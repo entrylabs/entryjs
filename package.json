@@ -1,0 +1,34 @@
+{
+  "name": "entryjs",
+  "title": "EntryJS",
+  "description": "JavaScript library for visual programming",
+  "version": "0.1.0",
+  "main": "dist/jquery.js",
+  "homepage": "http://play-entry.com",
+  "author": {
+    "name": "Entry Korea corp and other contributors"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/boolgom/entryjs.git"
+  },
+  "keywords": [
+    "entry",
+    "entryjs",
+    "javascript"
+  ],
+  "bugs": {
+    "url": "https://github.com/boolgom/entryjs/issues"
+  },
+  "license": "MIT",
+  "dependencies": {
+  },
+  "devDependencies": {
+    "grunt": "0.4.5",
+    "grunt-cli": "0.1.13",
+    "closurecompiler": "1.5.2",
+    "grunt-closure-tools": "0.9.8",
+    "grunt-contrib-watch": "~0.6.1",
+    "grunt-concurrent": "~0.4.2"
+  }
+}
