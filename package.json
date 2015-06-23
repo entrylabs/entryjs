@@ -21,15 +21,20 @@
     "url": "https://github.com/boolgom/entryjs/issues"
   },
   "license": "MIT",
-  "dependencies": {
-  },
+  "dependencies": {},
   "devDependencies": {
+    "closurecompiler": "1.5.2",
     "grunt": "0.4.5",
     "grunt-cli": "0.1.13",
-    "closurecompiler": "1.5.2",
     "grunt-closure-tools": "0.9.8",
-    "grunt-contrib-watch": "~0.6.1",
     "grunt-concurrent": "~0.4.2",
-    "grunt-contrib-jshint": "~0.11.2"
+    "grunt-contrib-jshint": "~0.11.2",
+    "grunt-contrib-watch": "~0.6.1",
+    "grunt-karma": "^0.11.1",
+    "grunt-mocha-test": "0.12.7",
+    "karma": "^0.12.36",
+    "karma-mocha": "^0.2.0",
+    "karma-phantomjs-launcher": "^0.2.0",
+    "phantomjs": "^1.9.17"
   }
 }

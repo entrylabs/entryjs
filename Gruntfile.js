@@ -11,7 +11,11 @@ module.exports = function(grunt) {
         watch: {
             js: {
                 files: ['src/**'],
-                tasks: ['closureCompiler', 'jshint'],
+                tasks: [
+                    'closureCompiler',
+                    'karma',
+                    'jshint'
+                ],
                 options: {
                     livereload: true
                 }
@@ -23,6 +27,24 @@ module.exports = function(grunt) {
             ],
             options: {
                 jshintrc: true
+            }
+        },
+        karma: {
+            options: {
+                frameworks: ['mocha', 'chai'],
+                files: [
+                    'dist/entry.js'
+                ]
+            },
+            unit: {
+                configFile: 'karma.conf.js',
+                port: 9999,
+                singleRun: true,
+                browsers: ['PhantomJS'],
+                logLevel: 'ERROR',
+                files: [
+                    { src : ['test/**/*.js'] }
+                ]
             }
         },
         closureCompiler: {
@@ -57,10 +79,12 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-concurrent');
     grunt.loadNpmTasks('grunt-contrib-watch');
+    grunt.loadNpmTasks('grunt-karma');
 
     // Default tasks.
     grunt.registerTask('default', [
         'closureCompiler',
+        'karma',
         'jshint',
         'concurrent'
     ]);
