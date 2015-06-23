@@ -11,10 +11,18 @@ module.exports = function(grunt) {
         watch: {
             js: {
                 files: ['src/**'],
-                tasks: ['closureCompiler'],
+                tasks: ['closureCompiler', 'jshint'],
                 options: {
                     livereload: true
                 }
+            }
+        },
+        jshint: {
+            all: [
+                'src/**'
+            ],
+            options: {
+                jshintrc: true
             }
         },
         closureCompiler: {
@@ -46,12 +54,14 @@ module.exports = function(grunt) {
 
     // Load NPM tasks
     grunt.loadNpmTasks('grunt-closure-tools');
+    grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-concurrent');
     grunt.loadNpmTasks('grunt-contrib-watch');
 
     // Default tasks.
     grunt.registerTask('default', [
         'closureCompiler',
+        'jshint',
         'concurrent'
     ]);
     grunt.registerTask('closure', ['closureCompiler']);

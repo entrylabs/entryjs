@@ -1,0 +1,12 @@
+{
+    "jquery": true,
+    "browser": true,
+    "shadow": true,
+    "devel": true,
+    "globalstrict": true,
+    "globals": {
+        "goog": true,
+        "createjs": true,
+        "Entry": true
+    }
+}
