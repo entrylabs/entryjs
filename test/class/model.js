@@ -6,6 +6,13 @@ describe('Entry.Model', function(){
     })
 
     describe('getter & setter', function(){
+        it('exist', function(){
+            var model = new Entry.ObserverModel();
+
+            assert.equal(typeof model.get, "function");
+            assert.equal(typeof model.set, "function");
+        })
+
         it('test', function(){
             var model = new Entry.Model();
 
