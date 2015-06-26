@@ -9,6 +9,15 @@ module.exports = function(grunt) {
             }
         },
         watch: {
+            test: {
+                files: ['test/**/*.js'],
+                tasks: [
+                    'karma'
+                ],
+                options: {
+                    livereload: true
+                }
+            },
             js: {
                 files: ['src/**'],
                 tasks: [
@@ -23,7 +32,7 @@ module.exports = function(grunt) {
         },
         jshint: {
             all: [
-                'src/**'
+                'src/**/*.js'
             ],
             options: {
                 jshintrc: true
@@ -85,8 +94,15 @@ module.exports = function(grunt) {
     grunt.registerTask('default', [
         'closureCompiler',
         'karma',
+        'jshint'
+    ]);
+
+    grunt.registerTask('development', [
+        'closureCompiler',
+        'karma',
         'jshint',
         'concurrent'
     ]);
+
     grunt.registerTask('closure', ['closureCompiler']);
 };

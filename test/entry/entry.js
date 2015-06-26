@@ -1,5 +1,5 @@
 describe('Entry', function(){
-    it('Entry exist', function(){
-      assert.equal(typeof Entry, "object");
+    it('exist', function(){
+        assert.equal(typeof Entry, "object");
     })
-})
+});
