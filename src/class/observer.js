@@ -5,17 +5,17 @@ goog.provide("Entry.ObserverModel");
 goog.require("Entry.Model");
 
 Entry.ObserverModel = function() {
+    this.base = Entry.Model;
+    this.base();
 };
 
-Entry.ObserverModel.prototype = Entry.Model.prototype;
+Entry.ObserverModel.prototype = new Entry.Model;
 
 (function (p) {
 
     p.set = function(data) {
-        for (var key in data) {
-            var value = data[key];
-            this[key] = value;
-        }
+        this.base.prototype.set.call(this, data);
+
         this.notify();
     };
 

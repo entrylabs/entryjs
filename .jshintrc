@@ -3,6 +3,7 @@
     "browser": true,
     "shadow": true,
     "devel": true,
+    "-W058": true,
     "globalstrict": true,
     "globals": {
         "goog": true,
