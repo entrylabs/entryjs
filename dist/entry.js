@@ -3,42 +3,67 @@ window.Entry = Entry;
 Entry.Model = function() {
   this.data = {};
 };
-(function(a) {
-  a.get = function(b) {
-    return this.data[b];
+(function(c) {
+  c.get = function(a) {
+    return this.data[a];
   };
-  a.set = function(b) {
-    for (var a in b) {
-      this.data[a] = b[a];
+  c.set = function(a) {
+    for (var b in a) {
+      this.data[b] = a[b];
     }
   };
 })(Entry.Model.prototype);
+Entry.LoopModel = function() {
+  this.base();
+  this._observers = [];
+};
+Entry.LoopModel.prototype = new Entry.Model;
+(function(c) {
+  c.base = Entry.Model;
+  c.bind = function(a) {
+    this._observers.push(a);
+  };
+  c.unbind = function(a) {
+    for (var b in this._observers) {
+      if (this._observers[b] === a) {
+        return this._observers.splice(b, 1), !0;
+      }
+    }
+    return !1;
+  };
+  c.notify = function() {
+    var a = Array.prototype.slice.call(arguments, 0), b;
+    for (b in this._observers) {
+      this._observers[b].update.apply(null, a);
+    }
+  };
+})(Entry.LoopModel.prototype);
 Entry.ObserverModel = function() {
   this.base();
   this._observers = [];
 };
 Entry.ObserverModel.prototype = new Entry.Model;
-(function(a) {
-  a.base = Entry.Model;
-  a.set = function(b) {
-    this.base.prototype.set.call(this, b);
+(function(c) {
+  c.base = Entry.Model;
+  c.set = function(a) {
+    this.base.prototype.set.call(this, a);
     this.notify();
   };
-  a.observe = function(b) {
-    this._observers.push(b);
+  c.observe = function(a) {
+    this._observers.push(a);
   };
-  a.unobserve = function(b) {
-    for (var a in this._observers) {
-      if (this._observers[a] === b) {
-        return this._observers.splice(a, 1), !0;
+  c.unobserve = function(a) {
+    for (var b in this._observers) {
+      if (this._observers[b] === a) {
+        return this._observers.splice(b, 1), !0;
       }
     }
     return !1;
   };
-  a.notify = function() {
-    var a = Array.prototype.slice.call(arguments, 0), c;
-    for (c in this._observers) {
-      this._observers[c].update.apply(null, a);
+  c.notify = function() {
+    var a = Array.prototype.slice.call(arguments, 0), b;
+    for (b in this._observers) {
+      this._observers[b].update.apply(null, a);
     }
   };
 })(Entry.ObserverModel.prototype);
