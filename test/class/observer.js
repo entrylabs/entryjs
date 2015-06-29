@@ -11,7 +11,7 @@ describe('Entry.ObserverModel', function(){
 
             assert.equal(typeof model.get, "function");
             assert.equal(typeof model.set, "function");
-        })
+        });
 
         it('test', function(){
             var model = new Entry.ObserverModel();
@@ -25,6 +25,42 @@ describe('Entry.ObserverModel', function(){
                 value,
                 model.get('key')
             );
-        })
+        });
+    });
+
+    describe('observe & unobserve', function() {
+        it('exist', function(){
+            var model = new Entry.ObserverModel();
+
+            assert.equal(typeof model.observe, "function");
+            assert.equal(typeof model.unobserve, "function");
+        });
+
+        it('register', function() {
+            var testObject = {};
+            var model = new Entry.ObserverModel();
+
+            assert.isFalse(model.unobserve(testObject));
+            model.observe(testObject);
+            assert.isTrue(model.unobserve(testObject));
+            assert.isFalse(model.unobserve(testObject));
+        });
+    });
+
+    describe('observer fire', function() {
+        it('test', function() {
+            var testFlag = false;
+            var testObject = {
+                update: function() {
+                    testFlag = true;
+                }
+            };
+            var model = new Entry.ObserverModel();
+
+            model.observe(testObject);
+            model.notify();
+            assert.isTrue(testFlag);
+        });
+
     });
 });
