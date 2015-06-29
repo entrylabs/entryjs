@@ -14,11 +14,11 @@ Entry.Model = function() {
   };
 })(Entry.Model.prototype);
 Entry.ObserverModel = function() {
-  this.base = Entry.Model;
   this.base();
 };
 Entry.ObserverModel.prototype = new Entry.Model;
 (function(a) {
+  a.base = Entry.Model;
   a.set = function(a) {
     this.base.prototype.set.call(this, a);
     this.notify();
