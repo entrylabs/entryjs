@@ -48,18 +48,16 @@ describe('Entry.LoopModel', function(){
     });
 
     describe('observer fire', function() {
-        it('test', function() {
-            var testFlag = false;
+        it('test', function(done) {
             var testObject = {
                 update: function() {
-                    testFlag = true;
+                    done();
                 }
             };
             var model = new Entry.LoopModel();
 
             model.bind(testObject);
             model.notify();
-            assert.isTrue(testFlag);
         });
 
     });
