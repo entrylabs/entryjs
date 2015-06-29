@@ -62,5 +62,18 @@ describe('Entry.ObserverModel', function(){
             assert.isTrue(testFlag);
         });
 
+        it('setter test', function() {
+            var testFlag = false;
+            var testObject = {
+                update: function() {
+                    testFlag = true;
+                }
+            };
+            var model = new Entry.ObserverModel();
+
+            model.observe(testObject);
+            model.set();
+            assert.isTrue(testFlag);
+        });
     });
 });
