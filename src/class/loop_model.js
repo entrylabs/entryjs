@@ -5,7 +5,7 @@ goog.provide("Entry.LoopModel");
 goog.require("Entry.Model");
 
 Entry.LoopModel = function() {
-    this.base();
+    Entry.Model.call(this);
 
     this._observers = [];
 };

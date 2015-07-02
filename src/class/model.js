@@ -3,10 +3,14 @@
 goog.provide("Entry.Model");
 
 Entry.Model = function() {
-    this.data = {};
+    this.data = this.schema;
 };
 
 (function (p) {
+    p.schema = {
+        id: null
+    };
+
     p.get = function(key) {
         return this.data[key];
     };
