@@ -32,9 +32,21 @@ describe('Entry.EntryObject', function(){
         it('test', function(){
             var model = new Entry.EntryObject();
 
-            assert.isTrue(
-                model.data.hasOwnProperty('name')
-            );
+            var schema = {
+                id: null,
+                name: null,
+                order: null,
+                objectType: null,
+                scene: null,
+                lock: null,
+                rotateMethod: null,
+                entity: null,
+                script: null,
+                sprite: null
+            };
+
+            for (var key in schema)
+                assert.isTrue(model.data.hasOwnProperty(key));
 
             assert.isFalse(
                 model.data.hasOwnProperty('Id')
