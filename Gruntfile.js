@@ -42,14 +42,12 @@ module.exports = function(grunt) {
             options: {
                 frameworks: ['mocha', 'chai'],
                 files: [
+                    'extern/blockly/blockly_compressed.js',
                     'dist/entry.js'
                 ]
             },
             unit: {
                 configFile: 'karma.conf.js',
-                port: 9999,
-                singleRun: true,
-                browsers: ['PhantomJS'],
                 logLevel: 'ERROR',
                 files: [
                     { src : ['test/**/*.js'] }

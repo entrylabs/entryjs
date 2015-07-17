@@ -1,5 +1,6 @@
 "use strict";
 
+/*
 goog.provide("Entry.EntryObject");
 
 goog.require("Entry.LoopModel");
@@ -29,3 +30,4 @@ Entry.EntryObject.prototype = new Entry.LoopModel;
     };
 
 })(Entry.EntryObject.prototype);
+*/

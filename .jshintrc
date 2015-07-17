@@ -8,6 +8,7 @@
     "globals": {
         "goog": true,
         "createjs": true,
-        "Entry": true
+        "Entry": true,
+        "Blockly": true
     }
 }

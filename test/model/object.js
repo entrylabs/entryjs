@@ -5,6 +5,7 @@ describe('Entry.EntryObject', function(){
         assert.equal(typeof Entry.EntryObject, "function");
     })
 
+    /*
     describe('getter & setter', function(){
         it('exist', function(){
             var model = new Entry.EntryObject();
@@ -87,4 +88,5 @@ describe('Entry.EntryObject', function(){
         });
 
     });
+    */
 });
