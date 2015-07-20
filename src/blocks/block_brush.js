@@ -1,6 +1,8 @@
+"use strict";
+
 var categoryColor = '#FF9E20';
 // 그리기 시작하기
-Blockly.Blocks['start_drawing'] = {
+Blockly.Blocks.start_drawing = {
   init: function() {
     this.setColour(categoryColor);
     this.appendDummyInput()
@@ -28,7 +30,7 @@ Entry.block.start_drawing = function (sprite, script) {
 
 
 // 그리기 멈추기
-Blockly.Blocks['stop_drawing'] = {
+Blockly.Blocks.stop_drawing = {
   init: function() {
     this.setColour(categoryColor);
     this.appendDummyInput()
@@ -49,7 +51,7 @@ Entry.block.stop_drawing = function (sprite, script) {
 };
 
 // 색깔을 [★] 로 정하기
-Blockly.Blocks['set_color'] = {
+Blockly.Blocks.set_color = {
   init: function() {
     this.setColour(categoryColor);
     this.appendDummyInput()
@@ -87,7 +89,7 @@ Entry.block.set_color = function (sprite, script) {
 };
 
 // 랜덤 색갈 정하기
-Blockly.Blocks['set_random_color'] = {
+Blockly.Blocks.set_random_color = {
   init: function() {
     this.setColour(categoryColor);
     this.appendDummyInput()
@@ -118,7 +120,7 @@ Entry.block.set_random_color = function (sprite, script) {
 };
 
 // 굵기를 () 만큼 바꾸기
-Blockly.Blocks['change_thickness'] = {
+Blockly.Blocks.change_thickness = {
   init: function() {
     this.setColour(categoryColor);
     this.appendDummyInput()
@@ -157,7 +159,7 @@ Entry.block.change_thickness = function (sprite, script) {
 };
 
 // 굵기를 () 로 정하기
-Blockly.Blocks['set_thickness'] = {
+Blockly.Blocks.set_thickness = {
   init: function() {
     this.setColour(categoryColor);
     this.appendDummyInput()
@@ -193,7 +195,7 @@ Entry.block.set_thickness = function (sprite, script) {
 };
 
 // 투명도를 () 로 바꾸기
-Blockly.Blocks['change_opacity'] = {
+Blockly.Blocks.change_opacity = {
   init: function() {
     this.setColour(categoryColor);
     this.appendDummyInput()
@@ -232,7 +234,7 @@ Entry.block.change_opacity = function (sprite, script) {
 
 
 // 투명도를 () 로 정하기
-Blockly.Blocks['set_opacity'] = {
+Blockly.Blocks.set_opacity = {
   init: function() {
     this.setColour(categoryColor);
     this.appendDummyInput()
@@ -270,7 +272,7 @@ Entry.block.set_opacity = function (sprite, script) {
 };
 
 // 모두 지우기
-Blockly.Blocks['brush_erase_all'] = {
+Blockly.Blocks.brush_erase_all = {
   init: function() {
     this.setColour(categoryColor);
     this.appendDummyInput()
@@ -301,7 +303,7 @@ Entry.block.brush_erase_all = function (sprite, script) {
     return script.callReturn();
 }
 
-Blockly.Blocks['brush_stamp'] = {
+Blockly.Blocks.brush_stamp = {
   init: function() {
     this.setColour(categoryColor);
     this.appendDummyInput()
@@ -320,7 +322,7 @@ Entry.block.brush_stamp = function (sprite, script) {
     return script.callReturn();
 }
 
-Blockly.Blocks['change_brush_transparency'] = {
+Blockly.Blocks.change_brush_transparency = {
   init: function() {
     this.setColour(categoryColor);
     this.appendDummyInput()
@@ -357,7 +359,7 @@ Entry.block.change_brush_transparency = function (sprite, script) {
     return script.callReturn();
 };
 
-Blockly.Blocks['set_brush_tranparency'] = {
+Blockly.Blocks.set_brush_tranparency = {
   init: function() {
     this.setColour(categoryColor);
     this.appendDummyInput()

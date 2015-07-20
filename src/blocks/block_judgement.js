@@ -1,4 +1,6 @@
-Blockly.Blocks['is_clicked'] = {
+"use strict";
+
+Blockly.Blocks.is_clicked = {
     init: function() {
         this.setColour("#2FC9F0");
         this.appendDummyInput()
@@ -13,7 +15,7 @@ Entry.block.is_clicked = function (sprite, script) {
     return Entry.stage.isClick;
 };
 
-Blockly.Blocks['is_press_some_key'] = {
+Blockly.Blocks.is_press_some_key = {
     init: function() {
         this.setColour("#2FC9F0");
         this.appendDummyInput()
@@ -33,7 +35,7 @@ Entry.block.is_press_some_key = function (sprite, script) {
 };
 
 // (▼) 에 닿았는가?
-Blockly.Blocks['reach_something'] = {
+Blockly.Blocks.reach_something = {
     init: function() {
         this.setColour("#2FC9F0");
         this.appendDummyInput()
@@ -123,7 +125,7 @@ Entry.block.reach_something = function (sprite, script) {
 
 
 
-Blockly.Blocks['boolean_comparison'] = {
+Blockly.Blocks.boolean_comparison = {
     init: function() {
         this.setColour("#2FC9F0");
         this.appendValueInput("LEFTHAND")
@@ -154,7 +156,7 @@ Entry.block.boolean_comparison = function (sprite, script) {
         return leftValue < rightValue;
 };
 
-Blockly.Blocks['boolean_equal'] = {
+Blockly.Blocks.boolean_equal = {
     init: function() {
         this.setColour("#2FC9F0");
         this.appendValueInput("LEFTHAND")
@@ -175,7 +177,7 @@ Entry.block.boolean_equal = function (sprite, script) {
     return leftValue == rightValue;
 };
 
-Blockly.Blocks['boolean_bigger'] = {
+Blockly.Blocks.boolean_bigger = {
     init: function() {
         this.setColour("#2FC9F0");
         this.appendValueInput("LEFTHAND")
@@ -196,7 +198,7 @@ Entry.block.boolean_bigger = function (sprite, script) {
     return leftValue > rightValue;
 };
 
-Blockly.Blocks['boolean_smaller'] = {
+Blockly.Blocks.boolean_smaller = {
     init: function() {
         this.setColour("#2FC9F0");
         this.appendValueInput("LEFTHAND")
@@ -218,7 +220,7 @@ Entry.block.boolean_smaller = function (sprite, script) {
 };
 
 //그리고 또는
-Blockly.Blocks['boolean_and_or'] = {
+Blockly.Blocks.boolean_and_or = {
     init: function() {
         this.setColour("#2FC9F0");
         this.appendValueInput("LEFTHAND")
@@ -246,7 +248,7 @@ Entry.block.boolean_and_or = function (sprite, script) {
         return leftValue || rightValue;
 };
 
-Blockly.Blocks['boolean_and'] = {
+Blockly.Blocks.boolean_and = {
     init: function() {
         this.setColour("#2FC9F0");
         this.appendValueInput("LEFTHAND")
@@ -267,7 +269,7 @@ Entry.block.boolean_and = function (sprite, script) {
     return leftValue && rightValue;
 };
 
-Blockly.Blocks['boolean_or'] = {
+Blockly.Blocks.boolean_or = {
     init: function() {
         this.setColour("#2FC9F0");
         this.appendValueInput("LEFTHAND")
@@ -289,7 +291,7 @@ Entry.block.boolean_or = function (sprite, script) {
 };
 
 
-Blockly.Blocks['boolean_not'] = {
+Blockly.Blocks.boolean_not = {
     init: function() {
         this.setColour("#2FC9F0");
         this.appendDummyInput()
@@ -310,7 +312,7 @@ Entry.block.boolean_not = function (sprite, script) {
 };
 
 
-Blockly.Blocks['true_or_false'] = {
+Blockly.Blocks.true_or_false = {
     init: function() {
         this.setColour("#2FC9F0");
         this.appendDummyInput()
@@ -330,7 +332,7 @@ Entry.block.true_or_false = function (sprite, script) {
     return value == "true";
 };
 
-Blockly.Blocks['True'] = {
+Blockly.Blocks.True = {
     init: function() {
         this.setColour("#2FC9F0");
         this.appendDummyInput()
@@ -346,7 +348,7 @@ Entry.block.True = function (sprite, script) {
     return true;
 };
 
-Blockly.Blocks['False'] = {
+Blockly.Blocks.False = {
     init: function() {
         this.setColour("#2FC9F0");
         this.appendDummyInput()
@@ -362,7 +364,7 @@ Entry.block.False = function (sprite, script) {
     return false;
 };
 
-Blockly.Blocks['is_included_in_list'] = {
+Blockly.Blocks.is_included_in_list = {
     init: function() {
         this.setColour("#2FC9F0");
         this.appendDummyInput()
@@ -396,7 +398,7 @@ Entry.block.is_included_in_list = function (sprite, script) {
     return false;
 };
 
-Blockly.Blocks['boolean_basic_operator'] = {
+Blockly.Blocks.boolean_basic_operator = {
   init: function() {
     this.setColour("#2FC9F0");
     this.appendValueInput("LEFTHAND")

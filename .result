@@ -1,0 +1,1285 @@
+[4mRunning "closureCompiler:targetName" (closureCompiler) task[24m
+[34mExecuting: [39mjava  -jar "node_modules/closurecompiler/compiler/compiler.jar"  --js src/entry.js --js src/block.js --js src/blocks/block_arduino.js --js src/blocks/block_brush.js --js src/blocks/block_calc.js --js src/blocks/block_flow.js --js src/blocks/block_function.js --js src/blocks/block_judgement.js --js src/blocks/block_looks.js --js src/blocks/block_moving.js --js src/blocks/block_scene.js --js src/blocks/block_sound.js --js src/blocks/block_start.js --js src/blocks/block_text.js --js src/blocks/block_variable.js --js src/class/loop_model.js --js src/class/model.js --js src/class/observer.js --js src/container.js --js src/core/container.js --js src/core/engine.js --js src/core/hw.js --js src/core/init.js --js src/core/script.js --js src/dialog.js --js src/engine.js --js src/entity.js --js src/function.js --js src/helper.js --js src/hw.js --js src/init.js --js src/model/entity.js --js src/model/function.js --js src/model/object.js --js src/model/scene.js --js src/model/variable.js --js src/object.js --js src/painter.js --js src/playground.js --js src/popup.js --js src/scene.js --js src/script.js --js src/stage.js --js src/stamp_entity.js --js src/state.js --js src/state_manager.js --js src/toast.js --js src/util/popup.js --js src/util/static.js --js src/util/toast.js --js src/util/utils.js --js src/variable.js --js src/variable_container.js --js src/view/canvas/dialog.js --js src/view/canvas/variable_view.js --js src/xml.js --js_output_file=dist/entry.js --compilation_level SIMPLE_OPTIMIZATIONS --formatting pretty_print
+src/engine.js:360: WARNING - Type annotations are not allowed here. Are you missing parentheses?
+    createjs.Ticker.setFPS(Entry.FPS);
+    ^
+
+src/entity.js:426: WARNING - Type annotations are not allowed here. Are you missing parentheses?
+    if (!colour)
+    ^
+
+src/entity.js:447: WARNING - Type annotations are not allowed here. Are you missing parentheses?
+    if (!colour)
+    ^
+
+src/entity.js:652: WARNING - Type annotations are not allowed here. Are you missing parentheses?
+    if (text == null)
+    ^
+
+src/entity.js:743: WARNING - Type annotations are not allowed here. Are you missing parentheses?
+    if(visible == null)
+    ^
+
+src/entry.js:91: WARNING - unreachable code
+    $.ajax('http://localhost:23518/arduino/')
+    ^
+
+src/entry.js:252: WARNING - Suspicious code. This code lacks side-effects. Is there a bug?
+    if (Entry.type == 'phone') {
+    ^
+
+src/init.js:85: WARNING - unreachable code
+  for (var i = 0; i < filenames.length; i++) {
+                                        ^
+
+src/init.js:140: WARNING - Type annotations are not allowed here. Are you missing parentheses?
+    if (this.type == 'workspace' || this.type == 'phone')
+    ^
+
+src/init.js:284: WARNING - Type annotations are not allowed here. Are you missing parentheses?
+    if (!this.FPS)
+    ^
+
+src/object.js:25: WARNING - Type annotations are not allowed here. Are you missing parentheses?
+        if (model.script)
+        ^
+
+src/object.js:1150: WARNING - Type annotations are not allowed here. Are you missing parentheses?
+    if(rotateMethod == null)
+    ^
+
+src/playground.js:878: WARNING - Type annotations are not allowed here. Are you missing parentheses?
+    if (!object) {
+    ^
+
+src/stamp_entity.js:27: WARNING - Suspicious code. This code lacks side-effects. Is there a bug?
+    } else if (this.type == 'textBox') {
+           ^
+
+src/state.js:24: WARNING - Type annotations are not allowed here. Are you missing parentheses?
+    if (arguments.length > 3)
+    ^
+
+src/util/utils.js:415: WARNING - If this if/for/while really shouldn't have a body, use {}
+    for(var i=-1,l=nl.length;++i!==l;arr[i]=nl[i]);
+                                                  ^
+
+src/util/utils.js:435: WARNING - Suspicious code. This code lacks side-effects. Is there a bug?
+    bytes = [], str;
+                ^
+
+src/variable.js:586: WARNING - Type annotations are not allowed here. Are you missing parentheses?
+    width = width < 100 ? 100 : width;
+    ^
+
+src/variable.js:605: WARNING - Type annotations are not allowed here. Are you missing parentheses?
+    height = height < 100 ? 100 : height;
+    ^
+
+src/variable_container.js:31: WARNING - Suspicious code. This code lacks side-effects. Is there a bug?
+    selectedVariable: null;
+                      ^
+
+0 error(s), 20 warning(s)
+
+Command complete for target: targetName
+
+[4mRunning "closureCompiler:dist" (closureCompiler) task[24m
+[34mExecuting: [39mjava  -jar "node_modules/closurecompiler/compiler/compiler.jar"  --js src/entry.js --js src/block.js --js src/blocks/block_arduino.js --js src/blocks/block_brush.js --js src/blocks/block_calc.js --js src/blocks/block_flow.js --js src/blocks/block_function.js --js src/blocks/block_judgement.js --js src/blocks/block_looks.js --js src/blocks/block_moving.js --js src/blocks/block_scene.js --js src/blocks/block_sound.js --js src/blocks/block_start.js --js src/blocks/block_text.js --js src/blocks/block_variable.js --js src/class/loop_model.js --js src/class/model.js --js src/class/observer.js --js src/container.js --js src/core/container.js --js src/core/engine.js --js src/core/hw.js --js src/core/init.js --js src/core/script.js --js src/dialog.js --js src/engine.js --js src/entity.js --js src/function.js --js src/helper.js --js src/hw.js --js src/init.js --js src/model/entity.js --js src/model/function.js --js src/model/object.js --js src/model/scene.js --js src/model/variable.js --js src/object.js --js src/painter.js --js src/playground.js --js src/popup.js --js src/scene.js --js src/script.js --js src/stage.js --js src/stamp_entity.js --js src/state.js --js src/state_manager.js --js src/toast.js --js src/util/popup.js --js src/util/static.js --js src/util/toast.js --js src/util/utils.js --js src/variable.js --js src/variable_container.js --js src/view/canvas/dialog.js --js src/view/canvas/variable_view.js --js src/xml.js --js_output_file=dist/entry.min.js --compilation_level SIMPLE_OPTIMIZATIONS
+src/engine.js:360: WARNING - Type annotations are not allowed here. Are you missing parentheses?
+    createjs.Ticker.setFPS(Entry.FPS);
+    ^
+
+src/entity.js:426: WARNING - Type annotations are not allowed here. Are you missing parentheses?
+    if (!colour)
+    ^
+
+src/entity.js:447: WARNING - Type annotations are not allowed here. Are you missing parentheses?
+    if (!colour)
+    ^
+
+src/entity.js:652: WARNING - Type annotations are not allowed here. Are you missing parentheses?
+    if (text == null)
+    ^
+
+src/entity.js:743: WARNING - Type annotations are not allowed here. Are you missing parentheses?
+    if(visible == null)
+    ^
+
+src/entry.js:91: WARNING - unreachable code
+    $.ajax('http://localhost:23518/arduino/')
+    ^
+
+src/entry.js:252: WARNING - Suspicious code. This code lacks side-effects. Is there a bug?
+    if (Entry.type == 'phone') {
+    ^
+
+src/init.js:85: WARNING - unreachable code
+  for (var i = 0; i < filenames.length; i++) {
+                                        ^
+
+src/init.js:140: WARNING - Type annotations are not allowed here. Are you missing parentheses?
+    if (this.type == 'workspace' || this.type == 'phone')
+    ^
+
+src/init.js:284: WARNING - Type annotations are not allowed here. Are you missing parentheses?
+    if (!this.FPS)
+    ^
+
+src/object.js:25: WARNING - Type annotations are not allowed here. Are you missing parentheses?
+        if (model.script)
+        ^
+
+src/object.js:1150: WARNING - Type annotations are not allowed here. Are you missing parentheses?
+    if(rotateMethod == null)
+    ^
+
+src/playground.js:878: WARNING - Type annotations are not allowed here. Are you missing parentheses?
+    if (!object) {
+    ^
+
+src/stamp_entity.js:27: WARNING - Suspicious code. This code lacks side-effects. Is there a bug?
+    } else if (this.type == 'textBox') {
+           ^
+
+src/state.js:24: WARNING - Type annotations are not allowed here. Are you missing parentheses?
+    if (arguments.length > 3)
+    ^
+
+src/util/utils.js:415: WARNING - If this if/for/while really shouldn't have a body, use {}
+    for(var i=-1,l=nl.length;++i!==l;arr[i]=nl[i]);
+                                                  ^
+
+src/util/utils.js:435: WARNING - Suspicious code. This code lacks side-effects. Is there a bug?
+    bytes = [], str;
+                ^
+
+src/variable.js:586: WARNING - Type annotations are not allowed here. Are you missing parentheses?
+    width = width < 100 ? 100 : width;
+    ^
+
+src/variable.js:605: WARNING - Type annotations are not allowed here. Are you missing parentheses?
+    height = height < 100 ? 100 : height;
+    ^
+
+src/variable_container.js:31: WARNING - Suspicious code. This code lacks side-effects. Is there a bug?
+    selectedVariable: null;
+                      ^
+
+0 error(s), 20 warning(s)
+
+Command complete for target: dist
+
+[4mRunning "karma:unit" (karma) task[24m
+PhantomJS 1.9.8 (Mac OS X 0.0.0): Executed 0 of 19 SUCCESS (0 secs / 0 secs)
+[1A[2KPhantomJS 1.9.8 (Mac OS X 0.0.0): Executed 1 of 19 SUCCESS (0 secs / 0 secs)
+[1A[2KPhantomJS 1.9.8 (Mac OS X 0.0.0): Executed 2 of 19 SUCCESS (0 secs / 0.001 secs)
+[1A[2KPhantomJS 1.9.8 (Mac OS X 0.0.0): Executed 3 of 19 SUCCESS (0 secs / 0.001 secs)
+[1A[2KPhantomJS 1.9.8 (Mac OS X 0.0.0): Executed 4 of 19 SUCCESS (0 secs / 0.001 secs)
+[1A[2KPhantomJS 1.9.8 (Mac OS X 0.0.0): Executed 5 of 19 SUCCESS (0 secs / 0.001 secs)
+[1A[2KPhantomJS 1.9.8 (Mac OS X 0.0.0): Executed 6 of 19 SUCCESS (0 secs / 0.001 secs)
+[1A[2KPhantomJS 1.9.8 (Mac OS X 0.0.0): Executed 7 of 19 SUCCESS (0 secs / 0.001 secs)
+[1A[2KPhantomJS 1.9.8 (Mac OS X 0.0.0): Executed 8 of 19 SUCCESS (0 secs / 0.001 secs)
+[1A[2KPhantomJS 1.9.8 (Mac OS X 0.0.0): Executed 9 of 19 SUCCESS (0 secs / 0.001 secs)
+[1A[2KPhantomJS 1.9.8 (Mac OS X 0.0.0): Executed 10 of 19 SUCCESS (0 secs / 0.001 secs)
+[1A[2KPhantomJS 1.9.8 (Mac OS X 0.0.0): Executed 11 of 19 SUCCESS (0 secs / 0.001 secs)
+[1A[2KPhantomJS 1.9.8 (Mac OS X 0.0.0): Executed 12 of 19 SUCCESS (0 secs / 0.001 secs)
+[1A[2KPhantomJS 1.9.8 (Mac OS X 0.0.0): Executed 13 of 19 SUCCESS (0 secs / 0.001 secs)
+[1A[2KPhantomJS 1.9.8 (Mac OS X 0.0.0): Executed 14 of 19 SUCCESS (0 secs / 0.001 secs)
+[1A[2KPhantomJS 1.9.8 (Mac OS X 0.0.0): Executed 15 of 19 SUCCESS (0 secs / 0.001 secs)
+[1A[2KPhantomJS 1.9.8 (Mac OS X 0.0.0): Executed 16 of 19 SUCCESS (0 secs / 0.001 secs)
+[1A[2KPhantomJS 1.9.8 (Mac OS X 0.0.0): Executed 17 of 19 SUCCESS (0 secs / 0.001 secs)
+[1A[2KPhantomJS 1.9.8 (Mac OS X 0.0.0): Executed 18 of 19 SUCCESS (0 secs / 0.001 secs)
+[1A[2KPhantomJS 1.9.8 (Mac OS X 0.0.0): Executed 19 of 19 SUCCESS (0 secs / 0.001 secs)
+[1A[2KPhantomJS 1.9.8 (Mac OS X 0.0.0): Executed 19 of 19 SUCCESS (0.006 secs / 0.001 secs)
+
+Running "jshint:all" (jshint) task
+
+   src/blocks/block_arduino.js
+    114 |}
+          ^ Missing semicolon.
+    146 |}
+          ^ Missing semicolon.
+    171 |}
+          ^ Missing semicolon.
+   src/blocks/block_brush.js
+    304 |}
+          ^ Missing semicolon.
+    323 |}
+          ^ Missing semicolon.
+   src/blocks/block_calc.js
+      8 |    .appendField(new Blockly.FieldTextInput(""), "NUM")
+                                                                ^ Missing semicolon.
+     16 |    return script.fields['NUM'];
+                                 ^ ['NUM'] is better written in dot notation.
+    169 |        .appendField(Lang.Blocks.CALC_coordinate_object_3, "#3D3D3D")
+                                                                              ^ Missing semicolon.
+    400 |    ]), "VALUE")
+                         ^ Missing semicolon.
+    499 |        .appendField(Lang.Blocks.CALC_get_date_2, "#3D3D3D")
+                                                                     ^ Missing semicolon.
+    547 |}
+          ^ Missing semicolon.
+   src/blocks/block_flow.js
+     67 |    if (script.iterCount != 0 && !(script.iterCount < 0)) {
+                                  ^ Use '!==' to compare with '0'.
+     67 |    if (script.iterCount != 0 && !(script.iterCount < 0)) {
+                                          ^ Confusing use of '!'.
+    155 |}
+          ^ Missing semicolon.
+    337 |}
+          ^ Missing semicolon.
+   src/blocks/block_function.js
+     61 | + text), "");
+          ^ Bad line breaking before '+'.
+     71 |    return script.register[script.hashId].run()
+                                                        ^ Missing semicolon.
+     98 |    return script.register[script.hashId].run()
+                                                        ^ Missing semicolon.
+    156 |                    .setCheck(['Boolean']);
+                                                   ^ Expected a 'break' statement before 'default'.
+    168 |            input = input.fieldRow[0]
+                                              ^ Missing semicolon.
+    183 |        container.appendChild(field);
+                                       ^ 'field' used out of scope.
+    197 |                == 'function_create')
+                         ^ Bad line breaking before '=='.
+   src/blocks/block_judgement.js
+     59 |    var object = sprite.object
+                                       ^ Missing semicolon.
+     72 |                    return false;
+                                         ^ Expected a 'break' statement before 'case'.
+     77 |                    return false;
+                                         ^ Expected a 'break' statement before 'case'.
+     82 |                    return false;
+                                         ^ Expected a 'break' statement before 'case'.
+     87 |                    return false;
+                                         ^ Expected a 'break' statement before 'case'.
+    303 |        this.appendDummyInput()
+                                        ^ Missing semicolon.
+    323 |        this.appendDummyInput()
+                                        ^ Missing semicolon.
+   src/blocks/block_looks.js
+     85 |    if (script.timeFlag == 0) {
+                                 ^ Use '===' to compare with '0'.
+    145 |}
+          ^ Missing semicolon.
+    370 |}
+          ^ Missing semicolon.
+    388 |}
+          ^ Missing semicolon.
+    425 |        .appendField(new Blockly.FieldDropdownDynamic("pictures"), "VALUE")
+                                                                                    ^ Missing semicolon.
+   src/blocks/block_moving.js
+    117 |        script.frameCount = Math.floor(timeValue * Entry.FPS)
+                                                                      ^ Missing semicolon.
+    121 |    if (script.frameCount != 0) {
+                                   ^ Use '!==' to compare with '0'.
+    398 |        script.frameCount = Math.floor(timeValue * Entry.FPS)
+                                                                      ^ Missing semicolon.
+    402 |    if (script.frameCount != 0) {
+                                   ^ Use '!==' to compare with '0'.
+    472 |        script.frameCount = Math.floor(timeValue * Entry.FPS)
+                                                                      ^ Missing semicolon.
+    475 |    if (script.frameCount != 0) {
+                                   ^ Use '!==' to compare with '0'.
+    524 |    if ((angle < 90 && angle >= 0) || (angle < 360 && angle >= 270)) {
+                  ^ 'angle' used out of scope.
+    524 |    if ((angle < 90 && angle >= 0) || (angle < 360 && angle >= 270)) {
+                                ^ 'angle' used out of scope.
+    524 |    if ((angle < 90 && angle >= 0) || (angle < 360 && angle >= 270)) {
+                                                ^ 'angle' used out of scope.
+    524 |    if ((angle < 90 && angle >= 0) || (angle < 360 && angle >= 270)) {
+                                                               ^ 'angle' used out of scope.
+    532 |    else if (angle < 270 && angle >= 90) {
+                      ^ 'angle' used out of scope.
+    532 |    else if (angle < 270 && angle >= 90) {
+                                     ^ 'angle' used out of scope.
+    540 |    if (angle < 360 && angle >= 180) {
+                 ^ 'angle' used out of scope.
+    540 |    if (angle < 360 && angle >= 180) {
+                                ^ 'angle' used out of scope.
+    548 |    else if (angle < 180 && angle >= 0) {
+                      ^ 'angle' used out of scope.
+    548 |    else if (angle < 180 && angle >= 0) {
+                                     ^ 'angle' used out of scope.
+    641 |    sprite.setRotation(sprite.getRotation() + value - nativeDirection);
+                                                       ^ 'value' used out of scope.
+    722 |        if (frameCount != 0) {
+                                ^ Use '!==' to compare with '0'.
+    753 |    if (script.frameCount != 0) {
+                                   ^ Use '!==' to compare with '0'.
+    771 |        .appendField(Lang.Blocks.MOVING_set_direction_by_angle_1)
+                                                                          ^ Missing semicolon.
+    863 |        .appendField(Lang.Blocks.MOVING_move_direction_angle_1)
+                                                                        ^ Missing semicolon.
+    867 |        .appendField(Lang.Blocks.MOVING_move_direction_angle_2)
+                                                                        ^ Missing semicolon.
+    918 |        script.frameCount = Math.floor(timeValue * Entry.FPS)
+                                                                      ^ Missing semicolon.
+    921 |    if (script.frameCount != 0) {
+                                   ^ Use '!==' to compare with '0'.
+   src/blocks/block_scene.js
+     86 |}
+          ^ Missing semicolon.
+   src/blocks/block_sound.js
+     95 |            }, sound.duration * 1000)
+                                              ^ Missing semicolon.
+    141 |            }, timeValue * 1000)
+                                         ^ Missing semicolon.
+    237 |        .appendField(new Blockly.FieldDropdownDynamic("sounds"), "VALUE")
+                                                                                  ^ Missing semicolon.
+    343 |            }, sound.duration * 1000)
+                                              ^ Missing semicolon.
+    389 |            }, timeValue * 1000)
+                                         ^ Missing semicolon.
+   src/blocks/block_start.js
+     73 |Blockly.Blocks["mouse_clicked"] = {
+                       ^ ['mouse_clicked'] is better written in dot notation.
+    271 |        var runningScript = []
+                                       ^ Missing semicolon.
+    287 |            };
+                      ^ Unnecessary semicolon.
+   src/blocks/block_variable.js
+     31 |    if ((value == false && typeof value == 'boolean'))
+                        ^ Use '===' to compare with 'false'.
+    140 |            .appendField(Lang.Blocks.VARIABLE_get_variable_2)
+                                                                      ^ Missing semicolon.
+    204 |}
+          ^ Missing semicolon.
+    221 |}
+          ^ Missing semicolon.
+    247 |}
+          ^ Missing semicolon.
+    349 |    if (!list.array_ || isNaN(index) || index == 0 || index > list.array_.length +1)
+                                                       ^ Use '===' to compare with '0'.
+    424 |    return list.array_[index-1].data
+                                             ^ Missing semicolon.
+   src/container.js
+     72 |        })
+                   ^ Missing semicolon.
+    119 |        })
+                   ^ Missing semicolon.
+    194 |        });
+                  ^ Don't make functions within a loop.
+    198 |        });
+                  ^ Don't make functions within a loop.
+    200 |    this.updateObjectsOrder()
+                                      ^ Missing semicolon.
+    301 |    if (this.objects_.length && index != 0)
+                                               ^ Use '!==' to compare with '0'.
+    303 |    else if (this.objects_.length && index == 0)
+                                                    ^ Use '===' to compare with '0'.
+    338 |    };
+              ^ Unnecessary semicolon.
+    363 |    };
+              ^ Unnecessary semicolon.
+    393 |    };
+              ^ Unnecessary semicolon.
+    477 |    if ( this.messages_.length == 0 ){
+                                        ^ Use '===' to compare with '0'.
+    638 |        };
+                  ^ Unnecessary semicolon.
+    639 |        if (!result || result.length == 0)
+                                              ^ Use '===' to compare with '0'.
+    646 |        };
+                  ^ Unnecessary semicolon.
+    647 |        if (!result || result.length == 0)
+                                              ^ Use '===' to compare with '0'.
+    654 |        };
+                  ^ Unnecessary semicolon.
+    660 |        };
+                  ^ Unnecessary semicolon.
+    675 |        result = [[Lang.Blocks.no_target, 'null']]
+                                                           ^ Missing semicolon.
+    689 |        };
+                  ^ Unnecessary semicolon.
+    707 |}
+          ^ Missing semicolon.
+    725 |        };
+                  ^ Unnecessary semicolon.
+    773 |        };
+                  ^ Unnecessary semicolon.
+    788 |        };
+                  ^ Unnecessary semicolon.
+    821 |    };
+              ^ Unnecessary semicolon.
+    869 |    };
+              ^ Unnecessary semicolon.
+    950 |    if (!objs || objs.length == 0)
+                                      ^ Use '===' to compare with '0'.
+   1086 |    this.youtubeHash = youtubeHash
+                                           ^ Missing semicolon.
+   1117 |}
+          ^ Missing semicolon.
+   1126 |}
+          ^ Missing semicolon.
+   src/dialog.js
+     13 |    if (entity.dialog)
+             ^ Missing "use strict" statement.
+     15 |    entity.dialog = this;
+             ^ Missing "use strict" statement.
+     21 |    var messageChunks = message.match(/.{1,15}/g);
+             ^ Missing "use strict" statement.
+     21 |    var messageChunks = message.match(/.{1,15}/g);
+                                                          ^ Missing "use strict" statement.
+     27 |    if (!isStamp)
+             ^ Missing "use strict" statement.
+     29 |};
+         ^ Missing "use strict" statement.
+     36 |    this.object = new createjs.Container();
+             ^ Missing "use strict" statement.
+     37 |    var text = new createjs.Text();
+                                           ^ Missing "use strict" statement.
+     42 |    var bound = text.getTransformedBounds();
+                                                    ^ Missing "use strict" statement.
+     43 |    var height = bound.height;
+                                      ^ Missing "use strict" statement.
+     44 |    var width = bound.width >= 10 ? bound.width : 17;
+                                                             ^ Missing "use strict" statement.
+     45 |    var rect = new createjs.Shape();
+                                            ^ Missing "use strict" statement.
+     58 |}
+          ^ Missing semicolon.
+     64 |    var bound = this.parent.object.getTransformedBounds();
+             ^ Missing "use strict" statement.
+     64 |    var bound = this.parent.object.getTransformedBounds();
+                                                                  ^ Missing "use strict" statement.
+     65 |    var notchType = '';
+                               ^ Missing "use strict" statement.
+     74 |    if (bound.x + bound.width + this.width < 240) {
+             ^ Missing "use strict" statement.
+     81 |    if (this.notch.type != notchType) {
+             ^ Missing "use strict" statement.
+     86 |};
+         ^ Missing "use strict" statement.
+     94 |    var notch = new createjs.Shape();
+             ^ Missing "use strict" statement.
+     94 |    var notch = new createjs.Shape();
+                                             ^ Missing "use strict" statement.
+    116 |    return notch;
+             ^ Missing "use strict" statement.
+    116 |    return notch;
+             ^ Missing "use strict" statement.
+    116 |    return notch;
+             ^ Missing "use strict" statement.
+    116 |    return notch;
+             ^ Missing "use strict" statement.
+    116 |    return notch;
+                         ^ Missing "use strict" statement.
+    123 |    Entry.stage.unloadDialog(this);
+             ^ Missing "use strict" statement.
+   src/engine.js
+    276 |}
+          ^ Missing semicolon.
+    311 |        })(i);
+                  ^ Don't make functions within a loop.
+    334 |}
+          ^ Missing semicolon.
+    352 |}
+          ^ Missing semicolon.
+    421 |    };
+              ^ Unnecessary semicolon.
+    430 |            var newScript = script.run()
+                                                 ^ Missing semicolon.
+    560 |}
+          ^ Missing semicolon.
+    576 |}
+          ^ Missing semicolon.
+    601 |    };
+              ^ Unnecessary semicolon.
+    631 |    };
+              ^ Unnecessary semicolon.
+    692 |    };
+              ^ Unnecessary semicolon.
+    741 |}
+          ^ Missing semicolon.
+    750 |            Entry.engine.updateProjectTimer()
+                                                      ^ Missing semicolon.
+    756 |}
+          ^ Missing semicolon.
+    769 |}
+          ^ Missing semicolon.
+    807 |}
+          ^ Missing semicolon.
+   src/entity.js
+     57 |        };
+                  ^ Unnecessary semicolon.
+     77 |}
+          ^ Missing semicolon.
+    373 |}
+          ^ Missing semicolon.
+    467 |}
+          ^ Missing semicolon.
+    471 |}
+          ^ Missing semicolon.
+    478 |}
+          ^ Missing semicolon.
+    482 |}
+          ^ Missing semicolon.
+    497 |}
+          ^ Missing semicolon.
+    508 |        font = "20px Nanum Gothic"
+                                           ^ Missing semicolon.
+    513 |    if (i = fontArray.indexOf("bold") > -1) {
+                                                   ^ Expected a conditional expression and instead saw an assignment.
+    517 |    if (i = fontArray.indexOf("italic") > -1) {
+                                                     ^ Expected a conditional expression and instead saw an assignment.
+    531 |}
+          ^ Missing semicolon.
+    542 |}
+          ^ Missing semicolon.
+    549 |}
+          ^ Missing semicolon.
+    560 |}
+          ^ Missing semicolon.
+    567 |}
+          ^ Missing semicolon.
+    580 |}
+          ^ Missing semicolon.
+    587 |}
+          ^ Missing semicolon.
+    603 |}
+          ^ Missing semicolon.
+    652 |    if (text == null)
+                      ^ Use '===' to compare with 'null'.
+    678 |    if (textAlign == null)
+                           ^ Use '===' to compare with 'null'.
+    707 |    if (lineBreak == null)
+                           ^ Use '===' to compare with 'null'.
+    743 |    if(visible == null)
+                        ^ Use '===' to compare with 'null'.
+    779 |    };
+              ^ Unnecessary semicolon.
+    934 |    }
+              ^ Missing semicolon.
+    996 |}
+          ^ Missing semicolon.
+   src/entry.js
+     64 |        var json = {category: category.getAttribute("id"), blocks: []}
+                                                                               ^ Missing semicolon.
+     71 |                json.blocks.push(b.getAttribute('type'))
+                                                                 ^ Missing semicolon.
+     77 |}
+          ^ Missing semicolon.
+     87 |}
+          ^ Missing semicolon.
+     91 |    $.ajax('http://localhost:23518/arduino/')
+             ^ Unreachable '$' after 'return'.
+    154 |}
+          ^ Missing semicolon.
+    264 |}
+          ^ Missing semicolon.
+    272 |}
+          ^ Missing semicolon.
+    287 |}
+          ^ Missing semicolon.
+   src/function.js
+     46 |}
+          ^ Missing semicolon.
+     53 |}
+          ^ Missing semicolon.
+     86 |}
+          ^ Missing semicolon.
+    208 |}
+          ^ Missing semicolon.
+    223 |}
+          ^ Missing semicolon.
+    239 |            })
+                       ^ Missing semicolon.
+    252 |            })
+                       ^ Missing semicolon.
+    257 |}
+          ^ Missing semicolon.
+    276 |    script.init(createBlock);
+                         ^ 'createBlock' used out of scope.
+    324 |    if (!description) description = "함수"
+                                                 ^ Missing semicolon.
+    376 |    saveButton.onclick = function(e) { func.save(); }
+                                                              ^ Missing semicolon.
+    377 |    saveText.onclick = function(e) { func.save(); }
+                                                            ^ Missing semicolon.
+    379 |    cancelButton.onclick = function(e) { func.cancelEdit(); }
+                                                                      ^ Missing semicolon.
+    380 |    cancelText.onclick = function(e) { func.cancelEdit(); }
+                                                                    ^ Missing semicolon.
+    436 |}
+          ^ Missing semicolon.
+   src/helper.js
+     10 |}
+          ^ Missing semicolon.
+     23 |}
+          ^ Missing semicolon.
+     81 |}
+          ^ Missing semicolon.
+    130 |    })
+               ^ Missing semicolon.
+   src/hw.js
+     27 |}
+          ^ Missing semicolon.
+     62 |}
+          ^ Missing semicolon.
+     67 |}
+          ^ Missing semicolon.
+     77 |}
+          ^ Missing semicolon.
+     81 |}
+          ^ Missing semicolon.
+     87 |}
+          ^ Missing semicolon.
+     98 |}
+          ^ Missing semicolon.
+    102 |}
+          ^ Missing semicolon.
+    121 |            if (value == 255 || value == 0) {
+                                               ^ Use '===' to compare with '0'.
+    138 |}
+          ^ Missing semicolon.
+    142 |}
+          ^ Missing semicolon.
+    147 |}
+          ^ Missing semicolon.
+    153 |}
+          ^ Missing semicolon.
+    159 |}
+          ^ Missing semicolon.
+   src/init.js
+     35 |        Entry.dispatchEvent('keyPressed', e)
+                                                     ^ Missing semicolon.
+     38 |        Entry.dispatchEvent('keyUpped', e)
+                                                   ^ Missing semicolon.
+     41 |        Entry.dispatchEvent('windowResized', e)
+                                                        ^ Missing semicolon.
+     46 |        Entry.addActivity("save")
+                                          ^ Missing semicolon.
+     80 |  if (!window['Audio'] || !filenames.length) {
+                      ^ ['Audio'] is better written in dot notation.
+     97 |}
+          ^ Missing semicolon.
+    286 |    Entry.assert(typeof(this.FPS) == 'number', 'FPS must be number')
+                                                                             ^ Missing semicolon.
+    298 |    this.projectSaveable = options['projectsaveable'];
+                                           ^ ['projectsaveable'] is better written in dot notation.
+    302 |    this.objectAddable = options['objectaddable'];
+                                         ^ ['objectaddable'] is better written in dot notation.
+    306 |    this.objectEditable = options['objectEditable'];
+                                          ^ ['objectEditable'] is better written in dot notation.
+    312 |    this.objectDeletable = options['objectdeletable'];
+                                           ^ ['objectdeletable'] is better written in dot notation.
+    316 |    this.soundEditable = options['soundeditable'];
+                                         ^ ['soundeditable'] is better written in dot notation.
+    320 |    this.pictureEditable = options['pictureeditable'];
+                                           ^ ['pictureeditable'] is better written in dot notation.
+    324 |    this.sceneEditable = options['sceneEditable'];
+                                         ^ ['sceneEditable'] is better written in dot notation.
+    328 |    this.functionEnable = options['functionEnable'];
+                                          ^ ['functionEnable'] is better written in dot notation.
+    332 |    this.messageEnable = options['messageEnable'];
+                                         ^ ['messageEnable'] is better written in dot notation.
+    336 |    this.variableEnable = options['variableEnable'];
+                                          ^ ['variableEnable'] is better written in dot notation.
+    340 |    this.listEnable = options['listEnable'];
+                                      ^ ['listEnable'] is better written in dot notation.
+    344 |    this.hasVariableManager = options['hasvariablemanager'];
+                                              ^ ['hasvariablemanager'] is better written in dot notation.
+    351 |    this.isForLecture = options['isForLecture'];
+                                        ^ ['isForLecture'] is better written in dot notation.
+    352 |}
+          ^ Missing semicolon.
+   src/object.js
+     54 |                     || Entry.scene.selectedScene;
+                              ^ Bad line breaking before '||'.
+     79 |            };
+                      ^ Don't make functions within a loop.
+    160 |            objectInfoView.addClass('entryHide')
+                                                         ^ Missing semicolon.
+    198 |        thumbnailView.addClass('entryObjectThumbnailWorkspace')
+                                                                        ^ Missing semicolon.
+    203 |        wrapperView.addClass('entryObjectWrapperWorkspace')
+                                                                    ^ Missing semicolon.
+    211 |        nameView.addClass('entryObjectNameWorkspace')
+                                                              ^ Missing semicolon.
+    250 |            }
+                      ^ Missing semicolon.
+    278 |        informationView.addClass('entryObjectInformationWorkspace')
+                                                                            ^ Missing semicolon.
+    285 |        rotationWrapperView.addClass('entryObjectRotationWrapperWorkspace')
+                                                                                    ^ Missing semicolon.
+    290 |        coordinateView.addClass('entryObjectCoordinateWorkspace')
+                                                                          ^ Missing semicolon.
+    371 |        rotateLabelWrapperView.addClass('entryObjectRotateLabelWrapperWorkspace')
+                                                                                          ^ Missing semicolon.
+    379 |        rotateInput.addClass('entryObjectRotateInputWorkspace')
+                                                                        ^ Missing semicolon.
+    392 |        directionInput.addClass('entryObjectDirectionInputWorkspace')
+                                                                              ^ Missing semicolon.
+    420 |        }
+                  ^ Missing semicolon.
+    433 |        }
+                  ^ Missing semicolon.
+    441 |        rotateMethodLabelView.addClass('entryObjectRotateMethodLabelWorkspace')
+                                                                                        ^ Missing semicolon.
+    446 |        rotateModeAView.addClass('entryObjectRotateModeWorkspace')
+                                                                           ^ Missing semicolon.
+    447 |        rotateModeAView.addClass('entryObjectRotateModeAWorkspace')
+                                                                            ^ Missing semicolon.
+    459 |        rotateModeBView.addClass('entryObjectRotateModeWorkspace')
+                                                                           ^ Missing semicolon.
+    460 |        rotateModeBView.addClass('entryObjectRotateModeBWorkspace')
+                                                                            ^ Missing semicolon.
+    472 |        rotateModeCView.addClass('entryObjectRotateModeWorkspace')
+                                                                           ^ Missing semicolon.
+    473 |        rotateModeCView.addClass('entryObjectRotateModeCWorkspace')
+                                                                            ^ Missing semicolon.
+    545 |        thumbnailView.addClass('entryObjectThumbnailWorkspace')
+                                                                        ^ Missing semicolon.
+    550 |        wrapperView.addClass('entryObjectWrapperWorkspace')
+                                                                    ^ Missing semicolon.
+    554 |        nameView.addClass('entryObjectNameWorkspace')
+                                                              ^ Missing semicolon.
+    600 |        informationView.addClass('entryObjectInformationWorkspace')
+                                                                            ^ Missing semicolon.
+    610 |        rotateLabelWrapperView.addClass('entryObjectRotateLabelWrapperWorkspace')
+                                                                                          ^ Missing semicolon.
+    618 |        rotateInput.addClass('entryObjectRotateInputWorkspace')
+                                                                        ^ Missing semicolon.
+    626 |        directionInput.addClass('entryObjectDirectionInputWorkspace')
+                                                                              ^ Missing semicolon.
+    651 |        }
+                  ^ Missing semicolon.
+    667 |        }
+                  ^ Missing semicolon.
+    670 |        rotationWrapperView.addClass('entryObjectRotationWrapperWorkspace')
+                                                                                    ^ Missing semicolon.
+    675 |        coordinateView.addClass('entryObjectCoordinateWorkspace')
+                                                                          ^ Missing semicolon.
+    686 |        yInput.addClass('entryObjectCoordinateInputWorkspace entryObjectCoordinateInputWorkspace_right')
+                                                                                                                 ^ Missing semicolon.
+    716 |        }
+                  ^ Missing semicolon.
+    729 |        }
+                  ^ Missing semicolon.
+    737 |        rotateMethodLabelView.addClass('entryObjectRotateMethodLabelWorkspace')
+                                                                                        ^ Missing semicolon.
+    742 |        rotateModeAView.addClass('entryObjectRotateModeWorkspace')
+                                                                           ^ Missing semicolon.
+    743 |        rotateModeAView.addClass('entryObjectRotateModeAWorkspace')
+                                                                            ^ Missing semicolon.
+    755 |        rotateModeBView.addClass('entryObjectRotateModeWorkspace')
+                                                                           ^ Missing semicolon.
+    756 |        rotateModeBView.addClass('entryObjectRotateModeBWorkspace')
+                                                                            ^ Missing semicolon.
+    768 |        rotateModeCView.addClass('entryObjectRotateModeWorkspace')
+                                                                           ^ Missing semicolon.
+    769 |        rotateModeCView.addClass('entryObjectRotateModeCWorkspace')
+                                                                            ^ Missing semicolon.
+    839 |        json.scaleX = json.scaleY = scale;
+                                             ^ 'scale' used out of scope.
+    913 |        && this.coordinateView_.yInput_) {
+                 ^ Bad line breaking before '&&'.
+    974 |    if (!index && index != 0)
+                                 ^ Use '!==' to compare with '0'.
+   1030 |    };
+              ^ Unnecessary semicolon.
+   1034 |    };
+              ^ Unnecessary semicolon.
+   1036 |    if (!(checker == false && typeof checker == 'boolean')
+                           ^ Use '===' to compare with 'false'.
+   1037 |        && len >= checker && checker > 0) {
+                 ^ Bad line breaking before '&&'.
+>> Too many errors. (71% scanned).
+   src/painter.js
+     72 |        if(string==""){
+                          ^ Use '===' to compare with ''.
+    123 |    handle.rect.cursor = "move"
+                                        ^ Missing semicolon.
+    409 |            +picture.filename.substring(2,4)+'/image/'+picture.filename+'.png';
+                     ^ Bad line breaking before '+'.
+    551 |        && (g >= gMin && g <= gMax)
+                 ^ Bad line breaking before '&&'.
+    552 |        && (b >= bMin && b <= bMax)
+                 ^ Bad line breaking before '&&'.
+    609 |}
+          ^ Missing semicolon.
+    830 |    delete pixelStack;
+                              ^ Variables should not be deleted.
+    897 |        if( this.stroke.thickness == 0){
+                                           ^ Use '===' to compare with '0'.
+    917 |        if( this.stroke.thickness == 0) {
+                                           ^ Use '===' to compare with '0'.
+    944 |        if(this.stroke.thickness ==0){
+                                          ^ Use '===' to compare with '0'.
+    959 |        if(this.stroke.thickness==0){
+                                         ^ Use '===' to compare with '0'.
+   1113 |}
+          ^ Missing semicolon.
+   1334 |                bound.right = x;;
+                                         ^ Unnecessary semicolon.
+   1366 |}
+          ^ Missing semicolon.
+   1407 |        +picture.filename.substring(2,4)+'/image/'+picture.filename+'.png';
+                 ^ Bad line breaking before '+'.
+   1453 |            this[q % 2 == 0 ? 'moveTo' : 'lineTo'](x1, y1);
+                                ^ Use '===' to compare with '0'.
+   1455 |        this[q % 2 == 0 ? 'moveTo' : 'lineTo'](x2, y2);
+                            ^ Use '===' to compare with '0'.
+   1494 |        this.view_.appendChild(painterToolbox)
+                                                       ^ Missing semicolon.
+   1511 |        var painterAttr = Entry.createElement('div', 'entryPainterAttr')
+                                                                                 ^ Missing semicolon.
+   1561 |                    || document.documentElement.clientWidth
+                             ^ Bad line breaking before '||'.
+   1562 |                    || document.body.clientWidth;
+                             ^ Bad line breaking before '||'.
+   1565 |                    || document.documentElement.clientHeight
+                             ^ Bad line breaking before '||'.
+   1566 |                    || document.body.clientHeight;
+                             ^ Bad line breaking before '||'.
+   1575 |            painterAttr.style.top = (h+30) + 'px'
+                                                          ^ Missing semicolon.
+   1576 |            painterAttr.style.height = (ih-h) + 'px'
+                                                             ^ Missing semicolon.
+   2031 |            this.style.zIndex= new String('10');
+                                        ^ Do not use String as a constructor.
+   2056 |        }
+                  ^ Missing semicolon.
+   2122 |            element.value = style.value;;
+                                                 ^ Unnecessary semicolon.
+   src/playground.js
+    144 |            Entry.playground.curtainView_.removeClass('entryRemove')});
+                                                                             ^ Missing semicolon.
+    146 |            Entry.playground.curtainView_.addClass('entryRemove')});
+                                                                          ^ Missing semicolon.
+    207 |            Entry.playground.curtainView_.removeClass('entryRemove')});
+                                                                             ^ Missing semicolon.
+    209 |            Entry.playground.curtainView_.addClass('entryRemove')});
+                                                                          ^ Missing semicolon.
+    243 |    this.tabViewElements['code'] = codeTab;
+                                 ^ ['code'] is better written in dot notation.
+    253 |        this.tabViewElements['picture'] = pictureTab;
+                                     ^ ['picture'] is better written in dot notation.
+    262 |        this.tabViewElements['text'] = textboxTab;
+                                     ^ ['text'] is better written in dot notation.
+    274 |        this.tabViewElements['sound'] = soundTab;
+                                     ^ ['sound'] is better written in dot notation.
+    287 |        this.tabViewElements['variable'] = variableTab;
+                                     ^ ['variable'] is better written in dot notation.
+    299 |        categoryView.addClass('entryCategoryWorkspace')
+                                                                ^ Missing semicolon.
+    304 |        categoryListView.addClass('entryCategoryListWorkspace')
+                                                                        ^ Missing semicolon.
+    338 |                Entry.resizeElement({menuWidth: blockMenuView.widthBackup})
+                                                                                    ^ Missing semicolon.
+    383 |        categoryView.addClass('entryCategoryPhone')
+                                                            ^ Missing semicolon.
+    388 |        categoryListView.addClass('entryCategoryListPhone')
+                                                                    ^ Missing semicolon.
+    513 |    }
+              ^ Missing semicolon.
+    643 |    fgColorDiv.addClass("entryPlayground_fgColorDiv")
+                                                              ^ Missing semicolon.
+    645 |    bgColorDiv.addClass("entryPlayground_bgColorDiv")
+                                                              ^ Missing semicolon.
+    657 |        cell.addClass("modal_colour")
+                                              ^ Missing semicolon.
+    664 |        });
+                  ^ Don't make functions within a loop.
+    675 |        cell.addClass("modal_colour")
+                                              ^ Missing semicolon.
+    682 |        });
+                  ^ Don't make functions within a loop.
+    755 |        isFontSizing = false;;
+                                      ^ Unnecessary semicolon.
+    763 |    linebreakHorizontal.addClass("entryPlaygroundLinebreakHorizontal")
+                                                                               ^ Missing semicolon.
+    894 |        if (this.tabViewElements['text'])
+                                         ^ ['text'] is better written in dot notation.
+    895 |            this.tabViewElements['text'].addClass("entryRemove");
+                                         ^ ['text'] is better written in dot notation.
+    896 |        if (this.tabViewElements['picture'])
+                                         ^ ['picture'] is better written in dot notation.
+    897 |            this.tabViewElements['picture'].removeClass("entryRemove");
+                                         ^ ['picture'] is better written in dot notation.
+    899 |        if (this.tabViewElements['picture'])
+                                         ^ ['picture'] is better written in dot notation.
+    900 |            this.tabViewElements['picture'].addClass("entryRemove");
+                                         ^ ['picture'] is better written in dot notation.
+    901 |        if (this.tabViewElements['text'])
+                                         ^ ['text'] is better written in dot notation.
+    902 |            this.tabViewElements['text'].removeClass("entryRemove");
+                                         ^ ['text'] is better written in dot notation.
+    911 |             && object.objectType == 'sprite')
+                      ^ Bad line breaking before '&&'.
+   1123 |        tab.removeClass('entryTabSelected')
+                                                    ^ Missing semicolon.
+   1267 |            Entry.playground.selectMenu(this.id.substring(13))
+                                                                       ^ Missing semicolon.
+   1268 |        });
+                  ^ Don't make functions within a loop.
+   1327 |        };
+                  ^ Unnecessary semicolon.
+   1348 |        };
+                  ^ Unnecessary semicolon.
+   1349 |    };
+              ^ Unnecessary semicolon.
+   1390 |            blockJSON.splice(blockJSON.length-1, 0, {category: "func"})
+                                                                                ^ Missing semicolon.
+   1418 |            })
+                       ^ Missing semicolon.
+   1420 |    })
+               ^ Missing semicolon.
+   1423 |    })
+               ^ Missing semicolon.
+   1443 |}
+          ^ Missing semicolon.
+   1455 |}
+          ^ Missing semicolon.
+   1465 |}
+          ^ Missing semicolon.
+   1537 |        if (this.value.trim() === '') {
+                     ^ Possible strict violation.
+   1538 |            Entry.deAttachEventListener(this, 'blur', nameViewBlur);
+                                                 ^ Possible strict violation.
+   1540 |            this.focus();
+                     ^ Possible strict violation.
+   1541 |            Entry.attachEventListener(this, 'blur', nameViewBlur);
+                                               ^ Possible strict violation.
+   1548 |               nameViewArray[i] != this) {
+                                            ^ Possible strict violation.
+>> Too many errors. (86% scanned).
+   src/scene.js
+     12 |    this.scenes_ = new Array();
+                                     ^ The array literal notation [] is preferable.
+     91 |    nameField.style['width'] = Entry.computeInputWidth(nameField);
+                            ^ ['width'] is better written in dot notation.
+    109 |        nameField.style['width'] = Entry.computeInputWidth(this);
+                                ^ ['width'] is better written in dot notation.
+    116 |    }
+              ^ Missing semicolon.
+    120 |        nameField.style['width'] = Entry.computeInputWidth(this);
+                                ^ ['width'] is better written in dot notation.
+    121 |    }
+              ^ Missing semicolon.
+    156 |    return scene.view = viewTemplate;
+                                ^ Did you mean to return a conditional instead of an assignment?
+    191 |    if (!scenes || scenes.length == 0) {
+                                          ^ Use '===' to compare with '0'.
+    206 |    if (scene == null)
+                       ^ Use '===' to compare with 'null'.
+    263 |        Entry.stage.objectContainers.length != 0)
+                                                     ^ Use '!==' to compare with '0'.
+    387 |}
+          ^ Missing semicolon.
+   src/script.js
+     68 |            statement.key = children.getAttribute("name")
+                                                                  ^ Missing semicolon.
+     72 |}
+          ^ Missing semicolon.
+     94 |    if (this.previousScript && type != 0) {
+                                             ^ Use '!==' to compare with '0'.
+    123 |}
+          ^ Missing semicolon.
+    127 |}
+          ^ Missing semicolon.
+    130 |}
+          ^ Missing semicolon.
+    134 |}
+          ^ Missing semicolon.
+    137 |}
+          ^ Missing semicolon.
+    140 |}
+          ^ Missing semicolon.
+    144 |}
+          ^ Missing semicolon.
+    148 |}
+          ^ Missing semicolon.
+    152 |}
+          ^ Missing semicolon.
+    156 |}
+          ^ Missing semicolon.
+    163 |        return this.parentScript
+                                         ^ Missing semicolon.
+    166 |}
+          ^ Missing semicolon.
+   src/stage.js
+     48 |            Entry.dispatchEvent('canvasClick',e)
+                                                         ^ Missing semicolon.
+    123 |        } catch (e) {}
+                           ^ Value of 'e' may be overwritten in IE 8 and earlier.
+    138 |}
+          ^ Missing semicolon.
+    370 |                    regX * Math.cos(rotation) -
+                             ^ 'regX' used out of scope.
+    371 |                    regY * Math.sin(rotation));
+                             ^ 'regY' used out of scope.
+    373 |                    regX * Math.sin(rotation) +
+                             ^ 'regX' used out of scope.
+    374 |                    regY * Math.cos(rotation));
+                             ^ 'regY' used out of scope.
+    511 |    };
+              ^ Unnecessary semicolon.
+    561 |    if (scenes && scenes.length != 0) {
+                                         ^ Use '!==' to compare with '0'.
+   src/state_manager.js
+     10 |    this.undoStack_ = new Array();
+                                        ^ The array literal notation [] is preferable.
+     11 |    this.redoStack_ = new Array();
+                                        ^ The array literal notation [] is preferable.
+     17 |        Entry.stateManager.cancelLastCommand()});
+                                                       ^ Missing semicolon.
+     19 |        Entry.stateManager.updateView()});
+                                                ^ Missing semicolon.
+     21 |        Entry.stateManager.updateView()});
+                                                ^ Missing semicolon.
+     23 |        Entry.stateManager.addStamp()});
+                                              ^ Missing semicolon.
+     25 |        Entry.stateManager.undo()});
+                                          ^ Missing semicolon.
+     27 |        Entry.stateManager.redo()});
+                                          ^ Missing semicolon.
+    217 |    return this.undoStack_.length == 0 ||
+                                           ^ Use '===' to compare with '0'.
+   src/toast.js
+     25 |    toast.bindOnClick(function() {Entry.toast.body_.removeChild(this)});
+                                                                              ^ Missing semicolon.
+     55 |    toast.bindOnClick(function() {Entry.toast.body_.removeChild(this)});
+                                                                              ^ Missing semicolon.
+   src/util/utils.js
+     50 |    return doc;
+                    ^ 'doc' used out of scope.
+     51 |}
+          ^ Missing semicolon.
+     66 |    }
+              ^ Missing semicolon.
+     72 |    }
+              ^ Missing semicolon.
+     81 |    }
+              ^ Missing semicolon.
+     89 |    }
+              ^ Missing semicolon.
+    213 |    }
+              ^ Missing semicolon.
+    228 |}
+          ^ Missing semicolon.
+    268 |}
+          ^ Missing semicolon.
+    282 |}
+          ^ Missing semicolon.
+    295 |}
+          ^ Missing semicolon.
+    306 |        (dataString.charCodeAt(p) > 255) ? len+=2 : len++;
+                                                                ^ Expected an assignment or function call and instead saw an expression.
+    308 |}
+          ^ Missing semicolon.
+    320 |        (dataString.charCodeAt(p) > 255) ? len+=2 : len++;
+                                                                ^ Expected an assignment or function call and instead saw an expression.
+    322 |}
+          ^ Missing semicolon.
+    332 |    if (child != null) {
+                       ^ Use '!==' to compare with 'null'.
+    339 |}
+          ^ Missing semicolon.
+    353 |}
+          ^ Missing semicolon.
+    357 |        document.exitFullScreen()
+                                          ^ Missing semicolon.
+    359 |        document.mozCancelFullScreen()
+                                               ^ Missing semicolon.
+    362 |}
+          ^ Missing semicolon.
+    370 |}
+          ^ Missing semicolon.
+    388 |    }
+              ^ Missing semicolon.
+    398 |}
+          ^ Missing semicolon.
+    404 |}
+          ^ Missing semicolon.
+    411 |}
+          ^ Missing semicolon.
+    414 |    var arr = Array(nl.length);
+                       ^ Missing 'new' prefix when invoking a constructor.
+    417 |}
+          ^ Missing semicolon.
+    435 |    bytes = [], str;
+                         ^ Expected an assignment or function call and instead saw an expression.
+    443 |}
+          ^ Missing semicolon.
+    452 |}
+          ^ Missing semicolon.
+    457 |    if (n == 0 || n == 1)
+                   ^ Use '===' to compare with '0'.
+    461 |    return Entry.factorials[n] = Entry.factorial(n-1) * n;
+                                         ^ Did you mean to return a conditional instead of an assignment?
+    462 |}
+          ^ Missing semicolon.
+    479 |}
+          ^ Missing semicolon.
+    483 |}
+          ^ Missing semicolon.
+    499 |}
+          ^ Missing semicolon.
+    515 |}
+          ^ Missing semicolon.
+    519 |}
+          ^ Missing semicolon.
+    532 |        if(tem!= null) return tem.slice(1).join(' ').replace('OPR', 'Opera');
+                       ^ Use '!==' to compare with 'null'.
+    535 |    if((tem= ua.match(/version\/(\d+)/i))!= null) M.splice(1, 1, tem[1]);
+                                                  ^ Use '!==' to compare with 'null'.
+    539 |}
+          ^ Missing semicolon.
+    559 |}
+          ^ Missing semicolon.
+    563 |}
+          ^ Missing semicolon.
+    570 |    }
+              ^ Missing semicolon.
+    577 |            num.unshift(ch)
+                                    ^ Missing semicolon.
+    590 |}
+          ^ Missing semicolon.
+    604 |            && target.index > maxNumber) {
+                     ^ Bad line breaking before '&&'.
+    614 |}
+          ^ Missing semicolon.
+    625 |}
+          ^ Missing semicolon.
+>> Too many errors. (94% scanned).
+   src/variable.js
+     23 |    var parsedValue = Entry.parseNumber(variable.value)
+                                                                ^ Missing semicolon.
+    409 |                    (this.array_.length - maxView))
+                                                            ^ Missing semicolon.
+    453 |    };
+              ^ Unnecessary semicolon.
+    699 |}
+          ^ Missing semicolon.
+    703 |}
+          ^ Missing semicolon.
+    710 |}
+          ^ Missing semicolon.
+    720 |}
+          ^ Missing semicolon.
+    737 |}
+          ^ Missing semicolon.
+    741 |}
+          ^ Missing semicolon.
+    748 |}
+          ^ Missing semicolon.
+    752 |}
+          ^ Missing semicolon.
+    759 |}
+          ^ Missing semicolon.
+   src/variable_container.js
+     31 |    selectedVariable: null;
+                               ^ Label 'selectedVariable' on null statement.
+     31 |    selectedVariable: null;
+                               ^ Expected an assignment or function call and instead saw an expression.
+     73 |            if (!value || value.length == 0){
+                                                ^ Use '===' to compare with '0'.
+    112 |            if (!value || value.length == 0) {
+                                                ^ Use '===' to compare with '0'.
+    146 |    if (isEnable == undefined) isEnable = true;
+                          ^ Use '===' to compare with 'undefined'.
+    174 |}
+          ^ Missing semicolon.
+    185 |    view.cloudWrapper.removeClass('entryVariableAddSpaceUnCheckedWorkspace')
+                                                                                     ^ Missing semicolon.
+    187 |        view.cloudCheck.addClass('entryVariableAddChecked')
+                                                                    ^ Missing semicolon.
+    193 |        view.localCheck.addClass('entryVariableAddChecked')
+                                                                    ^ Missing semicolon.
+    194 |        view.cloudWrapper.addClass('entryVariableAddSpaceUnCheckedWorkspace')
+                                                                                      ^ Missing semicolon.
+    196 |        view.globalCheck.addClass('entryVariableAddChecked')
+                                                                     ^ Missing semicolon.
+    197 |}
+          ^ Missing semicolon.
+    214 |    if (object == null) {
+                        ^ Use '===' to compare with 'null'.
+    235 |    listView.addClass('entryVariableListCallerListWorkspace')
+                                                                      ^ Missing semicolon.
+    272 |        });
+                  ^ Don't make functions within a loop.
+    275 |    if (callers.length == 0) {
+                                ^ Use '===' to compare with '0'.
+    302 |    listView.addClass('entryVariableListCallerListWorkspace')
+                                                                      ^ Missing semicolon.
+    340 |        });
+                  ^ Don't make functions within a loop.
+    343 |    if (callers.length == 0) {
+                                ^ Use '===' to compare with '0'.
+    366 |    listView.addClass('entryVariableListCallerListWorkspace')
+                                                                      ^ Missing semicolon.
+    375 |                var mutation = block.getElementsByTagName("mutation")[0]
+                                                                                 ^ Missing semicolon.
+    401 |        });
+                  ^ Don't make functions within a loop.
+    404 |    if (callers.length == 0) {
+                                ^ Use '===' to compare with '0'.
+    561 |    if (elementList.length != 0)
+                                    ^ Use '!==' to compare with '0'.
+    562 |        this.select(elementList[0])
+                                            ^ Missing semicolon.
+    757 |        if (!name || name.length == 0)
+                                          ^ Use '===' to compare with '0'.
+    950 |        if (!value || value.length == 0) {
+                                            ^ Use '===' to compare with '0'.
+   1085 |        if (!value || value.length == 0) {
+                                            ^ Use '===' to compare with '0'.
+   1118 |        if (!name || name.length == 0)
+                                          ^ Use '===' to compare with '0'.
+   1215 |        if (!value || value.length == 0) {
+                                            ^ Use '===' to compare with '0'.
+   1271 |    };
+              ^ Unnecessary semicolon.
+   1275 |    };
+              ^ Unnecessary semicolon.
+   1294 |    };
+              ^ Unnecessary semicolon.
+   1312 |    };
+              ^ Unnecessary semicolon.
+   1314 |}
+          ^ Missing semicolon.
+   1321 |    info.object = null;
+                           ^ Expected an assignment or function call and instead saw an expression.
+   1325 |}
+          ^ Missing semicolon.
+   1356 |    }
+              ^ Missing semicolon.
+   1464 |}
+          ^ Missing semicolon.
+   1495 |    }
+              ^ Missing semicolon.
+   1600 |}
+          ^ Missing semicolon.
+   1611 |    }
+              ^ Missing semicolon.
+   1612 |}
+          ^ Missing semicolon.
+   1630 |    var hasVariable = this.variables_.length != 0;
+                                                      ^ Use '!==' to compare with '0'.
+   1631 |    var hasList = this.lists_.length != 0;
+                                              ^ Use '!==' to compare with '0'.
+   1632 |    for (var i = 0, xml; xml = xmlList[i]; i++) {
+                                                  ^ Expected a conditional expression and instead saw an assignment.
+   1643 |            if (!hasVariable && category == 'variable')
+                                         ^ 'category' used out of scope.
+   1645 |            if (!hasList&& category == 'list')
+                                    ^ 'category' used out of scope.
+   1651 |}
+          ^ Missing semicolon.
+   1672 |}
+          ^ Missing semicolon.
+>> Too many errors. (80% scanned).
+   src/xml.js
+     36 |            return script.parentNode
+                                             ^ Missing semicolon.
+     64 |        return parent.parentNode
+                                         ^ Missing semicolon.
+
+>> 527 errors in 56 files
+Warning: Task "jshint:all" failed. Use --force to continue.
+
+Aborted due to warnings.

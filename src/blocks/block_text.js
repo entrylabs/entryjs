@@ -1,6 +1,8 @@
+"use strict";
+
 var colour = '#FFCA36';
 
-Blockly.Blocks['text'] = {
+Blockly.Blocks.text = {
   init: function() {
     this.setColour("#FFD974");
     this.appendDummyInput()
@@ -14,7 +16,7 @@ Entry.block.text = function (sprite, script) {
     return script.getField('NAME');
 };
 
-Blockly.Blocks['text_write'] = {
+Blockly.Blocks.text_write = {
   init: function() {
     this.setColour(colour);
     this.appendDummyInput()
@@ -38,7 +40,7 @@ Entry.block.text_write = function (sprite, script) {
 };
 
 
-Blockly.Blocks['text_append'] = {
+Blockly.Blocks.text_append = {
   init: function() {
     this.setColour(colour);
     this.appendDummyInput()
@@ -61,7 +63,7 @@ Entry.block.text_append = function (sprite, script) {
     return script.callReturn();
 };
 
-Blockly.Blocks['text_prepend'] = {
+Blockly.Blocks.text_prepend = {
   init: function() {
     this.setColour(colour);
     this.appendDummyInput()
@@ -84,7 +86,7 @@ Entry.block.text_prepend = function (sprite, script) {
     return script.callReturn();
 };
 
-Blockly.Blocks['text_flush'] = {
+Blockly.Blocks.text_flush = {
   init: function() {
     this.setColour(colour);
     this.appendDummyInput()

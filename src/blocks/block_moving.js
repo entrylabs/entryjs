@@ -1,5 +1,7 @@
+"use strict";
+
 // 바라보는 방향으로 ()픽셀 만큼 움직이기
-Blockly.Blocks['move_direction'] = {
+Blockly.Blocks.move_direction = {
   init: function() {
     this.setColour("#A751E3");
     this.appendDummyInput()
@@ -27,7 +29,7 @@ Entry.block.move_direction = function (sprite, script) {
 };
 
 // x좌표를 () 만큼 움직이기
-Blockly.Blocks['move_x'] = {
+Blockly.Blocks.move_x = {
   init: function() {
     this.setColour("#A751E3");
     this.appendDummyInput()
@@ -54,7 +56,7 @@ Entry.block.move_x = function (sprite, script) {
 };
 
 // y좌표를  () 만큼 움직이기
-Blockly.Blocks['move_y'] = {
+Blockly.Blocks.move_y = {
   init: function() {
     this.setColour("#A751E3");
     this.appendDummyInput()
@@ -80,7 +82,7 @@ Entry.block.move_y = function (sprite, script) {
     return script.callReturn();
 };
 
-Blockly.Blocks['locate_xy_time'] = {
+Blockly.Blocks.locate_xy_time = {
   init: function() {
     this.setColour("#A751E3");
     this.appendDummyInput()
@@ -132,7 +134,7 @@ Entry.block.locate_xy_time = function (sprite, script) {
 };
 
 // ()도 만큼 전하기
-Blockly.Blocks['rotate_by_angle'] = {
+Blockly.Blocks.rotate_by_angle = {
   init: function() {
     this.setColour("#A751E3");
     this.appendDummyInput()
@@ -155,7 +157,7 @@ Entry.block.rotate_by_angle = function (sprite, script) {
     return script.callReturn();
 };
 
-Blockly.Blocks['rotate_by_angle_dropdown'] = {
+Blockly.Blocks.rotate_by_angle_dropdown = {
   init: function() {
     this.setColour("#A751E3");
     this.appendDummyInput()
@@ -182,7 +184,7 @@ Entry.block.rotate_by_angle_dropdown = function (sprite, script) {
 };
 
 // ()도 방향 보기
-Blockly.Blocks['see_angle'] = {
+Blockly.Blocks.see_angle = {
   init: function() {
     this.setColour("#A751E3");
     this.appendDummyInput()
@@ -206,7 +208,7 @@ Entry.block.see_angle = function (sprite, script) {
 };
 
 // ~쪽 방향보기 **popup
-Blockly.Blocks['see_direction'] = {
+Blockly.Blocks.see_direction = {
   init: function() {
     this.setColour("#A751E3");
     this.appendDummyInput()
@@ -237,7 +239,7 @@ Entry.block.see_direction = function (sprite, script) {
 };
 
 // X, Y 위치로 가기
-Blockly.Blocks['locate_xy'] = {
+Blockly.Blocks.locate_xy = {
   init: function() {
     this.setColour("#A751E3");
     this.appendDummyInput()
@@ -270,7 +272,7 @@ Entry.block.locate_xy = function (sprite, script) {
 };
 
 // X:() 위치로 가기
-Blockly.Blocks['locate_x'] = {
+Blockly.Blocks.locate_x = {
   init: function() {
     this.setColour("#A751E3");
     this.appendDummyInput()
@@ -297,7 +299,7 @@ Entry.block.locate_x = function (sprite, script) {
 };
 
 // Y:() 위치로 가기
-Blockly.Blocks['locate_y'] = {
+Blockly.Blocks.locate_y = {
   init: function() {
     this.setColour("#A751E3");
     this.appendDummyInput()
@@ -325,7 +327,7 @@ Entry.block.locate_y = function (sprite, script) {
 };
 
 // ~위치로 가기 **popup
-Blockly.Blocks['locate'] = {
+Blockly.Blocks.locate = {
   init: function() {
     this.setColour("#A751E3");
     this.appendDummyInput()
@@ -361,7 +363,7 @@ Entry.block.locate = function (sprite, script) {
     return script.callReturn();
 };
 
-Blockly.Blocks['move_xy_time'] = {
+Blockly.Blocks.move_xy_time = {
   init: function() {
     this.setColour("#A751E3");
     this.appendDummyInput()
@@ -414,7 +416,7 @@ Entry.block.move_xy_time = function (sprite, script) {
 
 
 //() 초 동안 ~ 위치로 가기 **popup
-Blockly.Blocks['locate_time'] = {
+Blockly.Blocks.locate_time = {
   init: function() {
     this.setColour("#A751E3");
     this.appendDummyInput()
@@ -440,7 +442,7 @@ Blockly.Blocks['locate_time'] = {
 //};
 
 //() 초 동안 () 만큼 회전하기
-Blockly.Blocks['rotate_by_angle_time'] = {
+Blockly.Blocks.rotate_by_angle_time = {
   init: function() {
     this.setColour("#A751E3");
     this.appendDummyInput()
@@ -482,7 +484,7 @@ Entry.block.rotate_by_angle_time = function (sprite, script) {
 };
 
 // (▼) 에 닿으면 튕기기 **popup
-Blockly.Blocks['bounce_when'] = {
+Blockly.Blocks.bounce_when = {
   init: function() {
     this.setColour("#A751E3");
     this.appendDummyInput()
@@ -499,7 +501,7 @@ Blockly.Blocks['bounce_when'] = {
   }
 };
 
-Blockly.Blocks['bounce_wall'] = {
+Blockly.Blocks.bounce_wall = {
   init: function() {
     this.setColour('#A751E3');
     this.appendDummyInput()
@@ -555,7 +557,7 @@ Entry.block.bounce_wall = function(sprite, script) {
 };
 
 //화살표 방향 좌우 뒤집기
-Blockly.Blocks['flip_arrow_horizontal'] = {
+Blockly.Blocks.flip_arrow_horizontal = {
   init: function(){
     this.setColour('#A751E3');
     this.appendDummyInput()
@@ -574,7 +576,7 @@ Entry.block.flip_arrow_horizontal = function (sprite, script) {
 };
 
 //화살표 방향 좌우 뒤집기
-Blockly.Blocks['flip_arrow_vertical'] = {
+Blockly.Blocks.flip_arrow_vertical = {
   init: function() {
     this.setColour('#A751E3');
     this.appendDummyInput()
@@ -592,7 +594,7 @@ Entry.block.flip_arrow_vertical = function (sprite, script) {
     return script.callReturn();
 };
 
-Blockly.Blocks['see_angle_object'] = {
+Blockly.Blocks.see_angle_object = {
   init: function() {
     this.setColour("#A751E3");
     this.appendDummyInput()
@@ -640,7 +642,7 @@ Entry.block.see_angle_object = function (sprite, script) {
     return script.callReturn();
 };
 
-Blockly.Blocks['see_angle_direction'] = {
+Blockly.Blocks.see_angle_direction = {
   init: function() {
     this.setColour("#A751E3");
     this.appendDummyInput()
@@ -665,7 +667,7 @@ Entry.block.see_angle_direction = function (sprite, script) {
 };
 
 
-Blockly.Blocks['rotate_direction'] = {
+Blockly.Blocks.rotate_direction = {
   init: function() {
     this.setColour("#A751E3");
     this.appendDummyInput()
@@ -688,7 +690,7 @@ Entry.block.rotate_direction = function (sprite, script) {
     return script.callReturn();
 };
 
-Blockly.Blocks['locate_object_time'] = {
+Blockly.Blocks.locate_object_time = {
   init: function() {
     this.setColour("#A751E3");
     this.appendDummyInput()
@@ -762,7 +764,7 @@ Entry.block.locate_object_time = function (sprite, script) {
     }
 };
 
-Blockly.Blocks['rotate_absolute'] = {
+Blockly.Blocks.rotate_absolute = {
   init: function() {
     this.setColour("#A751E3");
     this.appendDummyInput()
@@ -785,7 +787,7 @@ Entry.block.rotate_absolute = function (entity, script) {
     return script.callReturn();
 };
 
-Blockly.Blocks['rotate_relative'] = {
+Blockly.Blocks.rotate_relative = {
   init: function() {
     this.setColour("#A751E3");
     this.appendDummyInput()
@@ -808,7 +810,7 @@ Entry.block.rotate_relative = function (entity, script) {
     return script.callReturn();
 };
 
-Blockly.Blocks['direction_absolute'] = {
+Blockly.Blocks.direction_absolute = {
   init: function() {
     this.setColour("#A751E3");
     this.appendDummyInput()
@@ -831,7 +833,7 @@ Entry.block.direction_absolute = function (entity, script) {
     return script.callReturn();
 };
 
-Blockly.Blocks['direction_relative'] = {
+Blockly.Blocks.direction_relative = {
   init: function() {
     this.setColour("#A751E3");
     this.appendDummyInput()
@@ -854,7 +856,7 @@ Entry.block.direction_relative = function (entity, script) {
     return script.callReturn();
 };
 
-Blockly.Blocks['move_to_angle'] = {
+Blockly.Blocks.move_to_angle = {
   init: function() {
     this.setColour("#A751E3");
     this.appendDummyInput()
@@ -886,7 +888,7 @@ Entry.block.move_to_angle = function (sprite, script) {
     return script.callReturn();
 };
 
-Blockly.Blocks['rotate_by_time'] = {
+Blockly.Blocks.rotate_by_time = {
   init: function() {
     this.setColour("#A751E3");
     this.appendDummyInput()

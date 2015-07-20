@@ -1,5 +1,7 @@
+"use strict";
+
 // X 좌표값
-Blockly.Blocks['number'] = {
+Blockly.Blocks.number = {
   init: function() {
     this.setColour("#FFD974");
     this.appendDummyInput()
@@ -14,7 +16,7 @@ Entry.block.number = function (sprite, script) {
     return script.fields['NUM'];
 };
 
-Blockly.Blocks['angle'] = {
+Blockly.Blocks.angle = {
   init: function() {
     this.setColour("#FFD974");
     this.appendDummyInput()
@@ -29,7 +31,7 @@ Entry.block.angle = function (sprite, script) {
     return script.getNumberField("ANGLE");
 };
 
-Blockly.Blocks['get_x_coordinate'] = {
+Blockly.Blocks.get_x_coordinate = {
   init: function() {
     this.setColour("#FFD974");
     this.appendDummyInput()
@@ -45,7 +47,7 @@ Entry.block.get_x_coordinate = function (sprite, script) {
 };
 
 // Y 좌표값
-Blockly.Blocks['get_y_coordinate'] = {
+Blockly.Blocks.get_y_coordinate = {
   // Numeric value.
   init: function() {
     this.setColour("#FFD974");
@@ -62,7 +64,7 @@ Entry.block.get_y_coordinate = function (sprite, script) {
 };
 
 // 방향 각도
-Blockly.Blocks['get_angle'] = {
+Blockly.Blocks.get_angle = {
   // Numeric value.
   init: function() {
     this.setColour("#FFD974");
@@ -78,7 +80,7 @@ Entry.block.get_angle = function (sprite, script) {
     return parseFloat(sprite.getRotation().toFixed(1));
 };
 
-Blockly.Blocks['get_rotation_direction'] = {
+Blockly.Blocks.get_rotation_direction = {
   init: function() {
     this.setColour("#FFD974");
     this.appendDummyInput()
@@ -103,7 +105,7 @@ Entry.block.get_rotation_direction = function (sprite, script) {
 };
 
 // (▼) 까지의 거리
-Blockly.Blocks['distance_something'] = {
+Blockly.Blocks.distance_something = {
   init: function() {
     this.setColour("#FFD974");
     this.appendDummyInput()
@@ -126,7 +128,7 @@ Entry.block.distance_something = function (sprite, script) {
 };
 
 //마우스 (xy▼) 좌표
-Blockly.Blocks['coordinate_mouse'] = {
+Blockly.Blocks.coordinate_mouse = {
   init: function() {
     this.setColour("#FFD974");
     this.appendDummyInput()
@@ -149,7 +151,7 @@ Entry.block.coordinate_mouse = function (sprite, script) {
 };
 
 // (오브젝트▼)의 (xy▼) 좌표
-Blockly.Blocks['coordinate_object'] = {
+Blockly.Blocks.coordinate_object = {
   init: function() {
     this.setColour("#FFD974");
     this.appendDummyInput()
@@ -197,7 +199,7 @@ Entry.block.coordinate_object = function (sprite, script) {
 };
 
 // () + ()
-Blockly.Blocks['calc_basic'] = {
+Blockly.Blocks.calc_basic = {
   init: function() {
     this.setColour("#FFD974");
     this.appendValueInput("LEFTHAND")
@@ -231,7 +233,7 @@ Entry.block.calc_basic = function (sprite, script) {
         return leftValue / rightValue;
 };
 
-Blockly.Blocks['calc_plus'] = {
+Blockly.Blocks.calc_plus = {
   init: function() {
     this.setColour("#FFD974");
     this.appendValueInput("LEFTHAND")
@@ -252,7 +254,7 @@ Entry.block.calc_plus = function (sprite, script) {
     return leftValue + rightValue;
 };
 
-Blockly.Blocks['calc_minus'] = {
+Blockly.Blocks.calc_minus = {
   init: function() {
     this.setColour("#FFD974");
     this.appendValueInput("LEFTHAND")
@@ -273,7 +275,7 @@ Entry.block.calc_minus = function (sprite, script) {
     return leftValue - rightValue;
 };
 
-Blockly.Blocks['calc_times'] = {
+Blockly.Blocks.calc_times = {
   init: function() {
     this.setColour("#FFD974");
     this.appendValueInput("LEFTHAND")
@@ -294,7 +296,7 @@ Entry.block.calc_times = function (sprite, script) {
     return leftValue * rightValue;
 };
 
-Blockly.Blocks['calc_divide'] = {
+Blockly.Blocks.calc_divide = {
   init: function() {
     this.setColour("#FFD974");
     this.appendValueInput("LEFTHAND")
@@ -316,7 +318,7 @@ Entry.block.calc_divide = function (sprite, script) {
 };
 
 // () / () 의 나머지
-Blockly.Blocks['calc_mod'] = {
+Blockly.Blocks.calc_mod = {
   init: function() {
     this.setColour("#FFD974");
     this.appendDummyInput()
@@ -342,7 +344,7 @@ Entry.block.calc_mod = function (sprite, script) {
 };
 
 // () / () 의 몫
-Blockly.Blocks['calc_share'] = {
+Blockly.Blocks.calc_share = {
   init: function() {
     this.setColour("#FFD974");
     this.appendDummyInput()
@@ -368,7 +370,7 @@ Entry.block.calc_share = function (sprite, script) {
 };
 
 //
-Blockly.Blocks['calc_operation'] = {
+Blockly.Blocks.calc_operation = {
   init: function() {
     this.setColour("#FFD974");
     this.appendDummyInput("VALUE")
@@ -445,7 +447,7 @@ Entry.block.calc_operation = function (sprite, script) {
 };
 
 // () 부터 () 사이의 무작위수
-Blockly.Blocks['calc_rand'] = {
+Blockly.Blocks.calc_rand = {
   init: function() {
     this.setColour("#FFD974");
     this.appendDummyInput()
@@ -478,7 +480,7 @@ Entry.block.calc_rand = function (sprite, script) {
 };
 
 // 현재 연도
-Blockly.Blocks['get_date'] = {
+Blockly.Blocks.get_date = {
   // Numeric value.
   init: function() {
     this.setColour("#FFD974");
@@ -519,7 +521,7 @@ Entry.block.get_date = function (sprite, script) {
 };
 
 // ~의 소리 길이
-Blockly.Blocks['get_sound_duration'] = {
+Blockly.Blocks.get_sound_duration = {
   init: function() {
     this.setColour("#FFD974");
     this.appendDummyInput()
@@ -544,7 +546,7 @@ Entry.block.get_sound_duration = function (sprite, script) {
     }
 }
 
-Blockly.Blocks['reset_project_timer'] = {
+Blockly.Blocks.reset_project_timer = {
   init: function() {
     this.setColour("#FFD974");
     this.appendDummyInput()
@@ -567,7 +569,7 @@ Entry.block.reset_project_timer = function (sprite, script) {
     return script.callReturn();
 };
 
-Blockly.Blocks['set_visible_project_timer'] = {
+Blockly.Blocks.set_visible_project_timer = {
   init: function() {
     this.setColour("#FFD974");
     this.appendDummyInput()
@@ -603,7 +605,7 @@ Entry.block.set_visible_project_timer = function (sprite, script) {
     return script.callReturn();
 };
 
-Blockly.Blocks['get_project_timer_value'] = {
+Blockly.Blocks.get_project_timer_value = {
   init: function() {
     this.setColour("#FFD974");
     this.appendDummyInput()

@@ -1,7 +1,7 @@
-
 /**
  * @fileoverview stamp entity object is class for entry stamp entity canvas view.
  */
+'use strict';
 
 /**
  * Construct stamp entity class

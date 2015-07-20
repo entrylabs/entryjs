@@ -9,6 +9,14 @@
         "goog": true,
         "createjs": true,
         "Entry": true,
-        "Blockly": true
+        "Blockly": true,
+        "Lang": true,
+        "context": true,
+        "popup": true,
+        "WebFont": true,
+        "CanvasInput": true,
+        "EntryStatic": true,
+        "EaselHandle": true,
+        "ndgmr": true
     }
 }

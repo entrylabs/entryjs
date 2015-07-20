@@ -1,5 +1,7 @@
+"use strict";
+
 // (변수▼) 를 () 만큼 바꾸기
-Blockly.Blocks['change_variable'] = {
+Blockly.Blocks.change_variable = {
   init: function() {
     this.setColour("#E457DC");
     this.appendDummyInput()
@@ -28,14 +30,14 @@ Entry.block.change_variable = function (sprite, script) {
     value = Entry.parseNumber(value);
     if ((value == false && typeof value == 'boolean'))
         throw new Error('Type is not correct');
-    variable = Entry.variableContainer.getVariable(variableId, sprite);
+    var variable = Entry.variableContainer.getVariable(variableId, sprite);
     fixed = Entry.getMaxFloatPoint([value, variable.getValue()]);
     variable.setValue((value + variable.getValue()).toFixed(fixed));
     return script.callReturn();
 };
 
 // (변수▼) 를 () 만큼 정하기
-Blockly.Blocks['set_variable'] = {
+Blockly.Blocks.set_variable = {
   init: function() {
     this.setColour("#E457DC");
     this.appendDummyInput()
@@ -59,14 +61,14 @@ Blockly.Blocks['set_variable'] = {
 Entry.block.set_variable = function (sprite, script) {
     var variableId = script.getField("VARIABLE", script);
     var value = script.getValue("VALUE", script);
-    variable = Entry.variableContainer.getVariable(variableId, sprite);
+    var variable = Entry.variableContainer.getVariable(variableId, sprite);
     variable.setValue(value);
     return script.callReturn();
 };
 
 
 // (변수▼) 보이기
-Blockly.Blocks['show_variable'] = {
+Blockly.Blocks.show_variable = {
   init: function() {
     this.setColour("#E457DC");
     this.appendDummyInput()
@@ -84,7 +86,7 @@ Blockly.Blocks['show_variable'] = {
 
 Entry.block.show_variable = function (sprite, script) {
     var variableId = script.getField("VARIABLE", script);
-    variable = Entry.variableContainer.getVariable(variableId, sprite);
+    var variable = Entry.variableContainer.getVariable(variableId, sprite);
     variable.setVisible(true);
     variable.updateView();
     return script.callReturn();
@@ -92,7 +94,7 @@ Entry.block.show_variable = function (sprite, script) {
 
 
 // (변수▼) 숨기기
-Blockly.Blocks['hide_variable'] = {
+Blockly.Blocks.hide_variable = {
   init: function() {
     this.setColour("#E457DC");
     this.appendDummyInput()
@@ -110,12 +112,12 @@ Blockly.Blocks['hide_variable'] = {
 
 Entry.block.hide_variable = function (sprite, script) {
     var variableId = script.getField("VARIABLE", script);
-    variable = Entry.variableContainer.getVariable(variableId, sprite);
+    var variable = Entry.variableContainer.getVariable(variableId, sprite);
     variable.setVisible(false);
     return script.callReturn();
 };
 
-Blockly.Blocks['get_y'] = {
+Blockly.Blocks.get_y = {
   // Numeric value.
   init: function() {
     this.setColour(230);
@@ -128,7 +130,7 @@ Blockly.Blocks['get_y'] = {
 };
 
 // 변수값
-Blockly.Blocks['get_variable'] = {
+Blockly.Blocks.get_variable = {
     init: function () {
         this.setColour("#E457DC");
         this.appendDummyInput()
@@ -144,13 +146,13 @@ Blockly.Blocks['get_variable'] = {
 
 Entry.block.get_variable = function (sprite, script) {
     var variableId = script.getField("VARIABLE", script);
-    variable = Entry.variableContainer.getVariable(variableId, sprite);
+    var variable = Entry.variableContainer.getVariable(variableId, sprite);
     return variable.getValue();
 };
 
 
 // Ask and wait until a response provided
-Blockly.Blocks['ask_and_wait'] = {
+Blockly.Blocks.ask_and_wait = {
   init: function() {
     this.setColour("#E457DC");
     this.appendDummyInput()
@@ -202,7 +204,7 @@ Entry.block.ask_and_wait = function (sprite, script) {
 }
 
 // get asked answer from canvas input
-Blockly.Blocks['get_canvas_input_value'] = {
+Blockly.Blocks.get_canvas_input_value = {
     init: function () {
         this.setColour("#E457DC");
         this.appendDummyInput()
@@ -219,7 +221,7 @@ Entry.block.get_canvas_input_value = function (sprite, script) {
 }
 
 // combine some text || number to string
-Blockly.Blocks['combine_something'] = {
+Blockly.Blocks.combine_something = {
   init: function() {
     this.setColour("#E457DC");
     this.appendDummyInput()
@@ -245,7 +247,7 @@ Entry.block.combine_something = function (sprite, script) {
 }
 
 
-Blockly.Blocks['add_value_to_list'] = {
+Blockly.Blocks.add_value_to_list = {
   init: function() {
     this.setColour("#E457DC");
     this.appendDummyInput()
@@ -278,7 +280,7 @@ Entry.block.add_value_to_list = function (sprite, script) {
     return script.callReturn();
 };
 
-Blockly.Blocks['remove_value_from_list'] = {
+Blockly.Blocks.remove_value_from_list = {
   init: function() {
     this.setColour("#E457DC");
     this.appendDummyInput()
@@ -313,7 +315,7 @@ Entry.block.remove_value_from_list = function (sprite, script) {
     return script.callReturn();
 };
 
-Blockly.Blocks['insert_value_to_list'] = {
+Blockly.Blocks.insert_value_to_list = {
   init: function() {
     this.setColour("#E457DC");
     this.appendDummyInput()
@@ -352,7 +354,7 @@ Entry.block.insert_value_to_list = function (sprite, script) {
     return script.callReturn();
 };
 
-Blockly.Blocks['change_value_list_index'] = {
+Blockly.Blocks.change_value_list_index = {
   init: function() {
     this.setColour("#E457DC");
     this.appendDummyInput()
@@ -391,7 +393,7 @@ Entry.block.change_value_list_index = function (sprite, script) {
     return script.callReturn();
 };
 
-Blockly.Blocks['value_of_index_from_list'] = {
+Blockly.Blocks.value_of_index_from_list = {
   init: function() {
     this.setColour("#E457DC");
     this.appendDummyInput()
@@ -422,7 +424,7 @@ Entry.block.value_of_index_from_list = function (sprite, script) {
     return list.array_[index-1].data
 };
 
-Blockly.Blocks['length_of_list'] = {
+Blockly.Blocks.length_of_list = {
   init: function() {
     this.setColour("#E457DC");
     this.appendDummyInput()
@@ -444,7 +446,7 @@ Entry.block.length_of_list = function (sprite, script) {
     return list.array_.length;
 };
 
-Blockly.Blocks['show_list'] = {
+Blockly.Blocks.show_list = {
   init: function() {
     this.setColour("#E457DC");
     this.appendDummyInput()
@@ -469,7 +471,7 @@ Entry.block.show_list = function (sprite, script) {
 };
 
 
-Blockly.Blocks['hide_list'] = {
+Blockly.Blocks.hide_list = {
   init: function() {
     this.setColour("#E457DC");
     this.appendDummyInput()
@@ -493,7 +495,7 @@ Entry.block.hide_list = function (sprite, script) {
     return script.callReturn();
 };
 
-Blockly.Blocks['options_for_list'] = {
+Blockly.Blocks.options_for_list = {
   init: function() {
     this.setColour("#E457DC");
     this.appendDummyInput()

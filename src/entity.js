@@ -1,6 +1,7 @@
 /**
  * @fileoverview entity object is class for entry object canvas view.
  */
+'use strict';
 
 /**
  * Construct entity class

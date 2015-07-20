@@ -843,7 +843,7 @@ Entry.block.repeat_basic = function(a, b) {
     b.iterCount = Math.floor(c);
   }
   if (0 == b.iterCount || 0 > b.iterCount) {
-    return delete b.isLooped, delete b.iterCount, returnBlock = b.callReturn();
+    return delete b.isLooped, delete b.iterCount, b.callReturn();
   }
   b.iterCount--;
   return b.getStatement("DO", b);
@@ -989,7 +989,7 @@ Entry.block.repeat_while_true = function(a, b) {
     return b.isLooped = !0, b.getStatement("DO", b);
   }
   b.isLooped = !1;
-  return returnBlock = b.callReturn();
+  return b.callReturn();
 };
 Blockly.Blocks.stop_object = {init:function() {
   this.setColour("#498deb");
@@ -2794,9 +2794,9 @@ Entry.block.change_variable = function(a, b) {
   if (0 == d && "boolean" == typeof d) {
     throw Error("Type is not correct");
   }
-  variable = Entry.variableContainer.getVariable(c, a);
-  e = Entry.getMaxFloatPoint([d, variable.getValue()]);
-  variable.setValue((d + variable.getValue()).toFixed(e));
+  c = Entry.variableContainer.getVariable(c, a);
+  e = Entry.getMaxFloatPoint([d, c.getValue()]);
+  c.setValue((d + c.getValue()).toFixed(e));
   return b.callReturn();
 };
 Blockly.Blocks.set_variable = {init:function() {
@@ -2813,8 +2813,7 @@ Blockly.Blocks.set_variable = {init:function() {
 }};
 Entry.block.set_variable = function(a, b) {
   var c = b.getField("VARIABLE", b), d = b.getValue("VALUE", b);
-  variable = Entry.variableContainer.getVariable(c, a);
-  variable.setValue(d);
+  Entry.variableContainer.getVariable(c, a).setValue(d);
   return b.callReturn();
 };
 Blockly.Blocks.show_variable = {init:function() {
@@ -2827,10 +2826,9 @@ Blockly.Blocks.show_variable = {init:function() {
   this.setTooltip("");
 }};
 Entry.block.show_variable = function(a, b) {
-  var c = b.getField("VARIABLE", b);
-  variable = Entry.variableContainer.getVariable(c, a);
-  variable.setVisible(!0);
-  variable.updateView();
+  var c = b.getField("VARIABLE", b), c = Entry.variableContainer.getVariable(c, a);
+  c.setVisible(!0);
+  c.updateView();
   return b.callReturn();
 };
 Blockly.Blocks.hide_variable = {init:function() {
@@ -2844,8 +2842,7 @@ Blockly.Blocks.hide_variable = {init:function() {
 }};
 Entry.block.hide_variable = function(a, b) {
   var c = b.getField("VARIABLE", b);
-  variable = Entry.variableContainer.getVariable(c, a);
-  variable.setVisible(!1);
+  Entry.variableContainer.getVariable(c, a).setVisible(!1);
   return b.callReturn();
 };
 Blockly.Blocks.get_y = {init:function() {
@@ -2864,8 +2861,7 @@ Blockly.Blocks.get_variable = {init:function() {
 }};
 Entry.block.get_variable = function(a, b) {
   var c = b.getField("VARIABLE", b);
-  variable = Entry.variableContainer.getVariable(c, a);
-  return variable.getValue();
+  return Entry.variableContainer.getVariable(c, a).getValue();
 };
 Blockly.Blocks.ask_and_wait = {init:function() {
   this.setColour("#E457DC");
@@ -6609,7 +6605,6 @@ Entry.Painter.prototype.generateView = function(a) {
     d = Entry.createElement("legend");
     d.addClass("panterAttrFontTitle");
     d.innerHTML = Lang.Workspace.textStyle;
-    painterAttrFont.appendChild(d);
     g = Entry.createElement("select", "entryPainterAttrFontName");
     g.addClass("entryPlaygroundPainterAttrFontName");
     g.size = "1";
@@ -7905,7 +7900,7 @@ Entry.Scene.prototype.removeScene = function(a) {
 Entry.Scene.prototype.selectScene = function(a) {
   a = a || this.getScenes()[0];
   this.selectedScene && this.selectedScene.id == a.id || (Entry.engine.isState("run") && Entry.container.resetSceneDuringRun(), this.selectedScene = a, Entry.container.setCurrentObjects(), Entry.stage.objectContainers && 0 != Entry.stage.objectContainers.length && Entry.stage.selectObjectContainer(a), (a = Entry.container.getCurrentObjects()[0]) && "minimize" != Entry.type ? Entry.container.selectObject(a.id) : (Entry.stage.selectObject(null), Entry.playground.flushPlayground(), Entry.variableContainer.updateList()), 
-  Entry.stage.sortZorder(), Entry.container.updateListView(), this.updateView());
+  Entry.container.listView_ || Entry.stage.sortZorder(), Entry.container.updateListView(), this.updateView());
 };
 Entry.Scene.prototype.toJSON = function() {
   for (var a = [], b = this.getScenes().length, c = 0;c < b;c++) {

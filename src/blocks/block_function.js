@@ -1,4 +1,6 @@
-Blockly.Blocks['function_field_label'] = {
+"use strict";
+
+Blockly.Blocks.function_field_label = {
   init: function() {
     this.setColour("#f9c535");
     this.appendDummyInput()
@@ -11,7 +13,7 @@ Blockly.Blocks['function_field_label'] = {
   }
 };
 
-Blockly.Blocks['function_field_string'] = {
+Blockly.Blocks.function_field_string = {
   init: function() {
     this.setColour("#ffec64");
     this.appendValueInput("PARAM")
@@ -24,7 +26,7 @@ Blockly.Blocks['function_field_string'] = {
   }
 };
 
-Blockly.Blocks['function_field_boolean'] = {
+Blockly.Blocks.function_field_boolean = {
   init: function() {
     this.setColour("#2FC9F0");
     this.appendValueInput("PARAM")
@@ -37,7 +39,7 @@ Blockly.Blocks['function_field_boolean'] = {
   }
 };
 
-Blockly.Blocks['function_param_string'] = {
+Blockly.Blocks.function_param_string = {
   init: function() {
     this.setEditable(false);
     this.setColour("#ffec64");
@@ -69,7 +71,7 @@ Entry.block.function_param_string = function (sprite, script, register) {
     return script.register[script.hashId].run()
 };
 
-Blockly.Blocks['function_param_boolean'] = {
+Blockly.Blocks.function_param_boolean = {
   init: function() {
     this.setEditable(false);
     this.setColour("#2FC9F0");
@@ -96,7 +98,7 @@ Entry.block.function_param_boolean = function (sprite, script, register) {
     return script.register[script.hashId].run()
 };
 
-Blockly.Blocks['function_create'] = {
+Blockly.Blocks.function_create = {
   init: function() {
     this.appendDummyInput()
         .appendField(Lang.Blocks.FUNCTION_define);
@@ -115,7 +117,7 @@ Entry.block.function_create = function (sprite, script) {
     return script.callReturn();
 };
 
-Blockly.Blocks['function_general'] = {
+Blockly.Blocks.function_general = {
   init: function() {
     this.setColour("#cc7337");
     this.setInputsInline(true);

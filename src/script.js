@@ -1,6 +1,7 @@
 /**
  * @fileoverview script object execute function user made
  */
+'use strict';
 
 /**
  * Construct script class

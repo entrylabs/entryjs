@@ -271,7 +271,7 @@ Entry.Scene.prototype.selectScene = function(scene) {
         Entry.playground.flushPlayground();
         Entry.variableContainer.updateList();
     }
-    if (!Entry.container.listView_);
+    if (!Entry.container.listView_)
         Entry.stage.sortZorder();
     Entry.container.updateListView();
     this.updateView();

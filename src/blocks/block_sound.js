@@ -1,5 +1,7 @@
+"use strict";
+
 // (▼) 소리 내기
-Blockly.Blocks['sound_something'] = {
+Blockly.Blocks.sound_something = {
   init: function() {
     this.setColour("#A4D01D");
     this.appendDummyInput()
@@ -25,7 +27,7 @@ Entry.block.sound_something = function (sprite, script) {
     return script.callReturn();
 };
 
-Blockly.Blocks['sound_something_second'] = {
+Blockly.Blocks.sound_something_second = {
   init: function() {
     this.setColour("#A4D01D");
     this.appendDummyInput()
@@ -61,7 +63,7 @@ Entry.block.sound_something_second = function (sprite, script) {
     return script.callReturn();
 };
 
-Blockly.Blocks['sound_something_wait'] = {
+Blockly.Blocks.sound_something_wait = {
   init: function() {
     this.setColour("#A4D01D");
     this.appendDummyInput()
@@ -102,7 +104,7 @@ Entry.block.sound_something_wait = function (sprite, script) {
     }
 };
 
-Blockly.Blocks['sound_something_second_wait'] = {
+Blockly.Blocks.sound_something_second_wait = {
   init: function() {
     this.setColour("#A4D01D");
     this.appendDummyInput()
@@ -151,7 +153,7 @@ Entry.block.sound_something_second_wait = function (sprite, script) {
 };
 
 // 소리 크기를 ()% 만큼 바꾸기
-Blockly.Blocks['sound_volume_change'] = {
+Blockly.Blocks.sound_volume_change = {
   init: function() {
     this.setColour("#A4D01D");
     this.appendDummyInput()
@@ -180,7 +182,7 @@ Entry.block.sound_volume_change = function (sprite, script) {
 };
 
 // 소리 크기를 ()% 로 정하기
-Blockly.Blocks['sound_volume_set'] = {
+Blockly.Blocks.sound_volume_set = {
   init: function() {
     this.setColour("#A4D01D");
     this.appendDummyInput()
@@ -208,7 +210,7 @@ Entry.block.sound_volume_set = function (sprite, script) {
 };
 
 // 모든 소리 재생 중단
-Blockly.Blocks['sound_silent_all'] = {
+Blockly.Blocks.sound_silent_all = {
   init: function() {
     this.setColour("#A4D01D");
     this.appendDummyInput()
@@ -226,7 +228,7 @@ Entry.block.sound_silent_all = function (sprite, script) {
     return script.callReturn();
 };
 
-Blockly.Blocks['get_sounds'] = {
+Blockly.Blocks.get_sounds = {
   init: function() {
     this.setColour("#A4D01D");
     this.appendDummyInput()
@@ -245,7 +247,7 @@ Entry.block.get_sounds = function (sprite, script) {
     return script.getStringField("VALUE");
 };
 
-Blockly.Blocks['sound_something_with_block'] = {
+Blockly.Blocks.sound_something_with_block = {
   init: function() {
     this.setColour("#A4D01D");
     this.appendDummyInput()
@@ -272,7 +274,7 @@ Entry.block.sound_something_with_block = function (sprite, script) {
     return script.callReturn();
 };
 
-Blockly.Blocks['sound_something_second_with_block'] = {
+Blockly.Blocks.sound_something_second_with_block = {
   init: function() {
     this.setColour("#A4D01D");
     this.appendDummyInput()
@@ -311,7 +313,7 @@ Entry.block.sound_something_second_with_block = function (sprite, script) {
     return script.callReturn();
 };
 
-Blockly.Blocks['sound_something_wait_with_block'] = {
+Blockly.Blocks.sound_something_wait_with_block = {
   init: function() {
     this.setColour("#A4D01D");
     this.appendDummyInput()
@@ -350,7 +352,7 @@ Entry.block.sound_something_wait_with_block = function (sprite, script) {
     }
 };
 
-Blockly.Blocks['sound_something_second_wait_with_block'] = {
+Blockly.Blocks.sound_something_second_wait_with_block = {
   init: function() {
     this.setColour("#A4D01D");
     this.appendDummyInput()

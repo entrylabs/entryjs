@@ -1,4 +1,6 @@
-Blockly.Blocks['arduino_text'] = {
+"use strict";
+
+Blockly.Blocks.arduino_text = {
   init: function() {
     this.setColour("#00979D");
     this.appendDummyInput()
@@ -12,7 +14,7 @@ Entry.block.arduino_text = function (sprite, script) {
     return script.getStringField("NAME");
 };
 
-Blockly.Blocks['arduino_send'] = {
+Blockly.Blocks.arduino_send = {
   init: function() {
     this.setColour("#00979D");
     this.appendDummyInput()
@@ -38,7 +40,7 @@ Entry.block.arduino_send = function (sprite, script) {
 };
 
 
-Blockly.Blocks['arduino_get_string'] = {
+Blockly.Blocks.arduino_get_string = {
   init: function() {
     this.setColour("#00979D");
     this.appendDummyInput()
@@ -62,7 +64,7 @@ Entry.block.arduino_get_number = function (sprite, script) {
     return Number(data);
 };
 
-Blockly.Blocks['arduino_get_number'] = {
+Blockly.Blocks.arduino_get_number = {
   init: function() {
     this.setColour("#00979D");
     this.appendDummyInput()
@@ -87,7 +89,7 @@ Entry.block.arduino_get_string = function (sprite, script) {
 };
 
 //new blocks here
-Blockly.Blocks['arduino_get_sensor_number'] = {
+Blockly.Blocks.arduino_get_sensor_number = {
   init: function() {
     this.setColour("#00979D");
     this.appendDummyInput()
@@ -111,7 +113,7 @@ Entry.block.arduino_get_sensor_number = function (sprite, script) {
     return script.getStringField("PORT");
 }
 
-Blockly.Blocks['arduino_get_port_number'] = {
+Blockly.Blocks.arduino_get_port_number = {
   init: function() {
     this.setColour("#00979D");
     this.appendDummyInput()
@@ -144,7 +146,7 @@ Entry.block.arduino_get_port_number = function (sprite, script) {
 }
 
 
-Blockly.Blocks['arduino_get_pwm_port_number'] = {
+Blockly.Blocks.arduino_get_pwm_port_number = {
   init: function() {
     this.setColour("#00979D");
     this.appendDummyInput()
@@ -168,7 +170,7 @@ Entry.block.arduino_get_pwm_port_number = function (sprite, script) {
     return script.getStringField("PORT");
 }
 
-Blockly.Blocks['arduino_get_number_sensor_value'] = {
+Blockly.Blocks.arduino_get_number_sensor_value = {
   init: function() {
     this.setColour("#00979D");
     this.appendDummyInput()
@@ -189,7 +191,7 @@ Entry.block.arduino_get_number_sensor_value = function (sprite, script) {
     return Entry.hw.getAnalogPortValue(signal[1]);
 };
 
-Blockly.Blocks['arduino_get_digital_value'] = {
+Blockly.Blocks.arduino_get_digital_value = {
   init: function() {
     this.setColour("#00979D");
     this.appendDummyInput()
@@ -209,7 +211,7 @@ Entry.block.arduino_get_digital_value = function (sprite, script) {
     return Entry.hw.getDigitalPortValue(signal);
 };
 
-Blockly.Blocks['arduino_toggle_led'] = {
+Blockly.Blocks.arduino_toggle_led = {
   init: function() {
     this.setColour("#00979D");
     this.appendDummyInput()
@@ -240,7 +242,7 @@ Entry.block.arduino_toggle_led = function (sprite, script) {
     return script.callReturn();
 };
 
-Blockly.Blocks['arduino_toggle_pwm'] = {
+Blockly.Blocks.arduino_toggle_pwm = {
   init: function() {
     this.setColour("#00979D");
     this.appendDummyInput()
@@ -272,7 +274,7 @@ Entry.block.arduino_toggle_pwm = function (sprite, script) {
     return script.callReturn();
 };
 
-Blockly.Blocks['arduino_convert_scale'] = {
+Blockly.Blocks.arduino_convert_scale = {
   init: function() {
     this.setColour("#00979D");
     this.appendDummyInput()

@@ -1,5 +1,7 @@
+"use strict";
+
 // ▶ 버튼을 클릭했을 때
-Blockly.Blocks['when_run_button_click'] = {
+Blockly.Blocks.when_run_button_click = {
   init: function() {
     this.setColour("#3BBD70");
     this.appendDummyInput()
@@ -16,7 +18,7 @@ Entry.block.when_run_button_click = function (sprite, script) {
 };
 
 // (▼) 키를 눌렀는가?
-Blockly.Blocks['press_some_key'] = {
+Blockly.Blocks.press_some_key = {
     init: function() {
         this.setColour("#3BBD70");
         this.appendDummyInput()
@@ -49,7 +51,7 @@ Entry.block.press_some_key = function (sprite, script) {
     return script.callReturn();
 };
 
-Blockly.Blocks['when_some_key_pressed'] = {
+Blockly.Blocks.when_some_key_pressed = {
   init: function() {
     this.setColour("#3BBD70");
     this.appendDummyInput()
@@ -85,7 +87,7 @@ Entry.block.mouse_clicked = function (sprite, script) {
 };
 
 // 마우스를 클릭 해제했는가?
-Blockly.Blocks['mouse_click_cancled'] = {
+Blockly.Blocks.mouse_click_cancled = {
     init: function() {
         this.setColour("#3BBD70");
         this.appendDummyInput()
@@ -103,7 +105,7 @@ Entry.block.mouse_click_cancled = function (sprite, script) {
 
 
 // //장면이 시작했을 때
-// Blockly.Blocks['when_scene_start'] = {
+// Blockly.Blocks.when_scene_start = {
 //   init: function() {
 //       this.setColour("#3BBD70");
 //     this.appendDummyInput()
@@ -120,7 +122,7 @@ Entry.block.mouse_click_cancled = function (sprite, script) {
 // };
 
 //오브젝트를 클릭 했을 때
-Blockly.Blocks['when_object_click'] = {
+Blockly.Blocks.when_object_click = {
   init: function() {
     this.setColour("#3BBD70");
     this.appendDummyInput()
@@ -137,7 +139,7 @@ Entry.block.when_object_click = function (sprite, script) {
 };
 
 //오브젝트 클릭해제했을 때
-Blockly.Blocks['when_object_click_canceled'] = {
+Blockly.Blocks.when_object_click_canceled = {
   init: function() {
     this.setColour("#3BBD70");
     this.appendDummyInput()
@@ -154,7 +156,7 @@ Entry.block.when_object_click_canceled = function (sprite, script) {
 };
 
 //(▼) 키를 눌렀을 때 **popup
-Blockly.Blocks['when_some_key_click'] = {
+Blockly.Blocks.when_some_key_click = {
   init: function() {
     this.setColour("#3BBD70");
     this.appendDummyInput()
@@ -171,7 +173,7 @@ Entry.block.when_some_key_click = function (sprite, script) {
 };
 
 //(메시지1▼) 이 방송되었을 때 **popup
-Blockly.Blocks['when_message_cast'] = {
+Blockly.Blocks.when_message_cast = {
   init: function() {
     this.setColour("#3BBD70");
     this.appendDummyInput()
@@ -190,7 +192,7 @@ Entry.block.when_message_cast = function (sprite, script) {
 };
 
 
-Blockly.Blocks['message_cast'] = {
+Blockly.Blocks.message_cast = {
   init: function() {
     this.setColour("#3BBD70");
     this.appendDummyInput()
@@ -221,7 +223,7 @@ Entry.block.message_cast = function (sprite, script) {
 
 
 //메시지 추가
-Blockly.Blocks['add_message'] = {
+Blockly.Blocks.add_message = {
   init: function() {
     this.setColour("#3BBD70");
     this.appendDummyInput()
@@ -236,7 +238,7 @@ Entry.block.add_massage = function (sprite, script) {
     return script.callReturn();
 };
 
-Blockly.Blocks['message_cast_wait'] = {
+Blockly.Blocks.message_cast_wait = {
   init: function() {
     this.setColour("#3BBD70");
     this.appendDummyInput()

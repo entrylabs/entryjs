@@ -1,3 +1,4 @@
+'use strict';
 
 Entry.Painter = function() {
 
@@ -901,7 +902,7 @@ Entry.Painter.prototype.move_rect = function() {
                 this.oldPt.y,
 
                 width,
-                height);    
+                height);
         }else{
             this.brush.graphics.clear()
             .beginStroke(this.stroke.lineColor)
@@ -910,7 +911,7 @@ Entry.Painter.prototype.move_rect = function() {
             .drawRect(this.oldPt.x,
                 this.oldPt.y,
                 width,
-                height);    
+                height);
         }
     } else {
         if( this.stroke.thickness == 0) {
@@ -919,7 +920,7 @@ Entry.Painter.prototype.move_rect = function() {
             .drawRect(this.oldPt.x,
                 this.oldPt.y,
                 width,
-                height);    
+                height);
         } else {
             this.brush.graphics.clear()
                 .beginStroke(this.stroke.lineColor)
@@ -952,7 +953,7 @@ Entry.Painter.prototype.move_circle = function() {
             .setStrokeStyle(this.stroke.thickness, 'round')
             .beginFill(this.stroke.fillColor)
             .drawEllipse(this.oldPt.x,
-                this.oldPt.y,width,height);        
+                this.oldPt.y,width,height);
         }
     }else if(!this.stroke.fill){
         if(this.stroke.thickness==0){
@@ -962,7 +963,7 @@ Entry.Painter.prototype.move_circle = function() {
             this.brush.graphics.clear()
             .beginStroke(this.stroke.lineColor)
             .setStrokeStyle(this.stroke.thickness, 'round')
-            .drawEllipse(this.oldPt.x,this.oldPt.y,width,height);    
+            .drawEllipse(this.oldPt.x,this.oldPt.y,width,height);
         }
     }
     this.stage.update();
@@ -2046,7 +2047,6 @@ Entry.Painter.prototype.generateView = function(painterView) {
         var painterAttrFontTitle = Entry.createElement('legend');
         painterAttrFontTitle.addClass("panterAttrFontTitle");
         painterAttrFontTitle.innerHTML = Lang.Workspace.textStyle;
-        painterAttrFont.appendChild(painterAttrFontTitle);
 
         var painterAttrFontName = Entry.createElement('select', 'entryPainterAttrFontName');
         painterAttrFontName.addClass('entryPlaygroundPainterAttrFontName');
@@ -2301,7 +2301,7 @@ Entry.Painter.prototype.selectToolbox = function(name){
             this.attrColorSpoid.removeClass("entryRemove");
             this.attrCircleArea.painterAttrCircle.removeClass('entryRemove');
             // this.attrCircleArea.painterAttrCircle.painterInnerCircle.removeClass('entryRemove');
-        
+
             break;
         case 'fill':
             this.toolboxFill.addClass('entryToolBoxFillClicked');

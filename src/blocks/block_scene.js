@@ -1,4 +1,6 @@
-Blockly.Blocks['when_scene_start'] = {
+"use strict";
+
+Blockly.Blocks.when_scene_start = {
     init: function() {
     this.setColour("#189FC1");
     this.appendDummyInput()
@@ -14,7 +16,7 @@ Entry.block.when_scene_start = function (sprite, script) {
     return script.callReturn();
 };
 
-Blockly.Blocks['start_scene'] = {
+Blockly.Blocks.start_scene = {
   init: function() {
     this.setColour("#189FC1");
     this.appendDummyInput()
@@ -40,7 +42,7 @@ Entry.block.start_scene = function (sprite, script) {
 };
 
 
-Blockly.Blocks['start_neighbor_scene'] = {
+Blockly.Blocks.start_neighbor_scene = {
   init: function() {
     this.setColour("#189FC1");
     this.appendDummyInput()

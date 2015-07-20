@@ -1,5 +1,7 @@
+"use strict";
+
 // 보이기
-Blockly.Blocks['show'] = {
+Blockly.Blocks.show = {
   init: function() {
     this.setColour("#EC4466");
     this.appendDummyInput()
@@ -18,7 +20,7 @@ Entry.block.show = function (sprite, script) {
 };
 
 // 숨기기
-Blockly.Blocks['hide'] = {
+Blockly.Blocks.hide = {
   init: function() {
     this.setColour("#EC4466");
     this.appendDummyInput()
@@ -37,7 +39,7 @@ Entry.block.hide = function (sprite, script) {
 };
 
 // [] 를 () 초 동안 (말하기▼)  **popup
-Blockly.Blocks['dialog_time'] = {
+Blockly.Blocks.dialog_time = {
   init: function() {
     this.setColour("#EC4466");
     this.appendDummyInput()
@@ -89,7 +91,7 @@ Entry.block.dialog_time = function (sprite, script) {
         return script;
 };
 
-Blockly.Blocks['dialog'] = {
+Blockly.Blocks.dialog = {
   init: function() {
     this.setColour("#EC4466");
     this.appendDummyInput()
@@ -124,7 +126,7 @@ Entry.block.dialog = function (sprite, script) {
     return script.callReturn();
 };
 
-Blockly.Blocks['remove_dialog'] = {
+Blockly.Blocks.remove_dialog = {
   init: function() {
     this.setColour("#EC4466");
     this.appendDummyInput()
@@ -143,7 +145,7 @@ Entry.block.remove_dialog = function (sprite, script) {
 }
 
 // (▼)번째 모양으로 바꾸기 **popup
-Blockly.Blocks['change_to_nth_shape'] = {
+Blockly.Blocks.change_to_nth_shape = {
   init: function() {
     this.setColour("#EC4466");
     this.appendDummyInput()
@@ -168,7 +170,7 @@ Entry.block.change_to_nth_shape = function (sprite, script) {
 };
 
 // 다음 모양으로 바꾸기
-Blockly.Blocks['change_to_next_shape'] = {
+Blockly.Blocks.change_to_next_shape = {
   init: function() {
     this.setColour("#EC4466");
     this.appendDummyInput()
@@ -188,7 +190,7 @@ Entry.block.change_to_next_shape = function (sprite, script) {
 };
 
 // (▼) 효과를 () 만큼 주기
-Blockly.Blocks['set_effect_volume'] = {
+Blockly.Blocks.set_effect_volume = {
   init: function() {
     this.setColour("#EC4466");
     this.appendDummyInput()
@@ -234,7 +236,7 @@ Entry.block.set_effect_volume = function (sprite, script) {
 
 
 // (▼) 효과를 () 로 정하기
-Blockly.Blocks['set_effect'] = {
+Blockly.Blocks.set_effect = {
   init: function() {
     this.setColour("#EC4466");
     this.appendDummyInput()
@@ -279,7 +281,7 @@ Entry.block.set_effect = function (sprite, script) {
 };
 
 // 효과 모두 지우기
-Blockly.Blocks['erase_all_effects'] = {
+Blockly.Blocks.erase_all_effects = {
   init: function() {
     this.setColour("#EC4466");
     this.appendDummyInput()
@@ -298,7 +300,7 @@ Entry.block.erase_all_effects = function (sprite, script) {
 };
 
 // 크기를 () % 만큼 바꾸기
-Blockly.Blocks['change_scale_percent'] = {
+Blockly.Blocks.change_scale_percent = {
   init: function() {
     this.setColour("#EC4466");
     this.appendDummyInput()
@@ -323,7 +325,7 @@ Entry.block.change_scale_percent = function (sprite, script) {
 };
 
 // 크기를 () % 로 정하기
-Blockly.Blocks['set_scale_percent'] = {
+Blockly.Blocks.set_scale_percent = {
   init: function() {
     this.setColour("#EC4466");
     this.appendDummyInput()
@@ -349,7 +351,7 @@ Entry.block.set_scale_percent = function (sprite, script) {
 };
 
 //y축 플
-Blockly.Blocks['flip_y'] = {
+Blockly.Blocks.flip_y = {
   init: function() {
     this.setColour("#EC4466");
     this.appendDummyInput()
@@ -367,7 +369,7 @@ Entry.block.flip_y = function(sprite, script) {
     return script.callReturn();
 }
 
-Blockly.Blocks['flip_x'] = {
+Blockly.Blocks.flip_x = {
   init: function() {
     this.setColour("#EC4466");
     this.appendDummyInput()
@@ -385,7 +387,7 @@ Entry.block.flip_x = function(sprite, script) {
     return script.callReturn();
 }
 
-Blockly.Blocks['set_object_order'] = {
+Blockly.Blocks.set_object_order = {
   init: function() {
     this.setColour("#EC4466");
     this.appendDummyInput()
@@ -414,7 +416,7 @@ Entry.block.set_object_order = function(sprite, script) {
         throw new Error('object is not available');
 };
 
-Blockly.Blocks['get_pictures'] = {
+Blockly.Blocks.get_pictures = {
   init: function() {
     this.setColour("#EC4466");
     this.appendDummyInput()
@@ -433,7 +435,7 @@ Entry.block.get_pictures = function (sprite, script) {
     return script.getStringField("VALUE");
 };
 
-Blockly.Blocks['change_to_some_shape'] = {
+Blockly.Blocks.change_to_some_shape = {
   init: function() {
     this.setColour("#EC4466");
     this.appendDummyInput()
@@ -460,7 +462,7 @@ Entry.block.change_to_some_shape = function (sprite, script) {
 };
 
 // (▼) 효과를 () 만큼 주기
-Blockly.Blocks['set_effect_amount'] = {
+Blockly.Blocks.set_effect_amount = {
     init: function() {
         this.setColour("#EC4466");
         this.appendDummyInput()
@@ -500,7 +502,7 @@ Entry.block.set_effect_amount = function (sprite, script) {
 };
 
 // (▼) 효과를 () 로 정하기
-Blockly.Blocks['set_entity_effect'] = {
+Blockly.Blocks.set_entity_effect = {
     init: function() {
         this.setColour("#EC4466");
         this.appendDummyInput()

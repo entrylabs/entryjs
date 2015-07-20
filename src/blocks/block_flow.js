@@ -1,5 +1,7 @@
+"use strict";
+
 // ()초 기다리기
-Blockly.Blocks['wait_second'] = {
+Blockly.Blocks.wait_second = {
   init: function() {
     this.setColour("#498deb");
     this.appendDummyInput()
@@ -36,7 +38,7 @@ Entry.block.wait_second = function (sprite, script) {
 };
 
 // ()번 반복하기
-Blockly.Blocks['repeat_basic'] = {
+Blockly.Blocks.repeat_basic = {
     init: function() {
         this.setColour("#498deb");
         this.appendDummyInput()
@@ -68,12 +70,12 @@ Entry.block.repeat_basic = function (sprite, script) {
     } else {
         delete script.isLooped;
         delete script.iterCount;
-        return returnBlock = script.callReturn();
+        return script.callReturn();
     }
 };
 
 // 무한 반복하기
-Blockly.Blocks['repeat_inf'] = {
+Blockly.Blocks.repeat_inf = {
     init: function() {
         this.setColour("#498deb");
         this.appendDummyInput()
@@ -94,7 +96,7 @@ Entry.block.repeat_inf = function (sprite, script) {
 };
 
 // 반복 중단하기
-Blockly.Blocks['stop_repeat'] = {
+Blockly.Blocks.stop_repeat = {
   init: function() {
     this.setColour("#498deb");
     this.appendDummyInput()
@@ -126,7 +128,7 @@ Entry.block.stop_repeat = function (sprite, script) {
 };
 
 // wait until condtion is true
-Blockly.Blocks['wait_until_true'] = {
+Blockly.Blocks.wait_until_true = {
     init: function() {
         this.setColour("#498deb");
         this.appendDummyInput()
@@ -153,7 +155,7 @@ Entry.block.wait_until_true = function (sprite, script) {
 }
 
 // 만약 <>라면
-Blockly.Blocks['_if'] = {
+Blockly.Blocks._if = {
     init: function() {
         this.setColour("#498deb");
         this.appendDummyInput()
@@ -186,7 +188,7 @@ Entry.block._if = function (sprite, script) {
 };
 
 // 만약 <>라면, 아니
-Blockly.Blocks['if_else'] = {
+Blockly.Blocks.if_else = {
     init: function() {
         this.setColour("#498deb");
         this.appendDummyInput()
@@ -220,7 +222,7 @@ Entry.block.if_else = function (sprite, script) {
         return script.getStatement("STACK_ELSE", script);
 };
 
-Blockly.Blocks['create_clone'] = {
+Blockly.Blocks.create_clone = {
     init: function() {
         this.setColour("#498deb");
         this.appendDummyInput()
@@ -249,7 +251,7 @@ Entry.block.create_clone = function (sprite, script) {
     return returnBlock;
 };
 
-Blockly.Blocks['delete_clone'] = {
+Blockly.Blocks.delete_clone = {
     init: function() {
         this.setColour("#498deb");
         this.appendDummyInput()
@@ -268,7 +270,7 @@ Entry.block.delete_clone = function (sprite, script) {
     return;
 };
 
-Blockly.Blocks['when_clone_start'] = {
+Blockly.Blocks.when_clone_start = {
     init: function() {
         this.setColour("#498deb");
         this.appendDummyInput()
@@ -284,7 +286,7 @@ Entry.block.when_clone_start = function (sprite, script) {
     return script.callReturn();
 };
 
-Blockly.Blocks['stop_run'] = {
+Blockly.Blocks.stop_run = {
   init: function() {
     this.setColour("#498deb");
     this.appendDummyInput()
@@ -303,7 +305,7 @@ Entry.block.stop_run = function (sprite, script) {
 };
 
 
-Blockly.Blocks['repeat_while_true'] = {
+Blockly.Blocks.repeat_while_true = {
     init: function() {
         this.setColour("#498deb");
         this.appendDummyInput()
@@ -329,12 +331,12 @@ Entry.block.repeat_while_true = function (sprite, script) {
     }
     else {
         script.isLooped = false;
-        return returnBlock = script.callReturn();
+        return script.callReturn();
     }
 
 }
 
-Blockly.Blocks['stop_object'] = {
+Blockly.Blocks.stop_object = {
     init: function() {
         this.setColour("#498deb");
         this.appendDummyInput()
@@ -386,7 +388,7 @@ Entry.block.stop_object = function (sprite, script) {
     return null;
 };
 
-Blockly.Blocks['restart_project'] = {
+Blockly.Blocks.restart_project = {
     init: function() {
         this.setColour("#498deb");
         this.appendDummyInput()
@@ -403,7 +405,7 @@ Entry.block.restart_project = function (sprite, script) {
     Entry.engine.toggleRun();
 };
 
-Blockly.Blocks['remove_all_clones'] = {
+Blockly.Blocks.remove_all_clones = {
     init: function() {
         this.setColour("#498deb");
         this.appendDummyInput()
