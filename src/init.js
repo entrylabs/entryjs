@@ -166,6 +166,9 @@ Entry.initialize_ = function() {
      */
     this.hw = new Entry.HW();
 
+    if (this.type == 'workspace' || this.type == 'phone')
+        this.reporter = new Entry.Reporter();
+
     this.initContextMenu();
 };
 

@@ -271,18 +271,22 @@ Entry.addActivity = function(activityType) {
         Entry.stateManager.addActivity(activityType);
 }
 
+Entry.startActivityLogging = function() {
+    if (Entry.reporter)
+        Entry.reporter.start(
+            Entry.projectId,
+            window.user._id,
+            Entry.startTime);
+};
+
 /**
  * return activity log
  * @return {object}
  */
 Entry.getActivityLog = function() {
     var log = {};
-    log.projectId = Entry.projectId;
     if (Entry.stateManager)
         log.activityLog = Entry.stateManager.activityLog_;
-    if (window.user)
-        log.userId = window.user._id;
-    log.startTime = Entry.startTime;
     return log;
 }
 

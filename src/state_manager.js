@@ -9,7 +9,6 @@
 Entry.StateManager = function() {
     this.undoStack_ = new Array();
     this.redoStack_ = new Array();
-    this.activityLog_ = [];
     /** prevent add command when undo and redo */
     this.isRestore = false;
     this.isIgnore = false;
@@ -76,13 +75,15 @@ Entry.StateManager.prototype.addCommand =
         var argumentArray = Array.prototype.slice.call(arguments);
         Entry.State.prototype.constructor.apply(state, argumentArray);
         this.redoStack_.push(state);
-        this.activityLog_.push(state);
+        if (Entry.reporter)
+            Entry.reporter.report(state);
     } else {
         var state = new Entry.State();
         var argumentArray = Array.prototype.slice.call(arguments);
         Entry.State.prototype.constructor.apply(state, argumentArray);
         this.undoStack_.push(state);
-        this.activityLog_.push(state);
+        if (Entry.reporter)
+            Entry.reporter.report(state);
         this.updateView();
     }
 };
@@ -94,7 +95,6 @@ Entry.StateManager.prototype.cancelLastCommand = function() {
     if (!this.canUndo())
         return;
     this.undoStack_.pop();
-    this.activityLog_.pop();
     this.updateView();
 };
 
@@ -223,5 +223,6 @@ Entry.StateManager.prototype.isSaved = function () {
  * @param {String} activityType
  */
 Entry.StateManager.prototype.addActivity = function (activityType) {
-    this.activityLog_.push(new Entry.State(activityType));
+    if (Entry.reporter)
+        Entry.reporter.report(new Entry.State(activityType));
 };

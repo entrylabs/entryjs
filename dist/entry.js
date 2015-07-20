@@ -70,12 +70,11 @@ var Entry = {events_:{}, block:{}, TEXT_ALIGN_CENTER:0, TEXT_ALIGN_LEFT:1, TEXT_
   return (new Date).getTime() - this.startTime;
 }, addActivity:function(a) {
   Entry.stateManager && Entry.stateManager.addActivity(a);
+}, startActivityLogging:function() {
+  Entry.reporter && Entry.reporter.start(Entry.projectId, window.user._id, Entry.startTime);
 }, getActivityLog:function() {
   var a = {};
-  a.projectId = Entry.projectId;
   Entry.stateManager && (a.activityLog = Entry.stateManager.activityLog_);
-  window.user && (a.userId = window.user._id);
-  a.startTime = Entry.startTime;
   return a;
 }};
 window.Entry = Entry;
@@ -4813,6 +4812,9 @@ Entry.initialize_ = function() {
   this.toast = new Entry.Toast;
   this.hw && this.hw.closeConnection();
   this.hw = new Entry.HW;
+  if ("workspace" == this.type || "phone" == this.type) {
+    this.reporter = new Entry.Reporter;
+  }
   this.initContextMenu();
 };
 Entry.createDom = function(a, b) {
@@ -7774,6 +7776,26 @@ Entry.Popup.prototype.resize = function(a) {
   a.style.width = String(b) + "px";
   a.style.height = String(c + 35) + "px";
 };
+Entry.Reporter = function() {
+  this.userId;
+  this.projectId;
+};
+Entry.Reporter.prototype.start = function(a, b, c) {
+  this.io = io(window.location.href.split("/")[2]);
+  this.io.emit("activity", {message:"start", userId:b, projectId:a, time:c});
+  this.userId = b;
+  this.projectId = a;
+};
+Entry.Reporter.prototype.report = function(a) {
+  if (this.io) {
+    var b = [], c;
+    for (c in a.params) {
+      var d = a.params[c];
+      "object" !== typeof d ? b.push(d) : d.id && b.push(d.id);
+    }
+    this.io.emit("activity", {message:a.message, userId:this.userId, projectId:this.projectId, time:a.time, params:b});
+  }
+};
 Entry.Scene = function() {
   this.scenes_ = [];
   this.selectedScene = null;
@@ -8439,7 +8461,6 @@ Entry.State.prototype.generateMessage = function() {
 Entry.StateManager = function() {
   this.undoStack_ = [];
   this.redoStack_ = [];
-  this.activityLog_ = [];
   this.isIgnore = this.isRestore = !1;
   Entry.addEventListener("cancelLastCommand", function(a) {
     Entry.stateManager.cancelLastCommand();
@@ -8468,14 +8489,14 @@ Entry.StateManager.prototype.addCommand = function(a, b, c, d) {
       var e = new Entry.State, f = Array.prototype.slice.call(arguments);
       Entry.State.prototype.constructor.apply(e, f);
       this.redoStack_.push(e);
-      this.activityLog_.push(e);
+      Entry.reporter && Entry.reporter.report(e);
     } else {
-      e = new Entry.State, f = Array.prototype.slice.call(arguments), Entry.State.prototype.constructor.apply(e, f), this.undoStack_.push(e), this.activityLog_.push(e), this.updateView();
+      e = new Entry.State, f = Array.prototype.slice.call(arguments), Entry.State.prototype.constructor.apply(e, f), this.undoStack_.push(e), Entry.reporter && Entry.reporter.report(e), this.updateView();
     }
   }
 };
 Entry.StateManager.prototype.cancelLastCommand = function() {
-  this.canUndo() && (this.undoStack_.pop(), this.activityLog_.pop(), this.updateView());
+  this.canUndo() && (this.undoStack_.pop(), this.updateView());
 };
 Entry.StateManager.prototype.undo = function() {
   if (this.canUndo() && !this.isRestoring()) {
@@ -8530,7 +8551,7 @@ Entry.StateManager.prototype.isSaved = function() {
   return 0 == this.undoStack_.length || this.undoStack_[this.undoStack_.length - 1].stamp == this.stamp && "string" == typeof this.stamp;
 };
 Entry.StateManager.prototype.addActivity = function(a) {
-  this.activityLog_.push(new Entry.State(a));
+  Entry.reporter && Entry.reporter.report(new Entry.State(a));
 };
 Entry.Toast = function() {
   this.toasts_ = [];
