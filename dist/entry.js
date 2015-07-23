@@ -3723,6 +3723,7 @@ Entry.Dom = function(a, b) {
   b.classes && b.classes.map(function(a) {
     d.addClass(a);
   });
+  b.parent && b.parent.append(d);
   return d;
 };
 Entry.Dialog = function(a, b, c, d) {

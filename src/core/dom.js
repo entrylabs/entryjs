@@ -38,6 +38,9 @@ Entry.Dom = function (tag, options) {
     if (options.classes)
         options.classes.map(function (className) { dom.addClass(className) });
 
+    if (options.parent)
+        options.parent.append(dom);
+
     return dom;
 };
 

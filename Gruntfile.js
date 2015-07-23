@@ -36,6 +36,7 @@ module.exports = function(grunt) {
             options: {
                 frameworks: ['mocha', 'chai'],
                 files: [
+                    'test_util/*.js',
                     'extern/jquery/jquery.js',
                     'extern/blockly/blockly_compressed.js',
                     'dist/entry.js'
