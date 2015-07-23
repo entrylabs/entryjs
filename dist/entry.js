@@ -3711,6 +3711,21 @@ Entry.Container.prototype.blurAllInputs = function() {
     }
   });
 };
+"use strict";
+Entry.Dom = function(a, b) {
+  var c = /<(\w+)>/, d;
+  d = a instanceof HTMLElement ? $(a) : a instanceof jQuery ? a : c.test(a) ? $(a) : $("<" + a + "></" + a + ">");
+  if (void 0 === b) {
+    return d;
+  }
+  b.id && d.attr("id", b.id);
+  b.class && d.addClass(b.class);
+  b.classes && b.classes.map(function(a) {
+    d.addClass(a);
+  });
+  b.parent && b.parent.append(d);
+  return d;
+};
 Entry.Dialog = function(a, b, c, d) {
   a.dialog && a.dialog.remove();
   a.dialog = this;

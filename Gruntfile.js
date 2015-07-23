@@ -13,21 +13,15 @@ module.exports = function(grunt) {
                 files: ['test/**/*.js'],
                 tasks: [
                     'karma'
-                ],
-                options: {
-                    livereload: true
-                }
+                ]
             },
             js: {
                 files: ['src/**'],
                 tasks: [
-                    'closureCompiler',
+                    'closureCompiler:targetName',
                     'karma',
                     'jshint'
-                ],
-                options: {
-                    livereload: true
-                }
+                ]
             }
         },
         jshint: {
@@ -42,6 +36,8 @@ module.exports = function(grunt) {
             options: {
                 frameworks: ['mocha', 'chai'],
                 files: [
+                    'test_util/*.js',
+                    'extern/jquery/jquery.js',
                     'extern/blockly/blockly_compressed.js',
                     'dist/entry.js'
                 ]
@@ -60,6 +56,8 @@ module.exports = function(grunt) {
                 checkModified: true,
                 compilerOpts: {
                     compilation_level: 'SIMPLE_OPTIMIZATIONS',
+                    language_in: 'ECMASCRIPT5',
+                    language_out: 'ECMASCRIPT5',
                     formatting: 'pretty_print'
                 }
             },
@@ -70,7 +68,9 @@ module.exports = function(grunt) {
             dist: {
                 options: {
                     compilerOpts: {
-                        compilation_level: 'SIMPLE_OPTIMIZATIONS'
+                        compilation_level: 'SIMPLE_OPTIMIZATIONS',
+                        language_in: 'ECMASCRIPT5',
+                        language_out: 'ECMASCRIPT5'
                     }
                 },
                 expand: false,
@@ -96,7 +96,7 @@ module.exports = function(grunt) {
     ]);
 
     grunt.registerTask('development', [
-        'closureCompiler',
+        'closureCompiler:targetName',
         'karma',
         'jshint',
         'concurrent'
