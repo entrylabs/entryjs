@@ -98,7 +98,6 @@ module.exports = function(grunt) {
     grunt.registerTask('development', [
         'closureCompiler:targetName',
         'karma',
-        'jshint',
         'concurrent'
     ]);
 
