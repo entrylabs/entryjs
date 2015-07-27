@@ -1,6 +1,5 @@
 "use strict";
 
-/*
 goog.provide("Entry.EntryObject");
 
 goog.require("Entry.LoopModel");
@@ -10,7 +9,7 @@ Entry.EntryObject = function() {
 
 };
 
-Entry.EntryObject.prototype = new Entry.LoopModel;
+Entry.EntryObject.prototype = new Entry.LoopModel();
 
 (function (p) {
 
@@ -30,4 +29,3 @@ Entry.EntryObject.prototype = new Entry.LoopModel;
     };
 
 })(Entry.EntryObject.prototype);
-*/

@@ -3,10 +3,10 @@
  * @author Kyumin Sim
  * @version 0.2
  */
+"use strict";
 
 goog.provide('Entry.Dom');
 
-"use strict";
 /**
  * Function for construct html dom element.
  * @function
@@ -36,7 +36,7 @@ Entry.Dom = function (tag, options) {
         dom.addClass(options.class);
 
     if (options.classes)
-        options.classes.map(function (className) { dom.addClass(className) });
+        options.classes.map(function (className) { dom.addClass(className); });
 
     if (options.parent)
         options.parent.append(dom);
