@@ -3062,6 +3062,25 @@ Entry.ObserverModel.prototype = new Entry.Model;
     }
   };
 })(Entry.ObserverModel.prototype);
+Entry.db = {data:{}, typeMap:{}};
+(function(b) {
+  b.add = function(a) {
+    this.data[a.id] = a;
+    var b = a.type;
+    void 0 === this.typeMap[b] && (this.typeMap[b] = {});
+    this.typeMap[b][a.id] = a;
+  };
+  b.has = function() {
+  };
+  b.remove = function() {
+  };
+  b.get = function() {
+  };
+  b.find = function() {
+  };
+  b.clear = function() {
+  };
+})(Entry.container);
 Entry.Dom = function(b, a) {
   var c = /<(\w+)>/, d;
   d = b instanceof HTMLElement ? $(b) : b instanceof jQuery ? b : c.test(b) ? $(b) : $("<" + b + "></" + b + ">");
@@ -3076,6 +3095,10 @@ Entry.Dom = function(b, a) {
   a.parent && a.parent.append(d);
   return d;
 };
+Entry.init = function() {
+};
+Entry.loadProject = function(b) {
+};
 Entry.EntryObject = function() {
   Entry.LoopModel.call(this);
 };
@@ -3084,4 +3107,5 @@ Entry.EntryObject.prototype = new Entry.LoopModel;
   b.base = Entry.LoopModel;
   b.schema = {id:null, name:null, order:null, objectType:null, scene:null, lock:null, rotateMethod:null, entity:null, script:null, sprite:null};
 })(Entry.EntryObject.prototype);
+Entry.STATIC = {OBJECT:0, ENTITY:1, SPRITE:2, SOUND:3, VARIABLE:4, FUNCTION:5, SCENE:6, MESSAGE:7};
 
