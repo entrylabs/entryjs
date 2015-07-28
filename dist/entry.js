@@ -2994,11 +2994,44 @@ Blockly.Blocks.options_for_list = {init:function() {
 Entry.block.options_for_list = function(b, a) {
   return a.getField("OPERATOR", a);
 };
-Entry.Model = function() {
-  this.data = this.schema;
+Entry.Model = function(b, a) {
+  var c = Entry.Model;
+  c.generateSchema(b, a);
+  c.generateObserve(b);
+  Object.seal(b);
+  return b;
 };
 (function(b) {
-  b.schema = {id:null};
+  function a(a) {
+    this.observers.push(a);
+  }
+  function c(a) {
+    a = this.observers.indexOf(a);
+    -1 < a && this.observers.splice(a, 1);
+  }
+  function d(a, b) {
+    var c = this;
+    c.observers.map(function(d) {
+      d.update([{name:a, object:c, oldValue:b}]);
+    });
+  }
+  b.generateSchema = function(a, b) {
+    a.data = {};
+    for (var c in b) {
+      a.data[c] = b[c], Object.defineProperty(a, c, {get:function() {
+        return a.data[c];
+      }, set:function(b) {
+        a.notify(c, a.data[c]);
+        a.data[c] = b;
+      }});
+    }
+  };
+  b.generateObserve = function(b) {
+    b.observers = [];
+    b.observe = a;
+    b.unobserve = c;
+    b.notify = d;
+  };
   b.get = function(a) {
     return this.data[a];
   };
@@ -3007,61 +3040,7 @@ Entry.Model = function() {
       this.data[b] = a[b];
     }
   };
-})(Entry.Model.prototype);
-Entry.LoopModel = function() {
-  Entry.Model.call(this);
-  this._observers = [];
-};
-Entry.LoopModel.prototype = new Entry.Model;
-(function(b) {
-  b.base = Entry.Model;
-  b.bind = function(a) {
-    this._observers.push(a);
-  };
-  b.unbind = function(a) {
-    for (var b in this._observers) {
-      if (this._observers[b] === a) {
-        return this._observers.splice(b, 1), !0;
-      }
-    }
-    return !1;
-  };
-  b.notify = function() {
-    var a = Array.prototype.slice.call(arguments, 0), b;
-    for (b in this._observers) {
-      this._observers[b].update.apply(null, a);
-    }
-  };
-})(Entry.LoopModel.prototype);
-Entry.ObserverModel = function() {
-  Entry.Model.call(this);
-  this._observers = [];
-};
-Entry.ObserverModel.prototype = new Entry.Model;
-(function(b) {
-  b.base = Entry.Model;
-  b.set = function(a) {
-    this.base.prototype.set.call(this, a);
-    this.notify();
-  };
-  b.observe = function(a) {
-    this._observers.push(a);
-  };
-  b.unobserve = function(a) {
-    for (var b in this._observers) {
-      if (this._observers[b] === a) {
-        return this._observers.splice(b, 1), !0;
-      }
-    }
-    return !1;
-  };
-  b.notify = function() {
-    var a = Array.prototype.slice.call(arguments, 0), b;
-    for (b in this._observers) {
-      this._observers[b].update.apply(null, a);
-    }
-  };
-})(Entry.ObserverModel.prototype);
+})(Entry.Model);
 Entry.db = {data:{}, typeMap:{}};
 (function(b) {
   b.add = function(a) {
@@ -3104,13 +3083,5 @@ Entry.init = function() {
 };
 Entry.loadProject = function(b) {
 };
-Entry.EntryObject = function() {
-  Entry.LoopModel.call(this);
-};
-Entry.EntryObject.prototype = new Entry.LoopModel;
-(function(b) {
-  b.base = Entry.LoopModel;
-  b.schema = {id:null, name:null, order:null, objectType:null, scene:null, lock:null, rotateMethod:null, entity:null, script:null, sprite:null};
-})(Entry.EntryObject.prototype);
 Entry.STATIC = {OBJECT:0, ENTITY:1, SPRITE:2, SOUND:3, VARIABLE:4, FUNCTION:5, SCENE:6, MESSAGE:7};
 
