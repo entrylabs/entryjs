@@ -3070,15 +3070,20 @@ Entry.db = {data:{}, typeMap:{}};
     void 0 === this.typeMap[b] && (this.typeMap[b] = {});
     this.typeMap[b][a.id] = a;
   };
-  b.has = function() {
+  b.has = function(a) {
+    return this.data.hasOwnProperty(a);
   };
-  b.remove = function() {
+  b.remove = function(a) {
+    this.has(a) && (delete this.typeMap[this.data[a].type][a], delete this.data[a]);
   };
-  b.get = function() {
+  b.get = function(a) {
+    return this.data[a];
   };
   b.find = function() {
   };
   b.clear = function() {
+    this.data = {};
+    this.typeMap = {};
   };
 })(Entry.db);
 Entry.Dom = function(b, a) {

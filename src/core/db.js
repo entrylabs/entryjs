@@ -17,16 +17,21 @@ Entry.db = {
         this.typeMap[type][datum.id] = datum;
     };
 
-    db.has = function() {
-
+    db.has = function(id) {
+        return this.data.hasOwnProperty(id);
     };
 
-    db.remove = function() {
+    db.remove = function(id) {
+        if (!this.has(id))
+            return;
 
+        var datum = this.data[id];
+        delete this.typeMap[datum.type][id];
+        delete this.data[id];
     };
 
-    db.get = function() {
-
+    db.get = function(id) {
+        return this.data[id];
     };
 
     db.find = function() {
@@ -34,7 +39,8 @@ Entry.db = {
     };
 
     db.clear = function() {
-
+        this.data = {};
+        this.typeMap = {};
     };
 
 })(Entry.db);
