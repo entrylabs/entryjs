@@ -3084,4 +3084,7 @@ Entry.init = function() {
 Entry.loadProject = function(b) {
 };
 Entry.STATIC = {OBJECT:0, ENTITY:1, SPRITE:2, SOUND:3, VARIABLE:4, FUNCTION:5, SCENE:6, MESSAGE:7};
+Entry.Object = function() {
+  Entry.Model(this, {id:0, type:Entry.STATIC.OBJECT, objectType:0, name:0, order:0, scene:0, active:!0, lock:!1, rotateMethod:0, entity:0, script:0, sprite:0, selectedPicture:0});
+};
 
