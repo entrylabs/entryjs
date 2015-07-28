@@ -7,8 +7,8 @@ Entry.db = {
     typeMap: {}
 };
 
-(function(c){
-    c.add = function(datum) {
+(function(db){
+    db.add = function(datum) {
         this.data[datum.id] = datum;
 
         var type = datum.type;
@@ -17,24 +17,24 @@ Entry.db = {
         this.typeMap[type][datum.id] = datum;
     };
 
-    c.has = function() {
+    db.has = function() {
 
     };
 
-    c.remove = function() {
+    db.remove = function() {
 
     };
 
-    c.get = function() {
+    db.get = function() {
 
     };
 
-    c.find = function() {
+    db.find = function() {
 
     };
 
-    c.clear = function() {
+    db.clear = function() {
 
     };
 
-})(Entry.container);
+})(Entry.db);

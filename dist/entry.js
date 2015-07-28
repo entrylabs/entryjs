@@ -3080,7 +3080,7 @@ Entry.db = {data:{}, typeMap:{}};
   };
   b.clear = function() {
   };
-})(Entry.container);
+})(Entry.db);
 Entry.Dom = function(b, a) {
   var c = /<(\w+)>/, d;
   d = b instanceof HTMLElement ? $(b) : b instanceof jQuery ? b : c.test(b) ? $(b) : $("<" + b + "></" + b + ">");
