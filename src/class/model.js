@@ -7,9 +7,9 @@ goog.provide("Entry.Model");
  * @param {object} obj
  * @param {object} schema
  */
-Entry.Model = function(obj, schema) {
+Entry.Model = function(obj) {
     var model = Entry.Model;
-    model.generateSchema(obj, schema);
+    model.generateSchema(obj);
     model.generateObserve(obj);
     Object.seal(obj);
 
@@ -17,11 +17,15 @@ Entry.Model = function(obj, schema) {
 };
 
 (function (m) {
-    m.generateSchema = function(obj, schema) {
+    m.generateSchema = function(obj) {
+        var schema = obj.schema;
         obj.data = {};
         for (var key in schema) {
             (function(localKey) {
-                obj.data[localKey] = schema[localKey];
+                if (typeof schema[localKey] == 'object')
+                    obj.data[localKey] = $.extend(true, {}, schema[localKey]);
+                else
+                    obj.data[localKey] = schema[localKey];
                 Object.defineProperty(obj, localKey, {
                     get: function() {
                         return obj.data[localKey];
@@ -56,9 +60,9 @@ Entry.Model = function(obj, schema) {
         var that = this;
         that.observers.map(function (observer) {
             observer.update([{
-                 name: key,
-                 object: that,
-                 oldValue: oldValue
+                name: key,
+                object: that,
+                oldValue: oldValue
             }]);
         });
     };

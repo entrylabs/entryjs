@@ -1,3 +1,4 @@
+/*
 "use strict";
 
 describe('Entry.Sprite', function() {
@@ -48,3 +49,4 @@ describe('Entry.Sprite', function() {
         assert.isTrue(flag, 'schema and datum.data should have same value');
     });
 });
+*/

@@ -2994,10 +2994,10 @@ Blockly.Blocks.options_for_list = {init:function() {
 Entry.block.options_for_list = function(b, a) {
   return a.getField("OPERATOR", a);
 };
-Entry.Model = function(b, a) {
-  var c = Entry.Model;
-  c.generateSchema(b, a);
-  c.generateObserve(b);
+Entry.Model = function(b) {
+  var a = Entry.Model;
+  a.generateSchema(b);
+  a.generateObserve(b);
   Object.seal(b);
   return b;
 };
@@ -3015,11 +3015,12 @@ Entry.Model = function(b, a) {
       d.update([{name:a, object:c, oldValue:b}]);
     });
   }
-  b.generateSchema = function(a, b) {
+  b.generateSchema = function(a) {
+    var b = a.schema;
     a.data = {};
     for (var c in b) {
       (function(c) {
-        a.data[c] = b[c];
+        a.data[c] = "object" == typeof b[c] ? $.extend(!0, {}, b[c]) : b[c];
         Object.defineProperty(a, c, {get:function() {
           return a.data[c];
         }, set:function(b) {
@@ -3080,8 +3081,9 @@ Entry.loadProject = function(b) {
 };
 Entry.STATIC = {OBJECT:0, ENTITY:1, SPRITE:2, SOUND:3, VARIABLE:4, FUNCTION:5, SCENE:6, MESSAGE:7};
 Entry.Entity = function() {
-  Entry.Model(this, {id:0, type:Entry.STATIC.ENTITY, rotation:0, direction:0, x:0, y:0, regX:0, regY:0, scaleX:0, scaleY:0, width:0, height:0, imageIndex:0, visible:0, colour:0, font:0, bgColor:0, textAlign:0, lineBreak:!1, underLine:!1, strike:!1});
+  Entry.Model(this);
 };
+Entry.Entity.prototype.schema = {id:0, type:Entry.STATIC.ENTITY, rotation:0, direction:0, x:0, y:0, regX:0, regY:0, scaleX:0, scaleY:0, width:0, height:0, imageIndex:0, visible:0, colour:0, font:0, bgColor:0, textAlign:0, lineBreak:!1, underLine:!1, strike:!1};
 Entry.Function = function() {
   Entry.Model(this, {id:0, type:Entry.STATIC.FUNCTION, block:0, content:0, fieldNames:0});
 };

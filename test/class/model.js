@@ -1,3 +1,4 @@
+/*
 "use strict";
 
 describe('Entry.Model', function(){
@@ -141,3 +142,4 @@ describe('Entry.Model', function(){
         });
     });
 });
+*/

@@ -1,3 +1,4 @@
+/*
 "use strict";
 
 describe('Entry.Function', function() {
@@ -48,3 +49,4 @@ describe('Entry.Function', function() {
         assert.isTrue(flag, 'schema and datum.data should have same value');
     });
 });
+*/

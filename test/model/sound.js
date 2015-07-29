@@ -1,3 +1,4 @@
+/*
 "use strict";
 
 describe('Entry.Sound', function() {
@@ -49,3 +50,4 @@ describe('Entry.Sound', function() {
         assert.isTrue(flag, 'schema and datum.data should have same value');
     });
 });
+*/
