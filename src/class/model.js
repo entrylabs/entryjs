@@ -2,24 +2,65 @@
 
 goog.provide("Entry.Model");
 
-Entry.Model = function() {
-    this.data = this.schema;
+/*
+ * Entry Model object generator.
+ * @param {object} obj
+ * @param {object} schema
+ */
+Entry.Model = function(obj, schema) {
+    var model = Entry.Model;
+    model.generateSchema(obj, schema);
+    model.generateObserve(obj);
+    Object.seal(obj);
+
+    return obj;
 };
 
-(function (p) {
-    p.schema = {
-        id: null
-    };
-
-    p.get = function(key) {
-        return this.data[key];
-    };
-
-    p.set = function(data) {
-        for (var key in data) {
-            var value = data[key];
-            this.data[key] = value;
+(function (m) {
+    m.generateSchema = function(obj, schema) {
+        obj.data = {};
+        for (var key in schema) {
+            (function(localKey) {
+                obj.data[localKey] = schema[localKey];
+                Object.defineProperty(obj, localKey, {
+                    get: function() {
+                        return obj.data[localKey];
+                    },
+                    set: function(val) {
+                        obj.notify(localKey, obj.data[localKey]);
+                        obj.data[localKey] = val;
+                    }
+                });
+            })(key);
         }
     };
 
-})(Entry.Model.prototype);
+    m.generateObserve = function(obj) {
+        obj.observers = [];
+        obj.observe = observe;
+        obj.unobserve = unobserve;
+        obj.notify = notify;
+    };
+
+    function observe(view) {
+        this.observers.push(view);
+    };
+
+    function unobserve(view) {
+        var index = this.observers.indexOf(view);
+        if (index > -1)
+            this.observers.splice(index, 1);
+    };
+
+    function notify(key, oldValue) {
+        var that = this;
+        that.observers.map(function (observer) {
+            observer.update([{
+                 name: key,
+                 object: that,
+                 oldValue: oldValue
+            }]);
+        });
+    };
+})(Entry.Model);
+

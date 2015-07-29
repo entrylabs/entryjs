@@ -1,90 +1,58 @@
 "use strict";
 
-describe('Entry.EntryObject', function(){
+describe('Entry.Object', function() {
     it('exist', function(){
-        assert.equal(typeof Entry.EntryObject, "function");
-    })
-
-    describe('getter & setter', function(){
-        it('exist', function(){
-            var model = new Entry.EntryObject();
-
-            assert.equal(typeof model.get, "function");
-            assert.equal(typeof model.set, "function");
-        })
-
-        it('test', function(){
-            var model = new Entry.EntryObject();
-
-            var value = Math.random();
-
-            model.set({
-                key: value
-            });
-            assert.equal(
-                value,
-                model.get('key')
-            );
-        })
+        assert.isFunction(Entry.Object);
     });
 
-    describe('schema', function(){
-        it('test', function(){
-            var model = new Entry.EntryObject();
+    var datum = new Entry.Object();
 
-            var schema = {
-                id: null,
-                name: null,
-                order: null,
-                objectType: null,
-                scene: null,
-                lock: null,
-                rotateMethod: null,
-                entity: null,
-                script: null,
-                sprite: null
-            };
+    var schema = {
+        id: 0,
+        type: Entry.STATIC.OBJECT,
+        objectType: 0,
+        name: 0,
+        order: 0,
+        scene: 0,
+        active: true,
+        lock: false,
+        rotateMethod: 0,
+        entity: 0,
+        script: 0,
+        sprite: 0,
+        selectedPicture: 0
+    };
 
-            for (var key in schema)
-                assert.isTrue(model.data.hasOwnProperty(key));
-
-            assert.isFalse(
-                model.data.hasOwnProperty('Id')
-            );
-        })
+    it('instanceof', function(){
+        assert.isTrue(datum instanceof Entry.Object);
     });
 
-    describe('bind', function() {
-        it('exist', function(){
-            var model = new Entry.EntryObject();
-
-            assert.equal(typeof model.bind, "function");
-            assert.equal(typeof model.unbind, "function");
-        });
-
-        it('register', function() {
-            var testObject = {};
-            var model = new Entry.EntryObject();
-
-            assert.isFalse(model.unbind(testObject));
-            model.bind(testObject);
-            assert.isTrue(model.unbind(testObject));
-            assert.isFalse(model.unbind(testObject));
-        });
+    it('schema key length compare', function(){
+        assert.equal(Object.keys(schema).length, Object.keys(datum.data).length);
     });
 
-    describe('observer fire', function() {
-        it('test', function(done) {
-            var testObject = {
-                update: function() {
-                    done();
-                }
-            };
-            var model = new Entry.EntryObject();
+    it('schema datum have same key', function(){
+        var schemaKeys = Object.keys(schema).sort();
+        var dataKeys = Object.keys(datum.data).sort();
 
-            model.bind(testObject);
-            model.notify();
-        });
+        var flag = true;
+        for (var i=0, len=schemaKeys.length; i<len; i++) {
+            if (schemaKeys[i] != dataKeys[i]) {
+                flag = false;
+                break;
+            }
+        }
+        assert.isTrue(flag, 'schema and datum.data should have same keys');
+    });
 
+    it('schema datum have same value', function(){
+        var flag = true;
+        for (var i in schema) {
+            if (schema[i] != datum[i]) {
+                flag = false;
+                break;
+            }
+        }
+        assert.isTrue(flag, 'schema and datum.data should have same value');
     });
 });

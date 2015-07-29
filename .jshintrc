@@ -5,6 +5,7 @@
     "devel": true,
     "-W058": true,
     "globalstrict": true,
+    "loopfunc": true,
     "globals": {
         "goog": true,
         "createjs": true,

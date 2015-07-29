@@ -4,7 +4,7 @@ var Test = {};
 
 Test.randomString = function() {
     return Math.random().toString(36).substring(
-        Math.floor(Math.random() * 18)
+        Math.floor(Math.random() * 17 + 1)
     );
 }
 
