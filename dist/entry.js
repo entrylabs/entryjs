@@ -3018,12 +3018,15 @@ Entry.Model = function(b, a) {
   b.generateSchema = function(a, b) {
     a.data = {};
     for (var c in b) {
-      a.data[c] = b[c], Object.defineProperty(a, c, {get:function() {
-        return a.data[c];
-      }, set:function(b) {
-        a.notify(c, a.data[c]);
-        a.data[c] = b;
-      }});
+      (function(c) {
+        a.data[c] = b[c];
+        Object.defineProperty(a, c, {get:function() {
+          return a.data[c];
+        }, set:function(b) {
+          a.notify(c, a.data[c]);
+          a.data[c] = b;
+        }});
+      })(c);
     }
   };
   b.generateObserve = function(b) {
@@ -3031,14 +3034,6 @@ Entry.Model = function(b, a) {
     b.observe = a;
     b.unobserve = c;
     b.notify = d;
-  };
-  b.get = function(a) {
-    return this.data[a];
-  };
-  b.set = function(a) {
-    for (var b in a) {
-      this.data[b] = a[b];
-    }
   };
 })(Entry.Model);
 Entry.db = {data:{}, typeMap:{}};
@@ -3084,7 +3079,28 @@ Entry.init = function() {
 Entry.loadProject = function(b) {
 };
 Entry.STATIC = {OBJECT:0, ENTITY:1, SPRITE:2, SOUND:3, VARIABLE:4, FUNCTION:5, SCENE:6, MESSAGE:7};
+Entry.Entity = function() {
+  Entry.Model(this, {id:0, type:Entry.STATIC.ENTITY, rotation:0, direction:0, x:0, y:0, regX:0, regY:0, scaleX:0, scaleY:0, width:0, height:0, imageIndex:0, visible:0, colour:0, font:0, bgColor:0, textAlign:0, lineBreak:!1, underLine:!1, strike:!1});
+};
+Entry.Function = function() {
+  Entry.Model(this, {id:0, type:Entry.STATIC.FUNCTION, block:0, content:0, fieldNames:0});
+};
+Entry.Message = function() {
+  Entry.Model(this, {id:0, type:Entry.STATIC.MESSAGE, name:0});
+};
 Entry.Object = function() {
   Entry.Model(this, {id:0, type:Entry.STATIC.OBJECT, objectType:0, name:0, order:0, scene:0, active:!0, lock:!1, rotateMethod:0, entity:0, script:0, sprite:0, selectedPicture:0});
+};
+Entry.Scene = function() {
+  Entry.Model(this, {id:0, type:Entry.STATIC.SCENE, name:0});
+};
+Entry.Sound = function() {
+  Entry.Model(this, {id:0, type:Entry.STATIC.SOUND, name:0, filename:0, ext:0, duration:0});
+};
+Entry.Sprite = function() {
+  Entry.Model(this, {id:0, type:Entry.STATIC.SPRITE, name:0, pictures:0, sounds:0});
+};
+Entry.Variable = function() {
+  Entry.Model(this, {id:0, type:Entry.STATIC.VARIABLE, variableType:0, name:0, value:0, minValue:0, maxValue:0, visible:!0, x:0, y:0, width:0, height:0, isCloud:!1, object:null, array:0});
 };
 

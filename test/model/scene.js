@@ -1,26 +1,26 @@
 "use strict";
 
-describe('Entry.Function', function() {
+describe('Entry.Scene', function() {
     it('exist', function(){
-        assert.isFunction(Entry.Function);
+        assert.isFunction(Entry.Scene);
     });
 
-    var datum = new Entry.Function();
+    var datum = new Entry.Scene();
 
     var schema = {
         id: 0,
-        type: Entry.STATIC.FUNCTION,
-        block: 0,
-        content: 0,
-        fieldNames: []
+        type: Entry.STATIC.SCENE,
+        name: 0
     };
 
     it('instanceof', function(){
-        assert.isTrue(datum instanceof Entry.Function);
+        assert.isTrue(datum instanceof Entry.Scene);
     });
 
     it('schema key length compare', function(){
-        assert.equal(Object.keys(schema).length, Object.keys(datum.data).length);
+        var schemaKeysLength = Object.keys(schema).length;
+        var dataKeysLength = Object.keys(datum.data).length;
+        assert.equal(schemaKeysLength, dataKeysLength);
     });
 
     it('schema datum have same key', function(){

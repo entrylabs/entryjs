@@ -20,16 +20,18 @@ Entry.Model = function(obj, schema) {
     m.generateSchema = function(obj, schema) {
         obj.data = {};
         for (var key in schema) {
-            obj.data[key] = schema[key];
-            Object.defineProperty(obj, key, {
-                get: function() {
-                    return obj.data[key];
-                },
-                set: function(val) {
-                    obj.notify(key, obj.data[key]);
-                    obj.data[key] = val;
-                }
-            });
+            (function(localKey) {
+                obj.data[localKey] = schema[localKey];
+                Object.defineProperty(obj, localKey, {
+                    get: function() {
+                        return obj.data[localKey];
+                    },
+                    set: function(val) {
+                        obj.notify(localKey, obj.data[localKey]);
+                        obj.data[localKey] = val;
+                    }
+                });
+            })(key);
         }
     };
 
@@ -45,9 +47,9 @@ Entry.Model = function(obj, schema) {
     };
 
     function unobserve(view) {
-        var i = this.observers.indexOf(view);
-        if (i > -1)
-            this.observers.splice(i, 1);
+        var index = this.observers.indexOf(view);
+        if (index > -1)
+            this.observers.splice(index, 1);
     };
 
     function notify(key, oldValue) {
@@ -60,17 +62,5 @@ Entry.Model = function(obj, schema) {
             }]);
         });
     };
-
-    m.get = function(key) {
-        return this.data[key];
-    };
-
-    m.set = function(data) {
-        for (var key in data) {
-            var value = data[key];
-            this.data[key] = value;
-        }
-    };
-
 })(Entry.Model);
 

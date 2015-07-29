@@ -1,22 +1,22 @@
 "use strict";
 
-describe('Entry.Function', function() {
+describe('Entry.Sprite', function() {
     it('exist', function(){
-        assert.isFunction(Entry.Function);
+        assert.isFunction(Entry.Sprite);
     });
 
-    var datum = new Entry.Function();
+    var datum = new Entry.Sprite();
 
     var schema = {
         id: 0,
-        type: Entry.STATIC.FUNCTION,
-        block: 0,
-        content: 0,
-        fieldNames: []
+        type: Entry.STATIC.SPRITE,
+        name: 0,
+        pictures: 0,
+        sounds: 0
     };
 
     it('instanceof', function(){
-        assert.isTrue(datum instanceof Entry.Function);
+        assert.isTrue(datum instanceof Entry.Sprite);
     });
 
     it('schema key length compare', function(){
