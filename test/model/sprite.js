@@ -1,14 +1,14 @@
 "use strict";
 
-describe('Entry.Function', function() {
+describe('Entry.Sprite', function() {
     it('exist', function(){
-        assert.isFunction(Entry.Function);
+        assert.isFunction(Entry.Sprite);
     });
 
-    var datum = new Entry.Function();
+    var datum = new Entry.Sprite();
 
     it('instanceof', function(){
-        assert.isTrue(datum instanceof Entry.Function);
+        assert.isTrue(datum instanceof Entry.Sprite);
     });
 
     it('schema data change', function(){
