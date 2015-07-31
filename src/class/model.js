@@ -19,13 +19,13 @@ Entry.Model = function(obj) {
 (function (m) {
     m.generateSchema = function(obj) {
         var schema = obj.schema;
+        if (schema === undefined)
+            return;
+        schema = JSON.parse(JSON.stringify(schema));
         obj.data = {};
         for (var key in schema) {
             (function(localKey) {
-                if (typeof schema[localKey] == 'object')
-                    obj.data[localKey] = $.extend(true, {}, schema[localKey]);
-                else
-                    obj.data[localKey] = schema[localKey];
+                obj.data[localKey] = schema[localKey];
                 Object.defineProperty(obj, localKey, {
                     get: function() {
                         return obj.data[localKey];

@@ -6,11 +6,11 @@ goog.require('Entry.Model');
 goog.require('Entry.STATIC');
 
 Entry.Scene = function() {
-    var schema = {
-        id: 0,
-        type: Entry.STATIC.SCENE,
-        name: 0
-    };
+    Entry.Model(this);
+};
 
-    Entry.Model(this, schema);
+Entry.Scene.prototype.schema = {
+    id: 0,
+    type: Entry.STATIC.SCENE,
+    name: 0
 };

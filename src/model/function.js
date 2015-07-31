@@ -6,13 +6,13 @@ goog.require('Entry.Model');
 goog.require('Entry.STATIC');
 
 Entry.Function = function() {
-    var schema = {
-        id: 0,
-        type: Entry.STATIC.FUNCTION,
-        block: 0,
-        content: 0,
-        fieldNames: 0
-    };
+    Entry.Model(this);
+};
 
-    Entry.Model(this, schema);
+Entry.Function.prototype.schema = {
+    id: 0,
+    type: Entry.STATIC.FUNCTION,
+    block: 0,
+    content: 0,
+    fieldNames: 0
 };

@@ -35,21 +35,24 @@ describe('Entry.Dom', function(){
             assert.notEqual(dom.attr('id'), Test.randomString());
         });
 
-        it('add class', function(){
+        it('add single class', function(){
             var className = Test.randomString();
             var dom = Entry.Dom('div', {class: className});
             assert.isTrue(dom.hasClass(className));
-            assert.isFalse(dom.hasClass(Test.randomString()));
+            var anotherClassName = Test.randomString();
+            assert.isFalse(dom.hasClass(anotherClassName));
         });
 
-        it('add class', function(){
+        it('add multiple class', function(){
             var rd = Test.randomString;
             var classNames = [rd(), rd(), rd()];
             var dom = Entry.Dom('div', {classes: classNames});
             assert.isTrue(dom.hasClass(classNames[0]));
             assert.isTrue(dom.hasClass(classNames[1]));
             assert.isTrue(dom.hasClass(classNames[2]));
-            assert.isFalse(dom.hasClass(Test.randomString()));
+
+            var anotherClassName = Test.randomString();
+            assert.isFalse(dom.hasClass(anotherClassName));
         });
 
         it('get parent', function() {
