@@ -1914,7 +1914,7 @@ Entry.VariableContainer.prototype.generateListSettingView = function () {
     lengthWrapper.addClass('entryListSettingLengthWrapperWorkspace');
     var lengthSpan = Entry.createElement('span');
     lengthSpan.addClass('entryListSettingLengthSpanWorkspace');
-    lengthSpan.innerHTML = '리스트 길이';
+    lengthSpan.innerHTML = '리스트 항목 수';
     lengthWrapper.appendChild(lengthSpan);
     element.appendChild(lengthWrapper);
     var lengthController = Entry.createElement('div');
