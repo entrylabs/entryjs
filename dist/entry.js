@@ -1,5 +1,6 @@
 var Entry = {events_:{}, block:{}, TEXT_ALIGN_CENTER:0, TEXT_ALIGN_LEFT:1, TEXT_ALIGN_RIGHT:2, TEXT_ALIGNS:["center", "left", "right"], loadProject:function(a) {
-  a && ("workspace" == this.type && Entry.stateManager.startIgnore(), Entry.projectId = a._id, Entry.variableContainer.setVariables(a.variables), Entry.variableContainer.setMessages(a.messages), Entry.variableContainer.setFunctions(a.functions), Entry.scene.addScenes(a.scenes), Entry.stage.initObjectContainers(), Entry.container.setObjects(a.objects), Entry.FPS = a.speed ? a.speed : 60, createjs.Ticker.setFPS(Entry.FPS), "workspace" == this.type && Entry.stateManager.endIgnore());
+  a && ("workspace" == this.type && Entry.stateManager.startIgnore(), Entry.projectId = a._id, Entry.variableContainer.setVariables(a.variables), Entry.variableContainer.setMessages(a.messages), Entry.variableContainer.setFunctions(a.functions), Entry.scene.addScenes(a.scenes), Entry.stage.initObjectContainers(), Entry.stage.setCoordinatorVisibility(a.isCoordinatorVisible), Entry.container.setObjects(a.objects), Entry.FPS = a.speed ? a.speed : 60, createjs.Ticker.setFPS(Entry.FPS), "workspace" == 
+  this.type && Entry.stateManager.endIgnore());
   Entry.engine.projectTimer || Entry.variableContainer.generateTimer();
   Entry.start();
 }, setBlockByText:function(a, b) {
@@ -8429,6 +8430,13 @@ Entry.Stage.prototype.moveSprite = function(a) {
     this.updateObject();
   }
 };
+Entry.Stage.prototype.getCoordinatorVisibility = function() {
+  return this.coordinator.visible;
+};
+Entry.Stage.prototype.setCoordinatorVisibility = function(a) {
+  void 0 === a && (a = !1);
+  return this.coordinator.visible = a;
+};
 Entry.StampEntity = function(a, b) {
   this.parent = a;
   this.type = a.objectType;
@@ -10552,7 +10560,7 @@ Entry.VariableContainer.prototype.generateListSettingView = function() {
   d.addClass("entryListSettingLengthWrapperWorkspace");
   c = Entry.createElement("span");
   c.addClass("entryListSettingLengthSpanWorkspace");
-  c.innerHTML = "\ub9ac\uc2a4\ud2b8 \uae38\uc774";
+  c.innerHTML = "\ub9ac\uc2a4\ud2b8 \ud56d\ubaa9 \uc218";
   d.appendChild(c);
   b.appendChild(d);
   c = Entry.createElement("div");
