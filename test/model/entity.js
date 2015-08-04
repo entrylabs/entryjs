@@ -31,6 +31,6 @@ describe('Entry.Entity', function() {
         var func = function() {
             datum[key] = value;
         };
-        assert.throws(func, Error, 'Attempted to assign to readonly property.');
+        assert.throws(func, Error);
     });
 });
