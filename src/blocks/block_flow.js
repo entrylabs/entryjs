@@ -23,9 +23,11 @@ Entry.block.wait_second = function (sprite, script) {
         script.isStart = true;
         script.timeFlag = 1;
         var timeValue = script.getNumberValue("SECOND", script);
+        var fps = Entry.FPS || 60;
+        timeValue = 60/fps*timeValue*1000;
         setTimeout(function() {
             script.timeFlag = 0;
-        }, timeValue * 1000);
+        }, timeValue);
         return script;
     } else if (script.timeFlag == 1) {
         return script;

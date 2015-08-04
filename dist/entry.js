@@ -814,10 +814,10 @@ Entry.block.wait_second = function(a, b) {
   }
   b.isStart = !0;
   b.timeFlag = 1;
-  var c = b.getNumberValue("SECOND", b);
+  var c = b.getNumberValue("SECOND", b), c = 60 / (Entry.FPS || 60) * c * 1E3;
   setTimeout(function() {
     b.timeFlag = 0;
-  }, 1E3 * c);
+  }, c);
   return b;
 };
 Blockly.Blocks.repeat_basic = {init:function() {
@@ -10552,7 +10552,7 @@ Entry.VariableContainer.prototype.generateListSettingView = function() {
   d.addClass("entryListSettingLengthWrapperWorkspace");
   c = Entry.createElement("span");
   c.addClass("entryListSettingLengthSpanWorkspace");
-  c.innerHTML = "\ub9ac\uc2a4\ud2b8 \uae38\uc774";
+  c.innerHTML = "\ub9ac\uc2a4\ud2b8 \ud56d\ubaa9 \uc218";
   d.appendChild(c);
   b.appendChild(d);
   c = Entry.createElement("div");
