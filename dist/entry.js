@@ -8948,7 +8948,7 @@ Entry.getMaxFloatPoint = function(a) {
     var e = String(a[c]), f = e.indexOf(".");
     -1 !== f && (e = e.length - (f + 1), e > b && (b = e));
   }
-  return b;
+  return Math.min(b, 20);
 };
 Entry.convertToRoundedDecimals = function(a, b) {
   return isNaN(a) || !this.isFloat(a) ? a : Number(Math.round(a + "e" + b) + "e-" + b);
