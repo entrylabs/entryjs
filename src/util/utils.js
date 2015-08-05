@@ -635,7 +635,7 @@ Entry.getMaxFloatPoint = function(numbers) {
                 max = tmp;
         }
     }
-    return max;
+    return Math.min(max, 20);
 }
 
 Entry.convertToRoundedDecimals = function (value, decimals) {

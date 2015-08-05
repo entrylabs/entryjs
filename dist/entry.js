@@ -8940,7 +8940,7 @@ Entry.getMaxFloatPoint = function(a) {
     var e = String(a[c]), f = e.indexOf(".");
     -1 !== f && (e = e.length - (f + 1), e > b && (b = e));
   }
-  return b;
+  return Math.min(b, 20);
 };
 Entry.convertToRoundedDecimals = function(a, b) {
   return isNaN(a) || !this.isFloat(a) ? a : Number(Math.round(a + "e" + b) + "e-" + b);
@@ -10552,7 +10552,7 @@ Entry.VariableContainer.prototype.generateListSettingView = function() {
   d.addClass("entryListSettingLengthWrapperWorkspace");
   c = Entry.createElement("span");
   c.addClass("entryListSettingLengthSpanWorkspace");
-  c.innerHTML = "\ub9ac\uc2a4\ud2b8 \uae38\uc774";
+  c.innerHTML = "\ub9ac\uc2a4\ud2b8 \ud56d\ubaa9 \uc218";
   d.appendChild(c);
   b.appendChild(d);
   c = Entry.createElement("div");
