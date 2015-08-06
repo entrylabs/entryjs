@@ -4261,6 +4261,7 @@ Entry.EntityObject.prototype.getRegY = function() {
 Entry.EntityObject.prototype.setScaleX = function(a) {
   this.scaleX = a;
   this.object.scaleX = this.scaleX;
+  this.parent.updateCoordinateView();
   this.updateDialog();
 };
 Entry.EntityObject.prototype.getScaleX = function() {
@@ -4269,6 +4270,7 @@ Entry.EntityObject.prototype.getScaleX = function() {
 Entry.EntityObject.prototype.setScaleY = function(a) {
   this.scaleY = a;
   this.object.scaleY = this.scaleY;
+  this.parent.updateCoordinateView();
   this.updateDialog();
 };
 Entry.EntityObject.prototype.getScaleY = function() {
