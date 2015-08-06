@@ -4185,7 +4185,7 @@ Entry.EntityObject.prototype.syncModel_ = function(a) {
   this.setHeight(a.height);
   this.setText(a.text);
   this.setTextAlign(a.textAlign);
-  this.setFontSize(a.fontSize);
+  this.setFontSize(a.fontSize || this.getFontSize());
   this.setVisible(a.visible);
 };
 Entry.EntityObject.prototype.initCommand = function() {
@@ -4531,7 +4531,7 @@ Entry.EntityObject.prototype.toJSON = function() {
   a.height = Entry.cutDecimal(this.getHeight());
   a.font = this.getFont();
   a.visible = this.getVisible();
-  "textBox" == this.parent.objectType && (a.colour = this.getColour(), a.text = this.getText(), a.textAlign = this.getTextAlign(), a.lineBreak = this.getLineBreak(), a.bgColor = this.getBGColour(), a.underLine = this.getUnderLine(), a.strike = this.getStrike());
+  "textBox" == this.parent.objectType && (a.colour = this.getColour(), a.text = this.getText(), a.textAlign = this.getTextAlign(), a.lineBreak = this.getLineBreak(), a.bgColor = this.getBGColour(), a.underLine = this.getUnderLine(), a.strike = this.getStrike(), a.fontSize = this.getFontSize());
   return a;
 };
 Entry.EntityObject.prototype.setInitialEffectValue = function() {

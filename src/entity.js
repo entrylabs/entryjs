@@ -122,7 +122,7 @@ Entry.EntityObject.prototype.syncModel_ = function(entityModel) {
     this.setHeight(entityModel.height);
     this.setText(entityModel.text);
     this.setTextAlign(entityModel.textAlign);
-    this.setFontSize(entityModel.fontSize);
+    this.setFontSize(entityModel.fontSize || this.getFontSize());
     this.setVisible(entityModel.visible);
 };
 
@@ -915,6 +915,7 @@ Entry.EntityObject.prototype.toJSON = function() {
         json.bgColor = this.getBGColour();
         json.underLine = this.getUnderLine();
         json.strike = this.getStrike();
+        json.fontSize = this.getFontSize();
     }
     return json;
 };
