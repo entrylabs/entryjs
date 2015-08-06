@@ -243,6 +243,10 @@ Entry.block.combine_something = function (sprite, script) {
     var leftValue = script.getStringValue("VALUE1", script);
     var rightValue = script.getStringValue("VALUE2", script);
 
+    if (!isNaN(leftValue))
+        leftValue = Entry.convertToRoundedDecimals(leftValue, 3);
+    if (!isNaN(rightValue))
+        rightValue = Entry.convertToRoundedDecimals(rightValue, 3);
     return leftValue + rightValue;
 }
 

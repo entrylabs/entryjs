@@ -2914,6 +2914,8 @@ Blockly.Blocks.combine_something = {init:function() {
 }};
 Entry.block.combine_something = function(a, b) {
   var c = b.getStringValue("VALUE1", b), d = b.getStringValue("VALUE2", b);
+  isNaN(c) || (c = Entry.convertToRoundedDecimals(c, 3));
+  isNaN(d) || (d = Entry.convertToRoundedDecimals(d, 3));
   return c + d;
 };
 Blockly.Blocks.add_value_to_list = {init:function() {
