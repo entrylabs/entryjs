@@ -655,6 +655,7 @@ Entry.EntityObject.prototype.setText = function(text) {
     this.textObject.text = this.text;
     if (!this.lineBreak) {
         this.setWidth(this.textObject.getMeasuredWidth());
+        this.parent.updateCoordinateView();
     }
     this.updateBG();
     Entry.stage.updateObject();
