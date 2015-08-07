@@ -452,8 +452,7 @@ Entry.VariableContainer.prototype.updateList = function() {
             this.listView_.appendChild(this.variableAddButton_);
             this.listView_.appendChild(this.variableAddPanel.view);
 
-            this.variableSplitters.top.innerHTML =
-                Lang.Workspace.Variable_used_at_all_objects ;
+            this.variableSplitters.top.innerHTML = Lang.Workspace.Variable_used_at_all_objects ;
             this.listView_.appendChild(this.variableSplitters.top);
             for (var i in this.variables_) {
                 var variable = this.variables_[i];
@@ -500,8 +499,7 @@ Entry.VariableContainer.prototype.updateList = function() {
                 info.object = null;
             this.listView_.appendChild(this.listAddButton_);
             this.listView_.appendChild(this.listAddPanel.view);
-            this.variableSplitters.top.innerHTML =
-                '모든 오브젝트에서 사용되는 리스트';
+            this.variableSplitters.top.innerHTML = Lang.Workspace.List_used_all_objects;
             this.listView_.appendChild(this.variableSplitters.top);
 
             this.updateVariableAddView('list');
@@ -515,8 +513,8 @@ Entry.VariableContainer.prototype.updateList = function() {
                 if (list.callerListElement)
                     this.listView_.appendChild(list.callerListElement);
             }
-            this.variableSplitters.bottom.innerHTML =
-                '특정 오브젝트에서 사용되는 리스트';
+            this.variableSplitters.bottom.innerHTML = Lang.Workspace.list_used_specific_objects;
+                
             this.listView_.appendChild(this.variableSplitters.bottom);
             for (var i in this.lists_) {
                 var list = this.lists_[i];
@@ -948,8 +946,9 @@ Entry.VariableContainer.prototype.createVariableView = function(variable) {
     nameField.onblur = function(e) {
         var value = this.value.trim();
         if (!value || value.length == 0) {
-            Entry.toast.alert('경고',
-                              '변수의 이름은 빈 칸이 될 수 없습니다..');
+            Entry.toast.alert(Lang.Msgs.warn,
+                              Lang.Workspace.variable_can_not_space
+);
             this.value = variable.getName();
             return;
         }
@@ -1083,8 +1082,8 @@ Entry.VariableContainer.prototype.createMessageView = function(message) {
     nameField.onblur = function(e) {
         var value = this.value.trim();
         if (!value || value.length == 0) {
-            Entry.toast.alert('경고',
-                              '신호의 이름은 빈 칸이 될 수 없습니다..');
+            Entry.toast.alert(Lang.Msgs.warn ,
+                              Lang.Msgs.sign_can_not_space);
             this.value = message.name;
             return;
         }
@@ -1213,8 +1212,8 @@ Entry.VariableContainer.prototype.createListView = function(list) {
     nameField.onblur = function(e) {
         var value = this.value.trim();
         if (!value || value.length == 0) {
-            Entry.toast.alert('경고',
-                              '리스트의 이름은 빈 칸이 될 수 없습니다..');
+            Entry.toast.alert(Lang.Msgs.warn ,
+                              Lang.Msgs.list_can_not_space);
             this.value = list.getName();
             return;
         }
@@ -1446,7 +1445,7 @@ Entry.VariableContainer.prototype.generateVariableAddView = function() {
     var addSpaceConfirmButton = Entry.createElement('span');
     addSpaceConfirmButton.addClass('entryVariableAddSpaceConfirmWorkspace');
     addSpaceConfirmButton.addClass('entryVariableAddSpaceButtonWorkspace');
-    addSpaceConfirmButton.innerHTML = Lang.Buttons.save;
+    addSpaceConfirmButton.innerHTML = Lang.Buttons.ok;
     addSpaceConfirmButton.variableContainer = this;
     addSpaceConfirmButton.bindOnClick(function (e) {
         var variableContainer = this.variableContainer;
@@ -1478,7 +1477,7 @@ Entry.VariableContainer.prototype.generateListAddView = function() {
 
     var addSpaceInput = Entry.createElement('input');
     addSpaceInput.addClass('entryVariableAddSpaceInputWorkspace');
-    addSpaceInput.setAttribute('placeholder', '리스트 이름');
+    addSpaceInput.setAttribute('placeholder', Lang.Workspace.list_name);
     this.listAddPanel.view.name = addSpaceInput;
     addSpaceInput.variableContainer = this;
     addSpaceInput.onkeypress = function (e) {
@@ -1506,7 +1505,7 @@ Entry.VariableContainer.prototype.generateListAddView = function() {
 
 
     var addListGlobalSpan = Entry.createElement('span');
-    addListGlobalSpan.innerHTML = '모든 오브젝트에서 사용';
+    addListGlobalSpan.innerHTML = Lang.Workspace.Variable_use_all_objects;
     addSpaceGlobalWrapper.appendChild(addListGlobalSpan);
 
 
@@ -1530,7 +1529,7 @@ Entry.VariableContainer.prototype.generateListAddView = function() {
     });
     listAddSpace.appendChild(addSpaceLocalWrapper);
     var addListLocalSpan = Entry.createElement('span');
-    addListLocalSpan.innerHTML = '이 오브젝트에서 사용';
+    addListLocalSpan.innerHTML = Lang.Workspace.Variable_use_this_object;
     addSpaceLocalWrapper.appendChild(addListLocalSpan);
 
 
@@ -1574,7 +1573,7 @@ Entry.VariableContainer.prototype.generateListAddView = function() {
     var addSpaceCancelButton = Entry.createElement('span');
     addSpaceCancelButton.addClass('entryVariableAddSpaceCancelWorkspace');
     addSpaceCancelButton.addClass('entryVariableAddSpaceButtonWorkspace');
-    addSpaceCancelButton.innerHTML = '취소';
+    addSpaceCancelButton.innerHTML = Lang.Buttons.cancel;
     addSpaceCancelButton.bindOnClick(function (e) {
         that.listAddPanel.view.addClass('entryRemove');
         that.resetVariableAddPanel('list');
@@ -1584,7 +1583,7 @@ Entry.VariableContainer.prototype.generateListAddView = function() {
     var addSpaceConfirmButton = Entry.createElement('span');
     addSpaceConfirmButton.addClass('entryVariableAddSpaceConfirmWorkspace');
     addSpaceConfirmButton.addClass('entryVariableAddSpaceButtonWorkspace');
-    addSpaceConfirmButton.innerHTML = '확인';
+    addSpaceConfirmButton.innerHTML =  Lang.Buttons.ok;
     addSpaceConfirmButton.variableContainer = this;
     addSpaceConfirmButton.bindOnClick(function (e) {
         that.addList();
@@ -1721,7 +1720,7 @@ Entry.VariableContainer.prototype.generateVariableSettingView = function () {
     });
     element.appendChild(visibleWrapper);
     var visibleSpan = Entry.createElement('span');
-    visibleSpan.innerHTML = '변수 보이기';
+    visibleSpan.innerHTML = Lang.Workspace.show_variable;
     visibleWrapper.appendChild(visibleSpan);
     var visibleCheck = Entry.createElement('span');
     visibleCheck.addClass('entryVariableSettingCheckWorkspace');
@@ -1732,7 +1731,7 @@ Entry.VariableContainer.prototype.generateVariableSettingView = function () {
     initValueWrapper.addClass('entryVariableSettingInitValueWrapperWorkspace');
     element.appendChild(initValueWrapper);
     var initValueSpan = Entry.createElement('span');
-    initValueSpan.innerHTML = '기본값';
+    initValueSpan.innerHTML = Lang.Workspace.default_value;
     initValueWrapper.appendChild(initValueSpan);
     var initValueInput = Entry.createElement('input');
     initValueInput.addClass('entryVariableSettingInitValueInputWorkspace');
@@ -1759,7 +1758,7 @@ Entry.VariableContainer.prototype.generateVariableSettingView = function () {
     slideWrapper.addClass('entryVariableSettingSlideWrapperWorkspace');
     element.appendChild(slideWrapper);
     var slideSpan = Entry.createElement('span');
-    slideSpan.innerHTML = '슬라이드';
+    slideSpan.innerHTML = Lang.Workspace.slide;
     slideWrapper.appendChild(slideSpan);
     var slideCheck = Entry.createElement('span');
     slideCheck.addClass('entryVariableSettingCheckWorkspace');
@@ -1799,7 +1798,7 @@ Entry.VariableContainer.prototype.generateVariableSettingView = function () {
     minMaxWrapper.addClass('entryVariableSettingMinMaxWrapperWorkspace');
     element.appendChild(minMaxWrapper);
     var minValueSpan = Entry.createElement('span');
-    minValueSpan.innerHTML = '최소값';
+    minValueSpan.innerHTML = Lang.Workspace.min_value;
     minMaxWrapper.appendChild(minValueSpan);
     var minValueInput = Entry.createElement('input');
     minValueInput.addClass('entryVariableSettingMinValueInputWorkspace');
@@ -1821,7 +1820,7 @@ Entry.VariableContainer.prototype.generateVariableSettingView = function () {
 
     var maxValueSpan = Entry.createElement('span');
     maxValueSpan.addClass('entryVariableSettingMaxValueSpanWorkspace');
-    maxValueSpan.innerHTML = '최대값';
+    maxValueSpan.innerHTML = Lang.Workspace.max_value;
     minMaxWrapper.appendChild(maxValueSpan);
     var maxValueInput = Entry.createElement('input');
     maxValueInput.addClass('entryVariableSettingMaxValueInputWorkspace');
@@ -1902,7 +1901,7 @@ Entry.VariableContainer.prototype.generateListSettingView = function () {
     });
     element.appendChild(visibleWrapper);
     var visibleSpan = Entry.createElement('span');
-    visibleSpan.innerHTML = '리스트 보이기';
+    visibleSpan.innerHTML = Lang.Workspace.VARIABLE_show_list;
     visibleWrapper.appendChild(visibleSpan);
     var visibleCheck = Entry.createElement('span');
     visibleCheck.addClass('entryListSettingCheckWorkspace');
@@ -1914,7 +1913,7 @@ Entry.VariableContainer.prototype.generateListSettingView = function () {
     lengthWrapper.addClass('entryListSettingLengthWrapperWorkspace');
     var lengthSpan = Entry.createElement('span');
     lengthSpan.addClass('entryListSettingLengthSpanWorkspace');
-    lengthSpan.innerHTML = '리스트 항목 수';
+    lengthSpan.innerHTML = Lang.Workspace.number_of_list;
     lengthWrapper.appendChild(lengthSpan);
     element.appendChild(lengthWrapper);
     var lengthController = Entry.createElement('div');

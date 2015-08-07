@@ -5076,7 +5076,7 @@ Entry.EntryObject.prototype.generateView = function() {
     g.setAttribute("disabled", "disabled");
     var k = Entry.createElement("span");
     k.addClass("entryObjectCoordinateSizeWorkspace");
-    k.innerHTML = "\ud06c\uae30 :";
+    k.innerHTML = Lang.Workspace.Size + " :";
     var m = Entry.createElement("input");
     m.addClass("entryObjectCoordinateInputWorkspace", "entryObjectCoordinateInputWorkspace_size");
     m.bindOnClick(function(a) {
@@ -5252,7 +5252,7 @@ Entry.EntryObject.prototype.generateView = function() {
       c.entity.setDirection(c.entity.getDirection());
       Entry.stage.updateObject();
     }, a = Entry.createElement("div"), a.addClass("entryObjectRotationWrapperWorkspace"), a.object = this, this.view_.appendChild(a), d = Entry.createElement("span"), d.addClass("entryObjectCoordinateWorkspace"), a.appendChild(d), e = Entry.createElement("span"), e.addClass("entryObjectCoordinateSpanWorkspace"), e.innerHTML = "X:", f = Entry.createElement("input"), f.addClass("entryObjectCoordinateInputWorkspace"), h = Entry.createElement("span"), h.addClass("entryObjectCoordinateSpanWorkspace"), 
-    h.innerHTML = "Y:", g = Entry.createElement("input"), g.addClass("entryObjectCoordinateInputWorkspace entryObjectCoordinateInputWorkspace_right"), k = Entry.createElement("span"), k.addClass("entryObjectCoordinateSpanWorkspace"), k.innerHTML = "\ud06c\uae30:", m = Entry.createElement("input"), m.addClass("entryObjectCoordinateInputWorkspace", "entryObjectCoordinateInputWorkspace_size"), d.appendChild(e), d.appendChild(f), d.appendChild(h), d.appendChild(g), d.appendChild(k), d.appendChild(m), 
+    h.innerHTML = "Y:", g = Entry.createElement("input"), g.addClass("entryObjectCoordinateInputWorkspace entryObjectCoordinateInputWorkspace_right"), k = Entry.createElement("span"), k.addClass("entryObjectCoordinateSpanWorkspace"), k.innerHTML = Lang.Workspace.Size + " :", m = Entry.createElement("input"), m.addClass("entryObjectCoordinateInputWorkspace", "entryObjectCoordinateInputWorkspace_size"), d.appendChild(e), d.appendChild(f), d.appendChild(h), d.appendChild(g), d.appendChild(k), d.appendChild(m), 
     d.xInput_ = f, d.yInput_ = g, d.sizeInput_ = m, this.coordinateView_ = d, c = this, f.onkeypress = function(a) {
       13 == a.keyCode && (isNaN(f.value) || c.entity.setX(Number(f.value)), c.updateCoordinateView(), f.blur());
     }, f.onblur = function(a) {
@@ -9747,13 +9747,13 @@ Entry.VariableContainer.prototype.updateList = function() {
         e.object && !Entry.playground.object && (e.object = null);
         this.listView_.appendChild(this.listAddButton_);
         this.listView_.appendChild(this.listAddPanel.view);
-        this.variableSplitters.top.innerHTML = "\ubaa8\ub4e0 \uc624\ube0c\uc81d\ud2b8\uc5d0\uc11c \uc0ac\uc6a9\ub418\ub294 \ub9ac\uc2a4\ud2b8";
+        this.variableSplitters.top.innerHTML = Lang.Workspace.List_used_all_objects;
         this.listView_.appendChild(this.variableSplitters.top);
         this.updateVariableAddView("list");
         for (c in this.lists_) {
           d = this.lists_[c], d.object_ || (b.push(d), e = d.listElement, this.listView_.appendChild(e), d.callerListElement && this.listView_.appendChild(d.callerListElement));
         }
-        this.variableSplitters.bottom.innerHTML = "\ud2b9\uc815 \uc624\ube0c\uc81d\ud2b8\uc5d0\uc11c \uc0ac\uc6a9\ub418\ub294 \ub9ac\uc2a4\ud2b8";
+        this.variableSplitters.bottom.innerHTML = Lang.Workspace.list_used_specific_objects;
         this.listView_.appendChild(this.variableSplitters.bottom);
         for (c in this.lists_) {
           d = this.lists_[c], d.object_ && (b.push(d), e = d.listElement, this.listView_.appendChild(e), d.callerListElement && this.listView_.appendChild(d.callerListElement));
@@ -9962,7 +9962,7 @@ Entry.VariableContainer.prototype.createVariableView = function(a) {
     a.stopPropagation();
   });
   g.onblur = function(c) {
-    (c = this.value.trim()) && 0 != c.length ? b.changeVariableName(a, this.value) : (Entry.toast.alert("\uacbd\uace0", "\ubcc0\uc218\uc758 \uc774\ub984\uc740 \ube48 \uce78\uc774 \ub420 \uc218 \uc5c6\uc2b5\ub2c8\ub2e4.."), this.value = a.getName());
+    (c = this.value.trim()) && 0 != c.length ? b.changeVariableName(a, this.value) : (Entry.toast.alert(Lang.Msgs.warn, Lang.Workspace.variable_can_not_space), this.value = a.getName());
   };
   g.onkeydown = function(a) {
     13 == a.keyCode && this.blur();
@@ -10034,7 +10034,7 @@ Entry.VariableContainer.prototype.createMessageView = function(a) {
     a.stopPropagation();
   });
   h.onblur = function(c) {
-    (c = this.value.trim()) && 0 != c.length ? (b.changeMessageName(a, this.value), e.removeClass("entryRemove"), f.addClass("entryRemove"), h.setAttribute("disabled", "disabled")) : (Entry.toast.alert("\uacbd\uace0", "\uc2e0\ud638\uc758 \uc774\ub984\uc740 \ube48 \uce78\uc774 \ub420 \uc218 \uc5c6\uc2b5\ub2c8\ub2e4.."), this.value = a.name);
+    (c = this.value.trim()) && 0 != c.length ? (b.changeMessageName(a, this.value), e.removeClass("entryRemove"), f.addClass("entryRemove"), h.setAttribute("disabled", "disabled")) : (Entry.toast.alert(Lang.Msgs.warn, Lang.Msgs.sign_can_not_space), this.value = a.name);
   };
   h.onkeydown = function(a) {
     13 == a.keyCode && this.blur();
@@ -10116,7 +10116,7 @@ Entry.VariableContainer.prototype.createListView = function(a) {
     a.stopPropagation();
   });
   g.onblur = function(c) {
-    (c = this.value.trim()) && 0 != c.length ? b.changeListName(a, this.value) : (Entry.toast.alert("\uacbd\uace0", "\ub9ac\uc2a4\ud2b8\uc758 \uc774\ub984\uc740 \ube48 \uce78\uc774 \ub420 \uc218 \uc5c6\uc2b5\ub2c8\ub2e4.."), this.value = a.getName());
+    (c = this.value.trim()) && 0 != c.length ? b.changeListName(a, this.value) : (Entry.toast.alert(Lang.Msgs.warn, Lang.Msgs.list_can_not_space), this.value = a.getName());
   };
   g.onkeydown = function(a) {
     13 == a.keyCode && this.blur();
@@ -10251,7 +10251,7 @@ Entry.VariableContainer.prototype.generateVariableAddView = function() {
   b = Entry.createElement("span");
   b.addClass("entryVariableAddSpaceConfirmWorkspace");
   b.addClass("entryVariableAddSpaceButtonWorkspace");
-  b.innerHTML = Lang.Buttons.save;
+  b.innerHTML = Lang.Buttons.ok;
   b.variableContainer = this;
   b.bindOnClick(function(b) {
     Entry.variableContainer.addVariable();
@@ -10276,7 +10276,7 @@ Entry.VariableContainer.prototype.generateListAddView = function() {
   b.appendChild(c);
   var d = Entry.createElement("input");
   d.addClass("entryVariableAddSpaceInputWorkspace");
-  d.setAttribute("placeholder", "\ub9ac\uc2a4\ud2b8 \uc774\ub984");
+  d.setAttribute("placeholder", Lang.Workspace.list_name);
   this.listAddPanel.view.name = d;
   d.variableContainer = this;
   d.onkeypress = function(b) {
@@ -10291,7 +10291,7 @@ Entry.VariableContainer.prototype.generateListAddView = function() {
   });
   b.appendChild(c);
   d = Entry.createElement("span");
-  d.innerHTML = "\ubaa8\ub4e0 \uc624\ube0c\uc81d\ud2b8\uc5d0\uc11c \uc0ac\uc6a9";
+  d.innerHTML = Lang.Workspace.Variable_use_all_objects;
   c.appendChild(d);
   d = Entry.createElement("span");
   d.addClass("entryVariableAddSpaceCheckWorkspace");
@@ -10305,7 +10305,7 @@ Entry.VariableContainer.prototype.generateListAddView = function() {
   });
   b.appendChild(c);
   d = Entry.createElement("span");
-  d.innerHTML = "\uc774 \uc624\ube0c\uc81d\ud2b8\uc5d0\uc11c \uc0ac\uc6a9";
+  d.innerHTML = Lang.Workspace.Variable_use_this_object;
   c.appendChild(d);
   d = Entry.createElement("span");
   d.addClass("entryVariableAddSpaceCheckWorkspace");
@@ -10336,7 +10336,7 @@ Entry.VariableContainer.prototype.generateListAddView = function() {
   b = Entry.createElement("span");
   b.addClass("entryVariableAddSpaceCancelWorkspace");
   b.addClass("entryVariableAddSpaceButtonWorkspace");
-  b.innerHTML = "\ucde8\uc18c";
+  b.innerHTML = Lang.Buttons.cancel;
   b.bindOnClick(function(b) {
     a.listAddPanel.view.addClass("entryRemove");
     a.resetVariableAddPanel("list");
@@ -10345,7 +10345,7 @@ Entry.VariableContainer.prototype.generateListAddView = function() {
   b = Entry.createElement("span");
   b.addClass("entryVariableAddSpaceConfirmWorkspace");
   b.addClass("entryVariableAddSpaceButtonWorkspace");
-  b.innerHTML = "\ud655\uc778";
+  b.innerHTML = Lang.Buttons.ok;
   b.variableContainer = this;
   b.bindOnClick(function(b) {
     a.addList();
@@ -10435,7 +10435,7 @@ Entry.VariableContainer.prototype.generateVariableSettingView = function() {
   });
   b.appendChild(c);
   var d = Entry.createElement("span");
-  d.innerHTML = "\ubcc0\uc218 \ubcf4\uc774\uae30";
+  d.innerHTML = Lang.Workspace.show_variable;
   c.appendChild(d);
   d = Entry.createElement("span");
   d.addClass("entryVariableSettingCheckWorkspace");
@@ -10445,7 +10445,7 @@ Entry.VariableContainer.prototype.generateVariableSettingView = function() {
   c.addClass("entryVariableSettingInitValueWrapperWorkspace");
   b.appendChild(c);
   d = Entry.createElement("span");
-  d.innerHTML = "\uae30\ubcf8\uac12";
+  d.innerHTML = Lang.Workspace.default_value;
   c.appendChild(d);
   d = Entry.createElement("input");
   d.addClass("entryVariableSettingInitValueInputWorkspace");
@@ -10466,7 +10466,7 @@ Entry.VariableContainer.prototype.generateVariableSettingView = function() {
   c.addClass("entryVariableSettingSlideWrapperWorkspace");
   b.appendChild(c);
   d = Entry.createElement("span");
-  d.innerHTML = "\uc2ac\ub77c\uc774\ub4dc";
+  d.innerHTML = Lang.Workspace.slide;
   c.appendChild(d);
   d = Entry.createElement("span");
   d.addClass("entryVariableSettingCheckWorkspace");
@@ -10497,7 +10497,7 @@ Entry.VariableContainer.prototype.generateVariableSettingView = function() {
   c.addClass("entryVariableSettingMinMaxWrapperWorkspace");
   b.appendChild(c);
   d = Entry.createElement("span");
-  d.innerHTML = "\ucd5c\uc18c\uac12";
+  d.innerHTML = Lang.Workspace.min_value;
   c.appendChild(d);
   var e = Entry.createElement("input");
   e.addClass("entryVariableSettingMinValueInputWorkspace");
@@ -10510,7 +10510,7 @@ Entry.VariableContainer.prototype.generateVariableSettingView = function() {
   c.appendChild(e);
   var f = Entry.createElement("span");
   f.addClass("entryVariableSettingMaxValueSpanWorkspace");
-  f.innerHTML = "\ucd5c\ub300\uac12";
+  f.innerHTML = Lang.Workspace.max_value;
   c.appendChild(f);
   var h = Entry.createElement("input");
   h.addClass("entryVariableSettingMaxValueInputWorkspace");
@@ -10550,7 +10550,7 @@ Entry.VariableContainer.prototype.generateListSettingView = function() {
   });
   b.appendChild(c);
   var d = Entry.createElement("span");
-  d.innerHTML = "\ub9ac\uc2a4\ud2b8 \ubcf4\uc774\uae30";
+  d.innerHTML = Lang.Workspace.VARIABLE_show_list;
   c.appendChild(d);
   d = Entry.createElement("span");
   d.addClass("entryListSettingCheckWorkspace");
@@ -10560,7 +10560,7 @@ Entry.VariableContainer.prototype.generateListSettingView = function() {
   d.addClass("entryListSettingLengthWrapperWorkspace");
   c = Entry.createElement("span");
   c.addClass("entryListSettingLengthSpanWorkspace");
-  c.innerHTML = "\ub9ac\uc2a4\ud2b8 \ud56d\ubaa9 \uc218";
+  c.innerHTML = Lang.Workspace.number_of_list;
   d.appendChild(c);
   b.appendChild(d);
   c = Entry.createElement("div");
