@@ -322,6 +322,7 @@ Entry.EntityObject.prototype.setScaleX = function(scaleX) {
     /** @type {number} */
     this.scaleX = scaleX;
     this.object.scaleX = this.scaleX;
+    this.parent.updateCoordinateView();
     this.updateDialog();
 };
 
@@ -341,6 +342,7 @@ Entry.EntityObject.prototype.setScaleY = function(scaleY) {
     /** @type {number} */
     this.scaleY = scaleY;
     this.object.scaleY = this.scaleY;
+    this.parent.updateCoordinateView();
     this.updateDialog();
 };
 
