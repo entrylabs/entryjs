@@ -4415,7 +4415,7 @@ Entry.EntityObject.prototype.getFontName = function() {
   }
 };
 Entry.EntityObject.prototype.setText = function(a) {
-  "textBox" == this.parent.objectType && (null == a && (a = ""), this.text = a, this.textObject.text = this.text, this.lineBreak || this.setWidth(this.textObject.getMeasuredWidth()), this.updateBG(), Entry.stage.updateObject());
+  "textBox" == this.parent.objectType && (null == a && (a = ""), this.text = a, this.textObject.text = this.text, this.lineBreak || (this.setWidth(this.textObject.getMeasuredWidth()), this.parent.updateCoordinateView()), this.updateBG(), Entry.stage.updateObject());
 };
 Entry.EntityObject.prototype.getText = function() {
   return this.text;
