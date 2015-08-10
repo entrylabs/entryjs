@@ -4604,7 +4604,7 @@ p.blockHelperOn = function() {
   a.parentView_.appendChild(b);
   if (!Entry.isForLecture) {
     var c = Entry.createElement("div", "entryBlockHelperHeaderWorkspace");
-    c.innerHTML = "\ube14\ub85d \uc124\uba85";
+    c.innerHTML = Lang.Workspace.block_explain;
     var d = Entry.createElement("button", "entryBlockHelperDisposeWorkspace");
     d.addClass("entryBtn");
     d.bindOnClick(function() {
@@ -4626,7 +4626,7 @@ p.blockHelperOn = function() {
   a.blockHelperContent_.appendChild(b);
   b = Entry.createElement("div", "entryBlockHelperDescriptionWorkspace");
   a.blockHelperContent_.appendChild(b);
-  b.innerHTML = "\ube14\ub85d\uc744 \ud074\ub9ad\ud558\uba74 \ube14\ub85d\uc5d0 \ub300\ud55c \uc124\uba85\uc774 \ub098\ud0c0\ub0a9\ub2c8\ub2e4.";
+  b.innerHTML = Lang.Workspace.block_intro;
   this.blockHelperDescription_ = b;
   this.blockChangeEvent = Blockly.bindEvent_(Blockly.mainWorkspace.getCanvas(), "blocklySelectChange", this, this.updateSelectedBlock);
   Entry.playground.blockMenu && (this.menuBlockChangeEvent = Blockly.bindEvent_(Entry.playground.blockMenu.workspace_.getCanvas(), "blocklySelectChange", this, this.updateSelectedBlock));
@@ -4650,10 +4650,12 @@ p.updateSelectedBlock = function() {
   Blockly.selected && (this.first && (this.blockHelperContent_.removeClass("entryBlockHelperIntro"), this.first = !1), this.renderBlock(Blockly.selected.type));
 };
 p.renderBlock = function(a) {
-  if (a = this.blockHelpData[a]) {
-    var b = jQuery.parseXML(a.xml), b = this.blockMenu_.show(b.childNodes);
-    this.blockHelperDescription_.innerHTML = a.description;
-    $(this.blockHelperDescription_).css({top:b + 40});
+  var b = this.blockHelpData[a];
+  if (b) {
+    var c = jQuery.parseXML(b.xml), c = this.blockMenu_.show(c.childNodes);
+    this.blockHelperDescription_.innerHTML = b.description;
+    this.blockHelperDescription_.innerHTML = Lang.Helper[a];
+    $(this.blockHelperDescription_).css({top:c + 40});
   }
 };
 Entry.HW = function() {
@@ -7862,11 +7864,11 @@ Entry.Scene.prototype.generateElement = function(a) {
     e.scene = a;
     e.bindOnClick(function(a) {
       a.stopPropagation();
-      Entry.engine.isState("run") || confirm("\uc120\ud0dd\ud55c \uc7a5\uba74\uc744 \uc0ad\uc81c \ud558\uc2dc\uaca0\uc2b5\ub2c8\uae4c?") && Entry.scene.removeScene(this.scene);
+      Entry.engine.isState("run") || confirm(Lang.Workspace.will_you_delete_scene) && Entry.scene.removeScene(this.scene);
     });
     d.appendChild(e);
   }
-  $ && context.attach("#" + a.id, [{text:"\ubcf5\uc81c\ud558\uae30", href:"/", action:function(b) {
+  $ && context.attach("#" + a.id, [{text:Lang.Workspace.duplicate_scene, href:"/", action:function(b) {
     b.preventDefault();
     Entry.scene.cloneScene(a);
   }}]);
@@ -7908,7 +7910,7 @@ Entry.Scene.prototype.addScene = function(a, b) {
 };
 Entry.Scene.prototype.removeScene = function(a) {
   if (1 >= this.getScenes().length) {
-    Entry.toast.alert(Lang.Msgs.runtime_error, "\uc7a5\uba74\uc740 \ucd5c\uc18c \ud558\ub098 \uc774\uc0c1 \uc874\uc7ac \ud574\uc57c \ud569\ub2c8\ub2e4.", !1);
+    Entry.toast.alert(Lang.Msgs.runtime_error, Lang.Workspace.Scene_delete_error, !1);
   } else {
     var b = this.getScenes().indexOf(this.getSceneById(a.id));
     this.getScenes().splice(b, 1);
@@ -7964,9 +7966,9 @@ Entry.Scene.prototype.createScene = function() {
 };
 Entry.Scene.prototype.cloneScene = function(a) {
   if (this.scenes_.length >= this.maxCount) {
-    Entry.toast.alert(Lang.Msgs.runtime_error, "\uc7a5\uba74\uc740 \ucd5c\ub300 10\uac1c\uae4c\uc9c0 \ucd94\uac00 \uac00\ub2a5\ud569\ub2c8\ub2e4.", !1);
+    Entry.toast.alert(Lang.Msgs.runtime_error, Lang.Workspace.Scene_add_error, !1);
   } else {
-    var b = {name:a.name + "\uc758 \ubcf5\uc81c\ubcf8", id:Entry.generateHash()};
+    var b = {name:a.name + Lang.Workspace.replica_of_object, id:Entry.generateHash()};
     this.generateElement(b);
     this.addScene(b);
     a = Entry.container.getSceneObjects(a);

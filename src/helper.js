@@ -38,7 +38,7 @@ p.blockHelperOn = function() {
     if (!Entry.isForLecture) {
         var blockHelperHeader = Entry.createElement('div',
                                 'entryBlockHelperHeaderWorkspace');
-        blockHelperHeader.innerHTML = '블록 설명';
+        blockHelperHeader.innerHTML = Lang.Workspace.block_explain;
         var blockHelperDispose = Entry.createElement('button',
                                 'entryBlockHelperDisposeWorkspace');
         blockHelperDispose.addClass('entryBtn');
@@ -67,7 +67,7 @@ p.blockHelperOn = function() {
     var blockHelperDescription = Entry.createElement('div',
                             'entryBlockHelperDescriptionWorkspace');
     helper.blockHelperContent_.appendChild(blockHelperDescription);
-    blockHelperDescription.innerHTML = '블록을 클릭하면 블록에 대한 설명이 나타납니다.';
+    blockHelperDescription.innerHTML = Lang.Workspace.block_intro;
     this.blockHelperDescription_ = blockHelperDescription;
 
     this.blockChangeEvent = Blockly.bindEvent_(Blockly.mainWorkspace.getCanvas(),
@@ -125,6 +125,7 @@ p.renderBlock = function(type) {
     var XML = jQuery.parseXML(xmlText);
     var blockHeight = this.blockMenu_.show(XML.childNodes);
     this.blockHelperDescription_.innerHTML = data.description;
+    this.blockHelperDescription_.innerHTML = Lang.Helper[type];
     $(this.blockHelperDescription_).css({
         top: blockHeight + 40
     })
