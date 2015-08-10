@@ -664,12 +664,3 @@ Entry.Stage.prototype.moveSprite = function (e) {
     this.updateObject();
 };
 
-Entry.Stage.prototype.getCoordinatorVisibility = function() {
-    return this.coordinator.visible;
-};
-
-Entry.Stage.prototype.setCoordinatorVisibility = function(bool) {
-    if (bool === undefined)
-        bool = false;
-    return this.coordinator.visible = bool;
-};

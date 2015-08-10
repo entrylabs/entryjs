@@ -38,7 +38,6 @@ Entry.loadProject = function(project) {
         Entry.variableContainer.setFunctions(project.functions);
         Entry.scene.addScenes(project.scenes);
         Entry.stage.initObjectContainers();
-        Entry.stage.setCoordinatorVisibility(project.isCoordinatorVisible);
         Entry.container.setObjects(project.objects);
         Entry.FPS = project.speed ? project.speed : 60;
         createjs.Ticker.setFPS(Entry.FPS);
