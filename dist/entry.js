@@ -8275,7 +8275,7 @@ Entry.Stage.prototype.updateObject = function() {
 Entry.Stage.prototype.updateHandle = function() {
   this.editEntity = !0;
   var a = this.handle, b = this.selectedObject.entity;
-  b.lineBreak ? (b.setHeight(a.height / b.getScaleY()), b.setWidth(a.width / b.getScaleX())) : (0 > b.getScaleX() ? b.setScaleX(-a.width / b.width) : b.setScaleX(a.width / b.width), b.setScaleY(a.height / b.height));
+  b.lineBreak ? (b.setHeight(a.height / b.getScaleY()), b.setWidth(a.width / b.getScaleX())) : (0 !== b.width && b.setScaleX(Math.sign(b.getScaleX()) * a.width / b.width), 0 !== b.height && b.setScaleY(a.height / b.height));
   var c = a.rotation / 180 * Math.PI;
   if ("textBox" == b.type) {
     var d = a.regX / b.scaleX, d = a.regY / b.scaleY;
