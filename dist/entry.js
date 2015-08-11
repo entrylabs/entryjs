@@ -3084,17 +3084,16 @@ Entry.Model = function(b) {
     a.unobserve = this.unobserve;
     a.notify = this.notify;
   };
-  b.observe = function(a) {
-    this.observers.push(a);
+  b.observe = function(a, b, d) {
+    this.observers.push({object:a, funcName:b, attrs:d});
   };
   b.unobserve = function(a) {
     a = this.observers.indexOf(a);
     -1 < a && this.observers.splice(a, 1);
   };
-  b.notify = function(a, b) {
-    var d = this;
-    d.observers.map(function(e) {
-      e.update([{name:a, object:d, oldValue:b}]);
+  b.notify = function(a) {
+    this.observers.map(function(a) {
+      a.object[a.funcName]();
     });
   };
 })(Entry.Model);

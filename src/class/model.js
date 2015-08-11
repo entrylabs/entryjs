@@ -46,8 +46,17 @@ Entry.Model = function(obj) {
         obj.notify = this.notify;
     };
 
-    m.observe = function(view) {
-        this.observers.push(view);
+    /*
+     * @param {object} object that observe this model
+     * @param {string} eventFunc will be call when notify
+     * @param {?object} attrs includes which property to watch. Should be array or null.
+     */
+    m.observe = function(object, funcName, attrs) {
+        this.observers.push({
+            object: object,
+            funcName: funcName,
+            attrs: attrs
+        });
     };
 
     m.unobserve = function(view) {
@@ -56,14 +65,15 @@ Entry.Model = function(obj) {
             this.observers.splice(index, 1);
     };
 
-    m.notify = function(key, oldValue) {
+    /*
+     * @param {object|string} key
+     */
+    m.notify = function(keys) {
+        if (typeof key === 'string') keys = [keys];
+
         var that = this;
-        that.observers.map(function (observer) {
-            observer.update([{
-                name: key,
-                object: that,
-                oldValue: oldValue
-            }]);
+        that.observers.map(function (observeData) {
+            observeData.object[observeData.funcName]();
         });
     };
 
