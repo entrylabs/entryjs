@@ -1,7 +1,12 @@
 "use strict";
 
 describe('Entry.Model', function(){
-    var schema, datum;
+    var schema, datum, never;
+
+    before(function() {
+        never = function(){ assert(false, "this function should not be called") };
+    });
+
     beforeEach(function() {
         schema = {
             id: 0,
@@ -15,6 +20,7 @@ describe('Entry.Model', function(){
         constructor.prototype.schema = schema;
 
         datum = new constructor();
+
     });
 
     it('should be a function', function(){
@@ -65,11 +71,31 @@ describe('Entry.Model', function(){
 
     describe('observer feature', function() {
         context('when model change', function() {
-            it('should notify', function(done) {
+            it('should notify when observe everything', function(done) {
                 var obj = {done: done};
                 datum.observe(obj, 'done');
 
                 datum.value = 3;
+            });
+
+            it('should notify when specific observed data change', function(done) {
+                var obj = {done: done};
+                datum.observe(obj, 'done', ['value']);
+
+                datum.value = 3;
+            });
+
+            it('should not notify when not observed data change', function() {
+                var obj = {done: never};
+                datum.observe(obj, 'done', ['id']);
+
+                datum.value = 3;
+            });
+
+            it('should not notify once when edit data at once', function() {
+            });
+
+            it('should provide change information properly', function() {
             });
         });
     });

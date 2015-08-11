@@ -2,6 +2,8 @@
 
 goog.provide("Entry.Model");
 
+goog.require("Entry.Utils");
+
 /*
  * Entry Model object generator.
  * @param {object} obj
@@ -69,11 +71,17 @@ Entry.Model = function(obj) {
      * @param {object|string} key
      */
     m.notify = function(keys) {
-        if (typeof key === 'string') keys = [keys];
+        if (typeof keys === 'string') keys = [keys];
 
         var that = this;
         that.observers.map(function (observeData) {
-            observeData.object[observeData.funcName]();
+            if (observeData.attrs === undefined)
+                observeData.object[observeData.funcName]();
+            else {
+                var attrs = Entry.Utils.intersectArray(observeData.attrs, keys);
+                if (attrs.length)
+                    observeData.object[observeData.funcName]();
+            }
         });
     };
 
