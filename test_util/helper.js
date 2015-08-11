@@ -9,7 +9,7 @@ Test.randomString = function() {
 };
 
 Test.randomNumber = function() {
-    Math.floor(Math.random() * 100);
+    return Math.floor(Math.random() * 100);
 };
 
 window.Test = Test;
