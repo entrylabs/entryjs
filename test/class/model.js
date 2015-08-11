@@ -11,10 +11,11 @@ describe('Entry.Model', function(){
             var value = Test.randomString();
             var schema = {};
             schema[key] = value;
-
             var constructor = function() {
-                Entry.Model(this, schema);
+                Entry.Model(this);
             };
+
+            constructor.prototype.schema = schema;
             var datum = new constructor();
 
             assert.equal(datum[key], value);
@@ -29,8 +30,10 @@ describe('Entry.Model', function(){
             schema[key] = value;
 
             var constructor = function() {
-                Entry.Model(this, schema);
+                Entry.Model(this);
             };
+            constructor.prototype.schema = schema;
+
             var datum = new constructor();
 
             value = Test.randomString();
@@ -66,8 +69,10 @@ describe('Entry.Model', function(){
             schema[key] = 0;
 
             var constructor = function() {
-                Entry.Model(this, schema);
+                Entry.Model(this);
             };
+            constructor.prototype.schema = schema;
+
             var datum = new constructor();
 
             var flag = false;
@@ -88,8 +93,10 @@ describe('Entry.Model', function(){
             schema[key] = oldValue;
 
             var constructor = function() {
-                Entry.Model(this, schema);
+                Entry.Model(this);
             };
+            constructor.prototype.schema = schema;
+
             var datum = new constructor();
 
             var change;
@@ -125,8 +132,10 @@ describe('Entry.Model', function(){
             schema[key] = oldValue;
 
             var constructor = function() {
-                Entry.Model(this, schema);
+                Entry.Model(this);
             };
+            constructor.prototype.schema = schema;
+
             var datum = new constructor();
 
             var flag = false;
