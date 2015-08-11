@@ -35,6 +35,13 @@ Entry.Collection = function(data) {
 (function(p) {
     /* setters */
     p.set = function(data) {
+        if (!data)
+            data = [];
+        this._hashMap = {};
+        for (var i = 0, len = data.length; i<len; i++) {
+            var datum = data[i];
+            this._hashMap[datum.id] = datum;
+        }
         this._data = data;
     };
 
@@ -44,13 +51,22 @@ Entry.Collection = function(data) {
     };
 
     p.unshift = function() {
+        var args = Array.prototype.slice.call(arguments,0);
+        for (var i=args.length-1; i>=0; i--) {
+            var datum = args[i];
+            this._data.unshift(datum);
+            this._hashMap[datum.id] = datum;
+        }
     };
 
-    p.insert = function() {
+    p.insert = function(datum, index) {
+        this._data.splice(index, 0, datum);
+        this._hashMap[datum.id] = datum;
     };
 
     /* getters */
-    p.has = function() {
+    p.has = function(id) {
+        return !!this._hashMap[id];
     };
 
     p.get = function(id) {
@@ -65,9 +81,19 @@ Entry.Collection = function(data) {
     };
 
     p.pop = function() {
+        if (this.length === 0)
+            return undefined;
+        var data = this._data;
+        var datum = data.splice(data.length-1, 1)[0];
+        delete this._hashMap[datum.id];
+        return datum;
     };
 
-    p.shift= function() {
+    p.shift = function() {
+    };
+
+    p.toArray = function() {
+        return this._data;
     };
 
     /* removers */
