@@ -2994,6 +2994,64 @@ Blockly.Blocks.options_for_list = {init:function() {
 Entry.block.options_for_list = function(b, a) {
   return a.getField("OPERATOR", a);
 };
+Entry.Collection = function(b) {
+  this._data = [];
+  this._hashMap = {};
+  this._observers = [];
+  Object.defineProperty(this, "length", {get:function() {
+    return this._data.length;
+  }});
+  this.set(b);
+};
+(function(b) {
+  b.set = function(a) {
+    this._data = a;
+  };
+  b.push = function(a) {
+    this._data.push(a);
+    this._hashMap[a.id] = a;
+  };
+  b.unshift = function() {
+  };
+  b.insert = function() {
+  };
+  b.has = function() {
+  };
+  b.get = function(a) {
+    return this._hashMap[a];
+  };
+  b.at = function(a) {
+    return this._data[a];
+  };
+  b.find = function() {
+  };
+  b.pop = function() {
+  };
+  b.shift = function() {
+  };
+  b.splice = function() {
+  };
+  b.clear = function() {
+  };
+  b.map = function() {
+  };
+  b.moveTo = function(a, b) {
+  };
+  b.sort = function() {
+  };
+  b.fromJSON = function() {
+  };
+  b.toJSON = function() {
+  };
+  b.observe = function() {
+  };
+  b.unobserve = function() {
+  };
+  b.notify = function() {
+  };
+  b.destroy = function() {
+  };
+})(Entry.Collection.prototype);
 Entry.Model = function(b) {
   var a = Entry.Model;
   a.generateSchema(b);
@@ -3002,42 +3060,42 @@ Entry.Model = function(b) {
   return b;
 };
 (function(b) {
-  function a(a) {
-    this.observers.push(a);
-  }
-  function c(a) {
-    a = this.observers.indexOf(a);
-    -1 < a && this.observers.splice(a, 1);
-  }
-  function d(a, b) {
-    var c = this;
-    c.observers.map(function(d) {
-      d.update([{name:a, object:c, oldValue:b}]);
-    });
-  }
   b.generateSchema = function(a) {
     var b = a.schema;
     if (void 0 !== b) {
       b = JSON.parse(JSON.stringify(b));
       a.data = {};
-      for (var c in b) {
-        (function(c) {
-          a.data[c] = b[c];
-          Object.defineProperty(a, c, {get:function() {
-            return a.data[c];
+      for (var d in b) {
+        (function(d) {
+          a.data[d] = b[d];
+          Object.defineProperty(a, d, {get:function() {
+            return a.data[d];
           }, set:function(b) {
-            a.notify(c, a.data[c]);
-            a.data[c] = b;
+            a.notify(d, a.data[d]);
+            a.data[d] = b;
           }});
-        })(c);
+        })(d);
       }
     }
   };
-  b.generateObserve = function(b) {
-    b.observers = [];
-    b.observe = a;
-    b.unobserve = c;
-    b.notify = d;
+  b.generateObserve = function(a) {
+    a.observers = [];
+    a.observe = this.observe;
+    a.unobserve = this.unobserve;
+    a.notify = this.notify;
+  };
+  b.observe = function(a) {
+    this.observers.push(a);
+  };
+  b.unobserve = function(a) {
+    a = this.observers.indexOf(a);
+    -1 < a && this.observers.splice(a, 1);
+  };
+  b.notify = function(a, b) {
+    var d = this;
+    d.observers.map(function(e) {
+      e.update([{name:a, object:d, oldValue:b}]);
+    });
   };
 })(Entry.Model);
 Entry.db = {data:{}, typeMap:{}};

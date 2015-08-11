@@ -41,22 +41,22 @@ Entry.Model = function(obj) {
 
     m.generateObserve = function(obj) {
         obj.observers = [];
-        obj.observe = observe;
-        obj.unobserve = unobserve;
-        obj.notify = notify;
+        obj.observe = this.observe;
+        obj.unobserve = this.unobserve;
+        obj.notify = this.notify;
     };
 
-    function observe(view) {
+    m.observe = function(view) {
         this.observers.push(view);
     };
 
-    function unobserve(view) {
+    m.unobserve = function(view) {
         var index = this.observers.indexOf(view);
         if (index > -1)
             this.observers.splice(index, 1);
     };
 
-    function notify(key, oldValue) {
+    m.notify = function(key, oldValue) {
         var that = this;
         that.observers.map(function (observer) {
             observer.update([{
@@ -66,5 +66,6 @@ Entry.Model = function(obj) {
             }]);
         });
     };
+
 })(Entry.Model);
 
