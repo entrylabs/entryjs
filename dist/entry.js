@@ -2623,9 +2623,9 @@ Entry.block.message_cast_wait = function(b, a) {
   }
   var e = [];
   Entry.container.mapEntityIncludeCloneOnScene(function(a, b) {
-    for (var c = b[0], d = b[1], n = a.parent.script.childNodes, l = 0;l < n.length;l++) {
-      var m = n[l], k = Entry.Xml.getField("VALUE", m);
-      Entry.Xml.isTypeOf(c, m) && k == d && (k = new Entry.Script(a), k.init(m), e.push(k));
+    for (var c = b[0], d = b[1], k = a.parent.script.childNodes, n = 0;n < k.length;n++) {
+      var p = k[n], l = Entry.Xml.getField("VALUE", p);
+      Entry.Xml.isTypeOf(c, p) && l == d && (l = new Entry.Script(a), l.init(p), e.push(l));
     }
   }, ["when_message_cast", c]);
   a.runningScript = e;
@@ -3006,10 +3006,14 @@ Entry.Collection = function(b) {
 (function(b) {
   b.set = function(a) {
     a || (a = []);
-    this._hashMap = {};
-    for (var b = 0, d = a.length;b < d;b++) {
-      var e = a[b];
-      this._hashMap[e.id] = e;
+    var b = this._hashMap, d;
+    for (d in b) {
+      delete b[d];
+    }
+    d = 0;
+    for (var e = a.length;d < e;d++) {
+      var f = a[d];
+      b[f.id] = f;
     }
     this._data = a;
   };
@@ -3047,23 +3051,57 @@ Entry.Collection = function(b) {
     }
   };
   b.shift = function() {
+    if (0 !== this.length) {
+      var a = this._data.shift();
+      delete this._hashMap[a.id];
+      return a;
+    }
   };
-  b.toArray = function() {
-    return this._data;
-  };
-  b.splice = function() {
+  b.splice = function(a, b) {
+    var d = Array.prototype.slice.call(arguments, 2);
+    if (!(0 > a || a > this.length)) {
+      for (var e = this._data, f = this._hashMap, h = e.splice(a, b), g = 0, m = h.length;g < m;g++) {
+        delete f[h[g].id];
+      }
+      g = 0;
+      for (m = d.length;g < m;g++) {
+        var k = d[g];
+        e.splice(a++, 0, k);
+        f[k.id] = k;
+      }
+      return h;
+    }
   };
   b.clear = function() {
+    for (var a = this._data, b = this._hashMap;this.length;) {
+      a.pop();
+    }
+    for (var d in b) {
+      delete b[d];
+    }
   };
-  b.map = function() {
+  b.map = function(a, b) {
+    for (var d = this._data, e = 0, f = this.length;e < f;e++) {
+      a(d[e], b);
+    }
   };
-  b.moveTo = function(a, b) {
+  b.moveFromTo = function(a, b) {
+    var d = this.length - 1;
+    if (!(0 > a || 0 > b || a > d || b > d)) {
+      var d = this._data, e = d[b];
+      d[b] = d[a];
+      d[a] = e;
+    }
   };
   b.sort = function() {
   };
   b.fromJSON = function() {
   };
   b.toJSON = function() {
+    for (var a = [], b = this._data, d = 0, e = this.length;d < e;d++) {
+      a.push(b[d].toJSON());
+    }
+    return a;
   };
   b.observe = function() {
   };

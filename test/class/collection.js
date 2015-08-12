@@ -158,6 +158,144 @@ describe('Entry.Collection', function(){
             col.pop();
             col.length.should.be.equal(2);
         });
+    });
 
+    describe('#shift()', function(){
+        it('should return proper datum at fist index', function() {
+            col.shift().should.be.deep.equal(a);
+        });
+
+        it('should return undefined when empty', function() {
+            col.set([]);
+            expect(col.shift()).to.be.an('undefined');
+        });
+
+        it('should return undefined by get method after shift', function() {
+            var datum = col.shift();
+            expect(col.get(datum.id)).to.be.an('undefined');
+        });
+
+        it('length should be decrease', function() {
+            col.shift();
+            col.length.should.be.equal(2);
+        });
+    });
+
+    describe('#splice()', function(){
+        it('should return proper data', function() {
+            col.splice(0,1)[0].should.be.deep.equal(a);
+            col.set([a,b]);
+            col.splice(1,1)[0].should.be.deep.equal(b);
+            var inputs = [a,b,c];
+            col.set([a,b,c]);
+            var ret = col.splice(0,3);
+            for (var i=0,len=ret.length; i<len; i++)
+                ret[i].should.be.deep.equal(inputs[i]);
+        });
+
+        it('length should be adjusted', function() {
+            col.splice(0,2);
+            col.length.should.be.equal(1);
+
+            col.set([a,b,c]);
+            col.splice(1,2);
+            col.length.should.be.equal(1);
+
+            col.set([a,b,c]);
+            col.splice(2,2);
+            col.length.should.be.equal(2);
+
+            col.set([a,b,c]);
+            col.splice(1,2,b);
+            col.length.should.be.equal(2);
+
+            col.set([a,b,c]);
+            col.splice(2,1,b,c);
+            col.length.should.be.equal(4);
+        });
+
+        it('should append data at proper position', function() {
+            col.splice(0,2,a);
+            col.at(0).should.be.deep.equal(a);
+
+
+            col.set([b,c]);
+            var inputs = [a,d];
+            col.splice(0,1,a,d);
+
+            for (var i=0,len=inputs.length; i<len; i++)
+                col.at(i).should.be.deep.equal(inputs[i]);
+        });
+
+        it('should return undefined by get method after splice', function() {
+            var data = col.shift(0,2);
+            for (var i=0,len=data.length; i<len; i++)
+                expect(col.get(data.id)).to.be.an('undefined');
+        });
+
+        it('should return proper by get method', function() {
+            var inputs = [a,d];
+            col.splice(0,1,a,d);
+            for (var i=0,len=inputs.length; i<len; i++)
+                col.get(inputs[i].id).should.be.deep.equal(inputs[i]);
+        });
+    });
+
+    describe('#clear()', function(){
+        it('should return undefined when empty', function() {
+            col.clear();
+            expect(col.shift()).to.be.an('undefined');
+            expect(col.pop()).to.be.an('undefined');
+            expect(col.at(0)).to.be.an('undefined');
+        });
+
+        it('should return undefined by get method', function() {
+            col.clear();
+            expect(col.get(a.id)).to.be.an('undefined');
+            expect(col.get(b.id)).to.be.an('undefined');
+        });
+
+        it('length should be zero', function() {
+            col.clear();
+            col.length.should.be.equal(0);
+        });
+    });
+
+    describe('#movoFromTo()', function(){
+        it('length should be same', function() {
+            col.moveFromTo(1,2);
+            col.length.should.be.equal(3);
+        });
+
+        it('should return proper datum by at method', function() {
+            col.moveFromTo(0,2);
+            col.at(2).should.be.deep.equal(a);
+
+            col.set([a,b,c]);
+            col.moveFromTo(2,0);
+            col.at(2).should.be.deep.equal(a);
+
+            col.set([a,b,c,d]);
+            col.moveFromTo(2,0);
+            col.at(0).should.be.deep.equal(c);
+        });
+
+        it('should return proper datum by get method', function() {
+            var inputs = [a,b,c];
+
+            for (var i=0,len=col.length; i<len; i++)
+                col.get(inputs[i].id).should.be.deep.equal(inputs[i]);
+        });
+    });
+
+    describe('#map()', function(){
+        it('should iterate every datum', function() {
+            var inputs = [a,b,c];
+            var cnt = 0;
+            col.map(function(datum, inputs){
+                datum.should.be.deep.equal(inputs[cnt++]);
+            }, inputs);
+
+        });
     });
 });

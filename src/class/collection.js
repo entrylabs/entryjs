@@ -37,10 +37,12 @@ Entry.Collection = function(data) {
     p.set = function(data) {
         if (!data)
             data = [];
-        this._hashMap = {};
+        var hashMap = this._hashMap;
+        for (var key in hashMap)
+            delete hashMap[key];
         for (var i = 0, len = data.length; i<len; i++) {
             var datum = data[i];
-            this._hashMap[datum.id] = datum;
+            hashMap[datum.id] = datum;
         }
         this._data = data;
     };
@@ -90,24 +92,64 @@ Entry.Collection = function(data) {
     };
 
     p.shift = function() {
-    };
-
-    p.toArray = function() {
-        return this._data;
+        if (this.length === 0)
+            return undefined;
+        var data = this._data;
+        var datum = data.shift();
+        delete this._hashMap[datum.id];
+        return datum;
     };
 
     /* removers */
-    p.splice = function() {
+    p.splice = function(index, amount) {
+        var args = Array.prototype.slice.call(arguments,2);
+
+        if (index < 0 || index > this.length)
+            return undefined;
+
+        var data = this._data;
+        var hashMap = this._hashMap;
+
+        var splicedData = data.splice(index, amount);
+
+        for (var i=0,len=splicedData.length; i<len; i++)
+            delete hashMap[splicedData[i].id];
+
+        for (i=0,len=args.length; i<len; i++) {
+            var datum = args[i];
+            data.splice(index++, 0, datum);
+            hashMap[datum.id] = datum;
+        }
+
+        return splicedData;
     };
 
     p.clear = function() {
+        var data = this._data;
+        var hashMap = this._hashMap;
+        while(this.length)
+            data.pop();
+        for (var key in hashMap)
+            delete hashMap[key];
     };
 
     /* help methods */
-    p.map = function() {
+    p.map = function(fn, param) {
+        var data = this._data;
+        for (var i=0, len=this.length; i<len; i++)
+            fn(data[i], param);
     };
 
-    p.moveTo = function(i, j) {
+    p.moveFromTo = function(from, to) {
+        var limit = this.length-1;
+        if (from< 0 || to<0 || from>limit || to>limit)
+            return;
+
+        var data = this._data;
+        var temp = data[to];
+        data[to] = data[from];
+        data[from] = temp;
+        temp = null;
     };
 
     p.sort = function() {
@@ -118,6 +160,11 @@ Entry.Collection = function(data) {
     };
 
     p.toJSON = function() {
+        var json = [];
+        var data = this._data;
+        for (var i=0, len=this.length; i<len; i++)
+            json.push(data[i].toJSON());
+        return json;
     };
 
     /* observe methods */
