@@ -298,4 +298,31 @@ describe('Entry.Collection', function(){
 
         });
     });
+
+    describe('#find()', function(){
+        it('should return matching data', function() {
+            var ret = col.find({id:a.id, type: a.type});
+            ret[0].should.be.deep.equal(a);
+
+            ret = col.find({id:a.id});
+            ret[0].should.be.deep.equal(a);
+
+            var inputs = [a,b,c];
+            col.set(inputs);
+            ret = col.find({});
+            for (var i=0,len=inputs.length; i<len; i++)
+                ret[i].should.be.deep.equal(inputs[i]);
+
+            inputs = [a,a,a];
+            col.set(inputs);
+            ret = col.find({type: a.type});
+            for (var i=0,len=inputs.length; i<len; i++)
+                ret[i].should.be.deep.equal(inputs[i]);
+        });
+
+        it('should return empty array when there is not matching datum', function() {
+            var ret = col.find({type: d.type});
+            ret.length.should.be.equal(0);
+        });
+    });
 });

@@ -2623,9 +2623,9 @@ Entry.block.message_cast_wait = function(b, a) {
   }
   var e = [];
   Entry.container.mapEntityIncludeCloneOnScene(function(a, b) {
-    for (var c = b[0], d = b[1], k = a.parent.script.childNodes, n = 0;n < k.length;n++) {
-      var p = k[n], l = Entry.Xml.getField("VALUE", p);
-      Entry.Xml.isTypeOf(c, p) && l == d && (l = new Entry.Script(a), l.init(p), e.push(l));
+    for (var c = b[0], d = b[1], l = a.parent.script.childNodes, n = 0;n < l.length;n++) {
+      var p = l[n], m = Entry.Xml.getField("VALUE", p);
+      Entry.Xml.isTypeOf(c, p) && m == d && (m = new Entry.Script(a), m.init(p), e.push(m));
     }
   }, ["when_message_cast", c]);
   a.runningScript = e;
@@ -3041,7 +3041,19 @@ Entry.Collection = function(b) {
   b.at = function(a) {
     return this._data[a];
   };
-  b.find = function() {
+  b.find = function(a) {
+    for (var b = this._data, d = [], e, f = 0, h = this.length;f < h;f++) {
+      e = !0;
+      var g = b[f], k;
+      for (k in a) {
+        if (a[k] != g[k]) {
+          e = !1;
+          break;
+        }
+      }
+      e && d.push(g);
+    }
+    return d;
   };
   b.pop = function() {
     if (0 !== this.length) {
@@ -3060,14 +3072,14 @@ Entry.Collection = function(b) {
   b.splice = function(a, b) {
     var d = Array.prototype.slice.call(arguments, 2);
     if (!(0 > a || a > this.length)) {
-      for (var e = this._data, f = this._hashMap, h = e.splice(a, b), g = 0, m = h.length;g < m;g++) {
+      for (var e = this._data, f = this._hashMap, h = e.splice(a, b), g = 0, k = h.length;g < k;g++) {
         delete f[h[g].id];
       }
       g = 0;
-      for (m = d.length;g < m;g++) {
-        var k = d[g];
-        e.splice(a++, 0, k);
-        f[k.id] = k;
+      for (k = d.length;g < k;g++) {
+        var l = d[g];
+        e.splice(a++, 0, l);
+        f[l.id] = l;
       }
       return h;
     }

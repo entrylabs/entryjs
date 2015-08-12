@@ -79,7 +79,24 @@ Entry.Collection = function(data) {
         return this._data[index];
     };
 
-    p.find = function() {
+    p.find = function(cond) {
+        var data = this._data;
+        var ret = [];
+        var flag;
+
+        for (var i=0,len=this.length; i<len; i++) {
+            flag = true;
+            var datum = data[i];
+            for(var key in cond) {
+                if (cond[key] != datum[key]) {
+                    flag = false;
+                    break;
+                }
+            }
+            if (flag)
+                ret.push(datum);
+        }
+        return ret;
     };
 
     p.pop = function() {
