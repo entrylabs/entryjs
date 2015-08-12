@@ -146,10 +146,7 @@ Entry.Collection = function(data) {
             return;
 
         var data = this._data;
-        var temp = data[to];
-        data[to] = data[from];
-        data[from] = temp;
-        temp = null;
+        data.splice(to, 0, data.splice(from, 1)[0]);
     };
 
     p.sort = function() {

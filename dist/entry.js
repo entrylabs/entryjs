@@ -3087,11 +3087,7 @@ Entry.Collection = function(b) {
   };
   b.moveFromTo = function(a, b) {
     var d = this.length - 1;
-    if (!(0 > a || 0 > b || a > d || b > d)) {
-      var d = this._data, e = d[b];
-      d[b] = d[a];
-      d[a] = e;
-    }
+    0 > a || 0 > b || a > d || b > d || (d = this._data, d.splice(b, 0, d.splice(a, 1)[0]));
   };
   b.sort = function() {
   };

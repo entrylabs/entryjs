@@ -273,7 +273,7 @@ describe('Entry.Collection', function(){
 
             col.set([a,b,c]);
             col.moveFromTo(2,0);
-            col.at(2).should.be.deep.equal(a);
+            col.at(0).should.be.deep.equal(c);
 
             col.set([a,b,c,d]);
             col.moveFromTo(2,0);
