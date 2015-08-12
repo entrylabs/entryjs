@@ -69,34 +69,86 @@ describe('Entry.Model', function(){
         });
     });
 
-    describe('observer feature', function() {
-        context('when model change', function() {
-            it('should notify when observe everything', function(done) {
-                var obj = {done: done};
-                datum.observe(obj, 'done');
+    describe('observe', function() {
+        describe('all', function() {
+            context('when model change', function() {
+                it('should notify', function(done) {
+                    var obj = {done: function() {
+                        done();
+                    }};
+                    datum.observe(obj, 'done');
 
-                datum.value = 3;
+                    datum.value = 3;
+                });
+
+                it('should provide change information properly', function() {
+                    var obj = {update: function(data) {
+                        expect(data).to.deep.equal([
+                            {
+                                name: 'value',
+                                object: datum,
+                                oldValue: 2
+                            }
+                        ])
+                    }};
+                    datum.observe(obj, 'update');
+
+                    datum.value = 3;
+                });
             });
 
-            it('should notify when specific observed data change', function(done) {
-                var obj = {done: done};
-                datum.observe(obj, 'done', ['value']);
-
-                datum.value = 3;
-            });
-
-            it('should not notify when not observed data change', function() {
-                var obj = {done: never};
-                datum.observe(obj, 'done', ['id']);
-
-                datum.value = 3;
-            });
-
-            it('should not notify once when edit data at once', function() {
-            });
-
-            it('should provide change information properly', function() {
+            context('when model not change', function() {
+                it('should not notify', function() {
+                    var obj = {done: never};
+                    datum.observe(obj, 'done');
+                });
             });
         });
+
+        describe('specific property', function() {
+            context('when model change', function() {
+                it('should notify', function(done) {
+                    var obj = {done: function() {
+                        done();
+                    }};
+                    datum.observe(obj, 'done', ['value']);
+
+                    datum.value = 3;
+                });
+
+                it('should provide change information properly ', function() {
+                    var obj = {update: function(data) {
+                        expect(data).to.deep.equal([
+                            {
+                                name: 'value',
+                                object: datum,
+                                oldValue: 2
+                            }
+                        ])
+                    }};
+                    datum.observe(obj, 'update', ['value']);
+
+                    datum.value = 3;
+                });
+            });
+
+            context('when model not change', function() {
+                it('should not notify', function() {
+                    var obj = {done: never};
+                    datum.observe(obj, 'done', ['id']);
+                });
+
+                it('should not notify', function() {
+                    var obj = {done: never};
+                    datum.observe(obj, 'done', ['id']);
+
+                    datum.value = 3;
+                });
+            });
+        });
+
+        it('should not notify once when edit data at once', function() {
+        });
+
     });
 });

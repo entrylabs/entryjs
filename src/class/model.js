@@ -75,13 +75,21 @@ Entry.Model = function(obj) {
 
         var that = this;
         that.observers.map(function (observeData) {
-            if (observeData.attrs === undefined)
-                observeData.object[observeData.funcName]();
-            else {
-                var attrs = Entry.Utils.intersectArray(observeData.attrs, keys);
-                if (attrs.length)
-                    observeData.object[observeData.funcName]();
-            }
+            var attrs = keys;
+            if (observeData.attrs !== undefined)
+                attrs = Entry.Utils.intersectArray(observeData.attrs, keys);
+
+            if (!attrs.length) return;
+
+            observeData.object[observeData.funcName](
+                attrs.map(function(key){
+                    return {
+                        name: key,
+                        object: that,
+                        oldValue: that.data[key]
+                    };
+                })
+            );
         });
     };
 

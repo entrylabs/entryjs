@@ -3100,7 +3100,7 @@ Entry.Utils.intersectArray = function(b, a) {
   for (var c = [], d = 0;d < b.length;d++) {
     for (var e = 0;e < a.length;e++) {
       if (b[d] == a[e]) {
-        c.push(d);
+        c.push(b[d]);
         break;
       }
     }
@@ -3148,13 +3148,14 @@ Entry.Model = function(b) {
   };
   b.notify = function(a) {
     "string" === typeof a && (a = [a]);
-    this.observers.map(function(b) {
-      if (void 0 === b.attrs) {
-        b.object[b.funcName]();
-      } else {
-        if (Entry.Utils.intersectArray(b.attrs, a).length) {
-          b.object[b.funcName]();
-        }
+    var b = this;
+    b.observers.map(function(d) {
+      var e = a;
+      void 0 !== d.attrs && (e = Entry.Utils.intersectArray(d.attrs, a));
+      if (e.length) {
+        d.object[d.funcName](e.map(function(a) {
+          return {name:a, object:b, oldValue:b.data[a]};
+        }));
       }
     });
   };
