@@ -172,7 +172,7 @@ describe('Entry.Model', function(){
                     }};
                     datum.observe(obj, 'update', ['type', 'value']);
 
-                    datum.set({type: 3, value: 4});
+                    datum.set({id: 2, type: 3, value: 4});
                 });
             });
 
