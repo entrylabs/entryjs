@@ -3110,6 +3110,7 @@ Entry.Utils.intersectArray = function(b, a) {
 Entry.Model = function(b) {
   var a = Entry.Model;
   a.generateSchema(b);
+  a.generateSetter(b);
   a.generateObserve(b);
   Object.seal(b);
   return b;
@@ -3126,14 +3127,26 @@ Entry.Model = function(b) {
           Object.defineProperty(a, d, {get:function() {
             return a.data[d];
           }, set:function(b) {
-            a.notify(d, a.data[d]);
+            a.notify(d);
             a.data[d] = b;
           }});
         })(d);
       }
     }
   };
+  b.generateSetter = function(a) {
+    a.set = this.set;
+  };
+  b.set = function(a) {
+    this.notify(Object.keys(a));
+    this._isSilent = !0;
+    for (var b in a) {
+      this[b] = a[b];
+    }
+    this._isSilent = !1;
+  };
   b.generateObserve = function(a) {
+    a._isSilent = !1;
     a.observers = [];
     a.observe = this.observe;
     a.unobserve = this.unobserve;
@@ -3147,17 +3160,19 @@ Entry.Model = function(b) {
     -1 < a && this.observers.splice(a, 1);
   };
   b.notify = function(a) {
-    "string" === typeof a && (a = [a]);
-    var b = this;
-    b.observers.map(function(d) {
-      var e = a;
-      void 0 !== d.attrs && (e = Entry.Utils.intersectArray(d.attrs, a));
-      if (e.length) {
-        d.object[d.funcName](e.map(function(a) {
-          return {name:a, object:b, oldValue:b.data[a]};
-        }));
-      }
-    });
+    if (!this._isSilent) {
+      "string" === typeof a && (a = [a]);
+      var b = this;
+      b.observers.map(function(d) {
+        var e = a;
+        void 0 !== d.attrs && (e = Entry.Utils.intersectArray(d.attrs, a));
+        if (e.length) {
+          d.object[d.funcName](e.map(function(a) {
+            return {name:a, object:b, oldValue:b.data[a]};
+          }));
+        }
+      });
+    }
   };
 })(Entry.Model);
 Entry.Entity = function() {

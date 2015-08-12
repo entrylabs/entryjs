@@ -12,6 +12,7 @@ goog.require("Entry.Utils");
 Entry.Model = function(obj) {
     var model = Entry.Model;
     model.generateSchema(obj);
+    model.generateSetter(obj);
     model.generateObserve(obj);
     Object.seal(obj);
 
@@ -33,7 +34,7 @@ Entry.Model = function(obj) {
                         return obj.data[localKey];
                     },
                     set: function(val) {
-                        obj.notify(localKey, obj.data[localKey]);
+                        obj.notify(localKey);
                         obj.data[localKey] = val;
                     }
                 });
@@ -41,7 +42,22 @@ Entry.Model = function(obj) {
         }
     };
 
+    m.generateSetter = function(obj) {
+        obj.set = this.set;
+    };
+
+    m.set = function(data) {
+        this.notify(Object.keys(data));
+        this._isSilent = true;
+        for (var key in data) {
+            // call setter
+            this[key] = data[key];
+        }
+        this._isSilent = false;
+    };
+
     m.generateObserve = function(obj) {
+        obj._isSilent = false;
         obj.observers = [];
         obj.observe = this.observe;
         obj.unobserve = this.unobserve;
@@ -71,6 +87,8 @@ Entry.Model = function(obj) {
      * @param {object|string} key
      */
     m.notify = function(keys) {
+        if (this._isSilent) return;
+
         if (typeof keys === 'string') keys = [keys];
 
         var that = this;

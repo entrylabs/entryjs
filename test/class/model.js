@@ -69,6 +69,21 @@ describe('Entry.Model', function(){
         });
     });
 
+    describe('getter', function(){
+        it('should change data properly', function(){
+            datum.set({type: 3});
+
+            datum.type.should.be.equal(3);
+        });
+
+        it('should change multiple data properly', function(){
+            datum.set({type: 3, value: 4});
+
+            datum.type.should.be.equal(3);
+            datum.value.should.be.equal(4);
+        });
+    });
+
     describe('observe', function() {
         describe('all', function() {
             context('when model change', function() {
@@ -116,6 +131,15 @@ describe('Entry.Model', function(){
                     datum.value = 3;
                 });
 
+                it('should notify at once', function(done) {
+                    var obj = {done: function() {
+                        done();
+                    }};
+                    datum.observe(obj, 'done', ['type', 'value']);
+
+                    datum.set({type: 3, value: 4});
+                });
+
                 it('should provide change information properly ', function() {
                     var obj = {update: function(data) {
                         expect(data).to.deep.equal([
@@ -129,6 +153,26 @@ describe('Entry.Model', function(){
                     datum.observe(obj, 'update', ['value']);
 
                     datum.value = 3;
+                });
+
+                it('should provide multiple change information properly ', function() {
+                    var obj = {update: function(data) {
+                        expect(data).to.deep.equal([
+                            {
+                                name: 'type',
+                                object: datum,
+                                oldValue: 1
+                            },
+                            {
+                                name: 'value',
+                                object: datum,
+                                oldValue: 2
+                            }
+                        ])
+                    }};
+                    datum.observe(obj, 'update', ['type', 'value']);
+
+                    datum.set({type: 3, value: 4});
                 });
             });
 
