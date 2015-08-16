@@ -177,7 +177,7 @@ Entry.Engine.prototype.generateView = function(controlView, option) {
         this.runButton = Entry.createElement('button');
         this.runButton.addClass('entryEngineButtonMinimize');
         this.runButton.addClass('entryRunButtonMinimize');
-        this.runButton.innerHTML = Lang.Workspace.run;
+        this.runButton.innerHTML = Lang.Blocks.START;
         this.view_.appendChild(this.runButton);
         this.runButton.bindOnClick(function(e) {
             Entry.engine.toggleRun();
