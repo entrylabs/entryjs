@@ -256,6 +256,119 @@ Entry.block.arduino_convert_scale = function(a, b) {
   c = Math.max(f, c);
   return Math.round(c);
 };
+Blockly.Blocks.bitbrick_sensor_value = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("").appendField(new Blockly.FieldDropdown([[Lang.Blocks.ARDUINO_arduino_get_sensor_number_0, "A0"], [Lang.Blocks.ARDUINO_arduino_get_sensor_number_1, "A1"], [Lang.Blocks.ARDUINO_arduino_get_sensor_number_5, "A5"]]), "PORT").appendField(" \uac12");
+  this.setOutput(!0, "String");
+  this.setInputsInline(!0);
+}};
+Entry.block.bitbrick_sensor_value = function(a, b) {
+};
+Blockly.Blocks.bitbrick_is_touch_pressed = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("\ud130\uce58\uc13c\uc11c").appendField(new Blockly.FieldDropdown([[Lang.Blocks.ARDUINO_arduino_get_sensor_number_0, "A0"], [Lang.Blocks.ARDUINO_arduino_get_sensor_number_1, "A1"], [Lang.Blocks.ARDUINO_arduino_get_sensor_number_5, "A5"]]), "PORT").appendField(" \uac00 \ub20c\ub838\ub294\uac00?");
+  this.setOutput(!0, "Boolean");
+  this.setInputsInline(!0);
+}};
+Entry.block.bitbrick_is_touch_pressed = function(a, b) {
+};
+Blockly.Blocks.bitbrick_turn_off_color_led = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("\uceec\ub7ec LED \ub044\uae30").appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_arduino.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.bitbrick_turn_off_color_led = function(a, b) {
+};
+Blockly.Blocks.bitbrick_turn_on_color_led_by_rgb = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("\uceec\ub7ec LED \ucf1c\uae30 R");
+  this.appendValueInput("rValue").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField("G");
+  this.appendValueInput("gValue").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField("B");
+  this.appendValueInput("bValue").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_arduino.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.bitbrick_turn_on_color_led_by_rgb = function(a, b) {
+};
+Blockly.Blocks.bitbrick_turn_on_color_led_by_picker = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("\uceec\ub7ec LED \uc0c9 ").appendField(new Blockly.FieldColour("#ff0000"), "VALUE").appendField("\ub85c \uc815\ud558\uae30").appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_arduino.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.bitbrick_turn_on_color_led_by_picker = function(a, b) {
+};
+Blockly.Blocks.bitbrick_turn_on_color_led_by_value = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("\uceec\ub7ec LED \ucf1c\uae30 \uc0c9");
+  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField("\ub85c \uc815\ud558\uae30").appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_arduino.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.bitbrick_turn_on_color_led_by_value = function(a, b) {
+};
+Blockly.Blocks.bitbrick_buzzer = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("\ubd80\uc800\uc74c ");
+  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField("\ub0b4\uae30").appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_arduino.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.bitbrick_buzzer = function(a, b) {
+};
+Blockly.Blocks.bitbrick_turn_off_all_motors = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("\ubaa8\ub4e0 \ubaa8\ud130 \ub044\uae30").appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_arduino.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.bitbrick_turn_off_all_motors = function(a, b) {
+};
+Blockly.Blocks.bitbrick_dc_speed = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("DC \ubaa8\ud130").appendField(new Blockly.FieldDropdown([[Lang.Blocks.ARDUINO_arduino_get_sensor_number_0, "A0"], [Lang.Blocks.ARDUINO_arduino_get_sensor_number_1, "A1"], [Lang.Blocks.ARDUINO_arduino_get_sensor_number_5, "A5"]]), "PORT").appendField(" \uc18d\ub3c4");
+  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField("").appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_arduino.png", "*"));
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+  this.setInputsInline(!0);
+}};
+Entry.block.bitbrick_dc_speed = function(a, b) {
+};
+Blockly.Blocks.bitbrick_dc_direction_speed = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("DC \ubaa8\ud130").appendField(new Blockly.FieldDropdown([[Lang.Blocks.ARDUINO_arduino_get_sensor_number_0, "A0"], [Lang.Blocks.ARDUINO_arduino_get_sensor_number_1, "A1"], [Lang.Blocks.ARDUINO_arduino_get_sensor_number_5, "A5"]]), "PORT").appendField(" \ubc29\ud5a5").appendField(new Blockly.FieldDropdown([["CCW", "CCW"], ["CW", "CW"]]), "DIRECTION").appendField(" \uc18d\ub3c4");
+  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField("").appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_arduino.png", "*"));
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+  this.setInputsInline(!0);
+}};
+Entry.block.bitbrick_dc_direction_speed = function(a, b) {
+};
+Blockly.Blocks.bitbrick_servomotor_angle = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("\uc11c\ubcf4 \ubaa8\ud130").appendField(new Blockly.FieldDropdown([[Lang.Blocks.ARDUINO_arduino_get_sensor_number_0, "A0"], [Lang.Blocks.ARDUINO_arduino_get_sensor_number_1, "A1"], [Lang.Blocks.ARDUINO_arduino_get_sensor_number_5, "A5"]]), "PORT").appendField(" \uac01\ub3c4");
+  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField("").appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_arduino.png", "*"));
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+  this.setInputsInline(!0);
+}};
+Entry.block.bitbrick_servomotor_angle = function(a, b) {
+};
 var categoryColor = "#FF9E20";
 Blockly.Blocks.start_drawing = {init:function() {
   this.setColour(categoryColor);
@@ -3794,7 +3907,7 @@ Entry.Engine.prototype.generateView = function(a, b) {
     }), this.coordinateButton = Entry.createElement("button"), this.coordinateButton.addClass("entryEngineButtonMinimize"), this.coordinateButton.addClass("entryCoordinateButtonMinimize"), this.view_.appendChild(this.coordinateButton), this.coordinateButton.bindOnClick(function(a) {
       this.hasClass("toggleOn") ? this.removeClass("toggleOn") : this.addClass("toggleOn");
       Entry.stage.toggleCoordinator();
-    }), this.runButton = Entry.createElement("button"), this.runButton.addClass("entryEngineButtonMinimize"), this.runButton.addClass("entryRunButtonMinimize"), this.runButton.innerHTML = Lang.Workspace.run, this.view_.appendChild(this.runButton), this.runButton.bindOnClick(function(a) {
+    }), this.runButton = Entry.createElement("button"), this.runButton.addClass("entryEngineButtonMinimize"), this.runButton.addClass("entryRunButtonMinimize"), this.runButton.innerHTML = Lang.Blocks.START, this.view_.appendChild(this.runButton), this.runButton.bindOnClick(function(a) {
       Entry.engine.toggleRun();
     }), this.runButton2 = Entry.createElement("button"), this.runButton2.addClass("entryEngineBigButtonMinimize_popup"), this.runButton2.addClass("entryEngineBigButtonMinimize_popup_run"), this.view_.appendChild(this.runButton2), this.runButton2.bindOnClick(function(a) {
       Entry.engine.toggleRun();
