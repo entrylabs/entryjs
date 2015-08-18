@@ -3615,7 +3615,7 @@ Entry.Container.prototype.generateTabView = function() {
   var d = Entry.createElement("span");
   d.addClass("entryContainerTabItemWorkspace");
   d.addClass("entryEllipsis");
-  d.innerHTML = "\uc624\ube0c\uc81d\ud2b8";
+  d.innerHTML = Lang.Menus.lecture_container_tab_object;
   d.bindOnClick(function() {
     b.changeTabView("object");
   });
@@ -3624,7 +3624,7 @@ Entry.Container.prototype.generateTabView = function() {
   var e = Entry.createElement("span");
   e.addClass("entryContainerTabItemWorkspace", "entryRemove");
   e.addClass("entryEllipsis");
-  e.innerHTML = "\uac15\uc758 \ub3d9\uc601\uc0c1";
+  e.innerHTML = Lang.Menus.lecture_container_tab_video;
   e.bindOnClick(function() {
     b.changeTabView("movie");
   });
@@ -3634,7 +3634,7 @@ Entry.Container.prototype.generateTabView = function() {
   e = Entry.createElement("span");
   e.addClass("entryContainerTabItemWorkspace", "entryRemove");
   e.addClass("entryEllipsis");
-  e.innerHTML = "\uc644\uc131\ub41c \ud504\ub85c\uc81d\ud2b8";
+  e.innerHTML = Lang.Menus.lecture_container_tab_project;
   e.bindOnClick(function() {
     b.changeTabView("done");
   });
@@ -3644,7 +3644,7 @@ Entry.Container.prototype.generateTabView = function() {
   e = Entry.createElement("span");
   e.addClass("entryContainerTabItemWorkspace");
   e.addClass("entryEllipsis");
-  e.innerHTML = "\ube14\ub85d \ub3c4\uc6c0\ub9d0";
+  e.innerHTML = Lang.Menus.lecture_container_tab_help;
   e.bindOnClick(function() {
     b.changeTabView("helper");
   });
@@ -3794,7 +3794,7 @@ Entry.Engine.prototype.generateView = function(a, b) {
     }), this.coordinateButton = Entry.createElement("button"), this.coordinateButton.addClass("entryEngineButtonMinimize"), this.coordinateButton.addClass("entryCoordinateButtonMinimize"), this.view_.appendChild(this.coordinateButton), this.coordinateButton.bindOnClick(function(a) {
       this.hasClass("toggleOn") ? this.removeClass("toggleOn") : this.addClass("toggleOn");
       Entry.stage.toggleCoordinator();
-    }), this.runButton = Entry.createElement("button"), this.runButton.addClass("entryEngineButtonMinimize"), this.runButton.addClass("entryRunButtonMinimize"), this.runButton.innerHTML = Lang.Workspace.run, this.view_.appendChild(this.runButton), this.runButton.bindOnClick(function(a) {
+    }), this.runButton = Entry.createElement("button"), this.runButton.addClass("entryEngineButtonMinimize"), this.runButton.addClass("entryRunButtonMinimize"), this.runButton.innerHTML = Lang.Blocks.START, this.view_.appendChild(this.runButton), this.runButton.bindOnClick(function(a) {
       Entry.engine.toggleRun();
     }), this.runButton2 = Entry.createElement("button"), this.runButton2.addClass("entryEngineBigButtonMinimize_popup"), this.runButton2.addClass("entryEngineBigButtonMinimize_popup_run"), this.view_.appendChild(this.runButton2), this.runButton2.bindOnClick(function(a) {
       Entry.engine.toggleRun();
