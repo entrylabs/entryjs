@@ -386,9 +386,9 @@ Blockly.Blocks.calc_operation = {
             [Lang.Blocks.CALC_calc_operation_sin, "sin"],
             [Lang.Blocks.CALC_calc_operation_cos,"cos"],
             [Lang.Blocks.CALC_calc_operation_tan,"tan"],
-            [Lang.Blocks.CALC_calc_operation_asin, "asin"],
-            [Lang.Blocks.CALC_calc_operation_acos,"acos"],
-            [Lang.Blocks.CALC_calc_operation_atan,"atan"],
+            [Lang.Blocks.CALC_calc_operation_asin, "asin_radian"],
+            [Lang.Blocks.CALC_calc_operation_acos,"acos_radian"],
+            [Lang.Blocks.CALC_calc_operation_atan,"atan_radian"],
             [Lang.Blocks.CALC_calc_operation_log,"log"],
             [Lang.Blocks.CALC_calc_operation_ln,"ln"],
             [Lang.Blocks.CALC_calc_operation_unnatural,"unnatural"],
@@ -410,6 +410,13 @@ Entry.block.calc_operation = function (sprite, script) {
     var value = script.getNumberValue("LEFTHAND", script);
     var operator = script.getField("VALUE", script);
     var returnVal = 0;
+    var needToConvertList = ['sin', 'cos', 'tan', 'asin_radian',
+        'acos_radian', 'atan_radian'];
+    if (needToConvertList.indexOf(operator) > -1) {
+        value = Entry.toRadian(value);
+        operator = operator.split('_')[0];
+    }
+
     switch(operator){
         case "square":
             returnVal = value * value;
@@ -419,15 +426,6 @@ Entry.block.calc_operation = function (sprite, script) {
             break;
         case "root":
             returnVal = Math.sqrt(value);
-            break;
-        case "sin":
-            returnVal = Math.sin(Entry.toRadian(value));
-            break;
-        case "cos":
-            returnVal = Math.cos(Entry.toRadian(value));
-            break;
-        case "tan":
-            returnVal = Math.tan(Entry.toRadian(value));
             break;
         case "log":
             returnVal = Math.log(value) / Math.LN10;
