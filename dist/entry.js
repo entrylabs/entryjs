@@ -3259,10 +3259,10 @@ Entry.Container.prototype.removeObject = function(a) {
   c = new Entry.State(this.addObject, c, b);
   a.destroy();
   this.objects_.splice(b, 1);
+  this.setCurrentObjects();
   Entry.stage.sortZorder();
   this.objects_.length && 0 != b ? Entry.container.selectObject(this.objects_[b - 1].id) : this.objects_.length && 0 == b ? Entry.container.selectObject(this.getCurrentObjects()[0].id) : (Entry.container.selectObject(), Entry.playground.flushPlayground());
   Entry.toast.success(Lang.Workspace.remove_object, a.name + " " + Lang.Workspace.remove_object_msg);
-  this.setCurrentObjects();
   Entry.variableContainer.removeLocalVariables(a.id);
   Entry.playground.reloadPlayground();
   return c;
@@ -3794,7 +3794,7 @@ Entry.Engine.prototype.generateView = function(a, b) {
     }), this.coordinateButton = Entry.createElement("button"), this.coordinateButton.addClass("entryEngineButtonMinimize"), this.coordinateButton.addClass("entryCoordinateButtonMinimize"), this.view_.appendChild(this.coordinateButton), this.coordinateButton.bindOnClick(function(a) {
       this.hasClass("toggleOn") ? this.removeClass("toggleOn") : this.addClass("toggleOn");
       Entry.stage.toggleCoordinator();
-    }), this.runButton = Entry.createElement("button"), this.runButton.addClass("entryEngineButtonMinimize"), this.runButton.addClass("entryRunButtonMinimize"), this.runButton.innerHTML = Lang.Workspace.run, this.view_.appendChild(this.runButton), this.runButton.bindOnClick(function(a) {
+    }), this.runButton = Entry.createElement("button"), this.runButton.addClass("entryEngineButtonMinimize"), this.runButton.addClass("entryRunButtonMinimize"), this.runButton.innerHTML = Lang.Blocks.START, this.view_.appendChild(this.runButton), this.runButton.bindOnClick(function(a) {
       Entry.engine.toggleRun();
     }), this.runButton2 = Entry.createElement("button"), this.runButton2.addClass("entryEngineBigButtonMinimize_popup"), this.runButton2.addClass("entryEngineBigButtonMinimize_popup_run"), this.view_.appendChild(this.runButton2), this.runButton2.bindOnClick(function(a) {
       Entry.engine.toggleRun();
