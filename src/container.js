@@ -978,7 +978,7 @@ Entry.Container.prototype.generateTabView = function() {
     var tab1 = Entry.createElement('span');
     tab1.addClass('entryContainerTabItemWorkspace');
     tab1.addClass('entryEllipsis');
-    tab1.innerHTML = '오브젝트';
+    tab1.innerHTML = Lang.Menus.lecture_container_tab_object;
     tab1.bindOnClick(function () {
         that.changeTabView('object');
     });
@@ -988,7 +988,7 @@ Entry.Container.prototype.generateTabView = function() {
     var tab2 = Entry.createElement('span');
     tab2.addClass('entryContainerTabItemWorkspace', 'entryRemove');
     tab2.addClass('entryEllipsis');
-    tab2.innerHTML = '강의 동영상';
+    tab2.innerHTML = Lang.Menus.lecture_container_tab_video;
     tab2.bindOnClick(function () {
         that.changeTabView('movie');
     });
@@ -1000,7 +1000,7 @@ Entry.Container.prototype.generateTabView = function() {
     var tab3 = Entry.createElement('span');
     tab3.addClass('entryContainerTabItemWorkspace', 'entryRemove');
     tab3.addClass('entryEllipsis');
-    tab3.innerHTML = '완성된 프로젝트';
+    tab3.innerHTML = Lang.Menus.lecture_container_tab_project;
     tab3.bindOnClick(function () {
         that.changeTabView('done');
     });
@@ -1011,7 +1011,7 @@ Entry.Container.prototype.generateTabView = function() {
     var tab4 = Entry.createElement('span');
     tab4.addClass('entryContainerTabItemWorkspace');
     tab4.addClass('entryEllipsis');
-    tab4.innerHTML = '블록 도움말';
+    tab4.innerHTML = Lang.Menus.lecture_container_tab_help;
     tab4.bindOnClick(function () {
         that.changeTabView('helper');
     });
