@@ -203,7 +203,7 @@ Entry.Engine.prototype.generateView = function(controlView, option) {
         });
 
         this.pauseButton = Entry.createElement('button');
-        this.pauseButton.innerHTML = '일시정지';
+        this.pauseButton.innerHTML = Lang.Workspace.pause;
         this.pauseButton.addClass('entryEngineButtonMinimize');
         this.pauseButton.addClass('entryPauseButtonMinimize');
         this.pauseButton.addClass('entryRemove');
@@ -298,7 +298,7 @@ Entry.Engine.prototype.toggleSpeedPanel = function() {
         this.mouseView.addClass('entryRemoveElement');
         this.speedLabel_ = Entry.createElement('div',
             'entrySpeedLabelWorkspace');
-        this.speedLabel_.innerHTML = '속도 조절하기';
+        this.speedLabel_.innerHTML = Lang.Workspace.speed;
         this.view_.insertBefore(this.speedLabel_, this.maximizeButton);
         this.speedProgress_ = Entry.createElement('table',
             'entrySpeedProgressWorkspace');
@@ -493,7 +493,7 @@ Entry.Engine.prototype.toggleRun = function() {
     if (Entry.type == 'mobile')
         this.view_.addClass('entryEngineBlueWorkspace');
 
-    this.pauseButton.innerHTML = '일시정지';
+    this.pauseButton.innerHTML = Lang.Workspace.pause;
     this.runButton.addClass('run');
     this.runButton.addClass('entryRemove');
     this.stopButton.removeClass('entryRemove');
@@ -565,10 +565,10 @@ Entry.Engine.prototype.toggleStop = function() {
 Entry.Engine.prototype.togglePause = function() {
     if (this.state == 'pause') {
         this.state = 'run';
-        this.pauseButton.innerHTML = '일시정지';
+        this.pauseButton.innerHTML = Lang.Workspace.pause;
     } else {
         this.state = 'pause';
-        this.pauseButton.innerHTML = '다시시작';
+        this.pauseButton.innerHTML = Lang.Workspace.restart;
         this.runButton.removeClass('entryRemove');
         this.stopButton.removeClass('entryRemove');
         //this.pauseButton.addClass('entryRemove');
