@@ -24,6 +24,8 @@ Entry.HW = function() {
     this.portData = {};
     this.sendQueue = {};
     this.settingQueue = {};
+
+    Entry.addEventListener('stop', Entry.Bitbrick.setZero);
 }
 
 Entry.HW.TRIAL_LIMIT = 1;
@@ -104,7 +106,10 @@ p.setPortReadable = function(port) {
 p.update = function() {
     if (!this.socket)
         return;
-    if (this.socket.readyState == 1) {
+    if (this.socket.readyState != 1)
+        return;
+    this.socket.send(JSON.stringify(this.sendQueue));
+    if (false) {
         var bytes = [], queryString;
         for (var port in this.settingQueue) {
             var value = this.settingQueue[port];
