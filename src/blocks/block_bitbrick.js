@@ -286,6 +286,11 @@ Blockly.Blocks.bitbrick_dc_direction_speed = {
 };
 
 Entry.block.bitbrick_dc_direction_speed = function (sprite, script) {
+  var value = script.getNumberValue("VALUE");
+  var isFront = script.getStringField("DIRECTION") === "CW";
+  var port = script.getStringField("PORT");
+  Entry.hw.sendQueue[port] = isFront ? value + 128 : 128 - value;
+  return script.callReturn();
 };
 
 Blockly.Blocks.bitbrick_servomotor_angle = {

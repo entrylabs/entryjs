@@ -407,6 +407,9 @@ Blockly.Blocks.bitbrick_dc_direction_speed = {init:function() {
   this.setInputsInline(!0);
 }};
 Entry.block.bitbrick_dc_direction_speed = function(a, b) {
+  var c = b.getNumberValue("VALUE"), d = "CW" === b.getStringField("DIRECTION"), e = b.getStringField("PORT");
+  Entry.hw.sendQueue[e] = d ? c + 128 : 128 - c;
+  return b.callReturn();
 };
 Blockly.Blocks.bitbrick_servomotor_angle = {init:function() {
   this.setColour("#00979D");
