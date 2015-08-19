@@ -4653,11 +4653,8 @@ p.updateSelectedBlock = function() {
   Blockly.selected && (this.first && (this.blockHelperContent_.removeClass("entryBlockHelperIntro"), this.first = !1), this.renderBlock(Blockly.selected.type));
 };
 p.renderBlock = function(a) {
-  if (a = this.blockHelpData[a]) {
-    var b = jQuery.parseXML(a.xml), b = this.blockMenu_.show(b.childNodes);
-    this.blockHelperDescription_.innerHTML = a.description;
-    $(this.blockHelperDescription_).css({top:b + 40});
-  }
+  var b = this.blockHelpData[a];
+  b && (b = jQuery.parseXML(b.xml), b = this.blockMenu_.show(b.childNodes), this.blockHelperDescription_.innerHTML = Lang.Helper[a], $(this.blockHelperDescription_).css({top:b + 40}));
 };
 Entry.HW = function() {
   this.connectTrial = 0;

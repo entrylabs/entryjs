@@ -124,7 +124,7 @@ p.renderBlock = function(type) {
     var xmlText = data.xml;
     var XML = jQuery.parseXML(xmlText);
     var blockHeight = this.blockMenu_.show(XML.childNodes);
-    this.blockHelperDescription_.innerHTML = data.description;
+    this.blockHelperDescription_.innerHTML = Lang.Helper[type];
     $(this.blockHelperDescription_).css({
         top: blockHeight + 40
     })
