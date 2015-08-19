@@ -3801,7 +3801,7 @@ Entry.Engine.prototype.generateView = function(a, b) {
     }), this.stopButton = Entry.createElement("button"), this.stopButton.addClass("entryEngineButtonMinimize"), this.stopButton.addClass("entryStopButtonMinimize"), this.stopButton.addClass("entryRemove"), this.stopButton.innerHTML = Lang.Workspace.stop, this.view_.appendChild(this.stopButton), this.stopButton.bindOnClick(function(a) {
       this.blur();
       Entry.engine.toggleStop();
-    }), this.pauseButton = Entry.createElement("button"), this.pauseButton.innerHTML = "\uc77c\uc2dc\uc815\uc9c0", this.pauseButton.addClass("entryEngineButtonMinimize"), this.pauseButton.addClass("entryPauseButtonMinimize"), this.pauseButton.addClass("entryRemove"), this.view_.appendChild(this.pauseButton), this.pauseButton.bindOnClick(function(a) {
+    }), this.pauseButton = Entry.createElement("button"), this.pauseButton.innerHTML = Lang.Workspace.pause, this.pauseButton.addClass("entryEngineButtonMinimize"), this.pauseButton.addClass("entryPauseButtonMinimize"), this.pauseButton.addClass("entryRemove"), this.view_.appendChild(this.pauseButton), this.pauseButton.bindOnClick(function(a) {
       this.blur();
       Entry.engine.togglePause();
     }), this.mouseView = Entry.createElement("div"), this.mouseView.addClass("entryMouseViewMinimize"), this.mouseView.addClass("entryRemove"), this.view_.appendChild(this.mouseView)) : "phone" == b && (this.view_ = a, this.view_.addClass("entryEngine", "entryEnginePhone"), this.headerView_ = Entry.createElement("div", "entryEngineHeader"), this.headerView_.addClass("entryEngineHeaderPhone"), this.view_.appendChild(this.headerView_), this.maximizeButton = Entry.createElement("button"), this.maximizeButton.addClass("entryEngineButtonPhone", 
@@ -3913,7 +3913,7 @@ Entry.Engine.prototype.toggleSpeedPanel = function() {
     this.maximizeButton.addClass("entryRemove");
     this.mouseView.addClass("entryRemoveElement");
     this.speedLabel_ = Entry.createElement("div", "entrySpeedLabelWorkspace");
-    this.speedLabel_.innerHTML = "\uc18d\ub3c4 \uc870\uc808\ud558\uae30";
+    this.speedLabel_.innerHTML = Lang.Workspace.speed;
     this.view_.insertBefore(this.speedLabel_, this.maximizeButton);
     this.speedProgress_ = Entry.createElement("table", "entrySpeedProgressWorkspace");
     for (var a = Entry.createElement("tr"), b = this.speeds, c = 0;5 > c;c++) {
@@ -3998,7 +3998,7 @@ Entry.Engine.prototype.toggleRun = function() {
   }), Entry.engine.projectTimer.takeSnapshot(), Entry.container.takeSequenceSnapshot(), Entry.scene.takeStartSceneSnapshot(), this.state = "run", this.fireEvent("when_run_button_click"));
   this.state = "run";
   "mobile" == Entry.type && this.view_.addClass("entryEngineBlueWorkspace");
-  this.pauseButton.innerHTML = "\uc77c\uc2dc\uc815\uc9c0";
+  this.pauseButton.innerHTML = Lang.Workspace.pause;
   this.runButton.addClass("run");
   this.runButton.addClass("entryRemove");
   this.stopButton.removeClass("entryRemove");
@@ -4043,7 +4043,7 @@ Entry.Engine.prototype.toggleStop = function() {
   Entry.stage.hideInputField();
 };
 Entry.Engine.prototype.togglePause = function() {
-  "pause" == this.state ? (this.state = "run", this.pauseButton.innerHTML = "\uc77c\uc2dc\uc815\uc9c0") : (this.state = "pause", this.pauseButton.innerHTML = "\ub2e4\uc2dc\uc2dc\uc791", this.runButton.removeClass("entryRemove"), this.stopButton.removeClass("entryRemove"));
+  "pause" == this.state ? (this.state = "run", this.pauseButton.innerHTML = Lang.Workspace.pause) : (this.state = "pause", this.pauseButton.innerHTML = Lang.Workspace.restart, this.runButton.removeClass("entryRemove"), this.stopButton.removeClass("entryRemove"));
 };
 Entry.Engine.prototype.fireEvent = function(a) {
   "run" == this.state && Entry.container.mapEntityIncludeCloneOnScene(this.raiseEvent, a);
