@@ -5243,7 +5243,7 @@ p.closeConnection = function() {
   this.socket && this.socket.close();
 };
 p.downloadConnector = function() {
-  window.open("/lib/EntryArduino/EntryArduino.zip", "_blank").focus();
+  window.open("/file/entry.zip", "_blank").focus();
 };
 p.downloadSource = function() {
   window.open("/lib/EntryArduino/arduino/entry.ino", "_blank").focus();

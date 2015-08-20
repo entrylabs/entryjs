@@ -155,7 +155,8 @@ p.closeConnection = function() {
 }
 
 p.downloadConnector = function() {
-    var url = "/lib/EntryArduino/EntryArduino.zip";
+    //var url = "/lib/EntryArduino/EntryArduino.zip";
+    var url = "/file/entry.zip";
     var win = window.open(url, '_blank');
     win.focus();
 }
