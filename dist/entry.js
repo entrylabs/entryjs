@@ -1412,6 +1412,83 @@ Blockly.Blocks.hamster_hand_found = {init:function() {
 }};
 Entry.block.hamster_hand_found = function(a, b) {
 };
+Blockly.Blocks.hamster_move_forward_for_secs = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("\uc55e\uc73c\ub85c ");
+  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField("\ucd08 \uc774\ub3d9\ud558\uae30").appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_arduino.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.hamster_move_forward_for_secs = function(a, b) {
+};
+Blockly.Blocks.hamster_move_backward_for_secs = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("\ub4a4\ub85c ");
+  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField("\ucd08 \uc774\ub3d9\ud558\uae30").appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_arduino.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.hamster_move_backward_for_secs = function(a, b) {
+};
+Blockly.Blocks.hamster_turn_for_secs = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("").appendField(new Blockly.FieldDropdown([["\uc67c\ucabd", "LEFT"], ["\uc624\ub978\ucabd", "RIGHT"]]), "DIRECTION").appendField(" \uc73c\ub85c");
+  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField("\ucd08 \ub3cc\uae30").appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_arduino.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.hamster_turn_for_secs = function(a, b) {
+};
+Blockly.Blocks.hamster_play_note_for = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("").appendField(new Blockly.FieldDropdown([["\ub3c4", "0"], ["\ub3c4#", "1"], ["\ub808", "2"], ["\ubbf8b", "3"], ["\ubbf8", "4"], ["\ud30c", "5"], ["\ud30c#", "6"], ["\uc194", "7"], ["\uc194#", "8"], ["\ub77c", "9"], ["\uc2dcb", "10"], ["\uc2dc", "11"]]), "NOTE").appendField(" ").appendField(new Blockly.FieldDropdown([["1", "0"], ["2", "2"], ["3", "3"], ["4", "4"], ["5", "5"], ["6", "6"]]), "DIRECTION").appendField(" \uc74c\uc744");
+  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField("\ubc15\uc790 \uc5f0\uc8fc\ud558\uae30").appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_arduino.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.hamster_play_note_for = function(a, b) {
+};
+Blockly.Blocks.hamster_rest_for = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("");
+  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField("\ubc15\uc790 \uc26c\uae30").appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_arduino.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.hamster_rest_for = function(a, b) {
+};
+Blockly.Blocks.hamster_change_tempo_by = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("\uc5f0\uc8fc \uc18d\ub3c4\ub97c");
+  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField("\ub9cc\ud07c \ubc14\uafb8\uae30").appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_arduino.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.hamster_change_tempo_by = function(a, b) {
+};
+Blockly.Blocks.hamster_set_tempo_to = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("\uc5f0\uc8fc \uc18d\ub3c4\ub97c");
+  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField("BPM\uc73c\ub85c \ud558\uae30").appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_arduino.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.hamster_set_tempo_to = function(a, b) {
+};
 Blockly.Blocks.is_clicked = {init:function() {
   this.setColour("#2FC9F0");
   this.appendDummyInput().appendField(Lang.Blocks.JUDGEMENT_is_clicked, "#3D3D3D");
