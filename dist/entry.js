@@ -5250,6 +5250,7 @@ p.downloadSource = function() {
 };
 p.setZero = function() {
   Entry.hw.hwModule.setZero();
+  Entry.Bitbrick.setZero();
 };
 p.checkDevice = function(a) {
 };
