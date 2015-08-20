@@ -17,6 +17,7 @@ Entry.Hamster = {
           Entry.hw.sendQueue[port] = portMap[port];
         }
         Entry.hw.update();
+        Entry.Hamster.tempo = 60;
     },
     tempo: 60
 };

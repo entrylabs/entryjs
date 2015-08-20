@@ -1354,6 +1354,7 @@ Entry.Hamster = {PORT_MAP:{leftWheel:0, rightWheel:0, buzzer:0, outputA:0, outpu
     Entry.hw.sendQueue[b] = a[b];
   }
   Entry.hw.update();
+  Entry.Hamster.tempo = 60;
 }, tempo:60};
 Blockly.Blocks.hamster_move_forward = {init:function() {
   this.setColour("#00979D");
