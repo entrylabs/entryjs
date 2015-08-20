@@ -14,9 +14,7 @@ Entry.HW = function() {
         } catch (err) {
             console.log('socket error:',err);
         }
-    }
-    else
-    {
+    } else {
         console.log('socket not exist');
     }
 
@@ -25,9 +23,15 @@ Entry.HW = function() {
     this.sendQueue = {};
     this.settingQueue = {};
     this.selectedDevice = null;
-    this.hwModule = Entry.Hamster;
+    this.hwModule = null;
 
     Entry.addEventListener('stop', this.setZero);
+
+    this.hwInfo = {
+        '33': Entry.Arduino,
+        '24': Entry.Hamster,
+        '31': Entry.Bitbrick
+    }
 }
 
 Entry.HW.TRIAL_LIMIT = 1;
@@ -47,7 +51,6 @@ p.initSocket = function() {
     var socket = new WebSocket("ws://localhost:23518");
     this.socket = socket;
     this.connected = false;
-    Entry.dispatchEvent("hwChanged");
     socket.binaryType = "arraybuffer";
     this.connectTrial++;
 
@@ -57,8 +60,9 @@ p.initSocket = function() {
     };
     socket.onmessage = function (evt)
     {
-        hw.checkDevice(evt.data);
-        hw.updatePortData(evt.data);
+        var data = JSON.parse(evt.data);
+        hw.checkDevice(data);
+        hw.updatePortData(data);
     };
     socket.onclose = function()
     {
@@ -146,7 +150,7 @@ p.update = function() {
 }
 
 p.updatePortData = function(data) {
-    this.portData = JSON.parse(data);
+    this.portData = data;
 }
 
 p.closeConnection = function() {
@@ -167,9 +171,25 @@ p.downloadSource = function() {
 }
 
 p.setZero = function() {
+    if (!Entry.hw.hwModule)
+        return;
     Entry.hw.hwModule.setZero();
-    Entry.Bitbrick.setZero();
 };
 
 p.checkDevice = function(data) {
+    if (data.company === undefined)
+        return;
+    var key = ''+data.company + data.model;
+    if (key == this.selectedDevice)
+        return;
+    this.selectedDevice = key;
+    this.hwModule = this.hwInfo[key];
+    Entry.dispatchEvent("hwChanged");
 };
+
+p.banHW = function() {
+    var hwOptions = this.hwInfo;
+    for (var i in hwOptions)
+        Entry.playground.blockMenu.banClass(hwOptions[i].name);
+}
+

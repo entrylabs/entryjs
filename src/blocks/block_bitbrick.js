@@ -69,7 +69,8 @@ Entry.Bitbrick = {
       Entry.hw.sendQueue[port] = 0;
     }
     Entry.hw.update();
-  }
+  },
+  name: 'bitbrick'
 };
 
 
@@ -217,9 +218,16 @@ Blockly.Blocks.bitbrick_buzzer = {
 };
 
 Entry.block.bitbrick_buzzer = function (sprite, script) {
-  var value = script.getNumberValue("VALUE");
-  Entry.hw.sendQueue["buzzer"] = value;
-  return script.callReturn();
+    if (!script.isStart) {
+        var value = script.getNumberValue("VALUE");
+        Entry.hw.sendQueue["buzzer"] = value;
+        script.isStart = true;
+        return script;
+    } else {
+        Entry.hw.sendQueue["buzzer"] = 0;
+        delete script.isStart;
+        return script.callReturn();
+    }
 };
 
 Blockly.Blocks.bitbrick_turn_off_all_motors = {

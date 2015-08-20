@@ -19,7 +19,8 @@ Entry.Hamster = {
         Entry.hw.update();
         Entry.Hamster.tempo = 60;
     },
-    tempo: 60
+    tempo: 60,
+    name: 'hamster'
 };
 
 //novice

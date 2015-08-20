@@ -78,6 +78,7 @@ var Entry = {events_:{}, block:{}, TEXT_ALIGN_CENTER:0, TEXT_ALIGN_LEFT:1, TEXT_
   return a;
 }};
 window.Entry = Entry;
+Entry.Arduino = {name:"arduino"};
 Blockly.Blocks.arduino_text = {init:function() {
   this.setColour("#00979D");
   this.appendDummyInput().appendField(new Blockly.FieldTextInput("Arduino"), "NAME");
@@ -281,7 +282,7 @@ Entry.Bitbrick = {SENSOR_MAP:{1:"light", 2:"IR", 3:"touch", 4:"potentiometer", 2
     Entry.hw.sendQueue[a] = 0;
   }
   Entry.hw.update();
-}};
+}, name:"bitbrick"};
 Blockly.Blocks.bitbrick_sensor_value = {init:function() {
   this.setColour("#00979D");
   this.appendDummyInput().appendField("").appendField(new Blockly.FieldDropdownDynamic(Entry.Bitbrick.sensorList), "PORT").appendField(" \uac12");
@@ -370,9 +371,13 @@ Blockly.Blocks.bitbrick_buzzer = {init:function() {
   this.setNextStatement(!0);
 }};
 Entry.block.bitbrick_buzzer = function(a, b) {
+  if (b.isStart) {
+    return Entry.hw.sendQueue.buzzer = 0, delete b.isStart, b.callReturn();
+  }
   var c = b.getNumberValue("VALUE");
   Entry.hw.sendQueue.buzzer = c;
-  return b.callReturn();
+  b.isStart = !0;
+  return b;
 };
 Blockly.Blocks.bitbrick_turn_off_all_motors = {init:function() {
   this.setColour("#00979D");
@@ -1355,7 +1360,7 @@ Entry.Hamster = {PORT_MAP:{leftWheel:0, rightWheel:0, buzzer:0, outputA:0, outpu
   }
   Entry.hw.update();
   Entry.Hamster.tempo = 60;
-}, tempo:60};
+}, tempo:60, name:"hamster"};
 Blockly.Blocks.hamster_move_forward = {init:function() {
   this.setColour("#00979D");
   this.appendDummyInput().appendField("\uc55e\uc73c\ub85c \uc774\ub3d9\ud558\uae30").appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_arduino.png", "*"));
@@ -5178,9 +5183,9 @@ Entry.HW = function() {
   this.portData = {};
   this.sendQueue = {};
   this.settingQueue = {};
-  this.selectedDevice = null;
-  this.hwModule = Entry.Hamster;
+  this.hwModule = this.selectedDevice = null;
   Entry.addEventListener("stop", this.setZero);
+  this.hwInfo = {33:Entry.Arduino, 24:Entry.Hamster, 31:Entry.Bitbrick};
 };
 Entry.HW.TRIAL_LIMIT = 1;
 p = Entry.HW.prototype;
@@ -5191,15 +5196,15 @@ p.initSocket = function() {
     var a = this, b = new WebSocket("ws://localhost:23518");
     this.socket = b;
     this.connected = !1;
-    Entry.dispatchEvent("hwChanged");
     b.binaryType = "arraybuffer";
     this.connectTrial++;
     b.onopen = function() {
       a.initHardware();
     };
     b.onmessage = function(b) {
-      a.checkDevice(b.data);
-      a.updatePortData(b.data);
+      b = JSON.parse(b.data);
+      a.checkDevice(b);
+      a.updatePortData(b);
     };
     b.onclose = function() {
       a.initSocket();
@@ -5237,7 +5242,7 @@ p.update = function() {
   this.socket && 1 == this.socket.readyState && this.socket.send(JSON.stringify(this.sendQueue));
 };
 p.updatePortData = function(a) {
-  this.portData = JSON.parse(a);
+  this.portData = a;
 };
 p.closeConnection = function() {
   this.socket && this.socket.close();
@@ -5249,10 +5254,16 @@ p.downloadSource = function() {
   window.open("/lib/EntryArduino/arduino/entry.ino", "_blank").focus();
 };
 p.setZero = function() {
-  Entry.hw.hwModule.setZero();
-  Entry.Bitbrick.setZero();
+  Entry.hw.hwModule && Entry.hw.hwModule.setZero();
 };
 p.checkDevice = function(a) {
+  void 0 !== a.company && (a = "" + a.company + a.model, a != this.selectedDevice && (this.selectedDevice = a, this.hwModule = this.hwInfo[a], Entry.dispatchEvent("hwChanged")));
+};
+p.banHW = function() {
+  var a = this.hwInfo, b;
+  for (b in a) {
+    Entry.playground.blockMenu.banClass(a[b].name);
+  }
 };
 Entry.init = function(a, b) {
   Entry.assert("object" === typeof b, "Init option is not object");
@@ -7464,11 +7475,12 @@ Entry.Playground.prototype.generateCodeView = function(a) {
     Blockly.mainWorkspace.blockMenu.hide();
     document.addEventListener("blocklyWorkspaceChange", this.syncObjectWithEvent, !1);
     this.blockMenu = Blockly.mainWorkspace.blockMenu;
+    Entry.hw.banHW();
     return a;
   }
   if ("phone" == Entry.type) {
     return b = Entry.createElement("div", "entryCategory"), b.addClass("entryCategoryPhone"), a.appendChild(b), this.categoryView_ = b, c = Entry.createElement("ul", "entryCategoryList"), c.addClass("entryCategoryListPhone"), b.appendChild(c), this.categoryListView_ = c, b = this.createVariableView(), a.appendChild(b), this.variableView_ = b, b = Entry.createElement("div", "entryBlockly"), b.addClass("entryBlocklyPhone"), this.blocklyView_ = b, a.appendChild(b), c = Entry.parseTexttoXML("<xml></xml>"), 
-    Blockly.inject(b, {path:".././", toolbox:c, trashcan:!0}), Blockly.mainWorkspace.flyout_.autoClose = !0, Blockly.mainWorkspace.flyout_.hide(), document.addEventListener("blocklyWorkspaceChange", this.syncObjectWithEvent, !1), this.blockMenu = Blockly.mainWorkspace.flyout_, a;
+    Blockly.inject(b, {path:".././", toolbox:c, trashcan:!0}), Blockly.mainWorkspace.flyout_.autoClose = !0, Blockly.mainWorkspace.flyout_.hide(), document.addEventListener("blocklyWorkspaceChange", this.syncObjectWithEvent, !1), this.blockMenu = Blockly.mainWorkspace.flyout_, Entry.hw.banHW(), a;
   }
 };
 Entry.Playground.prototype.generatePictureView = function(a) {
@@ -8216,7 +8228,11 @@ Entry.Playground.prototype.getViewMode = function() {
 };
 Entry.Playground.prototype.updateHW = function() {
   var a = Entry.playground;
-  a.blockMenu && (Entry.hw && Entry.hw.connected ? (a.blockMenu.unbanClass("arduinoConnected"), a.blockMenu.banClass("arduinoDisconnected")) : (a.blockMenu.banClass("arduinoConnected"), a.blockMenu.unbanClass("arduinoDisconnected")), a.object && a.selectMenu(a.lastSelector, !0));
+  if (a.blockMenu) {
+    var b = Entry.hw;
+    b && b.connected ? (a.blockMenu.unbanClass("arduinoConnected"), a.blockMenu.banClass("arduinoDisconnected"), b.banHW(), b.hwModule && a.blockMenu.unbanClass(b.hwModule.name)) : (a.blockMenu.banClass("arduinoConnected"), a.blockMenu.unbanClass("arduinoDisconnected"), Entry.hw.banHW());
+    a.object && a.selectMenu(a.lastSelector, !0);
+  }
 };
 Entry.Playground.prototype.toggleLineBreak = function(a) {
   this.object && "textBox" == this.object.objectType && (a ? (Entry.playground.object.entity.setLineBreak(!0), $(".entryPlayground_textArea").css("display", "block"), $(".entryPlayground_textBox").css("display", "none"), this.linebreakOffImage.src = "/img/assets/text-linebreak-off-false.png", this.linebreakOnImage.src = "/img/assets/text-linebreak-on-true.png", this.fontSizeWrapper.removeClass("entryHide")) : (Entry.playground.object.entity.setLineBreak(!1), $(".entryPlayground_textArea").css("display", 

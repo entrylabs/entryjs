@@ -1,5 +1,10 @@
 "use strict";
 
+Entry.Arduino = {
+    name: 'arduino'
+};
+
+
 Blockly.Blocks.arduino_text = {
   init: function() {
     this.setColour("#00979D");
