@@ -1348,7 +1348,12 @@ Entry.block.function_general = function(a, b) {
   }
   return b;
 };
-Entry.Hamster = {};
+Entry.Hamster = {PORT_MAP:{leftWheel:0, rightWheel:0, buzzer:0, outputA:0, outputB:0, topology:0, leftLed:0, rightLed:0, note:0, lineTracerMode:0, lineTracerSpeed:4, ioModeA:0, ioModeB:0, configProximity:2, configGravity:0, configBandWidth:3}, setZero:function() {
+  for (var a in Entry.Hamster.PORT_MAP) {
+    Entry.hw.sendQueue[a] = 0;
+  }
+  Entry.hw.update();
+}};
 Blockly.Blocks.hamster_move_forward = {init:function() {
   this.setColour("#00979D");
   this.appendDummyInput().appendField("\uc55e\uc73c\ub85c \uc774\ub3d9\ud558\uae30").appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_arduino.png", "*"));
@@ -1357,6 +1362,23 @@ Blockly.Blocks.hamster_move_forward = {init:function() {
   this.setNextStatement(!0);
 }};
 Entry.block.hamster_move_forward = function(a, b) {
+  if (b.isStart) {
+    if (1 == b.timeFlag) {
+      return Entry.hw.sendQueue.leftWheel = 50, Entry.hw.sendQueue.rightWheel = 50, b;
+    }
+    delete b.timeFlag;
+    delete b.isStart;
+    Entry.engine.isContinue = !1;
+    Entry.hw.sendQueue.leftWheel = 0;
+    Entry.hw.sendQueue.rightWheel = 0;
+    return b.callReturn();
+  }
+  b.isStart = !0;
+  b.timeFlag = 1;
+  setTimeout(function() {
+    b.timeFlag = 0;
+  }, 1E3);
+  return b;
 };
 Blockly.Blocks.hamster_move_backward = {init:function() {
   this.setColour("#00979D");
@@ -1366,6 +1388,23 @@ Blockly.Blocks.hamster_move_backward = {init:function() {
   this.setNextStatement(!0);
 }};
 Entry.block.hamster_move_backward = function(a, b) {
+  if (b.isStart) {
+    if (1 == b.timeFlag) {
+      return Entry.hw.sendQueue.leftWheel = -50, Entry.hw.sendQueue.rightWheel = -50, b;
+    }
+    delete b.timeFlag;
+    delete b.isStart;
+    Entry.engine.isContinue = !1;
+    Entry.hw.sendQueue.leftWheel = 0;
+    Entry.hw.sendQueue.rightWheel = 0;
+    return b.callReturn();
+  }
+  b.isStart = !0;
+  b.timeFlag = 1;
+  setTimeout(function() {
+    b.timeFlag = 0;
+  }, 1E3);
+  return b;
 };
 Blockly.Blocks.hamster_turn_around = {init:function() {
   this.setColour("#00979D");
@@ -1375,16 +1414,41 @@ Blockly.Blocks.hamster_turn_around = {init:function() {
   this.setNextStatement(!0);
 }};
 Entry.block.hamster_turn_around = function(a, b) {
+  if (b.isStart) {
+    if (1 == b.timeFlag) {
+      return Entry.hw.sendQueue.leftWheel = b.leftValue, Entry.hw.sendQueue.rightWheel = b.rightValue, b;
+    }
+    delete b.timeFlag;
+    delete b.isStart;
+    delete b.leftValue;
+    delete b.rightValue;
+    Entry.engine.isContinue = !1;
+    Entry.hw.sendQueue.leftWheel = 0;
+    Entry.hw.sendQueue.rightWheel = 0;
+    return b.callReturn();
+  }
+  var c = "LEFT" == b.getField("DIRECTION", b);
+  b.leftValue = c ? -50 : 50;
+  b.rightValue = c ? 50 : -50;
+  b.isStart = !0;
+  b.timeFlag = 1;
+  setTimeout(function() {
+    b.timeFlag = 0;
+  }, 1E3);
+  return b;
 };
 Blockly.Blocks.hamster_set_led_to = {init:function() {
   this.setColour("#00979D");
-  this.appendDummyInput().appendField("").appendField(new Blockly.FieldDropdown([["\uc67c\ucabd", "LEFT"], ["\uc624\ub978\ucabd", "RIGHT"]]), "DIRECTION").appendField(" LED\ub97c").appendField(new Blockly.FieldDropdown([["\ube68\uac04\uc0c9", "RED"], ["\ub178\ub780\uc0c9", "YELLOW"], ["\ub179\uc0c9", "GREEN"], ["\ud558\ub298\uc0c9", "SKYBLUE"], ["\ud30c\ub780\uc0c9", "BLUE"], ["\ubcf4\ub77c\uc0c9", "PURPLE"], ["\ud558\uc580\uc0c9", "WHITE"]]), "COLOR").appendField(" \uc73c\ub85c \ud558\uae30").appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_arduino.png", 
+  this.appendDummyInput().appendField("").appendField(new Blockly.FieldDropdown([["\uc67c\ucabd", "LEFT"], ["\uc624\ub978\ucabd", "RIGHT"], ["\uc55e\ucabd", "FRONT"]]), "DIRECTION").appendField(" LED\ub97c").appendField(new Blockly.FieldDropdown([["\ube68\uac04\uc0c9", "4"], ["\ub178\ub780\uc0c9", "6"], ["\ub179\uc0c9", "2"], ["\ud558\ub298\uc0c9", "3"], ["\ud30c\ub780\uc0c9", "1"], ["\ubcf4\ub77c\uc0c9", "5"], ["\ud558\uc580\uc0c9", "7"]]), "COLOR").appendField(" \uc73c\ub85c \ud558\uae30").appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_arduino.png", 
   "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
 }};
 Entry.block.hamster_set_led_to = function(a, b) {
+  var c = b.getField("DIRECTION", b), d = Number(b.getField("COLOR", b));
+  "FRONT" == c ? (Entry.hw.sendQueue.leftLed = d, Entry.hw.sendQueue.rightLed = d) : "LEFT" == c ? Entry.hw.sendQueue.leftLed = d : Entry.hw.sendQueue.rightLed = d;
+  return b.callReturn();
 };
 Blockly.Blocks.hamster_clear_led = {init:function() {
   this.setColour("#00979D");
@@ -1394,6 +1458,9 @@ Blockly.Blocks.hamster_clear_led = {init:function() {
   this.setNextStatement(!0);
 }};
 Entry.block.hamster_clear_led = function(a, b) {
+  var c = b.getField("DIRECTION", b);
+  "FRONT" == c ? (Entry.hw.sendQueue.leftLed = 0, Entry.hw.sendQueue.rightLed = 0) : "LEFT" == c ? Entry.hw.sendQueue.leftLed = 0 : Entry.hw.sendQueue.rightLed = 0;
+  return b.callReturn();
 };
 Blockly.Blocks.hamster_beep = {init:function() {
   this.setColour("#00979D");
@@ -1403,6 +1470,22 @@ Blockly.Blocks.hamster_beep = {init:function() {
   this.setNextStatement(!0);
 }};
 Entry.block.hamster_beep = function(a, b) {
+  if (b.isStart) {
+    if (1 == b.timeFlag) {
+      return Entry.hw.sendQueue.buzzer = 440, b;
+    }
+    delete b.timeFlag;
+    delete b.isStart;
+    Entry.engine.isContinue = !1;
+    Entry.hw.sendQueue.buzzer = 0;
+    return b.callReturn();
+  }
+  b.isStart = !0;
+  b.timeFlag = 1;
+  setTimeout(function() {
+    b.timeFlag = 0;
+  }, 200);
+  return b;
 };
 Blockly.Blocks.hamster_hand_found = {init:function() {
   this.setColour("#00979D");
@@ -1411,6 +1494,8 @@ Blockly.Blocks.hamster_hand_found = {init:function() {
   this.setInputsInline(!0);
 }};
 Entry.block.hamster_hand_found = function(a, b) {
+  var c = Entry.hw.portData.rightProximity;
+  return 40 < Entry.hw.portData.leftProximity || 40 < c;
 };
 Blockly.Blocks.hamster_move_forward_for_secs = {init:function() {
   this.setColour("#00979D");
@@ -4985,7 +5070,7 @@ Entry.HW = function() {
   this.portData = {};
   this.sendQueue = {};
   this.settingQueue = {};
-  Entry.addEventListener("stop", Entry.Bitbrick.setZero);
+  Entry.addEventListener("stop", Entry.Hamster.setZero);
 };
 Entry.HW.TRIAL_LIMIT = 1;
 p = Entry.HW.prototype;

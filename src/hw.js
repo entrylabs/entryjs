@@ -25,7 +25,7 @@ Entry.HW = function() {
     this.sendQueue = {};
     this.settingQueue = {};
 
-    Entry.addEventListener('stop', Entry.Bitbrick.setZero);
+    Entry.addEventListener('stop', Entry.Hamster.setZero);
 }
 
 Entry.HW.TRIAL_LIMIT = 1;

@@ -1,9 +1,31 @@
 "use strict";
 
 Entry.Hamster = {
+	PORT_MAP: {
+		leftWheel: 0,
+		rightWheel: 0,
+		buzzer: 0,
+		outputA: 0,
+		outputB: 0,
+		topology: 0,
+		leftLed: 0,
+		rightLed: 0,
+		note: 0,
+		lineTracerMode: 0,
+		lineTracerSpeed: 4,
+		ioModeA: 0,
+		ioModeB: 0,
+		configProximity: 2,
+		configGravity: 0,
+		configBandWidth: 3
+	},
+    setZero: function() {
+        for (var port in Entry.Hamster.PORT_MAP) {
+          Entry.hw.sendQueue[port] = 0;
+        }
+        Entry.hw.update();
+        }
 };
-
-
 
 //novice
 Blockly.Blocks.hamster_move_forward = {
@@ -19,6 +41,26 @@ Blockly.Blocks.hamster_move_forward = {
 };
 
 Entry.block.hamster_move_forward = function (sprite, script) {
+    if (!script.isStart) {
+        script.isStart = true;
+        script.timeFlag = 1;
+        var timeValue = 1 * 1000;
+        setTimeout(function() {
+            script.timeFlag = 0;
+        }, timeValue);
+        return script;
+    } else if (script.timeFlag == 1) {
+        Entry.hw.sendQueue['leftWheel'] = 50;
+        Entry.hw.sendQueue['rightWheel'] = 50;
+        return script;
+    } else {
+        delete script.timeFlag;
+        delete script.isStart;
+        Entry.engine.isContinue = false;
+        Entry.hw.sendQueue['leftWheel'] = 0;
+        Entry.hw.sendQueue['rightWheel'] = 0;
+        return script.callReturn();
+    }
 };
 
 Blockly.Blocks.hamster_move_backward = {
@@ -34,6 +76,26 @@ Blockly.Blocks.hamster_move_backward = {
 };
 
 Entry.block.hamster_move_backward = function (sprite, script) {
+    if (!script.isStart) {
+        script.isStart = true;
+        script.timeFlag = 1;
+        var timeValue = 1 * 1000;
+        setTimeout(function() {
+            script.timeFlag = 0;
+        }, timeValue);
+        return script;
+    } else if (script.timeFlag == 1) {
+        Entry.hw.sendQueue['leftWheel'] = -50;
+        Entry.hw.sendQueue['rightWheel'] = -50;
+        return script;
+    } else {
+        delete script.timeFlag;
+        delete script.isStart;
+        Entry.engine.isContinue = false;
+        Entry.hw.sendQueue['leftWheel'] = 0;
+        Entry.hw.sendQueue['rightWheel'] = 0;
+        return script.callReturn();
+    }
 };
 
 Blockly.Blocks.hamster_turn_around = {
@@ -54,6 +116,32 @@ Blockly.Blocks.hamster_turn_around = {
 };
 
 Entry.block.hamster_turn_around = function (sprite, script) {
+    if (!script.isStart) {
+        var direction = script.getField("DIRECTION", script);
+        var isLeft = direction == 'LEFT';
+        script.leftValue = isLeft ? -50 : 50;
+        script.rightValue = isLeft ? 50 : -50;
+        script.isStart = true;
+        script.timeFlag = 1;
+        var timeValue = 1 * 1000;
+        setTimeout(function() {
+            script.timeFlag = 0;
+        }, timeValue);
+        return script;
+    } else if (script.timeFlag == 1) {
+        Entry.hw.sendQueue['leftWheel'] = script.leftValue;
+        Entry.hw.sendQueue['rightWheel'] = script.rightValue;
+        return script;
+    } else {
+        delete script.timeFlag;
+        delete script.isStart;
+        delete script.leftValue;
+        delete script.rightValue;
+        Entry.engine.isContinue = false;
+        Entry.hw.sendQueue['leftWheel'] = 0;
+        Entry.hw.sendQueue['rightWheel'] = 0;
+        return script.callReturn();
+    }
 };
 
 Blockly.Blocks.hamster_set_led_to = {
@@ -63,17 +151,18 @@ Blockly.Blocks.hamster_set_led_to = {
     .appendField("")
     .appendField(new Blockly.FieldDropdown([
       ['왼쪽',"LEFT"],
-      ['오른쪽',"RIGHT"]
+      ['오른쪽',"RIGHT"],
+      ['앞쪽',"FRONT"]
       ]), "DIRECTION")
     .appendField(" LED를")
     .appendField(new Blockly.FieldDropdown([
-      ['빨간색',"RED"],
-      ['노란색',"YELLOW"],
-      ['녹색',"GREEN"],
-      ['하늘색',"SKYBLUE"],
-      ['파란색',"BLUE"],
-      ['보라색',"PURPLE"],
-      ['하얀색',"WHITE"]
+      ['빨간색',"4"],
+      ['노란색',"6"],
+      ['녹색',"2"],
+      ['하늘색',"3"],
+      ['파란색',"1"],
+      ['보라색',"5"],
+      ['하얀색',"7"]
       ]), "COLOR")
     .appendField(" 으로 하기")
     .appendField(new Blockly.FieldIcon('/img/assets/block_icon/entry_icon_arduino.png', '*'));
@@ -84,6 +173,17 @@ Blockly.Blocks.hamster_set_led_to = {
 };
 
 Entry.block.hamster_set_led_to = function (sprite, script) {
+    var direction = script.getField("DIRECTION", script);
+    var color = Number(script.getField("COLOR", script));
+    if (direction == 'FRONT') {
+        Entry.hw.sendQueue['leftLed'] = color;
+        Entry.hw.sendQueue['rightLed'] = color;
+    } else if (direction == 'LEFT')
+        Entry.hw.sendQueue['leftLed'] = color;
+    else
+        Entry.hw.sendQueue['rightLed'] = color;
+
+    return script.callReturn();
 };
 
 Blockly.Blocks.hamster_clear_led = {
@@ -104,6 +204,17 @@ Blockly.Blocks.hamster_clear_led = {
 };
 
 Entry.block.hamster_clear_led = function (sprite, script) {
+    var direction = script.getField("DIRECTION", script);
+    if (direction == 'FRONT') {
+        Entry.hw.sendQueue['leftLed'] = 0;
+        Entry.hw.sendQueue['rightLed'] = 0;
+    } else if (direction == 'LEFT') {
+        Entry.hw.sendQueue['leftLed'] = 0;
+    } else {
+        Entry.hw.sendQueue['rightLed'] = 0;
+    }
+
+    return script.callReturn();
 };
 
 Blockly.Blocks.hamster_beep = {
@@ -119,6 +230,24 @@ Blockly.Blocks.hamster_beep = {
 };
 
 Entry.block.hamster_beep = function (sprite, script) {
+    if (!script.isStart) {
+        script.isStart = true;
+        script.timeFlag = 1;
+        var timeValue = 0.2 * 1000;
+        setTimeout(function() {
+            script.timeFlag = 0;
+        }, timeValue);
+        return script;
+    } else if (script.timeFlag == 1) {
+        Entry.hw.sendQueue['buzzer'] = 440;
+        return script;
+    } else {
+        delete script.timeFlag;
+        delete script.isStart;
+        Entry.engine.isContinue = false;
+        Entry.hw.sendQueue['buzzer'] = 0;
+        return script.callReturn();
+    }
 };
 
 Blockly.Blocks.hamster_hand_found = {
@@ -132,6 +261,10 @@ Blockly.Blocks.hamster_hand_found = {
 };
 
 Entry.block.hamster_hand_found = function (sprite, script) {
+    var left = Entry.hw.portData['leftProximity'];
+    var right = Entry.hw.portData['rightProximity'];
+
+    return left > 40 || right > 40;
 };
 
 //intermediate
