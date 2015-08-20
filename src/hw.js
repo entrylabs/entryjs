@@ -24,8 +24,10 @@ Entry.HW = function() {
     this.portData = {};
     this.sendQueue = {};
     this.settingQueue = {};
+    this.selectedDevice = null;
+    this.hwModule = Entry.Hamster;
 
-    Entry.addEventListener('stop', Entry.Hamster.setZero);
+    Entry.addEventListener('stop', this.setZero);
 }
 
 Entry.HW.TRIAL_LIMIT = 1;
@@ -55,6 +57,7 @@ p.initSocket = function() {
     };
     socket.onmessage = function (evt)
     {
+        hw.checkDevice(evt.data);
         hw.updatePortData(evt.data);
     };
     socket.onclose = function()
@@ -162,3 +165,10 @@ p.downloadSource = function() {
     var win = window.open(url, '_blank');
     win.focus();
 }
+
+p.setZero = function() {
+    Entry.hw.hwModule.setZero();
+};
+
+p.checkDevice = function(data) {
+};

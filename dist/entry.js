@@ -5070,7 +5070,9 @@ Entry.HW = function() {
   this.portData = {};
   this.sendQueue = {};
   this.settingQueue = {};
-  Entry.addEventListener("stop", Entry.Hamster.setZero);
+  this.selectedDevice = null;
+  this.hwModule = Entry.Hamster;
+  Entry.addEventListener("stop", this.setZero);
 };
 Entry.HW.TRIAL_LIMIT = 1;
 p = Entry.HW.prototype;
@@ -5088,6 +5090,7 @@ p.initSocket = function() {
       a.initHardware();
     };
     b.onmessage = function(b) {
+      a.checkDevice(b.data);
       a.updatePortData(b.data);
     };
     b.onclose = function() {
@@ -5136,6 +5139,11 @@ p.downloadConnector = function() {
 };
 p.downloadSource = function() {
   window.open("/lib/EntryArduino/arduino/entry.ino", "_blank").focus();
+};
+p.setZero = function() {
+  Entry.hw.hwModule.setZero();
+};
+p.checkDevice = function(a) {
 };
 Entry.init = function(a, b) {
   Entry.assert("object" === typeof b, "Init option is not object");
