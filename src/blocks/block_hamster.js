@@ -1,30 +1,24 @@
 "use strict";
 
 Entry.Hamster = {
-	PORT_MAP: {
-		leftWheel: 0,
-		rightWheel: 0,
-		buzzer: 0,
-		outputA: 0,
-		outputB: 0,
-		topology: 0,
-		leftLed: 0,
-		rightLed: 0,
-		note: 0,
-		lineTracerMode: 0,
-		lineTracerSpeed: 4,
-		ioModeA: 0,
-		ioModeB: 0,
-		configProximity: 2,
-		configGravity: 0,
-		configBandWidth: 3
+        PORT_MAP: {
+        leftWheel: 0,
+        rightWheel: 0,
+        buzzer: 0,
+        outputA: 0,
+        outputB: 0,
+        leftLed: 0,
+        rightLed: 0,
+        note: 0
 	},
     setZero: function() {
-        for (var port in Entry.Hamster.PORT_MAP) {
-          Entry.hw.sendQueue[port] = 0;
+        var portMap = Entry.Hamster.PORT_MAP;
+        for (var port in portMap) {
+          Entry.hw.sendQueue[port] = portMap[port];
         }
         Entry.hw.update();
-        }
+    },
+    tempo: 60
 };
 
 //novice
@@ -231,6 +225,7 @@ Blockly.Blocks.hamster_beep = {
 
 Entry.block.hamster_beep = function (sprite, script) {
     if (!script.isStart) {
+        Entry.hw.sendQueue['note'] = 43;
         script.isStart = true;
         script.timeFlag = 1;
         var timeValue = 0.2 * 1000;
@@ -245,6 +240,7 @@ Entry.block.hamster_beep = function (sprite, script) {
         delete script.timeFlag;
         delete script.isStart;
         Entry.engine.isContinue = false;
+        Entry.hw.sendQueue['note'] = 0;
         Entry.hw.sendQueue['buzzer'] = 0;
         return script.callReturn();
     }
@@ -261,10 +257,8 @@ Blockly.Blocks.hamster_hand_found = {
 };
 
 Entry.block.hamster_hand_found = function (sprite, script) {
-    var left = Entry.hw.portData['leftProximity'];
-    var right = Entry.hw.portData['rightProximity'];
-
-    return left > 40 || right > 40;
+    return Entry.hw.portData['leftProximity'] > 40 ||
+        Entry.hw.portData['rightProximity'] > 40;
 };
 
 //intermediate
@@ -285,6 +279,26 @@ Blockly.Blocks.hamster_move_forward_for_secs = {
 };
 
 Entry.block.hamster_move_forward_for_secs = function (sprite, script) {
+    if (!script.isStart) {
+        script.isStart = true;
+        script.timeFlag = 1;
+        var timeValue = script.getNumberValue("VALUE") * 1000;
+        setTimeout(function() {
+            script.timeFlag = 0;
+        }, timeValue);
+        return script;
+    } else if (script.timeFlag == 1) {
+        Entry.hw.sendQueue['leftWheel'] = 50;
+        Entry.hw.sendQueue['rightWheel'] = 50;
+        return script;
+    } else {
+        delete script.timeFlag;
+        delete script.isStart;
+        Entry.engine.isContinue = false;
+        Entry.hw.sendQueue['leftWheel'] = 0;
+        Entry.hw.sendQueue['rightWheel'] = 0;
+        return script.callReturn();
+    }
 };
 
 Blockly.Blocks.hamster_move_backward_for_secs = {
@@ -304,6 +318,26 @@ Blockly.Blocks.hamster_move_backward_for_secs = {
 };
 
 Entry.block.hamster_move_backward_for_secs = function (sprite, script) {
+    if (!script.isStart) {
+        script.isStart = true;
+        script.timeFlag = 1;
+        var timeValue = script.getNumberValue("VALUE") * 1000;
+        setTimeout(function() {
+            script.timeFlag = 0;
+        }, timeValue);
+        return script;
+    } else if (script.timeFlag == 1) {
+        Entry.hw.sendQueue['leftWheel'] = -50;
+        Entry.hw.sendQueue['rightWheel'] = -50;
+        return script;
+    } else {
+        delete script.timeFlag;
+        delete script.isStart;
+        Entry.engine.isContinue = false;
+        Entry.hw.sendQueue['leftWheel'] = 0;
+        Entry.hw.sendQueue['rightWheel'] = 0;
+        return script.callReturn();
+    }
 };
 
 Blockly.Blocks.hamster_turn_for_secs = {
@@ -328,6 +362,32 @@ Blockly.Blocks.hamster_turn_for_secs = {
 };
 
 Entry.block.hamster_turn_for_secs = function (sprite, script) {
+    if (!script.isStart) {
+        var direction = script.getField("DIRECTION", script);
+        var isLeft = direction == 'LEFT';
+        script.leftValue = isLeft ? -50 : 50;
+        script.rightValue = isLeft ? 50 : -50;
+        script.isStart = true;
+        script.timeFlag = 1;
+        var timeValue = script.getNumberValue("VALUE") * 1000;
+        setTimeout(function() {
+            script.timeFlag = 0;
+        }, timeValue);
+        return script;
+    } else if (script.timeFlag == 1) {
+        Entry.hw.sendQueue['leftWheel'] = script.leftValue;
+        Entry.hw.sendQueue['rightWheel'] = script.rightValue;
+        return script;
+    } else {
+        delete script.timeFlag;
+        delete script.isStart;
+        delete script.leftValue;
+        delete script.rightValue;
+        Entry.engine.isContinue = false;
+        Entry.hw.sendQueue['leftWheel'] = 0;
+        Entry.hw.sendQueue['rightWheel'] = 0;
+        return script.callReturn();
+    }
 };
 
 Blockly.Blocks.hamster_play_note_for = {
@@ -336,28 +396,29 @@ Blockly.Blocks.hamster_play_note_for = {
     this.appendDummyInput()
     .appendField("")
     .appendField(new Blockly.FieldDropdown([
-      ['도',"0"],
-      ['도#',"1"],
-      ['레',"2"],
-      ['미b',"3"],
-      ['미',"4"],
-      ['파',"5"],
-      ['파#',"6"],
-      ['솔',"7"],
-      ['솔#',"8"],
-      ['라',"9"],
-      ['시b',"10"],
-      ['시',"11"]
+      ['도',"4"],
+      ['도#',"5"],
+      ['레',"6"],
+      ['미b',"7"],
+      ['미',"8"],
+      ['파',"9"],
+      ['파#',"10"],
+      ['솔',"11"],
+      ['솔#',"12"],
+      ['라',"13"],
+      ['시b',"14"],
+      ['시',"15"]
       ]), "NOTE")
     .appendField(" ")
     .appendField(new Blockly.FieldDropdown([
-      ['1',"0"],
+      ['1',"1"],
       ['2',"2"],
       ['3',"3"],
       ['4',"4"],
       ['5',"5"],
-      ['6',"6"]
-      ]), "DIRECTION")
+      ['6',"6"],
+      ['7',"7"]
+      ]), "OCTAVE")
     .appendField(' 음을')
     this.appendValueInput("VALUE")
     .setCheck(["Number", "String"]);
@@ -371,6 +432,39 @@ Blockly.Blocks.hamster_play_note_for = {
 };
 
 Entry.block.hamster_play_note_for = function (sprite, script) {
+    if (!script.isStart) {
+        var note = script.getNumberField("NOTE", script);
+        var octave = script.getNumberField("OCTAVE", script);
+        var beat = script.getNumberValue("VALUE", script);
+        var tempo = Entry.Hamster.tempo;
+        Entry.hw.sendQueue['buzzer'] = 0;
+        note += (octave-1)*12;
+        var timeValue = beat*60*1000/tempo;
+        script.note = note;
+
+        script.isStart = true;
+        script.timeFlag = 1;
+        if (timeValue > 100) {
+            setTimeout(function() {
+                Entry.hw.sendQueue['note'] = 0;
+            }, timeValue-100);
+        }
+        setTimeout(function() {
+            script.timeFlag = 0;
+        }, timeValue);
+        return script;
+    } else if (script.timeFlag == 1) {
+        Entry.hw.sendQueue['note'] = script.note;
+        return script;
+    } else {
+        delete script.timeFlag;
+        delete script.isStart;
+        delete script.note;
+        Entry.engine.isContinue = false;
+        Entry.hw.sendQueue['note'] = 0;
+        return script.callReturn();
+    }
+
 };
 
 Blockly.Blocks.hamster_rest_for = {
@@ -390,6 +484,25 @@ Blockly.Blocks.hamster_rest_for = {
 };
 
 Entry.block.hamster_rest_for = function (sprite, script) {
+    if (!script.isStart) {
+        script.isStart = true;
+        script.timeFlag = 1;
+        var timeValue = script.getNumberValue('VALUE');
+        timeValue = timeValue*60*1000/Entry.Hamster.tempo;
+        setTimeout(function() {
+            script.timeFlag = 0;
+        }, timeValue);
+        return script;
+    } else if (script.timeFlag == 1) {
+        Entry.hw.sendQueue['buzzer'] = 0;
+        Entry.hw.sendQueue['note'] = 0;
+        return script;
+    } else {
+        delete script.timeFlag;
+        delete script.isStart;
+        Entry.engine.isContinue = false;
+        return script.callReturn();
+    }
 };
 
 Blockly.Blocks.hamster_change_tempo_by = {
@@ -409,6 +522,9 @@ Blockly.Blocks.hamster_change_tempo_by = {
 };
 
 Entry.block.hamster_change_tempo_by = function (sprite, script) {
+    var tempo = script.getNumberValue('VALUE');
+    Entry.Hamster.tempo += tempo;
+    return script.callReturn();
 };
 
 Blockly.Blocks.hamster_set_tempo_to = {
@@ -428,5 +544,8 @@ Blockly.Blocks.hamster_set_tempo_to = {
 };
 
 Entry.block.hamster_set_tempo_to = function (sprite, script) {
+    var tempo = script.getNumberValue('VALUE');
+    Entry.Hamster.tempo = tempo;
+    return script.callReturn();
 };
 
