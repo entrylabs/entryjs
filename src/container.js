@@ -296,6 +296,7 @@ Entry.Container.prototype.removeObject = function(object) {
                                );
     object.destroy();
     this.objects_.splice(index, 1);
+    this.setCurrentObjects();
     Entry.stage.sortZorder();
 
     if (this.objects_.length && index != 0)
@@ -310,7 +311,6 @@ Entry.Container.prototype.removeObject = function(object) {
     Entry.toast.success(Lang.Workspace.remove_object,
                        object.name + ' ' + Lang.Workspace.remove_object_msg);
 
-    this.setCurrentObjects();
     Entry.variableContainer.removeLocalVariables(object.id);
     Entry.playground.reloadPlayground();
     return state;

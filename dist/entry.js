@@ -3260,10 +3260,10 @@ Entry.Container.prototype.removeObject = function(a) {
   c = new Entry.State(this.addObject, c, b);
   a.destroy();
   this.objects_.splice(b, 1);
+  this.setCurrentObjects();
   Entry.stage.sortZorder();
   this.objects_.length && 0 != b ? Entry.container.selectObject(this.objects_[b - 1].id) : this.objects_.length && 0 == b ? Entry.container.selectObject(this.getCurrentObjects()[0].id) : (Entry.container.selectObject(), Entry.playground.flushPlayground());
   Entry.toast.success(Lang.Workspace.remove_object, a.name + " " + Lang.Workspace.remove_object_msg);
-  this.setCurrentObjects();
   Entry.variableContainer.removeLocalVariables(a.id);
   Entry.playground.reloadPlayground();
   return c;
