@@ -1115,7 +1115,7 @@ Blockly.Blocks.function_create = {init:function() {
   this.appendDummyInput().appendField(Lang.Blocks.FUNCTION_define);
   this.setColour("#cc7337");
   this.appendValueInput("FIELD").setCheck(["Param"]);
-  this.appendDummyInput().appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_function.png", "*"));
+  this.appendDummyInput().appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_function_v1.png", "*"));
   this.setInputsInline(!0);
   this.setNextStatement(!0);
   this.setTooltip("");
@@ -1145,8 +1145,9 @@ Blockly.Blocks.function_general = {init:function() {
       case "boolean":
         this.appendValueInput(e).setCheck(["Boolean"]);
     }
+    this.hashId = a.getAttribute("hashid");
   }
-  this.hashId = a.getAttribute("hashid");
+  this.appendDummyInput().appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_function_v1.png", "*"));
 }, mutationToDom:function() {
   for (var a = document.createElement("mutation"), b = 1;b < this.inputList.length;b++) {
     var c = this.inputList[b];

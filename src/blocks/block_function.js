@@ -106,7 +106,7 @@ Blockly.Blocks.function_create = {
     this.appendValueInput("FIELD")
         .setCheck(['Param']);
     this.appendDummyInput()
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/entry_icon_function.png', '*'));
+        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/entry_icon_function_v1.png', '*'));
     this.setInputsInline(true);
     this.setNextStatement(true);
     this.setTooltip('');
@@ -156,8 +156,10 @@ Blockly.Blocks.function_general = {
                     .setCheck(['Boolean']);
             default:
         }
-    }
     this.hashId = xmlElement.getAttribute('hashid');
+    }
+    this.appendDummyInput()
+        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/entry_icon_function_v1.png', '*'));
   },
   mutationToDom: function() {
     var container = document.createElement('mutation');
