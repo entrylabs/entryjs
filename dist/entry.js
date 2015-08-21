@@ -657,8 +657,8 @@ Blockly.Blocks.calc_operation = {init:function() {
   this.appendDummyInput("VALUE").appendField(Lang.Blocks.CALC_calc_operation_of_1, "#3D3D3D");
   this.appendValueInput("LEFTHAND").setCheck(["Number", "String"]);
   this.appendDummyInput("VALUE").appendField(Lang.Blocks.CALC_calc_operation_of_2, "#3D3D3D");
-  this.appendDummyInput("VALUE").appendField(new Blockly.FieldDropdown([[Lang.Blocks.CALC_calc_operation_square, "square"], [Lang.Blocks.CALC_calc_operation_root, "root"], [Lang.Blocks.CALC_calc_operation_sin, "sin"], [Lang.Blocks.CALC_calc_operation_cos, "cos"], [Lang.Blocks.CALC_calc_operation_tan, "tan"], [Lang.Blocks.CALC_calc_operation_asin, "asin"], [Lang.Blocks.CALC_calc_operation_acos, "acos"], [Lang.Blocks.CALC_calc_operation_atan, "atan"], [Lang.Blocks.CALC_calc_operation_log, "log"], [Lang.Blocks.CALC_calc_operation_ln, 
-  "ln"], [Lang.Blocks.CALC_calc_operation_unnatural, "unnatural"], [Lang.Blocks.CALC_calc_operation_floor, "floor"], [Lang.Blocks.CALC_calc_operation_ceil, "ceil"], [Lang.Blocks.CALC_calc_operation_round, "round"], [Lang.Blocks.CALC_calc_operation_factorial, "factorial"], [Lang.Blocks.CALC_calc_operation_abs, "abs"]]), "VALUE");
+  this.appendDummyInput("VALUE").appendField(new Blockly.FieldDropdown([[Lang.Blocks.CALC_calc_operation_square, "square"], [Lang.Blocks.CALC_calc_operation_root, "root"], [Lang.Blocks.CALC_calc_operation_sin, "sin"], [Lang.Blocks.CALC_calc_operation_cos, "cos"], [Lang.Blocks.CALC_calc_operation_tan, "tan"], [Lang.Blocks.CALC_calc_operation_asin, "asin_radian"], [Lang.Blocks.CALC_calc_operation_acos, "acos_radian"], [Lang.Blocks.CALC_calc_operation_atan, "atan_radian"], [Lang.Blocks.CALC_calc_operation_log, 
+  "log"], [Lang.Blocks.CALC_calc_operation_ln, "ln"], [Lang.Blocks.CALC_calc_operation_unnatural, "unnatural"], [Lang.Blocks.CALC_calc_operation_floor, "floor"], [Lang.Blocks.CALC_calc_operation_ceil, "ceil"], [Lang.Blocks.CALC_calc_operation_round, "round"], [Lang.Blocks.CALC_calc_operation_factorial, "factorial"], [Lang.Blocks.CALC_calc_operation_abs, "abs"]]), "VALUE");
   this.setOutput(!0, "Number");
   this.appendDummyInput().appendField(" ");
   this.setInputsInline(!0);
@@ -666,6 +666,7 @@ Blockly.Blocks.calc_operation = {init:function() {
 }};
 Entry.block.calc_operation = function(a, b) {
   var c = b.getNumberValue("LEFTHAND", b), d = b.getField("VALUE", b), e = 0;
+  -1 < "sin cos tan asin_radian acos_radian atan_radian".split(" ").indexOf(d) && (c = Entry.toRadian(c), d = d.split("_")[0]);
   switch(d) {
     case "square":
       e = c * c;
@@ -675,15 +676,6 @@ Entry.block.calc_operation = function(a, b) {
       break;
     case "root":
       e = Math.sqrt(c);
-      break;
-    case "sin":
-      e = Math.sin(Entry.toRadian(c));
-      break;
-    case "cos":
-      e = Math.cos(Entry.toRadian(c));
-      break;
-    case "tan":
-      e = Math.tan(Entry.toRadian(c));
       break;
     case "log":
       e = Math.log(c) / Math.LN10;
