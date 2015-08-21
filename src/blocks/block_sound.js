@@ -14,7 +14,6 @@ Blockly.Blocks.sound_something = {
     this.setInputsInline(true);
     this.setNextStatement(true);
     this.setPreviousStatement(true);
-    this.setTooltip('');
   }
 };
 
@@ -44,7 +43,6 @@ Blockly.Blocks.sound_something_second = {
     this.setInputsInline(true);
     this.setNextStatement(true);
     this.setPreviousStatement(true);
-    this.setTooltip('');
   }
 };
 
@@ -76,7 +74,6 @@ Blockly.Blocks.sound_something_wait = {
     this.setInputsInline(true);
     this.setNextStatement(true);
     this.setPreviousStatement(true);
-    this.setTooltip('');
   }
 };
 
@@ -121,7 +118,6 @@ Blockly.Blocks.sound_something_second_wait = {
     this.setInputsInline(true);
     this.setNextStatement(true);
     this.setPreviousStatement(true);
-    this.setTooltip('');
   }
 };
 
@@ -166,7 +162,6 @@ Blockly.Blocks.sound_volume_change = {
     this.setInputsInline(true);
     this.setNextStatement(true);
     this.setPreviousStatement(true);
-    this.setTooltip('');
   }
 };
 
@@ -195,7 +190,6 @@ Blockly.Blocks.sound_volume_set = {
     this.setInputsInline(true);
     this.setNextStatement(true);
     this.setPreviousStatement(true);
-    this.setTooltip('');
   }
 };
 
@@ -219,7 +213,6 @@ Blockly.Blocks.sound_silent_all = {
     this.setInputsInline(true);
     this.setNextStatement(true);
     this.setPreviousStatement(true);
-    this.setTooltip('');
   }
 };
 
@@ -239,7 +232,6 @@ Blockly.Blocks.get_sounds = {
         .appendField(' ');
     this.setOutput(true, 'String');
     this.setInputsInline(true);
-    this.setTooltip('');
   }
 };
 
@@ -260,7 +252,6 @@ Blockly.Blocks.sound_something_with_block = {
     this.setInputsInline(true);
     this.setNextStatement(true);
     this.setPreviousStatement(true);
-    this.setTooltip('');
   }
 };
 
@@ -292,7 +283,6 @@ Blockly.Blocks.sound_something_second_with_block = {
     this.setInputsInline(true);
     this.setNextStatement(true);
     this.setPreviousStatement(true);
-    this.setTooltip('');
   }
 };
 
@@ -326,7 +316,6 @@ Blockly.Blocks.sound_something_wait_with_block = {
     this.setInputsInline(true);
     this.setNextStatement(true);
     this.setPreviousStatement(true);
-    this.setTooltip('');
   }
 };
 
@@ -370,7 +359,6 @@ Blockly.Blocks.sound_something_second_wait_with_block = {
     this.setInputsInline(true);
     this.setNextStatement(true);
     this.setPreviousStatement(true);
-    this.setTooltip('');
   }
 };
 

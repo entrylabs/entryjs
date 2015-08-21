@@ -7,7 +7,6 @@ Blockly.Blocks.is_clicked = {
             .appendField(Lang.Blocks.JUDGEMENT_is_clicked, "#3D3D3D");
         this.setOutput(true, 'Boolean');
         this.setInputsInline(true);
-        this.setTooltip('');
     }
 };
 
@@ -25,7 +24,6 @@ Blockly.Blocks.is_press_some_key = {
             .appendField(Lang.Blocks.JUDGEMENT_is_press_some_key_2, "#3D3D3D");
         this.setOutput(true, 'Boolean');
         this.setInputsInline(true);
-        this.setTooltip('');
     }
 };
 
@@ -46,7 +44,6 @@ Blockly.Blocks.reach_something = {
             .appendField(Lang.Blocks.JUDGEMENT_reach_something_2, "#3D3D3D");
         this.setOutput(true, 'Boolean');
         this.setInputsInline(true);
-        this.setTooltip('');
     }
 };
 
@@ -140,7 +137,6 @@ Blockly.Blocks.boolean_comparison = {
             .setCheck(['String', 'Number']);
         this.setOutput(true, 'Boolean');
         this.setInputsInline(true);
-        this.setTooltip('');
     }
 };
 
@@ -167,7 +163,6 @@ Blockly.Blocks.boolean_equal = {
             .setCheck(['String', 'Number']);
         this.setOutput(true, 'Boolean');
         this.setInputsInline(true);
-        this.setTooltip('');
     }
 };
 
@@ -188,7 +183,6 @@ Blockly.Blocks.boolean_bigger = {
             .setCheck(["Number", "String"]);
         this.setOutput(true, 'Boolean');
         this.setInputsInline(true);
-        this.setTooltip('');
     }
 };
 
@@ -209,7 +203,6 @@ Blockly.Blocks.boolean_smaller = {
             .setCheck(["Number", "String"]);
         this.setOutput(true, 'Boolean');
         this.setInputsInline(true);
-        this.setTooltip('');
     }
 };
 
@@ -234,7 +227,6 @@ Blockly.Blocks.boolean_and_or = {
         .setCheck("Boolean");
         this.setOutput(true, 'Boolean');
         this.setInputsInline(true);
-        this.setTooltip('');
     }
 };
 
@@ -259,7 +251,6 @@ Blockly.Blocks.boolean_and = {
             .setCheck("Boolean");
         this.setOutput(true, 'Boolean');
         this.setInputsInline(true);
-        this.setTooltip('');
     }
 };
 
@@ -280,7 +271,6 @@ Blockly.Blocks.boolean_or = {
             .setCheck("Boolean");
         this.setOutput(true, 'Boolean');
         this.setInputsInline(true);
-        this.setTooltip('');
     }
 };
 
@@ -303,7 +293,6 @@ Blockly.Blocks.boolean_not = {
         this.appendDummyInput()
         this.setOutput(true, 'Boolean');
         this.setInputsInline(true);
-        this.setTooltip('');
     }
 };
 
@@ -323,7 +312,6 @@ Blockly.Blocks.true_or_false = {
         this.appendDummyInput()
         this.setOutput(true, 'Boolean');
         this.setInputsInline(true);
-        this.setTooltip('');
     }
 };
 
@@ -340,7 +328,6 @@ Blockly.Blocks.True = {
             .appendField(" ");
         this.setOutput(true, 'Boolean');
         this.setInputsInline(true);
-        this.setTooltip('');
     }
 };
 
@@ -356,7 +343,6 @@ Blockly.Blocks.False = {
             .appendField(" ");
         this.setOutput(true, 'Boolean');
         this.setInputsInline(true);
-        this.setTooltip('');
     }
 };
 
@@ -379,7 +365,6 @@ Blockly.Blocks.is_included_in_list = {
             .appendField(Lang.Blocks.VARIABLE_is_included_in_list_3, "#3D3D3D");
         this.setOutput(true, 'Boolean');
         this.setInputsInline(true);
-        this.setTooltip('');
     }
 };
 

@@ -18,7 +18,6 @@ Blockly.Blocks.change_variable = {
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-    this.setTooltip('');
   }
 };
 
@@ -54,7 +53,6 @@ Blockly.Blocks.set_variable = {
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-    this.setTooltip('');
   }
 };
 
@@ -80,7 +78,6 @@ Blockly.Blocks.show_variable = {
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-    this.setTooltip('');
   }
 };
 
@@ -106,7 +103,6 @@ Blockly.Blocks.hide_variable = {
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-    this.setTooltip('');
   }
 };
 
@@ -125,7 +121,6 @@ Blockly.Blocks.get_y = {
         .appendField(Lang.Blocks.VARIABLE_get_y)
         .appendField(new Blockly.FieldIcon('/img/assets/block_icon/entry_icon_variable.png', '*'));
     this.setOutput(true, 'Number');
-    this.setTooltip(Blockly.Msg.MATH_NUMBER_TOOLTIP);
   }
 };
 
@@ -140,7 +135,6 @@ Blockly.Blocks.get_variable = {
             .appendField(Lang.Blocks.VARIABLE_get_variable_2)
         this.setOutput(true, 'Number');
         this.setInputsInline(true);
-        this.setTooltip(Blockly.Msg.MATH_NUMBER_TOOLTIP);
     }
 };
 
@@ -268,7 +262,6 @@ Blockly.Blocks.add_value_to_list = {
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-    this.setTooltip('');
   }
 };
 
@@ -301,7 +294,6 @@ Blockly.Blocks.remove_value_from_list = {
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-    this.setTooltip('');
   }
 };
 
@@ -340,7 +332,6 @@ Blockly.Blocks.insert_value_to_list = {
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-    this.setTooltip('');
   }
 };
 
@@ -379,7 +370,6 @@ Blockly.Blocks.change_value_list_index = {
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-    this.setTooltip('');
   }
 };
 
@@ -412,7 +402,6 @@ Blockly.Blocks.value_of_index_from_list = {
         .appendField(Lang.Blocks.VARIABLE_value_of_index_from_list_3);
     this.setOutput(true, 'String');
     this.setInputsInline(true);
-    this.setTooltip('');
   }
 };
 
@@ -439,7 +428,6 @@ Blockly.Blocks.length_of_list = {
         .appendField(Lang.Blocks.VARIABLE_length_of_list_2);
     this.setOutput(true, 'Number');
     this.setInputsInline(true);
-    this.setTooltip('');
   }
 };
 
@@ -462,7 +450,6 @@ Blockly.Blocks.show_list = {
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-    this.setTooltip('');
   }
 };
 
@@ -487,7 +474,6 @@ Blockly.Blocks.hide_list = {
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-    this.setTooltip('');
   }
 };
 
@@ -514,7 +500,6 @@ Blockly.Blocks.options_for_list = {
         .appendField(' ');
     this.setOutput(true, 'Number');
     this.setInputsInline(true);
-    this.setTooltip('');
   }
 };
 

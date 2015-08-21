@@ -8,7 +8,6 @@ Blockly.Blocks.number = {
     .appendField(new Blockly.FieldTextInput(""), "NUM")
     this.setOutput(true, 'Number');
     this.setInputsInline(true);
-    this.setTooltip(Blockly.Msg.MATH_NUMBER_TOOLTIP);
   }
 };
 
@@ -23,7 +22,6 @@ Blockly.Blocks.angle = {
     .appendField(new Blockly.FieldAngle("90"), "ANGLE");
     this.setOutput(true, 'Number');
     this.setInputsInline(true);
-    this.setTooltip(Blockly.Msg.MATH_NUMBER_TOOLTIP);
   }
 };
 
@@ -38,7 +36,6 @@ Blockly.Blocks.get_x_coordinate = {
         .appendField(Lang.Blocks.CALC_get_x_coordinate, "#3D3D3D");
     this.setOutput(true, 'Number');
     this.setInputsInline(true);
-    this.setTooltip(Blockly.Msg.MATH_NUMBER_TOOLTIP);
   }
 };
 
@@ -55,7 +52,6 @@ Blockly.Blocks.get_y_coordinate = {
         .appendField(Lang.Blocks.CALC_get_y_coordinate, "#3D3D3D");
     this.setOutput(true, 'Number');
     this.setInputsInline(true);
-    this.setTooltip(Blockly.Msg.MATH_NUMBER_TOOLTIP);
   }
 };
 
@@ -72,7 +68,6 @@ Blockly.Blocks.get_angle = {
         .appendField(Lang.Blocks.CALC_get_angle, "#3D3D3D");
     this.setOutput(true, 'Number');
     this.setInputsInline(true);
-    this.setTooltip(Blockly.Msg.MATH_NUMBER_TOOLTIP);
   }
 };
 
@@ -92,7 +87,6 @@ Blockly.Blocks.get_rotation_direction = {
         .appendField(" ");
     this.setOutput(true, 'Number');
     this.setInputsInline(true);
-    this.setTooltip(Blockly.Msg.MATH_NUMBER_TOOLTIP);
   }
 };
 
@@ -114,7 +108,6 @@ Blockly.Blocks.distance_something = {
         .appendField(Lang.Blocks.CALC_distance_something_2, "#3D3D3D");
     this.setOutput(true, 'Number');
     this.setInputsInline(true);
-    this.setTooltip(Blockly.Msg.MATH_NUMBER_TOOLTIP);
   }
 };
 
@@ -137,7 +130,6 @@ Blockly.Blocks.coordinate_mouse = {
     .appendField(Lang.Blocks.CALC_coordinate_mouse_2, "#3D3D3D");
     this.setOutput(true, 'Number');
     this.setInputsInline(true);
-    this.setTooltip(Blockly.Msg.MATH_NUMBER_TOOLTIP);
   }
 };
 
@@ -169,7 +161,6 @@ Blockly.Blocks.coordinate_object = {
         .appendField(Lang.Blocks.CALC_coordinate_object_3, "#3D3D3D")
     this.setOutput(true, 'Number');
     this.setInputsInline(true);
-    this.setTooltip(Blockly.Msg.MATH_NUMBER_TOOLTIP);
   }
 };
 
@@ -215,7 +206,6 @@ Blockly.Blocks.calc_basic = {
         .setCheck(["Number", "String"]);
     this.setOutput(true, 'Number');
     this.setInputsInline(true);
-    this.setTooltip(Blockly.Msg.MATH_NUMBER_TOOLTIP);
   }
 };
 
@@ -244,7 +234,6 @@ Blockly.Blocks.calc_plus = {
         .setCheck(["Number", "String"]);
     this.setOutput(true, 'Number');
     this.setInputsInline(true);
-    this.setTooltip(Blockly.Msg.MATH_NUMBER_TOOLTIP);
   }
 };
 
@@ -265,7 +254,6 @@ Blockly.Blocks.calc_minus = {
         .setCheck(["Number", "String"]);
     this.setOutput(true, 'Number');
     this.setInputsInline(true);
-    this.setTooltip(Blockly.Msg.MATH_NUMBER_TOOLTIP);
   }
 };
 
@@ -286,7 +274,6 @@ Blockly.Blocks.calc_times = {
         .setCheck(["Number", "String"]);
     this.setOutput(true, 'Number');
     this.setInputsInline(true);
-    this.setTooltip(Blockly.Msg.MATH_NUMBER_TOOLTIP);
   }
 };
 
@@ -307,7 +294,6 @@ Blockly.Blocks.calc_divide = {
         .setCheck(["Number", "String"]);
     this.setOutput(true, 'Number');
     this.setInputsInline(true);
-    this.setTooltip(Blockly.Msg.MATH_NUMBER_TOOLTIP);
   }
 };
 
@@ -333,7 +319,6 @@ Blockly.Blocks.calc_mod = {
     this.appendDummyInput("VALUE")
         .appendField(Lang.Blocks.CALC_calc_mod_3, "#3D3D3D");
     this.setInputsInline(true);
-    this.setTooltip(Blockly.Msg.MATH_NUMBER_TOOLTIP);
   }
 };
 
@@ -359,7 +344,6 @@ Blockly.Blocks.calc_share = {
     this.appendDummyInput("VALUE")
         .appendField(Lang.Blocks.CALC_calc_share_3, "#3D3D3D");
     this.setInputsInline(true);
-    this.setTooltip(Blockly.Msg.MATH_NUMBER_TOOLTIP);
   }
 };
 
@@ -402,7 +386,6 @@ Blockly.Blocks.calc_operation = {
     this.appendDummyInput()
     .appendField(" ");
     this.setInputsInline(true);
-    this.setTooltip(Blockly.Msg.MATH_NUMBER_TOOLTIP);
   }
 };
 
@@ -460,7 +443,6 @@ Blockly.Blocks.calc_rand = {
     this.appendDummyInput("VALUE")
     .appendField(Lang.Blocks.CALC_calc_rand_3, "#3D3D3D");
     this.setInputsInline(true);
-    this.setTooltip(Blockly.Msg.MATH_NUMBER_TOOLTIP);
   }
 };
 
@@ -497,7 +479,6 @@ Blockly.Blocks.get_date = {
         .appendField(Lang.Blocks.CALC_get_date_2, "#3D3D3D")
     this.setOutput(true, 'Number');
     this.setInputsInline(true);
-    this.setTooltip(Blockly.Msg.MATH_NUMBER_TOOLTIP);
   }
 };
 
@@ -530,7 +511,6 @@ Blockly.Blocks.get_sound_duration = {
         .appendField(Lang.Blocks.CALC_get_sound_duration_2, "#3D3D3D");
     this.setOutput(true, 'Number');
     this.setInputsInline(true);
-    this.setTooltip('');
   }
 };
 
@@ -552,7 +532,6 @@ Blockly.Blocks.reset_project_timer = {
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-    this.setTooltip(Blockly.Msg.MATH_NUMBER_TOOLTIP);
   },
   whenAdd: function () {
       Entry.engine.showProjectTimer();
@@ -582,7 +561,6 @@ Blockly.Blocks.set_visible_project_timer = {
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-    this.setTooltip(Blockly.Msg.MATH_NUMBER_TOOLTIP);
   },
   whenAdd: function () {
       Entry.engine.showProjectTimer();
@@ -611,7 +589,6 @@ Blockly.Blocks.get_project_timer_value = {
         .appendField(' ', "#3D3D3D");
     this.setOutput(true, 'Number');
     this.setInputsInline(true);
-    this.setTooltip(Blockly.Msg.MATH_NUMBER_TOOLTIP);
   },
   whenAdd: function () {
       Entry.engine.showProjectTimer();
@@ -623,4 +600,135 @@ Blockly.Blocks.get_project_timer_value = {
 
 Entry.block.get_project_timer_value = function (sprite, script) {
     return Entry.engine.projectTimer.getValue();
+};
+
+Blockly.Blocks.index_of_string = {
+  init: function() {
+    this.setColour("#FFD974");
+    this.appendDummyInput()
+    .appendField(Lang.Blocks.CALC_index_of_string_1, "#3D3D3D");
+    this.appendValueInput("LEFTHAND")
+        .setCheck(["Number", "String"]);
+    this.appendDummyInput("VALUE")
+    .appendField(Lang.Blocks.CALC_index_of_string_2, "#3D3D3D");
+    this.appendValueInput("RIGHTHAND")
+    .setCheck(["Number", "String"]);
+    this.setOutput(true, 'Number');
+    this.appendDummyInput("VALUE")
+    .appendField(Lang.Blocks.CALC_index_of_string_3, "#3D3D3D");
+    this.setInputsInline(true);
+  }
+};
+
+Entry.block.index_of_string = function (sprite, script) {
+    var str = script.getStringValue("LEFTHAND", script);
+    var index = script.getNumberValue("RIGHTHAND", script)-1;
+    if (index <0 || index >str.length-1)
+        throw new Error();
+    else
+        return str[index];
+};
+
+Blockly.Blocks.length_of_string = {
+  init: function() {
+    this.setColour("#FFD974");
+    this.appendDummyInput()
+    .appendField(Lang.Blocks.CALC_length_of_string_1, "#3D3D3D");
+    this.appendValueInput("STRING")
+        .setCheck(["Number", "String"]);
+    this.appendDummyInput("VALUE")
+    .appendField(Lang.Blocks.CALC_length_of_string_2, "#3D3D3D");
+    this.setOutput(true, 'Number');
+    this.setInputsInline(true);
+  }
+};
+
+Entry.block.length_of_string = function (sprite, script) {
+    return script.getStringValue("STRING", script).length;
+};
+
+Blockly.Blocks.substring = {
+  init: function() {
+    this.setColour("#FFD974");
+    this.appendDummyInput()
+    .appendField(Lang.Blocks.CALC_substring_1, "#3D3D3D");
+    this.appendValueInput("STRING")
+        .setCheck(["Number", "String"]);
+    this.appendDummyInput("VALUE")
+    .appendField(Lang.Blocks.CALC_substring_2, "#3D3D3D");
+    this.appendValueInput("START")
+    .setCheck(["Number", "String"]);
+    this.appendDummyInput("VALUE")
+    .appendField(Lang.Blocks.CALC_substring_3, "#3D3D3D");
+    this.appendValueInput("END")
+    .setCheck(["Number", "String"]);
+    this.appendDummyInput("VALUE")
+    .appendField(Lang.Blocks.CALC_substring_4, "#3D3D3D");
+    this.setOutput(true, 'String');
+    this.setInputsInline(true);
+  }
+};
+
+Entry.block.substring = function (sprite, script) {
+    var str = script.getStringValue("STRING", script);
+    var start = script.getNumberValue("START", script)-1;
+    var end = script.getNumberValue("END", script)-1;
+    var strLen = str.length-1;
+    if (start <0 || end<0 || start>strLen || end>strLen)
+        throw new Error();
+    else
+        return str.substring(Math.min(start, end), Math.max(start, end)+1);
+};
+
+Blockly.Blocks.replace_string = {
+  init: function() {
+    this.setColour("#FFD974");
+    this.appendDummyInput()
+    .appendField(Lang.Blocks.CALC_replace_string_1, "#3D3D3D");
+    this.appendValueInput("STRING")
+        .setCheck(["Number", "String"]);
+    this.appendDummyInput("VALUE")
+    .appendField(Lang.Blocks.CALC_replace_string_2, "#3D3D3D");
+    this.appendValueInput("OLD_WORD")
+    .setCheck(["Number", "String"]);
+    this.appendDummyInput("VALUE")
+    .appendField(Lang.Blocks.CALC_replace_string_3, "#3D3D3D");
+    this.appendValueInput("NEW_WORD")
+    .setCheck(["Number", "String"]);
+    this.appendDummyInput("VALUE")
+    .appendField(Lang.Blocks.CALC_replace_string_4, "#3D3D3D");
+    this.setOutput(true, 'String');
+    this.setInputsInline(true);
+  }
+};
+
+Entry.block.replace_string = function (sprite, script) {
+    return script.getStringValue("STRING", script).replace(
+        script.getStringValue("OLD_WORD", script),
+        script.getStringValue("NEW_WORD", script));
+};
+
+Blockly.Blocks.change_string_case = {
+  init: function() {
+    this.setColour("#FFD974");
+    this.appendDummyInput()
+        .appendField(Lang.Blocks.CALC_change_string_case_1);
+    this.appendValueInput("STRING")
+        .setCheck(["Number", "String"]);
+    this.appendDummyInput()
+        .appendField(Lang.Blocks.CALC_change_string_case_2);
+    this.appendDummyInput()
+        .appendField(new Blockly.FieldDropdown([
+          [Lang.Blocks.CALC_change_string_case_sub_1,"toUpperCase"],
+          [Lang.Blocks.CALC_change_string_case_sub_2,"toLowerCase"]
+          ]), "CASE");
+    this.appendDummyInput()
+        .appendField(Lang.Blocks.CALC_change_string_case_3);
+    this.setOutput(true, 'String');
+    this.setInputsInline(true);
+  }
+};
+
+Entry.block.change_string_case = function (sprite, script) {
+    return script.getStringValue("STRING", script)[script.getField("CASE", script)]();
 };

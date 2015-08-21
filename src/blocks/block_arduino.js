@@ -26,7 +26,6 @@ Blockly.Blocks.arduino_send = {
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-    this.setTooltip('');
   }
 };
 
@@ -105,7 +104,6 @@ Blockly.Blocks.arduino_get_sensor_number = {
         .appendField(" ");
     this.setOutput(true, 'Number');
     this.setInputsInline(true);
-    this.setTooltip(Blockly.Msg.MATH_NUMBER_TOOLTIP);
   }
 };
 
@@ -137,7 +135,6 @@ Blockly.Blocks.arduino_get_port_number = {
         .appendField(' ');
     this.setOutput(true, 'Number');
     this.setInputsInline(true);
-    this.setTooltip(Blockly.Msg.MATH_NUMBER_TOOLTIP);
   }
 };
 
@@ -162,7 +159,6 @@ Blockly.Blocks.arduino_get_pwm_port_number = {
         .appendField(" ");
     this.setOutput(true, 'Number');
     this.setInputsInline(true);
-    this.setTooltip(Blockly.Msg.MATH_NUMBER_TOOLTIP);
   }
 };
 
@@ -182,7 +178,6 @@ Blockly.Blocks.arduino_get_number_sensor_value = {
         .appendField(Lang.Blocks.ARDUINO_num_sensor_value_2);
     this.setInputsInline(true);
     this.setOutput(true, 'Number');
-    this.setTooltip('');
   }
 };
 
@@ -202,7 +197,6 @@ Blockly.Blocks.arduino_get_digital_value = {
         .appendField(Lang.Blocks.ARDUINO_num_sensor_value_2);
     this.setInputsInline(true);
     this.setOutput(true, 'Boolean');
-    this.setTooltip('');
   }
 };
 
@@ -230,7 +224,6 @@ Blockly.Blocks.arduino_toggle_led = {
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-    this.setTooltip('');
   }
 };
 
@@ -260,7 +253,6 @@ Blockly.Blocks.arduino_toggle_pwm = {
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-    this.setTooltip('');
   }
 };
 
