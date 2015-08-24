@@ -9,7 +9,6 @@ Blockly.Blocks.function_field_label = {
         .setCheck(['Param']);
     this.setOutput(true, 'Param');
     this.setInputsInline(true);
-    this.setTooltip('');
   }
 };
 
@@ -22,7 +21,6 @@ Blockly.Blocks.function_field_string = {
         .setCheck(['Param']);
     this.setOutput(true, 'Param');
     this.setInputsInline(true);
-    this.setTooltip('');
   }
 };
 
@@ -35,7 +33,6 @@ Blockly.Blocks.function_field_boolean = {
         .setCheck(['Param']);
     this.setOutput(true, 'Param');
     this.setInputsInline(true);
-    this.setTooltip('');
   }
 };
 
@@ -49,7 +46,6 @@ Blockly.Blocks.function_param_string = {
         */
     this.setOutput(true, ['String', 'Number']);
     this.setInputsInline(true);
-    this.setTooltip('');
   },
   domToMutation: function(xmlElement) {
     var fields = xmlElement.getElementsByTagName('field');
@@ -77,7 +73,6 @@ Blockly.Blocks.function_param_boolean = {
     this.setColour("#2FC9F0");
     this.setOutput(true, 'Boolean');
     this.setInputsInline(true);
-    this.setTooltip('');
   },
   domToMutation: function(xmlElement) {
     var fields = xmlElement.getElementsByTagName('field');
@@ -109,7 +104,6 @@ Blockly.Blocks.function_create = {
         .appendField(new Blockly.FieldIcon('/img/assets/block_icon/entry_icon_function_v1.png', '*'));
     this.setInputsInline(true);
     this.setNextStatement(true);
-    this.setTooltip('');
   }
 };
 
@@ -123,7 +117,6 @@ Blockly.Blocks.function_general = {
     this.setInputsInline(true);
     this.setNextStatement(true);
     this.setPreviousStatement(true);
-    this.setTooltip('');
   },
   domToMutation: function(xmlElement) {
     var fields = xmlElement.getElementsByTagName('field');

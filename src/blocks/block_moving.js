@@ -14,7 +14,6 @@ Blockly.Blocks.move_direction = {
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-    this.setTooltip('');
   }
 };
 
@@ -42,7 +41,6 @@ Blockly.Blocks.move_x = {
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-    this.setTooltip('');
   }
 };
 
@@ -69,7 +67,6 @@ Blockly.Blocks.move_y = {
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-    this.setTooltip('');
   }
 };
 
@@ -103,7 +100,6 @@ Blockly.Blocks.locate_xy_time = {
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-    this.setTooltip('');
   }
 };
 
@@ -147,7 +143,6 @@ Blockly.Blocks.rotate_by_angle = {
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-    this.setTooltip('');
   }
 };
 
@@ -173,7 +168,6 @@ Blockly.Blocks.rotate_by_angle_dropdown = {
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-    this.setTooltip('');
   }
 };
 
@@ -197,7 +191,6 @@ Blockly.Blocks.see_angle = {
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-    this.setTooltip('');
   }
 };
 
@@ -221,7 +214,6 @@ Blockly.Blocks.see_direction = {
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-    this.setTooltip('');
   }
 };
 
@@ -256,7 +248,6 @@ Blockly.Blocks.locate_xy = {
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-    this.setTooltip('');
   }
 };
 
@@ -285,7 +276,6 @@ Blockly.Blocks.locate_x = {
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-    this.setTooltip('');
   }
 };
 
@@ -312,7 +302,6 @@ Blockly.Blocks.locate_y = {
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-    this.setTooltip('');
   }
 };
 
@@ -340,7 +329,6 @@ Blockly.Blocks.locate = {
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-    this.setTooltip('');
   }
 };
 
@@ -384,7 +372,6 @@ Blockly.Blocks.move_xy_time = {
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-    this.setTooltip('');
   }
 };
 
@@ -433,7 +420,6 @@ Blockly.Blocks.locate_time = {
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-    this.setTooltip('');
   }
 };
 
@@ -459,7 +445,6 @@ Blockly.Blocks.rotate_by_angle_time = {
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-    this.setTooltip('');
   }
 };
 
@@ -497,7 +482,6 @@ Blockly.Blocks.bounce_when = {
     this.setPreviousStatement(true);
     this.setInputsInline(true);
     this.setNextStatement(true);
-    this.setTooltip('');
   }
 };
 
@@ -510,7 +494,6 @@ Blockly.Blocks.bounce_wall = {
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-    this.setTooltip('');
   }
 };
 
@@ -566,7 +549,6 @@ Blockly.Blocks.flip_arrow_horizontal = {
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-    this.setTooltip('');
   }
 };
 
@@ -585,7 +567,6 @@ Blockly.Blocks.flip_arrow_vertical = {
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-    this.setTooltip('');
   }
 };
 
@@ -607,7 +588,6 @@ Blockly.Blocks.see_angle_object = {
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-    this.setTooltip('');
   }
 };
 
@@ -655,7 +635,6 @@ Blockly.Blocks.see_angle_direction = {
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-    this.setTooltip('');
   }
 };
 
@@ -680,7 +659,6 @@ Blockly.Blocks.rotate_direction = {
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-    this.setTooltip('');
   }
 };
 
@@ -707,7 +685,6 @@ Blockly.Blocks.locate_object_time = {
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-    this.setTooltip('');
   }
 };
 
@@ -777,7 +754,6 @@ Blockly.Blocks.rotate_absolute = {
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-    this.setTooltip('');
   }
 };
 
@@ -800,7 +776,6 @@ Blockly.Blocks.rotate_relative = {
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-    this.setTooltip('');
   }
 };
 
@@ -823,7 +798,6 @@ Blockly.Blocks.direction_absolute = {
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-    this.setTooltip('');
   }
 };
 
@@ -846,7 +820,6 @@ Blockly.Blocks.direction_relative = {
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-    this.setTooltip('');
   }
 };
 
@@ -873,7 +846,6 @@ Blockly.Blocks.move_to_angle = {
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-    this.setTooltip('');
   }
 };
 
@@ -905,7 +877,6 @@ Blockly.Blocks.rotate_by_time = {
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-    this.setTooltip('');
   }
 };
 

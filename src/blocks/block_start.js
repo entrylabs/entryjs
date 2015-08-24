@@ -9,7 +9,6 @@ Blockly.Blocks.when_run_button_click = {
         .appendField(Lang.Blocks.START_when_run_button_click);
     this.setInputsInline(true);
     this.setNextStatement(true);
-    this.setTooltip('');
   }
 };
 
@@ -43,7 +42,6 @@ Blockly.Blocks.press_some_key = {
         .appendField(new Blockly.FieldIcon('/img/assets/block_icon/entry_icon_start.png', '*'));
         this.setInputsInline(true);
         this.setNextStatement(true);
-        this.setTooltip('');
     }
 };
 
@@ -61,7 +59,6 @@ Blockly.Blocks.when_some_key_pressed = {
         .appendField(Lang.Blocks.START_press_some_key_2);
     this.setInputsInline(true);
     this.setNextStatement(true);
-    this.setTooltip('');
   }
 };
 
@@ -78,7 +75,6 @@ Blockly.Blocks["mouse_clicked"] = {
         .appendField(Lang.Blocks.START_mouse_clicked);
         this.setInputsInline(true);
         this.setNextStatement(true);
-        this.setTooltip('');
     }
 };
 
@@ -95,7 +91,6 @@ Blockly.Blocks.mouse_click_cancled = {
         .appendField(Lang.Blocks.START_mouse_click_cancled);
         this.setInputsInline(true);
         this.setNextStatement(true);
-        this.setTooltip('');
     }
 };
 
@@ -113,7 +108,6 @@ Entry.block.mouse_click_cancled = function (sprite, script) {
 //         .appendField(Lang.Blocks.START_when_scene_start);
 //     this.setInputsInline(true);
 //     this.setNextStatement(true);
-//     this.setTooltip('');
 //   }
 // };
 
@@ -130,7 +124,6 @@ Blockly.Blocks.when_object_click = {
         .appendField(Lang.Blocks.START_when_object_click);
     this.setInputsInline(true);
     this.setNextStatement(true);
-    this.setTooltip('');
   }
 };
 
@@ -147,7 +140,6 @@ Blockly.Blocks.when_object_click_canceled = {
         .appendField(Lang.Blocks.START_when_object_click_canceled);
     this.setInputsInline(true);
     this.setNextStatement(true);
-    this.setTooltip('');
   }
 };
 
@@ -164,7 +156,6 @@ Blockly.Blocks.when_some_key_click = {
         .appendField(Lang.Blocks.START_when_some_key_click);
     this.setInputsInline(true);
     this.setNextStatement(true);
-    this.setTooltip('');
   }
 };
 
@@ -183,7 +174,6 @@ Blockly.Blocks.when_message_cast = {
         .appendField(Lang.Blocks.START_when_message_cast_2);
     this.setInputsInline(true);
     this.setNextStatement(true);
-    this.setTooltip('');
   }
 };
 
@@ -204,7 +194,6 @@ Blockly.Blocks.message_cast = {
     this.setInputsInline(true);
     this.setNextStatement(true);
     this.setPreviousStatement(true);
-    this.setTooltip('');
   }
 };
 
@@ -230,7 +219,6 @@ Blockly.Blocks.add_message = {
         .appendField(Lang.Blocks.START_add_message)
         .appendField(new Blockly.FieldIcon('/img/assets/block_icon/entry_icon_start.png', '*'));
     this.setInputsInline(true);
-    this.setTooltip('');
   }
 };
 
@@ -249,7 +237,6 @@ Blockly.Blocks.message_cast_wait = {
     this.setInputsInline(true);
     this.setNextStatement(true);
     this.setPreviousStatement(true);
-    this.setTooltip('');
   }
 };
 

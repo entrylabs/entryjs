@@ -8,7 +8,6 @@ Blockly.Blocks.when_scene_start = {
         .appendField(Lang.Blocks.SCENE_when_scene_start);
     this.setInputsInline(true);
     this.setNextStatement(true);
-    this.setTooltip('');
   }
 };
 
@@ -27,7 +26,6 @@ Blockly.Blocks.start_scene = {
     this.setInputsInline(true);
     this.setInputsInline(true);
     this.setPreviousStatement(true);
-    this.setTooltip('');
   }
 };
 
@@ -56,7 +54,6 @@ Blockly.Blocks.start_neighbor_scene = {
     this.setInputsInline(true);
     this.setInputsInline(true);
     this.setPreviousStatement(true);
-    this.setTooltip('');
   }
 };
 
