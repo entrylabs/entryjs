@@ -741,17 +741,17 @@ Blockly.Blocks.get_project_timer_value = {init:function() {
 Entry.block.get_project_timer_value = function(a, b) {
   return Entry.engine.projectTimer.getValue();
 };
-Blockly.Blocks.index_of_string = {init:function() {
+Blockly.Blocks.char_at = {init:function() {
   this.setColour("#FFD974");
-  this.appendDummyInput().appendField(Lang.Blocks.CALC_index_of_string_1, "#3D3D3D");
+  this.appendDummyInput().appendField(Lang.Blocks.CALC_char_at_1, "#3D3D3D");
   this.appendValueInput("LEFTHAND").setCheck(["Number", "String"]);
-  this.appendDummyInput("VALUE").appendField(Lang.Blocks.CALC_index_of_string_2, "#3D3D3D");
+  this.appendDummyInput("VALUE").appendField(Lang.Blocks.CALC_char_at_2, "#3D3D3D");
   this.appendValueInput("RIGHTHAND").setCheck(["Number", "String"]);
   this.setOutput(!0, "Number");
-  this.appendDummyInput("VALUE").appendField(Lang.Blocks.CALC_index_of_string_3, "#3D3D3D");
+  this.appendDummyInput("VALUE").appendField(Lang.Blocks.CALC_char_at_3, "#3D3D3D");
   this.setInputsInline(!0);
 }};
-Entry.block.index_of_string = function(a, b) {
+Entry.block.char_at = function(a, b) {
   var c = b.getStringValue("LEFTHAND", b), d = b.getNumberValue("RIGHTHAND", b) - 1;
   if (0 > d || d > c.length - 1) {
     throw Error();
@@ -805,16 +805,46 @@ Entry.block.replace_string = function(a, b) {
 };
 Blockly.Blocks.change_string_case = {init:function() {
   this.setColour("#FFD974");
-  this.appendDummyInput().appendField(Lang.Blocks.CALC_change_string_case_1);
+  this.appendDummyInput().appendField(Lang.Blocks.CALC_change_string_case_1, "#3D3D3D");
   this.appendValueInput("STRING").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.CALC_change_string_case_2);
+  this.appendDummyInput().appendField(Lang.Blocks.CALC_change_string_case_2, "#3D3D3D");
   this.appendDummyInput().appendField(new Blockly.FieldDropdown([[Lang.Blocks.CALC_change_string_case_sub_1, "toUpperCase"], [Lang.Blocks.CALC_change_string_case_sub_2, "toLowerCase"]]), "CASE");
-  this.appendDummyInput().appendField(Lang.Blocks.CALC_change_string_case_3);
+  this.appendDummyInput().appendField(Lang.Blocks.CALC_change_string_case_3, "#3D3D3D");
   this.setOutput(!0, "String");
   this.setInputsInline(!0);
 }};
 Entry.block.change_string_case = function(a, b) {
   return b.getStringValue("STRING", b)[b.getField("CASE", b)]();
+};
+Blockly.Blocks.index_of_string = {init:function() {
+  this.setColour("#FFD974");
+  this.appendDummyInput().appendField(Lang.Blocks.CALC_index_of_string_1, "#3D3D3D");
+  this.appendValueInput("LEFTHAND").setCheck(["Number", "String"]);
+  this.appendDummyInput("VALUE").appendField(Lang.Blocks.CALC_index_of_string_2, "#3D3D3D");
+  this.appendValueInput("RIGHTHAND").setCheck(["Number", "String"]);
+  this.setOutput(!0, "Number");
+  this.appendDummyInput("VALUE").appendField(Lang.Blocks.CALC_index_of_string_3, "#3D3D3D");
+  this.setInputsInline(!0);
+}};
+Entry.block.index_of_string = function(a, b) {
+  var c = b.getStringValue("LEFTHAND", b), d = b.getStringValue("RIGHTHAND", b), c = c.indexOf(d);
+  return -1 < c ? c + 1 : 0;
+};
+Blockly.Blocks.combine_something = {init:function() {
+  this.setColour("#FFD974");
+  this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_combine_something_1, "#3D3D3D");
+  this.appendValueInput("VALUE1").setCheck(["String", "Number", null]);
+  this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_combine_something_2, "#3D3D3D");
+  this.appendValueInput("VALUE2").setCheck(["String", "Number", null]);
+  this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_combine_something_3, "#3D3D3D");
+  this.setInputsInline(!0);
+  this.setOutput(!0, "String");
+}};
+Entry.block.combine_something = function(a, b) {
+  var c = b.getStringValue("VALUE1", b), d = b.getStringValue("VALUE2", b);
+  isNaN(c) || (c = Entry.convertToRoundedDecimals(c, 3));
+  isNaN(d) || (d = Entry.convertToRoundedDecimals(d, 3));
+  return c + d;
 };
 Blockly.Blocks.wait_second = {init:function() {
   this.setColour("#498deb");
@@ -2803,22 +2833,6 @@ Blockly.Blocks.get_canvas_input_value = {init:function() {
 }};
 Entry.block.get_canvas_input_value = function(a, b) {
   return Entry.container.getInputValue();
-};
-Blockly.Blocks.combine_something = {init:function() {
-  this.setColour("#E457DC");
-  this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_combine_something_1);
-  this.appendValueInput("VALUE1").setCheck(["String", "Number", null]);
-  this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_combine_something_2);
-  this.appendValueInput("VALUE2").setCheck(["String", "Number", null]);
-  this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_combine_something_3);
-  this.setInputsInline(!0);
-  this.setOutput(!0, "String");
-}};
-Entry.block.combine_something = function(a, b) {
-  var c = b.getStringValue("VALUE1", b), d = b.getStringValue("VALUE2", b);
-  isNaN(c) || (c = Entry.convertToRoundedDecimals(c, 3));
-  isNaN(d) || (d = Entry.convertToRoundedDecimals(d, 3));
-  return c + d;
 };
 Blockly.Blocks.add_value_to_list = {init:function() {
   this.setColour("#E457DC");

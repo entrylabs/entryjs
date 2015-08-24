@@ -602,25 +602,25 @@ Entry.block.get_project_timer_value = function (sprite, script) {
     return Entry.engine.projectTimer.getValue();
 };
 
-Blockly.Blocks.index_of_string = {
+Blockly.Blocks.char_at = {
   init: function() {
     this.setColour("#FFD974");
     this.appendDummyInput()
-    .appendField(Lang.Blocks.CALC_index_of_string_1, "#3D3D3D");
+    .appendField(Lang.Blocks.CALC_char_at_1, "#3D3D3D");
     this.appendValueInput("LEFTHAND")
         .setCheck(["Number", "String"]);
     this.appendDummyInput("VALUE")
-    .appendField(Lang.Blocks.CALC_index_of_string_2, "#3D3D3D");
+    .appendField(Lang.Blocks.CALC_char_at_2, "#3D3D3D");
     this.appendValueInput("RIGHTHAND")
     .setCheck(["Number", "String"]);
     this.setOutput(true, 'Number');
     this.appendDummyInput("VALUE")
-    .appendField(Lang.Blocks.CALC_index_of_string_3, "#3D3D3D");
+    .appendField(Lang.Blocks.CALC_char_at_3, "#3D3D3D");
     this.setInputsInline(true);
   }
 };
 
-Entry.block.index_of_string = function (sprite, script) {
+Entry.block.char_at = function (sprite, script) {
     var str = script.getStringValue("LEFTHAND", script);
     var index = script.getNumberValue("RIGHTHAND", script)-1;
     if (index <0 || index >str.length-1)
@@ -712,18 +712,18 @@ Blockly.Blocks.change_string_case = {
   init: function() {
     this.setColour("#FFD974");
     this.appendDummyInput()
-        .appendField(Lang.Blocks.CALC_change_string_case_1);
+        .appendField(Lang.Blocks.CALC_change_string_case_1, "#3D3D3D");
     this.appendValueInput("STRING")
         .setCheck(["Number", "String"]);
     this.appendDummyInput()
-        .appendField(Lang.Blocks.CALC_change_string_case_2);
+        .appendField(Lang.Blocks.CALC_change_string_case_2, "#3D3D3D");
     this.appendDummyInput()
         .appendField(new Blockly.FieldDropdown([
           [Lang.Blocks.CALC_change_string_case_sub_1,"toUpperCase"],
           [Lang.Blocks.CALC_change_string_case_sub_2,"toLowerCase"]
           ]), "CASE");
     this.appendDummyInput()
-        .appendField(Lang.Blocks.CALC_change_string_case_3);
+        .appendField(Lang.Blocks.CALC_change_string_case_3, "#3D3D3D");
     this.setOutput(true, 'String');
     this.setInputsInline(true);
   }
@@ -732,3 +732,59 @@ Blockly.Blocks.change_string_case = {
 Entry.block.change_string_case = function (sprite, script) {
     return script.getStringValue("STRING", script)[script.getField("CASE", script)]();
 };
+
+Blockly.Blocks.index_of_string = {
+  init: function() {
+    this.setColour("#FFD974");
+    this.appendDummyInput()
+    .appendField(Lang.Blocks.CALC_index_of_string_1, "#3D3D3D");
+    this.appendValueInput("LEFTHAND")
+        .setCheck(["Number", "String"]);
+    this.appendDummyInput("VALUE")
+    .appendField(Lang.Blocks.CALC_index_of_string_2, "#3D3D3D");
+    this.appendValueInput("RIGHTHAND")
+    .setCheck(["Number", "String"]);
+    this.setOutput(true, 'Number');
+    this.appendDummyInput("VALUE")
+    .appendField(Lang.Blocks.CALC_index_of_string_3, "#3D3D3D");
+    this.setInputsInline(true);
+  }
+};
+
+Entry.block.index_of_string = function (sprite, script) {
+    var str = script.getStringValue("LEFTHAND", script);
+    var target = script.getStringValue("RIGHTHAND", script);
+    var index = str.indexOf(target);
+    return index > -1?index+1:0;
+};
+//
+// combine some text || number to string
+Blockly.Blocks.combine_something = {
+  init: function() {
+    this.setColour("#FFD974");
+    this.appendDummyInput()
+        .appendField(Lang.Blocks.VARIABLE_combine_something_1, "#3D3D3D");
+    this.appendValueInput("VALUE1")
+        .setCheck(['String','Number', null]);
+    this.appendDummyInput()
+        .appendField(Lang.Blocks.VARIABLE_combine_something_2, "#3D3D3D");
+    this.appendValueInput("VALUE2")
+        .setCheck(['String','Number', null]);
+    this.appendDummyInput()
+        .appendField(Lang.Blocks.VARIABLE_combine_something_3, "#3D3D3D");
+    this.setInputsInline(true);
+    this.setOutput(true, 'String');
+  }
+};
+
+Entry.block.combine_something = function (sprite, script) {
+    var leftValue = script.getStringValue("VALUE1", script);
+    var rightValue = script.getStringValue("VALUE2", script);
+
+    if (!isNaN(leftValue))
+        leftValue = Entry.convertToRoundedDecimals(leftValue, 3);
+    if (!isNaN(rightValue))
+        rightValue = Entry.convertToRoundedDecimals(rightValue, 3);
+    return leftValue + rightValue;
+}
+

@@ -214,36 +214,6 @@ Entry.block.get_canvas_input_value = function (sprite, script) {
     return Entry.container.getInputValue();
 }
 
-// combine some text || number to string
-Blockly.Blocks.combine_something = {
-  init: function() {
-    this.setColour("#E457DC");
-    this.appendDummyInput()
-        .appendField(Lang.Blocks.VARIABLE_combine_something_1);
-    this.appendValueInput("VALUE1")
-        .setCheck(['String','Number', null]);
-    this.appendDummyInput()
-        .appendField(Lang.Blocks.VARIABLE_combine_something_2);
-    this.appendValueInput("VALUE2")
-        .setCheck(['String','Number', null]);
-    this.appendDummyInput()
-        .appendField(Lang.Blocks.VARIABLE_combine_something_3);
-    this.setInputsInline(true);
-    this.setOutput(true, 'String');
-  }
-};
-
-Entry.block.combine_something = function (sprite, script) {
-    var leftValue = script.getStringValue("VALUE1", script);
-    var rightValue = script.getStringValue("VALUE2", script);
-
-    if (!isNaN(leftValue))
-        leftValue = Entry.convertToRoundedDecimals(leftValue, 3);
-    if (!isNaN(rightValue))
-        rightValue = Entry.convertToRoundedDecimals(rightValue, 3);
-    return leftValue + rightValue;
-}
-
 
 Blockly.Blocks.add_value_to_list = {
   init: function() {
