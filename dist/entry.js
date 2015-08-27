@@ -5245,7 +5245,7 @@ p.setPortReadable = function(a) {
   this.sendQueue.readablePorts.push(a);
 };
 p.update = function() {
-  this.socket && 1 == this.socket.readyState && (this.socket.send(JSON.stringify(this.sendQueue)), this.sendQueue = {});
+  this.socket && 1 == this.socket.readyState && (this.socket.send(JSON.stringify(this.sendQueue)), this.sendQueue.readablePorts = []);
 };
 p.updatePortData = function(a) {
   this.portData = a;

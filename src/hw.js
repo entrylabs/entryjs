@@ -119,7 +119,7 @@ p.update = function() {
     if (this.socket.readyState != 1)
         return;
     this.socket.send(JSON.stringify(this.sendQueue));
-    this.sendQueue = {};
+    this.sendQueue.readablePorts = [];
     if (false) {
         var bytes = [], queryString;
         for (var port in this.settingQueue) {
@@ -130,7 +130,6 @@ p.update = function() {
             } else {
             }
         }
-        this.settingQueue = {};
         for (var port in this.sendQueue) {
             var value = this.sendQueue[port];
             var query;
