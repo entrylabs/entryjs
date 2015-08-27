@@ -3982,13 +3982,14 @@ Entry.Engine.prototype.raiseEventOnEntity = function(a, b) {
   }
 };
 Entry.Engine.prototype.captureKeyEvent = function(a) {
-  0 > Entry.engine.pressedKeys.indexOf(a.keyCode) && Entry.engine.pressedKeys.push(a.keyCode);
-  a.ctrlKey ? (a.preventDefault(), "workspace" == Entry.type && 83 == a.keyCode ? Entry.dispatchEvent("saveWorkspace") : "workspace" == Entry.type && 82 == a.keyCode ? Entry.engine.run() : "workspace" == Entry.type && 48 < a.keyCode && 58 > a.keyCode && Entry.playground.selectMenu(a.keyCode - 49)) : Entry.engine.isState("run") && (Entry.container.mapEntityIncludeCloneOnScene(Entry.engine.raiseKeyEvent, ["press_some_key", a.keyCode]), Entry.container.mapEntityIncludeCloneOnScene(Entry.engine.raiseKeyEvent, 
-  ["when_some_key_pressed", a.keyCode]));
-  Entry.engine.isState("stop") && "workspace" === Entry.type && 37 <= a.keyCode && 40 >= a.keyCode && Entry.stage.moveSprite(a);
+  var b = a.keyCode, c = Entry.type;
+  0 > Entry.engine.pressedKeys.indexOf(b) && Entry.engine.pressedKeys.push(b);
+  a.ctrlKey && "workspace" == c ? (a.preventDefault(), 83 == b ? Entry.dispatchEvent("saveWorkspace") : 82 == b ? Entry.engine.run() : 90 == b ? Entry.dispatchEvent("undo") : 48 < b && 58 > b && Entry.playground.selectMenu(b - 49)) : Entry.engine.isState("run") && (Entry.container.mapEntityIncludeCloneOnScene(Entry.engine.raiseKeyEvent, ["press_some_key", b]), Entry.container.mapEntityIncludeCloneOnScene(Entry.engine.raiseKeyEvent, ["when_some_key_pressed", b]));
+  Entry.engine.isState("stop") && "workspace" === c && 37 <= b && 40 >= b && Entry.stage.moveSprite(a);
 };
 Entry.Engine.prototype.captureKeyUpEvent = function(a) {
-  0 <= Entry.engine.pressedKeys.indexOf(a.keyCode) && Entry.engine.pressedKeys.splice(Entry.engine.pressedKeys.indexOf(a.keyCode), 1);
+  a = a.keyCode;
+  0 <= Entry.engine.pressedKeys.indexOf(a) && Entry.engine.pressedKeys.splice(Entry.engine.pressedKeys.indexOf(a), 1);
 };
 Entry.Engine.prototype.raiseKeyEvent = function(a, b) {
   for (var c = b[0], d = b[1], e = a.parent.script.childNodes, f = 0;f < e.length;f++) {
