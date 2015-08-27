@@ -3984,7 +3984,8 @@ Entry.Engine.prototype.raiseEventOnEntity = function(a, b) {
 Entry.Engine.prototype.captureKeyEvent = function(a) {
   var b = a.keyCode, c = Entry.type;
   0 > Entry.engine.pressedKeys.indexOf(b) && Entry.engine.pressedKeys.push(b);
-  a.ctrlKey && "workspace" == c ? (a.preventDefault(), 83 == b ? Entry.dispatchEvent("saveWorkspace") : 82 == b ? Entry.engine.run() : 90 == b ? Entry.dispatchEvent("undo") : 48 < b && 58 > b && Entry.playground.selectMenu(b - 49)) : Entry.engine.isState("run") && (Entry.container.mapEntityIncludeCloneOnScene(Entry.engine.raiseKeyEvent, ["press_some_key", b]), Entry.container.mapEntityIncludeCloneOnScene(Entry.engine.raiseKeyEvent, ["when_some_key_pressed", b]));
+  a.ctrlKey && "workspace" == c ? 83 == b ? (a.preventDefault(), Entry.dispatchEvent("saveWorkspace")) : 82 == b ? (a.preventDefault(), Entry.engine.run()) : 90 == b ? (a.preventDefault(), Entry.dispatchEvent("undo")) : 48 < b && 58 > b && (a.preventDefault(), Entry.playground.selectMenu(b - 49)) : Entry.engine.isState("run") && (Entry.container.mapEntityIncludeCloneOnScene(Entry.engine.raiseKeyEvent, ["press_some_key", b]), Entry.container.mapEntityIncludeCloneOnScene(Entry.engine.raiseKeyEvent, 
+  ["when_some_key_pressed", b]));
   Entry.engine.isState("stop") && "workspace" === c && 37 <= b && 40 >= b && Entry.stage.moveSprite(a);
 };
 Entry.Engine.prototype.captureKeyUpEvent = function(a) {

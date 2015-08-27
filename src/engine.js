@@ -642,15 +642,19 @@ Entry.Engine.prototype.captureKeyEvent = function(e) {
         Entry.engine.pressedKeys.push(keyCode);
     //mouse shortcuts
     if (e.ctrlKey && type == 'workspace') {
-        e.preventDefault();
-        if (keyCode == 83)
+        if (keyCode == 83) {
+            e.preventDefault();
             Entry.dispatchEvent('saveWorkspace');
-        else if (keyCode == 82)
+        } else if (keyCode == 82) {
+            e.preventDefault();
             Entry.engine.run();
-        else if (keyCode == 90)
+        } else if (keyCode == 90) {
+            e.preventDefault();
             Entry.dispatchEvent('undo');
-        else if (keyCode > 48 && keyCode < 58)
+        } else if (keyCode > 48 && keyCode < 58) {
+            e.preventDefault();
             Entry.playground.selectMenu(keyCode - 49);
+        }
     } else if (Entry.engine.isState('run')) {
         Entry.container.mapEntityIncludeCloneOnScene(Entry.engine.raiseKeyEvent,
                                   ["press_some_key", keyCode]);
