@@ -159,10 +159,12 @@ Entry.loadInterfaceState = function() {
  */
 Entry.resizeElement = function(interfaceModel) {
     if (Entry.type == 'workspace') {
-        if (!interfaceModel.canvasWidth && this.interfaceState.canvasWidth)
-            interfaceModel.canvasWidth = this.interfaceState.canvasWidth;
+        var interfaceState = this.interfaceState;
+        if (!interfaceModel.canvasWidth && interfaceState.canvasWidth)
+            interfaceModel.canvasWidth = interfaceState.canvasWidth;
         if (!interfaceModel.menuWidth &&
             this.interfaceState.menuWidth)
+            interfaceModel.menuWidth = interfaceState.menuWidth;
 
         if (Entry.engine.speedPanelOn)
             Entry.engine.toggleSpeedPanel();
@@ -249,10 +251,6 @@ Entry.resizeElement = function(interfaceModel) {
 
         this.interfaceState = interfaceModel;
     }
-    if (Entry.type == 'phone') {
-
-    }
-
     Blockly.fireUiEvent(window, 'resize');
 };
 
