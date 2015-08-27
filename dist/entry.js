@@ -192,7 +192,7 @@ Blockly.Blocks.arduino_toggle_led = {init:function() {
   this.appendDummyInput().appendField(Lang.Blocks.ARDUINO_num_pin_1);
   this.appendValueInput("VALUE").setCheck(["Number", "String", null]);
   this.appendDummyInput().appendField(Lang.Blocks.ARDUINO_num_pin_2);
-  this.appendDummyInput().appendField(new Blockly.FieldDropdown([[Lang.Blocks.ARDUINO_on, "on"], [Lang.Blocks.ARDUINO_off, "off"]]), "OPERATOR").appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_arduino.png", "*"));
+  this.appendDummyInput().appendField(new Blockly.FieldDropdown([[Lang.Blocks.ARDUINO_on, "on"], [Lang.Blocks.ARDUINO_off, "off"]]), "OPERATOR").appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_arduino_v1.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -209,7 +209,7 @@ Blockly.Blocks.arduino_toggle_pwm = {init:function() {
   this.appendDummyInput().appendField(Lang.Blocks.ARDUINO_toggle_pwm_2);
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
   this.appendDummyInput().appendField(Lang.Blocks.ARDUINO_toggle_pwm_3);
-  this.appendDummyInput().appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_arduino.png", "*"));
+  this.appendDummyInput().appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_arduino_v1.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
