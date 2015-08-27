@@ -635,28 +635,36 @@ Entry.Engine.prototype.raiseEventOnEntity = function(entity, param) {
  * @param {keyboard event} e
  */
 Entry.Engine.prototype.captureKeyEvent = function(e) {
-    if (Entry.engine.pressedKeys.indexOf(e.keyCode) < 0)
-        Entry.engine.pressedKeys.push(e.keyCode);
+    var keyCode = e.keyCode;
+    var type = Entry.type;
+
+    if (Entry.engine.pressedKeys.indexOf(keyCode) < 0)
+        Entry.engine.pressedKeys.push(keyCode);
     //mouse shortcuts
-    if (e.ctrlKey) {
-        e.preventDefault();
-        if (Entry.type == 'workspace' && e.keyCode == 83)
+    if (e.ctrlKey && type == 'workspace') {
+        if (keyCode == 83) {
+            e.preventDefault();
             Entry.dispatchEvent('saveWorkspace');
-        else if (Entry.type == 'workspace' && e.keyCode == 82)
+        } else if (keyCode == 82) {
+            e.preventDefault();
             Entry.engine.run();
-        else if (Entry.type == 'workspace' &&
-                 e.keyCode > 48 && e.keyCode < 58)
-            Entry.playground.selectMenu(e.keyCode - 49);
+        } else if (keyCode == 90) {
+            e.preventDefault();
+            Entry.dispatchEvent('undo');
+        } else if (keyCode > 48 && keyCode < 58) {
+            e.preventDefault();
+            Entry.playground.selectMenu(keyCode - 49);
+        }
     } else if (Entry.engine.isState('run')) {
         Entry.container.mapEntityIncludeCloneOnScene(Entry.engine.raiseKeyEvent,
-                                  ["press_some_key", e.keyCode]);
+                                  ["press_some_key", keyCode]);
         Entry.container.mapEntityIncludeCloneOnScene(Entry.engine.raiseKeyEvent,
-                                  ["when_some_key_pressed", e.keyCode]);
+                                  ["when_some_key_pressed", keyCode]);
     }
 
     if (Entry.engine.isState('stop')) {
-        if (Entry.type === 'workspace' &&
-            (e.keyCode >= 37 && e.keyCode <= 40)) {
+        if (type === 'workspace' &&
+            (keyCode >= 37 && keyCode <= 40)) {
             Entry.stage.moveSprite(e);
         }
     }
@@ -666,8 +674,10 @@ Entry.Engine.prototype.captureKeyEvent = function(e) {
  * @param {keyboard event} e
  */
 Entry.Engine.prototype.captureKeyUpEvent = function(e) {
-    if (Entry.engine.pressedKeys.indexOf(e.keyCode) >= 0)
-        Entry.engine.pressedKeys.splice(Entry.engine.pressedKeys.indexOf(e.keyCode), 1);
+    var keyCode = e.keyCode;
+    if (Entry.engine.pressedKeys.indexOf(keyCode) >= 0)
+        Entry.engine.pressedKeys.splice(
+            Entry.engine.pressedKeys.indexOf(keyCode), 1);
 };
 
 /**
