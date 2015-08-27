@@ -78,7 +78,12 @@ var Entry = {events_:{}, block:{}, TEXT_ALIGN_CENTER:0, TEXT_ALIGN_LEFT:1, TEXT_
   return a;
 }};
 window.Entry = Entry;
-Entry.Arduino = {name:"arduino"};
+Entry.Arduino = {name:"arduino", setZero:function() {
+  for (var a = 0;14 > a;a++) {
+    Entry.hw.sendQueue[a] = 0;
+  }
+  Entry.hw.update();
+}};
 Blockly.Blocks.arduino_text = {init:function() {
   this.setColour("#00979D");
   this.appendDummyInput().appendField(new Blockly.FieldTextInput("Arduino"), "NAME");
@@ -5185,7 +5190,7 @@ Entry.HW = function() {
   this.settingQueue = {};
   this.hwModule = this.selectedDevice = null;
   Entry.addEventListener("stop", this.setZero);
-  this.hwInfo = {33:Entry.Arduino, 24:Entry.Hamster, 31:Entry.Bitbrick};
+  this.hwInfo = {11:Entry.Arduino, 12:Entry.Arduino, 24:Entry.Hamster, 31:Entry.Bitbrick};
 };
 Entry.HW.TRIAL_LIMIT = 1;
 p = Entry.HW.prototype;
@@ -5233,13 +5238,14 @@ p.getDigitalPortValue = function(a) {
     return 0;
   }
   this.setPortReadable(a);
-  return this.portData.d ? Number(this.portData.d[a]) : 0;
+  return void 0 !== this.portData[a] ? this.portData[a] : 0;
 };
 p.setPortReadable = function(a) {
-  this.settingQueue[a] = !0;
+  this.sendQueue.readablePorts || (this.sendQueue.readablePorts = []);
+  this.sendQueue.readablePorts.push(a);
 };
 p.update = function() {
-  this.socket && 1 == this.socket.readyState && this.socket.send(JSON.stringify(this.sendQueue));
+  this.socket && 1 == this.socket.readyState && (this.socket.send(JSON.stringify(this.sendQueue)), this.sendQueue = {});
 };
 p.updatePortData = function(a) {
   this.portData = a;

@@ -28,7 +28,8 @@ Entry.HW = function() {
     Entry.addEventListener('stop', this.setZero);
 
     this.hwInfo = {
-        '33': Entry.Arduino,
+        '11': Entry.Arduino,
+        '12': Entry.Arduino,
         '24': Entry.Hamster,
         '31': Entry.Bitbrick
     }
@@ -99,15 +100,17 @@ p.getDigitalPortValue = function(port) {
     if (!this.connected)
         return 0;
     this.setPortReadable(port);
-    if (this.portData.d) {
-        return Number(this.portData.d[port]);
+    if (this.portData[port] !== undefined) {
+        return this.portData[port];
     }
     else
         return 0;
 }
 
 p.setPortReadable = function(port) {
-    this.settingQueue[port] = true;
+    if (!this.sendQueue.readablePorts)
+        this.sendQueue.readablePorts = [];
+    this.sendQueue.readablePorts.push(port);
 }
 
 p.update = function() {
@@ -116,6 +119,7 @@ p.update = function() {
     if (this.socket.readyState != 1)
         return;
     this.socket.send(JSON.stringify(this.sendQueue));
+    this.sendQueue = {};
     if (false) {
         var bytes = [], queryString;
         for (var port in this.settingQueue) {
