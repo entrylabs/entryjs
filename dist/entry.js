@@ -33,10 +33,11 @@ var Entry = {events_:{}, block:{}, TEXT_ALIGN_CENTER:0, TEXT_ALIGN_LEFT:1, TEXT_
   }
 }, resizeElement:function(a) {
   if ("workspace" == Entry.type) {
-    !a.canvasWidth && this.interfaceState.canvasWidth && (a.canvasWidth = this.interfaceState.canvasWidth);
-    !a.menuWidth && this.interfaceState.menuWidth && Entry.engine.speedPanelOn && Entry.engine.toggleSpeedPanel();
-    var b = a.canvasWidth;
-    b ? 300 > b ? b = 300 : 720 < b && (b = 720) : b = 400;
+    var b = this.interfaceState;
+    !a.canvasWidth && b.canvasWidth && (a.canvasWidth = b.canvasWidth);
+    !a.menuWidth && this.interfaceState.menuWidth && (a.menuWidth = b.menuWidth);
+    Entry.engine.speedPanelOn && Entry.engine.toggleSpeedPanel();
+    (b = a.canvasWidth) ? 300 > b ? b = 300 : 720 < b && (b = 720) : b = 400;
     a.canvasWidth = b;
     var c = 9 * b / 16;
     Entry.engine.view_.style.width = b + "px";
