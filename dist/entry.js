@@ -3879,13 +3879,9 @@ Entry.Engine.prototype.computeFunction = function(a) {
 Entry.Engine.computeThread = function(a, b) {
   Entry.engine.isContinue = !0;
   for (var c = !1;b && Entry.engine.isContinue && !c;) {
-    try {
-      Entry.engine.isContinue = !b.isRepeat;
-      var d = b.run(), c = d && d.type == b.type;
-      b = d;
-    } catch (e) {
-      throw console.log(e.stack), Entry.engine.toggleStop(), Entry.engine.isUpdating = !1, "workspace" == Entry.type && (Entry.container.selectObject(), Entry.container.selectObject(a.parent.id), Entry.playground.changeViewMode("code"), Blockly.mainWorkspace.activatePreviousBlock(b.id)), Entry.toast.alert(Lang.Msgs.runtime_error, Lang.Workspace.check_runtime_error, !0), e;
-    }
+    Entry.engine.isContinue = !b.isRepeat;
+    var d = b.run(), c = d && d.type == b.type;
+    b = d;
   }
   return b;
 };
