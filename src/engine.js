@@ -519,7 +519,8 @@ Entry.Engine.prototype.toggleRun = function() {
  */
 Entry.Engine.prototype.toggleStop = function() {
     Entry.addActivity("stop");
-    Entry.container.mapEntity(function(entity){
+    var container = Entry.container;
+    container.mapEntity(function(entity){
         entity.loadSnapshot();
         entity.object.filters = [];
         entity.resetFilter();
@@ -537,8 +538,9 @@ Entry.Engine.prototype.toggleStop = function() {
         variable.updateView();
     });
     Entry.engine.projectTimer.loadSnapshot();
-    Entry.container.clearRunningState();
-    Entry.container.loadSequenceSnapshot();
+    container.clearRunningState();
+    container.loadSequenceSnapshot();
+    container.setInputValue();
     Entry.scene.loadStartSceneSnapshot();
     Entry.Func.clearThreads();
     createjs.Sound.setVolume(1);

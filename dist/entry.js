@@ -2821,7 +2821,6 @@ Entry.block.ask_and_wait = function(a, b) {
   Entry.stage.showInputField();
   c.script = b;
   c.sprite = a;
-  c.value = "";
   b.isInit = !0;
   return b;
 };
@@ -3920,7 +3919,8 @@ Entry.Engine.prototype.toggleRun = function() {
 };
 Entry.Engine.prototype.toggleStop = function() {
   Entry.addActivity("stop");
-  Entry.container.mapEntity(function(a) {
+  var a = Entry.container;
+  a.mapEntity(function(a) {
     a.loadSnapshot();
     a.object.filters = [];
     a.resetFilter();
@@ -3935,8 +3935,9 @@ Entry.Engine.prototype.toggleStop = function() {
     a.updateView();
   });
   Entry.engine.projectTimer.loadSnapshot();
-  Entry.container.clearRunningState();
-  Entry.container.loadSequenceSnapshot();
+  a.clearRunningState();
+  a.loadSequenceSnapshot();
+  a.setInputValue();
   Entry.scene.loadStartSceneSnapshot();
   Entry.Func.clearThreads();
   createjs.Sound.setVolume(1);
