@@ -5214,6 +5214,7 @@ p.initSocket = function() {
     b.onclose = function() {
       a.initSocket();
     };
+    Entry.dispatchEvent("hwChanged");
   }
 };
 p.retryConnect = function() {

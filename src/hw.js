@@ -69,6 +69,7 @@ p.initSocket = function() {
     {
         hw.initSocket();
     };
+    Entry.dispatchEvent("hwChanged");
 }
 
 p.retryConnect = function() {
