@@ -14,9 +14,7 @@ Entry.HW = function() {
         } catch (err) {
             console.log('socket error:',err);
         }
-    }
-    else
-    {
+    } else {
         console.log('socket not exist');
     }
 
@@ -24,6 +22,17 @@ Entry.HW = function() {
     this.portData = {};
     this.sendQueue = {};
     this.settingQueue = {};
+    this.selectedDevice = null;
+    this.hwModule = null;
+
+    Entry.addEventListener('stop', this.setZero);
+
+    this.hwInfo = {
+        '11': Entry.Arduino,
+        '12': Entry.Arduino,
+        '24': Entry.Hamster,
+        '31': Entry.Bitbrick
+    }
 }
 
 Entry.HW.TRIAL_LIMIT = 1;
@@ -43,7 +52,6 @@ p.initSocket = function() {
     var socket = new WebSocket("ws://localhost:23518");
     this.socket = socket;
     this.connected = false;
-    Entry.dispatchEvent("hwChanged");
     socket.binaryType = "arraybuffer";
     this.connectTrial++;
 
@@ -53,12 +61,15 @@ p.initSocket = function() {
     };
     socket.onmessage = function (evt)
     {
-        hw.updatePortData(evt.data);
+        var data = JSON.parse(evt.data);
+        hw.checkDevice(data);
+        hw.updatePortData(data);
     };
     socket.onclose = function()
     {
         hw.initSocket();
     };
+    Entry.dispatchEvent("hwChanged");
 }
 
 p.retryConnect = function() {
@@ -90,21 +101,27 @@ p.getDigitalPortValue = function(port) {
     if (!this.connected)
         return 0;
     this.setPortReadable(port);
-    if (this.portData.d) {
-        return Number(this.portData.d[port]);
+    if (this.portData[port] !== undefined) {
+        return this.portData[port];
     }
     else
         return 0;
 }
 
 p.setPortReadable = function(port) {
-    this.settingQueue[port] = true;
+    if (!this.sendQueue.readablePorts)
+        this.sendQueue.readablePorts = [];
+    this.sendQueue.readablePorts.push(port);
 }
 
 p.update = function() {
     if (!this.socket)
         return;
-    if (this.socket.readyState == 1) {
+    if (this.socket.readyState != 1)
+        return;
+    this.socket.send(JSON.stringify(this.sendQueue));
+    this.sendQueue.readablePorts = [];
+    if (false) {
         var bytes = [], queryString;
         for (var port in this.settingQueue) {
             var value = this.settingQueue[port];
@@ -114,7 +131,6 @@ p.update = function() {
             } else {
             }
         }
-        this.settingQueue = {};
         for (var port in this.sendQueue) {
             var value = this.sendQueue[port];
             var query;
@@ -138,7 +154,7 @@ p.update = function() {
 }
 
 p.updatePortData = function(data) {
-    this.portData = JSON.parse(data);
+    this.portData = data;
 }
 
 p.closeConnection = function() {
@@ -147,7 +163,7 @@ p.closeConnection = function() {
 }
 
 p.downloadConnector = function() {
-    var url = "/lib/EntryArduino/EntryArduino.zip";
+    var url = "/file/entry_v0.1.zip";
     var win = window.open(url, '_blank');
     win.focus();
 }
@@ -157,3 +173,27 @@ p.downloadSource = function() {
     var win = window.open(url, '_blank');
     win.focus();
 }
+
+p.setZero = function() {
+    if (!Entry.hw.hwModule)
+        return;
+    Entry.hw.hwModule.setZero();
+};
+
+p.checkDevice = function(data) {
+    if (data.company === undefined)
+        return;
+    var key = ''+data.company + data.model;
+    if (key == this.selectedDevice)
+        return;
+    this.selectedDevice = key;
+    this.hwModule = this.hwInfo[key];
+    Entry.dispatchEvent("hwChanged");
+};
+
+p.banHW = function() {
+    var hwOptions = this.hwInfo;
+    for (var i in hwOptions)
+        Entry.playground.blockMenu.banClass(hwOptions[i].name);
+}
+

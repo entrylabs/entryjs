@@ -79,6 +79,12 @@ var Entry = {events_:{}, block:{}, TEXT_ALIGN_CENTER:0, TEXT_ALIGN_LEFT:1, TEXT_
   return a;
 }};
 window.Entry = Entry;
+Entry.Arduino = {name:"arduino", setZero:function() {
+  for (var a = 0;14 > a;a++) {
+    Entry.hw.sendQueue[a] = 0;
+  }
+  Entry.hw.update();
+}};
 Blockly.Blocks.arduino_text = {init:function() {
   this.setColour("#00979D");
   this.appendDummyInput().appendField(new Blockly.FieldTextInput("Arduino"), "NAME");
@@ -248,6 +254,179 @@ Entry.block.arduino_convert_scale = function(a, b) {
   c = Math.min(h, c);
   c = Math.max(f, c);
   return Math.round(c);
+};
+Entry.Bitbrick = {SENSOR_MAP:{1:"light", 2:"IR", 3:"touch", 4:"potentiometer", 20:"LED", 19:"SERVO", 18:"DC"}, PORT_MAP:{buzzer:2, 5:4, 6:6, 7:8, 8:10, LEDR:12, LEDG:14, LEDB:16}, sensorList:function() {
+  for (var a = [], b = Entry.hw.portData, c = 0;4 > c;c++) {
+    b[c] && a.push([c + " - " + b[c].type, c.toString()]);
+  }
+  return 0 == a.length ? [[Lang.Blocks.no_target, "null"]] : a;
+}, touchList:function() {
+  for (var a = [], b = Entry.hw.portData, c = 0;4 > c;c++) {
+    b[c] && "touch" === b[c].type && a.push([c + " - " + b[c].type, c.toString()]);
+  }
+  return 0 == a.length ? [[Lang.Blocks.no_target, "null"]] : a;
+}, servoList:function() {
+  for (var a = [], b = Entry.hw.portData, c = 4;9 > c;c++) {
+    b[c] && "SERVO" === b[c].type && a.push(["ABCD"[c - 5], c.toString()]);
+  }
+  return 0 == a.length ? [[Lang.Blocks.no_target, "null"]] : a;
+}, dcList:function() {
+  for (var a = [], b = Entry.hw.portData, c = 4;9 > c;c++) {
+    b[c] && "DC" === b[c].type && a.push(["ABCD"[c - 5], c.toString()]);
+  }
+  return 0 == a.length ? [[Lang.Blocks.no_target, "null"]] : a;
+}, setZero:function() {
+  for (var a in Entry.Bitbrick.PORT_MAP) {
+    Entry.hw.sendQueue[a] = 0;
+  }
+  Entry.hw.update();
+}, name:"bitbrick"};
+Blockly.Blocks.bitbrick_sensor_value = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("").appendField(new Blockly.FieldDropdownDynamic(Entry.Bitbrick.sensorList), "PORT").appendField(" \uac12");
+  this.setOutput(!0, "String");
+  this.setInputsInline(!0);
+}};
+Entry.block.bitbrick_sensor_value = function(a, b) {
+  var c = b.getStringField("PORT");
+  return Entry.hw.portData[c].value;
+};
+Blockly.Blocks.bitbrick_is_touch_pressed = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("\ud130\uce58\uc13c\uc11c").appendField(new Blockly.FieldDropdownDynamic(Entry.Bitbrick.touchList), "PORT").appendField(" \uac00 \ub20c\ub838\ub294\uac00?");
+  this.setOutput(!0, "Boolean");
+  this.setInputsInline(!0);
+}};
+Entry.block.bitbrick_is_touch_pressed = function(a, b) {
+  var c = b.getStringField("PORT");
+  return 0 < Entry.hw.portData[c].value;
+};
+Blockly.Blocks.bitbrick_turn_off_color_led = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("\uceec\ub7ec LED \ub044\uae30").appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_arduino.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.bitbrick_turn_off_color_led = function(a, b) {
+  Entry.hw.sendQueue.LEDR = 0;
+  Entry.hw.sendQueue.LEDG = 0;
+  Entry.hw.sendQueue.LEDB = 0;
+  return b.callReturn();
+};
+Blockly.Blocks.bitbrick_turn_on_color_led_by_rgb = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("\uceec\ub7ec LED \ucf1c\uae30 R");
+  this.appendValueInput("rValue").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField("G");
+  this.appendValueInput("gValue").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField("B");
+  this.appendValueInput("bValue").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_arduino.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.bitbrick_turn_on_color_led_by_rgb = function(a, b) {
+  var c = b.getNumberValue("rValue"), d = b.getNumberValue("gValue"), e = b.getNumberValue("bValue");
+  Entry.hw.sendQueue.LEDR = c;
+  Entry.hw.sendQueue.LEDG = d;
+  Entry.hw.sendQueue.LEDB = e;
+  return b.callReturn();
+};
+Blockly.Blocks.bitbrick_turn_on_color_led_by_picker = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("\uceec\ub7ec LED \uc0c9 ").appendField(new Blockly.FieldColour("#ff0000"), "VALUE").appendField("\ub85c \uc815\ud558\uae30").appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_arduino.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.bitbrick_turn_on_color_led_by_picker = function(a, b) {
+  var c = b.getStringField("VALUE");
+  Entry.hw.sendQueue.LEDR = parseInt(c.substr(1, 2), 16);
+  Entry.hw.sendQueue.LEDG = parseInt(c.substr(3, 2), 16);
+  Entry.hw.sendQueue.LEDB = parseInt(c.substr(5, 2), 16);
+  return b.callReturn();
+};
+Blockly.Blocks.bitbrick_turn_on_color_led_by_value = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("\uceec\ub7ec LED \ucf1c\uae30 \uc0c9");
+  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField("\ub85c \uc815\ud558\uae30").appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_arduino.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.bitbrick_turn_on_color_led_by_value = function(a, b) {
+};
+Blockly.Blocks.bitbrick_buzzer = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("\ubd80\uc800\uc74c ");
+  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField("\ub0b4\uae30").appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_arduino.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.bitbrick_buzzer = function(a, b) {
+  if (b.isStart) {
+    return Entry.hw.sendQueue.buzzer = 0, delete b.isStart, b.callReturn();
+  }
+  var c = b.getNumberValue("VALUE");
+  Entry.hw.sendQueue.buzzer = c;
+  b.isStart = !0;
+  return b;
+};
+Blockly.Blocks.bitbrick_turn_off_all_motors = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("\ubaa8\ub4e0 \ubaa8\ud130 \ub044\uae30").appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_arduino.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.bitbrick_turn_off_all_motors = function(a, b) {
+};
+Blockly.Blocks.bitbrick_dc_speed = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("DC \ubaa8\ud130").appendField(new Blockly.FieldDropdownDynamic(Entry.Bitbrick.dcList), "PORT").appendField(" \uc18d\ub3c4");
+  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField("").appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_arduino.png", "*"));
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+  this.setInputsInline(!0);
+}};
+Entry.block.bitbrick_dc_speed = function(a, b) {
+  var c = b.getNumberValue("VALUE"), d = b.getStringField("PORT");
+  Entry.hw.sendQueue[d] = c + 128;
+  return b.callReturn();
+};
+Blockly.Blocks.bitbrick_dc_direction_speed = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("DC \ubaa8\ud130").appendField(new Blockly.FieldDropdownDynamic(Entry.Bitbrick.dcList), "PORT").appendField(" \ubc29\ud5a5").appendField(new Blockly.FieldDropdown([["CCW", "CCW"], ["CW", "CW"]]), "DIRECTION").appendField(" \uc18d\ub3c4");
+  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField("").appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_arduino.png", "*"));
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+  this.setInputsInline(!0);
+}};
+Entry.block.bitbrick_dc_direction_speed = function(a, b) {
+  var c = b.getNumberValue("VALUE"), d = "CW" === b.getStringField("DIRECTION"), e = b.getStringField("PORT");
+  Entry.hw.sendQueue[e] = d ? c + 128 : 128 - c;
+  return b.callReturn();
+};
+Blockly.Blocks.bitbrick_servomotor_angle = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("\uc11c\ubcf4 \ubaa8\ud130").appendField(new Blockly.FieldDropdownDynamic(Entry.Bitbrick.servoList), "PORT").appendField(" \uac01\ub3c4");
+  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField("").appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_arduino.png", "*"));
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+  this.setInputsInline(!0);
+}};
+Entry.block.bitbrick_servomotor_angle = function(a, b) {
+  var c = b.getNumberValue("VALUE"), d = b.getStringField("PORT");
+  Entry.hw.sendQueue[d] = c;
+  return b.callReturn();
 };
 var categoryColor = "#FF9E20";
 Blockly.Blocks.start_drawing = {init:function() {
@@ -1212,6 +1391,340 @@ Entry.block.function_general = function(a, b) {
     "function_create" == c.content.childNodes[d].getAttribute("type") && b.thread.init(c.content.childNodes[d]);
   }
   return b;
+};
+Entry.Hamster = {PORT_MAP:{leftWheel:0, rightWheel:0, buzzer:0, outputA:0, outputB:0, leftLed:0, rightLed:0, note:0}, setZero:function() {
+  var a = Entry.Hamster.PORT_MAP, b;
+  for (b in a) {
+    Entry.hw.sendQueue[b] = a[b];
+  }
+  Entry.hw.update();
+  Entry.Hamster.tempo = 60;
+}, tempo:60, name:"hamster"};
+Blockly.Blocks.hamster_move_forward = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("\uc55e\uc73c\ub85c \uc774\ub3d9\ud558\uae30").appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_arduino.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.hamster_move_forward = function(a, b) {
+  if (b.isStart) {
+    if (1 == b.timeFlag) {
+      return Entry.hw.sendQueue.leftWheel = 50, Entry.hw.sendQueue.rightWheel = 50, b;
+    }
+    delete b.timeFlag;
+    delete b.isStart;
+    Entry.engine.isContinue = !1;
+    Entry.hw.sendQueue.leftWheel = 0;
+    Entry.hw.sendQueue.rightWheel = 0;
+    return b.callReturn();
+  }
+  b.isStart = !0;
+  b.timeFlag = 1;
+  setTimeout(function() {
+    b.timeFlag = 0;
+  }, 1E3);
+  return b;
+};
+Blockly.Blocks.hamster_move_backward = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("\ub4a4\ub85c \uc774\ub3d9\ud558\uae30").appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_arduino.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.hamster_move_backward = function(a, b) {
+  if (b.isStart) {
+    if (1 == b.timeFlag) {
+      return Entry.hw.sendQueue.leftWheel = -50, Entry.hw.sendQueue.rightWheel = -50, b;
+    }
+    delete b.timeFlag;
+    delete b.isStart;
+    Entry.engine.isContinue = !1;
+    Entry.hw.sendQueue.leftWheel = 0;
+    Entry.hw.sendQueue.rightWheel = 0;
+    return b.callReturn();
+  }
+  b.isStart = !0;
+  b.timeFlag = 1;
+  setTimeout(function() {
+    b.timeFlag = 0;
+  }, 1E3);
+  return b;
+};
+Blockly.Blocks.hamster_turn_around = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("").appendField(new Blockly.FieldDropdown([["\uc67c\ucabd", "LEFT"], ["\uc624\ub978\ucabd", "RIGHT"]]), "DIRECTION").appendField(" \uc73c\ub85c \ub3cc\uae30").appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_arduino.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.hamster_turn_around = function(a, b) {
+  if (b.isStart) {
+    if (1 == b.timeFlag) {
+      return Entry.hw.sendQueue.leftWheel = b.leftValue, Entry.hw.sendQueue.rightWheel = b.rightValue, b;
+    }
+    delete b.timeFlag;
+    delete b.isStart;
+    delete b.leftValue;
+    delete b.rightValue;
+    Entry.engine.isContinue = !1;
+    Entry.hw.sendQueue.leftWheel = 0;
+    Entry.hw.sendQueue.rightWheel = 0;
+    return b.callReturn();
+  }
+  var c = "LEFT" == b.getField("DIRECTION", b);
+  b.leftValue = c ? -50 : 50;
+  b.rightValue = c ? 50 : -50;
+  b.isStart = !0;
+  b.timeFlag = 1;
+  setTimeout(function() {
+    b.timeFlag = 0;
+  }, 1E3);
+  return b;
+};
+Blockly.Blocks.hamster_set_led_to = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("").appendField(new Blockly.FieldDropdown([["\uc67c\ucabd", "LEFT"], ["\uc624\ub978\ucabd", "RIGHT"], ["\uc55e\ucabd", "FRONT"]]), "DIRECTION").appendField(" LED\ub97c").appendField(new Blockly.FieldDropdown([["\ube68\uac04\uc0c9", "4"], ["\ub178\ub780\uc0c9", "6"], ["\ub179\uc0c9", "2"], ["\ud558\ub298\uc0c9", "3"], ["\ud30c\ub780\uc0c9", "1"], ["\ubcf4\ub77c\uc0c9", "5"], ["\ud558\uc580\uc0c9", "7"]]), "COLOR").appendField(" \uc73c\ub85c \ud558\uae30").appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_arduino.png", 
+  "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.hamster_set_led_to = function(a, b) {
+  var c = b.getField("DIRECTION", b), d = Number(b.getField("COLOR", b));
+  "FRONT" == c ? (Entry.hw.sendQueue.leftLed = d, Entry.hw.sendQueue.rightLed = d) : "LEFT" == c ? Entry.hw.sendQueue.leftLed = d : Entry.hw.sendQueue.rightLed = d;
+  return b.callReturn();
+};
+Blockly.Blocks.hamster_clear_led = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("").appendField(new Blockly.FieldDropdown([["\uc67c\ucabd", "LEFT"], ["\uc624\ub978\ucabd", "RIGHT"]]), "DIRECTION").appendField(" LED \ub044\uae30").appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_arduino.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.hamster_clear_led = function(a, b) {
+  var c = b.getField("DIRECTION", b);
+  "FRONT" == c ? (Entry.hw.sendQueue.leftLed = 0, Entry.hw.sendQueue.rightLed = 0) : "LEFT" == c ? Entry.hw.sendQueue.leftLed = 0 : Entry.hw.sendQueue.rightLed = 0;
+  return b.callReturn();
+};
+Blockly.Blocks.hamster_beep = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("\uc090 \uc18c\ub9ac\ub0b4\uae30").appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_arduino.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.hamster_beep = function(a, b) {
+  if (b.isStart) {
+    if (1 == b.timeFlag) {
+      return Entry.hw.sendQueue.buzzer = 440, b;
+    }
+    delete b.timeFlag;
+    delete b.isStart;
+    Entry.engine.isContinue = !1;
+    Entry.hw.sendQueue.note = 0;
+    Entry.hw.sendQueue.buzzer = 0;
+    return b.callReturn();
+  }
+  Entry.hw.sendQueue.note = 43;
+  b.isStart = !0;
+  b.timeFlag = 1;
+  setTimeout(function() {
+    b.timeFlag = 0;
+  }, 200);
+  return b;
+};
+Blockly.Blocks.hamster_hand_found = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("\uc190 \ucc3e\uc74c");
+  this.setOutput(!0, "Boolean");
+  this.setInputsInline(!0);
+}};
+Entry.block.hamster_hand_found = function(a, b) {
+  return 40 < Entry.hw.portData.leftProximity || 40 < Entry.hw.portData.rightProximity;
+};
+Blockly.Blocks.hamster_move_forward_for_secs = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("\uc55e\uc73c\ub85c ");
+  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField("\ucd08 \uc774\ub3d9\ud558\uae30").appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_arduino.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.hamster_move_forward_for_secs = function(a, b) {
+  if (b.isStart) {
+    if (1 == b.timeFlag) {
+      return Entry.hw.sendQueue.leftWheel = 50, Entry.hw.sendQueue.rightWheel = 50, b;
+    }
+    delete b.timeFlag;
+    delete b.isStart;
+    Entry.engine.isContinue = !1;
+    Entry.hw.sendQueue.leftWheel = 0;
+    Entry.hw.sendQueue.rightWheel = 0;
+    return b.callReturn();
+  }
+  b.isStart = !0;
+  b.timeFlag = 1;
+  var c = 1E3 * b.getNumberValue("VALUE");
+  setTimeout(function() {
+    b.timeFlag = 0;
+  }, c);
+  return b;
+};
+Blockly.Blocks.hamster_move_backward_for_secs = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("\ub4a4\ub85c ");
+  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField("\ucd08 \uc774\ub3d9\ud558\uae30").appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_arduino.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.hamster_move_backward_for_secs = function(a, b) {
+  if (b.isStart) {
+    if (1 == b.timeFlag) {
+      return Entry.hw.sendQueue.leftWheel = -50, Entry.hw.sendQueue.rightWheel = -50, b;
+    }
+    delete b.timeFlag;
+    delete b.isStart;
+    Entry.engine.isContinue = !1;
+    Entry.hw.sendQueue.leftWheel = 0;
+    Entry.hw.sendQueue.rightWheel = 0;
+    return b.callReturn();
+  }
+  b.isStart = !0;
+  b.timeFlag = 1;
+  var c = 1E3 * b.getNumberValue("VALUE");
+  setTimeout(function() {
+    b.timeFlag = 0;
+  }, c);
+  return b;
+};
+Blockly.Blocks.hamster_turn_for_secs = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("").appendField(new Blockly.FieldDropdown([["\uc67c\ucabd", "LEFT"], ["\uc624\ub978\ucabd", "RIGHT"]]), "DIRECTION").appendField(" \uc73c\ub85c");
+  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField("\ucd08 \ub3cc\uae30").appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_arduino.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.hamster_turn_for_secs = function(a, b) {
+  if (b.isStart) {
+    if (1 == b.timeFlag) {
+      return Entry.hw.sendQueue.leftWheel = b.leftValue, Entry.hw.sendQueue.rightWheel = b.rightValue, b;
+    }
+    delete b.timeFlag;
+    delete b.isStart;
+    delete b.leftValue;
+    delete b.rightValue;
+    Entry.engine.isContinue = !1;
+    Entry.hw.sendQueue.leftWheel = 0;
+    Entry.hw.sendQueue.rightWheel = 0;
+    return b.callReturn();
+  }
+  var c = "LEFT" == b.getField("DIRECTION", b);
+  b.leftValue = c ? -50 : 50;
+  b.rightValue = c ? 50 : -50;
+  b.isStart = !0;
+  b.timeFlag = 1;
+  c = 1E3 * b.getNumberValue("VALUE");
+  setTimeout(function() {
+    b.timeFlag = 0;
+  }, c);
+  return b;
+};
+Blockly.Blocks.hamster_play_note_for = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("").appendField(new Blockly.FieldDropdown([["\ub3c4", "4"], ["\ub3c4#", "5"], ["\ub808", "6"], ["\ubbf8b", "7"], ["\ubbf8", "8"], ["\ud30c", "9"], ["\ud30c#", "10"], ["\uc194", "11"], ["\uc194#", "12"], ["\ub77c", "13"], ["\uc2dcb", "14"], ["\uc2dc", "15"]]), "NOTE").appendField(" ").appendField(new Blockly.FieldDropdown([["1", "1"], ["2", "2"], ["3", "3"], ["4", "4"], ["5", "5"], ["6", "6"], ["7", "7"]]), "OCTAVE").appendField(" \uc74c\uc744");
+  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField("\ubc15\uc790 \uc5f0\uc8fc\ud558\uae30").appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_arduino.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.hamster_play_note_for = function(a, b) {
+  if (b.isStart) {
+    if (1 == b.timeFlag) {
+      return Entry.hw.sendQueue.note = b.note, b;
+    }
+    delete b.timeFlag;
+    delete b.isStart;
+    delete b.note;
+    Entry.engine.isContinue = !1;
+    Entry.hw.sendQueue.note = 0;
+    return b.callReturn();
+  }
+  var c = b.getNumberField("NOTE", b), d = b.getNumberField("OCTAVE", b), e = b.getNumberValue("VALUE", b), f = Entry.Hamster.tempo;
+  Entry.hw.sendQueue.buzzer = 0;
+  e = 6E4 * e / f;
+  b.note = c + 12 * (d - 1);
+  b.isStart = !0;
+  b.timeFlag = 1;
+  100 < e && setTimeout(function() {
+    Entry.hw.sendQueue.note = 0;
+  }, e - 100);
+  setTimeout(function() {
+    b.timeFlag = 0;
+  }, e);
+  return b;
+};
+Blockly.Blocks.hamster_rest_for = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("");
+  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField("\ubc15\uc790 \uc26c\uae30").appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_arduino.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.hamster_rest_for = function(a, b) {
+  if (b.isStart) {
+    if (1 == b.timeFlag) {
+      return Entry.hw.sendQueue.buzzer = 0, Entry.hw.sendQueue.note = 0, b;
+    }
+    delete b.timeFlag;
+    delete b.isStart;
+    Entry.engine.isContinue = !1;
+    return b.callReturn();
+  }
+  b.isStart = !0;
+  b.timeFlag = 1;
+  var c = b.getNumberValue("VALUE"), c = 6E4 * c / Entry.Hamster.tempo;
+  setTimeout(function() {
+    b.timeFlag = 0;
+  }, c);
+  return b;
+};
+Blockly.Blocks.hamster_change_tempo_by = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("\uc5f0\uc8fc \uc18d\ub3c4\ub97c");
+  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField("\ub9cc\ud07c \ubc14\uafb8\uae30").appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_arduino.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.hamster_change_tempo_by = function(a, b) {
+  var c = b.getNumberValue("VALUE");
+  Entry.Hamster.tempo += c;
+  return b.callReturn();
+};
+Blockly.Blocks.hamster_set_tempo_to = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("\uc5f0\uc8fc \uc18d\ub3c4\ub97c");
+  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField("BPM\uc73c\ub85c \ud558\uae30").appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_arduino.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.hamster_set_tempo_to = function(a, b) {
+  var c = b.getNumberValue("VALUE");
+  Entry.Hamster.tempo = c;
+  return b.callReturn();
 };
 Blockly.Blocks.is_clicked = {init:function() {
   this.setColour("#2FC9F0");
@@ -4580,6 +5093,9 @@ Entry.HW = function() {
   this.portData = {};
   this.sendQueue = {};
   this.settingQueue = {};
+  this.hwModule = this.selectedDevice = null;
+  Entry.addEventListener("stop", this.setZero);
+  this.hwInfo = {11:Entry.Arduino, 12:Entry.Arduino, 24:Entry.Hamster, 31:Entry.Bitbrick};
 };
 Entry.HW.TRIAL_LIMIT = 1;
 p = Entry.HW.prototype;
@@ -4590,18 +5106,20 @@ p.initSocket = function() {
     var a = this, b = new WebSocket("ws://localhost:23518");
     this.socket = b;
     this.connected = !1;
-    Entry.dispatchEvent("hwChanged");
     b.binaryType = "arraybuffer";
     this.connectTrial++;
     b.onopen = function() {
       a.initHardware();
     };
     b.onmessage = function(b) {
-      a.updatePortData(b.data);
+      b = JSON.parse(b.data);
+      a.checkDevice(b);
+      a.updatePortData(b);
     };
     b.onclose = function() {
       a.initSocket();
     };
+    Entry.dispatchEvent("hwChanged");
   }
 };
 p.retryConnect = function() {
@@ -4626,43 +5144,38 @@ p.getDigitalPortValue = function(a) {
     return 0;
   }
   this.setPortReadable(a);
-  return this.portData.d ? Number(this.portData.d[a]) : 0;
+  return void 0 !== this.portData[a] ? this.portData[a] : 0;
 };
 p.setPortReadable = function(a) {
-  this.settingQueue[a] = !0;
+  this.sendQueue.readablePorts || (this.sendQueue.readablePorts = []);
+  this.sendQueue.readablePorts.push(a);
 };
 p.update = function() {
-  if (this.socket && 1 == this.socket.readyState) {
-    var a = [], b;
-    for (b in this.settingQueue) {
-      var c = this.settingQueue[b];
-      c && (d = 160 + (b << 1), a.push(d));
-    }
-    this.settingQueue = {};
-    for (b in this.sendQueue) {
-      var c = this.sendQueue[b], d;
-      255 == c || 0 == c ? d = 224 + (b << 1) + (255 == c ? 1 : 0) : (d = 192 + (b << 1) + (127 < c ? 1 : 0), a.push(d), d = c & 127);
-      a.push(d);
-    }
-    this.sendQueue = {};
-    b = new Uint8Array(a.length);
-    for (c = 0;c < a.length;c++) {
-      b[c] = a[c];
-    }
-    this.socket.send(b);
-  }
+  this.socket && 1 == this.socket.readyState && (this.socket.send(JSON.stringify(this.sendQueue)), this.sendQueue.readablePorts = []);
 };
 p.updatePortData = function(a) {
-  this.portData = JSON.parse(a);
+  this.portData = a;
 };
 p.closeConnection = function() {
   this.socket && this.socket.close();
 };
 p.downloadConnector = function() {
-  window.open("/lib/EntryArduino/EntryArduino.zip", "_blank").focus();
+  window.open("/file/entry_v0.1.zip", "_blank").focus();
 };
 p.downloadSource = function() {
   window.open("/lib/EntryArduino/arduino/entry.ino", "_blank").focus();
+};
+p.setZero = function() {
+  Entry.hw.hwModule && Entry.hw.hwModule.setZero();
+};
+p.checkDevice = function(a) {
+  void 0 !== a.company && (a = "" + a.company + a.model, a != this.selectedDevice && (this.selectedDevice = a, this.hwModule = this.hwInfo[a], Entry.dispatchEvent("hwChanged")));
+};
+p.banHW = function() {
+  var a = this.hwInfo, b;
+  for (b in a) {
+    Entry.playground.blockMenu.banClass(a[b].name);
+  }
 };
 Entry.init = function(a, b) {
   Entry.assert("object" === typeof b, "Init option is not object");
@@ -6874,11 +7387,12 @@ Entry.Playground.prototype.generateCodeView = function(a) {
     Blockly.mainWorkspace.blockMenu.hide();
     document.addEventListener("blocklyWorkspaceChange", this.syncObjectWithEvent, !1);
     this.blockMenu = Blockly.mainWorkspace.blockMenu;
+    Entry.hw.banHW();
     return a;
   }
   if ("phone" == Entry.type) {
     return b = Entry.createElement("div", "entryCategory"), b.addClass("entryCategoryPhone"), a.appendChild(b), this.categoryView_ = b, c = Entry.createElement("ul", "entryCategoryList"), c.addClass("entryCategoryListPhone"), b.appendChild(c), this.categoryListView_ = c, b = this.createVariableView(), a.appendChild(b), this.variableView_ = b, b = Entry.createElement("div", "entryBlockly"), b.addClass("entryBlocklyPhone"), this.blocklyView_ = b, a.appendChild(b), c = Entry.parseTexttoXML("<xml></xml>"), 
-    Blockly.inject(b, {path:".././", toolbox:c, trashcan:!0}), Blockly.mainWorkspace.flyout_.autoClose = !0, Blockly.mainWorkspace.flyout_.hide(), document.addEventListener("blocklyWorkspaceChange", this.syncObjectWithEvent, !1), this.blockMenu = Blockly.mainWorkspace.flyout_, a;
+    Blockly.inject(b, {path:".././", toolbox:c, trashcan:!0}), Blockly.mainWorkspace.flyout_.autoClose = !0, Blockly.mainWorkspace.flyout_.hide(), document.addEventListener("blocklyWorkspaceChange", this.syncObjectWithEvent, !1), this.blockMenu = Blockly.mainWorkspace.flyout_, Entry.hw.banHW(), a;
   }
 };
 Entry.Playground.prototype.generatePictureView = function(a) {
@@ -7626,7 +8140,11 @@ Entry.Playground.prototype.getViewMode = function() {
 };
 Entry.Playground.prototype.updateHW = function() {
   var a = Entry.playground;
-  a.blockMenu && (Entry.hw && Entry.hw.connected ? (a.blockMenu.unbanClass("arduinoConnected"), a.blockMenu.banClass("arduinoDisconnected")) : (a.blockMenu.banClass("arduinoConnected"), a.blockMenu.unbanClass("arduinoDisconnected")), a.object && a.selectMenu(a.lastSelector, !0));
+  if (a.blockMenu) {
+    var b = Entry.hw;
+    b && b.connected ? (a.blockMenu.unbanClass("arduinoConnected"), a.blockMenu.banClass("arduinoDisconnected"), b.banHW(), b.hwModule && a.blockMenu.unbanClass(b.hwModule.name)) : (a.blockMenu.banClass("arduinoConnected"), a.blockMenu.unbanClass("arduinoDisconnected"), Entry.hw.banHW());
+    a.object && a.selectMenu(a.lastSelector, !0);
+  }
 };
 Entry.Playground.prototype.toggleLineBreak = function(a) {
   this.object && "textBox" == this.object.objectType && (a ? (Entry.playground.object.entity.setLineBreak(!0), $(".entryPlayground_textArea").css("display", "block"), $(".entryPlayground_textBox").css("display", "none"), this.linebreakOffImage.src = "/img/assets/text-linebreak-off-false.png", this.linebreakOnImage.src = "/img/assets/text-linebreak-on-true.png", this.fontSizeWrapper.removeClass("entryHide")) : (Entry.playground.object.entity.setLineBreak(!1), $(".entryPlayground_textArea").css("display", 

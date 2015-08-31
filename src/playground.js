@@ -1,4 +1,4 @@
-/**
+    /**
  * Playground is block construct area.
  * @fileoverview This manage playground.
  */
@@ -377,6 +377,7 @@ Entry.Playground.prototype.generateCodeView = function(codeView) {
        */
 
         this.blockMenu = Blockly.mainWorkspace.blockMenu;
+        Entry.hw.banHW();
         return codeView;
     } else if (Entry.type == 'phone') {
         var categoryView = Entry.createElement('div', 'entryCategory');
@@ -412,6 +413,7 @@ Entry.Playground.prototype.generateCodeView = function(codeView) {
         Blockly.mainWorkspace.flyout_.hide();
         document.addEventListener("blocklyWorkspaceChange", this.syncObjectWithEvent, false);
         this.blockMenu = Blockly.mainWorkspace.flyout_;
+        Entry.hw.banHW();
         return codeView;
     }
 };
@@ -1737,12 +1739,18 @@ Entry.Playground.prototype.updateHW = function() {
     var self = Entry.playground;
     if (!self.blockMenu)
         return;
-    if (Entry.hw && Entry.hw.connected) {
+    var hw = Entry.hw;
+    if (hw && hw.connected) {
         self.blockMenu.unbanClass("arduinoConnected")
         self.blockMenu.banClass("arduinoDisconnected")
+
+        hw.banHW();
+        if (hw.hwModule)
+            self.blockMenu.unbanClass(hw.hwModule.name);
     } else {
         self.blockMenu.banClass("arduinoConnected")
         self.blockMenu.unbanClass("arduinoDisconnected")
+        Entry.hw.banHW();
     }
     if (self.object)
         self.selectMenu(self.lastSelector, true);
@@ -1787,3 +1795,4 @@ Entry.Playground.prototype.setFontAlign = function(fontAlign) {
     }
     this.object.entity.setTextAlign(fontAlign);
 }
+

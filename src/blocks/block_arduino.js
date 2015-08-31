@@ -1,5 +1,16 @@
 "use strict";
 
+Entry.Arduino = {
+    name: 'arduino',
+    setZero: function() {
+        for (var port = 0; port < 14; port++) {
+          Entry.hw.sendQueue[port] = 0;
+        }
+        Entry.hw.update();
+    }
+};
+
+
 Blockly.Blocks.arduino_text = {
   init: function() {
     this.setColour("#00979D");
