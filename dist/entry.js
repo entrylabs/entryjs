@@ -85,7 +85,7 @@ Entry.Arduino = {name:"arduino", setZero:function() {
   }
   Entry.hw.update();
 }};
-Entry.SensorBoard = {name:"sensorBoard", setZoro:Entry.Arduino.setZero};
+Entry.SensorBoard = {name:"sensorBoard", setZero:Entry.Arduino.setZero};
 Blockly.Blocks.arduino_text = {init:function() {
   this.setColour("#00979D");
   this.appendDummyInput().appendField(new Blockly.FieldTextInput("Arduino"), "NAME");
@@ -255,6 +255,35 @@ Entry.block.arduino_convert_scale = function(a, b) {
   c = Math.min(h, c);
   c = Math.max(f, c);
   return Math.round(c);
+};
+Blockly.Blocks.sensorBoard_get_named_sensor_value = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("").appendField(new Blockly.FieldDropdown([["\uc18c\ub9ac", "0"], ["\uc870\ub3c4", "1"], ["\uc2ac\ub77c\uc774\ub354", "2"], ["\uc628\ub3c4", "3"]]), "PORT").appendField(" \uc13c\uc11c\uac12");
+  this.setOutput(!0, "Number");
+  this.setInputsInline(!0);
+}};
+Entry.block.sensorBoard_get_named_sensor_value = function(a, b) {
+  return Entry.hw.getAnalogPortValue(b.getField("PORT", b));
+};
+Blockly.Blocks.sensorBoard_is_button_pressed = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("").appendField(new Blockly.FieldDropdown([["\ube68\uac15", "8"], ["\ub178\ub791", "10"], ["\ucd08\ub85d", "9"], ["\ud30c\ub791", "11"]]), "PORT");
+  this.appendDummyInput().appendField(" \ubc84\ud2bc\uc774 \ub20c\ub838\ub294\uac00?");
+  this.setInputsInline(!0);
+  this.setOutput(!0, "Boolean");
+}};
+Entry.block.sensorBoard_is_button_pressed = function(a, b) {
+  return Entry.hw.getDigitalPortValue(b.getField("PORT", b));
+};
+Blockly.Blocks.sensorBoard_led = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("").appendField(new Blockly.FieldDropdown([["\ube68\uac15", "8"], ["\ub178\ub791", "10"], ["\ucd08\ub85d", "9"], ["\ud30c\ub791", "11"]]), "PORT").appendField(" LED").appendField(new Blockly.FieldDropdown([["\ucf1c\uae30", "255"], ["\ub044\uae30", "0"]]), "OPERATOR").appendField(" ");
+  this.setInputsInline(!0);
+  this.setOutput(!0, "Boolean");
+}};
+Entry.block.sensorBoard_led = function(a, b) {
+  Entry.hw.setDigitalPortValue(b.getField("PORT"), Number(b.getField("OPERATOR")));
+  return b.callReturn();
 };
 Entry.Bitbrick = {SENSOR_MAP:{1:"light", 2:"IR", 3:"touch", 4:"potentiometer", 20:"LED", 19:"SERVO", 18:"DC"}, PORT_MAP:{buzzer:2, 5:4, 6:6, 7:8, 8:10, LEDR:12, LEDG:14, LEDB:16}, sensorList:function() {
   for (var a = [], b = Entry.hw.portData, c = 0;4 > c;c++) {
