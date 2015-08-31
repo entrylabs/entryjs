@@ -29,7 +29,7 @@ Blockly.Blocks.hamster_move_forward = {
     this.setColour("#00979D");
     this.appendDummyInput()
     .appendField('앞으로 이동하기')
-    .appendField(new Blockly.FieldIcon('/img/assets/block_icon/entry_icon_arduino.png', '*'));
+    .appendField(new Blockly.FieldIcon('/img/assets/block_icon/hardware_03.png', '*'));
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
@@ -64,7 +64,7 @@ Blockly.Blocks.hamster_move_backward = {
     this.setColour("#00979D");
     this.appendDummyInput()
     .appendField('뒤로 이동하기')
-    .appendField(new Blockly.FieldIcon('/img/assets/block_icon/entry_icon_arduino.png', '*'));
+    .appendField(new Blockly.FieldIcon('/img/assets/block_icon/hardware_03.png', '*'));
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
@@ -104,7 +104,7 @@ Blockly.Blocks.hamster_turn_around = {
       ['오른쪽',"RIGHT"]
       ]), "DIRECTION")
     .appendField(" 으로 돌기")
-    .appendField(new Blockly.FieldIcon('/img/assets/block_icon/entry_icon_arduino.png', '*'));
+    .appendField(new Blockly.FieldIcon('/img/assets/block_icon/hardware_03.png', '*'));
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
@@ -161,7 +161,7 @@ Blockly.Blocks.hamster_set_led_to = {
       ['하얀색',"7"]
       ]), "COLOR")
     .appendField(" 으로 하기")
-    .appendField(new Blockly.FieldIcon('/img/assets/block_icon/entry_icon_arduino.png', '*'));
+    .appendField(new Blockly.FieldIcon('/img/assets/block_icon/hardware_03.png', '*'));
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
@@ -192,7 +192,7 @@ Blockly.Blocks.hamster_clear_led = {
       ['오른쪽',"RIGHT"]
       ]), "DIRECTION")
     .appendField(" LED 끄기")
-    .appendField(new Blockly.FieldIcon('/img/assets/block_icon/entry_icon_arduino.png', '*'));
+    .appendField(new Blockly.FieldIcon('/img/assets/block_icon/hardware_03.png', '*'));
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
@@ -218,7 +218,7 @@ Blockly.Blocks.hamster_beep = {
     this.setColour("#00979D");
     this.appendDummyInput()
     .appendField('삐 소리내기')
-    .appendField(new Blockly.FieldIcon('/img/assets/block_icon/entry_icon_arduino.png', '*'));
+    .appendField(new Blockly.FieldIcon('/img/assets/block_icon/hardware_03.png', '*'));
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
@@ -273,7 +273,7 @@ Blockly.Blocks.hamster_move_forward_for_secs = {
     .setCheck(["Number", "String"]);
     this.appendDummyInput()
     .appendField('초 이동하기')
-    .appendField(new Blockly.FieldIcon('/img/assets/block_icon/entry_icon_arduino.png', '*'));
+    .appendField(new Blockly.FieldIcon('/img/assets/block_icon/hardware_03.png', '*'));
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
@@ -312,7 +312,7 @@ Blockly.Blocks.hamster_move_backward_for_secs = {
     .setCheck(["Number", "String"]);
     this.appendDummyInput()
     .appendField('초 이동하기')
-    .appendField(new Blockly.FieldIcon('/img/assets/block_icon/entry_icon_arduino.png', '*'));
+    .appendField(new Blockly.FieldIcon('/img/assets/block_icon/hardware_03.png', '*'));
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
@@ -356,7 +356,7 @@ Blockly.Blocks.hamster_turn_for_secs = {
     .setCheck(["Number", "String"]);
     this.appendDummyInput()
     .appendField('초 돌기')
-    .appendField(new Blockly.FieldIcon('/img/assets/block_icon/entry_icon_arduino.png', '*'));
+    .appendField(new Blockly.FieldIcon('/img/assets/block_icon/hardware_03.png', '*'));
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
@@ -426,7 +426,7 @@ Blockly.Blocks.hamster_play_note_for = {
     .setCheck(["Number", "String"]);
     this.appendDummyInput()
     .appendField('박자 연주하기')
-    .appendField(new Blockly.FieldIcon('/img/assets/block_icon/entry_icon_arduino.png', '*'));
+    .appendField(new Blockly.FieldIcon('/img/assets/block_icon/hardware_03.png', '*'));
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
@@ -478,7 +478,7 @@ Blockly.Blocks.hamster_rest_for = {
     .setCheck(["Number", "String"]);
     this.appendDummyInput()
     .appendField('박자 쉬기')
-    .appendField(new Blockly.FieldIcon('/img/assets/block_icon/entry_icon_arduino.png', '*'));
+    .appendField(new Blockly.FieldIcon('/img/assets/block_icon/hardware_03.png', '*'));
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
@@ -516,7 +516,7 @@ Blockly.Blocks.hamster_change_tempo_by = {
     .setCheck(["Number", "String"]);
     this.appendDummyInput()
     .appendField('만큼 바꾸기')
-    .appendField(new Blockly.FieldIcon('/img/assets/block_icon/entry_icon_arduino.png', '*'));
+    .appendField(new Blockly.FieldIcon('/img/assets/block_icon/hardware_03.png', '*'));
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
@@ -538,7 +538,7 @@ Blockly.Blocks.hamster_set_tempo_to = {
     .setCheck(["Number", "String"]);
     this.appendDummyInput()
     .appendField('BPM으로 하기')
-    .appendField(new Blockly.FieldIcon('/img/assets/block_icon/entry_icon_arduino.png', '*'));
+    .appendField(new Blockly.FieldIcon('/img/assets/block_icon/hardware_03.png', '*'));
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);

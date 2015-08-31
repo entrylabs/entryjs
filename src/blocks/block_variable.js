@@ -14,7 +14,7 @@ Blockly.Blocks.change_variable = {
         .setCheck(["Number", "String"]);
     this.appendDummyInput()
         .appendField(Lang.Blocks.VARIABLE_change_variable_3)
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/entry_icon_variable.png', '*'));
+        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/variable_03.png', '*'));
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
@@ -49,7 +49,7 @@ Blockly.Blocks.set_variable = {
         .setCheck(["Number","String"]);
     this.appendDummyInput()
         .appendField(Lang.Blocks.VARIABLE_set_variable_3)
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/entry_icon_variable.png', '*'));
+        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/variable_03.png', '*'));
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
@@ -74,7 +74,7 @@ Blockly.Blocks.show_variable = {
     this.appendDummyInput()
         .appendField(new Blockly.FieldDropdownDynamic("variables"), "VARIABLE")
         .appendField(Lang.Blocks.VARIABLE_show_variable_2)
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/entry_icon_variable.png', '*'));
+        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/variable_03.png', '*'));
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
@@ -99,7 +99,7 @@ Blockly.Blocks.hide_variable = {
     this.appendDummyInput()
         .appendField(new Blockly.FieldDropdownDynamic("variables"), "VARIABLE")
         .appendField(Lang.Blocks.VARIABLE_hide_variable_2)
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/entry_icon_variable.png', '*'));
+        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/variable_03.png', '*'));
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
@@ -119,7 +119,7 @@ Blockly.Blocks.get_y = {
     this.setColour(230);
     this.appendDummyInput()
         .appendField(Lang.Blocks.VARIABLE_get_y)
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/entry_icon_variable.png', '*'));
+        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/variable_03.png', '*'));
     this.setOutput(true, 'Number');
   }
 };
@@ -155,7 +155,7 @@ Blockly.Blocks.ask_and_wait = {
         .setCheck(['String','Number', null]);
     this.appendDummyInput()
         .appendField(Lang.Blocks.VARIABLE_ask_and_wait_2)
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/entry_icon_variable.png', '*'));
+        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/variable_03.png', '*'));
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
@@ -227,7 +227,7 @@ Blockly.Blocks.add_value_to_list = {
         .appendField(new Blockly.FieldDropdownDynamic("lists"), "LIST");
     this.appendDummyInput()
         .appendField(Lang.Blocks.VARIABLE_add_value_to_list_3)
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/entry_icon_variable.png', '*'));
+        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/variable_03.png', '*'));
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
@@ -259,7 +259,7 @@ Blockly.Blocks.remove_value_from_list = {
         .appendField(new Blockly.FieldDropdownDynamic("lists"), "LIST");
     this.appendDummyInput()
         .appendField(Lang.Blocks.VARIABLE_remove_value_from_list_3)
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/entry_icon_variable.png', '*'));
+        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/variable_03.png', '*'));
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
@@ -297,7 +297,7 @@ Blockly.Blocks.insert_value_to_list = {
         .setCheck(["Number", "String"]);
     this.appendDummyInput()
         .appendField(Lang.Blocks.VARIABLE_insert_value_to_list_4)
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/entry_icon_variable.png', '*'));
+        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/variable_03.png', '*'));
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
@@ -335,7 +335,7 @@ Blockly.Blocks.change_value_list_index = {
         .setCheck(["Number", "String"]);
     this.appendDummyInput()
         .appendField(Lang.Blocks.VARIABLE_change_value_list_index_4)
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/entry_icon_variable.png', '*'));
+        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/variable_03.png', '*'));
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
@@ -415,7 +415,7 @@ Blockly.Blocks.show_list = {
     this.appendDummyInput()
         .appendField(new Blockly.FieldDropdownDynamic("lists"), "LIST")
         .appendField(Lang.Blocks.VARIABLE_show_list_2)
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/entry_icon_variable.png', '*'));
+        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/variable_03.png', '*'));
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
@@ -439,7 +439,7 @@ Blockly.Blocks.hide_list = {
     this.appendDummyInput()
         .appendField(new Blockly.FieldDropdownDynamic("lists"), "LIST")
         .appendField(Lang.Blocks.VARIABLE_hide_list_2)
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/entry_icon_variable.png', '*'));
+        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/variable_03.png', '*'));
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);

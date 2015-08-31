@@ -231,7 +231,7 @@ Blockly.Blocks.arduino_toggle_led = {
           [Lang.Blocks.ARDUINO_on,"on"],
           [Lang.Blocks.ARDUINO_off,"off"]
           ]), "OPERATOR")
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/entry_icon_arduino_v1.png', '*'));
+        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/hardware_03.png', '*'));
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
@@ -260,7 +260,7 @@ Blockly.Blocks.arduino_toggle_pwm = {
     this.appendDummyInput()
         .appendField(Lang.Blocks.ARDUINO_toggle_pwm_3);
     this.appendDummyInput()
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/entry_icon_arduino_v1.png', '*'));
+        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/hardware_03.png', '*'));
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);

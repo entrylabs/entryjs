@@ -199,7 +199,7 @@ Blockly.Blocks.arduino_toggle_led = {init:function() {
   this.appendDummyInput().appendField(Lang.Blocks.ARDUINO_num_pin_1);
   this.appendValueInput("VALUE").setCheck(["Number", "String", null]);
   this.appendDummyInput().appendField(Lang.Blocks.ARDUINO_num_pin_2);
-  this.appendDummyInput().appendField(new Blockly.FieldDropdown([[Lang.Blocks.ARDUINO_on, "on"], [Lang.Blocks.ARDUINO_off, "off"]]), "OPERATOR").appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_arduino_v1.png", "*"));
+  this.appendDummyInput().appendField(new Blockly.FieldDropdown([[Lang.Blocks.ARDUINO_on, "on"], [Lang.Blocks.ARDUINO_off, "off"]]), "OPERATOR").appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -216,7 +216,7 @@ Blockly.Blocks.arduino_toggle_pwm = {init:function() {
   this.appendDummyInput().appendField(Lang.Blocks.ARDUINO_toggle_pwm_2);
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
   this.appendDummyInput().appendField(Lang.Blocks.ARDUINO_toggle_pwm_3);
-  this.appendDummyInput().appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_arduino_v1.png", "*"));
+  this.appendDummyInput().appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -303,7 +303,7 @@ Entry.block.bitbrick_is_touch_pressed = function(a, b) {
 };
 Blockly.Blocks.bitbrick_turn_off_color_led = {init:function() {
   this.setColour("#00979D");
-  this.appendDummyInput().appendField("\uceec\ub7ec LED \ub044\uae30").appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_arduino.png", "*"));
+  this.appendDummyInput().appendField("\uceec\ub7ec LED \ub044\uae30").appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -322,7 +322,7 @@ Blockly.Blocks.bitbrick_turn_on_color_led_by_rgb = {init:function() {
   this.appendValueInput("gValue").setCheck(["Number", "String"]);
   this.appendDummyInput().appendField("B");
   this.appendValueInput("bValue").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_arduino.png", "*"));
+  this.appendDummyInput().appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -336,7 +336,7 @@ Entry.block.bitbrick_turn_on_color_led_by_rgb = function(a, b) {
 };
 Blockly.Blocks.bitbrick_turn_on_color_led_by_picker = {init:function() {
   this.setColour("#00979D");
-  this.appendDummyInput().appendField("\uceec\ub7ec LED \uc0c9 ").appendField(new Blockly.FieldColour("#ff0000"), "VALUE").appendField("\ub85c \uc815\ud558\uae30").appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_arduino.png", "*"));
+  this.appendDummyInput().appendField("\uceec\ub7ec LED \uc0c9 ").appendField(new Blockly.FieldColour("#ff0000"), "VALUE").appendField("\ub85c \uc815\ud558\uae30").appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -352,7 +352,7 @@ Blockly.Blocks.bitbrick_turn_on_color_led_by_value = {init:function() {
   this.setColour("#00979D");
   this.appendDummyInput().appendField("\uceec\ub7ec LED \ucf1c\uae30 \uc0c9");
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField("\ub85c \uc815\ud558\uae30").appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_arduino.png", "*"));
+  this.appendDummyInput().appendField("\ub85c \uc815\ud558\uae30").appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -363,7 +363,7 @@ Blockly.Blocks.bitbrick_buzzer = {init:function() {
   this.setColour("#00979D");
   this.appendDummyInput().appendField("\ubd80\uc800\uc74c ");
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField("\ub0b4\uae30").appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_arduino.png", "*"));
+  this.appendDummyInput().appendField("\ub0b4\uae30").appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -379,7 +379,7 @@ Entry.block.bitbrick_buzzer = function(a, b) {
 };
 Blockly.Blocks.bitbrick_turn_off_all_motors = {init:function() {
   this.setColour("#00979D");
-  this.appendDummyInput().appendField("\ubaa8\ub4e0 \ubaa8\ud130 \ub044\uae30").appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_arduino.png", "*"));
+  this.appendDummyInput().appendField("\ubaa8\ub4e0 \ubaa8\ud130 \ub044\uae30").appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -390,7 +390,7 @@ Blockly.Blocks.bitbrick_dc_speed = {init:function() {
   this.setColour("#00979D");
   this.appendDummyInput().appendField("DC \ubaa8\ud130").appendField(new Blockly.FieldDropdownDynamic(Entry.Bitbrick.dcList), "PORT").appendField(" \uc18d\ub3c4");
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField("").appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_arduino.png", "*"));
+  this.appendDummyInput().appendField("").appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", "*"));
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
   this.setInputsInline(!0);
@@ -404,7 +404,7 @@ Blockly.Blocks.bitbrick_dc_direction_speed = {init:function() {
   this.setColour("#00979D");
   this.appendDummyInput().appendField("DC \ubaa8\ud130").appendField(new Blockly.FieldDropdownDynamic(Entry.Bitbrick.dcList), "PORT").appendField(" \ubc29\ud5a5").appendField(new Blockly.FieldDropdown([["CCW", "CCW"], ["CW", "CW"]]), "DIRECTION").appendField(" \uc18d\ub3c4");
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField("").appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_arduino.png", "*"));
+  this.appendDummyInput().appendField("").appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", "*"));
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
   this.setInputsInline(!0);
@@ -418,7 +418,7 @@ Blockly.Blocks.bitbrick_servomotor_angle = {init:function() {
   this.setColour("#00979D");
   this.appendDummyInput().appendField("\uc11c\ubcf4 \ubaa8\ud130").appendField(new Blockly.FieldDropdownDynamic(Entry.Bitbrick.servoList), "PORT").appendField(" \uac01\ub3c4");
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField("").appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_arduino.png", "*"));
+  this.appendDummyInput().appendField("").appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", "*"));
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
   this.setInputsInline(!0);
@@ -431,7 +431,7 @@ Entry.block.bitbrick_servomotor_angle = function(a, b) {
 var categoryColor = "#FF9E20";
 Blockly.Blocks.start_drawing = {init:function() {
   this.setColour(categoryColor);
-  this.appendDummyInput().appendField(Lang.Blocks.BRUSH_start_drawing).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_brush.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.BRUSH_start_drawing).appendField(new Blockly.FieldIcon("/img/assets/block_icon/brush_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -444,7 +444,7 @@ Entry.block.start_drawing = function(a, b) {
 };
 Blockly.Blocks.stop_drawing = {init:function() {
   this.setColour(categoryColor);
-  this.appendDummyInput().appendField(Lang.Blocks.BRUSH_stop_drawing).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_brush.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.BRUSH_stop_drawing).appendField(new Blockly.FieldIcon("/img/assets/block_icon/brush_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -457,7 +457,7 @@ Blockly.Blocks.set_color = {init:function() {
   this.setColour(categoryColor);
   this.appendDummyInput().appendField(Lang.Blocks.BRUSH_set_color_1);
   this.appendDummyInput().appendField(new Blockly.FieldColour("#ff0000"), "VALUE");
-  this.appendDummyInput().appendField(Lang.Blocks.BRUSH_set_color_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_brush.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.BRUSH_set_color_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/brush_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -470,7 +470,7 @@ Entry.block.set_color = function(a, b) {
 };
 Blockly.Blocks.set_random_color = {init:function() {
   this.setColour(categoryColor);
-  this.appendDummyInput().appendField(Lang.Blocks.BRUSH_set_random_color).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_brush.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.BRUSH_set_random_color).appendField(new Blockly.FieldIcon("/img/assets/block_icon/brush_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -490,7 +490,7 @@ Blockly.Blocks.change_thickness = {init:function() {
   this.setColour(categoryColor);
   this.appendDummyInput().appendField(Lang.Blocks.BRUSH_change_thickness_1);
   this.appendValueInput("VALUE").setCheck(["Number", "Boolean"]);
-  this.appendDummyInput().appendField(Lang.Blocks.BRUSH_change_thickness_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_brush.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.BRUSH_change_thickness_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/brush_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -505,7 +505,7 @@ Blockly.Blocks.set_thickness = {init:function() {
   this.setColour(categoryColor);
   this.appendDummyInput().appendField(Lang.Blocks.BRUSH_set_thickness_1);
   this.appendValueInput("VALUE").setCheck(["Number", "Boolean"]);
-  this.appendDummyInput().appendField(Lang.Blocks.BRUSH_set_thickness_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_brush.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.BRUSH_set_thickness_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/brush_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -520,7 +520,7 @@ Blockly.Blocks.change_opacity = {init:function() {
   this.setColour(categoryColor);
   this.appendDummyInput().appendField(Lang.Blocks.BRUSH_change_opacity_1);
   this.appendValueInput("VALUE").setCheck(["Number", "Boolean"]);
-  this.appendDummyInput().appendField(Lang.Blocks.BRUSH_change_opacity_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_brush.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.BRUSH_change_opacity_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/brush_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -536,7 +536,7 @@ Blockly.Blocks.set_opacity = {init:function() {
   this.setColour(categoryColor);
   this.appendDummyInput().appendField(Lang.Blocks.BRUSH_set_opacity_1);
   this.appendValueInput("VALUE").setCheck(["Number", "Boolean"]);
-  this.appendDummyInput().appendField(Lang.Blocks.BRUSH_set_opacity_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_brush.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.BRUSH_set_opacity_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/brush_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -549,7 +549,7 @@ Entry.block.set_opacity = function(a, b) {
 };
 Blockly.Blocks.brush_erase_all = {init:function() {
   this.setColour(categoryColor);
-  this.appendDummyInput().appendField(Lang.Blocks.BRUSH_brush_erase_all).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_brush.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.BRUSH_brush_erase_all).appendField(new Blockly.FieldIcon("/img/assets/block_icon/brush_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -570,7 +570,7 @@ Entry.block.brush_erase_all = function(a, b) {
 };
 Blockly.Blocks.brush_stamp = {init:function() {
   this.setColour(categoryColor);
-  this.appendDummyInput().appendField(Lang.Blocks.BRUSH_stamp).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_brush.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.BRUSH_stamp).appendField(new Blockly.FieldIcon("/img/assets/block_icon/brush_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -583,7 +583,7 @@ Blockly.Blocks.change_brush_transparency = {init:function() {
   this.setColour(categoryColor);
   this.appendDummyInput().appendField(Lang.Blocks.BRUSH_change_brush_transparency_1);
   this.appendValueInput("VALUE").setCheck(["Number", "Boolean"]);
-  this.appendDummyInput().appendField(Lang.Blocks.BRUSH_change_brush_transparency_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_brush.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.BRUSH_change_brush_transparency_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/brush_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -599,7 +599,7 @@ Blockly.Blocks.set_brush_tranparency = {init:function() {
   this.setColour(categoryColor);
   this.appendDummyInput().appendField(Lang.Blocks.BRUSH_set_brush_transparency_1);
   this.appendValueInput("VALUE").setCheck(["Number", "Boolean"]);
-  this.appendDummyInput().appendField(Lang.Blocks.BRUSH_set_brush_transparency_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_brush.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.BRUSH_set_brush_transparency_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/brush_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -1030,7 +1030,7 @@ Blockly.Blocks.wait_second = {init:function() {
   this.setColour("#498deb");
   this.appendDummyInput().appendField(Lang.Blocks.FLOW_wait_second_1);
   this.appendValueInput("SECOND").setCheck(["Number", "String", null]);
-  this.appendDummyInput().appendField(Lang.Blocks.FLOW_wait_second_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_flow.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.FLOW_wait_second_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/flow_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -1057,7 +1057,7 @@ Blockly.Blocks.repeat_basic = {init:function() {
   this.setColour("#498deb");
   this.appendDummyInput().appendField(Lang.Blocks.FLOW_repeat_basic_1);
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.FLOW_repeat_basic_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_flow.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.FLOW_repeat_basic_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/flow_03.png", "*"));
   this.appendStatementInput("DO");
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
@@ -1081,7 +1081,7 @@ Entry.block.repeat_basic = function(a, b) {
 };
 Blockly.Blocks.repeat_inf = {init:function() {
   this.setColour("#498deb");
-  this.appendDummyInput().appendField(Lang.Blocks.FLOW_repeat_inf).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_flow.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.FLOW_repeat_inf).appendField(new Blockly.FieldIcon("/img/assets/block_icon/flow_03.png", "*"));
   this.appendStatementInput("DO");
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
@@ -1093,7 +1093,7 @@ Entry.block.repeat_inf = function(a, b) {
 };
 Blockly.Blocks.stop_repeat = {init:function() {
   this.setColour("#498deb");
-  this.appendDummyInput().appendField(Lang.Blocks.FLOW_stop_repeat).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_flow.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.FLOW_stop_repeat).appendField(new Blockly.FieldIcon("/img/assets/block_icon/flow_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -1109,7 +1109,7 @@ Blockly.Blocks.wait_until_true = {init:function() {
   this.setColour("#498deb");
   this.appendDummyInput().appendField(Lang.Blocks.FLOW_wait_until_true_1);
   this.appendValueInput("BOOL").setCheck("Boolean");
-  this.appendDummyInput().appendField(Lang.Blocks.FLOW_wait_until_true_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_flow.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.FLOW_wait_until_true_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/flow_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -1121,7 +1121,7 @@ Blockly.Blocks._if = {init:function() {
   this.setColour("#498deb");
   this.appendDummyInput().appendField(Lang.Blocks.FLOW__if_1);
   this.appendValueInput("BOOL").setCheck("Boolean");
-  this.appendDummyInput().appendField(Lang.Blocks.FLOW__if_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_flow.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.FLOW__if_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/flow_03.png", "*"));
   this.appendStatementInput("STACK");
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
@@ -1134,7 +1134,7 @@ Blockly.Blocks.if_else = {init:function() {
   this.setColour("#498deb");
   this.appendDummyInput().appendField(Lang.Blocks.FLOW_if_else_1);
   this.appendValueInput("BOOL").setCheck("Boolean");
-  this.appendDummyInput().appendField(Lang.Blocks.FLOW_if_else_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_flow.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.FLOW_if_else_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/flow_03.png", "*"));
   this.appendStatementInput("STACK_IF");
   this.appendDummyInput().appendField(Lang.Blocks.FLOW_if_else_3);
   this.appendStatementInput("STACK_ELSE");
@@ -1154,7 +1154,7 @@ Blockly.Blocks.create_clone = {init:function() {
   this.setColour("#498deb");
   this.appendDummyInput().appendField(Lang.Blocks.FLOW_create_clone_1);
   this.appendDummyInput().appendField(new Blockly.FieldDropdownDynamic("clone"), "VALUE");
-  this.appendDummyInput().appendField(Lang.Blocks.FLOW_create_clone_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_flow.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.FLOW_create_clone_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/flow_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -1166,7 +1166,7 @@ Entry.block.create_clone = function(a, b) {
 };
 Blockly.Blocks.delete_clone = {init:function() {
   this.setColour("#498deb");
-  this.appendDummyInput().appendField(Lang.Blocks.FLOW_delete_clone).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_flow.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.FLOW_delete_clone).appendField(new Blockly.FieldIcon("/img/assets/block_icon/flow_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
 }};
@@ -1187,7 +1187,7 @@ Entry.block.when_clone_start = function(a, b) {
 };
 Blockly.Blocks.stop_run = {init:function() {
   this.setColour("#498deb");
-  this.appendDummyInput().appendField(Lang.Blocks.FLOW_stop_run).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_flow.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.FLOW_stop_run).appendField(new Blockly.FieldIcon("/img/assets/block_icon/flow_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -1199,7 +1199,7 @@ Blockly.Blocks.repeat_while_true = {init:function() {
   this.setColour("#498deb");
   this.appendDummyInput().appendField(Lang.Blocks.FLOW_repeat_while_true_1);
   this.appendValueInput("BOOL").setCheck("Boolean");
-  this.appendDummyInput().appendField(Lang.Blocks.FLOW_repeat_while_true_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_flow.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.FLOW_repeat_while_true_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/flow_03.png", "*"));
   this.appendStatementInput("DO");
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
@@ -1216,7 +1216,7 @@ Blockly.Blocks.stop_object = {init:function() {
   this.setColour("#498deb");
   this.appendDummyInput().appendField(Lang.Blocks.FLOW_stop_object_1);
   this.appendDummyInput().appendField(new Blockly.FieldDropdown([[Lang.Blocks.FLOW_stop_object_all, "all"], [Lang.Blocks.FLOW_stop_object_this_object, "thisObject"], [Lang.Blocks.FLOW_stop_object_this_thread, "thisThread"], [Lang.Blocks.FLOW_stop_object_other_thread, "otherThread"]]), "TARGET");
-  this.appendDummyInput().appendField(Lang.Blocks.FLOW_stop_object_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_flow.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.FLOW_stop_object_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/flow_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -1245,7 +1245,7 @@ Entry.block.stop_object = function(a, b) {
 };
 Blockly.Blocks.restart_project = {init:function() {
   this.setColour("#498deb");
-  this.appendDummyInput().appendField(Lang.Blocks.FLOW_restart).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_flow.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.FLOW_restart).appendField(new Blockly.FieldIcon("/img/assets/block_icon/flow_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
 }};
@@ -1255,7 +1255,7 @@ Entry.block.restart_project = function(a, b) {
 };
 Blockly.Blocks.remove_all_clones = {init:function() {
   this.setColour("#498deb");
-  this.appendDummyInput().appendField(Lang.Blocks.FLOW_delete_clone_all).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_flow.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.FLOW_delete_clone_all).appendField(new Blockly.FieldIcon("/img/assets/block_icon/flow_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -1329,7 +1329,7 @@ Blockly.Blocks.function_create = {init:function() {
   this.appendDummyInput().appendField(Lang.Blocks.FUNCTION_define);
   this.setColour("#cc7337");
   this.appendValueInput("FIELD").setCheck(["Param"]);
-  this.appendDummyInput().appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_function_v1.png", "*"));
+  this.appendDummyInput().appendField(new Blockly.FieldIcon("/img/assets/block_icon/function_03.png", "*"));
   this.setInputsInline(!0);
   this.setNextStatement(!0);
 }};
@@ -1359,7 +1359,7 @@ Blockly.Blocks.function_general = {init:function() {
     }
     this.hashId = a.getAttribute("hashid");
   }
-  this.appendDummyInput().appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_function_v1.png", "*"));
+  this.appendDummyInput().appendField(new Blockly.FieldIcon("/img/assets/block_icon/function_03.png", "*"));
 }, mutationToDom:function() {
   for (var a = document.createElement("mutation"), b = 1;b < this.inputList.length;b++) {
     var c = this.inputList[b];
@@ -1402,7 +1402,7 @@ Entry.Hamster = {PORT_MAP:{leftWheel:0, rightWheel:0, buzzer:0, outputA:0, outpu
 }, tempo:60, name:"hamster"};
 Blockly.Blocks.hamster_move_forward = {init:function() {
   this.setColour("#00979D");
-  this.appendDummyInput().appendField("\uc55e\uc73c\ub85c \uc774\ub3d9\ud558\uae30").appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_arduino.png", "*"));
+  this.appendDummyInput().appendField("\uc55e\uc73c\ub85c \uc774\ub3d9\ud558\uae30").appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -1428,7 +1428,7 @@ Entry.block.hamster_move_forward = function(a, b) {
 };
 Blockly.Blocks.hamster_move_backward = {init:function() {
   this.setColour("#00979D");
-  this.appendDummyInput().appendField("\ub4a4\ub85c \uc774\ub3d9\ud558\uae30").appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_arduino.png", "*"));
+  this.appendDummyInput().appendField("\ub4a4\ub85c \uc774\ub3d9\ud558\uae30").appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -1454,7 +1454,7 @@ Entry.block.hamster_move_backward = function(a, b) {
 };
 Blockly.Blocks.hamster_turn_around = {init:function() {
   this.setColour("#00979D");
-  this.appendDummyInput().appendField("").appendField(new Blockly.FieldDropdown([["\uc67c\ucabd", "LEFT"], ["\uc624\ub978\ucabd", "RIGHT"]]), "DIRECTION").appendField(" \uc73c\ub85c \ub3cc\uae30").appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_arduino.png", "*"));
+  this.appendDummyInput().appendField("").appendField(new Blockly.FieldDropdown([["\uc67c\ucabd", "LEFT"], ["\uc624\ub978\ucabd", "RIGHT"]]), "DIRECTION").appendField(" \uc73c\ub85c \ub3cc\uae30").appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -1485,7 +1485,7 @@ Entry.block.hamster_turn_around = function(a, b) {
 };
 Blockly.Blocks.hamster_set_led_to = {init:function() {
   this.setColour("#00979D");
-  this.appendDummyInput().appendField("").appendField(new Blockly.FieldDropdown([["\uc67c\ucabd", "LEFT"], ["\uc624\ub978\ucabd", "RIGHT"], ["\uc55e\ucabd", "FRONT"]]), "DIRECTION").appendField(" LED\ub97c").appendField(new Blockly.FieldDropdown([["\ube68\uac04\uc0c9", "4"], ["\ub178\ub780\uc0c9", "6"], ["\ub179\uc0c9", "2"], ["\ud558\ub298\uc0c9", "3"], ["\ud30c\ub780\uc0c9", "1"], ["\ubcf4\ub77c\uc0c9", "5"], ["\ud558\uc580\uc0c9", "7"]]), "COLOR").appendField(" \uc73c\ub85c \ud558\uae30").appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_arduino.png", 
+  this.appendDummyInput().appendField("").appendField(new Blockly.FieldDropdown([["\uc67c\ucabd", "LEFT"], ["\uc624\ub978\ucabd", "RIGHT"], ["\uc55e\ucabd", "FRONT"]]), "DIRECTION").appendField(" LED\ub97c").appendField(new Blockly.FieldDropdown([["\ube68\uac04\uc0c9", "4"], ["\ub178\ub780\uc0c9", "6"], ["\ub179\uc0c9", "2"], ["\ud558\ub298\uc0c9", "3"], ["\ud30c\ub780\uc0c9", "1"], ["\ubcf4\ub77c\uc0c9", "5"], ["\ud558\uc580\uc0c9", "7"]]), "COLOR").appendField(" \uc73c\ub85c \ud558\uae30").appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", 
   "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
@@ -1498,7 +1498,7 @@ Entry.block.hamster_set_led_to = function(a, b) {
 };
 Blockly.Blocks.hamster_clear_led = {init:function() {
   this.setColour("#00979D");
-  this.appendDummyInput().appendField("").appendField(new Blockly.FieldDropdown([["\uc67c\ucabd", "LEFT"], ["\uc624\ub978\ucabd", "RIGHT"]]), "DIRECTION").appendField(" LED \ub044\uae30").appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_arduino.png", "*"));
+  this.appendDummyInput().appendField("").appendField(new Blockly.FieldDropdown([["\uc67c\ucabd", "LEFT"], ["\uc624\ub978\ucabd", "RIGHT"]]), "DIRECTION").appendField(" LED \ub044\uae30").appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -1510,7 +1510,7 @@ Entry.block.hamster_clear_led = function(a, b) {
 };
 Blockly.Blocks.hamster_beep = {init:function() {
   this.setColour("#00979D");
-  this.appendDummyInput().appendField("\uc090 \uc18c\ub9ac\ub0b4\uae30").appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_arduino.png", "*"));
+  this.appendDummyInput().appendField("\uc090 \uc18c\ub9ac\ub0b4\uae30").appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -1548,7 +1548,7 @@ Blockly.Blocks.hamster_move_forward_for_secs = {init:function() {
   this.setColour("#00979D");
   this.appendDummyInput().appendField("\uc55e\uc73c\ub85c ");
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField("\ucd08 \uc774\ub3d9\ud558\uae30").appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_arduino.png", "*"));
+  this.appendDummyInput().appendField("\ucd08 \uc774\ub3d9\ud558\uae30").appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -1577,7 +1577,7 @@ Blockly.Blocks.hamster_move_backward_for_secs = {init:function() {
   this.setColour("#00979D");
   this.appendDummyInput().appendField("\ub4a4\ub85c ");
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField("\ucd08 \uc774\ub3d9\ud558\uae30").appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_arduino.png", "*"));
+  this.appendDummyInput().appendField("\ucd08 \uc774\ub3d9\ud558\uae30").appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -1606,7 +1606,7 @@ Blockly.Blocks.hamster_turn_for_secs = {init:function() {
   this.setColour("#00979D");
   this.appendDummyInput().appendField("").appendField(new Blockly.FieldDropdown([["\uc67c\ucabd", "LEFT"], ["\uc624\ub978\ucabd", "RIGHT"]]), "DIRECTION").appendField(" \uc73c\ub85c");
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField("\ucd08 \ub3cc\uae30").appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_arduino.png", "*"));
+  this.appendDummyInput().appendField("\ucd08 \ub3cc\uae30").appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -1640,7 +1640,7 @@ Blockly.Blocks.hamster_play_note_for = {init:function() {
   this.setColour("#00979D");
   this.appendDummyInput().appendField("").appendField(new Blockly.FieldDropdown([["\ub3c4", "4"], ["\ub3c4#", "5"], ["\ub808", "6"], ["\ubbf8b", "7"], ["\ubbf8", "8"], ["\ud30c", "9"], ["\ud30c#", "10"], ["\uc194", "11"], ["\uc194#", "12"], ["\ub77c", "13"], ["\uc2dcb", "14"], ["\uc2dc", "15"]]), "NOTE").appendField(" ").appendField(new Blockly.FieldDropdown([["1", "1"], ["2", "2"], ["3", "3"], ["4", "4"], ["5", "5"], ["6", "6"], ["7", "7"]]), "OCTAVE").appendField(" \uc74c\uc744");
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField("\ubc15\uc790 \uc5f0\uc8fc\ud558\uae30").appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_arduino.png", "*"));
+  this.appendDummyInput().appendField("\ubc15\uc790 \uc5f0\uc8fc\ud558\uae30").appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -1675,7 +1675,7 @@ Blockly.Blocks.hamster_rest_for = {init:function() {
   this.setColour("#00979D");
   this.appendDummyInput().appendField("");
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField("\ubc15\uc790 \uc26c\uae30").appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_arduino.png", "*"));
+  this.appendDummyInput().appendField("\ubc15\uc790 \uc26c\uae30").appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -1702,7 +1702,7 @@ Blockly.Blocks.hamster_change_tempo_by = {init:function() {
   this.setColour("#00979D");
   this.appendDummyInput().appendField("\uc5f0\uc8fc \uc18d\ub3c4\ub97c");
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField("\ub9cc\ud07c \ubc14\uafb8\uae30").appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_arduino.png", "*"));
+  this.appendDummyInput().appendField("\ub9cc\ud07c \ubc14\uafb8\uae30").appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -1716,7 +1716,7 @@ Blockly.Blocks.hamster_set_tempo_to = {init:function() {
   this.setColour("#00979D");
   this.appendDummyInput().appendField("\uc5f0\uc8fc \uc18d\ub3c4\ub97c");
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField("BPM\uc73c\ub85c \ud558\uae30").appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_arduino.png", "*"));
+  this.appendDummyInput().appendField("BPM\uc73c\ub85c \ud558\uae30").appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -1986,7 +1986,7 @@ Entry.block.boolean_basic_operator = function(a, b) {
 };
 Blockly.Blocks.show = {init:function() {
   this.setColour("#EC4466");
-  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_show).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_looks.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_show).appendField(new Blockly.FieldIcon("/img/assets/block_icon/looks_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -1997,7 +1997,7 @@ Entry.block.show = function(a, b) {
 };
 Blockly.Blocks.hide = {init:function() {
   this.setColour("#EC4466");
-  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_hide).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_looks.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_hide).appendField(new Blockly.FieldIcon("/img/assets/block_icon/looks_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -2014,7 +2014,7 @@ Blockly.Blocks.dialog_time = {init:function() {
   this.appendValueInput("SECOND").setCheck(["Number", "String"]);
   this.appendDummyInput().appendField(Lang.Blocks.LOOKS_dialog_time_3);
   this.appendDummyInput().appendField(new Blockly.FieldDropdown([[Lang.Blocks.speak, "speak"]]), "OPTION");
-  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_dialog_time_4).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_looks.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_dialog_time_4).appendField(new Blockly.FieldIcon("/img/assets/block_icon/looks_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -2040,7 +2040,7 @@ Blockly.Blocks.dialog = {init:function() {
   this.appendValueInput("VALUE").setCheck(["String", "Number", null]);
   this.appendDummyInput().appendField(Lang.Blocks.LOOKS_dialog_2);
   this.appendDummyInput().appendField(new Blockly.FieldDropdown([[Lang.Blocks.speak, "speak"]]), "OPTION");
-  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_dialog_3).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_looks.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_dialog_3).appendField(new Blockly.FieldIcon("/img/assets/block_icon/looks_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -2055,7 +2055,7 @@ Entry.block.dialog = function(a, b) {
 };
 Blockly.Blocks.remove_dialog = {init:function() {
   this.setColour("#EC4466");
-  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_remove_dialog).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_looks.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_remove_dialog).appendField(new Blockly.FieldIcon("/img/assets/block_icon/looks_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -2068,7 +2068,7 @@ Blockly.Blocks.change_to_nth_shape = {init:function() {
   this.setColour("#EC4466");
   this.appendDummyInput().appendField(Lang.Blocks.LOOKS_change_to_nth_shape_1);
   this.appendDummyInput().appendField(new Blockly.FieldDropdownDynamic("pictures"), "VALUE");
-  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_change_to_nth_shape_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_looks.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_change_to_nth_shape_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/looks_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -2080,7 +2080,7 @@ Entry.block.change_to_nth_shape = function(a, b) {
 };
 Blockly.Blocks.change_to_next_shape = {init:function() {
   this.setColour("#EC4466");
-  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_change_to_next_shape).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_looks.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_change_to_next_shape).appendField(new Blockly.FieldIcon("/img/assets/block_icon/looks_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -2096,7 +2096,7 @@ Blockly.Blocks.set_effect_volume = {init:function() {
   this.appendDummyInput().appendField(new Blockly.FieldDropdown([[Lang.Blocks.color, "color"], [Lang.Blocks.brightness, "brightness"], [Lang.Blocks.opacity, "opacity"]]), "EFFECT");
   this.appendDummyInput().appendField(Lang.Blocks.LOOKS_set_effect_volume_2);
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_set_effect_volume_3).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_looks.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_set_effect_volume_3).appendField(new Blockly.FieldIcon("/img/assets/block_icon/looks_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -2113,7 +2113,7 @@ Blockly.Blocks.set_effect = {init:function() {
   this.appendDummyInput().appendField(new Blockly.FieldDropdown([[Lang.Blocks.color, "color"], [Lang.Blocks.brightness, "brightness"], [Lang.Blocks.opacity, "opacity"]]), "EFFECT");
   this.appendDummyInput().appendField(Lang.Blocks.LOOKS_set_effect_2);
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_set_effect_3).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_looks.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_set_effect_3).appendField(new Blockly.FieldIcon("/img/assets/block_icon/looks_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -2126,7 +2126,7 @@ Entry.block.set_effect = function(a, b) {
 };
 Blockly.Blocks.erase_all_effects = {init:function() {
   this.setColour("#EC4466");
-  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_erase_all_effects).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_looks.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_erase_all_effects).appendField(new Blockly.FieldIcon("/img/assets/block_icon/looks_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -2139,7 +2139,7 @@ Blockly.Blocks.change_scale_percent = {init:function() {
   this.setColour("#EC4466");
   this.appendDummyInput().appendField(Lang.Blocks.LOOKS_change_scale_percent_1);
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_change_scale_percent_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_looks.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_change_scale_percent_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/looks_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -2154,7 +2154,7 @@ Blockly.Blocks.set_scale_percent = {init:function() {
   this.setColour("#EC4466");
   this.appendDummyInput().appendField(Lang.Blocks.LOOKS_set_scale_percent_1);
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_set_scale_percent_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_looks.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_set_scale_percent_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/looks_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -2167,7 +2167,7 @@ Entry.block.set_scale_percent = function(a, b) {
 };
 Blockly.Blocks.flip_y = {init:function() {
   this.setColour("#EC4466");
-  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_flip_y).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_looks.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_flip_y).appendField(new Blockly.FieldIcon("/img/assets/block_icon/looks_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -2178,7 +2178,7 @@ Entry.block.flip_y = function(a, b) {
 };
 Blockly.Blocks.flip_x = {init:function() {
   this.setColour("#EC4466");
-  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_flip_x).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_looks.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_flip_x).appendField(new Blockly.FieldIcon("/img/assets/block_icon/looks_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -2191,7 +2191,7 @@ Blockly.Blocks.set_object_order = {init:function() {
   this.setColour("#EC4466");
   this.appendDummyInput().appendField(Lang.Blocks.LOOKS_set_object_order_1);
   this.appendDummyInput().appendField(new Blockly.FieldDropdownDynamic("objectSequence"), "VALUE");
-  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_set_object_order_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_looks.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_set_object_order_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/looks_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -2218,7 +2218,7 @@ Blockly.Blocks.change_to_some_shape = {init:function() {
   this.setColour("#EC4466");
   this.appendDummyInput().appendField(Lang.Blocks.LOOKS_change_to_nth_shape_1);
   this.appendValueInput("VALUE").setCheck(["String", "Number"]);
-  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_change_to_nth_shape_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_looks.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_change_to_nth_shape_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/looks_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -2236,7 +2236,7 @@ Blockly.Blocks.set_effect_amount = {init:function() {
   this.appendDummyInput().appendField(new Blockly.FieldDropdown([[Lang.Blocks.color, "color"], [Lang.Blocks.brightness, "brightness"], [Lang.Blocks.transparency, "transparency"]]), "EFFECT");
   this.appendDummyInput().appendField(Lang.Blocks.LOOKS_set_effect_volume_2);
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_set_effect_volume_3).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_looks.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_set_effect_volume_3).appendField(new Blockly.FieldIcon("/img/assets/block_icon/looks_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -2253,7 +2253,7 @@ Blockly.Blocks.set_entity_effect = {init:function() {
   this.appendDummyInput().appendField(new Blockly.FieldDropdown([[Lang.Blocks.color, "color"], [Lang.Blocks.brightness, "brightness"], [Lang.Blocks.transparency, "transparency"]]), "EFFECT");
   this.appendDummyInput().appendField(Lang.Blocks.LOOKS_set_effect_2);
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_set_effect_3).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_looks.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_set_effect_3).appendField(new Blockly.FieldIcon("/img/assets/block_icon/looks_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -2268,7 +2268,7 @@ Blockly.Blocks.move_direction = {init:function() {
   this.setColour("#A751E3");
   this.appendDummyInput().appendField(Lang.Blocks.MOVING_move_direction_1);
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_move_direction_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_moving.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.MOVING_move_direction_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/moving_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -2284,7 +2284,7 @@ Blockly.Blocks.move_x = {init:function() {
   this.setColour("#A751E3");
   this.appendDummyInput().appendField(Lang.Blocks.MOVING_move_x_1);
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_move_x_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_moving.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.MOVING_move_x_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/moving_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -2299,7 +2299,7 @@ Blockly.Blocks.move_y = {init:function() {
   this.setColour("#A751E3");
   this.appendDummyInput().appendField(Lang.Blocks.MOVING_move_y_1);
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_move_y_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_moving.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.MOVING_move_y_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/moving_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -2318,7 +2318,7 @@ Blockly.Blocks.locate_xy_time = {init:function() {
   this.appendValueInput("VALUE2").setCheck(["Number", "String"]);
   this.appendDummyInput().appendField(Lang.Blocks.MOVING_locate_xy_time_3);
   this.appendValueInput("VALUE3").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_locate_xy_time_4).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_moving.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.MOVING_locate_xy_time_4).appendField(new Blockly.FieldIcon("/img/assets/block_icon/moving_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -2344,7 +2344,7 @@ Blockly.Blocks.rotate_by_angle = {init:function() {
   this.setColour("#A751E3");
   this.appendDummyInput().appendField(Lang.Blocks.MOVING_rotate_by_angle_1);
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_rotate_by_angle_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_moving.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.MOVING_rotate_by_angle_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/moving_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -2357,7 +2357,7 @@ Entry.block.rotate_by_angle = function(a, b) {
 Blockly.Blocks.rotate_by_angle_dropdown = {init:function() {
   this.setColour("#A751E3");
   this.appendDummyInput().appendField(Lang.Blocks.MOVING_rotate_by_angle_dropdown_1);
-  this.appendDummyInput().appendField(new Blockly.FieldDropdown([["45", "45"], ["90", "90"], ["135", "135"], ["180", "180"]]), "VALUE").appendField(Lang.Blocks.MOVING_rotate_by_angle_dropdown_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_moving.png", "*"));
+  this.appendDummyInput().appendField(new Blockly.FieldDropdown([["45", "45"], ["90", "90"], ["135", "135"], ["180", "180"]]), "VALUE").appendField(Lang.Blocks.MOVING_rotate_by_angle_dropdown_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/moving_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -2371,7 +2371,7 @@ Blockly.Blocks.see_angle = {init:function() {
   this.setColour("#A751E3");
   this.appendDummyInput().appendField(Lang.Blocks.MOVING_see_angle_1);
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_see_angle_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_moving.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.MOVING_see_angle_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/moving_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -2385,7 +2385,7 @@ Blockly.Blocks.see_direction = {init:function() {
   this.setColour("#A751E3");
   this.appendDummyInput().appendField(Lang.Blocks.MOVING_see_direction_1);
   this.appendDummyInput().appendField(new Blockly.FieldDropdownDynamic("sprites"), "VALUE");
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_see_direction_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_moving.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.MOVING_see_direction_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/moving_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -2401,7 +2401,7 @@ Blockly.Blocks.locate_xy = {init:function() {
   this.appendValueInput("VALUE1").setCheck(["Number", "String"]);
   this.appendDummyInput().appendField(Lang.Blocks.MOVING_locate_xy_2);
   this.appendValueInput("VALUE2").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_locate_xy_3).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_moving.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.MOVING_locate_xy_3).appendField(new Blockly.FieldIcon("/img/assets/block_icon/moving_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -2418,7 +2418,7 @@ Blockly.Blocks.locate_x = {init:function() {
   this.setColour("#A751E3");
   this.appendDummyInput().appendField(Lang.Blocks.MOVING_locate_x_1);
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_locate_x_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_moving.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.MOVING_locate_x_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/moving_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -2433,7 +2433,7 @@ Blockly.Blocks.locate_y = {init:function() {
   this.setColour("#A751E3");
   this.appendDummyInput().appendField(Lang.Blocks.MOVING_locate_y_1);
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_locate_y_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_moving.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.MOVING_locate_y_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/moving_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -2448,7 +2448,7 @@ Blockly.Blocks.locate = {init:function() {
   this.setColour("#A751E3");
   this.appendDummyInput().appendField(Lang.Blocks.MOVING_locate_1);
   this.appendDummyInput().appendField(new Blockly.FieldDropdownDynamic("spritesWithMouse"), "VALUE");
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_locate_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_moving.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.MOVING_locate_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/moving_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -2469,7 +2469,7 @@ Blockly.Blocks.move_xy_time = {init:function() {
   this.appendValueInput("VALUE2").setCheck(["Number", "String"]);
   this.appendDummyInput().appendField(Lang.Blocks.MOVING_move_xy_time_3);
   this.appendValueInput("VALUE3").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_move_xy_time_4).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_moving.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.MOVING_move_xy_time_4).appendField(new Blockly.FieldIcon("/img/assets/block_icon/moving_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -2497,7 +2497,7 @@ Blockly.Blocks.locate_time = {init:function() {
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
   this.appendDummyInput().appendField(Lang.Blocks.MOVING_locate_time_2);
   this.appendDummyInput().appendField(new Blockly.FieldDropdownDynamic("sprites"), "VALUE");
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_locate_time_3).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_moving.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.MOVING_locate_time_3).appendField(new Blockly.FieldIcon("/img/assets/block_icon/moving_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -2508,7 +2508,7 @@ Blockly.Blocks.rotate_by_angle_time = {init:function() {
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
   this.appendDummyInput().appendField(Lang.Blocks.MOVING_rotate_by_angle_time_2);
   this.appendDummyInput().appendField(new Blockly.FieldAngle("90"), "VALUE");
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_rotate_by_angle_time_3).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_moving.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.MOVING_rotate_by_angle_time_3).appendField(new Blockly.FieldIcon("/img/assets/block_icon/moving_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -2533,14 +2533,14 @@ Blockly.Blocks.bounce_when = {init:function() {
   this.setColour("#A751E3");
   this.appendDummyInput().appendField(Lang.Blocks.MOVING_bounce_when_1);
   this.appendDummyInput().appendField(new Blockly.FieldDropdownDynamic("bounce"), "VALUE");
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_bounce_when_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_moving.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.MOVING_bounce_when_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/moving_03.png", "*"));
   this.setPreviousStatement(!0);
   this.setInputsInline(!0);
   this.setNextStatement(!0);
 }};
 Blockly.Blocks.bounce_wall = {init:function() {
   this.setColour("#A751E3");
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_bounce_wall).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_moving.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.MOVING_bounce_wall).appendField(new Blockly.FieldIcon("/img/assets/block_icon/moving_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -2555,7 +2555,7 @@ Entry.block.bounce_wall = function(a, b) {
 };
 Blockly.Blocks.flip_arrow_horizontal = {init:function() {
   this.setColour("#A751E3");
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_flip_arrow_horizontal).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_moving.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.MOVING_flip_arrow_horizontal).appendField(new Blockly.FieldIcon("/img/assets/block_icon/moving_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -2566,7 +2566,7 @@ Entry.block.flip_arrow_horizontal = function(a, b) {
 };
 Blockly.Blocks.flip_arrow_vertical = {init:function() {
   this.setColour("#A751E3");
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_flip_arrow_vertical).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_moving.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.MOVING_flip_arrow_vertical).appendField(new Blockly.FieldIcon("/img/assets/block_icon/moving_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -2579,7 +2579,7 @@ Blockly.Blocks.see_angle_object = {init:function() {
   this.setColour("#A751E3");
   this.appendDummyInput().appendField(Lang.Blocks.MOVING_see_angle_object_1);
   this.appendDummyInput().appendField(new Blockly.FieldDropdownDynamic("spritesWithMouse"), "VALUE");
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_see_angle_object_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_moving.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.MOVING_see_angle_object_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/moving_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -2599,7 +2599,7 @@ Blockly.Blocks.see_angle_direction = {init:function() {
   this.setColour("#A751E3");
   this.appendDummyInput().appendField(Lang.Blocks.MOVING_see_angle_direction_1);
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_see_angle_direction_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_moving.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.MOVING_see_angle_direction_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/moving_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -2613,7 +2613,7 @@ Blockly.Blocks.rotate_direction = {init:function() {
   this.setColour("#A751E3");
   this.appendDummyInput().appendField(Lang.Blocks.MOVING_rotate_direction_1);
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_rotate_direction_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_moving.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.MOVING_rotate_direction_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/moving_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -2629,7 +2629,7 @@ Blockly.Blocks.locate_object_time = {init:function() {
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
   this.appendDummyInput().appendField(Lang.Blocks.MOVING_locate_object_time_2);
   this.appendDummyInput().appendField(new Blockly.FieldDropdownDynamic("spritesWithMouse"), "TARGET");
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_locate_object_time_3).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_moving.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.MOVING_locate_object_time_3).appendField(new Blockly.FieldIcon("/img/assets/block_icon/moving_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -2658,7 +2658,7 @@ Blockly.Blocks.rotate_absolute = {init:function() {
   this.setColour("#A751E3");
   this.appendDummyInput().appendField(Lang.Blocks.MOVING_set_direction_by_angle_1);
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_set_direction_by_angle_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_moving.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.MOVING_set_direction_by_angle_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/moving_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -2672,7 +2672,7 @@ Blockly.Blocks.rotate_relative = {init:function() {
   this.setColour("#A751E3");
   this.appendDummyInput().appendField(Lang.Blocks.MOVING_add_direction_by_angle_1);
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_add_direction_by_angle_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_moving.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.MOVING_add_direction_by_angle_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/moving_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -2686,7 +2686,7 @@ Blockly.Blocks.direction_absolute = {init:function() {
   this.setColour("#A751E3");
   this.appendDummyInput().appendField(Lang.Blocks.MOVING_see_angle_1);
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_see_angle_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_moving.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.MOVING_see_angle_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/moving_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -2700,7 +2700,7 @@ Blockly.Blocks.direction_relative = {init:function() {
   this.setColour("#A751E3");
   this.appendDummyInput().appendField(Lang.Blocks.MOVING_rotate_direction_1);
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_rotate_direction_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_moving.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.MOVING_rotate_direction_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/moving_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -2716,7 +2716,7 @@ Blockly.Blocks.move_to_angle = {init:function() {
   this.appendValueInput("ANGLE").setCheck(["Number", "String"]);
   this.appendDummyInput().appendField(Lang.Blocks.MOVING_move_direction_angle_2);
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_move_direction_angle_3).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_moving.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.MOVING_move_direction_angle_3).appendField(new Blockly.FieldIcon("/img/assets/block_icon/moving_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -2734,7 +2734,7 @@ Blockly.Blocks.rotate_by_time = {init:function() {
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
   this.appendDummyInput().appendField(Lang.Blocks.MOVING_add_direction_by_angle_time_2);
   this.appendValueInput("ANGLE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_add_direction_by_angle_time_3).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_moving.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.MOVING_add_direction_by_angle_time_3).appendField(new Blockly.FieldIcon("/img/assets/block_icon/moving_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -2766,7 +2766,7 @@ Entry.block.when_scene_start = function(a, b) {
 };
 Blockly.Blocks.start_scene = {init:function() {
   this.setColour("#189FC1");
-  this.appendDummyInput().appendField(Lang.Blocks.SCENE_start_scene_1).appendField(new Blockly.FieldDropdownDynamic("scenes"), "VALUE").appendField(Lang.Blocks.SCENE_start_scene_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_scene.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.SCENE_start_scene_1).appendField(new Blockly.FieldDropdownDynamic("scenes"), "VALUE").appendField(Lang.Blocks.SCENE_start_scene_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/scene_03.png", "*"));
   this.setInputsInline(!0);
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
@@ -2780,7 +2780,7 @@ Entry.block.start_scene = function(a, b) {
 };
 Blockly.Blocks.start_neighbor_scene = {init:function() {
   this.setColour("#189FC1");
-  this.appendDummyInput().appendField(Lang.Blocks.SCENE_start_neighbor_scene_1).appendField(new Blockly.FieldDropdown([[Lang.Blocks.SCENE_start_scene_pre, "pre"], [Lang.Blocks.SCENE_start_scene_next, "next"]]), "OPERATOR").appendField(Lang.Blocks.SCENE_start_neighbor_scene_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_scene.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.SCENE_start_neighbor_scene_1).appendField(new Blockly.FieldDropdown([[Lang.Blocks.SCENE_start_scene_pre, "pre"], [Lang.Blocks.SCENE_start_scene_next, "next"]]), "OPERATOR").appendField(Lang.Blocks.SCENE_start_neighbor_scene_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/scene_03.png", "*"));
   this.setInputsInline(!0);
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
@@ -2794,7 +2794,7 @@ Blockly.Blocks.sound_something = {init:function() {
   this.setColour("#A4D01D");
   this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_something_1);
   this.appendDummyInput().appendField(new Blockly.FieldDropdownDynamic("sounds"), "VALUE");
-  this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_something_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_sound.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_something_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/sound_03.png", "*"));
   this.setInputsInline(!0);
   this.setNextStatement(!0);
   this.setPreviousStatement(!0);
@@ -2810,7 +2810,7 @@ Blockly.Blocks.sound_something_second = {init:function() {
   this.appendDummyInput().appendField(new Blockly.FieldDropdownDynamic("sounds"), "VALUE");
   this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_something_second_2);
   this.appendValueInput("SECOND").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_something_second_3).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_sound.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_something_second_3).appendField(new Blockly.FieldIcon("/img/assets/block_icon/sound_03.png", "*"));
   this.setInputsInline(!0);
   this.setNextStatement(!0);
   this.setPreviousStatement(!0);
@@ -2829,7 +2829,7 @@ Blockly.Blocks.sound_something_wait = {init:function() {
   this.setColour("#A4D01D");
   this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_something_wait_1);
   this.appendDummyInput().appendField(new Blockly.FieldDropdownDynamic("sounds"), "VALUE");
-  this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_something_wait_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_sound.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_something_wait_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/sound_03.png", "*"));
   this.setInputsInline(!0);
   this.setNextStatement(!0);
   this.setPreviousStatement(!0);
@@ -2857,7 +2857,7 @@ Blockly.Blocks.sound_something_second_wait = {init:function() {
   this.appendDummyInput().appendField(new Blockly.FieldDropdownDynamic("sounds"), "VALUE");
   this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_something_second_wait_2);
   this.appendValueInput("SECOND").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_something_second_wait_3).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_sound.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_something_second_wait_3).appendField(new Blockly.FieldIcon("/img/assets/block_icon/sound_03.png", "*"));
   this.setInputsInline(!0);
   this.setNextStatement(!0);
   this.setPreviousStatement(!0);
@@ -2889,7 +2889,7 @@ Blockly.Blocks.sound_volume_change = {init:function() {
   this.setColour("#A4D01D");
   this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_volume_change_1);
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_volume_change_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_sound.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_volume_change_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/sound_03.png", "*"));
   this.setInputsInline(!0);
   this.setNextStatement(!0);
   this.setPreviousStatement(!0);
@@ -2905,7 +2905,7 @@ Blockly.Blocks.sound_volume_set = {init:function() {
   this.setColour("#A4D01D");
   this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_volume_set_1);
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_volume_set_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_sound.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_volume_set_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/sound_03.png", "*"));
   this.setInputsInline(!0);
   this.setNextStatement(!0);
   this.setPreviousStatement(!0);
@@ -2919,7 +2919,7 @@ Entry.block.sound_volume_set = function(a, b) {
 };
 Blockly.Blocks.sound_silent_all = {init:function() {
   this.setColour("#A4D01D");
-  this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_silent_all).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_sound.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_silent_all).appendField(new Blockly.FieldIcon("/img/assets/block_icon/sound_03.png", "*"));
   this.setInputsInline(!0);
   this.setNextStatement(!0);
   this.setPreviousStatement(!0);
@@ -2943,7 +2943,7 @@ Blockly.Blocks.sound_something_with_block = {init:function() {
   this.setColour("#A4D01D");
   this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_something_1);
   this.appendValueInput("VALUE").setCheck(["String", "Number"]);
-  this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_something_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_sound.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_something_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/sound_03.png", "*"));
   this.setInputsInline(!0);
   this.setNextStatement(!0);
   this.setPreviousStatement(!0);
@@ -2959,7 +2959,7 @@ Blockly.Blocks.sound_something_second_with_block = {init:function() {
   this.appendValueInput("VALUE").setCheck(["String", "Number"]);
   this.appendDummyInput().appendField(" ").appendField(Lang.Blocks.SOUND_sound_something_second_2);
   this.appendValueInput("SECOND").setCheck(["String", "Number"]);
-  this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_something_second_3).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_sound.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_something_second_3).appendField(new Blockly.FieldIcon("/img/assets/block_icon/sound_03.png", "*"));
   this.setInputsInline(!0);
   this.setNextStatement(!0);
   this.setPreviousStatement(!0);
@@ -2973,7 +2973,7 @@ Blockly.Blocks.sound_something_wait_with_block = {init:function() {
   this.setColour("#A4D01D");
   this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_something_wait_1);
   this.appendValueInput("VALUE").setCheck(["String", "Number"]);
-  this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_something_wait_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_sound.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_something_wait_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/sound_03.png", "*"));
   this.setInputsInline(!0);
   this.setNextStatement(!0);
   this.setPreviousStatement(!0);
@@ -3003,7 +3003,7 @@ Blockly.Blocks.sound_something_second_wait_with_block = {init:function() {
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
   this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_something_second_wait_2).appendField(" ");
   this.appendValueInput("SECOND").setCheck(["String", "Number"]);
-  this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_something_second_wait_3).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_sound.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_something_second_wait_3).appendField(new Blockly.FieldIcon("/img/assets/block_icon/sound_03.png", "*"));
   this.setInputsInline(!0);
   this.setNextStatement(!0);
   this.setPreviousStatement(!0);
@@ -3043,7 +3043,7 @@ Entry.block.when_run_button_click = function(a, b) {
 Blockly.Blocks.press_some_key = {init:function() {
   this.setColour("#3BBD70");
   this.appendDummyInput().appendField(new Blockly.FieldIcon("/img/assets/block_icon/start_icon_keyboard.png", "*", "start")).appendField(Lang.Blocks.START_press_some_key_1).appendField(new Blockly.FieldDropdown([["q", "81"], ["w", "87"], ["e", "69"], ["r", "82"], ["a", "65"], ["s", "83"], ["d", "68"], [Lang.Blocks.START_press_some_key_up, "38"], [Lang.Blocks.START_press_some_key_down, "40"], [Lang.Blocks.START_press_some_key_left, "37"], [Lang.Blocks.START_press_some_key_right, "39"], [Lang.Blocks.START_press_some_key_enter, 
-  "13"], [Lang.Blocks.START_press_some_key_space, "32"]]), "VALUE").appendField(Lang.Blocks.START_press_some_key_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_start.png", "*"));
+  "13"], [Lang.Blocks.START_press_some_key_space, "32"]]), "VALUE").appendField(Lang.Blocks.START_press_some_key_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/start_03.png", "*"));
   this.setInputsInline(!0);
   this.setNextStatement(!0);
 }};
@@ -3115,7 +3115,7 @@ Entry.block.when_message_cast = function(a, b) {
 };
 Blockly.Blocks.message_cast = {init:function() {
   this.setColour("#3BBD70");
-  this.appendDummyInput().appendField(Lang.Blocks.START_message_cast_1).appendField(new Blockly.FieldDropdownDynamic("messages"), "VALUE").appendField(Lang.Blocks.START_message_cast_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_start.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.START_message_cast_1).appendField(new Blockly.FieldDropdownDynamic("messages"), "VALUE").appendField(Lang.Blocks.START_message_cast_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/start_03.png", "*"));
   this.setInputsInline(!0);
   this.setInputsInline(!0);
   this.setNextStatement(!0);
@@ -3131,7 +3131,7 @@ Entry.block.message_cast = function(a, b) {
 };
 Blockly.Blocks.add_message = {init:function() {
   this.setColour("#3BBD70");
-  this.appendDummyInput().appendField(Lang.Blocks.START_add_message).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_start.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.START_add_message).appendField(new Blockly.FieldIcon("/img/assets/block_icon/start_03.png", "*"));
   this.setInputsInline(!0);
 }};
 Entry.block.add_massage = function(a, b) {
@@ -3139,7 +3139,7 @@ Entry.block.add_massage = function(a, b) {
 };
 Blockly.Blocks.message_cast_wait = {init:function() {
   this.setColour("#3BBD70");
-  this.appendDummyInput().appendField(Lang.Blocks.START_message_send_wait_1).appendField(new Blockly.FieldDropdownDynamic("messages"), "VALUE").appendField(Lang.Blocks.START_message_send_wait_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_start.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.START_message_send_wait_1).appendField(new Blockly.FieldDropdownDynamic("messages"), "VALUE").appendField(Lang.Blocks.START_message_send_wait_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/start_03.png", "*"));
   this.setInputsInline(!0);
   this.setNextStatement(!0);
   this.setPreviousStatement(!0);
@@ -3235,7 +3235,7 @@ Blockly.Blocks.change_variable = {init:function() {
   this.appendDummyInput().appendField(new Blockly.FieldDropdownDynamic("variables"), "VARIABLE");
   this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_change_variable_2);
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_change_variable_3).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_variable.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_change_variable_3).appendField(new Blockly.FieldIcon("/img/assets/block_icon/variable_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -3256,7 +3256,7 @@ Blockly.Blocks.set_variable = {init:function() {
   this.appendDummyInput().appendField(new Blockly.FieldDropdownDynamic("variables"), "VARIABLE");
   this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_set_variable_2);
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_set_variable_3).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_variable.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_set_variable_3).appendField(new Blockly.FieldIcon("/img/assets/block_icon/variable_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -3269,7 +3269,7 @@ Entry.block.set_variable = function(a, b) {
 Blockly.Blocks.show_variable = {init:function() {
   this.setColour("#E457DC");
   this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_show_variable_1);
-  this.appendDummyInput().appendField(new Blockly.FieldDropdownDynamic("variables"), "VARIABLE").appendField(Lang.Blocks.VARIABLE_show_variable_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_variable.png", "*"));
+  this.appendDummyInput().appendField(new Blockly.FieldDropdownDynamic("variables"), "VARIABLE").appendField(Lang.Blocks.VARIABLE_show_variable_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/variable_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -3283,7 +3283,7 @@ Entry.block.show_variable = function(a, b) {
 Blockly.Blocks.hide_variable = {init:function() {
   this.setColour("#E457DC");
   this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_hide_variable_1);
-  this.appendDummyInput().appendField(new Blockly.FieldDropdownDynamic("variables"), "VARIABLE").appendField(Lang.Blocks.VARIABLE_hide_variable_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_variable.png", "*"));
+  this.appendDummyInput().appendField(new Blockly.FieldDropdownDynamic("variables"), "VARIABLE").appendField(Lang.Blocks.VARIABLE_hide_variable_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/variable_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -3295,7 +3295,7 @@ Entry.block.hide_variable = function(a, b) {
 };
 Blockly.Blocks.get_y = {init:function() {
   this.setColour(230);
-  this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_get_y).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_variable.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_get_y).appendField(new Blockly.FieldIcon("/img/assets/block_icon/variable_03.png", "*"));
   this.setOutput(!0, "Number");
 }};
 Blockly.Blocks.get_variable = {init:function() {
@@ -3313,7 +3313,7 @@ Blockly.Blocks.ask_and_wait = {init:function() {
   this.setColour("#E457DC");
   this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_ask_and_wait_1);
   this.appendValueInput("VALUE").setCheck(["String", "Number", null]);
-  this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_ask_and_wait_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_variable.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_ask_and_wait_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/variable_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -3353,7 +3353,7 @@ Blockly.Blocks.add_value_to_list = {init:function() {
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
   this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_add_value_to_list_2);
   this.appendDummyInput().appendField(new Blockly.FieldDropdownDynamic("lists"), "LIST");
-  this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_add_value_to_list_3).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_variable.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_add_value_to_list_3).appendField(new Blockly.FieldIcon("/img/assets/block_icon/variable_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -3371,7 +3371,7 @@ Blockly.Blocks.remove_value_from_list = {init:function() {
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
   this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_remove_value_from_list_2);
   this.appendDummyInput().appendField(new Blockly.FieldDropdownDynamic("lists"), "LIST");
-  this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_remove_value_from_list_3).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_variable.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_remove_value_from_list_3).appendField(new Blockly.FieldIcon("/img/assets/block_icon/variable_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -3393,7 +3393,7 @@ Blockly.Blocks.insert_value_to_list = {init:function() {
   this.appendDummyInput().appendField(new Blockly.FieldDropdownDynamic("lists"), "LIST");
   this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_insert_value_to_list_3);
   this.appendValueInput("INDEX").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_insert_value_to_list_4).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_variable.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_insert_value_to_list_4).appendField(new Blockly.FieldIcon("/img/assets/block_icon/variable_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -3415,7 +3415,7 @@ Blockly.Blocks.change_value_list_index = {init:function() {
   this.appendValueInput("INDEX").setCheck(["Number", "String"]);
   this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_change_value_list_index_3);
   this.appendValueInput("DATA").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_change_value_list_index_4).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_variable.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_change_value_list_index_4).appendField(new Blockly.FieldIcon("/img/assets/block_icon/variable_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -3461,7 +3461,7 @@ Entry.block.length_of_list = function(a, b) {
 Blockly.Blocks.show_list = {init:function() {
   this.setColour("#E457DC");
   this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_show_list_1);
-  this.appendDummyInput().appendField(new Blockly.FieldDropdownDynamic("lists"), "LIST").appendField(Lang.Blocks.VARIABLE_show_list_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_variable.png", "*"));
+  this.appendDummyInput().appendField(new Blockly.FieldDropdownDynamic("lists"), "LIST").appendField(Lang.Blocks.VARIABLE_show_list_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/variable_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -3474,7 +3474,7 @@ Entry.block.show_list = function(a, b) {
 Blockly.Blocks.hide_list = {init:function() {
   this.setColour("#E457DC");
   this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_hide_list_1);
-  this.appendDummyInput().appendField(new Blockly.FieldDropdownDynamic("lists"), "LIST").appendField(Lang.Blocks.VARIABLE_hide_list_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_variable.png", "*"));
+  this.appendDummyInput().appendField(new Blockly.FieldDropdownDynamic("lists"), "LIST").appendField(Lang.Blocks.VARIABLE_hide_list_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/variable_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);

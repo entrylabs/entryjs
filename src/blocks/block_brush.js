@@ -7,7 +7,7 @@ Blockly.Blocks.start_drawing = {
     this.setColour(categoryColor);
     this.appendDummyInput()
         .appendField(Lang.Blocks.BRUSH_start_drawing)
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/entry_icon_brush.png', '*'));
+        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/brush_03.png', '*'));
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
@@ -34,7 +34,7 @@ Blockly.Blocks.stop_drawing = {
     this.setColour(categoryColor);
     this.appendDummyInput()
         .appendField(Lang.Blocks.BRUSH_stop_drawing)
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/entry_icon_brush.png', '*'));
+        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/brush_03.png', '*'));
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
@@ -58,7 +58,7 @@ Blockly.Blocks.set_color = {
         .appendField(new Blockly.FieldColour('#ff0000'),'VALUE');
     this.appendDummyInput()
         .appendField(Lang.Blocks.BRUSH_set_color_2)
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/entry_icon_brush.png', '*'));
+        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/brush_03.png', '*'));
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
@@ -91,7 +91,7 @@ Blockly.Blocks.set_random_color = {
     this.setColour(categoryColor);
     this.appendDummyInput()
         .appendField(Lang.Blocks.BRUSH_set_random_color)
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/entry_icon_brush.png', '*'));
+        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/brush_03.png', '*'));
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
@@ -125,7 +125,7 @@ Blockly.Blocks.change_thickness = {
         .setCheck(['Number','Boolean']);
     this.appendDummyInput()
         .appendField(Lang.Blocks.BRUSH_change_thickness_2)
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/entry_icon_brush.png', '*'));
+        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/brush_03.png', '*'));
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
@@ -163,7 +163,7 @@ Blockly.Blocks.set_thickness = {
         .setCheck(['Number','Boolean']);
     this.appendDummyInput()
         .appendField(Lang.Blocks.BRUSH_set_thickness_2)
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/entry_icon_brush.png', '*'));
+        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/brush_03.png', '*'));
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
@@ -198,7 +198,7 @@ Blockly.Blocks.change_opacity = {
         .setCheck(['Number', 'Boolean']);
     this.appendDummyInput()
         .appendField(Lang.Blocks.BRUSH_change_opacity_2)
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/entry_icon_brush.png', '*'));
+        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/brush_03.png', '*'));
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
@@ -236,7 +236,7 @@ Blockly.Blocks.set_opacity = {
         .setCheck(['Number', 'Boolean']);
     this.appendDummyInput()
         .appendField(Lang.Blocks.BRUSH_set_opacity_2)
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/entry_icon_brush.png', '*'));
+        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/brush_03.png', '*'));
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
@@ -269,7 +269,7 @@ Blockly.Blocks.brush_erase_all = {
     this.setColour(categoryColor);
     this.appendDummyInput()
         .appendField(Lang.Blocks.BRUSH_brush_erase_all)
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/entry_icon_brush.png', '*'));
+        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/brush_03.png', '*'));
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
@@ -299,7 +299,7 @@ Blockly.Blocks.brush_stamp = {
     this.setColour(categoryColor);
     this.appendDummyInput()
         .appendField(Lang.Blocks.BRUSH_stamp)
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/entry_icon_brush.png', '*'));
+        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/brush_03.png', '*'));
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
@@ -321,7 +321,7 @@ Blockly.Blocks.change_brush_transparency = {
         .setCheck(['Number', 'Boolean']);
     this.appendDummyInput()
         .appendField(Lang.Blocks.BRUSH_change_brush_transparency_2)
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/entry_icon_brush.png', '*'));
+        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/brush_03.png', '*'));
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
@@ -357,7 +357,7 @@ Blockly.Blocks.set_brush_tranparency = {
         .setCheck(['Number', 'Boolean']);
     this.appendDummyInput()
         .appendField(Lang.Blocks.BRUSH_set_brush_transparency_2)
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/entry_icon_brush.png', '*'));
+        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/brush_03.png', '*'));
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);

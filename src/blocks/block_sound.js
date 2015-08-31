@@ -10,7 +10,7 @@ Blockly.Blocks.sound_something = {
         .appendField(new Blockly.FieldDropdownDynamic("sounds"), "VALUE");
     this.appendDummyInput()
         .appendField(Lang.Blocks.SOUND_sound_something_2)
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/entry_icon_sound.png', '*'));
+        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/sound_03.png', '*'));
     this.setInputsInline(true);
     this.setNextStatement(true);
     this.setPreviousStatement(true);
@@ -39,7 +39,7 @@ Blockly.Blocks.sound_something_second = {
         .setCheck(["Number", "String"]);
     this.appendDummyInput()
         .appendField(Lang.Blocks.SOUND_sound_something_second_3)
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/entry_icon_sound.png', '*'));
+        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/sound_03.png', '*'));
     this.setInputsInline(true);
     this.setNextStatement(true);
     this.setPreviousStatement(true);
@@ -70,7 +70,7 @@ Blockly.Blocks.sound_something_wait = {
         .appendField(new Blockly.FieldDropdownDynamic("sounds"), "VALUE");
     this.appendDummyInput()
         .appendField(Lang.Blocks.SOUND_sound_something_wait_2)
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/entry_icon_sound.png', '*'));
+        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/sound_03.png', '*'));
     this.setInputsInline(true);
     this.setNextStatement(true);
     this.setPreviousStatement(true);
@@ -114,7 +114,7 @@ Blockly.Blocks.sound_something_second_wait = {
         .setCheck(["Number", "String"]);
     this.appendDummyInput()
         .appendField(Lang.Blocks.SOUND_sound_something_second_wait_3)
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/entry_icon_sound.png', '*'));
+        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/sound_03.png', '*'));
     this.setInputsInline(true);
     this.setNextStatement(true);
     this.setPreviousStatement(true);
@@ -158,7 +158,7 @@ Blockly.Blocks.sound_volume_change = {
         .setCheck(["Number", "String"]);
     this.appendDummyInput()
         .appendField(Lang.Blocks.SOUND_sound_volume_change_2)
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/entry_icon_sound.png', '*'));
+        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/sound_03.png', '*'));
     this.setInputsInline(true);
     this.setNextStatement(true);
     this.setPreviousStatement(true);
@@ -186,7 +186,7 @@ Blockly.Blocks.sound_volume_set = {
         .setCheck(["Number", "String"]);
     this.appendDummyInput()
         .appendField(Lang.Blocks.SOUND_sound_volume_set_2)
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/entry_icon_sound.png', '*'));
+        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/sound_03.png', '*'));
     this.setInputsInline(true);
     this.setNextStatement(true);
     this.setPreviousStatement(true);
@@ -209,7 +209,7 @@ Blockly.Blocks.sound_silent_all = {
     this.setColour("#A4D01D");
     this.appendDummyInput()
         .appendField(Lang.Blocks.SOUND_sound_silent_all)
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/entry_icon_sound.png', '*'));
+        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/sound_03.png', '*'));
     this.setInputsInline(true);
     this.setNextStatement(true);
     this.setPreviousStatement(true);
@@ -248,7 +248,7 @@ Blockly.Blocks.sound_something_with_block = {
         .setCheck(["String", "Number"]);
     this.appendDummyInput()
         .appendField(Lang.Blocks.SOUND_sound_something_2)
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/entry_icon_sound.png', '*'));
+        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/sound_03.png', '*'));
     this.setInputsInline(true);
     this.setNextStatement(true);
     this.setPreviousStatement(true);
@@ -279,7 +279,7 @@ Blockly.Blocks.sound_something_second_with_block = {
         .setCheck(["String", "Number"]);
     this.appendDummyInput()
         .appendField(Lang.Blocks.SOUND_sound_something_second_3)
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/entry_icon_sound.png', '*'));
+        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/sound_03.png', '*'));
     this.setInputsInline(true);
     this.setNextStatement(true);
     this.setPreviousStatement(true);
@@ -312,7 +312,7 @@ Blockly.Blocks.sound_something_wait_with_block = {
         .setCheck(["String", "Number"]);
     this.appendDummyInput()
         .appendField(Lang.Blocks.SOUND_sound_something_wait_2)
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/entry_icon_sound.png', '*'));
+        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/sound_03.png', '*'));
     this.setInputsInline(true);
     this.setNextStatement(true);
     this.setPreviousStatement(true);
@@ -355,7 +355,7 @@ Blockly.Blocks.sound_something_second_wait_with_block = {
         .setCheck(["String", "Number"]);
     this.appendDummyInput()
         .appendField(Lang.Blocks.SOUND_sound_something_second_wait_3)
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/entry_icon_sound.png', '*'));
+        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/sound_03.png', '*'));
     this.setInputsInline(true);
     this.setNextStatement(true);
     this.setPreviousStatement(true);

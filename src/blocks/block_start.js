@@ -39,7 +39,7 @@ Blockly.Blocks.press_some_key = {
             [Lang.Blocks.START_press_some_key_space, "32"]
             ]), "VALUE")
         .appendField(Lang.Blocks.START_press_some_key_2)
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/entry_icon_start.png', '*'));
+        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/start_03.png', '*'));
         this.setInputsInline(true);
         this.setNextStatement(true);
     }
@@ -189,7 +189,7 @@ Blockly.Blocks.message_cast = {
         .appendField(Lang.Blocks.START_message_cast_1)
         .appendField(new Blockly.FieldDropdownDynamic("messages"), "VALUE")
         .appendField(Lang.Blocks.START_message_cast_2)
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/entry_icon_start.png', '*'));
+        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/start_03.png', '*'));
     this.setInputsInline(true);
     this.setInputsInline(true);
     this.setNextStatement(true);
@@ -217,7 +217,7 @@ Blockly.Blocks.add_message = {
     this.setColour("#3BBD70");
     this.appendDummyInput()
         .appendField(Lang.Blocks.START_add_message)
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/entry_icon_start.png', '*'));
+        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/start_03.png', '*'));
     this.setInputsInline(true);
   }
 };
@@ -233,7 +233,7 @@ Blockly.Blocks.message_cast_wait = {
         .appendField(Lang.Blocks.START_message_send_wait_1)
         .appendField(new Blockly.FieldDropdownDynamic("messages"), "VALUE")
         .appendField(Lang.Blocks.START_message_send_wait_2)
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/entry_icon_start.png', '*'));
+        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/start_03.png', '*'));
     this.setInputsInline(true);
     this.setNextStatement(true);
     this.setPreviousStatement(true);
