@@ -191,7 +191,6 @@ Entry.block.ask_and_wait = function (sprite, script) {
         Entry.stage.showInputField();
         inputModel.script = script;
         inputModel.sprite = sprite;
-        inputModel.value = '';
         script.isInit = true;
         return script;
     }
