@@ -85,6 +85,7 @@ Entry.Arduino = {name:"arduino", setZero:function() {
   }
   Entry.hw.update();
 }};
+Entry.SensorBoard = {name:"sensorBoard", setZoro:Entry.Arduino.setZero};
 Blockly.Blocks.arduino_text = {init:function() {
   this.setColour("#00979D");
   this.appendDummyInput().appendField(new Blockly.FieldTextInput("Arduino"), "NAME");
@@ -5095,7 +5096,7 @@ Entry.HW = function() {
   this.settingQueue = {};
   this.hwModule = this.selectedDevice = null;
   Entry.addEventListener("stop", this.setZero);
-  this.hwInfo = {11:Entry.Arduino, 12:Entry.Arduino, 24:Entry.Hamster, 31:Entry.Bitbrick};
+  this.hwInfo = {11:Entry.Arduino, 12:Entry.SensorBoard, 24:Entry.Hamster, 31:Entry.Bitbrick};
 };
 Entry.HW.TRIAL_LIMIT = 1;
 p = Entry.HW.prototype;

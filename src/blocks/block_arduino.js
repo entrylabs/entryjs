@@ -10,6 +10,11 @@ Entry.Arduino = {
     }
 };
 
+Entry.SensorBoard = {
+    name: 'sensorBoard',
+    setZoro: Entry.Arduino.setZero
+};
+
 
 Blockly.Blocks.arduino_text = {
   init: function() {
