@@ -425,24 +425,10 @@ Entry.Engine.computeThread = function(entity, script) {
     Entry.engine.isContinue = true;
     var isSame = false;
     while (script && Entry.engine.isContinue && !isSame) {
-        try {
-            Entry.engine.isContinue = !script.isRepeat;
-            var newScript = script.run()
-            isSame = (newScript && newScript.type == script.type);
-            script = newScript;
-        } catch (exception) {
-            console.log(exception.stack);
-            Entry.engine.toggleStop();
-            Entry.engine.isUpdating = false;
-            if (Entry.type == 'workspace') {
-                Entry.container.selectObject();
-                Entry.container.selectObject(entity.parent.id);
-                Entry.playground.changeViewMode('code');
-                Blockly.mainWorkspace.activatePreviousBlock(script.id);
-            }
-            Entry.toast.alert(Lang.Msgs.runtime_error, Lang.Workspace.check_runtime_error, true);
-            throw exception;
-        }
+        Entry.engine.isContinue = !script.isRepeat;
+        var newScript = script.run()
+        isSame = (newScript && newScript.type == script.type);
+        script = newScript;
     }
     return script;
 };
