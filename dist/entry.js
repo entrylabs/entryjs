@@ -267,22 +267,23 @@ Entry.block.sensorBoard_get_named_sensor_value = function(a, b) {
 };
 Blockly.Blocks.sensorBoard_is_button_pressed = {init:function() {
   this.setColour("#00979D");
-  this.appendDummyInput().appendField("").appendField(new Blockly.FieldDropdown([["\ube68\uac15", "8"], ["\ub178\ub791", "10"], ["\ucd08\ub85d", "9"], ["\ud30c\ub791", "11"]]), "PORT");
+  this.appendDummyInput().appendField("").appendField(new Blockly.FieldDropdown([["\ube68\uac15", "8"], ["\ub178\ub791", "10"], ["\ucd08\ub85d", "11"], ["\ud30c\ub791", "9"]]), "PORT");
   this.appendDummyInput().appendField(" \ubc84\ud2bc\uc774 \ub20c\ub838\ub294\uac00?");
   this.setInputsInline(!0);
   this.setOutput(!0, "Boolean");
 }};
 Entry.block.sensorBoard_is_button_pressed = function(a, b) {
-  return Entry.hw.getDigitalPortValue(b.getField("PORT", b));
+  return Entry.hw.getDigitalPortValue(b.getNumberField("PORT", b));
 };
 Blockly.Blocks.sensorBoard_led = {init:function() {
   this.setColour("#00979D");
-  this.appendDummyInput().appendField("").appendField(new Blockly.FieldDropdown([["\ube68\uac15", "8"], ["\ub178\ub791", "10"], ["\ucd08\ub85d", "9"], ["\ud30c\ub791", "11"]]), "PORT").appendField(" LED").appendField(new Blockly.FieldDropdown([["\ucf1c\uae30", "255"], ["\ub044\uae30", "0"]]), "OPERATOR").appendField(" ");
+  this.appendDummyInput().appendField("").appendField(new Blockly.FieldDropdown([["\ube68\uac15", "2"], ["\ucd08\ub85d", "3"], ["\ud30c\ub791", "4"], ["\ud770\uc0c9", "5"]]), "PORT").appendField(" LED").appendField(new Blockly.FieldDropdown([["\ucf1c\uae30", "255"], ["\ub044\uae30", "0"]]), "OPERATOR").appendField(" ").appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", "*"));
   this.setInputsInline(!0);
-  this.setOutput(!0, "Boolean");
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
 }};
 Entry.block.sensorBoard_led = function(a, b) {
-  Entry.hw.setDigitalPortValue(b.getField("PORT"), Number(b.getField("OPERATOR")));
+  Entry.hw.setDigitalPortValue(b.getField("PORT"), b.getNumberField("OPERATOR"));
   return b.callReturn();
 };
 Entry.Bitbrick = {SENSOR_MAP:{1:"light", 2:"IR", 3:"touch", 4:"potentiometer", 20:"LED", 19:"SERVO", 18:"DC"}, PORT_MAP:{buzzer:2, 5:4, 6:6, 7:8, 8:10, LEDR:12, LEDG:14, LEDB:16}, sensorList:function() {

@@ -364,8 +364,8 @@ Blockly.Blocks.sensorBoard_is_button_pressed = {
         .appendField(new Blockly.FieldDropdown([
           ['빨강',"8"],
           ['노랑',"10"],
-          ['초록',"9"],
-          ['파랑',"11"]
+          ['초록',"11"],
+          ['파랑',"9"]
           ]), "PORT")
     this.appendDummyInput()
         .appendField(' 버튼이 눌렸는가?');
@@ -375,7 +375,7 @@ Blockly.Blocks.sensorBoard_is_button_pressed = {
 };
 
 Entry.block.sensorBoard_is_button_pressed = function (sprite, script) {
-    return Entry.hw.getDigitalPortValue(script.getField("PORT", script));
+    return Entry.hw.getDigitalPortValue(script.getNumberField("PORT", script));
 };
 
 Blockly.Blocks.sensorBoard_led = {
@@ -384,24 +384,26 @@ Blockly.Blocks.sensorBoard_led = {
     this.appendDummyInput()
         .appendField('')
         .appendField(new Blockly.FieldDropdown([
-          ['빨강',"8"],
-          ['노랑',"10"],
-          ['초록',"9"],
-          ['파랑',"11"]
+          ['빨강',"2"],
+          ['초록',"3"],
+          ['파랑',"4"],
+          ['흰색',"5"]
           ]), "PORT")
         .appendField(' LED')
         .appendField(new Blockly.FieldDropdown([
           ['켜기',"255"],
           ['끄기',"0"]
           ]), "OPERATOR")
-        .appendField(' ');
+        .appendField(' ')
+        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/hardware_03.png', '*'));
     this.setInputsInline(true);
-    this.setOutput(true, 'Boolean');
+    this.setPreviousStatement(true);
+    this.setNextStatement(true);
   }
 };
 
 Entry.block.sensorBoard_led = function (sprite, script) {
     Entry.hw.setDigitalPortValue(script.getField("PORT"),
-                                 Number(script.getField("OPERATOR")));
+                                 script.getNumberField("OPERATOR"));
     return script.callReturn();
 };
