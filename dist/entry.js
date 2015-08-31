@@ -6452,6 +6452,7 @@ Entry.Painter.prototype.move_rect = function() {
   event.shiftKey && (b = a);
   this.stroke.fill ? 0 == this.stroke.thickness ? this.brush.graphics.clear().setStrokeStyle(this.stroke.thickness, "round").beginFill(this.stroke.fillColor).drawRect(this.oldPt.x, this.oldPt.y, a, b) : this.brush.graphics.clear().beginStroke(this.stroke.lineColor).setStrokeStyle(this.stroke.thickness, "round").beginFill(this.stroke.fillColor).drawRect(this.oldPt.x, this.oldPt.y, a, b) : 0 == this.stroke.thickness ? this.brush.graphics.clear().setStrokeStyle(this.stroke.thickness, "round").drawRect(this.oldPt.x, 
   this.oldPt.y, a, b) : this.brush.graphics.clear().beginStroke(this.stroke.lineColor).setStrokeStyle(this.stroke.thickness, "round").drawRect(this.oldPt.x, this.oldPt.y, a, b);
+  this.file.modified = !0;
   this.stage.update();
 };
 Entry.Painter.prototype.move_circle = function() {
@@ -6459,6 +6460,7 @@ Entry.Painter.prototype.move_circle = function() {
   event.shiftKey && (b = a);
   this.stroke.fill ? 0 == this.stroke.thickness ? this.brush.graphics.clear().beginStroke(this.stroke.fillColor).setStrokeStyle(this.stroke.thickness, "round").beginFill(this.stroke.fillColor).drawEllipse(this.oldPt.x, this.oldPt.y, a, b) : this.brush.graphics.clear().beginStroke(this.stroke.lineColor).setStrokeStyle(this.stroke.thickness, "round").beginFill(this.stroke.fillColor).drawEllipse(this.oldPt.x, this.oldPt.y, a, b) : this.stroke.fill || (0 == this.stroke.thickness ? this.brush.graphics.clear().drawEllipse(this.oldPt.x, 
   this.oldPt.y, a, b) : this.brush.graphics.clear().beginStroke(this.stroke.lineColor).setStrokeStyle(this.stroke.thickness, "round").drawEllipse(this.oldPt.x, this.oldPt.y, a, b));
+  this.file.modified = !0;
   this.stage.update();
 };
 Entry.Painter.prototype.edit_copy = function() {
@@ -6703,73 +6705,89 @@ Entry.Painter.prototype.generateView = function(a) {
     g.appendChild(e);
     var k = Entry.createElement("li");
     g.appendChild(k);
-    var m = Entry.createElement("a", "entryPainterTopMenuFileNew");
-    m.bindOnClick(function() {
+    g = Entry.createElement("a", "entryPainterTopMenuFileNew");
+    g.bindOnClick(function() {
       b.newPicture();
     });
-    m.addClass("entryPlaygroundPainterTopMenuFileNew");
-    m.innerHTML = Lang.Workspace.new_picture;
-    k.appendChild(m);
-    k = Entry.createElement("li");
-    g.appendChild(k);
-    g = Entry.createElement("a", "entryPainterTopMenuFileSave");
-    g.bindOnClick(function() {
-      b.file_save();
-    });
-    g.addClass("entryPlaygroundPainterTopMenuFileSave");
-    g.innerHTML = Lang.Workspace.file_save;
+    g.addClass("entryPlaygroundPainterTopMenuFileNew");
+    g.innerHTML = Lang.Workspace.new_picture;
     k.appendChild(g);
-    g = Entry.createElement("li", "entryPainterTopMenuEdit");
-    g.addClass("entryPlaygroundPainterTopMenuEdit");
-    g.innerHTML = Lang.Workspace.Painter_edit;
+    g = Entry.createElement("li", "entryPainterTopMenuFile");
+    g.addClass("entryPlaygroundPainterTopMenuFile");
+    g.innerHTML = Lang.Workspace.painter_file;
     e.appendChild(g);
-    e = Entry.createElement("ul");
-    g.appendChild(e);
+    k = Entry.createElement("ul");
+    g.appendChild(k);
     g = Entry.createElement("li");
-    e.appendChild(g);
-    k = Entry.createElement("a", "entryPainterTopMenuEditImportLink");
+    k.appendChild(g);
+    var m = Entry.createElement("a", "entryPainterTopMenuFileSave");
+    m.bindOnClick(function() {
+      b.file_save(!1);
+    });
+    m.addClass("entryPainterTopMenuFileSave");
+    m.innerHTML = Lang.Workspace.painter_file_save;
+    g.appendChild(m);
+    g = Entry.createElement("li");
+    k.appendChild(g);
+    k = Entry.createElement("a", "entryPainterTopMenuFileSaveAs");
     k.bindOnClick(function() {
+      b.file.mode = "new";
+      b.file_save(!1);
+    });
+    k.addClass("entryPlaygroundPainterTopMenuFileSaveAs");
+    k.innerHTML = Lang.Workspace.painter_file_saveas;
+    g.appendChild(k);
+    k = Entry.createElement("li", "entryPainterTopMenuEdit");
+    k.addClass("entryPlaygroundPainterTopMenuEdit");
+    k.innerHTML = Lang.Workspace.painter_edit;
+    e.appendChild(k);
+    e = Entry.createElement("ul");
+    k.appendChild(e);
+    k = Entry.createElement("li");
+    e.appendChild(k);
+    g = Entry.createElement("a", "entryPainterTopMenuEditImportLink");
+    g.bindOnClick(function() {
       Entry.dispatchEvent("openPictureImport");
     });
-    k.addClass("entryPainterTopMenuEditImport");
-    k.innerHTML = Lang.Workspace.get_file;
-    g.appendChild(k);
-    g = Entry.createElement("li");
-    e.appendChild(g);
-    k = Entry.createElement("a", "entryPainterTopMenuEditCopy");
-    k.bindOnClick(function() {
+    g.addClass("entryPainterTopMenuEditImport");
+    g.innerHTML = Lang.Workspace.get_file;
+    k.appendChild(g);
+    k = Entry.createElement("li");
+    e.appendChild(k);
+    g = Entry.createElement("a", "entryPainterTopMenuEditCopy");
+    g.bindOnClick(function() {
       b.edit_copy();
     });
-    k.addClass("entryPlaygroundPainterTopMenuEditCopy");
-    k.innerHTML = Lang.Workspace.copy_file;
-    g.appendChild(k);
-    g = Entry.createElement("li");
-    e.appendChild(g);
-    k = Entry.createElement("a", "entryPainterTopMenuEditCut");
-    k.bindOnClick(function() {
+    g.addClass("entryPlaygroundPainterTopMenuEditCopy");
+    g.innerHTML = Lang.Workspace.copy_file;
+    k.appendChild(g);
+    k = Entry.createElement("li");
+    e.appendChild(k);
+    g = Entry.createElement("a", "entryPainterTopMenuEditCut");
+    g.bindOnClick(function() {
       b.edit_cut();
     });
-    k.addClass("entryPlaygroundPainterTopMenuEditCut");
-    k.innerHTML = Lang.Workspace.cut_picture;
-    g.appendChild(k);
-    g = Entry.createElement("li");
-    e.appendChild(g);
-    k = Entry.createElement("a", "entryPainterTopMenuEditPaste");
-    k.bindOnClick(function() {
+    g.addClass("entryPlaygroundPainterTopMenuEditCut");
+    g.innerHTML = Lang.Workspace.cut_picture;
+    k.appendChild(g);
+    k = Entry.createElement("li");
+    e.appendChild(k);
+    g = Entry.createElement("a", "entryPainterTopMenuEditPaste");
+    g.bindOnClick(function() {
       b.edit_paste();
     });
-    k.addClass("entryPlaygroundPainterTopMenuEditPaste");
-    k.innerHTML = Lang.Workspace.paste_picture;
-    g.appendChild(k);
-    g = Entry.createElement("li");
-    e.appendChild(g);
+    g.addClass("entryPlaygroundPainterTopMenuEditPaste");
+    g.innerHTML = Lang.Workspace.paste_picture;
+    k.appendChild(g);
+    k = Entry.createElement("li");
+    e.appendChild(k);
     e = Entry.createElement("a", "entryPainterTopMenuEditEraseAll");
     e.addClass("entryPlaygroundPainterTopMenuEditEraseAll");
     e.innerHTML = Lang.Workspace.remove_all;
     e.bindOnClick(function() {
       b.clearCanvas();
     });
-    g.appendChild(e);
+    k.appendChild(e);
     this.painterTopStageXY = e = Entry.createElement("div", "entryPainterTopStageXY");
     e.addClass("entryPlaygroundPainterTopStageXY");
     c.appendChild(e);
@@ -7029,49 +7047,49 @@ Entry.Painter.prototype.generateView = function(a) {
     d = Entry.createElement("legend");
     d.addClass("panterAttrFontTitle");
     d.innerHTML = Lang.Workspace.textStyle;
-    g = Entry.createElement("select", "entryPainterAttrFontName");
-    g.addClass("entryPlaygroundPainterAttrFontName");
-    g.size = "1";
-    g.onchange = function(a) {
+    k = Entry.createElement("select", "entryPainterAttrFontName");
+    k.addClass("entryPlaygroundPainterAttrFontName");
+    k.size = "1";
+    k.onchange = function(a) {
       b.font.name = a.target.value;
     };
     for (d = 0;d < Entry.fonts.length;d++) {
-      k = Entry.fonts[d], c = Entry.createElement("option"), c.value = k.family, c.innerHTML = k.name, g.appendChild(c);
+      g = Entry.fonts[d], c = Entry.createElement("option"), c.value = g.family, c.innerHTML = g.name, k.appendChild(c);
     }
-    e.appendChild(g);
+    e.appendChild(k);
     e = Entry.createElement("div");
     e.addClass("painterAttrFontSizeArea");
     this.attrFontArea.appendChild(e);
     d = Entry.createElement("div");
     d.addClass("painterAttrFontSizeTop");
     e.appendChild(d);
-    g = Entry.createElement("select", "entryPainterAttrFontSize");
-    g.addClass("entryPlaygroundPainterAttrFontSize");
-    g.size = "1";
-    g.onchange = function(a) {
+    k = Entry.createElement("select", "entryPainterAttrFontSize");
+    k.addClass("entryPlaygroundPainterAttrFontSize");
+    k.size = "1";
+    k.onchange = function(a) {
       b.font.size = a.target.value;
     };
     for (d = 20;72 >= d;d++) {
-      c = Entry.createElement("option"), c.value = d, c.innerHTML = d, g.appendChild(c);
+      c = Entry.createElement("option"), c.value = d, c.innerHTML = d, k.appendChild(c);
     }
-    e.appendChild(g);
+    e.appendChild(k);
     e = Entry.createElement("div");
     e.addClass("entryPlaygroundPainterAttrFontStyleArea");
     this.attrFontArea.appendChild(e);
     d = Entry.createElement("div");
     d.addClass("entryPlaygroundPainterAttrFontTop");
     e.appendChild(d);
-    g = Entry.createElement("select", "entryPainterAttrFontStyle");
-    g.addClass("entryPlaygroundPainterAttrFontStyle");
-    g.size = "1";
-    g.onchange = function(a) {
+    k = Entry.createElement("select", "entryPainterAttrFontStyle");
+    k.addClass("entryPlaygroundPainterAttrFontStyle");
+    k.size = "1";
+    k.onchange = function(a) {
       b.font.style = a.target.value;
     };
-    k = [{label:"\ubcf4\ud1b5", value:"normal"}, {label:"\uad75\uac8c", value:"bold"}, {label:"\uae30\uc6b8\uc784", value:"italic"}];
-    for (d = 0;d < k.length;d++) {
-      m = k[d], c = Entry.createElement("option"), c.value = m.value, c.innerHTML = m.label, g.appendChild(c);
+    g = [{label:"\ubcf4\ud1b5", value:"normal"}, {label:"\uad75\uac8c", value:"bold"}, {label:"\uae30\uc6b8\uc784", value:"italic"}];
+    for (d = 0;d < g.length;d++) {
+      m = g[d], c = Entry.createElement("option"), c.value = m.value, c.innerHTML = m.label, k.appendChild(c);
     }
-    e.appendChild(g);
+    e.appendChild(k);
     this.attrLineArea = Entry.createElement("div", "painterAttrLineStyle");
     this.attrLineArea.addClass("entryPlaygroundPainterAttrLineStyle");
     h.appendChild(this.attrLineArea);
