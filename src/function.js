@@ -60,11 +60,12 @@ Entry.Func.createBtn = Entry.nodeListToArray(
     Blockly.Xml.textToDom(Entry.Func.CREATE_BTN).childNodes);
 
 Entry.Func.FIELD_BLOCK =
-    '<xml><block type="function_field_string"><value name="PARAM">' +
+    '<xml><block type="function_field_label"></block>' +
+    '<block type="function_field_string"><value name="PARAM">' +
     '<block type="function_param_string"><mutation hashid="#1"/></block></value></block>' +
     '<block type="function_field_boolean"><value name="PARAM">' +
     '<block type="function_param_boolean"><mutation hashid="#2"/></block></value></block>' +
-    '<block type="function_field_label"></block></xml>';
+    '</xml>';
 
 Entry.Func.fieldBlocks = Entry.nodeListToArray(
     Blockly.Xml.textToDom(Entry.Func.FIELD_BLOCK).childNodes);

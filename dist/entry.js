@@ -9461,7 +9461,7 @@ Entry.Func.prototype.init = function(a) {
 };
 Entry.Func.CREATE_BTN = '<xml><btn text="Lang.Workspace.create_function" onclick="Entry.variableContainer.createFunction()"></btn></xml>';
 Entry.Func.createBtn = Entry.nodeListToArray(Blockly.Xml.textToDom(Entry.Func.CREATE_BTN).childNodes);
-Entry.Func.FIELD_BLOCK = '<xml><block type="function_field_string"><value name="PARAM"><block type="function_param_string"><mutation hashid="#1"/></block></value></block><block type="function_field_boolean"><value name="PARAM"><block type="function_param_boolean"><mutation hashid="#2"/></block></value></block><block type="function_field_label"></block></xml>';
+Entry.Func.FIELD_BLOCK = '<xml><block type="function_field_label"></block><block type="function_field_string"><value name="PARAM"><block type="function_param_string"><mutation hashid="#1"/></block></value></block><block type="function_field_boolean"><value name="PARAM"><block type="function_param_boolean"><mutation hashid="#2"/></block></value></block></xml>';
 Entry.Func.fieldBlocks = Entry.nodeListToArray(Blockly.Xml.textToDom(Entry.Func.FIELD_BLOCK).childNodes);
 Entry.Func.CREATE_BLOCK = '<xml><block type="function_create" deletable="false" x="28" y="28"></block></xml>';
 Entry.Func.edit = function(a) {
