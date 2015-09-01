@@ -2762,9 +2762,10 @@ Entry.block.move_to_angle = function(a, b) {
 };
 Blockly.Blocks.rotate_by_time = {init:function() {
   this.setColour("#A751E3");
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_add_direction_by_angle_time_1);
+  this.appendDummyInput().appendField(Lang.Blocks.MOVING_add_direction_by_angle_time_explain_1);
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
   this.appendDummyInput().appendField(Lang.Blocks.MOVING_add_direction_by_angle_time_2);
+  this.appendDummyInput().appendField(Lang.Blocks.MOVING_add_direction_by_angle_time_1);
   this.appendValueInput("ANGLE").setCheck(["Number", "String"]);
   this.appendDummyInput().appendField(Lang.Blocks.MOVING_add_direction_by_angle_time_3).appendField(new Blockly.FieldIcon("/img/assets/block_icon/moving_03.png", "*"));
   this.setInputsInline(!0);
@@ -3300,6 +3301,7 @@ Entry.block.set_variable = function(a, b) {
 };
 Blockly.Blocks.show_variable = {init:function() {
   this.setColour("#E457DC");
+  this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_variable);
   this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_show_variable_1);
   this.appendDummyInput().appendField(new Blockly.FieldDropdownDynamic("variables"), "VARIABLE").appendField(Lang.Blocks.VARIABLE_show_variable_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/variable_03.png", "*"));
   this.setInputsInline(!0);
@@ -3314,6 +3316,7 @@ Entry.block.show_variable = function(a, b) {
 };
 Blockly.Blocks.hide_variable = {init:function() {
   this.setColour("#E457DC");
+  this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_variable);
   this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_hide_variable_1);
   this.appendDummyInput().appendField(new Blockly.FieldDropdownDynamic("variables"), "VARIABLE").appendField(Lang.Blocks.VARIABLE_hide_variable_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/variable_03.png", "*"));
   this.setInputsInline(!0);
@@ -3492,6 +3495,7 @@ Entry.block.length_of_list = function(a, b) {
 };
 Blockly.Blocks.show_list = {init:function() {
   this.setColour("#E457DC");
+  this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_list);
   this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_show_list_1);
   this.appendDummyInput().appendField(new Blockly.FieldDropdownDynamic("lists"), "LIST").appendField(Lang.Blocks.VARIABLE_show_list_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/variable_03.png", "*"));
   this.setInputsInline(!0);
@@ -3505,6 +3509,7 @@ Entry.block.show_list = function(a, b) {
 };
 Blockly.Blocks.hide_list = {init:function() {
   this.setColour("#E457DC");
+  this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_list);
   this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_hide_list_1);
   this.appendDummyInput().appendField(new Blockly.FieldDropdownDynamic("lists"), "LIST").appendField(Lang.Blocks.VARIABLE_hide_list_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/variable_03.png", "*"));
   this.setInputsInline(!0);

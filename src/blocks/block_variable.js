@@ -70,6 +70,8 @@ Blockly.Blocks.show_variable = {
   init: function() {
     this.setColour("#E457DC");
     this.appendDummyInput()
+        .appendField(Lang.Blocks.VARIABLE_variable);
+    this.appendDummyInput()
         .appendField(Lang.Blocks.VARIABLE_show_variable_1);
     this.appendDummyInput()
         .appendField(new Blockly.FieldDropdownDynamic("variables"), "VARIABLE")
@@ -94,6 +96,8 @@ Entry.block.show_variable = function (sprite, script) {
 Blockly.Blocks.hide_variable = {
   init: function() {
     this.setColour("#E457DC");
+    this.appendDummyInput()
+        .appendField(Lang.Blocks.VARIABLE_variable)
     this.appendDummyInput()
         .appendField(Lang.Blocks.VARIABLE_hide_variable_1);
     this.appendDummyInput()
@@ -411,6 +415,8 @@ Blockly.Blocks.show_list = {
   init: function() {
     this.setColour("#E457DC");
     this.appendDummyInput()
+        .appendField(Lang.Blocks.VARIABLE_list);
+    this.appendDummyInput()
         .appendField(Lang.Blocks.VARIABLE_show_list_1);
     this.appendDummyInput()
         .appendField(new Blockly.FieldDropdownDynamic("lists"), "LIST")
@@ -434,6 +440,8 @@ Entry.block.show_list = function (sprite, script) {
 Blockly.Blocks.hide_list = {
   init: function() {
     this.setColour("#E457DC");
+    this.appendDummyInput()
+        .appendField(Lang.Blocks.VARIABLE_list);
     this.appendDummyInput()
         .appendField(Lang.Blocks.VARIABLE_hide_list_1);
     this.appendDummyInput()
