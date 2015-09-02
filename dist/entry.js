@@ -1066,6 +1066,22 @@ Blockly.Blocks.get_sound_volume = {init:function() {
 Entry.block.get_sound_volume = function(a, b) {
   return 100 * createjs.Sound.getVolume();
 };
+Blockly.Blocks.quotient_and_mod = {init:function() {
+  this.setColour("#FFD974");
+  "ko" == Lang.type ? (this.appendDummyInput().appendField(Lang.Blocks.CALC_quotient_and_mod_1, "#3D3D3D"), this.appendValueInput("LEFTHAND").setCheck(["Number", "String"]), this.appendDummyInput().appendField(Lang.Blocks.CALC_quotient_and_mod_2, "#3D3D3D"), this.appendValueInput("RIGHTHAND").setCheck(["Number", "String"]), this.appendDummyInput().appendField(Lang.Blocks.CALC_quotient_and_mod_3, "#3D3D3D").appendField(new Blockly.FieldDropdown([[Lang.Blocks.CALC_quotient_and_mod_sub_1, "QUOTIENT"], 
+  [Lang.Blocks.CALC_quotient_and_mod_sub_2, "MOD"]]), "OPERATOR")) : "en" == Lang.type && (this.appendDummyInput().appendField(Lang.Blocks.CALC_quotient_and_mod_1, "#3D3D3D").appendField(new Blockly.FieldDropdown([[Lang.Blocks.CALC_quotient_and_mod_sub_1, "QUOTIENT"], [Lang.Blocks.CALC_quotient_and_mod_sub_2, "MOD"]]), "OPERATOR"), this.appendDummyInput().appendField(Lang.Blocks.CALC_quotient_and_mod_2, "#3D3D3D"), this.appendValueInput("LEFTHAND").setCheck(["Number", "String"]), this.appendDummyInput().appendField(Lang.Blocks.CALC_quotient_and_mod_3, 
+  "#3D3D3D"), this.appendValueInput("RIGHTHAND").setCheck(["Number", "String"]));
+  this.appendDummyInput().appendField(Lang.Blocks.CALC_quotient_and_mod_4, "#3D3D3D");
+  this.setOutput(!0, "Number");
+  this.setInputsInline(!0);
+}};
+Entry.block.quotient_and_mod = function(a, b) {
+  var c = b.getNumberValue("LEFTHAND", b), d = b.getNumberValue("RIGHTHAND", b);
+  if (isNaN(c) || isNaN(d)) {
+    throw Error();
+  }
+  return "QUOTIENT" == b.getField("OPERATOR", b) ? Math.floor(c / d) : c % d;
+};
 Blockly.Blocks.wait_second = {init:function() {
   this.setColour("#498deb");
   this.appendDummyInput().appendField(Lang.Blocks.FLOW_wait_second_1);

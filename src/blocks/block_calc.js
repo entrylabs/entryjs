@@ -802,3 +802,56 @@ Blockly.Blocks.get_sound_volume = {
 Entry.block.get_sound_volume = function (sprite, script) {
     return createjs.Sound.getVolume() * 100;
 };
+
+Blockly.Blocks.quotient_and_mod = {
+  init: function() {
+      this.setColour("#FFD974");
+      if (Lang.type == 'ko') {
+        this.appendDummyInput()
+            .appendField(Lang.Blocks.CALC_quotient_and_mod_1, "#3D3D3D");
+        this.appendValueInput("LEFTHAND")
+            .setCheck(["Number", "String"]);
+        this.appendDummyInput()
+            .appendField(Lang.Blocks.CALC_quotient_and_mod_2, "#3D3D3D");
+        this.appendValueInput("RIGHTHAND")
+        .setCheck(["Number", "String"]);
+        this.appendDummyInput()
+            .appendField(Lang.Blocks.CALC_quotient_and_mod_3, "#3D3D3D")
+            .appendField(new Blockly.FieldDropdown([
+              [Lang.Blocks.CALC_quotient_and_mod_sub_1,"QUOTIENT"],
+              [Lang.Blocks.CALC_quotient_and_mod_sub_2,"MOD"]
+              ]), "OPERATOR");
+      } else if (Lang.type == 'en') {
+        this.appendDummyInput()
+            .appendField(Lang.Blocks.CALC_quotient_and_mod_1, "#3D3D3D")
+            .appendField(new Blockly.FieldDropdown([
+              [Lang.Blocks.CALC_quotient_and_mod_sub_1,"QUOTIENT"],
+              [Lang.Blocks.CALC_quotient_and_mod_sub_2,"MOD"]
+              ]), "OPERATOR");
+        this.appendDummyInput()
+            .appendField(Lang.Blocks.CALC_quotient_and_mod_2, "#3D3D3D");
+        this.appendValueInput("LEFTHAND")
+            .setCheck(["Number", "String"]);
+        this.appendDummyInput()
+            .appendField(Lang.Blocks.CALC_quotient_and_mod_3, "#3D3D3D");
+        this.appendValueInput("RIGHTHAND")
+        .setCheck(["Number", "String"]);
+      }
+    this.appendDummyInput()
+        .appendField(Lang.Blocks.CALC_quotient_and_mod_4, "#3D3D3D");
+    this.setOutput(true, 'Number');
+    this.setInputsInline(true);
+  }
+};
+
+Entry.block.quotient_and_mod = function (sprite, script) {
+    var left = script.getNumberValue("LEFTHAND", script);
+    var right = script.getNumberValue("RIGHTHAND", script);
+    if (isNaN(left) || isNaN(right))
+        throw new Error();
+    var operator = script.getField("OPERATOR", script);
+    if (operator == 'QUOTIENT')
+        return Math.floor(left/right);
+    else
+        return left % right;
+};
