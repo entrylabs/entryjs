@@ -627,7 +627,7 @@ Entry.Variable.prototype.takeSnapshot = function() {
  * load snapshot to current variable
  */
 Entry.Variable.prototype.loadSnapshot = function() {
-    if (this.snapshot_)
+    if (this.snapshot_ && !this.isCloud_)
         this.syncModel_(this.snapshot_);
 };
 
@@ -643,6 +643,7 @@ Entry.Variable.prototype.syncModel_ = function(variableModel) {
     this.setVisible(variableModel.visible);
     this.setValue(variableModel.value);
     this.setName(variableModel.name);
+    this.isCloud_ = variableModel.isCloud;
     if (this.type == 'list') {
         this.setWidth(variableModel.width);
         this.setHeight(variableModel.height);
