@@ -899,3 +899,44 @@ Entry.block.rotate_by_time = function (sprite, script) {
         return script.callReturn();
     }
 };
+
+Blockly.Blocks.direction_relative_duration = {
+  init: function() {
+    this.setColour("#A751E3");
+    this.appendDummyInput()
+        .appendField(Lang.Blocks.MOVING_direction_relative_duration_1);
+    this.appendValueInput("DURATION")
+        .setCheck(["Number", "String"]);
+    this.appendDummyInput()
+        .appendField(Lang.Blocks.MOVING_direction_relative_duration_2);
+    this.appendValueInput("AMOUNT")
+        .setCheck(["Number", "String"]);
+    this.appendDummyInput()
+        .appendField(Lang.Blocks.MOVING_direction_relative_duration_3)
+        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/moving_03.png', '*'));
+    this.setInputsInline(true);
+    this.setPreviousStatement(true);
+    this.setNextStatement(true);
+  }
+};
+
+Entry.block.direction_relative_duration = function (sprite, script) {
+    if (!script.isStart) {
+        var timeValue;
+        timeValue = script.getNumberValue("DURATION", script);
+        var directionValue = script.getNumberValue("AMOUNT", script);
+        script.isStart = true;
+        script.frameCount = Math.floor(timeValue * Entry.FPS)
+        script.dDirection = directionValue/script.frameCount;
+    }
+    if (script.frameCount != 0) {
+        sprite.setDirection(sprite.getDirection() + script.dDirection);
+        script.frameCount--;
+        return script;
+    } else {
+        delete script.isStart;
+        delete script.frameCount;
+        delete script.dDirection;
+        return script.callReturn();
+    }
+};

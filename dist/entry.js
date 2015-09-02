@@ -2786,6 +2786,34 @@ Entry.block.rotate_by_time = function(a, b) {
   delete b.frameCount;
   return b.callReturn();
 };
+Blockly.Blocks.direction_relative_duration = {init:function() {
+  this.setColour("#A751E3");
+  this.appendDummyInput().appendField(Lang.Blocks.MOVING_direction_relative_duration_1);
+  this.appendValueInput("DURATION").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField(Lang.Blocks.MOVING_direction_relative_duration_2);
+  this.appendValueInput("AMOUNT").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField(Lang.Blocks.MOVING_direction_relative_duration_3).appendField(new Blockly.FieldIcon("/img/assets/block_icon/moving_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.direction_relative_duration = function(a, b) {
+  if (!b.isStart) {
+    var c;
+    c = b.getNumberValue("DURATION", b);
+    var d = b.getNumberValue("AMOUNT", b);
+    b.isStart = !0;
+    b.frameCount = Math.floor(c * Entry.FPS);
+    b.dDirection = d / b.frameCount;
+  }
+  if (0 != b.frameCount) {
+    return a.setDirection(a.getDirection() + b.dDirection), b.frameCount--, b;
+  }
+  delete b.isStart;
+  delete b.frameCount;
+  delete b.dDirection;
+  return b.callReturn();
+};
 Blockly.Blocks.when_scene_start = {init:function() {
   this.setColour("#189FC1");
   this.appendDummyInput().appendField(new Blockly.FieldIcon("/img/assets/block_icon/start_icon_scene.png", "*", "start")).appendField(Lang.Blocks.SCENE_when_scene_start);
