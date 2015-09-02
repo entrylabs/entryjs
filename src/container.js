@@ -604,6 +604,14 @@ Entry.Container.prototype.getDropdownList = function(menuName) {
             var object = objs[i];
             result.push([object.name, object.id]);
         }
+    } else if (menuName == 'spritesWithSelf') {
+        var objs = this.getCurrentObjects();
+        var length = objs.length;
+        for (var i = 0; i<length; i++) {
+            var object = objs[i];
+            result.push([object.name, object.id]);
+        }
+        result.push([Lang.Blocks.self, 'self']);
     } else if (menuName == 'collision') {
         result.push([Lang.Blocks.mouse_pointer, 'mouse']);
         var objs = this.getCurrentObjects();

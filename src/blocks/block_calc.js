@@ -156,13 +156,14 @@ Blockly.Blocks.coordinate_object = {
     this.setColour("#FFD974");
     this.appendDummyInput()
         .appendField(Lang.Blocks.CALC_coordinate_object_1, "#3D3D3D")
-        .appendField(new Blockly.FieldDropdownDynamic("sprites"), "VALUE")
+        .appendField(new Blockly.FieldDropdownDynamic("spritesWithSelf"), "VALUE")
         .appendField(Lang.Blocks.CALC_coordinate_object_2, "#3D3D3D")
         .appendField(new Blockly.FieldDropdown([
             [Lang.Blocks.CALC_coordinate_x_value,"x"],
             [Lang.Blocks.CALC_coordinate_y_value, "y"],
             [Lang.Blocks.CALC_coordinate_rotation_value, "rotation"],
             [Lang.Blocks.CALC_coordinate_direction_value, "direction"],
+            [Lang.Blocks.CALC_coordinate_size_value, "size"],
             [Lang.Blocks.CALC_picture_index, "picture_index"],
             [Lang.Blocks.CALC_picture_name, "picture_name"]
             ]), "COORDINATE")
@@ -174,8 +175,13 @@ Blockly.Blocks.coordinate_object = {
 
 Entry.block.coordinate_object = function (sprite, script) {
     var targetId = script.getField("VALUE", script);
+    var targetEntity;
+    if (targetId == 'self')
+        targetEntity = sprite;
+    else
+        targetEntity = Entry.container.getEntity(targetId);
+
     var targetCoordinate = script.getField("COORDINATE", script);
-    var targetEntity = Entry.container.getEntity(targetId);
     switch(targetCoordinate) {
         case 'x':
             return targetEntity.getX();
@@ -189,6 +195,8 @@ Entry.block.coordinate_object = function (sprite, script) {
             var object = targetEntity.parent;
             var pictures = object.pictures;
             return pictures.indexOf(targetEntity.picture) + 1;
+        case 'size':
+            return Number(targetEntity.getSize().toFixed(1));
         case 'picture_name':
             var object = targetEntity.parent;
             var pictures = object.pictures;

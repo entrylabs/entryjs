@@ -721,14 +721,14 @@ Entry.block.coordinate_mouse = function(a, b) {
 };
 Blockly.Blocks.coordinate_object = {init:function() {
   this.setColour("#FFD974");
-  this.appendDummyInput().appendField(Lang.Blocks.CALC_coordinate_object_1, "#3D3D3D").appendField(new Blockly.FieldDropdownDynamic("sprites"), "VALUE").appendField(Lang.Blocks.CALC_coordinate_object_2, "#3D3D3D").appendField(new Blockly.FieldDropdown([[Lang.Blocks.CALC_coordinate_x_value, "x"], [Lang.Blocks.CALC_coordinate_y_value, "y"], [Lang.Blocks.CALC_coordinate_rotation_value, "rotation"], [Lang.Blocks.CALC_coordinate_direction_value, "direction"], [Lang.Blocks.CALC_picture_index, "picture_index"], 
-  [Lang.Blocks.CALC_picture_name, "picture_name"]]), "COORDINATE").appendField(Lang.Blocks.CALC_coordinate_object_3, "#3D3D3D");
+  this.appendDummyInput().appendField(Lang.Blocks.CALC_coordinate_object_1, "#3D3D3D").appendField(new Blockly.FieldDropdownDynamic("spritesWithSelf"), "VALUE").appendField(Lang.Blocks.CALC_coordinate_object_2, "#3D3D3D").appendField(new Blockly.FieldDropdown([[Lang.Blocks.CALC_coordinate_x_value, "x"], [Lang.Blocks.CALC_coordinate_y_value, "y"], [Lang.Blocks.CALC_coordinate_rotation_value, "rotation"], [Lang.Blocks.CALC_coordinate_direction_value, "direction"], [Lang.Blocks.CALC_coordinate_size_value, 
+  "size"], [Lang.Blocks.CALC_picture_index, "picture_index"], [Lang.Blocks.CALC_picture_name, "picture_name"]]), "COORDINATE").appendField(Lang.Blocks.CALC_coordinate_object_3, "#3D3D3D");
   this.setOutput(!0, "Number");
   this.setInputsInline(!0);
 }};
 Entry.block.coordinate_object = function(a, b) {
-  var c = b.getField("VALUE", b), d = b.getField("COORDINATE", b), c = Entry.container.getEntity(c);
-  switch(d) {
+  var c = b.getField("VALUE", b), c = "self" == c ? a : Entry.container.getEntity(c);
+  switch(b.getField("COORDINATE", b)) {
     case "x":
       return c.getX();
     case "y":
@@ -738,7 +738,10 @@ Entry.block.coordinate_object = function(a, b) {
     case "direction":
       return c.getDirection();
     case "picture_index":
-      return d = c.parent, d = d.pictures, d.indexOf(c.picture) + 1;
+      var d = c.parent, d = d.pictures;
+      return d.indexOf(c.picture) + 1;
+    case "size":
+      return Number(c.getSize().toFixed(1));
     case "picture_name":
       return d = c.parent, d = d.pictures, d[d.indexOf(c.picture)].name;
   }
@@ -3959,61 +3962,70 @@ Entry.Container.prototype.getDropdownList = function(a) {
         e = c[a], b.push([e.name, e.id]);
       }
     } else {
-      if ("collision" == a) {
-        b.push([Lang.Blocks.mouse_pointer, "mouse"]);
+      if ("spritesWithSelf" == a) {
         c = this.getCurrentObjects();
         d = c.length;
         for (a = 0;a < d;a++) {
           e = c[a], b.push([e.name, e.id]);
         }
-        b.push([Lang.Blocks.wall, "wall"]);
-        b.push([Lang.Blocks.wall_up, "wall_up"]);
-        b.push([Lang.Blocks.wall_down, "wall_down"]);
-        b.push([Lang.Blocks.wall_right, "wall_right"]);
-        b.push([Lang.Blocks.wall_left, "wall_left"]);
+        b.push([Lang.Blocks.self, "self"]);
       } else {
-        if ("pictures" == a) {
-          for (c = Entry.playground.object.pictures, a = 0;a < c.length;a++) {
-            d = c[a], b.push([d.name, d.id]);
+        if ("collision" == a) {
+          b.push([Lang.Blocks.mouse_pointer, "mouse"]);
+          c = this.getCurrentObjects();
+          d = c.length;
+          for (a = 0;a < d;a++) {
+            e = c[a], b.push([e.name, e.id]);
           }
+          b.push([Lang.Blocks.wall, "wall"]);
+          b.push([Lang.Blocks.wall_up, "wall_up"]);
+          b.push([Lang.Blocks.wall_down, "wall_down"]);
+          b.push([Lang.Blocks.wall_right, "wall_right"]);
+          b.push([Lang.Blocks.wall_left, "wall_left"]);
         } else {
-          if ("messages" == a) {
-            for (c = Entry.variableContainer.messages_, a = 0;a < c.length;a++) {
+          if ("pictures" == a) {
+            for (c = Entry.playground.object.pictures, a = 0;a < c.length;a++) {
               d = c[a], b.push([d.name, d.id]);
             }
           } else {
-            if ("variables" == a) {
-              c = Entry.variableContainer.variables_;
-              for (a = 0;a < c.length;a++) {
-                d = c[a], d.object_ && d.object_ != Entry.playground.object.id || b.push([d.getName(), d.getId()]);
+            if ("messages" == a) {
+              for (c = Entry.variableContainer.messages_, a = 0;a < c.length;a++) {
+                d = c[a], b.push([d.name, d.id]);
               }
-              b && 0 != b.length || b.push([Lang.Blocks.VARIABLE_variable, "null"]);
             } else {
-              if ("lists" == a) {
-                c = Entry.variableContainer.lists_;
+              if ("variables" == a) {
+                c = Entry.variableContainer.variables_;
                 for (a = 0;a < c.length;a++) {
-                  d = c[a], b.push([d.getName(), d.getId()]);
+                  d = c[a], d.object_ && d.object_ != Entry.playground.object.id || b.push([d.getName(), d.getId()]);
                 }
-                b && 0 != b.length || b.push([Lang.Blocks.VARIABLE_list, "null"]);
+                b && 0 != b.length || b.push([Lang.Blocks.VARIABLE_variable, "null"]);
               } else {
-                if ("scenes" == a) {
-                  for (c = Entry.scene.scenes_, a = 0;a < c.length;a++) {
-                    d = c[a], b.push([d.name, d.id]);
+                if ("lists" == a) {
+                  c = Entry.variableContainer.lists_;
+                  for (a = 0;a < c.length;a++) {
+                    d = c[a], b.push([d.getName(), d.getId()]);
                   }
+                  b && 0 != b.length || b.push([Lang.Blocks.VARIABLE_list, "null"]);
                 } else {
-                  if ("sounds" == a) {
-                    for (c = Entry.playground.object.sounds, a = 0;a < c.length;a++) {
+                  if ("scenes" == a) {
+                    for (c = Entry.scene.scenes_, a = 0;a < c.length;a++) {
                       d = c[a], b.push([d.name, d.id]);
                     }
                   } else {
-                    if ("clone" == a) {
-                      for (b.push([Lang.Blocks.oneself, "self"]), d = this.objects_.length, a = 0;a < d;a++) {
-                        e = this.objects_[a], b.push([e.name, e.id]);
+                    if ("sounds" == a) {
+                      for (c = Entry.playground.object.sounds, a = 0;a < c.length;a++) {
+                        d = c[a], b.push([d.name, d.id]);
                       }
                     } else {
-                      if ("objectSequence" == a) {
-                        for (d = this.getCurrentObjects().length, a = 0;a < d;a++) {
-                          b.push([(a + 1).toString(), a.toString()]);
+                      if ("clone" == a) {
+                        for (b.push([Lang.Blocks.oneself, "self"]), d = this.objects_.length, a = 0;a < d;a++) {
+                          e = this.objects_[a], b.push([e.name, e.id]);
+                        }
+                      } else {
+                        if ("objectSequence" == a) {
+                          for (d = this.getCurrentObjects().length, a = 0;a < d;a++) {
+                            b.push([(a + 1).toString(), a.toString()]);
+                          }
                         }
                       }
                     }
