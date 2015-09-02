@@ -19,6 +19,7 @@ var Entry = {events_:{}, block:{}, TEXT_ALIGN_CENTER:0, TEXT_ALIGN_LEFT:1, TEXT_
   Entry.soundQueue.loadFile({id:a.id, src:b, type:createjs.LoadQueue.SOUND});
 }, beforeUnload:function(a) {
   Entry.hw.closeConnection();
+  Entry.variableContainer.updateCloudVariables();
   if ("workspace" == Entry.type && (localStorage && Entry.interfaceState && localStorage.setItem("workspace-interface", JSON.stringify(Entry.interfaceState)), !Entry.stateManager.isSaved())) {
     return "\ud504\ub85c\uc81d\ud2b8\ub97c \uc218\uc815\ud558\uc168\uc2b5\ub2c8\ub2e4.";
   }
@@ -9915,7 +9916,7 @@ Entry.Variable.prototype.takeSnapshot = function() {
   this.snapshot_ = this.toJSON();
 };
 Entry.Variable.prototype.loadSnapshot = function() {
-  this.snapshot_ && this.syncModel_(this.snapshot_);
+  this.snapshot_ && !this.isCloud_ && this.syncModel_(this.snapshot_);
 };
 Entry.Variable.prototype.syncModel_ = function(a) {
   this.setX(a.x);
@@ -9924,6 +9925,7 @@ Entry.Variable.prototype.syncModel_ = function(a) {
   this.setVisible(a.visible);
   this.setValue(a.value);
   this.setName(a.name);
+  this.isCloud_ = a.isCloud;
   "list" == this.type && (this.setWidth(a.width), this.setHeight(a.height), this.array_ = a.array);
 };
 Entry.Variable.prototype.toJSON = function() {
@@ -9997,6 +9999,7 @@ Entry.VariableContainer = function() {
   this.variableAddPanel = {isOpen:!1, info:{object:null, isCloud:!1}};
   this.listAddPanel = {isOpen:!1, info:{object:null, isCloud:!1}};
   null;
+  Entry.addEventListener("stop", this.updateCloudVariables);
 };
 Entry.VariableContainer.prototype.createDom = function(a) {
   var b = this;
@@ -11146,6 +11149,19 @@ Entry.VariableContainer.prototype.removeLocalVariables = function(a) {
   }, a);
   b.map(function(a) {
     c.removeVariable(a);
+  });
+};
+Entry.VariableContainer.prototype.updateCloudVariables = function() {
+  var a = Entry.variableContainer, b = a.variables_.filter(function(a) {
+    return a.isCloud_;
+  }), b = b.map(function(a) {
+    return a.toJSON();
+  }), a = a.lists_.filter(function(a) {
+    return a.isCloud_;
+  }), a = a.map(function(a) {
+    return a.toJSON();
+  });
+  $.ajax({url:"/api/project/variable/" + Entry.projectId, type:"PUT", data:{variables:b, lists:a}}).done(function() {
   });
 };
 Entry.Xml = {};
