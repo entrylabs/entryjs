@@ -698,12 +698,16 @@ Entry.block.get_rotation_direction = function(a, b) {
 };
 Blockly.Blocks.distance_something = {init:function() {
   this.setColour("#FFD974");
-  this.appendDummyInput().appendField(Lang.Blocks.CALC_distance_something_1, "#3D3D3D").appendField(new Blockly.FieldDropdownDynamic("sprites"), "VALUE").appendField(Lang.Blocks.CALC_distance_something_2, "#3D3D3D");
+  this.appendDummyInput().appendField(Lang.Blocks.CALC_distance_something_1, "#3D3D3D").appendField(new Blockly.FieldDropdownDynamic("spritesWithMouse"), "VALUE").appendField(Lang.Blocks.CALC_distance_something_2, "#3D3D3D");
   this.setOutput(!0, "Number");
   this.setInputsInline(!0);
 }};
 Entry.block.distance_something = function(a, b) {
-  var c = b.getField("VALUE", b), c = Entry.container.getEntity(c);
+  var c = b.getField("VALUE", b);
+  if ("mouse" == c) {
+    return c = Entry.stage.mouseCoordinate, Math.sqrt(Math.pow(a.getX() - c.x, 2) + Math.pow(a.getY() - c.y, 2));
+  }
+  c = Entry.container.getEntity(c);
   return Math.sqrt(Math.pow(a.getX() - c.getX(), 2) + Math.pow(a.getY() - c.getY(), 2));
 };
 Blockly.Blocks.coordinate_mouse = {init:function() {

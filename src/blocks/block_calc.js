@@ -104,7 +104,7 @@ Blockly.Blocks.distance_something = {
     this.setColour("#FFD974");
     this.appendDummyInput()
         .appendField(Lang.Blocks.CALC_distance_something_1, "#3D3D3D")
-        .appendField(new Blockly.FieldDropdownDynamic("sprites"), "VALUE")
+        .appendField(new Blockly.FieldDropdownDynamic("spritesWithMouse"), "VALUE")
         .appendField(Lang.Blocks.CALC_distance_something_2, "#3D3D3D");
     this.setOutput(true, 'Number');
     this.setInputsInline(true);
@@ -113,11 +113,19 @@ Blockly.Blocks.distance_something = {
 
 Entry.block.distance_something = function (sprite, script) {
     var targetId = script.getField("VALUE", script);
-    var targetEntity = Entry.container.getEntity(targetId);
-    return Math.sqrt(
-            Math.pow(sprite.getX() - targetEntity.getX(), 2) +
-            Math.pow(sprite.getY() - targetEntity.getY(), 2)
-        );
+    if (targetId == 'mouse') {
+        var mousePos = Entry.stage.mouseCoordinate;
+        return Math.sqrt(
+                Math.pow(sprite.getX() - mousePos.x, 2) +
+                Math.pow(sprite.getY() - mousePos.y, 2)
+            );
+    } else {
+        var targetEntity = Entry.container.getEntity(targetId);
+        return Math.sqrt(
+                Math.pow(sprite.getX() - targetEntity.getX(), 2) +
+                Math.pow(sprite.getY() - targetEntity.getY(), 2)
+            );
+    }
 };
 
 //마우스 (xy▼) 좌표
