@@ -1057,6 +1057,15 @@ Entry.block.combine_something = function(a, b) {
   isNaN(d) || (d = Entry.convertToRoundedDecimals(d, 3));
   return c + d;
 };
+Blockly.Blocks.get_sound_volume = {init:function() {
+  this.setColour("#FFD974");
+  this.appendDummyInput().appendField(Lang.Blocks.CALC_get_sound_volume, "#3D3D3D").appendField(" ", "#3D3D3D");
+  this.setOutput(!0, "Number");
+  this.setInputsInline(!0);
+}};
+Entry.block.get_sound_volume = function(a, b) {
+  return 100 * createjs.Sound.getVolume();
+};
 Blockly.Blocks.wait_second = {init:function() {
   this.setColour("#498deb");
   this.appendDummyInput().appendField(Lang.Blocks.FLOW_wait_second_1);

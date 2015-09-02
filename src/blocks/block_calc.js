@@ -788,3 +788,17 @@ Entry.block.combine_something = function (sprite, script) {
     return leftValue + rightValue;
 }
 
+Blockly.Blocks.get_sound_volume = {
+  init: function() {
+    this.setColour("#FFD974");
+    this.appendDummyInput()
+        .appendField(Lang.Blocks.CALC_get_sound_volume, "#3D3D3D")
+        .appendField(' ', "#3D3D3D");
+    this.setOutput(true, 'Number');
+    this.setInputsInline(true);
+  }
+};
+
+Entry.block.get_sound_volume = function (sprite, script) {
+    return createjs.Sound.getVolume() * 100;
+};
