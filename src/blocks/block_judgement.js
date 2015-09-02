@@ -88,6 +88,10 @@ Entry.block.reach_something = function (sprite, script) {
                 else
                     return false;
         }
+    } else if (targetSpriteId == 'mouse') {
+        var stage = Entry.stage.canvas;
+        var pt = object.globalToLocal(stage.mouseX, stage.mouseY);
+        return object.hitTest(pt.x, pt.y);
     } else {
         var targetSprite = Entry.container.getEntity(targetSpriteId);
         if (targetSprite.type == "textBox" || sprite.type == 'textBox') {

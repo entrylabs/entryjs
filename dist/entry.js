@@ -1848,7 +1848,11 @@ Entry.block.reach_something = function(a, b) {
       ;
     }
   } else {
-    if (c = Entry.container.getEntity(c), "textBox" == c.type || "textBox" == a.type) {
+    if ("mouse" == c) {
+      return f = Entry.stage.canvas, f = d.globalToLocal(f.mouseX, f.mouseY), d.hitTest(f.x, f.y);
+    }
+    c = Entry.container.getEntity(c);
+    if ("textBox" == c.type || "textBox" == a.type) {
       f = c.object.getTransformedBounds();
       d = d.getTransformedBounds();
       if (Entry.checkCollisionRect(d, f)) {
@@ -3953,6 +3957,7 @@ Entry.Container.prototype.getDropdownList = function(a) {
       }
     } else {
       if ("collision" == a) {
+        b.push([Lang.Blocks.mouse_pointer, "mouse"]);
         c = this.getCurrentObjects();
         d = c.length;
         for (a = 0;a < d;a++) {

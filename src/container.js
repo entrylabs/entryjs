@@ -605,6 +605,7 @@ Entry.Container.prototype.getDropdownList = function(menuName) {
             result.push([object.name, object.id]);
         }
     } else if (menuName == 'collision') {
+        result.push([Lang.Blocks.mouse_pointer, 'mouse']);
         var objs = this.getCurrentObjects();
         var length = objs.length;
         for (var i = 0; i<length; i++) {
