@@ -3111,9 +3111,44 @@ Blockly.Blocks.sound_from_to = {init:function() {
   this.setPreviousStatement(!0);
 }};
 Entry.block.sound_from_to = function(a, b) {
-  var c = b.getField("SOUND", b), d = 1E3 * b.getNumberValue("START", b), e = 1E3 * b.getNumberValue("END", b);
-  (c = a.parent.getSound(c)) && createjs.Sound.play(c.id, {startTime:Math.min(d, e), duration:Math.max(d, e) - Math.min(d, e)});
+  var c = b.getField("SOUND", b);
+  if (c = a.parent.getSound(c)) {
+    var d = 1E3 * b.getNumberValue("START", b), e = 1E3 * b.getNumberValue("END", b);
+    createjs.Sound.play(c.id, {startTime:Math.min(d, e), duration:Math.max(d, e) - Math.min(d, e)});
+  }
   return b.callReturn();
+};
+Blockly.Blocks.sound_from_to_and_wait = {init:function() {
+  this.setColour("#A4D01D");
+  this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_from_to_and_wait_1).appendField(new Blockly.FieldDropdownDynamic("sounds"), "SOUND").appendField(Lang.Blocks.SOUND_sound_from_to_and_wait_2);
+  this.appendValueInput("START").setCheck(["String", "Number"]);
+  this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_from_to_and_wait_3);
+  this.appendValueInput("END").setCheck(["String", "Number"]);
+  this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_from_to_and_wait_4).appendField(new Blockly.FieldIcon("/img/assets/block_icon/sound_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setNextStatement(!0);
+  this.setPreviousStatement(!0);
+}};
+Entry.block.sound_from_to_and_wait = function(a, b) {
+  if (b.isPlay) {
+    if (1 == b.playState) {
+      return b;
+    }
+    delete b.isPlay;
+    delete b.playState;
+    return b.callReturn();
+  }
+  b.isPlay = !0;
+  b.playState = 1;
+  var c = a.parent.getSound(b.getField("SOUND", b));
+  if (c) {
+    var d = 1E3 * b.getNumberValue("START", b), e = 1E3 * b.getNumberValue("END", b), f = Math.min(d, e), d = Math.max(d, e) - f;
+    createjs.Sound.play(c.id, {startTime:f, duration:d});
+    setTimeout(function() {
+      b.playState = 0;
+    }, d);
+  }
+  return b;
 };
 Blockly.Blocks.when_run_button_click = {init:function() {
   this.setColour("#3BBD70");
