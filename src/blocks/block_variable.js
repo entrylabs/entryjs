@@ -159,6 +159,12 @@ Blockly.Blocks.ask_and_wait = {
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
+  },
+  whenAdd: function () {
+    Entry.container.showProjectAnswer();
+  },
+  whenRemove: function (removeBlock) {
+    Entry.container.hideProjectAnswer(removeBlock);
   }
 };
 
@@ -179,7 +185,7 @@ Entry.block.ask_and_wait = function (sprite, script) {
             sprite.dialog.remove();
         delete script.isInit;
         return script.callReturn();
-    } else if (inputModel.value && inputModel.sprite == sprite &&
+    } else if (inputModel.getValue() && inputModel.sprite == sprite &&
                inputView._isHidden && script.isInit) {
         if(sprite.dialog)
             sprite.dialog.remove();
@@ -206,6 +212,12 @@ Blockly.Blocks.get_canvas_input_value = {
             .appendField(" ");
         this.setOutput(true, 'Number');
         this.setInputsInline(true);
+    },
+    whenAdd: function () {
+      Entry.container.showProjectAnswer();
+    },
+    whenRemove: function (removeBlock) {
+      Entry.container.hideProjectAnswer(removeBlock);
     }
 };
 
@@ -476,4 +488,36 @@ Entry.block.options_for_list = function (sprite, script) {
     return script.getField("OPERATOR", script);
 };
 
+Blockly.Blocks.set_visible_answer = {
+  init: function() {
+    this.setColour("#E457DC");
+    this.appendDummyInput()
+        .appendField('대답');
+    this.appendDummyInput()
+        .appendField(new Blockly.FieldDropdown([
+          ['보이기',"SHOW"],
+          ['숨기기',"HIDE"]
+          ]), "BOOL");
+    this.appendDummyInput()
+        .appendField('')
+        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/variable_03.png', '*'));
+    this.setInputsInline(true);
+    this.setPreviousStatement(true);
+    this.setNextStatement(true);
+  },
+  whenAdd: function () {
+    Entry.container.showProjectAnswer();
+  },
+  whenRemove: function (removeBlock) {
+    Entry.container.hideProjectAnswer(removeBlock);
+  }
+};
 
+Entry.block.set_visible_answer = function (sprite, script) {
+    var bool = script.getField("BOOL", script);
+    if (bool == 'HIDE')
+        Entry.container.inputValue.setVisible(false);
+    else
+        Entry.container.inputValue.setVisible(true);
+    return script.callReturn();
+};

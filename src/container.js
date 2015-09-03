@@ -884,7 +884,7 @@ Entry.Container.prototype.getVariableJSON = function() {
  * @return {String}
  */
 Entry.Container.prototype.getInputValue = function() {
-    return this.inputValue.value;
+    return this.inputValue.getValue();
 };
 
 /**
@@ -893,9 +893,9 @@ Entry.Container.prototype.getInputValue = function() {
  */
 Entry.Container.prototype.setInputValue = function(inputValue) {
     if (!inputValue)
-        this.inputValue.value = 0;
+        this.inputValue.setValue(0);
     else
-        this.inputValue.value = inputValue;
+        this.inputValue.setValue(inputValue);
 };
 
 Entry.Container.prototype.resetSceneDuringRun = function() {
@@ -1144,10 +1144,11 @@ Entry.Container.prototype.showProjectAnswer = function() {
 
 Entry.Container.prototype.hideProjectAnswer = function(removeBlock) {
     var answer = this.inputValue;
-    if (!answer || !answer.isVisible() || this.isState('run'))
+    if (!answer || !answer.isVisible() || Entry.engine.isState('run'))
         return;
     var objects = Entry.container.getAllObjects();
-    var answerTypes = ['timer_variable'];
+    var answerTypes = ['ask_and_wait', 'get_canvas_input_value',
+    'set_visible_answer'];
 
     for (var i=0, len=objects.length; i<len; i++) {
         var blocks = objects[i].script.getElementsByTagName('block');

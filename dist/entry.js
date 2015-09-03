@@ -1,7 +1,7 @@
 var Entry = {events_:{}, block:{}, TEXT_ALIGN_CENTER:0, TEXT_ALIGN_LEFT:1, TEXT_ALIGN_RIGHT:2, TEXT_ALIGNS:["center", "left", "right"], loadProject:function(a) {
-  a && ("workspace" == this.type && Entry.stateManager.startIgnore(), Entry.projectId = a._id, Entry.variableContainer.setVariables(a.variables), Entry.variableContainer.setMessages(a.messages), Entry.variableContainer.setFunctions(a.functions), Entry.scene.addScenes(a.scenes), Entry.stage.initObjectContainers(), Entry.container.setObjects(a.objects), Entry.FPS = a.speed ? a.speed : 60, createjs.Ticker.setFPS(Entry.FPS), "workspace" == this.type && Entry.stateManager.endIgnore());
+  a && ("workspace" == this.type && Entry.stateManager.startIgnore(), Entry.projectId = a._id, Entry.variableContainer.setVariables(a.variables), Entry.variableContainer.setMessages(a.messages), Entry.variableContainer.setFunctions(a.functions), Entry.variableContainer.generateAnswer(), Entry.scene.addScenes(a.scenes), Entry.stage.initObjectContainers(), Entry.container.setObjects(a.objects), Entry.FPS = a.speed ? a.speed : 60, createjs.Ticker.setFPS(Entry.FPS), "workspace" == this.type && Entry.stateManager.endIgnore());
   Entry.engine.projectTimer || Entry.variableContainer.generateTimer();
-  Entry.variableContainer.generateAnswer();
+  _.isEmpty(Entry.container.inputValue) && Entry.variableContainer.generateAnswer();
   Entry.start();
 }, setBlockByText:function(a, b) {
   for (var c = [], d = jQuery.parseXML(b).getElementsByTagName("category"), e = 0;e < d.length;e++) {
@@ -952,10 +952,6 @@ Blockly.Blocks.timer_variable = {init:function() {
   this.appendDummyInput().appendField(Lang.Blocks.CALC_get_timer_value, "#3D3D3D").appendField(" ", "#3D3D3D");
   this.setOutput(!0, "Number");
   this.setInputsInline(!0);
-}, whenAdd:function() {
-  Entry.container.showProjectAnswer();
-}, whenRemove:function(a) {
-  Entry.container.hideProjectAnswer(a);
 }};
 Entry.block.timer_variable = function(a, b) {
   return Entry.container.inputValue.getValue();
@@ -3480,6 +3476,10 @@ Blockly.Blocks.ask_and_wait = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
+}, whenAdd:function() {
+  Entry.container.showProjectAnswer();
+}, whenRemove:function(a) {
+  Entry.container.hideProjectAnswer(a);
 }};
 Entry.block.ask_and_wait = function(a, b) {
   var c = Entry.container.inputValue, d = Entry.stage.inputField, e = b.getValue("VALUE", b);
@@ -3489,7 +3489,7 @@ Entry.block.ask_and_wait = function(a, b) {
   if (c.sprite == a && d && !d._isHidden) {
     return b;
   }
-  if (c.sprite != a && b.isInit || c.value && c.sprite == a && d._isHidden && b.isInit) {
+  if (c.sprite != a && b.isInit || c.getValue() && c.sprite == a && d._isHidden && b.isInit) {
     return a.dialog && a.dialog.remove(), delete b.isInit, b.callReturn();
   }
   e = Entry.convertToRoundedDecimals(e, 3);
@@ -3506,6 +3506,10 @@ Blockly.Blocks.get_canvas_input_value = {init:function() {
   this.appendDummyInput().appendField(" ");
   this.setOutput(!0, "Number");
   this.setInputsInline(!0);
+}, whenAdd:function() {
+  Entry.container.showProjectAnswer();
+}, whenRemove:function(a) {
+  Entry.container.hideProjectAnswer(a);
 }};
 Entry.block.get_canvas_input_value = function(a, b) {
   return Entry.container.getInputValue();
@@ -3657,6 +3661,23 @@ Blockly.Blocks.options_for_list = {init:function() {
 }};
 Entry.block.options_for_list = function(a, b) {
   return b.getField("OPERATOR", b);
+};
+Blockly.Blocks.set_visible_answer = {init:function() {
+  this.setColour("#E457DC");
+  this.appendDummyInput().appendField("\ub300\ub2f5");
+  this.appendDummyInput().appendField(new Blockly.FieldDropdown([["\ubcf4\uc774\uae30", "SHOW"], ["\uc228\uae30\uae30", "HIDE"]]), "BOOL");
+  this.appendDummyInput().appendField("").appendField(new Blockly.FieldIcon("/img/assets/block_icon/variable_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}, whenAdd:function() {
+  Entry.container.showProjectAnswer();
+}, whenRemove:function(a) {
+  Entry.container.hideProjectAnswer(a);
+}};
+Entry.block.set_visible_answer = function(a, b) {
+  "HIDE" == b.getField("BOOL", b) ? Entry.container.inputValue.setVisible(!1) : Entry.container.inputValue.setVisible(!0);
+  return b.callReturn();
 };
 Entry.Model = function() {
   this.data = this.schema;
@@ -4152,10 +4173,10 @@ Entry.Container.prototype.getVariableJSON = function() {
   return a;
 };
 Entry.Container.prototype.getInputValue = function() {
-  return this.inputValue.value;
+  return this.inputValue.getValue();
 };
 Entry.Container.prototype.setInputValue = function(a) {
-  this.inputValue.value = a ? a : 0;
+  a ? this.inputValue.setValue(a) : this.inputValue.setValue(0);
 };
 Entry.Container.prototype.resetSceneDuringRun = function() {
   this.mapEntityOnScene(function(a) {
@@ -4313,8 +4334,8 @@ Entry.Container.prototype.showProjectAnswer = function() {
 };
 Entry.Container.prototype.hideProjectAnswer = function(a) {
   var b = this.inputValue;
-  if (b && b.isVisible() && !this.isState("run")) {
-    for (var c = Entry.container.getAllObjects(), d = ["timer_variable"], e = 0, f = c.length;e < f;e++) {
+  if (b && b.isVisible() && !Entry.engine.isState("run")) {
+    for (var c = Entry.container.getAllObjects(), d = ["ask_and_wait", "get_canvas_input_value", "set_visible_answer"], e = 0, f = c.length;e < f;e++) {
       for (var h = c[e].script.getElementsByTagName("block"), g = 0, k = h.length;g < k;g++) {
         if (-1 < d.indexOf(h[g].getAttribute("type")) && h[g].getAttribute("id") != a.getAttribute("id")) {
           return;
@@ -4602,7 +4623,7 @@ Entry.Engine.prototype.toggleRun = function() {
     a.takeSnapshot();
   }), Entry.variableContainer.mapList(function(a) {
     a.takeSnapshot();
-  }), Entry.engine.projectTimer.takeSnapshot(), Entry.engine.projectAnswer.takeSnapshot(), Entry.container.takeSequenceSnapshot(), Entry.scene.takeStartSceneSnapshot(), this.state = "run", this.fireEvent("when_run_button_click"));
+  }), Entry.engine.projectTimer.takeSnapshot(), Entry.container.takeSequenceSnapshot(), Entry.scene.takeStartSceneSnapshot(), this.state = "run", this.fireEvent("when_run_button_click"));
   this.state = "run";
   "mobile" == Entry.type && this.view_.addClass("entryEngineBlueWorkspace");
   this.pauseButton.innerHTML = Lang.Workspace.pause;
@@ -4634,7 +4655,6 @@ Entry.Engine.prototype.toggleStop = function() {
     a.updateView();
   });
   Entry.engine.projectTimer.loadSnapshot();
-  Entry.engine.projectAnswer.loadSnapshot();
   a.clearRunningState();
   a.loadSequenceSnapshot();
   a.setInputValue();
@@ -9864,32 +9884,16 @@ Entry.Variable = function(a) {
   a.isClone || (this.visible_ = a.visible || "boolean" == typeof a.visible ? a.visible : !0, this.x_ = a.x ? a.x : null, this.y_ = a.y ? a.y : null, "list" == this.type && (this.width_ = a.width ? a.width : 100, this.height_ = a.height ? a.height : 120, this.array_ = a.array ? a.array : [], this.scrollPosition = 0), this.BORDER = 6, this.FONT = "10pt NanumGothic");
 };
 Entry.Variable.prototype.generateView = function(a) {
-  if ("variable" == this.type || "timer" == this.type) {
-    this.view_ = new createjs.Container;
-    this.rect_ = new createjs.Shape;
-    this.view_.addChild(this.rect_);
-    this.view_.variable = this;
-    this.wrapper_ = new createjs.Shape;
-    this.view_.addChild(this.wrapper_);
-    this.textView_ = new createjs.Text("asdf", this.FONT, "#000000");
-    this.textView_.textBaseline = "alphabetic";
-    this.textView_.x = 4;
-    this.textView_.y = 1;
-    this.view_.addChild(this.textView_);
-    this.valueView_ = new createjs.Text("asdf", "10pt NanumGothic", "#ffffff");
-    this.valueView_.textBaseline = "alphabetic";
-    var b = Entry.variableContainer.variables_.length;
-    this.getX() && this.getY() ? (this.setX(this.getX()), this.setY(this.getY())) : (this.setX(-230 + 80 * Math.floor(b / 11)), this.setY(24 * a + 20 - 135 - 264 * Math.floor(b / 11)));
-    this.view_.visible = this.visible_;
-    this.view_.addChild(this.valueView_);
-    this.view_.on("mousedown", function(a) {
+  var b = this.type;
+  if ("variable" == b || "timer" == b || "answer" == b) {
+    this.view_ = new createjs.Container, this.rect_ = new createjs.Shape, this.view_.addChild(this.rect_), this.view_.variable = this, this.wrapper_ = new createjs.Shape, this.view_.addChild(this.wrapper_), this.textView_ = new createjs.Text("asdf", this.FONT, "#000000"), this.textView_.textBaseline = "alphabetic", this.textView_.x = 4, this.textView_.y = 1, this.view_.addChild(this.textView_), this.valueView_ = new createjs.Text("asdf", "10pt NanumGothic", "#ffffff"), this.valueView_.textBaseline = 
+    "alphabetic", b = Entry.variableContainer.variables_.length, this.getX() && this.getY() ? (this.setX(this.getX()), this.setY(this.getY())) : (this.setX(-230 + 80 * Math.floor(b / 11)), this.setY(24 * a + 20 - 135 - 264 * Math.floor(b / 11))), this.view_.visible = this.visible_, this.view_.addChild(this.valueView_), this.view_.on("mousedown", function(a) {
       "workspace" == Entry.type && (this.offset = {x:this.x - (.75 * a.stageX - 240), y:this.y - (.75 * a.stageY - 135)}, this.cursor = "move");
-    });
-    this.view_.on("pressmove", function(a) {
+    }), this.view_.on("pressmove", function(a) {
       "workspace" == Entry.type && (this.variable.setX(.75 * a.stageX - 240 + this.offset.x), this.variable.setY(.75 * a.stageY - 135 + this.offset.y), this.variable.updateView());
     });
   } else {
-    if ("slide" == this.type) {
+    if ("slide" == b) {
       var c = this;
       this.view_ = new createjs.Container;
       this.rect_ = new createjs.Shape;
@@ -10018,8 +10022,9 @@ Entry.Variable.prototype.updateView = function() {
             this.view_.addChild(c);
           }
         } else {
-          this.view_.x = this.getX(), this.view_.y = this.getY(), this.textView_.text = this.getName(), this.valueView_.x = this.textView_.getMeasuredWidth() + 14, this.valueView_.y = 1, this.isNumber() ? this.valueView_.text = this.getValue().toFixed(1).replace(".00", "") : this.valueView_.text = this.getValue(), this.rect_.graphics.clear().f("#ffffff").ss(1, 2, 0).s("#A0A1A1").rc(0, -14, this.textView_.getMeasuredWidth() + this.valueView_.getMeasuredWidth() + 26, 20, 4, 4, 4, 4), this.wrapper_.graphics.clear().f("#ffbb14").ss(1, 
-          2, 0).s("orange").rc(this.textView_.getMeasuredWidth() + 7, -11, this.valueView_.getMeasuredWidth() + 15, 14, 7, 7, 7, 7);
+          "answer" == this.type ? (this.view_.x = this.getX(), this.view_.y = this.getY(), this.textView_.text = this.getName(), this.valueView_.x = this.textView_.getMeasuredWidth() + 14, this.valueView_.y = 1, this.isNumber() ? this.valueView_.text = this.getValue().toFixed(1).replace(".00", "") : this.valueView_.text = this.getValue(), this.rect_.graphics.clear().f("#ffffff").ss(1, 2, 0).s("#A0A1A1").rc(0, -14, this.textView_.getMeasuredWidth() + this.valueView_.getMeasuredWidth() + 26, 20, 4, 
+          4, 4, 4), this.wrapper_.graphics.clear().f("#E457DC").ss(1, 2, 0).s("#E457DC").rc(this.textView_.getMeasuredWidth() + 7, -11, this.valueView_.getMeasuredWidth() + 15, 14, 7, 7, 7, 7)) : (this.view_.x = this.getX(), this.view_.y = this.getY(), this.textView_.text = this.getName(), this.valueView_.x = this.textView_.getMeasuredWidth() + 14, this.valueView_.y = 1, this.isNumber() ? this.valueView_.text = this.getValue().toFixed(1).replace(".00", "") : this.valueView_.text = this.getValue(), 
+          this.rect_.graphics.clear().f("#ffffff").ss(1, 2, 0).s("#A0A1A1").rc(0, -14, this.textView_.getMeasuredWidth() + this.valueView_.getMeasuredWidth() + 26, 20, 4, 4, 4, 4), this.wrapper_.graphics.clear().f("#ffbb14").ss(1, 2, 0).s("orange").rc(this.textView_.getMeasuredWidth() + 7, -11, this.valueView_.getMeasuredWidth() + 15, 14, 7, 7, 7, 7));
         }
       }
     }
@@ -10426,7 +10431,7 @@ Entry.VariableContainer.prototype.setMessages = function(a) {
 Entry.VariableContainer.prototype.setVariables = function(a) {
   for (var b in a) {
     var c = new Entry.Variable(a[b]), d = c.getType();
-    "variable" == d || "slide" == d ? (c.generateView(this.variables_.length), this.createVariableView(c), this.variables_.push(c)) : "list" == d ? (c.generateView(this.lists_.length), this.createListView(c), this.lists_.push(c)) : "timer" == d ? this.generateTimer(c) : this.generateAnswer(c);
+    "variable" == d || "slide" == d ? (c.generateView(this.variables_.length), this.createVariableView(c), this.variables_.push(c)) : "list" == d ? (c.generateView(this.lists_.length), this.createListView(c), this.lists_.push(c)) : "timer" == d && this.generateTimer(c);
   }
   Entry.playground.reloadPlayground();
   this.updateList();

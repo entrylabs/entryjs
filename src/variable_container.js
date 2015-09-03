@@ -597,8 +597,7 @@ Entry.VariableContainer.prototype.setVariables = function(variables) {
             this.lists_.push(variable);
         } else if (type == 'timer'){
             that.generateTimer(variable);
-        } else 
-            that.generateAnswer(variable);
+        }
     }
     Entry.playground.reloadPlayground();
     this.updateList();
@@ -1715,13 +1714,6 @@ Entry.VariableContainer.prototype.generateAnswer = function () {
 
     answer.generateView();
     Entry.container.inputValue = answer;
-
-    // Entry.addEventListener('run', function () {
-    //     Entry.engine.toggleProjectAnswer();
-    // });
-    // Entry.addEventListener('stop', function () {
-    //     Entry.engine.toggleProjectAnswer();
-    // });
 }
 
 Entry.VariableContainer.prototype.generateVariableSettingView = function () {

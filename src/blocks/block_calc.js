@@ -605,12 +605,6 @@ Blockly.Blocks.timer_variable = {
         .appendField(' ', "#3D3D3D");
     this.setOutput(true, 'Number');
     this.setInputsInline(true);
-  },
-  whenAdd: function () {
-      Entry.container.showProjectAnswer();
-  },
-  whenRemove: function (removeBlock) {
-      Entry.container.hideProjectAnswer(removeBlock);
   }
 };
 

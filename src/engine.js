@@ -470,7 +470,6 @@ Entry.Engine.prototype.toggleRun = function() {
             variable.takeSnapshot();
         });
         Entry.engine.projectTimer.takeSnapshot();
-        Entry.engine.projectAnswer.takeSnapshot();
         Entry.container.takeSequenceSnapshot();
         Entry.scene.takeStartSceneSnapshot();
         this.state = 'run';
@@ -525,7 +524,6 @@ Entry.Engine.prototype.toggleStop = function() {
         variable.updateView();
     });
     Entry.engine.projectTimer.loadSnapshot();
-    Entry.engine.projectAnswer.loadSnapshot();
     container.clearRunningState();
     container.loadSequenceSnapshot();
     container.setInputValue();
