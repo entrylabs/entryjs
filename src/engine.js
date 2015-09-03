@@ -470,6 +470,7 @@ Entry.Engine.prototype.toggleRun = function() {
             variable.takeSnapshot();
         });
         Entry.engine.projectTimer.takeSnapshot();
+        Entry.engine.projectAnswer.takeSnapshot();
         Entry.container.takeSequenceSnapshot();
         Entry.scene.takeStartSceneSnapshot();
         this.state = 'run';
@@ -524,6 +525,7 @@ Entry.Engine.prototype.toggleStop = function() {
         variable.updateView();
     });
     Entry.engine.projectTimer.loadSnapshot();
+    Entry.engine.projectAnswer.loadSnapshot();
     container.clearRunningState();
     container.loadSequenceSnapshot();
     container.setInputValue();
@@ -803,3 +805,35 @@ Entry.Engine.prototype.clearTimer = function() {
     clearInterval(this.ticker);
     clearInterval(this.projectTimer.tick);
 }
+
+
+Entry.Engine.prototype.toggleProjectTimer = function() {
+    var timer = this.projectTimer;
+    if (!timer)
+        return;
+    if (this.isState('run')) {
+        timer.start = (new Date()).getTime();
+        timer.tick = setInterval(function (e) {
+            Entry.engine.updateProjectTimer()
+        }, 1000/60);
+    } else {
+        clearInterval(timer.tick);
+        this.updateProjectTimer(0);
+    }
+}
+
+Entry.Engine.prototype.updateProjectTimer = function(value) {
+    var timer = Entry.engine.projectTimer;
+    if (!timer)
+        return;
+    if (typeof value == 'undefined') {
+        var newTime = ((new Date()).getTime() - timer.start);
+        timer.setValue((newTime/1000));
+    } else {
+        timer.setValue(value);
+        timer.start = (new Date()).getTime();
+    }
+}
+
+
+

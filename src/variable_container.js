@@ -595,8 +595,10 @@ Entry.VariableContainer.prototype.setVariables = function(variables) {
             variable.generateView(this.lists_.length);
             this.createListView(variable);
             this.lists_.push(variable);
-        } else
+        } else if (type == 'timer'){
             that.generateTimer(variable);
+        } else 
+            that.generateAnswer(variable);
     }
     Entry.playground.reloadPlayground();
     this.updateList();
@@ -1276,6 +1278,9 @@ Entry.VariableContainer.prototype.getVariableJSON = function() {
 
     if (Entry.engine.projectTimer)
         json.push(Entry.engine.projectTimer);
+
+    if (Entry.engine.projectAnswer)
+        json.push(Entry.engine.projectAnswer);
     return json;
 };
 
@@ -1694,6 +1699,29 @@ Entry.VariableContainer.prototype.generateTimer = function (timer) {
     Entry.addEventListener('stop', function () {
         Entry.engine.toggleProjectTimer();
     });
+}
+
+//generate Answer
+Entry.VariableContainer.prototype.generateAnswer = function () {
+    answer = {};
+    answer.id = Entry.generateHash();
+    answer.name = '대답';
+    answer.value = 0;
+    answer.variableType = 'answer';
+    answer.visible = false;
+    answer.x = -45;
+    answer.y = 2;
+    answer = new Entry.Variable(answer);
+
+    answer.generateView();
+    Entry.container.inputValue = answer;
+
+    // Entry.addEventListener('run', function () {
+    //     Entry.engine.toggleProjectAnswer();
+    // });
+    // Entry.addEventListener('stop', function () {
+    //     Entry.engine.toggleProjectAnswer();
+    // });
 }
 
 Entry.VariableContainer.prototype.generateVariableSettingView = function () {

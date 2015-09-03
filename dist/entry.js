@@ -1,6 +1,7 @@
 var Entry = {events_:{}, block:{}, TEXT_ALIGN_CENTER:0, TEXT_ALIGN_LEFT:1, TEXT_ALIGN_RIGHT:2, TEXT_ALIGNS:["center", "left", "right"], loadProject:function(a) {
   a && ("workspace" == this.type && Entry.stateManager.startIgnore(), Entry.projectId = a._id, Entry.variableContainer.setVariables(a.variables), Entry.variableContainer.setMessages(a.messages), Entry.variableContainer.setFunctions(a.functions), Entry.scene.addScenes(a.scenes), Entry.stage.initObjectContainers(), Entry.container.setObjects(a.objects), Entry.FPS = a.speed ? a.speed : 60, createjs.Ticker.setFPS(Entry.FPS), "workspace" == this.type && Entry.stateManager.endIgnore());
   Entry.engine.projectTimer || Entry.variableContainer.generateTimer();
+  Entry.variableContainer.generateAnswer();
   Entry.start();
 }, setBlockByText:function(a, b) {
   for (var c = [], d = jQuery.parseXML(b).getElementsByTagName("category"), e = 0;e < d.length;e++) {
@@ -945,6 +946,19 @@ Entry.block.set_visible_project_timer = function(a, b) {
   var c = b.getField("ACTION", b), d = Entry.engine.projectTimer;
   "SHOW" == c ? d.setVisible(!0) : d.setVisible(!1);
   return b.callReturn();
+};
+Blockly.Blocks.timer_variable = {init:function() {
+  this.setColour("#FFD974");
+  this.appendDummyInput().appendField(Lang.Blocks.CALC_get_timer_value, "#3D3D3D").appendField(" ", "#3D3D3D");
+  this.setOutput(!0, "Number");
+  this.setInputsInline(!0);
+}, whenAdd:function() {
+  Entry.container.showProjectAnswer();
+}, whenRemove:function(a) {
+  Entry.container.hideProjectAnswer(a);
+}};
+Entry.block.timer_variable = function(a, b) {
+  return Entry.container.inputValue.getValue();
 };
 Blockly.Blocks.get_project_timer_value = {init:function() {
   this.setColour("#FFD974");
@@ -4141,7 +4155,7 @@ Entry.Container.prototype.getInputValue = function() {
   return this.inputValue.value;
 };
 Entry.Container.prototype.setInputValue = function(a) {
-  this.inputValue.value = a ? a : "";
+  this.inputValue.value = a ? a : 0;
 };
 Entry.Container.prototype.resetSceneDuringRun = function() {
   this.mapEntityOnScene(function(a) {
@@ -4292,6 +4306,23 @@ Entry.Container.prototype.blurAllInputs = function() {
       a[b].blur();
     }
   });
+};
+Entry.Container.prototype.showProjectAnswer = function() {
+  var a = this.inputValue;
+  a && a.setVisible(!0);
+};
+Entry.Container.prototype.hideProjectAnswer = function(a) {
+  var b = this.inputValue;
+  if (b && b.isVisible() && !this.isState("run")) {
+    for (var c = Entry.container.getAllObjects(), d = ["timer_variable"], e = 0, f = c.length;e < f;e++) {
+      for (var h = c[e].script.getElementsByTagName("block"), g = 0, k = h.length;g < k;g++) {
+        if (-1 < d.indexOf(h[g].getAttribute("type")) && h[g].getAttribute("id") != a.getAttribute("id")) {
+          return;
+        }
+      }
+    }
+    b.setVisible(!1);
+  }
 };
 Entry.Dialog = function(a, b, c, d) {
   a.dialog && a.dialog.remove();
@@ -4571,7 +4602,7 @@ Entry.Engine.prototype.toggleRun = function() {
     a.takeSnapshot();
   }), Entry.variableContainer.mapList(function(a) {
     a.takeSnapshot();
-  }), Entry.engine.projectTimer.takeSnapshot(), Entry.container.takeSequenceSnapshot(), Entry.scene.takeStartSceneSnapshot(), this.state = "run", this.fireEvent("when_run_button_click"));
+  }), Entry.engine.projectTimer.takeSnapshot(), Entry.engine.projectAnswer.takeSnapshot(), Entry.container.takeSequenceSnapshot(), Entry.scene.takeStartSceneSnapshot(), this.state = "run", this.fireEvent("when_run_button_click"));
   this.state = "run";
   "mobile" == Entry.type && this.view_.addClass("entryEngineBlueWorkspace");
   this.pauseButton.innerHTML = Lang.Workspace.pause;
@@ -4603,6 +4634,7 @@ Entry.Engine.prototype.toggleStop = function() {
     a.updateView();
   });
   Entry.engine.projectTimer.loadSnapshot();
+  Entry.engine.projectAnswer.loadSnapshot();
   a.clearRunningState();
   a.loadSequenceSnapshot();
   a.setInputValue();
@@ -4722,6 +4754,16 @@ Entry.Engine.prototype.hideProjectTimer = function(a) {
 Entry.Engine.prototype.clearTimer = function() {
   clearInterval(this.ticker);
   clearInterval(this.projectTimer.tick);
+};
+Entry.Engine.prototype.toggleProjectTimer = function() {
+  var a = this.projectTimer;
+  a && (this.isState("run") ? (a.start = (new Date).getTime(), a.tick = setInterval(function(a) {
+    Entry.engine.updateProjectTimer();
+  }, 1E3 / 60)) : (clearInterval(a.tick), this.updateProjectTimer(0)));
+};
+Entry.Engine.prototype.updateProjectTimer = function(a) {
+  var b = Entry.engine.projectTimer;
+  b && ("undefined" == typeof a ? (a = (new Date).getTime() - b.start, b.setValue(a / 1E3)) : (b.setValue(a), b.start = (new Date).getTime()));
 };
 Entry.EntityObject = function(a) {
   this.parent = a;
@@ -10384,7 +10426,7 @@ Entry.VariableContainer.prototype.setMessages = function(a) {
 Entry.VariableContainer.prototype.setVariables = function(a) {
   for (var b in a) {
     var c = new Entry.Variable(a[b]), d = c.getType();
-    "variable" == d || "slide" == d ? (c.generateView(this.variables_.length), this.createVariableView(c), this.variables_.push(c)) : "list" == d ? (c.generateView(this.lists_.length), this.createListView(c), this.lists_.push(c)) : this.generateTimer(c);
+    "variable" == d || "slide" == d ? (c.generateView(this.variables_.length), this.createVariableView(c), this.variables_.push(c)) : "list" == d ? (c.generateView(this.lists_.length), this.createListView(c), this.lists_.push(c)) : "timer" == d ? this.generateTimer(c) : this.generateAnswer(c);
   }
   Entry.playground.reloadPlayground();
   this.updateList();
@@ -10742,6 +10784,7 @@ Entry.VariableContainer.prototype.getVariableJSON = function() {
     a.push(this.lists_[b].toJSON());
   }
   Entry.engine.projectTimer && a.push(Entry.engine.projectTimer);
+  Entry.engine.projectAnswer && a.push(Entry.engine.projectAnswer);
   return a;
 };
 Entry.VariableContainer.prototype.getMessageJSON = function() {
@@ -11011,6 +11054,19 @@ Entry.VariableContainer.prototype.generateTimer = function(a) {
   Entry.addEventListener("stop", function() {
     Entry.engine.toggleProjectTimer();
   });
+};
+Entry.VariableContainer.prototype.generateAnswer = function() {
+  answer = {};
+  answer.id = Entry.generateHash();
+  answer.name = "\ub300\ub2f5";
+  answer.value = 0;
+  answer.variableType = "answer";
+  answer.visible = !1;
+  answer.x = -45;
+  answer.y = 2;
+  answer = new Entry.Variable(answer);
+  answer.generateView();
+  Entry.container.inputValue = answer;
 };
 Entry.VariableContainer.prototype.generateVariableSettingView = function() {
   var a = this, b = Entry.createElement("div");

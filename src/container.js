@@ -893,7 +893,7 @@ Entry.Container.prototype.getInputValue = function() {
  */
 Entry.Container.prototype.setInputValue = function(inputValue) {
     if (!inputValue)
-        this.inputValue.value = '';
+        this.inputValue.value = 0;
     else
         this.inputValue.value = inputValue;
 };
@@ -1133,3 +1133,32 @@ Entry.Container.prototype.blurAllInputs = function() {
             inputs[i].blur();
     });
 }
+
+Entry.Container.prototype.showProjectAnswer = function() {
+    var answer = this.inputValue;
+    if (!answer)
+        return;
+    answer.setVisible(true);
+};
+
+
+Entry.Container.prototype.hideProjectAnswer = function(removeBlock) {
+    var answer = this.inputValue;
+    if (!answer || !answer.isVisible() || this.isState('run'))
+        return;
+    var objects = Entry.container.getAllObjects();
+    var answerTypes = ['timer_variable'];
+
+    for (var i=0, len=objects.length; i<len; i++) {
+        var blocks = objects[i].script.getElementsByTagName('block');
+        for (var j = 0, bLen=blocks.length; j < bLen; j++) {
+            if (answerTypes.indexOf(blocks[j].getAttribute('type')) > -1) {
+                if (blocks[j].getAttribute('id') == removeBlock.getAttribute('id'))
+                    continue;
+                else
+                    return;
+            }
+        }
+    }
+    answer.setVisible(false);
+};

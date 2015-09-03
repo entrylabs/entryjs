@@ -597,6 +597,29 @@ Entry.block.set_visible_project_timer = function (sprite, script) {
     return script.callReturn();
 };
 
+Blockly.Blocks.timer_variable = {
+  init: function() {
+    this.setColour("#FFD974");
+    this.appendDummyInput()
+        .appendField(Lang.Blocks.CALC_get_timer_value, "#3D3D3D")
+        .appendField(' ', "#3D3D3D");
+    this.setOutput(true, 'Number');
+    this.setInputsInline(true);
+  },
+  whenAdd: function () {
+      Entry.container.showProjectAnswer();
+  },
+  whenRemove: function (removeBlock) {
+      Entry.container.hideProjectAnswer(removeBlock);
+  }
+};
+
+Entry.block.timer_variable = function (sprite, script) {
+    return Entry.container.inputValue.getValue();
+};
+
+
+
 Blockly.Blocks.get_project_timer_value = {
   init: function() {
     this.setColour("#FFD974");
