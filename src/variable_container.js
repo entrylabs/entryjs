@@ -1704,7 +1704,7 @@ Entry.VariableContainer.prototype.generateTimer = function (timer) {
 Entry.VariableContainer.prototype.generateAnswer = function () {
     answer = {};
     answer.id = Entry.generateHash();
-    answer.name = '대답';
+    answer.name = Lang.Blocks.VARIABLE_get_canvas_input_value;
     answer.value = 0;
     answer.variableType = 'answer';
     answer.visible = false;
@@ -1741,7 +1741,7 @@ Entry.VariableContainer.prototype.generateVariableSettingView = function () {
     });
     element.appendChild(visibleWrapper);
     var visibleSpan = Entry.createElement('span');
-    visibleSpan.innerHTML = '변수 보이기';
+    visibleSpan.innerHTML = Lang.Workspace.show_variable;
     visibleWrapper.appendChild(visibleSpan);
     var visibleCheck = Entry.createElement('span');
     visibleCheck.addClass('entryVariableSettingCheckWorkspace');
@@ -1752,7 +1752,7 @@ Entry.VariableContainer.prototype.generateVariableSettingView = function () {
     initValueWrapper.addClass('entryVariableSettingInitValueWrapperWorkspace');
     element.appendChild(initValueWrapper);
     var initValueSpan = Entry.createElement('span');
-    initValueSpan.innerHTML = '기본값';
+    initValueSpan.innerHTML = Lang.Workspace.default_value;
     initValueWrapper.appendChild(initValueSpan);
     var initValueInput = Entry.createElement('input');
     initValueInput.addClass('entryVariableSettingInitValueInputWorkspace');
@@ -1779,7 +1779,7 @@ Entry.VariableContainer.prototype.generateVariableSettingView = function () {
     slideWrapper.addClass('entryVariableSettingSlideWrapperWorkspace');
     element.appendChild(slideWrapper);
     var slideSpan = Entry.createElement('span');
-    slideSpan.innerHTML = '슬라이드';
+    slideSpan.innerHTML = Lang.Workspace.slide;
     slideWrapper.appendChild(slideSpan);
     var slideCheck = Entry.createElement('span');
     slideCheck.addClass('entryVariableSettingCheckWorkspace');
@@ -1841,7 +1841,7 @@ Entry.VariableContainer.prototype.generateVariableSettingView = function () {
 
     var maxValueSpan = Entry.createElement('span');
     maxValueSpan.addClass('entryVariableSettingMaxValueSpanWorkspace');
-    maxValueSpan.innerHTML = '최대값';
+    maxValueSpan.innerHTML = Lang.Workspace.max_value;
     minMaxWrapper.appendChild(maxValueSpan);
     var maxValueInput = Entry.createElement('input');
     maxValueInput.addClass('entryVariableSettingMaxValueInputWorkspace');
@@ -1934,7 +1934,7 @@ Entry.VariableContainer.prototype.generateListSettingView = function () {
     lengthWrapper.addClass('entryListSettingLengthWrapperWorkspace');
     var lengthSpan = Entry.createElement('span');
     lengthSpan.addClass('entryListSettingLengthSpanWorkspace');
-    lengthSpan.innerHTML = '리스트 항목 수';
+    lengthSpan.innerHTML = Lang.Workspace.number_of_list;
     lengthWrapper.appendChild(lengthSpan);
     element.appendChild(lengthWrapper);
     var lengthController = Entry.createElement('div');

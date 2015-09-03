@@ -492,11 +492,11 @@ Blockly.Blocks.set_visible_answer = {
   init: function() {
     this.setColour("#E457DC");
     this.appendDummyInput()
-        .appendField('대답');
+        .appendField(Lang.Blocks.VARIABLE_get_canvas_input_value);
     this.appendDummyInput()
         .appendField(new Blockly.FieldDropdown([
-          ['보이기',"SHOW"],
-          ['숨기기',"HIDE"]
+          [Lang.Blocks.CALC_timer_visible_show,"SHOW"],
+          [Lang.Blocks.CALC_timer_visible_hide,"HIDE"]
           ]), "BOOL");
     this.appendDummyInput()
         .appendField('')

@@ -3664,8 +3664,8 @@ Entry.block.options_for_list = function(a, b) {
 };
 Blockly.Blocks.set_visible_answer = {init:function() {
   this.setColour("#E457DC");
-  this.appendDummyInput().appendField("\ub300\ub2f5");
-  this.appendDummyInput().appendField(new Blockly.FieldDropdown([["\ubcf4\uc774\uae30", "SHOW"], ["\uc228\uae30\uae30", "HIDE"]]), "BOOL");
+  this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_get_canvas_input_value);
+  this.appendDummyInput().appendField(new Blockly.FieldDropdown([[Lang.Blocks.CALC_timer_visible_show, "SHOW"], [Lang.Blocks.CALC_timer_visible_hide, "HIDE"]]), "BOOL");
   this.appendDummyInput().appendField("").appendField(new Blockly.FieldIcon("/img/assets/block_icon/variable_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
