@@ -354,39 +354,6 @@ Entry.block.False = function (sprite, script) {
     return false;
 };
 
-Blockly.Blocks.is_included_in_list = {
-    init: function() {
-        this.setColour("#2FC9F0");
-        this.appendDummyInput()
-            .appendField(Lang.Blocks.VARIABLE_is_included_in_list_1, "#3D3D3D");
-        this.appendDummyInput()
-            .appendField(new Blockly.FieldDropdownDynamic("lists"), "LIST");
-        this.appendDummyInput()
-            .appendField(Lang.Blocks.VARIABLE_is_included_in_list_2, "#3D3D3D");
-        this.appendValueInput("DATA")
-            .setCheck(["Number", "String"]);
-        this.appendDummyInput()
-            .appendField(Lang.Blocks.VARIABLE_is_included_in_list_3, "#3D3D3D");
-        this.setOutput(true, 'Boolean');
-        this.setInputsInline(true);
-    }
-};
-
-Entry.block.is_included_in_list = function (sprite, script) {
-    var listId = script.getField("LIST", script);
-    var data = script.getStringValue("DATA", script);
-    var list = Entry.variableContainer.getList(listId);
-    if (!list)
-        return false;
-    var arr = list.array_;
-
-    for (var i=0, len=arr.length; i<len; i++) {
-        if (arr[i].data.toString() == data.toString())
-            return true;
-    }
-    return false;
-};
-
 Blockly.Blocks.boolean_basic_operator = {
   init: function() {
     this.setColour("#2FC9F0");

@@ -521,3 +521,37 @@ Entry.block.set_visible_answer = function (sprite, script) {
         Entry.container.inputValue.setVisible(true);
     return script.callReturn();
 };
+
+Blockly.Blocks.is_included_in_list = {
+    init: function() {
+        this.setColour("#E457DC");
+        this.appendDummyInput()
+            .appendField(Lang.Blocks.VARIABLE_is_included_in_list_1);
+        this.appendDummyInput()
+            .appendField(new Blockly.FieldDropdownDynamic("lists"), "LIST");
+        this.appendDummyInput()
+            .appendField(Lang.Blocks.VARIABLE_is_included_in_list_2);
+        this.appendValueInput("DATA")
+            .setCheck(["Number", "String"]);
+        this.appendDummyInput()
+            .appendField(Lang.Blocks.VARIABLE_is_included_in_list_3);
+        this.setOutput(true, 'Boolean');
+        this.setInputsInline(true);
+    }
+};
+
+Entry.block.is_included_in_list = function (sprite, script) {
+    var listId = script.getField("LIST", script);
+    var data = script.getStringValue("DATA", script);
+    var list = Entry.variableContainer.getList(listId);
+    if (!list)
+        return false;
+    var arr = list.array_;
+
+    for (var i=0, len=arr.length; i<len; i++) {
+        if (arr[i].data.toString() == data.toString())
+            return true;
+    }
+    return false;
+};
+

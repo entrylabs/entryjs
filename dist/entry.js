@@ -2035,28 +2035,6 @@ Blockly.Blocks.False = {init:function() {
 Entry.block.False = function(a, b) {
   return !1;
 };
-Blockly.Blocks.is_included_in_list = {init:function() {
-  this.setColour("#2FC9F0");
-  this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_is_included_in_list_1, "#3D3D3D");
-  this.appendDummyInput().appendField(new Blockly.FieldDropdownDynamic("lists"), "LIST");
-  this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_is_included_in_list_2, "#3D3D3D");
-  this.appendValueInput("DATA").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_is_included_in_list_3, "#3D3D3D");
-  this.setOutput(!0, "Boolean");
-  this.setInputsInline(!0);
-}};
-Entry.block.is_included_in_list = function(a, b) {
-  var c = b.getField("LIST", b), d = b.getStringValue("DATA", b), c = Entry.variableContainer.getList(c);
-  if (!c) {
-    return !1;
-  }
-  for (var c = c.array_, e = 0, f = c.length;e < f;e++) {
-    if (c[e].data.toString() == d.toString()) {
-      return !0;
-    }
-  }
-  return !1;
-};
 Blockly.Blocks.boolean_basic_operator = {init:function() {
   this.setColour("#2FC9F0");
   this.appendValueInput("LEFTHAND").setCheck(["String", "Number"]);
@@ -3695,6 +3673,28 @@ Entry.block.set_visible_answer = function(a, b) {
   "HIDE" == b.getField("BOOL", b) ? Entry.container.inputValue.setVisible(!1) : Entry.container.inputValue.setVisible(!0);
   return b.callReturn();
 };
+Blockly.Blocks.is_included_in_list = {init:function() {
+  this.setColour("#E457DC");
+  this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_is_included_in_list_1);
+  this.appendDummyInput().appendField(new Blockly.FieldDropdownDynamic("lists"), "LIST");
+  this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_is_included_in_list_2);
+  this.appendValueInput("DATA").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_is_included_in_list_3);
+  this.setOutput(!0, "Boolean");
+  this.setInputsInline(!0);
+}};
+Entry.block.is_included_in_list = function(a, b) {
+  var c = b.getField("LIST", b), d = b.getStringValue("DATA", b), c = Entry.variableContainer.getList(c);
+  if (!c) {
+    return !1;
+  }
+  for (var c = c.array_, e = 0, f = c.length;e < f;e++) {
+    if (c[e].data.toString() == d.toString()) {
+      return !0;
+    }
+  }
+  return !1;
+};
 Entry.Model = function() {
   this.data = this.schema;
 };
@@ -4009,9 +4009,12 @@ Entry.Container.prototype.getDropdownList = function(a) {
     }
   } else {
     if ("spritesWithMouse" == a) {
-      for (c = this.getCurrentObjects(), d = c.length, b.push([Lang.Blocks.mouse_pointer, "mouse"]), a = 0;a < d;a++) {
+      c = this.getCurrentObjects();
+      d = c.length;
+      for (a = 0;a < d;a++) {
         e = c[a], b.push([e.name, e.id]);
       }
+      b.push([Lang.Blocks.mouse_pointer, "mouse"]);
     } else {
       if ("spritesWithSelf" == a) {
         c = this.getCurrentObjects();
