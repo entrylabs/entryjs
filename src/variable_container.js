@@ -29,6 +29,8 @@ Entry.VariableContainer = function() {
         }
     };
     selectedVariable: null;
+
+    Entry.addEventListener("stop", this.updateCloudVariables);
 };
 
 Entry.VariableContainer.prototype.createDom = function(view) {
@@ -1422,7 +1424,7 @@ Entry.VariableContainer.prototype.generateVariableAddView = function() {
     variableAddSpace.appendChild(addSpaceCloudWrapper);
     var addSpaceCloudSpan = Entry.createElement('span');
     addSpaceCloudSpan.addClass('entryVariableAddSpaceCloudSpanWorkspace');
-    addSpaceCloudSpan.innerHTML = '클라우드 변수로 사용 <br>(서버에 저장됩니다)';
+    addSpaceCloudSpan.innerHTML = Lang.Workspace.Variable_create_cloud;
     addSpaceCloudWrapper.appendChild(addSpaceCloudSpan);
     var addVariableCloudCheck = Entry.createElement('span');
     this.variableAddPanel.view.cloudCheck = addVariableCloudCheck;
@@ -2101,3 +2103,22 @@ Entry.VariableContainer.prototype.removeLocalVariables = function (objectId) {
         that.removeVariable(variable);
     });
 }
+
+Entry.VariableContainer.prototype.updateCloudVariables = function() {
+    var that = Entry.variableContainer;
+    var cloudVariables = that.variables_.filter(function(v) { return v.isCloud_ });
+    cloudVariables = cloudVariables.map(function(v) {return v.toJSON()});
+
+    var cloudLists = that.lists_.filter(function(v) { return v.isCloud_ });
+    cloudLists = cloudLists.map(function(v) {return v.toJSON()});
+
+    $.ajax({
+        url: "/api/project/variable/" + Entry.projectId,
+        type: "PUT",
+        data: {
+            variables: cloudVariables,
+            lists: cloudLists
+        }
+    }).done(function() {
+    });
+};

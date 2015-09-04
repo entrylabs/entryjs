@@ -20,6 +20,7 @@ var Entry = {events_:{}, block:{}, TEXT_ALIGN_CENTER:0, TEXT_ALIGN_LEFT:1, TEXT_
   Entry.soundQueue.loadFile({id:a.id, src:b, type:createjs.LoadQueue.SOUND});
 }, beforeUnload:function(a) {
   Entry.hw.closeConnection();
+  Entry.variableContainer.updateCloudVariables();
   if ("workspace" == Entry.type && (localStorage && Entry.interfaceState && localStorage.setItem("workspace-interface", JSON.stringify(Entry.interfaceState)), !Entry.stateManager.isSaved())) {
     return "\ud504\ub85c\uc81d\ud2b8\ub97c \uc218\uc815\ud558\uc168\uc2b5\ub2c8\ub2e4.";
   }
@@ -1819,7 +1820,7 @@ Entry.block.hamster_set_tempo_to = function(a, b) {
   return b.callReturn();
 };
 Blockly.Blocks.is_clicked = {init:function() {
-  this.setColour("#2FC9F0");
+  this.setColour("#AEB8FF");
   this.appendDummyInput().appendField(Lang.Blocks.JUDGEMENT_is_clicked, "#3D3D3D");
   this.setOutput(!0, "Boolean");
   this.setInputsInline(!0);
@@ -1828,7 +1829,7 @@ Entry.block.is_clicked = function(a, b) {
   return Entry.stage.isClick;
 };
 Blockly.Blocks.is_press_some_key = {init:function() {
-  this.setColour("#2FC9F0");
+  this.setColour("#AEB8FF");
   this.appendDummyInput().appendField(Lang.Blocks.JUDGEMENT_is_press_some_key_1, "#3D3D3D");
   this.appendDummyInput().appendField(new Blockly.FieldKeydownInput("81"), "VALUE").appendField(Lang.Blocks.JUDGEMENT_is_press_some_key_2, "#3D3D3D");
   this.setOutput(!0, "Boolean");
@@ -1839,7 +1840,7 @@ Entry.block.is_press_some_key = function(a, b) {
   return 0 <= Entry.engine.pressedKeys.indexOf(c);
 };
 Blockly.Blocks.reach_something = {init:function() {
-  this.setColour("#2FC9F0");
+  this.setColour("#AEB8FF");
   this.appendDummyInput().appendField(Lang.Blocks.JUDGEMENT_reach_something_1, "#3D3D3D");
   this.appendDummyInput().appendField(new Blockly.FieldDropdownDynamic("collision"), "VALUE");
   this.appendDummyInput().appendField(Lang.Blocks.JUDGEMENT_reach_something_2, "#3D3D3D");
@@ -1912,7 +1913,7 @@ Entry.block.reach_something = function(a, b) {
   return !1;
 };
 Blockly.Blocks.boolean_comparison = {init:function() {
-  this.setColour("#2FC9F0");
+  this.setColour("#AEB8FF");
   this.appendValueInput("LEFTHAND").setCheck(["String", "Number"]);
   this.appendDummyInput().appendField(new Blockly.FieldDropdown([["=", "EQUAL"], ["<", "SMALLER"], [">", "BIGGER"]]), "OPERATOR");
   this.appendValueInput("RIGHTHAND").setCheck(["String", "Number"]);
@@ -1924,7 +1925,7 @@ Entry.block.boolean_comparison = function(a, b) {
   return "EQUAL" == c ? d == e : "BIGGER" == c ? d > e : d < e;
 };
 Blockly.Blocks.boolean_equal = {init:function() {
-  this.setColour("#2FC9F0");
+  this.setColour("#AEB8FF");
   this.appendValueInput("LEFTHAND").setCheck(["String", "Number"]);
   this.appendDummyInput().appendField("=", "#3D3D3D");
   this.appendValueInput("RIGHTHAND").setCheck(["String", "Number"]);
@@ -1936,7 +1937,7 @@ Entry.block.boolean_equal = function(a, b) {
   return c == d;
 };
 Blockly.Blocks.boolean_bigger = {init:function() {
-  this.setColour("#2FC9F0");
+  this.setColour("#AEB8FF");
   this.appendValueInput("LEFTHAND").setCheck(["Number", "String"]);
   this.appendDummyInput().appendField(">", "#3D3D3D");
   this.appendValueInput("RIGHTHAND").setCheck(["Number", "String"]);
@@ -1948,7 +1949,7 @@ Entry.block.boolean_bigger = function(a, b) {
   return c > d;
 };
 Blockly.Blocks.boolean_smaller = {init:function() {
-  this.setColour("#2FC9F0");
+  this.setColour("#AEB8FF");
   this.appendValueInput("LEFTHAND").setCheck(["Number", "String"]);
   this.appendDummyInput().appendField("<", "#3D3D3D");
   this.appendValueInput("RIGHTHAND").setCheck(["Number", "String"]);
@@ -1960,7 +1961,7 @@ Entry.block.boolean_smaller = function(a, b) {
   return c < d;
 };
 Blockly.Blocks.boolean_and_or = {init:function() {
-  this.setColour("#2FC9F0");
+  this.setColour("#AEB8FF");
   this.appendValueInput("LEFTHAND").setCheck("Boolean");
   this.appendDummyInput().appendField(new Blockly.FieldDropdown([[Lang.Blocks.JUDGEMENT_boolean_and, "AND"], [Lang.Blocks.JUDGEMENT_boolean_or, "OR"]]), "OPERATOR");
   this.appendValueInput("RIGHTHAND").setCheck("Boolean");
@@ -1972,7 +1973,7 @@ Entry.block.boolean_and_or = function(a, b) {
   return "AND" == c ? d && e : d || e;
 };
 Blockly.Blocks.boolean_and = {init:function() {
-  this.setColour("#2FC9F0");
+  this.setColour("#AEB8FF");
   this.appendValueInput("LEFTHAND").setCheck("Boolean");
   this.appendDummyInput().appendField(Lang.Blocks.JUDGEMENT_boolean_and, "#3D3D3D");
   this.appendValueInput("RIGHTHAND").setCheck("Boolean");
@@ -1984,7 +1985,7 @@ Entry.block.boolean_and = function(a, b) {
   return c && d;
 };
 Blockly.Blocks.boolean_or = {init:function() {
-  this.setColour("#2FC9F0");
+  this.setColour("#AEB8FF");
   this.appendValueInput("LEFTHAND").setCheck("Boolean");
   this.appendDummyInput().appendField(Lang.Blocks.JUDGEMENT_boolean_or, "#3D3D3D");
   this.appendValueInput("RIGHTHAND").setCheck("Boolean");
@@ -1996,7 +1997,7 @@ Entry.block.boolean_or = function(a, b) {
   return c || d;
 };
 Blockly.Blocks.boolean_not = {init:function() {
-  this.setColour("#2FC9F0");
+  this.setColour("#AEB8FF");
   this.appendDummyInput().appendField(Lang.Blocks.JUDGEMENT_boolean_not_1, "#3D3D3D");
   this.appendValueInput("VALUE").setCheck("Boolean");
   this.appendDummyInput().appendField(Lang.Blocks.JUDGEMENT_boolean_not_2, "#3D3D3D");
@@ -2008,7 +2009,7 @@ Entry.block.boolean_not = function(a, b) {
   return !b.getBooleanValue("VALUE");
 };
 Blockly.Blocks.true_or_false = {init:function() {
-  this.setColour("#2FC9F0");
+  this.setColour("#AEB8FF");
   this.appendDummyInput().appendField(new Blockly.FieldDropdown([[Lang.Blocks.JUDGEMENT_true, "true"], [Lang.Blocks.JUDGEMENT_false, "false"]]), "VALUE");
   this.appendDummyInput();
   this.setOutput(!0, "Boolean");
@@ -2018,7 +2019,7 @@ Entry.block.true_or_false = function(a, b) {
   return "true" == b.children[0].textContent;
 };
 Blockly.Blocks.True = {init:function() {
-  this.setColour("#2FC9F0");
+  this.setColour("#AEB8FF");
   this.appendDummyInput().appendField(Lang.Blocks.JUDGEMENT_true, "#3D3D3D").appendField(" ");
   this.setOutput(!0, "Boolean");
   this.setInputsInline(!0);
@@ -2027,7 +2028,7 @@ Entry.block.True = function(a, b) {
   return !0;
 };
 Blockly.Blocks.False = {init:function() {
-  this.setColour("#2FC9F0");
+  this.setColour("#AEB8FF");
   this.appendDummyInput().appendField(Lang.Blocks.JUDGEMENT_false, "#3D3D3D").appendField(" ");
   this.setOutput(!0, "Boolean");
   this.setInputsInline(!0);
@@ -2036,7 +2037,7 @@ Entry.block.False = function(a, b) {
   return !1;
 };
 Blockly.Blocks.boolean_basic_operator = {init:function() {
-  this.setColour("#2FC9F0");
+  this.setColour("#AEB8FF");
   this.appendValueInput("LEFTHAND").setCheck(["String", "Number"]);
   this.appendDummyInput("VALUE").appendField(new Blockly.FieldDropdown([["=", "EQUAL"], [">", "GREATER"], ["<", "LESS"], [">=", "GREATER_OR_EQUAL"], ["<=", "LESS_OR_EQUAL"]], null, !1), "OPERATOR");
   this.appendValueInput("RIGHTHAND").setCheck(["Number", "String"]);
@@ -2833,9 +2834,10 @@ Entry.block.move_to_angle = function(a, b) {
 };
 Blockly.Blocks.rotate_by_time = {init:function() {
   this.setColour("#A751E3");
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_add_direction_by_angle_time_1);
+  this.appendDummyInput().appendField(Lang.Blocks.MOVING_add_direction_by_angle_time_explain_1);
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
   this.appendDummyInput().appendField(Lang.Blocks.MOVING_add_direction_by_angle_time_2);
+  this.appendDummyInput().appendField(Lang.Blocks.MOVING_add_direction_by_angle_time_1);
   this.appendValueInput("ANGLE").setCheck(["Number", "String"]);
   this.appendDummyInput().appendField(Lang.Blocks.MOVING_add_direction_by_angle_time_3).appendField(new Blockly.FieldIcon("/img/assets/block_icon/moving_03.png", "*"));
   this.setInputsInline(!0);
@@ -2887,7 +2889,7 @@ Entry.block.direction_relative_duration = function(a, b) {
   return b.callReturn();
 };
 Blockly.Blocks.when_scene_start = {init:function() {
-  this.setColour("#189FC1");
+  this.setColour("#3BBD70");
   this.appendDummyInput().appendField(new Blockly.FieldIcon("/img/assets/block_icon/start_icon_scene.png", "*", "start")).appendField(Lang.Blocks.SCENE_when_scene_start);
   this.setInputsInline(!0);
   this.setNextStatement(!0);
@@ -2896,8 +2898,8 @@ Entry.block.when_scene_start = function(a, b) {
   return b.callReturn();
 };
 Blockly.Blocks.start_scene = {init:function() {
-  this.setColour("#189FC1");
-  this.appendDummyInput().appendField(Lang.Blocks.SCENE_start_scene_1).appendField(new Blockly.FieldDropdownDynamic("scenes"), "VALUE").appendField(Lang.Blocks.SCENE_start_scene_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/scene_03.png", "*"));
+  this.setColour("#3BBD70");
+  this.appendDummyInput().appendField(Lang.Blocks.SCENE_start_scene_1).appendField(new Blockly.FieldDropdownDynamic("scenes"), "VALUE").appendField(Lang.Blocks.SCENE_start_scene_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/start_03.png", "*"));
   this.setInputsInline(!0);
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
@@ -2910,8 +2912,8 @@ Entry.block.start_scene = function(a, b) {
   return null;
 };
 Blockly.Blocks.start_neighbor_scene = {init:function() {
-  this.setColour("#189FC1");
-  this.appendDummyInput().appendField(Lang.Blocks.SCENE_start_neighbor_scene_1).appendField(new Blockly.FieldDropdown([[Lang.Blocks.SCENE_start_scene_pre, "pre"], [Lang.Blocks.SCENE_start_scene_next, "next"]]), "OPERATOR").appendField(Lang.Blocks.SCENE_start_neighbor_scene_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/scene_03.png", "*"));
+  this.setColour("#3BBD70");
+  this.appendDummyInput().appendField(Lang.Blocks.SCENE_start_neighbor_scene_1).appendField(new Blockly.FieldDropdown([[Lang.Blocks.SCENE_start_scene_pre, "pre"], [Lang.Blocks.SCENE_start_scene_next, "next"]]), "OPERATOR").appendField(Lang.Blocks.SCENE_start_neighbor_scene_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/start_03.png", "*"));
   this.setInputsInline(!0);
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
@@ -10132,7 +10134,7 @@ Entry.Variable.prototype.takeSnapshot = function() {
   this.snapshot_ = this.toJSON();
 };
 Entry.Variable.prototype.loadSnapshot = function() {
-  this.snapshot_ && this.syncModel_(this.snapshot_);
+  this.snapshot_ && !this.isCloud_ && this.syncModel_(this.snapshot_);
 };
 Entry.Variable.prototype.syncModel_ = function(a) {
   this.setX(a.x);
@@ -10141,6 +10143,7 @@ Entry.Variable.prototype.syncModel_ = function(a) {
   this.setVisible(a.visible);
   this.setValue(a.value);
   this.setName(a.name);
+  this.isCloud_ = a.isCloud;
   "list" == this.type && (this.setWidth(a.width), this.setHeight(a.height), this.array_ = a.array);
 };
 Entry.Variable.prototype.toJSON = function() {
@@ -10214,6 +10217,7 @@ Entry.VariableContainer = function() {
   this.variableAddPanel = {isOpen:!1, info:{object:null, isCloud:!1}};
   this.listAddPanel = {isOpen:!1, info:{object:null, isCloud:!1}};
   null;
+  Entry.addEventListener("stop", this.updateCloudVariables);
 };
 Entry.VariableContainer.prototype.createDom = function(a) {
   var b = this;
@@ -10914,7 +10918,7 @@ Entry.VariableContainer.prototype.generateVariableAddView = function() {
   b.appendChild(c);
   d = Entry.createElement("span");
   d.addClass("entryVariableAddSpaceCloudSpanWorkspace");
-  d.innerHTML = "\ud074\ub77c\uc6b0\ub4dc \ubcc0\uc218\ub85c \uc0ac\uc6a9 <br>(\uc11c\ubc84\uc5d0 \uc800\uc7a5\ub429\ub2c8\ub2e4)";
+  d.innerHTML = Lang.Workspace.Variable_create_cloud;
   c.appendChild(d);
   d = Entry.createElement("span");
   this.variableAddPanel.view.cloudCheck = d;
@@ -11374,6 +11378,19 @@ Entry.VariableContainer.prototype.removeLocalVariables = function(a) {
   }, a);
   b.map(function(a) {
     c.removeVariable(a);
+  });
+};
+Entry.VariableContainer.prototype.updateCloudVariables = function() {
+  var a = Entry.variableContainer, b = a.variables_.filter(function(a) {
+    return a.isCloud_;
+  }), b = b.map(function(a) {
+    return a.toJSON();
+  }), a = a.lists_.filter(function(a) {
+    return a.isCloud_;
+  }), a = a.map(function(a) {
+    return a.toJSON();
+  });
+  $.ajax({url:"/api/project/variable/" + Entry.projectId, type:"PUT", data:{variables:b, lists:a}}).done(function() {
   });
 };
 Entry.Xml = {};

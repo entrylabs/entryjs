@@ -567,6 +567,7 @@ Entry.block.change_object_index = function(sprite, script) {
             break;
 
     }
+
     Entry.container.moveElementByBlock(currentIndex, targetIndex);
     return script.callReturn();
 };

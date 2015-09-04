@@ -864,11 +864,13 @@ Blockly.Blocks.rotate_by_time = {
   init: function() {
     this.setColour("#A751E3");
     this.appendDummyInput()
-        .appendField(Lang.Blocks.MOVING_add_direction_by_angle_time_1);
+        .appendField(Lang.Blocks.MOVING_add_direction_by_angle_time_explain_1);
     this.appendValueInput("VALUE")
         .setCheck(["Number", "String"]);
     this.appendDummyInput()
         .appendField(Lang.Blocks.MOVING_add_direction_by_angle_time_2);
+    this.appendDummyInput()
+        .appendField(Lang.Blocks.MOVING_add_direction_by_angle_time_1);
     this.appendValueInput("ANGLE")
         .setCheck(["Number", "String"]);
     this.appendDummyInput()
