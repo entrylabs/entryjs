@@ -933,7 +933,7 @@ Blockly.Blocks.set_visible_project_timer = {init:function() {
   this.setColour("#FFD974");
   this.appendDummyInput().appendField(Lang.Blocks.CALC_timer_visible_1, "#3D3D3D");
   this.appendDummyInput().appendField(new Blockly.FieldDropdown([[Lang.Blocks.CALC_timer_visible_show, "SHOW"], [Lang.Blocks.CALC_timer_visible_hide, "HIDE"]]), "ACTION");
-  this.appendDummyInput().appendField(Lang.Blocks.CALC_timer_visible_2, "#3D3D3D");
+  this.appendDummyInput().appendField(Lang.Blocks.CALC_timer_visible_2, "#3D3D3D").appendField(new Blockly.FieldIcon("/img/assets/block_icon/calc_01.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -1101,7 +1101,7 @@ Entry.block.quotient_and_mod = function(a, b) {
 };
 Blockly.Blocks.choose_project_timer_action = {init:function() {
   this.setColour("#FFD974");
-  this.appendDummyInput().appendField(Lang.Blocks.CALC_choose_project_timer_action_1, "#3D3D3D").appendField(new Blockly.FieldDropdown([[Lang.Blocks.CALC_choose_project_timer_action_sub_1, "START"], [Lang.Blocks.CALC_choose_project_timer_action_sub_2, "STOP"], [Lang.Blocks.CALC_choose_project_timer_action_sub_3, "RESET"]]), "ACTION").appendField(Lang.Blocks.CALC_choose_project_timer_action_2, "#3D3D3D");
+  this.appendDummyInput().appendField(Lang.Blocks.CALC_choose_project_timer_action_1, "#3D3D3D").appendField(new Blockly.FieldDropdown([[Lang.Blocks.CALC_choose_project_timer_action_sub_1, "START"], [Lang.Blocks.CALC_choose_project_timer_action_sub_2, "STOP"], [Lang.Blocks.CALC_choose_project_timer_action_sub_3, "RESET"]]), "ACTION").appendField(Lang.Blocks.CALC_choose_project_timer_action_2, "#3D3D3D").appendField(new Blockly.FieldIcon("/img/assets/block_icon/calc_01.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
