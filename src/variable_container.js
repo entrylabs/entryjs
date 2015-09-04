@@ -1692,11 +1692,8 @@ Entry.VariableContainer.prototype.generateTimer = function (timer) {
     timer.tick = null;
     Entry.engine.projectTimer = timer;
 
-    Entry.addEventListener('run', function () {
-        Entry.engine.toggleProjectTimer();
-    });
     Entry.addEventListener('stop', function () {
-        Entry.engine.toggleProjectTimer();
+        Entry.engine.stopProjectTimer();
     });
 }
 

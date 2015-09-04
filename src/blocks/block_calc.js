@@ -888,3 +888,45 @@ Entry.block.quotient_and_mod = function (sprite, script) {
     else
         return left % right;
 };
+
+Blockly.Blocks.choose_project_timer_action = {
+  init: function() {
+    this.setColour("#FFD974");
+    this.appendDummyInput()
+        .appendField(Lang.Blocks.CALC_choose_project_timer_action_1, "#3D3D3D")
+        .appendField(new Blockly.FieldDropdown([
+          [Lang.Blocks.CALC_choose_project_timer_action_sub_1,"START"],
+          [Lang.Blocks.CALC_choose_project_timer_action_sub_2,"STOP"],
+          [Lang.Blocks.CALC_choose_project_timer_action_sub_3,"RESET"]
+          ]), "ACTION")
+        .appendField(Lang.Blocks.CALC_choose_project_timer_action_2, "#3D3D3D");
+    this.setInputsInline(true);
+    this.setPreviousStatement(true);
+    this.setNextStatement(true);
+  },
+  whenAdd: function () {
+      Entry.engine.showProjectTimer();
+  },
+  whenRemove: function (removeBlock) {
+      Entry.engine.hideProjectTimer(removeBlock);
+  }
+};
+
+Entry.block.choose_project_timer_action = function (sprite, script) {
+    var action = script.getField('ACTION');
+    var engine = Entry.engine;
+    var timer = engine.projectTimer;
+
+    if (action == 'START') {
+        timer.isPaused = false;
+        if (!timer.isInit)
+            engine.startProjectTimer();
+        else
+            timer.pausedTime += (new Date()).getTime() - timer.pauseStart;
+    } else if (action == 'STOP' && !timer.isPaused) {
+        timer.isPaused = true;
+        timer.pauseStart = (new Date()).getTime();
+    } else if (action == 'RESET')
+        engine.updateProjectTimer(0);
+    return script.callReturn();
+};

@@ -1099,6 +1099,22 @@ Entry.block.quotient_and_mod = function(a, b) {
   }
   return "QUOTIENT" == b.getField("OPERATOR", b) ? Math.floor(c / d) : c % d;
 };
+Blockly.Blocks.choose_project_timer_action = {init:function() {
+  this.setColour("#FFD974");
+  this.appendDummyInput().appendField(Lang.Blocks.CALC_choose_project_timer_action_1, "#3D3D3D").appendField(new Blockly.FieldDropdown([[Lang.Blocks.CALC_choose_project_timer_action_sub_1, "START"], [Lang.Blocks.CALC_choose_project_timer_action_sub_2, "STOP"], [Lang.Blocks.CALC_choose_project_timer_action_sub_3, "RESET"]]), "ACTION").appendField(Lang.Blocks.CALC_choose_project_timer_action_2, "#3D3D3D");
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}, whenAdd:function() {
+  Entry.engine.showProjectTimer();
+}, whenRemove:function(a) {
+  Entry.engine.hideProjectTimer(a);
+}};
+Entry.block.choose_project_timer_action = function(a, b) {
+  var c = b.getField("ACTION"), d = Entry.engine, e = d.projectTimer;
+  "START" == c ? (e.isPaused = !1, e.isInit ? e.pausedTime += (new Date).getTime() - e.pauseStart : d.startProjectTimer()) : "STOP" != c || e.isPaused ? "RESET" == c && d.updateProjectTimer(0) : (e.isPaused = !0, e.pauseStart = (new Date).getTime());
+  return b.callReturn();
+};
 Blockly.Blocks.wait_second = {init:function() {
   this.setColour("#498deb");
   this.appendDummyInput().appendField(Lang.Blocks.FLOW_wait_second_1);
@@ -4745,12 +4761,6 @@ Entry.Engine.prototype.toggleFullscreen = function() {
 Entry.Engine.prototype.exitFullScreen = function() {
   document.webkitIsFullScreen || document.mozIsFullScreen || document.isFullScreen || (Entry.engine.footerView_.removeClass("entryRemove"), Entry.engine.headerView_.removeClass("entryRemove"));
 };
-Entry.Engine.prototype.toggleProjectTimer = function() {
-  var a = this.projectTimer;
-  a && (this.isState("run") ? (a.start = (new Date).getTime(), a.tick = setInterval(function(a) {
-    Entry.engine.updateProjectTimer();
-  }, 1E3 / 60)) : (clearInterval(a.tick), this.updateProjectTimer(0)));
-};
 Entry.Engine.prototype.updateProjectTimer = function(a) {
   var b = Entry.engine.projectTimer;
   b && ("undefined" == typeof a ? (a = (new Date).getTime() - b.start, b.setValue(a / 1E3)) : (b.setValue(a), b.start = (new Date).getTime()));
@@ -4775,15 +4785,19 @@ Entry.Engine.prototype.clearTimer = function() {
   clearInterval(this.ticker);
   clearInterval(this.projectTimer.tick);
 };
-Entry.Engine.prototype.toggleProjectTimer = function() {
+Entry.Engine.prototype.startProjectTimer = function() {
   var a = this.projectTimer;
-  a && (this.isState("run") ? (a.start = (new Date).getTime(), a.tick = setInterval(function(a) {
+  a && (a.start = (new Date).getTime(), a.isInit = !0, a.pausedTime = 0, a.tick = setInterval(function(a) {
     Entry.engine.updateProjectTimer();
-  }, 1E3 / 60)) : (clearInterval(a.tick), this.updateProjectTimer(0)));
+  }, 1E3 / 60));
+};
+Entry.Engine.prototype.stopProjectTimer = function() {
+  var a = this.projectTimer;
+  a && (this.updateProjectTimer(0), a.isInit = !1, a.pausedTime = 0, this.isPaused = !1, clearInterval(this.projectTimer.tick));
 };
 Entry.Engine.prototype.updateProjectTimer = function(a) {
   var b = Entry.engine.projectTimer;
-  b && ("undefined" == typeof a ? (a = (new Date).getTime() - b.start, b.setValue(a / 1E3)) : (b.setValue(a), b.start = (new Date).getTime()));
+  b && ("undefined" == typeof a ? b.isPaused || (a = (new Date).getTime() - b.start - b.pausedTime, b.setValue(a / 1E3)) : (b.setValue(a), b.pausedTime = 0, b.start = (new Date).getTime()));
 };
 Entry.EntityObject = function(a) {
   this.parent = a;
@@ -11053,11 +11067,8 @@ Entry.VariableContainer.prototype.generateTimer = function(a) {
   a.generateView();
   a.tick = null;
   Entry.engine.projectTimer = a;
-  Entry.addEventListener("run", function() {
-    Entry.engine.toggleProjectTimer();
-  });
   Entry.addEventListener("stop", function() {
-    Entry.engine.toggleProjectTimer();
+    Entry.engine.stopProjectTimer();
   });
 };
 Entry.VariableContainer.prototype.generateAnswer = function() {
