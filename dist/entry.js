@@ -1424,7 +1424,7 @@ Entry.block.function_general = function(a, b) {
   }
   return b;
 };
-Entry.Hamster = {PORT_MAP:{leftWheel:0, rightWheel:0, buzzer:0, outputA:0, outputB:0, leftLed:0, rightLed:0, note:0}, setZero:function() {
+Entry.Hamster = {PORT_MAP:{leftWheel:0, rightWheel:0, buzzer:0, outputA:0, outputB:0, leftLed:0, rightLed:0}, setZero:function() {
   var a = Entry.Hamster.PORT_MAP, b;
   for (b in a) {
     Entry.hw.sendQueue[b] = a[b];
@@ -1757,6 +1757,166 @@ Entry.block.hamster_set_tempo_to = function(a, b) {
   var c = b.getNumberValue("VALUE");
   Entry.Hamster.tempo = c;
   return b.callReturn();
+};
+Blockly.Blocks.hamster_change_both_wheels_by = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("\uc67c\ucabd \ubc14\ud034");
+  this.appendValueInput("LEFT").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField("\uc624\ub978\ucabd \ubc14\ud034");
+  this.appendValueInput("RIGHT").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField("\ub9cc\ud07c \ubc14\uafb8\uae30").appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.hamster_change_both_wheels_by = function(a, b) {
+  var c = Entry.hw.portData, d = c.leftWheel, c = c.rightWheel, d = d + b.getNumberValue("LEFT"), c = c + b.getNumberValue("RIGHT");
+  Entry.hw.sendQueue.leftWheel = d;
+  Entry.hw.sendQueue.rightWheel = c;
+  return b.callReturn();
+};
+Blockly.Blocks.hamster_set_both_wheels_to = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("\uc67c\ucabd \ubc14\ud034");
+  this.appendValueInput("LEFT").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField("\uc624\ub978\ucabd \ubc14\ud034");
+  this.appendValueInput("RIGHT").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField("(\uc73c)\ub85c \ud558\uae30").appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.hamster_set_both_wheels_to = function(a, b) {
+  var c = b.getNumberValue("LEFT"), d = b.getNumberValue("RIGHT");
+  Entry.hw.sendQueue.leftWheel = c;
+  Entry.hw.sendQueue.rightWheel = d;
+  return b.callReturn();
+};
+Blockly.Blocks.hamster_change_wheels_by = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("").appendField(new Blockly.FieldDropdown([["\uc67c\ucabd", "LEFT"], ["\uc624\ub978\ucabd", "RIGHT"], ["\uc591\ucabd", "FRONT"]]), "DIRECTION").appendField("\ubc14\ud034");
+  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField("\ub9cc\ud07c \ubc14\uafb8\uae30").appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.hamster_change_wheels_by = function(a, b) {
+  var c = b.getField("DIRECTION"), d = b.getNumberValue("VALUE"), e = Entry.hw.portData;
+  "LEFT" == c ? Entry.hw.sendQueue.leftWheel = e.leftWheel + d : Entry.hw.sendQueue.rightWheel = e.rightWheel + right;
+  return b.callReturn();
+};
+Blockly.Blocks.hamster_set_wheels_to = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("").appendField(new Blockly.FieldDropdown([["\uc67c\ucabd", "LEFT"], ["\uc624\ub978\ucabd", "RIGHT"], ["\uc591\ucabd", "FRONT"]]), "DIRECTION").appendField("\ubc14\ud034");
+  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField("(\uc73c)\ub85c \ud558\uae30").appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.hamster_set_wheels_to = function(a, b) {
+  var c = b.getField("DIRECTION"), d = b.getNumberValue("VALUE");
+  "LEFT" == c ? Entry.hw.sendQueue.leftWheel = d : Entry.hw.sendQueue.rightWheel = right;
+  return b.callReturn();
+};
+Blockly.Blocks.hamster_stop = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("\uc815\uc9c0\ud558\uae30").appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.hamster_stop = function(a, b) {
+  Entry.hw.sendQueue.leftWheel = 0;
+  Entry.hw.sendQueue.rightWheel = 0;
+  return b.callReturn();
+};
+Blockly.Blocks.hamster_change_buzzer_by = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("\ubc84\uc800 \uc74c\uc744");
+  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField("\ub9cc\ud07c \ubc14\uafb8\uae30").appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.hamster_change_buzzer_by = function(a, b) {
+  Entry.hw.sendQueue.buzzer = Entry.hw.portData.buzzer + b.getNumberValue("VALUE");
+  return b.callReturn();
+};
+Blockly.Blocks.hamster_set_buzzer_to = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("\ubc84\uc800 \uc74c\uc744");
+  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField("(\uc73c)\ub85c \ud558\uae30").appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.hamster_set_buzzer_to = function(a, b) {
+  if (b.isStart) {
+    return delete b.isStart, b.callReturn();
+  }
+  Entry.hw.sendQueue.buzzer = b.getNumberValue("VALUE");
+  b.isStart = !0;
+  return b;
+};
+Blockly.Blocks.hamster_clear_buzzer = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("\ubc84\uc800 \ub044\uae30").appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.hamster_clear_buzzer = function(a, b) {
+  Entry.hw.sendQueue.buzzer = 0;
+  return b.callReturn();
+};
+Blockly.Blocks.hamster_value = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("").appendField(new Blockly.FieldDropdown([["\uc67c\ucabd \uadfc\uc811 \uc13c\uc11c", "leftProximity"], ["\uc624\ub978\ucabd \uadfc\uc811 \uc13c\uc11c", "rightProximity"], ["\uc67c\ucabd \ubc14\ub2e5 \uc13c\uc11c", "leftFloor"], ["\uc624\ub978\ucabd \ubc14\ub2e5 \uc13c\uc11c", "rightFloor"], ["x\ucd95 \uac00\uc18d\ub3c4", "accelerationX"], ["y\ucd95 \uac00\uc18d\ub3c4", "accelerationY"], ["z\ucd95 \uac00\uc18d\ub3c4", "accelerationZ"], ["\ubc1d\uae30", "light"], 
+  ["\uc628\ub3c4", "temperature"], ["\uc2e0\ud638\uc138\uae30", "signalStrength"], ["\uc785\ub825 A", "inputA"], ["\uc785\ub825 B", "inputB"]]), "PORT").appendField(" ");
+  this.setInputsInline(!0);
+  this.setOutput(!0, "Number");
+}};
+Entry.block.hamster_value = function(a, b) {
+  var c = b.getField("PORT");
+  return Entry.hw.portData[c];
+};
+Blockly.Blocks.hamster_set_port_to = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("\ud3ec\ud2b8").appendField(new Blockly.FieldDropdown([["A", "LEFT"], ["B", "RIGHT"], ["A\uc640B", "LEFT"]]), "PORT").appendField("\ub97c").appendField(new Blockly.FieldDropdown([["\uc544\ub0a0\ub85c\uadf8 \uc785\ub825", "LEFT"], ["\ub514\uc9c0\ud138 \uc785\ub825", "RIGHT"], ["\uc11c\ubcf4 \ucd9c\ub825", "LEFT"], ["PWM \ucd9c\ub825", "LEFT"], ["\ub514\uc9c0\ud138 \ucd9c\ub825", "LEFT"]]), "METHOD").appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", 
+  "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.hamster_set_port_to = function(a, b) {
+  b.getField("PORT");
+  b.getField("METHOD");
+};
+Blockly.Blocks.hamster_change_output_by = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("\ucd9c\ub825").appendField(new Blockly.FieldDropdown([["A", "LEFT"], ["B", "RIGHT"], ["A\uc640B", "LEFT"]]), "PORT").appendField("\ub97c");
+  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField("(\uc73c)\ub85c \ud558\uae30").appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.hamster_change_output_by = function(a, b) {
+};
+Blockly.Blocks.hamster_set_output_to = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("\ucd9c\ub825").appendField(new Blockly.FieldDropdown([["A", "LEFT"], ["B", "RIGHT"], ["A\uc640B", "LEFT"]]), "PORT").appendField("\ub97c");
+  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField("\ub9cc\ud07c \ubc14\uafb8\uae30").appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.hamster_set_output_to = function(a, b) {
 };
 Blockly.Blocks.is_clicked = {init:function() {
   this.setColour("#AEB8FF");

@@ -8,8 +8,8 @@ Entry.Hamster = {
         outputA: 0,
         outputB: 0,
         leftLed: 0,
-        rightLed: 0,
-        note: 0
+        rightLed: 0
+        //note: 0
 	},
     setZero: function() {
         var portMap = Entry.Hamster.PORT_MAP;
@@ -550,5 +550,334 @@ Entry.block.hamster_set_tempo_to = function (sprite, script) {
     var tempo = script.getNumberValue('VALUE');
     Entry.Hamster.tempo = tempo;
     return script.callReturn();
+};
+
+Blockly.Blocks.hamster_change_both_wheels_by = {
+  init: function() {
+    this.setColour("#00979D");
+    this.appendDummyInput()
+    .appendField('왼쪽 바퀴');
+    this.appendValueInput("LEFT")
+    .setCheck(["Number", "String"]);
+    this.appendDummyInput()
+    .appendField('오른쪽 바퀴');
+    this.appendValueInput("RIGHT")
+    .setCheck(["Number", "String"]);
+    this.appendDummyInput()
+    .appendField('만큼 바꾸기')
+    .appendField(new Blockly.FieldIcon('/img/assets/block_icon/hardware_03.png', '*'));
+    this.setInputsInline(true);
+    this.setPreviousStatement(true);
+    this.setNextStatement(true);
+  }
+};
+
+Entry.block.hamster_change_both_wheels_by = function (sprite, script) {
+    var portData = Entry.hw.portData;
+    var left = portData.leftWheel;
+    var right = portData.rightWheel;
+
+    left += script.getNumberValue('LEFT');
+    right += script.getNumberValue('RIGHT');
+
+    Entry.hw.sendQueue['leftWheel'] = left;
+    Entry.hw.sendQueue['rightWheel'] = right;
+
+    return script.callReturn();
+};
+
+Blockly.Blocks.hamster_set_both_wheels_to = {
+  init: function() {
+    this.setColour("#00979D");
+    this.appendDummyInput()
+    .appendField('왼쪽 바퀴');
+    this.appendValueInput("LEFT")
+    .setCheck(["Number", "String"]);
+    this.appendDummyInput()
+    .appendField('오른쪽 바퀴');
+    this.appendValueInput("RIGHT")
+    .setCheck(["Number", "String"]);
+    this.appendDummyInput()
+    .appendField('(으)로 하기')
+    .appendField(new Blockly.FieldIcon('/img/assets/block_icon/hardware_03.png', '*'));
+    this.setInputsInline(true);
+    this.setPreviousStatement(true);
+    this.setNextStatement(true);
+  }
+};
+
+Entry.block.hamster_set_both_wheels_to = function (sprite, script) {
+    var left = script.getNumberValue('LEFT');
+    var right = script.getNumberValue('RIGHT');
+
+    Entry.hw.sendQueue['leftWheel'] = left;
+    Entry.hw.sendQueue['rightWheel'] = right;
+
+    return script.callReturn();
+};
+
+Blockly.Blocks.hamster_change_wheels_by = {
+  init: function() {
+    this.setColour("#00979D");
+    this.appendDummyInput()
+    .appendField('')
+    .appendField(new Blockly.FieldDropdown([
+      ['왼쪽',"LEFT"],
+      ['오른쪽',"RIGHT"],
+      ['양쪽',"FRONT"]
+      ]), "DIRECTION")
+    .appendField('바퀴');
+    this.appendValueInput("VALUE")
+    .setCheck(["Number", "String"]);
+    this.appendDummyInput()
+    .appendField('만큼 바꾸기')
+    .appendField(new Blockly.FieldIcon('/img/assets/block_icon/hardware_03.png', '*'));
+    this.setInputsInline(true);
+    this.setPreviousStatement(true);
+    this.setNextStatement(true);
+  }
+};
+
+Entry.block.hamster_change_wheels_by = function (sprite, script) {
+    var direction = script.getField('DIRECTION');
+    var value = script.getNumberValue('VALUE');
+    var portData = Entry.hw.portData;
+
+    if (direction == 'LEFT')
+        Entry.hw.sendQueue['leftWheel'] = portData.leftWheel + value;
+    else
+        Entry.hw.sendQueue['rightWheel'] = portData.rightWheel + right;
+
+    return script.callReturn();
+};
+
+Blockly.Blocks.hamster_set_wheels_to = {
+  init: function() {
+    this.setColour("#00979D");
+    this.appendDummyInput()
+    .appendField('')
+    .appendField(new Blockly.FieldDropdown([
+      ['왼쪽',"LEFT"],
+      ['오른쪽',"RIGHT"],
+      ['양쪽',"FRONT"]
+      ]), "DIRECTION")
+    .appendField('바퀴');
+    this.appendValueInput("VALUE")
+    .setCheck(["Number", "String"]);
+    this.appendDummyInput()
+    .appendField('(으)로 하기')
+    .appendField(new Blockly.FieldIcon('/img/assets/block_icon/hardware_03.png', '*'));
+    this.setInputsInline(true);
+    this.setPreviousStatement(true);
+    this.setNextStatement(true);
+  }
+};
+
+Entry.block.hamster_set_wheels_to = function (sprite, script) {
+    var direction = script.getField('DIRECTION');
+    var value = script.getNumberValue('VALUE');
+
+    if (direction == 'LEFT')
+        Entry.hw.sendQueue['leftWheel'] = value;
+    else
+        Entry.hw.sendQueue['rightWheel'] = right;
+
+    return script.callReturn();
+};
+
+Blockly.Blocks.hamster_stop = {
+  init: function() {
+    this.setColour("#00979D");
+    this.appendDummyInput()
+    .appendField('정지하기')
+    .appendField(new Blockly.FieldIcon('/img/assets/block_icon/hardware_03.png', '*'));
+    this.setInputsInline(true);
+    this.setPreviousStatement(true);
+    this.setNextStatement(true);
+  }
+};
+
+Entry.block.hamster_stop = function (sprite, script) {
+    Entry.hw.sendQueue['leftWheel'] = 0;
+    Entry.hw.sendQueue['rightWheel'] = 0;
+
+    return script.callReturn();
+};
+
+Blockly.Blocks.hamster_change_buzzer_by = {
+  init: function() {
+    this.setColour("#00979D");
+    this.appendDummyInput()
+    .appendField('버저 음을');
+    this.appendValueInput("VALUE")
+    .setCheck(["Number", "String"]);
+    this.appendDummyInput()
+    .appendField('만큼 바꾸기')
+    .appendField(new Blockly.FieldIcon('/img/assets/block_icon/hardware_03.png', '*'));
+    this.setInputsInline(true);
+    this.setPreviousStatement(true);
+    this.setNextStatement(true);
+  }
+};
+
+Entry.block.hamster_change_buzzer_by = function (sprite, script) {
+    Entry.hw.sendQueue['buzzer'] = Entry.hw.portData.buzzer +
+        script.getNumberValue('VALUE');
+    return script.callReturn();
+
+};
+
+Blockly.Blocks.hamster_set_buzzer_to = {
+  init: function() {
+    this.setColour("#00979D");
+    this.appendDummyInput()
+    .appendField('버저 음을');
+    this.appendValueInput("VALUE")
+    .setCheck(["Number", "String"]);
+    this.appendDummyInput()
+    .appendField('(으)로 하기')
+    .appendField(new Blockly.FieldIcon('/img/assets/block_icon/hardware_03.png', '*'));
+    this.setInputsInline(true);
+    this.setPreviousStatement(true);
+    this.setNextStatement(true);
+  }
+};
+
+Entry.block.hamster_set_buzzer_to = function (sprite, script) {
+    if (!script.isStart) {
+        Entry.hw.sendQueue['buzzer'] = script.getNumberValue('VALUE');
+        script.isStart = true;
+        return script;
+    } else {
+        delete script.isStart;
+        return script.callReturn();
+    }
+};
+
+Blockly.Blocks.hamster_clear_buzzer = {
+  init: function() {
+    this.setColour("#00979D");
+    this.appendDummyInput()
+    .appendField('버저 끄기')
+    .appendField(new Blockly.FieldIcon('/img/assets/block_icon/hardware_03.png', '*'));
+    this.setInputsInline(true);
+    this.setPreviousStatement(true);
+    this.setNextStatement(true);
+  }
+};
+
+Entry.block.hamster_clear_buzzer = function (sprite, script) {
+    Entry.hw.sendQueue['buzzer'] = 0;
+    return script.callReturn();
+};
+
+Blockly.Blocks.hamster_value = {
+  init: function() {
+    this.setColour("#00979D");
+    this.appendDummyInput()
+    .appendField('')
+    .appendField(new Blockly.FieldDropdown([
+      ['왼쪽 근접 센서',"leftProximity"],
+      ['오른쪽 근접 센서',"rightProximity"],
+      ['왼쪽 바닥 센서',"leftFloor"],
+      ['오른쪽 바닥 센서',"rightFloor"],
+      ['x축 가속도',"accelerationX"],
+      ['y축 가속도',"accelerationY"],
+      ['z축 가속도',"accelerationZ"],
+      ['밝기',"light"],
+      ['온도',"temperature"],
+      ['신호세기',"signalStrength"],
+      ['입력 A',"inputA"],
+      ['입력 B',"inputB"]
+      ]), "PORT")
+    .appendField(' ');
+    this.setInputsInline(true);
+    this.setOutput(true, 'Number');
+  }
+};
+
+Entry.block.hamster_value = function (sprite, script) {
+    var port = script.getField('PORT');
+    return Entry.hw.portData[port];
+};
+
+Blockly.Blocks.hamster_set_port_to = {
+  init: function() {
+    this.setColour("#00979D");
+    this.appendDummyInput()
+    .appendField('포트')
+    .appendField(new Blockly.FieldDropdown([
+      ['A',"LEFT"],
+      ['B',"RIGHT"],
+      ['A와B',"LEFT"]
+      ]), "PORT")
+    .appendField('를')
+    .appendField(new Blockly.FieldDropdown([
+      ['아날로그 입력',"LEFT"],
+      ['디지털 입력',"RIGHT"],
+      ['서보 출력',"LEFT"],
+      ['PWM 출력',"LEFT"],
+      ['디지털 출력',"LEFT"]
+      ]), "METHOD")
+    .appendField(new Blockly.FieldIcon('/img/assets/block_icon/hardware_03.png', '*'));
+    this.setInputsInline(true);
+    this.setPreviousStatement(true);
+    this.setNextStatement(true);
+  }
+};
+
+Entry.block.hamster_set_port_to = function (sprite, script) {
+    var port = script.getField('PORT');
+    var method = script.getField('METHOD');
+};
+
+Blockly.Blocks.hamster_change_output_by = {
+  init: function() {
+    this.setColour("#00979D");
+    this.appendDummyInput()
+    .appendField('출력')
+    .appendField(new Blockly.FieldDropdown([
+      ['A',"LEFT"],
+      ['B',"RIGHT"],
+      ['A와B',"LEFT"]
+      ]), "PORT")
+    .appendField('를');
+    this.appendValueInput("VALUE")
+    .setCheck(["Number", "String"]);
+    this.appendDummyInput()
+    .appendField('(으)로 하기')
+    .appendField(new Blockly.FieldIcon('/img/assets/block_icon/hardware_03.png', '*'));
+    this.setInputsInline(true);
+    this.setPreviousStatement(true);
+    this.setNextStatement(true);
+  }
+};
+
+Entry.block.hamster_change_output_by = function (sprite, script) {
+};
+
+Blockly.Blocks.hamster_set_output_to = {
+  init: function() {
+    this.setColour("#00979D");
+    this.appendDummyInput()
+    .appendField('출력')
+    .appendField(new Blockly.FieldDropdown([
+      ['A',"LEFT"],
+      ['B',"RIGHT"],
+      ['A와B',"LEFT"]
+      ]), "PORT")
+    .appendField('를');
+    this.appendValueInput("VALUE")
+    .setCheck(["Number", "String"]);
+    this.appendDummyInput()
+    .appendField('만큼 바꾸기')
+    .appendField(new Blockly.FieldIcon('/img/assets/block_icon/hardware_03.png', '*'));
+    this.setInputsInline(true);
+    this.setPreviousStatement(true);
+    this.setNextStatement(true);
+  }
+};
+
+Entry.block.hamster_set_output_to = function (sprite, script) {
 };
 
