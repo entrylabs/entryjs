@@ -1517,7 +1517,7 @@ Entry.block.hamster_turn_around = function(a, b) {
 };
 Blockly.Blocks.hamster_set_led_to = {init:function() {
   this.setColour("#00979D");
-  this.appendDummyInput().appendField("").appendField(new Blockly.FieldDropdown([["\uc67c\ucabd", "LEFT"], ["\uc624\ub978\ucabd", "RIGHT"], ["\uc55e\ucabd", "FRONT"]]), "DIRECTION").appendField(" LED\ub97c").appendField(new Blockly.FieldDropdown([["\ube68\uac04\uc0c9", "4"], ["\ub178\ub780\uc0c9", "6"], ["\ub179\uc0c9", "2"], ["\ud558\ub298\uc0c9", "3"], ["\ud30c\ub780\uc0c9", "1"], ["\ubcf4\ub77c\uc0c9", "5"], ["\ud558\uc580\uc0c9", "7"]]), "COLOR").appendField(" \uc73c\ub85c \ud558\uae30").appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", 
+  this.appendDummyInput().appendField("").appendField(new Blockly.FieldDropdown([["\uc67c\ucabd", "LEFT"], ["\uc624\ub978\ucabd", "RIGHT"], ["\uc591\ucabd", "FRONT"]]), "DIRECTION").appendField(" LED\ub97c").appendField(new Blockly.FieldDropdown([["\ube68\uac04\uc0c9", "4"], ["\ub178\ub780\uc0c9", "6"], ["\ucd08\ub85d\uc0c9", "2"], ["\ud558\ub298\uc0c9", "3"], ["\ud30c\ub780\uc0c9", "1"], ["\ubcf4\ub77c\uc0c9", "5"], ["\ud558\uc580\uc0c9", "7"]]), "COLOR").appendField(" \uc73c\ub85c \ud558\uae30").appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", 
   "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
@@ -1530,7 +1530,7 @@ Entry.block.hamster_set_led_to = function(a, b) {
 };
 Blockly.Blocks.hamster_clear_led = {init:function() {
   this.setColour("#00979D");
-  this.appendDummyInput().appendField("").appendField(new Blockly.FieldDropdown([["\uc67c\ucabd", "LEFT"], ["\uc624\ub978\ucabd", "RIGHT"]]), "DIRECTION").appendField(" LED \ub044\uae30").appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", "*"));
+  this.appendDummyInput().appendField("").appendField(new Blockly.FieldDropdown([["\uc67c\ucabd", "LEFT"], ["\uc624\ub978\ucabd", "RIGHT"], ["\uc591\ucabd", "FRONT"]]), "DIRECTION").appendField(" LED \ub044\uae30").appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -1569,7 +1569,7 @@ Entry.block.hamster_beep = function(a, b) {
 };
 Blockly.Blocks.hamster_hand_found = {init:function() {
   this.setColour("#00979D");
-  this.appendDummyInput().appendField("\uc190 \ucc3e\uc74c");
+  this.appendDummyInput().appendField("\uc190 \ucc3e\uc74c?");
   this.setOutput(!0, "Boolean");
   this.setInputsInline(!0);
 }};
@@ -5134,7 +5134,7 @@ Entry.HW.TRIAL_LIMIT = 1;
 p = Entry.HW.prototype;
 p.initSocket = function() {
   if (this.connectTrial >= Entry.HW.TRIAL_LIMIT) {
-    this.isFirstConnect || Entry.toast.alert("\uc544\ub450\uc774\ub178 \uc5f0\uacb0", "\uc544\ub450\uc774\ub178 \uc5f0\uacb0\uc5d0 \uc2e4\ud328\ud588\uc2b5\ub2c8\ub2e4. \uc5f0\uacb0\ud504\ub85c\uadf8\ub7a8\uc774 \ucf1c\uc838 \uc788\ub294\uc9c0, \uc5d4\ud2b8\ub9ac \uc0ac\uc774\ud2b8\uac00 \uc5ec\ub7ec\uac1c \uc5f4\ub824\uc788\uc9c0\ub294 \uc54a\uc740\uc9c0 \ud655\uc778\ud574 \uc8fc\uc138\uc694.", !1), this.isFirstConnect = !1;
+    this.isFirstConnect || Entry.toast.alert(Lang.Menus.connect_hw, Lang.Menus.connect_fail, !1), this.isFirstConnect = !1;
   } else {
     var a = this, b = new WebSocket("ws://localhost:23518");
     this.socket = b;
@@ -5164,7 +5164,6 @@ p.initHardware = function() {
   this.connected = !0;
   Entry.dispatchEvent("hwChanged");
   Entry.playground && Entry.playground.object && Entry.playground.setMenu(Entry.playground.object.objectType);
-  Entry.toast.success("\uc544\ub450\uc774\ub178 \uc5f0\uacb0", "\uc544\ub450\uc774\ub178 \uc5f0\uacb0\uc5d0 \uc131\uacf5\ud558\uc600\uc2b5\ub2c8\ub2e4.", !1);
 };
 p.setDigitalPortValue = function(a, b) {
   this.sendQueue[a] = b;
@@ -5202,7 +5201,7 @@ p.setZero = function() {
   Entry.hw.hwModule && Entry.hw.hwModule.setZero();
 };
 p.checkDevice = function(a) {
-  void 0 !== a.company && (a = "" + a.company + a.model, a != this.selectedDevice && (this.selectedDevice = a, this.hwModule = this.hwInfo[a], Entry.dispatchEvent("hwChanged")));
+  void 0 !== a.company && (a = "" + a.company + a.model, a != this.selectedDevice && (this.selectedDevice = a, this.hwModule = this.hwInfo[a], Entry.dispatchEvent("hwChanged"), Entry.toast.success(Lang.Menus.connect_hw, Lang.Menus.connect_message.replace("%1", Lang.Device[Entry.hw.hwModule.name]), !1)));
 };
 p.banHW = function() {
   var a = this.hwInfo, b;

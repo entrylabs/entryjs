@@ -148,13 +148,13 @@ Blockly.Blocks.hamster_set_led_to = {
     .appendField(new Blockly.FieldDropdown([
       ['왼쪽',"LEFT"],
       ['오른쪽',"RIGHT"],
-      ['앞쪽',"FRONT"]
+      ['양쪽',"FRONT"]
       ]), "DIRECTION")
     .appendField(" LED를")
     .appendField(new Blockly.FieldDropdown([
       ['빨간색',"4"],
       ['노란색',"6"],
-      ['녹색',"2"],
+      ['초록색',"2"],
       ['하늘색',"3"],
       ['파란색',"1"],
       ['보라색',"5"],
@@ -189,7 +189,8 @@ Blockly.Blocks.hamster_clear_led = {
     .appendField("")
     .appendField(new Blockly.FieldDropdown([
       ['왼쪽',"LEFT"],
-      ['오른쪽',"RIGHT"]
+      ['오른쪽',"RIGHT"],
+      ['양쪽',"FRONT"]
       ]), "DIRECTION")
     .appendField(" LED 끄기")
     .appendField(new Blockly.FieldIcon('/img/assets/block_icon/hardware_03.png', '*'));
@@ -252,7 +253,7 @@ Blockly.Blocks.hamster_hand_found = {
   init: function() {
     this.setColour("#00979D");
     this.appendDummyInput()
-    .appendField("손 찾음")
+    .appendField("손 찾음?")
     this.setOutput(true, 'Boolean');
     this.setInputsInline(true);
   }
