@@ -4761,10 +4761,6 @@ Entry.Engine.prototype.toggleFullscreen = function() {
 Entry.Engine.prototype.exitFullScreen = function() {
   document.webkitIsFullScreen || document.mozIsFullScreen || document.isFullScreen || (Entry.engine.footerView_.removeClass("entryRemove"), Entry.engine.headerView_.removeClass("entryRemove"));
 };
-Entry.Engine.prototype.updateProjectTimer = function(a) {
-  var b = Entry.engine.projectTimer;
-  b && ("undefined" == typeof a ? (a = (new Date).getTime() - b.start, b.setValue(a / 1E3)) : (b.setValue(a), b.start = (new Date).getTime()));
-};
 Entry.Engine.prototype.showProjectTimer = function() {
   Entry.engine.projectTimer && this.projectTimer.setVisible(!0);
 };
@@ -11074,7 +11070,7 @@ Entry.VariableContainer.prototype.generateTimer = function(a) {
 Entry.VariableContainer.prototype.generateAnswer = function() {
   answer = {};
   answer.id = Entry.generateHash();
-  answer.name = "\ub300\ub2f5";
+  answer.name = Lang.Blocks.VARIABLE_get_canvas_input_value;
   answer.value = 0;
   answer.variableType = "answer";
   answer.visible = !1;
@@ -11103,7 +11099,7 @@ Entry.VariableContainer.prototype.generateVariableSettingView = function() {
   });
   b.appendChild(c);
   var d = Entry.createElement("span");
-  d.innerHTML = "\ubcc0\uc218 \ubcf4\uc774\uae30";
+  d.innerHTML = Lang.Workspace.show_variable;
   c.appendChild(d);
   d = Entry.createElement("span");
   d.addClass("entryVariableSettingCheckWorkspace");
@@ -11113,7 +11109,7 @@ Entry.VariableContainer.prototype.generateVariableSettingView = function() {
   c.addClass("entryVariableSettingInitValueWrapperWorkspace");
   b.appendChild(c);
   d = Entry.createElement("span");
-  d.innerHTML = "\uae30\ubcf8\uac12";
+  d.innerHTML = Lang.Workspace.default_value;
   c.appendChild(d);
   d = Entry.createElement("input");
   d.addClass("entryVariableSettingInitValueInputWorkspace");
@@ -11134,7 +11130,7 @@ Entry.VariableContainer.prototype.generateVariableSettingView = function() {
   c.addClass("entryVariableSettingSlideWrapperWorkspace");
   b.appendChild(c);
   d = Entry.createElement("span");
-  d.innerHTML = "\uc2ac\ub77c\uc774\ub4dc";
+  d.innerHTML = Lang.Workspace.slide;
   c.appendChild(d);
   d = Entry.createElement("span");
   d.addClass("entryVariableSettingCheckWorkspace");
@@ -11178,7 +11174,7 @@ Entry.VariableContainer.prototype.generateVariableSettingView = function() {
   c.appendChild(e);
   var f = Entry.createElement("span");
   f.addClass("entryVariableSettingMaxValueSpanWorkspace");
-  f.innerHTML = "\ucd5c\ub300\uac12";
+  f.innerHTML = Lang.Workspace.max_value;
   c.appendChild(f);
   var h = Entry.createElement("input");
   h.addClass("entryVariableSettingMaxValueInputWorkspace");
@@ -11228,7 +11224,7 @@ Entry.VariableContainer.prototype.generateListSettingView = function() {
   d.addClass("entryListSettingLengthWrapperWorkspace");
   c = Entry.createElement("span");
   c.addClass("entryListSettingLengthSpanWorkspace");
-  c.innerHTML = "\ub9ac\uc2a4\ud2b8 \ud56d\ubaa9 \uc218";
+  c.innerHTML = Lang.Workspace.number_of_list;
   d.appendChild(c);
   b.appendChild(d);
   c = Entry.createElement("div");

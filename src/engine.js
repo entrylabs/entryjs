@@ -738,20 +738,6 @@ Entry.Engine.prototype.exitFullScreen = function() {
 }
 
 
-Entry.Engine.prototype.updateProjectTimer = function(value) {
-    var timer = Entry.engine.projectTimer;
-    if (!timer)
-        return;
-    if (typeof value == 'undefined') {
-        var newTime = ((new Date()).getTime() - timer.start);
-        timer.setValue((newTime/1000));
-    } else {
-        timer.setValue(value);
-        timer.start = (new Date()).getTime();
-    }
-}
-
-
 //projectTimer to show
 Entry.Engine.prototype.showProjectTimer = function() {
     var timer = Entry.engine.projectTimer;
