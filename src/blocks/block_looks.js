@@ -521,3 +521,51 @@ Entry.block.set_entity_effect = function (sprite, script) {
     sprite.applyFilter();
     return script.callReturn();
 };
+
+Blockly.Blocks.change_object_index = {
+  init: function() {
+    this.setColour("#EC4466");
+    this.appendDummyInput()
+        .appendField(Lang.Blocks.LOOKS_change_object_index_1);
+    this.appendDummyInput()
+        .appendField(new Blockly.FieldDropdown([
+            [Lang.Blocks.LOOKS_change_object_index_sub_1, "FRONT"],
+            [Lang.Blocks.LOOKS_change_object_index_sub_2, "FORWARD"],
+            [Lang.Blocks.LOOKS_change_object_index_sub_3, "BACKWARD"],
+            [Lang.Blocks.LOOKS_change_object_index_sub_4, "BACK"]
+        ]), "LOCATION")
+        .appendField(Lang.Blocks.LOOKS_change_object_index_2)
+        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/looks_03.png', '*'));
+    this.setInputsInline(true);
+    this.setPreviousStatement(true);
+    this.setNextStatement(true);
+  }
+};
+
+Entry.block.change_object_index = function(sprite, script) {
+    var targetIndex;
+    var location = script.getField("LOCATION", script);
+    var objects = Entry.container.getCurrentObjects();
+    var currentIndex = objects.indexOf(sprite.parent);
+
+    if (currentIndex < 0)
+        throw new Error('object is not available for current scene');
+
+    switch (location) {
+        case 'FRONT':
+            targetIndex = 0;
+            break;
+        case 'FORWARD':
+            targetIndex = Math.max(0, currentIndex-1);
+            break;
+        case 'BACKWARD':
+            targetIndex = Math.min(objects.length-1, currentIndex+1);
+            break;
+        case 'BACK':
+            targetIndex = objects.length-1;
+            break;
+
+    }
+    Entry.container.moveElementByBlock(currentIndex, targetIndex);
+    return script.callReturn();
+};
