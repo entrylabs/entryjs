@@ -547,6 +547,7 @@ Entry.block.change_object_index = function(sprite, script) {
     var location = script.getField("LOCATION", script);
     var objects = Entry.container.getCurrentObjects();
     var currentIndex = objects.indexOf(sprite.parent);
+    var max = objects.length-1
 
     if (currentIndex < 0)
         throw new Error('object is not available for current scene');
@@ -559,10 +560,10 @@ Entry.block.change_object_index = function(sprite, script) {
             targetIndex = Math.max(0, currentIndex-1);
             break;
         case 'BACKWARD':
-            targetIndex = Math.min(objects.length-1, currentIndex+1);
+            targetIndex = Math.min(max, currentIndex+1);
             break;
         case 'BACK':
-            targetIndex = objects.length-1;
+            targetIndex = max;
             break;
 
     }

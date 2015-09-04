@@ -2347,7 +2347,7 @@ Blockly.Blocks.change_object_index = {init:function() {
   this.setNextStatement(!0);
 }};
 Entry.block.change_object_index = function(a, b) {
-  var c, d = b.getField("LOCATION", b), e = Entry.container.getCurrentObjects(), f = e.indexOf(a.parent);
+  var c, d = b.getField("LOCATION", b), e = Entry.container.getCurrentObjects(), f = e.indexOf(a.parent), e = e.length - 1;
   if (0 > f) {
     throw Error("object is not available for current scene");
   }
@@ -2359,10 +2359,10 @@ Entry.block.change_object_index = function(a, b) {
       c = Math.max(0, f - 1);
       break;
     case "BACKWARD":
-      c = Math.min(e.length - 1, f + 1);
+      c = Math.min(e, f + 1);
       break;
     case "BACK":
-      c = e.length - 1;
+      c = e;
   }
   Entry.container.moveElementByBlock(f, c);
   return b.callReturn();
