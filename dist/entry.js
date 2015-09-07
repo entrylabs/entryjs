@@ -1424,7 +1424,7 @@ Entry.block.function_general = function(a, b) {
   }
   return b;
 };
-Entry.Hamster = {PORT_MAP:{leftWheel:0, rightWheel:0, buzzer:0, outputA:0, outputB:0, leftLed:0, rightLed:0}, setZero:function() {
+Entry.Hamster = {PORT_MAP:{leftWheel:0, rightWheel:0, buzzer:0, outputA:0, outputB:0, leftLed:0, rightLed:0, note:0}, setZero:function() {
   var a = Entry.Hamster.PORT_MAP, b;
   for (b in a) {
     Entry.hw.sendQueue[b] = a[b];
@@ -1440,15 +1440,16 @@ Blockly.Blocks.hamster_move_forward = {init:function() {
   this.setNextStatement(!0);
 }};
 Entry.block.hamster_move_forward = function(a, b) {
+  var c = Entry.hw.sendQueue;
   if (b.isStart) {
     if (1 == b.timeFlag) {
-      return Entry.hw.sendQueue.leftWheel = 50, Entry.hw.sendQueue.rightWheel = 50, b;
+      return c.leftWheel = 50, c.rightWheel = 50, b;
     }
     delete b.timeFlag;
     delete b.isStart;
     Entry.engine.isContinue = !1;
-    Entry.hw.sendQueue.leftWheel = 0;
-    Entry.hw.sendQueue.rightWheel = 0;
+    c.leftWheel = 0;
+    c.rightWheel = 0;
     return b.callReturn();
   }
   b.isStart = !0;
@@ -1466,15 +1467,16 @@ Blockly.Blocks.hamster_move_backward = {init:function() {
   this.setNextStatement(!0);
 }};
 Entry.block.hamster_move_backward = function(a, b) {
+  var c = Entry.hw.sendQueue;
   if (b.isStart) {
     if (1 == b.timeFlag) {
-      return Entry.hw.sendQueue.leftWheel = -50, Entry.hw.sendQueue.rightWheel = -50, b;
+      return c.leftWheel = -50, c.rightWheel = -50, b;
     }
     delete b.timeFlag;
     delete b.isStart;
     Entry.engine.isContinue = !1;
-    Entry.hw.sendQueue.leftWheel = 0;
-    Entry.hw.sendQueue.rightWheel = 0;
+    c.leftWheel = 0;
+    c.rightWheel = 0;
     return b.callReturn();
   }
   b.isStart = !0;
@@ -1492,20 +1494,21 @@ Blockly.Blocks.hamster_turn_around = {init:function() {
   this.setNextStatement(!0);
 }};
 Entry.block.hamster_turn_around = function(a, b) {
+  var c = Entry.hw.sendQueue;
   if (b.isStart) {
     if (1 == b.timeFlag) {
-      return Entry.hw.sendQueue.leftWheel = b.leftValue, Entry.hw.sendQueue.rightWheel = b.rightValue, b;
+      return c.leftWheel = b.leftValue, c.rightWheel = b.rightValue, b;
     }
     delete b.timeFlag;
     delete b.isStart;
     delete b.leftValue;
     delete b.rightValue;
     Entry.engine.isContinue = !1;
-    Entry.hw.sendQueue.leftWheel = 0;
-    Entry.hw.sendQueue.rightWheel = 0;
+    c.leftWheel = 0;
+    c.rightWheel = 0;
     return b.callReturn();
   }
-  var c = "LEFT" == b.getField("DIRECTION", b);
+  c = "LEFT" == b.getField("DIRECTION", b);
   b.leftValue = c ? -50 : 50;
   b.rightValue = c ? 50 : -50;
   b.isStart = !0;
@@ -1524,8 +1527,8 @@ Blockly.Blocks.hamster_set_led_to = {init:function() {
   this.setNextStatement(!0);
 }};
 Entry.block.hamster_set_led_to = function(a, b) {
-  var c = b.getField("DIRECTION", b), d = Number(b.getField("COLOR", b));
-  "FRONT" == c ? (Entry.hw.sendQueue.leftLed = d, Entry.hw.sendQueue.rightLed = d) : "LEFT" == c ? Entry.hw.sendQueue.leftLed = d : Entry.hw.sendQueue.rightLed = d;
+  var c = Entry.hw.sendQueue, d = b.getField("DIRECTION", b), e = Number(b.getField("COLOR", b));
+  "FRONT" == d ? (c.leftLed = e, c.rightLed = e) : "LEFT" == d ? c.leftLed = e : c.rightLed = e;
   return b.callReturn();
 };
 Blockly.Blocks.hamster_clear_led = {init:function() {
@@ -1536,8 +1539,8 @@ Blockly.Blocks.hamster_clear_led = {init:function() {
   this.setNextStatement(!0);
 }};
 Entry.block.hamster_clear_led = function(a, b) {
-  var c = b.getField("DIRECTION", b);
-  "FRONT" == c ? (Entry.hw.sendQueue.leftLed = 0, Entry.hw.sendQueue.rightLed = 0) : "LEFT" == c ? Entry.hw.sendQueue.leftLed = 0 : Entry.hw.sendQueue.rightLed = 0;
+  var c = Entry.hw.sendQueue, d = b.getField("DIRECTION", b);
+  "FRONT" == d ? (c.leftLed = 0, c.rightLed = 0) : "LEFT" == d ? c.leftLed = 0 : c.rightLed = 0;
   return b.callReturn();
 };
 Blockly.Blocks.hamster_beep = {init:function() {
@@ -1548,20 +1551,14 @@ Blockly.Blocks.hamster_beep = {init:function() {
   this.setNextStatement(!0);
 }};
 Entry.block.hamster_beep = function(a, b) {
+  var c = Entry.hw.sendQueue;
   if (b.isStart) {
-    if (1 == b.timeFlag) {
-      return Entry.hw.sendQueue.buzzer = 440, b;
-    }
-    delete b.timeFlag;
-    delete b.isStart;
-    Entry.engine.isContinue = !1;
-    Entry.hw.sendQueue.note = 0;
-    Entry.hw.sendQueue.buzzer = 0;
-    return b.callReturn();
+    return delete b.timeFlag, delete b.isStart, Entry.engine.isContinue = !1, c.buzzer = 0, b.callReturn();
   }
-  Entry.hw.sendQueue.note = 43;
   b.isStart = !0;
   b.timeFlag = 1;
+  delete c.note;
+  c.buzzer = 440;
   setTimeout(function() {
     b.timeFlag = 0;
   }, 200);
@@ -1574,7 +1571,8 @@ Blockly.Blocks.hamster_hand_found = {init:function() {
   this.setInputsInline(!0);
 }};
 Entry.block.hamster_hand_found = function(a, b) {
-  return 40 < Entry.hw.portData.leftProximity || 40 < Entry.hw.portData.rightProximity;
+  var c = Entry.hw.portData;
+  return 40 < c.leftProximity || 40 < c.rightProximity;
 };
 Blockly.Blocks.hamster_move_forward_for_secs = {init:function() {
   this.setColour("#00979D");
@@ -1586,20 +1584,21 @@ Blockly.Blocks.hamster_move_forward_for_secs = {init:function() {
   this.setNextStatement(!0);
 }};
 Entry.block.hamster_move_forward_for_secs = function(a, b) {
+  var c = Entry.hw.sendQueue;
   if (b.isStart) {
     if (1 == b.timeFlag) {
-      return Entry.hw.sendQueue.leftWheel = 50, Entry.hw.sendQueue.rightWheel = 50, b;
+      return c.leftWheel = 50, c.rightWheel = 50, b;
     }
     delete b.timeFlag;
     delete b.isStart;
     Entry.engine.isContinue = !1;
-    Entry.hw.sendQueue.leftWheel = 0;
-    Entry.hw.sendQueue.rightWheel = 0;
+    c.leftWheel = 0;
+    c.rightWheel = 0;
     return b.callReturn();
   }
   b.isStart = !0;
   b.timeFlag = 1;
-  var c = 1E3 * b.getNumberValue("VALUE");
+  c = 1E3 * b.getNumberValue("VALUE");
   setTimeout(function() {
     b.timeFlag = 0;
   }, c);
@@ -1615,20 +1614,21 @@ Blockly.Blocks.hamster_move_backward_for_secs = {init:function() {
   this.setNextStatement(!0);
 }};
 Entry.block.hamster_move_backward_for_secs = function(a, b) {
+  var c = Entry.hw.sendQueue;
   if (b.isStart) {
     if (1 == b.timeFlag) {
-      return Entry.hw.sendQueue.leftWheel = -50, Entry.hw.sendQueue.rightWheel = -50, b;
+      return c.leftWheel = -50, c.rightWheel = -50, b;
     }
     delete b.timeFlag;
     delete b.isStart;
     Entry.engine.isContinue = !1;
-    Entry.hw.sendQueue.leftWheel = 0;
-    Entry.hw.sendQueue.rightWheel = 0;
+    c.leftWheel = 0;
+    c.rightWheel = 0;
     return b.callReturn();
   }
   b.isStart = !0;
   b.timeFlag = 1;
-  var c = 1E3 * b.getNumberValue("VALUE");
+  c = 1E3 * b.getNumberValue("VALUE");
   setTimeout(function() {
     b.timeFlag = 0;
   }, c);
@@ -1644,20 +1644,21 @@ Blockly.Blocks.hamster_turn_for_secs = {init:function() {
   this.setNextStatement(!0);
 }};
 Entry.block.hamster_turn_for_secs = function(a, b) {
+  var c = Entry.hw.sendQueue;
   if (b.isStart) {
     if (1 == b.timeFlag) {
-      return Entry.hw.sendQueue.leftWheel = b.leftValue, Entry.hw.sendQueue.rightWheel = b.rightValue, b;
+      return c.leftWheel = b.leftValue, c.rightWheel = b.rightValue, b;
     }
     delete b.timeFlag;
     delete b.isStart;
     delete b.leftValue;
     delete b.rightValue;
     Entry.engine.isContinue = !1;
-    Entry.hw.sendQueue.leftWheel = 0;
-    Entry.hw.sendQueue.rightWheel = 0;
+    c.leftWheel = 0;
+    c.rightWheel = 0;
     return b.callReturn();
   }
-  var c = "LEFT" == b.getField("DIRECTION", b);
+  c = "LEFT" == b.getField("DIRECTION", b);
   b.leftValue = c ? -50 : 50;
   b.rightValue = c ? 50 : -50;
   b.isStart = !0;
@@ -1678,29 +1679,28 @@ Blockly.Blocks.hamster_play_note_for = {init:function() {
   this.setNextStatement(!0);
 }};
 Entry.block.hamster_play_note_for = function(a, b) {
+  var c = Entry.hw.sendQueue;
   if (b.isStart) {
     if (1 == b.timeFlag) {
-      return Entry.hw.sendQueue.note = b.note, b;
+      return c.note = b.note, b;
     }
     delete b.timeFlag;
     delete b.isStart;
     delete b.note;
     Entry.engine.isContinue = !1;
-    Entry.hw.sendQueue.note = 0;
+    c.note = 0;
     return b.callReturn();
   }
-  var c = b.getNumberField("NOTE", b), d = b.getNumberField("OCTAVE", b), e = b.getNumberValue("VALUE", b), f = Entry.Hamster.tempo;
-  Entry.hw.sendQueue.buzzer = 0;
-  e = 6E4 * e / f;
-  b.note = c + 12 * (d - 1);
+  var d = b.getNumberField("NOTE", b), e = b.getNumberField("OCTAVE", b), f = b.getNumberValue("VALUE", b), h = Entry.Hamster.tempo, f = 6E4 * f / h;
+  b.note = d + 12 * (e - 1);
   b.isStart = !0;
   b.timeFlag = 1;
-  100 < e && setTimeout(function() {
-    Entry.hw.sendQueue.note = 0;
-  }, e - 100);
+  100 < f && setTimeout(function() {
+    c.note = 0;
+  }, f - 100);
   setTimeout(function() {
     b.timeFlag = 0;
-  }, e);
+  }, f);
   return b;
 };
 Blockly.Blocks.hamster_rest_for = {init:function() {
@@ -1713,21 +1713,17 @@ Blockly.Blocks.hamster_rest_for = {init:function() {
   this.setNextStatement(!0);
 }};
 Entry.block.hamster_rest_for = function(a, b) {
+  var c = Entry.hw.sendQueue;
   if (b.isStart) {
-    if (1 == b.timeFlag) {
-      return Entry.hw.sendQueue.buzzer = 0, Entry.hw.sendQueue.note = 0, b;
-    }
-    delete b.timeFlag;
-    delete b.isStart;
-    Entry.engine.isContinue = !1;
-    return b.callReturn();
+    return delete b.timeFlag, delete b.isStart, Entry.engine.isContinue = !1, b.callReturn();
   }
   b.isStart = !0;
   b.timeFlag = 1;
-  var c = b.getNumberValue("VALUE"), c = 6E4 * c / Entry.Hamster.tempo;
+  var d = b.getNumberValue("VALUE"), d = 6E4 * d / Entry.Hamster.tempo;
+  c.note = 0;
   setTimeout(function() {
     b.timeFlag = 0;
-  }, c);
+  }, d);
   return b;
 };
 Blockly.Blocks.hamster_change_tempo_by = {init:function() {
@@ -1740,8 +1736,7 @@ Blockly.Blocks.hamster_change_tempo_by = {init:function() {
   this.setNextStatement(!0);
 }};
 Entry.block.hamster_change_tempo_by = function(a, b) {
-  var c = b.getNumberValue("VALUE");
-  Entry.Hamster.tempo += c;
+  Entry.Hamster.tempo += b.getNumberValue("VALUE");
   return b.callReturn();
 };
 Blockly.Blocks.hamster_set_tempo_to = {init:function() {
@@ -1754,8 +1749,7 @@ Blockly.Blocks.hamster_set_tempo_to = {init:function() {
   this.setNextStatement(!0);
 }};
 Entry.block.hamster_set_tempo_to = function(a, b) {
-  var c = b.getNumberValue("VALUE");
-  Entry.Hamster.tempo = c;
+  Entry.Hamster.tempo = b.getNumberValue("VALUE");
   return b.callReturn();
 };
 Blockly.Blocks.hamster_change_both_wheels_by = {init:function() {
@@ -1770,9 +1764,9 @@ Blockly.Blocks.hamster_change_both_wheels_by = {init:function() {
   this.setNextStatement(!0);
 }};
 Entry.block.hamster_change_both_wheels_by = function(a, b) {
-  var c = Entry.hw.portData, d = c.leftWheel, c = c.rightWheel, d = d + b.getNumberValue("LEFT"), c = c + b.getNumberValue("RIGHT");
-  Entry.hw.sendQueue.leftWheel = d;
-  Entry.hw.sendQueue.rightWheel = c;
+  var c = Entry.hw.sendQueue, d = Entry.hw.portData, e = d.leftWheel, d = d.rightWheel, e = e + b.getNumberValue("LEFT"), d = d + b.getNumberValue("RIGHT");
+  c.leftWheel = e;
+  c.rightWheel = d;
   return b.callReturn();
 };
 Blockly.Blocks.hamster_set_both_wheels_to = {init:function() {
@@ -1787,9 +1781,9 @@ Blockly.Blocks.hamster_set_both_wheels_to = {init:function() {
   this.setNextStatement(!0);
 }};
 Entry.block.hamster_set_both_wheels_to = function(a, b) {
-  var c = b.getNumberValue("LEFT"), d = b.getNumberValue("RIGHT");
-  Entry.hw.sendQueue.leftWheel = c;
-  Entry.hw.sendQueue.rightWheel = d;
+  var c = Entry.hw.sendQueue;
+  c.leftWheel = b.getNumberValue("LEFT");
+  c.rightWheel = b.getNumberValue("RIGHT");
   return b.callReturn();
 };
 Blockly.Blocks.hamster_change_wheels_by = {init:function() {
@@ -1802,8 +1796,8 @@ Blockly.Blocks.hamster_change_wheels_by = {init:function() {
   this.setNextStatement(!0);
 }};
 Entry.block.hamster_change_wheels_by = function(a, b) {
-  var c = b.getField("DIRECTION"), d = b.getNumberValue("VALUE"), e = Entry.hw.portData;
-  "LEFT" == c ? Entry.hw.sendQueue.leftWheel = e.leftWheel + d : Entry.hw.sendQueue.rightWheel = e.rightWheel + right;
+  var c = Entry.hw.sendQueue, d = b.getField("DIRECTION"), e = b.getNumberValue("VALUE"), f = Entry.hw.portData;
+  "LEFT" == d ? c.leftWheel = f.leftWheel + e : ("RIGHT" != d && (c.leftWheel = f.leftWheel + e), c.rightWheel = f.rightWheel + e);
   return b.callReturn();
 };
 Blockly.Blocks.hamster_set_wheels_to = {init:function() {
@@ -1816,8 +1810,8 @@ Blockly.Blocks.hamster_set_wheels_to = {init:function() {
   this.setNextStatement(!0);
 }};
 Entry.block.hamster_set_wheels_to = function(a, b) {
-  var c = b.getField("DIRECTION"), d = b.getNumberValue("VALUE");
-  "LEFT" == c ? Entry.hw.sendQueue.leftWheel = d : Entry.hw.sendQueue.rightWheel = right;
+  var c = Entry.hw.sendQueue, d = b.getField("DIRECTION"), e = b.getNumberValue("VALUE");
+  "LEFT" == d ? c.leftWheel = e : ("RIGHT" != d && (c.leftWheel = e), c.rightWheel = e);
   return b.callReturn();
 };
 Blockly.Blocks.hamster_stop = {init:function() {
@@ -1828,8 +1822,9 @@ Blockly.Blocks.hamster_stop = {init:function() {
   this.setNextStatement(!0);
 }};
 Entry.block.hamster_stop = function(a, b) {
-  Entry.hw.sendQueue.leftWheel = 0;
-  Entry.hw.sendQueue.rightWheel = 0;
+  var c = Entry.hw.sendQueue;
+  c.leftWheel = 0;
+  c.rightWheel = 0;
   return b.callReturn();
 };
 Blockly.Blocks.hamster_change_buzzer_by = {init:function() {
@@ -1842,7 +1837,9 @@ Blockly.Blocks.hamster_change_buzzer_by = {init:function() {
   this.setNextStatement(!0);
 }};
 Entry.block.hamster_change_buzzer_by = function(a, b) {
-  Entry.hw.sendQueue.buzzer = Entry.hw.portData.buzzer + b.getNumberValue("VALUE");
+  var c = Entry.hw.sendQueue;
+  delete c.note;
+  c.buzzer = Entry.hw.portData.buzzer + b.getNumberValue("VALUE");
   return b.callReturn();
 };
 Blockly.Blocks.hamster_set_buzzer_to = {init:function() {
@@ -1855,12 +1852,10 @@ Blockly.Blocks.hamster_set_buzzer_to = {init:function() {
   this.setNextStatement(!0);
 }};
 Entry.block.hamster_set_buzzer_to = function(a, b) {
-  if (b.isStart) {
-    return delete b.isStart, b.callReturn();
-  }
-  Entry.hw.sendQueue.buzzer = b.getNumberValue("VALUE");
-  b.isStart = !0;
-  return b;
+  var c = Entry.hw.sendQueue;
+  delete c.note;
+  c.buzzer = b.getNumberValue("VALUE");
+  return b.callReturn();
 };
 Blockly.Blocks.hamster_clear_buzzer = {init:function() {
   this.setColour("#00979D");
@@ -1881,42 +1876,7 @@ Blockly.Blocks.hamster_value = {init:function() {
   this.setOutput(!0, "Number");
 }};
 Entry.block.hamster_value = function(a, b) {
-  var c = b.getField("PORT");
-  return Entry.hw.portData[c];
-};
-Blockly.Blocks.hamster_set_port_to = {init:function() {
-  this.setColour("#00979D");
-  this.appendDummyInput().appendField("\ud3ec\ud2b8").appendField(new Blockly.FieldDropdown([["A", "LEFT"], ["B", "RIGHT"], ["A\uc640B", "LEFT"]]), "PORT").appendField("\ub97c").appendField(new Blockly.FieldDropdown([["\uc544\ub0a0\ub85c\uadf8 \uc785\ub825", "LEFT"], ["\ub514\uc9c0\ud138 \uc785\ub825", "RIGHT"], ["\uc11c\ubcf4 \ucd9c\ub825", "LEFT"], ["PWM \ucd9c\ub825", "LEFT"], ["\ub514\uc9c0\ud138 \ucd9c\ub825", "LEFT"]]), "METHOD").appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", 
-  "*"));
-  this.setInputsInline(!0);
-  this.setPreviousStatement(!0);
-  this.setNextStatement(!0);
-}};
-Entry.block.hamster_set_port_to = function(a, b) {
-  b.getField("PORT");
-  b.getField("METHOD");
-};
-Blockly.Blocks.hamster_change_output_by = {init:function() {
-  this.setColour("#00979D");
-  this.appendDummyInput().appendField("\ucd9c\ub825").appendField(new Blockly.FieldDropdown([["A", "LEFT"], ["B", "RIGHT"], ["A\uc640B", "LEFT"]]), "PORT").appendField("\ub97c");
-  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField("(\uc73c)\ub85c \ud558\uae30").appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", "*"));
-  this.setInputsInline(!0);
-  this.setPreviousStatement(!0);
-  this.setNextStatement(!0);
-}};
-Entry.block.hamster_change_output_by = function(a, b) {
-};
-Blockly.Blocks.hamster_set_output_to = {init:function() {
-  this.setColour("#00979D");
-  this.appendDummyInput().appendField("\ucd9c\ub825").appendField(new Blockly.FieldDropdown([["A", "LEFT"], ["B", "RIGHT"], ["A\uc640B", "LEFT"]]), "PORT").appendField("\ub97c");
-  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField("\ub9cc\ud07c \ubc14\uafb8\uae30").appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", "*"));
-  this.setInputsInline(!0);
-  this.setPreviousStatement(!0);
-  this.setNextStatement(!0);
-}};
-Entry.block.hamster_set_output_to = function(a, b) {
+  return Entry.hw.portData[b.getField("PORT")];
 };
 Blockly.Blocks.is_clicked = {init:function() {
   this.setColour("#AEB8FF");
