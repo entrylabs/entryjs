@@ -321,6 +321,8 @@ Blockly.Blocks.bitbrick_sensor_value = {init:function() {
 }};
 Entry.block.bitbrick_sensor_value = function(a, b) {
   var c = b.getStringField("PORT");
+  console.log(c);
+  console.log(Entry.hw.portData[c]);
   return Entry.hw.portData[c].value;
 };
 Blockly.Blocks.bitbrick_is_touch_pressed = {init:function() {
@@ -330,8 +332,7 @@ Blockly.Blocks.bitbrick_is_touch_pressed = {init:function() {
   this.setInputsInline(!0);
 }};
 Entry.block.bitbrick_is_touch_pressed = function(a, b) {
-  var c = b.getStringField("PORT");
-  return 0 < Entry.hw.portData[c].value;
+  return 0 === Entry.hw.portData[b.getStringField("PORT")].value;
 };
 Blockly.Blocks.bitbrick_turn_off_color_led = {init:function() {
   this.setColour("#00979D");

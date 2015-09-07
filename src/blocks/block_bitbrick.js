@@ -1,24 +1,24 @@
 "use strict";
 
 Entry.Bitbrick = {
-  SENSOR_MAP : {
-    1: "light",
-    2: "IR",
-    3: "touch",
-    4: "potentiometer",
-    20: "LED",
-    19: "SERVO",
-    18: "DC"
-  },
+    SENSOR_MAP : {
+        1: "light",
+        2: "IR",
+        3: "touch",
+        4: "potentiometer",
+        20: "LED",
+        19: "SERVO",
+        18: "DC"
+    },
   PORT_MAP : {
-      "buzzer": 2,
-      "5": 4,
-      "6": 6,
-      "7": 8,
-      "8": 10,
-      "LEDR": 12,
-      "LEDG": 14,
-      "LEDB": 16
+        "buzzer": 2,
+        "5": 4,
+        "6": 6,
+        "7": 8,
+        "8": 10,
+        "LEDR": 12,
+        "LEDG": 14,
+        "LEDB": 16
   },
   sensorList: function() {
     var list = [];
@@ -88,6 +88,8 @@ Blockly.Blocks.bitbrick_sensor_value = {
 
 Entry.block.bitbrick_sensor_value = function (sprite, script) {
   var port = script.getStringField("PORT");
+  console.log(port);
+  console.log(Entry.hw.portData[port]);
   return Entry.hw.portData[port].value;
 };
 
@@ -104,8 +106,7 @@ Blockly.Blocks.bitbrick_is_touch_pressed = {
 };
 
 Entry.block.bitbrick_is_touch_pressed = function (sprite, script) {
-  var port = script.getStringField("PORT");
-  return Entry.hw.portData[port].value > 0;
+  return Entry.hw.portData[script.getStringField("PORT")].value === 0;
 };
 
 Blockly.Blocks.bitbrick_turn_off_color_led = {
