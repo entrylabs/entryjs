@@ -1685,8 +1685,8 @@ Entry.VariableContainer.prototype.generateTimer = function (timer) {
         timer.value = 0;
         timer.variableType = 'timer';
         timer.visible = false;
-        timer.x = -45;
-        timer.y = 2;
+        timer.x = 150;
+        timer.y = -70;
         timer = new Entry.Variable(timer);
     }
 
@@ -1707,8 +1707,8 @@ Entry.VariableContainer.prototype.generateAnswer = function () {
     answer.value = 0;
     answer.variableType = 'answer';
     answer.visible = false;
-    answer.x = -45;
-    answer.y = 2;
+    answer.x = 150;
+    answer.y = -100;
     answer = new Entry.Variable(answer);
 
     answer.generateView();
