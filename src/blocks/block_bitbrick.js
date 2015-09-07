@@ -282,7 +282,7 @@ Blockly.Blocks.bitbrick_dc_direction_speed = {
       ['CCW',"CCW"],
       ['CW',"CW"]
       ]), "DIRECTION")
-    .appendField(" 속도");
+    .appendField(" 속력");
     this.appendValueInput("VALUE")
     .setCheck(["Number", "String"]);
     this.appendDummyInput()

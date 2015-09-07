@@ -435,7 +435,7 @@ Entry.block.bitbrick_dc_speed = function(a, b) {
 };
 Blockly.Blocks.bitbrick_dc_direction_speed = {init:function() {
   this.setColour("#00979D");
-  this.appendDummyInput().appendField("DC \ubaa8\ud130").appendField(new Blockly.FieldDropdownDynamic(Entry.Bitbrick.dcList), "PORT").appendField(" \ubc29\ud5a5").appendField(new Blockly.FieldDropdown([["CCW", "CCW"], ["CW", "CW"]]), "DIRECTION").appendField(" \uc18d\ub3c4");
+  this.appendDummyInput().appendField("DC \ubaa8\ud130").appendField(new Blockly.FieldDropdownDynamic(Entry.Bitbrick.dcList), "PORT").appendField(" \ubc29\ud5a5").appendField(new Blockly.FieldDropdown([["CCW", "CCW"], ["CW", "CW"]]), "DIRECTION").appendField(" \uc18d\ub825");
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
   this.appendDummyInput().appendField("").appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", "*"));
   this.setPreviousStatement(!0);
