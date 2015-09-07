@@ -288,22 +288,22 @@ Entry.block.sensorBoard_led = function(a, b) {
   return b.callReturn();
 };
 Entry.Bitbrick = {SENSOR_MAP:{1:"light", 2:"IR", 3:"touch", 4:"potentiometer", 20:"LED", 19:"SERVO", 18:"DC"}, PORT_MAP:{buzzer:2, 5:4, 6:6, 7:8, 8:10, LEDR:12, LEDG:14, LEDB:16}, sensorList:function() {
-  for (var a = [], b = Entry.hw.portData, c = 0;4 > c;c++) {
+  for (var a = [], b = Entry.hw.portData, c = 1;5 > c;c++) {
     b[c] && a.push([c + " - " + b[c].type, c.toString()]);
   }
   return 0 == a.length ? [[Lang.Blocks.no_target, "null"]] : a;
 }, touchList:function() {
-  for (var a = [], b = Entry.hw.portData, c = 0;4 > c;c++) {
+  for (var a = [], b = Entry.hw.portData, c = 1;5 > c;c++) {
     b[c] && "touch" === b[c].type && a.push([c + " - " + b[c].type, c.toString()]);
   }
   return 0 == a.length ? [[Lang.Blocks.no_target, "null"]] : a;
 }, servoList:function() {
-  for (var a = [], b = Entry.hw.portData, c = 4;9 > c;c++) {
+  for (var a = [], b = Entry.hw.portData, c = 5;9 > c;c++) {
     b[c] && "SERVO" === b[c].type && a.push(["ABCD"[c - 5], c.toString()]);
   }
   return 0 == a.length ? [[Lang.Blocks.no_target, "null"]] : a;
 }, dcList:function() {
-  for (var a = [], b = Entry.hw.portData, c = 4;9 > c;c++) {
+  for (var a = [], b = Entry.hw.portData, c = 5;9 > c;c++) {
     b[c] && "DC" === b[c].type && a.push(["ABCD"[c - 5], c.toString()]);
   }
   return 0 == a.length ? [[Lang.Blocks.no_target, "null"]] : a;
@@ -312,7 +312,7 @@ Entry.Bitbrick = {SENSOR_MAP:{1:"light", 2:"IR", 3:"touch", 4:"potentiometer", 2
     Entry.hw.sendQueue[a] = 0;
   }
   Entry.hw.update();
-}, name:"bitbrick"};
+}, name:"bitbrick", servoMaxValue:181, servoMinValue:1, dcMaxValue:100, dcMinValue:-100};
 Blockly.Blocks.bitbrick_sensor_value = {init:function() {
   this.setColour("#00979D");
   this.appendDummyInput().appendField("").appendField(new Blockly.FieldDropdownDynamic(Entry.Bitbrick.sensorList), "PORT").appendField(" \uac12");
@@ -321,6 +321,8 @@ Blockly.Blocks.bitbrick_sensor_value = {init:function() {
 }};
 Entry.block.bitbrick_sensor_value = function(a, b) {
   var c = b.getStringField("PORT");
+  console.log(c);
+  console.log(Entry.hw.portData[c]);
   return Entry.hw.portData[c].value;
 };
 Blockly.Blocks.bitbrick_is_touch_pressed = {init:function() {
@@ -330,8 +332,7 @@ Blockly.Blocks.bitbrick_is_touch_pressed = {init:function() {
   this.setInputsInline(!0);
 }};
 Entry.block.bitbrick_is_touch_pressed = function(a, b) {
-  var c = b.getStringField("PORT");
-  return 0 < Entry.hw.portData[c].value;
+  return 0 === Entry.hw.portData[b.getStringField("PORT")].value;
 };
 Blockly.Blocks.bitbrick_turn_off_color_led = {init:function() {
   this.setColour("#00979D");
@@ -390,6 +391,12 @@ Blockly.Blocks.bitbrick_turn_on_color_led_by_value = {init:function() {
   this.setNextStatement(!0);
 }};
 Entry.block.bitbrick_turn_on_color_led_by_value = function(a, b) {
+  var c = b.getNumberValue("VALUE"), d, e, f, c = c % 200;
+  67 > c ? (d = 200 - 3 * c, e = 3 * c, f = 0) : 134 > c ? (c -= 67, d = 0, e = 200 - 3 * c, f = 3 * c) : 201 > c && (c -= 134, d = 3 * c, e = 0, f = 200 - 3 * c);
+  Entry.hw.sendQueue.LEDR = d;
+  Entry.hw.sendQueue.LEDG = e;
+  Entry.hw.sendQueue.LEDB = f;
+  return b.callReturn();
 };
 Blockly.Blocks.bitbrick_buzzer = {init:function() {
   this.setColour("#00979D");
@@ -428,13 +435,13 @@ Blockly.Blocks.bitbrick_dc_speed = {init:function() {
   this.setInputsInline(!0);
 }};
 Entry.block.bitbrick_dc_speed = function(a, b) {
-  var c = b.getNumberValue("VALUE"), d = b.getStringField("PORT");
-  Entry.hw.sendQueue[d] = c + 128;
+  var c = b.getNumberValue("VALUE"), c = Math.min(c, Entry.Bitbrick.dcMaxValue), c = Math.max(c, Entry.Bitbrick.dcMinValue);
+  Entry.hw.sendQueue[b.getStringField("PORT")] = c + 128;
   return b.callReturn();
 };
 Blockly.Blocks.bitbrick_dc_direction_speed = {init:function() {
   this.setColour("#00979D");
-  this.appendDummyInput().appendField("DC \ubaa8\ud130").appendField(new Blockly.FieldDropdownDynamic(Entry.Bitbrick.dcList), "PORT").appendField(" \ubc29\ud5a5").appendField(new Blockly.FieldDropdown([["CCW", "CCW"], ["CW", "CW"]]), "DIRECTION").appendField(" \uc18d\ub3c4");
+  this.appendDummyInput().appendField("DC \ubaa8\ud130").appendField(new Blockly.FieldDropdownDynamic(Entry.Bitbrick.dcList), "PORT").appendField(" \ubc29\ud5a5").appendField(new Blockly.FieldDropdown([["CCW", "CCW"], ["CW", "CW"]]), "DIRECTION").appendField(" \uc18d\ub825");
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
   this.appendDummyInput().appendField("").appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", "*"));
   this.setPreviousStatement(!0);
@@ -442,8 +449,8 @@ Blockly.Blocks.bitbrick_dc_direction_speed = {init:function() {
   this.setInputsInline(!0);
 }};
 Entry.block.bitbrick_dc_direction_speed = function(a, b) {
-  var c = b.getNumberValue("VALUE"), d = "CW" === b.getStringField("DIRECTION"), e = b.getStringField("PORT");
-  Entry.hw.sendQueue[e] = d ? c + 128 : 128 - c;
+  var c = "CW" === b.getStringField("DIRECTION"), d = b.getNumberValue("VALUE"), d = Math.min(d, Entry.Bitbrick.dcMaxValue), d = Math.max(d, Entry.Bitbrick.dcMinValue);
+  Entry.hw.sendQueue[b.getStringField("PORT")] = c ? d + 128 : 128 - d;
   return b.callReturn();
 };
 Blockly.Blocks.bitbrick_servomotor_angle = {init:function() {
@@ -456,8 +463,8 @@ Blockly.Blocks.bitbrick_servomotor_angle = {init:function() {
   this.setInputsInline(!0);
 }};
 Entry.block.bitbrick_servomotor_angle = function(a, b) {
-  var c = b.getNumberValue("VALUE"), d = b.getStringField("PORT");
-  Entry.hw.sendQueue[d] = c;
+  var c = b.getNumberValue("VALUE") + 1, c = Math.min(c, Entry.Bitbrick.servoMaxValue), c = Math.max(c, Entry.Bitbrick.servoMinValue);
+  Entry.hw.sendQueue[b.getStringField("PORT")] = c;
   return b.callReturn();
 };
 var categoryColor = "#FF9E20";
