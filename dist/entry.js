@@ -11221,7 +11221,7 @@ Entry.VariableContainer.prototype.addCloneLocalVariables = function(a) {
   });
 };
 Entry.VariableContainer.prototype.generateTimer = function(a) {
-  a || (a = {}, a.id = Entry.generateHash(), a.name = Lang.Workspace.Variable_Timer, a.value = 0, a.variableType = "timer", a.visible = !1, a.x = -45, a.y = 2, a = new Entry.Variable(a));
+  a || (a = {}, a.id = Entry.generateHash(), a.name = Lang.Workspace.Variable_Timer, a.value = 0, a.variableType = "timer", a.visible = !1, a.x = 150, a.y = -70, a = new Entry.Variable(a));
   a.generateView();
   a.tick = null;
   Entry.engine.projectTimer = a;
@@ -11236,8 +11236,8 @@ Entry.VariableContainer.prototype.generateAnswer = function() {
   answer.value = 0;
   answer.variableType = "answer";
   answer.visible = !1;
-  answer.x = -45;
-  answer.y = 2;
+  answer.x = 150;
+  answer.y = -100;
   answer = new Entry.Variable(answer);
   answer.generateView();
   Entry.container.inputValue = answer;
