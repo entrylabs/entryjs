@@ -3017,7 +3017,7 @@ Entry.block.direction_relative_duration = function(a, b) {
 };
 Blockly.Blocks.when_scene_start = {init:function() {
   this.setColour("#3BBD70");
-  this.appendDummyInput().appendField(new Blockly.FieldIcon("/img/assets/block_icon/start_icon_scene.png", "*", "start")).appendField(Lang.Blocks.SCENE_when_scene_start);
+  this.appendDummyInput().appendField(new Blockly.FieldIcon("/img/assets/block_icon/start_icon_scene_1_2.png", "*", "start")).appendField(Lang.Blocks.SCENE_when_scene_start);
   this.setInputsInline(!0);
   this.setNextStatement(!0);
 }};
