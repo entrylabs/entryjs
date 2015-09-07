@@ -6108,7 +6108,7 @@ Entry.EntryObject.prototype.initEntity = function(a) {
     var c = a.sprite.pictures[0].dimension;
     b.regX = c.width / 2;
     b.regY = c.height / 2;
-    a = "\ubc30\uacbd" == a.sprite.category.main ? Math.max(270 / c.height, 480 / c.width) : "new" == a.sprite.category.main ? 1 : 200 / (c.width + c.height);
+    a = "background" == a.sprite.category.main ? Math.max(270 / c.height, 480 / c.width) : "new" == a.sprite.category.main ? 1 : 200 / (c.width + c.height);
     b.scaleX = b.scaleY = a;
     b.width = c.width;
     b.height = c.height;
