@@ -457,8 +457,7 @@ Blockly.Blocks.bitbrick_servomotor_angle = {init:function() {
   this.setInputsInline(!0);
 }};
 Entry.block.bitbrick_servomotor_angle = function(a, b) {
-  var c = b.getNumberValue("VALUE"), d = b.getStringField("PORT");
-  Entry.hw.sendQueue[d] = c;
+  Entry.hw.sendQueue[b.getStringField("PORT")] = b.getNumberValue("VALUE") + 1;
   return b.callReturn();
 };
 var categoryColor = "#FF9E20";

@@ -321,8 +321,7 @@ Blockly.Blocks.bitbrick_servomotor_angle = {
 };
 
 Entry.block.bitbrick_servomotor_angle = function (sprite, script) {
-  var value = script.getNumberValue("VALUE");
-  var port = script.getStringField("PORT");
-  Entry.hw.sendQueue[port] = value;
+  Entry.hw.sendQueue[script.getStringField("PORT")] =
+      script.getNumberValue("VALUE") + 1;
   return script.callReturn();
 };
