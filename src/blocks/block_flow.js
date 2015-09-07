@@ -334,7 +334,7 @@ Blockly.Blocks.stop_object = {
         this.appendDummyInput()
             .appendField(new Blockly.FieldDropdown([
                 [Lang.Blocks.FLOW_stop_object_all,"all"],
-                [Lang.Blocks.FLOW_stop_object_this_object,"thisObject"],
+                [Lang.Blocks.FLOW_stop_object_this_object,"thisOnly"],
                 [Lang.Blocks.FLOW_stop_object_this_thread,"thisThread"],
                 [Lang.Blocks.FLOW_stop_object_other_thread, "otherThread"]
                 ]), "TARGET");
@@ -363,6 +363,9 @@ Entry.block.stop_object = function (sprite, script) {
             clonedEntities.map(function (entity) {
                 entity.clearScript();
             });
+            break;
+        case 'thisOnly':
+            sprite.clearScript();
             break;
         case 'thisThread':
             break;

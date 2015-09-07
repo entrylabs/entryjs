@@ -104,7 +104,7 @@ Blockly.Blocks.distance_something = {
     this.setColour("#FFD974");
     this.appendDummyInput()
         .appendField(Lang.Blocks.CALC_distance_something_1, "#3D3D3D")
-        .appendField(new Blockly.FieldDropdownDynamic("sprites"), "VALUE")
+        .appendField(new Blockly.FieldDropdownDynamic("spritesWithMouse"), "VALUE")
         .appendField(Lang.Blocks.CALC_distance_something_2, "#3D3D3D");
     this.setOutput(true, 'Number');
     this.setInputsInline(true);
@@ -113,11 +113,19 @@ Blockly.Blocks.distance_something = {
 
 Entry.block.distance_something = function (sprite, script) {
     var targetId = script.getField("VALUE", script);
-    var targetEntity = Entry.container.getEntity(targetId);
-    return Math.sqrt(
-            Math.pow(sprite.getX() - targetEntity.getX(), 2) +
-            Math.pow(sprite.getY() - targetEntity.getY(), 2)
-        );
+    if (targetId == 'mouse') {
+        var mousePos = Entry.stage.mouseCoordinate;
+        return Math.sqrt(
+                Math.pow(sprite.getX() - mousePos.x, 2) +
+                Math.pow(sprite.getY() - mousePos.y, 2)
+            );
+    } else {
+        var targetEntity = Entry.container.getEntity(targetId);
+        return Math.sqrt(
+                Math.pow(sprite.getX() - targetEntity.getX(), 2) +
+                Math.pow(sprite.getY() - targetEntity.getY(), 2)
+            );
+    }
 };
 
 //마우스 (xy▼) 좌표
@@ -148,13 +156,14 @@ Blockly.Blocks.coordinate_object = {
     this.setColour("#FFD974");
     this.appendDummyInput()
         .appendField(Lang.Blocks.CALC_coordinate_object_1, "#3D3D3D")
-        .appendField(new Blockly.FieldDropdownDynamic("sprites"), "VALUE")
+        .appendField(new Blockly.FieldDropdownDynamic("spritesWithSelf"), "VALUE")
         .appendField(Lang.Blocks.CALC_coordinate_object_2, "#3D3D3D")
         .appendField(new Blockly.FieldDropdown([
             [Lang.Blocks.CALC_coordinate_x_value,"x"],
             [Lang.Blocks.CALC_coordinate_y_value, "y"],
             [Lang.Blocks.CALC_coordinate_rotation_value, "rotation"],
             [Lang.Blocks.CALC_coordinate_direction_value, "direction"],
+            [Lang.Blocks.CALC_coordinate_size_value, "size"],
             [Lang.Blocks.CALC_picture_index, "picture_index"],
             [Lang.Blocks.CALC_picture_name, "picture_name"]
             ]), "COORDINATE")
@@ -166,8 +175,13 @@ Blockly.Blocks.coordinate_object = {
 
 Entry.block.coordinate_object = function (sprite, script) {
     var targetId = script.getField("VALUE", script);
+    var targetEntity;
+    if (targetId == 'self')
+        targetEntity = sprite;
+    else
+        targetEntity = Entry.container.getEntity(targetId);
+
     var targetCoordinate = script.getField("COORDINATE", script);
-    var targetEntity = Entry.container.getEntity(targetId);
     switch(targetCoordinate) {
         case 'x':
             return targetEntity.getX();
@@ -181,6 +195,8 @@ Entry.block.coordinate_object = function (sprite, script) {
             var object = targetEntity.parent;
             var pictures = object.pictures;
             return pictures.indexOf(targetEntity.picture) + 1;
+        case 'size':
+            return Number(targetEntity.getSize().toFixed(1));
         case 'picture_name':
             var object = targetEntity.parent;
             var pictures = object.pictures;
@@ -557,7 +573,8 @@ Blockly.Blocks.set_visible_project_timer = {
           [Lang.Blocks.CALC_timer_visible_hide,"HIDE"]
           ]), "ACTION");
     this.appendDummyInput()
-        .appendField(Lang.Blocks.CALC_timer_visible_2, "#3D3D3D");
+        .appendField(Lang.Blocks.CALC_timer_visible_2, "#3D3D3D")
+        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/calc_01.png', '*'));
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
@@ -580,6 +597,23 @@ Entry.block.set_visible_project_timer = function (sprite, script) {
 
     return script.callReturn();
 };
+
+Blockly.Blocks.timer_variable = {
+  init: function() {
+    this.setColour("#FFD974");
+    this.appendDummyInput()
+        .appendField(Lang.Blocks.CALC_get_timer_value, "#3D3D3D")
+        .appendField(' ', "#3D3D3D");
+    this.setOutput(true, 'Number');
+    this.setInputsInline(true);
+  }
+};
+
+Entry.block.timer_variable = function (sprite, script) {
+    return Entry.container.inputValue.getValue();
+};
+
+
 
 Blockly.Blocks.get_project_timer_value = {
   init: function() {
@@ -788,3 +822,113 @@ Entry.block.combine_something = function (sprite, script) {
     return leftValue + rightValue;
 }
 
+Blockly.Blocks.get_sound_volume = {
+  init: function() {
+    this.setColour("#FFD974");
+    this.appendDummyInput()
+        .appendField(Lang.Blocks.CALC_get_sound_volume, "#3D3D3D")
+        .appendField(' ', "#3D3D3D");
+    this.setOutput(true, 'Number');
+    this.setInputsInline(true);
+  }
+};
+
+Entry.block.get_sound_volume = function (sprite, script) {
+    return createjs.Sound.getVolume() * 100;
+};
+
+Blockly.Blocks.quotient_and_mod = {
+  init: function() {
+      this.setColour("#FFD974");
+      if (Lang.type == 'ko') {
+        this.appendDummyInput()
+            .appendField(Lang.Blocks.CALC_quotient_and_mod_1, "#3D3D3D");
+        this.appendValueInput("LEFTHAND")
+            .setCheck(["Number", "String"]);
+        this.appendDummyInput()
+            .appendField(Lang.Blocks.CALC_quotient_and_mod_2, "#3D3D3D");
+        this.appendValueInput("RIGHTHAND")
+        .setCheck(["Number", "String"]);
+        this.appendDummyInput()
+            .appendField(Lang.Blocks.CALC_quotient_and_mod_3, "#3D3D3D")
+            .appendField(new Blockly.FieldDropdown([
+              [Lang.Blocks.CALC_quotient_and_mod_sub_1,"QUOTIENT"],
+              [Lang.Blocks.CALC_quotient_and_mod_sub_2,"MOD"]
+              ]), "OPERATOR");
+      } else if (Lang.type == 'en') {
+        this.appendDummyInput()
+            .appendField(Lang.Blocks.CALC_quotient_and_mod_1, "#3D3D3D")
+            .appendField(new Blockly.FieldDropdown([
+              [Lang.Blocks.CALC_quotient_and_mod_sub_1,"QUOTIENT"],
+              [Lang.Blocks.CALC_quotient_and_mod_sub_2,"MOD"]
+              ]), "OPERATOR");
+        this.appendDummyInput()
+            .appendField(Lang.Blocks.CALC_quotient_and_mod_2, "#3D3D3D");
+        this.appendValueInput("LEFTHAND")
+            .setCheck(["Number", "String"]);
+        this.appendDummyInput()
+            .appendField(Lang.Blocks.CALC_quotient_and_mod_3, "#3D3D3D");
+        this.appendValueInput("RIGHTHAND")
+        .setCheck(["Number", "String"]);
+      }
+    this.appendDummyInput()
+        .appendField(Lang.Blocks.CALC_quotient_and_mod_4, "#3D3D3D");
+    this.setOutput(true, 'Number');
+    this.setInputsInline(true);
+  }
+};
+
+Entry.block.quotient_and_mod = function (sprite, script) {
+    var left = script.getNumberValue("LEFTHAND", script);
+    var right = script.getNumberValue("RIGHTHAND", script);
+    if (isNaN(left) || isNaN(right))
+        throw new Error();
+    var operator = script.getField("OPERATOR", script);
+    if (operator == 'QUOTIENT')
+        return Math.floor(left/right);
+    else
+        return left % right;
+};
+
+Blockly.Blocks.choose_project_timer_action = {
+  init: function() {
+    this.setColour("#FFD974");
+    this.appendDummyInput()
+        .appendField(Lang.Blocks.CALC_choose_project_timer_action_1, "#3D3D3D")
+        .appendField(new Blockly.FieldDropdown([
+          [Lang.Blocks.CALC_choose_project_timer_action_sub_1,"START"],
+          [Lang.Blocks.CALC_choose_project_timer_action_sub_2,"STOP"],
+          [Lang.Blocks.CALC_choose_project_timer_action_sub_3,"RESET"]
+          ]), "ACTION")
+        .appendField(Lang.Blocks.CALC_choose_project_timer_action_2, "#3D3D3D")
+        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/calc_01.png', '*'));
+    this.setInputsInline(true);
+    this.setPreviousStatement(true);
+    this.setNextStatement(true);
+  },
+  whenAdd: function () {
+      Entry.engine.showProjectTimer();
+  },
+  whenRemove: function (removeBlock) {
+      Entry.engine.hideProjectTimer(removeBlock);
+  }
+};
+
+Entry.block.choose_project_timer_action = function (sprite, script) {
+    var action = script.getField('ACTION');
+    var engine = Entry.engine;
+    var timer = engine.projectTimer;
+
+    if (action == 'START') {
+        timer.isPaused = false;
+        if (!timer.isInit)
+            engine.startProjectTimer();
+        else
+            timer.pausedTime += (new Date()).getTime() - timer.pauseStart;
+    } else if (action == 'STOP' && !timer.isPaused) {
+        timer.isPaused = true;
+        timer.pauseStart = (new Date()).getTime();
+    } else if (action == 'RESET')
+        engine.updateProjectTimer(0);
+    return script.callReturn();
+};
