@@ -803,10 +803,8 @@ Entry.Engine.prototype.updateProjectTimer = function(value) {
     if (!timer)
         return;
     if (typeof value == 'undefined') {
-        if (!timer.isPaused) {
-            var newTime = ((new Date()).getTime() - timer.start - timer.pausedTime);
-            timer.setValue((newTime/1000));
-        }
+        if (!timer.isPaused)
+            timer.setValue((((new Date()).getTime() - timer.start - timer.pausedTime)/1000));
     } else {
         timer.setValue(value);
         timer.pausedTime = 0;

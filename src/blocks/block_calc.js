@@ -920,15 +920,27 @@ Entry.block.choose_project_timer_action = function (sprite, script) {
     var timer = engine.projectTimer;
 
     if (action == 'START') {
-        timer.isPaused = false;
         if (!timer.isInit)
             engine.startProjectTimer();
-        else
-            timer.pausedTime += (new Date()).getTime() - timer.pauseStart;
-    } else if (action == 'STOP' && !timer.isPaused) {
-        timer.isPaused = true;
-        timer.pauseStart = (new Date()).getTime();
-    } else if (action == 'RESET')
-        engine.updateProjectTimer(0);
+        else if (timer.isInit && timer.isPaused) {
+            if (timer.pauseStart)
+                timer.pausedTime += (new Date()).getTime() - timer.pauseStart;
+            delete timer.pauseStart;
+            timer.isPaused = false;
+        }
+    } else if (action == 'STOP') {
+        if (timer.isInit && !timer.isPaused) {
+            timer.isPaused = true;
+            timer.pauseStart = (new Date()).getTime();
+        }
+    } else if (action == 'RESET') {
+        if (timer.isInit) {
+            timer.setValue(0);
+            timer.start = (new Date()).getTime();
+            timer.pausedTime = 0;
+            delete timer.pauseStart;
+        }
+
+    }
     return script.callReturn();
 };
