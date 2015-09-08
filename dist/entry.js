@@ -2363,8 +2363,7 @@ Blockly.Blocks.set_scale_percent = {init:function() {
 }};
 Entry.block.set_scale_percent = function(a, b) {
   var c = b.getNumberValue("VALUE", b) / 100, d = a.snapshot_;
-  a.setScaleX(c * d.scaleX);
-  a.setScaleY(c * d.scaleY);
+  0 > c ? (a.setScaleX(0), a.setScaleY(0)) : (a.setScaleX(c * d.scaleX), a.setScaleY(c * d.scaleY));
   return b.callReturn();
 };
 Blockly.Blocks.flip_y = {init:function() {
@@ -5091,6 +5090,7 @@ Entry.EntityObject.prototype.getScaleY = function() {
   return this.scaleY;
 };
 Entry.EntityObject.prototype.setSize = function(a) {
+  1 > a && (a = 1);
   a /= this.getSize();
   this.setScaleX(this.getScaleX() * a);
   this.setScaleY(this.getScaleY() * a);
@@ -9396,6 +9396,31 @@ Entry.Toast = function() {
   this.body_ = Entry.createElement("div", "entryToastContainer");
   this.body_.addClass("entryToastContainer");
   document.body.appendChild(this.body_);
+};
+Entry.Toast.prototype.warning = function(a, b, c) {
+  var d = Entry.createElement("div", "entryToast");
+  d.addClass("entryToast");
+  d.addClass("entryToastWarning");
+  d.bindOnClick(function() {
+    Entry.toast.body_.removeChild(this);
+  });
+  var e = Entry.createElement("div", "entryToast");
+  e.addClass("entryToastTitle");
+  e.innerHTML = a;
+  d.appendChild(e);
+  a = Entry.createElement("p", "entryToast");
+  a.addClass("entryToastMessage");
+  a.innerHTML = b;
+  d.appendChild(a);
+  this.toasts_.push(d);
+  this.body_.appendChild(d);
+  c || window.setTimeout(function() {
+    d.style.opacity = 1;
+    var a = setInterval(function() {
+      .05 > d.style.opacity && (clearInterval(a), d.style.display = "none", Entry.removeElement(d));
+      d.style.opacity *= .9;
+    }, 20);
+  }, 1E3);
 };
 Entry.Toast.prototype.success = function(a, b, c) {
   var d = Entry.createElement("div", "entryToast");
