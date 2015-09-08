@@ -342,7 +342,7 @@ Blockly.Blocks.sensorBoard_get_named_sensor_value = {
         .appendField('')
         .appendField(new Blockly.FieldDropdown([
           ['소리',"0"],
-          ['조도',"1"],
+          ['빛 감지',"1"],
           ['슬라이더',"2"],
           ['온도',"3"]
           ]), "PORT")
