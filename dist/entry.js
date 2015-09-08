@@ -1120,7 +1120,7 @@ Blockly.Blocks.choose_project_timer_action = {init:function() {
 }};
 Entry.block.choose_project_timer_action = function(a, b) {
   var c = b.getField("ACTION"), d = Entry.engine, e = d.projectTimer;
-  "START" == c ? (e.isPaused = !1, e.isInit ? e.pausedTime += (new Date).getTime() - e.pauseStart : d.startProjectTimer()) : "STOP" != c || e.isPaused ? "RESET" == c && d.updateProjectTimer(0) : (e.isPaused = !0, e.pauseStart = (new Date).getTime());
+  "START" == c ? e.isInit ? e.isInit && e.isPaused && (e.pauseStart && (e.pausedTime += (new Date).getTime() - e.pauseStart), delete e.pauseStart, e.isPaused = !1) : d.startProjectTimer() : "STOP" == c ? e.isInit && !e.isPaused && (e.isPaused = !0, e.pauseStart = (new Date).getTime()) : "RESET" == c && e.isInit && (e.setValue(0), e.start = (new Date).getTime(), e.pausedTime = 0, delete e.pauseStart);
   return b.callReturn();
 };
 Blockly.Blocks.wait_second = {init:function() {
@@ -4953,7 +4953,7 @@ Entry.Engine.prototype.stopProjectTimer = function() {
 };
 Entry.Engine.prototype.updateProjectTimer = function(a) {
   var b = Entry.engine.projectTimer;
-  b && ("undefined" == typeof a ? b.isPaused || (a = (new Date).getTime() - b.start - b.pausedTime, b.setValue(a / 1E3)) : (b.setValue(a), b.pausedTime = 0, b.start = (new Date).getTime()));
+  b && ("undefined" == typeof a ? b.isPaused || b.setValue(((new Date).getTime() - b.start - b.pausedTime) / 1E3) : (b.setValue(a), b.pausedTime = 0, b.start = (new Date).getTime()));
 };
 Entry.EntityObject = function(a) {
   this.parent = a;
