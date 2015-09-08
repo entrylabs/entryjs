@@ -260,7 +260,7 @@ Entry.block.arduino_convert_scale = function(a, b) {
 };
 Blockly.Blocks.sensorBoard_get_named_sensor_value = {init:function() {
   this.setColour("#00979D");
-  this.appendDummyInput().appendField("").appendField(new Blockly.FieldDropdown([["\uc18c\ub9ac", "0"], ["\uc870\ub3c4", "1"], ["\uc2ac\ub77c\uc774\ub354", "2"], ["\uc628\ub3c4", "3"]]), "PORT").appendField(" \uc13c\uc11c\uac12");
+  this.appendDummyInput().appendField("").appendField(new Blockly.FieldDropdown([["\uc18c\ub9ac", "0"], ["\ube5b \uac10\uc9c0", "1"], ["\uc2ac\ub77c\uc774\ub354", "2"], ["\uc628\ub3c4", "3"]]), "PORT").appendField(" \uc13c\uc11c\uac12");
   this.setOutput(!0, "Number");
   this.setInputsInline(!0);
 }};
