@@ -1,7 +1,7 @@
 var Entry = {events_:{}, block:{}, TEXT_ALIGN_CENTER:0, TEXT_ALIGN_LEFT:1, TEXT_ALIGN_RIGHT:2, TEXT_ALIGNS:["center", "left", "right"], loadProject:function(a) {
   a && ("workspace" == this.type && Entry.stateManager.startIgnore(), Entry.projectId = a._id, Entry.variableContainer.setVariables(a.variables), Entry.variableContainer.setMessages(a.messages), Entry.variableContainer.setFunctions(a.functions), Entry.variableContainer.generateAnswer(), Entry.scene.addScenes(a.scenes), Entry.stage.initObjectContainers(), Entry.container.setObjects(a.objects), Entry.FPS = a.speed ? a.speed : 60, createjs.Ticker.setFPS(Entry.FPS), "workspace" == this.type && Entry.stateManager.endIgnore());
   Entry.engine.projectTimer || Entry.variableContainer.generateTimer();
-  _.isEmpty(Entry.container.inputValue) && Entry.variableContainer.generateAnswer();
+  0 === Object.keys(Entry.container.inputValue).length && Entry.variableContainer.generateAnswer();
   Entry.start();
 }, setBlockByText:function(a, b) {
   for (var c = [], d = jQuery.parseXML(b).getElementsByTagName("category"), e = 0;e < d.length;e++) {
@@ -2363,7 +2363,8 @@ Blockly.Blocks.set_scale_percent = {init:function() {
 }};
 Entry.block.set_scale_percent = function(a, b) {
   var c = b.getNumberValue("VALUE", b) / 100, d = a.snapshot_;
-  0 > c ? (a.setScaleX(0), a.setScaleY(0)) : (a.setScaleX(c * d.scaleX), a.setScaleY(c * d.scaleY));
+  a.setScaleX(c * d.scaleX);
+  a.setScaleY(c * d.scaleY);
   return b.callReturn();
 };
 Blockly.Blocks.flip_y = {init:function() {

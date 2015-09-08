@@ -47,7 +47,7 @@ Entry.loadProject = function(project) {
     }
     if (!Entry.engine.projectTimer)
         Entry.variableContainer.generateTimer();
-    if (_.isEmpty(Entry.container.inputValue))
+    if (Object.keys(Entry.container.inputValue).length === 0)
         Entry.variableContainer.generateAnswer();
     Entry.start();
 };
