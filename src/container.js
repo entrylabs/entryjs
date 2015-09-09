@@ -216,7 +216,7 @@ Entry.Container.prototype.setObjects = function(objectModels) {
  * @return {Entry.EntryObject}
  */
 Entry.Container.prototype.addObject = function(objectModel, index) {
-    var backgroundStr = '배경';
+    var backgroundStr = 'background';
     var object = new Entry.EntryObject(objectModel);
     object.name = Entry.getOrderedName(object.name, this.objects_);
 

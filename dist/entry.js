@@ -4009,7 +4009,7 @@ Entry.Container.prototype.addObject = function(a, b) {
   c.name = Entry.getOrderedName(c.name, this.objects_);
   Entry.stateManager.addCommand("add object", this, this.removeObject, c);
   c.scene || (c.scene = Entry.scene.selectedScene);
-  "number" == typeof b ? a.sprite.category && "\ubc30\uacbd" == a.sprite.category.main ? (c.setLock(!0), this.objects_.push(c)) : this.objects_.splice(b, 0, c) : a.sprite.category && "\ubc30\uacbd" == a.sprite.category.main ? this.objects_.push(c) : this.objects_.unshift(c);
+  "number" == typeof b ? a.sprite.category && "background" == a.sprite.category.main ? (c.setLock(!0), this.objects_.push(c)) : this.objects_.splice(b, 0, c) : a.sprite.category && "background" == a.sprite.category.main ? this.objects_.push(c) : this.objects_.unshift(c);
   c.generateView();
   c.pictures.map(function(a) {
     a.id = Entry.generateHash();
