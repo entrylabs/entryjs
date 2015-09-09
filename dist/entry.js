@@ -8618,7 +8618,7 @@ Entry.Reporter = function() {
   this.projectId;
 };
 Entry.Reporter.prototype.start = function(a, b, c) {
-  this.io = io(window.location.href.split("/")[2]);
+  -1 < window.location.href.indexOf("localhost") ? this.io = io("localhost:7000") : this.io = io("socket.play-entry.com");
   this.io.emit("activity", {message:"start", userId:b, projectId:a, time:c});
   this.userId = b;
   this.projectId = a;
