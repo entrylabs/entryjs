@@ -46,6 +46,15 @@ Entry.init = function(container, options) {
         Entry.addActivity("save")
     });
 
+
+    // hack: fix createjs Sound bug
+    var playFunc = createjs.Sound.play;
+    createjs.Sound.play = function (a, b) {
+        if (b) b.pan = 0.01;
+        else b = {pan: 0.01};
+        playFunc(a, b);
+    };
+
     if (Entry.getBrowserType().substr(0,2) == 'IE' && !window.flashaudio) {
         createjs.FlashAudioPlugin.swfPath = "/media/";
         createjs.Sound.registerPlugins([createjs.FlashAudioPlugin]);
