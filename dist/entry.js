@@ -7652,6 +7652,7 @@ Entry.Playground = function() {
   this.viewMode_ = "default";
   Entry.addEventListener("textEdited", this.injectText);
   Entry.addEventListener("entryBlocklyChanged", this.editBlock);
+  Entry.addEventListener("entryBlocklyMouseUp", this.mouseupBlock);
   Entry.addEventListener("hwChanged", this.updateHW);
   this.fonts = [];
   this.fonts.push({name:"\ubc14\ud0d5\uccb4", family:"KoPub Batang", url:"/css/kopubbatang.css"});
@@ -8292,6 +8293,12 @@ Entry.Playground.prototype.syncObject = function(a) {
 Entry.Playground.prototype.editBlock = function() {
   var a = Entry.playground;
   Entry.stateManager.addCommand("edit block", a, a.restoreBlock, a.object, a.object.getScriptText());
+};
+Entry.Playground.prototype.mouseupBlock = function() {
+  if (Entry.reporter) {
+    var a = Entry.playground, b = a.object;
+    Entry.reporter.report(new Entry.State("edit block mouseup", a, a.restoreBlock, b, b.getScriptText()));
+  }
 };
 Entry.Playground.prototype.restoreBlock = function(a, b) {
   Entry.container.selectObject(a.id);
