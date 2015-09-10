@@ -5598,6 +5598,11 @@ Entry.init = function(a, b) {
   Entry.addEventListener("saveWorkspace", function(a) {
     Entry.addActivity("save");
   });
+  var c = createjs.Sound.play;
+  createjs.Sound.play = function(a, b) {
+    b ? b.pan = .01 : b = {pan:.01};
+    c(a, b);
+  };
   "IE" != Entry.getBrowserType().substr(0, 2) || window.flashaudio ? (createjs.Sound.registerPlugins([createjs.WebAudioPlugin]), Entry.soundQueue = new createjs.LoadQueue, Entry.soundQueue.installPlugin(createjs.Sound), Entry.loadAudio_(["/media/click.mp3", "/media/click.wav", "/media/click.ogg"], "click"), Entry.loadAudio_(["/media/delete.mp3", "/media/delete.ogg", "/media/delete.wav"], "delete")) : (createjs.FlashAudioPlugin.swfPath = "/media/", createjs.Sound.registerPlugins([createjs.FlashAudioPlugin]), 
   Entry.soundQueue = new createjs.LoadQueue, Entry.soundQueue.installPlugin(createjs.Sound), Entry.loadAudio_(["/media/click.mp3", "/media/click.wav", "/media/click.ogg"], "click"), Entry.loadAudio_(["/media/delete.mp3", "/media/delete.ogg", "/media/delete.wav"], "delete"), window.flashaudio = !0);
 };
