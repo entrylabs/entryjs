@@ -28,6 +28,7 @@ Entry.Playground = function() {
     this.viewMode_ = 'default';
     Entry.addEventListener('textEdited', this.injectText);
     Entry.addEventListener('entryBlocklyChanged', this.editBlock);
+    Entry.addEventListener('entryBlocklyMouseUp', this.mouseupBlock);
     Entry.addEventListener('hwChanged', this.updateHW);
 
     this.fonts = [];
@@ -1218,6 +1219,22 @@ Entry.Playground.prototype.editBlock = function() {
                                   playground.object,
                                   playground.object.getScriptText()
                                  );
+};
+
+Entry.Playground.prototype.mouseupBlock = function() {
+    if (!Entry.reporter)
+        return;
+    var playground = Entry.playground;
+    var object = playground.object;
+    Entry.reporter.report(
+        new Entry.State(
+            "edit block mouseup",
+            playground,
+            playground.restoreBlock,
+            object,
+            object.getScriptText()
+        )
+    );
 };
 
 /**

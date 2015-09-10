@@ -7657,6 +7657,7 @@ Entry.Playground = function() {
   this.viewMode_ = "default";
   Entry.addEventListener("textEdited", this.injectText);
   Entry.addEventListener("entryBlocklyChanged", this.editBlock);
+  Entry.addEventListener("entryBlocklyMouseUp", this.mouseupBlock);
   Entry.addEventListener("hwChanged", this.updateHW);
   this.fonts = [];
   this.fonts.push({name:"\ubc14\ud0d5\uccb4", family:"KoPub Batang", url:"/css/kopubbatang.css"});
@@ -8298,6 +8299,12 @@ Entry.Playground.prototype.editBlock = function() {
   var a = Entry.playground;
   Entry.stateManager.addCommand("edit block", a, a.restoreBlock, a.object, a.object.getScriptText());
 };
+Entry.Playground.prototype.mouseupBlock = function() {
+  if (Entry.reporter) {
+    var a = Entry.playground, b = a.object;
+    Entry.reporter.report(new Entry.State("edit block mouseup", a, a.restoreBlock, b, b.getScriptText()));
+  }
+};
 Entry.Playground.prototype.restoreBlock = function(a, b) {
   Entry.container.selectObject(a.id);
   Entry.stateManager.addCommand("restore block", this, this.restoreBlock, this.object, this.object.getScriptText());
@@ -8623,7 +8630,7 @@ Entry.Reporter = function() {
   this.projectId;
 };
 Entry.Reporter.prototype.start = function(a, b, c) {
-  this.io = io(window.location.href.split("/")[2]);
+  -1 < window.location.href.indexOf("localhost") ? this.io = io("localhost:7000") : this.io = io("socket.play-entry.com");
   this.io.emit("activity", {message:"start", userId:b, projectId:a, time:c});
   this.userId = b;
   this.projectId = a;
