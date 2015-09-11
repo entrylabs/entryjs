@@ -10683,13 +10683,14 @@ Entry.VariableContainer.prototype.removeFunction = function(a) {
   this.updateList();
 };
 Entry.VariableContainer.prototype.getList = function(a) {
-  var b = this.lists_;
+  var b = this.lists_, c = [];
   if (0 < b.length) {
-    for (var c = 0;c < b.length;c++) {
-      if (b[c].id_ == a) {
-        return b[c];
+    for (var d = 0;d < b.length;d++) {
+      for (var e = 0;e < a.length;e++) {
+        b[d].id_ == a[e] && c.push(b[d]);
       }
     }
+    return c;
   }
   return !1;
 };

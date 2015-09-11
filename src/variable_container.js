@@ -682,15 +682,19 @@ Entry.VariableContainer.prototype.removeFunction = function(func) {
     this.updateList();
 };
 
-Entry.VariableContainer.prototype.getList = function(id) {
+Entry.VariableContainer.prototype.getList = function(idList) {
     var list = this.lists_;
+    var influencedList = []
 
     if(list.length > 0){
         for(var i=0; i<list.length; i++){
-            if(list[i].id_ == id){
-                return list[i];
+            for(var j=0;j<idList.length; j++) {
+                if(list[i].id_ == idList[j]){
+                    influencedList.push(list[i]);                
+                }
             }
         }
+        return influencedList;
     } return false;
 }
 
