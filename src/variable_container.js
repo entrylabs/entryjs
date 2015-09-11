@@ -682,6 +682,18 @@ Entry.VariableContainer.prototype.removeFunction = function(func) {
     this.updateList();
 };
 
+Entry.VariableContainer.prototype.getList = function(id) {
+    var list = this.lists_;
+
+    if(list.length > 0){
+        for(var i=0; i<list.length; i++){
+            if(list[i].id_ == id){
+                return list[i];
+            }
+        }
+    } return false;
+}
+
 /**
  * @param {Entry.Variable} variable
  * @param {String} name

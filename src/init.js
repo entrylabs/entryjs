@@ -205,6 +205,22 @@ Entry.createDom = function(container, option) {
         canvas.width = 640;
         canvas.height = 360;
         engineView.insertBefore(canvas, this.engine.addButton);
+        
+        canvas.addEventListener("mousewheel" , function() {            
+            var lists = [];
+            var mousePosition = Entry.stage.mouseCoordinate;
+            console.log("x : " + mousePosition.x);
+            console.log("y: "  + mousePosition.y); 
+
+            // if(Entry.variableContainer.lists_.length > 0) {
+            //     var tempList = Entry.variableContainer.lists_;
+            //     for(var i=0; i<tempList.length ; i++){
+            //         lists.push(tempList.id_
+            //     }
+            // }
+            
+        });
+
         /** @type {!Element} */
         this.canvas_ = canvas;
         this.stage.initStage(this.canvas_);

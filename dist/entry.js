@@ -5655,6 +5655,11 @@ Entry.createDom = function(a, b) {
     c.width = 640;
     c.height = 360;
     d.insertBefore(c, this.engine.addButton);
+    c.addEventListener("mousewheel", function() {
+      var a = Entry.stage.mouseCoordinate;
+      console.log("x : " + a.x);
+      console.log("y: " + a.y);
+    });
     this.canvas_ = c;
     this.stage.initStage(this.canvas_);
     c = Entry.createElement("div");
@@ -10275,6 +10280,13 @@ Entry.Variable.prototype.setWidth = function(a) {
 Entry.Variable.prototype.getWidth = function() {
   return this.width_;
 };
+Entry.Variable.prototype.isInList = function(a, b) {
+  console.log(a + "=================" + b);
+  var c = this.getX() + this.width_;
+  console.log(c);
+  c = this.getY() + this.height_;
+  console.log(c);
+};
 Entry.Variable.prototype.setHeight = function(a) {
   this.height_ = 100 > a ? 100 : a;
   this.updateView();
@@ -10669,6 +10681,17 @@ Entry.VariableContainer.prototype.addFunction = function(a) {
 Entry.VariableContainer.prototype.removeFunction = function(a) {
   delete this.functions_[a.id];
   this.updateList();
+};
+Entry.VariableContainer.prototype.getList = function(a) {
+  var b = this.lists_;
+  if (0 < b.length) {
+    for (var c = 0;c < b.length;c++) {
+      if (b[c].id_ == a) {
+        return b[c];
+      }
+    }
+  }
+  return !1;
 };
 Entry.VariableContainer.prototype.editFunction = function(a, b) {
 };
