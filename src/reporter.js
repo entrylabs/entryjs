@@ -12,7 +12,7 @@ Entry.Reporter.prototype.start = function(projectId, userId, startTime) {
     if (window.location.href.indexOf("localhost") > -1)
         this.io = io('localhost:7000');
     else
-        this.io = io('socket.play-entry.com');
+        this.io = io('play04.play-entry.com:7000');
     this.io.emit('activity', {
         message: 'start',
         userId: userId,
