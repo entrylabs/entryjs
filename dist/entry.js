@@ -5655,10 +5655,18 @@ Entry.createDom = function(a, b) {
     c.width = 640;
     c.height = 360;
     d.insertBefore(c, this.engine.addButton);
-    c.addEventListener("mousewheel", function() {
-      var a = Entry.stage.mouseCoordinate;
-      console.log("x : " + a.x);
-      console.log("y: " + a.y);
+    c.addEventListener("mousewheel", function(a) {
+      console.log(a);
+      var b = Entry.stage.mouseCoordinate, c = Entry.variableContainer.getListById(b);
+      console.log(c);
+      a = 0 < a.wheelDelta ? !0 : !1;
+      for (var d = 0;d < c.length;d++) {
+        var k = c[d];
+        k.scrollButton_.y = a ? 46 <= k.scrollButton_.y ? k.scrollButton_.y - 23 : 23 : k.scrollButton_.y + 23;
+        k.updateView();
+      }
+      console.log("x : " + b.x);
+      console.log("y: " + b.y);
     });
     this.canvas_ = c;
     this.stage.initStage(this.canvas_);
@@ -10682,14 +10690,20 @@ Entry.VariableContainer.prototype.removeFunction = function(a) {
   delete this.functions_[a.id];
   this.updateList();
 };
-Entry.VariableContainer.prototype.getList = function(a) {
-  var b = this.lists_, c = [];
+Entry.VariableContainer.prototype.checkListPosition = function(a, b) {
+  var c = a.x_ + a.width_, d = -a.y_, e = -a.y_ + -a.height_;
+  return b.x > a.x_ && b.x < c && b.y < d && b.y > e ? (console.log("===================in===================="), !0) : !1;
+};
+Entry.VariableContainer.prototype.getListById = function(a) {
+  var b = this.lists_;
+  console.log(b);
+  var c = [];
   if (0 < b.length) {
     for (var d = 0;d < b.length;d++) {
-      for (var e = 0;e < a.length;e++) {
-        b[d].id_ == a[e] && c.push(b[d]);
-      }
+      this.checkListPosition(b[d], a) && c.push(b[d]);
     }
+    console.log("=================return list ==============");
+    console.log(c);
     return c;
   }
   return !1;
