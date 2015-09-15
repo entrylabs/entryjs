@@ -649,6 +649,8 @@ Entry.VariableContainer.prototype.setVariables = function(variables) {
             this.lists_.push(variable);
         } else if (type == 'timer'){
             that.generateTimer(variable);
+        } else if (type == 'answer'){
+            that.generateAnswer(variable);
         }
     }
     Entry.playground.reloadPlayground();
@@ -1330,8 +1332,9 @@ Entry.VariableContainer.prototype.getVariableJSON = function() {
     if (Entry.engine.projectTimer)
         json.push(Entry.engine.projectTimer);
 
-    if (Entry.engine.projectAnswer)
-        json.push(Entry.engine.projectAnswer);
+    var answer = Entry.container.inputValue;
+    if (!_.isEmpty(answer))
+        json.push(answer);
     return json;
 };
 
@@ -1750,16 +1753,18 @@ Entry.VariableContainer.prototype.generateTimer = function (timer) {
 }
 
 //generate Answer
-Entry.VariableContainer.prototype.generateAnswer = function () {
-    answer = {};
-    answer.id = Entry.generateHash();
-    answer.name = Lang.Blocks.VARIABLE_get_canvas_input_value;
-    answer.value = 0;
-    answer.variableType = 'answer';
-    answer.visible = false;
-    answer.x = 150;
-    answer.y = -100;
-    answer = new Entry.Variable(answer);
+Entry.VariableContainer.prototype.generateAnswer = function (answer) {
+    if (!answer) {
+        answer = new Entry.Variable({
+            id: Entry.generateHash(),
+            name: Lang.Blocks.VARIABLE_get_canvas_input_value,
+            value: 0,
+            variableType: 'answer',
+            visible: false,
+            x: 150,
+            y: -100
+        });
+    }
 
     answer.generateView();
     Entry.container.inputValue = answer;
