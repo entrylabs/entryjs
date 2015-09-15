@@ -1,5 +1,5 @@
 var Entry = {events_:{}, block:{}, TEXT_ALIGN_CENTER:0, TEXT_ALIGN_LEFT:1, TEXT_ALIGN_RIGHT:2, TEXT_ALIGNS:["center", "left", "right"], loadProject:function(a) {
-  a && ("workspace" == this.type && Entry.stateManager.startIgnore(), Entry.projectId = a._id, Entry.variableContainer.setVariables(a.variables), Entry.variableContainer.setMessages(a.messages), Entry.variableContainer.setFunctions(a.functions), Entry.variableContainer.generateAnswer(), Entry.scene.addScenes(a.scenes), Entry.stage.initObjectContainers(), Entry.container.setObjects(a.objects), Entry.FPS = a.speed ? a.speed : 60, createjs.Ticker.setFPS(Entry.FPS), "workspace" == this.type && Entry.stateManager.endIgnore());
+  a && ("workspace" == this.type && Entry.stateManager.startIgnore(), Entry.projectId = a._id, Entry.variableContainer.setVariables(a.variables), Entry.variableContainer.setMessages(a.messages), Entry.variableContainer.setFunctions(a.functions), Entry.scene.addScenes(a.scenes), Entry.stage.initObjectContainers(), Entry.container.setObjects(a.objects), Entry.FPS = a.speed ? a.speed : 60, createjs.Ticker.setFPS(Entry.FPS), "workspace" == this.type && Entry.stateManager.endIgnore());
   Entry.engine.projectTimer || Entry.variableContainer.generateTimer();
   0 === Object.keys(Entry.container.inputValue).length && Entry.variableContainer.generateAnswer();
   Entry.start();
@@ -8630,7 +8630,7 @@ Entry.Reporter = function() {
   this.projectId;
 };
 Entry.Reporter.prototype.start = function(a, b, c) {
-  -1 < window.location.href.indexOf("localhost") ? this.io = io("localhost:7000") : this.io = io("socket.play-entry.com");
+  -1 < window.location.href.indexOf("localhost") ? this.io = io("localhost:7000") : this.io = io("play04.play-entry.com:7000");
   this.io.emit("activity", {message:"start", userId:b, projectId:a, time:c});
   this.userId = b;
   this.projectId = a;
@@ -10667,7 +10667,7 @@ Entry.VariableContainer.prototype.setMessages = function(a) {
 Entry.VariableContainer.prototype.setVariables = function(a) {
   for (var b in a) {
     var c = new Entry.Variable(a[b]), d = c.getType();
-    "variable" == d || "slide" == d ? (c.generateView(this.variables_.length), this.createVariableView(c), this.variables_.push(c)) : "list" == d ? (c.generateView(this.lists_.length), this.createListView(c), this.lists_.push(c)) : "timer" == d && this.generateTimer(c);
+    "variable" == d || "slide" == d ? (c.generateView(this.variables_.length), this.createVariableView(c), this.variables_.push(c)) : "list" == d ? (c.generateView(this.lists_.length), this.createListView(c), this.lists_.push(c)) : "timer" == d ? this.generateTimer(c) : "answer" == d && this.generateAnswer(c);
   }
   Entry.playground.reloadPlayground();
   this.updateList();
@@ -11025,7 +11025,8 @@ Entry.VariableContainer.prototype.getVariableJSON = function() {
     a.push(this.lists_[b].toJSON());
   }
   Entry.engine.projectTimer && a.push(Entry.engine.projectTimer);
-  Entry.engine.projectAnswer && a.push(Entry.engine.projectAnswer);
+  b = Entry.container.inputValue;
+  _.isEmpty(b) || a.push(b);
   return a;
 };
 Entry.VariableContainer.prototype.getMessageJSON = function() {
@@ -11293,18 +11294,10 @@ Entry.VariableContainer.prototype.generateTimer = function(a) {
     Entry.engine.stopProjectTimer();
   });
 };
-Entry.VariableContainer.prototype.generateAnswer = function() {
-  answer = {};
-  answer.id = Entry.generateHash();
-  answer.name = Lang.Blocks.VARIABLE_get_canvas_input_value;
-  answer.value = 0;
-  answer.variableType = "answer";
-  answer.visible = !1;
-  answer.x = 150;
-  answer.y = -100;
-  answer = new Entry.Variable(answer);
-  answer.generateView();
-  Entry.container.inputValue = answer;
+Entry.VariableContainer.prototype.generateAnswer = function(a) {
+  a || (a = {}, a.id = Entry.generateHash(), a.name = Lang.Blocks.VARIABLE_get_canvas_input_value, a.value = 0, a.variableType = "answer", a.visible = !1, a.x = 150, a.y = -100, a = new Entry.Variable(a));
+  a.generateView();
+  Entry.container.inputValue = a;
 };
 Entry.VariableContainer.prototype.generateVariableSettingView = function() {
   var a = this, b = Entry.createElement("div");

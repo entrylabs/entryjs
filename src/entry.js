@@ -36,7 +36,6 @@ Entry.loadProject = function(project) {
         Entry.variableContainer.setVariables(project.variables);
         Entry.variableContainer.setMessages(project.messages);
         Entry.variableContainer.setFunctions(project.functions);
-        Entry.variableContainer.generateAnswer();
         Entry.scene.addScenes(project.scenes);
         Entry.stage.initObjectContainers();
         Entry.container.setObjects(project.objects);
@@ -47,6 +46,7 @@ Entry.loadProject = function(project) {
     }
     if (!Entry.engine.projectTimer)
         Entry.variableContainer.generateTimer();
+
     if (Object.keys(Entry.container.inputValue).length === 0)
         Entry.variableContainer.generateAnswer();
     Entry.start();
