@@ -231,7 +231,7 @@ Entry.VariableContainer.prototype.select = function(object) {
 Entry.VariableContainer.prototype.renderMessageReference = function(message) {
     var that = this;
     var objects = Entry.container.objects_;
-    var messageType = ['when_message_cast', 'message_cast'];
+    var messageType = ['when_message_cast', 'message_cast', 'message_cast_wait'];
     var callers = [];
     var listView = Entry.createElement('ul');
     listView.addClass('entryVariableListCallerListWorkspace')
@@ -246,6 +246,27 @@ Entry.VariableContainer.prototype.renderMessageReference = function(message) {
                 var value = Entry.Xml.getField("VALUE", block);
                 if (value == message.id)
                     callers.push({object:object, block: block});
+            } else if (type == 'function_general') {
+                var hashId = block.getElementsByTagName('mutation')[0].
+                    getAttribute('hashid');
+                var func = Entry.variableContainer.getFunction(hashId);
+                if (func) {
+                    func = func.content;
+                    var funcBlocks = func.getElementsByTagName('block');
+                    for (var k = 0; k < funcBlocks.length; k++) {
+                        var funcBlock = funcBlocks[k];
+                        type = funcBlock.getAttribute('type');
+                        if (messageType.indexOf(type) > -1) {
+                            var value = Entry.Xml.getField("VALUE", funcBlock);
+                            if (value == message.id)
+                                callers.push({
+                                    object:object,
+                                    block: funcBlock,
+                                    funcBlock: block
+                                });
+                        }
+                    }
+                }
             }
         }
     }
@@ -268,7 +289,11 @@ Entry.VariableContainer.prototype.renderMessageReference = function(message) {
                 that.select(null);
                 that.select(this.message);
             }
-            var id = this.caller.block.getAttribute("id");
+
+            var caller = this.caller;
+            var id;
+            if (caller.funcBlock) id = caller.funcBlock.getAttribute("id");
+            else id = caller.block.getAttribute("id");
             Blockly.mainWorkspace.activatePreviousBlock(Number(id));
             Entry.playground.toggleOnVariableView();
         });
@@ -297,7 +322,7 @@ Entry.VariableContainer.prototype.renderVariableReference = function(variable) {
         'set_variable', 'show_variable',
         'add_value_to_list', 'remove_value_from_list', 'insert_value_to_list',
         'change_value_list_index', 'value_of_index_from_list',
-        'length_of_list', 'show_list', 'hide_list'
+        'length_of_list', 'show_list', 'hide_list', 'is_included_in_list'
     ];
     var callers = [];
     var listView = Entry.createElement('ul');
@@ -314,6 +339,28 @@ Entry.VariableContainer.prototype.renderVariableReference = function(variable) {
                             Entry.Xml.getField('LIST', block);
                 if (value == variable.id_)
                     callers.push({object:object, block: block});
+            } else if (type == 'function_general') {
+                var hashId = block.getElementsByTagName('mutation')[0].
+                    getAttribute('hashid');
+                var func = Entry.variableContainer.getFunction(hashId);
+                if (func) {
+                    func = func.content;
+                    var funcBlocks = func.getElementsByTagName('block');
+                    for (var k = 0; k < funcBlocks.length; k++) {
+                        var funcBlock = funcBlocks[k];
+                        type = funcBlock.getAttribute('type');
+                        if (variableType.indexOf(type) > -1) {
+                            value = Entry.Xml.getField("VARIABLE", funcBlock) ||
+                                        Entry.Xml.getField('LIST', funcBlock);
+                            if (value == variable.id_)
+                                callers.push({
+                                    object:object,
+                                    block: funcBlock,
+                                    funcBlock: block
+                                });
+                        }
+                    }
+                }
             }
         }
     }
@@ -336,7 +383,10 @@ Entry.VariableContainer.prototype.renderVariableReference = function(variable) {
                 that.select(null);
                 that.select(this.variable);
             }
-            var id = this.caller.block.getAttribute("id");
+            var caller = this.caller;
+            var id;
+            if (caller.funcBlock) id = caller.funcBlock.getAttribute("id");
+            else id = caller.block.getAttribute("id");
             Blockly.mainWorkspace.activatePreviousBlock(Number(id));
             Entry.playground.toggleOnVariableView();
         });
