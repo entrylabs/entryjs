@@ -269,7 +269,7 @@ Entry.block.sensorBoard_get_named_sensor_value = function(a, b) {
 };
 Blockly.Blocks.sensorBoard_is_button_pressed = {init:function() {
   this.setColour("#00979D");
-  this.appendDummyInput().appendField("").appendField(new Blockly.FieldDropdown([["\ube68\uac15", "8"], ["\ub178\ub791", "10"], ["\ucd08\ub85d", "11"], ["\ud30c\ub791", "9"]]), "PORT");
+  this.appendDummyInput().appendField("").appendField(new Blockly.FieldDropdown([["\ube68\uac04", "8"], ["\ub178\ub791", "10"], ["\ucd08\ub85d", "11"], ["\ud30c\ub780", "9"]]), "PORT");
   this.appendDummyInput().appendField(" \ubc84\ud2bc\uc774 \ub20c\ub838\ub294\uac00?");
   this.setInputsInline(!0);
   this.setOutput(!0, "Boolean");
@@ -279,7 +279,7 @@ Entry.block.sensorBoard_is_button_pressed = function(a, b) {
 };
 Blockly.Blocks.sensorBoard_led = {init:function() {
   this.setColour("#00979D");
-  this.appendDummyInput().appendField("").appendField(new Blockly.FieldDropdown([["\ube68\uac15", "2"], ["\ucd08\ub85d", "3"], ["\ud30c\ub791", "4"], ["\ud770\uc0c9", "5"]]), "PORT").appendField(" LED").appendField(new Blockly.FieldDropdown([["\ucf1c\uae30", "255"], ["\ub044\uae30", "0"]]), "OPERATOR").appendField(" ").appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", "*"));
+  this.appendDummyInput().appendField("").appendField(new Blockly.FieldDropdown([["\ube68\uac04", "2"], ["\ucd08\ub85d", "3"], ["\ud30c\ub780", "4"], ["\ud770\uc0c9", "5"]]), "PORT").appendField(" LED").appendField(new Blockly.FieldDropdown([["\ucf1c\uae30", "255"], ["\ub044\uae30", "0"]]), "OPERATOR").appendField(" ").appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
