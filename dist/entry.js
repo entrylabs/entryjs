@@ -10669,6 +10669,8 @@ Entry.VariableContainer.prototype.setVariables = function(a) {
     var c = new Entry.Variable(a[b]), d = c.getType();
     "variable" == d || "slide" == d ? (c.generateView(this.variables_.length), this.createVariableView(c), this.variables_.push(c)) : "list" == d ? (c.generateView(this.lists_.length), this.createListView(c), this.lists_.push(c)) : "timer" == d ? this.generateTimer(c) : "answer" == d && this.generateAnswer(c);
   }
+  _.isEmpty(Entry.engine.projectTimer) && Entry.variableContainer.generateTimer();
+  _.isEmpty(Entry.container.inputValue) && Entry.variableContainer.generateAnswer();
   Entry.playground.reloadPlayground();
   this.updateList();
 };
@@ -11295,7 +11297,7 @@ Entry.VariableContainer.prototype.generateTimer = function(a) {
   });
 };
 Entry.VariableContainer.prototype.generateAnswer = function(a) {
-  a || (a = {}, a.id = Entry.generateHash(), a.name = Lang.Blocks.VARIABLE_get_canvas_input_value, a.value = 0, a.variableType = "answer", a.visible = !1, a.x = 150, a.y = -100, a = new Entry.Variable(a));
+  a || (a = new Entry.Variable({id:Entry.generateHash(), name:Lang.Blocks.VARIABLE_get_canvas_input_value, value:0, variableType:"answer", visible:!1, x:150, y:-100}));
   a.generateView();
   Entry.container.inputValue = a;
 };

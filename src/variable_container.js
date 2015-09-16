@@ -647,12 +647,11 @@ Entry.VariableContainer.prototype.setVariables = function(variables) {
             variable.generateView(this.lists_.length);
             this.createListView(variable);
             this.lists_.push(variable);
-        } else if (type == 'timer'){
-            that.generateTimer(variable);
-        } else if (type == 'answer'){
-            that.generateAnswer(variable);
-        }
+        } else if (type == 'timer') that.generateTimer(variable);
+        else if (type == 'answer') that.generateAnswer(variable);
     }
+    if (_.isEmpty(Entry.engine.projectTimer)) Entry.variableContainer.generateTimer();
+    if (_.isEmpty(Entry.container.inputValue)) Entry.variableContainer.generateAnswer();
     Entry.playground.reloadPlayground();
     this.updateList();
 };
