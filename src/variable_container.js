@@ -1015,7 +1015,8 @@ Entry.VariableContainer.prototype.createVariableView = function(variable) {
                               '변수의 이름은 빈 칸이 될 수 없습니다..');
             this.value = variable.getName();
             return;
-        }that.changeVariableName(variable, this.value);
+        }
+        that.changeVariableName(variable, this.value);
 
     };
     nameField.onkeydown = function(e) {
