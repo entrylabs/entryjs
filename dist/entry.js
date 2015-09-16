@@ -10285,11 +10285,8 @@ Entry.Variable.prototype.getWidth = function() {
   return this.width_;
 };
 Entry.Variable.prototype.isInList = function(a, b) {
-  console.log(a + "=================" + b);
-  var c = this.getX() + this.width_;
-  console.log(c);
-  c = this.getY() + this.height_;
-  console.log(c);
+  this.getX();
+  this.getY();
 };
 Entry.Variable.prototype.setHeight = function(a) {
   this.height_ = 100 > a ? 100 : a;

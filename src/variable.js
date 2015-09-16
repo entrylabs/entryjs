@@ -619,11 +619,8 @@ Entry.Variable.prototype.getWidth = function() {
 };
 
 Entry.Variable.prototype.isInList = function(x,y){
-    console.log(x + "=================" + y);
     var xArea = this.getX() + this.width_;
-    console.log(xArea);
     var yArea = this.getY() + this.height_;
-    console.log(yArea);
     // if(Entry.engine.state == 'stop' && this.type== 'list');
 
 };
