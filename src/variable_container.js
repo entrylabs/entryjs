@@ -803,8 +803,8 @@ Entry.VariableContainer.prototype.createFunctionView = function(func) {
  * @param {Entry.Variable} variable
  * @return {boolean} return true when success
  */
-Entry.VariableContainer.prototype.checkAllVariableName = function(name,arry){
-    var variable = arry;
+Entry.VariableContainer.prototype.checkAllVariableName = function(name,variable){
+    var variable = this[variable];
     for (var i=0; i < variable.length; i++) {
         if(variable[i].name_ == name){
             return true;
@@ -820,7 +820,7 @@ Entry.VariableContainer.prototype.addVariable = function(variable) {
         if (!name || name.length == 0)
             name = Lang.Workspace.variable;
 
-        name = this.checkAllVariableName(name,this.variables_) ? Entry.getOrderedName(name, this.variables_, 'name_') : name;
+        name = this.checkAllVariableName(name,'variables_') ? Entry.getOrderedName(name, this.variables_, 'name_') : name;
         var info = panel.info;
         variable = {
             name: name,
@@ -1183,7 +1183,7 @@ Entry.VariableContainer.prototype.addList = function(list) {
             name = Lang.Workspace.list;
 
         var info = panel.info;
-        name = this.checkAllVariableName(name,this.lists_) ? Entry.getOrderedName(name, this.lists_, 'name_') : name;
+        name = this.checkAllVariableName(name, 'lists_') ? Entry.getOrderedName(name, this.lists_, 'name_') : name;
         list = {
             name: name,
             isCloud: info.isCloud,

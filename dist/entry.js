@@ -10749,6 +10749,7 @@ Entry.VariableContainer.prototype.createFunctionView = function(a) {
   a.listElement = c;
 };
 Entry.VariableContainer.prototype.checkAllVariableName = function(a, b) {
+  b = this[b];
   for (var c = 0;c < b.length;c++) {
     if (b[c].name_ == a) {
       return !0;
@@ -10761,7 +10762,7 @@ Entry.VariableContainer.prototype.addVariable = function(a) {
     var b = this.variableAddPanel;
     a = b.view.name.value.trim();
     a && 0 != a.length || (a = Lang.Workspace.variable);
-    a = this.checkAllVariableName(a, this.variables_) ? Entry.getOrderedName(a, this.variables_, "name_") : a;
+    a = this.checkAllVariableName(a, "variables_") ? Entry.getOrderedName(a, this.variables_, "name_") : a;
     var c = b.info;
     a = {name:a, isCloud:c.isCloud, object:c.object, variableType:"variable"};
     b.view.addClass("entryRemove");
@@ -10941,7 +10942,7 @@ Entry.VariableContainer.prototype.addList = function(a) {
     a = b.view.name.value.trim();
     a && 0 != a.length || (a = Lang.Workspace.list);
     var c = b.info;
-    a = this.checkAllVariableName(a, this.lists_) ? Entry.getOrderedName(a, this.lists_, "name_") : a;
+    a = this.checkAllVariableName(a, "lists_") ? Entry.getOrderedName(a, this.lists_, "name_") : a;
     a = {name:a, isCloud:c.isCloud, object:c.object, variableType:"list"};
     b.view.addClass("entryRemove");
     this.resetVariableAddPanel("list");
