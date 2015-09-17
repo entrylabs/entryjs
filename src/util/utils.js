@@ -655,3 +655,14 @@ Entry.deAttachEventListener = function(elem, eventType, func) {
     elem['removeEventListener'](eventType, func);
 }
 
+Entry.isEmpty = function(obj) {
+    if (!obj)
+        return true;
+
+    for (var prop in obj) {
+        if (obj.hasOwnProperty(prop))
+            return false;
+    }
+
+    return true;
+}

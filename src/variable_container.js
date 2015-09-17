@@ -647,11 +647,18 @@ Entry.VariableContainer.prototype.setVariables = function(variables) {
             variable.generateView(this.lists_.length);
             this.createListView(variable);
             this.lists_.push(variable);
-        } else if (type == 'timer') that.generateTimer(variable);
-        else if (type == 'answer') that.generateAnswer(variable);
+        } else if (type == 'timer') {
+            that.generateTimer(variable);
+        } else if (type == 'answer') {
+            that.generateAnswer(variable);
+        }
     }
-    if (_.isEmpty(Entry.engine.projectTimer)) Entry.variableContainer.generateTimer();
-    if (_.isEmpty(Entry.container.inputValue)) Entry.variableContainer.generateAnswer();
+    if (Entry.isEmpty(Entry.engine.projectTimer))
+        Entry.variableContainer.generateTimer();
+
+    if (Entry.isEmpty(Entry.container.inputValue))
+        Entry.variableContainer.generateAnswer();
+
     Entry.playground.reloadPlayground();
     this.updateList();
 };
@@ -1332,7 +1339,7 @@ Entry.VariableContainer.prototype.getVariableJSON = function() {
         json.push(Entry.engine.projectTimer);
 
     var answer = Entry.container.inputValue;
-    if (!_.isEmpty(answer))
+    if (!Entry.isEmpty(answer))
         json.push(answer);
     return json;
 };
