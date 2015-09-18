@@ -9,7 +9,9 @@ Entry.Hamster = {
         outputB: 0,
         leftLed: 0,
         rightLed: 0,
-        note: 0
+        note: 0,
+        ioModeA: 0,
+        ioModeB: 0
 	},
     setZero: function() {
         var portMap = Entry.Hamster.PORT_MAP;
@@ -502,8 +504,8 @@ Entry.block.hamster_rest_for = function (sprite, script) {
         }, timeValue);
         return script;
     } else {
-        delete script.timeFlag;
         delete script.isStart;
+        delete script.timeFlag;
         Entry.engine.isContinue = false;
         return script.callReturn();
     }
