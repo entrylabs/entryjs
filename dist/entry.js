@@ -22,7 +22,7 @@ var Entry = {events_:{}, block:{}, TEXT_ALIGN_CENTER:0, TEXT_ALIGN_LEFT:1, TEXT_
   Entry.hw.closeConnection();
   Entry.variableContainer.updateCloudVariables();
   if ("workspace" == Entry.type && (localStorage && Entry.interfaceState && localStorage.setItem("workspace-interface", JSON.stringify(Entry.interfaceState)), !Entry.stateManager.isSaved())) {
-    return "\ud504\ub85c\uc81d\ud2b8\ub97c \uc218\uc815\ud558\uc168\uc2b5\ub2c8\ub2e4.";
+    return Lang.Workspace.project_changed;
   }
 }, loadInterfaceState:function() {
   if ("workspace" == Entry.type) {
@@ -5421,7 +5421,7 @@ p.blockHelperOn = function() {
   a.parentView_.appendChild(b);
   if (!Entry.isForLecture) {
     var c = Entry.createElement("div", "entryBlockHelperHeaderWorkspace");
-    c.innerHTML = "\ube14\ub85d \uc124\uba85";
+    c.innerHTML = Lang.Helper.Block_info;
     var d = Entry.createElement("button", "entryBlockHelperDisposeWorkspace");
     d.addClass("entryBtn");
     d.bindOnClick(function() {
@@ -5443,7 +5443,7 @@ p.blockHelperOn = function() {
   a.blockHelperContent_.appendChild(b);
   b = Entry.createElement("div", "entryBlockHelperDescriptionWorkspace");
   a.blockHelperContent_.appendChild(b);
-  b.innerHTML = "\ube14\ub85d\uc744 \ud074\ub9ad\ud558\uba74 \ube14\ub85d\uc5d0 \ub300\ud55c \uc124\uba85\uc774 \ub098\ud0c0\ub0a9\ub2c8\ub2e4.";
+  b.innerHTML = Lang.Helper.Block_click_msg;
   this.blockHelperDescription_ = b;
   this.blockChangeEvent = Blockly.bindEvent_(Blockly.mainWorkspace.getCanvas(), "blocklySelectChange", this, this.updateSelectedBlock);
   Entry.playground.blockMenu && (this.menuBlockChangeEvent = Blockly.bindEvent_(Entry.playground.blockMenu.workspace_.getCanvas(), "blocklySelectChange", this, this.updateSelectedBlock));
@@ -6070,7 +6070,7 @@ Entry.EntryObject.prototype.generateView = function() {
       c.entity.setDirection(c.entity.getDirection());
       Entry.stage.updateObject();
     }, a = Entry.createElement("div"), a.addClass("entryObjectRotationWrapperWorkspace"), a.object = this, this.view_.appendChild(a), d = Entry.createElement("span"), d.addClass("entryObjectCoordinateWorkspace"), a.appendChild(d), e = Entry.createElement("span"), e.addClass("entryObjectCoordinateSpanWorkspace"), e.innerHTML = "X:", f = Entry.createElement("input"), f.addClass("entryObjectCoordinateInputWorkspace"), h = Entry.createElement("span"), h.addClass("entryObjectCoordinateSpanWorkspace"), 
-    h.innerHTML = "Y:", g = Entry.createElement("input"), g.addClass("entryObjectCoordinateInputWorkspace entryObjectCoordinateInputWorkspace_right"), k = Entry.createElement("span"), k.addClass("entryObjectCoordinateSpanWorkspace"), k.innerHTML = "\ud06c\uae30:", n = Entry.createElement("input"), n.addClass("entryObjectCoordinateInputWorkspace", "entryObjectCoordinateInputWorkspace_size"), d.appendChild(e), d.appendChild(f), d.appendChild(h), d.appendChild(g), d.appendChild(k), d.appendChild(n), 
+    h.innerHTML = "Y:", g = Entry.createElement("input"), g.addClass("entryObjectCoordinateInputWorkspace entryObjectCoordinateInputWorkspace_right"), k = Entry.createElement("span"), k.addClass("entryObjectCoordinateSpanWorkspace"), k.innerHTML = Lang.Workspace.Size, n = Entry.createElement("input"), n.addClass("entryObjectCoordinateInputWorkspace", "entryObjectCoordinateInputWorkspace_size"), d.appendChild(e), d.appendChild(f), d.appendChild(h), d.appendChild(g), d.appendChild(k), d.appendChild(n), 
     d.xInput_ = f, d.yInput_ = g, d.sizeInput_ = n, this.coordinateView_ = d, c = this, f.onkeypress = function(a) {
       13 == a.keyCode && (isNaN(f.value) || c.entity.setX(Number(f.value)), c.updateCoordinateView(), f.blur());
     }, f.onblur = function(a) {
@@ -9827,6 +9827,17 @@ Entry.attachEventListener = function(a, b, c) {
 Entry.deAttachEventListener = function(a, b, c) {
   a.removeEventListener(b, c);
 };
+Entry.isEmpty = function(a) {
+  if (!a) {
+    return !0;
+  }
+  for (var b in a) {
+    if (a.hasOwnProperty(b)) {
+      return !1;
+    }
+  }
+  return !0;
+};
 Entry.Func = function() {
   this.id = Entry.generateHash();
   this.content = Blockly.Xml.textToDom(Entry.Func.CREATE_BLOCK);
@@ -10626,13 +10637,13 @@ Entry.VariableContainer.prototype.updateList = function() {
         e.object && !Entry.playground.object && (e.object = null);
         this.listView_.appendChild(this.listAddButton_);
         this.listView_.appendChild(this.listAddPanel.view);
-        this.variableSplitters.top.innerHTML = "\ubaa8\ub4e0 \uc624\ube0c\uc81d\ud2b8\uc5d0\uc11c \uc0ac\uc6a9\ub418\ub294 \ub9ac\uc2a4\ud2b8";
+        this.variableSplitters.top.innerHTML = Lang.Workspace.List_used_all_objects;
         this.listView_.appendChild(this.variableSplitters.top);
         this.updateVariableAddView("list");
         for (c in this.lists_) {
           d = this.lists_[c], d.object_ || (b.push(d), e = d.listElement, this.listView_.appendChild(e), d.callerListElement && this.listView_.appendChild(d.callerListElement));
         }
-        this.variableSplitters.bottom.innerHTML = "\ud2b9\uc815 \uc624\ube0c\uc81d\ud2b8\uc5d0\uc11c \uc0ac\uc6a9\ub418\ub294 \ub9ac\uc2a4\ud2b8";
+        this.variableSplitters.bottom.innerHTML = Lang.Workspace.list_used_specific_objects;
         this.listView_.appendChild(this.variableSplitters.bottom);
         for (c in this.lists_) {
           d = this.lists_[c], d.object_ && (b.push(d), e = d.listElement, this.listView_.appendChild(e), d.callerListElement && this.listView_.appendChild(d.callerListElement));
@@ -10748,12 +10759,21 @@ Entry.VariableContainer.prototype.createFunctionView = function(a) {
   c.appendChild(d);
   a.listElement = c;
 };
+Entry.VariableContainer.prototype.checkAllVariableName = function(a, b) {
+  b = this[b];
+  for (var c = 0;c < b.length;c++) {
+    if (b[c].name_ == a) {
+      return !0;
+    }
+  }
+  return !1;
+};
 Entry.VariableContainer.prototype.addVariable = function(a) {
   if (!a) {
     var b = this.variableAddPanel;
     a = b.view.name.value.trim();
     a && 0 != a.length || (a = Lang.Workspace.variable);
-    a = Entry.getOrderedName(a, this.variables_, "name_");
+    a = this.checkAllVariableName(a, "variables_") ? Entry.getOrderedName(a, this.variables_, "name_") : a;
     var c = b.info;
     a = {name:a, isCloud:c.isCloud, object:c.object, variableType:"variable"};
     b.view.addClass("entryRemove");
@@ -10843,7 +10863,7 @@ Entry.VariableContainer.prototype.createVariableView = function(a) {
     a.stopPropagation();
   });
   g.onblur = function(c) {
-    (c = this.value.trim()) && 0 != c.length ? b.changeVariableName(a, this.value) : (Entry.toast.alert("\uacbd\uace0", "\ubcc0\uc218\uc758 \uc774\ub984\uc740 \ube48 \uce78\uc774 \ub420 \uc218 \uc5c6\uc2b5\ub2c8\ub2e4.."), this.value = a.getName());
+    (c = this.value.trim()) && 0 != c.length ? b.changeVariableName(a, this.value) : (Entry.toast.alert(Lang.Msgs.warn, Lang.Workspace.variable_can_not_space), this.value = a.getName());
   };
   g.onkeydown = function(a) {
     13 == a.keyCode && this.blur();
@@ -10915,7 +10935,7 @@ Entry.VariableContainer.prototype.createMessageView = function(a) {
     a.stopPropagation();
   });
   h.onblur = function(c) {
-    (c = this.value.trim()) && 0 != c.length ? (b.changeMessageName(a, this.value), e.removeClass("entryRemove"), f.addClass("entryRemove"), h.setAttribute("disabled", "disabled")) : (Entry.toast.alert("\uacbd\uace0", "\uc2e0\ud638\uc758 \uc774\ub984\uc740 \ube48 \uce78\uc774 \ub420 \uc218 \uc5c6\uc2b5\ub2c8\ub2e4.."), this.value = a.name);
+    (c = this.value.trim()) && 0 != c.length ? (b.changeMessageName(a, this.value), e.removeClass("entryRemove"), f.addClass("entryRemove"), h.setAttribute("disabled", "disabled")) : (Entry.toast.alert(Lang.Msgs.warn, Lang.Msgs.sign_can_not_space), this.value = a.name);
   };
   h.onkeydown = function(a) {
     13 == a.keyCode && this.blur();
@@ -10933,7 +10953,7 @@ Entry.VariableContainer.prototype.addList = function(a) {
     a = b.view.name.value.trim();
     a && 0 != a.length || (a = Lang.Workspace.list);
     var c = b.info;
-    a = Entry.getOrderedName(a, this.lists_, "name_");
+    a = this.checkAllVariableName(a, "lists_") ? Entry.getOrderedName(a, this.lists_, "name_") : a;
     a = {name:a, isCloud:c.isCloud, object:c.object, variableType:"list"};
     b.view.addClass("entryRemove");
     this.resetVariableAddPanel("list");
@@ -10997,7 +11017,7 @@ Entry.VariableContainer.prototype.createListView = function(a) {
     a.stopPropagation();
   });
   g.onblur = function(c) {
-    (c = this.value.trim()) && 0 != c.length ? b.changeListName(a, this.value) : (Entry.toast.alert("\uacbd\uace0", "\ub9ac\uc2a4\ud2b8\uc758 \uc774\ub984\uc740 \ube48 \uce78\uc774 \ub420 \uc218 \uc5c6\uc2b5\ub2c8\ub2e4.."), this.value = a.getName());
+    (c = this.value.trim()) && 0 != c.length ? b.changeListName(a, this.value) : (Entry.toast.alert(Lang.Msgs.warn, Lang.Msgs.list_can_not_space), this.value = a.getName());
   };
   g.onkeydown = function(a) {
     13 == a.keyCode && this.blur();
@@ -11159,7 +11179,7 @@ Entry.VariableContainer.prototype.generateListAddView = function() {
   b.appendChild(c);
   var d = Entry.createElement("input");
   d.addClass("entryVariableAddSpaceInputWorkspace");
-  d.setAttribute("placeholder", "\ub9ac\uc2a4\ud2b8 \uc774\ub984");
+  d.setAttribute("placeholder", Lang.Workspace.list_name);
   this.listAddPanel.view.name = d;
   d.variableContainer = this;
   d.onkeypress = function(b) {
@@ -11174,7 +11194,7 @@ Entry.VariableContainer.prototype.generateListAddView = function() {
   });
   b.appendChild(c);
   d = Entry.createElement("span");
-  d.innerHTML = "\ubaa8\ub4e0 \uc624\ube0c\uc81d\ud2b8\uc5d0\uc11c \uc0ac\uc6a9";
+  d.innerHTML = Lang.Workspace.use_all_objects;
   c.appendChild(d);
   d = Entry.createElement("span");
   d.addClass("entryVariableAddSpaceCheckWorkspace");
@@ -11188,7 +11208,7 @@ Entry.VariableContainer.prototype.generateListAddView = function() {
   });
   b.appendChild(c);
   d = Entry.createElement("span");
-  d.innerHTML = "\uc774 \uc624\ube0c\uc81d\ud2b8\uc5d0\uc11c \uc0ac\uc6a9";
+  d.innerHTML = Lang.Workspace.Variable_use_this_object;
   c.appendChild(d);
   d = Entry.createElement("span");
   d.addClass("entryVariableAddSpaceCheckWorkspace");
@@ -11205,7 +11225,7 @@ Entry.VariableContainer.prototype.generateListAddView = function() {
   b.appendChild(c);
   d = Entry.createElement("span");
   d.addClass("entryVariableAddSpaceCloudSpanWorkspace");
-  d.innerHTML = "\ud074\ub77c\uc6b0\ub4dc \ubcc0\uc218\ub85c \uc0ac\uc6a9 <br>(\uc11c\ubc84\uc5d0 \uc800\uc7a5\ub429\ub2c8\ub2e4)";
+  d.innerHTML = Lang.Workspace.use_for_cloud + "<br>" + Lang.Workspace.stored_in_server;
   c.appendChild(d);
   d = Entry.createElement("span");
   this.listAddPanel.view.cloudCheck = d;
@@ -11219,7 +11239,7 @@ Entry.VariableContainer.prototype.generateListAddView = function() {
   b = Entry.createElement("span");
   b.addClass("entryVariableAddSpaceCancelWorkspace");
   b.addClass("entryVariableAddSpaceButtonWorkspace");
-  b.innerHTML = "\ucde8\uc18c";
+  b.innerHTML = Lang.Buttons.cancel;
   b.bindOnClick(function(b) {
     a.listAddPanel.view.addClass("entryRemove");
     a.resetVariableAddPanel("list");
@@ -11228,7 +11248,7 @@ Entry.VariableContainer.prototype.generateListAddView = function() {
   b = Entry.createElement("span");
   b.addClass("entryVariableAddSpaceConfirmWorkspace");
   b.addClass("entryVariableAddSpaceButtonWorkspace");
-  b.innerHTML = "\ud655\uc778";
+  b.innerHTML = Lang.Buttons.save;
   b.variableContainer = this;
   b.bindOnClick(function(b) {
     a.addList();
@@ -11435,7 +11455,7 @@ Entry.VariableContainer.prototype.generateListSettingView = function() {
   });
   b.appendChild(c);
   var d = Entry.createElement("span");
-  d.innerHTML = "\ub9ac\uc2a4\ud2b8 \ubcf4\uc774\uae30";
+  d.innerHTML = Lang.Workspace.show_list_workspace;
   c.appendChild(d);
   d = Entry.createElement("span");
   d.addClass("entryListSettingCheckWorkspace");
