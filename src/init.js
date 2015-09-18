@@ -214,6 +214,27 @@ Entry.createDom = function(container, option) {
         canvas.width = 640;
         canvas.height = 360;
         engineView.insertBefore(canvas, this.engine.addButton);
+        
+        canvas.addEventListener("mousewheel" , function(evt) {   
+            var lists = [];
+            var mousePosition = Entry.stage.mouseCoordinate;
+            var tempList = Entry.variableContainer.getListById(mousePosition);
+            var wheelDirection = evt.wheelDelta > 0 ? true : false;               
+            
+            for(var i=0; i<tempList.length; i++) {
+                var list = tempList[i];
+                if(wheelDirection){
+                    if(list.scrollButton_.y >= 46 )
+                        list.scrollButton_.y -= 23;
+                    else 
+                        list.scrollButton_.y = 23;
+                } else {
+                    list.scrollButton_.y += 23;
+                }
+                list.updateView();
+            }   
+        });
+
         /** @type {!Element} */
         this.canvas_ = canvas;
         this.stage.initStage(this.canvas_);

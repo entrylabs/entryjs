@@ -732,6 +732,36 @@ Entry.VariableContainer.prototype.removeFunction = function(func) {
     this.updateList();
 };
 
+Entry.VariableContainer.prototype.checkListPosition = function(list,mouse) {
+    var pos = {
+        start_w: list.x_,
+        area_w : list.x_ + list.width_,
+        start_h : -list.y_,
+        area_h : (-list.y_) + (-list.height_)
+    }
+
+    if(mouse.x > pos.start_w && mouse.x < pos.area_w) {
+        if(mouse.y < pos.start_h && mouse.y > pos.area_h) {
+            return true;
+        }
+    }
+    return false;
+}
+
+Entry.VariableContainer.prototype.getListById = function(mouseevt) {
+    var lists = this.lists_;
+    var returnList = []; 
+    if(lists.length > 0){
+        for(var i=0; i<lists.length; i++){
+            if(this.checkListPosition(lists[i],mouseevt))
+                returnList.push(lists[i]);
+        }
+        return returnList;
+    } 
+    return false;
+}
+
+
 /**
  * @param {Entry.Variable} variable
  * @param {String} name

@@ -618,6 +618,13 @@ Entry.Variable.prototype.getWidth = function() {
     return this.width_;
 };
 
+Entry.Variable.prototype.isInList = function(x,y){
+    var xArea = this.getX() + this.width_;
+    var yArea = this.getY() + this.height_;
+    // if(Entry.engine.state == 'stop' && this.type== 'list');
+
+};
+
 /**
  * height setter
  * @param {number} height

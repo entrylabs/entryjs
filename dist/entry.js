@@ -5660,6 +5660,15 @@ Entry.createDom = function(a, b) {
     c.width = 640;
     c.height = 360;
     d.insertBefore(c, this.engine.addButton);
+    c.addEventListener("mousewheel", function(a) {
+      var b = Entry.variableContainer.getListById(Entry.stage.mouseCoordinate);
+      a = 0 < a.wheelDelta ? !0 : !1;
+      for (var c = 0;c < b.length;c++) {
+        var d = b[c];
+        d.scrollButton_.y = a ? 46 <= d.scrollButton_.y ? d.scrollButton_.y - 23 : 23 : d.scrollButton_.y + 23;
+        d.updateView();
+      }
+    });
     this.canvas_ = c;
     this.stage.initStage(this.canvas_);
     c = Entry.createElement("div");
@@ -10287,6 +10296,10 @@ Entry.Variable.prototype.setWidth = function(a) {
 Entry.Variable.prototype.getWidth = function() {
   return this.width_;
 };
+Entry.Variable.prototype.isInList = function(a, b) {
+  this.getX();
+  this.getY();
+};
 Entry.Variable.prototype.setHeight = function(a) {
   this.height_ = 100 > a ? 100 : a;
   this.updateView();
@@ -10707,6 +10720,20 @@ Entry.VariableContainer.prototype.addFunction = function(a) {
 Entry.VariableContainer.prototype.removeFunction = function(a) {
   delete this.functions_[a.id];
   this.updateList();
+};
+Entry.VariableContainer.prototype.checkListPosition = function(a, b) {
+  var c = a.x_ + a.width_, d = -a.y_, e = -a.y_ + -a.height_;
+  return b.x > a.x_ && b.x < c && b.y < d && b.y > e ? !0 : !1;
+};
+Entry.VariableContainer.prototype.getListById = function(a) {
+  var b = this.lists_, c = [];
+  if (0 < b.length) {
+    for (var d = 0;d < b.length;d++) {
+      this.checkListPosition(b[d], a) && c.push(b[d]);
+    }
+    return c;
+  }
+  return !1;
 };
 Entry.VariableContainer.prototype.editFunction = function(a, b) {
 };
