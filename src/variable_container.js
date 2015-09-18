@@ -810,6 +810,15 @@ Entry.VariableContainer.prototype.createFunctionView = function(func) {
  * @param {Entry.Variable} variable
  * @return {boolean} return true when success
  */
+Entry.VariableContainer.prototype.checkAllVariableName = function(name,variable){
+    var variable = this[variable];
+    for (var i=0; i < variable.length; i++) {
+        if(variable[i].name_ == name){
+            return true;
+        }
+    }
+    return false;
+}
 Entry.VariableContainer.prototype.addVariable = function(variable) {
     if (!variable) {
         var variableContainer = this;
@@ -818,7 +827,7 @@ Entry.VariableContainer.prototype.addVariable = function(variable) {
         if (!name || name.length == 0)
             name = Lang.Workspace.variable;
 
-        name = Entry.getOrderedName(name, this.variables_, 'name_');
+        name = this.checkAllVariableName(name,'variables_') ? Entry.getOrderedName(name, this.variables_, 'name_') : name;
         var info = panel.info;
         variable = {
             name: name,
@@ -1015,6 +1024,7 @@ Entry.VariableContainer.prototype.createVariableView = function(variable) {
             return;
         }
         that.changeVariableName(variable, this.value);
+
     };
     nameField.onkeydown = function(e) {
         if (e.keyCode == 13)
@@ -1180,7 +1190,7 @@ Entry.VariableContainer.prototype.addList = function(list) {
             name = Lang.Workspace.list;
 
         var info = panel.info;
-        name = Entry.getOrderedName(name, this.lists_, 'name_');
+        name = this.checkAllVariableName(name, 'lists_') ? Entry.getOrderedName(name, this.lists_, 'name_') : name;
         list = {
             name: name,
             isCloud: info.isCloud,
