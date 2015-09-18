@@ -11205,7 +11205,7 @@ Entry.VariableContainer.prototype.generateListAddView = function() {
   b.appendChild(c);
   d = Entry.createElement("span");
   d.addClass("entryVariableAddSpaceCloudSpanWorkspace");
-  d.innerHTML = "\ud074\ub77c\uc6b0\ub4dc \ubcc0\uc218\ub85c \uc0ac\uc6a9 <br>(\uc11c\ubc84\uc5d0 \uc800\uc7a5\ub429\ub2c8\ub2e4)";
+  d.innerHTML = Lang.Workspace.List_create_cloud;
   c.appendChild(d);
   d = Entry.createElement("span");
   this.listAddPanel.view.cloudCheck = d;

@@ -1614,7 +1614,7 @@ Entry.VariableContainer.prototype.generateListAddView = function() {
     listAddSpace.appendChild(addSpaceCloudWrapper);
     var addSpaceCloudSpan = Entry.createElement('span');
     addSpaceCloudSpan.addClass('entryVariableAddSpaceCloudSpanWorkspace');
-    addSpaceCloudSpan.innerHTML = '클라우드 변수로 사용 <br>(서버에 저장됩니다)';
+    addSpaceCloudSpan.innerHTML = Lang.Workspace.List_create_cloud;
     addSpaceCloudWrapper.appendChild(addSpaceCloudSpan);
     var addListCloudCheck = Entry.createElement('span');
     this.listAddPanel.view.cloudCheck = addListCloudCheck;
