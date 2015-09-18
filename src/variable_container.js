@@ -647,10 +647,18 @@ Entry.VariableContainer.prototype.setVariables = function(variables) {
             variable.generateView(this.lists_.length);
             this.createListView(variable);
             this.lists_.push(variable);
-        } else if (type == 'timer'){
+        } else if (type == 'timer') {
             that.generateTimer(variable);
+        } else if (type == 'answer') {
+            that.generateAnswer(variable);
         }
     }
+    if (Entry.isEmpty(Entry.engine.projectTimer))
+        Entry.variableContainer.generateTimer();
+
+    if (Entry.isEmpty(Entry.container.inputValue))
+        Entry.variableContainer.generateAnswer();
+
     Entry.playground.reloadPlayground();
     this.updateList();
 };
@@ -832,6 +840,15 @@ Entry.VariableContainer.prototype.createFunctionView = function(func) {
  * @param {Entry.Variable} variable
  * @return {boolean} return true when success
  */
+Entry.VariableContainer.prototype.checkAllVariableName = function(name,variable){
+    var variable = this[variable];
+    for (var i=0; i < variable.length; i++) {
+        if(variable[i].name_ == name){
+            return true;
+        }
+    }
+    return false;
+}
 Entry.VariableContainer.prototype.addVariable = function(variable) {
     if (!variable) {
         var variableContainer = this;
@@ -840,7 +857,7 @@ Entry.VariableContainer.prototype.addVariable = function(variable) {
         if (!name || name.length == 0)
             name = Lang.Workspace.variable;
 
-        name = Entry.getOrderedName(name, this.variables_, 'name_');
+        name = this.checkAllVariableName(name,'variables_') ? Entry.getOrderedName(name, this.variables_, 'name_') : name;
         var info = panel.info;
         variable = {
             name: name,
@@ -1037,6 +1054,7 @@ Entry.VariableContainer.prototype.createVariableView = function(variable) {
             return;
         }
         that.changeVariableName(variable, this.value);
+
     };
     nameField.onkeydown = function(e) {
         if (e.keyCode == 13)
@@ -1202,7 +1220,7 @@ Entry.VariableContainer.prototype.addList = function(list) {
             name = Lang.Workspace.list;
 
         var info = panel.info;
-        name = Entry.getOrderedName(name, this.lists_, 'name_');
+        name = this.checkAllVariableName(name, 'lists_') ? Entry.getOrderedName(name, this.lists_, 'name_') : name;
         list = {
             name: name,
             isCloud: info.isCloud,
@@ -1360,8 +1378,9 @@ Entry.VariableContainer.prototype.getVariableJSON = function() {
     if (Entry.engine.projectTimer)
         json.push(Entry.engine.projectTimer);
 
-    if (Entry.engine.projectAnswer)
-        json.push(Entry.engine.projectAnswer);
+    var answer = Entry.container.inputValue;
+    if (!Entry.isEmpty(answer))
+        json.push(answer);
     return json;
 };
 
@@ -1780,16 +1799,18 @@ Entry.VariableContainer.prototype.generateTimer = function (timer) {
 }
 
 //generate Answer
-Entry.VariableContainer.prototype.generateAnswer = function () {
-    answer = {};
-    answer.id = Entry.generateHash();
-    answer.name = Lang.Blocks.VARIABLE_get_canvas_input_value;
-    answer.value = 0;
-    answer.variableType = 'answer';
-    answer.visible = false;
-    answer.x = 150;
-    answer.y = -100;
-    answer = new Entry.Variable(answer);
+Entry.VariableContainer.prototype.generateAnswer = function (answer) {
+    if (!answer) {
+        answer = new Entry.Variable({
+            id: Entry.generateHash(),
+            name: Lang.Blocks.VARIABLE_get_canvas_input_value,
+            value: 0,
+            variableType: 'answer',
+            visible: false,
+            x: 150,
+            y: -100
+        });
+    }
 
     answer.generateView();
     Entry.container.inputValue = answer;

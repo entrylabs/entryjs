@@ -1,5 +1,5 @@
 var Entry = {events_:{}, block:{}, TEXT_ALIGN_CENTER:0, TEXT_ALIGN_LEFT:1, TEXT_ALIGN_RIGHT:2, TEXT_ALIGNS:["center", "left", "right"], loadProject:function(a) {
-  a && ("workspace" == this.type && Entry.stateManager.startIgnore(), Entry.projectId = a._id, Entry.variableContainer.setVariables(a.variables), Entry.variableContainer.setMessages(a.messages), Entry.variableContainer.setFunctions(a.functions), Entry.variableContainer.generateAnswer(), Entry.scene.addScenes(a.scenes), Entry.stage.initObjectContainers(), Entry.container.setObjects(a.objects), Entry.FPS = a.speed ? a.speed : 60, createjs.Ticker.setFPS(Entry.FPS), "workspace" == this.type && Entry.stateManager.endIgnore());
+  a && ("workspace" == this.type && Entry.stateManager.startIgnore(), Entry.projectId = a._id, Entry.variableContainer.setVariables(a.variables), Entry.variableContainer.setMessages(a.messages), Entry.variableContainer.setFunctions(a.functions), Entry.scene.addScenes(a.scenes), Entry.stage.initObjectContainers(), Entry.container.setObjects(a.objects), Entry.FPS = a.speed ? a.speed : 60, createjs.Ticker.setFPS(Entry.FPS), "workspace" == this.type && Entry.stateManager.endIgnore());
   Entry.engine.projectTimer || Entry.variableContainer.generateTimer();
   0 === Object.keys(Entry.container.inputValue).length && Entry.variableContainer.generateAnswer();
   Entry.start();
@@ -269,7 +269,7 @@ Entry.block.sensorBoard_get_named_sensor_value = function(a, b) {
 };
 Blockly.Blocks.sensorBoard_is_button_pressed = {init:function() {
   this.setColour("#00979D");
-  this.appendDummyInput().appendField("").appendField(new Blockly.FieldDropdown([["\ube68\uac15", "8"], ["\ub178\ub791", "10"], ["\ucd08\ub85d", "11"], ["\ud30c\ub791", "9"]]), "PORT");
+  this.appendDummyInput().appendField("").appendField(new Blockly.FieldDropdown([["\ube68\uac04", "8"], ["\ub178\ub791", "10"], ["\ucd08\ub85d", "11"], ["\ud30c\ub780", "9"]]), "PORT");
   this.appendDummyInput().appendField(" \ubc84\ud2bc\uc774 \ub20c\ub838\ub294\uac00?");
   this.setInputsInline(!0);
   this.setOutput(!0, "Boolean");
@@ -279,7 +279,7 @@ Entry.block.sensorBoard_is_button_pressed = function(a, b) {
 };
 Blockly.Blocks.sensorBoard_led = {init:function() {
   this.setColour("#00979D");
-  this.appendDummyInput().appendField("").appendField(new Blockly.FieldDropdown([["\ube68\uac15", "2"], ["\ucd08\ub85d", "3"], ["\ud30c\ub791", "4"], ["\ud770\uc0c9", "5"]]), "PORT").appendField(" LED").appendField(new Blockly.FieldDropdown([["\ucf1c\uae30", "255"], ["\ub044\uae30", "0"]]), "OPERATOR").appendField(" ").appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", "*"));
+  this.appendDummyInput().appendField("").appendField(new Blockly.FieldDropdown([["\ube68\uac04", "2"], ["\ucd08\ub85d", "3"], ["\ud30c\ub780", "4"], ["\ud770\uc0c9", "5"]]), "PORT").appendField(" LED").appendField(new Blockly.FieldDropdown([["\ucf1c\uae30", "255"], ["\ub044\uae30", "0"]]), "OPERATOR").appendField(" ").appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -8639,7 +8639,7 @@ Entry.Reporter = function() {
   this.projectId;
 };
 Entry.Reporter.prototype.start = function(a, b, c) {
-  -1 < window.location.href.indexOf("localhost") ? this.io = io("localhost:7000") : this.io = io("socket.play-entry.com");
+  -1 < window.location.href.indexOf("localhost") ? this.io = io("localhost:7000") : this.io = io("play04.play-entry.com:7000");
   this.io.emit("activity", {message:"start", userId:b, projectId:a, time:c});
   this.userId = b;
   this.projectId = a;
@@ -9836,6 +9836,17 @@ Entry.attachEventListener = function(a, b, c) {
 Entry.deAttachEventListener = function(a, b, c) {
   a.removeEventListener(b, c);
 };
+Entry.isEmpty = function(a) {
+  if (!a) {
+    return !0;
+  }
+  for (var b in a) {
+    if (a.hasOwnProperty(b)) {
+      return !1;
+    }
+  }
+  return !0;
+};
 Entry.Func = function() {
   this.id = Entry.generateHash();
   this.content = Blockly.Xml.textToDom(Entry.Func.CREATE_BLOCK);
@@ -10680,8 +10691,10 @@ Entry.VariableContainer.prototype.setMessages = function(a) {
 Entry.VariableContainer.prototype.setVariables = function(a) {
   for (var b in a) {
     var c = new Entry.Variable(a[b]), d = c.getType();
-    "variable" == d || "slide" == d ? (c.generateView(this.variables_.length), this.createVariableView(c), this.variables_.push(c)) : "list" == d ? (c.generateView(this.lists_.length), this.createListView(c), this.lists_.push(c)) : "timer" == d && this.generateTimer(c);
+    "variable" == d || "slide" == d ? (c.generateView(this.variables_.length), this.createVariableView(c), this.variables_.push(c)) : "list" == d ? (c.generateView(this.lists_.length), this.createListView(c), this.lists_.push(c)) : "timer" == d ? this.generateTimer(c) : "answer" == d && this.generateAnswer(c);
   }
+  Entry.isEmpty(Entry.engine.projectTimer) && Entry.variableContainer.generateTimer();
+  Entry.isEmpty(Entry.container.inputValue) && Entry.variableContainer.generateAnswer();
   Entry.playground.reloadPlayground();
   this.updateList();
 };
@@ -10773,12 +10786,21 @@ Entry.VariableContainer.prototype.createFunctionView = function(a) {
   c.appendChild(d);
   a.listElement = c;
 };
+Entry.VariableContainer.prototype.checkAllVariableName = function(a, b) {
+  b = this[b];
+  for (var c = 0;c < b.length;c++) {
+    if (b[c].name_ == a) {
+      return !0;
+    }
+  }
+  return !1;
+};
 Entry.VariableContainer.prototype.addVariable = function(a) {
   if (!a) {
     var b = this.variableAddPanel;
     a = b.view.name.value.trim();
     a && 0 != a.length || (a = Lang.Workspace.variable);
-    a = Entry.getOrderedName(a, this.variables_, "name_");
+    a = this.checkAllVariableName(a, "variables_") ? Entry.getOrderedName(a, this.variables_, "name_") : a;
     var c = b.info;
     a = {name:a, isCloud:c.isCloud, object:c.object, variableType:"variable"};
     b.view.addClass("entryRemove");
@@ -10958,7 +10980,7 @@ Entry.VariableContainer.prototype.addList = function(a) {
     a = b.view.name.value.trim();
     a && 0 != a.length || (a = Lang.Workspace.list);
     var c = b.info;
-    a = Entry.getOrderedName(a, this.lists_, "name_");
+    a = this.checkAllVariableName(a, "lists_") ? Entry.getOrderedName(a, this.lists_, "name_") : a;
     a = {name:a, isCloud:c.isCloud, object:c.object, variableType:"list"};
     b.view.addClass("entryRemove");
     this.resetVariableAddPanel("list");
@@ -11052,7 +11074,8 @@ Entry.VariableContainer.prototype.getVariableJSON = function() {
     a.push(this.lists_[b].toJSON());
   }
   Entry.engine.projectTimer && a.push(Entry.engine.projectTimer);
-  Entry.engine.projectAnswer && a.push(Entry.engine.projectAnswer);
+  b = Entry.container.inputValue;
+  Entry.isEmpty(b) || a.push(b);
   return a;
 };
 Entry.VariableContainer.prototype.getMessageJSON = function() {
@@ -11320,18 +11343,10 @@ Entry.VariableContainer.prototype.generateTimer = function(a) {
     Entry.engine.stopProjectTimer();
   });
 };
-Entry.VariableContainer.prototype.generateAnswer = function() {
-  answer = {};
-  answer.id = Entry.generateHash();
-  answer.name = Lang.Blocks.VARIABLE_get_canvas_input_value;
-  answer.value = 0;
-  answer.variableType = "answer";
-  answer.visible = !1;
-  answer.x = 150;
-  answer.y = -100;
-  answer = new Entry.Variable(answer);
-  answer.generateView();
-  Entry.container.inputValue = answer;
+Entry.VariableContainer.prototype.generateAnswer = function(a) {
+  a || (a = new Entry.Variable({id:Entry.generateHash(), name:Lang.Blocks.VARIABLE_get_canvas_input_value, value:0, variableType:"answer", visible:!1, x:150, y:-100}));
+  a.generateView();
+  Entry.container.inputValue = a;
 };
 Entry.VariableContainer.prototype.generateVariableSettingView = function() {
   var a = this, b = Entry.createElement("div");
