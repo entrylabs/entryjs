@@ -722,7 +722,6 @@ Entry.Engine.prototype.toggleFullscreen = function() {
         }
         popup.window_.appendChild(Entry.engine.view_);
     } else {
-        //console.log(this.popup.remove);
         this.popup.remove();
         this.popup = null;
     }
@@ -735,34 +734,6 @@ Entry.Engine.prototype.exitFullScreen = function() {
     } else {
         Entry.engine.footerView_.removeClass('entryRemove');
         Entry.engine.headerView_.removeClass('entryRemove');
-    }
-}
-
-Entry.Engine.prototype.toggleProjectTimer = function() {
-    var timer = this.projectTimer;
-    if (!timer)
-        return;
-    if (this.isState('run')) {
-        timer.start = (new Date()).getTime();
-        timer.tick = setInterval(function (e) {
-            Entry.engine.updateProjectTimer()
-        }, 1000/60);
-    } else {
-        clearInterval(timer.tick);
-        this.updateProjectTimer(0);
-    }
-}
-
-Entry.Engine.prototype.updateProjectTimer = function(value) {
-    var timer = Entry.engine.projectTimer;
-    if (!timer)
-        return;
-    if (typeof value == 'undefined') {
-        var newTime = ((new Date()).getTime() - timer.start);
-        timer.setValue((newTime/1000));
-    } else {
-        timer.setValue(value);
-        timer.start = (new Date()).getTime();
     }
 }
 
@@ -803,3 +774,43 @@ Entry.Engine.prototype.clearTimer = function() {
     clearInterval(this.ticker);
     clearInterval(this.projectTimer.tick);
 }
+
+Entry.Engine.prototype.startProjectTimer = function() {
+    var timer = this.projectTimer;
+    if (!timer)
+        return;
+    timer.start = (new Date()).getTime();
+    timer.isInit = true;
+    timer.pausedTime = 0;
+    timer.tick = setInterval(function (e) {
+        Entry.engine.updateProjectTimer()
+    }, 1000/60);
+}
+
+Entry.Engine.prototype.stopProjectTimer = function() {
+    var timer = this.projectTimer;
+    if (!timer)
+        return;
+    this.updateProjectTimer(0);
+    timer.isInit = false;
+    timer.pausedTime = 0;
+    this.isPaused = false;
+    clearInterval(this.projectTimer.tick);
+}
+
+Entry.Engine.prototype.updateProjectTimer = function(value) {
+    var timer = Entry.engine.projectTimer;
+    if (!timer)
+        return;
+    if (typeof value == 'undefined') {
+        if (!timer.isPaused)
+            timer.setValue((((new Date()).getTime() - timer.start - timer.pausedTime)/1000));
+    } else {
+        timer.setValue(value);
+        timer.pausedTime = 0;
+        timer.start = (new Date()).getTime();
+    }
+}
+
+
+

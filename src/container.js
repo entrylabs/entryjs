@@ -216,7 +216,7 @@ Entry.Container.prototype.setObjects = function(objectModels) {
  * @return {Entry.EntryObject}
  */
 Entry.Container.prototype.addObject = function(objectModel, index) {
-    var backgroundStr = '배경';
+    var backgroundStr = 'background';
     var object = new Entry.EntryObject(objectModel);
     object.name = Entry.getOrderedName(object.name, this.objects_);
 
@@ -599,12 +599,21 @@ Entry.Container.prototype.getDropdownList = function(menuName) {
     } else if (menuName == 'spritesWithMouse') {
         var objs = this.getCurrentObjects();
         var length = objs.length;
-        result.push([Lang.Blocks.mouse_pointer, 'mouse']);
         for (var i = 0; i<length; i++) {
             var object = objs[i];
             result.push([object.name, object.id]);
         }
+        result.push([Lang.Blocks.mouse_pointer, 'mouse']);
+    } else if (menuName == 'spritesWithSelf') {
+        var objs = this.getCurrentObjects();
+        var length = objs.length;
+        for (var i = 0; i<length; i++) {
+            var object = objs[i];
+            result.push([object.name, object.id]);
+        }
+        result.push([Lang.Blocks.self, 'self']);
     } else if (menuName == 'collision') {
+        result.push([Lang.Blocks.mouse_pointer, 'mouse']);
         var objs = this.getCurrentObjects();
         var length = objs.length;
         for (var i = 0; i<length; i++) {
@@ -875,7 +884,7 @@ Entry.Container.prototype.getVariableJSON = function() {
  * @return {String}
  */
 Entry.Container.prototype.getInputValue = function() {
-    return this.inputValue.value;
+    return this.inputValue.getValue();
 };
 
 /**
@@ -884,9 +893,9 @@ Entry.Container.prototype.getInputValue = function() {
  */
 Entry.Container.prototype.setInputValue = function(inputValue) {
     if (!inputValue)
-        this.inputValue.value = '';
+        this.inputValue.setValue(0);
     else
-        this.inputValue.value = inputValue;
+        this.inputValue.setValue(inputValue);
 };
 
 Entry.Container.prototype.resetSceneDuringRun = function() {
@@ -1124,3 +1133,33 @@ Entry.Container.prototype.blurAllInputs = function() {
             inputs[i].blur();
     });
 }
+
+Entry.Container.prototype.showProjectAnswer = function() {
+    var answer = this.inputValue;
+    if (!answer)
+        return;
+    answer.setVisible(true);
+};
+
+
+Entry.Container.prototype.hideProjectAnswer = function(removeBlock) {
+    var answer = this.inputValue;
+    if (!answer || !answer.isVisible() || Entry.engine.isState('run'))
+        return;
+    var objects = Entry.container.getAllObjects();
+    var answerTypes = ['ask_and_wait', 'get_canvas_input_value',
+    'set_visible_answer'];
+
+    for (var i=0, len=objects.length; i<len; i++) {
+        var blocks = objects[i].script.getElementsByTagName('block');
+        for (var j = 0, bLen=blocks.length; j < bLen; j++) {
+            if (answerTypes.indexOf(blocks[j].getAttribute('type')) > -1) {
+                if (blocks[j].getAttribute('id') == removeBlock.getAttribute('id'))
+                    continue;
+                else
+                    return;
+            }
+        }
+    }
+    answer.setVisible(false);
+};

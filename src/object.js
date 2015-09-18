@@ -830,7 +830,7 @@ Entry.EntryObject.prototype.initEntity = function(model) {
         var dimension = model.sprite.pictures[0].dimension;
         json.regX = dimension.width/2;
         json.regY = dimension.height/2;
-        if (model.sprite.category.main == "배경")
+        if (model.sprite.category.main == "background")
             var scale = Math.max(270/dimension.height, 480/dimension.width);
         else if (model.sprite.category.main == "new")
             var scale = 1;
