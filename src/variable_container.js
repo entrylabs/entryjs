@@ -553,7 +553,7 @@ Entry.VariableContainer.prototype.updateList = function() {
             this.listView_.appendChild(this.listAddButton_);
             this.listView_.appendChild(this.listAddPanel.view);
             this.variableSplitters.top.innerHTML =
-                '모든 오브젝트에서 사용되는 리스트';
+                Lang.Workspace.List_used_all_objects;
             this.listView_.appendChild(this.variableSplitters.top);
 
             this.updateVariableAddView('list');
@@ -568,7 +568,7 @@ Entry.VariableContainer.prototype.updateList = function() {
                     this.listView_.appendChild(list.callerListElement);
             }
             this.variableSplitters.bottom.innerHTML =
-                '특정 오브젝트에서 사용되는 리스트';
+                Lang.Workspace.list_used_specific_objects;
             this.listView_.appendChild(this.variableSplitters.bottom);
             for (var i in this.lists_) {
                 var list = this.lists_[i];
@@ -647,18 +647,11 @@ Entry.VariableContainer.prototype.setVariables = function(variables) {
             variable.generateView(this.lists_.length);
             this.createListView(variable);
             this.lists_.push(variable);
-        } else if (type == 'timer') {
-            that.generateTimer(variable);
-        } else if (type == 'answer') {
-            that.generateAnswer(variable);
-        }
+        } else if (type == 'timer') that.generateTimer(variable);
+        else if (type == 'answer') that.generateAnswer(variable);
     }
-    if (Entry.isEmpty(Entry.engine.projectTimer))
-        Entry.variableContainer.generateTimer();
-
-    if (Entry.isEmpty(Entry.container.inputValue))
-        Entry.variableContainer.generateAnswer();
-
+    if (_.isEmpty(Entry.engine.projectTimer)) Entry.variableContainer.generateTimer();
+    if (_.isEmpty(Entry.container.inputValue)) Entry.variableContainer.generateAnswer();
     Entry.playground.reloadPlayground();
     this.updateList();
 };
@@ -1048,8 +1041,8 @@ Entry.VariableContainer.prototype.createVariableView = function(variable) {
     nameField.onblur = function(e) {
         var value = this.value.trim();
         if (!value || value.length == 0) {
-            Entry.toast.alert('경고',
-                              '변수의 이름은 빈 칸이 될 수 없습니다..');
+            Entry.toast.alert(Lang.Msgs.warn,
+                              Lang.Workspace.variable_can_not_space);
             this.value = variable.getName();
             return;
         }
@@ -1184,8 +1177,8 @@ Entry.VariableContainer.prototype.createMessageView = function(message) {
     nameField.onblur = function(e) {
         var value = this.value.trim();
         if (!value || value.length == 0) {
-            Entry.toast.alert('경고',
-                              '신호의 이름은 빈 칸이 될 수 없습니다..');
+            Entry.toast.alert(Lang.Msgs.warn,
+                              Lang.Msgs.sign_can_not_space);
             this.value = message.name;
             return;
         }
@@ -1314,8 +1307,8 @@ Entry.VariableContainer.prototype.createListView = function(list) {
     nameField.onblur = function(e) {
         var value = this.value.trim();
         if (!value || value.length == 0) {
-            Entry.toast.alert('경고',
-                              '리스트의 이름은 빈 칸이 될 수 없습니다..');
+            Entry.toast.alert(Lang.Msgs.warn,
+                              Lang.Msgs.list_can_not_space);
             this.value = list.getName();
             return;
         }
@@ -1379,7 +1372,7 @@ Entry.VariableContainer.prototype.getVariableJSON = function() {
         json.push(Entry.engine.projectTimer);
 
     var answer = Entry.container.inputValue;
-    if (!Entry.isEmpty(answer))
+    if (!_.isEmpty(answer))
         json.push(answer);
     return json;
 };
@@ -1583,7 +1576,7 @@ Entry.VariableContainer.prototype.generateListAddView = function() {
 
     var addSpaceInput = Entry.createElement('input');
     addSpaceInput.addClass('entryVariableAddSpaceInputWorkspace');
-    addSpaceInput.setAttribute('placeholder', '리스트 이름');
+    addSpaceInput.setAttribute('placeholder', Lang.Workspace.list_name);
     this.listAddPanel.view.name = addSpaceInput;
     addSpaceInput.variableContainer = this;
     addSpaceInput.onkeypress = function (e) {
@@ -1611,7 +1604,7 @@ Entry.VariableContainer.prototype.generateListAddView = function() {
 
 
     var addListGlobalSpan = Entry.createElement('span');
-    addListGlobalSpan.innerHTML = '모든 오브젝트에서 사용';
+    addListGlobalSpan.innerHTML = Lang.Workspace.use_all_objects;
     addSpaceGlobalWrapper.appendChild(addListGlobalSpan);
 
 
@@ -1635,7 +1628,7 @@ Entry.VariableContainer.prototype.generateListAddView = function() {
     });
     listAddSpace.appendChild(addSpaceLocalWrapper);
     var addListLocalSpan = Entry.createElement('span');
-    addListLocalSpan.innerHTML = '이 오브젝트에서 사용';
+    addListLocalSpan.innerHTML = Lang.Workspace.Variable_use_this_object;
     addSpaceLocalWrapper.appendChild(addListLocalSpan);
 
 
@@ -1661,7 +1654,8 @@ Entry.VariableContainer.prototype.generateListAddView = function() {
     listAddSpace.appendChild(addSpaceCloudWrapper);
     var addSpaceCloudSpan = Entry.createElement('span');
     addSpaceCloudSpan.addClass('entryVariableAddSpaceCloudSpanWorkspace');
-    addSpaceCloudSpan.innerHTML = '클라우드 변수로 사용 <br>(서버에 저장됩니다)';
+    addSpaceCloudSpan.innerHTML = Lang.Workspace.List_create_cloud;
+
     addSpaceCloudWrapper.appendChild(addSpaceCloudSpan);
     var addListCloudCheck = Entry.createElement('span');
     this.listAddPanel.view.cloudCheck = addListCloudCheck;
@@ -1679,7 +1673,7 @@ Entry.VariableContainer.prototype.generateListAddView = function() {
     var addSpaceCancelButton = Entry.createElement('span');
     addSpaceCancelButton.addClass('entryVariableAddSpaceCancelWorkspace');
     addSpaceCancelButton.addClass('entryVariableAddSpaceButtonWorkspace');
-    addSpaceCancelButton.innerHTML = '취소';
+    addSpaceCancelButton.innerHTML = Lang.Buttons.cancel;
     addSpaceCancelButton.bindOnClick(function (e) {
         that.listAddPanel.view.addClass('entryRemove');
         that.resetVariableAddPanel('list');
@@ -1689,7 +1683,7 @@ Entry.VariableContainer.prototype.generateListAddView = function() {
     var addSpaceConfirmButton = Entry.createElement('span');
     addSpaceConfirmButton.addClass('entryVariableAddSpaceConfirmWorkspace');
     addSpaceConfirmButton.addClass('entryVariableAddSpaceButtonWorkspace');
-    addSpaceConfirmButton.innerHTML = '확인';
+    addSpaceConfirmButton.innerHTML = Lang.Buttons.save;
     addSpaceConfirmButton.variableContainer = this;
     addSpaceConfirmButton.bindOnClick(function (e) {
         that.addList();
@@ -2022,7 +2016,7 @@ Entry.VariableContainer.prototype.generateListSettingView = function () {
     });
     element.appendChild(visibleWrapper);
     var visibleSpan = Entry.createElement('span');
-    visibleSpan.innerHTML = '리스트 보이기';
+    visibleSpan.innerHTML = Lang.Workspace.show_list_workspace;
     visibleWrapper.appendChild(visibleSpan);
     var visibleCheck = Entry.createElement('span');
     visibleCheck.addClass('entryListSettingCheckWorkspace');

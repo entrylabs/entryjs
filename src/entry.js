@@ -101,7 +101,7 @@ Entry.enableArduino = function() {
                 Entry.playground.currentObjectType = '';
                 Entry.playground.setMenu(Entry.playground.object.objectType);
             }
-            Entry.toast.success('아두이노 연결', '아두이노 연결에 성공하였습니다.', false);
+            Entry.toast.success(Lang.Workspace.arduino_connect, Lang.Workspace.arduino_connect_success, false);
         }).fail(function(){
     });
 };
@@ -135,7 +135,7 @@ Entry.beforeUnload = function(e) {
                                  JSON.stringify(Entry.interfaceState));
         }
         if (!Entry.stateManager.isSaved())
-            return "프로젝트를 수정하셨습니다.";
+            return Lang.Workspace.project_changed;
     }
 };
 

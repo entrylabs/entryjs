@@ -686,7 +686,7 @@ Entry.EntryObject.prototype.generateView= function() {
         yInput.addClass('entryObjectCoordinateInputWorkspace entryObjectCoordinateInputWorkspace_right')
         var sizeTitle = Entry.createElement('span');
         sizeTitle.addClass('entryObjectCoordinateSpanWorkspace');
-        sizeTitle.innerHTML = '크기:';
+        sizeTitle.innerHTML = Lang.Workspace.Size;
         var sizeInput = Entry.createElement('input');
         sizeInput.addClass('entryObjectCoordinateInputWorkspace',
                            'entryObjectCoordinateInputWorkspace_size');
