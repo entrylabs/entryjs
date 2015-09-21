@@ -1123,7 +1123,6 @@ Entry.Container.prototype.initTvcast = function(tvcast) {
     iframe.setAttribute('frameborder', 0);
     iframe.setAttribute('src', this.tvcast);
     this.movieFrame = iframe;
-    console.log(this.movieFrame);
     movieContainer.appendChild(iframe);
 };
 
