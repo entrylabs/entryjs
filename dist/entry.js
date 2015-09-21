@@ -1494,7 +1494,7 @@ Entry.block.function_general = function(a, b) {
   }
   return b;
 };
-Entry.Hamster = {PORT_MAP:{leftWheel:0, rightWheel:0, buzzer:0, outputA:0, outputB:0, leftLed:0, rightLed:0, note:0}, setZero:function() {
+Entry.Hamster = {PORT_MAP:{leftWheel:0, rightWheel:0, buzzer:0, outputA:0, outputB:0, leftLed:0, rightLed:0, note:0, ioModeA:0, ioModeB:0}, setZero:function() {
   var a = Entry.Hamster.PORT_MAP, b;
   for (b in a) {
     Entry.hw.sendQueue[b] = a[b];
@@ -1785,7 +1785,7 @@ Blockly.Blocks.hamster_rest_for = {init:function() {
 Entry.block.hamster_rest_for = function(a, b) {
   var c = Entry.hw.sendQueue;
   if (b.isStart) {
-    return delete b.timeFlag, delete b.isStart, Entry.engine.isContinue = !1, b.callReturn();
+    return delete b.isStart, delete b.timeFlag, Entry.engine.isContinue = !1, b.callReturn();
   }
   b.isStart = !0;
   b.timeFlag = 1;
@@ -1834,7 +1834,7 @@ Blockly.Blocks.hamster_change_both_wheels_by = {init:function() {
   this.setNextStatement(!0);
 }};
 Entry.block.hamster_change_both_wheels_by = function(a, b) {
-  var c = Entry.hw.sendQueue, d = Entry.hw.portData, e = d.leftWheel, d = d.rightWheel, e = e + b.getNumberValue("LEFT"), d = d + b.getNumberValue("RIGHT");
+  var c = Entry.hw.sendQueue, d = Entry.hw.portData, e = void 0 != c.leftWheel ? c.leftWheel : d.leftWheel, d = void 0 != c.rightWheel ? c.rightWheel : d.rightWheel, e = e + b.getNumberValue("LEFT"), d = d + b.getNumberValue("RIGHT");
   c.leftWheel = e;
   c.rightWheel = d;
   return b.callReturn();
@@ -1866,8 +1866,8 @@ Blockly.Blocks.hamster_change_wheels_by = {init:function() {
   this.setNextStatement(!0);
 }};
 Entry.block.hamster_change_wheels_by = function(a, b) {
-  var c = Entry.hw.sendQueue, d = b.getField("DIRECTION"), e = b.getNumberValue("VALUE"), f = Entry.hw.portData;
-  "LEFT" == d ? c.leftWheel = f.leftWheel + e : ("RIGHT" != d && (c.leftWheel = f.leftWheel + e), c.rightWheel = f.rightWheel + e);
+  var c = Entry.hw.sendQueue, d = Entry.hw.portData, e = b.getField("DIRECTION"), f = b.getNumberValue("VALUE");
+  "LEFT" == e ? c.leftWheel = void 0 != c.leftWheel ? c.leftWheel + f : d.leftWheel + f : ("RIGHT" != e && (c.leftWheel = void 0 != c.leftWheel ? c.leftWheel + f : d.leftWheel + f), c.rightWheel = void 0 != c.rightWheel ? c.rightWheel + f : d.rightWheel + f);
   return b.callReturn();
 };
 Blockly.Blocks.hamster_set_wheels_to = {init:function() {
@@ -1907,9 +1907,9 @@ Blockly.Blocks.hamster_change_buzzer_by = {init:function() {
   this.setNextStatement(!0);
 }};
 Entry.block.hamster_change_buzzer_by = function(a, b) {
-  var c = Entry.hw.sendQueue;
-  delete c.note;
-  c.buzzer = Entry.hw.portData.buzzer + b.getNumberValue("VALUE");
+  var c = Entry.hw, d = c.sendQueue, c = c.portData;
+  delete d.note;
+  d.buzzer = void 0 != d.buzzer ? d.buzzer : c.buzzer + b.getNumberValue("VALUE");
   return b.callReturn();
 };
 Blockly.Blocks.hamster_set_buzzer_to = {init:function() {
@@ -1946,7 +1946,8 @@ Blockly.Blocks.hamster_value = {init:function() {
   this.setOutput(!0, "Number");
 }};
 Entry.block.hamster_value = function(a, b) {
-  return Entry.hw.portData[b.getField("PORT")];
+  var c = Entry.hw, d = c.sendQueue, c = c.portData, e = b.getField("PORT");
+  return void 0 != d[e] ? d[e] : c[e];
 };
 Blockly.Blocks.is_clicked = {init:function() {
   this.setColour("#AEB8FF");
