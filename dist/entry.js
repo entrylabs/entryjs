@@ -4486,6 +4486,21 @@ Entry.Container.prototype.initYoutube = function(a) {
   this.movieFrame = c;
   b.appendChild(c);
 };
+Entry.Container.prototype.initTvcast = function(a) {
+  this.tvcast = a;
+  this.youtubeTab.removeClass("entryRemove");
+  a = this.view_;
+  a = a.style.width.substring(0, a.style.width.length - 2);
+  var b = this.movieContainer, c = Entry.createElement("iframe");
+  c.setAttribute("width", a);
+  c.setAttribute("height", 9 * a / 16);
+  c.setAttribute("allowfullscreen", "");
+  c.setAttribute("frameborder", 0);
+  c.setAttribute("src", this.tvcast);
+  this.movieFrame = c;
+  console.log(this.movieFrame);
+  b.appendChild(c);
+};
 Entry.Container.prototype.initDoneProject = function(a) {
   this.doneProject = a;
   this.iframeTab.removeClass("entryRemove");
