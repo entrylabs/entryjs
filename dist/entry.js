@@ -650,8 +650,9 @@ Entry.block.set_brush_tranparency = function(a, b) {
   a.brush && (a.brush.opacity = Entry.adjustValueWithMaxMin(c, 0, 100), a.brush.endStroke(), c = a.brush.rgb, a.brush.beginStroke("rgba(" + c.r + "," + c.g + "," + c.b + "," + (1 - a.brush.opacity / 100) + ")"), a.brush.moveTo(a.getX(), -1 * a.getY()));
   return b.callReturn();
 };
+var calcArrowColor = "#e8b349", calcBlockColor = "#FFD974", calcFontColor = "#3D3D3D";
 Blockly.Blocks.number = {init:function() {
-  this.setColour("#FFD974");
+  this.setColour(calcBlockColor);
   this.appendDummyInput().appendField(new Blockly.FieldTextInput(""), "NUM");
   this.setOutput(!0, "Number");
   this.setInputsInline(!0);
@@ -660,7 +661,7 @@ Entry.block.number = function(a, b) {
   return b.fields.NUM;
 };
 Blockly.Blocks.angle = {init:function() {
-  this.setColour("#FFD974");
+  this.setColour(calcBlockColor);
   this.appendDummyInput().appendField(new Blockly.FieldAngle("90"), "ANGLE");
   this.setOutput(!0, "Number");
   this.setInputsInline(!0);
@@ -669,8 +670,8 @@ Entry.block.angle = function(a, b) {
   return b.getNumberField("ANGLE");
 };
 Blockly.Blocks.get_x_coordinate = {init:function() {
-  this.setColour("#FFD974");
-  this.appendDummyInput().appendField(Lang.Blocks.CALC_get_x_coordinate, "#3D3D3D");
+  this.setColour(calcBlockColor);
+  this.appendDummyInput().appendField(Lang.Blocks.CALC_get_x_coordinate, calcFontColor);
   this.setOutput(!0, "Number");
   this.setInputsInline(!0);
 }};
@@ -678,8 +679,8 @@ Entry.block.get_x_coordinate = function(a, b) {
   return a.getX();
 };
 Blockly.Blocks.get_y_coordinate = {init:function() {
-  this.setColour("#FFD974");
-  this.appendDummyInput().appendField(Lang.Blocks.CALC_get_y_coordinate, "#3D3D3D");
+  this.setColour(calcBlockColor);
+  this.appendDummyInput().appendField(Lang.Blocks.CALC_get_y_coordinate, calcFontColor);
   this.setOutput(!0, "Number");
   this.setInputsInline(!0);
 }};
@@ -687,8 +688,8 @@ Entry.block.get_y_coordinate = function(a, b) {
   return a.getY();
 };
 Blockly.Blocks.get_angle = {init:function() {
-  this.setColour("#FFD974");
-  this.appendDummyInput().appendField(Lang.Blocks.CALC_get_angle, "#3D3D3D");
+  this.setColour(calcBlockColor);
+  this.appendDummyInput().appendField(Lang.Blocks.CALC_get_angle, calcFontColor);
   this.setOutput(!0, "Number");
   this.setInputsInline(!0);
 }};
@@ -696,8 +697,8 @@ Entry.block.get_angle = function(a, b) {
   return parseFloat(a.getRotation().toFixed(1));
 };
 Blockly.Blocks.get_rotation_direction = {init:function() {
-  this.setColour("#FFD974");
-  this.appendDummyInput().appendField(new Blockly.FieldDropdown([[Lang.Blocks.CALC_rotation_value, "ROTATION"], [Lang.Blocks.CALC_direction_value, "DIRECTION"]]), "OPERATOR");
+  this.setColour(calcBlockColor);
+  this.appendDummyInput().appendField(new Blockly.FieldDropdown([[Lang.Blocks.CALC_rotation_value, "ROTATION"], [Lang.Blocks.CALC_direction_value, "DIRECTION"]], null, !0, calcArrowColor), "OPERATOR");
   this.appendDummyInput().appendField(" ");
   this.setOutput(!0, "Number");
   this.setInputsInline(!0);
@@ -706,8 +707,8 @@ Entry.block.get_rotation_direction = function(a, b) {
   return "DIRECTION" == b.getField("OPERATOR", b).toUpperCase() ? parseFloat(a.getDirection().toFixed(1)) : parseFloat(a.getRotation().toFixed(1));
 };
 Blockly.Blocks.distance_something = {init:function() {
-  this.setColour("#FFD974");
-  this.appendDummyInput().appendField(Lang.Blocks.CALC_distance_something_1, "#3D3D3D").appendField(new Blockly.FieldDropdownDynamic("spritesWithMouse"), "VALUE").appendField(Lang.Blocks.CALC_distance_something_2, "#3D3D3D");
+  this.setColour(calcBlockColor);
+  this.appendDummyInput().appendField(Lang.Blocks.CALC_distance_something_1, calcFontColor).appendField(new Blockly.FieldDropdownDynamic("spritesWithMouse", null, !0, calcArrowColor), "VALUE").appendField(Lang.Blocks.CALC_distance_something_2, calcFontColor);
   this.setOutput(!0, "Number");
   this.setInputsInline(!0);
 }};
@@ -720,8 +721,8 @@ Entry.block.distance_something = function(a, b) {
   return Math.sqrt(Math.pow(a.getX() - c.getX(), 2) + Math.pow(a.getY() - c.getY(), 2));
 };
 Blockly.Blocks.coordinate_mouse = {init:function() {
-  this.setColour("#FFD974");
-  this.appendDummyInput().appendField(Lang.Blocks.CALC_coordinate_mouse_1, "#3D3D3D").appendField(new Blockly.FieldDropdown([["x", "x"], ["y", "y"]]), "VALUE").appendField(Lang.Blocks.CALC_coordinate_mouse_2, "#3D3D3D");
+  this.setColour(calcBlockColor);
+  this.appendDummyInput().appendField(Lang.Blocks.CALC_coordinate_mouse_1, calcFontColor).appendField(new Blockly.FieldDropdown([["x", "x"], ["y", "y"]], null, !0, calcArrowColor), "VALUE").appendField(Lang.Blocks.CALC_coordinate_mouse_2, calcFontColor);
   this.setOutput(!0, "Number");
   this.setInputsInline(!0);
 }};
@@ -729,9 +730,9 @@ Entry.block.coordinate_mouse = function(a, b) {
   return "x" === b.getField("VALUE", b) ? Number(Entry.stage.mouseCoordinate.x) : Number(Entry.stage.mouseCoordinate.y);
 };
 Blockly.Blocks.coordinate_object = {init:function() {
-  this.setColour("#FFD974");
-  this.appendDummyInput().appendField(Lang.Blocks.CALC_coordinate_object_1, "#3D3D3D").appendField(new Blockly.FieldDropdownDynamic("spritesWithSelf"), "VALUE").appendField(Lang.Blocks.CALC_coordinate_object_2, "#3D3D3D").appendField(new Blockly.FieldDropdown([[Lang.Blocks.CALC_coordinate_x_value, "x"], [Lang.Blocks.CALC_coordinate_y_value, "y"], [Lang.Blocks.CALC_coordinate_rotation_value, "rotation"], [Lang.Blocks.CALC_coordinate_direction_value, "direction"], [Lang.Blocks.CALC_coordinate_size_value, 
-  "size"], [Lang.Blocks.CALC_picture_index, "picture_index"], [Lang.Blocks.CALC_picture_name, "picture_name"]]), "COORDINATE").appendField(Lang.Blocks.CALC_coordinate_object_3, "#3D3D3D");
+  this.setColour(calcBlockColor);
+  this.appendDummyInput().appendField(Lang.Blocks.CALC_coordinate_object_1, calcFontColor).appendField(new Blockly.FieldDropdownDynamic("spritesWithSelf", null, !0, calcArrowColor), "VALUE").appendField(Lang.Blocks.CALC_coordinate_object_2, calcFontColor).appendField(new Blockly.FieldDropdown([[Lang.Blocks.CALC_coordinate_x_value, "x"], [Lang.Blocks.CALC_coordinate_y_value, "y"], [Lang.Blocks.CALC_coordinate_rotation_value, "rotation"], [Lang.Blocks.CALC_coordinate_direction_value, "direction"], 
+  [Lang.Blocks.CALC_coordinate_size_value, "size"], [Lang.Blocks.CALC_picture_index, "picture_index"], [Lang.Blocks.CALC_picture_name, "picture_name"]], null, !0, calcArrowColor), "COORDINATE").appendField(Lang.Blocks.CALC_coordinate_object_3, calcFontColor);
   this.setOutput(!0, "Number");
   this.setInputsInline(!0);
 }};
@@ -756,7 +757,7 @@ Entry.block.coordinate_object = function(a, b) {
   }
 };
 Blockly.Blocks.calc_basic = {init:function() {
-  this.setColour("#FFD974");
+  this.setColour(calcBlockColor);
   this.appendValueInput("LEFTHAND").setCheck(["String", "Number"]);
   this.appendDummyInput("VALUE").appendField(new Blockly.FieldDropdown([["+", "PLUS"], ["-", "MINUS"], ["x", "MULTI"], ["/", "DIVIDE"]], null, !1), "OPERATOR");
   this.appendValueInput("RIGHTHAND").setCheck(["Number", "String"]);
@@ -768,9 +769,9 @@ Entry.block.calc_basic = function(a, b) {
   return "PLUS" == c ? d + e : "MINUS" == c ? d - e : "MULTI" == c ? d * e : d / e;
 };
 Blockly.Blocks.calc_plus = {init:function() {
-  this.setColour("#FFD974");
+  this.setColour(calcBlockColor);
   this.appendValueInput("LEFTHAND").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField("+", "#3D3D3D");
+  this.appendDummyInput().appendField("+", calcFontColor);
   this.appendValueInput("RIGHTHAND").setCheck(["Number", "String"]);
   this.setOutput(!0, "Number");
   this.setInputsInline(!0);
@@ -780,9 +781,9 @@ Entry.block.calc_plus = function(a, b) {
   return c + d;
 };
 Blockly.Blocks.calc_minus = {init:function() {
-  this.setColour("#FFD974");
+  this.setColour(calcBlockColor);
   this.appendValueInput("LEFTHAND").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField("-", "#3D3D3D");
+  this.appendDummyInput().appendField("-", calcFontColor);
   this.appendValueInput("RIGHTHAND").setCheck(["Number", "String"]);
   this.setOutput(!0, "Number");
   this.setInputsInline(!0);
@@ -792,9 +793,9 @@ Entry.block.calc_minus = function(a, b) {
   return c - d;
 };
 Blockly.Blocks.calc_times = {init:function() {
-  this.setColour("#FFD974");
+  this.setColour(calcBlockColor);
   this.appendValueInput("LEFTHAND").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField("x", "#3D3D3D");
+  this.appendDummyInput().appendField("x", calcFontColor);
   this.appendValueInput("RIGHTHAND").setCheck(["Number", "String"]);
   this.setOutput(!0, "Number");
   this.setInputsInline(!0);
@@ -804,9 +805,9 @@ Entry.block.calc_times = function(a, b) {
   return c * d;
 };
 Blockly.Blocks.calc_divide = {init:function() {
-  this.setColour("#FFD974");
+  this.setColour(calcBlockColor);
   this.appendValueInput("LEFTHAND").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField("/", "#3D3D3D");
+  this.appendDummyInput().appendField("/", calcFontColor);
   this.appendValueInput("RIGHTHAND").setCheck(["Number", "String"]);
   this.setOutput(!0, "Number");
   this.setInputsInline(!0);
@@ -816,13 +817,13 @@ Entry.block.calc_divide = function(a, b) {
   return c / d;
 };
 Blockly.Blocks.calc_mod = {init:function() {
-  this.setColour("#FFD974");
-  this.appendDummyInput().appendField(Lang.Blocks.CALC_calc_mod_1, "#3D3D3D");
+  this.setColour(calcBlockColor);
+  this.appendDummyInput().appendField(Lang.Blocks.CALC_calc_mod_1, calcFontColor);
   this.appendValueInput("LEFTHAND").setCheck(["Number", "String"]);
-  this.appendDummyInput("VALUE").appendField(Lang.Blocks.CALC_calc_mod_2, "#3D3D3D");
+  this.appendDummyInput("VALUE").appendField(Lang.Blocks.CALC_calc_mod_2, calcFontColor);
   this.appendValueInput("RIGHTHAND").setCheck(["Number", "String"]);
   this.setOutput(!0, "Number");
-  this.appendDummyInput("VALUE").appendField(Lang.Blocks.CALC_calc_mod_3, "#3D3D3D");
+  this.appendDummyInput("VALUE").appendField(Lang.Blocks.CALC_calc_mod_3, calcFontColor);
   this.setInputsInline(!0);
 }};
 Entry.block.calc_mod = function(a, b) {
@@ -830,13 +831,13 @@ Entry.block.calc_mod = function(a, b) {
   return c % d;
 };
 Blockly.Blocks.calc_share = {init:function() {
-  this.setColour("#FFD974");
-  this.appendDummyInput().appendField(Lang.Blocks.CALC_calc_share_1, "#3D3D3D");
+  this.setColour(calcBlockColor);
+  this.appendDummyInput().appendField(Lang.Blocks.CALC_calc_share_1, calcFontColor);
   this.appendValueInput("LEFTHAND").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.CALC_calc_share_2, "#3D3D3D");
+  this.appendDummyInput().appendField(Lang.Blocks.CALC_calc_share_2, calcFontColor);
   this.appendValueInput("RIGHTHAND").setCheck(["Number", "String"]);
   this.setOutput(!0, "Number");
-  this.appendDummyInput("VALUE").appendField(Lang.Blocks.CALC_calc_share_3, "#3D3D3D");
+  this.appendDummyInput("VALUE").appendField(Lang.Blocks.CALC_calc_share_3, calcFontColor);
   this.setInputsInline(!0);
 }};
 Entry.block.calc_share = function(a, b) {
@@ -844,12 +845,12 @@ Entry.block.calc_share = function(a, b) {
   return Math.floor(c / d);
 };
 Blockly.Blocks.calc_operation = {init:function() {
-  this.setColour("#FFD974");
-  this.appendDummyInput("VALUE").appendField(Lang.Blocks.CALC_calc_operation_of_1, "#3D3D3D");
+  this.setColour(calcBlockColor);
+  this.appendDummyInput("VALUE").appendField(Lang.Blocks.CALC_calc_operation_of_1, calcFontColor);
   this.appendValueInput("LEFTHAND").setCheck(["Number", "String"]);
-  this.appendDummyInput("VALUE").appendField(Lang.Blocks.CALC_calc_operation_of_2, "#3D3D3D");
+  this.appendDummyInput("VALUE").appendField(Lang.Blocks.CALC_calc_operation_of_2, calcFontColor);
   this.appendDummyInput("VALUE").appendField(new Blockly.FieldDropdown([[Lang.Blocks.CALC_calc_operation_square, "square"], [Lang.Blocks.CALC_calc_operation_root, "root"], [Lang.Blocks.CALC_calc_operation_sin, "sin"], [Lang.Blocks.CALC_calc_operation_cos, "cos"], [Lang.Blocks.CALC_calc_operation_tan, "tan"], [Lang.Blocks.CALC_calc_operation_asin, "asin_radian"], [Lang.Blocks.CALC_calc_operation_acos, "acos_radian"], [Lang.Blocks.CALC_calc_operation_atan, "atan_radian"], [Lang.Blocks.CALC_calc_operation_log, 
-  "log"], [Lang.Blocks.CALC_calc_operation_ln, "ln"], [Lang.Blocks.CALC_calc_operation_unnatural, "unnatural"], [Lang.Blocks.CALC_calc_operation_floor, "floor"], [Lang.Blocks.CALC_calc_operation_ceil, "ceil"], [Lang.Blocks.CALC_calc_operation_round, "round"], [Lang.Blocks.CALC_calc_operation_factorial, "factorial"], [Lang.Blocks.CALC_calc_operation_abs, "abs"]]), "VALUE");
+  "log"], [Lang.Blocks.CALC_calc_operation_ln, "ln"], [Lang.Blocks.CALC_calc_operation_unnatural, "unnatural"], [Lang.Blocks.CALC_calc_operation_floor, "floor"], [Lang.Blocks.CALC_calc_operation_ceil, "ceil"], [Lang.Blocks.CALC_calc_operation_round, "round"], [Lang.Blocks.CALC_calc_operation_factorial, "factorial"], [Lang.Blocks.CALC_calc_operation_abs, "abs"]], null, !0, calcArrowColor), "VALUE");
   this.setOutput(!0, "Number");
   this.appendDummyInput().appendField(" ");
   this.setInputsInline(!0);
@@ -883,13 +884,13 @@ Entry.block.calc_operation = function(a, b) {
   return Math.round(1E3 * e) / 1E3;
 };
 Blockly.Blocks.calc_rand = {init:function() {
-  this.setColour("#FFD974");
-  this.appendDummyInput().appendField(Lang.Blocks.CALC_calc_rand_1, "#3D3D3D");
+  this.setColour(calcBlockColor);
+  this.appendDummyInput().appendField(Lang.Blocks.CALC_calc_rand_1, calcFontColor);
   this.appendValueInput("LEFTHAND").setCheck(["Number", "String"]);
-  this.appendDummyInput("VALUE").appendField(Lang.Blocks.CALC_calc_rand_2, "#3D3D3D");
+  this.appendDummyInput("VALUE").appendField(Lang.Blocks.CALC_calc_rand_2, calcFontColor);
   this.appendValueInput("RIGHTHAND").setCheck(["Number", "String"]);
   this.setOutput(!0, "Number");
-  this.appendDummyInput("VALUE").appendField(Lang.Blocks.CALC_calc_rand_3, "#3D3D3D");
+  this.appendDummyInput("VALUE").appendField(Lang.Blocks.CALC_calc_rand_3, calcFontColor);
   this.setInputsInline(!0);
 }};
 Entry.block.calc_rand = function(a, b) {
@@ -897,9 +898,9 @@ Entry.block.calc_rand = function(a, b) {
   return Entry.isFloat(d) || c ? (Math.random() * (f - e) + e).toFixed(2) : Math.floor(Math.random() * (f - e + 1) + e);
 };
 Blockly.Blocks.get_date = {init:function() {
-  this.setColour("#FFD974");
-  this.appendDummyInput().appendField(Lang.Blocks.CALC_get_date_1, "#3D3D3D").appendField(new Blockly.FieldDropdown([[Lang.Blocks.CALC_get_date_year, "YEAR"], [Lang.Blocks.CALC_get_date_month, "MONTH"], [Lang.Blocks.CALC_get_date_day, "DAY"], [Lang.Blocks.CALC_get_date_hour, "HOUR"], [Lang.Blocks.CALC_get_date_minute, "MINUTE"], [Lang.Blocks.CALC_get_date_second, "SECOND"]]), "VALUE");
-  this.appendDummyInput().appendField(" ").appendField(Lang.Blocks.CALC_get_date_2, "#3D3D3D");
+  this.setColour(calcBlockColor);
+  this.appendDummyInput().appendField(Lang.Blocks.CALC_get_date_1, calcFontColor).appendField(new Blockly.FieldDropdown([[Lang.Blocks.CALC_get_date_year, "YEAR"], [Lang.Blocks.CALC_get_date_month, "MONTH"], [Lang.Blocks.CALC_get_date_day, "DAY"], [Lang.Blocks.CALC_get_date_hour, "HOUR"], [Lang.Blocks.CALC_get_date_minute, "MINUTE"], [Lang.Blocks.CALC_get_date_second, "SECOND"]], null, !0, calcArrowColor), "VALUE");
+  this.appendDummyInput().appendField(" ").appendField(Lang.Blocks.CALC_get_date_2, calcFontColor);
   this.setOutput(!0, "Number");
   this.setInputsInline(!0);
 }};
@@ -908,10 +909,10 @@ Entry.block.get_date = function(a, b) {
   return "YEAR" == c ? d.getFullYear() : "MONTH" == c ? d.getMonth() + 1 : "DAY" == c ? d.getDate() : "HOUR" == c ? d.getHours() : "MINUTE" == c ? d.getMinutes() : d.getSeconds();
 };
 Blockly.Blocks.get_sound_duration = {init:function() {
-  this.setColour("#FFD974");
-  this.appendDummyInput().appendField(Lang.Blocks.CALC_get_sound_duration_1, "#3D3D3D");
-  this.appendDummyInput().appendField(new Blockly.FieldDropdownDynamic("sounds"), "VALUE");
-  this.appendDummyInput().appendField(Lang.Blocks.CALC_get_sound_duration_2, "#3D3D3D");
+  this.setColour(calcBlockColor);
+  this.appendDummyInput().appendField(Lang.Blocks.CALC_get_sound_duration_1, calcFontColor);
+  this.appendDummyInput().appendField(new Blockly.FieldDropdownDynamic("sounds", null, !0, calcArrowColor), "VALUE");
+  this.appendDummyInput().appendField(Lang.Blocks.CALC_get_sound_duration_2, calcFontColor);
   this.setOutput(!0, "Number");
   this.setInputsInline(!0);
 }};
@@ -923,8 +924,8 @@ Entry.block.get_sound_duration = function(a, b) {
   }
 };
 Blockly.Blocks.reset_project_timer = {init:function() {
-  this.setColour("#FFD974");
-  this.appendDummyInput().appendField(Lang.Blocks.CALC_timer_reset, "#3D3D3D");
+  this.setColour(calcBlockColor);
+  this.appendDummyInput().appendField(Lang.Blocks.CALC_timer_reset, calcFontColor);
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -938,10 +939,10 @@ Entry.block.reset_project_timer = function(a, b) {
   return b.callReturn();
 };
 Blockly.Blocks.set_visible_project_timer = {init:function() {
-  this.setColour("#FFD974");
-  this.appendDummyInput().appendField(Lang.Blocks.CALC_timer_visible_1, "#3D3D3D");
-  this.appendDummyInput().appendField(new Blockly.FieldDropdown([[Lang.Blocks.CALC_timer_visible_show, "SHOW"], [Lang.Blocks.CALC_timer_visible_hide, "HIDE"]]), "ACTION");
-  this.appendDummyInput().appendField(Lang.Blocks.CALC_timer_visible_2, "#3D3D3D").appendField(new Blockly.FieldIcon("/img/assets/block_icon/calc_01.png", "*"));
+  this.setColour(calcBlockColor);
+  this.appendDummyInput().appendField(Lang.Blocks.CALC_timer_visible_1, calcFontColor);
+  this.appendDummyInput().appendField(new Blockly.FieldDropdown([[Lang.Blocks.CALC_timer_visible_show, "SHOW"], [Lang.Blocks.CALC_timer_visible_hide, "HIDE"]], null, !0, calcArrowColor), "ACTION");
+  this.appendDummyInput().appendField(Lang.Blocks.CALC_timer_visible_2, calcFontColor).appendField(new Blockly.FieldIcon("/img/assets/block_icon/calc_01.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -956,8 +957,8 @@ Entry.block.set_visible_project_timer = function(a, b) {
   return b.callReturn();
 };
 Blockly.Blocks.timer_variable = {init:function() {
-  this.setColour("#FFD974");
-  this.appendDummyInput().appendField(Lang.Blocks.CALC_get_timer_value, "#3D3D3D").appendField(" ", "#3D3D3D");
+  this.setColour(calcBlockColor);
+  this.appendDummyInput().appendField(Lang.Blocks.CALC_get_timer_value, calcFontColor).appendField(" ", calcFontColor);
   this.setOutput(!0, "Number");
   this.setInputsInline(!0);
 }};
@@ -965,8 +966,8 @@ Entry.block.timer_variable = function(a, b) {
   return Entry.container.inputValue.getValue();
 };
 Blockly.Blocks.get_project_timer_value = {init:function() {
-  this.setColour("#FFD974");
-  this.appendDummyInput().appendField(Lang.Blocks.CALC_get_timer_value, "#3D3D3D").appendField(" ", "#3D3D3D");
+  this.setColour(calcBlockColor);
+  this.appendDummyInput().appendField(Lang.Blocks.CALC_get_timer_value, calcFontColor).appendField(" ", calcFontColor);
   this.setOutput(!0, "Number");
   this.setInputsInline(!0);
 }, whenAdd:function() {
@@ -978,13 +979,13 @@ Entry.block.get_project_timer_value = function(a, b) {
   return Entry.engine.projectTimer.getValue();
 };
 Blockly.Blocks.char_at = {init:function() {
-  this.setColour("#FFD974");
-  this.appendDummyInput().appendField(Lang.Blocks.CALC_char_at_1, "#3D3D3D");
+  this.setColour(calcBlockColor);
+  this.appendDummyInput().appendField(Lang.Blocks.CALC_char_at_1, calcFontColor);
   this.appendValueInput("LEFTHAND").setCheck(["Number", "String"]);
-  this.appendDummyInput("VALUE").appendField(Lang.Blocks.CALC_char_at_2, "#3D3D3D");
+  this.appendDummyInput("VALUE").appendField(Lang.Blocks.CALC_char_at_2, calcFontColor);
   this.appendValueInput("RIGHTHAND").setCheck(["Number", "String"]);
   this.setOutput(!0, "Number");
-  this.appendDummyInput("VALUE").appendField(Lang.Blocks.CALC_char_at_3, "#3D3D3D");
+  this.appendDummyInput("VALUE").appendField(Lang.Blocks.CALC_char_at_3, calcFontColor);
   this.setInputsInline(!0);
 }};
 Entry.block.char_at = function(a, b) {
@@ -995,10 +996,10 @@ Entry.block.char_at = function(a, b) {
   return c[d];
 };
 Blockly.Blocks.length_of_string = {init:function() {
-  this.setColour("#FFD974");
-  this.appendDummyInput().appendField(Lang.Blocks.CALC_length_of_string_1, "#3D3D3D");
+  this.setColour(calcBlockColor);
+  this.appendDummyInput().appendField(Lang.Blocks.CALC_length_of_string_1, calcFontColor);
   this.appendValueInput("STRING").setCheck(["Number", "String"]);
-  this.appendDummyInput("VALUE").appendField(Lang.Blocks.CALC_length_of_string_2, "#3D3D3D");
+  this.appendDummyInput("VALUE").appendField(Lang.Blocks.CALC_length_of_string_2, calcFontColor);
   this.setOutput(!0, "Number");
   this.setInputsInline(!0);
 }};
@@ -1006,14 +1007,14 @@ Entry.block.length_of_string = function(a, b) {
   return b.getStringValue("STRING", b).length;
 };
 Blockly.Blocks.substring = {init:function() {
-  this.setColour("#FFD974");
-  this.appendDummyInput().appendField(Lang.Blocks.CALC_substring_1, "#3D3D3D");
+  this.setColour(calcBlockColor);
+  this.appendDummyInput().appendField(Lang.Blocks.CALC_substring_1, calcFontColor);
   this.appendValueInput("STRING").setCheck(["Number", "String"]);
-  this.appendDummyInput("VALUE").appendField(Lang.Blocks.CALC_substring_2, "#3D3D3D");
+  this.appendDummyInput("VALUE").appendField(Lang.Blocks.CALC_substring_2, calcFontColor);
   this.appendValueInput("START").setCheck(["Number", "String"]);
-  this.appendDummyInput("VALUE").appendField(Lang.Blocks.CALC_substring_3, "#3D3D3D");
+  this.appendDummyInput("VALUE").appendField(Lang.Blocks.CALC_substring_3, calcFontColor);
   this.appendValueInput("END").setCheck(["Number", "String"]);
-  this.appendDummyInput("VALUE").appendField(Lang.Blocks.CALC_substring_4, "#3D3D3D");
+  this.appendDummyInput("VALUE").appendField(Lang.Blocks.CALC_substring_4, calcFontColor);
   this.setOutput(!0, "String");
   this.setInputsInline(!0);
 }};
@@ -1025,14 +1026,14 @@ Entry.block.substring = function(a, b) {
   return c.substring(Math.min(d, e), Math.max(d, e) + 1);
 };
 Blockly.Blocks.replace_string = {init:function() {
-  this.setColour("#FFD974");
-  this.appendDummyInput().appendField(Lang.Blocks.CALC_replace_string_1, "#3D3D3D");
+  this.setColour(calcBlockColor);
+  this.appendDummyInput().appendField(Lang.Blocks.CALC_replace_string_1, calcFontColor);
   this.appendValueInput("STRING").setCheck(["Number", "String"]);
-  this.appendDummyInput("VALUE").appendField(Lang.Blocks.CALC_replace_string_2, "#3D3D3D");
+  this.appendDummyInput("VALUE").appendField(Lang.Blocks.CALC_replace_string_2, calcFontColor);
   this.appendValueInput("OLD_WORD").setCheck(["Number", "String"]);
-  this.appendDummyInput("VALUE").appendField(Lang.Blocks.CALC_replace_string_3, "#3D3D3D");
+  this.appendDummyInput("VALUE").appendField(Lang.Blocks.CALC_replace_string_3, calcFontColor);
   this.appendValueInput("NEW_WORD").setCheck(["Number", "String"]);
-  this.appendDummyInput("VALUE").appendField(Lang.Blocks.CALC_replace_string_4, "#3D3D3D");
+  this.appendDummyInput("VALUE").appendField(Lang.Blocks.CALC_replace_string_4, calcFontColor);
   this.setOutput(!0, "String");
   this.setInputsInline(!0);
 }};
@@ -1040,12 +1041,12 @@ Entry.block.replace_string = function(a, b) {
   return b.getStringValue("STRING", b).replace(b.getStringValue("OLD_WORD", b), b.getStringValue("NEW_WORD", b));
 };
 Blockly.Blocks.change_string_case = {init:function() {
-  this.setColour("#FFD974");
-  this.appendDummyInput().appendField(Lang.Blocks.CALC_change_string_case_1, "#3D3D3D");
+  this.setColour(calcBlockColor);
+  this.appendDummyInput().appendField(Lang.Blocks.CALC_change_string_case_1, calcFontColor);
   this.appendValueInput("STRING").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.CALC_change_string_case_2, "#3D3D3D");
-  this.appendDummyInput().appendField(new Blockly.FieldDropdown([[Lang.Blocks.CALC_change_string_case_sub_1, "toUpperCase"], [Lang.Blocks.CALC_change_string_case_sub_2, "toLowerCase"]]), "CASE");
-  this.appendDummyInput().appendField(Lang.Blocks.CALC_change_string_case_3, "#3D3D3D");
+  this.appendDummyInput().appendField(Lang.Blocks.CALC_change_string_case_2, calcFontColor);
+  this.appendDummyInput().appendField(new Blockly.FieldDropdown([[Lang.Blocks.CALC_change_string_case_sub_1, "toUpperCase"], [Lang.Blocks.CALC_change_string_case_sub_2, "toLowerCase"]], null, !0, calcArrowColor), "CASE");
+  this.appendDummyInput().appendField(Lang.Blocks.CALC_change_string_case_3, calcFontColor);
   this.setOutput(!0, "String");
   this.setInputsInline(!0);
 }};
@@ -1053,13 +1054,13 @@ Entry.block.change_string_case = function(a, b) {
   return b.getStringValue("STRING", b)[b.getField("CASE", b)]();
 };
 Blockly.Blocks.index_of_string = {init:function() {
-  this.setColour("#FFD974");
-  this.appendDummyInput().appendField(Lang.Blocks.CALC_index_of_string_1, "#3D3D3D");
+  this.setColour(calcBlockColor);
+  this.appendDummyInput().appendField(Lang.Blocks.CALC_index_of_string_1, calcFontColor);
   this.appendValueInput("LEFTHAND").setCheck(["Number", "String"]);
-  this.appendDummyInput("VALUE").appendField(Lang.Blocks.CALC_index_of_string_2, "#3D3D3D");
+  this.appendDummyInput("VALUE").appendField(Lang.Blocks.CALC_index_of_string_2, calcFontColor);
   this.appendValueInput("RIGHTHAND").setCheck(["Number", "String"]);
   this.setOutput(!0, "Number");
-  this.appendDummyInput("VALUE").appendField(Lang.Blocks.CALC_index_of_string_3, "#3D3D3D");
+  this.appendDummyInput("VALUE").appendField(Lang.Blocks.CALC_index_of_string_3, calcFontColor);
   this.setInputsInline(!0);
 }};
 Entry.block.index_of_string = function(a, b) {
@@ -1067,12 +1068,12 @@ Entry.block.index_of_string = function(a, b) {
   return -1 < c ? c + 1 : 0;
 };
 Blockly.Blocks.combine_something = {init:function() {
-  this.setColour("#FFD974");
-  this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_combine_something_1, "#3D3D3D");
+  this.setColour(calcBlockColor);
+  this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_combine_something_1, calcFontColor);
   this.appendValueInput("VALUE1").setCheck(["String", "Number", null]);
-  this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_combine_something_2, "#3D3D3D");
+  this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_combine_something_2, calcFontColor);
   this.appendValueInput("VALUE2").setCheck(["String", "Number", null]);
-  this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_combine_something_3, "#3D3D3D");
+  this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_combine_something_3, calcFontColor);
   this.setInputsInline(!0);
   this.setOutput(!0, "String");
 }};
@@ -1083,8 +1084,8 @@ Entry.block.combine_something = function(a, b) {
   return c + d;
 };
 Blockly.Blocks.get_sound_volume = {init:function() {
-  this.setColour("#FFD974");
-  this.appendDummyInput().appendField(Lang.Blocks.CALC_get_sound_volume, "#3D3D3D").appendField(" ", "#3D3D3D");
+  this.setColour(calcBlockColor);
+  this.appendDummyInput().appendField(Lang.Blocks.CALC_get_sound_volume, calcFontColor).appendField(" ", calcFontColor);
   this.setOutput(!0, "Number");
   this.setInputsInline(!0);
 }};
@@ -1092,11 +1093,11 @@ Entry.block.get_sound_volume = function(a, b) {
   return 100 * createjs.Sound.getVolume();
 };
 Blockly.Blocks.quotient_and_mod = {init:function() {
-  this.setColour("#FFD974");
-  "ko" == Lang.type ? (this.appendDummyInput().appendField(Lang.Blocks.CALC_quotient_and_mod_1, "#3D3D3D"), this.appendValueInput("LEFTHAND").setCheck(["Number", "String"]), this.appendDummyInput().appendField(Lang.Blocks.CALC_quotient_and_mod_2, "#3D3D3D"), this.appendValueInput("RIGHTHAND").setCheck(["Number", "String"]), this.appendDummyInput().appendField(Lang.Blocks.CALC_quotient_and_mod_3, "#3D3D3D").appendField(new Blockly.FieldDropdown([[Lang.Blocks.CALC_quotient_and_mod_sub_1, "QUOTIENT"], 
-  [Lang.Blocks.CALC_quotient_and_mod_sub_2, "MOD"]]), "OPERATOR")) : "en" == Lang.type && (this.appendDummyInput().appendField(Lang.Blocks.CALC_quotient_and_mod_1, "#3D3D3D").appendField(new Blockly.FieldDropdown([[Lang.Blocks.CALC_quotient_and_mod_sub_1, "QUOTIENT"], [Lang.Blocks.CALC_quotient_and_mod_sub_2, "MOD"]]), "OPERATOR"), this.appendDummyInput().appendField(Lang.Blocks.CALC_quotient_and_mod_2, "#3D3D3D"), this.appendValueInput("LEFTHAND").setCheck(["Number", "String"]), this.appendDummyInput().appendField(Lang.Blocks.CALC_quotient_and_mod_3, 
-  "#3D3D3D"), this.appendValueInput("RIGHTHAND").setCheck(["Number", "String"]));
-  this.appendDummyInput().appendField(Lang.Blocks.CALC_quotient_and_mod_4, "#3D3D3D");
+  this.setColour(calcBlockColor);
+  "ko" == Lang.type ? (this.appendDummyInput().appendField(Lang.Blocks.CALC_quotient_and_mod_1, calcFontColor), this.appendValueInput("LEFTHAND").setCheck(["Number", "String"]), this.appendDummyInput().appendField(Lang.Blocks.CALC_quotient_and_mod_2, calcFontColor), this.appendValueInput("RIGHTHAND").setCheck(["Number", "String"]), this.appendDummyInput().appendField(Lang.Blocks.CALC_quotient_and_mod_3, calcFontColor).appendField(new Blockly.FieldDropdown([[Lang.Blocks.CALC_quotient_and_mod_sub_1, 
+  "QUOTIENT"], [Lang.Blocks.CALC_quotient_and_mod_sub_2, "MOD"]], null, !0, calcArrowColor), "OPERATOR")) : "en" == Lang.type && (this.appendDummyInput().appendField(Lang.Blocks.CALC_quotient_and_mod_1, calcFontColor).appendField(new Blockly.FieldDropdown([[Lang.Blocks.CALC_quotient_and_mod_sub_1, "QUOTIENT"], [Lang.Blocks.CALC_quotient_and_mod_sub_2, "MOD"]], null, !0, calcArrowColor), "OPERATOR"), this.appendDummyInput().appendField(Lang.Blocks.CALC_quotient_and_mod_2, calcFontColor), this.appendValueInput("LEFTHAND").setCheck(["Number", 
+  "String"]), this.appendDummyInput().appendField(Lang.Blocks.CALC_quotient_and_mod_3, calcFontColor), this.appendValueInput("RIGHTHAND").setCheck(["Number", "String"]));
+  this.appendDummyInput().appendField(Lang.Blocks.CALC_quotient_and_mod_4, calcFontColor);
   this.setOutput(!0, "Number");
   this.setInputsInline(!0);
 }};
@@ -1108,8 +1109,9 @@ Entry.block.quotient_and_mod = function(a, b) {
   return "QUOTIENT" == b.getField("OPERATOR", b) ? Math.floor(c / d) : c % d;
 };
 Blockly.Blocks.choose_project_timer_action = {init:function() {
-  this.setColour("#FFD974");
-  this.appendDummyInput().appendField(Lang.Blocks.CALC_choose_project_timer_action_1, "#3D3D3D").appendField(new Blockly.FieldDropdown([[Lang.Blocks.CALC_choose_project_timer_action_sub_1, "START"], [Lang.Blocks.CALC_choose_project_timer_action_sub_2, "STOP"], [Lang.Blocks.CALC_choose_project_timer_action_sub_3, "RESET"]]), "ACTION").appendField(Lang.Blocks.CALC_choose_project_timer_action_2, "#3D3D3D").appendField(new Blockly.FieldIcon("/img/assets/block_icon/calc_01.png", "*"));
+  this.setColour(calcBlockColor);
+  this.appendDummyInput().appendField(Lang.Blocks.CALC_choose_project_timer_action_1, calcFontColor).appendField(new Blockly.FieldDropdown([[Lang.Blocks.CALC_choose_project_timer_action_sub_1, "START"], [Lang.Blocks.CALC_choose_project_timer_action_sub_2, "STOP"], [Lang.Blocks.CALC_choose_project_timer_action_sub_3, "RESET"]], null, !0, calcArrowColor), "ACTION").appendField(Lang.Blocks.CALC_choose_project_timer_action_2, calcFontColor).appendField(new Blockly.FieldIcon("/img/assets/block_icon/calc_01.png", 
+  "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -5601,7 +5603,7 @@ Entry.init = function(a, b) {
   var c = createjs.Sound.play;
   createjs.Sound.play = function(a, b) {
     b ? b.pan = .01 : b = {pan:.01};
-    c(a, b);
+    return c(a, b);
   };
   "IE" != Entry.getBrowserType().substr(0, 2) || window.flashaudio ? (createjs.Sound.registerPlugins([createjs.WebAudioPlugin]), Entry.soundQueue = new createjs.LoadQueue, Entry.soundQueue.installPlugin(createjs.Sound), Entry.loadAudio_(["/media/click.mp3", "/media/click.wav", "/media/click.ogg"], "click"), Entry.loadAudio_(["/media/delete.mp3", "/media/delete.ogg", "/media/delete.wav"], "delete")) : (createjs.FlashAudioPlugin.swfPath = "/media/", createjs.Sound.registerPlugins([createjs.FlashAudioPlugin]), 
   Entry.soundQueue = new createjs.LoadQueue, Entry.soundQueue.installPlugin(createjs.Sound), Entry.loadAudio_(["/media/click.mp3", "/media/click.wav", "/media/click.ogg"], "click"), Entry.loadAudio_(["/media/delete.mp3", "/media/delete.ogg", "/media/delete.wav"], "delete"), window.flashaudio = !0);
@@ -5660,6 +5662,15 @@ Entry.createDom = function(a, b) {
     c.width = 640;
     c.height = 360;
     d.insertBefore(c, this.engine.addButton);
+    c.addEventListener("mousewheel", function(a) {
+      var b = Entry.variableContainer.getListById(Entry.stage.mouseCoordinate);
+      a = 0 < a.wheelDelta ? !0 : !1;
+      for (var c = 0;c < b.length;c++) {
+        var d = b[c];
+        d.scrollButton_.y = a ? 46 <= d.scrollButton_.y ? d.scrollButton_.y - 23 : 23 : d.scrollButton_.y + 23;
+        d.updateView();
+      }
+    });
     this.canvas_ = c;
     this.stage.initStage(this.canvas_);
     c = Entry.createElement("div");
@@ -10298,6 +10309,10 @@ Entry.Variable.prototype.setWidth = function(a) {
 Entry.Variable.prototype.getWidth = function() {
   return this.width_;
 };
+Entry.Variable.prototype.isInList = function(a, b) {
+  this.getX();
+  this.getY();
+};
 Entry.Variable.prototype.setHeight = function(a) {
   this.height_ = 100 > a ? 100 : a;
   this.updateView();
@@ -10720,6 +10735,20 @@ Entry.VariableContainer.prototype.addFunction = function(a) {
 Entry.VariableContainer.prototype.removeFunction = function(a) {
   delete this.functions_[a.id];
   this.updateList();
+};
+Entry.VariableContainer.prototype.checkListPosition = function(a, b) {
+  var c = a.x_ + a.width_, d = -a.y_, e = -a.y_ + -a.height_;
+  return b.x > a.x_ && b.x < c && b.y < d && b.y > e ? !0 : !1;
+};
+Entry.VariableContainer.prototype.getListById = function(a) {
+  var b = this.lists_, c = [];
+  if (0 < b.length) {
+    for (var d = 0;d < b.length;d++) {
+      this.checkListPosition(b[d], a) && c.push(b[d]);
+    }
+    return c;
+  }
+  return !1;
 };
 Entry.VariableContainer.prototype.editFunction = function(a, b) {
 };
@@ -11225,7 +11254,7 @@ Entry.VariableContainer.prototype.generateListAddView = function() {
   b.appendChild(c);
   d = Entry.createElement("span");
   d.addClass("entryVariableAddSpaceCloudSpanWorkspace");
-  d.innerHTML = Lang.Workspace.use_for_cloud + "<br>" + Lang.Workspace.stored_in_server;
+  d.innerHTML = Lang.Workspace.List_create_cloud;
   c.appendChild(d);
   d = Entry.createElement("span");
   this.listAddPanel.view.cloudCheck = d;
