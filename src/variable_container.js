@@ -650,8 +650,8 @@ Entry.VariableContainer.prototype.setVariables = function(variables) {
         } else if (type == 'timer') that.generateTimer(variable);
         else if (type == 'answer') that.generateAnswer(variable);
     }
-    if (_.isEmpty(Entry.engine.projectTimer)) Entry.variableContainer.generateTimer();
-    if (_.isEmpty(Entry.container.inputValue)) Entry.variableContainer.generateAnswer();
+    if (Entry.isEmpty(Entry.engine.projectTimer)) Entry.variableContainer.generateTimer();
+    if (Entry.isEmpty(Entry.container.inputValue)) Entry.variableContainer.generateAnswer();
     Entry.playground.reloadPlayground();
     this.updateList();
 };
@@ -751,14 +751,14 @@ Entry.VariableContainer.prototype.checkListPosition = function(list,mouse) {
 
 Entry.VariableContainer.prototype.getListById = function(mouseevt) {
     var lists = this.lists_;
-    var returnList = []; 
+    var returnList = [];
     if(lists.length > 0){
         for(var i=0; i<lists.length; i++){
             if(this.checkListPosition(lists[i],mouseevt))
                 returnList.push(lists[i]);
         }
         return returnList;
-    } 
+    }
     return false;
 }
 
@@ -1372,7 +1372,7 @@ Entry.VariableContainer.prototype.getVariableJSON = function() {
         json.push(Entry.engine.projectTimer);
 
     var answer = Entry.container.inputValue;
-    if (!_.isEmpty(answer))
+    if (!Entry.isEmpty(answer))
         json.push(answer);
     return json;
 };

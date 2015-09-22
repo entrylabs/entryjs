@@ -4499,7 +4499,6 @@ Entry.Container.prototype.initTvcast = function(a) {
   c.setAttribute("frameborder", 0);
   c.setAttribute("src", this.tvcast);
   this.movieFrame = c;
-  console.log(this.movieFrame);
   b.appendChild(c);
 };
 Entry.Container.prototype.initDoneProject = function(a) {
@@ -10711,8 +10710,8 @@ Entry.VariableContainer.prototype.setVariables = function(a) {
     var c = new Entry.Variable(a[b]), d = c.getType();
     "variable" == d || "slide" == d ? (c.generateView(this.variables_.length), this.createVariableView(c), this.variables_.push(c)) : "list" == d ? (c.generateView(this.lists_.length), this.createListView(c), this.lists_.push(c)) : "timer" == d ? this.generateTimer(c) : "answer" == d && this.generateAnswer(c);
   }
-  _.isEmpty(Entry.engine.projectTimer) && Entry.variableContainer.generateTimer();
-  _.isEmpty(Entry.container.inputValue) && Entry.variableContainer.generateAnswer();
+  Entry.isEmpty(Entry.engine.projectTimer) && Entry.variableContainer.generateTimer();
+  Entry.isEmpty(Entry.container.inputValue) && Entry.variableContainer.generateAnswer();
   Entry.playground.reloadPlayground();
   this.updateList();
 };
@@ -11093,7 +11092,7 @@ Entry.VariableContainer.prototype.getVariableJSON = function() {
   }
   Entry.engine.projectTimer && a.push(Entry.engine.projectTimer);
   b = Entry.container.inputValue;
-  _.isEmpty(b) || a.push(b);
+  Entry.isEmpty(b) || a.push(b);
   return a;
 };
 Entry.VariableContainer.prototype.getMessageJSON = function() {
