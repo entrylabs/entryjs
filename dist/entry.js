@@ -3120,52 +3120,6 @@ Entry.Collection = function(b) {
   b.destroy = function() {
   };
 })(Entry.Collection.prototype);
-Entry.Model = function(b) {
-  var a = Entry.Model;
-  a.generateSchema(b);
-  a.generateObserve(b);
-  Object.seal(b);
-  return b;
-};
-(function(b) {
-  b.generateSchema = function(a) {
-    var b = a.schema;
-    if (void 0 !== b) {
-      b = JSON.parse(JSON.stringify(b));
-      a.data = {};
-      for (var d in b) {
-        (function(d) {
-          a.data[d] = b[d];
-          Object.defineProperty(a, d, {get:function() {
-            return a.data[d];
-          }, set:function(b) {
-            a.notify(d, a.data[d]);
-            a.data[d] = b;
-          }});
-        })(d);
-      }
-    }
-  };
-  b.generateObserve = function(a) {
-    a.observers = [];
-    a.observe = this.observe;
-    a.unobserve = this.unobserve;
-    a.notify = this.notify;
-  };
-  b.observe = function(a) {
-    this.observers.push(a);
-  };
-  b.unobserve = function(a) {
-    a = this.observers.indexOf(a);
-    -1 < a && this.observers.splice(a, 1);
-  };
-  b.notify = function(a, b) {
-    var d = this;
-    d.observers.map(function(e) {
-      e.update([{name:a, object:d, oldValue:b}]);
-    });
-  };
-})(Entry.Model);
 Entry.db = {data:{}, typeMap:{}};
 (function(b) {
   b.add = function(a) {
@@ -3208,6 +3162,7 @@ Entry.init = function() {
 };
 Entry.loadProject = function(b) {
 };
+<<<<<<< HEAD
 Entry.block.run = {skeleton:"basic", color:"#3BBD70", contents:["this is", "basic block"], func:function() {
 }};
 Entry.Code = function(b) {
@@ -3323,6 +3278,89 @@ Entry.BoxModel = function() {
   Entry.Model(this);
 };
 Entry.BoxModel.prototype.schema = {id:0, type:Entry.STATIC.BOX_MODEL, x:0, y:0, width:0, height:0};
+=======
+Entry.STATIC = {OBJECT:0, ENTITY:1, SPRITE:2, SOUND:3, VARIABLE:4, FUNCTION:5, SCENE:6, MESSAGE:7};
+Entry.Utils = {};
+Entry.Utils.intersectArray = function(b, a) {
+  for (var c = [], d = 0;d < b.length;d++) {
+    for (var e = 0;e < a.length;e++) {
+      if (b[d] == a[e]) {
+        c.push(b[d]);
+        break;
+      }
+    }
+  }
+  return c;
+};
+Entry.Model = function(b) {
+  var a = Entry.Model;
+  a.generateSchema(b);
+  a.generateSetter(b);
+  a.generateObserve(b);
+  Object.seal(b);
+  return b;
+};
+(function(b) {
+  b.generateSchema = function(a) {
+    var b = a.schema;
+    if (void 0 !== b) {
+      b = JSON.parse(JSON.stringify(b));
+      a.data = {};
+      for (var d in b) {
+        (function(d) {
+          a.data[d] = b[d];
+          Object.defineProperty(a, d, {get:function() {
+            return a.data[d];
+          }, set:function(b) {
+            a.notify(d);
+            a.data[d] = b;
+          }});
+        })(d);
+      }
+    }
+  };
+  b.generateSetter = function(a) {
+    a.set = this.set;
+  };
+  b.set = function(a) {
+    this.notify(Object.keys(a));
+    this._isSilent = !0;
+    for (var b in a) {
+      this[b] = a[b];
+    }
+    this._isSilent = !1;
+  };
+  b.generateObserve = function(a) {
+    a._isSilent = !1;
+    a.observers = [];
+    a.observe = this.observe;
+    a.unobserve = this.unobserve;
+    a.notify = this.notify;
+  };
+  b.observe = function(a, b, d) {
+    this.observers.push({object:a, funcName:b, attrs:d});
+  };
+  b.unobserve = function(a) {
+    a = this.observers.indexOf(a);
+    -1 < a && this.observers.splice(a, 1);
+  };
+  b.notify = function(a) {
+    if (!this._isSilent) {
+      "string" === typeof a && (a = [a]);
+      var b = this;
+      b.observers.map(function(d) {
+        var e = a;
+        void 0 !== d.attrs && (e = Entry.Utils.intersectArray(d.attrs, a));
+        if (e.length) {
+          d.object[d.funcName](e.map(function(a) {
+            return {name:a, object:b, oldValue:b.data[a]};
+          }));
+        }
+      });
+    }
+  };
+})(Entry.Model);
+>>>>>>> origin/new/model
 Entry.Entity = function() {
   Entry.Model(this);
 };

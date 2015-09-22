@@ -2,6 +2,8 @@
 
 goog.provide("Entry.Model");
 
+goog.require("Entry.Utils");
+
 /*
  * Entry Model object generator.
  * @param {object} obj
@@ -10,6 +12,7 @@ goog.provide("Entry.Model");
 Entry.Model = function(obj) {
     var model = Entry.Model;
     model.generateSchema(obj);
+    model.generateSetter(obj);
     model.generateObserve(obj);
     Object.seal(obj);
 
@@ -31,7 +34,7 @@ Entry.Model = function(obj) {
                         return obj.data[localKey];
                     },
                     set: function(val) {
-                        obj.notify(localKey, obj.data[localKey]);
+                        obj.notify(localKey);
                         obj.data[localKey] = val;
                     }
                 });
@@ -39,15 +42,39 @@ Entry.Model = function(obj) {
         }
     };
 
+    m.generateSetter = function(obj) {
+        obj.set = this.set;
+    };
+
+    m.set = function(data) {
+        this.notify(Object.keys(data));
+        this._isSilent = true;
+        for (var key in data) {
+            // call setter
+            this[key] = data[key];
+        }
+        this._isSilent = false;
+    };
+
     m.generateObserve = function(obj) {
+        obj._isSilent = false;
         obj.observers = [];
         obj.observe = this.observe;
         obj.unobserve = this.unobserve;
         obj.notify = this.notify;
     };
 
-    m.observe = function(view) {
-        this.observers.push(view);
+    /*
+     * @param {object} object that observe this model
+     * @param {string} eventFunc will be call when notify
+     * @param {?object} attrs includes which property to watch. Should be array or null.
+     */
+    m.observe = function(object, funcName, attrs) {
+        this.observers.push({
+            object: object,
+            funcName: funcName,
+            attrs: attrs
+        });
     };
 
     m.unobserve = function(view) {
@@ -56,14 +83,31 @@ Entry.Model = function(obj) {
             this.observers.splice(index, 1);
     };
 
-    m.notify = function(key, oldValue) {
+    /*
+     * @param {object|string} key
+     */
+    m.notify = function(keys) {
+        if (this._isSilent) return;
+
+        if (typeof keys === 'string') keys = [keys];
+
         var that = this;
-        that.observers.map(function (observer) {
-            observer.update([{
-                name: key,
-                object: that,
-                oldValue: oldValue
-            }]);
+        that.observers.map(function (observeData) {
+            var attrs = keys;
+            if (observeData.attrs !== undefined)
+                attrs = Entry.Utils.intersectArray(observeData.attrs, keys);
+
+            if (!attrs.length) return;
+
+            observeData.object[observeData.funcName](
+                attrs.map(function(key){
+                    return {
+                        name: key,
+                        object: that,
+                        oldValue: that.data[key]
+                    };
+                })
+            );
         });
     };
 

@@ -1,152 +1,198 @@
 "use strict";
 
 describe('Entry.Model', function(){
-    it('exist', function(){
-        assert.equal(typeof Entry.Model, "function");
+    var schema, datum, never;
+
+    before(function() {
+        never = function(){ assert(false, "this function should not be called") };
+    });
+
+    beforeEach(function() {
+        schema = {
+            id: 0,
+            type: 1,
+            value: 2
+        };
+
+        var constructor = function() {
+            Entry.Model(this);
+        };
+        constructor.prototype.schema = schema;
+
+        datum = new constructor();
+
+    });
+
+    it('should be a function', function(){
+        Entry.Model.should.be.a("function");
     })
 
-    describe('schema', function(){
-        it('generate accessor', function(){
-            var key = Test.randomString();
-            var value = Test.randomString();
-            var schema = {};
-            schema[key] = value;
+    describe('schema feature', function(){
+        it('should not throw error with null schema', function(){
             var constructor = function() {
                 Entry.Model(this);
             };
 
-            constructor.prototype.schema = schema;
-            var datum = new constructor();
-
-            assert.equal(datum[key], value);
+            var func = function(){ new constructor() };
+            func.should.not.throw(Error);
         });
-    });
 
-    describe('get & set', function(){
-        it('test', function(){
-            var key = Test.randomString();
-            var value = 0;
-            var schema = {};
-            schema[key] = value;
-
-            var constructor = function() {
-                Entry.Model(this);
-            };
-            constructor.prototype.schema = schema;
-
-            var datum = new constructor();
-
-            value = Test.randomString();
-            datum[key] = value;
-
-            assert.equal(datum[key], value);
+        it('should generate accessor for registered key', function(){
+            datum.value.should.be.not.undefined;
         });
-    });
 
-    describe('seal', function(){
-        it('test', function(){
-            var datum = {};
-            Entry.Model(datum);
-
-            var key = Test.randomString();
-            var value = Test.randomString();
+        it('should throw error for accessing not registered key', function(){
             var func = function() {
-                datum[key] = value;
+                datum.notExistKey = 0;
             };
-            assert.throws(func, Error);
+            func.should.be.throw(Error);
+        });
+
+        it('should make default value', function(){
+            datum.type.should.be.equal(1);
+            datum.value.should.be.equal(2);
+        });
+    });
+
+    describe('direct getter & setter', function(){
+        it('should change data properly', function(){
+            datum.type = 3;
+
+            datum.type.should.be.equal(3);
+        });
+
+        it('should not be delete and throw error', function(){
+            var func = function() {
+                delete datum.id;
+            };
+            func.should.be.throw(Error);
+        });
+    });
+
+    describe('getter', function(){
+        it('should change data properly', function(){
+            datum.set({type: 3});
+
+            datum.type.should.be.equal(3);
+        });
+
+        it('should change multiple data properly', function(){
+            datum.set({type: 3, value: 4});
+
+            datum.type.should.be.equal(3);
+            datum.value.should.be.equal(4);
         });
     });
 
     describe('observe', function() {
-        it('exist', function(){
-            var datum = Entry.Model({});
-            assert.equal(typeof datum.observe, 'function');
-        });
+        describe('all', function() {
+            context('when model change', function() {
+                it('should notify', function(done) {
+                    var obj = {done: function() {
+                        done();
+                    }};
+                    datum.observe(obj, 'done');
 
-        it('notify', function(){
-            var key = Test.randomString();
-            var schema = {};
-            schema[key] = 0;
+                    datum.value = 3;
+                });
 
-            var constructor = function() {
-                Entry.Model(this);
-            };
-            constructor.prototype.schema = schema;
+                it('should provide change information properly', function() {
+                    var obj = {update: function(data) {
+                        expect(data).to.deep.equal([
+                            {
+                                name: 'value',
+                                object: datum,
+                                oldValue: 2
+                            }
+                        ])
+                    }};
+                    datum.observe(obj, 'update');
 
-            var datum = new constructor();
-
-            var flag = false;
-            var view = {update: function() {
-                flag = true;
-            }};
-            datum.observe(view);
-            datum.data.a = 2;
-
-            datum[key] = 1;
-            assert.isTrue(flag);
-        });
-
-        describe('give appropriate parameter', function(){
-            var key = Test.randomString();
-            var oldValue = Test.randomString();
-            var schema = {};
-            schema[key] = oldValue;
-
-            var constructor = function() {
-                Entry.Model(this);
-            };
-            constructor.prototype.schema = schema;
-
-            var datum = new constructor();
-
-            var change;
-            var view = {update: function(c) {
-                change = c[0];
-            }};
-            datum.observe(view);
-
-            // change value to notify
-            datum[key] = 'new';
-
-            it('name', function(){
-                assert.equal(change.name, key);
+                    datum.value = 3;
+                });
             });
 
-            it('object', function(){
-                assert.strictEqual(change.object, datum);
-            });
-
-            it('type', function(){
-                // In model, change type is always 'update', so not implemented.
-            });
-
-            it('oldValue', function(){
-                assert.equal(change.oldValue, oldValue);
+            context('when model not change', function() {
+                it('should not notify', function() {
+                    var obj = {done: never};
+                    datum.observe(obj, 'done');
+                });
             });
         });
 
-        it('unobserve test', function(){
-            var key = Test.randomString();
-            var oldValue = Test.randomString();
-            var schema = {};
-            schema[key] = oldValue;
+        describe('specific property', function() {
+            context('when model change', function() {
+                it('should notify', function(done) {
+                    var obj = {done: function() {
+                        done();
+                    }};
+                    datum.observe(obj, 'done', ['value']);
 
-            var constructor = function() {
-                Entry.Model(this);
-            };
-            constructor.prototype.schema = schema;
+                    datum.value = 3;
+                });
 
-            var datum = new constructor();
+                it('should notify at once', function(done) {
+                    var obj = {done: function() {
+                        done();
+                    }};
+                    datum.observe(obj, 'done', ['type', 'value']);
 
-            var flag = false;
-            var view = {update: function(c) {
-                flag = true;
-            }};
-            datum.observe(view);
-            datum.unobserve(view);
-            datum[key] = 'new';
+                    datum.set({type: 3, value: 4});
+                });
 
-            assert.isFalse(flag);
+                it('should provide change information properly ', function() {
+                    var obj = {update: function(data) {
+                        expect(data).to.deep.equal([
+                            {
+                                name: 'value',
+                                object: datum,
+                                oldValue: 2
+                            }
+                        ])
+                    }};
+                    datum.observe(obj, 'update', ['value']);
+
+                    datum.value = 3;
+                });
+
+                it('should provide multiple change information properly ', function() {
+                    var obj = {update: function(data) {
+                        expect(data).to.deep.equal([
+                            {
+                                name: 'type',
+                                object: datum,
+                                oldValue: 1
+                            },
+                            {
+                                name: 'value',
+                                object: datum,
+                                oldValue: 2
+                            }
+                        ])
+                    }};
+                    datum.observe(obj, 'update', ['type', 'value']);
+
+                    datum.set({id: 2, type: 3, value: 4});
+                });
+            });
+
+            context('when model not change', function() {
+                it('should not notify', function() {
+                    var obj = {done: never};
+                    datum.observe(obj, 'done', ['id']);
+                });
+
+                it('should not notify', function() {
+                    var obj = {done: never};
+                    datum.observe(obj, 'done', ['id']);
+
+                    datum.value = 3;
+                });
+            });
         });
+
+        it('should not notify once when edit data at once', function() {
+        });
+
     });
 });
