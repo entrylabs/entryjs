@@ -1109,6 +1109,23 @@ Entry.Container.prototype.initYoutube = function(youtubeHash) {
     movieContainer.appendChild(iframe);
 };
 
+Entry.Container.prototype.initTvcast = function(tvcast) {
+    this.tvcast = tvcast
+    this.youtubeTab.removeClass('entryRemove');
+    var view = this.view_;
+    var width = view.style.width.substring(0,
+                                          view.style.width.length-2);
+    var movieContainer = this.movieContainer;
+    var iframe = Entry.createElement('iframe');
+    iframe.setAttribute('width', width);
+    iframe.setAttribute('height',width*9/16);
+    iframe.setAttribute('allowfullscreen', '');
+    iframe.setAttribute('frameborder', 0);
+    iframe.setAttribute('src', this.tvcast);
+    this.movieFrame = iframe;
+    movieContainer.appendChild(iframe);
+};
+
 Entry.Container.prototype.initDoneProject = function(projectId) {
     this.doneProject = projectId;
     this.iframeTab.removeClass('entryRemove');
