@@ -1913,7 +1913,7 @@ Entry.VariableContainer.prototype.generateVariableSettingView = function () {
     minMaxWrapper.addClass('entryVariableSettingMinMaxWrapperWorkspace');
     element.appendChild(minMaxWrapper);
     var minValueSpan = Entry.createElement('span');
-    minValueSpan.innerHTML = '최소값';
+    minValueSpan.innerHTML = Lang.Workspace.min_value;
     minMaxWrapper.appendChild(minValueSpan);
     var minValueInput = Entry.createElement('input');
     minValueInput.addClass('entryVariableSettingMinValueInputWorkspace');

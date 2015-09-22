@@ -11446,7 +11446,7 @@ Entry.VariableContainer.prototype.generateVariableSettingView = function() {
   c.addClass("entryVariableSettingMinMaxWrapperWorkspace");
   b.appendChild(c);
   d = Entry.createElement("span");
-  d.innerHTML = "\ucd5c\uc18c\uac12";
+  d.innerHTML = Lang.Workspace.min_value;
   c.appendChild(d);
   var e = Entry.createElement("input");
   e.addClass("entryVariableSettingMinValueInputWorkspace");
