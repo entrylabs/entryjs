@@ -13,5 +13,5 @@ Entry.STATIC = {
     SCENE: 6,
     MESSAGE: 7,
     BLOCK_MODEL: 8,
-    BLOCK_RENDER_MODEL: 9
+    BOX_MODEL: 9
 };

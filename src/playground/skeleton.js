@@ -23,7 +23,7 @@ Entry.skeleton.basic = {
             next: {x: 0, y: 31}
         };
     },
-    content: function() {
-        return {x: 0, y: 0};
+    contentPos: function() {
+        return {x: 16, y: 15};
     }
 };

@@ -3208,7 +3208,7 @@ Entry.init = function() {
 };
 Entry.loadProject = function(b) {
 };
-Entry.block.run = {skeleton:"basic", color:"#3BBD70", content:["this is", "basic block"], func:function() {
+Entry.block.run = {skeleton:"basic", color:"#3BBD70", contents:["this is", "basic block"], func:function() {
 }};
 Entry.Code = function(b) {
   if (!(b instanceof Array)) {
@@ -3233,6 +3233,25 @@ Entry.Code = function(b) {
     });
   };
 })(Entry.Code.prototype);
+Entry.FieldText = function(b, a) {
+  this._block = a;
+  this.box = new Entry.BoxModel;
+  this.renderStart();
+  this._text = b;
+  this.textElement = null;
+  this.renderStart();
+};
+(function(b) {
+  b.renderStart = function() {
+    this.textElement = this._block.fieldSvgGroup.text(0, 0, this._text);
+    this.textElement.attr("alignment-baseline", "middle");
+    var a = this.textElement.getBBox();
+    this.box.set({x:0, y:0, width:a.width, height:a.height});
+  };
+  b.align = function(a, b) {
+    this.textElement.animate({x:a, y:b});
+  };
+})(Entry.FieldText.prototype);
 Entry.Playground = function(b) {
   b = "string" === typeof b ? $("#" + b) : $(b);
   if ("DIV" !== b.prop("tagName")) {
@@ -3261,8 +3280,8 @@ Entry.skeleton.basic = {path:function(b) {
   return "m 0,0 l 8,8 8,-8 h %w a 15,15 0 0,1 0,30 h -%w l -8,8 -8,-8 v -30 z".replace(/%w/gi, b);
 }, magnets:function() {
   return {previous:{x:0, y:0}, next:{x:0, y:31}};
-}, content:function() {
-  return {x:0, y:0};
+}, contentPos:function() {
+  return {x:16, y:15};
 }};
 Entry.Thread = function(b, a) {
   this.code = a;
@@ -3295,15 +3314,15 @@ Entry.Thread = function(b, a) {
     });
   };
 })(Entry.Thread.prototype);
-Entry.STATIC = {OBJECT:0, ENTITY:1, SPRITE:2, SOUND:3, VARIABLE:4, FUNCTION:5, SCENE:6, MESSAGE:7, BLOCK_MODEL:8, BLOCK_RENDER_MODEL:9};
+Entry.STATIC = {OBJECT:0, ENTITY:1, SPRITE:2, SOUND:3, VARIABLE:4, FUNCTION:5, SCENE:6, MESSAGE:7, BLOCK_MODEL:8, BOX_MODEL:9};
 Entry.BlockModel = function() {
   Entry.Model(this);
 };
 Entry.BlockModel.prototype.schema = {id:0, type:Entry.STATIC.BLOCK_MODEL};
-Entry.BlockRenderModel = function() {
+Entry.BoxModel = function() {
   Entry.Model(this);
 };
-Entry.BlockRenderModel.prototype.schema = {id:0, type:Entry.STATIC.BLOCK_RENDER_MODEL};
+Entry.BoxModel.prototype.schema = {id:0, type:Entry.STATIC.BOX_MODEL, x:0, y:0, width:0, height:0};
 Entry.Entity = function() {
   Entry.Model(this);
 };
@@ -3341,11 +3360,10 @@ Entry.Block = function(b, a) {
   this._schema = Entry.block[b.blockType];
   this._skeleton = Entry.skeleton[this._schema.skeleton];
   this._model = new Entry.BlockModel(b);
-  this._renderModel = null;
-  this.thread = a;
-  this.svgGroup = null;
+  this.contentBox = new Entry.BoxModel;
+  this._contents = [];
   this.magnets = {};
-  this._path = null;
+  this._path = this.fieldSvgGroup = this.svgGroup = null;
 };
 (function(b) {
   b.renderStart = function() {
@@ -3353,6 +3371,18 @@ Entry.Block = function(b, a) {
     this._path = this.svgGroup.path(this._skeleton.path());
     this._path.attr("fill", this._schema.color);
     this.magnets = this._skeleton.magnets();
+    this.fieldRenderStart();
+  };
+  b.fieldRenderStart = function() {
+    this.fieldSvgGroup = this.svgGroup.group();
+    var a = this._skeleton.contentPos();
+    this.fieldSvgGroup.transform("t" + a.x + "," + a.y);
+    for (var a = this._schema.contents, b = 0;b < a.length;b++) {
+      var d = a[b];
+      "string" === typeof d && this._contents.push(new Entry.FieldText(d, this));
+    }
+  };
+  b.alignContent = function() {
   };
 })(Entry.Block.prototype);
 

@@ -3,7 +3,7 @@
 Entry.block.run = {
     skeleton: "basic",
     color: "#3BBD70",
-    content: [
+    contents: [
         "this is",
         "basic block"
     ],
