@@ -11509,7 +11509,6 @@ Entry.VariableContainer.prototype.generateListSettingView = function() {
   c.appendChild(d);
   d = Entry.createElement("input");
   d.addClass("entryListSettingLengthInputWorkspace");
-  d.setAttribute("disabled", "disabled");
   d.onblur = function() {
     a.setListLength(this.value);
   };
