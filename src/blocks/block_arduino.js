@@ -363,12 +363,12 @@ Blockly.Blocks.sensorBoard_is_button_pressed = {
         .appendField('')
         .appendField(new Blockly.FieldDropdown([
           ['빨간',"8"],
-          ['노랑',"10"],
-          ['초록',"11"],
-          ['파란',"9"]
+          ['파란',"9"],
+          ['노란',"10"],
+          ['초록',"11"]
           ]), "PORT")
     this.appendDummyInput()
-        .appendField(' 버튼이 눌렸는가?');
+        .appendField(' 버튼을 눌렀는가?');
     this.setInputsInline(true);
     this.setOutput(true, 'Boolean');
   }
