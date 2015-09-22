@@ -3192,7 +3192,6 @@ Entry.FieldText = function(b, a) {
   var c = new Entry.BoxModel;
   c.observe(a, "alignContent", ["width"]);
   this.box = c;
-  this.renderStart();
   this._text = b;
   this.textElement = null;
   this.renderStart();
@@ -3205,7 +3204,7 @@ Entry.FieldText = function(b, a) {
     this.box.set({x:0, y:0, width:a.width, height:a.height});
   };
   b.align = function(a, b) {
-    this.textElement.attr({x:a, y:b});
+    this.textElement.animate({x:a, y:b}, 300);
     this.box.set({x:a, y:b});
   };
 })(Entry.FieldText.prototype);
@@ -3431,7 +3430,7 @@ Entry.Block = function(b, a) {
   };
   b.render = function() {
     var a = this._skeleton.path(this);
-    this._path.attr({d:a});
+    this._path.animate({d:a}, 200);
   };
 })(Entry.Block.prototype);
 

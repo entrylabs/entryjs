@@ -75,9 +75,9 @@ Entry.Block = function(block, thread) {
 
     p.render = function() {
         var path = this._skeleton.path(this);
-        this._path.attr({
+        this._path.animate({
             d: path
-        });
+        }, 200);
     };
 
 })(Entry.Block.prototype);

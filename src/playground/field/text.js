@@ -15,8 +15,6 @@ Entry.FieldText = function(text, block) {
     box.observe(block, "alignContent", ['width']);
     this.box = box;
 
-    this.renderStart();
-
     this._text = text;
 
     this.textElement = null;
@@ -38,10 +36,10 @@ Entry.FieldText = function(text, block) {
     };
 
     p.align = function(x, y) {
-        this.textElement.attr({
+        this.textElement.animate({
             x: x,
             y: y
-        });
+        }, 300);
 
         this.box.set({
              x: x,
