@@ -11,5 +11,7 @@ Entry.STATIC = {
     VARIABLE: 4,
     FUNCTION: 5,
     SCENE: 6,
-    MESSAGE: 7
+    MESSAGE: 7,
+    BLOCK_MODEL: 8,
+    BLOCK_RENDER_MODEL: 9
 };

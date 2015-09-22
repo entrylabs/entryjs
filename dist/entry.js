@@ -3208,7 +3208,102 @@ Entry.init = function() {
 };
 Entry.loadProject = function(b) {
 };
-Entry.STATIC = {OBJECT:0, ENTITY:1, SPRITE:2, SOUND:3, VARIABLE:4, FUNCTION:5, SCENE:6, MESSAGE:7};
+Entry.block.run = {skeleton:"basic", color:"#3BBD70", content:["this is", "basic block"], func:function() {
+}};
+Entry.Code = function(b) {
+  if (!(b instanceof Array)) {
+    return console.error("code must be array");
+  }
+  this._threads = new Entry.Collection;
+  this.playground = null;
+  this.set(b);
+};
+(function(b) {
+  b.set = function(a) {
+    var b = this;
+    a = a.map(function(a) {
+      return new Entry.Thread(a, b);
+    });
+    this._threads.set(a);
+  };
+  b.bindPlayground = function(a) {
+    this.playground = a;
+    this._threads.map(function(a) {
+      a.renderStart();
+    });
+  };
+})(Entry.Code.prototype);
+Entry.Playground = function(b) {
+  b = "string" === typeof b ? $("#" + b) : $(b);
+  if ("DIV" !== b.prop("tagName")) {
+    return console.error("Dom is not div element");
+  }
+  if ("function" !== typeof window.Snap) {
+    return console.error("Snap library is required");
+  }
+  b.css({width:"800px", height:"800px"});
+  this.svgDom = Entry.Dom($('<svg id="play" width="100%" height="100%"version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'), {parent:b});
+  this.snap = Snap("#play");
+};
+(function(b) {
+  b.selectCode = function(a) {
+    if (!(a instanceof Entry.Code)) {
+      return console.error("You must select code instance");
+    }
+    a.bindPlayground(this);
+    this.code = a;
+  };
+})(Entry.Playground.prototype);
+Entry.skeleton = function() {
+};
+Entry.skeleton.basic = {path:function(b) {
+  b = 200 * Math.random();
+  return "m 0,0 l 8,8 8,-8 h %w a 15,15 0 0,1 0,30 h -%w l -8,8 -8,-8 v -30 z".replace(/%w/gi, b);
+}, magnets:function() {
+  return {previous:{x:0, y:0}, next:{x:0, y:31}};
+}, content:function() {
+  return {x:0, y:0};
+}};
+Entry.Thread = function(b, a) {
+  this.code = a;
+  this._blocks = new Entry.Collection;
+  this.set(b);
+  this.svgGroup = null;
+};
+(function(b) {
+  b.set = function(a) {
+    var b = this;
+    a = a.map(function(a) {
+      return new Entry.Block(a, b);
+    });
+    this._blocks.set(a);
+  };
+  b.renderStart = function() {
+    this.svgGroup = this.code.playground.snap.group();
+    this._blocks.map(function(a) {
+      a.renderStart();
+    });
+    this.align();
+  };
+  b.align = function() {
+    var a = 0, b = 0;
+    this._blocks.map(function(d) {
+      d.svgGroup.animate({transform:"t" + a + "," + b}, 200);
+      d = d.magnets.next;
+      a += d.x;
+      b += d.y;
+    });
+  };
+})(Entry.Thread.prototype);
+Entry.STATIC = {OBJECT:0, ENTITY:1, SPRITE:2, SOUND:3, VARIABLE:4, FUNCTION:5, SCENE:6, MESSAGE:7, BLOCK_MODEL:8, BLOCK_RENDER_MODEL:9};
+Entry.BlockModel = function() {
+  Entry.Model(this);
+};
+Entry.BlockModel.prototype.schema = {id:0, type:Entry.STATIC.BLOCK_MODEL};
+Entry.BlockRenderModel = function() {
+  Entry.Model(this);
+};
+Entry.BlockRenderModel.prototype.schema = {id:0, type:Entry.STATIC.BLOCK_RENDER_MODEL};
 Entry.Entity = function() {
   Entry.Model(this);
 };
@@ -3241,4 +3336,23 @@ Entry.Variable = function() {
   Entry.Model(this);
 };
 Entry.Variable.prototype.schema = {id:0, type:Entry.STATIC.VARIABLE, variableType:0, name:0, value:0, minValue:0, maxValue:0, visible:!0, x:0, y:0, width:0, height:0, isCloud:!1, object:null, array:0};
+Entry.Block = function(b, a) {
+  this.thread = a;
+  this._schema = Entry.block[b.blockType];
+  this._skeleton = Entry.skeleton[this._schema.skeleton];
+  this._model = new Entry.BlockModel(b);
+  this._renderModel = null;
+  this.thread = a;
+  this.svgGroup = null;
+  this.magnets = {};
+  this._path = null;
+};
+(function(b) {
+  b.renderStart = function() {
+    this.svgGroup = this.thread.svgGroup.group();
+    this._path = this.svgGroup.path(this._skeleton.path());
+    this._path.attr("fill", this._schema.color);
+    this.magnets = this._skeleton.magnets();
+  };
+})(Entry.Block.prototype);
 
