@@ -11,7 +11,9 @@ goog.provide("Entry.FieldText");
 Entry.FieldText = function(text, block) {
     this._block = block;
 
-    this.box = new Entry.BoxModel();
+    var box = new Entry.BoxModel();
+    box.observe(block, "alignContent", ['width']);
+    this.box = box;
 
     this.renderStart();
 
@@ -36,9 +38,14 @@ Entry.FieldText = function(text, block) {
     };
 
     p.align = function(x, y) {
-        this.textElement.animate({
+        this.textElement.attr({
             x: x,
             y: y
+        });
+
+        this.box.set({
+             x: x,
+             y: y
         });
     };
 

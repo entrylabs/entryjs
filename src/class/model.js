@@ -34,8 +34,9 @@ Entry.Model = function(obj) {
                         return obj.data[localKey];
                     },
                     set: function(val) {
-                        obj.notify(localKey);
+                        var oldValue = obj.data[localKey];
                         obj.data[localKey] = val;
+                        obj.notify(localKey, oldValue);
                     }
                 });
             })(key);
@@ -85,8 +86,9 @@ Entry.Model = function(obj) {
 
     /*
      * @param {object|string} key
+     * @param {} oldValue
      */
-    m.notify = function(keys) {
+    m.notify = function(keys, oldValue) {
         if (this._isSilent) return;
 
         if (typeof keys === 'string') keys = [keys];
@@ -104,7 +106,7 @@ Entry.Model = function(obj) {
                     return {
                         name: key,
                         object: that,
-                        oldValue: that.data[key]
+                        oldValue: oldValue
                     };
                 })
             );

@@ -3162,7 +3162,6 @@ Entry.init = function() {
 };
 Entry.loadProject = function(b) {
 };
-<<<<<<< HEAD
 Entry.block.run = {skeleton:"basic", color:"#3BBD70", contents:["this is", "basic block"], func:function() {
 }};
 Entry.Code = function(b) {
@@ -3190,7 +3189,9 @@ Entry.Code = function(b) {
 })(Entry.Code.prototype);
 Entry.FieldText = function(b, a) {
   this._block = a;
-  this.box = new Entry.BoxModel;
+  var c = new Entry.BoxModel;
+  c.observe(a, "alignContent", ["width"]);
+  this.box = c;
   this.renderStart();
   this._text = b;
   this.textElement = null;
@@ -3204,7 +3205,8 @@ Entry.FieldText = function(b, a) {
     this.box.set({x:0, y:0, width:a.width, height:a.height});
   };
   b.align = function(a, b) {
-    this.textElement.animate({x:a, y:b});
+    this.textElement.attr({x:a, y:b});
+    this.box.set({x:a, y:b});
   };
 })(Entry.FieldText.prototype);
 Entry.Playground = function(b) {
@@ -3231,8 +3233,7 @@ Entry.Playground = function(b) {
 Entry.skeleton = function() {
 };
 Entry.skeleton.basic = {path:function(b) {
-  b = 200 * Math.random();
-  return "m 0,0 l 8,8 8,-8 h %w a 15,15 0 0,1 0,30 h -%w l -8,8 -8,-8 v -30 z".replace(/%w/gi, b);
+  return "m 0,0 l 8,8 8,-8 h %w a 15,15 0 0,1 0,30 h -%w l -8,8 -8,-8 v -30 z".replace(/%w/gi, b.contentBox.width);
 }, magnets:function() {
   return {previous:{x:0, y:0}, next:{x:0, y:31}};
 }, contentPos:function() {
@@ -3270,16 +3271,6 @@ Entry.Thread = function(b, a) {
   };
 })(Entry.Thread.prototype);
 Entry.STATIC = {OBJECT:0, ENTITY:1, SPRITE:2, SOUND:3, VARIABLE:4, FUNCTION:5, SCENE:6, MESSAGE:7, BLOCK_MODEL:8, BOX_MODEL:9};
-Entry.BlockModel = function() {
-  Entry.Model(this);
-};
-Entry.BlockModel.prototype.schema = {id:0, type:Entry.STATIC.BLOCK_MODEL};
-Entry.BoxModel = function() {
-  Entry.Model(this);
-};
-Entry.BoxModel.prototype.schema = {id:0, type:Entry.STATIC.BOX_MODEL, x:0, y:0, width:0, height:0};
-=======
-Entry.STATIC = {OBJECT:0, ENTITY:1, SPRITE:2, SOUND:3, VARIABLE:4, FUNCTION:5, SCENE:6, MESSAGE:7};
 Entry.Utils = {};
 Entry.Utils.intersectArray = function(b, a) {
   for (var c = [], d = 0;d < b.length;d++) {
@@ -3312,8 +3303,9 @@ Entry.Model = function(b) {
           Object.defineProperty(a, d, {get:function() {
             return a.data[d];
           }, set:function(b) {
-            a.notify(d);
+            var c = a.data[d];
             a.data[d] = b;
+            a.notify(d, c);
           }});
         })(d);
       }
@@ -3344,23 +3336,30 @@ Entry.Model = function(b) {
     a = this.observers.indexOf(a);
     -1 < a && this.observers.splice(a, 1);
   };
-  b.notify = function(a) {
+  b.notify = function(a, b) {
     if (!this._isSilent) {
       "string" === typeof a && (a = [a]);
-      var b = this;
-      b.observers.map(function(d) {
-        var e = a;
-        void 0 !== d.attrs && (e = Entry.Utils.intersectArray(d.attrs, a));
-        if (e.length) {
-          d.object[d.funcName](e.map(function(a) {
-            return {name:a, object:b, oldValue:b.data[a]};
+      var d = this;
+      d.observers.map(function(e) {
+        var f = a;
+        void 0 !== e.attrs && (f = Entry.Utils.intersectArray(e.attrs, a));
+        if (f.length) {
+          e.object[e.funcName](f.map(function(a) {
+            return {name:a, object:d, oldValue:b};
           }));
         }
       });
     }
   };
 })(Entry.Model);
->>>>>>> origin/new/model
+Entry.BlockModel = function() {
+  Entry.Model(this);
+};
+Entry.BlockModel.prototype.schema = {id:0, type:Entry.STATIC.BLOCK_MODEL};
+Entry.BoxModel = function() {
+  Entry.Model(this);
+};
+Entry.BoxModel.prototype.schema = {id:0, type:Entry.STATIC.BOX_MODEL, x:0, y:0, width:0, height:0};
 Entry.Entity = function() {
   Entry.Model(this);
 };
@@ -3399,6 +3398,7 @@ Entry.Block = function(b, a) {
   this._skeleton = Entry.skeleton[this._schema.skeleton];
   this._model = new Entry.BlockModel(b);
   this.contentBox = new Entry.BoxModel;
+  this.contentBox.observe(this, "render", ["width", "height"]);
   this._contents = [];
   this.magnets = {};
   this._path = this.fieldSvgGroup = this.svgGroup = null;
@@ -3406,7 +3406,7 @@ Entry.Block = function(b, a) {
 (function(b) {
   b.renderStart = function() {
     this.svgGroup = this.thread.svgGroup.group();
-    this._path = this.svgGroup.path(this._skeleton.path());
+    this._path = this.svgGroup.path(this._skeleton.path(this));
     this._path.attr("fill", this._schema.color);
     this.magnets = this._skeleton.magnets();
     this.fieldRenderStart();
@@ -3419,8 +3419,19 @@ Entry.Block = function(b, a) {
       var d = a[b];
       "string" === typeof d && this._contents.push(new Entry.FieldText(d, this));
     }
+    this.alignContent();
   };
   b.alignContent = function() {
+    for (var a = 0, b = 0;b < this._contents.length;b++) {
+      var d = this._contents[b];
+      d.align(a, 0);
+      a += d.box.width;
+    }
+    this.contentBox.width = a;
+  };
+  b.render = function() {
+    var a = this._skeleton.path(this);
+    this._path.attr({d:a});
   };
 })(Entry.Block.prototype);
 
