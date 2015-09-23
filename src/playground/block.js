@@ -154,6 +154,7 @@ Entry.Block = function(block, thread) {
                 $(document).bind('mousemove.block', this.onMouseMove);
                 $(document).bind('mouseup.block', this.onMouseUp);
                 Entry.Playground.dragBlock = this;
+                this.dragMode = true;
                 this._offset = { x: e.clientX, y: e.clientY };
             break;
             case 1: // middle button
@@ -172,11 +173,12 @@ Entry.Block = function(block, thread) {
             false
         );
         block._offset = { x: e.clientX, y: e.clientY };
+        block.thread.align(false);
     };
 
     p.onMouseUp = function(e) {
         var block = Entry.Playground.dragBlock;
-        block.thread.align();
+        block.dragMode = null;
         $(document).unbind('.block');
     };
 

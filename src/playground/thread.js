@@ -42,10 +42,19 @@ Entry.Thread = function(thread, code) {
         this.align();
     };
 
-    p.align = function() {
-        var cursor = {x: 0, y: 0};
+    p.align = function(animate) {
+        animate = animate === undefined ? true : animate;
+        var firstBlockBox = this._blocks.at(0).box;
+        var cursor = {
+            x: firstBlockBox.x,
+            y: firstBlockBox.y
+        };
         this._blocks.map(function(b) {
-            b.moveTo(cursor.x, cursor.y);
+            if (b.dragMode) {
+                cursor.x = b.box.x;
+                cursor.y = b.box.y;
+            };
+            b.moveTo(cursor.x, cursor.y, animate);
 
             var magnet = b.magnets.next;
             cursor.x += magnet.x;

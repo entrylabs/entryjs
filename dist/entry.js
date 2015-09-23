@@ -3261,13 +3261,15 @@ Entry.Thread = function(b, a) {
     });
     this.align();
   };
-  b.align = function() {
-    var a = 0, b = 0;
-    this._blocks.map(function(d) {
-      d.moveTo(a, b);
-      d = d.magnets.next;
-      a += d.x;
-      b += d.y;
+  b.align = function(a) {
+    a = void 0 === a ? !0 : a;
+    var b = this._blocks.at(0).box, d = b.x, e = b.y;
+    this._blocks.map(function(b) {
+      b.dragMode && (d = b.box.x, e = b.box.y);
+      b.moveTo(d, e, a);
+      b = b.magnets.next;
+      d += b.x;
+      e += b.y;
     });
   };
 })(Entry.Thread.prototype);
@@ -3467,16 +3469,17 @@ Entry.Block = function(b, a) {
   b.onMouseDown = function(a) {
     switch(a.button) {
       case 0:
-        $(document).bind("mousemove.block", this.onMouseMove), $(document).bind("mouseup.block", this.onMouseUp), Entry.Playground.dragBlock = this, this._offset = {x:a.clientX, y:a.clientY};
+        $(document).bind("mousemove.block", this.onMouseMove), $(document).bind("mouseup.block", this.onMouseUp), Entry.Playground.dragBlock = this, this.dragMode = !0, this._offset = {x:a.clientX, y:a.clientY};
     }
   };
   b.onMouseMove = function(a) {
     var b = Entry.Playground.dragBlock;
     b.moveBy(a.clientX - b._offset.x, a.clientY - b._offset.y, !1);
     b._offset = {x:a.clientX, y:a.clientY};
+    b.thread.align(!1);
   };
   b.onMouseUp = function(a) {
-    Entry.Playground.dragBlock.thread.align();
+    Entry.Playground.dragBlock.dragMode = null;
     $(document).unbind(".block");
   };
 })(Entry.Block.prototype);
