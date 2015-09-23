@@ -33,6 +33,7 @@ Entry.Thread = function(thread, code) {
 
     p.renderStart = function() {
         this.svgGroup = this.code.playground.snap.group();
+        this.svgGroup.transform("t5,5");
 
         this._blocks.map(function(b) {
             b.renderStart();

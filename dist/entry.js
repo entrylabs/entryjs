@@ -3199,7 +3199,7 @@ Entry.FieldText = function(b, a) {
 (function(b) {
   b.renderStart = function() {
     this.textElement = this._block.fieldSvgGroup.text(0, 0, this._text);
-    this.textElement.attr("alignment-baseline", "middle");
+    this.textElement.attr({"alignment-baseline":"central", "class":"dragNone"});
     var a = this.textElement.getBBox();
     this.box.set({x:0, y:0, width:a.width, height:a.height});
   };
@@ -3236,7 +3236,7 @@ Entry.skeleton.basic = {path:function(b) {
 }, magnets:function() {
   return {previous:{x:0, y:0}, next:{x:0, y:31}};
 }, contentPos:function() {
-  return {x:16, y:15};
+  return {x:20, y:15};
 }};
 Entry.Thread = function(b, a) {
   this.code = a;
@@ -3254,6 +3254,7 @@ Entry.Thread = function(b, a) {
   };
   b.renderStart = function() {
     this.svgGroup = this.code.playground.snap.group();
+    this.svgGroup.transform("t5,5");
     this._blocks.map(function(a) {
       a.renderStart();
     });
@@ -3405,8 +3406,9 @@ Entry.Block = function(b, a) {
 (function(b) {
   b.renderStart = function() {
     this.svgGroup = this.thread.svgGroup.group();
+    this.svgGroup.attr({class:"block"});
     this._path = this.svgGroup.path(this._skeleton.path(this));
-    this._path.attr("fill", this._schema.color);
+    this._path.attr({fill:this._schema.color});
     this.magnets = this._skeleton.magnets();
     this.fieldRenderStart();
   };
@@ -3424,6 +3426,7 @@ Entry.Block = function(b, a) {
     for (var a = 0, b = 0;b < this._contents.length;b++) {
       var d = this._contents[b];
       d.align(a, 0);
+      b !== this._contents.length - 1 && (a += 5);
       a += d.box.width;
     }
     this.contentBox.width = a;
@@ -3431,6 +3434,18 @@ Entry.Block = function(b, a) {
   b.render = function() {
     var a = this._skeleton.path(this);
     this._path.animate({d:a}, 200);
+  };
+  b.highlight = function() {
+    var a = this._path.getTotalLength(), b = this._path;
+    this._path.attr({stroke:"#f00", strokeWidth:2, "stroke-linecap":"round", "stroke-dasharray":a + " " + a, "stroke-dashoffset":a});
+    setInterval(function() {
+      b.attr({"stroke-dashoffset":a}).animate({"stroke-dashoffset":0}, 600);
+    }, 1800, mina.easeout);
+    setTimeout(function() {
+      setInterval(function() {
+        b.animate({"stroke-dashoffset":-a}, 600);
+      }, 1800, mina.easeout);
+    }, 1200);
   };
 })(Entry.Block.prototype);
 

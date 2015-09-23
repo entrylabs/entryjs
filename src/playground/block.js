@@ -38,9 +38,14 @@ Entry.Block = function(block, thread) {
 (function(p) {
     p.renderStart = function() {
         this.svgGroup = this.thread.svgGroup.group();
+        this.svgGroup.attr({
+            class: "block"
+        });
 
         this._path = this.svgGroup.path(this._skeleton.path(this));
-        this._path.attr('fill', this._schema.color);
+        this._path.attr({
+            fill: this._schema.color
+        });
 
         this.magnets = this._skeleton.magnets();
         this.fieldRenderStart();
@@ -66,6 +71,10 @@ Entry.Block = function(block, thread) {
             var c = this._contents[i];
             c.align(cursor.x, cursor.y);
 
+            // space between content
+            if (i !== this._contents.length - 1)
+                cursor.x += 5;
+
             var box = c.box;
             cursor.x += box.width;
         }
@@ -78,6 +87,27 @@ Entry.Block = function(block, thread) {
         this._path.animate({
             d: path
         }, 200);
+    };
+
+    p.highlight = function() {
+        var pathLen = this._path.getTotalLength();
+        var path = this._path;
+        this._path.attr({
+            stroke: "#f00",
+            strokeWidth: 2,
+            "stroke-linecap": "round",
+            "stroke-dasharray": pathLen + " " + pathLen,
+            "stroke-dashoffset": pathLen
+        });
+        setInterval(function() {
+            path.attr({"stroke-dashoffset": pathLen})
+                .animate({"stroke-dashoffset": 0}, 600);
+        }, 1800, mina.easeout);
+        setTimeout(function() {
+            setInterval(function() {
+                path.animate({"stroke-dashoffset": - pathLen}, 600);
+            }, 1800, mina.easeout);
+        }, 1200);
     };
 
 })(Entry.Block.prototype);
