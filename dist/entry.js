@@ -3220,6 +3220,7 @@ Entry.Playground = function(b) {
   this.svgDom = Entry.Dom($('<svg id="play" width="100%" height="100%"version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'), {parent:b});
   this.snap = Snap("#play");
 };
+Entry.Playground.dragBlock = null;
 (function(b) {
   b.selectCode = function(a) {
     if (!(a instanceof Entry.Code)) {
@@ -3263,7 +3264,7 @@ Entry.Thread = function(b, a) {
   b.align = function() {
     var a = 0, b = 0;
     this._blocks.map(function(d) {
-      d.svgGroup.animate({transform:"t" + a + "," + b}, 200);
+      d.moveTo(a, b);
       d = d.magnets.next;
       a += d.x;
       b += d.y;
@@ -3397,6 +3398,7 @@ Entry.Block = function(b, a) {
   this._schema = Entry.block[b.blockType];
   this._skeleton = Entry.skeleton[this._schema.skeleton];
   this._model = new Entry.BlockModel(b);
+  this.box = new Entry.BoxModel;
   this.contentBox = new Entry.BoxModel;
   this.contentBox.observe(this, "render", ["width", "height"]);
   this._contents = [];
@@ -3411,11 +3413,20 @@ Entry.Block = function(b, a) {
     this._path.attr({fill:this._schema.color});
     this.magnets = this._skeleton.magnets();
     this.fieldRenderStart();
+    this.addControl();
+  };
+  b.moveTo = function(a, b, d) {
+    var e = "t" + a + " " + b;
+    void 0 === d || d ? this.svgGroup.animate({transform:e}, 300, mina.easeinout) : this.svgGroup.attr({transform:e});
+    this.box.set({x:a, y:b});
+  };
+  b.moveBy = function(a, b, d) {
+    return this.moveTo(this.box.x + a, this.box.y + b, d);
   };
   b.fieldRenderStart = function() {
     this.fieldSvgGroup = this.svgGroup.group();
     var a = this._skeleton.contentPos();
-    this.fieldSvgGroup.transform("t" + a.x + "," + a.y);
+    this.fieldSvgGroup.transform("t" + a.x + " " + a.y);
     for (var a = this._schema.contents, b = 0;b < a.length;b++) {
       var d = a[b];
       "string" === typeof d && this._contents.push(new Entry.FieldText(d, this));
@@ -3446,6 +3457,27 @@ Entry.Block = function(b, a) {
         b.animate({"stroke-dashoffset":-a}, 600);
       }, 1800, mina.easeout);
     }, 1200);
+  };
+  b.addControl = function() {
+    var a = this;
+    this.svgGroup.mousedown(function() {
+      a.onMouseDown.apply(a, arguments);
+    });
+  };
+  b.onMouseDown = function(a) {
+    switch(a.button) {
+      case 0:
+        $(document).bind("mousemove.block", this.onMouseMove), $(document).bind("mouseup.block", this.onMouseUp), Entry.Playground.dragBlock = this, this._offset = {x:a.clientX, y:a.clientY};
+    }
+  };
+  b.onMouseMove = function(a) {
+    var b = Entry.Playground.dragBlock;
+    b.moveBy(a.clientX - b._offset.x, a.clientY - b._offset.y, !1);
+    b._offset = {x:a.clientX, y:a.clientY};
+  };
+  b.onMouseUp = function(a) {
+    Entry.Playground.dragBlock.thread.align();
+    $(document).unbind(".block");
   };
 })(Entry.Block.prototype);
 

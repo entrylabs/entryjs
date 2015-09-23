@@ -19,12 +19,14 @@ Entry.skeleton.basic = {
             .replace(/%w/gi, width);
     },
     magnets: function() {
+        // apply scale required.
         return {
             previous: {x: 0, y: 0},
             next: {x: 0, y: 31}
         };
     },
     contentPos: function() {
+        // apply scale required.
         return {x: 16 + 4, y: 15};
     }
 };

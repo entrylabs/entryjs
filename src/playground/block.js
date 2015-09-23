@@ -22,6 +22,7 @@ Entry.Block = function(block, thread) {
 
     // Block model
     this._model = new Entry.BlockModel(block);
+    this.box = new Entry.BoxModel();
     this.contentBox = new Entry.BoxModel();
     this.contentBox.observe(this, "render", ['width', 'height']);
 
@@ -49,12 +50,41 @@ Entry.Block = function(block, thread) {
 
         this.magnets = this._skeleton.magnets();
         this.fieldRenderStart();
+
+        this.addControl();
+    };
+
+    /*
+     *
+     * @param {} animate
+     */
+    p.moveTo = function(x, y, animate) {
+        animate = animate === undefined ? true : animate;
+        var transform = "t" + x + " " + y;
+        if (animate) {
+            this.svgGroup.animate({
+                transform: transform
+            }, 300, mina.easeinout);
+        } else {
+            this.svgGroup.attr({
+                transform: transform
+            });
+        }
+        this.box.set({ x: x, y: y });
+    };
+
+    p.moveBy = function(x, y, animate) {
+        return this.moveTo(
+            this.box.x + x,
+            this.box.y + y,
+            animate
+        );
     };
 
     p.fieldRenderStart = function() {
         this.fieldSvgGroup = this.svgGroup.group();
         var contentPos = this._skeleton.contentPos();
-        this.fieldSvgGroup.transform("t" + contentPos.x + ',' + contentPos.y);
+        this.fieldSvgGroup.transform("t" + contentPos.x + ' ' + contentPos.y);
 
         var contents = this._schema.contents;
         for (var i = 0; i < contents.length; i++) {
@@ -101,7 +131,7 @@ Entry.Block = function(block, thread) {
         });
         setInterval(function() {
             path.attr({"stroke-dashoffset": pathLen})
-                .animate({"stroke-dashoffset": 0}, 600);
+            .animate({"stroke-dashoffset": 0}, 600);
         }, 1800, mina.easeout);
         setTimeout(function() {
             setInterval(function() {
@@ -109,5 +139,46 @@ Entry.Block = function(block, thread) {
             }, 1800, mina.easeout);
         }, 1200);
     };
+
+    p.addControl = function() {
+        var that = this;
+        this.svgGroup.mousedown(function() {
+            that.onMouseDown.apply(that, arguments);
+        });
+    };
+
+    // this function is call by itself
+    p.onMouseDown = function(e) {
+        switch(e.button) {
+            case 0: // left button
+                $(document).bind('mousemove.block', this.onMouseMove);
+                $(document).bind('mouseup.block', this.onMouseUp);
+                Entry.Playground.dragBlock = this;
+                this._offset = { x: e.clientX, y: e.clientY };
+            break;
+            case 1: // middle button
+                break;
+            case 2: // left button
+                break;
+
+        }
+    };
+
+    p.onMouseMove = function(e) {
+        var block = Entry.Playground.dragBlock;
+        block.moveBy(
+            e.clientX - block._offset.x,
+            e.clientY - block._offset.y,
+            false
+        );
+        block._offset = { x: e.clientX, y: e.clientY };
+    };
+
+    p.onMouseUp = function(e) {
+        var block = Entry.Playground.dragBlock;
+        block.thread.align();
+        $(document).unbind('.block');
+    };
+
 
 })(Entry.Block.prototype);

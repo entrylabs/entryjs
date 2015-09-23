@@ -45,8 +45,8 @@ Entry.FieldText = function(text, block) {
         }, 300);
 
         this.box.set({
-             x: x,
-             y: y
+            x: x,
+            y: y
         });
     };
 

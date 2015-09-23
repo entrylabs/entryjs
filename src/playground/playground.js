@@ -37,6 +37,8 @@ Entry.Playground = function(dom) {
     this.snap = Snap('#play');
 };
 
+Entry.Playground.dragBlock = null;
+
 (function(p) {
     p.selectCode = function(code) {
         if (!(code instanceof Entry.Code))

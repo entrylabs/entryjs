@@ -45,10 +45,7 @@ Entry.Thread = function(thread, code) {
     p.align = function() {
         var cursor = {x: 0, y: 0};
         this._blocks.map(function(b) {
-            var transform = "t" + cursor.x + "," + cursor.y;
-            b.svgGroup.animate({
-                transform: transform
-            }, 200);
+            b.moveTo(cursor.x, cursor.y);
 
             var magnet = b.magnets.next;
             cursor.x += magnet.x;
