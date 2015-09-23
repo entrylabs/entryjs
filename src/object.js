@@ -13,6 +13,8 @@ Entry.EntryObject = function(model) {
         /** @type {string} */
         this.id = model.id;
 
+        this.label = model.label;
+
         /** @type {string} */
         this.name = model.name ? model.name : model.sprite.name;
 
@@ -215,19 +217,23 @@ Entry.EntryObject.prototype.generateView= function() {
         this.nameView_.entryObject = this;
         nameView.setAttribute("disabled", 'disabled');
 
+        var self = this;
         this.nameView_.onblur = function() {
-            this.entryObject.name = this.value;
+            if (this.entryObject.objectType == "textBox") {
+                self.label = this.value;
+            } else {
+                this.entryObject.name = this.value;
+            }
         };
         this.nameView_.onkeyup = function() {
             if (this.entryObject.objectType == "textBox")
-                this.entryObject.entity.setText(this.value);
+                self.label = this.value;
         };
         this.nameView_.onkeypress = function(e) {
             if (e.keyCode == 13)
                 this.blur();
         };
-        this.nameView_.value = this.name;
-
+        this.nameView_.value = this.label ? this.label :  this.name;
 
         var editView = Entry.createElement('div');
         editView.addClass('entryObjectEditWorkspace');
@@ -567,7 +573,6 @@ Entry.EntryObject.prototype.generateView= function() {
                 this.blur();
         };
         this.nameView_.value = this.name;
-
 
         if (Entry.objectEditable && Entry.objectDeletable) {
             var deleteView = Entry.createElement('div');
@@ -1267,6 +1272,8 @@ Entry.EntryObject.prototype.toJSON = function() {
     var json = {};
     json.id = this.id;
     json.name = this.name;
+    if (this.objectType == 'textBox')
+        json.label = this.label;
     json.script = this.getScriptText();
     if (this.objectType == 'sprite')
         json.selectedPictureId = this.selectedPicture.id;

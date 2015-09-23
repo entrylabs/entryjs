@@ -690,7 +690,7 @@ Entry.Playground.prototype.generateTextView = function(textView) {
     var textEditInput = Entry.createElement("input");
     textEditInput.addClass("entryPlayground_textBox");
     textEditInput.onkeyup = function() {
-        Entry.playground.object.setName(this.value);
+        //Entry.playground.object.setName(this.value);
         Entry.playground.object.entity.setText(this.value);
     };
     textEditInput.onblur = function() {
@@ -703,7 +703,7 @@ Entry.Playground.prototype.generateTextView = function(textView) {
     textEditArea.addClass("entryPlayground_textArea");
     textEditArea.style.display = 'none';
     textEditArea.onkeyup = function() {
-        Entry.playground.object.setName(this.value);
+        //Entry.playground.object.setName(this.value);
         Entry.playground.object.entity.setText(this.value);
     };
     textEditArea.onblur = function() {
