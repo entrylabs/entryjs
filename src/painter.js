@@ -735,11 +735,6 @@ Entry.Painter.prototype.restorePainter = function(colorLayerModel) {
                                  this,
                                  this.restorePainter,
                                  currentColorModel);
-    /*
-    return new Entry.State(this,
-                            this.restorePainter,
-                            currentColorModel);
-    */
 };
 
 Entry.Painter.prototype.platten = function() {
