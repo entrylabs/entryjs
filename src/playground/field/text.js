@@ -42,7 +42,7 @@ Entry.FieldText = function(text, block) {
         this.textElement.animate({
             x: x,
             y: y
-        }, 300);
+        }, 300, mina.easeinout);
 
         this.box.set({
             x: x,

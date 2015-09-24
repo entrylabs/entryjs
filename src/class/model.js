@@ -7,14 +7,14 @@ goog.require("Entry.Utils");
 /*
  * Entry Model object generator.
  * @param {object} obj
- * @param {object} schema
  */
-Entry.Model = function(obj) {
+Entry.Model = function(obj, isSeal) {
     var model = Entry.Model;
     model.generateSchema(obj);
     model.generateSetter(obj);
     model.generateObserve(obj);
-    Object.seal(obj);
+    if (isSeal === undefined || isSeal)
+        Object.seal(obj);
 
     return obj;
 };
@@ -71,15 +71,17 @@ Entry.Model = function(obj) {
      * @param {?object} attrs includes which property to watch. Should be array or null.
      */
     m.observe = function(object, funcName, attrs) {
-        this.observers.push({
+        var observeObj = {
             object: object,
             funcName: funcName,
             attrs: attrs
-        });
+        };
+        this.observers.push(observeObj);
+        return observeObj;
     };
 
-    m.unobserve = function(view) {
-        var index = this.observers.indexOf(view);
+    m.unobserve = function(observeObj) {
+        var index = this.observers.indexOf(observeObj);
         if (index > -1)
             this.observers.splice(index, 1);
     };

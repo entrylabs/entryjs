@@ -15,6 +15,7 @@ goog.require("Entry.skeleton");
  */
 Entry.Block = function(block, thread) {
     this.thread = thread;
+    this._playground = null;
 
     // block information
     this._schema = Entry.block[block.blockType];
@@ -23,6 +24,8 @@ Entry.Block = function(block, thread) {
     // Block model
     this._model = new Entry.BlockModel(block);
     this.box = new Entry.BoxModel();
+    if (block.x !== undefined)
+        this.box.set({ x: block.x, y: block.y });
     this.contentBox = new Entry.BoxModel();
     this.contentBox.observe(this, "render", ['width', 'height']);
 
@@ -37,11 +40,21 @@ Entry.Block = function(block, thread) {
 };
 
 (function(p) {
-    p.renderStart = function() {
+
+
+    // method for playground
+
+    p.renderStart = function(playground, startPos) {
+        this._playground = playground;
         this.svgGroup = this.thread.svgGroup.group();
         this.svgGroup.attr({
             class: "block"
         });
+        if (startPos) {
+            this.svgGroup.attr({
+                transform: "t" + startPos.x + " " + startPos.y
+            });
+        }
 
         this._path = this.svgGroup.path(this._skeleton.path(this));
         this._path.attr({
@@ -151,9 +164,9 @@ Entry.Block = function(block, thread) {
     p.onMouseDown = function(e) {
         switch(e.button) {
             case 0: // left button
-                $(document).bind('mousemove.block', this.onMouseMove);
-                $(document).bind('mouseup.block', this.onMouseUp);
-                Entry.Playground.dragBlock = this;
+                $(document).bind('mousemove.block', onMouseMove);
+                $(document).bind('mouseup.block', onMouseUp);
+                this._playground.dragBlock = this;
                 this.dragMode = true;
                 this._offset = { x: e.clientX, y: e.clientY };
             break;
@@ -163,24 +176,25 @@ Entry.Block = function(block, thread) {
                 break;
 
         }
+
+        var block = this;
+        function onMouseMove(e) {
+            block.moveBy(
+                e.clientX - block._offset.x,
+                e.clientY - block._offset.y,
+                false
+            );
+            block._offset = { x: e.clientX, y: e.clientY };
+            block.thread.align(false);
+        }
+
+        function onMouseUp(e) {
+            block.dragMode = null;
+            block._playground.dragBlock = null;
+            $(document).unbind('.block');
+        }
     };
 
-    p.onMouseMove = function(e) {
-        var block = Entry.Playground.dragBlock;
-        block.moveBy(
-            e.clientX - block._offset.x,
-            e.clientY - block._offset.y,
-            false
-        );
-        block._offset = { x: e.clientX, y: e.clientY };
-        block.thread.align(false);
-    };
-
-    p.onMouseUp = function(e) {
-        var block = Entry.Playground.dragBlock;
-        block.dragMode = null;
-        $(document).unbind('.block');
-    };
 
 
 })(Entry.Block.prototype);

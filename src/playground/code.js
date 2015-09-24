@@ -32,11 +32,14 @@ Entry.Code = function(code) {
         this._threads.set(threads);
     };
 
+
+    // method for playground
+
     p.bindPlayground = function(playground) {
         this.playground = playground;
 
         this._threads.map(function(t) {
-            t.renderStart();
+            t.renderStart(playground);
         });
     };
 

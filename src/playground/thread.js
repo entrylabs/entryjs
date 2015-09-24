@@ -17,6 +17,8 @@ Entry.Thread = function(thread, code) {
 
     this.set(thread);
 
+    this._playground = null;
+
     this.svgGroup = null;
 };
 
@@ -31,12 +33,17 @@ Entry.Thread = function(thread, code) {
         this._blocks.set(blocks);
     };
 
-    p.renderStart = function() {
-        this.svgGroup = this.code.playground.snap.group();
+
+    // method for playground
+
+    p.renderStart = function(playground) {
+        this._playground = playground;
+        this.svgGroup = playground.snap.group();
         this.svgGroup.transform("t5,5");
 
+        var firstBlockBox = this._blocks.at(0).box;
         this._blocks.map(function(b) {
-            b.renderStart();
+            b.renderStart(playground, firstBlockBox);
         });
 
         this.align();
@@ -53,7 +60,7 @@ Entry.Thread = function(thread, code) {
             if (b.dragMode) {
                 cursor.x = b.box.x;
                 cursor.y = b.box.y;
-            };
+            }
             b.moveTo(cursor.x, cursor.y, animate);
 
             var magnet = b.magnets.next;

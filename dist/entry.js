@@ -3182,8 +3182,8 @@ Entry.Code = function(b) {
   };
   b.bindPlayground = function(a) {
     this.playground = a;
-    this._threads.map(function(a) {
-      a.renderStart();
+    this._threads.map(function(b) {
+      b.renderStart(a);
     });
   };
 })(Entry.Code.prototype);
@@ -3204,32 +3204,10 @@ Entry.FieldText = function(b, a) {
     this.box.set({x:0, y:0, width:a.width, height:a.height});
   };
   b.align = function(a, b) {
-    this.textElement.animate({x:a, y:b}, 300);
+    this.textElement.animate({x:a, y:b}, 300, mina.easeinout);
     this.box.set({x:a, y:b});
   };
 })(Entry.FieldText.prototype);
-Entry.Playground = function(b) {
-  b = "string" === typeof b ? $("#" + b) : $(b);
-  if ("DIV" !== b.prop("tagName")) {
-    return console.error("Dom is not div element");
-  }
-  if ("function" !== typeof window.Snap) {
-    return console.error("Snap library is required");
-  }
-  b.css({width:"800px", height:"800px"});
-  this.svgDom = Entry.Dom($('<svg id="play" width="100%" height="100%"version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'), {parent:b});
-  this.snap = Snap("#play");
-};
-Entry.Playground.dragBlock = null;
-(function(b) {
-  b.selectCode = function(a) {
-    if (!(a instanceof Entry.Code)) {
-      return console.error("You must select code instance");
-    }
-    a.bindPlayground(this);
-    this.code = a;
-  };
-})(Entry.Playground.prototype);
 Entry.skeleton = function() {
 };
 Entry.skeleton.basic = {path:function(b) {
@@ -3243,7 +3221,7 @@ Entry.Thread = function(b, a) {
   this.code = a;
   this._blocks = new Entry.Collection;
   this.set(b);
-  this.svgGroup = null;
+  this.svgGroup = this._playground = null;
 };
 (function(b) {
   b.set = function(a) {
@@ -3253,11 +3231,13 @@ Entry.Thread = function(b, a) {
     });
     this._blocks.set(a);
   };
-  b.renderStart = function() {
-    this.svgGroup = this.code.playground.snap.group();
+  b.renderStart = function(a) {
+    this._playground = a;
+    this.svgGroup = a.snap.group();
     this.svgGroup.transform("t5,5");
-    this._blocks.map(function(a) {
-      a.renderStart();
+    var b = this._blocks.at(0).box;
+    this._blocks.map(function(d) {
+      d.renderStart(a, b);
     });
     this.align();
   };
@@ -3286,12 +3266,12 @@ Entry.Utils.intersectArray = function(b, a) {
   }
   return c;
 };
-Entry.Model = function(b) {
-  var a = Entry.Model;
-  a.generateSchema(b);
-  a.generateSetter(b);
-  a.generateObserve(b);
-  Object.seal(b);
+Entry.Model = function(b, a) {
+  var c = Entry.Model;
+  c.generateSchema(b);
+  c.generateSetter(b);
+  c.generateObserve(b);
+  (void 0 === a || a) && Object.seal(b);
   return b;
 };
 (function(b) {
@@ -3333,7 +3313,9 @@ Entry.Model = function(b) {
     a.notify = this.notify;
   };
   b.observe = function(a, b, d) {
-    this.observers.push({object:a, funcName:b, attrs:d});
+    a = {object:a, funcName:b, attrs:d};
+    this.observers.push(a);
+    return a;
   };
   b.unobserve = function(a) {
     a = this.observers.indexOf(a);
@@ -3397,10 +3379,12 @@ Entry.Variable = function() {
 Entry.Variable.prototype.schema = {id:0, type:Entry.STATIC.VARIABLE, variableType:0, name:0, value:0, minValue:0, maxValue:0, visible:!0, x:0, y:0, width:0, height:0, isCloud:!1, object:null, array:0};
 Entry.Block = function(b, a) {
   this.thread = a;
+  this._playground = null;
   this._schema = Entry.block[b.blockType];
   this._skeleton = Entry.skeleton[this._schema.skeleton];
   this._model = new Entry.BlockModel(b);
   this.box = new Entry.BoxModel;
+  void 0 !== b.x && this.box.set({x:b.x, y:b.y});
   this.contentBox = new Entry.BoxModel;
   this.contentBox.observe(this, "render", ["width", "height"]);
   this._contents = [];
@@ -3408,9 +3392,11 @@ Entry.Block = function(b, a) {
   this._path = this.fieldSvgGroup = this.svgGroup = null;
 };
 (function(b) {
-  b.renderStart = function() {
+  b.renderStart = function(a, b) {
+    this._playground = a;
     this.svgGroup = this.thread.svgGroup.group();
     this.svgGroup.attr({class:"block"});
+    b && this.svgGroup.attr({transform:"t" + b.x + " " + b.y});
     this._path = this.svgGroup.path(this._skeleton.path(this));
     this._path.attr({fill:this._schema.color});
     this.magnets = this._skeleton.magnets();
@@ -3467,20 +3453,47 @@ Entry.Block = function(b, a) {
     });
   };
   b.onMouseDown = function(a) {
+    function b(a) {
+      e.moveBy(a.clientX - e._offset.x, a.clientY - e._offset.y, !1);
+      e._offset = {x:a.clientX, y:a.clientY};
+      e.thread.align(!1);
+    }
+    function d(a) {
+      e.dragMode = null;
+      e._playground.dragBlock = null;
+      $(document).unbind(".block");
+    }
     switch(a.button) {
       case 0:
-        $(document).bind("mousemove.block", this.onMouseMove), $(document).bind("mouseup.block", this.onMouseUp), Entry.Playground.dragBlock = this, this.dragMode = !0, this._offset = {x:a.clientX, y:a.clientY};
+        $(document).bind("mousemove.block", b), $(document).bind("mouseup.block", d), this._playground.dragBlock = this, this.dragMode = !0, this._offset = {x:a.clientX, y:a.clientY};
     }
-  };
-  b.onMouseMove = function(a) {
-    var b = Entry.Playground.dragBlock;
-    b.moveBy(a.clientX - b._offset.x, a.clientY - b._offset.y, !1);
-    b._offset = {x:a.clientX, y:a.clientY};
-    b.thread.align(!1);
-  };
-  b.onMouseUp = function(a) {
-    Entry.Playground.dragBlock.dragMode = null;
-    $(document).unbind(".block");
+    var e = this;
   };
 })(Entry.Block.prototype);
+Entry.Playground = function(b) {
+  b = "string" === typeof b ? $("#" + b) : $(b);
+  if ("DIV" !== b.prop("tagName")) {
+    return console.error("Dom is not div element");
+  }
+  if ("function" !== typeof window.Snap) {
+    return console.error("Snap library is required");
+  }
+  this.svgDom = Entry.Dom($('<svg id="play" width="100%" height="100%"version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'), {parent:b});
+  this.snap = Snap("#play");
+  this._magnetDB = {previous:[], next:[]};
+  Entry.Model(this, !1);
+};
+Entry.Playground.dragBlock = null;
+(function(b) {
+  b.schema = {dragBlock:null, magnetOn:null};
+  b.selectCode = function(a) {
+    if (!(a instanceof Entry.Code)) {
+      return console.error("You must select code instance");
+    }
+    a.bindPlayground(this);
+    this.code = a;
+  };
+  b.updateMagnet = function(a) {
+  };
+})(Entry.Playground.prototype);
 

@@ -18,6 +18,8 @@
         "CanvasInput": true,
         "EntryStatic": true,
         "EaselHandle": true,
-        "ndgmr": true
+        "ndgmr": true,
+        "Snap": true,
+        "mina": true
     }
 }
