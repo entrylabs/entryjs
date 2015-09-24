@@ -6802,7 +6802,7 @@ Entry.Painter.prototype.restorePainter = function(a) {
     c.objectContainer.removeAllChildren();
     c.objectContainer.addChild(a);
   };
-  return new Entry.State(this, this.restorePainter, b);
+  Entry.stateManager.addCommand("restore sprite", this, this.restorePainter, b);
 };
 Entry.Painter.prototype.platten = function() {
   this.colorLayerData = this.ctx.getImageData(0, 0, this.canvas.width, this.canvas.height);
