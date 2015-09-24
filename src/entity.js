@@ -48,7 +48,7 @@ Entry.EntityObject = function(object) {
         var id = this.entity.parent.id;
         Entry.dispatchEvent('entityClick', this.entity);
         Entry.stage.isObjectClick = true;
-        
+
         if (Entry.type != 'minimize' && Entry.engine.isState('stop')) {
             this.offset = {x:-this.parent.x+this.entity.getX()-(evt.stageX*0.75 -240),
                 y:-this.parent.y-this.entity.getY()-(evt.stageY*0.75 -135)};
@@ -156,10 +156,10 @@ Entry.EntityObject.prototype.restoreEntity = function(entityModel) {
     var currentModel = this.toJSON();
     this.syncModel_(entityModel);
     Entry.dispatchEvent('updateObject');
-    return new Entry.State(this,
-                           this.restoreEntity,
-                           currentModel
-                          );
+    Entry.stateManager.addCommand("restore object",
+                                 this,
+                                 this.restoreEntity,
+                                 currentModel);
 };
 
 /**
@@ -285,7 +285,7 @@ Entry.EntityObject.prototype.setRegX = function(regX) {
     /** @type {number} */
     this.regX = regX;
     this.object.regX = this.regX;
-    
+
 };
 
 /**
