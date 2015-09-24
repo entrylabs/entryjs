@@ -13,5 +13,6 @@ Entry.STATIC = {
     SCENE: 6,
     MESSAGE: 7,
     BLOCK_MODEL: 8,
-    BOX_MODEL: 9
+    BOX_MODEL: 9,
+    DRAG_INSTANCE: 10
 };

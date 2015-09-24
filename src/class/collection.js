@@ -79,6 +79,10 @@ Entry.Collection = function(data) {
         return this._data[index];
     };
 
+    p.indexOf = function(obj) {
+        return this._data.indexOf(obj);
+    };
+
     p.find = function(cond) {
         var data = this._data;
         var ret = [];
@@ -126,6 +130,8 @@ Entry.Collection = function(data) {
 
         var data = this._data;
         var hashMap = this._hashMap;
+
+        amount = amount === undefined ? this.length - index: amount;
 
         var splicedData = data.splice(index, amount);
 

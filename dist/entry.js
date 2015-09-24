@@ -3041,6 +3041,9 @@ Entry.Collection = function(b) {
   b.at = function(a) {
     return this._data[a];
   };
+  b.indexOf = function(a) {
+    return this._data.indexOf(a);
+  };
   b.find = function(a) {
     for (var b = this._data, d = [], e, f = 0, h = this.length;f < h;f++) {
       e = !0;
@@ -3072,7 +3075,9 @@ Entry.Collection = function(b) {
   b.splice = function(a, b) {
     var d = Array.prototype.slice.call(arguments, 2);
     if (!(0 > a || a > this.length)) {
-      for (var e = this._data, f = this._hashMap, h = e.splice(a, b), g = 0, k = h.length;g < k;g++) {
+      var e = this._data, f = this._hashMap;
+      b = void 0 === b ? this.length - a : b;
+      for (var h = e.splice(a, b), g = 0, k = h.length;g < k;g++) {
         delete f[h[g].id];
       }
       g = 0;
@@ -3180,6 +3185,11 @@ Entry.Code = function(b) {
     });
     this._threads.set(a);
   };
+  b.createThread = function(a) {
+    a = new Entry.Thread(a);
+    this._threads.push(a);
+    return a;
+  };
   b.bindPlayground = function(a) {
     this.playground = a;
     this._threads.map(function(b) {
@@ -3227,9 +3237,13 @@ Entry.Thread = function(b, a) {
   b.set = function(a) {
     var b = this;
     a = a.map(function(a) {
-      return new Entry.Block(a, b);
+      return a instanceof Entry.Block ? (a.setThread(b), a) : new Entry.Block(a, b);
     });
     this._blocks.set(a);
+  };
+  b.cut = function(a) {
+    a = this._blocks.indexOf(a);
+    return this._blocks.splice(a);
   };
   b.renderStart = function(a) {
     this._playground = a;
@@ -3245,7 +3259,7 @@ Entry.Thread = function(b, a) {
     a = void 0 === a ? !0 : a;
     var b = this._blocks.at(0).box, d = b.x, e = b.y;
     this._blocks.map(function(b) {
-      b.dragMode && (d = b.box.x, e = b.box.y);
+      b.dragInstance && (d = b.box.x, e = b.box.y);
       b.moveTo(d, e, a);
       b = b.magnets.next;
       d += b.x;
@@ -3253,7 +3267,7 @@ Entry.Thread = function(b, a) {
     });
   };
 })(Entry.Thread.prototype);
-Entry.STATIC = {OBJECT:0, ENTITY:1, SPRITE:2, SOUND:3, VARIABLE:4, FUNCTION:5, SCENE:6, MESSAGE:7, BLOCK_MODEL:8, BOX_MODEL:9};
+Entry.STATIC = {OBJECT:0, ENTITY:1, SPRITE:2, SOUND:3, VARIABLE:4, FUNCTION:5, SCENE:6, MESSAGE:7, BLOCK_MODEL:8, BOX_MODEL:9, DRAG_INSTANCE:10};
 Entry.Utils = {};
 Entry.Utils.intersectArray = function(b, a) {
   for (var c = [], d = 0;d < b.length;d++) {
@@ -3345,6 +3359,11 @@ Entry.BoxModel = function() {
   Entry.Model(this);
 };
 Entry.BoxModel.prototype.schema = {id:0, type:Entry.STATIC.BOX_MODEL, x:0, y:0, width:0, height:0};
+Entry.DragInstance = function(b) {
+  Entry.Model(this);
+  this.set(b);
+};
+Entry.DragInstance.prototype.schema = {type:Entry.STATIC.DRAG_INSTANCE, startX:0, startY:0, offsetX:0, offsetY:0, mode:0};
 Entry.Entity = function() {
   Entry.Model(this);
 };
@@ -3378,7 +3397,7 @@ Entry.Variable = function() {
 };
 Entry.Variable.prototype.schema = {id:0, type:Entry.STATIC.VARIABLE, variableType:0, name:0, value:0, minValue:0, maxValue:0, visible:!0, x:0, y:0, width:0, height:0, isCloud:!1, object:null, array:0};
 Entry.Block = function(b, a) {
-  this.thread = a;
+  this.setThread(a);
   this._playground = null;
   this._schema = Entry.block[b.blockType];
   this._skeleton = Entry.skeleton[this._schema.skeleton];
@@ -3392,6 +3411,9 @@ Entry.Block = function(b, a) {
   this._path = this.fieldSvgGroup = this.svgGroup = null;
 };
 (function(b) {
+  b.setThread = function(a) {
+    this.thread = a;
+  };
   b.renderStart = function(a, b) {
     this._playground = a;
     this.svgGroup = this.thread.svgGroup.group();
@@ -3454,20 +3476,24 @@ Entry.Block = function(b, a) {
   };
   b.onMouseDown = function(a) {
     function b(a) {
-      e.moveBy(a.clientX - e._offset.x, a.clientY - e._offset.y, !1);
-      e._offset = {x:a.clientX, y:a.clientY};
+      var c = e.dragInstance;
+      e.moveBy(a.clientX - c.offsetX, a.clientY - c.offsetY, !1);
+      c.set({offsetX:a.clientX, offsetY:a.clientY});
       e.thread.align(!1);
     }
     function d(a) {
-      e.dragMode = null;
-      e._playground.dragBlock = null;
+      e.terminateDrag();
       $(document).unbind(".block");
+      e._playground.dragBlock = null;
     }
     switch(a.button) {
       case 0:
-        $(document).bind("mousemove.block", b), $(document).bind("mouseup.block", d), this._playground.dragBlock = this, this.dragMode = !0, this._offset = {x:a.clientX, y:a.clientY};
+        $(document).bind("mousemove.block", b), $(document).bind("mouseup.block", d), this._playground.dragBlock = this, this.dragInstance = new Entry.DragInstance({startX:a.clientX, startY:a.clientY, offsetX:a.clientX, offsetY:a.clientY, mode:!0});
     }
     var e = this;
+  };
+  b.terminateDrag = function() {
+    this._playground.terminateDrag(this);
   };
 })(Entry.Block.prototype);
 Entry.Playground = function(b) {
@@ -3484,8 +3510,9 @@ Entry.Playground = function(b) {
   Entry.Model(this, !1);
 };
 Entry.Playground.dragBlock = null;
+Entry.Playground.MAGNET_RANGE = 20;
 (function(b) {
-  b.schema = {dragBlock:null, magnetOn:null};
+  b.schema = {dragBlock:null, closeMagnet:null};
   b.selectCode = function(a) {
     if (!(a instanceof Entry.Code)) {
       return console.error("You must select code instance");
@@ -3494,6 +3521,11 @@ Entry.Playground.dragBlock = null;
     this.code = a;
   };
   b.updateMagnet = function(a) {
+  };
+  b.terminateDrag = function(a) {
+    var b = a.dragInstance;
+    delete a.dragInstance;
+    this.closeMagnet || (Math.sqrt(Math.pow(b.startX - b.offsetX, 2) + Math.pow(b.startY - b.offsetY, 2)) < Entry.Playground.MAGNET_RANGE ? a.thread.align() : (a = a.thread.cut(a), this.code.createThread(a)));
   };
 })(Entry.Playground.prototype);
 

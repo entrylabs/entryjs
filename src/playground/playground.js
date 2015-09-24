@@ -42,10 +42,12 @@ Entry.Playground = function(dom) {
 
 Entry.Playground.dragBlock = null;
 
+Entry.Playground.MAGNET_RANGE = 20;
+
 (function(p) {
     p.schema = {
         dragBlock: null,
-        magnetOn: null
+        closeMagnet: null
     };
 
     p.selectCode = function(code) {
@@ -58,6 +60,28 @@ Entry.Playground.dragBlock = null;
     };
 
     p.updateMagnet = function(magnet) {
+    };
+
+    p.terminateDrag = function(block) {
+        var di = block.dragInstance;
+        delete block.dragInstance;
+
+        if (this.closeMagnet) {
+
+        } else {
+
+            var distance = Math.sqrt(
+                Math.pow(di.startX - di.offsetX, 2) +
+                Math.pow(di.startY - di.offsetY, 2)
+            );
+
+            if (distance < Entry.Playground.MAGNET_RANGE)
+                block.thread.align();
+            else {
+                var newThread = block.thread.cut(block);
+                this.code.createThread(newThread);
+            }
+        }
     };
 
 })(Entry.Playground.prototype);

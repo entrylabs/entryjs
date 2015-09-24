@@ -14,7 +14,7 @@ goog.require("Entry.skeleton");
  *
  */
 Entry.Block = function(block, thread) {
-    this.thread = thread;
+    this.setThread(thread);
     this._playground = null;
 
     // block information
@@ -41,6 +41,9 @@ Entry.Block = function(block, thread) {
 
 (function(p) {
 
+    p.setThread = function(thread) {
+        this.thread = thread;
+    };
 
     // method for playground
 
@@ -167,9 +170,14 @@ Entry.Block = function(block, thread) {
                 $(document).bind('mousemove.block', onMouseMove);
                 $(document).bind('mouseup.block', onMouseUp);
                 this._playground.dragBlock = this;
-                this.dragMode = true;
-                this._offset = { x: e.clientX, y: e.clientY };
-            break;
+                this.dragInstance = new Entry.DragInstance({
+                    startX: e.clientX,
+                    startY: e.clientY,
+                    offsetX: e.clientX,
+                    offsetY: e.clientY,
+                    mode: true
+                });
+                break;
             case 1: // middle button
                 break;
             case 2: // left button
@@ -179,22 +187,29 @@ Entry.Block = function(block, thread) {
 
         var block = this;
         function onMouseMove(e) {
+            var dragInstance = block.dragInstance;
             block.moveBy(
-                e.clientX - block._offset.x,
-                e.clientY - block._offset.y,
+                e.clientX - dragInstance.offsetX,
+                e.clientY - dragInstance.offsetY,
                 false
             );
-            block._offset = { x: e.clientX, y: e.clientY };
+            dragInstance.set({
+                 offsetX: e.clientX,
+                 offsetY: e.clientY
+            });
             block.thread.align(false);
         }
 
         function onMouseUp(e) {
-            block.dragMode = null;
-            block._playground.dragBlock = null;
+            block.terminateDrag();
+
             $(document).unbind('.block');
+            block._playground.dragBlock = null;
         }
     };
 
-
+    p.terminateDrag = function() {
+        this._playground.terminateDrag(this);
+    };
 
 })(Entry.Block.prototype);

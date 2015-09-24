@@ -32,6 +32,11 @@ Entry.Code = function(code) {
         this._threads.set(threads);
     };
 
+    p.createThread = function(threadModel) {
+        var thread = new Entry.Thread(threadModel);
+        this._threads.push(thread);
+        return thread;
+    };
 
     // method for playground
 

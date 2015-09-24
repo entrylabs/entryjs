@@ -27,12 +27,22 @@ Entry.Thread = function(thread, code) {
         var that = this;
 
         var blocks = thread.map(function(b) {
-            return new Entry.Block(b, that);
+            if (b instanceof Entry.Block) {
+                b.setThread(that);
+                return b;
+            }
+            else
+                return new Entry.Block(b, that);
         });
 
         this._blocks.set(blocks);
     };
 
+    p.cut = function(block) {
+        var index = this._blocks.indexOf(block);
+        var slicedData = this._blocks.splice(index);
+        return slicedData;
+    };
 
     // method for playground
 
@@ -57,7 +67,7 @@ Entry.Thread = function(thread, code) {
             y: firstBlockBox.y
         };
         this._blocks.map(function(b) {
-            if (b.dragMode) {
+            if (b.dragInstance) {
                 cursor.x = b.box.x;
                 cursor.y = b.box.y;
             }
