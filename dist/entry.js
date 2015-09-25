@@ -4999,7 +4999,19 @@ Entry.EntityObject = function(a) {
   });
 };
 Entry.EntityObject.prototype.injectModel = function(a, b) {
-  "sprite" == this.type ? this.setImage(a) : "textBox" == this.type && (b.text = this.parent.text ? this.parent.text : this.parent.name, this.setFont(b.font), this.setBGColour(b.bgColor), this.setColour(b.colour), this.setUnderLine(b.underLine), this.setStrike(b.strike));
+  if ("sprite" == this.type) {
+    this.setImage(a);
+  } else {
+    if ("textBox" == this.type) {
+      var c = this.parent;
+      b.text = c.text || c.name;
+      this.setFont(b.font);
+      this.setBGColour(b.bgColor);
+      this.setColour(b.colour);
+      this.setUnderLine(b.underLine);
+      this.setStrike(b.strike);
+    }
+  }
   b && this.syncModel_(b);
 };
 Entry.EntityObject.prototype.syncModel_ = function(a) {
@@ -5758,8 +5770,8 @@ Entry.initFonts = function(a) {
 Entry.EntryObject = function(a) {
   if (a) {
     this.id = a.id;
-    this.name = a.name ? a.name : a.sprite.name;
-    this.text = a.text ? a.text : this.name;
+    this.name = a.name || a.sprite.name;
+    this.text = a.text || this.name;
     this.objectType = a.objectType;
     this.objectType || (this.objectType = "sprite");
     this.script = a.script ? Blockly.Xml.textToDom(a.script) : Blockly.Xml.textToDom("<xml></xml>");

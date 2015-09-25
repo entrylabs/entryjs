@@ -14,9 +14,9 @@ Entry.EntryObject = function(model) {
         this.id = model.id;
 
         /** @type {string} */
-        this.name = model.name ? model.name : model.sprite.name;
+        this.name = model.name || model.sprite.name;
 
-        this.text = model.text ? model.text : this.name;
+        this.text = model.text || this.name;
 
         /** @type {string} */
         this.objectType = model.objectType;

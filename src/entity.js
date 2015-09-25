@@ -87,7 +87,8 @@ Entry.EntityObject.prototype.injectModel = function(pictureModel, entityModel) {
     if (this.type == 'sprite') {
         this.setImage(pictureModel);
     } else if (this.type == 'textBox') {
-        entityModel.text = this.parent.text ? this.parent.text : this.parent.name;
+        var parent = this.parent;
+        entityModel.text = parent.text || parent.name;
         this.setFont(entityModel.font);
         this.setBGColour(entityModel.bgColor);
         this.setColour(entityModel.colour);
