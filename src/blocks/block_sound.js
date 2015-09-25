@@ -10,11 +10,10 @@ Blockly.Blocks.sound_something = {
         .appendField(new Blockly.FieldDropdownDynamic("sounds"), "VALUE");
     this.appendDummyInput()
         .appendField(Lang.Blocks.SOUND_sound_something_2)
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/entry_icon_sound.png', '*'));
+        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/sound_03.png', '*'));
     this.setInputsInline(true);
     this.setNextStatement(true);
     this.setPreviousStatement(true);
-    this.setTooltip('');
   }
 };
 
@@ -40,11 +39,10 @@ Blockly.Blocks.sound_something_second = {
         .setCheck(["Number", "String"]);
     this.appendDummyInput()
         .appendField(Lang.Blocks.SOUND_sound_something_second_3)
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/entry_icon_sound.png', '*'));
+        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/sound_03.png', '*'));
     this.setInputsInline(true);
     this.setNextStatement(true);
     this.setPreviousStatement(true);
-    this.setTooltip('');
   }
 };
 
@@ -72,11 +70,10 @@ Blockly.Blocks.sound_something_wait = {
         .appendField(new Blockly.FieldDropdownDynamic("sounds"), "VALUE");
     this.appendDummyInput()
         .appendField(Lang.Blocks.SOUND_sound_something_wait_2)
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/entry_icon_sound.png', '*'));
+        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/sound_03.png', '*'));
     this.setInputsInline(true);
     this.setNextStatement(true);
     this.setPreviousStatement(true);
-    this.setTooltip('');
   }
 };
 
@@ -117,11 +114,10 @@ Blockly.Blocks.sound_something_second_wait = {
         .setCheck(["Number", "String"]);
     this.appendDummyInput()
         .appendField(Lang.Blocks.SOUND_sound_something_second_wait_3)
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/entry_icon_sound.png', '*'));
+        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/sound_03.png', '*'));
     this.setInputsInline(true);
     this.setNextStatement(true);
     this.setPreviousStatement(true);
-    this.setTooltip('');
   }
 };
 
@@ -162,11 +158,10 @@ Blockly.Blocks.sound_volume_change = {
         .setCheck(["Number", "String"]);
     this.appendDummyInput()
         .appendField(Lang.Blocks.SOUND_sound_volume_change_2)
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/entry_icon_sound.png', '*'));
+        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/sound_03.png', '*'));
     this.setInputsInline(true);
     this.setNextStatement(true);
     this.setPreviousStatement(true);
-    this.setTooltip('');
   }
 };
 
@@ -191,11 +186,10 @@ Blockly.Blocks.sound_volume_set = {
         .setCheck(["Number", "String"]);
     this.appendDummyInput()
         .appendField(Lang.Blocks.SOUND_sound_volume_set_2)
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/entry_icon_sound.png', '*'));
+        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/sound_03.png', '*'));
     this.setInputsInline(true);
     this.setNextStatement(true);
     this.setPreviousStatement(true);
-    this.setTooltip('');
   }
 };
 
@@ -215,11 +209,10 @@ Blockly.Blocks.sound_silent_all = {
     this.setColour("#A4D01D");
     this.appendDummyInput()
         .appendField(Lang.Blocks.SOUND_sound_silent_all)
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/entry_icon_sound.png', '*'));
+        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/sound_03.png', '*'));
     this.setInputsInline(true);
     this.setNextStatement(true);
     this.setPreviousStatement(true);
-    this.setTooltip('');
   }
 };
 
@@ -239,7 +232,6 @@ Blockly.Blocks.get_sounds = {
         .appendField(' ');
     this.setOutput(true, 'String');
     this.setInputsInline(true);
-    this.setTooltip('');
   }
 };
 
@@ -256,11 +248,10 @@ Blockly.Blocks.sound_something_with_block = {
         .setCheck(["String", "Number"]);
     this.appendDummyInput()
         .appendField(Lang.Blocks.SOUND_sound_something_2)
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/entry_icon_sound.png', '*'));
+        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/sound_03.png', '*'));
     this.setInputsInline(true);
     this.setNextStatement(true);
     this.setPreviousStatement(true);
-    this.setTooltip('');
   }
 };
 
@@ -288,11 +279,10 @@ Blockly.Blocks.sound_something_second_with_block = {
         .setCheck(["String", "Number"]);
     this.appendDummyInput()
         .appendField(Lang.Blocks.SOUND_sound_something_second_3)
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/entry_icon_sound.png', '*'));
+        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/sound_03.png', '*'));
     this.setInputsInline(true);
     this.setNextStatement(true);
     this.setPreviousStatement(true);
-    this.setTooltip('');
   }
 };
 
@@ -322,11 +312,10 @@ Blockly.Blocks.sound_something_wait_with_block = {
         .setCheck(["String", "Number"]);
     this.appendDummyInput()
         .appendField(Lang.Blocks.SOUND_sound_something_wait_2)
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/entry_icon_sound.png', '*'));
+        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/sound_03.png', '*'));
     this.setInputsInline(true);
     this.setNextStatement(true);
     this.setPreviousStatement(true);
-    this.setTooltip('');
   }
 };
 
@@ -366,11 +355,10 @@ Blockly.Blocks.sound_something_second_wait_with_block = {
         .setCheck(["String", "Number"]);
     this.appendDummyInput()
         .appendField(Lang.Blocks.SOUND_sound_something_second_wait_3)
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/entry_icon_sound.png', '*'));
+        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/sound_03.png', '*'));
     this.setInputsInline(true);
     this.setNextStatement(true);
     this.setPreviousStatement(true);
-    this.setTooltip('');
   }
 };
 
@@ -389,6 +377,96 @@ Entry.block.sound_something_second_wait_with_block = function (sprite, script) {
             }, timeValue * 1000)
             instance.addEventListener('complete', function(e) {
             });
+        }
+        return script;
+    } else if (script.playState == 1) {
+        return script;
+    } else {
+        delete script.isPlay;
+        delete script.playState;
+        return script.callReturn();
+    }
+};
+
+Blockly.Blocks.sound_from_to = {
+  init: function() {
+    this.setColour("#A4D01D");
+    this.appendDummyInput()
+        .appendField(Lang.Blocks.SOUND_sound_from_to_1)
+        .appendField(new Blockly.FieldDropdownDynamic("sounds"), "SOUND")
+        .appendField(Lang.Blocks.SOUND_sound_from_to_2);
+    this.appendValueInput("START")
+        .setCheck(["String", "Number"]);
+    this.appendDummyInput()
+        .appendField(Lang.Blocks.SOUND_sound_from_to_3);
+    this.appendValueInput("END")
+        .setCheck(["String", "Number"]);
+    this.appendDummyInput()
+        .appendField(Lang.Blocks.SOUND_sound_from_to_4)
+        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/sound_03.png', '*'));
+    this.setInputsInline(true);
+    this.setNextStatement(true);
+    this.setPreviousStatement(true);
+  }
+};
+
+Entry.block.sound_from_to = function (sprite, script) {
+    var soundId = script.getField("SOUND", script);
+    var sound = sprite.parent.getSound(soundId);
+
+    if (sound) {
+        var start = script.getNumberValue("START", script)*1000;
+        var end = script.getNumberValue("END", script)*1000;
+        createjs.Sound.play(sound.id, {
+            startTime: Math.min(start, end),
+            duration: Math.max(start, end) - Math.min(start, end)
+        });
+    }
+    return script.callReturn();
+};
+
+Blockly.Blocks.sound_from_to_and_wait = {
+  init: function() {
+    this.setColour("#A4D01D");
+    this.appendDummyInput()
+        .appendField(Lang.Blocks.SOUND_sound_from_to_and_wait_1)
+        .appendField(new Blockly.FieldDropdownDynamic("sounds"), "SOUND")
+        .appendField(Lang.Blocks.SOUND_sound_from_to_and_wait_2);
+    this.appendValueInput("START")
+        .setCheck(["String", "Number"]);
+    this.appendDummyInput()
+        .appendField(Lang.Blocks.SOUND_sound_from_to_and_wait_3);
+    this.appendValueInput("END")
+        .setCheck(["String", "Number"]);
+    this.appendDummyInput()
+        .appendField(Lang.Blocks.SOUND_sound_from_to_and_wait_4)
+        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/sound_03.png', '*'));
+    this.setInputsInline(true);
+    this.setNextStatement(true);
+    this.setPreviousStatement(true);
+  }
+};
+
+Entry.block.sound_from_to_and_wait = function (sprite, script) {
+    if (!script.isPlay) {
+        script.isPlay = true;
+        script.playState = 1;
+        var sound = sprite.parent.getSound(script.getField("SOUND", script));
+        if (sound) {
+            var start = script.getNumberValue("START", script)*1000;
+            var end = script.getNumberValue("END", script)*1000;
+            var startValue = Math.min(start, end);
+            var endValue = Math.max(start, end);
+            var duration = endValue - startValue;
+
+            createjs.Sound.play(sound.id, {
+                startTime: startValue,
+                duration: duration
+            });
+
+            setTimeout(function() {
+                script.playState = 0;
+            }, duration)
         }
         return script;
     } else if (script.playState == 1) {

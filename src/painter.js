@@ -731,10 +731,10 @@ Entry.Painter.prototype.restorePainter = function(colorLayerModel) {
         painter.objectContainer.addChild(bitmap);
     };
 
-    return new Entry.State(this,
-                            this.restorePainter,
-                            currentColorModel);
-
+    Entry.stateManager.addCommand("restore sprite",
+                                 this,
+                                 this.restorePainter,
+                                 currentColorModel);
 };
 
 Entry.Painter.prototype.platten = function() {
@@ -931,6 +931,7 @@ Entry.Painter.prototype.move_rect = function() {
                     height);
         }
     }
+    this.file.modified = true;
     this.stage.update();
 };
 
@@ -966,6 +967,7 @@ Entry.Painter.prototype.move_circle = function() {
             .drawEllipse(this.oldPt.x,this.oldPt.y,width,height);
         }
     }
+    this.file.modified = true;
     this.stage.update();
 };
 
@@ -1251,7 +1253,7 @@ Entry.Painter.prototype.stagemouseup = function (event) {
     }
 };
 
-Entry.Painter.prototype.file_save = function(before) {
+Entry.Painter.prototype.file_save = function(saveChanges) {
 
     this.clearHandle();
     this.transparent();
@@ -1259,7 +1261,7 @@ Entry.Painter.prototype.file_save = function(before) {
 
     var canvasImage = this.canvas_.toDataURL();
     Entry.dispatchEvent('saveCanvasImage', {
-                        file: (before ? this.file_ : this.file),
+                        file: (saveChanges ? this.file_ : this.file),
                         image: canvasImage
     });
 
@@ -1598,21 +1600,42 @@ Entry.Painter.prototype.generateView = function(painterView) {
         painterTopMenuFileNewLink.innerHTML = Lang.Workspace.new_picture;
         painterTopMenuFileNew.appendChild(painterTopMenuFileNewLink);
 
-        var painterTopMenuFileSave = Entry.createElement('li');
-        painterTopMenu.appendChild(painterTopMenuFileSave);
+        var painterTopMenuFile = Entry.createElement('li', 'entryPainterTopMenuFile');
+        painterTopMenuFile.addClass('entryPlaygroundPainterTopMenuFile');
+        painterTopMenuFile.innerHTML = Lang.Workspace.painter_file;
+        painterTopMenuContainer.appendChild(painterTopMenuFile);
 
+        var painterTopMenuFileContainer = Entry.createElement('ul');
+        painterTopMenuFile.appendChild(painterTopMenuFileContainer);
+
+        var painterTopMenuFileSave = Entry.createElement('li');
+        painterTopMenuFileContainer.appendChild(painterTopMenuFileSave);
         var painterTopMenuFileSaveLink = Entry.createElement('a',
                                                     'entryPainterTopMenuFileSave');
         painterTopMenuFileSaveLink.bindOnClick(function() {
-            painter.file_save();
+            painter.file_save(false);
         });
-        painterTopMenuFileSaveLink.addClass('entryPlaygroundPainterTopMenuFileSave');
-        painterTopMenuFileSaveLink.innerHTML = Lang.Workspace.file_save;
+        painterTopMenuFileSaveLink.addClass('entryPainterTopMenuFileSave');
+        painterTopMenuFileSaveLink.innerHTML = Lang.Workspace.painter_file_save;
         painterTopMenuFileSave.appendChild(painterTopMenuFileSaveLink);
+
+        var painterTopMenuFileSaveAs = Entry.createElement('li');
+        painterTopMenuFileContainer.appendChild(painterTopMenuFileSaveAs);
+
+        var painterTopMenuFileSaveAsLink = Entry.createElement('a',
+                                                    'entryPainterTopMenuFileSaveAs');
+        painterTopMenuFileSaveAsLink.bindOnClick(function() {
+            painter.file.mode = "new";
+            painter.file_save(false);
+        });
+        painterTopMenuFileSaveAsLink.addClass('entryPlaygroundPainterTopMenuFileSaveAs');
+        painterTopMenuFileSaveAsLink.innerHTML = Lang.Workspace.painter_file_saveas;
+        painterTopMenuFileSaveAs.appendChild(painterTopMenuFileSaveAsLink);
+
 
         var painterTopMenuEdit = Entry.createElement('li', 'entryPainterTopMenuEdit');
         painterTopMenuEdit.addClass('entryPlaygroundPainterTopMenuEdit');
-        painterTopMenuEdit.innerHTML = Lang.Workspace.Painter_edit;
+        painterTopMenuEdit.innerHTML = Lang.Workspace.painter_edit;
         painterTopMenuContainer.appendChild(painterTopMenuEdit);
 
         var painterTopMenuEditContainer = Entry.createElement('ul');

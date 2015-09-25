@@ -28,7 +28,6 @@ Blockly.Blocks.text_write = {
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-    this.setTooltip('');
   }
 };
 
@@ -52,7 +51,6 @@ Blockly.Blocks.text_append = {
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-    this.setTooltip('');
   }
 };
 
@@ -75,7 +73,6 @@ Blockly.Blocks.text_prepend = {
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-    this.setTooltip('');
   }
 };
 
@@ -94,7 +91,6 @@ Blockly.Blocks.text_flush = {
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-    this.setTooltip('');
   }
 };
 

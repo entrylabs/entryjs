@@ -1,5 +1,21 @@
 "use strict";
 
+Entry.Arduino = {
+    name: 'arduino',
+    setZero: function() {
+        for (var port = 0; port < 14; port++) {
+          Entry.hw.sendQueue[port] = 0;
+        }
+        Entry.hw.update();
+    }
+};
+
+Entry.SensorBoard = {
+    name: 'sensorBoard',
+    setZero: Entry.Arduino.setZero
+};
+
+
 Blockly.Blocks.arduino_text = {
   init: function() {
     this.setColour("#00979D");
@@ -26,7 +42,6 @@ Blockly.Blocks.arduino_send = {
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-    this.setTooltip('');
   }
 };
 
@@ -105,7 +120,6 @@ Blockly.Blocks.arduino_get_sensor_number = {
         .appendField(" ");
     this.setOutput(true, 'Number');
     this.setInputsInline(true);
-    this.setTooltip(Blockly.Msg.MATH_NUMBER_TOOLTIP);
   }
 };
 
@@ -137,7 +151,6 @@ Blockly.Blocks.arduino_get_port_number = {
         .appendField(' ');
     this.setOutput(true, 'Number');
     this.setInputsInline(true);
-    this.setTooltip(Blockly.Msg.MATH_NUMBER_TOOLTIP);
   }
 };
 
@@ -162,7 +175,6 @@ Blockly.Blocks.arduino_get_pwm_port_number = {
         .appendField(" ");
     this.setOutput(true, 'Number');
     this.setInputsInline(true);
-    this.setTooltip(Blockly.Msg.MATH_NUMBER_TOOLTIP);
   }
 };
 
@@ -178,11 +190,9 @@ Blockly.Blocks.arduino_get_number_sensor_value = {
     this.appendValueInput("VALUE")
         .setCheck(["Number", "String", null]);
     this.appendDummyInput()
-        //.appendField('번 센서값');
         .appendField(Lang.Blocks.ARDUINO_num_sensor_value_2);
     this.setInputsInline(true);
     this.setOutput(true, 'Number');
-    this.setTooltip('');
   }
 };
 
@@ -202,7 +212,6 @@ Blockly.Blocks.arduino_get_digital_value = {
         .appendField(Lang.Blocks.ARDUINO_num_sensor_value_2);
     this.setInputsInline(true);
     this.setOutput(true, 'Boolean');
-    this.setTooltip('');
   }
 };
 
@@ -219,18 +228,16 @@ Blockly.Blocks.arduino_toggle_led = {
     this.appendValueInput("VALUE")
         .setCheck(["Number", "String", null]);
     this.appendDummyInput()
-        //.appendField('번 LED');
         .appendField(Lang.Blocks.ARDUINO_num_pin_2);
     this.appendDummyInput()
         .appendField(new Blockly.FieldDropdown([
           [Lang.Blocks.ARDUINO_on,"on"],
           [Lang.Blocks.ARDUINO_off,"off"]
           ]), "OPERATOR")
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/entry_icon_arduino.png', '*'));
+        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/hardware_03.png', '*'));
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-    this.setTooltip('');
   }
 };
 
@@ -256,11 +263,10 @@ Blockly.Blocks.arduino_toggle_pwm = {
     this.appendDummyInput()
         .appendField(Lang.Blocks.ARDUINO_toggle_pwm_3);
     this.appendDummyInput()
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/entry_icon_arduino.png', '*'));
+        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/hardware_03.png', '*'));
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-    this.setTooltip('');
   }
 };
 
@@ -329,3 +335,75 @@ Entry.block.arduino_convert_scale = function (sprite, script) {
     return Math.round(result);
 };
 
+Blockly.Blocks.sensorBoard_get_named_sensor_value = {
+  init: function() {
+    this.setColour("#00979D");
+    this.appendDummyInput()
+        .appendField('')
+        .appendField(new Blockly.FieldDropdown([
+          ['소리',"0"],
+          ['빛 감지',"1"],
+          ['슬라이더',"2"],
+          ['온도',"3"]
+          ]), "PORT")
+        .appendField(' 센서값');
+    this.setOutput(true, 'Number');
+    this.setInputsInline(true);
+  }
+};
+
+Entry.block.sensorBoard_get_named_sensor_value = function (sprite, script) {
+    return Entry.hw.getAnalogPortValue(script.getField("PORT", script));
+};
+
+Blockly.Blocks.sensorBoard_is_button_pressed = {
+  init: function() {
+    this.setColour("#00979D");
+    this.appendDummyInput()
+        .appendField('')
+        .appendField(new Blockly.FieldDropdown([
+          ['빨간',"8"],
+          ['파란',"9"],
+          ['노란',"10"],
+          ['초록',"11"]
+          ]), "PORT")
+    this.appendDummyInput()
+        .appendField(' 버튼을 눌렀는가?');
+    this.setInputsInline(true);
+    this.setOutput(true, 'Boolean');
+  }
+};
+
+Entry.block.sensorBoard_is_button_pressed = function (sprite, script) {
+    return Entry.hw.getDigitalPortValue(script.getNumberField("PORT", script));
+};
+
+Blockly.Blocks.sensorBoard_led = {
+  init: function() {
+    this.setColour("#00979D");
+    this.appendDummyInput()
+        .appendField('')
+        .appendField(new Blockly.FieldDropdown([
+          ['빨간',"2"],
+          ['초록',"3"],
+          ['파란',"4"],
+          ['흰색',"5"]
+          ]), "PORT")
+        .appendField(' LED')
+        .appendField(new Blockly.FieldDropdown([
+          ['켜기',"255"],
+          ['끄기',"0"]
+          ]), "OPERATOR")
+        .appendField(' ')
+        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/hardware_03.png', '*'));
+    this.setInputsInline(true);
+    this.setPreviousStatement(true);
+    this.setNextStatement(true);
+  }
+};
+
+Entry.block.sensorBoard_led = function (sprite, script) {
+    Entry.hw.setDigitalPortValue(script.getField("PORT"),
+                                 script.getNumberField("OPERATOR"));
+    return script.callReturn();
+};

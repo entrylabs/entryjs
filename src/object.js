@@ -686,7 +686,7 @@ Entry.EntryObject.prototype.generateView= function() {
         yInput.addClass('entryObjectCoordinateInputWorkspace entryObjectCoordinateInputWorkspace_right')
         var sizeTitle = Entry.createElement('span');
         sizeTitle.addClass('entryObjectCoordinateSpanWorkspace');
-        sizeTitle.innerHTML = '크기:';
+        sizeTitle.innerHTML = Lang.Workspace.Size;
         var sizeInput = Entry.createElement('input');
         sizeInput.addClass('entryObjectCoordinateInputWorkspace',
                            'entryObjectCoordinateInputWorkspace_size');
@@ -830,7 +830,7 @@ Entry.EntryObject.prototype.initEntity = function(model) {
         var dimension = model.sprite.pictures[0].dimension;
         json.regX = dimension.width/2;
         json.regY = dimension.height/2;
-        if (model.sprite.category.main == "배경")
+        if (model.sprite.category.main == "background")
             var scale = Math.max(270/dimension.height, 480/dimension.width);
         else if (model.sprite.category.main == "new")
             var scale = 1;
@@ -1352,13 +1352,10 @@ Entry.EntryObject.prototype.updateInputViews = function(isLocked) {
     var inputs = [
         this.nameView_, this.coordinateView_.xInput_,
         this.coordinateView_.yInput_, this.rotateInput_,
-        this.directionInput_,this.editView_,
+        this.directionInput_,
         this.coordinateView_.sizeInput_
     ];
-    var edit = this.editView_;
     if (isLocked){
-        edit.removeClass("editButtonToggle")
-        edit.addClass("editButtonToggle_");
         if(inputs[0].getAttribute("disabled")!='disabled'){
             for(var i=0; i<inputs.length; i++){
                 inputs[i].setAttribute('disabled', 'disabled');
@@ -1366,19 +1363,22 @@ Entry.EntryObject.prototype.updateInputViews = function(isLocked) {
                 tog = true;
             }
         }
-    } else{
-        edit.removeClass("editButtonToggle_");
-        edit.addClass("editButtonToggle")
     }
 }
 
 var tog = true;
 Entry.EntryObject.prototype.editObjectValues = function(click) {
-    var inputs = [
-        this.nameView_, this.coordinateView_.xInput_,
-        this.coordinateView_.yInput_, this.rotateInput_,
-        this.directionInput_, this.coordinateView_.sizeInput_
-    ];
+    
+    if(this.getLock()) {
+        var inputs = [this.nameView_];
+    } else {
+        var inputs = [
+            this.nameView_, this.coordinateView_.xInput_,
+            this.coordinateView_.yInput_, this.rotateInput_,
+            this.directionInput_, this.coordinateView_.sizeInput_
+        ];
+    }
+
     if (click) {
         for(var i=0; i<inputs.length; i++){
             inputs[i].removeAttribute('disabled');

@@ -46,6 +46,9 @@ Entry.loadProject = function(project) {
     }
     if (!Entry.engine.projectTimer)
         Entry.variableContainer.generateTimer();
+
+    if (Object.keys(Entry.container.inputValue).length === 0)
+        Entry.variableContainer.generateAnswer();
     Entry.start();
 };
 
@@ -98,7 +101,7 @@ Entry.enableArduino = function() {
                 Entry.playground.currentObjectType = '';
                 Entry.playground.setMenu(Entry.playground.object.objectType);
             }
-            Entry.toast.success('아두이노 연결', '아두이노 연결에 성공하였습니다.', false);
+            Entry.toast.success(Lang.Workspace.arduino_connect, Lang.Workspace.arduino_connect_success, false);
         }).fail(function(){
     });
 };
@@ -125,13 +128,14 @@ Entry.initSound = function(sound) {
  */
 Entry.beforeUnload = function(e) {
     Entry.hw.closeConnection();
+    Entry.variableContainer.updateCloudVariables();
     if (Entry.type == 'workspace') {
         if (localStorage && Entry.interfaceState) {
             localStorage.setItem('workspace-interface',
                                  JSON.stringify(Entry.interfaceState));
         }
         if (!Entry.stateManager.isSaved())
-            return "프로젝트를 수정하셨습니다.";
+            return Lang.Workspace.project_changed;
     }
 };
 
@@ -159,10 +163,12 @@ Entry.loadInterfaceState = function() {
  */
 Entry.resizeElement = function(interfaceModel) {
     if (Entry.type == 'workspace') {
-        if (!interfaceModel.canvasWidth && this.interfaceState.canvasWidth)
-            interfaceModel.canvasWidth = this.interfaceState.canvasWidth;
+        var interfaceState = this.interfaceState;
+        if (!interfaceModel.canvasWidth && interfaceState.canvasWidth)
+            interfaceModel.canvasWidth = interfaceState.canvasWidth;
         if (!interfaceModel.menuWidth &&
             this.interfaceState.menuWidth)
+            interfaceModel.menuWidth = interfaceState.menuWidth;
 
         if (Entry.engine.speedPanelOn)
             Entry.engine.toggleSpeedPanel();
@@ -249,10 +255,6 @@ Entry.resizeElement = function(interfaceModel) {
 
         this.interfaceState = interfaceModel;
     }
-    if (Entry.type == 'phone') {
-
-    }
-
     Blockly.fireUiEvent(window, 'resize');
 };
 

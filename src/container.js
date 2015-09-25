@@ -216,7 +216,7 @@ Entry.Container.prototype.setObjects = function(objectModels) {
  * @return {Entry.EntryObject}
  */
 Entry.Container.prototype.addObject = function(objectModel, index) {
-    var backgroundStr = '배경';
+    var backgroundStr = 'background';
     var object = new Entry.EntryObject(objectModel);
     object.name = Entry.getOrderedName(object.name, this.objects_);
 
@@ -296,6 +296,7 @@ Entry.Container.prototype.removeObject = function(object) {
                                );
     object.destroy();
     this.objects_.splice(index, 1);
+    this.setCurrentObjects();
     Entry.stage.sortZorder();
 
     if (this.objects_.length && index != 0)
@@ -310,7 +311,6 @@ Entry.Container.prototype.removeObject = function(object) {
     Entry.toast.success(Lang.Workspace.remove_object,
                        object.name + ' ' + Lang.Workspace.remove_object_msg);
 
-    this.setCurrentObjects();
     Entry.variableContainer.removeLocalVariables(object.id);
     Entry.playground.reloadPlayground();
     return state;
@@ -599,12 +599,21 @@ Entry.Container.prototype.getDropdownList = function(menuName) {
     } else if (menuName == 'spritesWithMouse') {
         var objs = this.getCurrentObjects();
         var length = objs.length;
-        result.push([Lang.Blocks.mouse_pointer, 'mouse']);
         for (var i = 0; i<length; i++) {
             var object = objs[i];
             result.push([object.name, object.id]);
         }
+        result.push([Lang.Blocks.mouse_pointer, 'mouse']);
+    } else if (menuName == 'spritesWithSelf') {
+        var objs = this.getCurrentObjects();
+        var length = objs.length;
+        for (var i = 0; i<length; i++) {
+            var object = objs[i];
+            result.push([object.name, object.id]);
+        }
+        result.push([Lang.Blocks.self, 'self']);
     } else if (menuName == 'collision') {
+        result.push([Lang.Blocks.mouse_pointer, 'mouse']);
         var objs = this.getCurrentObjects();
         var length = objs.length;
         for (var i = 0; i<length; i++) {
@@ -875,7 +884,7 @@ Entry.Container.prototype.getVariableJSON = function() {
  * @return {String}
  */
 Entry.Container.prototype.getInputValue = function() {
-    return this.inputValue.value;
+    return this.inputValue.getValue();
 };
 
 /**
@@ -884,9 +893,9 @@ Entry.Container.prototype.getInputValue = function() {
  */
 Entry.Container.prototype.setInputValue = function(inputValue) {
     if (!inputValue)
-        this.inputValue.value = '';
+        this.inputValue.setValue(0);
     else
-        this.inputValue.value = inputValue;
+        this.inputValue.setValue(inputValue);
 };
 
 Entry.Container.prototype.resetSceneDuringRun = function() {
@@ -978,7 +987,7 @@ Entry.Container.prototype.generateTabView = function() {
     var tab1 = Entry.createElement('span');
     tab1.addClass('entryContainerTabItemWorkspace');
     tab1.addClass('entryEllipsis');
-    tab1.innerHTML = '오브젝트';
+    tab1.innerHTML = Lang.Menus.lecture_container_tab_object;
     tab1.bindOnClick(function () {
         that.changeTabView('object');
     });
@@ -988,7 +997,7 @@ Entry.Container.prototype.generateTabView = function() {
     var tab2 = Entry.createElement('span');
     tab2.addClass('entryContainerTabItemWorkspace', 'entryRemove');
     tab2.addClass('entryEllipsis');
-    tab2.innerHTML = '강의 동영상';
+    tab2.innerHTML = Lang.Menus.lecture_container_tab_video;
     tab2.bindOnClick(function () {
         that.changeTabView('movie');
     });
@@ -1000,7 +1009,7 @@ Entry.Container.prototype.generateTabView = function() {
     var tab3 = Entry.createElement('span');
     tab3.addClass('entryContainerTabItemWorkspace', 'entryRemove');
     tab3.addClass('entryEllipsis');
-    tab3.innerHTML = '완성된 프로젝트';
+    tab3.innerHTML = Lang.Menus.lecture_container_tab_project;
     tab3.bindOnClick(function () {
         that.changeTabView('done');
     });
@@ -1011,7 +1020,7 @@ Entry.Container.prototype.generateTabView = function() {
     var tab4 = Entry.createElement('span');
     tab4.addClass('entryContainerTabItemWorkspace');
     tab4.addClass('entryEllipsis');
-    tab4.innerHTML = '블록 도움말';
+    tab4.innerHTML = Lang.Menus.lecture_container_tab_help;
     tab4.bindOnClick(function () {
         that.changeTabView('helper');
     });
@@ -1100,6 +1109,23 @@ Entry.Container.prototype.initYoutube = function(youtubeHash) {
     movieContainer.appendChild(iframe);
 };
 
+Entry.Container.prototype.initTvcast = function(tvcast) {
+    this.tvcast = tvcast
+    this.youtubeTab.removeClass('entryRemove');
+    var view = this.view_;
+    var width = view.style.width.substring(0,
+                                          view.style.width.length-2);
+    var movieContainer = this.movieContainer;
+    var iframe = Entry.createElement('iframe');
+    iframe.setAttribute('width', width);
+    iframe.setAttribute('height',width*9/16);
+    iframe.setAttribute('allowfullscreen', '');
+    iframe.setAttribute('frameborder', 0);
+    iframe.setAttribute('src', this.tvcast);
+    this.movieFrame = iframe;
+    movieContainer.appendChild(iframe);
+};
+
 Entry.Container.prototype.initDoneProject = function(projectId) {
     this.doneProject = projectId;
     this.iframeTab.removeClass('entryRemove');
@@ -1124,3 +1150,33 @@ Entry.Container.prototype.blurAllInputs = function() {
             inputs[i].blur();
     });
 }
+
+Entry.Container.prototype.showProjectAnswer = function() {
+    var answer = this.inputValue;
+    if (!answer)
+        return;
+    answer.setVisible(true);
+};
+
+
+Entry.Container.prototype.hideProjectAnswer = function(removeBlock) {
+    var answer = this.inputValue;
+    if (!answer || !answer.isVisible() || Entry.engine.isState('run'))
+        return;
+    var objects = Entry.container.getAllObjects();
+    var answerTypes = ['ask_and_wait', 'get_canvas_input_value',
+    'set_visible_answer'];
+
+    for (var i=0, len=objects.length; i<len; i++) {
+        var blocks = objects[i].script.getElementsByTagName('block');
+        for (var j = 0, bLen=blocks.length; j < bLen; j++) {
+            if (answerTypes.indexOf(blocks[j].getAttribute('type')) > -1) {
+                if (blocks[j].getAttribute('id') == removeBlock.getAttribute('id'))
+                    continue;
+                else
+                    return;
+            }
+        }
+    }
+    answer.setVisible(false);
+};

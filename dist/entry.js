@@ -1,6 +1,7 @@
 var Entry = {events_:{}, block:{}, TEXT_ALIGN_CENTER:0, TEXT_ALIGN_LEFT:1, TEXT_ALIGN_RIGHT:2, TEXT_ALIGNS:["center", "left", "right"], loadProject:function(a) {
   a && ("workspace" == this.type && Entry.stateManager.startIgnore(), Entry.projectId = a._id, Entry.variableContainer.setVariables(a.variables), Entry.variableContainer.setMessages(a.messages), Entry.variableContainer.setFunctions(a.functions), Entry.scene.addScenes(a.scenes), Entry.stage.initObjectContainers(), Entry.container.setObjects(a.objects), Entry.FPS = a.speed ? a.speed : 60, createjs.Ticker.setFPS(Entry.FPS), "workspace" == this.type && Entry.stateManager.endIgnore());
   Entry.engine.projectTimer || Entry.variableContainer.generateTimer();
+  0 === Object.keys(Entry.container.inputValue).length && Entry.variableContainer.generateAnswer();
   Entry.start();
 }, setBlockByText:function(a, b) {
   for (var c = [], d = jQuery.parseXML(b).getElementsByTagName("category"), e = 0;e < d.length;e++) {
@@ -19,8 +20,9 @@ var Entry = {events_:{}, block:{}, TEXT_ALIGN_CENTER:0, TEXT_ALIGN_LEFT:1, TEXT_
   Entry.soundQueue.loadFile({id:a.id, src:b, type:createjs.LoadQueue.SOUND});
 }, beforeUnload:function(a) {
   Entry.hw.closeConnection();
+  Entry.variableContainer.updateCloudVariables();
   if ("workspace" == Entry.type && (localStorage && Entry.interfaceState && localStorage.setItem("workspace-interface", JSON.stringify(Entry.interfaceState)), !Entry.stateManager.isSaved())) {
-    return "\ud504\ub85c\uc81d\ud2b8\ub97c \uc218\uc815\ud558\uc168\uc2b5\ub2c8\ub2e4.";
+    return Lang.Workspace.project_changed;
   }
 }, loadInterfaceState:function() {
   if ("workspace" == Entry.type) {
@@ -33,10 +35,11 @@ var Entry = {events_:{}, block:{}, TEXT_ALIGN_CENTER:0, TEXT_ALIGN_LEFT:1, TEXT_
   }
 }, resizeElement:function(a) {
   if ("workspace" == Entry.type) {
-    !a.canvasWidth && this.interfaceState.canvasWidth && (a.canvasWidth = this.interfaceState.canvasWidth);
-    !a.menuWidth && this.interfaceState.menuWidth && Entry.engine.speedPanelOn && Entry.engine.toggleSpeedPanel();
-    var b = a.canvasWidth;
-    b ? 300 > b ? b = 300 : 720 < b && (b = 720) : b = 400;
+    var b = this.interfaceState;
+    !a.canvasWidth && b.canvasWidth && (a.canvasWidth = b.canvasWidth);
+    !a.menuWidth && this.interfaceState.menuWidth && (a.menuWidth = b.menuWidth);
+    Entry.engine.speedPanelOn && Entry.engine.toggleSpeedPanel();
+    (b = a.canvasWidth) ? 300 > b ? b = 300 : 720 < b && (b = 720) : b = 400;
     a.canvasWidth = b;
     var c = 9 * b / 16;
     Entry.engine.view_.style.width = b + "px";
@@ -78,6 +81,13 @@ var Entry = {events_:{}, block:{}, TEXT_ALIGN_CENTER:0, TEXT_ALIGN_LEFT:1, TEXT_
   return a;
 }};
 window.Entry = Entry;
+Entry.Arduino = {name:"arduino", setZero:function() {
+  for (var a = 0;14 > a;a++) {
+    Entry.hw.sendQueue[a] = 0;
+  }
+  Entry.hw.update();
+}};
+Entry.SensorBoard = {name:"sensorBoard", setZero:Entry.Arduino.setZero};
 Blockly.Blocks.arduino_text = {init:function() {
   this.setColour("#00979D");
   this.appendDummyInput().appendField(new Blockly.FieldTextInput("Arduino"), "NAME");
@@ -95,7 +105,6 @@ Blockly.Blocks.arduino_send = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-  this.setTooltip("");
 }};
 Entry.block.arduino_send = function(a, b) {
   var c = b.getValue("VALUE", b), d = new XMLHttpRequest;
@@ -140,7 +149,6 @@ Blockly.Blocks.arduino_get_sensor_number = {init:function() {
   this.appendDummyInput().appendField(" ");
   this.setOutput(!0, "Number");
   this.setInputsInline(!0);
-  this.setTooltip(Blockly.Msg.MATH_NUMBER_TOOLTIP);
 }};
 Entry.block.arduino_get_sensor_number = function(a, b) {
   return b.getStringField("PORT");
@@ -151,7 +159,6 @@ Blockly.Blocks.arduino_get_port_number = {init:function() {
   this.appendDummyInput().appendField(" ");
   this.setOutput(!0, "Number");
   this.setInputsInline(!0);
-  this.setTooltip(Blockly.Msg.MATH_NUMBER_TOOLTIP);
 }};
 Entry.block.arduino_get_port_number = function(a, b) {
   return b.getStringField("PORT");
@@ -162,7 +169,6 @@ Blockly.Blocks.arduino_get_pwm_port_number = {init:function() {
   this.appendDummyInput().appendField(" ");
   this.setOutput(!0, "Number");
   this.setInputsInline(!0);
-  this.setTooltip(Blockly.Msg.MATH_NUMBER_TOOLTIP);
 }};
 Entry.block.arduino_get_pwm_port_number = function(a, b) {
   return b.getStringField("PORT");
@@ -174,7 +180,6 @@ Blockly.Blocks.arduino_get_number_sensor_value = {init:function() {
   this.appendDummyInput().appendField(Lang.Blocks.ARDUINO_num_sensor_value_2);
   this.setInputsInline(!0);
   this.setOutput(!0, "Number");
-  this.setTooltip("");
 }};
 Entry.block.arduino_get_number_sensor_value = function(a, b) {
   var c = b.getValue("VALUE", b);
@@ -187,7 +192,6 @@ Blockly.Blocks.arduino_get_digital_value = {init:function() {
   this.appendDummyInput().appendField(Lang.Blocks.ARDUINO_num_sensor_value_2);
   this.setInputsInline(!0);
   this.setOutput(!0, "Boolean");
-  this.setTooltip("");
 }};
 Entry.block.arduino_get_digital_value = function(a, b) {
   var c = b.getNumberValue("VALUE", b);
@@ -198,11 +202,10 @@ Blockly.Blocks.arduino_toggle_led = {init:function() {
   this.appendDummyInput().appendField(Lang.Blocks.ARDUINO_num_pin_1);
   this.appendValueInput("VALUE").setCheck(["Number", "String", null]);
   this.appendDummyInput().appendField(Lang.Blocks.ARDUINO_num_pin_2);
-  this.appendDummyInput().appendField(new Blockly.FieldDropdown([[Lang.Blocks.ARDUINO_on, "on"], [Lang.Blocks.ARDUINO_off, "off"]]), "OPERATOR").appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_arduino.png", "*"));
+  this.appendDummyInput().appendField(new Blockly.FieldDropdown([[Lang.Blocks.ARDUINO_on, "on"], [Lang.Blocks.ARDUINO_off, "off"]]), "OPERATOR").appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-  this.setTooltip("");
 }};
 Entry.block.arduino_toggle_led = function(a, b) {
   var c = b.getNumberValue("VALUE"), d = "on" == b.getField("OPERATOR") ? 255 : 0;
@@ -216,11 +219,10 @@ Blockly.Blocks.arduino_toggle_pwm = {init:function() {
   this.appendDummyInput().appendField(Lang.Blocks.ARDUINO_toggle_pwm_2);
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
   this.appendDummyInput().appendField(Lang.Blocks.ARDUINO_toggle_pwm_3);
-  this.appendDummyInput().appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_arduino.png", "*"));
+  this.appendDummyInput().appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-  this.setTooltip("");
 }};
 Entry.block.arduino_toggle_pwm = function(a, b) {
   var c = b.getNumberValue("PORT"), d = b.getNumberValue("VALUE"), d = Math.round(d), d = Math.max(d, 0), d = Math.min(d, 255);
@@ -256,14 +258,223 @@ Entry.block.arduino_convert_scale = function(a, b) {
   c = Math.max(f, c);
   return Math.round(c);
 };
-var categoryColor = "#FF9E20";
-Blockly.Blocks.start_drawing = {init:function() {
-  this.setColour(categoryColor);
-  this.appendDummyInput().appendField(Lang.Blocks.BRUSH_start_drawing).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_brush.png", "*"));
+Blockly.Blocks.sensorBoard_get_named_sensor_value = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("").appendField(new Blockly.FieldDropdown([["\uc18c\ub9ac", "0"], ["\ube5b \uac10\uc9c0", "1"], ["\uc2ac\ub77c\uc774\ub354", "2"], ["\uc628\ub3c4", "3"]]), "PORT").appendField(" \uc13c\uc11c\uac12");
+  this.setOutput(!0, "Number");
+  this.setInputsInline(!0);
+}};
+Entry.block.sensorBoard_get_named_sensor_value = function(a, b) {
+  return Entry.hw.getAnalogPortValue(b.getField("PORT", b));
+};
+Blockly.Blocks.sensorBoard_is_button_pressed = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("").appendField(new Blockly.FieldDropdown([["\ube68\uac04", "8"], ["\ud30c\ub780", "9"], ["\ub178\ub780", "10"], ["\ucd08\ub85d", "11"]]), "PORT");
+  this.appendDummyInput().appendField(" \ubc84\ud2bc\uc744 \ub20c\ub800\ub294\uac00?");
+  this.setInputsInline(!0);
+  this.setOutput(!0, "Boolean");
+}};
+Entry.block.sensorBoard_is_button_pressed = function(a, b) {
+  return Entry.hw.getDigitalPortValue(b.getNumberField("PORT", b));
+};
+Blockly.Blocks.sensorBoard_led = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("").appendField(new Blockly.FieldDropdown([["\ube68\uac04", "2"], ["\ucd08\ub85d", "3"], ["\ud30c\ub780", "4"], ["\ud770\uc0c9", "5"]]), "PORT").appendField(" LED").appendField(new Blockly.FieldDropdown([["\ucf1c\uae30", "255"], ["\ub044\uae30", "0"]]), "OPERATOR").appendField(" ").appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-  this.setTooltip("");
+}};
+Entry.block.sensorBoard_led = function(a, b) {
+  Entry.hw.setDigitalPortValue(b.getField("PORT"), b.getNumberField("OPERATOR"));
+  return b.callReturn();
+};
+Entry.Bitbrick = {SENSOR_MAP:{1:"light", 2:"IR", 3:"touch", 4:"potentiometer", 20:"LED", 19:"SERVO", 18:"DC"}, PORT_MAP:{buzzer:2, 5:4, 6:6, 7:8, 8:10, LEDR:12, LEDG:14, LEDB:16}, sensorList:function() {
+  for (var a = [], b = Entry.hw.portData, c = 1;5 > c;c++) {
+    b[c] && a.push([c + " - " + b[c].type, c.toString()]);
+  }
+  return 0 == a.length ? [[Lang.Blocks.no_target, "null"]] : a;
+}, touchList:function() {
+  for (var a = [], b = Entry.hw.portData, c = 1;5 > c;c++) {
+    b[c] && "touch" === b[c].type && a.push([c + " - " + b[c].type, c.toString()]);
+  }
+  return 0 == a.length ? [[Lang.Blocks.no_target, "null"]] : a;
+}, servoList:function() {
+  for (var a = [], b = Entry.hw.portData, c = 5;9 > c;c++) {
+    b[c] && "SERVO" === b[c].type && a.push(["ABCD"[c - 5], c.toString()]);
+  }
+  return 0 == a.length ? [[Lang.Blocks.no_target, "null"]] : a;
+}, dcList:function() {
+  for (var a = [], b = Entry.hw.portData, c = 5;9 > c;c++) {
+    b[c] && "DC" === b[c].type && a.push(["ABCD"[c - 5], c.toString()]);
+  }
+  return 0 == a.length ? [[Lang.Blocks.no_target, "null"]] : a;
+}, setZero:function() {
+  for (var a in Entry.Bitbrick.PORT_MAP) {
+    Entry.hw.sendQueue[a] = 0;
+  }
+  Entry.hw.update();
+}, name:"bitbrick", servoMaxValue:181, servoMinValue:1, dcMaxValue:100, dcMinValue:-100};
+Blockly.Blocks.bitbrick_sensor_value = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("").appendField(new Blockly.FieldDropdownDynamic(Entry.Bitbrick.sensorList), "PORT").appendField(" \uac12");
+  this.setOutput(!0, "String");
+  this.setInputsInline(!0);
+}};
+Entry.block.bitbrick_sensor_value = function(a, b) {
+  var c = b.getStringField("PORT");
+  console.log(c);
+  console.log(Entry.hw.portData[c]);
+  return Entry.hw.portData[c].value;
+};
+Blockly.Blocks.bitbrick_is_touch_pressed = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("\ud130\uce58\uc13c\uc11c").appendField(new Blockly.FieldDropdownDynamic(Entry.Bitbrick.touchList), "PORT").appendField(" \uac00 \ub20c\ub838\ub294\uac00?");
+  this.setOutput(!0, "Boolean");
+  this.setInputsInline(!0);
+}};
+Entry.block.bitbrick_is_touch_pressed = function(a, b) {
+  return 0 === Entry.hw.portData[b.getStringField("PORT")].value;
+};
+Blockly.Blocks.bitbrick_turn_off_color_led = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("\uceec\ub7ec LED \ub044\uae30").appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.bitbrick_turn_off_color_led = function(a, b) {
+  Entry.hw.sendQueue.LEDR = 0;
+  Entry.hw.sendQueue.LEDG = 0;
+  Entry.hw.sendQueue.LEDB = 0;
+  return b.callReturn();
+};
+Blockly.Blocks.bitbrick_turn_on_color_led_by_rgb = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("\uceec\ub7ec LED \ucf1c\uae30 R");
+  this.appendValueInput("rValue").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField("G");
+  this.appendValueInput("gValue").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField("B");
+  this.appendValueInput("bValue").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.bitbrick_turn_on_color_led_by_rgb = function(a, b) {
+  var c = b.getNumberValue("rValue"), d = b.getNumberValue("gValue"), e = b.getNumberValue("bValue");
+  Entry.hw.sendQueue.LEDR = c;
+  Entry.hw.sendQueue.LEDG = d;
+  Entry.hw.sendQueue.LEDB = e;
+  return b.callReturn();
+};
+Blockly.Blocks.bitbrick_turn_on_color_led_by_picker = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("\uceec\ub7ec LED \uc0c9 ").appendField(new Blockly.FieldColour("#ff0000"), "VALUE").appendField("\ub85c \uc815\ud558\uae30").appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.bitbrick_turn_on_color_led_by_picker = function(a, b) {
+  var c = b.getStringField("VALUE");
+  Entry.hw.sendQueue.LEDR = parseInt(c.substr(1, 2), 16);
+  Entry.hw.sendQueue.LEDG = parseInt(c.substr(3, 2), 16);
+  Entry.hw.sendQueue.LEDB = parseInt(c.substr(5, 2), 16);
+  return b.callReturn();
+};
+Blockly.Blocks.bitbrick_turn_on_color_led_by_value = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("\uceec\ub7ec LED \ucf1c\uae30 \uc0c9");
+  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField("\ub85c \uc815\ud558\uae30").appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.bitbrick_turn_on_color_led_by_value = function(a, b) {
+  var c = b.getNumberValue("VALUE"), d, e, f, c = c % 200;
+  67 > c ? (d = 200 - 3 * c, e = 3 * c, f = 0) : 134 > c ? (c -= 67, d = 0, e = 200 - 3 * c, f = 3 * c) : 201 > c && (c -= 134, d = 3 * c, e = 0, f = 200 - 3 * c);
+  Entry.hw.sendQueue.LEDR = d;
+  Entry.hw.sendQueue.LEDG = e;
+  Entry.hw.sendQueue.LEDB = f;
+  return b.callReturn();
+};
+Blockly.Blocks.bitbrick_buzzer = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("\ubd80\uc800\uc74c ");
+  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField("\ub0b4\uae30").appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.bitbrick_buzzer = function(a, b) {
+  if (b.isStart) {
+    return Entry.hw.sendQueue.buzzer = 0, delete b.isStart, b.callReturn();
+  }
+  var c = b.getNumberValue("VALUE");
+  Entry.hw.sendQueue.buzzer = c;
+  b.isStart = !0;
+  return b;
+};
+Blockly.Blocks.bitbrick_turn_off_all_motors = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("\ubaa8\ub4e0 \ubaa8\ud130 \ub044\uae30").appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.bitbrick_turn_off_all_motors = function(a, b) {
+};
+Blockly.Blocks.bitbrick_dc_speed = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("DC \ubaa8\ud130").appendField(new Blockly.FieldDropdownDynamic(Entry.Bitbrick.dcList), "PORT").appendField(" \uc18d\ub3c4");
+  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField("").appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", "*"));
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+  this.setInputsInline(!0);
+}};
+Entry.block.bitbrick_dc_speed = function(a, b) {
+  var c = b.getNumberValue("VALUE"), c = Math.min(c, Entry.Bitbrick.dcMaxValue), c = Math.max(c, Entry.Bitbrick.dcMinValue);
+  Entry.hw.sendQueue[b.getStringField("PORT")] = c + 128;
+  return b.callReturn();
+};
+Blockly.Blocks.bitbrick_dc_direction_speed = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("DC \ubaa8\ud130").appendField(new Blockly.FieldDropdownDynamic(Entry.Bitbrick.dcList), "PORT").appendField(" \ubc29\ud5a5").appendField(new Blockly.FieldDropdown([["CCW", "CCW"], ["CW", "CW"]]), "DIRECTION").appendField(" \uc18d\ub825");
+  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField("").appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", "*"));
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+  this.setInputsInline(!0);
+}};
+Entry.block.bitbrick_dc_direction_speed = function(a, b) {
+  var c = "CW" === b.getStringField("DIRECTION"), d = b.getNumberValue("VALUE"), d = Math.min(d, Entry.Bitbrick.dcMaxValue), d = Math.max(d, Entry.Bitbrick.dcMinValue);
+  Entry.hw.sendQueue[b.getStringField("PORT")] = c ? d + 128 : 128 - d;
+  return b.callReturn();
+};
+Blockly.Blocks.bitbrick_servomotor_angle = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("\uc11c\ubcf4 \ubaa8\ud130").appendField(new Blockly.FieldDropdownDynamic(Entry.Bitbrick.servoList), "PORT").appendField(" \uac01\ub3c4");
+  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField("").appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", "*"));
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+  this.setInputsInline(!0);
+}};
+Entry.block.bitbrick_servomotor_angle = function(a, b) {
+  var c = b.getNumberValue("VALUE") + 1, c = Math.min(c, Entry.Bitbrick.servoMaxValue), c = Math.max(c, Entry.Bitbrick.servoMinValue);
+  Entry.hw.sendQueue[b.getStringField("PORT")] = c;
+  return b.callReturn();
+};
+var categoryColor = "#FF9E20";
+Blockly.Blocks.start_drawing = {init:function() {
+  this.setColour(categoryColor);
+  this.appendDummyInput().appendField(Lang.Blocks.BRUSH_start_drawing).appendField(new Blockly.FieldIcon("/img/assets/block_icon/brush_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
 }};
 Entry.block.start_drawing = function(a, b) {
   a.brush ? a.brush.stop = !1 : Entry.setBasicBrush(a);
@@ -273,11 +484,10 @@ Entry.block.start_drawing = function(a, b) {
 };
 Blockly.Blocks.stop_drawing = {init:function() {
   this.setColour(categoryColor);
-  this.appendDummyInput().appendField(Lang.Blocks.BRUSH_stop_drawing).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_brush.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.BRUSH_stop_drawing).appendField(new Blockly.FieldIcon("/img/assets/block_icon/brush_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-  this.setTooltip("");
 }};
 Entry.block.stop_drawing = function(a, b) {
   a.brush && a.shape && (a.brush.stop = !0);
@@ -287,11 +497,10 @@ Blockly.Blocks.set_color = {init:function() {
   this.setColour(categoryColor);
   this.appendDummyInput().appendField(Lang.Blocks.BRUSH_set_color_1);
   this.appendDummyInput().appendField(new Blockly.FieldColour("#ff0000"), "VALUE");
-  this.appendDummyInput().appendField(Lang.Blocks.BRUSH_set_color_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_brush.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.BRUSH_set_color_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/brush_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-  this.setTooltip("");
 }};
 Entry.block.set_color = function(a, b) {
   var c = b.getField("VALUE", b);
@@ -301,11 +510,10 @@ Entry.block.set_color = function(a, b) {
 };
 Blockly.Blocks.set_random_color = {init:function() {
   this.setColour(categoryColor);
-  this.appendDummyInput().appendField(Lang.Blocks.BRUSH_set_random_color).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_brush.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.BRUSH_set_random_color).appendField(new Blockly.FieldIcon("/img/assets/block_icon/brush_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-  this.setTooltip("");
 }};
 Entry.block.set_random_color = function(a, b) {
   a.brush || (Entry.setBasicBrush(a), a.brush.stop = !0);
@@ -322,11 +530,10 @@ Blockly.Blocks.change_thickness = {init:function() {
   this.setColour(categoryColor);
   this.appendDummyInput().appendField(Lang.Blocks.BRUSH_change_thickness_1);
   this.appendValueInput("VALUE").setCheck(["Number", "Boolean"]);
-  this.appendDummyInput().appendField(Lang.Blocks.BRUSH_change_thickness_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_brush.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.BRUSH_change_thickness_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/brush_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-  this.setTooltip("");
 }};
 Entry.block.change_thickness = function(a, b) {
   var c = b.getNumberValue("VALUE", b);
@@ -338,11 +545,10 @@ Blockly.Blocks.set_thickness = {init:function() {
   this.setColour(categoryColor);
   this.appendDummyInput().appendField(Lang.Blocks.BRUSH_set_thickness_1);
   this.appendValueInput("VALUE").setCheck(["Number", "Boolean"]);
-  this.appendDummyInput().appendField(Lang.Blocks.BRUSH_set_thickness_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_brush.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.BRUSH_set_thickness_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/brush_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-  this.setTooltip("");
 }};
 Entry.block.set_thickness = function(a, b) {
   var c = b.getNumberValue("VALUE", b);
@@ -354,11 +560,10 @@ Blockly.Blocks.change_opacity = {init:function() {
   this.setColour(categoryColor);
   this.appendDummyInput().appendField(Lang.Blocks.BRUSH_change_opacity_1);
   this.appendValueInput("VALUE").setCheck(["Number", "Boolean"]);
-  this.appendDummyInput().appendField(Lang.Blocks.BRUSH_change_opacity_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_brush.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.BRUSH_change_opacity_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/brush_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-  this.setTooltip("");
 }};
 Entry.block.change_opacity = function(a, b) {
   var c = b.getNumberValue("VALUE", b);
@@ -371,11 +576,10 @@ Blockly.Blocks.set_opacity = {init:function() {
   this.setColour(categoryColor);
   this.appendDummyInput().appendField(Lang.Blocks.BRUSH_set_opacity_1);
   this.appendValueInput("VALUE").setCheck(["Number", "Boolean"]);
-  this.appendDummyInput().appendField(Lang.Blocks.BRUSH_set_opacity_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_brush.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.BRUSH_set_opacity_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/brush_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-  this.setTooltip("");
 }};
 Entry.block.set_opacity = function(a, b) {
   var c = b.getNumberValue("VALUE", b);
@@ -385,11 +589,10 @@ Entry.block.set_opacity = function(a, b) {
 };
 Blockly.Blocks.brush_erase_all = {init:function() {
   this.setColour(categoryColor);
-  this.appendDummyInput().appendField(Lang.Blocks.BRUSH_brush_erase_all).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_brush.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.BRUSH_brush_erase_all).appendField(new Blockly.FieldIcon("/img/assets/block_icon/brush_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-  this.setTooltip("");
 }};
 Entry.block.brush_erase_all = function(a, b) {
   var c = a.brush;
@@ -407,11 +610,10 @@ Entry.block.brush_erase_all = function(a, b) {
 };
 Blockly.Blocks.brush_stamp = {init:function() {
   this.setColour(categoryColor);
-  this.appendDummyInput().appendField(Lang.Blocks.BRUSH_stamp).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_brush.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.BRUSH_stamp).appendField(new Blockly.FieldIcon("/img/assets/block_icon/brush_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-  this.setTooltip("");
 }};
 Entry.block.brush_stamp = function(a, b) {
   a.parent.addStampEntity(a);
@@ -421,11 +623,10 @@ Blockly.Blocks.change_brush_transparency = {init:function() {
   this.setColour(categoryColor);
   this.appendDummyInput().appendField(Lang.Blocks.BRUSH_change_brush_transparency_1);
   this.appendValueInput("VALUE").setCheck(["Number", "Boolean"]);
-  this.appendDummyInput().appendField(Lang.Blocks.BRUSH_change_brush_transparency_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_brush.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.BRUSH_change_brush_transparency_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/brush_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-  this.setTooltip("");
 }};
 Entry.block.change_brush_transparency = function(a, b) {
   var c = b.getNumberValue("VALUE", b);
@@ -438,11 +639,10 @@ Blockly.Blocks.set_brush_tranparency = {init:function() {
   this.setColour(categoryColor);
   this.appendDummyInput().appendField(Lang.Blocks.BRUSH_set_brush_transparency_1);
   this.appendValueInput("VALUE").setCheck(["Number", "Boolean"]);
-  this.appendDummyInput().appendField(Lang.Blocks.BRUSH_set_brush_transparency_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_brush.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.BRUSH_set_brush_transparency_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/brush_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-  this.setTooltip("");
 }};
 Entry.block.set_brush_tranparency = function(a, b) {
   var c = b.getNumberValue("VALUE", b);
@@ -450,99 +650,95 @@ Entry.block.set_brush_tranparency = function(a, b) {
   a.brush && (a.brush.opacity = Entry.adjustValueWithMaxMin(c, 0, 100), a.brush.endStroke(), c = a.brush.rgb, a.brush.beginStroke("rgba(" + c.r + "," + c.g + "," + c.b + "," + (1 - a.brush.opacity / 100) + ")"), a.brush.moveTo(a.getX(), -1 * a.getY()));
   return b.callReturn();
 };
+var calcArrowColor = "#e8b349", calcBlockColor = "#FFD974", calcFontColor = "#3D3D3D";
 Blockly.Blocks.number = {init:function() {
-  this.setColour("#FFD974");
+  this.setColour(calcBlockColor);
   this.appendDummyInput().appendField(new Blockly.FieldTextInput(""), "NUM");
   this.setOutput(!0, "Number");
   this.setInputsInline(!0);
-  this.setTooltip(Blockly.Msg.MATH_NUMBER_TOOLTIP);
 }};
 Entry.block.number = function(a, b) {
   return b.fields.NUM;
 };
 Blockly.Blocks.angle = {init:function() {
-  this.setColour("#FFD974");
+  this.setColour(calcBlockColor);
   this.appendDummyInput().appendField(new Blockly.FieldAngle("90"), "ANGLE");
   this.setOutput(!0, "Number");
   this.setInputsInline(!0);
-  this.setTooltip(Blockly.Msg.MATH_NUMBER_TOOLTIP);
 }};
 Entry.block.angle = function(a, b) {
   return b.getNumberField("ANGLE");
 };
 Blockly.Blocks.get_x_coordinate = {init:function() {
-  this.setColour("#FFD974");
-  this.appendDummyInput().appendField(Lang.Blocks.CALC_get_x_coordinate, "#3D3D3D");
+  this.setColour(calcBlockColor);
+  this.appendDummyInput().appendField(Lang.Blocks.CALC_get_x_coordinate, calcFontColor);
   this.setOutput(!0, "Number");
   this.setInputsInline(!0);
-  this.setTooltip(Blockly.Msg.MATH_NUMBER_TOOLTIP);
 }};
 Entry.block.get_x_coordinate = function(a, b) {
   return a.getX();
 };
 Blockly.Blocks.get_y_coordinate = {init:function() {
-  this.setColour("#FFD974");
-  this.appendDummyInput().appendField(Lang.Blocks.CALC_get_y_coordinate, "#3D3D3D");
+  this.setColour(calcBlockColor);
+  this.appendDummyInput().appendField(Lang.Blocks.CALC_get_y_coordinate, calcFontColor);
   this.setOutput(!0, "Number");
   this.setInputsInline(!0);
-  this.setTooltip(Blockly.Msg.MATH_NUMBER_TOOLTIP);
 }};
 Entry.block.get_y_coordinate = function(a, b) {
   return a.getY();
 };
 Blockly.Blocks.get_angle = {init:function() {
-  this.setColour("#FFD974");
-  this.appendDummyInput().appendField(Lang.Blocks.CALC_get_angle, "#3D3D3D");
+  this.setColour(calcBlockColor);
+  this.appendDummyInput().appendField(Lang.Blocks.CALC_get_angle, calcFontColor);
   this.setOutput(!0, "Number");
   this.setInputsInline(!0);
-  this.setTooltip(Blockly.Msg.MATH_NUMBER_TOOLTIP);
 }};
 Entry.block.get_angle = function(a, b) {
   return parseFloat(a.getRotation().toFixed(1));
 };
 Blockly.Blocks.get_rotation_direction = {init:function() {
-  this.setColour("#FFD974");
-  this.appendDummyInput().appendField(new Blockly.FieldDropdown([[Lang.Blocks.CALC_rotation_value, "ROTATION"], [Lang.Blocks.CALC_direction_value, "DIRECTION"]]), "OPERATOR");
+  this.setColour(calcBlockColor);
+  this.appendDummyInput().appendField(new Blockly.FieldDropdown([[Lang.Blocks.CALC_rotation_value, "ROTATION"], [Lang.Blocks.CALC_direction_value, "DIRECTION"]], null, !0, calcArrowColor), "OPERATOR");
   this.appendDummyInput().appendField(" ");
   this.setOutput(!0, "Number");
   this.setInputsInline(!0);
-  this.setTooltip(Blockly.Msg.MATH_NUMBER_TOOLTIP);
 }};
 Entry.block.get_rotation_direction = function(a, b) {
   return "DIRECTION" == b.getField("OPERATOR", b).toUpperCase() ? parseFloat(a.getDirection().toFixed(1)) : parseFloat(a.getRotation().toFixed(1));
 };
 Blockly.Blocks.distance_something = {init:function() {
-  this.setColour("#FFD974");
-  this.appendDummyInput().appendField(Lang.Blocks.CALC_distance_something_1, "#3D3D3D").appendField(new Blockly.FieldDropdownDynamic("sprites"), "VALUE").appendField(Lang.Blocks.CALC_distance_something_2, "#3D3D3D");
+  this.setColour(calcBlockColor);
+  this.appendDummyInput().appendField(Lang.Blocks.CALC_distance_something_1, calcFontColor).appendField(new Blockly.FieldDropdownDynamic("spritesWithMouse", null, !0, calcArrowColor), "VALUE").appendField(Lang.Blocks.CALC_distance_something_2, calcFontColor);
   this.setOutput(!0, "Number");
   this.setInputsInline(!0);
-  this.setTooltip(Blockly.Msg.MATH_NUMBER_TOOLTIP);
 }};
 Entry.block.distance_something = function(a, b) {
-  var c = b.getField("VALUE", b), c = Entry.container.getEntity(c);
+  var c = b.getField("VALUE", b);
+  if ("mouse" == c) {
+    return c = Entry.stage.mouseCoordinate, Math.sqrt(Math.pow(a.getX() - c.x, 2) + Math.pow(a.getY() - c.y, 2));
+  }
+  c = Entry.container.getEntity(c);
   return Math.sqrt(Math.pow(a.getX() - c.getX(), 2) + Math.pow(a.getY() - c.getY(), 2));
 };
 Blockly.Blocks.coordinate_mouse = {init:function() {
-  this.setColour("#FFD974");
-  this.appendDummyInput().appendField(Lang.Blocks.CALC_coordinate_mouse_1, "#3D3D3D").appendField(new Blockly.FieldDropdown([["x", "x"], ["y", "y"]]), "VALUE").appendField(Lang.Blocks.CALC_coordinate_mouse_2, "#3D3D3D");
+  this.setColour(calcBlockColor);
+  this.appendDummyInput().appendField(Lang.Blocks.CALC_coordinate_mouse_1, calcFontColor).appendField(new Blockly.FieldDropdown([["x", "x"], ["y", "y"]], null, !0, calcArrowColor), "VALUE").appendField(Lang.Blocks.CALC_coordinate_mouse_2, calcFontColor);
   this.setOutput(!0, "Number");
   this.setInputsInline(!0);
-  this.setTooltip(Blockly.Msg.MATH_NUMBER_TOOLTIP);
 }};
 Entry.block.coordinate_mouse = function(a, b) {
   return "x" === b.getField("VALUE", b) ? Number(Entry.stage.mouseCoordinate.x) : Number(Entry.stage.mouseCoordinate.y);
 };
 Blockly.Blocks.coordinate_object = {init:function() {
-  this.setColour("#FFD974");
-  this.appendDummyInput().appendField(Lang.Blocks.CALC_coordinate_object_1, "#3D3D3D").appendField(new Blockly.FieldDropdownDynamic("sprites"), "VALUE").appendField(Lang.Blocks.CALC_coordinate_object_2, "#3D3D3D").appendField(new Blockly.FieldDropdown([[Lang.Blocks.CALC_coordinate_x_value, "x"], [Lang.Blocks.CALC_coordinate_y_value, "y"], [Lang.Blocks.CALC_coordinate_rotation_value, "rotation"], [Lang.Blocks.CALC_coordinate_direction_value, "direction"], [Lang.Blocks.CALC_picture_index, "picture_index"], 
-  [Lang.Blocks.CALC_picture_name, "picture_name"]]), "COORDINATE").appendField(Lang.Blocks.CALC_coordinate_object_3, "#3D3D3D");
+  this.setColour(calcBlockColor);
+  this.appendDummyInput().appendField(Lang.Blocks.CALC_coordinate_object_1, calcFontColor).appendField(new Blockly.FieldDropdownDynamic("spritesWithSelf", null, !0, calcArrowColor), "VALUE").appendField(Lang.Blocks.CALC_coordinate_object_2, calcFontColor).appendField(new Blockly.FieldDropdown([[Lang.Blocks.CALC_coordinate_x_value, "x"], [Lang.Blocks.CALC_coordinate_y_value, "y"], [Lang.Blocks.CALC_coordinate_rotation_value, "rotation"], [Lang.Blocks.CALC_coordinate_direction_value, "direction"], 
+  [Lang.Blocks.CALC_coordinate_size_value, "size"], [Lang.Blocks.CALC_picture_index, "picture_index"], [Lang.Blocks.CALC_picture_name, "picture_name"]], null, !0, calcArrowColor), "COORDINATE").appendField(Lang.Blocks.CALC_coordinate_object_3, calcFontColor);
   this.setOutput(!0, "Number");
   this.setInputsInline(!0);
-  this.setTooltip(Blockly.Msg.MATH_NUMBER_TOOLTIP);
 }};
 Entry.block.coordinate_object = function(a, b) {
-  var c = b.getField("VALUE", b), d = b.getField("COORDINATE", b), c = Entry.container.getEntity(c);
-  switch(d) {
+  var c = b.getField("VALUE", b), c = "self" == c ? a : Entry.container.getEntity(c);
+  switch(b.getField("COORDINATE", b)) {
     case "x":
       return c.getX();
     case "y":
@@ -552,117 +748,112 @@ Entry.block.coordinate_object = function(a, b) {
     case "direction":
       return c.getDirection();
     case "picture_index":
-      return d = c.parent, d = d.pictures, d.indexOf(c.picture) + 1;
+      var d = c.parent, d = d.pictures;
+      return d.indexOf(c.picture) + 1;
+    case "size":
+      return Number(c.getSize().toFixed(1));
     case "picture_name":
       return d = c.parent, d = d.pictures, d[d.indexOf(c.picture)].name;
   }
 };
 Blockly.Blocks.calc_basic = {init:function() {
-  this.setColour("#FFD974");
+  this.setColour(calcBlockColor);
   this.appendValueInput("LEFTHAND").setCheck(["String", "Number"]);
   this.appendDummyInput("VALUE").appendField(new Blockly.FieldDropdown([["+", "PLUS"], ["-", "MINUS"], ["x", "MULTI"], ["/", "DIVIDE"]], null, !1), "OPERATOR");
   this.appendValueInput("RIGHTHAND").setCheck(["Number", "String"]);
   this.setOutput(!0, "Number");
   this.setInputsInline(!0);
-  this.setTooltip(Blockly.Msg.MATH_NUMBER_TOOLTIP);
 }};
 Entry.block.calc_basic = function(a, b) {
   var c = b.getField("OPERATOR", b), d = b.getNumberValue("LEFTHAND", b), e = b.getNumberValue("RIGHTHAND", b);
   return "PLUS" == c ? d + e : "MINUS" == c ? d - e : "MULTI" == c ? d * e : d / e;
 };
 Blockly.Blocks.calc_plus = {init:function() {
-  this.setColour("#FFD974");
+  this.setColour(calcBlockColor);
   this.appendValueInput("LEFTHAND").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField("+", "#3D3D3D");
+  this.appendDummyInput().appendField("+", calcFontColor);
   this.appendValueInput("RIGHTHAND").setCheck(["Number", "String"]);
   this.setOutput(!0, "Number");
   this.setInputsInline(!0);
-  this.setTooltip(Blockly.Msg.MATH_NUMBER_TOOLTIP);
 }};
 Entry.block.calc_plus = function(a, b) {
   var c = b.getNumberValue("LEFTHAND", b), d = b.getNumberValue("RIGHTHAND", b);
   return c + d;
 };
 Blockly.Blocks.calc_minus = {init:function() {
-  this.setColour("#FFD974");
+  this.setColour(calcBlockColor);
   this.appendValueInput("LEFTHAND").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField("-", "#3D3D3D");
+  this.appendDummyInput().appendField("-", calcFontColor);
   this.appendValueInput("RIGHTHAND").setCheck(["Number", "String"]);
   this.setOutput(!0, "Number");
   this.setInputsInline(!0);
-  this.setTooltip(Blockly.Msg.MATH_NUMBER_TOOLTIP);
 }};
 Entry.block.calc_minus = function(a, b) {
   var c = b.getNumberValue("LEFTHAND", b), d = b.getNumberValue("RIGHTHAND", b);
   return c - d;
 };
 Blockly.Blocks.calc_times = {init:function() {
-  this.setColour("#FFD974");
+  this.setColour(calcBlockColor);
   this.appendValueInput("LEFTHAND").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField("x", "#3D3D3D");
+  this.appendDummyInput().appendField("x", calcFontColor);
   this.appendValueInput("RIGHTHAND").setCheck(["Number", "String"]);
   this.setOutput(!0, "Number");
   this.setInputsInline(!0);
-  this.setTooltip(Blockly.Msg.MATH_NUMBER_TOOLTIP);
 }};
 Entry.block.calc_times = function(a, b) {
   var c = b.getNumberValue("LEFTHAND", b), d = b.getNumberValue("RIGHTHAND", b);
   return c * d;
 };
 Blockly.Blocks.calc_divide = {init:function() {
-  this.setColour("#FFD974");
+  this.setColour(calcBlockColor);
   this.appendValueInput("LEFTHAND").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField("/", "#3D3D3D");
+  this.appendDummyInput().appendField("/", calcFontColor);
   this.appendValueInput("RIGHTHAND").setCheck(["Number", "String"]);
   this.setOutput(!0, "Number");
   this.setInputsInline(!0);
-  this.setTooltip(Blockly.Msg.MATH_NUMBER_TOOLTIP);
 }};
 Entry.block.calc_divide = function(a, b) {
   var c = b.getNumberValue("LEFTHAND", b), d = b.getNumberValue("RIGHTHAND", b);
   return c / d;
 };
 Blockly.Blocks.calc_mod = {init:function() {
-  this.setColour("#FFD974");
-  this.appendDummyInput().appendField(Lang.Blocks.CALC_calc_mod_1, "#3D3D3D");
+  this.setColour(calcBlockColor);
+  this.appendDummyInput().appendField(Lang.Blocks.CALC_calc_mod_1, calcFontColor);
   this.appendValueInput("LEFTHAND").setCheck(["Number", "String"]);
-  this.appendDummyInput("VALUE").appendField(Lang.Blocks.CALC_calc_mod_2, "#3D3D3D");
+  this.appendDummyInput("VALUE").appendField(Lang.Blocks.CALC_calc_mod_2, calcFontColor);
   this.appendValueInput("RIGHTHAND").setCheck(["Number", "String"]);
   this.setOutput(!0, "Number");
-  this.appendDummyInput("VALUE").appendField(Lang.Blocks.CALC_calc_mod_3, "#3D3D3D");
+  this.appendDummyInput("VALUE").appendField(Lang.Blocks.CALC_calc_mod_3, calcFontColor);
   this.setInputsInline(!0);
-  this.setTooltip(Blockly.Msg.MATH_NUMBER_TOOLTIP);
 }};
 Entry.block.calc_mod = function(a, b) {
   var c = b.getNumberValue("LEFTHAND", b), d = b.getNumberValue("RIGHTHAND", b);
   return c % d;
 };
 Blockly.Blocks.calc_share = {init:function() {
-  this.setColour("#FFD974");
-  this.appendDummyInput().appendField(Lang.Blocks.CALC_calc_share_1, "#3D3D3D");
+  this.setColour(calcBlockColor);
+  this.appendDummyInput().appendField(Lang.Blocks.CALC_calc_share_1, calcFontColor);
   this.appendValueInput("LEFTHAND").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.CALC_calc_share_2, "#3D3D3D");
+  this.appendDummyInput().appendField(Lang.Blocks.CALC_calc_share_2, calcFontColor);
   this.appendValueInput("RIGHTHAND").setCheck(["Number", "String"]);
   this.setOutput(!0, "Number");
-  this.appendDummyInput("VALUE").appendField(Lang.Blocks.CALC_calc_share_3, "#3D3D3D");
+  this.appendDummyInput("VALUE").appendField(Lang.Blocks.CALC_calc_share_3, calcFontColor);
   this.setInputsInline(!0);
-  this.setTooltip(Blockly.Msg.MATH_NUMBER_TOOLTIP);
 }};
 Entry.block.calc_share = function(a, b) {
   var c = b.getNumberValue("LEFTHAND", b), d = b.getNumberValue("RIGHTHAND", b);
   return Math.floor(c / d);
 };
 Blockly.Blocks.calc_operation = {init:function() {
-  this.setColour("#FFD974");
-  this.appendDummyInput("VALUE").appendField(Lang.Blocks.CALC_calc_operation_of_1, "#3D3D3D");
+  this.setColour(calcBlockColor);
+  this.appendDummyInput("VALUE").appendField(Lang.Blocks.CALC_calc_operation_of_1, calcFontColor);
   this.appendValueInput("LEFTHAND").setCheck(["Number", "String"]);
-  this.appendDummyInput("VALUE").appendField(Lang.Blocks.CALC_calc_operation_of_2, "#3D3D3D");
+  this.appendDummyInput("VALUE").appendField(Lang.Blocks.CALC_calc_operation_of_2, calcFontColor);
   this.appendDummyInput("VALUE").appendField(new Blockly.FieldDropdown([[Lang.Blocks.CALC_calc_operation_square, "square"], [Lang.Blocks.CALC_calc_operation_root, "root"], [Lang.Blocks.CALC_calc_operation_sin, "sin"], [Lang.Blocks.CALC_calc_operation_cos, "cos"], [Lang.Blocks.CALC_calc_operation_tan, "tan"], [Lang.Blocks.CALC_calc_operation_asin, "asin_radian"], [Lang.Blocks.CALC_calc_operation_acos, "acos_radian"], [Lang.Blocks.CALC_calc_operation_atan, "atan_radian"], [Lang.Blocks.CALC_calc_operation_log, 
-  "log"], [Lang.Blocks.CALC_calc_operation_ln, "ln"], [Lang.Blocks.CALC_calc_operation_unnatural, "unnatural"], [Lang.Blocks.CALC_calc_operation_floor, "floor"], [Lang.Blocks.CALC_calc_operation_ceil, "ceil"], [Lang.Blocks.CALC_calc_operation_round, "round"], [Lang.Blocks.CALC_calc_operation_factorial, "factorial"], [Lang.Blocks.CALC_calc_operation_abs, "abs"]]), "VALUE");
+  "log"], [Lang.Blocks.CALC_calc_operation_ln, "ln"], [Lang.Blocks.CALC_calc_operation_unnatural, "unnatural"], [Lang.Blocks.CALC_calc_operation_floor, "floor"], [Lang.Blocks.CALC_calc_operation_ceil, "ceil"], [Lang.Blocks.CALC_calc_operation_round, "round"], [Lang.Blocks.CALC_calc_operation_factorial, "factorial"], [Lang.Blocks.CALC_calc_operation_abs, "abs"]], null, !0, calcArrowColor), "VALUE");
   this.setOutput(!0, "Number");
   this.appendDummyInput().appendField(" ");
   this.setInputsInline(!0);
-  this.setTooltip(Blockly.Msg.MATH_NUMBER_TOOLTIP);
 }};
 Entry.block.calc_operation = function(a, b) {
   var c = b.getNumberValue("LEFTHAND", b), d = b.getField("VALUE", b), e = 0;
@@ -693,40 +884,37 @@ Entry.block.calc_operation = function(a, b) {
   return Math.round(1E3 * e) / 1E3;
 };
 Blockly.Blocks.calc_rand = {init:function() {
-  this.setColour("#FFD974");
-  this.appendDummyInput().appendField(Lang.Blocks.CALC_calc_rand_1, "#3D3D3D");
+  this.setColour(calcBlockColor);
+  this.appendDummyInput().appendField(Lang.Blocks.CALC_calc_rand_1, calcFontColor);
   this.appendValueInput("LEFTHAND").setCheck(["Number", "String"]);
-  this.appendDummyInput("VALUE").appendField(Lang.Blocks.CALC_calc_rand_2, "#3D3D3D");
+  this.appendDummyInput("VALUE").appendField(Lang.Blocks.CALC_calc_rand_2, calcFontColor);
   this.appendValueInput("RIGHTHAND").setCheck(["Number", "String"]);
   this.setOutput(!0, "Number");
-  this.appendDummyInput("VALUE").appendField(Lang.Blocks.CALC_calc_rand_3, "#3D3D3D");
+  this.appendDummyInput("VALUE").appendField(Lang.Blocks.CALC_calc_rand_3, calcFontColor);
   this.setInputsInline(!0);
-  this.setTooltip(Blockly.Msg.MATH_NUMBER_TOOLTIP);
 }};
 Entry.block.calc_rand = function(a, b) {
   var c = b.getStringValue("LEFTHAND", b), d = b.getStringValue("RIGHTHAND", b), e = Math.min(c, d), f = Math.max(c, d), c = Entry.isFloat(c);
   return Entry.isFloat(d) || c ? (Math.random() * (f - e) + e).toFixed(2) : Math.floor(Math.random() * (f - e + 1) + e);
 };
 Blockly.Blocks.get_date = {init:function() {
-  this.setColour("#FFD974");
-  this.appendDummyInput().appendField(Lang.Blocks.CALC_get_date_1, "#3D3D3D").appendField(new Blockly.FieldDropdown([[Lang.Blocks.CALC_get_date_year, "YEAR"], [Lang.Blocks.CALC_get_date_month, "MONTH"], [Lang.Blocks.CALC_get_date_day, "DAY"], [Lang.Blocks.CALC_get_date_hour, "HOUR"], [Lang.Blocks.CALC_get_date_minute, "MINUTE"], [Lang.Blocks.CALC_get_date_second, "SECOND"]]), "VALUE");
-  this.appendDummyInput().appendField(" ").appendField(Lang.Blocks.CALC_get_date_2, "#3D3D3D");
+  this.setColour(calcBlockColor);
+  this.appendDummyInput().appendField(Lang.Blocks.CALC_get_date_1, calcFontColor).appendField(new Blockly.FieldDropdown([[Lang.Blocks.CALC_get_date_year, "YEAR"], [Lang.Blocks.CALC_get_date_month, "MONTH"], [Lang.Blocks.CALC_get_date_day, "DAY"], [Lang.Blocks.CALC_get_date_hour, "HOUR"], [Lang.Blocks.CALC_get_date_minute, "MINUTE"], [Lang.Blocks.CALC_get_date_second, "SECOND"]], null, !0, calcArrowColor), "VALUE");
+  this.appendDummyInput().appendField(" ").appendField(Lang.Blocks.CALC_get_date_2, calcFontColor);
   this.setOutput(!0, "Number");
   this.setInputsInline(!0);
-  this.setTooltip(Blockly.Msg.MATH_NUMBER_TOOLTIP);
 }};
 Entry.block.get_date = function(a, b) {
   var c = b.getField("VALUE", b), d = new Date;
   return "YEAR" == c ? d.getFullYear() : "MONTH" == c ? d.getMonth() + 1 : "DAY" == c ? d.getDate() : "HOUR" == c ? d.getHours() : "MINUTE" == c ? d.getMinutes() : d.getSeconds();
 };
 Blockly.Blocks.get_sound_duration = {init:function() {
-  this.setColour("#FFD974");
-  this.appendDummyInput().appendField(Lang.Blocks.CALC_get_sound_duration_1, "#3D3D3D");
-  this.appendDummyInput().appendField(new Blockly.FieldDropdownDynamic("sounds"), "VALUE");
-  this.appendDummyInput().appendField(Lang.Blocks.CALC_get_sound_duration_2, "#3D3D3D");
+  this.setColour(calcBlockColor);
+  this.appendDummyInput().appendField(Lang.Blocks.CALC_get_sound_duration_1, calcFontColor);
+  this.appendDummyInput().appendField(new Blockly.FieldDropdownDynamic("sounds", null, !0, calcArrowColor), "VALUE");
+  this.appendDummyInput().appendField(Lang.Blocks.CALC_get_sound_duration_2, calcFontColor);
   this.setOutput(!0, "Number");
   this.setInputsInline(!0);
-  this.setTooltip("");
 }};
 Entry.block.get_sound_duration = function(a, b) {
   for (var c = b.getField("VALUE", b), d = a.parent.sounds, e = 0;e < d.length;e++) {
@@ -736,12 +924,11 @@ Entry.block.get_sound_duration = function(a, b) {
   }
 };
 Blockly.Blocks.reset_project_timer = {init:function() {
-  this.setColour("#FFD974");
-  this.appendDummyInput().appendField(Lang.Blocks.CALC_timer_reset, "#3D3D3D");
+  this.setColour(calcBlockColor);
+  this.appendDummyInput().appendField(Lang.Blocks.CALC_timer_reset, calcFontColor);
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-  this.setTooltip(Blockly.Msg.MATH_NUMBER_TOOLTIP);
 }, whenAdd:function() {
   Entry.engine.showProjectTimer();
 }, whenRemove:function(a) {
@@ -752,14 +939,13 @@ Entry.block.reset_project_timer = function(a, b) {
   return b.callReturn();
 };
 Blockly.Blocks.set_visible_project_timer = {init:function() {
-  this.setColour("#FFD974");
-  this.appendDummyInput().appendField(Lang.Blocks.CALC_timer_visible_1, "#3D3D3D");
-  this.appendDummyInput().appendField(new Blockly.FieldDropdown([[Lang.Blocks.CALC_timer_visible_show, "SHOW"], [Lang.Blocks.CALC_timer_visible_hide, "HIDE"]]), "ACTION");
-  this.appendDummyInput().appendField(Lang.Blocks.CALC_timer_visible_2, "#3D3D3D");
+  this.setColour(calcBlockColor);
+  this.appendDummyInput().appendField(Lang.Blocks.CALC_timer_visible_1, calcFontColor);
+  this.appendDummyInput().appendField(new Blockly.FieldDropdown([[Lang.Blocks.CALC_timer_visible_show, "SHOW"], [Lang.Blocks.CALC_timer_visible_hide, "HIDE"]], null, !0, calcArrowColor), "ACTION");
+  this.appendDummyInput().appendField(Lang.Blocks.CALC_timer_visible_2, calcFontColor).appendField(new Blockly.FieldIcon("/img/assets/block_icon/calc_01.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-  this.setTooltip(Blockly.Msg.MATH_NUMBER_TOOLTIP);
 }, whenAdd:function() {
   Entry.engine.showProjectTimer();
 }, whenRemove:function(a) {
@@ -770,12 +956,20 @@ Entry.block.set_visible_project_timer = function(a, b) {
   "SHOW" == c ? d.setVisible(!0) : d.setVisible(!1);
   return b.callReturn();
 };
-Blockly.Blocks.get_project_timer_value = {init:function() {
-  this.setColour("#FFD974");
-  this.appendDummyInput().appendField(Lang.Blocks.CALC_get_timer_value, "#3D3D3D").appendField(" ", "#3D3D3D");
+Blockly.Blocks.timer_variable = {init:function() {
+  this.setColour(calcBlockColor);
+  this.appendDummyInput().appendField(Lang.Blocks.CALC_get_timer_value, calcFontColor).appendField(" ", calcFontColor);
   this.setOutput(!0, "Number");
   this.setInputsInline(!0);
-  this.setTooltip(Blockly.Msg.MATH_NUMBER_TOOLTIP);
+}};
+Entry.block.timer_variable = function(a, b) {
+  return Entry.container.inputValue.getValue();
+};
+Blockly.Blocks.get_project_timer_value = {init:function() {
+  this.setColour(calcBlockColor);
+  this.appendDummyInput().appendField(Lang.Blocks.CALC_get_timer_value, calcFontColor).appendField(" ", calcFontColor);
+  this.setOutput(!0, "Number");
+  this.setInputsInline(!0);
 }, whenAdd:function() {
   Entry.engine.showProjectTimer();
 }, whenRemove:function(a) {
@@ -784,15 +978,161 @@ Blockly.Blocks.get_project_timer_value = {init:function() {
 Entry.block.get_project_timer_value = function(a, b) {
   return Entry.engine.projectTimer.getValue();
 };
+Blockly.Blocks.char_at = {init:function() {
+  this.setColour(calcBlockColor);
+  this.appendDummyInput().appendField(Lang.Blocks.CALC_char_at_1, calcFontColor);
+  this.appendValueInput("LEFTHAND").setCheck(["Number", "String"]);
+  this.appendDummyInput("VALUE").appendField(Lang.Blocks.CALC_char_at_2, calcFontColor);
+  this.appendValueInput("RIGHTHAND").setCheck(["Number", "String"]);
+  this.setOutput(!0, "Number");
+  this.appendDummyInput("VALUE").appendField(Lang.Blocks.CALC_char_at_3, calcFontColor);
+  this.setInputsInline(!0);
+}};
+Entry.block.char_at = function(a, b) {
+  var c = b.getStringValue("LEFTHAND", b), d = b.getNumberValue("RIGHTHAND", b) - 1;
+  if (0 > d || d > c.length - 1) {
+    throw Error();
+  }
+  return c[d];
+};
+Blockly.Blocks.length_of_string = {init:function() {
+  this.setColour(calcBlockColor);
+  this.appendDummyInput().appendField(Lang.Blocks.CALC_length_of_string_1, calcFontColor);
+  this.appendValueInput("STRING").setCheck(["Number", "String"]);
+  this.appendDummyInput("VALUE").appendField(Lang.Blocks.CALC_length_of_string_2, calcFontColor);
+  this.setOutput(!0, "Number");
+  this.setInputsInline(!0);
+}};
+Entry.block.length_of_string = function(a, b) {
+  return b.getStringValue("STRING", b).length;
+};
+Blockly.Blocks.substring = {init:function() {
+  this.setColour(calcBlockColor);
+  this.appendDummyInput().appendField(Lang.Blocks.CALC_substring_1, calcFontColor);
+  this.appendValueInput("STRING").setCheck(["Number", "String"]);
+  this.appendDummyInput("VALUE").appendField(Lang.Blocks.CALC_substring_2, calcFontColor);
+  this.appendValueInput("START").setCheck(["Number", "String"]);
+  this.appendDummyInput("VALUE").appendField(Lang.Blocks.CALC_substring_3, calcFontColor);
+  this.appendValueInput("END").setCheck(["Number", "String"]);
+  this.appendDummyInput("VALUE").appendField(Lang.Blocks.CALC_substring_4, calcFontColor);
+  this.setOutput(!0, "String");
+  this.setInputsInline(!0);
+}};
+Entry.block.substring = function(a, b) {
+  var c = b.getStringValue("STRING", b), d = b.getNumberValue("START", b) - 1, e = b.getNumberValue("END", b) - 1, f = c.length - 1;
+  if (0 > d || 0 > e || d > f || e > f) {
+    throw Error();
+  }
+  return c.substring(Math.min(d, e), Math.max(d, e) + 1);
+};
+Blockly.Blocks.replace_string = {init:function() {
+  this.setColour(calcBlockColor);
+  this.appendDummyInput().appendField(Lang.Blocks.CALC_replace_string_1, calcFontColor);
+  this.appendValueInput("STRING").setCheck(["Number", "String"]);
+  this.appendDummyInput("VALUE").appendField(Lang.Blocks.CALC_replace_string_2, calcFontColor);
+  this.appendValueInput("OLD_WORD").setCheck(["Number", "String"]);
+  this.appendDummyInput("VALUE").appendField(Lang.Blocks.CALC_replace_string_3, calcFontColor);
+  this.appendValueInput("NEW_WORD").setCheck(["Number", "String"]);
+  this.appendDummyInput("VALUE").appendField(Lang.Blocks.CALC_replace_string_4, calcFontColor);
+  this.setOutput(!0, "String");
+  this.setInputsInline(!0);
+}};
+Entry.block.replace_string = function(a, b) {
+  return b.getStringValue("STRING", b).replace(b.getStringValue("OLD_WORD", b), b.getStringValue("NEW_WORD", b));
+};
+Blockly.Blocks.change_string_case = {init:function() {
+  this.setColour(calcBlockColor);
+  this.appendDummyInput().appendField(Lang.Blocks.CALC_change_string_case_1, calcFontColor);
+  this.appendValueInput("STRING").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField(Lang.Blocks.CALC_change_string_case_2, calcFontColor);
+  this.appendDummyInput().appendField(new Blockly.FieldDropdown([[Lang.Blocks.CALC_change_string_case_sub_1, "toUpperCase"], [Lang.Blocks.CALC_change_string_case_sub_2, "toLowerCase"]], null, !0, calcArrowColor), "CASE");
+  this.appendDummyInput().appendField(Lang.Blocks.CALC_change_string_case_3, calcFontColor);
+  this.setOutput(!0, "String");
+  this.setInputsInline(!0);
+}};
+Entry.block.change_string_case = function(a, b) {
+  return b.getStringValue("STRING", b)[b.getField("CASE", b)]();
+};
+Blockly.Blocks.index_of_string = {init:function() {
+  this.setColour(calcBlockColor);
+  this.appendDummyInput().appendField(Lang.Blocks.CALC_index_of_string_1, calcFontColor);
+  this.appendValueInput("LEFTHAND").setCheck(["Number", "String"]);
+  this.appendDummyInput("VALUE").appendField(Lang.Blocks.CALC_index_of_string_2, calcFontColor);
+  this.appendValueInput("RIGHTHAND").setCheck(["Number", "String"]);
+  this.setOutput(!0, "Number");
+  this.appendDummyInput("VALUE").appendField(Lang.Blocks.CALC_index_of_string_3, calcFontColor);
+  this.setInputsInline(!0);
+}};
+Entry.block.index_of_string = function(a, b) {
+  var c = b.getStringValue("LEFTHAND", b), d = b.getStringValue("RIGHTHAND", b), c = c.indexOf(d);
+  return -1 < c ? c + 1 : 0;
+};
+Blockly.Blocks.combine_something = {init:function() {
+  this.setColour(calcBlockColor);
+  this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_combine_something_1, calcFontColor);
+  this.appendValueInput("VALUE1").setCheck(["String", "Number", null]);
+  this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_combine_something_2, calcFontColor);
+  this.appendValueInput("VALUE2").setCheck(["String", "Number", null]);
+  this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_combine_something_3, calcFontColor);
+  this.setInputsInline(!0);
+  this.setOutput(!0, "String");
+}};
+Entry.block.combine_something = function(a, b) {
+  var c = b.getStringValue("VALUE1", b), d = b.getStringValue("VALUE2", b);
+  isNaN(c) || (c = Entry.convertToRoundedDecimals(c, 3));
+  isNaN(d) || (d = Entry.convertToRoundedDecimals(d, 3));
+  return c + d;
+};
+Blockly.Blocks.get_sound_volume = {init:function() {
+  this.setColour(calcBlockColor);
+  this.appendDummyInput().appendField(Lang.Blocks.CALC_get_sound_volume, calcFontColor).appendField(" ", calcFontColor);
+  this.setOutput(!0, "Number");
+  this.setInputsInline(!0);
+}};
+Entry.block.get_sound_volume = function(a, b) {
+  return 100 * createjs.Sound.getVolume();
+};
+Blockly.Blocks.quotient_and_mod = {init:function() {
+  this.setColour(calcBlockColor);
+  "ko" == Lang.type ? (this.appendDummyInput().appendField(Lang.Blocks.CALC_quotient_and_mod_1, calcFontColor), this.appendValueInput("LEFTHAND").setCheck(["Number", "String"]), this.appendDummyInput().appendField(Lang.Blocks.CALC_quotient_and_mod_2, calcFontColor), this.appendValueInput("RIGHTHAND").setCheck(["Number", "String"]), this.appendDummyInput().appendField(Lang.Blocks.CALC_quotient_and_mod_3, calcFontColor).appendField(new Blockly.FieldDropdown([[Lang.Blocks.CALC_quotient_and_mod_sub_1, 
+  "QUOTIENT"], [Lang.Blocks.CALC_quotient_and_mod_sub_2, "MOD"]], null, !0, calcArrowColor), "OPERATOR")) : "en" == Lang.type && (this.appendDummyInput().appendField(Lang.Blocks.CALC_quotient_and_mod_1, calcFontColor).appendField(new Blockly.FieldDropdown([[Lang.Blocks.CALC_quotient_and_mod_sub_1, "QUOTIENT"], [Lang.Blocks.CALC_quotient_and_mod_sub_2, "MOD"]], null, !0, calcArrowColor), "OPERATOR"), this.appendDummyInput().appendField(Lang.Blocks.CALC_quotient_and_mod_2, calcFontColor), this.appendValueInput("LEFTHAND").setCheck(["Number", 
+  "String"]), this.appendDummyInput().appendField(Lang.Blocks.CALC_quotient_and_mod_3, calcFontColor), this.appendValueInput("RIGHTHAND").setCheck(["Number", "String"]));
+  this.appendDummyInput().appendField(Lang.Blocks.CALC_quotient_and_mod_4, calcFontColor);
+  this.setOutput(!0, "Number");
+  this.setInputsInline(!0);
+}};
+Entry.block.quotient_and_mod = function(a, b) {
+  var c = b.getNumberValue("LEFTHAND", b), d = b.getNumberValue("RIGHTHAND", b);
+  if (isNaN(c) || isNaN(d)) {
+    throw Error();
+  }
+  return "QUOTIENT" == b.getField("OPERATOR", b) ? Math.floor(c / d) : c % d;
+};
+Blockly.Blocks.choose_project_timer_action = {init:function() {
+  this.setColour(calcBlockColor);
+  this.appendDummyInput().appendField(Lang.Blocks.CALC_choose_project_timer_action_1, calcFontColor).appendField(new Blockly.FieldDropdown([[Lang.Blocks.CALC_choose_project_timer_action_sub_1, "START"], [Lang.Blocks.CALC_choose_project_timer_action_sub_2, "STOP"], [Lang.Blocks.CALC_choose_project_timer_action_sub_3, "RESET"]], null, !0, calcArrowColor), "ACTION").appendField(Lang.Blocks.CALC_choose_project_timer_action_2, calcFontColor).appendField(new Blockly.FieldIcon("/img/assets/block_icon/calc_01.png", 
+  "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}, whenAdd:function() {
+  Entry.engine.showProjectTimer();
+}, whenRemove:function(a) {
+  Entry.engine.hideProjectTimer(a);
+}};
+Entry.block.choose_project_timer_action = function(a, b) {
+  var c = b.getField("ACTION"), d = Entry.engine, e = d.projectTimer;
+  "START" == c ? e.isInit ? e.isInit && e.isPaused && (e.pauseStart && (e.pausedTime += (new Date).getTime() - e.pauseStart), delete e.pauseStart, e.isPaused = !1) : d.startProjectTimer() : "STOP" == c ? e.isInit && !e.isPaused && (e.isPaused = !0, e.pauseStart = (new Date).getTime()) : "RESET" == c && e.isInit && (e.setValue(0), e.start = (new Date).getTime(), e.pausedTime = 0, delete e.pauseStart);
+  return b.callReturn();
+};
 Blockly.Blocks.wait_second = {init:function() {
   this.setColour("#498deb");
   this.appendDummyInput().appendField(Lang.Blocks.FLOW_wait_second_1);
   this.appendValueInput("SECOND").setCheck(["Number", "String", null]);
-  this.appendDummyInput().appendField(Lang.Blocks.FLOW_wait_second_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_flow.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.FLOW_wait_second_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/flow_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-  this.setTooltip("");
 }};
 Entry.block.wait_second = function(a, b) {
   if (b.isStart) {
@@ -816,12 +1156,11 @@ Blockly.Blocks.repeat_basic = {init:function() {
   this.setColour("#498deb");
   this.appendDummyInput().appendField(Lang.Blocks.FLOW_repeat_basic_1);
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.FLOW_repeat_basic_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_flow.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.FLOW_repeat_basic_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/flow_03.png", "*"));
   this.appendStatementInput("DO");
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-  this.setTooltip("");
 }};
 Entry.block.repeat_basic = function(a, b) {
   var c;
@@ -841,12 +1180,11 @@ Entry.block.repeat_basic = function(a, b) {
 };
 Blockly.Blocks.repeat_inf = {init:function() {
   this.setColour("#498deb");
-  this.appendDummyInput().appendField(Lang.Blocks.FLOW_repeat_inf).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_flow.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.FLOW_repeat_inf).appendField(new Blockly.FieldIcon("/img/assets/block_icon/flow_03.png", "*"));
   this.appendStatementInput("DO");
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-  this.setTooltip("");
 }};
 Entry.block.repeat_inf = function(a, b) {
   b.isLooped = !0;
@@ -854,11 +1192,10 @@ Entry.block.repeat_inf = function(a, b) {
 };
 Blockly.Blocks.stop_repeat = {init:function() {
   this.setColour("#498deb");
-  this.appendDummyInput().appendField(Lang.Blocks.FLOW_stop_repeat).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_flow.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.FLOW_stop_repeat).appendField(new Blockly.FieldIcon("/img/assets/block_icon/flow_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-  this.setTooltip("");
 }};
 Entry.block.stop_repeat = function(a, b) {
   for (var c = b;"REPEAT" != c.type.substr(0, 6).toUpperCase() && c.parentScript;) {
@@ -871,11 +1208,10 @@ Blockly.Blocks.wait_until_true = {init:function() {
   this.setColour("#498deb");
   this.appendDummyInput().appendField(Lang.Blocks.FLOW_wait_until_true_1);
   this.appendValueInput("BOOL").setCheck("Boolean");
-  this.appendDummyInput().appendField(Lang.Blocks.FLOW_wait_until_true_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_flow.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.FLOW_wait_until_true_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/flow_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-  this.setTooltip("");
 }};
 Entry.block.wait_until_true = function(a, b) {
   return b.getBooleanValue("BOOL", b) ? b.callReturn() : b;
@@ -884,12 +1220,11 @@ Blockly.Blocks._if = {init:function() {
   this.setColour("#498deb");
   this.appendDummyInput().appendField(Lang.Blocks.FLOW__if_1);
   this.appendValueInput("BOOL").setCheck("Boolean");
-  this.appendDummyInput().appendField(Lang.Blocks.FLOW__if_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_flow.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.FLOW__if_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/flow_03.png", "*"));
   this.appendStatementInput("STACK");
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-  this.setTooltip("");
 }};
 Entry.block._if = function(a, b) {
   return b.isLooped ? (delete b.isLooped, b.callReturn()) : b.getBooleanValue("BOOL", b) ? (b.isLooped = !0, b.getStatement("STACK", b)) : b.callReturn();
@@ -898,14 +1233,13 @@ Blockly.Blocks.if_else = {init:function() {
   this.setColour("#498deb");
   this.appendDummyInput().appendField(Lang.Blocks.FLOW_if_else_1);
   this.appendValueInput("BOOL").setCheck("Boolean");
-  this.appendDummyInput().appendField(Lang.Blocks.FLOW_if_else_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_flow.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.FLOW_if_else_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/flow_03.png", "*"));
   this.appendStatementInput("STACK_IF");
   this.appendDummyInput().appendField(Lang.Blocks.FLOW_if_else_3);
   this.appendStatementInput("STACK_ELSE");
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-  this.setTooltip("");
 }};
 Entry.block.if_else = function(a, b) {
   if (b.isLooped) {
@@ -919,11 +1253,10 @@ Blockly.Blocks.create_clone = {init:function() {
   this.setColour("#498deb");
   this.appendDummyInput().appendField(Lang.Blocks.FLOW_create_clone_1);
   this.appendDummyInput().appendField(new Blockly.FieldDropdownDynamic("clone"), "VALUE");
-  this.appendDummyInput().appendField(Lang.Blocks.FLOW_create_clone_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_flow.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.FLOW_create_clone_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/flow_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-  this.setTooltip("");
 }};
 Entry.block.create_clone = function(a, b) {
   var c = b.getField("VALUE", b), d = b.callReturn();
@@ -932,10 +1265,9 @@ Entry.block.create_clone = function(a, b) {
 };
 Blockly.Blocks.delete_clone = {init:function() {
   this.setColour("#498deb");
-  this.appendDummyInput().appendField(Lang.Blocks.FLOW_delete_clone).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_flow.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.FLOW_delete_clone).appendField(new Blockly.FieldIcon("/img/assets/block_icon/flow_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
-  this.setTooltip("");
 }};
 Entry.block.delete_clone = function(a, b) {
   if (!a.isClone) {
@@ -948,16 +1280,14 @@ Blockly.Blocks.when_clone_start = {init:function() {
   this.appendDummyInput().appendField(new Blockly.FieldIcon("/img/assets/block_icon/start_icon_clone.png", "*", "start")).appendField(Lang.Blocks.FLOW_when_clone_start);
   this.setInputsInline(!0);
   this.setNextStatement(!0);
-  this.setTooltip("");
 }};
 Entry.block.when_clone_start = function(a, b) {
   return b.callReturn();
 };
 Blockly.Blocks.stop_run = {init:function() {
   this.setColour("#498deb");
-  this.appendDummyInput().appendField(Lang.Blocks.FLOW_stop_run).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_flow.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.FLOW_stop_run).appendField(new Blockly.FieldIcon("/img/assets/block_icon/flow_03.png", "*"));
   this.setInputsInline(!0);
-  this.setTooltip("");
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
 }};
@@ -968,12 +1298,11 @@ Blockly.Blocks.repeat_while_true = {init:function() {
   this.setColour("#498deb");
   this.appendDummyInput().appendField(Lang.Blocks.FLOW_repeat_while_true_1);
   this.appendValueInput("BOOL").setCheck("Boolean");
-  this.appendDummyInput().appendField(Lang.Blocks.FLOW_repeat_while_true_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_flow.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.FLOW_repeat_while_true_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/flow_03.png", "*"));
   this.appendStatementInput("DO");
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-  this.setTooltip("");
 }};
 Entry.block.repeat_while_true = function(a, b) {
   if (b.getBooleanValue("BOOL", b)) {
@@ -985,12 +1314,11 @@ Entry.block.repeat_while_true = function(a, b) {
 Blockly.Blocks.stop_object = {init:function() {
   this.setColour("#498deb");
   this.appendDummyInput().appendField(Lang.Blocks.FLOW_stop_object_1);
-  this.appendDummyInput().appendField(new Blockly.FieldDropdown([[Lang.Blocks.FLOW_stop_object_all, "all"], [Lang.Blocks.FLOW_stop_object_this_object, "thisObject"], [Lang.Blocks.FLOW_stop_object_this_thread, "thisThread"], [Lang.Blocks.FLOW_stop_object_other_thread, "otherThread"]]), "TARGET");
-  this.appendDummyInput().appendField(Lang.Blocks.FLOW_stop_object_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_flow.png", "*"));
+  this.appendDummyInput().appendField(new Blockly.FieldDropdown([[Lang.Blocks.FLOW_stop_object_all, "all"], [Lang.Blocks.FLOW_stop_object_this_object, "thisOnly"], [Lang.Blocks.FLOW_stop_object_this_thread, "thisThread"], [Lang.Blocks.FLOW_stop_object_other_thread, "otherThread"]]), "TARGET");
+  this.appendDummyInput().appendField(Lang.Blocks.FLOW_stop_object_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/flow_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-  this.setTooltip("");
 }};
 Entry.block.stop_object = function(a, b) {
   var c = b.getField("TARGET", b), d = Entry.container;
@@ -1007,6 +1335,9 @@ Entry.block.stop_object = function(a, b) {
         a.clearScript();
       });
       break;
+    case "thisOnly":
+      a.clearScript();
+      break;
     case "otherThread":
       return a.clearScript(), c = a.parent.clonedEntities, c.map(function(a) {
         a.clearScript();
@@ -1016,10 +1347,9 @@ Entry.block.stop_object = function(a, b) {
 };
 Blockly.Blocks.restart_project = {init:function() {
   this.setColour("#498deb");
-  this.appendDummyInput().appendField(Lang.Blocks.FLOW_restart).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_flow.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.FLOW_restart).appendField(new Blockly.FieldIcon("/img/assets/block_icon/flow_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
-  this.setTooltip("");
 }};
 Entry.block.restart_project = function(a, b) {
   Entry.engine.toggleStop();
@@ -1027,11 +1357,10 @@ Entry.block.restart_project = function(a, b) {
 };
 Blockly.Blocks.remove_all_clones = {init:function() {
   this.setColour("#498deb");
-  this.appendDummyInput().appendField(Lang.Blocks.FLOW_delete_clone_all).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_flow.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.FLOW_delete_clone_all).appendField(new Blockly.FieldIcon("/img/assets/block_icon/flow_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-  this.setTooltip("");
 }};
 Entry.block.remove_all_clones = function(a, b) {
   var c = a.parent.getClonedEntities();
@@ -1047,7 +1376,6 @@ Blockly.Blocks.function_field_label = {init:function() {
   this.appendValueInput("NEXT").setCheck(["Param"]);
   this.setOutput(!0, "Param");
   this.setInputsInline(!0);
-  this.setTooltip("");
 }};
 Blockly.Blocks.function_field_string = {init:function() {
   this.setColour("#ffec64");
@@ -1055,7 +1383,6 @@ Blockly.Blocks.function_field_string = {init:function() {
   this.appendValueInput("NEXT").setCheck(["Param"]);
   this.setOutput(!0, "Param");
   this.setInputsInline(!0);
-  this.setTooltip("");
 }};
 Blockly.Blocks.function_field_boolean = {init:function() {
   this.setColour("#2FC9F0");
@@ -1063,14 +1390,12 @@ Blockly.Blocks.function_field_boolean = {init:function() {
   this.appendValueInput("NEXT").setCheck(["Param"]);
   this.setOutput(!0, "Param");
   this.setInputsInline(!0);
-  this.setTooltip("");
 }};
 Blockly.Blocks.function_param_string = {init:function() {
   this.setEditable(!1);
   this.setColour("#ffec64");
   this.setOutput(!0, ["String", "Number"]);
   this.setInputsInline(!0);
-  this.setTooltip("");
 }, domToMutation:function(a) {
   a.getElementsByTagName("field");
   this.hashId = a.getAttribute("hashid");
@@ -1089,7 +1414,6 @@ Blockly.Blocks.function_param_boolean = {init:function() {
   this.setColour("#2FC9F0");
   this.setOutput(!0, "Boolean");
   this.setInputsInline(!0);
-  this.setTooltip("");
 }, domToMutation:function(a) {
   a.getElementsByTagName("field");
   this.hashId = a.getAttribute("hashid");
@@ -1107,10 +1431,9 @@ Blockly.Blocks.function_create = {init:function() {
   this.appendDummyInput().appendField(Lang.Blocks.FUNCTION_define);
   this.setColour("#cc7337");
   this.appendValueInput("FIELD").setCheck(["Param"]);
-  this.appendDummyInput().appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_function.png", "*"));
+  this.appendDummyInput().appendField(new Blockly.FieldIcon("/img/assets/block_icon/function_03.png", "*"));
   this.setInputsInline(!0);
   this.setNextStatement(!0);
-  this.setTooltip("");
 }};
 Entry.block.function_create = function(a, b) {
   return b.callReturn();
@@ -1120,7 +1443,6 @@ Blockly.Blocks.function_general = {init:function() {
   this.setInputsInline(!0);
   this.setNextStatement(!0);
   this.setPreviousStatement(!0);
-  this.setTooltip("");
 }, domToMutation:function(a) {
   var b = a.getElementsByTagName("field");
   this.appendDummyInput().appendField("");
@@ -1137,8 +1459,9 @@ Blockly.Blocks.function_general = {init:function() {
       case "boolean":
         this.appendValueInput(e).setCheck(["Boolean"]);
     }
+    this.hashId = a.getAttribute("hashid");
   }
-  this.hashId = a.getAttribute("hashid");
+  this.appendDummyInput().appendField(new Blockly.FieldIcon("/img/assets/block_icon/function_03.png", "*"));
 }, mutationToDom:function() {
   for (var a = document.createElement("mutation"), b = 1;b < this.inputList.length;b++) {
     var c = this.inputList[b];
@@ -1171,36 +1494,488 @@ Entry.block.function_general = function(a, b) {
   }
   return b;
 };
+Entry.Hamster = {PORT_MAP:{leftWheel:0, rightWheel:0, buzzer:0, outputA:0, outputB:0, leftLed:0, rightLed:0, note:0, ioModeA:0, ioModeB:0}, setZero:function() {
+  var a = Entry.Hamster.PORT_MAP, b;
+  for (b in a) {
+    Entry.hw.sendQueue[b] = a[b];
+  }
+  Entry.hw.update();
+  Entry.Hamster.tempo = 60;
+}, tempo:60, name:"hamster"};
+Blockly.Blocks.hamster_move_forward = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("\uc55e\uc73c\ub85c \uc774\ub3d9\ud558\uae30").appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.hamster_move_forward = function(a, b) {
+  var c = Entry.hw.sendQueue;
+  if (b.isStart) {
+    if (1 == b.timeFlag) {
+      return c.leftWheel = 50, c.rightWheel = 50, b;
+    }
+    delete b.timeFlag;
+    delete b.isStart;
+    Entry.engine.isContinue = !1;
+    c.leftWheel = 0;
+    c.rightWheel = 0;
+    return b.callReturn();
+  }
+  b.isStart = !0;
+  b.timeFlag = 1;
+  setTimeout(function() {
+    b.timeFlag = 0;
+  }, 1E3);
+  return b;
+};
+Blockly.Blocks.hamster_move_backward = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("\ub4a4\ub85c \uc774\ub3d9\ud558\uae30").appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.hamster_move_backward = function(a, b) {
+  var c = Entry.hw.sendQueue;
+  if (b.isStart) {
+    if (1 == b.timeFlag) {
+      return c.leftWheel = -50, c.rightWheel = -50, b;
+    }
+    delete b.timeFlag;
+    delete b.isStart;
+    Entry.engine.isContinue = !1;
+    c.leftWheel = 0;
+    c.rightWheel = 0;
+    return b.callReturn();
+  }
+  b.isStart = !0;
+  b.timeFlag = 1;
+  setTimeout(function() {
+    b.timeFlag = 0;
+  }, 1E3);
+  return b;
+};
+Blockly.Blocks.hamster_turn_around = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("").appendField(new Blockly.FieldDropdown([["\uc67c\ucabd", "LEFT"], ["\uc624\ub978\ucabd", "RIGHT"]]), "DIRECTION").appendField(" \uc73c\ub85c \ub3cc\uae30").appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.hamster_turn_around = function(a, b) {
+  var c = Entry.hw.sendQueue;
+  if (b.isStart) {
+    if (1 == b.timeFlag) {
+      return c.leftWheel = b.leftValue, c.rightWheel = b.rightValue, b;
+    }
+    delete b.timeFlag;
+    delete b.isStart;
+    delete b.leftValue;
+    delete b.rightValue;
+    Entry.engine.isContinue = !1;
+    c.leftWheel = 0;
+    c.rightWheel = 0;
+    return b.callReturn();
+  }
+  c = "LEFT" == b.getField("DIRECTION", b);
+  b.leftValue = c ? -50 : 50;
+  b.rightValue = c ? 50 : -50;
+  b.isStart = !0;
+  b.timeFlag = 1;
+  setTimeout(function() {
+    b.timeFlag = 0;
+  }, 1E3);
+  return b;
+};
+Blockly.Blocks.hamster_set_led_to = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("").appendField(new Blockly.FieldDropdown([["\uc67c\ucabd", "LEFT"], ["\uc624\ub978\ucabd", "RIGHT"], ["\uc591\ucabd", "FRONT"]]), "DIRECTION").appendField(" LED\ub97c").appendField(new Blockly.FieldDropdown([["\ube68\uac04\uc0c9", "4"], ["\ub178\ub780\uc0c9", "6"], ["\ucd08\ub85d\uc0c9", "2"], ["\ud558\ub298\uc0c9", "3"], ["\ud30c\ub780\uc0c9", "1"], ["\ubcf4\ub77c\uc0c9", "5"], ["\ud558\uc580\uc0c9", "7"]]), "COLOR").appendField(" \uc73c\ub85c \ud558\uae30").appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", 
+  "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.hamster_set_led_to = function(a, b) {
+  var c = Entry.hw.sendQueue, d = b.getField("DIRECTION", b), e = Number(b.getField("COLOR", b));
+  "FRONT" == d ? (c.leftLed = e, c.rightLed = e) : "LEFT" == d ? c.leftLed = e : c.rightLed = e;
+  return b.callReturn();
+};
+Blockly.Blocks.hamster_clear_led = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("").appendField(new Blockly.FieldDropdown([["\uc67c\ucabd", "LEFT"], ["\uc624\ub978\ucabd", "RIGHT"], ["\uc591\ucabd", "FRONT"]]), "DIRECTION").appendField(" LED \ub044\uae30").appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.hamster_clear_led = function(a, b) {
+  var c = Entry.hw.sendQueue, d = b.getField("DIRECTION", b);
+  "FRONT" == d ? (c.leftLed = 0, c.rightLed = 0) : "LEFT" == d ? c.leftLed = 0 : c.rightLed = 0;
+  return b.callReturn();
+};
+Blockly.Blocks.hamster_beep = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("\uc090 \uc18c\ub9ac\ub0b4\uae30").appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.hamster_beep = function(a, b) {
+  var c = Entry.hw.sendQueue;
+  if (b.isStart) {
+    return delete b.timeFlag, delete b.isStart, Entry.engine.isContinue = !1, c.buzzer = 0, b.callReturn();
+  }
+  b.isStart = !0;
+  b.timeFlag = 1;
+  delete c.note;
+  c.buzzer = 440;
+  setTimeout(function() {
+    b.timeFlag = 0;
+  }, 200);
+  return b;
+};
+Blockly.Blocks.hamster_hand_found = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("\uc190 \ucc3e\uc74c?");
+  this.setOutput(!0, "Boolean");
+  this.setInputsInline(!0);
+}};
+Entry.block.hamster_hand_found = function(a, b) {
+  var c = Entry.hw.portData;
+  return 40 < c.leftProximity || 40 < c.rightProximity;
+};
+Blockly.Blocks.hamster_move_forward_for_secs = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("\uc55e\uc73c\ub85c ");
+  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField("\ucd08 \uc774\ub3d9\ud558\uae30").appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.hamster_move_forward_for_secs = function(a, b) {
+  var c = Entry.hw.sendQueue;
+  if (b.isStart) {
+    if (1 == b.timeFlag) {
+      return c.leftWheel = 50, c.rightWheel = 50, b;
+    }
+    delete b.timeFlag;
+    delete b.isStart;
+    Entry.engine.isContinue = !1;
+    c.leftWheel = 0;
+    c.rightWheel = 0;
+    return b.callReturn();
+  }
+  b.isStart = !0;
+  b.timeFlag = 1;
+  c = 1E3 * b.getNumberValue("VALUE");
+  setTimeout(function() {
+    b.timeFlag = 0;
+  }, c);
+  return b;
+};
+Blockly.Blocks.hamster_move_backward_for_secs = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("\ub4a4\ub85c ");
+  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField("\ucd08 \uc774\ub3d9\ud558\uae30").appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.hamster_move_backward_for_secs = function(a, b) {
+  var c = Entry.hw.sendQueue;
+  if (b.isStart) {
+    if (1 == b.timeFlag) {
+      return c.leftWheel = -50, c.rightWheel = -50, b;
+    }
+    delete b.timeFlag;
+    delete b.isStart;
+    Entry.engine.isContinue = !1;
+    c.leftWheel = 0;
+    c.rightWheel = 0;
+    return b.callReturn();
+  }
+  b.isStart = !0;
+  b.timeFlag = 1;
+  c = 1E3 * b.getNumberValue("VALUE");
+  setTimeout(function() {
+    b.timeFlag = 0;
+  }, c);
+  return b;
+};
+Blockly.Blocks.hamster_turn_for_secs = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("").appendField(new Blockly.FieldDropdown([["\uc67c\ucabd", "LEFT"], ["\uc624\ub978\ucabd", "RIGHT"]]), "DIRECTION").appendField(" \uc73c\ub85c");
+  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField("\ucd08 \ub3cc\uae30").appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.hamster_turn_for_secs = function(a, b) {
+  var c = Entry.hw.sendQueue;
+  if (b.isStart) {
+    if (1 == b.timeFlag) {
+      return c.leftWheel = b.leftValue, c.rightWheel = b.rightValue, b;
+    }
+    delete b.timeFlag;
+    delete b.isStart;
+    delete b.leftValue;
+    delete b.rightValue;
+    Entry.engine.isContinue = !1;
+    c.leftWheel = 0;
+    c.rightWheel = 0;
+    return b.callReturn();
+  }
+  c = "LEFT" == b.getField("DIRECTION", b);
+  b.leftValue = c ? -50 : 50;
+  b.rightValue = c ? 50 : -50;
+  b.isStart = !0;
+  b.timeFlag = 1;
+  c = 1E3 * b.getNumberValue("VALUE");
+  setTimeout(function() {
+    b.timeFlag = 0;
+  }, c);
+  return b;
+};
+Blockly.Blocks.hamster_play_note_for = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("").appendField(new Blockly.FieldDropdown([["\ub3c4", "4"], ["\ub3c4#", "5"], ["\ub808", "6"], ["\ubbf8b", "7"], ["\ubbf8", "8"], ["\ud30c", "9"], ["\ud30c#", "10"], ["\uc194", "11"], ["\uc194#", "12"], ["\ub77c", "13"], ["\uc2dcb", "14"], ["\uc2dc", "15"]]), "NOTE").appendField(" ").appendField(new Blockly.FieldDropdown([["1", "1"], ["2", "2"], ["3", "3"], ["4", "4"], ["5", "5"], ["6", "6"], ["7", "7"]]), "OCTAVE").appendField(" \uc74c\uc744");
+  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField("\ubc15\uc790 \uc5f0\uc8fc\ud558\uae30").appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.hamster_play_note_for = function(a, b) {
+  var c = Entry.hw.sendQueue;
+  if (b.isStart) {
+    if (1 == b.timeFlag) {
+      return c.note = b.note, b;
+    }
+    delete b.timeFlag;
+    delete b.isStart;
+    delete b.note;
+    Entry.engine.isContinue = !1;
+    c.note = 0;
+    return b.callReturn();
+  }
+  var d = b.getNumberField("NOTE", b), e = b.getNumberField("OCTAVE", b), f = b.getNumberValue("VALUE", b), h = Entry.Hamster.tempo, f = 6E4 * f / h;
+  b.note = d + 12 * (e - 1);
+  b.isStart = !0;
+  b.timeFlag = 1;
+  100 < f && setTimeout(function() {
+    c.note = 0;
+  }, f - 100);
+  setTimeout(function() {
+    b.timeFlag = 0;
+  }, f);
+  return b;
+};
+Blockly.Blocks.hamster_rest_for = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("");
+  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField("\ubc15\uc790 \uc26c\uae30").appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.hamster_rest_for = function(a, b) {
+  var c = Entry.hw.sendQueue;
+  if (b.isStart) {
+    return delete b.isStart, delete b.timeFlag, Entry.engine.isContinue = !1, b.callReturn();
+  }
+  b.isStart = !0;
+  b.timeFlag = 1;
+  var d = b.getNumberValue("VALUE"), d = 6E4 * d / Entry.Hamster.tempo;
+  c.note = 0;
+  setTimeout(function() {
+    b.timeFlag = 0;
+  }, d);
+  return b;
+};
+Blockly.Blocks.hamster_change_tempo_by = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("\uc5f0\uc8fc \uc18d\ub3c4\ub97c");
+  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField("\ub9cc\ud07c \ubc14\uafb8\uae30").appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.hamster_change_tempo_by = function(a, b) {
+  Entry.Hamster.tempo += b.getNumberValue("VALUE");
+  return b.callReturn();
+};
+Blockly.Blocks.hamster_set_tempo_to = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("\uc5f0\uc8fc \uc18d\ub3c4\ub97c");
+  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField("BPM\uc73c\ub85c \ud558\uae30").appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.hamster_set_tempo_to = function(a, b) {
+  Entry.Hamster.tempo = b.getNumberValue("VALUE");
+  return b.callReturn();
+};
+Blockly.Blocks.hamster_change_both_wheels_by = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("\uc67c\ucabd \ubc14\ud034");
+  this.appendValueInput("LEFT").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField("\uc624\ub978\ucabd \ubc14\ud034");
+  this.appendValueInput("RIGHT").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField("\ub9cc\ud07c \ubc14\uafb8\uae30").appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.hamster_change_both_wheels_by = function(a, b) {
+  var c = Entry.hw.sendQueue, d = Entry.hw.portData, e = void 0 != c.leftWheel ? c.leftWheel : d.leftWheel, d = void 0 != c.rightWheel ? c.rightWheel : d.rightWheel, e = e + b.getNumberValue("LEFT"), d = d + b.getNumberValue("RIGHT");
+  c.leftWheel = e;
+  c.rightWheel = d;
+  return b.callReturn();
+};
+Blockly.Blocks.hamster_set_both_wheels_to = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("\uc67c\ucabd \ubc14\ud034");
+  this.appendValueInput("LEFT").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField("\uc624\ub978\ucabd \ubc14\ud034");
+  this.appendValueInput("RIGHT").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField("(\uc73c)\ub85c \ud558\uae30").appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.hamster_set_both_wheels_to = function(a, b) {
+  var c = Entry.hw.sendQueue;
+  c.leftWheel = b.getNumberValue("LEFT");
+  c.rightWheel = b.getNumberValue("RIGHT");
+  return b.callReturn();
+};
+Blockly.Blocks.hamster_change_wheels_by = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("").appendField(new Blockly.FieldDropdown([["\uc67c\ucabd", "LEFT"], ["\uc624\ub978\ucabd", "RIGHT"], ["\uc591\ucabd", "FRONT"]]), "DIRECTION").appendField("\ubc14\ud034");
+  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField("\ub9cc\ud07c \ubc14\uafb8\uae30").appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.hamster_change_wheels_by = function(a, b) {
+  var c = Entry.hw.sendQueue, d = Entry.hw.portData, e = b.getField("DIRECTION"), f = b.getNumberValue("VALUE");
+  "LEFT" == e ? c.leftWheel = void 0 != c.leftWheel ? c.leftWheel + f : d.leftWheel + f : ("RIGHT" != e && (c.leftWheel = void 0 != c.leftWheel ? c.leftWheel + f : d.leftWheel + f), c.rightWheel = void 0 != c.rightWheel ? c.rightWheel + f : d.rightWheel + f);
+  return b.callReturn();
+};
+Blockly.Blocks.hamster_set_wheels_to = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("").appendField(new Blockly.FieldDropdown([["\uc67c\ucabd", "LEFT"], ["\uc624\ub978\ucabd", "RIGHT"], ["\uc591\ucabd", "FRONT"]]), "DIRECTION").appendField("\ubc14\ud034");
+  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField("(\uc73c)\ub85c \ud558\uae30").appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.hamster_set_wheels_to = function(a, b) {
+  var c = Entry.hw.sendQueue, d = b.getField("DIRECTION"), e = b.getNumberValue("VALUE");
+  "LEFT" == d ? c.leftWheel = e : ("RIGHT" != d && (c.leftWheel = e), c.rightWheel = e);
+  return b.callReturn();
+};
+Blockly.Blocks.hamster_stop = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("\uc815\uc9c0\ud558\uae30").appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.hamster_stop = function(a, b) {
+  var c = Entry.hw.sendQueue;
+  c.leftWheel = 0;
+  c.rightWheel = 0;
+  return b.callReturn();
+};
+Blockly.Blocks.hamster_change_buzzer_by = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("\ubc84\uc800 \uc74c\uc744");
+  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField("\ub9cc\ud07c \ubc14\uafb8\uae30").appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.hamster_change_buzzer_by = function(a, b) {
+  var c = Entry.hw, d = c.sendQueue, c = c.portData;
+  delete d.note;
+  d.buzzer = void 0 != d.buzzer ? d.buzzer : c.buzzer + b.getNumberValue("VALUE");
+  return b.callReturn();
+};
+Blockly.Blocks.hamster_set_buzzer_to = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("\ubc84\uc800 \uc74c\uc744");
+  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField("(\uc73c)\ub85c \ud558\uae30").appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.hamster_set_buzzer_to = function(a, b) {
+  var c = Entry.hw.sendQueue;
+  delete c.note;
+  c.buzzer = b.getNumberValue("VALUE");
+  return b.callReturn();
+};
+Blockly.Blocks.hamster_clear_buzzer = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("\ubc84\uc800 \ub044\uae30").appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.hamster_clear_buzzer = function(a, b) {
+  Entry.hw.sendQueue.buzzer = 0;
+  return b.callReturn();
+};
+Blockly.Blocks.hamster_value = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("").appendField(new Blockly.FieldDropdown([["\uc67c\ucabd \uadfc\uc811 \uc13c\uc11c", "leftProximity"], ["\uc624\ub978\ucabd \uadfc\uc811 \uc13c\uc11c", "rightProximity"], ["\uc67c\ucabd \ubc14\ub2e5 \uc13c\uc11c", "leftFloor"], ["\uc624\ub978\ucabd \ubc14\ub2e5 \uc13c\uc11c", "rightFloor"], ["x\ucd95 \uac00\uc18d\ub3c4", "accelerationX"], ["y\ucd95 \uac00\uc18d\ub3c4", "accelerationY"], ["z\ucd95 \uac00\uc18d\ub3c4", "accelerationZ"], ["\ubc1d\uae30", "light"], 
+  ["\uc628\ub3c4", "temperature"], ["\uc2e0\ud638\uc138\uae30", "signalStrength"], ["\uc785\ub825 A", "inputA"], ["\uc785\ub825 B", "inputB"]]), "PORT").appendField(" ");
+  this.setInputsInline(!0);
+  this.setOutput(!0, "Number");
+}};
+Entry.block.hamster_value = function(a, b) {
+  var c = Entry.hw, d = c.sendQueue, c = c.portData, e = b.getField("PORT");
+  return void 0 != d[e] ? d[e] : c[e];
+};
 Blockly.Blocks.is_clicked = {init:function() {
-  this.setColour("#2FC9F0");
+  this.setColour("#AEB8FF");
   this.appendDummyInput().appendField(Lang.Blocks.JUDGEMENT_is_clicked, "#3D3D3D");
   this.setOutput(!0, "Boolean");
   this.setInputsInline(!0);
-  this.setTooltip("");
 }};
 Entry.block.is_clicked = function(a, b) {
   return Entry.stage.isClick;
 };
 Blockly.Blocks.is_press_some_key = {init:function() {
-  this.setColour("#2FC9F0");
+  this.setColour("#AEB8FF");
   this.appendDummyInput().appendField(Lang.Blocks.JUDGEMENT_is_press_some_key_1, "#3D3D3D");
   this.appendDummyInput().appendField(new Blockly.FieldKeydownInput("81"), "VALUE").appendField(Lang.Blocks.JUDGEMENT_is_press_some_key_2, "#3D3D3D");
   this.setOutput(!0, "Boolean");
   this.setInputsInline(!0);
-  this.setTooltip("");
 }};
 Entry.block.is_press_some_key = function(a, b) {
   var c = Number(b.getField("VALUE", b));
   return 0 <= Entry.engine.pressedKeys.indexOf(c);
 };
 Blockly.Blocks.reach_something = {init:function() {
-  this.setColour("#2FC9F0");
+  this.setColour("#AEB8FF");
   this.appendDummyInput().appendField(Lang.Blocks.JUDGEMENT_reach_something_1, "#3D3D3D");
   this.appendDummyInput().appendField(new Blockly.FieldDropdownDynamic("collision"), "VALUE");
   this.appendDummyInput().appendField(Lang.Blocks.JUDGEMENT_reach_something_2, "#3D3D3D");
   this.setOutput(!0, "Boolean");
   this.setInputsInline(!0);
-  this.setTooltip("");
 }};
 Entry.block.reach_something = function(a, b) {
   if (!a.getVisible()) {
@@ -1236,7 +2011,11 @@ Entry.block.reach_something = function(a, b) {
       ;
     }
   } else {
-    if (c = Entry.container.getEntity(c), "textBox" == c.type || "textBox" == a.type) {
+    if ("mouse" == c) {
+      return f = Entry.stage.canvas, f = d.globalToLocal(f.mouseX, f.mouseY), d.hitTest(f.x, f.y);
+    }
+    c = Entry.container.getEntity(c);
+    if ("textBox" == c.type || "textBox" == a.type) {
       f = c.object.getTransformedBounds();
       d = d.getTransformedBounds();
       if (Entry.checkCollisionRect(d, f)) {
@@ -1264,165 +2043,131 @@ Entry.block.reach_something = function(a, b) {
   return !1;
 };
 Blockly.Blocks.boolean_comparison = {init:function() {
-  this.setColour("#2FC9F0");
+  this.setColour("#AEB8FF");
   this.appendValueInput("LEFTHAND").setCheck(["String", "Number"]);
   this.appendDummyInput().appendField(new Blockly.FieldDropdown([["=", "EQUAL"], ["<", "SMALLER"], [">", "BIGGER"]]), "OPERATOR");
   this.appendValueInput("RIGHTHAND").setCheck(["String", "Number"]);
   this.setOutput(!0, "Boolean");
   this.setInputsInline(!0);
-  this.setTooltip("");
 }};
 Entry.block.boolean_comparison = function(a, b) {
   var c = b.getField("OPERATOR", b), d = b.getNumberValue("LEFTHAND", b), e = b.getNumberValue("RIGHTHAND", b);
   return "EQUAL" == c ? d == e : "BIGGER" == c ? d > e : d < e;
 };
 Blockly.Blocks.boolean_equal = {init:function() {
-  this.setColour("#2FC9F0");
+  this.setColour("#AEB8FF");
   this.appendValueInput("LEFTHAND").setCheck(["String", "Number"]);
   this.appendDummyInput().appendField("=", "#3D3D3D");
   this.appendValueInput("RIGHTHAND").setCheck(["String", "Number"]);
   this.setOutput(!0, "Boolean");
   this.setInputsInline(!0);
-  this.setTooltip("");
 }};
 Entry.block.boolean_equal = function(a, b) {
   var c = b.getStringValue("LEFTHAND", b), d = b.getStringValue("RIGHTHAND", b);
   return c == d;
 };
 Blockly.Blocks.boolean_bigger = {init:function() {
-  this.setColour("#2FC9F0");
+  this.setColour("#AEB8FF");
   this.appendValueInput("LEFTHAND").setCheck(["Number", "String"]);
   this.appendDummyInput().appendField(">", "#3D3D3D");
   this.appendValueInput("RIGHTHAND").setCheck(["Number", "String"]);
   this.setOutput(!0, "Boolean");
   this.setInputsInline(!0);
-  this.setTooltip("");
 }};
 Entry.block.boolean_bigger = function(a, b) {
   var c = b.getNumberValue("LEFTHAND", b), d = b.getNumberValue("RIGHTHAND", b);
   return c > d;
 };
 Blockly.Blocks.boolean_smaller = {init:function() {
-  this.setColour("#2FC9F0");
+  this.setColour("#AEB8FF");
   this.appendValueInput("LEFTHAND").setCheck(["Number", "String"]);
   this.appendDummyInput().appendField("<", "#3D3D3D");
   this.appendValueInput("RIGHTHAND").setCheck(["Number", "String"]);
   this.setOutput(!0, "Boolean");
   this.setInputsInline(!0);
-  this.setTooltip("");
 }};
 Entry.block.boolean_smaller = function(a, b) {
   var c = b.getNumberValue("LEFTHAND", b), d = b.getNumberValue("RIGHTHAND", b);
   return c < d;
 };
 Blockly.Blocks.boolean_and_or = {init:function() {
-  this.setColour("#2FC9F0");
+  this.setColour("#AEB8FF");
   this.appendValueInput("LEFTHAND").setCheck("Boolean");
   this.appendDummyInput().appendField(new Blockly.FieldDropdown([[Lang.Blocks.JUDGEMENT_boolean_and, "AND"], [Lang.Blocks.JUDGEMENT_boolean_or, "OR"]]), "OPERATOR");
   this.appendValueInput("RIGHTHAND").setCheck("Boolean");
   this.setOutput(!0, "Boolean");
   this.setInputsInline(!0);
-  this.setTooltip("");
 }};
 Entry.block.boolean_and_or = function(a, b) {
   var c = b.getField("OPERATOR", b), d = b.getBooleanValue("LEFTHAND", b), e = b.getBooleanValue("RIGHTHAND", b);
   return "AND" == c ? d && e : d || e;
 };
 Blockly.Blocks.boolean_and = {init:function() {
-  this.setColour("#2FC9F0");
+  this.setColour("#AEB8FF");
   this.appendValueInput("LEFTHAND").setCheck("Boolean");
   this.appendDummyInput().appendField(Lang.Blocks.JUDGEMENT_boolean_and, "#3D3D3D");
   this.appendValueInput("RIGHTHAND").setCheck("Boolean");
   this.setOutput(!0, "Boolean");
   this.setInputsInline(!0);
-  this.setTooltip("");
 }};
 Entry.block.boolean_and = function(a, b) {
   var c = b.getBooleanValue("LEFTHAND", b), d = b.getBooleanValue("RIGHTHAND", b);
   return c && d;
 };
 Blockly.Blocks.boolean_or = {init:function() {
-  this.setColour("#2FC9F0");
+  this.setColour("#AEB8FF");
   this.appendValueInput("LEFTHAND").setCheck("Boolean");
   this.appendDummyInput().appendField(Lang.Blocks.JUDGEMENT_boolean_or, "#3D3D3D");
   this.appendValueInput("RIGHTHAND").setCheck("Boolean");
   this.setOutput(!0, "Boolean");
   this.setInputsInline(!0);
-  this.setTooltip("");
 }};
 Entry.block.boolean_or = function(a, b) {
   var c = b.getBooleanValue("LEFTHAND", b), d = b.getBooleanValue("RIGHTHAND", b);
   return c || d;
 };
 Blockly.Blocks.boolean_not = {init:function() {
-  this.setColour("#2FC9F0");
+  this.setColour("#AEB8FF");
   this.appendDummyInput().appendField(Lang.Blocks.JUDGEMENT_boolean_not_1, "#3D3D3D");
   this.appendValueInput("VALUE").setCheck("Boolean");
   this.appendDummyInput().appendField(Lang.Blocks.JUDGEMENT_boolean_not_2, "#3D3D3D");
   this.appendDummyInput();
   this.setOutput(!0, "Boolean");
   this.setInputsInline(!0);
-  this.setTooltip("");
 }};
 Entry.block.boolean_not = function(a, b) {
   return !b.getBooleanValue("VALUE");
 };
 Blockly.Blocks.true_or_false = {init:function() {
-  this.setColour("#2FC9F0");
+  this.setColour("#AEB8FF");
   this.appendDummyInput().appendField(new Blockly.FieldDropdown([[Lang.Blocks.JUDGEMENT_true, "true"], [Lang.Blocks.JUDGEMENT_false, "false"]]), "VALUE");
   this.appendDummyInput();
   this.setOutput(!0, "Boolean");
   this.setInputsInline(!0);
-  this.setTooltip("");
 }};
 Entry.block.true_or_false = function(a, b) {
   return "true" == b.children[0].textContent;
 };
 Blockly.Blocks.True = {init:function() {
-  this.setColour("#2FC9F0");
+  this.setColour("#AEB8FF");
   this.appendDummyInput().appendField(Lang.Blocks.JUDGEMENT_true, "#3D3D3D").appendField(" ");
   this.setOutput(!0, "Boolean");
   this.setInputsInline(!0);
-  this.setTooltip("");
 }};
 Entry.block.True = function(a, b) {
   return !0;
 };
 Blockly.Blocks.False = {init:function() {
-  this.setColour("#2FC9F0");
+  this.setColour("#AEB8FF");
   this.appendDummyInput().appendField(Lang.Blocks.JUDGEMENT_false, "#3D3D3D").appendField(" ");
   this.setOutput(!0, "Boolean");
   this.setInputsInline(!0);
-  this.setTooltip("");
 }};
 Entry.block.False = function(a, b) {
   return !1;
 };
-Blockly.Blocks.is_included_in_list = {init:function() {
-  this.setColour("#2FC9F0");
-  this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_is_included_in_list_1, "#3D3D3D");
-  this.appendDummyInput().appendField(new Blockly.FieldDropdownDynamic("lists"), "LIST");
-  this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_is_included_in_list_2, "#3D3D3D");
-  this.appendValueInput("DATA").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_is_included_in_list_3, "#3D3D3D");
-  this.setOutput(!0, "Boolean");
-  this.setInputsInline(!0);
-  this.setTooltip("");
-}};
-Entry.block.is_included_in_list = function(a, b) {
-  var c = b.getField("LIST", b), d = b.getStringValue("DATA", b), c = Entry.variableContainer.getList(c);
-  if (!c) {
-    return !1;
-  }
-  for (var c = c.array_, e = 0, f = c.length;e < f;e++) {
-    if (c[e].data.toString() == d.toString()) {
-      return !0;
-    }
-  }
-  return !1;
-};
 Blockly.Blocks.boolean_basic_operator = {init:function() {
-  this.setColour("#2FC9F0");
+  this.setColour("#AEB8FF");
   this.appendValueInput("LEFTHAND").setCheck(["String", "Number"]);
   this.appendDummyInput("VALUE").appendField(new Blockly.FieldDropdown([["=", "EQUAL"], [">", "GREATER"], ["<", "LESS"], [">=", "GREATER_OR_EQUAL"], ["<=", "LESS_OR_EQUAL"]], null, !1), "OPERATOR");
   this.appendValueInput("RIGHTHAND").setCheck(["Number", "String"]);
@@ -1446,11 +2191,10 @@ Entry.block.boolean_basic_operator = function(a, b) {
 };
 Blockly.Blocks.show = {init:function() {
   this.setColour("#EC4466");
-  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_show).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_looks.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_show).appendField(new Blockly.FieldIcon("/img/assets/block_icon/looks_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-  this.setTooltip("");
 }};
 Entry.block.show = function(a, b) {
   a.setVisible(!0);
@@ -1458,11 +2202,10 @@ Entry.block.show = function(a, b) {
 };
 Blockly.Blocks.hide = {init:function() {
   this.setColour("#EC4466");
-  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_hide).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_looks.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_hide).appendField(new Blockly.FieldIcon("/img/assets/block_icon/looks_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-  this.setTooltip("");
 }};
 Entry.block.hide = function(a, b) {
   a.setVisible(!1);
@@ -1476,11 +2219,10 @@ Blockly.Blocks.dialog_time = {init:function() {
   this.appendValueInput("SECOND").setCheck(["Number", "String"]);
   this.appendDummyInput().appendField(Lang.Blocks.LOOKS_dialog_time_3);
   this.appendDummyInput().appendField(new Blockly.FieldDropdown([[Lang.Blocks.speak, "speak"]]), "OPTION");
-  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_dialog_time_4).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_looks.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_dialog_time_4).appendField(new Blockly.FieldIcon("/img/assets/block_icon/looks_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-  this.setTooltip("");
 }};
 Entry.block.dialog_time = function(a, b) {
   if (!b.isStart) {
@@ -1503,11 +2245,10 @@ Blockly.Blocks.dialog = {init:function() {
   this.appendValueInput("VALUE").setCheck(["String", "Number", null]);
   this.appendDummyInput().appendField(Lang.Blocks.LOOKS_dialog_2);
   this.appendDummyInput().appendField(new Blockly.FieldDropdown([[Lang.Blocks.speak, "speak"]]), "OPTION");
-  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_dialog_3).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_looks.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_dialog_3).appendField(new Blockly.FieldIcon("/img/assets/block_icon/looks_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-  this.setTooltip("");
 }};
 Entry.block.dialog = function(a, b) {
   var c = b.getStringValue("VALUE", b);
@@ -1519,11 +2260,10 @@ Entry.block.dialog = function(a, b) {
 };
 Blockly.Blocks.remove_dialog = {init:function() {
   this.setColour("#EC4466");
-  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_remove_dialog).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_looks.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_remove_dialog).appendField(new Blockly.FieldIcon("/img/assets/block_icon/looks_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-  this.setTooltip("");
 }};
 Entry.block.remove_dialog = function(a, b) {
   a.dialog && a.dialog.remove();
@@ -1533,11 +2273,10 @@ Blockly.Blocks.change_to_nth_shape = {init:function() {
   this.setColour("#EC4466");
   this.appendDummyInput().appendField(Lang.Blocks.LOOKS_change_to_nth_shape_1);
   this.appendDummyInput().appendField(new Blockly.FieldDropdownDynamic("pictures"), "VALUE");
-  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_change_to_nth_shape_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_looks.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_change_to_nth_shape_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/looks_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-  this.setTooltip("");
 }};
 Entry.block.change_to_nth_shape = function(a, b) {
   var c = b.getField("VALUE", b), c = a.parent.getPicture(c);
@@ -1546,11 +2285,10 @@ Entry.block.change_to_nth_shape = function(a, b) {
 };
 Blockly.Blocks.change_to_next_shape = {init:function() {
   this.setColour("#EC4466");
-  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_change_to_next_shape).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_looks.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_change_to_next_shape).appendField(new Blockly.FieldIcon("/img/assets/block_icon/looks_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-  this.setTooltip("");
 }};
 Entry.block.change_to_next_shape = function(a, b) {
   var c = a.parent.getNextPicture(a.picture.id);
@@ -1563,11 +2301,10 @@ Blockly.Blocks.set_effect_volume = {init:function() {
   this.appendDummyInput().appendField(new Blockly.FieldDropdown([[Lang.Blocks.color, "color"], [Lang.Blocks.brightness, "brightness"], [Lang.Blocks.opacity, "opacity"]]), "EFFECT");
   this.appendDummyInput().appendField(Lang.Blocks.LOOKS_set_effect_volume_2);
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_set_effect_volume_3).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_looks.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_set_effect_volume_3).appendField(new Blockly.FieldIcon("/img/assets/block_icon/looks_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-  this.setTooltip("");
 }};
 Entry.block.set_effect_volume = function(a, b) {
   var c = b.getField("EFFECT", b), d = b.getNumberValue("VALUE", b);
@@ -1581,11 +2318,10 @@ Blockly.Blocks.set_effect = {init:function() {
   this.appendDummyInput().appendField(new Blockly.FieldDropdown([[Lang.Blocks.color, "color"], [Lang.Blocks.brightness, "brightness"], [Lang.Blocks.opacity, "opacity"]]), "EFFECT");
   this.appendDummyInput().appendField(Lang.Blocks.LOOKS_set_effect_2);
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_set_effect_3).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_looks.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_set_effect_3).appendField(new Blockly.FieldIcon("/img/assets/block_icon/looks_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-  this.setTooltip("");
 }};
 Entry.block.set_effect = function(a, b) {
   var c = b.getField("EFFECT", b), d = b.getNumberValue("VALUE", b);
@@ -1595,11 +2331,10 @@ Entry.block.set_effect = function(a, b) {
 };
 Blockly.Blocks.erase_all_effects = {init:function() {
   this.setColour("#EC4466");
-  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_erase_all_effects).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_looks.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_erase_all_effects).appendField(new Blockly.FieldIcon("/img/assets/block_icon/looks_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-  this.setTooltip("");
 }};
 Entry.block.erase_all_effects = function(a, b) {
   a.resetFilter();
@@ -1609,11 +2344,10 @@ Blockly.Blocks.change_scale_percent = {init:function() {
   this.setColour("#EC4466");
   this.appendDummyInput().appendField(Lang.Blocks.LOOKS_change_scale_percent_1);
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_change_scale_percent_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_looks.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_change_scale_percent_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/looks_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-  this.setTooltip("");
 }};
 Entry.block.change_scale_percent = function(a, b) {
   var c = (b.getNumberValue("VALUE", b) + 100) / 100;
@@ -1625,11 +2359,10 @@ Blockly.Blocks.set_scale_percent = {init:function() {
   this.setColour("#EC4466");
   this.appendDummyInput().appendField(Lang.Blocks.LOOKS_set_scale_percent_1);
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_set_scale_percent_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_looks.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_set_scale_percent_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/looks_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-  this.setTooltip("");
 }};
 Entry.block.set_scale_percent = function(a, b) {
   var c = b.getNumberValue("VALUE", b) / 100, d = a.snapshot_;
@@ -1639,11 +2372,10 @@ Entry.block.set_scale_percent = function(a, b) {
 };
 Blockly.Blocks.flip_y = {init:function() {
   this.setColour("#EC4466");
-  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_flip_y).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_looks.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_flip_y).appendField(new Blockly.FieldIcon("/img/assets/block_icon/looks_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-  this.setTooltip("");
 }};
 Entry.block.flip_y = function(a, b) {
   a.setScaleX(-1 * a.getScaleX());
@@ -1651,11 +2383,10 @@ Entry.block.flip_y = function(a, b) {
 };
 Blockly.Blocks.flip_x = {init:function() {
   this.setColour("#EC4466");
-  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_flip_x).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_looks.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_flip_x).appendField(new Blockly.FieldIcon("/img/assets/block_icon/looks_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-  this.setTooltip("");
 }};
 Entry.block.flip_x = function(a, b) {
   a.setScaleY(-1 * a.getScaleY());
@@ -1665,11 +2396,10 @@ Blockly.Blocks.set_object_order = {init:function() {
   this.setColour("#EC4466");
   this.appendDummyInput().appendField(Lang.Blocks.LOOKS_set_object_order_1);
   this.appendDummyInput().appendField(new Blockly.FieldDropdownDynamic("objectSequence"), "VALUE");
-  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_set_object_order_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_looks.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_set_object_order_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/looks_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-  this.setTooltip("");
 }};
 Entry.block.set_object_order = function(a, b) {
   var c = b.getField("VALUE", b), d = Entry.container.getCurrentObjects().indexOf(a.parent);
@@ -1685,7 +2415,6 @@ Blockly.Blocks.get_pictures = {init:function() {
   this.appendDummyInput().appendField(" ");
   this.setOutput(!0, "String");
   this.setInputsInline(!0);
-  this.setTooltip("");
 }};
 Entry.block.get_pictures = function(a, b) {
   return b.getStringField("VALUE");
@@ -1694,11 +2423,10 @@ Blockly.Blocks.change_to_some_shape = {init:function() {
   this.setColour("#EC4466");
   this.appendDummyInput().appendField(Lang.Blocks.LOOKS_change_to_nth_shape_1);
   this.appendValueInput("VALUE").setCheck(["String", "Number"]);
-  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_change_to_nth_shape_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_looks.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_change_to_nth_shape_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/looks_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-  this.setTooltip("");
 }};
 Entry.block.change_to_some_shape = function(a, b) {
   var c = b.getStringValue("VALUE");
@@ -1713,11 +2441,10 @@ Blockly.Blocks.set_effect_amount = {init:function() {
   this.appendDummyInput().appendField(new Blockly.FieldDropdown([[Lang.Blocks.color, "color"], [Lang.Blocks.brightness, "brightness"], [Lang.Blocks.transparency, "transparency"]]), "EFFECT");
   this.appendDummyInput().appendField(Lang.Blocks.LOOKS_set_effect_volume_2);
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_set_effect_volume_3).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_looks.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_set_effect_volume_3).appendField(new Blockly.FieldIcon("/img/assets/block_icon/looks_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-  this.setTooltip("");
 }};
 Entry.block.set_effect_amount = function(a, b) {
   var c = b.getField("EFFECT", b), d = b.getNumberValue("VALUE", b);
@@ -1731,11 +2458,10 @@ Blockly.Blocks.set_entity_effect = {init:function() {
   this.appendDummyInput().appendField(new Blockly.FieldDropdown([[Lang.Blocks.color, "color"], [Lang.Blocks.brightness, "brightness"], [Lang.Blocks.transparency, "transparency"]]), "EFFECT");
   this.appendDummyInput().appendField(Lang.Blocks.LOOKS_set_effect_2);
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_set_effect_3).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_looks.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_set_effect_3).appendField(new Blockly.FieldIcon("/img/assets/block_icon/looks_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-  this.setTooltip("");
 }};
 Entry.block.set_entity_effect = function(a, b) {
   var c = b.getField("EFFECT", b), d = b.getNumberValue("VALUE", b);
@@ -1743,15 +2469,43 @@ Entry.block.set_entity_effect = function(a, b) {
   a.applyFilter();
   return b.callReturn();
 };
+Blockly.Blocks.change_object_index = {init:function() {
+  this.setColour("#EC4466");
+  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_change_object_index_1);
+  this.appendDummyInput().appendField(new Blockly.FieldDropdown([[Lang.Blocks.LOOKS_change_object_index_sub_1, "FRONT"], [Lang.Blocks.LOOKS_change_object_index_sub_2, "FORWARD"], [Lang.Blocks.LOOKS_change_object_index_sub_3, "BACKWARD"], [Lang.Blocks.LOOKS_change_object_index_sub_4, "BACK"]]), "LOCATION").appendField(Lang.Blocks.LOOKS_change_object_index_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/looks_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.change_object_index = function(a, b) {
+  var c, d = b.getField("LOCATION", b), e = Entry.container.getCurrentObjects(), f = e.indexOf(a.parent), e = e.length - 1;
+  if (0 > f) {
+    throw Error("object is not available for current scene");
+  }
+  switch(d) {
+    case "FRONT":
+      c = 0;
+      break;
+    case "FORWARD":
+      c = Math.max(0, f - 1);
+      break;
+    case "BACKWARD":
+      c = Math.min(e, f + 1);
+      break;
+    case "BACK":
+      c = e;
+  }
+  Entry.container.moveElementByBlock(f, c);
+  return b.callReturn();
+};
 Blockly.Blocks.move_direction = {init:function() {
   this.setColour("#A751E3");
   this.appendDummyInput().appendField(Lang.Blocks.MOVING_move_direction_1);
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_move_direction_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_moving.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.MOVING_move_direction_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/moving_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-  this.setTooltip("");
 }};
 Entry.block.move_direction = function(a, b) {
   var c = b.getNumberValue("VALUE", b);
@@ -1764,11 +2518,10 @@ Blockly.Blocks.move_x = {init:function() {
   this.setColour("#A751E3");
   this.appendDummyInput().appendField(Lang.Blocks.MOVING_move_x_1);
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_move_x_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_moving.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.MOVING_move_x_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/moving_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-  this.setTooltip("");
 }};
 Entry.block.move_x = function(a, b) {
   var c = b.getNumberValue("VALUE", b);
@@ -1780,11 +2533,10 @@ Blockly.Blocks.move_y = {init:function() {
   this.setColour("#A751E3");
   this.appendDummyInput().appendField(Lang.Blocks.MOVING_move_y_1);
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_move_y_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_moving.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.MOVING_move_y_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/moving_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-  this.setTooltip("");
 }};
 Entry.block.move_y = function(a, b) {
   var c = b.getNumberValue("VALUE", b);
@@ -1800,11 +2552,10 @@ Blockly.Blocks.locate_xy_time = {init:function() {
   this.appendValueInput("VALUE2").setCheck(["Number", "String"]);
   this.appendDummyInput().appendField(Lang.Blocks.MOVING_locate_xy_time_3);
   this.appendValueInput("VALUE3").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_locate_xy_time_4).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_moving.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.MOVING_locate_xy_time_4).appendField(new Blockly.FieldIcon("/img/assets/block_icon/moving_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-  this.setTooltip("");
 }};
 Entry.block.locate_xy_time = function(a, b) {
   if (!b.isStart) {
@@ -1827,11 +2578,10 @@ Blockly.Blocks.rotate_by_angle = {init:function() {
   this.setColour("#A751E3");
   this.appendDummyInput().appendField(Lang.Blocks.MOVING_rotate_by_angle_1);
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_rotate_by_angle_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_moving.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.MOVING_rotate_by_angle_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/moving_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-  this.setTooltip("");
 }};
 Entry.block.rotate_by_angle = function(a, b) {
   var c = b.getNumberValue("VALUE", b);
@@ -1841,11 +2591,10 @@ Entry.block.rotate_by_angle = function(a, b) {
 Blockly.Blocks.rotate_by_angle_dropdown = {init:function() {
   this.setColour("#A751E3");
   this.appendDummyInput().appendField(Lang.Blocks.MOVING_rotate_by_angle_dropdown_1);
-  this.appendDummyInput().appendField(new Blockly.FieldDropdown([["45", "45"], ["90", "90"], ["135", "135"], ["180", "180"]]), "VALUE").appendField(Lang.Blocks.MOVING_rotate_by_angle_dropdown_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_moving.png", "*"));
+  this.appendDummyInput().appendField(new Blockly.FieldDropdown([["45", "45"], ["90", "90"], ["135", "135"], ["180", "180"]]), "VALUE").appendField(Lang.Blocks.MOVING_rotate_by_angle_dropdown_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/moving_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-  this.setTooltip("");
 }};
 Entry.block.rotate_by_angle_dropdown = function(a, b) {
   var c = b.getField("VALUE", b);
@@ -1856,11 +2605,10 @@ Blockly.Blocks.see_angle = {init:function() {
   this.setColour("#A751E3");
   this.appendDummyInput().appendField(Lang.Blocks.MOVING_see_angle_1);
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_see_angle_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_moving.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.MOVING_see_angle_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/moving_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-  this.setTooltip("");
 }};
 Entry.block.see_angle = function(a, b) {
   var c = b.getNumberValue("VALUE", b);
@@ -1871,11 +2619,10 @@ Blockly.Blocks.see_direction = {init:function() {
   this.setColour("#A751E3");
   this.appendDummyInput().appendField(Lang.Blocks.MOVING_see_direction_1);
   this.appendDummyInput().appendField(new Blockly.FieldDropdownDynamic("sprites"), "VALUE");
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_see_direction_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_moving.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.MOVING_see_direction_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/moving_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-  this.setTooltip("");
 }};
 Entry.block.see_direction = function(a, b) {
   var c = b.getField("VALUE", b), d = Entry.container.getEntity(c), c = d.getX() - a.getX(), d = d.getY() - a.getY();
@@ -1888,11 +2635,10 @@ Blockly.Blocks.locate_xy = {init:function() {
   this.appendValueInput("VALUE1").setCheck(["Number", "String"]);
   this.appendDummyInput().appendField(Lang.Blocks.MOVING_locate_xy_2);
   this.appendValueInput("VALUE2").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_locate_xy_3).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_moving.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.MOVING_locate_xy_3).appendField(new Blockly.FieldIcon("/img/assets/block_icon/moving_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-  this.setTooltip("");
 }};
 Entry.block.locate_xy = function(a, b) {
   var c = b.getNumberValue("VALUE1", b);
@@ -1906,11 +2652,10 @@ Blockly.Blocks.locate_x = {init:function() {
   this.setColour("#A751E3");
   this.appendDummyInput().appendField(Lang.Blocks.MOVING_locate_x_1);
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_locate_x_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_moving.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.MOVING_locate_x_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/moving_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-  this.setTooltip("");
 }};
 Entry.block.locate_x = function(a, b) {
   var c = b.getNumberValue("VALUE", b);
@@ -1922,11 +2667,10 @@ Blockly.Blocks.locate_y = {init:function() {
   this.setColour("#A751E3");
   this.appendDummyInput().appendField(Lang.Blocks.MOVING_locate_y_1);
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_locate_y_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_moving.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.MOVING_locate_y_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/moving_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-  this.setTooltip("");
 }};
 Entry.block.locate_y = function(a, b) {
   var c = b.getNumberValue("VALUE", b);
@@ -1938,11 +2682,10 @@ Blockly.Blocks.locate = {init:function() {
   this.setColour("#A751E3");
   this.appendDummyInput().appendField(Lang.Blocks.MOVING_locate_1);
   this.appendDummyInput().appendField(new Blockly.FieldDropdownDynamic("spritesWithMouse"), "VALUE");
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_locate_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_moving.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.MOVING_locate_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/moving_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-  this.setTooltip("");
 }};
 Entry.block.locate = function(a, b) {
   var c = b.getField("VALUE", b), d;
@@ -1960,11 +2703,10 @@ Blockly.Blocks.move_xy_time = {init:function() {
   this.appendValueInput("VALUE2").setCheck(["Number", "String"]);
   this.appendDummyInput().appendField(Lang.Blocks.MOVING_move_xy_time_3);
   this.appendValueInput("VALUE3").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_move_xy_time_4).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_moving.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.MOVING_move_xy_time_4).appendField(new Blockly.FieldIcon("/img/assets/block_icon/moving_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-  this.setTooltip("");
 }};
 Entry.block.move_xy_time = function(a, b) {
   if (!b.isStart) {
@@ -1989,11 +2731,10 @@ Blockly.Blocks.locate_time = {init:function() {
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
   this.appendDummyInput().appendField(Lang.Blocks.MOVING_locate_time_2);
   this.appendDummyInput().appendField(new Blockly.FieldDropdownDynamic("sprites"), "VALUE");
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_locate_time_3).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_moving.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.MOVING_locate_time_3).appendField(new Blockly.FieldIcon("/img/assets/block_icon/moving_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-  this.setTooltip("");
 }};
 Blockly.Blocks.rotate_by_angle_time = {init:function() {
   this.setColour("#A751E3");
@@ -2001,11 +2742,10 @@ Blockly.Blocks.rotate_by_angle_time = {init:function() {
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
   this.appendDummyInput().appendField(Lang.Blocks.MOVING_rotate_by_angle_time_2);
   this.appendDummyInput().appendField(new Blockly.FieldAngle("90"), "VALUE");
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_rotate_by_angle_time_3).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_moving.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.MOVING_rotate_by_angle_time_3).appendField(new Blockly.FieldIcon("/img/assets/block_icon/moving_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-  this.setTooltip("");
 }};
 Entry.block.rotate_by_angle_time = function(a, b) {
   if (!b.isStart) {
@@ -2027,19 +2767,17 @@ Blockly.Blocks.bounce_when = {init:function() {
   this.setColour("#A751E3");
   this.appendDummyInput().appendField(Lang.Blocks.MOVING_bounce_when_1);
   this.appendDummyInput().appendField(new Blockly.FieldDropdownDynamic("bounce"), "VALUE");
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_bounce_when_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_moving.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.MOVING_bounce_when_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/moving_03.png", "*"));
   this.setPreviousStatement(!0);
   this.setInputsInline(!0);
   this.setNextStatement(!0);
-  this.setTooltip("");
 }};
 Blockly.Blocks.bounce_wall = {init:function() {
   this.setColour("#A751E3");
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_bounce_wall).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_moving.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.MOVING_bounce_wall).appendField(new Blockly.FieldIcon("/img/assets/block_icon/moving_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-  this.setTooltip("");
 }};
 Entry.block.bounce_wall = function(a, b) {
   var c = a.parent.getRotateMethod();
@@ -2051,11 +2789,10 @@ Entry.block.bounce_wall = function(a, b) {
 };
 Blockly.Blocks.flip_arrow_horizontal = {init:function() {
   this.setColour("#A751E3");
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_flip_arrow_horizontal).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_moving.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.MOVING_flip_arrow_horizontal).appendField(new Blockly.FieldIcon("/img/assets/block_icon/moving_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-  this.setTooltip("");
 }};
 Entry.block.flip_arrow_horizontal = function(a, b) {
   a.setDirection(a.getDirection() + 180);
@@ -2063,11 +2800,10 @@ Entry.block.flip_arrow_horizontal = function(a, b) {
 };
 Blockly.Blocks.flip_arrow_vertical = {init:function() {
   this.setColour("#A751E3");
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_flip_arrow_vertical).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_moving.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.MOVING_flip_arrow_vertical).appendField(new Blockly.FieldIcon("/img/assets/block_icon/moving_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-  this.setTooltip("");
 }};
 Entry.block.flip_arrow_vertical = function(a, b) {
   a.setDirection(a.getDirection() + 180);
@@ -2077,11 +2813,10 @@ Blockly.Blocks.see_angle_object = {init:function() {
   this.setColour("#A751E3");
   this.appendDummyInput().appendField(Lang.Blocks.MOVING_see_angle_object_1);
   this.appendDummyInput().appendField(new Blockly.FieldDropdownDynamic("spritesWithMouse"), "VALUE");
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_see_angle_object_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_moving.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.MOVING_see_angle_object_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/moving_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-  this.setTooltip("");
 }};
 Entry.block.see_angle_object = function(a, b) {
   var c = b.getField("VALUE", b), d = a.getX(), e = a.getY();
@@ -2098,11 +2833,10 @@ Blockly.Blocks.see_angle_direction = {init:function() {
   this.setColour("#A751E3");
   this.appendDummyInput().appendField(Lang.Blocks.MOVING_see_angle_direction_1);
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_see_angle_direction_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_moving.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.MOVING_see_angle_direction_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/moving_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-  this.setTooltip("");
 }};
 Entry.block.see_angle_direction = function(a, b) {
   var c = b.getNumberValue("VALUE", b), d = a.getDirection() + a.getRotation();
@@ -2113,11 +2847,10 @@ Blockly.Blocks.rotate_direction = {init:function() {
   this.setColour("#A751E3");
   this.appendDummyInput().appendField(Lang.Blocks.MOVING_rotate_direction_1);
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_rotate_direction_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_moving.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.MOVING_rotate_direction_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/moving_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-  this.setTooltip("");
 }};
 Entry.block.rotate_direction = function(a, b) {
   var c = b.getNumberValue("VALUE", b);
@@ -2130,11 +2863,10 @@ Blockly.Blocks.locate_object_time = {init:function() {
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
   this.appendDummyInput().appendField(Lang.Blocks.MOVING_locate_object_time_2);
   this.appendDummyInput().appendField(new Blockly.FieldDropdownDynamic("spritesWithMouse"), "TARGET");
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_locate_object_time_3).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_moving.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.MOVING_locate_object_time_3).appendField(new Blockly.FieldIcon("/img/assets/block_icon/moving_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-  this.setTooltip("");
 }};
 Entry.block.locate_object_time = function(a, b) {
   if (!b.isStart) {
@@ -2160,11 +2892,10 @@ Blockly.Blocks.rotate_absolute = {init:function() {
   this.setColour("#A751E3");
   this.appendDummyInput().appendField(Lang.Blocks.MOVING_set_direction_by_angle_1);
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_set_direction_by_angle_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_moving.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.MOVING_set_direction_by_angle_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/moving_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-  this.setTooltip("");
 }};
 Entry.block.rotate_absolute = function(a, b) {
   var c = b.getNumberValue("VALUE", b);
@@ -2175,11 +2906,10 @@ Blockly.Blocks.rotate_relative = {init:function() {
   this.setColour("#A751E3");
   this.appendDummyInput().appendField(Lang.Blocks.MOVING_add_direction_by_angle_1);
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_add_direction_by_angle_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_moving.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.MOVING_add_direction_by_angle_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/moving_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-  this.setTooltip("");
 }};
 Entry.block.rotate_relative = function(a, b) {
   var c = b.getNumberValue("VALUE", b);
@@ -2190,11 +2920,10 @@ Blockly.Blocks.direction_absolute = {init:function() {
   this.setColour("#A751E3");
   this.appendDummyInput().appendField(Lang.Blocks.MOVING_see_angle_1);
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_see_angle_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_moving.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.MOVING_see_angle_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/moving_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-  this.setTooltip("");
 }};
 Entry.block.direction_absolute = function(a, b) {
   var c = b.getNumberValue("VALUE", b);
@@ -2205,11 +2934,10 @@ Blockly.Blocks.direction_relative = {init:function() {
   this.setColour("#A751E3");
   this.appendDummyInput().appendField(Lang.Blocks.MOVING_rotate_direction_1);
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_rotate_direction_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_moving.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.MOVING_rotate_direction_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/moving_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-  this.setTooltip("");
 }};
 Entry.block.direction_relative = function(a, b) {
   var c = b.getNumberValue("VALUE", b);
@@ -2222,11 +2950,10 @@ Blockly.Blocks.move_to_angle = {init:function() {
   this.appendValueInput("ANGLE").setCheck(["Number", "String"]);
   this.appendDummyInput().appendField(Lang.Blocks.MOVING_move_direction_angle_2);
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_move_direction_angle_3).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_moving.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.MOVING_move_direction_angle_3).appendField(new Blockly.FieldIcon("/img/assets/block_icon/moving_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-  this.setTooltip("");
 }};
 Entry.block.move_to_angle = function(a, b) {
   var c = b.getNumberValue("VALUE", b), d = b.getNumberValue("ANGLE", b);
@@ -2237,15 +2964,15 @@ Entry.block.move_to_angle = function(a, b) {
 };
 Blockly.Blocks.rotate_by_time = {init:function() {
   this.setColour("#A751E3");
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_add_direction_by_angle_time_1);
+  this.appendDummyInput().appendField(Lang.Blocks.MOVING_add_direction_by_angle_time_explain_1);
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
   this.appendDummyInput().appendField(Lang.Blocks.MOVING_add_direction_by_angle_time_2);
+  this.appendDummyInput().appendField(Lang.Blocks.MOVING_add_direction_by_angle_time_1);
   this.appendValueInput("ANGLE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_add_direction_by_angle_time_3).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_moving.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.MOVING_add_direction_by_angle_time_3).appendField(new Blockly.FieldIcon("/img/assets/block_icon/moving_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-  this.setTooltip("");
 }};
 Entry.block.rotate_by_time = function(a, b) {
   if (!b.isStart) {
@@ -2263,23 +2990,49 @@ Entry.block.rotate_by_time = function(a, b) {
   delete b.frameCount;
   return b.callReturn();
 };
+Blockly.Blocks.direction_relative_duration = {init:function() {
+  this.setColour("#A751E3");
+  this.appendDummyInput().appendField(Lang.Blocks.MOVING_direction_relative_duration_1);
+  this.appendValueInput("DURATION").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField(Lang.Blocks.MOVING_direction_relative_duration_2);
+  this.appendValueInput("AMOUNT").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField(Lang.Blocks.MOVING_direction_relative_duration_3).appendField(new Blockly.FieldIcon("/img/assets/block_icon/moving_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.direction_relative_duration = function(a, b) {
+  if (!b.isStart) {
+    var c;
+    c = b.getNumberValue("DURATION", b);
+    var d = b.getNumberValue("AMOUNT", b);
+    b.isStart = !0;
+    b.frameCount = Math.floor(c * Entry.FPS);
+    b.dDirection = d / b.frameCount;
+  }
+  if (0 != b.frameCount) {
+    return a.setDirection(a.getDirection() + b.dDirection), b.frameCount--, b;
+  }
+  delete b.isStart;
+  delete b.frameCount;
+  delete b.dDirection;
+  return b.callReturn();
+};
 Blockly.Blocks.when_scene_start = {init:function() {
-  this.setColour("#189FC1");
-  this.appendDummyInput().appendField(new Blockly.FieldIcon("/img/assets/block_icon/start_icon_scene.png", "*", "start")).appendField(Lang.Blocks.SCENE_when_scene_start);
+  this.setColour("#3BBD70");
+  this.appendDummyInput().appendField(new Blockly.FieldIcon("/img/assets/block_icon/start_icon_scene_1_2.png", "*", "start")).appendField(Lang.Blocks.SCENE_when_scene_start);
   this.setInputsInline(!0);
   this.setNextStatement(!0);
-  this.setTooltip("");
 }};
 Entry.block.when_scene_start = function(a, b) {
   return b.callReturn();
 };
 Blockly.Blocks.start_scene = {init:function() {
-  this.setColour("#189FC1");
-  this.appendDummyInput().appendField(Lang.Blocks.SCENE_start_scene_1).appendField(new Blockly.FieldDropdownDynamic("scenes"), "VALUE").appendField(Lang.Blocks.SCENE_start_scene_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_scene.png", "*"));
+  this.setColour("#3BBD70");
+  this.appendDummyInput().appendField(Lang.Blocks.SCENE_start_scene_1).appendField(new Blockly.FieldDropdownDynamic("scenes"), "VALUE").appendField(Lang.Blocks.SCENE_start_scene_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/start_03.png", "*"));
   this.setInputsInline(!0);
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
-  this.setTooltip("");
 }};
 Entry.block.start_scene = function(a, b) {
   var c = b.getField("VALUE", b);
@@ -2289,12 +3042,11 @@ Entry.block.start_scene = function(a, b) {
   return null;
 };
 Blockly.Blocks.start_neighbor_scene = {init:function() {
-  this.setColour("#189FC1");
-  this.appendDummyInput().appendField(Lang.Blocks.SCENE_start_neighbor_scene_1).appendField(new Blockly.FieldDropdown([[Lang.Blocks.SCENE_start_scene_pre, "pre"], [Lang.Blocks.SCENE_start_scene_next, "next"]]), "OPERATOR").appendField(Lang.Blocks.SCENE_start_neighbor_scene_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_scene.png", "*"));
+  this.setColour("#3BBD70");
+  this.appendDummyInput().appendField(Lang.Blocks.SCENE_start_neighbor_scene_1).appendField(new Blockly.FieldDropdown([[Lang.Blocks.SCENE_start_scene_pre, "pre"], [Lang.Blocks.SCENE_start_scene_next, "next"]]), "OPERATOR").appendField(Lang.Blocks.SCENE_start_neighbor_scene_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/start_03.png", "*"));
   this.setInputsInline(!0);
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
-  this.setTooltip("");
 }};
 Entry.block.start_neighbor_scene = function(a, b) {
   var c = Entry.scene.selectedScene, d = Entry.scene.getScenes(), c = d.indexOf(c);
@@ -2305,11 +3057,10 @@ Blockly.Blocks.sound_something = {init:function() {
   this.setColour("#A4D01D");
   this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_something_1);
   this.appendDummyInput().appendField(new Blockly.FieldDropdownDynamic("sounds"), "VALUE");
-  this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_something_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_sound.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_something_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/sound_03.png", "*"));
   this.setInputsInline(!0);
   this.setNextStatement(!0);
   this.setPreviousStatement(!0);
-  this.setTooltip("");
 }};
 Entry.block.sound_something = function(a, b) {
   var c = b.getField("VALUE", b);
@@ -2322,11 +3073,10 @@ Blockly.Blocks.sound_something_second = {init:function() {
   this.appendDummyInput().appendField(new Blockly.FieldDropdownDynamic("sounds"), "VALUE");
   this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_something_second_2);
   this.appendValueInput("SECOND").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_something_second_3).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_sound.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_something_second_3).appendField(new Blockly.FieldIcon("/img/assets/block_icon/sound_03.png", "*"));
   this.setInputsInline(!0);
   this.setNextStatement(!0);
   this.setPreviousStatement(!0);
-  this.setTooltip("");
 }};
 Entry.block.sound_something_second = function(a, b) {
   var c = b.getField("VALUE", b), d = b.getNumberValue("SECOND", b);
@@ -2342,11 +3092,10 @@ Blockly.Blocks.sound_something_wait = {init:function() {
   this.setColour("#A4D01D");
   this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_something_wait_1);
   this.appendDummyInput().appendField(new Blockly.FieldDropdownDynamic("sounds"), "VALUE");
-  this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_something_wait_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_sound.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_something_wait_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/sound_03.png", "*"));
   this.setInputsInline(!0);
   this.setNextStatement(!0);
   this.setPreviousStatement(!0);
-  this.setTooltip("");
 }};
 Entry.block.sound_something_wait = function(a, b) {
   if (b.isPlay) {
@@ -2371,11 +3120,10 @@ Blockly.Blocks.sound_something_second_wait = {init:function() {
   this.appendDummyInput().appendField(new Blockly.FieldDropdownDynamic("sounds"), "VALUE");
   this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_something_second_wait_2);
   this.appendValueInput("SECOND").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_something_second_wait_3).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_sound.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_something_second_wait_3).appendField(new Blockly.FieldIcon("/img/assets/block_icon/sound_03.png", "*"));
   this.setInputsInline(!0);
   this.setNextStatement(!0);
   this.setPreviousStatement(!0);
-  this.setTooltip("");
 }};
 Entry.block.sound_something_second_wait = function(a, b) {
   if (b.isPlay) {
@@ -2404,11 +3152,10 @@ Blockly.Blocks.sound_volume_change = {init:function() {
   this.setColour("#A4D01D");
   this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_volume_change_1);
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_volume_change_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_sound.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_volume_change_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/sound_03.png", "*"));
   this.setInputsInline(!0);
   this.setNextStatement(!0);
   this.setPreviousStatement(!0);
-  this.setTooltip("");
 }};
 Entry.block.sound_volume_change = function(a, b) {
   var c = b.getNumberValue("VALUE", b) / 100, c = c + createjs.Sound.getVolume();
@@ -2421,11 +3168,10 @@ Blockly.Blocks.sound_volume_set = {init:function() {
   this.setColour("#A4D01D");
   this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_volume_set_1);
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_volume_set_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_sound.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_volume_set_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/sound_03.png", "*"));
   this.setInputsInline(!0);
   this.setNextStatement(!0);
   this.setPreviousStatement(!0);
-  this.setTooltip("");
 }};
 Entry.block.sound_volume_set = function(a, b) {
   var c = b.getNumberValue("VALUE", b) / 100;
@@ -2436,11 +3182,10 @@ Entry.block.sound_volume_set = function(a, b) {
 };
 Blockly.Blocks.sound_silent_all = {init:function() {
   this.setColour("#A4D01D");
-  this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_silent_all).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_sound.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_silent_all).appendField(new Blockly.FieldIcon("/img/assets/block_icon/sound_03.png", "*"));
   this.setInputsInline(!0);
   this.setNextStatement(!0);
   this.setPreviousStatement(!0);
-  this.setTooltip("");
 }};
 Entry.block.sound_silent_all = function(a, b) {
   createjs.Sound.stop();
@@ -2453,7 +3198,6 @@ Blockly.Blocks.get_sounds = {init:function() {
   this.appendDummyInput().appendField(" ");
   this.setOutput(!0, "String");
   this.setInputsInline(!0);
-  this.setTooltip("");
 }};
 Entry.block.get_sounds = function(a, b) {
   return b.getStringField("VALUE");
@@ -2462,11 +3206,10 @@ Blockly.Blocks.sound_something_with_block = {init:function() {
   this.setColour("#A4D01D");
   this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_something_1);
   this.appendValueInput("VALUE").setCheck(["String", "Number"]);
-  this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_something_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_sound.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_something_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/sound_03.png", "*"));
   this.setInputsInline(!0);
   this.setNextStatement(!0);
   this.setPreviousStatement(!0);
-  this.setTooltip("");
 }};
 Entry.block.sound_something_with_block = function(a, b) {
   var c = b.getStringValue("VALUE", b);
@@ -2479,11 +3222,10 @@ Blockly.Blocks.sound_something_second_with_block = {init:function() {
   this.appendValueInput("VALUE").setCheck(["String", "Number"]);
   this.appendDummyInput().appendField(" ").appendField(Lang.Blocks.SOUND_sound_something_second_2);
   this.appendValueInput("SECOND").setCheck(["String", "Number"]);
-  this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_something_second_3).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_sound.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_something_second_3).appendField(new Blockly.FieldIcon("/img/assets/block_icon/sound_03.png", "*"));
   this.setInputsInline(!0);
   this.setNextStatement(!0);
   this.setPreviousStatement(!0);
-  this.setTooltip("");
 }};
 Entry.block.sound_something_second_with_block = function(a, b) {
   var c = b.getStringValue("VALUE", b), d = b.getNumberValue("SECOND", b);
@@ -2494,11 +3236,10 @@ Blockly.Blocks.sound_something_wait_with_block = {init:function() {
   this.setColour("#A4D01D");
   this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_something_wait_1);
   this.appendValueInput("VALUE").setCheck(["String", "Number"]);
-  this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_something_wait_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_sound.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_something_wait_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/sound_03.png", "*"));
   this.setInputsInline(!0);
   this.setNextStatement(!0);
   this.setPreviousStatement(!0);
-  this.setTooltip("");
 }};
 Entry.block.sound_something_wait_with_block = function(a, b) {
   if (b.isPlay) {
@@ -2525,11 +3266,10 @@ Blockly.Blocks.sound_something_second_wait_with_block = {init:function() {
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
   this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_something_second_wait_2).appendField(" ");
   this.appendValueInput("SECOND").setCheck(["String", "Number"]);
-  this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_something_second_wait_3).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_sound.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_something_second_wait_3).appendField(new Blockly.FieldIcon("/img/assets/block_icon/sound_03.png", "*"));
   this.setInputsInline(!0);
   this.setNextStatement(!0);
   this.setPreviousStatement(!0);
-  this.setTooltip("");
 }};
 Entry.block.sound_something_second_wait_with_block = function(a, b) {
   if (b.isPlay) {
@@ -2554,12 +3294,62 @@ Entry.block.sound_something_second_wait_with_block = function(a, b) {
   }
   return b;
 };
+Blockly.Blocks.sound_from_to = {init:function() {
+  this.setColour("#A4D01D");
+  this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_from_to_1).appendField(new Blockly.FieldDropdownDynamic("sounds"), "SOUND").appendField(Lang.Blocks.SOUND_sound_from_to_2);
+  this.appendValueInput("START").setCheck(["String", "Number"]);
+  this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_from_to_3);
+  this.appendValueInput("END").setCheck(["String", "Number"]);
+  this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_from_to_4).appendField(new Blockly.FieldIcon("/img/assets/block_icon/sound_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setNextStatement(!0);
+  this.setPreviousStatement(!0);
+}};
+Entry.block.sound_from_to = function(a, b) {
+  var c = b.getField("SOUND", b);
+  if (c = a.parent.getSound(c)) {
+    var d = 1E3 * b.getNumberValue("START", b), e = 1E3 * b.getNumberValue("END", b);
+    createjs.Sound.play(c.id, {startTime:Math.min(d, e), duration:Math.max(d, e) - Math.min(d, e)});
+  }
+  return b.callReturn();
+};
+Blockly.Blocks.sound_from_to_and_wait = {init:function() {
+  this.setColour("#A4D01D");
+  this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_from_to_and_wait_1).appendField(new Blockly.FieldDropdownDynamic("sounds"), "SOUND").appendField(Lang.Blocks.SOUND_sound_from_to_and_wait_2);
+  this.appendValueInput("START").setCheck(["String", "Number"]);
+  this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_from_to_and_wait_3);
+  this.appendValueInput("END").setCheck(["String", "Number"]);
+  this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_from_to_and_wait_4).appendField(new Blockly.FieldIcon("/img/assets/block_icon/sound_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setNextStatement(!0);
+  this.setPreviousStatement(!0);
+}};
+Entry.block.sound_from_to_and_wait = function(a, b) {
+  if (b.isPlay) {
+    if (1 == b.playState) {
+      return b;
+    }
+    delete b.isPlay;
+    delete b.playState;
+    return b.callReturn();
+  }
+  b.isPlay = !0;
+  b.playState = 1;
+  var c = a.parent.getSound(b.getField("SOUND", b));
+  if (c) {
+    var d = 1E3 * b.getNumberValue("START", b), e = 1E3 * b.getNumberValue("END", b), f = Math.min(d, e), d = Math.max(d, e) - f;
+    createjs.Sound.play(c.id, {startTime:f, duration:d});
+    setTimeout(function() {
+      b.playState = 0;
+    }, d);
+  }
+  return b;
+};
 Blockly.Blocks.when_run_button_click = {init:function() {
   this.setColour("#3BBD70");
   this.appendDummyInput().appendField(new Blockly.FieldIcon("/img/assets/block_icon/start_icon_play.png", "*", "start")).appendField(Lang.Blocks.START_when_run_button_click);
   this.setInputsInline(!0);
   this.setNextStatement(!0);
-  this.setTooltip("");
 }};
 Entry.block.when_run_button_click = function(a, b) {
   return b.callReturn();
@@ -2567,10 +3357,9 @@ Entry.block.when_run_button_click = function(a, b) {
 Blockly.Blocks.press_some_key = {init:function() {
   this.setColour("#3BBD70");
   this.appendDummyInput().appendField(new Blockly.FieldIcon("/img/assets/block_icon/start_icon_keyboard.png", "*", "start")).appendField(Lang.Blocks.START_press_some_key_1).appendField(new Blockly.FieldDropdown([["q", "81"], ["w", "87"], ["e", "69"], ["r", "82"], ["a", "65"], ["s", "83"], ["d", "68"], [Lang.Blocks.START_press_some_key_up, "38"], [Lang.Blocks.START_press_some_key_down, "40"], [Lang.Blocks.START_press_some_key_left, "37"], [Lang.Blocks.START_press_some_key_right, "39"], [Lang.Blocks.START_press_some_key_enter, 
-  "13"], [Lang.Blocks.START_press_some_key_space, "32"]]), "VALUE").appendField(Lang.Blocks.START_press_some_key_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_start.png", "*"));
+  "13"], [Lang.Blocks.START_press_some_key_space, "32"]]), "VALUE").appendField(Lang.Blocks.START_press_some_key_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/start_03.png", "*"));
   this.setInputsInline(!0);
   this.setNextStatement(!0);
-  this.setTooltip("");
 }};
 Entry.block.press_some_key = function(a, b) {
   return b.callReturn();
@@ -2580,7 +3369,6 @@ Blockly.Blocks.when_some_key_pressed = {init:function() {
   this.appendDummyInput().appendField(new Blockly.FieldIcon("/img/assets/block_icon/start_icon_keyboard.png", "*", "start")).appendField(Lang.Blocks.START_press_some_key_1).appendField(new Blockly.FieldKeydownInput("81"), "VALUE").appendField(Lang.Blocks.START_press_some_key_2);
   this.setInputsInline(!0);
   this.setNextStatement(!0);
-  this.setTooltip("");
 }};
 Entry.block.when_some_key_pressed = function(a, b) {
   return b.callReturn();
@@ -2590,7 +3378,6 @@ Blockly.Blocks.mouse_clicked = {init:function() {
   this.appendDummyInput().appendField(new Blockly.FieldIcon("/img/assets/block_icon/start_icon_mouse.png", "*", "start")).appendField(Lang.Blocks.START_mouse_clicked);
   this.setInputsInline(!0);
   this.setNextStatement(!0);
-  this.setTooltip("");
 }};
 Entry.block.mouse_clicked = function(a, b) {
   return b.callReturn();
@@ -2600,7 +3387,6 @@ Blockly.Blocks.mouse_click_cancled = {init:function() {
   this.appendDummyInput().appendField(new Blockly.FieldIcon("/img/assets/block_icon/start_icon_mouse.png", "*", "start")).appendField(Lang.Blocks.START_mouse_click_cancled);
   this.setInputsInline(!0);
   this.setNextStatement(!0);
-  this.setTooltip("");
 }};
 Entry.block.mouse_click_cancled = function(a, b) {
   return b.callReturn();
@@ -2610,7 +3396,6 @@ Blockly.Blocks.when_object_click = {init:function() {
   this.appendDummyInput().appendField(new Blockly.FieldIcon("/img/assets/block_icon/start_icon_mouse.png", "*", "start")).appendField(Lang.Blocks.START_when_object_click);
   this.setInputsInline(!0);
   this.setNextStatement(!0);
-  this.setTooltip("");
 }};
 Entry.block.when_object_click = function(a, b) {
   return b.callReturn();
@@ -2620,7 +3405,6 @@ Blockly.Blocks.when_object_click_canceled = {init:function() {
   this.appendDummyInput().appendField(new Blockly.FieldIcon("/img/assets/block_icon/start_icon_mouse.png", "*", "start")).appendField(Lang.Blocks.START_when_object_click_canceled);
   this.setInputsInline(!0);
   this.setNextStatement(!0);
-  this.setTooltip("");
 }};
 Entry.block.when_object_click_canceled = function(a, b) {
   return b.callReturn();
@@ -2630,7 +3414,6 @@ Blockly.Blocks.when_some_key_click = {init:function() {
   this.appendDummyInput().appendField(new Blockly.FieldIcon("/img/assets/block_icon/start_icon_keyboard.png", "*", "start")).appendField(Lang.Blocks.START_when_some_key_click);
   this.setInputsInline(!0);
   this.setNextStatement(!0);
-  this.setTooltip("");
 }};
 Entry.block.when_some_key_click = function(a, b) {
   return b.callReturn();
@@ -2640,19 +3423,17 @@ Blockly.Blocks.when_message_cast = {init:function() {
   this.appendDummyInput().appendField(new Blockly.FieldIcon("/img/assets/block_icon/start_icon_signal.png", "*", "start")).appendField(Lang.Blocks.START_when_message_cast_1).appendField(new Blockly.FieldDropdownDynamic("messages"), "VALUE").appendField(Lang.Blocks.START_when_message_cast_2);
   this.setInputsInline(!0);
   this.setNextStatement(!0);
-  this.setTooltip("");
 }};
 Entry.block.when_message_cast = function(a, b) {
   return b.callReturn();
 };
 Blockly.Blocks.message_cast = {init:function() {
   this.setColour("#3BBD70");
-  this.appendDummyInput().appendField(Lang.Blocks.START_message_cast_1).appendField(new Blockly.FieldDropdownDynamic("messages"), "VALUE").appendField(Lang.Blocks.START_message_cast_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_start.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.START_message_cast_1).appendField(new Blockly.FieldDropdownDynamic("messages"), "VALUE").appendField(Lang.Blocks.START_message_cast_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/start_03.png", "*"));
   this.setInputsInline(!0);
   this.setInputsInline(!0);
   this.setNextStatement(!0);
   this.setPreviousStatement(!0);
-  this.setTooltip("");
 }};
 Entry.block.message_cast = function(a, b) {
   var c = b.getField("VALUE", b), d = Entry.isExist(c, "id", Entry.variableContainer.messages_);
@@ -2664,20 +3445,18 @@ Entry.block.message_cast = function(a, b) {
 };
 Blockly.Blocks.add_message = {init:function() {
   this.setColour("#3BBD70");
-  this.appendDummyInput().appendField(Lang.Blocks.START_add_message).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_start.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.START_add_message).appendField(new Blockly.FieldIcon("/img/assets/block_icon/start_03.png", "*"));
   this.setInputsInline(!0);
-  this.setTooltip("");
 }};
 Entry.block.add_massage = function(a, b) {
   return b.callReturn();
 };
 Blockly.Blocks.message_cast_wait = {init:function() {
   this.setColour("#3BBD70");
-  this.appendDummyInput().appendField(Lang.Blocks.START_message_send_wait_1).appendField(new Blockly.FieldDropdownDynamic("messages"), "VALUE").appendField(Lang.Blocks.START_message_send_wait_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_start.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.START_message_send_wait_1).appendField(new Blockly.FieldDropdownDynamic("messages"), "VALUE").appendField(Lang.Blocks.START_message_send_wait_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/start_03.png", "*"));
   this.setInputsInline(!0);
   this.setNextStatement(!0);
   this.setPreviousStatement(!0);
-  this.setTooltip("");
 }};
 Entry.block.message_cast_wait = function(a, b) {
   if (b.runningScript) {
@@ -2693,8 +3472,8 @@ Entry.block.message_cast_wait = function(a, b) {
   }
   var e = [];
   Entry.container.mapEntityIncludeCloneOnScene(function(a, b) {
-    for (var c = b[0], d = b[1], m = a.parent.script.childNodes, n = 0;n < m.length;n++) {
-      var l = m[n], q = Entry.Xml.getField("VALUE", l);
+    for (var c = b[0], d = b[1], n = a.parent.script.childNodes, m = 0;m < n.length;m++) {
+      var l = n[m], q = Entry.Xml.getField("VALUE", l);
       Entry.Xml.isTypeOf(c, l) && q == d && (q = new Entry.Script(a), q.init(l), e.push(q));
     }
   }, ["when_message_cast", c]);
@@ -2719,7 +3498,6 @@ Blockly.Blocks.text_write = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-  this.setTooltip("");
 }};
 Entry.block.text_write = function(a, b) {
   var c = b.getStringValue("VALUE", b), c = Entry.convertToRoundedDecimals(c, 3);
@@ -2734,7 +3512,6 @@ Blockly.Blocks.text_append = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-  this.setTooltip("");
 }};
 Entry.block.text_append = function(a, b) {
   var c = b.getStringValue("VALUE", b);
@@ -2749,7 +3526,6 @@ Blockly.Blocks.text_prepend = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-  this.setTooltip("");
 }};
 Entry.block.text_prepend = function(a, b) {
   var c = b.getStringValue("VALUE", b);
@@ -2762,7 +3538,6 @@ Blockly.Blocks.text_flush = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-  this.setTooltip("");
 }};
 Entry.block.text_flush = function(a, b) {
   a.setText("");
@@ -2774,11 +3549,10 @@ Blockly.Blocks.change_variable = {init:function() {
   this.appendDummyInput().appendField(new Blockly.FieldDropdownDynamic("variables"), "VARIABLE");
   this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_change_variable_2);
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_change_variable_3).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_variable.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_change_variable_3).appendField(new Blockly.FieldIcon("/img/assets/block_icon/variable_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-  this.setTooltip("");
 }};
 Entry.block.change_variable = function(a, b) {
   var c = b.getField("VARIABLE", b), d = b.getNumberValue("VALUE", b), e = 0, d = Entry.parseNumber(d);
@@ -2796,11 +3570,10 @@ Blockly.Blocks.set_variable = {init:function() {
   this.appendDummyInput().appendField(new Blockly.FieldDropdownDynamic("variables"), "VARIABLE");
   this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_set_variable_2);
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_set_variable_3).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_variable.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_set_variable_3).appendField(new Blockly.FieldIcon("/img/assets/block_icon/variable_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-  this.setTooltip("");
 }};
 Entry.block.set_variable = function(a, b) {
   var c = b.getField("VARIABLE", b), d = b.getValue("VALUE", b);
@@ -2810,11 +3583,10 @@ Entry.block.set_variable = function(a, b) {
 Blockly.Blocks.show_variable = {init:function() {
   this.setColour("#E457DC");
   this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_show_variable_1);
-  this.appendDummyInput().appendField(new Blockly.FieldDropdownDynamic("variables"), "VARIABLE").appendField(Lang.Blocks.VARIABLE_show_variable_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_variable.png", "*"));
+  this.appendDummyInput().appendField(new Blockly.FieldDropdownDynamic("variables"), "VARIABLE").appendField(Lang.Blocks.VARIABLE_show_variable_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/variable_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-  this.setTooltip("");
 }};
 Entry.block.show_variable = function(a, b) {
   var c = b.getField("VARIABLE", b), c = Entry.variableContainer.getVariable(c, a);
@@ -2825,11 +3597,10 @@ Entry.block.show_variable = function(a, b) {
 Blockly.Blocks.hide_variable = {init:function() {
   this.setColour("#E457DC");
   this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_hide_variable_1);
-  this.appendDummyInput().appendField(new Blockly.FieldDropdownDynamic("variables"), "VARIABLE").appendField(Lang.Blocks.VARIABLE_hide_variable_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_variable.png", "*"));
+  this.appendDummyInput().appendField(new Blockly.FieldDropdownDynamic("variables"), "VARIABLE").appendField(Lang.Blocks.VARIABLE_hide_variable_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/variable_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-  this.setTooltip("");
 }};
 Entry.block.hide_variable = function(a, b) {
   var c = b.getField("VARIABLE", b);
@@ -2838,9 +3609,8 @@ Entry.block.hide_variable = function(a, b) {
 };
 Blockly.Blocks.get_y = {init:function() {
   this.setColour(230);
-  this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_get_y).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_variable.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_get_y).appendField(new Blockly.FieldIcon("/img/assets/block_icon/variable_03.png", "*"));
   this.setOutput(!0, "Number");
-  this.setTooltip(Blockly.Msg.MATH_NUMBER_TOOLTIP);
 }};
 Blockly.Blocks.get_variable = {init:function() {
   this.setColour("#E457DC");
@@ -2848,7 +3618,6 @@ Blockly.Blocks.get_variable = {init:function() {
   this.appendDummyInput().appendField(new Blockly.FieldDropdownDynamic("variables"), "VARIABLE").appendField(Lang.Blocks.VARIABLE_get_variable_2);
   this.setOutput(!0, "Number");
   this.setInputsInline(!0);
-  this.setTooltip(Blockly.Msg.MATH_NUMBER_TOOLTIP);
 }};
 Entry.block.get_variable = function(a, b) {
   var c = b.getField("VARIABLE", b);
@@ -2858,10 +3627,14 @@ Blockly.Blocks.ask_and_wait = {init:function() {
   this.setColour("#E457DC");
   this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_ask_and_wait_1);
   this.appendValueInput("VALUE").setCheck(["String", "Number", null]);
-  this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_ask_and_wait_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_variable.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_ask_and_wait_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/variable_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
+}, whenAdd:function() {
+  Entry.container.showProjectAnswer();
+}, whenRemove:function(a) {
+  Entry.container.hideProjectAnswer(a);
 }};
 Entry.block.ask_and_wait = function(a, b) {
   var c = Entry.container.inputValue, d = Entry.stage.inputField, e = b.getValue("VALUE", b);
@@ -2871,7 +3644,7 @@ Entry.block.ask_and_wait = function(a, b) {
   if (c.sprite == a && d && !d._isHidden) {
     return b;
   }
-  if (c.sprite != a && b.isInit || c.value && c.sprite == a && d._isHidden && b.isInit) {
+  if (c.sprite != a && b.isInit || c.getValue() && c.sprite == a && d._isHidden && b.isInit) {
     return a.dialog && a.dialog.remove(), delete b.isInit, b.callReturn();
   }
   e = Entry.convertToRoundedDecimals(e, 3);
@@ -2879,7 +3652,6 @@ Entry.block.ask_and_wait = function(a, b) {
   Entry.stage.showInputField();
   c.script = b;
   c.sprite = a;
-  c.value = "";
   b.isInit = !0;
   return b;
 };
@@ -2889,25 +3661,13 @@ Blockly.Blocks.get_canvas_input_value = {init:function() {
   this.appendDummyInput().appendField(" ");
   this.setOutput(!0, "Number");
   this.setInputsInline(!0);
+}, whenAdd:function() {
+  Entry.container.showProjectAnswer();
+}, whenRemove:function(a) {
+  Entry.container.hideProjectAnswer(a);
 }};
 Entry.block.get_canvas_input_value = function(a, b) {
   return Entry.container.getInputValue();
-};
-Blockly.Blocks.combine_something = {init:function() {
-  this.setColour("#E457DC");
-  this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_combine_something_1);
-  this.appendValueInput("VALUE1").setCheck(["String", "Number", null]);
-  this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_combine_something_2);
-  this.appendValueInput("VALUE2").setCheck(["String", "Number", null]);
-  this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_combine_something_3);
-  this.setInputsInline(!0);
-  this.setOutput(!0, "String");
-}};
-Entry.block.combine_something = function(a, b) {
-  var c = b.getStringValue("VALUE1", b), d = b.getStringValue("VALUE2", b);
-  isNaN(c) || (c = Entry.convertToRoundedDecimals(c, 3));
-  isNaN(d) || (d = Entry.convertToRoundedDecimals(d, 3));
-  return c + d;
 };
 Blockly.Blocks.add_value_to_list = {init:function() {
   this.setColour("#E457DC");
@@ -2915,11 +3675,10 @@ Blockly.Blocks.add_value_to_list = {init:function() {
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
   this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_add_value_to_list_2);
   this.appendDummyInput().appendField(new Blockly.FieldDropdownDynamic("lists"), "LIST");
-  this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_add_value_to_list_3).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_variable.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_add_value_to_list_3).appendField(new Blockly.FieldIcon("/img/assets/block_icon/variable_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-  this.setTooltip("");
 }};
 Entry.block.add_value_to_list = function(a, b) {
   var c = b.getField("LIST", b), d = b.getValue("VALUE", b), c = Entry.variableContainer.getList(c, a);
@@ -2934,11 +3693,10 @@ Blockly.Blocks.remove_value_from_list = {init:function() {
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
   this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_remove_value_from_list_2);
   this.appendDummyInput().appendField(new Blockly.FieldDropdownDynamic("lists"), "LIST");
-  this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_remove_value_from_list_3).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_variable.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_remove_value_from_list_3).appendField(new Blockly.FieldIcon("/img/assets/block_icon/variable_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-  this.setTooltip("");
 }};
 Entry.block.remove_value_from_list = function(a, b) {
   var c = b.getField("LIST", b), d = b.getValue("VALUE", b), c = Entry.variableContainer.getList(c, a);
@@ -2957,11 +3715,10 @@ Blockly.Blocks.insert_value_to_list = {init:function() {
   this.appendDummyInput().appendField(new Blockly.FieldDropdownDynamic("lists"), "LIST");
   this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_insert_value_to_list_3);
   this.appendValueInput("INDEX").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_insert_value_to_list_4).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_variable.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_insert_value_to_list_4).appendField(new Blockly.FieldIcon("/img/assets/block_icon/variable_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-  this.setTooltip("");
 }};
 Entry.block.insert_value_to_list = function(a, b) {
   var c = b.getField("LIST", b), d = b.getValue("DATA", b), e = b.getValue("INDEX", b), c = Entry.variableContainer.getList(c, a);
@@ -2980,11 +3737,10 @@ Blockly.Blocks.change_value_list_index = {init:function() {
   this.appendValueInput("INDEX").setCheck(["Number", "String"]);
   this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_change_value_list_index_3);
   this.appendValueInput("DATA").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_change_value_list_index_4).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_variable.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_change_value_list_index_4).appendField(new Blockly.FieldIcon("/img/assets/block_icon/variable_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-  this.setTooltip("");
 }};
 Entry.block.change_value_list_index = function(a, b) {
   var c = b.getField("LIST", b), d = b.getValue("DATA", b), e = b.getValue("INDEX", b), c = Entry.variableContainer.getList(c, a);
@@ -3004,7 +3760,6 @@ Blockly.Blocks.value_of_index_from_list = {init:function() {
   this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_value_of_index_from_list_3);
   this.setOutput(!0, "String");
   this.setInputsInline(!0);
-  this.setTooltip("");
 }};
 Entry.block.value_of_index_from_list = function(a, b) {
   var c = b.getField("LIST", b), d = b.getValue("INDEX", b), c = Entry.variableContainer.getList(c, a), d = Entry.getListRealIndex(d, c);
@@ -3020,7 +3775,6 @@ Blockly.Blocks.length_of_list = {init:function() {
   this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_length_of_list_2);
   this.setOutput(!0, "Number");
   this.setInputsInline(!0);
-  this.setTooltip("");
 }};
 Entry.block.length_of_list = function(a, b) {
   var c = b.getField("LIST", b);
@@ -3029,11 +3783,10 @@ Entry.block.length_of_list = function(a, b) {
 Blockly.Blocks.show_list = {init:function() {
   this.setColour("#E457DC");
   this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_show_list_1);
-  this.appendDummyInput().appendField(new Blockly.FieldDropdownDynamic("lists"), "LIST").appendField(Lang.Blocks.VARIABLE_show_list_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_variable.png", "*"));
+  this.appendDummyInput().appendField(new Blockly.FieldDropdownDynamic("lists"), "LIST").appendField(Lang.Blocks.VARIABLE_show_list_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/variable_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-  this.setTooltip("");
 }};
 Entry.block.show_list = function(a, b) {
   var c = b.getField("LIST", b);
@@ -3043,11 +3796,10 @@ Entry.block.show_list = function(a, b) {
 Blockly.Blocks.hide_list = {init:function() {
   this.setColour("#E457DC");
   this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_hide_list_1);
-  this.appendDummyInput().appendField(new Blockly.FieldDropdownDynamic("lists"), "LIST").appendField(Lang.Blocks.VARIABLE_hide_list_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/entry_icon_variable.png", "*"));
+  this.appendDummyInput().appendField(new Blockly.FieldDropdownDynamic("lists"), "LIST").appendField(Lang.Blocks.VARIABLE_hide_list_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/variable_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-  this.setTooltip("");
 }};
 Entry.block.hide_list = function(a, b) {
   var c = b.getField("LIST", b);
@@ -3061,10 +3813,48 @@ Blockly.Blocks.options_for_list = {init:function() {
   this.appendDummyInput().appendField(" ");
   this.setOutput(!0, "Number");
   this.setInputsInline(!0);
-  this.setTooltip("");
 }};
 Entry.block.options_for_list = function(a, b) {
   return b.getField("OPERATOR", b);
+};
+Blockly.Blocks.set_visible_answer = {init:function() {
+  this.setColour("#E457DC");
+  this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_get_canvas_input_value);
+  this.appendDummyInput().appendField(new Blockly.FieldDropdown([[Lang.Blocks.CALC_timer_visible_show, "SHOW"], [Lang.Blocks.CALC_timer_visible_hide, "HIDE"]]), "BOOL");
+  this.appendDummyInput().appendField("").appendField(new Blockly.FieldIcon("/img/assets/block_icon/variable_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}, whenAdd:function() {
+  Entry.container.showProjectAnswer();
+}, whenRemove:function(a) {
+  Entry.container.hideProjectAnswer(a);
+}};
+Entry.block.set_visible_answer = function(a, b) {
+  "HIDE" == b.getField("BOOL", b) ? Entry.container.inputValue.setVisible(!1) : Entry.container.inputValue.setVisible(!0);
+  return b.callReturn();
+};
+Blockly.Blocks.is_included_in_list = {init:function() {
+  this.setColour("#E457DC");
+  this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_is_included_in_list_1);
+  this.appendDummyInput().appendField(new Blockly.FieldDropdownDynamic("lists"), "LIST");
+  this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_is_included_in_list_2);
+  this.appendValueInput("DATA").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_is_included_in_list_3);
+  this.setOutput(!0, "Boolean");
+  this.setInputsInline(!0);
+}};
+Entry.block.is_included_in_list = function(a, b) {
+  var c = b.getField("LIST", b), d = b.getStringValue("DATA", b), c = Entry.variableContainer.getList(c);
+  if (!c) {
+    return !1;
+  }
+  for (var c = c.array_, e = 0, f = c.length;e < f;e++) {
+    if (c[e].data.toString() == d.toString()) {
+      return !0;
+    }
+  }
+  return !1;
 };
 Entry.Model = function() {
   this.data = this.schema;
@@ -3222,7 +4012,7 @@ Entry.Container.prototype.addObject = function(a, b) {
   c.name = Entry.getOrderedName(c.name, this.objects_);
   Entry.stateManager.addCommand("add object", this, this.removeObject, c);
   c.scene || (c.scene = Entry.scene.selectedScene);
-  "number" == typeof b ? a.sprite.category && "\ubc30\uacbd" == a.sprite.category.main ? (c.setLock(!0), this.objects_.push(c)) : this.objects_.splice(b, 0, c) : a.sprite.category && "\ubc30\uacbd" == a.sprite.category.main ? this.objects_.push(c) : this.objects_.unshift(c);
+  "number" == typeof b ? a.sprite.category && "background" == a.sprite.category.main ? (c.setLock(!0), this.objects_.push(c)) : this.objects_.splice(b, 0, c) : a.sprite.category && "background" == a.sprite.category.main ? this.objects_.push(c) : this.objects_.unshift(c);
   c.generateView();
   c.pictures.map(function(a) {
     a.id = Entry.generateHash();
@@ -3251,10 +4041,10 @@ Entry.Container.prototype.removeObject = function(a) {
   c = new Entry.State(this.addObject, c, b);
   a.destroy();
   this.objects_.splice(b, 1);
+  this.setCurrentObjects();
   Entry.stage.sortZorder();
   this.objects_.length && 0 != b ? Entry.container.selectObject(this.objects_[b - 1].id) : this.objects_.length && 0 == b ? Entry.container.selectObject(this.getCurrentObjects()[0].id) : (Entry.container.selectObject(), Entry.playground.flushPlayground());
   Entry.toast.success(Lang.Workspace.remove_object, a.name + " " + Lang.Workspace.remove_object_msg);
-  this.setCurrentObjects();
   Entry.variableContainer.removeLocalVariables(a.id);
   Entry.playground.reloadPlayground();
   return c;
@@ -3380,64 +4170,77 @@ Entry.Container.prototype.getDropdownList = function(a) {
     }
   } else {
     if ("spritesWithMouse" == a) {
-      for (c = this.getCurrentObjects(), d = c.length, b.push([Lang.Blocks.mouse_pointer, "mouse"]), a = 0;a < d;a++) {
+      c = this.getCurrentObjects();
+      d = c.length;
+      for (a = 0;a < d;a++) {
         e = c[a], b.push([e.name, e.id]);
       }
+      b.push([Lang.Blocks.mouse_pointer, "mouse"]);
     } else {
-      if ("collision" == a) {
+      if ("spritesWithSelf" == a) {
         c = this.getCurrentObjects();
         d = c.length;
         for (a = 0;a < d;a++) {
           e = c[a], b.push([e.name, e.id]);
         }
-        b.push([Lang.Blocks.wall, "wall"]);
-        b.push([Lang.Blocks.wall_up, "wall_up"]);
-        b.push([Lang.Blocks.wall_down, "wall_down"]);
-        b.push([Lang.Blocks.wall_right, "wall_right"]);
-        b.push([Lang.Blocks.wall_left, "wall_left"]);
+        b.push([Lang.Blocks.self, "self"]);
       } else {
-        if ("pictures" == a) {
-          for (c = Entry.playground.object.pictures, a = 0;a < c.length;a++) {
-            d = c[a], b.push([d.name, d.id]);
+        if ("collision" == a) {
+          b.push([Lang.Blocks.mouse_pointer, "mouse"]);
+          c = this.getCurrentObjects();
+          d = c.length;
+          for (a = 0;a < d;a++) {
+            e = c[a], b.push([e.name, e.id]);
           }
+          b.push([Lang.Blocks.wall, "wall"]);
+          b.push([Lang.Blocks.wall_up, "wall_up"]);
+          b.push([Lang.Blocks.wall_down, "wall_down"]);
+          b.push([Lang.Blocks.wall_right, "wall_right"]);
+          b.push([Lang.Blocks.wall_left, "wall_left"]);
         } else {
-          if ("messages" == a) {
-            for (c = Entry.variableContainer.messages_, a = 0;a < c.length;a++) {
+          if ("pictures" == a) {
+            for (c = Entry.playground.object.pictures, a = 0;a < c.length;a++) {
               d = c[a], b.push([d.name, d.id]);
             }
           } else {
-            if ("variables" == a) {
-              c = Entry.variableContainer.variables_;
-              for (a = 0;a < c.length;a++) {
-                d = c[a], d.object_ && d.object_ != Entry.playground.object.id || b.push([d.getName(), d.getId()]);
+            if ("messages" == a) {
+              for (c = Entry.variableContainer.messages_, a = 0;a < c.length;a++) {
+                d = c[a], b.push([d.name, d.id]);
               }
-              b && 0 != b.length || b.push([Lang.Blocks.VARIABLE_variable, "null"]);
             } else {
-              if ("lists" == a) {
-                c = Entry.variableContainer.lists_;
+              if ("variables" == a) {
+                c = Entry.variableContainer.variables_;
                 for (a = 0;a < c.length;a++) {
-                  d = c[a], b.push([d.getName(), d.getId()]);
+                  d = c[a], d.object_ && d.object_ != Entry.playground.object.id || b.push([d.getName(), d.getId()]);
                 }
-                b && 0 != b.length || b.push([Lang.Blocks.VARIABLE_list, "null"]);
+                b && 0 != b.length || b.push([Lang.Blocks.VARIABLE_variable, "null"]);
               } else {
-                if ("scenes" == a) {
-                  for (c = Entry.scene.scenes_, a = 0;a < c.length;a++) {
-                    d = c[a], b.push([d.name, d.id]);
+                if ("lists" == a) {
+                  c = Entry.variableContainer.lists_;
+                  for (a = 0;a < c.length;a++) {
+                    d = c[a], b.push([d.getName(), d.getId()]);
                   }
+                  b && 0 != b.length || b.push([Lang.Blocks.VARIABLE_list, "null"]);
                 } else {
-                  if ("sounds" == a) {
-                    for (c = Entry.playground.object.sounds, a = 0;a < c.length;a++) {
+                  if ("scenes" == a) {
+                    for (c = Entry.scene.scenes_, a = 0;a < c.length;a++) {
                       d = c[a], b.push([d.name, d.id]);
                     }
                   } else {
-                    if ("clone" == a) {
-                      for (b.push([Lang.Blocks.oneself, "self"]), d = this.objects_.length, a = 0;a < d;a++) {
-                        e = this.objects_[a], b.push([e.name, e.id]);
+                    if ("sounds" == a) {
+                      for (c = Entry.playground.object.sounds, a = 0;a < c.length;a++) {
+                        d = c[a], b.push([d.name, d.id]);
                       }
                     } else {
-                      if ("objectSequence" == a) {
-                        for (d = this.getCurrentObjects().length, a = 0;a < d;a++) {
-                          b.push([(a + 1).toString(), a.toString()]);
+                      if ("clone" == a) {
+                        for (b.push([Lang.Blocks.oneself, "self"]), d = this.objects_.length, a = 0;a < d;a++) {
+                          e = this.objects_[a], b.push([e.name, e.id]);
+                        }
+                      } else {
+                        if ("objectSequence" == a) {
+                          for (d = this.getCurrentObjects().length, a = 0;a < d;a++) {
+                            b.push([(a + 1).toString(), a.toString()]);
+                          }
                         }
                       }
                     }
@@ -3550,10 +4353,10 @@ Entry.Container.prototype.getVariableJSON = function() {
   return a;
 };
 Entry.Container.prototype.getInputValue = function() {
-  return this.inputValue.value;
+  return this.inputValue.getValue();
 };
 Entry.Container.prototype.setInputValue = function(a) {
-  this.inputValue.value = a ? a : "";
+  a ? this.inputValue.setValue(a) : this.inputValue.setValue(0);
 };
 Entry.Container.prototype.resetSceneDuringRun = function() {
   this.mapEntityOnScene(function(a) {
@@ -3607,7 +4410,7 @@ Entry.Container.prototype.generateTabView = function() {
   var d = Entry.createElement("span");
   d.addClass("entryContainerTabItemWorkspace");
   d.addClass("entryEllipsis");
-  d.innerHTML = "\uc624\ube0c\uc81d\ud2b8";
+  d.innerHTML = Lang.Menus.lecture_container_tab_object;
   d.bindOnClick(function() {
     b.changeTabView("object");
   });
@@ -3616,7 +4419,7 @@ Entry.Container.prototype.generateTabView = function() {
   var e = Entry.createElement("span");
   e.addClass("entryContainerTabItemWorkspace", "entryRemove");
   e.addClass("entryEllipsis");
-  e.innerHTML = "\uac15\uc758 \ub3d9\uc601\uc0c1";
+  e.innerHTML = Lang.Menus.lecture_container_tab_video;
   e.bindOnClick(function() {
     b.changeTabView("movie");
   });
@@ -3626,7 +4429,7 @@ Entry.Container.prototype.generateTabView = function() {
   e = Entry.createElement("span");
   e.addClass("entryContainerTabItemWorkspace", "entryRemove");
   e.addClass("entryEllipsis");
-  e.innerHTML = "\uc644\uc131\ub41c \ud504\ub85c\uc81d\ud2b8";
+  e.innerHTML = Lang.Menus.lecture_container_tab_project;
   e.bindOnClick(function() {
     b.changeTabView("done");
   });
@@ -3636,7 +4439,7 @@ Entry.Container.prototype.generateTabView = function() {
   e = Entry.createElement("span");
   e.addClass("entryContainerTabItemWorkspace");
   e.addClass("entryEllipsis");
-  e.innerHTML = "\ube14\ub85d \ub3c4\uc6c0\ub9d0";
+  e.innerHTML = Lang.Menus.lecture_container_tab_help;
   e.bindOnClick(function() {
     b.changeTabView("helper");
   });
@@ -3684,6 +4487,20 @@ Entry.Container.prototype.initYoutube = function(a) {
   this.movieFrame = c;
   b.appendChild(c);
 };
+Entry.Container.prototype.initTvcast = function(a) {
+  this.tvcast = a;
+  this.youtubeTab.removeClass("entryRemove");
+  a = this.view_;
+  a = a.style.width.substring(0, a.style.width.length - 2);
+  var b = this.movieContainer, c = Entry.createElement("iframe");
+  c.setAttribute("width", a);
+  c.setAttribute("height", 9 * a / 16);
+  c.setAttribute("allowfullscreen", "");
+  c.setAttribute("frameborder", 0);
+  c.setAttribute("src", this.tvcast);
+  this.movieFrame = c;
+  b.appendChild(c);
+};
 Entry.Container.prototype.initDoneProject = function(a) {
   this.doneProject = a;
   this.iframeTab.removeClass("entryRemove");
@@ -3704,6 +4521,23 @@ Entry.Container.prototype.blurAllInputs = function() {
       a[b].blur();
     }
   });
+};
+Entry.Container.prototype.showProjectAnswer = function() {
+  var a = this.inputValue;
+  a && a.setVisible(!0);
+};
+Entry.Container.prototype.hideProjectAnswer = function(a) {
+  var b = this.inputValue;
+  if (b && b.isVisible() && !Entry.engine.isState("run")) {
+    for (var c = Entry.container.getAllObjects(), d = ["ask_and_wait", "get_canvas_input_value", "set_visible_answer"], e = 0, f = c.length;e < f;e++) {
+      for (var h = c[e].script.getElementsByTagName("block"), g = 0, k = h.length;g < k;g++) {
+        if (-1 < d.indexOf(h[g].getAttribute("type")) && h[g].getAttribute("id") != a.getAttribute("id")) {
+          return;
+        }
+      }
+    }
+    b.setVisible(!1);
+  }
 };
 Entry.Dialog = function(a, b, c, d) {
   a.dialog && a.dialog.remove();
@@ -3793,7 +4627,7 @@ Entry.Engine.prototype.generateView = function(a, b) {
     }), this.stopButton = Entry.createElement("button"), this.stopButton.addClass("entryEngineButtonMinimize"), this.stopButton.addClass("entryStopButtonMinimize"), this.stopButton.addClass("entryRemove"), this.stopButton.innerHTML = Lang.Workspace.stop, this.view_.appendChild(this.stopButton), this.stopButton.bindOnClick(function(a) {
       this.blur();
       Entry.engine.toggleStop();
-    }), this.pauseButton = Entry.createElement("button"), this.pauseButton.innerHTML = "\uc77c\uc2dc\uc815\uc9c0", this.pauseButton.addClass("entryEngineButtonMinimize"), this.pauseButton.addClass("entryPauseButtonMinimize"), this.pauseButton.addClass("entryRemove"), this.view_.appendChild(this.pauseButton), this.pauseButton.bindOnClick(function(a) {
+    }), this.pauseButton = Entry.createElement("button"), this.pauseButton.innerHTML = Lang.Workspace.pause, this.pauseButton.addClass("entryEngineButtonMinimize"), this.pauseButton.addClass("entryPauseButtonMinimize"), this.pauseButton.addClass("entryRemove"), this.view_.appendChild(this.pauseButton), this.pauseButton.bindOnClick(function(a) {
       this.blur();
       Entry.engine.togglePause();
     }), this.mouseView = Entry.createElement("div"), this.mouseView.addClass("entryMouseViewMinimize"), this.mouseView.addClass("entryRemove"), this.view_.appendChild(this.mouseView)) : "phone" == b && (this.view_ = a, this.view_.addClass("entryEngine", "entryEnginePhone"), this.headerView_ = Entry.createElement("div", "entryEngineHeader"), this.headerView_.addClass("entryEngineHeaderPhone"), this.view_.appendChild(this.headerView_), this.maximizeButton = Entry.createElement("button"), this.maximizeButton.addClass("entryEngineButtonPhone", 
@@ -3905,7 +4739,7 @@ Entry.Engine.prototype.toggleSpeedPanel = function() {
     this.maximizeButton.addClass("entryRemove");
     this.mouseView.addClass("entryRemoveElement");
     this.speedLabel_ = Entry.createElement("div", "entrySpeedLabelWorkspace");
-    this.speedLabel_.innerHTML = "\uc18d\ub3c4 \uc870\uc808\ud558\uae30";
+    this.speedLabel_.innerHTML = Lang.Workspace.speed;
     this.view_.insertBefore(this.speedLabel_, this.maximizeButton);
     this.speedProgress_ = Entry.createElement("table", "entrySpeedProgressWorkspace");
     for (var a = Entry.createElement("tr"), b = this.speeds, c = 0;5 > c;c++) {
@@ -3963,13 +4797,9 @@ Entry.Engine.prototype.computeFunction = function(a) {
 Entry.Engine.computeThread = function(a, b) {
   Entry.engine.isContinue = !0;
   for (var c = !1;b && Entry.engine.isContinue && !c;) {
-    try {
-      Entry.engine.isContinue = !b.isRepeat;
-      var d = b.run(), c = d && d.type == b.type;
-      b = d;
-    } catch (e) {
-      throw console.log(e.stack), Entry.engine.toggleStop(), Entry.engine.isUpdating = !1, "workspace" == Entry.type && (Entry.container.selectObject(), Entry.container.selectObject(a.parent.id), Entry.playground.changeViewMode("code"), Blockly.mainWorkspace.activatePreviousBlock(b.id)), Entry.toast.alert(Lang.Msgs.runtime_error, Lang.Workspace.check_runtime_error, !0), e;
-    }
+    Entry.engine.isContinue = !b.isRepeat;
+    var d = b.run(), c = d && d.type == b.type;
+    b = d;
   }
   return b;
 };
@@ -3990,7 +4820,7 @@ Entry.Engine.prototype.toggleRun = function() {
   }), Entry.engine.projectTimer.takeSnapshot(), Entry.container.takeSequenceSnapshot(), Entry.scene.takeStartSceneSnapshot(), this.state = "run", this.fireEvent("when_run_button_click"));
   this.state = "run";
   "mobile" == Entry.type && this.view_.addClass("entryEngineBlueWorkspace");
-  this.pauseButton.innerHTML = "\uc77c\uc2dc\uc815\uc9c0";
+  this.pauseButton.innerHTML = Lang.Workspace.pause;
   this.runButton.addClass("run");
   this.runButton.addClass("entryRemove");
   this.stopButton.removeClass("entryRemove");
@@ -4003,7 +4833,8 @@ Entry.Engine.prototype.toggleRun = function() {
 };
 Entry.Engine.prototype.toggleStop = function() {
   Entry.addActivity("stop");
-  Entry.container.mapEntity(function(a) {
+  var a = Entry.container;
+  a.mapEntity(function(a) {
     a.loadSnapshot();
     a.object.filters = [];
     a.resetFilter();
@@ -4018,8 +4849,9 @@ Entry.Engine.prototype.toggleStop = function() {
     a.updateView();
   });
   Entry.engine.projectTimer.loadSnapshot();
-  Entry.container.clearRunningState();
-  Entry.container.loadSequenceSnapshot();
+  a.clearRunningState();
+  a.loadSequenceSnapshot();
+  a.setInputValue();
   Entry.scene.loadStartSceneSnapshot();
   Entry.Func.clearThreads();
   createjs.Sound.setVolume(1);
@@ -4035,7 +4867,7 @@ Entry.Engine.prototype.toggleStop = function() {
   Entry.stage.hideInputField();
 };
 Entry.Engine.prototype.togglePause = function() {
-  "pause" == this.state ? (this.state = "run", this.pauseButton.innerHTML = "\uc77c\uc2dc\uc815\uc9c0") : (this.state = "pause", this.pauseButton.innerHTML = "\ub2e4\uc2dc\uc2dc\uc791", this.runButton.removeClass("entryRemove"), this.stopButton.removeClass("entryRemove"));
+  "pause" == this.state ? (this.state = "run", this.pauseButton.innerHTML = Lang.Workspace.pause) : (this.state = "pause", this.pauseButton.innerHTML = Lang.Workspace.restart, this.runButton.removeClass("entryRemove"), this.stopButton.removeClass("entryRemove"));
 };
 Entry.Engine.prototype.fireEvent = function(a) {
   "run" == this.state && Entry.container.mapEntityIncludeCloneOnScene(this.raiseEvent, a);
@@ -4066,13 +4898,15 @@ Entry.Engine.prototype.raiseEventOnEntity = function(a, b) {
   }
 };
 Entry.Engine.prototype.captureKeyEvent = function(a) {
-  0 > Entry.engine.pressedKeys.indexOf(a.keyCode) && Entry.engine.pressedKeys.push(a.keyCode);
-  a.ctrlKey ? (a.preventDefault(), "workspace" == Entry.type && 83 == a.keyCode ? Entry.dispatchEvent("saveWorkspace") : "workspace" == Entry.type && 82 == a.keyCode ? Entry.engine.run() : "workspace" == Entry.type && 48 < a.keyCode && 58 > a.keyCode && Entry.playground.selectMenu(a.keyCode - 49)) : Entry.engine.isState("run") && (Entry.container.mapEntityIncludeCloneOnScene(Entry.engine.raiseKeyEvent, ["press_some_key", a.keyCode]), Entry.container.mapEntityIncludeCloneOnScene(Entry.engine.raiseKeyEvent, 
-  ["when_some_key_pressed", a.keyCode]));
-  Entry.engine.isState("stop") && "workspace" === Entry.type && 37 <= a.keyCode && 40 >= a.keyCode && Entry.stage.moveSprite(a);
+  var b = a.keyCode, c = Entry.type;
+  0 > Entry.engine.pressedKeys.indexOf(b) && Entry.engine.pressedKeys.push(b);
+  a.ctrlKey && "workspace" == c ? 83 == b ? (a.preventDefault(), Entry.dispatchEvent("saveWorkspace")) : 82 == b ? (a.preventDefault(), Entry.engine.run()) : 90 == b ? (a.preventDefault(), Entry.dispatchEvent("undo")) : 48 < b && 58 > b && (a.preventDefault(), Entry.playground.selectMenu(b - 49)) : Entry.engine.isState("run") && (Entry.container.mapEntityIncludeCloneOnScene(Entry.engine.raiseKeyEvent, ["press_some_key", b]), Entry.container.mapEntityIncludeCloneOnScene(Entry.engine.raiseKeyEvent, 
+  ["when_some_key_pressed", b]));
+  Entry.engine.isState("stop") && "workspace" === c && 37 <= b && 40 >= b && Entry.stage.moveSprite(a);
 };
 Entry.Engine.prototype.captureKeyUpEvent = function(a) {
-  0 <= Entry.engine.pressedKeys.indexOf(a.keyCode) && Entry.engine.pressedKeys.splice(Entry.engine.pressedKeys.indexOf(a.keyCode), 1);
+  a = a.keyCode;
+  0 <= Entry.engine.pressedKeys.indexOf(a) && Entry.engine.pressedKeys.splice(Entry.engine.pressedKeys.indexOf(a), 1);
 };
 Entry.Engine.prototype.raiseKeyEvent = function(a, b) {
   for (var c = b[0], d = b[1], e = a.parent.script.childNodes, f = 0;f < e.length;f++) {
@@ -4105,16 +4939,6 @@ Entry.Engine.prototype.toggleFullscreen = function() {
 Entry.Engine.prototype.exitFullScreen = function() {
   document.webkitIsFullScreen || document.mozIsFullScreen || document.isFullScreen || (Entry.engine.footerView_.removeClass("entryRemove"), Entry.engine.headerView_.removeClass("entryRemove"));
 };
-Entry.Engine.prototype.toggleProjectTimer = function() {
-  var a = this.projectTimer;
-  a && (this.isState("run") ? (a.start = (new Date).getTime(), a.tick = setInterval(function(a) {
-    Entry.engine.updateProjectTimer();
-  }, 1E3 / 60)) : (clearInterval(a.tick), this.updateProjectTimer(0)));
-};
-Entry.Engine.prototype.updateProjectTimer = function(a) {
-  var b = Entry.engine.projectTimer;
-  b && ("undefined" == typeof a ? (a = (new Date).getTime() - b.start, b.setValue(a / 1E3)) : (b.setValue(a), b.start = (new Date).getTime()));
-};
 Entry.Engine.prototype.showProjectTimer = function() {
   Entry.engine.projectTimer && this.projectTimer.setVisible(!0);
 };
@@ -4134,6 +4958,20 @@ Entry.Engine.prototype.hideProjectTimer = function(a) {
 Entry.Engine.prototype.clearTimer = function() {
   clearInterval(this.ticker);
   clearInterval(this.projectTimer.tick);
+};
+Entry.Engine.prototype.startProjectTimer = function() {
+  var a = this.projectTimer;
+  a && (a.start = (new Date).getTime(), a.isInit = !0, a.pausedTime = 0, a.tick = setInterval(function(a) {
+    Entry.engine.updateProjectTimer();
+  }, 1E3 / 60));
+};
+Entry.Engine.prototype.stopProjectTimer = function() {
+  var a = this.projectTimer;
+  a && (this.updateProjectTimer(0), a.isInit = !1, a.pausedTime = 0, this.isPaused = !1, clearInterval(this.projectTimer.tick));
+};
+Entry.Engine.prototype.updateProjectTimer = function(a) {
+  var b = Entry.engine.projectTimer;
+  b && ("undefined" == typeof a ? b.isPaused || b.setValue(((new Date).getTime() - b.start - b.pausedTime) / 1E3) : (b.setValue(a), b.pausedTime = 0, b.start = (new Date).getTime()));
 };
 Entry.EntityObject = function(a) {
   this.parent = a;
@@ -4194,7 +5032,7 @@ Entry.EntityObject.prototype.restoreEntity = function(a) {
   var b = this.toJSON();
   this.syncModel_(a);
   Entry.dispatchEvent("updateObject");
-  return new Entry.State(this, this.restoreEntity, b);
+  Entry.stateManager.addCommand("restore object", this, this.restoreEntity, b);
 };
 Entry.EntityObject.prototype.clearScript = function(a) {
   for (;this.runningScript.length;) {
@@ -4270,6 +5108,7 @@ Entry.EntityObject.prototype.getScaleY = function() {
   return this.scaleY;
 };
 Entry.EntityObject.prototype.setSize = function(a) {
+  1 > a && (a = 1);
   a /= this.getSize();
   this.setScaleX(this.getScaleX() * a);
   this.setScaleY(this.getScaleY() * a);
@@ -4599,7 +5438,7 @@ p.blockHelperOn = function() {
   a.parentView_.appendChild(b);
   if (!Entry.isForLecture) {
     var c = Entry.createElement("div", "entryBlockHelperHeaderWorkspace");
-    c.innerHTML = "\ube14\ub85d \uc124\uba85";
+    c.innerHTML = Lang.Helper.Block_info;
     var d = Entry.createElement("button", "entryBlockHelperDisposeWorkspace");
     d.addClass("entryBtn");
     d.bindOnClick(function() {
@@ -4621,7 +5460,7 @@ p.blockHelperOn = function() {
   a.blockHelperContent_.appendChild(b);
   b = Entry.createElement("div", "entryBlockHelperDescriptionWorkspace");
   a.blockHelperContent_.appendChild(b);
-  b.innerHTML = "\ube14\ub85d\uc744 \ud074\ub9ad\ud558\uba74 \ube14\ub85d\uc5d0 \ub300\ud55c \uc124\uba85\uc774 \ub098\ud0c0\ub0a9\ub2c8\ub2e4.";
+  b.innerHTML = Lang.Helper.Block_click_msg;
   this.blockHelperDescription_ = b;
   this.blockChangeEvent = Blockly.bindEvent_(Blockly.mainWorkspace.getCanvas(), "blocklySelectChange", this, this.updateSelectedBlock);
   Entry.playground.blockMenu && (this.menuBlockChangeEvent = Blockly.bindEvent_(Entry.playground.blockMenu.workspace_.getCanvas(), "blocklySelectChange", this, this.updateSelectedBlock));
@@ -4645,11 +5484,8 @@ p.updateSelectedBlock = function() {
   Blockly.selected && (this.first && (this.blockHelperContent_.removeClass("entryBlockHelperIntro"), this.first = !1), this.renderBlock(Blockly.selected.type));
 };
 p.renderBlock = function(a) {
-  if (a = this.blockHelpData[a]) {
-    var b = jQuery.parseXML(a.xml), b = this.blockMenu_.show(b.childNodes);
-    this.blockHelperDescription_.innerHTML = a.description;
-    $(this.blockHelperDescription_).css({top:b + 40});
-  }
+  var b = this.blockHelpData[a];
+  b && (b = jQuery.parseXML(b.xml), b = this.blockMenu_.show(b.childNodes), this.blockHelperDescription_.innerHTML = Lang.Helper[a], $(this.blockHelperDescription_).css({top:b + 40}));
 };
 Entry.HW = function() {
   this.connectTrial = 0;
@@ -4667,28 +5503,33 @@ Entry.HW = function() {
   this.portData = {};
   this.sendQueue = {};
   this.settingQueue = {};
+  this.hwModule = this.selectedDevice = null;
+  Entry.addEventListener("stop", this.setZero);
+  this.hwInfo = {11:Entry.Arduino, 12:Entry.SensorBoard, 24:Entry.Hamster, 31:Entry.Bitbrick};
 };
 Entry.HW.TRIAL_LIMIT = 1;
 p = Entry.HW.prototype;
 p.initSocket = function() {
   if (this.connectTrial >= Entry.HW.TRIAL_LIMIT) {
-    this.isFirstConnect || Entry.toast.alert("\uc544\ub450\uc774\ub178 \uc5f0\uacb0", "\uc544\ub450\uc774\ub178 \uc5f0\uacb0\uc5d0 \uc2e4\ud328\ud588\uc2b5\ub2c8\ub2e4. \uc5f0\uacb0\ud504\ub85c\uadf8\ub7a8\uc774 \ucf1c\uc838 \uc788\ub294\uc9c0, \uc5d4\ud2b8\ub9ac \uc0ac\uc774\ud2b8\uac00 \uc5ec\ub7ec\uac1c \uc5f4\ub824\uc788\uc9c0\ub294 \uc54a\uc740\uc9c0 \ud655\uc778\ud574 \uc8fc\uc138\uc694.", !1), this.isFirstConnect = !1;
+    this.isFirstConnect || Entry.toast.alert(Lang.Menus.connect_hw, Lang.Menus.connect_fail, !1), this.isFirstConnect = !1;
   } else {
     var a = this, b = new WebSocket("ws://localhost:23518");
     this.socket = b;
     this.connected = !1;
-    Entry.dispatchEvent("hwChanged");
     b.binaryType = "arraybuffer";
     this.connectTrial++;
     b.onopen = function() {
       a.initHardware();
     };
     b.onmessage = function(b) {
-      a.updatePortData(b.data);
+      b = JSON.parse(b.data);
+      a.checkDevice(b);
+      a.updatePortData(b);
     };
     b.onclose = function() {
       a.initSocket();
     };
+    Entry.dispatchEvent("hwChanged");
   }
 };
 p.retryConnect = function() {
@@ -4700,7 +5541,6 @@ p.initHardware = function() {
   this.connected = !0;
   Entry.dispatchEvent("hwChanged");
   Entry.playground && Entry.playground.object && Entry.playground.setMenu(Entry.playground.object.objectType);
-  Entry.toast.success("\uc544\ub450\uc774\ub178 \uc5f0\uacb0", "\uc544\ub450\uc774\ub178 \uc5f0\uacb0\uc5d0 \uc131\uacf5\ud558\uc600\uc2b5\ub2c8\ub2e4.", !1);
 };
 p.setDigitalPortValue = function(a, b) {
   this.sendQueue[a] = b;
@@ -4713,43 +5553,38 @@ p.getDigitalPortValue = function(a) {
     return 0;
   }
   this.setPortReadable(a);
-  return this.portData.d ? Number(this.portData.d[a]) : 0;
+  return void 0 !== this.portData[a] ? this.portData[a] : 0;
 };
 p.setPortReadable = function(a) {
-  this.settingQueue[a] = !0;
+  this.sendQueue.readablePorts || (this.sendQueue.readablePorts = []);
+  this.sendQueue.readablePorts.push(a);
 };
 p.update = function() {
-  if (this.socket && 1 == this.socket.readyState) {
-    var a = [], b;
-    for (b in this.settingQueue) {
-      var c = this.settingQueue[b];
-      c && (d = 160 + (b << 1), a.push(d));
-    }
-    this.settingQueue = {};
-    for (b in this.sendQueue) {
-      var c = this.sendQueue[b], d;
-      255 == c || 0 == c ? d = 224 + (b << 1) + (255 == c ? 1 : 0) : (d = 192 + (b << 1) + (127 < c ? 1 : 0), a.push(d), d = c & 127);
-      a.push(d);
-    }
-    this.sendQueue = {};
-    b = new Uint8Array(a.length);
-    for (c = 0;c < a.length;c++) {
-      b[c] = a[c];
-    }
-    this.socket.send(b);
-  }
+  this.socket && 1 == this.socket.readyState && (this.socket.send(JSON.stringify(this.sendQueue)), this.sendQueue.readablePorts = []);
 };
 p.updatePortData = function(a) {
-  this.portData = JSON.parse(a);
+  this.portData = a;
 };
 p.closeConnection = function() {
   this.socket && this.socket.close();
 };
 p.downloadConnector = function() {
-  window.open("/lib/EntryArduino/EntryArduino.zip", "_blank").focus();
+  window.open("/file/entry_v0.1.zip", "_blank").focus();
 };
 p.downloadSource = function() {
   window.open("/lib/EntryArduino/arduino/entry.ino", "_blank").focus();
+};
+p.setZero = function() {
+  Entry.hw.hwModule && Entry.hw.hwModule.setZero();
+};
+p.checkDevice = function(a) {
+  void 0 !== a.company && (a = "" + a.company + a.model, a != this.selectedDevice && (this.selectedDevice = a, this.hwModule = this.hwInfo[a], Entry.dispatchEvent("hwChanged"), Entry.toast.success(Lang.Menus.connect_hw, Lang.Menus.connect_message.replace("%1", Lang.Device[Entry.hw.hwModule.name]), !1)));
+};
+p.banHW = function() {
+  var a = this.hwInfo, b;
+  for (b in a) {
+    Entry.playground.blockMenu.banClass(a[b].name);
+  }
 };
 Entry.init = function(a, b) {
   Entry.assert("object" === typeof b, "Init option is not object");
@@ -4780,6 +5615,11 @@ Entry.init = function(a, b) {
   Entry.addEventListener("saveWorkspace", function(a) {
     Entry.addActivity("save");
   });
+  var c = createjs.Sound.play;
+  createjs.Sound.play = function(a, b) {
+    b ? b.pan = .01 : b = {pan:.01};
+    return c(a, b);
+  };
   "IE" != Entry.getBrowserType().substr(0, 2) || window.flashaudio ? (createjs.Sound.registerPlugins([createjs.WebAudioPlugin]), Entry.soundQueue = new createjs.LoadQueue, Entry.soundQueue.installPlugin(createjs.Sound), Entry.loadAudio_(["/media/click.mp3", "/media/click.wav", "/media/click.ogg"], "click"), Entry.loadAudio_(["/media/delete.mp3", "/media/delete.ogg", "/media/delete.wav"], "delete")) : (createjs.FlashAudioPlugin.swfPath = "/media/", createjs.Sound.registerPlugins([createjs.FlashAudioPlugin]), 
   Entry.soundQueue = new createjs.LoadQueue, Entry.soundQueue.installPlugin(createjs.Sound), Entry.loadAudio_(["/media/click.mp3", "/media/click.wav", "/media/click.ogg"], "click"), Entry.loadAudio_(["/media/delete.mp3", "/media/delete.ogg", "/media/delete.wav"], "delete"), window.flashaudio = !0);
 };
@@ -4837,6 +5677,15 @@ Entry.createDom = function(a, b) {
     c.width = 640;
     c.height = 360;
     d.insertBefore(c, this.engine.addButton);
+    c.addEventListener("mousewheel", function(a) {
+      var b = Entry.variableContainer.getListById(Entry.stage.mouseCoordinate);
+      a = 0 < a.wheelDelta ? !0 : !1;
+      for (var c = 0;c < b.length;c++) {
+        var d = b[c];
+        d.scrollButton_.y = a ? 46 <= d.scrollButton_.y ? d.scrollButton_.y - 23 : 23 : d.scrollButton_.y + 23;
+        d.updateView();
+      }
+    });
     this.canvas_ = c;
     this.stage.initStage(this.canvas_);
     c = Entry.createElement("div");
@@ -5072,22 +5921,22 @@ Entry.EntryObject.prototype.generateView = function() {
     var k = Entry.createElement("span");
     k.addClass("entryObjectCoordinateSizeWorkspace");
     k.innerHTML = "\ud06c\uae30 :";
-    var m = Entry.createElement("input");
-    m.addClass("entryObjectCoordinateInputWorkspace", "entryObjectCoordinateInputWorkspace_size");
-    m.bindOnClick(function(a) {
+    var n = Entry.createElement("input");
+    n.addClass("entryObjectCoordinateInputWorkspace", "entryObjectCoordinateInputWorkspace_size");
+    n.bindOnClick(function(a) {
       a.stopPropagation();
       this.select();
     });
-    m.setAttribute("disabled", "disabled");
+    n.setAttribute("disabled", "disabled");
     d.appendChild(e);
     d.appendChild(f);
     d.appendChild(h);
     d.appendChild(g);
     d.appendChild(k);
-    d.appendChild(m);
+    d.appendChild(n);
     d.xInput_ = f;
     d.yInput_ = g;
-    d.sizeInput_ = m;
+    d.sizeInput_ = n;
     this.coordinateView_ = d;
     c = this;
     f.onkeypress = function(a) {
@@ -5106,11 +5955,11 @@ Entry.EntryObject.prototype.generateView = function() {
       c.updateCoordinateView();
       Entry.stage.updateObject();
     };
-    m.onkeypress = function(a) {
+    n.onkeypress = function(a) {
       13 == a.keyCode && this.blur();
     };
-    m.onblur = function(a) {
-      isNaN(m.value) || c.entity.setSize(Number(m.value));
+    n.onblur = function(a) {
+      isNaN(n.value) || c.entity.setSize(Number(n.value));
       c.updateCoordinateView();
       Entry.stage.updateObject();
     };
@@ -5121,15 +5970,15 @@ Entry.EntryObject.prototype.generateView = function() {
     e = Entry.createElement("span");
     e.addClass("entryObjectRotateSpanWorkspace");
     e.innerHTML = Lang.Workspace.rotation + " : ";
-    var n = Entry.createElement("input");
-    n.addClass("entryObjectRotateInputWorkspace");
-    n.setAttribute("disabled", "disabled");
-    n.bindOnClick(function(a) {
+    var m = Entry.createElement("input");
+    m.addClass("entryObjectRotateInputWorkspace");
+    m.setAttribute("disabled", "disabled");
+    m.bindOnClick(function(a) {
       a.stopPropagation();
       this.select();
     });
     this.rotateSpan_ = e;
-    this.rotateInput_ = n;
+    this.rotateInput_ = m;
     h = Entry.createElement("span");
     h.addClass("entryObjectDirectionSpanWorkspace");
     h.innerHTML = Lang.Workspace.direction + " : ";
@@ -5142,17 +5991,17 @@ Entry.EntryObject.prototype.generateView = function() {
     });
     this.directionInput_ = l;
     d.appendChild(e);
-    d.appendChild(n);
+    d.appendChild(m);
     d.appendChild(h);
     d.appendChild(l);
-    d.rotateInput_ = n;
+    d.rotateInput_ = m;
     d.directionInput_ = l;
     c = this;
-    n.onkeypress = function(a) {
+    m.onkeypress = function(a) {
       13 == a.keyCode && this.blur();
     };
-    n.onblur = function(a) {
-      a = n.value;
+    m.onblur = function(a) {
+      a = m.value;
       -1 != a.indexOf("\u02da") && (a = a.substring(0, a.indexOf("\u02da")));
       isNaN(a) || c.entity.setRotation(Number(a));
       c.updateRotationView();
@@ -5235,10 +6084,10 @@ Entry.EntryObject.prototype.generateView = function() {
       if (a = Entry.container.getObject(this.id)) {
         Entry.container.selectObject(a.id), Entry.playground.injectObject(a);
       }
-    }), this.view_.appendChild(d), d = Entry.createElement("div"), d.addClass("entryObjectInformationWorkspace"), d.object = this, this.isInformationToggle = !1, a.appendChild(d), this.informationView_ = d, d = Entry.createElement("div"), d.addClass("entryObjectRotateLabelWrapperWorkspace"), this.view_.appendChild(d), this.rotateLabelWrapperView_ = d, e = Entry.createElement("span"), e.addClass("entryObjectRotateSpanWorkspace"), e.innerHTML = Lang.Workspace.rotation + " : ", n = Entry.createElement("input"), 
-    n.addClass("entryObjectRotateInputWorkspace"), this.rotateSpan_ = e, this.rotateInput_ = n, h = Entry.createElement("span"), h.addClass("entryObjectDirectionSpanWorkspace"), h.innerHTML = Lang.Workspace.direction + " : ", l = Entry.createElement("input"), l.addClass("entryObjectDirectionInputWorkspace"), this.directionInput_ = l, d.appendChild(e), d.appendChild(n), d.appendChild(h), d.appendChild(l), d.rotateInput_ = n, d.directionInput_ = l, c = this, n.onkeypress = function(a) {
-      13 == a.keyCode && (a = n.value, -1 != a.indexOf("\u02da") && (a = a.substring(0, a.indexOf("\u02da"))), isNaN(a) || c.entity.setRotation(Number(a)), c.updateRotationView(), n.blur());
-    }, n.onblur = function(a) {
+    }), this.view_.appendChild(d), d = Entry.createElement("div"), d.addClass("entryObjectInformationWorkspace"), d.object = this, this.isInformationToggle = !1, a.appendChild(d), this.informationView_ = d, d = Entry.createElement("div"), d.addClass("entryObjectRotateLabelWrapperWorkspace"), this.view_.appendChild(d), this.rotateLabelWrapperView_ = d, e = Entry.createElement("span"), e.addClass("entryObjectRotateSpanWorkspace"), e.innerHTML = Lang.Workspace.rotation + " : ", m = Entry.createElement("input"), 
+    m.addClass("entryObjectRotateInputWorkspace"), this.rotateSpan_ = e, this.rotateInput_ = m, h = Entry.createElement("span"), h.addClass("entryObjectDirectionSpanWorkspace"), h.innerHTML = Lang.Workspace.direction + " : ", l = Entry.createElement("input"), l.addClass("entryObjectDirectionInputWorkspace"), this.directionInput_ = l, d.appendChild(e), d.appendChild(m), d.appendChild(h), d.appendChild(l), d.rotateInput_ = m, d.directionInput_ = l, c = this, m.onkeypress = function(a) {
+      13 == a.keyCode && (a = m.value, -1 != a.indexOf("\u02da") && (a = a.substring(0, a.indexOf("\u02da"))), isNaN(a) || c.entity.setRotation(Number(a)), c.updateRotationView(), m.blur());
+    }, m.onblur = function(a) {
       c.entity.setRotation(c.entity.getRotation());
       Entry.stage.updateObject();
     }, l.onkeypress = function(a) {
@@ -5247,8 +6096,8 @@ Entry.EntryObject.prototype.generateView = function() {
       c.entity.setDirection(c.entity.getDirection());
       Entry.stage.updateObject();
     }, a = Entry.createElement("div"), a.addClass("entryObjectRotationWrapperWorkspace"), a.object = this, this.view_.appendChild(a), d = Entry.createElement("span"), d.addClass("entryObjectCoordinateWorkspace"), a.appendChild(d), e = Entry.createElement("span"), e.addClass("entryObjectCoordinateSpanWorkspace"), e.innerHTML = "X:", f = Entry.createElement("input"), f.addClass("entryObjectCoordinateInputWorkspace"), h = Entry.createElement("span"), h.addClass("entryObjectCoordinateSpanWorkspace"), 
-    h.innerHTML = "Y:", g = Entry.createElement("input"), g.addClass("entryObjectCoordinateInputWorkspace entryObjectCoordinateInputWorkspace_right"), k = Entry.createElement("span"), k.addClass("entryObjectCoordinateSpanWorkspace"), k.innerHTML = "\ud06c\uae30:", m = Entry.createElement("input"), m.addClass("entryObjectCoordinateInputWorkspace", "entryObjectCoordinateInputWorkspace_size"), d.appendChild(e), d.appendChild(f), d.appendChild(h), d.appendChild(g), d.appendChild(k), d.appendChild(m), 
-    d.xInput_ = f, d.yInput_ = g, d.sizeInput_ = m, this.coordinateView_ = d, c = this, f.onkeypress = function(a) {
+    h.innerHTML = "Y:", g = Entry.createElement("input"), g.addClass("entryObjectCoordinateInputWorkspace entryObjectCoordinateInputWorkspace_right"), k = Entry.createElement("span"), k.addClass("entryObjectCoordinateSpanWorkspace"), k.innerHTML = Lang.Workspace.Size, n = Entry.createElement("input"), n.addClass("entryObjectCoordinateInputWorkspace", "entryObjectCoordinateInputWorkspace_size"), d.appendChild(e), d.appendChild(f), d.appendChild(h), d.appendChild(g), d.appendChild(k), d.appendChild(n), 
+    d.xInput_ = f, d.yInput_ = g, d.sizeInput_ = n, this.coordinateView_ = d, c = this, f.onkeypress = function(a) {
       13 == a.keyCode && (isNaN(f.value) || c.entity.setX(Number(f.value)), c.updateCoordinateView(), f.blur());
     }, f.onblur = function(a) {
       c.entity.setX(c.entity.getX());
@@ -5291,22 +6140,20 @@ Entry.EntryObject.prototype.initEntity = function(a) {
     var c = a.sprite.pictures[0].dimension;
     b.regX = c.width / 2;
     b.regY = c.height / 2;
-    a = "\ubc30\uacbd" == a.sprite.category.main ? Math.max(270 / c.height, 480 / c.width) : "new" == a.sprite.category.main ? 1 : 200 / (c.width + c.height);
-    b.scaleX = b.scaleY = a;
+    b.scaleX = b.scaleY = "background" == a.sprite.category.main ? Math.max(270 / c.height, 480 / c.width) : "new" == a.sprite.category.main ? 1 : 200 / (c.width + c.height);
     b.width = c.width;
     b.height = c.height;
   } else {
     if ("textBox" == this.objectType) {
       if (b.regX = 25, b.regY = 12, b.scaleX = b.scaleY = 1.5, b.width = 50, b.height = 24, b.text = a.name, a.options) {
-        if (c = a.options, a = "", c.bold && (a += "bold "), c.italic && (a += "italic "), b.underline = c.underline, b.strike = c.strike, b.font = a + "20px " + c.font.family, b.colour = c.colour, b.bgColor = c.background, b.lineBreak = c.lineBreak) {
-          c = b.text.split("\n");
-          if (1 < c.length) {
-            a = c[0].length;
-            for (var d = 1, e = c.length;d < e;d++) {
-              c[d].length > a && (a = c[d].length);
+        if (a = a.options, c = "", a.bold && (c += "bold "), a.italic && (c += "italic "), b.underline = a.underline, b.strike = a.strike, b.font = c + "20px " + a.font.family, b.colour = a.colour, b.bgColor = a.background, b.lineBreak = a.lineBreak) {
+          a = b.text.split("\n");
+          if (1 < a.length) {
+            for (var c = a[0].length, d = 1, e = a.length;d < e;d++) {
+              a[d].length > c && (c = a[d].length);
             }
-            b.width = 25 * a;
-            b.height = 24 * c.length;
+            b.width = 25 * c;
+            b.height = 24 * a.length;
           } else {
             b.width = 25 * b.text.length;
           }
@@ -5519,20 +6366,16 @@ Entry.EntryObject.prototype.setLock = function(a) {
 };
 Entry.EntryObject.prototype.updateInputViews = function(a) {
   a = a || this.getLock();
-  var b = [this.nameView_, this.coordinateView_.xInput_, this.coordinateView_.yInput_, this.rotateInput_, this.directionInput_, this.editView_, this.coordinateView_.sizeInput_], c = this.editView_;
-  if (a) {
-    if (c.removeClass("editButtonToggle"), c.addClass("editButtonToggle_"), "disabled" != b[0].getAttribute("disabled")) {
-      for (a = 0;a < b.length;a++) {
-        b[a].setAttribute("disabled", "disabled"), b[a].removeClass("selectedEditingObject"), tog = !0;
-      }
+  var b = [this.nameView_, this.coordinateView_.xInput_, this.coordinateView_.yInput_, this.rotateInput_, this.directionInput_, this.coordinateView_.sizeInput_];
+  if (a && "disabled" != b[0].getAttribute("disabled")) {
+    for (a = 0;a < b.length;a++) {
+      b[a].setAttribute("disabled", "disabled"), b[a].removeClass("selectedEditingObject"), tog = !0;
     }
-  } else {
-    c.removeClass("editButtonToggle_"), c.addClass("editButtonToggle");
   }
 };
 var tog = !0;
 Entry.EntryObject.prototype.editObjectValues = function(a) {
-  var b = [this.nameView_, this.coordinateView_.xInput_, this.coordinateView_.yInput_, this.rotateInput_, this.directionInput_, this.coordinateView_.sizeInput_];
+  var b = this.getLock() ? [this.nameView_] : [this.nameView_, this.coordinateView_.xInput_, this.coordinateView_.yInput_, this.rotateInput_, this.directionInput_, this.coordinateView_.sizeInput_];
   if (a) {
     for (a = 0;a < b.length;a++) {
       b[a].removeAttribute("disabled"), b[a].addClass("selectedEditingObject");
@@ -5880,8 +6723,7 @@ Entry.Painter.prototype.colorPixel = function(a, b, c, d, e) {
   this.colorLayerData.data[a + 3] = e;
 };
 Entry.Painter.prototype.pickStrokeColor = function(a) {
-  var b = Math.round(a.stageX);
-  a = 4 * (Math.round(a.stageY) * this.canvas.width + b);
+  a = 4 * (Math.round(a.stageY) * this.canvas.width + Math.round(a.stageX));
   this.stroke.lineColor = Entry.rgb2hex(this.colorLayerData.data[a], this.colorLayerData.data[a + 1], this.colorLayerData.data[a + 2]);
   document.getElementById("entryPainterAttrCircle").style.backgroundColor = this.stroke.lineColor;
   document.getElementById("entryPainterAttrCircleInput").value = this.stroke.lineColor;
@@ -5957,7 +6799,7 @@ Entry.Painter.prototype.restorePainter = function(a) {
     c.objectContainer.removeAllChildren();
     c.objectContainer.addChild(a);
   };
-  return new Entry.State(this, this.restorePainter, b);
+  Entry.stateManager.addCommand("restore sprite", this, this.restorePainter, b);
 };
 Entry.Painter.prototype.platten = function() {
   this.colorLayerData = this.ctx.getImageData(0, 0, this.canvas.width, this.canvas.height);
@@ -5974,14 +6816,14 @@ Entry.Painter.prototype.fill = function() {
     var c = new createjs.Point(this.stage.mouseX, this.stage.mouseY);
     c.x = Math.round(c.x);
     c.y = Math.round(c.y);
-    for (var d = 4 * (c.y * a + c.x), e = this.colorLayerData.data[d], f = this.colorLayerData.data[d + 1], h = this.colorLayerData.data[d + 2], g = this.colorLayerData.data[d + 3], k, m, c = [[c.x, c.y]], n = Entry.hex2rgb(this.stroke.lineColor);c.length;) {
+    for (var d = 4 * (c.y * a + c.x), e = this.colorLayerData.data[d], f = this.colorLayerData.data[d + 1], h = this.colorLayerData.data[d + 2], g = this.colorLayerData.data[d + 3], k, n, c = [[c.x, c.y]], m = Entry.hex2rgb(this.stroke.lineColor);c.length;) {
       for (var d = c.pop(), l = d[0], q = d[1], d = 4 * (q * a + l);0 <= q && this.matchColor(d, e, f, h, g);) {
         --q, d -= 4 * a;
       }
       d += 4 * a;
       q += 1;
-      for (m = k = !1;q < b - 1 && this.matchColor(d, e, f, h, g);) {
-        q += 1, this.colorPixel(d, n.r, n.g, n.b), 0 < l && (this.matchColor(d - 4, e, f, h, g) ? k || (c.push([l - 1, q]), k = !0) : k && (k = !1)), l < a - 1 && (this.matchColor(d + 4, e, f, h, g) ? m || (c.push([l + 1, q]), m = !0) : m && (m = !1)), d += 4 * a;
+      for (n = k = !1;q < b - 1 && this.matchColor(d, e, f, h, g);) {
+        q += 1, this.colorPixel(d, m.r, m.g, m.b), 0 < l && (this.matchColor(d - 4, e, f, h, g) ? k || (c.push([l - 1, q]), k = !0) : k && (k = !1)), l < a - 1 && (this.matchColor(d + 4, e, f, h, g) ? n || (c.push([l + 1, q]), n = !0) : n && (n = !1)), d += 4 * a;
       }
       if (1080 < c.length) {
         break;
@@ -6026,6 +6868,7 @@ Entry.Painter.prototype.move_rect = function() {
   event.shiftKey && (b = a);
   this.stroke.fill ? 0 == this.stroke.thickness ? this.brush.graphics.clear().setStrokeStyle(this.stroke.thickness, "round").beginFill(this.stroke.fillColor).drawRect(this.oldPt.x, this.oldPt.y, a, b) : this.brush.graphics.clear().beginStroke(this.stroke.lineColor).setStrokeStyle(this.stroke.thickness, "round").beginFill(this.stroke.fillColor).drawRect(this.oldPt.x, this.oldPt.y, a, b) : 0 == this.stroke.thickness ? this.brush.graphics.clear().setStrokeStyle(this.stroke.thickness, "round").drawRect(this.oldPt.x, 
   this.oldPt.y, a, b) : this.brush.graphics.clear().beginStroke(this.stroke.lineColor).setStrokeStyle(this.stroke.thickness, "round").drawRect(this.oldPt.x, this.oldPt.y, a, b);
+  this.file.modified = !0;
   this.stage.update();
 };
 Entry.Painter.prototype.move_circle = function() {
@@ -6033,6 +6876,7 @@ Entry.Painter.prototype.move_circle = function() {
   event.shiftKey && (b = a);
   this.stroke.fill ? 0 == this.stroke.thickness ? this.brush.graphics.clear().beginStroke(this.stroke.fillColor).setStrokeStyle(this.stroke.thickness, "round").beginFill(this.stroke.fillColor).drawEllipse(this.oldPt.x, this.oldPt.y, a, b) : this.brush.graphics.clear().beginStroke(this.stroke.lineColor).setStrokeStyle(this.stroke.thickness, "round").beginFill(this.stroke.fillColor).drawEllipse(this.oldPt.x, this.oldPt.y, a, b) : this.stroke.fill || (0 == this.stroke.thickness ? this.brush.graphics.clear().drawEllipse(this.oldPt.x, 
   this.oldPt.y, a, b) : this.brush.graphics.clear().beginStroke(this.stroke.lineColor).setStrokeStyle(this.stroke.thickness, "round").drawEllipse(this.oldPt.x, this.oldPt.y, a, b));
+  this.file.modified = !0;
   this.stage.update();
 };
 Entry.Painter.prototype.edit_copy = function() {
@@ -6277,73 +7121,89 @@ Entry.Painter.prototype.generateView = function(a) {
     g.appendChild(e);
     var k = Entry.createElement("li");
     g.appendChild(k);
-    var m = Entry.createElement("a", "entryPainterTopMenuFileNew");
-    m.bindOnClick(function() {
+    g = Entry.createElement("a", "entryPainterTopMenuFileNew");
+    g.bindOnClick(function() {
       b.newPicture();
     });
-    m.addClass("entryPlaygroundPainterTopMenuFileNew");
-    m.innerHTML = Lang.Workspace.new_picture;
-    k.appendChild(m);
-    k = Entry.createElement("li");
-    g.appendChild(k);
-    g = Entry.createElement("a", "entryPainterTopMenuFileSave");
-    g.bindOnClick(function() {
-      b.file_save();
-    });
-    g.addClass("entryPlaygroundPainterTopMenuFileSave");
-    g.innerHTML = Lang.Workspace.file_save;
+    g.addClass("entryPlaygroundPainterTopMenuFileNew");
+    g.innerHTML = Lang.Workspace.new_picture;
     k.appendChild(g);
-    g = Entry.createElement("li", "entryPainterTopMenuEdit");
-    g.addClass("entryPlaygroundPainterTopMenuEdit");
-    g.innerHTML = Lang.Workspace.Painter_edit;
+    g = Entry.createElement("li", "entryPainterTopMenuFile");
+    g.addClass("entryPlaygroundPainterTopMenuFile");
+    g.innerHTML = Lang.Workspace.painter_file;
     e.appendChild(g);
-    e = Entry.createElement("ul");
-    g.appendChild(e);
+    k = Entry.createElement("ul");
+    g.appendChild(k);
     g = Entry.createElement("li");
-    e.appendChild(g);
-    k = Entry.createElement("a", "entryPainterTopMenuEditImportLink");
+    k.appendChild(g);
+    var n = Entry.createElement("a", "entryPainterTopMenuFileSave");
+    n.bindOnClick(function() {
+      b.file_save(!1);
+    });
+    n.addClass("entryPainterTopMenuFileSave");
+    n.innerHTML = Lang.Workspace.painter_file_save;
+    g.appendChild(n);
+    g = Entry.createElement("li");
+    k.appendChild(g);
+    k = Entry.createElement("a", "entryPainterTopMenuFileSaveAs");
     k.bindOnClick(function() {
+      b.file.mode = "new";
+      b.file_save(!1);
+    });
+    k.addClass("entryPlaygroundPainterTopMenuFileSaveAs");
+    k.innerHTML = Lang.Workspace.painter_file_saveas;
+    g.appendChild(k);
+    k = Entry.createElement("li", "entryPainterTopMenuEdit");
+    k.addClass("entryPlaygroundPainterTopMenuEdit");
+    k.innerHTML = Lang.Workspace.painter_edit;
+    e.appendChild(k);
+    e = Entry.createElement("ul");
+    k.appendChild(e);
+    k = Entry.createElement("li");
+    e.appendChild(k);
+    g = Entry.createElement("a", "entryPainterTopMenuEditImportLink");
+    g.bindOnClick(function() {
       Entry.dispatchEvent("openPictureImport");
     });
-    k.addClass("entryPainterTopMenuEditImport");
-    k.innerHTML = Lang.Workspace.get_file;
-    g.appendChild(k);
-    g = Entry.createElement("li");
-    e.appendChild(g);
-    k = Entry.createElement("a", "entryPainterTopMenuEditCopy");
-    k.bindOnClick(function() {
+    g.addClass("entryPainterTopMenuEditImport");
+    g.innerHTML = Lang.Workspace.get_file;
+    k.appendChild(g);
+    k = Entry.createElement("li");
+    e.appendChild(k);
+    g = Entry.createElement("a", "entryPainterTopMenuEditCopy");
+    g.bindOnClick(function() {
       b.edit_copy();
     });
-    k.addClass("entryPlaygroundPainterTopMenuEditCopy");
-    k.innerHTML = Lang.Workspace.copy_file;
-    g.appendChild(k);
-    g = Entry.createElement("li");
-    e.appendChild(g);
-    k = Entry.createElement("a", "entryPainterTopMenuEditCut");
-    k.bindOnClick(function() {
+    g.addClass("entryPlaygroundPainterTopMenuEditCopy");
+    g.innerHTML = Lang.Workspace.copy_file;
+    k.appendChild(g);
+    k = Entry.createElement("li");
+    e.appendChild(k);
+    g = Entry.createElement("a", "entryPainterTopMenuEditCut");
+    g.bindOnClick(function() {
       b.edit_cut();
     });
-    k.addClass("entryPlaygroundPainterTopMenuEditCut");
-    k.innerHTML = Lang.Workspace.cut_picture;
-    g.appendChild(k);
-    g = Entry.createElement("li");
-    e.appendChild(g);
-    k = Entry.createElement("a", "entryPainterTopMenuEditPaste");
-    k.bindOnClick(function() {
+    g.addClass("entryPlaygroundPainterTopMenuEditCut");
+    g.innerHTML = Lang.Workspace.cut_picture;
+    k.appendChild(g);
+    k = Entry.createElement("li");
+    e.appendChild(k);
+    g = Entry.createElement("a", "entryPainterTopMenuEditPaste");
+    g.bindOnClick(function() {
       b.edit_paste();
     });
-    k.addClass("entryPlaygroundPainterTopMenuEditPaste");
-    k.innerHTML = Lang.Workspace.paste_picture;
-    g.appendChild(k);
-    g = Entry.createElement("li");
-    e.appendChild(g);
+    g.addClass("entryPlaygroundPainterTopMenuEditPaste");
+    g.innerHTML = Lang.Workspace.paste_picture;
+    k.appendChild(g);
+    k = Entry.createElement("li");
+    e.appendChild(k);
     e = Entry.createElement("a", "entryPainterTopMenuEditEraseAll");
     e.addClass("entryPlaygroundPainterTopMenuEditEraseAll");
     e.innerHTML = Lang.Workspace.remove_all;
     e.bindOnClick(function() {
       b.clearCanvas();
     });
-    g.appendChild(e);
+    k.appendChild(e);
     this.painterTopStageXY = e = Entry.createElement("div", "entryPainterTopStageXY");
     e.addClass("entryPlaygroundPainterTopStageXY");
     c.appendChild(e);
@@ -6505,9 +7365,9 @@ Entry.Painter.prototype.generateView = function(a) {
     this.attrColorArea = Entry.createElement("fieldset", "entryPainterAttrColor");
     this.attrColorArea.addClass("entryPlaygroundPainterAttrColor");
     h.appendChild(this.attrColorArea);
-    var n = Entry.createElement("div");
-    n.addClass("entryPlaygroundPainterAttrColorContainer");
-    this.attrColorArea.appendChild(n);
+    var m = Entry.createElement("div");
+    m.addClass("entryPlaygroundPainterAttrColorContainer");
+    this.attrColorArea.appendChild(m);
     this.attrCircleArea = Entry.createElement("div");
     this.attrCircleArea.addClass("painterAttrCircleArea");
     h.appendChild(this.attrCircleArea);
@@ -6530,11 +7390,11 @@ Entry.Painter.prototype.generateView = function(a) {
       c.addClass("entryPlaygroundPainterAttrColorElement");
       "transparent" === a ? c.style.backgroundImage = "url('/img/assets/transparent.png')" : c.style.backgroundColor = a;
       c.bindOnClick(function(c) {
-        "transparent" === a ? (b.stroke.transparent = !0, b.stroke.lineColor = "#ffffff") : (b.stroke.transparent = !1, t && (document.getElementById("entryPainterShapeBackgroundColor").style.backgroundColor = a, b.stroke.fillColor = a), t || (document.getElementById("entryPainterShapeLineColor").style.backgroundColor = a, b.stroke.lineColor = a));
+        "transparent" === a ? (b.stroke.transparent = !0, b.stroke.lineColor = "#ffffff") : (b.stroke.transparent = !1, r && (document.getElementById("entryPainterShapeBackgroundColor").style.backgroundColor = a, b.stroke.fillColor = a), r || (document.getElementById("entryPainterShapeLineColor").style.backgroundColor = a, b.stroke.lineColor = a));
         document.getElementById("entryPainterAttrCircle").style.backgroundColor = b.stroke.lineColor;
         document.getElementById("entryPainterAttrCircleInput").value = a;
       });
-      n.appendChild(c);
+      m.appendChild(c);
     });
     this.attrThickArea = Entry.createElement("div", "painterAttrThickArea");
     this.attrThickArea.addClass("entryPlaygroundentryPlaygroundPainterAttrThickArea");
@@ -6569,7 +7429,7 @@ Entry.Painter.prototype.generateView = function(a) {
     l.bindOnClick(function() {
       q.style.zIndex = "1";
       this.style.zIndex = "10";
-      t = !1;
+      r = !1;
     });
     this.attrBackgroundArea = Entry.createElement("div", "painterAttrBackgroundArea");
     this.attrBackgroundArea.addClass("entryPlaygroundPainterBackgroundArea");
@@ -6584,12 +7444,12 @@ Entry.Painter.prototype.generateView = function(a) {
     q.addClass("painterAttrShapeBackgroundColor");
     this.attrBackgroundArea.painterAttrShapeBackgroundColor = q;
     c.appendChild(q);
-    var t = !1;
+    var r = !1;
     q.bindOnClick(function(a) {
       l.style.zIndex = "1";
       this.style.zIndex = "10";
       this.style.zIndex = new String("10");
-      t = !0;
+      r = !0;
     });
     this.attrFontArea = Entry.createElement("div", "painterAttrFont");
     this.attrFontArea.addClass("entryPlaygroundPainterAttrFont");
@@ -6603,86 +7463,86 @@ Entry.Painter.prototype.generateView = function(a) {
     d = Entry.createElement("legend");
     d.addClass("panterAttrFontTitle");
     d.innerHTML = Lang.Workspace.textStyle;
-    g = Entry.createElement("select", "entryPainterAttrFontName");
-    g.addClass("entryPlaygroundPainterAttrFontName");
-    g.size = "1";
-    g.onchange = function(a) {
+    k = Entry.createElement("select", "entryPainterAttrFontName");
+    k.addClass("entryPlaygroundPainterAttrFontName");
+    k.size = "1";
+    k.onchange = function(a) {
       b.font.name = a.target.value;
     };
     for (d = 0;d < Entry.fonts.length;d++) {
-      k = Entry.fonts[d], c = Entry.createElement("option"), c.value = k.family, c.innerHTML = k.name, g.appendChild(c);
+      g = Entry.fonts[d], c = Entry.createElement("option"), c.value = g.family, c.innerHTML = g.name, k.appendChild(c);
     }
-    e.appendChild(g);
+    e.appendChild(k);
     e = Entry.createElement("div");
     e.addClass("painterAttrFontSizeArea");
     this.attrFontArea.appendChild(e);
     d = Entry.createElement("div");
     d.addClass("painterAttrFontSizeTop");
     e.appendChild(d);
-    g = Entry.createElement("select", "entryPainterAttrFontSize");
-    g.addClass("entryPlaygroundPainterAttrFontSize");
-    g.size = "1";
-    g.onchange = function(a) {
+    k = Entry.createElement("select", "entryPainterAttrFontSize");
+    k.addClass("entryPlaygroundPainterAttrFontSize");
+    k.size = "1";
+    k.onchange = function(a) {
       b.font.size = a.target.value;
     };
     for (d = 20;72 >= d;d++) {
-      c = Entry.createElement("option"), c.value = d, c.innerHTML = d, g.appendChild(c);
+      c = Entry.createElement("option"), c.value = d, c.innerHTML = d, k.appendChild(c);
     }
-    e.appendChild(g);
+    e.appendChild(k);
     e = Entry.createElement("div");
     e.addClass("entryPlaygroundPainterAttrFontStyleArea");
     this.attrFontArea.appendChild(e);
     d = Entry.createElement("div");
     d.addClass("entryPlaygroundPainterAttrFontTop");
     e.appendChild(d);
-    g = Entry.createElement("select", "entryPainterAttrFontStyle");
-    g.addClass("entryPlaygroundPainterAttrFontStyle");
-    g.size = "1";
-    g.onchange = function(a) {
+    k = Entry.createElement("select", "entryPainterAttrFontStyle");
+    k.addClass("entryPlaygroundPainterAttrFontStyle");
+    k.size = "1";
+    k.onchange = function(a) {
       b.font.style = a.target.value;
     };
-    k = [{label:"\ubcf4\ud1b5", value:"normal"}, {label:"\uad75\uac8c", value:"bold"}, {label:"\uae30\uc6b8\uc784", value:"italic"}];
-    for (d = 0;d < k.length;d++) {
-      m = k[d], c = Entry.createElement("option"), c.value = m.value, c.innerHTML = m.label, g.appendChild(c);
+    g = [{label:"\ubcf4\ud1b5", value:"normal"}, {label:"\uad75\uac8c", value:"bold"}, {label:"\uae30\uc6b8\uc784", value:"italic"}];
+    for (d = 0;d < g.length;d++) {
+      n = g[d], c = Entry.createElement("option"), c.value = n.value, c.innerHTML = n.label, k.appendChild(c);
     }
-    e.appendChild(g);
+    e.appendChild(k);
     this.attrLineArea = Entry.createElement("div", "painterAttrLineStyle");
     this.attrLineArea.addClass("entryPlaygroundPainterAttrLineStyle");
     h.appendChild(this.attrLineArea);
+    var t = Entry.createElement("div");
+    t.addClass("entryPlaygroundPainterAttrLineStyleLine");
+    this.attrLineArea.appendChild(t);
     var u = Entry.createElement("div");
-    u.addClass("entryPlaygroundPainterAttrLineStyleLine");
+    u.addClass("entryPlaygroundPaitnerAttrLineArea");
     this.attrLineArea.appendChild(u);
-    var r = Entry.createElement("div");
-    r.addClass("entryPlaygroundPaitnerAttrLineArea");
-    this.attrLineArea.appendChild(r);
     d = Entry.createElement("div");
     d.addClass("entryPlaygroundPainterAttrLineStyleLine1");
-    r.appendChild(d);
+    u.appendChild(d);
     d.value = "line";
     var v = Entry.createElement("div");
     v.addClass("painterAttrLineStyleBackgroundLine");
-    u.bindOnClick(function(a) {
-      r.removeClass("entryRemove");
+    t.bindOnClick(function(a) {
+      u.removeClass("entryRemove");
     });
-    r.blur = function(a) {
+    u.blur = function(a) {
       this.addClass("entryRemove");
     };
-    r.onmouseleave = function(a) {
+    u.onmouseleave = function(a) {
       this.addClass("entryRemove");
     };
     d.bindOnClick(function(a) {
-      this.attrLineArea.removeClass(u);
+      this.attrLineArea.removeClass(t);
       this.attrLineArea.appendChild(v);
       this.attrLineArea.onchange(a);
-      r.blur();
+      u.blur();
     });
     v.bindOnClick(function(a) {
-      r.removeClass("entryRemove");
+      u.removeClass("entryRemove");
     });
     this.attrLineArea.onchange = function(a) {
       b.stroke.style = a.target.value;
     };
-    r.blur();
+    u.blur();
   }
 };
 Entry.Painter.prototype.restoreHandle = function() {
@@ -6816,6 +7676,7 @@ Entry.Playground = function() {
   this.viewMode_ = "default";
   Entry.addEventListener("textEdited", this.injectText);
   Entry.addEventListener("entryBlocklyChanged", this.editBlock);
+  Entry.addEventListener("entryBlocklyMouseUp", this.mouseupBlock);
   Entry.addEventListener("hwChanged", this.updateHW);
   this.fonts = [];
   this.fonts.push({name:"\ubc14\ud0d5\uccb4", family:"KoPub Batang", url:"/css/kopubbatang.css"});
@@ -6961,11 +7822,12 @@ Entry.Playground.prototype.generateCodeView = function(a) {
     Blockly.mainWorkspace.blockMenu.hide();
     document.addEventListener("blocklyWorkspaceChange", this.syncObjectWithEvent, !1);
     this.blockMenu = Blockly.mainWorkspace.blockMenu;
+    Entry.hw.banHW();
     return a;
   }
   if ("phone" == Entry.type) {
     return b = Entry.createElement("div", "entryCategory"), b.addClass("entryCategoryPhone"), a.appendChild(b), this.categoryView_ = b, c = Entry.createElement("ul", "entryCategoryList"), c.addClass("entryCategoryListPhone"), b.appendChild(c), this.categoryListView_ = c, b = this.createVariableView(), a.appendChild(b), this.variableView_ = b, b = Entry.createElement("div", "entryBlockly"), b.addClass("entryBlocklyPhone"), this.blocklyView_ = b, a.appendChild(b), c = Entry.parseTexttoXML("<xml></xml>"), 
-    Blockly.inject(b, {path:".././", toolbox:c, trashcan:!0}), Blockly.mainWorkspace.flyout_.autoClose = !0, Blockly.mainWorkspace.flyout_.hide(), document.addEventListener("blocklyWorkspaceChange", this.syncObjectWithEvent, !1), this.blockMenu = Blockly.mainWorkspace.flyout_, a;
+    Blockly.inject(b, {path:".././", toolbox:c, trashcan:!0}), Blockly.mainWorkspace.flyout_.autoClose = !0, Blockly.mainWorkspace.flyout_.hide(), document.addEventListener("blocklyWorkspaceChange", this.syncObjectWithEvent, !1), this.blockMenu = Blockly.mainWorkspace.flyout_, Entry.hw.banHW(), a;
   }
 };
 Entry.Playground.prototype.generatePictureView = function(a) {
@@ -7080,11 +7942,11 @@ Entry.Playground.prototype.generateTextView = function(a) {
   d = Entry.createElement("a");
   c.appendChild(d);
   d.bindOnClick(function() {
-    Entry.playground.object.entity.toggleFontItalic() ? m.src = "/img/assets/text_button_italic_true.png" : m.src = "/img/assets/text_button_italic_false.png";
+    Entry.playground.object.entity.toggleFontItalic() ? n.src = "/img/assets/text_button_italic_true.png" : n.src = "/img/assets/text_button_italic_false.png";
   });
-  var m = Entry.createElement("img", "entryPlaygroundText_italicImage");
-  d.appendChild(m);
-  m.src = "/img/assets/text_button_italic_false.png";
+  var n = Entry.createElement("img", "entryPlaygroundText_italicImage");
+  d.appendChild(n);
+  n.src = "/img/assets/text_button_italic_false.png";
   c = Entry.createElement("li");
   e.appendChild(c);
   d = Entry.createElement("a");
@@ -7092,11 +7954,11 @@ Entry.Playground.prototype.generateTextView = function(a) {
   d.bindOnClick(function() {
     var a = !Entry.playground.object.entity.getStrike() || !1;
     Entry.playground.object.entity.setStrike(a);
-    n.src = "/img/assets/text_button_strike_" + a + ".png";
+    m.src = "/img/assets/text_button_strike_" + a + ".png";
   });
-  var n = Entry.createElement("img", "entryPlaygroundText_strikeImage");
-  d.appendChild(n);
-  n.src = "/img/assets/text_button_strike_false.png";
+  var m = Entry.createElement("img", "entryPlaygroundText_strikeImage");
+  d.appendChild(m);
+  m.src = "/img/assets/text_button_strike_false.png";
   d = Entry.createElement("li");
   e.appendChild(d);
   c = Entry.createElement("a");
@@ -7178,24 +8040,24 @@ Entry.Playground.prototype.generateTextView = function(a) {
   q.addClass("entryPlaygroundFontSizeIndicator");
   l.appendChild(q);
   this.fontSizeIndiciator = q;
-  var t = Entry.createElement("div");
-  t.addClass("entryPlaygroundFontSizeKnob");
-  l.appendChild(t);
-  this.fontSizeKnob = t;
+  var r = Entry.createElement("div");
+  r.addClass("entryPlaygroundFontSizeKnob");
+  l.appendChild(r);
+  this.fontSizeKnob = r;
   e = Entry.createElement("div");
   e.addClass("entryPlaygroundFontSizeLabel");
   e.innerHTML = "\uae00\uc790 \ud06c\uae30";
   a.appendChild(e);
-  var u = !1, r = 0;
-  t.onmousedown = function(a) {
-    u = !0;
-    r = $(l).offset().left;
+  var t = !1, u = 0;
+  r.onmousedown = function(a) {
+    t = !0;
+    u = $(l).offset().left;
   };
   document.addEventListener("mousemove", function(a) {
-    u && (a = a.pageX - r, a = Math.max(a, 5), a = Math.min(a, 88), t.style.left = a + "px", a /= .88, q.style.width = a + "%", Entry.playground.object.entity.setFontSize(a));
+    t && (a = a.pageX - u, a = Math.max(a, 5), a = Math.min(a, 88), r.style.left = a + "px", a /= .88, q.style.width = a + "%", Entry.playground.object.entity.setFontSize(a));
   });
   document.addEventListener("mouseup", function(a) {
-    u = !1;
+    t = !1;
   });
   a = Entry.createElement("div");
   a.addClass("entryPlaygroundLinebreakWrapper");
@@ -7456,6 +8318,12 @@ Entry.Playground.prototype.editBlock = function() {
   var a = Entry.playground;
   Entry.stateManager.addCommand("edit block", a, a.restoreBlock, a.object, a.object.getScriptText());
 };
+Entry.Playground.prototype.mouseupBlock = function() {
+  if (Entry.reporter) {
+    var a = Entry.playground, b = a.object;
+    Entry.reporter.report(new Entry.State("edit block mouseup", a, a.restoreBlock, b, b.getScriptText()));
+  }
+};
 Entry.Playground.prototype.restoreBlock = function(a, b) {
   Entry.container.selectObject(a.id);
   Entry.stateManager.addCommand("restore block", this, this.restoreBlock, this.object, this.object.getScriptText());
@@ -7713,7 +8581,11 @@ Entry.Playground.prototype.getViewMode = function() {
 };
 Entry.Playground.prototype.updateHW = function() {
   var a = Entry.playground;
-  a.blockMenu && (Entry.hw && Entry.hw.connected ? (a.blockMenu.unbanClass("arduinoConnected"), a.blockMenu.banClass("arduinoDisconnected")) : (a.blockMenu.banClass("arduinoConnected"), a.blockMenu.unbanClass("arduinoDisconnected")), a.object && a.selectMenu(a.lastSelector, !0));
+  if (a.blockMenu) {
+    var b = Entry.hw;
+    b && b.connected ? (a.blockMenu.unbanClass("arduinoConnected"), a.blockMenu.banClass("arduinoDisconnected"), b.banHW(), b.hwModule && a.blockMenu.unbanClass(b.hwModule.name)) : (a.blockMenu.banClass("arduinoConnected"), a.blockMenu.unbanClass("arduinoDisconnected"), Entry.hw.banHW());
+    a.object && a.selectMenu(a.lastSelector, !0);
+  }
 };
 Entry.Playground.prototype.toggleLineBreak = function(a) {
   this.object && "textBox" == this.object.objectType && (a ? (Entry.playground.object.entity.setLineBreak(!0), $(".entryPlayground_textArea").css("display", "block"), $(".entryPlayground_textBox").css("display", "none"), this.linebreakOffImage.src = "/img/assets/text-linebreak-off-false.png", this.linebreakOnImage.src = "/img/assets/text-linebreak-on-true.png", this.fontSizeWrapper.removeClass("entryHide")) : (Entry.playground.object.entity.setLineBreak(!1), $(".entryPlayground_textArea").css("display", 
@@ -7777,7 +8649,7 @@ Entry.Reporter = function() {
   this.projectId;
 };
 Entry.Reporter.prototype.start = function(a, b, c) {
-  this.io = io(window.location.href.split("/")[2]);
+  -1 < window.location.href.indexOf("localhost") ? this.io = io("localhost:7000") : this.io = io("play04.play-entry.com:7000");
   this.io.emit("activity", {message:"start", userId:b, projectId:a, time:c});
   this.userId = b;
   this.projectId = a;
@@ -8267,7 +9139,7 @@ Entry.Stage.prototype.updateObject = function() {
 Entry.Stage.prototype.updateHandle = function() {
   this.editEntity = !0;
   var a = this.handle, b = this.selectedObject.entity;
-  b.lineBreak ? (b.setHeight(a.height / b.getScaleY()), b.setWidth(a.width / b.getScaleX())) : (0 !== b.width && b.setScaleX(Math.sign(b.getScaleX()) * a.width / b.width), 0 !== b.height && b.setScaleY(a.height / b.height));
+  b.lineBreak ? (b.setHeight(a.height / b.getScaleY()), b.setWidth(a.width / b.getScaleX())) : (0 !== b.width && (0 > b.getScaleX() ? b.setScaleX(-a.width / b.width) : b.setScaleX(a.width / b.width)), 0 !== b.height && b.setScaleY(a.height / b.height));
   var c = a.rotation / 180 * Math.PI;
   if ("textBox" == b.type) {
     var d = a.regX / b.scaleX, d = a.regY / b.scaleY;
@@ -8556,6 +9428,31 @@ Entry.Toast = function() {
   this.body_ = Entry.createElement("div", "entryToastContainer");
   this.body_.addClass("entryToastContainer");
   document.body.appendChild(this.body_);
+};
+Entry.Toast.prototype.warning = function(a, b, c) {
+  var d = Entry.createElement("div", "entryToast");
+  d.addClass("entryToast");
+  d.addClass("entryToastWarning");
+  d.bindOnClick(function() {
+    Entry.toast.body_.removeChild(this);
+  });
+  var e = Entry.createElement("div", "entryToast");
+  e.addClass("entryToastTitle");
+  e.innerHTML = a;
+  d.appendChild(e);
+  a = Entry.createElement("p", "entryToast");
+  a.addClass("entryToastMessage");
+  a.innerHTML = b;
+  d.appendChild(a);
+  this.toasts_.push(d);
+  this.body_.appendChild(d);
+  c || window.setTimeout(function() {
+    d.style.opacity = 1;
+    var a = setInterval(function() {
+      .05 > d.style.opacity && (clearInterval(a), d.style.display = "none", Entry.removeElement(d));
+      d.style.opacity *= .9;
+    }, 20);
+  }, 1E3);
 };
 Entry.Toast.prototype.success = function(a, b, c) {
   var d = Entry.createElement("div", "entryToast");
@@ -8949,6 +9846,17 @@ Entry.attachEventListener = function(a, b, c) {
 Entry.deAttachEventListener = function(a, b, c) {
   a.removeEventListener(b, c);
 };
+Entry.isEmpty = function(a) {
+  if (!a) {
+    return !0;
+  }
+  for (var b in a) {
+    if (a.hasOwnProperty(b)) {
+      return !1;
+    }
+  }
+  return !0;
+};
 Entry.Func = function() {
   this.id = Entry.generateHash();
   this.content = Blockly.Xml.textToDom(Entry.Func.CREATE_BLOCK);
@@ -8981,7 +9889,7 @@ Entry.Func.prototype.init = function(a) {
 };
 Entry.Func.CREATE_BTN = '<xml><btn text="Lang.Workspace.create_function" onclick="Entry.variableContainer.createFunction()"></btn></xml>';
 Entry.Func.createBtn = Entry.nodeListToArray(Blockly.Xml.textToDom(Entry.Func.CREATE_BTN).childNodes);
-Entry.Func.FIELD_BLOCK = '<xml><block type="function_field_string"><value name="PARAM"><block type="function_param_string"><mutation hashid="#1"/></block></value></block><block type="function_field_boolean"><value name="PARAM"><block type="function_param_boolean"><mutation hashid="#2"/></block></value></block><block type="function_field_label"></block></xml>';
+Entry.Func.FIELD_BLOCK = '<xml><block type="function_field_label"></block><block type="function_field_string"><value name="PARAM"><block type="function_param_string"><mutation hashid="#1"/></block></value></block><block type="function_field_boolean"><value name="PARAM"><block type="function_param_boolean"><mutation hashid="#2"/></block></value></block></xml>';
 Entry.Func.fieldBlocks = Entry.nodeListToArray(Blockly.Xml.textToDom(Entry.Func.FIELD_BLOCK).childNodes);
 Entry.Func.CREATE_BLOCK = '<xml><block type="function_create" deletable="false" x="28" y="28"></block></xml>';
 Entry.Func.edit = function(a) {
@@ -9214,32 +10122,16 @@ Entry.Variable = function(a) {
   a.isClone || (this.visible_ = a.visible || "boolean" == typeof a.visible ? a.visible : !0, this.x_ = a.x ? a.x : null, this.y_ = a.y ? a.y : null, "list" == this.type && (this.width_ = a.width ? a.width : 100, this.height_ = a.height ? a.height : 120, this.array_ = a.array ? a.array : [], this.scrollPosition = 0), this.BORDER = 6, this.FONT = "10pt NanumGothic");
 };
 Entry.Variable.prototype.generateView = function(a) {
-  if ("variable" == this.type || "timer" == this.type) {
-    this.view_ = new createjs.Container;
-    this.rect_ = new createjs.Shape;
-    this.view_.addChild(this.rect_);
-    this.view_.variable = this;
-    this.wrapper_ = new createjs.Shape;
-    this.view_.addChild(this.wrapper_);
-    this.textView_ = new createjs.Text("asdf", this.FONT, "#000000");
-    this.textView_.textBaseline = "alphabetic";
-    this.textView_.x = 4;
-    this.textView_.y = 1;
-    this.view_.addChild(this.textView_);
-    this.valueView_ = new createjs.Text("asdf", "10pt NanumGothic", "#ffffff");
-    this.valueView_.textBaseline = "alphabetic";
-    var b = Entry.variableContainer.variables_.length;
-    this.getX() && this.getY() ? (this.setX(this.getX()), this.setY(this.getY())) : (this.setX(-230 + 80 * Math.floor(b / 11)), this.setY(24 * a + 20 - 135 - 264 * Math.floor(b / 11)));
-    this.view_.visible = this.visible_;
-    this.view_.addChild(this.valueView_);
-    this.view_.on("mousedown", function(a) {
+  var b = this.type;
+  if ("variable" == b || "timer" == b || "answer" == b) {
+    this.view_ = new createjs.Container, this.rect_ = new createjs.Shape, this.view_.addChild(this.rect_), this.view_.variable = this, this.wrapper_ = new createjs.Shape, this.view_.addChild(this.wrapper_), this.textView_ = new createjs.Text("asdf", this.FONT, "#000000"), this.textView_.textBaseline = "alphabetic", this.textView_.x = 4, this.textView_.y = 1, this.view_.addChild(this.textView_), this.valueView_ = new createjs.Text("asdf", "10pt NanumGothic", "#ffffff"), this.valueView_.textBaseline = 
+    "alphabetic", b = Entry.variableContainer.variables_.length, this.getX() && this.getY() ? (this.setX(this.getX()), this.setY(this.getY())) : (this.setX(-230 + 80 * Math.floor(b / 11)), this.setY(24 * a + 20 - 135 - 264 * Math.floor(b / 11))), this.view_.visible = this.visible_, this.view_.addChild(this.valueView_), this.view_.on("mousedown", function(a) {
       "workspace" == Entry.type && (this.offset = {x:this.x - (.75 * a.stageX - 240), y:this.y - (.75 * a.stageY - 135)}, this.cursor = "move");
-    });
-    this.view_.on("pressmove", function(a) {
+    }), this.view_.on("pressmove", function(a) {
       "workspace" == Entry.type && (this.variable.setX(.75 * a.stageX - 240 + this.offset.x), this.variable.setY(.75 * a.stageY - 135 + this.offset.y), this.variable.updateView());
     });
   } else {
-    if ("slide" == this.type) {
+    if ("slide" == b) {
       var c = this;
       this.view_ = new createjs.Container;
       this.rect_ = new createjs.Shape;
@@ -9368,8 +10260,9 @@ Entry.Variable.prototype.updateView = function() {
             this.view_.addChild(c);
           }
         } else {
-          this.view_.x = this.getX(), this.view_.y = this.getY(), this.textView_.text = this.getName(), this.valueView_.x = this.textView_.getMeasuredWidth() + 14, this.valueView_.y = 1, this.isNumber() ? this.valueView_.text = this.getValue().toFixed(1).replace(".00", "") : this.valueView_.text = this.getValue(), this.rect_.graphics.clear().f("#ffffff").ss(1, 2, 0).s("#A0A1A1").rc(0, -14, this.textView_.getMeasuredWidth() + this.valueView_.getMeasuredWidth() + 26, 20, 4, 4, 4, 4), this.wrapper_.graphics.clear().f("#ffbb14").ss(1, 
-          2, 0).s("orange").rc(this.textView_.getMeasuredWidth() + 7, -11, this.valueView_.getMeasuredWidth() + 15, 14, 7, 7, 7, 7);
+          "answer" == this.type ? (this.view_.x = this.getX(), this.view_.y = this.getY(), this.textView_.text = this.getName(), this.valueView_.x = this.textView_.getMeasuredWidth() + 14, this.valueView_.y = 1, this.isNumber() ? 0 == this.getValue() ? this.valueView_.text = 0 : this.valueView_.text = this.getValue().toFixed(1).replace(".00", "") : this.valueView_.text = this.getValue(), this.rect_.graphics.clear().f("#ffffff").ss(1, 2, 0).s("#A0A1A1").rc(0, -14, this.textView_.getMeasuredWidth() + 
+          this.valueView_.getMeasuredWidth() + 26, 20, 4, 4, 4, 4), this.wrapper_.graphics.clear().f("#E457DC").ss(1, 2, 0).s("#E457DC").rc(this.textView_.getMeasuredWidth() + 7, -11, this.valueView_.getMeasuredWidth() + 15, 14, 7, 7, 7, 7)) : (this.view_.x = this.getX(), this.view_.y = this.getY(), this.textView_.text = this.getName(), this.valueView_.x = this.textView_.getMeasuredWidth() + 14, this.valueView_.y = 1, this.isNumber() ? this.valueView_.text = this.getValue().toFixed(1).replace(".00", 
+          "") : this.valueView_.text = this.getValue(), this.rect_.graphics.clear().f("#ffffff").ss(1, 2, 0).s("#A0A1A1").rc(0, -14, this.textView_.getMeasuredWidth() + this.valueView_.getMeasuredWidth() + 26, 20, 4, 4, 4, 4), this.wrapper_.graphics.clear().f("#ffbb14").ss(1, 2, 0).s("orange").rc(this.textView_.getMeasuredWidth() + 7, -11, this.valueView_.getMeasuredWidth() + 15, 14, 7, 7, 7, 7));
         }
       }
     }
@@ -9424,6 +10317,10 @@ Entry.Variable.prototype.setWidth = function(a) {
 Entry.Variable.prototype.getWidth = function() {
   return this.width_;
 };
+Entry.Variable.prototype.isInList = function(a, b) {
+  this.getX();
+  this.getY();
+};
 Entry.Variable.prototype.setHeight = function(a) {
   this.height_ = 100 > a ? 100 : a;
   this.updateView();
@@ -9435,7 +10332,7 @@ Entry.Variable.prototype.takeSnapshot = function() {
   this.snapshot_ = this.toJSON();
 };
 Entry.Variable.prototype.loadSnapshot = function() {
-  this.snapshot_ && this.syncModel_(this.snapshot_);
+  this.snapshot_ && !this.isCloud_ && this.syncModel_(this.snapshot_);
 };
 Entry.Variable.prototype.syncModel_ = function(a) {
   this.setX(a.x);
@@ -9444,6 +10341,7 @@ Entry.Variable.prototype.syncModel_ = function(a) {
   this.setVisible(a.visible);
   this.setValue(a.value);
   this.setName(a.name);
+  this.isCloud_ = a.isCloud;
   "list" == this.type && (this.setWidth(a.width), this.setHeight(a.height), this.array_ = a.array);
 };
 Entry.Variable.prototype.toJSON = function() {
@@ -9475,8 +10373,8 @@ Entry.Variable.prototype.setType = function(a) {
   this.type = a;
 };
 Entry.Variable.prototype.getSlidePosition = function(a) {
-  var b = this.minValue_, c = this.maxValue_, b = Math.abs(this.value_ - b) / Math.abs(c - b);
-  return a * b + 10;
+  var b = this.minValue_;
+  return Math.abs(this.value_ - b) / Math.abs(this.maxValue_ - b) * a + 10;
 };
 Entry.Variable.prototype.setSlideCommandX = function(a, b) {
   var c = this.valueSetter_.graphics.command;
@@ -9485,7 +10383,7 @@ Entry.Variable.prototype.setSlideCommandX = function(a, b) {
   this.updateSlideValueByView();
 };
 Entry.Variable.prototype.updateSlideValueByView = function() {
-  var a = this.maxWidth, a = Math.max(this.valueSetter_.graphics.command.x - 10, 0) / a;
+  var a = Math.max(this.valueSetter_.graphics.command.x - 10, 0) / this.maxWidth;
   0 > a && (a = 0);
   1 < a && (a = 1);
   a = (this.minValue_ + Number(Math.abs(this.maxValue_ - this.minValue_) * a)).toFixed(2);
@@ -9517,6 +10415,7 @@ Entry.VariableContainer = function() {
   this.variableAddPanel = {isOpen:!1, info:{object:null, isCloud:!1}};
   this.listAddPanel = {isOpen:!1, info:{object:null, isCloud:!1}};
   null;
+  Entry.addEventListener("stop", this.updateCloudVariables);
 };
 Entry.VariableContainer.prototype.createDom = function(a) {
   var b = this;
@@ -9624,18 +10523,31 @@ Entry.VariableContainer.prototype.select = function(a) {
   a && (a.listElement.addClass("selected"), this.selected = a, null != a && (a instanceof Entry.Variable ? (this.renderVariableReference(a), a.object_ && Entry.container.selectObject(a.object_, !0)) : a instanceof Entry.Func ? this.renderFunctionReference(a) : this.renderMessageReference(a)));
 };
 Entry.VariableContainer.prototype.renderMessageReference = function(a) {
-  var b = this, c = Entry.container.objects_, d = ["when_message_cast", "message_cast"], e = [], f = Entry.createElement("ul");
+  var b = this, c = Entry.container.objects_, d = ["when_message_cast", "message_cast", "message_cast_wait"], e = [], f = Entry.createElement("ul");
   f.addClass("entryVariableListCallerListWorkspace");
   for (var h in c) {
-    for (var g = c[h], k = g.script.getElementsByTagName("block"), m = 0;m < k.length;m++) {
-      var n = k[m], l = n.getAttribute("type");
-      -1 < d.indexOf(l) && Entry.Xml.getField("VALUE", n) == a.id && e.push({object:g, block:n});
+    for (var g = c[h], k = g.script.getElementsByTagName("block"), n = 0;n < k.length;n++) {
+      var m = k[n], l = m.getAttribute("type");
+      if (-1 < d.indexOf(l)) {
+        l = Entry.Xml.getField("VALUE", m), l == a.id && e.push({object:g, block:m});
+      } else {
+        if ("function_general" == l) {
+          var q = m.getElementsByTagName("mutation")[0].getAttribute("hashid");
+          if (q = Entry.variableContainer.getFunction(q)) {
+            for (var q = q.content, q = q.getElementsByTagName("block"), r = 0;r < q.length;r++) {
+              var t = q[r], l = t.getAttribute("type");
+              -1 < d.indexOf(l) && (l = Entry.Xml.getField("VALUE", t), l == a.id && e.push({object:g, block:t, funcBlock:m}));
+            }
+          }
+        }
+      }
     }
   }
   for (h in e) {
     c = e[h], d = Entry.createElement("li"), d.addClass("entryVariableListCallerWorkspace"), d.appendChild(c.object.thumbnailView_.cloneNode()), g = Entry.createElement("div"), g.addClass("entryVariableListCallerNameWorkspace"), g.innerHTML = c.object.name + " : " + Lang.Blocks["START_" + c.block.getAttribute("type")], d.appendChild(g), d.caller = c, d.message = a, d.bindOnClick(function(a) {
       Entry.playground.object != this.caller.object && (Entry.container.selectObject(), Entry.container.selectObject(this.caller.object.id, !0), b.select(null), b.select(this.message));
-      a = this.caller.block.getAttribute("id");
+      a = this.caller;
+      a = a.funcBlock ? a.funcBlock.getAttribute("id") : a.block.getAttribute("id");
       Blockly.mainWorkspace.activatePreviousBlock(Number(a));
       Entry.playground.toggleOnVariableView();
     }), f.appendChild(d);
@@ -9646,18 +10558,31 @@ Entry.VariableContainer.prototype.renderMessageReference = function(a) {
   this.listView_.insertBefore(a.listElement, f);
 };
 Entry.VariableContainer.prototype.renderVariableReference = function(a) {
-  var b = this, c = Entry.container.objects_, d = "get_variable change_variable hide_variable set_variable show_variable add_value_to_list remove_value_from_list insert_value_to_list change_value_list_index value_of_index_from_list length_of_list show_list hide_list".split(" "), e = [], f = Entry.createElement("ul");
+  var b = this, c = Entry.container.objects_, d = "get_variable change_variable hide_variable set_variable show_variable add_value_to_list remove_value_from_list insert_value_to_list change_value_list_index value_of_index_from_list length_of_list show_list hide_list is_included_in_list".split(" "), e = [], f = Entry.createElement("ul");
   f.addClass("entryVariableListCallerListWorkspace");
   for (var h in c) {
-    for (var g = c[h], k = g.script.getElementsByTagName("block"), m = 0;m < k.length;m++) {
-      var n = k[m], l = n.getAttribute("type");
-      -1 < d.indexOf(l) && (Entry.Xml.getField("VARIABLE", n) || Entry.Xml.getField("LIST", n)) == a.id_ && e.push({object:g, block:n});
+    for (var g = c[h], k = g.script.getElementsByTagName("block"), n = 0;n < k.length;n++) {
+      var m = k[n], l = m.getAttribute("type");
+      if (-1 < d.indexOf(l)) {
+        l = Entry.Xml.getField("VARIABLE", m) || Entry.Xml.getField("LIST", m), l == a.id_ && e.push({object:g, block:m});
+      } else {
+        if ("function_general" == l) {
+          var q = m.getElementsByTagName("mutation")[0].getAttribute("hashid");
+          if (q = Entry.variableContainer.getFunction(q)) {
+            for (var q = q.content, q = q.getElementsByTagName("block"), r = 0;r < q.length;r++) {
+              var t = q[r], l = t.getAttribute("type");
+              -1 < d.indexOf(l) && (l = Entry.Xml.getField("VARIABLE", t) || Entry.Xml.getField("LIST", t), l == a.id_ && e.push({object:g, block:t, funcBlock:m}));
+            }
+          }
+        }
+      }
     }
   }
   for (h in e) {
     c = e[h], d = Entry.createElement("li"), d.addClass("entryVariableListCallerWorkspace"), d.appendChild(c.object.thumbnailView_.cloneNode()), g = Entry.createElement("div"), g.addClass("entryVariableListCallerNameWorkspace"), g.innerHTML = c.object.name + " : " + Lang.Blocks["VARIABLE_" + c.block.getAttribute("type")], d.appendChild(g), d.caller = c, d.variable = a, d.bindOnClick(function(a) {
       Entry.playground.object != this.caller.object && (Entry.container.selectObject(), Entry.container.selectObject(this.caller.object.id, !0), b.select(null), b.select(this.variable));
-      a = this.caller.block.getAttribute("id");
+      a = this.caller;
+      a = a.funcBlock ? a.funcBlock.getAttribute("id") : a.block.getAttribute("id");
       Blockly.mainWorkspace.activatePreviousBlock(Number(a));
       Entry.playground.toggleOnVariableView();
     }), f.appendChild(d);
@@ -9671,9 +10596,9 @@ Entry.VariableContainer.prototype.renderFunctionReference = function(a) {
   var b = this, c = Entry.container.objects_, d = ["function_general"], e = [], f = Entry.createElement("ul");
   f.addClass("entryVariableListCallerListWorkspace");
   for (var h in c) {
-    for (var g = c[h], k = g.script.getElementsByTagName("block"), m = 0;m < k.length;m++) {
-      var n = k[m], l = n.getAttribute("type");
-      -1 < d.indexOf(l) && n.getElementsByTagName("mutation")[0].getAttribute("hashid") == a.id && e.push({object:g, block:n});
+    for (var g = c[h], k = g.script.getElementsByTagName("block"), n = 0;n < k.length;n++) {
+      var m = k[n], l = m.getAttribute("type");
+      -1 < d.indexOf(l) && m.getElementsByTagName("mutation")[0].getAttribute("hashid") == a.id && e.push({object:g, block:m});
     }
   }
   for (h in e) {
@@ -9735,13 +10660,13 @@ Entry.VariableContainer.prototype.updateList = function() {
         e.object && !Entry.playground.object && (e.object = null);
         this.listView_.appendChild(this.listAddButton_);
         this.listView_.appendChild(this.listAddPanel.view);
-        this.variableSplitters.top.innerHTML = "\ubaa8\ub4e0 \uc624\ube0c\uc81d\ud2b8\uc5d0\uc11c \uc0ac\uc6a9\ub418\ub294 \ub9ac\uc2a4\ud2b8";
+        this.variableSplitters.top.innerHTML = Lang.Workspace.List_used_all_objects;
         this.listView_.appendChild(this.variableSplitters.top);
         this.updateVariableAddView("list");
         for (c in this.lists_) {
           d = this.lists_[c], d.object_ || (b.push(d), e = d.listElement, this.listView_.appendChild(e), d.callerListElement && this.listView_.appendChild(d.callerListElement));
         }
-        this.variableSplitters.bottom.innerHTML = "\ud2b9\uc815 \uc624\ube0c\uc81d\ud2b8\uc5d0\uc11c \uc0ac\uc6a9\ub418\ub294 \ub9ac\uc2a4\ud2b8";
+        this.variableSplitters.bottom.innerHTML = Lang.Workspace.list_used_specific_objects;
         this.listView_.appendChild(this.variableSplitters.bottom);
         for (c in this.lists_) {
           d = this.lists_[c], d.object_ && (b.push(d), e = d.listElement, this.listView_.appendChild(e), d.callerListElement && this.listView_.appendChild(d.callerListElement));
@@ -9776,8 +10701,10 @@ Entry.VariableContainer.prototype.setMessages = function(a) {
 Entry.VariableContainer.prototype.setVariables = function(a) {
   for (var b in a) {
     var c = new Entry.Variable(a[b]), d = c.getType();
-    "variable" == d || "slide" == d ? (c.generateView(this.variables_.length), this.createVariableView(c), this.variables_.push(c)) : "list" == d ? (c.generateView(this.lists_.length), this.createListView(c), this.lists_.push(c)) : this.generateTimer(c);
+    "variable" == d || "slide" == d ? (c.generateView(this.variables_.length), this.createVariableView(c), this.variables_.push(c)) : "list" == d ? (c.generateView(this.lists_.length), this.createListView(c), this.lists_.push(c)) : "timer" == d ? this.generateTimer(c) : "answer" == d && this.generateAnswer(c);
   }
+  Entry.isEmpty(Entry.engine.projectTimer) && Entry.variableContainer.generateTimer();
+  Entry.isEmpty(Entry.container.inputValue) && Entry.variableContainer.generateAnswer();
   Entry.playground.reloadPlayground();
   this.updateList();
 };
@@ -9817,6 +10744,20 @@ Entry.VariableContainer.prototype.removeFunction = function(a) {
   delete this.functions_[a.id];
   this.updateList();
 };
+Entry.VariableContainer.prototype.checkListPosition = function(a, b) {
+  var c = a.x_ + a.width_, d = -a.y_, e = -a.y_ + -a.height_;
+  return b.x > a.x_ && b.x < c && b.y < d && b.y > e ? !0 : !1;
+};
+Entry.VariableContainer.prototype.getListById = function(a) {
+  var b = this.lists_, c = [];
+  if (0 < b.length) {
+    for (var d = 0;d < b.length;d++) {
+      this.checkListPosition(b[d], a) && c.push(b[d]);
+    }
+    return c;
+  }
+  return !1;
+};
 Entry.VariableContainer.prototype.editFunction = function(a, b) {
 };
 Entry.VariableContainer.prototype.saveFunction = function(a) {
@@ -9855,12 +10796,21 @@ Entry.VariableContainer.prototype.createFunctionView = function(a) {
   c.appendChild(d);
   a.listElement = c;
 };
+Entry.VariableContainer.prototype.checkAllVariableName = function(a, b) {
+  b = this[b];
+  for (var c = 0;c < b.length;c++) {
+    if (b[c].name_ == a) {
+      return !0;
+    }
+  }
+  return !1;
+};
 Entry.VariableContainer.prototype.addVariable = function(a) {
   if (!a) {
     var b = this.variableAddPanel;
     a = b.view.name.value.trim();
     a && 0 != a.length || (a = Lang.Workspace.variable);
-    a = Entry.getOrderedName(a, this.variables_, "name_");
+    a = this.checkAllVariableName(a, "variables_") ? Entry.getOrderedName(a, this.variables_, "name_") : a;
     var c = b.info;
     a = {name:a, isCloud:c.isCloud, object:c.object, variableType:"variable"};
     b.view.addClass("entryRemove");
@@ -9950,7 +10900,7 @@ Entry.VariableContainer.prototype.createVariableView = function(a) {
     a.stopPropagation();
   });
   g.onblur = function(c) {
-    (c = this.value.trim()) && 0 != c.length ? b.changeVariableName(a, this.value) : (Entry.toast.alert("\uacbd\uace0", "\ubcc0\uc218\uc758 \uc774\ub984\uc740 \ube48 \uce78\uc774 \ub420 \uc218 \uc5c6\uc2b5\ub2c8\ub2e4.."), this.value = a.getName());
+    (c = this.value.trim()) && 0 != c.length ? b.changeVariableName(a, this.value) : (Entry.toast.alert(Lang.Msgs.warn, Lang.Workspace.variable_can_not_space), this.value = a.getName());
   };
   g.onkeydown = function(a) {
     13 == a.keyCode && this.blur();
@@ -10022,7 +10972,7 @@ Entry.VariableContainer.prototype.createMessageView = function(a) {
     a.stopPropagation();
   });
   h.onblur = function(c) {
-    (c = this.value.trim()) && 0 != c.length ? (b.changeMessageName(a, this.value), e.removeClass("entryRemove"), f.addClass("entryRemove"), h.setAttribute("disabled", "disabled")) : (Entry.toast.alert("\uacbd\uace0", "\uc2e0\ud638\uc758 \uc774\ub984\uc740 \ube48 \uce78\uc774 \ub420 \uc218 \uc5c6\uc2b5\ub2c8\ub2e4.."), this.value = a.name);
+    (c = this.value.trim()) && 0 != c.length ? (b.changeMessageName(a, this.value), e.removeClass("entryRemove"), f.addClass("entryRemove"), h.setAttribute("disabled", "disabled")) : (Entry.toast.alert(Lang.Msgs.warn, Lang.Msgs.sign_can_not_space), this.value = a.name);
   };
   h.onkeydown = function(a) {
     13 == a.keyCode && this.blur();
@@ -10040,7 +10990,7 @@ Entry.VariableContainer.prototype.addList = function(a) {
     a = b.view.name.value.trim();
     a && 0 != a.length || (a = Lang.Workspace.list);
     var c = b.info;
-    a = Entry.getOrderedName(a, this.lists_, "name_");
+    a = this.checkAllVariableName(a, "lists_") ? Entry.getOrderedName(a, this.lists_, "name_") : a;
     a = {name:a, isCloud:c.isCloud, object:c.object, variableType:"list"};
     b.view.addClass("entryRemove");
     this.resetVariableAddPanel("list");
@@ -10104,7 +11054,7 @@ Entry.VariableContainer.prototype.createListView = function(a) {
     a.stopPropagation();
   });
   g.onblur = function(c) {
-    (c = this.value.trim()) && 0 != c.length ? b.changeListName(a, this.value) : (Entry.toast.alert("\uacbd\uace0", "\ub9ac\uc2a4\ud2b8\uc758 \uc774\ub984\uc740 \ube48 \uce78\uc774 \ub420 \uc218 \uc5c6\uc2b5\ub2c8\ub2e4.."), this.value = a.getName());
+    (c = this.value.trim()) && 0 != c.length ? b.changeListName(a, this.value) : (Entry.toast.alert(Lang.Msgs.warn, Lang.Msgs.list_can_not_space), this.value = a.getName());
   };
   g.onkeydown = function(a) {
     13 == a.keyCode && this.blur();
@@ -10134,6 +11084,8 @@ Entry.VariableContainer.prototype.getVariableJSON = function() {
     a.push(this.lists_[b].toJSON());
   }
   Entry.engine.projectTimer && a.push(Entry.engine.projectTimer);
+  b = Entry.container.inputValue;
+  Entry.isEmpty(b) || a.push(b);
   return a;
 };
 Entry.VariableContainer.prototype.getMessageJSON = function() {
@@ -10216,7 +11168,7 @@ Entry.VariableContainer.prototype.generateVariableAddView = function() {
   b.appendChild(c);
   d = Entry.createElement("span");
   d.addClass("entryVariableAddSpaceCloudSpanWorkspace");
-  d.innerHTML = "\ud074\ub77c\uc6b0\ub4dc \ubcc0\uc218\ub85c \uc0ac\uc6a9 <br>(\uc11c\ubc84\uc5d0 \uc800\uc7a5\ub429\ub2c8\ub2e4)";
+  d.innerHTML = Lang.Workspace.Variable_create_cloud;
   c.appendChild(d);
   d = Entry.createElement("span");
   this.variableAddPanel.view.cloudCheck = d;
@@ -10264,7 +11216,7 @@ Entry.VariableContainer.prototype.generateListAddView = function() {
   b.appendChild(c);
   var d = Entry.createElement("input");
   d.addClass("entryVariableAddSpaceInputWorkspace");
-  d.setAttribute("placeholder", "\ub9ac\uc2a4\ud2b8 \uc774\ub984");
+  d.setAttribute("placeholder", Lang.Workspace.list_name);
   this.listAddPanel.view.name = d;
   d.variableContainer = this;
   d.onkeypress = function(b) {
@@ -10279,7 +11231,7 @@ Entry.VariableContainer.prototype.generateListAddView = function() {
   });
   b.appendChild(c);
   d = Entry.createElement("span");
-  d.innerHTML = "\ubaa8\ub4e0 \uc624\ube0c\uc81d\ud2b8\uc5d0\uc11c \uc0ac\uc6a9";
+  d.innerHTML = Lang.Workspace.use_all_objects;
   c.appendChild(d);
   d = Entry.createElement("span");
   d.addClass("entryVariableAddSpaceCheckWorkspace");
@@ -10293,7 +11245,7 @@ Entry.VariableContainer.prototype.generateListAddView = function() {
   });
   b.appendChild(c);
   d = Entry.createElement("span");
-  d.innerHTML = "\uc774 \uc624\ube0c\uc81d\ud2b8\uc5d0\uc11c \uc0ac\uc6a9";
+  d.innerHTML = Lang.Workspace.Variable_use_this_object;
   c.appendChild(d);
   d = Entry.createElement("span");
   d.addClass("entryVariableAddSpaceCheckWorkspace");
@@ -10310,7 +11262,7 @@ Entry.VariableContainer.prototype.generateListAddView = function() {
   b.appendChild(c);
   d = Entry.createElement("span");
   d.addClass("entryVariableAddSpaceCloudSpanWorkspace");
-  d.innerHTML = "\ud074\ub77c\uc6b0\ub4dc \ubcc0\uc218\ub85c \uc0ac\uc6a9 <br>(\uc11c\ubc84\uc5d0 \uc800\uc7a5\ub429\ub2c8\ub2e4)";
+  d.innerHTML = Lang.Workspace.List_create_cloud;
   c.appendChild(d);
   d = Entry.createElement("span");
   this.listAddPanel.view.cloudCheck = d;
@@ -10324,7 +11276,7 @@ Entry.VariableContainer.prototype.generateListAddView = function() {
   b = Entry.createElement("span");
   b.addClass("entryVariableAddSpaceCancelWorkspace");
   b.addClass("entryVariableAddSpaceButtonWorkspace");
-  b.innerHTML = "\ucde8\uc18c";
+  b.innerHTML = Lang.Buttons.cancel;
   b.bindOnClick(function(b) {
     a.listAddPanel.view.addClass("entryRemove");
     a.resetVariableAddPanel("list");
@@ -10333,7 +11285,7 @@ Entry.VariableContainer.prototype.generateListAddView = function() {
   b = Entry.createElement("span");
   b.addClass("entryVariableAddSpaceConfirmWorkspace");
   b.addClass("entryVariableAddSpaceButtonWorkspace");
-  b.innerHTML = "\ud655\uc778";
+  b.innerHTML = Lang.Buttons.save;
   b.variableContainer = this;
   b.bindOnClick(function(b) {
     a.addList();
@@ -10393,16 +11345,18 @@ Entry.VariableContainer.prototype.addCloneLocalVariables = function(a) {
   });
 };
 Entry.VariableContainer.prototype.generateTimer = function(a) {
-  a || (a = {}, a.id = Entry.generateHash(), a.name = Lang.Workspace.Variable_Timer, a.value = 0, a.variableType = "timer", a.visible = !1, a.x = -45, a.y = 2, a = new Entry.Variable(a));
+  a || (a = {}, a.id = Entry.generateHash(), a.name = Lang.Workspace.Variable_Timer, a.value = 0, a.variableType = "timer", a.visible = !1, a.x = 150, a.y = -70, a = new Entry.Variable(a));
   a.generateView();
   a.tick = null;
   Entry.engine.projectTimer = a;
-  Entry.addEventListener("run", function() {
-    Entry.engine.toggleProjectTimer();
-  });
   Entry.addEventListener("stop", function() {
-    Entry.engine.toggleProjectTimer();
+    Entry.engine.stopProjectTimer();
   });
+};
+Entry.VariableContainer.prototype.generateAnswer = function(a) {
+  a || (a = new Entry.Variable({id:Entry.generateHash(), name:Lang.Blocks.VARIABLE_get_canvas_input_value, value:0, variableType:"answer", visible:!1, x:150, y:-100}));
+  a.generateView();
+  Entry.container.inputValue = a;
 };
 Entry.VariableContainer.prototype.generateVariableSettingView = function() {
   var a = this, b = Entry.createElement("div");
@@ -10423,7 +11377,7 @@ Entry.VariableContainer.prototype.generateVariableSettingView = function() {
   });
   b.appendChild(c);
   var d = Entry.createElement("span");
-  d.innerHTML = "\ubcc0\uc218 \ubcf4\uc774\uae30";
+  d.innerHTML = Lang.Workspace.show_variable;
   c.appendChild(d);
   d = Entry.createElement("span");
   d.addClass("entryVariableSettingCheckWorkspace");
@@ -10433,7 +11387,7 @@ Entry.VariableContainer.prototype.generateVariableSettingView = function() {
   c.addClass("entryVariableSettingInitValueWrapperWorkspace");
   b.appendChild(c);
   d = Entry.createElement("span");
-  d.innerHTML = "\uae30\ubcf8\uac12";
+  d.innerHTML = Lang.Workspace.default_value;
   c.appendChild(d);
   d = Entry.createElement("input");
   d.addClass("entryVariableSettingInitValueInputWorkspace");
@@ -10454,7 +11408,7 @@ Entry.VariableContainer.prototype.generateVariableSettingView = function() {
   c.addClass("entryVariableSettingSlideWrapperWorkspace");
   b.appendChild(c);
   d = Entry.createElement("span");
-  d.innerHTML = "\uc2ac\ub77c\uc774\ub4dc";
+  d.innerHTML = Lang.Workspace.slide;
   c.appendChild(d);
   d = Entry.createElement("span");
   d.addClass("entryVariableSettingCheckWorkspace");
@@ -10485,7 +11439,7 @@ Entry.VariableContainer.prototype.generateVariableSettingView = function() {
   c.addClass("entryVariableSettingMinMaxWrapperWorkspace");
   b.appendChild(c);
   d = Entry.createElement("span");
-  d.innerHTML = "\ucd5c\uc18c\uac12";
+  d.innerHTML = Lang.Workspace.min_value;
   c.appendChild(d);
   var e = Entry.createElement("input");
   e.addClass("entryVariableSettingMinValueInputWorkspace");
@@ -10498,7 +11452,7 @@ Entry.VariableContainer.prototype.generateVariableSettingView = function() {
   c.appendChild(e);
   var f = Entry.createElement("span");
   f.addClass("entryVariableSettingMaxValueSpanWorkspace");
-  f.innerHTML = "\ucd5c\ub300\uac12";
+  f.innerHTML = Lang.Workspace.max_value;
   c.appendChild(f);
   var h = Entry.createElement("input");
   h.addClass("entryVariableSettingMaxValueInputWorkspace");
@@ -10538,7 +11492,7 @@ Entry.VariableContainer.prototype.generateListSettingView = function() {
   });
   b.appendChild(c);
   var d = Entry.createElement("span");
-  d.innerHTML = "\ub9ac\uc2a4\ud2b8 \ubcf4\uc774\uae30";
+  d.innerHTML = Lang.Workspace.show_list_workspace;
   c.appendChild(d);
   d = Entry.createElement("span");
   d.addClass("entryListSettingCheckWorkspace");
@@ -10548,7 +11502,7 @@ Entry.VariableContainer.prototype.generateListSettingView = function() {
   d.addClass("entryListSettingLengthWrapperWorkspace");
   c = Entry.createElement("span");
   c.addClass("entryListSettingLengthSpanWorkspace");
-  c.innerHTML = "\ub9ac\uc2a4\ud2b8 \ud56d\ubaa9 \uc218";
+  c.innerHTML = Lang.Workspace.number_of_list;
   d.appendChild(c);
   b.appendChild(d);
   c = Entry.createElement("div");
@@ -10563,7 +11517,6 @@ Entry.VariableContainer.prototype.generateListSettingView = function() {
   c.appendChild(d);
   d = Entry.createElement("input");
   d.addClass("entryListSettingLengthInputWorkspace");
-  d.setAttribute("disabled", "disabled");
   d.onblur = function() {
     a.setListLength(this.value);
   };
@@ -10666,6 +11619,19 @@ Entry.VariableContainer.prototype.removeLocalVariables = function(a) {
   }, a);
   b.map(function(a) {
     c.removeVariable(a);
+  });
+};
+Entry.VariableContainer.prototype.updateCloudVariables = function() {
+  var a = Entry.variableContainer, b = a.variables_.filter(function(a) {
+    return a.isCloud_;
+  }), b = b.map(function(a) {
+    return a.toJSON();
+  }), a = a.lists_.filter(function(a) {
+    return a.isCloud_;
+  }), a = a.map(function(a) {
+    return a.toJSON();
+  });
+  $.ajax({url:"/api/project/variable/" + Entry.projectId, type:"PUT", data:{variables:b, lists:a}}).done(function() {
   });
 };
 Entry.Xml = {};

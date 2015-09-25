@@ -6,11 +6,10 @@ Blockly.Blocks.show = {
     this.setColour("#EC4466");
     this.appendDummyInput()
         .appendField(Lang.Blocks.LOOKS_show)
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/entry_icon_looks.png', '*'));
+        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/looks_03.png', '*'));
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-    this.setTooltip('');
   }
 };
 
@@ -25,11 +24,10 @@ Blockly.Blocks.hide = {
     this.setColour("#EC4466");
     this.appendDummyInput()
         .appendField(Lang.Blocks.LOOKS_hide)
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/entry_icon_looks.png', '*'));
+        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/looks_03.png', '*'));
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-    this.setTooltip('');
   }
 };
 
@@ -58,11 +56,10 @@ Blockly.Blocks.dialog_time = {
         ]), "OPTION");
     this.appendDummyInput()
         .appendField(Lang.Blocks.LOOKS_dialog_time_4)
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/entry_icon_looks.png', '*'));
+        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/looks_03.png', '*'));
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-    this.setTooltip('');
   }
 };
 
@@ -106,11 +103,10 @@ Blockly.Blocks.dialog = {
         ]), "OPTION");
     this.appendDummyInput()
         .appendField(Lang.Blocks.LOOKS_dialog_3)
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/entry_icon_looks.png', '*'));
+        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/looks_03.png', '*'));
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-    this.setTooltip('');
   }
 };
 
@@ -131,11 +127,10 @@ Blockly.Blocks.remove_dialog = {
     this.setColour("#EC4466");
     this.appendDummyInput()
         .appendField(Lang.Blocks.LOOKS_remove_dialog)
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/entry_icon_looks.png', '*'));
+        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/looks_03.png', '*'));
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-    this.setTooltip('');
   }
 };
 
@@ -154,11 +149,10 @@ Blockly.Blocks.change_to_nth_shape = {
         .appendField(new Blockly.FieldDropdownDynamic("pictures"), "VALUE");
     this.appendDummyInput()
         .appendField(Lang.Blocks.LOOKS_change_to_nth_shape_2)
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/entry_icon_looks.png', '*'));
+        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/looks_03.png', '*'));
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-    this.setTooltip('');
   }
 };
 
@@ -175,11 +169,10 @@ Blockly.Blocks.change_to_next_shape = {
     this.setColour("#EC4466");
     this.appendDummyInput()
         .appendField(Lang.Blocks.LOOKS_change_to_next_shape)
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/entry_icon_looks.png', '*'));
+        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/looks_03.png', '*'));
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-    this.setTooltip('');
   }
 };
 
@@ -207,11 +200,10 @@ Blockly.Blocks.set_effect_volume = {
         .setCheck(["Number", "String"]);
     this.appendDummyInput()
         .appendField(Lang.Blocks.LOOKS_set_effect_volume_3)
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/entry_icon_looks.png', '*'));
+        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/looks_03.png', '*'));
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-    this.setTooltip('');
   }
 };
 
@@ -253,11 +245,10 @@ Blockly.Blocks.set_effect = {
         .setCheck(["Number", "String"]);
     this.appendDummyInput()
         .appendField(Lang.Blocks.LOOKS_set_effect_3)
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/entry_icon_looks.png', '*'));
+        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/looks_03.png', '*'));
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-    this.setTooltip('');
   }
 };
 
@@ -286,11 +277,10 @@ Blockly.Blocks.erase_all_effects = {
     this.setColour("#EC4466");
     this.appendDummyInput()
         .appendField(Lang.Blocks.LOOKS_erase_all_effects)
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/entry_icon_looks.png', '*'));
+        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/looks_03.png', '*'));
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-    this.setTooltip('');
   }
 };
 
@@ -309,11 +299,10 @@ Blockly.Blocks.change_scale_percent = {
         .setCheck(["Number", "String"]);
     this.appendDummyInput()
         .appendField(Lang.Blocks.LOOKS_change_scale_percent_2)
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/entry_icon_looks.png', '*'));
+        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/looks_03.png', '*'));
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-    this.setTooltip('');
   }
 };
 
@@ -334,11 +323,10 @@ Blockly.Blocks.set_scale_percent = {
         .setCheck(["Number", "String"]);
     this.appendDummyInput()
         .appendField(Lang.Blocks.LOOKS_set_scale_percent_2)
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/entry_icon_looks.png', '*'));
+        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/looks_03.png', '*'));
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-    this.setTooltip('');
   }
 };
 
@@ -356,11 +344,10 @@ Blockly.Blocks.flip_y = {
     this.setColour("#EC4466");
     this.appendDummyInput()
         .appendField(Lang.Blocks.LOOKS_flip_y)
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/entry_icon_looks.png', '*'));
+        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/looks_03.png', '*'));
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-    this.setTooltip('');
   }
 };
 
@@ -374,11 +361,10 @@ Blockly.Blocks.flip_x = {
     this.setColour("#EC4466");
     this.appendDummyInput()
         .appendField(Lang.Blocks.LOOKS_flip_x)
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/entry_icon_looks.png', '*'));
+        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/looks_03.png', '*'));
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-    this.setTooltip('');
   }
 };
 
@@ -396,11 +382,10 @@ Blockly.Blocks.set_object_order = {
         .appendField(new Blockly.FieldDropdownDynamic("objectSequence"), "VALUE");
     this.appendDummyInput()
         .appendField(Lang.Blocks.LOOKS_set_object_order_2)
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/entry_icon_looks.png', '*'));
+        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/looks_03.png', '*'));
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-    this.setTooltip('');
   }
 };
 
@@ -427,7 +412,6 @@ Blockly.Blocks.get_pictures = {
         .appendField(' ');
     this.setOutput(true, 'String');
     this.setInputsInline(true);
-    this.setTooltip('');
   }
 };
 
@@ -444,11 +428,10 @@ Blockly.Blocks.change_to_some_shape = {
         .setCheck(["String", "Number"]);
     this.appendDummyInput()
         .appendField(Lang.Blocks.LOOKS_change_to_nth_shape_2)
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/entry_icon_looks.png', '*'));
+        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/looks_03.png', '*'));
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-    this.setTooltip('');
   }
 };
 
@@ -479,11 +462,10 @@ Blockly.Blocks.set_effect_amount = {
             .setCheck(["Number", "String"]);
         this.appendDummyInput()
             .appendField(Lang.Blocks.LOOKS_set_effect_volume_3)
-            .appendField(new Blockly.FieldIcon('/img/assets/block_icon/entry_icon_looks.png', '*'));
+            .appendField(new Blockly.FieldIcon('/img/assets/block_icon/looks_03.png', '*'));
         this.setInputsInline(true);
         this.setPreviousStatement(true);
         this.setNextStatement(true);
-        this.setTooltip('');
     }
 };
 
@@ -519,11 +501,10 @@ Blockly.Blocks.set_entity_effect = {
             .setCheck(["Number", "String"]);
         this.appendDummyInput()
             .appendField(Lang.Blocks.LOOKS_set_effect_3)
-            .appendField(new Blockly.FieldIcon('/img/assets/block_icon/entry_icon_looks.png', '*'));
+            .appendField(new Blockly.FieldIcon('/img/assets/block_icon/looks_03.png', '*'));
         this.setInputsInline(true);
         this.setPreviousStatement(true);
         this.setNextStatement(true);
-        this.setTooltip('');
     }
 };
 
@@ -538,5 +519,55 @@ Entry.block.set_entity_effect = function (sprite, script) {
         sprite.effect.alpha = 1 - (effectValue / 100);
     }
     sprite.applyFilter();
+    return script.callReturn();
+};
+
+Blockly.Blocks.change_object_index = {
+  init: function() {
+    this.setColour("#EC4466");
+    this.appendDummyInput()
+        .appendField(Lang.Blocks.LOOKS_change_object_index_1);
+    this.appendDummyInput()
+        .appendField(new Blockly.FieldDropdown([
+            [Lang.Blocks.LOOKS_change_object_index_sub_1, "FRONT"],
+            [Lang.Blocks.LOOKS_change_object_index_sub_2, "FORWARD"],
+            [Lang.Blocks.LOOKS_change_object_index_sub_3, "BACKWARD"],
+            [Lang.Blocks.LOOKS_change_object_index_sub_4, "BACK"]
+        ]), "LOCATION")
+        .appendField(Lang.Blocks.LOOKS_change_object_index_2)
+        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/looks_03.png', '*'));
+    this.setInputsInline(true);
+    this.setPreviousStatement(true);
+    this.setNextStatement(true);
+  }
+};
+
+Entry.block.change_object_index = function(sprite, script) {
+    var targetIndex;
+    var location = script.getField("LOCATION", script);
+    var objects = Entry.container.getCurrentObjects();
+    var currentIndex = objects.indexOf(sprite.parent);
+    var max = objects.length-1
+
+    if (currentIndex < 0)
+        throw new Error('object is not available for current scene');
+
+    switch (location) {
+        case 'FRONT':
+            targetIndex = 0;
+            break;
+        case 'FORWARD':
+            targetIndex = Math.max(0, currentIndex-1);
+            break;
+        case 'BACKWARD':
+            targetIndex = Math.min(max, currentIndex+1);
+            break;
+        case 'BACK':
+            targetIndex = max;
+            break;
+
+    }
+
+    Entry.container.moveElementByBlock(currentIndex, targetIndex);
     return script.callReturn();
 };

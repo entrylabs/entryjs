@@ -10,11 +10,10 @@ Blockly.Blocks.move_direction = {
         .setCheck(["Number", "String"]);
     this.appendDummyInput()
         .appendField(Lang.Blocks.MOVING_move_direction_2)
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/entry_icon_moving.png', '*'));
+        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/moving_03.png', '*'));
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-    this.setTooltip('');
   }
 };
 
@@ -38,11 +37,10 @@ Blockly.Blocks.move_x = {
         .setCheck(["Number", "String"]);
     this.appendDummyInput()
         .appendField(Lang.Blocks.MOVING_move_x_2)
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/entry_icon_moving.png', '*'));
+        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/moving_03.png', '*'));
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-    this.setTooltip('');
   }
 };
 
@@ -65,11 +63,10 @@ Blockly.Blocks.move_y = {
         .setCheck(["Number", "String"]);
     this.appendDummyInput()
         .appendField(Lang.Blocks.MOVING_move_y_2)
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/entry_icon_moving.png', '*'));
+        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/moving_03.png', '*'));
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-    this.setTooltip('');
   }
 };
 
@@ -99,11 +96,10 @@ Blockly.Blocks.locate_xy_time = {
         .setCheck(["Number", "String"]);
     this.appendDummyInput()
         .appendField(Lang.Blocks.MOVING_locate_xy_time_4)
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/entry_icon_moving.png', '*'));
+        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/moving_03.png', '*'));
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-    this.setTooltip('');
   }
 };
 
@@ -143,11 +139,10 @@ Blockly.Blocks.rotate_by_angle = {
         .setCheck(["Number", "String"]);
     this.appendDummyInput()
         .appendField(Lang.Blocks.MOVING_rotate_by_angle_2)
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/entry_icon_moving.png', '*'));
+        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/moving_03.png', '*'));
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-    this.setTooltip('');
   }
 };
 
@@ -169,11 +164,10 @@ Blockly.Blocks.rotate_by_angle_dropdown = {
             ["135","135"],
             ["180","180"]]), "VALUE")
         .appendField(Lang.Blocks.MOVING_rotate_by_angle_dropdown_2)
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/entry_icon_moving.png', '*'));
+        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/moving_03.png', '*'));
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-    this.setTooltip('');
   }
 };
 
@@ -193,11 +187,10 @@ Blockly.Blocks.see_angle = {
         .setCheck(["Number", "String"]);
     this.appendDummyInput()
         .appendField(Lang.Blocks.MOVING_see_angle_2)
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/entry_icon_moving.png', '*'));
+        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/moving_03.png', '*'));
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-    this.setTooltip('');
   }
 };
 
@@ -217,11 +210,10 @@ Blockly.Blocks.see_direction = {
         .appendField(new Blockly.FieldDropdownDynamic("sprites"), "VALUE");
     this.appendDummyInput()
         .appendField(Lang.Blocks.MOVING_see_direction_2)
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/entry_icon_moving.png', '*'));
+        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/moving_03.png', '*'));
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-    this.setTooltip('');
   }
 };
 
@@ -252,11 +244,10 @@ Blockly.Blocks.locate_xy = {
         .setCheck(["Number", "String"]);
     this.appendDummyInput()
         .appendField(Lang.Blocks.MOVING_locate_xy_3)
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/entry_icon_moving.png', '*'));
+        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/moving_03.png', '*'));
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-    this.setTooltip('');
   }
 };
 
@@ -281,11 +272,10 @@ Blockly.Blocks.locate_x = {
         .setCheck(["Number", "String"]);
     this.appendDummyInput()
         .appendField(Lang.Blocks.MOVING_locate_x_2)
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/entry_icon_moving.png', '*'));
+        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/moving_03.png', '*'));
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-    this.setTooltip('');
   }
 };
 
@@ -308,11 +298,10 @@ Blockly.Blocks.locate_y = {
         .setCheck(["Number", "String"]);
     this.appendDummyInput()
         .appendField(Lang.Blocks.MOVING_locate_y_2)
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/entry_icon_moving.png', '*'));
+        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/moving_03.png', '*'));
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-    this.setTooltip('');
   }
 };
 
@@ -336,11 +325,10 @@ Blockly.Blocks.locate = {
         .appendField(new Blockly.FieldDropdownDynamic("spritesWithMouse"), "VALUE");
     this.appendDummyInput()
         .appendField(Lang.Blocks.MOVING_locate_2)
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/entry_icon_moving.png', '*'));
+        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/moving_03.png', '*'));
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-    this.setTooltip('');
   }
 };
 
@@ -380,11 +368,10 @@ Blockly.Blocks.move_xy_time = {
         .setCheck(["Number", "String"]);
     this.appendDummyInput()
         .appendField(Lang.Blocks.MOVING_move_xy_time_4)
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/entry_icon_moving.png', '*'));
+        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/moving_03.png', '*'));
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-    this.setTooltip('');
   }
 };
 
@@ -429,11 +416,10 @@ Blockly.Blocks.locate_time = {
         .appendField(new Blockly.FieldDropdownDynamic("sprites"), "VALUE");
     this.appendDummyInput()
         .appendField(Lang.Blocks.MOVING_locate_time_3)
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/entry_icon_moving.png', '*'));
+        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/moving_03.png', '*'));
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-    this.setTooltip('');
   }
 };
 
@@ -455,11 +441,10 @@ Blockly.Blocks.rotate_by_angle_time = {
         .appendField(new Blockly.FieldAngle("90"), "VALUE");
     this.appendDummyInput()
         .appendField(Lang.Blocks.MOVING_rotate_by_angle_time_3)
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/entry_icon_moving.png', '*'));
+        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/moving_03.png', '*'));
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-    this.setTooltip('');
   }
 };
 
@@ -493,11 +478,10 @@ Blockly.Blocks.bounce_when = {
         .appendField(new Blockly.FieldDropdownDynamic("bounce"), "VALUE");
     this.appendDummyInput()
         .appendField(Lang.Blocks.MOVING_bounce_when_2)
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/entry_icon_moving.png', '*'));
+        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/moving_03.png', '*'));
     this.setPreviousStatement(true);
     this.setInputsInline(true);
     this.setNextStatement(true);
-    this.setTooltip('');
   }
 };
 
@@ -506,11 +490,10 @@ Blockly.Blocks.bounce_wall = {
     this.setColour('#A751E3');
     this.appendDummyInput()
         .appendField(Lang.Blocks.MOVING_bounce_wall)
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/entry_icon_moving.png', '*'));
+        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/moving_03.png', '*'));
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-    this.setTooltip('');
   }
 };
 
@@ -562,11 +545,10 @@ Blockly.Blocks.flip_arrow_horizontal = {
     this.setColour('#A751E3');
     this.appendDummyInput()
         .appendField(Lang.Blocks.MOVING_flip_arrow_horizontal)
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/entry_icon_moving.png', '*'));
+        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/moving_03.png', '*'));
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-    this.setTooltip('');
   }
 };
 
@@ -581,11 +563,10 @@ Blockly.Blocks.flip_arrow_vertical = {
     this.setColour('#A751E3');
     this.appendDummyInput()
         .appendField(Lang.Blocks.MOVING_flip_arrow_vertical)
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/entry_icon_moving.png', '*'));
+        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/moving_03.png', '*'));
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-    this.setTooltip('');
   }
 };
 
@@ -603,11 +584,10 @@ Blockly.Blocks.see_angle_object = {
         .appendField(new Blockly.FieldDropdownDynamic("spritesWithMouse"), "VALUE");
     this.appendDummyInput()
         .appendField(Lang.Blocks.MOVING_see_angle_object_2)
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/entry_icon_moving.png', '*'));
+        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/moving_03.png', '*'));
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-    this.setTooltip('');
   }
 };
 
@@ -651,11 +631,10 @@ Blockly.Blocks.see_angle_direction = {
         .setCheck(["Number", "String"]);
     this.appendDummyInput()
         .appendField(Lang.Blocks.MOVING_see_angle_direction_2)
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/entry_icon_moving.png', '*'));
+        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/moving_03.png', '*'));
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-    this.setTooltip('');
   }
 };
 
@@ -676,11 +655,10 @@ Blockly.Blocks.rotate_direction = {
         .setCheck(["Number", "String"]);
     this.appendDummyInput()
         .appendField(Lang.Blocks.MOVING_rotate_direction_2)
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/entry_icon_moving.png', '*'));
+        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/moving_03.png', '*'));
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-    this.setTooltip('');
   }
 };
 
@@ -703,11 +681,10 @@ Blockly.Blocks.locate_object_time = {
         .appendField(new Blockly.FieldDropdownDynamic("spritesWithMouse"), "TARGET");
     this.appendDummyInput()
         .appendField(Lang.Blocks.MOVING_locate_object_time_3)
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/entry_icon_moving.png', '*'));
+        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/moving_03.png', '*'));
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-    this.setTooltip('');
   }
 };
 
@@ -773,11 +750,10 @@ Blockly.Blocks.rotate_absolute = {
         .setCheck(["Number", "String"]);
     this.appendDummyInput()
         .appendField(Lang.Blocks.MOVING_set_direction_by_angle_2)
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/entry_icon_moving.png', '*'));
+        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/moving_03.png', '*'));
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-    this.setTooltip('');
   }
 };
 
@@ -796,11 +772,10 @@ Blockly.Blocks.rotate_relative = {
         .setCheck(["Number", "String"]);
     this.appendDummyInput()
         .appendField(Lang.Blocks.MOVING_add_direction_by_angle_2)
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/entry_icon_moving.png', '*'));
+        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/moving_03.png', '*'));
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-    this.setTooltip('');
   }
 };
 
@@ -819,11 +794,10 @@ Blockly.Blocks.direction_absolute = {
         .setCheck(["Number", "String"]);
     this.appendDummyInput()
         .appendField(Lang.Blocks.MOVING_see_angle_2)
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/entry_icon_moving.png', '*'));
+        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/moving_03.png', '*'));
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-    this.setTooltip('');
   }
 };
 
@@ -842,11 +816,10 @@ Blockly.Blocks.direction_relative = {
         .setCheck(["Number", "String"]);
     this.appendDummyInput()
         .appendField(Lang.Blocks.MOVING_rotate_direction_2)
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/entry_icon_moving.png', '*'));
+        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/moving_03.png', '*'));
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-    this.setTooltip('');
   }
 };
 
@@ -869,11 +842,10 @@ Blockly.Blocks.move_to_angle = {
         .setCheck(["Number", "String"]);
     this.appendDummyInput()
         .appendField(Lang.Blocks.MOVING_move_direction_angle_3)
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/entry_icon_moving.png', '*'));
+        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/moving_03.png', '*'));
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-    this.setTooltip('');
   }
 };
 
@@ -892,20 +864,21 @@ Blockly.Blocks.rotate_by_time = {
   init: function() {
     this.setColour("#A751E3");
     this.appendDummyInput()
-        .appendField(Lang.Blocks.MOVING_add_direction_by_angle_time_1);
+        .appendField(Lang.Blocks.MOVING_add_direction_by_angle_time_explain_1);
     this.appendValueInput("VALUE")
         .setCheck(["Number", "String"]);
     this.appendDummyInput()
         .appendField(Lang.Blocks.MOVING_add_direction_by_angle_time_2);
+    this.appendDummyInput()
+        .appendField(Lang.Blocks.MOVING_add_direction_by_angle_time_1);
     this.appendValueInput("ANGLE")
         .setCheck(["Number", "String"]);
     this.appendDummyInput()
         .appendField(Lang.Blocks.MOVING_add_direction_by_angle_time_3)
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/entry_icon_moving.png', '*'));
+        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/moving_03.png', '*'));
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-    this.setTooltip('');
   }
 };
 
@@ -925,6 +898,47 @@ Entry.block.rotate_by_time = function (sprite, script) {
     } else {
         delete script.isStart;
         delete script.frameCount;
+        return script.callReturn();
+    }
+};
+
+Blockly.Blocks.direction_relative_duration = {
+  init: function() {
+    this.setColour("#A751E3");
+    this.appendDummyInput()
+        .appendField(Lang.Blocks.MOVING_direction_relative_duration_1);
+    this.appendValueInput("DURATION")
+        .setCheck(["Number", "String"]);
+    this.appendDummyInput()
+        .appendField(Lang.Blocks.MOVING_direction_relative_duration_2);
+    this.appendValueInput("AMOUNT")
+        .setCheck(["Number", "String"]);
+    this.appendDummyInput()
+        .appendField(Lang.Blocks.MOVING_direction_relative_duration_3)
+        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/moving_03.png', '*'));
+    this.setInputsInline(true);
+    this.setPreviousStatement(true);
+    this.setNextStatement(true);
+  }
+};
+
+Entry.block.direction_relative_duration = function (sprite, script) {
+    if (!script.isStart) {
+        var timeValue;
+        timeValue = script.getNumberValue("DURATION", script);
+        var directionValue = script.getNumberValue("AMOUNT", script);
+        script.isStart = true;
+        script.frameCount = Math.floor(timeValue * Entry.FPS)
+        script.dDirection = directionValue/script.frameCount;
+    }
+    if (script.frameCount != 0) {
+        sprite.setDirection(sprite.getDirection() + script.dDirection);
+        script.frameCount--;
+        return script;
+    } else {
+        delete script.isStart;
+        delete script.frameCount;
+        delete script.dDirection;
         return script.callReturn();
     }
 };

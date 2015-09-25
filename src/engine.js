@@ -203,7 +203,7 @@ Entry.Engine.prototype.generateView = function(controlView, option) {
         });
 
         this.pauseButton = Entry.createElement('button');
-        this.pauseButton.innerHTML = '일시정지';
+        this.pauseButton.innerHTML = Lang.Workspace.pause;
         this.pauseButton.addClass('entryEngineButtonMinimize');
         this.pauseButton.addClass('entryPauseButtonMinimize');
         this.pauseButton.addClass('entryRemove');
@@ -298,7 +298,7 @@ Entry.Engine.prototype.toggleSpeedPanel = function() {
         this.mouseView.addClass('entryRemoveElement');
         this.speedLabel_ = Entry.createElement('div',
             'entrySpeedLabelWorkspace');
-        this.speedLabel_.innerHTML = '속도 조절하기';
+        this.speedLabel_.innerHTML = Lang.Workspace.speed;
         this.view_.insertBefore(this.speedLabel_, this.maximizeButton);
         this.speedProgress_ = Entry.createElement('table',
             'entrySpeedProgressWorkspace');
@@ -425,24 +425,10 @@ Entry.Engine.computeThread = function(entity, script) {
     Entry.engine.isContinue = true;
     var isSame = false;
     while (script && Entry.engine.isContinue && !isSame) {
-        try {
-            Entry.engine.isContinue = !script.isRepeat;
-            var newScript = script.run()
-            isSame = (newScript && newScript.type == script.type);
-            script = newScript;
-        } catch (exception) {
-            console.log(exception.stack);
-            Entry.engine.toggleStop();
-            Entry.engine.isUpdating = false;
-            if (Entry.type == 'workspace') {
-                Entry.container.selectObject();
-                Entry.container.selectObject(entity.parent.id);
-                Entry.playground.changeViewMode('code');
-                Blockly.mainWorkspace.activatePreviousBlock(script.id);
-            }
-            Entry.toast.alert(Lang.Msgs.runtime_error, Lang.Workspace.check_runtime_error, true);
-            throw exception;
-        }
+        Entry.engine.isContinue = !script.isRepeat;
+        var newScript = script.run()
+        isSame = (newScript && newScript.type == script.type);
+        script = newScript;
     }
     return script;
 };
@@ -493,7 +479,7 @@ Entry.Engine.prototype.toggleRun = function() {
     if (Entry.type == 'mobile')
         this.view_.addClass('entryEngineBlueWorkspace');
 
-    this.pauseButton.innerHTML = '일시정지';
+    this.pauseButton.innerHTML = Lang.Workspace.pause;
     this.runButton.addClass('run');
     this.runButton.addClass('entryRemove');
     this.stopButton.removeClass('entryRemove');
@@ -519,7 +505,8 @@ Entry.Engine.prototype.toggleRun = function() {
  */
 Entry.Engine.prototype.toggleStop = function() {
     Entry.addActivity("stop");
-    Entry.container.mapEntity(function(entity){
+    var container = Entry.container;
+    container.mapEntity(function(entity){
         entity.loadSnapshot();
         entity.object.filters = [];
         entity.resetFilter();
@@ -537,8 +524,9 @@ Entry.Engine.prototype.toggleStop = function() {
         variable.updateView();
     });
     Entry.engine.projectTimer.loadSnapshot();
-    Entry.container.clearRunningState();
-    Entry.container.loadSequenceSnapshot();
+    container.clearRunningState();
+    container.loadSequenceSnapshot();
+    container.setInputValue();
     Entry.scene.loadStartSceneSnapshot();
     Entry.Func.clearThreads();
     createjs.Sound.setVolume(1);
@@ -565,10 +553,10 @@ Entry.Engine.prototype.toggleStop = function() {
 Entry.Engine.prototype.togglePause = function() {
     if (this.state == 'pause') {
         this.state = 'run';
-        this.pauseButton.innerHTML = '일시정지';
+        this.pauseButton.innerHTML = Lang.Workspace.pause;
     } else {
         this.state = 'pause';
-        this.pauseButton.innerHTML = '다시시작';
+        this.pauseButton.innerHTML = Lang.Workspace.restart;
         this.runButton.removeClass('entryRemove');
         this.stopButton.removeClass('entryRemove');
         //this.pauseButton.addClass('entryRemove');
@@ -635,28 +623,36 @@ Entry.Engine.prototype.raiseEventOnEntity = function(entity, param) {
  * @param {keyboard event} e
  */
 Entry.Engine.prototype.captureKeyEvent = function(e) {
-    if (Entry.engine.pressedKeys.indexOf(e.keyCode) < 0)
-        Entry.engine.pressedKeys.push(e.keyCode);
+    var keyCode = e.keyCode;
+    var type = Entry.type;
+
+    if (Entry.engine.pressedKeys.indexOf(keyCode) < 0)
+        Entry.engine.pressedKeys.push(keyCode);
     //mouse shortcuts
-    if (e.ctrlKey) {
-        e.preventDefault();
-        if (Entry.type == 'workspace' && e.keyCode == 83)
+    if (e.ctrlKey && type == 'workspace') {
+        if (keyCode == 83) {
+            e.preventDefault();
             Entry.dispatchEvent('saveWorkspace');
-        else if (Entry.type == 'workspace' && e.keyCode == 82)
+        } else if (keyCode == 82) {
+            e.preventDefault();
             Entry.engine.run();
-        else if (Entry.type == 'workspace' &&
-                 e.keyCode > 48 && e.keyCode < 58)
-            Entry.playground.selectMenu(e.keyCode - 49);
+        } else if (keyCode == 90) {
+            e.preventDefault();
+            Entry.dispatchEvent('undo');
+        } else if (keyCode > 48 && keyCode < 58) {
+            e.preventDefault();
+            Entry.playground.selectMenu(keyCode - 49);
+        }
     } else if (Entry.engine.isState('run')) {
         Entry.container.mapEntityIncludeCloneOnScene(Entry.engine.raiseKeyEvent,
-                                  ["press_some_key", e.keyCode]);
+                                  ["press_some_key", keyCode]);
         Entry.container.mapEntityIncludeCloneOnScene(Entry.engine.raiseKeyEvent,
-                                  ["when_some_key_pressed", e.keyCode]);
+                                  ["when_some_key_pressed", keyCode]);
     }
 
     if (Entry.engine.isState('stop')) {
-        if (Entry.type === 'workspace' &&
-            (e.keyCode >= 37 && e.keyCode <= 40)) {
+        if (type === 'workspace' &&
+            (keyCode >= 37 && keyCode <= 40)) {
             Entry.stage.moveSprite(e);
         }
     }
@@ -666,8 +662,10 @@ Entry.Engine.prototype.captureKeyEvent = function(e) {
  * @param {keyboard event} e
  */
 Entry.Engine.prototype.captureKeyUpEvent = function(e) {
-    if (Entry.engine.pressedKeys.indexOf(e.keyCode) >= 0)
-        Entry.engine.pressedKeys.splice(Entry.engine.pressedKeys.indexOf(e.keyCode), 1);
+    var keyCode = e.keyCode;
+    if (Entry.engine.pressedKeys.indexOf(keyCode) >= 0)
+        Entry.engine.pressedKeys.splice(
+            Entry.engine.pressedKeys.indexOf(keyCode), 1);
 };
 
 /**
@@ -724,7 +722,6 @@ Entry.Engine.prototype.toggleFullscreen = function() {
         }
         popup.window_.appendChild(Entry.engine.view_);
     } else {
-        //console.log(this.popup.remove);
         this.popup.remove();
         this.popup = null;
     }
@@ -737,34 +734,6 @@ Entry.Engine.prototype.exitFullScreen = function() {
     } else {
         Entry.engine.footerView_.removeClass('entryRemove');
         Entry.engine.headerView_.removeClass('entryRemove');
-    }
-}
-
-Entry.Engine.prototype.toggleProjectTimer = function() {
-    var timer = this.projectTimer;
-    if (!timer)
-        return;
-    if (this.isState('run')) {
-        timer.start = (new Date()).getTime();
-        timer.tick = setInterval(function (e) {
-            Entry.engine.updateProjectTimer()
-        }, 1000/60);
-    } else {
-        clearInterval(timer.tick);
-        this.updateProjectTimer(0);
-    }
-}
-
-Entry.Engine.prototype.updateProjectTimer = function(value) {
-    var timer = Entry.engine.projectTimer;
-    if (!timer)
-        return;
-    if (typeof value == 'undefined') {
-        var newTime = ((new Date()).getTime() - timer.start);
-        timer.setValue((newTime/1000));
-    } else {
-        timer.setValue(value);
-        timer.start = (new Date()).getTime();
     }
 }
 
@@ -805,3 +774,43 @@ Entry.Engine.prototype.clearTimer = function() {
     clearInterval(this.ticker);
     clearInterval(this.projectTimer.tick);
 }
+
+Entry.Engine.prototype.startProjectTimer = function() {
+    var timer = this.projectTimer;
+    if (!timer)
+        return;
+    timer.start = (new Date()).getTime();
+    timer.isInit = true;
+    timer.pausedTime = 0;
+    timer.tick = setInterval(function (e) {
+        Entry.engine.updateProjectTimer()
+    }, 1000/60);
+}
+
+Entry.Engine.prototype.stopProjectTimer = function() {
+    var timer = this.projectTimer;
+    if (!timer)
+        return;
+    this.updateProjectTimer(0);
+    timer.isInit = false;
+    timer.pausedTime = 0;
+    this.isPaused = false;
+    clearInterval(this.projectTimer.tick);
+}
+
+Entry.Engine.prototype.updateProjectTimer = function(value) {
+    var timer = Entry.engine.projectTimer;
+    if (!timer)
+        return;
+    if (typeof value == 'undefined') {
+        if (!timer.isPaused)
+            timer.setValue((((new Date()).getTime() - timer.start - timer.pausedTime)/1000));
+    } else {
+        timer.setValue(value);
+        timer.pausedTime = 0;
+        timer.start = (new Date()).getTime();
+    }
+}
+
+
+

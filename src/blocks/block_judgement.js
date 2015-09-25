@@ -2,12 +2,11 @@
 
 Blockly.Blocks.is_clicked = {
     init: function() {
-        this.setColour("#2FC9F0");
+        this.setColour("#AEB8FF");
         this.appendDummyInput()
             .appendField(Lang.Blocks.JUDGEMENT_is_clicked, "#3D3D3D");
         this.setOutput(true, 'Boolean');
         this.setInputsInline(true);
-        this.setTooltip('');
     }
 };
 
@@ -17,7 +16,7 @@ Entry.block.is_clicked = function (sprite, script) {
 
 Blockly.Blocks.is_press_some_key = {
     init: function() {
-        this.setColour("#2FC9F0");
+        this.setColour("#AEB8FF");
         this.appendDummyInput()
             .appendField(Lang.Blocks.JUDGEMENT_is_press_some_key_1, "#3D3D3D");
         this.appendDummyInput()
@@ -25,7 +24,6 @@ Blockly.Blocks.is_press_some_key = {
             .appendField(Lang.Blocks.JUDGEMENT_is_press_some_key_2, "#3D3D3D");
         this.setOutput(true, 'Boolean');
         this.setInputsInline(true);
-        this.setTooltip('');
     }
 };
 
@@ -37,7 +35,7 @@ Entry.block.is_press_some_key = function (sprite, script) {
 // (▼) 에 닿았는가?
 Blockly.Blocks.reach_something = {
     init: function() {
-        this.setColour("#2FC9F0");
+        this.setColour("#AEB8FF");
         this.appendDummyInput()
             .appendField(Lang.Blocks.JUDGEMENT_reach_something_1, "#3D3D3D");
         this.appendDummyInput()
@@ -46,7 +44,6 @@ Blockly.Blocks.reach_something = {
             .appendField(Lang.Blocks.JUDGEMENT_reach_something_2, "#3D3D3D");
         this.setOutput(true, 'Boolean');
         this.setInputsInline(true);
-        this.setTooltip('');
     }
 };
 
@@ -91,6 +88,10 @@ Entry.block.reach_something = function (sprite, script) {
                 else
                     return false;
         }
+    } else if (targetSpriteId == 'mouse') {
+        var stage = Entry.stage.canvas;
+        var pt = object.globalToLocal(stage.mouseX, stage.mouseY);
+        return object.hitTest(pt.x, pt.y);
     } else {
         var targetSprite = Entry.container.getEntity(targetSpriteId);
         if (targetSprite.type == "textBox" || sprite.type == 'textBox') {
@@ -127,7 +128,7 @@ Entry.block.reach_something = function (sprite, script) {
 
 Blockly.Blocks.boolean_comparison = {
     init: function() {
-        this.setColour("#2FC9F0");
+        this.setColour("#AEB8FF");
         this.appendValueInput("LEFTHAND")
             .setCheck(['String', 'Number']);
         this.appendDummyInput()
@@ -140,7 +141,6 @@ Blockly.Blocks.boolean_comparison = {
             .setCheck(['String', 'Number']);
         this.setOutput(true, 'Boolean');
         this.setInputsInline(true);
-        this.setTooltip('');
     }
 };
 
@@ -158,7 +158,7 @@ Entry.block.boolean_comparison = function (sprite, script) {
 
 Blockly.Blocks.boolean_equal = {
     init: function() {
-        this.setColour("#2FC9F0");
+        this.setColour("#AEB8FF");
         this.appendValueInput("LEFTHAND")
             .setCheck(['String', 'Number']);
         this.appendDummyInput()
@@ -167,7 +167,6 @@ Blockly.Blocks.boolean_equal = {
             .setCheck(['String', 'Number']);
         this.setOutput(true, 'Boolean');
         this.setInputsInline(true);
-        this.setTooltip('');
     }
 };
 
@@ -179,7 +178,7 @@ Entry.block.boolean_equal = function (sprite, script) {
 
 Blockly.Blocks.boolean_bigger = {
     init: function() {
-        this.setColour("#2FC9F0");
+        this.setColour("#AEB8FF");
         this.appendValueInput("LEFTHAND")
             .setCheck(["Number", "String"]);
         this.appendDummyInput()
@@ -188,7 +187,6 @@ Blockly.Blocks.boolean_bigger = {
             .setCheck(["Number", "String"]);
         this.setOutput(true, 'Boolean');
         this.setInputsInline(true);
-        this.setTooltip('');
     }
 };
 
@@ -200,7 +198,7 @@ Entry.block.boolean_bigger = function (sprite, script) {
 
 Blockly.Blocks.boolean_smaller = {
     init: function() {
-        this.setColour("#2FC9F0");
+        this.setColour("#AEB8FF");
         this.appendValueInput("LEFTHAND")
             .setCheck(["Number", "String"]);
         this.appendDummyInput()
@@ -209,7 +207,6 @@ Blockly.Blocks.boolean_smaller = {
             .setCheck(["Number", "String"]);
         this.setOutput(true, 'Boolean');
         this.setInputsInline(true);
-        this.setTooltip('');
     }
 };
 
@@ -222,7 +219,7 @@ Entry.block.boolean_smaller = function (sprite, script) {
 //그리고 또는
 Blockly.Blocks.boolean_and_or = {
     init: function() {
-        this.setColour("#2FC9F0");
+        this.setColour("#AEB8FF");
         this.appendValueInput("LEFTHAND")
         .setCheck("Boolean");
         this.appendDummyInput()
@@ -234,7 +231,6 @@ Blockly.Blocks.boolean_and_or = {
         .setCheck("Boolean");
         this.setOutput(true, 'Boolean');
         this.setInputsInline(true);
-        this.setTooltip('');
     }
 };
 
@@ -250,7 +246,7 @@ Entry.block.boolean_and_or = function (sprite, script) {
 
 Blockly.Blocks.boolean_and = {
     init: function() {
-        this.setColour("#2FC9F0");
+        this.setColour("#AEB8FF");
         this.appendValueInput("LEFTHAND")
             .setCheck("Boolean");
         this.appendDummyInput()
@@ -259,7 +255,6 @@ Blockly.Blocks.boolean_and = {
             .setCheck("Boolean");
         this.setOutput(true, 'Boolean');
         this.setInputsInline(true);
-        this.setTooltip('');
     }
 };
 
@@ -271,7 +266,7 @@ Entry.block.boolean_and = function (sprite, script) {
 
 Blockly.Blocks.boolean_or = {
     init: function() {
-        this.setColour("#2FC9F0");
+        this.setColour("#AEB8FF");
         this.appendValueInput("LEFTHAND")
             .setCheck("Boolean");
         this.appendDummyInput()
@@ -280,7 +275,6 @@ Blockly.Blocks.boolean_or = {
             .setCheck("Boolean");
         this.setOutput(true, 'Boolean');
         this.setInputsInline(true);
-        this.setTooltip('');
     }
 };
 
@@ -293,7 +287,7 @@ Entry.block.boolean_or = function (sprite, script) {
 
 Blockly.Blocks.boolean_not = {
     init: function() {
-        this.setColour("#2FC9F0");
+        this.setColour("#AEB8FF");
         this.appendDummyInput()
             .appendField(Lang.Blocks.JUDGEMENT_boolean_not_1, "#3D3D3D");
         this.appendValueInput("VALUE")
@@ -303,7 +297,6 @@ Blockly.Blocks.boolean_not = {
         this.appendDummyInput()
         this.setOutput(true, 'Boolean');
         this.setInputsInline(true);
-        this.setTooltip('');
     }
 };
 
@@ -314,7 +307,7 @@ Entry.block.boolean_not = function (sprite, script) {
 
 Blockly.Blocks.true_or_false = {
     init: function() {
-        this.setColour("#2FC9F0");
+        this.setColour("#AEB8FF");
         this.appendDummyInput()
         .appendField(new Blockly.FieldDropdown([
         [Lang.Blocks.JUDGEMENT_true,"true"],
@@ -323,7 +316,6 @@ Blockly.Blocks.true_or_false = {
         this.appendDummyInput()
         this.setOutput(true, 'Boolean');
         this.setInputsInline(true);
-        this.setTooltip('');
     }
 };
 
@@ -334,13 +326,12 @@ Entry.block.true_or_false = function (sprite, script) {
 
 Blockly.Blocks.True = {
     init: function() {
-        this.setColour("#2FC9F0");
+        this.setColour("#AEB8FF");
         this.appendDummyInput()
             .appendField(Lang.Blocks.JUDGEMENT_true, "#3D3D3D")
             .appendField(" ");
         this.setOutput(true, 'Boolean');
         this.setInputsInline(true);
-        this.setTooltip('');
     }
 };
 
@@ -350,13 +341,12 @@ Entry.block.True = function (sprite, script) {
 
 Blockly.Blocks.False = {
     init: function() {
-        this.setColour("#2FC9F0");
+        this.setColour("#AEB8FF");
         this.appendDummyInput()
             .appendField(Lang.Blocks.JUDGEMENT_false, "#3D3D3D")
             .appendField(" ");
         this.setOutput(true, 'Boolean');
         this.setInputsInline(true);
-        this.setTooltip('');
     }
 };
 
@@ -364,43 +354,9 @@ Entry.block.False = function (sprite, script) {
     return false;
 };
 
-Blockly.Blocks.is_included_in_list = {
-    init: function() {
-        this.setColour("#2FC9F0");
-        this.appendDummyInput()
-            .appendField(Lang.Blocks.VARIABLE_is_included_in_list_1, "#3D3D3D");
-        this.appendDummyInput()
-            .appendField(new Blockly.FieldDropdownDynamic("lists"), "LIST");
-        this.appendDummyInput()
-            .appendField(Lang.Blocks.VARIABLE_is_included_in_list_2, "#3D3D3D");
-        this.appendValueInput("DATA")
-            .setCheck(["Number", "String"]);
-        this.appendDummyInput()
-            .appendField(Lang.Blocks.VARIABLE_is_included_in_list_3, "#3D3D3D");
-        this.setOutput(true, 'Boolean');
-        this.setInputsInline(true);
-        this.setTooltip('');
-    }
-};
-
-Entry.block.is_included_in_list = function (sprite, script) {
-    var listId = script.getField("LIST", script);
-    var data = script.getStringValue("DATA", script);
-    var list = Entry.variableContainer.getList(listId);
-    if (!list)
-        return false;
-    var arr = list.array_;
-
-    for (var i=0, len=arr.length; i<len; i++) {
-        if (arr[i].data.toString() == data.toString())
-            return true;
-    }
-    return false;
-};
-
 Blockly.Blocks.boolean_basic_operator = {
   init: function() {
-    this.setColour("#2FC9F0");
+    this.setColour("#AEB8FF");
     this.appendValueInput("LEFTHAND")
         .setCheck(['String', 'Number']);
     this.appendDummyInput("VALUE")

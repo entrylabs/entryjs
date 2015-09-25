@@ -59,7 +59,8 @@ Entry.Variable = function(variable) {
  * @param {number} variableIndex index of this variable for render position
  */
 Entry.Variable.prototype.generateView = function(variableIndex) {
-    if (this.type == 'variable' || this.type == 'timer') {
+    var type = this.type;
+    if (type == 'variable' || type == 'timer' || type == 'answer') {
         this.view_ = new createjs.Container();
         this.rect_ = new createjs.Shape();
         this.view_.addChild(this.rect_);
@@ -97,7 +98,7 @@ Entry.Variable.prototype.generateView = function(variableIndex) {
             this.variable.setY(evt.stageY*0.75 -135 + this.offset.y);
             this.variable.updateView();
         });
-    } else if (this.type == 'slide') {
+    } else if (type == 'slide') {
         var slide = this;
         this.view_ = new createjs.Container();
         this.rect_ = new createjs.Shape();
@@ -428,6 +429,30 @@ Entry.Variable.prototype.updateView = function() {
                 view.y = (i - this.scrollPosition)*20 + 23;
                 this.view_.addChild(view);
             }
+        } else if (this.type == 'answer') {
+            this.view_.x = this.getX();
+            this.view_.y = this.getY();
+            this.textView_.text = this.getName();
+            this.valueView_.x = this.textView_.getMeasuredWidth() + 14;
+            this.valueView_.y = 1;
+            if (this.isNumber()) {
+                if (this.getValue() == 0)
+                    this.valueView_.text = 0
+                else 
+                    this.valueView_.text = this.getValue().toFixed(1).replace('.00', '');
+            }
+            else {
+                this.valueView_.text = this.getValue();
+
+            }
+            this.rect_.graphics.clear().f("#ffffff").ss(1, 2, 0).s("#A0A1A1")
+                .rc(0, -14,
+                    this.textView_.getMeasuredWidth() + this.valueView_.getMeasuredWidth() + 26, 20,
+                    4, 4, 4, 4);
+            this.wrapper_.graphics.clear().f("#E457DC").ss(1, 2, 0).s("#E457DC")
+                .rc(this.textView_.getMeasuredWidth() + 7, -11,
+                    this.valueView_.getMeasuredWidth() + 15, 14,
+                    7, 7, 7, 7);
         } else {
             this.view_.x = this.getX();
             this.view_.y = this.getY();
@@ -596,6 +621,13 @@ Entry.Variable.prototype.getWidth = function() {
     return this.width_;
 };
 
+Entry.Variable.prototype.isInList = function(x,y){
+    var xArea = this.getX() + this.width_;
+    var yArea = this.getY() + this.height_;
+    // if(Entry.engine.state == 'stop' && this.type== 'list');
+
+};
+
 /**
  * height setter
  * @param {number} height
@@ -627,7 +659,7 @@ Entry.Variable.prototype.takeSnapshot = function() {
  * load snapshot to current variable
  */
 Entry.Variable.prototype.loadSnapshot = function() {
-    if (this.snapshot_)
+    if (this.snapshot_ && !this.isCloud_)
         this.syncModel_(this.snapshot_);
 };
 
@@ -643,6 +675,7 @@ Entry.Variable.prototype.syncModel_ = function(variableModel) {
     this.setVisible(variableModel.visible);
     this.setValue(variableModel.value);
     this.setName(variableModel.name);
+    this.isCloud_ = variableModel.isCloud;
     if (this.type == 'list') {
         this.setWidth(variableModel.width);
         this.setHeight(variableModel.height);
