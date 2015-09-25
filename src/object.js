@@ -14,7 +14,9 @@ Entry.EntryObject = function(model) {
         this.id = model.id;
 
         /** @type {string} */
-        this.name = model.name ? model.name : model.sprite.name;
+        this.name = model.name || model.sprite.name;
+
+        this.text = model.text || this.name;
 
         /** @type {string} */
         this.objectType = model.objectType;
@@ -215,19 +217,15 @@ Entry.EntryObject.prototype.generateView= function() {
         this.nameView_.entryObject = this;
         nameView.setAttribute("disabled", 'disabled');
 
+        var self = this;
         this.nameView_.onblur = function() {
             this.entryObject.name = this.value;
-        };
-        this.nameView_.onkeyup = function() {
-            if (this.entryObject.objectType == "textBox")
-                this.entryObject.entity.setText(this.value);
         };
         this.nameView_.onkeypress = function(e) {
             if (e.keyCode == 13)
                 this.blur();
         };
         this.nameView_.value = this.name;
-
 
         var editView = Entry.createElement('div');
         editView.addClass('entryObjectEditWorkspace');
@@ -558,16 +556,11 @@ Entry.EntryObject.prototype.generateView= function() {
         this.nameView_.onblur = function() {
             this.entryObject.name = this.value;
         };
-        this.nameView_.onkeyup = function() {
-            if (this.entryObject.objectType == "textBox")
-                this.entryObject.entity.setText(this.value);
-        };
         this.nameView_.onkeypress = function(e) {
             if (e.keyCode == 13)
                 this.blur();
         };
         this.nameView_.value = this.name;
-
 
         if (Entry.objectEditable && Entry.objectDeletable) {
             var deleteView = Entry.createElement('div');
@@ -793,6 +786,15 @@ Entry.EntryObject.prototype.setName = function(name) {
     Entry.assert(typeof name == "string", 'object name must be string');
     this.name = name;
     this.nameView_.value = name;
+};
+
+/**
+ * Object text setter
+ * @param {!string} name
+ */
+Entry.EntryObject.prototype.setText = function(text) {
+    Entry.assert(typeof text == "string", 'object text must be string');
+    this.text = text;
 };
 
 /**
@@ -1267,6 +1269,8 @@ Entry.EntryObject.prototype.toJSON = function() {
     var json = {};
     json.id = this.id;
     json.name = this.name;
+    if (this.objectType == 'textBox')
+        json.text = this.text;
     json.script = this.getScriptText();
     if (this.objectType == 'sprite')
         json.selectedPictureId = this.selectedPicture.id;

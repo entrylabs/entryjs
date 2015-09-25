@@ -4999,7 +4999,19 @@ Entry.EntityObject = function(a) {
   });
 };
 Entry.EntityObject.prototype.injectModel = function(a, b) {
-  "sprite" == this.type ? this.setImage(a) : "textBox" == this.type && (b.text || (b.text = this.parent.name), this.setFont(b.font), this.setBGColour(b.bgColor), this.setColour(b.colour), this.setUnderLine(b.underLine), this.setStrike(b.strike));
+  if ("sprite" == this.type) {
+    this.setImage(a);
+  } else {
+    if ("textBox" == this.type) {
+      var c = this.parent;
+      b.text = c.text || c.name;
+      this.setFont(b.font);
+      this.setBGColour(b.bgColor);
+      this.setColour(b.colour);
+      this.setUnderLine(b.underLine);
+      this.setStrike(b.strike);
+    }
+  }
   b && this.syncModel_(b);
 };
 Entry.EntityObject.prototype.syncModel_ = function(a) {
@@ -5758,7 +5770,8 @@ Entry.initFonts = function(a) {
 Entry.EntryObject = function(a) {
   if (a) {
     this.id = a.id;
-    this.name = a.name ? a.name : a.sprite.name;
+    this.name = a.name || a.sprite.name;
+    this.text = a.text || this.name;
     this.objectType = a.objectType;
     this.objectType || (this.objectType = "sprite");
     this.script = a.script ? Blockly.Xml.textToDom(a.script) : Blockly.Xml.textToDom("<xml></xml>");
@@ -5857,9 +5870,6 @@ Entry.EntryObject.prototype.generateView = function() {
     d.setAttribute("disabled", "disabled");
     this.nameView_.onblur = function() {
       this.entryObject.name = this.value;
-    };
-    this.nameView_.onkeyup = function() {
-      "textBox" == this.entryObject.objectType && this.entryObject.entity.setText(this.value);
     };
     this.nameView_.onkeypress = function(a) {
       13 == a.keyCode && this.blur();
@@ -6074,8 +6084,6 @@ Entry.EntryObject.prototype.generateView = function() {
     }}])), this.view_ = a, a = Entry.createElement("ul"), a.addClass("objectInfoView"), d = Entry.createElement("li"), d.addClass("objectInfo_visible"), e = Entry.createElement("li"), e.addClass("objectInfo_lock"), a.appendChild(d), a.appendChild(e), this.view_.appendChild(a), a = Entry.createElement("div"), a.addClass("entryObjectThumbnailWorkspace"), this.view_.appendChild(a), this.thumbnailView_ = a, a = Entry.createElement("div"), a.addClass("entryObjectWrapperWorkspace"), this.view_.appendChild(a), 
     d = Entry.createElement("input"), d.addClass("entryObjectNameWorkspace"), a.appendChild(d), this.nameView_ = d, this.nameView_.entryObject = this, this.nameView_.onblur = function() {
       this.entryObject.name = this.value;
-    }, this.nameView_.onkeyup = function() {
-      "textBox" == this.entryObject.objectType && this.entryObject.entity.setText(this.value);
     }, this.nameView_.onkeypress = function(a) {
       13 == a.keyCode && this.blur();
     }, this.nameView_.value = this.name, Entry.objectEditable && Entry.objectDeletable && (d = Entry.createElement("div"), d.addClass("entryObjectDeletePhone"), d.object = this, this.deleteView_ = d, this.view_.appendChild(d), d.bindOnClick(function(a) {
@@ -6120,6 +6128,10 @@ Entry.EntryObject.prototype.setName = function(a) {
   Entry.assert("string" == typeof a, "object name must be string");
   this.name = a;
   this.nameView_.value = a;
+};
+Entry.EntryObject.prototype.setText = function(a) {
+  Entry.assert("string" == typeof a, "object text must be string");
+  this.text = a;
 };
 Entry.EntryObject.prototype.setScript = function(a) {
   this.script = a;
@@ -6314,6 +6326,7 @@ Entry.EntryObject.prototype.toJSON = function() {
   var a = {};
   a.id = this.id;
   a.name = this.name;
+  "textBox" == this.objectType && (a.text = this.text);
   a.script = this.getScriptText();
   "sprite" == this.objectType && (a.selectedPictureId = this.selectedPicture.id);
   a.objectType = this.objectType;
@@ -8009,7 +8022,7 @@ Entry.Playground.prototype.generateTextView = function(a) {
   a = Entry.createElement("input");
   a.addClass("entryPlayground_textBox");
   a.onkeyup = function() {
-    Entry.playground.object.setName(this.value);
+    Entry.playground.object.setText(this.value);
     Entry.playground.object.entity.setText(this.value);
   };
   a.onblur = function() {
@@ -8021,7 +8034,7 @@ Entry.Playground.prototype.generateTextView = function(a) {
   a.addClass("entryPlayground_textArea");
   a.style.display = "none";
   a.onkeyup = function() {
-    Entry.playground.object.setName(this.value);
+    Entry.playground.object.setText(this.value);
     Entry.playground.object.entity.setText(this.value);
   };
   a.onblur = function() {
