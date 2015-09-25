@@ -856,8 +856,13 @@ Blockly.Blocks.calc_operation = {init:function() {
   this.setInputsInline(!0);
 }};
 Entry.block.calc_operation = function(a, b) {
-  var c = b.getNumberValue("LEFTHAND", b), d = b.getField("VALUE", b), e = 0;
-  -1 < "sin cos tan asin_radian acos_radian atan_radian".split(" ").indexOf(d) && (c = Entry.toRadian(c), d = d.split("_")[0]);
+  var c = b.getNumberValue("LEFTHAND", b), d = b.getField("VALUE", b);
+  if (-1 < ["asin_radian", "acos_radian"].indexOf(d) && (1 < c || -1 > c)) {
+    throw Error("x range exceeded");
+  }
+  d.indexOf("_") && (d = d.split("_")[0]);
+  -1 < ["sin", "cos", "tan"].indexOf(d) && (c = Entry.toRadian(c));
+  var e = 0;
   switch(d) {
     case "square":
       e = c * c;

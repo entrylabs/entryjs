@@ -412,14 +412,19 @@ Blockly.Blocks.calc_operation = {
 Entry.block.calc_operation = function (sprite, script) {
     var value = script.getNumberValue("LEFTHAND", script);
     var operator = script.getField("VALUE", script);
-    var returnVal = 0;
-    var needToConvertList = ['sin', 'cos', 'tan', 'asin_radian',
-        'acos_radian', 'atan_radian'];
-    if (needToConvertList.indexOf(operator) > -1) {
-        value = Entry.toRadian(value);
-        operator = operator.split('_')[0];
-    }
+    var xRangeCheckList = ['asin_radian', 'acos_radian'];
+    if ((xRangeCheckList.indexOf(operator) > -1) &&
+           (value > 1 || value < -1))
+            throw new Error('x range exceeded');
 
+    var needToConvertList = ['sin', 'cos', 'tan'];
+    if (operator.indexOf('_'))
+        operator = operator.split('_')[0];
+
+    if (needToConvertList.indexOf(operator) > -1)
+        value = Entry.toRadian(value);
+
+    var returnVal = 0;
     switch(operator){
         case "square":
             returnVal = value * value;
