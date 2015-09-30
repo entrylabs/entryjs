@@ -436,8 +436,8 @@ Entry.Variable.prototype.updateView = function() {
             this.valueView_.x = this.textView_.getMeasuredWidth() + 14;
             this.valueView_.y = 1;
             if (this.isNumber()) {
-                if (this.getValue() == 0)
-                    this.valueView_.text = 0
+                if (this.getValue() == 0 || parseInt(this.getValue(),10) == this.getValue())
+                    this.valueView_.text = this.getValue();
                 else 
                     this.valueView_.text = this.getValue().toFixed(1).replace('.00', '');
             }
