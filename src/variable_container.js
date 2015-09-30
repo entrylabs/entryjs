@@ -296,6 +296,7 @@ Entry.VariableContainer.prototype.renderMessageReference = function(message) {
             else id = caller.block.getAttribute("id");
             Blockly.mainWorkspace.activatePreviousBlock(Number(id));
             Entry.playground.toggleOnVariableView();
+            Entry.playground.changeViewMode('variable');
         });
         listView.appendChild(element);
     }
@@ -381,7 +382,6 @@ Entry.VariableContainer.prototype.renderVariableReference = function(variable) {
                 Entry.container.selectObject();
                 Entry.container.selectObject(this.caller.object.id, true);
                 that.select(null);
-                that.select(this.variable);
             }
             var caller = this.caller;
             var id;
@@ -389,6 +389,7 @@ Entry.VariableContainer.prototype.renderVariableReference = function(variable) {
             else id = caller.block.getAttribute("id");
             Blockly.mainWorkspace.activatePreviousBlock(Number(id));
             Entry.playground.toggleOnVariableView();
+            Entry.playground.changeViewMode('variable');
         });
         listView.appendChild(element);
     }
@@ -410,9 +411,7 @@ Entry.VariableContainer.prototype.renderVariableReference = function(variable) {
 Entry.VariableContainer.prototype.renderFunctionReference = function(func) {
     var that = this;
     var objects = Entry.container.objects_;
-    var variableType = [
-        'function_general'
-    ];
+    var variableType = 'function_general';
     var callers = [];
     var listView = Entry.createElement('ul');
     listView.addClass('entryVariableListCallerListWorkspace')
@@ -423,7 +422,7 @@ Entry.VariableContainer.prototype.renderFunctionReference = function(func) {
         for (var j = 0; j < blocks.length; j++) {
             var block = blocks[j];
             var type = block.getAttribute('type');
-            if (variableType.indexOf(type) > -1) {
+            if (variableType == type) {
                 var mutation = block.getElementsByTagName("mutation")[0]
                 if (mutation.getAttribute("hashid") == func.id)
                     callers.push({object:object, block: block});
@@ -450,6 +449,7 @@ Entry.VariableContainer.prototype.renderFunctionReference = function(func) {
             var id = this.caller.block.getAttribute("id");
             Blockly.mainWorkspace.activatePreviousBlock(Number(id));
             Entry.playground.toggleOnVariableView();
+            Entry.playground.changeViewMode('variable');
         });
         listView.appendChild(element);
     }
