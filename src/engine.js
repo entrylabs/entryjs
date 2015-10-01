@@ -469,7 +469,6 @@ Entry.Engine.prototype.toggleRun = function() {
         Entry.variableContainer.mapList(function(variable){
             variable.takeSnapshot();
         });
-        Entry.engine.projectTimer.takeSnapshot();
         Entry.container.takeSequenceSnapshot();
         Entry.scene.takeStartSceneSnapshot();
         this.state = 'run';
@@ -506,6 +505,7 @@ Entry.Engine.prototype.toggleRun = function() {
 Entry.Engine.prototype.toggleStop = function() {
     Entry.addActivity("stop");
     var container = Entry.container;
+    var variableContainer = Entry.variableContainer;
     container.mapEntity(function(entity){
         entity.loadSnapshot();
         entity.object.filters = [];
@@ -516,14 +516,14 @@ Entry.Engine.prototype.toggleStop = function() {
             entity.removeBrush();
 
     });
-    Entry.variableContainer.mapVariable(function(variable){
+    variableContainer.mapVariable(function(variable){
         variable.loadSnapshot();
     });
-    Entry.variableContainer.mapList(function(variable){
+    variableContainer.mapList(function(variable){
         variable.loadSnapshot();
         variable.updateView();
     });
-    Entry.engine.projectTimer.loadSnapshot();
+    this.stopProjectTimer();
     container.clearRunningState();
     container.loadSequenceSnapshot();
     container.setInputValue();
@@ -792,23 +792,24 @@ Entry.Engine.prototype.stopProjectTimer = function() {
     if (!timer)
         return;
     this.updateProjectTimer(0);
+    timer.isPaused = false;
     timer.isInit = false;
     timer.pausedTime = 0;
-    this.isPaused = false;
-    clearInterval(this.projectTimer.tick);
+    clearInterval(timer.tick);
 }
 
 Entry.Engine.prototype.updateProjectTimer = function(value) {
     var timer = Entry.engine.projectTimer;
+    var current = (new Date()).getTime();
     if (!timer)
         return;
     if (typeof value == 'undefined') {
         if (!timer.isPaused)
-            timer.setValue((((new Date()).getTime() - timer.start - timer.pausedTime)/1000));
+            timer.setValue(((current - timer.start - timer.pausedTime)/1000));
     } else {
         timer.setValue(value);
         timer.pausedTime = 0;
-        timer.start = (new Date()).getTime();
+        timer.start = current;
     }
 }
 
