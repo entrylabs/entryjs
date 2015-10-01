@@ -929,8 +929,9 @@ Entry.block.choose_project_timer_action = function (sprite, script) {
     var timer = engine.projectTimer;
 
     if (action == 'START') {
-        if (!timer.isInit)
+        if (!timer.isInit) {
             engine.startProjectTimer();
+        }
         else if (timer.isInit && timer.isPaused) {
             if (timer.pauseStart)
                 timer.pausedTime += (new Date()).getTime() - timer.pauseStart;
