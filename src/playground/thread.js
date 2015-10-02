@@ -38,6 +38,10 @@ Entry.Thread = function(thread, code) {
         this._blocks.set(blocks);
     };
 
+    p.indexOf = function(block) {
+        return this._blocks.indexOf(block);
+    };
+
     p.cut = function(block) {
         var index = this._blocks.indexOf(block);
         var slicedData = this._blocks.splice(index);
@@ -57,6 +61,7 @@ Entry.Thread = function(thread, code) {
         });
 
         this.align();
+        this.updateMagnetMap(this._blocks.at(0));
     };
 
     p.align = function(animate) {
@@ -77,6 +82,30 @@ Entry.Thread = function(thread, code) {
             cursor.x += magnet.x;
             cursor.y += magnet.y;
         });
+    };
+
+    p.updateMagnetMap = function(block) {
+
+        var minIndex = 0;
+        var maxIndex = this.length - 1;
+        var currentIndex;
+        var currentElement;
+
+        while (minIndex <= maxIndex) {
+            currentIndex = (minIndex + maxIndex) / 2 | 0;
+            currentElement = this[currentIndex];
+
+            if (currentElement < searchElement) {
+                minIndex = currentIndex + 1;
+            }
+            else if (currentElement > searchElement) {
+                maxIndex = currentIndex - 1;
+            }
+            else {
+                return currentIndex;
+            }
+        }
+
     };
 
 })(Entry.Thread.prototype);

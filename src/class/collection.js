@@ -121,6 +121,19 @@ Entry.Collection = function(data) {
         return datum;
     };
 
+    p.slice = function(index, amount) {
+        if (index < 0 || index > this.length)
+            return undefined;
+
+        var data = this._data;
+
+        amount = amount === undefined ? this.length - index: amount;
+
+        var slicedData = data.slice(index, amount);
+
+        return slicedData;
+    };
+
     /* removers */
     p.splice = function(index, amount) {
         var args = Array.prototype.slice.call(arguments,2);

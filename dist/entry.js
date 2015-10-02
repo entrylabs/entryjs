@@ -3072,6 +3072,13 @@ Entry.Collection = function(b) {
       return a;
     }
   };
+  b.slice = function(a, b) {
+    if (!(0 > a || a > this.length)) {
+      var d = this._data;
+      b = void 0 === b ? this.length - a : b;
+      return d.slice(a, b);
+    }
+  };
   b.splice = function(a, b) {
     var d = Array.prototype.slice.call(arguments, 2);
     if (!(0 > a || a > this.length)) {
@@ -3241,6 +3248,9 @@ Entry.Thread = function(b, a) {
     });
     this._blocks.set(a);
   };
+  b.indexOf = function(a) {
+    return this._blocks.indexOf(a);
+  };
   b.cut = function(a) {
     a = this._blocks.indexOf(a);
     return this._blocks.splice(a);
@@ -3254,6 +3264,7 @@ Entry.Thread = function(b, a) {
       d.renderStart(a, b);
     });
     this.align();
+    this.updateMagnetMap(this._blocks.at(0));
   };
   b.align = function(a) {
     a = void 0 === a ? !0 : a;
@@ -3265,6 +3276,20 @@ Entry.Thread = function(b, a) {
       d += b.x;
       e += b.y;
     });
+  };
+  b.updateMagnetMap = function(a) {
+    a = 0;
+    for (var b = this.length - 1, d, e;a <= b;) {
+      if (d = (a + b) / 2 | 0, e = this[d], e < searchElement) {
+        a = d + 1;
+      } else {
+        if (e > searchElement) {
+          b = d - 1;
+        } else {
+          return d;
+        }
+      }
+    }
   };
 })(Entry.Thread.prototype);
 Entry.STATIC = {OBJECT:0, ENTITY:1, SPRITE:2, SOUND:3, VARIABLE:4, FUNCTION:5, SCENE:6, MESSAGE:7, BLOCK_MODEL:8, BOX_MODEL:9, DRAG_INSTANCE:10};
@@ -3505,8 +3530,8 @@ Entry.Playground = function(b) {
     return console.error("Snap library is required");
   }
   this.svgDom = Entry.Dom($('<svg id="play" width="100%" height="100%"version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'), {parent:b});
+  this._magnetMap = null;
   this.snap = Snap("#play");
-  this._magnetDB = {previous:[], next:[]};
   Entry.Model(this, !1);
 };
 Entry.Playground.dragBlock = null;
@@ -3517,15 +3542,22 @@ Entry.Playground.MAGNET_RANGE = 20;
     if (!(a instanceof Entry.Code)) {
       return console.error("You must select code instance");
     }
+    this.initMagnetMap();
     a.bindPlayground(this);
     this.code = a;
   };
-  b.updateMagnet = function(a) {
+  b.initMagnetMap = function() {
+    this._magnetMap = {previous:[], next:[]};
+  };
+  b.updateCloseMagnet = function(a) {
+  };
+  b.getMagnetMap = function() {
+    return this._magnetMap;
   };
   b.terminateDrag = function(a) {
     var b = a.dragInstance;
     delete a.dragInstance;
-    this.closeMagnet || (Math.sqrt(Math.pow(b.startX - b.offsetX, 2) + Math.pow(b.startY - b.offsetY, 2)) < Entry.Playground.MAGNET_RANGE ? a.thread.align() : (a = a.thread.cut(a), this.code.createThread(a)));
+    this.closeMagnet || (0 !== a.thread.indexOf(a) ? Math.sqrt(Math.pow(b.startX - b.offsetX, 2) + Math.pow(b.startY - b.offsetY, 2)) < Entry.Playground.MAGNET_RANGE ? a.thread.align() : (a = a.thread.cut(a), this.code.createThread(a)) : a.thread.align());
   };
 })(Entry.Playground.prototype);
 

@@ -30,12 +30,9 @@ Entry.Playground = function(dom) {
         { parent: dom }
     );
 
-    this.snap = Snap('#play');
+    this._magnetMap = null;
 
-    this._magnetDB = {
-        previous: [],
-        next: []
-    };
+    this.snap = Snap('#play');
 
     Entry.Model(this, false);
 };
@@ -54,12 +51,25 @@ Entry.Playground.MAGNET_RANGE = 20;
         if (!(code instanceof Entry.Code))
             return console.error("You must select code instance");
 
+        this.initMagnetMap();
+
         code.bindPlayground(this);
 
         this.code = code;
     };
 
-    p.updateMagnet = function(magnet) {
+    p.initMagnetMap = function() {
+        this._magnetMap = {
+            previous: [],
+            next: []
+        };
+    };
+
+    p.updateCloseMagnet = function(block) {
+    };
+
+    p.getMagnetMap = function() {
+        return this._magnetMap;
     };
 
     p.terminateDrag = function(block) {
@@ -68,20 +78,24 @@ Entry.Playground.MAGNET_RANGE = 20;
 
         if (this.closeMagnet) {
 
-        } else {
-
+        } else if (block.thread.indexOf(block) !== 0) {
             var distance = Math.sqrt(
                 Math.pow(di.startX - di.offsetX, 2) +
                 Math.pow(di.startY - di.offsetY, 2)
             );
 
-            if (distance < Entry.Playground.MAGNET_RANGE)
+            if (distance < Entry.Playground.MAGNET_RANGE) {
                 block.thread.align();
+                return;
+            }
             else {
                 var newThread = block.thread.cut(block);
                 this.code.createThread(newThread);
             }
+        } else {
+            block.thread.align();
         }
+        //this.updateMagnetMap(block);
     };
 
 })(Entry.Playground.prototype);
