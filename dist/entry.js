@@ -4726,6 +4726,7 @@ Entry.Engine.prototype.generateView = function(a, b) {
     this.stopButton2.addClass("entryEngineButtonWorkspace_w");
     this.stopButton2.addClass("entryStopButtonWorkspace_w2");
     this.stopButton2.addClass("entryRemove");
+    this.stopButton2.innerHTML = Lang.Workspace.stop;
     this.view_.appendChild(this.stopButton2);
     this.stopButton2.bindOnClick(function(a) {
       Entry.engine.toggleStop();
@@ -4734,6 +4735,7 @@ Entry.Engine.prototype.generateView = function(a, b) {
     this.pauseButton.addClass("entryEngineButtonWorkspace_w");
     this.pauseButton.addClass("entryPauseButtonWorkspace_w");
     this.pauseButton.addClass("entryRemove");
+    this.view_.appendChild(this.pauseButton);
     this.pauseButton.bindOnClick(function(a) {
       Entry.engine.togglePause();
     });
