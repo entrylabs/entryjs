@@ -30,7 +30,7 @@ Blockly.Blocks.hamster_move_forward = {
   init: function() {
     this.setColour("#00979D");
     this.appendDummyInput()
-    .appendField('앞으로 이동하기')
+    .appendField(Lang.Blocks.HAMSTER_move_forward)
     .appendField(new Blockly.FieldIcon('/img/assets/block_icon/hardware_03.png', '*'));
     this.setInputsInline(true);
     this.setPreviousStatement(true);
@@ -66,7 +66,7 @@ Blockly.Blocks.hamster_move_backward = {
   init: function() {
     this.setColour("#00979D");
     this.appendDummyInput()
-    .appendField('뒤로 이동하기')
+    .appendField(Lang.Blocks.HAMSTER_move_backward)
     .appendField(new Blockly.FieldIcon('/img/assets/block_icon/hardware_03.png', '*'));
     this.setInputsInline(true);
     this.setPreviousStatement(true);
@@ -102,12 +102,12 @@ Blockly.Blocks.hamster_turn_around = {
   init: function() {
     this.setColour("#00979D");
     this.appendDummyInput()
-    .appendField("")
+    .appendField(Lang.Blocks.HAMSTER_turn_around_1)
     .appendField(new Blockly.FieldDropdown([
-      ['왼쪽',"LEFT"],
-      ['오른쪽',"RIGHT"]
+      [Lang.General.left,"LEFT"],
+      [Lang.General.right,"RIGHT"]
       ]), "DIRECTION")
-    .appendField(" 으로 돌기")
+    .appendField(Lang.Blocks.HAMSTER_turn_around_2)
     .appendField(new Blockly.FieldIcon('/img/assets/block_icon/hardware_03.png', '*'));
     this.setInputsInline(true);
     this.setPreviousStatement(true);
@@ -149,23 +149,23 @@ Blockly.Blocks.hamster_set_led_to = {
   init: function() {
     this.setColour("#00979D");
     this.appendDummyInput()
-    .appendField("")
+    .appendField(Lang.Blocks.HAMSTER_set_led_to_1)
     .appendField(new Blockly.FieldDropdown([
-      ['왼쪽',"LEFT"],
-      ['오른쪽',"RIGHT"],
-      ['양쪽',"FRONT"]
+      [Lang.General.left,"LEFT"],
+      [Lang.General.right,"RIGHT"],
+      [Lang.General.both,"FRONT"]
       ]), "DIRECTION")
-    .appendField(" LED를")
+    .appendField(Lang.Blocks.HAMSTER_set_led_to_2)
     .appendField(new Blockly.FieldDropdown([
-      ['빨간색',"4"],
-      ['노란색',"6"],
-      ['초록색',"2"],
-      ['하늘색',"3"],
-      ['파란색',"1"],
-      ['보라색',"5"],
-      ['하얀색',"7"]
+      [Lang.General.red,"4"],
+      [Lang.General.yellow,"6"],
+      [Lang.General.green,"2"],
+      [Lang.General.skyblue,"3"],
+      [Lang.General.blue,"1"],
+      [Lang.General.purple,"5"],
+      [Lang.General.white,"7"]
       ]), "COLOR")
-    .appendField(" 으로 하기")
+    .appendField(Lang.Blocks.HAMSTER_set_led_to_3)
     .appendField(new Blockly.FieldIcon('/img/assets/block_icon/hardware_03.png', '*'));
     this.setInputsInline(true);
     this.setPreviousStatement(true);
@@ -192,13 +192,13 @@ Blockly.Blocks.hamster_clear_led = {
   init: function() {
     this.setColour("#00979D");
     this.appendDummyInput()
-    .appendField("")
+    .appendField(Lang.Blocks.HAMSTER_clear_led_1)
     .appendField(new Blockly.FieldDropdown([
-      ['왼쪽',"LEFT"],
-      ['오른쪽',"RIGHT"],
-      ['양쪽',"FRONT"]
+      [Lang.General.left,"LEFT"],
+      [Lang.General.right,"RIGHT"],
+      [Lang.General.both,"FRONT"]
       ]), "DIRECTION")
-    .appendField(" LED 끄기")
+    .appendField(Lang.Blocks.HAMSTER_clear_led_2)
     .appendField(new Blockly.FieldIcon('/img/assets/block_icon/hardware_03.png', '*'));
     this.setInputsInline(true);
     this.setPreviousStatement(true);
@@ -222,7 +222,7 @@ Blockly.Blocks.hamster_beep = {
   init: function() {
     this.setColour("#00979D");
     this.appendDummyInput()
-    .appendField('삐 소리내기')
+    .appendField(Lang.Blocks.HAMSTER_beep)
     .appendField(new Blockly.FieldIcon('/img/assets/block_icon/hardware_03.png', '*'));
     this.setInputsInline(true);
     this.setPreviousStatement(true);
@@ -255,7 +255,7 @@ Blockly.Blocks.hamster_hand_found = {
   init: function() {
     this.setColour("#00979D");
     this.appendDummyInput()
-    .appendField("손 찾음?")
+    .appendField(Lang.Blocks.HAMSTER_hand_found);
     this.setOutput(true, 'Boolean');
     this.setInputsInline(true);
   }
@@ -272,11 +272,11 @@ Blockly.Blocks.hamster_move_forward_for_secs = {
   init: function() {
     this.setColour("#00979D");
     this.appendDummyInput()
-    .appendField('앞으로 ');
+    .appendField(Lang.Blocks.HAMSTER_move_forward_for_secs_1);
     this.appendValueInput("VALUE")
     .setCheck(["Number", "String"]);
     this.appendDummyInput()
-    .appendField('초 이동하기')
+    .appendField(Lang.Blocks.HAMSTER_move_forward_for_secs_2)
     .appendField(new Blockly.FieldIcon('/img/assets/block_icon/hardware_03.png', '*'));
     this.setInputsInline(true);
     this.setPreviousStatement(true);
@@ -312,11 +312,11 @@ Blockly.Blocks.hamster_move_backward_for_secs = {
   init: function() {
     this.setColour("#00979D");
     this.appendDummyInput()
-    .appendField('뒤로 ');
+    .appendField(Lang.Blocks.HAMSTER_move_backward_for_secs_1);
     this.appendValueInput("VALUE")
     .setCheck(["Number", "String"]);
     this.appendDummyInput()
-    .appendField('초 이동하기')
+    .appendField(Lang.Blocks.HAMSTER_move_backward_for_secs_2)
     .appendField(new Blockly.FieldIcon('/img/assets/block_icon/hardware_03.png', '*'));
     this.setInputsInline(true);
     this.setPreviousStatement(true);
@@ -352,16 +352,16 @@ Blockly.Blocks.hamster_turn_for_secs = {
   init: function() {
     this.setColour("#00979D");
     this.appendDummyInput()
-    .appendField("")
+    .appendField(Lang.Blocks.HAMSTER_turn_for_secs_1)
     .appendField(new Blockly.FieldDropdown([
-      ['왼쪽',"LEFT"],
-      ['오른쪽',"RIGHT"]
+      [Lang.General.left,"LEFT"],
+      [Lang.General.right,"RIGHT"]
       ]), "DIRECTION")
-    .appendField(' 으로')
+    .appendField(Lang.Blocks.HAMSTER_turn_for_secs_2)
     this.appendValueInput("VALUE")
     .setCheck(["Number", "String"]);
     this.appendDummyInput()
-    .appendField('초 돌기')
+    .appendField(Lang.Blocks.HAMSTER_turn_for_secs_3)
     .appendField(new Blockly.FieldIcon('/img/assets/block_icon/hardware_03.png', '*'));
     this.setInputsInline(true);
     this.setPreviousStatement(true);
@@ -403,22 +403,22 @@ Blockly.Blocks.hamster_play_note_for = {
   init: function() {
     this.setColour("#00979D");
     this.appendDummyInput()
-    .appendField("")
+    .appendField(Lang.Blocks.HAMSTER_play_note_for_1)
     .appendField(new Blockly.FieldDropdown([
-      ['도',"4"],
-      ['도#',"5"],
-      ['레',"6"],
-      ['미b',"7"],
-      ['미',"8"],
-      ['파',"9"],
-      ['파#',"10"],
-      ['솔',"11"],
-      ['솔#',"12"],
-      ['라',"13"],
-      ['시b',"14"],
-      ['시',"15"]
+      [Lang.General.note_c + '',"4"],
+      [Lang.General.note_c + '#',"5"],
+      [Lang.General.note_d + '',"6"],
+      [Lang.General.note_e + 'b',"7"],
+      [Lang.General.note_e + '',"8"],
+      [Lang.General.note_f + '',"9"],
+      [Lang.General.note_f + '#',"10"],
+      [Lang.General.note_g + '',"11"],
+      [Lang.General.note_g + '#',"12"],
+      [Lang.General.note_a + '',"13"],
+      [Lang.General.note_b + 'b',"14"],
+      [Lang.General.note_b + '',"15"]
       ]), "NOTE")
-    .appendField(" ")
+    .appendField(Lang.Blocks.HAMSTER_play_note_for_2)
     .appendField(new Blockly.FieldDropdown([
       ['1',"1"],
       ['2',"2"],
@@ -428,11 +428,11 @@ Blockly.Blocks.hamster_play_note_for = {
       ['6',"6"],
       ['7',"7"]
       ]), "OCTAVE")
-    .appendField(' 음을')
+    .appendField(Lang.Blocks.HAMSTER_play_note_for_3)
     this.appendValueInput("VALUE")
     .setCheck(["Number", "String"]);
     this.appendDummyInput()
-    .appendField('박자 연주하기')
+    .appendField(Lang.Blocks.HAMSTER_play_note_for_4)
     .appendField(new Blockly.FieldIcon('/img/assets/block_icon/hardware_03.png', '*'));
     this.setInputsInline(true);
     this.setPreviousStatement(true);
@@ -480,11 +480,11 @@ Blockly.Blocks.hamster_rest_for = {
   init: function() {
     this.setColour("#00979D");
     this.appendDummyInput()
-    .appendField('');
+    .appendField(Lang.Blocks.HAMSTER_rest_for_1)
     this.appendValueInput("VALUE")
     .setCheck(["Number", "String"]);
     this.appendDummyInput()
-    .appendField('박자 쉬기')
+    .appendField(Lang.Blocks.HAMSTER_rest_for_2)
     .appendField(new Blockly.FieldIcon('/img/assets/block_icon/hardware_03.png', '*'));
     this.setInputsInline(true);
     this.setPreviousStatement(true);
@@ -516,11 +516,11 @@ Blockly.Blocks.hamster_change_tempo_by = {
   init: function() {
     this.setColour("#00979D");
     this.appendDummyInput()
-    .appendField('연주 속도를');
+    .appendField(Lang.Blocks.HAMSTER_change_tempo_by_1);
     this.appendValueInput("VALUE")
     .setCheck(["Number", "String"]);
     this.appendDummyInput()
-    .appendField('만큼 바꾸기')
+    .appendField(Lang.Blocks.HAMSTER_change_tempo_by_2)
     .appendField(new Blockly.FieldIcon('/img/assets/block_icon/hardware_03.png', '*'));
     this.setInputsInline(true);
     this.setPreviousStatement(true);
@@ -537,11 +537,11 @@ Blockly.Blocks.hamster_set_tempo_to = {
   init: function() {
     this.setColour("#00979D");
     this.appendDummyInput()
-    .appendField('연주 속도를');
+    .appendField(Lang.Blocks.HAMSTER_set_tempo_to_1);
     this.appendValueInput("VALUE")
     .setCheck(["Number", "String"]);
     this.appendDummyInput()
-    .appendField('BPM으로 하기')
+    .appendField(Lang.Blocks.HAMSTER_set_tempo_to_2)
     .appendField(new Blockly.FieldIcon('/img/assets/block_icon/hardware_03.png', '*'));
     this.setInputsInline(true);
     this.setPreviousStatement(true);
@@ -558,15 +558,15 @@ Blockly.Blocks.hamster_change_both_wheels_by = {
   init: function() {
     this.setColour("#00979D");
     this.appendDummyInput()
-    .appendField('왼쪽 바퀴');
+    .appendField(Lang.Blocks.HAMSTER_change_both_wheels_by_1);
     this.appendValueInput("LEFT")
     .setCheck(["Number", "String"]);
     this.appendDummyInput()
-    .appendField('오른쪽 바퀴');
+    .appendField(Lang.Blocks.HAMSTER_change_both_wheels_by_2)
     this.appendValueInput("RIGHT")
     .setCheck(["Number", "String"]);
     this.appendDummyInput()
-    .appendField('만큼 바꾸기')
+    .appendField(Lang.Blocks.HAMSTER_change_both_wheels_by_3)
     .appendField(new Blockly.FieldIcon('/img/assets/block_icon/hardware_03.png', '*'));
     this.setInputsInline(true);
     this.setPreviousStatement(true);
@@ -595,15 +595,15 @@ Blockly.Blocks.hamster_set_both_wheels_to = {
   init: function() {
     this.setColour("#00979D");
     this.appendDummyInput()
-    .appendField('왼쪽 바퀴');
+    .appendField(Lang.Blocks.HAMSTER_set_both_wheels_to_1);
     this.appendValueInput("LEFT")
     .setCheck(["Number", "String"]);
     this.appendDummyInput()
-    .appendField('오른쪽 바퀴');
+    .appendField(Lang.Blocks.HAMSTER_set_both_wheels_to_2);
     this.appendValueInput("RIGHT")
     .setCheck(["Number", "String"]);
     this.appendDummyInput()
-    .appendField('(으)로 하기')
+    .appendField(Lang.Blocks.HAMSTER_set_both_wheels_to_3)
     .appendField(new Blockly.FieldIcon('/img/assets/block_icon/hardware_03.png', '*'));
     this.setInputsInline(true);
     this.setPreviousStatement(true);
@@ -622,17 +622,17 @@ Blockly.Blocks.hamster_change_wheels_by = {
   init: function() {
     this.setColour("#00979D");
     this.appendDummyInput()
-    .appendField('')
+    .appendField(Lang.Blocks.HAMSTER_change_wheels_by_1)
     .appendField(new Blockly.FieldDropdown([
-      ['왼쪽',"LEFT"],
-      ['오른쪽',"RIGHT"],
-      ['양쪽',"FRONT"]
+      [Lang.General.left,"LEFT"],
+      [Lang.General.right,"RIGHT"],
+      [Lang.General.both,"FRONT"]
       ]), "DIRECTION")
-    .appendField('바퀴');
+    .appendField(Lang.Blocks.HAMSTER_change_wheels_by_2);
     this.appendValueInput("VALUE")
     .setCheck(["Number", "String"]);
     this.appendDummyInput()
-    .appendField('만큼 바꾸기')
+    .appendField(Lang.Blocks.HAMSTER_change_wheels_by_3)
     .appendField(new Blockly.FieldIcon('/img/assets/block_icon/hardware_03.png', '*'));
     this.setInputsInline(true);
     this.setPreviousStatement(true);
@@ -666,17 +666,17 @@ Blockly.Blocks.hamster_set_wheels_to = {
   init: function() {
     this.setColour("#00979D");
     this.appendDummyInput()
-    .appendField('')
+    .appendField(Lang.Blocks.HAMSTER_set_wheels_to_1)
     .appendField(new Blockly.FieldDropdown([
-      ['왼쪽',"LEFT"],
-      ['오른쪽',"RIGHT"],
-      ['양쪽',"FRONT"]
+      [Lang.General.left,"LEFT"],
+      [Lang.General.right,"RIGHT"],
+      [Lang.General.both,"FRONT"]
       ]), "DIRECTION")
-    .appendField('바퀴');
+    .appendField(Lang.Blocks.HAMSTER_set_wheels_to_2);
     this.appendValueInput("VALUE")
     .setCheck(["Number", "String"]);
     this.appendDummyInput()
-    .appendField('(으)로 하기')
+    .appendField(Lang.Blocks.HAMSTER_set_wheels_to_3)
     .appendField(new Blockly.FieldIcon('/img/assets/block_icon/hardware_03.png', '*'));
     this.setInputsInline(true);
     this.setPreviousStatement(true);
@@ -703,7 +703,7 @@ Blockly.Blocks.hamster_stop = {
   init: function() {
     this.setColour("#00979D");
     this.appendDummyInput()
-    .appendField('정지하기')
+    .appendField(Lang.Blocks.HAMSTER_stop)
     .appendField(new Blockly.FieldIcon('/img/assets/block_icon/hardware_03.png', '*'));
     this.setInputsInline(true);
     this.setPreviousStatement(true);
@@ -723,11 +723,11 @@ Blockly.Blocks.hamster_change_buzzer_by = {
   init: function() {
     this.setColour("#00979D");
     this.appendDummyInput()
-    .appendField('버저 음을');
+    .appendField(Lang.Blocks.HAMSTER_change_buzzer_by_1);
     this.appendValueInput("VALUE")
     .setCheck(["Number", "String"]);
     this.appendDummyInput()
-    .appendField('만큼 바꾸기')
+    .appendField(Lang.Blocks.HAMSTER_change_buzzer_by_2)
     .appendField(new Blockly.FieldIcon('/img/assets/block_icon/hardware_03.png', '*'));
     this.setInputsInline(true);
     this.setPreviousStatement(true);
@@ -750,11 +750,11 @@ Blockly.Blocks.hamster_set_buzzer_to = {
   init: function() {
     this.setColour("#00979D");
     this.appendDummyInput()
-    .appendField('버저 음을');
+    .appendField(Lang.Blocks.HAMSTER_set_buzzer_to_1);
     this.appendValueInput("VALUE")
     .setCheck(["Number", "String"]);
     this.appendDummyInput()
-    .appendField('(으)로 하기')
+    .appendField(Lang.Blocks.HAMSTER_set_buzzer_to_2)
     .appendField(new Blockly.FieldIcon('/img/assets/block_icon/hardware_03.png', '*'));
     this.setInputsInline(true);
     this.setPreviousStatement(true);
@@ -773,7 +773,7 @@ Blockly.Blocks.hamster_clear_buzzer = {
   init: function() {
     this.setColour("#00979D");
     this.appendDummyInput()
-    .appendField('버저 끄기')
+    .appendField(Lang.Blocks.HAMSTER_clear_buzzer)
     .appendField(new Blockly.FieldIcon('/img/assets/block_icon/hardware_03.png', '*'));
     this.setInputsInline(true);
     this.setPreviousStatement(true);
@@ -792,20 +792,19 @@ Blockly.Blocks.hamster_value = {
     this.appendDummyInput()
     .appendField('')
     .appendField(new Blockly.FieldDropdown([
-      ['왼쪽 근접 센서',"leftProximity"],
-      ['오른쪽 근접 센서',"rightProximity"],
-      ['왼쪽 바닥 센서',"leftFloor"],
-      ['오른쪽 바닥 센서',"rightFloor"],
-      ['x축 가속도',"accelerationX"],
-      ['y축 가속도',"accelerationY"],
-      ['z축 가속도',"accelerationZ"],
-      ['밝기',"light"],
-      ['온도',"temperature"],
-      ['신호세기',"signalStrength"],
-      ['입력 A',"inputA"],
-      ['입력 B',"inputB"]
-      ]), "PORT")
-    .appendField(' ');
+      [Lang.Blocks.HAMSTER_sensor_leftProximity ,"leftProximity"],
+      [Lang.Blocks.HAMSTER_sensor_rightProximity,"rightProximity"],
+      [Lang.Blocks.HAMSTER_sensor_leftFloor     ,"leftFloor"],
+      [Lang.Blocks.HAMSTER_sensor_rightFloor    ,"rightFloor"],
+      [Lang.Blocks.HAMSTER_sensor_accelerationX ,"accelerationX"],
+      [Lang.Blocks.HAMSTER_sensor_accelerationY ,"accelerationY"],
+      [Lang.Blocks.HAMSTER_sensor_accelerationZ ,"accelerationZ"],
+      [Lang.Blocks.HAMSTER_sensor_light         ,"light"],
+      [Lang.Blocks.HAMSTER_sensor_temperature   ,"temperature"],
+      [Lang.Blocks.HAMSTER_sensor_signalStrength,"signalStrength"],
+      [Lang.Blocks.HAMSTER_sensor_inputA        ,"inputA"],
+      [Lang.Blocks.HAMSTER_sensor_inputB        ,"inputB"]
+      ]), "PORT");
     this.setInputsInline(true);
     this.setOutput(true, 'Number');
   }
@@ -826,13 +825,13 @@ Blockly.Blocks.hamster_set_port_to = {
   init: function() {
     this.setColour("#00979D");
     this.appendDummyInput()
-    .appendField('포트')
+    .appendField(Lang.Blocks.HAMSTER_)
     .appendField(new Blockly.FieldDropdown([
       ['A',"LEFT"],
       ['B',"RIGHT"],
       ['A와B',"LEFT"]
       ]), "PORT")
-    .appendField('를')
+    .appendField(Lang.Blocks.HAMSTER_)
     .appendField(new Blockly.FieldDropdown([
       ['아날로그 입력',"LEFT"],
       ['디지털 입력',"RIGHT"],
@@ -856,17 +855,17 @@ Blockly.Blocks.hamster_change_output_by = {
   init: function() {
     this.setColour("#00979D");
     this.appendDummyInput()
-    .appendField('출력')
+    .appendField(Lang.Blocks.HAMSTER_)
     .appendField(new Blockly.FieldDropdown([
       ['A',"LEFT"],
       ['B',"RIGHT"],
       ['A와B',"LEFT"]
       ]), "PORT")
-    .appendField('를');
+    .appendField(Lang.Blocks.HAMSTER_);
     this.appendValueInput("VALUE")
     .setCheck(["Number", "String"]);
     this.appendDummyInput()
-    .appendField('(으)로 하기')
+    .appendField(Lang.Blocks.HAMSTER_)
     .appendField(new Blockly.FieldIcon('/img/assets/block_icon/hardware_03.png', '*'));
     this.setInputsInline(true);
     this.setPreviousStatement(true);
@@ -881,17 +880,17 @@ Blockly.Blocks.hamster_set_output_to = {
   init: function() {
     this.setColour("#00979D");
     this.appendDummyInput()
-    .appendField('출력')
+    .appendField(Lang.Blocks.HAMSTER_)
     .appendField(new Blockly.FieldDropdown([
       ['A',"LEFT"],
       ['B',"RIGHT"],
       ['A와B',"LEFT"]
       ]), "PORT")
-    .appendField('를');
+    .appendField(Lang.Blocks.HAMSTER_);
     this.appendValueInput("VALUE")
     .setCheck(["Number", "String"]);
     this.appendDummyInput()
-    .appendField('만큼 바꾸기')
+    .appendField(Lang.Blocks.HAMSTER_)
     .appendField(new Blockly.FieldIcon('/img/assets/block_icon/hardware_03.png', '*'));
     this.setInputsInline(true);
     this.setPreviousStatement(true);

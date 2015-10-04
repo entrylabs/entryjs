@@ -1509,7 +1509,7 @@ Entry.Hamster = {PORT_MAP:{leftWheel:0, rightWheel:0, buzzer:0, outputA:0, outpu
 }, tempo:60, name:"hamster"};
 Blockly.Blocks.hamster_move_forward = {init:function() {
   this.setColour("#00979D");
-  this.appendDummyInput().appendField("\uc55e\uc73c\ub85c \uc774\ub3d9\ud558\uae30").appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_move_forward).appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -1536,7 +1536,7 @@ Entry.block.hamster_move_forward = function(a, b) {
 };
 Blockly.Blocks.hamster_move_backward = {init:function() {
   this.setColour("#00979D");
-  this.appendDummyInput().appendField("\ub4a4\ub85c \uc774\ub3d9\ud558\uae30").appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_move_backward).appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -1563,7 +1563,7 @@ Entry.block.hamster_move_backward = function(a, b) {
 };
 Blockly.Blocks.hamster_turn_around = {init:function() {
   this.setColour("#00979D");
-  this.appendDummyInput().appendField("").appendField(new Blockly.FieldDropdown([["\uc67c\ucabd", "LEFT"], ["\uc624\ub978\ucabd", "RIGHT"]]), "DIRECTION").appendField(" \uc73c\ub85c \ub3cc\uae30").appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_turn_around_1).appendField(new Blockly.FieldDropdown([[Lang.General.left, "LEFT"], [Lang.General.right, "RIGHT"]]), "DIRECTION").appendField(Lang.Blocks.HAMSTER_turn_around_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -1595,7 +1595,7 @@ Entry.block.hamster_turn_around = function(a, b) {
 };
 Blockly.Blocks.hamster_set_led_to = {init:function() {
   this.setColour("#00979D");
-  this.appendDummyInput().appendField("").appendField(new Blockly.FieldDropdown([["\uc67c\ucabd", "LEFT"], ["\uc624\ub978\ucabd", "RIGHT"], ["\uc591\ucabd", "FRONT"]]), "DIRECTION").appendField(" LED\ub97c").appendField(new Blockly.FieldDropdown([["\ube68\uac04\uc0c9", "4"], ["\ub178\ub780\uc0c9", "6"], ["\ucd08\ub85d\uc0c9", "2"], ["\ud558\ub298\uc0c9", "3"], ["\ud30c\ub780\uc0c9", "1"], ["\ubcf4\ub77c\uc0c9", "5"], ["\ud558\uc580\uc0c9", "7"]]), "COLOR").appendField(" \uc73c\ub85c \ud558\uae30").appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", 
+  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_set_led_to_1).appendField(new Blockly.FieldDropdown([[Lang.General.left, "LEFT"], [Lang.General.right, "RIGHT"], [Lang.General.both, "FRONT"]]), "DIRECTION").appendField(Lang.Blocks.HAMSTER_set_led_to_2).appendField(new Blockly.FieldDropdown([[Lang.General.red, "4"], [Lang.General.yellow, "6"], [Lang.General.green, "2"], [Lang.General.skyblue, "3"], [Lang.General.blue, "1"], [Lang.General.purple, "5"], [Lang.General.white, "7"]]), "COLOR").appendField(Lang.Blocks.HAMSTER_set_led_to_3).appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", 
   "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
@@ -1608,7 +1608,7 @@ Entry.block.hamster_set_led_to = function(a, b) {
 };
 Blockly.Blocks.hamster_clear_led = {init:function() {
   this.setColour("#00979D");
-  this.appendDummyInput().appendField("").appendField(new Blockly.FieldDropdown([["\uc67c\ucabd", "LEFT"], ["\uc624\ub978\ucabd", "RIGHT"], ["\uc591\ucabd", "FRONT"]]), "DIRECTION").appendField(" LED \ub044\uae30").appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_clear_led_1).appendField(new Blockly.FieldDropdown([[Lang.General.left, "LEFT"], [Lang.General.right, "RIGHT"], [Lang.General.both, "FRONT"]]), "DIRECTION").appendField(Lang.Blocks.HAMSTER_clear_led_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -1620,7 +1620,7 @@ Entry.block.hamster_clear_led = function(a, b) {
 };
 Blockly.Blocks.hamster_beep = {init:function() {
   this.setColour("#00979D");
-  this.appendDummyInput().appendField("\uc090 \uc18c\ub9ac\ub0b4\uae30").appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_beep).appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -1641,7 +1641,7 @@ Entry.block.hamster_beep = function(a, b) {
 };
 Blockly.Blocks.hamster_hand_found = {init:function() {
   this.setColour("#00979D");
-  this.appendDummyInput().appendField("\uc190 \ucc3e\uc74c?");
+  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_hand_found);
   this.setOutput(!0, "Boolean");
   this.setInputsInline(!0);
 }};
@@ -1651,9 +1651,9 @@ Entry.block.hamster_hand_found = function(a, b) {
 };
 Blockly.Blocks.hamster_move_forward_for_secs = {init:function() {
   this.setColour("#00979D");
-  this.appendDummyInput().appendField("\uc55e\uc73c\ub85c ");
+  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_move_forward_for_secs_1);
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField("\ucd08 \uc774\ub3d9\ud558\uae30").appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_move_forward_for_secs_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -1681,9 +1681,9 @@ Entry.block.hamster_move_forward_for_secs = function(a, b) {
 };
 Blockly.Blocks.hamster_move_backward_for_secs = {init:function() {
   this.setColour("#00979D");
-  this.appendDummyInput().appendField("\ub4a4\ub85c ");
+  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_move_backward_for_secs_1);
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField("\ucd08 \uc774\ub3d9\ud558\uae30").appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_move_backward_for_secs_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -1711,9 +1711,9 @@ Entry.block.hamster_move_backward_for_secs = function(a, b) {
 };
 Blockly.Blocks.hamster_turn_for_secs = {init:function() {
   this.setColour("#00979D");
-  this.appendDummyInput().appendField("").appendField(new Blockly.FieldDropdown([["\uc67c\ucabd", "LEFT"], ["\uc624\ub978\ucabd", "RIGHT"]]), "DIRECTION").appendField(" \uc73c\ub85c");
+  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_turn_for_secs_1).appendField(new Blockly.FieldDropdown([[Lang.General.left, "LEFT"], [Lang.General.right, "RIGHT"]]), "DIRECTION").appendField(Lang.Blocks.HAMSTER_turn_for_secs_2);
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField("\ucd08 \ub3cc\uae30").appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_turn_for_secs_3).appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -1746,9 +1746,10 @@ Entry.block.hamster_turn_for_secs = function(a, b) {
 };
 Blockly.Blocks.hamster_play_note_for = {init:function() {
   this.setColour("#00979D");
-  this.appendDummyInput().appendField("").appendField(new Blockly.FieldDropdown([["\ub3c4", "4"], ["\ub3c4#", "5"], ["\ub808", "6"], ["\ubbf8b", "7"], ["\ubbf8", "8"], ["\ud30c", "9"], ["\ud30c#", "10"], ["\uc194", "11"], ["\uc194#", "12"], ["\ub77c", "13"], ["\uc2dcb", "14"], ["\uc2dc", "15"]]), "NOTE").appendField(" ").appendField(new Blockly.FieldDropdown([["1", "1"], ["2", "2"], ["3", "3"], ["4", "4"], ["5", "5"], ["6", "6"], ["7", "7"]]), "OCTAVE").appendField(" \uc74c\uc744");
+  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_play_note_for_1).appendField(new Blockly.FieldDropdown([[Lang.General.note_c + "", "4"], [Lang.General.note_c + "#", "5"], [Lang.General.note_d + "", "6"], [Lang.General.note_e + "b", "7"], [Lang.General.note_e + "", "8"], [Lang.General.note_f + "", "9"], [Lang.General.note_f + "#", "10"], [Lang.General.note_g + "", "11"], [Lang.General.note_g + "#", "12"], [Lang.General.note_a + "", "13"], [Lang.General.note_b + "b", "14"], [Lang.General.note_b + 
+  "", "15"]]), "NOTE").appendField(Lang.Blocks.HAMSTER_play_note_for_2).appendField(new Blockly.FieldDropdown([["1", "1"], ["2", "2"], ["3", "3"], ["4", "4"], ["5", "5"], ["6", "6"], ["7", "7"]]), "OCTAVE").appendField(Lang.Blocks.HAMSTER_play_note_for_3);
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField("\ubc15\uc790 \uc5f0\uc8fc\ud558\uae30").appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_play_note_for_4).appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -1780,9 +1781,9 @@ Entry.block.hamster_play_note_for = function(a, b) {
 };
 Blockly.Blocks.hamster_rest_for = {init:function() {
   this.setColour("#00979D");
-  this.appendDummyInput().appendField("");
+  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_rest_for_1);
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField("\ubc15\uc790 \uc26c\uae30").appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_rest_for_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -1803,9 +1804,9 @@ Entry.block.hamster_rest_for = function(a, b) {
 };
 Blockly.Blocks.hamster_change_tempo_by = {init:function() {
   this.setColour("#00979D");
-  this.appendDummyInput().appendField("\uc5f0\uc8fc \uc18d\ub3c4\ub97c");
+  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_change_tempo_by_1);
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField("\ub9cc\ud07c \ubc14\uafb8\uae30").appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_change_tempo_by_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -1816,9 +1817,9 @@ Entry.block.hamster_change_tempo_by = function(a, b) {
 };
 Blockly.Blocks.hamster_set_tempo_to = {init:function() {
   this.setColour("#00979D");
-  this.appendDummyInput().appendField("\uc5f0\uc8fc \uc18d\ub3c4\ub97c");
+  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_set_tempo_to_1);
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField("BPM\uc73c\ub85c \ud558\uae30").appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_set_tempo_to_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -1829,11 +1830,11 @@ Entry.block.hamster_set_tempo_to = function(a, b) {
 };
 Blockly.Blocks.hamster_change_both_wheels_by = {init:function() {
   this.setColour("#00979D");
-  this.appendDummyInput().appendField("\uc67c\ucabd \ubc14\ud034");
+  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_change_both_wheels_by_1);
   this.appendValueInput("LEFT").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField("\uc624\ub978\ucabd \ubc14\ud034");
+  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_change_both_wheels_by_2);
   this.appendValueInput("RIGHT").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField("\ub9cc\ud07c \ubc14\uafb8\uae30").appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_change_both_wheels_by_3).appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -1846,11 +1847,11 @@ Entry.block.hamster_change_both_wheels_by = function(a, b) {
 };
 Blockly.Blocks.hamster_set_both_wheels_to = {init:function() {
   this.setColour("#00979D");
-  this.appendDummyInput().appendField("\uc67c\ucabd \ubc14\ud034");
+  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_set_both_wheels_to_1);
   this.appendValueInput("LEFT").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField("\uc624\ub978\ucabd \ubc14\ud034");
+  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_set_both_wheels_to_2);
   this.appendValueInput("RIGHT").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField("(\uc73c)\ub85c \ud558\uae30").appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_set_both_wheels_to_3).appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -1863,9 +1864,9 @@ Entry.block.hamster_set_both_wheels_to = function(a, b) {
 };
 Blockly.Blocks.hamster_change_wheels_by = {init:function() {
   this.setColour("#00979D");
-  this.appendDummyInput().appendField("").appendField(new Blockly.FieldDropdown([["\uc67c\ucabd", "LEFT"], ["\uc624\ub978\ucabd", "RIGHT"], ["\uc591\ucabd", "FRONT"]]), "DIRECTION").appendField("\ubc14\ud034");
+  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_change_wheels_by_1).appendField(new Blockly.FieldDropdown([[Lang.General.left, "LEFT"], [Lang.General.right, "RIGHT"], [Lang.General.both, "FRONT"]]), "DIRECTION").appendField(Lang.Blocks.HAMSTER_change_wheels_by_2);
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField("\ub9cc\ud07c \ubc14\uafb8\uae30").appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_change_wheels_by_3).appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -1877,9 +1878,9 @@ Entry.block.hamster_change_wheels_by = function(a, b) {
 };
 Blockly.Blocks.hamster_set_wheels_to = {init:function() {
   this.setColour("#00979D");
-  this.appendDummyInput().appendField("").appendField(new Blockly.FieldDropdown([["\uc67c\ucabd", "LEFT"], ["\uc624\ub978\ucabd", "RIGHT"], ["\uc591\ucabd", "FRONT"]]), "DIRECTION").appendField("\ubc14\ud034");
+  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_set_wheels_to_1).appendField(new Blockly.FieldDropdown([[Lang.General.left, "LEFT"], [Lang.General.right, "RIGHT"], [Lang.General.both, "FRONT"]]), "DIRECTION").appendField(Lang.Blocks.HAMSTER_set_wheels_to_2);
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField("(\uc73c)\ub85c \ud558\uae30").appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_set_wheels_to_3).appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -1891,7 +1892,7 @@ Entry.block.hamster_set_wheels_to = function(a, b) {
 };
 Blockly.Blocks.hamster_stop = {init:function() {
   this.setColour("#00979D");
-  this.appendDummyInput().appendField("\uc815\uc9c0\ud558\uae30").appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_stop).appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -1904,9 +1905,9 @@ Entry.block.hamster_stop = function(a, b) {
 };
 Blockly.Blocks.hamster_change_buzzer_by = {init:function() {
   this.setColour("#00979D");
-  this.appendDummyInput().appendField("\ubc84\uc800 \uc74c\uc744");
+  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_change_buzzer_by_1);
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField("\ub9cc\ud07c \ubc14\uafb8\uae30").appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_change_buzzer_by_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -1919,9 +1920,9 @@ Entry.block.hamster_change_buzzer_by = function(a, b) {
 };
 Blockly.Blocks.hamster_set_buzzer_to = {init:function() {
   this.setColour("#00979D");
-  this.appendDummyInput().appendField("\ubc84\uc800 \uc74c\uc744");
+  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_set_buzzer_to_1);
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField("(\uc73c)\ub85c \ud558\uae30").appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_set_buzzer_to_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -1934,7 +1935,7 @@ Entry.block.hamster_set_buzzer_to = function(a, b) {
 };
 Blockly.Blocks.hamster_clear_buzzer = {init:function() {
   this.setColour("#00979D");
-  this.appendDummyInput().appendField("\ubc84\uc800 \ub044\uae30").appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_clear_buzzer).appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -1945,8 +1946,8 @@ Entry.block.hamster_clear_buzzer = function(a, b) {
 };
 Blockly.Blocks.hamster_value = {init:function() {
   this.setColour("#00979D");
-  this.appendDummyInput().appendField("").appendField(new Blockly.FieldDropdown([["\uc67c\ucabd \uadfc\uc811 \uc13c\uc11c", "leftProximity"], ["\uc624\ub978\ucabd \uadfc\uc811 \uc13c\uc11c", "rightProximity"], ["\uc67c\ucabd \ubc14\ub2e5 \uc13c\uc11c", "leftFloor"], ["\uc624\ub978\ucabd \ubc14\ub2e5 \uc13c\uc11c", "rightFloor"], ["x\ucd95 \uac00\uc18d\ub3c4", "accelerationX"], ["y\ucd95 \uac00\uc18d\ub3c4", "accelerationY"], ["z\ucd95 \uac00\uc18d\ub3c4", "accelerationZ"], ["\ubc1d\uae30", "light"], 
-  ["\uc628\ub3c4", "temperature"], ["\uc2e0\ud638\uc138\uae30", "signalStrength"], ["\uc785\ub825 A", "inputA"], ["\uc785\ub825 B", "inputB"]]), "PORT").appendField(" ");
+  this.appendDummyInput().appendField("").appendField(new Blockly.FieldDropdown([[Lang.Blocks.HAMSTER_sensor_leftProximity, "leftProximity"], [Lang.Blocks.HAMSTER_sensor_rightProximity, "rightProximity"], [Lang.Blocks.HAMSTER_sensor_leftFloor, "leftFloor"], [Lang.Blocks.HAMSTER_sensor_rightFloor, "rightFloor"], [Lang.Blocks.HAMSTER_sensor_accelerationX, "accelerationX"], [Lang.Blocks.HAMSTER_sensor_accelerationY, "accelerationY"], [Lang.Blocks.HAMSTER_sensor_accelerationZ, "accelerationZ"], [Lang.Blocks.HAMSTER_sensor_light, 
+  "light"], [Lang.Blocks.HAMSTER_sensor_temperature, "temperature"], [Lang.Blocks.HAMSTER_sensor_signalStrength, "signalStrength"], [Lang.Blocks.HAMSTER_sensor_inputA, "inputA"], [Lang.Blocks.HAMSTER_sensor_inputB, "inputB"]]), "PORT");
   this.setInputsInline(!0);
   this.setOutput(!0, "Number");
 }};
