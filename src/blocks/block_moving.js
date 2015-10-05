@@ -505,7 +505,8 @@ Entry.block.bounce_wall = function(sprite, script) {
     else
         var angle = sprite.getDirection();
     if ((angle < 90 && angle >= 0) || (angle < 360 && angle >= 270)) {
-        if (ndgmr.checkPixelCollision(Entry.stage.wall.up,sprite.object,0,true)) {
+        if (ndgmr.checkPixelCollision(Entry.stage.wall.up,sprite.object,0,true) ||
+                ndgmr.checkPixelCollision(Entry.stage.wall.down,sprite.object,0,true)) {
             if (method == 'free')
                 sprite.setRotation(- sprite.getRotation() - sprite.getDirection() * 2 + 180);
             else
@@ -513,7 +514,8 @@ Entry.block.bounce_wall = function(sprite, script) {
         }
     }
     else if (angle < 270 && angle >= 90) {
-        if (ndgmr.checkPixelCollision(Entry.stage.wall.down,sprite.object,0,true)) {
+        if (ndgmr.checkPixelCollision(Entry.stage.wall.down,sprite.object,0,true) ||
+                ndgmr.checkPixelCollision(Entry.stage.wall.up,sprite.object,0,true)) {
             if (method == 'free')
                 sprite.setRotation(- sprite.getRotation() - sprite.getDirection() * 2 + 180);
             else
@@ -521,7 +523,8 @@ Entry.block.bounce_wall = function(sprite, script) {
         }
     }
     if (angle < 360 && angle >= 180) {
-        if (ndgmr.checkPixelCollision(Entry.stage.wall.left,sprite.object,0,true)) {
+        if (ndgmr.checkPixelCollision(Entry.stage.wall.left,sprite.object,0,true) ||
+                ndgmr.checkPixelCollision(Entry.stage.wall.right,sprite.object,0,true)) {
             if (method == 'free')
                 sprite.setRotation(- sprite.getRotation() - sprite.getDirection() * 2);
             else
@@ -529,7 +532,8 @@ Entry.block.bounce_wall = function(sprite, script) {
         }
     }
     else if (angle < 180 && angle >= 0) {
-        if (ndgmr.checkPixelCollision(Entry.stage.wall.right,sprite.object,0,true)) {
+        if (ndgmr.checkPixelCollision(Entry.stage.wall.right,sprite.object,0,true) ||
+               ndgmr.checkPixelCollision(Entry.stage.wall.left,sprite.object,0,true)) {
             if (method == 'free')
                 sprite.setRotation(- sprite.getRotation() - sprite.getDirection() * 2);
             else
@@ -898,6 +902,47 @@ Entry.block.rotate_by_time = function (sprite, script) {
     } else {
         delete script.isStart;
         delete script.frameCount;
+        return script.callReturn();
+    }
+};
+
+Blockly.Blocks.direction_relative_duration = {
+  init: function() {
+    this.setColour("#A751E3");
+    this.appendDummyInput()
+        .appendField(Lang.Blocks.MOVING_direction_relative_duration_1);
+    this.appendValueInput("DURATION")
+        .setCheck(["Number", "String"]);
+    this.appendDummyInput()
+        .appendField(Lang.Blocks.MOVING_direction_relative_duration_2);
+    this.appendValueInput("AMOUNT")
+        .setCheck(["Number", "String"]);
+    this.appendDummyInput()
+        .appendField(Lang.Blocks.MOVING_direction_relative_duration_3)
+        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/moving_03.png', '*'));
+    this.setInputsInline(true);
+    this.setPreviousStatement(true);
+    this.setNextStatement(true);
+  }
+};
+
+Entry.block.direction_relative_duration = function (sprite, script) {
+    if (!script.isStart) {
+        var timeValue;
+        timeValue = script.getNumberValue("DURATION", script);
+        var directionValue = script.getNumberValue("AMOUNT", script);
+        script.isStart = true;
+        script.frameCount = Math.floor(timeValue * Entry.FPS)
+        script.dDirection = directionValue/script.frameCount;
+    }
+    if (script.frameCount != 0) {
+        sprite.setDirection(sprite.getDirection() + script.dDirection);
+        script.frameCount--;
+        return script;
+    } else {
+        delete script.isStart;
+        delete script.frameCount;
+        delete script.dDirection;
         return script.callReturn();
     }
 };

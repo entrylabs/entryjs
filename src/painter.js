@@ -731,10 +731,10 @@ Entry.Painter.prototype.restorePainter = function(colorLayerModel) {
         painter.objectContainer.addChild(bitmap);
     };
 
-    return new Entry.State(this,
-                            this.restorePainter,
-                            currentColorModel);
-
+    Entry.stateManager.addCommand("restore sprite",
+                                 this,
+                                 this.restorePainter,
+                                 currentColorModel);
 };
 
 Entry.Painter.prototype.platten = function() {

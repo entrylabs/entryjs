@@ -48,6 +48,7 @@ Entry.EntityObject = function(object) {
         var id = this.entity.parent.id;
         Entry.dispatchEvent('entityClick', this.entity);
         Entry.stage.isObjectClick = true;
+
         if (Entry.type != 'minimize' && Entry.engine.isState('stop')) {
             this.offset = {x:-this.parent.x+this.entity.getX()-(evt.stageX*0.75 -240),
                 y:-this.parent.y-this.entity.getY()-(evt.stageY*0.75 -135)};
@@ -86,8 +87,8 @@ Entry.EntityObject.prototype.injectModel = function(pictureModel, entityModel) {
     if (this.type == 'sprite') {
         this.setImage(pictureModel);
     } else if (this.type == 'textBox') {
-        if (!entityModel.text)
-            entityModel.text = this.parent.name;
+        var parent = this.parent;
+        entityModel.text = parent.text || parent.name;
         this.setFont(entityModel.font);
         this.setBGColour(entityModel.bgColor);
         this.setColour(entityModel.colour);
@@ -155,10 +156,10 @@ Entry.EntityObject.prototype.restoreEntity = function(entityModel) {
     var currentModel = this.toJSON();
     this.syncModel_(entityModel);
     Entry.dispatchEvent('updateObject');
-    return new Entry.State(this,
-                           this.restoreEntity,
-                           currentModel
-                          );
+    Entry.stateManager.addCommand("restore object",
+                                 this,
+                                 this.restoreEntity,
+                                 currentModel);
 };
 
 /**
@@ -284,6 +285,7 @@ Entry.EntityObject.prototype.setRegX = function(regX) {
     /** @type {number} */
     this.regX = regX;
     this.object.regX = this.regX;
+
 };
 
 /**
@@ -359,6 +361,8 @@ Entry.EntityObject.prototype.getScaleY = function() {
  * @param {number} size
  */
 Entry.EntityObject.prototype.setSize = function(size) {
+    if(size < 1)
+        size = 1;
     var scale = size / this.getSize();
     this.setScaleX(this.getScaleX() * scale);
     this.setScaleY(this.getScaleY() * scale);
@@ -785,6 +789,7 @@ Entry.EntityObject.prototype.setImage = function(pictureModel) {
     this.setScaleY(this.scaleY);
     this.setRegX(this.width/2 + absoluteRegX);
     this.setRegY(this.height/2 + absoluteRegY);
+
     var image = Entry.container.getCachedPicture(pictureModel.id);
     if (!image) {
         image = new Image();

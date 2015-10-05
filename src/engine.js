@@ -130,6 +130,7 @@ Entry.Engine.prototype.generateView = function(controlView, option) {
         this.stopButton2.addClass('entryEngineButtonWorkspace_w');
         this.stopButton2.addClass('entryStopButtonWorkspace_w2');
         this.stopButton2.addClass('entryRemove');
+        this.stopButton2.innerHTML = Lang.Workspace.stop;
         this.view_.appendChild(this.stopButton2);
         this.stopButton2.bindOnClick(function(e) {
             Entry.engine.toggleStop();
@@ -139,7 +140,7 @@ Entry.Engine.prototype.generateView = function(controlView, option) {
         this.pauseButton.addClass('entryEngineButtonWorkspace_w');
         this.pauseButton.addClass('entryPauseButtonWorkspace_w');
         this.pauseButton.addClass('entryRemove');
-        //this.view_.appendChild(this.pauseButton);
+        this.view_.appendChild(this.pauseButton);
         this.pauseButton.bindOnClick(function(e) {
             Entry.engine.togglePause();
         });
@@ -469,7 +470,6 @@ Entry.Engine.prototype.toggleRun = function() {
         Entry.variableContainer.mapList(function(variable){
             variable.takeSnapshot();
         });
-        Entry.engine.projectTimer.takeSnapshot();
         Entry.container.takeSequenceSnapshot();
         Entry.scene.takeStartSceneSnapshot();
         this.state = 'run';
@@ -506,6 +506,7 @@ Entry.Engine.prototype.toggleRun = function() {
 Entry.Engine.prototype.toggleStop = function() {
     Entry.addActivity("stop");
     var container = Entry.container;
+    var variableContainer = Entry.variableContainer;
     container.mapEntity(function(entity){
         entity.loadSnapshot();
         entity.object.filters = [];
@@ -516,14 +517,14 @@ Entry.Engine.prototype.toggleStop = function() {
             entity.removeBrush();
 
     });
-    Entry.variableContainer.mapVariable(function(variable){
+    variableContainer.mapVariable(function(variable){
         variable.loadSnapshot();
     });
-    Entry.variableContainer.mapList(function(variable){
+    variableContainer.mapList(function(variable){
         variable.loadSnapshot();
         variable.updateView();
     });
-    Entry.engine.projectTimer.loadSnapshot();
+    this.stopProjectTimer();
     container.clearRunningState();
     container.loadSequenceSnapshot();
     container.setInputValue();
@@ -638,7 +639,7 @@ Entry.Engine.prototype.captureKeyEvent = function(e) {
             Entry.engine.run();
         } else if (keyCode == 90) {
             e.preventDefault();
-            Entry.dispatchEvent('undo');
+            Entry.dispatchEvent(e.shiftKey ? 'redo' : 'undo');
         } else if (keyCode > 48 && keyCode < 58) {
             e.preventDefault();
             Entry.playground.selectMenu(keyCode - 49);
@@ -722,7 +723,6 @@ Entry.Engine.prototype.toggleFullscreen = function() {
         }
         popup.window_.appendChild(Entry.engine.view_);
     } else {
-        //console.log(this.popup.remove);
         this.popup.remove();
         this.popup = null;
     }
@@ -735,34 +735,6 @@ Entry.Engine.prototype.exitFullScreen = function() {
     } else {
         Entry.engine.footerView_.removeClass('entryRemove');
         Entry.engine.headerView_.removeClass('entryRemove');
-    }
-}
-
-Entry.Engine.prototype.toggleProjectTimer = function() {
-    var timer = this.projectTimer;
-    if (!timer)
-        return;
-    if (this.isState('run')) {
-        timer.start = (new Date()).getTime();
-        timer.tick = setInterval(function (e) {
-            Entry.engine.updateProjectTimer()
-        }, 1000/60);
-    } else {
-        clearInterval(timer.tick);
-        this.updateProjectTimer(0);
-    }
-}
-
-Entry.Engine.prototype.updateProjectTimer = function(value) {
-    var timer = Entry.engine.projectTimer;
-    if (!timer)
-        return;
-    if (typeof value == 'undefined') {
-        var newTime = ((new Date()).getTime() - timer.start);
-        timer.setValue((newTime/1000));
-    } else {
-        timer.setValue(value);
-        timer.start = (new Date()).getTime();
     }
 }
 
@@ -803,3 +775,44 @@ Entry.Engine.prototype.clearTimer = function() {
     clearInterval(this.ticker);
     clearInterval(this.projectTimer.tick);
 }
+
+Entry.Engine.prototype.startProjectTimer = function() {
+    var timer = this.projectTimer;
+    if (!timer)
+        return;
+    timer.start = (new Date()).getTime();
+    timer.isInit = true;
+    timer.pausedTime = 0;
+    timer.tick = setInterval(function (e) {
+        Entry.engine.updateProjectTimer()
+    }, 1000/60);
+}
+
+Entry.Engine.prototype.stopProjectTimer = function() {
+    var timer = this.projectTimer;
+    if (!timer)
+        return;
+    this.updateProjectTimer(0);
+    timer.isPaused = false;
+    timer.isInit = false;
+    timer.pausedTime = 0;
+    clearInterval(timer.tick);
+}
+
+Entry.Engine.prototype.updateProjectTimer = function(value) {
+    var timer = Entry.engine.projectTimer;
+    var current = (new Date()).getTime();
+    if (!timer)
+        return;
+    if (typeof value == 'undefined') {
+        if (!timer.isPaused)
+            timer.setValue(((current - timer.start - timer.pausedTime)/1000));
+    } else {
+        timer.setValue(value);
+        timer.pausedTime = 0;
+        timer.start = current;
+    }
+}
+
+
+

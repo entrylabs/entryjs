@@ -342,7 +342,7 @@ Blockly.Blocks.sensorBoard_get_named_sensor_value = {
         .appendField('')
         .appendField(new Blockly.FieldDropdown([
           ['소리',"0"],
-          ['조도',"1"],
+          ['빛 감지',"1"],
           ['슬라이더',"2"],
           ['온도',"3"]
           ]), "PORT")
@@ -362,13 +362,13 @@ Blockly.Blocks.sensorBoard_is_button_pressed = {
     this.appendDummyInput()
         .appendField('')
         .appendField(new Blockly.FieldDropdown([
-          ['빨강',"8"],
-          ['노랑',"10"],
-          ['초록',"11"],
-          ['파랑',"9"]
+          ['빨간',"8"],
+          ['파란',"9"],
+          ['노란',"10"],
+          ['초록',"11"]
           ]), "PORT")
     this.appendDummyInput()
-        .appendField(' 버튼이 눌렸는가?');
+        .appendField(' 버튼을 눌렀는가?');
     this.setInputsInline(true);
     this.setOutput(true, 'Boolean');
   }
@@ -384,9 +384,9 @@ Blockly.Blocks.sensorBoard_led = {
     this.appendDummyInput()
         .appendField('')
         .appendField(new Blockly.FieldDropdown([
-          ['빨강',"2"],
+          ['빨간',"2"],
           ['초록',"3"],
-          ['파랑',"4"],
+          ['파란',"4"],
           ['흰색',"5"]
           ]), "PORT")
         .appendField(' LED')

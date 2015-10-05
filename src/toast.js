@@ -18,6 +18,36 @@ Entry.Toast = function() {
     document.body.appendChild(this.body_);
 };
 
+Entry.Toast.prototype.warning = function(title, message, isNotAutoDispose) {
+    var toast = Entry.createElement('div', 'entryToast');
+    toast.addClass('entryToast');
+    toast.addClass('entryToastWarning');
+    toast.bindOnClick(function() {Entry.toast.body_.removeChild(this)});
+    var toastTitle = Entry.createElement('div', 'entryToast');
+    toastTitle.addClass('entryToastTitle');
+    toastTitle.innerHTML = title;
+    toast.appendChild(toastTitle);
+    var toastMessage = Entry.createElement('p', 'entryToast');
+    toastMessage.addClass('entryToastMessage');
+    toastMessage.innerHTML = message;
+    toast.appendChild(toastMessage);
+    this.toasts_.push(toast);
+    this.body_.appendChild(toast);
+    var f = function() {
+        toast.style.opacity = 1;
+        var timer = setInterval(function () {
+            if (toast.style.opacity < 0.05) {
+                clearInterval(timer);
+                toast.style.display = 'none';
+                Entry.removeElement(toast);
+            }
+            toast.style.opacity *= 0.90;
+        }, 20);
+    };
+    if (!isNotAutoDispose)
+        window.setTimeout(f, 1000);
+};
+
 Entry.Toast.prototype.success = function(title, message, isNotAutoDispose) {
     var toast = Entry.createElement('div', 'entryToast');
     toast.addClass('entryToast');
