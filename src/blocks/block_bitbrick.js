@@ -6,7 +6,7 @@ Entry.Bitbrick = {
         2: "IR",
         3: "touch",
         4: "potentiometer",
-        4: "MIC",
+        5: "MIC",
         11: "USER INPUT",
         20: "LED",
         19: "SERVO",
