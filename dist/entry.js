@@ -288,29 +288,34 @@ Entry.block.sensorBoard_led = function(a, b) {
   Entry.hw.setDigitalPortValue(b.getField("PORT"), b.getNumberField("OPERATOR"));
   return b.callReturn();
 };
-Entry.Bitbrick = {SENSOR_MAP:{1:"light", 2:"IR", 3:"touch", 4:"potentiometer", 20:"LED", 19:"SERVO", 18:"DC"}, PORT_MAP:{buzzer:2, 5:4, 6:6, 7:8, 8:10, LEDR:12, LEDG:14, LEDB:16}, sensorList:function() {
+Entry.Bitbrick = {SENSOR_MAP:{1:"light", 2:"IR", 3:"touch", 4:"potentiometer", 4:"MIC", 11:"USER INPUT", 20:"LED", 19:"SERVO", 18:"DC"}, PORT_MAP:{buzzer:2, 5:4, 6:6, 7:8, 8:10, LEDR:12, LEDG:14, LEDB:16}, sensorList:function() {
   for (var a = [], b = Entry.hw.portData, c = 1;5 > c;c++) {
-    b[c] && a.push([c + " - " + b[c].type, c.toString()]);
+    var d = b[c];
+    d && d.value && a.push([c + " - " + d.type, c.toString()]);
   }
   return 0 == a.length ? [[Lang.Blocks.no_target, "null"]] : a;
 }, touchList:function() {
   for (var a = [], b = Entry.hw.portData, c = 1;5 > c;c++) {
-    b[c] && "touch" === b[c].type && a.push([c + " - " + b[c].type, c.toString()]);
+    var d = b[c];
+    d && "touch" === d.type && a.push([c + " - " + d.type, c.toString()]);
   }
   return 0 == a.length ? [[Lang.Blocks.no_target, "null"]] : a;
 }, servoList:function() {
   for (var a = [], b = Entry.hw.portData, c = 5;9 > c;c++) {
-    b[c] && "SERVO" === b[c].type && a.push(["ABCD"[c - 5], c.toString()]);
+    var d = b[c];
+    d && "SERVO" === d.type && a.push(["ABCD"[c - 5], c.toString()]);
   }
   return 0 == a.length ? [[Lang.Blocks.no_target, "null"]] : a;
 }, dcList:function() {
   for (var a = [], b = Entry.hw.portData, c = 5;9 > c;c++) {
-    b[c] && "DC" === b[c].type && a.push(["ABCD"[c - 5], c.toString()]);
+    var d = b[c];
+    d && "DC" === d.type && a.push(["ABCD"[c - 5], c.toString()]);
   }
   return 0 == a.length ? [[Lang.Blocks.no_target, "null"]] : a;
 }, setZero:function() {
-  for (var a in Entry.Bitbrick.PORT_MAP) {
-    Entry.hw.sendQueue[a] = 0;
+  var a = Entry.hw.sendQueue, b;
+  for (b in Entry.Bitbrick.PORT_MAP) {
+    a[b] = 0;
   }
   Entry.hw.update();
 }, name:"bitbrick", servoMaxValue:181, servoMinValue:1, dcMaxValue:100, dcMinValue:-100};
@@ -362,10 +367,10 @@ Blockly.Blocks.bitbrick_turn_on_color_led_by_rgb = {init:function() {
   this.setNextStatement(!0);
 }};
 Entry.block.bitbrick_turn_on_color_led_by_rgb = function(a, b) {
-  var c = b.getNumberValue("rValue"), d = b.getNumberValue("gValue"), e = b.getNumberValue("bValue");
-  Entry.hw.sendQueue.LEDR = c;
-  Entry.hw.sendQueue.LEDG = d;
-  Entry.hw.sendQueue.LEDB = e;
+  var c = b.getNumberValue("rValue"), d = b.getNumberValue("gValue"), e = b.getNumberValue("bValue"), f = Entry.adjustValueWithMaxMin, h = Entry.hw.sendQueue;
+  h.LEDR = f(c, 0, 255);
+  h.LEDG = f(d, 0, 255);
+  h.LEDB = f(e, 0, 255);
   return b.callReturn();
 };
 Blockly.Blocks.bitbrick_turn_on_color_led_by_picker = {init:function() {
@@ -425,6 +430,14 @@ Blockly.Blocks.bitbrick_turn_off_all_motors = {init:function() {
   this.setNextStatement(!0);
 }};
 Entry.block.bitbrick_turn_off_all_motors = function(a, b) {
+  var c = Entry.hw.sendQueue, d = Entry.Bitbrick;
+  d.servoList().map(function(a) {
+    c[a[1]] = 0;
+  });
+  d.dcList().map(function(a) {
+    c[a[1]] = 128;
+  });
+  return b.callReturn();
 };
 Blockly.Blocks.bitbrick_dc_speed = {init:function() {
   this.setColour("#00979D");
@@ -450,7 +463,7 @@ Blockly.Blocks.bitbrick_dc_direction_speed = {init:function() {
   this.setInputsInline(!0);
 }};
 Entry.block.bitbrick_dc_direction_speed = function(a, b) {
-  var c = "CW" === b.getStringField("DIRECTION"), d = b.getNumberValue("VALUE"), d = Math.min(d, Entry.Bitbrick.dcMaxValue), d = Math.max(d, Entry.Bitbrick.dcMinValue);
+  var c = "CW" === b.getStringField("DIRECTION"), d = b.getNumberValue("VALUE"), d = Math.min(d, Entry.Bitbrick.dcMaxValue), d = Math.max(d, 0);
   Entry.hw.sendQueue[b.getStringField("PORT")] = c ? d + 128 : 128 - d;
   return b.callReturn();
 };
@@ -6172,22 +6185,20 @@ Entry.EntryObject.prototype.initEntity = function(a) {
     var c = a.sprite.pictures[0].dimension;
     b.regX = c.width / 2;
     b.regY = c.height / 2;
-    a = "background" == a.sprite.category.main ? Math.max(270 / c.height, 480 / c.width) : "new" == a.sprite.category.main ? 1 : 200 / (c.width + c.height);
-    b.scaleX = b.scaleY = a;
+    b.scaleX = b.scaleY = "background" == a.sprite.category.main ? Math.max(270 / c.height, 480 / c.width) : "new" == a.sprite.category.main ? 1 : 200 / (c.width + c.height);
     b.width = c.width;
     b.height = c.height;
   } else {
     if ("textBox" == this.objectType) {
       if (b.regX = 25, b.regY = 12, b.scaleX = b.scaleY = 1.5, b.width = 50, b.height = 24, b.text = a.name, a.options) {
-        if (c = a.options, a = "", c.bold && (a += "bold "), c.italic && (a += "italic "), b.underline = c.underline, b.strike = c.strike, b.font = a + "20px " + c.font.family, b.colour = c.colour, b.bgColor = c.background, b.lineBreak = c.lineBreak) {
-          c = b.text.split("\n");
-          if (1 < c.length) {
-            a = c[0].length;
-            for (var d = 1, e = c.length;d < e;d++) {
-              c[d].length > a && (a = c[d].length);
+        if (a = a.options, c = "", a.bold && (c += "bold "), a.italic && (c += "italic "), b.underline = a.underline, b.strike = a.strike, b.font = c + "20px " + a.font.family, b.colour = a.colour, b.bgColor = a.background, b.lineBreak = a.lineBreak) {
+          a = b.text.split("\n");
+          if (1 < a.length) {
+            for (var c = a[0].length, d = 1, e = a.length;d < e;d++) {
+              a[d].length > c && (c = a[d].length);
             }
-            b.width = 25 * a;
-            b.height = 24 * c.length;
+            b.width = 25 * c;
+            b.height = 24 * a.length;
           } else {
             b.width = 25 * b.text.length;
           }
@@ -6758,8 +6769,7 @@ Entry.Painter.prototype.colorPixel = function(a, b, c, d, e) {
   this.colorLayerData.data[a + 3] = e;
 };
 Entry.Painter.prototype.pickStrokeColor = function(a) {
-  var b = Math.round(a.stageX);
-  a = 4 * (Math.round(a.stageY) * this.canvas.width + b);
+  a = 4 * (Math.round(a.stageY) * this.canvas.width + Math.round(a.stageX));
   this.stroke.lineColor = Entry.rgb2hex(this.colorLayerData.data[a], this.colorLayerData.data[a + 1], this.colorLayerData.data[a + 2]);
   document.getElementById("entryPainterAttrCircle").style.backgroundColor = this.stroke.lineColor;
   document.getElementById("entryPainterAttrCircleInput").value = this.stroke.lineColor;
@@ -10409,8 +10419,8 @@ Entry.Variable.prototype.setType = function(a) {
   this.type = a;
 };
 Entry.Variable.prototype.getSlidePosition = function(a) {
-  var b = this.minValue_, c = this.maxValue_, b = Math.abs(this.value_ - b) / Math.abs(c - b);
-  return a * b + 10;
+  var b = this.minValue_;
+  return Math.abs(this.value_ - b) / Math.abs(this.maxValue_ - b) * a + 10;
 };
 Entry.Variable.prototype.setSlideCommandX = function(a, b) {
   var c = this.valueSetter_.graphics.command;
@@ -10419,7 +10429,7 @@ Entry.Variable.prototype.setSlideCommandX = function(a, b) {
   this.updateSlideValueByView();
 };
 Entry.Variable.prototype.updateSlideValueByView = function() {
-  var a = this.maxWidth, a = Math.max(this.valueSetter_.graphics.command.x - 10, 0) / a;
+  var a = Math.max(this.valueSetter_.graphics.command.x - 10, 0) / this.maxWidth;
   0 > a && (a = 0);
   1 < a && (a = 1);
   a = (this.minValue_ + Number(Math.abs(this.maxValue_ - this.minValue_) * a)).toFixed(2);
