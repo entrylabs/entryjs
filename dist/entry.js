@@ -2387,7 +2387,8 @@ Blockly.Blocks.change_scale_size = {init:function() {
 }};
 Entry.block.change_scale_size = function(a, b) {
   var c = b.getNumberValue("VALUE", b);
-  a.setSize(a.getSize() + Number(c));
+  a.setSize(a.getSize() + c);
+  console.log("sizeValue type=", typeof c);
   return b.callReturn();
 };
 Blockly.Blocks.set_scale_size = {init:function() {
@@ -2401,7 +2402,7 @@ Blockly.Blocks.set_scale_size = {init:function() {
 }};
 Entry.block.set_scale_size = function(a, b) {
   var c = b.getNumberValue("VALUE", b);
-  a.setSize(Number(c));
+  a.setSize(c);
   return b.callReturn();
 };
 Blockly.Blocks.flip_y = {init:function() {

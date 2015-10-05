@@ -357,7 +357,7 @@ Blockly.Blocks.change_scale_size = {
 
 Entry.block.change_scale_size = function (sprite, script) {
     var sizeValue = script.getNumberValue("VALUE", script);
-    sprite.setSize(sprite.getSize() + Number(sizeValue));
+    sprite.setSize(sprite.getSize() + sizeValue);
     return script.callReturn();
 };
 
@@ -380,7 +380,7 @@ Blockly.Blocks.set_scale_size = {
 
 Entry.block.set_scale_size = function (sprite, script) {
     var sizeValue = script.getNumberValue("VALUE", script);
-    sprite.setSize(Number(sizeValue));
+    sprite.setSize(sizeValue);
     return script.callReturn();
 };
 
