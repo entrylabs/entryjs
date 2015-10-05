@@ -2389,6 +2389,35 @@ Entry.block.set_scale_percent = function(a, b) {
   a.setScaleY(c * d.scaleY);
   return b.callReturn();
 };
+Blockly.Blocks.change_scale_size = {init:function() {
+  this.setColour("#EC4466");
+  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_change_scale_percent_1);
+  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_change_scale_percent_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/looks_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.change_scale_size = function(a, b) {
+  var c = b.getNumberValue("VALUE", b);
+  a.setSize(a.getSize() + c);
+  console.log("sizeValue type=", typeof c);
+  return b.callReturn();
+};
+Blockly.Blocks.set_scale_size = {init:function() {
+  this.setColour("#EC4466");
+  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_set_scale_percent_1);
+  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_set_scale_percent_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/looks_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.set_scale_size = function(a, b) {
+  var c = b.getNumberValue("VALUE", b);
+  a.setSize(c);
+  return b.callReturn();
+};
 Blockly.Blocks.flip_y = {init:function() {
   this.setColour("#EC4466");
   this.appendDummyInput().appendField(Lang.Blocks.LOOKS_flip_y).appendField(new Blockly.FieldIcon("/img/assets/block_icon/looks_03.png", "*"));
