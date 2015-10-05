@@ -158,10 +158,15 @@ Blockly.Blocks.bitbrick_turn_on_color_led_by_rgb = {
 Entry.block.bitbrick_turn_on_color_led_by_rgb = function (sprite, script) {
   var red = script.getNumberValue("rValue"),
       green = script.getNumberValue("gValue"),
-      blue = script.getNumberValue("bValue");
-  Entry.hw.sendQueue["LEDR"] = red;
-  Entry.hw.sendQueue["LEDG"] = green;
-  Entry.hw.sendQueue["LEDB"] = blue;
+      blue = script.getNumberValue("bValue"),
+      min = 0,
+      max = 255,
+      adjustor = Entry.adjustValueWithMaxMin,
+      sq = Entry.hw.sendQueue;
+
+  sq["LEDR"] = adjustor(red, min, max);
+  sq["LEDG"] = adjustor(green, min, max);
+  sq["LEDB"] = adjustor(blue, min, max);
   return script.callReturn();
 };
 

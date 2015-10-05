@@ -362,10 +362,10 @@ Blockly.Blocks.bitbrick_turn_on_color_led_by_rgb = {init:function() {
   this.setNextStatement(!0);
 }};
 Entry.block.bitbrick_turn_on_color_led_by_rgb = function(a, b) {
-  var c = b.getNumberValue("rValue"), d = b.getNumberValue("gValue"), e = b.getNumberValue("bValue");
-  Entry.hw.sendQueue.LEDR = c;
-  Entry.hw.sendQueue.LEDG = d;
-  Entry.hw.sendQueue.LEDB = e;
+  var c = b.getNumberValue("rValue"), d = b.getNumberValue("gValue"), e = b.getNumberValue("bValue"), f = Entry.adjustValueWithMaxMin, h = Entry.hw.sendQueue;
+  h.LEDR = f(c, 0, 255);
+  h.LEDG = f(d, 0, 255);
+  h.LEDB = f(e, 0, 255);
   return b.callReturn();
 };
 Blockly.Blocks.bitbrick_turn_on_color_led_by_picker = {init:function() {
