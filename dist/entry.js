@@ -288,29 +288,34 @@ Entry.block.sensorBoard_led = function(a, b) {
   Entry.hw.setDigitalPortValue(b.getField("PORT"), b.getNumberField("OPERATOR"));
   return b.callReturn();
 };
-Entry.Bitbrick = {SENSOR_MAP:{1:"light", 2:"IR", 3:"touch", 4:"potentiometer", 20:"LED", 19:"SERVO", 18:"DC"}, PORT_MAP:{buzzer:2, 5:4, 6:6, 7:8, 8:10, LEDR:12, LEDG:14, LEDB:16}, sensorList:function() {
+Entry.Bitbrick = {SENSOR_MAP:{1:"light", 2:"IR", 3:"touch", 4:"potentiometer", 4:"MIC", 11:"USER INPUT", 20:"LED", 19:"SERVO", 18:"DC"}, PORT_MAP:{buzzer:2, 5:4, 6:6, 7:8, 8:10, LEDR:12, LEDG:14, LEDB:16}, sensorList:function() {
   for (var a = [], b = Entry.hw.portData, c = 1;5 > c;c++) {
-    b[c] && a.push([c + " - " + b[c].type, c.toString()]);
+    var d = b[c];
+    d && d.value && a.push([c + " - " + d.type, c.toString()]);
   }
   return 0 == a.length ? [[Lang.Blocks.no_target, "null"]] : a;
 }, touchList:function() {
   for (var a = [], b = Entry.hw.portData, c = 1;5 > c;c++) {
-    b[c] && "touch" === b[c].type && a.push([c + " - " + b[c].type, c.toString()]);
+    var d = b[c];
+    d && "touch" === d.type && a.push([c + " - " + d.type, c.toString()]);
   }
   return 0 == a.length ? [[Lang.Blocks.no_target, "null"]] : a;
 }, servoList:function() {
   for (var a = [], b = Entry.hw.portData, c = 5;9 > c;c++) {
-    b[c] && "SERVO" === b[c].type && a.push(["ABCD"[c - 5], c.toString()]);
+    var d = b[c];
+    d && "SERVO" === d.type && a.push(["ABCD"[c - 5], c.toString()]);
   }
   return 0 == a.length ? [[Lang.Blocks.no_target, "null"]] : a;
 }, dcList:function() {
   for (var a = [], b = Entry.hw.portData, c = 5;9 > c;c++) {
-    b[c] && "DC" === b[c].type && a.push(["ABCD"[c - 5], c.toString()]);
+    var d = b[c];
+    d && "DC" === d.type && a.push(["ABCD"[c - 5], c.toString()]);
   }
   return 0 == a.length ? [[Lang.Blocks.no_target, "null"]] : a;
 }, setZero:function() {
-  for (var a in Entry.Bitbrick.PORT_MAP) {
-    Entry.hw.sendQueue[a] = 0;
+  var a = Entry.hw.sendQueue, b;
+  for (b in Entry.Bitbrick.PORT_MAP) {
+    a[b] = 0;
   }
   Entry.hw.update();
 }, name:"bitbrick", servoMaxValue:181, servoMinValue:1, dcMaxValue:100, dcMinValue:-100};
