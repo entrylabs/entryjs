@@ -304,7 +304,8 @@ Entry.block.bitbrick_dc_speed = function (sprite, script) {
     value = Math.min(value, Entry.Bitbrick.dcMaxValue);
     value = Math.max(value, Entry.Bitbrick.dcMinValue);
 
-    Entry.hw.sendQueue[script.getStringField("PORT")] = value + 128;
+    Entry.hw.sendQueue[script.getStringField("PORT")] =
+        value + 128;
     return script.callReturn();
 };
 
@@ -335,7 +336,7 @@ Entry.block.bitbrick_dc_direction_speed = function (sprite, script) {
     var isFront = script.getStringField("DIRECTION") === "CW";
     var value = script.getNumberValue("VALUE");
     value = Math.min(value, Entry.Bitbrick.dcMaxValue);
-    value = Math.max(value, Entry.Bitbrick.dcMinValue);
+    value = Math.max(value, 0);
 
     Entry.hw.sendQueue[script.getStringField("PORT")] =
         isFront ? value + 128 : 128 - value;
