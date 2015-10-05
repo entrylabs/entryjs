@@ -10,7 +10,7 @@ Entry.Bitbrick = {
         19: "SERVO",
         18: "DC"
     },
-  PORT_MAP : {
+    PORT_MAP : {
         "buzzer": 2,
         "5": 4,
         "6": 6,
@@ -19,7 +19,7 @@ Entry.Bitbrick = {
         "LEDR": 12,
         "LEDG": 14,
         "LEDB": 16
-  },
+    },
   sensorList: function() {
     var list = [];
     var portData = Entry.hw.portData;
@@ -270,6 +270,15 @@ Blockly.Blocks.bitbrick_turn_off_all_motors = {
 };
 
 Entry.block.bitbrick_turn_off_all_motors = function (sprite, script) {
+    var sq = Entry.hw.sendQueue;
+    var bitbrick = Entry.Bitbrick;
+    bitbrick.servoList().map(function(servo){
+        sq[servo[1]] = 0;
+    });
+    bitbrick.dcList().map(function(dc){
+        sq[dc[1]] = 128;
+    });
+    return script.callReturn();
 };
 
 Blockly.Blocks.bitbrick_dc_speed = {
