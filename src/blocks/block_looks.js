@@ -520,13 +520,16 @@ Entry.block.set_effect_amount = function (sprite, script) {
     var effect = script.getField("EFFECT", script);
     var effectValue = script.getNumberValue("VALUE", script);
     if (effect == "color") {
-        sprite.effect.hue = effectValue + sprite.effect.hue;
+        sprite.applyColorMatrix(effectValue);
+        //sprite.effect.hue = effectValue + sprite.effect.hue;
     } else if (effect == "brightness") {
         sprite.effect.brightness = effectValue + sprite.effect.brightness;
+        sprite.applyFilter();
     } else if (effect == "transparency") {
         sprite.effect.alpha = (sprite.effect.alpha - effectValue / 100) ;
+        sprite.applyFilter();
     }
-    sprite.applyFilter();
+    //sprite.applyFilter();
     return script.callReturn();
 };
 
