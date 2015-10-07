@@ -844,6 +844,50 @@ Entry.EntityObject.prototype.applyFilter = function() {
     object.cache(0,0,this.getWidth(),this.getHeight());
 };
 
+Entry.EntityObject.prototype.applyEffect = function() {
+    var effects = this.effect;
+    var object = this.object;
+
+    (function(e, obj) {
+        var f = [];
+        var adjust = Entry.adjustValueWithMaxMin;
+
+        e.brightness = e.brightness;
+        var cmBrightness = new createjs.ColorMatrix();
+        cmBrightness.adjustColor(adjust(e.brightness, -100, 100), 0, 0, 0);
+        var brightnessFilter = new createjs.ColorMatrixFilter(cmBrightness);
+        f.push(brightnessFilter);
+
+        var degrees = e.hue*3.6;
+        var pi = Math.acos(-1);
+        var r = degrees * pi / 180;
+
+        var cosVal = Math.cos(r);
+        var sinVal = Math.sin(r);
+
+        var matrixValue = [
+            cosVal, sinVal, 0, 0, 0,
+            -1*sinVal, cosVal, 0, 0, 0,
+            0, 0, 1, 0, 0,
+            0, 0, 0, 1, 0,
+            0, 0, 0, 0, 1
+        ];
+
+        var calcMatrix = new createjs.ColorMatrix().concat(matrixValue);
+        var colorFilter = new createjs.ColorMatrixFilter(calcMatrix);
+        f.push(colorFilter);
+
+        obj.alpha = e.alpha = adjust(e.alpha, 0, 1);
+
+        obj.filters = f;
+
+    })(effects, object);
+
+    object.cache(0,0,this.getWidth(),this.getHeight());
+
+};
+
+
 /**
  * Remove all filter
  */
