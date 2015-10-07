@@ -1464,8 +1464,8 @@ Blockly.Blocks.function_general = {init:function() {
       case "boolean":
         this.appendValueInput(e).setCheck(["Boolean"]);
     }
-    this.hashId = a.getAttribute("hashid");
   }
+  this.hashId = a.getAttribute("hashid");
   this.appendDummyInput().appendField(new Blockly.FieldIcon("/img/assets/block_icon/function_03.png", "*"));
 }, mutationToDom:function() {
   for (var a = document.createElement("mutation"), b = 1;b < this.inputList.length;b++) {
@@ -6172,22 +6172,20 @@ Entry.EntryObject.prototype.initEntity = function(a) {
     var c = a.sprite.pictures[0].dimension;
     b.regX = c.width / 2;
     b.regY = c.height / 2;
-    a = "background" == a.sprite.category.main ? Math.max(270 / c.height, 480 / c.width) : "new" == a.sprite.category.main ? 1 : 200 / (c.width + c.height);
-    b.scaleX = b.scaleY = a;
+    b.scaleX = b.scaleY = "background" == a.sprite.category.main ? Math.max(270 / c.height, 480 / c.width) : "new" == a.sprite.category.main ? 1 : 200 / (c.width + c.height);
     b.width = c.width;
     b.height = c.height;
   } else {
     if ("textBox" == this.objectType) {
       if (b.regX = 25, b.regY = 12, b.scaleX = b.scaleY = 1.5, b.width = 50, b.height = 24, b.text = a.name, a.options) {
-        if (c = a.options, a = "", c.bold && (a += "bold "), c.italic && (a += "italic "), b.underline = c.underline, b.strike = c.strike, b.font = a + "20px " + c.font.family, b.colour = c.colour, b.bgColor = c.background, b.lineBreak = c.lineBreak) {
-          c = b.text.split("\n");
-          if (1 < c.length) {
-            a = c[0].length;
-            for (var d = 1, e = c.length;d < e;d++) {
-              c[d].length > a && (a = c[d].length);
+        if (a = a.options, c = "", a.bold && (c += "bold "), a.italic && (c += "italic "), b.underline = a.underline, b.strike = a.strike, b.font = c + "20px " + a.font.family, b.colour = a.colour, b.bgColor = a.background, b.lineBreak = a.lineBreak) {
+          a = b.text.split("\n");
+          if (1 < a.length) {
+            for (var c = a[0].length, d = 1, e = a.length;d < e;d++) {
+              a[d].length > c && (c = a[d].length);
             }
-            b.width = 25 * a;
-            b.height = 24 * c.length;
+            b.width = 25 * c;
+            b.height = 24 * a.length;
           } else {
             b.width = 25 * b.text.length;
           }
@@ -6758,8 +6756,7 @@ Entry.Painter.prototype.colorPixel = function(a, b, c, d, e) {
   this.colorLayerData.data[a + 3] = e;
 };
 Entry.Painter.prototype.pickStrokeColor = function(a) {
-  var b = Math.round(a.stageX);
-  a = 4 * (Math.round(a.stageY) * this.canvas.width + b);
+  a = 4 * (Math.round(a.stageY) * this.canvas.width + Math.round(a.stageX));
   this.stroke.lineColor = Entry.rgb2hex(this.colorLayerData.data[a], this.colorLayerData.data[a + 1], this.colorLayerData.data[a + 2]);
   document.getElementById("entryPainterAttrCircle").style.backgroundColor = this.stroke.lineColor;
   document.getElementById("entryPainterAttrCircleInput").value = this.stroke.lineColor;
@@ -10013,17 +10010,30 @@ Entry.Func.syncFunc = function() {
 };
 Entry.Func.updateMenu = function() {
   if ("func" == Entry.playground.selectedMenu && (Entry.playground.blockMenu.hide(), Entry.playground.blockMenu.show(Entry.Func.getMenuXml()), !Blockly.WidgetDiv.field_ && Entry.Func.targetFunc)) {
-    var a = Entry.Func.targetFunc, b = Blockly.Xml.workspaceToDom(Entry.Func.workspace), c = b.getElementsByClassName("function_general"), d = a.id, e, c = Entry.nodeListToArray(c), c = c.filter(function(a) {
-      return a.getElementsByTagName("mutation")[0].getAttribute("hashid") == d;
-    });
+    var a = Entry.Func.targetFunc, b = Blockly.Xml.workspaceToDom(Entry.Func.workspace), c = b.getElementsByClassName("function_general"), d = a.id, e, c = Entry.nodeListToArray(c), f = [], h = {};
     c.map(function(a) {
-      for (e = Entry.Func.generateBlock(b, Blockly.Xml.workspaceToDom(Entry.Func.workspace), d).block;a.firstChild;) {
+      var b = a.getElementsByTagName("mutation")[0].getAttribute("hashid");
+      b == d ? f.push(a) : (h[b] || (h[b] = []), h[b].push(a));
+    });
+    f.map(function(a) {
+      for (e = Entry.Func.generateWsBlock(b, Blockly.Xml.workspaceToDom(Entry.Func.workspace), d).block;a.firstChild;) {
         a.removeChild(a.firstChild);
       }
       for (;e.firstChild;) {
         a.appendChild(e.firstChild);
       }
     });
+    for (var g in h) {
+      var a = h[g], k = Entry.variableContainer.getFunction(g).content;
+      a.map(function(a) {
+        for (e = Entry.Func.generateWsBlock(b, k, g).block;a.firstChild;) {
+          a.removeChild(a.firstChild);
+        }
+        for (;e.firstChild;) {
+          a.appendChild(e.firstChild);
+        }
+      });
+    }
     Entry.Func.workspace.clear();
     Blockly.Xml.domToWorkspace(Entry.Func.workspace, b);
   }
@@ -10042,28 +10052,26 @@ Entry.Func.generateBlock = function(a, b, c) {
   d.init(e);
   e = d;
   e.values && (e = d.values.FIELD);
-  b = '<mutation hashid="' + c + '">';
-  var f = "";
-  c = "";
-  var h = 0, g = 0;
+  d = '<mutation hashid="' + c + '">';
+  c = b = "";
+  var f = 0, h = 0;
   a.stringHash = {};
-  a.booleanHash = {};
-  for (d = 0;;d++) {
+  for (a.booleanHash = {};;) {
     switch(e.type) {
       case "function_field_label":
-        b += '<field type="label" content="' + e.fields.NAME.replace("<", "&lt;").replace(">", "&gt;") + '"></field>';
+        d += '<field type="label" content="' + e.fields.NAME.replace("<", "&lt;").replace(">", "&gt;") + '"></field>';
         c += e.fields.NAME;
         break;
       case "function_field_boolean":
-        var k = e.values.PARAM.hashId;
-        b += '<field type="boolean" hashid="' + k + '"></field>';
-        f += '<value name="' + k + '"><block type="True"></block></value>';
-        a.booleanHash[k] = g;
-        g++;
-        c += "\ub17c\ub9ac\uac12" + g;
+        var g = e.values.PARAM.hashId;
+        d += '<field type="boolean" hashid="' + g + '"></field>';
+        b += '<value name="' + g + '"><block type="True"></block></value>';
+        a.booleanHash[g] = h;
+        h++;
+        c += "\ub17c\ub9ac\uac12" + h;
         break;
       case "function_field_string":
-        k = e.values.PARAM.hashId, b += '<field type="string" hashid="' + k + '"></field>', f += '<value name="' + k + '"><block type="text"><field name="NAME">10</field></block></value>', a.stringHash[k] = h, h++, c += "\ubb38\uc790\uac12" + h;
+        g = e.values.PARAM.hashId, d += '<field type="string" hashid="' + g + '"></field>', b += '<value name="' + g + '"><block type="text"><field name="NAME">10</field></block></value>', a.stringHash[g] = f, f++, c += "\ubb38\uc790\uac12" + f;
     }
     if (e.values && e.values.NEXT) {
       e = e.values.NEXT;
@@ -10072,7 +10080,7 @@ Entry.Func.generateBlock = function(a, b, c) {
     }
     c += " ";
   }
-  a = Blockly.Xml.textToDom('<xml><block type="function_general">' + (b + "</mutation>") + f + "</block></xml>").childNodes[0];
+  a = Blockly.Xml.textToDom('<xml><block type="function_general">' + (d + "</mutation>") + b + "</block></xml>").childNodes[0];
   c || (c = "\ud568\uc218");
   return {block:a, description:c};
 };
@@ -10144,6 +10152,50 @@ Entry.Func.doWhenCancel = function() {
   Blockly.unbindEvent_(window, "resize", this, this.position_);
   Blockly.unbindEvent_(a, "mousedown", null, Blockly.onMouseDown_);
   Blockly.unbindEvent_(a, "contextmenu", null, Blockly.onContextMenu_);
+};
+Entry.Func.generateWsBlock = function(a, b, c) {
+  b = b.childNodes;
+  for (var d in b) {
+    if ("function_create" == b[d].getAttribute("type")) {
+      var e = b[d];
+      break;
+    }
+  }
+  d = new Entry.Script;
+  d.init(e);
+  e = d;
+  e.values && (e = d.values.FIELD);
+  d = '<mutation hashid="' + c + '">';
+  c = b = "";
+  var f = 0, h = 0;
+  a.stringHash = {};
+  for (a.booleanHash = {};;) {
+    switch(e.type) {
+      case "function_field_label":
+        d += '<field type="label" content="' + e.fields.NAME.replace("<", "&lt;").replace(">", "&gt;") + '"></field>';
+        c += e.fields.NAME;
+        break;
+      case "function_field_boolean":
+        var g = e.values.PARAM.hashId;
+        d += '<field type="boolean" hashid="' + g + '"></field>';
+        b += '<value name="' + g + '"><block type="function_param_boolean"><mutation hashid="' + g + '"></mutation></block></value>';
+        a.booleanHash[g] = h;
+        h++;
+        c += "\ub17c\ub9ac\uac12" + h;
+        break;
+      case "function_field_string":
+        g = e.values.PARAM.hashId, d += '<field type="string" hashid="' + g + '"></field>', b += '<value name="' + g + '"><block type="function_param_string"><mutation hashid="' + g + '"></mutation></block></value>', a.stringHash[g] = f, f++, c += "\ubb38\uc790\uac12" + f;
+    }
+    if (e.values && e.values.NEXT) {
+      e = e.values.NEXT;
+    } else {
+      break;
+    }
+    c += " ";
+  }
+  a = Blockly.Xml.textToDom('<xml><block type="function_general">' + (d + "</mutation>") + b + "</block></xml>").childNodes[0];
+  c || (c = "\ud568\uc218");
+  return {block:a, description:c};
 };
 Entry.Variable = function(a) {
   Entry.assert("string" == typeof a.name, "Variable name must be given");
@@ -10409,8 +10461,8 @@ Entry.Variable.prototype.setType = function(a) {
   this.type = a;
 };
 Entry.Variable.prototype.getSlidePosition = function(a) {
-  var b = this.minValue_, c = this.maxValue_, b = Math.abs(this.value_ - b) / Math.abs(c - b);
-  return a * b + 10;
+  var b = this.minValue_;
+  return Math.abs(this.value_ - b) / Math.abs(this.maxValue_ - b) * a + 10;
 };
 Entry.Variable.prototype.setSlideCommandX = function(a, b) {
   var c = this.valueSetter_.graphics.command;
@@ -10419,7 +10471,7 @@ Entry.Variable.prototype.setSlideCommandX = function(a, b) {
   this.updateSlideValueByView();
 };
 Entry.Variable.prototype.updateSlideValueByView = function() {
-  var a = this.maxWidth, a = Math.max(this.valueSetter_.graphics.command.x - 10, 0) / a;
+  var a = Math.max(this.valueSetter_.graphics.command.x - 10, 0) / this.maxWidth;
   0 > a && (a = 0);
   1 < a && (a = 1);
   a = (this.minValue_ + Number(Math.abs(this.maxValue_ - this.minValue_) * a)).toFixed(2);
