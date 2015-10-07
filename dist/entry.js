@@ -9944,16 +9944,6 @@ Entry.isEmpty = function(a) {
   }
   return !0;
 };
-Entry.getColorRotationMatrix = function(a) {
-  a *= 3.6;
-  var b = Math.acos(-1), b = a * b / 180;
-  a = Math.cos(b);
-  b = Math.sin(b);
-  return [a, b, 0, 0, 0, -1 * b, a, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1];
-};
-Entry.cleanValue = function(a, b) {
-  return Math.min(b, Math.max(-b, a));
-};
 Entry.Func = function() {
   this.id = Entry.generateHash();
   this.content = Blockly.Xml.textToDom(Entry.Func.CREATE_BLOCK);
