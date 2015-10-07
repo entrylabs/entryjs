@@ -249,12 +249,21 @@ Entry.Func.updateMenu = function() {
                 block = Entry.Func.generateWsBlock(xml,
                     Blockly.Xml.workspaceToDom(Entry.Func.workspace),
                     hash).block;
+                var afterNext = [];
+                var flag = false;
                 while (b.firstChild) {
-                    b.removeChild(b.firstChild);
+                    var child = b.firstChild;
+                    var xmlTag = child.tagName;
+                    if (flag || xmlTag == 'NEXT') {
+                        flag = true;
+                        afterNext.push(child);
+                    }
+                    b.removeChild(child);
                 }
-                while (block.firstChild) {
+                while (block.firstChild)
                     b.appendChild(block.firstChild);
-                }
+                while(afterNext.length)
+                    b.appendChild(afterNext.shift());
             });
 
             for (var hashKey in otherGenerals) {
@@ -264,12 +273,21 @@ Entry.Func.updateMenu = function() {
                     block = Entry.Func.generateWsBlock(xml,
                         funcContent,
                         hashKey).block;
+                    var afterNext = [];
+                    var flag = false;
                     while (b.firstChild) {
-                        b.removeChild(b.firstChild);
+                        var child = b.firstChild;
+                        var xmlTag = child.tagName;
+                        if (flag || xmlTag == 'NEXT') {
+                            flag = true;
+                            afterNext.push(child);
+                        }
+                        b.removeChild(child);
                     }
-                    while (block.firstChild) {
+                    while (block.firstChild)
                         b.appendChild(block.firstChild);
-                    }
+                    while(afterNext.length)
+                        b.appendChild(afterNext.shift());
                 });
             }
 
@@ -479,8 +497,7 @@ Entry.Func.generateWsBlock = function(func, content, id) {
     func.stringHash = {};
     func.booleanHash = {};
     while(true) {
-        var type = field.type;
-        switch (type) {
+        switch (field.type) {
             case 'function_field_label':
                 mutationXml += '<field type="label" content="' +
                     field.fields.NAME.replace("<", "&lt;").replace(">", "&gt;") + '"></field>';

@@ -288,7 +288,7 @@ Entry.block.sensorBoard_led = function(a, b) {
   Entry.hw.setDigitalPortValue(b.getField("PORT"), b.getNumberField("OPERATOR"));
   return b.callReturn();
 };
-Entry.Bitbrick = {SENSOR_MAP:{1:"light", 2:"IR", 3:"touch", 4:"potentiometer", 4:"MIC", 11:"USER INPUT", 20:"LED", 19:"SERVO", 18:"DC"}, PORT_MAP:{buzzer:2, 5:4, 6:6, 7:8, 8:10, LEDR:12, LEDG:14, LEDB:16}, sensorList:function() {
+Entry.Bitbrick = {SENSOR_MAP:{1:"light", 2:"IR", 3:"touch", 4:"potentiometer", 5:"MIC", 11:"USER INPUT", 20:"LED", 19:"SERVO", 18:"DC"}, PORT_MAP:{buzzer:2, 5:4, 6:6, 7:8, 8:10, LEDR:12, LEDG:14, LEDB:16}, sensorList:function() {
   for (var a = [], b = Entry.hw.portData, c = 1;5 > c;c++) {
     var d = b[c];
     d && d.value && a.push([c + " - " + d.type, c.toString()]);
@@ -2401,7 +2401,6 @@ Blockly.Blocks.change_scale_size = {init:function() {
 Entry.block.change_scale_size = function(a, b) {
   var c = b.getNumberValue("VALUE", b);
   a.setSize(a.getSize() + c);
-  console.log("sizeValue type=", typeof c);
   return b.callReturn();
 };
 Blockly.Blocks.set_scale_size = {init:function() {
@@ -10058,21 +10057,37 @@ Entry.Func.updateMenu = function() {
       b == d ? f.push(a) : (h[b] || (h[b] = []), h[b].push(a));
     });
     f.map(function(a) {
-      for (e = Entry.Func.generateWsBlock(b, Blockly.Xml.workspaceToDom(Entry.Func.workspace), d).block;a.firstChild;) {
-        a.removeChild(a.firstChild);
+      e = Entry.Func.generateWsBlock(b, Blockly.Xml.workspaceToDom(Entry.Func.workspace), d).block;
+      for (var c = [], f = !1;a.firstChild;) {
+        var g = a.firstChild, h = g.tagName;
+        if (f || "NEXT" == h) {
+          f = !0, c.push(g);
+        }
+        a.removeChild(g);
       }
       for (;e.firstChild;) {
         a.appendChild(e.firstChild);
+      }
+      for (;c.length;) {
+        a.appendChild(c.shift());
       }
     });
     for (var g in h) {
       var a = h[g], k = Entry.variableContainer.getFunction(g).content;
       a.map(function(a) {
-        for (e = Entry.Func.generateWsBlock(b, k, g).block;a.firstChild;) {
-          a.removeChild(a.firstChild);
+        e = Entry.Func.generateWsBlock(b, k, g).block;
+        for (var c = [], d = !1;a.firstChild;) {
+          var f = a.firstChild, h = f.tagName;
+          if (d || "NEXT" == h) {
+            d = !0, c.push(f);
+          }
+          a.removeChild(f);
         }
         for (;e.firstChild;) {
           a.appendChild(e.firstChild);
+        }
+        for (;c.length;) {
+          a.appendChild(c.shift());
         }
       });
     }
