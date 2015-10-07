@@ -338,6 +338,53 @@ Entry.block.set_scale_percent = function (sprite, script) {
     return script.callReturn();
 };
 
+// 크기를 ()  만큼 바꾸기
+Blockly.Blocks.change_scale_size = {
+  init: function() {
+    this.setColour("#EC4466");
+    this.appendDummyInput()
+        .appendField(Lang.Blocks.LOOKS_change_scale_percent_1);
+    this.appendValueInput("VALUE")
+        .setCheck(["Number", "String"]);
+    this.appendDummyInput()
+        .appendField(Lang.Blocks.LOOKS_change_scale_percent_2)
+        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/looks_03.png', '*'));
+    this.setInputsInline(true);
+    this.setPreviousStatement(true);
+    this.setNextStatement(true);
+  }
+};
+
+Entry.block.change_scale_size = function (sprite, script) {
+    var sizeValue = script.getNumberValue("VALUE", script);
+    sprite.setSize(sprite.getSize() + sizeValue);
+    return script.callReturn();
+};
+
+// 크기를 () 로 정하기
+Blockly.Blocks.set_scale_size = {
+  init: function() {
+    this.setColour("#EC4466");
+    this.appendDummyInput()
+        .appendField(Lang.Blocks.LOOKS_set_scale_percent_1);
+    this.appendValueInput("VALUE")
+        .setCheck(["Number", "String"]);
+    this.appendDummyInput()
+        .appendField(Lang.Blocks.LOOKS_set_scale_percent_2)
+        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/looks_03.png', '*'));
+    this.setInputsInline(true);
+    this.setPreviousStatement(true);
+    this.setNextStatement(true);
+  }
+};
+
+Entry.block.set_scale_size = function (sprite, script) {
+    var sizeValue = script.getNumberValue("VALUE", script);
+    sprite.setSize(sizeValue);
+    return script.callReturn();
+};
+
+
 //y축 플
 Blockly.Blocks.flip_y = {
   init: function() {

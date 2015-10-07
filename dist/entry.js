@@ -288,29 +288,34 @@ Entry.block.sensorBoard_led = function(a, b) {
   Entry.hw.setDigitalPortValue(b.getField("PORT"), b.getNumberField("OPERATOR"));
   return b.callReturn();
 };
-Entry.Bitbrick = {SENSOR_MAP:{1:"light", 2:"IR", 3:"touch", 4:"potentiometer", 20:"LED", 19:"SERVO", 18:"DC"}, PORT_MAP:{buzzer:2, 5:4, 6:6, 7:8, 8:10, LEDR:12, LEDG:14, LEDB:16}, sensorList:function() {
+Entry.Bitbrick = {SENSOR_MAP:{1:"light", 2:"IR", 3:"touch", 4:"potentiometer", 4:"MIC", 11:"USER INPUT", 20:"LED", 19:"SERVO", 18:"DC"}, PORT_MAP:{buzzer:2, 5:4, 6:6, 7:8, 8:10, LEDR:12, LEDG:14, LEDB:16}, sensorList:function() {
   for (var a = [], b = Entry.hw.portData, c = 1;5 > c;c++) {
-    b[c] && a.push([c + " - " + b[c].type, c.toString()]);
+    var d = b[c];
+    d && d.value && a.push([c + " - " + d.type, c.toString()]);
   }
   return 0 == a.length ? [[Lang.Blocks.no_target, "null"]] : a;
 }, touchList:function() {
   for (var a = [], b = Entry.hw.portData, c = 1;5 > c;c++) {
-    b[c] && "touch" === b[c].type && a.push([c + " - " + b[c].type, c.toString()]);
+    var d = b[c];
+    d && "touch" === d.type && a.push([c + " - " + d.type, c.toString()]);
   }
   return 0 == a.length ? [[Lang.Blocks.no_target, "null"]] : a;
 }, servoList:function() {
   for (var a = [], b = Entry.hw.portData, c = 5;9 > c;c++) {
-    b[c] && "SERVO" === b[c].type && a.push(["ABCD"[c - 5], c.toString()]);
+    var d = b[c];
+    d && "SERVO" === d.type && a.push(["ABCD"[c - 5], c.toString()]);
   }
   return 0 == a.length ? [[Lang.Blocks.no_target, "null"]] : a;
 }, dcList:function() {
   for (var a = [], b = Entry.hw.portData, c = 5;9 > c;c++) {
-    b[c] && "DC" === b[c].type && a.push(["ABCD"[c - 5], c.toString()]);
+    var d = b[c];
+    d && "DC" === d.type && a.push(["ABCD"[c - 5], c.toString()]);
   }
   return 0 == a.length ? [[Lang.Blocks.no_target, "null"]] : a;
 }, setZero:function() {
-  for (var a in Entry.Bitbrick.PORT_MAP) {
-    Entry.hw.sendQueue[a] = 0;
+  var a = Entry.hw.sendQueue, b;
+  for (b in Entry.Bitbrick.PORT_MAP) {
+    a[b] = 0;
   }
   Entry.hw.update();
 }, name:"bitbrick", servoMaxValue:181, servoMinValue:1, dcMaxValue:100, dcMinValue:-100};
@@ -362,10 +367,10 @@ Blockly.Blocks.bitbrick_turn_on_color_led_by_rgb = {init:function() {
   this.setNextStatement(!0);
 }};
 Entry.block.bitbrick_turn_on_color_led_by_rgb = function(a, b) {
-  var c = b.getNumberValue("rValue"), d = b.getNumberValue("gValue"), e = b.getNumberValue("bValue");
-  Entry.hw.sendQueue.LEDR = c;
-  Entry.hw.sendQueue.LEDG = d;
-  Entry.hw.sendQueue.LEDB = e;
+  var c = b.getNumberValue("rValue"), d = b.getNumberValue("gValue"), e = b.getNumberValue("bValue"), f = Entry.adjustValueWithMaxMin, h = Entry.hw.sendQueue;
+  h.LEDR = f(c, 0, 255);
+  h.LEDG = f(d, 0, 255);
+  h.LEDB = f(e, 0, 255);
   return b.callReturn();
 };
 Blockly.Blocks.bitbrick_turn_on_color_led_by_picker = {init:function() {
@@ -425,6 +430,14 @@ Blockly.Blocks.bitbrick_turn_off_all_motors = {init:function() {
   this.setNextStatement(!0);
 }};
 Entry.block.bitbrick_turn_off_all_motors = function(a, b) {
+  var c = Entry.hw.sendQueue, d = Entry.Bitbrick;
+  d.servoList().map(function(a) {
+    c[a[1]] = 0;
+  });
+  d.dcList().map(function(a) {
+    c[a[1]] = 128;
+  });
+  return b.callReturn();
 };
 Blockly.Blocks.bitbrick_dc_speed = {init:function() {
   this.setColour("#00979D");
@@ -450,7 +463,7 @@ Blockly.Blocks.bitbrick_dc_direction_speed = {init:function() {
   this.setInputsInline(!0);
 }};
 Entry.block.bitbrick_dc_direction_speed = function(a, b) {
-  var c = "CW" === b.getStringField("DIRECTION"), d = b.getNumberValue("VALUE"), d = Math.min(d, Entry.Bitbrick.dcMaxValue), d = Math.max(d, Entry.Bitbrick.dcMinValue);
+  var c = "CW" === b.getStringField("DIRECTION"), d = b.getNumberValue("VALUE"), d = Math.min(d, Entry.Bitbrick.dcMaxValue), d = Math.max(d, 0);
   Entry.hw.sendQueue[b.getStringField("PORT")] = c ? d + 128 : 128 - d;
   return b.callReturn();
 };
@@ -2374,6 +2387,35 @@ Entry.block.set_scale_percent = function(a, b) {
   var c = b.getNumberValue("VALUE", b) / 100, d = a.snapshot_;
   a.setScaleX(c * d.scaleX);
   a.setScaleY(c * d.scaleY);
+  return b.callReturn();
+};
+Blockly.Blocks.change_scale_size = {init:function() {
+  this.setColour("#EC4466");
+  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_change_scale_percent_1);
+  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_change_scale_percent_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/looks_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.change_scale_size = function(a, b) {
+  var c = b.getNumberValue("VALUE", b);
+  a.setSize(a.getSize() + c);
+  console.log("sizeValue type=", typeof c);
+  return b.callReturn();
+};
+Blockly.Blocks.set_scale_size = {init:function() {
+  this.setColour("#EC4466");
+  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_set_scale_percent_1);
+  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_set_scale_percent_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/looks_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.set_scale_size = function(a, b) {
+  var c = b.getNumberValue("VALUE", b);
+  a.setSize(c);
   return b.callReturn();
 };
 Blockly.Blocks.flip_y = {init:function() {
