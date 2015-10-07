@@ -2482,6 +2482,40 @@ Entry.block.change_to_some_shape = function(a, b) {
   a.setImage(c);
   return b.callReturn();
 };
+Blockly.Blocks.add_effect_amount = {init:function() {
+  this.setColour("#EC4466");
+  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_set_effect_volume_1);
+  this.appendDummyInput().appendField(new Blockly.FieldDropdown([[Lang.Blocks.color, "color"], [Lang.Blocks.brightness, "brightness"], [Lang.Blocks.transparency, "transparency"]]), "EFFECT");
+  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_set_effect_volume_2);
+  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_set_effect_volume_3).appendField(new Blockly.FieldIcon("/img/assets/block_icon/looks_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.add_effect_amount = function(a, b) {
+  var c = b.getField("EFFECT", b), d = b.getNumberValue("VALUE", b);
+  "color" == c ? a.effect.hue = d + a.effect.hue : "brightness" == c ? a.effect.brightness = d + a.effect.brightness : "transparency" == c && (a.effect.alpha -= d / 100);
+  a.applyEffect();
+  return b.callReturn();
+};
+Blockly.Blocks.change_effect_amount = {init:function() {
+  this.setColour("#EC4466");
+  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_set_effect_1);
+  this.appendDummyInput().appendField(new Blockly.FieldDropdown([[Lang.Blocks.color, "color"], [Lang.Blocks.brightness, "brightness"], [Lang.Blocks.transparency, "transparency"]]), "EFFECT");
+  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_set_effect_2);
+  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_set_effect_3).appendField(new Blockly.FieldIcon("/img/assets/block_icon/looks_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.change_effect_amount = function(a, b) {
+  var c = b.getField("EFFECT", b), d = b.getNumberValue("VALUE", b);
+  "color" == c ? a.effect.hue = d : "brightness" == c ? a.effect.brightness = d : "transparency" == c && (a.effect.alpha = 1 - d / 100);
+  a.applyEffect();
+  return b.callReturn();
+};
 Blockly.Blocks.set_effect_amount = {init:function() {
   this.setColour("#EC4466");
   this.appendDummyInput().appendField(Lang.Blocks.LOOKS_set_effect_volume_1);
@@ -2495,7 +2529,8 @@ Blockly.Blocks.set_effect_amount = {init:function() {
 }};
 Entry.block.set_effect_amount = function(a, b) {
   var c = b.getField("EFFECT", b), d = b.getNumberValue("VALUE", b);
-  "color" == c ? a.applyColorMatrix(d) : "brightness" == c ? (a.effect.brightness = d + a.effect.brightness, a.applyFilter()) : "transparency" == c && (a.effect.alpha -= d / 100, a.applyFilter());
+  "color" == c ? a.effect.hue = d + a.effect.hue : "brightness" == c ? a.effect.brightness = d + a.effect.brightness : "transparency" == c && (a.effect.alpha -= d / 100);
+  a.applyFilter();
   return b.callReturn();
 };
 Blockly.Blocks.set_entity_effect = {init:function() {
@@ -5401,16 +5436,18 @@ Entry.EntityObject.prototype.applyFilter = function() {
   a.filters = c;
   a.cache(0, 0, this.getWidth(), this.getHeight());
 };
-Entry.EntityObject.prototype.applyColorMatrix = function(a) {
-  var b = this.object;
-  a *= 3.6;
-  var c = Math.acos(-1), c = a * c / 180;
-  a = Math.cos(c);
-  c = Math.sin(c);
-  a = [a, c, 0, 0, 0, -1 * c, a, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1];
-  a = (new createjs.ColorMatrix).concat(a);
-  b.filters = [new createjs.ColorMatrixFilter(a)];
-  b.cache(0, 0, this.getWidth(), this.getHeight());
+Entry.EntityObject.prototype.applyEffect = function() {
+  var a = this.object, b = this.effect, c = [], d = Entry.adjustValueWithMaxMin;
+  b.brightness = b.brightness;
+  var e = new createjs.ColorMatrix;
+  e.adjustColor(d(b.brightness, -100, 100), 0, 0, 0);
+  e = new createjs.ColorMatrixFilter(e);
+  c.push(e);
+  var e = 3.6 * b.hue, f = Math.acos(-1), f = e * f / 180, e = Math.cos(f), f = Math.sin(f), e = [e, f, 0, 0, 0, -1 * f, e, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1], e = (new createjs.ColorMatrix).concat(e), e = new createjs.ColorMatrixFilter(e);
+  c.push(e);
+  a.alpha = b.alpha = d(b.alpha, 0, 1);
+  a.filters = c;
+  a.cache(0, 0, this.getWidth(), this.getHeight());
 };
 Entry.EntityObject.prototype.resetFilter = function() {
   "sprite" == this.parent.objectType && (this.object.filters = [], this.setInitialEffectValue(), this.object.alpha = this.effect.alpha, this.object.cache(0, 0, this.getWidth(), this.getHeight()));

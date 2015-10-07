@@ -492,6 +492,85 @@ Entry.block.change_to_some_shape = function (sprite, script) {
 };
 
 // (▼) 효과를 () 만큼 주기
+Blockly.Blocks.add_effect_amount = {
+    init: function() {
+        this.setColour("#EC4466");
+        this.appendDummyInput()
+            .appendField(Lang.Blocks.LOOKS_set_effect_volume_1);
+        this.appendDummyInput()
+            .appendField(new Blockly.FieldDropdown([
+                [Lang.Blocks.color, "color"],
+                [Lang.Blocks.brightness, "brightness"],
+                [Lang.Blocks.transparency, "transparency"]
+            ]), "EFFECT");
+        this.appendDummyInput()
+            .appendField(Lang.Blocks.LOOKS_set_effect_volume_2);
+        this.appendValueInput("VALUE")
+            .setCheck(["Number", "String"]);
+        this.appendDummyInput()
+            .appendField(Lang.Blocks.LOOKS_set_effect_volume_3)
+            .appendField(new Blockly.FieldIcon('/img/assets/block_icon/looks_03.png', '*'));
+        this.setInputsInline(true);
+        this.setPreviousStatement(true);
+        this.setNextStatement(true);
+    }
+};
+
+Entry.block.add_effect_amount = function (sprite, script) {
+    var effect = script.getField("EFFECT", script);
+    var effectValue = script.getNumberValue("VALUE", script);
+    if (effect == "color") {
+        sprite.effect.hue = effectValue + sprite.effect.hue;
+    } else if (effect == "brightness") {
+        sprite.effect.brightness = effectValue + sprite.effect.brightness;
+    } else if (effect == "transparency") {
+        sprite.effect.alpha = (sprite.effect.alpha - effectValue / 100) ;
+    }
+    sprite.applyEffect();
+    return script.callReturn();
+};
+
+// (▼) 효과를 () 로 정하기
+Blockly.Blocks.change_effect_amount = {
+    init: function() {
+        this.setColour("#EC4466");
+        this.appendDummyInput()
+            .appendField(Lang.Blocks.LOOKS_set_effect_1);
+        this.appendDummyInput()
+            .appendField(new Blockly.FieldDropdown([
+                [Lang.Blocks.color, "color"],
+                [Lang.Blocks.brightness, "brightness"],
+                [Lang.Blocks.transparency, "transparency"]
+            ]), "EFFECT");
+        this.appendDummyInput()
+            .appendField(Lang.Blocks.LOOKS_set_effect_2);
+        this.appendValueInput("VALUE")
+            .setCheck(["Number", "String"]);
+        this.appendDummyInput()
+            .appendField(Lang.Blocks.LOOKS_set_effect_3)
+            .appendField(new Blockly.FieldIcon('/img/assets/block_icon/looks_03.png', '*'));
+        this.setInputsInline(true);
+        this.setPreviousStatement(true);
+        this.setNextStatement(true);
+    }
+};
+
+Entry.block.change_effect_amount = function (sprite, script) {
+    var effect = script.getField("EFFECT", script);
+    var effectValue = script.getNumberValue("VALUE", script);
+    if (effect == "color") {
+        sprite.effect.hue = effectValue;
+    } else if (effect == "brightness") {
+        sprite.effect.brightness = effectValue;
+    } else if (effect == "transparency") {
+        sprite.effect.alpha = 1 - (effectValue / 100);
+    }
+    sprite.applyEffect();
+    return script.callReturn();
+};
+
+
+// (▼) 효과를 () 만큼 주기
 Blockly.Blocks.set_effect_amount = {
     init: function() {
         this.setColour("#EC4466");
@@ -520,16 +599,13 @@ Entry.block.set_effect_amount = function (sprite, script) {
     var effect = script.getField("EFFECT", script);
     var effectValue = script.getNumberValue("VALUE", script);
     if (effect == "color") {
-        sprite.applyColorMatrix(effectValue);
-        //sprite.effect.hue = effectValue + sprite.effect.hue;
+        sprite.effect.hue = effectValue + sprite.effect.hue;
     } else if (effect == "brightness") {
         sprite.effect.brightness = effectValue + sprite.effect.brightness;
-        sprite.applyFilter();
     } else if (effect == "transparency") {
         sprite.effect.alpha = (sprite.effect.alpha - effectValue / 100) ;
-        sprite.applyFilter();
     }
-    //sprite.applyFilter();
+    sprite.applyFilter();
     return script.callReturn();
 };
 
