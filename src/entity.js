@@ -820,29 +820,52 @@ Entry.EntityObject.prototype.setImage = function(pictureModel) {
 Entry.EntityObject.prototype.applyFilter = function() {
     var effects = this.effect;
     var object = this.object;
-    (function (e, obj){
+
+    (function(e, obj) {
         var f = [];
         var adjust = Entry.adjustValueWithMaxMin;
-
-        e.hue = e.hue.mod(360);
-        var cmHue = new createjs.ColorMatrix();
-        cmHue.adjustColor(0, 0, 0, e.hue);
-        var colorFilter = new createjs.ColorMatrixFilter(cmHue);
-        f.push(colorFilter);
 
         e.brightness = e.brightness;
         var cmBrightness = new createjs.ColorMatrix();
         cmBrightness.adjustColor(adjust(e.brightness, -100, 100), 0, 0, 0);
-        var colorFilter = new createjs.ColorMatrixFilter(cmBrightness);
+        var brightnessFilter = new createjs.ColorMatrixFilter(cmBrightness);
+        f.push(brightnessFilter);
+
+        e.hue = e.hue.mod(360);
+        var cmHue = new createjs.ColorMatrix();
+        cmHue.adjustColor(0, 0, 0, e.hue);
+        var hueFilter = new createjs.ColorMatrixFilter(cmHue);
+        f.push(hueFilter);
+
+        var degrees = e.hsv*3.6;
+        var pi = Math.acos(-1);
+        var r = degrees * pi / 180;
+
+        var cosVal = Math.cos(r);
+        var sinVal = Math.sin(r);
+
+        var matrixValue = [
+            cosVal, sinVal, 0, 0, 0,
+            -1*sinVal, cosVal, 0, 0, 0,
+            0, 0, 1, 0, 0,
+            0, 0, 0, 1, 0,
+            0, 0, 0, 0, 1
+        ];
+
+        var calcMatrix = new createjs.ColorMatrix().concat(matrixValue);
+        var colorFilter = new createjs.ColorMatrixFilter(calcMatrix);
         f.push(colorFilter);
 
         obj.alpha = e.alpha = adjust(e.alpha, 0, 1);
 
         obj.filters = f;
+
     })(effects, object);
 
     object.cache(0,0,this.getWidth(),this.getHeight());
+
 };
+
 
 /**
  * Remove all filter
@@ -936,6 +959,7 @@ Entry.EntityObject.prototype.setInitialEffectValue = function () {
     this.effect = {
         'blur': 0,
         'hue': 0,
+        'hsv': 0,
         'brightness': 0,
         'contrast': 0,
         'saturation': 0,
