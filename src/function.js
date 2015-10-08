@@ -249,21 +249,21 @@ Entry.Func.updateMenu = function() {
                 block = Entry.Func.generateWsBlock(xml,
                     Blockly.Xml.workspaceToDom(Entry.Func.workspace),
                     hash).block;
-                var afterNext = [];
+                var remainBlocks = [];
                 var flag = false;
                 while (b.firstChild) {
                     var child = b.firstChild;
                     var xmlTag = child.tagName;
                     if (flag || xmlTag == 'NEXT') {
                         flag = true;
-                        afterNext.push(child);
+                        remainBlocks.push(child);
                     }
                     b.removeChild(child);
                 }
                 while (block.firstChild)
                     b.appendChild(block.firstChild);
-                while(afterNext.length)
-                    b.appendChild(afterNext.shift());
+                while(remainBlocks.length)
+                    b.appendChild(remainBlocks.shift());
             });
 
             for (var hashKey in otherGenerals) {
@@ -273,21 +273,21 @@ Entry.Func.updateMenu = function() {
                     block = Entry.Func.generateWsBlock(xml,
                         funcContent,
                         hashKey).block;
-                    var afterNext = [];
+                    var remainBlocks = [];
                     var flag = false;
                     while (b.firstChild) {
                         var child = b.firstChild;
                         var xmlTag = child.tagName;
                         if (flag || xmlTag == 'NEXT') {
                             flag = true;
-                            afterNext.push(child);
+                            remainBlocks.push(child);
                         }
                         b.removeChild(child);
                     }
                     while (block.firstChild)
                         b.appendChild(block.firstChild);
-                    while(afterNext.length)
-                        b.appendChild(afterNext.shift());
+                    while(remainBlocks.length)
+                        b.appendChild(remainBlocks.shift());
                 });
             }
 
@@ -524,13 +524,14 @@ Entry.Func.generateWsBlock = function(func, content, id) {
                 description += '문자값' + stringCount;
                 break;
         }
-        if (field.values && field.values.NEXT) field = field.values.NEXT;
+        if (field.values && field.values.NEXT)
+            field = field.values.NEXT;
         else break;
         description += ' ';
     }
     mutationXml += '</mutation>';
-    var blockText = '<xml><block type="function_general">' + mutationXml +
-        fieldXml + '</block></xml>';
+    var blockText = '<xml><block type="function_general">' +
+        mutationXml + fieldXml + '</block></xml>';
     var block = Blockly.Xml.textToDom(blockText).childNodes[0];
     if (!description) description = "함수"
     return {block: block, description: description};
