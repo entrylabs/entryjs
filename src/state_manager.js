@@ -86,6 +86,7 @@ Entry.StateManager.prototype.addCommand =
             Entry.reporter.report(state);
         this.updateView();
     }
+    Entry.dispatchEvent('backupProject');
 };
 
 /**
