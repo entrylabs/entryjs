@@ -10250,9 +10250,9 @@ Entry.Func.generateWsBlock = function(a, b, c) {
     }
     c += " ";
   }
-  a = Blockly.Xml.textToDom('<xml><block type="function_general">' + (d + "</mutation>") + b + "</block></xml>").childNodes[0];
+  a = '<xml><block type="function_general">' + (d + "</mutation>") + b + "</block></xml>";
   c || (c = "\ud568\uc218");
-  return {block:a, description:c};
+  return {block:Blockly.Xml.textToDom(a).childNodes[0], description:c};
 };
 Entry.Variable = function(a) {
   Entry.assert("string" == typeof a.name, "Variable name must be given");

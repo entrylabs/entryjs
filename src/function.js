@@ -532,7 +532,9 @@ Entry.Func.generateWsBlock = function(func, content, id) {
     mutationXml += '</mutation>';
     var blockText = '<xml><block type="function_general">' +
         mutationXml + fieldXml + '</block></xml>';
-    var block = Blockly.Xml.textToDom(blockText).childNodes[0];
     if (!description) description = "함수"
-    return {block: block, description: description};
+    return {
+        block: Blockly.Xml.textToDom(blockText).childNodes[0],
+        description: description
+    };
 };
