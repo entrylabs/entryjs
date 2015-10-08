@@ -9438,7 +9438,7 @@ Entry.StateManager.prototype.addCommand = function(a, b, c, d) {
     } else {
       e = new Entry.State, f = Array.prototype.slice.call(arguments), Entry.State.prototype.constructor.apply(e, f), this.undoStack_.push(e), Entry.reporter && Entry.reporter.report(e), this.updateView();
     }
-    Entry.dispatchEvent("backupProject");
+    Entry.dispatchEvent("saveLocalStorageProject");
   }
 };
 Entry.StateManager.prototype.cancelLastCommand = function() {
