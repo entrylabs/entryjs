@@ -200,10 +200,8 @@ Entry.Func.getMenuXml = function() {
                 Blockly.Xml.workspaceToDom(Entry.Func.workspace),
                 func.id).block;
             blocks.push(block);
-        }
-        else {
+        } else
             blocks.push(func.block);
-        }
     }
     return blocks;
 }
@@ -234,23 +232,65 @@ Entry.Func.updateMenu = function() {
             var hash = target.id;
             var block;
             generals = Entry.nodeListToArray(generals);
-            generals = generals.filter(function(b) {
-                return b.getElementsByTagName("mutation")[0]
-                            .getAttribute('hashid') == hash;
-            })
+            var currentGenerals = [];
+            var otherGenerals = {};
+
             generals.map(function(b) {
-                block = Entry.Func.generateBlock(xml,
+                var functionHash = b.getElementsByTagName("mutation")[0]
+                            .getAttribute('hashid');
+                if (functionHash == hash) currentGenerals.push(b);
+                else {
+                    if (!otherGenerals[functionHash])
+                        otherGenerals[functionHash] = [];
+                    otherGenerals[functionHash].push(b);
+                }
+            });
+            currentGenerals.map(function(b) {
+                block = Entry.Func.generateWsBlock(xml,
                     Blockly.Xml.workspaceToDom(Entry.Func.workspace),
                     hash).block;
+                var remainBlocks = [];
+                var flag = false;
                 while (b.firstChild) {
-                    b.removeChild(b.firstChild);
+                    var child = b.firstChild;
+                    var xmlTag = child.tagName;
+                    if (flag || xmlTag == 'NEXT') {
+                        flag = true;
+                        remainBlocks.push(child);
+                    }
+                    b.removeChild(child);
                 }
-                while (block.firstChild) {
+                while (block.firstChild)
                     b.appendChild(block.firstChild);
-                }
-                //b.removeChild(b.getElementsByTagName("mutation")[0]);
-                //b.appendChild(mutation)
-            })
+                while(remainBlocks.length)
+                    b.appendChild(remainBlocks.shift());
+            });
+
+            for (var hashKey in otherGenerals) {
+                var otherBlocks = otherGenerals[hashKey];
+                var funcContent = Entry.variableContainer.getFunction(hashKey).content;
+                otherBlocks.map(function(b) {
+                    block = Entry.Func.generateWsBlock(xml,
+                        funcContent,
+                        hashKey).block;
+                    var remainBlocks = [];
+                    var flag = false;
+                    while (b.firstChild) {
+                        var child = b.firstChild;
+                        var xmlTag = child.tagName;
+                        if (flag || xmlTag == 'NEXT') {
+                            flag = true;
+                            remainBlocks.push(child);
+                        }
+                        b.removeChild(child);
+                    }
+                    while (block.firstChild)
+                        b.appendChild(block.firstChild);
+                    while(remainBlocks.length)
+                        b.appendChild(remainBlocks.shift());
+                });
+            }
+
             Entry.Func.workspace.clear();
             Blockly.Xml.domToWorkspace(Entry.Func.workspace, xml);
         }
@@ -285,7 +325,7 @@ Entry.Func.generateBlock = function(func, content, id) {
     var booleanCount = 0;
     func.stringHash = {};
     func.booleanHash = {};
-    for (i = 0; true; i++) {
+    while(true) {
         var type = field.type;
         switch (type) {
             case 'function_field_label':
@@ -435,3 +475,66 @@ Entry.Func.doWhenCancel = function() {
     Blockly.unbindEvent_(svg, 'mousedown', null, Blockly.onMouseDown_);
     Blockly.unbindEvent_(svg, 'contextmenu', null, Blockly.onContextMenu_);
 }
+
+Entry.Func.generateWsBlock = function(func, content, id) {
+    var topBlocks = content.childNodes;
+    for (var i in topBlocks) {
+        if (topBlocks[i].getAttribute('type') == 'function_create') {
+            var createBlock = topBlocks[i];
+            break;
+        }
+    }
+    var script = new Entry.Script();
+    script.init(createBlock);
+    var field = script;
+    if (field.values)
+        field = script.values.FIELD;
+    var mutationXml = '<mutation hashid="' + id + '">';
+    var fieldXml = '';
+    var description = '';
+    var stringCount = 0;
+    var booleanCount = 0;
+    func.stringHash = {};
+    func.booleanHash = {};
+    while(true) {
+        switch (field.type) {
+            case 'function_field_label':
+                mutationXml += '<field type="label" content="' +
+                    field.fields.NAME.replace("<", "&lt;").replace(">", "&gt;") + '"></field>';
+                description += field.fields.NAME;
+                break;
+            case 'function_field_boolean':
+                var hash = field.values.PARAM.hashId;
+                mutationXml += '<field type="boolean" hashid="' + hash +
+                               '"></field>';
+                fieldXml += '<value name="' + hash + '"><block type="function_param_boolean">' +
+                    '<mutation hashid="'+ hash +'"></mutation></block></value>';
+                func.booleanHash[hash] = booleanCount;
+                booleanCount++;
+                description += '논리값' + booleanCount;
+                break;
+            case 'function_field_string':
+                var hash = field.values.PARAM.hashId;
+                mutationXml += '<field type="string" hashid="' + hash +
+                               '"></field>';
+                fieldXml += '<value name="' + hash + '"><block type="function_param_string">' +
+                    '<mutation hashid="'+ hash +'"></mutation></block></value>';
+                func.stringHash[hash] = stringCount;
+                stringCount++;
+                description += '문자값' + stringCount;
+                break;
+        }
+        if (field.values && field.values.NEXT)
+            field = field.values.NEXT;
+        else break;
+        description += ' ';
+    }
+    mutationXml += '</mutation>';
+    var blockText = '<xml><block type="function_general">' +
+        mutationXml + fieldXml + '</block></xml>';
+    if (!description) description = "함수"
+    return {
+        block: Blockly.Xml.textToDom(blockText).childNodes[0],
+        description: description
+    };
+};

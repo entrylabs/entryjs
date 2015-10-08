@@ -1477,8 +1477,8 @@ Blockly.Blocks.function_general = {init:function() {
       case "boolean":
         this.appendValueInput(e).setCheck(["Boolean"]);
     }
-    this.hashId = a.getAttribute("hashid");
   }
+  this.hashId = a.getAttribute("hashid");
   this.appendDummyInput().appendField(new Blockly.FieldIcon("/img/assets/block_icon/function_03.png", "*"));
 }, mutationToDom:function() {
   for (var a = document.createElement("mutation"), b = 1;b < this.inputList.length;b++) {
@@ -10090,17 +10090,46 @@ Entry.Func.syncFunc = function() {
 };
 Entry.Func.updateMenu = function() {
   if ("func" == Entry.playground.selectedMenu && (Entry.playground.blockMenu.hide(), Entry.playground.blockMenu.show(Entry.Func.getMenuXml()), !Blockly.WidgetDiv.field_ && Entry.Func.targetFunc)) {
-    var a = Entry.Func.targetFunc, b = Blockly.Xml.workspaceToDom(Entry.Func.workspace), c = b.getElementsByClassName("function_general"), d = a.id, e, c = Entry.nodeListToArray(c), c = c.filter(function(a) {
-      return a.getElementsByTagName("mutation")[0].getAttribute("hashid") == d;
-    });
+    var a = Entry.Func.targetFunc, b = Blockly.Xml.workspaceToDom(Entry.Func.workspace), c = b.getElementsByClassName("function_general"), d = a.id, e, c = Entry.nodeListToArray(c), f = [], h = {};
     c.map(function(a) {
-      for (e = Entry.Func.generateBlock(b, Blockly.Xml.workspaceToDom(Entry.Func.workspace), d).block;a.firstChild;) {
-        a.removeChild(a.firstChild);
+      var b = a.getElementsByTagName("mutation")[0].getAttribute("hashid");
+      b == d ? f.push(a) : (h[b] || (h[b] = []), h[b].push(a));
+    });
+    f.map(function(a) {
+      e = Entry.Func.generateWsBlock(b, Blockly.Xml.workspaceToDom(Entry.Func.workspace), d).block;
+      for (var c = [], f = !1;a.firstChild;) {
+        var g = a.firstChild, h = g.tagName;
+        if (f || "NEXT" == h) {
+          f = !0, c.push(g);
+        }
+        a.removeChild(g);
       }
       for (;e.firstChild;) {
         a.appendChild(e.firstChild);
       }
+      for (;c.length;) {
+        a.appendChild(c.shift());
+      }
     });
+    for (var g in h) {
+      var a = h[g], k = Entry.variableContainer.getFunction(g).content;
+      a.map(function(a) {
+        e = Entry.Func.generateWsBlock(b, k, g).block;
+        for (var c = [], d = !1;a.firstChild;) {
+          var f = a.firstChild, h = f.tagName;
+          if (d || "NEXT" == h) {
+            d = !0, c.push(f);
+          }
+          a.removeChild(f);
+        }
+        for (;e.firstChild;) {
+          a.appendChild(e.firstChild);
+        }
+        for (;c.length;) {
+          a.appendChild(c.shift());
+        }
+      });
+    }
     Entry.Func.workspace.clear();
     Blockly.Xml.domToWorkspace(Entry.Func.workspace, b);
   }
@@ -10119,28 +10148,26 @@ Entry.Func.generateBlock = function(a, b, c) {
   d.init(e);
   e = d;
   e.values && (e = d.values.FIELD);
-  b = '<mutation hashid="' + c + '">';
-  var f = "";
-  c = "";
-  var h = 0, g = 0;
+  d = '<mutation hashid="' + c + '">';
+  c = b = "";
+  var f = 0, h = 0;
   a.stringHash = {};
-  a.booleanHash = {};
-  for (d = 0;;d++) {
+  for (a.booleanHash = {};;) {
     switch(e.type) {
       case "function_field_label":
-        b += '<field type="label" content="' + e.fields.NAME.replace("<", "&lt;").replace(">", "&gt;") + '"></field>';
+        d += '<field type="label" content="' + e.fields.NAME.replace("<", "&lt;").replace(">", "&gt;") + '"></field>';
         c += e.fields.NAME;
         break;
       case "function_field_boolean":
-        var k = e.values.PARAM.hashId;
-        b += '<field type="boolean" hashid="' + k + '"></field>';
-        f += '<value name="' + k + '"><block type="True"></block></value>';
-        a.booleanHash[k] = g;
-        g++;
-        c += "\ub17c\ub9ac\uac12" + g;
+        var g = e.values.PARAM.hashId;
+        d += '<field type="boolean" hashid="' + g + '"></field>';
+        b += '<value name="' + g + '"><block type="True"></block></value>';
+        a.booleanHash[g] = h;
+        h++;
+        c += "\ub17c\ub9ac\uac12" + h;
         break;
       case "function_field_string":
-        k = e.values.PARAM.hashId, b += '<field type="string" hashid="' + k + '"></field>', f += '<value name="' + k + '"><block type="text"><field name="NAME">10</field></block></value>', a.stringHash[k] = h, h++, c += "\ubb38\uc790\uac12" + h;
+        g = e.values.PARAM.hashId, d += '<field type="string" hashid="' + g + '"></field>', b += '<value name="' + g + '"><block type="text"><field name="NAME">10</field></block></value>', a.stringHash[g] = f, f++, c += "\ubb38\uc790\uac12" + f;
     }
     if (e.values && e.values.NEXT) {
       e = e.values.NEXT;
@@ -10149,7 +10176,7 @@ Entry.Func.generateBlock = function(a, b, c) {
     }
     c += " ";
   }
-  a = Blockly.Xml.textToDom('<xml><block type="function_general">' + (b + "</mutation>") + f + "</block></xml>").childNodes[0];
+  a = Blockly.Xml.textToDom('<xml><block type="function_general">' + (d + "</mutation>") + b + "</block></xml>").childNodes[0];
   c || (c = "\ud568\uc218");
   return {block:a, description:c};
 };
@@ -10221,6 +10248,50 @@ Entry.Func.doWhenCancel = function() {
   Blockly.unbindEvent_(window, "resize", this, this.position_);
   Blockly.unbindEvent_(a, "mousedown", null, Blockly.onMouseDown_);
   Blockly.unbindEvent_(a, "contextmenu", null, Blockly.onContextMenu_);
+};
+Entry.Func.generateWsBlock = function(a, b, c) {
+  b = b.childNodes;
+  for (var d in b) {
+    if ("function_create" == b[d].getAttribute("type")) {
+      var e = b[d];
+      break;
+    }
+  }
+  d = new Entry.Script;
+  d.init(e);
+  e = d;
+  e.values && (e = d.values.FIELD);
+  d = '<mutation hashid="' + c + '">';
+  c = b = "";
+  var f = 0, h = 0;
+  a.stringHash = {};
+  for (a.booleanHash = {};;) {
+    switch(e.type) {
+      case "function_field_label":
+        d += '<field type="label" content="' + e.fields.NAME.replace("<", "&lt;").replace(">", "&gt;") + '"></field>';
+        c += e.fields.NAME;
+        break;
+      case "function_field_boolean":
+        var g = e.values.PARAM.hashId;
+        d += '<field type="boolean" hashid="' + g + '"></field>';
+        b += '<value name="' + g + '"><block type="function_param_boolean"><mutation hashid="' + g + '"></mutation></block></value>';
+        a.booleanHash[g] = h;
+        h++;
+        c += "\ub17c\ub9ac\uac12" + h;
+        break;
+      case "function_field_string":
+        g = e.values.PARAM.hashId, d += '<field type="string" hashid="' + g + '"></field>', b += '<value name="' + g + '"><block type="function_param_string"><mutation hashid="' + g + '"></mutation></block></value>', a.stringHash[g] = f, f++, c += "\ubb38\uc790\uac12" + f;
+    }
+    if (e.values && e.values.NEXT) {
+      e = e.values.NEXT;
+    } else {
+      break;
+    }
+    c += " ";
+  }
+  a = '<xml><block type="function_general">' + (d + "</mutation>") + b + "</block></xml>";
+  c || (c = "\ud568\uc218");
+  return {block:Blockly.Xml.textToDom(a).childNodes[0], description:c};
 };
 Entry.Variable = function(a) {
   Entry.assert("string" == typeof a.name, "Variable name must be given");

@@ -135,22 +135,14 @@ Blockly.Blocks.function_general = {
             case 'string':
                 this.appendValueInput(hash)
                     .setCheck(['String', 'Number']);
-                /*
-                var connection = this.inputList[i].connection;
-                var xml = Blockly.Xml.textToDom('<xml><block type="text">' +
-                                                '<field name="NAME"></field>' +
-                                                '</block></xml>');
-                var newblock = Blockly.Xml.domToBlock(this.workspace, xml.childNodes[0]);
-                connection.connect(newblock.outputConnection);
-                */
                 break;
             case 'boolean':
                 this.appendValueInput(hash)
                     .setCheck(['Boolean']);
             default:
         }
-    this.hashId = xmlElement.getAttribute('hashid');
     }
+    this.hashId = xmlElement.getAttribute('hashid');
     this.appendDummyInput()
         .appendField(new Blockly.FieldIcon('/img/assets/block_icon/function_03.png', '*'));
   },
@@ -206,18 +198,4 @@ Entry.block.function_general = function (sprite, script) {
             return script;
         }
     }
-    /*
-    if (!script.functionTag) {
-        script.functionTag = Entry.Func.registerFunction(script.hashId, sprite);
-        return script;
-    } else {
-        var excutedFunc = Entry.Func.executeFunction(script.functionTag);
-        if (!excutedFunc) {
-            delete script.functionTag;
-            return script.callReturn();
-        } else {
-            return script;
-        }
-    }
-    */
 };
