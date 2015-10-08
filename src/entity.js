@@ -820,33 +820,6 @@ Entry.EntityObject.prototype.setImage = function(pictureModel) {
 Entry.EntityObject.prototype.applyFilter = function() {
     var effects = this.effect;
     var object = this.object;
-    (function (e, obj){
-        var f = [];
-        var adjust = Entry.adjustValueWithMaxMin;
-
-        e.hue = e.hue.mod(360);
-        var cmHue = new createjs.ColorMatrix();
-        cmHue.adjustColor(0, 0, 0, e.hue);
-        var colorFilter = new createjs.ColorMatrixFilter(cmHue);
-        f.push(colorFilter);
-
-        e.brightness = e.brightness;
-        var cmBrightness = new createjs.ColorMatrix();
-        cmBrightness.adjustColor(adjust(e.brightness, -100, 100), 0, 0, 0);
-        var colorFilter = new createjs.ColorMatrixFilter(cmBrightness);
-        f.push(colorFilter);
-
-        obj.alpha = e.alpha = adjust(e.alpha, 0, 1);
-
-        obj.filters = f;
-    })(effects, object);
-
-    object.cache(0,0,this.getWidth(),this.getHeight());
-};
-
-Entry.EntityObject.prototype.applyEffect = function() {
-    var effects = this.effect;
-    var object = this.object;
 
     (function(e, obj) {
         var f = [];

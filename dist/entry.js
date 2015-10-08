@@ -2496,7 +2496,7 @@ Blockly.Blocks.add_effect_amount = {init:function() {
 Entry.block.add_effect_amount = function(a, b) {
   var c = b.getField("EFFECT", b), d = b.getNumberValue("VALUE", b);
   "color" == c ? a.effect.hue = d + a.effect.hue : "brightness" == c ? a.effect.brightness = d + a.effect.brightness : "transparency" == c && (a.effect.alpha -= d / 100);
-  a.applyEffect();
+  a.applyFilter();
   return b.callReturn();
 };
 Blockly.Blocks.change_effect_amount = {init:function() {
@@ -2513,7 +2513,7 @@ Blockly.Blocks.change_effect_amount = {init:function() {
 Entry.block.change_effect_amount = function(a, b) {
   var c = b.getField("EFFECT", b), d = b.getNumberValue("VALUE", b);
   "color" == c ? a.effect.hue = d : "brightness" == c ? a.effect.brightness = d : "transparency" == c && (a.effect.alpha = 1 - d / 100);
-  a.applyEffect();
+  a.applyFilter();
   return b.callReturn();
 };
 Blockly.Blocks.set_effect_amount = {init:function() {
@@ -5421,22 +5421,6 @@ Entry.EntityObject.prototype.setImage = function(a) {
   Entry.dispatchEvent("updateObject");
 };
 Entry.EntityObject.prototype.applyFilter = function() {
-  var a = this.object, b = this.effect, c = [], d = Entry.adjustValueWithMaxMin;
-  b.hue = b.hue.mod(360);
-  var e = new createjs.ColorMatrix;
-  e.adjustColor(0, 0, 0, b.hue);
-  e = new createjs.ColorMatrixFilter(e);
-  c.push(e);
-  b.brightness = b.brightness;
-  e = new createjs.ColorMatrix;
-  e.adjustColor(d(b.brightness, -100, 100), 0, 0, 0);
-  e = new createjs.ColorMatrixFilter(e);
-  c.push(e);
-  a.alpha = b.alpha = d(b.alpha, 0, 1);
-  a.filters = c;
-  a.cache(0, 0, this.getWidth(), this.getHeight());
-};
-Entry.EntityObject.prototype.applyEffect = function() {
   var a = this.object, b = this.effect, c = [], d = Entry.adjustValueWithMaxMin;
   b.brightness = b.brightness;
   var e = new createjs.ColorMatrix;

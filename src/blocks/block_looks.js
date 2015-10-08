@@ -526,7 +526,7 @@ Entry.block.add_effect_amount = function (sprite, script) {
     } else if (effect == "transparency") {
         sprite.effect.alpha = (sprite.effect.alpha - effectValue / 100) ;
     }
-    sprite.applyEffect();
+    sprite.applyFilter();
     return script.callReturn();
 };
 
@@ -565,7 +565,7 @@ Entry.block.change_effect_amount = function (sprite, script) {
     } else if (effect == "transparency") {
         sprite.effect.alpha = 1 - (effectValue / 100);
     }
-    sprite.applyEffect();
+    sprite.applyFilter();
     return script.callReturn();
 };
 
