@@ -2495,7 +2495,7 @@ Blockly.Blocks.add_effect_amount = {init:function() {
 }};
 Entry.block.add_effect_amount = function(a, b) {
   var c = b.getField("EFFECT", b), d = b.getNumberValue("VALUE", b);
-  "color" == c ? a.effect.hue = d + a.effect.hue : "brightness" == c ? a.effect.brightness = d + a.effect.brightness : "transparency" == c && (a.effect.alpha -= d / 100);
+  "color" == c ? a.effect.hsv = d + a.effect.hsv : "brightness" == c ? a.effect.brightness = d + a.effect.brightness : "transparency" == c && (a.effect.alpha -= d / 100);
   a.applyFilter();
   return b.callReturn();
 };
@@ -2512,7 +2512,7 @@ Blockly.Blocks.change_effect_amount = {init:function() {
 }};
 Entry.block.change_effect_amount = function(a, b) {
   var c = b.getField("EFFECT", b), d = b.getNumberValue("VALUE", b);
-  "color" == c ? a.effect.hue = d : "brightness" == c ? a.effect.brightness = d : "transparency" == c && (a.effect.alpha = 1 - d / 100);
+  "color" == c ? a.effect.hsv = d : "brightness" == c ? a.effect.brightness = d : "transparency" == c && (a.effect.alpha = 1 - d / 100);
   a.applyFilter();
   return b.callReturn();
 };
@@ -5427,7 +5427,12 @@ Entry.EntityObject.prototype.applyFilter = function() {
   e.adjustColor(d(b.brightness, -100, 100), 0, 0, 0);
   e = new createjs.ColorMatrixFilter(e);
   c.push(e);
-  var e = 3.6 * b.hue, f = Math.acos(-1), f = e * f / 180, e = Math.cos(f), f = Math.sin(f), e = [e, f, 0, 0, 0, -1 * f, e, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1], e = (new createjs.ColorMatrix).concat(e), e = new createjs.ColorMatrixFilter(e);
+  b.hue = b.hue.mod(360);
+  e = new createjs.ColorMatrix;
+  e.adjustColor(0, 0, 0, b.hue);
+  e = new createjs.ColorMatrixFilter(e);
+  c.push(e);
+  var e = 3.6 * b.hsv, f = Math.acos(-1), f = e * f / 180, e = Math.cos(f), f = Math.sin(f), e = [e, f, 0, 0, 0, -1 * f, e, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1], e = (new createjs.ColorMatrix).concat(e), e = new createjs.ColorMatrixFilter(e);
   c.push(e);
   a.alpha = b.alpha = d(b.alpha, 0, 1);
   a.filters = c;
@@ -5473,7 +5478,7 @@ Entry.EntityObject.prototype.toJSON = function() {
   return a;
 };
 Entry.EntityObject.prototype.setInitialEffectValue = function() {
-  this.effect = {blur:0, hue:0, brightness:0, contrast:0, saturation:0, alpha:1};
+  this.effect = {blur:0, hue:0, hsv:0, brightness:0, contrast:0, saturation:0, alpha:1};
 };
 Entry.EntityObject.prototype.removeBrush = function() {
   Entry.stage.selectedObjectContainer.removeChild(this.shape);

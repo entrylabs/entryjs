@@ -520,7 +520,7 @@ Entry.block.add_effect_amount = function (sprite, script) {
     var effect = script.getField("EFFECT", script);
     var effectValue = script.getNumberValue("VALUE", script);
     if (effect == "color") {
-        sprite.effect.hue = effectValue + sprite.effect.hue;
+        sprite.effect.hsv = effectValue + sprite.effect.hsv;
     } else if (effect == "brightness") {
         sprite.effect.brightness = effectValue + sprite.effect.brightness;
     } else if (effect == "transparency") {
@@ -559,7 +559,7 @@ Entry.block.change_effect_amount = function (sprite, script) {
     var effect = script.getField("EFFECT", script);
     var effectValue = script.getNumberValue("VALUE", script);
     if (effect == "color") {
-        sprite.effect.hue = effectValue;
+        sprite.effect.hsv = effectValue;
     } else if (effect == "brightness") {
         sprite.effect.brightness = effectValue;
     } else if (effect == "transparency") {

@@ -831,7 +831,13 @@ Entry.EntityObject.prototype.applyFilter = function() {
         var brightnessFilter = new createjs.ColorMatrixFilter(cmBrightness);
         f.push(brightnessFilter);
 
-        var degrees = e.hue*3.6;
+        e.hue = e.hue.mod(360);
+        var cmHue = new createjs.ColorMatrix();
+        cmHue.adjustColor(0, 0, 0, e.hue);
+        var hueFilter = new createjs.ColorMatrixFilter(cmHue);
+        f.push(hueFilter);
+
+        var degrees = e.hsv*3.6;
         var pi = Math.acos(-1);
         var r = degrees * pi / 180;
 
@@ -953,6 +959,7 @@ Entry.EntityObject.prototype.setInitialEffectValue = function () {
     this.effect = {
         'blur': 0,
         'hue': 0,
+        'hsv': 0,
         'brightness': 0,
         'contrast': 0,
         'saturation': 0,
