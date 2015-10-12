@@ -2199,12 +2199,20 @@ Entry.VariableContainer.prototype.removeLocalVariables = function (objectId) {
 }
 
 Entry.VariableContainer.prototype.updateCloudVariables = function() {
-    var that = Entry.variableContainer;
-    var cloudVariables = that.variables_.filter(function(v) { return v.isCloud_ });
-    cloudVariables = cloudVariables.map(function(v) {return v.toJSON()});
+    var projectId = Entry.projectId;
+    if (!Entry.cloudSavable || !projectId)
+        return;
 
-    var cloudLists = that.lists_.filter(function(v) { return v.isCloud_ });
-    cloudLists = cloudLists.map(function(v) {return v.toJSON()});
+    var that = Entry.variableContainer;
+    var cloudVariables = that.variables_.filter(function(v) {
+        return v.isCloud_ });
+    cloudVariables = cloudVariables.map(function(v) {
+        return v.toJSON()});
+
+    var cloudLists = that.lists_.filter(function(v) {
+        return v.isCloud_ });
+    cloudLists = cloudLists.map(function(v) {
+        return v.toJSON()});
 
     $.ajax({
         url: "/api/project/variable/" + Entry.projectId,
