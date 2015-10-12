@@ -3,7 +3,7 @@
  */
 "use strict";
 
-goog.provide("Entry.Playground");
+goog.provide("Entry.Board");
 
 goog.require("Entry.Dom");
 goog.require("Entry.Model");
@@ -12,7 +12,7 @@ goog.require("Entry.Model");
  *
  * @param {object} dom which to inject playground
  */
-Entry.Playground = function(dom) {
+Entry.Board = function(dom) {
     if (typeof dom === "string")
         dom = $('#' + dom);
     else
@@ -37,9 +37,9 @@ Entry.Playground = function(dom) {
     Entry.Model(this, false);
 };
 
-Entry.Playground.dragBlock = null;
+Entry.Baard.dragBlock = null;
 
-Entry.Playground.MAGNET_RANGE = 20;
+Entry.Board.MAGNET_RANGE = 20;
 
 (function(p) {
     p.schema = {
@@ -53,7 +53,7 @@ Entry.Playground.MAGNET_RANGE = 20;
 
         this.initMagnetMap();
 
-        code.bindPlayground(this);
+        code.bindBoard(this);
 
         this.code = code;
     };
@@ -84,7 +84,7 @@ Entry.Playground.MAGNET_RANGE = 20;
                 Math.pow(di.startY - di.offsetY, 2)
             );
 
-            if (distance < Entry.Playground.MAGNET_RANGE) {
+            if (distance < Entry.Board.MAGNET_RANGE) {
                 block.thread.align();
                 return;
             }
@@ -98,4 +98,4 @@ Entry.Playground.MAGNET_RANGE = 20;
         //this.updateMagnetMap(block);
     };
 
-})(Entry.Playground.prototype);
+})(Entry.Board.prototype);

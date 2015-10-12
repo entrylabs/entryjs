@@ -16,7 +16,7 @@ Entry.Code = function(code) {
 
     this._threads = new Entry.Collection();
 
-    this.playground = null;
+    this.board = null;
 
     this.set(code);
 };
@@ -40,11 +40,11 @@ Entry.Code = function(code) {
 
     // method for playground
 
-    p.bindPlayground = function(playground) {
-        this.playground = playground;
+    p.bindBoard = function(board) {
+        this.board = board;
 
         this._threads.map(function(t) {
-            t.renderStart(playground);
+            t.renderStart(board);
         });
     };
 
