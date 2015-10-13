@@ -6,6 +6,7 @@
 goog.provide("Entry.Thread");
 
 goog.require("Entry.Collection");
+goog.require("Entry.ThreadModel");
 
 /*
  *
@@ -13,6 +14,7 @@ goog.require("Entry.Collection");
 Entry.Thread = function(thread, code) {
     this.code = code;
 
+    this.model = new Entry.ThreadModel();
     this._blocks = new Entry.Collection();
 
     this.set(thread);
@@ -55,7 +57,7 @@ Entry.Thread = function(thread, code) {
         this.svgGroup = playground.snap.group();
         this.svgGroup.transform("t5,5");
 
-        var firstBlockBox = this._blocks.at(0).box;
+        var firstBlockBox = this._blocks.at(0).model;
         this._blocks.map(function(b) {
             b.renderStart(playground, firstBlockBox);
         });
@@ -66,21 +68,33 @@ Entry.Thread = function(thread, code) {
 
     p.align = function(animate) {
         animate = animate === undefined ? true : animate;
-        var firstBlockBox = this._blocks.at(0).box;
+        var firstBlockBox = this._blocks.at(0).model;
         var cursor = {
             x: firstBlockBox.x,
-            y: firstBlockBox.y
+            y: firstBlockBox.y,
+            minWidth: firstBlockBox.width,
+            width: 0
         };
         this._blocks.map(function(b) {
             if (b.dragInstance) {
-                cursor.x = b.box.x;
-                cursor.y = b.box.y;
+                cursor.x = b.model.x;
+                cursor.y = b.model.y;
             }
             b.moveTo(cursor.x, cursor.y, animate);
 
             var magnet = b.magnets.next;
             cursor.x += magnet.x;
             cursor.y += magnet.y;
+
+            cursor.width = Math.max(cursor.width, b.model.width);
+            cursor.minWidth = Math.min(cursor.minWidth, b.model.width);
+        });
+        this.model.set({
+            x: firstBlockBox.x,
+            y: firstBlockBox.y,
+            minWidth: cursor.minWidth,
+            width: cursor.width,
+            height: cursor.y - firstBlockBox.y
         });
     };
 
@@ -106,6 +120,10 @@ Entry.Thread = function(thread, code) {
             }
         }
 
+    };
+
+    p.dominate = function() {
+         this._playground.dominate(this);
     };
 
 })(Entry.Thread.prototype);

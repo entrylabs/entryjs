@@ -14,7 +14,7 @@ Entry.Code = function(code) {
     if (!(code instanceof Array))
         return console.error("code must be array");
 
-    this._threads = new Entry.Collection();
+    this.threads = new Entry.Collection();
 
     this.board = null;
 
@@ -29,12 +29,12 @@ Entry.Code = function(code) {
             return new Entry.Thread(t, that);
         });
 
-        this._threads.set(threads);
+        this.threads.set(threads);
     };
 
     p.createThread = function(threadModel) {
         var thread = new Entry.Thread(threadModel);
-        this._threads.push(thread);
+        this.threads.push(thread);
         return thread;
     };
 
@@ -43,7 +43,7 @@ Entry.Code = function(code) {
     p.bindBoard = function(board) {
         this.board = board;
 
-        this._threads.map(function(t) {
+        this.threads.map(function(t) {
             t.renderStart(board);
         });
     };

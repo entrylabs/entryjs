@@ -14,5 +14,11 @@ Entry.STATIC = {
     MESSAGE: 7,
     BLOCK_MODEL: 8,
     BOX_MODEL: 9,
-    DRAG_INSTANCE: 10
+    THREAD_MODEL: 10,
+    DRAG_INSTANCE: 11,
+
+    /* block state */
+    BLOCK_STATIC: 0,
+    BLOCK_MOVE: 1,
+    BLOCK_FOLLOW: 2
 };

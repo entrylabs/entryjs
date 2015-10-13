@@ -11,5 +11,12 @@ Entry.BlockModel = function() {
 
 Entry.BlockModel.prototype.schema = {
     id: 0,
-    type: Entry.STATIC.BLOCK_MODEL
+    type: Entry.STATIC.BLOCK_MODEL,
+    x: 0,
+    y: 0,
+    width: 0,
+    height: 0,
+    state: Entry.STATIC.BLOCK_STATIC,
+    magneting: false,
+    highlight: false
 };

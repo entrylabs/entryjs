@@ -14,3 +14,11 @@ Entry.Utils.intersectArray = function (x, y){
     }
     return ret;
 };
+
+Entry.Utils.isPointInMatrix = function(matrix, point, offset) {
+    offset = offset === undefined ? 0 : offset;
+    return (matrix.x - offset <= point.x) &&
+        (matrix.x + matrix.width + offset >= point.x) &&
+        (matrix.y - offset <= point.y) &&
+        (matrix.y + matrix.height + offset >= point.y);
+};

@@ -7,6 +7,7 @@ goog.provide("Entry.Board");
 
 goog.require("Entry.Dom");
 goog.require("Entry.Model");
+goog.require("Entry.Utils");
 
 /*
  *
@@ -30,14 +31,12 @@ Entry.Board = function(dom) {
         { parent: dom }
     );
 
-    this._magnetMap = null;
-
     this.snap = Snap('#play');
 
     Entry.Model(this, false);
 };
 
-Entry.Baard.dragBlock = null;
+Entry.Board.dragBlock = null;
 
 Entry.Board.MAGNET_RANGE = 20;
 
@@ -51,25 +50,30 @@ Entry.Board.MAGNET_RANGE = 20;
         if (!(code instanceof Entry.Code))
             return console.error("You must select code instance");
 
-        this.initMagnetMap();
-
         code.bindBoard(this);
 
         this.code = code;
     };
 
-    p.initMagnetMap = function() {
-        this._magnetMap = {
-            previous: [],
-            next: []
-        };
-    };
-
-    p.updateCloseMagnet = function(block) {
-    };
-
-    p.getMagnetMap = function() {
-        return this._magnetMap;
+    p.updateCloseMagnet = function(targetBlock) {
+        var threads = this.code.threads;
+        for (var i = 0; i < threads.length; i++) {
+            var thread = threads.at(i);
+            if (Entry.Utils.isPointInMatrix(
+                thread.model, targetBlock.model, Entry.Board.MAGNET_RANGE
+            )) {
+                var blocks = thread._blocks;
+                for (var j = 0; j < blocks.length; j++) {
+                    var block = blocks.at(j);
+                    if (Entry.Utils.isPointInMatrix(
+                        block.model, targetBlock.model, Entry.Board.MAGNET_RANGE
+                    )) {
+                        console.log(block);
+                        return;
+                    }
+                }
+            }
+        }
     };
 
     p.terminateDrag = function(block) {
@@ -96,6 +100,10 @@ Entry.Board.MAGNET_RANGE = 20;
             block.thread.align();
         }
         //this.updateMagnetMap(block);
+    };
+
+    p.dominate = function(thread) {
+        this.snap.append(thread.svgGroup);
     };
 
 })(Entry.Board.prototype);

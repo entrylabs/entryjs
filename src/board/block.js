@@ -9,24 +9,23 @@ goog.require("Entry.BlockModel");
 goog.require("Entry.BoxModel");
 goog.require("Entry.skeleton");
 
-
 /*
  *
  */
 Entry.Block = function(block, thread) {
     this.setThread(thread);
-    this._playground = null;
+    this._board = null;
 
     // block information
     this._schema = Entry.block[block.blockType];
     this._skeleton = Entry.skeleton[this._schema.skeleton];
 
     // Block model
-    this._model = new Entry.BlockModel(block);
-    this.box = new Entry.BoxModel();
+    this.model = new Entry.BlockModel(block);
     if (block.x !== undefined)
-        this.box.set({ x: block.x, y: block.y });
+        this.model.set({ x: block.x, y: block.y });
     this.contentBox = new Entry.BoxModel();
+    this.contentBox.observe(this, "measureSize", ['width', 'height']);
     this.contentBox.observe(this, "render", ['width', 'height']);
 
     // content objects
@@ -45,10 +44,10 @@ Entry.Block = function(block, thread) {
         this.thread = thread;
     };
 
-    // method for playground
+    // method for board
 
-    p.renderStart = function(playground, startPos) {
-        this._playground = playground;
+    p.renderStart = function(board, startPos) {
+        this._board = board;
         this.svgGroup = this.thread.svgGroup.group();
         this.svgGroup.attr({
             class: "block"
@@ -74,6 +73,7 @@ Entry.Block = function(block, thread) {
      *
      * @param {} animate
      */
+    // not observer style
     p.moveTo = function(x, y, animate) {
         animate = animate === undefined ? true : animate;
         var transform = "t" + x + " " + y;
@@ -86,13 +86,13 @@ Entry.Block = function(block, thread) {
                 transform: transform
             });
         }
-        this.box.set({ x: x, y: y });
+        this.model.set({ x: x, y: y });
     };
 
     p.moveBy = function(x, y, animate) {
         return this.moveTo(
-            this.box.x + x,
-            this.box.y + y,
+            this.model.x + x,
+            this.model.y + y,
             animate
         );
     };
@@ -126,6 +126,13 @@ Entry.Block = function(block, thread) {
         }
 
         this.contentBox.width = cursor.x;
+    };
+
+    p.measureSize = function() {
+        this.model.set({
+            width: this.contentBox.width + 30,
+            height: 30
+        });
     };
 
     p.render = function() {
@@ -169,7 +176,7 @@ Entry.Block = function(block, thread) {
             case 0: // left button
                 $(document).bind('mousemove.block', onMouseMove);
                 $(document).bind('mouseup.block', onMouseUp);
-                this._playground.dragBlock = this;
+                this._board.dragBlock = this;
                 this.dragInstance = new Entry.DragInstance({
                     startX: e.clientX,
                     startY: e.clientY,
@@ -177,12 +184,12 @@ Entry.Block = function(block, thread) {
                     offsetY: e.clientY,
                     mode: true
                 });
+                this.thread.dominate();
                 break;
             case 1: // middle button
                 break;
             case 2: // left button
                 break;
-
         }
 
         var block = this;
@@ -198,18 +205,19 @@ Entry.Block = function(block, thread) {
                  offsetY: e.clientY
             });
             block.thread.align(false);
+            block._board.updateCloseMagnet(block);
         }
 
         function onMouseUp(e) {
             block.terminateDrag();
 
             $(document).unbind('.block');
-            block._playground.dragBlock = null;
+            block._board.dragBlock = null;
         }
     };
 
     p.terminateDrag = function() {
-        this._playground.terminateDrag(this);
+        this._board.terminateDrag(this);
     };
 
 })(Entry.Block.prototype);
