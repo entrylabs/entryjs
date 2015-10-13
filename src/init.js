@@ -29,6 +29,7 @@ Entry.init = function(container, options) {
     this.loadInterfaceState();
     this.overridePrototype();
     this.maxCloneLimit = 302;
+    this.cloudSavable = true;
     this.startTime = new Date().getTime();
 
     document.onkeydown=function(e){
