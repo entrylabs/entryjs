@@ -9178,7 +9178,7 @@ Entry.Stage.prototype.sortZorder = function() {
   }
 };
 Entry.Stage.prototype.initCoordinator = function() {
-  var a = new createjs.Container, b = new createjs.Bitmap("/img/assets/workspace_coordinate.png");
+  var a = new createjs.Container, b = new createjs.Bitmap("/img/assets/workspace_coordinate_v1.png");
   b.scaleX = .5;
   b.scaleY = .5;
   b.x = -240;
