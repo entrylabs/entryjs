@@ -60,8 +60,6 @@ Entry.Board.MAGNET_RANGE = 20;
         var targetThread = targetBlock.thread
         for (var i = 0; i < threads.length; i++) {
             var thread = threads.at(i);
-            if (thread === targetThread)
-                continue;
             if (Entry.Utils.isPointInMatrix(
                 thread, targetBlock, Entry.Board.MAGNET_RANGE
             )) {

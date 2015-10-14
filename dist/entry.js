@@ -3352,7 +3352,7 @@ Entry.Board.MAGNET_RANGE = 20;
   b.updateCloseMagnet = function(a) {
     for (var b = this.code.threads, d = a.thread, e = 0;e < b.length;e++) {
       var f = b.at(e);
-      if (f !== d && Entry.Utils.isPointInMatrix(f, a, Entry.Board.MAGNET_RANGE)) {
+      if (Entry.Utils.isPointInMatrix(f, a, Entry.Board.MAGNET_RANGE)) {
         for (var h = f._blocks, g = 0;g < h.length;g++) {
           if (f = h.at(g), Entry.Utils.isPointInMatrix({x:f.x, y:f.y + f.height, width:f.width, height:0}, a, Entry.Board.MAGNET_RANGE)) {
             if (this.closeBlock !== f) {
@@ -3431,19 +3431,20 @@ Entry.Thread = function(b, a) {
   };
   b.align = function(a) {
     a = void 0 === a ? !0 : a;
-    var b = this._blocks.at(0), d = b.x, e = b.y, f = b.width, h = 0;
-    this._blocks.map(function(b) {
-      var c = b.magnets.previous;
-      d -= c.x;
-      e -= c.y;
-      b.dragInstance && (d = b.x, e = b.y);
-      b.moveTo(d, e, a);
-      c = b.magnets.next;
-      d += c.x;
-      e += c.y;
-      h = Math.max(h, b.width);
-      f = Math.min(f, b.width);
-    });
+    for (var b = this._blocks.at(0), d = b.x, e = b.y, f = b.width, h = 0, g = 0;g < this._blocks.length;g++) {
+      var k = this._blocks.at(g);
+      if (k.dragInstance && a) {
+        break;
+      }
+      var l = k.magnets.previous, d = d - l.x, e = e - l.y;
+      k.dragInstance && (d = k.x, e = k.y);
+      k.moveTo(d, e, a);
+      l = k.magnets.next;
+      d += l.x;
+      e += l.y;
+      h = Math.max(h, k.width);
+      f = Math.min(f, k.width);
+    }
     this.set({x:b.x, y:b.y, minWidth:f, width:h, height:e - b.y});
   };
   b.updateMagnetMap = function(a) {
@@ -3464,6 +3465,7 @@ Entry.Thread = function(b, a) {
     this.board.dominate(this);
   };
   b.destroy = function() {
+    this.svgGroup && this.svgGroup.remove();
     this.code.remove(this);
   };
 })(Entry.Thread.prototype);

@@ -86,8 +86,11 @@ Entry.Thread = function(thread, code) {
             minWidth: firstBlockBox.width,
             width: 0
         };
-        this._blocks.map(function(b) {
-            var prevMagnet = b.magnets.previous
+        for (var i = 0; i < this._blocks.length; i++) {
+            var b = this._blocks.at(i);
+            if (b.dragInstance && animate)
+                break;
+            var prevMagnet = b.magnets.previous;
             cursor.x -= prevMagnet.x;
             cursor.y -= prevMagnet.y;
             if (b.dragInstance) {
@@ -102,7 +105,7 @@ Entry.Thread = function(thread, code) {
 
             cursor.width = Math.max(cursor.width, b.width);
             cursor.minWidth = Math.min(cursor.minWidth, b.width);
-        });
+        };
         this.set({
             x: firstBlockBox.x,
             y: firstBlockBox.y,
@@ -141,6 +144,8 @@ Entry.Thread = function(thread, code) {
     };
 
     p.destroy = function() {
+        if (this.svgGroup)
+            this.svgGroup.remove();
         this.code.remove(this);
     };
 
