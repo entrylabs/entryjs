@@ -97,6 +97,7 @@ Entry.StateManager.prototype.cancelLastCommand = function() {
         return;
     this.undoStack_.pop();
     this.updateView();
+    Entry.dispatchEvent('saveLocalStorageProject');
 };
 
 /**
@@ -111,6 +112,7 @@ Entry.StateManager.prototype.undo = function() {
     state.func.apply(state.caller, state.params);
     this.updateView();
     this.endRestore();
+    Entry.dispatchEvent('saveLocalStorageProject');
 };
 
 /**
@@ -123,6 +125,7 @@ Entry.StateManager.prototype.redo = function() {
     var state = this.redoStack_.pop();
     state.func.apply(state.caller, state.params);
     this.updateView();
+    Entry.dispatchEvent('saveLocalStorageProject');
 };
 
 /**

@@ -9442,7 +9442,7 @@ Entry.StateManager.prototype.addCommand = function(a, b, c, d) {
   }
 };
 Entry.StateManager.prototype.cancelLastCommand = function() {
-  this.canUndo() && (this.undoStack_.pop(), this.updateView());
+  this.canUndo() && (this.undoStack_.pop(), this.updateView(), Entry.dispatchEvent("saveLocalStorageProject"));
 };
 Entry.StateManager.prototype.undo = function() {
   if (this.canUndo() && !this.isRestoring()) {
@@ -9452,6 +9452,7 @@ Entry.StateManager.prototype.undo = function() {
     a.func.apply(a.caller, a.params);
     this.updateView();
     this.endRestore();
+    Entry.dispatchEvent("saveLocalStorageProject");
   }
 };
 Entry.StateManager.prototype.redo = function() {
@@ -9460,6 +9461,7 @@ Entry.StateManager.prototype.redo = function() {
     var a = this.redoStack_.pop();
     a.func.apply(a.caller, a.params);
     this.updateView();
+    Entry.dispatchEvent("saveLocalStorageProject");
   }
 };
 Entry.StateManager.prototype.updateView = function() {
