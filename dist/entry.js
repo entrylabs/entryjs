@@ -166,15 +166,15 @@ Blockly.Blocks.arduino_convert_scale = {init:function() {
   this.setInputsInline(!0);
 }};
 Entry.block.arduino_convert_scale = function(b, a) {
-  var c = a.getNumberValue("VALUE1", a), d = a.getNumberValue("VALUE2", a), e = a.getNumberValue("VALUE3", a), f = a.getNumberValue("VALUE4", a), g = a.getNumberValue("VALUE5", a);
+  var c = a.getNumberValue("VALUE1", a), d = a.getNumberValue("VALUE2", a), e = a.getNumberValue("VALUE3", a), f = a.getNumberValue("VALUE4", a), h = a.getNumberValue("VALUE5", a);
   if (d > e) {
-    var h = d, d = e, e = h
+    var g = d, d = e, e = g
   }
-  f > g && (h = f, f = g, g = h);
+  f > h && (g = f, f = h, h = g);
   c -= d;
-  c *= (g - f) / (e - d);
+  c *= (h - f) / (e - d);
   c += f;
-  c = Math.min(g, c);
+  c = Math.min(h, c);
   c = Math.max(f, c);
   return Math.round(c);
 };
@@ -1172,9 +1172,9 @@ Entry.block.reach_something = function(b, a) {
       if (Entry.checkCollisionRect(d, f)) {
         return !0;
       }
-      for (var c = c.parent.clonedEntities, e = 0, g = c.length;e < g;e++) {
-        var h = c[e];
-        if (h.getVisible() && !h.isStamp && Entry.checkCollisionRect(d, h.object.getTransformedBounds())) {
+      for (var c = c.parent.clonedEntities, e = 0, h = c.length;e < h;e++) {
+        var g = c[e];
+        if (g.getVisible() && !g.isStamp && Entry.checkCollisionRect(d, g.object.getTransformedBounds())) {
           return !0;
         }
       }
@@ -1184,8 +1184,8 @@ Entry.block.reach_something = function(b, a) {
       }
       c = c.parent.clonedEntities;
       e = 0;
-      for (g = c.length;e < g;e++) {
-        if (h = c[e], h.getVisible() && !h.isStamp && f(d, h.object, .2, !0)) {
+      for (h = c.length;e < h;e++) {
+        if (g = c[e], g.getVisible() && !g.isStamp && f(d, g.object, .2, !0)) {
           return !0;
         }
       }
@@ -3077,16 +3077,16 @@ Entry.Collection = function(b) {
     return this._data.indexOf(a);
   };
   b.find = function(a) {
-    for (var b = this._data, d = [], e, f = 0, g = this.length;f < g;f++) {
+    for (var b = this._data, d = [], e, f = 0, h = this.length;f < h;f++) {
       e = !0;
-      var h = b[f], k;
+      var g = b[f], k;
       for (k in a) {
-        if (a[k] != h[k]) {
+        if (a[k] != g[k]) {
           e = !1;
           break;
         }
       }
-      e && d.push(h);
+      e && d.push(g);
     }
     return d;
   };
@@ -3105,27 +3105,27 @@ Entry.Collection = function(b) {
     }
   };
   b.slice = function(a, b) {
-    if (!(0 > a || a > this.length)) {
-      var d = this._data;
-      b = void 0 === b ? this.length - a : b;
-      return d.slice(a, b);
-    }
+    return 0 > a || a > this.length ? void 0 : this._data.slice(a, b);
+  };
+  b.remove = function(a) {
+    a = this.indexOf(a);
+    -1 < a && this.splice(a, 1);
   };
   b.splice = function(a, b) {
     var d = Array.prototype.slice.call(arguments, 2);
     if (!(0 > a || a > this.length)) {
       var e = this._data, f = this._hashMap;
       b = void 0 === b ? this.length - a : b;
-      for (var g = e.splice(a, b), h = 0, k = g.length;h < k;h++) {
-        delete f[g[h].id];
+      for (var h = e.splice(a, b), g = 0, k = h.length;g < k;g++) {
+        delete f[h[g].id];
       }
-      h = 0;
-      for (k = d.length;h < k;h++) {
-        var l = d[h];
+      g = 0;
+      for (k = d.length;g < k;g++) {
+        var l = d[g];
         e.splice(a++, 0, l);
         f[l.id] = l;
       }
-      return g;
+      return h;
     }
   };
   b.clear = function() {
@@ -3181,7 +3181,8 @@ Entry.Code = function(b) {
     this.threads.set(a);
   };
   b.createThread = function(a) {
-    a = new Entry.Thread(a);
+    a = new Entry.Thread(a, this);
+    this.board && a.renderStart(board);
     this.threads.push(a);
     return a;
   };
@@ -3190,6 +3191,9 @@ Entry.Code = function(b) {
     this.threads.map(function(b) {
       b.renderStart(a);
     });
+  };
+  b.remove = function(a) {
+    this.threads.remove(a);
   };
 })(Entry.Code.prototype);
 Entry.db = {data:{}, typeMap:{}};
@@ -3346,13 +3350,22 @@ Entry.Board.MAGNET_RANGE = 20;
     this.code = a;
   };
   b.updateCloseMagnet = function(a) {
-    for (var b = this.code.threads, d = 0;d < b.length;d++) {
-      var e = b.at(d);
-      if (e !== a.thread && Entry.Utils.isPointInMatrix(e, a, Entry.Board.MAGNET_RANGE)) {
-        for (var e = e._blocks, f = 0;f < e.length;f++) {
-          var g = e.at(f);
-          if (Entry.Utils.isPointInMatrix({x:g.x, y:g.y + g.height, width:g.width, height:0}, a, Entry.Board.MAGNET_RANGE)) {
-            this.closeBlock !== g && (null !== this.closeBlock && (this.closeBlock.magnets.next.y = 31), g.magnets.next.y = 100, g.thread.align(!0), this.closeBlock = g);
+    for (var b = this.code.threads, d = a.thread, e = 0;e < b.length;e++) {
+      var f = b.at(e);
+      if (f !== d && Entry.Utils.isPointInMatrix(f, a, Entry.Board.MAGNET_RANGE)) {
+        for (var h = f._blocks, g = 0;g < h.length;g++) {
+          if (f = h.at(g), Entry.Utils.isPointInMatrix({x:f.x, y:f.y + f.height, width:f.width, height:0}, a, Entry.Board.MAGNET_RANGE)) {
+            if (this.closeBlock !== f) {
+              null !== this.closeBlock && (this.closeBlock.magnets.next.y = 31);
+              a = d._blocks.slice(d._blocks.indexOf(a));
+              var k = f.magnets.next.y;
+              a.map(function(a) {
+                k += a.height;
+              });
+              f.magnets.next.y = k;
+              f.thread.align(!0);
+              this.closeBlock = f;
+            }
             return;
           }
         }
@@ -3364,15 +3377,18 @@ Entry.Board.MAGNET_RANGE = 20;
     var b = a.dragInstance;
     delete a.dragInstance;
     if (this.closeBlock) {
-      a = a.thread.cut(a);
-      var b = this.closeBlock.thread, d = b.indexOf(this.closeBlock) + 1;
+      b = a.thread.cut(a);
+      a = a.thread;
+      var d = this.closeBlock.thread, e = d.indexOf(this.closeBlock) + 1;
       this.closeBlock.magnets.next.y = 31;
-      for (var e = a.length - 1;0 <= e;e--) {
-        b._blocks.insert(a[e], d);
+      for (var f = b.length - 1;0 <= f;f--) {
+        b[f].thread = d, d._blocks.insert(b[f], e);
       }
-      b.align();
+      d.align();
+      0 === a._blocks.length ? a.destroy() : a.align();
+      this.closeBlock = null;
     } else {
-      0 !== a.thread.indexOf(a) ? Math.sqrt(Math.pow(b.startX - b.offsetX, 2) + Math.pow(b.startY - b.offsetY, 2)) < Entry.Board.MAGNET_RANGE ? a.thread.align() : (a = a.thread.cut(a), this.code.createThread(a)) : a.thread.align();
+      0 !== a.thread.indexOf(a) ? Math.sqrt(Math.pow(b.startX - b.offsetX, 2) + Math.pow(b.startY - b.offsetY, 2)) < Entry.Board.MAGNET_RANGE ? a.thread.align() : (b = a.thread.cut(a), this.code.createThread(b)) : a.thread.align();
     }
   };
   b.dominate = function(a) {
@@ -3383,15 +3399,15 @@ Entry.Thread = function(b, a) {
   Entry.Model(this, !1);
   this.code = a;
   this._blocks = new Entry.Collection;
-  this.setThread(b);
-  this.svgGroup = this._playground = null;
+  this.loadModel(b);
+  this.svgGroup = this.board = null;
 };
 (function(b) {
   b.schema = {type:Entry.STATIC.THREAD_MODEL, x:0, y:0, width:0, minWidth:0, height:0};
-  b.setThread = function(a) {
+  b.loadModel = function(a) {
     var b = this;
     a = a.map(function(a) {
-      return a instanceof Entry.Block ? (a.setThread(b), a) : new Entry.Block(a, b);
+      return a instanceof Entry.Block ? (a.thread = b, a) : new Entry.Block(a, b);
     });
     this._blocks.set(a);
   };
@@ -3403,7 +3419,7 @@ Entry.Thread = function(b, a) {
     return this._blocks.splice(a);
   };
   b.renderStart = function(a) {
-    this._playground = a;
+    this.board = a;
     this.svgGroup = a.snap.group();
     this.svgGroup.transform("t5,5");
     var b = this._blocks.at(0);
@@ -3415,7 +3431,7 @@ Entry.Thread = function(b, a) {
   };
   b.align = function(a) {
     a = void 0 === a ? !0 : a;
-    var b = this._blocks.at(0), d = b.x, e = b.y, f = b.width, g = 0;
+    var b = this._blocks.at(0), d = b.x, e = b.y, f = b.width, h = 0;
     this._blocks.map(function(b) {
       var c = b.magnets.previous;
       d -= c.x;
@@ -3425,10 +3441,10 @@ Entry.Thread = function(b, a) {
       c = b.magnets.next;
       d += c.x;
       e += c.y;
-      g = Math.max(g, b.width);
+      h = Math.max(h, b.width);
       f = Math.min(f, b.width);
     });
-    this.set({x:b.x, y:b.y, minWidth:f, width:g, height:e - b.y});
+    this.set({x:b.x, y:b.y, minWidth:f, width:h, height:e - b.y});
   };
   b.updateMagnetMap = function(a) {
     a = 0;
@@ -3445,7 +3461,10 @@ Entry.Thread = function(b, a) {
     }
   };
   b.dominate = function() {
-    this._playground.dominate(this);
+    this.board.dominate(this);
+  };
+  b.destroy = function() {
+    this.code.remove(this);
   };
 })(Entry.Thread.prototype);
 Entry.BoxModel = function() {
@@ -3454,10 +3473,11 @@ Entry.BoxModel = function() {
 Entry.BoxModel.prototype.schema = {id:0, type:Entry.STATIC.BOX_MODEL, x:0, y:0, width:0, height:0};
 Entry.Block = function(b, a) {
   Entry.Model(this, !1);
-  this.setThread(a);
+  this.thread = a;
   this._board = null;
   this._schema = Entry.block[b.blockType];
   this._skeleton = Entry.skeleton[this._schema.skeleton];
+  this.observe(this, "setThread", ["thread"]);
   this.set({x:b.x, y:b.y});
   this.contentBox = new Entry.BoxModel;
   this.contentBox.observe(this, "measureSize", ["width", "height"]);
@@ -3474,19 +3494,11 @@ Entry.Block.FOLLOW = 3;
   b.schema = {type:Entry.STATIC.BLOCK_MODEL, state:Entry.Block.HIDDEN, thread:null, contents:null, board:null, x:0, y:0, width:0, height:0, contentWidth:0, contentHeight:0, magneting:!1, highlight:!1};
   b.initView = function() {
   };
-  b.setThread = function(a) {
-    this.thread = a;
+  b.setThread = function() {
+    this.thread.svgGroup && this.thread.svgGroup.append(this.svgGroup);
   };
   b.renderStart = function(a, b) {
-    this._board = a;
-    this.svgGroup = this.thread.svgGroup.group();
-    this.svgGroup.attr({class:"block"});
-    b && this.svgGroup.attr({transform:"t" + b.x + " " + b.y});
-    this._path = this.svgGroup.path(this._skeleton.path(this));
-    this._path.attr({fill:this._schema.color});
-    this.magnets = this._skeleton.magnets();
-    this.fieldRenderStart();
-    this.addControl();
+    this.svgGroup ? this.thread.svgGroup.append(this.svgGroup) : (this._board = a, this.svgGroup = this.thread.svgGroup.group(), this.svgGroup.attr({class:"block"}), b && this.svgGroup.attr({transform:"t" + b.x + " " + b.y}), this._path = this.svgGroup.path(this._skeleton.path(this)), this._path.attr({fill:this._schema.color}), this.magnets = this._skeleton.magnets(), this.fieldRenderStart(), this.addControl());
   };
   b.moveTo = function(a, b, d) {
     var e = "t" + a + " " + b;

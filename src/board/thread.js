@@ -18,9 +18,9 @@ Entry.Thread = function(thread, code) {
 
     this._blocks = new Entry.Collection();
 
-    this.setThread(thread);
+    this.loadModel(thread);
 
-    this._playground = null;
+    this.board = null;
 
     this.svgGroup = null;
 };
@@ -35,11 +35,13 @@ Entry.Thread = function(thread, code) {
         height: 0,
     };
 
-    p.setThread = function(thread) { var that = this;
+    p.loadModel = function(thread) {
+
+        var that = this;
 
         var blocks = thread.map(function(b) {
             if (b instanceof Entry.Block) {
-                b.setThread(that);
+                b.thread = that;
                 return b;
             }
             else
@@ -55,20 +57,20 @@ Entry.Thread = function(thread, code) {
 
     p.cut = function(block) {
         var index = this._blocks.indexOf(block);
-        var slicedData = this._blocks.splice(index);
-        return slicedData;
+        var splicedData = this._blocks.splice(index);
+        return splicedData;
     };
 
-    // method for playground
+    // method for board
 
-    p.renderStart = function(playground) {
-        this._playground = playground;
-        this.svgGroup = playground.snap.group();
+    p.renderStart = function(board) {
+        this.board = board;
+        this.svgGroup = board.snap.group();
         this.svgGroup.transform("t5,5");
 
         var firstBlockBox = this._blocks.at(0);
         this._blocks.map(function(b) {
-            b.renderStart(playground, firstBlockBox);
+            b.renderStart(board, firstBlockBox);
         });
 
         this.align();
@@ -135,7 +137,11 @@ Entry.Thread = function(thread, code) {
     };
 
     p.dominate = function() {
-         this._playground.dominate(this);
+         this.board.dominate(this);
+    };
+
+    p.destroy = function() {
+        this.code.remove(this);
     };
 
 })(Entry.Thread.prototype);

@@ -57,9 +57,10 @@ Entry.Board.MAGNET_RANGE = 20;
 
     p.updateCloseMagnet = function(targetBlock) {
         var threads = this.code.threads;
+        var targetThread = targetBlock.thread
         for (var i = 0; i < threads.length; i++) {
             var thread = threads.at(i);
-            if (thread === targetBlock.thread)
+            if (thread === targetThread)
                 continue;
             if (Entry.Utils.isPointInMatrix(
                 thread, targetBlock, Entry.Board.MAGNET_RANGE
@@ -79,7 +80,10 @@ Entry.Board.MAGNET_RANGE = 20;
                         if (this.closeBlock !== block) {
                             if (this.closeBlock !== null)
                                 this.closeBlock.magnets.next.y = 31;
-                            block.magnets.next.y = 100;
+                            var movingBlocks = targetThread._blocks.slice(targetThread._blocks.indexOf(targetBlock));
+                            var targetHeight = block.magnets.next.y;
+                            movingBlocks.map(function(b) {targetHeight += b.height})
+                            block.magnets.next.y = targetHeight;
                             block.thread.align(true);
                             this.closeBlock = block;
                         }
@@ -101,13 +105,21 @@ Entry.Board.MAGNET_RANGE = 20;
 
         if (this.closeBlock) {
             var separatedBlocks = block.thread.cut(block),
+                oldThread = block.thread,
                 thread = this.closeBlock.thread,
-            index = thread.indexOf(this.closeBlock) + 1;
+                index = thread.indexOf(this.closeBlock) + 1;
             this.closeBlock.magnets.next.y = 31;
             for (var i = separatedBlocks.length - 1; i >=0; i--) {
+                separatedBlocks[i].thread = thread;
                  thread._blocks.insert(separatedBlocks[i], index);
             }
             thread.align();
+            if (oldThread._blocks.length === 0) {
+                oldThread.destroy();
+            } else {
+                oldThread.align();
+            }
+            this.closeBlock = null;
         } else if (block.thread.indexOf(block) !== 0) {
             var distance = Math.sqrt(
                 Math.pow(di.startX - di.offsetX, 2) +

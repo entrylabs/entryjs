@@ -32,8 +32,11 @@ Entry.Code = function(code) {
         this.threads.set(threads);
     };
 
-    p.createThread = function(threadModel) {
-        var thread = new Entry.Thread(threadModel);
+    /* for alive blocks */
+    p.createThread = function(blocks) {
+        var thread = new Entry.Thread(blocks, this);
+        if (this.board)
+            thread.renderStart(board);
         this.threads.push(thread);
         return thread;
     };
@@ -46,6 +49,10 @@ Entry.Code = function(code) {
         this.threads.map(function(t) {
             t.renderStart(board);
         });
+    };
+
+    p.remove = function(thread) {
+        this.threads.remove(thread);
     };
 
 })(Entry.Code.prototype);

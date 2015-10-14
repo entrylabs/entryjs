@@ -15,12 +15,14 @@ goog.require("Entry.skeleton");
 Entry.Block = function(block, thread) {
     Entry.Model(this, false);
 
-    this.setThread(thread);
+    this.thread = thread;
     this._board = null;
 
     // block information
     this._schema = Entry.block[block.blockType];
     this._skeleton = Entry.skeleton[this._schema.skeleton];
+
+    this.observe(this, "setThread", ['thread']);
 
     // Block model
     this.set({ x: block.x, y: block.y });
@@ -64,13 +66,19 @@ Entry.Block.FOLLOW = 3;
     p.initView = function() {
     };
 
-    p.setThread = function(thread) {
-        this.thread = thread;
+    p.setThread = function() {
+        if (this.thread.svgGroup) {
+            this.thread.svgGroup.append(this.svgGroup);
+        }
     };
 
     // method for board
 
     p.renderStart = function(board, startPos) {
+        if (this.svgGroup) {
+            this.thread.svgGroup.append(this.svgGroup);
+            return;
+        }
         this._board = board;
         this.svgGroup = this.thread.svgGroup.group();
         this.svgGroup.attr({

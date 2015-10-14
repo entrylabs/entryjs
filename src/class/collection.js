@@ -127,14 +127,19 @@ Entry.Collection = function(data) {
 
         var data = this._data;
 
-        amount = amount === undefined ? this.length - index: amount;
-
         var slicedData = data.slice(index, amount);
 
         return slicedData;
     };
 
     /* removers */
+    p.remove = function(datum) {
+        var index = this.indexOf(datum);
+        if (index > -1) {
+            this.splice(index, 1);
+        }
+    };
+
     p.splice = function(index, amount) {
         var args = Array.prototype.slice.call(arguments,2);
 
