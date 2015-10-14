@@ -108,7 +108,7 @@ Entry.Model = function(obj, isSeal) {
                     return {
                         name: key,
                         object: that,
-                        oldValue: oldValue
+                        oldValue: oldValue === undefined ? that.data[key] : oldValue
                     };
                 })
             );

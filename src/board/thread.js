@@ -105,7 +105,7 @@ Entry.Thread = function(thread, code) {
 
             cursor.width = Math.max(cursor.width, b.width);
             cursor.minWidth = Math.min(cursor.minWidth, b.width);
-        };
+        }
         this.set({
             x: firstBlockBox.x,
             y: firstBlockBox.y,
@@ -113,30 +113,6 @@ Entry.Thread = function(thread, code) {
             width: cursor.width,
             height: cursor.y - firstBlockBox.y
         });
-    };
-
-    p.updateMagnetMap = function(block) {
-
-        var minIndex = 0;
-        var maxIndex = this.length - 1;
-        var currentIndex;
-        var currentElement;
-
-        while (minIndex <= maxIndex) {
-            currentIndex = (minIndex + maxIndex) / 2 | 0;
-            currentElement = this[currentIndex];
-
-            if (currentElement < searchElement) {
-                minIndex = currentIndex + 1;
-            }
-            else if (currentElement > searchElement) {
-                maxIndex = currentIndex - 1;
-            }
-            else {
-                return currentIndex;
-            }
-        }
-
     };
 
     p.dominate = function() {

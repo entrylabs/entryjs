@@ -157,6 +157,7 @@ describe('Entry.Model', function(){
 
                 it('should provide multiple change information properly ', function() {
                     var obj = {update: function(data) {
+                        console.log(data);
                         expect(data).to.deep.equal([
                             {
                                 name: 'type',

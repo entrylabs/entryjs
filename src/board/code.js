@@ -36,7 +36,7 @@ Entry.Code = function(code) {
     p.createThread = function(blocks) {
         var thread = new Entry.Thread(blocks, this);
         if (this.board)
-            thread.renderStart(board);
+            thread.renderStart(this.board);
         this.threads.push(thread);
         return thread;
     };

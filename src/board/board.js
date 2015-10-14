@@ -57,7 +57,7 @@ Entry.Board.MAGNET_RANGE = 20;
 
     p.updateCloseMagnet = function(targetBlock) {
         var threads = this.code.threads;
-        var targetThread = targetBlock.thread
+        var targetThread = targetBlock.thread;
         for (var i = 0; i < threads.length; i++) {
             var thread = threads.at(i);
             if (Entry.Utils.isPointInMatrix(
@@ -71,7 +71,7 @@ Entry.Board.MAGNET_RANGE = 20;
                         y: block.y + block.height,
                         width: block.width,
                         height: 0
-                    }
+                    };
                     if (Entry.Utils.isPointInMatrix(
                         matrix, targetBlock, Entry.Board.MAGNET_RANGE
                     )) {
@@ -80,7 +80,7 @@ Entry.Board.MAGNET_RANGE = 20;
                                 this.closeBlock.magnets.next.y = 31;
                             var movingBlocks = targetThread._blocks.slice(targetThread._blocks.indexOf(targetBlock));
                             var targetHeight = block.magnets.next.y;
-                            movingBlocks.map(function(b) {targetHeight += b.height})
+                            movingBlocks.map(function(b) {targetHeight += b.height;});
                             block.magnets.next.y = targetHeight;
                             block.thread.align(true);
                             this.closeBlock = block;

@@ -3182,7 +3182,7 @@ Entry.Code = function(b) {
   };
   b.createThread = function(a) {
     a = new Entry.Thread(a, this);
-    this.board && a.renderStart(board);
+    this.board && a.renderStart(this.board);
     this.threads.push(a);
     return a;
   };
@@ -3319,7 +3319,7 @@ Entry.Model = function(b, a) {
         void 0 !== e.attrs && (f = Entry.Utils.intersectArray(e.attrs, a));
         if (f.length) {
           e.object[e.funcName](f.map(function(a) {
-            return {name:a, object:d, oldValue:b};
+            return {name:a, object:d, oldValue:void 0 === b ? d.data[a] : b};
           }));
         }
       });
@@ -3446,20 +3446,6 @@ Entry.Thread = function(b, a) {
       f = Math.min(f, k.width);
     }
     this.set({x:b.x, y:b.y, minWidth:f, width:h, height:e - b.y});
-  };
-  b.updateMagnetMap = function(a) {
-    a = 0;
-    for (var b = this.length - 1, d, e;a <= b;) {
-      if (d = (a + b) / 2 | 0, e = this[d], e < searchElement) {
-        a = d + 1;
-      } else {
-        if (e > searchElement) {
-          b = d - 1;
-        } else {
-          return d;
-        }
-      }
-    }
   };
   b.dominate = function() {
     this.board.dominate(this);
