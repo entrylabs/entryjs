@@ -133,7 +133,7 @@ Entry.Scene.prototype.generateElement = function(scene) {
             e.stopPropagation();
             if (Entry.engine.isState('run'))
                 return;
-            var a = confirm('선택한 장면을 삭제 하시겠습니까?');
+            var a = confirm(Lang.Workspace.will_you_delete_scene);
             if (a)
                 Entry.scene.removeScene(this.scene);
             return;
@@ -228,7 +228,7 @@ Entry.Scene.prototype.addScene = function(scene, index) {
 Entry.Scene.prototype.removeScene = function(scene) {
     if (this.getScenes().length <=1) {
         Entry.toast.alert(Lang.Msgs.runtime_error,
-                          '장면은 최소 하나 이상 존재 해야 합니다.',
+                          Lang.Workspace.Scene_delete_error,
                           false);
          return;
     }
@@ -369,13 +369,13 @@ Entry.Scene.prototype.createScene = function() {
 Entry.Scene.prototype.cloneScene = function(scene) {
     if (this.scenes_.length >= this.maxCount) {
         Entry.toast.alert(Lang.Msgs.runtime_error,
-                          '장면은 최대 10개까지 추가 가능합니다.',
+                          Lang.Workspace.Scene_add_error,
                           false);
          return;
     }
 
     var clonedScene = {
-        name: scene.name + '의 복제본',
+        name: scene.name + Lang.Workspace.replica_of_object,
         id: Entry.generateHash()
     };
     this.generateElement(clonedScene);
