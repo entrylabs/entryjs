@@ -43,7 +43,7 @@ Entry.Board.MAGNET_RANGE = 20;
 (function(p) {
     p.schema = {
         dragBlock: null,
-        closeMagnet: null
+        closeBlock: null
     };
 
     p.selectCode = function(code) {
@@ -59,20 +59,39 @@ Entry.Board.MAGNET_RANGE = 20;
         var threads = this.code.threads;
         for (var i = 0; i < threads.length; i++) {
             var thread = threads.at(i);
+            if (thread === targetBlock.thread)
+                continue;
             if (Entry.Utils.isPointInMatrix(
-                thread.model, targetBlock.model, Entry.Board.MAGNET_RANGE
+                thread, targetBlock, Entry.Board.MAGNET_RANGE
             )) {
                 var blocks = thread._blocks;
                 for (var j = 0; j < blocks.length; j++) {
                     var block = blocks.at(j);
+                    var matrix = {
+                        x: block.x,
+                        y: block.y + block.height,
+                        width: block.width,
+                        height: 0
+                    }
                     if (Entry.Utils.isPointInMatrix(
-                        block.model, targetBlock.model, Entry.Board.MAGNET_RANGE
+                        matrix, targetBlock, Entry.Board.MAGNET_RANGE
                     )) {
-                        console.log(block);
+                        if (this.closeBlock !== block) {
+                            if (this.closeBlock !== null)
+                                this.closeBlock.magnets.next.y = 31;
+                            block.magnets.next.y = 100;
+                            block.thread.align(true);
+                            this.closeBlock = block;
+                        }
                         return;
                     }
                 }
             }
+        }
+        if (this.closeBlock) {
+            this.closeBlock.magnets.next.y = 31;
+            this.closeBlock.thread.align(true);
+            this.closeBlock = null;
         }
     };
 
@@ -80,8 +99,15 @@ Entry.Board.MAGNET_RANGE = 20;
         var di = block.dragInstance;
         delete block.dragInstance;
 
-        if (this.closeMagnet) {
-
+        if (this.closeBlock) {
+            var separatedBlocks = block.thread.cut(block),
+                thread = this.closeBlock.thread,
+            index = thread.indexOf(this.closeBlock) + 1;
+            this.closeBlock.magnets.next.y = 31;
+            for (var i = separatedBlocks.length - 1; i >=0; i--) {
+                 thread._blocks.insert(separatedBlocks[i], index);
+            }
+            thread.align();
         } else if (block.thread.indexOf(block) !== 0) {
             var distance = Math.sqrt(
                 Math.pow(di.startX - di.offsetX, 2) +

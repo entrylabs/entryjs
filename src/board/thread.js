@@ -5,19 +5,20 @@
 
 goog.provide("Entry.Thread");
 
+goog.require('Entry.Model');
 goog.require("Entry.Collection");
-goog.require("Entry.ThreadModel");
 
 /*
  *
  */
 Entry.Thread = function(thread, code) {
+    Entry.Model(this, false);
+
     this.code = code;
 
-    this.model = new Entry.ThreadModel();
     this._blocks = new Entry.Collection();
 
-    this.set(thread);
+    this.setThread(thread);
 
     this._playground = null;
 
@@ -25,8 +26,16 @@ Entry.Thread = function(thread, code) {
 };
 
 (function(p) {
-    p.set = function(thread) {
-        var that = this;
+    p.schema = {
+        type: Entry.STATIC.THREAD_MODEL,
+        x: 0,
+        y: 0,
+        width: 0,
+        minWidth: 0,
+        height: 0,
+    };
+
+    p.setThread = function(thread) { var that = this;
 
         var blocks = thread.map(function(b) {
             if (b instanceof Entry.Block) {
@@ -57,7 +66,7 @@ Entry.Thread = function(thread, code) {
         this.svgGroup = playground.snap.group();
         this.svgGroup.transform("t5,5");
 
-        var firstBlockBox = this._blocks.at(0).model;
+        var firstBlockBox = this._blocks.at(0);
         this._blocks.map(function(b) {
             b.renderStart(playground, firstBlockBox);
         });
@@ -68,7 +77,7 @@ Entry.Thread = function(thread, code) {
 
     p.align = function(animate) {
         animate = animate === undefined ? true : animate;
-        var firstBlockBox = this._blocks.at(0).model;
+        var firstBlockBox = this._blocks.at(0);
         var cursor = {
             x: firstBlockBox.x,
             y: firstBlockBox.y,
@@ -76,9 +85,12 @@ Entry.Thread = function(thread, code) {
             width: 0
         };
         this._blocks.map(function(b) {
+            var prevMagnet = b.magnets.previous
+            cursor.x -= prevMagnet.x;
+            cursor.y -= prevMagnet.y;
             if (b.dragInstance) {
-                cursor.x = b.model.x;
-                cursor.y = b.model.y;
+                cursor.x = b.x;
+                cursor.y = b.y;
             }
             b.moveTo(cursor.x, cursor.y, animate);
 
@@ -86,10 +98,10 @@ Entry.Thread = function(thread, code) {
             cursor.x += magnet.x;
             cursor.y += magnet.y;
 
-            cursor.width = Math.max(cursor.width, b.model.width);
-            cursor.minWidth = Math.min(cursor.minWidth, b.model.width);
+            cursor.width = Math.max(cursor.width, b.width);
+            cursor.minWidth = Math.min(cursor.minWidth, b.width);
         });
-        this.model.set({
+        this.set({
             x: firstBlockBox.x,
             y: firstBlockBox.y,
             minWidth: cursor.minWidth,

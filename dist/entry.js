@@ -3337,7 +3337,7 @@ Entry.Board = function(b) {
 Entry.Board.dragBlock = null;
 Entry.Board.MAGNET_RANGE = 20;
 (function(b) {
-  b.schema = {dragBlock:null, closeMagnet:null};
+  b.schema = {dragBlock:null, closeBlock:null};
   b.selectCode = function(a) {
     if (!(a instanceof Entry.Code)) {
       return console.error("You must select code instance");
@@ -3348,41 +3348,117 @@ Entry.Board.MAGNET_RANGE = 20;
   b.updateCloseMagnet = function(a) {
     for (var b = this.code.threads, d = 0;d < b.length;d++) {
       var e = b.at(d);
-      if (Entry.Utils.isPointInMatrix(e.model, a.model, Entry.Board.MAGNET_RANGE)) {
+      if (e !== a.thread && Entry.Utils.isPointInMatrix(e, a, Entry.Board.MAGNET_RANGE)) {
         for (var e = e._blocks, f = 0;f < e.length;f++) {
           var g = e.at(f);
-          if (Entry.Utils.isPointInMatrix(g.model, a.model, Entry.Board.MAGNET_RANGE)) {
-            console.log(g);
+          if (Entry.Utils.isPointInMatrix({x:g.x, y:g.y + g.height, width:g.width, height:0}, a, Entry.Board.MAGNET_RANGE)) {
+            this.closeBlock !== g && (null !== this.closeBlock && (this.closeBlock.magnets.next.y = 31), g.magnets.next.y = 100, g.thread.align(!0), this.closeBlock = g);
             return;
           }
         }
       }
     }
+    this.closeBlock && (this.closeBlock.magnets.next.y = 31, this.closeBlock.thread.align(!0), this.closeBlock = null);
   };
   b.terminateDrag = function(a) {
     var b = a.dragInstance;
     delete a.dragInstance;
-    this.closeMagnet || (0 !== a.thread.indexOf(a) ? Math.sqrt(Math.pow(b.startX - b.offsetX, 2) + Math.pow(b.startY - b.offsetY, 2)) < Entry.Board.MAGNET_RANGE ? a.thread.align() : (a = a.thread.cut(a), this.code.createThread(a)) : a.thread.align());
+    if (this.closeBlock) {
+      a = a.thread.cut(a);
+      var b = this.closeBlock.thread, d = b.indexOf(this.closeBlock) + 1;
+      this.closeBlock.magnets.next.y = 31;
+      for (var e = a.length - 1;0 <= e;e--) {
+        b._blocks.insert(a[e], d);
+      }
+      b.align();
+    } else {
+      0 !== a.thread.indexOf(a) ? Math.sqrt(Math.pow(b.startX - b.offsetX, 2) + Math.pow(b.startY - b.offsetY, 2)) < Entry.Board.MAGNET_RANGE ? a.thread.align() : (a = a.thread.cut(a), this.code.createThread(a)) : a.thread.align();
+    }
   };
   b.dominate = function(a) {
     this.snap.append(a.svgGroup);
   };
 })(Entry.Board.prototype);
-Entry.BlockModel = function() {
-  Entry.Model(this);
+Entry.Thread = function(b, a) {
+  Entry.Model(this, !1);
+  this.code = a;
+  this._blocks = new Entry.Collection;
+  this.setThread(b);
+  this.svgGroup = this._playground = null;
 };
-Entry.BlockModel.prototype.schema = {id:0, type:Entry.STATIC.BLOCK_MODEL, x:0, y:0, width:0, height:0, state:Entry.STATIC.BLOCK_STATIC, magneting:!1, highlight:!1};
+(function(b) {
+  b.schema = {type:Entry.STATIC.THREAD_MODEL, x:0, y:0, width:0, minWidth:0, height:0};
+  b.setThread = function(a) {
+    var b = this;
+    a = a.map(function(a) {
+      return a instanceof Entry.Block ? (a.setThread(b), a) : new Entry.Block(a, b);
+    });
+    this._blocks.set(a);
+  };
+  b.indexOf = function(a) {
+    return this._blocks.indexOf(a);
+  };
+  b.cut = function(a) {
+    a = this._blocks.indexOf(a);
+    return this._blocks.splice(a);
+  };
+  b.renderStart = function(a) {
+    this._playground = a;
+    this.svgGroup = a.snap.group();
+    this.svgGroup.transform("t5,5");
+    var b = this._blocks.at(0);
+    this._blocks.map(function(d) {
+      d.renderStart(a, b);
+    });
+    this.align();
+    this.updateMagnetMap(this._blocks.at(0));
+  };
+  b.align = function(a) {
+    a = void 0 === a ? !0 : a;
+    var b = this._blocks.at(0), d = b.x, e = b.y, f = b.width, g = 0;
+    this._blocks.map(function(b) {
+      var c = b.magnets.previous;
+      d -= c.x;
+      e -= c.y;
+      b.dragInstance && (d = b.x, e = b.y);
+      b.moveTo(d, e, a);
+      c = b.magnets.next;
+      d += c.x;
+      e += c.y;
+      g = Math.max(g, b.width);
+      f = Math.min(f, b.width);
+    });
+    this.set({x:b.x, y:b.y, minWidth:f, width:g, height:e - b.y});
+  };
+  b.updateMagnetMap = function(a) {
+    a = 0;
+    for (var b = this.length - 1, d, e;a <= b;) {
+      if (d = (a + b) / 2 | 0, e = this[d], e < searchElement) {
+        a = d + 1;
+      } else {
+        if (e > searchElement) {
+          b = d - 1;
+        } else {
+          return d;
+        }
+      }
+    }
+  };
+  b.dominate = function() {
+    this._playground.dominate(this);
+  };
+})(Entry.Thread.prototype);
 Entry.BoxModel = function() {
   Entry.Model(this);
 };
 Entry.BoxModel.prototype.schema = {id:0, type:Entry.STATIC.BOX_MODEL, x:0, y:0, width:0, height:0};
 Entry.Block = function(b, a) {
+  Entry.Model(this, !1);
   this.setThread(a);
   this._board = null;
   this._schema = Entry.block[b.blockType];
   this._skeleton = Entry.skeleton[this._schema.skeleton];
-  this.model = new Entry.BlockModel(b);
-  void 0 !== b.x && this.model.set({x:b.x, y:b.y});
+  this.set({x:b.x, y:b.y});
   this.contentBox = new Entry.BoxModel;
   this.contentBox.observe(this, "measureSize", ["width", "height"]);
   this.contentBox.observe(this, "render", ["width", "height"]);
@@ -3390,7 +3466,14 @@ Entry.Block = function(b, a) {
   this.magnets = {};
   this._path = this.fieldSvgGroup = this.svgGroup = null;
 };
+Entry.Block.HIDDEN = 0;
+Entry.Block.SHOWN = 1;
+Entry.Block.MOVE = 2;
+Entry.Block.FOLLOW = 3;
 (function(b) {
+  b.schema = {type:Entry.STATIC.BLOCK_MODEL, state:Entry.Block.HIDDEN, thread:null, contents:null, board:null, x:0, y:0, width:0, height:0, contentWidth:0, contentHeight:0, magneting:!1, highlight:!1};
+  b.initView = function() {
+  };
   b.setThread = function(a) {
     this.thread = a;
   };
@@ -3408,10 +3491,10 @@ Entry.Block = function(b, a) {
   b.moveTo = function(a, b, d) {
     var e = "t" + a + " " + b;
     void 0 === d || d ? this.svgGroup.animate({transform:e}, 300, mina.easeinout) : this.svgGroup.attr({transform:e});
-    this.model.set({x:a, y:b});
+    this.set({x:a, y:b});
   };
   b.moveBy = function(a, b, d) {
-    return this.moveTo(this.model.x + a, this.model.y + b, d);
+    return this.moveTo(this.x + a, this.y + b, d);
   };
   b.fieldRenderStart = function() {
     this.fieldSvgGroup = this.svgGroup.group();
@@ -3433,7 +3516,7 @@ Entry.Block = function(b, a) {
     this.contentBox.width = a;
   };
   b.measureSize = function() {
-    this.model.set({width:this.contentBox.width + 30, height:30});
+    this.set({width:this.contentBox.width + 30, height:30});
   };
   b.render = function() {
     var a = this._skeleton.path(this);
@@ -3517,71 +3600,6 @@ Entry.ThreadModel = function() {
   Entry.Model(this);
 };
 Entry.ThreadModel.prototype.schema = {id:0, type:Entry.STATIC.THREAD_MODEL, x:0, y:0, width:0, minWidth:0, height:0};
-Entry.Thread = function(b, a) {
-  this.code = a;
-  this.model = new Entry.ThreadModel;
-  this._blocks = new Entry.Collection;
-  this.set(b);
-  this.svgGroup = this._playground = null;
-};
-(function(b) {
-  b.set = function(a) {
-    var b = this;
-    a = a.map(function(a) {
-      return a instanceof Entry.Block ? (a.setThread(b), a) : new Entry.Block(a, b);
-    });
-    this._blocks.set(a);
-  };
-  b.indexOf = function(a) {
-    return this._blocks.indexOf(a);
-  };
-  b.cut = function(a) {
-    a = this._blocks.indexOf(a);
-    return this._blocks.splice(a);
-  };
-  b.renderStart = function(a) {
-    this._playground = a;
-    this.svgGroup = a.snap.group();
-    this.svgGroup.transform("t5,5");
-    var b = this._blocks.at(0).model;
-    this._blocks.map(function(d) {
-      d.renderStart(a, b);
-    });
-    this.align();
-    this.updateMagnetMap(this._blocks.at(0));
-  };
-  b.align = function(a) {
-    a = void 0 === a ? !0 : a;
-    var b = this._blocks.at(0).model, d = b.x, e = b.y, f = b.width, g = 0;
-    this._blocks.map(function(b) {
-      b.dragInstance && (d = b.model.x, e = b.model.y);
-      b.moveTo(d, e, a);
-      var c = b.magnets.next;
-      d += c.x;
-      e += c.y;
-      g = Math.max(g, b.model.width);
-      f = Math.min(f, b.model.width);
-    });
-    this.model.set({x:b.x, y:b.y, minWidth:f, width:g, height:e - b.y});
-  };
-  b.updateMagnetMap = function(a) {
-    a = 0;
-    for (var b = this.length - 1, d, e;a <= b;) {
-      if (d = (a + b) / 2 | 0, e = this[d], e < searchElement) {
-        a = d + 1;
-      } else {
-        if (e > searchElement) {
-          b = d - 1;
-        } else {
-          return d;
-        }
-      }
-    }
-  };
-  b.dominate = function() {
-    this._playground.dominate(this);
-  };
-})(Entry.Thread.prototype);
 Entry.Variable = function() {
   Entry.Model(this);
 };

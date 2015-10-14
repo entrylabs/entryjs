@@ -5,7 +5,7 @@
 
 goog.provide("Entry.Block");
 
-goog.require("Entry.BlockModel");
+goog.require('Entry.Model');
 goog.require("Entry.BoxModel");
 goog.require("Entry.skeleton");
 
@@ -13,6 +13,8 @@ goog.require("Entry.skeleton");
  *
  */
 Entry.Block = function(block, thread) {
+    Entry.Model(this, false);
+
     this.setThread(thread);
     this._board = null;
 
@@ -21,9 +23,7 @@ Entry.Block = function(block, thread) {
     this._skeleton = Entry.skeleton[this._schema.skeleton];
 
     // Block model
-    this.model = new Entry.BlockModel(block);
-    if (block.x !== undefined)
-        this.model.set({ x: block.x, y: block.y });
+    this.set({ x: block.x, y: block.y });
     this.contentBox = new Entry.BoxModel();
     this.contentBox.observe(this, "measureSize", ['width', 'height']);
     this.contentBox.observe(this, "render", ['width', 'height']);
@@ -38,7 +38,31 @@ Entry.Block = function(block, thread) {
     this._path = null;
 };
 
+Entry.Block.HIDDEN = 0;
+Entry.Block.SHOWN = 1;
+Entry.Block.MOVE = 2;
+Entry.Block.FOLLOW = 3;
+
 (function(p) {
+    p.schema = {
+        type: Entry.STATIC.BLOCK_MODEL,
+        state: Entry.Block.HIDDEN,
+        thread: null,
+        contents: null,
+        /* render related property */
+        board: null,
+        x: 0,
+        y: 0,
+        width: 0,
+        height: 0,
+        contentWidth: 0,
+        contentHeight: 0,
+        magneting: false,
+        highlight: false
+    };
+
+    p.initView = function() {
+    };
 
     p.setThread = function(thread) {
         this.thread = thread;
@@ -86,13 +110,13 @@ Entry.Block = function(block, thread) {
                 transform: transform
             });
         }
-        this.model.set({ x: x, y: y });
+        this.set({ x: x, y: y });
     };
 
     p.moveBy = function(x, y, animate) {
         return this.moveTo(
-            this.model.x + x,
-            this.model.y + y,
+            this.x + x,
+            this.y + y,
             animate
         );
     };
@@ -129,7 +153,7 @@ Entry.Block = function(block, thread) {
     };
 
     p.measureSize = function() {
-        this.model.set({
+        this.set({
             width: this.contentBox.width + 30,
             height: 30
         });
