@@ -74,7 +74,6 @@ Entry.Thread = function(thread, code) {
         });
 
         this.align();
-        this.updateMagnetMap(this._blocks.at(0));
     };
 
     p.align = function(animate) {

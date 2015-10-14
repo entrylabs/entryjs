@@ -3427,7 +3427,6 @@ Entry.Thread = function(b, a) {
       d.renderStart(a, b);
     });
     this.align();
-    this.updateMagnetMap(this._blocks.at(0));
   };
   b.align = function(a) {
     a = void 0 === a ? !0 : a;
