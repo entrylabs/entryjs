@@ -45,12 +45,12 @@ Entry.block.jr_item = {
     skeleton: "pebble_basic",
     color: "#F46C6C",
     contents: [
-        "아이템",
+        "꽃 모으기",
         {
             type: "Indicator",
             img: "/img/assets/ntry/bitmap/jr/block_item_image.png",
             highlightColor: "#FFF",
-            position: {x: 80, y: 0},
+            position: {x: 83, y: 0},
             size: 22
         }
     ],
@@ -67,7 +67,7 @@ Entry.block.jr_north = {
         {
             type: "Indicator",
             img: "/img/assets/ntry/bitmap/jr/block_up_image.png",
-            position: {x: 80, y: 0},
+            position: {x: 83, y: 0},
             size: 22
         }
     ],
@@ -84,7 +84,7 @@ Entry.block.jr_east = {
         {
             type: "Indicator",
             img: "/img/assets/ntry/bitmap/jr/block_right_image.png",
-            position: {x: 80, y: 0},
+            position: {x: 83, y: 0},
             size: 22
         }
     ],
@@ -101,7 +101,7 @@ Entry.block.jr_south = {
         {
             type: "Indicator",
             img: "/img/assets/ntry/bitmap/jr/block_down_image.png",
-            position: {x: 80, y: 0},
+            position: {x: 83, y: 0},
             size: 22
         }
     ],
@@ -118,7 +118,7 @@ Entry.block.jr_west = {
         {
             type: "Indicator",
             img: "/img/assets/ntry/bitmap/jr/block_left_image.png",
-            position: {x: 80, y: 0},
+            position: {x: 83, y: 0},
             size: 22
         }
     ],

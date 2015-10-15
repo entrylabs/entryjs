@@ -30,6 +30,8 @@ Entry.Block = function(block, thread) {
     this.observe(this, "measureSize", ['contentWidth', 'contentHeight']);
     this.observe(this, "render", ['contentWidth', 'contentHeight']);
 
+    this.observe(this, "applyMagnet", ['magneting']);
+
     // content objects
     this._contents = [];
     this.magnets = {};
@@ -40,6 +42,9 @@ Entry.Block = function(block, thread) {
     this._path = null;
     this._darkenPath = null;
 };
+
+Entry.Block.MAGNET_RANGE = 10;
+Entry.Block.MAGNET_OFFSET = 20;
 
 Entry.Block.HIDDEN = 0;
 Entry.Block.SHOWN = 1;
@@ -56,6 +61,8 @@ Entry.Block.FOLLOW = 3;
         board: null,
         x: 0,
         y: 0,
+        offsetX: 0,
+        offsetY: 0,
         width: 0,
         height: 0,
         contentWidth: 0,
@@ -176,10 +183,7 @@ Entry.Block.FOLLOW = 3;
     };
 
     p.measureSize = function() {
-        this.set({
-            width: this.contentWidth + 30,
-            height: 50
-        });
+        this.set(this._skeleton.box(this));
     };
 
     p.render = function() {
@@ -269,6 +273,42 @@ Entry.Block.FOLLOW = 3;
 
     p.terminateDrag = function() {
         this._board.terminateDrag(this);
+    };
+
+    p.checkMagnet = function(targetBlock) {
+        var matrix = {
+            x: this.x - this.offsetX,
+            y: this.y - this.offsetY + Entry.Block.MAGNET_OFFSET,
+            width: this.width,
+            height: this.height
+        };
+        var targetMatrix = {
+            x: targetBlock.x - targetBlock.offsetX,
+            y: targetBlock.y - targetBlock.offsetY,
+            width: targetBlock.width,
+            height: targetBlock.height
+        };
+        if (Entry.Utils.isPointInMatrix(
+            matrix, targetMatrix, Entry.Block.MAGNET_RANGE
+        )) {
+            this.magneting = true;
+        } else {
+            this.magneting = false;
+        }
+    };
+
+    p.applyMagnet = function() {
+        if (this.magneting) {
+            this.magnets = this._skeleton.magnets();
+            var targetBlock = this._board.dragBlock,
+                targetThread = targetBlock.thread;
+            var movingBlocks = targetThread._blocks.slice(targetThread._blocks.indexOf(targetBlock));
+            var targetHeight = Entry.Block.MAGNET_RANGE;
+            movingBlocks.map(function(b) {targetHeight += b.height;});
+            this.magnets.next.y += targetHeight;
+        } else {
+            this.magnets = this._skeleton.magnets();
+        }
     };
 
 })(Entry.Block.prototype);

@@ -36,10 +36,6 @@ Entry.Board = function(dom) {
     Entry.Model(this, false);
 };
 
-Entry.Board.dragBlock = null;
-
-Entry.Board.MAGNET_RANGE = 20;
-
 (function(p) {
     p.schema = {
         dragBlock: null,
@@ -63,29 +59,20 @@ Entry.Board.MAGNET_RANGE = 20;
         for (var i = 0; i < threads.length; i++) {
             var thread = threads.at(i);
             if (Entry.Utils.isPointInMatrix(
-                thread, targetBlock, Entry.Board.MAGNET_RANGE
+                thread, targetBlock, Entry.Block.MAGNET_RANGE
             )) {
                 var blocks = thread._blocks;
                 for (var j = 0; j < blocks.length; j++) {
                     var block = blocks.at(j);
-                    var matrix = {
-                        x: block.x,
-                        y: block.y + block.height,
-                        width: block.width,
-                        height: 0
-                    };
-                    if (Entry.Utils.isPointInMatrix(
-                        matrix, targetBlock, Entry.Board.MAGNET_RANGE
-                    )) {
+                    if (this.dragBlock === block)
+                        continue;
+                    block.checkMagnet(targetBlock);
+                    if (block.magneting) {
                         if (this.closeBlock !== block) {
                             if (this.closeBlock !== null)
-                                this.closeBlock.magnets.next.y = 51;
-                            var movingBlocks = targetThread._blocks.slice(targetThread._blocks.indexOf(targetBlock));
-                            var targetHeight = block.magnets.next.y;
-                            movingBlocks.map(function(b) {targetHeight += b.height;});
-                            block.magnets.next.y = targetHeight;
-                            block.thread.align(true);
+                                this.closeBlock.magneting = false;
                             this.closeBlock = block;
+                            this.closeBlock.thread.align(true);
                         }
                         return;
                     }
@@ -93,7 +80,7 @@ Entry.Board.MAGNET_RANGE = 20;
             }
         }
         if (this.closeBlock) {
-            this.closeBlock.magnets.next.y = 51;
+            this.closeBlock.magneting = false;
             this.closeBlock.thread.align(true);
             this.closeBlock = null;
         }
@@ -108,7 +95,7 @@ Entry.Board.MAGNET_RANGE = 20;
                 oldThread = block.thread,
                 thread = this.closeBlock.thread,
                 index = thread.indexOf(this.closeBlock) + 1;
-            this.closeBlock.magnets.next.y = 51;
+            this.closeBlock.magneting = false;
             for (var i = separatedBlocks.length - 1; i >=0; i--) {
                 separatedBlocks[i].thread = thread;
                  thread._blocks.insert(separatedBlocks[i], index);

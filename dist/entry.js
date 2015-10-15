@@ -3000,15 +3000,15 @@ Entry.block.jr_start = {skeleton:"pebble_event", color:"#3BBD70", contents:[{typ
 }};
 Entry.block.jr_repeat = {skeleton:"basic", color:"#3BBD70", contents:["1", "\ubc18\ubcf5"], func:function() {
 }};
-Entry.block.jr_item = {skeleton:"pebble_basic", color:"#F46C6C", contents:["\uc544\uc774\ud15c", {type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_item_image.png", highlightColor:"#FFF", position:{x:80, y:0}, size:22}], func:function() {
+Entry.block.jr_item = {skeleton:"pebble_basic", color:"#F46C6C", contents:["\uaf43 \ubaa8\uc73c\uae30", {type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_item_image.png", highlightColor:"#FFF", position:{x:83, y:0}, size:22}], func:function() {
 }};
-Entry.block.jr_north = {skeleton:"pebble_basic", color:"#A751E3", contents:["   \uc704\ub85c", {type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_up_image.png", position:{x:80, y:0}, size:22}], func:function() {
+Entry.block.jr_north = {skeleton:"pebble_basic", color:"#A751E3", contents:["   \uc704\ub85c", {type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_up_image.png", position:{x:83, y:0}, size:22}], func:function() {
 }};
-Entry.block.jr_east = {skeleton:"pebble_basic", color:"#A751E3", contents:["\uc624\ub978\ucabd", {type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_right_image.png", position:{x:80, y:0}, size:22}], func:function() {
+Entry.block.jr_east = {skeleton:"pebble_basic", color:"#A751E3", contents:["\uc624\ub978\ucabd", {type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_right_image.png", position:{x:83, y:0}, size:22}], func:function() {
 }};
-Entry.block.jr_south = {skeleton:"pebble_basic", color:"#A751E3", contents:["\uc544\ub798\ub85c", {type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_down_image.png", position:{x:80, y:0}, size:22}], func:function() {
+Entry.block.jr_south = {skeleton:"pebble_basic", color:"#A751E3", contents:["\uc544\ub798\ub85c", {type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_down_image.png", position:{x:83, y:0}, size:22}], func:function() {
 }};
-Entry.block.jr_west = {skeleton:"pebble_basic", color:"#A751E3", contents:["   \uc67c\ucabd", {type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_left_image.png", position:{x:80, y:0}, size:22}], func:function() {
+Entry.block.jr_west = {skeleton:"pebble_basic", color:"#A751E3", contents:["   \uc67c\ucabd", {type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_left_image.png", position:{x:83, y:0}, size:22}], func:function() {
 }};
 Entry.FieldIndicator = function(b, a) {
   this._block = a;
@@ -3075,6 +3075,7 @@ Entry.skeleton = function() {
 Entry.skeleton.basic = {path:function(b) {
   return "m 0,0 l 8,8 8,-8 h %w a 15,15 0 0,1 0,30 h -%w l -8,8 -8,-8 v -30 z".replace(/%w/gi, b.contentWidth);
 }, box:function(b) {
+  return {offsetX:0, offsetY:0, width:b.contentWidth + 30, height:30};
 }, magnets:function(b) {
   return {previous:{x:0, y:0}, next:{x:0, y:31}};
 }, contentPos:function(b) {
@@ -3083,6 +3084,7 @@ Entry.skeleton.basic = {path:function(b) {
 Entry.skeleton.pebble_event = {path:function(b) {
   return "m 0,0 a 25,25 0 0,1 9,48.3 a 9,9 0 0,1 -18,0 a 25,25 0 0,1 9,-48.3 z";
 }, box:function(b) {
+  return {offsetX:-25, offsetY:0, width:50, height:50};
 }, magnets:function(b) {
   return {next:{x:0, y:49.3}};
 }, contentPos:function() {
@@ -3096,9 +3098,11 @@ Entry.skeleton.pebble_loop = {path:function(b) {
   return {x:20, y:15};
 }};
 Entry.skeleton.pebble_basic = {path:function(b) {
-  return "m 0,9 a 9,9 0 0,0 9,-9 h 24 a 25,25 0 0,1 0,50 h -24 a 9,9 0 0,1 -18,0 h -24 a 25,25 0 0,1 0,-50 h 24 a 9,9 0 0,0 9,9 z";
+  return "m 0,9 a 9,9 0 0,0 9,-9 h 28 a 25,25 0 0,1 0,50 h -28 a 9,9 0 0,1 -18,0 h -28 a 25,25 0 0,1 0,-50 h 28 a 9,9 0 0,0 9,9 z";
 }, magnets:function() {
   return {previous:{x:0, y:0}, next:{x:0, y:51}};
+}, box:function() {
+  return {offsetX:-62, offsetY:0, width:124, height:50};
 }, contentPos:function() {
   return {x:-46, y:25};
 }};
@@ -3423,8 +3427,6 @@ Entry.Board = function(b) {
   this.snap = Snap("#play");
   Entry.Model(this, !1);
 };
-Entry.Board.dragBlock = null;
-Entry.Board.MAGNET_RANGE = 20;
 (function(b) {
   b.schema = {dragBlock:null, closeBlock:null};
   b.selectCode = function(a) {
@@ -3436,28 +3438,19 @@ Entry.Board.MAGNET_RANGE = 20;
   };
   b.updateCloseMagnet = function(a) {
     if (void 0 !== a.magnets.previous) {
-      for (var b = this.code.threads, d = a.thread, e = 0;e < b.length;e++) {
-        var f = b.at(e);
-        if (Entry.Utils.isPointInMatrix(f, a, Entry.Board.MAGNET_RANGE)) {
-          for (var h = f._blocks, g = 0;g < h.length;g++) {
-            if (f = h.at(g), Entry.Utils.isPointInMatrix({x:f.x, y:f.y + f.height, width:f.width, height:0}, a, Entry.Board.MAGNET_RANGE)) {
-              if (this.closeBlock !== f) {
-                null !== this.closeBlock && (this.closeBlock.magnets.next.y = 51);
-                a = d._blocks.slice(d._blocks.indexOf(a));
-                var k = f.magnets.next.y;
-                a.map(function(a) {
-                  k += a.height;
-                });
-                f.magnets.next.y = k;
-                f.thread.align(!0);
-                this.closeBlock = f;
-              }
+      for (var b = this.code.threads, d = 0;d < b.length;d++) {
+        var e = b.at(d);
+        if (Entry.Utils.isPointInMatrix(e, a, Entry.Block.MAGNET_RANGE)) {
+          for (var e = e._blocks, f = 0;f < e.length;f++) {
+            var h = e.at(f);
+            if (this.dragBlock !== h && (h.checkMagnet(a), h.magneting)) {
+              this.closeBlock !== h && (null !== this.closeBlock && (this.closeBlock.magneting = !1), this.closeBlock = h, this.closeBlock.thread.align(!0));
               return;
             }
           }
         }
       }
-      this.closeBlock && (this.closeBlock.magnets.next.y = 51, this.closeBlock.thread.align(!0), this.closeBlock = null);
+      this.closeBlock && (this.closeBlock.magneting = !1, this.closeBlock.thread.align(!0), this.closeBlock = null);
     }
   };
   b.terminateDrag = function(a) {
@@ -3467,7 +3460,7 @@ Entry.Board.MAGNET_RANGE = 20;
       b = a.thread.cut(a);
       a = a.thread;
       var d = this.closeBlock.thread, e = d.indexOf(this.closeBlock) + 1;
-      this.closeBlock.magnets.next.y = 51;
+      this.closeBlock.magneting = !1;
       for (var f = b.length - 1;0 <= f;f--) {
         b[f].thread = d, d._blocks.insert(b[f], e);
       }
@@ -3556,16 +3549,19 @@ Entry.Block = function(b, a) {
   this.set({x:b.x, y:b.y});
   this.observe(this, "measureSize", ["contentWidth", "contentHeight"]);
   this.observe(this, "render", ["contentWidth", "contentHeight"]);
+  this.observe(this, "applyMagnet", ["magneting"]);
   this._contents = [];
   this.magnets = {};
   this._darkenPath = this._path = this.contentSvgGroup = this.svgGroup = null;
 };
+Entry.Block.MAGNET_RANGE = 10;
+Entry.Block.MAGNET_OFFSET = 20;
 Entry.Block.HIDDEN = 0;
 Entry.Block.SHOWN = 1;
 Entry.Block.MOVE = 2;
 Entry.Block.FOLLOW = 3;
 (function(b) {
-  b.schema = {type:Entry.STATIC.BLOCK_MODEL, state:Entry.Block.HIDDEN, thread:null, contents:null, board:null, x:0, y:0, width:0, height:0, contentWidth:0, contentHeight:0, magneting:!1, highlight:!1};
+  b.schema = {type:Entry.STATIC.BLOCK_MODEL, state:Entry.Block.HIDDEN, thread:null, contents:null, board:null, x:0, y:0, offsetX:0, offsetY:0, width:0, height:0, contentWidth:0, contentHeight:0, magneting:!1, highlight:!1};
   b.initView = function() {
   };
   b.setThread = function() {
@@ -3618,7 +3614,7 @@ Entry.Block.FOLLOW = 3;
     this.contentWidth = a;
   };
   b.measureSize = function() {
-    this.set({width:this.contentWidth + 30, height:50});
+    this.set(this._skeleton.box(this));
   };
   b.render = function() {
     var a = this._skeleton.path(this);
@@ -3671,6 +3667,21 @@ Entry.Block.FOLLOW = 3;
   };
   b.terminateDrag = function() {
     this._board.terminateDrag(this);
+  };
+  b.checkMagnet = function(a) {
+    Entry.Utils.isPointInMatrix({x:this.x - this.offsetX, y:this.y - this.offsetY + Entry.Block.MAGNET_OFFSET, width:this.width, height:this.height}, {x:a.x - a.offsetX, y:a.y - a.offsetY, width:a.width, height:a.height}, Entry.Block.MAGNET_RANGE) ? this.magneting = !0 : this.magneting = !1;
+  };
+  b.applyMagnet = function() {
+    if (this.magneting) {
+      this.magnets = this._skeleton.magnets();
+      var a = this._board.dragBlock, b = a.thread, a = b._blocks.slice(b._blocks.indexOf(a)), d = Entry.Block.MAGNET_RANGE;
+      a.map(function(a) {
+        d += a.height;
+      });
+      this.magnets.next.y += d;
+    } else {
+      this.magnets = this._skeleton.magnets();
+    }
   };
 })(Entry.Block.prototype);
 Entry.DragInstance = function(b) {
