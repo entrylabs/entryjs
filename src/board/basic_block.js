@@ -30,7 +30,7 @@ Entry.block.jr_start = {
 };
 
 Entry.block.jr_repeat = {
-    skeleton: "basic",
+    skeleton: "pebble_loop",
     color: "#3BBD70",
     contents: [
         "1",

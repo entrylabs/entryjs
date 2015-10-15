@@ -2998,7 +2998,7 @@ Entry.block.run = {skeleton:"basic", color:"#3BBD70", contents:["this is", "basi
 }};
 Entry.block.jr_start = {skeleton:"pebble_event", color:"#3BBD70", contents:[{type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_play_image.png", highlightColor:"#3BBD70", size:22}], func:function() {
 }};
-Entry.block.jr_repeat = {skeleton:"basic", color:"#3BBD70", contents:["1", "\ubc18\ubcf5"], func:function() {
+Entry.block.jr_repeat = {skeleton:"pebble_loop", color:"#3BBD70", contents:["1", "\ubc18\ubcf5"], func:function() {
 }};
 Entry.block.jr_item = {skeleton:"pebble_basic", color:"#F46C6C", contents:["\uaf43 \ubaa8\uc73c\uae30", {type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_item_image.png", highlightColor:"#FFF", position:{x:83, y:0}, size:22}], func:function() {
 }};
@@ -3091,11 +3091,13 @@ Entry.skeleton.pebble_event = {path:function(b) {
   return {x:0, y:25};
 }};
 Entry.skeleton.pebble_loop = {path:function(b) {
-  return "m 0,0 l 8,8 8,-8 h %w a 15,15 0 0,1 0,30 h -%w l -8,8 -8,-8 v -30 z".replace(/%w/gi, b.contentWidth);
+  return "M 0,9 a 9,9 0 0,0 9,-9 h %cw a 25,25 0 0,1 25,25 v %ch a 25,25 0 0,1 -25,25 h -%cw a 9,9 0 0,1 -18,0 h -%cw a 25,25 0 0,1 -25,-25 v -%ch a 25,25 0 0,1 25,-25 h %cw a 9,9 0 0,0 9,9 ZM 0,40 a 9,9 0 0,0 9,-9 h 28 a 25,25 0 0,1 25,25 v %cih a 25,25 0 0,1 -25,25 h -28 a 9,9 0 0,1 -18,0 h -28 a 25,25 0 0,1 -25,-25 v -%cih a 25,25 0 0,1 25,-25 h 28 a 9,9 0 0,0 9,9 Z".replace(/%cw/gi, 41).replace(/%ch/gi, 54).replace(/%cih/gi, 0);
 }, magnets:function() {
-  return {previous:{x:0, y:0}, next:{x:0, y:31}};
+  return {previous:{x:0, y:0}, next:{x:0, y:51}};
+}, box:function() {
+  return {offsetX:-62, offsetY:0, width:124, height:50};
 }, contentPos:function() {
-  return {x:20, y:15};
+  return {x:-46, y:25};
 }};
 Entry.skeleton.pebble_basic = {path:function(b) {
   return "m 0,9 a 9,9 0 0,0 9,-9 h 28 a 25,25 0 0,1 0,50 h -28 a 9,9 0 0,1 -18,0 h -28 a 25,25 0 0,1 0,-50 h 28 a 9,9 0 0,0 9,9 z";
@@ -3595,7 +3597,6 @@ Entry.Block.FOLLOW = 3;
   };
   b.fieldRenderStart = function() {
     this.contentSvgGroup = this.svgGroup.group();
-    this.contentSvgGroup.attr({style:"white-space: pre"});
     var a = this._skeleton.contentPos();
     this.contentSvgGroup.transform("t" + a.x + " " + a.y);
     for (var a = this._schema.contents, b = 0;b < a.length;b++) {

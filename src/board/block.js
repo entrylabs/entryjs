@@ -146,9 +146,6 @@ Entry.Block.FOLLOW = 3;
 
     p.fieldRenderStart = function() {
         this.contentSvgGroup = this.svgGroup.group();
-        this.contentSvgGroup.attr({
-            'style': 'white-space: pre'
-        });
         var contentPos = this._skeleton.contentPos();
         this.contentSvgGroup.transform("t" + contentPos.x + ' ' + contentPos.y);
 
