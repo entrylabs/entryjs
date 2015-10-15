@@ -27,7 +27,8 @@ Entry.FieldText = function(text, block) {
         this.textElement = this._block.fieldSvgGroup.text(0, 0, this._text);
         this.textElement.attr({
             "alignment-baseline": "central",
-            "class": "dragNone"
+            "class": "dragNone",
+            "fill": "white"
         });
         var bBox = this.textElement.getBBox();
         this.box.set({

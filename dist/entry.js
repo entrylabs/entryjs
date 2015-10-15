@@ -2996,6 +2996,20 @@ Entry.block.options_for_list = function(b, a) {
 };
 Entry.block.run = {skeleton:"basic", color:"#3BBD70", contents:["this is", "basic block"], func:function() {
 }};
+Entry.block.jr_start = {skeleton:"pebble_event", color:"#3BBD70", contents:[">"], func:function() {
+}};
+Entry.block.jr_repeat = {skeleton:"basic", color:"#3BBD70", contents:["1", "\ubc18\ubcf5"], func:function() {
+}};
+Entry.block.jr_item = {skeleton:"pebble_basic", color:"#F46C6C", contents:["\uc544\uc774\ud15c"], func:function() {
+}};
+Entry.block.jr_north = {skeleton:"pebble_basic", color:"#A751E3", contents:["\uc704\ub85c"], func:function() {
+}};
+Entry.block.jr_east = {skeleton:"pebble_basic", color:"#A751E3", contents:["\uc624\ub978\ucabd"], func:function() {
+}};
+Entry.block.jr_south = {skeleton:"pebble_basic", color:"#A751E3", contents:["\uc544\ub798\ub85c"], func:function() {
+}};
+Entry.block.jr_west = {skeleton:"pebble_basic", color:"#A751E3", contents:["\uc67c\ucabd"], func:function() {
+}};
 Entry.FieldText = function(b, a) {
   this._block = a;
   var c = new Entry.BoxModel;
@@ -3008,7 +3022,7 @@ Entry.FieldText = function(b, a) {
 (function(b) {
   b.renderStart = function() {
     this.textElement = this._block.fieldSvgGroup.text(0, 0, this._text);
-    this.textElement.attr({"alignment-baseline":"central", "class":"dragNone"});
+    this.textElement.attr({"alignment-baseline":"central", "class":"dragNone", fill:"white"});
     var a = this.textElement.getBBox();
     this.box.set({x:0, y:0, width:a.width, height:a.height});
   };
@@ -3020,11 +3034,32 @@ Entry.FieldText = function(b, a) {
 Entry.skeleton = function() {
 };
 Entry.skeleton.basic = {path:function(b) {
-  return "m 0,0 l 8,8 8,-8 h %w a 15,15 0 0,1 0,30 h -%w l -8,8 -8,-8 v -30 z".replace(/%w/gi, b.contentBox.width);
+  return "m 0,0 l 8,8 8,-8 h %w a 15,15 0 0,1 0,30 h -%w l -8,8 -8,-8 v -30 z".replace(/%w/gi, b.contentWidth);
 }, magnets:function() {
   return {previous:{x:0, y:0}, next:{x:0, y:31}};
 }, contentPos:function() {
   return {x:20, y:15};
+}};
+Entry.skeleton.pebble_event = {path:function(b) {
+  return "m 0,0 a 25,25 0 0,1 9,48.3 a 9,9 0 0,1 -18,0 a 25,25 0 0,1 9,-48.3 z";
+}, magnets:function() {
+  return {previous:{x:0, y:0}, next:{x:0, y:49.3}};
+}, contentPos:function() {
+  return {x:0, y:25};
+}};
+Entry.skeleton.pebble_loop = {path:function(b) {
+  return "m 0,0 l 8,8 8,-8 h %w a 15,15 0 0,1 0,30 h -%w l -8,8 -8,-8 v -30 z".replace(/%w/gi, b.contentWidth);
+}, magnets:function() {
+  return {previous:{x:0, y:0}, next:{x:0, y:31}};
+}, contentPos:function() {
+  return {x:20, y:15};
+}};
+Entry.skeleton.pebble_basic = {path:function(b) {
+  return "m 0,9 a 9,9 0 0,0 9,-9 h 24 a 25,25 0 0,1 0,50 h -24 a 9,9 0 0,1 -18,0 h -24 a 25,25 0 0,1 0,-50 h 24 a 9,9 0 0,0 9,9 z";
+}, magnets:function() {
+  return {previous:{x:0, y:0}, next:{x:0, y:51}};
+}, contentPos:function() {
+  return {x:-47, y:25};
 }};
 Entry.Collection = function(b) {
   this._data = [];
@@ -3255,6 +3290,15 @@ Entry.Utils.isPointInMatrix = function(b, a, c) {
   c = void 0 === c ? 0 : c;
   return b.x - c <= a.x && b.x + b.width + c >= a.x && b.y - c <= a.y && b.y + b.height + c >= a.y;
 };
+Entry.Utils.colorDarken = function(b, a) {
+  var c, d, e;
+  7 === b.length ? (c = parseInt(b.substr(1, 2), 16), d = parseInt(b.substr(3, 2), 16), e = parseInt(b.substr(5, 2), 16)) : (c = parseInt(b.substr(1, 2), 16), d = parseInt(b.substr(2, 2), 16), e = parseInt(b.substr(3, 2), 16));
+  a = void 0 === a ? .7 : a;
+  c = Math.floor(c * a).toString(16);
+  d = Math.floor(d * a).toString(16);
+  e = Math.floor(e * a).toString(16);
+  return "#" + c + d + e;
+};
 Entry.Model = function(b, a) {
   var c = Entry.Model;
   c.generateSchema(b);
@@ -3466,12 +3510,11 @@ Entry.Block = function(b, a) {
   this._skeleton = Entry.skeleton[this._schema.skeleton];
   this.observe(this, "setThread", ["thread"]);
   this.set({x:b.x, y:b.y});
-  this.contentBox = new Entry.BoxModel;
-  this.contentBox.observe(this, "measureSize", ["width", "height"]);
-  this.contentBox.observe(this, "render", ["width", "height"]);
+  this.observe(this, "measureSize", ["contentWidth", "contentHeight"]);
+  this.observe(this, "render", ["contentWidth", "contentHeight"]);
   this._contents = [];
   this.magnets = {};
-  this._path = this.fieldSvgGroup = this.svgGroup = null;
+  this._darkenPath = this._path = this.fieldSvgGroup = this.svgGroup = null;
 };
 Entry.Block.HIDDEN = 0;
 Entry.Block.SHOWN = 1;
@@ -3485,7 +3528,22 @@ Entry.Block.FOLLOW = 3;
     this.thread.svgGroup && this.thread.svgGroup.append(this.svgGroup);
   };
   b.renderStart = function(a, b) {
-    this.svgGroup ? this.thread.svgGroup.append(this.svgGroup) : (this._board = a, this.svgGroup = this.thread.svgGroup.group(), this.svgGroup.attr({class:"block"}), b && this.svgGroup.attr({transform:"t" + b.x + " " + b.y}), this._path = this.svgGroup.path(this._skeleton.path(this)), this._path.attr({fill:this._schema.color}), this.magnets = this._skeleton.magnets(), this.fieldRenderStart(), this.addControl());
+    if (this.svgGroup) {
+      this.thread.svgGroup.append(this.svgGroup);
+    } else {
+      this._board = a;
+      this.svgGroup = this.thread.svgGroup.group();
+      this.svgGroup.attr({class:"block"});
+      b && this.svgGroup.attr({transform:"t" + b.x + " " + b.y});
+      this._darkenPath = this.svgGroup.path(d);
+      this._darkenPath.attr({transform:"t0 1.1", fill:Entry.Utils.colorDarken(this._schema.color)});
+      var d = this._skeleton.path(this);
+      this._path = this.svgGroup.path(d);
+      this._path.attr({fill:this._schema.color});
+      this.magnets = this._skeleton.magnets();
+      this.fieldRenderStart();
+      this.addControl();
+    }
   };
   b.moveTo = function(a, b, d) {
     var e = "t" + a + " " + b;
@@ -3512,14 +3570,15 @@ Entry.Block.FOLLOW = 3;
       b !== this._contents.length - 1 && (a += 5);
       a += d.box.width;
     }
-    this.contentBox.width = a;
+    this.contentWidth = a;
   };
   b.measureSize = function() {
-    this.set({width:this.contentBox.width + 30, height:30});
+    this.set({width:this.contentWidth + 30, height:30});
   };
   b.render = function() {
     var a = this._skeleton.path(this);
     this._path.animate({d:a}, 200);
+    this._darkenPath.animate({d:a}, 200);
   };
   b.highlight = function() {
     var a = this._path.getTotalLength(), b = this._path;

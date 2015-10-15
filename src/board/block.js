@@ -5,6 +5,7 @@
 
 goog.provide("Entry.Block");
 
+goog.require('Entry.Utils');
 goog.require('Entry.Model');
 goog.require("Entry.BoxModel");
 goog.require("Entry.skeleton");
@@ -26,9 +27,8 @@ Entry.Block = function(block, thread) {
 
     // Block model
     this.set({ x: block.x, y: block.y });
-    this.contentBox = new Entry.BoxModel();
-    this.contentBox.observe(this, "measureSize", ['width', 'height']);
-    this.contentBox.observe(this, "render", ['width', 'height']);
+    this.observe(this, "measureSize", ['contentWidth', 'contentHeight']);
+    this.observe(this, "render", ['contentWidth', 'contentHeight']);
 
     // content objects
     this._contents = [];
@@ -38,6 +38,7 @@ Entry.Block = function(block, thread) {
     this.svgGroup = null;
     this.fieldSvgGroup = null;
     this._path = null;
+    this._darkenPath = null;
 };
 
 Entry.Block.HIDDEN = 0;
@@ -90,7 +91,14 @@ Entry.Block.FOLLOW = 3;
             });
         }
 
-        this._path = this.svgGroup.path(this._skeleton.path(this));
+        this._darkenPath = this.svgGroup.path(path);
+        this._darkenPath.attr({
+            transform: "t0 1.1",
+            fill: Entry.Utils.colorDarken(this._schema.color)
+        });
+
+        var path = this._skeleton.path(this);
+        this._path = this.svgGroup.path(path);
         this._path.attr({
             fill: this._schema.color
         });
@@ -157,12 +165,12 @@ Entry.Block.FOLLOW = 3;
             cursor.x += box.width;
         }
 
-        this.contentBox.width = cursor.x;
+        this.contentWidth = cursor.x;
     };
 
     p.measureSize = function() {
         this.set({
-            width: this.contentBox.width + 30,
+            width: this.contentWidth + 30,
             height: 30
         });
     };
@@ -170,6 +178,9 @@ Entry.Block.FOLLOW = 3;
     p.render = function() {
         var path = this._skeleton.path(this);
         this._path.animate({
+            d: path
+        }, 200);
+        this._darkenPath.animate({
             d: path
         }, 200);
     };
