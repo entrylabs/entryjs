@@ -3580,17 +3580,17 @@ Entry.Block.FOLLOW = 3;
     this._path.animate({d:a}, 200);
     this._darkenPath.animate({d:a}, 200);
   };
-  b.highlight = function() {
+  b.enableHighlight = function() {
     var a = this._path.getTotalLength(), b = this._path;
-    this._path.attr({stroke:"#f00", strokeWidth:2, "stroke-linecap":"round", "stroke-dasharray":a + " " + a, "stroke-dashoffset":a});
+    this._path.attr({stroke:"#F59900", strokeWidth:2, "stroke-linecap":"round", "stroke-dasharray":a + " " + a, "stroke-dashoffset":a});
     setInterval(function() {
-      b.attr({"stroke-dashoffset":a}).animate({"stroke-dashoffset":0}, 600);
-    }, 1800, mina.easeout);
+      b.attr({"stroke-dashoffset":a}).animate({"stroke-dashoffset":0}, 300);
+    }, 1400, mina.easeout);
     setTimeout(function() {
       setInterval(function() {
-        b.animate({"stroke-dashoffset":-a}, 600);
-      }, 1800, mina.easeout);
-    }, 1200);
+        b.animate({"stroke-dashoffset":-a}, 300);
+      }, 1400, mina.easeout);
+    }, 500);
   };
   b.addControl = function() {
     var a = this;
@@ -3613,7 +3613,14 @@ Entry.Block.FOLLOW = 3;
     }
     switch(a.button) {
       case 0:
-        $(document).bind("mousemove.block", b), $(document).bind("mouseup.block", d), this._board.dragBlock = this, this.dragInstance = new Entry.DragInstance({startX:a.clientX, startY:a.clientY, offsetX:a.clientX, offsetY:a.clientY, mode:!0}), this.thread.dominate();
+        $(document).bind("mousemove.block", b);
+        $(document).bind("mouseup.block", d);
+        this._board.dragBlock = this;
+        this.dragInstance = new Entry.DragInstance({startX:a.clientX, startY:a.clientY, offsetX:a.clientX, offsetY:a.clientY, mode:!0});
+        this.thread.dominate();
+        break;
+      case 1:
+        this.enableHighlight();
     }
     var e = this;
   };

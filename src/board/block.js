@@ -185,11 +185,11 @@ Entry.Block.FOLLOW = 3;
         }, 200);
     };
 
-    p.highlight = function() {
+    p.enableHighlight = function() {
         var pathLen = this._path.getTotalLength();
         var path = this._path;
         this._path.attr({
-            stroke: "#f00",
+            stroke: "#F59900",
             strokeWidth: 2,
             "stroke-linecap": "round",
             "stroke-dasharray": pathLen + " " + pathLen,
@@ -197,13 +197,13 @@ Entry.Block.FOLLOW = 3;
         });
         setInterval(function() {
             path.attr({"stroke-dashoffset": pathLen})
-            .animate({"stroke-dashoffset": 0}, 600);
-        }, 1800, mina.easeout);
+            .animate({"stroke-dashoffset": 0}, 300);
+        }, 1400, mina.easeout);
         setTimeout(function() {
             setInterval(function() {
-                path.animate({"stroke-dashoffset": - pathLen}, 600);
-            }, 1800, mina.easeout);
-        }, 1200);
+                path.animate({"stroke-dashoffset": - pathLen}, 300);
+            }, 1400, mina.easeout);
+        }, 500);
     };
 
     p.addControl = function() {
@@ -230,6 +230,7 @@ Entry.Block.FOLLOW = 3;
                 this.thread.dominate();
                 break;
             case 1: // middle button
+                this.enableHighlight();
                 break;
             case 2: // left button
                 break;
