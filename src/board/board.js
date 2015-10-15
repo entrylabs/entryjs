@@ -56,6 +56,8 @@ Entry.Board.MAGNET_RANGE = 20;
     };
 
     p.updateCloseMagnet = function(targetBlock) {
+        if (targetBlock.magnets.previous === undefined)
+            return;
         var threads = this.code.threads;
         var targetThread = targetBlock.thread;
         for (var i = 0; i < threads.length; i++) {
@@ -77,7 +79,7 @@ Entry.Board.MAGNET_RANGE = 20;
                     )) {
                         if (this.closeBlock !== block) {
                             if (this.closeBlock !== null)
-                                this.closeBlock.magnets.next.y = 31;
+                                this.closeBlock.magnets.next.y = 51;
                             var movingBlocks = targetThread._blocks.slice(targetThread._blocks.indexOf(targetBlock));
                             var targetHeight = block.magnets.next.y;
                             movingBlocks.map(function(b) {targetHeight += b.height;});
@@ -91,7 +93,7 @@ Entry.Board.MAGNET_RANGE = 20;
             }
         }
         if (this.closeBlock) {
-            this.closeBlock.magnets.next.y = 31;
+            this.closeBlock.magnets.next.y = 51;
             this.closeBlock.thread.align(true);
             this.closeBlock = null;
         }
@@ -106,7 +108,7 @@ Entry.Board.MAGNET_RANGE = 20;
                 oldThread = block.thread,
                 thread = this.closeBlock.thread,
                 index = thread.indexOf(this.closeBlock) + 1;
-            this.closeBlock.magnets.next.y = 31;
+            this.closeBlock.magnets.next.y = 51;
             for (var i = separatedBlocks.length - 1; i >=0; i--) {
                 separatedBlocks[i].thread = thread;
                  thread._blocks.insert(separatedBlocks[i], index);

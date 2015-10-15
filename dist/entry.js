@@ -3074,15 +3074,17 @@ Entry.skeleton = function() {
 };
 Entry.skeleton.basic = {path:function(b) {
   return "m 0,0 l 8,8 8,-8 h %w a 15,15 0 0,1 0,30 h -%w l -8,8 -8,-8 v -30 z".replace(/%w/gi, b.contentWidth);
-}, magnets:function() {
+}, box:function(b) {
+}, magnets:function(b) {
   return {previous:{x:0, y:0}, next:{x:0, y:31}};
-}, contentPos:function() {
+}, contentPos:function(b) {
   return {x:20, y:15};
 }};
 Entry.skeleton.pebble_event = {path:function(b) {
   return "m 0,0 a 25,25 0 0,1 9,48.3 a 9,9 0 0,1 -18,0 a 25,25 0 0,1 9,-48.3 z";
-}, magnets:function() {
-  return {previous:{x:0, y:0}, next:{x:0, y:49.3}};
+}, box:function(b) {
+}, magnets:function(b) {
+  return {next:{x:0, y:49.3}};
 }, contentPos:function() {
   return {x:0, y:25};
 }};
@@ -3098,7 +3100,7 @@ Entry.skeleton.pebble_basic = {path:function(b) {
 }, magnets:function() {
   return {previous:{x:0, y:0}, next:{x:0, y:51}};
 }, contentPos:function() {
-  return {x:-47, y:25};
+  return {x:-46, y:25};
 }};
 Entry.Collection = function(b) {
   this._data = [];
@@ -3433,28 +3435,30 @@ Entry.Board.MAGNET_RANGE = 20;
     this.code = a;
   };
   b.updateCloseMagnet = function(a) {
-    for (var b = this.code.threads, d = a.thread, e = 0;e < b.length;e++) {
-      var f = b.at(e);
-      if (Entry.Utils.isPointInMatrix(f, a, Entry.Board.MAGNET_RANGE)) {
-        for (var h = f._blocks, g = 0;g < h.length;g++) {
-          if (f = h.at(g), Entry.Utils.isPointInMatrix({x:f.x, y:f.y + f.height, width:f.width, height:0}, a, Entry.Board.MAGNET_RANGE)) {
-            if (this.closeBlock !== f) {
-              null !== this.closeBlock && (this.closeBlock.magnets.next.y = 31);
-              a = d._blocks.slice(d._blocks.indexOf(a));
-              var k = f.magnets.next.y;
-              a.map(function(a) {
-                k += a.height;
-              });
-              f.magnets.next.y = k;
-              f.thread.align(!0);
-              this.closeBlock = f;
+    if (void 0 !== a.magnets.previous) {
+      for (var b = this.code.threads, d = a.thread, e = 0;e < b.length;e++) {
+        var f = b.at(e);
+        if (Entry.Utils.isPointInMatrix(f, a, Entry.Board.MAGNET_RANGE)) {
+          for (var h = f._blocks, g = 0;g < h.length;g++) {
+            if (f = h.at(g), Entry.Utils.isPointInMatrix({x:f.x, y:f.y + f.height, width:f.width, height:0}, a, Entry.Board.MAGNET_RANGE)) {
+              if (this.closeBlock !== f) {
+                null !== this.closeBlock && (this.closeBlock.magnets.next.y = 51);
+                a = d._blocks.slice(d._blocks.indexOf(a));
+                var k = f.magnets.next.y;
+                a.map(function(a) {
+                  k += a.height;
+                });
+                f.magnets.next.y = k;
+                f.thread.align(!0);
+                this.closeBlock = f;
+              }
+              return;
             }
-            return;
           }
         }
       }
+      this.closeBlock && (this.closeBlock.magnets.next.y = 51, this.closeBlock.thread.align(!0), this.closeBlock = null);
     }
-    this.closeBlock && (this.closeBlock.magnets.next.y = 31, this.closeBlock.thread.align(!0), this.closeBlock = null);
   };
   b.terminateDrag = function(a) {
     var b = a.dragInstance;
@@ -3463,7 +3467,7 @@ Entry.Board.MAGNET_RANGE = 20;
       b = a.thread.cut(a);
       a = a.thread;
       var d = this.closeBlock.thread, e = d.indexOf(this.closeBlock) + 1;
-      this.closeBlock.magnets.next.y = 31;
+      this.closeBlock.magnets.next.y = 51;
       for (var f = b.length - 1;0 <= f;f--) {
         b[f].thread = d, d._blocks.insert(b[f], e);
       }
@@ -3518,12 +3522,13 @@ Entry.Thread = function(b, a) {
       if (k.dragInstance && a) {
         break;
       }
-      var l = k.magnets.previous, d = d - l.x, e = e - l.y;
+      var l = k.magnets.previous;
+      l && (d -= l.x, e -= l.y);
       k.dragInstance && (d = k.x, e = k.y);
       k.moveTo(d, e, a);
-      l = k.magnets.next;
-      d += l.x;
-      e += l.y;
+      if (l = k.magnets.next) {
+        d += l.x, e += l.y;
+      }
       h = Math.max(h, k.width);
       f = Math.min(f, k.width);
     }
@@ -3613,7 +3618,7 @@ Entry.Block.FOLLOW = 3;
     this.contentWidth = a;
   };
   b.measureSize = function() {
-    this.set({width:this.contentWidth + 30, height:30});
+    this.set({width:this.contentWidth + 30, height:50});
   };
   b.render = function() {
     var a = this._skeleton.path(this);

@@ -90,8 +90,10 @@ Entry.Thread = function(thread, code) {
             if (b.dragInstance && animate)
                 break;
             var prevMagnet = b.magnets.previous;
-            cursor.x -= prevMagnet.x;
-            cursor.y -= prevMagnet.y;
+            if (prevMagnet) {
+                cursor.x -= prevMagnet.x;
+                cursor.y -= prevMagnet.y;
+            }
             if (b.dragInstance) {
                 cursor.x = b.x;
                 cursor.y = b.y;
@@ -99,8 +101,10 @@ Entry.Thread = function(thread, code) {
             b.moveTo(cursor.x, cursor.y, animate);
 
             var magnet = b.magnets.next;
-            cursor.x += magnet.x;
-            cursor.y += magnet.y;
+            if (magnet) {
+                cursor.x += magnet.x;
+                cursor.y += magnet.y;
+            }
 
             cursor.width = Math.max(cursor.width, b.width);
             cursor.minWidth = Math.min(cursor.minWidth, b.width);

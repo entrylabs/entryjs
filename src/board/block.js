@@ -178,7 +178,7 @@ Entry.Block.FOLLOW = 3;
     p.measureSize = function() {
         this.set({
             width: this.contentWidth + 30,
-            height: 30
+            height: 50
         });
     };
 
