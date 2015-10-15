@@ -24,8 +24,9 @@ Entry.FieldText = function(text, block) {
 
 (function(p) {
     p.renderStart = function() {
-        this.textElement = this._block.fieldSvgGroup.text(0, 0, this._text);
+        this.textElement = this._block.contentSvgGroup.text(0, 0, this._text);
         this.textElement.attr({
+            'style': 'white-space: pre',
             "alignment-baseline": "central",
             "class": "dragNone",
             "fill": "white"

@@ -2996,20 +2996,59 @@ Entry.block.options_for_list = function(b, a) {
 };
 Entry.block.run = {skeleton:"basic", color:"#3BBD70", contents:["this is", "basic block"], func:function() {
 }};
-Entry.block.jr_start = {skeleton:"pebble_event", color:"#3BBD70", contents:[">"], func:function() {
+Entry.block.jr_start = {skeleton:"pebble_event", color:"#3BBD70", contents:[{type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_play_image.png", highlightColor:"#3BBD70", size:22}], func:function() {
 }};
 Entry.block.jr_repeat = {skeleton:"basic", color:"#3BBD70", contents:["1", "\ubc18\ubcf5"], func:function() {
 }};
-Entry.block.jr_item = {skeleton:"pebble_basic", color:"#F46C6C", contents:["\uc544\uc774\ud15c"], func:function() {
+Entry.block.jr_item = {skeleton:"pebble_basic", color:"#F46C6C", contents:["\uc544\uc774\ud15c", {type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_item_image.png", highlightColor:"#FFF", position:{x:80, y:0}, size:22}], func:function() {
 }};
-Entry.block.jr_north = {skeleton:"pebble_basic", color:"#A751E3", contents:["\uc704\ub85c"], func:function() {
+Entry.block.jr_north = {skeleton:"pebble_basic", color:"#A751E3", contents:["   \uc704\ub85c", {type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_up_image.png", position:{x:80, y:0}, size:22}], func:function() {
 }};
-Entry.block.jr_east = {skeleton:"pebble_basic", color:"#A751E3", contents:["\uc624\ub978\ucabd"], func:function() {
+Entry.block.jr_east = {skeleton:"pebble_basic", color:"#A751E3", contents:["\uc624\ub978\ucabd", {type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_right_image.png", position:{x:80, y:0}, size:22}], func:function() {
 }};
-Entry.block.jr_south = {skeleton:"pebble_basic", color:"#A751E3", contents:["\uc544\ub798\ub85c"], func:function() {
+Entry.block.jr_south = {skeleton:"pebble_basic", color:"#A751E3", contents:["\uc544\ub798\ub85c", {type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_down_image.png", position:{x:80, y:0}, size:22}], func:function() {
 }};
-Entry.block.jr_west = {skeleton:"pebble_basic", color:"#A751E3", contents:["\uc67c\ucabd"], func:function() {
+Entry.block.jr_west = {skeleton:"pebble_basic", color:"#A751E3", contents:["   \uc67c\ucabd", {type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_left_image.png", position:{x:80, y:0}, size:22}], func:function() {
 }};
+Entry.FieldIndicator = function(b, a) {
+  this._block = a;
+  var c = new Entry.BoxModel;
+  c.observe(a, "alignContent", ["width"]);
+  this.box = c;
+  this._size = b.size;
+  this._imgUrl = b.img;
+  this._highlightColor = b.highlightColor ? b.highlightColor : "#F59900";
+  this._position = b.position;
+  this._imgElement = this._path = this.svgGroup = null;
+  this.renderStart();
+};
+(function(b) {
+  b.renderStart = function() {
+    this.svgGroup = this._block.contentSvgGroup.group();
+    this._imgElement = this.svgGroup.image(this._imgUrl, -1 * this._size, -1 * this._size, 2 * this._size, 2 * this._size);
+    var a = "m 0,-%s a %s,%s 0 1,1 -0.1,0 z".replace(/%s/gi, this._size);
+    this._path = this.svgGroup.path(a);
+    this._path.attr({stroke:"none", fill:"none"});
+    this.box.set({x:this._size, y:0, width:2 * this._size, height:2 * this._size});
+  };
+  b.align = function(a, b) {
+    this._position && (a = this._position.x);
+    this.svgGroup.animate({transform:"t" + a + " " + b}, 300, mina.easeinout);
+    this.box.set({x:a, y:b});
+  };
+  b.enableHighlight = function() {
+    var a = this._path.getTotalLength(), b = this._path;
+    this._path.attr({stroke:this._highlightColor, strokeWidth:2, "stroke-linecap":"round", "stroke-dasharray":a + " " + a, "stroke-dashoffset":a});
+    setInterval(function() {
+      b.attr({"stroke-dashoffset":a}).animate({"stroke-dashoffset":0}, 300);
+    }, 1400, mina.easeout);
+    setTimeout(function() {
+      setInterval(function() {
+        b.animate({"stroke-dashoffset":-a}, 300);
+      }, 1400, mina.easeout);
+    }, 500);
+  };
+})(Entry.FieldIndicator.prototype);
 Entry.FieldText = function(b, a) {
   this._block = a;
   var c = new Entry.BoxModel;
@@ -3021,8 +3060,8 @@ Entry.FieldText = function(b, a) {
 };
 (function(b) {
   b.renderStart = function() {
-    this.textElement = this._block.fieldSvgGroup.text(0, 0, this._text);
-    this.textElement.attr({"alignment-baseline":"central", "class":"dragNone", fill:"white"});
+    this.textElement = this._block.contentSvgGroup.text(0, 0, this._text);
+    this.textElement.attr({style:"white-space: pre", "alignment-baseline":"central", "class":"dragNone", fill:"white"});
     var a = this.textElement.getBBox();
     this.box.set({x:0, y:0, width:a.width, height:a.height});
   };
@@ -3514,7 +3553,7 @@ Entry.Block = function(b, a) {
   this.observe(this, "render", ["contentWidth", "contentHeight"]);
   this._contents = [];
   this.magnets = {};
-  this._darkenPath = this._path = this.fieldSvgGroup = this.svgGroup = null;
+  this._darkenPath = this._path = this.contentSvgGroup = this.svgGroup = null;
 };
 Entry.Block.HIDDEN = 0;
 Entry.Block.SHOWN = 1;
@@ -3554,12 +3593,13 @@ Entry.Block.FOLLOW = 3;
     return this.moveTo(this.x + a, this.y + b, d);
   };
   b.fieldRenderStart = function() {
-    this.fieldSvgGroup = this.svgGroup.group();
+    this.contentSvgGroup = this.svgGroup.group();
+    this.contentSvgGroup.attr({style:"white-space: pre"});
     var a = this._skeleton.contentPos();
-    this.fieldSvgGroup.transform("t" + a.x + " " + a.y);
+    this.contentSvgGroup.transform("t" + a.x + " " + a.y);
     for (var a = this._schema.contents, b = 0;b < a.length;b++) {
       var d = a[b];
-      "string" === typeof d && this._contents.push(new Entry.FieldText(d, this));
+      "string" === typeof d ? this._contents.push(new Entry.FieldText(d, this)) : this._contents.push(new Entry["Field" + d.type](d, this));
     }
     this.alignContent();
   };

@@ -36,7 +36,7 @@ Entry.Block = function(block, thread) {
 
     // SVG Element
     this.svgGroup = null;
-    this.fieldSvgGroup = null;
+    this.contentSvgGroup = null;
     this._path = null;
     this._darkenPath = null;
 };
@@ -138,15 +138,22 @@ Entry.Block.FOLLOW = 3;
     };
 
     p.fieldRenderStart = function() {
-        this.fieldSvgGroup = this.svgGroup.group();
+        this.contentSvgGroup = this.svgGroup.group();
+        this.contentSvgGroup.attr({
+            'style': 'white-space: pre'
+        });
         var contentPos = this._skeleton.contentPos();
-        this.fieldSvgGroup.transform("t" + contentPos.x + ' ' + contentPos.y);
+        this.contentSvgGroup.transform("t" + contentPos.x + ' ' + contentPos.y);
 
         var contents = this._schema.contents;
         for (var i = 0; i < contents.length; i++) {
             var content = contents[i];
             if (typeof content === "string")
                 this._contents.push(new Entry.FieldText(content, this));
+            else
+                this._contents.push(
+                    new Entry['Field' + content.type](content, this)
+                );
         }
         this.alignContent();
     };
