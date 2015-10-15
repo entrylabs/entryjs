@@ -3061,7 +3061,7 @@ Entry.FieldText = function(b, a) {
 (function(b) {
   b.renderStart = function() {
     this.textElement = this._block.contentSvgGroup.text(0, 0, this._text);
-    this.textElement.attr({style:"white-space: pre", "alignment-baseline":"central", "class":"dragNone", fill:"white"});
+    this.textElement.attr({style:"white-space: pre; font-size: 16px", "alignment-baseline":"central", "class":"dragNone", fill:"white"});
     var a = this.textElement.getBBox();
     this.box.set({x:0, y:0, width:a.width, height:a.height});
   };
