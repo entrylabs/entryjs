@@ -380,8 +380,8 @@ Entry.Painter.prototype.newPicture = function() {
 
 Entry.Painter.prototype.initPicture = function() {
     var painter = this;
-
     Entry.addEventListener('pictureSelected', function(picture) {
+        painter.selectToolbox('cursor');
         if (painter.file.id === picture.id)
             return;
 
@@ -632,6 +632,11 @@ Entry.Painter.prototype.addImage  = function(image) {
     bitmap.y = this.stage.canvas.height / 2;
     bitmap.regX = bitmap.image.width / 2 | 0;
     bitmap.regY = bitmap.image.height / 2 | 0;
+    if (bitmap.image.height > 540) {
+        var scale = 540 / bitmap.image.height;
+        bitmap.scaleX = scale;
+        bitmap.scaleY = scale;
+    }
     bitmap.name = image.id;
     bitmap.id = image.id;
 

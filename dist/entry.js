@@ -5432,7 +5432,7 @@ Entry.EntityObject.prototype.applyFilter = function() {
   e.adjustColor(0, 0, 0, b.hue);
   e = new createjs.ColorMatrixFilter(e);
   c.push(e);
-  var f = 3.6 * b.hsv * Math.acos(-1) / 180, e = Math.cos(f), f = Math.sin(f), e = [e, f, 0, 0, 0, -1 * f, e, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1], e = (new createjs.ColorMatrix).concat(e), e = new createjs.ColorMatrixFilter(e);
+  var e = 3.6 * b.hsv, f = Math.acos(-1), f = e * f / 180, e = Math.cos(f), f = Math.sin(f), e = [e, f, 0, 0, 0, -1 * f, e, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1], e = (new createjs.ColorMatrix).concat(e), e = new createjs.ColorMatrixFilter(e);
   c.push(e);
   a.alpha = b.alpha = d(b.alpha, 0, 1);
   a.filters = c;
@@ -6738,6 +6738,7 @@ Entry.Painter.prototype.newPicture = function() {
 Entry.Painter.prototype.initPicture = function() {
   var a = this;
   Entry.addEventListener("pictureSelected", function(b) {
+    a.selectToolbox("cursor");
     if (a.file.id !== b.id) {
       a.file.modified && confirm("\uc218\uc815\ub41c \ub0b4\uc6a9\uc744 \uc800\uc7a5\ud558\uc2dc\uaca0\uc2b5\ub2c8\uae4c?") && (a.file_ = JSON.parse(JSON.stringify(a.file)), a.file_save(!0), a.file.modified = !1);
       a.clearCanvas();
@@ -6854,6 +6855,11 @@ Entry.Painter.prototype.addImage = function(a) {
   b.y = this.stage.canvas.height / 2;
   b.regX = b.image.width / 2 | 0;
   b.regY = b.image.height / 2 | 0;
+  if (540 < b.image.height) {
+    var c = 540 / b.image.height;
+    b.scaleX = c;
+    b.scaleY = c;
+  }
   b.name = a.id;
   b.id = a.id;
   this.selectObject(b);
