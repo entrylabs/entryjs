@@ -30,6 +30,7 @@ Entry.Thread = function(thread, code) {
         type: Entry.STATIC.THREAD_MODEL,
         x: 0,
         y: 0,
+        offsetX: 0,
         width: 0,
         minWidth: 0,
         height: 0,
@@ -82,8 +83,10 @@ Entry.Thread = function(thread, code) {
         var cursor = {
             x: firstBlockBox.x,
             y: firstBlockBox.y,
+            offsetX: 0,
             minWidth: firstBlockBox.width,
-            width: 0
+            width: 0,
+            height: 0
         };
         for (var i = 0; i < this._blocks.length; i++) {
             var b = this._blocks.at(i);
@@ -108,14 +111,17 @@ Entry.Thread = function(thread, code) {
 
             cursor.width = Math.max(cursor.width, b.width);
             cursor.minWidth = Math.min(cursor.minWidth, b.width);
+            cursor.offsetX = Math.min(cursor.offsetX, b.offsetX);
         }
+        cursor.height = cursor.y - firstBlockBox.y;
         this.set({
             x: firstBlockBox.x,
             y: firstBlockBox.y,
+            offsetX: cursor.offsetX,
             minWidth: cursor.minWidth,
             width: cursor.width,
             height: cursor.y - firstBlockBox.y
-        });
+        })
     };
 
     p.dominate = function() {

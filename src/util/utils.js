@@ -17,21 +17,23 @@ Entry.Utils.intersectArray = function (x, y){
 
 Entry.Utils.isPointInMatrix = function(matrix, point, offset) {
     offset = offset === undefined ? 0 : offset;
-    return (matrix.x - offset <= point.x) &&
-        (matrix.x + matrix.width + offset >= point.x) &&
-        (matrix.y - offset <= point.y) &&
-        (matrix.y + matrix.height + offset >= point.y);
+    var x = matrix.offsetX ? matrix.x + matrix.offsetX : matrix.x;
+    var y = matrix.offsetY ? matrix.y + matrix.offsety : matrix.y;
+    return (x - offset <= point.x) &&
+        (x + matrix.width + offset >= point.x) &&
+        (y - offset <= point.y) &&
+        (y + matrix.height + offset >= point.y);
 };
 
 Entry.Utils.colorDarken = function(color, factor) {
     var r, g, b;
     if (color.length === 7) {
-        r = parseInt(color.substr(1, 2), 16),
-        g = parseInt(color.substr(3, 2), 16),
+        r = parseInt(color.substr(1, 2), 16);
+        g = parseInt(color.substr(3, 2), 16);
         b = parseInt(color.substr(5, 2), 16);
     } else {
-        r = parseInt(color.substr(1, 2), 16),
-        g = parseInt(color.substr(2, 2), 16),
+        r = parseInt(color.substr(1, 2), 16);
+        g = parseInt(color.substr(2, 2), 16);
         b = parseInt(color.substr(3, 2), 16);
     }
 

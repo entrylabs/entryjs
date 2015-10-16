@@ -44,7 +44,7 @@ Entry.Block = function(block, thread) {
 };
 
 Entry.Block.MAGNET_RANGE = 10;
-Entry.Block.MAGNET_OFFSET = 20;
+Entry.Block.MAGNET_OFFSET = 0.4;
 
 Entry.Block.HIDDEN = 0;
 Entry.Block.SHOWN = 1;
@@ -98,13 +98,14 @@ Entry.Block.FOLLOW = 3;
             });
         }
 
+        var path = this._skeleton.path(this);
+
         this._darkenPath = this.svgGroup.path(path);
         this._darkenPath.attr({
             transform: "t0 1.1",
             fill: Entry.Utils.colorDarken(this._schema.color)
         });
 
-        var path = this._skeleton.path(this);
         this._path = this.svgGroup.path(path);
         this._path.attr({
             fill: this._schema.color
@@ -274,19 +275,17 @@ Entry.Block.FOLLOW = 3;
 
     p.checkMagnet = function(targetBlock) {
         var matrix = {
-            x: this.x - this.offsetX,
-            y: this.y - this.offsetY + Entry.Block.MAGNET_OFFSET,
+            x: this.x,
+            y: this.y + this.height * Entry.Block.MAGNET_OFFSET,
             width: this.width,
             height: this.height
         };
         var targetMatrix = {
-            x: targetBlock.x - targetBlock.offsetX,
-            y: targetBlock.y - targetBlock.offsetY,
-            width: targetBlock.width,
-            height: targetBlock.height
+            x: targetBlock.x,
+            y: targetBlock.y
         };
         if (Entry.Utils.isPointInMatrix(
-            matrix, targetMatrix, Entry.Block.MAGNET_RANGE
+            this, targetMatrix, Entry.Block.MAGNET_RANGE
         )) {
             this.magneting = true;
         } else {

@@ -2623,9 +2623,9 @@ Entry.block.message_cast_wait = function(b, a) {
   }
   var e = [];
   Entry.container.mapEntityIncludeCloneOnScene(function(a, b) {
-    for (var c = b[0], d = b[1], l = a.parent.script.childNodes, n = 0;n < l.length;n++) {
-      var p = l[n], m = Entry.Xml.getField("VALUE", p);
-      Entry.Xml.isTypeOf(c, p) && m == d && (m = new Entry.Script(a), m.init(p), e.push(m));
+    for (var c = b[0], d = b[1], k = a.parent.script.childNodes, m = 0;m < k.length;m++) {
+      var p = k[m], n = Entry.Xml.getField("VALUE", p);
+      Entry.Xml.isTypeOf(c, p) && n == d && (n = new Entry.Script(a), n.init(p), e.push(n));
     }
   }, ["when_message_cast", c]);
   a.runningScript = e;
@@ -3091,11 +3091,11 @@ Entry.skeleton.pebble_event = {path:function(b) {
   return {x:0, y:25};
 }};
 Entry.skeleton.pebble_loop = {path:function(b) {
-  return "M 0,9 a 9,9 0 0,0 9,-9 h %cw a 25,25 0 0,1 25,25 v %ch a 25,25 0 0,1 -25,25 h -%cw a 9,9 0 0,1 -18,0 h -%cw a 25,25 0 0,1 -25,-25 v -%ch a 25,25 0 0,1 25,-25 h %cw a 9,9 0 0,0 9,9 ZM 0,40 a 9,9 0 0,0 9,-9 h 28 a 25,25 0 0,1 25,25 v %cih a 25,25 0 0,1 -25,25 h -28 a 9,9 0 0,1 -18,0 h -28 a 25,25 0 0,1 -25,-25 v -%cih a 25,25 0 0,1 25,-25 h 28 a 9,9 0 0,0 9,9 Z".replace(/%cw/gi, 41).replace(/%ch/gi, 54).replace(/%cih/gi, 0);
+  return "M 0,9 a 9,9 0 0,0 9,-9 h %cw a 25,25 0 0,1 25,25 v %ch a 25,25 0 0,1 -25,25 h -%cw a 9,9 0 0,1 -18,0 h -%cw a 25,25 0 0,1 -25,-25 v -%ch a 25,25 0 0,1 25,-25 h %cw a 9,9 0 0,0 9,9 z M 0,49 a 9,9 0 0,1 -9,-9 h -28 a 25,25 0 0,0 -25,25 v %cih a 25,25 0 0,0 25,25 h 28 a 9,9 0 0,0 18,0 h 28 a 25,25 0 0,0 25,-25 v -%cih a 25,25 0 0,0 -25,-25 h -28 a 9,9 0 0,1 -9,9 z".replace(/%cw/gi, 41).replace(/%ch/gi, 54).replace(/%cih/gi, 0);
 }, magnets:function() {
-  return {previous:{x:0, y:0}, next:{x:0, y:51}};
+  return {previous:{x:0, y:0}, next:{x:0, y:105}};
 }, box:function() {
-  return {offsetX:-62, offsetY:0, width:124, height:50};
+  return {offsetX:-75, offsetY:0, width:150, height:104};
 }, contentPos:function() {
   return {x:-46, y:25};
 }};
@@ -3161,9 +3161,9 @@ Entry.Collection = function(b) {
   b.find = function(a) {
     for (var b = this._data, d = [], e, f = 0, h = this.length;f < h;f++) {
       e = !0;
-      var g = b[f], k;
-      for (k in a) {
-        if (a[k] != g[k]) {
+      var g = b[f], l;
+      for (l in a) {
+        if (a[l] != g[l]) {
           e = !1;
           break;
         }
@@ -3198,14 +3198,14 @@ Entry.Collection = function(b) {
     if (!(0 > a || a > this.length)) {
       var e = this._data, f = this._hashMap;
       b = void 0 === b ? this.length - a : b;
-      for (var h = e.splice(a, b), g = 0, k = h.length;g < k;g++) {
+      for (var h = e.splice(a, b), g = 0, l = h.length;g < l;g++) {
         delete f[h[g].id];
       }
       g = 0;
-      for (k = d.length;g < k;g++) {
-        var l = d[g];
-        e.splice(a++, 0, l);
-        f[l.id] = l;
+      for (l = d.length;g < l;g++) {
+        var k = d[g];
+        e.splice(a++, 0, k);
+        f[k.id] = k;
       }
       return h;
     }
@@ -3335,7 +3335,8 @@ Entry.Utils.intersectArray = function(b, a) {
 };
 Entry.Utils.isPointInMatrix = function(b, a, c) {
   c = void 0 === c ? 0 : c;
-  return b.x - c <= a.x && b.x + b.width + c >= a.x && b.y - c <= a.y && b.y + b.height + c >= a.y;
+  var d = b.offsetX ? b.x + b.offsetX : b.x, e = b.offsetY ? b.y + b.offsety : b.y;
+  return d - c <= a.x && d + b.width + c >= a.x && e - c <= a.y && e + b.height + c >= a.y;
 };
 Entry.Utils.colorDarken = function(b, a) {
   var c, d, e;
@@ -3485,7 +3486,7 @@ Entry.Thread = function(b, a) {
   this.svgGroup = this.board = null;
 };
 (function(b) {
-  b.schema = {type:Entry.STATIC.THREAD_MODEL, x:0, y:0, width:0, minWidth:0, height:0};
+  b.schema = {type:Entry.STATIC.THREAD_MODEL, x:0, y:0, offsetX:0, width:0, minWidth:0, height:0};
   b.loadModel = function(a) {
     var b = this;
     a = a.map(function(a) {
@@ -3512,22 +3513,23 @@ Entry.Thread = function(b, a) {
   };
   b.align = function(a) {
     a = void 0 === a ? !0 : a;
-    for (var b = this._blocks.at(0), d = b.x, e = b.y, f = b.width, h = 0, g = 0;g < this._blocks.length;g++) {
-      var k = this._blocks.at(g);
+    for (var b = this._blocks.at(0), d = b.x, e = b.y, f = 0, h = b.width, g = 0, l = 0;l < this._blocks.length;l++) {
+      var k = this._blocks.at(l);
       if (k.dragInstance && a) {
         break;
       }
-      var l = k.magnets.previous;
-      l && (d -= l.x, e -= l.y);
+      var m = k.magnets.previous;
+      m && (d -= m.x, e -= m.y);
       k.dragInstance && (d = k.x, e = k.y);
       k.moveTo(d, e, a);
-      if (l = k.magnets.next) {
-        d += l.x, e += l.y;
+      if (m = k.magnets.next) {
+        d += m.x, e += m.y;
       }
-      h = Math.max(h, k.width);
-      f = Math.min(f, k.width);
+      g = Math.max(g, k.width);
+      h = Math.min(h, k.width);
+      f = Math.min(f, k.offsetX);
     }
-    this.set({x:b.x, y:b.y, minWidth:f, width:h, height:e - b.y});
+    this.set({x:b.x, y:b.y, offsetX:f, minWidth:h, width:g, height:e - b.y});
   };
   b.dominate = function() {
     this.board.dominate(this);
@@ -3557,7 +3559,7 @@ Entry.Block = function(b, a) {
   this._darkenPath = this._path = this.contentSvgGroup = this.svgGroup = null;
 };
 Entry.Block.MAGNET_RANGE = 10;
-Entry.Block.MAGNET_OFFSET = 20;
+Entry.Block.MAGNET_OFFSET = .4;
 Entry.Block.HIDDEN = 0;
 Entry.Block.SHOWN = 1;
 Entry.Block.MOVE = 2;
@@ -3577,9 +3579,9 @@ Entry.Block.FOLLOW = 3;
       this.svgGroup = this.thread.svgGroup.group();
       this.svgGroup.attr({class:"block"});
       b && this.svgGroup.attr({transform:"t" + b.x + " " + b.y});
+      var d = this._skeleton.path(this);
       this._darkenPath = this.svgGroup.path(d);
       this._darkenPath.attr({transform:"t0 1.1", fill:Entry.Utils.colorDarken(this._schema.color)});
-      var d = this._skeleton.path(this);
       this._path = this.svgGroup.path(d);
       this._path.attr({fill:this._schema.color});
       this.magnets = this._skeleton.magnets();
@@ -3670,7 +3672,7 @@ Entry.Block.FOLLOW = 3;
     this._board.terminateDrag(this);
   };
   b.checkMagnet = function(a) {
-    Entry.Utils.isPointInMatrix({x:this.x - this.offsetX, y:this.y - this.offsetY + Entry.Block.MAGNET_OFFSET, width:this.width, height:this.height}, {x:a.x - a.offsetX, y:a.y - a.offsetY, width:a.width, height:a.height}, Entry.Block.MAGNET_RANGE) ? this.magneting = !0 : this.magneting = !1;
+    Entry.Utils.isPointInMatrix(this, {x:a.x, y:a.y}, Entry.Block.MAGNET_RANGE) ? this.magneting = !0 : this.magneting = !1;
   };
   b.applyMagnet = function() {
     if (this.magneting) {
