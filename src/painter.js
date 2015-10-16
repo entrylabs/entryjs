@@ -17,7 +17,7 @@ Entry.Painter = function() {
     };
     this.file = {
         id: Entry.generateHash(),
-        name: Lang.Workspace.new_picture,
+        name: '새그림',
         modified: false,
         mode: 'new' // new or edit
     };
@@ -370,7 +370,7 @@ Entry.Painter.prototype.newPicture = function() {
             width: 1
         },
         filename: "_1x1",
-        name: Lang.Workspace.new_picture
+        name: "새그림"
     };
 
     newPicture.id = Entry.generateHash();
@@ -382,12 +382,11 @@ Entry.Painter.prototype.initPicture = function() {
     var painter = this;
 
     Entry.addEventListener('pictureSelected', function(picture) {
-        painter.selectToolbox('cursor');
         if (painter.file.id === picture.id)
             return;
 
         if (painter.file.modified) {
-            var save = confirm(Lang.Workspace.picture_modified);
+            var save = confirm('수정된 내용을 저장하시겠습니까?');
             if (save) {
                 painter.file_ = JSON.parse(JSON.stringify(painter.file));
                 painter.file_save(true);
@@ -633,11 +632,6 @@ Entry.Painter.prototype.addImage  = function(image) {
     bitmap.y = this.stage.canvas.height / 2;
     bitmap.regX = bitmap.image.width / 2 | 0;
     bitmap.regY = bitmap.image.height / 2 | 0;
-    if (bitmap.image.height > 540) {
-        var scale = 540/bitmap.image.height;
-        bitmap.scaleX = scale;
-        bitmap.scaleY = scale;
-    }
     bitmap.name = image.id;
     bitmap.id = image.id;
 
