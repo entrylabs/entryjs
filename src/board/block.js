@@ -225,10 +225,11 @@ Entry.Block.FOLLOW = 3;
 
     // this function is call by itself
     p.onMouseDown = function(e) {
-        switch(e.button) {
-            case 0: // left button
+        if (e.button === 0 || e instanceof Touch) {
                 $(document).bind('mousemove.block', onMouseMove);
                 $(document).bind('mouseup.block', onMouseUp);
+                $(document).bind('touchmove.block', onMouseMove);
+                $(document).bind('touchend.block', onMouseUp);
                 this._board.dragBlock = this;
                 this.dragInstance = new Entry.DragInstance({
                     startX: e.clientX,
@@ -238,16 +239,16 @@ Entry.Block.FOLLOW = 3;
                     mode: true
                 });
                 this.thread.dominate();
-                break;
-            case 1: // middle button
+        } else if (e.button === 1) {
                 this.enableHighlight();
-                break;
-            case 2: // left button
-                break;
+        } else if (e.button === 2) {
         }
 
         var block = this;
         function onMouseMove(e) {
+            if (e.originalEvent.touches) {
+                e = e.originalEvent.touches[0];
+            };
             var dragInstance = block.dragInstance;
             block.moveBy(
                 e.clientX - dragInstance.offsetX,
@@ -282,9 +283,9 @@ Entry.Block.FOLLOW = 3;
             var movingBlocks = targetThread._blocks.slice(targetThread._blocks.indexOf(targetBlock));
             var targetHeight = Entry.Block.MAGNET_RANGE;
             movingBlocks.map(function(b) {targetHeight += b.height;});
-            this.magnets.next.y += targetHeight;
+            this.height += targetHeight;
         } else {
-            this.magnets = this._skeleton.magnets();
+            this.measureSize();
         }
     };
 

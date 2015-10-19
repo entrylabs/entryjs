@@ -23,6 +23,8 @@ Entry.Thread = function(thread, code) {
     this.board = null;
 
     this.svgGroup = null;
+
+    this.observe(this, "resizeBG", ['width', 'height']);
 };
 
 (function(p) {
@@ -69,6 +71,9 @@ Entry.Thread = function(thread, code) {
         this.svgGroup = board.snap.group();
         this.svgGroup.transform("t5,5");
 
+        this._bg = this.svgGroup.rect(0, 0, this.width, this.height);
+        //this._bg.attr({"fill": "transparent"})
+
         var firstBlockBox = this._blocks.at(0);
         this._blocks.map(function(b) {
             b.renderStart(board, firstBlockBox);
@@ -77,41 +82,48 @@ Entry.Thread = function(thread, code) {
         this.align();
     };
 
+    p.resizeBG = function() {
+        this._bg.attr({
+            x: this.x + this.offsetX,
+            y: this.y,
+            width: this.width,
+            height: this.height
+        });
+    };
+
     p.align = function(animate) {
         animate = animate === undefined ? true : animate;
-        var firstBlockBox = this._blocks.at(0);
-        var cursor = {
-            x: firstBlockBox.x,
-            y: firstBlockBox.y,
-            offsetX: 0,
-            minWidth: firstBlockBox.width,
-            width: 0,
-            height: 0
-        };
+        var firstBlockBox = this._blocks.at(0),
+            terminalSizing = false,
+            cursor = {
+                x: firstBlockBox.x,
+                y: firstBlockBox.y,
+                offsetX: 0,
+                minWidth: firstBlockBox.width,
+                width: 0,
+                height: 0
+            };
         for (var i = 0; i < this._blocks.length; i++) {
             var b = this._blocks.at(i);
-            if (b.dragInstance && animate)
+            if (b.dragInstance && animate) // this code sucks
                 break;
-            var prevMagnet = b.magnets.previous;
-            if (prevMagnet) {
-                cursor.x -= prevMagnet.x;
-                cursor.y -= prevMagnet.y;
-            }
             if (b.dragInstance) {
                 cursor.x = b.x;
                 cursor.y = b.y;
+                terminalSizing = true;
             }
             b.moveTo(cursor.x, cursor.y, animate);
 
             var magnet = b.magnets.next;
             if (magnet) {
-                cursor.x += magnet.x;
-                cursor.y += magnet.y;
+                cursor.y += b.height + 1;
             }
 
-            cursor.width = Math.max(cursor.width, b.width);
-            cursor.minWidth = Math.min(cursor.minWidth, b.width);
-            cursor.offsetX = Math.min(cursor.offsetX, b.offsetX);
+            if (true) {
+                cursor.width = Math.max(cursor.width, b.width);
+                cursor.minWidth = Math.min(cursor.minWidth, b.width);
+                cursor.offsetX = Math.min(cursor.offsetX, b.offsetX);
+            }
         }
         cursor.height = cursor.y - firstBlockBox.y;
         this.set({

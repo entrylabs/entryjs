@@ -15,7 +15,7 @@ Entry.skeleton = function() {
 Entry.skeleton.basic = {
     path: function(block) {
         var width = block.contentWidth;
-        return "m 0,0 l 8,8 8,-8 h %w a 15,15 0 0,1 0,30 h -%w l -8,8 -8,-8 v -30 z"
+        return "m -4,0 l 8,8 8,-8 h %w a 15,15 0 0,1 0,30 h -%w l -8,8 -8,-8 v -30 z"
             .replace(/%w/gi, width);
     },
     box: function(block) {
@@ -25,12 +25,10 @@ Entry.skeleton.basic = {
             height: 30
         };
     },
-    magnets: function(block) {
+    magnets: {
         // apply scale required.
-        return {
-            previous: {x: 0, y: 0},
-            next: {x: 0, y: 31}
-        };
+        previous: {},
+        next: {x: 0, y: 31}
     },
     contentPos: function(block) {
         // apply scale required.
@@ -47,7 +45,7 @@ Entry.skeleton.pebble_event = {
         return {
             offsetX: -25, offsetY: 0,
             width: 50,
-            height: 50
+            height: 48.3
         };
     },
     magnets: function(block) {

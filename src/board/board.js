@@ -31,6 +31,8 @@ Entry.Board = function(dom) {
         { parent: dom }
     );
 
+    this.offset = this.svgDom.offset();
+
     this.snap = Snap('#play');
     this.snap.block = "null";
 
@@ -55,8 +57,10 @@ Entry.Board = function(dom) {
     p.updateCloseMagnet = function(targetBlock) {
         if (targetBlock.magnets.previous === undefined)
             return;
-        var targetElement = Snap.getElementByPoint(targetBlock.x + 690, targetBlock.y + 130),
-            targetBlock = targetElement.block;
+        var targetElement = Snap.getElementByPoint(
+            targetBlock.x + this.offset.left, targetBlock.y + this.offset.top
+        ), targetBlock = targetElement.block;
+        console.log(targetElement);
         while (!targetBlock) {
             targetElement = targetElement.parent();
             targetBlock = targetElement.block;
@@ -69,6 +73,8 @@ Entry.Board = function(dom) {
                 this.closeBlock.magneting = true;
                 this.closeBlock.thread.align(true);
             }
+        } else if (targetBlock instanceof Entry.Thread) {
+            console.log(targetBlock);
         } else if (this.closeBlock) {
             this.closeBlock.magneting = false;
             this.closeBlock.thread.align(true);

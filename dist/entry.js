@@ -2623,9 +2623,9 @@ Entry.block.message_cast_wait = function(b, a) {
   }
   var e = [];
   Entry.container.mapEntityIncludeCloneOnScene(function(a, b) {
-    for (var c = b[0], d = b[1], k = a.parent.script.childNodes, m = 0;m < k.length;m++) {
-      var p = k[m], n = Entry.Xml.getField("VALUE", p);
-      Entry.Xml.isTypeOf(c, p) && n == d && (n = new Entry.Script(a), n.init(p), e.push(n));
+    for (var c = b[0], d = b[1], k = a.parent.script.childNodes, n = 0;n < k.length;n++) {
+      var p = k[n], m = Entry.Xml.getField("VALUE", p);
+      Entry.Xml.isTypeOf(c, p) && m == d && (m = new Entry.Script(a), m.init(p), e.push(m));
     }
   }, ["when_message_cast", c]);
   a.runningScript = e;
@@ -3073,18 +3073,16 @@ Entry.FieldText = function(b, a) {
 Entry.skeleton = function() {
 };
 Entry.skeleton.basic = {path:function(b) {
-  return "m 0,0 l 8,8 8,-8 h %w a 15,15 0 0,1 0,30 h -%w l -8,8 -8,-8 v -30 z".replace(/%w/gi, b.contentWidth);
+  return "m -4,0 l 8,8 8,-8 h %w a 15,15 0 0,1 0,30 h -%w l -8,8 -8,-8 v -30 z".replace(/%w/gi, b.contentWidth);
 }, box:function(b) {
   return {offsetX:0, offsetY:0, width:b.contentWidth + 30, height:30};
-}, magnets:function(b) {
-  return {previous:{x:0, y:0}, next:{x:0, y:31}};
-}, contentPos:function(b) {
+}, magnets:{previous:{}, next:{x:0, y:31}}, contentPos:function(b) {
   return {x:20, y:15};
 }};
 Entry.skeleton.pebble_event = {path:function(b) {
   return "m 0,0 a 25,25 0 0,1 9,48.3 a 9,9 0 0,1 -18,0 a 25,25 0 0,1 9,-48.3 z";
 }, box:function(b) {
-  return {offsetX:-25, offsetY:0, width:50, height:50};
+  return {offsetX:-25, offsetY:0, width:50, height:48.3};
 }, magnets:function(b) {
   return {next:{x:0, y:49.3}};
 }, contentPos:function() {
@@ -3427,6 +3425,7 @@ Entry.Board = function(b) {
     return console.error("Snap library is required");
   }
   this.svgDom = Entry.Dom($('<svg id="play" width="100%" height="100%"version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'), {parent:b});
+  this.offset = this.svgDom.offset();
   this.snap = Snap("#play");
   this.snap.block = "null";
   Entry.Model(this, !1);
@@ -3442,11 +3441,12 @@ Entry.Board = function(b) {
   };
   b.updateCloseMagnet = function(a) {
     if (void 0 !== a.magnets.previous) {
-      var b = Snap.getElementByPoint(a.x + 690, a.y + 130);
-      for (a = b.block;!a;) {
+      var b = Snap.getElementByPoint(a.x + this.offset.left, a.y + this.offset.top);
+      a = b.block;
+      for (console.log(b);!a;) {
         b = b.parent(), a = b.block;
       }
-      a instanceof Entry.Block ? this.closeBlock !== a && (null !== this.closeBlock && (this.closeBlock.magneting = !1), this.closeBlock = a, this.closeBlock.magneting = !0, this.closeBlock.thread.align(!0)) : this.closeBlock && (this.closeBlock.magneting = !1, this.closeBlock.thread.align(!0), this.closeBlock = null);
+      a instanceof Entry.Block ? this.closeBlock !== a && (null !== this.closeBlock && (this.closeBlock.magneting = !1), this.closeBlock = a, this.closeBlock.magneting = !0, this.closeBlock.thread.align(!0)) : a instanceof Entry.Thread ? console.log(a) : this.closeBlock && (this.closeBlock.magneting = !1, this.closeBlock.thread.align(!0), this.closeBlock = null);
     }
   };
   b.terminateDrag = function(a) {
@@ -3477,6 +3477,7 @@ Entry.Thread = function(b, a) {
   this._blocks = new Entry.Collection;
   this.loadModel(b);
   this.svgGroup = this.board = null;
+  this.observe(this, "resizeBG", ["width", "height"]);
 };
 (function(b) {
   b.schema = {type:Entry.STATIC.THREAD_MODEL, x:0, y:0, offsetX:0, width:0, minWidth:0, height:0};
@@ -3498,11 +3499,15 @@ Entry.Thread = function(b, a) {
     this.board = a;
     this.svgGroup = a.snap.group();
     this.svgGroup.transform("t5,5");
+    this._bg = this.svgGroup.rect(0, 0, this.width, this.height);
     var b = this._blocks.at(0);
     this._blocks.map(function(d) {
       d.renderStart(a, b);
     });
     this.align();
+  };
+  b.resizeBG = function() {
+    this._bg.attr({x:this.x + this.offsetX, y:this.y, width:this.width, height:this.height});
   };
   b.align = function(a) {
     a = void 0 === a ? !0 : a;
@@ -3511,13 +3516,9 @@ Entry.Thread = function(b, a) {
       if (k.dragInstance && a) {
         break;
       }
-      var m = k.magnets.previous;
-      m && (d -= m.x, e -= m.y);
       k.dragInstance && (d = k.x, e = k.y);
       k.moveTo(d, e, a);
-      if (m = k.magnets.next) {
-        d += m.x, e += m.y;
-      }
+      k.magnets.next && (e += k.height + 1);
       g = Math.max(g, k.width);
       h = Math.min(h, k.width);
       f = Math.min(f, k.offsetX);
@@ -3638,6 +3639,7 @@ Entry.Block.FOLLOW = 3;
   };
   b.onMouseDown = function(a) {
     function b(a) {
+      a.originalEvent.touches && (a = a.originalEvent.touches[0]);
       var c = e.dragInstance;
       e.moveBy(a.clientX - c.offsetX, a.clientY - c.offsetY, !1);
       c.set({offsetX:a.clientX, offsetY:a.clientY});
@@ -3649,17 +3651,7 @@ Entry.Block.FOLLOW = 3;
       $(document).unbind(".block");
       e._board.dragBlock = null;
     }
-    switch(a.button) {
-      case 0:
-        $(document).bind("mousemove.block", b);
-        $(document).bind("mouseup.block", d);
-        this._board.dragBlock = this;
-        this.dragInstance = new Entry.DragInstance({startX:a.clientX, startY:a.clientY, offsetX:a.clientX, offsetY:a.clientY, mode:!0});
-        this.thread.dominate();
-        break;
-      case 1:
-        this.enableHighlight();
-    }
+    0 === a.button || a instanceof Touch ? ($(document).bind("mousemove.block", b), $(document).bind("mouseup.block", d), $(document).bind("touchmove.block", b), $(document).bind("touchend.block", d), this._board.dragBlock = this, this.dragInstance = new Entry.DragInstance({startX:a.clientX, startY:a.clientY, offsetX:a.clientX, offsetY:a.clientY, mode:!0}), this.thread.dominate()) : 1 === a.button && this.enableHighlight();
     var e = this;
   };
   b.terminateDrag = function() {
@@ -3672,9 +3664,9 @@ Entry.Block.FOLLOW = 3;
       a.map(function(a) {
         d += a.height;
       });
-      this.magnets.next.y += d;
+      this.height += d;
     } else {
-      this.magnets = this._skeleton.magnets();
+      this.measureSize();
     }
   };
 })(Entry.Block.prototype);
