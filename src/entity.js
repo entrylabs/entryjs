@@ -837,17 +837,26 @@ Entry.EntityObject.prototype.applyFilter = function() {
         var hueFilter = new createjs.ColorMatrixFilter(cmHue);
         f.push(hueFilter);
 
-        var degrees = e.hsv*3.6;
+        //var degrees = e.hsv*3.6;
+        var degrees = e.hsv;
         var pi = Math.acos(-1);
         var r = degrees * pi / 180;
 
         var cosVal = Math.cos(r);
         var sinVal = Math.sin(r);
-
+/*
         var matrixValue = [
             cosVal, sinVal, 0, 0, 0,
             -1*sinVal, cosVal, 0, 0, 0,
             0, 0, 1, 0, 0,
+            0, 0, 0, 1, 0,
+            0, 0, 0, 0, 1
+        ];
+*/
+        var matrixValue = [
+            cosVal, sinVal, 0, 0, 0,
+            -1*sinVal, cosVal, 0, 0, 0,
+            0, 0, cosVal, 0, 0,
             0, 0, 0, 1, 0,
             0, 0, 0, 0, 1
         ];
