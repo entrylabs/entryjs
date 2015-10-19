@@ -3428,6 +3428,7 @@ Entry.Board = function(b) {
   }
   this.svgDom = Entry.Dom($('<svg id="play" width="100%" height="100%"version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'), {parent:b});
   this.snap = Snap("#play");
+  this.snap.block = "null";
   Entry.Model(this, !1);
 };
 (function(b) {
@@ -3441,19 +3442,11 @@ Entry.Board = function(b) {
   };
   b.updateCloseMagnet = function(a) {
     if (void 0 !== a.magnets.previous) {
-      for (var b = this.code.threads, d = 0;d < b.length;d++) {
-        var e = b.at(d);
-        if (Entry.Utils.isPointInMatrix(e, a, Entry.Block.MAGNET_RANGE)) {
-          for (var e = e._blocks, f = 0;f < e.length;f++) {
-            var h = e.at(f);
-            if (this.dragBlock !== h && (h.checkMagnet(a), h.magneting)) {
-              this.closeBlock !== h && (null !== this.closeBlock && (this.closeBlock.magneting = !1), this.closeBlock = h, this.closeBlock.thread.align(!0));
-              return;
-            }
-          }
-        }
+      var b = Snap.getElementByPoint(a.x + 690, a.y + 130);
+      for (a = b.block;!a;) {
+        b = b.parent(), a = b.block;
       }
-      this.closeBlock && (this.closeBlock.magneting = !1, this.closeBlock.thread.align(!0), this.closeBlock = null);
+      a instanceof Entry.Block ? this.closeBlock !== a && (null !== this.closeBlock && (this.closeBlock.magneting = !1), this.closeBlock = a, this.closeBlock.magneting = !0, this.closeBlock.thread.align(!0)) : this.closeBlock && (this.closeBlock.magneting = !1, this.closeBlock.thread.align(!0), this.closeBlock = null);
     }
   };
   b.terminateDrag = function(a) {
@@ -3578,6 +3571,7 @@ Entry.Block.FOLLOW = 3;
       this._board = a;
       this.svgGroup = this.thread.svgGroup.group();
       this.svgGroup.attr({class:"block"});
+      this.svgGroup.block = this;
       b && this.svgGroup.attr({transform:"t" + b.x + " " + b.y});
       var d = this._skeleton.path(this);
       this._darkenPath = this.svgGroup.path(d);
@@ -3670,9 +3664,6 @@ Entry.Block.FOLLOW = 3;
   };
   b.terminateDrag = function() {
     this._board.terminateDrag(this);
-  };
-  b.checkMagnet = function(a) {
-    Entry.Utils.isPointInMatrix(this, {x:a.x, y:a.y}, Entry.Block.MAGNET_RANGE) ? this.magneting = !0 : this.magneting = !1;
   };
   b.applyMagnet = function() {
     if (this.magneting) {

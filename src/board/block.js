@@ -92,6 +92,7 @@ Entry.Block.FOLLOW = 3;
         this.svgGroup.attr({
             class: "block"
         });
+        this.svgGroup.block = this;
         if (startPos) {
             this.svgGroup.attr({
                 transform: "t" + startPos.x + " " + startPos.y
@@ -271,26 +272,6 @@ Entry.Block.FOLLOW = 3;
 
     p.terminateDrag = function() {
         this._board.terminateDrag(this);
-    };
-
-    p.checkMagnet = function(targetBlock) {
-        var matrix = {
-            x: this.x,
-            y: this.y + this.height * Entry.Block.MAGNET_OFFSET,
-            width: this.width,
-            height: this.height
-        };
-        var targetMatrix = {
-            x: targetBlock.x,
-            y: targetBlock.y
-        };
-        if (Entry.Utils.isPointInMatrix(
-            this, targetMatrix, Entry.Block.MAGNET_RANGE
-        )) {
-            this.magneting = true;
-        } else {
-            this.magneting = false;
-        }
     };
 
     p.applyMagnet = function() {

@@ -32,6 +32,7 @@ Entry.Board = function(dom) {
     );
 
     this.snap = Snap('#play');
+    this.snap.block = "null";
 
     Entry.Model(this, false);
 };
@@ -54,6 +55,26 @@ Entry.Board = function(dom) {
     p.updateCloseMagnet = function(targetBlock) {
         if (targetBlock.magnets.previous === undefined)
             return;
+        var targetElement = Snap.getElementByPoint(targetBlock.x + 690, targetBlock.y + 130),
+            targetBlock = targetElement.block;
+        while (!targetBlock) {
+            targetElement = targetElement.parent();
+            targetBlock = targetElement.block;
+        }
+        if (targetBlock instanceof Entry.Block) {
+            if (this.closeBlock !== targetBlock) {
+                if (this.closeBlock !== null)
+                    this.closeBlock.magneting = false;
+                this.closeBlock = targetBlock;
+                this.closeBlock.magneting = true;
+                this.closeBlock.thread.align(true);
+            }
+        } else if (this.closeBlock) {
+            this.closeBlock.magneting = false;
+            this.closeBlock.thread.align(true);
+            this.closeBlock = null;
+        }
+        return;
         var threads = this.code.threads;
         var targetThread = targetBlock.thread;
         for (var i = 0; i < threads.length; i++) {

@@ -121,7 +121,7 @@ Entry.Thread = function(thread, code) {
             minWidth: cursor.minWidth,
             width: cursor.width,
             height: cursor.y - firstBlockBox.y
-        })
+        });
     };
 
     p.dominate = function() {
