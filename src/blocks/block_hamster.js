@@ -739,10 +739,10 @@ Entry.block.hamster_change_buzzer_by = function (sprite, script) {
     var hw = Entry.hw,
         sq = hw.sendQueue,
         pd = hw.portData;
+        value = script.getNumberValue('VALUE');
     delete sq.note;
-    sq.buzzer = sq.buzzer != undefined ?
-        sq.buzzer : pd.buzzer +
-        script.getNumberValue('VALUE');
+    sq.buzzer = sq.buzzer == undefined ?
+        value : sq.buzzer + value;
     return script.callReturn();
 };
 
