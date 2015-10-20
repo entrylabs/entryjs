@@ -60,7 +60,6 @@ Entry.Board = function(dom) {
         var targetElement = Snap.getElementByPoint(
             targetBlock.x + this.offset.left, targetBlock.y + this.offset.top
         ), targetBlock = targetElement.block;
-        console.log(targetElement);
         while (!targetBlock) {
             targetElement = targetElement.parent();
             targetBlock = targetElement.block;
@@ -74,17 +73,7 @@ Entry.Board = function(dom) {
                 this.closeBlock.thread.align(true);
             }
         } else if (targetBlock instanceof Entry.Thread) {
-            console.log(targetBlock);
-        } else if (this.closeBlock) {
-            this.closeBlock.magneting = false;
-            this.closeBlock.thread.align(true);
-            this.closeBlock = null;
-        }
-        return;
-        var threads = this.code.threads;
-        var targetThread = targetBlock.thread;
-        for (var i = 0; i < threads.length; i++) {
-            var thread = threads.at(i);
+            var thread = targetBlock;
             if (Entry.Utils.isPointInMatrix(
                 thread, targetBlock, Entry.Block.MAGNET_RANGE
             )) {
@@ -105,12 +94,12 @@ Entry.Board = function(dom) {
                     }
                 }
             }
-        }
-        if (this.closeBlock) {
+        } else if (this.closeBlock) {
             this.closeBlock.magneting = false;
             this.closeBlock.thread.align(true);
             this.closeBlock = null;
         }
+        return;
     };
 
     p.terminateDrag = function(block) {
@@ -131,6 +120,7 @@ Entry.Board = function(dom) {
             if (oldThread._blocks.length === 0) {
                 oldThread.destroy();
             } else {
+                console.log('oldThreadReset');
                 oldThread.align();
             }
             this.closeBlock = null;

@@ -70,6 +70,7 @@ Entry.Thread = function(thread, code) {
         this.board = board;
         this.svgGroup = board.snap.group();
         this.svgGroup.transform("t5,5");
+        this.svgGroup.block = this;
 
         this._bg = this.svgGroup.rect(0, 0, this.width, this.height);
         //this._bg.attr({"fill": "transparent"})
@@ -83,6 +84,7 @@ Entry.Thread = function(thread, code) {
     };
 
     p.resizeBG = function() {
+        console.log('resize');
         this._bg.attr({
             x: this.x + this.offsetX,
             y: this.y,

@@ -3442,11 +3442,26 @@ Entry.Board = function(b) {
   b.updateCloseMagnet = function(a) {
     if (void 0 !== a.magnets.previous) {
       var b = Snap.getElementByPoint(a.x + this.offset.left, a.y + this.offset.top);
-      a = b.block;
-      for (console.log(b);!a;) {
+      for (a = b.block;!a;) {
         b = b.parent(), a = b.block;
       }
-      a instanceof Entry.Block ? this.closeBlock !== a && (null !== this.closeBlock && (this.closeBlock.magneting = !1), this.closeBlock = a, this.closeBlock.magneting = !0, this.closeBlock.thread.align(!0)) : a instanceof Entry.Thread ? console.log(a) : this.closeBlock && (this.closeBlock.magneting = !1, this.closeBlock.thread.align(!0), this.closeBlock = null);
+      if (a instanceof Entry.Block) {
+        this.closeBlock !== a && (null !== this.closeBlock && (this.closeBlock.magneting = !1), this.closeBlock = a, this.closeBlock.magneting = !0, this.closeBlock.thread.align(!0));
+      } else {
+        if (a instanceof Entry.Thread) {
+          if (b = a, Entry.Utils.isPointInMatrix(b, a, Entry.Block.MAGNET_RANGE)) {
+            for (var b = b._blocks, d = 0;d < b.length;d++) {
+              var e = b.at(d);
+              if (this.dragBlock !== e && (e.checkMagnet(a), e.magneting)) {
+                this.closeBlock !== e && (null !== this.closeBlock && (this.closeBlock.magneting = !1), this.closeBlock = e, this.closeBlock.thread.align(!0));
+                break;
+              }
+            }
+          }
+        } else {
+          this.closeBlock && (this.closeBlock.magneting = !1, this.closeBlock.thread.align(!0), this.closeBlock = null);
+        }
+      }
     }
   };
   b.terminateDrag = function(a) {
@@ -3461,7 +3476,7 @@ Entry.Board = function(b) {
         b[f].thread = d, d._blocks.insert(b[f], e);
       }
       d.align();
-      0 === a._blocks.length ? a.destroy() : a.align();
+      0 === a._blocks.length ? a.destroy() : (console.log("oldThreadReset"), a.align());
       this.closeBlock = null;
     } else {
       0 !== a.thread.indexOf(a) ? Math.sqrt(Math.pow(b.startX - b.offsetX, 2) + Math.pow(b.startY - b.offsetY, 2)) < Entry.Board.MAGNET_RANGE ? a.thread.align() : (b = a.thread.cut(a), this.code.createThread(b)) : a.thread.align();
@@ -3499,6 +3514,7 @@ Entry.Thread = function(b, a) {
     this.board = a;
     this.svgGroup = a.snap.group();
     this.svgGroup.transform("t5,5");
+    this.svgGroup.block = this;
     this._bg = this.svgGroup.rect(0, 0, this.width, this.height);
     var b = this._blocks.at(0);
     this._blocks.map(function(d) {
@@ -3507,6 +3523,7 @@ Entry.Thread = function(b, a) {
     this.align();
   };
   b.resizeBG = function() {
+    console.log("resize");
     this._bg.attr({x:this.x + this.offsetX, y:this.y, width:this.width, height:this.height});
   };
   b.align = function(a) {
@@ -3656,6 +3673,9 @@ Entry.Block.FOLLOW = 3;
   };
   b.terminateDrag = function() {
     this._board.terminateDrag(this);
+  };
+  b.checkMagnet = function(a) {
+    Entry.Utils.isPointInMatrix(this, {x:a.x, y:a.y}, Entry.Block.MAGNET_RANGE) ? this.magneting = !0 : this.magneting = !1;
   };
   b.applyMagnet = function() {
     if (this.magneting) {
