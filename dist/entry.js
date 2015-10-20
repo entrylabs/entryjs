@@ -5433,7 +5433,11 @@ Entry.EntityObject.prototype.applyFilter = function() {
   e.adjustColor(0, 0, 0, b.hue);
   e = new createjs.ColorMatrixFilter(e);
   c.push(e);
-  var e = b.hsv, f = Math.acos(-1), f = e * f / 180, e = Math.cos(f), f = Math.sin(f), e = [e, f, 0, 0, 0, -1 * f, e, 0, 0, 0, 0, 0, e, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1], e = (new createjs.ColorMatrix).concat(e), e = new createjs.ColorMatrixFilter(e);
+  var e = [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1], f = 33.929200658769766 * b.hsv / 180, h = Math.cos(f), f = Math.sin(f), g = b.hsv / 100;
+  1 < g && (g -= Math.floor(g));
+  0 <= g && .33 >= g ? e = [1, 0, 0, 0, 0, 0, h, f, 0, 0, 0, -1 * f, h, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1] : .33 < g && .66 >= g ? e = [h, 0, f, 0, 0, 0, 1, 0, 0, 0, f, 0, h, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1] : .66 < g && .99 >= g && (e = [h, f, 0, 0, 0, -1 * f, h, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1]);
+  e = (new createjs.ColorMatrix).concat(e);
+  e = new createjs.ColorMatrixFilter(e);
   c.push(e);
   a.alpha = b.alpha = d(b.alpha, 0, 1);
   a.filters = c;

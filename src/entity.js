@@ -837,29 +837,50 @@ Entry.EntityObject.prototype.applyFilter = function() {
         var hueFilter = new createjs.ColorMatrixFilter(cmHue);
         f.push(hueFilter);
 
-        //var degrees = e.hsv*3.6;
-        var degrees = e.hsv;
-        var pi = Math.acos(-1);
-        var r = degrees * pi / 180;
-
-        var cosVal = Math.cos(r);
-        var sinVal = Math.sin(r);
-/*
         var matrixValue = [
-            cosVal, sinVal, 0, 0, 0,
-            -1*sinVal, cosVal, 0, 0, 0,
+            1, 0, 0, 0, 0,
+            0, 1, 0, 0, 0,
             0, 0, 1, 0, 0,
             0, 0, 0, 1, 0,
             0, 0, 0, 0, 1
         ];
-*/
-        var matrixValue = [
-            cosVal, sinVal, 0, 0, 0,
-            -1*sinVal, cosVal, 0, 0, 0,
-            0, 0, cosVal, 0, 0,
-            0, 0, 0, 1, 0,
-            0, 0, 0, 0, 1
-        ];
+
+        var degrees = e.hsv*3.6;
+        var pi = 3.141592653589793;//Math.acos(-1);
+        var r = (degrees*3) * pi / 180;
+        var cosVal = Math.cos(r);
+        var sinVal = Math.sin(r);
+
+        var v = e.hsv/100;
+        if (v>1) {
+            v = v-Math.floor(v);
+        }
+
+        if (v >= 0 && v <= 0.33) {
+            var matrixValue = [
+                1, 0, 0, 0, 0,
+                0, cosVal, sinVal, 0, 0,
+                0, -1*sinVal, cosVal, 0, 0,
+                0, 0, 0, 1, 0,
+                0, 0, 0, 0, 1
+            ];
+        } else if (v > 0.33 && v <= 0.66) {
+            var matrixValue = [
+                cosVal, 0, sinVal, 0, 0,
+                0, 1, 0, 0, 0,
+                sinVal, 0, cosVal, 0, 0,
+                0, 0, 0, 1, 0,
+                0, 0, 0, 0, 1
+            ];
+        } else if (v > 0.66 && v <= 0.99) {
+            var matrixValue = [
+                cosVal, sinVal, 0, 0, 0,
+                -1*sinVal, cosVal, 0, 0, 0,
+                0, 0, 1, 0, 0,
+                0, 0, 0, 1, 0,
+                0, 0, 0, 0, 1
+            ];
+        }
 
         var calcMatrix = new createjs.ColorMatrix().concat(matrixValue);
         var colorFilter = new createjs.ColorMatrixFilter(calcMatrix);
