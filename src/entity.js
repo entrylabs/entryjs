@@ -851,12 +851,12 @@ Entry.EntityObject.prototype.applyFilter = function() {
         var cosVal = Math.cos(r);
         var sinVal = Math.sin(r);
 
-        var v = e.hsv/100;
+        var v = Math.abs(e.hsv/100);
         if (v>1) {
             v = v-Math.floor(v);
         }
 
-        if (v >= 0 && v <= 0.33) {
+        if (v > 0 && v <= 0.33) {
             var matrixValue = [
                 1, 0, 0, 0, 0,
                 0, cosVal, sinVal, 0, 0,
@@ -864,7 +864,7 @@ Entry.EntityObject.prototype.applyFilter = function() {
                 0, 0, 0, 1, 0,
                 0, 0, 0, 0, 1
             ];
-        } else if (v > 0.33 && v <= 0.66) {
+        } else if (v <= 0.66) {
             var matrixValue = [
                 cosVal, 0, sinVal, 0, 0,
                 0, 1, 0, 0, 0,
@@ -872,7 +872,7 @@ Entry.EntityObject.prototype.applyFilter = function() {
                 0, 0, 0, 1, 0,
                 0, 0, 0, 0, 1
             ];
-        } else if (v > 0.66 && v <= 0.99) {
+        } else if (v <= 0.99) {
             var matrixValue = [
                 cosVal, sinVal, 0, 0, 0,
                 -1*sinVal, cosVal, 0, 0, 0,
