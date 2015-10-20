@@ -3150,6 +3150,9 @@ Entry.Collection = function(b) {
   b.get = function(a) {
     return this._hashMap[a];
   };
+  b.getAll = function() {
+    return this._data;
+  };
   b.at = function(a) {
     return this._data[a];
   };
@@ -3416,6 +3419,51 @@ Entry.Model = function(b, a) {
     }
   };
 })(Entry.Model);
+Entry.BlockMenu = function(b) {
+  Entry.Model(this, !1);
+  b = "string" === typeof b ? $("#" + b) : $(b);
+  if ("DIV" !== b.prop("tagName")) {
+    return console.error("Dom is not div element");
+  }
+  if ("function" !== typeof window.Snap) {
+    return console.error("Snap library is required");
+  }
+  this._svgDom = Entry.Dom($('<svg id="blockMenu" width="100%" height="100%"version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'), {parent:b});
+  this.offset = this._svgDom.offset();
+  this.snap = Snap("#blockMenu");
+  this.snap.block = "null";
+  this._code = null;
+  this.observe(this, "cloneBlock", ["dragBlock"]);
+};
+(function(b) {
+  b.schema = {dragBlock:null, closeBlock:null};
+  b.setBlocks = function(a) {
+    if (!(a instanceof Entry.Code)) {
+      return console.error("You must inject code instance");
+    }
+    this._code = a;
+    a.bindBoard(this);
+    this.align();
+  };
+  b.cloneBlock = function() {
+    console.log(this.dragBlock);
+  };
+  b.align = function() {
+    for (var a = this._code.threads.getAll(), b = 0, d = this._svgDom.width() / 2, e = 0, f = a.length;e < f;e++) {
+      var h = a[e];
+      h.moveTo(d, b, !0);
+      b += h.height + 10;
+    }
+  };
+  b.updateCloseMagnet = function(a) {
+  };
+  b.terminateDrag = function(a) {
+    this.align();
+  };
+  b.dominate = function(a) {
+    this.snap.append(a.svgGroup);
+  };
+})(Entry.BlockMenu.prototype);
 Entry.Board = function(b) {
   b = "string" === typeof b ? $("#" + b) : $(b);
   if ("DIV" !== b.prop("tagName")) {
@@ -3509,6 +3557,11 @@ Entry.Thread = function(b, a) {
   b.resizeBG = function() {
     this._bg.attr({x:this.x + this.offsetX, y:this.y, width:this.width, height:this.height});
   };
+  b.moveTo = function(a, b, d) {
+    d = void 0 === d ? !0 : d;
+    this._blocks.at(0).set({x:a, y:b});
+    this.align(d);
+  };
   b.align = function(a) {
     a = void 0 === a ? !0 : a;
     for (var b = this._blocks.at(0), d = b.x, e = b.y, f = 0, h = b.width, g = 0, l = 0;l < this._blocks.length;l++) {
@@ -3544,7 +3597,7 @@ Entry.Block = function(b, a) {
   this._schema = Entry.block[b.blockType];
   this._skeleton = Entry.skeleton[this._schema.skeleton];
   this.observe(this, "setThread", ["thread"]);
-  this.set({x:b.x, y:b.y});
+  this.set({x:b.x || 0, y:b.y || 0});
   this.observe(this, "measureSize", ["contentWidth", "contentHeight"]);
   this.observe(this, "render", ["contentWidth", "contentHeight"]);
   this.observe(this, "applyMagnet", ["magneting"]);

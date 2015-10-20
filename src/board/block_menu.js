@@ -1,6 +1,6 @@
 "use strict";
 
-goog.provide("Entry.Board");
+goog.provide("Entry.BlockMenu");
 
 goog.require("Entry.Dom");
 goog.require("Entry.Model");
@@ -11,9 +11,11 @@ goog.require("Entry.Utils");
  * @param {object} dom which to inject playground
  */
 Entry.BlockMenu = function(dom) {
-    if (typeof dom === "string")
+    Entry.Model(this, false);
+
+    if (typeof dom === "string") {
         dom = $('#' + dom);
-    else
+    } else
         dom = $(dom);
 
     if (dom.prop("tagName") !== "DIV")
@@ -22,22 +24,64 @@ Entry.BlockMenu = function(dom) {
     if (typeof window.Snap !== "function")
         return console.error("Snap library is required");
 
-    this.svgDom = Entry.Dom(
-        $('<svg id="play" width="100%" height="100%"' +
+    this._svgDom = Entry.Dom(
+        $('<svg id="blockMenu" width="100%" height="100%"' +
           'version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'),
         { parent: dom }
     );
 
-    this.offset = this.svgDom.offset();
+    this.offset = this._svgDom.offset();
 
-    this.snap = Snap('#play');
+    this.snap = Snap('#blockMenu');
     this.snap.block = "null";
 
-    Entry.Model(this, false);
+    this._code = null;
+
+    this.observe(this, "cloneBlock", ['dragBlock']);
+
 };
 
 (function(p) {
     p.schema = {
+        dragBlock: null,
+        closeBlock: null
     };
 
-})(Entry.Board.prototype);
+    p.setBlocks = function(code) {
+        if (!(code instanceof Entry.Code))
+            return console.error("You must inject code instance");
+        this._code = code;
+
+        code.bindBoard(this);
+
+        this.align();
+    };
+
+    p.cloneBlock = function() {
+        console.log(this.dragBlock);
+    };
+
+    p.align = function() {
+        var threads = this._code.threads.getAll();
+        var vPadding = 0,
+            hPadding = this._svgDom.width()/2;
+
+        for (var i=0,len=threads.length; i<len; i++) {
+            var thread = threads[i];
+            thread.moveTo(hPadding, vPadding, true);
+            vPadding += thread.height + 10;
+        }
+    };
+
+    p.updateCloseMagnet = function(targetBlock) {
+    };
+
+    p.terminateDrag = function(block) {
+        this.align();
+    };
+
+    p.dominate = function(thread) {
+        this.snap.append(thread.svgGroup);
+    };
+
+})(Entry.BlockMenu.prototype);
