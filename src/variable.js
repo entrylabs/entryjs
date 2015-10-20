@@ -438,7 +438,7 @@ Entry.Variable.prototype.updateView = function() {
             if (this.isNumber()) {
                 if (parseInt(this.getValue(),10) == this.getValue())
                     this.valueView_.text = this.getValue();
-                else 
+                else
                     this.valueView_.text = this.getValue().toFixed(1).replace('.00', '');
             }
             else {

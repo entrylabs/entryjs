@@ -185,10 +185,12 @@ Entry.block.ask_and_wait = function (sprite, script) {
             sprite.dialog.remove();
         delete script.isInit;
         return script.callReturn();
-    } else if (inputModel.getValue() && inputModel.sprite == sprite &&
+    } else if (inputModel.complete &&
+               inputModel.sprite == sprite &&
                inputView._isHidden && script.isInit) {
         if(sprite.dialog)
             sprite.dialog.remove();
+        delete inputModel.complete;
         delete script.isInit;
         return script.callReturn();
     } else {

@@ -3738,8 +3738,11 @@ Entry.block.ask_and_wait = function(a, b) {
   if (c.sprite == a && d && !d._isHidden) {
     return b;
   }
-  if (c.sprite != a && b.isInit || c.getValue() && c.sprite == a && d._isHidden && b.isInit) {
+  if (c.sprite != a && b.isInit) {
     return a.dialog && a.dialog.remove(), delete b.isInit, b.callReturn();
+  }
+  if (c.complete && c.sprite == a && d._isHidden && b.isInit) {
+    return a.dialog && a.dialog.remove(), delete c.complete, delete b.isInit, b.callReturn();
   }
   e = Entry.convertToRoundedDecimals(e, 3);
   new Entry.Dialog(a, e, "speak");
@@ -5433,7 +5436,7 @@ Entry.EntityObject.prototype.applyFilter = function() {
   e.adjustColor(0, 0, 0, b.hue);
   e = new createjs.ColorMatrixFilter(e);
   c.push(e);
-  var e = 3.6 * b.hsv, f = Math.acos(-1), f = e * f / 180, e = Math.cos(f), f = Math.sin(f), e = [e, f, 0, 0, 0, -1 * f, e, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1], e = (new createjs.ColorMatrix).concat(e), e = new createjs.ColorMatrixFilter(e);
+  var f = 3.6 * b.hsv * Math.acos(-1) / 180, e = Math.cos(f), f = Math.sin(f), e = [e, f, 0, 0, 0, -1 * f, e, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1], e = (new createjs.ColorMatrix).concat(e), e = new createjs.ColorMatrixFilter(e);
   c.push(e);
   a.alpha = b.alpha = d(b.alpha, 0, 1);
   a.filters = c;
@@ -9123,8 +9126,12 @@ Entry.Stage.prototype.initStage = function(a) {
     try {
       var b = Entry.stage.inputField.value();
       Entry.stage.hideInputField();
-      b && Entry.container.setInputValue(b);
-    } catch (e) {
+      if (b) {
+        var e = Entry.container;
+        e.setInputValue(b);
+        e.inputValue.complete = !0;
+      }
+    } catch (f) {
     }
   });
   this.initWall();

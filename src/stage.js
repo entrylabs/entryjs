@@ -118,8 +118,12 @@ Entry.Stage.prototype.initStage = function(canvas) {
         try {
             var inputValue = Entry.stage.inputField.value();
             Entry.stage.hideInputField();
-            if (inputValue)
-                Entry.container.setInputValue(inputValue);
+            if (inputValue) {
+                (function (c){
+                    c.setInputValue(inputValue);
+                    c.inputValue.complete = true;
+                })(Entry.container);
+            }
         } catch (e) {}
     });
 
