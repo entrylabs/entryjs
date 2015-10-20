@@ -3433,7 +3433,7 @@ Entry.BlockMenu = function(b) {
   this.snap = Snap("#blockMenu");
   this.snap.block = "null";
   this._code = null;
-  this.observe(this, "cloneBlock", ["dragBlock"]);
+  this.observe(this, "cloneThread", ["dragBlock"]);
 };
 (function(b) {
   b.schema = {dragBlock:null, closeBlock:null};
@@ -3445,7 +3445,7 @@ Entry.BlockMenu = function(b) {
     a.bindBoard(this);
     this.align();
   };
-  b.cloneBlock = function() {
+  b.cloneThread = function() {
     console.log(this.dragBlock);
   };
   b.align = function() {

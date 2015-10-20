@@ -37,7 +37,7 @@ Entry.BlockMenu = function(dom) {
 
     this._code = null;
 
-    this.observe(this, "cloneBlock", ['dragBlock']);
+    this.observe(this, "cloneThread", ['dragBlock']);
 
 };
 
@@ -57,7 +57,8 @@ Entry.BlockMenu = function(dom) {
         this.align();
     };
 
-    p.cloneBlock = function() {
+    p.cloneThread = function() {
+
         console.log(this.dragBlock);
     };
 
