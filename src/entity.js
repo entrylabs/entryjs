@@ -846,8 +846,7 @@ Entry.EntityObject.prototype.applyFilter = function() {
         ];
 
         var degrees = e.hsv*3.6;
-        var pi = 3.141592653589793;//Math.acos(-1);
-        var r = (degrees*3) * pi / 180;
+        var r = (degrees*3) * Math.PI / 180;
         var cosVal = Math.cos(r);
         var sinVal = Math.sin(r);
 
