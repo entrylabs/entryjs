@@ -64,6 +64,23 @@ Entry.Thread = function(thread, code) {
         return splicedData;
     };
 
+    p.raiseEvent = function(event) {
+        var firstBlock = this._blocks.at(0)
+        if (firstBlock.type === event) {
+            return {block: firstBlock}
+        } else {
+            return null;
+        }
+    };
+
+    p.next = function(block) {
+        var i = this._blocks.indexOf(block);
+        if (this._blocks.length <= i)
+            return null;
+        else
+            return this._blocks.at(i + 1);
+    }
+
     // method for board
 
     p.renderStart = function(board) {

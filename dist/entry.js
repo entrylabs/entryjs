@@ -2994,22 +2994,6 @@ Blockly.Blocks.options_for_list = {init:function() {
 Entry.block.options_for_list = function(b, a) {
   return a.getField("OPERATOR", a);
 };
-Entry.block.run = {skeleton:"basic", color:"#3BBD70", contents:["this is", "basic block"], func:function() {
-}};
-Entry.block.jr_start = {skeleton:"pebble_event", color:"#3BBD70", contents:[{type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_play_image.png", highlightColor:"#3BBD70", size:22}], func:function() {
-}};
-Entry.block.jr_repeat = {skeleton:"pebble_loop", color:"#3BBD70", contents:["1", "\ubc18\ubcf5"], func:function() {
-}};
-Entry.block.jr_item = {skeleton:"pebble_basic", color:"#F46C6C", contents:["\uaf43 \ubaa8\uc73c\uae30", {type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_item_image.png", highlightColor:"#FFF", position:{x:83, y:0}, size:22}], func:function() {
-}};
-Entry.block.jr_north = {skeleton:"pebble_basic", color:"#A751E3", contents:["   \uc704\ub85c", {type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_up_image.png", position:{x:83, y:0}, size:22}], func:function() {
-}};
-Entry.block.jr_east = {skeleton:"pebble_basic", color:"#A751E3", contents:["\uc624\ub978\ucabd", {type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_right_image.png", position:{x:83, y:0}, size:22}], func:function() {
-}};
-Entry.block.jr_south = {skeleton:"pebble_basic", color:"#A751E3", contents:["\uc544\ub798\ub85c", {type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_down_image.png", position:{x:83, y:0}, size:22}], func:function() {
-}};
-Entry.block.jr_west = {skeleton:"pebble_basic", color:"#A751E3", contents:["   \uc67c\ucabd", {type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_left_image.png", position:{x:83, y:0}, size:22}], func:function() {
-}};
 Entry.FieldIndicator = function(b, a) {
   this._block = a;
   var c = new Entry.BoxModel;
@@ -3244,38 +3228,6 @@ Entry.Collection = function(b) {
   b.destroy = function() {
   };
 })(Entry.Collection.prototype);
-Entry.Code = function(b) {
-  if (!(b instanceof Array)) {
-    return console.error("code must be array");
-  }
-  this.threads = new Entry.Collection;
-  this.board = null;
-  this.set(b);
-};
-(function(b) {
-  b.set = function(a) {
-    var b = this;
-    a = a.map(function(a) {
-      return new Entry.Thread(a, b);
-    });
-    this.threads.set(a);
-  };
-  b.createThread = function(a) {
-    a = new Entry.Thread(a, this);
-    this.board && a.renderStart(this.board);
-    this.threads.push(a);
-    return a;
-  };
-  b.bindBoard = function(a) {
-    this.board = a;
-    this.threads.map(function(b) {
-      b.renderStart(a);
-    });
-  };
-  b.remove = function(a) {
-    this.threads.remove(a);
-  };
-})(Entry.Code.prototype);
 Entry.db = {data:{}, typeMap:{}};
 (function(b) {
   b.add = function(a) {
@@ -3318,7 +3270,79 @@ Entry.init = function() {
 };
 Entry.loadProject = function(b) {
 };
-Entry.STATIC = {OBJECT:0, ENTITY:1, SPRITE:2, SOUND:3, VARIABLE:4, FUNCTION:5, SCENE:6, MESSAGE:7, BLOCK_MODEL:8, BOX_MODEL:9, THREAD_MODEL:10, DRAG_INSTANCE:11, BLOCK_STATIC:0, BLOCK_MOVE:1, BLOCK_FOLLOW:2};
+Entry.STATIC = {OBJECT:0, ENTITY:1, SPRITE:2, SOUND:3, VARIABLE:4, FUNCTION:5, SCENE:6, MESSAGE:7, BLOCK_MODEL:8, BOX_MODEL:9, THREAD_MODEL:10, DRAG_INSTANCE:11, BLOCK_STATIC:0, BLOCK_MOVE:1, BLOCK_FOLLOW:2, RETURN:0, CONTINUE:1};
+Entry.block.run = {skeleton:"basic", color:"#3BBD70", contents:["this is", "basic block"], func:function() {
+}};
+Entry.block.jr_start = {skeleton:"pebble_event", color:"#3BBD70", contents:[{type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_play_image.png", highlightColor:"#3BBD70", size:22}], func:function() {
+}};
+Entry.block.jr_repeat = {skeleton:"pebble_loop", color:"#3BBD70", contents:["1", "\ubc18\ubcf5"], func:function() {
+  console.log("repeat");
+}};
+Entry.block.jr_item = {skeleton:"pebble_basic", color:"#F46C6C", contents:["\uaf43 \ubaa8\uc73c\uae30", {type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_item_image.png", highlightColor:"#FFF", position:{x:83, y:0}, size:22}], func:function() {
+}};
+Entry.block.jr_north = {skeleton:"pebble_basic", color:"#A751E3", contents:["   \uc704\ub85c", {type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_up_image.png", position:{x:83, y:0}, size:22}], func:function() {
+  console.log("up");
+  return Entry.STATIC.RETURN;
+}};
+Entry.block.jr_east = {skeleton:"pebble_basic", color:"#A751E3", contents:["\uc624\ub978\ucabd", {type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_right_image.png", position:{x:83, y:0}, size:22}], func:function() {
+  console.log("east");
+  return Entry.STATIC.RETURN;
+}};
+Entry.block.jr_south = {skeleton:"pebble_basic", color:"#A751E3", contents:["\uc544\ub798\ub85c", {type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_down_image.png", position:{x:83, y:0}, size:22}], func:function() {
+  console.log("south");
+  return Entry.STATIC.RETURN;
+}};
+Entry.block.jr_west = {skeleton:"pebble_basic", color:"#A751E3", contents:["   \uc67c\ucabd", {type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_left_image.png", position:{x:83, y:0}, size:22}], func:function() {
+  console.log("west");
+  return Entry.STATIC.RETURN;
+}};
+Entry.Code = function(b) {
+  if (!(b instanceof Array)) {
+    return console.error("code must be array");
+  }
+  this.threads = new Entry.Collection;
+  this.board = null;
+  this.executors = [];
+  this.set(b);
+};
+(function(b) {
+  b.set = function(a) {
+    var b = this;
+    a = a.map(function(a) {
+      return new Entry.Thread(a, b);
+    });
+    this.threads.set(a);
+  };
+  b.createThread = function(a) {
+    a = new Entry.Thread(a, this);
+    this.board && a.renderStart(this.board);
+    this.threads.push(a);
+    return a;
+  };
+  b.bindBoard = function(a) {
+    this.board = a;
+    this.threads.map(function(b) {
+      b.renderStart(a);
+    });
+  };
+  b.remove = function(a) {
+    this.threads.remove(a);
+  };
+  b.raiseEvent = function(a) {
+    for (var b = 0;b < this.threads.length;b++) {
+      var d = this.threads.at(b).raiseEvent(a);
+      null !== d && this.executors.push(d);
+    }
+  };
+  b.tick = function() {
+    for (var a = this.executors, b = 0;b < a.length;b++) {
+      for (var d = a[b];d.block && d.block.func.call(d) == Entry.STATIC.RETURN;) {
+        d.block = d.block.thread.next(d.block);
+      }
+      null === d && (a.splice(b, 1), b--);
+    }
+  };
+})(Entry.Code.prototype);
 Entry.Utils = {};
 Entry.Utils.intersectArray = function(b, a) {
   for (var c = [], d = 0;d < b.length;d++) {
@@ -3510,6 +3534,14 @@ Entry.Thread = function(b, a) {
     a = this._blocks.indexOf(a);
     return this._blocks.splice(a);
   };
+  b.raiseEvent = function(a) {
+    var b = this._blocks.at(0);
+    return b.type === a ? {block:b} : null;
+  };
+  b.next = function(a) {
+    a = this._blocks.indexOf(a);
+    return this._blocks.length <= a ? null : this._blocks.at(a + 1);
+  };
   b.renderStart = function(a) {
     this.board = a;
     this.svgGroup = a.snap.group();
@@ -3558,8 +3590,10 @@ Entry.Block = function(b, a) {
   Entry.Model(this, !1);
   this.thread = a;
   this._board = null;
+  this.type = b.blockType;
   this._schema = Entry.block[b.blockType];
   this._skeleton = Entry.skeleton[this._schema.skeleton];
+  this.func = this._schema.func;
   this.observe(this, "setThread", ["thread"]);
   this.set({x:b.x, y:b.y});
   this.observe(this, "measureSize", ["contentWidth", "contentHeight"]);

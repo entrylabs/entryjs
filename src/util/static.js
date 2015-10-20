@@ -20,5 +20,9 @@ Entry.STATIC = {
     /* block state */
     BLOCK_STATIC: 0,
     BLOCK_MOVE: 1,
-    BLOCK_FOLLOW: 2
+    BLOCK_FOLLOW: 2,
+
+    /* execute return state */
+    RETURN: 0,
+    CONTINUE: 1
 };

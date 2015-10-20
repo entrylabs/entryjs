@@ -1,4 +1,5 @@
 "use strict";
+goog.require('Entry.STATIC');
 
 Entry.block.run = {
     skeleton: "basic",
@@ -37,6 +38,7 @@ Entry.block.jr_repeat = {
         "반복"
     ],
     func: function() {
+        console.log('repeat');
 
     }
 };
@@ -72,7 +74,8 @@ Entry.block.jr_north = {
         }
     ],
     func: function() {
-
+        console.log('up');
+        return Entry.STATIC.RETURN;
     }
 };
 
@@ -89,7 +92,8 @@ Entry.block.jr_east = {
         }
     ],
     func: function() {
-
+        console.log('east');
+        return Entry.STATIC.RETURN;
     }
 };
 
@@ -106,6 +110,8 @@ Entry.block.jr_south = {
         }
     ],
     func: function() {
+        console.log('south');
+        return Entry.STATIC.RETURN;
 
     }
 };
@@ -123,6 +129,7 @@ Entry.block.jr_west = {
         }
     ],
     func: function() {
-
+        console.log('west');
+        return Entry.STATIC.RETURN;
     }
 };

@@ -20,8 +20,10 @@ Entry.Block = function(block, thread) {
     this._board = null;
 
     // block information
+    this.type = block.blockType;
     this._schema = Entry.block[block.blockType];
     this._skeleton = Entry.skeleton[this._schema.skeleton];
+    this.func = this._schema.func;
 
     this.observe(this, "setThread", ['thread']);
 
