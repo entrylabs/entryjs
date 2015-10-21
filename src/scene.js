@@ -41,7 +41,8 @@ Entry.Scene.prototype.generateView = function(sceneView, option) {
                         var end = ui.item.index();
                         Entry.scene.moveScene(start, end);
                     },
-                    axis: 'x'
+                    axis: 'x',
+                    grid: [1,0]
                 });
 
                 // $(listView).draggable({
@@ -304,7 +305,6 @@ Entry.Scene.prototype.toJSON = function() {
 Entry.Scene.prototype.moveScene = function(start, end) {
     this.getScenes().splice(
         end, 0, this.getScenes().splice(start, 1)[0]);
-
     Entry.container.updateObjectsOrder();
     Entry.stage.sortZorder();
 };
