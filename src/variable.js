@@ -278,7 +278,6 @@ Entry.Variable.prototype.generateView = function(variableIndex) {
                 this.y = evt.rawY/2 - this.offsetY + 23 * (this.list.height_/100);
             }
             
-            console.log(this.y);
             if (this.y < 23)
                 this.y = 23;
             if (this.y > this.list.getHeight() - 40)

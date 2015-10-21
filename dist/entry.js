@@ -10383,7 +10383,6 @@ Entry.Variable.prototype.generateView = function(a) {
         this.offsetY = isNaN(this.offsetY) || 0 > this.offsetY ? a.rawY / 2 : this.offsetY;
       }), this.scrollButton_.on("pressmove", function(a) {
         void 0 == this.moveAmount ? (this.y = a.target.y, this.moveAmount = !0) : this.y = a.rawY / 2 - this.offsetY + this.list.height_ / 100 * 23;
-        console.log(this.y);
         23 > this.y && (this.y = 23);
         this.y > this.list.getHeight() - 40 && (this.y = this.list.getHeight() - 40);
         this.list.updateView();
