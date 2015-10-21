@@ -3738,8 +3738,11 @@ Entry.block.ask_and_wait = function(a, b) {
   if (c.sprite == a && d && !d._isHidden) {
     return b;
   }
-  if (c.sprite != a && b.isInit || c.getValue() && c.sprite == a && d._isHidden && b.isInit) {
+  if (c.sprite != a && b.isInit) {
     return a.dialog && a.dialog.remove(), delete b.isInit, b.callReturn();
+  }
+  if (c.complete && c.sprite == a && d._isHidden && b.isInit) {
+    return a.dialog && a.dialog.remove(), delete c.complete, delete b.isInit, b.callReturn();
   }
   e = Entry.convertToRoundedDecimals(e, 3);
   new Entry.Dialog(a, e, "speak");
@@ -9136,8 +9139,12 @@ Entry.Stage.prototype.initStage = function(a) {
     try {
       var b = Entry.stage.inputField.value();
       Entry.stage.hideInputField();
-      b && Entry.container.setInputValue(b);
-    } catch (e) {
+      if (b) {
+        var e = Entry.container;
+        e.setInputValue(b);
+        e.inputValue.complete = !0;
+      }
+    } catch (f) {
     }
   });
   this.initWall();
