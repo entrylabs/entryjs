@@ -267,11 +267,10 @@ Entry.Variable.prototype.generateView = function(variableIndex) {
             // if(Entry.type != 'workspace') return;
             this.list.isResizing = true;
             this.cursor = 'pointer';
-            this.offsetY = isNaN(this.offsetY) || (this.offsetY==undefined) || (this.offsetY < 0) ? evt.rawY/2 : this.offsetY;
+            this.offsetY = isNaN(this.offsetY) || (this.offsetY < 0) ? evt.rawY/2 : this.offsetY;
         });
         this.scrollButton_.on("pressmove", function(evt) {
             // if(Entry.type != 'workspace') return;
-            console.log(evt);
             if(this.moveAmount== undefined) {
                 this.y = evt.target.y;
                 this.moveAmount = true;

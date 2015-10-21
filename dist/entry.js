@@ -10380,9 +10380,8 @@ Entry.Variable.prototype.generateView = function(a) {
       new createjs.Shape, this.scrollButton_.graphics.f("#aaa").rr(0, 0, 7, 30, 3.5), this.view_.addChild(this.scrollButton_), this.scrollButton_.y = 23, this.scrollButton_.list = this, this.scrollButton_.on("mousedown", function(a) {
         this.list.isResizing = !0;
         this.cursor = "pointer";
-        this.offsetY = isNaN(this.offsetY) || void 0 == this.offsetY || 0 > this.offsetY ? a.rawY / 2 : this.offsetY;
+        this.offsetY = isNaN(this.offsetY) || 0 > this.offsetY ? a.rawY / 2 : this.offsetY;
       }), this.scrollButton_.on("pressmove", function(a) {
-        console.log(a);
         void 0 == this.moveAmount ? (this.y = a.target.y, this.moveAmount = !0) : this.y = a.rawY / 2 - this.offsetY + this.list.height_ / 100 * 23;
         console.log(this.y);
         23 > this.y && (this.y = 23);
