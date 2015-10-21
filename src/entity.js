@@ -375,7 +375,7 @@ Entry.EntityObject.prototype.setSize = function(size) {
  * @return {number}
  */
 Entry.EntityObject.prototype.getSize = function() {
-    return (this.getWidth() * this.getScaleX() + this.getHeight() * this.getScaleY()) / 2;
+    return (this.getWidth() * Math.abs(this.getScaleX()) + this.getHeight() * Math.abs(this.getScaleY())) / 2;
 }
 
 /**
