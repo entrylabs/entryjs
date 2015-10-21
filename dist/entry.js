@@ -3555,7 +3555,6 @@ Entry.Thread = function(b, a) {
     this.align();
   };
   b.resizeBG = function() {
-    console.log("resize");
     this._bg.attr({x:this.x + this.offsetX, y:this.y, width:this.width, height:this.height});
   };
   b.align = function(a) {

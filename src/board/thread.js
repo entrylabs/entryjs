@@ -101,7 +101,6 @@ Entry.Thread = function(thread, code) {
     };
 
     p.resizeBG = function() {
-        console.log('resize');
         this._bg.attr({
             x: this.x + this.offsetX,
             y: this.y,
