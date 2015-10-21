@@ -277,7 +277,7 @@ Entry.startActivityLogging = function() {
     if (Entry.reporter)
         Entry.reporter.start(
             Entry.projectId,
-            window.user._id,
+            window.user ? window.user._id : null,
             Entry.startTime);
 };
 
