@@ -164,4 +164,12 @@ Entry.Thread = function(thread, code) {
         this.code.remove(this);
     };
 
+    p.toJSON = function() {
+        var array = [];
+        for (var i = 0; i < this._blocks.length; i++) {
+            array.push(this._blocks.at(i).toJSON());
+        } 
+        return array;
+    }
+
 })(Entry.Thread.prototype);

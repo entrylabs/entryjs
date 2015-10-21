@@ -26,7 +26,8 @@ Entry.block.jr_start = {
         }
     ],
     func: function() {
-
+        console.log('start');
+        return Entry.STATIC.RETURN;
     }
 };
 

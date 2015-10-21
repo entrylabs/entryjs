@@ -3274,6 +3274,8 @@ Entry.STATIC = {OBJECT:0, ENTITY:1, SPRITE:2, SOUND:3, VARIABLE:4, FUNCTION:5, S
 Entry.block.run = {skeleton:"basic", color:"#3BBD70", contents:["this is", "basic block"], func:function() {
 }};
 Entry.block.jr_start = {skeleton:"pebble_event", color:"#3BBD70", contents:[{type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_play_image.png", highlightColor:"#3BBD70", size:22}], func:function() {
+  console.log("start");
+  return Entry.STATIC.RETURN;
 }};
 Entry.block.jr_repeat = {skeleton:"pebble_loop", color:"#3BBD70", contents:["1", "\ubc18\ubcf5"], func:function() {
   console.log("repeat");
@@ -3341,6 +3343,15 @@ Entry.Code = function(b) {
       }
       null === d && (a.splice(b, 1), b--);
     }
+  };
+  b.clearExecutors = function() {
+    this.executors = [];
+  };
+  b.toJSON = function() {
+    for (var a = [], b = 0;b < this.threads.length;b++) {
+      a.push(this.threads.at(b).toJSON());
+    }
+    return a;
   };
 })(Entry.Code.prototype);
 Entry.Utils = {};
@@ -3580,6 +3591,12 @@ Entry.Thread = function(b, a) {
     this.svgGroup && this.svgGroup.remove();
     this.code.remove(this);
   };
+  b.toJSON = function() {
+    for (var a = [], b = 0;b < this._blocks.length;b++) {
+      a.push(this._blocks.at(b).toJSON());
+    }
+    return a;
+  };
 })(Entry.Thread.prototype);
 Entry.BoxModel = function() {
   Entry.Model(this);
@@ -3589,8 +3606,8 @@ Entry.Block = function(b, a) {
   Entry.Model(this, !1);
   this.thread = a;
   this._board = null;
-  this.type = b.blockType;
-  this._schema = Entry.block[b.blockType];
+  this.type = b.type;
+  this._schema = Entry.block[b.type];
   this._skeleton = Entry.skeleton[this._schema.skeleton];
   this.func = this._schema.func;
   this.observe(this, "setThread", ["thread"]);
@@ -3721,6 +3738,9 @@ Entry.Block.FOLLOW = 3;
     } else {
       this.measureSize();
     }
+  };
+  b.toJSON = function() {
+    return {type:this.type, x:0, y:0};
   };
 })(Entry.Block.prototype);
 Entry.DragInstance = function(b) {

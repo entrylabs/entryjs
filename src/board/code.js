@@ -78,6 +78,18 @@ Entry.Code = function(code) {
                 i--;
             }
         }
+    };
+
+    p.clearExecutors = function() {
+        this.executors = [];
+    };
+
+    p.toJSON = function() {
+        var array = [];
+        for (var i = 0; i < this.threads.length; i++) {
+            array.push(this.threads.at(i).toJSON());
+        } 
+        return array;
     }
 
 })(Entry.Code.prototype);
