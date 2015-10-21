@@ -267,16 +267,27 @@ Entry.Variable.prototype.generateView = function(variableIndex) {
             // if(Entry.type != 'workspace') return;
             this.list.isResizing = true;
             this.cursor = 'pointer';
-            this.offsetY = evt.rawY/2;
+            this.offsetY = isNaN(this.offsetY) || (this.offsetY < 0) ? evt.rawY/2 : this.offsetY;
         });
         this.scrollButton_.on("pressmove", function(evt) {
             // if(Entry.type != 'workspace') return;
-            this.y = evt.rawY/2 - this.offsetY + 23;
+            if(this.moveAmount== undefined) {
+                this.y = evt.target.y;
+                this.moveAmount = true;
+            } else {
+                this.y = evt.rawY/2 - this.offsetY + 23 * (this.list.height_/100);
+            }
+            
             if (this.y < 23)
                 this.y = 23;
             if (this.y > this.list.getHeight() - 40)
                 this.y = this.list.getHeight() - 40;
             this.list.updateView();
+
+        });
+
+        this.scrollButton_.on("pressup" , function(evt) {
+            this.moveAmount = undefined;
         });
         if ( this.getX() && this.getY() ) {
             this.setX( this.getX() );
