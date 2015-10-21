@@ -229,4 +229,8 @@ Entry.StateManager.prototype.isSaved = function () {
 Entry.StateManager.prototype.addActivity = function (activityType) {
     if (Entry.reporter)
         Entry.reporter.report(new Entry.State(activityType));
+    if (Entry.enableActivityLogging) {
+         if (!this.activities) this.activities = [];
+         this.activities.push(new Entry.State(activityType));
+    }
 };

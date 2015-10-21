@@ -5433,7 +5433,7 @@ Entry.EntityObject.prototype.applyFilter = function() {
   e.adjustColor(0, 0, 0, b.hue);
   e = new createjs.ColorMatrixFilter(e);
   c.push(e);
-  var e = 3.6 * b.hsv, f = Math.acos(-1), f = e * f / 180, e = Math.cos(f), f = Math.sin(f), e = [e, f, 0, 0, 0, -1 * f, e, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1], e = (new createjs.ColorMatrix).concat(e), e = new createjs.ColorMatrixFilter(e);
+  var f = 3.6 * b.hsv * Math.acos(-1) / 180, e = Math.cos(f), f = Math.sin(f), e = [e, f, 0, 0, 0, -1 * f, e, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1], e = (new createjs.ColorMatrix).concat(e), e = new createjs.ColorMatrixFilter(e);
   c.push(e);
   a.alpha = b.alpha = d(b.alpha, 0, 1);
   a.filters = c;
@@ -9536,6 +9536,7 @@ Entry.StateManager.prototype.isSaved = function() {
 };
 Entry.StateManager.prototype.addActivity = function(a) {
   Entry.reporter && Entry.reporter.report(new Entry.State(a));
+  Entry.enableActivityLogging && (this.activities || (this.activities = []), this.activities.push(new Entry.State(a)));
 };
 Entry.Toast = function() {
   this.toasts_ = [];
