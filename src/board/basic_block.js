@@ -26,7 +26,7 @@ Entry.block.jr_start = {
         }
     ],
     func: function() {
-
+        return Entry.STATIC.RETURN;
     }
 };
 
