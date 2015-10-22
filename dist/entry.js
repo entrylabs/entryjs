@@ -3404,14 +3404,18 @@ Entry.loadProject = function(b) {
 };
 Entry.STATIC = {OBJECT:0, ENTITY:1, SPRITE:2, SOUND:3, VARIABLE:4, FUNCTION:5, SCENE:6, MESSAGE:7, BLOCK_MODEL:8, BOX_MODEL:9, THREAD_MODEL:10, DRAG_INSTANCE:11, BLOCK_STATIC:0, BLOCK_MOVE:1, BLOCK_FOLLOW:2, RETURN:0, CONTINUE:1};
 Entry.block.run = {skeleton:"basic", color:"#3BBD70", contents:["this is", "basic block"], func:function() {
+  return Entry.STATIC.RETURN;
 }};
 Entry.block.jr_start = {skeleton:"pebble_event", color:"#3BBD70", contents:[{type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_play_image.png", highlightColor:"#3BBD70", size:22}], func:function() {
+  console.log("dd");
   return Entry.STATIC.RETURN;
 }};
 Entry.block.jr_repeat = {skeleton:"pebble_loop", color:"#3BBD70", contents:["1", "\ubc18\ubcf5"], func:function() {
   console.log("repeat");
 }};
 Entry.block.jr_item = {skeleton:"pebble_basic", color:"#F46C6C", contents:["\uaf43 \ubaa8\uc73c\uae30", {type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_item_image.png", highlightColor:"#FFF", position:{x:83, y:0}, size:22}], func:function() {
+  Ntry.dispatchEvent("unitAction", Ntry.STATIC.GET_ITEM);
+  return Entry.STATIC.RETURN;
 }};
 Entry.block.jr_north = {skeleton:"pebble_basic", color:"#A751E3", contents:["   \uc704\ub85c", {type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_up_image.png", position:{x:83, y:0}, size:22}], func:function() {
   console.log("up");
@@ -3419,6 +3423,7 @@ Entry.block.jr_north = {skeleton:"pebble_basic", color:"#A751E3", contents:["   
 }};
 Entry.block.jr_east = {skeleton:"pebble_basic", color:"#A751E3", contents:["\uc624\ub978\ucabd", {type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_right_image.png", position:{x:83, y:0}, size:22}], func:function() {
   console.log("east");
+  Ntry.dispatchEvent("unitAction", Ntry.STATIC.WALK);
   return Entry.STATIC.RETURN;
 }};
 Entry.block.jr_south = {skeleton:"pebble_basic", color:"#A751E3", contents:["\uc544\ub798\ub85c", {type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_down_image.png", position:{x:83, y:0}, size:22}], func:function() {
@@ -3464,13 +3469,14 @@ Entry.Code = function(b) {
   b.raiseEvent = function(a) {
     for (var b = 0;b < this.threads.length;b++) {
       var d = this.threads.at(b).raiseEvent(a);
+      console.log(d);
       null !== d && this.executors.push(d);
     }
   };
   b.tick = function() {
     for (var a = this.executors, b = 0;b < a.length;b++) {
       for (var d = a[b];d.block && d.block.func.call(d) == Entry.STATIC.RETURN;) {
-        d.block = d.block.thread.next(d.block);
+        console.log(d.block), d.block = d.block.thread.next(d.block);
       }
       null === d && (a.splice(b, 1), b--);
     }

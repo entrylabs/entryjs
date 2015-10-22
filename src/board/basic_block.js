@@ -9,7 +9,7 @@ Entry.block.run = {
         "basic block"
     ],
     func: function() {
-
+        return Entry.STATIC.RETURN;
     }
 };
 
@@ -26,6 +26,7 @@ Entry.block.jr_start = {
         }
     ],
     func: function() {
+        console.log('dd');
         return Entry.STATIC.RETURN;
     }
 };
@@ -57,7 +58,8 @@ Entry.block.jr_item = {
         }
     ],
     func: function() {
-
+        Ntry.dispatchEvent("unitAction", Ntry.STATIC.GET_ITEM);
+        return Entry.STATIC.RETURN;
     }
 };
 
@@ -93,6 +95,7 @@ Entry.block.jr_east = {
     ],
     func: function() {
         console.log('east');
+        Ntry.dispatchEvent("unitAction", Ntry.STATIC.WALK);
         return Entry.STATIC.RETURN;
     }
 };
