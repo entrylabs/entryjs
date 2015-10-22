@@ -2623,8 +2623,8 @@ Entry.block.message_cast_wait = function(b, a) {
   }
   var e = [];
   Entry.container.mapEntityIncludeCloneOnScene(function(a, b) {
-    for (var c = b[0], d = b[1], k = a.parent.script.childNodes, n = 0;n < k.length;n++) {
-      var p = k[n], m = Entry.Xml.getField("VALUE", p);
+    for (var c = b[0], d = b[1], l = a.parent.script.childNodes, n = 0;n < l.length;n++) {
+      var p = l[n], m = Entry.Xml.getField("VALUE", p);
       Entry.Xml.isTypeOf(c, p) && m == d && (m = new Entry.Script(a), m.init(p), e.push(m));
     }
   }, ["when_message_cast", c]);
@@ -3059,14 +3059,14 @@ Entry.skeleton = function() {
 Entry.skeleton.basic = {path:function(b) {
   return "m -4,0 l 8,8 8,-8 h %w a 15,15 0 0,1 0,30 h -%w l -8,8 -8,-8 v -30 z".replace(/%w/gi, b.contentWidth);
 }, box:function(b) {
-  return {offsetX:0, offsetY:0, width:b.contentWidth + 30, height:30};
+  return {offsetX:0, offsetY:0, width:b.contentWidth + 30, height:30, marginBottom:0};
 }, magnets:{previous:{}, next:{x:0, y:31}}, contentPos:function(b) {
   return {x:20, y:15};
 }};
 Entry.skeleton.pebble_event = {path:function(b) {
   return "m 0,0 a 25,25 0 0,1 9,48.3 a 9,9 0 0,1 -18,0 a 25,25 0 0,1 9,-48.3 z";
 }, box:function(b) {
-  return {offsetX:-25, offsetY:0, width:50, height:48.3};
+  return {offsetX:-25, offsetY:0, width:50, height:48.3, marginBottom:0};
 }, magnets:function(b) {
   return {next:{x:0, y:49.3}};
 }, contentPos:function() {
@@ -3077,7 +3077,7 @@ Entry.skeleton.pebble_loop = {path:function(b) {
 }, magnets:function() {
   return {previous:{x:0, y:0}, next:{x:0, y:105}};
 }, box:function() {
-  return {offsetX:-75, offsetY:0, width:150, height:104};
+  return {offsetX:-75, offsetY:0, width:150, height:104, marginBottom:0};
 }, contentPos:function() {
   return {x:-46, y:25};
 }};
@@ -3086,7 +3086,7 @@ Entry.skeleton.pebble_basic = {path:function(b) {
 }, magnets:function() {
   return {previous:{x:0, y:0}, next:{x:0, y:51}};
 }, box:function() {
-  return {offsetX:-62, offsetY:0, width:124, height:50};
+  return {offsetX:-62, offsetY:0, width:124, height:50, marginBottom:0};
 }, contentPos:function() {
   return {x:-46, y:25};
 }};
@@ -3134,6 +3134,9 @@ Entry.Collection = function(b) {
   b.get = function(a) {
     return this._hashMap[a];
   };
+  b.getAll = function() {
+    return this._data;
+  };
   b.at = function(a) {
     return this._data[a];
   };
@@ -3143,9 +3146,9 @@ Entry.Collection = function(b) {
   b.find = function(a) {
     for (var b = this._data, d = [], e, f = 0, h = this.length;f < h;f++) {
       e = !0;
-      var g = b[f], l;
-      for (l in a) {
-        if (a[l] != g[l]) {
+      var g = b[f], k;
+      for (k in a) {
+        if (a[k] != g[k]) {
           e = !1;
           break;
         }
@@ -3180,14 +3183,14 @@ Entry.Collection = function(b) {
     if (!(0 > a || a > this.length)) {
       var e = this._data, f = this._hashMap;
       b = void 0 === b ? this.length - a : b;
-      for (var h = e.splice(a, b), g = 0, l = h.length;g < l;g++) {
+      for (var h = e.splice(a, b), g = 0, k = h.length;g < k;g++) {
         delete f[h[g].id];
       }
       g = 0;
-      for (l = d.length;g < l;g++) {
-        var k = d[g];
-        e.splice(a++, 0, k);
-        f[k.id] = k;
+      for (k = d.length;g < k;g++) {
+        var l = d[g];
+        e.splice(a++, 0, l);
+        f[l.id] = l;
       }
       return h;
     }
@@ -3228,6 +3231,135 @@ Entry.Collection = function(b) {
   b.destroy = function() {
   };
 })(Entry.Collection.prototype);
+Entry.CollectionNew = function(b) {
+  this.length = 0;
+  this._hashMap = {};
+  this._observers = [];
+  this.set(b);
+};
+(function(b, a) {
+  b.set = function(b) {
+    for (;this.length;) {
+      a.pop.call(this);
+    }
+    var d = this._hashMap, e;
+    for (e in d) {
+      delete d[e];
+    }
+    if (void 0 !== b) {
+      e = 0;
+      for (var f = b.length;e < f;e++) {
+        var h = b[e];
+        d[h.id] = h;
+        a.push.call(this, h);
+      }
+    }
+  };
+  b.push = function(b) {
+    a.push.call(this, b);
+  };
+  b.unshift = function() {
+    for (var b = Array.prototype.slice.call(arguments, 0), d = b.length - 1;0 <= d;d--) {
+      var e = b[d];
+      a.unshift.call(this, e);
+      this._hashMap[e.id] = e;
+    }
+  };
+  b.insert = function(b, d) {
+    a.splice.call(this, d, 0, b);
+    this._hashMap[b.id] = b;
+  };
+  b.has = function(a) {
+    return !!this._hashMap[a];
+  };
+  b.get = function(a) {
+    return this._hashMap[a];
+  };
+  b.getAll = function() {
+    for (var a = this.length, b = [], e = 0;e < a;e++) {
+      b.push(this[e]);
+    }
+    return b;
+  };
+  b.indexOf = function(b) {
+    return a.indexOf.call(this, b);
+  };
+  b.find = function(a) {
+    for (var b = [], e, f = 0, h = this.length;f < h;f++) {
+      e = !0;
+      var g = this[f], k;
+      for (k in a) {
+        if (a[k] != g[k]) {
+          e = !1;
+          break;
+        }
+      }
+      e && b.push(g);
+    }
+    return b;
+  };
+  b.pop = function() {
+    a.pop.call(this);
+  };
+  b.shift = function() {
+    return a.shift.call(this);
+  };
+  b.slice = function(b, d) {
+    return a.slice.call(this, b, d);
+  };
+  b.remove = function(a) {
+    var b = this.indexOf(a);
+    -1 < b && (delete this._hashMap[a.id], this.splice(b, 1));
+  };
+  b.splice = function(b, d) {
+    var e = a.slice.call(arguments, 2), f = this._hashMap;
+    d = void 0 === d ? this.length - b : d;
+    for (var h = a.splice.call(this, b, d), g = 0, k = h.length;g < k;g++) {
+      delete f[h[g].id];
+    }
+    g = 0;
+    for (k = e.length;g < k;g++) {
+      f = e[g], a.splice.call(this, b++, 0, f), this._hashMap[f.id] = f;
+    }
+    return h;
+  };
+  b.clear = function() {
+    for (;this.length;) {
+      a.pop.call(this);
+    }
+    var b = this._hashMap, d;
+    for (d in b) {
+      delete b[d];
+    }
+  };
+  b.map = function(a, b) {
+    for (var e = 0, f = this.length;e < f;e++) {
+      a(this[e], b);
+    }
+  };
+  b.moveFromTo = function(b, d) {
+    var e = this.length - 1;
+    0 > b || 0 > d || b > e || d > e || a.splice.call(this, d, 0, a.splice.call(this, b, 1)[0]);
+  };
+  b.sort = function() {
+  };
+  b.fromJSON = function() {
+  };
+  b.toJSON = function() {
+    for (var a = [], b = 0, e = this.length;b < e;b++) {
+      a.push(this[b].toJSON());
+    }
+    return a;
+  };
+  b.observe = function() {
+  };
+  b.unobserve = function() {
+  };
+  b.notify = function() {
+  };
+  b.destroy = function() {
+  };
+})(Entry.CollectionNew.prototype, Array.prototype);
 Entry.db = {data:{}, typeMap:{}};
 (function(b) {
   b.add = function(a) {
@@ -3450,6 +3582,51 @@ Entry.Model = function(b, a) {
     }
   };
 })(Entry.Model);
+Entry.BlockMenu = function(b) {
+  Entry.Model(this, !1);
+  b = "string" === typeof b ? $("#" + b) : $(b);
+  if ("DIV" !== b.prop("tagName")) {
+    return console.error("Dom is not div element");
+  }
+  if ("function" !== typeof window.Snap) {
+    return console.error("Snap library is required");
+  }
+  this._svgDom = Entry.Dom($('<svg id="blockMenu" width="100%" height="100%"version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'), {parent:b});
+  this.offset = this._svgDom.offset();
+  this.snap = Snap("#blockMenu");
+  this.snap.block = "null";
+  this._code = null;
+  this.observe(this, "cloneThread", ["dragBlock"]);
+};
+(function(b) {
+  b.schema = {dragBlock:null, closeBlock:null};
+  b.setBlocks = function(a) {
+    if (!(a instanceof Entry.Code)) {
+      return console.error("You must inject code instance");
+    }
+    this._code = a;
+    a.bindBoard(this);
+    this.align();
+  };
+  b.cloneThread = function() {
+    console.log(this.dragBlock);
+  };
+  b.align = function() {
+    for (var a = this._code.threads.getAll(), b = 0, d = this._svgDom.width() / 2, e = 0, f = a.length;e < f;e++) {
+      var h = a[e];
+      h.moveTo(d, b, !0);
+      b += h.height + 10;
+    }
+  };
+  b.updateCloseMagnet = function(a) {
+  };
+  b.terminateDrag = function(a) {
+    this.align();
+  };
+  b.dominate = function(a) {
+    this.snap.append(a.svgGroup);
+  };
+})(Entry.BlockMenu.prototype);
 Entry.Board = function(b) {
   b = "string" === typeof b ? $("#" + b) : $(b);
   if ("DIV" !== b.prop("tagName")) {
@@ -3567,19 +3744,24 @@ Entry.Thread = function(b, a) {
   b.resizeBG = function() {
     this._bg.attr({x:this.x + this.offsetX, y:this.y, width:this.width, height:this.height});
   };
+  b.moveTo = function(a, b, d) {
+    d = void 0 === d ? !0 : d;
+    this._blocks.at(0).set({x:a, y:b});
+    this.align(d);
+  };
   b.align = function(a) {
     a = void 0 === a ? !0 : a;
-    for (var b = this._blocks.at(0), d = b.x, e = b.y, f = 0, h = b.width, g = 0, l = 0;l < this._blocks.length;l++) {
-      var k = this._blocks.at(l);
-      if (k.dragInstance && a) {
+    for (var b = this._blocks.at(0), d = b.x, e = b.y, f = 0, h = b.width, g = 0, k = 0;k < this._blocks.length;k++) {
+      var l = this._blocks.at(k);
+      if (l.dragInstance && a) {
         break;
       }
-      k.dragInstance && (d = k.x, e = k.y);
-      k.moveTo(d, e, a);
-      k.magnets.next && (e += k.height + 1);
-      g = Math.max(g, k.width);
-      h = Math.min(h, k.width);
-      f = Math.min(f, k.offsetX);
+      l.dragInstance && (d = l.x, e = l.y);
+      l.moveTo(d, e, a);
+      l.magnets.next && (e += l.height + 1, e += l.marginBottom);
+      g = Math.max(g, l.width);
+      h = Math.min(h, l.width);
+      f = Math.min(f, l.offsetX);
     }
     this.set({x:b.x, y:b.y, offsetX:f, minWidth:h, width:g, height:e - b.y});
   };
@@ -3610,7 +3792,7 @@ Entry.Block = function(b, a) {
   this._skeleton = Entry.skeleton[this._schema.skeleton];
   this.func = this._schema.func;
   this.observe(this, "setThread", ["thread"]);
-  this.set({x:b.x, y:b.y});
+  this.set({x:b.x || 0, y:b.y || 0});
   this.observe(this, "measureSize", ["contentWidth", "contentHeight"]);
   this.observe(this, "render", ["contentWidth", "contentHeight"]);
   this.observe(this, "applyMagnet", ["magneting"]);
@@ -3625,7 +3807,7 @@ Entry.Block.SHOWN = 1;
 Entry.Block.MOVE = 2;
 Entry.Block.FOLLOW = 3;
 (function(b) {
-  b.schema = {type:Entry.STATIC.BLOCK_MODEL, state:Entry.Block.HIDDEN, thread:null, contents:null, board:null, x:0, y:0, offsetX:0, offsetY:0, width:0, height:0, contentWidth:0, contentHeight:0, magneting:!1, highlight:!1};
+  b.schema = {type:Entry.STATIC.BLOCK_MODEL, state:Entry.Block.HIDDEN, thread:null, contents:null, board:null, x:0, y:0, offsetX:0, offsetY:0, width:0, height:0, marginBottom:0, contentWidth:0, contentHeight:0, magneting:!1, highlight:!1};
   b.initView = function() {
   };
   b.setThread = function() {
@@ -3733,7 +3915,7 @@ Entry.Block.FOLLOW = 3;
       a.map(function(a) {
         d += a.height;
       });
-      this.height += d;
+      this.marginBottom = d;
     } else {
       this.measureSize();
     }

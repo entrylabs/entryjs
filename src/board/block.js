@@ -28,7 +28,10 @@ Entry.Block = function(block, thread) {
     this.observe(this, "setThread", ['thread']);
 
     // Block model
-    this.set({ x: block.x, y: block.y });
+    this.set({
+        x: block.x || 0,
+        y: block.y || 0
+    });
     this.observe(this, "measureSize", ['contentWidth', 'contentHeight']);
     this.observe(this, "render", ['contentWidth', 'contentHeight']);
 
@@ -67,6 +70,7 @@ Entry.Block.FOLLOW = 3;
         offsetY: 0,
         width: 0,
         height: 0,
+        marginBottom: 0,
         contentWidth: 0,
         contentHeight: 0,
         magneting: false,
@@ -305,7 +309,7 @@ Entry.Block.FOLLOW = 3;
             var movingBlocks = targetThread._blocks.slice(targetThread._blocks.indexOf(targetBlock));
             var targetHeight = Entry.Block.MAGNET_RANGE;
             movingBlocks.map(function(b) {targetHeight += b.height;});
-            this.height += targetHeight;
+            this.marginBottom = targetHeight;
         } else {
             this.measureSize();
         }

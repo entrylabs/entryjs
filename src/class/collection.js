@@ -75,6 +75,10 @@ Entry.Collection = function(data) {
         return this._hashMap[id];
     };
 
+    p.getAll = function() {
+        return this._data;
+    };
+
     p.at = function(index) {
         return this._data[index];
     };
