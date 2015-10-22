@@ -70,6 +70,7 @@ Entry.Block.FOLLOW = 3;
         offsetY: 0,
         width: 0,
         height: 0,
+        marginBottom: 0,
         contentWidth: 0,
         contentHeight: 0,
         magneting: false,
@@ -308,7 +309,7 @@ Entry.Block.FOLLOW = 3;
             var movingBlocks = targetThread._blocks.slice(targetThread._blocks.indexOf(targetBlock));
             var targetHeight = Entry.Block.MAGNET_RANGE;
             movingBlocks.map(function(b) {targetHeight += b.height;});
-            this.height += targetHeight;
+            this.marginBottom = targetHeight;
         } else {
             this.measureSize();
         }

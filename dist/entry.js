@@ -3059,14 +3059,14 @@ Entry.skeleton = function() {
 Entry.skeleton.basic = {path:function(b) {
   return "m -4,0 l 8,8 8,-8 h %w a 15,15 0 0,1 0,30 h -%w l -8,8 -8,-8 v -30 z".replace(/%w/gi, b.contentWidth);
 }, box:function(b) {
-  return {offsetX:0, offsetY:0, width:b.contentWidth + 30, height:30};
+  return {offsetX:0, offsetY:0, width:b.contentWidth + 30, height:30, marginBottom:0};
 }, magnets:{previous:{}, next:{x:0, y:31}}, contentPos:function(b) {
   return {x:20, y:15};
 }};
 Entry.skeleton.pebble_event = {path:function(b) {
   return "m 0,0 a 25,25 0 0,1 9,48.3 a 9,9 0 0,1 -18,0 a 25,25 0 0,1 9,-48.3 z";
 }, box:function(b) {
-  return {offsetX:-25, offsetY:0, width:50, height:48.3};
+  return {offsetX:-25, offsetY:0, width:50, height:48.3, marginBottom:0};
 }, magnets:function(b) {
   return {next:{x:0, y:49.3}};
 }, contentPos:function() {
@@ -3077,7 +3077,7 @@ Entry.skeleton.pebble_loop = {path:function(b) {
 }, magnets:function() {
   return {previous:{x:0, y:0}, next:{x:0, y:105}};
 }, box:function() {
-  return {offsetX:-75, offsetY:0, width:150, height:104};
+  return {offsetX:-75, offsetY:0, width:150, height:104, marginBottom:0};
 }, contentPos:function() {
   return {x:-46, y:25};
 }};
@@ -3086,7 +3086,7 @@ Entry.skeleton.pebble_basic = {path:function(b) {
 }, magnets:function() {
   return {previous:{x:0, y:0}, next:{x:0, y:51}};
 }, box:function() {
-  return {offsetX:-62, offsetY:0, width:124, height:50};
+  return {offsetX:-62, offsetY:0, width:124, height:50, marginBottom:0};
 }, contentPos:function() {
   return {x:-46, y:25};
 }};
@@ -3758,7 +3758,7 @@ Entry.Thread = function(b, a) {
       }
       l.dragInstance && (d = l.x, e = l.y);
       l.moveTo(d, e, a);
-      l.magnets.next && (e += l.height + 1);
+      l.magnets.next && (e += l.height + 1, e += l.marginBottom);
       g = Math.max(g, l.width);
       h = Math.min(h, l.width);
       f = Math.min(f, l.offsetX);
@@ -3807,7 +3807,7 @@ Entry.Block.SHOWN = 1;
 Entry.Block.MOVE = 2;
 Entry.Block.FOLLOW = 3;
 (function(b) {
-  b.schema = {type:Entry.STATIC.BLOCK_MODEL, state:Entry.Block.HIDDEN, thread:null, contents:null, board:null, x:0, y:0, offsetX:0, offsetY:0, width:0, height:0, contentWidth:0, contentHeight:0, magneting:!1, highlight:!1};
+  b.schema = {type:Entry.STATIC.BLOCK_MODEL, state:Entry.Block.HIDDEN, thread:null, contents:null, board:null, x:0, y:0, offsetX:0, offsetY:0, width:0, height:0, marginBottom:0, contentWidth:0, contentHeight:0, magneting:!1, highlight:!1};
   b.initView = function() {
   };
   b.setThread = function() {
@@ -3915,7 +3915,7 @@ Entry.Block.FOLLOW = 3;
       a.map(function(a) {
         d += a.height;
       });
-      this.height += d;
+      this.marginBottom = d;
     } else {
       this.measureSize();
     }

@@ -144,6 +144,7 @@ Entry.Thread = function(thread, code) {
             var magnet = b.magnets.next;
             if (magnet) {
                 cursor.y += b.height + 1;
+                cursor.y += b.marginBottom;
             }
 
             if (true) {
@@ -177,7 +178,7 @@ Entry.Thread = function(thread, code) {
         var array = [];
         for (var i = 0; i < this._blocks.length; i++) {
             array.push(this._blocks.at(i).toJSON());
-        } 
+        }
         return array;
     }
 
