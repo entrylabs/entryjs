@@ -3307,7 +3307,6 @@ Entry.init = function() {
 Entry.loadProject = function(b) {
 };
 Entry.STATIC = {OBJECT:0, ENTITY:1, SPRITE:2, SOUND:3, VARIABLE:4, FUNCTION:5, SCENE:6, MESSAGE:7, BLOCK_MODEL:8, BOX_MODEL:9, THREAD_MODEL:10, DRAG_INSTANCE:11, BLOCK_STATIC:0, BLOCK_MOVE:1, BLOCK_FOLLOW:2, RETURN:0, CONTINUE:1};
-<<<<<<< HEAD
 Entry.block.run = {skeleton:"basic", color:"#3BBD70", contents:["this is", "basic block"], func:function() {
   return Entry.STATIC.RETURN;
 }};
@@ -3435,8 +3434,6 @@ Entry.Code = function(b) {
     return a;
   };
 })(Entry.Code.prototype);
-=======
->>>>>>> origin/jr/dist
 Entry.Utils = {};
 Entry.Utils.intersectArray = function(b, a) {
   for (var c = [], d = 0;d < b.length;d++) {
