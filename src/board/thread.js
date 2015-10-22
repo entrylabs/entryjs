@@ -109,6 +109,15 @@ Entry.Thread = function(thread, code) {
         });
     };
 
+    p.moveTo = function(x, y, animate) {
+        animate = animate === undefined ? true : animate;
+        var firstBlock = this._blocks.at(0);
+        firstBlock.set({
+            x: x, y: y
+        });
+        this.align(animate);
+    };
+
     p.align = function(animate) {
         animate = animate === undefined ? true : animate;
         var firstBlockBox = this._blocks.at(0),

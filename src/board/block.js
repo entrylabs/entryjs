@@ -28,7 +28,10 @@ Entry.Block = function(block, thread) {
     this.observe(this, "setThread", ['thread']);
 
     // Block model
-    this.set({ x: block.x, y: block.y });
+    this.set({
+        x: block.x || 0,
+        y: block.y || 0
+    });
     this.observe(this, "measureSize", ['contentWidth', 'contentHeight']);
     this.observe(this, "render", ['contentWidth', 'contentHeight']);
 
