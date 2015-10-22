@@ -77,6 +77,10 @@ Entry.BlockMenu = function(dom) {
                 var boardCode = this.workspace.getBoard().getCode();
                 var workspaceThread =
                     block.getThread().clone(boardCode);
+                if (workspaceThread) {
+                    boardCode.addThread(workspaceThread);
+                }
+
             }
         }
 
