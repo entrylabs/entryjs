@@ -180,4 +180,16 @@ Entry.Thread = function(thread, code) {
         return array;
     }
 
+    p.clone = function() {
+        var clonedBlocks = [];
+        for (var i = 0; i < this._blocks.length; i++) {
+            clonedBlocks.push(this._blocks.at(i).clone());
+        }
+
+        return new Entry.Thread(
+            clonedBlocks,
+            this.code
+        );
+    }
+
 })(Entry.Thread.prototype);

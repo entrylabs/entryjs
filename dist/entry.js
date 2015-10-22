@@ -3615,7 +3615,15 @@ Entry.BlockMenu = function(b) {
     this.align();
   };
   b.cloneThread = function() {
-    console.log(this.dragBlock);
+    var a = this.dragBlock, b = this._code;
+    if (a && a.thread) {
+      var d = a.thread.clone();
+      if (d) {
+        var e = b.threads;
+        e.splice(e.indexOf(a.thread), 1, d);
+        b.bindBoard(this);
+      }
+    }
   };
   b.align = function() {
     for (var a = this._code.threads.getAll(), b = 10, d = this._svgDom.width() / 2, e = 0, f = a.length;e < f;e++) {
@@ -3627,7 +3635,7 @@ Entry.BlockMenu = function(b) {
   b.updateCloseMagnet = function(a) {
   };
   b.terminateDrag = function(a) {
-    this.align();
+    (a = this.dragBlock) && console.log(a);
   };
   b.dominate = function(a) {
     this.snap.append(a.svgGroup);
@@ -3791,6 +3799,12 @@ Entry.Thread = function(b, a) {
     }
     return a;
   };
+  b.clone = function() {
+    for (var a = [], b = 0;b < this._blocks.length;b++) {
+      a.push(this._blocks.at(b).clone());
+    }
+    return new Entry.Thread(a, this.code);
+  };
 })(Entry.Thread.prototype);
 Entry.BoxModel = function() {
   Entry.Model(this);
@@ -3799,6 +3813,7 @@ Entry.BoxModel.prototype.schema = {id:0, type:Entry.STATIC.BOX_MODEL, x:0, y:0, 
 Entry.Block = function(b, a) {
   Entry.Model(this, !1);
   this.thread = a;
+  this.blockInfo = b;
   this._board = null;
   this.type = b.type;
   this._schema = Entry.block[b.type];
@@ -3934,7 +3949,10 @@ Entry.Block.FOLLOW = 3;
     }
   };
   b.toJSON = function() {
-    return {type:this.type, x:0, y:0};
+    return {type:this.type, x:this.x, y:this.y};
+  };
+  b.clone = function() {
+    return new Entry.Block(this.toJSON());
   };
 })(Entry.Block.prototype);
 Entry.DragInstance = function(b) {

@@ -58,8 +58,22 @@ Entry.BlockMenu = function(dom) {
     };
 
     p.cloneThread = function() {
-
-        console.log(this.dragBlock);
+        var block = this.dragBlock;
+        var newThread = [];
+        var cloned;
+        var code = this._code;
+        if (block && block.thread) {
+            var clonedThread = block.thread.clone();
+            if (clonedThread) {
+                var threads = code.threads;
+                threads.splice(
+                    threads.indexOf(block.thread),
+                    1,
+                    clonedThread
+                );
+                code.bindBoard(this);
+            }
+        }
     };
 
     p.align = function() {
@@ -79,7 +93,10 @@ Entry.BlockMenu = function(dom) {
     };
 
     p.terminateDrag = function(block) {
-        this.align();
+        var originBlock = this.dragBlock;
+        if (originBlock) {
+            console.log(originBlock);
+        }
     };
 
     p.dominate = function(thread) {

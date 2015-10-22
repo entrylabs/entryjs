@@ -17,7 +17,9 @@ Entry.Block = function(block, thread) {
     Entry.Model(this, false);
 
     this.thread = thread;
+    this.blockInfo = block;
     this._board = null;
+
 
     // block information
     this.type = block.type;
@@ -316,12 +318,17 @@ Entry.Block.FOLLOW = 3;
     };
 
     p.toJSON = function() {
-
         return {
             type: this.type,
-            x: 0,
-            y: 0
+            x: this.x,
+            y: this.y
         };
+    }
+
+    p.clone = function() {
+        return new Entry.Block(
+             this.toJSON()
+        );
     }
 
 })(Entry.Block.prototype);
