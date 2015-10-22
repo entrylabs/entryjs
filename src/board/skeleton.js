@@ -22,7 +22,8 @@ Entry.skeleton.basic = {
         return {
             offsetX: 0, offsetY: 0,
             width: block.contentWidth + 30,
-            height: 30
+            height: 30,
+            marginBottom: 0
         };
     },
     magnets: {
@@ -45,7 +46,8 @@ Entry.skeleton.pebble_event = {
         return {
             offsetX: -25, offsetY: 0,
             width: 50,
-            height: 48.3
+            height: 48.3,
+            marginBottom: 0
         };
     },
     magnets: function(block) {
@@ -87,7 +89,8 @@ Entry.skeleton.pebble_loop = {
         return {
             offsetX: -(contentWidth / 2 + 13), offsetY: 0,
             width: contentWidth + 26,
-            height: contentHeight + 54
+            height: contentHeight + 54,
+            marginBottom: 0
         };
     },
     contentPos: function() {
@@ -111,7 +114,8 @@ Entry.skeleton.pebble_basic = {
         return {
             offsetX: -62, offsetY: 0,
             width: 124,
-            height: 50
+            height: 50,
+            marginBottom: 0
         };
     },
     contentPos: function() {
