@@ -3636,12 +3636,8 @@ Entry.BlockMenu = function(b) {
   b.cloneThread = function() {
     var a = this.dragBlock, b = this._code;
     if (a && a.thread) {
-      var d = a.thread.clone();
-      if (d) {
-        var e = b.getThreads();
-        e.splice(e.indexOf(a.thread), 1, d);
-        b.bindBoard(this);
-      }
+      var d = a.getThread().clone(b);
+      d && (b = b.getThreads(), b.splice(b.indexOf(a.getThread()), 1, d), d.renderStart(this), d = this.workspace.getBoard().getCode(), a.getThread().clone(d));
     }
   };
   b.align = function() {
@@ -3734,6 +3730,9 @@ Entry.Board = function(b) {
   b.dominate = function(a) {
     this.snap.append(a.svgGroup);
   };
+  b.getCode = function() {
+    return this.code;
+  };
 })(Entry.Board.prototype);
 Entry.Code = function(b) {
   if (!(b instanceof Array)) {
@@ -3793,6 +3792,11 @@ Entry.Code = function(b) {
   };
   b.getThreads = function() {
     return this.threads;
+  };
+  b.addThread = function(a) {
+    this.board && a.renderStart(this.board);
+    this.threads.push(a);
+    return a;
   };
 })(Entry.Code.prototype);
 Entry.FieldIndicator = function(b, a) {
@@ -3894,7 +3898,6 @@ Entry.skeleton.pebble_basic = {path:function(b) {
 Entry.Block = function(b, a) {
   Entry.Model(this, !1);
   this.thread = a;
-  this.blockInfo = b;
   this._board = null;
   this.type = b.type;
   this._schema = Entry.block[b.type];
@@ -4122,11 +4125,15 @@ Entry.Thread = function(b, a) {
     }
     return a;
   };
-  b.clone = function() {
-    for (var a = [], b = 0;b < this._blocks.length;b++) {
-      a.push(this._blocks.at(b).clone());
+  b.clone = function(a) {
+    a == a || this.code;
+    for (var b = [], d = 0;d < this._blocks.length;d++) {
+      b.push(this._blocks.at(d).clone());
     }
-    return new Entry.Thread(a, this.code);
+    return new Entry.Thread(b, a);
+  };
+  b.getBlocks = function() {
+    return this._blocks;
   };
 })(Entry.Thread.prototype);
 Entry.Workspace = function(b, a) {

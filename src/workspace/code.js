@@ -98,4 +98,11 @@ Entry.Code = function(code) {
         return this.threads;
     }
 
+    p.addThread = function(thread) {
+        if (this.board)
+            thread.renderStart(this.board);
+        this.threads.push(thread);
+        return thread;
+    };
+
 })(Entry.Code.prototype);

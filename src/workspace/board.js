@@ -151,4 +151,8 @@ Entry.Board = function(dom) {
         this.snap.append(thread.svgGroup);
     };
 
+    p.getCode = function() {
+        return this.code;
+    };
+
 })(Entry.Board.prototype);

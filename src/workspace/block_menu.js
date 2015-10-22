@@ -63,17 +63,20 @@ Entry.BlockMenu = function(dom) {
         var cloned;
         var code = this._code;
         if (block && block.thread) {
-            var clonedThread = block.thread.clone();
+            var clonedThread = block.getThread().clone(code);
             if (clonedThread) {
                 //clone thread at blockMenu
                 var threads = code.getThreads();
                 threads.splice(
-                    threads.indexOf(block.thread), 1,
+                    threads.indexOf(block.getThread()), 1,
                     clonedThread
                 );
-                code.bindBoard(this);
+                clonedThread.renderStart(this);
 
                 //TODO clone thread at Workspace Code
+                var boardCode = this.workspace.getBoard().getCode();
+                var workspaceThread =
+                    block.getThread().clone(boardCode);
             }
         }
 

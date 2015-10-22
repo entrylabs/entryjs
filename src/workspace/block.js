@@ -17,9 +17,7 @@ Entry.Block = function(block, thread) {
     Entry.Model(this, false);
 
     this.thread = thread;
-    this.blockInfo = block;
     this._board = null;
-
 
     // block information
     this.type = block.type;
@@ -308,6 +306,7 @@ Entry.Block.FOLLOW = 3;
             this.magnets = this._skeleton.magnets();
             var targetBlock = this._board.dragBlock,
                 targetThread = targetBlock.thread;
+
             var movingBlocks = targetThread._blocks.slice(targetThread._blocks.indexOf(targetBlock));
             var targetHeight = Entry.Block.MAGNET_RANGE;
             movingBlocks.map(function(b) {targetHeight += b.height;});
