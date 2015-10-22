@@ -58,19 +58,38 @@ Entry.BlockMenu = function(dom) {
     };
 
     p.cloneThread = function() {
+        var block = this.dragBlock;
+        var newThread = [];
+        var cloned;
+        var code = this._code;
+        if (block && block.thread) {
+            var clonedThread = block.thread.clone();
+            if (clonedThread) {
+                //clone thread at blockMenu
+                var threads = code.getThreads();
+                threads.splice(
+                    threads.indexOf(block.thread), 1,
+                    clonedThread
+                );
+                code.bindBoard(this);
 
-        console.log(this.dragBlock);
+                //TODO clone thread at Workspace Code
+            }
+        }
+
+
     };
 
     p.align = function() {
-        var threads = this._code.threads.getAll();
-        var vPadding = 0,
+        var threads = this._code.getThreads().getAll();
+        var vPadding = 10,
+            marginFromTop = 10,
             hPadding = this._svgDom.width()/2;
 
         for (var i=0,len=threads.length; i<len; i++) {
             var thread = threads[i];
-            thread.moveTo(hPadding, vPadding, true);
-            vPadding += thread.height + 10;
+            thread.moveTo(hPadding, marginFromTop, true);
+            marginFromTop += thread.height + vPadding;
         }
     };
 
@@ -78,7 +97,10 @@ Entry.BlockMenu = function(dom) {
     };
 
     p.terminateDrag = function(block) {
-        this.align();
+        //remove dragging thread
+        var originBlock = this.dragBlock;
+        if (originBlock && originBlock.getThread())
+            originBlock.getThread().destroy();
     };
 
     p.dominate = function(thread) {

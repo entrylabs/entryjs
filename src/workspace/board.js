@@ -70,10 +70,8 @@ Entry.Board = function(dom) {
                     this.closeBlock.magneting = false;
                 this.closeBlock = targetBlock;
                 this.closeBlock.magneting = true;
-                console.log(this.closeBlock.marginBottom);
                 this.closeBlock.thread.align(true);
             }
-                console.log(this.closeBlock.marginBottom);
         } else if (targetBlock instanceof Entry.Thread) {
             var thread = targetBlock,
                 blocks = thread._blocks,
@@ -83,7 +81,6 @@ Entry.Board = function(dom) {
                 if (this.dragBlock === block)
                     continue;
                 if (this.dragBlock.y > cursorY && this.dragBlock.y < cursorY + block.height) {
-                    console.log('detect');
                     if (this.closeBlock !== block) {
                         if (this.closeBlock !== null)
                             this.closeBlock.magneting = false;

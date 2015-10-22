@@ -90,7 +90,7 @@ Entry.Thread = function(thread, code) {
         this.svgGroup.block = this;
 
         this._bg = this.svgGroup.rect(0, 0, this.width, this.height);
-        //this._bg.attr({"fill": "transparent"})
+        this._bg.attr({"fill": "transparent"})
 
         var firstBlockBox = this._blocks.at(0);
         this._blocks.map(function(b) {
@@ -178,6 +178,18 @@ Entry.Thread = function(thread, code) {
             array.push(this._blocks.at(i).toJSON());
         }
         return array;
+    }
+
+    p.clone = function() {
+        var clonedBlocks = [];
+        for (var i = 0; i < this._blocks.length; i++) {
+            clonedBlocks.push(this._blocks.at(i).clone());
+        }
+
+        return new Entry.Thread(
+            clonedBlocks,
+            this.code
+        );
     }
 
 })(Entry.Thread.prototype);

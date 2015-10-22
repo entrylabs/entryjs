@@ -2994,102 +2994,6 @@ Blockly.Blocks.options_for_list = {init:function() {
 Entry.block.options_for_list = function(b, a) {
   return a.getField("OPERATOR", a);
 };
-Entry.FieldIndicator = function(b, a) {
-  this._block = a;
-  var c = new Entry.BoxModel;
-  c.observe(a, "alignContent", ["width"]);
-  this.box = c;
-  this._size = b.size;
-  this._imgUrl = b.img;
-  this._highlightColor = b.highlightColor ? b.highlightColor : "#F59900";
-  this._position = b.position;
-  this._imgElement = this._path = this.svgGroup = null;
-  this.renderStart();
-};
-(function(b) {
-  b.renderStart = function() {
-    this.svgGroup = this._block.contentSvgGroup.group();
-    this._imgElement = this.svgGroup.image(this._imgUrl, -1 * this._size, -1 * this._size, 2 * this._size, 2 * this._size);
-    var a = "m 0,-%s a %s,%s 0 1,1 -0.1,0 z".replace(/%s/gi, this._size);
-    this._path = this.svgGroup.path(a);
-    this._path.attr({stroke:"none", fill:"none"});
-    this.box.set({x:this._size, y:0, width:2 * this._size, height:2 * this._size});
-  };
-  b.align = function(a, b) {
-    this._position && (a = this._position.x);
-    this.svgGroup.animate({transform:"t" + a + " " + b}, 300, mina.easeinout);
-    this.box.set({x:a, y:b});
-  };
-  b.enableHighlight = function() {
-    var a = this._path.getTotalLength(), b = this._path;
-    this._path.attr({stroke:this._highlightColor, strokeWidth:2, "stroke-linecap":"round", "stroke-dasharray":a + " " + a, "stroke-dashoffset":a});
-    setInterval(function() {
-      b.attr({"stroke-dashoffset":a}).animate({"stroke-dashoffset":0}, 300);
-    }, 1400, mina.easeout);
-    setTimeout(function() {
-      setInterval(function() {
-        b.animate({"stroke-dashoffset":-a}, 300);
-      }, 1400, mina.easeout);
-    }, 500);
-  };
-})(Entry.FieldIndicator.prototype);
-Entry.FieldText = function(b, a) {
-  this._block = a;
-  var c = new Entry.BoxModel;
-  c.observe(a, "alignContent", ["width"]);
-  this.box = c;
-  this._text = b;
-  this.textElement = null;
-  this.renderStart();
-};
-(function(b) {
-  b.renderStart = function() {
-    this.textElement = this._block.contentSvgGroup.text(0, 0, this._text);
-    this.textElement.attr({style:"white-space: pre; font-size: 16px", "alignment-baseline":"central", "class":"dragNone", fill:"white"});
-    var a = this.textElement.getBBox();
-    this.box.set({x:0, y:0, width:a.width, height:a.height});
-  };
-  b.align = function(a, b) {
-    this.textElement.animate({x:a, y:b}, 300, mina.easeinout);
-    this.box.set({x:a, y:b});
-  };
-})(Entry.FieldText.prototype);
-Entry.skeleton = function() {
-};
-Entry.skeleton.basic = {path:function(b) {
-  return "m -4,0 l 8,8 8,-8 h %w a 15,15 0 0,1 0,30 h -%w l -8,8 -8,-8 v -30 z".replace(/%w/gi, b.contentWidth);
-}, box:function(b) {
-  return {offsetX:0, offsetY:0, width:b.contentWidth + 30, height:30, marginBottom:0};
-}, magnets:{previous:{}, next:{x:0, y:31}}, contentPos:function(b) {
-  return {x:20, y:15};
-}};
-Entry.skeleton.pebble_event = {path:function(b) {
-  return "m 0,0 a 25,25 0 0,1 9,48.3 a 9,9 0 0,1 -18,0 a 25,25 0 0,1 9,-48.3 z";
-}, box:function(b) {
-  return {offsetX:-25, offsetY:0, width:50, height:48.3, marginBottom:0};
-}, magnets:function(b) {
-  return {next:{x:0, y:49.3}};
-}, contentPos:function() {
-  return {x:0, y:25};
-}};
-Entry.skeleton.pebble_loop = {path:function(b) {
-  return "M 0,9 a 9,9 0 0,0 9,-9 h %cw a 25,25 0 0,1 25,25 v %ch a 25,25 0 0,1 -25,25 h -%cw a 9,9 0 0,1 -18,0 h -%cw a 25,25 0 0,1 -25,-25 v -%ch a 25,25 0 0,1 25,-25 h %cw a 9,9 0 0,0 9,9 z M 0,49 a 9,9 0 0,1 -9,-9 h -28 a 25,25 0 0,0 -25,25 v %cih a 25,25 0 0,0 25,25 h 28 a 9,9 0 0,0 18,0 h 28 a 25,25 0 0,0 25,-25 v -%cih a 25,25 0 0,0 -25,-25 h -28 a 9,9 0 0,1 -9,9 z".replace(/%cw/gi, 41).replace(/%ch/gi, 54).replace(/%cih/gi, 0);
-}, magnets:function() {
-  return {previous:{x:0, y:0}, next:{x:0, y:105}};
-}, box:function() {
-  return {offsetX:-75, offsetY:0, width:150, height:104, marginBottom:0};
-}, contentPos:function() {
-  return {x:-46, y:25};
-}};
-Entry.skeleton.pebble_basic = {path:function(b) {
-  return "m 0,9 a 9,9 0 0,0 9,-9 h 28 a 25,25 0 0,1 0,50 h -28 a 9,9 0 0,1 -18,0 h -28 a 25,25 0 0,1 0,-50 h 28 a 9,9 0 0,0 9,9 z";
-}, magnets:function() {
-  return {previous:{x:0, y:0}, next:{x:0, y:51}};
-}, box:function() {
-  return {offsetX:-62, offsetY:0, width:124, height:50, marginBottom:0};
-}, contentPos:function() {
-  return {x:-46, y:25};
-}};
 Entry.Collection = function(b) {
   this._data = [];
   this._hashMap = {};
@@ -3403,6 +3307,7 @@ Entry.init = function() {
 Entry.loadProject = function(b) {
 };
 Entry.STATIC = {OBJECT:0, ENTITY:1, SPRITE:2, SOUND:3, VARIABLE:4, FUNCTION:5, SCENE:6, MESSAGE:7, BLOCK_MODEL:8, BOX_MODEL:9, THREAD_MODEL:10, DRAG_INSTANCE:11, BLOCK_STATIC:0, BLOCK_MOVE:1, BLOCK_FOLLOW:2, RETURN:0, CONTINUE:1};
+<<<<<<< HEAD
 Entry.block.run = {skeleton:"basic", color:"#3BBD70", contents:["this is", "basic block"], func:function() {
   return Entry.STATIC.RETURN;
 }};
@@ -3530,6 +3435,8 @@ Entry.Code = function(b) {
     return a;
   };
 })(Entry.Code.prototype);
+=======
+>>>>>>> origin/jr/dist
 Entry.Utils = {};
 Entry.Utils.intersectArray = function(b, a) {
   for (var c = [], d = 0;d < b.length;d++) {
@@ -3627,6 +3534,82 @@ Entry.Model = function(b, a) {
     }
   };
 })(Entry.Model);
+Entry.BoxModel = function() {
+  Entry.Model(this);
+};
+Entry.BoxModel.prototype.schema = {id:0, type:Entry.STATIC.BOX_MODEL, x:0, y:0, width:0, height:0};
+Entry.DragInstance = function(b) {
+  Entry.Model(this);
+  this.set(b);
+};
+Entry.DragInstance.prototype.schema = {type:Entry.STATIC.DRAG_INSTANCE, startX:0, startY:0, offsetX:0, offsetY:0, mode:0};
+Entry.Entity = function() {
+  Entry.Model(this);
+};
+Entry.Entity.prototype.schema = {id:0, type:Entry.STATIC.ENTITY, rotation:0, direction:0, x:0, y:0, regX:0, regY:0, scaleX:0, scaleY:0, width:0, height:0, imageIndex:0, visible:0, colour:0, font:0, bgColor:0, textAlign:0, lineBreak:!1, underLine:!1, strike:!1};
+Entry.Function = function() {
+  Entry.Model(this);
+};
+Entry.Function.prototype.schema = {id:0, type:Entry.STATIC.FUNCTION, block:0, content:0, fieldNames:0};
+Entry.Message = function() {
+  Entry.Model(this);
+};
+Entry.Message.prototype.schema = {id:0, type:Entry.STATIC.MESSAGE, name:0};
+Entry.Object = function() {
+  Entry.Model(this);
+};
+Entry.Object.prototype.schema = {id:0, type:Entry.STATIC.OBJECT, objectType:0, name:0, order:0, scene:0, active:!0, lock:!1, rotateMethod:0, entity:0, script:0, sprite:0, selectedPicture:0};
+Entry.Scene = function() {
+  Entry.Model(this);
+};
+Entry.Scene.prototype.schema = {id:0, type:Entry.STATIC.SCENE, name:0};
+Entry.Sound = function() {
+  Entry.Model(this);
+};
+Entry.Sound.prototype.schema = {id:0, type:Entry.STATIC.SOUND, name:0, filename:0, ext:0, duration:0};
+Entry.Sprite = function() {
+  Entry.Model(this);
+};
+Entry.Sprite.prototype.schema = {id:0, type:Entry.STATIC.SPRITE, name:0, pictures:0, sounds:0};
+Entry.ThreadModel = function() {
+  Entry.Model(this);
+};
+Entry.ThreadModel.prototype.schema = {id:0, type:Entry.STATIC.THREAD_MODEL, x:0, y:0, width:0, minWidth:0, height:0};
+Entry.Variable = function() {
+  Entry.Model(this);
+};
+Entry.Variable.prototype.schema = {id:0, type:Entry.STATIC.VARIABLE, variableType:0, name:0, value:0, minValue:0, maxValue:0, visible:!0, x:0, y:0, width:0, height:0, isCloud:!1, object:null, array:0};
+Entry.block.run = {skeleton:"basic", color:"#3BBD70", contents:["this is", "basic block"], func:function() {
+  return Entry.STATIC.RETURN;
+}};
+Entry.block.jr_start = {skeleton:"pebble_event", color:"#3BBD70", contents:[{type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_play_image.png", highlightColor:"#3BBD70", size:22}], func:function() {
+  console.log("dd");
+  return Entry.STATIC.RETURN;
+}};
+Entry.block.jr_repeat = {skeleton:"pebble_loop", color:"#3BBD70", contents:["1", "\ubc18\ubcf5"], func:function() {
+  console.log("repeat");
+}};
+Entry.block.jr_item = {skeleton:"pebble_basic", color:"#F46C6C", contents:["\uaf43 \ubaa8\uc73c\uae30", {type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_item_image.png", highlightColor:"#FFF", position:{x:83, y:0}, size:22}], func:function() {
+  Ntry.dispatchEvent("unitAction", Ntry.STATIC.GET_ITEM);
+  return Entry.STATIC.RETURN;
+}};
+Entry.block.jr_north = {skeleton:"pebble_basic", color:"#A751E3", contents:["   \uc704\ub85c", {type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_up_image.png", position:{x:83, y:0}, size:22}], func:function() {
+  console.log("up");
+  return Entry.STATIC.RETURN;
+}};
+Entry.block.jr_east = {skeleton:"pebble_basic", color:"#A751E3", contents:["\uc624\ub978\ucabd", {type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_right_image.png", position:{x:83, y:0}, size:22}], func:function() {
+  console.log("east");
+  Ntry.dispatchEvent("unitAction", Ntry.STATIC.WALK);
+  return Entry.STATIC.RETURN;
+}};
+Entry.block.jr_south = {skeleton:"pebble_basic", color:"#A751E3", contents:["\uc544\ub798\ub85c", {type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_down_image.png", position:{x:83, y:0}, size:22}], func:function() {
+  console.log("south");
+  return Entry.STATIC.RETURN;
+}};
+Entry.block.jr_west = {skeleton:"pebble_basic", color:"#A751E3", contents:["   \uc67c\ucabd", {type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_left_image.png", position:{x:83, y:0}, size:22}], func:function() {
+  console.log("west");
+  return Entry.STATIC.RETURN;
+}};
 Entry.BlockMenu = function(b) {
   Entry.Model(this, !1);
   b = "string" === typeof b ? $("#" + b) : $(b);
@@ -3654,10 +3637,18 @@ Entry.BlockMenu = function(b) {
     this.align();
   };
   b.cloneThread = function() {
-    console.log(this.dragBlock);
+    var a = this.dragBlock, b = this._code;
+    if (a && a.thread) {
+      var d = a.thread.clone();
+      if (d) {
+        var e = b.getThreads();
+        e.splice(e.indexOf(a.thread), 1, d);
+        b.bindBoard(this);
+      }
+    }
   };
   b.align = function() {
-    for (var a = this._code.threads.getAll(), b = 0, d = this._svgDom.width() / 2, e = 0, f = a.length;e < f;e++) {
+    for (var a = this._code.getThreads().getAll(), b = 10, d = this._svgDom.width() / 2, e = 0, f = a.length;e < f;e++) {
       var h = a[e];
       h.moveTo(d, b, !0);
       b += h.height + 10;
@@ -3666,7 +3657,7 @@ Entry.BlockMenu = function(b) {
   b.updateCloseMagnet = function(a) {
   };
   b.terminateDrag = function(a) {
-    this.align();
+    (a = this.dragBlock) && a.getThread() && a.getThread().destroy();
   };
   b.dominate = function(a) {
     this.snap.append(a.svgGroup);
@@ -3702,14 +3693,14 @@ Entry.Board = function(b) {
         b = b.parent(), a = b.block;
       }
       if (a instanceof Entry.Block) {
-        this.closeBlock !== a && (null !== this.closeBlock && (this.closeBlock.magneting = !1), this.closeBlock = a, this.closeBlock.magneting = !0, console.log(this.closeBlock.marginBottom), this.closeBlock.thread.align(!0)), console.log(this.closeBlock.marginBottom);
+        this.closeBlock !== a && (null !== this.closeBlock && (this.closeBlock.magneting = !1), this.closeBlock = a, this.closeBlock.magneting = !0, this.closeBlock.thread.align(!0));
       } else {
         if (a instanceof Entry.Thread) {
           a = a._blocks;
           for (var b = a.at(0).y, d = 0;d < a.length;d++) {
             var e = a.at(d);
             if (this.dragBlock !== e) {
-              if (this.dragBlock.y > b && this.dragBlock.y < b + e.height && (console.log("detect"), this.closeBlock !== e)) {
+              if (this.dragBlock.y > b && this.dragBlock.y < b + e.height && this.closeBlock !== e) {
                 null !== this.closeBlock && (this.closeBlock.magneting = !1);
                 this.closeBlock = e;
                 this.closeBlock.magneting = !0;
@@ -3747,96 +3738,166 @@ Entry.Board = function(b) {
     this.snap.append(a.svgGroup);
   };
 })(Entry.Board.prototype);
-Entry.Thread = function(b, a) {
-  Entry.Model(this, !1);
-  this.code = a;
-  this._blocks = new Entry.Collection;
-  this.loadModel(b);
-  this.svgGroup = this.board = null;
-  this.observe(this, "resizeBG", ["width", "height"]);
+Entry.Code = function(b) {
+  if (!(b instanceof Array)) {
+    return console.error("code must be array");
+  }
+  this.threads = new Entry.Collection;
+  this.board = null;
+  this.executors = [];
+  this.set(b);
 };
 (function(b) {
-  b.schema = {type:Entry.STATIC.THREAD_MODEL, x:0, y:0, offsetX:0, width:0, minWidth:0, height:0};
-  b.loadModel = function(a) {
+  b.set = function(a) {
     var b = this;
     a = a.map(function(a) {
-      return a instanceof Entry.Block ? (a.thread = b, a) : new Entry.Block(a, b);
+      return new Entry.Thread(a, b);
     });
-    this._blocks.set(a);
+    this.threads.set(a);
   };
-  b.indexOf = function(a) {
-    return this._blocks.indexOf(a);
+  b.createThread = function(a) {
+    a = new Entry.Thread(a, this);
+    this.board && a.renderStart(this.board);
+    this.threads.push(a);
+    return a;
   };
-  b.cut = function(a) {
-    a = this._blocks.indexOf(a);
-    return this._blocks.splice(a);
+  b.bindBoard = function(a) {
+    this.board = a;
+    this.threads.map(function(b) {
+      b.renderStart(a);
+    });
+  };
+  b.remove = function(a) {
+    this.threads.remove(a);
   };
   b.raiseEvent = function(a) {
-    var b = this._blocks.at(0);
-    return b.type === a ? {block:b} : null;
-  };
-  b.next = function(a) {
-    a = this._blocks.indexOf(a);
-    return this._blocks.length <= a ? null : this._blocks.at(a + 1);
-  };
-  b.renderStart = function(a) {
-    this.board = a;
-    this.svgGroup = a.snap.group();
-    this.svgGroup.transform("t5,5");
-    this.svgGroup.block = this;
-    this._bg = this.svgGroup.rect(0, 0, this.width, this.height);
-    var b = this._blocks.at(0);
-    this._blocks.map(function(d) {
-      d.renderStart(a, b);
-    });
-    this.align();
-  };
-  b.resizeBG = function() {
-    this._bg.attr({x:this.x + this.offsetX, y:this.y, width:this.width, height:this.height});
-  };
-  b.moveTo = function(a, b, d) {
-    d = void 0 === d ? !0 : d;
-    this._blocks.at(0).set({x:a, y:b});
-    this.align(d);
-  };
-  b.align = function(a) {
-    a = void 0 === a ? !0 : a;
-    for (var b = this._blocks.at(0), d = b.x, e = b.y, f = 0, h = b.width, g = 0, k = 0, m = 0;m < this._blocks.length;m++) {
-      var l = this._blocks.at(m);
-      if (l.dragInstance && a) {
-        break;
-      }
-      l.dragInstance && (k = e - b.y, d = l.x, e = l.y);
-      l.moveTo(d, e, a);
-      l.magnets.next && (e += l.height + 1, e += l.marginBottom);
-      g = Math.max(g, l.width);
-      h = Math.min(h, l.width);
-      f = Math.min(f, l.offsetX);
+    for (var b = 0;b < this.threads.length;b++) {
+      var d = this.threads.at(b).raiseEvent(a);
+      console.log(d);
+      null !== d && this.executors.push(d);
     }
-    k = k || e - b.y;
-    this.set({x:b.x, y:b.y, offsetX:f, minWidth:h, width:g, height:k});
   };
-  b.dominate = function() {
-    this.board.dominate(this);
+  b.tick = function() {
+    for (var a = this.executors, b = 0;b < a.length;b++) {
+      for (var d = a[b];d.block && d.block.func.call(d) == Entry.STATIC.RETURN;) {
+        console.log(d.block), d.block = d.block.thread.next(d.block);
+      }
+      null === d && (a.splice(b, 1), b--);
+    }
   };
-  b.destroy = function() {
-    this.svgGroup && this.svgGroup.remove();
-    this.code.remove(this);
+  b.clearExecutors = function() {
+    this.executors = [];
   };
   b.toJSON = function() {
-    for (var a = [], b = 0;b < this._blocks.length;b++) {
-      a.push(this._blocks.at(b).toJSON());
+    for (var a = [], b = 0;b < this.threads.length;b++) {
+      a.push(this.threads.at(b).toJSON());
     }
     return a;
   };
-})(Entry.Thread.prototype);
-Entry.BoxModel = function() {
-  Entry.Model(this);
+  b.getThreads = function() {
+    return this.threads;
+  };
+})(Entry.Code.prototype);
+Entry.FieldIndicator = function(b, a) {
+  this._block = a;
+  var c = new Entry.BoxModel;
+  c.observe(a, "alignContent", ["width"]);
+  this.box = c;
+  this._size = b.size;
+  this._imgUrl = b.img;
+  this._highlightColor = b.highlightColor ? b.highlightColor : "#F59900";
+  this._position = b.position;
+  this._imgElement = this._path = this.svgGroup = null;
+  this.renderStart();
 };
-Entry.BoxModel.prototype.schema = {id:0, type:Entry.STATIC.BOX_MODEL, x:0, y:0, width:0, height:0};
+(function(b) {
+  b.renderStart = function() {
+    this.svgGroup = this._block.contentSvgGroup.group();
+    this._imgElement = this.svgGroup.image(this._imgUrl, -1 * this._size, -1 * this._size, 2 * this._size, 2 * this._size);
+    var a = "m 0,-%s a %s,%s 0 1,1 -0.1,0 z".replace(/%s/gi, this._size);
+    this._path = this.svgGroup.path(a);
+    this._path.attr({stroke:"none", fill:"none"});
+    this.box.set({x:this._size, y:0, width:2 * this._size, height:2 * this._size});
+  };
+  b.align = function(a, b) {
+    this._position && (a = this._position.x);
+    this.svgGroup.animate({transform:"t" + a + " " + b}, 300, mina.easeinout);
+    this.box.set({x:a, y:b});
+  };
+  b.enableHighlight = function() {
+    var a = this._path.getTotalLength(), b = this._path;
+    this._path.attr({stroke:this._highlightColor, strokeWidth:2, "stroke-linecap":"round", "stroke-dasharray":a + " " + a, "stroke-dashoffset":a});
+    setInterval(function() {
+      b.attr({"stroke-dashoffset":a}).animate({"stroke-dashoffset":0}, 300);
+    }, 1400, mina.easeout);
+    setTimeout(function() {
+      setInterval(function() {
+        b.animate({"stroke-dashoffset":-a}, 300);
+      }, 1400, mina.easeout);
+    }, 500);
+  };
+})(Entry.FieldIndicator.prototype);
+Entry.FieldText = function(b, a) {
+  this._block = a;
+  var c = new Entry.BoxModel;
+  c.observe(a, "alignContent", ["width"]);
+  this.box = c;
+  this._text = b;
+  this.textElement = null;
+  this.renderStart();
+};
+(function(b) {
+  b.renderStart = function() {
+    this.textElement = this._block.contentSvgGroup.text(0, 0, this._text);
+    this.textElement.attr({style:"white-space: pre; font-size: 16px", "alignment-baseline":"central", "class":"dragNone", fill:"white"});
+    var a = this.textElement.getBBox();
+    this.box.set({x:0, y:0, width:a.width, height:a.height});
+  };
+  b.align = function(a, b) {
+    this.textElement.animate({x:a, y:b}, 300, mina.easeinout);
+    this.box.set({x:a, y:b});
+  };
+})(Entry.FieldText.prototype);
+Entry.skeleton = function() {
+};
+Entry.skeleton.basic = {path:function(b) {
+  return "m -4,0 l 8,8 8,-8 h %w a 15,15 0 0,1 0,30 h -%w l -8,8 -8,-8 v -30 z".replace(/%w/gi, b.contentWidth);
+}, box:function(b) {
+  return {offsetX:0, offsetY:0, width:b.contentWidth + 30, height:30, marginBottom:0};
+}, magnets:{previous:{}, next:{x:0, y:31}}, contentPos:function(b) {
+  return {x:20, y:15};
+}};
+Entry.skeleton.pebble_event = {path:function(b) {
+  return "m 0,0 a 25,25 0 0,1 9,48.3 a 9,9 0 0,1 -18,0 a 25,25 0 0,1 9,-48.3 z";
+}, box:function(b) {
+  return {offsetX:-25, offsetY:0, width:50, height:48.3, marginBottom:0};
+}, magnets:function(b) {
+  return {next:{x:0, y:49.3}};
+}, contentPos:function() {
+  return {x:0, y:25};
+}};
+Entry.skeleton.pebble_loop = {path:function(b) {
+  return "M 0,9 a 9,9 0 0,0 9,-9 h %cw a 25,25 0 0,1 25,25 v %ch a 25,25 0 0,1 -25,25 h -%cw a 9,9 0 0,1 -18,0 h -%cw a 25,25 0 0,1 -25,-25 v -%ch a 25,25 0 0,1 25,-25 h %cw a 9,9 0 0,0 9,9 z M 0,49 a 9,9 0 0,1 -9,-9 h -28 a 25,25 0 0,0 -25,25 v %cih a 25,25 0 0,0 25,25 h 28 a 9,9 0 0,0 18,0 h 28 a 25,25 0 0,0 25,-25 v -%cih a 25,25 0 0,0 -25,-25 h -28 a 9,9 0 0,1 -9,9 z".replace(/%cw/gi, 41).replace(/%ch/gi, 54).replace(/%cih/gi, 0);
+}, magnets:function() {
+  return {previous:{x:0, y:0}, next:{x:0, y:105}};
+}, box:function() {
+  return {offsetX:-75, offsetY:0, width:150, height:104, marginBottom:0};
+}, contentPos:function() {
+  return {x:-46, y:25};
+}};
+Entry.skeleton.pebble_basic = {path:function(b) {
+  return "m 0,9 a 9,9 0 0,0 9,-9 h 28 a 25,25 0 0,1 0,50 h -28 a 9,9 0 0,1 -18,0 h -28 a 25,25 0 0,1 0,-50 h 28 a 9,9 0 0,0 9,9 z";
+}, magnets:function() {
+  return {previous:{x:0, y:0}, next:{x:0, y:51}};
+}, box:function() {
+  return {offsetX:-62, offsetY:0, width:124, height:50, marginBottom:0};
+}, contentPos:function() {
+  return {x:-46, y:25};
+}};
 Entry.Block = function(b, a) {
   Entry.Model(this, !1);
   this.thread = a;
+  this.blockInfo = b;
   this._board = null;
   this.type = b.type;
   this._schema = Entry.block[b.type];
@@ -3972,48 +4033,115 @@ Entry.Block.FOLLOW = 3;
     }
   };
   b.toJSON = function() {
-    return {type:this.type, x:0, y:0};
+    return {type:this.type, x:this.x, y:this.y};
+  };
+  b.clone = function() {
+    return new Entry.Block(this.toJSON());
+  };
+  b.getThread = function() {
+    return this.thread;
   };
 })(Entry.Block.prototype);
-Entry.DragInstance = function(b) {
-  Entry.Model(this);
-  this.set(b);
+Entry.Thread = function(b, a) {
+  Entry.Model(this, !1);
+  this.code = a;
+  this._blocks = new Entry.Collection;
+  this.loadModel(b);
+  this.svgGroup = this.board = null;
+  this.observe(this, "resizeBG", ["width", "height"]);
 };
-Entry.DragInstance.prototype.schema = {type:Entry.STATIC.DRAG_INSTANCE, startX:0, startY:0, offsetX:0, offsetY:0, mode:0};
-Entry.Entity = function() {
-  Entry.Model(this);
+(function(b) {
+  b.schema = {type:Entry.STATIC.THREAD_MODEL, x:0, y:0, offsetX:0, width:0, minWidth:0, height:0};
+  b.loadModel = function(a) {
+    var b = this;
+    a = a.map(function(a) {
+      return a instanceof Entry.Block ? (a.thread = b, a) : new Entry.Block(a, b);
+    });
+    this._blocks.set(a);
+  };
+  b.indexOf = function(a) {
+    return this._blocks.indexOf(a);
+  };
+  b.cut = function(a) {
+    a = this._blocks.indexOf(a);
+    return this._blocks.splice(a);
+  };
+  b.raiseEvent = function(a) {
+    var b = this._blocks.at(0);
+    return b.type === a ? {block:b} : null;
+  };
+  b.next = function(a) {
+    a = this._blocks.indexOf(a);
+    return this._blocks.length <= a ? null : this._blocks.at(a + 1);
+  };
+  b.renderStart = function(a) {
+    this.board = a;
+    this.svgGroup = a.snap.group();
+    this.svgGroup.transform("t5,5");
+    this.svgGroup.block = this;
+    this._bg = this.svgGroup.rect(0, 0, this.width, this.height);
+    this._bg.attr({fill:"transparent"});
+    var b = this._blocks.at(0);
+    this._blocks.map(function(d) {
+      d.renderStart(a, b);
+    });
+    this.align();
+  };
+  b.resizeBG = function() {
+    this._bg.attr({x:this.x + this.offsetX, y:this.y, width:this.width, height:this.height});
+  };
+  b.moveTo = function(a, b, d) {
+    d = void 0 === d ? !0 : d;
+    this._blocks.at(0).set({x:a, y:b});
+    this.align(d);
+  };
+  b.align = function(a) {
+    a = void 0 === a ? !0 : a;
+    for (var b = this._blocks.at(0), d = b.x, e = b.y, f = 0, h = b.width, g = 0, k = 0, m = 0;m < this._blocks.length;m++) {
+      var l = this._blocks.at(m);
+      if (l.dragInstance && a) {
+        break;
+      }
+      l.dragInstance && (k = e - b.y, d = l.x, e = l.y);
+      l.moveTo(d, e, a);
+      l.magnets.next && (e += l.height + 1, e += l.marginBottom);
+      g = Math.max(g, l.width);
+      h = Math.min(h, l.width);
+      f = Math.min(f, l.offsetX);
+    }
+    k = k || e - b.y;
+    this.set({x:b.x, y:b.y, offsetX:f, minWidth:h, width:g, height:k});
+  };
+  b.dominate = function() {
+    this.board.dominate(this);
+  };
+  b.destroy = function() {
+    this.svgGroup && this.svgGroup.remove();
+    this.code.remove(this);
+  };
+  b.toJSON = function() {
+    for (var a = [], b = 0;b < this._blocks.length;b++) {
+      a.push(this._blocks.at(b).toJSON());
+    }
+    return a;
+  };
+  b.clone = function() {
+    for (var a = [], b = 0;b < this._blocks.length;b++) {
+      a.push(this._blocks.at(b).clone());
+    }
+    return new Entry.Thread(a, this.code);
+  };
+})(Entry.Thread.prototype);
+Entry.Workspace = function(b, a) {
+  this._blockMenu = b;
+  this._board = a;
 };
-Entry.Entity.prototype.schema = {id:0, type:Entry.STATIC.ENTITY, rotation:0, direction:0, x:0, y:0, regX:0, regY:0, scaleX:0, scaleY:0, width:0, height:0, imageIndex:0, visible:0, colour:0, font:0, bgColor:0, textAlign:0, lineBreak:!1, underLine:!1, strike:!1};
-Entry.Function = function() {
-  Entry.Model(this);
-};
-Entry.Function.prototype.schema = {id:0, type:Entry.STATIC.FUNCTION, block:0, content:0, fieldNames:0};
-Entry.Message = function() {
-  Entry.Model(this);
-};
-Entry.Message.prototype.schema = {id:0, type:Entry.STATIC.MESSAGE, name:0};
-Entry.Object = function() {
-  Entry.Model(this);
-};
-Entry.Object.prototype.schema = {id:0, type:Entry.STATIC.OBJECT, objectType:0, name:0, order:0, scene:0, active:!0, lock:!1, rotateMethod:0, entity:0, script:0, sprite:0, selectedPicture:0};
-Entry.Scene = function() {
-  Entry.Model(this);
-};
-Entry.Scene.prototype.schema = {id:0, type:Entry.STATIC.SCENE, name:0};
-Entry.Sound = function() {
-  Entry.Model(this);
-};
-Entry.Sound.prototype.schema = {id:0, type:Entry.STATIC.SOUND, name:0, filename:0, ext:0, duration:0};
-Entry.Sprite = function() {
-  Entry.Model(this);
-};
-Entry.Sprite.prototype.schema = {id:0, type:Entry.STATIC.SPRITE, name:0, pictures:0, sounds:0};
-Entry.ThreadModel = function() {
-  Entry.Model(this);
-};
-Entry.ThreadModel.prototype.schema = {id:0, type:Entry.STATIC.THREAD_MODEL, x:0, y:0, width:0, minWidth:0, height:0};
-Entry.Variable = function() {
-  Entry.Model(this);
-};
-Entry.Variable.prototype.schema = {id:0, type:Entry.STATIC.VARIABLE, variableType:0, name:0, value:0, minValue:0, maxValue:0, visible:!0, x:0, y:0, width:0, height:0, isCloud:!1, object:null, array:0};
+(function(b) {
+  b.getBoard = function() {
+    return this._board;
+  };
+  b.getBlockMenu = function() {
+    return this._blockMenu;
+  };
+})(Entry.Workspace.prototype);
 
