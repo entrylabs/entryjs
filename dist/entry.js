@@ -3945,7 +3945,7 @@ Entry.Block.FOLLOW = 3;
     return {type:this.type, x:this.x, y:this.y};
   };
   b.clone = function() {
-    return new Entry.Block(this.toJSON());
+    return new Entry.Block(this);
   };
   b.getThread = function() {
     return this.thread;
