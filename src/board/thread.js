@@ -64,12 +64,30 @@ Entry.Thread = function(thread, code) {
         return splicedData;
     };
 
+    p.raiseEvent = function(event) {
+        var firstBlock = this._blocks.at(0)
+        if (firstBlock.type === event) {
+            return {block: firstBlock}
+        } else {
+            return null;
+        }
+    };
+
+    p.next = function(block) {
+        var i = this._blocks.indexOf(block);
+        if (this._blocks.length <= i)
+            return null;
+        else
+            return this._blocks.at(i + 1);
+    }
+
     // method for board
 
     p.renderStart = function(board) {
         this.board = board;
         this.svgGroup = board.snap.group();
         this.svgGroup.transform("t5,5");
+        this.svgGroup.block = this;
 
         this._bg = this.svgGroup.rect(0, 0, this.width, this.height);
         //this._bg.attr({"fill": "transparent"})
@@ -154,5 +172,13 @@ Entry.Thread = function(thread, code) {
             this.svgGroup.remove();
         this.code.remove(this);
     };
+
+    p.toJSON = function() {
+        var array = [];
+        for (var i = 0; i < this._blocks.length; i++) {
+            array.push(this._blocks.at(i).toJSON());
+        } 
+        return array;
+    }
 
 })(Entry.Thread.prototype);

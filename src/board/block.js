@@ -20,8 +20,10 @@ Entry.Block = function(block, thread) {
     this._board = null;
 
     // block information
-    this._schema = Entry.block[block.blockType];
+    this.type = block.type;
+    this._schema = Entry.block[block.type];
     this._skeleton = Entry.skeleton[this._schema.skeleton];
+    this.func = this._schema.func;
 
     this.observe(this, "setThread", ['thread']);
 
@@ -278,6 +280,26 @@ Entry.Block.FOLLOW = 3;
         this._board.terminateDrag(this);
     };
 
+    p.checkMagnet = function(targetBlock) {
+        var matrix = {
+            x: this.x,
+            y: this.y + this.height * Entry.Block.MAGNET_OFFSET,
+            width: this.width,
+            height: this.height
+        };
+        var targetMatrix = {
+            x: targetBlock.x,
+            y: targetBlock.y
+        };
+        if (Entry.Utils.isPointInMatrix(
+            this, targetMatrix, Entry.Block.MAGNET_RANGE
+        )) {
+            this.magneting = true;
+        } else {
+            this.magneting = false;
+        }
+    };
+
     p.applyMagnet = function() {
         if (this.magneting) {
             this.magnets = this._skeleton.magnets();
@@ -291,5 +313,14 @@ Entry.Block.FOLLOW = 3;
             this.measureSize();
         }
     };
+
+    p.toJSON = function() {
+
+        return {
+            type: this.type,
+            x: 0,
+            y: 0
+        };
+    }
 
 })(Entry.Block.prototype);

@@ -6,6 +6,7 @@
 goog.provide("Entry.Code");
 
 goog.require("Entry.Collection");
+goog.require('Entry.STATIC');
 
 /*
  *
@@ -17,6 +18,8 @@ Entry.Code = function(code) {
     this.threads = new Entry.Collection();
 
     this.board = null;
+
+    this.executors = [];
 
     this.set(code);
 };
@@ -54,5 +57,39 @@ Entry.Code = function(code) {
     p.remove = function(thread) {
         this.threads.remove(thread);
     };
+
+    p.raiseEvent = function(event) {
+        for (var i = 0; i < this.threads.length; i++) {
+            var executor = this.threads.at(i).raiseEvent(event);
+            if (executor !== null) this.executors.push(executor);
+        }
+    };
+
+    p.tick = function() {
+        var executors = this.executors;
+        for (var i = 0; i < executors.length; i++) {
+            var executor = executors[i];
+            while (executor.block &&
+                   executor.block.func.call(executor) == Entry.STATIC.RETURN) {
+                executor.block = executor.block.thread.next(executor.block);
+            };
+            if (executor === null) {
+                executors.splice(i, 1);
+                i--;
+            }
+        }
+    };
+
+    p.clearExecutors = function() {
+        this.executors = [];
+    };
+
+    p.toJSON = function() {
+        var array = [];
+        for (var i = 0; i < this.threads.length; i++) {
+            array.push(this.threads.at(i).toJSON());
+        } 
+        return array;
+    }
 
 })(Entry.Code.prototype);
