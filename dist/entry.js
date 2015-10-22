@@ -2623,9 +2623,9 @@ Entry.block.message_cast_wait = function(b, a) {
   }
   var e = [];
   Entry.container.mapEntityIncludeCloneOnScene(function(a, b) {
-    for (var c = b[0], d = b[1], l = a.parent.script.childNodes, n = 0;n < l.length;n++) {
-      var p = l[n], m = Entry.Xml.getField("VALUE", p);
-      Entry.Xml.isTypeOf(c, p) && m == d && (m = new Entry.Script(a), m.init(p), e.push(m));
+    for (var c = b[0], d = b[1], m = a.parent.script.childNodes, l = 0;l < m.length;l++) {
+      var p = m[l], n = Entry.Xml.getField("VALUE", p);
+      Entry.Xml.isTypeOf(c, p) && n == d && (n = new Entry.Script(a), n.init(p), e.push(n));
     }
   }, ["when_message_cast", c]);
   a.runningScript = e;
@@ -3188,9 +3188,9 @@ Entry.Collection = function(b) {
       }
       g = 0;
       for (k = d.length;g < k;g++) {
-        var l = d[g];
-        e.splice(a++, 0, l);
-        f[l.id] = l;
+        var m = d[g];
+        e.splice(a++, 0, m);
+        f[m.id] = m;
       }
       return h;
     }
@@ -3663,16 +3663,21 @@ Entry.Board = function(b) {
         b = b.parent(), a = b.block;
       }
       if (a instanceof Entry.Block) {
-        this.closeBlock !== a && (null !== this.closeBlock && (this.closeBlock.magneting = !1), this.closeBlock = a, this.closeBlock.magneting = !0, this.closeBlock.thread.align(!0));
+        this.closeBlock !== a && (null !== this.closeBlock && (this.closeBlock.magneting = !1), this.closeBlock = a, this.closeBlock.magneting = !0, console.log(this.closeBlock.marginBottom), this.closeBlock.thread.align(!0)), console.log(this.closeBlock.marginBottom);
       } else {
         if (a instanceof Entry.Thread) {
-          if (b = a, Entry.Utils.isPointInMatrix(b, a, Entry.Block.MAGNET_RANGE)) {
-            for (var b = b._blocks, d = 0;d < b.length;d++) {
-              var e = b.at(d);
-              if (this.dragBlock !== e && (e.checkMagnet(a), e.magneting)) {
-                this.closeBlock !== e && (null !== this.closeBlock && (this.closeBlock.magneting = !1), this.closeBlock = e, this.closeBlock.thread.align(!0));
+          a = a._blocks;
+          for (var b = a.at(0).y, d = 0;d < a.length;d++) {
+            var e = a.at(d);
+            if (this.dragBlock !== e) {
+              if (this.dragBlock.y > b && this.dragBlock.y < b + e.height && (console.log("detect"), this.closeBlock !== e)) {
+                null !== this.closeBlock && (this.closeBlock.magneting = !1);
+                this.closeBlock = e;
+                this.closeBlock.magneting = !0;
+                this.closeBlock.thread.align(!0);
                 break;
               }
+              b += e.height;
             }
           }
         } else {
@@ -3693,7 +3698,7 @@ Entry.Board = function(b) {
         b[f].thread = d, d._blocks.insert(b[f], e);
       }
       d.align();
-      0 === a._blocks.length ? a.destroy() : (console.log("oldThreadReset"), a.align());
+      0 === a._blocks.length ? a.destroy() : a.align();
       this.closeBlock = null;
     } else {
       0 !== a.thread.indexOf(a) ? Math.sqrt(Math.pow(b.startX - b.offsetX, 2) + Math.pow(b.startY - b.offsetY, 2)) < Entry.Board.MAGNET_RANGE ? a.thread.align() : (b = a.thread.cut(a), this.code.createThread(b)) : a.thread.align();
@@ -3757,19 +3762,20 @@ Entry.Thread = function(b, a) {
   };
   b.align = function(a) {
     a = void 0 === a ? !0 : a;
-    for (var b = this._blocks.at(0), d = b.x, e = b.y, f = 0, h = b.width, g = 0, k = 0;k < this._blocks.length;k++) {
-      var l = this._blocks.at(k);
+    for (var b = this._blocks.at(0), d = b.x, e = b.y, f = 0, h = b.width, g = 0, k = 0, m = 0;m < this._blocks.length;m++) {
+      var l = this._blocks.at(m);
       if (l.dragInstance && a) {
         break;
       }
-      l.dragInstance && (d = l.x, e = l.y);
+      l.dragInstance && (k = e - b.y, d = l.x, e = l.y);
       l.moveTo(d, e, a);
       l.magnets.next && (e += l.height + 1, e += l.marginBottom);
       g = Math.max(g, l.width);
       h = Math.min(h, l.width);
       f = Math.min(f, l.offsetX);
     }
-    this.set({x:b.x, y:b.y, offsetX:f, minWidth:h, width:g, height:e - b.y});
+    k = k || e - b.y;
+    this.set({x:b.x, y:b.y, offsetX:f, minWidth:h, width:g, height:k});
   };
   b.dominate = function() {
     this.board.dominate(this);

@@ -121,7 +121,6 @@ Entry.Thread = function(thread, code) {
     p.align = function(animate) {
         animate = animate === undefined ? true : animate;
         var firstBlockBox = this._blocks.at(0),
-            terminalSizing = false,
             cursor = {
                 x: firstBlockBox.x,
                 y: firstBlockBox.y,
@@ -132,12 +131,13 @@ Entry.Thread = function(thread, code) {
             };
         for (var i = 0; i < this._blocks.length; i++) {
             var b = this._blocks.at(i);
-            if (b.dragInstance && animate) // this code sucks
+            if (b.dragInstance && animate) {
                 break;
+            } // this code sucks
             if (b.dragInstance) {
+                cursor.height = cursor.y - firstBlockBox.y;
                 cursor.x = b.x;
                 cursor.y = b.y;
-                terminalSizing = true;
             }
             b.moveTo(cursor.x, cursor.y, animate);
 
@@ -147,20 +147,18 @@ Entry.Thread = function(thread, code) {
                 cursor.y += b.marginBottom;
             }
 
-            if (true) {
-                cursor.width = Math.max(cursor.width, b.width);
-                cursor.minWidth = Math.min(cursor.minWidth, b.width);
-                cursor.offsetX = Math.min(cursor.offsetX, b.offsetX);
-            }
+            cursor.width = Math.max(cursor.width, b.width);
+            cursor.minWidth = Math.min(cursor.minWidth, b.width);
+            cursor.offsetX = Math.min(cursor.offsetX, b.offsetX);
         }
-        cursor.height = cursor.y - firstBlockBox.y;
+        cursor.height = cursor.height || cursor.y - firstBlockBox.y;
         this.set({
             x: firstBlockBox.x,
             y: firstBlockBox.y,
             offsetX: cursor.offsetX,
             minWidth: cursor.minWidth,
             width: cursor.width,
-            height: cursor.y - firstBlockBox.y
+            height: cursor.height
         });
     };
 

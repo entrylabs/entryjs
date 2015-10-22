@@ -70,29 +70,36 @@ Entry.Board = function(dom) {
                     this.closeBlock.magneting = false;
                 this.closeBlock = targetBlock;
                 this.closeBlock.magneting = true;
+                console.log(this.closeBlock.marginBottom);
                 this.closeBlock.thread.align(true);
             }
+                console.log(this.closeBlock.marginBottom);
         } else if (targetBlock instanceof Entry.Thread) {
-            var thread = targetBlock;
-            if (Entry.Utils.isPointInMatrix(
-                thread, targetBlock, Entry.Block.MAGNET_RANGE
-            )) {
-                var blocks = thread._blocks;
-                for (var j = 0; j < blocks.length; j++) {
-                    var block = blocks.at(j);
-                    if (this.dragBlock === block)
-                        continue;
-                    block.checkMagnet(targetBlock);
-                    if (block.magneting) {
-                        if (this.closeBlock !== block) {
-                            if (this.closeBlock !== null)
-                                this.closeBlock.magneting = false;
-                            this.closeBlock = block;
-                            this.closeBlock.thread.align(true);
-                        }
-                        return;
+            var thread = targetBlock,
+                blocks = thread._blocks,
+                cursorY = blocks.at(0).y;
+            for (var j = 0; j < blocks.length; j++) {
+                var block = blocks.at(j);
+                if (this.dragBlock === block)
+                    continue;
+                if (this.dragBlock.y > cursorY && this.dragBlock.y < cursorY + block.height) {
+                    console.log('detect');
+                    if (this.closeBlock !== block) {
+                        if (this.closeBlock !== null)
+                            this.closeBlock.magneting = false;
+                        this.closeBlock = block;
+                        this.closeBlock.magneting = true;
+                        this.closeBlock.thread.align(true);
+                        break;
                     }
                 }
+                cursorY += block.height;
+                /*
+                block.checkMagnet(targetBlock);
+                if (block.magneting) {
+                    return;
+                }
+                */
             }
         } else if (this.closeBlock) {
             this.closeBlock.magneting = false;
@@ -120,7 +127,6 @@ Entry.Board = function(dom) {
             if (oldThread._blocks.length === 0) {
                 oldThread.destroy();
             } else {
-                console.log('oldThreadReset');
                 oldThread.align();
             }
             this.closeBlock = null;
