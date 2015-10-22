@@ -65,19 +65,23 @@ Entry.BlockMenu = function(dom) {
         if (block && block.thread) {
             var clonedThread = block.thread.clone();
             if (clonedThread) {
-                var threads = code.threads;
+                //clone thread at blockMenu
+                var threads = code.getThreads();
                 threads.splice(
-                    threads.indexOf(block.thread),
-                    1,
+                    threads.indexOf(block.thread), 1,
                     clonedThread
                 );
                 code.bindBoard(this);
+
+                //TODO clone thread at Workspace Code
             }
         }
+
+
     };
 
     p.align = function() {
-        var threads = this._code.threads.getAll();
+        var threads = this._code.getThreads().getAll();
         var vPadding = 10,
             marginFromTop = 10,
             hPadding = this._svgDom.width()/2;
@@ -93,10 +97,10 @@ Entry.BlockMenu = function(dom) {
     };
 
     p.terminateDrag = function(block) {
+        //remove dragging thread
         var originBlock = this.dragBlock;
-        if (originBlock) {
-            console.log(originBlock);
-        }
+        if (originBlock && originBlock.getThread())
+            originBlock.getThread().destroy();
     };
 
     p.dominate = function(thread) {

@@ -331,4 +331,8 @@ Entry.Block.FOLLOW = 3;
         );
     }
 
+    p.getThread = function() {
+        return this.thread;
+    }
+
 })(Entry.Block.prototype);

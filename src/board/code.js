@@ -90,8 +90,12 @@ Entry.Code = function(code) {
         var array = [];
         for (var i = 0; i < this.threads.length; i++) {
             array.push(this.threads.at(i).toJSON());
-        } 
+        }
         return array;
+    }
+
+    p.getThreads = function() {
+        return this.threads;
     }
 
 })(Entry.Code.prototype);
