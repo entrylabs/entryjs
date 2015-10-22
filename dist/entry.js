@@ -3663,14 +3663,14 @@ Entry.Board = function(b) {
         b = b.parent(), a = b.block;
       }
       if (a instanceof Entry.Block) {
-        this.closeBlock !== a && (null !== this.closeBlock && (this.closeBlock.magneting = !1), this.closeBlock = a, this.closeBlock.magneting = !0, console.log(this.closeBlock.marginBottom), this.closeBlock.thread.align(!0)), console.log(this.closeBlock.marginBottom);
+        this.closeBlock !== a && (null !== this.closeBlock && (this.closeBlock.magneting = !1), this.closeBlock = a, this.closeBlock.magneting = !0, this.closeBlock.thread.align(!0));
       } else {
         if (a instanceof Entry.Thread) {
           a = a._blocks;
           for (var b = a.at(0).y, d = 0;d < a.length;d++) {
             var e = a.at(d);
             if (this.dragBlock !== e) {
-              if (this.dragBlock.y > b && this.dragBlock.y < b + e.height && (console.log("detect"), this.closeBlock !== e)) {
+              if (this.dragBlock.y > b && this.dragBlock.y < b + e.height && this.closeBlock !== e) {
                 null !== this.closeBlock && (this.closeBlock.magneting = !1);
                 this.closeBlock = e;
                 this.closeBlock.magneting = !0;
@@ -3746,6 +3746,7 @@ Entry.Thread = function(b, a) {
     this.svgGroup.transform("t5,5");
     this.svgGroup.block = this;
     this._bg = this.svgGroup.rect(0, 0, this.width, this.height);
+    this._bg.attr({fill:"transparent"});
     var b = this._blocks.at(0);
     this._blocks.map(function(d) {
       d.renderStart(a, b);
