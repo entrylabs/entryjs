@@ -26,7 +26,15 @@ Entry.block.jr_start = {
         }
     ],
     func: function() {
-        console.log('dd');
+        var entities = Ntry.entityManager.getEntitiesByComponent(
+        Ntry.STATIC.UNIT);
+
+        for (var key in entities)
+            this._unit = entities[key];
+
+        this.unitComp = Ntry.entityManager.getComponent(
+        this._unit.id, Ntry.STATIC.UNIT);
+
         return Entry.STATIC.RETURN;
     }
 };
@@ -39,7 +47,6 @@ Entry.block.jr_repeat = {
         "반복"
     ],
     func: function() {
-        console.log('repeat');
 
     }
 };
@@ -76,8 +83,42 @@ Entry.block.jr_north = {
         }
     ],
     func: function() {
-        console.log('up');
-        return Entry.STATIC.RETURN;
+          
+        if (!this.isContinue) {
+
+            this.isContinue = true;
+            this.isAction = true;
+            var self = this;
+            var callBack = function() {
+                 self.isAction = false;
+            };
+            
+
+            // turn direction
+            switch (this.unitComp.direction) {
+                case Ntry.STATIC.EAST: 
+                    Ntry.dispatchEvent("unitAction", Ntry.STATIC.TURN_LEFT, callBack);
+                    break;
+                case Ntry.STATIC.SOUTH: 
+                    Ntry.dispatchEvent("unitAction", Ntry.STATIC.HALF_ROTATION, callBack);
+                    break;
+                case Ntry.STATIC.WEST: 
+                    Ntry.dispatchEvent("unitAction", Ntry.STATIC.TURN_RIGHT, callBack);
+                    break;
+                default:
+                    Ntry.dispatchEvent("unitAction", Ntry.STATIC.WALK, callBack);
+                    break;
+
+            }
+            return Entry.STATIC.CONTINUE;
+        } else if (this.isAction) {
+            return Entry.STATIC.CONTINUE;
+        } else {
+            delete this.isAction;
+            delete this.isContinue;
+            return Entry.STATIC.RETURN;
+        }
+
     }
 };
 
@@ -94,9 +135,23 @@ Entry.block.jr_east = {
         }
     ],
     func: function() {
-        console.log('east');
-        Ntry.dispatchEvent("unitAction", Ntry.STATIC.WALK);
-        return Entry.STATIC.RETURN;
+        if (!this.isContinue) {
+            this.isContinue = true;
+            this.isAction = true;
+            var self = this;
+            var callBack = function() {
+                self.isAction = false;
+            };
+            Ntry.dispatchEvent("unitAction", Ntry.STATIC.WALK, callBack);
+            return Entry.STATIC.CONTINUE;
+        } else if (this.isAction) {
+            return Entry.STATIC.CONTINUE;
+        } else {
+            delete this.isAction;
+            delete this.isContinue;
+
+            return Entry.STATIC.RETURN;
+        }
     }
 };
 
@@ -113,7 +168,6 @@ Entry.block.jr_south = {
         }
     ],
     func: function() {
-        console.log('south');
         return Entry.STATIC.RETURN;
 
     }
@@ -132,7 +186,6 @@ Entry.block.jr_west = {
         }
     ],
     func: function() {
-        console.log('west');
         return Entry.STATIC.RETURN;
     }
 };

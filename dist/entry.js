@@ -3407,31 +3407,70 @@ Entry.block.run = {skeleton:"basic", color:"#3BBD70", contents:["this is", "basi
   return Entry.STATIC.RETURN;
 }};
 Entry.block.jr_start = {skeleton:"pebble_event", color:"#3BBD70", contents:[{type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_play_image.png", highlightColor:"#3BBD70", size:22}], func:function() {
-  console.log("dd");
+  var b = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT), a;
+  for (a in b) {
+    this._unit = b[a];
+  }
+  this.unitComp = Ntry.entityManager.getComponent(this._unit.id, Ntry.STATIC.UNIT);
+  this.gridComp = Ntry.entityManager.getComponent(this._unit.id, Ntry.STATIC.GRID);
+  console.log("start : " + this.unitComp);
   return Entry.STATIC.RETURN;
 }};
 Entry.block.jr_repeat = {skeleton:"pebble_loop", color:"#3BBD70", contents:["1", "\ubc18\ubcf5"], func:function() {
-  console.log("repeat");
 }};
 Entry.block.jr_item = {skeleton:"pebble_basic", color:"#F46C6C", contents:["\uaf43 \ubaa8\uc73c\uae30", {type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_item_image.png", highlightColor:"#FFF", position:{x:83, y:0}, size:22}], func:function() {
   Ntry.dispatchEvent("unitAction", Ntry.STATIC.GET_ITEM);
   return Entry.STATIC.RETURN;
 }};
 Entry.block.jr_north = {skeleton:"pebble_basic", color:"#A751E3", contents:["   \uc704\ub85c", {type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_up_image.png", position:{x:83, y:0}, size:22}], func:function() {
-  console.log("up");
-  return Entry.STATIC.RETURN;
+  if (this.isContinue) {
+    if (this.isAction) {
+      return Entry.STATIC.CONTINUE;
+    }
+    delete this.isAction;
+    delete this.isContinue;
+    return Entry.STATIC.RETURN;
+  }
+  this.isAction = this.isContinue = !0;
+  var b = this, a = function() {
+    b.isAction = !1;
+  };
+  switch(this.unitComp.direction) {
+    case Ntry.STATIC.EAST:
+      console.log("Ntry.STATIC.EAST");
+      Ntry.dispatchEvent("unitAction", Ntry.STATIC.TURN_LEFT, a);
+      break;
+    case Ntry.STATIC.SOUTH:
+      Ntry.dispatchEvent("unitAction", Ntry.STATIC.HALF_ROTATION, a);
+      break;
+    case Ntry.STATIC.WEST:
+      Ntry.dispatchEvent("unitAction", Ntry.STATIC.TURN_RIGHT, a);
+      break;
+    default:
+      Ntry.dispatchEvent("unitAction", Ntry.STATIC.WALK, a);
+  }
+  return Entry.STATIC.CONTINUE;
 }};
 Entry.block.jr_east = {skeleton:"pebble_basic", color:"#A751E3", contents:["\uc624\ub978\ucabd", {type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_right_image.png", position:{x:83, y:0}, size:22}], func:function() {
-  console.log("east");
-  Ntry.dispatchEvent("unitAction", Ntry.STATIC.WALK);
-  return Entry.STATIC.RETURN;
+  if (this.isContinue) {
+    if (this.isAction) {
+      return Entry.STATIC.CONTINUE;
+    }
+    delete this.isAction;
+    delete this.isContinue;
+    return Entry.STATIC.RETURN;
+  }
+  this.isAction = this.isContinue = !0;
+  var b = this;
+  Ntry.dispatchEvent("unitAction", Ntry.STATIC.WALK, function() {
+    b.isAction = !1;
+  });
+  return Entry.STATIC.CONTINUE;
 }};
 Entry.block.jr_south = {skeleton:"pebble_basic", color:"#A751E3", contents:["\uc544\ub798\ub85c", {type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_down_image.png", position:{x:83, y:0}, size:22}], func:function() {
-  console.log("south");
   return Entry.STATIC.RETURN;
 }};
 Entry.block.jr_west = {skeleton:"pebble_basic", color:"#A751E3", contents:["   \uc67c\ucabd", {type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_left_image.png", position:{x:83, y:0}, size:22}], func:function() {
-  console.log("west");
   return Entry.STATIC.RETURN;
 }};
 Entry.Code = function(b) {
