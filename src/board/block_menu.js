@@ -64,13 +64,14 @@ Entry.BlockMenu = function(dom) {
 
     p.align = function() {
         var threads = this._code.threads.getAll();
-        var vPadding = 0,
+        var vPadding = 10,
+            marginFromTop = 10,
             hPadding = this._svgDom.width()/2;
 
         for (var i=0,len=threads.length; i<len; i++) {
             var thread = threads[i];
-            thread.moveTo(hPadding, vPadding, true);
-            vPadding += thread.height + 10;
+            thread.moveTo(hPadding, marginFromTop, true);
+            marginFromTop += thread.height + vPadding;
         }
     };
 

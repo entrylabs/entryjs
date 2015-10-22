@@ -3618,7 +3618,7 @@ Entry.BlockMenu = function(b) {
     console.log(this.dragBlock);
   };
   b.align = function() {
-    for (var a = this._code.threads.getAll(), b = 0, d = this._svgDom.width() / 2, e = 0, f = a.length;e < f;e++) {
+    for (var a = this._code.threads.getAll(), b = 10, d = this._svgDom.width() / 2, e = 0, f = a.length;e < f;e++) {
       var h = a[e];
       h.moveTo(d, b, !0);
       b += h.height + 10;
