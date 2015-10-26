@@ -58,30 +58,28 @@ Entry.BlockMenu = function(dom) {
 
     p.cloneThread = function() {
         var block = this.dragBlock;
-        var cloned;
+        var clonedThread;
         var code = this._code;
         if (block && block.thread) {
             block.observe(this, "moveBoardBlock", ['x', 'y']);
-            var clonedThread = block.getThread().clone(code);
-            if (clonedThread) {
+            clonedThread = block.getThread().clone(code);
                 //clone thread at blockMenu
-                var threads = code.getThreads();
-                threads.splice(
-                    threads.indexOf(block.getThread()),
-                    1,
-                    clonedThread
-                );
-                clonedThread.renderStart(this, false);
+            var threads = code.getThreads();
+            threads.splice(
+                threads.indexOf(block.getThread()),
+                1,
+                clonedThread
+            );
+            clonedThread.renderStart(this, false);
 
-                //clone thread at Workspace
-                var board = this.workspace.getBoard();
-                var boardCode = board.getCode();
-                var boardThread = block.getThread().clone(boardCode);
-                this._boardBlock = boardThread.getBlocks().at(0);
-                board.dragBlock = this._boardBlock;
-                boardCode.addThread(boardThread, false);
-                this.moveBoardBlock();
-            }
+            //clone thread at Workspace
+            var board = this.workspace.getBoard();
+            var boardCode = board.getCode();
+            var boardThread = block.getThread().clone(boardCode);
+            this._boardBlock = boardThread.getBlocks().at(0);
+            board.dragBlock = this._boardBlock;
+            boardCode.addThread(boardThread, false);
+            this.moveBoardBlock();
         }
     }
 

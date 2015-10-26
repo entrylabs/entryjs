@@ -3543,12 +3543,8 @@ Entry.BlockMenu = function(b) {
     this.align();
   };
   b.cloneThread = function() {
-    var a = this.dragBlock, b = this._code;
-    if (a && a.thread) {
-      a.observe(this, "moveBoardBlock", ["x", "y"]);
-      var d = a.getThread().clone(b);
-      d && (b = b.getThreads(), b.splice(b.indexOf(a.getThread()), 1, d), d.renderStart(this, !1), d = this.workspace.getBoard(), b = d.getCode(), a = a.getThread().clone(b), this._boardBlock = a.getBlocks().at(0), d.dragBlock = this._boardBlock, b.addThread(a, !1), this.moveBoardBlock());
-    }
+    var a = this.dragBlock, b, d = this._code;
+    a && a.thread && (a.observe(this, "moveBoardBlock", ["x", "y"]), b = a.getThread().clone(d), d = d.getThreads(), d.splice(d.indexOf(a.getThread()), 1, b), b.renderStart(this, !1), b = this.workspace.getBoard(), d = b.getCode(), a = a.getThread().clone(d), this._boardBlock = a.getBlocks().at(0), b.dragBlock = this._boardBlock, d.addThread(a, !1), this.moveBoardBlock());
   };
   b.align = function() {
     for (var a = this._code.getThreads().getAll(), b = 10, d = this._svgDom.width() / 2, e = 0, f = a.length;e < f;e++) {
