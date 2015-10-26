@@ -3735,9 +3735,11 @@ Entry.FieldIndicator = function(b, a) {
     this._path.attr({stroke:"none", fill:"none"});
     this.box.set({x:this._size, y:0, width:2 * this._size, height:2 * this._size});
   };
-  b.align = function(a, b) {
+  b.align = function(a, b, d) {
+    var e = this.svgGroup;
     this._position && (a = this._position.x);
-    this.svgGroup.animate({transform:"t" + a + " " + b}, 300, mina.easeinout);
+    var f = "t" + a + " " + b;
+    void 0 === d || d ? e.animate({transform:f}, 300, mina.easeinout) : e.attr({transform:f});
     this.box.set({x:a, y:b});
   };
   b.enableHighlight = function() {
@@ -3840,24 +3842,10 @@ Entry.Block.FOLLOW = 3;
   b.setThread = function() {
     this.thread.svgGroup && this.thread.svgGroup.append(this.svgGroup);
   };
-  b.renderStart = function(a, b) {
-    if (this.svgGroup) {
-      this.thread.svgGroup.append(this.svgGroup);
-    } else {
-      this._board = a;
-      this.svgGroup = this.thread.svgGroup.group();
-      this.svgGroup.attr({class:"block"});
-      this.svgGroup.block = this;
-      b && this.svgGroup.attr({transform:"t" + b.x + " " + b.y});
-      var d = this._skeleton.path(this);
-      this._darkenPath = this.svgGroup.path(d);
-      this._darkenPath.attr({transform:"t0 1.1", fill:Entry.Utils.colorDarken(this._schema.color)});
-      this._path = this.svgGroup.path(d);
-      this._path.attr({fill:this._schema.color});
-      this.magnets = this._skeleton.magnets();
-      this.fieldRenderStart();
-      this.addControl();
-    }
+  b.renderStart = function(a, b, d) {
+    d = void 0 === d ? !0 : d;
+    this.svgGroup ? this.thread.svgGroup.append(this.svgGroup) : (this._board = a, this.svgGroup = this.thread.svgGroup.group(), this.svgGroup.attr({class:"block"}), this.svgGroup.block = this, b && this.svgGroup.attr({transform:"t" + b.x + " " + b.y}), a = this._skeleton.path(this), this._darkenPath = this.svgGroup.path(a), this._darkenPath.attr({transform:"t0 1.1", fill:Entry.Utils.colorDarken(this._schema.color)}), this._path = this.svgGroup.path(a), this._path.attr({fill:this._schema.color}), 
+    this.magnets = this._skeleton.magnets(), this.fieldRenderStart(d), this.addControl());
   };
   b.moveTo = function(a, b, d) {
     var e = "t" + a + " " + b;
@@ -3867,24 +3855,24 @@ Entry.Block.FOLLOW = 3;
   b.moveBy = function(a, b, d) {
     return this.moveTo(this.x + a, this.y + b, d);
   };
-  b.fieldRenderStart = function() {
+  b.fieldRenderStart = function(a) {
     this.contentSvgGroup = this.svgGroup.group();
-    var a = this._skeleton.contentPos();
-    this.contentSvgGroup.transform("t" + a.x + " " + a.y);
-    for (var a = this._schema.contents, b = 0;b < a.length;b++) {
-      var d = a[b];
-      "string" === typeof d ? this._contents.push(new Entry.FieldText(d, this)) : this._contents.push(new Entry["Field" + d.type](d, this));
+    var b = this._skeleton.contentPos();
+    this.contentSvgGroup.transform("t" + b.x + " " + b.y);
+    for (var b = this._schema.contents, d = 0;d < b.length;d++) {
+      var e = b[d];
+      "string" === typeof e ? this._contents.push(new Entry.FieldText(e, this)) : this._contents.push(new Entry["Field" + e.type](e, this));
     }
-    this.alignContent();
+    this.alignContent(a);
   };
-  b.alignContent = function() {
-    for (var a = 0, b = 0;b < this._contents.length;b++) {
-      var d = this._contents[b];
-      d.align(a, 0);
-      b !== this._contents.length - 1 && (a += 5);
-      a += d.box.width;
+  b.alignContent = function(a) {
+    for (var b = 0, d = 0;d < this._contents.length;d++) {
+      var e = this._contents[d];
+      e.align(b, 0, a);
+      d !== this._contents.length - 1 && (b += 5);
+      b += e.box.width;
     }
-    this.contentWidth = a;
+    this.contentWidth = b;
   };
   b.measureSize = function() {
     this.set(this._skeleton.box(this));
@@ -4013,8 +4001,8 @@ Entry.Thread = function(b, a) {
     this._bg = this.svgGroup.rect(0, 0, this.width, this.height);
     this._bg.attr({fill:"transparent"});
     var d = this._blocks.at(0);
-    this._blocks.map(function(b) {
-      b.renderStart(a, d);
+    this._blocks.map(function(e) {
+      e.renderStart(a, d, b);
     });
     this.align(b);
   };

@@ -88,7 +88,9 @@ Entry.Block.FOLLOW = 3;
 
     // method for board
 
-    p.renderStart = function(board, startPos) {
+    p.renderStart = function(board, startPos, animate) {
+        animate = animate === undefined ? true : animate;
+
         if (this.svgGroup) {
             this.thread.svgGroup.append(this.svgGroup);
             return;
@@ -119,7 +121,7 @@ Entry.Block.FOLLOW = 3;
         });
 
         this.magnets = this._skeleton.magnets();
-        this.fieldRenderStart();
+        this.fieldRenderStart(animate);
 
         this.addControl();
     };
@@ -152,7 +154,7 @@ Entry.Block.FOLLOW = 3;
         );
     };
 
-    p.fieldRenderStart = function() {
+    p.fieldRenderStart = function(animate) {
         this.contentSvgGroup = this.svgGroup.group();
         var contentPos = this._skeleton.contentPos();
         this.contentSvgGroup.transform("t" + contentPos.x + ' ' + contentPos.y);
@@ -167,14 +169,14 @@ Entry.Block.FOLLOW = 3;
                     new Entry['Field' + content.type](content, this)
                 );
         }
-        this.alignContent();
+        this.alignContent(animate);
     };
 
-    p.alignContent = function() {
+    p.alignContent = function(animate) {
         var cursor = {x: 0, y: 0};
         for (var i = 0; i < this._contents.length; i++) {
             var c = this._contents[i];
-            c.align(cursor.x, cursor.y);
+            c.align(cursor.x, cursor.y, animate);
 
             // space between content
             if (i !== this._contents.length - 1)

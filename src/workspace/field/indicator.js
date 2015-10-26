@@ -54,12 +54,20 @@ Entry.FieldIndicator = function(content, block) {
         });
     };
 
-    p.align = function(x, y) {
-        if (this._position)
-            x = this._position.x;
-        this.svgGroup.animate({
-            transform: "t" + x + " " + y
-        }, 300, mina.easeinout);
+    p.align = function(x, y, animate) {
+        animate = animate === undefined ? true : animate;
+        var svgGroup = this.svgGroup;
+        if (this._position) x = this._position.x;
+        var transform = "t" + x + " " + y;
+
+        if (animate)
+            svgGroup.animate({
+                transform: transform
+            }, 300, mina.easeinout);
+        else
+            svgGroup.attr({
+                transform: transform
+            });
 
         this.box.set({
             x: x,

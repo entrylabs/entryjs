@@ -95,7 +95,7 @@ Entry.Thread = function(thread, code) {
 
         var firstBlockBox = this._blocks.at(0);
         this._blocks.map(function(b) {
-            b.renderStart(board, firstBlockBox);
+            b.renderStart(board, firstBlockBox, animate);
         });
 
         this.align(animate);
