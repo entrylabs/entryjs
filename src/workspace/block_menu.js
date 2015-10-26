@@ -79,7 +79,9 @@ Entry.BlockMenu = function(dom) {
                 var boardThread = block.getThread().clone(boardCode);
                 this._boardBlock = boardThread.getBlocks().at(0);
                 board.dragBlock = this._boardBlock;
-                this._boardBlock.x = -300;
+                var offsetX = this.workspace.getBoard().offset.left
+                    - this.offset.left;
+                this._boardBlock.x -= offsetX;
                 boardCode.addThread(boardThread);
             }
         }

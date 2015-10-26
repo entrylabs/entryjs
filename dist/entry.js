@@ -3547,7 +3547,7 @@ Entry.BlockMenu = function(b) {
     if (a && a.thread) {
       a.observe(this, "moveBoardBlock", ["x", "y"]);
       var d = a.getThread().clone(b);
-      d && (b = b.getThreads(), b.splice(b.indexOf(a.getThread()), 1, d), d.renderStart(this), d = this.workspace.getBoard(), b = d.getCode(), a = a.getThread().clone(b), this._boardBlock = a.getBlocks().at(0), d.dragBlock = this._boardBlock, this._boardBlock.x = -300, b.addThread(a));
+      d && (b = b.getThreads(), b.splice(b.indexOf(a.getThread()), 1, d), d.renderStart(this), b = this.workspace.getBoard(), d = b.getCode(), a = a.getThread().clone(d), this._boardBlock = a.getBlocks().at(0), b.dragBlock = this._boardBlock, b = this.workspace.getBoard().offset.left - this.offset.left, this._boardBlock.x -= b, d.addThread(a));
     }
   };
   b.align = function() {
