@@ -271,6 +271,7 @@ Entry.Block.FOLLOW = 3;
 
         function onMouseUp(e) {
             block.terminateDrag();
+            delete block.dragInstance;
 
             $(document).unbind('.block');
             block._board.dragBlock = null;

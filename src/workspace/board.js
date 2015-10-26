@@ -108,7 +108,6 @@ Entry.Board = function(dom) {
 
     p.terminateDrag = function(block) {
         var di = block.dragInstance;
-        delete block.dragInstance;
 
         if (this.closeBlock) {
             var separatedBlocks = block.thread.cut(block),

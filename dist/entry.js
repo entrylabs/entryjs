@@ -3545,8 +3545,9 @@ Entry.BlockMenu = function(b) {
   b.cloneThread = function() {
     var a = this.dragBlock, b = this._code;
     if (a && a.thread) {
+      a.observe(this, "moveBoardBlock", ["x", "y"]);
       var d = a.getThread().clone(b);
-      d && (b = b.getThreads(), b.splice(b.indexOf(a.getThread()), 1, d), d.renderStart(this), d = this.workspace.getBoard().getCode(), (a = a.getThread().clone(d)) && d.addThread(a));
+      d && (b = b.getThreads(), b.splice(b.indexOf(a.getThread()), 1, d), d.renderStart(this), d = this.workspace.getBoard().getCode(), a = a.getThread().clone(d), this._boardBlock = a.getBlocks().at(0), this.workspace.getBoard().dragBlock = this._boardBlock, d.addThread(a), this._boardBlock.moveTo(-100, 0, !1));
     }
   };
   b.align = function() {
@@ -3559,10 +3560,17 @@ Entry.BlockMenu = function(b) {
   b.updateCloseMagnet = function(a) {
   };
   b.terminateDrag = function(a) {
-    (a = this.dragBlock) && a.getThread() && a.getThread().destroy();
+    this._boardBlock._board.terminateDrag(this._boardBlock);
+    (a = this.dragBlock) && a.getThread() && (a.getThread().destroy(), this._boardBlock = null);
   };
   b.dominate = function(a) {
     this.snap.append(a.svgGroup);
+  };
+  b.moveBoardBlock = function() {
+    var a = this.workspace.getBoard().offset.left - this.offset.left, b = this.workspace.getBoard().offset.top - this.offset.top, d = this.dragBlock, e = this._boardBlock;
+    if (e || d) {
+      e.moveTo(d.x - a, d.y - b, !1), e._board.updateCloseMagnet(e);
+    }
   };
 })(Entry.BlockMenu.prototype);
 Entry.Board = function(b) {
@@ -3620,7 +3628,6 @@ Entry.Board = function(b) {
   };
   b.terminateDrag = function(a) {
     var b = a.dragInstance;
-    delete a.dragInstance;
     if (this.closeBlock) {
       b = a.thread.cut(a);
       a = a.thread;
@@ -3917,6 +3924,7 @@ Entry.Block.FOLLOW = 3;
     }
     function d(a) {
       e.terminateDrag();
+      delete e.dragInstance;
       $(document).unbind(".block");
       e._board.dragBlock = null;
     }

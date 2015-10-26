@@ -38,7 +38,6 @@ Entry.BlockMenu = function(dom) {
     this._code = null;
 
     this.observe(this, "cloneThread", ['dragBlock']);
-
 };
 
 (function(p) {
@@ -63,6 +62,7 @@ Entry.BlockMenu = function(dom) {
         var cloned;
         var code = this._code;
         if (block && block.thread) {
+            block.observe(this, "moveBoardBlock", ['x', 'y']);
             var clonedThread = block.getThread().clone(code);
             if (clonedThread) {
                 //clone thread at blockMenu
@@ -73,13 +73,14 @@ Entry.BlockMenu = function(dom) {
                 );
                 clonedThread.renderStart(this);
 
-                //TODO clone thread at Workspace Code
+                //clone thread at Workspace Code
                 var boardCode = this.workspace.getBoard().getCode();
-                var workspaceThread =
+                var boardThread =
                     block.getThread().clone(boardCode);
-                if (workspaceThread) {
-                    boardCode.addThread(workspaceThread);
-                }
+                this._boardBlock = boardThread.getBlocks().at(0);
+                this.workspace.getBoard().dragBlock = this._boardBlock;
+                boardCode.addThread(boardThread);
+                this._boardBlock.moveTo(-100,0,false);
 
             }
         }
@@ -104,14 +105,39 @@ Entry.BlockMenu = function(dom) {
     };
 
     p.terminateDrag = function(block) {
+        this._boardBlock._board.terminateDrag(this._boardBlock);
+
         //remove dragging thread
         var originBlock = this.dragBlock;
-        if (originBlock && originBlock.getThread())
+        if (originBlock && originBlock.getThread()) {
             originBlock.getThread().destroy();
+            this._boardBlock = null;
+        }
     };
 
     p.dominate = function(thread) {
         this.snap.append(thread.svgGroup);
     };
+
+    p.moveBoardBlock = function() {
+        var offsetX = this.workspace.getBoard().offset.left
+            - this.offset.left,
+            offsetY = this.workspace.getBoard().offset.top
+            - this.offset.top;
+
+        var dragBlock = this.dragBlock;
+        var boardBlock = this._boardBlock;
+        if (boardBlock || dragBlock) {
+            var x = dragBlock.x;
+            var y = dragBlock.y;
+            boardBlock.moveTo(
+                x-offsetX,
+                y-offsetY,
+                false
+            );
+            boardBlock._board.updateCloseMagnet(boardBlock);
+        }
+    }
+
 
 })(Entry.BlockMenu.prototype);
