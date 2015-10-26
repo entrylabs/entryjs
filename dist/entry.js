@@ -3915,20 +3915,31 @@ Entry.Block.FOLLOW = 3;
   b.onMouseDown = function(a) {
     function b(a) {
       a.originalEvent.touches && (a = a.originalEvent.touches[0]);
-      var c = e.dragInstance;
-      e.moveBy(a.clientX - c.offsetX, a.clientY - c.offsetY, !1);
+      var c = f.dragInstance;
+      f.moveBy(a.clientX - c.offsetX, a.clientY - c.offsetY, !1);
       c.set({offsetX:a.clientX, offsetY:a.clientY});
-      e.thread.align(!1);
-      e._board.updateCloseMagnet(e);
+      f.thread.align(!1);
+      f._board.updateCloseMagnet(f);
     }
     function d(a) {
-      e.terminateDrag();
-      delete e.dragInstance;
+      f.terminateDrag();
+      delete f.dragInstance;
       $(document).unbind(".block");
-      e._board.dragBlock = null;
+      f._board.dragBlock = null;
     }
-    0 === a.button || a instanceof Touch ? ($(document).bind("mousemove.block", b), $(document).bind("mouseup.block", d), $(document).bind("touchmove.block", b), $(document).bind("touchend.block", d), this._board.dragBlock = this, this.dragInstance = new Entry.DragInstance({startX:a.clientX, startY:a.clientY, offsetX:a.clientX, offsetY:a.clientY, mode:!0}), this.thread.dominate()) : 1 === a.button && this.enableHighlight();
-    var e = this;
+    if (0 === a.button || a instanceof Touch) {
+      var e = $(document);
+      e.bind("mousemove.block", b);
+      e.bind("mouseup.block", d);
+      e.bind("touchmove.block", b);
+      e.bind("touchend.block", d);
+      this._board.dragBlock = this;
+      this.dragInstance = new Entry.DragInstance({startX:a.clientX, startY:a.clientY, offsetX:a.clientX, offsetY:a.clientY, mode:!0});
+      this.thread.dominate();
+    } else {
+      1 === a.button && this.enableHighlight();
+    }
+    var f = this;
   };
   b.terminateDrag = function() {
     this._board.terminateDrag(this);

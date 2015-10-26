@@ -232,23 +232,27 @@ Entry.Block.FOLLOW = 3;
     // this function is call by itself
     p.onMouseDown = function(e) {
         if (e.button === 0 || e instanceof Touch) {
-                $(document).bind('mousemove.block', onMouseMove);
-                $(document).bind('mouseup.block', onMouseUp);
-                $(document).bind('touchmove.block', onMouseMove);
-                $(document).bind('touchend.block', onMouseUp);
-                this._board.dragBlock = this;
-                this.dragInstance = new Entry.DragInstance({
-                    startX: e.clientX,
-                    startY: e.clientY,
-                    offsetX: e.clientX,
-                    offsetY: e.clientY,
-                    mode: true
-                });
-                this.thread.dominate();
+            var doc = $(document);
+            doc.bind('mousemove.block', onMouseMove);
+            doc.bind('mouseup.block', onMouseUp);
+            doc.bind('touchmove.block', onMouseMove);
+            doc.bind('touchend.block', onMouseUp);
+            this._board.dragBlock = this;
+            this.dragInstance = new Entry.DragInstance({
+                startX: e.clientX,
+                startY: e.clientY,
+                offsetX: e.clientX,
+                offsetY: e.clientY,
+                mode: true
+            });
+            this.thread.dominate();
         } else if (e.button === 1) {
-                this.enableHighlight();
-        } else if (e.button === 2) {
+            this.enableHighlight();
         }
+        /*
+        else if (e.button === 2) {
+        }
+        */
 
         var block = this;
         function onMouseMove(e) {
