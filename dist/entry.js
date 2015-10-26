@@ -3543,11 +3543,11 @@ Entry.BlockMenu = function(b) {
     this.align();
   };
   b.cloneThread = function() {
-    var a = this.dragBlock, b, d = this._code;
+    var a = this.dragBlock, b, d = this.getCode();
     a && a.thread && (a.observe(this, "moveBoardBlock", ["x", "y"]), b = a.getThread().clone(d), d = d.getThreads(), d.splice(d.indexOf(a.getThread()), 1, b), b.renderStart(this, !1), b = this.workspace.getBoard(), d = b.getCode(), a = a.getThread().clone(d), this._boardBlock = a.getBlocks().at(0), b.dragBlock = this._boardBlock, d.addThread(a, !1), this.moveBoardBlock());
   };
   b.align = function() {
-    for (var a = this._code.getThreads().getAll(), b = 10, d = this._svgDom.width() / 2, e = 0, f = a.length;e < f;e++) {
+    for (var a = this.getCode().getThreads().getAll(), b = 10, d = this._svgDom.width() / 2, e = 0, f = a.length;e < f;e++) {
       var h = a[e];
       h.moveTo(d, b, !0);
       b += h.height + 10;
@@ -3562,9 +3562,12 @@ Entry.BlockMenu = function(b) {
   b.dominate = function(a) {
     this.snap.append(a.svgGroup);
   };
+  b.getCode = function(a) {
+    return this._code;
+  };
   b.moveBoardBlock = function() {
-    var a = this.workspace.getBoard().offset.left - this.offset.left, b = this.workspace.getBoard().offset.top - this.offset.top, d = this.dragBlock, e = this._boardBlock;
-    e && d && (e.moveTo(d.x - a, d.y - b, !1), e._board.updateCloseMagnet(e));
+    var a = this.workspace.getBoard().offset, b = this.offset, d = a.left - b.left, a = a.top - b.top, b = this.dragBlock, e = this._boardBlock;
+    e && b && (e.moveTo(b.x - d, b.y - a, !1), e.getBoard().updateCloseMagnet(e));
   };
 })(Entry.BlockMenu.prototype);
 Entry.Board = function(b) {
@@ -3952,6 +3955,9 @@ Entry.Block.FOLLOW = 3;
   b.getThread = function() {
     return this.thread;
   };
+  b.getBoard = function() {
+    return this._board;
+  };
 })(Entry.Block.prototype);
 Entry.Thread = function(b, a) {
   Entry.Model(this, !1);
@@ -4038,7 +4044,7 @@ Entry.Thread = function(b, a) {
     return a;
   };
   b.clone = function(a) {
-    a == a || this.code;
+    a = a || this.getCode();
     for (var b = [], d = 0;d < this._blocks.length;d++) {
       b.push(this._blocks.at(d).clone());
     }
@@ -4046,6 +4052,9 @@ Entry.Thread = function(b, a) {
   };
   b.getBlocks = function() {
     return this._blocks;
+  };
+  b.getCode = function() {
+    return this.code;
   };
 })(Entry.Thread.prototype);
 Entry.Workspace = function(b, a) {

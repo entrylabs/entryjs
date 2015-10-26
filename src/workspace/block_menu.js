@@ -59,7 +59,7 @@ Entry.BlockMenu = function(dom) {
     p.cloneThread = function() {
         var block = this.dragBlock;
         var clonedThread;
-        var code = this._code;
+        var code = this.getCode();
         if (block && block.thread) {
             block.observe(this, "moveBoardBlock", ['x', 'y']);
             clonedThread = block.getThread().clone(code);
@@ -81,10 +81,10 @@ Entry.BlockMenu = function(dom) {
             boardCode.addThread(boardThread, false);
             this.moveBoardBlock();
         }
-    }
+    };
 
     p.align = function() {
-        var threads = this._code.getThreads().getAll();
+        var threads = this.getCode().getThreads().getAll();
         var vPadding = 10,
             marginFromTop = 10,
             hPadding = this._svgDom.width()/2;
@@ -117,11 +117,15 @@ Entry.BlockMenu = function(dom) {
         this.snap.append(thread.svgGroup);
     };
 
+    p.getCode = function(thread) {
+        return this._code;
+    };
+
     p.moveBoardBlock = function() {
-        var offsetX = this.workspace.getBoard().offset.left
-            - this.offset.left,
-            offsetY = this.workspace.getBoard().offset.top
-            - this.offset.top;
+        var boardOffset = this.workspace.getBoard().offset;
+        var thisOffset = this.offset;
+        var offsetX = boardOffset.left - thisOffset.left,
+            offsetY = boardOffset.top - thisOffset.top;
 
         var dragBlock = this.dragBlock;
         var boardBlock = this._boardBlock;
@@ -133,7 +137,7 @@ Entry.BlockMenu = function(dom) {
                 y-offsetY,
                 false
             );
-            boardBlock._board.updateCloseMagnet(boardBlock);
+            boardBlock.getBoard().updateCloseMagnet(boardBlock);
         }
-    }
+    };
 })(Entry.BlockMenu.prototype);

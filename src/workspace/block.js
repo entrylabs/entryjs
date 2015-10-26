@@ -254,7 +254,7 @@ Entry.Block.FOLLOW = 3;
         function onMouseMove(e) {
             if (e.originalEvent.touches) {
                 e = e.originalEvent.touches[0];
-            };
+            }
             var dragInstance = block.dragInstance;
             block.moveBy(
                 e.clientX - dragInstance.offsetX,
@@ -323,14 +323,18 @@ Entry.Block.FOLLOW = 3;
             x: this.x,
             y: this.y
         };
-    }
+    };
 
     p.clone = function() {
         return new Entry.Block(this);
-    }
+    };
 
     p.getThread = function() {
         return this.thread;
-    }
+    };
+
+    p.getBoard = function() {
+        return this._board;
+    };
 
 })(Entry.Block.prototype);

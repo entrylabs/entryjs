@@ -65,9 +65,9 @@ Entry.Thread = function(thread, code) {
     };
 
     p.raiseEvent = function(event) {
-        var firstBlock = this._blocks.at(0)
+        var firstBlock = this._blocks.at(0);
         if (firstBlock.type === event) {
-            return {block: firstBlock}
+            return {block: firstBlock};
         } else {
             return null;
         }
@@ -79,7 +79,7 @@ Entry.Thread = function(thread, code) {
             return null;
         else
             return this._blocks.at(i + 1);
-    }
+    };
 
     // method for board
 
@@ -91,7 +91,7 @@ Entry.Thread = function(thread, code) {
         this.svgGroup.block = this;
 
         this._bg = this.svgGroup.rect(0, 0, this.width, this.height);
-        this._bg.attr({"fill": "transparent"})
+        this._bg.attr({"fill": "transparent"});
 
         var firstBlockBox = this._blocks.at(0);
         this._blocks.map(function(b) {
@@ -179,10 +179,10 @@ Entry.Thread = function(thread, code) {
             array.push(this._blocks.at(i).toJSON());
         }
         return array;
-    }
+    };
 
     p.clone = function(code) {
-        code == code || this.code;
+        code = code || this.getCode();
         var clonedBlocks = [];
         for (var i = 0; i < this._blocks.length; i++) {
             clonedBlocks.push(this._blocks.at(i).clone());
@@ -192,10 +192,14 @@ Entry.Thread = function(thread, code) {
             clonedBlocks,
             code
         );
-    }
+    };
 
     p.getBlocks = function() {
         return this._blocks;
-    }
+    };
+
+    p.getCode = function() {
+        return this.code;
+    };
 
 })(Entry.Thread.prototype);
