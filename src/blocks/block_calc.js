@@ -441,6 +441,11 @@ Entry.block.calc_operation = function (sprite, script) {
         case "ln":
             returnVal = Math.log(value);
             break;
+        case "asin":
+        case "acos":
+        case "atan":
+            returnVal = Entry.toDegrees(Math[operator](value));
+            break;
         case "unnatural":
             returnVal = value - Math.floor(value);
             if (value < 0)
