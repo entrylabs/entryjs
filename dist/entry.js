@@ -3547,7 +3547,7 @@ Entry.BlockMenu = function(b) {
     if (a && a.thread) {
       a.observe(this, "moveBoardBlock", ["x", "y"]);
       var d = a.getThread().clone(b);
-      d && (b = b.getThreads(), b.splice(b.indexOf(a.getThread()), 1, d), d.renderStart(this), b = this.workspace.getBoard(), d = b.getCode(), a = a.getThread().clone(d), this._boardBlock = a.getBlocks().at(0), b.dragBlock = this._boardBlock, b = this.workspace.getBoard().offset.left - this.offset.left, this._boardBlock.x -= b, d.addThread(a));
+      d && (b = b.getThreads(), b.splice(b.indexOf(a.getThread()), 1, d), d.renderStart(this, !1), d = this.workspace.getBoard(), b = d.getCode(), a = a.getThread().clone(b), this._boardBlock = a.getBlocks().at(0), d.dragBlock = this._boardBlock, b.addThread(a, !1), this.moveBoardBlock());
     }
   };
   b.align = function() {
@@ -3568,9 +3568,7 @@ Entry.BlockMenu = function(b) {
   };
   b.moveBoardBlock = function() {
     var a = this.workspace.getBoard().offset.left - this.offset.left, b = this.workspace.getBoard().offset.top - this.offset.top, d = this.dragBlock, e = this._boardBlock;
-    if (e || d) {
-      e.moveTo(d.x - a, d.y - b, !1), e._board.updateCloseMagnet(e);
-    }
+    e && d && (e.moveTo(d.x - a, d.y - b, !1), e._board.updateCloseMagnet(e));
   };
 })(Entry.BlockMenu.prototype);
 Entry.Board = function(b) {
@@ -3709,8 +3707,8 @@ Entry.Code = function(b) {
   b.getThreads = function() {
     return this.threads;
   };
-  b.addThread = function(a) {
-    this.board && a.renderStart(this.board);
+  b.addThread = function(a, b) {
+    this.board && a.renderStart(this.board, b);
     this.threads.push(a);
     return a;
   };
@@ -3991,18 +3989,19 @@ Entry.Thread = function(b, a) {
     a = this._blocks.indexOf(a);
     return this._blocks.length <= a ? null : this._blocks.at(a + 1);
   };
-  b.renderStart = function(a) {
+  b.renderStart = function(a, b) {
+    b = void 0 === b ? !0 : b;
     this.board = a;
     this.svgGroup = a.snap.group();
     this.svgGroup.transform("t5,5");
     this.svgGroup.block = this;
     this._bg = this.svgGroup.rect(0, 0, this.width, this.height);
     this._bg.attr({fill:"transparent"});
-    var b = this._blocks.at(0);
-    this._blocks.map(function(d) {
-      d.renderStart(a, b);
+    var d = this._blocks.at(0);
+    this._blocks.map(function(b) {
+      b.renderStart(a, d);
     });
-    this.align();
+    this.align(b);
   };
   b.resizeBG = function() {
     this._bg.attr({x:this.x + this.offsetX, y:this.y, width:this.width, height:this.height});

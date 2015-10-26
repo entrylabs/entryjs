@@ -98,9 +98,9 @@ Entry.Code = function(code) {
         return this.threads;
     }
 
-    p.addThread = function(thread) {
+    p.addThread = function(thread, animate) {
         if (this.board)
-            thread.renderStart(this.board);
+            thread.renderStart(this.board, animate);
         this.threads.push(thread);
         return thread;
     };

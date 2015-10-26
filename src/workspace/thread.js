@@ -83,7 +83,8 @@ Entry.Thread = function(thread, code) {
 
     // method for board
 
-    p.renderStart = function(board) {
+    p.renderStart = function(board, animate) {
+        animate = animate === undefined ? true : animate;
         this.board = board;
         this.svgGroup = board.snap.group();
         this.svgGroup.transform("t5,5");
@@ -97,7 +98,7 @@ Entry.Thread = function(thread, code) {
             b.renderStart(board, firstBlockBox);
         });
 
-        this.align();
+        this.align(animate);
     };
 
     p.resizeBG = function() {
