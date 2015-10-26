@@ -3527,7 +3527,6 @@ Entry.BlockMenu = function(b) {
   }
   this._svgDom = Entry.Dom($('<svg id="blockMenu" width="100%" height="100%"version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'), {parent:b});
   this.offset = this._svgDom.offset();
-  this.generateRange = this._svgDom.width();
   this.snap = Snap("#blockMenu");
   this.snap.block = "null";
   this._code = null;
@@ -3548,7 +3547,7 @@ Entry.BlockMenu = function(b) {
     if (a && a.thread) {
       a.observe(this, "moveBoardBlock", ["x", "y"]);
       var d = a.getThread().clone(b);
-      d && (b = b.getThreads(), b.splice(b.indexOf(a.getThread()), 1, d), d.renderStart(this), d = this.workspace.getBoard(), b = d.getCode(), a = a.getThread().clone(b), this._boardBlock = a.getBlocks().at(0), d.dragBlock = this._boardBlock, b.addThread(a), this._boardBlock.moveTo(-100, 0, !1));
+      d && (b = b.getThreads(), b.splice(b.indexOf(a.getThread()), 1, d), d.renderStart(this), d = this.workspace.getBoard(), b = d.getCode(), a = a.getThread().clone(b), this._boardBlock = a.getBlocks().at(0), d.dragBlock = this._boardBlock, this._boardBlock.x = -300, b.addThread(a));
     }
   };
   b.align = function() {

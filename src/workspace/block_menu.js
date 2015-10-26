@@ -58,7 +58,6 @@ Entry.BlockMenu = function(dom) {
 
     p.cloneThread = function() {
         var block = this.dragBlock;
-        var newThread = [];
         var cloned;
         var code = this._code;
         if (block && block.thread) {
@@ -74,19 +73,17 @@ Entry.BlockMenu = function(dom) {
                 );
                 clonedThread.renderStart(this);
 
-                //clone thread at Workspace Code
+                //clone thread at Workspace
                 var board = this.workspace.getBoard();
                 var boardCode = board.getCode();
                 var boardThread = block.getThread().clone(boardCode);
                 this._boardBlock = boardThread.getBlocks().at(0);
                 board.dragBlock = this._boardBlock;
+                this._boardBlock.x = -300;
                 boardCode.addThread(boardThread);
-                this._boardBlock.moveTo(-100,0,false);
             }
         }
-
-
-    };
+    }
 
     p.align = function() {
         var threads = this._code.getThreads().getAll();
