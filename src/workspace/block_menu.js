@@ -100,16 +100,20 @@ Entry.BlockMenu = function(dom) {
     };
 
     p.terminateDrag = function(block) {
-        this._boardBlock._board.terminateDrag(this._boardBlock);
+        var boardBlock = this._boardBlock;
+        this._boardBlock._board.terminateDrag(boardBlock);
 
         //remove dragging thread
         var originBlock = this.dragBlock;
         if (originBlock && originBlock.getThread()) {
             //destory boardBlock below the range
             if (originBlock.x < this._svgDom.width())
-                this._boardBlock.getThread().destroy();
-            originBlock.getThread().destroy();
+                destroyThread(boardBlock.getThread());
+            destroyThread(originBlock.getThread());
             this._boardBlock = null;
+        }
+        function destroyThread(thread) {
+            thread.destroy();
         }
     };
 

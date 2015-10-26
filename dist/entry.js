@@ -3556,8 +3556,10 @@ Entry.BlockMenu = function(b) {
   b.updateCloseMagnet = function(a) {
   };
   b.terminateDrag = function(a) {
-    this._boardBlock._board.terminateDrag(this._boardBlock);
-    (a = this.dragBlock) && a.getThread() && (a.x < this._svgDom.width() && this._boardBlock.getThread().destroy(), a.getThread().destroy(), this._boardBlock = null);
+    a = this._boardBlock;
+    this._boardBlock._board.terminateDrag(a);
+    var b = this.dragBlock;
+    b && b.getThread() && (b.x < this._svgDom.width() && a.getThread().destroy(), b.getThread().destroy(), this._boardBlock = null);
   };
   b.dominate = function(a) {
     this.snap.append(a.svgGroup);
