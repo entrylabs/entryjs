@@ -38,6 +38,25 @@ Entry.Engine = function() {
             Entry.engine.hideMouseView();
         });
     }
+
+    Entry.addEventListener('run', function() {
+        $(window).bind('keydown', arrowHandler);
+    });
+
+    Entry.addEventListener('stop', function() {
+        $(window).unbind('keydown', arrowHandler);
+    });
+
+    function arrowHandler(e){
+        var arrows = [37,38,39,40,32];
+        var code = (e.keyCode || e.which);
+        var input = Entry.stage.inputField;
+        if (code == 32 && input &&
+                input.hasFocus())
+            return;
+        if(arrows.indexOf(code) > -1)
+            e.preventDefault();
+    }
 };
 
 /**
