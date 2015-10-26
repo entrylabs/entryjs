@@ -505,8 +505,7 @@ Entry.block.bounce_wall = function(sprite, script) {
     else
         var angle = sprite.getDirection();
     if ((angle < 90 && angle >= 0) || (angle < 360 && angle >= 270)) {
-        if (ndgmr.checkPixelCollision(Entry.stage.wall.up,sprite.object,0,true) ||
-                ndgmr.checkPixelCollision(Entry.stage.wall.down,sprite.object,0,true)) {
+        if (ndgmr.checkPixelCollision(Entry.stage.wall.up,sprite.object,0,true)) {
             if (method == 'free')
                 sprite.setRotation(- sprite.getRotation() - sprite.getDirection() * 2 + 180);
             else
@@ -514,8 +513,7 @@ Entry.block.bounce_wall = function(sprite, script) {
         }
     }
     else if (angle < 270 && angle >= 90) {
-        if (ndgmr.checkPixelCollision(Entry.stage.wall.down,sprite.object,0,true) ||
-                ndgmr.checkPixelCollision(Entry.stage.wall.up,sprite.object,0,true)) {
+        if (ndgmr.checkPixelCollision(Entry.stage.wall.down,sprite.object,0,true)) {
             if (method == 'free')
                 sprite.setRotation(- sprite.getRotation() - sprite.getDirection() * 2 + 180);
             else
@@ -523,8 +521,7 @@ Entry.block.bounce_wall = function(sprite, script) {
         }
     }
     if (angle < 360 && angle >= 180) {
-        if (ndgmr.checkPixelCollision(Entry.stage.wall.left,sprite.object,0,true) ||
-                ndgmr.checkPixelCollision(Entry.stage.wall.right,sprite.object,0,true)) {
+        if (ndgmr.checkPixelCollision(Entry.stage.wall.left,sprite.object,0,true)) {
             if (method == 'free')
                 sprite.setRotation(- sprite.getRotation() - sprite.getDirection() * 2);
             else
@@ -532,8 +529,7 @@ Entry.block.bounce_wall = function(sprite, script) {
         }
     }
     else if (angle < 180 && angle >= 0) {
-        if (ndgmr.checkPixelCollision(Entry.stage.wall.right,sprite.object,0,true) ||
-               ndgmr.checkPixelCollision(Entry.stage.wall.left,sprite.object,0,true)) {
+        if (ndgmr.checkPixelCollision(Entry.stage.wall.right,sprite.object,0,true)) {
             if (method == 'free')
                 sprite.setRotation(- sprite.getRotation() - sprite.getDirection() * 2);
             else
