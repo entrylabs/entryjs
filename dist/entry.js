@@ -8808,7 +8808,7 @@ Entry.Scene.prototype.generateView = function(a, b) {
     }, stop:function(a, b) {
       var c = b.item.data("start_pos"), h = b.item.index();
       Entry.scene.moveScene(c, h);
-    }, axis:"x", grid:[1, 0]});
+    }, axis:"x", tolerance:"pointer"});
     this.view_.appendChild(c);
     this.listView_ = c;
     Entry.sceneEditable && (c = Entry.createElement("span"), c.addClass("entrySceneElementWorkspace"), c.addClass("entrySceneAddButtonWorkspace"), c.bindOnClick(function(a) {

@@ -42,8 +42,9 @@ Entry.Scene.prototype.generateView = function(sceneView, option) {
                         Entry.scene.moveScene(start, end);
                     },
                     axis: 'x',
-                    grid: [1,0]
-                });
+                    tolerance: "pointer"
+                
+                }); 
 
                 // $(listView).draggable({
                 //     connectToSortable: listView,
