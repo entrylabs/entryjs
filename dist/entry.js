@@ -892,6 +892,13 @@ Entry.block.calc_operation = function(a, b) {
     case "ln":
       e = Math.log(c);
       break;
+    case "asin":
+    ;
+    case "acos":
+    ;
+    case "atan":
+      e = Entry.toDegrees(Math[d](c));
+      break;
     case "unnatural":
       e = c - Math.floor(c);
       0 > c && (e = 1 - e);
@@ -9860,7 +9867,10 @@ Entry.getListRealIndex = function(a, b) {
   return a;
 };
 Entry.toRadian = function(a) {
-  return Math.PI / 180 * a;
+  return a * Math.PI / 180;
+};
+Entry.toDegrees = function(a) {
+  return 180 * a / Math.PI;
 };
 Entry.getPicturesJSON = function(a) {
   for (var b = [], c = 0, d = a.length;c < d;c++) {
