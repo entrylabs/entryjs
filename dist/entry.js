@@ -3527,6 +3527,7 @@ Entry.BlockMenu = function(b) {
   }
   this._svgDom = Entry.Dom($('<svg id="blockMenu" width="100%" height="100%"version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'), {parent:b});
   this.offset = this._svgDom.offset();
+  this.generateRange = this._svgDom.width();
   this.snap = Snap("#blockMenu");
   this.snap.block = "null";
   this._code = null;
@@ -3547,7 +3548,7 @@ Entry.BlockMenu = function(b) {
     if (a && a.thread) {
       a.observe(this, "moveBoardBlock", ["x", "y"]);
       var d = a.getThread().clone(b);
-      d && (b = b.getThreads(), b.splice(b.indexOf(a.getThread()), 1, d), d.renderStart(this), d = this.workspace.getBoard().getCode(), a = a.getThread().clone(d), this._boardBlock = a.getBlocks().at(0), this.workspace.getBoard().dragBlock = this._boardBlock, d.addThread(a), this._boardBlock.moveTo(-100, 0, !1));
+      d && (b = b.getThreads(), b.splice(b.indexOf(a.getThread()), 1, d), d.renderStart(this), d = this.workspace.getBoard(), b = d.getCode(), a = a.getThread().clone(b), this._boardBlock = a.getBlocks().at(0), d.dragBlock = this._boardBlock, b.addThread(a), this._boardBlock.moveTo(-100, 0, !1));
     }
   };
   b.align = function() {
@@ -3561,7 +3562,7 @@ Entry.BlockMenu = function(b) {
   };
   b.terminateDrag = function(a) {
     this._boardBlock._board.terminateDrag(this._boardBlock);
-    (a = this.dragBlock) && a.getThread() && (a.getThread().destroy(), this._boardBlock = null);
+    (a = this.dragBlock) && a.getThread() && (a.x < this._svgDom.width() && this._boardBlock.getThread().destroy(), a.getThread().destroy(), this._boardBlock = null);
   };
   b.dominate = function(a) {
     this.snap.append(a.svgGroup);

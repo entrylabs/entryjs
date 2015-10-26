@@ -68,20 +68,20 @@ Entry.BlockMenu = function(dom) {
                 //clone thread at blockMenu
                 var threads = code.getThreads();
                 threads.splice(
-                    threads.indexOf(block.getThread()), 1,
+                    threads.indexOf(block.getThread()),
+                    1,
                     clonedThread
                 );
                 clonedThread.renderStart(this);
 
                 //clone thread at Workspace Code
-                var boardCode = this.workspace.getBoard().getCode();
-                var boardThread =
-                    block.getThread().clone(boardCode);
+                var board = this.workspace.getBoard();
+                var boardCode = board.getCode();
+                var boardThread = block.getThread().clone(boardCode);
                 this._boardBlock = boardThread.getBlocks().at(0);
-                this.workspace.getBoard().dragBlock = this._boardBlock;
+                board.dragBlock = this._boardBlock;
                 boardCode.addThread(boardThread);
                 this._boardBlock.moveTo(-100,0,false);
-
             }
         }
 
@@ -110,6 +110,9 @@ Entry.BlockMenu = function(dom) {
         //remove dragging thread
         var originBlock = this.dragBlock;
         if (originBlock && originBlock.getThread()) {
+            //destory boardBlock below the range
+            if (originBlock.x < this._svgDom.width())
+                this._boardBlock.getThread().destroy();
             originBlock.getThread().destroy();
             this._boardBlock = null;
         }
