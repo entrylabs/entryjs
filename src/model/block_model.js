@@ -10,11 +10,10 @@ Entry.BlockModel = function() {
 };
 
 Entry.BlockModel.prototype.schema = {
-    id: 0,
-    type: Entry.STATIC.BLOCK_MODEL,
+    id: null,
     x: 0,
     y: 0,
-    type: 0,
+    type: null,
     params: {},
     statements: {},
     prev: null,

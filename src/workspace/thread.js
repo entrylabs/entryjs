@@ -12,6 +12,12 @@ goog.require("Entry.Collection");
  *
  */
 Entry.Thread = function(thread, code) {
+    this._data = new Entry.Collection();
+    this._code = code;
+
+    this.load(thread);
+
+    /*
     Entry.Model(this, false);
 
     this.code = code;
@@ -25,9 +31,39 @@ Entry.Thread = function(thread, code) {
     this.svgGroup = null;
 
     this.observe(this, "resizeBG", ['width', 'height']);
+    */
 };
 
 (function(p) {
+    p.load = function(thread) {
+        if (!(thread instanceof Array))
+            return console.error("thread must be array");
+
+        for (var i = 0; i < thread.length; i++) {
+            this._data.push(new Entry.Block(thread[i], this));
+        }
+
+        this._setRelation();
+    };
+
+    p._setRelation = function() {
+        var blocks = this._data.getAll();
+        if (blocks.length === 0)
+            return;
+
+        var prevBlock = blocks[0];
+        for (var i = 1; i < blocks.length; i++) {
+            var block = blocks[i];
+            block.setPrev(prevBlock);
+            prevBlock.setNext(block);
+            prevBlock = block;
+        }
+    };
+
+    p.registerEvent = function(block, eventType) {
+        this._code.registerEvent(block, eventType);
+    };
+    /*
     p.schema = {
         type: Entry.STATIC.THREAD_MODEL,
         x: 0,
@@ -201,5 +237,6 @@ Entry.Thread = function(thread, code) {
     p.getCode = function() {
         return this.code;
     };
+    */
 
 })(Entry.Thread.prototype);

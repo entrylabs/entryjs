@@ -14,6 +14,12 @@ goog.require("Entry.skeleton");
  *
  */
 Entry.Block = function(block, thread) {
+    this._data = new Entry.BlockModel();
+    this._thread = thread;
+    this._schema = null;
+
+    this.load(block);
+    /*
     Entry.Model(this, false);
 
     this.thread = thread;
@@ -46,6 +52,7 @@ Entry.Block = function(block, thread) {
     this.contentSvgGroup = null;
     this._path = null;
     this._darkenPath = null;
+    */
 };
 
 Entry.Block.MAGNET_RANGE = 10;
@@ -57,12 +64,46 @@ Entry.Block.MOVE = 2;
 Entry.Block.FOLLOW = 3;
 
 (function(p) {
+    p.load = function(block) {
+        if (!block.id)
+            block.id = Entry.Utils.generateId();
+
+        this._data.set(block);
+        this.getSchema();
+    };
+
+    p.getSchema = function() {
+        this._schema = Entry.block[this._data.type];
+        if (this._schema.event)
+            this._thread.registerEvent(this, this._schema.event);
+    };
+
+    p.setPrev = function(block) {
+        this._data.prev = block;
+    };
+
+    p.setNext = function(block) {
+        this._data.next = block;
+    };
+
+    p.observe = function() {
+        return this._data.observe.apply(this._data, arguments);
+    };
+
+    p.execute = function(executor) {
+         return this._schema.func.call(executor);
+    };
+
+    p.next = function() {
+        return this._data.next;
+    };
+
+    /*
     p.schema = {
         type: Entry.STATIC.BLOCK_MODEL,
         state: Entry.Block.HIDDEN,
         thread: null,
         contents: null,
-        /* render related property */
         board: null,
         x: 0,
         y: 0,
@@ -126,10 +167,6 @@ Entry.Block.FOLLOW = 3;
         this.addControl();
     };
 
-    /*
-     *
-     * @param {} animate
-     */
     // not observer style
     p.moveTo = function(x, y, animate) {
         animate = animate === undefined ? true : animate;
@@ -251,10 +288,8 @@ Entry.Block.FOLLOW = 3;
         } else if (e.button === 1) {
             this.enableHighlight();
         }
-        /*
         else if (e.button === 2) {
         }
-        */
 
         var block = this;
         function onMouseMove(e) {
@@ -342,5 +377,6 @@ Entry.Block.FOLLOW = 3;
     p.getBoard = function() {
         return this._board;
     };
+    */
 
 })(Entry.Block.prototype);

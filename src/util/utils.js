@@ -2,6 +2,10 @@
 
 goog.provide("Entry.Utils");
 
+Entry.Utils.generateId = function() {
+    return ("0000"+(Math.random()*Math.pow(36,4)<<0).toString(36)).substr(-4);
+};
+
 Entry.Utils.intersectArray = function (x, y){
     var ret = [];
     for (var i = 0; i < x.length; i++) {

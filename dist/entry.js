@@ -2623,9 +2623,9 @@ Entry.block.message_cast_wait = function(b, a) {
   }
   var e = [];
   Entry.container.mapEntityIncludeCloneOnScene(function(a, b) {
-    for (var c = b[0], d = b[1], m = a.parent.script.childNodes, k = 0;k < m.length;k++) {
-      var p = m[k], n = Entry.Xml.getField("VALUE", p);
-      Entry.Xml.isTypeOf(c, p) && n == d && (n = new Entry.Script(a), n.init(p), e.push(n));
+    for (var c = b[0], d = b[1], p = a.parent.script.childNodes, m = 0;m < p.length;m++) {
+      var n = p[m], l = Entry.Xml.getField("VALUE", n);
+      Entry.Xml.isTypeOf(c, n) && l == d && (l = new Entry.Script(a), l.init(n), e.push(l));
     }
   }, ["when_message_cast", c]);
   a.runningScript = e;
@@ -3053,9 +3053,9 @@ Entry.Collection = function(b) {
   b.find = function(a) {
     for (var b = [], e, f = 0, g = this.length;f < g;f++) {
       e = !0;
-      var h = this[f], l;
-      for (l in a) {
-        if (a[l] != h[l]) {
+      var h = this[f], k;
+      for (k in a) {
+        if (a[k] != h[k]) {
           e = !1;
           break;
         }
@@ -3080,11 +3080,11 @@ Entry.Collection = function(b) {
   b.splice = function(b, d) {
     var e = a.slice.call(arguments, 2), f = this._hashMap;
     d = void 0 === d ? this.length - b : d;
-    for (var g = a.splice.call(this, b, d), h = 0, l = g.length;h < l;h++) {
+    for (var g = a.splice.call(this, b, d), h = 0, k = g.length;h < k;h++) {
       delete f[g[h].id];
     }
     h = 0;
-    for (l = e.length;h < l;h++) {
+    for (k = e.length;h < k;h++) {
       f = e[h], a.splice.call(this, b++, 0, f), this._hashMap[f.id] = f;
     }
     return g;
@@ -3185,6 +3185,9 @@ Entry.loadProject = function(b) {
 };
 Entry.STATIC = {OBJECT:0, ENTITY:1, SPRITE:2, SOUND:3, VARIABLE:4, FUNCTION:5, SCENE:6, MESSAGE:7, BLOCK_MODEL:8, BLOCK_RENDER_MODEL:9, BOX_MODEL:10, THREAD_MODEL:11, DRAG_INSTANCE:12, BLOCK_STATIC:0, BLOCK_MOVE:1, BLOCK_FOLLOW:2, RETURN:0, CONTINUE:1};
 Entry.Utils = {};
+Entry.Utils.generateId = function() {
+  return ("0000" + (Math.random() * Math.pow(36, 4) << 0).toString(36)).substr(-4);
+};
 Entry.Utils.intersectArray = function(b, a) {
   for (var c = [], d = 0;d < b.length;d++) {
     for (var e = 0;e < a.length;e++) {
@@ -3232,7 +3235,7 @@ Entry.Model = function(b, a) {
           }, set:function(b) {
             var c = a.data[d];
             a.data[d] = b;
-            a.notify(d, c);
+            c !== b && a.notify(d, c);
           }});
         })(d);
       }
@@ -3284,7 +3287,7 @@ Entry.Model = function(b, a) {
 Entry.BlockModel = function() {
   Entry.Model(this);
 };
-Entry.BlockModel.prototype.schema = {id:0, type:Entry.STATIC.BLOCK_MODEL, x:0, y:0, type:0, params:{}, statements:{}, prev:null, next:null, render:null};
+Entry.BlockModel.prototype.schema = {id:null, x:0, y:0, type:null, params:{}, statements:{}, prev:null, next:null, render:null};
 Entry.BlockRenderModel = function() {
   Entry.Model(this);
 };
@@ -3337,7 +3340,7 @@ Entry.Variable.prototype.schema = {id:0, type:Entry.STATIC.VARIABLE, variableTyp
 Entry.block.run = {skeleton:"basic", color:"#3BBD70", contents:["this is", "basic block"], func:function() {
   return Entry.STATIC.RETURN;
 }};
-Entry.block.jr_start = {skeleton:"pebble_event", color:"#3BBD70", contents:[{type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_play_image.png", highlightColor:"#3BBD70", size:22}], func:function() {
+Entry.block.jr_start = {skeleton:"pebble_event", event:"start", color:"#3BBD70", contents:[{type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_play_image.png", highlightColor:"#3BBD70", size:22}], func:function() {
   var b = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT), a;
   for (a in b) {
     this._unit = b[a];
@@ -3402,30 +3405,10 @@ Entry.block.jr_west = {skeleton:"pebble_basic", color:"#A751E3", contents:["   \
   return Entry.STATIC.RETURN;
 }};
 Entry.BlockMenu = function(b) {
-  Entry.Model(this, !1);
-  b = "string" === typeof b ? $("#" + b) : $(b);
-  if ("DIV" !== b.prop("tagName")) {
-    return console.error("Dom is not div element");
-  }
-  if ("function" !== typeof window.Snap) {
-    return console.error("Snap library is required");
-  }
-  this._svgDom = Entry.Dom($('<svg id="blockMenu" width="100%" height="100%"version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'), {parent:b});
-  this.offset = this._svgDom.offset();
-  this.snap = Snap("#blockMenu");
-  this.snap.block = "null";
-  this._code = null;
-  this.observe(this, "cloneThread", ["dragBlock"]);
 };
 (function(b) {
   b.schema = {dragBlock:null, closeBlock:null};
   b.setBlocks = function(a) {
-    if (!(a instanceof Entry.Code)) {
-      return console.error("You must inject code instance");
-    }
-    this._code = a;
-    a.bindBoard(this);
-    this.align();
   };
   b.cloneThread = function() {
     var a = this.dragBlock, b, d = this.getCode();
@@ -3535,68 +3518,44 @@ Entry.Board = function(b) {
   };
 })(Entry.Board.prototype);
 Entry.Code = function(b) {
-  if (!(b instanceof Array)) {
-    return console.error("code must be array");
-  }
-  this.threads = new Entry.Collection;
-  this.board = null;
+  this._data = new Entry.Collection;
+  this._eventMap = {};
   this.executors = [];
-  this.set(b);
+  this.load(b);
 };
 (function(b) {
-  b.set = function(a) {
-    var b = this;
-    a = a.map(function(a) {
-      return new Entry.Thread(a, b);
-    });
-    this.threads.set(a);
+  b.load = function(a) {
+    if (!(a instanceof Array)) {
+      return console.error("code must be array");
+    }
+    for (var b = 0;b < a.length;b++) {
+      this._data.push(new Entry.Thread(a[b], this));
+    }
   };
-  b.createThread = function(a) {
-    a = new Entry.Thread(a, this);
-    this.board && a.renderStart(this.board);
-    this.threads.push(a);
-    return a;
+  b.set = function(a) {
   };
   b.bindBoard = function(a) {
-    this.board = a;
-    this.threads.map(function(b) {
-      b.renderStart(a);
-    });
   };
-  b.remove = function(a) {
-    this.threads.remove(a);
+  b.registerEvent = function(a, b) {
+    this._eventMap[b] || (this._eventMap[b] = []);
+    this._eventMap[b].push(a);
   };
   b.raiseEvent = function(a) {
-    for (var b = 0;b < this.threads.length;b++) {
-      var d = this.threads[b].raiseEvent(a);
-      console.log(d);
-      null !== d && this.executors.push(d);
+    a = this._eventMap[a];
+    for (var b = 0;b < a.length;b++) {
+      this.executors.push({block:a[b]});
     }
   };
   b.tick = function() {
     for (var a = this.executors, b = 0;b < a.length;b++) {
-      for (var d = a[b];d.block && d.block.func.call(d) == Entry.STATIC.RETURN;) {
-        console.log(d.block), d.block = d.block.thread.next(d.block);
+      for (var d = a[b];d.block && d.block.execute(d) == Entry.STATIC.RETURN;) {
+        d.block = d.block.next(d.block);
       }
-      null === d && (a.splice(b, 1), b--);
+      null === d.block && (a.splice(b, 1), b--);
     }
   };
   b.clearExecutors = function() {
     this.executors = [];
-  };
-  b.toJSON = function() {
-    for (var a = [], b = 0;b < this.threads.length;b++) {
-      a.push(this.threads[b].toJSON());
-    }
-    return a;
-  };
-  b.getThreads = function() {
-    return this.threads;
-  };
-  b.addThread = function(a, b) {
-    this.board && a.renderStart(this.board, b);
-    this.threads.push(a);
-    return a;
   };
 })(Entry.Code.prototype);
 Entry.FieldIndicator = function(b, a) {
@@ -3698,21 +3657,10 @@ Entry.skeleton.pebble_basic = {path:function(b) {
   return {x:-46, y:25};
 }};
 Entry.Block = function(b, a) {
-  Entry.Model(this, !1);
-  this.thread = a;
-  this._board = null;
-  this.type = b.type;
-  this._schema = Entry.block[b.type];
-  this._skeleton = Entry.skeleton[this._schema.skeleton];
-  this.func = this._schema.func;
-  this.observe(this, "setThread", ["thread"]);
-  this.set({x:b.x || 0, y:b.y || 0});
-  this.observe(this, "measureSize", ["contentWidth", "contentHeight"]);
-  this.observe(this, "render", ["contentWidth", "contentHeight"]);
-  this.observe(this, "applyMagnet", ["magneting"]);
-  this._contents = [];
-  this.magnets = {};
-  this._darkenPath = this._path = this.contentSvgGroup = this.svgGroup = null;
+  this._data = new Entry.BlockModel;
+  this._thread = a;
+  this._schema = null;
+  this.load(b);
 };
 Entry.Block.MAGNET_RANGE = 10;
 Entry.Block.MAGNET_OFFSET = .4;
@@ -3721,226 +3669,59 @@ Entry.Block.SHOWN = 1;
 Entry.Block.MOVE = 2;
 Entry.Block.FOLLOW = 3;
 (function(b) {
-  b.schema = {type:Entry.STATIC.BLOCK_MODEL, state:Entry.Block.HIDDEN, thread:null, contents:null, board:null, x:0, y:0, offsetX:0, offsetY:0, width:0, height:0, marginBottom:0, contentWidth:0, contentHeight:0, magneting:!1, highlight:!1};
-  b.initView = function() {
+  b.load = function(a) {
+    a.id || (a.id = Entry.Utils.generateId());
+    this._data.set(a);
+    this.getSchema();
   };
-  b.setThread = function() {
-    this.thread.svgGroup && this.thread.svgGroup.append(this.svgGroup);
+  b.getSchema = function() {
+    this._schema = Entry.block[this._data.type];
+    this._schema.event && this._thread.registerEvent(this, this._schema.event);
   };
-  b.renderStart = function(a, b, d) {
-    d = void 0 === d ? !0 : d;
-    this.svgGroup ? this.thread.svgGroup.append(this.svgGroup) : (this._board = a, this.svgGroup = this.thread.svgGroup.group(), this.svgGroup.attr({class:"block"}), this.svgGroup.block = this, b && this.svgGroup.attr({transform:"t" + b.x + " " + b.y}), a = this._skeleton.path(this), this._darkenPath = this.svgGroup.path(a), this._darkenPath.attr({transform:"t0 1.1", fill:Entry.Utils.colorDarken(this._schema.color)}), this._path = this.svgGroup.path(a), this._path.attr({fill:this._schema.color}), 
-    this.magnets = this._skeleton.magnets(), this.fieldRenderStart(d), this.addControl());
+  b.setPrev = function(a) {
+    this._data.prev = a;
   };
-  b.moveTo = function(a, b, d) {
-    var e = "t" + a + " " + b;
-    void 0 === d || d ? this.svgGroup.animate({transform:e}, 300, mina.easeinout) : this.svgGroup.attr({transform:e});
-    this.set({x:a, y:b});
+  b.setNext = function(a) {
+    this._data.next = a;
   };
-  b.moveBy = function(a, b, d) {
-    return this.moveTo(this.x + a, this.y + b, d);
+  b.observe = function() {
+    return this._data.observe.apply(this._data, arguments);
   };
-  b.fieldRenderStart = function(a) {
-    this.contentSvgGroup = this.svgGroup.group();
-    var b = this._skeleton.contentPos();
-    this.contentSvgGroup.transform("t" + b.x + " " + b.y);
-    for (var b = this._schema.contents, d = 0;d < b.length;d++) {
-      var e = b[d];
-      "string" === typeof e ? this._contents.push(new Entry.FieldText(e, this)) : this._contents.push(new Entry["Field" + e.type](e, this));
-    }
-    this.alignContent(a);
+  b.execute = function(a) {
+    return this._schema.func.call(a);
   };
-  b.alignContent = function(a) {
-    for (var b = 0, d = 0;d < this._contents.length;d++) {
-      var e = this._contents[d];
-      e.align(b, 0, a);
-      d !== this._contents.length - 1 && (b += 5);
-      b += e.box.width;
-    }
-    this.contentWidth = b;
-  };
-  b.measureSize = function() {
-    this.set(this._skeleton.box(this));
-  };
-  b.render = function() {
-    var a = this._skeleton.path(this);
-    this._path.animate({d:a}, 200);
-    this._darkenPath.animate({d:a}, 200);
-  };
-  b.enableHighlight = function() {
-    var a = this._path.getTotalLength(), b = this._path;
-    this._path.attr({stroke:"#F59900", strokeWidth:2, "stroke-linecap":"round", "stroke-dasharray":a + " " + a, "stroke-dashoffset":a});
-    setInterval(function() {
-      b.attr({"stroke-dashoffset":a}).animate({"stroke-dashoffset":0}, 300);
-    }, 1400, mina.easeout);
-    setTimeout(function() {
-      setInterval(function() {
-        b.animate({"stroke-dashoffset":-a}, 300);
-      }, 1400, mina.easeout);
-    }, 500);
-  };
-  b.addControl = function() {
-    var a = this;
-    this.svgGroup.mousedown(function() {
-      a.onMouseDown.apply(a, arguments);
-    });
-  };
-  b.onMouseDown = function(a) {
-    function b(a) {
-      a.originalEvent.touches && (a = a.originalEvent.touches[0]);
-      var c = f.dragInstance;
-      f.moveBy(a.clientX - c.offsetX, a.clientY - c.offsetY, !1);
-      c.set({offsetX:a.clientX, offsetY:a.clientY});
-      f.thread.align(!1);
-      f._board.updateCloseMagnet(f);
-    }
-    function d(a) {
-      f.terminateDrag();
-      delete f.dragInstance;
-      $(document).unbind(".block");
-      f._board.dragBlock = null;
-    }
-    if (0 === a.button || a instanceof Touch) {
-      var e = $(document);
-      e.bind("mousemove.block", b);
-      e.bind("mouseup.block", d);
-      e.bind("touchmove.block", b);
-      e.bind("touchend.block", d);
-      this._board.dragBlock = this;
-      this.dragInstance = new Entry.DragInstance({startX:a.clientX, startY:a.clientY, offsetX:a.clientX, offsetY:a.clientY, mode:!0});
-      this.thread.dominate();
-    } else {
-      1 === a.button && this.enableHighlight();
-    }
-    var f = this;
-  };
-  b.terminateDrag = function() {
-    this._board.terminateDrag(this);
-  };
-  b.checkMagnet = function(a) {
-    Entry.Utils.isPointInMatrix(this, {x:a.x, y:a.y}, Entry.Block.MAGNET_RANGE) ? this.magneting = !0 : this.magneting = !1;
-  };
-  b.applyMagnet = function() {
-    if (this.magneting) {
-      this.magnets = this._skeleton.magnets();
-      var a = this._board.dragBlock, b = a.thread, a = b._blocks.slice(b._blocks.indexOf(a)), d = Entry.Block.MAGNET_RANGE;
-      a.map(function(a) {
-        d += a.height;
-      });
-      this.marginBottom = d;
-    } else {
-      this.measureSize();
-    }
-  };
-  b.toJSON = function() {
-    return {type:this.type, x:this.x, y:this.y};
-  };
-  b.clone = function() {
-    return new Entry.Block(this);
-  };
-  b.getThread = function() {
-    return this.thread;
-  };
-  b.getBoard = function() {
-    return this._board;
+  b.next = function() {
+    return this._data.next;
   };
 })(Entry.Block.prototype);
 Entry.Thread = function(b, a) {
-  Entry.Model(this, !1);
-  this.code = a;
-  this._blocks = new Entry.Collection;
-  this.loadModel(b);
-  this.svgGroup = this.board = null;
-  this.observe(this, "resizeBG", ["width", "height"]);
+  this._data = new Entry.Collection;
+  this._code = a;
+  this.load(b);
 };
 (function(b) {
-  b.schema = {type:Entry.STATIC.THREAD_MODEL, x:0, y:0, offsetX:0, width:0, minWidth:0, height:0};
-  b.loadModel = function(a) {
-    var b = this;
-    a = a.map(function(a) {
-      return a instanceof Entry.Block ? (a.thread = b, a) : new Entry.Block(a, b);
-    });
-    this._blocks.set(a);
+  b.load = function(a) {
+    if (!(a instanceof Array)) {
+      return console.error("thread must be array");
+    }
+    for (var b = 0;b < a.length;b++) {
+      this._data.push(new Entry.Block(a[b], this));
+    }
+    this._setRelation();
   };
-  b.indexOf = function(a) {
-    return this._blocks.indexOf(a);
-  };
-  b.cut = function(a) {
-    a = this._blocks.indexOf(a);
-    return this._blocks.splice(a);
-  };
-  b.raiseEvent = function(a) {
-    var b = this._blocks[0];
-    return b.type === a ? {block:b} : null;
-  };
-  b.next = function(a) {
-    a = this._blocks.indexOf(a);
-    return this._blocks.length <= a ? null : this._blocks[a + 1];
-  };
-  b.renderStart = function(a, b) {
-    b = void 0 === b ? !0 : b;
-    this.board = a;
-    this.svgGroup = a.snap.group();
-    this.svgGroup.transform("t5,5");
-    this.svgGroup.block = this;
-    this._bg = this.svgGroup.rect(0, 0, this.width, this.height);
-    this._bg.attr({fill:"transparent"});
-    var d = this._blocks[0];
-    this._blocks.map(function(e) {
-      e.renderStart(a, d, b);
-    });
-    this.align(b);
-  };
-  b.resizeBG = function() {
-    this._bg.attr({x:this.x + this.offsetX, y:this.y, width:this.width, height:this.height});
-  };
-  b.moveTo = function(a, b, d) {
-    d = void 0 === d ? !0 : d;
-    this._blocks[0].set({x:a, y:b});
-    this.align(d);
-  };
-  b.align = function(a) {
-    a = void 0 === a ? !0 : a;
-    for (var b = this._blocks[0], d = b.x, e = b.y, f = 0, g = b.width, h = 0, l = 0, m = 0;m < this._blocks.length;m++) {
-      var k = this._blocks[m];
-      if (k.dragInstance && a) {
-        break;
+  b._setRelation = function() {
+    var a = this._data.getAll();
+    if (0 !== a.length) {
+      for (var b = a[0], d = 1;d < a.length;d++) {
+        var e = a[d];
+        e.setPrev(b);
+        b.setNext(e);
+        b = e;
       }
-      k.dragInstance && (l = e - b.y, d = k.x, e = k.y);
-      k.moveTo(d, e, a);
-      k.magnets.next && (e += k.height + 1, e += k.marginBottom);
-      h = Math.max(h, k.width);
-      g = Math.min(g, k.width);
-      f = Math.min(f, k.offsetX);
     }
-    l = l || e - b.y;
-    this.set({x:b.x, y:b.y, offsetX:f, minWidth:g, width:h, height:l});
   };
-  b.dominate = function() {
-    this.board.dominate(this);
-  };
-  b.destroy = function() {
-    this.svgGroup && this.svgGroup.remove();
-    this.code.remove(this);
-  };
-  b.toJSON = function() {
-    for (var a = [], b = 0;b < this._blocks.length;b++) {
-      a.push(this._blocks[b].toJSON());
-    }
-    return a;
-  };
-  b.clone = function(a) {
-    a = a || this.getCode();
-    for (var b = [], d = 0;d < this._blocks.length;d++) {
-      b.push(this._blocks[d].clone());
-    }
-    return new Entry.Thread(b, a);
-  };
-  b.getBlocks = function() {
-    return this._blocks;
-  };
-  b.getCode = function() {
-    return this.code;
+  b.registerEvent = function(a, b) {
+    this._code.registerEvent(a, b);
   };
 })(Entry.Thread.prototype);
 Entry.Workspace = function(b, a) {

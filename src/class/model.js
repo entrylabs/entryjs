@@ -36,7 +36,8 @@ Entry.Model = function(obj, isSeal) {
                     set: function(val) {
                         var oldValue = obj.data[localKey];
                         obj.data[localKey] = val;
-                        obj.notify(localKey, oldValue);
+                        if (oldValue !== val)
+                            obj.notify(localKey, oldValue);
                     }
                 });
             })(key);

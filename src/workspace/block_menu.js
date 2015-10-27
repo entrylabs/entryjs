@@ -11,6 +11,7 @@ goog.require("Entry.Utils");
  * @param {object} dom which to inject playground
  */
 Entry.BlockMenu = function(dom) {
+    /*
     Entry.Model(this, false);
 
     if (typeof dom === "string") {
@@ -38,6 +39,7 @@ Entry.BlockMenu = function(dom) {
     this._code = null;
 
     this.observe(this, "cloneThread", ['dragBlock']);
+    */
 };
 
 (function(p) {
@@ -47,6 +49,7 @@ Entry.BlockMenu = function(dom) {
     };
 
     p.setBlocks = function(code) {
+        /*
         if (!(code instanceof Entry.Code))
             return console.error("You must inject code instance");
         this._code = code;
@@ -54,6 +57,7 @@ Entry.BlockMenu = function(dom) {
         code.bindBoard(this);
 
         this.align();
+        */
     };
 
     p.cloneThread = function() {

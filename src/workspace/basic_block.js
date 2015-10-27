@@ -16,6 +16,7 @@ Entry.block.run = {
 
 Entry.block.jr_start = {
     skeleton: "pebble_event",
+    event: "start",
     color: "#3BBD70",
     contents: [
         {
@@ -83,7 +84,7 @@ Entry.block.jr_north = {
         }
     ],
     func: function() {
-          
+
         if (!this.isContinue) {
 
             this.isContinue = true;
@@ -92,17 +93,17 @@ Entry.block.jr_north = {
             var callBack = function() {
                  self.isAction = false;
             };
-            
+
 
             // turn direction
             switch (this.unitComp.direction) {
-                case Ntry.STATIC.EAST: 
+                case Ntry.STATIC.EAST:
                     Ntry.dispatchEvent("unitAction", Ntry.STATIC.TURN_LEFT, callBack);
                     break;
-                case Ntry.STATIC.SOUTH: 
+                case Ntry.STATIC.SOUTH:
                     Ntry.dispatchEvent("unitAction", Ntry.STATIC.HALF_ROTATION, callBack);
                     break;
-                case Ntry.STATIC.WEST: 
+                case Ntry.STATIC.WEST:
                     Ntry.dispatchEvent("unitAction", Ntry.STATIC.TURN_RIGHT, callBack);
                     break;
                 default:
