@@ -3126,6 +3126,21 @@ Entry.Collection = function(b) {
   b.destroy = function() {
   };
 })(Entry.Collection.prototype, Array.prototype);
+Entry.Event = function(b) {
+  this._sender = b;
+  this._listeners = [];
+};
+(function(b) {
+  b.attach = function(a) {
+    this._listeners.push(a);
+  };
+  b.notify = function(a) {
+    var b;
+    for (b = 0;b < this._listeners.length;b += 1) {
+      this._listeners[b](this._sender, a);
+    }
+  };
+})(Entry.Event.prototype);
 Entry.db = {data:{}, typeMap:{}};
 (function(b) {
   b.add = function(a) {
