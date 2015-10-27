@@ -13,9 +13,10 @@ Entry.STATIC = {
     SCENE: 6,
     MESSAGE: 7,
     BLOCK_MODEL: 8,
-    BOX_MODEL: 9,
-    THREAD_MODEL: 10,
-    DRAG_INSTANCE: 11,
+    BLOCK_RENDER_MODEL: 9,
+    BOX_MODEL: 10,
+    THREAD_MODEL: 11,
+    DRAG_INSTANCE: 12,
 
     /* block state */
     BLOCK_STATIC: 0,

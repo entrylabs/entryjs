@@ -3183,7 +3183,7 @@ Entry.init = function() {
 };
 Entry.loadProject = function(b) {
 };
-Entry.STATIC = {OBJECT:0, ENTITY:1, SPRITE:2, SOUND:3, VARIABLE:4, FUNCTION:5, SCENE:6, MESSAGE:7, BLOCK_MODEL:8, BOX_MODEL:9, THREAD_MODEL:10, DRAG_INSTANCE:11, BLOCK_STATIC:0, BLOCK_MOVE:1, BLOCK_FOLLOW:2, RETURN:0, CONTINUE:1};
+Entry.STATIC = {OBJECT:0, ENTITY:1, SPRITE:2, SOUND:3, VARIABLE:4, FUNCTION:5, SCENE:6, MESSAGE:7, BLOCK_MODEL:8, BLOCK_RENDER_MODEL:9, BOX_MODEL:10, THREAD_MODEL:11, DRAG_INSTANCE:12, BLOCK_STATIC:0, BLOCK_MOVE:1, BLOCK_FOLLOW:2, RETURN:0, CONTINUE:1};
 Entry.Utils = {};
 Entry.Utils.intersectArray = function(b, a) {
   for (var c = [], d = 0;d < b.length;d++) {
@@ -3281,6 +3281,14 @@ Entry.Model = function(b, a) {
     }
   };
 })(Entry.Model);
+Entry.BlockModel = function() {
+  Entry.Model(this);
+};
+Entry.BlockModel.prototype.schema = {id:0, type:Entry.STATIC.BLOCK_MODEL, x:0, y:0, type:0, params:{}, statements:{}, prev:null, next:null, render:null};
+Entry.BlockRenderModel = function() {
+  Entry.Model(this);
+};
+Entry.BlockRenderModel.prototype.schema = {id:0, type:Entry.STATIC.BLOCK_RENDER_MODEL, x:0, y:0, width:0, height:0, magneting:!1};
 Entry.BoxModel = function() {
   Entry.Model(this);
 };
