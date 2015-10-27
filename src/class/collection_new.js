@@ -1,12 +1,12 @@
 'use strict';
 
-goog.provide("Entry.CollectionNew");
+goog.provide("Entry.Collection");
 
 /*
  * Entry Collection object constructor.
  */
 
-Entry.CollectionNew = function(data) {
+Entry.Collection = function(data) {
     this.length = 0;
 
     /*
@@ -174,4 +174,4 @@ Entry.CollectionNew = function(data) {
     /* end function */
     p.destroy = function() {
     };
-})(Entry.CollectionNew.prototype, Array.prototype);
+})(Entry.Collection.prototype, Array.prototype);

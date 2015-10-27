@@ -60,7 +60,7 @@ Entry.Code = function(code) {
 
     p.raiseEvent = function(event) {
         for (var i = 0; i < this.threads.length; i++) {
-            var executor = this.threads.at(i).raiseEvent(event);
+            var executor = this.threads[i].raiseEvent(event);
             console.log(executor);
             if (executor !== null) this.executors.push(executor);
         }
@@ -89,7 +89,7 @@ Entry.Code = function(code) {
     p.toJSON = function() {
         var array = [];
         for (var i = 0; i < this.threads.length; i++) {
-            array.push(this.threads.at(i).toJSON());
+            array.push(this.threads[i].toJSON());
         }
         return array;
     };

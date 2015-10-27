@@ -76,7 +76,7 @@ Entry.BlockMenu = function(dom) {
             var board = this.workspace.getBoard();
             var boardCode = board.getCode();
             var boardThread = block.getThread().clone(boardCode);
-            this._boardBlock = boardThread.getBlocks().at(0);
+            this._boardBlock = boardThread.getBlocks()[0];
             board.dragBlock = this._boardBlock;
             boardCode.addThread(boardThread, false);
             this.moveBoardBlock();

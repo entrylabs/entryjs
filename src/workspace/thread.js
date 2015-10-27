@@ -65,7 +65,7 @@ Entry.Thread = function(thread, code) {
     };
 
     p.raiseEvent = function(event) {
-        var firstBlock = this._blocks.at(0);
+        var firstBlock = this._blocks[0];
         if (firstBlock.type === event) {
             return {block: firstBlock};
         } else {
@@ -78,7 +78,7 @@ Entry.Thread = function(thread, code) {
         if (this._blocks.length <= i)
             return null;
         else
-            return this._blocks.at(i + 1);
+            return this._blocks[i + 1];
     };
 
     // method for board
@@ -93,7 +93,7 @@ Entry.Thread = function(thread, code) {
         this._bg = this.svgGroup.rect(0, 0, this.width, this.height);
         this._bg.attr({"fill": "transparent"});
 
-        var firstBlockBox = this._blocks.at(0);
+        var firstBlockBox = this._blocks[0];
         this._blocks.map(function(b) {
             b.renderStart(board, firstBlockBox, animate);
         });
@@ -112,7 +112,7 @@ Entry.Thread = function(thread, code) {
 
     p.moveTo = function(x, y, animate) {
         animate = animate === undefined ? true : animate;
-        var firstBlock = this._blocks.at(0);
+        var firstBlock = this._blocks[0];
         firstBlock.set({
             x: x, y: y
         });
@@ -121,7 +121,7 @@ Entry.Thread = function(thread, code) {
 
     p.align = function(animate) {
         animate = animate === undefined ? true : animate;
-        var firstBlockBox = this._blocks.at(0),
+        var firstBlockBox = this._blocks[0],
             cursor = {
                 x: firstBlockBox.x,
                 y: firstBlockBox.y,
@@ -131,7 +131,7 @@ Entry.Thread = function(thread, code) {
                 height: 0
             };
         for (var i = 0; i < this._blocks.length; i++) {
-            var b = this._blocks.at(i);
+            var b = this._blocks[i];
             if (b.dragInstance && animate) {
                 break;
             } // this code sucks
@@ -176,7 +176,7 @@ Entry.Thread = function(thread, code) {
     p.toJSON = function() {
         var array = [];
         for (var i = 0; i < this._blocks.length; i++) {
-            array.push(this._blocks.at(i).toJSON());
+            array.push(this._blocks[i].toJSON());
         }
         return array;
     };
@@ -185,7 +185,7 @@ Entry.Thread = function(thread, code) {
         code = code || this.getCode();
         var clonedBlocks = [];
         for (var i = 0; i < this._blocks.length; i++) {
-            clonedBlocks.push(this._blocks.at(i).clone());
+            clonedBlocks.push(this._blocks[i].clone());
         }
 
         return new Entry.Thread(

@@ -75,9 +75,9 @@ Entry.Board = function(dom) {
         } else if (targetBlock instanceof Entry.Thread) {
             var thread = targetBlock,
                 blocks = thread._blocks,
-                cursorY = blocks.at(0).y;
+                cursorY = blocks[0].y;
             for (var j = 0; j < blocks.length; j++) {
-                var block = blocks.at(j);
+                var block = blocks[j];
                 if (this.dragBlock === block)
                     continue;
                 if (this.dragBlock.y > cursorY && this.dragBlock.y < cursorY + block.height) {
