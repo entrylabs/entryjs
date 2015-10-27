@@ -50,6 +50,7 @@ Entry.Collection = function(data) {
             this._hashMap[datum.id] = datum;
         }
     };
+
     p.insert = function(datum, index) {
         ap.splice.call(this, index, 0, datum);
         this._hashMap[datum.id] = datum;
@@ -58,6 +59,8 @@ Entry.Collection = function(data) {
     p.has = function(id) {return !!this._hashMap[id];};
 
     p.get = function(id) {return this._hashMap[id];};
+
+    p.at = function(index) {return this[index];};
 
     p.getAll = function() {
         var len = this.length;
@@ -82,17 +85,14 @@ Entry.Collection = function(data) {
                     break;
                 }
             }
-            if (flag)
-                ret.push(datum);
+            if (flag) ret.push(datum);
         }
         return ret;
     };
 
-    p.pop = function(){ap.pop.call(this);};
+    p.pop = function() {return ap.pop.call(this);};
 
-    p.shift = function() {
-        return ap.shift.call(this);
-    };
+    p.shift = function() { return ap.shift.call(this);};
 
     p.slice = function(index, amount) {
         return ap.slice.call(this,index, amount);

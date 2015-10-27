@@ -3038,6 +3038,9 @@ Entry.Collection = function(b) {
   b.get = function(a) {
     return this._hashMap[a];
   };
+  b.at = function(a) {
+    return this[a];
+  };
   b.getAll = function() {
     for (var a = this.length, b = [], e = 0;e < a;e++) {
       b.push(this[e]);
@@ -3062,7 +3065,7 @@ Entry.Collection = function(b) {
     return b;
   };
   b.pop = function() {
-    a.pop.call(this);
+    return a.pop.call(this);
   };
   b.shift = function() {
     return a.shift.call(this);
