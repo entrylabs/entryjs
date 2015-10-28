@@ -3019,6 +3019,7 @@ Entry.Collection = function(b) {
     }
   };
   b.push = function(b) {
+    this._hashMap[b.id] = b;
     a.push.call(this, b);
   };
   b.unshift = function() {
@@ -3065,13 +3066,21 @@ Entry.Collection = function(b) {
     return b;
   };
   b.pop = function() {
-    return a.pop.call(this);
+    var b = a.pop.call(this);
+    delete this._hashMap[b.id];
+    return b;
   };
   b.shift = function() {
-    return a.shift.call(this);
+    var b = a.shift.call(this);
+    delete this._hashMap[b.id];
+    return b;
   };
   b.slice = function(b, d) {
-    return a.slice.call(this, b, d);
+    var e = a.slice.call(this, b, d), f;
+    for (f in e) {
+      delete this._hashMap[e[f].id];
+    }
+    return e;
   };
   b.remove = function(a) {
     var b = this.indexOf(a);
@@ -3093,10 +3102,7 @@ Entry.Collection = function(b) {
     for (;this.length;) {
       a.pop.call(this);
     }
-    var b = this._hashMap, d;
-    for (d in b) {
-      delete b[d];
-    }
+    this._hashMap = {};
   };
   b.map = function(a, b) {
     for (var e = 0, f = this.length;e < f;e++) {
@@ -3492,6 +3498,7 @@ Entry.BlockView = function(b, a) {
   };
   b._bindPrev = function() {
     this.prevObserver && this.prevObserver.destroy();
+    this.prevAnimatingObserver && this.prevAnimatingObserver.destroy();
     this.block.prev && (this.prevObserver = this.block.prev.view.observe(this, "_align", ["x", "y"]), this.prevAnimatingObserver = this.block.prev.view.observe(this, "_inheritAnimate", ["animating"]), this._align());
   };
   b._render = function() {
@@ -3545,7 +3552,7 @@ Entry.BlockView = function(b, a) {
     var f = this;
   };
   b.terminateDrag = function() {
-    this.block.prev ? 30 < Math.sqrt(Math.pow(this.x - this.block.x, 2) + Math.pow(this.y - this.block.y, 2)) ? this.block.set({prev:null}) : this._align(!0) : this.block.doMove();
+    this.block.prev ? 30 < Math.sqrt(Math.pow(this.x - this.block.x, 2) + Math.pow(this.y - this.block.y, 2)) ? this.block.doSeparate() : this._align(!0) : this.block.doMove();
   };
   b._inheritAnimate = function() {
     this.set({animating:this.block.prev.view.animating});
@@ -3672,6 +3679,12 @@ Entry.Code = function(b) {
   };
   b.clearExecutors = function() {
     this.executors = [];
+  };
+  b.createThread = function(a) {
+    if (!(a instanceof Array)) {
+      return console.error("blocks must be array");
+    }
+    this._data.push(new Entry.Thread(a, this));
   };
 })(Entry.Code.prototype);
 Entry.FieldIndicator = function(b, a) {
@@ -3815,6 +3828,15 @@ Entry.Block.FOLLOW = 3;
     console.log("doMove", this.id, this.view.x - this.x, this.view.y - this.y);
     this._updatePos();
   };
+  b.doSeparate = function() {
+    console.log("separate", this.id, this.x, this.y);
+    this._thread.separate(this);
+    this._updatePos();
+  };
+  b.doInsert = function(a) {
+  };
+  b.doDestroy = function() {
+  };
 })(Entry.Block.prototype);
 Entry.Thread = function(b, a) {
   this._data = new Entry.Collection;
@@ -3828,7 +3850,8 @@ Entry.Thread = function(b, a) {
       return console.error("thread must be array");
     }
     for (var b = 0;b < a.length;b++) {
-      this._data.push(new Entry.Block(a[b], this));
+      var d = a[b];
+      d instanceof Entry.Block ? this._data.push(d) : this._data.push(new Entry.Block(d, this));
     }
     this._setRelation();
   };
@@ -3851,6 +3874,9 @@ Entry.Thread = function(b, a) {
     this._data.map(function(b) {
       b.bindBoard(a);
     });
+  };
+  b.separate = function(a) {
+    this._data.has(a.id) && a.prev && (a.prev.setNext(null), a.setPrev(null), a = this._data.splice(this._data.indexOf(a)), this._code.createThread(a));
   };
 })(Entry.Thread.prototype);
 Entry.Workspace = function(b, a) {

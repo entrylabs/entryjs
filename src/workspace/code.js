@@ -75,6 +75,13 @@ Entry.Code = function(code) {
         this.executors = [];
     };
 
+    p.createThread = function(blocks) {
+        if (!(blocks instanceof Array))
+            return console.error("blocks must be array");
+
+        this._data.push(new Entry.Thread(blocks, this));
+    };
+
     /*
     p.createThread = function(blocks) {
         var thread = new Entry.Thread(blocks, this);

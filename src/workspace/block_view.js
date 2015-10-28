@@ -107,6 +107,7 @@ Entry.BlockView = function(block, board) {
 
     p._bindPrev = function() {
         if (this.prevObserver) this.prevObserver.destroy();
+        if (this.prevAnimatingObserver) this.prevAnimatingObserver.destroy();
         if (this.block.prev) {
             this.prevObserver = this.block.prev.view.observe(
                 this, "_align", ["x", "y"]
@@ -127,7 +128,7 @@ Entry.BlockView = function(block, board) {
     p._align = function(animate) {
         if (this.block.prev === null)
             return;
-        var prevBlockView = this.block.prev.view
+        var prevBlockView = this.block.prev.view;
         if (animate === true)
             this.set({animating: true});
         this.set({
@@ -197,8 +198,7 @@ Entry.BlockView = function(block, board) {
             //this.thread.dominate();
         } else if (e.button === 1) {
             //this.enableHighlight();
-        }
-        else if (e.button === 2) {
+        } else if (e.button === 2) {
         }
 
         var block = this;
@@ -239,7 +239,7 @@ Entry.BlockView = function(block, board) {
             Math.pow(this.y - this.block.y, 2)
         );
         if (distance > 30) {
-            this.block.set({prev: null});
+            this.block.doSeparate();
         } else {
             this._align(true);
         }

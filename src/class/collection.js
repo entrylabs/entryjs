@@ -40,7 +40,10 @@ Entry.Collection = function(data) {
         }
     };
 
-    p.push = function(elem){ap.push.call(this, elem);};
+    p.push = function(elem){
+        this._hashMap[elem.id] = elem;
+        ap.push.call(this, elem);
+    };
 
     p.unshift = function() {
         var args = Array.prototype.slice.call(arguments,0);
@@ -89,12 +92,24 @@ Entry.Collection = function(data) {
         return ret;
     };
 
-    p.pop = function() {return ap.pop.call(this);};
+    p.pop = function() {
+        var datum = ap.pop.call(this);
+        delete this._hashMap[datum.id];
+        return datum;
+    };
 
-    p.shift = function() { return ap.shift.call(this);};
+    p.shift = function() {
+        var datum = ap.shift.call(this);
+        delete this._hashMap[datum.id];
+        return datum;
+    };
 
     p.slice = function(index, amount) {
-        return ap.slice.call(this,index, amount);
+        var data = ap.slice.call(this,index, amount);
+        for (var i in data) {
+            delete this._hashMap[data[i].id];
+        }
+        return data;
     };
 
     p.remove = function(datum) {
@@ -127,8 +142,7 @@ Entry.Collection = function(data) {
 
     p.clear = function() {
         while(this.length) ap.pop.call(this);
-        var hashMap = this._hashMap;
-        for (var key in hashMap) delete hashMap[key];
+        this._hashMap = {};
     };
 
     p.map = function(fn, param) {

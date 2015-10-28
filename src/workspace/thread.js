@@ -42,7 +42,12 @@ Entry.Thread = function(thread, code) {
             return console.error("thread must be array");
 
         for (var i = 0; i < thread.length; i++) {
-            this._data.push(new Entry.Block(thread[i], this));
+            var block = thread[i];
+            if (block instanceof Entry.Block) {
+                this._data.push(block);
+            } else {
+                this._data.push(new Entry.Block(block, this));
+            }
         }
 
         this._setRelation();
@@ -72,6 +77,15 @@ Entry.Thread = function(thread, code) {
         this._data.map(function(b) {
             b.bindBoard(board);
         });
+    };
+
+    p.separate = function(block) {
+        if (!this._data.has(block.id) || !block.prev)
+            return;
+        block.prev.setNext(null);
+        block.setPrev(null);
+        var blocks = this._data.splice(this._data.indexOf(block));
+        this._code.createThread(blocks);
     };
 
     /*

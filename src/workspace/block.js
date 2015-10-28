@@ -136,6 +136,23 @@ Entry.Block.FOLLOW = 3;
         this._updatePos();
     };
 
+    p.doSeparate = function() {
+        console.log(
+            "separate",
+            this.id,
+            this.x,
+            this.y
+        );
+        this._thread.separate(this);
+        this._updatePos();
+    };
+
+    p.doInsert = function(targetBlock) {
+    };
+
+    p.doDestroy = function() {
+    };
+
     /*
     p.schema = {
         type: Entry.STATIC.BLOCK_MODEL,
