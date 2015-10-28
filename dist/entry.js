@@ -3445,10 +3445,15 @@ Entry.BlockMenu = function(b) {
 })(Entry.BlockMenu.prototype);
 Entry.BlockView = function(b, a) {
   Entry.Model(this, !1);
+  this.block = b;
   this.set(b);
   this.svgGroup = a.svgBlockGroup.group();
   this._schema = Entry.block[b.type];
   this._skeleton = Entry.skeleton[this._schema.skeleton];
+  this._contents = [];
+  this.prevObserver = null;
+  this.block.observe(this, "_bindPrev", ["prev"]);
+  this._bindPrev();
   this._startRender(b);
 };
 (function(b) {
@@ -3462,6 +3467,39 @@ Entry.BlockView = function(b, a) {
     this._darkenPath.attr({transform:"t0 1.1", fill:Entry.Utils.colorDarken(this._schema.color)});
     this._path = this.svgGroup.path(a);
     this._path.attr({fill:this._schema.color});
+    this._startContentRender();
+    this._render();
+  };
+  b._startContentRender = function() {
+    this.contentSvgGroup = this.svgGroup.group();
+    var a = this._skeleton.contentPos();
+    this.contentSvgGroup.transform("t" + a.x + " " + a.y);
+    for (var a = this._schema.contents, b = 0;b < a.length;b++) {
+      var d = a[b];
+      "string" === typeof d ? this._contents.push(new Entry.FieldText(d, this)) : this._contents.push(new Entry["Field" + d.type](d, this));
+    }
+    this._alignContent();
+  };
+  b._alignContent = function(a) {
+    for (var b = 0, d = 0;d < this._contents.length;d++) {
+      var e = this._contents[d];
+      e.align(b, 0, a);
+      d !== this._contents.length - 1 && (b += 5);
+      b += e.box.width;
+    }
+    this.contentWidth = b;
+  };
+  b._bindPrev = function() {
+    this.prevObserver && this.prevObserver.destroy();
+    this.block.prev && (this.prevObserver = this.block.prev.view.observe(this, "_align", ["x", "y"]), this._align());
+  };
+  b._render = function() {
+    this.set(this._skeleton.box());
+  };
+  b._align = function() {
+    var a = this.block.prev.view;
+    this.set({x:a.x, y:a.y + a.height + 1});
+    this.svgGroup.attr({transform:"t" + a.x + " " + a.y});
   };
 })(Entry.BlockView.prototype);
 Entry.Board = function(b) {
@@ -3589,9 +3627,7 @@ Entry.Code = function(b) {
 })(Entry.Code.prototype);
 Entry.FieldIndicator = function(b, a) {
   this._block = a;
-  var c = new Entry.BoxModel;
-  c.observe(a, "alignContent", ["width"]);
-  this.box = c;
+  this.box = new Entry.BoxModel;
   this._size = b.size;
   this._imgUrl = b.img;
   this._highlightColor = b.highlightColor ? b.highlightColor : "#F59900";
@@ -3630,9 +3666,7 @@ Entry.FieldIndicator = function(b, a) {
 })(Entry.FieldIndicator.prototype);
 Entry.FieldText = function(b, a) {
   this._block = a;
-  var c = new Entry.BoxModel;
-  c.observe(a, "alignContent", ["width"]);
-  this.box = c;
+  this.box = new Entry.BoxModel;
   this._text = b;
   this.textElement = null;
   this.renderStart();
@@ -3713,9 +3747,6 @@ Entry.Block.FOLLOW = 3;
   };
   b.setNext = function(a) {
     this.set({next:a});
-  };
-  b.observe = function() {
-    return this.observe.apply(this, arguments);
   };
   b.execute = function(a) {
     return this._schema.func.call(a);

@@ -12,7 +12,6 @@ Entry.FieldText = function(text, block) {
     this._block = block;
 
     var box = new Entry.BoxModel();
-    box.observe(block, "alignContent", ['width']);
     this.box = box;
 
     this._text = text;

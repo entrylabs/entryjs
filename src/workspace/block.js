@@ -98,10 +98,6 @@ Entry.Block.FOLLOW = 3;
         this.set({next: block});
     };
 
-    p.observe = function() {
-        return this.observe.apply(this, arguments);
-    };
-
     p.execute = function(executor) {
          return this._schema.func.call(executor);
     };
