@@ -14,7 +14,7 @@ Entry.Event = function(sender) {
 
     p.deAttach = function (listener) {
         var ls = this._listeners;
-        var index = ls.indexOf(listener)
+        var index = ls.indexOf(listener);
         this._listeners.splice(index, 1);
     };
 
