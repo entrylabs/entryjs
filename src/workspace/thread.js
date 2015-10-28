@@ -44,6 +44,7 @@ Entry.Thread = function(thread, code) {
         for (var i = 0; i < thread.length; i++) {
             var block = thread[i];
             if (block instanceof Entry.Block) {
+                block.setThread(this);
                 this._data.push(block);
             } else {
                 this._data.push(new Entry.Block(block, this));
@@ -59,6 +60,8 @@ Entry.Thread = function(thread, code) {
             return;
 
         var prevBlock = blocks[0];
+        prevBlock.setPrev(null);
+        blocks[blocks.length - 1].setNext(null);
         for (var i = 1; i < blocks.length; i++) {
             var block = blocks[i];
             block.setPrev(prevBlock);
@@ -84,8 +87,28 @@ Entry.Thread = function(thread, code) {
             return;
         block.prev.setNext(null);
         block.setPrev(null);
-        var blocks = this._data.splice(this._data.indexOf(block));
+        blocks = this._data.splice(this._data.indexOf(block));
         this._code.createThread(blocks);
+    };
+
+    p.cut = function(block) {
+        var index = this._data.indexOf(block);
+        var splicedData = this._data.splice(index);
+        return splicedData;
+    };
+
+    p.insertByBlock = function(block, newBlocks) {
+        var index = this._data.indexOf(block);
+        block.setNext(newBlocks[0]);
+        newBlocks[0].setPrev(block);
+        for (var i in newBlocks) {
+            newBlocks[i].setThread(this);
+        }
+        this._data.splice.apply(
+            this._data,
+            [index + 1, 0].concat(newBlocks)
+        );
+        this._setRelation();
     };
 
     /*

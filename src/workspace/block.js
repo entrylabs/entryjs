@@ -19,40 +19,6 @@ Entry.Block = function(block, thread) {
     this._schema = null;
 
     this.load(block);
-    /*
-    Entry.Model(this, false);
-
-    this.thread = thread;
-    this._board = null;
-
-    // block information
-    this.type = block.type;
-    this._schema = Entry.block[block.type];
-    this._skeleton = Entry.skeleton[this._schema.skeleton];
-    this.func = this._schema.func;
-
-    this.observe(this, "setThread", ['thread']);
-
-    // Block model
-    this.set({
-        x: block.x || 0,
-        y: block.y || 0
-    });
-    this.observe(this, "measureSize", ['contentWidth', 'contentHeight']);
-    this.observe(this, "render", ['contentWidth', 'contentHeight']);
-
-    this.observe(this, "applyMagnet", ['magneting']);
-
-    // content objects
-    this._contents = [];
-    this.magnets = {};
-
-    // SVG Element
-    this.svgGroup = null;
-    this.contentSvgGroup = null;
-    this._path = null;
-    this._darkenPath = null;
-    */
 };
 
 Entry.Block.MAGNET_RANGE = 10;
@@ -90,6 +56,10 @@ Entry.Block.FOLLOW = 3;
             this._thread.registerEvent(this, this._schema.event);
     };
 
+    p.setThread = function(thread) {
+        this._thread = thread;
+    };
+
     p.setPrev = function(block) {
         this.set({prev: block});
     };
@@ -104,6 +74,10 @@ Entry.Block.FOLLOW = 3;
 
     p.next = function() {
         return this.next;
+    };
+
+    p.insertAfter = function(blocks) {
+        this._thread.insertByBlock(this, blocks);
     };
 
     p._updatePos = function() {
@@ -148,31 +122,22 @@ Entry.Block.FOLLOW = 3;
     };
 
     p.doInsert = function(targetBlock) {
+        console.log(
+            "insert",
+            this.id,
+            targetBlock.id,
+            this.x,
+            this.y
+        );
+        var blocks = this._thread.cut(this);
+        targetBlock.insertAfter(blocks);
+        this._updatePos();
     };
 
     p.doDestroy = function() {
     };
 
     /*
-    p.schema = {
-        type: Entry.STATIC.BLOCK_MODEL,
-        state: Entry.Block.HIDDEN,
-        thread: null,
-        contents: null,
-        board: null,
-        x: 0,
-        y: 0,
-        offsetX: 0,
-        offsetY: 0,
-        width: 0,
-        height: 0,
-        marginBottom: 0,
-        contentWidth: 0,
-        contentHeight: 0,
-        magneting: false,
-        highlight: false
-    };
-
     p.initView = function() {
     };
 
@@ -286,57 +251,6 @@ Entry.Block.FOLLOW = 3;
         this.svgGroup.mousedown(function() {
             that.onMouseDown.apply(that, arguments);
         });
-    };
-
-    // this function is call by itself
-    p.onMouseDown = function(e) {
-        if (e.button === 0 || e instanceof Touch) {
-            var doc = $(document);
-            doc.bind('mousemove.block', onMouseMove);
-            doc.bind('mouseup.block', onMouseUp);
-            doc.bind('touchmove.block', onMouseMove);
-            doc.bind('touchend.block', onMouseUp);
-            this._board.dragBlock = this;
-            this.dragInstance = new Entry.DragInstance({
-                startX: e.clientX,
-                startY: e.clientY,
-                offsetX: e.clientX,
-                offsetY: e.clientY,
-                mode: true
-            });
-            this.thread.dominate();
-        } else if (e.button === 1) {
-            this.enableHighlight();
-        }
-        else if (e.button === 2) {
-        }
-
-        var block = this;
-        function onMouseMove(e) {
-            if (e.originalEvent.touches) {
-                e = e.originalEvent.touches[0];
-            }
-            var dragInstance = block.dragInstance;
-            block.moveBy(
-                e.clientX - dragInstance.offsetX,
-                e.clientY - dragInstance.offsetY,
-                false
-            );
-            dragInstance.set({
-                 offsetX: e.clientX,
-                 offsetY: e.clientY
-            });
-            block.thread.align(false);
-            block._board.updateCloseMagnet(block);
-        }
-
-        function onMouseUp(e) {
-            block.terminateDrag();
-            delete block.dragInstance;
-
-            $(document).unbind('.block');
-            block._board.dragBlock = null;
-        }
     };
 
     p.terminateDrag = function() {

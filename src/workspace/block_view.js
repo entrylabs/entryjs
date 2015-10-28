@@ -13,6 +13,7 @@ Entry.BlockView = function(block, board) {
     this.block = block;
     this.set(block);
     this.svgGroup = board.svgBlockGroup.group();
+    this.svgGroup.block = this.block;
 
     this._schema = Entry.block[block.type];
     this._skeleton = Entry.skeleton[this._schema.skeleton];
@@ -45,8 +46,6 @@ Entry.BlockView = function(block, board) {
         this.svgGroup.attr({
             class: "block"
         });
-
-        this.svgGroup.block = this;
 
         this.svgGroup.attr({
             transform: "t" + this.x + " " + this.y
@@ -230,7 +229,8 @@ Entry.BlockView = function(block, board) {
     };
 
     p.terminateDrag = function() {
-        if (!this.block.prev) {
+        var closeBlock = this._getCloseBlock();
+        if (!this.block.prev && !closeBlock) {
             this.block.doMove();
             return;
         } // this means block is top block {}
@@ -239,12 +239,29 @@ Entry.BlockView = function(block, board) {
             Math.pow(this.y - this.block.y, 2)
         );
         if (distance > 30) {
-            this.block.doSeparate();
+            if (closeBlock)
+                this.block.doInsert(closeBlock);
+            else
+                this.block.doSeparate();
         } else {
             this._align(true);
         }
 
         return;
+    };
+
+    p._getCloseBlock = function() {
+        var targetElement = Snap.getElementByPoint(
+            this.x + 620, this.y + 120
+        ), targetBlock = targetElement.block;
+        while (!targetBlock &&
+               targetElement.type !== "svg" &&
+               targetElement.type !== "body") {
+            targetElement = targetElement.parent();
+            targetBlock = targetElement.block;
+        }
+
+        return targetBlock;
     };
 
     p._inheritAnimate = function() {

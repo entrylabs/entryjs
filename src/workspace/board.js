@@ -34,7 +34,6 @@ Entry.Board = function(dom) {
     this.offset = this.svgDom.offset();
 
     this.snap = Snap('#play');
-    this.snap.block = "null";
 
     this._blockViews = [];
 

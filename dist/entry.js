@@ -3458,6 +3458,7 @@ Entry.BlockView = function(b, a) {
   this.block = b;
   this.set(b);
   this.svgGroup = a.svgBlockGroup.group();
+  this.svgGroup.block = this.block;
   this._schema = Entry.block[b.type];
   this._skeleton = Entry.skeleton[this._schema.skeleton];
   this._contents = [];
@@ -3470,7 +3471,6 @@ Entry.BlockView = function(b, a) {
   b.schema = {id:0, type:Entry.STATIC.BLOCK_RENDER_MODEL, x:0, y:0, width:0, height:0, magneting:!1, animating:!1};
   b._startRender = function(a) {
     this.svgGroup.attr({class:"block"});
-    this.svgGroup.block = this;
     this.svgGroup.attr({transform:"t" + this.x + " " + this.y});
     a = this._skeleton.path(this);
     this._darkenPath = this.svgGroup.path(a);
@@ -3556,7 +3556,14 @@ Entry.BlockView = function(b, a) {
     var f = this;
   };
   b.terminateDrag = function() {
-    this.block.prev ? 30 < Math.sqrt(Math.pow(this.x - this.block.x, 2) + Math.pow(this.y - this.block.y, 2)) ? this.block.doSeparate() : this._align(!0) : this.block.doMove();
+    var a = this._getCloseBlock();
+    this.block.prev || a ? 30 < Math.sqrt(Math.pow(this.x - this.block.x, 2) + Math.pow(this.y - this.block.y, 2)) ? a ? this.block.doInsert(a) : this.block.doSeparate() : this._align(!0) : this.block.doMove();
+  };
+  b._getCloseBlock = function() {
+    for (var a = Snap.getElementByPoint(this.x + 620, this.y + 120), b = a.block;!b && "svg" !== a.type && "body" !== a.type;) {
+      a = a.parent(), b = a.block;
+    }
+    return b;
   };
   b._inheritAnimate = function() {
     this.set({animating:this.block.prev.view.animating});
@@ -3573,7 +3580,6 @@ Entry.Board = function(b) {
   this.svgDom = Entry.Dom($('<svg id="play" width="100%" height="100%"version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'), {parent:b});
   this.offset = this.svgDom.offset();
   this.snap = Snap("#play");
-  this.snap.block = "null";
   this._blockViews = [];
   this.svgBlockGroup = this.snap.group();
   Entry.Model(this, !1);
@@ -3808,6 +3814,9 @@ Entry.Block.FOLLOW = 3;
     this._schema = Entry.block[this.type];
     this._schema.event && this._thread.registerEvent(this, this._schema.event);
   };
+  b.setThread = function(a) {
+    this._thread = a;
+  };
   b.setPrev = function(a) {
     this.set({prev:a});
   };
@@ -3819,6 +3828,9 @@ Entry.Block.FOLLOW = 3;
   };
   b.next = function() {
     return this.next;
+  };
+  b.insertAfter = function(a) {
+    this._thread.insertByBlock(this, a);
   };
   b._updatePos = function() {
     this.view && this.set({x:this.view.x, y:this.view.y});
@@ -3838,6 +3850,10 @@ Entry.Block.FOLLOW = 3;
     this._updatePos();
   };
   b.doInsert = function(a) {
+    console.log("insert", this.id, a.id, this.x, this.y);
+    var b = this._thread.cut(this);
+    a.insertAfter(b);
+    this._updatePos();
   };
   b.doDestroy = function() {
   };
@@ -3855,14 +3871,17 @@ Entry.Thread = function(b, a) {
     }
     for (var b = 0;b < a.length;b++) {
       var d = a[b];
-      d instanceof Entry.Block ? this._data.push(d) : this._data.push(new Entry.Block(d, this));
+      d instanceof Entry.Block ? (d.setThread(this), this._data.push(d)) : this._data.push(new Entry.Block(d, this));
     }
     this._setRelation();
   };
   b._setRelation = function() {
     var a = this._data.getAll();
     if (0 !== a.length) {
-      for (var b = a[0], d = 1;d < a.length;d++) {
+      var b = a[0];
+      b.setPrev(null);
+      a[a.length - 1].setNext(null);
+      for (var d = 1;d < a.length;d++) {
         var e = a[d];
         e.setPrev(b);
         b.setNext(e);
@@ -3880,7 +3899,21 @@ Entry.Thread = function(b, a) {
     });
   };
   b.separate = function(a) {
-    this._data.has(a.id) && a.prev && (a.prev.setNext(null), a.setPrev(null), a = this._data.splice(this._data.indexOf(a)), this._code.createThread(a));
+    this._data.has(a.id) && a.prev && (a.prev.setNext(null), a.setPrev(null), blocks = this._data.splice(this._data.indexOf(a)), this._code.createThread(blocks));
+  };
+  b.cut = function(a) {
+    a = this._data.indexOf(a);
+    return this._data.splice(a);
+  };
+  b.insertByBlock = function(a, b) {
+    var d = this._data.indexOf(a);
+    a.setNext(b[0]);
+    b[0].setPrev(a);
+    for (var e in b) {
+      b[e].setThread(this);
+    }
+    this._data.splice.apply(this._data, [d + 1, 0].concat(b));
+    this._setRelation();
   };
 })(Entry.Thread.prototype);
 Entry.Workspace = function(b, a) {
