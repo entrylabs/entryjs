@@ -12,6 +12,12 @@ Entry.Event = function(sender) {
         this._listeners.push(listener);
     };
 
+    p.deAttach = function (listener) {
+        var ls = this._listeners;
+        var index = ls.indexOf(listener)
+        this._listeners.splice(index, 1);
+    };
+
     p.notify = function (args) {
         var index;
 
