@@ -64,6 +64,7 @@ Entry.BlockView = function(block, board) {
 
         this._startContentRender();
         this._render();
+        this._addControl();
     };
 
     p._startContentRender = function() {
@@ -125,7 +126,88 @@ Entry.BlockView = function(block, board) {
         });
 
         this.svgGroup.attr({
-            transform: "t" + prevBlockView.x + " " + prevBlockView.y
+            transform: "t" + this.x + " " + this.y
         });
     };
+
+    p._moveTo = function(x, y, animate) {
+        animate = animate === undefined ? true : animate;
+        var transform = "t" + x + " " + y;
+        if (animate) {
+            this.svgGroup.animate({
+                transform: transform
+            }, 300, mina.easeinout);
+        } else {
+            this.svgGroup.attr({
+                transform: transform
+            });
+        }
+        this.set({ x: x, y: y });
+    };
+
+    p._moveBy = function(x, y, animate) {
+        return this._moveTo(
+            this.x + x,
+            this.y + y,
+            animate
+        );
+    };
+
+    p._addControl = function() {
+        var that = this;
+        this.svgGroup.mousedown(function() {
+            that.onMouseDown.apply(that, arguments);
+        });
+    };
+
+    p.onMouseDown = function(e) {
+        if (e.button === 0 || e instanceof Touch) {
+            var doc = $(document);
+            doc.bind('mousemove.block', onMouseMove);
+            doc.bind('mouseup.block', onMouseUp);
+            doc.bind('touchmove.block', onMouseMove);
+            doc.bind('touchend.block', onMouseUp);
+            //this._board.dragBlock = this;
+            this.dragInstance = new Entry.DragInstance({
+                startX: e.clientX,
+                startY: e.clientY,
+                offsetX: e.clientX,
+                offsetY: e.clientY,
+                mode: true
+            });
+            //this.thread.dominate();
+        } else if (e.button === 1) {
+            //this.enableHighlight();
+        }
+        else if (e.button === 2) {
+        }
+
+        var block = this;
+        function onMouseMove(e) {
+            if (e.originalEvent.touches) {
+                e = e.originalEvent.touches[0];
+            }
+            var dragInstance = block.dragInstance;
+            block._moveBy(
+                e.clientX - dragInstance.offsetX,
+                e.clientY - dragInstance.offsetY,
+                false
+            );
+            dragInstance.set({
+                 offsetX: e.clientX,
+                 offsetY: e.clientY
+            });
+            //block.thread.align(false);
+            //block._board.updateCloseMagnet(block);
+        }
+
+        function onMouseUp(e) {
+            //block.terminateDrag();
+            delete block.dragInstance;
+
+            $(document).unbind('.block');
+            //block._board.dragBlock = null;
+        }
+    };
+
 })(Entry.BlockView.prototype);

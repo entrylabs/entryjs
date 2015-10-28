@@ -62,7 +62,7 @@ Entry.Code = function(code) {
             var executor = executors[i];
             while (executor.block &&
                    executor.block.execute(executor) == Entry.STATIC.RETURN) {
-                executor.block = executor.block.next(executor.block);
+                executor.block = executor.block.next;
             }
             if (executor.block === null) {
                 executors.splice(i, 1);

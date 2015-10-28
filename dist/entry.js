@@ -3469,6 +3469,7 @@ Entry.BlockView = function(b, a) {
     this._path.attr({fill:this._schema.color});
     this._startContentRender();
     this._render();
+    this._addControl();
   };
   b._startContentRender = function() {
     this.contentSvgGroup = this.svgGroup.group();
@@ -3499,7 +3500,42 @@ Entry.BlockView = function(b, a) {
   b._align = function() {
     var a = this.block.prev.view;
     this.set({x:a.x, y:a.y + a.height + 1});
-    this.svgGroup.attr({transform:"t" + a.x + " " + a.y});
+    this.svgGroup.attr({transform:"t" + this.x + " " + this.y});
+  };
+  b._moveTo = function(a, b, d) {
+    var e = "t" + a + " " + b;
+    void 0 === d || d ? this.svgGroup.animate({transform:e}, 300, mina.easeinout) : this.svgGroup.attr({transform:e});
+    this.set({x:a, y:b});
+  };
+  b._moveBy = function(a, b, d) {
+    return this._moveTo(this.x + a, this.y + b, d);
+  };
+  b._addControl = function() {
+    var a = this;
+    this.svgGroup.mousedown(function() {
+      a.onMouseDown.apply(a, arguments);
+    });
+  };
+  b.onMouseDown = function(a) {
+    function b(a) {
+      a.originalEvent.touches && (a = a.originalEvent.touches[0]);
+      var c = f.dragInstance;
+      f._moveBy(a.clientX - c.offsetX, a.clientY - c.offsetY, !1);
+      c.set({offsetX:a.clientX, offsetY:a.clientY});
+    }
+    function d(a) {
+      delete f.dragInstance;
+      $(document).unbind(".block");
+    }
+    if (0 === a.button || a instanceof Touch) {
+      var e = $(document);
+      e.bind("mousemove.block", b);
+      e.bind("mouseup.block", d);
+      e.bind("touchmove.block", b);
+      e.bind("touchend.block", d);
+      this.dragInstance = new Entry.DragInstance({startX:a.clientX, startY:a.clientY, offsetX:a.clientX, offsetY:a.clientY, mode:!0});
+    }
+    var f = this;
   };
 })(Entry.BlockView.prototype);
 Entry.Board = function(b) {
@@ -3616,7 +3652,7 @@ Entry.Code = function(b) {
   b.tick = function() {
     for (var a = this.executors, b = 0;b < a.length;b++) {
       for (var d = a[b];d.block && d.block.execute(d) == Entry.STATIC.RETURN;) {
-        d.block = d.block.next(d.block);
+        d.block = d.block.next;
       }
       null === d.block && (a.splice(b, 1), b--);
     }
