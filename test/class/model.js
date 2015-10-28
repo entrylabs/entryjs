@@ -54,21 +54,6 @@ describe('Entry.Model', function(){
         });
     });
 
-    describe('direct getter & setter', function(){
-        it('should change data properly', function(){
-            datum.type = 3;
-
-            datum.type.should.be.equal(3);
-        });
-
-        it('should not be delete and throw error', function(){
-            var func = function() {
-                delete datum.id;
-            };
-            func.should.be.throw(Error);
-        });
-    });
-
     describe('getter', function(){
         it('should change data properly', function(){
             datum.set({type: 3});
@@ -93,7 +78,7 @@ describe('Entry.Model', function(){
                     }};
                     datum.observe(obj, 'done');
 
-                    datum.value = 3;
+                    datum.set({value: 3});
                 });
 
                 it('should provide change information properly', function() {
@@ -108,7 +93,7 @@ describe('Entry.Model', function(){
                     }};
                     datum.observe(obj, 'update');
 
-                    datum.value = 3;
+                    datum.set({value: 3});
                 });
             });
 
@@ -128,7 +113,7 @@ describe('Entry.Model', function(){
                     }};
                     datum.observe(obj, 'done', ['value']);
 
-                    datum.value = 3;
+                    datum.set({value: 3});
                 });
 
                 it('should notify at once', function(done) {
@@ -152,7 +137,7 @@ describe('Entry.Model', function(){
                     }};
                     datum.observe(obj, 'update', ['value']);
 
-                    datum.value = 3;
+                    datum.set({value: 3});
                 });
 
                 it('should provide multiple change information properly ', function() {
@@ -186,7 +171,7 @@ describe('Entry.Model', function(){
                     var obj = {done: never};
                     datum.observe(obj, 'done', ['id']);
 
-                    datum.value = 3;
+                    datum.set({value: 3});
                 });
             });
         });

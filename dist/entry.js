@@ -3246,10 +3246,6 @@ Entry.Model = function(b, a) {
           a.data[d] = b[d];
           Object.defineProperty(a, d, {get:function() {
             return a.data[d];
-          }, set:function(b) {
-            var c = a.data[d];
-            a.data[d] = b;
-            c !== b && a.notify(d, c);
           }});
         })(d);
       }
@@ -3258,16 +3254,14 @@ Entry.Model = function(b, a) {
   b.generateSetter = function(a) {
     a.set = this.set;
   };
-  b.set = function(a) {
-    this.notify(Object.keys(a));
-    this._isSilent = !0;
-    for (var b in a) {
-      this[b] = a[b];
+  b.set = function(a, b) {
+    var d = {}, e;
+    for (e in this.data) {
+      void 0 !== a[e] && (d[e] = this.data[e], this.data[e] = a[e]);
     }
-    this._isSilent = !1;
+    b || this.notify(Object.keys(a), d);
   };
   b.generateObserve = function(a) {
-    a._isSilent = !1;
     a.observers = [];
     a.observe = this.observe;
     a.unobserve = this.unobserve;
@@ -3280,25 +3274,23 @@ Entry.Model = function(b, a) {
     a.destroy();
   };
   b.notify = function(a, b) {
-    if (!this._isSilent) {
-      "string" === typeof a && (a = [a]);
-      var d = this;
-      d.observers.map(function(e) {
-        var f = a;
-        void 0 !== e.attrs && (f = Entry.Utils.intersectArray(e.attrs, a));
-        if (f.length) {
-          e.object[e.funcName](f.map(function(a) {
-            return {name:a, object:d, oldValue:void 0 === b ? d.data[a] : b};
-          }));
-        }
-      });
-    }
+    "string" === typeof a && (a = [a]);
+    var d = this;
+    d.observers.map(function(e) {
+      var f = a;
+      void 0 !== e.attrs && (f = Entry.Utils.intersectArray(e.attrs, a));
+      if (f.length) {
+        e.object[e.funcName](f.map(function(a) {
+          return {name:a, object:d, oldValue:b[a]};
+        }));
+      }
+    });
   };
 })(Entry.Model);
 Entry.BlockModel = function() {
   Entry.Model(this);
 };
-Entry.BlockModel.prototype.schema = {id:null, x:0, y:0, type:null, params:{}, statements:{}, prev:null, next:null, render:null};
+Entry.BlockModel.prototype.schema = {id:null, x:0, y:0, type:null, params:{}, statements:{}, prev:null, next:null, view:null};
 Entry.BlockRenderModel = function() {
   Entry.Model(this);
 };
@@ -3451,6 +3443,27 @@ Entry.BlockMenu = function(b) {
     e && b && (e.moveTo(b.x - d, b.y - a, !1), e.getBoard().updateCloseMagnet(e));
   };
 })(Entry.BlockMenu.prototype);
+Entry.BlockView = function(b, a) {
+  Entry.Model(this, !1);
+  this.set(b);
+  this.svgGroup = a.svgBlockGroup.group();
+  this._schema = Entry.block[b.type];
+  this._skeleton = Entry.skeleton[this._schema.skeleton];
+  this._startRender(b);
+};
+(function(b) {
+  b.schema = {id:0, type:Entry.STATIC.BLOCK_RENDER_MODEL, x:0, y:0, width:0, height:0, magneting:!1};
+  b._startRender = function(a) {
+    this.svgGroup.attr({class:"block"});
+    this.svgGroup.block = this;
+    this.svgGroup.attr({transform:"t" + this.x + " " + this.y});
+    a = this._skeleton.path(this);
+    this._darkenPath = this.svgGroup.path(a);
+    this._darkenPath.attr({transform:"t0 1.1", fill:Entry.Utils.colorDarken(this._schema.color)});
+    this._path = this.svgGroup.path(a);
+    this._path.attr({fill:this._schema.color});
+  };
+})(Entry.BlockView.prototype);
 Entry.Board = function(b) {
   b = "string" === typeof b ? $("#" + b) : $(b);
   if ("DIV" !== b.prop("tagName")) {
@@ -3463,16 +3476,20 @@ Entry.Board = function(b) {
   this.offset = this.svgDom.offset();
   this.snap = Snap("#play");
   this.snap.block = "null";
+  this._blockViews = [];
+  this.svgBlockGroup = this.snap.group();
   Entry.Model(this, !1);
+  this.observe(this, "_changeCode", ["code"]);
 };
 (function(b) {
-  b.schema = {dragBlock:null, closeBlock:null};
-  b.selectCode = function(a) {
-    if (!(a instanceof Entry.Code)) {
-      return console.error("You must select code instance");
-    }
-    a.bindBoard(this);
-    this.code = a;
+  b.schema = {code:null, dragBlock:null, closeBlock:null};
+  b.changeCode = function(a) {
+    this.set({code:a});
+  };
+  b._changeCode = function() {
+    null !== this.code && this.code.changeBoard(this);
+  };
+  b._makeBlockViewAll = function() {
   };
   b.updateCloseMagnet = function(a) {
     if (void 0 !== a.magnets.previous) {
@@ -3529,12 +3546,14 @@ Entry.Board = function(b) {
   };
 })(Entry.Board.prototype);
 Entry.Code = function(b) {
+  Entry.Model(this, !1);
   this._data = new Entry.Collection;
   this._eventMap = {};
   this.executors = [];
   this.load(b);
 };
 (function(b) {
+  b.schema = {board:null};
   b.load = function(a) {
     if (!(a instanceof Array)) {
       return console.error("code must be array");
@@ -3543,9 +3562,8 @@ Entry.Code = function(b) {
       this._data.push(new Entry.Thread(a[b], this));
     }
   };
-  b.set = function(a) {
-  };
-  b.bindBoard = function(a) {
+  b.changeBoard = function(a) {
+    this.set({board:a});
   };
   b.registerEvent = function(a, b) {
     this._eventMap[b] || (this._eventMap[b] = []);
@@ -3668,7 +3686,7 @@ Entry.skeleton.pebble_basic = {path:function(b) {
   return {x:-46, y:25};
 }};
 Entry.Block = function(b, a) {
-  this._data = new Entry.BlockModel;
+  Entry.Model(this, !1);
   this._thread = a;
   this._schema = null;
   this.load(b);
@@ -3680,34 +3698,39 @@ Entry.Block.SHOWN = 1;
 Entry.Block.MOVE = 2;
 Entry.Block.FOLLOW = 3;
 (function(b) {
+  b.schema = {id:null, x:0, y:0, type:null, params:{}, statements:{}, prev:null, next:null, view:null};
   b.load = function(a) {
     a.id || (a.id = Entry.Utils.generateId());
-    this._data.set(a);
+    this.set(a);
     this.getSchema();
   };
   b.getSchema = function() {
-    this._schema = Entry.block[this._data.type];
+    this._schema = Entry.block[this.type];
     this._schema.event && this._thread.registerEvent(this, this._schema.event);
   };
   b.setPrev = function(a) {
-    this._data.prev = a;
+    this.set({prev:a});
   };
   b.setNext = function(a) {
-    this._data.next = a;
+    this.set({next:a});
   };
   b.observe = function() {
-    return this._data.observe.apply(this._data, arguments);
+    return this.observe.apply(this, arguments);
   };
   b.execute = function(a) {
     return this._schema.func.call(a);
   };
   b.next = function() {
-    return this._data.next;
+    return this.next;
+  };
+  b.bindBoard = function(a) {
+    this.set({view:new Entry.BlockView(this, a)});
   };
 })(Entry.Block.prototype);
 Entry.Thread = function(b, a) {
   this._data = new Entry.Collection;
   this._code = a;
+  this._code.observe(this, "changeBoard", ["board"]);
   this.load(b);
 };
 (function(b) {
@@ -3733,6 +3756,12 @@ Entry.Thread = function(b, a) {
   };
   b.registerEvent = function(a, b) {
     this._code.registerEvent(a, b);
+  };
+  b.changeBoard = function() {
+    var a = this._code.board;
+    this._data.map(function(b) {
+      b.bindBoard(a);
+    });
   };
 })(Entry.Thread.prototype);
 Entry.Workspace = function(b, a) {

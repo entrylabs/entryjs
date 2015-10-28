@@ -14,7 +14,7 @@ goog.require("Entry.skeleton");
  *
  */
 Entry.Block = function(block, thread) {
-    this._data = new Entry.BlockModel();
+    Entry.Model(this, false);
     this._thread = thread;
     this._schema = null;
 
@@ -64,30 +64,42 @@ Entry.Block.MOVE = 2;
 Entry.Block.FOLLOW = 3;
 
 (function(p) {
+    p.schema = {
+        id: null,
+        x: 0,
+        y: 0,
+        type: null,
+        params: {},
+        statements: {},
+        prev: null,
+        next: null,
+        view: null
+    };
+
     p.load = function(block) {
         if (!block.id)
             block.id = Entry.Utils.generateId();
 
-        this._data.set(block);
+        this.set(block);
         this.getSchema();
     };
 
     p.getSchema = function() {
-        this._schema = Entry.block[this._data.type];
+        this._schema = Entry.block[this.type];
         if (this._schema.event)
             this._thread.registerEvent(this, this._schema.event);
     };
 
     p.setPrev = function(block) {
-        this._data.prev = block;
+        this.set({prev: block});
     };
 
     p.setNext = function(block) {
-        this._data.next = block;
+        this.set({next: block});
     };
 
     p.observe = function() {
-        return this._data.observe.apply(this._data, arguments);
+        return this.observe.apply(this, arguments);
     };
 
     p.execute = function(executor) {
@@ -95,7 +107,12 @@ Entry.Block.FOLLOW = 3;
     };
 
     p.next = function() {
-        return this._data.next;
+        return this.next;
+    };
+
+    // make view
+    p.bindBoard = function(board) {
+        this.set({view: new Entry.BlockView(this, board)});
     };
 
     /*
@@ -130,41 +147,6 @@ Entry.Block.FOLLOW = 3;
     // method for board
 
     p.renderStart = function(board, startPos, animate) {
-        animate = animate === undefined ? true : animate;
-
-        if (this.svgGroup) {
-            this.thread.svgGroup.append(this.svgGroup);
-            return;
-        }
-        this._board = board;
-        this.svgGroup = this.thread.svgGroup.group();
-        this.svgGroup.attr({
-            class: "block"
-        });
-        this.svgGroup.block = this;
-        if (startPos) {
-            this.svgGroup.attr({
-                transform: "t" + startPos.x + " " + startPos.y
-            });
-        }
-
-        var path = this._skeleton.path(this);
-
-        this._darkenPath = this.svgGroup.path(path);
-        this._darkenPath.attr({
-            transform: "t0 1.1",
-            fill: Entry.Utils.colorDarken(this._schema.color)
-        });
-
-        this._path = this.svgGroup.path(path);
-        this._path.attr({
-            fill: this._schema.color
-        });
-
-        this.magnets = this._skeleton.magnets();
-        this.fieldRenderStart(animate);
-
-        this.addControl();
     };
 
     // not observer style

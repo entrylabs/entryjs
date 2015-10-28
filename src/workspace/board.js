@@ -36,22 +36,32 @@ Entry.Board = function(dom) {
     this.snap = Snap('#play');
     this.snap.block = "null";
 
+    this._blockViews = [];
+
+    this.svgBlockGroup = this.snap.group();
+
     Entry.Model(this, false);
+
+    this.observe(this, "_changeCode", ['code']);
 };
 
 (function(p) {
     p.schema = {
+        code: null,
         dragBlock: null,
         closeBlock: null
     };
 
-    p.selectCode = function(code) {
-        if (!(code instanceof Entry.Code))
-            return console.error("You must select code instance");
+    p.changeCode = function(code) {
+        this.set({code: code});
+    };
 
-        code.bindBoard(this);
+    p._changeCode = function() {
+        if (this.code !== null)
+            this.code.changeBoard(this);
+    };
 
-        this.code = code;
+    p._makeBlockViewAll = function() {
     };
 
     p.updateCloseMagnet = function(targetBlock) {

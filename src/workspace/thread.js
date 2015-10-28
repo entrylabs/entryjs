@@ -15,6 +15,8 @@ Entry.Thread = function(thread, code) {
     this._data = new Entry.Collection();
     this._code = code;
 
+    this._code.observe(this, "changeBoard", ["board"]);
+
     this.load(thread);
 
     /*
@@ -63,6 +65,15 @@ Entry.Thread = function(thread, code) {
     p.registerEvent = function(block, eventType) {
         this._code.registerEvent(block, eventType);
     };
+
+    p.changeBoard = function() {
+        var board = this._code.board;
+
+        this._data.map(function(b) {
+            b.bindBoard(board);
+        });
+    };
+
     /*
     p.schema = {
         type: Entry.STATIC.THREAD_MODEL,

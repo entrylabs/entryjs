@@ -32,12 +32,6 @@ Entry.Model = function(obj, isSeal) {
                 Object.defineProperty(obj, localKey, {
                     get: function() {
                         return obj.data[localKey];
-                    },
-                    set: function(val) {
-                        var oldValue = obj.data[localKey];
-                        obj.data[localKey] = val;
-                        if (oldValue !== val)
-                            obj.notify(localKey, oldValue);
                     }
                 });
             })(key);
@@ -48,18 +42,19 @@ Entry.Model = function(obj, isSeal) {
         obj.set = this.set;
     };
 
-    m.set = function(data) {
-        this.notify(Object.keys(data));
-        this._isSilent = true;
-        for (var key in data) {
-            // call setter
-            this[key] = data[key];
+    m.set = function(data, isSilent) {
+        var oldValue = {};
+        for (var key in this.data) {
+            if (data[key] !== undefined) {
+                oldValue[key] = this.data[key];
+                this.data[key] = data[key];
+            }
         }
-        this._isSilent = false;
+        if (!isSilent)
+            this.notify(Object.keys(data), oldValue);
     };
 
     m.generateObserve = function(obj) {
-        obj._isSilent = false;
         obj.observers = [];
         obj.observe = this.observe;
         obj.unobserve = this.unobserve;
@@ -89,8 +84,6 @@ Entry.Model = function(obj, isSeal) {
      * @param {} oldValue
      */
     m.notify = function(keys, oldValue) {
-        if (this._isSilent) return;
-
         if (typeof keys === 'string') keys = [keys];
 
         var that = this;
@@ -106,7 +99,7 @@ Entry.Model = function(obj, isSeal) {
                     return {
                         name: key,
                         object: that,
-                        oldValue: oldValue === undefined ? that.data[key] : oldValue
+                        oldValue: oldValue[key]
                     };
                 })
             );

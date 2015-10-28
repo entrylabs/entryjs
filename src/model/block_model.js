@@ -18,5 +18,5 @@ Entry.BlockModel.prototype.schema = {
     statements: {},
     prev: null,
     next: null,
-    render: null
+    view: null
 };

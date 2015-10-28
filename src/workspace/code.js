@@ -12,6 +12,8 @@ goog.require('Entry.STATIC');
  *
  */
 Entry.Code = function(code) {
+    Entry.Model(this, false);
+
     this._data = new Entry.Collection();
 
     this._eventMap = {};
@@ -22,6 +24,10 @@ Entry.Code = function(code) {
 };
 
 (function(p) {
+    p.schema = {
+        board: null
+    };
+
     p.load = function(code) {
         if (!(code instanceof Array))
             return console.error("code must be array");
@@ -31,26 +37,8 @@ Entry.Code = function(code) {
         }
     };
 
-    p.set = function(code) {
-        /*
-        var that = this;
-
-        var threads = code.map(function(t) {
-            return new Entry.Thread(t, that);
-        });
-
-        this.threads.set(threads);
-        */
-    };
-
-    p.bindBoard = function(board) {
-        /*
-        this.board = board;
-
-        this.threads.map(function(t) {
-            t.renderStart(board);
-        });
-        */
+    p.changeBoard = function(board) {
+        this.set({board: board});
     };
 
     p.registerEvent = function(block, eventType) {
