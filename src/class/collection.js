@@ -65,8 +65,7 @@ Entry.Collection = function(data) {
     p.getAll = function() {
         var len = this.length;
         var ret = [];
-        for (var i=0; i<len; i++)
-            ret.push(this[i]);
+        for (var i=0; i<len; i++) ret.push(this[i]);
         return ret;
     };
 
@@ -116,7 +115,6 @@ Entry.Collection = function(data) {
 
         for (var i=0,len=splicedData.length; i<len; i++)
             delete hashMap[splicedData[i].id];
-
 
         for (i=0,len=args.length; i<len; i++) {
             var datum = args[i];
