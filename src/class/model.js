@@ -72,19 +72,16 @@ Entry.Model = function(obj, isSeal) {
      * @param {?object} attrs includes which property to watch. Should be array or null.
      */
     m.observe = function(object, funcName, attrs) {
-        var observeObj = {
-            object: object,
-            funcName: funcName,
-            attrs: attrs
-        };
-        this.observers.push(observeObj);
-        return observeObj;
+        return new Entry.Observer(
+            this.observers,
+            object,
+            funcName,
+            attrs
+        );
     };
 
-    m.unobserve = function(observeObj) {
-        var index = this.observers.indexOf(observeObj);
-        if (index > -1)
-            this.observers.splice(index, 1);
+    m.unobserve = function(observer) {
+        observer.destroy();
     };
 
     /*

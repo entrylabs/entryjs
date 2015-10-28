@@ -3141,6 +3141,20 @@ Entry.Event = function(b) {
     }
   };
 })(Entry.Event.prototype);
+Entry.Observer = function(b, a, c, d) {
+  this.parent = b;
+  this.object = a;
+  this.funcName = c;
+  this.attrs = d;
+  b.push(this);
+};
+(function(b) {
+  b.destroy = function() {
+    var a = this.parent;
+    a.splice(a.indexOf(this), 1);
+    return this;
+  };
+})(Entry.Observer.prototype);
 Entry.db = {data:{}, typeMap:{}};
 (function(b) {
   b.add = function(a) {
@@ -3260,13 +3274,10 @@ Entry.Model = function(b, a) {
     a.notify = this.notify;
   };
   b.observe = function(a, b, d) {
-    a = {object:a, funcName:b, attrs:d};
-    this.observers.push(a);
-    return a;
+    return new Entry.Observer(this.observers, a, b, d);
   };
   b.unobserve = function(a) {
-    a = this.observers.indexOf(a);
-    -1 < a && this.observers.splice(a, 1);
+    a.destroy();
   };
   b.notify = function(a, b) {
     if (!this._isSilent) {
