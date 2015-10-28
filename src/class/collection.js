@@ -1,226 +1,177 @@
-//'use strict';
+'use strict';
 
-//goog.provide("Entry.Collection");
+goog.provide("Entry.Collection");
 
 /*
  * Entry Collection object constructor.
  */
-//Entry.Collection = function(data) {
-    /*
-     * array for store data
-     * @private
-     */
-    //this._data = [];
+
+Entry.Collection = function(data) {
+    this.length = 0;
 
     /*
      * object for hashing data with id
      * @private
      */
-    //this._hashMap = {};
+    this._hashMap = {};
 
     /*
      * observers
      */
-    //this._observers = [];
+    this._observers = [];
+    this.set(data);
+};
 
-    //Object.defineProperty(this, 'length', {
-        //get: function() {
-            //return this._data.length;
-        //}
-    //});
+(function(p, ap) {
+    /* setters */
+    p.set = function(data) {
+        while(this.length) ap.pop.call(this);
 
-    //this.set(data);
-//};
+        var hashMap = this._hashMap;
+        for (var key in hashMap)
+            delete hashMap[key];
 
-//(function(p) {
-    //[> setters <]
-    //p.set = function(data) {
-        //if (!data)
-            //data = [];
-        //var hashMap = this._hashMap;
-        //for (var key in hashMap)
-            //delete hashMap[key];
-        //for (var i = 0, len = data.length; i<len; i++) {
-            //var datum = data[i];
-            //hashMap[datum.id] = datum;
-        //}
-        //this._data = data;
-    //};
+        if (data !== undefined) {
+            for (var i = 0, len = data.length; i<len; i++) {
+                var datum = data[i];
+                hashMap[datum.id] = datum;
+                ap.push.call(this, datum);
+            }
+        }
+    };
 
-    //p.push = function(datum) {
-        //this._data.push(datum);
-        //this._hashMap[datum.id] = datum;
-    //};
+    p.push = function(elem){ap.push.call(this, elem);};
 
-    //p.unshift = function() {
-        //var args = Array.prototype.slice.call(arguments,0);
-        //for (var i=args.length-1; i>=0; i--) {
-            //var datum = args[i];
-            //this._data.unshift(datum);
-            //this._hashMap[datum.id] = datum;
-        //}
-    //};
+    p.unshift = function() {
+        var args = Array.prototype.slice.call(arguments,0);
+        for (var i=args.length-1; i>=0; i--) {
+            var datum = args[i];
+            ap.unshift.call(this, datum);
+            this._hashMap[datum.id] = datum;
+        }
+    };
 
-    //p.insert = function(datum, index) {
-        //this._data.splice(index, 0, datum);
-        //this._hashMap[datum.id] = datum;
-    //};
+    p.insert = function(datum, index) {
+        ap.splice.call(this, index, 0, datum);
+        this._hashMap[datum.id] = datum;
+    };
 
-    //[> getters <]
-    //p.has = function(id) {
-        //return !!this._hashMap[id];
-    //};
+    p.has = function(id) {return !!this._hashMap[id];};
 
-    //p.get = function(id) {
-        //return this._hashMap[id];
-    //};
+    p.get = function(id) {return this._hashMap[id];};
 
-    //p.getAll = function() {
-        //return this._data;
-    //};
+    p.at = function(index) {return this[index];};
 
-    //p.at = function(index) {
-        //return this._data[index];
-    //};
+    p.getAll = function() {
+        var len = this.length;
+        var ret = [];
+        for (var i=0; i<len; i++)
+            ret.push(this[i]);
+        return ret;
+    };
 
-    //p.indexOf = function(obj) {
-        //return this._data.indexOf(obj);
-    //};
+    p.indexOf = function(obj) {return ap.indexOf.call(this, obj);};
 
-    //p.find = function(cond) {
-        //var data = this._data;
-        //var ret = [];
-        //var flag;
+    p.find = function(cond) {
+        var ret = [];
+        var flag;
 
-        //for (var i=0,len=this.length; i<len; i++) {
-            //flag = true;
-            //var datum = data[i];
-            //for(var key in cond) {
-                //if (cond[key] != datum[key]) {
-                    //flag = false;
-                    //break;
-                //}
-            //}
-            //if (flag)
-                //ret.push(datum);
-        //}
-        //return ret;
-    //};
+        for (var i=0,len=this.length; i<len; i++) {
+            flag = true;
+            var datum = this[i];
+            for(var key in cond) {
+                if (cond[key] != datum[key]) {
+                    flag = false;
+                    break;
+                }
+            }
+            if (flag) ret.push(datum);
+        }
+        return ret;
+    };
 
-    //p.pop = function() {
-        //if (this.length === 0)
-            //return undefined;
-        //var data = this._data;
-        //var datum = data.splice(data.length-1, 1)[0];
-        //delete this._hashMap[datum.id];
-        //return datum;
-    //};
+    p.pop = function() {return ap.pop.call(this);};
 
-    //p.shift = function() {
-        //if (this.length === 0)
-            //return undefined;
-        //var data = this._data;
-        //var datum = data.shift();
-        //delete this._hashMap[datum.id];
-        //return datum;
-    //};
+    p.shift = function() { return ap.shift.call(this);};
 
-    //p.slice = function(index, amount) {
-        //if (index < 0 || index > this.length)
-            //return undefined;
+    p.slice = function(index, amount) {
+        return ap.slice.call(this,index, amount);
+    };
 
-        //var data = this._data;
+    p.remove = function(datum) {
+        var index = this.indexOf(datum);
+        if (index > -1) {
+            delete this._hashMap[datum.id];
+            this.splice(index, 1);
+        }
+    };
 
-        //var slicedData = data.slice(index, amount);
+    p.splice = function(index, amount) {
+        var args = ap.slice.call(arguments,2);
+        var hashMap = this._hashMap;
+        amount = amount === undefined ?
+            this.length - index: amount;
 
-        //return slicedData;
-    //};
+        var splicedData = ap.splice.call(this, index, amount);
 
-    //[> removers <]
-    //p.remove = function(datum) {
-        //var index = this.indexOf(datum);
-        //if (index > -1) {
-            //this.splice(index, 1);
-        //}
-    //};
+        for (var i=0,len=splicedData.length; i<len; i++)
+            delete hashMap[splicedData[i].id];
 
-    //p.splice = function(index, amount) {
-        //var args = Array.prototype.slice.call(arguments,2);
 
-        //if (index < 0 || index > this.length)
-            //return undefined;
+        for (i=0,len=args.length; i<len; i++) {
+            var datum = args[i];
+            ap.splice.call(this, index++, 0, datum);
+            this._hashMap[datum.id] = datum;
+        }
 
-        //var data = this._data;
-        //var hashMap = this._hashMap;
+        return splicedData;
+    };
 
-        //amount = amount === undefined ? this.length - index: amount;
+    p.clear = function() {
+        while(this.length) ap.pop.call(this);
+        var hashMap = this._hashMap;
+        for (var key in hashMap) delete hashMap[key];
+    };
 
-        //var splicedData = data.splice(index, amount);
+    p.map = function(fn, param) {
+        for (var i=0, len=this.length; i<len; i++) fn(this[i], param);
+    };
 
-        //for (var i=0,len=splicedData.length; i<len; i++)
-            //delete hashMap[splicedData[i].id];
+    p.moveFromTo = function(from, to) {
+        var max = this.length-1;
+        if (from< 0 || to<0 || from>max || to>max)
+            return;
+        ap.splice.call(
+            this, to, 0,
+            ap.splice.call(this, from, 1)[0]
+        );
+    };
 
-        //for (i=0,len=args.length; i<len; i++) {
-            //var datum = args[i];
-            //data.splice(index++, 0, datum);
-            //hashMap[datum.id] = datum;
-        //}
+    p.sort = function() {
+    };
 
-        //return splicedData;
-    //};
+    /* import & export */
+    p.fromJSON = function() {
+    };
 
-    //p.clear = function() {
-        //var data = this._data;
-        //var hashMap = this._hashMap;
-        //while(this.length)
-            //data.pop();
-        //for (var key in hashMap)
-            //delete hashMap[key];
-    //};
+    p.toJSON = function() {
+        var json = [];
+        for (var i=0, len=this.length; i<len; i++)
+            json.push(this[i].toJSON());
+        return json;
+    };
 
-    //[> help methods <]
-    //p.map = function(fn, param) {
-        //var data = this._data;
-        //for (var i=0, len=this.length; i<len; i++)
-            //fn(data[i], param);
-    //};
+    /* observe methods */
+    p.observe = function() {
+    };
 
-    //p.moveFromTo = function(from, to) {
-        //var limit = this.length-1;
-        //if (from< 0 || to<0 || from>limit || to>limit)
-            //return;
+    p.unobserve = function() {
+    };
 
-        //var data = this._data;
-        //data.splice(to, 0, data.splice(from, 1)[0]);
-    //};
+    p.notify = function() {
+    };
 
-    //p.sort = function() {
-    //};
-
-    //[> import & export <]
-    //p.fromJSON = function() {
-    //};
-
-    //p.toJSON = function() {
-        //var json = [];
-        //var data = this._data;
-        //for (var i=0, len=this.length; i<len; i++)
-            //json.push(data[i].toJSON());
-        //return json;
-    //};
-
-    //[> observe methods <]
-    //p.observe = function() {
-    //};
-
-    //p.unobserve = function() {
-    //};
-
-    //p.notify = function() {
-    //};
-
-    //[> end function <]
-    //p.destroy = function() {
-    //};
-
-//})(Entry.Collection.prototype);
+    /* end function */
+    p.destroy = function() {
+    };
+})(Entry.Collection.prototype, Array.prototype);
