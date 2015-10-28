@@ -3451,13 +3451,13 @@ Entry.BlockView = function(b, a) {
   this._schema = Entry.block[b.type];
   this._skeleton = Entry.skeleton[this._schema.skeleton];
   this._contents = [];
-  this.prevObserver = null;
+  this.prevAnimatingObserver = this.prevObserver = null;
   this.block.observe(this, "_bindPrev", ["prev"]);
   this._bindPrev();
   this._startRender(b);
 };
 (function(b) {
-  b.schema = {id:0, type:Entry.STATIC.BLOCK_RENDER_MODEL, x:0, y:0, width:0, height:0, magneting:!1};
+  b.schema = {id:0, type:Entry.STATIC.BLOCK_RENDER_MODEL, x:0, y:0, width:0, height:0, magneting:!1, animating:!1};
   b._startRender = function(a) {
     this.svgGroup.attr({class:"block"});
     this.svgGroup.block = this;
@@ -3492,15 +3492,21 @@ Entry.BlockView = function(b, a) {
   };
   b._bindPrev = function() {
     this.prevObserver && this.prevObserver.destroy();
-    this.block.prev && (this.prevObserver = this.block.prev.view.observe(this, "_align", ["x", "y"]), this._align());
+    this.block.prev && (this.prevObserver = this.block.prev.view.observe(this, "_align", ["x", "y"]), this.prevAnimatingObserver = this.block.prev.view.observe(this, "_inheritAnimate", ["animating"]), this._align());
   };
   b._render = function() {
     this.set(this._skeleton.box());
   };
-  b._align = function() {
-    var a = this.block.prev.view;
-    this.set({x:a.x, y:a.y + a.height + 1});
-    this.svgGroup.attr({transform:"t" + this.x + " " + this.y});
+  b._align = function(a) {
+    if (null !== this.block.prev) {
+      var b = this.block.prev.view;
+      !0 === a && this.set({animating:!0});
+      this.set({x:b.x, y:b.y + b.height + 1});
+      var d = this;
+      !0 === a || this.animating ? this.svgGroup.animate({transform:"t" + this.x + " " + this.y}, 300, mina.easeinout, function() {
+        d.set({animating:!1});
+      }) : this.svgGroup.attr({transform:"t" + this.x + " " + this.y});
+    }
   };
   b._moveTo = function(a, b, d) {
     var e = "t" + a + " " + b;
@@ -3524,6 +3530,7 @@ Entry.BlockView = function(b, a) {
       c.set({offsetX:a.clientX, offsetY:a.clientY});
     }
     function d(a) {
+      f.terminateDrag();
       delete f.dragInstance;
       $(document).unbind(".block");
     }
@@ -3536,6 +3543,12 @@ Entry.BlockView = function(b, a) {
       this.dragInstance = new Entry.DragInstance({startX:a.clientX, startY:a.clientY, offsetX:a.clientX, offsetY:a.clientY, mode:!0});
     }
     var f = this;
+  };
+  b.terminateDrag = function() {
+    this.block.prev ? 30 < Math.sqrt(Math.pow(this.x - this.block.x, 2) + Math.pow(this.y - this.block.y, 2)) ? this.block.set({prev:null}) : this._align(!0) : this.block.doMove();
+  };
+  b._inheritAnimate = function() {
+    this.set({animating:this.block.prev.view.animating});
   };
 })(Entry.BlockView.prototype);
 Entry.Board = function(b) {
@@ -3790,8 +3803,17 @@ Entry.Block.FOLLOW = 3;
   b.next = function() {
     return this.next;
   };
+  b._updatePos = function() {
+    this.view && this.set({x:this.view.x, y:this.view.y});
+    this.next && this.next._updatePos();
+  };
   b.bindBoard = function(a) {
-    this.set({view:new Entry.BlockView(this, a)});
+    a = new Entry.BlockView(this, a);
+    this.set({view:a, x:a.x, y:a.y});
+  };
+  b.doMove = function() {
+    console.log("doMove", this.id, this.view.x - this.x, this.view.y - this.y);
+    this._updatePos();
   };
 })(Entry.Block.prototype);
 Entry.Thread = function(b, a) {

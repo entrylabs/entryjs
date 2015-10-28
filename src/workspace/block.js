@@ -106,9 +106,34 @@ Entry.Block.FOLLOW = 3;
         return this.next;
     };
 
+    p._updatePos = function() {
+        if (this.view)
+            this.set({
+                x: this.view.x,
+                y: this.view.y
+            });
+        if (this.next)
+            this.next._updatePos();
+    };
+
     // make view
     p.bindBoard = function(board) {
-        this.set({view: new Entry.BlockView(this, board)});
+        var blockView = new Entry.BlockView(this, board);
+        this.set({
+            view: blockView,
+            x: blockView.x,
+            y: blockView.y
+        });
+    };
+
+    // command func
+    p.doMove = function() {
+        console.log(
+            "doMove",
+            this.id,
+            this.view.x - this.x,
+            this.view.y - this.y);
+        this._updatePos();
     };
 
     /*

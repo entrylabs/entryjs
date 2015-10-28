@@ -19,10 +19,12 @@ Entry.BlockView = function(block, board) {
     this._contents = [];
 
     this.prevObserver = null;
+    this.prevAnimatingObserver = null;
 
     // observe
     this.block.observe(this, "_bindPrev", ["prev"]);
     this._bindPrev();
+
 
     this._startRender(block);
 };
@@ -35,7 +37,8 @@ Entry.BlockView = function(block, board) {
         y: 0,
         width: 0,
         height: 0,
-        magneting: false
+        magneting: false,
+        animating: false
     };
 
     p._startRender = function(block) {
@@ -108,6 +111,9 @@ Entry.BlockView = function(block, board) {
             this.prevObserver = this.block.prev.view.observe(
                 this, "_align", ["x", "y"]
             );
+            this.prevAnimatingObserver = this.block.prev.view.observe(
+                this, "_inheritAnimate", ["animating"]
+            );
             this._align();
         } else {
 
@@ -118,16 +124,29 @@ Entry.BlockView = function(block, board) {
         this.set(this._skeleton.box());
     };
 
-    p._align = function() {
-        var prevBlockView = this.block.prev.view;
+    p._align = function(animate) {
+        if (this.block.prev === null)
+            return;
+        var prevBlockView = this.block.prev.view
+        if (animate === true)
+            this.set({animating: true});
         this.set({
             x: prevBlockView.x,
             y: prevBlockView.y + prevBlockView.height + 1
         });
+        var that = this;
 
-        this.svgGroup.attr({
-            transform: "t" + this.x + " " + this.y
-        });
+        if (animate === true || this.animating) {
+            this.svgGroup.animate({
+                transform: "t" + this.x + " " + this.y
+            }, 300, mina.easeinout, function() {
+                that.set({animating: false});
+            });
+        } else {
+            this.svgGroup.attr({
+                transform: "t" + this.x + " " + this.y
+            });
+        }
     };
 
     p._moveTo = function(x, y, animate) {
@@ -202,12 +221,35 @@ Entry.BlockView = function(block, board) {
         }
 
         function onMouseUp(e) {
-            //block.terminateDrag();
+            block.terminateDrag();
             delete block.dragInstance;
 
             $(document).unbind('.block');
             //block._board.dragBlock = null;
         }
+    };
+
+    p.terminateDrag = function() {
+        if (!this.block.prev) {
+            this.block.doMove();
+            return;
+        } // this means block is top block {}
+        var distance = Math.sqrt(
+            Math.pow(this.x - this.block.x, 2) +
+            Math.pow(this.y - this.block.y, 2)
+        );
+        if (distance > 30) {
+            this.block.set({prev: null});
+        } else {
+            this._align(true);
+        }
+
+        return;
+    };
+
+    p._inheritAnimate = function() {
+        var prevBlockView = this.block.prev.view;
+        this.set({animating: prevBlockView.animating});
     };
 
 })(Entry.BlockView.prototype);
