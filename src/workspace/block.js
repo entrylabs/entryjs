@@ -130,6 +130,8 @@ Entry.Block.FOLLOW = 3;
             this.y
         );
         var blocks = this._thread.cut(this);
+        if (this.prev)
+            this.prev.setNext(null);
         targetBlock.insertAfter(blocks);
         this._updatePos();
     };

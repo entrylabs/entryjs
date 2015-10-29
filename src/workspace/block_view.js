@@ -130,9 +130,6 @@ Entry.BlockView = function(block, board) {
     p._align = function(animate) {
         if (this.block.prev === null)
             return;
-        var parent = this.svgGroup.parent();
-        this.svgGroup.remove();
-        parent.append(this.svgGroup);
         var prevBlockView = this.block.prev.view;
         if (animate === true)
             this.set({animating: true});
@@ -200,7 +197,7 @@ Entry.BlockView = function(block, board) {
                 offsetY: e.clientY,
                 mode: true
             });
-            //this.thread.dominate();
+            this.dominate();
         } else if (e.button === 1) {
             //this.enableHighlight();
         } else if (e.button === 2) {
@@ -276,5 +273,13 @@ Entry.BlockView = function(block, board) {
         var prevBlockView = this.block.prev.view;
         this.set({animating: prevBlockView.animating});
     };
+
+    p.dominate = function() {
+        var parent = this.svgGroup.parent();
+        this.svgGroup.remove();
+        parent.append(this.svgGroup);
+        if (this.block.next)
+            this.block.next.view.dominate();
+    }
 
 })(Entry.BlockView.prototype);

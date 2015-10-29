@@ -3516,10 +3516,7 @@ Entry.BlockView = function(b, a) {
   };
   b._align = function(a) {
     if (null !== this.block.prev) {
-      var b = this.svgGroup.parent();
-      this.svgGroup.remove();
-      b.append(this.svgGroup);
-      b = this.block.prev.view;
+      var b = this.block.prev.view;
       !0 === a && this.set({animating:!0});
       this.set({x:b.x, y:b.y + b.height + 1});
       var d = this;
@@ -3561,6 +3558,7 @@ Entry.BlockView = function(b, a) {
       e.bind("touchmove.block", b);
       e.bind("touchend.block", d);
       this.dragInstance = new Entry.DragInstance({startX:a.clientX, startY:a.clientY, offsetX:a.clientX, offsetY:a.clientY, mode:!0});
+      this.dominate();
     }
     var f = this;
   };
@@ -3576,6 +3574,12 @@ Entry.BlockView = function(b, a) {
   };
   b._inheritAnimate = function() {
     this.set({animating:this.block.prev.view.animating});
+  };
+  b.dominate = function() {
+    var a = this.svgGroup.parent();
+    this.svgGroup.remove();
+    a.append(this.svgGroup);
+    this.block.next && this.block.next.view.dominate();
   };
 })(Entry.BlockView.prototype);
 Entry.Board = function(b) {
@@ -3861,6 +3865,7 @@ Entry.Block.FOLLOW = 3;
   b.doInsert = function(a) {
     console.log("insert", this.id, a.id, this.x, this.y);
     var b = this._thread.cut(this);
+    this.prev && this.prev.setNext(null);
     a.insertAfter(b);
     this._updatePos();
   };
