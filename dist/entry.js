@@ -3429,15 +3429,28 @@ Entry.BlockMenu = function(b) {
   this._svgDom = Entry.Dom($('<svg id="blockMenu" width="100%" height="100%"version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'), {parent:b});
   this.offset = this._svgDom.offset();
   this.snap = Snap("#blockMenu");
-  this.svgBlockGroup = this.snap.group();
-  this.snap.block = "null";
-  this.observe(this, "_changeCode", ["code"]);
+  this.svgGroup = this.snap.group();
+  this.svgThreadGroup = this.svgGroup.group();
+  this.svgThreadGroup.board = this;
+  this.svgBlockGroup = this.svgGroup.group();
+  this.svgBlockGroup.board = this;
+  this.observe(this, "cloneThread", ["dragBlock"]);
 };
 (function(b) {
   b.schema = {code:null, dragBlock:null, closeBlock:null};
   b.changeCode = function(a) {
+    if (!(a instanceof Entry.Code)) {
+      return console.error("You must inject code instance");
+    }
+    a.createView(this);
+    this.set({code:a});
+    this.align();
   };
-  b._changeCode = function() {
+  b.bindCodeView = function(a) {
+    this.svgBlockGroup.remove();
+    this.svgThreadGroup.remove();
+    this.svgBlockGroup = a.svgBlockGroup;
+    this.svgThreadGroup = a.svgThreadGroup;
   };
   b.align = function() {
     for (var a = this.code._data, b = 10, d = this._svgDom.width() / 2, e = 0, f = a.length;e < f;e++) {
@@ -3448,6 +3461,7 @@ Entry.BlockMenu = function(b) {
     }
   };
   b.cloneThread = function() {
+    console.log("here");
     var a = this.dragBlock, b, d = this.getCode();
     a && a.thread && (a.observe(this, "moveBoardBlock", ["x", "y"]), b = a.getThread().clone(d), d = d.getThreads(), d.splice(d.indexOf(a.getThread()), 1, b), b.renderStart(this, !1), b = this.workspace.getBoard(), d = b.getCode(), a = a.getThread().clone(d), this._boardBlock = a.getBlocks()[0], b.dragBlock = this._boardBlock, d.addThread(a, !1), this.moveBoardBlock());
   };
@@ -3578,6 +3592,7 @@ Entry.BlockView = function(b, a) {
       e.bind("mouseup.block", d);
       e.bind("touchmove.block", b);
       e.bind("touchend.block", d);
+      this.getBoard().set({dragBlock:this});
       this.dragInstance = new Entry.DragInstance({startX:a.clientX, startY:a.clientY, offsetX:a.clientX, offsetY:a.clientY, mode:!0});
       this.dominate();
     }

@@ -194,7 +194,7 @@ Entry.BlockView = function(block, board) {
             doc.bind('mouseup.block', onMouseUp);
             doc.bind('touchmove.block', onMouseMove);
             doc.bind('touchend.block', onMouseUp);
-            //this._board.dragBlock = this;
+            this.getBoard().set({dragBlock:this});
             this.dragInstance = new Entry.DragInstance({
                 startX: e.clientX,
                 startY: e.clientY,

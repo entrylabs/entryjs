@@ -31,11 +31,16 @@ Entry.BlockMenu = function(dom) {
     this.offset = this._svgDom.offset();
 
     this.snap = Snap('#blockMenu');
-    this.svgBlockGroup = this.snap.group();
-    this.snap.block = "null";
 
-    this.observe(this, "_changeCode", ['code']);
-    //this.observe(this, "cloneThread", ['dragBlock']);
+    this.svgGroup = this.snap.group();
+
+    this.svgThreadGroup = this.svgGroup.group();
+    this.svgThreadGroup.board = this;
+
+    this.svgBlockGroup = this.svgGroup.group();
+    this.svgBlockGroup.board = this;
+
+    this.observe(this, "cloneThread", ['dragBlock']);
 };
 
 (function(p) {
@@ -46,15 +51,18 @@ Entry.BlockMenu = function(dom) {
     };
 
     p.changeCode = function(code) {
-        /*
         if (!(code instanceof Entry.Code))
             return console.error("You must inject code instance");
+        code.createView(this);
         this.set({code: code});
         this.align();
-        */
     };
 
-    p._changeCode = function() {
+    p.bindCodeView = function(codeView) {
+        this.svgBlockGroup.remove();
+        this.svgThreadGroup.remove();
+        this.svgBlockGroup = codeView.svgBlockGroup;
+        this.svgThreadGroup = codeView.svgThreadGroup;
     };
 
     p.align = function() {
@@ -76,6 +84,7 @@ Entry.BlockMenu = function(dom) {
     };
 
     p.cloneThread = function() {
+        console.log('here');
         var block = this.dragBlock;
         var clonedThread;
         var code = this.getCode();
