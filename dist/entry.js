@@ -3720,91 +3720,6 @@ Entry.BlockView = function(b, a) {
     this.svgGroup.remove();
   };
 })(Entry.BlockView.prototype);
-Entry.Board = function(b) {
-  b = "string" === typeof b ? $("#" + b) : $(b);
-  if ("DIV" !== b.prop("tagName")) {
-    return console.error("Dom is not div element");
-  }
-  if ("function" !== typeof window.Snap) {
-    return console.error("Snap library is required");
-  }
-  this.svgDom = Entry.Dom($('<svg id="play" width="100%" height="100%"version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'), {parent:b});
-  this.offset = this.svgDom.offset();
-  this.snap = Snap("#play");
-  this._blockViews = [];
-  this.svgGroup = this.snap.group();
-  this.svgThreadGroup = this.svgGroup.group();
-  this.svgThreadGroup.board = this;
-  this.svgBlockGroup = this.svgGroup.group();
-  this.svgBlockGroup.board = this;
-  Entry.Model(this, !1);
-};
-(function(b) {
-  b.schema = {code:null, dragBlock:null, closeBlock:null};
-  b.changeCode = function(a) {
-    a.createView(this);
-    this.set({code:a});
-  };
-  b.bindCodeView = function(a) {
-    this.svgBlockGroup.remove();
-    this.svgThreadGroup.remove();
-    this.svgBlockGroup = a.svgBlockGroup;
-    this.svgThreadGroup = a.svgThreadGroup;
-  };
-  b.updateCloseMagnet = function(a) {
-    if (void 0 !== a.magnets.previous) {
-      var b = Snap.getElementByPoint(a.x + this.offset.left, a.y + this.offset.top);
-      for (a = b.block;!a;) {
-        b = b.parent(), a = b.block;
-      }
-      if (a instanceof Entry.Block) {
-        this.closeBlock !== a && (null !== this.closeBlock && (this.closeBlock.magneting = !1), this.closeBlock = a, this.closeBlock.magneting = !0, this.closeBlock.thread.align(!0));
-      } else {
-        if (a instanceof Entry.Thread) {
-          a = a._blocks;
-          for (var b = a[0].y, d = 0;d < a.length;d++) {
-            var e = a[d];
-            if (this.dragBlock !== e) {
-              if (this.dragBlock.y > b && this.dragBlock.y < b + e.height && this.closeBlock !== e) {
-                null !== this.closeBlock && (this.closeBlock.magneting = !1);
-                this.closeBlock = e;
-                this.closeBlock.magneting = !0;
-                this.closeBlock.thread.align(!0);
-                break;
-              }
-              b += e.height;
-            }
-          }
-        } else {
-          this.closeBlock && (this.closeBlock.magneting = !1, this.closeBlock.thread.align(!0), this.closeBlock = null);
-        }
-      }
-    }
-  };
-  b.terminateDrag = function(a) {
-    var b = a.dragInstance;
-    if (this.closeBlock) {
-      b = a.thread.cut(a);
-      a = a.thread;
-      var d = this.closeBlock.thread, e = d.indexOf(this.closeBlock) + 1;
-      this.closeBlock.magneting = !1;
-      for (var f = b.length - 1;0 <= f;f--) {
-        b[f].thread = d, d._blocks.insert(b[f], e);
-      }
-      d.align();
-      0 === a._blocks.length ? a.destroy() : a.align();
-      this.closeBlock = null;
-    } else {
-      0 !== a.thread.indexOf(a) ? Math.sqrt(Math.pow(b.startX - b.offsetX, 2) + Math.pow(b.startY - b.offsetY, 2)) < Entry.Board.MAGNET_RANGE ? a.thread.align() : (b = a.thread.cut(a), this.code.createThread(b)) : a.thread.align();
-    }
-  };
-  b.dominate = function(a) {
-    this.snap.append(a.svgGroup);
-  };
-  b.getCode = function() {
-    return this.code;
-  };
-})(Entry.Board.prototype);
 Entry.Code = function(b) {
   Entry.Model(this, !1);
   this._data = new Entry.Collection;
@@ -4166,6 +4081,111 @@ Entry.ThreadView = function(b, a) {
     this.svgGroup.remove();
   };
 })(Entry.ThreadView.prototype);
+Entry.FieldTrashcan = function(b) {
+  this.board = b;
+  this.svgGroup = b.snap.group();
+  this._positionX = b.svgDom.width() - 110;
+  this._positionY = b.svgDom.height() - 110;
+  this._imgUrl = "";
+  this.renderStart();
+  this.align();
+};
+(function(b) {
+  b.renderStart = function() {
+    this.trashcanTop = this.svgGroup.image("/img/assets/delete_cover.png", 0, 0, 80, 20);
+    this.trashcan = this.svgGroup.image("/img/assets/delete_body.png", 0, 20, 80, 80);
+  };
+  b.align = function(a, b, d) {
+    this.svgGroup.attr({transform:"t" + this._positionX + " " + this._positionY});
+  };
+})(Entry.FieldTrashcan.prototype);
+Entry.Board = function(b) {
+  b = "string" === typeof b ? $("#" + b) : $(b);
+  if ("DIV" !== b.prop("tagName")) {
+    return console.error("Dom is not div element");
+  }
+  if ("function" !== typeof window.Snap) {
+    return console.error("Snap library is required");
+  }
+  this.svgDom = Entry.Dom($('<svg id="play" width="100%" height="100%"version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'), {parent:b});
+  this.offset = this.svgDom.offset();
+  this.snap = Snap("#play");
+  this._blockViews = [];
+  this.trashcan = new Entry.FieldTrashcan(this);
+  console.log(this);
+  this.svgGroup = this.snap.group();
+  this.svgThreadGroup = this.svgGroup.group();
+  this.svgThreadGroup.board = this;
+  this.svgBlockGroup = this.svgGroup.group();
+  this.svgBlockGroup.board = this;
+  Entry.Model(this, !1);
+};
+(function(b) {
+  b.schema = {code:null, dragBlock:null, closeBlock:null};
+  b.changeCode = function(a) {
+    a.createView(this);
+    this.set({code:a});
+  };
+  b.bindCodeView = function(a) {
+    this.svgBlockGroup.remove();
+    this.svgThreadGroup.remove();
+    this.svgBlockGroup = a.svgBlockGroup;
+    this.svgThreadGroup = a.svgThreadGroup;
+  };
+  b.updateCloseMagnet = function(a) {
+    if (void 0 !== a.magnets.previous) {
+      var b = Snap.getElementByPoint(a.x + this.offset.left, a.y + this.offset.top);
+      for (a = b.block;!a;) {
+        b = b.parent(), a = b.block;
+      }
+      if (a instanceof Entry.Block) {
+        this.closeBlock !== a && (null !== this.closeBlock && (this.closeBlock.magneting = !1), this.closeBlock = a, this.closeBlock.magneting = !0, this.closeBlock.thread.align(!0));
+      } else {
+        if (a instanceof Entry.Thread) {
+          a = a._blocks;
+          for (var b = a[0].y, d = 0;d < a.length;d++) {
+            var e = a[d];
+            if (this.dragBlock !== e) {
+              if (this.dragBlock.y > b && this.dragBlock.y < b + e.height && this.closeBlock !== e) {
+                null !== this.closeBlock && (this.closeBlock.magneting = !1);
+                this.closeBlock = e;
+                this.closeBlock.magneting = !0;
+                this.closeBlock.thread.align(!0);
+                break;
+              }
+              b += e.height;
+            }
+          }
+        } else {
+          this.closeBlock && (this.closeBlock.magneting = !1, this.closeBlock.thread.align(!0), this.closeBlock = null);
+        }
+      }
+    }
+  };
+  b.terminateDrag = function(a) {
+    var b = a.dragInstance;
+    if (this.closeBlock) {
+      b = a.thread.cut(a);
+      a = a.thread;
+      var d = this.closeBlock.thread, e = d.indexOf(this.closeBlock) + 1;
+      this.closeBlock.magneting = !1;
+      for (var f = b.length - 1;0 <= f;f--) {
+        b[f].thread = d, d._blocks.insert(b[f], e);
+      }
+      d.align();
+      0 === a._blocks.length ? a.destroy() : a.align();
+      this.closeBlock = null;
+    } else {
+      0 !== a.thread.indexOf(a) ? Math.sqrt(Math.pow(b.startX - b.offsetX, 2) + Math.pow(b.startY - b.offsetY, 2)) < Entry.Board.MAGNET_RANGE ? a.thread.align() : (b = a.thread.cut(a), this.code.createThread(b)) : a.thread.align();
+    }
+  };
+  b.dominate = function(a) {
+    this.snap.append(a.svgGroup);
+  };
+  b.getCode = function() {
+    return this.code;
+  };
+})(Entry.Board.prototype);
 Entry.Workspace = function(b, a) {
   this._blockMenu = b;
   this._board = a;
