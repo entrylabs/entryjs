@@ -70,8 +70,23 @@ Entry.block.jr_item = {
         }
     ],
     func: function() {
-        Ntry.dispatchEvent("unitAction", Ntry.STATIC.GET_ITEM);
-        return Entry.STATIC.RETURN;
+        if (!this.isContinue) {
+            this.isContinue = true;
+            this.isAction = true;
+            var self = this;
+            var callBack = function() {
+                self.isAction = false;
+            };
+            Ntry.dispatchEvent("unitAction", Ntry.STATIC.GET_ITEM , callBack);
+            return Entry.STATIC.CONTINUE;
+        } else if (this.isAction) {
+            return Entry.STATIC.CONTINUE;
+        } else {
+            delete this.isAction;
+            delete this.isContinue;
+
+            return Entry.STATIC.RETURN;
+        }
     }
 };
 
@@ -95,11 +110,12 @@ Entry.block.jr_north = {
             this.isAction = true;
             var self = this;
             var callBack = function() {
-                 self.isAction = false;
+                window.setTimeout(
+                    function() { Ntry.dispatchEvent("unitAction", Ntry.STATIC.WALK, function() {
+                        self.isAction = false;
+                        }
+                    );}, 3);
             };
-
-
-            // turn direction
             switch (this.unitComp.direction) {
                 case Ntry.STATIC.EAST:
                     Ntry.dispatchEvent("unitAction", Ntry.STATIC.TURN_LEFT, callBack);
@@ -111,7 +127,7 @@ Entry.block.jr_north = {
                     Ntry.dispatchEvent("unitAction", Ntry.STATIC.TURN_RIGHT, callBack);
                     break;
                 default:
-                    Ntry.dispatchEvent("unitAction", Ntry.STATIC.WALK, callBack);
+                    callBack();
                     break;
 
             }
@@ -140,21 +156,40 @@ Entry.block.jr_east = {
         }
     ],
     func: function() {
-        if (!this.isContinue) {
+         if (!this.isContinue) {
+
             this.isContinue = true;
             this.isAction = true;
             var self = this;
             var callBack = function() {
-                self.isAction = false;
-            };
-            Ntry.dispatchEvent("unitAction", Ntry.STATIC.WALK, callBack);
+                window.setTimeout(
+                    function() { Ntry.dispatchEvent("unitAction", Ntry.STATIC.WALK,
+                        function() { self.isAction = false; } );}
+                    , 3);
+            }
+
+            // turn direction
+            switch (this.unitComp.direction) {
+                case Ntry.STATIC.SOUTH:
+                    Ntry.dispatchEvent("unitAction", Ntry.STATIC.TURN_LEFT, callBack);
+                    break;
+                case Ntry.STATIC.WEST:
+                    Ntry.dispatchEvent("unitAction", Ntry.STATIC.HALF_ROTATION, callBack);
+                    break;
+                case Ntry.STATIC.NORTH:
+                    Ntry.dispatchEvent("unitAction", Ntry.STATIC.TURN_RIGHT, callBack);
+                    break;
+                default:
+                    callBack();
+                    break;
+
+            }
             return Entry.STATIC.CONTINUE;
         } else if (this.isAction) {
             return Entry.STATIC.CONTINUE;
         } else {
             delete this.isAction;
             delete this.isContinue;
-
             return Entry.STATIC.RETURN;
         }
     }
@@ -164,7 +199,7 @@ Entry.block.jr_south = {
     skeleton: "pebble_basic",
     color: "#A751E3",
     contents: [
-        "아래로",
+        "아래쪽",
         {
             type: "Indicator",
             img: "/img/assets/ntry/bitmap/jr/block_down_image.png",
@@ -173,7 +208,43 @@ Entry.block.jr_south = {
         }
     ],
     func: function() {
-        return Entry.STATIC.RETURN;
+         if (!this.isContinue) {
+
+            this.isContinue = true;
+            this.isAction = true;
+            var self = this;
+            var callBack = function() {
+                window.setTimeout(
+                    function() { Ntry.dispatchEvent("unitAction", Ntry.STATIC.WALK,
+                        function() { self.isAction = false; } );}
+                    , 3);
+            }
+
+            // turn direction
+            switch (this.unitComp.direction) {
+                case Ntry.STATIC.EAST:
+                    Ntry.dispatchEvent("unitAction", Ntry.STATIC.TURN_RIGHT, callBack);
+                    break;
+                case Ntry.STATIC.NORTH:
+                    Ntry.dispatchEvent("unitAction", Ntry.STATIC.HALF_ROTATION, callBack);
+                    break;
+                case Ntry.STATIC.WEST:
+                    Ntry.dispatchEvent("unitAction", Ntry.STATIC.TURN_LEFT, callBack);
+                    break;
+                default:
+                    callBack();
+                    break;
+
+            }
+            return Entry.STATIC.CONTINUE;
+        } else if (this.isAction) {
+            return Entry.STATIC.CONTINUE;
+        } else {
+            delete this.isAction;
+            delete this.isContinue;
+            return Entry.STATIC.RETURN;
+        }
+
 
     }
 };
@@ -191,6 +262,41 @@ Entry.block.jr_west = {
         }
     ],
     func: function() {
-        return Entry.STATIC.RETURN;
+        if (!this.isContinue) {
+
+            this.isContinue = true;
+            this.isAction = true;
+            var self = this;
+            var callBack = function() {
+                window.setTimeout(
+                    function() { Ntry.dispatchEvent("unitAction", Ntry.STATIC.WALK,
+                        function() { self.isAction = false; } );}
+                    , 3);
+            };
+
+            // turn direction
+            switch (this.unitComp.direction) {
+                case Ntry.STATIC.SOUTH:
+                    Ntry.dispatchEvent("unitAction", Ntry.STATIC.TURN_RIGHT, callBack);
+                    break;
+                case Ntry.STATIC.EAST:
+                    Ntry.dispatchEvent("unitAction", Ntry.STATIC.HALF_ROTATION, callBack);
+                    break;
+                case Ntry.STATIC.NORTH:
+                    Ntry.dispatchEvent("unitAction", Ntry.STATIC.TURN_LEFT, callBack);
+                    break;
+                default:
+                    callBack();
+                    break;
+
+            }
+            return Entry.STATIC.CONTINUE;
+        } else if (this.isAction) {
+            return Entry.STATIC.CONTINUE;
+        } else {
+            delete this.isAction;
+            delete this.isContinue;
+            return Entry.STATIC.RETURN;
+        }
     }
 };
