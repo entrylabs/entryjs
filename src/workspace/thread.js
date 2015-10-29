@@ -74,6 +74,12 @@ Entry.Thread = function(thread, code) {
         this._code.registerEvent(block, eventType);
     };
 
+    p.createView = function(board) {
+        this._data.map(function(b) {
+            b.createView(board);
+        });
+    };
+
     p.changeBoard = function() {
         var board = this._code.board;
 

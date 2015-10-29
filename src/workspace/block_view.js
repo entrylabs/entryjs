@@ -87,6 +87,11 @@ Entry.BlockView = function(block, board) {
         this._alignContent();
     };
 
+    p.changeBoard = function(board) {
+        this.svgGroup.remove();
+        board.svgBlockGroup.append(this.svgGroup);
+    };
+
     p._alignContent = function(animate) {
         var cursor = {x: 0, y: 0};
         for (var i = 0; i < this._contents.length; i++) {

@@ -37,7 +37,13 @@ Entry.Board = function(dom) {
 
     this._blockViews = [];
 
-    this.svgBlockGroup = this.snap.group();
+    this.svgGroup = this.snap.group();
+
+    this.svgThreadGroup = this.svgGroup.group();
+    this.svgThreadGroup.board = this;
+
+    this.svgBlockGroup = this.svgGroup.group();
+    this.svgBlockGroup.board = this;
 
     Entry.Model(this, false);
 
@@ -52,12 +58,18 @@ Entry.Board = function(dom) {
     };
 
     p.changeCode = function(code) {
+        code.createView(this);
         this.set({code: code});
     };
 
+    p.bindCodeView = function(codeView) {
+        this.svgBlockGroup.remove();
+        this.svgThreadGroup.remove();
+        this.svgBlockGroup = codeView.svgBlockGroup;
+        this.svgThreadGroup = codeView.svgThreadGroup;
+    };
+
     p._changeCode = function() {
-        if (this.code !== null)
-            this.code.changeBoard(this);
     };
 
     p._makeBlockViewAll = function() {

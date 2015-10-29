@@ -3514,6 +3514,10 @@ Entry.BlockView = function(b, a) {
     }
     this._alignContent();
   };
+  b.changeBoard = function(a) {
+    this.svgGroup.remove();
+    a.svgBlockGroup.append(this.svgGroup);
+  };
   b._alignContent = function(a) {
     for (var b = 0, d = 0;d < this._contents.length;d++) {
       var e = this._contents[d];
@@ -3617,17 +3621,27 @@ Entry.Board = function(b) {
   this.offset = this.svgDom.offset();
   this.snap = Snap("#play");
   this._blockViews = [];
-  this.svgBlockGroup = this.snap.group();
+  this.svgGroup = this.snap.group();
+  this.svgThreadGroup = this.svgGroup.group();
+  this.svgThreadGroup.board = this;
+  this.svgBlockGroup = this.svgGroup.group();
+  this.svgBlockGroup.board = this;
   Entry.Model(this, !1);
   this.observe(this, "_changeCode", ["code"]);
 };
 (function(b) {
   b.schema = {code:null, dragBlock:null, closeBlock:null};
   b.changeCode = function(a) {
+    a.createView(this);
     this.set({code:a});
   };
+  b.bindCodeView = function(a) {
+    this.svgBlockGroup.remove();
+    this.svgThreadGroup.remove();
+    this.svgBlockGroup = a.svgBlockGroup;
+    this.svgThreadGroup = a.svgThreadGroup;
+  };
   b._changeCode = function() {
-    null !== this.code && this.code.changeBoard(this);
   };
   b._makeBlockViewAll = function() {
   };
@@ -3693,7 +3707,7 @@ Entry.Code = function(b) {
   this.load(b);
 };
 (function(b) {
-  b.schema = {board:null};
+  b.schema = {view:null};
   b.load = function(a) {
     if (!(a instanceof Array)) {
       return console.error("code must be array");
@@ -3702,8 +3716,8 @@ Entry.Code = function(b) {
       this._data.push(new Entry.Thread(a[b], this));
     }
   };
-  b.changeBoard = function(a) {
-    this.set({board:a});
+  b.createView = function(a) {
+    null === this.view && this.set({view:Entry.CodeView(this, a)});
   };
   b.registerEvent = function(a, b) {
     this._eventMap[b] || (this._eventMap[b] = []);
@@ -3714,6 +3728,9 @@ Entry.Code = function(b) {
     for (var b = 0;b < a.length;b++) {
       this.executors.push({block:a[b]});
     }
+  };
+  b.map = function(a) {
+    this._data.map(a);
   };
   b.tick = function() {
     for (var a = this.executors, b = 0;b < a.length;b++) {
@@ -3733,6 +3750,23 @@ Entry.Code = function(b) {
     this._data.push(new Entry.Thread(a, this));
   };
 })(Entry.Code.prototype);
+Entry.CodeView = function(b, a) {
+  Entry.Model(this, !1);
+  this.code = b;
+  this.board = a;
+  this.observe(this, "changeBoard", ["board"]);
+  this.svgThreadGroup = a.svgGroup.group();
+  this.svgThreadGroup.board = this;
+  this.svgBlockGroup = a.svgGroup.group();
+  this.svgBlockGroup.board = this;
+  a.bindCodeView(this);
+  this.code.map(function(b) {
+    b.createView(a);
+  });
+};
+(function(b) {
+  b.schema = {board:null, scrollX:0, scrollY:0};
+})(Entry.CodeView.prototype);
 Entry.FieldIndicator = function(b, a) {
   this._block = a;
   this.box = new Entry.BoxModel;
@@ -3872,9 +3906,11 @@ Entry.Block.FOLLOW = 3;
     this.view && this.set({x:this.view.x, y:this.view.y});
     this.next && this.next._updatePos();
   };
+  b.createView = function(a) {
+    this.view || this.set({view:new Entry.BlockView(this, a)});
+  };
   b.bindBoard = function(a) {
-    a = new Entry.BlockView(this, a);
-    this.set({view:a, x:a.x, y:a.y});
+    this.view ? this.view.changeBoard(a) : (a = new Entry.BlockView(this, a), this.set({view:a, x:a.x, y:a.y}));
   };
   b.doMove = function() {
     console.log("doMove", this.id, this.view.x - this.x, this.view.y - this.y);
@@ -3929,6 +3965,11 @@ Entry.Thread = function(b, a) {
   b.registerEvent = function(a, b) {
     this._code.registerEvent(a, b);
   };
+  b.createView = function(a) {
+    this._data.map(function(b) {
+      b.createView(a);
+    });
+  };
   b.changeBoard = function() {
     var a = this._code.board;
     this._data.map(function(b) {
@@ -3953,6 +3994,12 @@ Entry.Thread = function(b, a) {
     this._setRelation();
   };
 })(Entry.Thread.prototype);
+Entry.ThreadView = function(b, a) {
+  Entry.Model(this, !1);
+};
+(function(b) {
+  b.schema = {scrollX:0, scrollY:0};
+})(Entry.ThreadView.prototype);
 Entry.Workspace = function(b, a) {
   this._blockMenu = b;
   this._board = a;

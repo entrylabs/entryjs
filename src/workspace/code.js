@@ -25,7 +25,7 @@ Entry.Code = function(code) {
 
 (function(p) {
     p.schema = {
-        board: null
+        view: null
     };
 
     p.load = function(code) {
@@ -37,8 +37,10 @@ Entry.Code = function(code) {
         }
     };
 
-    p.changeBoard = function(board) {
-        this.set({board: board});
+    p.createView = function(board) {
+        if (this.view === null) {
+            this.set({view: Entry.CodeView(this, board)});
+        }
     };
 
     p.registerEvent = function(block, eventType) {
@@ -54,6 +56,10 @@ Entry.Code = function(code) {
             var executor = {block: blocks[i]};
             this.executors.push(executor);
         }
+    };
+
+    p.map = function(func) {
+        this._data.map(func);
     };
 
     p.tick = function() {

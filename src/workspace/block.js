@@ -90,14 +90,24 @@ Entry.Block.FOLLOW = 3;
             this.next._updatePos();
     };
 
+    p.createView = function(board) {
+        if (!this.view) {
+            this.set({view: new Entry.BlockView(this, board)});
+        }
+    };
+
     // make view
     p.bindBoard = function(board) {
-        var blockView = new Entry.BlockView(this, board);
-        this.set({
-            view: blockView,
-            x: blockView.x,
-            y: blockView.y
-        });
+        if (this.view) {
+            this.view.changeBoard(board);
+        } else {
+            var blockView = new Entry.BlockView(this, board);
+            this.set({
+                view: blockView,
+                x: blockView.x,
+                y: blockView.y
+            });
+        }
     };
 
     // command func
