@@ -168,9 +168,8 @@ Entry.block.jr_east = {
             var callBack = function() {
                 window.setTimeout(
                     function() { Ntry.dispatchEvent("unitAction", Ntry.STATIC.WALK,
-                        function() { self.isAction = false; } );}
-                    , 3);
-            }
+                        function() { self.isAction = false; } );}, 3);
+            };
 
             // turn direction
             switch (this.unitComp.direction) {
@@ -220,9 +219,8 @@ Entry.block.jr_south = {
             var callBack = function() {
                 window.setTimeout(
                     function() { Ntry.dispatchEvent("unitAction", Ntry.STATIC.WALK,
-                        function() { self.isAction = false; } );}
-                    , 3);
-            }
+                        function() { self.isAction = false; } );}, 3);
+            };
 
             // turn direction
             switch (this.unitComp.direction) {
@@ -274,8 +272,7 @@ Entry.block.jr_west = {
             var callBack = function() {
                 window.setTimeout(
                     function() { Ntry.dispatchEvent("unitAction", Ntry.STATIC.WALK,
-                        function() { self.isAction = false; } );}
-                    , 3);
+                        function() { self.isAction = false; } );}, 3);
             };
 
             // turn direction
@@ -292,7 +289,6 @@ Entry.block.jr_west = {
                 default:
                     callBack();
                     break;
-
             }
             return Entry.STATIC.CONTINUE;
         } else if (this.isAction) {

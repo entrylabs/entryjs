@@ -29,6 +29,7 @@ Entry.BlockMenu = function(dom) {
     );
 
     this.offset = this._svgDom.offset();
+    this._svgWidth = this._svgDom.width();
 
     this.snap = Snap('#blockMenu');
 
@@ -84,36 +85,42 @@ Entry.BlockMenu = function(dom) {
     };
 
     p.cloneThread = function() {
+        var svgWidth = this._svgWidth;
         var blockView = this.dragBlock;
         var block = blockView.block;
         var clonedThread;
         var code = this.code;
-        if (block && block.getThread()) {
-            block.observe(this, "moveBoardBlock", ['x', 'y']);
-            clonedThread = code.cloneThread(block.getThread());
+        var currentThread = block.getThread();
+        if (block && currentThread) {
+            blockView.observe(this, "moveBoardBlock", ['x', 'y']);
+            code.cloneThread(currentThread);
+
+            this._boardBlockView = this.workspace.getBoard().code.
+                cloneThread(currentThread).getFirstBlock().view;
+            this._boardBlockView._moveTo(
+                -(svgWidth - blockView.x),
+                blockView.y,
+                false
+            );
         }
+
     };
 
+    p.terminateDrag = function() {
+        var boardBlockView = this._boardBlockView;
+        var boardBlock = boardBlockView.block;
+        var dragBlockView = this.dragBlock;
+        var dragBlock = dragBlockView.block;
+        var thisCode = this.code;
+        var boardCode = this.workspace.getBoard().code;
 
-    p.updateCloseMagnet = function(targetBlock) {
-    };
+        //destory boardBlock below the range
+        if (dragBlockView.x < this._svgWidth)
+            boardCode.destroyThread(boardBlock.getThread());
+        else boardBlock.view.terminateDrag();
 
-    p.terminateDrag = function(block) {
-        var boardBlock = this._boardBlock;
-        this._boardBlock._board.terminateDrag(boardBlock);
-
-        //remove dragging thread
-        var originBlock = this.dragBlock;
-        if (originBlock && originBlock.getThread()) {
-            //destory boardBlock below the range
-            if (originBlock.x < this._svgDom.width())
-                destroyThread(boardBlock.getThread());
-            destroyThread(originBlock.getThread());
-            this._boardBlock = null;
-        }
-        function destroyThread(thread) {
-            thread.destroy();
-        }
+        thisCode.destroyThread(dragBlock.getThread(), true);
+        this._boardBlockView = null;
     };
 
     p.dominate = function(thread) {
@@ -130,17 +137,16 @@ Entry.BlockMenu = function(dom) {
         var offsetX = boardOffset.left - thisOffset.left,
             offsetY = boardOffset.top - thisOffset.top;
 
-        var dragBlock = this.dragBlock;
-        var boardBlock = this._boardBlock;
-        if (boardBlock && dragBlock) {
-            var x = dragBlock.x;
-            var y = dragBlock.y;
-            boardBlock.moveTo(
+        var dragBlockView = this.dragBlock;
+        var boardBlockView = this._boardBlockView;
+        if (dragBlockView && boardBlockView) {
+            var x = dragBlockView.x;
+            var y = dragBlockView.y;
+            boardBlockView._moveTo(
                 x-offsetX,
                 y-offsetY,
                 false
             );
-            boardBlock.getBoard().updateCloseMagnet(boardBlock);
         }
     };
 })(Entry.BlockMenu.prototype);
