@@ -3463,8 +3463,20 @@ Entry.block.jr_start = {skeleton:"pebble_event", color:"#3BBD70", contents:[{typ
 Entry.block.jr_repeat = {skeleton:"pebble_loop", color:"#3BBD70", contents:["1", "\ubc18\ubcf5"], func:function() {
 }};
 Entry.block.jr_item = {skeleton:"pebble_basic", color:"#F46C6C", contents:["\uaf43 \ubaa8\uc73c\uae30", {type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_item_image.png", highlightColor:"#FFF", position:{x:83, y:0}, size:22}], func:function() {
-  Ntry.dispatchEvent("unitAction", Ntry.STATIC.GET_ITEM);
-  return Entry.STATIC.RETURN;
+  if (this.isContinue) {
+    if (this.isAction) {
+      return Entry.STATIC.CONTINUE;
+    }
+    delete this.isAction;
+    delete this.isContinue;
+    return Entry.STATIC.RETURN;
+  }
+  this.isAction = this.isContinue = !0;
+  var b = this;
+  Ntry.dispatchEvent("unitAction", Ntry.STATIC.GET_ITEM, function() {
+    b.isAction = !1;
+  });
+  return Entry.STATIC.CONTINUE;
 }};
 Entry.block.jr_north = {skeleton:"pebble_basic", color:"#A751E3", contents:["   \uc704\ub85c", {type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_up_image.png", position:{x:83, y:0}, size:22}], func:function() {
   if (this.isContinue) {
@@ -3477,20 +3489,24 @@ Entry.block.jr_north = {skeleton:"pebble_basic", color:"#A751E3", contents:["   
   }
   this.isAction = this.isContinue = !0;
   var b = this, a = function() {
-    b.isAction = !1;
+    window.setTimeout(function() {
+      Ntry.dispatchEvent("unitAction", Ntry.STATIC.WALK, function() {
+        b.isAction = !1;
+      });
+    }, 3);
   };
   switch(this.unitComp.direction) {
     case Ntry.STATIC.EAST:
       Ntry.dispatchEvent("unitAction", Ntry.STATIC.TURN_LEFT, a);
       break;
     case Ntry.STATIC.SOUTH:
-      Ntry.dispatchEvent("unitAction", Ntry.STATIC.HALF_ROTATION, a);
+      Ntry.dispatchEvent("unitAction", Ntry.STATIC.TURN_LEFT, a);
       break;
     case Ntry.STATIC.WEST:
-      Ntry.dispatchEvent("unitAction", Ntry.STATIC.TURN_RIGHT, a);
+      Ntry.dispatchEvent("unitAction", Ntry.STATIC.TURN_LEFT, a);
       break;
     default:
-      Ntry.dispatchEvent("unitAction", Ntry.STATIC.WALK, a);
+      a();
   }
   return Entry.STATIC.CONTINUE;
 }};
@@ -3504,17 +3520,91 @@ Entry.block.jr_east = {skeleton:"pebble_basic", color:"#A751E3", contents:["\uc6
     return Entry.STATIC.RETURN;
   }
   this.isAction = this.isContinue = !0;
-  var b = this;
-  Ntry.dispatchEvent("unitAction", Ntry.STATIC.WALK, function() {
-    b.isAction = !1;
-  });
+  var b = this, a = function() {
+    window.setTimeout(function() {
+      Ntry.dispatchEvent("unitAction", Ntry.STATIC.WALK, function() {
+        b.isAction = !1;
+      });
+    }, 3);
+  };
+  switch(this.unitComp.direction) {
+    case Ntry.STATIC.SOUTH:
+      Ntry.dispatchEvent("unitAction", Ntry.STATIC.TURN_LEFT, a);
+      break;
+    case Ntry.STATIC.WEST:
+      Ntry.dispatchEvent("unitAction", Ntry.STATIC.HALF_ROTATION, a);
+      break;
+    case Ntry.STATIC.NORTH:
+      Ntry.dispatchEvent("unitAction", Ntry.STATIC.TURN_RIGHT, a);
+      break;
+    default:
+      a();
+  }
   return Entry.STATIC.CONTINUE;
 }};
-Entry.block.jr_south = {skeleton:"pebble_basic", color:"#A751E3", contents:["\uc544\ub798\ub85c", {type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_down_image.png", position:{x:83, y:0}, size:22}], func:function() {
-  return Entry.STATIC.RETURN;
+Entry.block.jr_south = {skeleton:"pebble_basic", color:"#A751E3", contents:["\uc544\ub798\ucabd", {type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_down_image.png", position:{x:83, y:0}, size:22}], func:function() {
+  if (this.isContinue) {
+    if (this.isAction) {
+      return Entry.STATIC.CONTINUE;
+    }
+    delete this.isAction;
+    delete this.isContinue;
+    return Entry.STATIC.RETURN;
+  }
+  this.isAction = this.isContinue = !0;
+  var b = this, a = function() {
+    window.setTimeout(function() {
+      Ntry.dispatchEvent("unitAction", Ntry.STATIC.WALK, function() {
+        b.isAction = !1;
+      });
+    }, 3);
+  };
+  switch(this.unitComp.direction) {
+    case Ntry.STATIC.EAST:
+      Ntry.dispatchEvent("unitAction", Ntry.STATIC.TURN_RIGHT, a);
+      break;
+    case Ntry.STATIC.NORTH:
+      Ntry.dispatchEvent("unitAction", Ntry.STATIC.HALF_ROTATION, a);
+      break;
+    case Ntry.STATIC.WEST:
+      Ntry.dispatchEvent("unitAction", Ntry.STATIC.TURN_LEFT, a);
+      break;
+    default:
+      a();
+  }
+  return Entry.STATIC.CONTINUE;
 }};
 Entry.block.jr_west = {skeleton:"pebble_basic", color:"#A751E3", contents:["   \uc67c\ucabd", {type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_left_image.png", position:{x:83, y:0}, size:22}], func:function() {
-  return Entry.STATIC.RETURN;
+  if (this.isContinue) {
+    if (this.isAction) {
+      return Entry.STATIC.CONTINUE;
+    }
+    delete this.isAction;
+    delete this.isContinue;
+    return Entry.STATIC.RETURN;
+  }
+  this.isAction = this.isContinue = !0;
+  var b = this, a = function() {
+    window.setTimeout(function() {
+      Ntry.dispatchEvent("unitAction", Ntry.STATIC.WALK, function() {
+        b.isAction = !1;
+      });
+    }, 3);
+  };
+  switch(this.unitComp.direction) {
+    case Ntry.STATIC.SOUTH:
+      Ntry.dispatchEvent("unitAction", Ntry.STATIC.TURN_RIGHT, a);
+      break;
+    case Ntry.STATIC.EAST:
+      Ntry.dispatchEvent("unitAction", Ntry.STATIC.HALF_ROTATION, a);
+      break;
+    case Ntry.STATIC.NORTH:
+      Ntry.dispatchEvent("unitAction", Ntry.STATIC.TURN_LEFT, a);
+      break;
+    default:
+      a();
+  }
+  return Entry.STATIC.CONTINUE;
 }};
 Entry.BlockMenu = function(b) {
   Entry.Model(this, !1);
@@ -3684,14 +3774,13 @@ Entry.Code = function(b) {
   b.raiseEvent = function(a) {
     for (var b = 0;b < this.threads.length;b++) {
       var d = this.threads.at(b).raiseEvent(a);
-      console.log(d);
       null !== d && this.executors.push(d);
     }
   };
   b.tick = function() {
     for (var a = this.executors, b = 0;b < a.length;b++) {
       for (var d = a[b];d.block && d.block.func.call(d) == Entry.STATIC.RETURN;) {
-        console.log(d.block), d.block = d.block.thread.next(d.block);
+        d.block = d.block.thread.next(d.block);
       }
       null === d && (a.splice(b, 1), b--);
     }

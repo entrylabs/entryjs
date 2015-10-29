@@ -61,7 +61,6 @@ Entry.Code = function(code) {
     p.raiseEvent = function(event) {
         for (var i = 0; i < this.threads.length; i++) {
             var executor = this.threads.at(i).raiseEvent(event);
-            console.log(executor);
             if (executor !== null) this.executors.push(executor);
         }
     };
@@ -72,7 +71,6 @@ Entry.Code = function(code) {
             var executor = executors[i];
             while (executor.block &&
                    executor.block.func.call(executor) == Entry.STATIC.RETURN) {
-                console.log(executor.block);
                 executor.block = executor.block.thread.next(executor.block);
             }
             if (executor === null) {
