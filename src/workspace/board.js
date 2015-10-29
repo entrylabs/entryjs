@@ -56,8 +56,8 @@ Entry.Board = function(dom) {
     };
 
     p.changeCode = function(code) {
-        code.createView(this);
         this.set({code: code});
+        code.createView(this);
     };
 
     p.bindCodeView = function(codeView) {

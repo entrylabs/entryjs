@@ -65,7 +65,7 @@ Entry.skeleton.pebble_event = {
 Entry.skeleton.pebble_loop = {
     path: function(block) {
         var contentWidth = 124;
-        var contentHeight = 50;
+        var contentHeight = Math.max(block.contentHeight, 50);
         return ("M 0,9 a 9,9 0 0,0 9,-9 h %cw a 25,25 0 0,1 25,25 v %ch a 25,25 0 0,1 -25,25 h -%cw a 9,9 0 0,1 -18,0 " +
             "h -%cw a 25,25 0 0,1 -25,-25 v -%ch a 25,25 0 0,1 25,-25 h %cw a 9,9 0 0,0 9,9 z" +
             " M 0,49 a 9,9 0 0,1 -9,-9 h -28 a 25,25 0 0,0 -25,25 v %cih a 25,25 0 0,0 25,25 h 28 a 9,9 0 0,0 18,0 " +
