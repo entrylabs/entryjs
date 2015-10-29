@@ -3763,13 +3763,40 @@ Entry.FieldDropdown = function(b, a) {
   this._block = a;
   this.box = new Entry.BoxModel;
   this.svgGroup = null;
+  this._contents = b;
   this.renderStart();
 };
 (function(b) {
   b.renderStart = function() {
+    var a = this, b = this._contents.options, d = this._contents.value, e = 22 * b.length;
     this.svgGroup = this._block.contentSvgGroup.group();
-    this.svgGroup.rect(0, -10, 20, 20);
-    this.box.set({x:0, y:0, width:20, height:20});
+    this.topGroup = this.svgGroup.group();
+    this.bottomGroup = this.svgGroup.group();
+    this.bottomGroup.remove();
+    this.topGroup.rect(0, -12, 39, 22).attr({fill:"#80cbf8", stroke:"#127cdb"});
+    this.textElement = this.topGroup.text(10, 3, b[d]);
+    this.topGroup.polygon(28, -2, 34, -2, 31, 2).attr({fill:"#127cbd", stroke:"#127cbd"});
+    this.topGroup.mousedown(function(b) {
+      a.svgGroup.append(a.bottomGroup);
+    });
+    var d = [], f;
+    for (f in b) {
+      d.push(this.bottomGroup.group());
+      var h = Number(f) + 1, g = d[f].rect(0, -12 + 22 * h, 39, 22).attr({fill:"white"});
+      d[f].text(10, 3 + 22 * h, b[f]);
+      (function(b, c, d) {
+        b.hover(function() {
+          c.attr({fill:"#ccc"});
+        }, function() {
+          c.attr({fill:"white"});
+        });
+        b.mousedown(function() {
+          a.applyValue(d);
+          a.bottomGroup.remove();
+        });
+      })(d[f], g, b[f]);
+    }
+    this.box.set({x:0, y:0, width:39, height:e});
   };
   b.align = function(a, b, d) {
     var e = this.svgGroup;
@@ -3777,6 +3804,9 @@ Entry.FieldDropdown = function(b, a) {
     var f = "t" + a + " " + b;
     void 0 === d || d ? e.animate({transform:f}, 300, mina.easeinout) : e.attr({transform:f});
     this.box.set({x:a, y:b});
+  };
+  b.applyValue = function(a) {
+    this.textElement.node.textContent = a;
   };
 })(Entry.FieldDropdown.prototype);
 Entry.FieldIndicator = function(b, a) {
