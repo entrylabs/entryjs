@@ -39,7 +39,7 @@ Entry.Code = function(code) {
 
     p.createView = function(board) {
         if (this.view === null) {
-            this.set({view: Entry.CodeView(this, board)});
+            this.set({view: new Entry.CodeView(this, board)});
         } else {
             // TODO: bind child board
             board.bindCodeView(this.view);
@@ -90,6 +90,14 @@ Entry.Code = function(code) {
 
         this._data.push(new Entry.Thread(blocks, this));
     };
+
+    p.cloneThread = function(thread) {
+        var newThread = thread.clone();
+        this._data.push(newThread);
+        return newThread;
+    };
+
+
 
     /*
     p.createThread = function(blocks) {

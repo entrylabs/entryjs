@@ -53,6 +53,7 @@ Entry.BlockMenu = function(dom) {
     p.changeCode = function(code) {
         if (!(code instanceof Entry.Code))
             return console.error("You must inject code instance");
+        console.log('asdf')
         code.createView(this);
         this.set({code: code});
         this.align();
@@ -84,30 +85,13 @@ Entry.BlockMenu = function(dom) {
     };
 
     p.cloneThread = function() {
-        console.log('here');
-        var block = this.dragBlock;
+        var blockView = this.dragBlock;
+        var block = blockView.block;
         var clonedThread;
-        var code = this.getCode();
-        if (block && block.thread) {
+        var code = this.code;
+        if (block && block.getThread()) {
             block.observe(this, "moveBoardBlock", ['x', 'y']);
-            clonedThread = block.getThread().clone(code);
-                //clone thread at blockMenu
-            var threads = code.getThreads();
-            threads.splice(
-                threads.indexOf(block.getThread()),
-                1,
-                clonedThread
-            );
-            clonedThread.renderStart(this, false);
-
-            //clone thread at Workspace
-            var board = this.workspace.getBoard();
-            var boardCode = board.getCode();
-            var boardThread = block.getThread().clone(boardCode);
-            this._boardBlock = boardThread.getBlocks()[0];
-            board.dragBlock = this._boardBlock;
-            boardCode.addThread(boardThread, false);
-            this.moveBoardBlock();
+            clonedThread = code.cloneThread(block.getThread());
         }
     };
 

@@ -3532,6 +3532,7 @@ Entry.BlockMenu = function(b) {
     if (!(a instanceof Entry.Code)) {
       return console.error("You must inject code instance");
     }
+    console.log("asdf");
     a.createView(this);
     this.set({code:a});
     this.align();
@@ -3551,9 +3552,8 @@ Entry.BlockMenu = function(b) {
     }
   };
   b.cloneThread = function() {
-    console.log("here");
-    var a = this.dragBlock, b, d = this.getCode();
-    a && a.thread && (a.observe(this, "moveBoardBlock", ["x", "y"]), b = a.getThread().clone(d), d = d.getThreads(), d.splice(d.indexOf(a.getThread()), 1, b), b.renderStart(this, !1), b = this.workspace.getBoard(), d = b.getCode(), a = a.getThread().clone(d), this._boardBlock = a.getBlocks()[0], b.dragBlock = this._boardBlock, d.addThread(a, !1), this.moveBoardBlock());
+    var a = this.dragBlock.block, b = this.code;
+    a && a.getThread() && (a.observe(this, "moveBoardBlock", ["x", "y"]), b.cloneThread(a.getThread()));
   };
   b.updateCloseMagnet = function(a) {
   };
@@ -3814,7 +3814,7 @@ Entry.Code = function(b) {
     }
   };
   b.createView = function(a) {
-    null === this.view ? this.set({view:Entry.CodeView(this, a)}) : a.bindCodeView(this.view);
+    null === this.view ? this.set({view:new Entry.CodeView(this, a)}) : a.bindCodeView(this.view);
   };
   b.registerEvent = function(a, b) {
     this._eventMap[b] || (this._eventMap[b] = []);
@@ -3846,11 +3846,16 @@ Entry.Code = function(b) {
     }
     this._data.push(new Entry.Thread(a, this));
   };
+  b.cloneThread = function(a) {
+    a = a.clone();
+    this._data.push(a);
+    return a;
+  };
 })(Entry.Code.prototype);
 Entry.CodeView = function(b, a) {
   Entry.Model(this, !1);
   this.code = b;
-  this.board = a;
+  this.set({board:a});
   this.observe(this, "changeBoard", ["board"]);
   this.svgThreadGroup = a.svgGroup.group();
   this.svgThreadGroup.board = a;
@@ -4004,6 +4009,9 @@ Entry.Block.FOLLOW = 3;
   b.setThread = function(a) {
     this._thread = a;
   };
+  b.getThread = function() {
+    return this._thread;
+  };
   b.setPrev = function(a) {
     this.set({prev:a});
   };
@@ -4025,6 +4033,9 @@ Entry.Block.FOLLOW = 3;
   };
   b.createView = function(a) {
     this.view || this.set({view:new Entry.BlockView(this, a)});
+  };
+  b.clone = function() {
+    return new Entry.Block(this);
   };
   b.doMove = function() {
     console.log("doMove", this.id, this.view.x - this.x, this.view.y - this.y);
@@ -4080,10 +4091,13 @@ Entry.Thread = function(b, a) {
     this._code.registerEvent(a, b);
   };
   b.createView = function(a) {
-    console.log(a);
     this.view || (this.view = new Entry.ThreadView(this, a));
     this._data.map(function(b) {
       b.createView(a);
+      console.log(b);
+      console.log(b.view);
+      console.log(b.view.board);
+      console.log(a);
     });
   };
   b.separate = function(a) {
@@ -4102,6 +4116,12 @@ Entry.Thread = function(b, a) {
     }
     this._data.splice.apply(this._data, [d + 1, 0].concat(b));
     this._setRelation();
+  };
+  b.clone = function() {
+    for (var a = this._code, b = [], d = 0;d < this._data.length;d++) {
+      b.push(this._data[d].clone());
+    }
+    return new Entry.Thread(b, a);
   };
 })(Entry.Thread.prototype);
 Entry.ThreadView = function(b, a) {

@@ -60,6 +60,10 @@ Entry.Block.FOLLOW = 3;
         this._thread = thread;
     };
 
+    p.getThread = function() {
+        return this._thread;
+    };
+
     p.setPrev = function(block) {
         this.set({prev: block});
     };
@@ -94,6 +98,10 @@ Entry.Block.FOLLOW = 3;
         if (!this.view) {
             this.set({view: new Entry.BlockView(this, board)});
         }
+    };
+
+    p.clone = function() {
+        return new Entry.Block(this);
     };
 
     // command func
