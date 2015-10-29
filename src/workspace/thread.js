@@ -81,10 +81,6 @@ Entry.Thread = function(thread, code) {
             this.view = new Entry.ThreadView(this, board);
         this._data.map(function(b) {
             b.createView(board);
-            console.log(b);
-            console.log(b.view);
-            console.log(b.view.board);
-            console.log(board);
         });
     };
 

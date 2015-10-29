@@ -3259,6 +3259,7 @@ Entry.Model = function(b, a) {
           }});
         })(d);
       }
+      a._toJSON = this._toJSON;
     }
   };
   b.generateSetter = function(a) {
@@ -3295,6 +3296,13 @@ Entry.Model = function(b, a) {
         }));
       }
     });
+  };
+  b._toJSON = function() {
+    var a = {}, b;
+    for (b in this.data) {
+      a[b] = this.data[b];
+    }
+    return a;
   };
 })(Entry.Model);
 Entry.BlockModel = function() {
@@ -3532,7 +3540,6 @@ Entry.BlockMenu = function(b) {
     if (!(a instanceof Entry.Code)) {
       return console.error("You must inject code instance");
     }
-    console.log("asdf");
     a.createView(this);
     this.set({code:a});
     this.align();
@@ -3610,7 +3617,7 @@ Entry.BlockView = function(b, a) {
       var d = a[b];
       "string" === typeof d ? this._contents.push(new Entry.FieldText(d, this)) : this._contents.push(new Entry["Field" + d.type](d, this));
     }
-    this._alignContent();
+    this._alignContent(!1);
   };
   b.changeBoard = function(a) {
     this.svgGroup.remove();
@@ -4035,7 +4042,7 @@ Entry.Block.FOLLOW = 3;
     this.view || this.set({view:new Entry.BlockView(this, a)});
   };
   b.clone = function() {
-    return new Entry.Block(this);
+    return new Entry.Block(this.toJSON());
   };
   b.doMove = function() {
     console.log("doMove", this.id, this.view.x - this.x, this.view.y - this.y);
@@ -4054,6 +4061,13 @@ Entry.Block.FOLLOW = 3;
     this._updatePos();
   };
   b.doDestroy = function() {
+  };
+  b.toJSON = function() {
+    var a = this._toJSON();
+    delete a.prev;
+    delete a.next;
+    delete a.view;
+    return a;
   };
 })(Entry.Block.prototype);
 Entry.Thread = function(b, a) {
@@ -4094,10 +4108,6 @@ Entry.Thread = function(b, a) {
     this.view || (this.view = new Entry.ThreadView(this, a));
     this._data.map(function(b) {
       b.createView(a);
-      console.log(b);
-      console.log(b.view);
-      console.log(b.view.board);
-      console.log(a);
     });
   };
   b.separate = function(a) {

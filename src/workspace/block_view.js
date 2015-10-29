@@ -84,7 +84,7 @@ Entry.BlockView = function(block, board) {
                     new Entry['Field' + content.type](content, this)
                 );
         }
-        this._alignContent();
+        this._alignContent(false);
     };
 
     p.changeBoard = function(board) {

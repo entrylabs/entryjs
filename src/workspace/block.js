@@ -1,5 +1,5 @@
 /*
- *
+on*
  */
 "use strict";
 
@@ -101,7 +101,7 @@ Entry.Block.FOLLOW = 3;
     };
 
     p.clone = function() {
-        return new Entry.Block(this);
+        return new Entry.Block(this.toJSON());
     };
 
     // command func
@@ -141,6 +141,14 @@ Entry.Block.FOLLOW = 3;
     };
 
     p.doDestroy = function() {
+    };
+
+    p.toJSON = function() {
+        var json = this._toJSON();
+        delete json.prev;
+        delete json.next;
+        delete json.view;
+        return json;
     };
 
     /*
