@@ -113,8 +113,8 @@ Entry.Thread = function(thread, code) {
         this._setRelation();
     };
 
-    p.clone = function() {
-        var code = this._code;
+    p.clone = function(code) {
+        var code = code || this._code;
         var clonedBlocks = [];
         for (var i = 0; i < this._data.length; i++) {
             clonedBlocks.push(this._data[i].clone());
@@ -124,6 +124,18 @@ Entry.Thread = function(thread, code) {
             clonedBlocks,
             code
         );
+    };
+
+    p.destory = function(animate) {
+        var data = this._data;
+        if (this.view)
+            this.view.destroy(animate);
+        for (var i = 0; i < data.length; i++)
+            data[i].destory(animate);
+    };
+
+    p.getFirstBlock = function() {
+        return this._data[0];
     };
 
     /*

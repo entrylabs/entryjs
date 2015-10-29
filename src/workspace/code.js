@@ -92,9 +92,16 @@ Entry.Code = function(code) {
     };
 
     p.cloneThread = function(thread) {
-        var newThread = thread.clone();
+        var newThread = thread.clone(this);
         this._data.push(newThread);
         return newThread;
+    };
+
+    p.destroyThread = function(thread, animate) {
+        var data = this._data;
+        var index = data.indexOf(thread);
+        data.splice(index, 1);
+        thread.destory(animate);
     };
 
 

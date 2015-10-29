@@ -3526,6 +3526,7 @@ Entry.BlockMenu = function(b) {
   }
   this._svgDom = Entry.Dom($('<svg id="blockMenu" width="100%" height="100%"version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'), {parent:b});
   this.offset = this._svgDom.offset();
+  this._svgWidth = this._svgDom.width();
   this.snap = Snap("#blockMenu");
   this.svgGroup = this.snap.group();
   this.svgThreadGroup = this.svgGroup.group();
@@ -3559,16 +3560,14 @@ Entry.BlockMenu = function(b) {
     }
   };
   b.cloneThread = function() {
-    var a = this.dragBlock.block, b = this.code;
-    a && a.getThread() && (a.observe(this, "moveBoardBlock", ["x", "y"]), b.cloneThread(a.getThread()));
+    var a = this._svgWidth, b = this.dragBlock, d = b.block, e = this.code, f = d.getThread();
+    d && f && (b.observe(this, "moveBoardBlock", ["x", "y"]), e.cloneThread(f), this._boardBlockView = this.workspace.getBoard().code.cloneThread(f).getFirstBlock().view, this._boardBlockView._moveTo(-(a - b.x), b.y, !1));
   };
-  b.updateCloseMagnet = function(a) {
-  };
-  b.terminateDrag = function(a) {
-    a = this._boardBlock;
-    this._boardBlock._board.terminateDrag(a);
-    var b = this.dragBlock;
-    b && b.getThread() && (b.x < this._svgDom.width() && a.getThread().destroy(), b.getThread().destroy(), this._boardBlock = null);
+  b.terminateDrag = function() {
+    var a = this._boardBlockView.block, b = this.dragBlock, d = b.block, e = this.code, f = this.workspace.getBoard().code;
+    b.x < this._svgWidth ? f.destroyThread(a.getThread()) : a.view.terminateDrag();
+    e.destroyThread(d.getThread(), !0);
+    this._boardBlockView = null;
   };
   b.dominate = function(a) {
     this.snap.append(a.svgGroup);
@@ -3577,8 +3576,8 @@ Entry.BlockMenu = function(b) {
     return this._code;
   };
   b.moveBoardBlock = function() {
-    var a = this.workspace.getBoard().offset, b = this.offset, d = a.left - b.left, a = a.top - b.top, b = this.dragBlock, e = this._boardBlock;
-    e && b && (e.moveTo(b.x - d, b.y - a, !1), e.getBoard().updateCloseMagnet(e));
+    var a = this.workspace.getBoard().offset, b = this.offset, d = a.left - b.left, a = a.top - b.top, b = this.dragBlock, e = this._boardBlockView;
+    b && e && e._moveTo(b.x - d, b.y - a, !1);
   };
 })(Entry.BlockMenu.prototype);
 Entry.BlockView = function(b, a) {
@@ -3696,8 +3695,8 @@ Entry.BlockView = function(b, a) {
     var f = this;
   };
   b.terminateDrag = function() {
-    var a = this._getCloseBlock();
-    this.block.prev || a ? 30 < Math.sqrt(Math.pow(this.x - this.block.x, 2) + Math.pow(this.y - this.block.y, 2)) ? a ? (this.set({animating:!0}), this.block.doInsert(a)) : this.block.doSeparate() : this._align(!0) : this.block.doMove();
+    var a = this.getBoard();
+    a instanceof Entry.BlockMenu ? a.terminateDrag() : (a = this._getCloseBlock(), this.block.prev || a ? 30 < Math.sqrt(Math.pow(this.x - this.block.x, 2) + Math.pow(this.y - this.block.y, 2)) ? a ? (this.set({animating:!0}), this.block.doInsert(a)) : this.block.doSeparate() : this._align(!0) : this.block.doMove());
   };
   b._getCloseBlock = function() {
     for (var a = Snap.getElementByPoint(this.x + 690, this.y + 130), b = a.block;!b && "svg" !== a.type && "BODY" !== a.type;) {
@@ -3716,6 +3715,9 @@ Entry.BlockView = function(b, a) {
   };
   b.getBoard = function() {
     return this.svgGroup.parent().board;
+  };
+  b.destroy = function(a) {
+    this.svgGroup.remove();
   };
 })(Entry.BlockView.prototype);
 Entry.Board = function(b) {
@@ -3854,9 +3856,14 @@ Entry.Code = function(b) {
     this._data.push(new Entry.Thread(a, this));
   };
   b.cloneThread = function(a) {
-    a = a.clone();
+    a = a.clone(this);
     this._data.push(a);
     return a;
+  };
+  b.destroyThread = function(a, b) {
+    var d = this._data, e = d.indexOf(a);
+    d.splice(e, 1);
+    a.destory(b);
   };
 })(Entry.Code.prototype);
 Entry.CodeView = function(b, a) {
@@ -4044,6 +4051,9 @@ Entry.Block.FOLLOW = 3;
   b.clone = function() {
     return new Entry.Block(this.toJSON());
   };
+  b.destory = function(a) {
+    this.view && this.view.destroy(a);
+  };
   b.doMove = function() {
     console.log("doMove", this.id, this.view.x - this.x, this.view.y - this.y);
     this._updatePos();
@@ -4127,11 +4137,22 @@ Entry.Thread = function(b, a) {
     this._data.splice.apply(this._data, [d + 1, 0].concat(b));
     this._setRelation();
   };
-  b.clone = function() {
-    for (var a = this._code, b = [], d = 0;d < this._data.length;d++) {
+  b.clone = function(a) {
+    a = a || this._code;
+    for (var b = [], d = 0;d < this._data.length;d++) {
       b.push(this._data[d].clone());
     }
     return new Entry.Thread(b, a);
+  };
+  b.destory = function(a) {
+    var b = this._data;
+    this.view && this.view.destroy(a);
+    for (var d = 0;d < b.length;d++) {
+      b[d].destory(a);
+    }
+  };
+  b.getFirstBlock = function() {
+    return this._data[0];
   };
 })(Entry.Thread.prototype);
 Entry.ThreadView = function(b, a) {
@@ -4141,6 +4162,9 @@ Entry.ThreadView = function(b, a) {
 };
 (function(b) {
   b.schema = {scrollX:0, scrollY:0};
+  b.destroy = function() {
+    this.svgGroup.remove();
+  };
 })(Entry.ThreadView.prototype);
 Entry.Workspace = function(b, a) {
   this._blockMenu = b;

@@ -22,4 +22,8 @@ Entry.ThreadView = function(thread, board) {
         scrollY: 0
     };
 
+    p.destroy = function() {
+        this.svgGroup.remove();
+    };
+
 })(Entry.ThreadView.prototype);

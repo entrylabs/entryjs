@@ -109,9 +109,7 @@ Entry.Model = function(obj, isSeal) {
 
     m._toJSON = function() {
         var json = {};
-        for (var key in this.data) {
-            json[key] = this.data[key];
-        };
+        for (var key in this.data) json[key] = this.data[key];
         return json;
     };
 
