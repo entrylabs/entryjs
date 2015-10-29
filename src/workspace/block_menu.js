@@ -46,14 +46,15 @@ Entry.BlockMenu = function(dom) {
     };
 
     p.changeCode = function(code) {
+        /*
         if (!(code instanceof Entry.Code))
             return console.error("You must inject code instance");
         this.set({code: code});
         this.align();
+        */
     };
 
     p._changeCode = function() {
-        if (this.code !== null) this.code.changeBoard(this);
     };
 
     p.align = function() {

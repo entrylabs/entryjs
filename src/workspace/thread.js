@@ -15,8 +15,6 @@ Entry.Thread = function(thread, code) {
     this._data = new Entry.Collection();
     this._code = code;
 
-    this._code.observe(this, "changeBoard", ["board"]);
-
     this.load(thread);
 
     /*
@@ -77,14 +75,6 @@ Entry.Thread = function(thread, code) {
     p.createView = function(board) {
         this._data.map(function(b) {
             b.createView(board);
-        });
-    };
-
-    p.changeBoard = function() {
-        var board = this._code.board;
-
-        this._data.map(function(b) {
-            b.bindBoard(board);
         });
     };
 

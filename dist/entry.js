@@ -3436,14 +3436,8 @@ Entry.BlockMenu = function(b) {
 (function(b) {
   b.schema = {code:null, dragBlock:null, closeBlock:null};
   b.changeCode = function(a) {
-    if (!(a instanceof Entry.Code)) {
-      return console.error("You must inject code instance");
-    }
-    this.set({code:a});
-    this.align();
   };
   b._changeCode = function() {
-    null !== this.code && this.code.changeBoard(this);
   };
   b.align = function() {
     for (var a = this.code._data, b = 10, d = this._svgDom.width() / 2, e = 0, f = a.length;e < f;e++) {
@@ -3585,7 +3579,6 @@ Entry.BlockView = function(b, a) {
       e.bind("touchmove.block", b);
       e.bind("touchend.block", d);
       this.dragInstance = new Entry.DragInstance({startX:a.clientX, startY:a.clientY, offsetX:a.clientX, offsetY:a.clientY, mode:!0});
-      console.log(this.getBoard());
       this.dominate();
     }
     var f = this;
@@ -3610,7 +3603,7 @@ Entry.BlockView = function(b, a) {
     this.block.next && this.block.next.view.dominate();
   };
   b.getBoard = function() {
-    this.svgGroup.parent().board;
+    return this.svgGroup.parent().board;
   };
 })(Entry.BlockView.prototype);
 Entry.Board = function(b) {
@@ -3908,9 +3901,6 @@ Entry.Block.FOLLOW = 3;
   b.createView = function(a) {
     this.view || this.set({view:new Entry.BlockView(this, a)});
   };
-  b.bindBoard = function(a) {
-    this.view ? this.view.changeBoard(a) : (a = new Entry.BlockView(this, a), this.set({view:a, x:a.x, y:a.y}));
-  };
   b.doMove = function() {
     console.log("doMove", this.id, this.view.x - this.x, this.view.y - this.y);
     this._updatePos();
@@ -3933,7 +3923,6 @@ Entry.Block.FOLLOW = 3;
 Entry.Thread = function(b, a) {
   this._data = new Entry.Collection;
   this._code = a;
-  this._code.observe(this, "changeBoard", ["board"]);
   this.load(b);
 };
 (function(b) {
@@ -3967,12 +3956,6 @@ Entry.Thread = function(b, a) {
   b.createView = function(a) {
     this._data.map(function(b) {
       b.createView(a);
-    });
-  };
-  b.changeBoard = function() {
-    var a = this._code.board;
-    this._data.map(function(b) {
-      b.bindBoard(a);
     });
   };
   b.separate = function(a) {

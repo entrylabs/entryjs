@@ -96,20 +96,6 @@ Entry.Block.FOLLOW = 3;
         }
     };
 
-    // make view
-    p.bindBoard = function(board) {
-        if (this.view) {
-            this.view.changeBoard(board);
-        } else {
-            var blockView = new Entry.BlockView(this, board);
-            this.set({
-                view: blockView,
-                x: blockView.x,
-                y: blockView.y
-            });
-        }
-    };
-
     // command func
     p.doMove = function() {
         console.log(
