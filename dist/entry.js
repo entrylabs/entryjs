@@ -166,15 +166,15 @@ Blockly.Blocks.arduino_convert_scale = {init:function() {
   this.setInputsInline(!0);
 }};
 Entry.block.arduino_convert_scale = function(b, a) {
-  var c = a.getNumberValue("VALUE1", a), d = a.getNumberValue("VALUE2", a), e = a.getNumberValue("VALUE3", a), f = a.getNumberValue("VALUE4", a), g = a.getNumberValue("VALUE5", a);
+  var c = a.getNumberValue("VALUE1", a), d = a.getNumberValue("VALUE2", a), e = a.getNumberValue("VALUE3", a), f = a.getNumberValue("VALUE4", a), h = a.getNumberValue("VALUE5", a);
   if (d > e) {
-    var h = d, d = e, e = h
+    var g = d, d = e, e = g
   }
-  f > g && (h = f, f = g, g = h);
+  f > h && (g = f, f = h, h = g);
   c -= d;
-  c *= (g - f) / (e - d);
+  c *= (h - f) / (e - d);
   c += f;
-  c = Math.min(g, c);
+  c = Math.min(h, c);
   c = Math.max(f, c);
   return Math.round(c);
 };
@@ -1172,9 +1172,9 @@ Entry.block.reach_something = function(b, a) {
       if (Entry.checkCollisionRect(d, f)) {
         return !0;
       }
-      for (var c = c.parent.clonedEntities, e = 0, g = c.length;e < g;e++) {
-        var h = c[e];
-        if (h.getVisible() && !h.isStamp && Entry.checkCollisionRect(d, h.object.getTransformedBounds())) {
+      for (var c = c.parent.clonedEntities, e = 0, h = c.length;e < h;e++) {
+        var g = c[e];
+        if (g.getVisible() && !g.isStamp && Entry.checkCollisionRect(d, g.object.getTransformedBounds())) {
           return !0;
         }
       }
@@ -1184,8 +1184,8 @@ Entry.block.reach_something = function(b, a) {
       }
       c = c.parent.clonedEntities;
       e = 0;
-      for (g = c.length;e < g;e++) {
-        if (h = c[e], h.getVisible() && !h.isStamp && f(d, h.object, .2, !0)) {
+      for (h = c.length;e < h;e++) {
+        if (g = c[e], g.getVisible() && !g.isStamp && f(d, g.object, .2, !0)) {
           return !0;
         }
       }
@@ -3012,9 +3012,9 @@ Entry.Collection = function(b) {
     if (void 0 !== b) {
       e = 0;
       for (var f = b.length;e < f;e++) {
-        var g = b[e];
-        d[g.id] = g;
-        a.push.call(this, g);
+        var h = b[e];
+        d[h.id] = h;
+        a.push.call(this, h);
       }
     }
   };
@@ -3052,16 +3052,16 @@ Entry.Collection = function(b) {
     return a.indexOf.call(this, b);
   };
   b.find = function(a) {
-    for (var b = [], e, f = 0, g = this.length;f < g;f++) {
+    for (var b = [], e, f = 0, h = this.length;f < h;f++) {
       e = !0;
-      var h = this[f], k;
+      var g = this[f], k;
       for (k in a) {
-        if (a[k] != h[k]) {
+        if (a[k] != g[k]) {
           e = !1;
           break;
         }
       }
-      e && b.push(h);
+      e && b.push(g);
     }
     return b;
   };
@@ -3089,14 +3089,14 @@ Entry.Collection = function(b) {
   b.splice = function(b, d) {
     var e = a.slice.call(arguments, 2), f = this._hashMap;
     d = void 0 === d ? this.length - b : d;
-    for (var g = a.splice.call(this, b, d), h = 0, k = g.length;h < k;h++) {
-      delete f[g[h].id];
+    for (var h = a.splice.call(this, b, d), g = 0, k = h.length;g < k;g++) {
+      delete f[h[g].id];
     }
-    h = 0;
-    for (k = e.length;h < k;h++) {
-      f = e[h], a.splice.call(this, b++, 0, f), this._hashMap[f.id] = f;
+    g = 0;
+    for (k = e.length;g < k;g++) {
+      f = e[g], a.splice.call(this, b++, 0, f), this._hashMap[f.id] = f;
     }
-    return g;
+    return h;
   };
   b.clear = function() {
     for (;this.length;) {
@@ -3418,21 +3418,44 @@ Entry.block.jr_west = {skeleton:"pebble_basic", color:"#A751E3", contents:["   \
   return Entry.STATIC.RETURN;
 }};
 Entry.BlockMenu = function(b) {
+  Entry.Model(this, !1);
+  b = "string" === typeof b ? $("#" + b) : $(b);
+  if ("DIV" !== b.prop("tagName")) {
+    return console.error("Dom is not div element");
+  }
+  if ("function" !== typeof window.Snap) {
+    return console.error("Snap library is required");
+  }
+  this._svgDom = Entry.Dom($('<svg id="blockMenu" width="100%" height="100%"version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'), {parent:b});
+  this.offset = this._svgDom.offset();
+  this.snap = Snap("#blockMenu");
+  this.svgBlockGroup = this.snap.group();
+  this.snap.block = "null";
+  this.observe(this, "_changeCode", ["code"]);
 };
 (function(b) {
-  b.schema = {dragBlock:null, closeBlock:null};
-  b.setBlocks = function(a) {
+  b.schema = {code:null, dragBlock:null, closeBlock:null};
+  b.changeCode = function(a) {
+    if (!(a instanceof Entry.Code)) {
+      return console.error("You must inject code instance");
+    }
+    this.set({code:a});
+    this.align();
+  };
+  b._changeCode = function() {
+    null !== this.code && this.code.changeBoard(this);
+  };
+  b.align = function() {
+    for (var a = this.code._data, b = 10, d = this._svgDom.width() / 2, e = 0, f = a.length;e < f;e++) {
+      var h = a[e]._data[0], g = h.view;
+      h.set({x:d, y:b});
+      g._moveTo(d, b, !1);
+      b += g.height + 10;
+    }
   };
   b.cloneThread = function() {
     var a = this.dragBlock, b, d = this.getCode();
     a && a.thread && (a.observe(this, "moveBoardBlock", ["x", "y"]), b = a.getThread().clone(d), d = d.getThreads(), d.splice(d.indexOf(a.getThread()), 1, b), b.renderStart(this, !1), b = this.workspace.getBoard(), d = b.getCode(), a = a.getThread().clone(d), this._boardBlock = a.getBlocks()[0], b.dragBlock = this._boardBlock, d.addThread(a, !1), this.moveBoardBlock());
-  };
-  b.align = function() {
-    for (var a = this.getCode().getThreads().getAll(), b = 10, d = this._svgDom.width() / 2, e = 0, f = a.length;e < f;e++) {
-      var g = a[e];
-      g.moveTo(d, b, !0);
-      b += g.height + 10;
-    }
   };
   b.updateCloseMagnet = function(a) {
   };
@@ -3913,7 +3936,7 @@ Entry.Thread = function(b, a) {
     });
   };
   b.separate = function(a) {
-    this._data.has(a.id) && a.prev && (a.prev.setNext(null), a.setPrev(null), blocks = this._data.splice(this._data.indexOf(a)), this._code.createThread(blocks));
+    this._data.has(a.id) && a.prev && (a.prev.setNext(null), a.setPrev(null), a = this._data.splice(this._data.indexOf(a)), this._code.createThread(a));
   };
   b.cut = function(a) {
     a = this._data.indexOf(a);
@@ -3933,6 +3956,8 @@ Entry.Thread = function(b, a) {
 Entry.Workspace = function(b, a) {
   this._blockMenu = b;
   this._board = a;
+  b.workspace = this;
+  a.workspace = this;
 };
 (function(b) {
   b.getBoard = function() {

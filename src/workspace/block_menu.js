@@ -11,13 +11,10 @@ goog.require("Entry.Utils");
  * @param {object} dom which to inject playground
  */
 Entry.BlockMenu = function(dom) {
-    /*
     Entry.Model(this, false);
 
-    if (typeof dom === "string") {
-        dom = $('#' + dom);
-    } else
-        dom = $(dom);
+    if (typeof dom === "string") dom = $('#' + dom);
+    else dom = $(dom);
 
     if (dom.prop("tagName") !== "DIV")
         return console.error("Dom is not div element");
@@ -34,30 +31,47 @@ Entry.BlockMenu = function(dom) {
     this.offset = this._svgDom.offset();
 
     this.snap = Snap('#blockMenu');
+    this.svgBlockGroup = this.snap.group();
     this.snap.block = "null";
 
-    this._code = null;
-
-    this.observe(this, "cloneThread", ['dragBlock']);
-    */
+    this.observe(this, "_changeCode", ['code']);
+    //this.observe(this, "cloneThread", ['dragBlock']);
 };
 
 (function(p) {
     p.schema = {
+        code: null,
         dragBlock: null,
         closeBlock: null
     };
 
-    p.setBlocks = function(code) {
-        /*
+    p.changeCode = function(code) {
         if (!(code instanceof Entry.Code))
             return console.error("You must inject code instance");
-        this._code = code;
-
-        code.bindBoard(this);
-
+        this.set({code: code});
         this.align();
-        */
+    };
+
+    p._changeCode = function() {
+        if (this.code !== null) this.code.changeBoard(this);
+    };
+
+    p.align = function() {
+        var threads = this.code._data;
+        var vPadding = 10,
+            marginFromTop = 10,
+            hPadding = this._svgDom.width()/2;
+
+        for (var i=0,len=threads.length; i<len; i++) {
+            var block = threads[i]._data[0];
+            var blockView = block.view;
+            block.set({
+                 x: hPadding,
+                 y: marginFromTop,
+            });
+            blockView._moveTo(hPadding, marginFromTop, false);
+            marginFromTop += blockView.height + vPadding;
+        }
     };
 
     p.cloneThread = function() {
@@ -87,18 +101,6 @@ Entry.BlockMenu = function(dom) {
         }
     };
 
-    p.align = function() {
-        var threads = this.getCode().getThreads().getAll();
-        var vPadding = 10,
-            marginFromTop = 10,
-            hPadding = this._svgDom.width()/2;
-
-        for (var i=0,len=threads.length; i<len; i++) {
-            var thread = threads[i];
-            thread.moveTo(hPadding, marginFromTop, true);
-            marginFromTop += thread.height + vPadding;
-        }
-    };
 
     p.updateCloseMagnet = function(targetBlock) {
     };

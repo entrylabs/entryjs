@@ -8,6 +8,8 @@ goog.provide("Entry.Workspace");
 Entry.Workspace = function(blockMenu, board) {
     this._blockMenu = blockMenu;
     this._board = board;
+    blockMenu.workspace = this;
+    board.workspace = this;
 };
 
 (function(p) {

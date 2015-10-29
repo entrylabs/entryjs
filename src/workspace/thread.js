@@ -87,7 +87,7 @@ Entry.Thread = function(thread, code) {
             return;
         block.prev.setNext(null);
         block.setPrev(null);
-        blocks = this._data.splice(this._data.indexOf(block));
+        var blocks = this._data.splice(this._data.indexOf(block));
         this._code.createThread(blocks);
     };
 
