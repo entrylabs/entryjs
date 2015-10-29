@@ -3361,7 +3361,7 @@ Entry.block.jr_start = {skeleton:"pebble_event", event:"start", color:"#3BBD70",
   this.unitComp = Ntry.entityManager.getComponent(this._unit.id, Ntry.STATIC.UNIT);
   return Entry.STATIC.RETURN;
 }};
-Entry.block.jr_repeat = {skeleton:"pebble_loop", color:"#3BBD70", contents:["1", "\ubc18\ubcf5"], func:function() {
+Entry.block.jr_repeat = {skeleton:"pebble_loop", color:"#3BBD70", contents:[{type:"Dropdown", options:[1, 2, 3, 4, 5, 6, 7, 8, 9, 10], value:1}, "\ubc18\ubcf5"], func:function() {
 }};
 Entry.block.jr_item = {skeleton:"pebble_basic", color:"#F46C6C", contents:["\uaf43 \ubaa8\uc73c\uae30", {type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_item_image.png", highlightColor:"#FFF", position:{x:83, y:0}, size:22}], func:function() {
   Ntry.dispatchEvent("unitAction", Ntry.STATIC.GET_ITEM);
@@ -3759,6 +3759,26 @@ Entry.CodeView = function(b, a) {
 (function(b) {
   b.schema = {board:null, scrollX:0, scrollY:0};
 })(Entry.CodeView.prototype);
+Entry.FieldDropdown = function(b, a) {
+  this._block = a;
+  this.box = new Entry.BoxModel;
+  this.svgGroup = null;
+  this.renderStart();
+};
+(function(b) {
+  b.renderStart = function() {
+    this.svgGroup = this._block.contentSvgGroup.group();
+    this.svgGroup.rect(0, -10, 20, 20);
+    this.box.set({x:0, y:0, width:20, height:20});
+  };
+  b.align = function(a, b, d) {
+    var e = this.svgGroup;
+    this._position && (a = this._position.x);
+    var f = "t" + a + " " + b;
+    void 0 === d || d ? e.animate({transform:f}, 300, mina.easeinout) : e.attr({transform:f});
+    this.box.set({x:a, y:b});
+  };
+})(Entry.FieldDropdown.prototype);
 Entry.FieldIndicator = function(b, a) {
   this._block = a;
   this.box = new Entry.BoxModel;

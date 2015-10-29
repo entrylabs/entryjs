@@ -44,7 +44,11 @@ Entry.block.jr_repeat = {
     skeleton: "pebble_loop",
     color: "#3BBD70",
     contents: [
-        "1",
+        {
+            type: "Dropdown",
+            options: [1,2,3,4,5,6,7,8,9,10],
+            value: 1
+        },
         "반복"
     ],
     func: function() {
