@@ -252,11 +252,11 @@ Entry.BlockView = function(block, board) {
 
     p._getCloseBlock = function() {
         var targetElement = Snap.getElementByPoint(
-            this.x + 620, this.y + 120
+            this.x + 690, this.y + 130
         ), targetBlock = targetElement.block;
         while (!targetBlock &&
                targetElement.type !== "svg" &&
-               targetElement.type !== "body") {
+               targetElement.type !== "BODY") {
             targetElement = targetElement.parent();
             targetBlock = targetElement.block;
         }
