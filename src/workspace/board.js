@@ -8,6 +8,7 @@ goog.provide("Entry.Board");
 goog.require("Entry.Dom");
 goog.require("Entry.Model");
 goog.require("Entry.Utils");
+goog.require("Entry.FieldTrashcan");
 
 /*
  *
@@ -37,6 +38,8 @@ Entry.Board = function(dom) {
 
     this._blockViews = [];
 
+    this.trashcan = new Entry.FieldTrashcan(this);
+    console.log(this);
     this.svgGroup = this.snap.group();
 
     this.svgThreadGroup = this.svgGroup.group();

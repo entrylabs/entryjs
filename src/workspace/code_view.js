@@ -12,7 +12,7 @@ Entry.CodeView = function(code, board) {
     Entry.Model(this, false);
 
     this.code = code;
-    this.board = board;
+    this.set({board: board});
 
     this.observe(this, "changeBoard", ["board"]);
 
@@ -23,8 +23,6 @@ Entry.CodeView = function(code, board) {
     this.svgBlockGroup.board = board;
 
     board.bindCodeView(this);
-
-    var board = board;
 
     this.code.map(function(thread) {
         thread.createView(board);

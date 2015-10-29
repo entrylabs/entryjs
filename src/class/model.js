@@ -36,6 +36,7 @@ Entry.Model = function(obj, isSeal) {
                 });
             })(key);
         }
+        obj._toJSON = this._toJSON;
     };
 
     m.generateSetter = function(obj) {
@@ -104,6 +105,12 @@ Entry.Model = function(obj, isSeal) {
                 })
             );
         });
+    };
+
+    m._toJSON = function() {
+        var json = {};
+        for (var key in this.data) json[key] = this.data[key];
+        return json;
     };
 
 })(Entry.Model);

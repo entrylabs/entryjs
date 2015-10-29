@@ -79,6 +79,7 @@ Entry.FieldDropdown = function(content, block) {
 
                 var selectValue = function() {
                     self.applyValue(value);
+                    hoverOut();
                     self.bottomGroup.remove();
                 };
 

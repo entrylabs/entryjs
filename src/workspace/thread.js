@@ -17,6 +17,10 @@ Entry.Thread = function(thread, code) {
 
     this.load(thread);
 
+    if (code.view) {
+        this.createView(code.view.board);
+    }
+
     /*
     Entry.Model(this, false);
 
@@ -73,6 +77,8 @@ Entry.Thread = function(thread, code) {
     };
 
     p.createView = function(board) {
+        if (!this.view)
+            this.view = new Entry.ThreadView(this, board);
         this._data.map(function(b) {
             b.createView(board);
         });
@@ -105,6 +111,31 @@ Entry.Thread = function(thread, code) {
             [index + 1, 0].concat(newBlocks)
         );
         this._setRelation();
+    };
+
+    p.clone = function(code) {
+        var code = code || this._code;
+        var clonedBlocks = [];
+        for (var i = 0; i < this._data.length; i++) {
+            clonedBlocks.push(this._data[i].clone());
+        }
+
+        return new Entry.Thread(
+            clonedBlocks,
+            code
+        );
+    };
+
+    p.destory = function(animate) {
+        var data = this._data;
+        if (this.view)
+            this.view.destroy(animate);
+        for (var i = 0; i < data.length; i++)
+            data[i].destory(animate);
+    };
+
+    p.getFirstBlock = function() {
+        return this._data[0];
     };
 
     /*

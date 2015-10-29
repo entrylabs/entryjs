@@ -84,7 +84,7 @@ Entry.BlockView = function(block, board) {
                     new Entry['Field' + content.type](content, this)
                 );
         }
-        this._alignContent();
+        this._alignContent(false);
     };
 
     p.changeBoard = function(board) {
@@ -194,7 +194,7 @@ Entry.BlockView = function(block, board) {
             doc.bind('mouseup.block', onMouseUp);
             doc.bind('touchmove.block', onMouseMove);
             doc.bind('touchend.block', onMouseUp);
-            //this._board.dragBlock = this;
+            this.getBoard().set({dragBlock:this});
             this.dragInstance = new Entry.DragInstance({
                 startX: e.clientX,
                 startY: e.clientY,
@@ -237,26 +237,30 @@ Entry.BlockView = function(block, board) {
     };
 
     p.terminateDrag = function() {
-        var closeBlock = this._getCloseBlock();
-        if (!this.block.prev && !closeBlock) {
-            this.block.doMove();
-            return;
-        } // this means block is top block {}
-        var distance = Math.sqrt(
-            Math.pow(this.x - this.block.x, 2) +
-            Math.pow(this.y - this.block.y, 2)
-        );
-        if (distance > 30) {
-            if (closeBlock) {
-                this.set({animating: true});
-                this.block.doInsert(closeBlock);
-            }
-            else
-                this.block.doSeparate();
+        var board = this.getBoard();
+        if (board instanceof Entry.BlockMenu) {
+            board.terminateDrag();
         } else {
-            this._align(true);
+            var closeBlock = this._getCloseBlock();
+            if (!this.block.prev && !closeBlock) {
+                this.block.doMove();
+                return;
+            } // this means block is top block {}
+            var distance = Math.sqrt(
+                Math.pow(this.x - this.block.x, 2) +
+                Math.pow(this.y - this.block.y, 2)
+            );
+            if (distance > 30) {
+                if (closeBlock) {
+                    this.set({animating: true});
+                    this.block.doInsert(closeBlock);
+                }
+                else
+                    this.block.doSeparate();
+            } else {
+                this._align(true);
+            }
         }
-
         return;
     };
 
@@ -289,6 +293,10 @@ Entry.BlockView = function(block, board) {
 
     p.getBoard = function() {
         return this.svgGroup.parent().board;
+    };
+
+    p.destroy = function(animate) {
+        this.svgGroup.remove();
     };
 
 })(Entry.BlockView.prototype);

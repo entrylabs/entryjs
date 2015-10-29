@@ -29,13 +29,19 @@ Entry.BlockMenu = function(dom) {
     );
 
     this.offset = this._svgDom.offset();
+    this._svgWidth = this._svgDom.width();
 
     this.snap = Snap('#blockMenu');
-    this.svgBlockGroup = this.snap.group();
-    this.snap.block = "null";
 
-    this.observe(this, "_changeCode", ['code']);
-    //this.observe(this, "cloneThread", ['dragBlock']);
+    this.svgGroup = this.snap.group();
+
+    this.svgThreadGroup = this.svgGroup.group();
+    this.svgThreadGroup.board = this;
+
+    this.svgBlockGroup = this.svgGroup.group();
+    this.svgBlockGroup.board = this;
+
+    this.observe(this, "cloneThread", ['dragBlock']);
 };
 
 (function(p) {
@@ -46,15 +52,18 @@ Entry.BlockMenu = function(dom) {
     };
 
     p.changeCode = function(code) {
-        /*
         if (!(code instanceof Entry.Code))
             return console.error("You must inject code instance");
+        code.createView(this);
         this.set({code: code});
         this.align();
-        */
     };
 
-    p._changeCode = function() {
+    p.bindCodeView = function(codeView) {
+        this.svgBlockGroup.remove();
+        this.svgThreadGroup.remove();
+        this.svgBlockGroup = codeView.svgBlockGroup;
+        this.svgThreadGroup = codeView.svgThreadGroup;
     };
 
     p.align = function() {
@@ -76,52 +85,42 @@ Entry.BlockMenu = function(dom) {
     };
 
     p.cloneThread = function() {
-        var block = this.dragBlock;
+        var svgWidth = this._svgWidth;
+        var blockView = this.dragBlock;
+        var block = blockView.block;
         var clonedThread;
-        var code = this.getCode();
-        if (block && block.thread) {
-            block.observe(this, "moveBoardBlock", ['x', 'y']);
-            clonedThread = block.getThread().clone(code);
-                //clone thread at blockMenu
-            var threads = code.getThreads();
-            threads.splice(
-                threads.indexOf(block.getThread()),
-                1,
-                clonedThread
+        var code = this.code;
+        var currentThread = block.getThread();
+        if (block && currentThread) {
+            blockView.observe(this, "moveBoardBlock", ['x', 'y']);
+            code.cloneThread(currentThread);
+
+            this._boardBlockView = this.workspace.getBoard().code.
+                cloneThread(currentThread).getFirstBlock().view;
+            this._boardBlockView._moveTo(
+                -(svgWidth - blockView.x),
+                blockView.y,
+                false
             );
-            clonedThread.renderStart(this, false);
-
-            //clone thread at Workspace
-            var board = this.workspace.getBoard();
-            var boardCode = board.getCode();
-            var boardThread = block.getThread().clone(boardCode);
-            this._boardBlock = boardThread.getBlocks()[0];
-            board.dragBlock = this._boardBlock;
-            boardCode.addThread(boardThread, false);
-            this.moveBoardBlock();
         }
+
     };
 
+    p.terminateDrag = function() {
+        var boardBlockView = this._boardBlockView;
+        var boardBlock = boardBlockView.block;
+        var dragBlockView = this.dragBlock;
+        var dragBlock = dragBlockView.block;
+        var thisCode = this.code;
+        var boardCode = this.workspace.getBoard().code;
 
-    p.updateCloseMagnet = function(targetBlock) {
-    };
+        //destory boardBlock below the range
+        if (dragBlockView.x < this._svgWidth)
+            boardCode.destroyThread(boardBlock.getThread());
+        else boardBlock.view.terminateDrag();
 
-    p.terminateDrag = function(block) {
-        var boardBlock = this._boardBlock;
-        this._boardBlock._board.terminateDrag(boardBlock);
-
-        //remove dragging thread
-        var originBlock = this.dragBlock;
-        if (originBlock && originBlock.getThread()) {
-            //destory boardBlock below the range
-            if (originBlock.x < this._svgDom.width())
-                destroyThread(boardBlock.getThread());
-            destroyThread(originBlock.getThread());
-            this._boardBlock = null;
-        }
-        function destroyThread(thread) {
-            thread.destroy();
-        }
+        thisCode.destroyThread(dragBlock.getThread(), true);
+        this._boardBlockView = null;
     };
 
     p.dominate = function(thread) {
@@ -138,17 +137,16 @@ Entry.BlockMenu = function(dom) {
         var offsetX = boardOffset.left - thisOffset.left,
             offsetY = boardOffset.top - thisOffset.top;
 
-        var dragBlock = this.dragBlock;
-        var boardBlock = this._boardBlock;
-        if (boardBlock && dragBlock) {
-            var x = dragBlock.x;
-            var y = dragBlock.y;
-            boardBlock.moveTo(
+        var dragBlockView = this.dragBlock;
+        var boardBlockView = this._boardBlockView;
+        if (dragBlockView && boardBlockView) {
+            var x = dragBlockView.x;
+            var y = dragBlockView.y;
+            boardBlockView._moveTo(
                 x-offsetX,
                 y-offsetY,
                 false
             );
-            boardBlock.getBoard().updateCloseMagnet(boardBlock);
         }
     };
 })(Entry.BlockMenu.prototype);
