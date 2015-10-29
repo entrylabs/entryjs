@@ -3959,6 +3959,7 @@ Entry.Thread = function(b, a) {
   this._data = new Entry.Collection;
   this._code = a;
   this.load(b);
+  a.view && this.createView(a.view.board);
 };
 (function(b) {
   b.load = function(a) {
@@ -3989,6 +3990,8 @@ Entry.Thread = function(b, a) {
     this._code.registerEvent(a, b);
   };
   b.createView = function(a) {
+    console.log(a);
+    this.view || (this.view = new Entry.ThreadView(this, a));
     this._data.map(function(b) {
       b.createView(a);
     });
@@ -4013,6 +4016,8 @@ Entry.Thread = function(b, a) {
 })(Entry.Thread.prototype);
 Entry.ThreadView = function(b, a) {
   Entry.Model(this, !1);
+  this.svgGroup = a.svgThreadGroup.group();
+  this.svgGroup.rect(0, 0, 20, 20);
 };
 (function(b) {
   b.schema = {scrollX:0, scrollY:0};

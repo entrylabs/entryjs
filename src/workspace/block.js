@@ -136,93 +136,6 @@ Entry.Block.FOLLOW = 3;
     };
 
     /*
-    p.initView = function() {
-    };
-
-    p.setThread = function() {
-        if (this.thread.svgGroup) {
-            this.thread.svgGroup.append(this.svgGroup);
-        }
-    };
-
-    // method for board
-
-    p.renderStart = function(board, startPos, animate) {
-    };
-
-    // not observer style
-    p.moveTo = function(x, y, animate) {
-        animate = animate === undefined ? true : animate;
-        var transform = "t" + x + " " + y;
-        if (animate) {
-            this.svgGroup.animate({
-                transform: transform
-            }, 300, mina.easeinout);
-        } else {
-            this.svgGroup.attr({
-                transform: transform
-            });
-        }
-        this.set({ x: x, y: y });
-    };
-
-    p.moveBy = function(x, y, animate) {
-        return this.moveTo(
-            this.x + x,
-            this.y + y,
-            animate
-        );
-    };
-
-    p.fieldRenderStart = function(animate) {
-        this.contentSvgGroup = this.svgGroup.group();
-        var contentPos = this._skeleton.contentPos();
-        this.contentSvgGroup.transform("t" + contentPos.x + ' ' + contentPos.y);
-
-        var contents = this._schema.contents;
-        for (var i = 0; i < contents.length; i++) {
-            var content = contents[i];
-            if (typeof content === "string")
-                this._contents.push(new Entry.FieldText(content, this));
-            else
-                this._contents.push(
-                    new Entry['Field' + content.type](content, this)
-                );
-        }
-        this.alignContent(animate);
-    };
-
-    p.alignContent = function(animate) {
-        var cursor = {x: 0, y: 0};
-        for (var i = 0; i < this._contents.length; i++) {
-            var c = this._contents[i];
-            c.align(cursor.x, cursor.y, animate);
-
-            // space between content
-            if (i !== this._contents.length - 1)
-                cursor.x += 5;
-
-            var box = c.box;
-            cursor.x += box.width;
-        }
-
-        this.contentWidth = cursor.x;
-    };
-
-    p.measureSize = function() {
-        this.set(this._skeleton.box(this));
-    };
-
-    p.render = function() {
-        var path = this._skeleton.path(this);
-        this._path.animate({
-            d: path
-        }, 200);
-        this._darkenPath.animate({
-            d: path
-        }, 200);
-    };
-
     p.enableHighlight = function() {
         var pathLen = this._path.getTotalLength();
         var path = this._path;
@@ -242,17 +155,6 @@ Entry.Block.FOLLOW = 3;
                 path.animate({"stroke-dashoffset": - pathLen}, 300);
             }, 1400, mina.easeout);
         }, 500);
-    };
-
-    p.addControl = function() {
-        var that = this;
-        this.svgGroup.mousedown(function() {
-            that.onMouseDown.apply(that, arguments);
-        });
-    };
-
-    p.terminateDrag = function() {
-        this._board.terminateDrag(this);
     };
 
     p.checkMagnet = function(targetBlock) {
@@ -289,26 +191,5 @@ Entry.Block.FOLLOW = 3;
             this.measureSize();
         }
     };
-
-    p.toJSON = function() {
-        return {
-            type: this.type,
-            x: this.x,
-            y: this.y
-        };
-    };
-
-    p.clone = function() {
-        return new Entry.Block(this);
-    };
-
-    p.getThread = function() {
-        return this.thread;
-    };
-
-    p.getBoard = function() {
-        return this._board;
-    };
     */
-
 })(Entry.Block.prototype);

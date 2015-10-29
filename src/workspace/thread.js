@@ -17,6 +17,9 @@ Entry.Thread = function(thread, code) {
 
     this.load(thread);
 
+    if (code.view)
+        this.createView(code.view.board);
+
     /*
     Entry.Model(this, false);
 
@@ -73,6 +76,9 @@ Entry.Thread = function(thread, code) {
     };
 
     p.createView = function(board) {
+        console.log(board);
+        if (!this.view)
+            this.view = new Entry.ThreadView(this, board);
         this._data.map(function(b) {
             b.createView(board);
         });
