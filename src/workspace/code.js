@@ -40,6 +40,9 @@ Entry.Code = function(code) {
     p.createView = function(board) {
         if (this.view === null) {
             this.set({view: Entry.CodeView(this, board)});
+        } else {
+            // TODO: bind child board
+            board.bindCodeView(this.view);
         }
     };
 

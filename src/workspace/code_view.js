@@ -17,10 +17,10 @@ Entry.CodeView = function(code, board) {
     this.observe(this, "changeBoard", ["board"]);
 
     this.svgThreadGroup = board.svgGroup.group();
-    this.svgThreadGroup.board = this;
+    this.svgThreadGroup.board = board;
 
     this.svgBlockGroup = board.svgGroup.group();
-    this.svgBlockGroup.board = this;
+    this.svgBlockGroup.board = board;
 
     board.bindCodeView(this);
 

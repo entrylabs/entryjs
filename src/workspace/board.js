@@ -46,8 +46,6 @@ Entry.Board = function(dom) {
     this.svgBlockGroup.board = this;
 
     Entry.Model(this, false);
-
-    this.observe(this, "_changeCode", ['code']);
 };
 
 (function(p) {
@@ -67,12 +65,6 @@ Entry.Board = function(dom) {
         this.svgThreadGroup.remove();
         this.svgBlockGroup = codeView.svgBlockGroup;
         this.svgThreadGroup = codeView.svgThreadGroup;
-    };
-
-    p._changeCode = function() {
-    };
-
-    p._makeBlockViewAll = function() {
     };
 
     p.updateCloseMagnet = function(targetBlock) {

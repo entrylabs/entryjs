@@ -202,6 +202,7 @@ Entry.BlockView = function(block, board) {
                 offsetY: e.clientY,
                 mode: true
             });
+            console.log(this.getBoard());
             this.dominate();
         } else if (e.button === 1) {
             //this.enableHighlight();
@@ -285,6 +286,10 @@ Entry.BlockView = function(block, board) {
         parent.append(this.svgGroup);
         if (this.block.next)
             this.block.next.view.dominate();
-    }
+    };
+
+    p.getBoard = function() {
+        this.svgGroup.parent().board;
+    };
 
 })(Entry.BlockView.prototype);

@@ -3585,6 +3585,7 @@ Entry.BlockView = function(b, a) {
       e.bind("touchmove.block", b);
       e.bind("touchend.block", d);
       this.dragInstance = new Entry.DragInstance({startX:a.clientX, startY:a.clientY, offsetX:a.clientX, offsetY:a.clientY, mode:!0});
+      console.log(this.getBoard());
       this.dominate();
     }
     var f = this;
@@ -3608,6 +3609,9 @@ Entry.BlockView = function(b, a) {
     a.append(this.svgGroup);
     this.block.next && this.block.next.view.dominate();
   };
+  b.getBoard = function() {
+    this.svgGroup.parent().board;
+  };
 })(Entry.BlockView.prototype);
 Entry.Board = function(b) {
   b = "string" === typeof b ? $("#" + b) : $(b);
@@ -3627,7 +3631,6 @@ Entry.Board = function(b) {
   this.svgBlockGroup = this.svgGroup.group();
   this.svgBlockGroup.board = this;
   Entry.Model(this, !1);
-  this.observe(this, "_changeCode", ["code"]);
 };
 (function(b) {
   b.schema = {code:null, dragBlock:null, closeBlock:null};
@@ -3640,10 +3643,6 @@ Entry.Board = function(b) {
     this.svgThreadGroup.remove();
     this.svgBlockGroup = a.svgBlockGroup;
     this.svgThreadGroup = a.svgThreadGroup;
-  };
-  b._changeCode = function() {
-  };
-  b._makeBlockViewAll = function() {
   };
   b.updateCloseMagnet = function(a) {
     if (void 0 !== a.magnets.previous) {
@@ -3717,7 +3716,7 @@ Entry.Code = function(b) {
     }
   };
   b.createView = function(a) {
-    null === this.view && this.set({view:Entry.CodeView(this, a)});
+    null === this.view ? this.set({view:Entry.CodeView(this, a)}) : a.bindCodeView(this.view);
   };
   b.registerEvent = function(a, b) {
     this._eventMap[b] || (this._eventMap[b] = []);
@@ -3756,9 +3755,9 @@ Entry.CodeView = function(b, a) {
   this.board = a;
   this.observe(this, "changeBoard", ["board"]);
   this.svgThreadGroup = a.svgGroup.group();
-  this.svgThreadGroup.board = this;
+  this.svgThreadGroup.board = a;
   this.svgBlockGroup = a.svgGroup.group();
-  this.svgBlockGroup.board = this;
+  this.svgBlockGroup.board = a;
   a.bindCodeView(this);
   this.code.map(function(b) {
     b.createView(a);
