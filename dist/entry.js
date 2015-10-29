@@ -3503,14 +3503,23 @@ Entry.BlockView = function(b, a) {
   b._bindPrev = function() {
     this.prevObserver && this.prevObserver.destroy();
     this.prevAnimatingObserver && this.prevAnimatingObserver.destroy();
-    this.block.prev && (this.prevObserver = this.block.prev.view.observe(this, "_align", ["x", "y"]), this.prevAnimatingObserver = this.block.prev.view.observe(this, "_inheritAnimate", ["animating"]), this._align());
+    if (this.block.prev) {
+      var a = this.block.prev.view;
+      this.prevAnimatingObserver = a.observe(this, "_inheritAnimate", ["animating"]);
+      this.prevObserver = a.observe(this, "_align", ["x", "y"]);
+      !0 === a.animating && this.set({animating:!0});
+      this._align();
+    }
   };
   b._render = function() {
     this.set(this._skeleton.box());
   };
   b._align = function(a) {
     if (null !== this.block.prev) {
-      var b = this.block.prev.view;
+      var b = this.svgGroup.parent();
+      this.svgGroup.remove();
+      b.append(this.svgGroup);
+      b = this.block.prev.view;
       !0 === a && this.set({animating:!0});
       this.set({x:b.x, y:b.y + b.height + 1});
       var d = this;
@@ -3557,7 +3566,7 @@ Entry.BlockView = function(b, a) {
   };
   b.terminateDrag = function() {
     var a = this._getCloseBlock();
-    this.block.prev || a ? 30 < Math.sqrt(Math.pow(this.x - this.block.x, 2) + Math.pow(this.y - this.block.y, 2)) ? a ? this.block.doInsert(a) : this.block.doSeparate() : this._align(!0) : this.block.doMove();
+    this.block.prev || a ? 30 < Math.sqrt(Math.pow(this.x - this.block.x, 2) + Math.pow(this.y - this.block.y, 2)) ? a ? (this.set({animating:!0}), this.block.doInsert(a)) : this.block.doSeparate() : this._align(!0) : this.block.doMove();
   };
   b._getCloseBlock = function() {
     for (var a = Snap.getElementByPoint(this.x + 690, this.y + 130), b = a.block;!b && "svg" !== a.type && "BODY" !== a.type;) {

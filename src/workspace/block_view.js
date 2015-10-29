@@ -108,12 +108,15 @@ Entry.BlockView = function(block, board) {
         if (this.prevObserver) this.prevObserver.destroy();
         if (this.prevAnimatingObserver) this.prevAnimatingObserver.destroy();
         if (this.block.prev) {
-            this.prevObserver = this.block.prev.view.observe(
-                this, "_align", ["x", "y"]
-            );
-            this.prevAnimatingObserver = this.block.prev.view.observe(
+            var prevView = this.block.prev.view;
+            this.prevAnimatingObserver = prevView.observe(
                 this, "_inheritAnimate", ["animating"]
             );
+            this.prevObserver = prevView.observe(
+                this, "_align", ["x", "y"]
+            );
+            if (prevView.animating === true)
+                this.set({animating: true});
             this._align();
         } else {
 
@@ -127,6 +130,9 @@ Entry.BlockView = function(block, board) {
     p._align = function(animate) {
         if (this.block.prev === null)
             return;
+        var parent = this.svgGroup.parent();
+        this.svgGroup.remove();
+        parent.append(this.svgGroup);
         var prevBlockView = this.block.prev.view;
         if (animate === true)
             this.set({animating: true});
@@ -239,8 +245,10 @@ Entry.BlockView = function(block, board) {
             Math.pow(this.y - this.block.y, 2)
         );
         if (distance > 30) {
-            if (closeBlock)
+            if (closeBlock) {
+                this.set({animating: true});
                 this.block.doInsert(closeBlock);
+            }
             else
                 this.block.doSeparate();
         } else {
