@@ -314,7 +314,18 @@ Entry.BlockView = function(block, board) {
     };
 
     p.destroy = function(animate) {
-        this.svgGroup.remove();
+        var svgGroup = this.svgGroup;
+
+        if (animate) {
+            svgGroup.animate(
+                { opacity: 0 },
+                200,
+                null,
+                function(){
+                    this.remove();
+                }
+            );
+        } else svgGroup.remove();
     };
 
 })(Entry.BlockView.prototype);
