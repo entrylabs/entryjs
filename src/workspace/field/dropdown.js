@@ -32,18 +32,18 @@ Entry.FieldDropdown = function(content, block) {
 
         this.svgGroup = this._block.contentSvgGroup.group();
         this.topGroup = this.svgGroup.group();
-        var input = this.topGroup.rect(-20,-12, 39, 22);
+        var input = this.topGroup.rect(0,-12, 39, 22);
         input.attr({
-            fill: "#80cbf8",
-            stroke: "#127cdb"
+            fill: "#80cbf8"
         });
 
-        var clickTopGroup = function(event) {
+        var clickTopGroup = function(e) {
+            e.stopPropagation();
             self.renderOptions();
          };
 
-        this.textElement = this.topGroup.text(-15,3,this.options[this.value]);
-        var button = this.topGroup.polygon(8,-2,14,-2,11,2);
+        this.textElement = this.topGroup.text(5,3,this.options[this.value]);
+        var button = this.topGroup.polygon(28,-2,34,-2,31,2);
         button.attr({
             fill: "#127cbd",
             stroke: "#127cbd"
@@ -63,23 +63,28 @@ Entry.FieldDropdown = function(content, block) {
         this.px = this._block.x;
         this.py = this._block.y;
 
-        if (this.bottomGroup && this.bottomGroup.expand) {
-            this.bottomGroup.remove();
-            this.bottomGroup.expand = false;
+        if (this.optionGroup && this.optionGroup.expand) {
+            this.optionGroup.remove();
+            this.optionGroup.expand = false;
             return;
         }
 
         this.snap = Snap('#play');
-        this.bottomGroup = this.snap.group();
-        this.bottomGroup.expand = true;
+        this.optionGroup = this.snap.group();
+        this.optionGroup.expand = true;
+        $(document).bind('mousedown', function(e) {
+            self.optionGroup.remove();
+            self.optionGroup.expand = false;
+        });
+
         for (var i in this.options) {
-            var element = this.bottomGroup.group();
+            var element = this.optionGroup.group();
 
             var x = Number(i)+1;
-            var rect = element.rect(this.px-40, this.py+14+(x*22), 38, 23).attr({
+            var rect = element.rect(this.px-46, this.py+14+(x*22), 38, 23).attr({
                 fill: "white"
             });
-            element.text(this.px-33,this.py+29+(x*22), this.options[i]);
+            element.text(this.px-43,this.py+29+(x*22), this.options[i]);
 
             (function(elem, value) {
                 var hoverIn = function() {
@@ -95,8 +100,8 @@ Entry.FieldDropdown = function(content, block) {
                 var selectValue = function() {
                     self.applyValue(value);
                     hoverOut();
-                    self.bottomGroup.remove();
-                    self.bottomGroup.expand = false;
+                    self.optionGroup.remove();
+                    self.optionGroup.expand = false;
                 };
 
                 elem.mouseover(hoverIn).mouseout(hoverOut).mousedown(selectValue);
