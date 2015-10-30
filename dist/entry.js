@@ -3690,7 +3690,7 @@ Entry.BlockView = function(b, a) {
       f.terminateDrag();
       delete f.dragInstance;
       $(document).unbind(".block");
-      0 >= c - a.offsetX - 100 && 0 >= d - a.offsetY - 100 && (console.log(f.block), console.log(f.block.getThread()), f.block.getThread().destroy());
+      0 >= c - a.offsetX - 100 && 0 >= d - a.offsetY - 100 && f.block.getThread().destroy(!0);
       b.align(b._positionX, b._positionY, !1);
     }
     if (0 === a.button || a instanceof Touch) {
@@ -3730,8 +3730,6 @@ Entry.BlockView = function(b, a) {
   };
   b.destroy = function(a) {
     var b = this.svgGroup;
-    console.log("dddddddddddddddddddddd");
-    console.log(this.svgGroup);
     a ? b.animate({opacity:0}, 200, null, function() {
       this.remove();
     }) : b.remove();
@@ -4201,8 +4199,9 @@ Entry.ThreadView = function(b, a) {
 Entry.FieldTrashcan = function(b) {
   this.board = b;
   this.svgGroup = b.snap.group();
-  this._positionX = b.svgDom.width() - 110;
-  this._positionY = b.svgDom.height() - 110;
+  b = b.svgDom;
+  this._positionX = b.width() - 110;
+  this._positionY = b.height() - 110;
   this.renderStart();
   this.align(this._positionX, this._positionY, !1);
 };
@@ -4212,10 +4211,11 @@ Entry.FieldTrashcan = function(b) {
     this.trashcan = this.svgGroup.image("/img/assets/delete_body.png", 0, 20, 80, 80);
   };
   b.align = function(a, b, d) {
-    this._position && (a = this._positionX);
-    this._position && (b = this._positionX);
+    this._positionX && (a = this._positionX);
+    this._positionY && (b = this._positionY);
     this.svgGroup.attr({transform:"t" + a + " " + b});
-    d ? this.trashcanTop.animate({transform:"t5 -18 r30"}, 100) : this.trashcanTop.animate({transform:"r0"}, 100);
+    a = this.trashcanTop;
+    d ? a.animate({transform:"t5 -20 r30"}, 50) : a.animate({transform:"r0"}, 50);
   };
 })(Entry.FieldTrashcan.prototype);
 Entry.Board = function(b) {

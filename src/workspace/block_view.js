@@ -257,9 +257,7 @@ Entry.BlockView = function(block, board) {
             $(document).unbind('.block');
 
             if(x-e.offsetX-100 <= 0 && y-e.offsetY-100 <=0 ) {
-                console.log(block.block);
-                console.log(block.block.getThread());
-                block.block.getThread().destroy();
+                block.block.getThread().destroy(true);
             }
              _block.align( _block._positionX, _block._positionY ,false);
             //block._board.dragBlock = null;
@@ -340,12 +338,8 @@ Entry.BlockView = function(block, board) {
     };
 
     p.destroy = function(animate) {
-        var svgGroup = this.svgGroup;
-
-        console.log('dddddddddddddddddddddd');
-        console.log(this.svgGroup);
+        var svgGroup = this.svgGroup; 
         
-
         if (animate) {
             svgGroup.animate(
                 { opacity: 0 },
