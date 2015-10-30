@@ -70,17 +70,15 @@ Entry.FieldDropdown = function(content, block) {
             });
             element.text(-13,3+(x*22), options[i]);
 
-            (function(elem, rect, value) {
+            (function(elem, value) {
                 var hoverIn = function() {
-                    rect.attr({
-                        fill: "#ccc"
-                    });
+                    elem.select("rect:nth-child(1)").attr({ fill: "#127cdb" });
+                    elem.select("text:nth-child(2)").attr({ fill: "white" });
                 };
 
                 var hoverOut = function() {
-                    rect.attr({
-                        fill: "white"
-                    });
+                    elem.select("rect:nth-child(1)").attr({ fill: "white" });
+                    elem.select("text:nth-child(2)").attr({ fill: "black" });
                 };
 
                 var selectValue = function() {
@@ -92,7 +90,7 @@ Entry.FieldDropdown = function(content, block) {
 
                 elem.mouseover(hoverIn).mouseout(hoverOut).mousedown(selectValue);
 
-            })(element, rect, options[i]);
+            })(element, options[i]);
         }
 
         this.box.set({

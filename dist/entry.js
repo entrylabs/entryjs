@@ -3825,21 +3825,24 @@ Entry.FieldDropdown = function(b, a) {
       1 == a.bottomGroup.collapse ? (a.svgGroup.append(a.bottomGroup), a.bottomGroup.collapse = !1) : (a.bottomGroup.remove(), a.bottomGroup.collapse = !0);
     });
     for (var e in b) {
-      var d = this.bottomGroup.group(), f = Number(e) + 1, h = d.rect(-20, -12 + 22 * f, 39, 22).attr({fill:"white"});
+      var d = this.bottomGroup.group(), f = Number(e) + 1;
+      d.rect(-20, -12 + 22 * f, 39, 22).attr({fill:"white"});
       d.text(-13, 3 + 22 * f, b[e]);
-      (function(b, c, d) {
-        var e = function() {
-          c.attr({fill:"white"});
+      (function(b, c) {
+        var d = function() {
+          b.select("rect:nth-child(1)").attr({fill:"white"});
+          b.select("text:nth-child(2)").attr({fill:"black"});
         };
         b.mouseover(function() {
-          c.attr({fill:"#ccc"});
-        }).mouseout(e).mousedown(function() {
-          a.applyValue(d);
-          e();
+          b.select("rect:nth-child(1)").attr({fill:"#127cdb"});
+          b.select("text:nth-child(2)").attr({fill:"white"});
+        }).mouseout(d).mousedown(function() {
+          a.applyValue(c);
+          d();
           a.bottomGroup.remove();
           a.bottomGroup.collapse = !0;
         });
-      })(d, h, b[e]);
+      })(d, b[e]);
     }
     this.box.set({x:0, y:0, width:39, height:22});
   };
