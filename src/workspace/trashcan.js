@@ -1,108 +1,48 @@
-/*
- */
 "use strict";
 
 goog.provide("Entry.FieldTrashcan");
 
-/*
- *
- */
 Entry.FieldTrashcan = function(board) {
     this.board = board;
     this.svgGroup = board.snap.group();
 
-    this._positionX = board.svgDom.width()-110;
-    this._positionY = board.svgDom.height()-110;    
-    this._imgUrl = "" 
+    var svgDom = board.svgDom;
+    this._positionX = svgDom.width()-110;
+    this._positionY = svgDom.height()-110;
     this.renderStart();
-    this.align();
+    this.align(this._positionX,this._positionY,false);
+
+
+    if (Entry.windowResized)
+        Entry.windowResized.attach(this, this.align);
 };
 
 (function(p) {
     p.renderStart = function() {
-        // this.rect = this.svgGroup.rect(this._positionx, this._positiony, 100, 100);
-        // this.rect.attr({
-        //     fill: "transparent"
-        // });
-
-        // var trashcanTop = Snap(100,100);
-        // var trashTop = trashcanTop.image('/img/assets/delete_body.png',0,0,50,50);
-        // var path = trashcanTop.path("M0,0h200v200h-200z").attr("fill", trashTop);
+        var path = '/img/assets/delete_';
         this.trashcanTop = this.svgGroup.image (
-            '/img/assets/delete_cover.png',
-            0,
-            0,
-            80,
-            20
-            );
-        // this.trashcanTop.attr({
-        //     fill: 'none'
-        // });
+            path + 'cover.png', 0, 0, 80, 20);
+
         this.trashcan = this.svgGroup.image (
-            '/img/assets/delete_body.png',
-            0,
-            20,
-            80,
-            80
-            );
-
-
-
-
-        // this.trashcan.attr({
-        //     fill: 'none'
-        // });
-        // this.svgGroup.g(this.trashcanTop , this.trashcan);
-        
-
-        // this._imgElement = this.svgGroup.image(
-        //     this._imgUrl,
-        //     this._size * -1,
-        //     this._size * -1,
-        //     this._size * 2,
-        //     this._size * 2
-        // );
-
-        // var path = "m 0,-%s a %s,%s 0 1,1 -0.1,0 z"
-        //     .replace(/%s/gi, this._size);
-        // this._path = this.svgGroup.path(path);
-        // this._path.attr({
-        //     stroke: "none",
-        //     fill: "none"
-        // });
-
-        // var path = "m 0,-%s a %s,%s 0 1,1 -0.1,0 z"
-        //     .replace(/%s/gi, this._size);
-        // this._path = this.svgGroup.path(path);
-        // this._path.attr({
-        //     stroke: "none",
-        //     fill: "none"
-        // });
+            path + 'body.png', 0, 20, 80, 80);
     };
+
     p.align = function(x, y, animate) {
+        if (this._positionX) x = this._positionX;
+        if (this._positionY) y = this._positionY;
+
+        var transform = "t" + x + " " + y;
 
         this.svgGroup.attr({
-            transform: "t" + this._positionX + " " + this._positionY
+            transform: transform
         });
 
-
-        // console.log(animate);
-        // console.log(this);
-        // animate = animate === undefined ? true : animate;
-        // var svgGroup = this.svgGroup;
-        // if (this._position) x = this._position.x;
-        // var transform = "t" + x + " " + y;
-
-        // if (animate)
-        //     svgGroup.animate({
-        //         transform: transform
-        //     }, 300, mina.easeinout);
-        // else
-        //     svgGroup.attr({
-        //         transform: transform
-        //     });
-
-        
+        var trashTop = this.trashcanTop;
+        if(animate)
+            trashTop.animate({
+                transform: "t5 -20 r30"}, 50);
+        else
+            trashTop.animate({
+                transform: "r0"}, 50);
     };
-
 })(Entry.FieldTrashcan.prototype);
