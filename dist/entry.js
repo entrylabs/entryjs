@@ -3559,8 +3559,8 @@ Entry.BlockMenu = function(b) {
     this.svgThreadGroup = a.svgThreadGroup;
   };
   b.align = function() {
-    for (var a = this.code._data, b = 10, d = this._svgDom.width() / 2, e = 0, f = a.length;e < f;e++) {
-      var g = a[e]._data[0], h = g.view;
+    for (var a = this.code.getThreads(), b = 10, d = this._svgDom.width() / 2, e = 0, f = a.length;e < f;e++) {
+      var g = a[e].getFirstBlock(), h = g.view;
       g.set({x:d, y:b});
       h._moveTo(d, b, !1);
       b += h.height + 10;
@@ -3802,6 +3802,9 @@ Entry.Code = function(b) {
     d.splice(e, 1);
     a.destroy(b);
   };
+  b.getThreads = function() {
+    return this._data;
+  };
 })(Entry.Code.prototype);
 Entry.CodeView = function(b, a) {
   Entry.Model(this, !1);
@@ -3971,8 +3974,7 @@ Entry.DummyBlock = function(b, a) {
   this.originBlockView = a;
   this.svgGroup = b.svgGroup.group();
   this.svgGroup.block = b;
-  skeleton = Entry.skeleton[b.acceptType];
-  var c = skeleton.path(this);
+  var c = Entry.skeleton[b.acceptType].path(this);
   this.path = this.svgGroup.path(c);
   this.path.attr({transform:"t0 1.1", fill:"transparent"});
   this.prevObserver = a.observe(this, "_align", ["x", "y"]);
@@ -4257,7 +4259,6 @@ Entry.Board = function(b) {
   this.snap = Snap("#play");
   this._blockViews = [];
   this.trashcan = new Entry.FieldTrashcan(this);
-  console.log(this);
   this.svgGroup = this.snap.group();
   this.svgThreadGroup = this.svgGroup.group();
   this.svgThreadGroup.board = this;
