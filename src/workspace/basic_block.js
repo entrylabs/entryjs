@@ -45,6 +45,10 @@ Entry.block.jr_repeat = {
     color: "#3BBD70",
     contents: [
         {
+            type: "Statement",
+            accept: "pebble_basic"
+        },
+        {
             type: "Dropdown",
             options: [1,2,3,4,5,6,7,8,9,10],
             value: 1

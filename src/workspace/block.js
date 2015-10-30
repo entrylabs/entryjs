@@ -104,11 +104,6 @@ Entry.Block.FOLLOW = 3;
         return new Entry.Block(this.toJSON());
     };
 
-    p.destory = function(animate) {
-        if (this.view)
-            this.view.destroy(animate);
-    };
-
     // command func
     p.doMove = function() {
         console.log(
@@ -139,8 +134,6 @@ Entry.Block.FOLLOW = 3;
             this.y
         );
         var blocks = this._thread.cut(this);
-        if (this.prev)
-            this.prev.setNext(null);
         targetBlock.insertAfter(blocks);
         this._updatePos();
     };

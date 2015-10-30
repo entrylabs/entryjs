@@ -106,6 +106,7 @@ Entry.FieldTrashcan = function(board) {
             },100);
         }
         
+        
         // console.log(animate);
         // console.log(this);
         // animate = animate === undefined ? true : animate;

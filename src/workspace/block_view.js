@@ -38,6 +38,8 @@ Entry.BlockView = function(block, board) {
         y: 0,
         width: 0,
         height: 0,
+        contentWidth: 0,
+        contentHeight: 0,
         magneting: false,
         animating: false
     };
@@ -65,7 +67,6 @@ Entry.BlockView = function(block, board) {
         });
 
         this._startContentRender();
-        this._render();
         this._addControl();
     };
 
@@ -93,7 +94,8 @@ Entry.BlockView = function(block, board) {
     };
 
     p._alignContent = function(animate) {
-        var cursor = {x: 0, y: 0};
+        if (animate !== true) animate = false;
+        var cursor = {x: 0, y: 0, height: 0};
         for (var i = 0; i < this._contents.length; i++) {
             var c = this._contents[i];
             c.align(cursor.x, cursor.y, animate);
@@ -103,10 +105,15 @@ Entry.BlockView = function(block, board) {
                 cursor.x += 5;
 
             var box = c.box;
+            cursor.height = Math.max(box.y + box.height);
             cursor.x += box.width;
         }
 
-        this.contentWidth = cursor.x;
+        this.set({
+            contentWidth: cursor.x,
+            contentHeight: cursor.height
+        });
+        this._render();
     };
 
     p._bindPrev = function() {
@@ -129,7 +136,16 @@ Entry.BlockView = function(block, board) {
     };
 
     p._render = function() {
-        this.set(this._skeleton.box());
+        var path = this._skeleton.path(this);
+
+        this._darkenPath.animate({
+            d: path
+        }, 300, mina.easeinout);
+
+        this._path.animate({
+            d: path
+        }, 300, mina.easeinout);
+        this.set(this._skeleton.box(this));
     };
 
     p._align = function(animate) {
@@ -300,13 +316,15 @@ Entry.BlockView = function(block, board) {
             targetElement = targetElement.parent();
             targetBlock = targetElement.block;
         }
-
+        if (targetBlock === this.block)
+            return null;
         return targetBlock;
     };
 
     p._inheritAnimate = function() {
         var prevBlockView = this.block.prev.view;
-        this.set({animating: prevBlockView.animating});
+        if (prevBlockView)
+            this.set({animating: prevBlockView.animating});
     };
 
     p.dominate = function() {

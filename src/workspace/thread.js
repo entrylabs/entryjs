@@ -7,6 +7,7 @@ goog.provide("Entry.Thread");
 
 goog.require('Entry.Model');
 goog.require("Entry.Collection");
+goog.require("Entry.DummyBlock");
 
 /*
  *
@@ -21,21 +22,7 @@ Entry.Thread = function(thread, code) {
         this.createView(code.view.board);
     }
 
-    /*
-    Entry.Model(this, false);
-
-    this.code = code;
-
-    this._blocks = new Entry.Collection();
-
-    this.loadModel(thread);
-
-    this.board = null;
-
-    this.svgGroup = null;
-
-    this.observe(this, "resizeBG", ['width', 'height']);
-    */
+    this.changeEvent = new Entry.Event(this);
 };
 
 (function(p) {
@@ -45,7 +32,8 @@ Entry.Thread = function(thread, code) {
 
         for (var i = 0; i < thread.length; i++) {
             var block = thread[i];
-            if (block instanceof Entry.Block) {
+            if (block instanceof Entry.Block ||
+               block instanceof Entry.DummyBlock) {
                 block.setThread(this);
                 this._data.push(block);
             } else {
@@ -91,11 +79,15 @@ Entry.Thread = function(thread, code) {
         block.setPrev(null);
         var blocks = this._data.splice(this._data.indexOf(block));
         this._code.createThread(blocks);
+        this.changeEvent.notify();
     };
 
     p.cut = function(block) {
         var index = this._data.indexOf(block);
         var splicedData = this._data.splice(index);
+        if (this._data[index - 1])
+            this._data[index - 1].setNext(null);
+        this.changeEvent.notify();
         return splicedData;
     };
 
@@ -111,6 +103,7 @@ Entry.Thread = function(thread, code) {
             [index + 1, 0].concat(newBlocks)
         );
         this._setRelation();
+        this.changeEvent.notify();
     };
 
     p.clone = function(code) {
@@ -126,7 +119,7 @@ Entry.Thread = function(thread, code) {
         );
     };
 
-    p.destory = function(animate) {
+    p.destroy = function(animate) {
         var data = this._data;
         if (this.view)
             this.view.destroy(animate);

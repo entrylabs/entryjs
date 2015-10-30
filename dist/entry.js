@@ -3369,7 +3369,7 @@ Entry.block.jr_start = {skeleton:"pebble_event", event:"start", color:"#3BBD70",
   this.unitComp = Ntry.entityManager.getComponent(this._unit.id, Ntry.STATIC.UNIT);
   return Entry.STATIC.RETURN;
 }};
-Entry.block.jr_repeat = {skeleton:"pebble_loop", color:"#3BBD70", contents:[{type:"Dropdown", options:[1, 2, 3, 4, 5, 6, 7, 8, 9, 10], value:1}, "\ubc18\ubcf5"], func:function() {
+Entry.block.jr_repeat = {skeleton:"pebble_loop", color:"#3BBD70", contents:[{type:"Statement", accept:"pebble_basic"}, {type:"Dropdown", options:[1, 2, 3, 4, 5, 6, 7, 8, 9, 10], value:1}, "\ubc18\ubcf5"], func:function() {
 }};
 Entry.block.jr_item = {skeleton:"pebble_basic", color:"#F46C6C", contents:["\uaf43 \ubaa8\uc73c\uae30", {type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_item_image.png", highlightColor:"#FFF", position:{x:83, y:0}, size:22}], func:function() {
   if (this.isContinue) {
@@ -3595,7 +3595,7 @@ Entry.BlockView = function(b, a) {
   this._startRender(b);
 };
 (function(b) {
-  b.schema = {id:0, type:Entry.STATIC.BLOCK_RENDER_MODEL, x:0, y:0, width:0, height:0, magneting:!1, animating:!1};
+  b.schema = {id:0, type:Entry.STATIC.BLOCK_RENDER_MODEL, x:0, y:0, width:0, height:0, contentWidth:0, contentHeight:0, magneting:!1, animating:!1};
   b._startRender = function(a) {
     this.svgGroup.attr({class:"block"});
     this.svgGroup.attr({transform:"t" + this.x + " " + this.y});
@@ -3605,7 +3605,6 @@ Entry.BlockView = function(b, a) {
     this._path = this.svgGroup.path(a);
     this._path.attr({fill:this._schema.color});
     this._startContentRender();
-    this._render();
     this._addControl();
   };
   b._startContentRender = function() {
@@ -3623,13 +3622,15 @@ Entry.BlockView = function(b, a) {
     a.svgBlockGroup.append(this.svgGroup);
   };
   b._alignContent = function(a) {
-    for (var b = 0, d = 0;d < this._contents.length;d++) {
-      var e = this._contents[d];
-      e.align(b, 0, a);
-      d !== this._contents.length - 1 && (b += 5);
-      b += e.box.width;
+    !0 !== a && (a = !1);
+    for (var b = 0, d = 0, e = 0;e < this._contents.length;e++) {
+      d = this._contents[e];
+      d.align(b, 0, a);
+      e !== this._contents.length - 1 && (b += 5);
+      var f = d.box, d = Math.max(f.y + f.height), b = b + f.width;
     }
-    this.contentWidth = b;
+    this.set({contentWidth:b, contentHeight:d});
+    this._render();
   };
   b._bindPrev = function() {
     this.prevObserver && this.prevObserver.destroy();
@@ -3643,7 +3644,10 @@ Entry.BlockView = function(b, a) {
     }
   };
   b._render = function() {
-    this.set(this._skeleton.box());
+    var a = this._skeleton.path(this);
+    this._darkenPath.animate({d:a}, 300, mina.easeinout);
+    this._path.animate({d:a}, 300, mina.easeinout);
+    this.set(this._skeleton.box(this));
   };
   b._align = function(a) {
     if (null !== this.block.prev) {
@@ -3686,7 +3690,7 @@ Entry.BlockView = function(b, a) {
       f.terminateDrag();
       delete f.dragInstance;
       $(document).unbind(".block");
-      0 >= c - a.offsetX - 100 && 0 >= d - a.offsetY - 100 && f.getThread().destroy();
+      0 >= c - a.offsetX - 100 && 0 >= d - a.offsetY - 100 && (console.log(f.block), console.log(f.block.getThread()), f.block.getThread().destroy());
       b.align(b._positionX, b._positionY, !1);
     }
     if (0 === a.button || a instanceof Touch) {
@@ -3709,10 +3713,11 @@ Entry.BlockView = function(b, a) {
     for (var a = Snap.getElementByPoint(this.x + 690, this.y + 130), b = a.block;!b && "svg" !== a.type && "BODY" !== a.type;) {
       a = a.parent(), b = a.block;
     }
-    return b;
+    return b === this.block ? null : b;
   };
   b._inheritAnimate = function() {
-    this.set({animating:this.block.prev.view.animating});
+    var a = this.block.prev.view;
+    a && this.set({animating:a.animating});
   };
   b.dominate = function() {
     var a = this.svgGroup.parent();
@@ -3811,13 +3816,44 @@ Entry.FieldDropdown = function(b, a) {
   this._block = a;
   this.box = new Entry.BoxModel;
   this.svgGroup = null;
+  this._contents = b;
   this.renderStart();
 };
 (function(b) {
   b.renderStart = function() {
+    var a = this, b = this._contents.options, d = this._contents.value;
     this.svgGroup = this._block.contentSvgGroup.group();
-    this.svgGroup.rect(0, -10, 20, 20);
-    this.box.set({x:0, y:0, width:20, height:20});
+    this.topGroup = this.svgGroup.group();
+    this.bottomGroup = this.svgGroup.group();
+    this.bottomGroup.remove();
+    this.bottomGroup.collapse = !0;
+    this.topGroup.rect(-20, -12, 39, 22).attr({fill:"#80cbf8", stroke:"#127cdb"});
+    this.textElement = this.topGroup.text(-15, 3, b[d]);
+    this.topGroup.polygon(8, -2, 14, -2, 11, 2).attr({fill:"#127cbd", stroke:"#127cbd"});
+    this.topGroup.mousedown(function(b) {
+      1 == a.bottomGroup.collapse ? (a.svgGroup.append(a.bottomGroup), a.bottomGroup.collapse = !1) : (a.bottomGroup.remove(), a.bottomGroup.collapse = !0);
+    });
+    for (var e in b) {
+      var d = this.bottomGroup.group(), f = Number(e) + 1;
+      d.rect(-20, -12 + 22 * f, 39, 22).attr({fill:"white"});
+      d.text(-13, 3 + 22 * f, b[e]);
+      (function(b, c) {
+        var d = function() {
+          b.select("rect:nth-child(1)").attr({fill:"white"});
+          b.select("text:nth-child(2)").attr({fill:"black"});
+        };
+        b.mouseover(function() {
+          b.select("rect:nth-child(1)").attr({fill:"#127cdb"});
+          b.select("text:nth-child(2)").attr({fill:"white"});
+        }).mouseout(d).mousedown(function() {
+          a.applyValue(c);
+          d();
+          a.bottomGroup.remove();
+          a.bottomGroup.collapse = !0;
+        });
+      })(d, b[e]);
+    }
+    this.box.set({x:0, y:0, width:39, height:22});
   };
   b.align = function(a, b, d) {
     var e = this.svgGroup;
@@ -3825,6 +3861,9 @@ Entry.FieldDropdown = function(b, a) {
     var f = "t" + a + " " + b;
     void 0 === d || d ? e.animate({transform:f}, 300, mina.easeinout) : e.attr({transform:f});
     this.box.set({x:a, y:b});
+  };
+  b.applyValue = function(a) {
+    this.textElement.node.textContent = a;
   };
 })(Entry.FieldDropdown.prototype);
 Entry.FieldIndicator = function(b, a) {
@@ -3866,6 +3905,66 @@ Entry.FieldIndicator = function(b, a) {
     }, 500);
   };
 })(Entry.FieldIndicator.prototype);
+Entry.FieldStatement = function(b, a) {
+  this._blockView = a;
+  this.box = new Entry.BoxModel;
+  this.acceptType = b.accept;
+  this.dummyBlock = this.svgGroup = null;
+  this.box.observe(a, "_alignContent", ["height"]);
+  this.renderStart();
+};
+(function(b) {
+  b.renderStart = function() {
+    this.svgGroup = this._blockView.contentSvgGroup.group();
+    this.dummyBlock = new Entry.DummyBlock(this, this._blockView);
+    this._thread = new Entry.Thread([this.dummyBlock], this._blockView.getBoard().code);
+    var a = this;
+    this._thread.changeEvent.attach(function() {
+      a.calcHeight();
+    });
+    this.box.set({x:46, y:0, width:20, height:20});
+  };
+  b.insertAfter = function(a) {
+    this._thread.insertByBlock(this.dummyBlock, a);
+    this.calcHeight();
+  };
+  b.calcHeight = function() {
+    for (var a = this.dummyBlock.next, b = 0;a;) {
+      b += a.view.height + 1, a = a.next;
+    }
+    this.box.set({height:b});
+  };
+  b.align = function(a, b, d) {
+    a = this.svgGroup;
+    void 0 === d || d ? a.animate({transform:"t46 15"}, 300, mina.easeinout) : a.attr({transform:"t46 15"});
+  };
+})(Entry.FieldStatement.prototype);
+Entry.DummyBlock = function(b, a) {
+  Entry.Model(this, !1);
+  this.view = this;
+  this.originBlockView = a;
+  this.svgGroup = b.svgGroup.group();
+  this.svgGroup.block = b;
+  skeleton = Entry.skeleton[b.acceptType];
+  var c = skeleton.path(this);
+  this.path = this.svgGroup.path(c);
+  this.path.attr({transform:"t0 1.1", fill:"transparent"});
+  this.prevObserver = a.observe(this, "_align", ["x", "y"]);
+  this._align();
+};
+(function(b) {
+  b.schema = {x:0, y:0, width:0, height:39};
+  b._align = function(a) {
+    this.set({x:this.originBlockView.x, y:this.originBlockView.y});
+  };
+  b.setThread = function() {
+  };
+  b.setPrev = function() {
+  };
+  b.setNext = function(a) {
+    this.next = a;
+  };
+})(Entry.DummyBlock.prototype);
 Entry.FieldText = function(b, a) {
   this._block = a;
   this.box = new Entry.BoxModel;
@@ -3904,7 +4003,8 @@ Entry.skeleton.pebble_event = {path:function(b) {
   return {x:0, y:25};
 }};
 Entry.skeleton.pebble_loop = {path:function(b) {
-  return "M 0,9 a 9,9 0 0,0 9,-9 h %cw a 25,25 0 0,1 25,25 v %ch a 25,25 0 0,1 -25,25 h -%cw a 9,9 0 0,1 -18,0 h -%cw a 25,25 0 0,1 -25,-25 v -%ch a 25,25 0 0,1 25,-25 h %cw a 9,9 0 0,0 9,9 z M 0,49 a 9,9 0 0,1 -9,-9 h -28 a 25,25 0 0,0 -25,25 v %cih a 25,25 0 0,0 25,25 h 28 a 9,9 0 0,0 18,0 h 28 a 25,25 0 0,0 25,-25 v -%cih a 25,25 0 0,0 -25,-25 h -28 a 9,9 0 0,1 -9,9 z".replace(/%cw/gi, 41).replace(/%ch/gi, 54).replace(/%cih/gi, 0);
+  b = Math.max(b.contentHeight, 50);
+  return "M 0,9 a 9,9 0 0,0 9,-9 h %cw a 25,25 0 0,1 25,25 v %ch a 25,25 0 0,1 -25,25 h -%cw a 9,9 0 0,1 -18,0 h -%cw a 25,25 0 0,1 -25,-25 v -%ch a 25,25 0 0,1 25,-25 h %cw a 9,9 0 0,0 9,9 z M 0,49 a 9,9 0 0,1 -9,-9 h -28 a 25,25 0 0,0 -25,25 v %cih a 25,25 0 0,0 25,25 h 28 a 9,9 0 0,0 18,0 h 28 a 25,25 0 0,0 25,-25 v -%cih a 25,25 0 0,0 -25,-25 h -28 a 9,9 0 0,1 -9,9 z".replace(/%cw/gi, 41).replace(/%ch/gi, b + 4).replace(/%cih/gi, b + -50);
 }, magnets:function() {
   return {previous:{x:0, y:0}, next:{x:0, y:105}};
 }, box:function() {
@@ -3975,9 +4075,6 @@ Entry.Block.FOLLOW = 3;
   b.clone = function() {
     return new Entry.Block(this.toJSON());
   };
-  b.destory = function(a) {
-    this.view && this.view.destroy(a);
-  };
   b.doMove = function() {
     console.log("doMove", this.id, this.view.x - this.x, this.view.y - this.y);
     this._updatePos();
@@ -3990,7 +4087,6 @@ Entry.Block.FOLLOW = 3;
   b.doInsert = function(a) {
     console.log("insert", this.id, a.id, this.x, this.y);
     var b = this._thread.cut(this);
-    this.prev && this.prev.setNext(null);
     a.insertAfter(b);
     this._updatePos();
   };
@@ -4009,6 +4105,7 @@ Entry.Thread = function(b, a) {
   this._code = a;
   this.load(b);
   a.view && this.createView(a.view.board);
+  this.changeEvent = new Entry.Event(this);
 };
 (function(b) {
   b.load = function(a) {
@@ -4017,7 +4114,7 @@ Entry.Thread = function(b, a) {
     }
     for (var b = 0;b < a.length;b++) {
       var d = a[b];
-      d instanceof Entry.Block ? (d.setThread(this), this._data.push(d)) : this._data.push(new Entry.Block(d, this));
+      d instanceof Entry.Block || d instanceof Entry.DummyBlock ? (d.setThread(this), this._data.push(d)) : this._data.push(new Entry.Block(d, this));
     }
     this._setRelation();
   };
@@ -4045,11 +4142,14 @@ Entry.Thread = function(b, a) {
     });
   };
   b.separate = function(a) {
-    this._data.has(a.id) && a.prev && (a.prev.setNext(null), a.setPrev(null), a = this._data.splice(this._data.indexOf(a)), this._code.createThread(a));
+    this._data.has(a.id) && a.prev && (a.prev.setNext(null), a.setPrev(null), a = this._data.splice(this._data.indexOf(a)), this._code.createThread(a), this.changeEvent.notify());
   };
   b.cut = function(a) {
     a = this._data.indexOf(a);
-    return this._data.splice(a);
+    var b = this._data.splice(a);
+    this._data[a - 1] && this._data[a - 1].setNext(null);
+    this.changeEvent.notify();
+    return b;
   };
   b.insertByBlock = function(a, b) {
     var d = this._data.indexOf(a);
@@ -4060,6 +4160,7 @@ Entry.Thread = function(b, a) {
     }
     this._data.splice.apply(this._data, [d + 1, 0].concat(b));
     this._setRelation();
+    this.changeEvent.notify();
   };
   b.clone = function(a) {
     a = a || this._code;
@@ -4082,7 +4183,6 @@ Entry.Thread = function(b, a) {
 Entry.ThreadView = function(b, a) {
   Entry.Model(this, !1);
   this.svgGroup = a.svgThreadGroup.group();
-  this.svgGroup.rect(0, 0, 20, 20);
 };
 (function(b) {
   b.schema = {scrollX:0, scrollY:0};
@@ -4134,8 +4234,8 @@ Entry.Board = function(b) {
 (function(b) {
   b.schema = {code:null, dragBlock:null, closeBlock:null};
   b.changeCode = function(a) {
-    a.createView(this);
     this.set({code:a});
+    a.createView(this);
   };
   b.bindCodeView = function(a) {
     this.svgBlockGroup.remove();
