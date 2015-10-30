@@ -115,11 +115,13 @@ Entry.BlockMenu = function(dom) {
         var boardCode = this.workspace.getBoard().code;
 
         //destory boardBlock below the range
-        if (dragBlockView.x < this._svgWidth)
-            boardCode.destroyThread(boardBlock.getThread());
-        else boardBlock.view.terminateDrag();
+        var animate = false;
+        if (dragBlockView.x < this._svgWidth) {
+            animate = true;
+            boardCode.destroyThread(boardBlock.getThread(), animate);
+        } else boardBlock.view.terminateDrag();
 
-        thisCode.destroyThread(dragBlock.getThread(), true);
+        thisCode.destroyThread(dragBlock.getThread(), animate);
         this._boardBlockView = null;
     };
 

@@ -101,7 +101,7 @@ Entry.Code = function(code) {
         var data = this._data;
         var index = data.indexOf(thread);
         data.splice(index, 1);
-        thread.destory(animate);
+        thread.destroy(animate);
     };
 
 

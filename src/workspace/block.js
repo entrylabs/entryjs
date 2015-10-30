@@ -104,6 +104,10 @@ Entry.Block.FOLLOW = 3;
         return new Entry.Block(this.toJSON());
     };
 
+    p._destroy = function(animate) {
+        if (this.view) this.view.destroy(animate);
+    };
+
     // command func
     p.doMove = function() {
         console.log(
@@ -138,7 +142,14 @@ Entry.Block.FOLLOW = 3;
         this._updatePos();
     };
 
-    p.doDestroy = function() {
+    p.doDestroy = function(animate) {
+        console.log(
+            "destroy",
+            this.id,
+            this.x,
+            this.y
+        );
+        this._destroy(animate);
     };
 
     p.toJSON = function() {
