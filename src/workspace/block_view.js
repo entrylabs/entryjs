@@ -240,38 +240,47 @@ Entry.BlockView = function(block, board) {
                  offsetX: e.clientX,
                  offsetY: e.clientY
             });
-            destroyBlock(e.offsetX,e.offsetY);
+            checkTranshcan(e);
     
             //block.thread.align(false);
             //block._board.updateCloseMagnet(block);
         }
 
         function onMouseUp(e) {
-            var _block = block.getBoard().trashcan,
-                x = _block._positionX ,
-                y = _block._positionY ;
+            var board = block.getBoard();
+            var trashcan = board.trashcan;
 
             block.terminateDrag();
             delete block.dragInstance;
 
             $(document).unbind('.block');
 
-            if(x-e.offsetX-100 <= 0 && y-e.offsetY-100 <=0 ) {
+            if(checkTranshcan(e)) {
                 block.block.getThread().destroy(true);
             }
-             _block.align( _block._positionX, _block._positionY ,false);
+             trashcan.tAnimation(false);
             //block._board.dragBlock = null;
         }
 
-        function destroyBlock(blockx, blocky) {
-    
-            var _block = block.getBoard().trashcan,
-                x = _block._positionX ,
-                y = _block._positionY ;
-            if(x-blockx-100 <= 0 && y-blocky-100 <=0 ) {
-                _block.align( _block._positionX, _block._positionY ,true);
+        function checkTranshcan(e) {
+            var board = block.getBoard();
+            var trashcan = board.trashcan;
+            if(!trashcan) return false;
+
+            var boardOffset = board.offset;
+            var position = trashcan.getPosition();
+            var trashcanX = position.x + boardOffset.left; 
+            var trashcanY = position.y + boardOffset.top;
+
+            var mouseX = e.clientX;
+            var mouseY = e.clientY;
+
+            if(mouseX >= trashcanX && mouseY >= trashcanY) {
+                trashcan.tAnimation(true);
+                return true;
             } else {
-                _block.align( _block._positionX, _block._positionY ,false);
+                trashcan.tAnimation(false);
+                return false;
             }
         }
     };
@@ -339,7 +348,7 @@ Entry.BlockView = function(block, board) {
 
     p.destroy = function(animate) {
         var svgGroup = this.svgGroup; 
-        
+
         if (animate) {
             svgGroup.animate(
                 { opacity: 0 },
