@@ -3137,17 +3137,20 @@ Entry.Event = function(b) {
   this._listeners = [];
 };
 (function(b) {
-  b.attach = function(a) {
-    this._listeners.push(a);
+  b.attach = function(a, b) {
+    var d = {obj:a, fn:b};
+    this._listeners.push(d);
+    return d;
   };
   b.deAttach = function(a) {
     a = this._listeners.indexOf(a);
     this._listeners.splice(a, 1);
   };
   b.notify = function(a) {
-    var b;
-    for (b = 0;b < this._listeners.length;b += 1) {
-      this._listeners[b](this._sender, a);
+    var b, d = this._listeners, e = this._sender;
+    for (b = 0;b < d.length;b += 1) {
+      var f = d[b];
+      f.fn.call(f.obj, e, a);
     }
   };
 })(Entry.Event.prototype);
@@ -3204,6 +3207,10 @@ Entry.Dom = function(b, a) {
   return d;
 };
 Entry.init = function() {
+  Entry.windowResized = new Entry.Event(window);
+  $(window).resize(function() {
+    Entry.windowResized.notify();
+  });
 };
 Entry.loadProject = function(b) {
 };
@@ -4204,6 +4211,7 @@ Entry.FieldTrashcan = function(b) {
   this._positionY = b.height() - 110;
   this.renderStart();
   this.align(this._positionX, this._positionY, !1);
+  Entry.windowResized.attach(this, this.align);
 };
 (function(b) {
   b.renderStart = function() {

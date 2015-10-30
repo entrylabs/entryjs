@@ -8,9 +8,12 @@ Entry.FieldTrashcan = function(board) {
 
     var svgDom = board.svgDom;
     this._positionX = svgDom.width()-110;
-    this._positionY = svgDom.height()-110;    
+    this._positionY = svgDom.height()-110;
     this.renderStart();
-    this.align(this._positionX,this._positionY ,false);
+    this.align(this._positionX,this._positionY,false);
+
+
+    Entry.windowResized.attach(this, this.align);
 };
 
 (function(p) {
@@ -18,7 +21,7 @@ Entry.FieldTrashcan = function(board) {
         var path = '/img/assets/delete_';
         this.trashcanTop = this.svgGroup.image (
             path + 'cover.png', 0, 0, 80, 20);
-        
+
         this.trashcan = this.svgGroup.image (
             path + 'body.png', 0, 20, 80, 80);
     };
@@ -31,10 +34,10 @@ Entry.FieldTrashcan = function(board) {
 
         this.svgGroup.attr({
             transform: transform
-        }); 
-    
+        });
+
         var trashTop = this.trashcanTop;
-        if(animate) 
+        if(animate)
             trashTop.animate({
                 transform: "t5 -20 r30"}, 50);
         else

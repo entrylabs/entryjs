@@ -8,8 +8,13 @@ Entry.Event = function(sender) {
 };
 
 (function(p) {
-    p.attach = function (listener) {
+    p.attach = function (obj, fn) {
+        var listener = {
+            obj: obj,
+            fn: fn
+        }
         this._listeners.push(listener);
+        return listener;
     };
 
     p.deAttach = function (listener) {
@@ -20,9 +25,16 @@ Entry.Event = function(sender) {
 
     p.notify = function (args) {
         var index;
+        var listeners = this._listeners;
+        var sender = this._sender;
 
-        for (index = 0; index < this._listeners.length; index += 1) {
-            this._listeners[index](this._sender, args);
+        for (index = 0; index < listeners.length; index += 1) {
+            var ls = listeners[index];
+            ls.fn.call(
+                ls.obj,
+                sender,
+                args
+            );
         }
     };
 })(Entry.Event.prototype);
