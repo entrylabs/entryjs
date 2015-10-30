@@ -28,74 +28,76 @@ Entry.FieldDropdown = function(content, block) {
         var value = this._contents.value;
         var width = 39;
         var height = 22;
-        var dropdownHeight = options.length * height;
+        var dropdownHeight = 22 + options.length * height;
 
         this.svgGroup = this._block.contentSvgGroup.group();
 
         this.topGroup = this.svgGroup.group();
         this.bottomGroup = this.svgGroup.group();
         this.bottomGroup.remove();
+        this.bottomGroup.collapse = true;
 
-        var input = this.topGroup.rect(0,-12, 39, 22);
+        var input = this.topGroup.rect(-20,-12, 39, 22);
         input.attr({
             fill: "#80cbf8",
             stroke: "#127cdb"
         });
 
         var clickTopGroup = function(event) {
-            self.svgGroup.append(self.bottomGroup);
+            if (self.bottomGroup.collapse == true) {
+                self.svgGroup.append(self.bottomGroup);
+                self.bottomGroup.collapse = false;
+            } else {
+                self.bottomGroup.remove();
+                self.bottomGroup.collapse = true;
+            }
         };
 
-        this.textElement = this.topGroup.text(10,3,options[value]);
-        var button = this.topGroup.polygon(28,-2,34,-2,31,2);
+        this.textElement = this.topGroup.text(-15,3,options[value]);
+        var button = this.topGroup.polygon(8,-2,14,-2,11,2);
         button.attr({
             fill: "#127cbd",
             stroke: "#127cbd"
         });
         this.topGroup.mousedown(clickTopGroup);
 
-        var elements = [];
         for (var i in options) {
-            elements.push(this.bottomGroup.group());
+            var element = this.bottomGroup.group();
 
             var x = Number(i)+1;
-            var rect = elements[i].rect(0, -12+(x*22), 39, 22).attr({
+            var rect = element.rect(-20, -12+(x*22), 39, 22).attr({
                 fill: "white"
             });
-            elements[i].text(10,3+(x*22), options[i]);
+            element.text(-13,3+(x*22), options[i]);
 
-            (function(elem, rect, value) {
+            (function(elem, value) {
                 var hoverIn = function() {
-                    rect.attr({
-                        fill: "#ccc"
-                    });
+                    elem.select("rect:nth-child(1)").attr({ fill: "#127cdb" });
+                    elem.select("text:nth-child(2)").attr({ fill: "white" });
                 };
 
                 var hoverOut = function() {
-                    rect.attr({
-                        fill: "white"
-                    });
+                    elem.select("rect:nth-child(1)").attr({ fill: "white" });
+                    elem.select("text:nth-child(2)").attr({ fill: "black" });
                 };
 
                 var selectValue = function() {
                     self.applyValue(value);
                     hoverOut();
                     self.bottomGroup.remove();
+                    self.bottomGroup.collapse = true;
                 };
 
-                elem.hover(
-                    hoverIn, hoverOut
-                );
-                elem.mousedown(selectValue);
+                elem.mouseover(hoverIn).mouseout(hoverOut).mousedown(selectValue);
 
-            })(elements[i], rect, options[i]);
+            })(element, options[i]);
         }
 
         this.box.set({
             x: 0,
             y: 0,
             width: 39,
-            height: dropdownHeight
+            height: 22
         });
     };
 

@@ -3369,7 +3369,7 @@ Entry.block.jr_start = {skeleton:"pebble_event", event:"start", color:"#3BBD70",
   this.unitComp = Ntry.entityManager.getComponent(this._unit.id, Ntry.STATIC.UNIT);
   return Entry.STATIC.RETURN;
 }};
-Entry.block.jr_repeat = {skeleton:"pebble_loop", color:"#3BBD70", contents:[{type:"Dropdown", options:[1, 2, 3, 4, 5, 6, 7, 8, 9, 10], value:1}, "\ubc18\ubcf5", {type:"Statement", accept:"pebble_basic"}], func:function() {
+Entry.block.jr_repeat = {skeleton:"pebble_loop", color:"#3BBD70", contents:[{type:"Statement", accept:"pebble_basic"}, {type:"Dropdown", options:[1, 2, 3, 4, 5, 6, 7, 8, 9, 10], value:1}, "\ubc18\ubcf5"], func:function() {
 }};
 Entry.block.jr_item = {skeleton:"pebble_basic", color:"#F46C6C", contents:["\uaf43 \ubaa8\uc73c\uae30", {type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_item_image.png", highlightColor:"#FFF", position:{x:83, y:0}, size:22}], func:function() {
   if (this.isContinue) {
@@ -3815,37 +3815,39 @@ Entry.FieldDropdown = function(b, a) {
 };
 (function(b) {
   b.renderStart = function() {
-    var a = this, b = this._contents.options, d = this._contents.value, e = 22 * b.length;
+    var a = this, b = this._contents.options, d = this._contents.value;
     this.svgGroup = this._block.contentSvgGroup.group();
     this.topGroup = this.svgGroup.group();
     this.bottomGroup = this.svgGroup.group();
     this.bottomGroup.remove();
-    this.topGroup.rect(0, -12, 39, 22).attr({fill:"#80cbf8", stroke:"#127cdb"});
-    this.textElement = this.topGroup.text(10, 3, b[d]);
-    this.topGroup.polygon(28, -2, 34, -2, 31, 2).attr({fill:"#127cbd", stroke:"#127cbd"});
+    this.bottomGroup.collapse = !0;
+    this.topGroup.rect(-20, -12, 39, 22).attr({fill:"#80cbf8", stroke:"#127cdb"});
+    this.textElement = this.topGroup.text(-15, 3, b[d]);
+    this.topGroup.polygon(8, -2, 14, -2, 11, 2).attr({fill:"#127cbd", stroke:"#127cbd"});
     this.topGroup.mousedown(function(b) {
-      a.svgGroup.append(a.bottomGroup);
+      1 == a.bottomGroup.collapse ? (a.svgGroup.append(a.bottomGroup), a.bottomGroup.collapse = !1) : (a.bottomGroup.remove(), a.bottomGroup.collapse = !0);
     });
-    var d = [], f;
-    for (f in b) {
-      d.push(this.bottomGroup.group());
-      var g = Number(f) + 1, h = d[f].rect(0, -12 + 22 * g, 39, 22).attr({fill:"white"});
-      d[f].text(10, 3 + 22 * g, b[f]);
-      (function(b, c, d) {
-        var e = function() {
-          c.attr({fill:"white"});
+    for (var e in b) {
+      var d = this.bottomGroup.group(), f = Number(e) + 1;
+      d.rect(-20, -12 + 22 * f, 39, 22).attr({fill:"white"});
+      d.text(-13, 3 + 22 * f, b[e]);
+      (function(b, c) {
+        var d = function() {
+          b.select("rect:nth-child(1)").attr({fill:"white"});
+          b.select("text:nth-child(2)").attr({fill:"black"});
         };
-        b.hover(function() {
-          c.attr({fill:"#ccc"});
-        }, e);
-        b.mousedown(function() {
-          a.applyValue(d);
-          e();
+        b.mouseover(function() {
+          b.select("rect:nth-child(1)").attr({fill:"#127cdb"});
+          b.select("text:nth-child(2)").attr({fill:"white"});
+        }).mouseout(d).mousedown(function() {
+          a.applyValue(c);
+          d();
           a.bottomGroup.remove();
+          a.bottomGroup.collapse = !0;
         });
-      })(d[f], h, b[f]);
+      })(d, b[e]);
     }
-    this.box.set({x:0, y:0, width:39, height:e});
+    this.box.set({x:0, y:0, width:39, height:22});
   };
   b.align = function(a, b, d) {
     var e = this.svgGroup;
