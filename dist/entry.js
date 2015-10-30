@@ -3559,8 +3559,8 @@ Entry.BlockMenu = function(b) {
     this.svgThreadGroup = a.svgThreadGroup;
   };
   b.align = function() {
-    for (var a = this.code._data, b = 10, d = this._svgDom.width() / 2, e = 0, f = a.length;e < f;e++) {
-      var g = a[e]._data[0], h = g.view;
+    for (var a = this.code.getThreads(), b = 10, d = this._svgDom.width() / 2, e = 0, f = a.length;e < f;e++) {
+      var g = a[e].getFirstBlock(), h = g.view;
       g.set({x:d, y:b});
       h._moveTo(d, b, !1);
       b += h.height + 10;
@@ -3801,6 +3801,9 @@ Entry.Code = function(b) {
     var d = this._data, e = d.indexOf(a);
     d.splice(e, 1);
     a.destroy(b);
+  };
+  b.getThreads = function() {
+    return this._data;
   };
 })(Entry.Code.prototype);
 Entry.CodeView = function(b, a) {
