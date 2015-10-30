@@ -60,8 +60,6 @@ Entry.FieldDropdown = function(content, block) {
 
     p.renderOptions = function() {
         var self = this;
-        //console.log("this._block.x=", this._block.x);
-        //console.log("this._block.y=", this._block.y);
         this.px = this._block.x;
         this.py = this._block.y;
 
@@ -78,12 +76,7 @@ Entry.FieldDropdown = function(content, block) {
             var element = this.bottomGroup.group();
 
             var x = Number(i)+1;
-            /*
-            var rect = element.rect(-20, -12+(x*22), 39, 22).attr({
-                fill: "white"
-            });
-            */
-            var rect = element.rect(this.px-40, this.py+14+(x*22), 39, 22).attr({
+            var rect = element.rect(this.px-40, this.py+14+(x*22), 38, 23).attr({
                 fill: "white"
             });
             element.text(this.px-33,this.py+29+(x*22), this.options[i]);

@@ -3856,7 +3856,7 @@ Entry.FieldDropdown = function(b, a) {
       this.bottomGroup.expand = !0;
       for (var b in this.options) {
         var d = this.bottomGroup.group(), e = Number(b) + 1;
-        d.rect(this.px - 40, this.py + 14 + 22 * e, 39, 22).attr({fill:"white"});
+        d.rect(this.px - 40, this.py + 14 + 22 * e, 38, 23).attr({fill:"white"});
         d.text(this.px - 33, this.py + 29 + 22 * e, this.options[b]);
         (function(b, c) {
           var d = function() {
