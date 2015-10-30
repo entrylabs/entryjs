@@ -13,7 +13,8 @@ Entry.FieldTrashcan = function(board) {
     this.align(this._positionX,this._positionY,false);
 
 
-    Entry.windowResized.attach(this, this.align);
+    if (Entry.windowResized)
+        Entry.windowResized.attach(this, this.align);
 };
 
 (function(p) {

@@ -4211,7 +4211,7 @@ Entry.FieldTrashcan = function(b) {
   this._positionY = b.height() - 110;
   this.renderStart();
   this.align(this._positionX, this._positionY, !1);
-  Entry.windowResized.attach(this, this.align);
+  Entry.windowResized && Entry.windowResized.attach(this, this.align);
 };
 (function(b) {
   b.renderStart = function() {
