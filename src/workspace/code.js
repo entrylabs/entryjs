@@ -104,6 +104,11 @@ Entry.Code = function(code) {
         thread.destroy(animate);
     };
 
+    p.getThreads = function() {
+        return this._data;
+    };
+
+
 
 
     /*

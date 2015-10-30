@@ -47,7 +47,6 @@ Entry.FieldTrashcan = function(board) {
     
     p.tAnimation = function(bool) {
         var trashTop = this.trashcanTop;
-
         if(bool) {        
             trashTop.animate({
                 transform: "t5 -20 r30"}, 50);
@@ -57,3 +56,5 @@ Entry.FieldTrashcan = function(board) {
         }
     };
 })(Entry.FieldTrashcan.prototype);
+
+

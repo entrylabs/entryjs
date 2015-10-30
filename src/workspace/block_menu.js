@@ -67,17 +67,17 @@ Entry.BlockMenu = function(dom) {
     };
 
     p.align = function() {
-        var threads = this.code._data;
+        var threads = this.code.getThreads();
         var vPadding = 10,
             marginFromTop = 10,
             hPadding = this._svgDom.width()/2;
 
         for (var i=0,len=threads.length; i<len; i++) {
-            var block = threads[i]._data[0];
+            var block = threads[i].getFirstBlock();
             var blockView = block.view;
             block.set({
-                 x: hPadding,
-                 y: marginFromTop,
+                x: hPadding,
+                y: marginFromTop,
             });
             blockView._moveTo(hPadding, marginFromTop, false);
             marginFromTop += blockView.height + vPadding;

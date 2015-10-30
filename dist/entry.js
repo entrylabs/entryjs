@@ -3559,8 +3559,8 @@ Entry.BlockMenu = function(b) {
     this.svgThreadGroup = a.svgThreadGroup;
   };
   b.align = function() {
-    for (var a = this.code._data, b = 10, d = this._svgDom.width() / 2, e = 0, f = a.length;e < f;e++) {
-      var g = a[e]._data[0], h = g.view;
+    for (var a = this.code.getThreads(), b = 10, d = this._svgDom.width() / 2, e = 0, f = a.length;e < f;e++) {
+      var g = a[e].getFirstBlock(), h = g.view;
       g.set({x:d, y:b});
       h._moveTo(d, b, !1);
       b += h.height + 10;
@@ -3808,6 +3808,9 @@ Entry.Code = function(b) {
     d.splice(e, 1);
     a.destroy(b);
   };
+  b.getThreads = function() {
+    return this._data;
+  };
 })(Entry.Code.prototype);
 Entry.CodeView = function(b, a) {
   Entry.Model(this, !1);
@@ -3835,39 +3838,52 @@ Entry.FieldDropdown = function(b, a) {
 };
 (function(b) {
   b.renderStart = function() {
-    var a = this, b = this._contents.options, d = this._contents.value;
+    var a = this;
+    this.options = this._contents.options;
+    this.value = this._contents.value;
+    this.width = 39;
+    this.height = 22;
     this.svgGroup = this._block.contentSvgGroup.group();
     this.topGroup = this.svgGroup.group();
-    this.bottomGroup = this.svgGroup.group();
-    this.bottomGroup.remove();
-    this.bottomGroup.collapse = !0;
     this.topGroup.rect(-20, -12, 39, 22).attr({fill:"#80cbf8", stroke:"#127cdb"});
-    this.textElement = this.topGroup.text(-15, 3, b[d]);
+    this.textElement = this.topGroup.text(-15, 3, this.options[this.value]);
     this.topGroup.polygon(8, -2, 14, -2, 11, 2).attr({fill:"#127cbd", stroke:"#127cbd"});
     this.topGroup.mousedown(function(b) {
-      1 == a.bottomGroup.collapse ? (a.svgGroup.append(a.bottomGroup), a.bottomGroup.collapse = !1) : (a.bottomGroup.remove(), a.bottomGroup.collapse = !0);
+      a.renderOptions();
     });
-    for (var e in b) {
-      var d = this.bottomGroup.group(), f = Number(e) + 1;
-      d.rect(-20, -12 + 22 * f, 39, 22).attr({fill:"white"});
-      d.text(-13, 3 + 22 * f, b[e]);
-      (function(b, c) {
-        var d = function() {
-          b.select("rect:nth-child(1)").attr({fill:"white"});
-          b.select("text:nth-child(2)").attr({fill:"black"});
-        };
-        b.mouseover(function() {
-          b.select("rect:nth-child(1)").attr({fill:"#127cdb"});
-          b.select("text:nth-child(2)").attr({fill:"white"});
-        }).mouseout(d).mousedown(function() {
-          a.applyValue(c);
-          d();
-          a.bottomGroup.remove();
-          a.bottomGroup.collapse = !0;
-        });
-      })(d, b[e]);
-    }
     this.box.set({x:0, y:0, width:39, height:22});
+  };
+  b.renderOptions = function() {
+    var a = this;
+    this.px = this._block.x;
+    this.py = this._block.y;
+    if (this.bottomGroup && this.bottomGroup.expand) {
+      this.bottomGroup.remove(), this.bottomGroup.expand = !1;
+    } else {
+      this.snap = Snap("#play");
+      this.bottomGroup = this.snap.group();
+      this.bottomGroup.expand = !0;
+      for (var b in this.options) {
+        var d = this.bottomGroup.group(), e = Number(b) + 1;
+        d.rect(this.px - 40, this.py + 14 + 22 * e, 39, 22).attr({fill:"white"});
+        d.text(this.px - 33, this.py + 29 + 22 * e, this.options[b]);
+        (function(b, c) {
+          var d = function() {
+            b.select("rect:nth-child(1)").attr({fill:"white"});
+            b.select("text:nth-child(2)").attr({fill:"black"});
+          };
+          b.mouseover(function() {
+            b.select("rect:nth-child(1)").attr({fill:"#127cdb"});
+            b.select("text:nth-child(2)").attr({fill:"white"});
+          }).mouseout(d).mousedown(function() {
+            a.applyValue(c);
+            d();
+            a.bottomGroup.remove();
+            a.bottomGroup.expand = !1;
+          });
+        })(d, this.options[b]);
+      }
+    }
   };
   b.align = function(a, b, d) {
     var e = this.svgGroup;
@@ -3959,8 +3975,7 @@ Entry.DummyBlock = function(b, a) {
   this.originBlockView = a;
   this.svgGroup = b.svgGroup.group();
   this.svgGroup.block = b;
-  skeleton = Entry.skeleton[b.acceptType];
-  var c = skeleton.path(this);
+  var c = Entry.skeleton[b.acceptType].path(this);
   this.path = this.svgGroup.path(c);
   this.path.attr({transform:"t0 1.1", fill:"transparent"});
   this.prevObserver = a.observe(this, "_align", ["x", "y"]);
@@ -4250,7 +4265,6 @@ Entry.Board = function(b) {
   this.snap = Snap("#play");
   this._blockViews = [];
   this.trashcan = new Entry.FieldTrashcan(this);
-  console.log(this);
   this.svgGroup = this.snap.group();
   this.svgThreadGroup = this.svgGroup.group();
   this.svgThreadGroup.board = this;

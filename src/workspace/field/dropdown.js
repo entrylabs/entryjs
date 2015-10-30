@@ -24,19 +24,14 @@ Entry.FieldDropdown = function(content, block) {
     p.renderStart = function() {
         var self = this;
 
-        var options = this._contents.options;
-        var value = this._contents.value;
-        var width = 39;
-        var height = 22;
-        var dropdownHeight = 22 + options.length * height;
+        this.options = this._contents.options;
+        this.value = this._contents.value;
+        this.width = 39;
+        this.height = 22;
+        //var dropdownHeight = 22 + options.length * height;
 
         this.svgGroup = this._block.contentSvgGroup.group();
-
         this.topGroup = this.svgGroup.group();
-        this.bottomGroup = this.svgGroup.group();
-        this.bottomGroup.remove();
-        this.bottomGroup.collapse = true;
-
         var input = this.topGroup.rect(-20,-12, 39, 22);
         input.attr({
             fill: "#80cbf8",
@@ -44,16 +39,10 @@ Entry.FieldDropdown = function(content, block) {
         });
 
         var clickTopGroup = function(event) {
-            if (self.bottomGroup.collapse == true) {
-                self.svgGroup.append(self.bottomGroup);
-                self.bottomGroup.collapse = false;
-            } else {
-                self.bottomGroup.remove();
-                self.bottomGroup.collapse = true;
-            }
-        };
+            self.renderOptions();
+         };
 
-        this.textElement = this.topGroup.text(-15,3,options[value]);
+        this.textElement = this.topGroup.text(-15,3,this.options[this.value]);
         var button = this.topGroup.polygon(8,-2,14,-2,11,2);
         button.attr({
             fill: "#127cbd",
@@ -61,14 +50,43 @@ Entry.FieldDropdown = function(content, block) {
         });
         this.topGroup.mousedown(clickTopGroup);
 
-        for (var i in options) {
+        this.box.set({
+            x: 0,
+            y: 0,
+            width: 39,
+            height: 22
+        });
+    };
+
+    p.renderOptions = function() {
+        var self = this;
+        //console.log("this._block.x=", this._block.x);
+        //console.log("this._block.y=", this._block.y);
+        this.px = this._block.x;
+        this.py = this._block.y;
+
+        if (this.bottomGroup && this.bottomGroup.expand) {
+            this.bottomGroup.remove();
+            this.bottomGroup.expand = false;
+            return;
+        }
+
+        this.snap = Snap('#play');
+        this.bottomGroup = this.snap.group();
+        this.bottomGroup.expand = true;
+        for (var i in this.options) {
             var element = this.bottomGroup.group();
 
             var x = Number(i)+1;
+            /*
             var rect = element.rect(-20, -12+(x*22), 39, 22).attr({
                 fill: "white"
             });
-            element.text(-13,3+(x*22), options[i]);
+            */
+            var rect = element.rect(this.px-40, this.py+14+(x*22), 39, 22).attr({
+                fill: "white"
+            });
+            element.text(this.px-33,this.py+29+(x*22), this.options[i]);
 
             (function(elem, value) {
                 var hoverIn = function() {
@@ -85,20 +103,14 @@ Entry.FieldDropdown = function(content, block) {
                     self.applyValue(value);
                     hoverOut();
                     self.bottomGroup.remove();
-                    self.bottomGroup.collapse = true;
+                    self.bottomGroup.expand = false;
                 };
 
                 elem.mouseover(hoverIn).mouseout(hoverOut).mousedown(selectValue);
 
-            })(element, options[i]);
+            })(element, this.options[i]);
         }
 
-        this.box.set({
-            x: 0,
-            y: 0,
-            width: 39,
-            height: 22
-        });
     };
 
     p.align = function(x, y, animate) {

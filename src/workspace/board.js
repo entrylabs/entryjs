@@ -39,7 +39,6 @@ Entry.Board = function(dom) {
     this._blockViews = [];
 
     this.trashcan = new Entry.FieldTrashcan(this);
-    console.log(this);
     this.svgGroup = this.snap.group();
 
     this.svgThreadGroup = this.svgGroup.group();
