@@ -13,9 +13,8 @@ Entry.FieldTrashcan = function(board) {
 
     this._positionX = board.svgDom.width()-110;
     this._positionY = board.svgDom.height()-110;    
-    this._imgUrl = "" 
     this.renderStart();
-    this.align();
+    this.align(this._positionX,this._positionY ,false);
 };
 
 (function(p) {
@@ -46,9 +45,17 @@ Entry.FieldTrashcan = function(board) {
             80
             );
 
-
-
-
+        // function animateTrashCan() {
+        //     this.trashcanTop.stop().animate(
+        //             { transform: 'r90,0,0'},
+        //             1000
+        //             // function() {
+        //             //     this.trashcanTop.animate(
+        //             //         { transform: 'r-90,0,0'},
+        //             //         1000
+        //             //         );}
+        //         );
+        // };
         // this.trashcan.attr({
         //     fill: 'none'
         // });
@@ -80,18 +87,29 @@ Entry.FieldTrashcan = function(board) {
         // });
     };
     p.align = function(x, y, animate) {
+        if (this._position) x = this._positionX;
+        if (this._position) y = this._positionX;
+
+        var transform = "t" + x + " " + y;
 
         this.svgGroup.attr({
-            transform: "t" + this._positionX + " " + this._positionY
-        });
-
-
+            transform: transform
+        }); 
+    
+        if(animate) {
+            this.trashcanTop.animate({
+                transform: "t5 -18 r30"
+            },100);
+        } else {
+            this.trashcanTop.animate({
+                transform: "r0"
+            },100);
+        }
+        
         // console.log(animate);
         // console.log(this);
         // animate = animate === undefined ? true : animate;
         // var svgGroup = this.svgGroup;
-        // if (this._position) x = this._position.x;
-        // var transform = "t" + x + " " + y;
 
         // if (animate)
         //     svgGroup.animate({

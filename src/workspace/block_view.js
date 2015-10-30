@@ -210,6 +210,7 @@ Entry.BlockView = function(block, board) {
 
         var block = this;
         function onMouseMove(e) {
+            
             if (e.originalEvent.touches) {
                 e = e.originalEvent.touches[0];
             }
@@ -223,16 +224,41 @@ Entry.BlockView = function(block, board) {
                  offsetX: e.clientX,
                  offsetY: e.clientY
             });
+            destroyBlock(e.offsetX,e.offsetY);
+    
             //block.thread.align(false);
             //block._board.updateCloseMagnet(block);
         }
 
         function onMouseUp(e) {
+            var _block = block.getBoard().trashcan,
+                x = _block._positionX ,
+                y = _block._positionY ;
+
             block.terminateDrag();
             delete block.dragInstance;
 
             $(document).unbind('.block');
+
+            if(x-e.offsetX-100 <= 0 && y-e.offsetY-100 <=0 ) {
+                console.log(block.block);
+                console.log(block.block.getThread());
+                block.block.getThread().destroy();
+            }
+             _block.align( _block._positionX, _block._positionY ,false);
             //block._board.dragBlock = null;
+        }
+
+        function destroyBlock(blockx, blocky) {
+    
+            var _block = block.getBoard().trashcan,
+                x = _block._positionX ,
+                y = _block._positionY ;
+            if(x-blockx-100 <= 0 && y-blocky-100 <=0 ) {
+                _block.align( _block._positionX, _block._positionY ,true);
+            } else {
+                _block.align( _block._positionX, _block._positionY ,false);
+            }
         }
     };
 
@@ -296,6 +322,8 @@ Entry.BlockView = function(block, board) {
     };
 
     p.destroy = function(animate) {
+        console.log('dddddddddddddddddddddd');
+        console.log(this.svgGroup);
         this.svgGroup.remove();
     };
 

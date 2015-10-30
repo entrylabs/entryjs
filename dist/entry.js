@@ -3676,11 +3676,18 @@ Entry.BlockView = function(b, a) {
       var c = f.dragInstance;
       f._moveBy(a.clientX - c.offsetX, a.clientY - c.offsetY, !1);
       c.set({offsetX:a.clientX, offsetY:a.clientY});
+      c = a.offsetX;
+      a = a.offsetY;
+      var d = f.getBoard().trashcan, e = d._positionY;
+      0 >= d._positionX - c - 100 && 0 >= e - a - 100 ? d.align(d._positionX, d._positionY, !0) : d.align(d._positionX, d._positionY, !1);
     }
     function d(a) {
+      var b = f.getBoard().trashcan, c = b._positionX, d = b._positionY;
       f.terminateDrag();
       delete f.dragInstance;
       $(document).unbind(".block");
+      0 >= c - a.offsetX - 100 && 0 >= d - a.offsetY - 100 && f.getThread().destroy();
+      b.align(b._positionX, b._positionY, !1);
     }
     if (0 === a.button || a instanceof Touch) {
       var e = $(document);
@@ -3717,6 +3724,8 @@ Entry.BlockView = function(b, a) {
     return this.svgGroup.parent().board;
   };
   b.destroy = function(a) {
+    console.log("dddddddddddddddddddddd");
+    console.log(this.svgGroup);
     this.svgGroup.remove();
   };
 })(Entry.BlockView.prototype);
@@ -4086,9 +4095,8 @@ Entry.FieldTrashcan = function(b) {
   this.svgGroup = b.snap.group();
   this._positionX = b.svgDom.width() - 110;
   this._positionY = b.svgDom.height() - 110;
-  this._imgUrl = "";
   this.renderStart();
-  this.align();
+  this.align(this._positionX, this._positionY, !1);
 };
 (function(b) {
   b.renderStart = function() {
@@ -4096,7 +4104,10 @@ Entry.FieldTrashcan = function(b) {
     this.trashcan = this.svgGroup.image("/img/assets/delete_body.png", 0, 20, 80, 80);
   };
   b.align = function(a, b, d) {
-    this.svgGroup.attr({transform:"t" + this._positionX + " " + this._positionY});
+    this._position && (a = this._positionX);
+    this._position && (b = this._positionX);
+    this.svgGroup.attr({transform:"t" + a + " " + b});
+    d ? this.trashcanTop.animate({transform:"t5 -18 r30"}, 100) : this.trashcanTop.animate({transform:"r0"}, 100);
   };
 })(Entry.FieldTrashcan.prototype);
 Entry.Board = function(b) {
