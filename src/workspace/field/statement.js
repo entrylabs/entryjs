@@ -53,7 +53,7 @@ Entry.FieldStatement = function(content, blockView) {
         while (block) {
             height += block.view.height + 1;
             block = block.next;
-        };
+        }
         this.box.set({height: height});
     };
 
@@ -83,7 +83,7 @@ Entry.DummyBlock = function(statementField, blockView) {
     this.svgGroup = statementField.svgGroup.group();
     this.svgGroup.block = statementField;
 
-    skeleton = Entry.skeleton[statementField.acceptType];
+    var skeleton = Entry.skeleton[statementField.acceptType];
 
     var path = skeleton.path(this);
 

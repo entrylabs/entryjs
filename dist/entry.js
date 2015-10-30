@@ -3966,8 +3966,7 @@ Entry.DummyBlock = function(b, a) {
   this.originBlockView = a;
   this.svgGroup = b.svgGroup.group();
   this.svgGroup.block = b;
-  skeleton = Entry.skeleton[b.acceptType];
-  var c = skeleton.path(this);
+  var c = Entry.skeleton[b.acceptType].path(this);
   this.path = this.svgGroup.path(c);
   this.path.attr({transform:"t0 1.1", fill:"transparent"});
   this.prevObserver = a.observe(this, "_align", ["x", "y"]);
@@ -4252,7 +4251,6 @@ Entry.Board = function(b) {
   this.snap = Snap("#play");
   this._blockViews = [];
   this.trashcan = new Entry.FieldTrashcan(this);
-  console.log(this);
   this.svgGroup = this.snap.group();
   this.svgThreadGroup = this.svgGroup.group();
   this.svgThreadGroup.board = this;

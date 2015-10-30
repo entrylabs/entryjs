@@ -12,7 +12,7 @@ Entry.Event = function(sender) {
         var listener = {
             obj: obj,
             fn: fn
-        }
+        };
         this._listeners.push(listener);
         return listener;
     };
