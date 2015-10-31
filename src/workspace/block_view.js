@@ -254,9 +254,9 @@ Entry.BlockView = function(block, board) {
 
             $(document).unbind('.block');
 
-            if(checkTrashcan(e)) 
+            if(checkTrashcan(e))
                 block.block.getThread().destroy(true);
-            trashcan.tAnimation(false);
+            if (trashcan) trashcan.tAnimation(false);
 
             //block._board.dragBlock = null;
         }
@@ -264,7 +264,9 @@ Entry.BlockView = function(block, board) {
         function setTrashcan(e) {
             var board = block.getBoard();
             var trashcan = board.trashcan;
-            
+
+            if (!trashcan) return;
+
             if(checkTrashcan(e))
                 trashcan.tAnimation(true);
             else
@@ -278,16 +280,14 @@ Entry.BlockView = function(block, board) {
 
             var boardOffset = board.offset;
             var position = trashcan.getPosition();
-            var trashcanX = position.x + boardOffset.left; 
+            var trashcanX = position.x + boardOffset.left;
             var trashcanY = position.y + boardOffset.top;
 
             var mouseX = e.clientX;
             var mouseY = e.clientY;
 
-            if(mouseX >= trashcanX && mouseY >= trashcanY)
-                return true;
-            else 
-                return false
+            return mouseX >= trashcanX &&
+                mouseY >= trashcanY;
         };
     };
 

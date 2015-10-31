@@ -3687,8 +3687,7 @@ Entry.BlockView = function(b, a) {
       var c = g.dragInstance;
       g._moveBy(a.clientX - c.offsetX, a.clientY - c.offsetY, !1);
       c.set({offsetX:a.clientX, offsetY:a.clientY});
-      c = g.getBoard().trashcan;
-      e(a) ? c.tAnimation(!0) : c.tAnimation(!1);
+      (c = g.getBoard().trashcan) && (e(a) ? c.tAnimation(!0) : c.tAnimation(!1));
     }
     function d(a) {
       var b = g.getBoard().trashcan;
@@ -3696,7 +3695,7 @@ Entry.BlockView = function(b, a) {
       delete g.dragInstance;
       $(document).unbind(".block");
       e(a) && g.block.getThread().destroy(!0);
-      b.tAnimation(!1);
+      b && b.tAnimation(!1);
     }
     function e(a) {
       var b = g.getBoard(), c = b.trashcan;
@@ -3704,7 +3703,7 @@ Entry.BlockView = function(b, a) {
         return !1;
       }
       var b = b.offset, c = c.getPosition(), d = c.y + b.top, e = a.clientY;
-      return a.clientX >= c.x + b.left && e >= d ? !0 : !1;
+      return a.clientX >= c.x + b.left && e >= d;
     }
     if (0 === a.button || a instanceof Touch) {
       var f = $(document);
