@@ -28,7 +28,6 @@ Entry.FieldDropdown = function(content, block) {
         this.value = this._contents.value;
         this.width = 39;
         this.height = 22;
-        //var dropdownHeight = 22 + options.length * height;
 
         this.svgGroup = this._block.contentSvgGroup.group();
         this.topGroup = this.svgGroup.group();
@@ -63,18 +62,21 @@ Entry.FieldDropdown = function(content, block) {
         this.px = this._block.x;
         this.py = this._block.y;
 
-        if (this.optionGroup) {
+        if (this.optionGroup && this.optionGroup.expand) {
             this.optionGroup.remove();
-            delete this.optionGroup;
+            this.optionGroup.expand = false;
             return;
         }
+
+        if (this.optionGroup)
+            delete this.optionGroup;
 
         this.snap = Snap('#play');
         this.optionGroup = this.snap.group();
         this.optionGroup.expand = true;
         $(document).bind('mousedown', function(e) {
             self.optionGroup.remove();
-            delete self.optionGroup;
+            self.optionGroup.expand = false;
         });
 
         for (var i in this.options) {
@@ -99,6 +101,8 @@ Entry.FieldDropdown = function(content, block) {
 
                 var selectValue = function() {
                     self.applyValue(value);
+                    self.optionGroup.remove();
+                    self.optionGroup.expand = false;
                 };
 
                 elem.mouseover(hoverIn).mouseout(hoverOut).mousedown(selectValue);

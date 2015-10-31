@@ -3852,15 +3852,16 @@ Entry.FieldDropdown = function(b, a) {
     var a = this;
     this.px = this._block.x;
     this.py = this._block.y;
-    if (this.optionGroup) {
-      this.optionGroup.remove(), delete this.optionGroup;
+    if (this.optionGroup && this.optionGroup.expand) {
+      this.optionGroup.remove(), this.optionGroup.expand = !1;
     } else {
+      this.optionGroup && delete this.optionGroup;
       this.snap = Snap("#play");
       this.optionGroup = this.snap.group();
       this.optionGroup.expand = !0;
       $(document).bind("mousedown", function(b) {
         a.optionGroup.remove();
-        delete a.optionGroup;
+        a.optionGroup.expand = !1;
       });
       for (var b in this.options) {
         var d = this.optionGroup.group(), e = Number(b) + 1;
@@ -3875,6 +3876,8 @@ Entry.FieldDropdown = function(b, a) {
             b.select("text:nth-child(2)").attr({fill:"black"});
           }).mousedown(function() {
             a.applyValue(c);
+            a.optionGroup.remove();
+            a.optionGroup.expand = !1;
           });
         })(d, this.options[b]);
       }
