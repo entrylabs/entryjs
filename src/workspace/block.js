@@ -35,8 +35,7 @@ Entry.Block.FOLLOW = 3;
         x: 0,
         y: 0,
         type: null,
-        params: {},
-        statements: {},
+        values: {},
         prev: null,
         next: null,
         view: null
@@ -70,10 +69,6 @@ Entry.Block.FOLLOW = 3;
 
     p.setNext = function(block) {
         this.set({next: block});
-    };
-
-    p.execute = function(executor) {
-         return this._schema.func.call(executor);
     };
 
     p.next = function() {

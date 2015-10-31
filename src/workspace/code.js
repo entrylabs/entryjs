@@ -20,6 +20,9 @@ Entry.Code = function(code) {
 
     this.executors = [];
 
+
+    this.executeEndEvent = new Entry.Event(this);
+
     this.load(code);
 };
 
@@ -56,8 +59,7 @@ Entry.Code = function(code) {
     p.raiseEvent = function(eventType) {
         var blocks = this._eventMap[eventType];
         for (var i = 0; i < blocks.length; i++) {
-            var executor = {block: blocks[i]};
-            this.executors.push(executor);
+            this.executors.push(new Entry.Executor(blocks[i]));
         }
     };
 
@@ -69,13 +71,12 @@ Entry.Code = function(code) {
         var executors = this.executors;
         for (var i = 0; i < executors.length; i++) {
             var executor = executors[i];
-            while (executor.block &&
-                   executor.block.execute(executor) == Entry.STATIC.RETURN) {
-                executor.block = executor.block.next;
-            }
+            executor.execute();
             if (executor.block === null) {
                 executors.splice(i, 1);
                 i--;
+                if (executors.length === 0)
+                    this.executeEndEvent.notify();
             }
         }
     };

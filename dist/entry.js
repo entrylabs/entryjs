@@ -3366,7 +3366,6 @@ Entry.Variable = function() {
 };
 Entry.Variable.prototype.schema = {id:0, type:Entry.STATIC.VARIABLE, variableType:0, name:0, value:0, minValue:0, maxValue:0, visible:!0, x:0, y:0, width:0, height:0, isCloud:!1, object:null, array:0};
 Entry.block.run = {skeleton:"basic", color:"#3BBD70", contents:["this is", "basic block"], func:function() {
-  return Entry.STATIC.RETURN;
 }};
 Entry.block.jr_start = {skeleton:"pebble_event", event:"start", color:"#3BBD70", contents:[{type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_play_image.png", highlightColor:"#3BBD70", size:22}], func:function() {
   var b = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT), a;
@@ -3374,9 +3373,17 @@ Entry.block.jr_start = {skeleton:"pebble_event", event:"start", color:"#3BBD70",
     this._unit = b[a];
   }
   this.unitComp = Ntry.entityManager.getComponent(this._unit.id, Ntry.STATIC.UNIT);
-  return Entry.STATIC.RETURN;
 }};
-Entry.block.jr_repeat = {skeleton:"pebble_loop", color:"#127CDB", contents:[{type:"Dropdown", options:[1, 2, 3, 4, 5, 6, 7, 8, 9, 10], value:1}, "\ubc18\ubcf5", {type:"Statement", accept:"pebble_basic"}], func:function() {
+Entry.block.jr_repeat = {skeleton:"pebble_loop", color:"#127CDB", contents:[{type:"Dropdown", key:"REPEAT", options:[1, 2, 3, 4, 5, 6, 7, 8, 9, 10], value:1}, "\ubc18\ubcf5", {type:"Statement", accept:"pebble_basic"}], func:function() {
+  if (this.isContinue) {
+    if (0 < this.repeatCount) {
+      return console.log(this.repeatCount), this.repeatCount--, Entry.STATIC.CONTINUE;
+    }
+    delete this.isAction;
+    delete this.repeatCount;
+  } else {
+    return this.isContinue = !0, this.repeatCount = this.block.values.REPEAT, Entry.STATIC.CONTINUE;
+  }
 }};
 Entry.block.jr_item = {skeleton:"pebble_basic", color:"#F46C6C", contents:["\uaf43 \ubaa8\uc73c\uae30", {type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_item_image.png", highlightColor:"#FFF", position:{x:83, y:0}, size:22}], func:function() {
   if (this.isContinue) {
@@ -3385,14 +3392,14 @@ Entry.block.jr_item = {skeleton:"pebble_basic", color:"#F46C6C", contents:["\uaf
     }
     delete this.isAction;
     delete this.isContinue;
-    return Entry.STATIC.RETURN;
+  } else {
+    this.isAction = this.isContinue = !0;
+    var b = this;
+    Ntry.dispatchEvent("unitAction", Ntry.STATIC.GET_ITEM, function() {
+      b.isAction = !1;
+    });
+    return Entry.STATIC.CONTINUE;
   }
-  this.isAction = this.isContinue = !0;
-  var b = this;
-  Ntry.dispatchEvent("unitAction", Ntry.STATIC.GET_ITEM, function() {
-    b.isAction = !1;
-  });
-  return Entry.STATIC.CONTINUE;
 }};
 Entry.block.jr_north = {skeleton:"pebble_basic", color:"#A751E3", contents:["   \uc704\ub85c", {type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_up_image.png", position:{x:83, y:0}, size:22}], func:function() {
   if (this.isContinue) {
@@ -3401,30 +3408,30 @@ Entry.block.jr_north = {skeleton:"pebble_basic", color:"#A751E3", contents:["   
     }
     delete this.isAction;
     delete this.isContinue;
-    return Entry.STATIC.RETURN;
+  } else {
+    this.isAction = this.isContinue = !0;
+    var b = this, a = function() {
+      window.setTimeout(function() {
+        Ntry.dispatchEvent("unitAction", Ntry.STATIC.WALK, function() {
+          b.isAction = !1;
+        });
+      }, 3);
+    };
+    switch(this.unitComp.direction) {
+      case Ntry.STATIC.EAST:
+        Ntry.dispatchEvent("unitAction", Ntry.STATIC.TURN_LEFT, a);
+        break;
+      case Ntry.STATIC.SOUTH:
+        Ntry.dispatchEvent("unitAction", Ntry.STATIC.HALF_ROTATION, a);
+        break;
+      case Ntry.STATIC.WEST:
+        Ntry.dispatchEvent("unitAction", Ntry.STATIC.TURN_RIGHT, a);
+        break;
+      default:
+        a();
+    }
+    return Entry.STATIC.CONTINUE;
   }
-  this.isAction = this.isContinue = !0;
-  var b = this, a = function() {
-    window.setTimeout(function() {
-      Ntry.dispatchEvent("unitAction", Ntry.STATIC.WALK, function() {
-        b.isAction = !1;
-      });
-    }, 3);
-  };
-  switch(this.unitComp.direction) {
-    case Ntry.STATIC.EAST:
-      Ntry.dispatchEvent("unitAction", Ntry.STATIC.TURN_LEFT, a);
-      break;
-    case Ntry.STATIC.SOUTH:
-      Ntry.dispatchEvent("unitAction", Ntry.STATIC.HALF_ROTATION, a);
-      break;
-    case Ntry.STATIC.WEST:
-      Ntry.dispatchEvent("unitAction", Ntry.STATIC.TURN_RIGHT, a);
-      break;
-    default:
-      a();
-  }
-  return Entry.STATIC.CONTINUE;
 }};
 Entry.block.jr_east = {skeleton:"pebble_basic", color:"#A751E3", contents:["\uc624\ub978\ucabd", {type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_right_image.png", position:{x:83, y:0}, size:22}], func:function() {
   if (this.isContinue) {
@@ -3433,30 +3440,30 @@ Entry.block.jr_east = {skeleton:"pebble_basic", color:"#A751E3", contents:["\uc6
     }
     delete this.isAction;
     delete this.isContinue;
-    return Entry.STATIC.RETURN;
+  } else {
+    this.isAction = this.isContinue = !0;
+    var b = this, a = function() {
+      window.setTimeout(function() {
+        Ntry.dispatchEvent("unitAction", Ntry.STATIC.WALK, function() {
+          b.isAction = !1;
+        });
+      }, 3);
+    };
+    switch(this.unitComp.direction) {
+      case Ntry.STATIC.SOUTH:
+        Ntry.dispatchEvent("unitAction", Ntry.STATIC.TURN_LEFT, a);
+        break;
+      case Ntry.STATIC.WEST:
+        Ntry.dispatchEvent("unitAction", Ntry.STATIC.HALF_ROTATION, a);
+        break;
+      case Ntry.STATIC.NORTH:
+        Ntry.dispatchEvent("unitAction", Ntry.STATIC.TURN_RIGHT, a);
+        break;
+      default:
+        a();
+    }
+    return Entry.STATIC.CONTINUE;
   }
-  this.isAction = this.isContinue = !0;
-  var b = this, a = function() {
-    window.setTimeout(function() {
-      Ntry.dispatchEvent("unitAction", Ntry.STATIC.WALK, function() {
-        b.isAction = !1;
-      });
-    }, 3);
-  };
-  switch(this.unitComp.direction) {
-    case Ntry.STATIC.SOUTH:
-      Ntry.dispatchEvent("unitAction", Ntry.STATIC.TURN_LEFT, a);
-      break;
-    case Ntry.STATIC.WEST:
-      Ntry.dispatchEvent("unitAction", Ntry.STATIC.HALF_ROTATION, a);
-      break;
-    case Ntry.STATIC.NORTH:
-      Ntry.dispatchEvent("unitAction", Ntry.STATIC.TURN_RIGHT, a);
-      break;
-    default:
-      a();
-  }
-  return Entry.STATIC.CONTINUE;
 }};
 Entry.block.jr_south = {skeleton:"pebble_basic", color:"#A751E3", contents:["\uc544\ub798\ucabd", {type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_down_image.png", position:{x:83, y:0}, size:22}], func:function() {
   if (this.isContinue) {
@@ -3465,30 +3472,30 @@ Entry.block.jr_south = {skeleton:"pebble_basic", color:"#A751E3", contents:["\uc
     }
     delete this.isAction;
     delete this.isContinue;
-    return Entry.STATIC.RETURN;
+  } else {
+    this.isAction = this.isContinue = !0;
+    var b = this, a = function() {
+      window.setTimeout(function() {
+        Ntry.dispatchEvent("unitAction", Ntry.STATIC.WALK, function() {
+          b.isAction = !1;
+        });
+      }, 3);
+    };
+    switch(this.unitComp.direction) {
+      case Ntry.STATIC.EAST:
+        Ntry.dispatchEvent("unitAction", Ntry.STATIC.TURN_RIGHT, a);
+        break;
+      case Ntry.STATIC.NORTH:
+        Ntry.dispatchEvent("unitAction", Ntry.STATIC.HALF_ROTATION, a);
+        break;
+      case Ntry.STATIC.WEST:
+        Ntry.dispatchEvent("unitAction", Ntry.STATIC.TURN_LEFT, a);
+        break;
+      default:
+        a();
+    }
+    return Entry.STATIC.CONTINUE;
   }
-  this.isAction = this.isContinue = !0;
-  var b = this, a = function() {
-    window.setTimeout(function() {
-      Ntry.dispatchEvent("unitAction", Ntry.STATIC.WALK, function() {
-        b.isAction = !1;
-      });
-    }, 3);
-  };
-  switch(this.unitComp.direction) {
-    case Ntry.STATIC.EAST:
-      Ntry.dispatchEvent("unitAction", Ntry.STATIC.TURN_RIGHT, a);
-      break;
-    case Ntry.STATIC.NORTH:
-      Ntry.dispatchEvent("unitAction", Ntry.STATIC.HALF_ROTATION, a);
-      break;
-    case Ntry.STATIC.WEST:
-      Ntry.dispatchEvent("unitAction", Ntry.STATIC.TURN_LEFT, a);
-      break;
-    default:
-      a();
-  }
-  return Entry.STATIC.CONTINUE;
 }};
 Entry.block.jr_west = {skeleton:"pebble_basic", color:"#A751E3", contents:["   \uc67c\ucabd", {type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_left_image.png", position:{x:83, y:0}, size:22}], func:function() {
   if (this.isContinue) {
@@ -3497,30 +3504,30 @@ Entry.block.jr_west = {skeleton:"pebble_basic", color:"#A751E3", contents:["   \
     }
     delete this.isAction;
     delete this.isContinue;
-    return Entry.STATIC.RETURN;
+  } else {
+    this.isAction = this.isContinue = !0;
+    var b = this, a = function() {
+      window.setTimeout(function() {
+        Ntry.dispatchEvent("unitAction", Ntry.STATIC.WALK, function() {
+          b.isAction = !1;
+        });
+      }, 3);
+    };
+    switch(this.unitComp.direction) {
+      case Ntry.STATIC.SOUTH:
+        Ntry.dispatchEvent("unitAction", Ntry.STATIC.TURN_RIGHT, a);
+        break;
+      case Ntry.STATIC.EAST:
+        Ntry.dispatchEvent("unitAction", Ntry.STATIC.HALF_ROTATION, a);
+        break;
+      case Ntry.STATIC.NORTH:
+        Ntry.dispatchEvent("unitAction", Ntry.STATIC.TURN_LEFT, a);
+        break;
+      default:
+        a();
+    }
+    return Entry.STATIC.CONTINUE;
   }
-  this.isAction = this.isContinue = !0;
-  var b = this, a = function() {
-    window.setTimeout(function() {
-      Ntry.dispatchEvent("unitAction", Ntry.STATIC.WALK, function() {
-        b.isAction = !1;
-      });
-    }, 3);
-  };
-  switch(this.unitComp.direction) {
-    case Ntry.STATIC.SOUTH:
-      Ntry.dispatchEvent("unitAction", Ntry.STATIC.TURN_RIGHT, a);
-      break;
-    case Ntry.STATIC.EAST:
-      Ntry.dispatchEvent("unitAction", Ntry.STATIC.HALF_ROTATION, a);
-      break;
-    case Ntry.STATIC.NORTH:
-      Ntry.dispatchEvent("unitAction", Ntry.STATIC.TURN_LEFT, a);
-      break;
-    default:
-      a();
-  }
-  return Entry.STATIC.CONTINUE;
 }};
 Entry.BlockMenu = function(b) {
   Entry.Model(this, !1);
@@ -3745,6 +3752,7 @@ Entry.Code = function(b) {
   this._data = new Entry.Collection;
   this._eventMap = {};
   this.executors = [];
+  this.executeEndEvent = new Entry.Event(this);
   this.load(b);
 };
 (function(b) {
@@ -3767,7 +3775,7 @@ Entry.Code = function(b) {
   b.raiseEvent = function(a) {
     a = this._eventMap[a];
     for (var b = 0;b < a.length;b++) {
-      this.executors.push({block:a[b]});
+      this.executors.push(new Entry.Executor(a[b]));
     }
   };
   b.map = function(a) {
@@ -3775,10 +3783,9 @@ Entry.Code = function(b) {
   };
   b.tick = function() {
     for (var a = this.executors, b = 0;b < a.length;b++) {
-      for (var d = a[b];d.block && d.block.execute(d) == Entry.STATIC.RETURN;) {
-        d.block = d.block.next;
-      }
-      null === d.block && (a.splice(b, 1), b--);
+      var d = a[b];
+      d.execute();
+      null === d.block && (a.splice(b, 1), b--, 0 === a.length && this.executeEndEvent.notify());
     }
   };
   b.clearExecutors = function() {
@@ -3821,35 +3828,47 @@ Entry.CodeView = function(b, a) {
 (function(b) {
   b.schema = {board:null, scrollX:0, scrollY:0};
 })(Entry.CodeView.prototype);
+Entry.Executor = function(b) {
+  this.block = b;
+  this._callStack = [];
+};
+(function(b) {
+  b.execute = function() {
+    void 0 === this.block._schema.func.call(this) && (this.block = this.block.next);
+  };
+  b.stepInto = function() {
+  };
+})(Entry.Executor.prototype);
 Entry.FieldDropdown = function(b, a) {
-  this._block = a;
+  this._block = a.block;
   this.box = new Entry.BoxModel;
   this.svgGroup = null;
   this._contents = b;
-  this.renderStart();
+  this.renderStart(a);
 };
 (function(b) {
-  b.renderStart = function() {
-    var a = this;
+  b.renderStart = function(a) {
+    var b = this;
     this.options = this._contents.options;
-    this.value = this._contents.value;
+    this.key = this._contents.key;
+    this.value = void 0 !== this._block.values[this.key] ? this._block.values[this.key] : this._contents.value;
     this.width = 39;
     this.height = 22;
-    this.svgGroup = this._block.contentSvgGroup.group();
+    this.svgGroup = a.contentSvgGroup.group();
     this.topGroup = this.svgGroup.group();
     this.topGroup.rect(0, -12, 39, 22, 3).attr({fill:"#80cbf8"});
-    this.textElement = this.topGroup.text(5, 3, this.options[this.value]);
+    this.textElement = this.topGroup.text(5, 3, this.value);
     this.topGroup.polygon(28, -2, 34, -2, 31, 2).attr({fill:"#127cbd", stroke:"#127cbd"});
-    this.topGroup.mousedown(function(b) {
-      b.stopPropagation();
-      a.renderOptions();
+    this.topGroup.mousedown(function(a) {
+      a.stopPropagation();
+      b.renderOptions();
     });
     this.box.set({x:0, y:0, width:39, height:22});
   };
   b.renderOptions = function() {
-    var a = this;
-    this.px = this._block.x;
-    this.py = this._block.y;
+    var a = this, b = this._block.view;
+    this.px = b.x;
+    this.py = b.y;
     if (this.optionGroup && this.optionGroup.expand) {
       this.optionGroup.remove(), this.optionGroup.expand = !1;
     } else {
@@ -3861,10 +3880,10 @@ Entry.FieldDropdown = function(b, a) {
         a.optionGroup.remove();
         a.optionGroup.expand = !1;
       });
-      for (var b in this.options) {
-        var d = this.optionGroup.group(), e = Number(b) + 1;
-        d.rect(this.px - 46, this.py + 14 + 22 * e, 38, 23).attr({fill:"white"});
-        d.text(this.px - 43, this.py + 29 + 22 * e, this.options[b]);
+      for (var d in this.options) {
+        var b = this.optionGroup.group(), e = Number(d) + 1;
+        b.rect(this.px - 46, this.py + 14 + 22 * e, 38, 23).attr({fill:"white"});
+        b.text(this.px - 43, this.py + 29 + 22 * e, this.options[d]);
         (function(b, c) {
           b.mouseover(function() {
             b.select("rect:nth-child(1)").attr({fill:"#127cdb"});
@@ -3877,7 +3896,7 @@ Entry.FieldDropdown = function(b, a) {
             a.optionGroup.remove();
             a.optionGroup.expand = !1;
           });
-        })(d, this.options[b]);
+        })(b, this.options[d]);
       }
     }
   };
@@ -3889,6 +3908,7 @@ Entry.FieldDropdown = function(b, a) {
     this.box.set({x:a, y:b});
   };
   b.applyValue = function(a) {
+    this._block.values[this.key] = a;
     this.textElement.node.textContent = a;
   };
 })(Entry.FieldDropdown.prototype);
@@ -4058,7 +4078,7 @@ Entry.Block.SHOWN = 1;
 Entry.Block.MOVE = 2;
 Entry.Block.FOLLOW = 3;
 (function(b) {
-  b.schema = {id:null, x:0, y:0, type:null, params:{}, statements:{}, prev:null, next:null, view:null};
+  b.schema = {id:null, x:0, y:0, type:null, values:{}, prev:null, next:null, view:null};
   b.load = function(a) {
     a.id || (a.id = Entry.Utils.generateId());
     this.set(a);
@@ -4079,9 +4099,6 @@ Entry.Block.FOLLOW = 3;
   };
   b.setNext = function(a) {
     this.set({next:a});
-  };
-  b.execute = function(a) {
-    return this._schema.func.call(a);
   };
   b.next = function() {
     return this.next;

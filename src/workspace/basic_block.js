@@ -9,7 +9,6 @@ Entry.block.run = {
         "basic block"
     ],
     func: function() {
-        return Entry.STATIC.RETURN;
     }
 };
 
@@ -35,8 +34,6 @@ Entry.block.jr_start = {
 
         this.unitComp = Ntry.entityManager.getComponent(
         this._unit.id, Ntry.STATIC.UNIT);
-
-        return Entry.STATIC.RETURN;
     }
 };
 
@@ -46,6 +43,7 @@ Entry.block.jr_repeat = {
     contents: [
         {
             type: "Dropdown",
+            key: "REPEAT",
             options: [1,2,3,4,5,6,7,8,9,10],
             value: 1
         },
@@ -56,7 +54,18 @@ Entry.block.jr_repeat = {
         }
     ],
     func: function() {
-
+        if (!this.isContinue) {
+            this.isContinue = true;
+            this.repeatCount = this.block.values["REPEAT"];
+            return Entry.STATIC.CONTINUE;
+        } else if (this.repeatCount > 0) {
+            console.log(this.repeatCount);
+            this.repeatCount--;
+            return Entry.STATIC.CONTINUE;
+        } else {
+            delete this.isAction;
+            delete this.repeatCount;
+        }
     }
 };
 
@@ -89,7 +98,6 @@ Entry.block.jr_item = {
             delete this.isAction;
             delete this.isContinue;
 
-            return Entry.STATIC.RETURN;
         }
     }
 };
@@ -141,7 +149,6 @@ Entry.block.jr_north = {
         } else {
             delete this.isAction;
             delete this.isContinue;
-            return Entry.STATIC.RETURN;
         }
 
     }
@@ -193,7 +200,6 @@ Entry.block.jr_east = {
         } else {
             delete this.isAction;
             delete this.isContinue;
-            return Entry.STATIC.RETURN;
         }
     }
 };
@@ -244,7 +250,6 @@ Entry.block.jr_south = {
         } else {
             delete this.isAction;
             delete this.isContinue;
-            return Entry.STATIC.RETURN;
         }
 
 
@@ -296,7 +301,6 @@ Entry.block.jr_west = {
         } else {
             delete this.isAction;
             delete this.isContinue;
-            return Entry.STATIC.RETURN;
         }
     }
 };

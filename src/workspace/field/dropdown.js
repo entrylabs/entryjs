@@ -7,8 +7,8 @@ goog.provide("Entry.FieldDropdown");
 /*
  *
  */
-Entry.FieldDropdown = function(content, block) {
-    this._block = block;
+Entry.FieldDropdown = function(content, blockView) {
+    this._block = blockView.block;
 
     var box = new Entry.BoxModel();
     this.box = box;
@@ -17,21 +17,25 @@ Entry.FieldDropdown = function(content, block) {
 
     this._contents = content;
 
-    this.renderStart();
+    this.renderStart(blockView);
 };
 
 (function(p) {
-    p.renderStart = function() {
+    p.renderStart = function(blockView) {
         var self = this;
 
         this.options = this._contents.options;
-        this.value = this._contents.value;
+        this.key = this._contents.key;
+        if (this._block.values[this.key] !== undefined)
+            this.value = this._block.values[this.key];
+        else
+            this.value = this._contents.value;
         this.width = 39;
         this.height = 22;
 
-        this.svgGroup = this._block.contentSvgGroup.group();
+        this.svgGroup = blockView.contentSvgGroup.group();
         this.topGroup = this.svgGroup.group();
-        var input = this.topGroup.rect(0,-12, 39, 22, 3);
+        var input = this.topGroup.rect(0, -12, 39, 22, 3);
         input.attr({
             fill: "#80cbf8"
         });
@@ -41,8 +45,8 @@ Entry.FieldDropdown = function(content, block) {
             self.renderOptions();
          };
 
-        this.textElement = this.topGroup.text(5,3,this.options[this.value]);
-        var button = this.topGroup.polygon(28,-2,34,-2,31,2);
+        this.textElement = this.topGroup.text(5, 3, this.value);
+        var button = this.topGroup.polygon(28, -2, 34, -2, 31, 2);
         button.attr({
             fill: "#127cbd",
             stroke: "#127cbd"
@@ -59,8 +63,9 @@ Entry.FieldDropdown = function(content, block) {
 
     p.renderOptions = function() {
         var self = this;
-        this.px = this._block.x;
-        this.py = this._block.y;
+        var blockView = this._block.view;
+        this.px = blockView.x;
+        this.py = blockView.y;
 
         if (this.optionGroup && this.optionGroup.expand) {
             this.optionGroup.remove();
@@ -83,10 +88,11 @@ Entry.FieldDropdown = function(content, block) {
             var element = this.optionGroup.group();
 
             var x = Number(i)+1;
-            var rect = element.rect(this.px-46, this.py+14+(x*22), 38, 23).attr({
+            var rect = element.rect(this.px - 46,
+                                    this.py + 14 + (x * 22), 38, 23).attr({
                 fill: "white"
             });
-            element.text(this.px-43,this.py+29+(x*22), this.options[i]);
+            element.text(this.px - 43,this.py + 29 + (x * 22), this.options[i]);
 
             (function(elem, value) {
                 var hoverIn = function() {
@@ -134,6 +140,7 @@ Entry.FieldDropdown = function(content, block) {
     };
 
     p.applyValue = function(value) {
+        this._block.values[this.key] = value;
         this.textElement.node.textContent = value;
     };
 
