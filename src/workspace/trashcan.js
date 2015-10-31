@@ -6,19 +6,17 @@ Entry.FieldTrashcan = function(board) {
     this.board = board;
     this.svgGroup = board.snap.group();
 
-    var svgDom = board.svgDom;
-    this._x = svgDom.width()-110;
-    this._y = svgDom.height()-110;
     this.renderStart();
-    this.align(this._x, this._y,false);
     this.dragBlock = null;
     this.dragBlockObserver = null;
     this.isTrash = false;
 
     board.observe(this, "updateDragBlock", ["dragBlock"]);
 
+    this.setPosition();
+
     if (Entry.windowResized)
-        Entry.windowResized.attach(this, this.align);
+        Entry.windowResized.attach(this, this.setPosition);
 };
 
 (function(p) {
@@ -60,15 +58,21 @@ Entry.FieldTrashcan = function(board) {
         this.tAnimation(this.isTrash);
     };
 
-    p.align = function(x, y, animate) {
-        if (this._x) x = this._x;
-        if (this._y) y = this._y;
-
-        var transform = "t" + x + " " + y;
+    p.align = function() {
+        var position = this.getPosition();
+        var transform = "t" + position.x + " " + position.y;
 
         this.svgGroup.attr({
             transform: transform
         });
+    };
+
+    p.setPosition = function() {
+        console.log(11);
+        var svgDom = this.board.svgDom;
+        this._x = svgDom.width()-110;
+        this._y = svgDom.height()-110;
+        this.align();
     };
 
     p.getPosition = function() {

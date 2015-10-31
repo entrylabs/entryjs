@@ -4222,15 +4222,12 @@ Entry.ThreadView = function(b, a) {
 Entry.FieldTrashcan = function(b) {
   this.board = b;
   this.svgGroup = b.snap.group();
-  var a = b.svgDom;
-  this._x = a.width() - 110;
-  this._y = a.height() - 110;
   this.renderStart();
-  this.align(this._x, this._y, !1);
   this.dragBlockObserver = this.dragBlock = null;
   this.isTrash = !1;
   b.observe(this, "updateDragBlock", ["dragBlock"]);
-  Entry.windowResized && Entry.windowResized.attach(this, this.align);
+  this.setPosition();
+  Entry.windowResized && Entry.windowResized.attach(this, this.setPosition);
 };
 (function(b) {
   b.renderStart = function() {
@@ -4247,10 +4244,16 @@ Entry.FieldTrashcan = function(b) {
     this.isTrash = this.dragBlock.dragInstance.offsetX >= b.x + a.left && e >= d;
     this.tAnimation(this.isTrash);
   };
-  b.align = function(a, b, d) {
-    this._x && (a = this._x);
-    this._y && (b = this._y);
-    this.svgGroup.attr({transform:"t" + a + " " + b});
+  b.align = function() {
+    var a = this.getPosition();
+    this.svgGroup.attr({transform:"t" + a.x + " " + a.y});
+  };
+  b.setPosition = function() {
+    console.log(11);
+    var a = this.board.svgDom;
+    this._x = a.width() - 110;
+    this._y = a.height() - 110;
+    this.align();
   };
   b.getPosition = function() {
     return {x:this._x, y:this._y};
