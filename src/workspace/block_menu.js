@@ -97,8 +97,13 @@ Entry.BlockMenu = function(dom) {
             blockView.observe(this, "moveBoardBlock", ['x', 'y']);
             code.cloneThread(currentThread);
 
-            this._boardBlockView = this.workspace.getBoard().code.
+            var workspaceBoard = this.workspace.getBoard();
+            this._boardBlockView = workspaceBoard.code.
                 cloneThread(currentThread).getFirstBlock().view;
+            workspaceBoard.set({
+                dragBlock : this._boardBlockView
+            });
+
             this._boardBlockView._moveTo(
                 -(svgWidth - blockView.x),
                 blockView.y,
@@ -114,7 +119,8 @@ Entry.BlockMenu = function(dom) {
         var dragBlockView = this.dragBlock;
         var dragBlock = dragBlockView.block;
         var thisCode = this.code;
-        var boardCode = this.workspace.getBoard().code;
+        var workspace = this.workspace;
+        var boardCode = workspace.getBoard().code;
 
         //destory boardBlock below the range
         var animate = false;
@@ -123,6 +129,9 @@ Entry.BlockMenu = function(dom) {
             boardCode.destroyThread(boardBlock.getThread(), animate);
         } else boardBlock.view.terminateDrag();
 
+        workspace.getBoard().set({
+            dragBlock : null
+        });
         thisCode.destroyThread(dragBlock.getThread(), animate);
         this._boardBlockView = null;
     };

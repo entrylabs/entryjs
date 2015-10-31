@@ -219,9 +219,6 @@ Entry.BlockView = function(block, board) {
                 mode: true
             });
             this.dominate();
-        } else if (e.button === 1) {
-            //this.enableHighlight();
-        } else if (e.button === 2) {
         }
 
         var block = this;

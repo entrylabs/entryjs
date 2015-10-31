@@ -9,7 +9,7 @@ Entry.FieldTrashcan = function(board) {
     this.renderStart();
     this.dragBlock = null;
     this.dragBlockObserver = null;
-    this.isTrash = false;
+    this.isOver = false;
 
     board.observe(this, "updateDragBlock", ["dragBlock"]);
 
@@ -36,8 +36,8 @@ Entry.FieldTrashcan = function(board) {
         } else {
             if (this.dragBlockObserver)
                 this.dragBlockObserver.destroy();
-            if (this.dragBlock && this.isTrash)
-                this.dragBlock.block.doDestroy(false);
+            if (this.dragBlock && this.isOver)
+                this.dragBlock.block.getThread().destroy(true);
             this.tAnimation(false);
         }
         this.dragBlock = block;
@@ -49,12 +49,20 @@ Entry.FieldTrashcan = function(board) {
         var trashcanX = position.x + boardOffset.left;
         var trashcanY = position.y + boardOffset.top;
 
-        var mouseX = this.dragBlock.dragInstance.offsetX;
-        var mouseY = this.dragBlock.dragInstance.offsetY;
+        var mouseX, mouseY;
+        var dragBlock = this.dragBlock;
+        var instance = dragBlock.dragInstance;
+        if (instance) {
+            mouseX = instance.offsetX;
+            mouseY = instance.offsetY;
+        } else {
+            mouseX = dragBlock.x + boardOffset.left;
+            mouseY = dragBlock.y + boardOffset.top;
+        }
 
-        this.isTrash = mouseX >= trashcanX &&
+        this.isOver = mouseX >= trashcanX &&
             mouseY >= trashcanY;
-        this.tAnimation(this.isTrash);
+        this.tAnimation(this.isOver);
     };
 
     p.align = function() {
@@ -81,6 +89,7 @@ Entry.FieldTrashcan = function(board) {
     };
 
     p.tAnimation = function(bool) {
+        bool = bool === undefined ? true : bool;
         var trashTop = this.trashcanTop;
         if(bool) {
             trashTop.animate({
