@@ -6,15 +6,17 @@ Entry.FieldTrashcan = function(board) {
     this.board = board;
     this.svgGroup = board.snap.group();
 
-    var svgDom = board.svgDom;
-    this._x = svgDom.width()-110;
-    this._y = svgDom.height()-110;
     this.renderStart();
-    this.align(this._x, this._y,false);
+    this.dragBlock = null;
+    this.dragBlockObserver = null;
+    this.isOver = false;
 
+    board.observe(this, "updateDragBlock", ["dragBlock"]);
+
+    this.setPosition();
 
     if (Entry.windowResized)
-        Entry.windowResized.attach(this, this.align);
+        Entry.windowResized.attach(this, this.setPosition);
 };
 
 (function(p) {
@@ -27,15 +29,56 @@ Entry.FieldTrashcan = function(board) {
             path + 'body.png', 0, 20, 80, 80);
     };
 
-    p.align = function(x, y, animate) {
-        if (this._x) x = this._x;
-        if (this._y) y = this._y;
+    p.updateDragBlock = function() {
+        var block = this.board.dragBlock;
+        if (block) {
+            this.dragBlockObserver = block.observe(this, "checkBlock", ["x", "y"]);
+        } else {
+            if (this.dragBlockObserver)
+                this.dragBlockObserver.destroy();
+            if (this.dragBlock && this.isOver)
+                this.dragBlock.block.getThread().destroy(true);
+            this.tAnimation(false);
+        }
+        this.dragBlock = block;
+    };
 
-        var transform = "t" + x + " " + y;
+    p.checkBlock = function() {
+        var boardOffset = this.board.offset;
+        var position = this.getPosition();
+        var trashcanX = position.x + boardOffset.left;
+        var trashcanY = position.y + boardOffset.top;
+
+        var mouseX, mouseY;
+        var dragBlock = this.dragBlock;
+        var instance = dragBlock.dragInstance;
+        if (instance) {
+            mouseX = instance.offsetX;
+            mouseY = instance.offsetY;
+        } else {
+            mouseX = dragBlock.x + boardOffset.left;
+            mouseY = dragBlock.y + boardOffset.top;
+        }
+
+        this.isOver = mouseX >= trashcanX &&
+            mouseY >= trashcanY;
+        this.tAnimation(this.isOver);
+    };
+
+    p.align = function() {
+        var position = this.getPosition();
+        var transform = "t" + position.x + " " + position.y;
 
         this.svgGroup.attr({
             transform: transform
         });
+    };
+
+    p.setPosition = function() {
+        var svgDom = this.board.svgDom;
+        this._x = svgDom.width()-110;
+        this._y = svgDom.height()-110;
+        this.align();
     };
 
     p.getPosition = function() {
@@ -44,13 +87,14 @@ Entry.FieldTrashcan = function(board) {
             y: this._y
         };
     };
-    
+
     p.tAnimation = function(bool) {
+        bool = bool === undefined ? true : bool;
         var trashTop = this.trashcanTop;
-        if(bool) {        
+        if(bool) {
             trashTop.animate({
                 transform: "t5 -20 r30"}, 50);
-        } else { 
+        } else {
             trashTop.animate({
                 transform: "r0"}, 50);
         }

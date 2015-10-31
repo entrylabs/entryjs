@@ -83,9 +83,9 @@ Entry.skeleton.pebble_loop = {
             next: {x: 0, y: contentHeight + 55}
         };
     },
-    box: function() {
+    box: function(block) {
         var contentWidth = 124;
-        var contentHeight = 50;
+        var contentHeight = Math.max(block.contentHeight, 50);
         return {
             offsetX: -(contentWidth / 2 + 13), offsetY: 0,
             width: contentWidth + 26,

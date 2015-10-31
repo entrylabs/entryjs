@@ -26,6 +26,8 @@ Entry.Board = function(dom) {
     if (typeof window.Snap !== "function")
         return console.error("Snap library is required");
 
+    Entry.Model(this, false);
+
     this.svgDom = Entry.Dom(
         $('<svg id="play" width="100%" height="100%"' +
           'version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'),
@@ -47,7 +49,6 @@ Entry.Board = function(dom) {
     this.svgBlockGroup = this.svgGroup.group();
     this.svgBlockGroup.board = this;
 
-    Entry.Model(this, false);
 };
 
 (function(p) {

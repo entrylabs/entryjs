@@ -125,7 +125,7 @@ Entry.BlockView = function(block, board) {
                 this, "_inheritAnimate", ["animating"]
             );
             this.prevObserver = prevView.observe(
-                this, "_align", ["x", "y"]
+                this, "_align", ["x", "y", "height"]
             );
             if (prevView.animating === true)
                 this.set({animating: true});
@@ -138,11 +138,11 @@ Entry.BlockView = function(block, board) {
     p._render = function() {
         var path = this._skeleton.path(this);
 
-        this._darkenPath.animate({
+        this._darkenPath.attr({
             d: path
         }, 300, mina.easeinout);
 
-        this._path.animate({
+        this._path.attr({
             d: path
         }, 300, mina.easeinout);
         this.set(this._skeleton.box(this));
@@ -219,9 +219,6 @@ Entry.BlockView = function(block, board) {
                 mode: true
             });
             this.dominate();
-        } else if (e.button === 1) {
-            //this.enableHighlight();
-        } else if (e.button === 2) {
         }
 
         var block = this;
@@ -240,57 +237,21 @@ Entry.BlockView = function(block, board) {
                  offsetX: e.clientX,
                  offsetY: e.clientY
             });
-            setTrashcan(e);
             //block.thread.align(false);
             //block._board.updateCloseMagnet(block);
         }
 
         function onMouseUp(e) {
             var board = block.getBoard();
-            var trashcan = board.trashcan;
 
             block.terminateDrag();
             delete block.dragInstance;
 
             $(document).unbind('.block');
 
-            if(checkTrashcan(e))
-                block.block.getThread().destroy(true);
-            if (trashcan) trashcan.tAnimation(false);
-
-            //block._board.dragBlock = null;
+            board.set({dragBlock: null});
         }
-
-        function setTrashcan(e) {
-            var board = block.getBoard();
-            var trashcan = board.trashcan;
-
-            if (!trashcan) return;
-
-            if(checkTrashcan(e))
-                trashcan.tAnimation(true);
-            else
-                trashcan.tAnimation(false);
-        };
-
-        function checkTrashcan(e) {
-            var board = block.getBoard();
-            var trashcan = board.trashcan;
-            if(!trashcan) return false;
-
-            var boardOffset = board.offset;
-            var position = trashcan.getPosition();
-            var trashcanX = position.x + boardOffset.left;
-            var trashcanY = position.y + boardOffset.top;
-
-            var mouseX = e.clientX;
-            var mouseY = e.clientY;
-
-            return mouseX >= trashcanX &&
-                mouseY >= trashcanY;
-        };
     };
-
 
     p.terminateDrag = function() {
         var board = this.getBoard();
