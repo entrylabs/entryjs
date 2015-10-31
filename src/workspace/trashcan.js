@@ -7,10 +7,10 @@ Entry.FieldTrashcan = function(board) {
     this.svgGroup = board.snap.group();
 
     var svgDom = board.svgDom;
-    this._positionX = svgDom.width()-110;
-    this._positionY = svgDom.height()-110;
+    this._x = svgDom.width()-110;
+    this._y = svgDom.height()-110;
     this.renderStart();
-    this.align(this._positionX,this._positionY,false);
+    this.align(this._x, this._y,false);
 
 
     if (Entry.windowResized)
@@ -28,21 +28,33 @@ Entry.FieldTrashcan = function(board) {
     };
 
     p.align = function(x, y, animate) {
-        if (this._positionX) x = this._positionX;
-        if (this._positionY) y = this._positionY;
+        if (this._x) x = this._x;
+        if (this._y) y = this._y;
 
         var transform = "t" + x + " " + y;
 
         this.svgGroup.attr({
             transform: transform
         });
+    };
 
+    p.getPosition = function() {
+        return {
+            x: this._x,
+            y: this._y
+        };
+    };
+    
+    p.tAnimation = function(bool) {
         var trashTop = this.trashcanTop;
-        if(animate)
+        if(bool) {        
             trashTop.animate({
                 transform: "t5 -20 r30"}, 50);
-        else
+        } else { 
             trashTop.animate({
                 transform: "r0"}, 50);
+        }
     };
 })(Entry.FieldTrashcan.prototype);
+
+

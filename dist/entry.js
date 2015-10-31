@@ -3684,33 +3684,39 @@ Entry.BlockView = function(b, a) {
   b.onMouseDown = function(a) {
     function b(a) {
       a.originalEvent.touches && (a = a.originalEvent.touches[0]);
-      var c = f.dragInstance;
-      f._moveBy(a.clientX - c.offsetX, a.clientY - c.offsetY, !1);
+      var c = g.dragInstance;
+      g._moveBy(a.clientX - c.offsetX, a.clientY - c.offsetY, !1);
       c.set({offsetX:a.clientX, offsetY:a.clientY});
-      c = a.offsetX;
-      a = a.offsetY;
-      var d = f.getBoard().trashcan, e = d._positionY;
-      0 >= d._positionX - c - 100 && 0 >= e - a - 100 ? d.align(d._positionX, d._positionY, !0) : d.align(d._positionX, d._positionY, !1);
+      c = g.getBoard().trashcan;
+      e(a) ? c.tAnimation(!0) : c.tAnimation(!1);
     }
     function d(a) {
-      var b = f.getBoard().trashcan, c = b._positionX, d = b._positionY;
-      f.terminateDrag();
-      delete f.dragInstance;
+      var b = g.getBoard().trashcan;
+      g.terminateDrag();
+      delete g.dragInstance;
       $(document).unbind(".block");
-      0 >= c - a.offsetX - 100 && 0 >= d - a.offsetY - 100 && f.block.getThread().destroy(!0);
-      b.align(b._positionX, b._positionY, !1);
+      e(a) && g.block.getThread().destroy(!0);
+      b.tAnimation(!1);
+    }
+    function e(a) {
+      var b = g.getBoard(), c = b.trashcan;
+      if (!c) {
+        return !1;
+      }
+      var b = b.offset, c = c.getPosition(), d = c.y + b.top, e = a.clientY;
+      return a.clientX >= c.x + b.left && e >= d ? !0 : !1;
     }
     if (0 === a.button || a instanceof Touch) {
-      var e = $(document);
-      e.bind("mousemove.block", b);
-      e.bind("mouseup.block", d);
-      e.bind("touchmove.block", b);
-      e.bind("touchend.block", d);
+      var f = $(document);
+      f.bind("mousemove.block", b);
+      f.bind("mouseup.block", d);
+      f.bind("touchmove.block", b);
+      f.bind("touchend.block", d);
       this.getBoard().set({dragBlock:this});
       this.dragInstance = new Entry.DragInstance({startX:a.clientX, startY:a.clientY, offsetX:a.clientX, offsetY:a.clientY, mode:!0});
       this.dominate();
     }
-    var f = this;
+    var g = this;
   };
   b.terminateDrag = function() {
     var a = this.getBoard();
@@ -4226,10 +4232,10 @@ Entry.FieldTrashcan = function(b) {
   this.board = b;
   this.svgGroup = b.snap.group();
   b = b.svgDom;
-  this._positionX = b.width() - 110;
-  this._positionY = b.height() - 110;
+  this._x = b.width() - 110;
+  this._y = b.height() - 110;
   this.renderStart();
-  this.align(this._positionX, this._positionY, !1);
+  this.align(this._x, this._y, !1);
   Entry.windowResized && Entry.windowResized.attach(this, this.align);
 };
 (function(b) {
@@ -4238,11 +4244,16 @@ Entry.FieldTrashcan = function(b) {
     this.trashcan = this.svgGroup.image("/img/assets/delete_body.png", 0, 20, 80, 80);
   };
   b.align = function(a, b, d) {
-    this._positionX && (a = this._positionX);
-    this._positionY && (b = this._positionY);
+    this._x && (a = this._x);
+    this._y && (b = this._y);
     this.svgGroup.attr({transform:"t" + a + " " + b});
-    a = this.trashcanTop;
-    d ? a.animate({transform:"t5 -20 r30"}, 50) : a.animate({transform:"r0"}, 50);
+  };
+  b.getPosition = function() {
+    return {x:this._x, y:this._y};
+  };
+  b.tAnimation = function(a) {
+    var b = this.trashcanTop;
+    a ? b.animate({transform:"t5 -20 r30"}, 50) : b.animate({transform:"r0"}, 50);
   };
 })(Entry.FieldTrashcan.prototype);
 Entry.Board = function(b) {
