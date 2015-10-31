@@ -11,7 +11,11 @@ Entry.FieldTrashcan = function(board) {
     this._y = svgDom.height()-110;
     this.renderStart();
     this.align(this._x, this._y,false);
+    this.dragBlock = null;
+    this.dragBlockObserver = null;
+    this.isTrash = false;
 
+    board.observe(this, "updateDragBlock", ["dragBlock"]);
 
     if (Entry.windowResized)
         Entry.windowResized.attach(this, this.align);
@@ -25,6 +29,35 @@ Entry.FieldTrashcan = function(board) {
 
         this.trashcan = this.svgGroup.image (
             path + 'body.png', 0, 20, 80, 80);
+    };
+
+    p.updateDragBlock = function() {
+        var block = this.board.dragBlock;
+        if (block) {
+            this.dragBlockObserver = block.observe(this, "checkBlock", ["x", "y"]);
+        } else {
+            console.log(19);
+            if (this.dragBlockObserver)
+                this.dragBlockObserver.destroy();
+            if (this.dragBlock && this.isTrash)
+                this.dragBlock.block.doDestroy(false);
+            this.tAnimation(false);
+        }
+        this.dragBlock = block;
+    };
+
+    p.checkBlock = function() {
+        var boardOffset = this.board.offset;
+        var position = this.getPosition();
+        var trashcanX = position.x + boardOffset.left;
+        var trashcanY = position.y + boardOffset.top;
+
+        var mouseX = this.dragBlock.dragInstance.offsetX;
+        var mouseY = this.dragBlock.dragInstance.offsetY;
+
+        this.isTrash = mouseX >= trashcanX &&
+            mouseY >= trashcanY;
+        this.tAnimation(this.isTrash);
     };
 
     p.align = function(x, y, animate) {
@@ -44,13 +77,13 @@ Entry.FieldTrashcan = function(board) {
             y: this._y
         };
     };
-    
+
     p.tAnimation = function(bool) {
         var trashTop = this.trashcanTop;
-        if(bool) {        
+        if(bool) {
             trashTop.animate({
                 transform: "t5 -20 r30"}, 50);
-        } else { 
+        } else {
             trashTop.animate({
                 transform: "r0"}, 50);
         }

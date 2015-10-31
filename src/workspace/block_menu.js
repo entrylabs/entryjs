@@ -85,6 +85,8 @@ Entry.BlockMenu = function(dom) {
     };
 
     p.cloneThread = function() {
+        if (this.dragBlock === null)
+            return;
         var svgWidth = this._svgWidth;
         var blockView = this.dragBlock;
         var block = blockView.block;

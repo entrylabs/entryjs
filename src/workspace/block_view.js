@@ -240,57 +240,21 @@ Entry.BlockView = function(block, board) {
                  offsetX: e.clientX,
                  offsetY: e.clientY
             });
-            setTrashcan(e);
             //block.thread.align(false);
             //block._board.updateCloseMagnet(block);
         }
 
         function onMouseUp(e) {
             var board = block.getBoard();
-            var trashcan = board.trashcan;
 
             block.terminateDrag();
             delete block.dragInstance;
 
             $(document).unbind('.block');
 
-            if(checkTrashcan(e))
-                block.block.getThread().destroy(true);
-            if (trashcan) trashcan.tAnimation(false);
-
-            //block._board.dragBlock = null;
+            board.set({dragBlock: null});
         }
-
-        function setTrashcan(e) {
-            var board = block.getBoard();
-            var trashcan = board.trashcan;
-
-            if (!trashcan) return;
-
-            if(checkTrashcan(e))
-                trashcan.tAnimation(true);
-            else
-                trashcan.tAnimation(false);
-        };
-
-        function checkTrashcan(e) {
-            var board = block.getBoard();
-            var trashcan = board.trashcan;
-            if(!trashcan) return false;
-
-            var boardOffset = board.offset;
-            var position = trashcan.getPosition();
-            var trashcanX = position.x + boardOffset.left;
-            var trashcanY = position.y + boardOffset.top;
-
-            var mouseX = e.clientX;
-            var mouseY = e.clientY;
-
-            return mouseX >= trashcanX &&
-                mouseY >= trashcanY;
-        };
     };
-
 
     p.terminateDrag = function() {
         var board = this.getBoard();

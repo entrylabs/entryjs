@@ -3567,8 +3567,10 @@ Entry.BlockMenu = function(b) {
     }
   };
   b.cloneThread = function() {
-    var a = this._svgWidth, b = this.dragBlock, d = b.block, e = this.code, f = d.getThread();
-    d && f && (b.observe(this, "moveBoardBlock", ["x", "y"]), e.cloneThread(f), this._boardBlockView = this.workspace.getBoard().code.cloneThread(f).getFirstBlock().view, this._boardBlockView._moveTo(-(a - b.x), b.y, !1));
+    if (null !== this.dragBlock) {
+      var a = this._svgWidth, b = this.dragBlock, d = b.block, e = this.code, f = d.getThread();
+      d && f && (b.observe(this, "moveBoardBlock", ["x", "y"]), e.cloneThread(f), this._boardBlockView = this.workspace.getBoard().code.cloneThread(f).getFirstBlock().view, this._boardBlockView._moveTo(-(a - b.x), b.y, !1));
+    }
   };
   b.terminateDrag = function() {
     var a = this._boardBlockView.block, b = this.dragBlock, d = b.block, e = this.code, f = this.workspace.getBoard().code, g = !1;
@@ -3684,38 +3686,28 @@ Entry.BlockView = function(b, a) {
   b.onMouseDown = function(a) {
     function b(a) {
       a.originalEvent.touches && (a = a.originalEvent.touches[0]);
-      var c = g.dragInstance;
-      g._moveBy(a.clientX - c.offsetX, a.clientY - c.offsetY, !1);
+      var c = f.dragInstance;
+      f._moveBy(a.clientX - c.offsetX, a.clientY - c.offsetY, !1);
       c.set({offsetX:a.clientX, offsetY:a.clientY});
-      (c = g.getBoard().trashcan) && (e(a) ? c.tAnimation(!0) : c.tAnimation(!1));
     }
     function d(a) {
-      var b = g.getBoard().trashcan;
-      g.terminateDrag();
-      delete g.dragInstance;
+      a = f.getBoard();
+      f.terminateDrag();
+      delete f.dragInstance;
       $(document).unbind(".block");
-      e(a) && g.block.getThread().destroy(!0);
-      b && b.tAnimation(!1);
-    }
-    function e(a) {
-      var b = g.getBoard(), c = b.trashcan;
-      if (!c) {
-        return !1;
-      }
-      var b = b.offset, c = c.getPosition(), d = c.y + b.top, e = a.clientY;
-      return a.clientX >= c.x + b.left && e >= d;
+      a.set({dragBlock:null});
     }
     if (0 === a.button || a instanceof Touch) {
-      var f = $(document);
-      f.bind("mousemove.block", b);
-      f.bind("mouseup.block", d);
-      f.bind("touchmove.block", b);
-      f.bind("touchend.block", d);
+      var e = $(document);
+      e.bind("mousemove.block", b);
+      e.bind("mouseup.block", d);
+      e.bind("touchmove.block", b);
+      e.bind("touchend.block", d);
       this.getBoard().set({dragBlock:this});
       this.dragInstance = new Entry.DragInstance({startX:a.clientX, startY:a.clientY, offsetX:a.clientX, offsetY:a.clientY, mode:!0});
       this.dominate();
     }
-    var g = this;
+    var f = this;
   };
   b.terminateDrag = function() {
     var a = this.getBoard();
@@ -4230,17 +4222,30 @@ Entry.ThreadView = function(b, a) {
 Entry.FieldTrashcan = function(b) {
   this.board = b;
   this.svgGroup = b.snap.group();
-  b = b.svgDom;
-  this._x = b.width() - 110;
-  this._y = b.height() - 110;
+  var a = b.svgDom;
+  this._x = a.width() - 110;
+  this._y = a.height() - 110;
   this.renderStart();
   this.align(this._x, this._y, !1);
+  this.dragBlockObserver = this.dragBlock = null;
+  this.isTrash = !1;
+  b.observe(this, "updateDragBlock", ["dragBlock"]);
   Entry.windowResized && Entry.windowResized.attach(this, this.align);
 };
 (function(b) {
   b.renderStart = function() {
     this.trashcanTop = this.svgGroup.image("/img/assets/delete_cover.png", 0, 0, 80, 20);
     this.trashcan = this.svgGroup.image("/img/assets/delete_body.png", 0, 20, 80, 80);
+  };
+  b.updateDragBlock = function() {
+    var a = this.board.dragBlock;
+    a ? this.dragBlockObserver = a.observe(this, "checkBlock", ["x", "y"]) : (console.log(19), this.dragBlockObserver && this.dragBlockObserver.destroy(), this.dragBlock && this.isTrash && this.dragBlock.block.doDestroy(!1), this.tAnimation(!1));
+    this.dragBlock = a;
+  };
+  b.checkBlock = function() {
+    var a = this.board.offset, b = this.getPosition(), d = b.y + a.top, e = this.dragBlock.dragInstance.offsetY;
+    this.isTrash = this.dragBlock.dragInstance.offsetX >= b.x + a.left && e >= d;
+    this.tAnimation(this.isTrash);
   };
   b.align = function(a, b, d) {
     this._x && (a = this._x);
@@ -4263,6 +4268,7 @@ Entry.Board = function(b) {
   if ("function" !== typeof window.Snap) {
     return console.error("Snap library is required");
   }
+  Entry.Model(this, !1);
   this.svgDom = Entry.Dom($('<svg id="play" width="100%" height="100%"version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'), {parent:b});
   this.offset = this.svgDom.offset();
   this.snap = Snap("#play");
@@ -4273,7 +4279,6 @@ Entry.Board = function(b) {
   this.svgThreadGroup.board = this;
   this.svgBlockGroup = this.svgGroup.group();
   this.svgBlockGroup.board = this;
-  Entry.Model(this, !1);
 };
 (function(b) {
   b.schema = {code:null, dragBlock:null, closeBlock:null};
