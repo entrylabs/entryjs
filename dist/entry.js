@@ -3852,33 +3852,29 @@ Entry.FieldDropdown = function(b, a) {
     var a = this;
     this.px = this._block.x;
     this.py = this._block.y;
-    if (this.optionGroup && this.optionGroup.expand) {
-      this.optionGroup.remove(), this.optionGroup.expand = !1;
+    if (this.optionGroup) {
+      this.optionGroup.remove(), delete this.optionGroup;
     } else {
       this.snap = Snap("#play");
       this.optionGroup = this.snap.group();
       this.optionGroup.expand = !0;
       $(document).bind("mousedown", function(b) {
         a.optionGroup.remove();
-        a.optionGroup.expand = !1;
+        delete a.optionGroup;
       });
       for (var b in this.options) {
         var d = this.optionGroup.group(), e = Number(b) + 1;
         d.rect(this.px - 46, this.py + 14 + 22 * e, 38, 23).attr({fill:"white"});
         d.text(this.px - 43, this.py + 29 + 22 * e, this.options[b]);
         (function(b, c) {
-          var d = function() {
-            b.select("rect:nth-child(1)").attr({fill:"white"});
-            b.select("text:nth-child(2)").attr({fill:"black"});
-          };
           b.mouseover(function() {
             b.select("rect:nth-child(1)").attr({fill:"#127cdb"});
             b.select("text:nth-child(2)").attr({fill:"white"});
-          }).mouseout(d).mousedown(function() {
+          }).mouseout(function() {
+            b.select("rect:nth-child(1)").attr({fill:"white"});
+            b.select("text:nth-child(2)").attr({fill:"black"});
+          }).mousedown(function() {
             a.applyValue(c);
-            d();
-            a.optionGroup.remove();
-            a.optionGroup.expand = !1;
           });
         })(d, this.options[b]);
       }

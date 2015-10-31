@@ -63,9 +63,9 @@ Entry.FieldDropdown = function(content, block) {
         this.px = this._block.x;
         this.py = this._block.y;
 
-        if (this.optionGroup && this.optionGroup.expand) {
+        if (this.optionGroup) {
             this.optionGroup.remove();
-            this.optionGroup.expand = false;
+            delete this.optionGroup;
             return;
         }
 
@@ -74,7 +74,7 @@ Entry.FieldDropdown = function(content, block) {
         this.optionGroup.expand = true;
         $(document).bind('mousedown', function(e) {
             self.optionGroup.remove();
-            self.optionGroup.expand = false;
+            delete self.optionGroup;
         });
 
         for (var i in this.options) {
@@ -99,9 +99,6 @@ Entry.FieldDropdown = function(content, block) {
 
                 var selectValue = function() {
                     self.applyValue(value);
-                    hoverOut();
-                    self.optionGroup.remove();
-                    self.optionGroup.expand = false;
                 };
 
                 elem.mouseover(hoverIn).mouseout(hoverOut).mousedown(selectValue);
