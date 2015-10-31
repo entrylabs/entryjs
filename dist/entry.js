@@ -3376,7 +3376,7 @@ Entry.block.jr_start = {skeleton:"pebble_event", event:"start", color:"#3BBD70",
   this.unitComp = Ntry.entityManager.getComponent(this._unit.id, Ntry.STATIC.UNIT);
   return Entry.STATIC.RETURN;
 }};
-Entry.block.jr_repeat = {skeleton:"pebble_loop", color:"#3BBD70", contents:[{type:"Statement", accept:"pebble_basic"}, {type:"Dropdown", options:[1, 2, 3, 4, 5, 6, 7, 8, 9, 10], value:1}, "\ubc18\ubcf5"], func:function() {
+Entry.block.jr_repeat = {skeleton:"pebble_loop", color:"#3BBD70", contents:[{type:"Dropdown", options:[1, 2, 3, 4, 5, 6, 7, 8, 9, 10], value:1}, "\ubc18\ubcf5", {type:"Statement", accept:"pebble_basic"}], func:function() {
 }};
 Entry.block.jr_item = {skeleton:"pebble_basic", color:"#F46C6C", contents:["\uaf43 \ubaa8\uc73c\uae30", {type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_item_image.png", highlightColor:"#FFF", position:{x:83, y:0}, size:22}], func:function() {
   if (this.isContinue) {
@@ -3845,10 +3845,11 @@ Entry.FieldDropdown = function(b, a) {
     this.height = 22;
     this.svgGroup = this._block.contentSvgGroup.group();
     this.topGroup = this.svgGroup.group();
-    this.topGroup.rect(-20, -12, 39, 22).attr({fill:"#80cbf8", stroke:"#127cdb"});
-    this.textElement = this.topGroup.text(-15, 3, this.options[this.value]);
-    this.topGroup.polygon(8, -2, 14, -2, 11, 2).attr({fill:"#127cbd", stroke:"#127cbd"});
+    this.topGroup.rect(0, -12, 39, 22).attr({fill:"#80cbf8"});
+    this.textElement = this.topGroup.text(5, 3, this.options[this.value]);
+    this.topGroup.polygon(28, -2, 34, -2, 31, 2).attr({fill:"#127cbd", stroke:"#127cbd"});
     this.topGroup.mousedown(function(b) {
+      b.stopPropagation();
       a.renderOptions();
     });
     this.box.set({x:0, y:0, width:39, height:22});
@@ -3857,29 +3858,29 @@ Entry.FieldDropdown = function(b, a) {
     var a = this;
     this.px = this._block.x;
     this.py = this._block.y;
-    if (this.bottomGroup && this.bottomGroup.expand) {
-      this.bottomGroup.remove(), this.bottomGroup.expand = !1;
+    if (this.optionGroup) {
+      this.optionGroup.remove(), delete this.optionGroup;
     } else {
       this.snap = Snap("#play");
-      this.bottomGroup = this.snap.group();
-      this.bottomGroup.expand = !0;
+      this.optionGroup = this.snap.group();
+      this.optionGroup.expand = !0;
+      $(document).bind("mousedown", function(b) {
+        a.optionGroup.remove();
+        delete a.optionGroup;
+      });
       for (var b in this.options) {
-        var d = this.bottomGroup.group(), e = Number(b) + 1;
-        d.rect(this.px - 40, this.py + 14 + 22 * e, 39, 22).attr({fill:"white"});
-        d.text(this.px - 33, this.py + 29 + 22 * e, this.options[b]);
+        var d = this.optionGroup.group(), e = Number(b) + 1;
+        d.rect(this.px - 46, this.py + 14 + 22 * e, 38, 23).attr({fill:"white"});
+        d.text(this.px - 43, this.py + 29 + 22 * e, this.options[b]);
         (function(b, c) {
-          var d = function() {
-            b.select("rect:nth-child(1)").attr({fill:"white"});
-            b.select("text:nth-child(2)").attr({fill:"black"});
-          };
           b.mouseover(function() {
             b.select("rect:nth-child(1)").attr({fill:"#127cdb"});
             b.select("text:nth-child(2)").attr({fill:"white"});
-          }).mouseout(d).mousedown(function() {
+          }).mouseout(function() {
+            b.select("rect:nth-child(1)").attr({fill:"white"});
+            b.select("text:nth-child(2)").attr({fill:"black"});
+          }).mousedown(function() {
             a.applyValue(c);
-            d();
-            a.bottomGroup.remove();
-            a.bottomGroup.expand = !1;
           });
         })(d, this.options[b]);
       }

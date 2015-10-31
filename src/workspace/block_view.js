@@ -226,7 +226,7 @@ Entry.BlockView = function(block, board) {
 
         var block = this;
         function onMouseMove(e) {
-            
+
             if (e.originalEvent.touches) {
                 e = e.originalEvent.touches[0];
             }
@@ -241,7 +241,6 @@ Entry.BlockView = function(block, board) {
                  offsetY: e.clientY
             });
             setTrashcan(e);
-    
             //block.thread.align(false);
             //block._board.updateCloseMagnet(block);
         }
@@ -355,7 +354,7 @@ Entry.BlockView = function(block, board) {
     };
 
     p.destroy = function(animate) {
-        var svgGroup = this.svgGroup; 
+        var svgGroup = this.svgGroup;
 
         if (animate) {
             svgGroup.animate(
