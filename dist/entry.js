@@ -3390,6 +3390,7 @@ Entry.block.jr_item = {skeleton:"pebble_basic", color:"#F46C6C", contents:["\uaf
   this.isAction = this.isContinue = !0;
   var b = this;
   Ntry.dispatchEvent("unitAction", Ntry.STATIC.GET_ITEM, function() {
+    Ntry.dispatchEvent("getItem");
     b.isAction = !1;
   });
   return Entry.STATIC.CONTINUE;

@@ -79,6 +79,7 @@ Entry.block.jr_item = {
             this.isAction = true;
             var self = this;
             var callBack = function() {
+                Ntry.dispatchEvent("getItem");
                 self.isAction = false;
             };
             Ntry.dispatchEvent("unitAction", Ntry.STATIC.GET_ITEM , callBack);
