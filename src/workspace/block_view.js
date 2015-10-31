@@ -125,7 +125,7 @@ Entry.BlockView = function(block, board) {
                 this, "_inheritAnimate", ["animating"]
             );
             this.prevObserver = prevView.observe(
-                this, "_align", ["x", "y"]
+                this, "_align", ["x", "y", "height"]
             );
             if (prevView.animating === true)
                 this.set({animating: true});
@@ -138,11 +138,11 @@ Entry.BlockView = function(block, board) {
     p._render = function() {
         var path = this._skeleton.path(this);
 
-        this._darkenPath.animate({
+        this._darkenPath.attr({
             d: path
         }, 300, mina.easeinout);
 
-        this._path.animate({
+        this._path.attr({
             d: path
         }, 300, mina.easeinout);
         this.set(this._skeleton.box(this));

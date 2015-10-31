@@ -54,8 +54,8 @@ Entry.BlockMenu = function(dom) {
     p.changeCode = function(code) {
         if (!(code instanceof Entry.Code))
             return console.error("You must inject code instance");
-        code.createView(this);
         this.set({code: code});
+        code.createView(this);
         this.align();
     };
 

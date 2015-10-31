@@ -29,10 +29,7 @@ Entry.FieldStatement = function(content, blockView) {
         this.svgGroup = this._blockView.contentSvgGroup.group();
         this.dummyBlock = new Entry.DummyBlock(this, this._blockView);
         this._thread = new Entry.Thread([this.dummyBlock], this._blockView.getBoard().code);
-        var that = this;
-        this._thread.changeEvent.attach(function() {
-            that.calcHeight();
-        });
+        this._thread.changeEvent.attach(this, this.calcHeight);
 
         this.box.set({
             x: 46,
@@ -112,6 +109,9 @@ Entry.DummyBlock = function(statementField, blockView) {
             x: this.originBlockView.x,
             y: this.originBlockView.y
         });
+    };
+
+    p.createView = function() {
     };
 
     p.setThread = function() {

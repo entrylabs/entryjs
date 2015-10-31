@@ -3548,8 +3548,8 @@ Entry.BlockMenu = function(b) {
     if (!(a instanceof Entry.Code)) {
       return console.error("You must inject code instance");
     }
-    a.createView(this);
     this.set({code:a});
+    a.createView(this);
     this.align();
   };
   b.bindCodeView = function(a) {
@@ -3647,15 +3647,15 @@ Entry.BlockView = function(b, a) {
     if (this.block.prev) {
       var a = this.block.prev.view;
       this.prevAnimatingObserver = a.observe(this, "_inheritAnimate", ["animating"]);
-      this.prevObserver = a.observe(this, "_align", ["x", "y"]);
+      this.prevObserver = a.observe(this, "_align", ["x", "y", "height"]);
       !0 === a.animating && this.set({animating:!0});
       this._align();
     }
   };
   b._render = function() {
     var a = this._skeleton.path(this);
-    this._darkenPath.animate({d:a}, 300, mina.easeinout);
-    this._path.animate({d:a}, 300, mina.easeinout);
+    this._darkenPath.attr({d:a}, 300, mina.easeinout);
+    this._path.attr({d:a}, 300, mina.easeinout);
     this.set(this._skeleton.box(this));
   };
   b._align = function(a) {
@@ -3943,10 +3943,7 @@ Entry.FieldStatement = function(b, a) {
     this.svgGroup = this._blockView.contentSvgGroup.group();
     this.dummyBlock = new Entry.DummyBlock(this, this._blockView);
     this._thread = new Entry.Thread([this.dummyBlock], this._blockView.getBoard().code);
-    var a = this;
-    this._thread.changeEvent.attach(function() {
-      a.calcHeight();
-    });
+    this._thread.changeEvent.attach(this, this.calcHeight);
     this.box.set({x:46, y:0, width:20, height:20});
   };
   b.insertAfter = function(a) {
@@ -3980,6 +3977,8 @@ Entry.DummyBlock = function(b, a) {
   b.schema = {x:0, y:0, width:0, height:39};
   b._align = function(a) {
     this.set({x:this.originBlockView.x, y:this.originBlockView.y});
+  };
+  b.createView = function() {
   };
   b.setThread = function() {
   };
@@ -4031,8 +4030,8 @@ Entry.skeleton.pebble_loop = {path:function(b) {
   return "M 0,9 a 9,9 0 0,0 9,-9 h %cw a 25,25 0 0,1 25,25 v %ch a 25,25 0 0,1 -25,25 h -%cw a 9,9 0 0,1 -18,0 h -%cw a 25,25 0 0,1 -25,-25 v -%ch a 25,25 0 0,1 25,-25 h %cw a 9,9 0 0,0 9,9 z M 0,49 a 9,9 0 0,1 -9,-9 h -28 a 25,25 0 0,0 -25,25 v %cih a 25,25 0 0,0 25,25 h 28 a 9,9 0 0,0 18,0 h 28 a 25,25 0 0,0 25,-25 v -%cih a 25,25 0 0,0 -25,-25 h -28 a 9,9 0 0,1 -9,9 z".replace(/%cw/gi, 41).replace(/%ch/gi, b + 4).replace(/%cih/gi, b + -50);
 }, magnets:function() {
   return {previous:{x:0, y:0}, next:{x:0, y:105}};
-}, box:function() {
-  return {offsetX:-75, offsetY:0, width:150, height:104, marginBottom:0};
+}, box:function(b) {
+  return {offsetX:-75, offsetY:0, width:150, height:Math.max(b.contentHeight, 50) + 54, marginBottom:0};
 }, contentPos:function() {
   return {x:-46, y:25};
 }};
