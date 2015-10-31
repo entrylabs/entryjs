@@ -4236,7 +4236,7 @@ Entry.FieldTrashcan = function(b) {
   };
   b.updateDragBlock = function() {
     var a = this.board.dragBlock;
-    a ? this.dragBlockObserver = a.observe(this, "checkBlock", ["x", "y"]) : (console.log(19), this.dragBlockObserver && this.dragBlockObserver.destroy(), this.dragBlock && this.isTrash && this.dragBlock.block.doDestroy(!1), this.tAnimation(!1));
+    a ? this.dragBlockObserver = a.observe(this, "checkBlock", ["x", "y"]) : (this.dragBlockObserver && this.dragBlockObserver.destroy(), this.dragBlock && this.isTrash && this.dragBlock.block.doDestroy(!1), this.tAnimation(!1));
     this.dragBlock = a;
   };
   b.checkBlock = function() {
@@ -4249,7 +4249,6 @@ Entry.FieldTrashcan = function(b) {
     this.svgGroup.attr({transform:"t" + a.x + " " + a.y});
   };
   b.setPosition = function() {
-    console.log(11);
     var a = this.board.svgDom;
     this._x = a.width() - 110;
     this._y = a.height() - 110;

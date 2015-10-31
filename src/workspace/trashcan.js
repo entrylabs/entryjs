@@ -34,7 +34,6 @@ Entry.FieldTrashcan = function(board) {
         if (block) {
             this.dragBlockObserver = block.observe(this, "checkBlock", ["x", "y"]);
         } else {
-            console.log(19);
             if (this.dragBlockObserver)
                 this.dragBlockObserver.destroy();
             if (this.dragBlock && this.isTrash)
@@ -68,7 +67,6 @@ Entry.FieldTrashcan = function(board) {
     };
 
     p.setPosition = function() {
-        console.log(11);
         var svgDom = this.board.svgDom;
         this._x = svgDom.width()-110;
         this._y = svgDom.height()-110;
