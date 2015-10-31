@@ -42,7 +42,7 @@ Entry.block.jr_start = {
 
 Entry.block.jr_repeat = {
     skeleton: "pebble_loop",
-    color: "#3BBD70",
+    color: "#127CDB",
     contents: [
         {
             type: "Dropdown",

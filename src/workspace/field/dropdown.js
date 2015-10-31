@@ -31,7 +31,7 @@ Entry.FieldDropdown = function(content, block) {
 
         this.svgGroup = this._block.contentSvgGroup.group();
         this.topGroup = this.svgGroup.group();
-        var input = this.topGroup.rect(0,-12, 39, 22);
+        var input = this.topGroup.rect(0,-12, 39, 22, 3);
         input.attr({
             fill: "#80cbf8"
         });

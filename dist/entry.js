@@ -3376,7 +3376,7 @@ Entry.block.jr_start = {skeleton:"pebble_event", event:"start", color:"#3BBD70",
   this.unitComp = Ntry.entityManager.getComponent(this._unit.id, Ntry.STATIC.UNIT);
   return Entry.STATIC.RETURN;
 }};
-Entry.block.jr_repeat = {skeleton:"pebble_loop", color:"#3BBD70", contents:[{type:"Dropdown", options:[1, 2, 3, 4, 5, 6, 7, 8, 9, 10], value:1}, "\ubc18\ubcf5", {type:"Statement", accept:"pebble_basic"}], func:function() {
+Entry.block.jr_repeat = {skeleton:"pebble_loop", color:"#127CDB", contents:[{type:"Dropdown", options:[1, 2, 3, 4, 5, 6, 7, 8, 9, 10], value:1}, "\ubc18\ubcf5", {type:"Statement", accept:"pebble_basic"}], func:function() {
 }};
 Entry.block.jr_item = {skeleton:"pebble_basic", color:"#F46C6C", contents:["\uaf43 \ubaa8\uc73c\uae30", {type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_item_image.png", highlightColor:"#FFF", position:{x:83, y:0}, size:22}], func:function() {
   if (this.isContinue) {
@@ -3844,7 +3844,7 @@ Entry.FieldDropdown = function(b, a) {
     this.height = 22;
     this.svgGroup = this._block.contentSvgGroup.group();
     this.topGroup = this.svgGroup.group();
-    this.topGroup.rect(0, -12, 39, 22).attr({fill:"#80cbf8"});
+    this.topGroup.rect(0, -12, 39, 22, 3).attr({fill:"#80cbf8"});
     this.textElement = this.topGroup.text(5, 3, this.options[this.value]);
     this.topGroup.polygon(28, -2, 34, -2, 31, 2).attr({fill:"#127cbd", stroke:"#127cbd"});
     this.topGroup.mousedown(function(b) {
