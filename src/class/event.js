@@ -18,23 +18,22 @@ Entry.Event = function(sender) {
     };
 
     p.deAttach = function (listener) {
-        var ls = this._listeners;
-        var index = ls.indexOf(listener);
-        this._listeners.splice(index, 1);
+        var listeners = this._listeners;
+        return listeners.splice(
+            listeners.indexOf(listener), 1
+        );
     };
 
     p.notify = function (args) {
-        var index;
         var listeners = this._listeners;
         var sender = this._sender;
 
-        for (index = 0; index < listeners.length; index += 1) {
-            var ls = listeners[index];
-            ls.fn.call(
-                ls.obj,
+        listeners.forEach(function(listener){
+            listener.fn.call(
+                listener.obj,
                 sender,
                 args
             );
-        }
+        });
     };
 })(Entry.Event.prototype);

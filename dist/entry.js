@@ -3143,15 +3143,14 @@ Entry.Event = function(b) {
     return d;
   };
   b.deAttach = function(a) {
-    a = this._listeners.indexOf(a);
-    this._listeners.splice(a, 1);
+    var b = this._listeners;
+    return b.splice(b.indexOf(a), 1);
   };
   b.notify = function(a) {
-    var b, d = this._listeners, e = this._sender;
-    for (b = 0;b < d.length;b += 1) {
-      var f = d[b];
-      f.fn.call(f.obj, e, a);
-    }
+    var b = this._sender;
+    this._listeners.forEach(function(d) {
+      d.fn.call(d.obj, b, a);
+    });
   };
 })(Entry.Event.prototype);
 Entry.Observer = function(b, a, c, d) {
@@ -3207,10 +3206,9 @@ Entry.Dom = function(b, a) {
   return d;
 };
 Entry.init = function() {
-  Entry.windowResized = new Entry.Event(window);
-  $(window).resize(function() {
+  Entry.windowReszied || (Entry.windowResized = new Entry.Event(window), $(window).resize(function() {
     Entry.windowResized.notify();
-  });
+  }));
 };
 Entry.loadProject = function(b) {
 };
