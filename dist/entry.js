@@ -3146,6 +3146,11 @@ Entry.Event = function(b) {
     var b = this._listeners;
     return b.splice(b.indexOf(a), 1);
   };
+  b.clear = function() {
+    for (var a = this._listeners;a.length;) {
+      a.pop();
+    }
+  };
   b.notify = function(a) {
     var b = this._sender;
     this._listeners.forEach(function(d) {

@@ -24,6 +24,11 @@ Entry.Event = function(sender) {
         );
     };
 
+    p.clear = function () {
+        var listeners = this._listeners;
+        while(listeners.length) listeners.pop();
+    };
+
     p.notify = function (args) {
         var listeners = this._listeners;
         var sender = this._sender;
