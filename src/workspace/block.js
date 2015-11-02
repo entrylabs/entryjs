@@ -53,6 +53,13 @@ Entry.Block.FOLLOW = 3;
         this._schema = Entry.block[this.type];
         if (this._schema.event)
             this._thread.registerEvent(this, this._schema.event);
+        var contents = this._schema.contents;
+        for (var i = 0; i < contents.length; i++) {
+            var content = contents[i];
+            if (content.value) {
+                this.values[content.key] = content.value;
+            }
+        }
     };
 
     p.setThread = function(thread) {

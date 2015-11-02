@@ -45,7 +45,7 @@ Entry.block.jr_repeat = {
             type: "Dropdown",
             key: "REPEAT",
             options: [1,2,3,4,5,6,7,8,9,10],
-            value: 1
+            value: 9
         },
         "반복",
         {
@@ -54,16 +54,14 @@ Entry.block.jr_repeat = {
         }
     ],
     func: function() {
-        if (!this.isContinue) {
-            this.isContinue = true;
-            this.repeatCount = this.block.values["REPEAT"];
+        if (this.repeatCount === undefined) {
+            this.repeatCount = this.block.values.REPEAT;
             return Entry.STATIC.CONTINUE;
         } else if (this.repeatCount > 0) {
             console.log(this.repeatCount);
             this.repeatCount--;
             return Entry.STATIC.CONTINUE;
         } else {
-            delete this.isAction;
             delete this.repeatCount;
         }
     }
