@@ -3858,12 +3858,13 @@ Entry.FieldDropdown = function(b, a) {
     this.height = 22;
     this.svgGroup = a.contentSvgGroup.group();
     this.topGroup = this.svgGroup.group();
-    this.topGroup.rect(0, -12, 39, 22, 3).attr({fill:"#80cbf8"});
+    this.input = this.topGroup.rect(0, -12, 39, 22, 3);
+    this.input.attr({fill:"#80cbf8"});
     this.textElement = this.topGroup.text(5, 3, this.value);
     this.topGroup.polygon(28, -2, 34, -2, 31, 2).attr({fill:"#127cbd", stroke:"#127cbd"});
     this.topGroup.mousedown(function(a) {
-      a.stopPropagation();
       b.renderOptions();
+      a.stopPropagation();
     });
     this.box.set({x:0, y:0, width:39, height:22});
   };
@@ -3875,8 +3876,7 @@ Entry.FieldDropdown = function(b, a) {
       this.optionGroup.remove(), this.optionGroup.expand = !1;
     } else {
       this.optionGroup && delete this.optionGroup;
-      this.snap = Snap("#play");
-      this.optionGroup = this.snap.group();
+      this.optionGroup = b.getBoard().svgGroup.group();
       this.optionGroup.expand = !0;
       $(document).bind("mousedown", function(b) {
         a.optionGroup.remove();
