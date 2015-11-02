@@ -107,9 +107,8 @@ Entry.Collection = function(data) {
 
     p.slice = function(index, amount) {
         var data = ap.slice.call(this,index, amount);
-        for (var i in data) {
-            delete this._hashMap[data[i].id];
-        }
+        var hashMap = this._hashMap;
+        for (var i in data) delete hashMap[data[i].id];
         return data;
     };
 

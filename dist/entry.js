@@ -166,15 +166,15 @@ Blockly.Blocks.arduino_convert_scale = {init:function() {
   this.setInputsInline(!0);
 }};
 Entry.block.arduino_convert_scale = function(b, a) {
-  var c = a.getNumberValue("VALUE1", a), d = a.getNumberValue("VALUE2", a), e = a.getNumberValue("VALUE3", a), f = a.getNumberValue("VALUE4", a), h = a.getNumberValue("VALUE5", a);
+  var c = a.getNumberValue("VALUE1", a), d = a.getNumberValue("VALUE2", a), e = a.getNumberValue("VALUE3", a), f = a.getNumberValue("VALUE4", a), g = a.getNumberValue("VALUE5", a);
   if (d > e) {
-    var g = d, d = e, e = g
+    var h = d, d = e, e = h
   }
-  f > h && (g = f, f = h, h = g);
+  f > g && (h = f, f = g, g = h);
   c -= d;
-  c *= (h - f) / (e - d);
+  c *= (g - f) / (e - d);
   c += f;
-  c = Math.min(h, c);
+  c = Math.min(g, c);
   c = Math.max(f, c);
   return Math.round(c);
 };
@@ -1172,9 +1172,9 @@ Entry.block.reach_something = function(b, a) {
       if (Entry.checkCollisionRect(d, f)) {
         return !0;
       }
-      for (var c = c.parent.clonedEntities, e = 0, h = c.length;e < h;e++) {
-        var g = c[e];
-        if (g.getVisible() && !g.isStamp && Entry.checkCollisionRect(d, g.object.getTransformedBounds())) {
+      for (var c = c.parent.clonedEntities, e = 0, g = c.length;e < g;e++) {
+        var h = c[e];
+        if (h.getVisible() && !h.isStamp && Entry.checkCollisionRect(d, h.object.getTransformedBounds())) {
           return !0;
         }
       }
@@ -1184,8 +1184,8 @@ Entry.block.reach_something = function(b, a) {
       }
       c = c.parent.clonedEntities;
       e = 0;
-      for (h = c.length;e < h;e++) {
-        if (g = c[e], g.getVisible() && !g.isStamp && f(d, g.object, .2, !0)) {
+      for (g = c.length;e < g;e++) {
+        if (h = c[e], h.getVisible() && !h.isStamp && f(d, h.object, .2, !0)) {
           return !0;
         }
       }
@@ -3012,9 +3012,9 @@ Entry.Collection = function(b) {
     if (void 0 !== b) {
       e = 0;
       for (var f = b.length;e < f;e++) {
-        var h = b[e];
-        d[h.id] = h;
-        a.push.call(this, h);
+        var g = b[e];
+        d[g.id] = g;
+        a.push.call(this, g);
       }
     }
   };
@@ -3052,16 +3052,16 @@ Entry.Collection = function(b) {
     return a.indexOf.call(this, b);
   };
   b.find = function(a) {
-    for (var b = [], e, f = 0, h = this.length;f < h;f++) {
+    for (var b = [], e, f = 0, g = this.length;f < g;f++) {
       e = !0;
-      var g = this[f], k;
+      var h = this[f], k;
       for (k in a) {
-        if (a[k] != g[k]) {
+        if (a[k] != h[k]) {
           e = !1;
           break;
         }
       }
-      e && b.push(g);
+      e && b.push(h);
     }
     return b;
   };
@@ -3076,9 +3076,9 @@ Entry.Collection = function(b) {
     return b;
   };
   b.slice = function(b, d) {
-    var e = a.slice.call(this, b, d), f;
-    for (f in e) {
-      delete this._hashMap[e[f].id];
+    var e = a.slice.call(this, b, d), f = this._hashMap, g;
+    for (g in e) {
+      delete f[e[g].id];
     }
     return e;
   };
@@ -3089,14 +3089,14 @@ Entry.Collection = function(b) {
   b.splice = function(b, d) {
     var e = a.slice.call(arguments, 2), f = this._hashMap;
     d = void 0 === d ? this.length - b : d;
-    for (var h = a.splice.call(this, b, d), g = 0, k = h.length;g < k;g++) {
-      delete f[h[g].id];
+    for (var g = a.splice.call(this, b, d), h = 0, k = g.length;h < k;h++) {
+      delete f[g[h].id];
     }
-    g = 0;
-    for (k = e.length;g < k;g++) {
-      f = e[g], a.splice.call(this, b++, 0, f), this._hashMap[f.id] = f;
+    h = 0;
+    for (k = e.length;h < k;h++) {
+      f = e[h], a.splice.call(this, b++, 0, f), this._hashMap[f.id] = f;
     }
-    return h;
+    return g;
   };
   b.clear = function() {
     for (;this.length;) {
@@ -3569,10 +3569,10 @@ Entry.BlockMenu = function(b) {
   };
   b.align = function() {
     for (var a = this.code.getThreads(), b = 10, d = this._svgDom.width() / 2, e = 0, f = a.length;e < f;e++) {
-      var h = a[e].getFirstBlock(), g = h.view;
-      h.set({x:d, y:b});
-      g._moveTo(d, b, !1);
-      b += g.height + 10;
+      var g = a[e].getFirstBlock(), h = g.view;
+      g.set({x:d, y:b});
+      h._moveTo(d, b, !1);
+      b += h.height + 10;
     }
   };
   b.cloneThread = function() {
@@ -3582,10 +3582,10 @@ Entry.BlockMenu = function(b) {
     }
   };
   b.terminateDrag = function() {
-    var a = this._boardBlockView.block, b = this.dragBlock, d = b.block, e = this.code, f = this.workspace, h = f.getBoard().code, g = !1;
-    b.x < this._svgWidth ? (g = !0, h.destroyThread(a.getThread(), g)) : a.view.terminateDrag();
+    var a = this._boardBlockView.block, b = this.dragBlock, d = b.block, e = this.code, f = this.workspace, g = f.getBoard().code, h = !1;
+    b.x < this._svgWidth ? (h = !0, g.destroyThread(a.getThread(), h)) : a.view.terminateDrag();
     f.getBoard().set({dragBlock:null});
-    e.destroyThread(d.getThread(), g);
+    e.destroyThread(d.getThread(), h);
     this._boardBlockView = null;
   };
   b.dominate = function(a) {
@@ -3858,8 +3858,8 @@ Entry.FieldDropdown = function(b, a) {
     this.height = 22;
     this.svgGroup = a.contentSvgGroup.group();
     this.topGroup = this.svgGroup.group();
-    this.input = this.topGroup.rect(0, -12, 39, 22, 3);
-    this.input.attr({fill:"#80cbf8"});
+    this.topGroup.attr({class:"entry-field-dropdown"});
+    this.topGroup.rect(0, -12, 39, 22, 3).attr({fill:"#80cbf8"});
     this.textElement = this.topGroup.text(5, 3, this.value);
     this.topGroup.polygon(28, -2, 34, -2, 31, 2).attr({fill:"#127cbd", stroke:"#127cbd"});
     this.topGroup.mousedown(function(a) {
@@ -3877,6 +3877,7 @@ Entry.FieldDropdown = function(b, a) {
     } else {
       this.optionGroup && delete this.optionGroup;
       this.optionGroup = b.getBoard().svgGroup.group();
+      this.optionGroup.attr({class:"entry-field-dropdown"});
       this.optionGroup.expand = !0;
       $(document).bind("mousedown", function(b) {
         a.optionGroup.remove();
@@ -4268,8 +4269,8 @@ Entry.FieldTrashcan = function(b) {
     this.dragBlock = a;
   };
   b.checkBlock = function() {
-    var a = this.board.offset, b = this.getPosition(), d = b.x + a.left, b = b.y + a.top, e, f = this.dragBlock, h = f.dragInstance;
-    h ? (e = h.offsetX, a = h.offsetY) : (e = f.x + a.left, a = f.y + a.top);
+    var a = this.board.offset, b = this.getPosition(), d = b.x + a.left, b = b.y + a.top, e, f = this.dragBlock, g = f.dragInstance;
+    g ? (e = g.offsetX, a = g.offsetY) : (e = f.x + a.left, a = f.y + a.top);
     this.isOver = e >= d && a >= b;
     this.tAnimation(this.isOver);
   };
