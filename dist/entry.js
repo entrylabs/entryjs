@@ -3023,10 +3023,10 @@ Entry.Collection = function(b) {
     a.push.call(this, b);
   };
   b.unshift = function() {
-    for (var b = Array.prototype.slice.call(arguments, 0), d = b.length - 1;0 <= d;d--) {
-      var e = b[d];
-      a.unshift.call(this, e);
-      this._hashMap[e.id] = e;
+    for (var b = Array.prototype.slice.call(arguments, 0), d = this._hashMap, e = b.length - 1;0 <= e;e--) {
+      var f = b[e];
+      a.unshift.call(this, f);
+      d[f.id] = f;
     }
   };
   b.insert = function(b, d) {
@@ -4091,7 +4091,7 @@ Entry.Block.FOLLOW = 3;
     this._schema.event && this._thread.registerEvent(this, this._schema.event);
     for (var a = this._schema.contents, b = 0;b < a.length;b++) {
       var d = a[b];
-      d.value && (this.values[d.key] = "" == d.type ? new Entry.Thread(d.value, this._thread._code) : d.value);
+      d.value && (this.values[d.key] = "" === d.type ? new Entry.Thread(d.value, this._thread._code) : d.value);
     }
   };
   b.setThread = function(a) {

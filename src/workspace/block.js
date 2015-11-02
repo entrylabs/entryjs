@@ -57,7 +57,7 @@ Entry.Block.FOLLOW = 3;
         for (var i = 0; i < contents.length; i++) {
             var content = contents[i];
             if (content.value) {
-                if (content.type == "")
+                if (content.type === "")
                     this.values[content.key] = new Entry.Thread(content.value, this._thread._code);
                 else
                     this.values[content.key] = content.value;
@@ -106,7 +106,7 @@ Entry.Block.FOLLOW = 3;
     };
 
     p.clone = function() {
-        var json = this.toJSON()
+        var json = this.toJSON();
         json.id = Entry.Utils.generateId();
         return new Entry.Block(json);
     };

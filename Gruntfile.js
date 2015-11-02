@@ -20,8 +20,19 @@ module.exports = function(grunt) {
                 tasks: [
                     'closureCompiler:targetName',
                     'karma',
-                    'jshint'
+                    'jshint',
+                    'less'
                 ]
+            }
+        },
+        less: {
+            options: {
+                compress: true
+            },
+            development: {
+                files: {
+                    "dist/entry.css": "src/css/*.less"
+                }
             }
         },
         jshint: {
@@ -88,12 +99,16 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-concurrent');
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-karma');
+    grunt.loadNpmTasks('grunt-contrib-less');
+
+    grunt.option('force', true);
 
     // Default tasks.
     grunt.registerTask('default', [
         'closureCompiler',
         'karma',
-        'jshint'
+        'jshint',
+        'less'
     ]);
 
     grunt.registerTask('development', [
