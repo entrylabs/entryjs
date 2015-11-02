@@ -4233,6 +4233,9 @@ Entry.Thread = function(b, a) {
   b.getFirstBlock = function() {
     return this._data[0];
   };
+  b.getBlocks = function() {
+    return this._data;
+  };
 })(Entry.Thread.prototype);
 Entry.ThreadView = function(b, a) {
   Entry.Model(this, !1);
