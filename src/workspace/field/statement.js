@@ -28,7 +28,8 @@ Entry.FieldStatement = function(content, blockView) {
     p.renderStart = function() {
         this.svgGroup = this._blockView.contentSvgGroup.group();
         this.dummyBlock = new Entry.DummyBlock(this, this._blockView);
-        this._thread = new Entry.Thread([this.dummyBlock], this._blockView.getBoard().code);
+        this._thread = new Entry.Thread(
+            [this.dummyBlock], this._blockView.getBoard().code);
         this._thread.changeEvent.attach(this, this.calcHeight);
 
         this.box.set({

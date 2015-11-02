@@ -4091,7 +4091,7 @@ Entry.Block.FOLLOW = 3;
     this._schema.event && this._thread.registerEvent(this, this._schema.event);
     for (var a = this._schema.contents, b = 0;b < a.length;b++) {
       var d = a[b];
-      d.value && (this.values[d.key] = d.value);
+      d.value && (this.values[d.key] = "" == d.type ? new Entry.Thread(d.value, this._thread._code) : d.value);
     }
   };
   b.setThread = function(a) {
@@ -4120,7 +4120,9 @@ Entry.Block.FOLLOW = 3;
     this.view || this.set({view:new Entry.BlockView(this, a)});
   };
   b.clone = function() {
-    return new Entry.Block(this.toJSON());
+    var a = this.toJSON();
+    a.id = Entry.Utils.generateId();
+    return new Entry.Block(a);
   };
   b._destroy = function(a) {
     this.view && this.view.destroy(a);
