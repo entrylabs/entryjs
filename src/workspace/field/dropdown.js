@@ -26,10 +26,7 @@ Entry.FieldDropdown = function(content, blockView) {
 
         this.options = this._contents.options;
         this.key = this._contents.key;
-        if (this._block.values[this.key] !== undefined)
-            this.value = this._block.values[this.key];
-        else
-            this.value = this._contents.value;
+        this.value = this._block.values[this.key];
         this.width = 39;
         this.height = 22;
 

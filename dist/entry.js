@@ -3377,16 +3377,14 @@ Entry.block.jr_start = {skeleton:"pebble_event", event:"start", color:"#3BBD70",
   }
   this.unitComp = Ntry.entityManager.getComponent(this._unit.id, Ntry.STATIC.UNIT);
 }};
-Entry.block.jr_repeat = {skeleton:"pebble_loop", color:"#127CDB", contents:[{type:"Dropdown", key:"REPEAT", options:[1, 2, 3, 4, 5, 6, 7, 8, 9, 10], value:1}, "\ubc18\ubcf5", {type:"Statement", accept:"pebble_basic"}], func:function() {
-  if (this.isContinue) {
-    if (0 < this.repeatCount) {
-      return console.log(this.repeatCount), this.repeatCount--, Entry.STATIC.CONTINUE;
-    }
-    delete this.isAction;
-    delete this.repeatCount;
-  } else {
-    return this.isContinue = !0, this.repeatCount = this.block.values.REPEAT, Entry.STATIC.CONTINUE;
+Entry.block.jr_repeat = {skeleton:"pebble_loop", color:"#127CDB", contents:[{type:"Dropdown", key:"REPEAT", options:[1, 2, 3, 4, 5, 6, 7, 8, 9, 10], value:9}, "\ubc18\ubcf5", {type:"Statement", accept:"pebble_basic"}], func:function() {
+  if (void 0 === this.repeatCount) {
+    return this.repeatCount = this.block.values.REPEAT, Entry.STATIC.CONTINUE;
   }
+  if (0 < this.repeatCount) {
+    return console.log(this.repeatCount), this.repeatCount--, Entry.STATIC.CONTINUE;
+  }
+  delete this.repeatCount;
 }};
 Entry.block.jr_item = {skeleton:"pebble_basic", color:"#F46C6C", contents:["\uaf43 \ubaa8\uc73c\uae30", {type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_item_image.png", highlightColor:"#FFF", position:{x:83, y:0}, size:22}], func:function() {
   if (this.isContinue) {
@@ -3855,7 +3853,7 @@ Entry.FieldDropdown = function(b, a) {
     var b = this;
     this.options = this._contents.options;
     this.key = this._contents.key;
-    this.value = void 0 !== this._block.values[this.key] ? this._block.values[this.key] : this._contents.value;
+    this.value = this._block.values[this.key];
     this.width = 39;
     this.height = 22;
     this.svgGroup = a.contentSvgGroup.group();
@@ -4091,6 +4089,10 @@ Entry.Block.FOLLOW = 3;
   b.getSchema = function() {
     this._schema = Entry.block[this.type];
     this._schema.event && this._thread.registerEvent(this, this._schema.event);
+    for (var a = this._schema.contents, b = 0;b < a.length;b++) {
+      var d = a[b];
+      d.value && (this.values[d.key] = d.value);
+    }
   };
   b.setThread = function(a) {
     this._thread = a;
