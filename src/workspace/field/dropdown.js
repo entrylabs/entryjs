@@ -32,6 +32,9 @@ Entry.FieldDropdown = function(content, blockView) {
 
         this.svgGroup = blockView.contentSvgGroup.group();
         this.topGroup = this.svgGroup.group();
+        this.topGroup.attr({
+            class: 'entry-field-dropdown'
+        });
         var input = this.topGroup.rect(0, -12, 39, 22, 3);
         input.attr({
             fill: "#80cbf8"
@@ -75,6 +78,9 @@ Entry.FieldDropdown = function(content, blockView) {
 
         this.snap = Snap('#play');
         this.optionGroup = this.snap.group();
+        this.optionGroup.attr({
+            class: 'entry-field-dropdown'
+        });
         this.optionGroup.expand = true;
         $(document).bind('mousedown', function(e) {
             self.optionGroup.remove();
