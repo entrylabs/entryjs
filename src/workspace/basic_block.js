@@ -50,6 +50,7 @@ Entry.block.jr_repeat = {
         "반복",
         {
             type: "Statement",
+            key: "STATEMENT",
             accept: "pebble_basic"
         }
     ],

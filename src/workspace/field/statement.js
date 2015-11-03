@@ -11,6 +11,8 @@ goog.provide("Entry.DummyBlock");
 Entry.FieldStatement = function(content, blockView) {
     this._blockView = blockView;
 
+    this.key = content.key;
+
     var box = new Entry.BoxModel();
     this.box = box;
 
@@ -21,17 +23,17 @@ Entry.FieldStatement = function(content, blockView) {
 
     this.box.observe(blockView, "_alignContent", ["height"]);
 
-    this.renderStart();
+    this.renderStart(blockView.getBoard());
 };
 
 (function(p) {
-    p.renderStart = function() {
+    p.renderStart = function(board) {
         this.svgGroup = this._blockView.contentSvgGroup.group();
         this.dummyBlock = new Entry.DummyBlock(this, this._blockView);
-        this._thread = new Entry.Thread(
-            [this.dummyBlock], this._blockView.getBoard().code);
+        this._thread = this._blockView.block.values[this.key];
+        this._thread.insertDummyBlock(this.dummyBlock);
+        this._thread.createView(board);
         this._thread.changeEvent.attach(this, this.calcHeight);
-
         this.box.set({
             x: 46,
             y: 0,
