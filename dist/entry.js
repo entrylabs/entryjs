@@ -3382,7 +3382,7 @@ Entry.block.jr_repeat = {skeleton:"pebble_loop", color:"#127CDB", contents:[{typ
     return this.repeatCount = this.block.values.REPEAT, Entry.STATIC.CONTINUE;
   }
   if (0 < this.repeatCount) {
-    return console.log(this.repeatCount), this.repeatCount--, Entry.STATIC.CONTINUE;
+    return console.log(this.repeatCount), this.repeatCount--, this.stepInto(this.block.values.STATEMENT), Entry.STATIC.CONTINUE;
   }
   delete this.repeatCount;
 }};
@@ -3842,8 +3842,14 @@ Entry.Executor = function(b) {
 (function(b) {
   b.execute = function() {
     void 0 === this.block._schema.func.call(this) && (this.block = this.block.next);
+    null === this.block && this._callStack.length && (this.block = this._callStack.pop());
   };
-  b.stepInto = function() {
+  b.stepInto = function(a) {
+    a instanceof Entry.Thread || console.error("Must step in to thread");
+    this._callStack.push(this.block);
+    a = a.getFirstBlock();
+    a instanceof Entry.DummyBlock && (a = a.next);
+    this.block = a;
   };
 })(Entry.Executor.prototype);
 Entry.FieldDropdown = function(b, a) {
@@ -4131,7 +4137,13 @@ Entry.Block.FOLLOW = 3;
     delete b.next;
     delete b.view;
     a && delete b.id;
-    for (var d = this._schema.contents, e = 0;e < d.length;e++) {
+    var d = {}, e;
+    for (e in b.values) {
+      d[e] = b.values[e];
+    }
+    b.values = d;
+    d = this._schema.contents;
+    for (e = 0;e < d.length;e++) {
       var f = d[e];
       "Statement" == f.type && (b.values[f.key] = this.values[f.key].toJSON(a));
     }

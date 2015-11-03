@@ -61,6 +61,7 @@ Entry.block.jr_repeat = {
         } else if (this.repeatCount > 0) {
             console.log(this.repeatCount);
             this.repeatCount--;
+            this.stepInto(this.block.values.STATEMENT);
             return Entry.STATIC.CONTINUE;
         } else {
             delete this.repeatCount;

@@ -117,6 +117,11 @@ Entry.Block.FOLLOW = 3;
         delete json.view;
         if (isNew)
             delete json.id;
+        var values = {};
+        for (var key in json.values) {
+            values[key] = json.values[key];
+        }
+        json.values = values;
         var contents = this._schema.contents;
         for (var i = 0; i < contents.length; i++) {
             var content = contents[i];
