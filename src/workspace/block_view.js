@@ -25,6 +25,7 @@ Entry.BlockView = function(block, board) {
     // observe
     this.block.observe(this, "_bindPrev", ["prev"]);
     this._bindPrev();
+    this.dragMode = 0;
 
 
     this._startRender(block);
@@ -219,6 +220,7 @@ Entry.BlockView = function(block, board) {
                 mode: true
             });
             this.dominate();
+            this.dragMode = 1;
         }
 
         var block = this;
@@ -237,6 +239,7 @@ Entry.BlockView = function(block, board) {
                  offsetX: e.clientX,
                  offsetY: e.clientY
             });
+            block.dragMode = 2;
             //block.thread.align(false);
             //block._board.updateCloseMagnet(block);
         }
@@ -255,6 +258,7 @@ Entry.BlockView = function(block, board) {
 
     p.terminateDrag = function() {
         var board = this.getBoard();
+        this.dragMode = 0;
         if (board instanceof Entry.BlockMenu) {
             board.terminateDrag();
         } else {

@@ -41,9 +41,8 @@ Entry.FieldDropdown = function(content, blockView) {
         });
 
         var clickTopGroup = function(e) {
-            Ntry.dispatchEvent('closeOptions');
-            self.renderOptions();
-            e.stopPropagation();
+            if (self._block.view.dragMode != 2)
+                self.renderOptions();
         };
 
         this.textElement = this.topGroup.text(5, 3, this.value);
@@ -52,7 +51,7 @@ Entry.FieldDropdown = function(content, blockView) {
             fill: "#127cbd",
             stroke: "#127cbd"
         });
-        this.topGroup.mousedown(clickTopGroup);
+        this.topGroup.mouseup(clickTopGroup);
 
         this.box.set({
             x: 0,

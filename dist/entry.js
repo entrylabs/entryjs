@@ -3611,6 +3611,7 @@ Entry.BlockView = function(b, a) {
   this.prevAnimatingObserver = this.prevObserver = null;
   this.block.observe(this, "_bindPrev", ["prev"]);
   this._bindPrev();
+  this.dragMode = 0;
   this._startRender(b);
 };
 (function(b) {
@@ -3699,6 +3700,7 @@ Entry.BlockView = function(b, a) {
       var c = f.dragInstance;
       f._moveBy(a.clientX - c.offsetX, a.clientY - c.offsetY, !1);
       c.set({offsetX:a.clientX, offsetY:a.clientY});
+      f.dragMode = 2;
     }
     function d(a) {
       a = f.getBoard();
@@ -3716,11 +3718,13 @@ Entry.BlockView = function(b, a) {
       this.getBoard().set({dragBlock:this});
       this.dragInstance = new Entry.DragInstance({startX:a.clientX, startY:a.clientY, offsetX:a.clientX, offsetY:a.clientY, mode:!0});
       this.dominate();
+      this.dragMode = 1;
     }
     var f = this;
   };
   b.terminateDrag = function() {
     var a = this.getBoard();
+    this.dragMode = 0;
     a instanceof Entry.BlockMenu ? a.terminateDrag() : (a = this._getCloseBlock(), this.block.prev || a ? 30 < Math.sqrt(Math.pow(this.x - this.block.x, 2) + Math.pow(this.y - this.block.y, 2)) ? a ? (this.set({animating:!0}), this.block.doInsert(a)) : this.block.doSeparate() : this._align(!0) : this.block.doMove());
   };
   b._getCloseBlock = function() {
@@ -3863,10 +3867,8 @@ Entry.FieldDropdown = function(b, a) {
     this.topGroup.rect(0, -12, 39, 22, 3).attr({fill:"#80cbf8"});
     this.textElement = this.topGroup.text(5, 3, this.value);
     this.topGroup.polygon(28, -2, 34, -2, 31, 2).attr({fill:"#127cbd", stroke:"#127cbd"});
-    this.topGroup.mousedown(function(a) {
-      Ntry.dispatchEvent("closeOptions");
-      b.renderOptions();
-      a.stopPropagation();
+    this.topGroup.mouseup(function(a) {
+      2 != b._block.view.dragMode && b.renderOptions();
     });
     this.box.set({x:0, y:0, width:39, height:22});
   };
