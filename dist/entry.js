@@ -4095,12 +4095,8 @@ Entry.Block.FOLLOW = 3;
     this._schema.event && this._thread.registerEvent(this, this._schema.event);
     for (var a = this._schema.contents, b = 0;b < a.length;b++) {
       var d = a[b];
-<<<<<<< HEAD
       d.value && (this.values[d.key] = d.value);
       "Statement" == d.type && (this.values[d.key] = new Entry.Thread(this.values[d.key], this._thread._code));
-=======
-      d.value && (this.values[d.key] = "" === d.type ? new Entry.Thread(d.value, this._thread._code) : d.value);
->>>>>>> origin/jr/dist
     }
   };
   b.setThread = function(a) {
