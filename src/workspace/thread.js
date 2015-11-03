@@ -26,7 +26,6 @@ Entry.Thread = function(thread, code) {
         if (thread === undefined)
             thread = [];
         if (!(thread instanceof Array)) {
-            debugger;
             return console.error("thread must be array");
         }
 
@@ -125,13 +124,16 @@ Entry.Thread = function(thread, code) {
         for (var i = 0; i < this._data.length; i++) {
             clonedBlocks.push(this._data[i].clone(newThread));
         }
+        newThread.load(clonedBlocks);
         return newThread;
     };
 
     p.toJSON = function(isNew) {
         var array = [];
-        for (var i = 0; i < this._blocks.length; i++) {
-            array.push(this._blocks[i].toJSON(isNew));
+        for (var i = 0; i < this._data.length; i++) {
+            var block = this._data[i];
+            if (block instanceof Entry.Block )
+                array.push(this._data[i].toJSON(isNew));
         }
         return array;
     };

@@ -4126,12 +4126,16 @@ Entry.Block.FOLLOW = 3;
     return new Entry.Block(this.toJSON(!0), a);
   };
   b.toJSON = function(a) {
-    var b = this.toJSON();
+    var b = this._toJSON();
+    delete b.prev;
+    delete b.next;
+    delete b.view;
     a && delete b.id;
     for (var d = this._schema.contents, e = 0;e < d.length;e++) {
       var f = d[e];
       "Statement" == f.type && (b.values[f.key] = this.values[f.key].toJSON(a));
     }
+    return b;
   };
   b._destroy = function(a) {
     this.view && this.view.destroy(a);
@@ -4155,13 +4159,6 @@ Entry.Block.FOLLOW = 3;
     console.log("destroy", this.id, this.x, this.y);
     this._destroy(a);
   };
-  b.toJSON = function() {
-    var a = this._toJSON();
-    delete a.prev;
-    delete a.next;
-    delete a.view;
-    return a;
-  };
 })(Entry.Block.prototype);
 Entry.Thread = function(b, a) {
   this._data = new Entry.Collection;
@@ -4173,7 +4170,6 @@ Entry.Thread = function(b, a) {
   b.load = function(a) {
     void 0 === a && (a = []);
     if (!(a instanceof Array)) {
-      debugger;
       return console.error("thread must be array");
     }
     for (var b = 0;b < a.length;b++) {
@@ -4238,11 +4234,12 @@ Entry.Thread = function(b, a) {
     for (var d = 0;d < this._data.length;d++) {
       b.push(this._data[d].clone(a));
     }
+    a.load(b);
     return a;
   };
   b.toJSON = function(a) {
-    for (var b = [], d = 0;d < this._blocks.length;d++) {
-      b.push(this._blocks[d].toJSON(a));
+    for (var b = [], d = 0;d < this._data.length;d++) {
+      this._data[d] instanceof Entry.Block && b.push(this._data[d].toJSON(a));
     }
     return b;
   };

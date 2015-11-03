@@ -111,7 +111,10 @@ Entry.Block.FOLLOW = 3;
     };
 
     p.toJSON = function(isNew) {
-        var json = this.toJSON();
+        var json = this._toJSON();
+        delete json.prev;
+        delete json.next;
+        delete json.view;
         if (isNew)
             delete json.id;
         var contents = this._schema.contents;
@@ -121,6 +124,7 @@ Entry.Block.FOLLOW = 3;
                 json.values[content.key] = this.values[content.key].toJSON(isNew);
             }
         }
+        return json;
     };
 
     p._destroy = function(animate) {
@@ -169,14 +173,6 @@ Entry.Block.FOLLOW = 3;
             this.y
         );
         this._destroy(animate);
-    };
-
-    p.toJSON = function() {
-        var json = this._toJSON();
-        delete json.prev;
-        delete json.next;
-        delete json.view;
-        return json;
     };
 
     /*
