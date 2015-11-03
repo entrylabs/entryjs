@@ -3863,6 +3863,7 @@ Entry.FieldDropdown = function(b, a) {
     this.textElement = this.topGroup.text(5, 3, this.value);
     this.topGroup.polygon(28, -2, 34, -2, 31, 2).attr({fill:"#127cbd", stroke:"#127cbd"});
     this.topGroup.mousedown(function(a) {
+      Ntry.dispatchEvent("closeOptions");
       b.renderOptions();
       a.stopPropagation();
     });
@@ -3880,6 +3881,10 @@ Entry.FieldDropdown = function(b, a) {
       this.optionGroup.attr({class:"entry-field-dropdown"});
       this.optionGroup.expand = !0;
       $(document).bind("mousedown", function(b) {
+        a.optionGroup.remove();
+        a.optionGroup.expand = !1;
+      });
+      Ntry.addEventListener("closeOptions", this, function(b) {
         a.optionGroup.remove();
         a.optionGroup.expand = !1;
       });

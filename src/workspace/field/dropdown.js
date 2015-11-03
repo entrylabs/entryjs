@@ -41,9 +41,10 @@ Entry.FieldDropdown = function(content, blockView) {
         });
 
         var clickTopGroup = function(e) {
+            Ntry.dispatchEvent('closeOptions');
             self.renderOptions();
             e.stopPropagation();
-         };
+        };
 
         this.textElement = this.topGroup.text(5, 3, this.value);
         var button = this.topGroup.polygon(28, -2, 34, -2, 31, 2);
@@ -81,7 +82,13 @@ Entry.FieldDropdown = function(content, blockView) {
             class: 'entry-field-dropdown'
         });
         this.optionGroup.expand = true;
+
         $(document).bind('mousedown', function(e) {
+            self.optionGroup.remove();
+            self.optionGroup.expand = false;
+        });
+
+        Ntry.addEventListener('closeOptions', this, function(e) {
             self.optionGroup.remove();
             self.optionGroup.expand = false;
         });
