@@ -32,7 +32,7 @@ Entry.block.jr_start = {
         for (var key in entities)
             this._unit = entities[key];
 
-        this.unitComp = Ntry.entityManager.getComponent(
+        Ntry.unitComp = Ntry.entityManager.getComponent(
         this._unit.id, Ntry.STATIC.UNIT);
     }
 };
@@ -61,7 +61,7 @@ Entry.block.jr_repeat = {
         } else if (this.repeatCount > 0) {
             console.log(this.repeatCount);
             this.repeatCount--;
-            this.stepInto(this.block.values.STATEMENT);
+            this.executor.stepInto(this.block.values.STATEMENT);
             return Entry.STATIC.CONTINUE;
         } else {
             delete this.repeatCount;
@@ -129,7 +129,7 @@ Entry.block.jr_north = {
                         }
                     );}, 3);
             };
-            switch (this.unitComp.direction) {
+            switch (Ntry.unitComp.direction) {
                 case Ntry.STATIC.EAST:
                     Ntry.dispatchEvent("unitAction", Ntry.STATIC.TURN_LEFT, callBack);
                     break;
@@ -180,7 +180,7 @@ Entry.block.jr_east = {
             };
 
             // turn direction
-            switch (this.unitComp.direction) {
+            switch (Ntry.unitComp.direction) {
                 case Ntry.STATIC.SOUTH:
                     Ntry.dispatchEvent("unitAction", Ntry.STATIC.TURN_LEFT, callBack);
                     break;
@@ -230,7 +230,7 @@ Entry.block.jr_south = {
             };
 
             // turn direction
-            switch (this.unitComp.direction) {
+            switch (Ntry.unitComp.direction) {
                 case Ntry.STATIC.EAST:
                     Ntry.dispatchEvent("unitAction", Ntry.STATIC.TURN_RIGHT, callBack);
                     break;
@@ -282,7 +282,7 @@ Entry.block.jr_west = {
             };
 
             // turn direction
-            switch (this.unitComp.direction) {
+            switch (Ntry.unitComp.direction) {
                 case Ntry.STATIC.SOUTH:
                     Ntry.dispatchEvent("unitAction", Ntry.STATIC.TURN_RIGHT, callBack);
                     break;

@@ -3375,14 +3375,14 @@ Entry.block.jr_start = {skeleton:"pebble_event", event:"start", color:"#3BBD70",
   for (a in b) {
     this._unit = b[a];
   }
-  this.unitComp = Ntry.entityManager.getComponent(this._unit.id, Ntry.STATIC.UNIT);
+  Ntry.unitComp = Ntry.entityManager.getComponent(this._unit.id, Ntry.STATIC.UNIT);
 }};
 Entry.block.jr_repeat = {skeleton:"pebble_loop", color:"#127CDB", contents:[{type:"Dropdown", key:"REPEAT", options:[1, 2, 3, 4, 5, 6, 7, 8, 9, 10], value:9}, "\ubc18\ubcf5", {type:"Statement", key:"STATEMENT", accept:"pebble_basic"}], func:function() {
   if (void 0 === this.repeatCount) {
     return this.repeatCount = this.block.values.REPEAT, Entry.STATIC.CONTINUE;
   }
   if (0 < this.repeatCount) {
-    return console.log(this.repeatCount), this.repeatCount--, this.stepInto(this.block.values.STATEMENT), Entry.STATIC.CONTINUE;
+    return console.log(this.repeatCount), this.repeatCount--, this.executor.stepInto(this.block.values.STATEMENT), Entry.STATIC.CONTINUE;
   }
   delete this.repeatCount;
 }};
@@ -3419,7 +3419,7 @@ Entry.block.jr_north = {skeleton:"pebble_basic", color:"#A751E3", contents:["   
         });
       }, 3);
     };
-    switch(this.unitComp.direction) {
+    switch(Ntry.unitComp.direction) {
       case Ntry.STATIC.EAST:
         Ntry.dispatchEvent("unitAction", Ntry.STATIC.TURN_LEFT, a);
         break;
@@ -3451,7 +3451,7 @@ Entry.block.jr_east = {skeleton:"pebble_basic", color:"#A751E3", contents:["\uc6
         });
       }, 3);
     };
-    switch(this.unitComp.direction) {
+    switch(Ntry.unitComp.direction) {
       case Ntry.STATIC.SOUTH:
         Ntry.dispatchEvent("unitAction", Ntry.STATIC.TURN_LEFT, a);
         break;
@@ -3483,7 +3483,7 @@ Entry.block.jr_south = {skeleton:"pebble_basic", color:"#A751E3", contents:["\uc
         });
       }, 3);
     };
-    switch(this.unitComp.direction) {
+    switch(Ntry.unitComp.direction) {
       case Ntry.STATIC.EAST:
         Ntry.dispatchEvent("unitAction", Ntry.STATIC.TURN_RIGHT, a);
         break;
@@ -3515,7 +3515,7 @@ Entry.block.jr_west = {skeleton:"pebble_basic", color:"#A751E3", contents:["   \
         });
       }, 3);
     };
-    switch(this.unitComp.direction) {
+    switch(Ntry.unitComp.direction) {
       case Ntry.STATIC.SOUTH:
         Ntry.dispatchEvent("unitAction", Ntry.STATIC.TURN_RIGHT, a);
         break;
@@ -3792,7 +3792,7 @@ Entry.Code = function(b) {
     for (var a = this.executors, b = 0;b < a.length;b++) {
       var d = a[b];
       d.execute();
-      null === d.block && (a.splice(b, 1), b--, 0 === a.length && this.executeEndEvent.notify());
+      null === d.scope.block && (a.splice(b, 1), b--, 0 === a.length && this.executeEndEvent.notify());
     }
   };
   b.clearExecutors = function() {
@@ -3836,20 +3836,20 @@ Entry.CodeView = function(b, a) {
   b.schema = {board:null, scrollX:0, scrollY:0};
 })(Entry.CodeView.prototype);
 Entry.Executor = function(b) {
-  this.block = b;
+  this.scope = {block:b, executor:this};
   this._callStack = [];
 };
 (function(b) {
   b.execute = function() {
-    void 0 === this.block._schema.func.call(this) && (this.block = this.block.next);
-    null === this.block && this._callStack.length && (this.block = this._callStack.pop());
+    void 0 === this.scope.block._schema.func.call(this.scope) && (this.scope = {block:this.scope.block.next, executor:this});
+    null === this.scope.block && this._callStack.length && (this.scope = this._callStack.pop());
   };
   b.stepInto = function(a) {
     a instanceof Entry.Thread || console.error("Must step in to thread");
-    this._callStack.push(this.block);
+    this._callStack.push(this.scope);
     a = a.getFirstBlock();
     a instanceof Entry.DummyBlock && (a = a.next);
-    this.block = a;
+    this.scope = {block:a, executor:this};
   };
 })(Entry.Executor.prototype);
 Entry.FieldDropdown = function(b, a) {

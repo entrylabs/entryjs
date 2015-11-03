@@ -7,19 +7,25 @@ goog.provide("Entry.Executor");
 
 
 Entry.Executor = function(block) {
-    this.block = block;
+    this.scope = {
+        block: block,
+        executor: this
+    };
     this._callStack = [];
 };
 
 (function(p) {
     p.execute = function() {
-        var returnVal = this.block._schema.func.call(this);
+        var returnVal = this.scope.block._schema.func.call(this.scope);
         if (returnVal === undefined) {
-            this.block = this.block.next;
+            this.scope = {
+                block: this.scope.block.next,
+                executor: this
+            };
         }
-        if (this.block === null) {
+        if (this.scope.block === null) {
             if (this._callStack.length)
-                this.block = this._callStack.pop();
+                this.scope = this._callStack.pop();
         }
     };
 
@@ -27,11 +33,14 @@ Entry.Executor = function(block) {
         if (!(thread instanceof Entry.Thread))
             console.error("Must step in to thread");
 
-        this._callStack.push(this.block);
+        this._callStack.push(this.scope);
 
         var block = thread.getFirstBlock();
         if (block instanceof Entry.DummyBlock)
             block = block.next;
-        this.block = block;
+        this.scope = {
+            block: block,
+            executor: this
+        };
     };
 })(Entry.Executor.prototype);

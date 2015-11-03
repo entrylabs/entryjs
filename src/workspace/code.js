@@ -72,7 +72,7 @@ Entry.Code = function(code) {
         for (var i = 0; i < executors.length; i++) {
             var executor = executors[i];
             executor.execute();
-            if (executor.block === null) {
+            if (executor.scope.block === null) {
                 executors.splice(i, 1);
                 i--;
                 if (executors.length === 0)
