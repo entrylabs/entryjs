@@ -3377,7 +3377,7 @@ Entry.block.jr_start = {skeleton:"pebble_event", event:"start", color:"#3BBD70",
   }
   this.unitComp = Ntry.entityManager.getComponent(this._unit.id, Ntry.STATIC.UNIT);
 }};
-Entry.block.jr_repeat = {skeleton:"pebble_loop", color:"#127CDB", contents:[{type:"Dropdown", key:"REPEAT", options:[1, 2, 3, 4, 5, 6, 7, 8, 9, 10], value:9}, "\ubc18\ubcf5", {type:"Statement", accept:"pebble_basic"}], func:function() {
+Entry.block.jr_repeat = {skeleton:"pebble_loop", color:"#127CDB", contents:[{type:"Dropdown", key:"REPEAT", options:[1, 2, 3, 4, 5, 6, 7, 8, 9, 10], value:9}, "\ubc18\ubcf5", {type:"Statement", key:"STATEMENT", accept:"pebble_basic"}], func:function() {
   if (void 0 === this.repeatCount) {
     return this.repeatCount = this.block.values.REPEAT, Entry.STATIC.CONTINUE;
   }
@@ -3955,17 +3955,20 @@ Entry.FieldIndicator = function(b, a) {
 })(Entry.FieldIndicator.prototype);
 Entry.FieldStatement = function(b, a) {
   this._blockView = a;
+  this.key = b.key;
   this.box = new Entry.BoxModel;
   this.acceptType = b.accept;
   this.dummyBlock = this.svgGroup = null;
   this.box.observe(a, "_alignContent", ["height"]);
-  this.renderStart();
+  this.renderStart(a.getBoard());
 };
 (function(b) {
-  b.renderStart = function() {
+  b.renderStart = function(a) {
     this.svgGroup = this._blockView.contentSvgGroup.group();
     this.dummyBlock = new Entry.DummyBlock(this, this._blockView);
-    this._thread = new Entry.Thread([this.dummyBlock], this._blockView.getBoard().code);
+    this._thread = this._blockView.block.values[this.key];
+    this._thread.insertDummyBlock(this.dummyBlock);
+    this._thread.createView(a);
     this._thread.changeEvent.attach(this, this.calcHeight);
     this.box.set({x:46, y:0, width:20, height:20});
   };
@@ -4091,7 +4094,8 @@ Entry.Block.FOLLOW = 3;
     this._schema.event && this._thread.registerEvent(this, this._schema.event);
     for (var a = this._schema.contents, b = 0;b < a.length;b++) {
       var d = a[b];
-      d.value && (this.values[d.key] = "" == d.type ? new Entry.Thread(d.value, this._thread._code) : d.value);
+      d.value && (this.values[d.key] = d.value);
+      "Statement" == d.type && (this.values[d.key] = new Entry.Thread(this.values[d.key], this._thread._code));
     }
   };
   b.setThread = function(a) {
@@ -4163,6 +4167,7 @@ Entry.Thread = function(b, a) {
 };
 (function(b) {
   b.load = function(a) {
+    void 0 === a && (a = []);
     if (!(a instanceof Array)) {
       return console.error("thread must be array");
     }
@@ -4204,6 +4209,10 @@ Entry.Thread = function(b, a) {
     this._data[a - 1] && this._data[a - 1].setNext(null);
     this.changeEvent.notify();
     return b;
+  };
+  b.insertDummyBlock = function(a) {
+    this._data.unshift(a);
+    this._data[1] && (this._data[1].setPrev(a), a.setNext(this._data[1]));
   };
   b.insertByBlock = function(a, b) {
     var d = this._data.indexOf(a);

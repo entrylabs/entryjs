@@ -56,11 +56,11 @@ Entry.Block.FOLLOW = 3;
         var contents = this._schema.contents;
         for (var i = 0; i < contents.length; i++) {
             var content = contents[i];
-            if (content.value) {
-                if (content.type == "")
-                    this.values[content.key] = new Entry.Thread(content.value, this._thread._code);
-                else
-                    this.values[content.key] = content.value;
+            if (content.value)
+                this.values[content.key] = content.value;
+            if (content.type == "Statement") {
+                this.values[content.key] = new Entry.Thread(
+                    this.values[content.key], this._thread._code);
             }
         }
     };

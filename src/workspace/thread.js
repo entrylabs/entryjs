@@ -27,6 +27,8 @@ Entry.Thread = function(thread, code) {
 
 (function(p) {
     p.load = function(thread) {
+        if (thread === undefined)
+            thread = [];
         if (!(thread instanceof Array))
             return console.error("thread must be array");
 
@@ -89,6 +91,14 @@ Entry.Thread = function(thread, code) {
             this._data[index - 1].setNext(null);
         this.changeEvent.notify();
         return splicedData;
+    };
+
+    p.insertDummyBlock = function(dummyBlock) {
+        this._data.unshift(dummyBlock);
+        if (this._data[1]) {
+            this._data[1].setPrev(dummyBlock);
+            dummyBlock.setNext(this._data[1]);
+        }
     };
 
     p.insertByBlock = function(block, newBlocks) {
