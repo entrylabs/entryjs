@@ -102,6 +102,7 @@ Entry.Block.FOLLOW = 3;
     p.createView = function(board) {
         if (!this.view) {
             this.set({view: new Entry.BlockView(this, board)});
+            this._updatePos();
         }
     };
 

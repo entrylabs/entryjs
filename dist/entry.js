@@ -4120,7 +4120,7 @@ Entry.Block.FOLLOW = 3;
     this.next && this.next._updatePos();
   };
   b.createView = function(a) {
-    this.view || this.set({view:new Entry.BlockView(this, a)});
+    this.view || (this.set({view:new Entry.BlockView(this, a)}), this._updatePos());
   };
   b.clone = function(a) {
     return new Entry.Block(this.toJSON(!0), a);
