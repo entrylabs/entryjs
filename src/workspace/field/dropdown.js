@@ -67,12 +67,6 @@ Entry.FieldDropdown = function(content, blockView) {
         this.px = blockView.x;
         this.py = blockView.y;
 
-        if (this.optionGroup && this.optionGroup.expand) {
-            this.optionGroup.remove();
-            this.optionGroup.expand = false;
-            return;
-        }
-
         if (this.optionGroup)
             delete this.optionGroup;
 
@@ -80,16 +74,10 @@ Entry.FieldDropdown = function(content, blockView) {
         this.optionGroup.attr({
             class: 'entry-field-dropdown'
         });
-        this.optionGroup.expand = true;
 
         $(document).bind('mousedown', function(e) {
+            $(document).unbind('mousedown');
             self.optionGroup.remove();
-            self.optionGroup.expand = false;
-        });
-
-        Ntry.addEventListener('closeOptions', this, function(e) {
-            self.optionGroup.remove();
-            self.optionGroup.expand = false;
         });
 
         for (var i in this.options) {
@@ -116,7 +104,6 @@ Entry.FieldDropdown = function(content, blockView) {
                 var selectValue = function() {
                     self.applyValue(value);
                     self.optionGroup.remove();
-                    self.optionGroup.expand = false;
                 };
 
                 elem.mouseover(hoverIn).mouseout(hoverOut).mousedown(selectValue);

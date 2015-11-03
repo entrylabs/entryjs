@@ -3876,39 +3876,29 @@ Entry.FieldDropdown = function(b, a) {
     var a = this, b = this._block.view;
     this.px = b.x;
     this.py = b.y;
-    if (this.optionGroup && this.optionGroup.expand) {
-      this.optionGroup.remove(), this.optionGroup.expand = !1;
-    } else {
-      this.optionGroup && delete this.optionGroup;
-      this.optionGroup = b.getBoard().svgGroup.group();
-      this.optionGroup.attr({class:"entry-field-dropdown"});
-      this.optionGroup.expand = !0;
-      $(document).bind("mousedown", function(b) {
-        a.optionGroup.remove();
-        a.optionGroup.expand = !1;
-      });
-      Ntry.addEventListener("closeOptions", this, function(b) {
-        a.optionGroup.remove();
-        a.optionGroup.expand = !1;
-      });
-      for (var d in this.options) {
-        var b = this.optionGroup.group(), e = Number(d) + 1;
-        b.rect(this.px - 46, this.py + 14 + 22 * e, 38, 23).attr({fill:"white"});
-        b.text(this.px - 43, this.py + 29 + 22 * e, this.options[d]);
-        (function(b, c) {
-          b.mouseover(function() {
-            b.select("rect:nth-child(1)").attr({fill:"#127cdb"});
-            b.select("text:nth-child(2)").attr({fill:"white"});
-          }).mouseout(function() {
-            b.select("rect:nth-child(1)").attr({fill:"white"});
-            b.select("text:nth-child(2)").attr({fill:"black"});
-          }).mousedown(function() {
-            a.applyValue(c);
-            a.optionGroup.remove();
-            a.optionGroup.expand = !1;
-          });
-        })(b, this.options[d]);
-      }
+    this.optionGroup && delete this.optionGroup;
+    this.optionGroup = b.getBoard().svgGroup.group();
+    this.optionGroup.attr({class:"entry-field-dropdown"});
+    $(document).bind("mousedown", function(b) {
+      $(document).unbind("mousedown");
+      a.optionGroup.remove();
+    });
+    for (var d in this.options) {
+      var b = this.optionGroup.group(), e = Number(d) + 1;
+      b.rect(this.px - 46, this.py + 14 + 22 * e, 38, 23).attr({fill:"white"});
+      b.text(this.px - 43, this.py + 29 + 22 * e, this.options[d]);
+      (function(b, c) {
+        b.mouseover(function() {
+          b.select("rect:nth-child(1)").attr({fill:"#127cdb"});
+          b.select("text:nth-child(2)").attr({fill:"white"});
+        }).mouseout(function() {
+          b.select("rect:nth-child(1)").attr({fill:"white"});
+          b.select("text:nth-child(2)").attr({fill:"black"});
+        }).mousedown(function() {
+          a.applyValue(c);
+          a.optionGroup.remove();
+        });
+      })(b, this.options[d]);
     }
   };
   b.align = function(a, b, d) {
