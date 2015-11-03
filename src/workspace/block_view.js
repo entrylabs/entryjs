@@ -303,11 +303,17 @@ Entry.BlockView = function(block, board) {
     };
 
     p.dominate = function() {
+        var block = this.block;
         var parent = this.svgGroup.parent();
         this.svgGroup.remove();
         parent.append(this.svgGroup);
-        if (this.block.next)
-            this.block.next.view.dominate();
+
+        var statement = block.values.STATEMENT;
+        if (statement) {
+            var statementBlock = statement.getFirstBlock().next;
+            if (statementBlock) statementBlock.view.dominate();
+        }
+        if (block.next) block.next.view.dominate();
     };
 
     p.getBoard = function() {

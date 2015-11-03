@@ -77,7 +77,7 @@ Entry.FieldDropdown = function(content, blockView) {
         if (this.optionGroup)
             delete this.optionGroup;
 
-        this.optionGroup = blockView.getBoard().svgGroup.group()
+        this.optionGroup = blockView.getBoard().svgGroup.group();
         this.optionGroup.attr({
             class: 'entry-field-dropdown'
         });

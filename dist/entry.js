@@ -3734,10 +3734,11 @@ Entry.BlockView = function(b, a) {
     a && this.set({animating:a.animating});
   };
   b.dominate = function() {
-    var a = this.svgGroup.parent();
+    var a = this.block, b = this.svgGroup.parent();
     this.svgGroup.remove();
-    a.append(this.svgGroup);
-    this.block.next && this.block.next.view.dominate();
+    b.append(this.svgGroup);
+    (b = a.values.STATEMENT) && (b = b.getFirstBlock().next) && b.view.dominate();
+    a.next && a.next.view.dominate();
   };
   b.getBoard = function() {
     return this.svgGroup.parent().board;
