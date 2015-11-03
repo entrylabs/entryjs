@@ -108,46 +108,4 @@ Entry.Code = function(code) {
     p.getThreads = function() {
         return this._data;
     };
-
-
-
-
-    /*
-    p.createThread = function(blocks) {
-        var thread = new Entry.Thread(blocks, this);
-        if (this.board)
-            thread.renderStart(this.board);
-        this.threads.push(thread);
-        return thread;
-    };
-
-    // method for playground
-
-    p.remove = function(thread) {
-        this.threads.remove(thread);
-    };
-
-    */
-
-    /*
-    p.toJSON = function() {
-        var array = [];
-        for (var i = 0; i < this.threads.length; i++) {
-            array.push(this.threads[i].toJSON());
-        }
-        return array;
-    };
-
-    p.getThreads = function() {
-        return this.threads;
-    };
-
-    p.addThread = function(thread, animate) {
-        if (this.board)
-            thread.renderStart(this.board, animate);
-        this.threads.push(thread);
-        return thread;
-    };
-    */
-
 })(Entry.Code.prototype);

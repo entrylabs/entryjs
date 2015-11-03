@@ -106,7 +106,7 @@ Entry.Block.FOLLOW = 3;
     };
 
     p.clone = function() {
-        var json = this.toJSON()
+        var json = this.toJSON();
         json.id = Entry.Utils.generateId();
         return new Entry.Block(json);
     };

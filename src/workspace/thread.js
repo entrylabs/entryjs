@@ -141,6 +141,11 @@ Entry.Thread = function(thread, code) {
         return this._data[0];
     };
 
+    p.getBlocks = function() {
+        return this._data;
+    };
+
+
     /*
     p.schema = {
         type: Entry.STATIC.THREAD_MODEL,

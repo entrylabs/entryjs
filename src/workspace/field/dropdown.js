@@ -32,14 +32,17 @@ Entry.FieldDropdown = function(content, blockView) {
 
         this.svgGroup = blockView.contentSvgGroup.group();
         this.topGroup = this.svgGroup.group();
+        this.topGroup.attr({
+            class: 'entry-field-dropdown'
+        });
         var input = this.topGroup.rect(0, -12, 39, 22, 3);
         input.attr({
             fill: "#80cbf8"
         });
 
         var clickTopGroup = function(e) {
-            e.stopPropagation();
             self.renderOptions();
+            e.stopPropagation();
          };
 
         this.textElement = this.topGroup.text(5, 3, this.value);
@@ -73,8 +76,10 @@ Entry.FieldDropdown = function(content, blockView) {
         if (this.optionGroup)
             delete this.optionGroup;
 
-        this.snap = Snap('#play');
-        this.optionGroup = this.snap.group();
+        this.optionGroup = blockView.getBoard().svgGroup.group()
+        this.optionGroup.attr({
+            class: 'entry-field-dropdown'
+        });
         this.optionGroup.expand = true;
         $(document).bind('mousedown', function(e) {
             self.optionGroup.remove();
@@ -89,8 +94,8 @@ Entry.FieldDropdown = function(content, blockView) {
                                     this.py + 14 + (x * 22), 38, 23).attr({
                 fill: "white"
             });
-            element.text(this.px - 43,this.py + 29 + (x * 22), this.options[i]);
 
+            element.text(this.px - 43,this.py + 29 + (x * 22), this.options[i]);
             (function(elem, value) {
                 var hoverIn = function() {
                     elem.select("rect:nth-child(1)").attr({ fill: "#127cdb" });

@@ -47,10 +47,11 @@ Entry.Collection = function(data) {
 
     p.unshift = function() {
         var args = Array.prototype.slice.call(arguments,0);
+        var hashMap = this._hashMap;
         for (var i=args.length-1; i>=0; i--) {
             var datum = args[i];
             ap.unshift.call(this, datum);
-            this._hashMap[datum.id] = datum;
+            hashMap[datum.id] = datum;
         }
     };
 
@@ -106,9 +107,8 @@ Entry.Collection = function(data) {
 
     p.slice = function(index, amount) {
         var data = ap.slice.call(this,index, amount);
-        for (var i in data) {
-            delete this._hashMap[data[i].id];
-        }
+        var hashMap = this._hashMap;
+        for (var i in data) delete hashMap[data[i].id];
         return data;
     };
 
