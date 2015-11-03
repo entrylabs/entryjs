@@ -105,10 +105,21 @@ Entry.Block.FOLLOW = 3;
         }
     };
 
-    p.clone = function() {
+    p.clone = function(thread) {
+        return new Entry.Block(this.toJSON(true), thread);
+    };
+
+    p.toJSON = function(isNew) {
         var json = this.toJSON();
-        json.id = Entry.Utils.generateId();
-        return new Entry.Block(json);
+        if (isNew)
+            delete json.id;
+        var contents = this._schema.contents;
+        for (var i = 0; i < contents.length; i++) {
+            var content = contents[i];
+            if (content.type == "Statement") {
+                json.values[content.key] = this.values[content.key].toJSON(isNew);
+            }
+        }
     };
 
     p._destroy = function(animate) {

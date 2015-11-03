@@ -3964,12 +3964,12 @@ Entry.FieldStatement = function(b, a) {
 (function(b) {
   b.renderStart = function(a) {
     this.svgGroup = this._blockView.contentSvgGroup.group();
+    this.box.set({x:46, y:0, width:20, height:20});
     this.dummyBlock = new Entry.DummyBlock(this, this._blockView);
     this._thread = this._blockView.block.values[this.key];
     this._thread.insertDummyBlock(this.dummyBlock);
     this._thread.createView(a);
     this._thread.changeEvent.attach(this, this.calcHeight);
-    this.box.set({x:46, y:0, width:20, height:20});
   };
   b.insertAfter = function(a) {
     this._thread.insertByBlock(this.dummyBlock, a);
@@ -4122,10 +4122,16 @@ Entry.Block.FOLLOW = 3;
   b.createView = function(a) {
     this.view || this.set({view:new Entry.BlockView(this, a)});
   };
-  b.clone = function() {
-    var a = this.toJSON();
-    a.id = Entry.Utils.generateId();
-    return new Entry.Block(a);
+  b.clone = function(a) {
+    return new Entry.Block(this.toJSON(!0), a);
+  };
+  b.toJSON = function(a) {
+    var b = this.toJSON();
+    a && delete b.id;
+    for (var d = this._schema.contents, e = 0;e < d.length;e++) {
+      var f = d[e];
+      "Statement" == f.type && (b.values[f.key] = this.values[f.key].toJSON(a));
+    }
   };
   b._destroy = function(a) {
     this.view && this.view.destroy(a);
@@ -4161,13 +4167,13 @@ Entry.Thread = function(b, a) {
   this._data = new Entry.Collection;
   this._code = a;
   this.load(b);
-  a.view && this.createView(a.view.board);
   this.changeEvent = new Entry.Event(this);
 };
 (function(b) {
   b.load = function(a) {
     void 0 === a && (a = []);
     if (!(a instanceof Array)) {
+      debugger;
       return console.error("thread must be array");
     }
     for (var b = 0;b < a.length;b++) {
@@ -4175,6 +4181,7 @@ Entry.Thread = function(b, a) {
       d instanceof Entry.Block || d instanceof Entry.DummyBlock ? (d.setThread(this), this._data.push(d)) : this._data.push(new Entry.Block(d, this));
     }
     this._setRelation();
+    this._code.view && this.createView(this._code.view.board);
   };
   b._setRelation = function() {
     var a = this._data.getAll();
@@ -4226,10 +4233,18 @@ Entry.Thread = function(b, a) {
   };
   b.clone = function(a) {
     a = a || this._code;
-    for (var b = [], d = 0;d < this._data.length;d++) {
-      b.push(this._data[d].clone());
+    var b = [];
+    a = new Entry.Thread([], a);
+    for (var d = 0;d < this._data.length;d++) {
+      b.push(this._data[d].clone(a));
     }
-    return new Entry.Thread(b, a);
+    return a;
+  };
+  b.toJSON = function(a) {
+    for (var b = [], d = 0;d < this._blocks.length;d++) {
+      b.push(this._blocks[d].toJSON(a));
+    }
+    return b;
   };
   b.destroy = function(a) {
     var b = this._data;

@@ -29,17 +29,17 @@ Entry.FieldStatement = function(content, blockView) {
 (function(p) {
     p.renderStart = function(board) {
         this.svgGroup = this._blockView.contentSvgGroup.group();
-        this.dummyBlock = new Entry.DummyBlock(this, this._blockView);
-        this._thread = this._blockView.block.values[this.key];
-        this._thread.insertDummyBlock(this.dummyBlock);
-        this._thread.createView(board);
-        this._thread.changeEvent.attach(this, this.calcHeight);
         this.box.set({
             x: 46,
             y: 0,
             width: 20,
             height: 20
         });
+        this.dummyBlock = new Entry.DummyBlock(this, this._blockView);
+        this._thread = this._blockView.block.values[this.key];
+        this._thread.insertDummyBlock(this.dummyBlock);
+        this._thread.createView(board);
+        this._thread.changeEvent.attach(this, this.calcHeight);
     };
 
     p.insertAfter = function(blocks) {

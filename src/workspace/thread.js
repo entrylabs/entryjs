@@ -18,10 +18,6 @@ Entry.Thread = function(thread, code) {
 
     this.load(thread);
 
-    if (code.view) {
-        this.createView(code.view.board);
-    }
-
     this.changeEvent = new Entry.Event(this);
 };
 
@@ -29,8 +25,10 @@ Entry.Thread = function(thread, code) {
     p.load = function(thread) {
         if (thread === undefined)
             thread = [];
-        if (!(thread instanceof Array))
+        if (!(thread instanceof Array)) {
+            debugger;
             return console.error("thread must be array");
+        }
 
         for (var i = 0; i < thread.length; i++) {
             var block = thread[i];
@@ -44,6 +42,10 @@ Entry.Thread = function(thread, code) {
         }
 
         this._setRelation();
+
+        if (this._code.view) {
+            this.createView(this._code.view.board);
+        }
     };
 
     p._setRelation = function() {
@@ -119,14 +121,19 @@ Entry.Thread = function(thread, code) {
     p.clone = function(code) {
         var code = code || this._code;
         var clonedBlocks = [];
+        var newThread = new Entry.Thread([], code);
         for (var i = 0; i < this._data.length; i++) {
-            clonedBlocks.push(this._data[i].clone());
+            clonedBlocks.push(this._data[i].clone(newThread));
         }
+        return newThread;
+    };
 
-        return new Entry.Thread(
-            clonedBlocks,
-            code
-        );
+    p.toJSON = function(isNew) {
+        var array = [];
+        for (var i = 0; i < this._blocks.length; i++) {
+            array.push(this._blocks[i].toJSON(isNew));
+        }
+        return array;
     };
 
     p.destroy = function(animate) {
@@ -144,7 +151,6 @@ Entry.Thread = function(thread, code) {
     p.getBlocks = function() {
         return this._data;
     };
-
 
     /*
     p.schema = {
