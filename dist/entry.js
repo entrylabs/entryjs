@@ -3731,9 +3731,9 @@ Entry.BlockView = function(b, a) {
     var f = this;
   };
   b.terminateDrag = function() {
-    var a = this.getBoard();
+    var a = this.getBoard(), b = this.dragMode;
     this.dragMode = Entry.DRAG_MODE_NONE;
-    a instanceof Entry.BlockMenu ? a.terminateDrag() : (a = this._getCloseBlock(), this.block.prev || a ? 30 < Math.sqrt(Math.pow(this.x - this.block.x, 2) + Math.pow(this.y - this.block.y, 2)) ? a ? (this.set({animating:!0}), this.block.doInsert(a)) : this.block.doSeparate() : this._align(!0) : this.block.doMove());
+    a instanceof Entry.BlockMenu ? a.terminateDrag() : (a = this._getCloseBlock(), this.block.prev || a ? 30 < Math.sqrt(Math.pow(this.x - this.block.x, 2) + Math.pow(this.y - this.block.y, 2)) ? a ? (this.set({animating:!0}), this.block.doInsert(a)) : this.block.doSeparate() : this._align(!0) : b == Entry.DRAG_MODE_DRAG && this.block.doMove());
   };
   b._getCloseBlock = function() {
     for (var a = Snap.getElementByPoint(this.x + 690, this.y + 130), b = a.block;!b && "svg" !== a.type && "BODY" !== a.type;) {

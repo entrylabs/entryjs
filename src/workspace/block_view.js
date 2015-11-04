@@ -258,12 +258,14 @@ Entry.BlockView = function(block, board) {
 
     p.terminateDrag = function() {
         var board = this.getBoard();
+        var dragMode = this.dragMode;
         this.dragMode = Entry.DRAG_MODE_NONE;
         if (board instanceof Entry.BlockMenu) {
             board.terminateDrag();
         } else {
             var closeBlock = this._getCloseBlock();
             if (!this.block.prev && !closeBlock) {
+                if (dragMode == Entry.DRAG_MODE_DRAG)
                 this.block.doMove();
                 return;
             } // this means block is top block {}
