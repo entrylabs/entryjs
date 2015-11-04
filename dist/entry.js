@@ -9909,6 +9909,7 @@ Entry.getPicturesJSON = function(a) {
     f.id = e.id;
     f.dimension = e.dimension;
     f.filename = e.filename;
+    f.fileurl = e.fileurl;
     f.name = e.name;
     f.scale = e.scale;
     b.push(f);
@@ -9923,6 +9924,7 @@ Entry.getSoundsJSON = function(a) {
     f.ext = e.ext;
     f.id = e.id;
     f.filename = e.filename;
+    f.fileurl = e.fileurl;
     f.name = e.name;
     b.push(f);
   }

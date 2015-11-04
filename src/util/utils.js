@@ -495,6 +495,7 @@ Entry.getPicturesJSON = function (pictures) {
         o.id = p.id;
         o.dimension = p.dimension;
         o.filename = p.filename;
+        o.fileurl = p.fileurl;
         o.name = p.name;
         o.scale = p.scale;
         json.push(o);
@@ -512,6 +513,7 @@ Entry.getSoundsJSON = function (sounds) {
         o.ext = s.ext;
         o.id = s.id;
         o.filename = s.filename;
+        o.fileurl = s.fileurl;
         o.name = s.name;
         json.push(o);
     }
