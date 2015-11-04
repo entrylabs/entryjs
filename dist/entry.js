@@ -3575,7 +3575,7 @@ Entry.BlockMenu = function(b) {
       var g = a[e].getFirstBlock(), h = g.view;
       g.set({x:d, y:b});
       h._moveTo(d, b, !1);
-      b += h.height + 10;
+      b += h.height + 15;
     }
   };
   b.generateDragBlockObserver = function() {

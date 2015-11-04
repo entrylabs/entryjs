@@ -68,7 +68,7 @@ Entry.BlockMenu = function(dom) {
 
     p.align = function() {
         var threads = this.code.getThreads();
-        var vPadding = 10,
+        var vPadding = 15,
             marginFromTop = 10,
             hPadding = this._svgDom.width()/2;
 
