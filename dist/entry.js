@@ -3929,7 +3929,7 @@ Entry.FieldDropdown = function(b, a) {
       a.optionGroup.remove();
     }), f;
     for (f in d) {
-      var b = this.optionGroup.group().attr({class:"entry-field-rect"}), g = Number(f) + 1;
+      var b = this.optionGroup.group().attr({class:"rect"}), g = Number(f) + 1;
       b.rect(this.px - 46, this.py + 14 + 22 * g, 38, 23);
       b.text(this.px - 43, this.py + 29 + 22 * g, d[f]);
       (function(b, c) {

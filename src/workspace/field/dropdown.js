@@ -83,7 +83,7 @@ Entry.FieldDropdown = function(content, blockView) {
 
         for (var i in options) {
             var element = this.optionGroup.group().attr({
-                class: 'entry-field-rect'
+                class: 'rect'
             });
 
             var x = Number(i)+1;
@@ -104,7 +104,6 @@ Entry.FieldDropdown = function(content, blockView) {
                 });
             })(element, options[i]);
         }
-
     };
 
     p.align = function(x, y, animate) {
@@ -132,5 +131,4 @@ Entry.FieldDropdown = function(content, blockView) {
         this._block.values[this.key] = value;
         this.textElement.node.textContent = value;
     };
-
 })(Entry.FieldDropdown.prototype);
