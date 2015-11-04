@@ -62,7 +62,7 @@ Entry.FieldTrashcan = function(board) {
 
         var isOver = mouseX >= trashcanX &&
             mouseY >= trashcanY;
-        this.tAnimation(this.isOver);
+        this.tAnimation(isOver);
     };
 
     p.align = function() {
