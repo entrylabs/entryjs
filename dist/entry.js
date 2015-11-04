@@ -3889,17 +3889,18 @@ Entry.FieldDropdown = function(b, a) {
     var a = this, b = this._block.view;
     this.px = b.x;
     this.py = b.y;
+    var d = this.options;
     this.optionGroup && delete this.optionGroup;
     this.optionGroup = b.getBoard().svgGroup.group();
     this.optionGroup.attr({class:"entry-field-dropdown"});
-    var d = Entry.documentMousedown.attach(this, function() {
-      Entry.documentMousedown.detach(d);
+    var e = Entry.documentMousedown.attach(this, function() {
+      Entry.documentMousedown.detach(e);
       a.optionGroup.remove();
-    }), e;
-    for (e in this.options) {
-      var b = this.optionGroup.group(), f = Number(e) + 1;
-      b.rect(this.px - 46, this.py + 14 + 22 * f, 38, 23).attr({fill:"white"});
-      b.text(this.px - 43, this.py + 29 + 22 * f, this.options[e]);
+    }), f;
+    for (f in d) {
+      var b = this.optionGroup.group(), g = Number(f) + 1;
+      b.rect(this.px - 46, this.py + 14 + 22 * g, 38, 23).attr({fill:"white"});
+      b.text(this.px - 43, this.py + 29 + 22 * g, d[f]);
       (function(b, c) {
         b.mouseover(function() {
           b.select("rect:nth-child(1)").attr({fill:"#127cdb"});
@@ -3909,9 +3910,8 @@ Entry.FieldDropdown = function(b, a) {
           b.select("text:nth-child(2)").attr({fill:"black"});
         }).mousedown(function() {
           a.applyValue(c);
-          a.optionGroup.remove();
         });
-      })(b, this.options[e]);
+      })(b, d[f]);
     }
   };
   b.align = function(a, b, d) {

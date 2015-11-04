@@ -64,6 +64,7 @@ Entry.FieldDropdown = function(content, blockView) {
         var blockView = this._block.view;
         this.px = blockView.x;
         this.py = blockView.y;
+        var options = this.options;
 
         if (this.optionGroup)
             delete this.optionGroup;
@@ -80,16 +81,21 @@ Entry.FieldDropdown = function(content, blockView) {
             }
         );
 
-        for (var i in this.options) {
+        for (var i in options) {
             var element = this.optionGroup.group();
 
             var x = Number(i)+1;
-            var rect = element.rect(this.px - 46,
-                                    this.py + 14 + (x * 22), 38, 23).attr({
-                fill: "white"
-            });
+            var rect = element.rect(
+                this.px - 46,
+                this.py + 14 + (x * 22), 38, 23
+            ).attr({fill: "white"});
 
-            element.text(this.px - 43,this.py + 29 + (x * 22), this.options[i]);
+            element.text(
+                this.px - 43,
+                this.py + 29 + (x * 22),
+                options[i]
+            );
+
             (function(elem, value) {
                 var hoverIn = function() {
                     elem.select("rect:nth-child(1)").attr({ fill: "#127cdb" });
@@ -101,14 +107,13 @@ Entry.FieldDropdown = function(content, blockView) {
                     elem.select("text:nth-child(2)").attr({ fill: "black" });
                 };
 
-                var selectValue = function() {
-                    self.applyValue(value);
-                    self.optionGroup.remove();
-                };
+                elem.mouseover(hoverIn).
+                    mouseout(hoverOut).
+                    mousedown(function() {
+                        self.applyValue(value);
+                    });
 
-                elem.mouseover(hoverIn).mouseout(hoverOut).mousedown(selectValue);
-
-            })(element, this.options[i]);
+            })(element, options[i]);
         }
 
     };
