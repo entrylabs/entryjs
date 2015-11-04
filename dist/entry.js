@@ -4050,8 +4050,10 @@ Entry.FieldText = function(b, a) {
     var a = this.textElement.getBBox();
     this.box.set({x:0, y:0, width:a.width, height:a.height});
   };
-  b.align = function(a, b) {
-    this.textElement.animate({x:a, y:b}, 300, mina.easeinout);
+  b.align = function(a, b, d) {
+    !0 !== d && (d = !1);
+    var e = this.textElement, f = {x:a, y:b};
+    d ? e.animate(f, 300, mina.easeinout) : e.attr(f);
     this.box.set({x:a, y:b});
   };
 })(Entry.FieldText.prototype);

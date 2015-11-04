@@ -39,11 +39,20 @@ Entry.FieldText = function(text, block) {
         });
     };
 
-    p.align = function(x, y) {
-        this.textElement.animate({
-            x: x,
-            y: y
-        }, 300, mina.easeinout);
+    p.align = function(x, y, animate) {
+        if (animate !== true) animate = false;
+        var elem = this.textElement;
+
+        var attr = {x: x, y: y};
+
+        if (animate)
+            elem.animate(
+                attr,
+                300,
+                mina.easeinout
+            );
+        else elem.attr(attr);
+
 
         this.box.set({
             x: x,

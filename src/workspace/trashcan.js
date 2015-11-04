@@ -100,7 +100,7 @@ Entry.FieldTrashcan = function(board) {
             trashTop.animate({
                 transform: "r0"}, 50);
         }
-        this.isOver = isOver
+        this.isOver = isOver;
     };
 })(Entry.FieldTrashcan.prototype);
 
