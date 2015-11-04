@@ -40,18 +40,17 @@ Entry.FieldDropdown = function(content, blockView) {
             fill: "#80cbf8"
         });
 
-        var clickTopGroup = function(e) {
-            if (self._block.view.dragMode != 2)
-                self.renderOptions();
-        };
-
         this.textElement = this.topGroup.text(5, 3, this.value);
         var button = this.topGroup.polygon(28, -2, 34, -2, 31, 2);
         button.attr({
             fill: "#127cbd",
             stroke: "#127cbd"
         });
-        this.topGroup.mouseup(clickTopGroup);
+
+        this.topGroup.mouseup(function(e) {
+            if (self._block.view.dragMode != 2)
+                self.renderOptions();
+        });
 
         this.box.set({
             x: 0,

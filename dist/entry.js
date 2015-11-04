@@ -3581,14 +3581,15 @@ Entry.BlockMenu = function(b) {
   b.cloneThread = function() {
     if (null !== this.dragBlock) {
       var a = this._svgWidth, b = this.dragBlock, d = b.block, e = this.code, f = d.getThread();
-      d && f && (b.observe(this, "moveBoardBlock", ["x", "y"]), e.cloneThread(f), d = this.workspace.getBoard(), this._boardBlockView = d.code.cloneThread(f).getFirstBlock().view, d.set({dragBlock:this._boardBlockView}), this._boardBlockView._moveTo(-(a - b.x), b.y, !1));
+      d && f && (b.observe(this, "moveBoardBlock", ["x", "y"]), e.cloneThread(f), d = this.workspace.getBoard(), this._boardBlockView = d.code.cloneThread(f).getFirstBlock().view, d.set({dragBlock:this._boardBlockView}), this._boardBlockView.dragMode = 1, this._boardBlockView._moveTo(-(a - b.x), b.y, !1));
     }
   };
   b.terminateDrag = function() {
-    var a = this._boardBlockView.block, b = this.dragBlock, d = b.block, e = this.code, f = this.workspace, g = f.getBoard().code, h = !1;
-    b.x < this._svgWidth ? (h = !0, g.destroyThread(a.getThread(), h)) : a.view.terminateDrag();
-    f.getBoard().set({dragBlock:null});
-    e.destroyThread(d.getThread(), h);
+    var a = this._boardBlockView, b = a.block, d = this.dragBlock, e = d.block, f = this.code, g = this.workspace, h = g.getBoard().code, k = !1;
+    a.dragMode = 0;
+    d.x < this._svgWidth ? (k = !0, h.destroyThread(b.getThread(), k)) : b.view.terminateDrag();
+    g.getBoard().set({dragBlock:null});
+    f.destroyThread(e.getThread(), k);
     this._boardBlockView = null;
   };
   b.dominate = function(a) {
@@ -3598,8 +3599,12 @@ Entry.BlockMenu = function(b) {
     return this._code;
   };
   b.moveBoardBlock = function() {
-    var a = this.workspace.getBoard().offset, b = this.offset, d = a.left - b.left, a = a.top - b.top, b = this.dragBlock, e = this._boardBlockView;
-    b && e && e._moveTo(b.x - d, b.y - a, !1);
+    var a = this.workspace.getBoard().offset, b = this.offset, d = a.left - b.left, a = a.top - b.top, e = this.dragBlock, b = this._boardBlockView;
+    if (e && b) {
+      var f = e.x, e = e.y;
+      b.dragMode = 2;
+      b._moveTo(f - d, e - a, !1);
+    }
   };
 })(Entry.BlockMenu.prototype);
 Entry.BlockView = function(b, a) {

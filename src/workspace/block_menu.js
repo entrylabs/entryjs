@@ -85,8 +85,8 @@ Entry.BlockMenu = function(dom) {
     };
 
     p.cloneThread = function() {
-        if (this.dragBlock === null)
-            return;
+        if (this.dragBlock === null) return;
+
         var svgWidth = this._svgWidth;
         var blockView = this.dragBlock;
         var block = blockView.block;
@@ -103,6 +103,7 @@ Entry.BlockMenu = function(dom) {
             workspaceBoard.set({
                 dragBlock : this._boardBlockView
             });
+            this._boardBlockView.dragMode = 1;
 
             this._boardBlockView._moveTo(
                 -(svgWidth - blockView.x),
@@ -124,6 +125,7 @@ Entry.BlockMenu = function(dom) {
 
         //destory boardBlock below the range
         var animate = false;
+        boardBlockView.dragMode = 0;
         if (dragBlockView.x < this._svgWidth) {
             animate = true;
             boardCode.destroyThread(boardBlock.getThread(), animate);
@@ -155,6 +157,7 @@ Entry.BlockMenu = function(dom) {
         if (dragBlockView && boardBlockView) {
             var x = dragBlockView.x;
             var y = dragBlockView.y;
+            boardBlockView.dragMode = 2;
             boardBlockView._moveTo(
                 x-offsetX,
                 y-offsetY,
