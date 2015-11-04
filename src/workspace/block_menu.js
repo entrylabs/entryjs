@@ -114,7 +114,10 @@ Entry.BlockMenu = function(dom) {
         var currentThread = block.getThread();
         if (block && currentThread) {
             blockView.observe(this, "moveBoardBlock", ['x', 'y']);
+
             code.cloneThread(currentThread);
+            //original block should be top of svg
+            blockView.dominate();
 
             var workspaceBoard = this.workspace.getBoard();
             this._boardBlockView = workspaceBoard.code.

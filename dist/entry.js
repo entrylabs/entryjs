@@ -3590,7 +3590,7 @@ Entry.BlockMenu = function(b) {
     if (null !== this.dragBlock) {
       this.dragBlockObserver && this.removeDragBlockObserver();
       var a = this._svgWidth, b = this.dragBlock, d = b.block, e = this.code, f = d.getThread();
-      d && f && (b.observe(this, "moveBoardBlock", ["x", "y"]), e.cloneThread(f), d = this.workspace.getBoard(), this._boardBlockView = d.code.cloneThread(f).getFirstBlock().view, d.set({dragBlock:this._boardBlockView}), this._boardBlockView.dragMode = 1, this._boardBlockView._moveTo(-(a - b.x), b.y, !1));
+      d && f && (b.observe(this, "moveBoardBlock", ["x", "y"]), e.cloneThread(f), b.dominate(), d = this.workspace.getBoard(), this._boardBlockView = d.code.cloneThread(f).getFirstBlock().view, d.set({dragBlock:this._boardBlockView}), this._boardBlockView.dragMode = 1, this._boardBlockView._moveTo(-(a - b.x), b.y, !1));
     }
   };
   b.terminateDrag = function() {
