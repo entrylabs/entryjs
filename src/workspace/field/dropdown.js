@@ -31,24 +31,23 @@ Entry.FieldDropdown = function(content, blockView) {
         this.height = 22;
 
         this.svgGroup = blockView.contentSvgGroup.group();
-        this.topGroup = this.svgGroup.group();
-        this.topGroup.attr({
+        this.svgGroup.attr({
             class: 'entry-field-dropdown'
         });
-        var input = this.topGroup.rect(0, -12, 39, 22, 3);
+        var input = this.svgGroup.rect(0, -12, 39, 22, 3);
         input.attr({
             fill: "#80cbf8"
         });
 
-        this.textElement = this.topGroup.text(5, 3, this.value);
-        var button = this.topGroup.polygon(28, -2, 34, -2, 31, 2);
+        this.textElement = this.svgGroup.text(5, 3, this.value);
+        var button = this.svgGroup.polygon(28, -2, 34, -2, 31, 2);
         button.attr({
             fill: "#127cbd",
             stroke: "#127cbd"
         });
 
-        this.topGroup.mouseup(function(e) {
-            if (self._block.view.dragMode != 2)
+        this.svgGroup.mouseup(function(e) {
+            if (self._block.view.dragMode == Entry.DRAG_MODE_MOUSEDOWN)
                 self.renderOptions();
         });
 

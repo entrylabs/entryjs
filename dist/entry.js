@@ -1,4 +1,4 @@
-var Entry = {block:{}};
+var Entry = {block:{}, DRAG_MODE_NONE:0, DRAG_MODE_MOUSEDOWN:1, DRAG_MODE_DRAG:2};
 window.Entry = Entry;
 Blockly.Blocks.arduino_text = {init:function() {
   this.setColour("#00979D");
@@ -3619,7 +3619,7 @@ Entry.BlockView = function(b, a) {
   this.prevAnimatingObserver = this.prevObserver = null;
   this.block.observe(this, "_bindPrev", ["prev"]);
   this._bindPrev();
-  this.dragMode = 0;
+  this.dragMode = Entry.DRAG_MODE_NONE;
   this._startRender(b);
 };
 (function(b) {
@@ -3708,7 +3708,7 @@ Entry.BlockView = function(b, a) {
       var c = f.dragInstance;
       f._moveBy(a.clientX - c.offsetX, a.clientY - c.offsetY, !1);
       c.set({offsetX:a.clientX, offsetY:a.clientY});
-      f.dragMode = 2;
+      f.dragMode = Entry.DRAG_MODE_DRAG;
     }
     function d(a) {
       a = f.getBoard();
@@ -3726,13 +3726,13 @@ Entry.BlockView = function(b, a) {
       this.getBoard().set({dragBlock:this});
       this.dragInstance = new Entry.DragInstance({startX:a.clientX, startY:a.clientY, offsetX:a.clientX, offsetY:a.clientY, mode:!0});
       this.dominate();
-      this.dragMode = 1;
+      this.dragMode = Entry.DRAG_MODE_MOUSEDOWN;
     }
     var f = this;
   };
   b.terminateDrag = function() {
     var a = this.getBoard();
-    this.dragMode = 0;
+    this.dragMode = Entry.DRAG_MODE_NONE;
     a instanceof Entry.BlockMenu ? a.terminateDrag() : (a = this._getCloseBlock(), this.block.prev || a ? 30 < Math.sqrt(Math.pow(this.x - this.block.x, 2) + Math.pow(this.y - this.block.y, 2)) ? a ? (this.set({animating:!0}), this.block.doInsert(a)) : this.block.doSeparate() : this._align(!0) : this.block.doMove());
   };
   b._getCloseBlock = function() {
@@ -3876,13 +3876,12 @@ Entry.FieldDropdown = function(b, a) {
     this.width = 39;
     this.height = 22;
     this.svgGroup = a.contentSvgGroup.group();
-    this.topGroup = this.svgGroup.group();
-    this.topGroup.attr({class:"entry-field-dropdown"});
-    this.topGroup.rect(0, -12, 39, 22, 3).attr({fill:"#80cbf8"});
-    this.textElement = this.topGroup.text(5, 3, this.value);
-    this.topGroup.polygon(28, -2, 34, -2, 31, 2).attr({fill:"#127cbd", stroke:"#127cbd"});
-    this.topGroup.mouseup(function(a) {
-      2 != b._block.view.dragMode && b.renderOptions();
+    this.svgGroup.attr({class:"entry-field-dropdown"});
+    this.svgGroup.rect(0, -12, 39, 22, 3).attr({fill:"#80cbf8"});
+    this.textElement = this.svgGroup.text(5, 3, this.value);
+    this.svgGroup.polygon(28, -2, 34, -2, 31, 2).attr({fill:"#127cbd", stroke:"#127cbd"});
+    this.svgGroup.mouseup(function(a) {
+      b._block.view.dragMode == Entry.DRAG_MODE_MOUSEDOWN && b.renderOptions();
     });
     this.box.set({x:0, y:0, width:39, height:22});
   };
