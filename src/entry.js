@@ -53,6 +53,38 @@ Entry.loadProject = function(project) {
 };
 
 /**
+ * Export project
+ * @param {?Project} project
+ */
+Entry.exportProject = function(project) {
+    if (!project) {
+        project = {};
+    }
+
+    if (!Entry.engine.isState('stop')) {
+        Entry.engine.toggleStop();
+    }
+
+    if (Entry.Func &&
+        Entry.Func.workspace &&
+        Entry.Func.workspace.visible ) {
+        Entry.Func.cancelEdit();
+    }
+
+    Entry.stage.handle.setVisible(false);
+    Entry.stage.update();
+
+    project.objects = Entry.container.toJSON();
+    project.scenes = Entry.scene.toJSON();
+    project.variables = Entry.variableContainer.getVariableJSON();
+    project.messages = Entry.variableContainer.getMessageJSON();
+    project.functions = Entry.variableContainer.getFunctionJSON();
+    project.scenes = Entry.scene.toJSON();
+    project.speed = Entry.FPS;
+    return project;
+};
+
+/**
  * inject blocks to Entry menu.
  * Available block is different by object type.
  * @param {!string} objectType
