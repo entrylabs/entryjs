@@ -75,10 +75,12 @@ Entry.FieldDropdown = function(content, blockView) {
             class: 'entry-field-dropdown'
         });
 
-        $(document).bind('mousedown', function(e) {
-            $(document).unbind('mousedown');
-            self.optionGroup.remove();
-        });
+        var mousedownEvent = Entry.documentMousedown.attach(
+            this, function(){
+                Entry.documentMousedown.detach(mousedownEvent);
+                self.optionGroup.remove();
+            }
+        );
 
         for (var i in this.options) {
             var element = this.optionGroup.group();

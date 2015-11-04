@@ -3142,7 +3142,7 @@ Entry.Event = function(b) {
     this._listeners.push(d);
     return d;
   };
-  b.deAttach = function(a) {
+  b.detach = function(a) {
     var b = this._listeners;
     return b.splice(b.indexOf(a), 1);
   };
@@ -3211,8 +3211,11 @@ Entry.Dom = function(b, a) {
   return d;
 };
 Entry.init = function() {
-  Entry.windowReszied || (Entry.windowResized = new Entry.Event(window), $(window).resize(function() {
+  Entry.windowReszied || (Entry.windowResized = new Entry.Event(window), $(window).on("resize", function() {
     Entry.windowResized.notify();
+  }));
+  Entry.documentMousedown || (Entry.documentMousedown = new Entry.Event(window), $(document).on("mousedown", function(b) {
+    Entry.documentMousedown.notify(b);
   }));
 };
 Entry.loadProject = function(b) {
@@ -3885,14 +3888,14 @@ Entry.FieldDropdown = function(b, a) {
     this.optionGroup && delete this.optionGroup;
     this.optionGroup = b.getBoard().svgGroup.group();
     this.optionGroup.attr({class:"entry-field-dropdown"});
-    $(document).bind("mousedown", function(b) {
-      $(document).unbind("mousedown");
+    var d = Entry.documentMousedown.attach(this, function() {
+      Entry.documentMousedown.detach(d);
       a.optionGroup.remove();
-    });
-    for (var d in this.options) {
-      var b = this.optionGroup.group(), e = Number(d) + 1;
-      b.rect(this.px - 46, this.py + 14 + 22 * e, 38, 23).attr({fill:"white"});
-      b.text(this.px - 43, this.py + 29 + 22 * e, this.options[d]);
+    }), e;
+    for (e in this.options) {
+      var b = this.optionGroup.group(), f = Number(e) + 1;
+      b.rect(this.px - 46, this.py + 14 + 22 * f, 38, 23).attr({fill:"white"});
+      b.text(this.px - 43, this.py + 29 + 22 * f, this.options[e]);
       (function(b, c) {
         b.mouseover(function() {
           b.select("rect:nth-child(1)").attr({fill:"#127cdb"});
@@ -3904,7 +3907,7 @@ Entry.FieldDropdown = function(b, a) {
           a.applyValue(c);
           a.optionGroup.remove();
         });
-      })(b, this.options[d]);
+      })(b, this.options[e]);
     }
   };
   b.align = function(a, b, d) {
