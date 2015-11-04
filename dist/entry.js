@@ -166,15 +166,15 @@ Blockly.Blocks.arduino_convert_scale = {init:function() {
   this.setInputsInline(!0);
 }};
 Entry.block.arduino_convert_scale = function(b, a) {
-  var c = a.getNumberValue("VALUE1", a), d = a.getNumberValue("VALUE2", a), e = a.getNumberValue("VALUE3", a), f = a.getNumberValue("VALUE4", a), g = a.getNumberValue("VALUE5", a);
+  var c = a.getNumberValue("VALUE1", a), d = a.getNumberValue("VALUE2", a), e = a.getNumberValue("VALUE3", a), f = a.getNumberValue("VALUE4", a), h = a.getNumberValue("VALUE5", a);
   if (d > e) {
-    var h = d, d = e, e = h
+    var g = d, d = e, e = g
   }
-  f > g && (h = f, f = g, g = h);
+  f > h && (g = f, f = h, h = g);
   c -= d;
-  c *= (g - f) / (e - d);
+  c *= (h - f) / (e - d);
   c += f;
-  c = Math.min(g, c);
+  c = Math.min(h, c);
   c = Math.max(f, c);
   return Math.round(c);
 };
@@ -1172,9 +1172,9 @@ Entry.block.reach_something = function(b, a) {
       if (Entry.checkCollisionRect(d, f)) {
         return !0;
       }
-      for (var c = c.parent.clonedEntities, e = 0, g = c.length;e < g;e++) {
-        var h = c[e];
-        if (h.getVisible() && !h.isStamp && Entry.checkCollisionRect(d, h.object.getTransformedBounds())) {
+      for (var c = c.parent.clonedEntities, e = 0, h = c.length;e < h;e++) {
+        var g = c[e];
+        if (g.getVisible() && !g.isStamp && Entry.checkCollisionRect(d, g.object.getTransformedBounds())) {
           return !0;
         }
       }
@@ -1184,8 +1184,8 @@ Entry.block.reach_something = function(b, a) {
       }
       c = c.parent.clonedEntities;
       e = 0;
-      for (g = c.length;e < g;e++) {
-        if (h = c[e], h.getVisible() && !h.isStamp && f(d, h.object, .2, !0)) {
+      for (h = c.length;e < h;e++) {
+        if (g = c[e], g.getVisible() && !g.isStamp && f(d, g.object, .2, !0)) {
           return !0;
         }
       }
@@ -3012,9 +3012,9 @@ Entry.Collection = function(b) {
     if (void 0 !== b) {
       e = 0;
       for (var f = b.length;e < f;e++) {
-        var g = b[e];
-        d[g.id] = g;
-        a.push.call(this, g);
+        var h = b[e];
+        d[h.id] = h;
+        a.push.call(this, h);
       }
     }
   };
@@ -3052,16 +3052,16 @@ Entry.Collection = function(b) {
     return a.indexOf.call(this, b);
   };
   b.find = function(a) {
-    for (var b = [], e, f = 0, g = this.length;f < g;f++) {
+    for (var b = [], e, f = 0, h = this.length;f < h;f++) {
       e = !0;
-      var h = this[f], k;
+      var g = this[f], k;
       for (k in a) {
-        if (a[k] != h[k]) {
+        if (a[k] != g[k]) {
           e = !1;
           break;
         }
       }
-      e && b.push(h);
+      e && b.push(g);
     }
     return b;
   };
@@ -3076,9 +3076,9 @@ Entry.Collection = function(b) {
     return b;
   };
   b.slice = function(b, d) {
-    var e = a.slice.call(this, b, d), f = this._hashMap, g;
-    for (g in e) {
-      delete f[e[g].id];
+    var e = a.slice.call(this, b, d), f = this._hashMap, h;
+    for (h in e) {
+      delete f[e[h].id];
     }
     return e;
   };
@@ -3089,14 +3089,14 @@ Entry.Collection = function(b) {
   b.splice = function(b, d) {
     var e = a.slice.call(arguments, 2), f = this._hashMap;
     d = void 0 === d ? this.length - b : d;
-    for (var g = a.splice.call(this, b, d), h = 0, k = g.length;h < k;h++) {
-      delete f[g[h].id];
+    for (var h = a.splice.call(this, b, d), g = 0, k = h.length;g < k;g++) {
+      delete f[h[g].id];
     }
-    h = 0;
-    for (k = e.length;h < k;h++) {
-      f = e[h], a.splice.call(this, b++, 0, f), this._hashMap[f.id] = f;
+    g = 0;
+    for (k = e.length;g < k;g++) {
+      f = e[g], a.splice.call(this, b++, 0, f), this._hashMap[f.id] = f;
     }
-    return g;
+    return h;
   };
   b.clear = function() {
     for (;this.length;) {
@@ -3569,10 +3569,10 @@ Entry.BlockMenu = function(b) {
   };
   b.align = function() {
     for (var a = this.code.getThreads(), b = 10, d = this._svgDom.width() / 2, e = 0, f = a.length;e < f;e++) {
-      var g = a[e].getFirstBlock(), h = g.view;
-      g.set({x:d, y:b});
-      h._moveTo(d, b, !1);
-      b += h.height + 10;
+      var h = a[e].getFirstBlock(), g = h.view;
+      h.set({x:d, y:b});
+      g._moveTo(d, b, !1);
+      b += g.height + 10;
     }
   };
   b.cloneThread = function() {
@@ -3582,10 +3582,10 @@ Entry.BlockMenu = function(b) {
     }
   };
   b.terminateDrag = function() {
-    var a = this._boardBlockView.block, b = this.dragBlock, d = b.block, e = this.code, f = this.workspace, g = f.getBoard().code, h = !1;
-    b.x < this._svgWidth ? (h = !0, g.destroyThread(a.getThread(), h)) : a.view.terminateDrag();
+    var a = this._boardBlockView.block, b = this.dragBlock, d = b.block, e = this.code, f = this.workspace, h = f.getBoard().code, g = !1;
+    b.x < this._svgWidth ? (g = !0, h.destroyThread(a.getThread(), g)) : a.view.terminateDrag();
     f.getBoard().set({dragBlock:null});
-    e.destroyThread(d.getThread(), h);
+    e.destroyThread(d.getThread(), g);
     this._boardBlockView = null;
   };
   b.dominate = function(a) {
@@ -3696,6 +3696,8 @@ Entry.BlockView = function(b, a) {
   };
   b.onMouseDown = function(a) {
     function b(a) {
+      a.stopPropagation();
+      a.preventDefault();
       a.originalEvent.touches && (a = a.originalEvent.touches[0]);
       var c = f.dragInstance;
       f._moveBy(a.clientX - c.offsetX, a.clientY - c.offsetY, !1);
@@ -4300,9 +4302,7 @@ Entry.FieldTrashcan = function(b) {
     this.dragBlock = a;
   };
   b.checkBlock = function() {
-    var a = this.board.offset, b = this.getPosition(), d = b.x + a.left, b = b.y + a.top, e, f = this.dragBlock, g = f.dragInstance;
-    g ? (e = g.offsetX, a = g.offsetY) : (e = f.x + a.left, a = f.y + a.top);
-    this.isOver = e >= d && a >= b;
+    this.getPosition();
     this.tAnimation(this.isOver);
   };
   b.align = function() {
@@ -4319,8 +4319,12 @@ Entry.FieldTrashcan = function(b) {
     return {x:this._x, y:this._y};
   };
   b.tAnimation = function(a) {
-    var b = this.trashcanTop;
-    void 0 === a || a ? b.animate({transform:"t5 -20 r30"}, 50) : b.animate({transform:"r0"}, 50);
+    if (a !== this.isOver) {
+      a = void 0 === a ? !0 : a;
+      var b = this.trashcanTop;
+      a ? b.animate({transform:"t5 -20 r30"}, 50) : b.animate({transform:"r0"}, 50);
+      this.isOver = a;
+    }
   };
 })(Entry.FieldTrashcan.prototype);
 Entry.Board = function(b) {

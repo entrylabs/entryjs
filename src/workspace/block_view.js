@@ -225,6 +225,8 @@ Entry.BlockView = function(block, board) {
 
         var block = this;
         function onMouseMove(e) {
+            e.stopPropagation();
+            e.preventDefault();
 
             if (e.originalEvent.touches) {
                 e = e.originalEvent.touches[0];

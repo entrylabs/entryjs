@@ -60,7 +60,7 @@ Entry.FieldTrashcan = function(board) {
             mouseY = dragBlock.y + boardOffset.top;
         }
 
-        this.isOver = mouseX >= trashcanX &&
+        var isOver = mouseX >= trashcanX &&
             mouseY >= trashcanY;
         this.tAnimation(this.isOver);
     };
@@ -88,16 +88,19 @@ Entry.FieldTrashcan = function(board) {
         };
     };
 
-    p.tAnimation = function(bool) {
-        bool = bool === undefined ? true : bool;
+    p.tAnimation = function(isOver) {
+        if (isOver === this.isOver)
+            return;
+        isOver = isOver === undefined ? true : isOver;
         var trashTop = this.trashcanTop;
-        if(bool) {
+        if(isOver) {
             trashTop.animate({
                 transform: "t5 -20 r30"}, 50);
         } else {
             trashTop.animate({
                 transform: "r0"}, 50);
         }
+        this.isOver = isOver
     };
 })(Entry.FieldTrashcan.prototype);
 
