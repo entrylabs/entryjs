@@ -31,27 +31,25 @@ Entry.FieldDropdown = function(content, blockView) {
         this.height = 22;
 
         this.svgGroup = blockView.contentSvgGroup.group();
-        this.topGroup = this.svgGroup.group();
-        this.topGroup.attr({
+        this.svgGroup.attr({
             class: 'entry-field-dropdown'
         });
-        var input = this.topGroup.rect(0, -12, 39, 22, 3);
+        var input = this.svgGroup.rect(0, -12, 39, 22, 3);
         input.attr({
             fill: "#80cbf8"
         });
 
-        var clickTopGroup = function(e) {
-            if (self._block.view.dragMode != 2)
-                self.renderOptions();
-        };
-
-        this.textElement = this.topGroup.text(5, 3, this.value);
-        var button = this.topGroup.polygon(28, -2, 34, -2, 31, 2);
+        this.textElement = this.svgGroup.text(5, 3, this.value);
+        var button = this.svgGroup.polygon(28, -2, 34, -2, 31, 2);
         button.attr({
             fill: "#127cbd",
             stroke: "#127cbd"
         });
-        this.topGroup.mouseup(clickTopGroup);
+
+        this.svgGroup.mouseup(function(e) {
+            if (self._block.view.dragMode == Entry.DRAG_MODE_MOUSEDOWN)
+                self.renderOptions();
+        });
 
         this.box.set({
             x: 0,
@@ -66,6 +64,7 @@ Entry.FieldDropdown = function(content, blockView) {
         var blockView = this._block.view;
         this.px = blockView.x;
         this.py = blockView.y;
+        var options = this.options;
 
         if (this.optionGroup)
             delete this.optionGroup;
@@ -75,40 +74,35 @@ Entry.FieldDropdown = function(content, blockView) {
             class: 'entry-field-dropdown'
         });
 
-        $(document).bind('mousedown', function(e) {
-            $(document).unbind('mousedown');
-            self.optionGroup.remove();
-        });
+        var mousedownEvent = Entry.documentMousedown.attach(
+            this, function(){
+                Entry.documentMousedown.detach(mousedownEvent);
+                self.optionGroup.remove();
+            }
+        );
 
-        for (var i in this.options) {
-            var element = this.optionGroup.group();
-
-            var x = Number(i)+1;
-            var rect = element.rect(this.px - 46,
-                                    this.py + 14 + (x * 22), 38, 23).attr({
-                fill: "white"
+        for (var i in options) {
+            var element = this.optionGroup.group().attr({
+                class: 'entry-field-rect'
             });
 
-            element.text(this.px - 43,this.py + 29 + (x * 22), this.options[i]);
+            var x = Number(i)+1;
+            var rect = element.rect(
+                this.px - 46,
+                this.py + 14 + (x * 22), 38, 23
+            );
+
+            element.text(
+                this.px - 43,
+                this.py + 29 + (x * 22),
+                options[i]
+            );
+
             (function(elem, value) {
-                var hoverIn = function() {
-                    elem.select("rect:nth-child(1)").attr({ fill: "#127cdb" });
-                    elem.select("text:nth-child(2)").attr({ fill: "white" });
-                };
-
-                var hoverOut = function() {
-                    elem.select("rect:nth-child(1)").attr({ fill: "white" });
-                    elem.select("text:nth-child(2)").attr({ fill: "black" });
-                };
-
-                var selectValue = function() {
+                elem.mousedown(function(){
                     self.applyValue(value);
-                    self.optionGroup.remove();
-                };
-
-                elem.mouseover(hoverIn).mouseout(hoverOut).mousedown(selectValue);
-
-            })(element, this.options[i]);
+                });
+            })(element, options[i]);
         }
 
     };

@@ -1,4 +1,4 @@
-var Entry = {block:{}};
+var Entry = {block:{}, DRAG_MODE_NONE:0, DRAG_MODE_MOUSEDOWN:1, DRAG_MODE_DRAG:2};
 window.Entry = Entry;
 Blockly.Blocks.arduino_text = {init:function() {
   this.setColour("#00979D");
@@ -3142,7 +3142,7 @@ Entry.Event = function(b) {
     this._listeners.push(d);
     return d;
   };
-  b.deAttach = function(a) {
+  b.detach = function(a) {
     var b = this._listeners;
     return b.splice(b.indexOf(a), 1);
   };
@@ -3211,8 +3211,11 @@ Entry.Dom = function(b, a) {
   return d;
 };
 Entry.init = function() {
-  Entry.windowReszied || (Entry.windowResized = new Entry.Event(window), $(window).resize(function() {
+  Entry.windowReszied || (Entry.windowResized = new Entry.Event(window), $(window).on("resize", function() {
     Entry.windowResized.notify();
+  }));
+  Entry.documentMousedown || (Entry.documentMousedown = new Entry.Event(window), $(document).on("mousedown", function(b) {
+    Entry.documentMousedown.notify(b);
   }));
 };
 Entry.loadProject = function(b) {
@@ -3549,7 +3552,7 @@ Entry.BlockMenu = function(b) {
   this.svgThreadGroup.board = this;
   this.svgBlockGroup = this.svgGroup.group();
   this.svgBlockGroup.board = this;
-  this.observe(this, "cloneThread", ["dragBlock"]);
+  this.observe(this, "generateDragBlockObserver", ["dragBlock"]);
 };
 (function(b) {
   b.schema = {code:null, dragBlock:null, closeBlock:null};
@@ -3569,24 +3572,54 @@ Entry.BlockMenu = function(b) {
   };
   b.align = function() {
     for (var a = this.code.getThreads(), b = 10, d = this._svgDom.width() / 2, e = 0, f = a.length;e < f;e++) {
+<<<<<<< HEAD
       var h = a[e].getFirstBlock(), g = h.view;
       h.set({x:d, y:b});
       g._moveTo(d, b, !1);
       b += g.height + 10;
+=======
+      var g = a[e].getFirstBlock(), h = g.view;
+      g.set({x:d, y:b});
+      h._moveTo(d, b, !1);
+      b += h.height + 15;
+>>>>>>> origin/jr/dist
     }
+  };
+  b.generateDragBlockObserver = function() {
+    var a = this.dragBlock;
+    a && !this.dragBlockObserver && (this.dragBlockObserver = a.observe(this, "cloneThread", ["x", "y"]));
+  };
+  b.removeDragBlockObserver = function() {
+    var a = this.dragBlockObserver;
+    null !== a && (a.destroy(), this.dragBlockObserver = null);
   };
   b.cloneThread = function() {
     if (null !== this.dragBlock) {
+      this.dragBlockObserver && this.removeDragBlockObserver();
       var a = this._svgWidth, b = this.dragBlock, d = b.block, e = this.code, f = d.getThread();
-      d && f && (b.observe(this, "moveBoardBlock", ["x", "y"]), e.cloneThread(f), d = this.workspace.getBoard(), this._boardBlockView = d.code.cloneThread(f).getFirstBlock().view, d.set({dragBlock:this._boardBlockView}), this._boardBlockView._moveTo(-(a - b.x), b.y, !1));
+      d && f && (b.observe(this, "moveBoardBlock", ["x", "y"]), e.cloneThread(f), d = this.workspace.getBoard(), this._boardBlockView = d.code.cloneThread(f).getFirstBlock().view, d.set({dragBlock:this._boardBlockView}), this._boardBlockView.dragMode = 1, this._boardBlockView._moveTo(-(a - b.x), b.y, !1));
     }
   };
   b.terminateDrag = function() {
+<<<<<<< HEAD
     var a = this._boardBlockView.block, b = this.dragBlock, d = b.block, e = this.code, f = this.workspace, h = f.getBoard().code, g = !1;
     b.x < this._svgWidth ? (g = !0, h.destroyThread(a.getThread(), g)) : a.view.terminateDrag();
     f.getBoard().set({dragBlock:null});
     e.destroyThread(d.getThread(), g);
     this._boardBlockView = null;
+=======
+    if (this._boardBlockView) {
+      var a = this._boardBlockView;
+      if (a) {
+        var b = a.block, d = this.dragBlock, e = d.block, f = this.code, g = this.workspace, h = g.getBoard().code, k = !1;
+        a.dragMode = 0;
+        d.x < this._svgWidth ? (k = !0, h.destroyThread(b.getThread(), k)) : b.view.terminateDrag();
+        g.getBoard().set({dragBlock:null});
+        f.destroyThread(e.getThread(), k);
+        this._boardBlockView = null;
+      }
+    }
+>>>>>>> origin/jr/dist
   };
   b.dominate = function(a) {
     this.snap.append(a.svgGroup);
@@ -3595,8 +3628,12 @@ Entry.BlockMenu = function(b) {
     return this._code;
   };
   b.moveBoardBlock = function() {
-    var a = this.workspace.getBoard().offset, b = this.offset, d = a.left - b.left, a = a.top - b.top, b = this.dragBlock, e = this._boardBlockView;
-    b && e && e._moveTo(b.x - d, b.y - a, !1);
+    var a = this.workspace.getBoard().offset, b = this.offset, d = a.left - b.left, a = a.top - b.top, e = this.dragBlock, b = this._boardBlockView;
+    if (e && b) {
+      var f = e.x, e = e.y;
+      b.dragMode = 2;
+      b._moveTo(f - d, e - a, !1);
+    }
   };
 })(Entry.BlockMenu.prototype);
 Entry.BlockView = function(b, a) {
@@ -3611,7 +3648,7 @@ Entry.BlockView = function(b, a) {
   this.prevAnimatingObserver = this.prevObserver = null;
   this.block.observe(this, "_bindPrev", ["prev"]);
   this._bindPrev();
-  this.dragMode = 0;
+  this.dragMode = Entry.DRAG_MODE_NONE;
   this._startRender(b);
 };
 (function(b) {
@@ -3702,7 +3739,7 @@ Entry.BlockView = function(b, a) {
       var c = f.dragInstance;
       f._moveBy(a.clientX - c.offsetX, a.clientY - c.offsetY, !1);
       c.set({offsetX:a.clientX, offsetY:a.clientY});
-      f.dragMode = 2;
+      f.dragMode = Entry.DRAG_MODE_DRAG;
     }
     function d(a) {
       a = f.getBoard();
@@ -3720,14 +3757,14 @@ Entry.BlockView = function(b, a) {
       this.getBoard().set({dragBlock:this});
       this.dragInstance = new Entry.DragInstance({startX:a.clientX, startY:a.clientY, offsetX:a.clientX, offsetY:a.clientY, mode:!0});
       this.dominate();
-      this.dragMode = 1;
+      this.dragMode = Entry.DRAG_MODE_MOUSEDOWN;
     }
     var f = this;
   };
   b.terminateDrag = function() {
-    var a = this.getBoard();
-    this.dragMode = 0;
-    a instanceof Entry.BlockMenu ? a.terminateDrag() : (a = this._getCloseBlock(), this.block.prev || a ? 30 < Math.sqrt(Math.pow(this.x - this.block.x, 2) + Math.pow(this.y - this.block.y, 2)) ? a ? (this.set({animating:!0}), this.block.doInsert(a)) : this.block.doSeparate() : this._align(!0) : this.block.doMove());
+    var a = this.getBoard(), b = this.dragMode, d = this.block;
+    this.dragMode = Entry.DRAG_MODE_NONE;
+    a instanceof Entry.BlockMenu ? a.terminateDrag() : (a = this._getCloseBlock(), d.prev || a ? 30 < Math.sqrt(Math.pow(this.x - d.x, 2) + Math.pow(this.y - d.y, 2)) ? a ? (this.set({animating:!0}), d.doInsert(a)) : d.doSeparate() : this._align(!0) : b == Entry.DRAG_MODE_DRAG && d.doMove());
   };
   b._getCloseBlock = function() {
     for (var a = Snap.getElementByPoint(this.x + 690, this.y + 130), b = a.block;!b && "svg" !== a.type && "BODY" !== a.type;) {
@@ -3870,13 +3907,12 @@ Entry.FieldDropdown = function(b, a) {
     this.width = 39;
     this.height = 22;
     this.svgGroup = a.contentSvgGroup.group();
-    this.topGroup = this.svgGroup.group();
-    this.topGroup.attr({class:"entry-field-dropdown"});
-    this.topGroup.rect(0, -12, 39, 22, 3).attr({fill:"#80cbf8"});
-    this.textElement = this.topGroup.text(5, 3, this.value);
-    this.topGroup.polygon(28, -2, 34, -2, 31, 2).attr({fill:"#127cbd", stroke:"#127cbd"});
-    this.topGroup.mouseup(function(a) {
-      2 != b._block.view.dragMode && b.renderOptions();
+    this.svgGroup.attr({class:"entry-field-dropdown"});
+    this.svgGroup.rect(0, -12, 39, 22, 3).attr({fill:"#80cbf8"});
+    this.textElement = this.svgGroup.text(5, 3, this.value);
+    this.svgGroup.polygon(28, -2, 34, -2, 31, 2).attr({fill:"#127cbd", stroke:"#127cbd"});
+    this.svgGroup.mouseup(function(a) {
+      b._block.view.dragMode == Entry.DRAG_MODE_MOUSEDOWN && b.renderOptions();
     });
     this.box.set({x:0, y:0, width:39, height:22});
   };
@@ -3884,29 +3920,23 @@ Entry.FieldDropdown = function(b, a) {
     var a = this, b = this._block.view;
     this.px = b.x;
     this.py = b.y;
+    var d = this.options;
     this.optionGroup && delete this.optionGroup;
     this.optionGroup = b.getBoard().svgGroup.group();
     this.optionGroup.attr({class:"entry-field-dropdown"});
-    $(document).bind("mousedown", function(b) {
-      $(document).unbind("mousedown");
+    var e = Entry.documentMousedown.attach(this, function() {
+      Entry.documentMousedown.detach(e);
       a.optionGroup.remove();
-    });
-    for (var d in this.options) {
-      var b = this.optionGroup.group(), e = Number(d) + 1;
-      b.rect(this.px - 46, this.py + 14 + 22 * e, 38, 23).attr({fill:"white"});
-      b.text(this.px - 43, this.py + 29 + 22 * e, this.options[d]);
+    }), f;
+    for (f in d) {
+      var b = this.optionGroup.group().attr({class:"entry-field-rect"}), g = Number(f) + 1;
+      b.rect(this.px - 46, this.py + 14 + 22 * g, 38, 23);
+      b.text(this.px - 43, this.py + 29 + 22 * g, d[f]);
       (function(b, c) {
-        b.mouseover(function() {
-          b.select("rect:nth-child(1)").attr({fill:"#127cdb"});
-          b.select("text:nth-child(2)").attr({fill:"white"});
-        }).mouseout(function() {
-          b.select("rect:nth-child(1)").attr({fill:"white"});
-          b.select("text:nth-child(2)").attr({fill:"black"});
-        }).mousedown(function() {
+        b.mousedown(function() {
           a.applyValue(c);
-          a.optionGroup.remove();
         });
-      })(b, this.options[d]);
+      })(b, d[f]);
     }
   };
   b.align = function(a, b, d) {

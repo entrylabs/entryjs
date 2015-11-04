@@ -41,7 +41,7 @@ Entry.BlockMenu = function(dom) {
     this.svgBlockGroup = this.svgGroup.group();
     this.svgBlockGroup.board = this;
 
-    this.observe(this, "cloneThread", ['dragBlock']);
+    this.observe(this, "generateDragBlockObserver", ['dragBlock']);
 };
 
 (function(p) {
@@ -68,7 +68,7 @@ Entry.BlockMenu = function(dom) {
 
     p.align = function() {
         var threads = this.code.getThreads();
-        var vPadding = 10,
+        var vPadding = 15,
             marginFromTop = 10,
             hPadding = this._svgDom.width()/2;
 
@@ -84,9 +84,28 @@ Entry.BlockMenu = function(dom) {
         }
     };
 
+    p.generateDragBlockObserver = function() {
+        var block =  this.dragBlock;
+        if (!block) return;
+
+        if (!this.dragBlockObserver) {
+            this.dragBlockObserver =
+                block.observe(this, "cloneThread", ['x', 'y']);
+        }
+    };
+
+    p.removeDragBlockObserver = function() {
+        var observer = this.dragBlockObserver;
+        if (observer === null) return;
+        observer.destroy();
+        this.dragBlockObserver = null;
+    };
+
     p.cloneThread = function() {
-        if (this.dragBlock === null)
-            return;
+        if (this.dragBlock === null) return;
+        if (this.dragBlockObserver)
+            this.removeDragBlockObserver();
+
         var svgWidth = this._svgWidth;
         var blockView = this.dragBlock;
         var block = blockView.block;
@@ -103,6 +122,7 @@ Entry.BlockMenu = function(dom) {
             workspaceBoard.set({
                 dragBlock : this._boardBlockView
             });
+            this._boardBlockView.dragMode = 1;
 
             this._boardBlockView._moveTo(
                 -(svgWidth - blockView.x),
@@ -114,7 +134,10 @@ Entry.BlockMenu = function(dom) {
     };
 
     p.terminateDrag = function() {
+        if (!this._boardBlockView) return;
+
         var boardBlockView = this._boardBlockView;
+        if (!boardBlockView) return;
         var boardBlock = boardBlockView.block;
         var dragBlockView = this.dragBlock;
         var dragBlock = dragBlockView.block;
@@ -124,6 +147,7 @@ Entry.BlockMenu = function(dom) {
 
         //destory boardBlock below the range
         var animate = false;
+        boardBlockView.dragMode = 0;
         if (dragBlockView.x < this._svgWidth) {
             animate = true;
             boardCode.destroyThread(boardBlock.getThread(), animate);
@@ -155,6 +179,7 @@ Entry.BlockMenu = function(dom) {
         if (dragBlockView && boardBlockView) {
             var x = dragBlockView.x;
             var y = dragBlockView.y;
+            boardBlockView.dragMode = 2;
             boardBlockView._moveTo(
                 x-offsetX,
                 y-offsetY,

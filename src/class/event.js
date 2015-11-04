@@ -17,7 +17,7 @@ Entry.Event = function(sender) {
         return listener;
     };
 
-    p.deAttach = function (listener) {
+    p.detach = function (listener) {
         var listeners = this._listeners;
         return listeners.splice(
             listeners.indexOf(listener), 1
