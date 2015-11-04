@@ -259,27 +259,28 @@ Entry.BlockView = function(block, board) {
     p.terminateDrag = function() {
         var board = this.getBoard();
         var dragMode = this.dragMode;
+        var block = this.block;
         this.dragMode = Entry.DRAG_MODE_NONE;
         if (board instanceof Entry.BlockMenu) {
             board.terminateDrag();
         } else {
             var closeBlock = this._getCloseBlock();
-            if (!this.block.prev && !closeBlock) {
+            if (!block.prev && !closeBlock) {
                 if (dragMode == Entry.DRAG_MODE_DRAG)
-                this.block.doMove();
+                block.doMove();
                 return;
             } // this means block is top block {}
             var distance = Math.sqrt(
-                Math.pow(this.x - this.block.x, 2) +
-                Math.pow(this.y - this.block.y, 2)
+                Math.pow(this.x - block.x, 2) +
+                Math.pow(this.y - block.y, 2)
             );
             if (distance > 30) {
                 if (closeBlock) {
                     this.set({animating: true});
-                    this.block.doInsert(closeBlock);
+                    block.doInsert(closeBlock);
                 }
                 else
-                    this.block.doSeparate();
+                    block.doSeparate();
             } else {
                 this._align(true);
             }

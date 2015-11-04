@@ -41,7 +41,7 @@ Entry.BlockMenu = function(dom) {
     this.svgBlockGroup = this.svgGroup.group();
     this.svgBlockGroup.board = this;
 
-    this.observe(this, "cloneThread", ['dragBlock']);
+    this.observe(this, "generateDragBlockObserver", ['dragBlock']);
 };
 
 (function(p) {
@@ -84,8 +84,27 @@ Entry.BlockMenu = function(dom) {
         }
     };
 
+    p.generateDragBlockObserver = function() {
+        var block =  this.dragBlock;
+        if (!block) return;
+
+        if (!this.dragBlockObserver) {
+            this.dragBlockObserver =
+                block.observe(this, "cloneThread", ['x', 'y']);
+        }
+    };
+
+    p.removeDragBlockObserver = function() {
+        var observer = this.dragBlockObserver;
+        if (observer === null) return;
+        observer.destroy();
+        this.dragBlockObserver = null;
+    };
+
     p.cloneThread = function() {
         if (this.dragBlock === null) return;
+        if (this.dragBlockObserver)
+            this.removeDragBlockObserver();
 
         var svgWidth = this._svgWidth;
         var blockView = this.dragBlock;
@@ -115,7 +134,10 @@ Entry.BlockMenu = function(dom) {
     };
 
     p.terminateDrag = function() {
+        if (!this._boardBlockView) return;
+
         var boardBlockView = this._boardBlockView;
+        if (!boardBlockView) return;
         var boardBlock = boardBlockView.block;
         var dragBlockView = this.dragBlock;
         var dragBlock = dragBlockView.block;

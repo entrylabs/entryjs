@@ -3552,7 +3552,7 @@ Entry.BlockMenu = function(b) {
   this.svgThreadGroup.board = this;
   this.svgBlockGroup = this.svgGroup.group();
   this.svgBlockGroup.board = this;
-  this.observe(this, "cloneThread", ["dragBlock"]);
+  this.observe(this, "generateDragBlockObserver", ["dragBlock"]);
 };
 (function(b) {
   b.schema = {code:null, dragBlock:null, closeBlock:null};
@@ -3578,19 +3578,33 @@ Entry.BlockMenu = function(b) {
       b += h.height + 10;
     }
   };
+  b.generateDragBlockObserver = function() {
+    var a = this.dragBlock;
+    a && !this.dragBlockObserver && (this.dragBlockObserver = a.observe(this, "cloneThread", ["x", "y"]));
+  };
+  b.removeDragBlockObserver = function() {
+    var a = this.dragBlockObserver;
+    null !== a && (a.destroy(), this.dragBlockObserver = null);
+  };
   b.cloneThread = function() {
     if (null !== this.dragBlock) {
+      this.dragBlockObserver && this.removeDragBlockObserver();
       var a = this._svgWidth, b = this.dragBlock, d = b.block, e = this.code, f = d.getThread();
       d && f && (b.observe(this, "moveBoardBlock", ["x", "y"]), e.cloneThread(f), d = this.workspace.getBoard(), this._boardBlockView = d.code.cloneThread(f).getFirstBlock().view, d.set({dragBlock:this._boardBlockView}), this._boardBlockView.dragMode = 1, this._boardBlockView._moveTo(-(a - b.x), b.y, !1));
     }
   };
   b.terminateDrag = function() {
-    var a = this._boardBlockView, b = a.block, d = this.dragBlock, e = d.block, f = this.code, g = this.workspace, h = g.getBoard().code, k = !1;
-    a.dragMode = 0;
-    d.x < this._svgWidth ? (k = !0, h.destroyThread(b.getThread(), k)) : b.view.terminateDrag();
-    g.getBoard().set({dragBlock:null});
-    f.destroyThread(e.getThread(), k);
-    this._boardBlockView = null;
+    if (this._boardBlockView) {
+      var a = this._boardBlockView;
+      if (a) {
+        var b = a.block, d = this.dragBlock, e = d.block, f = this.code, g = this.workspace, h = g.getBoard().code, k = !1;
+        a.dragMode = 0;
+        d.x < this._svgWidth ? (k = !0, h.destroyThread(b.getThread(), k)) : b.view.terminateDrag();
+        g.getBoard().set({dragBlock:null});
+        f.destroyThread(e.getThread(), k);
+        this._boardBlockView = null;
+      }
+    }
   };
   b.dominate = function(a) {
     this.snap.append(a.svgGroup);
@@ -3731,9 +3745,9 @@ Entry.BlockView = function(b, a) {
     var f = this;
   };
   b.terminateDrag = function() {
-    var a = this.getBoard(), b = this.dragMode;
+    var a = this.getBoard(), b = this.dragMode, d = this.block;
     this.dragMode = Entry.DRAG_MODE_NONE;
-    a instanceof Entry.BlockMenu ? a.terminateDrag() : (a = this._getCloseBlock(), this.block.prev || a ? 30 < Math.sqrt(Math.pow(this.x - this.block.x, 2) + Math.pow(this.y - this.block.y, 2)) ? a ? (this.set({animating:!0}), this.block.doInsert(a)) : this.block.doSeparate() : this._align(!0) : b == Entry.DRAG_MODE_DRAG && this.block.doMove());
+    a instanceof Entry.BlockMenu ? a.terminateDrag() : (a = this._getCloseBlock(), d.prev || a ? 30 < Math.sqrt(Math.pow(this.x - d.x, 2) + Math.pow(this.y - d.y, 2)) ? a ? (this.set({animating:!0}), d.doInsert(a)) : d.doSeparate() : this._align(!0) : b == Entry.DRAG_MODE_DRAG && d.doMove());
   };
   b._getCloseBlock = function() {
     for (var a = Snap.getElementByPoint(this.x + 690, this.y + 130), b = a.block;!b && "svg" !== a.type && "BODY" !== a.type;) {
