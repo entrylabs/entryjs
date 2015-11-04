@@ -134,6 +134,14 @@ Entry.Block.FOLLOW = 3;
 
     p._destroy = function(animate) {
         if (this.view) this.view.destroy(animate);
+        var statement = this.values.STATEMENT
+        if (statement) {
+            var block = statement.getFirstBlock();
+            if (block instanceof Entry.DummyBlock)
+                block = block.next;
+            if (block) block.doDestroy(animate);
+        }
+        block = this.next;
     };
 
     // command func

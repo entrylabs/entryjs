@@ -4168,6 +4168,8 @@ Entry.Block.FOLLOW = 3;
   };
   b._destroy = function(a) {
     this.view && this.view.destroy(a);
+    var b = this.values.STATEMENT;
+    b && (b = b.getFirstBlock(), b instanceof Entry.DummyBlock && (b = b.next), b && b.doDestroy(a));
   };
   b.doMove = function() {
     console.log("doMove", this.id, this.view.x - this.x, this.view.y - this.y);
