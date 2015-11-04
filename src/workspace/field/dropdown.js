@@ -82,13 +82,15 @@ Entry.FieldDropdown = function(content, blockView) {
         );
 
         for (var i in options) {
-            var element = this.optionGroup.group();
+            var element = this.optionGroup.group().attr({
+                class: 'entry-field-rect'
+            });
 
             var x = Number(i)+1;
             var rect = element.rect(
                 this.px - 46,
                 this.py + 14 + (x * 22), 38, 23
-            ).attr({fill: "white"});
+            );
 
             element.text(
                 this.px - 43,
@@ -97,22 +99,9 @@ Entry.FieldDropdown = function(content, blockView) {
             );
 
             (function(elem, value) {
-                var hoverIn = function() {
-                    elem.select("rect:nth-child(1)").attr({ fill: "#127cdb" });
-                    elem.select("text:nth-child(2)").attr({ fill: "white" });
-                };
-
-                var hoverOut = function() {
-                    elem.select("rect:nth-child(1)").attr({ fill: "white" });
-                    elem.select("text:nth-child(2)").attr({ fill: "black" });
-                };
-
-                elem.mouseover(hoverIn).
-                    mouseout(hoverOut).
-                    mousedown(function() {
-                        self.applyValue(value);
-                    });
-
+                elem.mousedown(function(){
+                    self.applyValue(value);
+                });
             })(element, options[i]);
         }
 

@@ -3898,17 +3898,11 @@ Entry.FieldDropdown = function(b, a) {
       a.optionGroup.remove();
     }), f;
     for (f in d) {
-      var b = this.optionGroup.group(), g = Number(f) + 1;
-      b.rect(this.px - 46, this.py + 14 + 22 * g, 38, 23).attr({fill:"white"});
+      var b = this.optionGroup.group().attr({class:"entry-field-rect"}), g = Number(f) + 1;
+      b.rect(this.px - 46, this.py + 14 + 22 * g, 38, 23);
       b.text(this.px - 43, this.py + 29 + 22 * g, d[f]);
       (function(b, c) {
-        b.mouseover(function() {
-          b.select("rect:nth-child(1)").attr({fill:"#127cdb"});
-          b.select("text:nth-child(2)").attr({fill:"white"});
-        }).mouseout(function() {
-          b.select("rect:nth-child(1)").attr({fill:"white"});
-          b.select("text:nth-child(2)").attr({fill:"black"});
-        }).mousedown(function() {
+        b.mousedown(function() {
           a.applyValue(c);
         });
       })(b, d[f]);
