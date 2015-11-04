@@ -29,27 +29,32 @@ Entry.TEXT_ALIGNS = ["center", "left", "right"];
  * @param {?Project} project
  */
 Entry.loadProject = function(project) {
-    if (project) {
-        if (this.type == 'workspace')
-            Entry.stateManager.startIgnore();
-        Entry.projectId = project._id;
-        Entry.variableContainer.setVariables(project.variables);
-        Entry.variableContainer.setMessages(project.messages);
-        Entry.variableContainer.setFunctions(project.functions);
-        Entry.scene.addScenes(project.scenes);
-        Entry.stage.initObjectContainers();
-        Entry.container.setObjects(project.objects);
-        Entry.FPS = project.speed ? project.speed : 60;
-        createjs.Ticker.setFPS(Entry.FPS);
-        if (this.type == 'workspace')
-            Entry.stateManager.endIgnore();
+    if (!project) {
+        project = Entry.StartProject;
     }
+
+    if (this.type == 'workspace')
+        Entry.stateManager.startIgnore();
+    Entry.projectId = project._id;
+    Entry.variableContainer.setVariables(project.variables);
+    Entry.variableContainer.setMessages(project.messages);
+    Entry.variableContainer.setFunctions(project.functions);
+    Entry.scene.addScenes(project.scenes);
+    Entry.stage.initObjectContainers();
+    Entry.container.setObjects(project.objects);
+    Entry.FPS = project.speed ? project.speed : 60;
+    createjs.Ticker.setFPS(Entry.FPS);
+    if (this.type == 'workspace')
+        Entry.stateManager.endIgnore();
+
     if (!Entry.engine.projectTimer)
         Entry.variableContainer.generateTimer();
 
     if (Object.keys(Entry.container.inputValue).length === 0)
         Entry.variableContainer.generateAnswer();
     Entry.start();
+
+    return project;
 };
 
 /**

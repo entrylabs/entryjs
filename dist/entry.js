@@ -1,8 +1,20 @@
 var Entry = {events_:{}, block:{}, TEXT_ALIGN_CENTER:0, TEXT_ALIGN_LEFT:1, TEXT_ALIGN_RIGHT:2, TEXT_ALIGNS:["center", "left", "right"], loadProject:function(a) {
-  a && ("workspace" == this.type && Entry.stateManager.startIgnore(), Entry.projectId = a._id, Entry.variableContainer.setVariables(a.variables), Entry.variableContainer.setMessages(a.messages), Entry.variableContainer.setFunctions(a.functions), Entry.scene.addScenes(a.scenes), Entry.stage.initObjectContainers(), Entry.container.setObjects(a.objects), Entry.FPS = a.speed ? a.speed : 60, createjs.Ticker.setFPS(Entry.FPS), "workspace" == this.type && Entry.stateManager.endIgnore());
+  a || (a = Entry.StartProject);
+  "workspace" == this.type && Entry.stateManager.startIgnore();
+  Entry.projectId = a._id;
+  Entry.variableContainer.setVariables(a.variables);
+  Entry.variableContainer.setMessages(a.messages);
+  Entry.variableContainer.setFunctions(a.functions);
+  Entry.scene.addScenes(a.scenes);
+  Entry.stage.initObjectContainers();
+  Entry.container.setObjects(a.objects);
+  Entry.FPS = a.speed ? a.speed : 60;
+  createjs.Ticker.setFPS(Entry.FPS);
+  "workspace" == this.type && Entry.stateManager.endIgnore();
   Entry.engine.projectTimer || Entry.variableContainer.generateTimer();
   0 === Object.keys(Entry.container.inputValue).length && Entry.variableContainer.generateAnswer();
   Entry.start();
+  return a;
 }, exportProject:function(a) {
   a || (a = {});
   Entry.engine.isState("stop") || Entry.engine.toggleStop();
@@ -8805,6 +8817,9 @@ Entry.Popup.prototype.resize = function(a) {
   a.style.width = String(b) + "px";
   a.style.height = String(c + 35) + "px";
 };
+Entry.StartProject = {category:"\uae30\ud0c0", scenes:[{name:"\uc7a5\uba74 1", id:"7dwq"}], variables:[{name:"\ucd08\uc2dc\uacc4", id:"brih", visible:!1, value:"0", variableType:"timer", x:150, y:-70, array:[], object:null, isCloud:!1}, {name:"\ub300\ub2f5", id:"1vu8", visible:!1, value:"0", variableType:"answer", x:150, y:-100, array:[], object:null, isCloud:!1}], objects:[{id:"7y0y", name:"\uc5d4\ud2b8\ub9ac\ubd07", script:'<xml><block type="when_run_button_click" x="136" y="47"><next><block type="repeat_basic"><value name="VALUE"><block type="number"><field name="NUM">10</field></block></value><statement name="DO"><block type="move_direction"><value name="VALUE"><block type="number"><field name="NUM">10</field></block></value></block></statement></block></next></block></xml>', 
+selectedPictureId:"vx80", objectType:"sprite", rotateMethod:"free", scene:"7dwq", sprite:{sounds:[{duration:1.3, ext:".mp3", id:"8el5", fileurl:"/lib/entryjs/dist/media/bark.mp3", name:"\uac15\uc544\uc9c0 \uc9d6\ub294\uc18c\ub9ac"}], pictures:[{id:"vx80", fileurl:"/lib/entryjs/dist/media/entrybot1.png", name:"\uc5d4\ud2b8\ub9ac\ubd07_\uac77\uae301", scale:100, dimension:{width:284, height:350}}, {id:"4t48", fileurl:"/lib/entryjs/dist/media/entrybot2.png", name:"\uc5d4\ud2b8\ub9ac\ubd07_\uac77\uae302", 
+scale:100, dimension:{width:284, height:350}}]}, entity:{x:0, y:0, regX:142, regY:175, scaleX:.3154574132492113, scaleY:.3154574132492113, rotation:0, direction:90, width:284, height:350, visible:!0}, lock:!1, active:!0}], speed:60};
 Entry.Reporter = function(a) {
   this.userId;
   this.projectId;

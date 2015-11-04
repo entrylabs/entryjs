@@ -1,3 +1,6 @@
+'use strict';
+
+Entry.StartProject =
 {
     "category" : "기타",
     "scenes" : [
