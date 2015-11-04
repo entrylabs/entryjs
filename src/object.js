@@ -73,9 +73,17 @@ Entry.EntryObject = function(model) {
             if (!picture.id)
                 picture.id = Entry.generateHash();
             var image = new Image();
-            var fileName = picture.filename;
-            image.src = '/uploads/' + fileName.substring(0, 2) + '/' +
-                fileName.substring(2, 4) + '/image/' + fileName + '.png';
+            if (picture.fileurl) {
+                image.src = picture.fileurl;
+            } else {
+                if (picture.fileurl) {
+                    image.src = picture.fileurl;
+                } else {
+                    var fileName = picture.filename;
+                    image.src = '/uploads/' + fileName.substring(0, 2) + '/' +
+                        fileName.substring(2, 4) + '/image/' + fileName + '.png';
+                }
+            }
             image.onload = function(e) {
                 Entry.container.cachePicture(picture.id, image);
             };
@@ -895,10 +903,18 @@ Entry.EntryObject.prototype.initEntity = function(model) {
  */
 Entry.EntryObject.prototype.updateThumbnailView = function() {
     if (this.objectType == 'sprite') {
-        var fileName = this.entity.picture.filename;
-        this.thumbnailView_.style.backgroundImage =
-            'url("' + '/uploads/' + fileName.substring(0, 2) + '/' +
-            fileName.substring(2, 4) + '/thumb/' + fileName + '.png")';
+        if (this.entity.picture.fileurl) {
+            this.thumbnailView_.style.backgroundImage = 'url("' + this.entity.picture.fileurl + '")';
+        } else {
+            if (picture.fileurl) {
+                this.thumbnailView_.style.backgroundImage = 'url("' + this.entity.picture.fileurl + '")';
+            } else {
+                var fileName = this.entity.picture.filename;
+                this.thumbnailView_.style.backgroundImage =
+                    'url("' + '/uploads/' + fileName.substring(0, 2) + '/' +
+                    fileName.substring(2, 4) + '/thumb/' + fileName + '.png")';
+            }
+        }
     }
     else if (this.objectType == 'textBox')
         this.thumbnailView_.style.backgroundImage =
@@ -1372,7 +1388,7 @@ Entry.EntryObject.prototype.updateInputViews = function(isLocked) {
 
 var tog = true;
 Entry.EntryObject.prototype.editObjectValues = function(click) {
-    
+
     if(this.getLock()) {
         var inputs = [this.nameView_];
     } else {

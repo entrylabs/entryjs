@@ -5430,8 +5430,7 @@ Entry.EntityObject.prototype.setImage = function(a) {
     Entry.image = e, this.object.image = e, this.object.cache(0, 0, this.getWidth(), this.getHeight());
   } else {
     e = new Image;
-    b = a.filename;
-    e.src = "/uploads/" + b.substring(0, 2) + "/" + b.substring(2, 4) + "/image/" + b + ".png";
+    a.fileurl ? e.src = a.fileurl : (b = a.filename, e.src = "/uploads/" + b.substring(0, 2) + "/" + b.substring(2, 4) + "/image/" + b + ".png");
     var f = this;
     e.onload = function(b) {
       Entry.container.cachePicture(a.id, e);
@@ -5917,8 +5916,7 @@ Entry.EntryObject = function(a) {
       var c = this.pictures[b];
       c.id || (c.id = Entry.generateHash());
       var d = new Image;
-      a = c.filename;
-      d.src = "/uploads/" + a.substring(0, 2) + "/" + a.substring(2, 4) + "/image/" + a + ".png";
+      c.fileurl ? d.src = c.fileurl : c.fileurl ? d.src = c.fileurl : (a = c.filename, d.src = "/uploads/" + a.substring(0, 2) + "/" + a.substring(2, 4) + "/image/" + a + ".png");
       d.onload = function(a) {
         Entry.container.cachePicture(c.id, d);
       };
@@ -6307,8 +6305,16 @@ Entry.EntryObject.prototype.initEntity = function(a) {
 };
 Entry.EntryObject.prototype.updateThumbnailView = function() {
   if ("sprite" == this.objectType) {
-    var a = this.entity.picture.filename;
-    this.thumbnailView_.style.backgroundImage = 'url("/uploads/' + a.substring(0, 2) + "/" + a.substring(2, 4) + "/thumb/" + a + '.png")';
+    if (this.entity.picture.fileurl) {
+      this.thumbnailView_.style.backgroundImage = 'url("' + this.entity.picture.fileurl + '")';
+    } else {
+      if (picture.fileurl) {
+        this.thumbnailView_.style.backgroundImage = 'url("' + this.entity.picture.fileurl + '")';
+      } else {
+        var a = this.entity.picture.filename;
+        this.thumbnailView_.style.backgroundImage = 'url("/uploads/' + a.substring(0, 2) + "/" + a.substring(2, 4) + "/thumb/" + a + '.png")';
+      }
+    }
   } else {
     "textBox" == this.objectType && (this.thumbnailView_.style.backgroundImage = "url('/img/assets/text_icon.png')");
   }
@@ -6778,7 +6784,7 @@ Entry.Painter.prototype.initPicture = function() {
       a.file.id = c.id;
       a.file.name = b.name;
       a.file.mode = "edit";
-      c.src = "/uploads/" + b.filename.substring(0, 2) + "/" + b.filename.substring(2, 4) + "/image/" + b.filename + ".png";
+      b.fileurl ? img.src = b.fileurl : c.src = "/uploads/" + b.filename.substring(0, 2) + "/" + b.filename.substring(2, 4) + "/image/" + b.filename + ".png";
       c.onload = function(b) {
         a.addImage(b.target);
       };
@@ -7153,7 +7159,7 @@ Entry.Painter.prototype.addPicture = function(a) {
   this.initCommand();
   var b = new Image;
   b.id = Entry.generateHash();
-  b.src = "/uploads/" + a.filename.substring(0, 2) + "/" + a.filename.substring(2, 4) + "/image/" + a.filename + ".png";
+  b.src = a.fileurl ? a.fileurl : "/uploads/" + a.filename.substring(0, 2) + "/" + a.filename.substring(2, 4) + "/image/" + a.filename + ".png";
   var c = this;
   b.onload = function(a) {
     c.addImage(a.target);
@@ -8330,8 +8336,13 @@ Entry.Playground.prototype.setPicture = function(a) {
   var b = document.getElementById(a.id);
   a.view = b;
   b.picture = a;
-  var b = document.getElementById("t_" + a.id), c = a.filename;
-  b.style.backgroundImage = 'url("/uploads/' + c.substring(0, 2) + "/" + c.substring(2, 4) + "/thumb/" + c + '.png")';
+  b = document.getElementById("t_" + a.id);
+  if (a.fileurl) {
+    b.style.backgroundImage = 'url("' + a.fileurl + '")';
+  } else {
+    var c = a.filename;
+    b.style.backgroundImage = 'url("/uploads/' + c.substring(0, 2) + "/" + c.substring(2, 4) + "/thumb/" + c + '.png")';
+  }
   document.getElementById("s_" + a.id).innerHTML = a.dimension.width + " X " + a.dimension.height;
   Entry.playground.object.setPicture(a);
 };
@@ -8615,7 +8626,7 @@ Entry.Playground.prototype.generatePictureElement = function(a) {
     Entry.playground.object.removePicture(a.id) ? (Entry.removeElement(c), Entry.toast.success(Lang.Workspace.shape_remove_ok, a.name + " " + Lang.Workspace.shape_remove_ok_msg)) : Entry.toast.alert(Lang.Workspace.shape_remove_fail, Lang.Workspace.shape_remove_fail_msg);
   }}, {divider:!0}, {text:Lang.Workspace.context_download, href:"/", action:function(b) {
     b.preventDefault();
-    window.open("/api/sprite/download/image/" + encodeURIComponent(a.filename) + "/" + encodeURIComponent(a.name) + ".png");
+    fileurl ? window.open(a.fileurl) : window.open("/api/sprite/download/image/" + encodeURIComponent(a.filename) + "/" + encodeURIComponent(a.name) + ".png");
   }}]);
   var d = Entry.createElement("div");
   d.addClass("entryPlaygroundPictureOrder");
@@ -8623,8 +8634,12 @@ Entry.Playground.prototype.generatePictureElement = function(a) {
   c.appendChild(d);
   d = Entry.createElement("div", "t_" + a.id);
   d.addClass("entryPlaygroundPictureThumbnail");
-  var e = a.filename;
-  d.style.backgroundImage = 'url("/uploads/' + e.substring(0, 2) + "/" + e.substring(2, 4) + "/thumb/" + e + '.png")';
+  if (a.fileurl) {
+    d.style.backgroundImage = 'url("' + a.fileurl + '")';
+  } else {
+    var e = a.filename;
+    d.style.backgroundImage = 'url("/uploads/' + e.substring(0, 2) + "/" + e.substring(2, 4) + "/thumb/" + e + '.png")';
+  }
   c.appendChild(d);
   var f = Entry.createElement("input");
   f.addClass("entryPlaygroundPictureName");

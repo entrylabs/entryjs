@@ -405,8 +405,13 @@ Entry.Painter.prototype.initPicture = function() {
         painter.file.name = picture.name;
         painter.file.mode = 'edit';
 
-        image.src = '/uploads/' + picture.filename.substring(0,2)+'/'
-            +picture.filename.substring(2,4)+'/image/'+picture.filename+'.png';
+        if (picture.fileurl) {
+            img.src = picture.fileurl;
+        } else {
+            // deprecated
+            image.src = '/uploads/' + picture.filename.substring(0,2)+'/'
+                +picture.filename.substring(2,4)+'/image/'+picture.filename+'.png';
+        }
 
         image.onload = function(event) {
             painter.addImage(event.target);
@@ -1410,8 +1415,12 @@ Entry.Painter.prototype.addPicture = function(picture) {
 
     var image = new Image();
     image.id = Entry.generateHash();
-    image.src = '/uploads/' + picture.filename.substring(0,2)+'/'
-        +picture.filename.substring(2,4)+'/image/'+picture.filename+'.png';
+    if (picture.fileurl) {
+        image.src = picture.fileurl;
+    } else {
+        image.src = '/uploads/' + picture.filename.substring(0,2)+'/'
+            +picture.filename.substring(2,4)+'/image/'+picture.filename+'.png';
+    }
 
     var painter = this;
     image.onload = function(event) {

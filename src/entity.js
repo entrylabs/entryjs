@@ -793,9 +793,13 @@ Entry.EntityObject.prototype.setImage = function(pictureModel) {
     var image = Entry.container.getCachedPicture(pictureModel.id);
     if (!image) {
         image = new Image();
-        var fileName = pictureModel.filename;
-        image.src = '/uploads/' + fileName.substring(0, 2) + '/' +
-            fileName.substring(2, 4) + '/image/' + fileName + '.png';
+        if (pictureModel.fileurl) {
+            image.src = pictureModel.fileurl;
+        } else {
+            var fileName = pictureModel.filename;
+            image.src = '/uploads/' + fileName.substring(0, 2) + '/' +
+                fileName.substring(2, 4) + '/image/' + fileName + '.png';
+        }
         image = image;
         var thisPointer = this;
         image.onload = function(e) {

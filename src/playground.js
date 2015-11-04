@@ -977,10 +977,15 @@ Entry.Playground.prototype.setPicture = function(picture) {
     element.picture = picture;
 
     var thumbnailView = document.getElementById('t_'+picture.id);
-    var fileName = picture.filename;
-    thumbnailView.style.backgroundImage =
-        'url("' + '/uploads/' + fileName.substring(0, 2) + '/' +
-        fileName.substring(2, 4) + '/thumb/' + fileName + '.png")';
+    if (picture.fileurl) {
+        thumbnailView.style.backgroundImage = 'url("' + picture.fileurl + '")';
+    } else {
+        // deprecated
+        var fileName = picture.filename;
+        thumbnailView.style.backgroundImage =
+            'url("' + '/uploads/' + fileName.substring(0, 2) + '/' +
+            fileName.substring(2, 4) + '/thumb/' + fileName + '.png")';
+    }
     var sizeView = document.getElementById('s_'+picture.id);
     sizeView.innerHTML = picture.dimension.width + ' X ' +
         picture.dimension.height;
@@ -1528,8 +1533,14 @@ Entry.Playground.prototype.generatePictureElement = function(picture) {
                 href: '/',
                 action: function(e){
                     e.preventDefault();
-                    window.open('/api/sprite/download/image/'+
+                    if (fileurl) {
+                        window.open(picture.fileurl);
+                    } else {
+                        // deprecated
+                        window.open('/api/sprite/download/image/'+
                                 encodeURIComponent(picture.filename)+'/'+encodeURIComponent(picture.name) + '.png');
+                    }
+
                 }
             }
         ]);
@@ -1540,10 +1551,15 @@ Entry.Playground.prototype.generatePictureElement = function(picture) {
     element.appendChild(orderHolder);
     var thumbnailView = Entry.createElement('div', 't_'+picture.id);
     thumbnailView.addClass('entryPlaygroundPictureThumbnail');
-    var fileName = picture.filename;
-    thumbnailView.style.backgroundImage =
-        'url("' + '/uploads/' + fileName.substring(0, 2) + '/' +
-        fileName.substring(2, 4) + '/thumb/' + fileName + '.png")';
+    if (picture.fileurl) {
+        thumbnailView.style.backgroundImage = 'url("' + picture.fileurl + '")';
+    } else {
+        // deptecated
+        var fileName = picture.filename;
+        thumbnailView.style.backgroundImage =
+            'url("' + '/uploads/' + fileName.substring(0, 2) + '/' +
+            fileName.substring(2, 4) + '/thumb/' + fileName + '.png")';
+    }
     element.appendChild(thumbnailView);
     var nameView = Entry.createElement('input');
     nameView.addClass('entryPlaygroundPictureName');
