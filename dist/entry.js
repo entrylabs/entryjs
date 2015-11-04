@@ -30,8 +30,8 @@ var Entry = {events_:{}, block:{}, TEXT_ALIGN_CENTER:0, TEXT_ALIGN_LEFT:1, TEXT_
   Entry.playground.setMenuBlock(a, b);
 }, enableArduino:function() {
 }, initSound:function(a) {
-  var b = "/uploads/" + a.filename.substring(0, 2) + "/" + a.filename.substring(2, 4) + "/" + a.filename + a.ext;
-  Entry.soundQueue.loadFile({id:a.id, src:b, type:createjs.LoadQueue.SOUND});
+  a.path = a.fileurl ? a.fileurl : "/uploads/" + a.filename.substring(0, 2) + "/" + a.filename.substring(2, 4) + "/" + a.filename + a.ext;
+  Entry.soundQueue.loadFile({id:a.id, src:a.path, type:createjs.LoadQueue.SOUND});
 }, beforeUnload:function(a) {
   Entry.hw.closeConnection();
   Entry.variableContainer.updateCloudVariables();
@@ -6308,7 +6308,7 @@ Entry.EntryObject.prototype.updateThumbnailView = function() {
     if (this.entity.picture.fileurl) {
       this.thumbnailView_.style.backgroundImage = 'url("' + this.entity.picture.fileurl + '")';
     } else {
-      if (picture.fileurl) {
+      if (this.entity.picture.fileurl) {
         this.thumbnailView_.style.backgroundImage = 'url("' + this.entity.picture.fileurl + '")';
       } else {
         var a = this.entity.picture.filename;

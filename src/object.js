@@ -906,7 +906,7 @@ Entry.EntryObject.prototype.updateThumbnailView = function() {
         if (this.entity.picture.fileurl) {
             this.thumbnailView_.style.backgroundImage = 'url("' + this.entity.picture.fileurl + '")';
         } else {
-            if (picture.fileurl) {
+            if (this.entity.picture.fileurl) {
                 this.thumbnailView_.style.backgroundImage = 'url("' + this.entity.picture.fileurl + '")';
             } else {
                 var fileName = this.entity.picture.filename;

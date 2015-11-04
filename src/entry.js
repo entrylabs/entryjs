@@ -143,13 +143,17 @@ Entry.enableArduino = function() {
  * @param {sound object} sound
  */
 Entry.initSound = function(sound) {
-    var path = '/uploads/' + sound.filename.substring(0,2)+'/'+
-        sound.filename.substring(2,4)+'/'+sound.filename+sound.ext;
-    //createjs.Sound.removeSound(path);
-    //createjs.Sound.registerSound(path, sound.id, 4);
+    if (sound.fileurl) {
+        sound.path = sound.fileurl;
+    } else {
+        sound.path = '/uploads/' + sound.filename.substring(0,2)+'/'+
+            sound.filename.substring(2,4)+'/'+sound.filename+sound.ext;
+        //createjs.Sound.removeSound(path);
+        //createjs.Sound.registerSound(path, sound.id, 4);
+    }
     Entry.soundQueue.loadFile({
         id: sound.id,
-        src: path,
+        src: sound.path,
         type: createjs.LoadQueue.SOUND
     });
 };
