@@ -5,6 +5,7 @@
     "devel": true,
     "-W058": true,
     "globalstrict": true,
+    "loopfunc": true,
     "globals": {
         "goog": true,
         "createjs": true,
@@ -17,6 +18,10 @@
         "CanvasInput": true,
         "EntryStatic": true,
         "EaselHandle": true,
-        "ndgmr": true
+        "ndgmr": true,
+        "Ntry": true,
+        "Snap": true,
+        "mina": true,
+        "Touch": true
     }
 }

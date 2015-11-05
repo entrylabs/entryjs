@@ -32,6 +32,8 @@ Entry.init = function(container, options) {
     this.cloudSavable = true;
     this.startTime = new Date().getTime();
 
+    this.mediaFilePath = '/lib/entryjs/images/'
+
     document.onkeydown=function(e){
         Entry.dispatchEvent('keyPressed', e)
     };
