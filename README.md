@@ -2,14 +2,14 @@
 
 ## 프로젝트 (Project Schema)
 
- 1. 저장
+ * 저장
    : 아래의 Entry 함수를 이용해 필수정보들을 JSON형태로 저장할 수 있습니다.
     저장된 프로젝트는 Entry.loadProject(project) 를 이용해 다시 로드할 수 있습니다.
 ```
     var project = Entry.exportProject();
 ```
 
- 2. 상세 스키마
+ * 상세 스키마
 ```
 /**
  * MongoDB 스키마 예제.
