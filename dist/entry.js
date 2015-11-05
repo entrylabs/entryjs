@@ -12491,8 +12491,8 @@ Entry.BlockView = function(a, b) {
   };
   a._render = function() {
     var a = this._skeleton.path(this);
-    this._darkenPath.attr({d:a}, 300, mina.easeinout);
-    this._path.attr({d:a}, 300, mina.easeinout);
+    this._darkenPath.animate({d:a}, 3E3, mina.easeinout);
+    this._path.animate({d:a}, 3E3, mina.easeinout);
     this.set(this._skeleton.box(this));
   };
   a._align = function(a) {
