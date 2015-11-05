@@ -17,6 +17,3 @@ Entry.init = function() {
     }
 };
 
-Entry.loadProject = function(project) {
-
-};

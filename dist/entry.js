@@ -4813,8 +4813,6 @@ Entry.init = function() {
     Entry.documentMousedown.notify(a);
   }));
 };
-Entry.loadProject = function(a) {
-};
 Entry.Dialog = function(a, b, c, d) {
   a.dialog && a.dialog.remove();
   a.dialog = this;
