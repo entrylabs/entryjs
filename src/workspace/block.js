@@ -154,6 +154,10 @@ Entry.Block.FOLLOW = 3;
         if (this.next) this.next.destroy(animate);
     };
 
+    p.getView = function() {
+        return this.view;
+    };
+
     // command func
     p.doMove = function() {
         console.log(

@@ -12561,7 +12561,7 @@ Entry.BlockView = function(a, b) {
     for (var a = Snap.getElementByPoint(this.x + 690, this.y + 130), c = a.block;!c && "svg" !== a.type && "BODY" !== a.type;) {
       a = a.parent(), c = a.block;
     }
-    return c === this.block ? null : c;
+    return void 0 === c || c === this.block ? null : c.getView().getBoard() === this.getBoard() ? c : null;
   };
   a._inheritAnimate = function() {
     var a = this.block.prev.view;
@@ -12569,7 +12569,6 @@ Entry.BlockView = function(a, b) {
   };
   a.dominate = function() {
     var a = this.block, c = this.svgGroup.parent();
-    console.log(this.svgGroup.parent());
     this.svgGroup.remove();
     c.append(this.svgGroup);
     (c = a.values.STATEMENT) && (c = c.getFirstBlock().next) && c.view.dominate();
@@ -12815,6 +12814,9 @@ Entry.FieldStatement = function(a, b) {
     a = this.svgGroup;
     void 0 === d || d ? a.animate({transform:"t46 15"}, 300, mina.easeinout) : a.attr({transform:"t46 15"});
   };
+  a.getView = function() {
+    return this._blockView;
+  };
 })(Entry.FieldStatement.prototype);
 Entry.DummyBlock = function(a, b) {
   Entry.Model(this, !1);
@@ -12985,6 +12987,9 @@ Entry.Block.FOLLOW = 3;
     var c = this.values.STATEMENT;
     c && (c = c.getFirstBlock(), c instanceof Entry.DummyBlock && (c = c.next), c && c.destroy(a));
     this.next && this.next.destroy(a);
+  };
+  a.getView = function() {
+    return this.view;
   };
   a.doMove = function() {
     console.log("doMove", this.id, this.view.x - this.x, this.view.y - this.y);

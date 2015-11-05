@@ -72,6 +72,8 @@ Entry.FieldStatement = function(content, blockView) {
             });
     };
 
+    p.getView = function() {return this._blockView;};
+
 })(Entry.FieldStatement.prototype);
 
 Entry.DummyBlock = function(statementField, blockView) {

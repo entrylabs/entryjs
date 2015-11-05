@@ -281,9 +281,7 @@ Entry.BlockView = function(block, board) {
                 if (closeBlock) {
                     this.set({animating: true});
                     block.doInsert(closeBlock);
-                }
-                else
-                    block.doSeparate();
+                } else block.doSeparate();
             } else {
                 this._align(true);
             }
@@ -301,9 +299,11 @@ Entry.BlockView = function(block, board) {
             targetElement = targetElement.parent();
             targetBlock = targetElement.block;
         }
-        if (targetBlock === this.block)
-            return null;
-        return targetBlock;
+        if (targetBlock === undefined) return null;
+        if (targetBlock === this.block) return null;
+        //blocks at different board can not be connected
+        return targetBlock.getView().getBoard() ===
+            this.getBoard() ? targetBlock : null;
     };
 
     p._inheritAnimate = function() {
@@ -315,7 +315,6 @@ Entry.BlockView = function(block, board) {
     p.dominate = function() {
         var block = this.block;
         var parent = this.svgGroup.parent();
-        console.log(this.svgGroup.parent());
         this.svgGroup.remove();
         parent.append(this.svgGroup);
 
