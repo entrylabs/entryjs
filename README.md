@@ -26,6 +26,10 @@
 <script type='text/javascript' src='${WEBROOT}/entryjs/dist/entry.min.js'>
 ```
 
+* Download 사이트
+- jQuery : http://jquery.com/download/
+- Underscore : https://github.com/jashkenas/underscore
+- CreateJS (EaselJS, PreloadJS, SoundJS) : http://createjs.com/downloads
 
 ## 엔트리 초기화 (Inject Options)
 
