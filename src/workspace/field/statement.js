@@ -10,6 +10,8 @@ goog.provide("Entry.DummyBlock");
  */
 Entry.FieldStatement = function(content, blockView) {
     this._blockView = blockView;
+    this.block = blockView.block;
+    this.block.observe(this, "_updateThread", ["thread"]);
 
     this.key = content.key;
 
@@ -70,6 +72,15 @@ Entry.FieldStatement = function(content, blockView) {
             svgGroup.attr({
                 transform: transform
             });
+    };
+
+    p._updateThread = function() {
+        if (this._threadChangeEvent)
+            this._thread.changeEvent.detach(this._threadChangeEvent);
+        var thread = this.block.thread;
+        this._threadChangeEvent = this._thread.changeEvent.attach(this, function() {
+            thread.changeEvent.notify();
+        });
     };
 
     p.getView = function() {return this._blockView;};

@@ -15,9 +15,9 @@ goog.require("Entry.skeleton");
  */
 Entry.Block = function(block, thread) {
     Entry.Model(this, false);
-    this._thread = thread;
     this._schema = null;
 
+    block.thread = thread;
     this.load(block);
 };
 
@@ -38,7 +38,8 @@ Entry.Block.FOLLOW = 3;
         values: {},
         prev: null,
         next: null,
-        view: null
+        view: null,
+        thread: null
     };
 
     p.load = function(block) {
@@ -52,7 +53,7 @@ Entry.Block.FOLLOW = 3;
     p.getSchema = function() {
         this._schema = Entry.block[this.type];
         if (this._schema.event)
-            this._thread.registerEvent(this, this._schema.event);
+            this.thread.registerEvent(this, this._schema.event);
         var contents = this._schema.contents;
         for (var i = 0; i < contents.length; i++) {
             var content = contents[i];
@@ -60,17 +61,17 @@ Entry.Block.FOLLOW = 3;
                 this.values[content.key] = content.value;
             if (content.type == "Statement") {
                 this.values[content.key] = new Entry.Thread(
-                    this.values[content.key], this._thread._code);
+                    this.values[content.key], this.thread._code);
             }
         }
     };
 
     p.setThread = function(thread) {
-        this._thread = thread;
+        this.set({thread: thread});
     };
 
     p.getThread = function() {
-        return this._thread;
+        return this.thread;
     };
 
     p.setPrev = function(block) {
@@ -86,7 +87,7 @@ Entry.Block.FOLLOW = 3;
     };
 
     p.insertAfter = function(blocks) {
-        this._thread.insertByBlock(this, blocks);
+        this.thread.insertByBlock(this, blocks);
     };
 
     p._updatePos = function() {
@@ -141,7 +142,7 @@ Entry.Block.FOLLOW = 3;
     p.destroy = function(animate) {
         if (this.view) this.view.destroy(animate);
         if (!this.prev || this.prev instanceof Entry.DummyBlock)
-            this._thread.destroy();
+            this.thread.destroy();
 
         var statement = this.values.STATEMENT;
         if (statement) {
@@ -175,7 +176,7 @@ Entry.Block.FOLLOW = 3;
             this.x,
             this.y
         );
-        this._thread.separate(this);
+        this.thread.separate(this);
         this._updatePos();
     };
 
@@ -187,7 +188,7 @@ Entry.Block.FOLLOW = 3;
             this.x,
             this.y
         );
-        var blocks = this._thread.cut(this);
+        var blocks = this.thread.cut(this);
         targetBlock.insertAfter(blocks);
         this._updatePos();
     };
@@ -202,61 +203,4 @@ Entry.Block.FOLLOW = 3;
         this.destroy(animate);
     };
 
-    /*
-    p.enableHighlight = function() {
-        var pathLen = this._path.getTotalLength();
-        var path = this._path;
-        this._path.attr({
-            stroke: "#F59900",
-            strokeWidth: 2,
-            "stroke-linecap": "round",
-            "stroke-dasharray": pathLen + " " + pathLen,
-            "stroke-dashoffset": pathLen
-        });
-        setInterval(function() {
-            path.attr({"stroke-dashoffset": pathLen})
-            .animate({"stroke-dashoffset": 0}, 300);
-        }, 1400, mina.easeout);
-        setTimeout(function() {
-            setInterval(function() {
-                path.animate({"stroke-dashoffset": - pathLen}, 300);
-            }, 1400, mina.easeout);
-        }, 500);
-    };
-
-    p.checkMagnet = function(targetBlock) {
-        var matrix = {
-            x: this.x,
-            y: this.y + this.height * Entry.Block.MAGNET_OFFSET,
-            width: this.width,
-            height: this.height
-        };
-        var targetMatrix = {
-            x: targetBlock.x,
-            y: targetBlock.y
-        };
-        if (Entry.Utils.isPointInMatrix(
-            this, targetMatrix, Entry.Block.MAGNET_RANGE
-        )) {
-            this.magneting = true;
-        } else {
-            this.magneting = false;
-        }
-    };
-
-    p.applyMagnet = function() {
-        if (this.magneting) {
-            this.magnets = this._skeleton.magnets();
-            var targetBlock = this._board.dragBlock,
-                targetThread = targetBlock.thread;
-
-            var movingBlocks = targetThread._blocks.slice(targetThread._blocks.indexOf(targetBlock));
-            var targetHeight = Entry.Block.MAGNET_RANGE;
-            movingBlocks.map(function(b) {targetHeight += b.height;});
-            this.marginBottom = targetHeight;
-        } else {
-            this.measureSize();
-        }
-    };
-    */
 })(Entry.Block.prototype);

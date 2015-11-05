@@ -12783,6 +12783,8 @@ Entry.FieldIndicator = function(a, b) {
 })(Entry.FieldIndicator.prototype);
 Entry.FieldStatement = function(a, b) {
   this._blockView = b;
+  this.block = b.block;
+  this.block.observe(this, "_updateThread", ["thread"]);
   this.key = a.key;
   this.box = new Entry.BoxModel;
   this.acceptType = a.accept;
@@ -12813,6 +12815,13 @@ Entry.FieldStatement = function(a, b) {
   a.align = function(a, c, d) {
     a = this.svgGroup;
     void 0 === d || d ? a.animate({transform:"t46 15"}, 300, mina.easeinout) : a.attr({transform:"t46 15"});
+  };
+  a._updateThread = function() {
+    this._threadChangeEvent && this._thread.changeEvent.detach(this._threadChangeEvent);
+    var a = this.block.thread;
+    this._threadChangeEvent = this._thread.changeEvent.attach(this, function() {
+      a.changeEvent.notify();
+    });
   };
   a.getView = function() {
     return this._blockView;
@@ -12909,8 +12918,8 @@ Entry.skeleton.pebble_basic = {path:function(a) {
 }};
 Entry.Block = function(a, b) {
   Entry.Model(this, !1);
-  this._thread = b;
   this._schema = null;
+  a.thread = b;
   this.load(a);
 };
 Entry.Block.MAGNET_RANGE = 10;
@@ -12920,7 +12929,7 @@ Entry.Block.SHOWN = 1;
 Entry.Block.MOVE = 2;
 Entry.Block.FOLLOW = 3;
 (function(a) {
-  a.schema = {id:null, x:0, y:0, type:null, values:{}, prev:null, next:null, view:null};
+  a.schema = {id:null, x:0, y:0, type:null, values:{}, prev:null, next:null, view:null, thread:null};
   a.load = function(a) {
     a.id || (a.id = Entry.Utils.generateId());
     this.set(a);
@@ -12928,18 +12937,18 @@ Entry.Block.FOLLOW = 3;
   };
   a.getSchema = function() {
     this._schema = Entry.block[this.type];
-    this._schema.event && this._thread.registerEvent(this, this._schema.event);
+    this._schema.event && this.thread.registerEvent(this, this._schema.event);
     for (var a = this._schema.contents, c = 0;c < a.length;c++) {
       var d = a[c];
       d.value && (this.values[d.key] = d.value);
-      "Statement" == d.type && (this.values[d.key] = new Entry.Thread(this.values[d.key], this._thread._code));
+      "Statement" == d.type && (this.values[d.key] = new Entry.Thread(this.values[d.key], this.thread._code));
     }
   };
   a.setThread = function(a) {
-    this._thread = a;
+    this.set({thread:a});
   };
   a.getThread = function() {
-    return this._thread;
+    return this.thread;
   };
   a.setPrev = function(a) {
     this.set({prev:a});
@@ -12951,7 +12960,7 @@ Entry.Block.FOLLOW = 3;
     return this.next;
   };
   a.insertAfter = function(a) {
-    this._thread.insertByBlock(this, a);
+    this.thread.insertByBlock(this, a);
   };
   a._updatePos = function() {
     this.view && this.set({x:this.view.x, y:this.view.y});
@@ -12983,7 +12992,7 @@ Entry.Block.FOLLOW = 3;
   };
   a.destroy = function(a) {
     this.view && this.view.destroy(a);
-    (!this.prev || this.prev instanceof Entry.DummyBlock) && this._thread.destroy();
+    (!this.prev || this.prev instanceof Entry.DummyBlock) && this.thread.destroy();
     var c = this.values.STATEMENT;
     c && (c = c.getFirstBlock(), c instanceof Entry.DummyBlock && (c = c.next), c && c.destroy(a));
     this.next && this.next.destroy(a);
@@ -12997,12 +13006,12 @@ Entry.Block.FOLLOW = 3;
   };
   a.doSeparate = function() {
     console.log("separate", this.id, this.x, this.y);
-    this._thread.separate(this);
+    this.thread.separate(this);
     this._updatePos();
   };
   a.doInsert = function(a) {
     console.log("insert", this.id, a.id, this.x, this.y);
-    var c = this._thread.cut(this);
+    var c = this.thread.cut(this);
     a.insertAfter(c);
     this._updatePos();
   };
