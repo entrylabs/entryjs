@@ -12972,12 +12972,12 @@ Entry.Block.FOLLOW = 3;
     }
     return c;
   };
-  a._destroy = function(a) {
+  a.destroy = function(a) {
     this.view && this.view.destroy(a);
     (!this.prev || this.prev instanceof Entry.DummyBlock) && this._thread.destroy();
     var c = this.values.STATEMENT;
-    c && (c = c.getFirstBlock(), c instanceof Entry.DummyBlock && (c = c.next), c && c.doDestroy(a));
-    this.next && this.next.doDestroy(a);
+    c && (c = c.getFirstBlock(), c instanceof Entry.DummyBlock && (c = c.next), c && c.destroy(a));
+    this.next && this.next.destroy(a);
   };
   a.doMove = function() {
     console.log("doMove", this.id, this.view.x - this.x, this.view.y - this.y);
@@ -12996,7 +12996,7 @@ Entry.Block.FOLLOW = 3;
   };
   a.doDestroy = function(a) {
     console.log("destroy", this.id, this.x, this.y);
-    this._destroy(a);
+    this.destroy(a);
   };
 })(Entry.Block.prototype);
 Entry.Thread = function(a, b) {
