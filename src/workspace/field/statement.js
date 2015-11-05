@@ -89,13 +89,18 @@ Entry.DummyBlock = function(statementField, blockView) {
 
     this.path = this.svgGroup.path(path);
     this.path.attr({
-        transform: "t0 1.1",
+        transform: "t0 -10",
         fill: "transparent"
     });
 
     this.prevObserver = blockView.observe(
         this, "_align", ["x", "y"]
     );
+
+    this.prevAnimatingObserver = blockView.observe(
+        this, "_inheritAnimate", ["animating"]
+    );
+
     this._align();
 };
 
@@ -104,7 +109,8 @@ Entry.DummyBlock = function(statementField, blockView) {
         x: 0,
         y: 0,
         width: 0,
-        height: 40 - 1
+        height: 40 - 1,
+        animating: false
     };
 
     p._align = function(animate) {
@@ -126,4 +132,9 @@ Entry.DummyBlock = function(statementField, blockView) {
     p.setNext = function(block) {
         this.next = block;
     };
+
+    p._inheritAnimate = function() {
+        this.set({animating: this.originBlockView.animating});
+    };
+
 })(Entry.DummyBlock.prototype);

@@ -12824,12 +12824,13 @@ Entry.DummyBlock = function(a, b) {
   this.svgGroup.block = a;
   var c = Entry.skeleton[a.acceptType].path(this);
   this.path = this.svgGroup.path(c);
-  this.path.attr({transform:"t0 1.1", fill:"transparent"});
+  this.path.attr({transform:"t0 -10", fill:"transparent"});
   this.prevObserver = b.observe(this, "_align", ["x", "y"]);
+  this.prevAnimatingObserver = b.observe(this, "_inheritAnimate", ["animating"]);
   this._align();
 };
 (function(a) {
-  a.schema = {x:0, y:0, width:0, height:39};
+  a.schema = {x:0, y:0, width:0, height:39, animating:!1};
   a._align = function(a) {
     this.set({x:this.originBlockView.x, y:this.originBlockView.y});
   };
@@ -12841,6 +12842,9 @@ Entry.DummyBlock = function(a, b) {
   };
   a.setNext = function(a) {
     this.next = a;
+  };
+  a._inheritAnimate = function() {
+    this.set({animating:this.originBlockView.animating});
   };
 })(Entry.DummyBlock.prototype);
 Entry.FieldText = function(a, b) {
@@ -12884,7 +12888,7 @@ Entry.skeleton.pebble_event = {path:function(a) {
 }};
 Entry.skeleton.pebble_loop = {path:function(a) {
   a = Math.max(a.contentHeight, 50);
-  return "M 0,9 q 9,0 9,-9 h %cw q 25,0 25,25 v %ch q 0,25 -25,25 h -%cw a 9,9 0 0,1 -18,0 h -%cw q -25,0 -25,-25 v -%ch q 0,-25 25,-25 h %cw q 0,9 9,9 M 0,49 a 9,9 0 0,1 -9,-9 h -28 a 25,25 0 0,0 -25,25 v %cih a 25,25 0 0,0 25,25 h 28 a 9,9 0 0,0 18,0 h 28 a 25,25 0 0,0 25,-25 v -%cih a 25,25 0 0,0 -25,-25 h -28 a 9,9 0 0,1 -9,9 z".replace(/%cw/gi, 41).replace(/%ch/gi, a + 4).replace(/%cih/gi, a + -50);
+  return "M 0,9 a 9,9 0 0,0 9,-9 h %cw q 25,0 25,25 v %ch q 0,25 -25,25 h -%cw a 9,9 0 0,1 -18,0 h -%cw q -25,0 -25,-25 v -%ch q 0,-25 25,-25 h %cw a 9,9 0 0,0 9,9 M 0,49 a 9,9 0 0,1 -9,-9 h -28 a 25,25 0 0,0 -25,25 v %cih a 25,25 0 0,0 25,25 h 28 a 9,9 0 0,0 18,0 h 28 a 25,25 0 0,0 25,-25 v -%cih a 25,25 0 0,0 -25,-25 h -28 a 9,9 0 0,1 -9,9 z".replace(/%cw/gi, 41).replace(/%ch/gi, a + 4).replace(/%cih/gi, a + -50);
 }, magnets:function() {
   return {previous:{x:0, y:0}, next:{x:0, y:105}};
 }, box:function(a) {
