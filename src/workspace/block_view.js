@@ -143,11 +143,11 @@ Entry.BlockView = function(block, board) {
 
         this._darkenPath.animate({
             d: path
-        }, 3000, mina.easeinout);
+        }, 300, mina.easeinout);
 
         this._path.animate({
             d: path
-        }, 3000, mina.easeinout);
+        }, 300, mina.easeinout);
         this.set(this._skeleton.box(this));
     };
 
