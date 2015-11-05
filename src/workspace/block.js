@@ -132,7 +132,7 @@ Entry.Block.FOLLOW = 3;
         return json;
     };
 
-    p._destroy = function(animate) {
+    p.destroy = function(animate) {
         if (this.view) this.view.destroy(animate);
         if (!this.prev || this.prev instanceof Entry.DummyBlock)
             this._thread.destroy();
@@ -142,10 +142,10 @@ Entry.Block.FOLLOW = 3;
             var block = statement.getFirstBlock();
             if (block instanceof Entry.DummyBlock)
                 block = block.next;
-            if (block) block.doDestroy(animate);
+            if (block) block.destroy(animate);
         }
 
-        if (this.next) this.next.doDestroy(animate);
+        if (this.next) this.next.destroy(animate);
     };
 
     // command func
@@ -189,7 +189,7 @@ Entry.Block.FOLLOW = 3;
             this.x,
             this.y
         );
-        this._destroy(animate);
+        this.destroy(animate);
     };
 
     /*
