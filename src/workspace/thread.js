@@ -42,9 +42,8 @@ Entry.Thread = function(thread, code) {
 
         this._setRelation();
 
-        if (this._code.view) {
-            this.createView(this._code.view.board);
-        }
+        var codeView = this._code.view;
+        if (codeView) this.createView(codeView.board);
     };
 
     p._setRelation = function() {
@@ -121,8 +120,11 @@ Entry.Thread = function(thread, code) {
         var code = code || this._code;
         var clonedBlocks = [];
         var newThread = new Entry.Thread([], code);
-        for (var i = 0; i < this._data.length; i++) {
-            clonedBlocks.push(this._data[i].clone(newThread));
+        var blocks = this._data;
+        for (var i = 0; i < blocks.length; i++) {
+            clonedBlocks.push(
+                blocks[i].clone(newThread)
+            );
         }
         newThread.load(clonedBlocks);
         return newThread;

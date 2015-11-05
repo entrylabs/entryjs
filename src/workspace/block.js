@@ -101,13 +101,19 @@ Entry.Block.FOLLOW = 3;
 
     p.createView = function(board) {
         if (!this.view) {
-            this.set({view: new Entry.BlockView(this, board)});
+            this.set({view: new Entry.BlockView(
+                this,
+                board)
+            });
             this._updatePos();
         }
     };
 
     p.clone = function(thread) {
-        return new Entry.Block(this.toJSON(true), thread);
+        return new Entry.Block(
+            this.toJSON(true),
+            thread
+        );
     };
 
     p.toJSON = function(isNew) {

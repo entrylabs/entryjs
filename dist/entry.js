@@ -12431,6 +12431,7 @@ Entry.BlockMenu = function(a) {
 Entry.BlockView = function(a, b) {
   Entry.Model(this, !1);
   this.block = a;
+  this._board = b;
   this.set(a);
   this.svgGroup = b.svgBlockGroup.group();
   this.svgGroup.block = this.block;
@@ -12467,6 +12468,7 @@ Entry.BlockView = function(a, b) {
     this._alignContent(!1);
   };
   a.changeBoard = function(a) {
+    this._board = a;
     this.svgGroup.remove();
     a.svgBlockGroup.append(this.svgGroup);
   };
@@ -12534,11 +12536,11 @@ Entry.BlockView = function(a, b) {
       f.dragMode = Entry.DRAG_MODE_DRAG;
     }
     function d(a) {
+      $(document).unbind(".block");
       a = f.getBoard();
       f.terminateDrag();
+      a && a.set({dragBlock:null});
       delete f.dragInstance;
-      $(document).unbind(".block");
-      a.set({dragBlock:null});
     }
     if (0 === a.button || a instanceof Touch) {
       var e = $(document);
@@ -12570,13 +12572,14 @@ Entry.BlockView = function(a, b) {
   };
   a.dominate = function() {
     var a = this.block, c = this.svgGroup.parent();
+    console.log(this.svgGroup.parent());
     this.svgGroup.remove();
     c.append(this.svgGroup);
     (c = a.values.STATEMENT) && (c = c.getFirstBlock().next) && c.view.dominate();
     a.next && a.next.view.dominate();
   };
   a.getBoard = function() {
-    return this.svgGroup.parent().board;
+    return this._board;
   };
   a.destroy = function(a) {
     var c = this.svgGroup;
@@ -13019,7 +13022,7 @@ Entry.Thread = function(a, b) {
       d instanceof Entry.Block || d instanceof Entry.DummyBlock ? (d.setThread(this), this._data.push(d)) : this._data.push(new Entry.Block(d, this));
     }
     this._setRelation();
-    this._code.view && this.createView(this._code.view.board);
+    (a = this._code.view) && this.createView(a.board);
   };
   a._setRelation = function() {
     var a = this._data.getAll();
@@ -13073,8 +13076,8 @@ Entry.Thread = function(a, b) {
     a = a || this._code;
     var c = [];
     a = new Entry.Thread([], a);
-    for (var d = 0;d < this._data.length;d++) {
-      c.push(this._data[d].clone(a));
+    for (var d = this._data, e = 0;e < d.length;e++) {
+      c.push(d[e].clone(a));
     }
     a.load(c);
     return a;

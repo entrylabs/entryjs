@@ -11,6 +11,7 @@ goog.provide("Entry.BlockView");
 Entry.BlockView = function(block, board) {
     Entry.Model(this, false);
     this.block = block;
+    this._board = board;
     this.set(block);
     this.svgGroup = board.svgBlockGroup.group();
     this.svgGroup.block = this.block;
@@ -90,6 +91,7 @@ Entry.BlockView = function(block, board) {
     };
 
     p.changeBoard = function(board) {
+        this._board = board;
         this.svgGroup.remove();
         board.svgBlockGroup.append(this.svgGroup);
     };
@@ -242,19 +244,18 @@ Entry.BlockView = function(block, board) {
                  offsetY: e.clientY
             });
             block.dragMode = Entry.DRAG_MODE_DRAG;
-            //block.thread.align(false);
-            //block._board.updateCloseMagnet(block);
         }
 
         function onMouseUp(e) {
-            var board = block.getBoard();
-
-            block.terminateDrag();
-            delete block.dragInstance;
-
             $(document).unbind('.block');
 
-            board.set({dragBlock: null});
+            var board = block.getBoard();
+            block.terminateDrag();
+            if (board) board.set({dragBlock: null});
+            delete block.dragInstance;
+
+
+
         }
     };
 
@@ -314,6 +315,7 @@ Entry.BlockView = function(block, board) {
     p.dominate = function() {
         var block = this.block;
         var parent = this.svgGroup.parent();
+        console.log(this.svgGroup.parent());
         this.svgGroup.remove();
         parent.append(this.svgGroup);
 
@@ -325,9 +327,7 @@ Entry.BlockView = function(block, board) {
         if (block.next) block.next.view.dominate();
     };
 
-    p.getBoard = function() {
-        return this.svgGroup.parent().board;
-    };
+    p.getBoard = function() {return this._board;};
 
     p.destroy = function(animate) {
         var svgGroup = this.svgGroup;
