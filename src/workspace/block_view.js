@@ -20,6 +20,10 @@ Entry.BlockView = function(block, board) {
     this._skeleton = Entry.skeleton[this._schema.skeleton];
     this._contents = [];
 
+    if (this._skeleton.morph) {
+        this.block.observe(this, "_renderPath", this._skeleton.morph);
+    }
+
     this.prevObserver = null;
     this.prevAnimatingObserver = null;
 
@@ -141,6 +145,11 @@ Entry.BlockView = function(block, board) {
     };
 
     p._render = function() {
+        this._renderPath();
+        this.set(this._skeleton.box(this));
+    };
+
+    p._renderPath = function() {
         var path = this._skeleton.path(this);
 
         this._darkenPath.animate({
@@ -150,7 +159,6 @@ Entry.BlockView = function(block, board) {
         this._path.animate({
             d: path
         }, 300, mina.easeinout);
-        this.set(this._skeleton.box(this));
     };
 
     p._align = function(animate) {

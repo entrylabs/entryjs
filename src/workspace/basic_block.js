@@ -45,7 +45,7 @@ Entry.block.jr_repeat = {
             type: "Dropdown",
             key: "REPEAT",
             options: [1,2,3,4,5,6,7,8,9,10],
-            value: 9
+            value: 1
         },
         "반복",
         {

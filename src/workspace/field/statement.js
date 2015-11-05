@@ -92,17 +92,20 @@ Entry.DummyBlock = function(statementField, blockView) {
 
     this.view = this;
     this.originBlockView = blockView;
+    this._schema = {};
 
     this.svgGroup = statementField.svgGroup.group();
     this.svgGroup.block = statementField;
 
-    var skeleton = Entry.skeleton[statementField.acceptType];
+    var acceptBox = Entry.skeleton[statementField.acceptType].box();
 
-    var path = skeleton.path(this);
-
-    this.path = this.svgGroup.path(path);
+    this.path = this.svgGroup.rect(
+        acceptBox.offsetX,
+        acceptBox.offsetY - 10,
+        acceptBox.width,
+        acceptBox.height
+    );
     this.path.attr({
-        transform: "t0 -10",
         fill: "transparent"
     });
 

@@ -12184,7 +12184,7 @@ Entry.block.jr_start = {skeleton:"pebble_event", event:"start", color:"#3BBD70",
   }
   Ntry.unitComp = Ntry.entityManager.getComponent(this._unit.id, Ntry.STATIC.UNIT);
 }};
-Entry.block.jr_repeat = {skeleton:"pebble_loop", color:"#127CDB", contents:[{type:"Dropdown", key:"REPEAT", options:[1, 2, 3, 4, 5, 6, 7, 8, 9, 10], value:9}, "\ubc18\ubcf5", {type:"Statement", key:"STATEMENT", accept:"pebble_basic"}], func:function() {
+Entry.block.jr_repeat = {skeleton:"pebble_loop", color:"#127CDB", contents:[{type:"Dropdown", key:"REPEAT", options:[1, 2, 3, 4, 5, 6, 7, 8, 9, 10], value:1}, "\ubc18\ubcf5", {type:"Statement", key:"STATEMENT", accept:"pebble_basic"}], func:function() {
   if (void 0 === this.repeatCount) {
     return this.repeatCount = this.block.values.REPEAT, Entry.STATIC.CONTINUE;
   }
@@ -12435,6 +12435,7 @@ Entry.BlockView = function(a, b) {
   this._schema = Entry.block[a.type];
   this._skeleton = Entry.skeleton[this._schema.skeleton];
   this._contents = [];
+  this._skeleton.morph && this.block.observe(this, "_renderPath", this._skeleton.morph);
   this.prevAnimatingObserver = this.prevObserver = null;
   this.block.observe(this, "_bindPrev", ["prev"]);
   this.observe(this, "_updateBG", ["magneting"]);
@@ -12493,10 +12494,13 @@ Entry.BlockView = function(a, b) {
     }
   };
   a._render = function() {
+    this._renderPath();
+    this.set(this._skeleton.box(this));
+  };
+  a._renderPath = function() {
     var a = this._skeleton.path(this);
     this._darkenPath.animate({d:a}, 300, mina.easeinout);
     this._path.animate({d:a}, 300, mina.easeinout);
-    this.set(this._skeleton.box(this));
   };
   a._align = function(a) {
     if (null !== this.block.prev) {
@@ -12840,11 +12844,12 @@ Entry.DummyBlock = function(a, b) {
   Entry.Model(this, !1);
   this.view = this;
   this.originBlockView = b;
+  this._schema = {};
   this.svgGroup = a.svgGroup.group();
   this.svgGroup.block = a;
-  var c = Entry.skeleton[a.acceptType].path(this);
-  this.path = this.svgGroup.path(c);
-  this.path.attr({transform:"t0 -10", fill:"transparent"});
+  var c = Entry.skeleton[a.acceptType].box();
+  this.path = this.svgGroup.rect(c.offsetX, c.offsetY - 10, c.width, c.height);
+  this.path.attr({fill:"transparent"});
   this.prevObserver = b.observe(this, "_align", ["x", "y"]);
   this.prevAnimatingObserver = b.observe(this, "_inheritAnimate", ["animating"]);
   this._align();
@@ -12916,8 +12921,11 @@ Entry.skeleton.pebble_loop = {path:function(a) {
 }, contentPos:function() {
   return {x:-46, y:25};
 }};
-Entry.skeleton.pebble_basic = {path:function(a) {
-  return "m 0,9 a 9,9 0 0,0 9,-9 h 28 a 25,25 0 0,1 0,50 h -28 a 9,9 0 0,1 -18,0 h -28 a 25,25 0 0,1 0,-50 h 28 a 9,9 0 0,0 9,9 z";
+Entry.skeleton.pebble_basic = {morph:["prev", "next"], path:function(a) {
+  var b = a.block;
+  a = b.prev && "pebble_basic" === b.prev._schema.skeleton;
+  b = b.next && "pebble_basic" === b.next._schema.skeleton;
+  return "m 0,9 a 9,9 0 0,0 9,-9 h 28 " + (a ? "l 25,0 0,25" : "q 25,0 25,25") + (b ? "l 0,25 -25,0" : "q 0,25 -25,25") + "h -28 a 9,9 0 0,1 -18,0 h -28 " + (b ? "l -25,0 0,-25" : "q -25,0 -25,-25") + (a ? "l 0,-25 25,0" : "q 0,-25 25,-25") + "h 28 a 9,9 0 0,0 9,9 z";
 }, magnets:function() {
   return {previous:{x:0, y:0}, next:{x:0, y:51}};
 }, box:function() {
