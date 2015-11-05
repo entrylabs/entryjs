@@ -4805,7 +4805,7 @@ Entry.Dom = function(a, b) {
   b.parent && b.parent.append(d);
   return d;
 };
-Entry.initialize = function() {
+Entry.bindGlobalEvent = function() {
   Entry.windowReszied || (Entry.windowResized = new Entry.Event(window), $(window).on("resize", function() {
     Entry.windowResized.notify();
   }));
@@ -12396,7 +12396,7 @@ Entry.BlockMenu = function(a) {
     if (null !== this.dragBlock) {
       this.dragBlockObserver && this.removeDragBlockObserver();
       var a = this._svgWidth, c = this.dragBlock, d = c.block, e = this.code, f = d.getThread();
-      d && f && (c.observe(this, "moveBoardBlock", ["x", "y"]), e.cloneThread(f), d = this.workspace.getBoard(), this._boardBlockView = d.code.cloneThread(f).getFirstBlock().view, d.set({dragBlock:this._boardBlockView}), this._boardBlockView.dragMode = 1, this._boardBlockView._moveTo(-(a - c.x), c.y, !1));
+      d && f && (c.observe(this, "moveBoardBlock", ["x", "y"]), e.cloneThread(f), c.dominate(), d = this.workspace.getBoard(), this._boardBlockView = d.code.cloneThread(f).getFirstBlock().view, d.set({dragBlock:this._boardBlockView}), this._boardBlockView.dragMode = 1, this._boardBlockView._moveTo(-(a - c.x), c.y, !1));
     }
   };
   a.terminateDrag = function() {
@@ -12856,8 +12856,10 @@ Entry.FieldText = function(a, b) {
     var a = this.textElement.getBBox();
     this.box.set({x:0, y:0, width:a.width, height:a.height});
   };
-  a.align = function(a, c) {
-    this.textElement.animate({x:a, y:c}, 300, mina.easeinout);
+  a.align = function(a, c, d) {
+    !0 !== d && (d = !1);
+    var e = this.textElement, f = {x:a, y:c};
+    d ? e.animate(f, 300, mina.easeinout) : e.attr(f);
     this.box.set({x:a, y:c});
   };
 })(Entry.FieldText.prototype);
