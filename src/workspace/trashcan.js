@@ -37,7 +37,7 @@ Entry.FieldTrashcan = function(board) {
             if (this.dragBlockObserver)
                 this.dragBlockObserver.destroy();
             if (this.dragBlock && this.isOver)
-                this.dragBlock.block.getThread().destroy(true);
+                this.dragBlock.block.doDestroy(true);
             this.tAnimation(false);
         }
         this.dragBlock = block;
@@ -89,8 +89,8 @@ Entry.FieldTrashcan = function(board) {
     };
 
     p.tAnimation = function(isOver) {
-        if (isOver === this.isOver)
-            return;
+        if (isOver === this.isOver) return;
+
         isOver = isOver === undefined ? true : isOver;
         var trashTop = this.trashcanTop;
         if(isOver) {
@@ -100,7 +100,7 @@ Entry.FieldTrashcan = function(board) {
             trashTop.animate({
                 transform: "r0"}, 50);
         }
-        this.isOver = isOver
+        this.isOver = isOver;
     };
 })(Entry.FieldTrashcan.prototype);
 

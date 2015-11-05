@@ -139,11 +139,7 @@ Entry.Thread = function(thread, code) {
     };
 
     p.destroy = function(animate) {
-        var data = this._data;
-        if (this.view)
-            this.view.destroy(animate);
-        for (var i = 0; i < data.length; i++)
-            data[i].doDestroy(animate);
+        if (this.view) this.view.destroy(animate);
     };
 
     p.getFirstBlock = function() {

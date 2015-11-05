@@ -2,7 +2,7 @@
 
 goog.provide("Entry.init");
 
-Entry.init = function() {
+Entry.initialize = function() {
     if (!Entry.windowReszied) {
         Entry.windowResized = new Entry.Event(window);
         $(window).on('resize', (function() {

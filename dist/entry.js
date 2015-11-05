@@ -4805,7 +4805,7 @@ Entry.Dom = function(a, b) {
   b.parent && b.parent.append(d);
   return d;
 };
-Entry.init = function() {
+Entry.initialize = function() {
   Entry.windowReszied || (Entry.windowResized = new Entry.Event(window), $(window).on("resize", function() {
     Entry.windowResized.notify();
   }));
@@ -12642,7 +12642,7 @@ Entry.Code = function(a) {
   a.destroyThread = function(a, c) {
     var d = this._data, e = d.indexOf(a);
     d.splice(e, 1);
-    a.destroy(c);
+    a.getFirstBlock().doDestroy(c);
   };
   a.getThreads = function() {
     return this._data;
@@ -12974,6 +12974,10 @@ Entry.Block.FOLLOW = 3;
   };
   a._destroy = function(a) {
     this.view && this.view.destroy(a);
+    (!this.prev || this.prev instanceof Entry.DummyBlock) && this._thread.destroy();
+    var c = this.values.STATEMENT;
+    c && (c = c.getFirstBlock(), c instanceof Entry.DummyBlock && (c = c.next), c && c.doDestroy(a));
+    this.next && this.next.doDestroy(a);
   };
   a.doMove = function() {
     console.log("doMove", this.id, this.view.x - this.x, this.view.y - this.y);
@@ -13079,11 +13083,7 @@ Entry.Thread = function(a, b) {
     return c;
   };
   a.destroy = function(a) {
-    var c = this._data;
     this.view && this.view.destroy(a);
-    for (var d = 0;d < c.length;d++) {
-      c[d].doDestroy(a);
-    }
   };
   a.getFirstBlock = function() {
     return this._data[0];
@@ -13119,7 +13119,7 @@ Entry.FieldTrashcan = function(a) {
   };
   a.updateDragBlock = function() {
     var a = this.board.dragBlock;
-    a ? this.dragBlockObserver = a.observe(this, "checkBlock", ["x", "y"]) : (this.dragBlockObserver && this.dragBlockObserver.destroy(), this.dragBlock && this.isOver && this.dragBlock.block.getThread().destroy(!0), this.tAnimation(!1));
+    a ? this.dragBlockObserver = a.observe(this, "checkBlock", ["x", "y"]) : (this.dragBlockObserver && this.dragBlockObserver.destroy(), this.dragBlock && this.isOver && this.dragBlock.block.doDestroy(!0), this.tAnimation(!1));
     this.dragBlock = a;
   };
   a.checkBlock = function() {

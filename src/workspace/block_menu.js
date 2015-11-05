@@ -145,7 +145,7 @@ Entry.BlockMenu = function(dom) {
         var workspace = this.workspace;
         var boardCode = workspace.getBoard().code;
 
-        //destory boardBlock below the range
+        //destroy boardBlock below the range
         var animate = false;
         boardBlockView.dragMode = 0;
         if (dragBlockView.x < this._svgWidth) {
