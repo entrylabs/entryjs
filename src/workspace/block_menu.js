@@ -114,7 +114,10 @@ Entry.BlockMenu = function(dom) {
         var currentThread = block.getThread();
         if (block && currentThread) {
             blockView.observe(this, "moveBoardBlock", ['x', 'y']);
+
             code.cloneThread(currentThread);
+            //original block should be top of svg
+            blockView.dominate();
 
             var workspaceBoard = this.workspace.getBoard();
             this._boardBlockView = workspaceBoard.code.
@@ -145,7 +148,7 @@ Entry.BlockMenu = function(dom) {
         var workspace = this.workspace;
         var boardCode = workspace.getBoard().code;
 
-        //destory boardBlock below the range
+        //destroy boardBlock below the range
         var animate = false;
         boardBlockView.dragMode = 0;
         if (dragBlockView.x < this._svgWidth) {

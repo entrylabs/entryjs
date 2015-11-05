@@ -4805,7 +4805,7 @@ Entry.Dom = function(a, b) {
   b.parent && b.parent.append(d);
   return d;
 };
-Entry.init = function() {
+Entry.bindGlobalEvent = function() {
   Entry.windowReszied || (Entry.windowResized = new Entry.Event(window), $(window).on("resize", function() {
     Entry.windowResized.notify();
   }));
@@ -5872,10 +5872,10 @@ p.closeConnection = function() {
   this.socket && this.socket.close();
 };
 p.downloadConnector = function() {
-  window.open("/file/entry_v0.1.zip", "_blank").focus();
+  window.open("http://play-entry.com/file/entry_v0.1.zip", "_blank").focus();
 };
 p.downloadSource = function() {
-  window.open("/lib/EntryArduino/arduino/entry.ino", "_blank").focus();
+  window.open("http://play-entry.com/lib/EntryArduino/arduino/entry.ino", "_blank").focus();
 };
 p.setZero = function() {
   Entry.hw.hwModule && Entry.hw.hwModule.setZero();
@@ -6443,22 +6443,20 @@ Entry.EntryObject.prototype.initEntity = function(a) {
     var c = a.sprite.pictures[0].dimension;
     b.regX = c.width / 2;
     b.regY = c.height / 2;
-    a = "background" == a.sprite.category.main ? Math.max(270 / c.height, 480 / c.width) : "new" == a.sprite.category.main ? 1 : 200 / (c.width + c.height);
-    b.scaleX = b.scaleY = a;
+    b.scaleX = b.scaleY = "background" == a.sprite.category.main ? Math.max(270 / c.height, 480 / c.width) : "new" == a.sprite.category.main ? 1 : 200 / (c.width + c.height);
     b.width = c.width;
     b.height = c.height;
   } else {
     if ("textBox" == this.objectType) {
       if (b.regX = 25, b.regY = 12, b.scaleX = b.scaleY = 1.5, b.width = 50, b.height = 24, b.text = a.name, a.options) {
-        if (c = a.options, a = "", c.bold && (a += "bold "), c.italic && (a += "italic "), b.underline = c.underline, b.strike = c.strike, b.font = a + "20px " + c.font.family, b.colour = c.colour, b.bgColor = c.background, b.lineBreak = c.lineBreak) {
-          c = b.text.split("\n");
-          if (1 < c.length) {
-            a = c[0].length;
-            for (var d = 1, e = c.length;d < e;d++) {
-              c[d].length > a && (a = c[d].length);
+        if (a = a.options, c = "", a.bold && (c += "bold "), a.italic && (c += "italic "), b.underline = a.underline, b.strike = a.strike, b.font = c + "20px " + a.font.family, b.colour = a.colour, b.bgColor = a.background, b.lineBreak = a.lineBreak) {
+          a = b.text.split("\n");
+          if (1 < a.length) {
+            for (var c = a[0].length, d = 1, e = a.length;d < e;d++) {
+              a[d].length > c && (c = a[d].length);
             }
-            b.width = 25 * a;
-            b.height = 24 * c.length;
+            b.width = 25 * c;
+            b.height = 24 * a.length;
           } else {
             b.width = 25 * b.text.length;
           }
@@ -7038,8 +7036,7 @@ Entry.Painter.prototype.colorPixel = function(a, b, c, d, e) {
   this.colorLayerData.data[a + 3] = e;
 };
 Entry.Painter.prototype.pickStrokeColor = function(a) {
-  var b = Math.round(a.stageX);
-  a = 4 * (Math.round(a.stageY) * this.canvas.width + b);
+  a = 4 * (Math.round(a.stageY) * this.canvas.width + Math.round(a.stageX));
   this.stroke.lineColor = Entry.rgb2hex(this.colorLayerData.data[a], this.colorLayerData.data[a + 1], this.colorLayerData.data[a + 2]);
   document.getElementById("entryPainterAttrCircle").style.backgroundColor = this.stroke.lineColor;
   document.getElementById("entryPainterAttrCircleInput").value = this.stroke.lineColor;
@@ -10911,8 +10908,8 @@ Entry.Variable.prototype.setType = function(a) {
   this.type = a;
 };
 Entry.Variable.prototype.getSlidePosition = function(a) {
-  var b = this.minValue_, c = this.maxValue_, b = Math.abs(this.value_ - b) / Math.abs(c - b);
-  return a * b + 10;
+  var b = this.minValue_;
+  return Math.abs(this.value_ - b) / Math.abs(this.maxValue_ - b) * a + 10;
 };
 Entry.Variable.prototype.setSlideCommandX = function(a, b) {
   var c = this.valueSetter_.graphics.command;
@@ -10921,7 +10918,7 @@ Entry.Variable.prototype.setSlideCommandX = function(a, b) {
   this.updateSlideValueByView();
 };
 Entry.Variable.prototype.updateSlideValueByView = function() {
-  var a = this.maxWidth, a = Math.max(this.valueSetter_.graphics.command.x - 10, 0) / a;
+  var a = Math.max(this.valueSetter_.graphics.command.x - 10, 0) / this.maxWidth;
   0 > a && (a = 0);
   1 < a && (a = 1);
   a = (this.minValue_ + Number(Math.abs(this.maxValue_ - this.minValue_) * a)).toFixed(2);
@@ -12397,7 +12394,7 @@ Entry.BlockMenu = function(a) {
     if (null !== this.dragBlock) {
       this.dragBlockObserver && this.removeDragBlockObserver();
       var a = this._svgWidth, c = this.dragBlock, d = c.block, e = this.code, f = d.getThread();
-      d && f && (c.observe(this, "moveBoardBlock", ["x", "y"]), e.cloneThread(f), d = this.workspace.getBoard(), this._boardBlockView = d.code.cloneThread(f).getFirstBlock().view, d.set({dragBlock:this._boardBlockView}), this._boardBlockView.dragMode = 1, this._boardBlockView._moveTo(-(a - c.x), c.y, !1));
+      d && f && (c.observe(this, "moveBoardBlock", ["x", "y"]), e.cloneThread(f), c.dominate(), d = this.workspace.getBoard(), this._boardBlockView = d.code.cloneThread(f).getFirstBlock().view, d.set({dragBlock:this._boardBlockView}), this._boardBlockView.dragMode = 1, this._boardBlockView._moveTo(-(a - c.x), c.y, !1));
     }
   };
   a.terminateDrag = function() {
@@ -12643,7 +12640,7 @@ Entry.Code = function(a) {
   a.destroyThread = function(a, c) {
     var d = this._data, e = d.indexOf(a);
     d.splice(e, 1);
-    a.destroy(c);
+    a.getFirstBlock().doDestroy(c);
   };
   a.getThreads = function() {
     return this._data;
@@ -12857,8 +12854,10 @@ Entry.FieldText = function(a, b) {
     var a = this.textElement.getBBox();
     this.box.set({x:0, y:0, width:a.width, height:a.height});
   };
-  a.align = function(a, c) {
-    this.textElement.animate({x:a, y:c}, 300, mina.easeinout);
+  a.align = function(a, c, d) {
+    !0 !== d && (d = !1);
+    var e = this.textElement, f = {x:a, y:c};
+    d ? e.animate(f, 300, mina.easeinout) : e.attr(f);
     this.box.set({x:a, y:c});
   };
 })(Entry.FieldText.prototype);
@@ -12975,6 +12974,10 @@ Entry.Block.FOLLOW = 3;
   };
   a._destroy = function(a) {
     this.view && this.view.destroy(a);
+    (!this.prev || this.prev instanceof Entry.DummyBlock) && this._thread.destroy();
+    var c = this.values.STATEMENT;
+    c && (c = c.getFirstBlock(), c instanceof Entry.DummyBlock && (c = c.next), c && c.doDestroy(a));
+    this.next && this.next.doDestroy(a);
   };
   a.doMove = function() {
     console.log("doMove", this.id, this.view.x - this.x, this.view.y - this.y);
@@ -13080,11 +13083,7 @@ Entry.Thread = function(a, b) {
     return c;
   };
   a.destroy = function(a) {
-    var c = this._data;
     this.view && this.view.destroy(a);
-    for (var d = 0;d < c.length;d++) {
-      c[d].doDestroy(a);
-    }
   };
   a.getFirstBlock = function() {
     return this._data[0];
@@ -13120,7 +13119,7 @@ Entry.FieldTrashcan = function(a) {
   };
   a.updateDragBlock = function() {
     var a = this.board.dragBlock;
-    a ? this.dragBlockObserver = a.observe(this, "checkBlock", ["x", "y"]) : (this.dragBlockObserver && this.dragBlockObserver.destroy(), this.dragBlock && this.isOver && this.dragBlock.block.getThread().destroy(!0), this.tAnimation(!1));
+    a ? this.dragBlockObserver = a.observe(this, "checkBlock", ["x", "y"]) : (this.dragBlockObserver && this.dragBlockObserver.destroy(), this.dragBlock && this.isOver && this.dragBlock.block.doDestroy(!0), this.tAnimation(!1));
     this.dragBlock = a;
   };
   a.checkBlock = function() {

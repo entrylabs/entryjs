@@ -162,13 +162,13 @@ p.closeConnection = function() {
 }
 
 p.downloadConnector = function() {
-    var url = "/file/entry_v0.1.zip";
+    var url = "http://play-entry.com/file/entry_v0.1.zip";
     var win = window.open(url, '_blank');
     win.focus();
 }
 
 p.downloadSource = function() {
-    var url = "/lib/EntryArduino/arduino/entry.ino";
+    var url = "http://play-entry.com/lib/EntryArduino/arduino/entry.ino";
     var win = window.open(url, '_blank');
     win.focus();
 }
