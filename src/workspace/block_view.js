@@ -139,13 +139,13 @@ Entry.BlockView = function(block, board) {
     p._render = function() {
         var path = this._skeleton.path(this);
 
-        this._darkenPath.attr({
+        this._darkenPath.animate({
             d: path
-        }, 300, mina.easeinout);
+        }, 3000, mina.easeinout);
 
-        this._path.attr({
+        this._path.animate({
             d: path
-        }, 300, mina.easeinout);
+        }, 3000, mina.easeinout);
         this.set(this._skeleton.box(this));
     };
 
