@@ -1,5 +1,144 @@
 # entryjs
 
+
+## Dependent library
+
+* CSS include
+```
+<link rel='stylesheet'  href='${WEBROOT}/entryjs/dist/entry.css'>
+```
+
+* JS includes (jquery and underscore required)
+```
+<script type='text/javascript' src='${WEBROOT}/jquery.js'>
+<script type='text/javascript' src='${WEBROOT}/underscore.js'>
+<script type='text/javascript' src='${WEBROOT}/PreloadJS/lib/preloadjs-0.6.0.min.js'>
+<script type='text/javascript' src='${WEBROOT}/EaselJS/lib/easeljs-0.8.0.min.js'>
+<script type='text/javascript' src='${WEBROOT}/SoundJS/lib/soundjs-0.6.0.min.js'>
+<script type='text/javascript' src='${WEBROOT}/SoundJS/lib/flashaudioplugin-0.6.0.min.js'>
+<script type='text/javascript' src='${WEBROOT}/entryjs/extern/blockly/blockly_compressed.js'>
+<script type='text/javascript' src='${WEBROOT}/entryjs/util/ko.js'>
+<script type='text/javascript' src='${WEBROOT}/entryjs/util/static.js'>
+<script type='text/javascript' src='${WEBROOT}/entryjs/util/CanvasInput.js'>
+<script type='text/javascript' src='${WEBROOT}/entryjs/util/handle.js'>
+<script type='text/javascript' src='${WEBROOT}/entryjs/util/ndgmr.Collision.js'>
+
+<script type='text/javascript' src='${WEBROOT}/entryjs/dist/entry.min.js'>
+```
+
+
+## 엔트리 초기화 (Inject Options)
+
+ * Entry.init(domElement, initOptions);
+```
+   - Markup
+   <div id="workspace"></div>
+```
+
+```
+   - JS
+   var workspace = document.getElementById("workspace");
+   var initOptions = {
+    type: 'workspace'
+   };
+   Entry.init(workspace, initOptions);
+```
+   - domElement : Entry가 Inject될 DOM 노드.
+   - initOptions (기본값)
+````
+{
+    type: 워크스페이스 타입. (workspace: 만들기 환경, minimize: 구경하기 환경)
+    projectsaveable: 프로젝트 저장가능 여부 (true)
+    objectaddable: 오브젝트 추가가능 여부 (true)
+    objectEditable: 오브젝트 수정가능 여부 (true). 이값을 false로 세팅하면 objectAddable도 false가 된다.
+    objectdeletable: 오브젝트 삭제가능 여부 (true)
+    soundeditable: 소리 수정가능 여부 (true)
+    pictureeditable: 모양 수정가능 여부 (true)
+    sceneEditable: 장면 수정가능 여부 (true)
+    functionEnable: 함수 사용가능 여부 (true)
+    messageEnable: 신호 사용가능 여부 (true)
+    variableEnable: 변수 사용가능 여부 (true)
+    listEnable: 리스트 사용가능 여부 (true)
+    isForLecture: 강의용 프로젝트 여부 (false)
+   }
+```
+
+ * Entry.playground.setBlockMenu(); // 블록메뉴 초기화
+ * Entry.enableArduino(); // 아두이노 초기화, Web socket connection 오픈
+ * Entry.loadProject(project) // 프로젝트 불러오기. project 인자를 생략할 경우 기본 프로젝트를 리턴합니다.
+
+
+ ## 이벤트. (Event description)
+
+ * event listening
+ ```
+ Entry.addEventListener(eventName, function);
+ ```
+  - eventName: 캐치하고 싶은  커스텀 이벤트의 이름
+  - function: 해당 커스텀 이벤트가 발생했을 경우 실행 될 함수
+
+ * event dispatch
+ ```
+ Entry.dispatchEvent(eventName,params);
+ ```
+  - eventName: 발생 시키고 싶은 이벤트의 이름
+  - params: 이벤트를 리스닝 하고 있는 콜백함수에 넘겨줄 파라미터
+
+ * 대표적인 이벤트
+  - run
+  - stop
+
+ * 유저 인터랙션
+  - keyPressed
+  - keyUpped
+  - canvasClick
+  - canvasClickCanceled
+  - entityClick
+  - entityClickCanceled
+  - stageMouseMove
+  - stageMouseOut
+
+ * 화면
+  - windowResized
+
+## Entry.Toast
+* 워크스페이스 하단에 알림 메시지 표시
+- Entry.Toast.warning(title, message, auto-dospose); // 주의
+- Entry.Toast.success(title, message, auto-dospose); // 성공
+- Entry.Toast.alert(title, message, auto-dospose); // 경고
+
+## 블록 모양 정의와 실행 스크립트.
+${entryjs}/src/blocks.js
+
+```
+// 블록 모양 정의
+Blockly.Blocks.move_x = {
+  init: function() {
+    this.setColour("#A751E3");
+    this.appendDummyInput()
+        .appendField(Lang.Blocks.MOVING_move_x_1);
+    this.appendValueInput("VALUE")
+        .setCheck(["Number", "String"]);
+    this.appendDummyInput()
+        .appendField(Lang.Blocks.MOVING_move_x_2)
+        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/moving_03.png', '*'));
+    this.setInputsInline(true);
+    this.setPreviousStatement(true);
+    this.setNextStatement(true);
+  }
+};
+
+// x좌표를 () 만큼 움직이기
+Entry.block.move_x = function (sprite, script) {
+    var value = script.getNumberValue("VALUE", script);
+    sprite.setX(sprite.getX() + value);
+    if (sprite.brush && !sprite.brush.stop) {
+        sprite.brush.lineTo(sprite.getX(), sprite.getY()*-1);
+    }
+    return script.callReturn();
+};
+```
+
 ## 프로젝트 (Project Schema)
 
  * 저장
@@ -140,84 +279,6 @@ var ProjectSchema = new Schema({
 });
 ```
 
-## 엔트리 초기화 (Inject Options)
-
- * Entry.init(domElement, initOptions);
-```
-   - Markup
-   <div id="workspace"></div>
-```
-
-```
-   - JS
-   var workspace = document.getElementById("workspace");
-   var initOptions = {
-    type: 'workspace'
-   };
-   Entry.init(workspace, initOptions);
-```
-   - domElement : Entry가 Inject될 DOM 노드.
-   - initOptions (기본값)
-````
-{
-    type: 워크스페이스 타입. (workspace: 만들기 환경, minimize: 구경하기 환경)
-    projectsaveable: 프로젝트 저장가능 여부 (true)
-    objectaddable: 오브젝트 추가가능 여부 (true)
-    objectEditable: 오브젝트 수정가능 여부 (true). 이값을 false로 세팅하면 objectAddable도 false가 된다.
-    objectdeletable: 오브젝트 삭제가능 여부 (true)
-    soundeditable: 소리 수정가능 여부 (true)
-    pictureeditable: 모양 수정가능 여부 (true)
-    sceneEditable: 장면 수정가능 여부 (true)
-    functionEnable: 함수 사용가능 여부 (true)
-    messageEnable: 신호 사용가능 여부 (true)
-    variableEnable: 변수 사용가능 여부 (true)
-    listEnable: 리스트 사용가능 여부 (true)
-    isForLecture: 강의용 프로젝트 여부 (false)
-   }
-```
-
- * Entry.playground.setBlockMenu(); // 블록메뉴 초기화
- * Entry.enableArduino(); // 아두이노 초기화, Web socket connection 오픈
- * Entry.loadProject(project) // 프로젝트 불러오기. project 인자를 생략할 경우 기본 프로젝트를 리턴합니다.
-
-
-## 이벤트. (Event description)
-
-* event listening
-```
-Entry.addEventListener(eventName, function);
-```
- - eventName: 캐치하고 싶은  커스텀 이벤트의 이름
- - function: 해당 커스텀 이벤트가 발생했을 경우 실행 될 함수
-
-* event dispatch
-```
-Entry.dispatchEvent(eventName,params);
-```
- - eventName: 발생 시키고 싶은 이벤트의 이름
- - params: 이벤트를 리스닝 하고 있는 콜백함수에 넘겨줄 파라미터
-
-* 대표적인 이벤트
- - run
- - stop
-
-* 유저 인터랙션
- - keyPressed
- - keyUpped
- - canvasClick
- - canvasClickCanceled
- - entityClick
- - entityClickCanceled
- - stageMouseMove
- - stageMouseOut
-
-* 화면
- - windowResized
-
-## Toast description
-
-
-
 ## Sprite, Picture, Sound schema
 * 스프라이트
 ```
@@ -260,35 +321,8 @@ Entry.dispatchEvent(eventName,params);
 	})
 ```
 
-## Block add and define
 
 
 
 ## License
-
-## Dependent library
-
-* CSS include
-```
-<link rel='stylesheet'  href='/lib/entryjs/dist/entry.css'>
-```
-
-* JS includes (jquery and underscore required)
-```
-<script type='text/javascript'  src='jquery.js'>
-<script type='text/javascript' src='underscore.js'>
-
-<script type='text/javascript' src='/lib/entryjs/extern/blockly/blockly_compressed.js'>
-<script type='text/javascript' src='/lib/entryjs/extern/blockly/msg/js/ko.js'>
-<script type='text/javascript' src='/lib/entryjs/extern/PreloadJS/lib/preloadjs-0.6.0.min.js'>
-<script type='text/javascript' src='/lib/entryjs/extern/EaselJS/lib/easeljs-0.8.0.min.js'>
-<script type='text/javascript' src='/lib/entryjs/extern/SoundJS/lib/soundjs-0.6.0.min.js'>
-<script type='text/javascript' src='/lib/entryjs/extern/SoundJS/lib/flashaudioplugin-0.6.0.min.js'>
-<script type='text/javascript' src='/lib/entryjs/util/ko.js'>
-<script type='text/javascript' src='/lib/entryjs/util/static.js'>
-<script type='text/javascript' src='/lib/entryjs/util/CanvasInput.js'>
-<script type='text/javascript' src='/lib/entryjs/util/handle.js'>
-<script type='text/javascript' src='/lib/entryjs/util/ndgmr.Collision.js'>
-
-<script type='text/javascript' src='/lib/entryjs/dist/entry.min.js'>
-```
+* TODO
