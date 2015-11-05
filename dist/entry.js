@@ -5874,10 +5874,10 @@ p.closeConnection = function() {
   this.socket && this.socket.close();
 };
 p.downloadConnector = function() {
-  window.open("/file/entry_v0.1.zip", "_blank").focus();
+  window.open("http://play-entry.com/file/entry_v0.1.zip", "_blank").focus();
 };
 p.downloadSource = function() {
-  window.open("/lib/EntryArduino/arduino/entry.ino", "_blank").focus();
+  window.open("http://play-entry.com/lib/EntryArduino/arduino/entry.ino", "_blank").focus();
 };
 p.setZero = function() {
   Entry.hw.hwModule && Entry.hw.hwModule.setZero();
