@@ -25,6 +25,8 @@ Entry.BlockView = function(block, board) {
 
     // observe
     this.block.observe(this, "_bindPrev", ["prev"]);
+    this.observe(this, "_updateBG", ["magneting"]);
+
     this._bindPrev();
     this.dragMode = Entry.DRAG_MODE_NONE;
 
@@ -226,6 +228,7 @@ Entry.BlockView = function(block, board) {
         }
 
         var block = this;
+        var board = this.getBoard();
         function onMouseMove(e) {
             e.stopPropagation();
             e.preventDefault();
@@ -244,18 +247,27 @@ Entry.BlockView = function(block, board) {
                  offsetY: e.clientY
             });
             block.dragMode = Entry.DRAG_MODE_DRAG;
+
+            var closeBlock = block._getCloseBlock();
+            var oldMagnet = board.magnetedBlock;
+            if (closeBlock) {
+                closeBlock = closeBlock.getView();
+                if (oldMagnet != closeBlock) {
+                    if (oldMagnet) oldMagnet.set({magneting: false});
+                    board.magnetedBlock = closeBlock;
+                    closeBlock.set({magneting: true});
+                }
+            } else if (oldMagnet) {
+                oldMagnet.set({magneting: false});
+                delete board.magnetedBlock;
+            }
         }
 
         function onMouseUp(e) {
             $(document).unbind('.block');
-
-            var board = block.getBoard();
             block.terminateDrag();
             if (board) board.set({dragBlock: null});
             delete block.dragInstance;
-
-
-
         }
     };
 
@@ -291,8 +303,12 @@ Entry.BlockView = function(block, board) {
 
     p._getCloseBlock = function() {
         var targetElement = Snap.getElementByPoint(
-            this.x + 690, this.y + 130
-        ), targetBlock = targetElement.block;
+                this.x + 690, this.y + 130
+            );
+        if (targetElement === null) return;
+
+        var targetBlock = targetElement.block;
+
         while (!targetBlock &&
                targetElement.type !== "svg" &&
                targetElement.type !== "BODY") {
@@ -341,6 +357,15 @@ Entry.BlockView = function(block, board) {
                 }
             );
         } else svgGroup.remove();
+    };
+
+    p._updateBG = function() {
+        var magneting = this.magneting;
+        if (magneting) {
+            console.log('make bg');
+        } else {
+            console.log('remove bg');
+        }
     };
 
 })(Entry.BlockView.prototype);

@@ -12437,6 +12437,7 @@ Entry.BlockView = function(a, b) {
   this._contents = [];
   this.prevAnimatingObserver = this.prevObserver = null;
   this.block.observe(this, "_bindPrev", ["prev"]);
+  this.observe(this, "_updateBG", ["magneting"]);
   this._bindPrev();
   this.dragMode = Entry.DRAG_MODE_NONE;
   this._startRender(a);
@@ -12531,12 +12532,14 @@ Entry.BlockView = function(a, b) {
       f._moveBy(a.clientX - b.offsetX, a.clientY - b.offsetY, !1);
       b.set({offsetX:a.clientX, offsetY:a.clientY});
       f.dragMode = Entry.DRAG_MODE_DRAG;
+      a = f._getCloseBlock();
+      b = h.magnetedBlock;
+      a ? (a = a.getView(), b != a && (b && b.set({magneting:!1}), h.magnetedBlock = a, a.set({magneting:!0}))) : b && (b.set({magneting:!1}), delete h.magnetedBlock);
     }
     function d(a) {
       $(document).unbind(".block");
-      a = f.getBoard();
       f.terminateDrag();
-      a && a.set({dragBlock:null});
+      h && h.set({dragBlock:null});
       delete f.dragInstance;
     }
     if (0 === a.button || a instanceof Touch) {
@@ -12550,7 +12553,7 @@ Entry.BlockView = function(a, b) {
       this.dominate();
       this.dragMode = Entry.DRAG_MODE_MOUSEDOWN;
     }
-    var f = this;
+    var f = this, h = this.getBoard();
   };
   a.terminateDrag = function() {
     var a = this.getBoard(), c = this.dragMode, d = this.block;
@@ -12558,10 +12561,13 @@ Entry.BlockView = function(a, b) {
     a instanceof Entry.BlockMenu ? a.terminateDrag() : (a = this._getCloseBlock(), d.prev || a ? 30 < Math.sqrt(Math.pow(this.x - d.x, 2) + Math.pow(this.y - d.y, 2)) ? a ? (this.set({animating:!0}), d.doInsert(a)) : d.doSeparate() : this._align(!0) : c == Entry.DRAG_MODE_DRAG && d.doMove());
   };
   a._getCloseBlock = function() {
-    for (var a = Snap.getElementByPoint(this.x + 690, this.y + 130), c = a.block;!c && "svg" !== a.type && "BODY" !== a.type;) {
-      a = a.parent(), c = a.block;
+    var a = Snap.getElementByPoint(this.x + 690, this.y + 130);
+    if (null !== a) {
+      for (var c = a.block;!c && "svg" !== a.type && "BODY" !== a.type;) {
+        a = a.parent(), c = a.block;
+      }
+      return void 0 === c || c === this.block ? null : c.getView().getBoard() === this.getBoard() ? c : null;
     }
-    return void 0 === c || c === this.block ? null : c.getView().getBoard() === this.getBoard() ? c : null;
   };
   a._inheritAnimate = function() {
     var a = this.block.prev.view;
@@ -12582,6 +12588,9 @@ Entry.BlockView = function(a, b) {
     a ? c.animate({opacity:0}, 200, null, function() {
       this.remove();
     }) : c.remove();
+  };
+  a._updateBG = function() {
+    this.magneting ? console.log("make bg") : console.log("remove bg");
   };
 })(Entry.BlockView.prototype);
 Entry.Code = function(a) {
