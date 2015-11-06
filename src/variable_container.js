@@ -2095,10 +2095,8 @@ Entry.VariableContainer.prototype.updateListSettingView = function(list) {
         listValues.removeChild(listValues.firstChild);
 
     var arr = list.array_;
-    if (arr.length == 0)
-        seperator.addClass('entryRemove');
-    else
-        seperator.removeClass('entryRemove');
+    if (arr.length === 0) seperator.addClass('entryRemove');
+    else seperator.removeClass('entryRemove');
 
     for (var i=0; i<arr.length; i++) {
         (function (i) {

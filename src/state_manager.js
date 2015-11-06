@@ -7,8 +7,8 @@
  * @constructor
  */
 Entry.StateManager = function() {
-    this.undoStack_ = new Array();
-    this.redoStack_ = new Array();
+    this.undoStack_ = [];
+    this.redoStack_ = [];
     /** prevent add command when undo and redo */
     this.isRestore = false;
     this.isIgnore = false;

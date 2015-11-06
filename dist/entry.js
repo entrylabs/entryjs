@@ -9885,13 +9885,8 @@ Entry.assert = function(a, b) {
   }
 };
 Entry.parseTexttoXML = function(a) {
-  if (window.ActiveXObject) {
-    var b = new ActiveXObject("Microsoft.XMLDOM");
-    b.async = "false";
-    b.loadXML(a);
-  } else {
-    b = (new DOMParser).parseFromString(a, "text/xml");
-  }
+  var b;
+  window.ActiveXObject ? (b = new ActiveXObject("Microsoft.XMLDOM"), b.async = "false", b.loadXML(a)) : b = (new DOMParser).parseFromString(a, "text/xml");
   return b;
 };
 Entry.createElement = function(a, b) {
@@ -10077,7 +10072,7 @@ Entry.findObjsByKey = function(a, b, c) {
 };
 Entry.factorials = [];
 Entry.factorial = function(a) {
-  return 0 == a || 1 == a ? 1 : 0 < Entry.factorials[a] ? Entry.factorials[a] : Entry.factorials[a] = Entry.factorial(a - 1) * a;
+  return 0 === a || 1 == a ? 1 : 0 < Entry.factorials[a] ? Entry.factorials[a] : Entry.factorials[a] = Entry.factorial(a - 1) * a;
 };
 Entry.getListRealIndex = function(a, b) {
   if (isNaN(a)) {
@@ -10735,7 +10730,7 @@ Entry.Variable.prototype.generateView = function(a) {
         this.cursor = "pointer";
         this.offsetY = isNaN(this.offsetY) || 0 > this.offsetY ? a.rawY / 2 : this.offsetY;
       }), this.scrollButton_.on("pressmove", function(a) {
-        void 0 == this.moveAmount ? (this.y = a.target.y, this.moveAmount = !0) : this.y = a.rawY / 2 - this.offsetY + this.list.height_ / 100 * 23;
+        void 0 === this.moveAmount ? (this.y = a.target.y, this.moveAmount = !0) : this.y = a.rawY / 2 - this.offsetY + this.list.height_ / 100 * 23;
         23 > this.y && (this.y = 23);
         this.y > this.list.getHeight() - 40 && (this.y = this.list.getHeight() - 40);
         this.list.updateView();
@@ -12090,7 +12085,7 @@ Entry.VariableContainer.prototype.updateListSettingView = function(a) {
     d.removeChild(d.firstChild);
   }
   var g = a.array_;
-  0 == g.length ? h.addClass("entryRemove") : h.removeClass("entryRemove");
+  0 === g.length ? h.addClass("entryRemove") : h.removeClass("entryRemove");
   for (e = 0;e < g.length;e++) {
     (function(c) {
       var e = Entry.createElement("div");

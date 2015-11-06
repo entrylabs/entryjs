@@ -84,13 +84,14 @@ Entry.assert = function(condition, message) {
  * @param {xml} doc
  */
 Entry.parseTexttoXML = function(xmlText) {
+    var doc;
     if (window.ActiveXObject){
-        var doc=new ActiveXObject('Microsoft.XMLDOM');
+        doc=new ActiveXObject('Microsoft.XMLDOM');
         doc.async='false';
         doc.loadXML(xmlText);
     } else {
         var parser=new DOMParser();
-        var doc=parser.parseFromString(xmlText,'text/xml');
+        doc=parser.parseFromString(xmlText,'text/xml');
     }
     return doc;
 };
@@ -456,7 +457,7 @@ Entry.cloneSimpleObject = function(object) {
 };
 
 Entry.nodeListToArray = function(nl) {
-    var arr = Array(nl.length);
+    var arr = new Array(nl.length);
     for(var i=-1,l=nl.length;++i!==l;arr[i]=nl[i]);
     return arr;
 };
@@ -499,7 +500,7 @@ Entry.findObjsByKey = function(arr, keyName, key) {
 Entry.factorials = [];
 
 Entry.factorial = function(n){
-    if (n == 0 || n == 1)
+    if (n === 0 || n == 1)
         return 1;
     if (Entry.factorials[n] > 0)
         return Entry.factorials[n];

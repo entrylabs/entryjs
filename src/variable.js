@@ -271,13 +271,13 @@ Entry.Variable.prototype.generateView = function(variableIndex) {
         });
         this.scrollButton_.on("pressmove", function(evt) {
             // if(Entry.type != 'workspace') return;
-            if(this.moveAmount== undefined) {
+            if(this.moveAmount === undefined) {
                 this.y = evt.target.y;
                 this.moveAmount = true;
             } else {
                 this.y = evt.rawY/2 - this.offsetY + 23 * (this.list.height_/100);
             }
-            
+
             if (this.y < 23)
                 this.y = 23;
             if (this.y > this.list.getHeight() - 40)
