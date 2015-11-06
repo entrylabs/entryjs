@@ -45,7 +45,7 @@ Entry.Stage.prototype.initStage = function(canvas) {
 
     if (Entry.isPhone()) {
         canvas.ontouchstart =  function(e){
-            Entry.dispatchEvent('canvasClick',e)
+            Entry.dispatchEvent('canvasClick',e);
             Entry.stage.isClick = true;
         };
         canvas.ontouchend = function(e){
@@ -139,7 +139,7 @@ Entry.Stage.prototype.render = function() {
     Entry.stage.update();
     time = new Date().getTime() - time;
     Entry.stage.timer = setTimeout(Entry.stage.render, 16 - time % 16 + 16 * Math.floor(time / 16));
-}
+};
 
 /**
  * redraw canvas
@@ -396,9 +396,9 @@ Entry.Stage.prototype.updateHandle = function() {
     } else {
         if (entity.width !== 0) {
             if (entity.getScaleX() < 0)
-                entity.setScaleX(-handle.width/entity.width)
+                entity.setScaleX(-handle.width/entity.width);
             else
-                entity.setScaleX(handle.width/entity.width)
+                entity.setScaleX(handle.width/entity.width);
         }
 
         if (entity.height !== 0)
@@ -516,7 +516,7 @@ Entry.Stage.prototype.showInputField = function (sprite) {
                 Entry.dispatchEvent('canvasInputComplete');
             }
         });
-    };
+    }
 
     var inputSubmitButton = new createjs.Container();
     var buttonImg = new Image();
