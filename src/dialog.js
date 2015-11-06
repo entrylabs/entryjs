@@ -55,7 +55,7 @@ Entry.Dialog.prototype.generateSpeak = function() {
     this.update();
     this.object.addChild(this.notch);
     this.object.addChild(text);
-}
+};
 
 /**
  * Set position
