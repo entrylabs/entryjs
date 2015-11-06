@@ -80,7 +80,7 @@ Entry.init = function(container, options) {
 };
 
 Entry.loadAudio_ = function(filenames, name) {
-  if (!window['Audio'] || !filenames.length) {
+  if (!window.Audio || !filenames.length) {
     // No browser support for Audio.
     return;
   }
@@ -324,60 +324,60 @@ Entry.parseOptions = function(options) {
     /** @type {string} */
     this.type = options.type;
 
-    this.projectSaveable = options['projectsaveable'];
+    this.projectSaveable = options.projectsaveable;
     if (this.projectSaveable === undefined)
         this.projectSaveable = true;
 
-    this.objectAddable = options['objectaddable'];
+    this.objectAddable = options.objectaddable;
     if (this.objectAddable === undefined)
         this.objectAddable = true;
 //sj
-    this.objectEditable = options['objectEditable'];
+    this.objectEditable = options.objectEditable;
     if (this.objectEditable === undefined)
         this.objectEditable = true;
     if (!this.objectEditable)
         this.objectAddable = false;
 
-    this.objectDeletable = options['objectdeletable'];
+    this.objectDeletable = options.objectdeletable;
     if (this.objectDeletable === undefined)
         this.objectDeletable = true;
 
-    this.soundEditable = options['soundeditable'];
+    this.soundEditable = options.soundeditable;
     if (this.soundEditable === undefined)
         this.soundEditable = true;
 
-    this.pictureEditable = options['pictureeditable'];
+    this.pictureEditable = options.pictureeditable;
     if (this.pictureEditable === undefined)
         this.pictureEditable = true;
 
-    this.sceneEditable = options['sceneEditable'];
+    this.sceneEditable = options.sceneEditable;
     if (this.sceneEditable === undefined)
         this.sceneEditable = true;
 
-    this.functionEnable = options['functionEnable'];
+    this.functionEnable = options.functionEnable;
     if (this.functionEnable === undefined)
         this.functionEnable = true;
 
-    this.messageEnable = options['messageEnable'];
+    this.messageEnable = options.messageEnable;
     if (this.messageEnable === undefined)
         this.messageEnable = true;
 
-    this.variableEnable = options['variableEnable'];
+    this.variableEnable = options.variableEnable;
     if (this.variableEnable === undefined)
         this.variableEnable = true;
 
-    this.listEnable = options['listEnable'];
+    this.listEnable = options.listEnable;
     if (this.listEnable === undefined)
         this.listEnable = true;
 
-    this.hasVariableManager = options['hasvariablemanager'];
+    this.hasVariableManager = options.hasvariablemanager;
     if (!(this.variableEnable || this.messageEnable ||
           this.listEnable || this.functionEnable))
         this.hasVariableManager = false;
     else if (this.hasVariableManager === undefined)
         this.hasVariableManager = true;
 
-    this.isForLecture = options['isForLecture'];
+    this.isForLecture = options.isForLecture;
 };
 
 /**
