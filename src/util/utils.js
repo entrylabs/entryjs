@@ -478,7 +478,7 @@ Entry.isArrowOrBackspace = function(keyCode){
 };
 
 Entry.hexStringToBin = function(hexString) {
-    bytes = [], str;
+    var bytes = [], str;
 
     for(var i=0; i< hexString.length-1; i+=2){
         bytes.push(parseInt(hexString.substr(i, 2), 16));

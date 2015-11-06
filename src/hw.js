@@ -133,7 +133,7 @@ p.update = function() {
         for (var port in this.sendQueue) {
             var value = this.sendQueue[port];
             var query;
-            if (value == 255 || value == 0) {
+            if (value == 255 || value === 0) {
                 query = (7 << 5) + (port << 1) + (value == 255 ? 1 : 0);
                 bytes.push(query);
             } else {

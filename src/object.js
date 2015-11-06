@@ -840,12 +840,13 @@ Entry.EntryObject.prototype.initEntity = function(model) {
         var dimension = model.sprite.pictures[0].dimension;
         json.regX = dimension.width/2;
         json.regY = dimension.height/2;
+        var scale;
         if (model.sprite.category.main == "background")
-            var scale = Math.max(270/dimension.height, 480/dimension.width);
+            scale = Math.max(270/dimension.height, 480/dimension.width);
         else if (model.sprite.category.main == "new")
-            var scale = 1;
+            scale = 1;
         else
-            var scale = 200 / (dimension.width + dimension.height);
+            scale = 200 / (dimension.width + dimension.height);
         json.scaleX = json.scaleY = scale;
         json.width = dimension.width;
         json.height = dimension.height;

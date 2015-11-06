@@ -218,7 +218,7 @@ Entry.StateManager.prototype.addStamp = function () {
  * @return {!boolean} return true when project is up-to-date
  */
 Entry.StateManager.prototype.isSaved = function () {
-    return this.undoStack_.length == 0 ||
+    return this.undoStack_.length === 0 ||
         (this.undoStack_[this.undoStack_.length-1].stamp == this.stamp &&
         typeof this.stamp == 'string');
 };

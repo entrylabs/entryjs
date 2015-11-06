@@ -9755,7 +9755,7 @@ Entry.StateManager.prototype.addStamp = function() {
   this.undoStack_.length && (this.undoStack_[this.undoStack_.length - 1].stamp = this.stamp);
 };
 Entry.StateManager.prototype.isSaved = function() {
-  return 0 == this.undoStack_.length || this.undoStack_[this.undoStack_.length - 1].stamp == this.stamp && "string" == typeof this.stamp;
+  return 0 === this.undoStack_.length || this.undoStack_[this.undoStack_.length - 1].stamp == this.stamp && "string" == typeof this.stamp;
 };
 Entry.StateManager.prototype.addActivity = function(a) {
   Entry.reporter && Entry.reporter.report(new Entry.State(a));
@@ -10057,12 +10057,10 @@ Entry.isArrowOrBackspace = function(a) {
   return -1 < [37, 38, 39, 40, 8].indexOf(a);
 };
 Entry.hexStringToBin = function(a) {
-  bytes = [];
-  str;
-  for (var b = 0;b < a.length - 1;b += 2) {
-    bytes.push(parseInt(a.substr(b, 2), 16));
+  for (var b = [], c = 0;c < a.length - 1;c += 2) {
+    b.push(parseInt(a.substr(c, 2), 16));
   }
-  return str = String.fromCharCode.apply(String, bytes);
+  return String.fromCharCode.apply(String, b);
 };
 Entry.findObjsByKey = function(a, b, c) {
   for (var d = [], e = 0;e < a.length;e++) {
