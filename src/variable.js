@@ -20,7 +20,7 @@ Entry.Variable = function(variable) {
     /** @type {boolean} */
     this.isCloud_ = variable.isCloud || false;
     /** @type {number||string} */
-    var parsedValue = Entry.parseNumber(variable.value)
+    var parsedValue = Entry.parseNumber(variable.value);
     if (typeof parsedValue == 'number')
         this.value_ = parsedValue;
     else if (!variable.value)
@@ -418,7 +418,7 @@ Entry.Variable.prototype.updateView = function() {
                 this.scrollPosition =
                     Math.floor(((this.scrollButton_.y - 23) /
                     (this.getHeight() - 23 - 40)) *
-                    (this.array_.length - maxView))
+                    (this.array_.length - maxView));
             } else {
                 this.elementView.valueWrapper.graphics.clear()
                     .f("#1bafea")
@@ -486,7 +486,7 @@ Entry.Variable.prototype.updateView = function() {
                     this.valueView_.getMeasuredWidth() + 15, 14,
                     7, 7, 7, 7);
         }
-    };
+    }
 };
 
 /**
@@ -740,18 +740,18 @@ Entry.Variable.prototype.clone = function() {
 
 Entry.Variable.prototype.getType = function() {
     return this.type;
-}
+};
 
 Entry.Variable.prototype.setType = function(type) {
     this.type = type;
-}
+};
 
 Entry.Variable.prototype.getSlidePosition = function(width) {
     var minValue = this.minValue_;
     var maxValue = this.maxValue_;
     var ratio = Math.abs(this.value_ - minValue) / Math.abs(maxValue - minValue);
     return (width) * ratio + 10;
-}
+};
 
 Entry.Variable.prototype.setSlideCommandX = function(value, isSetter) {
     var command = this.valueSetter_.graphics.command;
@@ -761,7 +761,7 @@ Entry.Variable.prototype.setSlideCommandX = function(value, isSetter) {
     else
         command.x += value;
     this.updateSlideValueByView();
-}
+};
 
 Entry.Variable.prototype.updateSlideValueByView = function() {
     var maxWidth = this.maxWidth;
@@ -778,26 +778,26 @@ Entry.Variable.prototype.updateSlideValueByView = function() {
         this.setValue(this.maxValue_);
     else
         this.setValue(value);
-}
+};
 
 Entry.Variable.prototype.getMinValue = function() {
     return this.minValue_;
-}
+};
 
 Entry.Variable.prototype.setMinValue = function(minValue) {
     this.minValue_ = minValue;
     if (this.value_ < minValue)
         this.value_ = minValue;
     this.updateView();
-}
+};
 
 Entry.Variable.prototype.getMaxValue = function() {
     return this.maxValue_;
-}
+};
 
 Entry.Variable.prototype.setMaxValue = function(maxValue) {
     this.maxValue_ = maxValue;
     if (this.value_ > maxValue)
         this.value_ = maxValue;
     this.updateView();
-}
+};
