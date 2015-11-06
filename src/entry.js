@@ -90,20 +90,20 @@ Entry.setBlockByText = function(objectType, blockText) {
     var categories = xml.getElementsByTagName('category');
     for (var i = 0; i < categories.length; i++) {
         var category = categories[i];
-        var json = {category: category.getAttribute("id"), blocks: []}
+        var json = {category: category.getAttribute("id"), blocks: []};
         var blocks = category.childNodes;
         for (var j = 0; j < blocks.length; j++) {
             var b = blocks[j];
             if (b.tagName &&
                 (b.tagName.toUpperCase() == 'BLOCK' ||
                  b.tagName.toUpperCase() == 'BTN')) {
-                json.blocks.push(b.getAttribute('type'))
+                json.blocks.push(b.getAttribute('type'));
             }
         }
         blockJSON.push(json);
     }
     Entry.playground.setBlockMenu(blockJSON);
-}
+};
 
 /**
  * inject blocks to Entry menu.
@@ -113,7 +113,7 @@ Entry.setBlockByText = function(objectType, blockText) {
  */
 Entry.setBlock = function(objectType, XML) {
     Entry.playground.setMenuBlock(objectType, XML);
-}
+};
 
 Entry.enableArduino = function() {
     return;
@@ -185,7 +185,7 @@ Entry.loadInterfaceState = function() {
             });
         }
     }
-}
+};
 
 /**
  * Resize element's size.
@@ -293,7 +293,7 @@ Entry.resizeElement = function(interfaceModel) {
  */
 Entry.getUpTime = function() {
     return new Date().getTime() - this.startTime;
-}
+};
 
 /**
  * @param {String} activityType
@@ -301,7 +301,7 @@ Entry.getUpTime = function() {
 Entry.addActivity = function(activityType) {
     if (Entry.stateManager)
         Entry.stateManager.addActivity(activityType);
-}
+};
 
 Entry.startActivityLogging = function() {
     if (Entry.reporter)
@@ -320,7 +320,7 @@ Entry.getActivityLog = function() {
     if (Entry.stateManager)
         log.activityLog = Entry.stateManager.activityLog_;
     return log;
-}
+};
 //block drag mode for Entry.BlockView
 Entry.DRAG_MODE_NONE = 0;
 Entry.DRAG_MODE_MOUSEDOWN = 1;
