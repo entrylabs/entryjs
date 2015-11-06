@@ -167,7 +167,7 @@ Entry.EntryObject.prototype.generateView= function() {
         var objectInfoView = Entry.createElement('ul');
         objectInfoView.addClass('objectInfoView');
         if (!Entry.objectEditable) {
-            objectInfoView.addClass('entryHide')
+            objectInfoView.addClass('entryHide');
         }
         var objectInfo_visible = Entry.createElement('li');
         objectInfo_visible.addClass('objectInfo_visible');
@@ -205,12 +205,12 @@ Entry.EntryObject.prototype.generateView= function() {
         this.view_.appendChild(objectInfoView);
 
         var thumbnailView = Entry.createElement('div');
-        thumbnailView.addClass('entryObjectThumbnailWorkspace')
+        thumbnailView.addClass('entryObjectThumbnailWorkspace');
         this.view_.appendChild(thumbnailView);
         this.thumbnailView_ = thumbnailView;
 
         var wrapperView = Entry.createElement('div');
-        wrapperView.addClass('entryObjectWrapperWorkspace')
+        wrapperView.addClass('entryObjectWrapperWorkspace');
         this.view_.appendChild(wrapperView);
 
         var nameView = Entry.createElement('input');
@@ -218,7 +218,7 @@ Entry.EntryObject.prototype.generateView= function() {
             e.stopPropagation();
             this.select();
         });
-        nameView.addClass('entryObjectNameWorkspace')
+        nameView.addClass('entryObjectNameWorkspace');
 
         wrapperView.appendChild(nameView);
         this.nameView_ = nameView;
@@ -253,7 +253,7 @@ Entry.EntryObject.prototype.generateView= function() {
             });
             editView.blur = function(e){
                 object.editObjectComplete();
-            }
+            };
         } else {
             editView.addClass("entryRemove");
         }
@@ -281,19 +281,19 @@ Entry.EntryObject.prototype.generateView= function() {
         this.splitter = selectedImgView;
 
         var informationView = Entry.createElement('div');
-        informationView.addClass('entryObjectInformationWorkspace')
+        informationView.addClass('entryObjectInformationWorkspace');
         informationView.object = this;
         this.isInformationToggle = false;
         wrapperView.appendChild(informationView);
         this.informationView_ = informationView;
 
         var rotationWrapperView = Entry.createElement('div');
-        rotationWrapperView.addClass('entryObjectRotationWrapperWorkspace')
+        rotationWrapperView.addClass('entryObjectRotationWrapperWorkspace');
         rotationWrapperView.object = this;
         this.view_.appendChild(rotationWrapperView);
 
         var coordinateView = Entry.createElement('span');
-        coordinateView.addClass('entryObjectCoordinateWorkspace')
+        coordinateView.addClass('entryObjectCoordinateWorkspace');
         rotationWrapperView.appendChild(coordinateView);
         var xCoordi = Entry.createElement('span');
         xCoordi.addClass('entryObjectCoordinateSpanWorkspace');
@@ -374,7 +374,7 @@ Entry.EntryObject.prototype.generateView= function() {
         };
 
         var rotateLabelWrapperView = Entry.createElement('div');
-        rotateLabelWrapperView.addClass('entryObjectRotateLabelWrapperWorkspace')
+        rotateLabelWrapperView.addClass('entryObjectRotateLabelWrapperWorkspace');
         this.view_.appendChild(rotateLabelWrapperView);
         this.rotateLabelWrapperView_ = rotateLabelWrapperView;
 
@@ -382,7 +382,7 @@ Entry.EntryObject.prototype.generateView= function() {
         rotateSpan.addClass('entryObjectRotateSpanWorkspace');
         rotateSpan.innerHTML = Lang.Workspace.rotation + ' : ';
         var rotateInput = Entry.createElement('input');
-        rotateInput.addClass('entryObjectRotateInputWorkspace')
+        rotateInput.addClass('entryObjectRotateInputWorkspace');
         rotateInput.setAttribute("disabled","disabled");
         rotateInput.bindOnClick(function (e) {
             e.stopPropagation();
@@ -395,7 +395,7 @@ Entry.EntryObject.prototype.generateView= function() {
         directionSpan.addClass('entryObjectDirectionSpanWorkspace');
         directionSpan.innerHTML = Lang.Workspace.direction + ' : ';
         var directionInput = Entry.createElement('input');
-        directionInput.addClass('entryObjectDirectionInputWorkspace')
+        directionInput.addClass('entryObjectDirectionInputWorkspace');
         directionInput.setAttribute("disabled","disabled");
         directionInput.bindOnClick(function (e) {
             e.stopPropagation();
@@ -423,7 +423,7 @@ Entry.EntryObject.prototype.generateView= function() {
             }
             thisPointer.updateRotationView();
             Entry.stage.updateObject();
-        }
+        };
         directionInput.onkeypress = function (e) {
             if (e.keyCode == 13)
                 this.blur();
@@ -436,7 +436,7 @@ Entry.EntryObject.prototype.generateView= function() {
                 thisPointer.entity.setDirection(Number(value));
             thisPointer.updateRotationView();
             Entry.stage.updateObject();
-        }
+        };
 
         var rotationMethodWrapper = Entry.createElement('div');
         rotationMethodWrapper.addClass('rotationMethodWrapper');
@@ -444,13 +444,13 @@ Entry.EntryObject.prototype.generateView= function() {
         this.rotationMethodWrapper_ = rotationMethodWrapper;
 
         var rotateMethodLabelView = Entry.createElement('span');
-        rotateMethodLabelView.addClass('entryObjectRotateMethodLabelWorkspace')
+        rotateMethodLabelView.addClass('entryObjectRotateMethodLabelWorkspace');
         rotationMethodWrapper.appendChild(rotateMethodLabelView);
         rotateMethodLabelView.innerHTML = Lang.Workspace.rotate_method + ' : ';
 
         var rotateModeAView = Entry.createElement('div');
-        rotateModeAView.addClass('entryObjectRotateModeWorkspace')
-        rotateModeAView.addClass('entryObjectRotateModeAWorkspace')
+        rotateModeAView.addClass('entryObjectRotateModeWorkspace');
+        rotateModeAView.addClass('entryObjectRotateModeAWorkspace');
         rotateModeAView.object = this;
         this.rotateModeAView_ = rotateModeAView;
         rotationMethodWrapper.appendChild(rotateModeAView);
@@ -462,8 +462,8 @@ Entry.EntryObject.prototype.generateView= function() {
         });
 
         var rotateModeBView = Entry.createElement('div');
-        rotateModeBView.addClass('entryObjectRotateModeWorkspace')
-        rotateModeBView.addClass('entryObjectRotateModeBWorkspace')
+        rotateModeBView.addClass('entryObjectRotateModeWorkspace');
+        rotateModeBView.addClass('entryObjectRotateModeBWorkspace');
         rotateModeBView.object = this;
         this.rotateModeBView_ = rotateModeBView;
         rotationMethodWrapper.appendChild(rotateModeBView);
@@ -475,8 +475,8 @@ Entry.EntryObject.prototype.generateView= function() {
         });
 
         var rotateModeCView = Entry.createElement('div');
-        rotateModeCView.addClass('entryObjectRotateModeWorkspace')
-        rotateModeCView.addClass('entryObjectRotateModeCWorkspace')
+        rotateModeCView.addClass('entryObjectRotateModeWorkspace');
+        rotateModeCView.addClass('entryObjectRotateModeCWorkspace');
         rotateModeCView.object = this;
         this.rotateModeCView_ = rotateModeCView;
         rotationMethodWrapper.appendChild(rotateModeCView);
@@ -548,16 +548,16 @@ Entry.EntryObject.prototype.generateView= function() {
 
 
         var thumbnailView = Entry.createElement('div');
-        thumbnailView.addClass('entryObjectThumbnailWorkspace')
+        thumbnailView.addClass('entryObjectThumbnailWorkspace');
         this.view_.appendChild(thumbnailView);
         this.thumbnailView_ = thumbnailView;
 
         var wrapperView = Entry.createElement('div');
-        wrapperView.addClass('entryObjectWrapperWorkspace')
+        wrapperView.addClass('entryObjectWrapperWorkspace');
         this.view_.appendChild(wrapperView);
 
         var nameView = Entry.createElement('input');
-        nameView.addClass('entryObjectNameWorkspace')
+        nameView.addClass('entryObjectNameWorkspace');
         wrapperView.appendChild(nameView);
         this.nameView_ = nameView;
         this.nameView_.entryObject = this;
@@ -598,7 +598,7 @@ Entry.EntryObject.prototype.generateView= function() {
 
 
         var informationView = Entry.createElement('div');
-        informationView.addClass('entryObjectInformationWorkspace')
+        informationView.addClass('entryObjectInformationWorkspace');
         informationView.object = this;
         this.isInformationToggle = false;
         wrapperView.appendChild(informationView);
@@ -608,7 +608,7 @@ Entry.EntryObject.prototype.generateView= function() {
 
 
         var rotateLabelWrapperView = Entry.createElement('div');
-        rotateLabelWrapperView.addClass('entryObjectRotateLabelWrapperWorkspace')
+        rotateLabelWrapperView.addClass('entryObjectRotateLabelWrapperWorkspace');
         this.view_.appendChild(rotateLabelWrapperView);
         this.rotateLabelWrapperView_ = rotateLabelWrapperView;
 
@@ -616,7 +616,7 @@ Entry.EntryObject.prototype.generateView= function() {
         rotateSpan.addClass('entryObjectRotateSpanWorkspace');
         rotateSpan.innerHTML = Lang.Workspace.rotation + ' : ';
         var rotateInput = Entry.createElement('input');
-        rotateInput.addClass('entryObjectRotateInputWorkspace')
+        rotateInput.addClass('entryObjectRotateInputWorkspace');
         this.rotateSpan_ = rotateSpan;
         this.rotateInput_ = rotateInput;
 
@@ -624,7 +624,7 @@ Entry.EntryObject.prototype.generateView= function() {
         directionSpan.addClass('entryObjectDirectionSpanWorkspace');
         directionSpan.innerHTML = Lang.Workspace.direction + ' : ';
         var directionInput = Entry.createElement('input');
-        directionInput.addClass('entryObjectDirectionInputWorkspace')
+        directionInput.addClass('entryObjectDirectionInputWorkspace');
         this.directionInput_ = directionInput;
 
         rotateLabelWrapperView.appendChild(rotateSpan);
@@ -649,7 +649,7 @@ Entry.EntryObject.prototype.generateView= function() {
         rotateInput.onblur = function (e) {
             thisPointer.entity.setRotation(thisPointer.entity.getRotation());
             Entry.stage.updateObject();
-        }
+        };
         directionInput.onkeypress = function (e) {
             if (e.keyCode == 13) {
                 var value = directionInput.value;
@@ -665,15 +665,15 @@ Entry.EntryObject.prototype.generateView= function() {
         directionInput.onblur = function (e) {
             thisPointer.entity.setDirection(thisPointer.entity.getDirection());
             Entry.stage.updateObject();
-        }
+        };
 
         var rotationWrapperView = Entry.createElement('div');
-        rotationWrapperView.addClass('entryObjectRotationWrapperWorkspace')
+        rotationWrapperView.addClass('entryObjectRotationWrapperWorkspace');
         rotationWrapperView.object = this;
         this.view_.appendChild(rotationWrapperView);
 
         var coordinateView = Entry.createElement('span');
-        coordinateView.addClass('entryObjectCoordinateWorkspace')
+        coordinateView.addClass('entryObjectCoordinateWorkspace');
         rotationWrapperView.appendChild(coordinateView);
         var xCoordi = Entry.createElement('span');
         xCoordi.addClass('entryObjectCoordinateSpanWorkspace');
@@ -684,7 +684,7 @@ Entry.EntryObject.prototype.generateView= function() {
         yCoordi.addClass('entryObjectCoordinateSpanWorkspace');
         yCoordi.innerHTML = 'Y:';
         var yInput = Entry.createElement('input');
-        yInput.addClass('entryObjectCoordinateInputWorkspace entryObjectCoordinateInputWorkspace_right')
+        yInput.addClass('entryObjectCoordinateInputWorkspace entryObjectCoordinateInputWorkspace_right');
         var sizeTitle = Entry.createElement('span');
         sizeTitle.addClass('entryObjectCoordinateSpanWorkspace');
         sizeTitle.innerHTML = Lang.Workspace.Size;
@@ -714,7 +714,7 @@ Entry.EntryObject.prototype.generateView= function() {
         xInput.onblur = function (e) {
             thisPointer.entity.setX(thisPointer.entity.getX());
             Entry.stage.updateObject();
-        }
+        };
         yInput.onkeypress = function (e) {
             if (e.keyCode == 13) {
                 if (!isNaN(yInput.value)) {
@@ -727,7 +727,7 @@ Entry.EntryObject.prototype.generateView= function() {
         yInput.onblur = function (e) {
             thisPointer.entity.setY(thisPointer.entity.getY());
             Entry.stage.updateObject();
-        }
+        };
 
         var rotationMethodWrapper = Entry.createElement('div');
         rotationMethodWrapper.addClass('rotationMethodWrapper');
@@ -735,13 +735,13 @@ Entry.EntryObject.prototype.generateView= function() {
         this.rotationMethodWrapper_ = rotationMethodWrapper;
 
         var rotateMethodLabelView = Entry.createElement('span');
-        rotateMethodLabelView.addClass('entryObjectRotateMethodLabelWorkspace')
+        rotateMethodLabelView.addClass('entryObjectRotateMethodLabelWorkspace');
         rotationMethodWrapper.appendChild(rotateMethodLabelView);
         rotateMethodLabelView.innerHTML = Lang.Workspace.rotate_method + ' : ';
 
         var rotateModeAView = Entry.createElement('div');
-        rotateModeAView.addClass('entryObjectRotateModeWorkspace')
-        rotateModeAView.addClass('entryObjectRotateModeAWorkspace')
+        rotateModeAView.addClass('entryObjectRotateModeWorkspace');
+        rotateModeAView.addClass('entryObjectRotateModeAWorkspace');
         rotateModeAView.object = this;
         this.rotateModeAView_ = rotateModeAView;
         rotationMethodWrapper.appendChild(rotateModeAView);
@@ -753,8 +753,8 @@ Entry.EntryObject.prototype.generateView= function() {
         });
 
         var rotateModeBView = Entry.createElement('div');
-        rotateModeBView.addClass('entryObjectRotateModeWorkspace')
-        rotateModeBView.addClass('entryObjectRotateModeBWorkspace')
+        rotateModeBView.addClass('entryObjectRotateModeWorkspace');
+        rotateModeBView.addClass('entryObjectRotateModeBWorkspace');
         rotateModeBView.object = this;
         this.rotateModeBView_ = rotateModeBView;
         rotationMethodWrapper.appendChild(rotateModeBView);
@@ -766,8 +766,8 @@ Entry.EntryObject.prototype.generateView= function() {
         });
 
         var rotateModeCView = Entry.createElement('div');
-        rotateModeCView.addClass('entryObjectRotateModeWorkspace')
-        rotateModeCView.addClass('entryObjectRotateModeCWorkspace')
+        rotateModeCView.addClass('entryObjectRotateModeWorkspace');
+        rotateModeCView.addClass('entryObjectRotateModeCWorkspace');
         rotateModeCView.object = this;
         this.rotateModeCView_ = rotateModeCView;
         rotationMethodWrapper.appendChild(rotateModeCView);
@@ -1045,11 +1045,11 @@ Entry.EntryObject.prototype.getPicture = function(value) {
     for (var i=0; i<len; i++) {
         if (pictures[i].id == value)
             return pictures[i];
-    };
+    }
     for (i=0; i<len; i++) {
         if (pictures[i].name == value)
             return pictures[i];
-    };
+    }
     var checker = Entry.parseNumber(value);
     if (!(checker == false && typeof checker == 'boolean')
         && len >= checker && checker > 0) {
@@ -1081,7 +1081,7 @@ Entry.EntryObject.prototype.getNextPicture = function(pictureId) {
         var picture = pictures[i];
         if (picture.id == pictureId)
             return pictures[i == len-1 ? 0 : i+1];
-    };
+    }
 };
 
 /**
@@ -1096,7 +1096,7 @@ Entry.EntryObject.prototype.selectPicture = function(pictureId) {
         this.entity.setImage(picture);
         this.updateThumbnailView();
         return;
-    };
+    }
     throw new Error('No picture with pictureId : ' + pictureId);
 };
 
@@ -1169,7 +1169,7 @@ Entry.EntryObject.prototype.setRotateMethod = function(rotateMethod) {
         rotateMethod = 'free';
     this.rotateMethod = rotateMethod;
     this.updateRotateMethodView();
-}
+};
 
 Entry.EntryObject.prototype.updateRotateMethodView = function() {
     var rotateMethod = this.rotateMethod;
@@ -1275,7 +1275,7 @@ Entry.EntryObject.prototype.initializeSplitter = function(splitter) {
  */
 Entry.EntryObject.prototype.isSelected = function() {
     return this.isSelected_;
-}
+};
 
 /**
  * convert this object's data to JSON.
@@ -1327,11 +1327,11 @@ Entry.EntryObject.prototype.getSound = function(value) {
     for (var i=0; i<len; i++) {
         if (sounds[i].id == value)
             return sounds[i];
-    };
+    }
     for (i=0; i<len; i++) {
         if (sounds[i].name == value )
             return sounds[i];
-    };
+    }
     var checker = Entry.parseNumber(value);
     if (!(checker == false && typeof checker == 'boolean')
         && len >= checker && checker > 0) {
@@ -1357,15 +1357,15 @@ Entry.EntryObject.prototype.addCloneVariables = function(object, entity, variabl
         entity.variables.push(variables[i].clone());
     for (var i=0; i<lists.length; i++)
         entity.lists.push(lists[i].clone());
-}
+};
 
 Entry.EntryObject.prototype.getLock = function() {
     return this.lock;
-}
+};
 
 Entry.EntryObject.prototype.setLock = function(bool) {
     return this.lock = bool;
-}
+};
 
 Entry.EntryObject.prototype.updateInputViews = function(isLocked) {
     isLocked = isLocked || this.getLock();
@@ -1384,7 +1384,7 @@ Entry.EntryObject.prototype.updateInputViews = function(isLocked) {
             }
         }
     }
-}
+};
 
 var tog = true;
 Entry.EntryObject.prototype.editObjectValues = function(click) {
@@ -1414,7 +1414,7 @@ Entry.EntryObject.prototype.editObjectValues = function(click) {
         inputs[0].blur();
         tog = true;
     }
-}
+};
 
 
 /**
