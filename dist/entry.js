@@ -12600,13 +12600,16 @@ Entry.BlockView = function(a, b) {
   a._updateBG = function() {
     var a = this.svgGroup;
     if (this.magneting) {
-      var c = this.height + 100;
-      this.background = a.rect(0 - this.width / 2, 0, this.width, c);
-      this.background.attr({fill:"black", opacity:.5});
+      var c = this.height + 100, d = Snap().rect(0 - this.width / 2, 0, this.width, c);
+      this.background = d;
+      a.prepend(d);
+      d.attr({fill:"black", opacity:.5});
       this.originalHeight = this.height;
       this.set({height:c, animating:!0});
     } else {
-      this.background && this.background.remove(), c = this.originalHeight, console.log(c), c && (this.set({height:c, animating:!0}), delete this.originalHeight);
+      if (this.background && this.background.remove(), c = this.originalHeight) {
+        this.set({height:c, animating:!0}), delete this.originalHeight;
+      }
     }
   };
 })(Entry.BlockView.prototype);

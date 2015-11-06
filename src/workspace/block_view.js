@@ -373,7 +373,6 @@ Entry.BlockView = function(block, board) {
     };
 
     p._updateBG = function() {
-        //TODO
         var dragThreadHeight = 100;
         var blockView = this;
         var magneting = blockView.magneting;
@@ -381,30 +380,29 @@ Entry.BlockView = function(block, board) {
         var svgGroup = blockView.svgGroup;
         if (magneting) {
             var height = blockView.height + dragThreadHeight;
-            blockView.background = svgGroup.rect(
-                 0 - blockView.width/2,
-                 0,
-                 blockView.width,
-                 height
-
+            var bg = Snap().rect(
+                0 - blockView.width/2,
+                0,
+                blockView.width,
+                height
             );
-            blockView.background.attr({
+            blockView.background = bg;
+
+            svgGroup.prepend(bg);
+            bg.attr({
                 fill: 'black',
                 opacity: 0.5
             });
 
             blockView.originalHeight = blockView.height;
-
             blockView.set({
                 height: height,
                 animating: true
             });
-
         } else {
             if (blockView.background)
                 blockView.background.remove();
             var height = blockView.originalHeight;
-            console.log(height);
             if (height) {
                 blockView.set({
                     height: height,
