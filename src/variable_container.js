@@ -72,7 +72,7 @@ Entry.VariableContainer.prototype.createDom = function(view) {
         var panel = thisPointer.variableAddPanel;
         var value = panel.view.name.value.trim();
         if (panel.isOpen){
-            if (!value || value.length == 0){
+            if (!value || value.length === 0){
                 panel.view.addClass('entryRemove');
                 panel.isOpen = false;
             } else
@@ -111,7 +111,7 @@ Entry.VariableContainer.prototype.createDom = function(view) {
         var panel = thisPointer.listAddPanel;
         var value = panel.view.name.value.trim();
         if (panel.isOpen) {
-            if (!value || value.length == 0) {
+            if (!value || value.length === 0) {
                 panel.view.addClass('entryRemove');
                 panel.isOpen = false;
             } else
@@ -300,7 +300,7 @@ Entry.VariableContainer.prototype.renderMessageReference = function(message) {
         });
         listView.appendChild(element);
     }
-    if (callers.length == 0) {
+    if (callers.length === 0) {
         var element = Entry.createElement('li');
         element.addClass('entryVariableListCallerWorkspace');
         element.addClass('entryVariableListCallerNoneWorkspace');
@@ -393,7 +393,7 @@ Entry.VariableContainer.prototype.renderVariableReference = function(variable) {
         });
         listView.appendChild(element);
     }
-    if (callers.length == 0) {
+    if (callers.length === 0) {
         var element = Entry.createElement('li');
         element.addClass('entryVariableListCallerWorkspace');
         element.addClass('entryVariableListCallerNoneWorkspace');
@@ -453,7 +453,7 @@ Entry.VariableContainer.prototype.renderFunctionReference = function(func) {
         });
         listView.appendChild(element);
     }
-    if (callers.length == 0) {
+    if (callers.length === 0) {
         var element = Entry.createElement('li');
         element.addClass('entryVariableListCallerWorkspace');
         element.addClass('entryVariableListCallerNoneWorkspace');
@@ -610,7 +610,7 @@ Entry.VariableContainer.prototype.updateList = function() {
     //select the first element(view) if exist
     this.listView_.appendChild(this.variableSettingView);
     this.listView_.appendChild(this.listSettingView);
-    if (elementList.length != 0)
+    if (elementList.length !== 0)
         this.select(elementList[0]);
     elementList = null;
 };
@@ -847,7 +847,7 @@ Entry.VariableContainer.prototype.addVariable = function(variable) {
         var variableContainer = this;
         var panel = this.variableAddPanel;
         var name = panel.view.name.value.trim();
-        if (!name || name.length == 0)
+        if (!name || name.length === 0)
             name = Lang.Workspace.variable;
 
         name = this.checkAllVariableName(name,'variables_') ? Entry.getOrderedName(name, this.variables_, 'name_') : name;
@@ -1040,7 +1040,7 @@ Entry.VariableContainer.prototype.createVariableView = function(variable) {
     });
     nameField.onblur = function(e) {
         var value = this.value.trim();
-        if (!value || value.length == 0) {
+        if (!value || value.length === 0) {
             Entry.toast.alert(Lang.Msgs.warn,
                               Lang.Workspace.variable_can_not_space);
             this.value = variable.getName();
@@ -1176,7 +1176,7 @@ Entry.VariableContainer.prototype.createMessageView = function(message) {
     });
     nameField.onblur = function(e) {
         var value = this.value.trim();
-        if (!value || value.length == 0) {
+        if (!value || value.length === 0) {
             Entry.toast.alert(Lang.Msgs.warn,
                               Lang.Msgs.sign_can_not_space);
             this.value = message.name;
@@ -1209,7 +1209,7 @@ Entry.VariableContainer.prototype.addList = function(list) {
         var variableContainer = this;
         var panel = this.listAddPanel;
         var name = panel.view.name.value.trim();
-        if (!name || name.length == 0)
+        if (!name || name.length === 0)
             name = Lang.Workspace.list;
 
         var info = panel.info;
@@ -1306,7 +1306,7 @@ Entry.VariableContainer.prototype.createListView = function(list) {
     });
     nameField.onblur = function(e) {
         var value = this.value.trim();
-        if (!value || value.length == 0) {
+        if (!value || value.length === 0) {
             Entry.toast.alert(Lang.Msgs.warn,
                               Lang.Msgs.list_can_not_space);
             this.value = list.getName();
@@ -1726,8 +1726,8 @@ Entry.VariableContainer.prototype.openVariableAddPanel = function(type) {
 
 Entry.VariableContainer.prototype.getMenuXml = function(xmlList) {
     var blocks = [];
-    var hasVariable = this.variables_.length != 0;
-    var hasList = this.lists_.length != 0;
+    var hasVariable = this.variables_.length !== 0;
+    var hasList = this.lists_.length !== 0;
     for (var i = 0, xml; xml = xmlList[i]; i++) {
         var tagName = xml.tagName;
         if (tagName && tagName.toUpperCase() == 'BLOCK') {
