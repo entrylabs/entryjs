@@ -113,12 +113,12 @@ Entry.Scene.prototype.generateElement = function(scene) {
             this.value = this.value.substring(0,10);
             this.blur();
         }
-    }
+    };
     nameField.onblur = function (e) {
         nameField.value = this.value;
         scene.name = this.value;
         nameField.style['width'] = Entry.computeInputWidth(this);
-    }
+    };
     divide.appendChild(nameField);
     divide.nameField = nameField;
     var removeButtonCover = Entry.createElement('span');
@@ -384,4 +384,4 @@ Entry.Scene.prototype.cloneScene = function(scene) {
     var objects = Entry.container.getSceneObjects(scene);
     for (var i=objects.length-1; i>=0; i--)
         Entry.container.addCloneObject(objects[i], clonedScene.id);
-}
+};
