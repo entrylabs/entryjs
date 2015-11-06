@@ -12600,7 +12600,7 @@ Entry.BlockView = function(a, b) {
   a._updateBG = function() {
     var a = this.svgGroup;
     if (this.magneting) {
-      var c = this.height + 100, d = Snap().rect(0 - this.width / 2, 0, this.width, c);
+      var c = this.height + 100, d = a.rect(0 - this.width / 2, 0, this.width, c);
       this.background = d;
       a.prepend(d);
       d.attr({fill:"black", opacity:.5});

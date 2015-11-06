@@ -380,7 +380,7 @@ Entry.BlockView = function(block, board) {
         var svgGroup = blockView.svgGroup;
         if (magneting) {
             var height = blockView.height + dragThreadHeight;
-            var bg = Snap().rect(
+            var bg = svgGroup.rect(
                 0 - blockView.width/2,
                 0,
                 blockView.width,
