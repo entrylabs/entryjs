@@ -160,6 +160,10 @@ Entry.Block.FOLLOW = 3;
     };
 
     // command func
+    p.doAdd = function() {
+        console.log("doAdd", this.id);
+    };
+
     p.doMove = function() {
         console.log(
             "doMove",

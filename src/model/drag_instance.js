@@ -17,5 +17,6 @@ Entry.DragInstance.prototype.schema = {
     startY: 0,
     offsetX: 0,
     offsetY: 0,
+    prev: null,
     mode: 0
 };

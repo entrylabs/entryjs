@@ -75,10 +75,12 @@ Entry.Thread = function(thread, code) {
     };
 
     p.separate = function(block) {
-        if (!this._data.has(block.id) || !block.prev)
+        if (!this._data.has(block.id))
             return;
-        block.prev.setNext(null);
-        block.setPrev(null);
+        if (block.prev) {
+            block.prev.setNext(null);
+            block.setPrev(null);
+        }
         var blocks = this._data.splice(this._data.indexOf(block));
         this._code.createThread(blocks);
         this.changeEvent.notify();

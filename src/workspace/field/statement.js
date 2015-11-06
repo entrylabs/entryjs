@@ -37,16 +37,11 @@ Entry.FieldStatement = function(content, blockView) {
             width: 20,
             height: 20
         });
-        this.dummyBlock = new Entry.DummyBlock(this, this._blockView);
         this._thread = this._blockView.block.values[this.key];
+        this.dummyBlock = new Entry.DummyBlock(this, this._blockView);
         this._thread.insertDummyBlock(this.dummyBlock);
         this._thread.createView(board);
         this._thread.changeEvent.attach(this, this.calcHeight);
-    };
-
-    p.insertAfter = function(blocks) {
-        this._thread.insertByBlock(this.dummyBlock, blocks);
-        this.calcHeight();
     };
 
     p.calcHeight = function() {
@@ -83,8 +78,6 @@ Entry.FieldStatement = function(content, blockView) {
         });
     };
 
-    p.getView = function() {return this._blockView;};
-
 })(Entry.FieldStatement.prototype);
 
 Entry.DummyBlock = function(statementField, blockView) {
@@ -93,9 +86,11 @@ Entry.DummyBlock = function(statementField, blockView) {
     this.view = this;
     this.originBlockView = blockView;
     this._schema = {};
+    this._thread = statementField._thread;
+    this.statementField = statementField;
 
     this.svgGroup = statementField.svgGroup.group();
-    this.svgGroup.block = statementField;
+    this.svgGroup.block = this;
 
     var acceptBox = Entry.skeleton[statementField.acceptType].box();
 
@@ -136,6 +131,11 @@ Entry.DummyBlock = function(statementField, blockView) {
         });
     };
 
+    p.insertAfter = function(blocks) {
+        this._thread.insertByBlock(this, blocks);
+        this.statementField.calcHeight();
+    };
+
     p.createView = function() {
     };
 
@@ -147,6 +147,10 @@ Entry.DummyBlock = function(statementField, blockView) {
 
     p.setNext = function(block) {
         this.next = block;
+    };
+
+    p.getBoard = function() {
+        return this.originBlockView.getBoard();
     };
 
     p._inheritAnimate = function() {

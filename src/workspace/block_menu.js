@@ -190,4 +190,8 @@ Entry.BlockMenu = function(dom) {
             );
         }
     };
+
+    p.setMagnetedBlock = function() {
+    };
+
 })(Entry.BlockMenu.prototype);

@@ -55,7 +55,7 @@ Entry.Board = function(dom) {
     p.schema = {
         code: null,
         dragBlock: null,
-        closeBlock: null
+        magnetedBlockView: null
     };
 
     p.changeCode = function(code) {
@@ -70,6 +70,19 @@ Entry.Board = function(dom) {
         this.svgThreadGroup = codeView.svgThreadGroup;
     };
 
+    p.setMagnetedBlock = function(block) {
+        if (this.magnetedBlockView) {
+            if (this.magnetedBlockView === block)
+                return;
+            else
+                this.magnetedBlockView.set({magneting: false});
+        }
+        this.set({magnetedBlockView: block});
+        if (block)
+            block.set({magneting: true});
+    };
+
+    /*
     p.updateCloseMagnet = function(targetBlock) {
         if (targetBlock.magnets.previous === undefined)
             return;
@@ -107,12 +120,6 @@ Entry.Board = function(dom) {
                     }
                 }
                 cursorY += block.height;
-                /*
-                block.checkMagnet(targetBlock);
-                if (block.magneting) {
-                    return;
-                }
-                */
             }
         } else if (this.closeBlock) {
             this.closeBlock.magneting = false;
@@ -161,6 +168,7 @@ Entry.Board = function(dom) {
         }
         //this.updateMagnetMap(block);
     };
+    */
 
     p.dominate = function(thread) {
         this.snap.append(thread.svgGroup);

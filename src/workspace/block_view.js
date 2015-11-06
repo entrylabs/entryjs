@@ -194,6 +194,7 @@ Entry.BlockView = function(block, board) {
                 transform: transform
             }, 300, mina.easeinout);
         } else {
+            this.svgGroup.stop();
             this.svgGroup.attr({
                 transform: transform
             });
@@ -229,23 +230,29 @@ Entry.BlockView = function(block, board) {
                 startY: e.clientY,
                 offsetX: e.clientX,
                 offsetY: e.clientY,
+                prev: this.block.prev,
                 mode: true
             });
             this.dominate();
             this.dragMode = Entry.DRAG_MODE_MOUSEDOWN;
         }
 
-        var block = this;
+        var blockView = this;
         var board = this.getBoard();
         function onMouseMove(e) {
             e.stopPropagation();
             e.preventDefault();
 
+            if(blockView.block.prev) {
+                blockView.block.prev.setNext(null);
+                blockView.block.setPrev(null);
+            };
+
             if (e.originalEvent.touches) {
                 e = e.originalEvent.touches[0];
             }
-            var dragInstance = block.dragInstance;
-            block._moveBy(
+            var dragInstance = blockView.dragInstance;
+            blockView._moveBy(
                 e.clientX - dragInstance.offsetX,
                 e.clientY - dragInstance.offsetY,
                 false
@@ -254,28 +261,21 @@ Entry.BlockView = function(block, board) {
                  offsetX: e.clientX,
                  offsetY: e.clientY
             });
-            block.dragMode = Entry.DRAG_MODE_DRAG;
+            blockView.dragMode = Entry.DRAG_MODE_DRAG;
 
-            var closeBlock = block._getCloseBlock();
-            var oldMagnet = board.magnetedBlock;
-            if (closeBlock) {
-                closeBlock = closeBlock.getView();
-                if (oldMagnet != closeBlock) {
-                    if (oldMagnet) oldMagnet.set({magneting: false});
-                    board.magnetedBlock = closeBlock;
-                    closeBlock.set({magneting: true});
-                }
-            } else if (oldMagnet) {
-                oldMagnet.set({magneting: false});
-                delete board.magnetedBlock;
+            var magnetedBlock = blockView._getCloseBlock();
+            if (magnetedBlock) {
+                board.setMagnetedBlock(magnetedBlock.view);
+            } else {
+                board.setMagnetedBlock(null);
             }
         }
 
         function onMouseUp(e) {
             $(document).unbind('.block');
-            block.terminateDrag();
+            blockView.terminateDrag();
             if (board) board.set({dragBlock: null});
-            delete block.dragInstance;
+            delete blockView.dragInstance;
         }
     };
 
@@ -287,25 +287,28 @@ Entry.BlockView = function(block, board) {
         if (board instanceof Entry.BlockMenu) {
             board.terminateDrag();
         } else {
-            if (board.magnetedBlock)
-                board.magnetedBlock.set({magneting: false});
-            var closeBlock = this._getCloseBlock();
-            if (!block.prev && !closeBlock) {
-                if (dragMode == Entry.DRAG_MODE_DRAG)
-                block.doMove();
-                return;
-            } // this means block is top block {}
             var distance = Math.sqrt(
                 Math.pow(this.x - block.x, 2) +
                 Math.pow(this.y - block.y, 2)
             );
-            if (distance > 30) {
+            if (distance < 30) {
+                this._align(true);
+                return;
+            }
+            if (!this.dragInstance) {
+                block.doAdd();
+            }
+            var prevBlock = this.dragInstance && this.dragInstance.prev;
+            var closeBlock = this._getCloseBlock();
+            board.setMagnetedBlock(null);
+            if (!prevBlock && !closeBlock) {
+                if (dragMode == Entry.DRAG_MODE_DRAG)
+                    block.doMove();
+            } else {
                 if (closeBlock) {
                     this.set({animating: true});
                     block.doInsert(closeBlock);
                 } else block.doSeparate();
-            } else {
-                this._align(true);
             }
         }
         return;
@@ -328,7 +331,7 @@ Entry.BlockView = function(block, board) {
         if (targetBlock === undefined) return null;
         if (targetBlock === this.block) return null;
         //blocks at different board can not be connected
-        return targetBlock.getView().getBoard() ===
+        return targetBlock.view.getBoard() ===
             this.getBoard() ? targetBlock : null;
     };
 
