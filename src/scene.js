@@ -9,7 +9,7 @@
  * @constructor
  */
 Entry.Scene = function() {
-    this.scenes_ = new Array();
+    this.scenes_ = [];
     this.selectedScene = null;
     this.maxCount = 10;
 };

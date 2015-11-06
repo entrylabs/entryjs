@@ -4813,6 +4813,7 @@ Entry.bindGlobalEvent = function() {
     Entry.documentMousedown.notify(a);
   }));
 };
+"user strict";
 Entry.Dialog = function(a, b, c, d) {
   a.dialog && a.dialog.remove();
   a.dialog = this;
