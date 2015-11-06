@@ -17,7 +17,7 @@ Entry.Block = function(block, thread) {
     Entry.Model(this, false);
     this._schema = null;
 
-    block.thread = thread;
+    this.setThread(thread);
     this.load(block);
 };
 
