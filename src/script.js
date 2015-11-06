@@ -65,11 +65,11 @@ p.init = function(xml, previousScript, parentScript) {
             if (this.register)
                 statement.register = this.register;
             statement.init(children.childNodes[0], null, this);
-            statement.key = children.getAttribute("name")
+            statement.key = children.getAttribute("name");
             this.statements[children.getAttribute("name")] = statement;
         }
     }
-}
+};
 
 p.clone = function(clonedEntity, type) {
     var clone = new Entry.Script(clonedEntity);
@@ -120,50 +120,50 @@ p.clone = function(clonedEntity, type) {
         }
     }
     return clone;
-}
+};
 
 p.getStatement = function(statementName) {
     return this.statements[statementName];
-}
+};
 p.compute = function() {
 
-}
+};
 
 p.getValue = function(valueName) {
     return this.values[valueName].run();
-}
+};
 p.getNumberValue = function(valueName) {
     return Number(this.values[valueName].run());
-}
+};
 p.getStringValue = function(valueName) {
     return String(this.values[valueName].run());
-}
+};
 
 p.getBooleanValue = function(valueName) {
     return this.values[valueName].run() ? true : false;
-}
+};
 
 p.getField = function(fieldName) {
     return this.fields[fieldName];
-}
+};
 
 p.getStringField = function(fieldName) {
     return String(this.fields[fieldName]);
-}
+};
 
 p.getNumberField = function(fieldName) {
     return Number(this.fields[fieldName]);
-}
+};
 
 p.callReturn = function() {
     if (this.nextScript) {
         return this.nextScript;
     }
     else if (this.parentScript)
-        return this.parentScript
+        return this.parentScript;
     else
         return null;
-}
+};
 
 p.run = function() {
     return Entry.block[this.type](this.entity, this);
