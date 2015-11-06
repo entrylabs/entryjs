@@ -52,8 +52,7 @@ Entry.EntryObject = function(model) {
         }
 
 
-        this.scene = Entry.scene.getSceneById(model.scene)
-                     || Entry.scene.selectedScene;
+        this.scene = Entry.scene.getSceneById(model.scene)|| Entry.scene.selectedScene;
 
         this.setRotateMethod(model.rotateMethod);
 
@@ -928,8 +927,7 @@ Entry.EntryObject.prototype.updateThumbnailView = function() {
 Entry.EntryObject.prototype.updateCoordinateView = function(isForced) {
     if (!this.isSelected() && !isForced)
         return;
-    if (this.coordinateView_ && this.coordinateView_.xInput_
-        && this.coordinateView_.yInput_) {
+    if (this.coordinateView_ && this.coordinateView_.xInput_&& this.coordinateView_.yInput_) {
         var originX = this.coordinateView_.xInput_.value,
             originY = this.coordinateView_.yInput_.value,
             size = this.coordinateView_.sizeInput_.value,
@@ -1052,8 +1050,7 @@ Entry.EntryObject.prototype.getPicture = function(value) {
             return pictures[i];
     }
     var checker = Entry.parseNumber(value);
-    if (!(checker == false && typeof checker == 'boolean')
-        && len >= checker && checker > 0) {
+    if (!(checker == false && typeof checker == 'boolean') && len >= checker && checker > 0) {
         return pictures[checker-1];
     }
     throw new Error('No picture with pictureId : ' + pictureId);
@@ -1334,8 +1331,7 @@ Entry.EntryObject.prototype.getSound = function(value) {
             return sounds[i];
     }
     var checker = Entry.parseNumber(value);
-    if (!(checker == false && typeof checker == 'boolean')
-        && len >= checker && checker > 0) {
+    if (!(checker == false && typeof checker == 'boolean') && len >= checker && checker > 0) {
         return sounds[checker-1];
     }
     throw new Error('No Sound');
