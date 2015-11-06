@@ -908,10 +908,9 @@ Entry.Playground.prototype.injectObject = function(object) {
     var viewMode = this.viewMode_;
     if (viewMode == 'default')
         this.changeViewMode('code');
-    else if ((viewMode == 'picture' || viewMode == 'text' )&& object.objectType == 'textBox')
+    else if ((viewMode == 'picture' || viewMode == 'text' ) && object.objectType == 'textBox')
         this.changeViewMode('text');
-    else if ((viewMode == 'text' || viewMode == 'picture')
-             && object.objectType == 'sprite')
+    else if ((viewMode == 'text' || viewMode == 'picture') && object.objectType == 'sprite')
         this.changeViewMode('picture');
     else if (viewMode == 'sound')
         this.changeViewMode('sound');
