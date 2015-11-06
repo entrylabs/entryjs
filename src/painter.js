@@ -120,7 +120,7 @@ Entry.Painter.prototype.initHandle = function() {
         painter.checkCommand();
     });
 
-    handle.rect.cursor = "move"
+    handle.rect.cursor = "move";
     handle.addChild(handle.rect);
     handle.notch = new createjs.Shape();
     handle.addChild(handle.notch);
@@ -611,7 +611,7 @@ Entry.Painter.prototype.pickStrokeColor = function(event) {
     document.getElementById('entryPainterAttrCircle').style.backgroundColor = this.stroke.lineColor;
     document.getElementById('entryPainterAttrCircleInput').value = this.stroke.lineColor;
 
-}
+};
 
 Entry.Painter.prototype.drawText = function(string) {
     var fontStyle = document.getElementById('entryPainterAttrFontStyle').value;
@@ -1122,7 +1122,7 @@ Entry.Painter.prototype.edit_select = function() {
     };
 
 
-}
+};
 
 Entry.Painter.prototype.move_erase = function(event) {
     var midPt = new createjs.Point(this.oldPt.x + this.stage.mouseX >> 1,
@@ -1343,7 +1343,7 @@ Entry.Painter.prototype.trim = function() {
             if (bound.right === null) {
                 bound.right = x;
             } else {
-                bound.right = x;;
+                bound.right = x;
             }
 
             if (bound.bottom === null) {
@@ -1375,7 +1375,7 @@ Entry.Painter.prototype.trim = function() {
     }
     this.ctx_.putImageData(trimmed, 0, 0);
 
-}
+};
 
 Entry.Painter.prototype.showInputField = function(event) {
     if (!this.inputField) {
@@ -1507,7 +1507,7 @@ Entry.Painter.prototype.generateView = function(painterView) {
         this.view_.appendChild(painterTop);
         var painterToolbox = Entry.createElement('div', 'entryPainterToolbox');
         painterToolbox.addClass('entryPlaygroundPainterToolbox');
-        this.view_.appendChild(painterToolbox)
+        this.view_.appendChild(painterToolbox);
         var painterToolboxTop = Entry.createElement('div','entryPainterToolboxTop');
         painterToolboxTop.addClass('entryPainterToolboxTop');
         painterToolbox.appendChild(painterToolboxTop);
@@ -1524,7 +1524,7 @@ Entry.Painter.prototype.generateView = function(painterView) {
         painterCanvas_.width = 960;
         painterCanvas_.height = 540;
         painterContainer.appendChild(painterCanvas_);
-        var painterAttr = Entry.createElement('div', 'entryPainterAttr')
+        var painterAttr = Entry.createElement('div', 'entryPainterAttr');
         painterAttr.addClass('entryPlaygroundPainterAttr');
         this.view_.appendChild(painterAttr);
 
@@ -1588,8 +1588,8 @@ Entry.Painter.prototype.generateView = function(painterView) {
             painterView.style.width = w + 'px';
             painterContainer.style.width = (w - 54) + 'px';
             painterContainer.style.height = h + 'px';
-            painterAttr.style.top = (h+30) + 'px'
-            painterAttr.style.height = (ih-h) + 'px'
+            painterAttr.style.top = (h+30) + 'px';
+            painterAttr.style.height = (ih-h) + 'px';
 
         });
         //- 레이아웃 끝
@@ -2090,7 +2090,7 @@ Entry.Painter.prototype.generateView = function(painterView) {
         painterAttrFontName.size = '1';
         painterAttrFontName.onchange = function(evt) {
             painter.font.name = evt.target.value;
-        }
+        };
         for (var i=0; i<Entry.fonts.length; i++) {
             var font = Entry.fonts[i];
             var element = Entry.createElement('option');
@@ -2156,7 +2156,7 @@ Entry.Painter.prototype.generateView = function(painterView) {
         for (var i=0; i<fontStyles.length; i++) {
             var style = fontStyles[i];
             var element = Entry.createElement('option');
-            element.value = style.value;;
+            element.value = style.value;
             element.innerHTML = style.label;
             painterAttrFontStyle.appendChild(element);
         }
