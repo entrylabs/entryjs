@@ -17,7 +17,9 @@ Entry.Observer = function(parent, object, funcName, attrs) {
 (function (p) {
     p.destroy = function() {
         var parent = this.parent;
-        parent.splice(parent.indexOf(this), 1);
+        var index = parent.indexOf(this);
+        if (index > -1)
+            parent.splice(index, 1);
         return this;
     };
 })(Entry.Observer.prototype);

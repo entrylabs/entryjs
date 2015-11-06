@@ -4147,8 +4147,8 @@ Entry.Observer = function(a, b, c, d) {
 };
 (function(a) {
   a.destroy = function() {
-    var a = this.parent;
-    a.splice(a.indexOf(this), 1);
+    var a = this.parent, c = a.indexOf(this);
+    -1 < c && a.splice(c, 1);
     return this;
   };
 })(Entry.Observer.prototype);
