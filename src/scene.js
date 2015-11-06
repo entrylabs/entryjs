@@ -88,7 +88,7 @@ Entry.Scene.prototype.generateElement = function(scene) {
     var nameField = Entry.createElement('input');
     nameField.addClass('entrySceneFieldWorkspace');
     nameField.value = scene.name;
-    nameField.style['width'] = Entry.computeInputWidth(nameField);
+    nameField.style.width = Entry.computeInputWidth(nameField);
 
     if (!Entry.sceneEditable)
         nameField.disabled = 'disabled';
@@ -106,7 +106,7 @@ Entry.Scene.prototype.generateElement = function(scene) {
         if (Entry.isArrowOrBackspace(code))
             return;
         scene.name = this.value;
-        nameField.style['width'] = Entry.computeInputWidth(this);
+        nameField.style.width = Entry.computeInputWidth(this);
         if (code == 13)
             this.blur();
         if (this.value.length > 9) {
@@ -117,7 +117,7 @@ Entry.Scene.prototype.generateElement = function(scene) {
     nameField.onblur = function (e) {
         nameField.value = this.value;
         scene.name = this.value;
-        nameField.style['width'] = Entry.computeInputWidth(this);
+        nameField.style.width = Entry.computeInputWidth(this);
     };
     divide.appendChild(nameField);
     divide.nameField = nameField;
