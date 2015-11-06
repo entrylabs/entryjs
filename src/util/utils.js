@@ -699,12 +699,12 @@ Entry.convertToRoundedDecimals = function (value, decimals) {
 
 Entry.attachEventListener = function(elem, eventType, func) {
     setTimeout(function() {
-        elem['addEventListener'](eventType, func);
+        elem.addEventListener(eventType, func);
     }, 0);
 };
 
 Entry.deAttachEventListener = function(elem, eventType, func) {
-    elem['removeEventListener'](eventType, func);
+    elem.removeEventListener(eventType, func);
 };
 
 Entry.isEmpty = function(obj) {
