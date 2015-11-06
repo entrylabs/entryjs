@@ -287,6 +287,8 @@ Entry.BlockView = function(block, board) {
         if (board instanceof Entry.BlockMenu) {
             board.terminateDrag();
         } else {
+            if (board.magnetedBlock)
+                board.magnetedBlock.set({magneting: false});
             var closeBlock = this._getCloseBlock();
             if (!block.prev && !closeBlock) {
                 if (dragMode == Entry.DRAG_MODE_DRAG)
@@ -368,12 +370,46 @@ Entry.BlockView = function(block, board) {
     };
 
     p._updateBG = function() {
-        var magneting = this.magneting;
+        //TODO
+        var dragThreadHeight = 100;
+        var blockView = this;
+        var magneting = blockView.magneting;
+        var block = blockView.block;
+        var svgGroup = blockView.svgGroup;
         if (magneting) {
-            console.log('make bg');
+            var height = blockView.height + dragThreadHeight;
+            blockView.background = svgGroup.rect(
+                 0 - blockView.width/2,
+                 0,
+                 blockView.width,
+                 height
+
+            );
+            blockView.background.attr({
+                fill: 'black',
+                opacity: 0.5
+            });
+
+            blockView.originalHeight = blockView.height;
+
+            blockView.set({
+                height: height,
+                animating: true
+            });
+
         } else {
-            console.log('remove bg');
+            if (blockView.background)
+                blockView.background.remove();
+            var height = blockView.originalHeight;
+            console.log(height);
+            if (height) {
+                blockView.set({
+                    height: height,
+                    animating: true
+                });
+                delete blockView.originalHeight;
+            }
+
         }
     };
-
 })(Entry.BlockView.prototype);

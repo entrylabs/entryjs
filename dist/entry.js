@@ -12562,7 +12562,7 @@ Entry.BlockView = function(a, b) {
   a.terminateDrag = function() {
     var a = this.getBoard(), c = this.dragMode, d = this.block;
     this.dragMode = Entry.DRAG_MODE_NONE;
-    a instanceof Entry.BlockMenu ? a.terminateDrag() : (a = this._getCloseBlock(), d.prev || a ? 30 < Math.sqrt(Math.pow(this.x - d.x, 2) + Math.pow(this.y - d.y, 2)) ? a ? (this.set({animating:!0}), d.doInsert(a)) : d.doSeparate() : this._align(!0) : c == Entry.DRAG_MODE_DRAG && d.doMove());
+    a instanceof Entry.BlockMenu ? a.terminateDrag() : (a.magnetedBlock && a.magnetedBlock.set({magneting:!1}), a = this._getCloseBlock(), d.prev || a ? 30 < Math.sqrt(Math.pow(this.x - d.x, 2) + Math.pow(this.y - d.y, 2)) ? a ? (this.set({animating:!0}), d.doInsert(a)) : d.doSeparate() : this._align(!0) : c == Entry.DRAG_MODE_DRAG && d.doMove());
   };
   a._getCloseBlock = function() {
     var a = Snap.getElementByPoint(this.x + 690, this.y + 130);
@@ -12594,7 +12594,16 @@ Entry.BlockView = function(a, b) {
     }) : c.remove();
   };
   a._updateBG = function() {
-    this.magneting ? console.log("make bg") : console.log("remove bg");
+    var a = this.svgGroup;
+    if (this.magneting) {
+      var c = this.height + 100;
+      this.background = a.rect(0 - this.width / 2, 0, this.width, c);
+      this.background.attr({fill:"black", opacity:.5});
+      this.originalHeight = this.height;
+      this.set({height:c, animating:!0});
+    } else {
+      this.background && this.background.remove(), c = this.originalHeight, console.log(c), c && (this.set({height:c, animating:!0}), delete this.originalHeight);
+    }
   };
 })(Entry.BlockView.prototype);
 Entry.Code = function(a) {
