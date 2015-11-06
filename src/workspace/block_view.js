@@ -251,7 +251,7 @@ Entry.BlockView = function(block, board) {
                 blockView.block.prev.setNext(null);
                 blockView.block.setPrev(null);
                 blockView.block.thread.changeEvent.notify();
-            };
+            }
 
             if (blockView.dragInstance.height === 0) {
                 var block = blockView.block;
