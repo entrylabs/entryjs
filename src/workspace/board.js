@@ -178,4 +178,21 @@ Entry.Board = function(dom) {
         return this.code;
     };
 
+    p.findByName = function(name) {
+        console.log('find ', name);
+        var code = this.code;
+        var threads = code.getThreads();
+        for (var i=0,len=threads.length; i<len; i++) {
+            var thread = threads[i];
+            if (!thread)
+                continue;
+
+            var block = thread.getFirstBlock();
+            if (block && block.name == name) {
+                return block;
+            }
+        }
+    };
+
+
 })(Entry.Board.prototype);

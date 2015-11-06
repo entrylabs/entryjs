@@ -102,6 +102,7 @@ Entry.BlockMenu = function(dom) {
     };
 
     p.cloneThread = function() {
+        console.log('blockMenu::cloneThread');
         if (this.dragBlock === null) return;
         if (this.dragBlockObserver)
             this.removeDragBlockObserver();
@@ -172,6 +173,7 @@ Entry.BlockMenu = function(dom) {
     };
 
     p.moveBoardBlock = function() {
+        console.log('blockMenu::moveBoardBlock');
         var boardOffset = this.workspace.getBoard().offset;
         var thisOffset = this.offset;
         var offsetX = boardOffset.left - thisOffset.left,
@@ -192,6 +194,21 @@ Entry.BlockMenu = function(dom) {
     };
 
     p.setMagnetedBlock = function() {
+    };
+
+    p.findByName = function(name) {
+        var code = this.code;
+        var threads = code.getThreads();
+        for (var i=0,len=threads.length; i<len; i++) {
+            var thread = threads[i];
+            if (!thread)
+                continue;
+
+            var block = thread.getFirstBlock();
+            if (block && block.name == name) {
+                return block;
+            }
+        }
     };
 
 })(Entry.BlockMenu.prototype);

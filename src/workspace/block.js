@@ -32,6 +32,7 @@ Entry.Block.FOLLOW = 3;
 (function(p) {
     p.schema = {
         id: null,
+        name: null,
         x: 0,
         y: 0,
         type: null,
