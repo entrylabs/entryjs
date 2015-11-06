@@ -246,7 +246,7 @@ Entry.BlockView = function(block, board) {
             if(blockView.block.prev) {
                 blockView.block.prev.setNext(null);
                 blockView.block.setPrev(null);
-            };
+            }
 
             if (e.originalEvent.touches) {
                 e = e.originalEvent.touches[0];
