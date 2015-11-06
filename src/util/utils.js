@@ -652,8 +652,7 @@ Entry.getOrderedName = function(str, objects, field) {
     var source = Entry.getStringIndex(str);
     for (var i=0, len=objects.length; i<len; i++) {
         var target = Entry.getStringIndex(objects[i][field]);
-        if ( (source.string === target.string)
-            && target.index > maxNumber) {
+        if ( (source.string === target.string) && target.index > maxNumber) {
                 maxNumber = target.index;
         }
 
