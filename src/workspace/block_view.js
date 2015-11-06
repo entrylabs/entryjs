@@ -151,10 +151,13 @@ Entry.BlockView = function(block, board) {
 
     p._renderPath = function() {
         var path = this._skeleton.path(this);
+        var that = this;
 
         this._darkenPath.animate({
             d: path
-        }, 300, mina.easeinout);
+        }, 300, mina.easeinout, function() {
+            that.set({animating: false});
+        });
 
         this._path.animate({
             d: path
@@ -233,6 +236,7 @@ Entry.BlockView = function(block, board) {
                 offsetX: e.clientX,
                 offsetY: e.clientY,
                 prev: this.block.prev,
+                height: 0,
                 mode: true
             });
             this.dominate();
@@ -248,7 +252,20 @@ Entry.BlockView = function(block, board) {
             if(blockView.block.prev) {
                 blockView.block.prev.setNext(null);
                 blockView.block.setPrev(null);
-            };
+                blockView.block.thread.changeEvent.notify();
+            }
+
+            if (blockView.dragInstance.height === 0) {
+                var block = blockView.block;
+                var height = 10;
+                while (block) {
+                    height += block.view.height;
+                    block = block.next;
+                }
+                blockView.dragInstance.set({
+                    height: height
+                });
+            }
 
             if (e.originalEvent.touches) {
                 e = e.originalEvent.touches[0];
@@ -375,14 +392,14 @@ Entry.BlockView = function(block, board) {
     };
 
     p._updateBG = function() {
-        var dragThreadHeight = 100;
+        var dragThreadHeight = this._board.dragBlock.dragInstance.height;
         var blockView = this;
         var magneting = blockView.magneting;
         var block = blockView.block;
         var svgGroup = blockView.svgGroup;
         if (magneting) {
             var height = blockView.height + dragThreadHeight;
-            var bg = Snap().rect(
+            var bg = svgGroup.rect(
                 0 - blockView.width/2,
                 0,
                 blockView.width,
@@ -392,8 +409,7 @@ Entry.BlockView = function(block, board) {
 
             svgGroup.prepend(bg);
             bg.attr({
-                fill: 'black',
-                opacity: 0.5
+                fill: 'transparent'
             });
 
             blockView.originalHeight = blockView.height;
@@ -414,5 +430,6 @@ Entry.BlockView = function(block, board) {
             }
 
         }
+        blockView.block.thread.changeEvent.notify();
     };
 })(Entry.BlockView.prototype);

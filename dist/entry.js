@@ -4147,8 +4147,8 @@ Entry.Observer = function(a, b, c, d) {
 };
 (function(a) {
   a.destroy = function() {
-    var a = this.parent;
-    a.splice(a.indexOf(this), 1);
+    var a = this.parent, c = a.indexOf(this);
+    -1 < c && a.splice(c, 1);
     return this;
   };
 })(Entry.Observer.prototype);
@@ -10632,7 +10632,7 @@ Entry.DragInstance = function(a) {
   Entry.Model(this);
   this.set(a);
 };
-Entry.DragInstance.prototype.schema = {type:Entry.STATIC.DRAG_INSTANCE, startX:0, startY:0, offsetX:0, offsetY:0, prev:null, mode:0};
+Entry.DragInstance.prototype.schema = {type:Entry.STATIC.DRAG_INSTANCE, startX:0, startY:0, offsetX:0, offsetY:0, prev:null, height:0, mode:0};
 Entry.ThreadModel = function() {
   Entry.Model(this);
 };
@@ -12505,8 +12505,10 @@ Entry.BlockView = function(a, b) {
     this.set(this._skeleton.box(this));
   };
   a._renderPath = function() {
-    var a = this._skeleton.path(this);
-    this._darkenPath.animate({d:a}, 300, mina.easeinout);
+    var a = this._skeleton.path(this), c = this;
+    this._darkenPath.animate({d:a}, 300, mina.easeinout, function() {
+      c.set({animating:!1});
+    });
     this._path.animate({d:a}, 300, mina.easeinout);
   };
   a._align = function(a) {
@@ -12539,9 +12541,15 @@ Entry.BlockView = function(a, b) {
     function c(a) {
       a.stopPropagation();
       a.preventDefault();
-      f.block.prev && (f.block.prev.setNext(null), f.block.setPrev(null));
+      f.block.prev && (f.block.prev.setNext(null), f.block.setPrev(null), f.block.thread.changeEvent.notify());
+      if (0 === f.dragInstance.height) {
+        for (var b = f.block, c = 10;b;) {
+          c += b.view.height, b = b.next;
+        }
+        f.dragInstance.set({height:c});
+      }
       a.originalEvent.touches && (a = a.originalEvent.touches[0]);
-      var b = f.dragInstance;
+      b = f.dragInstance;
       f._moveBy(a.clientX - b.offsetX, a.clientY - b.offsetY, !1);
       b.set({offsetX:a.clientX, offsetY:a.clientY});
       f.dragMode = Entry.DRAG_MODE_DRAG;
@@ -12560,7 +12568,7 @@ Entry.BlockView = function(a, b) {
       e.bind("touchmove.block", c);
       e.bind("touchend.block", d);
       this.getBoard().set({dragBlock:this});
-      this.dragInstance = new Entry.DragInstance({startX:a.clientX, startY:a.clientY, offsetX:a.clientX, offsetY:a.clientY, prev:this.block.prev, mode:!0});
+      this.dragInstance = new Entry.DragInstance({startX:a.clientX, startY:a.clientY, offsetX:a.clientX, offsetY:a.clientY, prev:this.block.prev, height:0, mode:!0});
       this.dominate();
       this.dragMode = Entry.DRAG_MODE_MOUSEDOWN;
     }
@@ -12612,19 +12620,20 @@ Entry.BlockView = function(a, b) {
     }) : c.remove();
   };
   a._updateBG = function() {
-    var a = this.svgGroup;
+    var a = this._board.dragBlock.dragInstance.height, c = this.svgGroup;
     if (this.magneting) {
-      var c = this.height + 100, d = Snap().rect(0 - this.width / 2, 0, this.width, c);
+      var a = this.height + a, d = c.rect(0 - this.width / 2, 0, this.width, a);
       this.background = d;
-      a.prepend(d);
-      d.attr({fill:"black", opacity:.5});
+      c.prepend(d);
+      d.attr({fill:"transparent"});
       this.originalHeight = this.height;
-      this.set({height:c, animating:!0});
+      this.set({height:a, animating:!0});
     } else {
-      if (this.background && this.background.remove(), c = this.originalHeight) {
-        this.set({height:c, animating:!0}), delete this.originalHeight;
+      if (this.background && this.background.remove(), a = this.originalHeight) {
+        this.set({height:a, animating:!0}), delete this.originalHeight;
       }
     }
+    this.block.thread.changeEvent.notify();
   };
 })(Entry.BlockView.prototype);
 Entry.Code = function(a) {
@@ -12968,7 +12977,7 @@ Entry.skeleton.pebble_basic = {morph:["prev", "next"], path:function(a) {
 Entry.Block = function(a, b) {
   Entry.Model(this, !1);
   this._schema = null;
-  a.thread = b;
+  this.setThread(b);
   this.load(a);
 };
 Entry.Block.MAGNET_RANGE = 10;
