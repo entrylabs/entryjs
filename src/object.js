@@ -988,7 +988,7 @@ Entry.EntryObject.prototype.addPicture = function(picture, index) {
         this,
         this.removePicture,
         picture.id);
-    if (!index && index != 0)
+    if (!index && index !== 0)
         this.pictures.push(picture);
     else {
         this.pictures.splice(index, 0, picture);
@@ -1050,7 +1050,7 @@ Entry.EntryObject.prototype.getPicture = function(value) {
             return pictures[i];
     }
     var checker = Entry.parseNumber(value);
-    if (!(checker == false && typeof checker == 'boolean') && len >= checker && checker > 0) {
+    if (!(checker === false && typeof checker == 'boolean') && len >= checker && checker > 0) {
         return pictures[checker-1];
     }
     throw new Error('No picture with pictureId : ' + pictureId);
@@ -1112,7 +1112,7 @@ Entry.EntryObject.prototype.addSound = function(sound, index) {
         sound.id);
     Entry.initSound(sound, index);
 
-    if (!index && index != 0)
+    if (!index && index !== 0)
         this.sounds.push(sound);
     else {
         this.sounds.splice(index, 0, sound);

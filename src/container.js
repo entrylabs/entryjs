@@ -299,9 +299,9 @@ Entry.Container.prototype.removeObject = function(object) {
     this.setCurrentObjects();
     Entry.stage.sortZorder();
 
-    if (this.objects_.length && index != 0)
+    if (this.objects_.length && index !== 0)
         Entry.container.selectObject(this.objects_[index -1].id);
-    else if (this.objects_.length && index == 0)
+    else if (this.objects_.length && index === 0)
         Entry.container.selectObject(this.getCurrentObjects()[0].id);
     else {
         Entry.container.selectObject();
@@ -474,7 +474,7 @@ Entry.Container.prototype.addMessage = function(message) {
  * Real deleting message action is do in 'this.removeMessage'
  */
 Entry.Container.prototype.deleteMessage = function() {
-    if ( this.messages_.length == 0 ){
+    if ( this.messages_.length === 0 ){
         Entry.toast.alert(Lang.Msgs.warn, Lang.Workspace.no_message_to_remove, 'true');
         return;
     }
@@ -645,7 +645,7 @@ Entry.Container.prototype.getDropdownList = function(menuName) {
                 continue;
             result.push([variable.getName(), variable.getId()]);
         }
-        if (!result || result.length == 0)
+        if (!result || result.length === 0)
             result.push([Lang.Blocks.VARIABLE_variable, 'null']);
     } else if (menuName == 'lists') {
         var lists = Entry.variableContainer.lists_;
@@ -653,7 +653,7 @@ Entry.Container.prototype.getDropdownList = function(menuName) {
             var list = lists[i];
             result.push([list.getName(), list.getId()]);
         }
-        if (!result || result.length == 0)
+        if (!result || result.length === 0)
             result.push([Lang.Blocks.VARIABLE_list, 'null']);
     } else if (menuName == 'scenes') {
         var scenes = Entry.scene.scenes_;
@@ -956,7 +956,7 @@ Entry.Container.prototype.setCurrentObjects = function() {
  */
 Entry.Container.prototype.getCurrentObjects = function() {
     var objs = this.currentObjects_;
-    if (!objs || objs.length == 0)
+    if (!objs || objs.length === 0)
         this.setCurrentObjects();
     return this.currentObjects_;
 };

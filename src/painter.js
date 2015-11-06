@@ -69,7 +69,7 @@ Entry.Painter.prototype.initialize = function(painterView) {
     var painter = this;
     Entry.addEventListener('textUpdate', function() {
         var string = painter.inputField.value();
-        if(string==""){
+        if(string === ""){
             painter.inputField.hide();
             delete painter.inputField;
             return;
@@ -901,7 +901,7 @@ Entry.Painter.prototype.move_rect = function() {
         height= width;
     }
     if (this.stroke.fill) {
-        if( this.stroke.thickness == 0){
+        if( this.stroke.thickness === 0){
             this.brush.graphics.clear()
             .setStrokeStyle(this.stroke.thickness, 'round')
             .beginFill(this.stroke.fillColor)
@@ -921,7 +921,7 @@ Entry.Painter.prototype.move_rect = function() {
                 height);
         }
     } else {
-        if( this.stroke.thickness == 0) {
+        if( this.stroke.thickness === 0) {
             this.brush.graphics.clear()
             .setStrokeStyle(this.stroke.thickness, 'round')
             .drawRect(this.oldPt.x,
@@ -949,7 +949,7 @@ Entry.Painter.prototype.move_circle = function() {
         height= width;
     }
     if(this.stroke.fill){
-        if(this.stroke.thickness ==0){
+        if(this.stroke.thickness === 0){
             this.brush.graphics.clear()
             .beginStroke(this.stroke.fillColor)
             .setStrokeStyle(this.stroke.thickness, 'round')
@@ -964,7 +964,7 @@ Entry.Painter.prototype.move_circle = function() {
                 this.oldPt.y,width,height);
         }
     }else if(!this.stroke.fill){
-        if(this.stroke.thickness==0){
+        if(this.stroke.thickness === 0){
             this.brush.graphics.clear()
             .drawEllipse(this.oldPt.x,this.oldPt.y,width,height);
         }else{
@@ -1462,9 +1462,9 @@ Entry.Painter.prototype.initDashedLine = function() {
         while( q++ < dashes ){
             x1 += dashX;
             y1 += dashY;
-            this[q % 2 == 0 ? 'moveTo' : 'lineTo'](x1, y1);
+            this[q % 2 === 0 ? 'moveTo' : 'lineTo'](x1, y1);
         }
-        this[q % 2 == 0 ? 'moveTo' : 'lineTo'](x2, y2);
+        this[q % 2 === 0 ? 'moveTo' : 'lineTo'](x2, y2);
         return this;
     };
 
@@ -2056,8 +2056,7 @@ Entry.Painter.prototype.generateView = function(painterView) {
         var backgroundClick = false;
         painterAttrShapeBackgroundColor.bindOnClick(function(evt) {
             painterAttrThick.style.zIndex='1';
-            this.style.zIndex='10';
-            this.style.zIndex= new String('10');
+            this.style.zIndex = '10';
             backgroundClick = true;
         });
 

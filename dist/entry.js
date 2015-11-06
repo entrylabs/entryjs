@@ -4271,7 +4271,7 @@ Entry.Container.prototype.removeObject = function(a) {
   this.objects_.splice(b, 1);
   this.setCurrentObjects();
   Entry.stage.sortZorder();
-  this.objects_.length && 0 != b ? Entry.container.selectObject(this.objects_[b - 1].id) : this.objects_.length && 0 == b ? Entry.container.selectObject(this.getCurrentObjects()[0].id) : (Entry.container.selectObject(), Entry.playground.flushPlayground());
+  this.objects_.length && 0 !== b ? Entry.container.selectObject(this.objects_[b - 1].id) : this.objects_.length && 0 === b ? Entry.container.selectObject(this.getCurrentObjects()[0].id) : (Entry.container.selectObject(), Entry.playground.flushPlayground());
   Entry.toast.success(Lang.Workspace.remove_object, a.name + " " + Lang.Workspace.remove_object_msg);
   Entry.variableContainer.removeLocalVariables(a.id);
   Entry.playground.reloadPlayground();
@@ -4341,7 +4341,7 @@ Entry.Container.prototype.addMessage = function(a) {
   return !0;
 };
 Entry.Container.prototype.deleteMessage = function() {
-  0 == this.messages_.length ? Entry.toast.alert(Lang.Msgs.warn, Lang.Workspace.no_message_to_remove, "true") : Entry.dispatchEvent("deleteMessage");
+  0 === this.messages_.length ? Entry.toast.alert(Lang.Msgs.warn, Lang.Workspace.no_message_to_remove, "true") : Entry.dispatchEvent("deleteMessage");
 };
 Entry.Container.prototype.removeMessage = function(a) {
   for (var b = this.messages_, c = 0;c < b.length;c++) {
@@ -4441,14 +4441,14 @@ Entry.Container.prototype.getDropdownList = function(a) {
                 for (a = 0;a < c.length;a++) {
                   d = c[a], d.object_ && d.object_ != Entry.playground.object.id || b.push([d.getName(), d.getId()]);
                 }
-                b && 0 != b.length || b.push([Lang.Blocks.VARIABLE_variable, "null"]);
+                b && 0 !== b.length || b.push([Lang.Blocks.VARIABLE_variable, "null"]);
               } else {
                 if ("lists" == a) {
                   c = Entry.variableContainer.lists_;
                   for (a = 0;a < c.length;a++) {
                     d = c[a], b.push([d.getName(), d.getId()]);
                   }
-                  b && 0 != b.length || b.push([Lang.Blocks.VARIABLE_list, "null"]);
+                  b && 0 !== b.length || b.push([Lang.Blocks.VARIABLE_list, "null"]);
                 } else {
                   if ("scenes" == a) {
                     for (c = Entry.scene.scenes_, a = 0;a < c.length;a++) {
@@ -4619,7 +4619,7 @@ Entry.Container.prototype.setCurrentObjects = function() {
 };
 Entry.Container.prototype.getCurrentObjects = function() {
   var a = this.currentObjects_;
-  a && 0 != a.length || this.setCurrentObjects();
+  a && 0 !== a.length || this.setCurrentObjects();
   return this.currentObjects_;
 };
 Entry.Container.prototype.getProjectWithJSON = function(a) {
@@ -6505,7 +6505,7 @@ Entry.EntryObject.prototype.select = function(a) {
 };
 Entry.EntryObject.prototype.addPicture = function(a, b) {
   Entry.stateManager.addCommand("add sprite", this, this.removePicture, a.id);
-  b || 0 == b ? (this.pictures.splice(b, 0, a), Entry.playground.injectPicture(this)) : this.pictures.push(a);
+  b || 0 === b ? (this.pictures.splice(b, 0, a), Entry.playground.injectPicture(this)) : this.pictures.push(a);
   return new Entry.State(this, this.removePicture, a.id);
 };
 Entry.EntryObject.prototype.removePicture = function(a) {
@@ -6537,7 +6537,7 @@ Entry.EntryObject.prototype.getPicture = function(a) {
     }
   }
   a = Entry.parseNumber(a);
-  if ((0 != a || "boolean" != typeof a) && c >= a && 0 < a) {
+  if ((!1 !== a || "boolean" != typeof a) && c >= a && 0 < a) {
     return b[a - 1];
   }
   throw Error("No picture with pictureId : " + pictureId);
@@ -6570,7 +6570,7 @@ Entry.EntryObject.prototype.addSound = function(a, b) {
   a.id || (a.id = Entry.generateHash());
   Entry.stateManager.addCommand("add sound", this, this.removeSound, a.id);
   Entry.initSound(a, b);
-  b || 0 == b ? (this.sounds.splice(b, 0, a), Entry.playground.injectSound(this)) : this.sounds.push(a);
+  b || 0 === b ? (this.sounds.splice(b, 0, a), Entry.playground.injectSound(this)) : this.sounds.push(a);
   return new Entry.State(this, this.removeSound, a.id);
 };
 Entry.EntryObject.prototype.removeSound = function(a) {
@@ -6757,7 +6757,7 @@ Entry.Painter.prototype.initialize = function(a) {
   var b = this;
   Entry.addEventListener("textUpdate", function() {
     var a = b.inputField.value();
-    "" == a ? (b.inputField.hide(), delete b.inputField) : (b.inputField.hide(), b.drawText(a), b.selectToolbox("cursor"));
+    "" === a ? (b.inputField.hide(), delete b.inputField) : (b.inputField.hide(), b.drawText(a), b.selectToolbox("cursor"));
   });
   this.selectToolbox("cursor");
 };
@@ -7184,7 +7184,7 @@ Entry.Painter.prototype.move_line = function() {
 Entry.Painter.prototype.move_rect = function() {
   var a = this.stage.mouseX - this.oldPt.x, b = this.stage.mouseY - this.oldPt.y;
   event.shiftKey && (b = a);
-  this.stroke.fill ? 0 == this.stroke.thickness ? this.brush.graphics.clear().setStrokeStyle(this.stroke.thickness, "round").beginFill(this.stroke.fillColor).drawRect(this.oldPt.x, this.oldPt.y, a, b) : this.brush.graphics.clear().beginStroke(this.stroke.lineColor).setStrokeStyle(this.stroke.thickness, "round").beginFill(this.stroke.fillColor).drawRect(this.oldPt.x, this.oldPt.y, a, b) : 0 == this.stroke.thickness ? this.brush.graphics.clear().setStrokeStyle(this.stroke.thickness, "round").drawRect(this.oldPt.x, 
+  this.stroke.fill ? 0 === this.stroke.thickness ? this.brush.graphics.clear().setStrokeStyle(this.stroke.thickness, "round").beginFill(this.stroke.fillColor).drawRect(this.oldPt.x, this.oldPt.y, a, b) : this.brush.graphics.clear().beginStroke(this.stroke.lineColor).setStrokeStyle(this.stroke.thickness, "round").beginFill(this.stroke.fillColor).drawRect(this.oldPt.x, this.oldPt.y, a, b) : 0 === this.stroke.thickness ? this.brush.graphics.clear().setStrokeStyle(this.stroke.thickness, "round").drawRect(this.oldPt.x, 
   this.oldPt.y, a, b) : this.brush.graphics.clear().beginStroke(this.stroke.lineColor).setStrokeStyle(this.stroke.thickness, "round").drawRect(this.oldPt.x, this.oldPt.y, a, b);
   this.file.modified = !0;
   this.stage.update();
@@ -7192,7 +7192,7 @@ Entry.Painter.prototype.move_rect = function() {
 Entry.Painter.prototype.move_circle = function() {
   var a = this.stage.mouseX - this.oldPt.x, b = this.stage.mouseY - this.oldPt.y;
   event.shiftKey && (b = a);
-  this.stroke.fill ? 0 == this.stroke.thickness ? this.brush.graphics.clear().beginStroke(this.stroke.fillColor).setStrokeStyle(this.stroke.thickness, "round").beginFill(this.stroke.fillColor).drawEllipse(this.oldPt.x, this.oldPt.y, a, b) : this.brush.graphics.clear().beginStroke(this.stroke.lineColor).setStrokeStyle(this.stroke.thickness, "round").beginFill(this.stroke.fillColor).drawEllipse(this.oldPt.x, this.oldPt.y, a, b) : this.stroke.fill || (0 == this.stroke.thickness ? this.brush.graphics.clear().drawEllipse(this.oldPt.x, 
+  this.stroke.fill ? 0 === this.stroke.thickness ? this.brush.graphics.clear().beginStroke(this.stroke.fillColor).setStrokeStyle(this.stroke.thickness, "round").beginFill(this.stroke.fillColor).drawEllipse(this.oldPt.x, this.oldPt.y, a, b) : this.brush.graphics.clear().beginStroke(this.stroke.lineColor).setStrokeStyle(this.stroke.thickness, "round").beginFill(this.stroke.fillColor).drawEllipse(this.oldPt.x, this.oldPt.y, a, b) : this.stroke.fill || (0 === this.stroke.thickness ? this.brush.graphics.clear().drawEllipse(this.oldPt.x, 
   this.oldPt.y, a, b) : this.brush.graphics.clear().beginStroke(this.stroke.lineColor).setStrokeStyle(this.stroke.thickness, "round").drawEllipse(this.oldPt.x, this.oldPt.y, a, b));
   this.file.modified = !0;
   this.stage.update();
@@ -7349,9 +7349,9 @@ Entry.Painter.prototype.initDashedLine = function() {
     var f = c - a, h = d - b;
     e = Math.floor(Math.sqrt(f * f + h * h) / e);
     for (var f = f / e, h = h / e, g = 0;g++ < e;) {
-      a += f, b += h, this[0 == g % 2 ? "moveTo" : "lineTo"](a, b);
+      a += f, b += h, this[0 === g % 2 ? "moveTo" : "lineTo"](a, b);
     }
-    this[0 == g % 2 ? "moveTo" : "lineTo"](c, d);
+    this[0 === g % 2 ? "moveTo" : "lineTo"](c, d);
     return this;
   };
   createjs.Graphics.prototype.drawDashedRect = function(a, b, c, d, e) {
@@ -7766,7 +7766,6 @@ Entry.Painter.prototype.generateView = function(a) {
     q.bindOnClick(function(a) {
       l.style.zIndex = "1";
       this.style.zIndex = "10";
-      this.style.zIndex = new String("10");
       r = !0;
     });
     this.attrFontArea = Entry.createElement("div", "painterAttrFont");

@@ -117,19 +117,19 @@ Entry.setBlock = function(objectType, XML) {
 
 Entry.enableArduino = function() {
     return;
-    $.ajax('http://localhost:23518/arduino/')
-        .done(function(data){
-            var xmlHttp = new XMLHttpRequest();
-            xmlHttp.open( "GET", '/xml/arduino_blocks.xml', false );
-            xmlHttp.send('');
-            if (!Entry.playground.menuBlocks_.sprite.getElementById("arduino")) {
-                Entry.setBlockByText('arduino', xmlHttp.responseText);
-                Entry.playground.currentObjectType = '';
-                Entry.playground.setMenu(Entry.playground.object.objectType);
-            }
-            Entry.toast.success(Lang.Workspace.arduino_connect, Lang.Workspace.arduino_connect_success, false);
-        }).fail(function(){
-    });
+    //$.ajax('http://localhost:23518/arduino/')
+        //.done(function(data){
+            //var xmlHttp = new XMLHttpRequest();
+            //xmlHttp.open( "GET", '/xml/arduino_blocks.xml', false );
+            //xmlHttp.send('');
+            //if (!Entry.playground.menuBlocks_.sprite.getElementById("arduino")) {
+                //Entry.setBlockByText('arduino', xmlHttp.responseText);
+                //Entry.playground.currentObjectType = '';
+                //Entry.playground.setMenu(Entry.playground.object.objectType);
+            //}
+            //Entry.toast.success(Lang.Workspace.arduino_connect, Lang.Workspace.arduino_connect_success, false);
+        //}).fail(function(){
+    //});
 };
 
 /**
