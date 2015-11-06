@@ -1,4 +1,5 @@
-"user strict";
+"use strict";
+
 /**
  * @fileoverview Show dialog on canvas
  */
