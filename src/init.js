@@ -32,21 +32,21 @@ Entry.init = function(container, options) {
     this.cloudSavable = true;
     this.startTime = new Date().getTime();
 
-    this.mediaFilePath = '/lib/entryjs/images/'
+    this.mediaFilePath = '/lib/entryjs/images/';
 
     document.onkeydown=function(e){
-        Entry.dispatchEvent('keyPressed', e)
+        Entry.dispatchEvent('keyPressed', e);
     };
     document.onkeyup=function(e){
-        Entry.dispatchEvent('keyUpped', e)
+        Entry.dispatchEvent('keyUpped', e);
     };
     window.onresize = function(e) {
-        Entry.dispatchEvent('windowResized', e)
+        Entry.dispatchEvent('windowResized', e);
     };
     window.onbeforeunload = this.beforeUnload;
 
     Entry.addEventListener("saveWorkspace", function(e) {
-        Entry.addActivity("save")
+        Entry.addActivity("save");
     });
 
     if (Entry.getBrowserType().substr(0,2) == 'IE' && !window.flashaudio) {
@@ -97,7 +97,7 @@ Entry.loadAudio_ = function(filenames, name) {
     });
     break;
   }
-}
+};
 
 /**
  * Initialize function for Entry.
@@ -312,7 +312,7 @@ Entry.start = function(FPS) {
     /** @type {number} */
     if (!this.FPS)
         this.FPS = 60;
-    Entry.assert(typeof(this.FPS) == 'number', 'FPS must be number')
+    Entry.assert(typeof(this.FPS) == 'number', 'FPS must be number');
     Entry.engine.start(this.FPS);
 };
 
@@ -378,7 +378,7 @@ Entry.parseOptions = function(options) {
         this.hasVariableManager = true;
 
     this.isForLecture = options['isForLecture'];
-}
+};
 
 /**
  * Initialize context menu library.
