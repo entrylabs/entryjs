@@ -241,7 +241,7 @@ Entry.Playground.prototype.generateTabView = function(tabView) {
     codeTab.bindOnClick(function(e) {
         Entry.playground.changeViewMode('code');
     });
-    this.tabViewElements['code'] = codeTab;
+    this.tabViewElements.code = codeTab;
 
     if (Entry.pictureEditable) {
         var pictureTab = Entry.createElement('li', 'entryPictureTab');
@@ -251,7 +251,7 @@ Entry.Playground.prototype.generateTabView = function(tabView) {
         pictureTab.bindOnClick(function(e) {
             Entry.playground.changeViewMode('picture');
         });
-        this.tabViewElements['picture'] = pictureTab;
+        this.tabViewElements.picture = pictureTab;
 
         var textboxTab = Entry.createElement('li', 'entryTextboxTab');
         textboxTab.innerHTML = Lang.Workspace.tab_text;
@@ -260,7 +260,7 @@ Entry.Playground.prototype.generateTabView = function(tabView) {
         textboxTab.bindOnClick(function(e) {
             Entry.playground.changeViewMode('text');
         });
-        this.tabViewElements['text'] = textboxTab;
+        this.tabViewElements.text = textboxTab;
         textboxTab.addClass('entryRemove');
     }
 
@@ -272,7 +272,7 @@ Entry.Playground.prototype.generateTabView = function(tabView) {
         soundTab.bindOnClick(function(e) {
             Entry.playground.changeViewMode('sound');
         });
-        this.tabViewElements['sound'] = soundTab;
+        this.tabViewElements.sound = soundTab;
     }
 
     if (Entry.hasVariableManager) {
@@ -285,7 +285,7 @@ Entry.Playground.prototype.generateTabView = function(tabView) {
             Entry.playground.toggleOnVariableView();
             Entry.playground.changeViewMode('variable');
         });
-        this.tabViewElements['variable'] = variableTab;
+        this.tabViewElements.variable = variableTab;
     }
 
 };
@@ -894,15 +894,15 @@ Entry.Playground.prototype.injectObject = function(object) {
 
     this.injectCode();
     if (object.objectType == 'sprite' && Entry.pictureEditable) {
-        if (this.tabViewElements['text'])
-            this.tabViewElements['text'].addClass("entryRemove");
-        if (this.tabViewElements['picture'])
-            this.tabViewElements['picture'].removeClass("entryRemove");
+        if (this.tabViewElements.text)
+            this.tabViewElements.text.addClass("entryRemove");
+        if (this.tabViewElements.picture)
+            this.tabViewElements.picture.removeClass("entryRemove");
     } else if (object.objectType == 'textBox') {
-        if (this.tabViewElements['picture'])
-            this.tabViewElements['picture'].addClass("entryRemove");
-        if (this.tabViewElements['text'])
-            this.tabViewElements['text'].removeClass("entryRemove");
+        if (this.tabViewElements.picture)
+            this.tabViewElements.picture.addClass("entryRemove");
+        if (this.tabViewElements.text)
+            this.tabViewElements.text.removeClass("entryRemove");
     }
 
     var viewMode = this.viewMode_;
