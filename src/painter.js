@@ -409,8 +409,7 @@ Entry.Painter.prototype.initPicture = function() {
             img.src = picture.fileurl;
         } else {
             // deprecated
-            image.src = '/uploads/' + picture.filename.substring(0,2)+'/'
-                +picture.filename.substring(2,4)+'/image/'+picture.filename+'.png';
+            image.src = '/uploads/' + picture.filename.substring(0,2)+'/' + picture.filename.substring(2,4)+'/image/'+picture.filename+'.png';
         }
 
         image.onload = function(event) {
@@ -552,9 +551,7 @@ Entry.Painter.prototype.matchTolerance = function(pos, startR, startG, startB, t
     var b = this.colorLayerData.data[pos+2];
 
     return (
-        (r >= rMin && r <= rMax)
-        && (g >= gMin && g <= gMax)
-        && (b >= bMin && b <= bMax)
+        (r >= rMin && r <= rMax) && (g >= gMin && g <= gMax) && (b >= bMin && b <= bMax)
         );
 };
 
@@ -1418,8 +1415,7 @@ Entry.Painter.prototype.addPicture = function(picture) {
     if (picture.fileurl) {
         image.src = picture.fileurl;
     } else {
-        image.src = '/uploads/' + picture.filename.substring(0,2)+'/'
-            +picture.filename.substring(2,4)+'/image/'+picture.filename+'.png';
+        image.src = '/uploads/' + picture.filename.substring(0,2)+'/'+picture.filename.substring(2,4)+'/image/'+picture.filename+'.png';
     }
 
     var painter = this;
@@ -1573,13 +1569,9 @@ Entry.Painter.prototype.generateView = function(painterView) {
             var ow = 960;
             var oh = 540;
 
-            var iw = window.innerWidth
-                    || document.documentElement.clientWidth
-                    || document.body.clientWidth;
+            var iw = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
 
-            var ih = window.innerHeight
-                    || document.documentElement.clientHeight
-                    || document.body.clientHeight;
+            var ih = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
 
             var ecw = parseInt(document.getElementById('entryCanvas').style.width);
 
