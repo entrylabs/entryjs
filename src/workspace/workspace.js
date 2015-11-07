@@ -14,6 +14,9 @@ Entry.Workspace = function(blockMenu, board) {
     this._board = board;
     blockMenu.workspace = this;
     board.workspace = this;
+
+    this._playEvent = new Entry.Event(this);
+    this._stopEvent = new Entry.Event(this);
 };
 
 (function(p) {
@@ -21,11 +24,13 @@ Entry.Workspace = function(blockMenu, board) {
     p.getBoard = function(){return this._board;};
     p.getBlockMenu = function(){return this._blockMenu;};
 
-    p.playAdd = function(target, dest) {
-        var targetBlock = this._blockMenu.findByName(target);
+    p.playAddBlock = function(help) {
+        var self = this;
+        this._playEvent.notify(help);
+        var targetBlock = this._blockMenu.findByName(help.target);
         var destBlock;
-        if (dest.name)
-            destBlock = this._board.findByName(dest.name);
+        if (help.dest.name)
+            destBlock = this._board.findByName(help.dest.name);
 
         blockView = targetBlock.view;
 
@@ -55,11 +60,10 @@ Entry.Workspace = function(blockMenu, board) {
         var distanceX = this.getBlockMenu()._svgWidth + destBlock.view.x;
         var distanceY = destBlock.view.y + destBlock.view.height;
 
-        var timeout = 3000;
         blockView._moveTo(distanceX,
                           distanceY,
                           true,
-                          timeout);
+                          help.duration - 300);
 
         setTimeout(function() {
             blockView._align(true);
@@ -77,7 +81,12 @@ Entry.Workspace = function(blockMenu, board) {
             if (board) board.set({dragBoard: null});
             delete blockView.dragInstance;
 
-        }, timeout);
+            if (self._playEvent) {
+                self._playEvent.detach(this._playEvent);
+            }
+            self._stopEvent.notify(help);
+
+        }, help.duration - 300);
 
     };
 

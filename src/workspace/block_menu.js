@@ -102,7 +102,6 @@ Entry.BlockMenu = function(dom) {
     };
 
     p.cloneThread = function() {
-        console.log('blockMenu::cloneThread');
         if (this.dragBlock === null) return;
         if (this.dragBlockObserver)
             this.removeDragBlockObserver();

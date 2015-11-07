@@ -12386,7 +12386,6 @@ Entry.BlockMenu = function(a) {
     null !== a && (a.destroy(), this.dragBlockObserver = null);
   };
   a.cloneThread = function() {
-    console.log("blockMenu::cloneThread");
     if (null !== this.dragBlock) {
       this.dragBlockObserver && this.removeDragBlockObserver();
       var a = this._svgWidth, c = this.dragBlock, d = c.block, e = this.code, f = d.getThread();
@@ -13295,6 +13294,8 @@ Entry.Workspace = function(a, b) {
   this._board = b;
   a.workspace = this;
   b.workspace = this;
+  this._playEvent = new Entry.Event(this);
+  this._stopEvent = new Entry.Event(this);
 };
 (function(a) {
   a.getBoard = function() {
@@ -13303,9 +13304,11 @@ Entry.Workspace = function(a, b) {
   a.getBlockMenu = function() {
     return this._blockMenu;
   };
-  a.playAdd = function(a, c) {
-    var d = this._blockMenu.findByName(a), e;
-    c.name && (e = this._board.findByName(c.name));
+  a.playAddBlock = function(a) {
+    var c = this;
+    this._playEvent.notify(a);
+    var d = this._blockMenu.findByName(a.target), e;
+    a.dest.name && (e = this._board.findByName(a.dest.name));
     blockView = d.view;
     blockView.getBoard().set({dragBlock:blockView});
     blockView.dragInstance = new Entry.DragInstance({startX:d.view.x, startY:d.view.y, offsetX:0, offsetY:0, mode:!0});
@@ -13314,16 +13317,18 @@ Entry.Workspace = function(a, b) {
     var f = blockView.getBoard();
     blockView.block.prev && (blockView.block.prev.setNext(null), blockView.block.setPrev(null));
     d = this.getBlockMenu()._svgWidth + e.view.x;
-    blockView._moveTo(d, e.view.y + e.view.height, !0, 3E3);
+    blockView._moveTo(d, e.view.y + e.view.height, !0, a.duration - 300);
     setTimeout(function() {
       blockView._align(!0);
-      var a = blockView._getCloseBlock();
-      a ? f.setMagnetedBlock(a.view) : f.setMagnetedBlock(null);
+      var d = blockView._getCloseBlock();
+      d ? f.setMagnetedBlock(d.view) : f.setMagnetedBlock(null);
       $(document).unbind(".block");
       blockView.terminateDrag();
       f && f.set({dragBoard:null});
       delete blockView.dragInstance;
-    }, 3E3);
+      c._playEvent && c._playEvent.detach(this._playEvent);
+      c._stopEvent.notify(a);
+    }, a.duration - 300);
   };
 })(Entry.Workspace.prototype);
 Entry.Xml = {};
