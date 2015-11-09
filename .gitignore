@@ -33,3 +33,4 @@ extern/SoundJS
 extern/jquery
 extern/socket.io-client
 extern/underscore
+extern/Snap.svg
