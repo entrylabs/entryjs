@@ -38,18 +38,9 @@ Entry.Workspace = function(blockMenu, board) {
 
         // mousedown
         board.set({dragBlock:blockView});
-        blockView._moveTo(0,0);
+        board.cloneThread();
         var observer = blockView.moveBoardBlockObserver;
         if (observer) observer.destroy();
-
-        blockView.dragMode = Entry.DRAG_MODE_MOUSEDOWN;
-
-
-        // mousemove
-        if (blockView.block.prev) {
-            blockView.block.prev.setNext(null);
-            blockView.block.setPrev(null);
-        }
 
         var distanceX = this.getBlockMenu()._svgWidth + destBlock.view.x;
         var distanceY = destBlock.view.y + destBlock.view.height;
@@ -59,22 +50,21 @@ Entry.Workspace = function(blockMenu, board) {
                           true,
                           help.duration - 300);
 
-        // var boardOffset = this.getBoard().offset;
-        // var blockMenuOffset = this.getBlockMenu().offset;
+        var boardOffset = this.getBoard().offset;
+        var blockMenuOffset = this.getBlockMenu().offset;
 
-        // var offsetX = boardOffset.left - blockMenuOffset.left,
-        //     offsetY = boardOffset.top - blockMenuOffset.top;
+        var offsetX = boardOffset.left - blockMenuOffset.left,
+            offsetY = boardOffset.top - blockMenuOffset.top;
 
-        // this.getBoard().dragBlock._moveTo(
-        //                   distanceX-offsetX,
-        //                   distanceY-offsetY,
-        //                   true,
-        //                   help.duration - 300);
+        this.getBoard().dragBlock._moveTo(
+                          distanceX-offsetX,
+                          distanceY-offsetY,
+                          true,
+                          help.duration - 300);
 
         setTimeout(function() {
             blockView._align(true);
 
-            return;
             var magnetedBlock = blockView._getCloseBlock();
             if (magnetedBlock) {
                 board.setMagnetedBlock(magnetedBlock.view);
@@ -82,8 +72,6 @@ Entry.Workspace = function(blockMenu, board) {
                 board.setMagnetedBlock(null);
             }
 
-            // mouseup
-            $(document).unbind('.block');
             blockView.terminateDrag();
             if (board) board.set({dragBoard: null});
 

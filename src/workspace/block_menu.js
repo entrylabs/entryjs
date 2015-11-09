@@ -95,7 +95,6 @@ Entry.BlockMenu = function(dom) {
     };
 
     p.removeDragBlockObserver = function() {
-        console.log('observer');
         var observer = this.dragBlockObserver;
         if (observer === null) return;
         observer.destroy();
@@ -129,11 +128,10 @@ Entry.BlockMenu = function(dom) {
             this._boardBlockView.dragMode = 1;
 
             this._boardBlockView._moveTo(
-                -(svgWidth - blockView.x),
-                blockView.y,
+                blockView.x-svgWidth,
+                blockView.y-0,
                 false
             );
-
         }
 
     };
@@ -174,7 +172,6 @@ Entry.BlockMenu = function(dom) {
     };
 
     p.moveBoardBlock = function() {
-        console.log('blockMenu::moveBoardBlock');
         var boardOffset = this.workspace.getBoard().offset;
         var thisOffset = this.offset;
         var offsetX = boardOffset.left - thisOffset.left,
