@@ -59,11 +59,17 @@ Entry.Workspace = function(blockMenu, board) {
                           true,
                           help.duration - 300);
 
-        this.getBoard().dragBlock._moveTo(
-                          distanceX,
-                          distanceY,
-                          true,
-                          help.duration - 300);
+        // var boardOffset = this.getBoard().offset;
+        // var blockMenuOffset = this.getBlockMenu().offset;
+
+        // var offsetX = boardOffset.left - blockMenuOffset.left,
+        //     offsetY = boardOffset.top - blockMenuOffset.top;
+
+        // this.getBoard().dragBlock._moveTo(
+        //                   distanceX-offsetX,
+        //                   distanceY-offsetY,
+        //                   true,
+        //                   help.duration - 300);
 
         setTimeout(function() {
             blockView._align(true);

@@ -10290,6 +10290,31 @@ Entry.Model = function(a, b) {
     return a;
   };
 })(Entry.Model);
+Entry.LoopModel = function() {
+  Entry.Model.call(this);
+  this._observers = [];
+};
+Entry.LoopModel.prototype = new Entry.Model;
+(function(a) {
+  a.base = Entry.Model;
+  a.bind = function(a) {
+    this._observers.push(a);
+  };
+  a.unbind = function(a) {
+    for (var c in this._observers) {
+      if (this._observers[c] === a) {
+        return this._observers.splice(c, 1), !0;
+      }
+    }
+    return !1;
+  };
+  a.notify = function() {
+    var a = Array.prototype.slice.call(arguments, 0), c;
+    for (c in this._observers) {
+      this._observers[c].update.apply(null, a);
+    }
+  };
+})(Entry.LoopModel.prototype);
 Entry.Func = function() {
   this.id = Entry.generateHash();
   this.content = Blockly.Xml.textToDom(Entry.Func.CREATE_BLOCK);
@@ -13318,9 +13343,7 @@ Entry.Workspace = function(a, b) {
     e.dragMode = Entry.DRAG_MODE_MOUSEDOWN;
     e.block.prev && (e.block.prev.setNext(null), e.block.setPrev(null));
     c = this.getBlockMenu()._svgWidth + d.view.x;
-    d = d.view.y + d.view.height;
-    e._moveTo(c, d, !0, a.duration - 300);
-    this.getBoard().dragBlock._moveTo(c, d, !0, a.duration - 300);
+    e._moveTo(c, d.view.y + d.view.height, !0, a.duration - 300);
     setTimeout(function() {
       e._align(!0);
     }, a.duration - 300);
