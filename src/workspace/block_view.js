@@ -191,14 +191,15 @@ Entry.BlockView = function(block, board) {
         }
     };
 
-    p._moveTo = function(x, y, animate) {
+    p._moveTo = function(x, y, animate, speed) {
         animate = animate === undefined ? true : animate;
+        speed = speed === undefined ? 300 : speed;
         var transform = "t" + x + " " + y;
         this.svgGroup.stop();
         if (animate) {
             that.svgGroup.animate({
                 transform: transform
-            }, 300, mina.easeinout);
+            }, speed, mina.easeinout);
         } else {
             this.svgGroup.attr({
                 transform: transform
@@ -207,11 +208,12 @@ Entry.BlockView = function(block, board) {
         this.set({ x: x, y: y });
     };
 
-    p._moveBy = function(x, y, animate) {
+    p._moveBy = function(x, y, animate, spped) {
         return this._moveTo(
             this.x + x,
             this.y + y,
-            animate
+            animate,
+            speed
         );
     };
 
