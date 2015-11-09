@@ -1,7 +1,4 @@
-/**
- * @fileoverview Utility functions for Entry.
- */
-'use strict';
+"use strict";
 
 goog.provide("Entry.Utils");
 
@@ -13,6 +10,54 @@ Entry.overridePrototype = function() {
     Number.prototype.mod = function(n) {
             return ((this%n)+n)%n;
     };
+};
+
+
+Entry.Utils.generateId = function() {
+    return ("0000"+(Math.random()*Math.pow(36,4)<<0).toString(36)).substr(-4);
+};
+
+Entry.Utils.intersectArray = function (x, y){
+    var ret = [];
+    for (var i = 0; i < x.length; i++) {
+        for (var z = 0; z < y.length; z++) {
+            if (x[i] == y[z]) {
+                ret.push(x[i]);
+                break;
+            }
+        }
+    }
+    return ret;
+};
+
+Entry.Utils.isPointInMatrix = function(matrix, point, offset) {
+    offset = offset === undefined ? 0 : offset;
+    var x = matrix.offsetX ? matrix.x + matrix.offsetX : matrix.x;
+    var y = matrix.offsetY ? matrix.y + matrix.offsety : matrix.y;
+    return (x - offset <= point.x) &&
+        (x + matrix.width + offset >= point.x) &&
+        (y - offset <= point.y) &&
+        (y + matrix.height + offset >= point.y);
+};
+
+Entry.Utils.colorDarken = function(color, factor) {
+    var r, g, b;
+    if (color.length === 7) {
+        r = parseInt(color.substr(1, 2), 16);
+        g = parseInt(color.substr(3, 2), 16);
+        b = parseInt(color.substr(5, 2), 16);
+    } else {
+        r = parseInt(color.substr(1, 2), 16);
+        g = parseInt(color.substr(2, 2), 16);
+        b = parseInt(color.substr(3, 2), 16);
+    }
+
+    factor = factor === undefined ? 0.7 : factor;
+    r = Math.floor(r * factor).toString(16);
+    g = Math.floor(g * factor).toString(16);
+    b = Math.floor(b * factor).toString(16);
+
+    return '#' + r + g + b;
 };
 
 /**
@@ -39,16 +84,17 @@ Entry.assert = function(condition, message) {
  * @param {xml} doc
  */
 Entry.parseTexttoXML = function(xmlText) {
+    var doc;
     if (window.ActiveXObject){
-        var doc=new ActiveXObject('Microsoft.XMLDOM');
+        doc=new ActiveXObject('Microsoft.XMLDOM');
         doc.async='false';
         doc.loadXML(xmlText);
     } else {
         var parser=new DOMParser();
-        var doc=parser.parseFromString(xmlText,'text/xml');
+        doc=parser.parseFromString(xmlText,'text/xml');
     }
     return doc;
-}
+};
 
 /**
  * Create html element with some method
@@ -63,13 +109,13 @@ Entry.createElement = function(type, elementId) {
 
     element.hasClass = function(className) {
         return this.className.match(new RegExp('(\\s|^)'+className+'(\\s|$)'));
-    }
+    };
     element.addClass = function(className) {
         for (var i = 0; i < arguments.length; i++) {
             var className = arguments[i];
             if (!this.hasClass(className)) this.className += " " + className;
         }
-    }
+    };
     element.removeClass = function(className) {
         for (var i = 0; i < arguments.length; i++) {
             var className = arguments[i];
@@ -78,7 +124,7 @@ Entry.createElement = function(type, elementId) {
                 this.className=this.className.replace(reg,' ');
             }
         }
-    }
+    };
     element.bindOnClick = function(func) {
         $(this).on('click touchstart', function(e) {
             e.stopImmediatePropagation();
@@ -86,7 +132,7 @@ Entry.createElement = function(type, elementId) {
             e.handled = true;
             func.call(this, e);
         });
-    }
+    };
     return element;
 };
 
@@ -210,7 +256,7 @@ Entry.generateRgb = function () {
         r: Math.floor(Math.random()*256),
         g: Math.floor(Math.random()*256),
         b: Math.floor(Math.random()*256)
-    }
+    };
 };
 
 /*
@@ -225,7 +271,7 @@ Entry.adjustValueWithMaxMin = function (input, min, max) {
     } else
         return input;
 
-}
+};
 
 /*
  * Inspect input value exists already in an array
@@ -265,7 +311,7 @@ Entry.getColourCodes = function () {
 Entry.removeElement = function(element) {
    if (element && element.parentNode)
        element.parentNode.removeChild(element);
-}
+};
 
 /*
  * Replacement for elements.getElementsByClassName(className)
@@ -279,7 +325,7 @@ Entry.getElementsByClassName = function(cl) {
         if((' ' + elem[i].className + ' ').indexOf(' ' + cl + ' ') > -1) retnode.push(elem[i]);
     }
     return retnode;
-}
+};
 
 /*
  * parse string to number
@@ -292,7 +338,7 @@ Entry.parseNumber = function(value) {
     else if (typeof value == "number" && !isNaN(Number(value)))
         return value;
     return false;
-}
+};
 
 /**
  * count length of string.
@@ -305,7 +351,7 @@ Entry.countStringLength = function(dataString) {
     for (p = 0; p < dataString.length; p++)
         (dataString.charCodeAt(p) > 255) ? len+=2 : len++;
     return len;
-}
+};
 
 /**
  * count length of string.
@@ -319,7 +365,7 @@ Entry.cutStringByLength = function(dataString, stringLength) {
     for (p = 0; len < stringLength && p < dataString.length; p++)
         (dataString.charCodeAt(p) > 255) ? len+=2 : len++;
     return dataString.substr(0,p);
-}
+};
 
 
 /**
@@ -336,7 +382,7 @@ Entry.isChild = function(parent, child) {
         }
     }
     return false;
-}
+};
 
 /**
  * @param {Element} child
@@ -350,16 +396,16 @@ Entry.launchFullScreen = function(element) {
         element.webkitRequestFullscreen();
     else if (element.msRequestFullScreen)
         element.msRequestFullScreen();
-}
+};
 
 Entry.exitFullScreen = function() {
     if (document.exitFullScreen)
-        document.exitFullScreen()
+        document.exitFullScreen();
     else if (document.mozCancelFullScreen)
-        document.mozCancelFullScreen()
+        document.mozCancelFullScreen();
     else if (document.webkitExitFullscreen)
         document.webkitExitFullscreen();
-}
+};
 
 Entry.isPhone = function(){
     return false;
@@ -367,7 +413,7 @@ Entry.isPhone = function(){
         //return false;
     //else
         //return true;
-}
+};
 
 Entry.getKeyCodeMap = function () {
     return {
@@ -385,7 +431,7 @@ Entry.getKeyCodeMap = function () {
         '48':'0', '49':'1', '50':'2', '51':'3', '52':'4',
         '53':'5', '54':'6', '55':'7', '56':'8', '57':'9',
         '13':Lang.Blocks.START_press_some_key_enter
-    }
+    };
 };
 
 Entry.checkCollisionRect = function(rectA, rectB) {
@@ -395,26 +441,26 @@ Entry.checkCollisionRect = function(rectA, rectB) {
         ((rectA.x + rectA.width) < rectB.x) ||
         (rectA.x > (rectB.x + rectB.width))
     );
-}
+};
 
 Entry.bindAnimationCallback = function(element, func) {
     element.addEventListener("webkitAnimationEnd", func, false);
     element.addEventListener("animationend", func, false);
     element.addEventListener("oanimationend", func, false);
-}
+};
 
 Entry.cloneSimpleObject = function(object) {
     var clone = {};
     for (var i in object)
         clone[i] = object[i];
     return clone;
-}
+};
 
 Entry.nodeListToArray = function(nl) {
-    var arr = Array(nl.length);
+    var arr = new Array(nl.length);
     for(var i=-1,l=nl.length;++i!==l;arr[i]=nl[i]);
     return arr;
-}
+};
 
 Entry.computeInputWidth = function(nameField){
     var tmp = document.createElement("span");
@@ -432,7 +478,7 @@ Entry.isArrowOrBackspace = function(keyCode){
 };
 
 Entry.hexStringToBin = function(hexString) {
-    bytes = [], str;
+    var bytes = [], str;
 
     for(var i=0; i< hexString.length-1; i+=2){
         bytes.push(parseInt(hexString.substr(i, 2), 16));
@@ -440,7 +486,7 @@ Entry.hexStringToBin = function(hexString) {
 
     str = String.fromCharCode.apply(String, bytes);
     return str;
-}
+};
 
 Entry.findObjsByKey = function(arr, keyName, key) {
     var result = [];
@@ -449,17 +495,17 @@ Entry.findObjsByKey = function(arr, keyName, key) {
             result.push(arr[i]);
     }
     return result;
-}
+};
 
 Entry.factorials = [];
 
 Entry.factorial = function(n){
-    if (n == 0 || n == 1)
+    if (n === 0 || n == 1)
         return 1;
     if (Entry.factorials[n] > 0)
         return Entry.factorials[n];
     return Entry.factorials[n] = Entry.factorial(n-1) * n;
-}
+};
 
 Entry.getListRealIndex = function(index, list){
     if (isNaN(index)) {
@@ -476,15 +522,15 @@ Entry.getListRealIndex = function(index, list){
         }
     }
     return index;
-}
+};
 
 Entry.toRadian = function(angle){
     return angle * Math.PI / 180;
-}
+};
 
 Entry.toDegrees = function(radians){
     return radians * 180 / Math.PI;
-}
+};
 
 Entry.getPicturesJSON = function (pictures) {
     var json = [];
@@ -495,12 +541,13 @@ Entry.getPicturesJSON = function (pictures) {
         o.id = p.id;
         o.dimension = p.dimension;
         o.filename = p.filename;
+        o.fileurl = p.fileurl;
         o.name = p.name;
         o.scale = p.scale;
         json.push(o);
     }
     return json;
-}
+};
 
 Entry.getSoundsJSON = function (sounds) {
     var json = [];
@@ -512,15 +559,16 @@ Entry.getSoundsJSON = function (sounds) {
         o.ext = s.ext;
         o.id = s.id;
         o.filename = s.filename;
+        o.fileurl = s.fileurl;
         o.name = s.name;
         json.push(o);
     }
     return json;
-}
+};
 
 Entry.cutDecimal = function (number) {
     return Math.round(number * 100) / 100;
-}
+};
 
 Entry.getBrowserType = function() {
     if (Entry.userAgent)
@@ -540,7 +588,7 @@ Entry.getBrowserType = function() {
     var uaResult = M.join(' ');
     Entry.userAgent = uaResult;
     return uaResult;
-}
+};
 
 Entry.setBasicBrush = function (sprite) {
     var brush = new createjs.Graphics();
@@ -560,25 +608,25 @@ Entry.setBasicBrush = function (sprite) {
     if (sprite.shape)
         sprite.shape = null;
     sprite.shape = shape;
-}
+};
 
 Entry.isFloat = function (num) {
     return /\d+\.{1}\d+/.test(num);
-}
+};
 
 Entry.getStringIndex = function(str) {
     if (!str) return '';
     var result = {
         string: str,
         index: 1
-    }
+    };
     var idx = 0;
     var num = [];
     var len = str.length;
     for (var i=len-1; i>0; --i) {
         var ch = str.charAt(i);
         if (!isNaN(ch)) {
-            num.unshift(ch)
+            num.unshift(ch);
             idx = i;
         } else {
             break;
@@ -591,7 +639,7 @@ Entry.getStringIndex = function(str) {
     }
 
     return result;
-}
+};
 
 Entry.getOrderedName = function(str, objects, field) {
     if (!str) return 'untitled';
@@ -604,8 +652,7 @@ Entry.getOrderedName = function(str, objects, field) {
     var source = Entry.getStringIndex(str);
     for (var i=0, len=objects.length; i<len; i++) {
         var target = Entry.getStringIndex(objects[i][field]);
-        if ( (source.string === target.string)
-            && target.index > maxNumber) {
+        if ( (source.string === target.string) && target.index > maxNumber) {
                 maxNumber = target.index;
         }
 
@@ -615,7 +662,7 @@ Entry.getOrderedName = function(str, objects, field) {
         return source.string + maxNumber;
 
     return str;
-}
+};
 
 
 Entry.changeXmlHashId = function(xmlBlock) {
@@ -626,7 +673,7 @@ Entry.changeXmlHashId = function(xmlBlock) {
             mutations[i].setAttribute('hashid', Entry.generateHash());
     }
     return xmlBlock;
-}
+};
 
 Entry.getMaxFloatPoint = function(numbers) {
     var max = 0;
@@ -640,24 +687,24 @@ Entry.getMaxFloatPoint = function(numbers) {
         }
     }
     return Math.min(max, 20);
-}
+};
 
 Entry.convertToRoundedDecimals = function (value, decimals) {
     if (isNaN(value) || !this.isFloat(value))
         return value;
     else
         return Number(Math.round(value+'e'+decimals)+'e-'+decimals);
-}
+};
 
 Entry.attachEventListener = function(elem, eventType, func) {
     setTimeout(function() {
-        elem['addEventListener'](eventType, func);
+        elem.addEventListener(eventType, func);
     }, 0);
-}
+};
 
 Entry.deAttachEventListener = function(elem, eventType, func) {
-    elem['removeEventListener'](eventType, func);
-}
+    elem.removeEventListener(eventType, func);
+};
 
 Entry.isEmpty = function(obj) {
     if (!obj)
@@ -669,4 +716,4 @@ Entry.isEmpty = function(obj) {
     }
 
     return true;
-}
+};

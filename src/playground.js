@@ -142,9 +142,9 @@ Entry.Playground.prototype.generateView = function(playgroundView, option) {
         this.codeView_ = codeView;
 
         Entry.addEventListener('run', function(e) {
-            Entry.playground.curtainView_.removeClass('entryRemove')});
+            Entry.playground.curtainView_.removeClass('entryRemove');});
         Entry.addEventListener('stop', function(e) {
-            Entry.playground.curtainView_.addClass('entryRemove')});
+            Entry.playground.curtainView_.addClass('entryRemove');});
     } else if (option == 'phone') {
         this.view_.addClass('entryPlaygroundPhone');
 
@@ -205,9 +205,9 @@ Entry.Playground.prototype.generateView = function(playgroundView, option) {
         /** @type {!Element} */
         this.codeView_ = codeView;
         Entry.addEventListener('run', function(e) {
-            Entry.playground.curtainView_.removeClass('entryRemove')});
+            Entry.playground.curtainView_.removeClass('entryRemove');});
         Entry.addEventListener('stop', function(e) {
-            Entry.playground.curtainView_.addClass('entryRemove')});
+            Entry.playground.curtainView_.addClass('entryRemove');});
     }
 };
 
@@ -241,7 +241,7 @@ Entry.Playground.prototype.generateTabView = function(tabView) {
     codeTab.bindOnClick(function(e) {
         Entry.playground.changeViewMode('code');
     });
-    this.tabViewElements['code'] = codeTab;
+    this.tabViewElements.code = codeTab;
 
     if (Entry.pictureEditable) {
         var pictureTab = Entry.createElement('li', 'entryPictureTab');
@@ -251,7 +251,7 @@ Entry.Playground.prototype.generateTabView = function(tabView) {
         pictureTab.bindOnClick(function(e) {
             Entry.playground.changeViewMode('picture');
         });
-        this.tabViewElements['picture'] = pictureTab;
+        this.tabViewElements.picture = pictureTab;
 
         var textboxTab = Entry.createElement('li', 'entryTextboxTab');
         textboxTab.innerHTML = Lang.Workspace.tab_text;
@@ -260,7 +260,7 @@ Entry.Playground.prototype.generateTabView = function(tabView) {
         textboxTab.bindOnClick(function(e) {
             Entry.playground.changeViewMode('text');
         });
-        this.tabViewElements['text'] = textboxTab;
+        this.tabViewElements.text = textboxTab;
         textboxTab.addClass('entryRemove');
     }
 
@@ -272,7 +272,7 @@ Entry.Playground.prototype.generateTabView = function(tabView) {
         soundTab.bindOnClick(function(e) {
             Entry.playground.changeViewMode('sound');
         });
-        this.tabViewElements['sound'] = soundTab;
+        this.tabViewElements.sound = soundTab;
     }
 
     if (Entry.hasVariableManager) {
@@ -285,7 +285,7 @@ Entry.Playground.prototype.generateTabView = function(tabView) {
             Entry.playground.toggleOnVariableView();
             Entry.playground.changeViewMode('variable');
         });
-        this.tabViewElements['variable'] = variableTab;
+        this.tabViewElements.variable = variableTab;
     }
 
 };
@@ -297,12 +297,12 @@ Entry.Playground.prototype.generateTabView = function(tabView) {
 Entry.Playground.prototype.generateCodeView = function(codeView) {
     if (!Entry.type || Entry.type == 'workspace') {
         var categoryView = Entry.createElement('div', 'entryCategory');
-        categoryView.addClass('entryCategoryWorkspace')
+        categoryView.addClass('entryCategoryWorkspace');
         codeView.appendChild(categoryView);
         this.categoryView_ = categoryView;
 
         var categoryListView = Entry.createElement('ul', 'entryCategoryList');
-        categoryListView.addClass('entryCategoryListWorkspace')
+        categoryListView.addClass('entryCategoryListWorkspace');
         categoryView.appendChild(categoryListView);
         this.categoryListView_ = categoryListView;
 
@@ -336,7 +336,7 @@ Entry.Playground.prototype.generateCodeView = function(codeView) {
         Entry.addEventListener('entryBlocklyChanged', function(e) {
             var blockMenuView = Entry.playground.blockMenuView_;
             if (blockMenuView.widthBackup)
-                Entry.resizeElement({menuWidth: blockMenuView.widthBackup})
+                Entry.resizeElement({menuWidth: blockMenuView.widthBackup});
             delete blockMenuView.widthBackup;
             delete Entry.playground.focusBlockMenu;
         });
@@ -382,12 +382,12 @@ Entry.Playground.prototype.generateCodeView = function(codeView) {
         return codeView;
     } else if (Entry.type == 'phone') {
         var categoryView = Entry.createElement('div', 'entryCategory');
-        categoryView.addClass('entryCategoryPhone')
+        categoryView.addClass('entryCategoryPhone');
         codeView.appendChild(categoryView);
         this.categoryView_ = categoryView;
 
         var categoryListView = Entry.createElement('ul', 'entryCategoryList');
-        categoryListView.addClass('entryCategoryListPhone')
+        categoryListView.addClass('entryCategoryListPhone');
         categoryView.appendChild(categoryListView);
         this.categoryListView_ = categoryListView;
 
@@ -513,7 +513,7 @@ Entry.Playground.prototype.generateTextView = function(textView) {
     fontName.onchange = function(evt) {
         var font = evt.target.value;
         Entry.playground.object.entity.setFontType(font);
-    }
+    };
     for (var i=0; i<this.fonts.length; i++) {
         var font = this.fonts[i];
         var element = Entry.createElement('option');
@@ -643,9 +643,9 @@ Entry.Playground.prototype.generateTextView = function(textView) {
     backgroundImage.src = '/img/assets/text_button_background_false.png';
 
     var fgColorDiv = Entry.createElement("div");
-    fgColorDiv.addClass("entryPlayground_fgColorDiv")
+    fgColorDiv.addClass("entryPlayground_fgColorDiv");
     var bgColorDiv = Entry.createElement("div");
-    bgColorDiv.addClass("entryPlayground_bgColorDiv")
+    bgColorDiv.addClass("entryPlayground_bgColorDiv");
 
     textProperties.appendChild(fgColorDiv);
     textProperties.appendChild(bgColorDiv);
@@ -657,7 +657,7 @@ Entry.Playground.prototype.generateTextView = function(textView) {
     var colours = Entry.getColourCodes();
     for (var i=0; i<colours.length; i++) {
         var cell = Entry.createElement("div");
-        cell.addClass("modal_colour")
+        cell.addClass("modal_colour");
         cell.setAttribute("colour", colours[i]);
         cell.style.backgroundColor = colours[i];
         if (i===0)
@@ -675,7 +675,7 @@ Entry.Playground.prototype.generateTextView = function(textView) {
     wrap.appendChild(backgroundsWrapper);
     for (var i=0; i<colours.length; i++) {
         var cell = Entry.createElement("div");
-        cell.addClass("modal_colour")
+        cell.addClass("modal_colour");
         cell.setAttribute("colour", colours[i]);
         cell.style.backgroundColor = colours[i];
         if (i===0)
@@ -755,7 +755,7 @@ Entry.Playground.prototype.generateTextView = function(textView) {
         }
     });
     document.addEventListener('mouseup', function(e) {
-        isFontSizing = false;;
+        isFontSizing = false;
     });
 
     var linebreakWrapper = Entry.createElement("div");
@@ -763,7 +763,7 @@ Entry.Playground.prototype.generateTextView = function(textView) {
     wrap.appendChild(linebreakWrapper);
 
     var linebreakHorizontal = Entry.createElement("hr");
-    linebreakHorizontal.addClass("entryPlaygroundLinebreakHorizontal")
+    linebreakHorizontal.addClass("entryPlaygroundLinebreakHorizontal");
     linebreakWrapper.appendChild(linebreakHorizontal);
 
     var linebreakButtons = Entry.createElement("div");
@@ -894,24 +894,23 @@ Entry.Playground.prototype.injectObject = function(object) {
 
     this.injectCode();
     if (object.objectType == 'sprite' && Entry.pictureEditable) {
-        if (this.tabViewElements['text'])
-            this.tabViewElements['text'].addClass("entryRemove");
-        if (this.tabViewElements['picture'])
-            this.tabViewElements['picture'].removeClass("entryRemove");
+        if (this.tabViewElements.text)
+            this.tabViewElements.text.addClass("entryRemove");
+        if (this.tabViewElements.picture)
+            this.tabViewElements.picture.removeClass("entryRemove");
     } else if (object.objectType == 'textBox') {
-        if (this.tabViewElements['picture'])
-            this.tabViewElements['picture'].addClass("entryRemove");
-        if (this.tabViewElements['text'])
-            this.tabViewElements['text'].removeClass("entryRemove");
+        if (this.tabViewElements.picture)
+            this.tabViewElements.picture.addClass("entryRemove");
+        if (this.tabViewElements.text)
+            this.tabViewElements.text.removeClass("entryRemove");
     }
 
     var viewMode = this.viewMode_;
     if (viewMode == 'default')
         this.changeViewMode('code');
-    else if ((viewMode == 'picture' || viewMode == 'text' )&& object.objectType == 'textBox')
+    else if ((viewMode == 'picture' || viewMode == 'text' ) && object.objectType == 'textBox')
         this.changeViewMode('text');
-    else if ((viewMode == 'text' || viewMode == 'picture')
-             && object.objectType == 'sprite')
+    else if ((viewMode == 'text' || viewMode == 'picture') && object.objectType == 'sprite')
         this.changeViewMode('picture');
     else if (viewMode == 'sound')
         this.changeViewMode('sound');
@@ -977,10 +976,15 @@ Entry.Playground.prototype.setPicture = function(picture) {
     element.picture = picture;
 
     var thumbnailView = document.getElementById('t_'+picture.id);
-    var fileName = picture.filename;
-    thumbnailView.style.backgroundImage =
-        'url("' + '/uploads/' + fileName.substring(0, 2) + '/' +
-        fileName.substring(2, 4) + '/thumb/' + fileName + '.png")';
+    if (picture.fileurl) {
+        thumbnailView.style.backgroundImage = 'url("' + picture.fileurl + '")';
+    } else {
+        // deprecated
+        var fileName = picture.filename;
+        thumbnailView.style.backgroundImage =
+            'url("' + '/uploads/' + fileName.substring(0, 2) + '/' +
+            fileName.substring(2, 4) + '/thumb/' + fileName + '.png")';
+    }
     var sizeView = document.getElementById('s_'+picture.id);
     sizeView.innerHTML = picture.dimension.width + ' X ' +
         picture.dimension.height;
@@ -1123,7 +1127,7 @@ Entry.Playground.prototype.addSound = function(sound, NotForView) {
 Entry.Playground.prototype.changeViewMode = function(viewType) {
     for (var i in this.tabViewElements) {
         var tab = this.tabViewElements[i];
-        tab.removeClass('entryTabSelected')
+        tab.removeClass('entryTabSelected');
     }
     if (viewType != 'default')
         this.tabViewElements[viewType].addClass('entryTabSelected');
@@ -1283,7 +1287,7 @@ Entry.Playground.prototype.setMenu = function(objectType) {
             element.addClass("entryRemove");
         element.innerHTML = Lang.Blocks[categoryName.toUpperCase()];
         element.bindOnClick(function () {
-            Entry.playground.selectMenu(this.id.substring(13))
+            Entry.playground.selectMenu(this.id.substring(13));
         });
         if (!Entry.type || Entry.type == 'workspace') {
             element.addClass('entryCategoryElementWorkspace');
@@ -1343,7 +1347,7 @@ Entry.Playground.prototype.selectMenu = function(selector, disableTab) {
             } else {
                 elements[i].removeClass('entrySelectedCategory');
             }
-        };
+        }
     } else if (Entry.type == 'phone') {
         for (var i = 0; i<categories.length; i++) {
             var category = categories[i];
@@ -1364,8 +1368,8 @@ Entry.Playground.prototype.selectMenu = function(selector, disableTab) {
             } else {
                 elements[i].removeClass('entrySelectedCategory');
             }
-        };
-    };
+        }
+    }
 };
 
 Entry.Playground.prototype.hideTabs = function() {
@@ -1406,7 +1410,7 @@ Entry.Playground.prototype.setBlockMenu = function(blockJSON) {
     if (Entry.functionEnable)
         if (blockJSON.length > 1 &&
             blockJSON[blockJSON.length-1].category == "arduino")
-            blockJSON.splice(blockJSON.length-1, 0, {category: "func"})
+            blockJSON.splice(blockJSON.length-1, 0, {category: "func"});
     if (!Entry.messageEnable)
         this.blockMenu.banClass("message");
     if (!Entry.variableEnable)
@@ -1434,12 +1438,12 @@ Entry.Playground.prototype.initializeResizeHandle = function(handle) {
         if (Entry.playground.resizing) {
             Entry.resizeElement({
                 menuWidth: e.x - Entry.interfaceState.canvasWidth
-            })
+            });
         }
-    })
+    });
     document.addEventListener('mouseup', function(e) {
         Entry.playground.resizing = false;
-    })
+    });
 };
 
 /**
@@ -1459,7 +1463,7 @@ Entry.Playground.prototype.reloadPlayground = function () {
         Blockly.mainWorkspace.clear();
         Blockly.Xml.domToWorkspace(Blockly.mainWorkspace, Entry.stage.selectedObject.script);
     }
-}
+};
 
 /**
  * flush playground when object is not exist
@@ -1471,7 +1475,7 @@ Entry.Playground.prototype.flushPlayground = function () {
         this.injectPicture();
         this.injectSound();
     }
-}
+};
 
 Entry.Playground.prototype.updateListViewOrder = function (type) {
     var list;
@@ -1481,7 +1485,7 @@ Entry.Playground.prototype.updateListViewOrder = function (type) {
         list = this.soundListView_.childNodes;
     for (var i=0, len=list.length; i<len; i++)
         list[i].orderHolder.innerHTML = i+1;
-}
+};
 
 Entry.Playground.prototype.generatePictureElement = function(picture) {
     var element = Entry.createElement('li', picture.id);
@@ -1528,8 +1532,14 @@ Entry.Playground.prototype.generatePictureElement = function(picture) {
                 href: '/',
                 action: function(e){
                     e.preventDefault();
-                    window.open('/api/sprite/download/image/'+
+                    if (fileurl) {
+                        window.open(picture.fileurl);
+                    } else {
+                        // deprecated
+                        window.open('/api/sprite/download/image/'+
                                 encodeURIComponent(picture.filename)+'/'+encodeURIComponent(picture.name) + '.png');
+                    }
+
                 }
             }
         ]);
@@ -1540,10 +1550,15 @@ Entry.Playground.prototype.generatePictureElement = function(picture) {
     element.appendChild(orderHolder);
     var thumbnailView = Entry.createElement('div', 't_'+picture.id);
     thumbnailView.addClass('entryPlaygroundPictureThumbnail');
-    var fileName = picture.filename;
-    thumbnailView.style.backgroundImage =
-        'url("' + '/uploads/' + fileName.substring(0, 2) + '/' +
-        fileName.substring(2, 4) + '/thumb/' + fileName + '.png")';
+    if (picture.fileurl) {
+        thumbnailView.style.backgroundImage = 'url("' + picture.fileurl + '")';
+    } else {
+        // deptecated
+        var fileName = picture.filename;
+        thumbnailView.style.backgroundImage =
+            'url("' + '/uploads/' + fileName.substring(0, 2) + '/' +
+            fileName.substring(2, 4) + '/thumb/' + fileName + '.png")';
+    }
     element.appendChild(thumbnailView);
     var nameView = Entry.createElement('input');
     nameView.addClass('entryPlaygroundPictureName');
@@ -1566,7 +1581,7 @@ Entry.Playground.prototype.generatePictureElement = function(picture) {
             if(nameViewArray.eq(i).val()==nameView.value &&
                nameViewArray[i] != this) {
                 Entry.deAttachEventListener(this, 'blur', nameViewBlur);
-                alert('이름이 중복 되었습니다.')
+                alert('이름이 중복 되었습니다.');
                 this.focus();
                 Entry.attachEventListener(this, 'blur', nameViewBlur);
                 return;
@@ -1585,7 +1600,7 @@ Entry.Playground.prototype.generatePictureElement = function(picture) {
     sizeView.innerHTML = picture.dimension.width + ' X ' +
         picture.dimension.height;
     element.appendChild(sizeView);
-}
+};
 
 Entry.Playground.prototype.generateSoundElement = function(sound) {
     var element = Entry.createElement('sound', sound.id);
@@ -1680,7 +1695,7 @@ Entry.Playground.prototype.generateSoundElement = function(sound) {
             if(nameViewArray[i].value==nameView.value) {
                 count = count+1;
                 if (count > 1) {
-                    alert('이름이 중복 되었습니다.')
+                    alert('이름이 중복 되었습니다.');
                     this.focus();
                     return;
                 }
@@ -1698,7 +1713,7 @@ Entry.Playground.prototype.generateSoundElement = function(sound) {
     lengthView.addClass('entryPlaygroundSoundLength');
     lengthView.innerHTML = sound.duration + ' 초';
     element.appendChild(lengthView);
-}
+};
 
 Entry.Playground.prototype.toggleColourChooser = function(name) {
     if (name === 'foreground') {
@@ -1732,7 +1747,7 @@ Entry.Playground.prototype.setBackgroundColour = function(colour) {
 
 Entry.Playground.prototype.isTextBGMode = function () {
     return this.isTextBGMode_;
-}
+};
 
 Entry.Playground.prototype.checkVariables = function () {
     if (Entry.forEBS)
@@ -1745,12 +1760,12 @@ Entry.Playground.prototype.checkVariables = function () {
         this.blockMenu.unbanClass("variableNotExist");
     else
         this.blockMenu.banClass("variableNotExist");
-}
+};
 
 
 Entry.Playground.prototype.getViewMode = function() {
     return this.viewMode_;
-}
+};
 
 Entry.Playground.prototype.updateHW = function() {
     var self = Entry.playground;
@@ -1758,15 +1773,15 @@ Entry.Playground.prototype.updateHW = function() {
         return;
     var hw = Entry.hw;
     if (hw && hw.connected) {
-        self.blockMenu.unbanClass("arduinoConnected")
-        self.blockMenu.banClass("arduinoDisconnected")
+        self.blockMenu.unbanClass("arduinoConnected");
+        self.blockMenu.banClass("arduinoDisconnected");
 
         hw.banHW();
         if (hw.hwModule)
             self.blockMenu.unbanClass(hw.hwModule.name);
     } else {
-        self.blockMenu.banClass("arduinoConnected")
-        self.blockMenu.unbanClass("arduinoDisconnected")
+        self.blockMenu.banClass("arduinoConnected");
+        self.blockMenu.unbanClass("arduinoDisconnected");
         Entry.hw.banHW();
     }
     if (self.object)
@@ -1791,7 +1806,7 @@ Entry.Playground.prototype.toggleLineBreak = function(isLineBreak) {
         this.linebreakOnImage.src = '/img/assets/text-linebreak-on-false.png';
         this.fontSizeWrapper.addClass("entryHide");
     }
-}
+};
 
 Entry.Playground.prototype.setFontAlign = function(fontAlign) {
     if (this.object.objectType != "textBox")
@@ -1811,5 +1826,5 @@ Entry.Playground.prototype.setFontAlign = function(fontAlign) {
             break;
     }
     this.object.entity.setTextAlign(fontAlign);
-}
+};
 

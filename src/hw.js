@@ -32,8 +32,8 @@ Entry.HW = function() {
         '12': Entry.SensorBoard,
         '24': Entry.Hamster,
         '31': Entry.Bitbrick
-    }
-}
+    };
+};
 
 Entry.HW.TRIAL_LIMIT = 1;
 
@@ -70,12 +70,12 @@ p.initSocket = function() {
         hw.initSocket();
     };
     Entry.dispatchEvent("hwChanged");
-}
+};
 
 p.retryConnect = function() {
     this.connectTrial = 0;
     this.initSocket();
-}
+};
 
 p.initHardware = function() {
     this.connectTrial = 0;
@@ -84,17 +84,17 @@ p.initHardware = function() {
     Entry.dispatchEvent("hwChanged");
     if (Entry.playground && Entry.playground.object)
         Entry.playground.setMenu(Entry.playground.object.objectType);
-}
+};
 
 p.setDigitalPortValue = function(port, value) {
     this.sendQueue[port] = value;
-}
+};
 
 p.getAnalogPortValue = function(port) {
     if (!this.connected)
         return 0;
     return this.portData['a'+port];
-}
+};
 
 p.getDigitalPortValue = function(port) {
     if (!this.connected)
@@ -105,13 +105,13 @@ p.getDigitalPortValue = function(port) {
     }
     else
         return 0;
-}
+};
 
 p.setPortReadable = function(port) {
     if (!this.sendQueue.readablePorts)
         this.sendQueue.readablePorts = [];
     this.sendQueue.readablePorts.push(port);
-}
+};
 
 p.update = function() {
     if (!this.socket)
@@ -133,7 +133,7 @@ p.update = function() {
         for (var port in this.sendQueue) {
             var value = this.sendQueue[port];
             var query;
-            if (value == 255 || value == 0) {
+            if (value == 255 || value === 0) {
                 query = (7 << 5) + (port << 1) + (value == 255 ? 1 : 0);
                 bytes.push(query);
             } else {
@@ -150,28 +150,28 @@ p.update = function() {
         }
         this.socket.send(buf);
     }
-}
+};
 
 p.updatePortData = function(data) {
     this.portData = data;
-}
+};
 
 p.closeConnection = function() {
     if (this.socket)
         this.socket.close();
-}
+};
 
 p.downloadConnector = function() {
-    var url = "/file/entry_v0.1.zip";
+    var url = "http://play-entry.com/file/entry_v0.1.zip";
     var win = window.open(url, '_blank');
     win.focus();
-}
+};
 
 p.downloadSource = function() {
-    var url = "/lib/EntryArduino/arduino/entry.ino";
+    var url = "http://play-entry.com/lib/EntryArduino/arduino/entry.ino";
     var win = window.open(url, '_blank');
     win.focus();
-}
+};
 
 p.setZero = function() {
     if (!Entry.hw.hwModule)
@@ -202,5 +202,5 @@ p.banHW = function() {
     var hwOptions = this.hwInfo;
     for (var i in hwOptions)
         Entry.playground.blockMenu.banClass(hwOptions[i].name);
-}
+};
 

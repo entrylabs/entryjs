@@ -1,3 +1,4 @@
+"use strict";
 /**
  * @fileoverview Show dialog on canvas
  */
