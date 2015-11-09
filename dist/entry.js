@@ -12379,6 +12379,7 @@ Entry.BlockMenu = function(a) {
     a && !this.dragBlockObserver && (this.dragBlockObserver = a.observe(this, "cloneThread", ["x", "y"]));
   };
   a.removeDragBlockObserver = function() {
+    console.log("observer");
     var a = this.dragBlockObserver;
     null !== a && (a.destroy(), this.dragBlockObserver = null);
   };
@@ -12386,7 +12387,7 @@ Entry.BlockMenu = function(a) {
     if (null !== this.dragBlock) {
       this.dragBlockObserver && this.removeDragBlockObserver();
       var a = this._svgWidth, c = this.dragBlock, d = c.block, e = this.code, f = d.getThread();
-      d && f && (c.observe(this, "moveBoardBlock", ["x", "y"]), e.cloneThread(f), c.dominate(), d = this.workspace.getBoard(), this._boardBlockView = d.code.cloneThread(f).getFirstBlock().view, d.set({dragBlock:this._boardBlockView}), this._boardBlockView.dragMode = 1, this._boardBlockView._moveTo(-(a - c.x), c.y, !1));
+      d && f && (c.moveBoardBlockObserver = c.observe(this, "moveBoardBlock", ["x", "y"]), e.cloneThread(f), c.dominate(), d = this.workspace.getBoard(), this._boardBlockView = d.code.cloneThread(f).getFirstBlock().view, d.set({dragBlock:this._boardBlockView}), this._boardBlockView.dragMode = 1, this._boardBlockView._moveTo(-(a - c.x), c.y, !1));
     }
   };
   a.terminateDrag = function() {
@@ -13290,10 +13291,10 @@ Entry.Board = function(a) {
 })(Entry.Board.prototype);
 Entry.Workspace = function(a, b) {
   Entry.Model(this, !1);
-  this._blockMenu = a;
-  this._board = b;
   a.workspace = this;
   b.workspace = this;
+  this._blockMenu = a;
+  this._board = b;
   this._playEvent = new Entry.Event(this);
   this._stopEvent = new Entry.Event(this);
 };
@@ -13305,30 +13306,47 @@ Entry.Workspace = function(a, b) {
     return this._blockMenu;
   };
   a.playAddBlock = function(a) {
-    var c = this;
     this._playEvent.notify(a);
-    var d = this._blockMenu.findByName(a.target), e;
-    a.dest.name && (e = this._board.findByName(a.dest.name));
-    blockView = d.view;
-    blockView.getBoard().set({dragBlock:blockView});
-    blockView.dragInstance = new Entry.DragInstance({startX:d.view.x, startY:d.view.y, offsetX:0, offsetY:0, mode:!0});
-    blockView.dominate();
-    blockView.dragMode = Entry.DRAG_MODE_MOUSEDOWN;
-    var f = blockView.getBoard();
-    blockView.block.prev && (blockView.block.prev.setNext(null), blockView.block.setPrev(null));
-    d = this.getBlockMenu()._svgWidth + e.view.x;
-    blockView._moveTo(d, e.view.y + e.view.height, !0, a.duration - 300);
+    var c = this._blockMenu.findByName(a.target);
+    if (a.dest.name) {
+      var d = this._board.findByName(a.dest.name)
+    }
+    var e = c.view;
+    e.getBoard().set({dragBlock:e});
+    e._moveTo(0, 0);
+    (c = e.moveBoardBlockObserver) && c.destroy();
+    e.dragMode = Entry.DRAG_MODE_MOUSEDOWN;
+    e.block.prev && (e.block.prev.setNext(null), e.block.setPrev(null));
+    c = this.getBlockMenu()._svgWidth + d.view.x;
+    d = d.view.y + d.view.height;
+    e._moveTo(c, d, !0, a.duration - 300);
+    this.getBoard().dragBlock._moveTo(c, d, !0, a.duration - 300);
     setTimeout(function() {
-      blockView._align(!0);
-      var d = blockView._getCloseBlock();
-      d ? f.setMagnetedBlock(d.view) : f.setMagnetedBlock(null);
-      $(document).unbind(".block");
-      blockView.terminateDrag();
-      f && f.set({dragBoard:null});
-      delete blockView.dragInstance;
-      c._playEvent && c._playEvent.detach(this._playEvent);
-      c._stopEvent.notify(a);
+      e._align(!0);
     }, a.duration - 300);
+  };
+  a.playClick = function(a) {
+    var c = this, d = $("#" + a.target);
+    d ? (d.position(), d.click(), setTimeout(function() {
+      console.log("notify playClick finish");
+      c._stopEvent.notify(a);
+    }, a.duration)) : c._stopEvent.notify(a);
+  };
+  a.playMove = function(a) {
+    var c = this;
+    console.log("playMove help");
+    setTimeout(function() {
+      console.log("stop playMove");
+      c._stopEvent.notify(a);
+    }, a.duration);
+  };
+  a.playDelete = function(a) {
+    var c = this;
+    console.log("playDelete help");
+    setTimeout(function() {
+      console.log("stop playDelete");
+      c._stopEvent.notify(a);
+    }, a.duration);
   };
 })(Entry.Workspace.prototype);
 Entry.Xml = {};

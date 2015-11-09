@@ -95,6 +95,7 @@ Entry.BlockMenu = function(dom) {
     };
 
     p.removeDragBlockObserver = function() {
+        console.log('observer');
         var observer = this.dragBlockObserver;
         if (observer === null) return;
         observer.destroy();
@@ -113,8 +114,8 @@ Entry.BlockMenu = function(dom) {
         var code = this.code;
         var currentThread = block.getThread();
         if (block && currentThread) {
-            blockView.observe(this, "moveBoardBlock", ['x', 'y']);
-
+            blockView.moveBoardBlockObserver = 
+                blockView.observe(this, "moveBoardBlock", ['x', 'y']);
             code.cloneThread(currentThread);
             //original block should be top of svg
             blockView.dominate();
@@ -132,6 +133,7 @@ Entry.BlockMenu = function(dom) {
                 blockView.y,
                 false
             );
+
         }
 
     };
