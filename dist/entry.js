@@ -12502,10 +12502,10 @@ Entry.BlockView = function(a, b) {
   a._renderPath = function() {
     var a = this._skeleton.path(this), c = this;
     setTimeout(function() {
-      c._darkenPath.animate({d:a}, 300, mina.easeinout, function() {
+      c._darkenPath.animate({d:a}, 200, mina.easeinout, function() {
         c.set({animating:!1});
       });
-      c._path.animate({d:a}, 300, mina.easeinout);
+      c._path.animate({d:a}, 200, mina.easeinout);
     }, 0);
   };
   a._align = function(a) {
@@ -12614,7 +12614,7 @@ Entry.BlockView = function(a, b) {
   };
   a.destroy = function(a) {
     var c = this.svgGroup;
-    a ? c.animate({opacity:0}, 200, null, function() {
+    a ? c.animate({opacity:0}, 100, null, function() {
       this.remove();
     }) : c.remove();
   };

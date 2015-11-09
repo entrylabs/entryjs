@@ -156,13 +156,13 @@ Entry.BlockView = function(block, board) {
         setTimeout(function() {
             that._darkenPath.animate({
                 d: path
-            }, 300, mina.easeinout, function() {
+            }, 200, mina.easeinout, function() {
                 that.set({animating: false});
             });
 
             that._path.animate({
                 d: path
-            }, 300, mina.easeinout);
+            }, 200, mina.easeinout);
         }, 0);
     };
 
@@ -384,7 +384,7 @@ Entry.BlockView = function(block, board) {
         if (animate) {
             svgGroup.animate(
                 { opacity: 0 },
-                200,
+                100,
                 null,
                 function(){
                     this.remove();
