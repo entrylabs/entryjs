@@ -197,7 +197,7 @@ Entry.BlockView = function(block, board) {
         var transform = "t" + x + " " + y;
         this.svgGroup.stop();
         if (animate) {
-            that.svgGroup.animate({
+            this.svgGroup.animate({
                 transform: transform
             }, speed, mina.easeinout);
         } else {
@@ -321,6 +321,7 @@ Entry.BlockView = function(block, board) {
             }
             var prevBlock = this.dragInstance && this.dragInstance.prev;
             var closeBlock = this._getCloseBlock();
+            board.setMagnetedBlock(null);
             if (!prevBlock && !closeBlock) {
                 if (dragMode == Entry.DRAG_MODE_DRAG)
                     block.doMove();
@@ -330,7 +331,6 @@ Entry.BlockView = function(block, board) {
                     block.doInsert(closeBlock);
                 } else block.doSeparate();
             }
-            board.setMagnetedBlock(null);
         }
         return;
     };
@@ -400,26 +400,7 @@ Entry.BlockView = function(block, board) {
         var block = blockView.block;
         var svgGroup = blockView.svgGroup;
         if (magneting) {
-            if (blockView.background) {
-                blockView.background.remove();
-                blockView.nextBackground.remove();
-            }
             var height = blockView.height + dragThreadHeight;
-
-            var nextBg = svgGroup.rect(
-                0 - blockView.width/2,
-                blockView.height * 1.5 + 1,
-                blockView.width,
-                height - blockView.height * 1.5
-            );
-            nextBg.block = blockView.block.next;
-            blockView.nextBackground = nextBg;
-
-            svgGroup.prepend(nextBg);
-            nextBg.attr({
-                fill: 'transparent'
-            });
-
             var bg = svgGroup.rect(
                 0 - blockView.width/2,
                 0,
@@ -435,19 +416,17 @@ Entry.BlockView = function(block, board) {
 
             blockView.originalHeight = blockView.height;
             blockView.set({
-                height: height
+                height: height,
+                animating: true
             });
         } else {
-            if (blockView.background) {
-                setTimeout(function() {
-                    blockView.background.remove();
-                    blockView.nextBackground.remove();
-                }, 200);
-            }
+            if (blockView.background)
+                blockView.background.remove();
             var height = blockView.originalHeight;
             if (height) {
                 blockView.set({
-                    height: height
+                    height: height,
+                    animating: true
                 });
                 delete blockView.originalHeight;
             }
