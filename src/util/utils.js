@@ -479,7 +479,11 @@ Entry.getListRealIndex = function(index, list){
 }
 
 Entry.toRadian = function(angle){
-    return angle * (Math.PI / 180);
+    return angle * Math.PI / 180;
+}
+
+Entry.toDegrees = function(radians){
+    return radians * 180 / Math.PI;
 }
 
 Entry.getPicturesJSON = function (pictures) {

@@ -892,6 +892,13 @@ Entry.block.calc_operation = function(a, b) {
     case "ln":
       e = Math.log(c);
       break;
+    case "asin":
+    ;
+    case "acos":
+    ;
+    case "atan":
+      e = Entry.toDegrees(Math[d](c));
+      break;
     case "unnatural":
       e = c - Math.floor(c);
       0 > c && (e = 1 - e);
@@ -1314,20 +1321,17 @@ Entry.block.stop_run = function(a, b) {
 };
 Blockly.Blocks.repeat_while_true = {init:function() {
   this.setColour("#498deb");
-  this.appendDummyInput().appendField(Lang.Blocks.FLOW_repeat_while_true_1);
-  this.appendValueInput("BOOL").setCheck("Boolean");
-  this.appendDummyInput().appendField(Lang.Blocks.FLOW_repeat_while_true_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/flow_03.png", "*"));
+  "ko" == Lang.type ? (this.appendDummyInput().appendField(Lang.Blocks.FLOW_repeat_while_true_1), this.appendValueInput("BOOL").setCheck("Boolean"), this.appendDummyInput().appendField(new Blockly.FieldDropdown([[Lang.Blocks.FLOW_repeat_while_true_until, "until"], [Lang.Blocks.FLOW_repeat_while_true_while, "while"]]), "OPTION").appendField(Lang.Blocks.FLOW_repeat_while_true_2)) : (this.appendDummyInput().appendField(Lang.Blocks.FLOW_repeat_while_true_1), this.appendDummyInput().appendField(new Blockly.FieldDropdown([[Lang.Blocks.FLOW_repeat_while_true_until, 
+  "until"], [Lang.Blocks.FLOW_repeat_while_true_while, "while"]]), "OPTION"), this.appendValueInput("BOOL").setCheck("Boolean"), this.appendDummyInput().appendField(Lang.Blocks.FLOW_repeat_while_true_2));
   this.appendStatementInput("DO");
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
 }};
 Entry.block.repeat_while_true = function(a, b) {
-  if (b.getBooleanValue("BOOL", b)) {
-    return b.isLooped = !0, b.getStatement("DO", b);
-  }
-  b.isLooped = !1;
-  return b.callReturn();
+  var c = b.getBooleanValue("BOOL", b);
+  "until" == b.getField("OPTION", b) && (c = !c);
+  return (b.isLooped = c) ? b.getStatement("DO", b) : b.callReturn();
 };
 Blockly.Blocks.stop_object = {init:function() {
   this.setColour("#498deb");
@@ -4710,6 +4714,10 @@ Entry.Dialog.prototype.remove = function() {
   this.parent.dialog = null;
 };
 Entry.Engine = function() {
+  function a(a) {
+    var c = [37, 38, 39, 40, 32], d = a.keyCode || a.which, e = Entry.stage.inputField;
+    32 == d && e && e.hasFocus() || -1 < c.indexOf(d) && a.preventDefault();
+  }
   this.state = "stop";
   this.popup = null;
   this.isUpdating = !0;
@@ -4734,6 +4742,12 @@ Entry.Engine = function() {
   }), Entry.addEventListener("stageMouseOut", function(a) {
     Entry.engine.hideMouseView();
   }));
+  Entry.addEventListener("run", function() {
+    $(window).bind("keydown", a);
+  });
+  Entry.addEventListener("stop", function() {
+    $(window).unbind("keydown", a);
+  });
 };
 Entry.Engine.prototype.generateView = function(a, b) {
   if (b && "workspace" != b) {
@@ -8836,7 +8850,7 @@ Entry.Scene.prototype.generateView = function(a, b) {
     }, stop:function(a, b) {
       var c = b.item.data("start_pos"), h = b.item.index();
       Entry.scene.moveScene(c, h);
-    }, axis:"x"});
+    }, axis:"x", tolerance:"pointer"});
     this.view_.appendChild(c);
     this.listView_ = c;
     Entry.sceneEditable && (c = Entry.createElement("span"), c.addClass("entrySceneElementWorkspace"), c.addClass("entrySceneAddButtonWorkspace"), c.bindOnClick(function(a) {
@@ -9888,7 +9902,10 @@ Entry.getListRealIndex = function(a, b) {
   return a;
 };
 Entry.toRadian = function(a) {
-  return Math.PI / 180 * a;
+  return a * Math.PI / 180;
+};
+Entry.toDegrees = function(a) {
+  return 180 * a / Math.PI;
 };
 Entry.getPicturesJSON = function(a) {
   for (var b = [], c = 0, d = a.length;c < d;c++) {
