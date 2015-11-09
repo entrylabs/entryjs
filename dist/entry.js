@@ -12588,8 +12588,8 @@ Entry.BlockView = function(a, b) {
       } else {
         this.dragInstance || d.doAdd();
         var e = this.dragInstance && this.dragInstance.prev, f = this._getCloseBlock();
-        a.setMagnetedBlock(null);
         e || f ? f ? (this.set({animating:!0}), d.doInsert(f)) : d.doSeparate() : c == Entry.DRAG_MODE_DRAG && d.doMove();
+        a.setMagnetedBlock(null);
       }
     }
   };
@@ -12623,20 +12623,29 @@ Entry.BlockView = function(a, b) {
     }) : c.remove();
   };
   a._updateBG = function() {
-    var a = this._board.dragBlock.dragInstance.height, c = this.svgGroup;
-    if (this.magneting) {
-      var a = this.height + a, d = c.rect(0 - this.width / 2, 0, this.width, a);
-      this.background = d;
-      c.prepend(d);
-      d.attr({fill:"transparent"});
-      this.originalHeight = this.height;
-      this.set({height:a, animating:!0});
+    var a = this._board.dragBlock.dragInstance.height, c = this, d = c.svgGroup;
+    if (c.magneting) {
+      c.background && (c.background.remove(), c.nextBackground.remove());
+      var a = c.height + a, e = d.rect(0 - c.width / 2, 1.5 * c.height + 1, c.width, a - 1.5 * c.height);
+      e.block = c.block.next;
+      c.nextBackground = e;
+      d.prepend(e);
+      e.attr({fill:"transparent"});
+      e = d.rect(0 - c.width / 2, 0, c.width, a);
+      c.background = e;
+      d.prepend(e);
+      e.attr({fill:"transparent"});
+      c.originalHeight = c.height;
+      c.set({height:a});
     } else {
-      if (this.background && this.background.remove(), a = this.originalHeight) {
-        this.set({height:a, animating:!0}), delete this.originalHeight;
+      if (c.background && setTimeout(function() {
+        c.background.remove();
+        c.nextBackground.remove();
+      }, 200), a = c.originalHeight) {
+        c.set({height:a}), delete c.originalHeight;
       }
     }
-    this.block.thread.changeEvent.notify();
+    c.block.thread.changeEvent.notify();
   };
 })(Entry.BlockView.prototype);
 Entry.Code = function(a) {
@@ -13274,7 +13283,7 @@ Entry.Board = function(a) {
       this.magnetedBlockView.set({magneting:!1});
     }
     this.set({magnetedBlockView:a});
-    a && a.set({magneting:!0});
+    a && a.set({magneting:!0, animating:!0});
   };
   a.dominate = function(a) {
     this.snap.append(a.svgGroup);
