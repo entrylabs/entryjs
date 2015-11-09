@@ -12533,7 +12533,7 @@ Entry.BlockView = function(a, b) {
     this.set({x:a, y:c});
   };
   a._moveBy = function(a, c, d, e) {
-    return this._moveTo(this.x + a, this.y + c, d, speed);
+    return this._moveTo(this.x + a, this.y + c, d, e);
   };
   a._addControl = function() {
     var a = this;
@@ -12547,7 +12547,7 @@ Entry.BlockView = function(a, b) {
       a.preventDefault();
       f.block.prev && (f.block.prev.setNext(null), f.block.setPrev(null), f.block.thread.changeEvent.notify());
       if (0 === f.dragInstance.height) {
-        for (var b = f.block, c = 10;b;) {
+        for (var b = f.block, c = 0;b;) {
           c += b.view.height, b = b.next;
         }
         f.dragInstance.set({height:c});
@@ -12626,8 +12626,12 @@ Entry.BlockView = function(a, b) {
   a._updateBG = function() {
     var a = this._board.dragBlock.dragInstance.height, c = this.svgGroup;
     if (this.magneting) {
-      var a = this.height + a, d = c.rect(0 - this.width / 2, 0, this.width, a);
-      this.background = d;
+      var a = this.height + a, d = c.rect(0 - this.width / 2, 1.5 * this.height + 1, this.width, Math.max(0, a - 1.5 * this.height));
+      d.block = this.block.next;
+      this.nextBackground = d;
+      c.prepend(d);
+      d.attr({fill:"transparent"});
+      this.background = d = c.rect(0 - this.width / 2, 0, this.width, a);
       c.prepend(d);
       d.attr({fill:"transparent"});
       this.originalHeight = this.height;

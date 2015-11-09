@@ -208,7 +208,7 @@ Entry.BlockView = function(block, board) {
         this.set({ x: x, y: y });
     };
 
-    p._moveBy = function(x, y, animate, spped) {
+    p._moveBy = function(x, y, animate, speed) {
         return this._moveTo(
             this.x + x,
             this.y + y,
@@ -259,7 +259,7 @@ Entry.BlockView = function(block, board) {
 
             if (blockView.dragInstance.height === 0) {
                 var block = blockView.block;
-                var height = 10;
+                var height = 0;
                 while (block) {
                     height += block.view.height;
                     block = block.next;
@@ -401,6 +401,21 @@ Entry.BlockView = function(block, board) {
         var svgGroup = blockView.svgGroup;
         if (magneting) {
             var height = blockView.height + dragThreadHeight;
+
+            var nextBg = svgGroup.rect(
+                0 - blockView.width/2,
+                blockView.height * 1.5 + 1,
+                blockView.width,
+                Math.max(0, height - blockView.height * 1.5)
+            );
+            nextBg.block = blockView.block.next;
+            blockView.nextBackground = nextBg;
+
+            svgGroup.prepend(nextBg);
+            nextBg.attr({
+                fill: 'transparent'
+            });
+
             var bg = svgGroup.rect(
                 0 - blockView.width/2,
                 0,
