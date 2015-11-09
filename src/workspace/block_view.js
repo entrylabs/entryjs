@@ -257,7 +257,7 @@ Entry.BlockView = function(block, board) {
 
             if (blockView.dragInstance.height === 0) {
                 var block = blockView.block;
-                var height = 10;
+                var height = 0;
                 while (block) {
                     height += block.view.height;
                     block = block.next;
@@ -408,7 +408,7 @@ Entry.BlockView = function(block, board) {
                 0 - blockView.width/2,
                 blockView.height * 1.5 + 1,
                 blockView.width,
-                height - blockView.height * 1.5
+                Math.max(0, height - blockView.height * 1.5)
             );
             nextBg.block = blockView.block.next;
             blockView.nextBackground = nextBg;
