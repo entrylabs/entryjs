@@ -79,7 +79,7 @@ Entry.Board = function(dom) {
         }
         this.set({magnetedBlockView: block});
         if (block)
-            block.set({magneting: true});
+            block.set({magneting: true, animating: true});
     };
 
     /*
