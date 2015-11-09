@@ -153,15 +153,17 @@ Entry.BlockView = function(block, board) {
         var path = this._skeleton.path(this);
         var that = this;
 
-        this._darkenPath.animate({
-            d: path
-        }, 300, mina.easeinout, function() {
-            that.set({animating: false});
-        });
+        setTimeout(function() {
+            that._darkenPath.animate({
+                d: path
+            }, 300, mina.easeinout, function() {
+                that.set({animating: false});
+            });
 
-        this._path.animate({
-            d: path
-        }, 300, mina.easeinout);
+            that._path.animate({
+                d: path
+            }, 300, mina.easeinout);
+        }, 0);
     };
 
     p._align = function(animate) {
@@ -189,16 +191,15 @@ Entry.BlockView = function(block, board) {
         }
     };
 
-    p._moveTo = function(x, y, animate, speed) {
+    p._moveTo = function(x, y, animate) {
         animate = animate === undefined ? true : animate;
-        speed = speed === undefined ? 300 : speed;
         var transform = "t" + x + " " + y;
+        this.svgGroup.stop();
         if (animate) {
-            this.svgGroup.animate({
+            that.svgGroup.animate({
                 transform: transform
-            }, speed, mina.easeinout);
+            }, 300, mina.easeinout);
         } else {
-            this.svgGroup.stop();
             this.svgGroup.attr({
                 transform: transform
             });
@@ -206,12 +207,11 @@ Entry.BlockView = function(block, board) {
         this.set({ x: x, y: y });
     };
 
-    p._moveBy = function(x, y, animate, speed) {
+    p._moveBy = function(x, y, animate) {
         return this._moveTo(
             this.x + x,
             this.y + y,
-            animate,
-            speed
+            animate
         );
     };
 

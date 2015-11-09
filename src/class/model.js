@@ -47,8 +47,12 @@ Entry.Model = function(obj, isSeal) {
         var oldValue = {};
         for (var key in this.data) {
             if (data[key] !== undefined) {
-                oldValue[key] = this.data[key];
-                this.data[key] = data[key];
+                if (data[key] === this.data[key]) {
+                    delete data[key];
+                } else {
+                    oldValue[key] = this.data[key];
+                    this.data[key] = data[key];
+                }
             }
         }
         if (!isSilent)
