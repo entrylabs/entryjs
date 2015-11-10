@@ -12383,7 +12383,7 @@ Entry.BlockMenu = function(a) {
     null !== a && (a.destroy(), this.dragBlockObserver = null);
   };
   a.cloneThread = function(a) {
-    void 0 === a ? !0 : a;
+    a = void 0 === a ? !0 : a;
     if (null !== this.dragBlock) {
       this.dragBlockObserver && this.removeDragBlockObserver();
       var c = this._svgWidth, d = this.dragBlock, e = d.block, f = this.code, g = e.getThread();
@@ -12569,12 +12569,14 @@ Entry.BlockView = function(a, b) {
       this.getBoard().set({dragBlock:this});
       this.dragInstance = new Entry.DragInstance({startX:a.clientX, startY:a.clientY, offsetX:a.clientX, offsetY:a.clientY, prev:this.block.prev, height:0, mode:!0});
       this.dominate();
+      this.addDragging();
       this.dragMode = Entry.DRAG_MODE_MOUSEDOWN;
     }
     var f = this, g = this.getBoard();
   };
   a.terminateDrag = function() {
     var a = this.getBoard(), c = this.dragMode, d = this.block;
+    this.removeDragging();
     this.dragMode = Entry.DRAG_MODE_NONE;
     if (a instanceof Entry.BlockMenu) {
       a.terminateDrag();
@@ -12641,6 +12643,12 @@ Entry.BlockView = function(a, b) {
       }
     }
     c.block.thread.changeEvent.notify();
+  };
+  a.addDragging = function() {
+    this.svgGroup.addClass("dragging");
+  };
+  a.removeDragging = function() {
+    this.svgGroup.removeClass("dragging");
   };
 })(Entry.BlockView.prototype);
 Entry.Code = function(a) {

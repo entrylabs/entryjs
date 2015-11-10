@@ -102,7 +102,8 @@ Entry.BlockMenu = function(dom) {
     };
 
     p.cloneThread = function(forMouseMove) {
-        forMouseMove === undefined ? true : forMouseMove;
+        forMouseMove = forMouseMove === undefined ?
+            true : forMouseMove;
         if (this.dragBlock === null) return;
         if (this.dragBlockObserver)
             this.removeDragBlockObserver();

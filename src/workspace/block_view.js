@@ -231,6 +231,7 @@ Entry.BlockView = function(block, board) {
                 mode: true
             });
             this.dominate();
+            this.addDragging();
             this.dragMode = Entry.DRAG_MODE_MOUSEDOWN;
         }
 
@@ -296,6 +297,7 @@ Entry.BlockView = function(block, board) {
         var board = this.getBoard();
         var dragMode = this.dragMode;
         var block = this.block;
+        this.removeDragging();
         this.dragMode = Entry.DRAG_MODE_NONE;
         if (board instanceof Entry.BlockMenu) {
             board.terminateDrag();
@@ -451,4 +453,13 @@ Entry.BlockView = function(block, board) {
         }
         blockView.block.thread.changeEvent.notify();
     };
+
+    p.addDragging = function() {
+        this.svgGroup.addClass('dragging');
+    };
+
+    p.removeDragging = function() {
+        this.svgGroup.removeClass('dragging');
+    };
+
 })(Entry.BlockView.prototype);

@@ -4131,7 +4131,10 @@
 }
 
 .block {
-  cursor: pointer;
+  cursor: url('../images/handopen.cur') 8 5, auto;
+}
+.block.dragging {
+  cursor: url('../images/handclosed.cur') 8 5, auto;
 }
 .entry-field-dropdown {
   cursor: pointer;
