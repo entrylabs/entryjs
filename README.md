@@ -8,28 +8,35 @@
 <link rel='stylesheet'  href='${WEBROOT}/entryjs/dist/entry.css'>
 ```
 
+* Third-Party Libraries
+ - 엔트리를 사용하기 위해서는 아래의 라이브러리들이 사전에 설치되어 있어야 합니다.
+ 다음의 라이브러리들은 해당 사이트에서 다운로드 받거나 bower, npm 과 같은 패키지 관리자를
+ 이용해 다운로드 하실 수 있습니다.
+  - jQuery : http://jquery.com/download/
+  - jquery-ui : https://github.com/jquery/jquery-ui
+  - Underscore : https://github.com/jashkenas/underscore
+  - CreateJS (EaselJS, PreloadJS, SoundJS) : http://createjs.com/downloads
+
 * JS includes (jquery and underscore required)
+
 ```
+<!-- 외부 라이브러리들 -->
 <script type='text/javascript' src='${WEBROOT}/jquery.js'>
 <script type='text/javascript' src='${WEBROOT}/underscore.js'>
 <script type='text/javascript' src='${WEBROOT}/PreloadJS/lib/preloadjs-0.6.0.min.js'>
 <script type='text/javascript' src='${WEBROOT}/EaselJS/lib/easeljs-0.8.0.min.js'>
 <script type='text/javascript' src='${WEBROOT}/SoundJS/lib/soundjs-0.6.0.min.js'>
 <script type='text/javascript' src='${WEBROOT}/SoundJS/lib/flashaudioplugin-0.6.0.min.js'>
+<!-- entryjs 및 entryjs 에 포함된 라이브러리들 -->
 <script type='text/javascript' src='${WEBROOT}/entryjs/extern/blockly/blockly_compressed.js'>
-<script type='text/javascript' src='${WEBROOT}/entryjs/util/ko.js'>
 <script type='text/javascript' src='${WEBROOT}/entryjs/util/static.js'>
 <script type='text/javascript' src='${WEBROOT}/entryjs/util/CanvasInput.js'>
 <script type='text/javascript' src='${WEBROOT}/entryjs/util/handle.js'>
 <script type='text/javascript' src='${WEBROOT}/entryjs/util/ndgmr.Collision.js'>
-
+<script type='text/javascript' src='${WEBROOT}/entryjs/util/ko.js'>
+<!-- entryjs core -->
 <script type='text/javascript' src='${WEBROOT}/entryjs/dist/entry.min.js'>
 ```
-
-* Download 사이트
-- jQuery : http://jquery.com/download/
-- Underscore : https://github.com/jashkenas/underscore
-- CreateJS (EaselJS, PreloadJS, SoundJS) : http://createjs.com/downloads
 
 ## 엔트리 초기화 (Inject Options)
 
