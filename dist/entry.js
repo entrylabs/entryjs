@@ -12494,6 +12494,8 @@ Entry.BlockView = function(a, b) {
       this.prevObserver = a.observe(this, "_align", ["x", "y", "height"]);
       !0 === a.animating && this.set({animating:!0});
       this._align();
+    } else {
+      delete this.prevObserver, delete this.prevAnimatingObserver;
     }
   };
   a._render = function() {
@@ -12514,22 +12516,18 @@ Entry.BlockView = function(a, b) {
       var c = this.block.prev.view;
       !0 === a && this.set({animating:!0});
       this.set({x:c.x, y:c.y + c.height + 1});
-      var d = this;
-      !0 === a || this.animating ? this.svgGroup.animate({transform:"t" + this.x + " " + this.y}, 300, mina.easeinout, function() {
-        d.set({animating:!1});
-      }) : this.svgGroup.attr({transform:"t" + this.x + " " + this.y});
+      this._moveTo(this.x, this.y, !0 === a || this.animating);
     }
   };
-  a._moveTo = function(a, c, d, e) {
+  a._moveTo = function(a, c, d) {
     d = void 0 === d ? !0 : d;
-    e = void 0 === e ? 300 : e;
-    var f = "t" + a + " " + c;
+    var e = "t" + a + " " + c;
     this.svgGroup.stop();
-    d ? this.svgGroup.animate({transform:f}, e, mina.easeinout) : this.svgGroup.attr({transform:f});
+    d ? (this.svgGroup.animate({transform:e}, 300, mina.easeinout), console.log("animate")) : this.svgGroup.attr({transform:e});
     this.set({x:a, y:c});
   };
-  a._moveBy = function(a, c, d, e) {
-    return this._moveTo(this.x + a, this.y + c, d, e);
+  a._moveBy = function(a, c, d) {
+    return this._moveTo(this.x + a, this.y + c, d);
   };
   a._addControl = function() {
     var a = this;
@@ -12542,6 +12540,7 @@ Entry.BlockView = function(a, b) {
       a.stopPropagation();
       a.preventDefault();
       f.block.prev && (f.block.prev.setNext(null), f.block.setPrev(null), f.block.thread.changeEvent.notify());
+      this.animating && this.set({animating:!1});
       if (0 === f.dragInstance.height) {
         for (var b = f.block, c = 0;b;) {
           c += b.view.height, b = b.next;
@@ -12585,8 +12584,8 @@ Entry.BlockView = function(a, b) {
       } else {
         this.dragInstance || d.doAdd();
         var e = this.dragInstance && this.dragInstance.prev, f = this._getCloseBlock();
-        a.setMagnetedBlock(null);
         e || f ? f ? (this.set({animating:!0}), d.doInsert(f)) : d.doSeparate() : c == Entry.DRAG_MODE_DRAG && d.doMove();
+        a.setMagnetedBlock(null);
       }
     }
   };
@@ -12620,24 +12619,28 @@ Entry.BlockView = function(a, b) {
     }) : c.remove();
   };
   a._updateBG = function() {
-    var a = this._board.dragBlock.dragInstance.height, c = this.svgGroup;
-    if (this.magneting) {
-      var a = this.height + a, d = c.rect(0 - this.width / 2, 1.5 * this.height + 1, this.width, Math.max(0, a - 1.5 * this.height));
-      d.block = this.block.next;
-      this.nextBackground = d;
-      c.prepend(d);
-      d.attr({fill:"transparent"});
-      this.background = d = c.rect(0 - this.width / 2, 0, this.width, a);
-      c.prepend(d);
-      d.attr({fill:"transparent"});
-      this.originalHeight = this.height;
-      this.set({height:a, animating:!0});
+    var a = this._board.dragBlock.dragInstance.height, c = this, d = c.svgGroup;
+    if (c.magneting) {
+      c.background && (c.background.remove(), c.nextBackground.remove(), delete c.background, delete c.nextBackground);
+      var a = c.height + a, e = d.rect(0 - c.width / 2, 1.5 * c.height + 1, c.width, Math.max(0, a - 1.5 * c.height));
+      e.block = c.block.next;
+      c.nextBackground = e;
+      d.prepend(e);
+      e.attr({fill:"transparent"});
+      e = d.rect(0 - c.width / 2, 0, c.width, a);
+      c.background = e;
+      d.prepend(e);
+      e.attr({fill:"transparent"});
+      c.originalHeight = c.height;
+      c.set({height:a});
     } else {
-      if (this.background && this.background.remove(), a = this.originalHeight) {
-        this.set({height:a, animating:!0}), delete this.originalHeight;
+      if (a = c.originalHeight) {
+        setTimeout(function() {
+          c.background && (c.background.remove(), c.nextBackground.remove(), delete c.background, delete c.nextBackground);
+        }, 200), c.set({height:a}), delete c.originalHeight;
       }
     }
-    this.block.thread.changeEvent.notify();
+    c.block.thread.changeEvent.notify();
   };
 })(Entry.BlockView.prototype);
 Entry.Code = function(a) {
@@ -13013,10 +13016,10 @@ Entry.Block.FOLLOW = 3;
     return this.thread;
   };
   a.setPrev = function(a) {
-    this.set({prev:a});
+    a !== this && this.set({prev:a});
   };
   a.setNext = function(a) {
-    this.set({next:a});
+    a !== this && this.set({next:a});
   };
   a.next = function() {
     return this.next;

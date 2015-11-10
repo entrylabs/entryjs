@@ -76,10 +76,14 @@ Entry.Block.FOLLOW = 3;
     };
 
     p.setPrev = function(block) {
+        if (block === this)
+            return;
         this.set({prev: block});
     };
 
     p.setNext = function(block) {
+        if (block === this)
+            return;
         this.set({next: block});
     };
 
