@@ -16,6 +16,8 @@ Entry.Workspace = function(blockMenu, board) {
     this._board = board;
 
 
+    this.svgGroup = blockMenu.snap.group();
+
     this._playEvent = new Entry.Event(this);
     this._stopEvent = new Entry.Event(this);
 };
@@ -118,6 +120,20 @@ Entry.Workspace = function(blockMenu, board) {
         }, help.duration);
     };
 
+    p.moveMouse = function(startpos, endPos) {
 
+    };
+
+    p.generateImage = function(imagePath) {
+        var block = this.getBoard();
+        var dom = block.svgDom[0];
+        var PosX = dom.clientWidth / 2;
+        var PosY = dom.clientHeight / 2;
+
+        this.svgGroup = this._board.snap.group();
+        this.image = this.svgGroup.image (
+                imagePath , PosX, PosY, 30, 30
+            );
+    };
 
 })(Entry.Workspace.prototype);

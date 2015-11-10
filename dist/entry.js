@@ -13299,6 +13299,7 @@ Entry.Workspace = function(a, b) {
   b.workspace = this;
   this._blockMenu = a;
   this._board = b;
+  this.svgGroup = a.snap.group();
   this._playEvent = new Entry.Event(this);
   this._stopEvent = new Entry.Event(this);
 };
@@ -13356,6 +13357,13 @@ Entry.Workspace = function(a, b) {
       console.log("stop playDelete");
       c._stopEvent.notify(a);
     }, a.duration);
+  };
+  a.moveMouse = function(a, c) {
+  };
+  a.generateImage = function(a) {
+    var c = this.getBoard().svgDom[0], d = c.clientWidth / 2, c = c.clientHeight / 2;
+    this.svgGroup = this._board.snap.group();
+    this.image = this.svgGroup.image(a, d, c, 30, 30);
   };
 })(Entry.Workspace.prototype);
 Entry.Xml = {};
