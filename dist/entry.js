@@ -12523,7 +12523,7 @@ Entry.BlockView = function(a, b) {
     d = void 0 === d ? !0 : d;
     var e = "t" + a + " " + c;
     this.svgGroup.stop();
-    d ? (this.svgGroup.animate({transform:e}, 300, mina.easeinout), console.log("animate")) : this.svgGroup.attr({transform:e});
+    d ? this.svgGroup.animate({transform:e}, 300, mina.easeinout) : this.svgGroup.attr({transform:e});
     this.set({x:a, y:c});
   };
   a._moveBy = function(a, c, d) {

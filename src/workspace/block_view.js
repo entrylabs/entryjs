@@ -190,7 +190,6 @@ Entry.BlockView = function(block, board) {
             this.svgGroup.animate({
                 transform: transform
             }, 300, mina.easeinout);
-            console.log('animate');
         } else {
             this.svgGroup.attr({
                 transform: transform
