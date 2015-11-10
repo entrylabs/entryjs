@@ -14,9 +14,8 @@ Entry.Workspace = function(blockMenu, board) {
 
     this._blockMenu = blockMenu;
     this._board = board;
-   
 
-    this._playEvent = new Entry.Event(this);
+
     this._stopEvent = new Entry.Event(this);
 };
 
@@ -27,23 +26,39 @@ Entry.Workspace = function(blockMenu, board) {
 
     p.playAddBlock = function(help) {
         var self = this;
-        this._playEvent.notify(help);
-        var targetBlock = this._blockMenu.findByName(help.target);
+        var targetBlock;
+        if (help.cloneId) {
+            targetBlock = this._blockMenu.findById(help.cloneId);
+            if (!targetBlock)
+                targetBlock = this._board.findById(help.cloneId);
+        } else {
+            targetBlock = this._blockMenu.findById(help.target);
+        }
 
-        if (help.dest.name)
-            var destBlock = this._board.findByName(help.dest.name);
+        if (!targetBlock)
+            return;
+
+        if (help.dest.id) { // find x,y by id
+            var destBlock = this._board.findById(help.dest.id);
+            help.dest.x = this.getBlockMenu()._svgWidth + destBlock.view.x;
+            help.dest.y = destBlock.view.y + destBlock.view.height;
+        } //else x,y was already known
 
         var blockView = targetBlock.view;
         var board = blockView.getBoard();
 
         // mousedown
         board.set({dragBlock:blockView});
-        board.cloneThread();
+        var cloneId = board.cloneThread();
+        help.cloneId = cloneId;
+        //var cloneId = clonedThread.getFirstBlock().id;
+        //console.log('cloneId=',cloneId);
+        //help.cloneId = cloneId;
         var observer = blockView.moveBoardBlockObserver;
         if (observer) observer.destroy();
 
-        var distanceX = this.getBlockMenu()._svgWidth + destBlock.view.x;
-        var distanceY = destBlock.view.y + destBlock.view.height;
+        var distanceX = help.dest.x;
+        var distanceY = help.dest.y;
 
         blockView._moveTo(distanceX,
                           distanceY,
@@ -75,49 +90,73 @@ Entry.Workspace = function(blockMenu, board) {
             blockView.terminateDrag();
             if (board) board.set({dragBoard: null});
 
-            if (self._playEvent) {
-                self._playEvent.detach(this._playEvent);
+            self._stopEvent.notify(help);
+
+        }, help.duration - 300);
+    };
+
+    p.playMoveBlock = function(help) {
+        var self = this;
+        var targetBlock;
+        console.log('cloneId=',help.cloneId);
+        if (help.cloneId) {
+            targetBlock = this._board.findById(help.cloneId);
+        } else {
+            targetBlock = this._board.findById(help.target);
+        }
+
+        if (help.dest.id) { // find x,y by id
+            var destBlock = this._board.findById(help.dest.id);
+            help.dest.x = this.getBlockMenu()._svgWidth + destBlock.view.x;
+            help.dest.y = destBlock.view.y + destBlock.view.height;
+        } //else x,y was already known
+
+        var blockView = targetBlock.view;
+        var board = blockView.getBoard();
+
+        // mousedown
+        board.set({dragBlock:blockView});
+        //board.cloneThread();
+        var observer = blockView.moveBoardBlockObserver;
+        if (observer) observer.destroy();
+
+        var distanceX = help.dest.x;
+        var distanceY = help.dest.y;
+
+        blockView._moveTo(distanceX,
+                          distanceY,
+                          true,
+                          help.duration - 300);
+
+        var boardOffset = this.getBoard().offset;
+        var blockMenuOffset = this.getBlockMenu().offset;
+
+        var offsetX = boardOffset.left - blockMenuOffset.left,
+            offsetY = boardOffset.top - blockMenuOffset.top;
+
+        blockView._moveTo(
+                          distanceX-offsetX,
+                          distanceY-offsetY,
+                          true,
+                          help.duration - 300);
+
+        setTimeout(function() {
+            blockView._align(true);
+
+            var magnetedBlock = blockView._getCloseBlock();
+            if (magnetedBlock) {
+                board.setMagnetedBlock(magnetedBlock.view);
+            } else {
+                board.setMagnetedBlock(null);
             }
+
+            blockView.terminateDrag();
+            if (board) board.set({dragBoard: null});
+
             self._stopEvent.notify(help);
 
         }, help.duration - 300);
 
-    };
-
-    p.playClick = function(help) {
-        var self = this;
-
-        var target = $('#'+help.target);
-        if (target) {
-            var pos = target.position();
-            target.click();
-            setTimeout(function() {
-                console.log('notify playClick finish');
-                self._stopEvent.notify(help);
-            }, help.duration);
-        } else {
-            self._stopEvent.notify(help);
-        }
-    };
-
-    p.playMove = function(help) {
-        var self = this;
-        console.log('playMove help');
-        //TODO
-        setTimeout(function() {
-            console.log('stop playMove');
-            self._stopEvent.notify(help);
-        }, help.duration);
-    };
-
-    p.playDelete = function(help) {
-        var self = this;
-        console.log('playDelete help');
-        //TODO
-        setTimeout(function() {
-            console.log('stop playDelete');
-            self._stopEvent.notify(help);
-        }, help.duration);
     };
 
 

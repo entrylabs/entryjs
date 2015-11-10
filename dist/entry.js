@@ -6443,20 +6443,22 @@ Entry.EntryObject.prototype.initEntity = function(a) {
     var c = a.sprite.pictures[0].dimension;
     b.regX = c.width / 2;
     b.regY = c.height / 2;
-    b.scaleX = b.scaleY = "background" == a.sprite.category.main ? Math.max(270 / c.height, 480 / c.width) : "new" == a.sprite.category.main ? 1 : 200 / (c.width + c.height);
+    a = "background" == a.sprite.category.main ? Math.max(270 / c.height, 480 / c.width) : "new" == a.sprite.category.main ? 1 : 200 / (c.width + c.height);
+    b.scaleX = b.scaleY = a;
     b.width = c.width;
     b.height = c.height;
   } else {
     if ("textBox" == this.objectType) {
       if (b.regX = 25, b.regY = 12, b.scaleX = b.scaleY = 1.5, b.width = 50, b.height = 24, b.text = a.name, a.options) {
-        if (a = a.options, c = "", a.bold && (c += "bold "), a.italic && (c += "italic "), b.underline = a.underline, b.strike = a.strike, b.font = c + "20px " + a.font.family, b.colour = a.colour, b.bgColor = a.background, b.lineBreak = a.lineBreak) {
-          a = b.text.split("\n");
-          if (1 < a.length) {
-            for (var c = a[0].length, d = 1, e = a.length;d < e;d++) {
-              a[d].length > c && (c = a[d].length);
+        if (c = a.options, a = "", c.bold && (a += "bold "), c.italic && (a += "italic "), b.underline = c.underline, b.strike = c.strike, b.font = a + "20px " + c.font.family, b.colour = c.colour, b.bgColor = c.background, b.lineBreak = c.lineBreak) {
+          c = b.text.split("\n");
+          if (1 < c.length) {
+            a = c[0].length;
+            for (var d = 1, e = c.length;d < e;d++) {
+              c[d].length > a && (a = c[d].length);
             }
-            b.width = 25 * c;
-            b.height = 24 * a.length;
+            b.width = 25 * a;
+            b.height = 24 * c.length;
           } else {
             b.width = 25 * b.text.length;
           }
@@ -7036,7 +7038,8 @@ Entry.Painter.prototype.colorPixel = function(a, b, c, d, e) {
   this.colorLayerData.data[a + 3] = e;
 };
 Entry.Painter.prototype.pickStrokeColor = function(a) {
-  a = 4 * (Math.round(a.stageY) * this.canvas.width + Math.round(a.stageX));
+  var b = Math.round(a.stageX);
+  a = 4 * (Math.round(a.stageY) * this.canvas.width + b);
   this.stroke.lineColor = Entry.rgb2hex(this.colorLayerData.data[a], this.colorLayerData.data[a + 1], this.colorLayerData.data[a + 2]);
   document.getElementById("entryPainterAttrCircle").style.backgroundColor = this.stroke.lineColor;
   document.getElementById("entryPainterAttrCircleInput").value = this.stroke.lineColor;
@@ -10900,8 +10903,8 @@ Entry.Variable.prototype.setType = function(a) {
   this.type = a;
 };
 Entry.Variable.prototype.getSlidePosition = function(a) {
-  var b = this.minValue_;
-  return Math.abs(this.value_ - b) / Math.abs(this.maxValue_ - b) * a + 10;
+  var b = this.minValue_, c = this.maxValue_, b = Math.abs(this.value_ - b) / Math.abs(c - b);
+  return a * b + 10;
 };
 Entry.Variable.prototype.setSlideCommandX = function(a, b) {
   var c = this.valueSetter_.graphics.command;
@@ -10910,7 +10913,7 @@ Entry.Variable.prototype.setSlideCommandX = function(a, b) {
   this.updateSlideValueByView();
 };
 Entry.Variable.prototype.updateSlideValueByView = function() {
-  var a = Math.max(this.valueSetter_.graphics.command.x - 10, 0) / this.maxWidth;
+  var a = this.maxWidth, a = Math.max(this.valueSetter_.graphics.command.x - 10, 0) / a;
   0 > a && (a = 0);
   1 < a && (a = 1);
   a = (this.minValue_ + Number(Math.abs(this.maxValue_ - this.minValue_) * a)).toFixed(2);
@@ -12387,6 +12390,9 @@ Entry.BlockMenu = function(a) {
       this.dragBlockObserver && this.removeDragBlockObserver();
       var a = this._svgWidth, c = this.dragBlock, d = c.block, e = this.code, f = d.getThread();
       d && f && (c.moveBoardBlockObserver = c.observe(this, "moveBoardBlock", ["x", "y"]), e.cloneThread(f), c.dominate(), d = this.workspace.getBoard(), this._boardBlockView = d.code.cloneThread(f).getFirstBlock().view, d.set({dragBlock:this._boardBlockView}), this._boardBlockView.dragMode = 1, this._boardBlockView._moveTo(c.x - a, c.y - 0, !1));
+      if (this._boardBlockView) {
+        return this._boardBlockView.block.id;
+      }
     }
   };
   a.terminateDrag = function() {
@@ -12418,10 +12424,10 @@ Entry.BlockMenu = function(a) {
   };
   a.setMagnetedBlock = function() {
   };
-  a.findByName = function(a) {
+  a.findById = function(a) {
     for (var c = this.code.getThreads(), d = 0, e = c.length;d < e;d++) {
       var f = c[d];
-      if (f && (f = f.getFirstBlock()) && f.name == a) {
+      if (f && (f = f.getFirstBlock()) && f.id == a) {
         return f;
       }
     }
@@ -13282,12 +13288,16 @@ Entry.Board = function(a) {
   a.getCode = function() {
     return this.code;
   };
-  a.findByName = function(a) {
-    console.log("find ", a);
+  a.findById = function(a) {
+    console.log("board.findBy=", a);
     for (var c = this.code.getThreads(), d = 0, e = c.length;d < e;d++) {
       var f = c[d];
-      if (f && (f = f.getFirstBlock()) && f.name == a) {
-        return f;
+      if (f) {
+        for (var f = f.getBlocks(), g = 0, e = f.length;g < e;g++) {
+          if (f[g] && f[g].id == a) {
+            return f[g];
+          }
+        }
       }
     }
   };
@@ -13298,7 +13308,6 @@ Entry.Workspace = function(a, b) {
   b.workspace = this;
   this._blockMenu = a;
   this._board = b;
-  this._playEvent = new Entry.Event(this);
   this._stopEvent = new Entry.Event(this);
 };
 (function(a) {
@@ -13309,53 +13318,59 @@ Entry.Workspace = function(a, b) {
     return this._blockMenu;
   };
   a.playAddBlock = function(a) {
-    var c = this;
-    this._playEvent.notify(a);
-    var d = this._blockMenu.findByName(a.target);
-    if (a.dest.name) {
-      var e = this._board.findByName(a.dest.name)
+    var c = this, d;
+    a.cloneId ? (d = this._blockMenu.findById(a.cloneId)) || (d = this._board.findById(a.cloneId)) : d = this._blockMenu.findById(a.target);
+    if (d) {
+      if (a.dest.id) {
+        var e = this._board.findById(a.dest.id);
+        a.dest.x = this.getBlockMenu()._svgWidth + e.view.x;
+        a.dest.y = e.view.y + e.view.height;
+      }
+      var f = d.view, g = f.getBoard();
+      g.set({dragBlock:f});
+      d = g.cloneThread();
+      a.cloneId = d;
+      (d = f.moveBoardBlockObserver) && d.destroy();
+      d = a.dest.x;
+      e = a.dest.y;
+      f._moveTo(d, e, !0, a.duration - 300);
+      var h = this.getBoard().offset, k = this.getBlockMenu().offset, m = h.left - k.left, h = h.top - k.top;
+      this.getBoard().dragBlock._moveTo(d - m, e - h, !0, a.duration - 300);
+      setTimeout(function() {
+        f._align(!0);
+        var d = f._getCloseBlock();
+        d ? g.setMagnetedBlock(d.view) : g.setMagnetedBlock(null);
+        f.terminateDrag();
+        g && g.set({dragBoard:null});
+        c._stopEvent.notify(a);
+      }, a.duration - 300);
+    }
+  };
+  a.playMoveBlock = function(a) {
+    var c = this, d;
+    console.log("cloneId=", a.cloneId);
+    d = a.cloneId ? this._board.findById(a.cloneId) : this._board.findById(a.target);
+    if (a.dest.id) {
+      var e = this._board.findById(a.dest.id);
+      a.dest.x = this.getBlockMenu()._svgWidth + e.view.x;
+      a.dest.y = e.view.y + e.view.height;
     }
     var f = d.view, g = f.getBoard();
     g.set({dragBlock:f});
-    g.cloneThread();
     (d = f.moveBoardBlockObserver) && d.destroy();
-    d = this.getBlockMenu()._svgWidth + e.view.x;
-    e = e.view.y + e.view.height;
+    d = a.dest.x;
+    e = a.dest.y;
     f._moveTo(d, e, !0, a.duration - 300);
-    var h = this.getBoard().offset, k = this.getBlockMenu().offset, m = h.left - k.left, h = h.top - k.top;
-    this.getBoard().dragBlock._moveTo(d - m, e - h, !0, a.duration - 300);
+    var h = this.getBoard().offset, k = this.getBlockMenu().offset;
+    f._moveTo(d - (h.left - k.left), e - (h.top - k.top), !0, a.duration - 300);
     setTimeout(function() {
       f._align(!0);
       var d = f._getCloseBlock();
       d ? g.setMagnetedBlock(d.view) : g.setMagnetedBlock(null);
       f.terminateDrag();
       g && g.set({dragBoard:null});
-      c._playEvent && c._playEvent.detach(this._playEvent);
       c._stopEvent.notify(a);
     }, a.duration - 300);
-  };
-  a.playClick = function(a) {
-    var c = this, d = $("#" + a.target);
-    d ? (d.position(), d.click(), setTimeout(function() {
-      console.log("notify playClick finish");
-      c._stopEvent.notify(a);
-    }, a.duration)) : c._stopEvent.notify(a);
-  };
-  a.playMove = function(a) {
-    var c = this;
-    console.log("playMove help");
-    setTimeout(function() {
-      console.log("stop playMove");
-      c._stopEvent.notify(a);
-    }, a.duration);
-  };
-  a.playDelete = function(a) {
-    var c = this;
-    console.log("playDelete help");
-    setTimeout(function() {
-      console.log("stop playDelete");
-      c._stopEvent.notify(a);
-    }, a.duration);
   };
 })(Entry.Workspace.prototype);
 Entry.Xml = {};

@@ -332,7 +332,8 @@ Entry.BlockView = function(block, board) {
                 } else block.doSeparate();
             }
         }
-        return;
+
+        return
     };
 
     p._getCloseBlock = function() {

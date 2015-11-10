@@ -178,8 +178,8 @@ Entry.Board = function(dom) {
         return this.code;
     };
 
-    p.findByName = function(name) {
-        console.log('find ', name);
+    p.findById = function(id) {
+        console.log('board.findBy=',id);
         var code = this.code;
         var threads = code.getThreads();
         for (var i=0,len=threads.length; i<len; i++) {
@@ -187,11 +187,22 @@ Entry.Board = function(dom) {
             if (!thread)
                 continue;
 
+            /*
             var block = thread.getFirstBlock();
-            if (block && block.name == name) {
+            if (block && block.id == id) {
                 return block;
             }
+            */
+
+            var blocks = thread.getBlocks();
+            for (var j=0,len=blocks.length; j<len; j++) {
+                if (blocks[j] && blocks[j].id == id) {
+                    return blocks[j];
+                }
+            }
+
         }
+        return;
     };
 
 

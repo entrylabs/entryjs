@@ -113,9 +113,9 @@ Entry.BlockMenu = function(dom) {
         var code = this.code;
         var currentThread = block.getThread();
         if (block && currentThread) {
-            blockView.moveBoardBlockObserver = 
+            blockView.moveBoardBlockObserver =
                 blockView.observe(this, "moveBoardBlock", ['x', 'y']);
-            code.cloneThread(currentThread);
+            clonedThread = code.cloneThread(currentThread);
             //original block should be top of svg
             blockView.dominate();
 
@@ -133,6 +133,9 @@ Entry.BlockMenu = function(dom) {
                 false
             );
         }
+
+        if (this._boardBlockView)
+            return this._boardBlockView.block.id;
 
     };
 
@@ -194,7 +197,7 @@ Entry.BlockMenu = function(dom) {
     p.setMagnetedBlock = function() {
     };
 
-    p.findByName = function(name) {
+    p.findById = function(id) {
         var code = this.code;
         var threads = code.getThreads();
         for (var i=0,len=threads.length; i<len; i++) {
@@ -203,7 +206,7 @@ Entry.BlockMenu = function(dom) {
                 continue;
 
             var block = thread.getFirstBlock();
-            if (block && block.name == name) {
+            if (block && block.id == id) {
                 return block;
             }
         }
