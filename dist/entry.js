@@ -4805,14 +4805,6 @@ Entry.Dom = function(a, b) {
   b.parent && b.parent.append(d);
   return d;
 };
-Entry.bindGlobalEvent = function() {
-  Entry.windowReszied || (Entry.windowResized = new Entry.Event(window), $(window).on("resize", function() {
-    Entry.windowResized.notify();
-  }));
-  Entry.documentMousedown || (Entry.documentMousedown = new Entry.Event(window), $(document).on("mousedown", function(a) {
-    Entry.documentMousedown.notify(a);
-  }));
-};
 Entry.Dialog = function(a, b, c, d) {
   a.dialog && a.dialog.remove();
   a.dialog = this;
@@ -9877,6 +9869,14 @@ Entry.Utils.colorDarken = function(a, b) {
   e = Math.floor(e * b).toString(16);
   return "#" + c + d + e;
 };
+Entry.Utils.bindGlobalEvent = function() {
+  Entry.windowReszied || (Entry.windowResized = new Entry.Event(window), $(window).on("resize", function() {
+    Entry.windowResized.notify();
+  }));
+  Entry.documentMousedown || (Entry.documentMousedown = new Entry.Event(window), $(document).on("mousedown", function(a) {
+    Entry.documentMousedown.notify(a);
+  }));
+};
 Entry.sampleColours = [];
 Entry.assert = function(a, b) {
   if (!a) {
@@ -12376,17 +12376,18 @@ Entry.BlockMenu = function(a) {
   };
   a.generateDragBlockObserver = function() {
     var a = this.dragBlock;
-    a && !this.dragBlockObserver && (this.dragBlockObserver = a.observe(this, "cloneThread", ["x", "y"]));
+    a && (this.dragBlockObserver && this.removeDragBlockObserver(), this.dragBlockObserver = a.observe(this, "cloneThread", ["x", "y"]));
   };
   a.removeDragBlockObserver = function() {
     var a = this.dragBlockObserver;
     null !== a && (a.destroy(), this.dragBlockObserver = null);
   };
-  a.cloneThread = function() {
+  a.cloneThread = function(a) {
+    void 0 === a ? !0 : a;
     if (null !== this.dragBlock) {
       this.dragBlockObserver && this.removeDragBlockObserver();
-      var a = this._svgWidth, c = this.dragBlock, d = c.block, e = this.code, f = d.getThread();
-      d && f && (c.moveBoardBlockObserver = c.observe(this, "moveBoardBlock", ["x", "y"]), e.cloneThread(f), c.dominate(), d = this.workspace.getBoard(), this._boardBlockView = d.code.cloneThread(f).getFirstBlock().view, d.set({dragBlock:this._boardBlockView}), this._boardBlockView.dragMode = 1, this._boardBlockView._moveTo(c.x - a, c.y - 0, !1));
+      var c = this._svgWidth, d = this.dragBlock, e = d.block, f = this.code, g = e.getThread();
+      e && g && (a && d.observe(this, "moveBoardBlock", ["x", "y"]), f.cloneThread(g), d.dominate(), a = this.workspace.getBoard(), this._boardBlockView = a.code.cloneThread(g).getFirstBlock().view, a.set({dragBlock:this._boardBlockView}), this._boardBlockView.dragMode = 1, this._boardBlockView._moveTo(d.x - c, d.y - 0, !1));
     }
   };
   a.terminateDrag = function() {
@@ -13317,8 +13318,7 @@ Entry.Workspace = function(a, b) {
     }
     var f = d.view, g = f.getBoard();
     g.set({dragBlock:f});
-    g.cloneThread();
-    (d = f.moveBoardBlockObserver) && d.destroy();
+    g.cloneThread(!1);
     d = this.getBlockMenu()._svgWidth + e.view.x;
     e = e.view.y + e.view.height;
     f._moveTo(d, e, !0, a.duration - 300);

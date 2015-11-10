@@ -85,13 +85,13 @@ Entry.BlockMenu = function(dom) {
     };
 
     p.generateDragBlockObserver = function() {
-        var block =  this.dragBlock;
+        var block = this.dragBlock;
         if (!block) return;
 
-        if (!this.dragBlockObserver) {
-            this.dragBlockObserver =
-                block.observe(this, "cloneThread", ['x', 'y']);
-        }
+        if (this.dragBlockObserver)
+            this.removeDragBlockObserver();
+        this.dragBlockObserver =
+            block.observe(this, "cloneThread", ['x', 'y']);
     };
 
     p.removeDragBlockObserver = function() {
@@ -101,7 +101,8 @@ Entry.BlockMenu = function(dom) {
         this.dragBlockObserver = null;
     };
 
-    p.cloneThread = function() {
+    p.cloneThread = function(forMouseMove) {
+        forMouseMove === undefined ? true : forMouseMove;
         if (this.dragBlock === null) return;
         if (this.dragBlockObserver)
             this.removeDragBlockObserver();
@@ -113,15 +114,20 @@ Entry.BlockMenu = function(dom) {
         var code = this.code;
         var currentThread = block.getThread();
         if (block && currentThread) {
-            blockView.moveBoardBlockObserver = 
-                blockView.observe(this, "moveBoardBlock", ['x', 'y']);
+            if (forMouseMove)
+                    blockView.observe(
+                        this,
+                        "moveBoardBlock",
+                        ['x', 'y']
+                    );
             code.cloneThread(currentThread);
             //original block should be top of svg
             blockView.dominate();
 
             var workspaceBoard = this.workspace.getBoard();
             this._boardBlockView = workspaceBoard.code.
-                cloneThread(currentThread).getFirstBlock().view;
+                cloneThread(currentThread).
+                getFirstBlock().view;
             workspaceBoard.set({
                 dragBlock : this._boardBlockView
             });
@@ -133,7 +139,6 @@ Entry.BlockMenu = function(dom) {
                 false
             );
         }
-
     };
 
     p.terminateDrag = function() {
@@ -156,9 +161,7 @@ Entry.BlockMenu = function(dom) {
             boardCode.destroyThread(boardBlock.getThread(), animate);
         } else boardBlock.view.terminateDrag();
 
-        workspace.getBoard().set({
-            dragBlock : null
-        });
+        workspace.getBoard().set({dragBlock:null});
         thisCode.destroyThread(dragBlock.getThread(), animate);
         this._boardBlockView = null;
     };

@@ -14,7 +14,7 @@ Entry.Workspace = function(blockMenu, board) {
 
     this._blockMenu = blockMenu;
     this._board = board;
-   
+
 
     this._playEvent = new Entry.Event(this);
     this._stopEvent = new Entry.Event(this);
@@ -38,9 +38,7 @@ Entry.Workspace = function(blockMenu, board) {
 
         // mousedown
         board.set({dragBlock:blockView});
-        board.cloneThread();
-        var observer = blockView.moveBoardBlockObserver;
-        if (observer) observer.destroy();
+        board.cloneThread(false);
 
         var distanceX = this.getBlockMenu()._svgWidth + destBlock.view.x;
         var distanceY = destBlock.view.y + destBlock.view.height;
