@@ -140,7 +140,8 @@ Entry.BlockView = function(block, board) {
                 this.set({animating: true});
             this._align();
         } else {
-
+            delete this.prevObserver;
+            delete this.prevAnimatingObserver;
         }
     };
 
@@ -178,28 +179,17 @@ Entry.BlockView = function(block, board) {
         });
         var that = this;
 
-        if (animate === true || this.animating) {
-            this.svgGroup.animate({
-                transform: "t" + this.x + " " + this.y
-            }, 300, mina.easeinout, function() {
-                that.set({animating: false});
-            });
-        } else {
-            this.svgGroup.attr({
-                transform: "t" + this.x + " " + this.y
-            });
-        }
+        this._moveTo(this.x, this.y, animate === true || this.animating);
     };
 
-    p._moveTo = function(x, y, animate, speed) {
+    p._moveTo = function(x, y, animate) {
         animate = animate === undefined ? true : animate;
-        speed = speed === undefined ? 300 : speed;
         var transform = "t" + x + " " + y;
         this.svgGroup.stop();
         if (animate) {
             this.svgGroup.animate({
                 transform: transform
-            }, speed, mina.easeinout);
+            }, 300, mina.easeinout);
         } else {
             this.svgGroup.attr({
                 transform: transform
@@ -208,12 +198,11 @@ Entry.BlockView = function(block, board) {
         this.set({ x: x, y: y });
     };
 
-    p._moveBy = function(x, y, animate, speed) {
+    p._moveBy = function(x, y, animate) {
         return this._moveTo(
             this.x + x,
             this.y + y,
-            animate,
-            speed
+            animate
         );
     };
 
@@ -242,6 +231,7 @@ Entry.BlockView = function(block, board) {
                 mode: true
             });
             this.dominate();
+            this.addDragging();
             this.dragMode = Entry.DRAG_MODE_MOUSEDOWN;
         }
 
@@ -256,6 +246,9 @@ Entry.BlockView = function(block, board) {
                 blockView.block.setPrev(null);
                 blockView.block.thread.changeEvent.notify();
             }
+
+            if (this.animating)
+                this.set({animating: false});
 
             if (blockView.dragInstance.height === 0) {
                 var block = blockView.block;
@@ -304,6 +297,7 @@ Entry.BlockView = function(block, board) {
         var board = this.getBoard();
         var dragMode = this.dragMode;
         var block = this.block;
+        this.removeDragging();
         this.dragMode = Entry.DRAG_MODE_NONE;
         if (board instanceof Entry.BlockMenu) {
             board.terminateDrag();
@@ -321,7 +315,6 @@ Entry.BlockView = function(block, board) {
             }
             var prevBlock = this.dragInstance && this.dragInstance.prev;
             var closeBlock = this._getCloseBlock();
-            board.setMagnetedBlock(null);
             if (!prevBlock && !closeBlock) {
                 if (dragMode == Entry.DRAG_MODE_DRAG)
                     block.doMove();
@@ -331,6 +324,7 @@ Entry.BlockView = function(block, board) {
                     block.doInsert(closeBlock);
                 } else block.doSeparate();
             }
+            board.setMagnetedBlock(null);
         }
 
         return
@@ -401,6 +395,12 @@ Entry.BlockView = function(block, board) {
         var block = blockView.block;
         var svgGroup = blockView.svgGroup;
         if (magneting) {
+            if (blockView.background) {
+                blockView.background.remove();
+                blockView.nextBackground.remove();
+                delete blockView.background;
+                delete blockView.nextBackground;
+            }
             var height = blockView.height + dragThreadHeight;
 
             var nextBg = svgGroup.rect(
@@ -432,17 +432,21 @@ Entry.BlockView = function(block, board) {
 
             blockView.originalHeight = blockView.height;
             blockView.set({
-                height: height,
-                animating: true
+                height: height
             });
         } else {
-            if (blockView.background)
-                blockView.background.remove();
             var height = blockView.originalHeight;
             if (height) {
+                setTimeout(function() {
+                    if (blockView.background) {
+                        blockView.background.remove();
+                        blockView.nextBackground.remove();
+                        delete blockView.background;
+                        delete blockView.nextBackground;
+                    }
+                }, 200);
                 blockView.set({
-                    height: height,
-                    animating: true
+                    height: height
                 });
                 delete blockView.originalHeight;
             }
@@ -450,4 +454,13 @@ Entry.BlockView = function(block, board) {
         }
         blockView.block.thread.changeEvent.notify();
     };
+
+    p.addDragging = function() {
+        this.svgGroup.addClass('dragging');
+    };
+
+    p.removeDragging = function() {
+        this.svgGroup.removeClass('dragging');
+    };
+
 })(Entry.BlockView.prototype);
