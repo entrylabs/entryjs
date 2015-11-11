@@ -24,7 +24,7 @@ Entry.init = function(container, options) {
     /** @type {!Element} */
     this.view_ = container;
     this.view_.setAttribute('class', 'entry');
-    Entry.initFonts();
+    Entry.initFonts(options.fonts);
     this.createDom(container, this.type);
     this.loadInterfaceState();
     this.overridePrototype();
@@ -394,38 +394,9 @@ Entry.initContextMenu = function() {
     });
 };
 
-Entry.initFonts = function(painterView) {
-    this.fonts = [];
-    this.fonts.push({
-        name: '바탕체',
-        family: 'KoPub Batang',
-        url: '/css/kopubbatang.css'
-    });
-    this.fonts.push({
-        name: '명조체',
-        family: 'Nanum Myeongjo',
-        url: '/css/nanummyeongjo.css'
-    });
-    this.fonts.push({
-        name: '고딕체',
-        family: 'Nanum Gothic',
-        url: '/css/nanumgothic.css'
-    });
-    this.fonts.push({
-        name: '필기체',
-        family: 'Nanum Pen Script',
-        url: '/css/nanumpenscript.css'
-    });
-    this.fonts.push({
-        name: '한라산체',
-        family: 'Jeju Hallasan',
-        url: '/css/jejuhallasan.css'
-    });
-    this.fonts.push({
-        name: '코딩고딕체',
-        family: 'Nanum Gothic Coding',
-        url: '/css/nanumgothiccoding.css'
-    });
+Entry.initFonts = function(fonts) {
+    this.fonts = fonts;
+    if (!fonts) this.fonts = [];
 
     var config = {
         custom: {

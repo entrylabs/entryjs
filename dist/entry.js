@@ -5891,7 +5891,7 @@ Entry.init = function(a, b) {
   this.initialize_();
   this.view_ = a;
   this.view_.setAttribute("class", "entry");
-  Entry.initFonts();
+  Entry.initFonts(b.fonts);
   this.createDom(a, this.type);
   this.loadInterfaceState();
   this.overridePrototype();
@@ -6034,13 +6034,8 @@ Entry.initContextMenu = function() {
   }, above:"auto", preventDoubleContext:!0, compress:!0});
 };
 Entry.initFonts = function(a) {
-  this.fonts = [];
-  this.fonts.push({name:"\ubc14\ud0d5\uccb4", family:"KoPub Batang", url:"/css/kopubbatang.css"});
-  this.fonts.push({name:"\uba85\uc870\uccb4", family:"Nanum Myeongjo", url:"/css/nanummyeongjo.css"});
-  this.fonts.push({name:"\uace0\ub515\uccb4", family:"Nanum Gothic", url:"/css/nanumgothic.css"});
-  this.fonts.push({name:"\ud544\uae30\uccb4", family:"Nanum Pen Script", url:"/css/nanumpenscript.css"});
-  this.fonts.push({name:"\ud55c\ub77c\uc0b0\uccb4", family:"Jeju Hallasan", url:"/css/jejuhallasan.css"});
-  this.fonts.push({name:"\ucf54\ub529\uace0\ub515\uccb4", family:"Nanum Gothic Coding", url:"/css/nanumgothiccoding.css"});
+  this.fonts = a;
+  a || (this.fonts = []);
   var b = {custom:{families:[], urls:[]}};
   for (a = 0;a < this.fonts.length;a++) {
     var c = this.fonts[a];
