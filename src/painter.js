@@ -406,7 +406,7 @@ Entry.Painter.prototype.initPicture = function() {
         painter.file.mode = 'edit';
 
         if (picture.fileurl) {
-            img.src = picture.fileurl;
+            image.src = picture.fileurl;
         } else {
             // deprecated
             image.src = '/uploads/' + picture.filename.substring(0,2)+'/' + picture.filename.substring(2,4)+'/image/'+picture.filename+'.png';
@@ -1430,7 +1430,7 @@ Entry.Painter.prototype.addPicture = function(picture) {
  */
 Entry.Painter.prototype.initCoordinator = function() {
     var coordinator = new createjs.Container();
-    var img = new createjs.Bitmap("/img/assets/workspace_coordinate.png");
+    var img = new createjs.Bitmap(Entry.mediaFilePath + "/workspace_coordinate.png");
     coordinator.addChild(img);
     this.stage.addChild(coordinator);
 
@@ -1962,7 +1962,8 @@ Entry.Painter.prototype.generateView = function(painterView) {
             var element = Entry.createElement('div');
             element.addClass('entryPlaygroundPainterAttrColorElement');
             if (color === 'transparent') {
-                element.style.backgroundImage = "url('/img/assets/transparent.png')";
+                var transparentImage = Entry.mediaFilePath + '/transparent.png';
+                element.style.backgroundImage = "url("+transparentImage+")";
             } else {
                 element.style.backgroundColor = color;
             }

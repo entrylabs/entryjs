@@ -257,7 +257,7 @@ Entry.Stage.prototype.sortZorder = function() {
  */
 Entry.Stage.prototype.initCoordinator = function() {
     var coordinator = new createjs.Container();
-    var img = new createjs.Bitmap("/img/assets/workspace_coordinate_v1.png");
+    var img = new createjs.Bitmap(Entry.mediaFilePath + "workspace_coordinate_v1.png");
     img.scaleX = 0.5;
     img.scaleY = 0.5;
     img.x = -240;
@@ -520,7 +520,7 @@ Entry.Stage.prototype.showInputField = function (sprite) {
 
     var inputSubmitButton = new createjs.Container();
     var buttonImg = new Image();
-    buttonImg.src = "/img/assets/confirm_button.png";
+    buttonImg.src = Entry.mediaFilePath + "confirm_button.png";
     var button = new createjs.Bitmap();
     button.scaleX = 0.23;
     button.scaleY = 0.23;

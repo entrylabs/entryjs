@@ -21,7 +21,7 @@ Entry.FieldTrashcan = function(board) {
 
 (function(p) {
     p.renderStart = function() {
-        var path = '/img/assets/delete_';
+        var path = Entry.mediaFilePath + 'delete_';
         this.trashcanTop = this.svgGroup.image (
             path + 'cover.png', 0, 0, 80, 20);
 

@@ -5885,6 +5885,7 @@ Entry.init = function(a, b) {
   Entry.assert("object" === typeof b, "Init option is not object");
   this.events_ = {};
   this.interfaceState = {menuWidth:264};
+  this.mediaFilePath = "/lib/entryjs/images/";
   this.options = b;
   this.parseOptions(b);
   "workspace" == this.type && this.isPhone() && (this.type = "phone");
@@ -5898,7 +5899,6 @@ Entry.init = function(a, b) {
   this.maxCloneLimit = 302;
   this.cloudSavable = !0;
   this.startTime = (new Date).getTime();
-  this.mediaFilePath = "/lib/entryjs/images/";
   document.onkeydown = function(a) {
     Entry.dispatchEvent("keyPressed", a);
   };
@@ -6472,8 +6472,11 @@ Entry.EntryObject.prototype.updateThumbnailView = function() {
       }
     }
   } else {
-    "textBox" == this.objectType && (this.thumbnailView_.style.backgroundImage = "url('/img/assets/text_icon.png')");
+    if ("textBox" == this.objectType) {
+      var b = Entry.mediaFilePath + "/text_icon.png"
+    }
   }
+  this.thumbnailView_.style.backgroundImage = "url(" + b + ")";
 };
 Entry.EntryObject.prototype.updateCoordinateView = function(a) {
   if ((this.isSelected() || a) && this.coordinateView_ && this.coordinateView_.xInput_ && this.coordinateView_.yInput_) {
@@ -6940,7 +6943,7 @@ Entry.Painter.prototype.initPicture = function() {
       a.file.id = c.id;
       a.file.name = b.name;
       a.file.mode = "edit";
-      b.fileurl ? img.src = b.fileurl : c.src = "/uploads/" + b.filename.substring(0, 2) + "/" + b.filename.substring(2, 4) + "/image/" + b.filename + ".png";
+      c.src = b.fileurl ? b.fileurl : "/uploads/" + b.filename.substring(0, 2) + "/" + b.filename.substring(2, 4) + "/image/" + b.filename + ".png";
       c.onload = function(b) {
         a.addImage(b.target);
       };
@@ -7323,7 +7326,7 @@ Entry.Painter.prototype.addPicture = function(a) {
   };
 };
 Entry.Painter.prototype.initCoordinator = function() {
-  var a = new createjs.Container, b = new createjs.Bitmap("/img/assets/workspace_coordinate.png");
+  var a = new createjs.Container, b = new createjs.Bitmap(Entry.mediaFilePath + "/workspace_coordinate.png");
   a.addChild(b);
   this.stage.addChild(a);
   a.visible = !1;
@@ -7696,7 +7699,7 @@ Entry.Painter.prototype.generateView = function(a) {
     Entry.getColourCodes().forEach(function(a) {
       var c = Entry.createElement("div");
       c.addClass("entryPlaygroundPainterAttrColorElement");
-      "transparent" === a ? c.style.backgroundImage = "url('/img/assets/transparent.png')" : c.style.backgroundColor = a;
+      "transparent" === a ? c.style.backgroundImage = "url(" + (Entry.mediaFilePath + "/transparent.png") + ")" : c.style.backgroundColor = a;
       c.bindOnClick(function(c) {
         "transparent" === a ? (b.stroke.transparent = !0, b.stroke.lineColor = "#ffffff") : (b.stroke.transparent = !1, r && (document.getElementById("entryPainterShapeBackgroundColor").style.backgroundColor = a, b.stroke.fillColor = a), r || (document.getElementById("entryPainterShapeLineColor").style.backgroundColor = a, b.stroke.lineColor = a));
         document.getElementById("entryPainterAttrCircle").style.backgroundColor = b.stroke.lineColor;
@@ -8227,33 +8230,33 @@ Entry.Playground.prototype.generateTextView = function(a) {
   d = Entry.createElement("a");
   c.appendChild(d);
   d.bindOnClick(function() {
-    Entry.playground.object.entity.toggleFontBold() ? h.src = "/img/assets/text_button_bold_true.png" : h.src = "/img/assets/text_button_bold_false.png";
+    Entry.playground.object.entity.toggleFontBold() ? h.src = Entry.mediaFilePath + "text_button_bold_true.png" : h.src = Entry.mediaFilePath + "text_button_bold_false.png";
   });
   var h = Entry.createElement("img", "entryPlaygroundText_boldImage");
   d.appendChild(h);
-  h.src = "/img/assets/text_button_bold_false.png";
+  h.src = Entry.mediaFilePath + "text_button_bold_false.png";
   c = Entry.createElement("li");
   e.appendChild(c);
   d = Entry.createElement("a");
   c.appendChild(d);
   d.bindOnClick(function() {
     var a = !Entry.playground.object.entity.getUnderLine() || !1;
-    k.src = "/img/assets/text_button_underline_" + a + ".png";
+    k.src = Entry.mediaFilePath + "text_button_underline_" + a + ".png";
     Entry.playground.object.entity.setUnderLine(a);
   });
   var k = Entry.createElement("img", "entryPlaygroundText_underlineImage");
   d.appendChild(k);
-  k.src = "/img/assets/text_button_underline_false.png";
+  k.src = Entry.mediaFilePath + "text_button_underline_false.png";
   c = Entry.createElement("li");
   e.appendChild(c);
   d = Entry.createElement("a");
   c.appendChild(d);
   d.bindOnClick(function() {
-    Entry.playground.object.entity.toggleFontItalic() ? m.src = "/img/assets/text_button_italic_true.png" : m.src = "/img/assets/text_button_italic_false.png";
+    Entry.playground.object.entity.toggleFontItalic() ? m.src = Entry.mediaFilePath + "text_button_italic_true.png" : m.src = Entry.mediaFilePath + "/text_button_italic_false.png";
   });
   var m = Entry.createElement("img", "entryPlaygroundText_italicImage");
   d.appendChild(m);
-  m.src = "/img/assets/text_button_italic_false.png";
+  m.src = Entry.mediaFilePath + "text_button_italic_false.png";
   c = Entry.createElement("li");
   e.appendChild(c);
   d = Entry.createElement("a");
@@ -8261,11 +8264,11 @@ Entry.Playground.prototype.generateTextView = function(a) {
   d.bindOnClick(function() {
     var a = !Entry.playground.object.entity.getStrike() || !1;
     Entry.playground.object.entity.setStrike(a);
-    n.src = "/img/assets/text_button_strike_" + a + ".png";
+    n.src = Entry.mediaFilePath + "text_button_strike_" + a + ".png";
   });
   var n = Entry.createElement("img", "entryPlaygroundText_strikeImage");
   d.appendChild(n);
-  n.src = "/img/assets/text_button_strike_false.png";
+  n.src = Entry.mediaFilePath + "text_button_strike_false.png";
   d = Entry.createElement("li");
   e.appendChild(d);
   c = Entry.createElement("a");
@@ -8275,7 +8278,7 @@ Entry.Playground.prototype.generateTextView = function(a) {
   });
   d = Entry.createElement("img");
   c.appendChild(d);
-  d.src = "/img/assets/text_button_color_false.png";
+  d.src = Entry.mediaFilePath + "text_button_color_false.png";
   c = Entry.createElement("li");
   e.appendChild(c);
   e = Entry.createElement("a");
@@ -8285,7 +8288,7 @@ Entry.Playground.prototype.generateTextView = function(a) {
   });
   c = Entry.createElement("img");
   e.appendChild(c);
-  c.src = "/img/assets/text_button_background_false.png";
+  c.src = Entry.mediaFilePath + "text_button_background_false.png";
   e = Entry.createElement("div");
   e.addClass("entryPlayground_fgColorDiv");
   c = Entry.createElement("div");
@@ -8379,14 +8382,14 @@ Entry.Playground.prototype.generateTextView = function(a) {
   e.bindOnClick(function() {
     Entry.playground.toggleLineBreak(!1);
   });
-  e.src = "/img/assets/text-linebreak-off-true.png";
+  e.src = Entry.mediaFilePath + "text-linebreak-off-true.png";
   b.appendChild(e);
   this.linebreakOffImage = e;
   e = Entry.createElement("img");
   e.bindOnClick(function() {
     Entry.playground.toggleLineBreak(!0);
   });
-  e.src = "/img/assets/text-linebreak-on-false.png";
+  e.src = Entry.mediaFilePath + "text-linebreak-on-false.png";
   b.appendChild(e);
   this.linebreakOnImage = e;
   b = Entry.createElement("div");
@@ -8525,14 +8528,14 @@ Entry.Playground.prototype.injectText = function() {
     Entry.playground.fontName_.value = Entry.playground.object.entity.getFontName();
     if (Entry.playground.object.entity.font) {
       var a = -1 < Entry.playground.object.entity.font.indexOf("bold") || !1;
-      $("#entryPlaygroundText_boldImage").attr("src", "/img/assets/text_button_bold_" + a + ".png");
+      $("#entryPlaygroundText_boldImage").attr("src", Entry.mediaFilePath + "text_button_bold_" + a + ".png");
       a = -1 < Entry.playground.object.entity.font.indexOf("italic") || !1;
-      $("#entryPlaygroundText_italicImage").attr("src", "/img/assets/text_button_italic_" + a + ".png");
+      $("#entryPlaygroundText_italicImage").attr("src", Entry.mediaFilePath + "text_button_italic_" + a + ".png");
     }
     a = Entry.playground.object.entity.getUnderLine() || !1;
-    $("#entryPlaygroundText_underlineImage").attr("src", "/img/assets/text_button_underline_" + a + ".png");
+    $("#entryPlaygroundText_underlineImage").attr("src", Entry.mediaFilePath + "text_button_underline_" + a + ".png");
     a = Entry.playground.object.entity.getStrike() || !1;
-    $("#entryPlaygroundText_strikeImage").attr("src", "/img/assets/text_button_strike_" + a + ".png");
+    $("#entryPlaygroundText_strikeImage").attr("src", Entry.mediaFilePath + "text_button_strike_" + a + ".png");
     $(".entryPlayground_fgColorDiv").css("backgroundColor", Entry.playground.object.entity.colour);
     $(".entryPlayground_bgColorDiv").css("backgroundColor", Entry.playground.object.entity.bgColour);
     Entry.playground.toggleLineBreak(Entry.playground.object.entity.getLineBreak());
@@ -8904,8 +8907,8 @@ Entry.Playground.prototype.updateHW = function() {
   }
 };
 Entry.Playground.prototype.toggleLineBreak = function(a) {
-  this.object && "textBox" == this.object.objectType && (a ? (Entry.playground.object.entity.setLineBreak(!0), $(".entryPlayground_textArea").css("display", "block"), $(".entryPlayground_textBox").css("display", "none"), this.linebreakOffImage.src = "/img/assets/text-linebreak-off-false.png", this.linebreakOnImage.src = "/img/assets/text-linebreak-on-true.png", this.fontSizeWrapper.removeClass("entryHide")) : (Entry.playground.object.entity.setLineBreak(!1), $(".entryPlayground_textArea").css("display", 
-  "none"), $(".entryPlayground_textBox").css("display", "block"), this.linebreakOffImage.src = "/img/assets/text-linebreak-off-true.png", this.linebreakOnImage.src = "/img/assets/text-linebreak-on-false.png", this.fontSizeWrapper.addClass("entryHide")));
+  this.object && "textBox" == this.object.objectType && (a ? (Entry.playground.object.entity.setLineBreak(!0), $(".entryPlayground_textArea").css("display", "block"), $(".entryPlayground_textBox").css("display", "none"), this.linebreakOffImage.src = Entry.mediaFilePath + "text-linebreak-off-false.png", this.linebreakOnImage.src = Entry.mediaFilePath + "text-linebreak-on-true.png", this.fontSizeWrapper.removeClass("entryHide")) : (Entry.playground.object.entity.setLineBreak(!1), $(".entryPlayground_textArea").css("display", 
+  "none"), $(".entryPlayground_textBox").css("display", "block"), this.linebreakOffImage.src = Entry.mediaFilePath + "text-linebreak-off-true.png", this.linebreakOnImage.src = Entry.mediaFilePath + "text-linebreak-on-false.png", this.fontSizeWrapper.addClass("entryHide")));
 };
 Entry.Playground.prototype.setFontAlign = function(a) {
   if ("textBox" == this.object.objectType) {
@@ -9392,7 +9395,7 @@ Entry.Stage.prototype.sortZorder = function() {
   }
 };
 Entry.Stage.prototype.initCoordinator = function() {
-  var a = new createjs.Container, b = new createjs.Bitmap("/img/assets/workspace_coordinate_v1.png");
+  var a = new createjs.Container, b = new createjs.Bitmap(Entry.mediaFilePath + "workspace_coordinate_v1.png");
   b.scaleX = .5;
   b.scaleY = .5;
   b.x = -240;
@@ -9535,7 +9538,7 @@ Entry.Stage.prototype.showInputField = function(a) {
   }}));
   a = new createjs.Container;
   var b = new Image;
-  b.src = "/img/assets/confirm_button.png";
+  b.src = Entry.mediaFilePath + "confirm_button.png";
   var c = new createjs.Bitmap;
   c.scaleX = .23;
   c.scaleY = .23;
@@ -13212,8 +13215,9 @@ Entry.FieldTrashcan = function(a) {
 };
 (function(a) {
   a.renderStart = function() {
-    this.trashcanTop = this.svgGroup.image("/img/assets/delete_cover.png", 0, 0, 80, 20);
-    this.trashcan = this.svgGroup.image("/img/assets/delete_body.png", 0, 20, 80, 80);
+    var a = Entry.mediaFilePath + "delete_";
+    this.trashcanTop = this.svgGroup.image(a + "cover.png", 0, 0, 80, 20);
+    this.trashcan = this.svgGroup.image(a + "body.png", 0, 20, 80, 80);
   };
   a.updateDragBlock = function() {
     var a = this.board.dragBlock;

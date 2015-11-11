@@ -560,15 +560,15 @@ Entry.Playground.prototype.generateTextView = function(textView) {
     boldButton.bindOnClick(function() {
         var isBold = Entry.playground.object.entity.toggleFontBold() || false;
         if (isBold) {
-            boldImage.src = '/img/assets/text_button_bold_true.png';
+            boldImage.src = Entry.mediaFilePath + 'text_button_bold_true.png';
         } else {
-            boldImage.src = '/img/assets/text_button_bold_false.png';
+            boldImage.src = Entry.mediaFilePath + 'text_button_bold_false.png';
         }
 
     });
     var boldImage = Entry.createElement("img", "entryPlaygroundText_boldImage");
     boldButton.appendChild(boldImage);
-    boldImage.src = '/img/assets/text_button_bold_false.png';
+    boldImage.src = Entry.mediaFilePath + 'text_button_bold_false.png';
 
     var underLineWrap = Entry.createElement("li");
     textButtons.appendChild(underLineWrap);
@@ -577,14 +577,14 @@ Entry.Playground.prototype.generateTextView = function(textView) {
     underLineButton.bindOnClick(function() {
         //toggle
         var underLineState = !Entry.playground.object.entity.getUnderLine() || false;
-        underLineImage.src = '/img/assets/text_button_underline_'+
+        underLineImage.src = Entry.mediaFilePath + 'text_button_underline_'+
             underLineState +'.png';
         Entry.playground.object.entity.setUnderLine(underLineState);
 
     });
     var underLineImage = Entry.createElement("img", "entryPlaygroundText_underlineImage");
     underLineButton.appendChild(underLineImage);
-    underLineImage.src = '/img/assets/text_button_underline_false.png';
+    underLineImage.src = Entry.mediaFilePath + 'text_button_underline_false.png';
 
     var italicWrap = Entry.createElement("li");
     textButtons.appendChild(italicWrap);
@@ -594,16 +594,16 @@ Entry.Playground.prototype.generateTextView = function(textView) {
         //toggle
         var isItalic = Entry.playground.object.entity.toggleFontItalic();
         if (isItalic) {
-            italicImage.src = '/img/assets/text_button_italic_true.png';
+            italicImage.src = Entry.mediaFilePath + 'text_button_italic_true.png';
         } else {
-            italicImage.src = '/img/assets/text_button_italic_false.png';
+            italicImage.src = Entry.mediaFilePath + '/text_button_italic_false.png';
         }
 
     });
 
     var italicImage = Entry.createElement("img", "entryPlaygroundText_italicImage");
     italicButton.appendChild(italicImage);
-    italicImage.src = '/img/assets/text_button_italic_false.png';
+    italicImage.src = Entry.mediaFilePath + 'text_button_italic_false.png';
 
     var strikeWrap = Entry.createElement("li");
     textButtons.appendChild(strikeWrap);
@@ -613,12 +613,12 @@ Entry.Playground.prototype.generateTextView = function(textView) {
         //toggle
         var strikeState = !Entry.playground.object.entity.getStrike() || false;
         Entry.playground.object.entity.setStrike(strikeState);
-        strikeImage.src = '/img/assets/text_button_strike_'+
+        strikeImage.src = Entry.mediaFilePath + 'text_button_strike_'+
             strikeState +'.png';
     });
     var strikeImage = Entry.createElement("img", "entryPlaygroundText_strikeImage");
     strikeButton.appendChild(strikeImage);
-    strikeImage.src = '/img/assets/text_button_strike_false.png';
+    strikeImage.src = Entry.mediaFilePath + 'text_button_strike_false.png';
 
     var foregroundWrap = Entry.createElement("li");
     textButtons.appendChild(foregroundWrap);
@@ -629,7 +629,7 @@ Entry.Playground.prototype.generateTextView = function(textView) {
     });
     var foregroundImage = Entry.createElement("img");
     foregroundButton.appendChild(foregroundImage);
-    foregroundImage.src = '/img/assets/text_button_color_false.png';
+    foregroundImage.src = Entry.mediaFilePath + 'text_button_color_false.png';
 
     var backgroundWrap = Entry.createElement("li");
     textButtons.appendChild(backgroundWrap);
@@ -640,7 +640,7 @@ Entry.Playground.prototype.generateTextView = function(textView) {
     });
     var backgroundImage = Entry.createElement("img");
     backgroundButton.appendChild(backgroundImage);
-    backgroundImage.src = '/img/assets/text_button_background_false.png';
+    backgroundImage.src = Entry.mediaFilePath + 'text_button_background_false.png';
 
     var fgColorDiv = Entry.createElement("div");
     fgColorDiv.addClass("entryPlayground_fgColorDiv");
@@ -775,7 +775,7 @@ Entry.Playground.prototype.generateTextView = function(textView) {
         Entry.playground.toggleLineBreak(false);
     });
 
-    linebreakOffImage.src = '/img/assets/text-linebreak-off-true.png';
+    linebreakOffImage.src = Entry.mediaFilePath + 'text-linebreak-off-true.png';
     linebreakButtons.appendChild(linebreakOffImage);
     this.linebreakOffImage = linebreakOffImage;
 
@@ -784,7 +784,7 @@ Entry.Playground.prototype.generateTextView = function(textView) {
         Entry.playground.toggleLineBreak(true);
     });
 
-    linebreakOnImage.src = '/img/assets/text-linebreak-on-false.png';
+    linebreakOnImage.src = Entry.mediaFilePath + 'text-linebreak-on-false.png';
     linebreakButtons.appendChild(linebreakOnImage);
     this.linebreakOnImage = linebreakOnImage;
 
@@ -1041,17 +1041,17 @@ Entry.Playground.prototype.injectText = function() {
 
         if (Entry.playground.object.entity.font) {
             var isBold = Entry.playground.object.entity.font.indexOf("bold") > -1 || false;
-            $("#entryPlaygroundText_boldImage").attr('src', '/img/assets/text_button_bold_'+isBold+'.png');
+            $("#entryPlaygroundText_boldImage").attr('src', Entry.mediaFilePath + 'text_button_bold_'+isBold+'.png');
 
             var isItalic = Entry.playground.object.entity.font.indexOf("italic") > -1 || false;
-            $("#entryPlaygroundText_italicImage").attr('src', '/img/assets/text_button_italic_'+isItalic+'.png');
+            $("#entryPlaygroundText_italicImage").attr('src', Entry.mediaFilePath + 'text_button_italic_'+isItalic+'.png');
         }
 
         var isUnderLine = Entry.playground.object.entity.getUnderLine() || false;
-        $("#entryPlaygroundText_underlineImage").attr('src', '/img/assets/text_button_underline_'+isUnderLine+'.png');
+        $("#entryPlaygroundText_underlineImage").attr('src', Entry.mediaFilePath + 'text_button_underline_'+isUnderLine+'.png');
 
         var isStrike = Entry.playground.object.entity.getStrike() || false;
-        $("#entryPlaygroundText_strikeImage").attr('src', '/img/assets/text_button_strike_'+isStrike+'.png');
+        $("#entryPlaygroundText_strikeImage").attr('src', Entry.mediaFilePath + 'text_button_strike_'+isStrike+'.png');
 
         $('.entryPlayground_fgColorDiv').css('backgroundColor', Entry.playground.object.entity.colour);
         $('.entryPlayground_bgColorDiv').css('backgroundColor', Entry.playground.object.entity.bgColour);
@@ -1795,15 +1795,15 @@ Entry.Playground.prototype.toggleLineBreak = function(isLineBreak) {
         Entry.playground.object.entity.setLineBreak(true);
         $('.entryPlayground_textArea').css('display', 'block');
         $('.entryPlayground_textBox').css('display', 'none');
-        this.linebreakOffImage.src = '/img/assets/text-linebreak-off-false.png';
-        this.linebreakOnImage.src = '/img/assets/text-linebreak-on-true.png';
+        this.linebreakOffImage.src = Entry.mediaFilePath + 'text-linebreak-off-false.png';
+        this.linebreakOnImage.src = Entry.mediaFilePath + 'text-linebreak-on-true.png';
         this.fontSizeWrapper.removeClass("entryHide");
     } else {
         Entry.playground.object.entity.setLineBreak(false);
         $('.entryPlayground_textArea').css('display', 'none');
         $('.entryPlayground_textBox').css('display', 'block');
-        this.linebreakOffImage.src = '/img/assets/text-linebreak-off-true.png';
-        this.linebreakOnImage.src = '/img/assets/text-linebreak-on-false.png';
+        this.linebreakOffImage.src = Entry.mediaFilePath + 'text-linebreak-off-true.png';
+        this.linebreakOnImage.src = Entry.mediaFilePath + 'text-linebreak-on-false.png';
         this.fontSizeWrapper.addClass("entryHide");
     }
 };

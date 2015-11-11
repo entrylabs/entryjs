@@ -917,8 +917,9 @@ Entry.EntryObject.prototype.updateThumbnailView = function() {
         }
     }
     else if (this.objectType == 'textBox')
+        var textIconPath = Entry.mediaFilePath + '/text_icon.png';
         this.thumbnailView_.style.backgroundImage =
-            "url('/img/assets/text_icon.png')";
+            "url("+textIconPath+")";
 };
 
 /**

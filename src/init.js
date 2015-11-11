@@ -14,6 +14,7 @@ Entry.init = function(container, options) {
     this.interfaceState = {
         menuWidth: 264
     };
+    this.mediaFilePath = '/lib/entryjs/images/';
 
     /** @type {object} */
     this.options = options;
@@ -31,8 +32,6 @@ Entry.init = function(container, options) {
     this.maxCloneLimit = 302;
     this.cloudSavable = true;
     this.startTime = new Date().getTime();
-
-    this.mediaFilePath = '/lib/entryjs/images/';
 
     document.onkeydown=function(e){
         Entry.dispatchEvent('keyPressed', e);
