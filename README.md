@@ -19,31 +19,31 @@ entryjs는 HTML Canvas와 오디오, 벡터 이미지등을 다루기 위해 몇
  
 ```html
 <!-- 써드파티 라이브러리들 -->
-<script type='text/javascript' src='${WEBROOT}/jquery.js'>
-<script type='text/javascript' src='${WEBROOT}/underscore.js'>
-<script type='text/javascript' src='${WEBROOT}/PreloadJS/lib/preloadjs-0.6.0.min.js'>
-<script type='text/javascript' src='${WEBROOT}/EaselJS/lib/easeljs-0.8.0.min.js'>
-<script type='text/javascript' src='${WEBROOT}/SoundJS/lib/soundjs-0.6.0.min.js'>
-<script type='text/javascript' src='${WEBROOT}/SoundJS/lib/flashaudioplugin-0.6.0.min.js'>
-<script type='text/javascript' src="${WEBROOT}/webfont/1.5.18/webfont.js"></script>
+<script type='text/javascript' src='${LIBDIR}/jquery.js'>
+<script type='text/javascript' src='${LIBDIR}/underscore.js'>
+<script type='text/javascript' src='${LIBDIR}/PreloadJS/lib/preloadjs-0.6.0.min.js'>
+<script type='text/javascript' src='${LIBDIR}/EaselJS/lib/easeljs-0.8.0.min.js'>
+<script type='text/javascript' src='${LIBDIR}/SoundJS/lib/soundjs-0.6.0.min.js'>
+<script type='text/javascript' src='${LIBDIR}/SoundJS/lib/flashaudioplugin-0.6.0.min.js'>
+<script type='text/javascript' src="${LIBDIR}/webfont/1.5.18/webfont.js"></script>
 
 <!-- entryjs 및 entryjs 에 포함된 라이브러리들 -->
-<script type='text/javascript' src='${WEBROOT}/entryjs/extern/blockly/blockly_compressed.js'>
-<script type='text/javascript' src='${WEBROOT}/entryjs/util/static.js'>
-<script type='text/javascript' src='${WEBROOT}/entryjs/util/context.js'>
-<script type='text/javascript' src='${WEBROOT}/entryjs/util/CanvasInput.js'>
-<script type='text/javascript' src='${WEBROOT}/entryjs/util/handle.js'>
-<script type='text/javascript' src='${WEBROOT}/entryjs/util/ndgmr.Collision.js'>
-<script type='text/javascript' src='${WEBROOT}/entryjs/util/ko.js'>
+<script type='text/javascript' src='${LIBDIR}/entryjs/extern/blockly/blockly_compressed.js'>
+<script type='text/javascript' src='${LIBDIR}/entryjs/util/static.js'>
+<script type='text/javascript' src='${LIBDIR}/entryjs/util/context.js'>
+<script type='text/javascript' src='${LIBDIR}/entryjs/util/CanvasInput.js'>
+<script type='text/javascript' src='${LIBDIR}/entryjs/util/handle.js'>
+<script type='text/javascript' src='${LIBDIR}/entryjs/util/ndgmr.Collision.js'>
+<script type='text/javascript' src='${LIBDIR}/entryjs/util/ko.js'>
 
 <!-- entryjs core -->
-<script type='text/javascript' src='${WEBROOT}/entryjs/dist/entry.min.js'>
+<script type='text/javascript' src='${LIBDIR}/entryjs/dist/entry.min.js'>
 ```
 
 ### entryjs 스타일시트
 블록 디자인과 관련된 기본적인 스타일들이 정의되어 있습니다.
 ```html
-<link rel='stylesheet'  href='${WEBROOT}/entryjs/dist/entry.css'>
+<link rel='stylesheet'  href='${LIBDIR}/entryjs/dist/entry.css'>
 ```
 
 ### 엔트리 초기화 (Inject Options)
