@@ -1,27 +1,23 @@
 # entryjs
+entryjs는 엔트리 교육연구소에서 개발한 HTML5 기반의 블록코딩 라이브러리 입니다.
+[엔트리](http://play-entry.org) 사이트에 접속하시면 entryjs를 사용한 블록코딩 환경을 확인해 볼 수 있습니다.
 
+## Getting Started
+entryjs는 HTML Canvas와 오디오, 벡터 이미지등을 다루기 위해 몇가지 오픈소스 라이브러리들을 사용합니다.
+이 라이브러리들이 웹프로젝트에 먼저 로딩된 후에 entryjs를 로딩하여야 합니다.
 
-## Dependent library
+### 써드파티 라이브러리
+ * jQuery : http://jquery.com/download/
+ * jquery-ui : https://github.com/jquery/jquery-ui
+ * Underscore : https://github.com/jashkenas/underscore
+ * CreateJS (EaselJS, PreloadJS, SoundJS) : http://createjs.com/downloads
+ * Web Font Loader : https://github.com/typekit/webfontloader
 
-* CSS include
-```
-<link rel='stylesheet'  href='${WEBROOT}/entryjs/dist/entry.css'>
-```
+ 위 라이브러리들은 모두 오픈소스로 배포되며, 직접 다운로드 받거나 [npm](http://npmjs.org), [bower](http://bower.io)등을 이용해 설치할 수 있습니다.
 
-* Third-Party Libraries
- - 엔트리를 사용하기 위해서는 아래의 라이브러리들이 사전에 설치되어 있어야 합니다.
- 다음의 라이브러리들은 해당 사이트에서 다운로드 받거나 bower, npm 과 같은 패키지 관리자를
- 이용해 다운로드 하실 수 있습니다.
-  - jQuery : http://jquery.com/download/
-  - jquery-ui : https://github.com/jquery/jquery-ui
-  - Underscore : https://github.com/jashkenas/underscore
-  - CreateJS (EaselJS, PreloadJS, SoundJS) : http://createjs.com/downloads
-  - Web Font Loader : https://github.com/typekit/webfontloader
-
-* JS includes (jquery and underscore required)
-
-```
-<!-- 외부 라이브러리들 -->
+#### 자바스크립트 라이브러리
+```html
+<!-- 써드파티 라이브러리들 -->
 <script type='text/javascript' src='${WEBROOT}/jquery.js'>
 <script type='text/javascript' src='${WEBROOT}/underscore.js'>
 <script type='text/javascript' src='${WEBROOT}/PreloadJS/lib/preloadjs-0.6.0.min.js'>
@@ -33,61 +29,73 @@
 <!-- entryjs 및 entryjs 에 포함된 라이브러리들 -->
 <script type='text/javascript' src='${WEBROOT}/entryjs/extern/blockly/blockly_compressed.js'>
 <script type='text/javascript' src='${WEBROOT}/entryjs/util/static.js'>
+<script type='text/javascript' src='${WEBROOT}/entryjs/util/context.js'>
 <script type='text/javascript' src='${WEBROOT}/entryjs/util/CanvasInput.js'>
 <script type='text/javascript' src='${WEBROOT}/entryjs/util/handle.js'>
 <script type='text/javascript' src='${WEBROOT}/entryjs/util/ndgmr.Collision.js'>
 <script type='text/javascript' src='${WEBROOT}/entryjs/util/ko.js'>
+
 <!-- entryjs core -->
 <script type='text/javascript' src='${WEBROOT}/entryjs/dist/entry.min.js'>
 ```
 
-## 엔트리 초기화 (Inject Options)
-
- * Entry.init(domElement, initOptions);
+#### entryjs 스타일시트
+블록 디자인과 관련된 기본적인 스타일들이 정의되어 있습니다.
+```html
+<link rel='stylesheet'  href='${WEBROOT}/entryjs/dist/entry.css'>
 ```
-   - Markup
+
+### 엔트리 초기화 (Inject Options)
+
+필요한 라이브러리와 entryjs를 로딩하였으면 현재 DOM의 특정 위치에 Javascript를 이용해 entryjs workspace를 주입할 수 있습니다.
+
+ #### Entry.init(domElement, initOptions);
+```html
    <div id="workspace"></div>
 ```
 
-```
-   - JS
+```javascript
    var workspace = document.getElementById("workspace");
    var initOptions = {
     type: 'workspace'
    };
    Entry.init(workspace, initOptions);
 ```
-   - domElement : Entry가 Inject될 DOM 노드.
-   - initOptions (기본값)
-````
-{
-    type: 워크스페이스 타입. (workspace: 만들기 환경, minimize: 구경하기 환경)
-    projectsaveable: 프로젝트 저장가능 여부 (true)
-    objectaddable: 오브젝트 추가가능 여부 (true)
-    objectEditable: 오브젝트 수정가능 여부 (true). 이값을 false로 세팅하면 objectAddable도 false가 된다.
-    objectdeletable: 오브젝트 삭제가능 여부 (true)
-    soundeditable: 소리 수정가능 여부 (true)
-    pictureeditable: 모양 수정가능 여부 (true)
-    sceneEditable: 장면 수정가능 여부 (true)
-    functionEnable: 함수 사용가능 여부 (true)
-    messageEnable: 신호 사용가능 여부 (true)
-    variableEnable: 변수 사용가능 여부 (true)
-    listEnable: 리스트 사용가능 여부 (true)
-    isForLecture: 강의용 프로젝트 여부 (false)
-    fonts: 웹폰트 정보
-   }
-```
- * 웹폰트 정보
+   * domElement : Entry가 Inject될 DOM 노드.
+   * initOptions : entryjs workspace의 옵션값.
+   
+ #### initOptions
+   Workspace 타입과 폰트정보를 제외한 모든 옵션은 선택사항이며 Boolean 타입입니다.
+   
+   * 필수항목
+       - type: 워크스페이스 타입. (workspace: 만들기 환경, minimize: 구경하기 환경)
+       - fonts: 웹폰트 정보
+   
+   * 선택항목
+       - projectsaveable: 프로젝트 저장가능 여부 (true)
+       - objectaddable: 오브젝트 추가가능 여부 (true)
+       - objectEditable: 오브젝트 수정가능 여부 (true). 이값을 false로 세팅하면 objectAddable도 false가 된다.
+       - objectdeletable: 오브젝트 삭제가능 여부 (true)
+       - soundeditable: 소리 수정가능 여부 (true)
+       - pictureeditable: 모양 수정가능 여부 (true)
+       - sceneEditable: 장면 수정가능 여부 (true)
+       - functionEnable: 함수 사용가능 여부 (true)
+       - messageEnable: 신호 사용가능 여부 (true)
+       - variableEnable: 변수 사용가능 여부 (true)
+       - listEnable: 리스트 사용가능 여부 (true)
+       - isForLecture: 강의용 프로젝트 여부 (false)
+   
+   * 웹폰트 정보
 엔트리 글상자와 그림판에서 사용할 폰트들을 하나 이상 배열로 추가할 수 있습니다.
-```
+```javascript
   [{
     name: '화면에 표시할 폰트 이름',
     family: 'font-family 이름',
     url: '폰트 정의파일 경로'
   }]
 ```
-예시
-```
+    (예시)
+```javascript
 [
 {
   name: '나눔고딕',
@@ -103,22 +111,27 @@
 ```
 무료 한글 웹폰트는 https://www.google.com/fonts/earlyaccess 에서 다운로드 하실 수 있습니다.
 
- * Entry.playground.setBlockMenu(); // 블록메뉴 초기화
- * Entry.enableArduino(); // 아두이노 초기화, Web socket connection 오픈
- * Entry.loadProject(project) // 프로젝트 불러오기. project 인자를 생략할 경우 기본 프로젝트를 리턴합니다.
+  #### Entry.playground.setBlockMenu();
+  블록메뉴 초기화
+  
+  #### Entry.enableArduino();
+  아두이노 초기화, Web socket connection 오픈
+  
+  #### Entry.loadProject(project);
+  프로젝트 불러오기. project 인자를 생략할 경우 기본 프로젝트를 리턴합니다.
 
 
- ## 이벤트. (Event description)
+ ### 이벤트. (Event description)
 
  * event listening
- ```
+ ```javascript
  Entry.addEventListener(eventName, function);
  ```
   - eventName: 캐치하고 싶은  커스텀 이벤트의 이름
   - function: 해당 커스텀 이벤트가 발생했을 경우 실행 될 함수
 
  * event dispatch
- ```
+ ```javascript
  Entry.dispatchEvent(eventName,params);
  ```
   - eventName: 발생 시키고 싶은 이벤트의 이름
@@ -141,17 +154,19 @@
  * 화면
   - windowResized
 
-## Entry.Toast
+### Entry.Toast
 * 워크스페이스 하단에 알림 메시지 표시
 - Entry.Toast.warning(title, message, auto-dospose); // 주의
 - Entry.Toast.success(title, message, auto-dospose); // 성공
 - Entry.Toast.alert(title, message, auto-dospose); // 경고
 
-## 블록 모양 정의와 실행 스크립트.
-${entryjs}/src/blocks.js
-
+### 블록 모양 정의와 실행 스크립트.
 ```
-// 블록 모양 정의
+${entryjs}/src/blocks.js
+```
+
+#### 블록 모양 정의
+```javascript
 Blockly.Blocks.move_x = {
   init: function() {
     this.setColour("#A751E3");
@@ -167,8 +182,10 @@ Blockly.Blocks.move_x = {
     this.setNextStatement(true);
   }
 };
+```
 
-// x좌표를 () 만큼 움직이기
+#### x좌표를 () 만큼 움직이기
+````javascript
 Entry.block.move_x = function (sprite, script) {
     var value = script.getNumberValue("VALUE", script);
     sprite.setX(sprite.getX() + value);
@@ -179,17 +196,19 @@ Entry.block.move_x = function (sprite, script) {
 };
 ```
 
-## 프로젝트 (Project Schema)
+### 프로젝트 (Project Schema)
 
- * 저장
+ #### 저장
    : 아래의 Entry 함수를 이용해 필수정보들을 JSON형태로 저장할 수 있습니다.
     저장된 프로젝트는 Entry.loadProject(project) 를 이용해 다시 로드할 수 있습니다.
-```
+    
+```javascript
     var project = Entry.exportProject();
 ```
 
- * 상세 스키마
-```
+ #### 상세 스키마
+ 
+```javascript
 /**
  * MongoDB 스키마 예제.
  */
@@ -319,9 +338,10 @@ var ProjectSchema = new Schema({
 });
 ```
 
-## Sprite, Picture, Sound schema
-* 스프라이트
-```
+### Sprite, Picture, Sound schema
+
+#### 스프라이트
+```javascript
             var SpriteSchema = new Schema({
                 name: String, // 스프라이트 이름
                 pictures: [{ // 모양 목록
@@ -340,8 +360,8 @@ var ProjectSchema = new Schema({
             })
 ```
 
-* 모양
-```
+#### 모양
+```javascript
 	var PictureSchema = new Schema({
                     name: String, // 모양 이름
                     fileurl: String, // 모양 이미지
@@ -352,8 +372,8 @@ var ProjectSchema = new Schema({
 	})
 ```
 
-* 소리
-```
+#### 소리
+```javascript
 	var SoundSchema = new Schema({
                     name: String, // 이름
                     fileurl: String, // 사운드 파일 URL
@@ -362,7 +382,12 @@ var ProjectSchema = new Schema({
 ```
 
 
+## Copyright and License
 
+EntryJS Copyright (c) 2015 Entry Labs.
 
-## License
-* TODO
+Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License.  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
