@@ -20,6 +20,7 @@ Entry.Code = function(code) {
 
     this.executors = [];
 
+    window.codde = this;
 
     this.executeEndEvent = new Entry.Event(this);
 
@@ -108,4 +109,21 @@ Entry.Code = function(code) {
     p.getThreads = function() {
         return this._data;
     };
+
+    p.toJSON = function() {
+        var threads = this.getThreads();
+        var json = [];
+        for (var i=0, len=threads.length; i<len; i++)
+            json.push(threads[i].toJSON());
+        return json;
+    };
+
+    p.countBlock = function() {
+        var threads = this.getThreads();
+        var count = 0;
+        for (var i = 0; i < threads.length; i++)
+            count += threads[i].countBlock();
+        return count;
+    };
+
 })(Entry.Code.prototype);
