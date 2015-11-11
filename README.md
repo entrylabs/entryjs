@@ -78,21 +78,28 @@
    }
 ```
  * 웹폰트 정보
-엔트리 글상자와 그림판에서 사용할 폰트를 설정할 수 있습니다.
+엔트리 글상자와 그림판에서 사용할 폰트들을 하나 이상 배열로 추가할 수 있습니다.
 ```
-  {
+  [{
     name: '화면에 표시할 폰트 이름',
     family: 'font-family 이름',
     url: '폰트 정의파일 경로'
-  }
+  }]
 ```
 예시
 ```
+[
 {
   name: '나눔고딕',
   family: 'Nanum Gothic',
   url: '/css/nanumgothic.css'
+},
+{
+  name: '나눔필기체',
+  family: 'Nanum Pen Script',
+  url: '/css/nanumpenscript.css'
 }
+]
 ```
 무료 한글 웹폰트는 https://www.google.com/fonts/earlyaccess 에서 다운로드 하실 수 있습니다.
 
