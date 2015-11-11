@@ -20,7 +20,7 @@ Entry.TEXT_ALIGNS = ["center", "left", "right"];
  */
 Entry.loadProject = function(project) {
     if (!project) {
-        project = Entry.StartProject;
+        project = Entry.getStartProject(Entry.mediaFilePath);
     }
 
     if (this.type == 'workspace')

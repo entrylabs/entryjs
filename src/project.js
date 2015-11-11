@@ -1,7 +1,8 @@
 'use strict';
 
-Entry.StartProject =
-{
+Entry.getStartProject = function(mediaFilePath) {
+
+  return {
     "category" : "기타",
     "scenes" : [
         {
@@ -50,14 +51,14 @@ Entry.StartProject =
                         "duration" : 1.3000000000000000,
                         "ext" : ".mp3",
                         "id" : "8el5",
-                        "fileurl" : Entry.mediaFilePath + "/entryjs/images/media/bark.mp3",
+                        "fileurl" : mediaFilePath + "/entryjs/images/media/bark.mp3",
                         "name" : "강아지 짖는소리"
                     }
                 ],
                 "pictures" : [
                     {
                         "id" : "vx80",
-                        "fileurl" : Entry.mediaFilePath + "/entryjs/images/media/entrybot1.png",
+                        "fileurl" : mediaFilePath + "/entryjs/images/media/entrybot1.png",
                         "name" : "엔트리봇_걷기1",
                         "scale" : 100,
                         "dimension" : {
@@ -67,7 +68,7 @@ Entry.StartProject =
                     },
                     {
                         "id" : "4t48",
-                        "fileurl" : Entry.mediaFilePath + "/entryjs/images/media/entrybot2.png",
+                        "fileurl" : mediaFilePath + "/entryjs/images/media/entrybot2.png",
                         "name" : "엔트리봇_걷기2",
                         "scale" : 100,
                         "dimension" : {
@@ -95,5 +96,6 @@ Entry.StartProject =
         }
     ],
     "speed" : 60
+  }
 
 };
