@@ -40,7 +40,9 @@ Entry.Block.FOLLOW = 3;
         prev: null,
         next: null,
         view: null,
-        thread: null
+        thread: null,
+        movable: true,
+        deletable: true
     };
 
     p.load = function(block) {
@@ -160,9 +162,20 @@ Entry.Block.FOLLOW = 3;
         if (this.next) this.next.destroy(animate);
     };
 
-    p.getView = function() {
-        return this.view;
+    p.getView = function() {return this.view;};
+
+    p.setMovable = function(movable) {
+        this.set({movable: movable});
     };
+
+    p.isMovable = function() {return this.movable;};
+
+    p.setDeletable = function(deletable) {
+        this.set({deletable: deletable});
+    };
+
+    p.isDeletable = function() {return this.deletable;};
+
 
     // command func
     p.doAdd = function() {

@@ -215,6 +215,7 @@ Entry.BlockView = function(block, board) {
 
     p.onMouseDown = function(e) {
         if (e.button === 0 || e instanceof Touch) {
+            if (!this.block.isMovable()) return;
             var doc = $(document);
             doc.bind('mousemove.block', onMouseMove);
             doc.bind('mouseup.block', onMouseUp);
@@ -231,7 +232,7 @@ Entry.BlockView = function(block, board) {
                 mode: true
             });
             this.dominate();
-            this.addDragging();
+            this._addDragging();
             this.dragMode = Entry.DRAG_MODE_MOUSEDOWN;
         }
 
@@ -297,7 +298,7 @@ Entry.BlockView = function(block, board) {
         var board = this.getBoard();
         var dragMode = this.dragMode;
         var block = this.block;
-        this.removeDragging();
+        this._removeDragging();
         this.dragMode = Entry.DRAG_MODE_NONE;
         if (board instanceof Entry.BlockMenu) {
             board.terminateDrag();
@@ -455,11 +456,11 @@ Entry.BlockView = function(block, board) {
         blockView.block.thread.changeEvent.notify();
     };
 
-    p.addDragging = function() {
+    p._addDragging = function() {
         this.svgGroup.addClass('dragging');
     };
 
-    p.removeDragging = function() {
+    p._removeDragging = function() {
         this.svgGroup.removeClass('dragging');
     };
 
