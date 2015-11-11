@@ -12663,7 +12663,6 @@ Entry.Code = function(a) {
   this._data = new Entry.Collection;
   this._eventMap = {};
   this.executors = [];
-  window.codde = this;
   this.executeEndEvent = new Entry.Event(this);
   this.load(a);
 };
@@ -12689,6 +12688,9 @@ Entry.Code = function(a) {
     for (var c = 0;c < a.length;c++) {
       this.executors.push(new Entry.Executor(a[c]));
     }
+  };
+  a.getEventMap = function(a) {
+    return this._eventMap;
   };
   a.map = function(a) {
     this._data.map(a);
