@@ -143,6 +143,7 @@ Entry.Thread = function(thread, code) {
     };
 
     p.destroy = function(animate) {
+        this._code.getThreads().remove(this);
         if (this.view) this.view.destroy(animate);
     };
 

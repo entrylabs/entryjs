@@ -13209,6 +13209,7 @@ Entry.Thread = function(a, b) {
     return c;
   };
   a.destroy = function(a) {
+    this._code.getThreads().remove(this);
     this.view && this.view.destroy(a);
   };
   a.getFirstBlock = function() {
