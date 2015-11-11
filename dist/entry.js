@@ -12660,6 +12660,7 @@ Entry.Code = function(a) {
   this._data = new Entry.Collection;
   this._eventMap = {};
   this.executors = [];
+  window.codde = this;
   this.executeEndEvent = new Entry.Event(this);
   this.load(a);
 };
@@ -12717,6 +12718,18 @@ Entry.Code = function(a) {
   };
   a.getThreads = function() {
     return this._data;
+  };
+  a.toJSON = function() {
+    for (var a = this.getThreads(), c = [], d = 0, e = a.length;d < e;d++) {
+      c.push(a[d].toJSON());
+    }
+    return c;
+  };
+  a.countBlock = function() {
+    for (var a = this.getThreads(), c = 0, d = 0;d < a.length;d++) {
+      c += a[d].countBlock();
+    }
+    return c;
   };
 })(Entry.Code.prototype);
 Entry.CodeView = function(a, b) {
@@ -13203,6 +13216,19 @@ Entry.Thread = function(a, b) {
   };
   a.getBlocks = function() {
     return this._data;
+  };
+  a.countBlock = function() {
+    for (var a = 0, c = 0;c < this._data.length;c++) {
+      var d = this._data[c];
+      if (d.type) {
+        a++;
+        for (var e = Entry.block[d.type].contents, f = 0;f < e.length;f++) {
+          var g = e[f];
+          "Statement" == g.type && (a += d.values[g.key].countBlock());
+        }
+      }
+    }
+    return a;
   };
 })(Entry.Thread.prototype);
 Entry.ThreadView = function(a, b) {

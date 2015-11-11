@@ -154,4 +154,23 @@ Entry.Thread = function(thread, code) {
         return this._data;
     };
 
+    p.countBlock = function() {
+        var count = 0;
+        for (var i = 0; i < this._data.length; i++) {
+            var block = this._data[i];
+            if (!block.type)
+                continue;
+            count++;
+            var schema = Entry.block[block.type];
+            var contents = schema.contents;
+            for (var j = 0; j < contents.length; j++) {
+                var content = contents[j];
+                if (content.type == "Statement") {
+                    count += block.values[content.key].countBlock();
+                }
+            }
+        }
+        return count;
+    };
+
 })(Entry.Thread.prototype);
