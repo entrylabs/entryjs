@@ -20,8 +20,6 @@ Entry.Code = function(code) {
 
     this.executors = [];
 
-    window.codde = this;
-
     this.executeEndEvent = new Entry.Event(this);
 
     this.load(code);
@@ -63,6 +61,8 @@ Entry.Code = function(code) {
             this.executors.push(new Entry.Executor(blocks[i]));
         }
     };
+
+    p.getEventMap = function(eventType) {return this._eventMap;};
 
     p.map = function(func) {
         this._data.map(func);
