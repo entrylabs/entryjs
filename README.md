@@ -58,7 +58,13 @@ entryjs는 HTML Canvas와 오디오, 벡터 이미지등을 다루기 위해 몇
     ```javascript
        var workspace = document.getElementById("workspace");
        var initOptions = {
-        type: 'workspace'
+        type: 'workspace',
+        libDir: '/lib',
+        fonts: [{
+          name: '나눔고딕',
+          family: 'Nanum Gothic',
+          url: '/css/nanumgothic.css'
+        }]
        };
        Entry.init(workspace, initOptions);
     ```
@@ -70,6 +76,7 @@ entryjs는 HTML Canvas와 오디오, 벡터 이미지등을 다루기 위해 몇
    
  * 필수항목
    - type: 워크스페이스 타입. (workspace: 만들기 환경, minimize: 구경하기 환경)
+   - libDir: 써드파티 라이브러리 저장소. entryjs를 포함한 Library 위치. (기본값: '/lib')
    - fonts: 웹폰트 정보
    
  * 선택항목

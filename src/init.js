@@ -14,11 +14,12 @@ Entry.init = function(container, options) {
     this.interfaceState = {
         menuWidth: 264
     };
-    this.mediaFilePath = '/lib/entryjs/images/';
 
     /** @type {object} */
     this.options = options;
     this.parseOptions(options);
+    this.mediaFilePath = (options.libDir ? options.libDir : '/lib') + '/entryjs/images/';
+
     if (this.type == 'workspace' && this.isPhone())
         this.type = 'phone';
     this.initialize_();
