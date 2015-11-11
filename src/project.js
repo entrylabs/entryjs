@@ -51,14 +51,14 @@ Entry.getStartProject = function(mediaFilePath) {
                         "duration" : 1.3000000000000000,
                         "ext" : ".mp3",
                         "id" : "8el5",
-                        "fileurl" : mediaFilePath + "/entryjs/images/media/bark.mp3",
+                        "fileurl" : mediaFilePath + "media/bark.mp3",
                         "name" : "강아지 짖는소리"
                     }
                 ],
                 "pictures" : [
                     {
                         "id" : "vx80",
-                        "fileurl" : mediaFilePath + "/entryjs/images/media/entrybot1.png",
+                        "fileurl" : mediaFilePath + "media/entrybot1.png",
                         "name" : "엔트리봇_걷기1",
                         "scale" : 100,
                         "dimension" : {
@@ -68,7 +68,7 @@ Entry.getStartProject = function(mediaFilePath) {
                     },
                     {
                         "id" : "4t48",
-                        "fileurl" : mediaFilePath + "/entryjs/images/media/entrybot2.png",
+                        "fileurl" : mediaFilePath + "media/entrybot2.png",
                         "name" : "엔트리봇_걷기2",
                         "scale" : 100,
                         "dimension" : {
