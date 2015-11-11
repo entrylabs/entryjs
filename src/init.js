@@ -59,9 +59,9 @@ Entry.init = function(container, options) {
         Entry.soundQueue.installPlugin(createjs.Sound);
 
         Entry.loadAudio_(
-            ['/media/click.mp3', '/media/click.wav', '/media/click.ogg'], 'click');
+            [Entry.mediaFilePath + 'media/click.mp3', Entry.mediaFilePath + 'media/click.wav', Entry.mediaFilePath + 'media/click.ogg'], 'click');
         Entry.loadAudio_(
-            ['/media/delete.mp3', '/media/delete.ogg', '/media/delete.wav'], 'delete');
+            [Entry.mediaFilePath + 'media/delete.mp3', Entry.mediaFilePath + 'media/delete.ogg', Entry.mediaFilePath + 'media/delete.wav'], 'delete');
 
         window.flashaudio = true;
     } else {
@@ -71,9 +71,9 @@ Entry.init = function(container, options) {
         Entry.soundQueue.installPlugin(createjs.Sound);
 
         Entry.loadAudio_(
-            ['/media/click.mp3', '/media/click.wav', '/media/click.ogg'], 'click');
+            [Entry.mediaFilePath + 'media/click.mp3', Entry.mediaFilePath + 'media/click.wav', Entry.mediaFilePath + 'media/click.ogg'], 'click');
         Entry.loadAudio_(
-            ['/media/delete.mp3', '/media/delete.ogg', '/media/delete.wav'], 'delete');
+            [Entry.mediaFilePath + 'media/delete.mp3', Entry.mediaFilePath + 'media/delete.ogg', Entry.mediaFilePath + 'media/delete.wav'], 'delete');
 
     }
 
