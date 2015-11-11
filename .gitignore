@@ -27,10 +27,4 @@ build/Release
 node_modules
 
 # external libraries
-extern/EaselJS
-extern/PreloadJS
-extern/SoundJS
-extern/jquery
-extern/socket.io-client
-extern/underscore
-extern/Snap.svg
+extern/closure-library
