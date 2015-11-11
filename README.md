@@ -2,7 +2,7 @@
 entryjs는 엔트리 교육연구소에서 개발한 HTML5 기반의 블록코딩 라이브러리 입니다.
 [엔트리](http://play-entry.org) 사이트에 접속하시면 entryjs를 사용한 블록코딩 환경을 확인해 볼 수 있습니다.
 
-## Getting Started
+## 시작하기
 entryjs는 HTML Canvas와 오디오, 벡터 이미지등을 다루기 위해 몇가지 오픈소스 라이브러리들을 사용합니다.
 이 라이브러리들이 웹프로젝트에 먼저 로딩된 후에 entryjs를 로딩하여야 합니다.
 
@@ -15,7 +15,8 @@ entryjs는 HTML Canvas와 오디오, 벡터 이미지등을 다루기 위해 몇
 
  위 라이브러리들은 모두 오픈소스로 배포되며, 직접 다운로드 받거나 [npm](http://npmjs.org), [bower](http://bower.io)등을 이용해 설치할 수 있습니다.
 
-#### 자바스크립트 라이브러리
+### 자바스크립트 라이브러리
+ 
 ```html
 <!-- 써드파티 라이브러리들 -->
 <script type='text/javascript' src='${WEBROOT}/jquery.js'>
@@ -39,7 +40,7 @@ entryjs는 HTML Canvas와 오디오, 벡터 이미지등을 다루기 위해 몇
 <script type='text/javascript' src='${WEBROOT}/entryjs/dist/entry.min.js'>
 ```
 
-#### entryjs 스타일시트
+### entryjs 스타일시트
 블록 디자인과 관련된 기본적인 스타일들이 정의되어 있습니다.
 ```html
 <link rel='stylesheet'  href='${WEBROOT}/entryjs/dist/entry.css'>
@@ -49,80 +50,77 @@ entryjs는 HTML Canvas와 오디오, 벡터 이미지등을 다루기 위해 몇
 
 필요한 라이브러리와 entryjs를 로딩하였으면 현재 DOM의 특정 위치에 Javascript를 이용해 entryjs workspace를 주입할 수 있습니다.
 
- #### Entry.init(domElement, initOptions);
-```html
-   <div id="workspace"></div>
-```
+ * Entry.init(domElement, initOptions);
+    ```html
+       <div id="workspace"></div>
+    ```
 
-```javascript
-   var workspace = document.getElementById("workspace");
-   var initOptions = {
-    type: 'workspace'
-   };
-   Entry.init(workspace, initOptions);
-```
-   * domElement : Entry가 Inject될 DOM 노드.
-   * initOptions : entryjs workspace의 옵션값.
+    ```javascript
+       var workspace = document.getElementById("workspace");
+       var initOptions = {
+        type: 'workspace'
+       };
+       Entry.init(workspace, initOptions);
+    ```
+ * domElement : Entry가 Inject될 DOM 노드.
+ * initOptions : entryjs workspace의 옵션값.
    
- #### initOptions
-   Workspace 타입과 폰트정보를 제외한 모든 옵션은 선택사항이며 Boolean 타입입니다.
+### initOptions
+ Workspace 타입과 폰트정보를 제외한 모든 옵션은 선택사항이며 Boolean 타입입니다.
    
-   * 필수항목
-       - type: 워크스페이스 타입. (workspace: 만들기 환경, minimize: 구경하기 환경)
-       - fonts: 웹폰트 정보
+ * 필수항목
+   - type: 워크스페이스 타입. (workspace: 만들기 환경, minimize: 구경하기 환경)
+   - fonts: 웹폰트 정보
    
-   * 선택항목
-       - projectsaveable: 프로젝트 저장가능 여부 (true)
-       - objectaddable: 오브젝트 추가가능 여부 (true)
-       - objectEditable: 오브젝트 수정가능 여부 (true). 이값을 false로 세팅하면 objectAddable도 false가 된다.
-       - objectdeletable: 오브젝트 삭제가능 여부 (true)
-       - soundeditable: 소리 수정가능 여부 (true)
-       - pictureeditable: 모양 수정가능 여부 (true)
-       - sceneEditable: 장면 수정가능 여부 (true)
-       - functionEnable: 함수 사용가능 여부 (true)
-       - messageEnable: 신호 사용가능 여부 (true)
-       - variableEnable: 변수 사용가능 여부 (true)
-       - listEnable: 리스트 사용가능 여부 (true)
-       - isForLecture: 강의용 프로젝트 여부 (false)
+ * 선택항목
+   - projectsaveable: 프로젝트 저장가능 여부 (true)
+   - objectaddable: 오브젝트 추가가능 여부 (true)
+   - objectEditable: 오브젝트 수정가능 여부 (true). 이값을 false로 세팅하면 objectAddable도 false가 된다.
+   - objectdeletable: 오브젝트 삭제가능 여부 (true)
+   - soundeditable: 소리 수정가능 여부 (true)
+   - pictureeditable: 모양 수정가능 여부 (true)
+   - sceneEditable: 장면 수정가능 여부 (true)
+   - functionEnable: 함수 사용가능 여부 (true)
+   - messageEnable: 신호 사용가능 여부 (true)
+   - variableEnable: 변수 사용가능 여부 (true)
+   - listEnable: 리스트 사용가능 여부 (true)
+   - isForLecture: 강의용 프로젝트 여부 (false)
    
-   * 웹폰트 정보
-엔트리 글상자와 그림판에서 사용할 폰트들을 하나 이상 배열로 추가할 수 있습니다.
-```javascript
-  [{
-    name: '화면에 표시할 폰트 이름',
-    family: 'font-family 이름',
-    url: '폰트 정의파일 경로'
-  }]
-```
-    (예시)
-```javascript
-[
-{
-  name: '나눔고딕',
-  family: 'Nanum Gothic',
-  url: '/css/nanumgothic.css'
-},
-{
-  name: '나눔필기체',
-  family: 'Nanum Pen Script',
-  url: '/css/nanumpenscript.css'
-}
-]
-```
-무료 한글 웹폰트는 https://www.google.com/fonts/earlyaccess 에서 다운로드 하실 수 있습니다.
+ * 웹폰트 정보
+    엔트리 글상자와 그림판에서 사용할 폰트들을 하나 이상 배열로 추가할 수 있습니다.
+    ```javascript
+      [{
+        name: '화면에 표시할 폰트 이름',
+        family: 'font-family 이름',
+        url: '폰트 정의파일 경로'
+      }]
+    ```
+    
+    ```javascript
+    // 예시
+    [{
+      name: '나눔고딕',
+      family: 'Nanum Gothic',
+      url: '/css/nanumgothic.css'
+    },
+    {
+      name: '나눔필기체',
+      family: 'Nanum Pen Script',
+      url: '/css/nanumpenscript.css'
+    }]
+    ```
+    무료 한글 웹폰트는 https://www.google.com/fonts/earlyaccess 에서 다운로드 하실 수 있습니다.
 
-  #### Entry.playground.setBlockMenu();
-  블록메뉴 초기화
+### Entry.playground.setBlockMenu();
+ 블록메뉴 초기화
   
-  #### Entry.enableArduino();
-  아두이노 초기화, Web socket connection 오픈
+### Entry.enableArduino();
+ 아두이노 초기화, Web socket connection 오픈
   
-  #### Entry.loadProject(project);
-  프로젝트 불러오기. project 인자를 생략할 경우 기본 프로젝트를 리턴합니다.
+### Entry.loadProject(project);
+ 프로젝트 불러오기. project 인자를 생략할 경우 기본 프로젝트를 리턴합니다.
 
-
- ### 이벤트. (Event description)
-
+### 이벤트. (Event description)
  * event listening
  ```javascript
  Entry.addEventListener(eventName, function);
@@ -156,16 +154,16 @@ entryjs는 HTML Canvas와 오디오, 벡터 이미지등을 다루기 위해 몇
 
 ### Entry.Toast
 * 워크스페이스 하단에 알림 메시지 표시
-- Entry.Toast.warning(title, message, auto-dospose); // 주의
-- Entry.Toast.success(title, message, auto-dospose); // 성공
-- Entry.Toast.alert(title, message, auto-dospose); // 경고
+ - Entry.Toast.warning(title, message, auto-dospose); // 주의
+ - Entry.Toast.success(title, message, auto-dospose); // 성공
+ - Entry.Toast.alert(title, message, auto-dospose); // 경고
 
 ### 블록 모양 정의와 실행 스크립트.
 ```
 ${entryjs}/src/blocks.js
 ```
 
-#### 블록 모양 정의
+### 블록 모양 정의
 ```javascript
 Blockly.Blocks.move_x = {
   init: function() {
@@ -184,7 +182,7 @@ Blockly.Blocks.move_x = {
 };
 ```
 
-#### x좌표를 () 만큼 움직이기
+### x좌표를 () 만큼 움직이기
 ````javascript
 Entry.block.move_x = function (sprite, script) {
     var value = script.getNumberValue("VALUE", script);
@@ -198,7 +196,7 @@ Entry.block.move_x = function (sprite, script) {
 
 ### 프로젝트 (Project Schema)
 
- #### 저장
+### 저장
    : 아래의 Entry 함수를 이용해 필수정보들을 JSON형태로 저장할 수 있습니다.
     저장된 프로젝트는 Entry.loadProject(project) 를 이용해 다시 로드할 수 있습니다.
     
@@ -206,7 +204,7 @@ Entry.block.move_x = function (sprite, script) {
     var project = Entry.exportProject();
 ```
 
- #### 상세 스키마
+### 상세 스키마
  
 ```javascript
 /**
@@ -340,7 +338,7 @@ var ProjectSchema = new Schema({
 
 ### Sprite, Picture, Sound schema
 
-#### 스프라이트
+### 스프라이트
 ```javascript
             var SpriteSchema = new Schema({
                 name: String, // 스프라이트 이름
