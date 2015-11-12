@@ -12557,6 +12557,7 @@ Entry.BlockView = function(a, b) {
       delete f.dragInstance;
     }
     if (0 === a.button || a instanceof Touch) {
+      this.dominate();
       if (!this.block.isMovable()) {
         return;
       }
@@ -12567,7 +12568,6 @@ Entry.BlockView = function(a, b) {
       e.bind("touchend.block", d);
       this.getBoard().set({dragBlock:this});
       this.dragInstance = new Entry.DragInstance({startX:a.clientX, startY:a.clientY, offsetX:a.clientX, offsetY:a.clientY, prev:this.block.prev, height:0, mode:!0});
-      this.dominate();
       this._addDragging();
       this.dragMode = Entry.DRAG_MODE_MOUSEDOWN;
     }
