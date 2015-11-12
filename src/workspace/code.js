@@ -22,7 +22,6 @@ Entry.Code = function(code) {
 
     this.executeEndEvent = new Entry.Event(this);
 
-    window.cc = this;
     this.load(code);
 };
 

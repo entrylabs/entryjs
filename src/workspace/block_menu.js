@@ -131,6 +131,9 @@ Entry.BlockMenu = function(dom) {
             this._boardBlockView = workspaceBoard.code.
                 cloneThread(currentThread).
                 getFirstBlock().view;
+            this._boardBlockView.dragInstance = new Entry.DragInstance({
+                height: 0
+            });
             workspaceBoard.set({
                 dragBlock : this._boardBlockView
             });
@@ -170,6 +173,7 @@ Entry.BlockMenu = function(dom) {
 
         workspace.getBoard().set({dragBlock:null});
         thisCode.destroyThread(dragBlock.getThread(), animate);
+        delete boardBlockView.dragInstance;
         this._boardBlockView = null;
     };
 
@@ -189,6 +193,19 @@ Entry.BlockMenu = function(dom) {
 
         var dragBlockView = this.dragBlock;
         var boardBlockView = this._boardBlockView;
+
+        if (boardBlockView.dragInstance.height === 0) {
+            var block = boardBlockView.block;
+            var height = 0;
+            while (block) {
+                height += block.view.height;
+                block = block.next;
+            }
+            boardBlockView.dragInstance.set({
+                height: height
+            });
+        }
+
         if (dragBlockView && boardBlockView) {
             var x = dragBlockView.x;
             var y = dragBlockView.y;
