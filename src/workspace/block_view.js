@@ -280,6 +280,7 @@ Entry.BlockView = function(block, board) {
 
             var magnetedBlock = blockView._getCloseBlock();
             if (magnetedBlock) {
+                board = magnetedBlock.view.getBoard();
                 board.setMagnetedBlock(magnetedBlock.view);
             } else {
                 board.setMagnetedBlock(null);
@@ -309,6 +310,7 @@ Entry.BlockView = function(block, board) {
             );
             if (distance < 30) {
                 this._align(true);
+                board.setMagnetedBlock(null);
                 return;
             }
             if (!this.dragInstance) {
@@ -332,8 +334,16 @@ Entry.BlockView = function(block, board) {
     };
 
     p._getCloseBlock = function() {
+        var board = this.getBoard();
+        var isInBlockMenu = board instanceof Entry.BlockMenu;
+
+        var x = this.x, y = this.y;
+
+        if (isInBlockMenu)
+            x -= board._svgWidth;
+
         var targetElement = Snap.getElementByPoint(
-                this.x + 690, this.y + 130
+                x + 690, y + 130
             );
         if (targetElement === null) return;
 
@@ -348,8 +358,9 @@ Entry.BlockView = function(block, board) {
         if (targetBlock === undefined) return null;
         if (targetBlock === this.block) return null;
         //blocks at different board can not be connected
-        return targetBlock.view.getBoard() ===
-            this.getBoard() ? targetBlock : null;
+        if (isInBlockMenu) return targetBlock;
+        return targetBlock.view.getBoard() ==
+            board ? targetBlock : null;
     };
 
     p._inheritAnimate = function() {

@@ -12377,7 +12377,7 @@ Entry.BlockMenu = function(a) {
     if (null !== this.dragBlock) {
       this.dragBlockObserver && this.removeDragBlockObserver();
       var c = this._svgWidth, d = this.dragBlock, e = d.block, f = this.code, g = e.getThread();
-      e && g && (d.moveBoardBlockObserver = d.observe(this, "moveBoardBlock", ["x", "y"]), f.cloneThread(g), a && d.observe(this, "moveBoardBlock", ["x", "y"]), d.dominate(), a = this.workspace.getBoard(), this._boardBlockView = a.code.cloneThread(g).getFirstBlock().view, a.set({dragBlock:this._boardBlockView}), this._boardBlockView.dragMode = 1, this._boardBlockView._moveTo(d.x - c, d.y - 0, !1));
+      e && g && (d.moveBoardBlockObserver = d.observe(this, "moveBoardBlock", ["x", "y"]), f.cloneThread(g), a && d.observe(this, "moveBoardBlock", ["x", "y"]), d.dominate(), a = this.workspace.getBoard(), this._boardBlockView = a.code.cloneThread(g).getFirstBlock().view, this._boardBlockView.dragInstance = new Entry.DragInstance({height:0}), a.set({dragBlock:this._boardBlockView}), this._boardBlockView.dragMode = 1, this._boardBlockView._moveTo(d.x - c, d.y - 0, !1));
       if (this._boardBlockView) {
         return this._boardBlockView.block.id;
       }
@@ -12392,6 +12392,7 @@ Entry.BlockMenu = function(a) {
         d.x < this._svgWidth ? (k = !0, h.destroyThread(c.getThread(), k)) : c.view.terminateDrag();
         g.getBoard().set({dragBlock:null});
         f.destroyThread(e.getThread(), k);
+        delete a.dragInstance;
         this._boardBlockView = null;
       }
     }
@@ -12404,11 +12405,13 @@ Entry.BlockMenu = function(a) {
   };
   a.moveBoardBlock = function() {
     var a = this.workspace.getBoard().offset, c = this.offset, d = a.left - c.left, a = a.top - c.top, e = this.dragBlock, c = this._boardBlockView;
-    if (e && c) {
-      var f = e.x, e = e.y;
-      c.dragMode = 2;
-      c._moveTo(f - d, e - a, !1);
+    if (0 === c.dragInstance.height) {
+      for (var f = c.block, g = 0;f;) {
+        g += f.view.height, f = f.next;
+      }
+      c.dragInstance.set({height:g});
     }
+    e && c && (f = e.x, e = e.y, c.dragMode = 2, c._moveTo(f - d, e - a, !1));
   };
   a.setMagnetedBlock = function() {
   };
@@ -12545,7 +12548,7 @@ Entry.BlockView = function(a, b) {
       f._moveBy(a.clientX - b.offsetX, a.clientY - b.offsetY, !1);
       b.set({offsetX:a.clientX, offsetY:a.clientY});
       f.dragMode = Entry.DRAG_MODE_DRAG;
-      (a = f._getCloseBlock()) ? g.setMagnetedBlock(a.view) : g.setMagnetedBlock(null);
+      (a = f._getCloseBlock()) ? (g = a.view.getBoard(), g.setMagnetedBlock(a.view)) : g.setMagnetedBlock(null);
     }
     function d(a) {
       $(document).unbind(".block");
@@ -12583,17 +12586,19 @@ Entry.BlockView = function(a, b) {
         this.dragInstance || d.doAdd();
         var e = this.dragInstance && this.dragInstance.prev, f = this._getCloseBlock();
         e || f ? f ? (this.set({animating:!0}), d.doInsert(f)) : d.doSeparate() : c == Entry.DRAG_MODE_DRAG && d.doMove();
-        a.setMagnetedBlock(null);
       }
+      a.setMagnetedBlock(null);
     }
   };
   a._getCloseBlock = function() {
-    var a = Snap.getElementByPoint(this.x + 690, this.y + 130);
-    if (null !== a) {
-      for (var c = a.block;!c && "svg" !== a.type && "BODY" !== a.type;) {
-        a = a.parent(), c = a.block;
+    var a = this.getBoard(), c = a instanceof Entry.BlockMenu, d = this.x, e = this.y;
+    c && (d -= a._svgWidth);
+    d = Snap.getElementByPoint(d + 690, e + 130);
+    if (null !== d) {
+      for (e = d.block;!e && "svg" !== d.type && "BODY" !== d.type;) {
+        d = d.parent(), e = d.block;
       }
-      return void 0 === c || c === this.block ? null : c.view.getBoard() === this.getBoard() ? c : null;
+      return void 0 === e || e === this.block ? null : c ? e : e.view.getBoard() == a ? e : null;
     }
   };
   a._inheritAnimate = function() {
@@ -12653,7 +12658,6 @@ Entry.Code = function(a) {
   this._eventMap = {};
   this.executors = [];
   this.executeEndEvent = new Entry.Event(this);
-  window.cc = this;
   this.load(a);
 };
 (function(a) {
