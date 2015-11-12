@@ -54,28 +54,19 @@ Entry.init = function(container, options) {
         createjs.Sound.registerPlugins([createjs.FlashAudioPlugin]);
         //createjs.Sound.registerPlugins([createjs.WebAudioPlugin]);
         //createjs.Sound.registerPlugins([createjs.HTMLAudioPlugin]);
-
-        Entry.soundQueue = new createjs.LoadQueue();
-        Entry.soundQueue.installPlugin(createjs.Sound);
-
-        Entry.loadAudio_(
-            [Entry.mediaFilePath + 'media/click.mp3', Entry.mediaFilePath + 'media/click.wav', Entry.mediaFilePath + 'media/click.ogg'], 'click');
-        Entry.loadAudio_(
-            [Entry.mediaFilePath + 'media/delete.mp3', Entry.mediaFilePath + 'media/delete.ogg', Entry.mediaFilePath + 'media/delete.wav'], 'delete');
-
         window.flashaudio = true;
     } else {
-        createjs.Sound.registerPlugins([createjs.WebAudioPlugin]);
-
-        Entry.soundQueue = new createjs.LoadQueue();
-        Entry.soundQueue.installPlugin(createjs.Sound);
-
-        Entry.loadAudio_(
-            [Entry.mediaFilePath + 'media/click.mp3', Entry.mediaFilePath + 'media/click.wav', Entry.mediaFilePath + 'media/click.ogg'], 'click');
-        Entry.loadAudio_(
-            [Entry.mediaFilePath + 'media/delete.mp3', Entry.mediaFilePath + 'media/delete.ogg', Entry.mediaFilePath + 'media/delete.wav'], 'delete');
-
+        createjs.Sound.registerPlugins([createjs.WebAudioPlugin, createjs.HTMLAudioPlugin]);
     }
+
+    Entry.soundQueue = new createjs.LoadQueue();
+    Entry.soundQueue.installPlugin(createjs.Sound);
+
+    Entry.loadAudio_(
+        [Entry.mediaFilePath + 'media/click.mp3', Entry.mediaFilePath + 'media/click.wav', Entry.mediaFilePath + 'media/click.ogg'], 'click');
+    Entry.loadAudio_(
+        [Entry.mediaFilePath + 'media/delete.mp3', Entry.mediaFilePath + 'media/delete.ogg', Entry.mediaFilePath + 'media/delete.wav'], 'delete');
+
 
 };
 
