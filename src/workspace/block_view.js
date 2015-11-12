@@ -215,6 +215,7 @@ Entry.BlockView = function(block, board) {
 
     p.onMouseDown = function(e) {
         if (e.button === 0 || e instanceof Touch) {
+            this.dominate();
             if (!this.block.isMovable()) return;
             var doc = $(document);
             doc.bind('mousemove.block', onMouseMove);
@@ -231,7 +232,6 @@ Entry.BlockView = function(block, board) {
                 height: 0,
                 mode: true
             });
-            this.dominate();
             this._addDragging();
             this.dragMode = Entry.DRAG_MODE_MOUSEDOWN;
         }
@@ -357,7 +357,6 @@ Entry.BlockView = function(block, board) {
         }
         if (targetBlock === undefined) return null;
         if (targetBlock === this.block) return null;
-        //blocks at different board can not be connected
         if (isInBlockMenu) return targetBlock;
         return targetBlock.view.getBoard() ==
             board ? targetBlock : null;
