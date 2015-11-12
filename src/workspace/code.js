@@ -27,7 +27,8 @@ Entry.Code = function(code) {
 
 (function(p) {
     p.schema = {
-        view: null
+        view: null,
+        board: null
     };
 
     p.load = function(code) {
@@ -43,7 +44,7 @@ Entry.Code = function(code) {
         if (this.view === null) {
             this.set({view: new Entry.CodeView(this, board)});
         } else {
-            // TODO: bind child board
+            this.set({board : board});
             board.bindCodeView(this.view);
         }
     };

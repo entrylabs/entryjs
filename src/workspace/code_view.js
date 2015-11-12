@@ -14,7 +14,7 @@ Entry.CodeView = function(code, board) {
     this.code = code;
     this.set({board: board});
 
-    this.observe(this, "changeBoard", ["board"]);
+    code.observe(this, "_changeBoard", ["board"]);
 
     this.svgThreadGroup = board.svgGroup.group();
     this.svgThreadGroup.board = board;
@@ -35,5 +35,13 @@ Entry.CodeView = function(code, board) {
         scrollX: 0,
         scrollY: 0
     };
+
+    p._changeBoard = function() {
+        var board = this.board;
+        var threads = this.code.getThreads();
+        for (var i = 0; i < threads.length; i++)
+            threads[i].view.changeBoard(board);
+    };
+
 
 })(Entry.CodeView.prototype);
