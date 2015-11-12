@@ -5913,8 +5913,8 @@ Entry.init = function(a, b) {
     Entry.addActivity("save");
   });
   "IE" != Entry.getBrowserType().substr(0, 2) || window.flashaudio ? (createjs.Sound.registerPlugins([createjs.WebAudioPlugin]), Entry.soundQueue = new createjs.LoadQueue, Entry.soundQueue.installPlugin(createjs.Sound), Entry.loadAudio_([Entry.mediaFilePath + "media/click.mp3", Entry.mediaFilePath + "media/click.wav", Entry.mediaFilePath + "media/click.ogg"], "click"), Entry.loadAudio_([Entry.mediaFilePath + "media/delete.mp3", Entry.mediaFilePath + "media/delete.ogg", Entry.mediaFilePath + "media/delete.wav"], 
-  "delete")) : (createjs.FlashAudioPlugin.swfPath = "/media/", createjs.Sound.registerPlugins([createjs.FlashAudioPlugin]), Entry.soundQueue = new createjs.LoadQueue, Entry.soundQueue.installPlugin(createjs.Sound), Entry.loadAudio_([Entry.mediaFilePath + "media/click.mp3", Entry.mediaFilePath + "media/click.wav", Entry.mediaFilePath + "media/click.ogg"], "click"), Entry.loadAudio_([Entry.mediaFilePath + "media/delete.mp3", Entry.mediaFilePath + "media/delete.ogg", Entry.mediaFilePath + "media/delete.wav"], 
-  "delete"), window.flashaudio = !0);
+  "delete")) : (createjs.FlashAudioPlugin.swfPath = this.mediaFilePath + "media/", createjs.Sound.registerPlugins([createjs.FlashAudioPlugin]), Entry.soundQueue = new createjs.LoadQueue, Entry.soundQueue.installPlugin(createjs.Sound), Entry.loadAudio_([Entry.mediaFilePath + "media/click.mp3", Entry.mediaFilePath + "media/click.wav", Entry.mediaFilePath + "media/click.ogg"], "click"), Entry.loadAudio_([Entry.mediaFilePath + "media/delete.mp3", Entry.mediaFilePath + "media/delete.ogg", Entry.mediaFilePath + 
+  "media/delete.wav"], "delete"), window.flashaudio = !0);
 };
 Entry.loadAudio_ = function(a, b) {
   if (window.Audio && a.length) {
@@ -7989,13 +7989,7 @@ Entry.Playground = function() {
   Entry.addEventListener("entryBlocklyChanged", this.editBlock);
   Entry.addEventListener("entryBlocklyMouseUp", this.mouseupBlock);
   Entry.addEventListener("hwChanged", this.updateHW);
-  this.fonts = [];
-  this.fonts.push({name:"\ubc14\ud0d5\uccb4", family:"KoPub Batang", url:"/css/kopubbatang.css"});
-  this.fonts.push({name:"\uba85\uc870\uccb4", family:"Nanum Myeongjo", url:"/css/nanummyeongjo.css"});
-  this.fonts.push({name:"\uace0\ub515\uccb4", family:"Nanum Gothic", url:"/css/nanumgothic.css"});
-  this.fonts.push({name:"\ud544\uae30\uccb4", family:"Nanum Pen Script", url:"/css/nanumpenscript.css"});
-  this.fonts.push({name:"\ud55c\ub77c\uc0b0\uccb4", family:"Jeju Hallasan", url:"/css/jejuhallasan.css"});
-  this.fonts.push({name:"\ucf54\ub529\uace0\ub515\uccb4", family:"Nanum Gothic Coding", url:"/css/nanumgothiccoding.css"});
+  this.fonts = Entry.fonts;
 };
 Entry.Playground.prototype.generateView = function(a, b) {
   this.view_ = a;
@@ -8194,8 +8188,8 @@ Entry.Playground.prototype.generateTextView = function(a) {
   d.onchange = function(a) {
     Entry.playground.object.entity.setFontType(a.target.value);
   };
-  for (var e = 0;e < this.fonts.length;e++) {
-    var f = this.fonts[e], g = Entry.createElement("option");
+  for (var e = 0;e < Entry.fonts.length;e++) {
+    var f = Entry.fonts[e], g = Entry.createElement("option");
     g.value = f.family;
     g.innerHTML = f.name;
     d.appendChild(g);

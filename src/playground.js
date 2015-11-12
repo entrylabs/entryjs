@@ -31,37 +31,6 @@ Entry.Playground = function() {
     Entry.addEventListener('entryBlocklyMouseUp', this.mouseupBlock);
     Entry.addEventListener('hwChanged', this.updateHW);
 
-    this.fonts = [];
-    this.fonts.push({
-        name: '바탕체',
-        family: 'KoPub Batang',
-        url: '/css/kopubbatang.css'
-    });
-    this.fonts.push({
-        name: '명조체',
-        family: 'Nanum Myeongjo',
-        url: '/css/nanummyeongjo.css'
-    });
-    this.fonts.push({
-        name: '고딕체',
-        family: 'Nanum Gothic',
-        url: '/css/nanumgothic.css'
-    });
-    this.fonts.push({
-        name: '필기체',
-        family: 'Nanum Pen Script',
-        url: '/css/nanumpenscript.css'
-    });
-    this.fonts.push({
-        name: '한라산체',
-        family: 'Jeju Hallasan',
-        url: '/css/jejuhallasan.css'
-    });
-    this.fonts.push({
-        name: '코딩고딕체',
-        family: 'Nanum Gothic Coding',
-        url: '/css/nanumgothiccoding.css'
-    });
 };
 
 /**
@@ -514,8 +483,8 @@ Entry.Playground.prototype.generateTextView = function(textView) {
         var font = evt.target.value;
         Entry.playground.object.entity.setFontType(font);
     };
-    for (var i=0; i<this.fonts.length; i++) {
-        var font = this.fonts[i];
+    for (var i=0; i<Entry.fonts.length; i++) {
+        var font = Entry.fonts[i];
         var element = Entry.createElement('option');
         element.value = font.family;
         element.innerHTML = font.name;
