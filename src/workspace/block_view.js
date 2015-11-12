@@ -44,6 +44,8 @@ Entry.BlockView = function(block, board) {
         type: Entry.STATIC.BLOCK_RENDER_MODEL,
         x: 0,
         y: 0,
+        offsetX: 0,
+        offsetY: 0,
         width: 0,
         height: 0,
         contentWidth: 0,
@@ -129,17 +131,16 @@ Entry.BlockView = function(block, board) {
         if (this.prevObserver) this.prevObserver.destroy();
         if (this.prevAnimatingObserver) this.prevAnimatingObserver.destroy();
         if (this.block.prev) {
+            this.block.prev.view.svgGroup.append(this.svgGroup);
             var prevView = this.block.prev.view;
             this.prevAnimatingObserver = prevView.observe(
                 this, "_inheritAnimate", ["animating"]
             );
             this.prevObserver = prevView.observe(
-                this, "_align", ["x", "y", "height"]
+                this, "_align", ["height"]
             );
-            if (prevView.animating === true)
-                this.set({animating: true});
-            this._align();
         } else {
+            this._board.svgGroup.append(this.svgGroup);
             delete this.prevObserver;
             delete this.prevAnimatingObserver;
         }
@@ -174,17 +175,18 @@ Entry.BlockView = function(block, board) {
         if (animate === true)
             this.set({animating: true});
         this.set({
-            x: prevBlockView.x,
-            y: prevBlockView.y + prevBlockView.height + 1
+            x: 0,
+            y: prevBlockView.height + 1
         });
-        var that = this;
 
-        this._moveTo(this.x, this.y, animate === true || this.animating);
+        this._setPosition(animate === true || this.animating);
     };
 
-    p._moveTo = function(x, y, animate) {
+    p._setPosition = function(animate) {
         animate = animate === undefined ? true : animate;
-        var transform = "t" + x + " " + y;
+        var transform = "t" +
+            (this.x + this.offsetX) + " " +
+            (this.y + this.offsetY);
         this.svgGroup.stop();
         if (animate) {
             this.svgGroup.animate({
@@ -195,7 +197,11 @@ Entry.BlockView = function(block, board) {
                 transform: transform
             });
         }
+    };
+
+    p._moveTo = function(x, y, animate) {
         this.set({ x: x, y: y });
+        this._setPosition(animate);
     };
 
     p._moveBy = function(x, y, animate) {
@@ -369,6 +375,7 @@ Entry.BlockView = function(block, board) {
     };
 
     p.dominate = function() {
+        return;
         var block = this.block;
         var parent = this.svgGroup.parent();
         this.svgGroup.remove();

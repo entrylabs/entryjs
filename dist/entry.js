@@ -6433,22 +6433,20 @@ Entry.EntryObject.prototype.initEntity = function(a) {
     var c = a.sprite.pictures[0].dimension;
     b.regX = c.width / 2;
     b.regY = c.height / 2;
-    a = "background" == a.sprite.category.main ? Math.max(270 / c.height, 480 / c.width) : "new" == a.sprite.category.main ? 1 : 200 / (c.width + c.height);
-    b.scaleX = b.scaleY = a;
+    b.scaleX = b.scaleY = "background" == a.sprite.category.main ? Math.max(270 / c.height, 480 / c.width) : "new" == a.sprite.category.main ? 1 : 200 / (c.width + c.height);
     b.width = c.width;
     b.height = c.height;
   } else {
     if ("textBox" == this.objectType) {
       if (b.regX = 25, b.regY = 12, b.scaleX = b.scaleY = 1.5, b.width = 50, b.height = 24, b.text = a.name, a.options) {
-        if (c = a.options, a = "", c.bold && (a += "bold "), c.italic && (a += "italic "), b.underline = c.underline, b.strike = c.strike, b.font = a + "20px " + c.font.family, b.colour = c.colour, b.bgColor = c.background, b.lineBreak = c.lineBreak) {
-          c = b.text.split("\n");
-          if (1 < c.length) {
-            a = c[0].length;
-            for (var d = 1, e = c.length;d < e;d++) {
-              c[d].length > a && (a = c[d].length);
+        if (a = a.options, c = "", a.bold && (c += "bold "), a.italic && (c += "italic "), b.underline = a.underline, b.strike = a.strike, b.font = c + "20px " + a.font.family, b.colour = a.colour, b.bgColor = a.background, b.lineBreak = a.lineBreak) {
+          a = b.text.split("\n");
+          if (1 < a.length) {
+            for (var c = a[0].length, d = 1, e = a.length;d < e;d++) {
+              a[d].length > c && (c = a[d].length);
             }
-            b.width = 25 * a;
-            b.height = 24 * c.length;
+            b.width = 25 * c;
+            b.height = 24 * a.length;
           } else {
             b.width = 25 * b.text.length;
           }
@@ -7024,8 +7022,7 @@ Entry.Painter.prototype.colorPixel = function(a, b, c, d, e) {
   this.colorLayerData.data[a + 3] = e;
 };
 Entry.Painter.prototype.pickStrokeColor = function(a) {
-  var b = Math.round(a.stageX);
-  a = 4 * (Math.round(a.stageY) * this.canvas.width + b);
+  a = 4 * (Math.round(a.stageY) * this.canvas.width + Math.round(a.stageX));
   this.stroke.lineColor = Entry.rgb2hex(this.colorLayerData.data[a], this.colorLayerData.data[a + 1], this.colorLayerData.data[a + 2]);
   document.getElementById("entryPainterAttrCircle").style.backgroundColor = this.stroke.lineColor;
   document.getElementById("entryPainterAttrCircleInput").value = this.stroke.lineColor;
@@ -10896,8 +10893,8 @@ Entry.Variable.prototype.setType = function(a) {
   this.type = a;
 };
 Entry.Variable.prototype.getSlidePosition = function(a) {
-  var b = this.minValue_, c = this.maxValue_, b = Math.abs(this.value_ - b) / Math.abs(c - b);
-  return a * b + 10;
+  var b = this.minValue_;
+  return Math.abs(this.value_ - b) / Math.abs(this.maxValue_ - b) * a + 10;
 };
 Entry.Variable.prototype.setSlideCommandX = function(a, b) {
   var c = this.valueSetter_.graphics.command;
@@ -10906,7 +10903,7 @@ Entry.Variable.prototype.setSlideCommandX = function(a, b) {
   this.updateSlideValueByView();
 };
 Entry.Variable.prototype.updateSlideValueByView = function() {
-  var a = this.maxWidth, a = Math.max(this.valueSetter_.graphics.command.x - 10, 0) / a;
+  var a = Math.max(this.valueSetter_.graphics.command.x - 10, 0) / this.maxWidth;
   0 > a && (a = 0);
   1 < a && (a = 1);
   a = (this.minValue_ + Number(Math.abs(this.maxValue_ - this.minValue_) * a)).toFixed(2);
@@ -12449,7 +12446,7 @@ Entry.BlockView = function(a, b) {
   this._startRender(a);
 };
 (function(a) {
-  a.schema = {id:0, type:Entry.STATIC.BLOCK_RENDER_MODEL, x:0, y:0, width:0, height:0, contentWidth:0, contentHeight:0, magneting:!1, animating:!1};
+  a.schema = {id:0, type:Entry.STATIC.BLOCK_RENDER_MODEL, x:0, y:0, offsetX:0, offsetY:0, width:0, height:0, contentWidth:0, contentHeight:0, magneting:!1, animating:!1};
   a._startRender = function(a) {
     this.svgGroup.attr({class:"block"});
     this.svgGroup.attr({transform:"t" + this.x + " " + this.y});
@@ -12491,13 +12488,12 @@ Entry.BlockView = function(a, b) {
     this.prevObserver && this.prevObserver.destroy();
     this.prevAnimatingObserver && this.prevAnimatingObserver.destroy();
     if (this.block.prev) {
+      this.block.prev.view.svgGroup.append(this.svgGroup);
       var a = this.block.prev.view;
       this.prevAnimatingObserver = a.observe(this, "_inheritAnimate", ["animating"]);
-      this.prevObserver = a.observe(this, "_align", ["x", "y", "height"]);
-      !0 === a.animating && this.set({animating:!0});
-      this._align();
+      this.prevObserver = a.observe(this, "_align", ["height"]);
     } else {
-      delete this.prevObserver, delete this.prevAnimatingObserver;
+      this._board.svgGroup.append(this.svgGroup), delete this.prevObserver, delete this.prevAnimatingObserver;
     }
   };
   a._render = function() {
@@ -12517,16 +12513,19 @@ Entry.BlockView = function(a, b) {
     if (null !== this.block.prev) {
       var c = this.block.prev.view;
       !0 === a && this.set({animating:!0});
-      this.set({x:c.x, y:c.y + c.height + 1});
-      this._moveTo(this.x, this.y, !0 === a || this.animating);
+      this.set({x:0, y:c.height + 1});
+      this._setPosition(!0 === a || this.animating);
     }
   };
-  a._moveTo = function(a, c, d) {
-    d = void 0 === d ? !0 : d;
-    var e = "t" + a + " " + c;
+  a._setPosition = function(a) {
+    a = void 0 === a ? !0 : a;
+    var c = "t" + (this.x + this.offsetX) + " " + (this.y + this.offsetY);
     this.svgGroup.stop();
-    d ? this.svgGroup.animate({transform:e}, 300, mina.easeinout) : this.svgGroup.attr({transform:e});
+    a ? this.svgGroup.animate({transform:c}, 300, mina.easeinout) : this.svgGroup.attr({transform:c});
+  };
+  a._moveTo = function(a, c, d) {
     this.set({x:a, y:c});
+    this._setPosition(d);
   };
   a._moveBy = function(a, c, d) {
     return this._moveTo(this.x + a, this.y + c, d);
@@ -12612,11 +12611,6 @@ Entry.BlockView = function(a, b) {
     a && this.set({animating:a.animating});
   };
   a.dominate = function() {
-    var a = this.block, c = this.svgGroup.parent();
-    this.svgGroup.remove();
-    c.append(this.svgGroup);
-    (c = a.values.STATEMENT) && (c = c.getFirstBlock().next) && c.view.dominate();
-    a.next && a.next.view.dominate();
   };
   a.getBoard = function() {
     return this._board;
