@@ -19,6 +19,7 @@ Entry.Thread = function(thread, code) {
     this.load(thread);
 
     this.changeEvent = new Entry.Event(this);
+    this.changeEvent.attach(this, this.inspectExist);
 };
 
 (function(p) {
@@ -48,8 +49,7 @@ Entry.Thread = function(thread, code) {
 
     p._setRelation = function() {
         var blocks = this._data.getAll();
-        if (blocks.length === 0)
-            return;
+        if (blocks.length === 0) return;
 
         var prevBlock = blocks[0];
         prevBlock.setPrev(null);
@@ -136,7 +136,7 @@ Entry.Thread = function(thread, code) {
         var array = [];
         for (var i = 0; i < this._data.length; i++) {
             var block = this._data[i];
-            if (block instanceof Entry.Block )
+            if (block instanceof Entry.Block)
                 array.push(this._data[i].toJSON(isNew));
         }
         return array;
@@ -172,6 +172,10 @@ Entry.Thread = function(thread, code) {
             }
         }
         return count;
+    };
+
+    p.inspectExist = function() {
+        if (this._data.length === 0) this.destroy();
     };
 
 })(Entry.Thread.prototype);

@@ -328,7 +328,7 @@ Entry.BlockView = function(block, board) {
             board.setMagnetedBlock(null);
         }
 
-        return
+        return;
     };
 
     p._getCloseBlock = function() {
