@@ -400,6 +400,8 @@ Entry.BlockView = function(block, board) {
     };
 
     p._updateBG = function() {
+        if (!this._board.dragBlock || !this._board.dragBlock.dragInstance)
+            return;
         var dragThreadHeight = this._board.dragBlock.dragInstance.height;
         var blockView = this;
         var magneting = blockView.magneting;

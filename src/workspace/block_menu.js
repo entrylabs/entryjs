@@ -91,7 +91,7 @@ Entry.BlockMenu = function(dom) {
         if (this.dragBlockObserver)
             this.removeDragBlockObserver();
         this.dragBlockObserver =
-            block.observe(this, "cloneThread", ['x', 'y']);
+            block.observe(this, "cloneThread", ['x', 'y'], false);
     };
 
     p.removeDragBlockObserver = function() {
@@ -115,35 +115,34 @@ Entry.BlockMenu = function(dom) {
         var code = this.code;
         var currentThread = block.getThread();
         if (block && currentThread) {
-            blockView.moveBoardBlockObserver =
-                blockView.observe(this, "moveBoardBlock", ['x', 'y']);
             clonedThread = code.cloneThread(currentThread);
             if (forMouseMove)
-                    blockView.observe(
-                        this,
-                        "moveBoardBlock",
-                        ['x', 'y']
-                    );
-            //original block should be top of svg
-            blockView.dominate();
+                blockView.observe(
+                    this,
+                    "moveBoardBlock",
+                    ['x', 'y'],
+                    false
+                );
+                //original block should be top of svg
+                blockView.dominate();
 
-            var workspaceBoard = this.workspace.getBoard();
-            this._boardBlockView = workspaceBoard.code.
-                cloneThread(currentThread).
-                getFirstBlock().view;
-            this._boardBlockView.dragInstance = new Entry.DragInstance({
-                height: 0
-            });
-            workspaceBoard.set({
-                dragBlock : this._boardBlockView
-            });
-            this._boardBlockView.dragMode = 1;
+                var workspaceBoard = this.workspace.getBoard();
+                this._boardBlockView = workspaceBoard.code.
+                    cloneThread(currentThread).
+                    getFirstBlock().view;
+                this._boardBlockView.dragInstance = new Entry.DragInstance({
+                    height: 0
+                });
+                workspaceBoard.set({
+                    dragBlock : this._boardBlockView
+                });
+                this._boardBlockView.dragMode = 1;
 
-            this._boardBlockView._moveTo(
-                blockView.x-svgWidth,
-                blockView.y-0,
-                false
-            );
+                this._boardBlockView._moveTo(
+                    blockView.x-svgWidth,
+                    blockView.y-0,
+                    false
+                );
         }
 
         if (this._boardBlockView)

@@ -10255,8 +10255,12 @@ Entry.Model = function(a, b) {
     a.unobserve = this.unobserve;
     a.notify = this.notify;
   };
-  a.observe = function(a, c, d) {
-    return new Entry.Observer(this.observers, a, c, d);
+  a.observe = function(a, c, d, e) {
+    d = new Entry.Observer(this.observers, a, c, d);
+    if (!1 !== e) {
+      a[c]([]);
+    }
+    return d;
   };
   a.unobserve = function(a) {
     a.destroy();
@@ -12368,7 +12372,7 @@ Entry.BlockMenu = function(a) {
   };
   a.generateDragBlockObserver = function() {
     var a = this.dragBlock;
-    a && (this.dragBlockObserver && this.removeDragBlockObserver(), this.dragBlockObserver = a.observe(this, "cloneThread", ["x", "y"]));
+    a && (this.dragBlockObserver && this.removeDragBlockObserver(), this.dragBlockObserver = a.observe(this, "cloneThread", ["x", "y"], !1));
   };
   a.removeDragBlockObserver = function() {
     var a = this.dragBlockObserver;
@@ -12379,7 +12383,7 @@ Entry.BlockMenu = function(a) {
     if (null !== this.dragBlock) {
       this.dragBlockObserver && this.removeDragBlockObserver();
       var c = this._svgWidth, d = this.dragBlock, e = d.block, f = this.code, g = e.getThread();
-      e && g && (d.moveBoardBlockObserver = d.observe(this, "moveBoardBlock", ["x", "y"]), f.cloneThread(g), a && d.observe(this, "moveBoardBlock", ["x", "y"]), d.dominate(), a = this.workspace.getBoard(), this._boardBlockView = a.code.cloneThread(g).getFirstBlock().view, this._boardBlockView.dragInstance = new Entry.DragInstance({height:0}), a.set({dragBlock:this._boardBlockView}), this._boardBlockView.dragMode = 1, this._boardBlockView._moveTo(d.x - c, d.y - 0, !1));
+      e && g && (f.cloneThread(g), a && d.observe(this, "moveBoardBlock", ["x", "y"], !1), d.dominate(), a = this.workspace.getBoard(), this._boardBlockView = a.code.cloneThread(g).getFirstBlock().view, this._boardBlockView.dragInstance = new Entry.DragInstance({height:0}), a.set({dragBlock:this._boardBlockView}), this._boardBlockView.dragMode = 1, this._boardBlockView._moveTo(d.x - c, d.y - 0, !1));
       if (this._boardBlockView) {
         return this._boardBlockView.block.id;
       }
@@ -12624,28 +12628,30 @@ Entry.BlockView = function(a, b) {
     }) : c.remove();
   };
   a._updateBG = function() {
-    var a = this._board.dragBlock.dragInstance.height, c = this, d = c.svgGroup;
-    if (c.magneting) {
-      c.background && (c.background.remove(), c.nextBackground.remove(), delete c.background, delete c.nextBackground);
-      var a = c.height + a, e = d.rect(0 - c.width / 2, 1.5 * c.height + 1, c.width, Math.max(0, a - 1.5 * c.height));
-      e.block = c.block.next;
-      c.nextBackground = e;
-      d.prepend(e);
-      e.attr({fill:"transparent"});
-      e = d.rect(0 - c.width / 2, 0, c.width, a);
-      c.background = e;
-      d.prepend(e);
-      e.attr({fill:"transparent"});
-      c.originalHeight = c.height;
-      c.set({height:a});
-    } else {
-      if (a = c.originalHeight) {
-        setTimeout(function() {
-          c.background && (c.background.remove(), c.nextBackground.remove(), delete c.background, delete c.nextBackground);
-        }, 200), c.set({height:a}), delete c.originalHeight;
+    if (this._board.dragBlock && this._board.dragBlock.dragInstance) {
+      var a = this._board.dragBlock.dragInstance.height, c = this, d = c.svgGroup;
+      if (c.magneting) {
+        c.background && (c.background.remove(), c.nextBackground.remove(), delete c.background, delete c.nextBackground);
+        var a = c.height + a, e = d.rect(0 - c.width / 2, 1.5 * c.height + 1, c.width, Math.max(0, a - 1.5 * c.height));
+        e.block = c.block.next;
+        c.nextBackground = e;
+        d.prepend(e);
+        e.attr({fill:"transparent"});
+        e = d.rect(0 - c.width / 2, 0, c.width, a);
+        c.background = e;
+        d.prepend(e);
+        e.attr({fill:"transparent"});
+        c.originalHeight = c.height;
+        c.set({height:a});
+      } else {
+        if (a = c.originalHeight) {
+          setTimeout(function() {
+            c.background && (c.background.remove(), c.nextBackground.remove(), delete c.background, delete c.nextBackground);
+          }, 200), c.set({height:a}), delete c.originalHeight;
+        }
       }
+      c.block.thread.changeEvent.notify();
     }
-    c.block.thread.changeEvent.notify();
   };
   a._addDragging = function() {
     this.svgGroup.addClass("dragging");
@@ -12739,7 +12745,7 @@ Entry.CodeView = function(a, b) {
   Entry.Model(this, !1);
   this.code = a;
   this.set({board:b});
-  a.observe(this, "_changeBoard", ["board"]);
+  this.observe(this, "_changeBoard", ["board"]);
   this.svgThreadGroup = b.svgGroup.group();
   this.svgThreadGroup.board = b;
   this.svgBlockGroup = b.svgGroup.group();
@@ -12753,7 +12759,7 @@ Entry.CodeView = function(a, b) {
   a.schema = {board:null, scrollX:0, scrollY:0};
   a._changeBoard = function() {
     for (var a = this.board, c = this.code.getThreads(), d = 0;d < c.length;d++) {
-      c[d].view.changeBoard(a);
+      c[d].view && c[d].view.changeBoard(a);
     }
   };
 })(Entry.CodeView.prototype);
@@ -13287,8 +13293,7 @@ Entry.FieldTrashcan = function(a) {
   };
   a.updateDragBlock = function() {
     var a = this.board.dragBlock;
-    a ? this.dragBlockObserver = a.observe(this, "checkBlock", ["x", "y"]) : (this.dragBlockObserver && this.dragBlockObserver.destroy(), this.dragBlock && this.isOver && this.dragBlock.block.doDestroy(!0), this.tAnimation(!1));
-    this.dragBlock = a;
+    (this.dragBlock = a) ? this.dragBlockObserver = a.observe(this, "checkBlock", ["x", "y"]) : (this.dragBlockObserver && this.dragBlockObserver.destroy(), this.dragBlock && this.isOver && this.dragBlock.block.doDestroy(!0), this.tAnimation(!1));
   };
   a.checkBlock = function() {
     var a = this.dragBlock;

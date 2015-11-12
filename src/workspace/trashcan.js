@@ -31,6 +31,7 @@ Entry.FieldTrashcan = function(board) {
 
     p.updateDragBlock = function() {
         var block = this.board.dragBlock;
+        this.dragBlock = block;
         if (block) {
             this.dragBlockObserver = block.observe(this, "checkBlock", ["x", "y"]);
         } else {
@@ -40,7 +41,6 @@ Entry.FieldTrashcan = function(board) {
                 this.dragBlock.block.doDestroy(true);
             this.tAnimation(false);
         }
-        this.dragBlock = block;
     };
 
     p.checkBlock = function() {

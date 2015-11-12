@@ -70,14 +70,18 @@ Entry.Model = function(obj, isSeal) {
      * @param {object} object that observe this model
      * @param {string} eventFunc will be call when notify
      * @param {?object} attrs includes which property to watch. Should be array or null.
+     * @param {boolean} isNotify
      */
-    m.observe = function(object, funcName, attrs) {
-        return new Entry.Observer(
+    m.observe = function(object, funcName, attrs, isNotify) {
+         var observer = new Entry.Observer(
             this.observers,
             object,
             funcName,
             attrs
         );
+        if (isNotify !== false)
+            object[funcName]([]);
+        return observer;
     };
 
     m.unobserve = function(observer) {
