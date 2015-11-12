@@ -331,7 +331,8 @@ Entry.Playground.prototype.generateCodeView = function(codeView) {
                 path: '.././',
                 toolbox: XML,
                 trashcan: true,
-                blockmenu: this.blockMenuView_
+                blockmenu: this.blockMenuView_,
+                mediaFilePath: Entry.mediaFilePath
             });
         Blockly.mainWorkspace.flyout_.hide();
         Blockly.mainWorkspace.blockMenu.hide();
@@ -377,7 +378,8 @@ Entry.Playground.prototype.generateCodeView = function(codeView) {
             {
                 path: '.././',
                 toolbox: XML,
-                trashcan: true
+                trashcan: true,
+                mediaFilePath: Entry.mediaFilePath
             });
         Blockly.mainWorkspace.flyout_.autoClose = true;
         Blockly.mainWorkspace.flyout_.hide();

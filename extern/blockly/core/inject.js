@@ -112,7 +112,8 @@ Blockly.parseOptions_ = function(options) {
     hasScrollbars: hasScrollbars,
     hasTrashcan: hasTrashcan,
     hasBlockMenu: hasBlockMenu,
-    languageTree: tree
+    languageTree: tree,
+    mediaFilePath: options['mediaFilePath']
   };
 };
 
