@@ -56,7 +56,7 @@ Entry.init = function(container, options) {
         //createjs.Sound.registerPlugins([createjs.HTMLAudioPlugin]);
         window.flashaudio = true;
     } else {
-        createjs.Sound.registerPlugins([createjs.WebAudioPlugin, createjs.HTMLAudioPlugin]);
+        createjs.Sound.registerPlugins([createjs.WebAudioPlugin]);
     }
 
     Entry.soundQueue = new createjs.LoadQueue();
