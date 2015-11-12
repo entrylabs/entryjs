@@ -39,7 +39,7 @@ goog.require('goog.cssom');
 Blockly.Css.inject = function() {
   var text = Blockly.Css.CONTENT.join('\n');
   // Strip off any trailing slash (either Unix or Windows).
-  var path = Blockly.pathToBlockly.replace(/[\\\/]$/, '');
+  var path = Blockly.pathToBlockly.replace(/[\\\/]$/, '') + Blockly.mediaFilePath;
   text = text.replace(/<<<PATH>>>/g, path);
   goog.cssom.addCssText(text);
 };

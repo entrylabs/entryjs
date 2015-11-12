@@ -78,8 +78,8 @@ Blockly.FieldDropdown.prototype.clone = function() {
  * @return {!Element} The field's SVG group.
  */
 Blockly.FieldDropdown.createDom = function() {
-  var url_up = 'media/scroll_up.png';
-  var url_down = 'media/scroll_down.png';
+  var url_up = Blockly.mediaFilePath + 'media/scroll_up.png';
+  var url_down = Blockly.mediaFilePath + 'media/scroll_down.png';
   Blockly.FieldDropdown.currentPosition = 0;
   var svg = Blockly.createSvgElement('svg', {
     'xmlns': 'http://www.w3.org/2000/svg',

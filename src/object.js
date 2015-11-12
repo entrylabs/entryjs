@@ -906,20 +906,17 @@ Entry.EntryObject.prototype.updateThumbnailView = function() {
         if (this.entity.picture.fileurl) {
             this.thumbnailView_.style.backgroundImage = 'url("' + this.entity.picture.fileurl + '")';
         } else {
-            if (this.entity.picture.fileurl) {
-                this.thumbnailView_.style.backgroundImage = 'url("' + this.entity.picture.fileurl + '")';
-            } else {
-                var fileName = this.entity.picture.filename;
-                this.thumbnailView_.style.backgroundImage =
-                    'url("' + '/uploads/' + fileName.substring(0, 2) + '/' +
-                    fileName.substring(2, 4) + '/thumb/' + fileName + '.png")';
-            }
+            var fileName = this.entity.picture.filename;
+            this.thumbnailView_.style.backgroundImage =
+                'url("' + '/uploads/' + fileName.substring(0, 2) + '/' +
+                fileName.substring(2, 4) + '/thumb/' + fileName + '.png")';
         }
     }
-    else if (this.objectType == 'textBox')
+    else if (this.objectType == 'textBox') {
         var textIconPath = Entry.mediaFilePath + '/text_icon.png';
         this.thumbnailView_.style.backgroundImage =
             "url("+textIconPath+")";
+    }
 };
 
 /**
