@@ -76,7 +76,8 @@ Blockly.FieldKeydownInput.createDom = function() {
        'height': '106'
       }, svgGroup);
   helpImg.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href',
-      Blockly.pathToBlockly + url);
+      url);
+      //Blockly.pathToBlockly + url);
 
   Blockly.FieldKeydownInput.helperSvgGroup_ = svgGroup;
   return svgGroup;

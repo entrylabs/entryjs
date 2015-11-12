@@ -233,7 +233,7 @@ Blockly.Blocks.message_cast_wait = {
         .appendField(Lang.Blocks.START_message_send_wait_1)
         .appendField(new Blockly.FieldDropdownDynamic("messages"), "VALUE")
         .appendField(Lang.Blocks.START_message_send_wait_2)
-        .appendField(new Blockly.FieldIcon('../', '*'));
+        .appendField(new Blockly.FieldIcon(Entry.mediaFilePath + 'block_icon/start_03.png', '*'));
     this.setInputsInline(true);
     this.setNextStatement(true);
     this.setPreviousStatement(true);

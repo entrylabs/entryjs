@@ -109,7 +109,8 @@ Blockly.FieldDropdown.createDom = function() {
   var upperImg = Blockly.createSvgElement('image', {'width':'10','height':'40', 'x':'5','opacity':'0.5'},
                            Blockly.FieldDropdown.scrollbarUpWrapper_);
   upperImg.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href',
-      Blockly.pathToBlockly + url_up);
+      url_up);
+      //Blockly.pathToBlockly + url_up);
 
   Blockly.FieldDropdown.scrollbarDownWrapper_ = Blockly.createSvgElement('g',
       {'transform':'translate(0 160)', 'cursor':'pointer'}, Blockly.FieldDropdown.scrollbarWrapper_);
@@ -118,7 +119,8 @@ Blockly.FieldDropdown.createDom = function() {
   var upperImg = Blockly.createSvgElement('image', {'width':'10','height':'40', 'x':'5','opacity':'0.5'},
                            Blockly.FieldDropdown.scrollbarDownWrapper_);
   upperImg.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href',
-      Blockly.pathToBlockly + url_down);;
+      + url_down);;
+      //Blockly.pathToBlockly + url_down);;
 
 
   return svg;
