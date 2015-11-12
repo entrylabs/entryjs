@@ -22,6 +22,7 @@ Entry.Code = function(code) {
 
     this.executeEndEvent = new Entry.Event(this);
 
+    window.cc = this;
     this.load(code);
 };
 
@@ -57,6 +58,7 @@ Entry.Code = function(code) {
 
     p.raiseEvent = function(eventType) {
         var blocks = this._eventMap[eventType];
+        if (blocks === undefined) return;
         for (var i = 0; i < blocks.length; i++) {
             this.executors.push(new Entry.Executor(blocks[i]));
         }

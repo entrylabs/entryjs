@@ -19,6 +19,7 @@ Entry.Thread = function(thread, code) {
     this.load(thread);
 
     this.changeEvent = new Entry.Event(this);
+    this.changeEvent.attach(this, this.inspectExist);
 };
 
 (function(p) {
@@ -48,8 +49,7 @@ Entry.Thread = function(thread, code) {
 
     p._setRelation = function() {
         var blocks = this._data.getAll();
-        if (blocks.length === 0)
-            return;
+        if (blocks.length === 0) return;
 
         var prevBlock = blocks[0];
         prevBlock.setPrev(null);
@@ -172,6 +172,10 @@ Entry.Thread = function(thread, code) {
             }
         }
         return count;
+    };
+
+    p.inspectExist = function() {
+        if (this._data.length === 0) this.destroy();
     };
 
 })(Entry.Thread.prototype);

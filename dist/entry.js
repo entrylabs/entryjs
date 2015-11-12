@@ -5913,8 +5913,8 @@ Entry.init = function(a, b) {
     Entry.addActivity("save");
   });
   "IE" != Entry.getBrowserType().substr(0, 2) || window.flashaudio ? (createjs.Sound.registerPlugins([createjs.WebAudioPlugin]), Entry.soundQueue = new createjs.LoadQueue, Entry.soundQueue.installPlugin(createjs.Sound), Entry.loadAudio_([Entry.mediaFilePath + "media/click.mp3", Entry.mediaFilePath + "media/click.wav", Entry.mediaFilePath + "media/click.ogg"], "click"), Entry.loadAudio_([Entry.mediaFilePath + "media/delete.mp3", Entry.mediaFilePath + "media/delete.ogg", Entry.mediaFilePath + "media/delete.wav"], 
-  "delete")) : (createjs.FlashAudioPlugin.swfPath = "/media/", createjs.Sound.registerPlugins([createjs.FlashAudioPlugin]), Entry.soundQueue = new createjs.LoadQueue, Entry.soundQueue.installPlugin(createjs.Sound), Entry.loadAudio_([Entry.mediaFilePath + "media/click.mp3", Entry.mediaFilePath + "media/click.wav", Entry.mediaFilePath + "media/click.ogg"], "click"), Entry.loadAudio_([Entry.mediaFilePath + "media/delete.mp3", Entry.mediaFilePath + "media/delete.ogg", Entry.mediaFilePath + "media/delete.wav"], 
-  "delete"), window.flashaudio = !0);
+  "delete")) : (createjs.FlashAudioPlugin.swfPath = this.mediaFilePath + "media/", createjs.Sound.registerPlugins([createjs.FlashAudioPlugin]), Entry.soundQueue = new createjs.LoadQueue, Entry.soundQueue.installPlugin(createjs.Sound), Entry.loadAudio_([Entry.mediaFilePath + "media/click.mp3", Entry.mediaFilePath + "media/click.wav", Entry.mediaFilePath + "media/click.ogg"], "click"), Entry.loadAudio_([Entry.mediaFilePath + "media/delete.mp3", Entry.mediaFilePath + "media/delete.ogg", Entry.mediaFilePath + 
+  "media/delete.wav"], "delete"), window.flashaudio = !0);
 };
 Entry.loadAudio_ = function(a, b) {
   if (window.Audio && a.length) {
@@ -12664,6 +12664,7 @@ Entry.Code = function(a) {
   this._eventMap = {};
   this.executors = [];
   this.executeEndEvent = new Entry.Event(this);
+  window.cc = this;
   this.load(a);
 };
 (function(a) {
@@ -12685,8 +12686,10 @@ Entry.Code = function(a) {
   };
   a.raiseEvent = function(a) {
     a = this._eventMap[a];
-    for (var c = 0;c < a.length;c++) {
-      this.executors.push(new Entry.Executor(a[c]));
+    if (void 0 !== a) {
+      for (var c = 0;c < a.length;c++) {
+        this.executors.push(new Entry.Executor(a[c]));
+      }
     }
   };
   a.getEventMap = function(a) {
@@ -13135,6 +13138,7 @@ Entry.Thread = function(a, b) {
   this._code = b;
   this.load(a);
   this.changeEvent = new Entry.Event(this);
+  this.changeEvent.attach(this, this.inspectExist);
 };
 (function(a) {
   a.load = function(a) {
@@ -13235,6 +13239,9 @@ Entry.Thread = function(a, b) {
       }
     }
     return a;
+  };
+  a.inspectExist = function() {
+    0 === this._data.length && this.destroy();
   };
 })(Entry.Thread.prototype);
 Entry.ThreadView = function(a, b) {
