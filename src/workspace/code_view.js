@@ -42,5 +42,4 @@ Entry.CodeView = function(code, board) {
         scrollY: 0
     };
 
-
 })(Entry.CodeView.prototype);

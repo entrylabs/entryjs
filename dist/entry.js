@@ -12487,11 +12487,7 @@ Entry.BlockView = function(a, b) {
       this.prevAnimatingObserver = a.observe(this, "_inheritAnimate", ["animating"]);
       this.prevObserver = a.observe(this, "_align", ["height"]);
     } else {
-<<<<<<< HEAD
       this._toGlobalCoordinate(), delete this.prevObserver, delete this.prevAnimatingObserver;
-=======
-      this._board.svgBlockGroup.append(this.svgGroup), delete this.prevObserver, delete this.prevAnimatingObserver;
->>>>>>> origin/feature/opensource
     }
   };
   a._render = function() {
@@ -12620,6 +12616,11 @@ Entry.BlockView = function(a, b) {
     a && this.set({animating:a.animating});
   };
   a.dominate = function() {
+    var a = this.block, c = this.svgGroup.parent();
+    this.svgGroup.remove();
+    c.append(this.svgGroup);
+    (c = a.values.STATEMENT) && (c = c.getFirstBlock().next) && c.view.dominate();
+    a.next && a.next.view.dominate();
   };
   a.getBoard = function() {
     return this._board;
@@ -13277,12 +13278,13 @@ Entry.FieldTrashcan = function(a) {
     this.trashcan = this.svgGroup.image(a + "body.png", 0, 20, 80, 80);
   };
   a.updateDragBlock = function() {
-    var a = this.board.dragBlock;
-    (this.dragBlock = a) ? this.dragBlockObserver = a.observe(this, "checkBlock", ["x", "y"]) : (this.dragBlockObserver && this.dragBlockObserver.destroy(), this.dragBlock && this.isOver && this.dragBlock.block.doDestroy(!0), this.tAnimation(!1));
+    var a = this.board.dragBlock, c = this.dragBlockObserver;
+    a ? a.observe(this, "checkBlock", ["x", "y"]) : (c && c.destroy(), this.isOver && this.dragBlock && this.dragBlock.block.doDestroy(!0), this.tAnimation(!1));
+    this.dragBlock = a;
   };
   a.checkBlock = function() {
     var a = this.dragBlock;
-    if (a.block.isDeletable()) {
+    if (a && a.block.isDeletable()) {
       var c = this.board.offset, d = this.getPosition(), e = d.x + c.left, d = d.y + c.top, f, g = a.dragInstance;
       g ? (f = g.offsetX, a = g.offsetY) : (f = a.x + c.left, a = a.y + c.top);
       this.tAnimation(f >= e && a >= d);

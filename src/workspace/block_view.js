@@ -378,7 +378,6 @@ Entry.BlockView = function(block, board) {
     };
 
     p.dominate = function() {
-        return;
         var block = this.block;
         var parent = this.svgGroup.parent();
         this.svgGroup.remove();

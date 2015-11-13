@@ -31,21 +31,22 @@ Entry.FieldTrashcan = function(board) {
 
     p.updateDragBlock = function() {
         var block = this.board.dragBlock;
-        this.dragBlock = block;
+        var observer = this.dragBlockObserver;
         if (block) {
-            this.dragBlockObserver = block.observe(this, "checkBlock", ["x", "y"]);
+             observer = block.observe(this, "checkBlock", ["x", "y"]);
         } else {
-            if (this.dragBlockObserver)
-                this.dragBlockObserver.destroy();
-            if (this.dragBlock && this.isOver)
+            if (observer) observer.destroy();
+            if (this.isOver && this.dragBlock)
                 this.dragBlock.block.doDestroy(true);
             this.tAnimation(false);
         }
+        this.dragBlock = block;
     };
 
     p.checkBlock = function() {
         var dragBlock = this.dragBlock;
-        if (!dragBlock.block.isDeletable()) return;
+        if (!dragBlock || !dragBlock.block.isDeletable()) return;
+
         var boardOffset = this.board.offset;
         var position = this.getPosition();
         var trashcanX = position.x + boardOffset.left;
