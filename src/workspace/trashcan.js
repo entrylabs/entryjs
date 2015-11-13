@@ -57,11 +57,7 @@ Entry.FieldTrashcan = function(board) {
         if (instance) {
             mouseX = instance.offsetX;
             mouseY = instance.offsetY;
-        } else {
-            mouseX = dragBlock.x + boardOffset.left;
-            mouseY = dragBlock.y + boardOffset.top;
         }
-
         var isOver = mouseX >= trashcanX &&
             mouseY >= trashcanY;
         this.tAnimation(isOver);

@@ -13280,9 +13280,11 @@ Entry.FieldTrashcan = function(a) {
   a.checkBlock = function() {
     var a = this.dragBlock;
     if (a && a.block.isDeletable()) {
-      var c = this.board.offset, d = this.getPosition(), e = d.x + c.left, d = d.y + c.top, f, g = a.dragInstance;
-      g ? (f = g.offsetX, a = g.offsetY) : (f = a.x + c.left, a = a.y + c.top);
-      this.tAnimation(f >= e && a >= d);
+      var c = this.board.offset, d = this.getPosition(), e = d.x + c.left, c = d.y + c.top, f, g;
+      if (a = a.dragInstance) {
+        f = a.offsetX, g = a.offsetY;
+      }
+      this.tAnimation(f >= e && g >= c);
     }
   };
   a.align = function() {
