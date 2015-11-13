@@ -98,12 +98,6 @@ Entry.BlockView = function(block, board) {
         this._alignContent(false);
     };
 
-    p.changeBoard = function(board) {
-        this._board = board;
-        this.svgGroup.remove();
-        board.svgBlockGroup.append(this.svgGroup);
-    };
-
     p._alignContent = function(animate) {
         if (animate !== true) animate = false;
         var cursor = {x: 0, y: 0, height: 0};
@@ -140,7 +134,7 @@ Entry.BlockView = function(block, board) {
                 this, "_align", ["height"]
             );
         } else {
-            this._board.svgGroup.append(this.svgGroup);
+            this._board.svgBlockGroup.append(this.svgGroup);
             delete this.prevObserver;
             delete this.prevAnimatingObserver;
         }

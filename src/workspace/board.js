@@ -68,6 +68,8 @@ Entry.Board = function(dom) {
         this.svgThreadGroup.remove();
         this.svgBlockGroup = codeView.svgBlockGroup;
         this.svgThreadGroup = codeView.svgThreadGroup;
+        this.svgGroup.append(this.svgThreadGroup);
+        this.svgGroup.append(this.svgBlockGroup);
     };
 
     p.setMagnetedBlock = function(block) {

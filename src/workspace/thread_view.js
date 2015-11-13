@@ -26,24 +26,4 @@ Entry.ThreadView = function(thread, board) {
         this.svgGroup.remove();
     };
 
-    p.changeBoard = function(board) {
-        this.svgGroup.remove();
-        board.svgThreadGroup.append(this.svgGroup);
-
-        var blocks = this.thread.getBlocks();
-        for (var i = 0; i < blocks.length; i++) {
-            var block = blocks[i];
-            if (!block.type)
-                continue;
-            block.view.changeBoard(board);
-            var schema = Entry.block[block.type];
-            var contents = schema.contents;
-            for (var j = 0; j < contents.length; j++) {
-                var content = contents[j];
-                if (content.type == "Statement")
-                    block.values[content.key].changeBoard(board);
-            }
-        }
-    };
-
 })(Entry.ThreadView.prototype);
