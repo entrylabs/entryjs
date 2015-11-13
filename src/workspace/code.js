@@ -128,4 +128,12 @@ Entry.Code = function(code) {
         return count;
     };
 
+    p.moveBy = function(x, y) {
+        var threads = this.getThreads();
+        for (var i=0, len=threads.length; i<len; i++) {
+            var firstBlock = threads[i].getFirstBlock();
+            firstBlock.view._moveBy(x, y, false);
+        }
+    };
+
 })(Entry.Code.prototype);

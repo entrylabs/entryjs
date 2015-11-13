@@ -50,6 +50,8 @@ Entry.Board = function(dom) {
     this.svgBlockGroup.board = this;
 
     Entry.ANIMATION_DURATION = 200;
+
+    this._addControl(dom);
 };
 
 (function(p) {
@@ -119,6 +121,56 @@ Entry.Board = function(dom) {
         }
         return;
     };
+
+    p._addControl = function(dom) {
+        var that = this;
+        dom.mousedown(function() {
+            that.onMouseDown.apply(that, arguments);
+        });
+    };
+
+    p.onMouseDown = function(e) {
+        if (e.button === 0 || e instanceof Touch) {
+            var doc = $(document);
+            doc.bind('mousemove.board', onMouseMove);
+            doc.bind('mouseup.board', onMouseUp);
+            doc.bind('touchmove.board', onMouseMove);
+            doc.bind('touchend.board', onMouseUp);
+            this.dragInstance = new Entry.DragInstance({
+                startX: e.clientX,
+                startY: e.clientY,
+                offsetX: e.clientX,
+                offsetY: e.clientY
+            });
+        }
+
+        var board = this;
+        function onMouseMove(e) {
+            e.stopPropagation();
+            e.preventDefault();
+
+            if (e.originalEvent.touches) {
+                e = e.originalEvent.touches[0];
+            }
+            var dragInstance = board.dragInstance;
+            board.code.moveBy(
+                e.clientX - dragInstance.offsetX,
+                e.clientY - dragInstance.offsetY,
+                false
+            );
+            dragInstance.set({
+                 offsetX: e.clientX,
+                 offsetY: e.clientY
+            });
+        }
+
+        function onMouseUp(e) {
+            $(document).unbind('.board');
+            delete board.dragInstance;
+        }
+        e.stopPropagation();
+    };
+
 
 
 })(Entry.Board.prototype);

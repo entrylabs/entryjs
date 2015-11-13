@@ -10416,11 +10416,11 @@ Entry.Func.updateMenu = function() {
     f.map(function(a) {
       e = Entry.Func.generateWsBlock(b, Blockly.Xml.workspaceToDom(Entry.Func.workspace), d).block;
       for (var c = [], f = !1;a.firstChild;) {
-        var h = a.firstChild, g = h.tagName;
-        if (f || "NEXT" == g) {
-          f = !0, c.push(h);
+        var g = a.firstChild, h = g.tagName;
+        if (f || "NEXT" == h) {
+          f = !0, c.push(g);
         }
-        a.removeChild(h);
+        a.removeChild(g);
       }
       for (;e.firstChild;) {
         a.appendChild(e.firstChild);
@@ -12732,6 +12732,11 @@ Entry.Code = function(a) {
     }
     return c;
   };
+  a.moveBy = function(a, c) {
+    for (var d = this.getThreads(), e = 0, f = d.length;e < f;e++) {
+      d[e].getFirstBlock().view._moveBy(a, c, !1);
+    }
+  };
 })(Entry.Code.prototype);
 Entry.CodeView = function(a, b) {
   Entry.Model(this, !1);
@@ -13322,6 +13327,7 @@ Entry.Board = function(a) {
   this.svgBlockGroup = this.svgGroup.group();
   this.svgBlockGroup.board = this;
   Entry.ANIMATION_DURATION = 200;
+  this._addControl(a);
 };
 (function(a) {
   a.schema = {code:null, dragBlock:null, magnetedBlockView:null};
@@ -13365,6 +13371,36 @@ Entry.Board = function(a) {
         }
       }
     }
+  };
+  a._addControl = function(a) {
+    var c = this;
+    a.mousedown(function() {
+      c.onMouseDown.apply(c, arguments);
+    });
+  };
+  a.onMouseDown = function(a) {
+    function c(a) {
+      a.stopPropagation();
+      a.preventDefault();
+      a.originalEvent.touches && (a = a.originalEvent.touches[0]);
+      var b = f.dragInstance;
+      f.code.moveBy(a.clientX - b.offsetX, a.clientY - b.offsetY, !1);
+      b.set({offsetX:a.clientX, offsetY:a.clientY});
+    }
+    function d(a) {
+      $(document).unbind(".board");
+      delete f.dragInstance;
+    }
+    if (0 === a.button || a instanceof Touch) {
+      var e = $(document);
+      e.bind("mousemove.board", c);
+      e.bind("mouseup.board", d);
+      e.bind("touchmove.board", c);
+      e.bind("touchend.board", d);
+      this.dragInstance = new Entry.DragInstance({startX:a.clientX, startY:a.clientY, offsetX:a.clientX, offsetY:a.clientY});
+    }
+    var f = this;
+    a.stopPropagation();
   };
 })(Entry.Board.prototype);
 Entry.Workspace = function(a, b) {
