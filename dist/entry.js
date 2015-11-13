@@ -12467,11 +12467,6 @@ Entry.BlockView = function(a, b) {
     }
     this._alignContent(!1);
   };
-  a.changeBoard = function(a) {
-    this._board = a;
-    this.svgGroup.remove();
-    a.svgBlockGroup.append(this.svgGroup);
-  };
   a._alignContent = function(a) {
     !0 !== a && (a = !1);
     for (var c = 0, d = 0, e = 0;e < this._contents.length;e++) {
@@ -12492,7 +12487,11 @@ Entry.BlockView = function(a, b) {
       this.prevAnimatingObserver = a.observe(this, "_inheritAnimate", ["animating"]);
       this.prevObserver = a.observe(this, "_align", ["height"]);
     } else {
+<<<<<<< HEAD
       this._toGlobalCoordinate(), delete this.prevObserver, delete this.prevAnimatingObserver;
+=======
+      this._board.svgBlockGroup.append(this.svgGroup), delete this.prevObserver, delete this.prevAnimatingObserver;
+>>>>>>> origin/feature/opensource
     }
   };
   a._render = function() {
@@ -12749,10 +12748,11 @@ Entry.CodeView = function(a, b) {
   Entry.Model(this, !1);
   this.code = a;
   this.set({board:b});
-  this.observe(this, "_changeBoard", ["board"]);
   this.svgThreadGroup = b.svgGroup.group();
+  this.svgThreadGroup.attr({class:"svgThreadGroup"});
   this.svgThreadGroup.board = b;
   this.svgBlockGroup = b.svgGroup.group();
+  this.svgBlockGroup.attr({class:"svgBlockGroup"});
   this.svgBlockGroup.board = b;
   b.bindCodeView(this);
   this.code.map(function(a) {
@@ -12761,11 +12761,6 @@ Entry.CodeView = function(a, b) {
 };
 (function(a) {
   a.schema = {board:null, scrollX:0, scrollY:0};
-  a._changeBoard = function() {
-    for (var a = this.board, c = this.code.getThreads(), d = 0;d < c.length;d++) {
-      c[d].view && c[d].view.changeBoard(a);
-    }
-  };
 })(Entry.CodeView.prototype);
 Entry.Executor = function(a) {
   this.scope = {block:a, executor:this};
@@ -13264,20 +13259,6 @@ Entry.ThreadView = function(a, b) {
   a.destroy = function() {
     this.svgGroup.remove();
   };
-  a.changeBoard = function(a) {
-    this.svgGroup.remove();
-    a.svgThreadGroup.append(this.svgGroup);
-    for (var c = this.thread.getBlocks(), d = 0;d < c.length;d++) {
-      var e = c[d];
-      if (e.type) {
-        e.view.changeBoard(a);
-        for (var f = Entry.block[e.type].contents, g = 0;g < f.length;g++) {
-          var h = f[g];
-          "Statement" == h.type && e.values[h.key].changeBoard(a);
-        }
-      }
-    }
-  };
 })(Entry.ThreadView.prototype);
 Entry.FieldTrashcan = function(a) {
   this.board = a;
@@ -13360,6 +13341,8 @@ Entry.Board = function(a) {
     this.svgThreadGroup.remove();
     this.svgBlockGroup = a.svgBlockGroup;
     this.svgThreadGroup = a.svgThreadGroup;
+    this.svgGroup.append(this.svgThreadGroup);
+    this.svgGroup.append(this.svgBlockGroup);
   };
   a.setMagnetedBlock = function(a) {
     if (this.magnetedBlockView) {
