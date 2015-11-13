@@ -27,15 +27,13 @@ Entry.BlockView = function(block, board) {
     this.prevObserver = null;
     this.prevAnimatingObserver = null;
 
+    this._startRender(block);
+
     // observe
     this.block.observe(this, "_bindPrev", ["prev"]);
     this.observe(this, "_updateBG", ["magneting"]);
 
-    this._bindPrev();
     this.dragMode = Entry.DRAG_MODE_NONE;
-
-
-    this._startRender(block);
 };
 
 (function(p) {
@@ -59,10 +57,6 @@ Entry.BlockView = function(block, board) {
             class: "block"
         });
 
-        this.svgGroup.attr({
-            transform: "t" + this.x + " " + this.y
-        });
-
         var path = this._skeleton.path(this);
 
         this._darkenPath = this.svgGroup.path(path);
@@ -76,6 +70,7 @@ Entry.BlockView = function(block, board) {
             fill: this._schema.color
         });
 
+        this._moveTo(this.x, this.y, false);
         this._startContentRender();
         this._addControl();
     };
@@ -131,7 +126,7 @@ Entry.BlockView = function(block, board) {
         if (this.prevObserver) this.prevObserver.destroy();
         if (this.prevAnimatingObserver) this.prevAnimatingObserver.destroy();
         if (this.block.prev) {
-            this.block.prev.view.svgGroup.append(this.svgGroup);
+            this._toLocalCoordinate(this.block.prev.view.svgGroup);
             var prevView = this.block.prev.view;
             this.prevAnimatingObserver = prevView.observe(
                 this, "_inheritAnimate", ["animating"]
@@ -140,7 +135,7 @@ Entry.BlockView = function(block, board) {
                 this, "_align", ["height"]
             );
         } else {
-            this._board.svgGroup.append(this.svgGroup);
+            this._toGlobalCoordinate();
             delete this.prevObserver;
             delete this.prevAnimatingObserver;
         }
@@ -185,8 +180,8 @@ Entry.BlockView = function(block, board) {
     p._setPosition = function(animate) {
         animate = animate === undefined ? true : animate;
         var transform = "t" +
-            (this.x + this.offsetX) + " " +
-            (this.y + this.offsetY);
+            (this.x) + " " +
+            (this.y);
         this.svgGroup.stop();
         if (animate) {
             this.svgGroup.animate({
@@ -197,6 +192,19 @@ Entry.BlockView = function(block, board) {
                 transform: transform
             });
         }
+    };
+
+    p._toLocalCoordinate = function(parentSvgGroup) {
+        var parentMatrix = parentSvgGroup.transform().globalMatrix;
+        var matrix = this.svgGroup.transform().globalMatrix;
+        this._moveTo(matrix.e - parentMatrix.e, matrix.f - parentMatrix.f, false);
+        parentSvgGroup.append(this.svgGroup);
+    };
+
+    p._toGlobalCoordinate = function() {
+        var matrix = this.svgGroup.transform().globalMatrix;
+        this._moveTo(matrix.e, matrix.f, false);
+        this._board.svgGroup.append(this.svgGroup);
     };
 
     p._moveTo = function(x, y, animate) {
@@ -299,6 +307,7 @@ Entry.BlockView = function(block, board) {
             if (board) board.set({dragBlock: null});
             delete blockView.dragInstance;
         }
+        e.stopPropagation();
     };
 
     p.terminateDrag = function() {

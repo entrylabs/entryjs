@@ -12439,22 +12439,21 @@ Entry.BlockView = function(a, b) {
   this._contents = [];
   this._skeleton.morph && this.block.observe(this, "_renderPath", this._skeleton.morph);
   this.prevAnimatingObserver = this.prevObserver = null;
+  this._startRender(a);
   this.block.observe(this, "_bindPrev", ["prev"]);
   this.observe(this, "_updateBG", ["magneting"]);
-  this._bindPrev();
   this.dragMode = Entry.DRAG_MODE_NONE;
-  this._startRender(a);
 };
 (function(a) {
   a.schema = {id:0, type:Entry.STATIC.BLOCK_RENDER_MODEL, x:0, y:0, offsetX:0, offsetY:0, width:0, height:0, contentWidth:0, contentHeight:0, magneting:!1, animating:!1};
   a._startRender = function(a) {
     this.svgGroup.attr({class:"block"});
-    this.svgGroup.attr({transform:"t" + this.x + " " + this.y});
     a = this._skeleton.path(this);
     this._darkenPath = this.svgGroup.path(a);
     this._darkenPath.attr({transform:"t0 1.1", fill:Entry.Utils.colorDarken(this._schema.color)});
     this._path = this.svgGroup.path(a);
     this._path.attr({fill:this._schema.color});
+    this._moveTo(this.x, this.y, !1);
     this._startContentRender();
     this._addControl();
   };
@@ -12488,12 +12487,12 @@ Entry.BlockView = function(a, b) {
     this.prevObserver && this.prevObserver.destroy();
     this.prevAnimatingObserver && this.prevAnimatingObserver.destroy();
     if (this.block.prev) {
-      this.block.prev.view.svgGroup.append(this.svgGroup);
+      this._toLocalCoordinate(this.block.prev.view.svgGroup);
       var a = this.block.prev.view;
       this.prevAnimatingObserver = a.observe(this, "_inheritAnimate", ["animating"]);
       this.prevObserver = a.observe(this, "_align", ["height"]);
     } else {
-      this._board.svgGroup.append(this.svgGroup), delete this.prevObserver, delete this.prevAnimatingObserver;
+      this._toGlobalCoordinate(), delete this.prevObserver, delete this.prevAnimatingObserver;
     }
   };
   a._render = function() {
@@ -12519,9 +12518,19 @@ Entry.BlockView = function(a, b) {
   };
   a._setPosition = function(a) {
     a = void 0 === a ? !0 : a;
-    var c = "t" + (this.x + this.offsetX) + " " + (this.y + this.offsetY);
+    var c = "t" + this.x + " " + this.y;
     this.svgGroup.stop();
     a ? this.svgGroup.animate({transform:c}, 300, mina.easeinout) : this.svgGroup.attr({transform:c});
+  };
+  a._toLocalCoordinate = function(a) {
+    var c = a.transform().globalMatrix, d = this.svgGroup.transform().globalMatrix;
+    this._moveTo(d.e - c.e, d.f - c.f, !1);
+    a.append(this.svgGroup);
+  };
+  a._toGlobalCoordinate = function() {
+    var a = this.svgGroup.transform().globalMatrix;
+    this._moveTo(a.e, a.f, !1);
+    this._board.svgGroup.append(this.svgGroup);
   };
   a._moveTo = function(a, c, d) {
     this.set({x:a, y:c});
@@ -12577,6 +12586,7 @@ Entry.BlockView = function(a, b) {
       this.dragMode = Entry.DRAG_MODE_MOUSEDOWN;
     }
     var f = this, g = this.getBoard();
+    a.stopPropagation();
   };
   a.terminateDrag = function() {
     var a = this.getBoard(), c = this.dragMode, d = this.block;
