@@ -11,7 +11,6 @@ goog.provide("Entry.DummyBlock");
 Entry.FieldStatement = function(content, blockView) {
     this._blockView = blockView;
     this.block = blockView.block;
-    this.block.observe(this, "_updateThread", ["thread"]);
 
     this.key = content.key;
 
@@ -26,6 +25,7 @@ Entry.FieldStatement = function(content, blockView) {
     this.box.observe(blockView, "_alignContent", ["height"]);
 
     this.renderStart(blockView.getBoard());
+    this.block.observe(this, "_updateThread", ["thread"]);
 };
 
 (function(p) {
@@ -57,7 +57,7 @@ Entry.FieldStatement = function(content, blockView) {
     p.align = function(x, y, animate) {
         animate = animate === undefined ? true : animate;
         var svgGroup = this.svgGroup;
-        var transform = "t" + 46 + " " + 15;
+        var transform = "t" + 46 + " " + 14;
 
         if (animate)
             svgGroup.animate({
@@ -120,7 +120,7 @@ Entry.DummyBlock = function(statementField, blockView) {
         x: 0,
         y: 0,
         width: 0,
-        height: 40 - 1,
+        height: 0,
         animating: false
     };
 

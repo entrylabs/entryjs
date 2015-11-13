@@ -61,7 +61,7 @@ Entry.BlockView = function(block, board) {
 
         this._darkenPath = this.svgGroup.path(path);
         this._darkenPath.attr({
-            transform: "t0 1.1",
+            transform: "t0 1",
             fill: Entry.Utils.colorDarken(this._schema.color)
         });
 
@@ -378,6 +378,7 @@ Entry.BlockView = function(block, board) {
     };
 
     p.dominate = function() {
+        return;
         var block = this.block;
         var parent = this.svgGroup.parent();
         this.svgGroup.remove();

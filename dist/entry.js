@@ -12450,7 +12450,7 @@ Entry.BlockView = function(a, b) {
     this.svgGroup.attr({class:"block"});
     a = this._skeleton.path(this);
     this._darkenPath = this.svgGroup.path(a);
-    this._darkenPath.attr({transform:"t0 1.1", fill:Entry.Utils.colorDarken(this._schema.color)});
+    this._darkenPath.attr({transform:"t0 1", fill:Entry.Utils.colorDarken(this._schema.color)});
     this._path = this.svgGroup.path(a);
     this._path.attr({fill:this._schema.color});
     this._moveTo(this.x, this.y, !1);
@@ -12616,11 +12616,6 @@ Entry.BlockView = function(a, b) {
     a && this.set({animating:a.animating});
   };
   a.dominate = function() {
-    var a = this.block, c = this.svgGroup.parent();
-    this.svgGroup.remove();
-    c.append(this.svgGroup);
-    (c = a.values.STATEMENT) && (c = c.getFirstBlock().next) && c.view.dominate();
-    a.next && a.next.view.dominate();
   };
   a.getBoard = function() {
     return this._board;
@@ -12882,13 +12877,13 @@ Entry.FieldIndicator = function(a, b) {
 Entry.FieldStatement = function(a, b) {
   this._blockView = b;
   this.block = b.block;
-  this.block.observe(this, "_updateThread", ["thread"]);
   this.key = a.key;
   this.box = new Entry.BoxModel;
   this.acceptType = a.accept;
   this.dummyBlock = this.svgGroup = null;
   this.box.observe(b, "_alignContent", ["height"]);
   this.renderStart(b.getBoard());
+  this.block.observe(this, "_updateThread", ["thread"]);
 };
 (function(a) {
   a.renderStart = function(a) {
@@ -12908,7 +12903,7 @@ Entry.FieldStatement = function(a, b) {
   };
   a.align = function(a, c, d) {
     a = this.svgGroup;
-    void 0 === d || d ? a.animate({transform:"t46 15"}, 300, mina.easeinout) : a.attr({transform:"t46 15"});
+    void 0 === d || d ? a.animate({transform:"t46 14"}, 300, mina.easeinout) : a.attr({transform:"t46 14"});
   };
   a._updateThread = function() {
     this._threadChangeEvent && this._thread.changeEvent.detach(this._threadChangeEvent);
@@ -12935,7 +12930,7 @@ Entry.DummyBlock = function(a, b) {
   this._align();
 };
 (function(a) {
-  a.schema = {x:0, y:0, width:0, height:39, animating:!1};
+  a.schema = {x:0, y:0, width:0, height:0, animating:!1};
   a._align = function(a) {
     this.set({x:this.originBlockView.x, y:this.originBlockView.y});
   };
