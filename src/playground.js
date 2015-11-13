@@ -1320,6 +1320,7 @@ Entry.Playground.prototype.selectMenu = function(selector, disableTab) {
             }
         }
     } else if (Entry.type == 'phone') {
+        var categories = [];
         for (var i = 0; i<categories.length; i++) {
             var category = categories[i];
             var categoryName = category.attributes[0].value;
@@ -1503,7 +1504,7 @@ Entry.Playground.prototype.generatePictureElement = function(picture) {
                 href: '/',
                 action: function(e){
                     e.preventDefault();
-                    if (fileurl) {
+                    if (picture.fileurl) {
                         window.open(picture.fileurl);
                     } else {
                         // deprecated

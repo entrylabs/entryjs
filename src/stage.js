@@ -124,7 +124,7 @@ Entry.Stage.prototype.initStage = function(canvas) {
                     c.inputValue.complete = true;
                 })(Entry.container);
             }
-        } catch (e) {}
+        } catch (exception) {}
     });
 
 
@@ -343,29 +343,30 @@ Entry.Stage.prototype.updateObject = function() {
     var entity = object.entity;
     this.handle.setWidth(entity.getScaleX() * entity.getWidth());
     this.handle.setHeight(entity.getScaleY() * entity.getHeight());
+    var regX, regY;
     if (entity.type == "textBox") {
         // maybe 0.
         if (entity.getLineBreak()) {
-            var regX = (entity.regX) * entity.scaleX;
-            var regY = (- entity.regY) * entity.scaleY;
+            regX = (entity.regX) * entity.scaleX;
+            regY = (- entity.regY) * entity.scaleY;
         } else {
             var fontAlign = entity.getTextAlign();
-            var regY = (- entity.regY) * entity.scaleY;
+            regY = (- entity.regY) * entity.scaleY;
             switch (fontAlign) {
                 case Entry.TEXT_ALIGN_LEFT:
-                    var regX = - entity.getWidth() / 2 * entity.scaleX;
+                    regX = - entity.getWidth() / 2 * entity.scaleX;
                     break;
                 case Entry.TEXT_ALIGN_CENTER:
-                    var regX = (entity.regX) * entity.scaleX;
+                    regX = (entity.regX) * entity.scaleX;
                     break;
                 case Entry.TEXT_ALIGN_RIGHT:
-                    var regX = entity.getWidth() / 2 * entity.scaleX;
+                    regX = entity.getWidth() / 2 * entity.scaleX;
                     break;
             }
         }
     } else {
-        var regX = (entity.regX - entity.width / 2) * entity.scaleX;
-        var regY = (entity.height / 2 - entity.regY) * entity.scaleY;
+        regX = (entity.regX - entity.width / 2) * entity.scaleX;
+        regY = (entity.height / 2 - entity.regY) * entity.scaleY;
     }
 
     var rotation = entity.getRotation() / 180 * Math.PI;
@@ -566,7 +567,7 @@ Entry.Stage.prototype.hideInputField = function () {
  */
 Entry.Stage.prototype.initObjectContainers = function() {
     var scenes = Entry.scene.scenes_;
-    if (scenes && scenes.length != 0) {
+    if (scenes && scenes.length !== 0) {
         for (var i = 0; i < scenes.length; i++) {
             this.objectContainers[i] = this.createObjectContainer(scenes[i]);
         }

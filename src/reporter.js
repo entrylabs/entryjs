@@ -4,8 +4,8 @@
  */
 
 Entry.Reporter = function(isRealTime) {
-    this.userId;
-    this.projectId;
+    this.userId = null;
+    this.projectId = null;
     this.isRealTime = isRealTime;
     this.activities = [];
 };

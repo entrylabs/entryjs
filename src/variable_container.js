@@ -28,7 +28,7 @@ Entry.VariableContainer = function() {
             isCloud: false
         }
     };
-    selectedVariable: null;
+    this.selectedVariable = null;
 
     Entry.addEventListener("stop", this.updateCloudVariables);
 };
@@ -145,7 +145,7 @@ Entry.VariableContainer.prototype.createDom = function(view) {
  */
 Entry.VariableContainer.prototype.createSelectButton = function(type, isEnable) {
     var that = this;
-    if (isEnable == undefined) isEnable = true;
+    if (isEnable === undefined) isEnable = true;
     var view = Entry.createElement('td');
     view.addClass('entryVariableSelectButtonWorkspace', type);
     view.innerHTML = Lang.Workspace[type];
@@ -213,8 +213,7 @@ Entry.VariableContainer.prototype.select = function(object) {
         return;
     object.listElement.addClass('selected');
     this.selected = object;
-    if (object == null) {
-    } else if (object instanceof Entry.Variable) {
+    if (object instanceof Entry.Variable) {
         this.renderVariableReference(object);
         if (object.object_)
             Entry.container.selectObject(object.object_, true);
@@ -328,6 +327,7 @@ Entry.VariableContainer.prototype.renderVariableReference = function(variable) {
     var callers = [];
     var listView = Entry.createElement('ul');
     listView.addClass('entryVariableListCallerListWorkspace');
+    var value;
     for (var i in objects) {
         var object = objects[i];
         var script = object.script;
@@ -336,7 +336,7 @@ Entry.VariableContainer.prototype.renderVariableReference = function(variable) {
             var block = blocks[j];
             var type = block.getAttribute('type');
             if (variableType.indexOf(type) > -1) {
-                var value = Entry.Xml.getField("VARIABLE", block) ||
+                value = Entry.Xml.getField("VARIABLE", block) ||
                             Entry.Xml.getField('LIST', block);
                 if (value == variable.id_)
                     callers.push({object:object, block: block});
@@ -1728,10 +1728,11 @@ Entry.VariableContainer.prototype.getMenuXml = function(xmlList) {
     var blocks = [];
     var hasVariable = this.variables_.length !== 0;
     var hasList = this.lists_.length !== 0;
+    var category;
     for (var i = 0, xml; xml = xmlList[i]; i++) {
         var tagName = xml.tagName;
         if (tagName && tagName.toUpperCase() == 'BLOCK') {
-        var category = xml.getAttribute('bCategory');
+        category = xml.getAttribute('bCategory');
         if (!hasVariable && category == 'variable')
             continue;
         if (!hasList && category == 'list')
@@ -1880,13 +1881,14 @@ Entry.VariableContainer.prototype.generateVariableSettingView = function () {
     element.slideCheck = slideCheck;
     slideWrapper.appendChild(slideCheck);
     slideWrapper.bindOnClick(function (e) {
+        var newVariable;
         var v = that.selectedVariable;
         var variables = that.variables_;
         var type = v.getType();
         if (type == 'variable') {
             var variableJSON = v.toJSON();
             variableJSON.variableType = 'slide';
-            var newVariable = new Entry.Variable(variableJSON);
+            newVariable = new Entry.Variable(variableJSON);
             variables.splice(variables.indexOf(v), 0, newVariable);
             if (newVariable.getValue() < 0)
                 newVariable.setValue(0);
@@ -1897,7 +1899,7 @@ Entry.VariableContainer.prototype.generateVariableSettingView = function () {
         } else if (type == 'slide') {
             var variableJSON = v.toJSON();
             variableJSON.variableType = 'variable';
-            var newVariable = new Entry.Variable(variableJSON);
+            newVariable = new Entry.Variable(variableJSON);
             variables.splice(variables.indexOf(v), 0, newVariable);
             minValueInput.setAttribute('disabled', 'disabled');
             maxValueInput.setAttribute('disabled', 'disabled');

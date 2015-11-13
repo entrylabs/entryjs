@@ -153,7 +153,9 @@ Entry.Scene.prototype.generateElement = function(scene) {
             }
         ]);
     }
-    return scene.view = viewTemplate;
+    scene.view = viewTemplate;
+
+    return viewTemplate;
 };
 
 Entry.Scene.prototype.updateView = function() {
@@ -188,7 +190,7 @@ Entry.Scene.prototype.updateView = function() {
  */
 Entry.Scene.prototype.addScenes = function(scenes) {
     this.scenes_ = scenes;
-    if (!scenes || scenes.length == 0) {
+    if (!scenes || scenes.length === 0) {
         this.scenes_ = [];
         this.scenes_.push(this.createScene());
     } else {
@@ -203,7 +205,7 @@ Entry.Scene.prototype.addScenes = function(scenes) {
  * @param {scene model} scene
  */
 Entry.Scene.prototype.addScene = function(scene, index) {
-    if (scene == null)
+    if (scene === undefined)
         scene = this.createScene();
 
     if (!scene.view)
@@ -260,7 +262,7 @@ Entry.Scene.prototype.selectScene = function(scene) {
     this.selectedScene = scene;
     Entry.container.setCurrentObjects();
     if (Entry.stage.objectContainers &&
-        Entry.stage.objectContainers.length != 0)
+        Entry.stage.objectContainers.length !== 0)
         Entry.stage.selectObjectContainer(scene);
 
     var targetObject = Entry.container.getCurrentObjects()[0];

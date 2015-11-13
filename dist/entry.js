@@ -5539,20 +5539,20 @@ Entry.EntityObject.prototype.getFontName = function() {
   }
 };
 Entry.EntityObject.prototype.setText = function(a) {
-  "textBox" == this.parent.objectType && (null == a && (a = ""), this.text = a, this.textObject.text = this.text, this.lineBreak || (this.setWidth(this.textObject.getMeasuredWidth()), this.parent.updateCoordinateView()), this.updateBG(), Entry.stage.updateObject());
+  "textBox" == this.parent.objectType && (void 0 === a && (a = ""), this.text = a, this.textObject.text = this.text, this.lineBreak || (this.setWidth(this.textObject.getMeasuredWidth()), this.parent.updateCoordinateView()), this.updateBG(), Entry.stage.updateObject());
 };
 Entry.EntityObject.prototype.getText = function() {
   return this.text;
 };
 Entry.EntityObject.prototype.setTextAlign = function(a) {
-  "textBox" == this.parent.objectType && (null == a && (a = Entry.TEXT_ALIGN_CENTER), this.textAlign = a, this.textObject.textAlign = Entry.TEXT_ALIGNS[this.textAlign], this.alignTextBox(), this.updateBG(), Entry.stage.updateObject());
+  "textBox" == this.parent.objectType && (void 0 === a && (a = Entry.TEXT_ALIGN_CENTER), this.textAlign = a, this.textObject.textAlign = Entry.TEXT_ALIGNS[this.textAlign], this.alignTextBox(), this.updateBG(), Entry.stage.updateObject());
 };
 Entry.EntityObject.prototype.getTextAlign = function() {
   return this.textAlign;
 };
 Entry.EntityObject.prototype.setLineBreak = function(a) {
   if ("textBox" == this.parent.objectType) {
-    null == a && (a = !1);
+    void 0 === a && (a = !1);
     var b = this.lineBreak;
     this.lineBreak = a;
     b && !this.lineBreak ? (this.textObject.lineWidth = null, this.setHeight(this.textObject.getMeasuredLineHeight()), this.setText(this.getText().replace(/\n/g, ""))) : !b && this.lineBreak && (this.setFontSize(this.getFontSize() * this.getScaleX()), this.setHeight(3 * this.textObject.getMeasuredLineHeight()), this.setWidth(this.getWidth() * this.getScaleX()), this.setScaleX(1), this.setScaleY(1), this.textObject.lineWidth = this.getWidth(), this.alignTextBox());
@@ -5563,7 +5563,7 @@ Entry.EntityObject.prototype.getLineBreak = function() {
   return this.lineBreak;
 };
 Entry.EntityObject.prototype.setVisible = function(a) {
-  null == a && (a = !0);
+  void 0 === a && (a = !0);
   this.visible = a;
   this.object.visible = this.visible;
   this.dialog && this.syncDialogVisible();
@@ -6526,7 +6526,7 @@ Entry.EntryObject.prototype.getPicture = function(a) {
   if ((!1 !== a || "boolean" != typeof a) && c >= a && 0 < a) {
     return b[a - 1];
   }
-  throw Error("No picture with pictureId : " + pictureId);
+  throw Error("No picture found");
 };
 Entry.EntryObject.prototype.setPicture = function(a) {
   for (var b in this.pictures) {
@@ -6535,7 +6535,7 @@ Entry.EntryObject.prototype.setPicture = function(a) {
       return;
     }
   }
-  throw Error("No picture with pictureId : " + pictureId);
+  throw Error("No picture found");
 };
 Entry.EntryObject.prototype.getNextPicture = function(a) {
   for (var b = this.pictures, c = b.length, d = 0;d < c;d++) {
@@ -6570,11 +6570,11 @@ Entry.EntryObject.prototype.removeSound = function(a) {
   return new Entry.State(this, this.addSound, b, a);
 };
 Entry.EntryObject.prototype.getRotateMethod = function() {
-  null == this.rotateMethod && (this.rotateMethod = "free");
+  this.rotateMethod || (this.rotateMethod = "free");
   return this.rotateMethod;
 };
 Entry.EntryObject.prototype.setRotateMethod = function(a) {
-  null == a && (a = "free");
+  a || (a = "free");
   this.rotateMethod = a;
   this.updateRotateMethodView();
 };
@@ -6584,7 +6584,7 @@ Entry.EntryObject.prototype.updateRotateMethodView = function() {
 };
 Entry.EntryObject.prototype.toggleInformation = function(a) {
   this.setRotateMethod(this.getRotateMethod());
-  null == a && (a = this.isInformationToggle = !this.isInformationToggle);
+  void 0 === a && (a = this.isInformationToggle = !this.isInformationToggle);
   a ? this.view_.addClass("informationToggle") : this.view_.removeClass("informationToggle");
 };
 Entry.EntryObject.prototype.addCloneEntity = function(a, b, c) {
@@ -6639,7 +6639,7 @@ Entry.EntryObject.prototype.getSound = function(a) {
     }
   }
   a = Entry.parseNumber(a);
-  if ((0 != a || "boolean" != typeof a) && c >= a && 0 < a) {
+  if ((!1 !== a || "boolean" != typeof a) && c >= a && 0 < a) {
     return b[a - 1];
   }
   throw Error("No Sound");
@@ -6673,7 +6673,8 @@ Entry.EntryObject.prototype.updateInputViews = function(a) {
 };
 var tog = !0;
 Entry.EntryObject.prototype.editObjectValues = function(a) {
-  var b = this.getLock() ? [this.nameView_] : [this.nameView_, this.coordinateView_.xInput_, this.coordinateView_.yInput_, this.rotateInput_, this.directionInput_, this.coordinateView_.sizeInput_];
+  var b;
+  b = this.getLock() ? [this.nameView_] : [this.nameView_, this.coordinateView_.xInput_, this.coordinateView_.yInput_, this.rotateInput_, this.directionInput_, this.coordinateView_.sizeInput_];
   if (a) {
     for (a = 0;a < b.length;a++) {
       b[a].removeAttribute("disabled"), b[a].addClass("selectedEditingObject");
@@ -7133,7 +7134,6 @@ Entry.Painter.prototype.fill = function() {
         break;
       }
     }
-    delete c;
     this.file.modified = !0;
     this.reloadContext();
   }
@@ -8667,8 +8667,9 @@ Entry.Playground.prototype.selectMenu = function(a, b) {
       }
     } else {
       if ("phone" == Entry.type) {
-        for (d = 0;d < categories.length;d++) {
-          e = categories[d].attributes[0].value, "string" == typeof a && e == a || "number" == typeof a && a == d ? c[d].hasClass("entrySelectedCategory") ? (this.blockMenu.hide(), c[d].removeClass("entrySelectedCategory"), this.menuInjected = !0, this.selectedMenu = e) : (c[d].addClass("entrySelectedCategory"), this.blockMenu.show(categories[d].childNodes), this.menuInjected = !0, delete this.selctedMenu) : c[d].removeClass("entrySelectedCategory");
+        var f = [];
+        for (d = 0;d < f.length;d++) {
+          e = f[d].attributes[0].value, "string" == typeof a && e == a || "number" == typeof a && a == d ? c[d].hasClass("entrySelectedCategory") ? (this.blockMenu.hide(), c[d].removeClass("entrySelectedCategory"), this.menuInjected = !0, this.selectedMenu = e) : (c[d].addClass("entrySelectedCategory"), this.blockMenu.show(f[d].childNodes), this.menuInjected = !0, delete this.selctedMenu) : c[d].removeClass("entrySelectedCategory");
         }
       }
     }
@@ -8770,7 +8771,7 @@ Entry.Playground.prototype.generatePictureElement = function(a) {
     Entry.playground.object.removePicture(a.id) ? (Entry.removeElement(c), Entry.toast.success(Lang.Workspace.shape_remove_ok, a.name + " " + Lang.Workspace.shape_remove_ok_msg)) : Entry.toast.alert(Lang.Workspace.shape_remove_fail, Lang.Workspace.shape_remove_fail_msg);
   }}, {divider:!0}, {text:Lang.Workspace.context_download, href:"/", action:function(b) {
     b.preventDefault();
-    fileurl ? window.open(a.fileurl) : window.open("/api/sprite/download/image/" + encodeURIComponent(a.filename) + "/" + encodeURIComponent(a.name) + ".png");
+    a.fileurl ? window.open(a.fileurl) : window.open("/api/sprite/download/image/" + encodeURIComponent(a.filename) + "/" + encodeURIComponent(a.name) + ".png");
   }}]);
   var d = Entry.createElement("div");
   d.addClass("entryPlaygroundPictureOrder");
@@ -8955,8 +8956,7 @@ Entry.getStartProject = function(a) {
   entity:{x:0, y:0, regX:142, regY:175, scaleX:.3154574132492113, scaleY:.3154574132492113, rotation:0, direction:90, width:284, height:350, visible:!0}, lock:!1, active:!0}], speed:60};
 };
 Entry.Reporter = function(a) {
-  this.userId;
-  this.projectId;
+  this.projectId = this.userId = null;
   this.isRealTime = a;
   this.activities = [];
 };
@@ -9065,7 +9065,7 @@ Entry.Scene.prototype.updateView = function() {
   }
 };
 Entry.Scene.prototype.addScenes = function(a) {
-  if ((this.scenes_ = a) && 0 != a.length) {
+  if ((this.scenes_ = a) && 0 !== a.length) {
     for (var b = 0, c = a.length;b < c;b++) {
       this.generateElement(a[b]);
     }
@@ -9076,7 +9076,7 @@ Entry.Scene.prototype.addScenes = function(a) {
   this.updateView();
 };
 Entry.Scene.prototype.addScene = function(a, b) {
-  null == a && (a = this.createScene());
+  void 0 === a && (a = this.createScene());
   a.view || this.generateElement(a);
   b || "number" == typeof b ? this.getScenes().splice(b, 0, a) : this.getScenes().push(a);
   Entry.stage.objectContainers.push(Entry.stage.createObjectContainer(a));
@@ -9101,7 +9101,7 @@ Entry.Scene.prototype.removeScene = function(a) {
 };
 Entry.Scene.prototype.selectScene = function(a) {
   a = a || this.getScenes()[0];
-  this.selectedScene && this.selectedScene.id == a.id || (Entry.engine.isState("run") && Entry.container.resetSceneDuringRun(), this.selectedScene = a, Entry.container.setCurrentObjects(), Entry.stage.objectContainers && 0 != Entry.stage.objectContainers.length && Entry.stage.selectObjectContainer(a), (a = Entry.container.getCurrentObjects()[0]) && "minimize" != Entry.type ? Entry.container.selectObject(a.id) : (Entry.stage.selectObject(null), Entry.playground.flushPlayground(), Entry.variableContainer.updateList()), 
+  this.selectedScene && this.selectedScene.id == a.id || (Entry.engine.isState("run") && Entry.container.resetSceneDuringRun(), this.selectedScene = a, Entry.container.setCurrentObjects(), Entry.stage.objectContainers && 0 !== Entry.stage.objectContainers.length && Entry.stage.selectObjectContainer(a), (a = Entry.container.getCurrentObjects()[0]) && "minimize" != Entry.type ? Entry.container.selectObject(a.id) : (Entry.stage.selectObject(null), Entry.playground.flushPlayground(), Entry.variableContainer.updateList()), 
   Entry.container.listView_ || Entry.stage.sortZorder(), Entry.container.updateListView(), this.updateView());
 };
 Entry.Scene.prototype.toJSON = function() {
@@ -9195,7 +9195,7 @@ p.clone = function(a, b) {
     }
   }
   this.nextScript && 1 != b && (c.nextScript = this.nextScript.clone(a, 0), c.nextScript.previousScript = this);
-  this.previousScript && 0 != b && (c.previousScript = this.previousScript.clone(a, 1), c.previousScript.previousScript = this);
+  this.previousScript && 0 !== b && (c.previousScript = this.previousScript.clone(a, 1), c.previousScript.previousScript = this);
   if (this.fields) {
     c.fields = {};
     for (var e in this.fields) {
@@ -9419,11 +9419,13 @@ Entry.Stage.prototype.updateObject = function() {
       a = a.entity;
       this.handle.setWidth(a.getScaleX() * a.getWidth());
       this.handle.setHeight(a.getScaleY() * a.getHeight());
+      var b, c;
       if ("textBox" == a.type) {
         if (a.getLineBreak()) {
-          var b = a.regX * a.scaleX, c = -a.regY * a.scaleY
+          b = a.regX * a.scaleX, c = -a.regY * a.scaleY;
         } else {
-          var d = a.getTextAlign(), c = -a.regY * a.scaleY;
+          var d = a.getTextAlign();
+          c = -a.regY * a.scaleY;
           switch(d) {
             case Entry.TEXT_ALIGN_LEFT:
               b = -a.getWidth() / 2 * a.scaleX;
@@ -9548,7 +9550,7 @@ Entry.Stage.prototype.hideInputField = function() {
 };
 Entry.Stage.prototype.initObjectContainers = function() {
   var a = Entry.scene.scenes_;
-  if (a && 0 != a.length) {
+  if (a && 0 !== a.length) {
     for (var b = 0;b < a.length;b++) {
       this.objectContainers[b] = this.createObjectContainer(a[b]);
     }
@@ -9990,7 +9992,7 @@ Entry.cutStringByLength = function(a, b) {
   return a.substr(0, c);
 };
 Entry.isChild = function(a, b) {
-  if (null != b) {
+  if (!b) {
     for (;b.parentNode;) {
       if ((b = b.parentNode) == a) {
         return !0;
@@ -10452,44 +10454,43 @@ Entry.Func.prototype.edit = function() {
 };
 Entry.Func.generateBlock = function(a, b, c) {
   b = Entry.nodeListToArray(b.childNodes);
-  for (var d in b) {
-    if ("function_create" == b[d].getAttribute("type")) {
-      var e = b[d]
-    }
+  var d, e;
+  for (e in b) {
+    "function_create" == b[e].getAttribute("type") && (d = b[e]);
   }
-  d = new Entry.Script;
-  d.init(e);
-  e = d;
-  e.values && (e = d.values.FIELD);
-  d = '<mutation hashid="' + c + '">';
+  e = new Entry.Script;
+  e.init(d);
+  d = e;
+  d.values && (d = e.values.FIELD);
+  e = '<mutation hashid="' + c + '">';
   c = b = "";
   var f = 0, g = 0;
   a.stringHash = {};
   for (a.booleanHash = {};;) {
-    switch(e.type) {
+    switch(d.type) {
       case "function_field_label":
-        d += '<field type="label" content="' + e.fields.NAME.replace("<", "&lt;").replace(">", "&gt;") + '"></field>';
-        c += e.fields.NAME;
+        e += '<field type="label" content="' + d.fields.NAME.replace("<", "&lt;").replace(">", "&gt;") + '"></field>';
+        c += d.fields.NAME;
         break;
       case "function_field_boolean":
-        var h = e.values.PARAM.hashId;
-        d += '<field type="boolean" hashid="' + h + '"></field>';
+        var h = d.values.PARAM.hashId;
+        e += '<field type="boolean" hashid="' + h + '"></field>';
         b += '<value name="' + h + '"><block type="True"></block></value>';
         a.booleanHash[h] = g;
         g++;
         c += "\ub17c\ub9ac\uac12" + g;
         break;
       case "function_field_string":
-        h = e.values.PARAM.hashId, d += '<field type="string" hashid="' + h + '"></field>', b += '<value name="' + h + '"><block type="text"><field name="NAME">10</field></block></value>', a.stringHash[h] = f, f++, c += "\ubb38\uc790\uac12" + f;
+        h = d.values.PARAM.hashId, e += '<field type="string" hashid="' + h + '"></field>', b += '<value name="' + h + '"><block type="text"><field name="NAME">10</field></block></value>', a.stringHash[h] = f, f++, c += "\ubb38\uc790\uac12" + f;
     }
-    if (e.values && e.values.NEXT) {
-      e = e.values.NEXT;
+    if (d.values && d.values.NEXT) {
+      d = d.values.NEXT;
     } else {
       break;
     }
     c += " ";
   }
-  a = Blockly.Xml.textToDom('<xml><block type="function_general">' + (d + "</mutation>") + b + "</block></xml>").childNodes[0];
+  a = Blockly.Xml.textToDom('<xml><block type="function_general">' + (e + "</mutation>") + b + "</block></xml>").childNodes[0];
   c || (c = "\ud568\uc218");
   return {block:a, description:c};
 };
@@ -10564,45 +10565,46 @@ Entry.Func.doWhenCancel = function() {
 };
 Entry.Func.generateWsBlock = function(a, b, c) {
   b = b.childNodes;
-  for (var d in b) {
-    if ("function_create" == b[d].getAttribute("type")) {
-      var e = b[d];
+  var d, e;
+  for (e in b) {
+    if ("function_create" == b[e].getAttribute("type")) {
+      d = b[e];
       break;
     }
   }
-  d = new Entry.Script;
-  d.init(e);
-  e = d;
-  e.values && (e = d.values.FIELD);
-  d = '<mutation hashid="' + c + '">';
+  e = new Entry.Script;
+  e.init(d);
+  d = e;
+  d.values && (d = e.values.FIELD);
+  e = '<mutation hashid="' + c + '">';
   c = b = "";
   var f = 0, g = 0;
   a.stringHash = {};
   for (a.booleanHash = {};;) {
-    switch(e.type) {
+    switch(d.type) {
       case "function_field_label":
-        d += '<field type="label" content="' + e.fields.NAME.replace("<", "&lt;").replace(">", "&gt;") + '"></field>';
-        c += e.fields.NAME;
+        e += '<field type="label" content="' + d.fields.NAME.replace("<", "&lt;").replace(">", "&gt;") + '"></field>';
+        c += d.fields.NAME;
         break;
       case "function_field_boolean":
-        var h = e.values.PARAM.hashId;
-        d += '<field type="boolean" hashid="' + h + '"></field>';
+        var h = d.values.PARAM.hashId;
+        e += '<field type="boolean" hashid="' + h + '"></field>';
         b += '<value name="' + h + '"><block type="function_param_boolean"><mutation hashid="' + h + '"></mutation></block></value>';
         a.booleanHash[h] = g;
         g++;
         c += "\ub17c\ub9ac\uac12" + g;
         break;
       case "function_field_string":
-        h = e.values.PARAM.hashId, d += '<field type="string" hashid="' + h + '"></field>', b += '<value name="' + h + '"><block type="function_param_string"><mutation hashid="' + h + '"></mutation></block></value>', a.stringHash[h] = f, f++, c += "\ubb38\uc790\uac12" + f;
+        h = d.values.PARAM.hashId, e += '<field type="string" hashid="' + h + '"></field>', b += '<value name="' + h + '"><block type="function_param_string"><mutation hashid="' + h + '"></mutation></block></value>', a.stringHash[h] = f, f++, c += "\ubb38\uc790\uac12" + f;
     }
-    if (e.values && e.values.NEXT) {
-      e = e.values.NEXT;
+    if (d.values && d.values.NEXT) {
+      d = d.values.NEXT;
     } else {
       break;
     }
     c += " ";
   }
-  a = '<xml><block type="function_general">' + (d + "</mutation>") + b + "</block></xml>";
+  a = '<xml><block type="function_general">' + (e + "</mutation>") + b + "</block></xml>";
   c || (c = "\ud568\uc218");
   return {block:Blockly.Xml.textToDom(a).childNodes[0], description:c};
 };
@@ -10934,7 +10936,7 @@ Entry.VariableContainer = function() {
   this.selected = null;
   this.variableAddPanel = {isOpen:!1, info:{object:null, isCloud:!1}};
   this.listAddPanel = {isOpen:!1, info:{object:null, isCloud:!1}};
-  null;
+  this.selectedVariable = null;
   Entry.addEventListener("stop", this.updateCloudVariables);
 };
 Entry.VariableContainer.prototype.createDom = function(a) {
@@ -11007,7 +11009,7 @@ Entry.VariableContainer.prototype.createDom = function(a) {
 };
 Entry.VariableContainer.prototype.createSelectButton = function(a, b) {
   var c = this;
-  void 0 == b && (b = !0);
+  void 0 === b && (b = !0);
   var d = Entry.createElement("td");
   d.addClass("entryVariableSelectButtonWorkspace", a);
   d.innerHTML = Lang.Workspace[a];
@@ -11040,7 +11042,7 @@ Entry.VariableContainer.prototype.updateVariableAddView = function(a) {
 Entry.VariableContainer.prototype.select = function(a) {
   a = this.selected == a ? null : a;
   this.selected && (this.selected.listElement.removeClass("selected"), this.listView_.removeChild(this.selected.callerListElement), delete this.selected.callerListElement, this.selected = null);
-  a && (a.listElement.addClass("selected"), this.selected = a, null != a && (a instanceof Entry.Variable ? (this.renderVariableReference(a), a.object_ && Entry.container.selectObject(a.object_, !0)) : a instanceof Entry.Func ? this.renderFunctionReference(a) : this.renderMessageReference(a)));
+  a && (a.listElement.addClass("selected"), this.selected = a, a instanceof Entry.Variable ? (this.renderVariableReference(a), a.object_ && Entry.container.selectObject(a.object_, !0)) : a instanceof Entry.Func ? this.renderFunctionReference(a) : this.renderMessageReference(a));
 };
 Entry.VariableContainer.prototype.renderMessageReference = function(a) {
   var b = this, c = Entry.container.objects_, d = ["when_message_cast", "message_cast", "message_cast_wait"], e = [], f = Entry.createElement("ul");
@@ -11081,26 +11083,29 @@ Entry.VariableContainer.prototype.renderMessageReference = function(a) {
 Entry.VariableContainer.prototype.renderVariableReference = function(a) {
   var b = this, c = Entry.container.objects_, d = "get_variable change_variable hide_variable set_variable show_variable add_value_to_list remove_value_from_list insert_value_to_list change_value_list_index value_of_index_from_list length_of_list show_list hide_list is_included_in_list".split(" "), e = [], f = Entry.createElement("ul");
   f.addClass("entryVariableListCallerListWorkspace");
-  for (var g in c) {
-    for (var h = c[g], k = h.script.getElementsByTagName("block"), m = 0;m < k.length;m++) {
-      var n = k[m], l = n.getAttribute("type");
-      if (-1 < d.indexOf(l)) {
-        l = Entry.Xml.getField("VARIABLE", n) || Entry.Xml.getField("LIST", n), l == a.id_ && e.push({object:h, block:n});
+  var g, h;
+  for (h in c) {
+    for (var k = c[h], m = k.script.getElementsByTagName("block"), n = 0;n < m.length;n++) {
+      var l = m[n];
+      g = l.getAttribute("type");
+      if (-1 < d.indexOf(g)) {
+        g = Entry.Xml.getField("VARIABLE", l) || Entry.Xml.getField("LIST", l), g == a.id_ && e.push({object:k, block:l});
       } else {
-        if ("function_general" == l) {
-          var q = n.getElementsByTagName("mutation")[0].getAttribute("hashid");
+        if ("function_general" == g) {
+          var q = l.getElementsByTagName("mutation")[0].getAttribute("hashid");
           if (q = Entry.variableContainer.getFunction(q)) {
             for (var q = q.content, q = q.getElementsByTagName("block"), r = 0;r < q.length;r++) {
-              var t = q[r], l = t.getAttribute("type");
-              -1 < d.indexOf(l) && (l = Entry.Xml.getField("VARIABLE", t) || Entry.Xml.getField("LIST", t), l == a.id_ && e.push({object:h, block:t, funcBlock:n}));
+              var t = q[r];
+              g = t.getAttribute("type");
+              -1 < d.indexOf(g) && (g = Entry.Xml.getField("VARIABLE", t) || Entry.Xml.getField("LIST", t), g == a.id_ && e.push({object:k, block:t, funcBlock:l}));
             }
           }
         }
       }
     }
   }
-  for (g in e) {
-    c = e[g], d = Entry.createElement("li"), d.addClass("entryVariableListCallerWorkspace"), d.appendChild(c.object.thumbnailView_.cloneNode()), h = Entry.createElement("div"), h.addClass("entryVariableListCallerNameWorkspace"), h.innerHTML = c.object.name + " : " + Lang.Blocks["VARIABLE_" + c.block.getAttribute("type")], d.appendChild(h), d.caller = c, d.variable = a, d.bindOnClick(function(a) {
+  for (h in e) {
+    c = e[h], d = Entry.createElement("li"), d.addClass("entryVariableListCallerWorkspace"), d.appendChild(c.object.thumbnailView_.cloneNode()), k = Entry.createElement("div"), k.addClass("entryVariableListCallerNameWorkspace"), k.innerHTML = c.object.name + " : " + Lang.Blocks["VARIABLE_" + c.block.getAttribute("type")], d.appendChild(k), d.caller = c, d.variable = a, d.bindOnClick(function(a) {
       Entry.playground.object != this.caller.object && (Entry.container.selectObject(), Entry.container.selectObject(this.caller.object.id, !0), b.select(null));
       a = this.caller;
       a = a.funcBlock ? a.funcBlock.getAttribute("id") : a.block.getAttribute("id");
@@ -11838,14 +11843,9 @@ Entry.VariableContainer.prototype.openVariableAddPanel = function(a) {
   this.updateVariableAddView(a);
 };
 Entry.VariableContainer.prototype.getMenuXml = function(a) {
-  for (var b = [], c = 0 !== this.variables_.length, d = 0 !== this.lists_.length, e = 0, f;f = a[e];e++) {
-    var g = f.tagName;
-    if (g && "BLOCK" == g.toUpperCase()) {
-      var h = f.getAttribute("bCategory");
-      !c && "variable" == h || !d && "list" == h || b.push(f);
-    } else {
-      !g || "SPLITTER" != g.toUpperCase() && "BTN" != g.toUpperCase() || !c && "variable" == h || (d || "list" != h) && b.push(f);
-    }
+  for (var b = [], c = 0 !== this.variables_.length, d = 0 !== this.lists_.length, e, f = 0, g;g = a[f];f++) {
+    var h = g.tagName;
+    h && "BLOCK" == h.toUpperCase() ? (e = g.getAttribute("bCategory"), !c && "variable" == e || !d && "list" == e || b.push(g)) : !h || "SPLITTER" != h.toUpperCase() && "BTN" != h.toUpperCase() || !c && "variable" == e || (d || "list" != e) && b.push(g);
   }
   return b;
 };
@@ -11938,24 +11938,14 @@ Entry.VariableContainer.prototype.generateVariableSettingView = function() {
   b.slideCheck = d;
   c.appendChild(d);
   c.bindOnClick(function(b) {
+    var c;
     b = a.selectedVariable;
-    var c = a.variables_, d = b.getType();
-    if ("variable" == d) {
-      var f = b.toJSON();
-      f.variableType = "slide";
-      f = new Entry.Variable(f);
-      c.splice(c.indexOf(b), 0, f);
-      0 > f.getValue() && f.setValue(0);
-      100 < f.getValue() && f.setValue(100);
-      e.removeAttribute("disabled");
-      g.removeAttribute("disabled");
-    } else {
-      "slide" == d && (f = b.toJSON(), f.variableType = "variable", f = new Entry.Variable(f), c.splice(c.indexOf(b), 0, f), e.setAttribute("disabled", "disabled"), g.setAttribute("disabled", "disabled"));
-    }
-    a.createVariableView(f);
+    var d = a.variables_, f = b.getType();
+    "variable" == f ? (c = b.toJSON(), c.variableType = "slide", c = new Entry.Variable(c), d.splice(d.indexOf(b), 0, c), 0 > c.getValue() && c.setValue(0), 100 < c.getValue() && c.setValue(100), e.removeAttribute("disabled"), g.removeAttribute("disabled")) : "slide" == f && (c = b.toJSON(), c.variableType = "variable", c = new Entry.Variable(c), d.splice(d.indexOf(b), 0, c), e.setAttribute("disabled", "disabled"), g.setAttribute("disabled", "disabled"));
+    a.createVariableView(c);
     a.removeVariable(b);
-    a.updateSelectedVariable(f);
-    f.generateView();
+    a.updateSelectedVariable(c);
+    c.generateView();
   });
   c = Entry.createElement("div");
   b.minMaxWrapper = c;

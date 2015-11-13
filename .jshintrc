@@ -6,6 +6,7 @@
     "-W058": true,
     "globalstrict": true,
     "loopfunc": true,
+    "validthis": true,
     "globals": {
         "goog": true,
         "createjs": true,
@@ -22,6 +23,8 @@
         "Ntry": true,
         "Snap": true,
         "mina": true,
-        "Touch": true
+        "Touch": true,
+        "io": true,
+        "ActiveXObject": true
     }
 }

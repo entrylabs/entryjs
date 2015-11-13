@@ -1051,7 +1051,7 @@ Entry.EntryObject.prototype.getPicture = function(value) {
     if (!(checker === false && typeof checker == 'boolean') && len >= checker && checker > 0) {
         return pictures[checker-1];
     }
-    throw new Error('No picture with pictureId : ' + pictureId);
+    throw new Error('No picture found');
 };
 
 Entry.EntryObject.prototype.setPicture = function(picture) {
@@ -1062,7 +1062,7 @@ Entry.EntryObject.prototype.setPicture = function(picture) {
             return;
         }
     }
-    throw new Error('No picture with pictureId : ' + pictureId);
+    throw new Error('No picture found');
 };
 
 /**
@@ -1150,7 +1150,7 @@ Entry.EntryObject.prototype.removeSound = function(soundId) {
  * @return {string}
  */
 Entry.EntryObject.prototype.getRotateMethod = function() {
-    if(this.rotateMethod == null)
+    if(!this.rotateMethod)
         this.rotateMethod = 'free';
     return this.rotateMethod;
 };
@@ -1161,7 +1161,7 @@ Entry.EntryObject.prototype.getRotateMethod = function() {
  */
 Entry.EntryObject.prototype.setRotateMethod = function(rotateMethod) {
     /** @type {string} */
-    if(rotateMethod == null)
+    if(!rotateMethod)
         rotateMethod = 'free';
     this.rotateMethod = rotateMethod;
     this.updateRotateMethodView();
@@ -1189,7 +1189,7 @@ Entry.EntryObject.prototype.updateRotateMethodView = function() {
  */
 Entry.EntryObject.prototype.toggleInformation = function(isToggle) {
     this.setRotateMethod(this.getRotateMethod());
-    if (isToggle == null)
+    if (isToggle === undefined)
         isToggle = this.isInformationToggle = !this.isInformationToggle;
     if (isToggle) {
         this.view_.addClass('informationToggle');
@@ -1320,16 +1320,15 @@ Entry.EntryObject.prototype.getSound = function(value) {
     value = value.trim();
     var sounds = this.sounds,
         len = sounds.length;
-    for (var i=0; i<len; i++) {
-        if (sounds[i].id == value)
-            return sounds[i];
-    }
-    for (i=0; i<len; i++) {
-        if (sounds[i].name == value )
-            return sounds[i];
-    }
+    for (var i=0; i<len; i++)
+        if (sounds[i].id == value) return sounds[i];
+
+    for (i=0; i<len; i++)
+        if (sounds[i].name == value ) return sounds[i];
+
     var checker = Entry.parseNumber(value);
-    if (!(checker == false && typeof checker == 'boolean') && len >= checker && checker > 0) {
+    if (!(checker === false && typeof checker == 'boolean') &&
+        len >= checker && checker > 0) {
         return sounds[checker-1];
     }
     throw new Error('No Sound');
@@ -1359,7 +1358,8 @@ Entry.EntryObject.prototype.getLock = function() {
 };
 
 Entry.EntryObject.prototype.setLock = function(bool) {
-    return this.lock = bool;
+    this.lock = bool;
+    return bool;
 };
 
 Entry.EntryObject.prototype.updateInputViews = function(isLocked) {
@@ -1384,10 +1384,11 @@ Entry.EntryObject.prototype.updateInputViews = function(isLocked) {
 var tog = true;
 Entry.EntryObject.prototype.editObjectValues = function(click) {
 
+    var inputs;
     if(this.getLock()) {
-        var inputs = [this.nameView_];
+        inputs = [this.nameView_];
     } else {
-        var inputs = [
+        inputs = [
             this.nameView_, this.coordinateView_.xInput_,
             this.coordinateView_.yInput_, this.rotateInput_,
             this.directionInput_, this.coordinateView_.sizeInput_

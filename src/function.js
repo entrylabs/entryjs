@@ -310,9 +310,10 @@ Entry.Func.prototype.edit = function() {
 
 Entry.Func.generateBlock = function(func, content, id) {
     var topBlocks = Entry.nodeListToArray(content.childNodes);
+    var createBlock;
     for (var i in topBlocks)
         if (topBlocks[i].getAttribute('type') == 'function_create')
-            var createBlock = topBlocks[i];
+            createBlock = topBlocks[i];
     var script = new Entry.Script();
     script.init(createBlock);
     var field = script;
@@ -478,9 +479,10 @@ Entry.Func.doWhenCancel = function() {
 
 Entry.Func.generateWsBlock = function(func, content, id) {
     var topBlocks = content.childNodes;
+    var createBlock;
     for (var i in topBlocks) {
         if (topBlocks[i].getAttribute('type') == 'function_create') {
-            var createBlock = topBlocks[i];
+            createBlock = topBlocks[i];
             break;
         }
     }

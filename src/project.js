@@ -1,7 +1,6 @@
 'use strict';
 
 Entry.getStartProject = function(mediaFilePath) {
-
   return {
     "category" : "기타",
     "scenes" : [
@@ -96,6 +95,6 @@ Entry.getStartProject = function(mediaFilePath) {
         }
     ],
     "speed" : 60
-  }
+  };
 
 };

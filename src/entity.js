@@ -655,7 +655,7 @@ Entry.EntityObject.prototype.setText = function(text) {
     if (this.parent.objectType != 'textBox')
         return;
     /** @type {string} */
-    if (text == null)
+    if (text === undefined)
         text = '';
     this.text = text;
     this.textObject.text = this.text;
@@ -682,7 +682,7 @@ Entry.EntityObject.prototype.getText = function() {
 Entry.EntityObject.prototype.setTextAlign = function(textAlign) {
     if (this.parent.objectType != 'textBox')
         return;
-    if (textAlign == null)
+    if (textAlign === undefined)
         textAlign = Entry.TEXT_ALIGN_CENTER;
     this.textAlign = textAlign;
 
@@ -709,10 +709,9 @@ Entry.EntityObject.prototype.getTextAlign = function() {
  * @param {boolean} lineBreak
  */
 Entry.EntityObject.prototype.setLineBreak = function(lineBreak) {
-    if (this.parent.objectType != 'textBox')
-        return;
-    if (lineBreak == null)
-        lineBreak = false;
+    if (this.parent.objectType != 'textBox') return;
+
+    if (lineBreak === undefined) lineBreak = false;
 
     var previousState = this.lineBreak;
     this.lineBreak = lineBreak;
@@ -747,7 +746,7 @@ Entry.EntityObject.prototype.getLineBreak = function() {
  */
 Entry.EntityObject.prototype.setVisible = function(visible) {
     /** @type {string} */
-    if(visible == null)
+    if(visible === undefined)
         visible = true;
     this.visible = visible;
     this.object.visible = this.visible;

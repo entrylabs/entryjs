@@ -834,12 +834,9 @@ Entry.Painter.prototype.fill = function() {
         if (pixelStack.length > 1080)
             break;
     }
-    delete pixelStack;
 
     this.file.modified = true;
     this.reloadContext();
-
-
 };
 
 Entry.Painter.prototype.reloadContext = function() {

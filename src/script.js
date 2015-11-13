@@ -91,7 +91,7 @@ p.clone = function(clonedEntity, type) {
         clone.nextScript = this.nextScript.clone(clonedEntity, 0);
         clone.nextScript.previousScript = this;
     }
-    if (this.previousScript && type != 0) {
+    if (this.previousScript && type !== 0) {
         clone.previousScript = this.previousScript.clone(clonedEntity, 1);
         clone.previousScript.previousScript = this;
     }

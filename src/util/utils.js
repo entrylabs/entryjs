@@ -364,8 +364,10 @@ Entry.parseNumber = function(value) {
  */
 Entry.countStringLength = function(dataString) {
     var p, len = 0;
-    for (p = 0; p < dataString.length; p++)
-        (dataString.charCodeAt(p) > 255) ? len+=2 : len++;
+    for (p = 0; p < dataString.length; p++) {
+        if (dataString.charCodeAt(p) > 255) len+=2;
+        else len++;
+    }
     return len;
 };
 
@@ -378,8 +380,10 @@ Entry.countStringLength = function(dataString) {
  */
 Entry.cutStringByLength = function(dataString, stringLength) {
     var p, len = 0;
-    for (p = 0; len < stringLength && p < dataString.length; p++)
-        (dataString.charCodeAt(p) > 255) ? len+=2 : len++;
+    for (p = 0; len < stringLength && p < dataString.length; p++) {
+        if (dataString.charCodeAt(p) > 255) len+=2;
+        else len++;
+    }
     return dataString.substr(0,p);
 };
 
@@ -391,9 +395,9 @@ Entry.cutStringByLength = function(dataString, stringLength) {
  * @return {Boolean}
  */
 Entry.isChild = function(parent, child) {
-    if (child != null) {
+    if (!child) {
         while (child.parentNode) {
-            if ( (child = child.parentNode) == parent)
+            if ((child = child.parentNode) == parent)
                 return true;
         }
     }
@@ -516,11 +520,11 @@ Entry.findObjsByKey = function(arr, keyName, key) {
 Entry.factorials = [];
 
 Entry.factorial = function(n){
-    if (n === 0 || n == 1)
-        return 1;
-    if (Entry.factorials[n] > 0)
-        return Entry.factorials[n];
-    return Entry.factorials[n] = Entry.factorial(n-1) * n;
+    if (n === 0 || n == 1) return 1;
+    if (Entry.factorials[n] > 0) return Entry.factorials[n];
+
+    var ret = Entry.factorials[n] = Entry.factorial(n-1) * n;
+    return ret;
 };
 
 Entry.getListRealIndex = function(index, list){
