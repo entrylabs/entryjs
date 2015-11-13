@@ -209,7 +209,7 @@ Entry.BlockView = function(block, board) {
     p._toGlobalCoordinate = function() {
         var matrix = this.svgGroup.transform().globalMatrix;
         this._moveTo(matrix.e, matrix.f, false);
-        this._board.svgGroup.append(this.svgGroup);
+        this._board.svgBlockGroup.append(this.svgGroup);
     };
 
     p._moveTo = function(x, y, animate) {
