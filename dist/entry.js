@@ -12437,7 +12437,7 @@ Entry.BlockView = function(a, b) {
   this._schema = Entry.block[a.type];
   this._skeleton = Entry.skeleton[this._schema.skeleton];
   this._contents = [];
-  this._skeleton.morph && this.block.observe(this, "_renderPath", this._skeleton.morph);
+  this._skeleton.morph && this.block.observe(this, "_renderPath", this._skeleton.morph, !1);
   this.prevAnimatingObserver = this.prevObserver = null;
   this._startRender(a);
   this.block.observe(this, "_bindPrev", ["prev"]);
@@ -12496,12 +12496,12 @@ Entry.BlockView = function(a, b) {
   };
   a._renderPath = function() {
     var a = this._skeleton.path(this), c = this;
-    setTimeout(function() {
-      c._darkenPath.animate({d:a}, 200, mina.easeinout, function() {
+    0 !== Entry.ANIMATION_DURATION ? setTimeout(function() {
+      c._darkenPath.animate({d:a}, Entry.ANIMATION_DURATION, mina.easeinout, function() {
         c.set({animating:!1});
       });
-      c._path.animate({d:a}, 200, mina.easeinout);
-    }, 0);
+      c._path.animate({d:a}, Entry.ANIMATION_DURATION, mina.easeinout);
+    }, 0) : (this._darkenPath.attr({d:a}), this._path.attr({d:a}), this.set({animating:!1}));
   };
   a._align = function(a) {
     if (null !== this.block.prev) {
@@ -12515,7 +12515,7 @@ Entry.BlockView = function(a, b) {
     a = void 0 === a ? !0 : a;
     var c = "t" + this.x + " " + this.y;
     this.svgGroup.stop();
-    a ? this.svgGroup.animate({transform:c}, 300, mina.easeinout) : this.svgGroup.attr({transform:c});
+    a && 0 !== Entry.ANIMATION_DURATION ? this.svgGroup.animate({transform:c}, Entry.ANIMATION_DURATION, mina.easeinout) : this.svgGroup.attr({transform:c});
   };
   a._toLocalCoordinate = function(a) {
     var c = a.transform().globalMatrix, d = this.svgGroup.transform().globalMatrix;
@@ -12646,7 +12646,7 @@ Entry.BlockView = function(a, b) {
         if (a = c.originalHeight) {
           setTimeout(function() {
             c.background && (c.background.remove(), c.nextBackground.remove(), delete c.background, delete c.nextBackground);
-          }, 200), c.set({height:a}), delete c.originalHeight;
+          }, Entry.ANIMATION_DURATION), c.set({height:a}), delete c.originalHeight;
         }
       }
       c.block.thread.changeEvent.notify();
@@ -13326,6 +13326,7 @@ Entry.Board = function(a) {
   this.svgThreadGroup.board = this;
   this.svgBlockGroup = this.svgGroup.group();
   this.svgBlockGroup.board = this;
+  Entry.ANIMATION_DURATION = 200;
 };
 (function(a) {
   a.schema = {code:null, dragBlock:null, magnetedBlockView:null};

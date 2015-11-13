@@ -49,6 +49,7 @@ Entry.Board = function(dom) {
     this.svgBlockGroup = this.svgGroup.group();
     this.svgBlockGroup.board = this;
 
+    Entry.ANIMATION_DURATION = 200;
 };
 
 (function(p) {

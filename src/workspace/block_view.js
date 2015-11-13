@@ -21,7 +21,7 @@ Entry.BlockView = function(block, board) {
     this._contents = [];
 
     if (this._skeleton.morph) {
-        this.block.observe(this, "_renderPath", this._skeleton.morph);
+        this.block.observe(this, "_renderPath", this._skeleton.morph, false);
     }
 
     this.prevObserver = null;
@@ -144,17 +144,28 @@ Entry.BlockView = function(block, board) {
         var path = this._skeleton.path(this);
         var that = this;
 
-        setTimeout(function() {
-            that._darkenPath.animate({
+        if (Entry.ANIMATION_DURATION !== 0) {
+            setTimeout(function() {
+                that._darkenPath.animate({
+                    d: path
+                }, Entry.ANIMATION_DURATION, mina.easeinout, function() {
+                    that.set({animating: false});
+                });
+
+                that._path.animate({
+                    d: path
+                }, Entry.ANIMATION_DURATION, mina.easeinout);
+            }, 0);
+        } else {
+            this._darkenPath.attr({
                 d: path
-            }, 200, mina.easeinout, function() {
-                that.set({animating: false});
             });
 
-            that._path.animate({
+            this._path.attr({
                 d: path
-            }, 200, mina.easeinout);
-        }, 0);
+            });
+            this.set({animating: false});
+        }
     };
 
     p._align = function(animate) {
@@ -177,10 +188,10 @@ Entry.BlockView = function(block, board) {
             (this.x) + " " +
             (this.y);
         this.svgGroup.stop();
-        if (animate) {
+        if (animate && Entry.ANIMATION_DURATION !== 0) {
             this.svgGroup.animate({
                 transform: transform
-            }, 300, mina.easeinout);
+            }, Entry.ANIMATION_DURATION, mina.easeinout);
         } else {
             this.svgGroup.attr({
                 transform: transform
@@ -467,7 +478,7 @@ Entry.BlockView = function(block, board) {
                         delete blockView.background;
                         delete blockView.nextBackground;
                     }
-                }, 200);
+                }, Entry.ANIMATION_DURATION);
                 blockView.set({
                     height: height
                 });
