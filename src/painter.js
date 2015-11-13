@@ -369,8 +369,9 @@ Entry.Painter.prototype.newPicture = function() {
             height: 1,
             width: 1
         },
-        filename: "_1x1",
-        name: "새그림"
+        //filename: "_1x1",
+        fileurl: Entry.mediaFilePath + '_1x1.png',
+        name: Lang.Workspace.new_picture
     };
 
     newPicture.id = Entry.generateHash();
