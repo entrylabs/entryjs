@@ -67,10 +67,21 @@ Entry.Utils.bindGlobalEvent = function() {
             Entry.windowResized.notify();
         }));
     }
+
     if (!Entry.documentMousedown) {
         Entry.documentMousedown = new Entry.Event(window);
         $(document).on('mousedown', (function(e) {
             Entry.documentMousedown.notify(e);
+        }));
+    }
+
+    if (!Entry.documentMousemove) {
+        Entry.mouseCoordinate = {};
+        Entry.documentMousemove = new Entry.Event(window);
+        $(document).on('mousemove', (function(e) {
+            Entry.documentMousemove.notify(e);
+            Entry.mouseCoordinate.x = e.clientX;
+            Entry.mouseCoordinate.y = e.clientY;
         }));
     }
 };

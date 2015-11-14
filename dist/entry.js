@@ -9867,6 +9867,11 @@ Entry.Utils.bindGlobalEvent = function() {
   Entry.documentMousedown || (Entry.documentMousedown = new Entry.Event(window), $(document).on("mousedown", function(a) {
     Entry.documentMousedown.notify(a);
   }));
+  Entry.documentMousemove || (Entry.mouseCoordinate = {}, Entry.documentMousemove = new Entry.Event(window), $(document).on("mousemove", function(a) {
+    Entry.documentMousemove.notify(a);
+    Entry.mouseCoordinate.x = a.clientX;
+    Entry.mouseCoordinate.y = a.clientY;
+  }));
 };
 Entry.sampleColours = [];
 Entry.assert = function(a, b) {
@@ -13275,10 +13280,8 @@ Entry.FieldTrashcan = function(a) {
   a.checkBlock = function() {
     var a = this.dragBlock;
     if (a && a.block.isDeletable()) {
-      var c = this.board.offset, d = this.getPosition(), e = d.x + c.left, c = d.y + c.top, f, g;
-      if (a = a.dragInstance) {
-        f = a.offsetX, g = a.offsetY;
-      }
+      var c = this.board.offset, d = this.getPosition(), e = d.x + c.left, c = d.y + c.top, f, g, a = a.dragInstance, d = Entry.mouseCoordinate;
+      a && (f = a.offsetX || d.x, g = a.offsetY || d.y);
       this.tAnimation(f >= e && g >= c);
     }
   };

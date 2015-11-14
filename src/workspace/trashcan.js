@@ -54,9 +54,10 @@ Entry.FieldTrashcan = function(board) {
 
         var mouseX, mouseY;
         var instance = dragBlock.dragInstance;
+        var mouse = Entry.mouseCoordinate;
         if (instance) {
-            mouseX = instance.offsetX;
-            mouseY = instance.offsetY;
+            mouseX = instance.offsetX || mouse.x;
+            mouseY = instance.offsetY || mouse.y;
         }
         var isOver = mouseX >= trashcanX &&
             mouseY >= trashcanY;
