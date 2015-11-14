@@ -12402,7 +12402,8 @@ Entry.BlockMenu = function(a) {
     return this._code;
   };
   a.moveBoardBlock = function() {
-    var a = this.workspace.getBoard().offset, c = this.offset, d = a.left - c.left, a = a.top - c.top, e = this.dragBlock, c = this._boardBlockView;
+    var a = this.workspace.getBoard().offset, c = this.offset, d = a.left - c.left, a = a.top - c.top, e = this.dragBlock, c = this._boardBlockView, f = Entry.mouseCoordinate;
+    c.dragInstance.set({offsetX:f.x, offsetY:f.y});
     if (0 === c.dragInstance.height) {
       for (var f = c.block, g = 0;f;) {
         g += f.view.height, f = f.next;
@@ -13280,8 +13281,10 @@ Entry.FieldTrashcan = function(a) {
   a.checkBlock = function() {
     var a = this.dragBlock;
     if (a && a.block.isDeletable()) {
-      var c = this.board.offset, d = this.getPosition(), e = d.x + c.left, c = d.y + c.top, f, g, a = a.dragInstance, d = Entry.mouseCoordinate;
-      a && (f = a.offsetX || d.x, g = a.offsetY || d.y);
+      var c = this.board.offset, d = this.getPosition(), e = d.x + c.left, c = d.y + c.top, f, g;
+      if (a = a.dragInstance) {
+        f = a.offsetX, g = a.offsetY;
+      }
       this.tAnimation(f >= e && g >= c);
     }
   };
