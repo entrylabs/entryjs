@@ -12402,13 +12402,13 @@ Entry.BlockMenu = function(a) {
     return this._code;
   };
   a.moveBoardBlock = function() {
-    var a = this.workspace.getBoard().offset, c = this.offset, d = a.left - c.left, a = a.top - c.top, e = this.dragBlock, c = this._boardBlockView, f = Entry.mouseCoordinate;
-    c.dragInstance.set({offsetX:f.x, offsetY:f.y});
-    if (0 === c.dragInstance.height) {
-      for (var f = c.block, g = 0;f;) {
-        g += f.view.height, f = f.next;
+    var a = this.workspace.getBoard().offset, c = this.offset, d = a.left - c.left, a = a.top - c.top, e = this.dragBlock, c = this._boardBlockView, f = c.dragInstance, g = Entry.mouseCoordinate;
+    f.set({offsetX:g.x, offsetY:g.y});
+    if (0 === f.height) {
+      for (var g = c.block, h = 0;g;) {
+        h += g.view.height, g = g.next;
       }
-      c.dragInstance.set({height:g});
+      f.set({height:h});
     }
     e && c && (f = e.x, e = e.y, c.dragMode = 2, c._moveTo(f - d, e - a, !1));
   };

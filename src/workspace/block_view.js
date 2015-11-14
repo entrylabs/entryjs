@@ -356,8 +356,8 @@ Entry.BlockView = function(block, board) {
     p._getCloseBlock = function() {
         var board = this.getBoard();
         var isInBlockMenu = board instanceof Entry.BlockMenu;
-
-        var x = this.x, y = this.y;
+        var x = this.x,
+            y = this.y;
 
         if (isInBlockMenu)
             x -= board._svgWidth;

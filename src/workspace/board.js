@@ -159,8 +159,8 @@ Entry.Board = function(dom) {
                 false
             );
             dragInstance.set({
-                 offsetX: e.clientX,
-                 offsetY: e.clientY
+                offsetX: e.clientX,
+                offsetY: e.clientY
             });
         }
 
