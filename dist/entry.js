@@ -12353,6 +12353,8 @@ Entry.BlockMenu = function(a) {
     this.svgThreadGroup.remove();
     this.svgBlockGroup = a.svgBlockGroup;
     this.svgThreadGroup = a.svgThreadGroup;
+    this.svgGroup.append(this.svgThreadGroup);
+    this.svgGroup.append(this.svgBlockGroup);
   };
   a.align = function() {
     for (var a = this.code.getThreads(), c = 10, d = this._svgDom.width() / 2, e = 0, f = a.length;e < f;e++) {
