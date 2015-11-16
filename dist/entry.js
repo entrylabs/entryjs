@@ -4135,10 +4135,10 @@ Entry.Event = function(a) {
     }
   };
   a.notify = function(a) {
-    for (var c = this._listeners, d = this._sender, e = c.length - 1;0 <= e;e--) {
-      var f = c[e];
-      f.fn.call(f.obj, d, a);
-    }
+    var c = this._sender;
+    this._listeners.slice().forEach(function(d) {
+      d.fn.call(d.obj, c, a);
+    });
   };
 })(Entry.Event.prototype);
 Entry.Observer = function(a, b, c, d) {

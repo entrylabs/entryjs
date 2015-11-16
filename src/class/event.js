@@ -30,16 +30,14 @@ Entry.Event = function(sender) {
     };
 
     p.notify = function (args) {
-        var listeners = this._listeners;
         var sender = this._sender;
 
-        for (var i=listeners.length-1; i>=0; i--) {
-            var listener = listeners[i];
+        this._listeners.slice().forEach(function(listener){
             listener.fn.call(
                 listener.obj,
                 sender,
                 args
             );
-        }
+        });
     };
 })(Entry.Event.prototype);
