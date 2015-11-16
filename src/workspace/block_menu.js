@@ -64,6 +64,8 @@ Entry.BlockMenu = function(dom) {
         this.svgThreadGroup.remove();
         this.svgBlockGroup = codeView.svgBlockGroup;
         this.svgThreadGroup = codeView.svgThreadGroup;
+        this.svgGroup.append(this.svgThreadGroup);
+        this.svgGroup.append(this.svgBlockGroup);
     };
 
     p.align = function() {
@@ -130,12 +132,13 @@ Entry.BlockMenu = function(dom) {
                 this._boardBlockView = workspaceBoard.code.
                     cloneThread(currentThread).
                     getFirstBlock().view;
-                this._boardBlockView.dragInstance = new Entry.DragInstance({
-                    height: 0
-                });
+                this._boardBlockView.dragInstance =
+                    new Entry.DragInstance({height: 0});
+
                 workspaceBoard.set({
                     dragBlock : this._boardBlockView
                 });
+                this._boardBlockView.addDragging();
                 this._boardBlockView.dragMode = 1;
 
                 this._boardBlockView._moveTo(
@@ -165,6 +168,7 @@ Entry.BlockMenu = function(dom) {
         //destroy boardBlock below the range
         var animate = false;
         boardBlockView.dragMode = 0;
+        boardBlockView.removeDragging();
         if (dragBlockView.x < this._svgWidth) {
             animate = true;
             boardCode.destroyThread(boardBlock.getThread(), animate);
@@ -193,14 +197,21 @@ Entry.BlockMenu = function(dom) {
         var dragBlockView = this.dragBlock;
         var boardBlockView = this._boardBlockView;
 
-        if (boardBlockView.dragInstance.height === 0) {
+        var instance = boardBlockView.dragInstance;
+
+        var mouse = Entry.mouseCoordinate;
+        instance.set({
+             offsetX: mouse.x,
+             offsetY: mouse.y
+        });
+        if (instance.height === 0) {
             var block = boardBlockView.block;
             var height = 0;
             while (block) {
                 height += block.view.height;
                 block = block.next;
             }
-            boardBlockView.dragInstance.set({
+            instance.set({
                 height: height
             });
         }

@@ -235,7 +235,6 @@ Entry.BlockView = function(block, board) {
     p.onMouseDown = function(e) {
         if (e.button === 0 || e instanceof Touch) {
             this.dominate();
-            if (!this.block.isMovable()) return;
             var doc = $(document);
             doc.bind('mousemove.block', onMouseMove);
             doc.bind('mouseup.block', onMouseUp);
@@ -251,7 +250,7 @@ Entry.BlockView = function(block, board) {
                 height: 0,
                 mode: true
             });
-            this._addDragging();
+            this.addDragging();
             this.dragMode = Entry.DRAG_MODE_MOUSEDOWN;
         }
 
@@ -260,6 +259,7 @@ Entry.BlockView = function(block, board) {
         function onMouseMove(e) {
             e.stopPropagation();
             e.preventDefault();
+            if (!blockView.block.isMovable()) return;
 
             if(blockView.block.prev) {
                 blockView.block.prev.setNext(null);
@@ -319,7 +319,7 @@ Entry.BlockView = function(block, board) {
         var board = this.getBoard();
         var dragMode = this.dragMode;
         var block = this.block;
-        this._removeDragging();
+        this.removeDragging();
         this.dragMode = Entry.DRAG_MODE_NONE;
         if (board instanceof Entry.BlockMenu) {
             board.terminateDrag();
@@ -356,8 +356,8 @@ Entry.BlockView = function(block, board) {
     p._getCloseBlock = function() {
         var board = this.getBoard();
         var isInBlockMenu = board instanceof Entry.BlockMenu;
-
-        var x = this.x, y = this.y;
+        var x = this.x,
+            y = this.y;
 
         if (isInBlockMenu)
             x -= board._svgWidth;
@@ -489,11 +489,11 @@ Entry.BlockView = function(block, board) {
         blockView.block.thread.changeEvent.notify();
     };
 
-    p._addDragging = function() {
+    p.addDragging = function() {
         this.svgGroup.addClass('dragging');
     };
 
-    p._removeDragging = function() {
+    p.removeDragging = function() {
         this.svgGroup.removeClass('dragging');
     };
 
