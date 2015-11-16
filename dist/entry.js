@@ -12380,7 +12380,7 @@ Entry.BlockMenu = function(a) {
     if (null !== this.dragBlock) {
       this.dragBlockObserver && this.removeDragBlockObserver();
       var c = this._svgWidth, d = this.dragBlock, e = d.block, f = this.code, g = e.getThread();
-      e && g && (f.cloneThread(g), a && d.observe(this, "moveBoardBlock", ["x", "y"], !1), d.dominate(), a = this.workspace.getBoard(), this._boardBlockView = a.code.cloneThread(g).getFirstBlock().view, this._boardBlockView.dragInstance = new Entry.DragInstance({height:0}), a.set({dragBlock:this._boardBlockView}), this._boardBlockView.addDragging(), this._boardBlockView.dragMode = 1, this._boardBlockView._moveTo(d.x - c, d.y - 0, !1));
+      e && g && (f.cloneThread(g), a && d.observe(this, "moveBoardBlock", ["x", "y"], !1), d.dominate(), a = this.workspace.getBoard(), this._boardBlockView = a.code.cloneThread(g).getFirstBlock().view, this._boardBlockView.dragInstance = new Entry.DragInstance({height:0}), a.set({dragBlock:this._boardBlockView}), this._boardBlockView.addDragging(), this._boardBlockView.dragMode = Entry.DRAG_MODE_MOUSEDOWN, this._boardBlockView._moveTo(d.x - c, d.y - 0, !1));
       if (this._boardBlockView) {
         return this._boardBlockView.block.id;
       }
@@ -13083,7 +13083,11 @@ Entry.Block.FOLLOW = 3;
     this.view || (this.set({view:new Entry.BlockView(this, a)}), this._updatePos());
   };
   a.clone = function(a) {
-    return new Entry.Block(this.toJSON(!0), a);
+    for (var c = new Entry.Block(this.toJSON(!0), a), d = this._schema.contents, e = 0;e < d.length;e++) {
+      var f = d[e];
+      "Statement" == f.type && c.values[f.key].setCode(a.getCode());
+    }
+    return c;
   };
   a.toJSON = function(a) {
     var c = this._toJSON();
@@ -13257,6 +13261,12 @@ Entry.Thread = function(a, b) {
   };
   a.inspectExist = function() {
     0 === this._data.length && this.destroy();
+  };
+  a.getCode = function() {
+    return this._code;
+  };
+  a.setCode = function(a) {
+    this._code = a;
   };
 })(Entry.Thread.prototype);
 Entry.ThreadView = function(a, b) {

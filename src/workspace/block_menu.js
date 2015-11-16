@@ -139,7 +139,7 @@ Entry.BlockMenu = function(dom) {
                     dragBlock : this._boardBlockView
                 });
                 this._boardBlockView.addDragging();
-                this._boardBlockView.dragMode = 1;
+                this._boardBlockView.dragMode = Entry.DRAG_MODE_MOUSEDOWN;
 
                 this._boardBlockView._moveTo(
                     blockView.x-svgWidth,

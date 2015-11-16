@@ -178,4 +178,12 @@ Entry.Thread = function(thread, code) {
         if (this._data.length === 0) this.destroy();
     };
 
+    p.getCode = function() {
+        return this._code;
+    };
+
+    p.setCode = function(code) {
+        this._code = code;
+    };
+
 })(Entry.Thread.prototype);

@@ -118,10 +118,19 @@ Entry.Block.FOLLOW = 3;
     };
 
     p.clone = function(thread) {
-        return new Entry.Block(
+        var block = new Entry.Block(
             this.toJSON(true),
             thread
         );
+
+        var contents = this._schema.contents;
+        for (var i = 0; i < contents.length; i++) {
+            var content = contents[i];
+            if (content.type == "Statement")
+                block.values[content.key].setCode(thread.getCode());
+        }
+
+        return block;
     };
 
     p.toJSON = function(isNew) {
@@ -140,7 +149,8 @@ Entry.Block.FOLLOW = 3;
         for (var i = 0; i < contents.length; i++) {
             var content = contents[i];
             if (content.type == "Statement") {
-                json.values[content.key] = this.values[content.key].toJSON(isNew);
+                json.values[content.key] =
+                    this.values[content.key].toJSON(isNew);
             }
         }
         return json;
