@@ -272,9 +272,9 @@ Entry.BlockView = function(block, board) {
 
             if (blockView.dragInstance.height === 0) {
                 var block = blockView.block;
-                var height = 0;
+                var height = - 1;
                 while (block) {
-                    height += block.view.height;
+                    height += block.view.height + 1;
                     block = block.next;
                 }
                 blockView.dragInstance.set({

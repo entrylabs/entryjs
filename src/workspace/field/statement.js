@@ -45,8 +45,8 @@ Entry.FieldStatement = function(content, blockView) {
     };
 
     p.calcHeight = function() {
-        var block = this.dummyBlock.next,
-            height = 0;
+        var block = this.dummyBlock,
+            height = - 1;
         while (block) {
             height += block.view.height + 1;
             block = block.next;
@@ -112,6 +112,8 @@ Entry.DummyBlock = function(statementField, blockView) {
         this, "_inheritAnimate", ["animating"]
     );
 
+    this.observe(this, "_updateBG", ["magneting"]);
+
     this._align();
 };
 
@@ -121,7 +123,8 @@ Entry.DummyBlock = function(statementField, blockView) {
         y: 0,
         width: 0,
         height: 0,
-        animating: false
+        animating: false,
+        magneting: false
     };
 
     p._align = function(animate) {
@@ -155,6 +158,16 @@ Entry.DummyBlock = function(statementField, blockView) {
 
     p._inheritAnimate = function() {
         this.set({animating: this.originBlockView.animating});
+    };
+
+    p._updateBG = function() {
+        if (this.magneting) {
+            var dragThreadHeight = this.getBoard().dragBlock.dragInstance.height;
+            this.set({height: dragThreadHeight});
+        } else {
+            this.set({height: 0});
+        }
+        this._thread.changeEvent.notify();
     };
 
 })(Entry.DummyBlock.prototype);

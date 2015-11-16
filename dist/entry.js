@@ -12537,8 +12537,8 @@ Entry.BlockView = function(a, b) {
       f.block.prev && (f.block.prev.setNext(null), f.block.setPrev(null), f.block.thread.changeEvent.notify());
       this.animating && this.set({animating:!1});
       if (0 === f.dragInstance.height) {
-        for (var b = f.block, c = 0;b;) {
-          c += b.view.height, b = b.next;
+        for (var b = f.block, c = -1;b;) {
+          c += b.view.height + 1, b = b.next;
         }
         f.dragInstance.set({height:c});
       }
@@ -12891,7 +12891,7 @@ Entry.FieldStatement = function(a, b) {
     this._thread.changeEvent.attach(this, this.calcHeight);
   };
   a.calcHeight = function() {
-    for (var a = this.dummyBlock.next, c = 0;a;) {
+    for (var a = this.dummyBlock, c = -1;a;) {
       c += a.view.height + 1, a = a.next;
     }
     this.box.set({height:c});
@@ -12922,10 +12922,11 @@ Entry.DummyBlock = function(a, b) {
   this.path.attr({fill:"transparent"});
   this.prevObserver = b.observe(this, "_align", ["x", "y"]);
   this.prevAnimatingObserver = b.observe(this, "_inheritAnimate", ["animating"]);
+  this.observe(this, "_updateBG", ["magneting"]);
   this._align();
 };
 (function(a) {
-  a.schema = {x:0, y:0, width:0, height:0, animating:!1};
+  a.schema = {x:0, y:0, width:0, height:0, animating:!1, magneting:!1};
   a._align = function(a) {
     this.set({x:this.originBlockView.x, y:this.originBlockView.y});
   };
@@ -12947,6 +12948,15 @@ Entry.DummyBlock = function(a, b) {
   };
   a._inheritAnimate = function() {
     this.set({animating:this.originBlockView.animating});
+  };
+  a._updateBG = function() {
+    if (this.magneting) {
+      var a = this.getBoard().dragBlock.dragInstance.height;
+      this.set({height:a});
+    } else {
+      this.set({height:0});
+    }
+    this._thread.changeEvent.notify();
   };
 })(Entry.DummyBlock.prototype);
 Entry.FieldText = function(a, b) {
