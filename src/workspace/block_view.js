@@ -242,10 +242,10 @@ Entry.BlockView = function(block, board) {
             doc.bind('touchend.block', onMouseUp);
             this.getBoard().set({dragBlock:this});
             this.dragInstance = new Entry.DragInstance({
-                startX: e.clientX,
-                startY: e.clientY,
-                offsetX: e.clientX,
-                offsetY: e.clientY,
+                startX: e.pageX,
+                startY: e.pageY,
+                offsetX: e.pageX,
+                offsetY: e.pageY,
                 prev: this.block.prev,
                 height: 0,
                 mode: true
@@ -287,13 +287,13 @@ Entry.BlockView = function(block, board) {
             }
             var dragInstance = blockView.dragInstance;
             blockView._moveBy(
-                e.clientX - dragInstance.offsetX,
-                e.clientY - dragInstance.offsetY,
+                e.pageX - dragInstance.offsetX,
+                e.pageY - dragInstance.offsetY,
                 false
             );
             dragInstance.set({
-                 offsetX: e.clientX,
-                 offsetY: e.clientY
+                 offsetX: e.pageX,
+                 offsetY: e.pageY
             });
             blockView.dragMode = Entry.DRAG_MODE_DRAG;
 

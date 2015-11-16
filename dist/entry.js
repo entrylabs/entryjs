@@ -12543,27 +12543,19 @@ Entry.BlockView = function(a, b) {
     function c(a) {
       a.stopPropagation();
       a.preventDefault();
-<<<<<<< HEAD
-      f.block.prev && (f.block.prev.setNext(null), f.block.setPrev(null), f.block.thread.changeEvent.notify());
-      this.animating && this.set({animating:!1});
-      if (0 === f.dragInstance.height) {
-        for (var b = f.block, c = -1;b;) {
-          c += b.view.height + 1, b = b.next;
-=======
       if (f.block.isMovable()) {
         f.block.prev && (f.block.prev.setNext(null), f.block.setPrev(null), f.block.thread.changeEvent.notify());
         this.animating && this.set({animating:!1});
         if (0 === f.dragInstance.height) {
-          for (var b = f.block, c = 0;b;) {
-            c += b.view.height, b = b.next;
+          for (var b = f.block, c = -1;b;) {
+            c += b.view.height + 1, b = b.next;
           }
           f.dragInstance.set({height:c});
->>>>>>> origin/feature/opensource
         }
         a.originalEvent.touches && (a = a.originalEvent.touches[0]);
         b = f.dragInstance;
-        f._moveBy(a.clientX - b.offsetX, a.clientY - b.offsetY, !1);
-        b.set({offsetX:a.clientX, offsetY:a.clientY});
+        f._moveBy(a.pageX - b.offsetX, a.pageY - b.offsetY, !1);
+        b.set({offsetX:a.pageX, offsetY:a.pageY});
         f.dragMode = Entry.DRAG_MODE_DRAG;
         (a = f._getCloseBlock()) ? (g = a.view.getBoard(), g.setMagnetedBlock(a.view)) : g.setMagnetedBlock(null);
       }
@@ -12582,7 +12574,7 @@ Entry.BlockView = function(a, b) {
       e.bind("touchmove.block", c);
       e.bind("touchend.block", d);
       this.getBoard().set({dragBlock:this});
-      this.dragInstance = new Entry.DragInstance({startX:a.clientX, startY:a.clientY, offsetX:a.clientX, offsetY:a.clientY, prev:this.block.prev, height:0, mode:!0});
+      this.dragInstance = new Entry.DragInstance({startX:a.pageX, startY:a.pageY, offsetX:a.pageX, offsetY:a.pageY, prev:this.block.prev, height:0, mode:!0});
       this.addDragging();
       this.dragMode = Entry.DRAG_MODE_MOUSEDOWN;
     }
@@ -13407,8 +13399,8 @@ Entry.Board = function(a) {
       a.preventDefault();
       a.originalEvent.touches && (a = a.originalEvent.touches[0]);
       var b = f.dragInstance;
-      f.code.moveBy(a.clientX - b.offsetX, a.clientY - b.offsetY, !1);
-      b.set({offsetX:a.clientX, offsetY:a.clientY});
+      f.code.moveBy(a.pageX - b.offsetX, a.pageY - b.offsetY, !1);
+      b.set({offsetX:a.pageX, offsetY:a.pageY});
     }
     function d(a) {
       $(document).unbind(".board");
@@ -13420,7 +13412,7 @@ Entry.Board = function(a) {
       e.bind("mouseup.board", d);
       e.bind("touchmove.board", c);
       e.bind("touchend.board", d);
-      this.dragInstance = new Entry.DragInstance({startX:a.clientX, startY:a.clientY, offsetX:a.clientX, offsetY:a.clientY});
+      this.dragInstance = new Entry.DragInstance({startX:a.pageX, startY:a.pageY, offsetX:a.pageX, offsetY:a.pageY});
     }
     var f = this;
     a.stopPropagation();

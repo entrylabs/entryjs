@@ -137,10 +137,10 @@ Entry.Board = function(dom) {
             doc.bind('touchmove.board', onMouseMove);
             doc.bind('touchend.board', onMouseUp);
             this.dragInstance = new Entry.DragInstance({
-                startX: e.clientX,
-                startY: e.clientY,
-                offsetX: e.clientX,
-                offsetY: e.clientY
+                startX: e.pageX,
+                startY: e.pageY,
+                offsetX: e.pageX,
+                offsetY: e.pageY
             });
         }
 
@@ -154,13 +154,13 @@ Entry.Board = function(dom) {
             }
             var dragInstance = board.dragInstance;
             board.code.moveBy(
-                e.clientX - dragInstance.offsetX,
-                e.clientY - dragInstance.offsetY,
+                e.pageX - dragInstance.offsetX,
+                e.pageY - dragInstance.offsetY,
                 false
             );
             dragInstance.set({
-                offsetX: e.clientX,
-                offsetY: e.clientY
+                offsetX: e.pageX,
+                offsetY: e.pageY
             });
         }
 
