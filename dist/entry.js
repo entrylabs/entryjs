@@ -12437,7 +12437,7 @@ Entry.BlockView = function(a, b) {
   this._skeleton = Entry.skeleton[this._schema.skeleton];
   this._contents = [];
   this._skeleton.morph && this.block.observe(this, "_renderPath", this._skeleton.morph, !1);
-  this.prevAnimatingObserver = this.prevObserver = null;
+  this.prevObserver = null;
   this._startRender(a);
   this.block.observe(this, "_bindPrev", ["prev"]);
   this.observe(this, "_updateBG", ["magneting"]);
@@ -12479,15 +12479,7 @@ Entry.BlockView = function(a, b) {
   };
   a._bindPrev = function() {
     this.prevObserver && this.prevObserver.destroy();
-    this.prevAnimatingObserver && this.prevAnimatingObserver.destroy();
-    if (this.block.prev) {
-      this._toLocalCoordinate(this.block.prev.view.svgGroup);
-      var a = this.block.prev.view;
-      this.prevAnimatingObserver = a.observe(this, "_inheritAnimate", ["animating"]);
-      this.prevObserver = a.observe(this, "_align", ["height"]);
-    } else {
-      this._toGlobalCoordinate(), delete this.prevObserver, delete this.prevAnimatingObserver;
-    }
+    this.block.prev ? (this._toLocalCoordinate(this.block.prev.view.svgGroup), this.prevObserver = this.block.prev.view.observe(this, "_align", ["height"])) : (this._toGlobalCoordinate(), delete this.prevObserver);
   };
   a._render = function() {
     this._renderPath();
@@ -12969,6 +12961,9 @@ Entry.DummyBlock = function(a, b) {
     }
     this._thread.changeEvent.notify();
   };
+  a.dominate = function() {
+    this.originBlockView.dominate();
+  };
 })(Entry.DummyBlock.prototype);
 Entry.FieldText = function(a, b) {
   this._block = b;
@@ -13369,10 +13364,7 @@ Entry.Board = function(a) {
       this.magnetedBlockView.set({magneting:!1});
     }
     this.set({magnetedBlockView:a});
-    a && a.set({magneting:!0, animating:!0});
-  };
-  a.dominate = function(a) {
-    this.snap.append(a.svgGroup);
+    a && (a.set({magneting:!0, animating:!0}), a.dominate(), this.dragBlock.dominate());
   };
   a.getCode = function() {
     return this.code;

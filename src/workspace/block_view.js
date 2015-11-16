@@ -25,7 +25,6 @@ Entry.BlockView = function(block, board) {
     }
 
     this.prevObserver = null;
-    this.prevAnimatingObserver = null;
 
     this._startRender(block);
 
@@ -118,20 +117,15 @@ Entry.BlockView = function(block, board) {
 
     p._bindPrev = function() {
         if (this.prevObserver) this.prevObserver.destroy();
-        if (this.prevAnimatingObserver) this.prevAnimatingObserver.destroy();
         if (this.block.prev) {
             this._toLocalCoordinate(this.block.prev.view.svgGroup);
             var prevView = this.block.prev.view;
-            this.prevAnimatingObserver = prevView.observe(
-                this, "_inheritAnimate", ["animating"]
-            );
             this.prevObserver = prevView.observe(
                 this, "_align", ["height"]
             );
         } else {
             this._toGlobalCoordinate();
             delete this.prevObserver;
-            delete this.prevAnimatingObserver;
         }
     };
 

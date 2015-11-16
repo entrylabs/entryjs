@@ -170,4 +170,8 @@ Entry.DummyBlock = function(statementField, blockView) {
         this._thread.changeEvent.notify();
     };
 
+    p.dominate = function() {
+        this.originBlockView.dominate();
+    };
+
 })(Entry.DummyBlock.prototype);

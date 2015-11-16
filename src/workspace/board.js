@@ -83,12 +83,11 @@ Entry.Board = function(dom) {
                 this.magnetedBlockView.set({magneting: false});
         }
         this.set({magnetedBlockView: block});
-        if (block)
+        if (block) {
             block.set({magneting: true, animating: true});
-    };
-
-    p.dominate = function(thread) {
-        this.snap.append(thread.svgGroup);
+            block.dominate();
+            this.dragBlock.dominate();
+        }
     };
 
     p.getCode = function() {
