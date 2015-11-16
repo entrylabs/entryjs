@@ -10418,11 +10418,11 @@ Entry.Func.updateMenu = function() {
     f.map(function(a) {
       e = Entry.Func.generateWsBlock(b, Blockly.Xml.workspaceToDom(Entry.Func.workspace), d).block;
       for (var c = [], f = !1;a.firstChild;) {
-        var g = a.firstChild, h = g.tagName;
-        if (f || "NEXT" == h) {
-          f = !0, c.push(g);
+        var h = a.firstChild, g = h.tagName;
+        if (f || "NEXT" == g) {
+          f = !0, c.push(h);
         }
-        a.removeChild(g);
+        a.removeChild(h);
       }
       for (;e.firstChild;) {
         a.appendChild(e.firstChild);
@@ -12614,10 +12614,10 @@ Entry.BlockView = function(a, b) {
     a && this.set({animating:a.animating});
   };
   a.dominate = function() {
-    for (var a = this.svgGroup, c = this.getBoard().svgBlockGroup;a.parent() !== c;) {
-      a = a.parent();
+    for (var a = this.getBoard().svgBlockGroup, c = this.svgGroup;c.parent() !== a;) {
+      c = c.parent();
     }
-    c.append(a);
+    a.append(c);
   };
   a.getBoard = function() {
     return this._board;
@@ -12812,22 +12812,23 @@ Entry.FieldDropdown = function(a, b) {
     this.px = c.x;
     this.py = c.y;
     var d = this.options;
-    this.optionGroup && delete this.optionGroup;
+    this.optionGroup && (this.optionGroup.remove(), delete this.optionGroup);
     this.optionGroup = c.getBoard().svgGroup.group();
     this.optionGroup.attr({class:"entry-field-dropdown"});
-    var e = Entry.documentMousedown.attach(this, function() {
-      Entry.documentMousedown.detach(e);
+    this.documentDownEvent && Entry.documentMousedown.detach(this.documentDownEvent);
+    this.documentDownEvent = Entry.documentMousedown.attach(this, function() {
+      Entry.documentMousedown.detach(this.documentDownEvent);
       a.optionGroup.remove();
-    }), f;
-    for (f in d) {
-      var c = this.optionGroup.group().attr({class:"rect"}), g = Number(f) + 1;
-      c.rect(this.px - 46, this.py + 14 + 22 * g, 38, 23);
-      c.text(this.px - 43, this.py + 29 + 22 * g, d[f]);
+    });
+    for (var e in d) {
+      var c = this.optionGroup.group().attr({class:"rect"}), f = Number(e) + 1;
+      c.rect(this.px - 46, this.py + 14 + 22 * f, 38, 23);
+      c.text(this.px - 43, this.py + 29 + 22 * f, d[e]);
       (function(c, d) {
         c.mousedown(function() {
           a.applyValue(d);
         });
-      })(c, d[f]);
+      })(c, d[e]);
     }
   };
   a.align = function(a, c, d) {

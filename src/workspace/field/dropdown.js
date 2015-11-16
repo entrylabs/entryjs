@@ -66,17 +66,22 @@ Entry.FieldDropdown = function(content, blockView) {
         this.py = blockView.y;
         var options = this.options;
 
-        if (this.optionGroup)
+        if (this.optionGroup) {
+            this.optionGroup.remove();
             delete this.optionGroup;
+        }
 
         this.optionGroup = blockView.getBoard().svgGroup.group();
         this.optionGroup.attr({
             class: 'entry-field-dropdown'
         });
 
-        var mousedownEvent = Entry.documentMousedown.attach(
+        if (this.documentDownEvent)
+            Entry.documentMousedown.detach(this.documentDownEvent);
+
+        this.documentDownEvent = Entry.documentMousedown.attach(
             this, function(){
-                Entry.documentMousedown.detach(mousedownEvent);
+                Entry.documentMousedown.detach(this.documentDownEvent);
                 self.optionGroup.remove();
             }
         );
