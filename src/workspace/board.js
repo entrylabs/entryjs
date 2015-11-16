@@ -29,7 +29,7 @@ Entry.Board = function(dom) {
     Entry.Model(this, false);
 
     this.svgDom = Entry.Dom(
-        $('<svg id="play" width="100%" height="100%"' +
+        $('<svg id="play" class="entryBoard" width="100%" height="100%"' +
           'version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'),
         { parent: dom }
     );

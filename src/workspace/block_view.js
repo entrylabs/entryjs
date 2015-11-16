@@ -235,7 +235,6 @@ Entry.BlockView = function(block, board) {
     p.onMouseDown = function(e) {
         if (e.button === 0 || e instanceof Touch) {
             this.dominate();
-            if (!this.block.isMovable()) return;
             var doc = $(document);
             doc.bind('mousemove.block', onMouseMove);
             doc.bind('mouseup.block', onMouseUp);
@@ -260,6 +259,7 @@ Entry.BlockView = function(block, board) {
         function onMouseMove(e) {
             e.stopPropagation();
             e.preventDefault();
+            if (!blockView.block.isMovable()) return;
 
             if(blockView.block.prev) {
                 blockView.block.prev.setNext(null);

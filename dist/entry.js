@@ -12540,20 +12540,22 @@ Entry.BlockView = function(a, b) {
     function c(a) {
       a.stopPropagation();
       a.preventDefault();
-      f.block.prev && (f.block.prev.setNext(null), f.block.setPrev(null), f.block.thread.changeEvent.notify());
-      this.animating && this.set({animating:!1});
-      if (0 === f.dragInstance.height) {
-        for (var b = f.block, c = 0;b;) {
-          c += b.view.height, b = b.next;
+      if (f.block.isMovable()) {
+        f.block.prev && (f.block.prev.setNext(null), f.block.setPrev(null), f.block.thread.changeEvent.notify());
+        this.animating && this.set({animating:!1});
+        if (0 === f.dragInstance.height) {
+          for (var b = f.block, c = 0;b;) {
+            c += b.view.height, b = b.next;
+          }
+          f.dragInstance.set({height:c});
         }
-        f.dragInstance.set({height:c});
+        a.originalEvent.touches && (a = a.originalEvent.touches[0]);
+        b = f.dragInstance;
+        f._moveBy(a.clientX - b.offsetX, a.clientY - b.offsetY, !1);
+        b.set({offsetX:a.clientX, offsetY:a.clientY});
+        f.dragMode = Entry.DRAG_MODE_DRAG;
+        (a = f._getCloseBlock()) ? (g = a.view.getBoard(), g.setMagnetedBlock(a.view)) : g.setMagnetedBlock(null);
       }
-      a.originalEvent.touches && (a = a.originalEvent.touches[0]);
-      b = f.dragInstance;
-      f._moveBy(a.clientX - b.offsetX, a.clientY - b.offsetY, !1);
-      b.set({offsetX:a.clientX, offsetY:a.clientY});
-      f.dragMode = Entry.DRAG_MODE_DRAG;
-      (a = f._getCloseBlock()) ? (g = a.view.getBoard(), g.setMagnetedBlock(a.view)) : g.setMagnetedBlock(null);
     }
     function d(a) {
       $(document).unbind(".block");
@@ -12563,9 +12565,6 @@ Entry.BlockView = function(a, b) {
     }
     if (0 === a.button || a instanceof Touch) {
       this.dominate();
-      if (!this.block.isMovable()) {
-        return;
-      }
       var e = $(document);
       e.bind("mousemove.block", c);
       e.bind("mouseup.block", d);
@@ -13319,7 +13318,7 @@ Entry.Board = function(a) {
     return console.error("Snap library is required");
   }
   Entry.Model(this, !1);
-  this.svgDom = Entry.Dom($('<svg id="play" width="100%" height="100%"version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'), {parent:a});
+  this.svgDom = Entry.Dom($('<svg id="play" class="entryBoard" width="100%" height="100%"version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'), {parent:a});
   this.offset = this.svgDom.offset();
   this.snap = Snap("#play");
   this._blockViews = [];

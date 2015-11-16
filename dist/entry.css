@@ -4151,5 +4151,8 @@
 .entry-field-dropdown .rect:hover text {
   fill: white;
 }
+.entryBoard {
+  cursor: move;
+}
 
 
