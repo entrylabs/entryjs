@@ -250,7 +250,7 @@ Entry.BlockView = function(block, board) {
                 height: 0,
                 mode: true
             });
-            this._addDragging();
+            this.addDragging();
             this.dragMode = Entry.DRAG_MODE_MOUSEDOWN;
         }
 
@@ -319,7 +319,7 @@ Entry.BlockView = function(block, board) {
         var board = this.getBoard();
         var dragMode = this.dragMode;
         var block = this.block;
-        this._removeDragging();
+        this.removeDragging();
         this.dragMode = Entry.DRAG_MODE_NONE;
         if (board instanceof Entry.BlockMenu) {
             board.terminateDrag();
@@ -489,11 +489,11 @@ Entry.BlockView = function(block, board) {
         blockView.block.thread.changeEvent.notify();
     };
 
-    p._addDragging = function() {
+    p.addDragging = function() {
         this.svgGroup.addClass('dragging');
     };
 
-    p._removeDragging = function() {
+    p.removeDragging = function() {
         this.svgGroup.removeClass('dragging');
     };
 

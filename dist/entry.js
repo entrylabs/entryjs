@@ -12375,7 +12375,7 @@ Entry.BlockMenu = function(a) {
     if (null !== this.dragBlock) {
       this.dragBlockObserver && this.removeDragBlockObserver();
       var c = this._svgWidth, d = this.dragBlock, e = d.block, f = this.code, g = e.getThread();
-      e && g && (f.cloneThread(g), a && d.observe(this, "moveBoardBlock", ["x", "y"], !1), d.dominate(), a = this.workspace.getBoard(), this._boardBlockView = a.code.cloneThread(g).getFirstBlock().view, this._boardBlockView.dragInstance = new Entry.DragInstance({height:0}), a.set({dragBlock:this._boardBlockView}), this._boardBlockView.dragMode = 1, this._boardBlockView._moveTo(d.x - c, d.y - 0, !1));
+      e && g && (f.cloneThread(g), a && d.observe(this, "moveBoardBlock", ["x", "y"], !1), d.dominate(), a = this.workspace.getBoard(), this._boardBlockView = a.code.cloneThread(g).getFirstBlock().view, this._boardBlockView.dragInstance = new Entry.DragInstance({height:0}), a.set({dragBlock:this._boardBlockView}), this._boardBlockView.addDragging(), this._boardBlockView.dragMode = 1, this._boardBlockView._moveTo(d.x - c, d.y - 0, !1));
       if (this._boardBlockView) {
         return this._boardBlockView.block.id;
       }
@@ -12387,6 +12387,7 @@ Entry.BlockMenu = function(a) {
       if (a) {
         var c = a.block, d = this.dragBlock, e = d.block, f = this.code, g = this.workspace, h = g.getBoard().code, k = !1;
         a.dragMode = 0;
+        a.removeDragging();
         d.x < this._svgWidth ? (k = !0, h.destroyThread(c.getThread(), k)) : c.view.terminateDrag();
         g.getBoard().set({dragBlock:null});
         f.destroyThread(e.getThread(), k);
@@ -12572,7 +12573,7 @@ Entry.BlockView = function(a, b) {
       e.bind("touchend.block", d);
       this.getBoard().set({dragBlock:this});
       this.dragInstance = new Entry.DragInstance({startX:a.clientX, startY:a.clientY, offsetX:a.clientX, offsetY:a.clientY, prev:this.block.prev, height:0, mode:!0});
-      this._addDragging();
+      this.addDragging();
       this.dragMode = Entry.DRAG_MODE_MOUSEDOWN;
     }
     var f = this, g = this.getBoard();
@@ -12580,7 +12581,7 @@ Entry.BlockView = function(a, b) {
   };
   a.terminateDrag = function() {
     var a = this.getBoard(), c = this.dragMode, d = this.block;
-    this._removeDragging();
+    this.removeDragging();
     this.dragMode = Entry.DRAG_MODE_NONE;
     if (a instanceof Entry.BlockMenu) {
       a.terminateDrag();
@@ -12647,10 +12648,10 @@ Entry.BlockView = function(a, b) {
       c.block.thread.changeEvent.notify();
     }
   };
-  a._addDragging = function() {
+  a.addDragging = function() {
     this.svgGroup.addClass("dragging");
   };
-  a._removeDragging = function() {
+  a.removeDragging = function() {
     this.svgGroup.removeClass("dragging");
   };
 })(Entry.BlockView.prototype);

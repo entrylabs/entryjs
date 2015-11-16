@@ -136,6 +136,7 @@ Entry.BlockMenu = function(dom) {
                 workspaceBoard.set({
                     dragBlock : this._boardBlockView
                 });
+                this._boardBlockView.addDragging();
                 this._boardBlockView.dragMode = 1;
 
                 this._boardBlockView._moveTo(
@@ -165,6 +166,7 @@ Entry.BlockMenu = function(dom) {
         //destroy boardBlock below the range
         var animate = false;
         boardBlockView.dragMode = 0;
+        boardBlockView.removeDragging();
         if (dragBlockView.x < this._svgWidth) {
             animate = true;
             boardCode.destroyThread(boardBlock.getThread(), animate);
