@@ -10418,11 +10418,11 @@ Entry.Func.updateMenu = function() {
     f.map(function(a) {
       e = Entry.Func.generateWsBlock(b, Blockly.Xml.workspaceToDom(Entry.Func.workspace), d).block;
       for (var c = [], f = !1;a.firstChild;) {
-        var h = a.firstChild, g = h.tagName;
-        if (f || "NEXT" == g) {
-          f = !0, c.push(h);
+        var g = a.firstChild, h = g.tagName;
+        if (f || "NEXT" == h) {
+          f = !0, c.push(g);
         }
-        a.removeChild(h);
+        a.removeChild(g);
       }
       for (;e.firstChild;) {
         a.appendChild(e.firstChild);
@@ -12811,31 +12811,24 @@ Entry.FieldDropdown = function(a, b) {
     var a = this;
     this.destroyOption();
     var c = this._block.view;
-    this.px = c.x;
-    this.py = c.y;
-    var d = this.options;
-    this.optionGroup = c.getBoard().svgGroup.group();
-    this.optionGroup.attr({class:"entry-field-dropdown"});
     this.documentDownEvent = Entry.documentMousedown.attach(this, function() {
       Entry.documentMousedown.detach(this.documentDownEvent);
       a.optionGroup.remove();
     });
-    for (var e in d) {
-      var c = this.optionGroup.group().attr({class:"rect"}), f = Number(e) + 1;
-      c.rect(this.px - 46, this.py + 14 + 22 * f, 38, 23);
-      c.text(this.px - 43, this.py + 29 + 22 * f, d[e]);
-      (function(c, d) {
+    this.optionGroup = c.getBoard().svgGroup.group();
+    var d = c.svgGroup.transform().globalMatrix, c = this.options;
+    this.optionGroup.attr({class:"entry-field-dropdown", transform:"t" + (d.e - 46) + " " + (d.f + 34)});
+    for (var e in c) {
+      d = Number(e), d = this.optionGroup.group().attr({class:"rect", transform:"t0 " + 23 * d, "alignment-baseline":"central"}), d.rect(0, 0, 38, 23), d.text(0, 11, c[e]).attr({"alignment-baseline":"central"}), function(c, d) {
         c.mousedown(function() {
           a.applyValue(d);
           a.destroyOption();
         });
-      })(c, d[e]);
+      }(d, c[e]);
     }
   };
   a.align = function(a, c, d) {
-    var e = this.svgGroup;
-    this._position && (a = this._position.x);
-    var f = "t" + a + " " + c;
+    var e = this.svgGroup, f = "t" + a + " " + c;
     void 0 === d || d ? e.animate({transform:f}, 300, mina.easeinout) : e.attr({transform:f});
     this.box.set({x:a, y:c});
   };

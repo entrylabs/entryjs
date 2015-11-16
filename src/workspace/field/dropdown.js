@@ -62,15 +62,8 @@ Entry.FieldDropdown = function(content, blockView) {
     p.renderOptions = function() {
         var self = this;
         this.destroyOption();
-        var blockView = this._block.view;
-        this.px = blockView.x;
-        this.py = blockView.y;
-        var options = this.options;
 
-        this.optionGroup = blockView.getBoard().svgGroup.group();
-        this.optionGroup.attr({
-            class: 'entry-field-dropdown'
-        });
+        var blockView = this._block.view;
 
         this.documentDownEvent = Entry.documentMousedown.attach(
             this, function(){
@@ -79,22 +72,38 @@ Entry.FieldDropdown = function(content, blockView) {
             }
         );
 
+
+        this.optionGroup = blockView.getBoard().svgGroup.group();
+
+        var matrix = blockView.svgGroup.transform().globalMatrix;
+        var x = matrix.e;
+        var y = matrix.f;
+
+        var options = this.options;
+        this.optionGroup.attr({
+            class: 'entry-field-dropdown',
+            transform: "t" + (x -46) + " " + (y + 34)
+        });
+
         for (var i in options) {
+            var index = Number(i);
             var element = this.optionGroup.group().attr({
-                class: 'rect'
+                class: 'rect',
+                transform: "t" + 0 + " " + (index * 23),
+                "alignment-baseline": "central"
             });
 
-            var x = Number(i)+1;
             var rect = element.rect(
-                this.px - 46,
-                this.py + 14 + (x * 22), 38, 23
+                0, 0,
+                38, 23
             );
 
             element.text(
-                this.px - 43,
-                this.py + 29 + (x * 22),
+                0, 11,
                 options[i]
-            );
+            ).attr({
+                "alignment-baseline": "central"
+            });
 
             (function(elem, value) {
                 elem.mousedown(function(){
@@ -108,7 +117,7 @@ Entry.FieldDropdown = function(content, blockView) {
     p.align = function(x, y, animate) {
         animate = animate === undefined ? true : animate;
         var svgGroup = this.svgGroup;
-        if (this._position) x = this._position.x;
+
         var transform = "t" + x + " " + y;
 
         if (animate)
