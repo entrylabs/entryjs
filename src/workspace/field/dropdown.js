@@ -82,15 +82,14 @@ Entry.FieldDropdown = function(content, blockView) {
         var options = this.options;
         this.optionGroup.attr({
             class: 'entry-field-dropdown',
-            transform: "t" + (x -46) + " " + (y + 34)
+            transform: "t" + (x -45) + " " + (y + 34)
         });
 
         for (var i in options) {
             var index = Number(i);
             var element = this.optionGroup.group().attr({
                 class: 'rect',
-                transform: "t" + 0 + " " + (index * 23),
-                "alignment-baseline": "central"
+                transform: "t" + 0 + " " + (index * 23)
             });
 
             var rect = element.rect(
@@ -99,7 +98,7 @@ Entry.FieldDropdown = function(content, blockView) {
             );
 
             element.text(
-                0, 11,
+                3, 11,
                 options[i]
             ).attr({
                 "alignment-baseline": "central"

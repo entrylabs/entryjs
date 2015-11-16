@@ -19,9 +19,9 @@ Entry.Event = function(sender) {
 
     p.detach = function (listener) {
         var listeners = this._listeners;
-        return listeners.splice(
-            listeners.indexOf(listener), 1
-        );
+        var index = listeners.indexOf(listener);
+        if (index > -1)
+            return listeners.splice(index, 1);
     };
 
     p.clear = function () {
@@ -33,12 +33,13 @@ Entry.Event = function(sender) {
         var listeners = this._listeners;
         var sender = this._sender;
 
-        listeners.forEach(function(listener){
+        for (var i=listeners.length-1; i>=0; i--) {
+            var listener = listeners[i];
             listener.fn.call(
                 listener.obj,
                 sender,
                 args
             );
-        });
+        }
     };
 })(Entry.Event.prototype);

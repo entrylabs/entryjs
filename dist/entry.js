@@ -4124,7 +4124,10 @@ Entry.Event = function(a) {
   };
   a.detach = function(a) {
     var c = this._listeners;
-    return c.splice(c.indexOf(a), 1);
+    a = c.indexOf(a);
+    if (-1 < a) {
+      return c.splice(a, 1);
+    }
   };
   a.clear = function() {
     for (var a = this._listeners;a.length;) {
@@ -4132,10 +4135,10 @@ Entry.Event = function(a) {
     }
   };
   a.notify = function(a) {
-    var c = this._sender;
-    this._listeners.forEach(function(d) {
-      d.fn.call(d.obj, c, a);
-    });
+    for (var c = this._listeners, d = this._sender, e = c.length - 1;0 <= e;e--) {
+      var f = c[e];
+      f.fn.call(f.obj, d, a);
+    }
   };
 })(Entry.Event.prototype);
 Entry.Observer = function(a, b, c, d) {
@@ -12809,9 +12812,9 @@ Entry.FieldDropdown = function(a, b) {
     });
     this.optionGroup = c.getBoard().svgGroup.group();
     var d = c.svgGroup.transform().globalMatrix, c = this.options;
-    this.optionGroup.attr({class:"entry-field-dropdown", transform:"t" + (d.e - 46) + " " + (d.f + 34)});
+    this.optionGroup.attr({class:"entry-field-dropdown", transform:"t" + (d.e - 45) + " " + (d.f + 34)});
     for (var e in c) {
-      d = Number(e), d = this.optionGroup.group().attr({class:"rect", transform:"t0 " + 23 * d, "alignment-baseline":"central"}), d.rect(0, 0, 38, 23), d.text(0, 11, c[e]).attr({"alignment-baseline":"central"}), function(c, d) {
+      d = Number(e), d = this.optionGroup.group().attr({class:"rect", transform:"t0 " + 23 * d}), d.rect(0, 0, 38, 23), d.text(3, 11, c[e]).attr({"alignment-baseline":"central"}), function(c, d) {
         c.mousedown(function() {
           a.applyValue(d);
           a.destroyOption();
