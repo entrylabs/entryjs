@@ -325,11 +325,15 @@ Entry.BlockView = function(block, board) {
             board.terminateDrag();
         } else {
             var distance = Math.sqrt(
-                Math.pow(this.x - block.x, 2) +
-                Math.pow(this.y - block.y, 2)
+                Math.pow(this.dragInstance.startX - this.dragInstance.offsetX, 2) +
+                Math.pow(this.dragInstance.startY - this.dragInstance.offsetY, 2)
             );
             if (distance < 30) {
-                this._align(true);
+                if (this.dragInstance.prev) {
+                    this.dragInstance.prev.setNext(this.block);
+                    this.block.setPrev(this.dragInstance.prev)
+                    this.block.thread.changeEvent.notify();
+                }
                 board.setMagnetedBlock(null);
                 return;
             }

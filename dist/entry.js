@@ -12588,8 +12588,8 @@ Entry.BlockView = function(a, b) {
     if (a instanceof Entry.BlockMenu) {
       a.terminateDrag();
     } else {
-      if (30 > Math.sqrt(Math.pow(this.x - d.x, 2) + Math.pow(this.y - d.y, 2))) {
-        this._align(!0);
+      if (30 > Math.sqrt(Math.pow(this.dragInstance.startX - this.dragInstance.offsetX, 2) + Math.pow(this.dragInstance.startY - this.dragInstance.offsetY, 2))) {
+        this.dragInstance.prev && (this.dragInstance.prev.setNext(this.block), this.block.setPrev(this.dragInstance.prev), this.block.thread.changeEvent.notify());
       } else {
         this.dragInstance || d.doAdd();
         var e = this.dragInstance && this.dragInstance.prev, f = this._getCloseBlock();
