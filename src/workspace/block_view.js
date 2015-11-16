@@ -389,18 +389,13 @@ Entry.BlockView = function(block, board) {
     };
 
     p.dominate = function() {
-        return;
-        var block = this.block;
-        var parent = this.svgGroup.parent();
-        this.svgGroup.remove();
-        parent.append(this.svgGroup);
+        var svgBlockGroup = this.getBoard().svgBlockGroup;
 
-        var statement = block.values.STATEMENT;
-        if (statement) {
-            var statementBlock = statement.getFirstBlock().next;
-            if (statementBlock) statementBlock.view.dominate();
-        }
-        if (block.next) block.next.view.dominate();
+        var node = this.svgGroup;
+        while (node.parent() !== svgBlockGroup)
+            node = node.parent();
+
+        svgBlockGroup.append(node);
     };
 
     p.getBoard = function() {return this._board;};

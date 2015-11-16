@@ -12614,6 +12614,10 @@ Entry.BlockView = function(a, b) {
     a && this.set({animating:a.animating});
   };
   a.dominate = function() {
+    for (var a = this.svgGroup, c = this.getBoard().svgBlockGroup;a.parent() !== c;) {
+      a = a.parent();
+    }
+    c.append(a);
   };
   a.getBoard = function() {
     return this._board;
