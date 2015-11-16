@@ -61,23 +61,16 @@ Entry.FieldDropdown = function(content, blockView) {
 
     p.renderOptions = function() {
         var self = this;
+        this.destroyOption();
         var blockView = this._block.view;
         this.px = blockView.x;
         this.py = blockView.y;
         var options = this.options;
 
-        if (this.optionGroup) {
-            this.optionGroup.remove();
-            delete this.optionGroup;
-        }
-
         this.optionGroup = blockView.getBoard().svgGroup.group();
         this.optionGroup.attr({
             class: 'entry-field-dropdown'
         });
-
-        if (this.documentDownEvent)
-            Entry.documentMousedown.detach(this.documentDownEvent);
 
         this.documentDownEvent = Entry.documentMousedown.attach(
             this, function(){
@@ -106,6 +99,7 @@ Entry.FieldDropdown = function(content, blockView) {
             (function(elem, value) {
                 elem.mousedown(function(){
                     self.applyValue(value);
+                    self.destroyOption();
                 });
             })(element, options[i]);
         }
@@ -135,5 +129,17 @@ Entry.FieldDropdown = function(content, blockView) {
     p.applyValue = function(value) {
         this._block.values[this.key] = value;
         this.textElement.node.textContent = value;
+    };
+
+    p.destroyOption = function() {
+        if (this.documentDownEvent) {
+            Entry.documentMousedown.detach(this.documentDownEvent);
+            delete this.documentDownEvent;
+        }
+
+        if (this.optionGroup) {
+            this.optionGroup.remove();
+            delete this.optionGroup;
+        }
     };
 })(Entry.FieldDropdown.prototype);

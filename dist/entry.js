@@ -12808,14 +12808,14 @@ Entry.FieldDropdown = function(a, b) {
     this.box.set({x:0, y:0, width:39, height:22});
   };
   a.renderOptions = function() {
-    var a = this, c = this._block.view;
+    var a = this;
+    this.destroyOption();
+    var c = this._block.view;
     this.px = c.x;
     this.py = c.y;
     var d = this.options;
-    this.optionGroup && (this.optionGroup.remove(), delete this.optionGroup);
     this.optionGroup = c.getBoard().svgGroup.group();
     this.optionGroup.attr({class:"entry-field-dropdown"});
-    this.documentDownEvent && Entry.documentMousedown.detach(this.documentDownEvent);
     this.documentDownEvent = Entry.documentMousedown.attach(this, function() {
       Entry.documentMousedown.detach(this.documentDownEvent);
       a.optionGroup.remove();
@@ -12827,6 +12827,7 @@ Entry.FieldDropdown = function(a, b) {
       (function(c, d) {
         c.mousedown(function() {
           a.applyValue(d);
+          a.destroyOption();
         });
       })(c, d[e]);
     }
@@ -12841,6 +12842,10 @@ Entry.FieldDropdown = function(a, b) {
   a.applyValue = function(a) {
     this._block.values[this.key] = a;
     this.textElement.node.textContent = a;
+  };
+  a.destroyOption = function() {
+    this.documentDownEvent && (Entry.documentMousedown.detach(this.documentDownEvent), delete this.documentDownEvent);
+    this.optionGroup && (this.optionGroup.remove(), delete this.optionGroup);
   };
 })(Entry.FieldDropdown.prototype);
 Entry.FieldIndicator = function(a, b) {
