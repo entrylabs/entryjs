@@ -12662,6 +12662,7 @@ Entry.Code = function(a) {
   this._eventMap = {};
   this.executors = [];
   this.executeEndEvent = new Entry.Event(this);
+  this.changeEvent = new Entry.Event(this);
   this.load(a);
 };
 (function(a) {
@@ -12675,7 +12676,7 @@ Entry.Code = function(a) {
     }
   };
   a.createView = function(a) {
-    null === this.view ? this.set({view:new Entry.CodeView(this, a)}) : (this.set({board:a}), a.bindCodeView(this.view));
+    null === this.view ? this.set({view:new Entry.CodeView(this, a), board:a}) : (this.set({board:a}), a.bindCodeView(this.view));
   };
   a.registerEvent = function(a, c) {
     this._eventMap[c] || (this._eventMap[c] = []);
@@ -12718,8 +12719,7 @@ Entry.Code = function(a) {
   };
   a.destroyThread = function(a, c) {
     var d = this._data, e = d.indexOf(a);
-    d.splice(e, 1);
-    a.getFirstBlock().doDestroy(c);
+    0 > e || (d.splice(e, 1), (d = a.getFirstBlock()) && d.doDestroy(c));
   };
   a.getThreads = function() {
     return this._data;
@@ -12738,7 +12738,8 @@ Entry.Code = function(a) {
   };
   a.moveBy = function(a, c) {
     for (var d = this.getThreads(), e = 0, f = d.length;e < f;e++) {
-      d[e].getFirstBlock().view._moveBy(a, c, !1);
+      var g = d[e].getFirstBlock();
+      g && g.view._moveBy(a, c, !1);
     }
   };
 })(Entry.Code.prototype);
@@ -12989,6 +12990,98 @@ Entry.FieldText = function(a, b) {
     this.box.set({x:a, y:c});
   };
 })(Entry.FieldText.prototype);
+Entry.Scroller = function(a) {
+  this.board = a;
+  this.board.changeEvent.attach(this, this.resizeScrollBar);
+  this.svgGroup = null;
+  this.vRatio = this.vY = this.vWidth = this.hRatio = this.hX = this.hWidth = 0;
+  this.createScrollBar();
+  Entry.windowResized && Entry.windowResized.attach(this, this.resizeScrollBar);
+};
+Entry.Scroller.RADIUS = 7;
+(function(a) {
+  a.createScrollBar = function() {
+    this.svgGroup = this.board.snap.group().attr({class:"boardScrollbar"});
+    var a = Entry.Scroller.RADIUS;
+    this.hScrollbar = this.svgGroup.rect(0, 0, 0, 2 * a, a);
+    this.hScrollbar.mousedown(function(a) {
+      function b(a) {
+        a.stopPropagation();
+        a.preventDefault();
+        a.originalEvent.touches && (a = a.originalEvent.touches[0]);
+        var d = c.dragInstance;
+        c.scroll((a.pageX - d.offsetX) / c.hRatio, 0);
+        d.set({offsetX:a.pageX, offsetY:a.pageY});
+      }
+      function f(a) {
+        $(document).unbind(".scroll");
+        delete c.dragInstance;
+      }
+      if (0 === a.button || a instanceof Touch) {
+        var g = $(document);
+        g.bind("mousemove.scroll", b);
+        g.bind("mouseup.scroll", f);
+        g.bind("touchmove.scroll", b);
+        g.bind("touchend.scroll", f);
+        c.dragInstance = new Entry.DragInstance({startX:a.pageX, startY:a.pageY, offsetX:a.pageX, offsetY:a.pageY});
+      }
+      a.stopPropagation();
+    });
+    var c = this;
+    this.vScrollbar = this.svgGroup.rect(0, 0, 2 * a, 0, a);
+    this.vScrollbar.mousedown(function(a) {
+      function b(a) {
+        a.stopPropagation();
+        a.preventDefault();
+        a.originalEvent.touches && (a = a.originalEvent.touches[0]);
+        var d = c.dragInstance;
+        c.scroll(0, (a.pageY - d.offsetY) / c.vRatio);
+        d.set({offsetX:a.pageX, offsetY:a.pageY});
+      }
+      function f(a) {
+        $(document).unbind(".scroll");
+        delete c.dragInstance;
+      }
+      if (0 === a.button || a instanceof Touch) {
+        var g = $(document);
+        g.bind("mousemove.scroll", b);
+        g.bind("mouseup.scroll", f);
+        g.bind("touchmove.scroll", b);
+        g.bind("touchend.scroll", f);
+        c.dragInstance = new Entry.DragInstance({startX:a.pageX, startY:a.pageY, offsetX:a.pageX, offsetY:a.pageY});
+      }
+      a.stopPropagation();
+    });
+    this.resizeScrollBar();
+  };
+  a.resizeScrollBar = function() {
+    var a = this.board.svgBlockGroup.getBBox(), c = this.board.svgDom, d = c.width(), c = c.height(), e = -a.width + Entry.BOARD_PADDING, f = d - Entry.BOARD_PADDING, g = (d + 2 * Entry.Scroller.RADIUS) * a.width / (f - e + a.width);
+    this.hX = (a.x - e) / (f - e) * (d - g - 2 * Entry.Scroller.RADIUS);
+    this.hScrollbar.attr({width:g, x:this.hX, y:c - 2 * Entry.Scroller.RADIUS});
+    this.hRatio = (d - g - 2 * Entry.Scroller.RADIUS) / (f - e);
+    e = -a.height + Entry.BOARD_PADDING;
+    f = c - Entry.BOARD_PADDING;
+    g = (c + 2 * Entry.Scroller.RADIUS) * a.height / (f - e + a.height);
+    this.vY = (a.y - e) / (f - e) * (c - g - 2 * Entry.Scroller.RADIUS);
+    this.vScrollbar.attr({height:g, y:this.vY, x:d - 2 * Entry.Scroller.RADIUS});
+    this.vRatio = (c - g - 2 * Entry.Scroller.RADIUS) / (f - e);
+  };
+  a.updateScrollBar = function(a, c) {
+    this.hX += a * this.hRatio;
+    this.hScrollbar.attr({x:this.hX});
+    this.vY += c * this.vRatio;
+    this.vScrollbar.attr({y:this.vY});
+  };
+  a.scroll = function(a, c) {
+    var d = this.board.svgBlockGroup.getBBox(), e = this.board.svgDom;
+    a = Math.max(-d.width + Entry.BOARD_PADDING - d.x, a);
+    c = Math.max(-d.height + Entry.BOARD_PADDING - d.y, c);
+    a = Math.min(e.width() - Entry.BOARD_PADDING - d.x, a);
+    c = Math.min(e.height() - Entry.BOARD_PADDING - d.y, c);
+    this.board.code.moveBy(a, c);
+    this.updateScrollBar(a, c);
+  };
+})(Entry.Scroller.prototype);
 Entry.skeleton = function() {
 };
 Entry.skeleton.basic = {path:function(a) {
@@ -13128,25 +13221,30 @@ Entry.Block.FOLLOW = 3;
   };
   a.doAdd = function() {
     console.log("doAdd", this.id);
+    this.thread.getCode().changeEvent.notify();
   };
   a.doMove = function() {
     console.log("doMove", this.id, this.view.x - this.x, this.view.y - this.y);
     this._updatePos();
+    this.thread.getCode().changeEvent.notify();
   };
   a.doSeparate = function() {
     console.log("separate", this.id, this.x, this.y);
     this.thread.separate(this);
     this._updatePos();
+    this.thread.getCode().changeEvent.notify();
   };
   a.doInsert = function(a) {
     console.log("insert", this.id, a.id, this.x, this.y);
     var c = this.thread.cut(this);
     a.insertAfter(c);
     this._updatePos();
+    this.thread.getCode().changeEvent.notify();
   };
   a.doDestroy = function(a) {
     console.log("destroy", this.id, this.x, this.y);
     this.destroy(a);
+    this.thread.getCode().changeEvent.notify();
   };
 })(Entry.Block.prototype);
 Entry.Thread = function(a, b) {
@@ -13234,7 +13332,7 @@ Entry.Thread = function(a, b) {
     return c;
   };
   a.destroy = function(a) {
-    this._code.getThreads().remove(this);
+    this._code.destroyThread(this, !1);
     this.view && this.view.destroy(a);
   };
   a.getFirstBlock = function() {
@@ -13257,7 +13355,6 @@ Entry.Thread = function(a, b) {
     return a;
   };
   a.inspectExist = function() {
-    0 === this._data.length && this.destroy();
   };
   a.getCode = function() {
     return this._code;
@@ -13350,13 +13447,22 @@ Entry.Board = function(a) {
   this.svgBlockGroup = this.svgGroup.group();
   this.svgBlockGroup.board = this;
   Entry.ANIMATION_DURATION = 200;
+  Entry.BOARD_PADDING = 100;
+  this.changeEvent = new Entry.Event(this);
+  this.scroller = new Entry.Scroller(this);
   this._addControl(a);
 };
 (function(a) {
   a.schema = {code:null, dragBlock:null, magnetedBlockView:null};
   a.changeCode = function(a) {
+    this.codeListener && this.code.changeEvent.detach(this.codeListener);
     this.set({code:a});
+    var c = this;
+    this.codeListener = this.code.changeEvent.attach(this, function() {
+      c.changeEvent.notify();
+    });
     a.createView(this);
+    this.changeEvent.notify();
   };
   a.bindCodeView = function(a) {
     this.svgBlockGroup.remove();
@@ -13404,7 +13510,7 @@ Entry.Board = function(a) {
       a.preventDefault();
       a.originalEvent.touches && (a = a.originalEvent.touches[0]);
       var b = f.dragInstance;
-      f.code.moveBy(a.pageX - b.offsetX, a.pageY - b.offsetY, !1);
+      f.scroller.scroll(a.pageX - b.offsetX, a.pageY - b.offsetY);
       b.set({offsetX:a.pageX, offsetY:a.pageY});
     }
     function d(a) {

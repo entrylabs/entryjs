@@ -21,6 +21,7 @@ Entry.Code = function(code) {
     this.executors = [];
 
     this.executeEndEvent = new Entry.Event(this);
+    this.changeEvent = new Entry.Event(this);
 
     this.load(code);
 };
@@ -42,7 +43,10 @@ Entry.Code = function(code) {
 
     p.createView = function(board) {
         if (this.view === null) {
-            this.set({view: new Entry.CodeView(this, board)});
+            this.set({
+                view: new Entry.CodeView(this, board),
+                board: board
+            });
         } else {
             this.set({board : board});
             board.bindCodeView(this.view);
@@ -104,8 +108,11 @@ Entry.Code = function(code) {
     p.destroyThread = function(thread, animate) {
         var data = this._data;
         var index = data.indexOf(thread);
+        // case of statement thread
+        if (index < 0) return;
         data.splice(index, 1);
-        thread.getFirstBlock().doDestroy(animate);
+        var firstBlock = thread.getFirstBlock();
+        if (firstBlock) firstBlock.doDestroy(animate);
     };
 
     p.getThreads = function() {
@@ -132,7 +139,8 @@ Entry.Code = function(code) {
         var threads = this.getThreads();
         for (var i=0, len=threads.length; i<len; i++) {
             var firstBlock = threads[i].getFirstBlock();
-            firstBlock.view._moveBy(x, y, false);
+            if (firstBlock)
+                firstBlock.view._moveBy(x, y, false);
         }
     };
 

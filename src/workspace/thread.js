@@ -143,7 +143,7 @@ Entry.Thread = function(thread, code) {
     };
 
     p.destroy = function(animate) {
-        this._code.getThreads().remove(this);
+        this._code.destroyThread(this, false);
         if (this.view) this.view.destroy(animate);
     };
 
@@ -175,7 +175,7 @@ Entry.Thread = function(thread, code) {
     };
 
     p.inspectExist = function() {
-        if (this._data.length === 0) this.destroy();
+        //if (this._data.length === 0) this.destroy();
     };
 
     p.getCode = function() {

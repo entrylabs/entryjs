@@ -182,6 +182,7 @@ Entry.Block.FOLLOW = 3;
     // command func
     p.doAdd = function() {
         console.log("doAdd", this.id);
+        this.thread.getCode().changeEvent.notify();
     };
 
     p.doMove = function() {
@@ -191,6 +192,7 @@ Entry.Block.FOLLOW = 3;
             this.view.x - this.x,
             this.view.y - this.y);
         this._updatePos();
+        this.thread.getCode().changeEvent.notify();
     };
 
     p.doSeparate = function() {
@@ -202,6 +204,7 @@ Entry.Block.FOLLOW = 3;
         );
         this.thread.separate(this);
         this._updatePos();
+        this.thread.getCode().changeEvent.notify();
     };
 
     p.doInsert = function(targetBlock) {
@@ -215,6 +218,7 @@ Entry.Block.FOLLOW = 3;
         var blocks = this.thread.cut(this);
         targetBlock.insertAfter(blocks);
         this._updatePos();
+        this.thread.getCode().changeEvent.notify();
     };
 
     p.doDestroy = function(animate) {
@@ -225,6 +229,7 @@ Entry.Block.FOLLOW = 3;
             this.y
         );
         this.destroy(animate);
+        this.thread.getCode().changeEvent.notify();
     };
 
 })(Entry.Block.prototype);

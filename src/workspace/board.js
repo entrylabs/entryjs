@@ -9,6 +9,7 @@ goog.require("Entry.Dom");
 goog.require("Entry.Model");
 goog.require("Entry.Utils");
 goog.require("Entry.FieldTrashcan");
+goog.require("Entry.Scroller");
 
 /*
  *
@@ -50,6 +51,10 @@ Entry.Board = function(dom) {
     this.svgBlockGroup.board = this;
 
     Entry.ANIMATION_DURATION = 200;
+    Entry.BOARD_PADDING = 100;
+
+    this.changeEvent = new Entry.Event(this);
+    this.scroller = new Entry.Scroller(this);
 
     this._addControl(dom);
 };
@@ -62,8 +67,16 @@ Entry.Board = function(dom) {
     };
 
     p.changeCode = function(code) {
+        if (this.codeListener)
+            this.code.changeEvent.detach(this.codeListener);
         this.set({code: code});
+        var that = this;
+        this.codeListener = this.code.changeEvent.attach(this,
+                                                         function() {
+            that.changeEvent.notify();
+        });
         code.createView(this);
+        this.changeEvent.notify();
     };
 
     p.bindCodeView = function(codeView) {
@@ -104,11 +117,11 @@ Entry.Board = function(dom) {
                 continue;
 
             /*
-            var block = thread.getFirstBlock();
-            if (block && block.id == id) {
-                return block;
-            }
-            */
+               var block = thread.getFirstBlock();
+               if (block && block.id == id) {
+               return block;
+               }
+               */
 
             var blocks = thread.getBlocks();
             for (var j=0,len=blocks.length; j<len; j++) {
@@ -116,9 +129,7 @@ Entry.Board = function(dom) {
                     return blocks[j];
                 }
             }
-
         }
-        return;
     };
 
     p._addControl = function(dom) {
@@ -152,10 +163,9 @@ Entry.Board = function(dom) {
                 e = e.originalEvent.touches[0];
             }
             var dragInstance = board.dragInstance;
-            board.code.moveBy(
+            board.scroller.scroll(
                 e.pageX - dragInstance.offsetX,
-                e.pageY - dragInstance.offsetY,
-                false
+                e.pageY - dragInstance.offsetY
             );
             dragInstance.set({
                 offsetX: e.pageX,

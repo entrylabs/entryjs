@@ -4154,5 +4154,12 @@
 .entryBoard {
   cursor: move;
 }
+.boardScrollbar {
+  opacity: 0.4;
+  cursor: url('../images/handopen.cur') 8 5, auto;
+}
+.boardScrollbar:hover {
+  opacity: 0.6;
+}
 
 
