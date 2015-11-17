@@ -12588,7 +12588,7 @@ Entry.BlockView = function(a, b) {
       } else {
         this.dragInstance || d.doAdd();
         var e = this.dragInstance && this.dragInstance.prev, f = this._getCloseBlock();
-        e || f ? f ? (this.set({animating:!0}), d.doInsert(f)) : d.doSeparate() : c == Entry.DRAG_MODE_DRAG && d.doMove();
+        e || f ? f ? (this.set({animating:!0}), f.next && f.next.view.set({animating:!0}), d.doInsert(f)) : d.doSeparate() : c == Entry.DRAG_MODE_DRAG && d.doMove();
       }
       a.setMagnetedBlock(null);
     }
@@ -13083,17 +13083,14 @@ Entry.Block.FOLLOW = 3;
     this.view || (this.set({view:new Entry.BlockView(this, a)}), this._updatePos());
   };
   a.clone = function(a) {
-    for (var c = new Entry.Block(this.toJSON(!0), a), d = this._schema.contents, e = 0;e < d.length;e++) {
-      var f = d[e];
-      "Statement" == f.type && c.values[f.key].setCode(a.getCode());
-    }
-    return c;
+    return block = new Entry.Block(this.toJSON(!0), a);
   };
   a.toJSON = function(a) {
     var c = this._toJSON();
     delete c.prev;
     delete c.next;
     delete c.view;
+    delete c.thread;
     a && delete c.id;
     var d = {}, e;
     for (e in c.values) {

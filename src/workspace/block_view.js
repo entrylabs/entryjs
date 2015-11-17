@@ -342,6 +342,8 @@ Entry.BlockView = function(block, board) {
             } else {
                 if (closeBlock) {
                     this.set({animating: true});
+                    if (closeBlock.next)
+                        closeBlock.next.view.set({animating: true});
                     block.doInsert(closeBlock);
                 } else block.doSeparate();
             }

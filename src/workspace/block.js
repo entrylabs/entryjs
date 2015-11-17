@@ -118,19 +118,10 @@ Entry.Block.FOLLOW = 3;
     };
 
     p.clone = function(thread) {
-        var block = new Entry.Block(
+        return block = new Entry.Block(
             this.toJSON(true),
             thread
         );
-
-        var contents = this._schema.contents;
-        for (var i = 0; i < contents.length; i++) {
-            var content = contents[i];
-            if (content.type == "Statement")
-                block.values[content.key].setCode(thread.getCode());
-        }
-
-        return block;
     };
 
     p.toJSON = function(isNew) {
@@ -138,6 +129,7 @@ Entry.Block.FOLLOW = 3;
         delete json.prev;
         delete json.next;
         delete json.view;
+        delete json.thread;
         if (isNew)
             delete json.id;
         var values = {};
