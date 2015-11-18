@@ -44,6 +44,7 @@ Entry.BlockMenu = function(dom) {
     this.svgBlockGroup.board = this;
 
     this.changeEvent = new Entry.Event(this);
+    //TODO scroller should be attached
     //this.scroller = new Entry.Scroller(this, false, true);
 
     this.observe(this, "generateDragBlockObserver", ['dragBlock']);

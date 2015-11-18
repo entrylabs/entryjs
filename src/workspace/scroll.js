@@ -142,6 +142,7 @@ Entry.Scroller.RADIUS = 7;
             bWidth = svgDom.width(),
             bHeight = svgDom.height();
         var visible = true;
+        //TODO visible setting needed only if overflow happens
         //if (bBox.width > bWidth || bBox.height > bHeight)
             //visible = true;
 
