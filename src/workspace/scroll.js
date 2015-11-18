@@ -146,7 +146,7 @@ Entry.Scroller.RADIUS = 7;
         //if (bBox.width > bWidth || bBox.height > bHeight)
             //visible = true;
 
-        this.setVisible(visible)
+        this.setVisible(visible);
 
         if (visible) {
             // hScroll
@@ -226,7 +226,7 @@ Entry.Scroller.RADIUS = 7;
         if (visible == this.isVisible()) return;
         this._visible = visible;
         this.svgGroup.attr({
-            display: visible == true ? 'block' : 'none'
+            display: visible === true ? 'block' : 'none'
         });
 
     };

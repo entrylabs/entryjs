@@ -13090,7 +13090,7 @@ Entry.Scroller.RADIUS = 7;
     this.updateScrollBar(a, c);
   };
   a.setVisible = function(a) {
-    a != this.isVisible() && (this._visible = a, this.svgGroup.attr({display:1 == a ? "block" : "none"}));
+    a != this.isVisible() && (this._visible = a, this.svgGroup.attr({display:!0 === a ? "block" : "none"}));
   };
   a.isVisible = function() {
     return this._visible;
