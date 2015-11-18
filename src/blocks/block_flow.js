@@ -299,32 +299,51 @@ Entry.block.stop_run = function (sprite, script) {
 Blockly.Blocks.repeat_while_true = {
     init: function() {
         this.setColour("#498deb");
-        this.appendDummyInput()
-            .appendField(Lang.Blocks.FLOW_repeat_while_true_1);
-        this.appendValueInput("BOOL")
-        .setCheck("Boolean");
-        this.appendDummyInput()
-            .appendField(Lang.Blocks.FLOW_repeat_while_true_2)
-        .appendField(new Blockly.FieldIcon(Entry.mediaFilePath + 'block_icon/flow_03.png', '*'));
-        this.appendStatementInput('DO');
-        this.setInputsInline(true);
-        this.setPreviousStatement(true);
-        this.setNextStatement(true);
+        if (Lang.type == 'ko') {
+            this.appendDummyInput()
+                .appendField(Lang.Blocks.FLOW_repeat_while_true_1);
+            this.appendValueInput("BOOL")
+            .setCheck("Boolean");
+            this.appendDummyInput()
+                .appendField(new Blockly.FieldDropdown([
+                    [Lang.Blocks.FLOW_repeat_while_true_until,"until"],
+                    [Lang.Blocks.FLOW_repeat_while_true_while,"while"]
+                    ]), "OPTION")
+                    .appendField(Lang.Blocks.FLOW_repeat_while_true_2);
+            this.appendStatementInput('DO');
+            this.setInputsInline(true);
+            this.setPreviousStatement(true);
+            this.setNextStatement(true);
+        } else {
+            this.appendDummyInput()
+                .appendField(Lang.Blocks.FLOW_repeat_while_true_1);
+            this.appendDummyInput()
+                .appendField(new Blockly.FieldDropdown([
+                    [Lang.Blocks.FLOW_repeat_while_true_until,"until"],
+                    [Lang.Blocks.FLOW_repeat_while_true_while,"while"]
+                    ]), "OPTION");
+            this.appendValueInput("BOOL")
+            .setCheck("Boolean");
+            this.appendDummyInput()
+                    .appendField(Lang.Blocks.FLOW_repeat_while_true_2);
+            this.appendStatementInput('DO');
+            this.setInputsInline(true);
+            this.setPreviousStatement(true);
+            this.setNextStatement(true);
+        }
     }
 };
 
 Entry.block.repeat_while_true = function (sprite, script) {
     var value = script.getBooleanValue("BOOL", script);
-    if (value) {
-        script.isLooped = true;
-        return script.getStatement("DO", script);
-    }
-    else {
-        script.isLooped = false;
-        return script.callReturn();
-    }
 
-}
+    if (script.getField("OPTION", script) == 'until')
+        value = !value;
+    script.isLooped = value;
+
+    return value ? script.getStatement("DO", script) :
+        script.callReturn();
+};
 
 Blockly.Blocks.stop_object = {
     init: function() {
