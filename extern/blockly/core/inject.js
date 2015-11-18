@@ -113,7 +113,7 @@ Blockly.parseOptions_ = function(options) {
     hasTrashcan: hasTrashcan,
     hasBlockMenu: hasBlockMenu,
     languageTree: tree,
-    mediaFilePath: options['mediaFilePath']
+    mediaFilePath: options['mediaFilePath'] || './'
   };
 };
 
