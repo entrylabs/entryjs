@@ -228,6 +228,8 @@ Entry.BlockView = function(block, board) {
 
     p.onMouseDown = function(e) {
         if (e.button === 0 || e instanceof Touch) {
+            if (Entry.documentMousedown)
+                    Entry.documentMousedown.notify(e);
             this.dominate();
             var doc = $(document);
             doc.bind('mousemove.block', onMouseMove);
@@ -325,7 +327,7 @@ Entry.BlockView = function(block, board) {
             if (distance < 30) {
                 if (this.dragInstance.prev) {
                     this.dragInstance.prev.setNext(this.block);
-                    this.block.setPrev(this.dragInstance.prev)
+                    this.block.setPrev(this.dragInstance.prev);
                     this.block.thread.changeEvent.notify();
                 }
                 board.setMagnetedBlock(null);

@@ -118,7 +118,7 @@ Entry.Block.FOLLOW = 3;
     };
 
     p.clone = function(thread) {
-        return block = new Entry.Block(
+        return new Entry.Block(
             this.toJSON(true),
             thread
         );
