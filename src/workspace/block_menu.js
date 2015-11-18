@@ -28,6 +28,8 @@ Entry.BlockMenu = function(dom) {
         { parent: dom }
     );
 
+
+
     this.offset = this.svgDom.offset();
     this._svgWidth = this.svgDom.width();
 
@@ -42,7 +44,7 @@ Entry.BlockMenu = function(dom) {
     this.svgBlockGroup.board = this;
 
     this.changeEvent = new Entry.Event(this);
-    this.scroller = new Entry.Scroller(this, false, true);
+    //this.scroller = new Entry.Scroller(this, false, true);
 
     this.observe(this, "generateDragBlockObserver", ['dragBlock']);
 };

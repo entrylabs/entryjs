@@ -141,9 +141,9 @@ Entry.Scroller.RADIUS = 7;
             svgDom = this.board.svgDom,
             bWidth = svgDom.width(),
             bHeight = svgDom.height();
-        var visible = false;
-        if (bBox.width > bWidth || bBox.height > bHeight)
-            visible = true;
+        var visible = true;
+        //if (bBox.width > bWidth || bBox.height > bHeight)
+            //visible = true;
 
         this.setVisible(visible)
 

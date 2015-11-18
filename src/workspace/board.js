@@ -128,6 +128,9 @@ Entry.Board = function(dom) {
         dom.mousedown(function() {
             that.onMouseDown.apply(that, arguments);
         });
+        dom.on('mousewheel', function(){
+            that.mouseWheel.apply(that, arguments);
+        });
     };
 
     p.onMouseDown = function(e) {
@@ -171,6 +174,15 @@ Entry.Board = function(dom) {
             delete board.dragInstance;
         }
         e.stopPropagation();
+    };
+
+    p.mouseWheel = function(e) {
+        e = e.originalEvent;
+
+        this.scroller.scroll(
+            e.wheelDeltaX || -e.deltaX,
+            e.wheelDeltaY || -e.deltaY
+        );
     };
 
 

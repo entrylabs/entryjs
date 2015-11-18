@@ -12340,7 +12340,6 @@ Entry.BlockMenu = function(a) {
   this.svgBlockGroup = this.svgGroup.group();
   this.svgBlockGroup.board = this;
   this.changeEvent = new Entry.Event(this);
-  this.scroller = new Entry.Scroller(this, !1, !0);
   this.observe(this, "generateDragBlockObserver", ["dragBlock"]);
 };
 (function(a) {
@@ -13066,21 +13065,16 @@ Entry.Scroller.RADIUS = 7;
     this.resizeScrollBar();
   };
   a.resizeScrollBar = function() {
-    var a = this.board.svgBlockGroup.getBBox(), c = this.board.svgDom, d = c.width(), c = c.height(), e = !1;
-    if (a.width > d || a.height > c) {
-      e = !0;
+    var a = this.board.svgBlockGroup.getBBox(), c = this.board.svgDom, d = c.width(), c = c.height();
+    this.setVisible(!0);
+    if (this._horizontal) {
+      var e = -a.width + Entry.BOARD_PADDING, f = d - Entry.BOARD_PADDING, g = (d + 2 * Entry.Scroller.RADIUS) * a.width / (f - e + a.width);
+      isNaN(g) && (g = 0);
+      this.hX = (a.x - e) / (f - e) * (d - g - 2 * Entry.Scroller.RADIUS);
+      this.hScrollbar.attr({width:g, x:this.hX, y:c - 2 * Entry.Scroller.RADIUS});
+      this.hRatio = (d - g - 2 * Entry.Scroller.RADIUS) / (f - e);
     }
-    this.setVisible(e);
-    if (e) {
-      if (this._horizontal) {
-        var e = -a.width + Entry.BOARD_PADDING, f = d - Entry.BOARD_PADDING, g = (d + 2 * Entry.Scroller.RADIUS) * a.width / (f - e + a.width);
-        isNaN(g) && (g = 0);
-        this.hX = (a.x - e) / (f - e) * (d - g - 2 * Entry.Scroller.RADIUS);
-        this.hScrollbar.attr({width:g, x:this.hX, y:c - 2 * Entry.Scroller.RADIUS});
-        this.hRatio = (d - g - 2 * Entry.Scroller.RADIUS) / (f - e);
-      }
-      this._vertical && (e = -a.height + Entry.BOARD_PADDING, f = c - Entry.BOARD_PADDING, g = (c + 2 * Entry.Scroller.RADIUS) * a.height / (f - e + a.height), this.vY = (a.y - e) / (f - e) * (c - g - 2 * Entry.Scroller.RADIUS), this.vScrollbar.attr({height:g, y:this.vY, x:d - 2 * Entry.Scroller.RADIUS}), this.vRatio = (c - g - 2 * Entry.Scroller.RADIUS) / (f - e));
-    }
+    this._vertical && (e = -a.height + Entry.BOARD_PADDING, f = c - Entry.BOARD_PADDING, g = (c + 2 * Entry.Scroller.RADIUS) * a.height / (f - e + a.height), this.vY = (a.y - e) / (f - e) * (c - g - 2 * Entry.Scroller.RADIUS), this.vScrollbar.attr({height:g, y:this.vY, x:d - 2 * Entry.Scroller.RADIUS}), this.vRatio = (c - g - 2 * Entry.Scroller.RADIUS) / (f - e));
   };
   a.updateScrollBar = function(a, c) {
     this._horizontal && (this.hX += a * this.hRatio, this.hScrollbar.attr({x:this.hX}));
@@ -13522,6 +13516,9 @@ Entry.Board = function(a) {
     a.mousedown(function() {
       c.onMouseDown.apply(c, arguments);
     });
+    a.on("mousewheel", function() {
+      c.mouseWheel.apply(c, arguments);
+    });
   };
   a.onMouseDown = function(a) {
     function c(a) {
@@ -13547,6 +13544,10 @@ Entry.Board = function(a) {
     }
     var f = this;
     a.stopPropagation();
+  };
+  a.mouseWheel = function(a) {
+    a = a.originalEvent;
+    this.scroller.scroll(a.wheelDeltaX || -a.deltaX, a.wheelDeltaY || -a.deltaY);
   };
 })(Entry.Board.prototype);
 Entry.Workspace = function(a, b) {
