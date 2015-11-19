@@ -317,9 +317,8 @@ Entry.BlockView = function(block, board) {
         var block = this.block;
         this.removeDragging();
         this.dragMode = Entry.DRAG_MODE_NONE;
-        if (board instanceof Entry.BlockMenu) {
-            board.terminateDrag();
-        } else {
+        if (board instanceof Entry.BlockMenu) board.terminateDrag();
+        else {
             var distance = Math.sqrt(
                 Math.pow(this.dragInstance.startX - this.dragInstance.offsetX, 2) +
                 Math.pow(this.dragInstance.startY - this.dragInstance.offsetY, 2)
