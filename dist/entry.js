@@ -9913,6 +9913,9 @@ Entry.Utils.bindGlobalEvent = function() {
     Entry.mouseCoordinate.y = a.clientY;
   }));
 };
+Entry.Utils.initEntryEvent_ = function() {
+  Entry.events_ || (Entry.events_ = []);
+};
 Entry.sampleColours = [];
 Entry.assert = function(a, b) {
   if (!a) {

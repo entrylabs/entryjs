@@ -86,6 +86,11 @@ Entry.Utils.bindGlobalEvent = function() {
     }
 };
 
+Entry.Utils.initEntryEvent_ = function() {
+    if (!Entry.events_) {
+        Entry.events_ = [];
+    }
+};
 
 /**
  * Sample color code for user select
