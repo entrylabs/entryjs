@@ -1347,20 +1347,17 @@ Entry.block.stop_run = function(a, b) {
 };
 Blockly.Blocks.repeat_while_true = {init:function() {
   this.setColour("#498deb");
-  this.appendDummyInput().appendField(Lang.Blocks.FLOW_repeat_while_true_1);
-  this.appendValueInput("BOOL").setCheck("Boolean");
-  this.appendDummyInput().appendField(Lang.Blocks.FLOW_repeat_while_true_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/flow_03.png", "*"));
+  "ko" == Lang.type ? (this.appendDummyInput().appendField(Lang.Blocks.FLOW_repeat_while_true_1), this.appendValueInput("BOOL").setCheck("Boolean"), this.appendDummyInput().appendField(new Blockly.FieldDropdown([[Lang.Blocks.FLOW_repeat_while_true_until, "until"], [Lang.Blocks.FLOW_repeat_while_true_while, "while"]]), "OPTION").appendField(Lang.Blocks.FLOW_repeat_while_true_2)) : (this.appendDummyInput().appendField(Lang.Blocks.FLOW_repeat_while_true_1), this.appendDummyInput().appendField(new Blockly.FieldDropdown([[Lang.Blocks.FLOW_repeat_while_true_until, 
+  "until"], [Lang.Blocks.FLOW_repeat_while_true_while, "while"]]), "OPTION"), this.appendValueInput("BOOL").setCheck("Boolean"), this.appendDummyInput().appendField(Lang.Blocks.FLOW_repeat_while_true_2));
   this.appendStatementInput("DO");
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
 }};
 Entry.block.repeat_while_true = function(a, b) {
-  if (b.getBooleanValue("BOOL", b)) {
-    return b.isLooped = !0, b.getStatement("DO", b);
-  }
-  b.isLooped = !1;
-  return b.callReturn();
+  var c = b.getBooleanValue("BOOL", b);
+  "until" == b.getField("OPTION", b) && (c = !c);
+  return (b.isLooped = c) ? b.getStatement("DO", b) : b.callReturn();
 };
 Blockly.Blocks.stop_object = {init:function() {
   this.setColour("#498deb");
@@ -2895,11 +2892,48 @@ Blockly.Blocks.bounce_wall = {init:function() {
   this.setNextStatement(!0);
 }};
 Entry.block.bounce_wall = function(a, b) {
-  var c = a.parent.getRotateMethod();
-  a.object.getTransformedBounds();
-  var d = "free" == c ? (a.getRotation() + a.getDirection()).mod(360) : a.getDirection();
-  90 > d && 0 <= d || 360 > d && 270 <= d ? ndgmr.checkPixelCollision(Entry.stage.wall.up, a.object, 0, !0) && ("free" == c ? a.setRotation(-a.getRotation() - 2 * a.getDirection() + 180) : a.setDirection(-a.getDirection() + 180)) : 270 > d && 90 <= d && ndgmr.checkPixelCollision(Entry.stage.wall.down, a.object, 0, !0) && ("free" == c ? a.setRotation(-a.getRotation() - 2 * a.getDirection() + 180) : a.setDirection(-a.getDirection() + 180));
-  360 > d && 180 <= d ? ndgmr.checkPixelCollision(Entry.stage.wall.left, a.object, 0, !0) && ("free" == c ? a.setRotation(-a.getRotation() - 2 * a.getDirection()) : a.setDirection(-a.getDirection() + 360)) : 180 > d && 0 <= d && ndgmr.checkPixelCollision(Entry.stage.wall.right, a.object, 0, !0) && ("free" == c ? a.setRotation(-a.getRotation() - 2 * a.getDirection()) : a.setDirection(-a.getDirection() + 360));
+  var c = a.parent.getRotateMethod(), d = a.object.getTransformedBounds(), e;
+  e = d.width * Math.sqrt(1 + d.height / d.width * (d.height / d.width));
+  var d = d.height * Math.sqrt(1 + d.width / d.height * (d.width / d.height)), f = "free" == c ? (a.getRotation() + a.getDirection()).mod(360) : a.getDirection();
+  if (90 > f && 0 <= f || 360 > f && 270 <= f) {
+    var g = ndgmr.checkPixelCollision(Entry.stage.wall.up, a.object, 0, !1);
+    if (g) {
+      "free" == c ? a.setRotation(-a.getRotation() - 2 * a.getDirection() + 180) : a.setDirection(-a.getDirection() + 180), a.setY(135 - d / 2 - 1);
+    } else {
+      if (g = ndgmr.checkPixelCollision(Entry.stage.wall.down, a.object, 0, !1)) {
+        "free" == c ? a.setRotation(-a.getRotation() - 2 * a.getDirection() + 180) : a.setDirection(-a.getDirection() + 180), a.setY(d / 2 + -134);
+      }
+    }
+  } else {
+    if (270 > f && 90 <= f) {
+      if (g = ndgmr.checkPixelCollision(Entry.stage.wall.down, a.object, 0, !1)) {
+        "free" == c ? a.setRotation(-a.getRotation() - 2 * a.getDirection() + 180) : a.setDirection(-a.getDirection() + 180), a.setY(d / 2 + -134);
+      } else {
+        if (g = ndgmr.checkPixelCollision(Entry.stage.wall.up, a.object, 0, !1)) {
+          "free" == c ? a.setRotation(-a.getRotation() - 2 * a.getDirection() + 180) : a.setDirection(-a.getDirection() + 180), a.setY(135 - d / 2 - 1);
+        }
+      }
+    }
+  }
+  if (360 > f && 180 <= f) {
+    if (d = ndgmr.checkPixelCollision(Entry.stage.wall.left, a.object, 0, !1)) {
+      "free" == c ? a.setRotation(-a.getRotation() - 2 * a.getDirection()) : a.setDirection(-a.getDirection() + 360), a.setX(e / 2 + -239);
+    } else {
+      if (d = ndgmr.checkPixelCollision(Entry.stage.wall.right, a.object, 0, !1)) {
+        "free" == c ? a.setRotation(-a.getRotation() - 2 * a.getDirection()) : a.setDirection(-a.getDirection() + 360), a.setX(240 - e / 2 - 1);
+      }
+    }
+  } else {
+    if (180 > f && 0 <= f) {
+      if (d = ndgmr.checkPixelCollision(Entry.stage.wall.right, a.object, 0, !1)) {
+        "free" == c ? a.setRotation(-a.getRotation() - 2 * a.getDirection()) : a.setDirection(-a.getDirection() + 360), a.setX(240 - e / 2 - 1);
+      } else {
+        if (d = ndgmr.checkPixelCollision(Entry.stage.wall.left, a.object, 0, !1)) {
+          "free" == c ? a.setRotation(-a.getRotation() - 2 * a.getDirection()) : a.setDirection(-a.getDirection() + 360), a.setX(e / 2 + -239);
+        }
+      }
+    }
+  }
   return b.callReturn();
 };
 Blockly.Blocks.flip_arrow_horizontal = {init:function() {
@@ -8997,7 +9031,7 @@ Entry.Scene.prototype.generateView = function(a, b) {
     }, stop:function(a, b) {
       var c = b.item.data("start_pos"), g = b.item.index();
       Entry.scene.moveScene(c, g);
-    }, axis:"x"});
+    }, axis:"x", tolerance:"pointer"});
     this.view_.appendChild(c);
     this.listView_ = c;
     Entry.sceneEditable && (c = Entry.createElement("span"), c.addClass("entrySceneElementWorkspace"), c.addClass("entrySceneAddButtonWorkspace"), c.bindOnClick(function(a) {
@@ -9875,6 +9909,9 @@ Entry.Utils.bindGlobalEvent = function() {
     Entry.mouseCoordinate.x = a.clientX;
     Entry.mouseCoordinate.y = a.clientY;
   }));
+};
+Entry.Utils.initEntryEvent_ = function() {
+  Entry.events_ || (Entry.events_ = []);
 };
 Entry.sampleColours = [];
 Entry.assert = function(a, b) {
@@ -12330,15 +12367,16 @@ Entry.BlockMenu = function(a) {
   if ("function" !== typeof window.Snap) {
     return console.error("Snap library is required");
   }
-  this._svgDom = Entry.Dom($('<svg id="blockMenu" width="100%" height="100%"version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'), {parent:a});
-  this.offset = this._svgDom.offset();
-  this._svgWidth = this._svgDom.width();
+  this.svgDom = Entry.Dom($('<svg id="blockMenu" width="100%" height="100%"version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'), {parent:a});
+  this.offset = this.svgDom.offset();
+  this._svgWidth = this.svgDom.width();
   this.snap = Snap("#blockMenu");
   this.svgGroup = this.snap.group();
   this.svgThreadGroup = this.svgGroup.group();
   this.svgThreadGroup.board = this;
   this.svgBlockGroup = this.svgGroup.group();
   this.svgBlockGroup.board = this;
+  this.changeEvent = new Entry.Event(this);
   this.observe(this, "generateDragBlockObserver", ["dragBlock"]);
 };
 (function(a) {
@@ -12347,7 +12385,12 @@ Entry.BlockMenu = function(a) {
     if (!(a instanceof Entry.Code)) {
       return console.error("You must inject code instance");
     }
+    this.codeListener && this.code.changeEvent.detach(this.codeListener);
     this.set({code:a});
+    var c = this;
+    this.codeListener = this.code.changeEvent.attach(this, function() {
+      c.changeEvent.notify();
+    });
     a.createView(this);
     this.align();
   };
@@ -12360,12 +12403,13 @@ Entry.BlockMenu = function(a) {
     this.svgGroup.append(this.svgBlockGroup);
   };
   a.align = function() {
-    for (var a = this.code.getThreads(), c = 10, d = this._svgDom.width() / 2, e = 0, f = a.length;e < f;e++) {
+    for (var a = this.code.getThreads(), c = 10, d = this.svgDom.width() / 2, e = 0, f = a.length;e < f;e++) {
       var g = a[e].getFirstBlock(), h = g.view;
       g.set({x:d, y:c});
       h._moveTo(d, c, !1);
       c += h.height + 15;
     }
+    this.changeEvent.notify();
   };
   a.generateDragBlockObserver = function() {
     var a = this.dragBlock;
@@ -12987,21 +13031,23 @@ Entry.FieldText = function(a, b) {
     this.box.set({x:a, y:c});
   };
 })(Entry.FieldText.prototype);
-Entry.Scroller = function(a) {
+Entry.Scroller = function(a, b, c) {
+  this._horizontal = void 0 === b ? !0 : b;
+  this._vertical = void 0 === c ? !0 : c;
   this.board = a;
   this.board.changeEvent.attach(this, this.resizeScrollBar);
   this.svgGroup = null;
   this.vRatio = this.vY = this.vWidth = this.hRatio = this.hX = this.hWidth = 0;
+  this._visible = !0;
   this.createScrollBar();
   Entry.windowResized && Entry.windowResized.attach(this, this.resizeScrollBar);
 };
 Entry.Scroller.RADIUS = 7;
 (function(a) {
   a.createScrollBar = function() {
+    var a = Entry.Scroller.RADIUS, c = this;
     this.svgGroup = this.board.snap.group().attr({class:"boardScrollbar"});
-    var a = Entry.Scroller.RADIUS;
-    this.hScrollbar = this.svgGroup.rect(0, 0, 0, 2 * a, a);
-    this.hScrollbar.mousedown(function(a) {
+    this._horizontal && (this.hScrollbar = this.svgGroup.rect(0, 0, 0, 2 * a, a), this.hScrollbar.mousedown(function(a) {
       function b(a) {
         a.stopPropagation();
         a.preventDefault();
@@ -13015,6 +13061,7 @@ Entry.Scroller.RADIUS = 7;
         delete c.dragInstance;
       }
       if (0 === a.button || a instanceof Touch) {
+        Entry.documentMousedown && Entry.documentMousedown.notify(a);
         var g = $(document);
         g.bind("mousemove.scroll", b);
         g.bind("mouseup.scroll", f);
@@ -13023,10 +13070,8 @@ Entry.Scroller.RADIUS = 7;
         c.dragInstance = new Entry.DragInstance({startX:a.pageX, startY:a.pageY, offsetX:a.pageX, offsetY:a.pageY});
       }
       a.stopPropagation();
-    });
-    var c = this;
-    this.vScrollbar = this.svgGroup.rect(0, 0, 2 * a, 0, a);
-    this.vScrollbar.mousedown(function(a) {
+    }));
+    this._vertical && (this.vScrollbar = this.svgGroup.rect(0, 0, 2 * a, 0, a), this.vScrollbar.mousedown(function(a) {
       function b(a) {
         a.stopPropagation();
         a.preventDefault();
@@ -13040,6 +13085,7 @@ Entry.Scroller.RADIUS = 7;
         delete c.dragInstance;
       }
       if (0 === a.button || a instanceof Touch) {
+        Entry.documentMousedown && Entry.documentMousedown.notify(a);
         var g = $(document);
         g.bind("mousemove.scroll", b);
         g.bind("mouseup.scroll", f);
@@ -13048,26 +13094,24 @@ Entry.Scroller.RADIUS = 7;
         c.dragInstance = new Entry.DragInstance({startX:a.pageX, startY:a.pageY, offsetX:a.pageX, offsetY:a.pageY});
       }
       a.stopPropagation();
-    });
+    }));
     this.resizeScrollBar();
   };
   a.resizeScrollBar = function() {
-    var a = this.board.svgBlockGroup.getBBox(), c = this.board.svgDom, d = c.width(), c = c.height(), e = -a.width + Entry.BOARD_PADDING, f = d - Entry.BOARD_PADDING, g = (d + 2 * Entry.Scroller.RADIUS) * a.width / (f - e + a.width);
-    this.hX = (a.x - e) / (f - e) * (d - g - 2 * Entry.Scroller.RADIUS);
-    this.hScrollbar.attr({width:g, x:this.hX, y:c - 2 * Entry.Scroller.RADIUS});
-    this.hRatio = (d - g - 2 * Entry.Scroller.RADIUS) / (f - e);
-    e = -a.height + Entry.BOARD_PADDING;
-    f = c - Entry.BOARD_PADDING;
-    g = (c + 2 * Entry.Scroller.RADIUS) * a.height / (f - e + a.height);
-    this.vY = (a.y - e) / (f - e) * (c - g - 2 * Entry.Scroller.RADIUS);
-    this.vScrollbar.attr({height:g, y:this.vY, x:d - 2 * Entry.Scroller.RADIUS});
-    this.vRatio = (c - g - 2 * Entry.Scroller.RADIUS) / (f - e);
+    var a = this.board.svgBlockGroup.getBBox(), c = this.board.svgDom, d = c.width(), c = c.height();
+    this.setVisible(!0);
+    if (this._horizontal) {
+      var e = -a.width + Entry.BOARD_PADDING, f = d - Entry.BOARD_PADDING, g = (d + 2 * Entry.Scroller.RADIUS) * a.width / (f - e + a.width);
+      isNaN(g) && (g = 0);
+      this.hX = (a.x - e) / (f - e) * (d - g - 2 * Entry.Scroller.RADIUS);
+      this.hScrollbar.attr({width:g, x:this.hX, y:c - 2 * Entry.Scroller.RADIUS});
+      this.hRatio = (d - g - 2 * Entry.Scroller.RADIUS) / (f - e);
+    }
+    this._vertical && (e = -a.height + Entry.BOARD_PADDING, f = c - Entry.BOARD_PADDING, g = (c + 2 * Entry.Scroller.RADIUS) * a.height / (f - e + a.height), this.vY = (a.y - e) / (f - e) * (c - g - 2 * Entry.Scroller.RADIUS), this.vScrollbar.attr({height:g, y:this.vY, x:d - 2 * Entry.Scroller.RADIUS}), this.vRatio = (c - g - 2 * Entry.Scroller.RADIUS) / (f - e));
   };
   a.updateScrollBar = function(a, c) {
-    this.hX += a * this.hRatio;
-    this.hScrollbar.attr({x:this.hX});
-    this.vY += c * this.vRatio;
-    this.vScrollbar.attr({y:this.vY});
+    this._horizontal && (this.hX += a * this.hRatio, this.hScrollbar.attr({x:this.hX}));
+    this._vertical && (this.vY += c * this.vRatio, this.vScrollbar.attr({y:this.vY}));
   };
   a.scroll = function(a, c) {
     var d = this.board.svgBlockGroup.getBBox(), e = this.board.svgDom;
@@ -13077,6 +13121,12 @@ Entry.Scroller.RADIUS = 7;
     c = Math.min(e.height() - Entry.BOARD_PADDING - d.y, c);
     this.board.code.moveBy(a, c);
     this.updateScrollBar(a, c);
+  };
+  a.setVisible = function(a) {
+    a != this.isVisible() && (this._visible = a, this.svgGroup.attr({display:!0 === a ? "block" : "none"}));
+  };
+  a.isVisible = function() {
+    return this._visible;
   };
 })(Entry.Scroller.prototype);
 Entry.skeleton = function() {
@@ -13143,7 +13193,7 @@ Entry.Block.FOLLOW = 3;
     this._schema.event && this.thread.registerEvent(this, this._schema.event);
     for (var a = this._schema.contents, c = 0;c < a.length;c++) {
       var d = a[c];
-      d.value && (this.values[d.key] = d.value);
+      !this.values[d.key] && d.value && (this.values[d.key] = d.value);
       "Statement" == d.type && (this.values[d.key] = new Entry.Thread(this.values[d.key], this.thread._code));
     }
   };
@@ -13173,7 +13223,7 @@ Entry.Block.FOLLOW = 3;
     this.view || (this.set({view:new Entry.BlockView(this, a)}), this._updatePos());
   };
   a.clone = function(a) {
-    return block = new Entry.Block(this.toJSON(!0), a);
+    return new Entry.Block(this.toJSON(!0), a);
   };
   a.toJSON = function(a) {
     var c = this._toJSON();
@@ -13446,7 +13496,7 @@ Entry.Board = function(a) {
   Entry.ANIMATION_DURATION = 200;
   Entry.BOARD_PADDING = 100;
   this.changeEvent = new Entry.Event(this);
-  this.scroller = new Entry.Scroller(this);
+  this.scroller = new Entry.Scroller(this, !0, !0);
   this._addControl(a);
 };
 (function(a) {
@@ -13483,7 +13533,6 @@ Entry.Board = function(a) {
     return this.code;
   };
   a.findById = function(a) {
-    console.log("board.findBy=", a);
     for (var c = this.code.getThreads(), d = 0, e = c.length;d < e;d++) {
       var f = c[d];
       if (f) {
@@ -13500,6 +13549,9 @@ Entry.Board = function(a) {
     a.mousedown(function() {
       c.onMouseDown.apply(c, arguments);
     });
+    a.on("mousewheel", function() {
+      c.mouseWheel.apply(c, arguments);
+    });
   };
   a.onMouseDown = function(a) {
     function c(a) {
@@ -13515,6 +13567,7 @@ Entry.Board = function(a) {
       delete f.dragInstance;
     }
     if (0 === a.button || a instanceof Touch) {
+      Entry.documentMousedown && Entry.documentMousedown.notify(a);
       var e = $(document);
       e.bind("mousemove.board", c);
       e.bind("mouseup.board", d);
@@ -13524,6 +13577,10 @@ Entry.Board = function(a) {
     }
     var f = this;
     a.stopPropagation();
+  };
+  a.mouseWheel = function(a) {
+    a = a.originalEvent;
+    this.scroller.scroll(a.wheelDeltaX || -a.deltaX, a.wheelDeltaY || -a.deltaY);
   };
 })(Entry.Board.prototype);
 Entry.Workspace = function(a, b) {

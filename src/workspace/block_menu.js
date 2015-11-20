@@ -22,14 +22,16 @@ Entry.BlockMenu = function(dom) {
     if (typeof window.Snap !== "function")
         return console.error("Snap library is required");
 
-    this._svgDom = Entry.Dom(
+    this.svgDom = Entry.Dom(
         $('<svg id="blockMenu" width="100%" height="100%"' +
           'version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'),
         { parent: dom }
     );
 
-    this.offset = this._svgDom.offset();
-    this._svgWidth = this._svgDom.width();
+
+
+    this.offset = this.svgDom.offset();
+    this._svgWidth = this.svgDom.width();
 
     this.snap = Snap('#blockMenu');
 
@@ -40,6 +42,10 @@ Entry.BlockMenu = function(dom) {
 
     this.svgBlockGroup = this.svgGroup.group();
     this.svgBlockGroup.board = this;
+
+    this.changeEvent = new Entry.Event(this);
+    //TODO scroller should be attached
+    //this.scroller = new Entry.Scroller(this, false, true);
 
     this.observe(this, "generateDragBlockObserver", ['dragBlock']);
 };
@@ -54,7 +60,14 @@ Entry.BlockMenu = function(dom) {
     p.changeCode = function(code) {
         if (!(code instanceof Entry.Code))
             return console.error("You must inject code instance");
+        if (this.codeListener)
+            this.code.changeEvent.detach(this.codeListener);
         this.set({code: code});
+        var that = this;
+        this.codeListener = this.code.changeEvent.attach(
+            this,
+            function() {that.changeEvent.notify();}
+        );
         code.createView(this);
         this.align();
     };
@@ -72,7 +85,7 @@ Entry.BlockMenu = function(dom) {
         var threads = this.code.getThreads();
         var vPadding = 15,
             marginFromTop = 10,
-            hPadding = this._svgDom.width()/2;
+            hPadding = this.svgDom.width()/2;
 
         for (var i=0,len=threads.length; i<len; i++) {
             var block = threads[i].getFirstBlock();
@@ -84,6 +97,7 @@ Entry.BlockMenu = function(dom) {
             blockView._moveTo(hPadding, marginFromTop, false);
             marginFromTop += blockView.height + vPadding;
         }
+        this.changeEvent.notify();
     };
 
     p.generateDragBlockObserver = function() {

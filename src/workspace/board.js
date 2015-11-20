@@ -54,7 +54,7 @@ Entry.Board = function(dom) {
     Entry.BOARD_PADDING = 100;
 
     this.changeEvent = new Entry.Event(this);
-    this.scroller = new Entry.Scroller(this);
+    this.scroller = new Entry.Scroller(this, true, true);
 
     this._addControl(dom);
 };
@@ -71,10 +71,10 @@ Entry.Board = function(dom) {
             this.code.changeEvent.detach(this.codeListener);
         this.set({code: code});
         var that = this;
-        this.codeListener = this.code.changeEvent.attach(this,
-                                                         function() {
-            that.changeEvent.notify();
-        });
+        this.codeListener = this.code.changeEvent.attach(
+            this,
+            function() {that.changeEvent.notify();}
+        );
         code.createView(this);
         this.changeEvent.notify();
     };
@@ -108,20 +108,11 @@ Entry.Board = function(dom) {
     };
 
     p.findById = function(id) {
-        console.log('board.findBy=',id);
         var code = this.code;
         var threads = code.getThreads();
         for (var i=0,len=threads.length; i<len; i++) {
             var thread = threads[i];
-            if (!thread)
-                continue;
-
-            /*
-               var block = thread.getFirstBlock();
-               if (block && block.id == id) {
-               return block;
-               }
-               */
+            if (!thread) continue;
 
             var blocks = thread.getBlocks();
             for (var j=0,len=blocks.length; j<len; j++) {
@@ -137,10 +128,15 @@ Entry.Board = function(dom) {
         dom.mousedown(function() {
             that.onMouseDown.apply(that, arguments);
         });
+        dom.on('mousewheel', function(){
+            that.mouseWheel.apply(that, arguments);
+        });
     };
 
     p.onMouseDown = function(e) {
         if (e.button === 0 || e instanceof Touch) {
+            if (Entry.documentMousedown)
+                Entry.documentMousedown.notify(e);
             var doc = $(document);
             doc.bind('mousemove.board', onMouseMove);
             doc.bind('mouseup.board', onMouseUp);
@@ -178,6 +174,15 @@ Entry.Board = function(dom) {
             delete board.dragInstance;
         }
         e.stopPropagation();
+    };
+
+    p.mouseWheel = function(e) {
+        e = e.originalEvent;
+
+        this.scroller.scroll(
+            e.wheelDeltaX || -e.deltaX,
+            e.wheelDeltaY || -e.deltaY
+        );
     };
 
 
