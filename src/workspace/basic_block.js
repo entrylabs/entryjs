@@ -305,3 +305,147 @@ Entry.block.jr_west = {
         }
     }
 };
+
+//maze 명세의 주니버 시작
+
+Entry.block.jr_go_straight = {
+    skeleton: "pebble_basic",
+    color: "#A751E3",
+    contents: [
+        "앞으로 가기",
+        {
+            type: "Indicator",
+            img: "/img/assets/ntry/bitmap/jr/cparty_go_straight.png",
+            position: {x: 83, y: 0},
+            size: 22,
+            text: {x: -30, y:0}
+        }
+    ],
+    func: function() {
+        if (!this.isContinue) {
+
+            this.isContinue = true;
+            this.isAction = true;
+            var self = this;
+            var callBack = function() {        
+                self.isAction = false;
+            };
+
+            // turn direction
+            Ntry.dispatchEvent("unitAction", Ntry.STATIC.WALK, callBack);
+
+            return Entry.STATIC.CONTINUE;
+        } else if (this.isAction) {
+            return Entry.STATIC.CONTINUE;
+        } else {
+            delete this.isAction;
+            delete this.isContinue;
+        }
+    }
+};
+
+Entry.block.jr_turn_left = {
+    skeleton: "pebble_basic",
+    color: "#A751E3",
+    contents: [
+        "왼쪽으로 돌기",
+        {
+            type: "Indicator",
+            img: "/img/assets/ntry/bitmap/jr/cparty_rotate_l.png",
+            position: {x: 83, y: 0},
+            size: 22
+        }
+    ],
+    func: function() {
+        if (!this.isContinue) {
+
+            this.isContinue = true;
+            this.isAction = true;
+            var self = this;
+            var callBack = function() {        
+                self.isAction = false;
+            };
+
+            // turn direction
+            Ntry.dispatchEvent("unitAction", Ntry.STATIC.TURN_LEFT, callBack);
+
+            return Entry.STATIC.CONTINUE;
+        } else if (this.isAction) {
+            return Entry.STATIC.CONTINUE;
+        } else {
+            delete this.isAction;
+            delete this.isContinue;
+        }
+    }
+};
+
+Entry.block.jr_turn_right = {
+    skeleton: "pebble_basic",
+    color: "#A751E3",
+    contents: [
+        "오른쪽으로 돌기",
+        {
+            type: "Indicator",
+            img: "/img/assets/ntry/bitmap/jr/cparty_rotate_r.png",
+            position: {x: 83, y: 0},
+            size: 22
+        }
+    ],
+    func: function() {
+        if (!this.isContinue) {
+
+            this.isContinue = true;
+            this.isAction = true;
+            var self = this;
+            var callBack = function() {        
+                self.isAction = false;
+            };
+
+            // turn direction
+            Ntry.dispatchEvent("unitAction", Ntry.STATIC.TURN_RIGHT, callBack);
+
+            return Entry.STATIC.CONTINUE;
+        } else if (this.isAction) {
+            return Entry.STATIC.CONTINUE;
+        } else {
+            delete this.isAction;
+            delete this.isContinue;
+        }
+    }
+};
+
+Entry.block.jr_go_slow = {
+    skeleton: "pebble_basic",
+    color: "#A751E3",
+    contents: [
+        "천천히 가기",
+        {
+            type: "Indicator",
+            img: "/img/assets/ntry/bitmap/jr/cparty_rotate_r.png",
+            position: {x: 83, y: 0},
+            size: 22
+        }
+    ],
+    func: function() {
+        if (!this.isContinue) {
+
+            this.isContinue = true;
+            this.isAction = true;
+            var self = this;
+            var callBack = function() {        
+                self.isAction = false;
+            };
+
+            // turn direction
+            Ntry.dispatchEvent("unitAction", Ntry.STATIC.GO_SLOW, callBack);
+
+            return Entry.STATIC.CONTINUE;
+        } else if (this.isAction) {
+            return Entry.STATIC.CONTINUE;
+        } else {
+            delete this.isAction;
+            delete this.isContinue;
+        }
+    }
+};
+
