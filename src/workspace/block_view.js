@@ -138,7 +138,7 @@ Entry.BlockView = function(block, board) {
         var path = this._skeleton.path(this);
         var that = this;
 
-        if (Entry.ANIMATION_DURATION !== 0) {
+        if (false && Entry.ANIMATION_DURATION !== 0) {
             setTimeout(function() {
                 that._darkenPath.animate({
                     d: path

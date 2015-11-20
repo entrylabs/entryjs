@@ -12489,13 +12489,10 @@ Entry.BlockView = function(a, b) {
     this.set(this._skeleton.box(this));
   };
   a._renderPath = function() {
-    var a = this._skeleton.path(this), c = this;
-    0 !== Entry.ANIMATION_DURATION ? setTimeout(function() {
-      c._darkenPath.animate({d:a}, Entry.ANIMATION_DURATION, mina.easeinout, function() {
-        c.set({animating:!1});
-      });
-      c._path.animate({d:a}, Entry.ANIMATION_DURATION, mina.easeinout);
-    }, 0) : (this._darkenPath.attr({d:a}), this._path.attr({d:a}), this.set({animating:!1}));
+    var a = this._skeleton.path(this);
+    this._darkenPath.attr({d:a});
+    this._path.attr({d:a});
+    this.set({animating:!1});
   };
   a._align = function(a) {
     if (null !== this.block.prev) {
