@@ -12552,6 +12552,7 @@ Entry.BlockView = function(a, b) {
   this._startRender(a);
   this.block.observe(this, "_bindPrev", ["prev"]);
   this.observe(this, "_updateBG", ["magneting"]);
+  b.code.observe(this, "_setBoard", ["board"], !1);
   this.dragMode = Entry.DRAG_MODE_NONE;
 };
 (function(a) {
@@ -12722,6 +12723,9 @@ Entry.BlockView = function(a, b) {
   a.getBoard = function() {
     return this._board;
   };
+  a._setBoard = function() {
+    this._board = this._board.code.board;
+  };
   a.destroy = function(a) {
     var c = this.svgGroup;
     a ? c.animate({opacity:0}, 100, null, function() {
@@ -12862,9 +12866,13 @@ Entry.CodeView = function(a, b) {
   this.code.map(function(a) {
     a.createView(b);
   });
+  a.observe(this, "_setBoard", ["board"]);
 };
 (function(a) {
   a.schema = {board:null, scrollX:0, scrollY:0};
+  a._setBoard = function() {
+    this.set({board:this.code.board});
+  };
 })(Entry.CodeView.prototype);
 Entry.Executor = function(a) {
   this.scope = {block:a, executor:this};

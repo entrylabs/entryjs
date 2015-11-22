@@ -31,6 +31,7 @@ Entry.BlockView = function(block, board) {
     // observe
     this.block.observe(this, "_bindPrev", ["prev"]);
     this.observe(this, "_updateBG", ["magneting"]);
+    board.code.observe(this, '_setBoard', ['board'], false);
 
     this.dragMode = Entry.DRAG_MODE_NONE;
 };
@@ -399,6 +400,10 @@ Entry.BlockView = function(block, board) {
     };
 
     p.getBoard = function() {return this._board;};
+
+    p._setBoard = function() {
+        this._board = this._board.code.board;
+    };
 
     p.destroy = function(animate) {
         var svgGroup = this.svgGroup;
