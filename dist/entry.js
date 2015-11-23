@@ -12693,11 +12693,6 @@ Entry.BlockView = function(a, b) {
     if (a instanceof Entry.BlockMenu) {
       a.terminateDrag();
     } else {
-      if (30 > Math.sqrt(Math.pow(this.dragInstance.startX - this.dragInstance.offsetX, 2) + Math.pow(this.dragInstance.startY - this.dragInstance.offsetY, 2))) {
-        this.dragInstance.prev && (this.dragInstance.prev.setNext(this.block), this.block.setPrev(this.dragInstance.prev), this.block.thread.changeEvent.notify());
-        a.setMagnetedBlock(null);
-        return;
-      }
       this.dragInstance || d.doAdd();
       var e = this.dragInstance && this.dragInstance.prev, f = this._getCloseBlock();
       e || f ? f ? (this.set({animating:!0}), f.next && f.next.view.set({animating:!0}), d.doInsert(f)) : d.doSeparate() : c == Entry.DRAG_MODE_DRAG && d.doMove();

@@ -330,19 +330,6 @@ Entry.BlockView = function(block, board) {
         if (board instanceof Entry.BlockMenu) {
             board.terminateDrag();
         } else {
-            var distance = Math.sqrt(
-                Math.pow(this.dragInstance.startX - this.dragInstance.offsetX, 2) +
-                Math.pow(this.dragInstance.startY - this.dragInstance.offsetY, 2)
-            );
-            if (distance < 30) {
-                if (this.dragInstance.prev) {
-                    this.dragInstance.prev.setNext(this.block);
-                    this.block.setPrev(this.dragInstance.prev)
-                    this.block.thread.changeEvent.notify();
-                }
-                board.setMagnetedBlock(null);
-                return;
-            }
             if (!this.dragInstance) {
                 block.doAdd();
             }
