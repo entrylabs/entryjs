@@ -12832,6 +12832,10 @@ Entry.Code = function(a) {
   };
   a.destroyThread = function(a, c) {
     var d = this._data, e = d.indexOf(a);
+    0 > e || (d.splice(e, 1), (d = a.getFirstBlock()) && d.destroy(c));
+  };
+  a.doDestroyThread = function(a, c) {
+    var d = this._data, e = d.indexOf(a);
     0 > e || (d.splice(e, 1), (d = a.getFirstBlock()) && d.doDestroy(c));
   };
   a.getThreads = function() {

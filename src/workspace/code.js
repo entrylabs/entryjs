@@ -112,6 +112,16 @@ Entry.Code = function(code) {
         if (index < 0) return;
         data.splice(index, 1);
         var firstBlock = thread.getFirstBlock();
+        if (firstBlock) firstBlock.destroy(animate);
+    };
+
+    p.doDestroyThread = function(thread, animate) {
+        var data = this._data;
+        var index = data.indexOf(thread);
+        // case of statement thread
+        if (index < 0) return;
+        data.splice(index, 1);
+        var firstBlock = thread.getFirstBlock();
         if (firstBlock) firstBlock.doDestroy(animate);
     };
 
