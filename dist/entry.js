@@ -12644,7 +12644,8 @@ Entry.BlockView = function(a, b) {
     function c(a) {
       a.stopPropagation();
       a.preventDefault();
-      if (f.block.isMovable()) {
+      var b = f.mouseDownCoordinate;
+      if ((f.dragMode == Entry.DRAG_MODE_DRAG || a.pageX !== b.x || a.pageY !== b.y) && f.block.isMovable()) {
         f.block.prev && (f.block.prev.setNext(null), f.block.setPrev(null), f.block.thread.changeEvent.notify());
         this.animating && this.set({animating:!1});
         if (0 === f.dragInstance.height) {
@@ -12663,12 +12664,15 @@ Entry.BlockView = function(a, b) {
     }
     function d(a) {
       $(document).unbind(".block");
+      delete this.mouseDownCoordinate;
       f.terminateDrag();
       g && g.set({dragBlock:null});
       delete f.dragInstance;
     }
     if (0 === a.button || a instanceof Touch) {
       this.dominate();
+      Entry.documentMousedown && Entry.documentMousedown.notify();
+      this.mouseDownCoordinate = {x:a.pageX, y:a.pageY};
       var e = $(document);
       e.bind("mousemove.block", c);
       e.bind("mouseup.block", d);
@@ -12926,9 +12930,9 @@ Entry.FieldDropdown = function(a, b) {
     });
     this.optionGroup = c.getBoard().svgGroup.group();
     var d = c.svgGroup.transform().globalMatrix, c = this.options;
-    this.optionGroup.attr({class:"entry-field-dropdown", transform:"t" + (d.e - 45) + " " + (d.f + 34)});
+    this.optionGroup.attr({class:"entry-field-dropdown", transform:"t" + (d.e - 45) + " " + (d.f + 35)});
     for (var e in c) {
-      d = Number(e), d = this.optionGroup.group().attr({class:"rect", transform:"t0 " + 23 * d}), d.rect(0, 0, 38, 23), d.text(3, 11, c[e]).attr({"alignment-baseline":"central"}), function(c, d) {
+      d = Number(e), d = this.optionGroup.group().attr({class:"rect", transform:"t0 " + 23 * d}), d.rect(0, 0, 38, 23), d.text(3, 13, c[e]).attr({"alignment-baseline":"central"}), function(c, d) {
         c.mousedown(function() {
           a.applyValue(d);
           a.destroyOption();
