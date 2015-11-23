@@ -434,6 +434,20 @@ Entry.BlockView = function(block, board) {
         } else svgGroup.remove();
     };
 
+    p.getShadow = function() {
+        if (!this._shadow) {
+            this._shadow = this.svgGroup.clone();
+            this._shadow.attr({
+                opacity: 0.5
+            });
+        }
+        return this._shadow;
+    };
+
+    p.destroyShadow = function() {
+        delete this._shadow;
+    };
+
     p._updateBG = function() {
         if (!this._board.dragBlock || !this._board.dragBlock.dragInstance)
             return;
@@ -443,18 +457,10 @@ Entry.BlockView = function(block, board) {
         var block = blockView.block;
         var svgGroup = blockView.svgGroup;
         if (magneting) {
-            var dragBlock = this._board.dragBlock;
-            if (!dragBlock.shadow)
-                dragBlock.shadow = dragBlock.svgGroup.clone();
-            var transform = "t" +
-                (0) + " " +
-                (this.height + 1);
-            dragBlock.shadow.attr({
-                transform: transform,
-                opacity: 0.5
-            });
-            this.svgGroup.append(dragBlock.shadow);
-            this.clonedShadow = dragBlock.shadow;
+            var shadow = this._board.dragBlock.getShadow();
+            shadow.attr({transform: "t0 " + (this.height + 1)})
+            this.svgGroup.append(shadow);
+            this._clonedShadow = shadow;
 
             if (blockView.background) {
                 blockView.background.remove();
@@ -496,9 +502,9 @@ Entry.BlockView = function(block, board) {
                 height: height
             });
         } else {
-            if (this.clonedShadow) {
-                this.clonedShadow.remove();
-                delete this.clonedShadow;
+            if (this._clonedShadow) {
+                this._clonedShadow.remove();
+                delete this._clonedShadow;
             }
 
             var height = blockView.originalHeight;

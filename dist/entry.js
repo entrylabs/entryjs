@@ -12738,15 +12738,21 @@ Entry.BlockView = function(a, b) {
       this.remove();
     }) : c.remove();
   };
+  a.getShadow = function() {
+    this._shadow || (this._shadow = this.svgGroup.clone(), this._shadow.attr({opacity:.5}));
+    return this._shadow;
+  };
+  a.destroyShadow = function() {
+    delete this._shadow;
+  };
   a._updateBG = function() {
     if (this._board.dragBlock && this._board.dragBlock.dragInstance) {
       var a = this._board.dragBlock.dragInstance.height, c = this, d = c.svgGroup;
       if (c.magneting) {
-        var e = this._board.dragBlock;
-        e.shadow || (e.shadow = e.svgGroup.clone());
-        e.shadow.attr({transform:"t0 " + (this.height + 1), opacity:.5});
-        this.svgGroup.append(e.shadow);
-        this.clonedShadow = e.shadow;
+        var e = this._board.dragBlock.getShadow();
+        e.attr({transform:"t0 " + (this.height + 1)});
+        this.svgGroup.append(e);
+        this._clonedShadow = e;
         c.background && (c.background.remove(), c.nextBackground.remove(), delete c.background, delete c.nextBackground);
         a = c.height + a;
         e = d.rect(0 - c.width / 2, 1.5 * c.height + 1, c.width, Math.max(0, a - 1.5 * c.height));
@@ -12761,7 +12767,7 @@ Entry.BlockView = function(a, b) {
         c.originalHeight = c.height;
         c.set({height:a});
       } else {
-        if (this.clonedShadow && (this.clonedShadow.remove(), delete this.clonedShadow), a = c.originalHeight) {
+        if (this._clonedShadow && (this._clonedShadow.remove(), delete this._clonedShadow), a = c.originalHeight) {
           setTimeout(function() {
             c.background && (c.background.remove(), c.nextBackground.remove(), delete c.background, delete c.nextBackground);
           }, Entry.ANIMATION_DURATION), c.set({height:a}), delete c.originalHeight;
@@ -13089,8 +13095,12 @@ Entry.DummyBlock = function(a, b) {
     if (this.magneting) {
       var a = this.getBoard().dragBlock.dragInstance.height;
       this.set({height:a});
+      a = this.getBoard().dragBlock.getShadow();
+      a.attr({transform:"t0 0"});
+      this.svgGroup.append(a);
+      this._clonedShadow = a;
     } else {
-      this.set({height:0});
+      this._clonedShadow && (this._clonedShadow.remove(), delete this._clonedShadow), this.set({height:0});
     }
     this._thread.changeEvent.notify();
   };
