@@ -13373,9 +13373,9 @@ Entry.Block.FOLLOW = 3;
 Entry.Thread = function(a, b) {
   this._data = new Entry.Collection;
   this._code = b;
-  this.load(a);
   this.changeEvent = new Entry.Event(this);
   this.changeEvent.attach(this, this.inspectExist);
+  this.load(a);
 };
 (function(a) {
   a.load = function(a) {
@@ -13440,12 +13440,11 @@ Entry.Thread = function(a, b) {
   };
   a.clone = function(a) {
     a = a || this._code;
-    var c = [];
     a = new Entry.Thread([], a);
-    for (var d = this._data, e = 0;e < d.length;e++) {
-      c.push(d[e].clone(a));
+    for (var c = this._data, d = [], e = 0, f = c.length;e < f;e++) {
+      d.push(c[e].clone(a));
     }
-    a.load(c);
+    a.load(d);
     return a;
   };
   a.toJSON = function(a) {
