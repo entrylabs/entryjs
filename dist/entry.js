@@ -6086,6 +6086,30 @@ Entry.initFonts = function(a) {
     WebFont.load(b);
   }, 1E3);
 };
+Entry.MazeReporter = function() {
+  this._activities = [];
+};
+(function(a) {
+  a.add = function(a) {
+    if (!(a instanceof Entry.MazeActivity)) {
+      return console.error("Activity must be an instanceof Entry.MazeActivity");
+    }
+    this._activities.push(a);
+  };
+  a.clear = function() {
+    this._activities = [];
+  };
+  a.get = function() {
+    return this._activities;
+  };
+})(Entry.MazeReporter.prototype);
+Entry.MazeActivity = function(a, b) {
+  this.name = a;
+  this.data = b;
+  this.timestamp = new Date;
+};
+(function(a) {
+})(Entry.MazeActivity.prototype);
 Entry.EntryObject = function(a) {
   if (a) {
     this.id = a.id;
@@ -9909,6 +9933,10 @@ Entry.Utils.bindGlobalEvent = function() {
     Entry.mouseCoordinate.x = a.clientX;
     Entry.mouseCoordinate.y = a.clientY;
   }));
+};
+Entry.Utils.makeMazeReporter = function() {
+  Entry.mazeReporter = new Entry.MazeReporter;
+  return Entry.mazeReporter;
 };
 Entry.Utils.initEntryEvent_ = function() {
   Entry.events_ || (Entry.events_ = []);

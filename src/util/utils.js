@@ -86,6 +86,11 @@ Entry.Utils.bindGlobalEvent = function() {
     }
 };
 
+Entry.Utils.makeMazeReporter = function() {
+    Entry.mazeReporter = new Entry.MazeReporter();
+    return Entry.mazeReporter;
+};
+
 Entry.Utils.initEntryEvent_ = function() {
     if (!Entry.events_) {
         Entry.events_ = [];
