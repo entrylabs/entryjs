@@ -362,8 +362,7 @@ Entry.BlockView = function(block, board) {
             board.setMagnetedBlock(null);
         }
 
-        if (this.shadow)
-            delete this.shadow;
+        this.destroyShadow();
 
         return;
     };

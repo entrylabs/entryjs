@@ -12703,7 +12703,7 @@ Entry.BlockView = function(a, b) {
       e || f ? f ? (this.set({animating:!0}), f.next && f.next.view.set({animating:!0}), d.doInsert(f)) : d.doSeparate() : c == Entry.DRAG_MODE_DRAG && d.doMove();
       a.setMagnetedBlock(null);
     }
-    this.shadow && delete this.shadow;
+    this.destroyShadow();
   };
   a._getCloseBlock = function() {
     var a = this.getBoard(), c = a instanceof Entry.BlockMenu, d = this.x, e = this.y;
