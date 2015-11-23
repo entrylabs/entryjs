@@ -12552,6 +12552,7 @@ Entry.BlockView = function(a, b) {
   this._startRender(a);
   this.block.observe(this, "_bindPrev", ["prev"]);
   this.observe(this, "_updateBG", ["magneting"]);
+  b.code.observe(this, "_setBoard", ["board"], !1);
   this.dragMode = Entry.DRAG_MODE_NONE;
 };
 (function(a) {
@@ -12643,7 +12644,8 @@ Entry.BlockView = function(a, b) {
     function c(a) {
       a.stopPropagation();
       a.preventDefault();
-      if (f.block.isMovable()) {
+      var b = f.mouseDownCoordinate;
+      if ((f.dragMode == Entry.DRAG_MODE_DRAG || a.pageX !== b.x || a.pageY !== b.y) && f.block.isMovable()) {
         f.block.prev && (f.block.prev.setNext(null), f.block.setPrev(null), f.block.thread.changeEvent.notify());
         this.animating && this.set({animating:!1});
         if (0 === f.dragInstance.height) {
@@ -12662,12 +12664,15 @@ Entry.BlockView = function(a, b) {
     }
     function d(a) {
       $(document).unbind(".block");
+      delete this.mouseDownCoordinate;
       f.terminateDrag();
       g && g.set({dragBlock:null});
       delete f.dragInstance;
     }
     if (0 === a.button || a instanceof Touch) {
       this.dominate();
+      Entry.documentMousedown && Entry.documentMousedown.notify();
+      this.mouseDownCoordinate = {x:a.pageX, y:a.pageY};
       var e = $(document);
       e.bind("mousemove.block", c);
       e.bind("mouseup.block", d);
@@ -12721,6 +12726,9 @@ Entry.BlockView = function(a, b) {
   };
   a.getBoard = function() {
     return this._board;
+  };
+  a._setBoard = function() {
+    this._board = this._board.code.board;
   };
   a.destroy = function(a) {
     var c = this.svgGroup;
@@ -12824,6 +12832,10 @@ Entry.Code = function(a) {
   };
   a.destroyThread = function(a, c) {
     var d = this._data, e = d.indexOf(a);
+    0 > e || (d.splice(e, 1), (d = a.getFirstBlock()) && d.destroy(c));
+  };
+  a.doDestroyThread = function(a, c) {
+    var d = this._data, e = d.indexOf(a);
     0 > e || (d.splice(e, 1), (d = a.getFirstBlock()) && d.doDestroy(c));
   };
   a.getThreads = function() {
@@ -12862,9 +12874,13 @@ Entry.CodeView = function(a, b) {
   this.code.map(function(a) {
     a.createView(b);
   });
+  a.observe(this, "_setBoard", ["board"]);
 };
 (function(a) {
   a.schema = {board:null, scrollX:0, scrollY:0};
+  a._setBoard = function() {
+    this.set({board:this.code.board});
+  };
 })(Entry.CodeView.prototype);
 Entry.Executor = function(a) {
   this.scope = {block:a, executor:this};
@@ -12918,9 +12934,9 @@ Entry.FieldDropdown = function(a, b) {
     });
     this.optionGroup = c.getBoard().svgGroup.group();
     var d = c.svgGroup.transform().globalMatrix, c = this.options;
-    this.optionGroup.attr({class:"entry-field-dropdown", transform:"t" + (d.e - 45) + " " + (d.f + 34)});
+    this.optionGroup.attr({class:"entry-field-dropdown", transform:"t" + (d.e - 45) + " " + (d.f + 35)});
     for (var e in c) {
-      d = Number(e), d = this.optionGroup.group().attr({class:"rect", transform:"t0 " + 23 * d}), d.rect(0, 0, 38, 23), d.text(3, 11, c[e]).attr({"alignment-baseline":"central"}), function(c, d) {
+      d = Number(e), d = this.optionGroup.group().attr({class:"rect", transform:"t0 " + 23 * d}), d.rect(0, 0, 38, 23), d.text(3, 13, c[e]).attr({"alignment-baseline":"central"}), function(c, d) {
         c.mousedown(function() {
           a.applyValue(d);
           a.destroyOption();
@@ -13361,9 +13377,9 @@ Entry.Block.FOLLOW = 3;
 Entry.Thread = function(a, b) {
   this._data = new Entry.Collection;
   this._code = b;
-  this.load(a);
   this.changeEvent = new Entry.Event(this);
   this.changeEvent.attach(this, this.inspectExist);
+  this.load(a);
 };
 (function(a) {
   a.load = function(a) {
@@ -13428,12 +13444,11 @@ Entry.Thread = function(a, b) {
   };
   a.clone = function(a) {
     a = a || this._code;
-    var c = [];
     a = new Entry.Thread([], a);
-    for (var d = this._data, e = 0;e < d.length;e++) {
-      c.push(d[e].clone(a));
+    for (var c = this._data, d = [], e = 0, f = c.length;e < f;e++) {
+      d.push(c[e].clone(a));
     }
-    a.load(c);
+    a.load(d);
     return a;
   };
   a.toJSON = function(a) {
@@ -13498,8 +13513,10 @@ Entry.FieldTrashcan = function(a) {
 (function(a) {
   a.renderStart = function() {
     var a = Entry.mediaFilePath + "delete_";
-    this.trashcanTop = this.svgGroup.image(a + "cover.png", 0, 0, 80, 20);
-    this.trashcan = this.svgGroup.image(a + "body.png", 0, 20, 80, 80);
+    this.trashcanTop = this.svgGroup.image(a + "cover.png", 0, 0, 60, 20);
+    this.trashcan = this.svgGroup.image(a + "body.png", 0, 20, 60, 60);
+    a = this.svgGroup.filter(Snap.filter.shadow(1, 1, 2));
+    this.svgGroup.attr({filter:a});
   };
   a.updateDragBlock = function() {
     var a = this.board.dragBlock, c = this.dragBlockObserver;

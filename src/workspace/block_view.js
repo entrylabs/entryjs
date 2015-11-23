@@ -25,12 +25,12 @@ Entry.BlockView = function(block, board) {
     }
 
     this.prevObserver = null;
-
     this._startRender(block);
 
     // observe
     this.block.observe(this, "_bindPrev", ["prev"]);
     this.observe(this, "_updateBG", ["magneting"]);
+    board.code.observe(this, '_setBoard', ['board'], false);
 
     this.dragMode = Entry.DRAG_MODE_NONE;
 };
@@ -229,6 +229,11 @@ Entry.BlockView = function(block, board) {
     p.onMouseDown = function(e) {
         if (e.button === 0 || e instanceof Touch) {
             this.dominate();
+            if (Entry.documentMousedown)
+                Entry.documentMousedown.notify();
+            this.mouseDownCoordinate = {
+                x: e.pageX, y: e.pageY
+            };
             var doc = $(document);
             doc.bind('mousemove.block', onMouseMove);
             doc.bind('mouseup.block', onMouseUp);
@@ -253,55 +258,61 @@ Entry.BlockView = function(block, board) {
         function onMouseMove(e) {
             e.stopPropagation();
             e.preventDefault();
-            if (!blockView.block.isMovable()) return;
+            var mouseDownCoordinate = blockView.mouseDownCoordinate;
+            if (blockView.dragMode == Entry.DRAG_MODE_DRAG ||
+                e.pageX !== mouseDownCoordinate.x ||
+                e.pageY !== mouseDownCoordinate.y) {
+                if (!blockView.block.isMovable()) return;
 
-            if(blockView.block.prev) {
-                blockView.block.prev.setNext(null);
-                blockView.block.setPrev(null);
-                blockView.block.thread.changeEvent.notify();
-            }
-
-            if (this.animating)
-                this.set({animating: false});
-
-            if (blockView.dragInstance.height === 0) {
-                var block = blockView.block;
-                var height = - 1;
-                while (block) {
-                    height += block.view.height + 1;
-                    block = block.next;
+                if(blockView.block.prev) {
+                    blockView.block.prev.setNext(null);
+                    blockView.block.setPrev(null);
+                    blockView.block.thread.changeEvent.notify();
                 }
-                blockView.dragInstance.set({
-                    height: height
+
+                if (this.animating)
+                    this.set({animating: false});
+
+                if (blockView.dragInstance.height === 0) {
+                    var block = blockView.block;
+                    var height = - 1;
+                    while (block) {
+                        height += block.view.height + 1;
+                        block = block.next;
+                    }
+                    blockView.dragInstance.set({
+                        height: height
+                    });
+                }
+
+                if (e.originalEvent.touches) {
+                    e = e.originalEvent.touches[0];
+                }
+                var dragInstance = blockView.dragInstance;
+                blockView._moveBy(
+                    e.pageX - dragInstance.offsetX,
+                    e.pageY - dragInstance.offsetY,
+                    false
+                );
+                dragInstance.set({
+                    offsetX: e.pageX,
+                    offsetY: e.pageY
                 });
-            }
+                blockView.dragMode = Entry.DRAG_MODE_DRAG;
 
-            if (e.originalEvent.touches) {
-                e = e.originalEvent.touches[0];
-            }
-            var dragInstance = blockView.dragInstance;
-            blockView._moveBy(
-                e.pageX - dragInstance.offsetX,
-                e.pageY - dragInstance.offsetY,
-                false
-            );
-            dragInstance.set({
-                 offsetX: e.pageX,
-                 offsetY: e.pageY
-            });
-            blockView.dragMode = Entry.DRAG_MODE_DRAG;
-
-            var magnetedBlock = blockView._getCloseBlock();
-            if (magnetedBlock) {
-                board = magnetedBlock.view.getBoard();
-                board.setMagnetedBlock(magnetedBlock.view);
-            } else {
-                board.setMagnetedBlock(null);
+                var magnetedBlock = blockView._getCloseBlock();
+                if (magnetedBlock) {
+                    board = magnetedBlock.view.getBoard();
+                    board.setMagnetedBlock(magnetedBlock.view);
+                } else {
+                    board.setMagnetedBlock(null);
+                }
             }
         }
 
         function onMouseUp(e) {
             $(document).unbind('.block');
+            delete this.mouseDownCoordinate;
             blockView.terminateDrag();
             if (board) board.set({dragBlock: null});
             delete blockView.dragInstance;
@@ -399,6 +410,10 @@ Entry.BlockView = function(block, board) {
     };
 
     p.getBoard = function() {return this._board;};
+
+    p._setBoard = function() {
+        this._board = this._board.code.board;
+    };
 
     p.destroy = function(animate) {
         var svgGroup = this.svgGroup;

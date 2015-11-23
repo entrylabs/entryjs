@@ -16,10 +16,10 @@ Entry.Thread = function(thread, code) {
     this._data = new Entry.Collection();
     this._code = code;
 
-    this.load(thread);
-
     this.changeEvent = new Entry.Event(this);
     this.changeEvent.attach(this, this.inspectExist);
+
+    this.load(thread);
 };
 
 (function(p) {
@@ -40,7 +40,6 @@ Entry.Thread = function(thread, code) {
                 this._data.push(new Entry.Block(block, this));
             }
         }
-
         this._setRelation();
 
         var codeView = this._code.view;
@@ -120,15 +119,13 @@ Entry.Thread = function(thread, code) {
 
     p.clone = function(code) {
         var code = code || this._code;
-        var clonedBlocks = [];
         var newThread = new Entry.Thread([], code);
-        var blocks = this._data;
-        for (var i = 0; i < blocks.length; i++) {
-            clonedBlocks.push(
-                blocks[i].clone(newThread)
-            );
+        var data = this._data;
+        var cloned = [];
+        for (var i=0, len=data.length; i<len; i++) {
+            cloned.push(data[i].clone(newThread));
         }
-        newThread.load(clonedBlocks);
+        newThread.load(cloned);
         return newThread;
     };
 

@@ -72,7 +72,6 @@ Entry.FieldDropdown = function(content, blockView) {
             }
         );
 
-
         this.optionGroup = blockView.getBoard().svgGroup.group();
 
         var matrix = blockView.svgGroup.transform().globalMatrix;
@@ -82,7 +81,7 @@ Entry.FieldDropdown = function(content, blockView) {
         var options = this.options;
         this.optionGroup.attr({
             class: 'entry-field-dropdown',
-            transform: "t" + (x -45) + " " + (y + 34)
+            transform: "t" + (x -45) + " " + (y + 35)
         });
 
         for (var i in options) {
@@ -98,7 +97,7 @@ Entry.FieldDropdown = function(content, blockView) {
             );
 
             element.text(
-                3, 11,
+                3, 13,
                 options[i]
             ).attr({
                 "alignment-baseline": "central"

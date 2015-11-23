@@ -33,6 +33,8 @@ Entry.CodeView = function(code, board) {
     this.code.map(function(thread) {
         thread.createView(board);
     });
+
+    code.observe(this, "_setBoard", ['board']);
 };
 
 (function(p) {
@@ -40,6 +42,10 @@ Entry.CodeView = function(code, board) {
         board: null,
         scrollX: 0,
         scrollY: 0
+    };
+
+    p._setBoard = function() {
+        this.set({board:this.code.board});
     };
 
 })(Entry.CodeView.prototype);

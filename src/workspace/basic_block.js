@@ -446,5 +446,6 @@ Entry.block.jr_go_slow = {
             delete this.isContinue;
         }
     }
+    
 };
 
