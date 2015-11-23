@@ -12551,6 +12551,7 @@ Entry.BlockView = function(a, b) {
   this.prevObserver = null;
   this._startRender(a);
   this.block.observe(this, "_bindPrev", ["prev"]);
+  this.block.observe(this, "_createEmptyBG", ["next"]);
   this.observe(this, "_updateBG", ["magneting"]);
   b.code.observe(this, "_setBoard", ["board"], !1);
   this.dragMode = Entry.DRAG_MODE_NONE;
@@ -12753,12 +12754,12 @@ Entry.BlockView = function(a, b) {
         e = d.rect(0 - c.width / 2, 1.5 * c.height + 1, c.width, Math.max(0, a - 1.5 * c.height));
         e.block = c.block.next;
         c.nextBackground = e;
-        d.prepend(e);
         e.attr({fill:"transparent"});
+        d.prepend(e);
         e = d.rect(0 - c.width / 2, 0, c.width, a);
         c.background = e;
-        d.prepend(e);
         e.attr({fill:"transparent"});
+        d.prepend(e);
         c.originalHeight = c.height;
         c.set({height:a});
       } else {
@@ -12769,6 +12770,16 @@ Entry.BlockView = function(a, b) {
         }
       }
       c.block.thread.changeEvent.notify();
+    }
+  };
+  a._createEmptyBG = function() {
+    if (this.block.next) {
+      this.emptyBackground && (this.emptyBackground.remove(), delete this.emptyBackground);
+    } else {
+      var a = this.svgGroup.rect(0 - this.width / 2, this.height / 2, this.width, this.height);
+      this.emptyBackground = a;
+      a.attr({fill:"transparent"});
+      this.svgGroup.prepend(a);
     }
   };
   a.addDragging = function() {

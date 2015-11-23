@@ -29,6 +29,7 @@ Entry.BlockView = function(block, board) {
 
     // observe
     this.block.observe(this, "_bindPrev", ["prev"]);
+    this.block.observe(this, "_createEmptyBG", ["next"]);
     this.observe(this, "_updateBG", ["magneting"]);
     board.code.observe(this, '_setBoard', ['board'], false);
 
@@ -465,10 +466,10 @@ Entry.BlockView = function(block, board) {
             nextBg.block = blockView.block.next;
             blockView.nextBackground = nextBg;
 
-            svgGroup.prepend(nextBg);
             nextBg.attr({
                 fill: 'transparent'
             });
+            svgGroup.prepend(nextBg);
 
             var bg = svgGroup.rect(
                 0 - blockView.width/2,
@@ -478,10 +479,10 @@ Entry.BlockView = function(block, board) {
             );
             blockView.background = bg;
 
-            svgGroup.prepend(bg);
             bg.attr({
                 fill: 'transparent'
             });
+            svgGroup.prepend(bg);
 
             blockView.originalHeight = blockView.height;
             blockView.set({
@@ -511,6 +512,29 @@ Entry.BlockView = function(block, board) {
 
         }
         blockView.block.thread.changeEvent.notify();
+    };
+
+    p._createEmptyBG = function() {
+        var blockView = this;
+        if (!this.block.next) {
+            var bg = this.svgGroup.rect(
+                0 - blockView.width/2,
+                blockView.height/2,
+                blockView.width,
+                blockView.height
+            );
+            blockView.emptyBackground = bg;
+
+            bg.attr({
+                fill: 'transparent'
+            });
+            this.svgGroup.prepend(bg);
+        } else {
+            if (blockView.emptyBackground) {
+                blockView.emptyBackground.remove();
+                delete blockView.emptyBackground;
+            }
+        }
     };
 
     p.addDragging = function() {
