@@ -13513,8 +13513,10 @@ Entry.FieldTrashcan = function(a) {
 (function(a) {
   a.renderStart = function() {
     var a = Entry.mediaFilePath + "delete_";
-    this.trashcanTop = this.svgGroup.image(a + "cover.png", 0, 0, 80, 20);
-    this.trashcan = this.svgGroup.image(a + "body.png", 0, 20, 80, 80);
+    this.trashcanTop = this.svgGroup.image(a + "cover.png", 0, 0, 60, 20);
+    this.trashcan = this.svgGroup.image(a + "body.png", 0, 20, 60, 60);
+    a = this.svgGroup.filter(Snap.filter.shadow(1, 1, 2));
+    this.svgGroup.attr({filter:a});
   };
   a.updateDragBlock = function() {
     var a = this.board.dragBlock, c = this.dragBlockObserver;
