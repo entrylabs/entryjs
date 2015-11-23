@@ -61,11 +61,12 @@ Entry.BlockView = function(block, board) {
         this._darkenPath = this.svgGroup.path(path);
         this._darkenPath.attr({
             transform: "t0 1",
-            fill: Entry.Utils.colorDarken(this._schema.color)
+            fill: Entry.Utils.colorDarken(this._schema.color, 0.7)
         });
 
         this._path = this.svgGroup.path(path);
         this._path.attr({
+            strokeWidth: "2",
             fill: this._schema.color
         });
 
@@ -361,6 +362,9 @@ Entry.BlockView = function(block, board) {
             board.setMagnetedBlock(null);
         }
 
+        if (this.shadow)
+            delete this.shadow;
+
         return;
     };
 
@@ -439,6 +443,19 @@ Entry.BlockView = function(block, board) {
         var block = blockView.block;
         var svgGroup = blockView.svgGroup;
         if (magneting) {
+            var dragBlock = this._board.dragBlock;
+            if (!dragBlock.shadow)
+                dragBlock.shadow = dragBlock.svgGroup.clone();
+            var transform = "t" +
+                (0) + " " +
+                (this.height + 1);
+            dragBlock.shadow.attr({
+                transform: transform,
+                opacity: 0.5
+            });
+            this.svgGroup.append(dragBlock.shadow);
+            this.clonedShadow = dragBlock.shadow;
+
             if (blockView.background) {
                 blockView.background.remove();
                 blockView.nextBackground.remove();
@@ -479,6 +496,11 @@ Entry.BlockView = function(block, board) {
                 height: height
             });
         } else {
+            if (this.clonedShadow) {
+                this.clonedShadow.remove();
+                delete this.clonedShadow;
+            }
+
             var height = blockView.originalHeight;
             if (height) {
                 setTimeout(function() {

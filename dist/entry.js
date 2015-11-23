@@ -12561,9 +12561,9 @@ Entry.BlockView = function(a, b) {
     this.svgGroup.attr({class:"block"});
     a = this._skeleton.path(this);
     this._darkenPath = this.svgGroup.path(a);
-    this._darkenPath.attr({transform:"t0 1", fill:Entry.Utils.colorDarken(this._schema.color)});
+    this._darkenPath.attr({transform:"t0 1", fill:Entry.Utils.colorDarken(this._schema.color, .7)});
     this._path = this.svgGroup.path(a);
-    this._path.attr({fill:this._schema.color});
+    this._path.attr({strokeWidth:"2", fill:this._schema.color});
     this._moveTo(this.x, this.y, !1);
     this._startContentRender();
     this._addControl();
@@ -12695,13 +12695,15 @@ Entry.BlockView = function(a, b) {
     } else {
       if (30 > Math.sqrt(Math.pow(this.dragInstance.startX - this.dragInstance.offsetX, 2) + Math.pow(this.dragInstance.startY - this.dragInstance.offsetY, 2))) {
         this.dragInstance.prev && (this.dragInstance.prev.setNext(this.block), this.block.setPrev(this.dragInstance.prev), this.block.thread.changeEvent.notify());
-      } else {
-        this.dragInstance || d.doAdd();
-        var e = this.dragInstance && this.dragInstance.prev, f = this._getCloseBlock();
-        e || f ? f ? (this.set({animating:!0}), f.next && f.next.view.set({animating:!0}), d.doInsert(f)) : d.doSeparate() : c == Entry.DRAG_MODE_DRAG && d.doMove();
+        a.setMagnetedBlock(null);
+        return;
       }
+      this.dragInstance || d.doAdd();
+      var e = this.dragInstance && this.dragInstance.prev, f = this._getCloseBlock();
+      e || f ? f ? (this.set({animating:!0}), f.next && f.next.view.set({animating:!0}), d.doInsert(f)) : d.doSeparate() : c == Entry.DRAG_MODE_DRAG && d.doMove();
       a.setMagnetedBlock(null);
     }
+    this.shadow && delete this.shadow;
   };
   a._getCloseBlock = function() {
     var a = this.getBoard(), c = a instanceof Entry.BlockMenu, d = this.x, e = this.y;
@@ -12740,8 +12742,14 @@ Entry.BlockView = function(a, b) {
     if (this._board.dragBlock && this._board.dragBlock.dragInstance) {
       var a = this._board.dragBlock.dragInstance.height, c = this, d = c.svgGroup;
       if (c.magneting) {
+        var e = this._board.dragBlock;
+        e.shadow || (e.shadow = e.svgGroup.clone());
+        e.shadow.attr({transform:"t0 " + (this.height + 1), opacity:.5});
+        this.svgGroup.append(e.shadow);
+        this.clonedShadow = e.shadow;
         c.background && (c.background.remove(), c.nextBackground.remove(), delete c.background, delete c.nextBackground);
-        var a = c.height + a, e = d.rect(0 - c.width / 2, 1.5 * c.height + 1, c.width, Math.max(0, a - 1.5 * c.height));
+        a = c.height + a;
+        e = d.rect(0 - c.width / 2, 1.5 * c.height + 1, c.width, Math.max(0, a - 1.5 * c.height));
         e.block = c.block.next;
         c.nextBackground = e;
         d.prepend(e);
@@ -12753,7 +12761,7 @@ Entry.BlockView = function(a, b) {
         c.originalHeight = c.height;
         c.set({height:a});
       } else {
-        if (a = c.originalHeight) {
+        if (this.clonedShadow && (this.clonedShadow.remove(), delete this.clonedShadow), a = c.originalHeight) {
           setTimeout(function() {
             c.background && (c.background.remove(), c.nextBackground.remove(), delete c.background, delete c.nextBackground);
           }, Entry.ANIMATION_DURATION), c.set({height:a}), delete c.originalHeight;
