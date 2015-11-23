@@ -327,10 +327,9 @@ Entry.BlockView = function(block, board) {
         var dragMode = this.dragMode;
         var block = this.block;
         this.removeDragging();
-        this.dragMode = Entry.DRAG_MODE_NONE;
         if (board instanceof Entry.BlockMenu) {
             board.terminateDrag();
-        } else {
+        } else if (dragMode !== Entry.DRAG_MODE_MOUSEDOWN) {
             if (!this.dragInstance) {
                 block.doAdd();
             }
@@ -349,6 +348,7 @@ Entry.BlockView = function(block, board) {
             }
             board.setMagnetedBlock(null);
         }
+        this.dragMode = Entry.DRAG_MODE_NONE;
 
         this.destroyShadow();
 

@@ -12690,15 +12690,17 @@ Entry.BlockView = function(a, b) {
   a.terminateDrag = function() {
     var a = this.getBoard(), c = this.dragMode, d = this.block;
     this.removeDragging();
-    this.dragMode = Entry.DRAG_MODE_NONE;
     if (a instanceof Entry.BlockMenu) {
       a.terminateDrag();
     } else {
-      this.dragInstance || d.doAdd();
-      var e = this.dragInstance && this.dragInstance.prev, f = this._getCloseBlock();
-      e || f ? f ? (this.set({animating:!0}), f.next && f.next.view.set({animating:!0}), d.doInsert(f)) : d.doSeparate() : c == Entry.DRAG_MODE_DRAG && d.doMove();
-      a.setMagnetedBlock(null);
+      if (c !== Entry.DRAG_MODE_MOUSEDOWN) {
+        this.dragInstance || d.doAdd();
+        var e = this.dragInstance && this.dragInstance.prev, f = this._getCloseBlock();
+        e || f ? f ? (this.set({animating:!0}), f.next && f.next.view.set({animating:!0}), d.doInsert(f)) : d.doSeparate() : c == Entry.DRAG_MODE_DRAG && d.doMove();
+        a.setMagnetedBlock(null);
+      }
     }
+    this.dragMode = Entry.DRAG_MODE_NONE;
     this.destroyShadow();
   };
   a._getCloseBlock = function() {
