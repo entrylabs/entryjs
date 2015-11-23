@@ -12358,7 +12358,7 @@ Entry.block.jr_west = {skeleton:"pebble_basic", color:"#A751E3", contents:["   \
     return Entry.STATIC.CONTINUE;
   }
 }};
-Entry.block.jr_go_straight = {skeleton:"pebble_basic", color:"#A751E3", contents:["\uc55e\uc73c\ub85c \uac00\uae30", {type:"Indicator", img:"/img/assets/ntry/bitmap/jr/cparty_go_straight.png", position:{x:83, y:0}, size:22, text:{x:-30, y:0}}], func:function() {
+Entry.block.jr_go_straight = {skeleton:"pebble_basic", color:"#A751E3", contents:["\uc55e\uc73c\ub85c \uac00\uae30", {type:"Indicator", img:"/img/assets/ntry/bitmap/jr/cparty_go_straight.png", position:{x:83, y:0}, size:22}], func:function() {
   if (this.isContinue) {
     if (this.isAction) {
       return Entry.STATIC.CONTINUE;

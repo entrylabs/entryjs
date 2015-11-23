@@ -317,8 +317,7 @@ Entry.block.jr_go_straight = {
             type: "Indicator",
             img: "/img/assets/ntry/bitmap/jr/cparty_go_straight.png",
             position: {x: 83, y: 0},
-            size: 22,
-            text: {x: -30, y:0}
+            size: 22
         }
     ],
     func: function() {
