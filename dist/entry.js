@@ -6088,12 +6088,16 @@ Entry.initFonts = function(a) {
 };
 Entry.Activity = function(a, b) {
   this.name = a;
-  for (var c = [], d = 0, e = b.length;d < e;d++) {
-    var f = b[d], g = Object.keys(f)[0];
-    c.push({key:g, value:f[g]});
-  }
-  this.data = c;
   this.timestamp = new Date;
+  if (void 0 !== b) {
+    for (var c = [], d = 0, e = b.length;d < e;d++) {
+      var f = b[d], g = Object.keys(f)[0];
+      c.push({key:g, value:f[g]});
+    }
+    this.data = c;
+  } else {
+    this.data = [];
+  }
 };
 Entry.ActivityReporter = function() {
   this._activities = [];
