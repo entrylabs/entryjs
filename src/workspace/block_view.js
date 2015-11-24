@@ -446,7 +446,7 @@ Entry.BlockView = function(block, board) {
         if (magneting) {
             var shadow = this._board.dragBlock.getShadow();
             shadow.attr({transform: "t0 " + (this.height + 1)})
-            this.svgGroup.append(shadow);
+            this.svgGroup.prepend(shadow);
             this._clonedShadow = shadow;
 
             if (blockView.background) {
