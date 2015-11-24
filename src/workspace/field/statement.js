@@ -42,6 +42,7 @@ Entry.FieldStatement = function(content, blockView) {
         this._thread.insertDummyBlock(this.dummyBlock);
         this._thread.createView(board);
         this._thread.changeEvent.attach(this, this.calcHeight);
+        this.calcHeight();
     };
 
     p.calcHeight = function() {

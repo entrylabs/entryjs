@@ -13075,6 +13075,7 @@ Entry.FieldStatement = function(a, b) {
     this._thread.insertDummyBlock(this.dummyBlock);
     this._thread.createView(a);
     this._thread.changeEvent.attach(this, this.calcHeight);
+    this.calcHeight();
   };
   a.calcHeight = function() {
     for (var a = this.dummyBlock, c = -1;a;) {
