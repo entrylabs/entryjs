@@ -154,4 +154,8 @@ Entry.Code = function(code) {
         }
     };
 
+    p.stringify = function() {
+        return JSON.stringify(this.toJSON());
+    };
+
 })(Entry.Code.prototype);

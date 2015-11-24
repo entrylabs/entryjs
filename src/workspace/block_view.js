@@ -330,9 +330,8 @@ Entry.BlockView = function(block, board) {
         if (board instanceof Entry.BlockMenu) {
             board.terminateDrag();
         } else if (dragMode !== Entry.DRAG_MODE_MOUSEDOWN) {
-            if (!this.dragInstance) {
+            if (this.dragInstance && this.dragInstance.isNew)
                 block.doAdd();
-            }
             var prevBlock = this.dragInstance && this.dragInstance.prev;
             var closeBlock = this._getCloseBlock();
             if (!prevBlock && !closeBlock) {

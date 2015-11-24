@@ -6086,12 +6086,21 @@ Entry.initFonts = function(a) {
     WebFont.load(b);
   }, 1E3);
 };
-Entry.MazeReporter = function() {
+Entry.Activity = function(a, b) {
+  this.name = a;
+  for (var c = [], d = 0, e = b.length;d < e;d++) {
+    var f = b[d], g = Object.keys(f)[0];
+    c.push({key:g, value:f[g]});
+  }
+  this.data = c;
+  this.timestamp = new Date;
+};
+Entry.ActivityReporter = function() {
   this._activities = [];
 };
 (function(a) {
   a.add = function(a) {
-    if (!(a instanceof Entry.MazeActivity)) {
+    if (!(a instanceof Entry.Activity)) {
       return console.error("Activity must be an instanceof Entry.MazeActivity");
     }
     this._activities.push(a);
@@ -6102,14 +6111,7 @@ Entry.MazeReporter = function() {
   a.get = function() {
     return this._activities;
   };
-})(Entry.MazeReporter.prototype);
-Entry.MazeActivity = function(a, b) {
-  this.name = a;
-  this.data = b;
-  this.timestamp = new Date;
-};
-(function(a) {
-})(Entry.MazeActivity.prototype);
+})(Entry.ActivityReporter.prototype);
 Entry.EntryObject = function(a) {
   if (a) {
     this.id = a.id;
@@ -9934,9 +9936,9 @@ Entry.Utils.bindGlobalEvent = function() {
     Entry.mouseCoordinate.y = a.clientY;
   }));
 };
-Entry.Utils.makeMazeReporter = function() {
-  Entry.mazeReporter = new Entry.MazeReporter;
-  return Entry.mazeReporter;
+Entry.Utils.makeActivityReporter = function() {
+  Entry.activityReporter = new Entry.ActivityReporter;
+  return Entry.activityReporter;
 };
 Entry.Utils.initEntryEvent_ = function() {
   Entry.events_ || (Entry.events_ = []);
@@ -10697,7 +10699,7 @@ Entry.DragInstance = function(a) {
   Entry.Model(this);
   this.set(a);
 };
-Entry.DragInstance.prototype.schema = {type:Entry.STATIC.DRAG_INSTANCE, startX:0, startY:0, offsetX:0, offsetY:0, prev:null, height:0, mode:0};
+Entry.DragInstance.prototype.schema = {type:Entry.STATIC.DRAG_INSTANCE, startX:0, startY:0, offsetX:0, offsetY:0, prev:null, height:0, mode:0, isNew:!1};
 Entry.ThreadModel = function() {
   Entry.Model(this);
 };
@@ -12516,7 +12518,7 @@ Entry.BlockMenu = function(a) {
     if (null !== this.dragBlock) {
       this.dragBlockObserver && this.removeDragBlockObserver();
       var c = this._svgWidth, d = this.dragBlock, e = d.block, f = this.code, g = e.getThread();
-      e && g && (f.cloneThread(g), a && d.observe(this, "moveBoardBlock", ["x", "y"], !1), d.dominate(), a = this.workspace.getBoard(), this._boardBlockView = a.code.cloneThread(g).getFirstBlock().view, this._boardBlockView.dragInstance = new Entry.DragInstance({height:0}), a.set({dragBlock:this._boardBlockView}), this._boardBlockView.addDragging(), this._boardBlockView.dragMode = Entry.DRAG_MODE_MOUSEDOWN, this._boardBlockView._moveTo(d.x - c, d.y - 0, !1));
+      e && g && (f.cloneThread(g), a && d.observe(this, "moveBoardBlock", ["x", "y"], !1), d.dominate(), a = this.workspace.getBoard(), this._boardBlockView = a.code.cloneThread(g).getFirstBlock().view, this._boardBlockView.dragInstance = new Entry.DragInstance({height:0, isNew:!0}), a.set({dragBlock:this._boardBlockView}), this._boardBlockView.addDragging(), this._boardBlockView.dragMode = Entry.DRAG_MODE_MOUSEDOWN, this._boardBlockView._moveTo(d.x - c, d.y - 0, !1));
       if (this._boardBlockView) {
         return this._boardBlockView.block.id;
       }
@@ -12722,7 +12724,7 @@ Entry.BlockView = function(a, b) {
       a.terminateDrag();
     } else {
       if (c !== Entry.DRAG_MODE_MOUSEDOWN) {
-        this.dragInstance || d.doAdd();
+        this.dragInstance && this.dragInstance.isNew && d.doAdd();
         var e = this.dragInstance && this.dragInstance.prev, f = this._getCloseBlock();
         e || f ? f ? (this.set({animating:!0}), f.next && f.next.view.set({animating:!0}), d.doInsert(f)) : d.doSeparate() : c == Entry.DRAG_MODE_DRAG && d.doMove();
         a.setMagnetedBlock(null);
@@ -12908,6 +12910,9 @@ Entry.Code = function(a) {
       var g = d[e].getFirstBlock();
       g && g.view._moveBy(a, c, !1);
     }
+  };
+  a.stringify = function() {
+    return JSON.stringify(this.toJSON());
   };
 })(Entry.Code.prototype);
 Entry.CodeView = function(a, b) {
@@ -13311,10 +13316,6 @@ Entry.Block = function(a, b) {
 };
 Entry.Block.MAGNET_RANGE = 10;
 Entry.Block.MAGNET_OFFSET = .4;
-Entry.Block.HIDDEN = 0;
-Entry.Block.SHOWN = 1;
-Entry.Block.MOVE = 2;
-Entry.Block.FOLLOW = 3;
 (function(a) {
   a.schema = {id:null, name:null, x:0, y:0, type:null, values:{}, prev:null, next:null, view:null, thread:null, movable:!0, deletable:!0};
   a.load = function(a) {
@@ -13328,7 +13329,7 @@ Entry.Block.FOLLOW = 3;
     for (var a = this._schema.contents, c = 0;c < a.length;c++) {
       var d = a[c];
       !this.values[d.key] && d.value && (this.values[d.key] = d.value);
-      "Statement" == d.type && (this.values[d.key] = new Entry.Thread(this.values[d.key], this.thread._code));
+      "Statement" == d.type && (this.values[d.key] = new Entry.Thread(this.values[d.key], this.getCode()));
     }
   };
   a.setThread = function(a) {
@@ -13400,32 +13401,45 @@ Entry.Block.FOLLOW = 3;
   a.isDeletable = function() {
     return this.deletable;
   };
+  a.getCode = function() {
+    return this.thread.getCode();
+  };
   a.doAdd = function() {
-    console.log("doAdd", this.id);
-    this.thread.getCode().changeEvent.notify();
+    var a = this.id;
+    console.log("doAdd", a);
+    Entry.activityReporter && (a = [{blockId:a}, {code:this.getCode().stringify()}], Entry.activityReporter.add(new Entry.Activity("addBlock", a)));
+    this.getCode().changeEvent.notify();
   };
   a.doMove = function() {
-    console.log("doMove", this.id, this.view.x - this.x, this.view.y - this.y);
+    var a = this.id, c = this.view.x - this.x, d = this.view.y - this.y;
+    console.log("doMove", a, c, d);
     this._updatePos();
-    this.thread.getCode().changeEvent.notify();
+    this.getCode().changeEvent.notify();
+    Entry.activityReporter && (a = [{blockId:a}, {moveX:c}, {moveY:d}, {code:this.getCode().stringify()}], Entry.activityReporter.add(new Entry.Activity("moveBlock", a)));
   };
   a.doSeparate = function() {
-    console.log("separate", this.id, this.x, this.y);
+    var a = this.id, c = this.x, d = this.y;
+    console.log("separate", a, c, d);
     this.thread.separate(this);
     this._updatePos();
-    this.thread.getCode().changeEvent.notify();
+    this.getCode().changeEvent.notify();
+    Entry.activityReporter && (a = [{blockId:a}, {positionX:c}, {positionY:d}, {code:this.getCode().stringify()}], Entry.activityReporter.add(new Entry.Activity("seperateBlock", a)));
   };
   a.doInsert = function(a) {
-    console.log("insert", this.id, a.id, this.x, this.y);
-    var c = this.thread.cut(this);
-    a.insertAfter(c);
+    var c = this.id, d = a.id, e = this.x, f = this.y;
+    console.log("insert", c, d, e, f);
+    var g = this.thread.cut(this);
+    a.insertAfter(g);
     this._updatePos();
-    this.thread.getCode().changeEvent.notify();
+    this.getCode().changeEvent.notify();
+    Entry.activityReporter && (a = [{targetBlockId:d}, {blockId:c}, {positionX:e}, {positionY:f}, {code:this.getCode().stringify()}], Entry.activityReporter.add(new Entry.Activity("insertBlock", a)));
   };
   a.doDestroy = function(a) {
-    console.log("destroy", this.id, this.x, this.y);
+    var c = this.id, d = this.x, e = this.y;
+    console.log("destroy", c, d, e);
     this.destroy(a);
-    this.thread.getCode().changeEvent.notify();
+    this.getCode().changeEvent.notify();
+    Entry.activityReporter && (a = [{blockId:c}, {positionX:d}, {positionY:e}, {code:this.getCode().stringify()}], Entry.activityReporter.add(new Entry.Activity("destroyBlock", a)));
   };
 })(Entry.Block.prototype);
 Entry.Thread = function(a, b) {

@@ -86,9 +86,9 @@ Entry.Utils.bindGlobalEvent = function() {
     }
 };
 
-Entry.Utils.makeMazeReporter = function() {
-    Entry.mazeReporter = new Entry.MazeReporter();
-    return Entry.mazeReporter;
+Entry.Utils.makeActivityReporter = function() {
+    Entry.activityReporter = new Entry.ActivityReporter();
+    return Entry.activityReporter;
 };
 
 Entry.Utils.initEntryEvent_ = function() {

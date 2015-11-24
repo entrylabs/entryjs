@@ -147,7 +147,10 @@ Entry.BlockMenu = function(dom) {
                     cloneThread(currentThread).
                     getFirstBlock().view;
                 this._boardBlockView.dragInstance =
-                    new Entry.DragInstance({height: 0});
+                    new Entry.DragInstance({
+                        height: 0,
+                        isNew: true
+                    });
 
                 workspaceBoard.set({
                     dragBlock : this._boardBlockView
@@ -215,8 +218,8 @@ Entry.BlockMenu = function(dom) {
 
         var mouse = Entry.mouseCoordinate;
         instance.set({
-             offsetX: mouse.x,
-             offsetY: mouse.y
+            offsetX: mouse.x,
+            offsetY: mouse.y
         });
         if (instance.height === 0) {
             var block = boardBlockView.block;

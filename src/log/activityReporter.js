@@ -1,14 +1,14 @@
 'use strict';
 
-goog.provide("Entry.MazeReporter");
+goog.provide("Entry.ActivityReporter");
 
-Entry.MazeReporter = function() {
+Entry.ActivityReporter = function() {
     this._activities = [];
 };
 
 (function(p) {
     p.add = function(activity) {
-        if (!(activity instanceof Entry.MazeActivity))
+        if (!(activity instanceof Entry.Activity))
             return console.error("Activity must be an instanceof Entry.MazeActivity");
         this._activities.push(activity);
     };
@@ -20,4 +20,4 @@ Entry.MazeReporter = function() {
     p.get = function() {
         return this._activities;
     };
-})(Entry.MazeReporter.prototype);
+})(Entry.ActivityReporter.prototype);
