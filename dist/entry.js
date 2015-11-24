@@ -13393,13 +13393,13 @@ Entry.Block.MAGNET_OFFSET = .4;
     return this.view;
   };
   a.setMovable = function(a) {
-    this.set({movable:a});
+    this.movable != a && this.set({movable:a});
   };
   a.isMovable = function() {
     return this.movable;
   };
   a.setDeletable = function(a) {
-    this.set({deletable:a});
+    this.deletable != a && this.set({deletable:a});
   };
   a.isDeletable = function() {
     return this.deletable;

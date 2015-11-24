@@ -164,12 +164,14 @@ Entry.Block.MAGNET_OFFSET = 0.4;
     p.getView = function() {return this.view;};
 
     p.setMovable = function(movable) {
+        if (this.movable == movable) return;
         this.set({movable: movable});
     };
 
     p.isMovable = function() {return this.movable;};
 
     p.setDeletable = function(deletable) {
+        if (this.deletable == deletable) return;
         this.set({deletable: deletable});
     };
 
