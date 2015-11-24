@@ -12777,7 +12777,7 @@ Entry.BlockView = function(a, b) {
       if (c.magneting) {
         var e = this._board.dragBlock.getShadow();
         e.attr({transform:"t0 " + (this.height + 1)});
-        this.svgGroup.append(e);
+        this.svgGroup.prepend(e);
         this._clonedShadow = e;
         c.background && (c.background.remove(), c.nextBackground.remove(), delete c.background, delete c.nextBackground);
         a = c.height + a;
@@ -13133,7 +13133,7 @@ Entry.DummyBlock = function(a, b) {
       this.set({height:a});
       a = this.getBoard().dragBlock.getShadow();
       a.attr({transform:"t0 0"});
-      this.svgGroup.append(a);
+      this.svgGroup.prepend(a);
       this._clonedShadow = a;
     } else {
       this._clonedShadow && (this._clonedShadow.remove(), delete this._clonedShadow), this.set({height:0});
