@@ -6089,15 +6089,14 @@ Entry.initFonts = function(a) {
 Entry.Activity = function(a, b) {
   this.name = a;
   this.timestamp = new Date;
+  var c = [];
   if (void 0 !== b) {
-    for (var c = [], d = 0, e = b.length;d < e;d++) {
-      var f = b[d], g = Object.keys(f)[0];
-      c.push({key:g, value:f[g]});
+    for (var d = 0, e = b.length;d < e;d++) {
+      var f = b[d];
+      c.push({key:f[0], value:f[1]});
     }
-    this.data = c;
-  } else {
-    this.data = [];
   }
+  this.data = c;
 };
 Entry.ActivityReporter = function() {
   this._activities = [];
@@ -13411,7 +13410,7 @@ Entry.Block.MAGNET_OFFSET = .4;
   a.doAdd = function() {
     var a = this.id;
     console.log("doAdd", a);
-    Entry.activityReporter && (a = [{blockId:a}, {code:this.getCode().stringify()}], Entry.activityReporter.add(new Entry.Activity("addBlock", a)));
+    Entry.activityReporter && (a = [["blockId", a], ["code", this.getCode().stringify()]], Entry.activityReporter.add(new Entry.Activity("addBlock", a)));
     this.getCode().changeEvent.notify();
   };
   a.doMove = function() {
@@ -13419,7 +13418,7 @@ Entry.Block.MAGNET_OFFSET = .4;
     console.log("doMove", a, c, d);
     this._updatePos();
     this.getCode().changeEvent.notify();
-    Entry.activityReporter && (a = [{blockId:a}, {moveX:c}, {moveY:d}, {code:this.getCode().stringify()}], Entry.activityReporter.add(new Entry.Activity("moveBlock", a)));
+    Entry.activityReporter && (a = [["blockId", a], ["moveX", c], ["moveY", d], ["code", this.getCode().stringify()]], Entry.activityReporter.add(new Entry.Activity("moveBlock", a)));
   };
   a.doSeparate = function() {
     var a = this.id, c = this.x, d = this.y;
@@ -13427,7 +13426,7 @@ Entry.Block.MAGNET_OFFSET = .4;
     this.thread.separate(this);
     this._updatePos();
     this.getCode().changeEvent.notify();
-    Entry.activityReporter && (a = [{blockId:a}, {positionX:c}, {positionY:d}, {code:this.getCode().stringify()}], Entry.activityReporter.add(new Entry.Activity("seperateBlock", a)));
+    Entry.activityReporter && (a = [["blockId", a], ["positionX", c], ["positionY", d], ["code", this.getCode().stringify()]], Entry.activityReporter.add(new Entry.Activity("seperateBlock", a)));
   };
   a.doInsert = function(a) {
     var c = this.id, d = a.id, e = this.x, f = this.y;
@@ -13436,14 +13435,14 @@ Entry.Block.MAGNET_OFFSET = .4;
     a.insertAfter(g);
     this._updatePos();
     this.getCode().changeEvent.notify();
-    Entry.activityReporter && (a = [{targetBlockId:d}, {blockId:c}, {positionX:e}, {positionY:f}, {code:this.getCode().stringify()}], Entry.activityReporter.add(new Entry.Activity("insertBlock", a)));
+    Entry.activityReporter && (a = [["targetBlockId", d], ["blockId", c], ["positionX", e], ["positionY", f], ["code", this.getCode().stringify()]], Entry.activityReporter.add(new Entry.Activity("insertBlock", a)));
   };
   a.doDestroy = function(a) {
     var c = this.id, d = this.x, e = this.y;
     console.log("destroy", c, d, e);
     this.destroy(a);
     this.getCode().changeEvent.notify();
-    Entry.activityReporter && (a = [{blockId:c}, {positionX:d}, {positionY:e}, {code:this.getCode().stringify()}], Entry.activityReporter.add(new Entry.Activity("destroyBlock", a)));
+    Entry.activityReporter && (a = [["blockId", c], ["positionX", d], ["positionY", e], ["code", this.getCode().stringify()]], Entry.activityReporter.add(new Entry.Activity("destroyBlock", a)));
   };
 })(Entry.Block.prototype);
 Entry.Thread = function(a, b) {

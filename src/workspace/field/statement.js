@@ -165,7 +165,7 @@ Entry.DummyBlock = function(statementField, blockView) {
             var dragThreadHeight = this.getBoard().dragBlock.dragInstance.height;
             this.set({height: dragThreadHeight});
             var shadow = this.getBoard().dragBlock.getShadow();
-            shadow.attr({transform: "t0 " + 0})
+            shadow.attr({transform: "t0 " + 0});
             this.svgGroup.prepend(shadow);
             this._clonedShadow = shadow;
         } else {

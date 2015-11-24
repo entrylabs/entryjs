@@ -184,8 +184,8 @@ Entry.Block.MAGNET_OFFSET = 0.4;
         console.log("doAdd", id);
         if (Entry.activityReporter) {
             var data = [
-                {blockId:id},
-                {code:this.getCode().stringify()}
+                ['blockId',id],
+                ['code',this.getCode().stringify()]
             ];
             Entry.activityReporter.add(new Entry.Activity('addBlock', data));
         }
@@ -205,10 +205,10 @@ Entry.Block.MAGNET_OFFSET = 0.4;
         this.getCode().changeEvent.notify();
         if (Entry.activityReporter) {
             var data = [
-                {blockId:id},
-                {moveX:moveX},
-                {moveY:moveY},
-                {code:this.getCode().stringify()}
+                ['blockId',id],
+                ['moveX',moveX],
+                ['moveY',moveY],
+                ['code',this.getCode().stringify()]
             ];
             Entry.activityReporter.add(new Entry.Activity('moveBlock', data));
         }
@@ -229,10 +229,10 @@ Entry.Block.MAGNET_OFFSET = 0.4;
         this.getCode().changeEvent.notify();
         if (Entry.activityReporter) {
             var data = [
-                {blockId:id},
-                {positionX:positionX},
-                {positionY:positionY},
-                {code:this.getCode().stringify()}
+                ['blockId',id],
+                ['positionX',positionX],
+                ['positionY',positionY],
+                ['code',this.getCode().stringify()]
             ];
             Entry.activityReporter.add(new Entry.Activity('seperateBlock', data));
         }
@@ -256,11 +256,11 @@ Entry.Block.MAGNET_OFFSET = 0.4;
         this.getCode().changeEvent.notify();
         if (Entry.activityReporter) {
             var data = [
-                {targetBlockId:targetId},
-                {blockId:id},
-                {positionX:positionX},
-                {positionY:positionY},
-                {code:this.getCode().stringify()}
+                ['targetBlockId',targetId],
+                ['blockId',id],
+                ['positionX',positionX],
+                ['positionY',positionY],
+                ['code',this.getCode().stringify()]
             ];
             Entry.activityReporter.add(new Entry.Activity('insertBlock', data));
         }
@@ -281,10 +281,10 @@ Entry.Block.MAGNET_OFFSET = 0.4;
         this.getCode().changeEvent.notify();
         if (Entry.activityReporter) {
             var data = [
-                {blockId:id},
-                {positionX:positionX},
-                {positionY:positionY},
-                {code:this.getCode().stringify()}
+                ['blockId',id],
+                ['positionX',positionX],
+                ['positionY',positionY],
+                ['code',this.getCode().stringify()]
             ];
             Entry.activityReporter.add(new Entry.Activity('destroyBlock', data));
         }
