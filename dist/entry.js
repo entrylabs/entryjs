@@ -43,6 +43,7 @@ var Entry = {block:{}, TEXT_ALIGN_CENTER:0, TEXT_ALIGN_LEFT:1, TEXT_ALIGN_RIGHT:
 }, enableArduino:function() {
 }, initSound:function(a) {
   a.path = a.fileurl ? a.fileurl : "/uploads/" + a.filename.substring(0, 2) + "/" + a.filename.substring(2, 4) + "/" + a.filename + a.ext;
+  console.log(Entry.soundQueue);
   Entry.soundQueue.loadFile({id:a.id, src:a.path, type:createjs.LoadQueue.SOUND});
 }, beforeUnload:function(a) {
   Entry.hw.closeConnection();
@@ -9939,6 +9940,8 @@ Entry.Utils.bindGlobalEvent = function() {
     Entry.mouseCoordinate.y = a.clientY;
   }));
 };
+Entry.Utils.initWorkspaceSounds = function() {
+};
 Entry.Utils.makeActivityReporter = function() {
   Entry.activityReporter = new Entry.ActivityReporter;
   return Entry.activityReporter;
@@ -12729,7 +12732,7 @@ Entry.BlockView = function(a, b) {
       if (c !== Entry.DRAG_MODE_MOUSEDOWN) {
         this.dragInstance && this.dragInstance.isNew && d.doAdd();
         var e = this.dragInstance && this.dragInstance.prev, f = this._getCloseBlock();
-        e || f ? f ? (this.set({animating:!0}), f.next && f.next.view.set({animating:!0}), d.doInsert(f)) : d.doSeparate() : c == Entry.DRAG_MODE_DRAG && d.doMove();
+        e || f ? f ? (this.set({animating:!0}), f.next && f.next.view.set({animating:!0}), d.doInsert(f), createjs.Sound.play("entryMagneting")) : d.doSeparate() : c == Entry.DRAG_MODE_DRAG && d.doMove();
         a.setMagnetedBlock(null);
       }
     }
@@ -13592,7 +13595,7 @@ Entry.FieldTrashcan = function(a) {
   };
   a.updateDragBlock = function() {
     var a = this.board.dragBlock, c = this.dragBlockObserver;
-    a ? a.observe(this, "checkBlock", ["x", "y"]) : (c && c.destroy(), this.isOver && this.dragBlock && this.dragBlock.block.doDestroy(!0), this.tAnimation(!1));
+    a ? a.observe(this, "checkBlock", ["x", "y"]) : (c && c.destroy(), this.isOver && this.dragBlock && (this.dragBlock.block.doDestroy(!0), createjs.Sound.play("entryDelete")), this.tAnimation(!1));
     this.dragBlock = a;
   };
   a.checkBlock = function() {

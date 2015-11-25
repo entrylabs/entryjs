@@ -343,6 +343,7 @@ Entry.BlockView = function(block, board) {
                     if (closeBlock.next)
                         closeBlock.next.view.set({animating: true});
                     block.doInsert(closeBlock);
+                    createjs.Sound.play('entryMagneting');
                 } else block.doSeparate();
             }
             board.setMagnetedBlock(null);
