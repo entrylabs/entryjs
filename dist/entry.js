@@ -12263,7 +12263,7 @@ Entry.block.jr_item = {skeleton:"pebble_basic", color:"#F46C6C", contents:["\uaf
     return Entry.STATIC.CONTINUE;
   }
 }};
-Entry.block.jr_north = {skeleton:"pebble_basic", color:"#A751E3", contents:["   \uc704\ub85c", {type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_up_image.png", position:{x:83, y:0}, size:22}], func:function() {
+Entry.block.jr_north = {skeleton:"pebble_basic", color:"#A751E3", contents:["   \uc704\ucabd", {type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_up_image.png", position:{x:83, y:0}, size:22}], func:function() {
   if (this.isContinue) {
     if (this.isAction) {
       return Entry.STATIC.CONTINUE;

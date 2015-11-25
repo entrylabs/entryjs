@@ -107,7 +107,7 @@ Entry.block.jr_north = {
     skeleton: "pebble_basic",
     color: "#A751E3",
     contents: [
-        "   위로",
+        "   위쪽",
         {
             type: "Indicator",
             img: "/img/assets/ntry/bitmap/jr/block_up_image.png",
@@ -326,7 +326,7 @@ Entry.block.jr_go_straight = {
             this.isContinue = true;
             this.isAction = true;
             var self = this;
-            var callBack = function() {        
+            var callBack = function() {
                 self.isAction = false;
             };
 
@@ -361,7 +361,7 @@ Entry.block.jr_turn_left = {
             this.isContinue = true;
             this.isAction = true;
             var self = this;
-            var callBack = function() {        
+            var callBack = function() {
                 self.isAction = false;
             };
 
@@ -396,7 +396,7 @@ Entry.block.jr_turn_right = {
             this.isContinue = true;
             this.isAction = true;
             var self = this;
-            var callBack = function() {        
+            var callBack = function() {
                 self.isAction = false;
             };
 
@@ -431,7 +431,7 @@ Entry.block.jr_go_slow = {
             this.isContinue = true;
             this.isAction = true;
             var self = this;
-            var callBack = function() {        
+            var callBack = function() {
                 self.isAction = false;
             };
 
@@ -446,6 +446,6 @@ Entry.block.jr_go_slow = {
             delete this.isContinue;
         }
     }
-    
+
 };
 
