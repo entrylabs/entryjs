@@ -343,6 +343,7 @@ Entry.BlockView = function(block, board) {
                     if (closeBlock.next)
                         closeBlock.next.view.set({animating: true});
                     block.doInsert(closeBlock);
+                    createjs.Sound.play('entryMagneting');
                 } else block.doSeparate();
             }
             board.setMagnetedBlock(null);
@@ -444,7 +445,7 @@ Entry.BlockView = function(block, board) {
         var svgGroup = blockView.svgGroup;
         if (magneting) {
             var shadow = this._board.dragBlock.getShadow();
-            shadow.attr({transform: "t0 " + (this.height + 1)})
+            shadow.attr({transform: "t0 " + (this.height + 1)});
             this.svgGroup.prepend(shadow);
             this._clonedShadow = shadow;
 

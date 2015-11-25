@@ -145,6 +145,7 @@ Entry.initSound = function(sound) {
         //createjs.Sound.removeSound(path);
         //createjs.Sound.registerSound(path, sound.id, 4);
     }
+    console.log(Entry.soundQueue);
     Entry.soundQueue.loadFile({
         id: sound.id,
         src: sound.path,
