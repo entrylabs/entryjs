@@ -12394,7 +12394,7 @@ Entry.block.jr_west = {skeleton:"pebble_basic", color:"#A751E3", contents:["   \
     return Entry.STATIC.CONTINUE;
   }
 }};
-Entry.block.jr_go_straight = {skeleton:"pebble_basic", color:"#A751E3", contents:["\uc55e\uc73c\ub85c \uac00\uae30", {type:"Indicator", img:"/img/assets/ntry/bitmap/jr/cparty_go_straight.png", position:{x:83, y:0}, size:22}], func:function() {
+Entry.block.jr_go_straight = {skeleton:"basic", color:"#A751E3", contents:["\uc55e\uc73c\ub85c \uac00\uae30", {type:"Image", img:"/img/assets/ntry/bitmap/jr/cparty_go_straight.png", size:24}], func:function() {
   if (this.isContinue) {
     if (this.isAction) {
       return Entry.STATIC.CONTINUE;
@@ -13019,6 +13019,42 @@ Entry.FieldDropdown = function(a, b) {
     this.optionGroup && (this.optionGroup.remove(), delete this.optionGroup);
   };
 })(Entry.FieldDropdown.prototype);
+Entry.FieldImage = function(a, b) {
+  this._block = b;
+  this.box = new Entry.BoxModel;
+  this._size = a.size;
+  this._imgUrl = a.img;
+  this._highlightColor = a.highlightColor ? a.highlightColor : "#F59900";
+  this._position = a.position;
+  this._imgElement = this._path = this.svgGroup = null;
+  this.renderStart();
+};
+(function(a) {
+  a.renderStart = function() {
+    this.svgGroup = this._block.contentSvgGroup.group();
+    this._imgElement = this.svgGroup.image(this._imgUrl, 0, -.5 * this._size, this._size, this._size);
+    this.box.set({x:this._size, y:0, width:this._size, height:this._size});
+  };
+  a.align = function(a, c, d) {
+    var e = this.svgGroup;
+    this._position && (a = this._position.x);
+    var f = "t" + a + " " + c;
+    void 0 === d || d ? e.animate({transform:f}, 300, mina.easeinout) : e.attr({transform:f});
+    this.box.set({x:a, y:c});
+  };
+  a.enableHighlight = function() {
+    var a = this._path.getTotalLength(), c = this._path;
+    this._path.attr({stroke:this._highlightColor, strokeWidth:2, "stroke-linecap":"round", "stroke-dasharray":a + " " + a, "stroke-dashoffset":a});
+    setInterval(function() {
+      c.attr({"stroke-dashoffset":a}).animate({"stroke-dashoffset":0}, 300);
+    }, 1400, mina.easeout);
+    setTimeout(function() {
+      setInterval(function() {
+        c.animate({"stroke-dashoffset":-a}, 300);
+      }, 1400, mina.easeout);
+    }, 500);
+  };
+})(Entry.FieldImage.prototype);
 Entry.FieldIndicator = function(a, b) {
   this._block = b;
   this.box = new Entry.BoxModel;
@@ -13278,7 +13314,9 @@ Entry.Scroller.RADIUS = 7;
 Entry.skeleton = function() {
 };
 Entry.skeleton.basic = {path:function(a) {
-  return "m -4,0 l 8,8 8,-8 h %w a 15,15 0 0,1 0,30 h -%w l -8,8 -8,-8 v -30 z".replace(/%w/gi, a.contentWidth);
+  a = a.contentWidth;
+  a = Math.max(0, a);
+  return "m -4,0 l 8,8 8,-8 h %w a 15,15 0 0,1 0,30 h -%w l -8,8 -8,-8 v -30 z".replace(/%w/gi, a);
 }, box:function(a) {
   return {offsetX:0, offsetY:0, width:a.contentWidth + 30, height:30, marginBottom:0};
 }, magnets:{previous:{}, next:{x:0, y:31}}, contentPos:function(a) {

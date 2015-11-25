@@ -309,15 +309,14 @@ Entry.block.jr_west = {
 //maze 명세의 주니버 시작
 
 Entry.block.jr_go_straight = {
-    skeleton: "pebble_basic",
+    skeleton: "basic",
     color: "#A751E3",
     contents: [
         "앞으로 가기",
         {
-            type: "Indicator",
+            type: "Image",
             img: "/img/assets/ntry/bitmap/jr/cparty_go_straight.png",
-            position: {x: 83, y: 0},
-            size: 22
+            size: 24
         }
     ],
     func: function() {

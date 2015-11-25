@@ -15,6 +15,7 @@ Entry.skeleton = function() {
 Entry.skeleton.basic = {
     path: function(block) {
         var width = block.contentWidth;
+        width = Math.max(0, width);
         return "m -4,0 l 8,8 8,-8 h %w a 15,15 0 0,1 0,30 h -%w l -8,8 -8,-8 v -30 z"
             .replace(/%w/gi, width);
     },
