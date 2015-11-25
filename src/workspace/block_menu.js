@@ -10,8 +10,9 @@ goog.require("Entry.Utils");
  *
  * @param {object} dom which to inject playground
  */
-Entry.BlockMenu = function(dom) {
+Entry.BlockMenu = function(dom, align) {
     Entry.Model(this, false);
+    this._align = align || "CENTER";
 
     if (typeof dom === "string") dom = $('#' + dom);
     else dom = $(dom);
@@ -27,8 +28,6 @@ Entry.BlockMenu = function(dom) {
           'version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'),
         { parent: dom }
     );
-
-
 
     this.offset = this.svgDom.offset();
     this._svgWidth = this.svgDom.width();
@@ -85,7 +84,7 @@ Entry.BlockMenu = function(dom) {
         var threads = this.code.getThreads();
         var vPadding = 15,
             marginFromTop = 10,
-            hPadding = this.svgDom.width()/2;
+            hPadding = this._align == 'LEFT' ? 20 : this.svgDom.width()/2;
 
         for (var i=0,len=threads.length; i<len; i++) {
             var block = threads[i].getFirstBlock();

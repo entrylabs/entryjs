@@ -12456,8 +12456,9 @@ Entry.block.jr_go_slow = {skeleton:"pebble_basic", color:"#A751E3", contents:["\
     return Entry.STATIC.CONTINUE;
   }
 }};
-Entry.BlockMenu = function(a) {
+Entry.BlockMenu = function(a, b) {
   Entry.Model(this, !1);
+  this._align = b || "CENTER";
   a = "string" === typeof a ? $("#" + a) : $(a);
   if ("DIV" !== a.prop("tagName")) {
     return console.error("Dom is not div element");
@@ -12501,7 +12502,7 @@ Entry.BlockMenu = function(a) {
     this.svgGroup.append(this.svgBlockGroup);
   };
   a.align = function() {
-    for (var a = this.code.getThreads(), c = 10, d = this.svgDom.width() / 2, e = 0, f = a.length;e < f;e++) {
+    for (var a = this.code.getThreads(), c = 10, d = "LEFT" == this._align ? 20 : this.svgDom.width() / 2, e = 0, f = a.length;e < f;e++) {
       var g = a[e].getFirstBlock(), h = g.view;
       g.set({x:d, y:c});
       h._moveTo(d, c, !1);
