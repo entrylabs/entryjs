@@ -86,28 +86,6 @@ Entry.Utils.bindGlobalEvent = function() {
     }
 };
 
-Entry.Utils.initWorkspaceSounds = function() {
-    return;
-    if (!window['Audio']) return;
-    console.log('register');
-
-    var path = Entry.mediaFilePath || '/media/';
-
-    var sounds = [
-        {
-            'entryMagneting': path + 'click.mp3'
-        },
-        {
-            'entryDelete': path + 'delete.mp3'
-        }
-    ];
-
-    for (var i = 0; i < sounds.length; i++) {
-        for (var j in sounds[i])
-            createjs.Sound.registerSound(sounds[i][j], j, 4);
-    }
-};
-
 Entry.Utils.makeActivityReporter = function() {
     Entry.activityReporter = new Entry.ActivityReporter();
     return Entry.activityReporter;

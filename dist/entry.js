@@ -5583,7 +5583,7 @@ Entry.EntityObject.prototype.getText = function() {
   return this.text;
 };
 Entry.EntityObject.prototype.setTextAlign = function(a) {
-  "textBox" == this.parent.objectType && (void 0 === a && (a = Entry.TEXT_ALIGN_CENTER), this.textAlign = a, this.textObject.textAlign = Entry.TEXT_ALIGNS[this.textAlign], this.alignTextBox(), this.updateBG(), Entry.stage.updateObject());
+  "textBox" == this.parent.objectType && (void 0 === a && (a = Entry.TEXT_ALIGN_CENTER), this.textAlign = a, this.textObject.textAlign = Entry.TEXT_ALIGNS[this.textAlign], this.alignTextBox(), this.updateBG(), Entry.stage.updateObject(), this.setWidth(this.textObject.getMeasuredWidth()), this.updateBG());
 };
 Entry.EntityObject.prototype.getTextAlign = function() {
   return this.textAlign;
@@ -9939,8 +9939,6 @@ Entry.Utils.bindGlobalEvent = function() {
     Entry.mouseCoordinate.x = a.clientX;
     Entry.mouseCoordinate.y = a.clientY;
   }));
-};
-Entry.Utils.initWorkspaceSounds = function() {
 };
 Entry.Utils.makeActivityReporter = function() {
   Entry.activityReporter = new Entry.ActivityReporter;
