@@ -12392,21 +12392,12 @@ Entry.block.jr_west = {skeleton:"pebble_basic", color:"#A751E3", contents:[{type
     return Entry.STATIC.CONTINUE;
   }
 }};
-Entry.block.jr_start_basic = {skeleton:"basic_event", color:"#3BBD70", contents:[{type:"Indicator", boxMultiplier:1, img:"/img/assets/block_icon/start_icon_play.png", highlightColor:"#3BBD70", size:17, position:{x:0, y:-2}}, "\uc2dc\uc791 \ubc84\ud2bc\uc744 \ub20c\ub800\uc744 \ub54c"], func:function() {
-  if (this.isContinue) {
-    if (this.isAction) {
-      return Entry.STATIC.CONTINUE;
-    }
-    delete this.isAction;
-    delete this.isContinue;
-  } else {
-    this.isAction = this.isContinue = !0;
-    var a = this;
-    Ntry.dispatchEvent("unitAction", Ntry.STATIC.WALK, function() {
-      a.isAction = !1;
-    });
-    return Entry.STATIC.CONTINUE;
+Entry.block.jr_start_basic = {skeleton:"basic_event", event:"start", color:"#3BBD70", contents:[{type:"Indicator", boxMultiplier:1, img:"/img/assets/block_icon/start_icon_play.png", highlightColor:"#3BBD70", size:17, position:{x:0, y:-2}}, "\uc2dc\uc791 \ubc84\ud2bc\uc744 \ub20c\ub800\uc744 \ub54c"], func:function() {
+  var a = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT), b;
+  for (b in a) {
+    this._unit = a[b];
   }
+  Ntry.unitComp = Ntry.entityManager.getComponent(this._unit.id, Ntry.STATIC.UNIT);
 }};
 Entry.block.jr_go_straight = {skeleton:"basic", color:"#A751E3", contents:["\uc55e\uc73c\ub85c \uac00\uae30", {type:"Image", img:"/img/assets/ntry/bitmap/jr/cparty_go_straight.png", size:24}], func:function() {
   if (this.isContinue) {
@@ -12473,51 +12464,46 @@ Entry.block.jr_go_slow = {skeleton:"basic", color:"#f46c6c", contents:["\ucc9c\u
   }
 }};
 Entry.block.jr_repeat_until_dest = {skeleton:"basic_loop", color:"#498DEB", contents:[{type:"Image", img:"/img/assets/ntry/bitmap/jr/jr_goal_image.png", size:18}, "\ub9cc\ub0a0 \ub54c \uae4c\uc9c0 \ubc18\ubcf5\ud558\uae30", {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}, {type:"Statement", key:"STATEMENT", accept:"basic", alignX:-4}], func:function() {
-  if (this.isContinue) {
-    if (this.isAction) {
-      return Entry.STATIC.CONTINUE;
-    }
-    delete this.isAction;
-    delete this.isContinue;
-  } else {
-    this.isAction = this.isContinue = !0;
-    var a = this;
-    Ntry.dispatchEvent("unitAction", Ntry.STATIC.GO_SLOW, function() {
-      a.isAction = !1;
-    });
-    return Entry.STATIC.CONTINUE;
+  if (void 0 === this.repeatCount) {
+    return this.repeatCount = 100, Entry.STATIC.CONTINUE;
   }
+  if (0 < this.repeatCount) {
+    return console.log(this.repeatCount), this.repeatCount--, this.executor.stepInto(this.block.values.STATEMENT), Entry.STATIC.CONTINUE;
+  }
+  delete this.repeatCount;
 }};
-Entry.block.jr_if_construction = {skeleton:"basic_loop", color:"#498DEB", contents:["\ub9cc\uc57d", {type:"Image", img:"/img/assets/ntry/bitmap/jr/jr_construction_image.png", size:18}, "\uc55e\uc5d0 \uc788\ub2e4\uba74", "\uc55e\uc5d0 \uc788\ub2e4\uba74", {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}, {type:"Statement", key:"STATEMENT", accept:"basic", alignX:-4}], func:function() {
-  if (this.isContinue) {
-    if (this.isAction) {
-      return Entry.STATIC.CONTINUE;
+Entry.block.jr_if_construction = {skeleton:"basic_loop", color:"#498DEB", contents:["\ub9cc\uc57d", {type:"Image", img:"/img/assets/ntry/bitmap/jr/jr_construction_image.png", size:18}, "\uc55e\uc5d0 \uc788\ub2e4\uba74", {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}, {type:"Statement", key:"STATEMENT", accept:"basic", alignX:-4}], func:function() {
+  if (!this.isContinue) {
+    var a = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT), b;
+    for (b in a) {
+      var c = a[b]
     }
-    delete this.isAction;
-    delete this.isContinue;
-  } else {
-    this.isAction = this.isContinue = !0;
-    var a = this;
-    Ntry.dispatchEvent("unitAction", Ntry.STATIC.GO_SLOW, function() {
-      a.isAction = !1;
-    });
-    return Entry.STATIC.CONTINUE;
+    a = Ntry.entityManager.getComponent(c.id, Ntry.STATIC.UNIT);
+    c = Ntry.entityManager.getComponent(c.id, Ntry.STATIC.GRID);
+    c = {x:c.x, y:c.y};
+    Ntry.addVectorByDirection(c, a.direction, 1);
+    c = Ntry.entityManager.find({type:Ntry.STATIC.GRID, x:c.x, y:c.y}, {type:Ntry.STATIC.TILE, tileType:Ntry.STATIC.OBSTACLE_REPAIR});
+    this.isContinue = !0;
+    if (0 != c.length) {
+      return this.executor.stepInto(this.block.values.STATEMENT), Entry.STATIC.CONTINUE;
+    }
   }
 }};
 Entry.block.jr_if_speed = {skeleton:"basic_loop", color:"#498DEB", contents:["\ub9cc\uc57d", {type:"Image", img:"/img/assets/ntry/bitmap/jr/jr_speed_image.png", size:18}, "\uc55e\uc5d0 \uc788\ub2e4\uba74", {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}, {type:"Statement", key:"STATEMENT", accept:"basic", alignX:-4}], func:function() {
-  if (this.isContinue) {
-    if (this.isAction) {
-      return Entry.STATIC.CONTINUE;
+  if (!this.isContinue) {
+    var a = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT), b;
+    for (b in a) {
+      var c = a[b]
     }
-    delete this.isAction;
-    delete this.isContinue;
-  } else {
-    this.isAction = this.isContinue = !0;
-    var a = this;
-    Ntry.dispatchEvent("unitAction", Ntry.STATIC.GO_SLOW, function() {
-      a.isAction = !1;
-    });
-    return Entry.STATIC.CONTINUE;
+    a = Ntry.entityManager.getComponent(c.id, Ntry.STATIC.UNIT);
+    c = Ntry.entityManager.getComponent(c.id, Ntry.STATIC.GRID);
+    c = {x:c.x, y:c.y};
+    Ntry.addVectorByDirection(c, a.direction, 1);
+    c = Ntry.entityManager.find({type:Ntry.STATIC.GRID, x:c.x, y:c.y}, {type:Ntry.STATIC.TILE, tileType:Ntry.STATIC.OBSTACLE_SLOW});
+    this.isContinue = !0;
+    if (0 != c.length) {
+      return this.executor.stepInto(this.block.values.STATEMENT), Entry.STATIC.CONTINUE;
+    }
   }
 }};
 Entry.BlockMenu = function(a, b) {

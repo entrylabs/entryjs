@@ -333,6 +333,7 @@ Entry.block.jr_west = {
 //maze 명세의 주니버 시작
 Entry.block.jr_start_basic = {
     skeleton: "basic_event",
+    event: "start",
     color: "#3BBD70",
     contents: [
         {
@@ -348,25 +349,14 @@ Entry.block.jr_start_basic = {
         "시작 버튼을 눌렀을 때"
     ],
     func: function() {
-        if (!this.isContinue) {
+        var entities = Ntry.entityManager.getEntitiesByComponent(
+        Ntry.STATIC.UNIT);
 
-            this.isContinue = true;
-            this.isAction = true;
-            var self = this;
-            var callBack = function() {
-                self.isAction = false;
-            };
+        for (var key in entities)
+            this._unit = entities[key];
 
-            // turn direction
-            Ntry.dispatchEvent("unitAction", Ntry.STATIC.WALK, callBack);
-
-            return Entry.STATIC.CONTINUE;
-        } else if (this.isAction) {
-            return Entry.STATIC.CONTINUE;
-        } else {
-            delete this.isAction;
-            delete this.isContinue;
-        }
+        Ntry.unitComp = Ntry.entityManager.getComponent(
+        this._unit.id, Ntry.STATIC.UNIT);
     }
 };
 
@@ -529,24 +519,16 @@ Entry.block.jr_repeat_until_dest = {
         }
     ],
     func: function() {
-        if (!this.isContinue) {
-
-            this.isContinue = true;
-            this.isAction = true;
-            var self = this;
-            var callBack = function() {
-                self.isAction = false;
-            };
-
-            // turn direction
-            Ntry.dispatchEvent("unitAction", Ntry.STATIC.GO_SLOW, callBack);
-
+        if (this.repeatCount === undefined) {
+            this.repeatCount = 100;
             return Entry.STATIC.CONTINUE;
-        } else if (this.isAction) {
+        } else if (this.repeatCount > 0) {
+            console.log(this.repeatCount);
+            this.repeatCount--;
+            this.executor.stepInto(this.block.values.STATEMENT);
             return Entry.STATIC.CONTINUE;
         } else {
-            delete this.isAction;
-            delete this.isContinue;
+            delete this.repeatCount;
         }
     }
 };
@@ -562,7 +544,6 @@ Entry.block.jr_if_construction = {
             size: 18
         },
         "앞에 있다면",
-        "앞에 있다면",
         {
             type: "Image",
             img: "/img/assets/week/blocks/for.png",
@@ -576,24 +557,41 @@ Entry.block.jr_if_construction = {
         }
     ],
     func: function() {
-        if (!this.isContinue) {
+        if (this.isContinue)
+            return;
+        var entities = Ntry.entityManager.getEntitiesByComponent(
+        Ntry.STATIC.UNIT);
 
-            this.isContinue = true;
-            this.isAction = true;
-            var self = this;
-            var callBack = function() {
-                self.isAction = false;
-            };
+        for (var key in entities)
+            var entity = entities[key];
 
-            // turn direction
-            Ntry.dispatchEvent("unitAction", Ntry.STATIC.GO_SLOW, callBack);
+        var unitComp = Ntry.entityManager.getComponent(
+            entity.id, Ntry.STATIC.UNIT);
+        var gridComp = Ntry.entityManager.getComponent(
+            entity.id, Ntry.STATIC.GRID);
 
-            return Entry.STATIC.CONTINUE;
-        } else if (this.isAction) {
-            return Entry.STATIC.CONTINUE;
+        var grid = {x: gridComp.x, y: gridComp.y};
+        Ntry.addVectorByDirection(grid, unitComp.direction, 1);    
+            
+        var fitEntities = Ntry.entityManager.find(
+            {
+                type: Ntry.STATIC.GRID,
+                x: grid.x,
+                y: grid.y
+            },
+            {
+                type: Ntry.STATIC.TILE,
+                tileType: Ntry.STATIC.OBSTACLE_REPAIR
+            }
+        );
+
+        this.isContinue = true;
+        
+        if (fitEntities.length == 0) {
+            return;
         } else {
-            delete this.isAction;
-            delete this.isContinue;
+            this.executor.stepInto(this.block.values.STATEMENT);
+            return Entry.STATIC.CONTINUE;
         }
     }
 };
@@ -621,25 +619,42 @@ Entry.block.jr_if_speed = {
             alignX: -4
         }
     ],
-    func: function() {
-        if (!this.isContinue) {
+    func: function()  {
+        if (this.isContinue)
+            return;
+        var entities = Ntry.entityManager.getEntitiesByComponent(
+        Ntry.STATIC.UNIT);
 
-            this.isContinue = true;
-            this.isAction = true;
-            var self = this;
-            var callBack = function() {
-                self.isAction = false;
-            };
+        for (var key in entities)
+            var entity = entities[key];
 
-            // turn direction
-            Ntry.dispatchEvent("unitAction", Ntry.STATIC.GO_SLOW, callBack);
+        var unitComp = Ntry.entityManager.getComponent(
+            entity.id, Ntry.STATIC.UNIT);
+        var gridComp = Ntry.entityManager.getComponent(
+            entity.id, Ntry.STATIC.GRID);
 
-            return Entry.STATIC.CONTINUE;
-        } else if (this.isAction) {
-            return Entry.STATIC.CONTINUE;
+        var grid = {x: gridComp.x, y: gridComp.y};
+        Ntry.addVectorByDirection(grid, unitComp.direction, 1);    
+            
+        var fitEntities = Ntry.entityManager.find(
+            {
+                type: Ntry.STATIC.GRID,
+                x: grid.x,
+                y: grid.y
+            },
+            {
+                type: Ntry.STATIC.TILE,
+                tileType: Ntry.STATIC.OBSTACLE_SLOW
+            }
+        );
+
+        this.isContinue = true;
+        
+        if (fitEntities.length == 0) {
+            return;
         } else {
-            delete this.isAction;
-            delete this.isContinue;
+            this.executor.stepInto(this.block.values.STATEMENT);
+            return Entry.STATIC.CONTINUE;
         }
     }
 };
