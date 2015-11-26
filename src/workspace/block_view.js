@@ -363,17 +363,21 @@ Entry.BlockView = function(block, board) {
         var x = this.x,
             y = this.y;
 
-        if (isInBlockMenu)
+        if (isInBlockMenu) {
             x -= board._svgWidth;
+            board = board.workspace.getBoard();
+        }
 
+        var offset = board.relativeOffset;
         var targetElement = Snap.getElementByPoint(
-                x + 690, y + 130
+                x + offset.left, y + offset.top
             );
         if (targetElement === null) return;
 
         var targetBlock = targetElement.block;
 
         while (!targetBlock &&
+               targetElement.parent() &&
                targetElement.type !== "svg" &&
                targetElement.type !== "BODY") {
             targetElement = targetElement.parent();

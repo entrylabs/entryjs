@@ -5583,7 +5583,7 @@ Entry.EntityObject.prototype.getText = function() {
   return this.text;
 };
 Entry.EntityObject.prototype.setTextAlign = function(a) {
-  "textBox" == this.parent.objectType && (void 0 === a && (a = Entry.TEXT_ALIGN_CENTER), this.textAlign = a, this.textObject.textAlign = Entry.TEXT_ALIGNS[this.textAlign], this.alignTextBox(), this.updateBG(), Entry.stage.updateObject(), this.setWidth(this.textObject.getMeasuredWidth()), this.updateBG());
+  "textBox" == this.parent.objectType && (void 0 === a && (a = Entry.TEXT_ALIGN_CENTER), this.textAlign = a, this.textObject.textAlign = Entry.TEXT_ALIGNS[this.textAlign], this.alignTextBox(), this.updateBG(), Entry.stage.updateObject());
 };
 Entry.EntityObject.prototype.getTextAlign = function() {
   return this.textAlign;
@@ -12360,7 +12360,7 @@ Entry.block.jr_south = {skeleton:"pebble_basic", color:"#A751E3", contents:[{typ
     return Entry.STATIC.CONTINUE;
   }
 }};
-Entry.block.jr_west = {skeleton:"pebble_basic", color:"#A751E3", contents:["   \uc67c\ucabd", {type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_left_image.png", position:{x:83, y:0}, size:22}], func:function() {
+Entry.block.jr_west = {skeleton:"pebble_basic", color:"#A751E3", contents:[{type:"Text", fontSize:"16px", text:"  \uc67c\ucabd"}, {type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_left_image.png", position:{x:83, y:0}, size:22}], func:function() {
   if (this.isContinue) {
     if (this.isAction) {
       return Entry.STATIC.CONTINUE;
@@ -12778,10 +12778,10 @@ Entry.BlockView = function(a, b) {
   };
   a._getCloseBlock = function() {
     var a = this.getBoard(), c = a instanceof Entry.BlockMenu, d = this.x, e = this.y;
-    c && (d -= a._svgWidth);
-    d = Snap.getElementByPoint(d + 690, e + 130);
+    c && (d -= a._svgWidth, a = a.workspace.getBoard());
+    var f = a.relativeOffset, d = Snap.getElementByPoint(d + f.left, e + f.top);
     if (null !== d) {
-      for (e = d.block;!e && "svg" !== d.type && "BODY" !== d.type;) {
+      for (e = d.block;!e && d.parent() && "svg" !== d.type && "BODY" !== d.type;) {
         d = d.parent(), e = d.block;
       }
       return void 0 === e || e === this.block ? null : c ? e : e.view.getBoard() == a ? e : null;
@@ -13739,7 +13739,14 @@ Entry.Board = function(a) {
   }
   Entry.Model(this, !1);
   this.svgDom = Entry.Dom($('<svg id="play" class="entryBoard" width="100%" height="100%"version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'), {parent:a});
-  this.offset = this.svgDom.offset();
+  this.relativeOffset = this.offset = this.svgDom.offset();
+  var b = this;
+  $(window).scroll(function(a) {
+    var d = $(window);
+    a = d.scrollTop();
+    var d = d.scrollLeft(), e = b.offset;
+    b.relativeOffset = {top:e.top - a, left:e.left - d};
+  });
   this.snap = Snap("#play");
   this._blockViews = [];
   this.trashcan = new Entry.FieldTrashcan(this);

@@ -36,6 +36,19 @@ Entry.Board = function(dom) {
     );
 
     this.offset = this.svgDom.offset();
+    this.relativeOffset = this.offset;
+    var that = this;
+    $(window).scroll(function(e) {
+        var w = $(window),
+            scrollTop = w.scrollTop(),
+            scrollLeft = w.scrollLeft(),
+            offset = that.offset;
+
+        that.relativeOffset = {
+            top: offset.top - scrollTop,
+            left: offset.left - scrollLeft
+        }
+    });
 
     this.snap = Snap('#play');
 
