@@ -36,7 +36,7 @@ Entry.FieldText = function(content, block) {
         this.box.set({
             x: 0,
             y: 0,
-            width: bBox.width,
+            width: this.textElement.node.getComputedTextLength(),
             height: bBox.height
         });
     };
@@ -58,6 +58,7 @@ Entry.FieldText = function(content, block) {
 
         this.box.set({
             x: x,
+            width: this.textElement.node.getComputedTextLength(),
             y: y
         });
     };

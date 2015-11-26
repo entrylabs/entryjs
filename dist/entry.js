@@ -12392,7 +12392,7 @@ Entry.block.jr_west = {skeleton:"pebble_basic", color:"#A751E3", contents:[{type
     return Entry.STATIC.CONTINUE;
   }
 }};
-Entry.block.jr_start_basic = {skeleton:"basic_event", color:"#3BBD70", contents:[{type:"Indicator", boxMultiplier:1, img:"/img/assets/block_icon/start_icon_play.png", highlightColor:"#3BBD70", size:17}, {type:"Text", fontSize:"9pt", text:"\uc2dc\uc791 \ubc84\ud2bc\uc744 \ub20c\ub800\uc744 \ub54c"}], func:function() {
+Entry.block.jr_start_basic = {skeleton:"basic_event", color:"#3BBD70", contents:[{type:"Indicator", boxMultiplier:1, img:"/img/assets/block_icon/start_icon_play.png", highlightColor:"#3BBD70", size:17, position:{x:0, y:-2}}, "\uc2dc\uc791 \ubc84\ud2bc\uc744 \ub20c\ub800\uc744 \ub54c"], func:function() {
   if (this.isContinue) {
     if (this.isAction) {
       return Entry.STATIC.CONTINUE;
@@ -12408,7 +12408,7 @@ Entry.block.jr_start_basic = {skeleton:"basic_event", color:"#3BBD70", contents:
     return Entry.STATIC.CONTINUE;
   }
 }};
-Entry.block.jr_go_straight = {skeleton:"basic", color:"#A751E3", contents:[{type:"Text", fontSize:"9pt", text:"\uc55e\uc73c\ub85c \uac00\uae30"}, {type:"Image", img:"/img/assets/ntry/bitmap/jr/cparty_go_straight.png", size:24}], func:function() {
+Entry.block.jr_go_straight = {skeleton:"basic", color:"#A751E3", contents:["\uc55e\uc73c\ub85c \uac00\uae30", {type:"Image", img:"/img/assets/ntry/bitmap/jr/cparty_go_straight.png", size:24}], func:function() {
   if (this.isContinue) {
     if (this.isAction) {
       return Entry.STATIC.CONTINUE;
@@ -12424,7 +12424,7 @@ Entry.block.jr_go_straight = {skeleton:"basic", color:"#A751E3", contents:[{type
     return Entry.STATIC.CONTINUE;
   }
 }};
-Entry.block.jr_turn_left = {skeleton:"basic", color:"#A751E3", contents:["\uc67c\ucabd\uc73c\ub85c \ub3cc\uae30", {type:"Image", img:"/img/assets/ntry/bitmap/jr/cparty_go_straight.png", size:24}], func:function() {
+Entry.block.jr_turn_left = {skeleton:"basic", color:"#A751E3", contents:["\uc67c\ucabd\uc73c\ub85c \ub3cc\uae30", {type:"Image", img:"/img/assets/ntry/bitmap/jr/cparty_rotate_l.png", size:24}], func:function() {
   if (this.isContinue) {
     if (this.isAction) {
       return Entry.STATIC.CONTINUE;
@@ -12440,7 +12440,7 @@ Entry.block.jr_turn_left = {skeleton:"basic", color:"#A751E3", contents:["\uc67c
     return Entry.STATIC.CONTINUE;
   }
 }};
-Entry.block.jr_turn_right = {skeleton:"basic", color:"#A751E3", contents:["\uc624\ub978\ucabd\uc73c\ub85c \ub3cc\uae30", {type:"Image", img:"/img/assets/ntry/bitmap/jr/cparty_go_straight.png", size:24}], func:function() {
+Entry.block.jr_turn_right = {skeleton:"basic", color:"#A751E3", contents:["\uc624\ub978\ucabd\uc73c\ub85c \ub3cc\uae30", {type:"Image", img:"/img/assets/ntry/bitmap/jr/cparty_rotate_r.png", size:24}], func:function() {
   if (this.isContinue) {
     if (this.isAction) {
       return Entry.STATIC.CONTINUE;
@@ -12456,7 +12456,7 @@ Entry.block.jr_turn_right = {skeleton:"basic", color:"#A751E3", contents:["\uc62
     return Entry.STATIC.CONTINUE;
   }
 }};
-Entry.block.jr_go_slow = {skeleton:"basic", color:"#A751E3", contents:["\ucc9c\ucc9c\ud788 \uac00\uae30", {type:"Image", img:"/img/assets/ntry/bitmap/jr/cparty_go_straight.png", size:24}], func:function() {
+Entry.block.jr_go_slow = {skeleton:"basic", color:"#f46c6c", contents:["\ucc9c\ucc9c\ud788 \uac00\uae30", {type:"Image", img:"/img/assets/ntry/bitmap/jr/cparty_go_slow.png", size:24}], func:function() {
   if (this.isContinue) {
     if (this.isAction) {
       return Entry.STATIC.CONTINUE;
@@ -12472,7 +12472,39 @@ Entry.block.jr_go_slow = {skeleton:"basic", color:"#A751E3", contents:["\ucc9c\u
     return Entry.STATIC.CONTINUE;
   }
 }};
-Entry.block.jr_repeat_until_dest = {skeleton:"basic_loop", color:"#498DEB", contents:[{type:"Image", img:"/img/assets/ntry/bitmap/jr/jr_goal_image.png", size:18}, "\ub9cc\ub0a0 \ub54c \uae4c\uc9c0 \ubc18\ubcf5\ud558\uae30", {type:"Image", img:"/img/assets/ntry/bitmap/jr/cparty_go_straight.png", size:24}], func:function() {
+Entry.block.jr_repeat_until_dest = {skeleton:"basic_loop", color:"#498DEB", contents:[{type:"Image", img:"/img/assets/ntry/bitmap/jr/jr_goal_image.png", size:18}, "\ub9cc\ub0a0 \ub54c \uae4c\uc9c0 \ubc18\ubcf5\ud558\uae30", {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}, {type:"Statement", key:"STATEMENT", accept:"basic", alignX:-4}], func:function() {
+  if (this.isContinue) {
+    if (this.isAction) {
+      return Entry.STATIC.CONTINUE;
+    }
+    delete this.isAction;
+    delete this.isContinue;
+  } else {
+    this.isAction = this.isContinue = !0;
+    var a = this;
+    Ntry.dispatchEvent("unitAction", Ntry.STATIC.GO_SLOW, function() {
+      a.isAction = !1;
+    });
+    return Entry.STATIC.CONTINUE;
+  }
+}};
+Entry.block.jr_if_construction = {skeleton:"basic_loop", color:"#498DEB", contents:["\ub9cc\uc57d", {type:"Image", img:"/img/assets/ntry/bitmap/jr/jr_construction_image.png", size:18}, "\uc55e\uc5d0 \uc788\ub2e4\uba74", "\uc55e\uc5d0 \uc788\ub2e4\uba74", {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}, {type:"Statement", key:"STATEMENT", accept:"basic", alignX:-4}], func:function() {
+  if (this.isContinue) {
+    if (this.isAction) {
+      return Entry.STATIC.CONTINUE;
+    }
+    delete this.isAction;
+    delete this.isContinue;
+  } else {
+    this.isAction = this.isContinue = !0;
+    var a = this;
+    Ntry.dispatchEvent("unitAction", Ntry.STATIC.GO_SLOW, function() {
+      a.isAction = !1;
+    });
+    return Entry.STATIC.CONTINUE;
+  }
+}};
+Entry.block.jr_if_speed = {skeleton:"basic_loop", color:"#498DEB", contents:["\ub9cc\uc57d", {type:"Image", img:"/img/assets/ntry/bitmap/jr/jr_speed_image.png", size:18}, "\uc55e\uc5d0 \uc788\ub2e4\uba74", {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}, {type:"Statement", key:"STATEMENT", accept:"basic", alignX:-4}], func:function() {
   if (this.isContinue) {
     if (this.isAction) {
       return Entry.STATIC.CONTINUE;
@@ -12851,7 +12883,7 @@ Entry.BlockView = function(a, b) {
     if (this.block.next) {
       this.emptyBackground && (this.emptyBackground.remove(), delete this.emptyBackground);
     } else {
-      var a = this.svgGroup.rect(0 - this.width / 2, this.height / 2, this.width, this.height);
+      var a = this.svgGroup.rect(0 + this.offsetX, this.height, this.width, 20);
       this.emptyBackground = a;
       a.attr({fill:"transparent"});
       this.svgGroup.prepend(a);
@@ -13117,7 +13149,7 @@ Entry.FieldIndicator = function(a, b) {
   };
   a.align = function(a, c, d) {
     var e = this.svgGroup;
-    this._position && (a = this._position.x);
+    this._position && (a = this._position.x, c = this._position.y);
     var f = "t" + a + " " + c;
     void 0 === d || d ? e.animate({transform:f}, 300, mina.easeinout) : e.attr({transform:f});
     this.box.set({x:a, y:c});
@@ -13142,6 +13174,7 @@ Entry.FieldStatement = function(a, b) {
   this.box = new Entry.BoxModel;
   this.acceptType = a.accept;
   this.dummyBlock = this.svgGroup = null;
+  a.alignX && (this._alignX = a.alignX);
   this.box.observe(b, "_alignContent", ["height"]);
   this.renderStart(b.getBoard());
   this.block.observe(this, "_updateThread", ["thread"]);
@@ -13164,8 +13197,10 @@ Entry.FieldStatement = function(a, b) {
     this.box.set({height:c});
   };
   a.align = function(a, c, d) {
-    a = this.svgGroup;
-    void 0 === d || d ? a.animate({transform:"t46 14"}, 300, mina.easeinout) : a.attr({transform:"t46 14"});
+    c = this.svgGroup;
+    a = this._alignX || 46;
+    a = "t" + a + " 14";
+    void 0 === d || d ? c.animate({transform:a}, 300, mina.easeinout) : c.attr({transform:a});
   };
   a._updateThread = function() {
     this._threadChangeEvent && this._thread.changeEvent.detach(this._threadChangeEvent);
@@ -13246,13 +13281,13 @@ Entry.FieldText = function(a, b) {
     this.textElement = this._block.contentSvgGroup.text(0, 0, this._text);
     this.textElement.attr({style:"white-space: pre; font-size:" + this._fontSize, "alignment-baseline":"central", "class":"dragNone", fill:"white"});
     var a = this.textElement.getBBox();
-    this.box.set({x:0, y:0, width:a.width, height:a.height});
+    this.box.set({x:0, y:0, width:this.textElement.node.getComputedTextLength(), height:a.height});
   };
   a.align = function(a, c, d) {
     !0 !== d && (d = !1);
     var e = this.textElement, f = {x:a, y:c};
     d ? e.animate(f, 300, mina.easeinout) : e.attr(f);
-    this.box.set({x:a, y:c});
+    this.box.set({x:a, width:this.textElement.node.getComputedTextLength(), y:c});
   };
 })(Entry.FieldText.prototype);
 Entry.Scroller = function(a, b, c) {
@@ -13358,30 +13393,30 @@ Entry.skeleton = function() {
 Entry.skeleton.basic = {path:function(a) {
   a = a.contentWidth;
   a = Math.max(0, a);
-  return "m -4,0 l 8,8 8,-8 h %w a 15,15 0 0,1 0,30 h -%w l -8,8 -8,-8 v -30 z".replace(/%w/gi, a);
+  return "m -8,0 l 8,8 8,-8 h %w a 15,15 0 0,1 0,30 h -%w l -8,8 -8,-8 v -30 z".replace(/%w/gi, a);
 }, box:function(a) {
-  return {offsetX:0, offsetY:0, width:a.contentWidth + 30, height:30, marginBottom:0};
+  return {offsetX:0, offsetY:0, width:(a ? a.contentWidth : 150) + 30, height:30, marginBottom:0};
 }, magnets:{previous:{}, next:{x:0, y:31}}, contentPos:function(a) {
   return {x:20, y:15};
-}, fontSize:"9pt"};
+}};
 Entry.skeleton.basic_event = {path:function(a) {
   a = a.contentWidth;
   a = Math.max(0, a);
-  return "m -4,0 m 0,-5 a 19.5,19.5 0, 0,1 16,0 c 10,5 15,5 20,5 h %w a 15,15 0 0,1 0,30 H 12 l -8,8 -8,-8 l 0,0.5 a 19.5,19.5 0, 0,1 0,-35 z".replace(/%w/gi, a - 50);
+  return "m -8,0 m 0,-5 a 19.5,19.5 0, 0,1 16,0 c 10,5 15,5 20,5 h %w a 15,15 0 0,1 0,30 H 8 l -8,8 -8,-8 l 0,0.5 a 19.5,19.5 0, 0,1 0,-35 z".replace(/%w/gi, a - 40);
 }, box:function(a) {
   return {offsetX:0, offsetY:0, width:a.contentWidth + 30, height:30, marginBottom:0};
 }, magnets:{previous:{}, next:{x:0, y:31}}, contentPos:function(a) {
-  return {x:5, y:13};
+  return {x:1, y:15};
 }};
 Entry.skeleton.basic_loop = {path:function(a) {
-  a = Math.max(a.contentHeight, 50);
-  return "m 0,0 c 0,4 0,-4 0,0 H 0 l 8,8 8,-8 H %cw a 15,15 0 0,1 0,30 H 30 l -8,8 -8,-8 h -0.6 h0 a 0,0 0 0,0 -0,0 v 25.5 a 0,0 0 0,0 0,0 H 14 l 8,8 8,-8 H 124.07594299316406 a 8,8 0 0,1 0,16 l 0,-0.5 H 16 l -8,8 -8,-8 l 0,0.5 c 0,4 0,-4 0,0 H 0 z z".replace(/%cw/gi, 190).replace(/%ch/gi, a + 4).replace(/%cih/gi, a + -50);
+  a = Math.max(a.contentHeight, 25);
+  return "m -8,0 l 8,8 8,-8 h %cw a 15,15 0 0,1 0,30 H 24 l -8,8 -8,-8 v %ch l 8,8 8,-8 h %cw h -8 a 8,8 0 0,1 0,16 H 8 l -8,8 -8,-8 z".replace(/%cw/gi, 160).replace(/%ch/gi, a).replace(/%cih/gi, a + -50);
 }, magnets:function() {
   return {previous:{x:0, y:0}, next:{x:0, y:105}};
 }, box:function(a) {
-  return {offsetX:0, offsetY:0, width:124, height:Math.max(a.contentHeight, 50) + 54, marginBottom:0};
+  return {offsetX:0, offsetY:0, width:a.contentWidth, height:Math.max(a.contentHeight, 25) + 46, marginBottom:0};
 }, contentPos:function() {
-  return {x:10, y:15};
+  return {x:20, y:15};
 }};
 Entry.skeleton.pebble_event = {path:function(a) {
   return "m 0,0 a 25,25 0 0,1 9,48.3 a 9,9 0 0,1 -18,0 a 25,25 0 0,1 9,-48.3 z";

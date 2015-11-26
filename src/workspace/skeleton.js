@@ -16,13 +16,14 @@ Entry.skeleton.basic = {
     path: function(block) {
         var width = block.contentWidth;
         width = Math.max(0, width);
-        return "m -4,0 l 8,8 8,-8 h %w a 15,15 0 0,1 0,30 h -%w l -8,8 -8,-8 v -30 z"
+        return "m -8,0 l 8,8 8,-8 h %w a 15,15 0 0,1 0,30 h -%w l -8,8 -8,-8 v -30 z"
             .replace(/%w/gi, width);
     },
     box: function(block) {
+        var width = block ? block.contentWidth : 150;
         return {
             offsetX: 0, offsetY: 0,
-            width: block.contentWidth + 30,
+            width: width + 30,
             height: 30,
             marginBottom: 0
         };
@@ -35,8 +36,7 @@ Entry.skeleton.basic = {
     contentPos: function(block) {
         // apply scale required.
         return {x: 16 + 4, y: 15};
-    },
-    fontSize: "9pt"
+    }
 
 };
 
@@ -44,9 +44,9 @@ Entry.skeleton.basic_event = {
     path: function(block) {
         var width = block.contentWidth;
         width = Math.max(0, width);
-        return ("m -4,0 m 0,-5 a 19.5,19.5 0, 0,1 16,0 c 10,5 15,5 20,5 h %w " +
-            "a 15,15 0 0,1 0,30 H 12 l -8,8 -8,-8 l 0,0.5 a 19.5,19.5 0, 0,1 0,-35 z")
-            .replace(/%w/gi, width - 50);
+        return ("m -8,0 m 0,-5 a 19.5,19.5 0, 0,1 16,0 c 10,5 15,5 20,5 h %w " +
+            "a 15,15 0 0,1 0,30 H 8 l -8,8 -8,-8 l 0,0.5 a 19.5,19.5 0, 0,1 0,-35 z")
+            .replace(/%w/gi, width - 40);
     },
     box: function(block) {
         return {
@@ -63,17 +63,17 @@ Entry.skeleton.basic_event = {
     },
     contentPos: function(block) {
         // apply scale required.
-        return {x: 5, y: 13};
+        return {x: 1, y: 15};
     }
 };
 
 Entry.skeleton.basic_loop = {
     path: function(block) {
         var contentWidth = 124;
-        var contentHeight = Math.max(block.contentHeight, 50);
-        return ("m 0,0 c 0,4 0,-4 0,0 H 0 l 8,8 8,-8 H %cw a 15,15 0 0,1 0,30 H 30 l -8,8 -8,-8 h -0.6 h0 a 0,0 0 0,0 -0,0 v 25.5 a 0,0 0 0,0 0,0 H 14 l 8,8 8,-8 H 124.07594299316406 a 8,8 0 0,1 0,16 l 0,-0.5 H 16 l -8,8 -8,-8 l 0,0.5 c 0,4 0,-4 0,0 H 0 z z")
-            .replace(/%cw/gi, contentWidth + 66)
-            .replace(/%ch/gi, contentHeight + 4)
+        var contentHeight = Math.max(block.contentHeight, 25);
+        return ("m -8,0 l 8,8 8,-8 h %cw a 15,15 0 0,1 0,30 H 24 l -8,8 -8,-8 v %ch l 8,8 8,-8 h %cw h -8 a 8,8 0 0,1 0,16 H 8 l -8,8 -8,-8 z")
+            .replace(/%cw/gi, contentWidth + 36)
+            .replace(/%ch/gi, contentHeight)
             .replace(/%cih/gi, contentHeight + -50);
     },
     magnets: function() {
@@ -86,18 +86,18 @@ Entry.skeleton.basic_loop = {
         };
     },
     box: function(block) {
-        var contentWidth = 124;
-        var contentHeight = Math.max(block.contentHeight, 50);
+        var contentWidth = block.contentWidth;
+        var contentHeight = Math.max(block.contentHeight, 25);
         return {
             offsetX: 0, offsetY: 0,
             width: contentWidth,
-            height: contentHeight + 54,
+            height: contentHeight + 46,
             marginBottom: 0
         };
     },
     contentPos: function() {
         // apply scale required.
-        return {x: 10, y: 15};
+        return {x: 20, y: 15};
     }
 };
 

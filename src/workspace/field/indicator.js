@@ -57,7 +57,11 @@ Entry.FieldIndicator = function(content, block) {
     p.align = function(x, y, animate) {
         animate = animate === undefined ? true : animate;
         var svgGroup = this.svgGroup;
-        if (this._position) x = this._position.x;
+        if (this._position) {
+            x = this._position.x;
+            y = this._position.y;
+        }
+
         var transform = "t" + x + " " + y;
 
         if (animate)

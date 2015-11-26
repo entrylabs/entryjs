@@ -22,6 +22,8 @@ Entry.FieldStatement = function(content, blockView) {
     this.svgGroup = null;
     this.dummyBlock = null;
 
+    if (content.alignX) this._alignX = content.alignX;
+
     this.box.observe(blockView, "_alignContent", ["height"]);
 
     this.renderStart(blockView.getBoard());
@@ -58,7 +60,8 @@ Entry.FieldStatement = function(content, blockView) {
     p.align = function(x, y, animate) {
         animate = animate === undefined ? true : animate;
         var svgGroup = this.svgGroup;
-        var transform = "t" + 46 + " " + 14;
+        var x = this._alignX || 46;
+        var transform = "t" + x + " " + 14;
 
         if (animate)
             svgGroup.animate({

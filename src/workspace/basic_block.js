@@ -340,13 +340,12 @@ Entry.block.jr_start_basic = {
             boxMultiplier: 1,
             img: "/img/assets/block_icon/start_icon_play.png",
             highlightColor: "#3BBD70",
-            size: 17
+            size: 17,
+            position: {
+                 x: 0, y: -2
+            }
         },
-        {
-            type: "Text",
-            fontSize: '9pt',
-            text: "시작 버튼을 눌렀을 때"
-        }
+        "시작 버튼을 눌렀을 때"
     ],
     func: function() {
         if (!this.isContinue) {
@@ -375,11 +374,7 @@ Entry.block.jr_go_straight = {
     skeleton: "basic",
     color: "#A751E3",
     contents: [
-        {
-            type: "Text",
-            fontSize: '9pt',
-            text: "앞으로 가기"
-        },
+        "앞으로 가기",
         {
             type: "Image",
             img: "/img/assets/ntry/bitmap/jr/cparty_go_straight.png",
@@ -416,7 +411,7 @@ Entry.block.jr_turn_left = {
         "왼쪽으로 돌기",
         {
             type: "Image",
-            img: "/img/assets/ntry/bitmap/jr/cparty_go_straight.png",
+            img: "/img/assets/ntry/bitmap/jr/cparty_rotate_l.png",
             size: 24
         }
     ],
@@ -450,7 +445,7 @@ Entry.block.jr_turn_right = {
         "오른쪽으로 돌기",
         {
             type: "Image",
-            img: "/img/assets/ntry/bitmap/jr/cparty_go_straight.png",
+            img: "/img/assets/ntry/bitmap/jr/cparty_rotate_r.png",
             size: 24
         }
     ],
@@ -479,12 +474,12 @@ Entry.block.jr_turn_right = {
 
 Entry.block.jr_go_slow = {
     skeleton: "basic",
-    color: "#A751E3",
+    color: "#f46c6c",
     contents: [
         "천천히 가기",
         {
             type: "Image",
-            img: "/img/assets/ntry/bitmap/jr/cparty_go_straight.png",
+            img: "/img/assets/ntry/bitmap/jr/cparty_go_slow.png",
             size: 24
         }
     ],
@@ -523,9 +518,108 @@ Entry.block.jr_repeat_until_dest = {
         "만날 때 까지 반복하기",
         {
             type: "Image",
-            img: "/img/assets/ntry/bitmap/jr/cparty_go_straight.png",
+            img: "/img/assets/week/blocks/for.png",
             size: 24
         },
+        {
+            type: "Statement",
+            key: "STATEMENT",
+            accept: "basic",
+            alignX: -4
+        }
+    ],
+    func: function() {
+        if (!this.isContinue) {
+
+            this.isContinue = true;
+            this.isAction = true;
+            var self = this;
+            var callBack = function() {
+                self.isAction = false;
+            };
+
+            // turn direction
+            Ntry.dispatchEvent("unitAction", Ntry.STATIC.GO_SLOW, callBack);
+
+            return Entry.STATIC.CONTINUE;
+        } else if (this.isAction) {
+            return Entry.STATIC.CONTINUE;
+        } else {
+            delete this.isAction;
+            delete this.isContinue;
+        }
+    }
+};
+
+Entry.block.jr_if_construction = {
+    skeleton: "basic_loop",
+    color: "#498DEB",
+    contents: [
+        "만약",
+        {
+            type: "Image",
+            img: "/img/assets/ntry/bitmap/jr/jr_construction_image.png",
+            size: 18
+        },
+        "앞에 있다면",
+        "앞에 있다면",
+        {
+            type: "Image",
+            img: "/img/assets/week/blocks/for.png",
+            size: 24
+        },
+        {
+            type: "Statement",
+            key: "STATEMENT",
+            accept: "basic",
+            alignX: -4
+        }
+    ],
+    func: function() {
+        if (!this.isContinue) {
+
+            this.isContinue = true;
+            this.isAction = true;
+            var self = this;
+            var callBack = function() {
+                self.isAction = false;
+            };
+
+            // turn direction
+            Ntry.dispatchEvent("unitAction", Ntry.STATIC.GO_SLOW, callBack);
+
+            return Entry.STATIC.CONTINUE;
+        } else if (this.isAction) {
+            return Entry.STATIC.CONTINUE;
+        } else {
+            delete this.isAction;
+            delete this.isContinue;
+        }
+    }
+};
+
+Entry.block.jr_if_speed = {
+    skeleton: "basic_loop",
+    color: "#498DEB",
+    contents: [
+        "만약",
+        {
+            type: "Image",
+            img: "/img/assets/ntry/bitmap/jr/jr_speed_image.png",
+            size: 18
+        },
+        "앞에 있다면",
+        {
+            type: "Image",
+            img: "/img/assets/week/blocks/for.png",
+            size: 24
+        },
+        {
+            type: "Statement",
+            key: "STATEMENT",
+            accept: "basic",
+            alignX: -4
+        }
     ],
     func: function() {
         if (!this.isContinue) {

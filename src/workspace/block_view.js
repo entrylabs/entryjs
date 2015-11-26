@@ -524,10 +524,10 @@ Entry.BlockView = function(block, board) {
         var blockView = this;
         if (!this.block.next) {
             var bg = this.svgGroup.rect(
-                0 - blockView.width/2,
-                blockView.height/2,
+                0 + blockView.offsetX,
+                blockView.height,
                 blockView.width,
-                blockView.height
+                20
             );
             blockView.emptyBackground = bg;
 
