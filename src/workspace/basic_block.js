@@ -525,7 +525,8 @@ Entry.block.jr_repeat_until_dest = {
             type: "Statement",
             key: "STATEMENT",
             accept: "basic",
-            alignX: 1
+            alignY: 15,
+            alignX: 2
         }
     ],
     func: function() {
@@ -571,7 +572,8 @@ Entry.block.jr_if_construction = {
             type: "Statement",
             key: "STATEMENT",
             accept: "basic",
-            alignX: 1
+            alignY: 15,
+            alignX: 2
         }
     ],
     func: function() {
@@ -617,7 +619,8 @@ Entry.block.jr_if_speed = {
             type: "Statement",
             key: "STATEMENT",
             accept: "basic",
-            alignX: 1
+            alignY: 15,
+            alignX: 2
         }
     ],
     func: function() {
