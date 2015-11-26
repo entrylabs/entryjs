@@ -84,9 +84,11 @@ Entry.BlockView = function(block, board) {
         var contents = this._schema.contents;
         for (var i = 0; i < contents.length; i++) {
             var content = contents[i];
-            if (typeof content === "string")
-                this._contents.push(new Entry.FieldText(content, this));
-            else
+            if (typeof content === "string") {
+                var contentObject = {};
+                contentObject.text = content;
+                this._contents.push(new Entry.FieldText(contentObject, this));
+            } else
                 this._contents.push(
                     new Entry['Field' + content.type](content, this)
                 );
@@ -544,5 +546,7 @@ Entry.BlockView = function(block, board) {
     p.removeDragging = function() {
         this.svgGroup.removeClass('dragging');
     };
+
+    p.getSkeleton = function() {return this._skeleton;};
 
 })(Entry.BlockView.prototype);

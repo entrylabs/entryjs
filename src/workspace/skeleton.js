@@ -35,6 +35,69 @@ Entry.skeleton.basic = {
     contentPos: function(block) {
         // apply scale required.
         return {x: 16 + 4, y: 15};
+    },
+    fontSize: "9pt"
+
+};
+
+Entry.skeleton.basic_event = {
+    path: function(block) {
+        var width = block.contentWidth;
+        width = Math.max(0, width);
+        return ("m -4,0 m 0,-5 a 19.5,19.5 0, 0,1 16,0 c 10,5 15,5 20,5 h %w " +
+            "a 15,15 0 0,1 0,30 H 12 l -8,8 -8,-8 l 0,0.5 a 19.5,19.5 0, 0,1 0,-35 z")
+            .replace(/%w/gi, width - 50);
+    },
+    box: function(block) {
+        return {
+            offsetX: 0, offsetY: 0,
+            width: block.contentWidth + 30,
+            height: 30,
+            marginBottom: 0
+        };
+    },
+    magnets: {
+        // apply scale required.
+        previous: {},
+        next: {x: 0, y: 31}
+    },
+    contentPos: function(block) {
+        // apply scale required.
+        return {x: 5, y: 13};
+    }
+};
+
+Entry.skeleton.basic_loop = {
+    path: function(block) {
+        var contentWidth = 124;
+        var contentHeight = Math.max(block.contentHeight, 50);
+        return ("m 0,0 c 0,4 0,-4 0,0 H 0 l 8,8 8,-8 H %cw a 15,15 0 0,1 0,30 H 30 l -8,8 -8,-8 h -0.6 h0 a 0,0 0 0,0 -0,0 v 25.5 a 0,0 0 0,0 0,0 H 14 l 8,8 8,-8 H 124.07594299316406 a 8,8 0 0,1 0,16 l 0,-0.5 H 16 l -8,8 -8,-8 l 0,0.5 c 0,4 0,-4 0,0 H 0 z z")
+            .replace(/%cw/gi, contentWidth + 66)
+            .replace(/%ch/gi, contentHeight + 4)
+            .replace(/%cih/gi, contentHeight + -50);
+    },
+    magnets: function() {
+        var contentWidth = 124;
+        var contentHeight = 50;
+        // apply scale required.
+        return {
+            previous: {x: 0, y: 0},
+            next: {x: 0, y: contentHeight + 55}
+        };
+    },
+    box: function(block) {
+        var contentWidth = 124;
+        var contentHeight = Math.max(block.contentHeight, 50);
+        return {
+            offsetX: 0, offsetY: 0,
+            width: contentWidth,
+            height: contentHeight + 54,
+            marginBottom: 0
+        };
+    },
+    contentPos: function() {
+        // apply scale required.
+        return {x: 10, y: 15};
     }
 };
 

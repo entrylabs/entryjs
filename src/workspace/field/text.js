@@ -8,13 +8,14 @@ goog.provide("Entry.FieldText");
 /*
  *
  */
-Entry.FieldText = function(text, block) {
+Entry.FieldText = function(content, block) {
     this._block = block;
 
     var box = new Entry.BoxModel();
     this.box = box;
 
-    this._text = text;
+    this._fontSize = content.fontSize || block.getSkeleton().fontSize || '9pt';
+    this._text = content.text;
 
     this.textElement = null;
 
@@ -23,9 +24,10 @@ Entry.FieldText = function(text, block) {
 
 (function(p) {
     p.renderStart = function() {
+        var that = this;
         this.textElement = this._block.contentSvgGroup.text(0, 0, this._text);
         this.textElement.attr({
-            'style': 'white-space: pre; font-size: 16px',
+            'style': 'white-space: pre; font-size:' + that._fontSize,
             "alignment-baseline": "central",
             "class": "dragNone",
             "fill": "white"

@@ -15,6 +15,7 @@ Entry.FieldIndicator = function(content, block) {
 
     this._size = content.size;
     this._imgUrl = content.img;
+    this._boxMultiplier = content.boxMultiplier || 2;
     this._highlightColor =
         content.highlightColor? content.highlightColor : "#F59900";
     this._position = content.position;
@@ -48,8 +49,8 @@ Entry.FieldIndicator = function(content, block) {
         this.box.set({
             x: this._size,
             y: 0,
-            width: this._size * 2,
-            height: this._size * 2
+            width: this._size * this._boxMultiplier,
+            height: this._size * this._boxMultiplier
         });
     };
 

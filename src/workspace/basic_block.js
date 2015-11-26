@@ -47,7 +47,11 @@ Entry.block.jr_repeat = {
             options: [1,2,3,4,5,6,7,8,9,10],
             value: 1
         },
-        "반복",
+        {
+            type: "Text",
+            fontSize: '16px',
+            text: "반복"
+        },
         {
             type: "Statement",
             key: "STATEMENT",
@@ -73,7 +77,11 @@ Entry.block.jr_item = {
     skeleton: "pebble_basic",
     color: "#F46C6C",
     contents: [
-        "꽃 모으기",
+        {
+            type: "Text",
+            fontSize: '16px',
+            text: "꽃 모으기"
+        },
         {
             type: "Indicator",
             img: "/img/assets/ntry/bitmap/jr/block_item_image.png",
@@ -107,7 +115,11 @@ Entry.block.jr_north = {
     skeleton: "pebble_basic",
     color: "#A751E3",
     contents: [
-        "   위쪽",
+        {
+            type: "Text",
+            fontSize: '16px',
+            text: "  위쪽"
+        },
         {
             type: "Indicator",
             img: "/img/assets/ntry/bitmap/jr/block_up_image.png",
@@ -159,7 +171,11 @@ Entry.block.jr_east = {
     skeleton: "pebble_basic",
     color: "#A751E3",
     contents: [
-        "오른쪽",
+        {
+            type: "Text",
+            fontSize: '16px',
+            text: "오른쪽"
+        },
         {
             type: "Indicator",
             img: "/img/assets/ntry/bitmap/jr/block_right_image.png",
@@ -209,7 +225,11 @@ Entry.block.jr_south = {
     skeleton: "pebble_basic",
     color: "#A751E3",
     contents: [
-        "아래쪽",
+        {
+            type: "Text",
+            fontSize: '16px',
+            text: "  아래쪽"
+        },
         {
             type: "Indicator",
             img: "/img/assets/ntry/bitmap/jr/block_down_image.png",
@@ -261,7 +281,11 @@ Entry.block.jr_west = {
     skeleton: "pebble_basic",
     color: "#A751E3",
     contents: [
-        "   왼쪽",
+        {
+            type: "Text",
+            fontSize: '16px',
+            text: "  왼쪽"
+        },
         {
             type: "Indicator",
             img: "/img/assets/ntry/bitmap/jr/block_left_image.png",
@@ -307,12 +331,55 @@ Entry.block.jr_west = {
 };
 
 //maze 명세의 주니버 시작
+Entry.block.jr_start_basic = {
+    skeleton: "basic_event",
+    color: "#3BBD70",
+    contents: [
+        {
+            type: "Indicator",
+            boxMultiplier: 1,
+            img: "/img/assets/block_icon/start_icon_play.png",
+            highlightColor: "#3BBD70",
+            size: 17
+        },
+        {
+            type: "Text",
+            fontSize: '9pt',
+            text: "시작 버튼을 눌렀을 때"
+        }
+    ],
+    func: function() {
+        if (!this.isContinue) {
+
+            this.isContinue = true;
+            this.isAction = true;
+            var self = this;
+            var callBack = function() {
+                self.isAction = false;
+            };
+
+            // turn direction
+            Ntry.dispatchEvent("unitAction", Ntry.STATIC.WALK, callBack);
+
+            return Entry.STATIC.CONTINUE;
+        } else if (this.isAction) {
+            return Entry.STATIC.CONTINUE;
+        } else {
+            delete this.isAction;
+            delete this.isContinue;
+        }
+    }
+};
 
 Entry.block.jr_go_straight = {
     skeleton: "basic",
     color: "#A751E3",
     contents: [
-        "앞으로 가기",
+        {
+            type: "Text",
+            fontSize: '9pt',
+            text: "앞으로 가기"
+        },
         {
             type: "Image",
             img: "/img/assets/ntry/bitmap/jr/cparty_go_straight.png",
@@ -343,15 +410,14 @@ Entry.block.jr_go_straight = {
 };
 
 Entry.block.jr_turn_left = {
-    skeleton: "pebble_basic",
+    skeleton: "basic",
     color: "#A751E3",
     contents: [
         "왼쪽으로 돌기",
         {
-            type: "Indicator",
-            img: "/img/assets/ntry/bitmap/jr/cparty_rotate_l.png",
-            position: {x: 83, y: 0},
-            size: 22
+            type: "Image",
+            img: "/img/assets/ntry/bitmap/jr/cparty_go_straight.png",
+            size: 24
         }
     ],
     func: function() {
@@ -378,15 +444,14 @@ Entry.block.jr_turn_left = {
 };
 
 Entry.block.jr_turn_right = {
-    skeleton: "pebble_basic",
+    skeleton: "basic",
     color: "#A751E3",
     contents: [
         "오른쪽으로 돌기",
         {
-            type: "Indicator",
-            img: "/img/assets/ntry/bitmap/jr/cparty_rotate_r.png",
-            position: {x: 83, y: 0},
-            size: 22
+            type: "Image",
+            img: "/img/assets/ntry/bitmap/jr/cparty_go_straight.png",
+            size: 24
         }
     ],
     func: function() {
@@ -413,15 +478,14 @@ Entry.block.jr_turn_right = {
 };
 
 Entry.block.jr_go_slow = {
-    skeleton: "pebble_basic",
+    skeleton: "basic",
     color: "#A751E3",
     contents: [
         "천천히 가기",
         {
-            type: "Indicator",
-            img: "/img/assets/ntry/bitmap/jr/cparty_rotate_r.png",
-            position: {x: 83, y: 0},
-            size: 22
+            type: "Image",
+            img: "/img/assets/ntry/bitmap/jr/cparty_go_straight.png",
+            size: 24
         }
     ],
     func: function() {
@@ -445,6 +509,44 @@ Entry.block.jr_go_slow = {
             delete this.isContinue;
         }
     }
+};
 
+Entry.block.jr_repeat_until_dest = {
+    skeleton: "basic_loop",
+    color: "#498DEB",
+    contents: [
+        {
+            type: "Image",
+            img: "/img/assets/ntry/bitmap/jr/jr_goal_image.png",
+            size: 18
+        },
+        "만날 때 까지 반복하기",
+        {
+            type: "Image",
+            img: "/img/assets/ntry/bitmap/jr/cparty_go_straight.png",
+            size: 24
+        },
+    ],
+    func: function() {
+        if (!this.isContinue) {
+
+            this.isContinue = true;
+            this.isAction = true;
+            var self = this;
+            var callBack = function() {
+                self.isAction = false;
+            };
+
+            // turn direction
+            Ntry.dispatchEvent("unitAction", Ntry.STATIC.GO_SLOW, callBack);
+
+            return Entry.STATIC.CONTINUE;
+        } else if (this.isAction) {
+            return Entry.STATIC.CONTINUE;
+        } else {
+            delete this.isAction;
+            delete this.isContinue;
+        }
+    }
 };
 

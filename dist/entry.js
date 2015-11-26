@@ -12238,7 +12238,7 @@ Entry.block.jr_start = {skeleton:"pebble_event", event:"start", color:"#3BBD70",
   }
   Ntry.unitComp = Ntry.entityManager.getComponent(this._unit.id, Ntry.STATIC.UNIT);
 }};
-Entry.block.jr_repeat = {skeleton:"pebble_loop", color:"#127CDB", contents:[{type:"Dropdown", key:"REPEAT", options:[1, 2, 3, 4, 5, 6, 7, 8, 9, 10], value:1}, "\ubc18\ubcf5", {type:"Statement", key:"STATEMENT", accept:"pebble_basic"}], func:function() {
+Entry.block.jr_repeat = {skeleton:"pebble_loop", color:"#127CDB", contents:[{type:"Dropdown", key:"REPEAT", options:[1, 2, 3, 4, 5, 6, 7, 8, 9, 10], value:1}, {type:"Text", fontSize:"16px", text:"\ubc18\ubcf5"}, {type:"Statement", key:"STATEMENT", accept:"pebble_basic"}], func:function() {
   if (void 0 === this.repeatCount) {
     return this.repeatCount = this.block.values.REPEAT, Entry.STATIC.CONTINUE;
   }
@@ -12247,7 +12247,7 @@ Entry.block.jr_repeat = {skeleton:"pebble_loop", color:"#127CDB", contents:[{typ
   }
   delete this.repeatCount;
 }};
-Entry.block.jr_item = {skeleton:"pebble_basic", color:"#F46C6C", contents:["\uaf43 \ubaa8\uc73c\uae30", {type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_item_image.png", highlightColor:"#FFF", position:{x:83, y:0}, size:22}], func:function() {
+Entry.block.jr_item = {skeleton:"pebble_basic", color:"#F46C6C", contents:[{type:"Text", fontSize:"16px", text:"\uaf43 \ubaa8\uc73c\uae30"}, {type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_item_image.png", highlightColor:"#FFF", position:{x:83, y:0}, size:22}], func:function() {
   if (this.isContinue) {
     if (this.isAction) {
       return Entry.STATIC.CONTINUE;
@@ -12264,7 +12264,7 @@ Entry.block.jr_item = {skeleton:"pebble_basic", color:"#F46C6C", contents:["\uaf
     return Entry.STATIC.CONTINUE;
   }
 }};
-Entry.block.jr_north = {skeleton:"pebble_basic", color:"#A751E3", contents:["   \uc704\ucabd", {type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_up_image.png", position:{x:83, y:0}, size:22}], func:function() {
+Entry.block.jr_north = {skeleton:"pebble_basic", color:"#A751E3", contents:[{type:"Text", fontSize:"16px", text:"  \uc704\ucabd"}, {type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_up_image.png", position:{x:83, y:0}, size:22}], func:function() {
   if (this.isContinue) {
     if (this.isAction) {
       return Entry.STATIC.CONTINUE;
@@ -12296,7 +12296,7 @@ Entry.block.jr_north = {skeleton:"pebble_basic", color:"#A751E3", contents:["   
     return Entry.STATIC.CONTINUE;
   }
 }};
-Entry.block.jr_east = {skeleton:"pebble_basic", color:"#A751E3", contents:["\uc624\ub978\ucabd", {type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_right_image.png", position:{x:83, y:0}, size:22}], func:function() {
+Entry.block.jr_east = {skeleton:"pebble_basic", color:"#A751E3", contents:[{type:"Text", fontSize:"16px", text:"\uc624\ub978\ucabd"}, {type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_right_image.png", position:{x:83, y:0}, size:22}], func:function() {
   if (this.isContinue) {
     if (this.isAction) {
       return Entry.STATIC.CONTINUE;
@@ -12328,7 +12328,7 @@ Entry.block.jr_east = {skeleton:"pebble_basic", color:"#A751E3", contents:["\uc6
     return Entry.STATIC.CONTINUE;
   }
 }};
-Entry.block.jr_south = {skeleton:"pebble_basic", color:"#A751E3", contents:["\uc544\ub798\ucabd", {type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_down_image.png", position:{x:83, y:0}, size:22}], func:function() {
+Entry.block.jr_south = {skeleton:"pebble_basic", color:"#A751E3", contents:[{type:"Text", fontSize:"16px", text:"  \uc544\ub798\ucabd"}, {type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_down_image.png", position:{x:83, y:0}, size:22}], func:function() {
   if (this.isContinue) {
     if (this.isAction) {
       return Entry.STATIC.CONTINUE;
@@ -12392,7 +12392,7 @@ Entry.block.jr_west = {skeleton:"pebble_basic", color:"#A751E3", contents:["   \
     return Entry.STATIC.CONTINUE;
   }
 }};
-Entry.block.jr_go_straight = {skeleton:"basic", color:"#A751E3", contents:["\uc55e\uc73c\ub85c \uac00\uae30", {type:"Image", img:"/img/assets/ntry/bitmap/jr/cparty_go_straight.png", size:24}], func:function() {
+Entry.block.jr_start_basic = {skeleton:"basic_event", color:"#3BBD70", contents:[{type:"Indicator", boxMultiplier:1, img:"/img/assets/block_icon/start_icon_play.png", highlightColor:"#3BBD70", size:17}, {type:"Text", fontSize:"9pt", text:"\uc2dc\uc791 \ubc84\ud2bc\uc744 \ub20c\ub800\uc744 \ub54c"}], func:function() {
   if (this.isContinue) {
     if (this.isAction) {
       return Entry.STATIC.CONTINUE;
@@ -12408,7 +12408,23 @@ Entry.block.jr_go_straight = {skeleton:"basic", color:"#A751E3", contents:["\uc5
     return Entry.STATIC.CONTINUE;
   }
 }};
-Entry.block.jr_turn_left = {skeleton:"pebble_basic", color:"#A751E3", contents:["\uc67c\ucabd\uc73c\ub85c \ub3cc\uae30", {type:"Indicator", img:"/img/assets/ntry/bitmap/jr/cparty_rotate_l.png", position:{x:83, y:0}, size:22}], func:function() {
+Entry.block.jr_go_straight = {skeleton:"basic", color:"#A751E3", contents:[{type:"Text", fontSize:"9pt", text:"\uc55e\uc73c\ub85c \uac00\uae30"}, {type:"Image", img:"/img/assets/ntry/bitmap/jr/cparty_go_straight.png", size:24}], func:function() {
+  if (this.isContinue) {
+    if (this.isAction) {
+      return Entry.STATIC.CONTINUE;
+    }
+    delete this.isAction;
+    delete this.isContinue;
+  } else {
+    this.isAction = this.isContinue = !0;
+    var a = this;
+    Ntry.dispatchEvent("unitAction", Ntry.STATIC.WALK, function() {
+      a.isAction = !1;
+    });
+    return Entry.STATIC.CONTINUE;
+  }
+}};
+Entry.block.jr_turn_left = {skeleton:"basic", color:"#A751E3", contents:["\uc67c\ucabd\uc73c\ub85c \ub3cc\uae30", {type:"Image", img:"/img/assets/ntry/bitmap/jr/cparty_go_straight.png", size:24}], func:function() {
   if (this.isContinue) {
     if (this.isAction) {
       return Entry.STATIC.CONTINUE;
@@ -12424,7 +12440,7 @@ Entry.block.jr_turn_left = {skeleton:"pebble_basic", color:"#A751E3", contents:[
     return Entry.STATIC.CONTINUE;
   }
 }};
-Entry.block.jr_turn_right = {skeleton:"pebble_basic", color:"#A751E3", contents:["\uc624\ub978\ucabd\uc73c\ub85c \ub3cc\uae30", {type:"Indicator", img:"/img/assets/ntry/bitmap/jr/cparty_rotate_r.png", position:{x:83, y:0}, size:22}], func:function() {
+Entry.block.jr_turn_right = {skeleton:"basic", color:"#A751E3", contents:["\uc624\ub978\ucabd\uc73c\ub85c \ub3cc\uae30", {type:"Image", img:"/img/assets/ntry/bitmap/jr/cparty_go_straight.png", size:24}], func:function() {
   if (this.isContinue) {
     if (this.isAction) {
       return Entry.STATIC.CONTINUE;
@@ -12440,7 +12456,23 @@ Entry.block.jr_turn_right = {skeleton:"pebble_basic", color:"#A751E3", contents:
     return Entry.STATIC.CONTINUE;
   }
 }};
-Entry.block.jr_go_slow = {skeleton:"pebble_basic", color:"#A751E3", contents:["\ucc9c\ucc9c\ud788 \uac00\uae30", {type:"Indicator", img:"/img/assets/ntry/bitmap/jr/cparty_rotate_r.png", position:{x:83, y:0}, size:22}], func:function() {
+Entry.block.jr_go_slow = {skeleton:"basic", color:"#A751E3", contents:["\ucc9c\ucc9c\ud788 \uac00\uae30", {type:"Image", img:"/img/assets/ntry/bitmap/jr/cparty_go_straight.png", size:24}], func:function() {
+  if (this.isContinue) {
+    if (this.isAction) {
+      return Entry.STATIC.CONTINUE;
+    }
+    delete this.isAction;
+    delete this.isContinue;
+  } else {
+    this.isAction = this.isContinue = !0;
+    var a = this;
+    Ntry.dispatchEvent("unitAction", Ntry.STATIC.GO_SLOW, function() {
+      a.isAction = !1;
+    });
+    return Entry.STATIC.CONTINUE;
+  }
+}};
+Entry.block.jr_repeat_until_dest = {skeleton:"basic_loop", color:"#498DEB", contents:[{type:"Image", img:"/img/assets/ntry/bitmap/jr/jr_goal_image.png", size:18}, "\ub9cc\ub0a0 \ub54c \uae4c\uc9c0 \ubc18\ubcf5\ud558\uae30", {type:"Image", img:"/img/assets/ntry/bitmap/jr/cparty_go_straight.png", size:24}], func:function() {
   if (this.isContinue) {
     if (this.isAction) {
       return Entry.STATIC.CONTINUE;
@@ -12610,7 +12642,13 @@ Entry.BlockView = function(a, b) {
     this.contentSvgGroup.transform("t" + a.x + " " + a.y);
     for (var a = this._schema.contents, c = 0;c < a.length;c++) {
       var d = a[c];
-      "string" === typeof d ? this._contents.push(new Entry.FieldText(d, this)) : this._contents.push(new Entry["Field" + d.type](d, this));
+      if ("string" === typeof d) {
+        var e = {};
+        e.text = d;
+        this._contents.push(new Entry.FieldText(e, this));
+      } else {
+        this._contents.push(new Entry["Field" + d.type](d, this));
+      }
     }
     this._alignContent(!1);
   };
@@ -12824,6 +12862,9 @@ Entry.BlockView = function(a, b) {
   };
   a.removeDragging = function() {
     this.svgGroup.removeClass("dragging");
+  };
+  a.getSkeleton = function() {
+    return this._skeleton;
   };
 })(Entry.BlockView.prototype);
 Entry.Code = function(a) {
@@ -13059,6 +13100,7 @@ Entry.FieldIndicator = function(a, b) {
   this.box = new Entry.BoxModel;
   this._size = a.size;
   this._imgUrl = a.img;
+  this._boxMultiplier = a.boxMultiplier || 2;
   this._highlightColor = a.highlightColor ? a.highlightColor : "#F59900";
   this._position = a.position;
   this._imgElement = this._path = this.svgGroup = null;
@@ -13071,7 +13113,7 @@ Entry.FieldIndicator = function(a, b) {
     var a = "m 0,-%s a %s,%s 0 1,1 -0.1,0 z".replace(/%s/gi, this._size);
     this._path = this.svgGroup.path(a);
     this._path.attr({stroke:"none", fill:"none"});
-    this.box.set({x:this._size, y:0, width:2 * this._size, height:2 * this._size});
+    this.box.set({x:this._size, y:0, width:this._size * this._boxMultiplier, height:this._size * this._boxMultiplier});
   };
   a.align = function(a, c, d) {
     var e = this.svgGroup;
@@ -13194,14 +13236,15 @@ Entry.DummyBlock = function(a, b) {
 Entry.FieldText = function(a, b) {
   this._block = b;
   this.box = new Entry.BoxModel;
-  this._text = a;
+  this._fontSize = a.fontSize || b.getSkeleton().fontSize || "9pt";
+  this._text = a.text;
   this.textElement = null;
   this.renderStart();
 };
 (function(a) {
   a.renderStart = function() {
     this.textElement = this._block.contentSvgGroup.text(0, 0, this._text);
-    this.textElement.attr({style:"white-space: pre; font-size: 16px", "alignment-baseline":"central", "class":"dragNone", fill:"white"});
+    this.textElement.attr({style:"white-space: pre; font-size:" + this._fontSize, "alignment-baseline":"central", "class":"dragNone", fill:"white"});
     var a = this.textElement.getBBox();
     this.box.set({x:0, y:0, width:a.width, height:a.height});
   };
@@ -13320,6 +13363,25 @@ Entry.skeleton.basic = {path:function(a) {
   return {offsetX:0, offsetY:0, width:a.contentWidth + 30, height:30, marginBottom:0};
 }, magnets:{previous:{}, next:{x:0, y:31}}, contentPos:function(a) {
   return {x:20, y:15};
+}, fontSize:"9pt"};
+Entry.skeleton.basic_event = {path:function(a) {
+  a = a.contentWidth;
+  a = Math.max(0, a);
+  return "m -4,0 m 0,-5 a 19.5,19.5 0, 0,1 16,0 c 10,5 15,5 20,5 h %w a 15,15 0 0,1 0,30 H 12 l -8,8 -8,-8 l 0,0.5 a 19.5,19.5 0, 0,1 0,-35 z".replace(/%w/gi, a - 50);
+}, box:function(a) {
+  return {offsetX:0, offsetY:0, width:a.contentWidth + 30, height:30, marginBottom:0};
+}, magnets:{previous:{}, next:{x:0, y:31}}, contentPos:function(a) {
+  return {x:5, y:13};
+}};
+Entry.skeleton.basic_loop = {path:function(a) {
+  a = Math.max(a.contentHeight, 50);
+  return "m 0,0 c 0,4 0,-4 0,0 H 0 l 8,8 8,-8 H %cw a 15,15 0 0,1 0,30 H 30 l -8,8 -8,-8 h -0.6 h0 a 0,0 0 0,0 -0,0 v 25.5 a 0,0 0 0,0 0,0 H 14 l 8,8 8,-8 H 124.07594299316406 a 8,8 0 0,1 0,16 l 0,-0.5 H 16 l -8,8 -8,-8 l 0,0.5 c 0,4 0,-4 0,0 H 0 z z".replace(/%cw/gi, 190).replace(/%ch/gi, a + 4).replace(/%cih/gi, a + -50);
+}, magnets:function() {
+  return {previous:{x:0, y:0}, next:{x:0, y:105}};
+}, box:function(a) {
+  return {offsetX:0, offsetY:0, width:124, height:Math.max(a.contentHeight, 50) + 54, marginBottom:0};
+}, contentPos:function() {
+  return {x:10, y:15};
 }};
 Entry.skeleton.pebble_event = {path:function(a) {
   return "m 0,0 a 25,25 0 0,1 9,48.3 a 9,9 0 0,1 -18,0 a 25,25 0 0,1 9,-48.3 z";
