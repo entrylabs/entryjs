@@ -84,11 +84,9 @@ Entry.BlockView = function(block, board) {
         var contents = this._schema.contents;
         for (var i = 0; i < contents.length; i++) {
             var content = contents[i];
-            if (typeof content === "string") {
-                var contentObject = {};
-                contentObject.text = content;
-                this._contents.push(new Entry.FieldText(contentObject, this));
-            } else
+            if (typeof content === "string")
+                this._contents.push(new Entry.FieldText({text: content}, this));
+            else
                 this._contents.push(
                     new Entry['Field' + content.type](content, this)
                 );

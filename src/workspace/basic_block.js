@@ -49,7 +49,6 @@ Entry.block.jr_repeat = {
         },
         {
             type: "Text",
-            fontSize: '16px',
             text: "반복"
         },
         {
@@ -79,7 +78,6 @@ Entry.block.jr_item = {
     contents: [
         {
             type: "Text",
-            fontSize: '16px',
             text: "꽃 모으기"
         },
         {
@@ -117,7 +115,6 @@ Entry.block.jr_north = {
     contents: [
         {
             type: "Text",
-            fontSize: '16px',
             text: "  위쪽"
         },
         {
@@ -173,7 +170,6 @@ Entry.block.jr_east = {
     contents: [
         {
             type: "Text",
-            fontSize: '16px',
             text: "오른쪽"
         },
         {
@@ -227,7 +223,6 @@ Entry.block.jr_south = {
     contents: [
         {
             type: "Text",
-            fontSize: '16px',
             text: "  아래쪽"
         },
         {
@@ -283,7 +278,6 @@ Entry.block.jr_west = {
     contents: [
         {
             type: "Text",
-            fontSize: '16px',
             text: "  왼쪽"
         },
         {
@@ -515,7 +509,8 @@ Entry.block.jr_repeat_until_dest = {
             type: "Statement",
             key: "STATEMENT",
             accept: "basic",
-            alignX: -4
+            alignY: 15,
+            alignX: 2
         }
     ],
     func: function() {
@@ -553,7 +548,8 @@ Entry.block.jr_if_construction = {
             type: "Statement",
             key: "STATEMENT",
             accept: "basic",
-            alignX: -4
+            alignY: 15,
+            alignX: 2
         }
     ],
     func: function() {
@@ -616,7 +612,8 @@ Entry.block.jr_if_speed = {
             type: "Statement",
             key: "STATEMENT",
             accept: "basic",
-            alignX: -4
+            alignY: 15,
+            alignX: 2
         }
     ],
     func: function()  {
@@ -655,6 +652,7 @@ Entry.block.jr_if_speed = {
         } else {
             this.executor.stepInto(this.block.values.STATEMENT);
             return Entry.STATIC.CONTINUE;
+            
         }
     }
 };

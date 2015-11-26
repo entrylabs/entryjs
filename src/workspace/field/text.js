@@ -14,7 +14,7 @@ Entry.FieldText = function(content, block) {
     var box = new Entry.BoxModel();
     this.box = box;
 
-    this._fontSize = content.fontSize || block.getSkeleton().fontSize || '9pt';
+    this._fontSize = content.fontSize || block.getSkeleton().fontSize || 12;
     this._text = content.text;
 
     this.textElement = null;
@@ -27,12 +27,14 @@ Entry.FieldText = function(content, block) {
         var that = this;
         this.textElement = this._block.contentSvgGroup.text(0, 0, this._text);
         this.textElement.attr({
-            'style': 'white-space: pre; font-size:' + that._fontSize,
-            "alignment-baseline": "central",
+            'style': 'white-space: pre; font-size:' + that._fontSize + 'px',
             "class": "dragNone",
             "fill": "white"
         });
         var bBox = this.textElement.getBBox();
+        this.textElement.attr({
+            'y': bBox.height * 0.25
+        });
         this.box.set({
             x: 0,
             y: 0,
@@ -45,7 +47,7 @@ Entry.FieldText = function(content, block) {
         if (animate !== true) animate = false;
         var elem = this.textElement;
 
-        var attr = {x: x, y: y};
+        var attr = {x: x};
 
         if (animate)
             elem.animate(
