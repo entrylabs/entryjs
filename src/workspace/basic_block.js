@@ -562,7 +562,6 @@ Entry.block.jr_if_construction = {
             size: 18
         },
         "앞에 있다면",
-        "앞에 있다면",
         {
             type: "Image",
             img: "/img/assets/week/blocks/for.png",

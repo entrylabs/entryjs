@@ -15,7 +15,7 @@ Entry.skeleton = function() {
 Entry.skeleton.basic = {
     path: function(block) {
         var width = block.contentWidth;
-        width = Math.max(0, width);
+        width = Math.max(0, width - 6);
         return "m -8,0 l 8,8 8,-8 h %w a 15,15 0 0,1 0,30 h -%w l -8,8 -8,-8 v -30 z"
             .replace(/%w/gi, width);
     },
@@ -35,7 +35,7 @@ Entry.skeleton.basic = {
     },
     contentPos: function(block) {
         // apply scale required.
-        return {x: 16 + 4, y: 15};
+        return {x: 14, y: 15};
     }
 
 };
@@ -46,7 +46,7 @@ Entry.skeleton.basic_event = {
         width = Math.max(0, width);
         return ("m -8,0 m 0,-5 a 19.5,19.5 0, 0,1 16,0 c 10,5 15,5 20,5 h %w " +
             "a 15,15 0 0,1 0,30 H 8 l -8,8 -8,-8 l 0,0.5 a 19.5,19.5 0, 0,1 0,-35 z")
-            .replace(/%w/gi, width - 40);
+            .replace(/%w/gi, width - 30);
     },
     box: function(block) {
         return {
@@ -69,12 +69,11 @@ Entry.skeleton.basic_event = {
 
 Entry.skeleton.basic_loop = {
     path: function(block) {
-        var contentWidth = 124;
+        var contentWidth = Math.max(0, block.contentWidth - 31);
         var contentHeight = Math.max(block.contentHeight, 25);
         return ("m -8,0 l 8,8 8,-8 h %cw a 15,15 0 0,1 0,30 H 24 l -8,8 -8,-8 v %ch l 8,8 8,-8 h %cw h -8 a 8,8 0 0,1 0,16 H 8 l -8,8 -8,-8 z")
-            .replace(/%cw/gi, contentWidth + 36)
-            .replace(/%ch/gi, contentHeight)
-            .replace(/%cih/gi, contentHeight + -50);
+            .replace(/%cw/gi, contentWidth)
+            .replace(/%ch/gi, contentHeight);
     },
     magnets: function() {
         var contentWidth = 124;
@@ -97,7 +96,7 @@ Entry.skeleton.basic_loop = {
     },
     contentPos: function() {
         // apply scale required.
-        return {x: 20, y: 15};
+        return {x: 14, y: 15};
     }
 };
 
@@ -136,7 +135,7 @@ Entry.skeleton.pebble_loop = {
             "h 28 a 25,25 0 0,0 25,-25 v -%cih a 25,25 0 0,0 -25,-25 h -28 a 9,9 0 0,1 -9,9 z")
             .replace(/%cw/gi, contentWidth/2 - 21)
             .replace(/%ch/gi, contentHeight + 4)
-            .replace(/%cih/gi, contentHeight + -50);
+            .replace(/%cih/gi, contentHeight - 50);
     },
     magnets: function() {
         var contentWidth = 124;
