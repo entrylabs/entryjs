@@ -40,7 +40,7 @@ goog.require('goog.userAgent');
  */
 Blockly.FieldIcon = function(src, opt_alt, type) {
   this.sourceBlock_ = null;
-  this.type = type ? type : "end";
+  this.type = type ? type : "endOrigin";
   if (this.type == "end") {
     // Ensure height and width are numbers.  Strings are bad at math.
     var height = 24;

@@ -77,7 +77,6 @@ Blockly.FieldKeydownInput.createDom = function() {
       }, svgGroup);
   helpImg.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href',
       url);
-      //Blockly.pathToBlockly + url);
 
   Blockly.FieldKeydownInput.helperSvgGroup_ = svgGroup;
   return svgGroup;
@@ -231,7 +230,8 @@ fkip.resizeEditor_ = function() {
   var div = Blockly.WidgetDiv.DIV;
   var bBox = this.fieldGroup_.getBBox();
   div.style.width = bBox.width + 'px';
-  var xy = Blockly.getAbsoluteXY_(/** @type {!Element} */ (this.borderRect_));
+  var xy = Blockly.getAbsoluteXY_(/** @type {!Element} */ (this.borderRect_),
+                                 this.sourceBlock_.workspace.svgGroup_.parentNode);
   // In RTL mode block fields and LTR input fields the left edge moves,
   // whereas the right edge is fixed.  Reposition the editor.
   if (Blockly.RTL) {
