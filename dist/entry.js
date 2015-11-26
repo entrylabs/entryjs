@@ -12238,7 +12238,7 @@ Entry.block.jr_start = {skeleton:"pebble_event", event:"start", color:"#3BBD70",
   }
   Ntry.unitComp = Ntry.entityManager.getComponent(this._unit.id, Ntry.STATIC.UNIT);
 }};
-Entry.block.jr_repeat = {skeleton:"pebble_loop", color:"#127CDB", contents:[{type:"Dropdown", key:"REPEAT", options:[1, 2, 3, 4, 5, 6, 7, 8, 9, 10], value:1}, {type:"Text", fontSize:"16px", text:"\ubc18\ubcf5"}, {type:"Statement", key:"STATEMENT", accept:"pebble_basic"}], func:function() {
+Entry.block.jr_repeat = {skeleton:"pebble_loop", color:"#127CDB", contents:[{type:"Dropdown", key:"REPEAT", options:[1, 2, 3, 4, 5, 6, 7, 8, 9, 10], value:1}, {type:"Text", text:"\ubc18\ubcf5"}, {type:"Statement", key:"STATEMENT", accept:"pebble_basic"}], func:function() {
   if (void 0 === this.repeatCount) {
     return this.repeatCount = this.block.values.REPEAT, Entry.STATIC.CONTINUE;
   }
@@ -12247,7 +12247,7 @@ Entry.block.jr_repeat = {skeleton:"pebble_loop", color:"#127CDB", contents:[{typ
   }
   delete this.repeatCount;
 }};
-Entry.block.jr_item = {skeleton:"pebble_basic", color:"#F46C6C", contents:[{type:"Text", fontSize:"16px", text:"\uaf43 \ubaa8\uc73c\uae30"}, {type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_item_image.png", highlightColor:"#FFF", position:{x:83, y:0}, size:22}], func:function() {
+Entry.block.jr_item = {skeleton:"pebble_basic", color:"#F46C6C", contents:[{type:"Text", text:"\uaf43 \ubaa8\uc73c\uae30"}, {type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_item_image.png", highlightColor:"#FFF", position:{x:83, y:0}, size:22}], func:function() {
   if (this.isContinue) {
     if (this.isAction) {
       return Entry.STATIC.CONTINUE;
@@ -12264,7 +12264,7 @@ Entry.block.jr_item = {skeleton:"pebble_basic", color:"#F46C6C", contents:[{type
     return Entry.STATIC.CONTINUE;
   }
 }};
-Entry.block.jr_north = {skeleton:"pebble_basic", color:"#A751E3", contents:[{type:"Text", fontSize:"16px", text:"  \uc704\ucabd"}, {type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_up_image.png", position:{x:83, y:0}, size:22}], func:function() {
+Entry.block.jr_north = {skeleton:"pebble_basic", color:"#A751E3", contents:[{type:"Text", text:"  \uc704\ucabd"}, {type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_up_image.png", position:{x:83, y:0}, size:22}], func:function() {
   if (this.isContinue) {
     if (this.isAction) {
       return Entry.STATIC.CONTINUE;
@@ -12296,7 +12296,7 @@ Entry.block.jr_north = {skeleton:"pebble_basic", color:"#A751E3", contents:[{typ
     return Entry.STATIC.CONTINUE;
   }
 }};
-Entry.block.jr_east = {skeleton:"pebble_basic", color:"#A751E3", contents:[{type:"Text", fontSize:"16px", text:"\uc624\ub978\ucabd"}, {type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_right_image.png", position:{x:83, y:0}, size:22}], func:function() {
+Entry.block.jr_east = {skeleton:"pebble_basic", color:"#A751E3", contents:[{type:"Text", text:"\uc624\ub978\ucabd"}, {type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_right_image.png", position:{x:83, y:0}, size:22}], func:function() {
   if (this.isContinue) {
     if (this.isAction) {
       return Entry.STATIC.CONTINUE;
@@ -12328,7 +12328,7 @@ Entry.block.jr_east = {skeleton:"pebble_basic", color:"#A751E3", contents:[{type
     return Entry.STATIC.CONTINUE;
   }
 }};
-Entry.block.jr_south = {skeleton:"pebble_basic", color:"#A751E3", contents:[{type:"Text", fontSize:"16px", text:"  \uc544\ub798\ucabd"}, {type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_down_image.png", position:{x:83, y:0}, size:22}], func:function() {
+Entry.block.jr_south = {skeleton:"pebble_basic", color:"#A751E3", contents:[{type:"Text", text:"  \uc544\ub798\ucabd"}, {type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_down_image.png", position:{x:83, y:0}, size:22}], func:function() {
   if (this.isContinue) {
     if (this.isAction) {
       return Entry.STATIC.CONTINUE;
@@ -12360,7 +12360,7 @@ Entry.block.jr_south = {skeleton:"pebble_basic", color:"#A751E3", contents:[{typ
     return Entry.STATIC.CONTINUE;
   }
 }};
-Entry.block.jr_west = {skeleton:"pebble_basic", color:"#A751E3", contents:[{type:"Text", fontSize:"16px", text:"  \uc67c\ucabd"}, {type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_left_image.png", position:{x:83, y:0}, size:22}], func:function() {
+Entry.block.jr_west = {skeleton:"pebble_basic", color:"#A751E3", contents:[{type:"Text", text:"  \uc67c\ucabd"}, {type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_left_image.png", position:{x:83, y:0}, size:22}], func:function() {
   if (this.isContinue) {
     if (this.isAction) {
       return Entry.STATIC.CONTINUE;
@@ -13267,7 +13267,7 @@ Entry.DummyBlock = function(a, b) {
 Entry.FieldText = function(a, b) {
   this._block = b;
   this.box = new Entry.BoxModel;
-  this._fontSize = a.fontSize || b.getSkeleton().fontSize || "9pt";
+  this._fontSize = a.fontSize || b.getSkeleton().fontSize || 12;
   this._text = a.text;
   this.textElement = null;
   this.renderStart();
@@ -13275,13 +13275,14 @@ Entry.FieldText = function(a, b) {
 (function(a) {
   a.renderStart = function() {
     this.textElement = this._block.contentSvgGroup.text(0, 0, this._text);
-    this.textElement.attr({style:"white-space: pre; font-size:" + this._fontSize, "alignment-baseline":"central", "class":"dragNone", fill:"white"});
+    this.textElement.attr({style:"white-space: pre; font-size:" + this._fontSize + "px", "class":"dragNone", fill:"white"});
     var a = this.textElement.getBBox();
+    this.textElement.attr({y:.25 * a.height});
     this.box.set({x:0, y:0, width:this.textElement.node.getComputedTextLength(), height:a.height});
   };
   a.align = function(a, c, d) {
     !0 !== d && (d = !1);
-    var e = this.textElement, f = {x:a, y:c};
+    var e = this.textElement, f = {x:a};
     d ? e.animate(f, 300, mina.easeinout) : e.attr(f);
     this.box.set({x:a, width:this.textElement.node.getComputedTextLength(), y:c});
   };
@@ -13423,7 +13424,7 @@ Entry.skeleton.pebble_event = {path:function(a) {
 }, contentPos:function() {
   return {x:0, y:25};
 }};
-Entry.skeleton.pebble_loop = {path:function(a) {
+Entry.skeleton.pebble_loop = {fontSize:16, path:function(a) {
   a = Math.max(a.contentHeight, 50);
   return "M 0,9 a 9,9 0 0,0 9,-9 h %cw q 25,0 25,25 v %ch q 0,25 -25,25 h -%cw a 9,9 0 0,1 -18,0 h -%cw q -25,0 -25,-25 v -%ch q 0,-25 25,-25 h %cw a 9,9 0 0,0 9,9 M 0,49 a 9,9 0 0,1 -9,-9 h -28 a 25,25 0 0,0 -25,25 v %cih a 25,25 0 0,0 25,25 h 28 a 9,9 0 0,0 18,0 h 28 a 25,25 0 0,0 25,-25 v -%cih a 25,25 0 0,0 -25,-25 h -28 a 9,9 0 0,1 -9,9 z".replace(/%cw/gi, 41).replace(/%ch/gi, a + 4).replace(/%cih/gi, a - 50);
 }, magnets:function() {
@@ -13433,7 +13434,7 @@ Entry.skeleton.pebble_loop = {path:function(a) {
 }, contentPos:function() {
   return {x:-46, y:25};
 }};
-Entry.skeleton.pebble_basic = {morph:["prev", "next"], path:function(a) {
+Entry.skeleton.pebble_basic = {fontSize:16, morph:["prev", "next"], path:function(a) {
   var b = a.block;
   a = b.prev && "pebble_basic" === b.prev._schema.skeleton;
   b = b.next && "pebble_basic" === b.next._schema.skeleton;

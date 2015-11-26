@@ -49,7 +49,6 @@ Entry.block.jr_repeat = {
         },
         {
             type: "Text",
-            fontSize: '16px',
             text: "반복"
         },
         {
@@ -79,7 +78,6 @@ Entry.block.jr_item = {
     contents: [
         {
             type: "Text",
-            fontSize: '16px',
             text: "꽃 모으기"
         },
         {
@@ -117,7 +115,6 @@ Entry.block.jr_north = {
     contents: [
         {
             type: "Text",
-            fontSize: '16px',
             text: "  위쪽"
         },
         {
@@ -173,7 +170,6 @@ Entry.block.jr_east = {
     contents: [
         {
             type: "Text",
-            fontSize: '16px',
             text: "오른쪽"
         },
         {
@@ -227,7 +223,6 @@ Entry.block.jr_south = {
     contents: [
         {
             type: "Text",
-            fontSize: '16px',
             text: "  아래쪽"
         },
         {
@@ -283,7 +278,6 @@ Entry.block.jr_west = {
     contents: [
         {
             type: "Text",
-            fontSize: '16px',
             text: "  왼쪽"
         },
         {
