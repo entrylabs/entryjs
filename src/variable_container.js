@@ -862,10 +862,13 @@ Entry.VariableContainer.prototype.addVariable = function(variable) {
         this.resetVariableAddPanel('variable');
     }
     var variable = new Entry.Variable(variable);
-    Entry.stateManager.addCommand("add variable",
-                                  this,
-                                  this.removeVariable,
-                                  variable);
+    if (Entry.stateManager)
+        Entry.stateManager.addCommand(
+            "add variable",
+            this,
+            this.removeVariable,
+            variable
+        );
     variable.generateView(this.variables_.length);
     this.createVariableView(variable);
     this.variables_.unshift(variable);
@@ -885,10 +888,13 @@ Entry.VariableContainer.prototype.addVariable = function(variable) {
 Entry.VariableContainer.prototype.removeVariable = function(variable) {
     var index = this.variables_.indexOf(variable);
     var variableJSON = variable.toJSON();
-    Entry.stateManager.addCommand("remove variable",
-                                  this,
-                                  this.addVariable,
-                                  variableJSON);
+    if (Entry.stateManager)
+        Entry.stateManager.addCommand(
+            "remove variable",
+            this,
+            this.addVariable,
+            variableJSON
+        );
     if (this.selected == variable)
         this.select(null);
     variable.remove();
@@ -961,10 +967,13 @@ Entry.VariableContainer.prototype.changeListName = function(list, name) {
 Entry.VariableContainer.prototype.removeList = function(list) {
     var index = this.lists_.indexOf(list);
     var listJSON = list.toJSON();
-    Entry.stateManager.addCommand("remove list",
-                                  this,
-                                  this.addList,
-                                  listJSON);
+    if (Entry.stateManager)
+        Entry.stateManager.addCommand(
+            "remove list",
+            this,
+            this.addList,
+            listJSON
+        );
     if (this.selected == list)
         this.select(null);
     list.remove();
@@ -1069,10 +1078,13 @@ Entry.VariableContainer.prototype.createVariableView = function(variable) {
 Entry.VariableContainer.prototype.addMessage = function(message) {
     if (!message.id)
         message.id = Entry.generateHash();
-    Entry.stateManager.addCommand("add message",
-                                  this,
-                                  this.removeMessage,
-                                  message);
+    if (Entry.stateManager)
+        Entry.stateManager.addCommand(
+            "add message",
+            this,
+            this.removeMessage,
+            message
+        );
     this.createMessageView(message);
     this.messages_.unshift(message);
     Entry.playground.reloadPlayground();
@@ -1090,10 +1102,13 @@ Entry.VariableContainer.prototype.addMessage = function(message) {
 Entry.VariableContainer.prototype.removeMessage = function(message) {
     if (this.selected == message)
         this.select(null);
-    Entry.stateManager.addCommand("remove message",
-                                  this,
-                                  this.addMessage,
-                                  message);
+    if (Entry.stateManager)
+        Entry.stateManager.addCommand(
+            "remove message",
+            this,
+            this.addMessage,
+            message
+        );
     var index = this.messages_.indexOf(message);
     this.messages_.splice(index, 1);
     this.updateList();
@@ -1224,10 +1239,13 @@ Entry.VariableContainer.prototype.addList = function(list) {
         this.resetVariableAddPanel('list');
     }
     var list = new Entry.Variable(list);
-    Entry.stateManager.addCommand("add list",
-                                  this,
-                                  this.removeList,
-                                  list);
+    if (Entry.stateManager)
+        Entry.stateManager.addCommand(
+            "add list",
+            this,
+            this.removeList,
+            list
+        );
     list.generateView(this.lists_.length);
     this.createListView(list);
     this.lists_.unshift(list);

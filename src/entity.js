@@ -131,11 +131,13 @@ Entry.EntityObject.prototype.initCommand = function() {
     if (!Entry.engine.isState('stop'))
         return;
     this.isCommandValid = false;
-    Entry.stateManager.addCommand("edit entity",
-                                  this,
-                                  this.restoreEntity,
-                                  this.toJSON()
-                                 );
+    if (Entry.stateManager)
+        Entry.stateManager.addCommand(
+            "edit entity",
+            this,
+            this.restoreEntity,
+            this.toJSON()
+        );
 };
 
 Entry.EntityObject.prototype.doCommand = function() {
@@ -156,10 +158,13 @@ Entry.EntityObject.prototype.restoreEntity = function(entityModel) {
     var currentModel = this.toJSON();
     this.syncModel_(entityModel);
     Entry.dispatchEvent('updateObject');
-    Entry.stateManager.addCommand("restore object",
-                                 this,
-                                 this.restoreEntity,
-                                 currentModel);
+    if (Entry.stateManager)
+        Entry.stateManager.addCommand(
+            "restore object",
+            this,
+            this.restoreEntity,
+            currentModel
+        );
 };
 
 /**

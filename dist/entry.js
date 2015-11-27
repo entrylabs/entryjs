@@ -4733,7 +4733,7 @@ Entry.Container.prototype.setObjects = function(a) {
 Entry.Container.prototype.addObject = function(a, b) {
   var c = new Entry.EntryObject(a);
   c.name = Entry.getOrderedName(c.name, this.objects_);
-  Entry.stateManager.addCommand("add object", this, this.removeObject, c);
+  Entry.stateManager && Entry.stateManager.addCommand("add object", this, this.removeObject, c);
   c.scene || (c.scene = Entry.scene.selectedScene);
   "number" == typeof b ? a.sprite.category && "background" == a.sprite.category.main ? (c.setLock(!0), this.objects_.push(c)) : this.objects_.splice(b, 0, c) : a.sprite.category && "background" == a.sprite.category.main ? this.objects_.push(c) : this.objects_.unshift(c);
   c.generateView();
@@ -4760,7 +4760,7 @@ Entry.Container.prototype.addCloneObject = function(a, b) {
 };
 Entry.Container.prototype.removeObject = function(a) {
   var b = this.objects_.indexOf(a), c = a.toJSON();
-  Entry.stateManager.addCommand("remove object", this, this.addObject, c, b);
+  Entry.stateManager && Entry.stateManager.addCommand("remove object", this, this.addObject, c, b);
   c = new Entry.State(this.addObject, c, b);
   a.destroy();
   this.objects_.splice(b, 1);
@@ -4813,7 +4813,7 @@ Entry.Container.prototype.moveElement = function(a, b, c) {
   d = this.getCurrentObjects();
   a = this.getAllObjects().indexOf(d[a]);
   b = this.getAllObjects().indexOf(d[b]);
-  c || Entry.stateManager.addCommand("reorder object", Entry.container, Entry.container.moveElement, b, a, !0);
+  !c && Entry.stateManager && Entry.stateManager.addCommand("reorder object", Entry.container, Entry.container.moveElement, b, a, !0);
   this.objects_.splice(b, 0, this.objects_.splice(a, 1)[0]);
   this.setCurrentObjects();
   Entry.container.updateListView();
@@ -5805,7 +5805,7 @@ Entry.EntityObject.prototype.syncModel_ = function(a) {
   this.setVisible(a.visible);
 };
 Entry.EntityObject.prototype.initCommand = function() {
-  Entry.engine.isState("stop") && (this.isCommandValid = !1, Entry.stateManager.addCommand("edit entity", this, this.restoreEntity, this.toJSON()));
+  Entry.engine.isState("stop") && (this.isCommandValid = !1, Entry.stateManager && Entry.stateManager.addCommand("edit entity", this, this.restoreEntity, this.toJSON()));
 };
 Entry.EntityObject.prototype.doCommand = function() {
   this.isCommandValid = !0;
@@ -5817,7 +5817,7 @@ Entry.EntityObject.prototype.restoreEntity = function(a) {
   var b = this.toJSON();
   this.syncModel_(a);
   Entry.dispatchEvent("updateObject");
-  Entry.stateManager.addCommand("restore object", this, this.restoreEntity, b);
+  Entry.stateManager && Entry.stateManager.addCommand("restore object", this, this.restoreEntity, b);
 };
 Entry.EntityObject.prototype.clearScript = function(a) {
   for (;this.runningScript.length;) {
@@ -7014,7 +7014,7 @@ Entry.EntryObject.prototype.select = function(a) {
   console.log(this);
 };
 Entry.EntryObject.prototype.addPicture = function(a, b) {
-  Entry.stateManager.addCommand("add sprite", this, this.removePicture, a.id);
+  Entry.stateManager && Entry.stateManager.addCommand("add sprite", this, this.removePicture, a.id);
   b || 0 === b ? (this.pictures.splice(b, 0, a), Entry.playground.injectPicture(this)) : this.pictures.push(a);
   return new Entry.State(this, this.removePicture, a.id);
 };
@@ -7024,7 +7024,7 @@ Entry.EntryObject.prototype.removePicture = function(a) {
   }
   a = this.getPicture(a);
   var b = this.pictures.indexOf(a);
-  Entry.stateManager.addCommand("remove sprite", this, this.addPicture, a, b);
+  Entry.stateManager && Entry.stateManager.addCommand("remove sprite", this, this.addPicture, a, b);
   this.pictures.splice(b, 1);
   a === this.selectedPicture && Entry.playground.selectPicture(this.pictures[0]);
   Entry.playground.injectPicture(this);
@@ -7078,7 +7078,7 @@ Entry.EntryObject.prototype.selectPicture = function(a) {
 };
 Entry.EntryObject.prototype.addSound = function(a, b) {
   a.id || (a.id = Entry.generateHash());
-  Entry.stateManager.addCommand("add sound", this, this.removeSound, a.id);
+  Entry.stateManager && Entry.stateManager.addCommand("add sound", this, this.removeSound, a.id);
   Entry.initSound(a, b);
   b || 0 === b ? (this.sounds.splice(b, 0, a), Entry.playground.injectSound(this)) : this.sounds.push(a);
   return new Entry.State(this, this.removeSound, a.id);
@@ -7087,7 +7087,7 @@ Entry.EntryObject.prototype.removeSound = function(a) {
   var b;
   b = this.getSound(a);
   a = this.sounds.indexOf(b);
-  Entry.stateManager.addCommand("remove sound", this, this.addSound, b, a);
+  Entry.stateManager && Entry.stateManager.addCommand("remove sound", this, this.addSound, b, a);
   this.sounds.splice(a, 1);
   Entry.playground.reloadPlayground();
   Entry.playground.injectSound(this);
@@ -7604,7 +7604,7 @@ Entry.Painter.prototype.initCommand = function() {
   (a || b) && this.stage.update();
   this.isCommandValid = !1;
   this.colorLayerModel = this.ctx.getImageData(0, 0, this.canvas.width, this.canvas.height);
-  Entry.stateManager.addCommand("edit sprite", this, this.restorePainter, this.colorLayerModel);
+  Entry.stateManager && Entry.stateManager.addCommand("edit sprite", this, this.restorePainter, this.colorLayerModel);
   a && (this.handle.visible = !0);
   b && (this.coordinator.visible = !0);
   (a || b) && this.stage.update();
@@ -7628,7 +7628,7 @@ Entry.Painter.prototype.restorePainter = function(a) {
     c.objectContainer.removeAllChildren();
     c.objectContainer.addChild(a);
   };
-  Entry.stateManager.addCommand("restore sprite", this, this.restorePainter, b);
+  Entry.stateManager && Entry.stateManager.addCommand("restore sprite", this, this.restorePainter, b);
 };
 Entry.Painter.prototype.platten = function() {
   this.colorLayerData = this.ctx.getImageData(0, 0, this.canvas.width, this.canvas.height);
@@ -9141,7 +9141,7 @@ Entry.Playground.prototype.syncObject = function(a) {
 };
 Entry.Playground.prototype.editBlock = function() {
   var a = Entry.playground;
-  Entry.stateManager.addCommand("edit block", a, a.restoreBlock, a.object, a.object.getScriptText());
+  Entry.stateManager && Entry.stateManager.addCommand("edit block", a, a.restoreBlock, a.object, a.object.getScriptText());
 };
 Entry.Playground.prototype.mouseupBlock = function() {
   if (Entry.reporter) {
@@ -9151,7 +9151,7 @@ Entry.Playground.prototype.mouseupBlock = function() {
 };
 Entry.Playground.prototype.restoreBlock = function(a, b) {
   Entry.container.selectObject(a.id);
-  Entry.stateManager.addCommand("restore block", this, this.restoreBlock, this.object, this.object.getScriptText());
+  Entry.stateManager && Entry.stateManager.addCommand("restore block", this, this.restoreBlock, this.object, this.object.getScriptText());
   var c = Blockly.Xml.textToDom(b);
   Blockly.mainWorkspace.clear();
   Blockly.Xml.domToWorkspace(Blockly.mainWorkspace, c);
@@ -11883,7 +11883,7 @@ Entry.VariableContainer.prototype.addVariable = function(a) {
     this.resetVariableAddPanel("variable");
   }
   a = new Entry.Variable(a);
-  Entry.stateManager.addCommand("add variable", this, this.removeVariable, a);
+  Entry.stateManager && Entry.stateManager.addCommand("add variable", this, this.removeVariable, a);
   a.generateView(this.variables_.length);
   this.createVariableView(a);
   this.variables_.unshift(a);
@@ -11894,7 +11894,7 @@ Entry.VariableContainer.prototype.addVariable = function(a) {
 };
 Entry.VariableContainer.prototype.removeVariable = function(a) {
   var b = this.variables_.indexOf(a), c = a.toJSON();
-  Entry.stateManager.addCommand("remove variable", this, this.addVariable, c);
+  Entry.stateManager && Entry.stateManager.addCommand("remove variable", this, this.addVariable, c);
   this.selected == a && this.select(null);
   a.remove();
   this.variables_.splice(b, 1);
@@ -11910,7 +11910,7 @@ Entry.VariableContainer.prototype.changeListName = function(a, b) {
 };
 Entry.VariableContainer.prototype.removeList = function(a) {
   var b = this.lists_.indexOf(a), c = a.toJSON();
-  Entry.stateManager.addCommand("remove list", this, this.addList, c);
+  Entry.stateManager && Entry.stateManager.addCommand("remove list", this, this.addList, c);
   this.selected == a && this.select(null);
   a.remove();
   this.lists_.splice(b, 1);
@@ -11980,7 +11980,7 @@ Entry.VariableContainer.prototype.createVariableView = function(a) {
 };
 Entry.VariableContainer.prototype.addMessage = function(a) {
   a.id || (a.id = Entry.generateHash());
-  Entry.stateManager.addCommand("add message", this, this.removeMessage, a);
+  Entry.stateManager && Entry.stateManager.addCommand("add message", this, this.removeMessage, a);
   this.createMessageView(a);
   this.messages_.unshift(a);
   Entry.playground.reloadPlayground();
@@ -11990,7 +11990,7 @@ Entry.VariableContainer.prototype.addMessage = function(a) {
 };
 Entry.VariableContainer.prototype.removeMessage = function(a) {
   this.selected == a && this.select(null);
-  Entry.stateManager.addCommand("remove message", this, this.addMessage, a);
+  Entry.stateManager && Entry.stateManager.addCommand("remove message", this, this.addMessage, a);
   var b = this.messages_.indexOf(a);
   this.messages_.splice(b, 1);
   this.updateList();
@@ -12062,7 +12062,7 @@ Entry.VariableContainer.prototype.addList = function(a) {
     this.resetVariableAddPanel("list");
   }
   a = new Entry.Variable(a);
-  Entry.stateManager.addCommand("add list", this, this.removeList, a);
+  Entry.stateManager && Entry.stateManager.addCommand("add list", this, this.removeList, a);
   a.generateView(this.lists_.length);
   this.createListView(a);
   this.lists_.unshift(a);
