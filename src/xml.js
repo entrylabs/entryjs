@@ -33,7 +33,7 @@ Entry.Xml.getParentLoop = function(script) {
             return null;
         script = script.parentNode;
         if (script && script.tagName.toUpperCase() == "STATEMENT") {
-            return script.parentNode
+            return script.parentNode;
         } else if (script) {
             script = script.parentNode;
         } else {
@@ -61,7 +61,7 @@ Entry.Xml.getParentIterateLoop = function(script) {
 Entry.Xml.getParentBlock = function(script) {
     var parent = script.parentNode;
     if (parent) {
-        return parent.parentNode
+        return parent.parentNode;
     }
     return null;
 };

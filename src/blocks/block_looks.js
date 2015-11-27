@@ -6,7 +6,7 @@ Blockly.Blocks.show = {
     this.setColour("#EC4466");
     this.appendDummyInput()
         .appendField(Lang.Blocks.LOOKS_show)
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/looks_03.png', '*'));
+        .appendField(new Blockly.FieldIcon(Entry.mediaFilePath + 'block_icon/looks_03.png', '*'));
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
@@ -24,7 +24,7 @@ Blockly.Blocks.hide = {
     this.setColour("#EC4466");
     this.appendDummyInput()
         .appendField(Lang.Blocks.LOOKS_hide)
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/looks_03.png', '*'));
+        .appendField(new Blockly.FieldIcon(Entry.mediaFilePath + 'block_icon/looks_03.png', '*'));
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
@@ -56,7 +56,7 @@ Blockly.Blocks.dialog_time = {
         ]), "OPTION");
     this.appendDummyInput()
         .appendField(Lang.Blocks.LOOKS_dialog_time_4)
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/looks_03.png', '*'));
+        .appendField(new Blockly.FieldIcon(Entry.mediaFilePath + 'block_icon/looks_03.png', '*'));
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
@@ -103,7 +103,7 @@ Blockly.Blocks.dialog = {
         ]), "OPTION");
     this.appendDummyInput()
         .appendField(Lang.Blocks.LOOKS_dialog_3)
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/looks_03.png', '*'));
+        .appendField(new Blockly.FieldIcon(Entry.mediaFilePath + 'block_icon/looks_03.png', '*'));
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
@@ -127,7 +127,7 @@ Blockly.Blocks.remove_dialog = {
     this.setColour("#EC4466");
     this.appendDummyInput()
         .appendField(Lang.Blocks.LOOKS_remove_dialog)
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/looks_03.png', '*'));
+        .appendField(new Blockly.FieldIcon(Entry.mediaFilePath + 'block_icon/looks_03.png', '*'));
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
@@ -149,7 +149,7 @@ Blockly.Blocks.change_to_nth_shape = {
         .appendField(new Blockly.FieldDropdownDynamic("pictures"), "VALUE");
     this.appendDummyInput()
         .appendField(Lang.Blocks.LOOKS_change_to_nth_shape_2)
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/looks_03.png', '*'));
+        .appendField(new Blockly.FieldIcon(Entry.mediaFilePath + 'block_icon/looks_03.png', '*'));
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
@@ -169,7 +169,7 @@ Blockly.Blocks.change_to_next_shape = {
     this.setColour("#EC4466");
     this.appendDummyInput()
         .appendField(Lang.Blocks.LOOKS_change_to_next_shape)
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/looks_03.png', '*'));
+        .appendField(new Blockly.FieldIcon(Entry.mediaFilePath + 'block_icon/looks_03.png', '*'));
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
@@ -200,7 +200,7 @@ Blockly.Blocks.set_effect_volume = {
         .setCheck(["Number", "String"]);
     this.appendDummyInput()
         .appendField(Lang.Blocks.LOOKS_set_effect_volume_3)
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/looks_03.png', '*'));
+        .appendField(new Blockly.FieldIcon(Entry.mediaFilePath + 'block_icon/looks_03.png', '*'));
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
@@ -245,7 +245,7 @@ Blockly.Blocks.set_effect = {
         .setCheck(["Number", "String"]);
     this.appendDummyInput()
         .appendField(Lang.Blocks.LOOKS_set_effect_3)
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/looks_03.png', '*'));
+        .appendField(new Blockly.FieldIcon(Entry.mediaFilePath + 'block_icon/looks_03.png', '*'));
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
@@ -277,7 +277,7 @@ Blockly.Blocks.erase_all_effects = {
     this.setColour("#EC4466");
     this.appendDummyInput()
         .appendField(Lang.Blocks.LOOKS_erase_all_effects)
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/looks_03.png', '*'));
+        .appendField(new Blockly.FieldIcon(Entry.mediaFilePath + 'block_icon/looks_03.png', '*'));
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
@@ -299,7 +299,7 @@ Blockly.Blocks.change_scale_percent = {
         .setCheck(["Number", "String"]);
     this.appendDummyInput()
         .appendField(Lang.Blocks.LOOKS_change_scale_percent_2)
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/looks_03.png', '*'));
+        .appendField(new Blockly.FieldIcon(Entry.mediaFilePath + 'block_icon/looks_03.png', '*'));
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
@@ -323,7 +323,7 @@ Blockly.Blocks.set_scale_percent = {
         .setCheck(["Number", "String"]);
     this.appendDummyInput()
         .appendField(Lang.Blocks.LOOKS_set_scale_percent_2)
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/looks_03.png', '*'));
+        .appendField(new Blockly.FieldIcon(Entry.mediaFilePath + 'block_icon/looks_03.png', '*'));
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
@@ -348,7 +348,7 @@ Blockly.Blocks.change_scale_size = {
         .setCheck(["Number", "String"]);
     this.appendDummyInput()
         .appendField(Lang.Blocks.LOOKS_change_scale_percent_2)
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/looks_03.png', '*'));
+        .appendField(new Blockly.FieldIcon(Entry.mediaFilePath + 'block_icon/looks_03.png', '*'));
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
@@ -371,7 +371,7 @@ Blockly.Blocks.set_scale_size = {
         .setCheck(["Number", "String"]);
     this.appendDummyInput()
         .appendField(Lang.Blocks.LOOKS_set_scale_percent_2)
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/looks_03.png', '*'));
+        .appendField(new Blockly.FieldIcon(Entry.mediaFilePath + 'block_icon/looks_03.png', '*'));
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
@@ -391,7 +391,7 @@ Blockly.Blocks.flip_y = {
     this.setColour("#EC4466");
     this.appendDummyInput()
         .appendField(Lang.Blocks.LOOKS_flip_y)
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/looks_03.png', '*'));
+        .appendField(new Blockly.FieldIcon(Entry.mediaFilePath + 'block_icon/looks_03.png', '*'));
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
@@ -408,7 +408,7 @@ Blockly.Blocks.flip_x = {
     this.setColour("#EC4466");
     this.appendDummyInput()
         .appendField(Lang.Blocks.LOOKS_flip_x)
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/looks_03.png', '*'));
+        .appendField(new Blockly.FieldIcon(Entry.mediaFilePath + 'block_icon/looks_03.png', '*'));
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
@@ -429,7 +429,7 @@ Blockly.Blocks.set_object_order = {
         .appendField(new Blockly.FieldDropdownDynamic("objectSequence"), "VALUE");
     this.appendDummyInput()
         .appendField(Lang.Blocks.LOOKS_set_object_order_2)
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/looks_03.png', '*'));
+        .appendField(new Blockly.FieldIcon(Entry.mediaFilePath + 'block_icon/looks_03.png', '*'));
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
@@ -475,7 +475,7 @@ Blockly.Blocks.change_to_some_shape = {
         .setCheck(["String", "Number"]);
     this.appendDummyInput()
         .appendField(Lang.Blocks.LOOKS_change_to_nth_shape_2)
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/looks_03.png', '*'));
+        .appendField(new Blockly.FieldIcon(Entry.mediaFilePath + 'block_icon/looks_03.png', '*'));
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
@@ -509,7 +509,7 @@ Blockly.Blocks.add_effect_amount = {
             .setCheck(["Number", "String"]);
         this.appendDummyInput()
             .appendField(Lang.Blocks.LOOKS_set_effect_volume_3)
-            .appendField(new Blockly.FieldIcon('/img/assets/block_icon/looks_03.png', '*'));
+            .appendField(new Blockly.FieldIcon(Entry.mediaFilePath + 'block_icon/looks_03.png', '*'));
         this.setInputsInline(true);
         this.setPreviousStatement(true);
         this.setNextStatement(true);
@@ -548,7 +548,7 @@ Blockly.Blocks.change_effect_amount = {
             .setCheck(["Number", "String"]);
         this.appendDummyInput()
             .appendField(Lang.Blocks.LOOKS_set_effect_3)
-            .appendField(new Blockly.FieldIcon('/img/assets/block_icon/looks_03.png', '*'));
+            .appendField(new Blockly.FieldIcon(Entry.mediaFilePath + 'block_icon/looks_03.png', '*'));
         this.setInputsInline(true);
         this.setPreviousStatement(true);
         this.setNextStatement(true);
@@ -588,7 +588,7 @@ Blockly.Blocks.set_effect_amount = {
             .setCheck(["Number", "String"]);
         this.appendDummyInput()
             .appendField(Lang.Blocks.LOOKS_set_effect_volume_3)
-            .appendField(new Blockly.FieldIcon('/img/assets/block_icon/looks_03.png', '*'));
+            .appendField(new Blockly.FieldIcon(Entry.mediaFilePath + 'block_icon/looks_03.png', '*'));
         this.setInputsInline(true);
         this.setPreviousStatement(true);
         this.setNextStatement(true);
@@ -627,7 +627,7 @@ Blockly.Blocks.set_entity_effect = {
             .setCheck(["Number", "String"]);
         this.appendDummyInput()
             .appendField(Lang.Blocks.LOOKS_set_effect_3)
-            .appendField(new Blockly.FieldIcon('/img/assets/block_icon/looks_03.png', '*'));
+            .appendField(new Blockly.FieldIcon(Entry.mediaFilePath + 'block_icon/looks_03.png', '*'));
         this.setInputsInline(true);
         this.setPreviousStatement(true);
         this.setNextStatement(true);
@@ -661,7 +661,7 @@ Blockly.Blocks.change_object_index = {
             [Lang.Blocks.LOOKS_change_object_index_sub_4, "BACK"]
         ]), "LOCATION")
         .appendField(Lang.Blocks.LOOKS_change_object_index_2)
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/looks_03.png', '*'));
+        .appendField(new Blockly.FieldIcon(Entry.mediaFilePath + 'block_icon/looks_03.png', '*'));
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);

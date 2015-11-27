@@ -228,7 +228,7 @@ Blockly.getRelativeXY_ = function(element) {
  * @return {!Object} Object with .x and .y properties.
  * @private
  */
-Blockly.getSvgXY_ = function(element) {
+Blockly.getSvgXY_ = function(element, workspace) {
   var x = 0;
   var y = 0;
   if (Blockly.mainWorkspace.blockMenu) {
@@ -258,9 +258,9 @@ Blockly.getSvgXY_ = function(element) {
  * @return {!Object} Object with .x and .y properties.
  * @private
  */
-Blockly.getAbsoluteXY_ = function(element) {
+Blockly.getAbsoluteXY_ = function(element, svg) {
   var xy = Blockly.getSvgXY_(element);
-  return Blockly.convertCoordinates(xy.x, xy.y, false);
+  return Blockly.convertCoordinates(xy.x, xy.y, false, svg);
 };
 
 /**
@@ -313,17 +313,19 @@ Blockly.isMiddleButton = function(e) {
  * @param {number} y Y input coordinate.
  * @param {boolean} toSvg True to convert to SVG coordinates.
  *     False to convert to mouse/HTML coordinates.
+ * @param {?Object} svg Origin SVG.
  * @return {!Object} Object with x and y properties in output coordinates.
  */
-Blockly.convertCoordinates = function(x, y, toSvg) {
+Blockly.convertCoordinates = function(x, y, toSvg, svg) {
   if (toSvg) {
     x -= window.scrollX || window.pageXOffset;
     y -= window.scrollY || window.pageYOffset;
   }
-  var svgPoint = Blockly.svg.createSVGPoint();
+  var svg = svg ? svg : Blockly.svg;
+  var svgPoint = svg.createSVGPoint();
   svgPoint.x = x;
   svgPoint.y = y;
-  var matrix = Blockly.svg.getScreenCTM();
+  var matrix = svg.getScreenCTM();
   if (toSvg) {
     matrix = matrix.inverse();
   }

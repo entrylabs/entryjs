@@ -28,7 +28,7 @@ Entry.VariableContainer = function() {
             isCloud: false
         }
     };
-    selectedVariable: null;
+    this.selectedVariable = null;
 
     Entry.addEventListener("stop", this.updateCloudVariables);
 };
@@ -72,7 +72,7 @@ Entry.VariableContainer.prototype.createDom = function(view) {
         var panel = thisPointer.variableAddPanel;
         var value = panel.view.name.value.trim();
         if (panel.isOpen){
-            if (!value || value.length == 0){
+            if (!value || value.length === 0){
                 panel.view.addClass('entryRemove');
                 panel.isOpen = false;
             } else
@@ -111,7 +111,7 @@ Entry.VariableContainer.prototype.createDom = function(view) {
         var panel = thisPointer.listAddPanel;
         var value = panel.view.name.value.trim();
         if (panel.isOpen) {
-            if (!value || value.length == 0) {
+            if (!value || value.length === 0) {
                 panel.view.addClass('entryRemove');
                 panel.isOpen = false;
             } else
@@ -145,7 +145,7 @@ Entry.VariableContainer.prototype.createDom = function(view) {
  */
 Entry.VariableContainer.prototype.createSelectButton = function(type, isEnable) {
     var that = this;
-    if (isEnable == undefined) isEnable = true;
+    if (isEnable === undefined) isEnable = true;
     var view = Entry.createElement('td');
     view.addClass('entryVariableSelectButtonWorkspace', type);
     view.innerHTML = Lang.Workspace[type];
@@ -173,7 +173,7 @@ Entry.VariableContainer.prototype.selectFilter = function(type) {
     this.viewMode_ = type;
     this.select();
     this.updateList();
-}
+};
 
 Entry.VariableContainer.prototype.updateVariableAddView = function(type) {
     type = type ? type : 'variable';
@@ -184,19 +184,19 @@ Entry.VariableContainer.prototype.updateVariableAddView = function(type) {
     view.cloudCheck.removeClass('entryVariableAddChecked');
     view.localCheck.removeClass('entryVariableAddChecked');
     view.globalCheck.removeClass('entryVariableAddChecked');
-    view.cloudWrapper.removeClass('entryVariableAddSpaceUnCheckedWorkspace')
+    view.cloudWrapper.removeClass('entryVariableAddSpaceUnCheckedWorkspace');
     if (info.isCloud)
-        view.cloudCheck.addClass('entryVariableAddChecked')
+        view.cloudCheck.addClass('entryVariableAddChecked');
     if (panel.isOpen) {
         view.removeClass('entryRemove');
         view.name.focus();
     }
     if (info.object) {
-        view.localCheck.addClass('entryVariableAddChecked')
-        view.cloudWrapper.addClass('entryVariableAddSpaceUnCheckedWorkspace')
+        view.localCheck.addClass('entryVariableAddChecked');
+        view.cloudWrapper.addClass('entryVariableAddSpaceUnCheckedWorkspace');
     } else
-        view.globalCheck.addClass('entryVariableAddChecked')
-}
+        view.globalCheck.addClass('entryVariableAddChecked');
+};
 
 /**
  * @param {object|Entry.Variable} object
@@ -213,8 +213,7 @@ Entry.VariableContainer.prototype.select = function(object) {
         return;
     object.listElement.addClass('selected');
     this.selected = object;
-    if (object == null) {
-    } else if (object instanceof Entry.Variable) {
+    if (object instanceof Entry.Variable) {
         this.renderVariableReference(object);
         if (object.object_)
             Entry.container.selectObject(object.object_, true);
@@ -234,7 +233,7 @@ Entry.VariableContainer.prototype.renderMessageReference = function(message) {
     var messageType = ['when_message_cast', 'message_cast', 'message_cast_wait'];
     var callers = [];
     var listView = Entry.createElement('ul');
-    listView.addClass('entryVariableListCallerListWorkspace')
+    listView.addClass('entryVariableListCallerListWorkspace');
     for (var i in objects) {
         var object = objects[i];
         var script = object.script;
@@ -300,7 +299,7 @@ Entry.VariableContainer.prototype.renderMessageReference = function(message) {
         });
         listView.appendChild(element);
     }
-    if (callers.length == 0) {
+    if (callers.length === 0) {
         var element = Entry.createElement('li');
         element.addClass('entryVariableListCallerWorkspace');
         element.addClass('entryVariableListCallerNoneWorkspace');
@@ -327,7 +326,8 @@ Entry.VariableContainer.prototype.renderVariableReference = function(variable) {
     ];
     var callers = [];
     var listView = Entry.createElement('ul');
-    listView.addClass('entryVariableListCallerListWorkspace')
+    listView.addClass('entryVariableListCallerListWorkspace');
+    var value;
     for (var i in objects) {
         var object = objects[i];
         var script = object.script;
@@ -336,7 +336,7 @@ Entry.VariableContainer.prototype.renderVariableReference = function(variable) {
             var block = blocks[j];
             var type = block.getAttribute('type');
             if (variableType.indexOf(type) > -1) {
-                var value = Entry.Xml.getField("VARIABLE", block) ||
+                value = Entry.Xml.getField("VARIABLE", block) ||
                             Entry.Xml.getField('LIST', block);
                 if (value == variable.id_)
                     callers.push({object:object, block: block});
@@ -393,7 +393,7 @@ Entry.VariableContainer.prototype.renderVariableReference = function(variable) {
         });
         listView.appendChild(element);
     }
-    if (callers.length == 0) {
+    if (callers.length === 0) {
         var element = Entry.createElement('li');
         element.addClass('entryVariableListCallerWorkspace');
         element.addClass('entryVariableListCallerNoneWorkspace');
@@ -414,7 +414,7 @@ Entry.VariableContainer.prototype.renderFunctionReference = function(func) {
     var variableType = 'function_general';
     var callers = [];
     var listView = Entry.createElement('ul');
-    listView.addClass('entryVariableListCallerListWorkspace')
+    listView.addClass('entryVariableListCallerListWorkspace');
     for (var i in objects) {
         var object = objects[i];
         var script = object.script;
@@ -423,7 +423,7 @@ Entry.VariableContainer.prototype.renderFunctionReference = function(func) {
             var block = blocks[j];
             var type = block.getAttribute('type');
             if (variableType == type) {
-                var mutation = block.getElementsByTagName("mutation")[0]
+                var mutation = block.getElementsByTagName("mutation")[0];
                 if (mutation.getAttribute("hashid") == func.id)
                     callers.push({object:object, block: block});
             }
@@ -453,7 +453,7 @@ Entry.VariableContainer.prototype.renderFunctionReference = function(func) {
         });
         listView.appendChild(element);
     }
-    if (callers.length == 0) {
+    if (callers.length === 0) {
         var element = Entry.createElement('li');
         element.addClass('entryVariableListCallerWorkspace');
         element.addClass('entryVariableListCallerNoneWorkspace');
@@ -610,8 +610,8 @@ Entry.VariableContainer.prototype.updateList = function() {
     //select the first element(view) if exist
     this.listView_.appendChild(this.variableSettingView);
     this.listView_.appendChild(this.listSettingView);
-    if (elementList.length != 0)
-        this.select(elementList[0])
+    if (elementList.length !== 0)
+        this.select(elementList[0]);
     elementList = null;
 };
 
@@ -739,7 +739,7 @@ Entry.VariableContainer.prototype.checkListPosition = function(list,mouse) {
         area_w : list.x_ + list.width_,
         start_h : -list.y_,
         area_h : (-list.y_) + (-list.height_)
-    }
+    };
 
     if(mouse.x > pos.start_w && mouse.x < pos.area_w) {
         if(mouse.y < pos.start_h && mouse.y > pos.area_h) {
@@ -747,7 +747,7 @@ Entry.VariableContainer.prototype.checkListPosition = function(list,mouse) {
         }
     }
     return false;
-}
+};
 
 Entry.VariableContainer.prototype.getListById = function(mouseevt) {
     var lists = this.lists_;
@@ -760,7 +760,7 @@ Entry.VariableContainer.prototype.getListById = function(mouseevt) {
         return returnList;
     }
     return false;
-}
+};
 
 
 /**
@@ -841,13 +841,13 @@ Entry.VariableContainer.prototype.checkAllVariableName = function(name,variable)
         }
     }
     return false;
-}
+};
 Entry.VariableContainer.prototype.addVariable = function(variable) {
     if (!variable) {
         var variableContainer = this;
         var panel = this.variableAddPanel;
         var name = panel.view.name.value.trim();
-        if (!name || name.length == 0)
+        if (!name || name.length === 0)
             name = Lang.Workspace.variable;
 
         name = this.checkAllVariableName(name,'variables_') ? Entry.getOrderedName(name, this.variables_, 'name_') : name;
@@ -1040,7 +1040,7 @@ Entry.VariableContainer.prototype.createVariableView = function(variable) {
     });
     nameField.onblur = function(e) {
         var value = this.value.trim();
-        if (!value || value.length == 0) {
+        if (!value || value.length === 0) {
             Entry.toast.alert(Lang.Msgs.warn,
                               Lang.Workspace.variable_can_not_space);
             this.value = variable.getName();
@@ -1176,7 +1176,7 @@ Entry.VariableContainer.prototype.createMessageView = function(message) {
     });
     nameField.onblur = function(e) {
         var value = this.value.trim();
-        if (!value || value.length == 0) {
+        if (!value || value.length === 0) {
             Entry.toast.alert(Lang.Msgs.warn,
                               Lang.Msgs.sign_can_not_space);
             this.value = message.name;
@@ -1209,7 +1209,7 @@ Entry.VariableContainer.prototype.addList = function(list) {
         var variableContainer = this;
         var panel = this.listAddPanel;
         var name = panel.view.name.value.trim();
-        if (!name || name.length == 0)
+        if (!name || name.length === 0)
             name = Lang.Workspace.list;
 
         var info = panel.info;
@@ -1306,7 +1306,7 @@ Entry.VariableContainer.prototype.createListView = function(list) {
     });
     nameField.onblur = function(e) {
         var value = this.value.trim();
-        if (!value || value.length == 0) {
+        if (!value || value.length === 0) {
             Entry.toast.alert(Lang.Msgs.warn,
                               Lang.Msgs.list_can_not_space);
             this.value = list.getName();
@@ -1362,11 +1362,11 @@ Entry.VariableContainer.prototype.getVariableJSON = function() {
     for (var i = 0; i<this.variables_.length; i++) {
         var variable = this.variables_[i];
         json.push(variable.toJSON());
-    };
+    }
     for (var i = 0; i<this.lists_.length; i++) {
         var list = this.lists_[i];
         json.push(list.toJSON());
-    };
+    }
 
     if (Entry.engine.projectTimer)
         json.push(Entry.engine.projectTimer);
@@ -1389,7 +1389,7 @@ Entry.VariableContainer.prototype.getMessageJSON = function() {
             name: this.messages_[i].name
         };
         json.push(message);
-    };
+    }
     return json;
 };
 
@@ -1407,9 +1407,9 @@ Entry.VariableContainer.prototype.getFunctionJSON = function() {
             content: Blockly.Xml.domToText(func.content)
         };
         json.push(funcJSON);
-    };
+    }
     return json;
-}
+};
 
 Entry.VariableContainer.prototype.resetVariableAddPanel = function(type) {
     type = type || 'variable';
@@ -1420,7 +1420,7 @@ Entry.VariableContainer.prototype.resetVariableAddPanel = function(type) {
     panel.view.name.value = '';
     panel.isOpen = false;
     this.updateVariableAddView(type);
-}
+};
 
 Entry.VariableContainer.prototype.generateVariableAddView = function() {
     var that = this;
@@ -1451,7 +1451,7 @@ Entry.VariableContainer.prototype.generateVariableAddView = function() {
             view.nameField.removeAttribute('disabled');
             view.nameField.focus();
         }
-    }
+    };
     this.variableAddPanel.view.name = addSpaceInput;
     addSpaceNameWrapper.appendChild(addSpaceInput);
 
@@ -1559,7 +1559,7 @@ Entry.VariableContainer.prototype.generateVariableAddView = function() {
         view.nameField.focus();
     });
     addSpaceButtonWrapper.appendChild(addSpaceConfirmButton);
-}
+};
 
 Entry.VariableContainer.prototype.generateListAddView = function() {
     var that = this;
@@ -1590,7 +1590,7 @@ Entry.VariableContainer.prototype.generateListAddView = function() {
             view.nameField.removeAttribute('disabled');
             view.nameField.focus();
         }
-    }
+    };
     addSpaceNameWrapper.appendChild(addSpaceInput);
 
     var addSpaceGlobalWrapper = Entry.createElement('div');
@@ -1696,7 +1696,7 @@ Entry.VariableContainer.prototype.generateListAddView = function() {
         view.nameField.focus();
     });
     addSpaceButtonWrapper.appendChild(addSpaceConfirmButton);
-}
+};
 
 Entry.VariableContainer.prototype.generateVariableSplitterView = function() {
     var topSplitter = Entry.createElement('li');
@@ -1707,8 +1707,8 @@ Entry.VariableContainer.prototype.generateVariableSplitterView = function() {
     this.variableSplitters = {
         top: topSplitter,
         bottom: bottomSplitter
-    }
-}
+    };
+};
 
 Entry.VariableContainer.prototype.openVariableAddPanel = function(type) {
     type = type ? type : 'variable';
@@ -1726,12 +1726,13 @@ Entry.VariableContainer.prototype.openVariableAddPanel = function(type) {
 
 Entry.VariableContainer.prototype.getMenuXml = function(xmlList) {
     var blocks = [];
-    var hasVariable = this.variables_.length != 0;
-    var hasList = this.lists_.length != 0;
+    var hasVariable = this.variables_.length !== 0;
+    var hasList = this.lists_.length !== 0;
+    var category;
     for (var i = 0, xml; xml = xmlList[i]; i++) {
         var tagName = xml.tagName;
         if (tagName && tagName.toUpperCase() == 'BLOCK') {
-        var category = xml.getAttribute('bCategory');
+        category = xml.getAttribute('bCategory');
         if (!hasVariable && category == 'variable')
             continue;
         if (!hasList && category == 'list')
@@ -1747,7 +1748,7 @@ Entry.VariableContainer.prototype.getMenuXml = function(xmlList) {
       }
     }
     return blocks;
-}
+};
 
 Entry.VariableContainer.prototype.addCloneLocalVariables = function (param) {
     var variables = [];
@@ -1768,7 +1769,7 @@ Entry.VariableContainer.prototype.addCloneLocalVariables = function (param) {
     variables.map(function (variable) {
         that.addVariable(variable);
     });
-}
+};
 
 Entry.VariableContainer.prototype.generateTimer = function (timer) {
     if (!timer) {
@@ -1790,7 +1791,7 @@ Entry.VariableContainer.prototype.generateTimer = function (timer) {
     Entry.addEventListener('stop', function () {
         Entry.engine.stopProjectTimer();
     });
-}
+};
 
 //generate Answer
 Entry.VariableContainer.prototype.generateAnswer = function (answer) {
@@ -1808,7 +1809,7 @@ Entry.VariableContainer.prototype.generateAnswer = function (answer) {
 
     answer.generateView();
     Entry.container.inputValue = answer;
-}
+};
 
 Entry.VariableContainer.prototype.generateVariableSettingView = function () {
     var that = this;
@@ -1856,12 +1857,12 @@ Entry.VariableContainer.prototype.generateVariableSettingView = function () {
         var v = that.selectedVariable;
         var value = this.value;
         v.setValue(this.value);
-    }
+    };
     initValueInput.onblur = function (e) {
         var v = that.selectedVariable;
         var value = this.value;
         v.setValue(this.value);
-    }
+    };
     element.initValueInput = initValueInput;
     initValueWrapper.appendChild(initValueInput);
 
@@ -1880,13 +1881,14 @@ Entry.VariableContainer.prototype.generateVariableSettingView = function () {
     element.slideCheck = slideCheck;
     slideWrapper.appendChild(slideCheck);
     slideWrapper.bindOnClick(function (e) {
+        var newVariable;
         var v = that.selectedVariable;
         var variables = that.variables_;
         var type = v.getType();
         if (type == 'variable') {
             var variableJSON = v.toJSON();
             variableJSON.variableType = 'slide';
-            var newVariable = new Entry.Variable(variableJSON);
+            newVariable = new Entry.Variable(variableJSON);
             variables.splice(variables.indexOf(v), 0, newVariable);
             if (newVariable.getValue() < 0)
                 newVariable.setValue(0);
@@ -1897,7 +1899,7 @@ Entry.VariableContainer.prototype.generateVariableSettingView = function () {
         } else if (type == 'slide') {
             var variableJSON = v.toJSON();
             variableJSON.variableType = 'variable';
-            var newVariable = new Entry.Variable(variableJSON);
+            newVariable = new Entry.Variable(variableJSON);
             variables.splice(variables.indexOf(v), 0, newVariable);
             minValueInput.setAttribute('disabled', 'disabled');
             maxValueInput.setAttribute('disabled', 'disabled');
@@ -1929,7 +1931,7 @@ Entry.VariableContainer.prototype.generateVariableSettingView = function () {
             that.updateVariableSettingView(v);
         }
 
-    }
+    };
     element.minValueInput = minValueInput;
     minMaxWrapper.appendChild(minValueInput);
 
@@ -1949,10 +1951,10 @@ Entry.VariableContainer.prototype.generateVariableSettingView = function () {
             v.setMaxValue(Number(this.value));
             that.updateVariableSettingView(v);
         }
-    }
+    };
     element.maxValueInput = maxValueInput;
     minMaxWrapper.appendChild(maxValueInput);
-}
+};
 
 
 /**
@@ -2047,12 +2049,12 @@ Entry.VariableContainer.prototype.generateListSettingView = function () {
     lengthInput.addClass('entryListSettingLengthInputWorkspace');
     lengthInput.onblur = function () {
         that.setListLength(this.value);
-    }
+    };
 
     lengthInput.onkeypress = function (e) {
         if (e.keyCode == 13)
             this.blur();
-    }
+    };
     element.lengthInput = lengthInput;
     lengthController.appendChild(lengthInput);
     var plus = Entry.createElement('span');
@@ -2073,7 +2075,7 @@ Entry.VariableContainer.prototype.generateListSettingView = function () {
     listValues.addClass('entryListSettingListValuesWorkspace');
     element.listValues = listValues;
     element.appendChild(listValues);
-}
+};
 
 Entry.VariableContainer.prototype.updateListSettingView = function(list) {
     var that = this;
@@ -2095,10 +2097,8 @@ Entry.VariableContainer.prototype.updateListSettingView = function(list) {
         listValues.removeChild(listValues.firstChild);
 
     var arr = list.array_;
-    if (arr.length == 0)
-        seperator.addClass('entryRemove');
-    else
-        seperator.removeClass('entryRemove');
+    if (arr.length === 0) seperator.addClass('entryRemove');
+    else seperator.removeClass('entryRemove');
 
     for (var i=0; i<arr.length; i++) {
         (function (i) {
@@ -2113,11 +2113,11 @@ Entry.VariableContainer.prototype.updateListSettingView = function(list) {
              input.onblur = function () {
                  arr[i].data = this.value;
                  list.updateView();
-             }
+             };
              input.onkeypress = function (e) {
                  if (e.keyCode == 13)
                      this.blur();
-             }
+             };
              input.addClass('entryListSettingEachInputWorkspace');
              wrapper.appendChild(input);
              var removeButton = Entry.createElement('span');
@@ -2149,7 +2149,7 @@ Entry.VariableContainer.prototype.setListLength = function(value) {
         }
     }
     this.updateListSettingView();
-}
+};
 
 Entry.VariableContainer.prototype.updateViews = function() {
     var variables = this.variables_,
@@ -2162,7 +2162,7 @@ Entry.VariableContainer.prototype.updateViews = function() {
     lists.map(function (l) {
         l.updateView();
     });
-}
+};
 
 Entry.VariableContainer.prototype.updateSelectedVariable = function(object, type) {
     if (!object) {
@@ -2182,7 +2182,7 @@ Entry.VariableContainer.prototype.updateSelectedVariable = function(object, type
         this.selectedList = object;
         this.updateListSettingView(object);
     }
-}
+};
 
 Entry.VariableContainer.prototype.removeLocalVariables = function (objectId) {
     var variables = [];
@@ -2196,7 +2196,7 @@ Entry.VariableContainer.prototype.removeLocalVariables = function (objectId) {
     variables.map(function (variable) {
         that.removeVariable(variable);
     });
-}
+};
 
 Entry.VariableContainer.prototype.updateCloudVariables = function() {
     var projectId = Entry.projectId;
@@ -2205,14 +2205,14 @@ Entry.VariableContainer.prototype.updateCloudVariables = function() {
 
     var that = Entry.variableContainer;
     var cloudVariables = that.variables_.filter(function(v) {
-        return v.isCloud_ });
+        return v.isCloud_; });
     cloudVariables = cloudVariables.map(function(v) {
-        return v.toJSON()});
+        return v.toJSON();});
 
     var cloudLists = that.lists_.filter(function(v) {
-        return v.isCloud_ });
+        return v.isCloud_; });
     cloudLists = cloudLists.map(function(v) {
-        return v.toJSON()});
+        return v.toJSON();});
 
     $.ajax({
         url: "/api/project/variable/" + Entry.projectId,

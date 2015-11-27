@@ -43,14 +43,14 @@ Entry.Func.executeFunction = function(threadHash) {
 
 Entry.Func.clearThreads = function() {
     this.threads = {};
-}
+};
 
 Entry.Func.prototype.init = function(model) {
     this.id = model.id;
     this.content = Blockly.Xml.textToDom(model.content);
     var xmlText = '<xml>' + model.block + '</xml>';
     this.block = Blockly.Xml.textToDom(xmlText).childNodes[0];
-}
+};
 
 Entry.Func.CREATE_BTN =
     '<xml><btn text="Lang.Workspace.create_function" ' +
@@ -84,7 +84,7 @@ Entry.Func.edit = function(func) {
     Blockly.Xml.domToWorkspace(this.workspace, func.content);
     this.updateMenu();
     this.position_();
-}
+};
 
 Entry.Func.initEditView = function() {
     this.parentView = Entry.playground.blocklyView_;
@@ -204,7 +204,7 @@ Entry.Func.getMenuXml = function() {
             blocks.push(func.block);
     }
     return blocks;
-}
+};
 
 Entry.Func.syncFunc = function() {
     var func = Entry.Func;
@@ -219,7 +219,7 @@ Entry.Func.syncFunc = function() {
         func.fieldText = fieldText;
         func.workspaceLength = workspaceLength;
     }
-}
+};
 
 Entry.Func.updateMenu = function() {
     if (Entry.playground.selectedMenu == 'func') {
@@ -295,7 +295,7 @@ Entry.Func.updateMenu = function() {
             Blockly.Xml.domToWorkspace(Entry.Func.workspace, xml);
         }
     }
-}
+};
 
 Entry.Func.prototype.edit = function() {
     if (Entry.Func.isEdit)
@@ -310,9 +310,10 @@ Entry.Func.prototype.edit = function() {
 
 Entry.Func.generateBlock = function(func, content, id) {
     var topBlocks = Entry.nodeListToArray(content.childNodes);
+    var createBlock;
     for (var i in topBlocks)
         if (topBlocks[i].getAttribute('type') == 'function_create')
-            var createBlock = topBlocks[i];
+            createBlock = topBlocks[i];
     var script = new Entry.Script();
     script.init(createBlock);
     var field = script;
@@ -362,7 +363,7 @@ Entry.Func.generateBlock = function(func, content, id) {
     var blockText = '<xml><block type="function_general">' + mutationXml +
         fieldXml + '</block></xml>';
     var block = Blockly.Xml.textToDom(blockText).childNodes[0];
-    if (!description) description = "함수"
+    if (!description) description = "함수";
     return {block: block, description: description};
 };
 
@@ -414,11 +415,11 @@ Entry.Func.generateButtons = function() {
         'class': 'entryFunctionButton'
     }, btnWrapper);
 
-    saveButton.onclick = function(e) { func.save(); }
-    saveText.onclick = function(e) { func.save(); }
+    saveButton.onclick = function(e) { func.save(); };
+    saveText.onclick = function(e) { func.save(); };
 
-    cancelButton.onclick = function(e) { func.cancelEdit(); }
-    cancelText.onclick = function(e) { func.cancelEdit(); }
+    cancelButton.onclick = function(e) { func.cancelEdit(); };
+    cancelText.onclick = function(e) { func.cancelEdit(); };
 };
 
 Entry.Func.position_ = function() {
@@ -474,13 +475,14 @@ Entry.Func.doWhenCancel = function() {
     Blockly.unbindEvent_(window, 'resize', this, this.position_);
     Blockly.unbindEvent_(svg, 'mousedown', null, Blockly.onMouseDown_);
     Blockly.unbindEvent_(svg, 'contextmenu', null, Blockly.onContextMenu_);
-}
+};
 
 Entry.Func.generateWsBlock = function(func, content, id) {
     var topBlocks = content.childNodes;
+    var createBlock;
     for (var i in topBlocks) {
         if (topBlocks[i].getAttribute('type') == 'function_create') {
-            var createBlock = topBlocks[i];
+            createBlock = topBlocks[i];
             break;
         }
     }
@@ -532,7 +534,7 @@ Entry.Func.generateWsBlock = function(func, content, id) {
     mutationXml += '</mutation>';
     var blockText = '<xml><block type="function_general">' +
         mutationXml + fieldXml + '</block></xml>';
-    if (!description) description = "함수"
+    if (!description) description = "함수";
     return {
         block: Blockly.Xml.textToDom(blockText).childNodes[0],
         description: description

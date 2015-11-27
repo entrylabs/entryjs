@@ -670,6 +670,9 @@ Blockly.Block.prototype.onMouseUp_ = function(e) {
       Entry.dispatchEvent("cancelLastCommand");
     }
   }
+  if (typeof(Entry) == "object")
+    Entry.dispatchEvent("entryBlocklyMouseUp");
+
   if (Blockly.highlightedConnection_) {
     Blockly.highlightedConnection_.unhighlight();
     Blockly.highlightedConnection_ = null;

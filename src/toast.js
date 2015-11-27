@@ -22,7 +22,7 @@ Entry.Toast.prototype.warning = function(title, message, isNotAutoDispose) {
     var toast = Entry.createElement('div', 'entryToast');
     toast.addClass('entryToast');
     toast.addClass('entryToastWarning');
-    toast.bindOnClick(function() {Entry.toast.body_.removeChild(this)});
+    toast.bindOnClick(function() {Entry.toast.body_.removeChild(this);});
     var toastTitle = Entry.createElement('div', 'entryToast');
     toastTitle.addClass('entryToastTitle');
     toastTitle.innerHTML = title;
@@ -52,7 +52,7 @@ Entry.Toast.prototype.success = function(title, message, isNotAutoDispose) {
     var toast = Entry.createElement('div', 'entryToast');
     toast.addClass('entryToast');
     toast.addClass('entryToastSuccess');
-    toast.bindOnClick(function() {Entry.toast.body_.removeChild(this)});
+    toast.bindOnClick(function() {Entry.toast.body_.removeChild(this);});
     var toastTitle = Entry.createElement('div', 'entryToast');
     toastTitle.addClass('entryToastTitle');
     toastTitle.innerHTML = title;
@@ -82,7 +82,7 @@ Entry.Toast.prototype.alert = function(title, message, isNotAutoDispose) {
     var toast = Entry.createElement('div', 'entryToast');
     toast.addClass('entryToast');
     toast.addClass('entryToastAlert');
-    toast.bindOnClick(function() {Entry.toast.body_.removeChild(this)});
+    toast.bindOnClick(function() {Entry.toast.body_.removeChild(this);});
     var toastTitle = Entry.createElement('div', 'entryToast');
     toastTitle.addClass('entryToastTitle');
     toastTitle.innerHTML = title;

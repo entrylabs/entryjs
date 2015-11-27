@@ -588,7 +588,7 @@ Blockly.Blocks.set_visible_project_timer = {
           ], null, true, calcArrowColor), "ACTION");
     this.appendDummyInput()
         .appendField(Lang.Blocks.CALC_timer_visible_2, calcFontColor)
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/calc_01.png', '*'));
+        .appendField(new Blockly.FieldIcon(Entry.mediaFilePath + 'block_icon/calc_01.png', '*'));
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
@@ -915,7 +915,7 @@ Blockly.Blocks.choose_project_timer_action = {
           [Lang.Blocks.CALC_choose_project_timer_action_sub_3,"RESET"]
           ], null, true, calcArrowColor), "ACTION")
         .appendField(Lang.Blocks.CALC_choose_project_timer_action_2, calcFontColor)
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/calc_01.png', '*'));
+        .appendField(new Blockly.FieldIcon(Entry.mediaFilePath + 'block_icon/calc_01.png', '*'));
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);

@@ -227,7 +227,7 @@ Blockly.Workspace.prototype.getTopBlocks = function(ordered) {
   var blocks = [].concat(this.topBlocks_);
   if (ordered && blocks.length > 1) {
     var offset = Math.sin(Blockly.Workspace.SCAN_ANGLE / 180 * Math.PI);
-    if (Blockly.RTL) {
+    if (Blockly.LTR) {
       offset *= -1;
     }
     blocks.sort(function(a, b) {

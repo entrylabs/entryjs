@@ -101,7 +101,7 @@ Blockly.Blocks.function_create = {
     this.appendValueInput("FIELD")
         .setCheck(['Param']);
     this.appendDummyInput()
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/function_03.png', '*'));
+        .appendField(new Blockly.FieldIcon(Entry.mediaFilePath + 'block_icon/function_03.png', '*'));
     this.setInputsInline(true);
     this.setNextStatement(true);
   }
@@ -144,7 +144,7 @@ Blockly.Blocks.function_general = {
     }
     this.hashId = xmlElement.getAttribute('hashid');
     this.appendDummyInput()
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/function_03.png', '*'));
+        .appendField(new Blockly.FieldIcon(Entry.mediaFilePath + 'block_icon/function_03.png', '*'));
   },
   mutationToDom: function() {
     var container = document.createElement('mutation');

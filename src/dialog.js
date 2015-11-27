@@ -1,3 +1,5 @@
+"use strict";
+
 /**
  * @fileoverview Show dialog on canvas
  */
@@ -55,7 +57,7 @@ Entry.Dialog.prototype.generateSpeak = function() {
     this.update();
     this.object.addChild(this.notch);
     this.object.addChild(text);
-}
+};
 
 /**
  * Set position

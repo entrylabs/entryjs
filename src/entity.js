@@ -55,7 +55,7 @@ Entry.EntityObject = function(object) {
             this.cursor = "move";
             this.entity.initCommand();
             Entry.container.selectObject(id);
-        };
+        }
     });
 
     this.object.on("pressup", function(evt) {
@@ -75,7 +75,7 @@ Entry.EntityObject = function(object) {
             Entry.stage.updateObject();
         }
     });
-}
+};
 
 /**
  * Construct entity class
@@ -376,7 +376,7 @@ Entry.EntityObject.prototype.setSize = function(size) {
  */
 Entry.EntityObject.prototype.getSize = function() {
     return (this.getWidth() * Math.abs(this.getScaleX()) + this.getHeight() * Math.abs(this.getScaleY())) / 2;
-}
+};
 
 /**
  * width coordinate setter
@@ -470,22 +470,22 @@ Entry.EntityObject.prototype.setUnderLine = function(underLine) {
         underLine = false;
     this.underLine = underLine;
     this.textObject.underLine = underLine;
-}
+};
 
 Entry.EntityObject.prototype.getUnderLine = function() {
     return this.underLine;
-}
+};
 
 Entry.EntityObject.prototype.setStrike = function(strike) {
     if (strike === undefined)
         strike = false;
     this.strike = strike;
     this.textObject.strike = strike;
-}
+};
 
 Entry.EntityObject.prototype.getStrike = function() {
     return this.strike;
-}
+};
 
 /**
  * font getter
@@ -500,7 +500,7 @@ Entry.EntityObject.prototype.getFont = function() {
     fontArray.push(this.fontType);
     var font = fontArray.join(" ");
     return font;
-}
+};
 
 /**
  * font setter
@@ -511,7 +511,7 @@ Entry.EntityObject.prototype.setFont = function(font) {
     if (this.font === font)
         return;
     if (!font)
-        font = "20px Nanum Gothic"
+        font = "20px Nanum Gothic";
 
     var fontArray = font.split(" ");
     var i = 0;
@@ -534,7 +534,7 @@ Entry.EntityObject.prototype.setFont = function(font) {
     this.setWidth(this.textObject.getMeasuredWidth());
     this.updateBG();
     Entry.stage.updateObject();
-}
+};
 
 Entry.EntityObject.prototype.syncFont = function() {
     this.textObject.font = this.getFont();
@@ -545,14 +545,14 @@ Entry.EntityObject.prototype.syncFont = function() {
         this.setWidth(this.textObject.getMeasuredWidth());
     }
     Entry.stage.updateObject();
-}
+};
 
 /**
  * font type getter
  */
 Entry.EntityObject.prototype.getFontType = function() {
     return this.fontType;
-}
+};
 
 /**
  * font type setter
@@ -563,14 +563,14 @@ Entry.EntityObject.prototype.setFontType = function(fontType) {
     fontType = fontType ? fontType : "Nanum Gothic";
     this.fontType = fontType;
     this.syncFont();
-}
+};
 
 /**
  * font size getter
  */
 Entry.EntityObject.prototype.getFontSize = function(fontSize) {
     return this.fontSize;
-}
+};
 
 /**
  * font size setter
@@ -583,14 +583,14 @@ Entry.EntityObject.prototype.setFontSize = function(fontSize) {
     this.fontSize = fontSize ? fontSize : 20;
     this.syncFont();
     this.alignTextBox();
-}
+};
 
 /**
  * set font bold state
  */
 Entry.EntityObject.prototype.setFontBold = function(isFontBold) {
     this.fontBold = isFontBold;
-}
+};
 
 /**
  * toggle bold on,off and return current
@@ -606,7 +606,7 @@ Entry.EntityObject.prototype.toggleFontBold = function() {
  */
 Entry.EntityObject.prototype.setFontItalic = function(isFontItalic) {
     this.fontItalic = isFontItalic;
-}
+};
 
 /**
  * toggle italic on,off and return current
@@ -655,7 +655,7 @@ Entry.EntityObject.prototype.setText = function(text) {
     if (this.parent.objectType != 'textBox')
         return;
     /** @type {string} */
-    if (text == null)
+    if (text === undefined)
         text = '';
     this.text = text;
     this.textObject.text = this.text;
@@ -682,7 +682,7 @@ Entry.EntityObject.prototype.getText = function() {
 Entry.EntityObject.prototype.setTextAlign = function(textAlign) {
     if (this.parent.objectType != 'textBox')
         return;
-    if (textAlign == null)
+    if (textAlign === undefined)
         textAlign = Entry.TEXT_ALIGN_CENTER;
     this.textAlign = textAlign;
 
@@ -709,10 +709,9 @@ Entry.EntityObject.prototype.getTextAlign = function() {
  * @param {boolean} lineBreak
  */
 Entry.EntityObject.prototype.setLineBreak = function(lineBreak) {
-    if (this.parent.objectType != 'textBox')
-        return;
-    if (lineBreak == null)
-        lineBreak = false;
+    if (this.parent.objectType != 'textBox') return;
+
+    if (lineBreak === undefined) lineBreak = false;
 
     var previousState = this.lineBreak;
     this.lineBreak = lineBreak;
@@ -747,7 +746,7 @@ Entry.EntityObject.prototype.getLineBreak = function() {
  */
 Entry.EntityObject.prototype.setVisible = function(visible) {
     /** @type {string} */
-    if(visible == null)
+    if(visible === undefined)
         visible = true;
     this.visible = visible;
     this.object.visible = this.visible;
@@ -783,7 +782,7 @@ Entry.EntityObject.prototype.setImage = function(pictureModel) {
     if (!dimension.scaleX) {
         dimension.scaleX = this.getScaleX();
         dimension.scaleY = this.getScaleY();
-    };
+    }
 
     this.setScaleX(this.scaleX);
     this.setScaleY(this.scaleY);
@@ -793,9 +792,13 @@ Entry.EntityObject.prototype.setImage = function(pictureModel) {
     var image = Entry.container.getCachedPicture(pictureModel.id);
     if (!image) {
         image = new Image();
-        var fileName = pictureModel.filename;
-        image.src = '/uploads/' + fileName.substring(0, 2) + '/' +
-            fileName.substring(2, 4) + '/image/' + fileName + '.png';
+        if (pictureModel.fileurl) {
+            image.src = pictureModel.fileurl;
+        } else {
+            var fileName = pictureModel.filename;
+            image.src = '/uploads/' + fileName.substring(0, 2) + '/' +
+                fileName.substring(2, 4) + '/image/' + fileName + '.png';
+        }
         image = image;
         var thisPointer = this;
         image.onload = function(e) {
@@ -993,7 +996,7 @@ Entry.EntityObject.prototype.setInitialEffectValue = function () {
         'contrast': 0,
         'saturation': 0,
         'alpha': 1
-    }
+    };
 };
 
 /*
@@ -1055,7 +1058,7 @@ Entry.EntityObject.prototype.alignTextBox = function () {
         textObject.x = 0;
         textObject.y = 0;
     }
-}
+};
 
 Entry.EntityObject.prototype.syncDialogVisible = function() {
     if (this.dialog)

@@ -39,8 +39,9 @@ goog.require('goog.cssom');
 Blockly.Css.inject = function() {
   var text = Blockly.Css.CONTENT.join('\n');
   // Strip off any trailing slash (either Unix or Windows).
-  var path = Blockly.pathToBlockly.replace(/[\\\/]$/, '');
-  text = text.replace(/<<<PATH>>>/g, path);
+  //var path = Blockly.pathToBlockly.replace(/[\\\/]$/, '') + Blockly.mediaFilePath;
+  //text = text.replace(/<<<PATH>>>/g, path);
+  text = text.replace(/<<<PATH>>>/g, Blockly.mediaFilePath);
   goog.cssom.addCssText(text);
 };
 
@@ -256,6 +257,9 @@ Blockly.Css.CONTENT = [
   '.blocklyContextMenuOptions>.blocklyMenuDivDisabled,',
   '.blocklyDropdownMenuOptions>.blocklyMenuDiv {',
   '  fill: #fff;',
+  '}',
+  '.blocklyDropdownMenuOptions>.blocklyMenuDiv {',
+  '  cursor: default;',
   '}',
   '.blocklyContextMenuOptions>.blocklyMenuDiv:hover>rect,',
   '.blocklyDropdownMenuOptions>.blocklyMenuDiv:hover>rect {',
