@@ -1883,4 +1883,36 @@ EntryStatic.objectSubCategories = {
     'background': ['background_outdoor', 'background_indoor', 'background_nature', 'background_others']
 };
 
+EntryStatic.fonts = [
+{
+    name: '바탕체',
+    family: 'KoPub Batang',
+    url: '/css/kopubbatang.css'
+},
+{
+    name: '명조체',
+    family: 'Nanum Myeongjo',
+    url: '/css/nanummyeongjo.css'
+},
+{
+    name: '고딕체',
+    family: 'Nanum Gothic',
+    url: '/css/nanumgothic.css'
+},
+{
+    name: '필기체',
+    family: 'Nanum Pen Script',
+    url: '/css/nanumpenscript.css'
+},
+{
+    name: '한라산체',
+    family: 'Jeju Hallasan',
+    url: '/css/jejuhallasan.css'
+},
+{
+    name: '코딩고딕체',
+    family: 'Nanum Gothic Coding',
+    url: '/css/nanumgothiccoding.css'
+}
+];
 
