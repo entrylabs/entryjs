@@ -187,6 +187,8 @@ Entry.generateHash = function() {
  * @param {function} fn
  */
 Entry.addEventListener = function(eventName, fn) {
+    if (!this.events_)
+        this.events_ = {};
      if (!this.events_[eventName]) {
         this.events_[eventName] = [];
     }
@@ -202,6 +204,8 @@ Entry.addEventListener = function(eventName, fn) {
  * @param {?} params
  */
 Entry.dispatchEvent = function(eventName, params) {
+    if (!this.events_)
+        this.events_ = {};
     if (!this.events_[eventName])
         return;
     for (var index = 0, l = this.events_[eventName].length; index < l; index++) {

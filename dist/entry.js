@@ -9986,11 +9986,13 @@ Entry.generateHash = function() {
   return ("0000" + (Math.random() * Math.pow(36, 4) << 0).toString(36)).substr(-4);
 };
 Entry.addEventListener = function(a, b) {
+  this.events_ || (this.events_ = {});
   this.events_[a] || (this.events_[a] = []);
   b instanceof Function && this.events_[a].push(b);
   return !0;
 };
 Entry.dispatchEvent = function(a, b) {
+  this.events_ || (this.events_ = {});
   if (this.events_[a]) {
     for (var c = 0, d = this.events_[a].length;c < d;c++) {
       this.events_[a][c].call(window, b);
