@@ -273,6 +273,29 @@ EntryStatic.getAllBlocks = function() {
                 "hamster_set_buzzer_to",
                 "hamster_clear_buzzer",
                 "hamster_value",
+                "albert_move_forward",
+                "albert_move_backward",
+                "albert_turn_around",
+                "albert_set_led_to",
+                "albert_clear_led",
+                "albert_beep",
+                "albert_hand_found",
+                "albert_move_forward_for_secs",
+                "albert_move_backward_for_secs",
+                "albert_turn_for_secs",
+                "albert_play_note_for",
+                "albert_rest_for",
+                "albert_change_tempo_by",
+                "albert_set_tempo_to",
+                "albert_change_both_wheels_by",
+                "albert_set_both_wheels_to",
+                "albert_change_wheels_by",
+                "albert_set_wheels_to",
+                "albert_stop",
+                "albert_change_buzzer_by",
+                "albert_set_buzzer_to",
+                "albert_clear_buzzer",
+                "albert_value",
                 //"hamster_set_port_to",
                 //"hamster_change_output_by",
                 //"hamster_set_output_to",
@@ -1486,6 +1509,140 @@ EntryStatic.blockInfo = {
     "hamster_set_output_to": {
         "isNotFor": ["hamster"],
         "xml": "<block type='hamster_set_output_to'><value name='VALUE'><block type='text'><field name='NAME'>60</field></block></value></block>",
+        "class": "rank"
+    },
+
+    "albert_move_forward": {
+        "isNotFor": ["albert"],
+        "xml": "<block type='albert_move_forward'></block>",
+        "class": "albert_novice"
+    },
+    "albert_move_backward": {
+        "isNotFor": ["albert"],
+        "xml": "<block type='albert_move_backward'></block>",
+        "class": "albert_novice"
+    },
+    "albert_turn_around": {
+        "isNotFor": ["albert"],
+        "xml": "<block type='albert_turn_around'></block>",
+        "class": "albert_novice"
+    },
+    "albert_set_led_to": {
+        "isNotFor": ["albert"],
+        "xml": "<block type='albert_set_led_to'></block>",
+        "class": "albert_novice"
+    },
+    "albert_clear_led": {
+        "isNotFor": ["albert"],
+        "xml": "<block type='albert_clear_led'></block>",
+        "class": "albert_novice"
+    },
+    "albert_beep": {
+        "isNotFor": ["albert"],
+        "xml": "<block type='albert_beep'></block>",
+        "class": "albert_novice"
+    },
+    "albert_hand_found": {
+        "isNotFor": ["albert"],
+        "xml": "<block type='albert_hand_found'></block>",
+        "class": "albert_novice"
+    },
+    "albert_move_forward_for_secs": {
+        "isNotFor": ["albert"],
+        "xml": "<block type='albert_move_forward_for_secs'><value name='VALUE'><block type='text'><field name='NAME'>1</field></block></value></block>",
+        "class": "intermediate"
+    },
+    "albert_move_backward_for_secs": {
+        "isNotFor": ["albert"],
+        "xml": "<block type='albert_move_backward_for_secs'><value name='VALUE'><block type='text'><field name='NAME'>1</field></block></value></block>",
+        "class": "intermediate"
+    },
+    "albert_turn_for_secs": {
+        "isNotFor": ["albert"],
+        "xml": "<block type='albert_turn_for_secs'><value name='VALUE'><block type='text'><field name='NAME'>1</field></block></value></block>",
+        "class": "intermediate"
+    },
+    "albert_play_note_for": {
+        "isNotFor": ["albert"],
+        "xml": "<block type='albert_play_note_for'><field name='OCTAVE'>4</field><value name='VALUE'><block type='text'><field name='NAME'>0.5</field></block></value></block>",
+        "class": "intermediate"
+    },
+    "albert_rest_for": {
+        "isNotFor": ["albert"],
+        "xml": "<block type='albert_rest_for'><value name='VALUE'><block type='text'><field name='NAME'>0.25</field></block></value></block>",
+        "class": "intermediate"
+    },
+    "albert_change_tempo_by": {
+        "isNotFor": ["albert"],
+        "xml": "<block type='albert_change_tempo_by'><value name='VALUE'><block type='text'><field name='NAME'>20</field></block></value></block>",
+        "class": "intermediate"
+    },
+    "albert_set_tempo_to": {
+        "isNotFor": ["albert"],
+        "xml": "<block type='albert_set_tempo_to'><value name='VALUE'><block type='text'><field name='NAME'>60</field></block></value></block>",
+        "class": "intermediate"
+    },
+
+
+
+    "albert_change_both_wheels_by": {
+        "isNotFor": ["albert"],
+        "xml": "<block type='albert_change_both_wheels_by'><value name='LEFT'><block type='text'><field name='NAME'>10</field></block></value><value name='RIGHT'><block type='text'><field name='NAME'>10</field></block></value></block>",
+        "class": "rank"
+    },
+    "albert_set_both_wheels_to": {
+        "isNotFor": ["albert"],
+        "xml": "<block type='albert_set_both_wheels_to'><value name='LEFT'><block type='text'><field name='NAME'>30</field></block></value><value name='RIGHT'><block type='text'><field name='NAME'>30</field></block></value></block>",
+        "class": "rank"
+    },
+    "albert_change_wheels_by": {
+        "isNotFor": ["albert"],
+        "xml": "<block type='albert_change_wheels_by'><value name='VALUE'><block type='text'><field name='NAME'>10</field></block></value></block>",
+        "class": "rank"
+    },
+    "albert_set_wheels_to": {
+        "isNotFor": ["albert"],
+        "xml": "<block type='albert_set_wheels_to'><value name='VALUE'><block type='text'><field name='NAME'>30</field></block></value></block>",
+        "class": "rank"
+    },
+    "albert_stop": {
+        "isNotFor": ["albert"],
+        "xml": "<block type='albert_stop'></block>",
+        "class": "rank"
+    },
+    "albert_change_buzzer_by": {
+        "isNotFor": ["albert"],
+        "xml": "<block type='albert_change_buzzer_by'><value name='VALUE'><block type='text'><field name='NAME'>10</field></block></value></block>",
+        "class": "rank"
+    },
+    "albert_set_buzzer_to": {
+        "isNotFor": ["albert"],
+        "xml": "<block type='albert_set_buzzer_to'><value name='VALUE'><block type='text'><field name='NAME'>1000</field></block></value></block>",
+        "class": "rank"
+    },
+    "albert_clear_buzzer": {
+        "isNotFor": ["albert"],
+        "xml": "<block type='albert_clear_buzzer'></block>",
+        "class": "rank"
+    },
+    "albert_value": {
+        "isNotFor": ["albert"],
+        "xml": "<block type='albert_value'></block>",
+        "class": "rank"
+    },
+    "albert_set_port_to": {
+        "isNotFor": ["albert"],
+        "xml": "<block type='albert_set_port_to'></block>",
+        "class": "rank"
+    },
+    "albert_change_output_by": {
+        "isNotFor": ["albert"],
+        "xml": "<block type='albert_change_output_by'><value name='VALUE'><block type='text'><field name='NAME'>60</field></block></value></block>",
+        "class": "rank"
+    },
+    "albert_set_output_to": {
+        "isNotFor": ["albert"],
+        "xml": "<block type='albert_set_output_to'><value name='VALUE'><block type='text'><field name='NAME'>60</field></block></value></block>",
         "class": "rank"
     },
 
