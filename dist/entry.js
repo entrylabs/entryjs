@@ -19,8 +19,6 @@ var Entry = {block:{}, TEXT_ALIGN_CENTER:0, TEXT_ALIGN_LEFT:1, TEXT_ALIGN_RIGHT:
   a || (a = {});
   Entry.engine.isState("stop") || Entry.engine.toggleStop();
   Entry.Func && Entry.Func.workspace && Entry.Func.workspace.visible && Entry.Func.cancelEdit();
-  Entry.stage.handle.setVisible(!1);
-  Entry.stage.update();
   a.objects = Entry.container.toJSON();
   a.scenes = Entry.scene.toJSON();
   a.variables = Entry.variableContainer.getVariableJSON();
