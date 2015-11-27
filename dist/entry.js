@@ -10207,7 +10207,7 @@ Entry.StateManager.prototype.addCommand = function(a, b, c, d) {
   }
 };
 Entry.StateManager.prototype.cancelLastCommand = function() {
-  this.canUndo() && (this.undoStack_.pop(), this.updateView());
+  this.canUndo() && (this.undoStack_.pop(), this.updateView(), Entry.dispatchEvent("saveLocalStorageProject"));
 };
 Entry.StateManager.prototype.undo = function() {
   if (this.canUndo() && !this.isRestoring()) {
@@ -14288,6 +14288,9 @@ Entry.Board = function(a) {
     a.mousedown(function() {
       c.onMouseDown.apply(c, arguments);
     });
+    a.bind("touchstart", function() {
+      c.onMouseDown.apply(c, arguments);
+    });
     a.on("mousewheel", function() {
       c.mouseWheel.apply(c, arguments);
     });
@@ -14302,16 +14305,17 @@ Entry.Board = function(a) {
       b.set({offsetX:a.pageX, offsetY:a.pageY});
     }
     function d(a) {
-      $(document).unbind(".board");
+      $(document).unbind(".entryBoard");
       delete f.dragInstance;
     }
+    a.originalEvent.touches && (a = a.originalEvent.touches[0]);
     if (0 === a.button || a instanceof Touch) {
       Entry.documentMousedown && Entry.documentMousedown.notify(a);
       var e = $(document);
-      e.bind("mousemove.board", c);
-      e.bind("mouseup.board", d);
-      e.bind("touchmove.board", c);
-      e.bind("touchend.board", d);
+      e.bind("mousemove.entryBoard", c);
+      e.bind("mouseup.entryBoard", d);
+      e.bind("touchmove.entryBoard", c);
+      e.bind("touchend.entryBoard", d);
       this.dragInstance = new Entry.DragInstance({startX:a.pageX, startY:a.pageY, offsetX:a.pageX, offsetY:a.pageY});
     }
     var f = this;

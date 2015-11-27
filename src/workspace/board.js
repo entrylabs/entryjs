@@ -141,20 +141,26 @@ Entry.Board = function(dom) {
         dom.mousedown(function() {
             that.onMouseDown.apply(that, arguments);
         });
+        dom.bind('touchstart', function() {
+            that.onMouseDown.apply(that, arguments);
+        });
         dom.on('mousewheel', function(){
             that.mouseWheel.apply(that, arguments);
         });
     };
 
     p.onMouseDown = function(e) {
+        if (e.originalEvent.touches)
+            e = e.originalEvent.touches[0];
+
         if (e.button === 0 || e instanceof Touch) {
             if (Entry.documentMousedown)
                 Entry.documentMousedown.notify(e);
             var doc = $(document);
-            doc.bind('mousemove.board', onMouseMove);
-            doc.bind('mouseup.board', onMouseUp);
-            doc.bind('touchmove.board', onMouseMove);
-            doc.bind('touchend.board', onMouseUp);
+            doc.bind('mousemove.entryBoard', onMouseMove);
+            doc.bind('mouseup.entryBoard', onMouseUp);
+            doc.bind('touchmove.entryBoard', onMouseMove);
+            doc.bind('touchend.entryBoard', onMouseUp);
             this.dragInstance = new Entry.DragInstance({
                 startX: e.pageX,
                 startY: e.pageY,
@@ -183,7 +189,7 @@ Entry.Board = function(dom) {
         }
 
         function onMouseUp(e) {
-            $(document).unbind('.board');
+            $(document).unbind('.entryBoard');
             delete board.dragInstance;
         }
         e.stopPropagation();
