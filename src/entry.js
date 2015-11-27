@@ -65,8 +65,8 @@ Entry.exportProject = function(project) {
         Entry.Func.cancelEdit();
     }
 
-    Entry.stage.handle.setVisible(false);
-    Entry.stage.update();
+    //Entry.stage.handle.setVisible(false);
+    //Entry.stage.update();
 
     project.objects = Entry.container.toJSON();
     project.scenes = Entry.scene.toJSON();
