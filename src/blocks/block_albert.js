@@ -50,8 +50,8 @@ Entry.block.albert_move_forward = function (sprite, script) {
         }, timeValue);
         return script;
     } else if (script.timeFlag == 1) {
-        sq.leftWheel = 50;
-        sq.rightWheel = 50;
+        sq.leftWheel = 30;
+        sq.rightWheel = 30;
         return script;
     } else {
         delete script.timeFlag;
@@ -86,8 +86,8 @@ Entry.block.albert_move_backward = function (sprite, script) {
         }, timeValue);
         return script;
     } else if (script.timeFlag == 1) {
-        sq.leftWheel = -50;
-        sq.rightWheel = -50;
+        sq.leftWheel = -30;
+        sq.rightWheel = -30;
         return script;
     } else {
         delete script.timeFlag;
@@ -121,8 +121,8 @@ Entry.block.albert_turn_around = function (sprite, script) {
     if (!script.isStart) {
         var direction = script.getField("DIRECTION", script);
         var isLeft = direction == 'LEFT';
-        script.leftValue = isLeft ? -50 : 50;
-        script.rightValue = isLeft ? 50 : -50;
+        script.leftValue = isLeft ? -30 : 30;
+        script.rightValue = isLeft ? 30 : -30;
         script.isStart = true;
         script.timeFlag = 1;
         var timeValue = 1 * 1000;
@@ -179,12 +179,12 @@ Entry.block.albert_set_led_to = function (sprite, script) {
     var direction = script.getField("DIRECTION", script);
     var color = Number(script.getField("COLOR", script));
     if (direction == 'FRONT') {
-        sq.leftLed = color;
-        sq.rightLed = color;
+        sq.leftEye = color;
+        sq.rightEye = color;
     } else if (direction == 'LEFT')
-        sq.leftLed = color;
+        sq.leftEye = color;
     else
-        sq.rightLed = color;
+        sq.rightEye = color;
 
     return script.callReturn();
 };
@@ -211,10 +211,10 @@ Entry.block.albert_clear_led = function (sprite, script) {
     var sq = Entry.hw.sendQueue;
     var direction = script.getField("DIRECTION", script);
     if (direction == 'FRONT') {
-        sq.leftLed = 0;
-        sq.rightLed = 0;
-    } else if (direction == 'LEFT') sq.leftLed = 0;
-    else sq.rightLed = 0;
+        sq.leftEye = 0;
+        sq.rightEye = 0;
+    } else if (direction == 'LEFT') sq.leftEye = 0;
+    else sq.rightEye = 0;
 
     return script.callReturn();
 };

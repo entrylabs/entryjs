@@ -127,7 +127,7 @@ Entry.block.albert_move_forward = function(a, b) {
   var c = Entry.hw.sendQueue;
   if (b.isStart) {
     if (1 == b.timeFlag) {
-      return c.leftWheel = 50, c.rightWheel = 50, b;
+      return c.leftWheel = 30, c.rightWheel = 30, b;
     }
     delete b.timeFlag;
     delete b.isStart;
@@ -154,7 +154,7 @@ Entry.block.albert_move_backward = function(a, b) {
   var c = Entry.hw.sendQueue;
   if (b.isStart) {
     if (1 == b.timeFlag) {
-      return c.leftWheel = -50, c.rightWheel = -50, b;
+      return c.leftWheel = -30, c.rightWheel = -30, b;
     }
     delete b.timeFlag;
     delete b.isStart;
@@ -193,8 +193,8 @@ Entry.block.albert_turn_around = function(a, b) {
     return b.callReturn();
   }
   c = "LEFT" == b.getField("DIRECTION", b);
-  b.leftValue = c ? -50 : 50;
-  b.rightValue = c ? 50 : -50;
+  b.leftValue = c ? -30 : 30;
+  b.rightValue = c ? 30 : -30;
   b.isStart = !0;
   b.timeFlag = 1;
   setTimeout(function() {
@@ -212,7 +212,7 @@ Blockly.Blocks.albert_set_led_to = {init:function() {
 }};
 Entry.block.albert_set_led_to = function(a, b) {
   var c = Entry.hw.sendQueue, d = b.getField("DIRECTION", b), e = Number(b.getField("COLOR", b));
-  "FRONT" == d ? (c.leftLed = e, c.rightLed = e) : "LEFT" == d ? c.leftLed = e : c.rightLed = e;
+  "FRONT" == d ? (c.leftEye = e, c.rightEye = e) : "LEFT" == d ? c.leftEye = e : c.rightEye = e;
   return b.callReturn();
 };
 Blockly.Blocks.albert_clear_led = {init:function() {
@@ -224,7 +224,7 @@ Blockly.Blocks.albert_clear_led = {init:function() {
 }};
 Entry.block.albert_clear_led = function(a, b) {
   var c = Entry.hw.sendQueue, d = b.getField("DIRECTION", b);
-  "FRONT" == d ? (c.leftLed = 0, c.rightLed = 0) : "LEFT" == d ? c.leftLed = 0 : c.rightLed = 0;
+  "FRONT" == d ? (c.leftEye = 0, c.rightEye = 0) : "LEFT" == d ? c.leftEye = 0 : c.rightEye = 0;
   return b.callReturn();
 };
 Blockly.Blocks.albert_beep = {init:function() {
@@ -10207,7 +10207,7 @@ Entry.StateManager.prototype.addCommand = function(a, b, c, d) {
   }
 };
 Entry.StateManager.prototype.cancelLastCommand = function() {
-  this.canUndo() && (this.undoStack_.pop(), this.updateView(), Entry.dispatchEvent("saveLocalStorageProject"));
+  this.canUndo() && (this.undoStack_.pop(), this.updateView());
 };
 Entry.StateManager.prototype.undo = function() {
   if (this.canUndo() && !this.isRestoring()) {
