@@ -692,13 +692,19 @@ Entry.Painter.prototype.initCommand = function() {
         this.stage.update();
 
     this.isCommandValid = false;
-    this.colorLayerModel = this.ctx.getImageData(0, 0,
-                                                this.canvas.width,
-                                                this.canvas.height);
-    Entry.stateManager.addCommand("edit sprite",
-                                 this,
-                                 this.restorePainter,
-                                 this.colorLayerModel);
+    this.colorLayerModel = this.ctx.getImageData(
+        0, 0,
+        this.canvas.width,
+        this.canvas.height
+    );
+
+    if (Entry.stateManager)
+        Entry.stateManager.addCommand(
+            "edit sprite",
+            this,
+            this.restorePainter,
+            this.colorLayerModel
+        );
 
     if (restoreHandle)
         this.handle.visible = true;
@@ -739,10 +745,13 @@ Entry.Painter.prototype.restorePainter = function(colorLayerModel) {
         painter.objectContainer.addChild(bitmap);
     };
 
-    Entry.stateManager.addCommand("restore sprite",
-                                 this,
-                                 this.restorePainter,
-                                 currentColorModel);
+    if (Entry.stateManager)
+        Entry.stateManager.addCommand(
+            "restore sprite",
+            this,
+            this.restorePainter,
+            currentColorModel
+        );
 };
 
 Entry.Painter.prototype.platten = function() {

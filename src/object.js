@@ -982,10 +982,13 @@ Entry.EntryObject.prototype.select = function(pictureId) {
  * @param {picture model} picture
  */
 Entry.EntryObject.prototype.addPicture = function(picture, index) {
-    Entry.stateManager.addCommand("add sprite",
-        this,
-        this.removePicture,
-        picture.id);
+    if (Entry.stateManager)
+        Entry.stateManager.addCommand(
+            "add sprite",
+            this,
+            this.removePicture,
+            picture.id
+        );
     if (!index && index !== 0)
         this.pictures.push(picture);
     else {
@@ -1007,11 +1010,14 @@ Entry.EntryObject.prototype.removePicture = function(pictureId) {
         return false;
     var picture = this.getPicture(pictureId);
     var index = this.pictures.indexOf(picture);
-    Entry.stateManager.addCommand("remove sprite",
-        this,
-        this.addPicture,
-        picture,
-        index);
+    if (Entry.stateManager)
+        Entry.stateManager.addCommand(
+            "remove sprite",
+            this,
+            this.addPicture,
+            picture,
+            index
+        );
     this.pictures.splice(index, 1);
     if (picture === this.selectedPicture)
         Entry.playground.selectPicture(this.pictures[0]);
@@ -1104,10 +1110,13 @@ Entry.EntryObject.prototype.addSound = function(sound, index) {
     if (!sound.id)
         sound.id = Entry.generateHash();
 
-    Entry.stateManager.addCommand("add sound",
-        this,
-        this.removeSound,
-        sound.id);
+    if (Entry.stateManager)
+        Entry.stateManager.addCommand(
+            "add sound",
+            this,
+            this.removeSound,
+            sound.id
+        );
     Entry.initSound(sound, index);
 
     if (!index && index !== 0)
@@ -1131,11 +1140,14 @@ Entry.EntryObject.prototype.removeSound = function(soundId) {
     var index, sound;
     sound = this.getSound(soundId);
     index = this.sounds.indexOf(sound);
-    Entry.stateManager.addCommand("remove sound",
-        this,
-        this.addSound,
-        sound,
-        index);
+    if (Entry.stateManager)
+        Entry.stateManager.addCommand(
+            "remove sound",
+            this,
+            this.addSound,
+            sound,
+            index
+        );
     this.sounds.splice(index, 1);
     Entry.playground.reloadPlayground();
     Entry.playground.injectSound(this);
