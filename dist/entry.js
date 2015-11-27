@@ -12732,30 +12732,32 @@ Entry.block.jr_north = {skeleton:"pebble_basic", color:"#A751E3", contents:[{typ
     delete this.isContinue;
   } else {
     this.isAction = this.isContinue = !0;
-    var a = this, b = function() {
+    var a = Ntry.STATIC, b = this, c = function() {
       window.setTimeout(function() {
         Ntry.dispatchEvent("unitAction", Ntry.STATIC.WALK, function() {
-          a.isAction = !1;
+          b.isAction = !1;
         });
       }, 3);
-    };
+    }, d;
     switch(Ntry.unitComp.direction) {
       case Ntry.STATIC.EAST:
-        Ntry.dispatchEvent("unitAction", Ntry.STATIC.TURN_LEFT, b);
+        d = a.TURN_LEFT;
         break;
       case Ntry.STATIC.SOUTH:
-        Ntry.dispatchEvent("unitAction", Ntry.STATIC.HALF_ROTATION, b);
+        d = a.HALF_ROTATION;
         break;
       case Ntry.STATIC.WEST:
-        Ntry.dispatchEvent("unitAction", Ntry.STATIC.TURN_RIGHT, b);
+        d = a.TURN_RIGHT;
         break;
       default:
-        b();
+        c();
     }
+    d && Ntry.dispatchEvent("unitAction", d, c);
     return Entry.STATIC.CONTINUE;
   }
 }};
 Entry.block.jr_east = {skeleton:"pebble_basic", color:"#A751E3", contents:[{type:"Text", text:"\uc624\ub978\ucabd"}, {type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_right_image.png", position:{x:83, y:0}, size:22}], func:function() {
+  var a = Ntry.STATIC;
   if (this.isContinue) {
     if (this.isAction) {
       return Entry.STATIC.CONTINUE;
@@ -12764,26 +12766,27 @@ Entry.block.jr_east = {skeleton:"pebble_basic", color:"#A751E3", contents:[{type
     delete this.isContinue;
   } else {
     this.isAction = this.isContinue = !0;
-    var a = this, b = function() {
+    var b = this, c = function() {
       window.setTimeout(function() {
-        Ntry.dispatchEvent("unitAction", Ntry.STATIC.WALK, function() {
-          a.isAction = !1;
+        Ntry.dispatchEvent("unitAction", a.WALK, function() {
+          b.isAction = !1;
         });
       }, 3);
-    };
+    }, d;
     switch(Ntry.unitComp.direction) {
-      case Ntry.STATIC.SOUTH:
-        Ntry.dispatchEvent("unitAction", Ntry.STATIC.TURN_LEFT, b);
+      case a.SOUTH:
+        d = a.TURN_LEFT;
         break;
-      case Ntry.STATIC.WEST:
-        Ntry.dispatchEvent("unitAction", Ntry.STATIC.HALF_ROTATION, b);
+      case a.WEST:
+        d = a.HALF_ROTATION;
         break;
-      case Ntry.STATIC.NORTH:
-        Ntry.dispatchEvent("unitAction", Ntry.STATIC.TURN_RIGHT, b);
+      case a.NORTH:
+        d = a.TURN_RIGHT;
         break;
       default:
-        b();
+        c();
     }
+    d && Ntry.dispatchEvent("unitAction", d, c);
     return Entry.STATIC.CONTINUE;
   }
 }};
@@ -12796,26 +12799,27 @@ Entry.block.jr_south = {skeleton:"pebble_basic", color:"#A751E3", contents:[{typ
     delete this.isContinue;
   } else {
     this.isAction = this.isContinue = !0;
-    var a = this, b = function() {
+    var a = Ntry.STATIC, b = this, c = function() {
       window.setTimeout(function() {
         Ntry.dispatchEvent("unitAction", Ntry.STATIC.WALK, function() {
-          a.isAction = !1;
+          b.isAction = !1;
         });
       }, 3);
-    };
+    }, d;
     switch(Ntry.unitComp.direction) {
-      case Ntry.STATIC.EAST:
-        Ntry.dispatchEvent("unitAction", Ntry.STATIC.TURN_RIGHT, b);
+      case a.EAST:
+        d = a.TURN_RIGHT;
         break;
-      case Ntry.STATIC.NORTH:
-        Ntry.dispatchEvent("unitAction", Ntry.STATIC.HALF_ROTATION, b);
+      case a.NORTH:
+        d = a.HALF_ROTATION;
         break;
-      case Ntry.STATIC.WEST:
-        Ntry.dispatchEvent("unitAction", Ntry.STATIC.TURN_LEFT, b);
+      case a.WEST:
+        d = a.TURN_LEFT;
         break;
       default:
-        b();
+        c();
     }
+    d && Ntry.dispatchEvent("unitAction", d, c);
     return Entry.STATIC.CONTINUE;
   }
 }};
@@ -12828,26 +12832,27 @@ Entry.block.jr_west = {skeleton:"pebble_basic", color:"#A751E3", contents:[{type
     delete this.isContinue;
   } else {
     this.isAction = this.isContinue = !0;
-    var a = this, b = function() {
+    var a = Ntry.STATIC, b = this, c = function() {
       window.setTimeout(function() {
-        Ntry.dispatchEvent("unitAction", Ntry.STATIC.WALK, function() {
-          a.isAction = !1;
+        Ntry.dispatchEvent("unitAction", a.WALK, function() {
+          b.isAction = !1;
         });
       }, 3);
-    };
+    }, d;
     switch(Ntry.unitComp.direction) {
-      case Ntry.STATIC.SOUTH:
-        Ntry.dispatchEvent("unitAction", Ntry.STATIC.TURN_RIGHT, b);
+      case a.SOUTH:
+        d = a.TURN_RIGHT;
         break;
-      case Ntry.STATIC.EAST:
-        Ntry.dispatchEvent("unitAction", Ntry.STATIC.HALF_ROTATION, b);
+      case a.EAST:
+        d = a.HALF_ROTATION;
         break;
-      case Ntry.STATIC.NORTH:
-        Ntry.dispatchEvent("unitAction", Ntry.STATIC.TURN_LEFT, b);
+      case a.NORTH:
+        d = a.TURN_LEFT;
         break;
       default:
-        b();
+        c();
     }
+    d && Ntry.dispatchEvent("unitAction", d, c);
     return Entry.STATIC.CONTINUE;
   }
 }};
@@ -12923,13 +12928,8 @@ Entry.block.jr_go_slow = {skeleton:"basic", color:"#f46c6c", contents:["\ucc9c\u
   }
 }};
 Entry.block.jr_repeat_until_dest = {skeleton:"basic_loop", color:"#498DEB", contents:[{type:"Image", img:"/img/assets/ntry/bitmap/jr/jr_goal_image.png", size:18}, "\ub9cc\ub0a0 \ub54c \uae4c\uc9c0 \ubc18\ubcf5\ud558\uae30", {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}, {type:"Statement", key:"STATEMENT", accept:"basic", alignY:15, alignX:2}], func:function() {
-  if (void 0 === this.repeatCount) {
-    return this.repeatCount = 100, Entry.STATIC.CONTINUE;
-  }
-  if (0 < this.repeatCount) {
-    return console.log(this.repeatCount), this.repeatCount--, this.executor.stepInto(this.block.values.STATEMENT), Entry.STATIC.CONTINUE;
-  }
-  delete this.repeatCount;
+  this.executor.stepInto(this.block.values.STATEMENT);
+  return Entry.STATIC.CONTINUE;
 }};
 Entry.block.jr_if_construction = {skeleton:"basic_loop", color:"#498DEB", contents:["\ub9cc\uc57d", {type:"Image", img:"/img/assets/ntry/bitmap/jr/jr_construction_image.png", size:18}, "\uc55e\uc5d0 \uc788\ub2e4\uba74", {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}, {type:"Statement", key:"STATEMENT", accept:"basic", alignY:15, alignX:2}], func:function() {
   if (!this.isContinue) {

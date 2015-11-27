@@ -1222,10 +1222,10 @@ Entry.Playground.prototype.restoreBlock = function(targetObject, blockString) {
     if (Entry.stateManager) {
         Entry.stateManager.addCommand(
             "restore block",
-              this,
-              this.restoreBlock,
-              this.object,
-              this.object.getScriptText()
+            this,
+            this.restoreBlock,
+            this.object,
+            this.object.getScriptText()
         );
     }
     var script = Blockly.Xml.textToDom(blockString);
