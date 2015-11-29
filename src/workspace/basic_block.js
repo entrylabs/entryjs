@@ -109,6 +109,44 @@ Entry.block.jr_item = {
     }
 };
 
+Entry.block.cparty_jr_item = {
+    skeleton: "pebble_basic",
+    color: "#8ABC1D",
+    contents: [
+        {
+            type: "Text",
+            text: "연필 줍기"
+        },
+        {
+            type: "Indicator",
+            img: "/img/assets/ntry/bitmap/cpartyjr/pen.png",
+            highlightColor: "#FFF",
+            position: {x: 83, y: 0},
+            size: 22
+        }
+    ],
+    func: function() {
+        if (!this.isContinue) {
+            this.isContinue = true;
+            this.isAction = true;
+            var self = this;
+            var callBack = function() {
+                Ntry.dispatchEvent("getItem");
+                self.isAction = false;
+            };
+            Ntry.dispatchEvent("unitAction", Ntry.STATIC.GET_ITEM , callBack);
+            return Entry.STATIC.CONTINUE;
+        } else if (this.isAction) {
+            return Entry.STATIC.CONTINUE;
+        } else {
+            delete this.isAction;
+            delete this.isContinue;
+
+        }
+    }
+};
+
+
 Entry.block.jr_north = {
     skeleton: "pebble_basic",
     color: "#A751E3",
@@ -656,4 +694,3 @@ Entry.block.jr_if_speed = {
         }
     }
 };
-
