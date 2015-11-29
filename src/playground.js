@@ -1188,6 +1188,7 @@ Entry.Playground.prototype.syncObject = function(object) {
  */
 Entry.Playground.prototype.editBlock = function() {
     var playground = Entry.playground;
+    if (!Entry.stateManager) return;
     Entry.stateManager.addCommand("edit block",
                                   playground,
                                   playground.restoreBlock,
@@ -1197,8 +1198,7 @@ Entry.Playground.prototype.editBlock = function() {
 };
 
 Entry.Playground.prototype.mouseupBlock = function() {
-    if (!Entry.reporter)
-        return;
+    if (!Entry.reporter) return;
     var playground = Entry.playground;
     var object = playground.object;
     Entry.reporter.report(
@@ -1219,12 +1219,15 @@ Entry.Playground.prototype.mouseupBlock = function() {
 Entry.Playground.prototype.restoreBlock = function(targetObject, blockString) {
     var playground = Entry.playground;
     Entry.container.selectObject(targetObject.id);
-    Entry.stateManager.addCommand("restore block",
-                                  this,
-                                  this.restoreBlock,
-                                  this.object,
-                                  this.object.getScriptText()
-                                 );
+    if (Entry.stateManager) {
+        Entry.stateManager.addCommand(
+            "restore block",
+            this,
+            this.restoreBlock,
+            this.object,
+            this.object.getScriptText()
+        );
+    }
     var script = Blockly.Xml.textToDom(blockString);
     Blockly.mainWorkspace.clear();
     Blockly.Xml.domToWorkspace(Blockly.mainWorkspace, script);

@@ -31,6 +31,7 @@ Entry.HW = function() {
         '11': Entry.Arduino,
         '12': Entry.SensorBoard,
         '24': Entry.Hamster,
+        '25': Entry.Albert,
         '31': Entry.Bitbrick
     };
 };

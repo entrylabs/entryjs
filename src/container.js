@@ -220,10 +220,15 @@ Entry.Container.prototype.addObject = function(objectModel, index) {
     var object = new Entry.EntryObject(objectModel);
     object.name = Entry.getOrderedName(object.name, this.objects_);
 
-    Entry.stateManager.addCommand("add object",
-                                  this,
-                                  this.removeObject,
-                                  object);
+
+    if (Entry.stateManager) {
+        Entry.stateManager.addCommand(
+            "add object",
+              this,
+              this.removeObject,
+              object
+        );
+    }
     if (!object.scene)
         object.scene = Entry.scene.selectedScene;
     if (typeof index == 'number') {
@@ -284,11 +289,15 @@ Entry.Container.prototype.addCloneObject = function(object, scene) {
 Entry.Container.prototype.removeObject = function(object) {
     var index = this.objects_.indexOf(object);
     var objectJSON = object.toJSON();
-    Entry.stateManager.addCommand("remove object",
-                                  this,
-                                  this.addObject,
-                                  objectJSON,
-                                 index);
+    if (Entry.stateManager) {
+        Entry.stateManager.addCommand(
+            "remove object",
+            this,
+            this.addObject,
+            objectJSON,
+            index
+        );
+    }
     var state = new Entry.State(
                                 this.addObject,
                                 objectJSON,
@@ -406,11 +415,13 @@ Entry.Container.prototype.moveElement = function(start, end, isCallFromState) {
     objs = this.getCurrentObjects();
     startIndex = this.getAllObjects().indexOf(objs[start]);
     endIndex = this.getAllObjects().indexOf(objs[end]);
-    if (!isCallFromState)
-        Entry.stateManager.addCommand("reorder object",
-                                      Entry.container,
-                                      Entry.container.moveElement,
-                                      endIndex, startIndex, true);
+    if (!isCallFromState && Entry.stateManager)
+        Entry.stateManager.addCommand(
+            "reorder object",
+            Entry.container,
+            Entry.container.moveElement,
+            endIndex, startIndex, true
+        );
 
     this.objects_.splice(endIndex, 0, this.objects_.splice(startIndex, 1)[0]);
     this.setCurrentObjects();
