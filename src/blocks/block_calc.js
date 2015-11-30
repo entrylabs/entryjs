@@ -751,9 +751,11 @@ Blockly.Blocks.replace_string = {
 };
 
 Entry.block.replace_string = function (sprite, script) {
-    return script.getStringValue("STRING", script).replace(
-        script.getStringValue("OLD_WORD", script),
-        script.getStringValue("NEW_WORD", script));
+    return script.getStringValue("STRING", script).
+        replace(
+            new RegExp(script.getStringValue("OLD_WORD", script), 'gm'),
+            script.getStringValue("NEW_WORD", script)
+        );
 };
 
 Blockly.Blocks.change_string_case = {
