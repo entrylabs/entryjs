@@ -12943,8 +12943,9 @@ Entry.block.jr_go_slow = {skeleton:"basic", color:"#f46c6c", contents:["\ucc9c\u
   }
 }};
 Entry.block.jr_repeat_until_dest = {skeleton:"basic_loop", color:"#498DEB", contents:[{type:"Image", img:"/img/assets/ntry/bitmap/jr/jr_goal_image.png", size:18}, "\ub9cc\ub0a0 \ub54c \uae4c\uc9c0 \ubc18\ubcf5\ud558\uae30", {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}, {type:"Statement", key:"STATEMENT", accept:"basic", alignY:15, alignX:2}], func:function() {
-  this.executor.stepInto(this.block.values.STATEMENT);
-  return Entry.STATIC.CONTINUE;
+  if (1 !== this.block.values.STATEMENT.getBlocks().length) {
+    return this.executor.stepInto(this.block.values.STATEMENT), Entry.STATIC.CONTINUE;
+  }
 }};
 Entry.block.jr_if_construction = {skeleton:"basic_loop", color:"#498DEB", contents:["\ub9cc\uc57d", {type:"Image", img:"/img/assets/ntry/bitmap/jr/jr_construction_image.png", size:18}, "\uc55e\uc5d0 \uc788\ub2e4\uba74", {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}, {type:"Statement", key:"STATEMENT", accept:"basic", alignY:15, alignX:2}], func:function() {
   if (!this.isContinue) {
@@ -12958,7 +12959,7 @@ Entry.block.jr_if_construction = {skeleton:"basic_loop", color:"#498DEB", conten
     Ntry.addVectorByDirection(c, a.direction, 1);
     c = Ntry.entityManager.find({type:Ntry.STATIC.GRID, x:c.x, y:c.y}, {type:Ntry.STATIC.TILE, tileType:Ntry.STATIC.OBSTACLE_REPAIR});
     this.isContinue = !0;
-    if (0 != c.length) {
+    if (0 != c.length && 1 !== this.block.values.STATEMENT.getBlocks().length) {
       return this.executor.stepInto(this.block.values.STATEMENT), Entry.STATIC.CONTINUE;
     }
   }
@@ -12975,7 +12976,7 @@ Entry.block.jr_if_speed = {skeleton:"basic_loop", color:"#498DEB", contents:["\u
     Ntry.addVectorByDirection(c, a.direction, 1);
     c = Ntry.entityManager.find({type:Ntry.STATIC.GRID, x:c.x, y:c.y}, {type:Ntry.STATIC.TILE, tileType:Ntry.STATIC.OBSTACLE_SLOW});
     this.isContinue = !0;
-    if (0 != c.length) {
+    if (0 != c.length && 1 !== this.block.values.STATEMENT.getBlocks().length) {
       return this.executor.stepInto(this.block.values.STATEMENT), Entry.STATIC.CONTINUE;
     }
   }
