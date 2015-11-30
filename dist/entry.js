@@ -12963,35 +12963,37 @@ Entry.block.jr_repeat_until_dest = {skeleton:"basic_loop", color:"#498DEB", cont
 }};
 Entry.block.jr_if_construction = {skeleton:"basic_loop", color:"#498DEB", contents:["\ub9cc\uc57d", {type:"Image", img:"/img/assets/ntry/bitmap/jr/jr_construction_image.png", size:18}, "\uc55e\uc5d0 \uc788\ub2e4\uba74", {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}, {type:"Statement", key:"STATEMENT", accept:"basic", alignY:15, alignX:2}], func:function() {
   if (!this.isContinue) {
-    var a = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT), b;
-    for (b in a) {
-      var c = a[b]
+    var a = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT), b, c;
+    for (c in a) {
+      b = a[c];
     }
-    a = Ntry.entityManager.getComponent(c.id, Ntry.STATIC.UNIT);
-    c = Ntry.entityManager.getComponent(c.id, Ntry.STATIC.GRID);
-    c = {x:c.x, y:c.y};
-    Ntry.addVectorByDirection(c, a.direction, 1);
-    c = Ntry.entityManager.find({type:Ntry.STATIC.GRID, x:c.x, y:c.y}, {type:Ntry.STATIC.TILE, tileType:Ntry.STATIC.OBSTACLE_REPAIR});
+    a = Ntry.entityManager.getComponent(b.id, Ntry.STATIC.UNIT);
+    b = Ntry.entityManager.getComponent(b.id, Ntry.STATIC.GRID);
+    b = {x:b.x, y:b.y};
+    Ntry.addVectorByDirection(b, a.direction, 1);
+    b = Ntry.entityManager.find({type:Ntry.STATIC.GRID, x:b.x, y:b.y}, {type:Ntry.STATIC.TILE, tileType:Ntry.STATIC.OBSTACLE_REPAIR});
     this.isContinue = !0;
-    if (0 != c.length && 1 !== this.block.values.STATEMENT.getBlocks().length) {
-      return this.executor.stepInto(this.block.values.STATEMENT), Entry.STATIC.CONTINUE;
+    a = this.block.values.STATEMENT;
+    if (0 !== b.length && 1 !== a.getBlocks().length) {
+      return this.executor.stepInto(a), Entry.STATIC.CONTINUE;
     }
   }
 }};
 Entry.block.jr_if_speed = {skeleton:"basic_loop", color:"#498DEB", contents:["\ub9cc\uc57d", {type:"Image", img:"/img/assets/ntry/bitmap/jr/jr_speed_image.png", size:18}, "\uc55e\uc5d0 \uc788\ub2e4\uba74", {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}, {type:"Statement", key:"STATEMENT", accept:"basic", alignY:15, alignX:2}], func:function() {
   if (!this.isContinue) {
-    var a = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT), b;
-    for (b in a) {
-      var c = a[b]
+    var a = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT), b, c;
+    for (c in a) {
+      b = a[c];
     }
-    a = Ntry.entityManager.getComponent(c.id, Ntry.STATIC.UNIT);
-    c = Ntry.entityManager.getComponent(c.id, Ntry.STATIC.GRID);
-    c = {x:c.x, y:c.y};
-    Ntry.addVectorByDirection(c, a.direction, 1);
-    c = Ntry.entityManager.find({type:Ntry.STATIC.GRID, x:c.x, y:c.y}, {type:Ntry.STATIC.TILE, tileType:Ntry.STATIC.OBSTACLE_SLOW});
+    a = Ntry.entityManager.getComponent(b.id, Ntry.STATIC.UNIT);
+    b = Ntry.entityManager.getComponent(b.id, Ntry.STATIC.GRID);
+    b = {x:b.x, y:b.y};
+    Ntry.addVectorByDirection(b, a.direction, 1);
+    b = Ntry.entityManager.find({type:Ntry.STATIC.GRID, x:b.x, y:b.y}, {type:Ntry.STATIC.TILE, tileType:Ntry.STATIC.OBSTACLE_SLOW});
     this.isContinue = !0;
-    if (0 != c.length && 1 !== this.block.values.STATEMENT.getBlocks().length) {
-      return this.executor.stepInto(this.block.values.STATEMENT), Entry.STATIC.CONTINUE;
+    a = this.block.values.STATEMENT;
+    if (0 !== b.length && 1 !== a.getBlocks().length) {
+      return this.executor.stepInto(a), Entry.STATIC.CONTINUE;
     }
   }
 }};

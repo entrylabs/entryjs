@@ -610,8 +610,9 @@ Entry.block.jr_if_construction = {
         var entities = Ntry.entityManager.getEntitiesByComponent(
         Ntry.STATIC.UNIT);
 
+        var entity;
         for (var key in entities)
-            var entity = entities[key];
+            entity = entities[key];
 
         var unitComp = Ntry.entityManager.getComponent(
             entity.id, Ntry.STATIC.UNIT);
@@ -635,11 +636,13 @@ Entry.block.jr_if_construction = {
 
         this.isContinue = true;
 
-        if (fitEntities.length == 0) {
+        var statement = this.block.values.STATEMENT;
+        if (fitEntities.length === 0) {
             return;
-        } else if(this.block.values.STATEMENT.getBlocks().length === 1){           return;
-        }else {
-           this.executor.stepInto(this.block.values.STATEMENT);
+        } else if (statement.getBlocks().length === 1)
+            return;
+        else {
+            this.executor.stepInto(statement);
             return Entry.STATIC.CONTINUE;
         }
     }
@@ -675,8 +678,9 @@ Entry.block.jr_if_speed = {
         var entities = Ntry.entityManager.getEntitiesByComponent(
         Ntry.STATIC.UNIT);
 
+        var entity;
         for (var key in entities)
-            var entity = entities[key];
+            entity = entities[key];
 
         var unitComp = Ntry.entityManager.getComponent(
             entity.id, Ntry.STATIC.UNIT);
@@ -696,16 +700,16 @@ Entry.block.jr_if_speed = {
                 type: Ntry.STATIC.TILE,
                 tileType: Ntry.STATIC.OBSTACLE_SLOW
             }
-            
+
         );
 
         this.isContinue = true;
 
-        if (fitEntities.length == 0) {
-            return;
-        } else if(this.block.values.STATEMENT.getBlocks().length === 1){           return;
-        } else {
-            this.executor.stepInto(this.block.values.STATEMENT);
+        var statement = this.block.values.STATEMENT;
+        if (fitEntities.length === 0) return;
+        else if(statement.getBlocks().length === 1) return;
+        else {
+            this.executor.stepInto(statement);
             return Entry.STATIC.CONTINUE;
         }
     }

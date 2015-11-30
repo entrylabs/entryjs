@@ -54,7 +54,7 @@ Entry.Board = function(dom) {
             left: offset.left - scrollLeft
         };
         console.log('update');
-    };
+    }
 
     this.snap = Snap('#play');
 
