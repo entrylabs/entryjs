@@ -213,9 +213,10 @@ Entry.Board = function(dom) {
         if (old) old.removeSelected();
 
         if (blockView instanceof Entry.BlockView) {
-            this.set({selectedBlockView:blockView});
             blockView.addSelected();
-        } else this.set({selectedBlockView:null});
+        } else blockView = null;
+
+        this.set({selectedBlockView:blockView});
     };
 
 

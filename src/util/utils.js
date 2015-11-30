@@ -63,8 +63,8 @@ Entry.Utils.colorDarken = function(color, factor) {
 Entry.Utils.bindGlobalEvent = function() {
     if (!Entry.windowReszied) {
         Entry.windowResized = new Entry.Event(window);
-        $(window).on('resize', (function() {
-            Entry.windowResized.notify();
+        $(window).on('resize', (function(e) {
+            Entry.windowResized.notify(e);
         }));
     }
 
@@ -82,6 +82,37 @@ Entry.Utils.bindGlobalEvent = function() {
             Entry.documentMousemove.notify(e);
             Entry.mouseCoordinate.x = e.clientX;
             Entry.mouseCoordinate.y = e.clientY;
+        }));
+    }
+
+    if (!Entry.documentMousemove) {
+        Entry.mouseCoordinate = {};
+        Entry.documentMousemove = new Entry.Event(window);
+        $(document).on('mousemove', (function(e) {
+            Entry.documentMousemove.notify(e);
+            Entry.mouseCoordinate.x = e.clientX;
+            Entry.mouseCoordinate.y = e.clientY;
+        }));
+    }
+
+    if (!Entry.keyPressed) {
+        Entry.pressedKeys = [];
+        Entry.keyPressed = new Entry.Event(window);
+        $(document).on('keydown', (function(e) {
+            var keyCode = e.keyCode;
+            if (Entry.pressedKeys.indexOf(keyCode) < 0)
+                Entry.pressedKeys.push(keyCode);
+            Entry.keyPressed.notify(e);
+        }));
+    }
+
+    if (!Entry.keyUpped) {
+        Entry.keyUpped = new Entry.Event(window);
+        $(document).on('keyup', (function(e) {
+            var keyCode = e.keyCode;
+            var index = Entry.pressedKeys.indexOf(keyCode);
+            if (index > -1) Entry.pressedKeys.splice(index,1);
+            Entry.keyUpped.notify(e);
         }));
     }
 };

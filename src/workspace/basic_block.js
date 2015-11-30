@@ -696,6 +696,7 @@ Entry.block.jr_if_speed = {
                 type: Ntry.STATIC.TILE,
                 tileType: Ntry.STATIC.OBSTACLE_SLOW
             }
+            
         );
 
         this.isContinue = true;

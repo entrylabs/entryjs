@@ -10383,8 +10383,8 @@ Entry.Utils.colorDarken = function(a, b) {
   return "#" + c + d + e;
 };
 Entry.Utils.bindGlobalEvent = function() {
-  Entry.windowReszied || (Entry.windowResized = new Entry.Event(window), $(window).on("resize", function() {
-    Entry.windowResized.notify();
+  Entry.windowReszied || (Entry.windowResized = new Entry.Event(window), $(window).on("resize", function(a) {
+    Entry.windowResized.notify(a);
   }));
   Entry.documentMousedown || (Entry.documentMousedown = new Entry.Event(window), $(document).on("mousedown", function(a) {
     Entry.documentMousedown.notify(a);
@@ -10393,6 +10393,21 @@ Entry.Utils.bindGlobalEvent = function() {
     Entry.documentMousemove.notify(a);
     Entry.mouseCoordinate.x = a.clientX;
     Entry.mouseCoordinate.y = a.clientY;
+  }));
+  Entry.documentMousemove || (Entry.mouseCoordinate = {}, Entry.documentMousemove = new Entry.Event(window), $(document).on("mousemove", function(a) {
+    Entry.documentMousemove.notify(a);
+    Entry.mouseCoordinate.x = a.clientX;
+    Entry.mouseCoordinate.y = a.clientY;
+  }));
+  Entry.keyPressed || (Entry.pressedKeys = [], Entry.keyPressed = new Entry.Event(window), $(document).on("keydown", function(a) {
+    var b = a.keyCode;
+    0 > Entry.pressedKeys.indexOf(b) && Entry.pressedKeys.push(b);
+    Entry.keyPressed.notify(a);
+  }));
+  Entry.keyUpped || (Entry.keyUpped = new Entry.Event(window), $(document).on("keyup", function(a) {
+    var b = Entry.pressedKeys.indexOf(a.keyCode);
+    -1 < b && Entry.pressedKeys.splice(b, 1);
+    Entry.keyUpped.notify(a);
   }));
 };
 Entry.Utils.makeActivityReporter = function() {
@@ -13101,7 +13116,8 @@ Entry.BlockMenu = function(a, b) {
   a.setSelectedBlock = function(a) {
     var c = this.selectedBlockView;
     c && c.removeSelected();
-    a instanceof Entry.BlockView && (this.set({selectedBlockView:a}), a.addSelected());
+    a instanceof Entry.BlockView ? a.addSelected() : a = null;
+    this.set({selectedBlockView:a});
   };
 })(Entry.BlockMenu.prototype);
 Entry.BlockView = function(a, b) {
@@ -14359,7 +14375,8 @@ Entry.Board = function(a) {
   a.setSelectedBlock = function(a) {
     var c = this.selectedBlockView;
     c && c.removeSelected();
-    a instanceof Entry.BlockView ? (this.set({selectedBlockView:a}), a.addSelected()) : this.set({selectedBlockView:null});
+    a instanceof Entry.BlockView ? a.addSelected() : a = null;
+    this.set({selectedBlockView:a});
   };
 })(Entry.Board.prototype);
 Entry.Workspace = function(a, b) {

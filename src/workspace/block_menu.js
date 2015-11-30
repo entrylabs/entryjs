@@ -272,9 +272,10 @@ Entry.BlockMenu = function(dom, align) {
         if (old) old.removeSelected();
 
         if (blockView instanceof Entry.BlockView) {
-            this.set({selectedBlockView:blockView});
             blockView.addSelected();
-        }
+        } else blockView = null;
+
+        this.set({selectedBlockView:blockView});
     };
 
 })(Entry.BlockMenu.prototype);
