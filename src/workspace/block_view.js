@@ -252,6 +252,7 @@ Entry.BlockView = function(block, board) {
                 mode: true
             });
             this.addDragging();
+            this.getBoard().setSelectedBlock(this);
             this.dragMode = Entry.DRAG_MODE_MOUSEDOWN;
         }
 
@@ -547,6 +548,14 @@ Entry.BlockView = function(block, board) {
 
     p.removeDragging = function() {
         this.svgGroup.removeClass('dragging');
+    };
+
+    p.addSelected = function() {
+        this.svgGroup.addClass('selected');
+    };
+
+    p.removeSelected = function() {
+        this.svgGroup.removeClass('selected');
     };
 
     p.getSkeleton = function() {return this._skeleton;};

@@ -4136,6 +4136,10 @@
 .block.dragging {
   cursor: url('../images/handclosed.cur') 8 5, auto;
 }
+.block.selected > path {
+  stroke-width: 3px;
+  stroke: #798EB1;
+}
 .entry-field-dropdown {
   cursor: pointer;
 }

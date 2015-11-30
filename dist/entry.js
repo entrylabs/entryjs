@@ -13241,6 +13241,7 @@ Entry.BlockView = function(a, b) {
       this.getBoard().set({dragBlock:this});
       this.dragInstance = new Entry.DragInstance({startX:a.pageX, startY:a.pageY, offsetX:a.pageX, offsetY:a.pageY, prev:this.block.prev, height:0, mode:!0});
       this.addDragging();
+      this.getBoard().setSelectedBlock(this);
       this.dragMode = Entry.DRAG_MODE_MOUSEDOWN;
     }
     var f = this, g = this.getBoard();
@@ -13348,6 +13349,12 @@ Entry.BlockView = function(a, b) {
   };
   a.removeDragging = function() {
     this.svgGroup.removeClass("dragging");
+  };
+  a.addSelected = function() {
+    this.svgGroup.addClass("selected");
+  };
+  a.removeSelected = function() {
+    this.svgGroup.removeClass("selected");
   };
   a.getSkeleton = function() {
     return this._skeleton;
@@ -14252,9 +14259,10 @@ Entry.Board = function(a) {
   this.changeEvent = new Entry.Event(this);
   this.scroller = new Entry.Scroller(this, !0, !0);
   this._addControl(a);
+  Entry.documentMousedown && Entry.documentMousedown.attach(this, this.setSelectedBlock);
 };
 (function(a) {
-  a.schema = {code:null, dragBlock:null, magnetedBlockView:null};
+  a.schema = {code:null, dragBlock:null, magnetedBlockView:null, selectedBlockView:null};
   a.changeCode = function(a) {
     this.codeListener && this.code.changeEvent.detach(this.codeListener);
     this.set({code:a});
@@ -14339,6 +14347,11 @@ Entry.Board = function(a) {
   a.mouseWheel = function(a) {
     a = a.originalEvent;
     this.scroller.scroll(a.wheelDeltaX || -a.deltaX, a.wheelDeltaY || -a.deltaY);
+  };
+  a.setSelectedBlock = function(a) {
+    var c = this.selectedBlockView;
+    c && c.removeSelected();
+    a instanceof Entry.BlockView && (this.set({selectedBlockView:a}), a.addSelected());
   };
 })(Entry.Board.prototype);
 Entry.Workspace = function(a, b) {
