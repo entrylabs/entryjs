@@ -35,10 +35,15 @@ Entry.Board = function(dom) {
         { parent: dom }
     );
 
+    var zoom = document.documentElement.clientWidth / window.innerWidth;
     this.offset = this.svgDom.offset();
+    this.offset.top = 130;
+    this.offset.left -= $(window).scrollLeft();
     this.relativeOffset = this.offset;
     var that = this;
-    $(window).scroll(function(e) {
+    $(window).scroll(updateOffset);
+    Entry.windowResized.attach(this, updateOffset);
+    function updateOffset(e) {
         var w = $(window),
             scrollTop = w.scrollTop(),
             scrollLeft = w.scrollLeft(),
@@ -47,8 +52,9 @@ Entry.Board = function(dom) {
         that.relativeOffset = {
             top: offset.top - scrollTop,
             left: offset.left - scrollLeft
-        }
-    });
+        };
+        console.log('update');
+    };
 
     this.snap = Snap('#play');
 

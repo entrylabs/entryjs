@@ -14222,6 +14222,13 @@ Entry.FieldTrashcan = function(a) {
   };
 })(Entry.FieldTrashcan.prototype);
 Entry.Board = function(a) {
+  function b(a) {
+    var b = $(window);
+    a = b.scrollTop();
+    var b = b.scrollLeft(), f = c.offset;
+    c.relativeOffset = {top:f.top - a, left:f.left - b};
+    console.log("update");
+  }
   a = "string" === typeof a ? $("#" + a) : $(a);
   if ("DIV" !== a.prop("tagName")) {
     return console.error("Dom is not div element");
@@ -14231,14 +14238,13 @@ Entry.Board = function(a) {
   }
   Entry.Model(this, !1);
   this.svgDom = Entry.Dom($('<svg id="play" class="entryBoard" width="100%" height="100%"version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'), {parent:a});
-  this.relativeOffset = this.offset = this.svgDom.offset();
-  var b = this;
-  $(window).scroll(function(a) {
-    var d = $(window);
-    a = d.scrollTop();
-    var d = d.scrollLeft(), e = b.offset;
-    b.relativeOffset = {top:e.top - a, left:e.left - d};
-  });
+  this.offset = this.svgDom.offset();
+  this.offset.top = 130;
+  this.offset.left -= $(window).scrollLeft();
+  this.relativeOffset = this.offset;
+  var c = this;
+  $(window).scroll(b);
+  Entry.windowResized.attach(this, b);
   this.snap = Snap("#play");
   this._blockViews = [];
   this.trashcan = new Entry.FieldTrashcan(this);
