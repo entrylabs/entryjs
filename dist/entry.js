@@ -13001,9 +13001,10 @@ Entry.BlockMenu = function(a, b) {
   this.svgBlockGroup.board = this;
   this.changeEvent = new Entry.Event(this);
   this.observe(this, "generateDragBlockObserver", ["dragBlock"]);
+  Entry.documentMousedown && Entry.documentMousedown.attach(this, this.setSelectedBlock);
 };
 (function(a) {
-  a.schema = {code:null, dragBlock:null, closeBlock:null};
+  a.schema = {code:null, dragBlock:null, closeBlock:null, selectedBlockView:null};
   a.changeCode = function(a) {
     if (!(a instanceof Entry.Code)) {
       return console.error("You must inject code instance");
@@ -13047,7 +13048,8 @@ Entry.BlockMenu = function(a, b) {
     if (null !== this.dragBlock) {
       this.dragBlockObserver && this.removeDragBlockObserver();
       var c = this._svgWidth, d = this.dragBlock, e = d.block, f = this.code, g = e.getThread();
-      e && g && (f.cloneThread(g), a && d.observe(this, "moveBoardBlock", ["x", "y"], !1), d.dominate(), a = this.workspace.getBoard(), this._boardBlockView = a.code.cloneThread(g).getFirstBlock().view, this._boardBlockView.dragInstance = new Entry.DragInstance({height:0, isNew:!0}), a.set({dragBlock:this._boardBlockView}), this._boardBlockView.addDragging(), this._boardBlockView.dragMode = Entry.DRAG_MODE_MOUSEDOWN, this._boardBlockView._moveTo(d.x - c, d.y - 0, !1));
+      e && g && (f.cloneThread(g), a && d.observe(this, "moveBoardBlock", ["x", "y"], !1), d.dominate(), a = this.workspace.getBoard(), this._boardBlockView = a.code.cloneThread(g).getFirstBlock().view, this._boardBlockView.dragInstance = new Entry.DragInstance({height:0, isNew:!0}), a.set({dragBlock:this._boardBlockView}), a.setSelectedBlock(this._boardBlockView), this._boardBlockView.addDragging(), this._boardBlockView.dragMode = Entry.DRAG_MODE_MOUSEDOWN, this._boardBlockView._moveTo(d.x - c, 
+      d.y - 0, !1));
       if (this._boardBlockView) {
         return this._boardBlockView.block.id;
       }
@@ -13094,6 +13096,11 @@ Entry.BlockMenu = function(a, b) {
         return f;
       }
     }
+  };
+  a.setSelectedBlock = function(a) {
+    var c = this.selectedBlockView;
+    c && c.removeSelected();
+    a instanceof Entry.BlockView && (this.set({selectedBlockView:a}), a.addSelected());
   };
 })(Entry.BlockMenu.prototype);
 Entry.BlockView = function(a, b) {
