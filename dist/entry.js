@@ -10383,8 +10383,8 @@ Entry.Utils.colorDarken = function(a, b) {
   return "#" + c + d + e;
 };
 Entry.Utils.bindGlobalEvent = function() {
-  Entry.windowReszied || (Entry.windowResized = new Entry.Event(window), $(window).on("resize", function() {
-    Entry.windowResized.notify();
+  Entry.windowReszied || (Entry.windowResized = new Entry.Event(window), $(window).on("resize", function(a) {
+    Entry.windowResized.notify(a);
   }));
   Entry.documentMousedown || (Entry.documentMousedown = new Entry.Event(window), $(document).on("mousedown", function(a) {
     Entry.documentMousedown.notify(a);
@@ -10393,6 +10393,21 @@ Entry.Utils.bindGlobalEvent = function() {
     Entry.documentMousemove.notify(a);
     Entry.mouseCoordinate.x = a.clientX;
     Entry.mouseCoordinate.y = a.clientY;
+  }));
+  Entry.documentMousemove || (Entry.mouseCoordinate = {}, Entry.documentMousemove = new Entry.Event(window), $(document).on("mousemove", function(a) {
+    Entry.documentMousemove.notify(a);
+    Entry.mouseCoordinate.x = a.clientX;
+    Entry.mouseCoordinate.y = a.clientY;
+  }));
+  Entry.keyPressed || (Entry.pressedKeys = [], Entry.keyPressed = new Entry.Event(window), $(document).on("keydown", function(a) {
+    var b = a.keyCode;
+    0 > Entry.pressedKeys.indexOf(b) && Entry.pressedKeys.push(b);
+    Entry.keyPressed.notify(a);
+  }));
+  Entry.keyUpped || (Entry.keyUpped = new Entry.Event(window), $(document).on("keyup", function(a) {
+    var b = Entry.pressedKeys.indexOf(a.keyCode);
+    -1 < b && Entry.pressedKeys.splice(b, 1);
+    Entry.keyUpped.notify(a);
   }));
 };
 Entry.Utils.makeActivityReporter = function() {
@@ -12943,8 +12958,9 @@ Entry.block.jr_go_slow = {skeleton:"basic", color:"#f46c6c", contents:["\ucc9c\u
   }
 }};
 Entry.block.jr_repeat_until_dest = {skeleton:"basic_loop", color:"#498DEB", contents:[{type:"Image", img:"/img/assets/ntry/bitmap/jr/jr_goal_image.png", size:18}, "\ub9cc\ub0a0 \ub54c \uae4c\uc9c0 \ubc18\ubcf5\ud558\uae30", {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}, {type:"Statement", key:"STATEMENT", accept:"basic", alignY:15, alignX:2}], func:function() {
-  this.executor.stepInto(this.block.values.STATEMENT);
-  return Entry.STATIC.CONTINUE;
+  if (1 !== this.block.values.STATEMENT.getBlocks().length) {
+    return this.executor.stepInto(this.block.values.STATEMENT), Entry.STATIC.CONTINUE;
+  }
 }};
 Entry.block.jr_if_construction = {skeleton:"basic_loop", color:"#498DEB", contents:["\ub9cc\uc57d", {type:"Image", img:"/img/assets/ntry/bitmap/jr/jr_construction_image.png", size:18}, "\uc55e\uc5d0 \uc788\ub2e4\uba74", {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}, {type:"Statement", key:"STATEMENT", accept:"basic", alignY:15, alignX:2}], func:function() {
   if (!this.isContinue) {
@@ -12958,7 +12974,7 @@ Entry.block.jr_if_construction = {skeleton:"basic_loop", color:"#498DEB", conten
     Ntry.addVectorByDirection(c, a.direction, 1);
     c = Ntry.entityManager.find({type:Ntry.STATIC.GRID, x:c.x, y:c.y}, {type:Ntry.STATIC.TILE, tileType:Ntry.STATIC.OBSTACLE_REPAIR});
     this.isContinue = !0;
-    if (0 != c.length) {
+    if (0 != c.length && 1 !== this.block.values.STATEMENT.getBlocks().length) {
       return this.executor.stepInto(this.block.values.STATEMENT), Entry.STATIC.CONTINUE;
     }
   }
@@ -12975,7 +12991,7 @@ Entry.block.jr_if_speed = {skeleton:"basic_loop", color:"#498DEB", contents:["\u
     Ntry.addVectorByDirection(c, a.direction, 1);
     c = Ntry.entityManager.find({type:Ntry.STATIC.GRID, x:c.x, y:c.y}, {type:Ntry.STATIC.TILE, tileType:Ntry.STATIC.OBSTACLE_SLOW});
     this.isContinue = !0;
-    if (0 != c.length) {
+    if (0 != c.length && 1 !== this.block.values.STATEMENT.getBlocks().length) {
       return this.executor.stepInto(this.block.values.STATEMENT), Entry.STATIC.CONTINUE;
     }
   }
@@ -13001,9 +13017,10 @@ Entry.BlockMenu = function(a, b) {
   this.svgBlockGroup.board = this;
   this.changeEvent = new Entry.Event(this);
   this.observe(this, "generateDragBlockObserver", ["dragBlock"]);
+  Entry.documentMousedown && Entry.documentMousedown.attach(this, this.setSelectedBlock);
 };
 (function(a) {
-  a.schema = {code:null, dragBlock:null, closeBlock:null};
+  a.schema = {code:null, dragBlock:null, closeBlock:null, selectedBlockView:null};
   a.changeCode = function(a) {
     if (!(a instanceof Entry.Code)) {
       return console.error("You must inject code instance");
@@ -13047,7 +13064,8 @@ Entry.BlockMenu = function(a, b) {
     if (null !== this.dragBlock) {
       this.dragBlockObserver && this.removeDragBlockObserver();
       var c = this._svgWidth, d = this.dragBlock, e = d.block, f = this.code, g = e.getThread();
-      e && g && (f.cloneThread(g), a && d.observe(this, "moveBoardBlock", ["x", "y"], !1), d.dominate(), a = this.workspace.getBoard(), this._boardBlockView = a.code.cloneThread(g).getFirstBlock().view, this._boardBlockView.dragInstance = new Entry.DragInstance({height:0, isNew:!0}), a.set({dragBlock:this._boardBlockView}), this._boardBlockView.addDragging(), this._boardBlockView.dragMode = Entry.DRAG_MODE_MOUSEDOWN, this._boardBlockView._moveTo(d.x - c, d.y - 0, !1));
+      e && g && (f.cloneThread(g), a && d.observe(this, "moveBoardBlock", ["x", "y"], !1), d.dominate(), a = this.workspace.getBoard(), this._boardBlockView = a.code.cloneThread(g).getFirstBlock().view, this._boardBlockView.dragInstance = new Entry.DragInstance({height:0, isNew:!0}), a.set({dragBlock:this._boardBlockView}), a.setSelectedBlock(this._boardBlockView), this._boardBlockView.addDragging(), this._boardBlockView.dragMode = Entry.DRAG_MODE_MOUSEDOWN, this._boardBlockView._moveTo(d.x - c, 
+      d.y - 0, !1));
       if (this._boardBlockView) {
         return this._boardBlockView.block.id;
       }
@@ -13094,6 +13112,12 @@ Entry.BlockMenu = function(a, b) {
         return f;
       }
     }
+  };
+  a.setSelectedBlock = function(a) {
+    var c = this.selectedBlockView;
+    c && c.removeSelected();
+    a instanceof Entry.BlockView ? a.addSelected() : a = null;
+    this.set({selectedBlockView:a});
   };
 })(Entry.BlockMenu.prototype);
 Entry.BlockView = function(a, b) {
@@ -13241,6 +13265,7 @@ Entry.BlockView = function(a, b) {
       this.getBoard().set({dragBlock:this});
       this.dragInstance = new Entry.DragInstance({startX:a.pageX, startY:a.pageY, offsetX:a.pageX, offsetY:a.pageY, prev:this.block.prev, height:0, mode:!0});
       this.addDragging();
+      this.getBoard().setSelectedBlock(this);
       this.dragMode = Entry.DRAG_MODE_MOUSEDOWN;
     }
     var f = this, g = this.getBoard();
@@ -13348,6 +13373,12 @@ Entry.BlockView = function(a, b) {
   };
   a.removeDragging = function() {
     this.svgGroup.removeClass("dragging");
+  };
+  a.addSelected = function() {
+    this.svgGroup.addClass("selected");
+  };
+  a.removeSelected = function() {
+    this.svgGroup.removeClass("selected");
   };
   a.getSkeleton = function() {
     return this._skeleton;
@@ -14258,9 +14289,10 @@ Entry.Board = function(a) {
   this.changeEvent = new Entry.Event(this);
   this.scroller = new Entry.Scroller(this, !0, !0);
   this._addControl(a);
+  Entry.documentMousedown && Entry.documentMousedown.attach(this, this.setSelectedBlock);
 };
 (function(a) {
-  a.schema = {code:null, dragBlock:null, magnetedBlockView:null};
+  a.schema = {code:null, dragBlock:null, magnetedBlockView:null, selectedBlockView:null};
   a.changeCode = function(a) {
     this.codeListener && this.code.changeEvent.detach(this.codeListener);
     this.set({code:a});
@@ -14345,6 +14377,12 @@ Entry.Board = function(a) {
   a.mouseWheel = function(a) {
     a = a.originalEvent;
     this.scroller.scroll(a.wheelDeltaX || -a.deltaX, a.wheelDeltaY || -a.deltaY);
+  };
+  a.setSelectedBlock = function(a) {
+    var c = this.selectedBlockView;
+    c && c.removeSelected();
+    a instanceof Entry.BlockView ? a.addSelected() : a = null;
+    this.set({selectedBlockView:a});
   };
 })(Entry.Board.prototype);
 Entry.Workspace = function(a, b) {

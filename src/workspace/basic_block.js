@@ -572,6 +572,9 @@ Entry.block.jr_repeat_until_dest = {
         }
     ],
     func: function() {
+        if (this.block.values.STATEMENT.getBlocks().length === 1)
+            return;
+
         this.executor.stepInto(this.block.values.STATEMENT);
         return Entry.STATIC.CONTINUE;
     }
@@ -634,8 +637,9 @@ Entry.block.jr_if_construction = {
 
         if (fitEntities.length == 0) {
             return;
-        } else {
-            this.executor.stepInto(this.block.values.STATEMENT);
+        } else if(this.block.values.STATEMENT.getBlocks().length === 1){           return;
+        }else {
+           this.executor.stepInto(this.block.values.STATEMENT);
             return Entry.STATIC.CONTINUE;
         }
     }
@@ -692,16 +696,17 @@ Entry.block.jr_if_speed = {
                 type: Ntry.STATIC.TILE,
                 tileType: Ntry.STATIC.OBSTACLE_SLOW
             }
+            
         );
 
         this.isContinue = true;
 
         if (fitEntities.length == 0) {
             return;
+        } else if(this.block.values.STATEMENT.getBlocks().length === 1){           return;
         } else {
             this.executor.stepInto(this.block.values.STATEMENT);
             return Entry.STATIC.CONTINUE;
-
         }
     }
 
