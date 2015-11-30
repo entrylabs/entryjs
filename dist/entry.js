@@ -41,7 +41,6 @@ var Entry = {block:{}, TEXT_ALIGN_CENTER:0, TEXT_ALIGN_LEFT:1, TEXT_ALIGN_RIGHT:
 }, enableArduino:function() {
 }, initSound:function(a) {
   a.path = a.fileurl ? a.fileurl : "/uploads/" + a.filename.substring(0, 2) + "/" + a.filename.substring(2, 4) + "/" + a.filename + a.ext;
-  console.log(Entry.soundQueue);
   Entry.soundQueue.loadFile({id:a.id, src:a.path, type:createjs.LoadQueue.SOUND});
 }, beforeUnload:function(a) {
   Entry.hw.closeConnection();
