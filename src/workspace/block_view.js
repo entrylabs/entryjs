@@ -189,8 +189,8 @@ Entry.BlockView = function(block, board) {
                 transform: transform
             }, Entry.ANIMATION_DURATION, mina.easeinout);
         } else {
-            this.svgGroup.attr({
-                transform: transform
+            $(this.svgGroup.node).attr({
+                 transform: 'translate(' + this.x + ' ' + this.y + ')'
             });
         }
     };
@@ -449,7 +449,9 @@ Entry.BlockView = function(block, board) {
         var svgGroup = blockView.svgGroup;
         if (magneting) {
             var shadow = this._board.dragBlock.getShadow();
-            shadow.attr({transform: "t0 " + (this.height + 1)});
+            $(shadow.node).attr({
+                 transform: 'translate(0 ' + (this.height + 1) + ')'
+            });
             this.svgGroup.prepend(shadow);
             this._clonedShadow = shadow;
 

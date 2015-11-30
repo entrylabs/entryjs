@@ -13175,7 +13175,7 @@ Entry.BlockView = function(a, b) {
     a = void 0 === a ? !0 : a;
     var c = "t" + this.x + " " + this.y;
     this.svgGroup.stop();
-    a && 0 !== Entry.ANIMATION_DURATION ? this.svgGroup.animate({transform:c}, Entry.ANIMATION_DURATION, mina.easeinout) : this.svgGroup.attr({transform:c});
+    a && 0 !== Entry.ANIMATION_DURATION ? this.svgGroup.animate({transform:c}, Entry.ANIMATION_DURATION, mina.easeinout) : $(this.svgGroup.node).attr({transform:"translate(" + this.x + " " + this.y + ")"});
   };
   a._toLocalCoordinate = function(a) {
     var c = a.transform().globalMatrix, d = this.svgGroup.transform().globalMatrix;
@@ -13307,7 +13307,7 @@ Entry.BlockView = function(a, b) {
       var a = this._board.dragBlock.dragInstance.height, c = this, d = c.svgGroup;
       if (c.magneting) {
         var e = this._board.dragBlock.getShadow();
-        e.attr({transform:"t0 " + (this.height + 1)});
+        $(e.node).attr({transform:"translate(0 " + (this.height + 1) + ")"});
         this.svgGroup.prepend(e);
         this._clonedShadow = e;
         c.background && (c.background.remove(), c.nextBackground.remove(), delete c.background, delete c.nextBackground);
@@ -14222,6 +14222,13 @@ Entry.FieldTrashcan = function(a) {
   };
 })(Entry.FieldTrashcan.prototype);
 Entry.Board = function(a) {
+  function b(a) {
+    var b = $(window);
+    a = b.scrollTop();
+    var b = b.scrollLeft(), f = c.offset;
+    c.relativeOffset = {top:f.top - a, left:f.left - b};
+    console.log("update");
+  }
   a = "string" === typeof a ? $("#" + a) : $(a);
   if ("DIV" !== a.prop("tagName")) {
     return console.error("Dom is not div element");
@@ -14231,14 +14238,13 @@ Entry.Board = function(a) {
   }
   Entry.Model(this, !1);
   this.svgDom = Entry.Dom($('<svg id="play" class="entryBoard" width="100%" height="100%"version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'), {parent:a});
-  this.relativeOffset = this.offset = this.svgDom.offset();
-  var b = this;
-  $(window).scroll(function(a) {
-    var d = $(window);
-    a = d.scrollTop();
-    var d = d.scrollLeft(), e = b.offset;
-    b.relativeOffset = {top:e.top - a, left:e.left - d};
-  });
+  this.offset = this.svgDom.offset();
+  this.offset.top = 130;
+  this.offset.left -= $(window).scrollLeft();
+  this.relativeOffset = this.offset;
+  var c = this;
+  $(window).scroll(b);
+  Entry.windowResized.attach(this, b);
   this.snap = Snap("#play");
   this._blockViews = [];
   this.trashcan = new Entry.FieldTrashcan(this);
