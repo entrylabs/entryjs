@@ -1,23 +1,48 @@
-var Entry = {events_:{}, block:{}, TEXT_ALIGN_CENTER:0, TEXT_ALIGN_LEFT:1, TEXT_ALIGN_RIGHT:2, TEXT_ALIGNS:["center", "left", "right"], loadProject:function(a) {
-  a && ("workspace" == this.type && Entry.stateManager.startIgnore(), Entry.projectId = a._id, Entry.variableContainer.setVariables(a.variables), Entry.variableContainer.setMessages(a.messages), Entry.variableContainer.setFunctions(a.functions), Entry.scene.addScenes(a.scenes), Entry.stage.initObjectContainers(), Entry.container.setObjects(a.objects), Entry.FPS = a.speed ? a.speed : 60, createjs.Ticker.setFPS(Entry.FPS), "workspace" == this.type && Entry.stateManager.endIgnore());
+var Entry = {block:{}, TEXT_ALIGN_CENTER:0, TEXT_ALIGN_LEFT:1, TEXT_ALIGN_RIGHT:2, TEXT_ALIGNS:["center", "left", "right"], loadProject:function(a) {
+  a || (a = Entry.getStartProject(Entry.mediaFilePath));
+  "workspace" == this.type && Entry.stateManager.startIgnore();
+  Entry.projectId = a._id;
+  Entry.variableContainer.setVariables(a.variables);
+  Entry.variableContainer.setMessages(a.messages);
+  Entry.variableContainer.setFunctions(a.functions);
+  Entry.scene.addScenes(a.scenes);
+  Entry.stage.initObjectContainers();
+  Entry.container.setObjects(a.objects);
+  Entry.FPS = a.speed ? a.speed : 60;
+  createjs.Ticker.setFPS(Entry.FPS);
+  "workspace" == this.type && Entry.stateManager.endIgnore();
   Entry.engine.projectTimer || Entry.variableContainer.generateTimer();
   0 === Object.keys(Entry.container.inputValue).length && Entry.variableContainer.generateAnswer();
   Entry.start();
+  return a;
+}, exportProject:function(a) {
+  a || (a = {});
+  Entry.engine.isState("stop") || Entry.engine.toggleStop();
+  Entry.Func && Entry.Func.workspace && Entry.Func.workspace.visible && Entry.Func.cancelEdit();
+  a.objects = Entry.container.toJSON();
+  a.scenes = Entry.scene.toJSON();
+  a.variables = Entry.variableContainer.getVariableJSON();
+  a.messages = Entry.variableContainer.getMessageJSON();
+  a.functions = Entry.variableContainer.getFunctionJSON();
+  a.scenes = Entry.scene.toJSON();
+  a.speed = Entry.FPS;
+  return a;
 }, setBlockByText:function(a, b) {
   for (var c = [], d = jQuery.parseXML(b).getElementsByTagName("category"), e = 0;e < d.length;e++) {
-    for (var f = d[e], h = {category:f.getAttribute("id"), blocks:[]}, f = f.childNodes, g = 0;g < f.length;g++) {
-      var k = f[g];
-      !k.tagName || "BLOCK" != k.tagName.toUpperCase() && "BTN" != k.tagName.toUpperCase() || h.blocks.push(k.getAttribute("type"));
+    for (var f = d[e], g = {category:f.getAttribute("id"), blocks:[]}, f = f.childNodes, h = 0;h < f.length;h++) {
+      var k = f[h];
+      !k.tagName || "BLOCK" != k.tagName.toUpperCase() && "BTN" != k.tagName.toUpperCase() || g.blocks.push(k.getAttribute("type"));
     }
-    c.push(h);
+    c.push(g);
   }
   Entry.playground.setBlockMenu(c);
 }, setBlock:function(a, b) {
   Entry.playground.setMenuBlock(a, b);
 }, enableArduino:function() {
 }, initSound:function(a) {
-  var b = "/uploads/" + a.filename.substring(0, 2) + "/" + a.filename.substring(2, 4) + "/" + a.filename + a.ext;
-  Entry.soundQueue.loadFile({id:a.id, src:b, type:createjs.LoadQueue.SOUND});
+  a.path = a.fileurl ? a.fileurl : "/uploads/" + a.filename.substring(0, 2) + "/" + a.filename.substring(2, 4) + "/" + a.filename + a.ext;
+  console.log(Entry.soundQueue);
+  Entry.soundQueue.loadFile({id:a.id, src:a.path, type:createjs.LoadQueue.SOUND});
 }, beforeUnload:function(a) {
   Entry.hw.closeConnection();
   Entry.variableContainer.updateCloudVariables();
@@ -79,8 +104,465 @@ var Entry = {events_:{}, block:{}, TEXT_ALIGN_CENTER:0, TEXT_ALIGN_LEFT:1, TEXT_
   var a = {};
   Entry.stateManager && (a.activityLog = Entry.stateManager.activityLog_);
   return a;
-}};
+}, DRAG_MODE_NONE:0, DRAG_MODE_MOUSEDOWN:1, DRAG_MODE_DRAG:2};
 window.Entry = Entry;
+Entry.Albert = {PORT_MAP:{leftWheel:0, rightWheel:0, buzzer:0, bodyLed:0, frontLed:0, leftEye:0, rightEye:0, topology:0, note:0, ioModeA:0, ioModeB:0}, setZero:function() {
+  var a = Entry.Albert.PORT_MAP, b;
+  for (b in a) {
+    Entry.hw.sendQueue[b] = a[b];
+  }
+  Entry.hw.update();
+  Entry.Albert.tempo = 60;
+}, tempo:60, name:"albert"};
+Blockly.Blocks.albert_move_forward = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_move_forward).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.albert_move_forward = function(a, b) {
+  var c = Entry.hw.sendQueue;
+  if (b.isStart) {
+    if (1 == b.timeFlag) {
+      return c.leftWheel = 30, c.rightWheel = 30, b;
+    }
+    delete b.timeFlag;
+    delete b.isStart;
+    Entry.engine.isContinue = !1;
+    c.leftWheel = 0;
+    c.rightWheel = 0;
+    return b.callReturn();
+  }
+  b.isStart = !0;
+  b.timeFlag = 1;
+  setTimeout(function() {
+    b.timeFlag = 0;
+  }, 1E3);
+  return b;
+};
+Blockly.Blocks.albert_move_backward = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_move_backward).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.albert_move_backward = function(a, b) {
+  var c = Entry.hw.sendQueue;
+  if (b.isStart) {
+    if (1 == b.timeFlag) {
+      return c.leftWheel = -30, c.rightWheel = -30, b;
+    }
+    delete b.timeFlag;
+    delete b.isStart;
+    Entry.engine.isContinue = !1;
+    c.leftWheel = 0;
+    c.rightWheel = 0;
+    return b.callReturn();
+  }
+  b.isStart = !0;
+  b.timeFlag = 1;
+  setTimeout(function() {
+    b.timeFlag = 0;
+  }, 1E3);
+  return b;
+};
+Blockly.Blocks.albert_turn_around = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_turn_around_1).appendField(new Blockly.FieldDropdown([[Lang.General.left, "LEFT"], [Lang.General.right, "RIGHT"]]), "DIRECTION").appendField(Lang.Blocks.HAMSTER_turn_around_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.albert_turn_around = function(a, b) {
+  var c = Entry.hw.sendQueue;
+  if (b.isStart) {
+    if (1 == b.timeFlag) {
+      return c.leftWheel = b.leftValue, c.rightWheel = b.rightValue, b;
+    }
+    delete b.timeFlag;
+    delete b.isStart;
+    delete b.leftValue;
+    delete b.rightValue;
+    Entry.engine.isContinue = !1;
+    c.leftWheel = 0;
+    c.rightWheel = 0;
+    return b.callReturn();
+  }
+  c = "LEFT" == b.getField("DIRECTION", b);
+  b.leftValue = c ? -30 : 30;
+  b.rightValue = c ? 30 : -30;
+  b.isStart = !0;
+  b.timeFlag = 1;
+  setTimeout(function() {
+    b.timeFlag = 0;
+  }, 1E3);
+  return b;
+};
+Blockly.Blocks.albert_set_led_to = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_set_led_to_1).appendField(new Blockly.FieldDropdown([[Lang.General.left, "LEFT"], [Lang.General.right, "RIGHT"], [Lang.General.both, "FRONT"]]), "DIRECTION").appendField(Lang.Blocks.HAMSTER_set_led_to_2).appendField(new Blockly.FieldDropdown([[Lang.General.red, "4"], [Lang.General.yellow, "6"], [Lang.General.green, "2"], [Lang.General.skyblue, "3"], [Lang.General.blue, "1"], [Lang.General.purple, "5"], [Lang.General.white, "7"]]), "COLOR").appendField(Lang.Blocks.HAMSTER_set_led_to_3).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + 
+  "block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.albert_set_led_to = function(a, b) {
+  var c = Entry.hw.sendQueue, d = b.getField("DIRECTION", b), e = Number(b.getField("COLOR", b));
+  "FRONT" == d ? (c.leftEye = e, c.rightEye = e) : "LEFT" == d ? c.leftEye = e : c.rightEye = e;
+  return b.callReturn();
+};
+Blockly.Blocks.albert_clear_led = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_clear_led_1).appendField(new Blockly.FieldDropdown([[Lang.General.left, "LEFT"], [Lang.General.right, "RIGHT"], [Lang.General.both, "FRONT"]]), "DIRECTION").appendField(Lang.Blocks.HAMSTER_clear_led_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.albert_clear_led = function(a, b) {
+  var c = Entry.hw.sendQueue, d = b.getField("DIRECTION", b);
+  "FRONT" == d ? (c.leftEye = 0, c.rightEye = 0) : "LEFT" == d ? c.leftEye = 0 : c.rightEye = 0;
+  return b.callReturn();
+};
+Blockly.Blocks.albert_beep = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_beep).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.albert_beep = function(a, b) {
+  var c = Entry.hw.sendQueue;
+  if (b.isStart) {
+    return delete b.timeFlag, delete b.isStart, Entry.engine.isContinue = !1, c.buzzer = 0, b.callReturn();
+  }
+  b.isStart = !0;
+  b.timeFlag = 1;
+  delete c.note;
+  c.buzzer = 440;
+  setTimeout(function() {
+    b.timeFlag = 0;
+  }, 200);
+  return b;
+};
+Blockly.Blocks.albert_hand_found = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_hand_found);
+  this.setOutput(!0, "Boolean");
+  this.setInputsInline(!0);
+}};
+Entry.block.albert_hand_found = function(a, b) {
+  var c = Entry.hw.portData;
+  return 40 < c.leftProximity || 40 < c.rightProximity;
+};
+Blockly.Blocks.albert_move_forward_for_secs = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_move_forward_for_secs_1);
+  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_move_forward_for_secs_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.albert_move_forward_for_secs = function(a, b) {
+  var c = Entry.hw.sendQueue;
+  if (b.isStart) {
+    if (1 == b.timeFlag) {
+      return c.leftWheel = 50, c.rightWheel = 50, b;
+    }
+    delete b.timeFlag;
+    delete b.isStart;
+    Entry.engine.isContinue = !1;
+    c.leftWheel = 0;
+    c.rightWheel = 0;
+    return b.callReturn();
+  }
+  b.isStart = !0;
+  b.timeFlag = 1;
+  c = 1E3 * b.getNumberValue("VALUE");
+  setTimeout(function() {
+    b.timeFlag = 0;
+  }, c);
+  return b;
+};
+Blockly.Blocks.albert_move_backward_for_secs = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_move_backward_for_secs_1);
+  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_move_backward_for_secs_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.albert_move_backward_for_secs = function(a, b) {
+  var c = Entry.hw.sendQueue;
+  if (b.isStart) {
+    if (1 == b.timeFlag) {
+      return c.leftWheel = -50, c.rightWheel = -50, b;
+    }
+    delete b.timeFlag;
+    delete b.isStart;
+    Entry.engine.isContinue = !1;
+    c.leftWheel = 0;
+    c.rightWheel = 0;
+    return b.callReturn();
+  }
+  b.isStart = !0;
+  b.timeFlag = 1;
+  c = 1E3 * b.getNumberValue("VALUE");
+  setTimeout(function() {
+    b.timeFlag = 0;
+  }, c);
+  return b;
+};
+Blockly.Blocks.albert_turn_for_secs = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_turn_for_secs_1).appendField(new Blockly.FieldDropdown([[Lang.General.left, "LEFT"], [Lang.General.right, "RIGHT"]]), "DIRECTION").appendField(Lang.Blocks.HAMSTER_turn_for_secs_2);
+  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_turn_for_secs_3).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.albert_turn_for_secs = function(a, b) {
+  var c = Entry.hw.sendQueue;
+  if (b.isStart) {
+    if (1 == b.timeFlag) {
+      return c.leftWheel = b.leftValue, c.rightWheel = b.rightValue, b;
+    }
+    delete b.timeFlag;
+    delete b.isStart;
+    delete b.leftValue;
+    delete b.rightValue;
+    Entry.engine.isContinue = !1;
+    c.leftWheel = 0;
+    c.rightWheel = 0;
+    return b.callReturn();
+  }
+  c = "LEFT" == b.getField("DIRECTION", b);
+  b.leftValue = c ? -50 : 50;
+  b.rightValue = c ? 50 : -50;
+  b.isStart = !0;
+  b.timeFlag = 1;
+  c = 1E3 * b.getNumberValue("VALUE");
+  setTimeout(function() {
+    b.timeFlag = 0;
+  }, c);
+  return b;
+};
+Blockly.Blocks.albert_play_note_for = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_play_note_for_1).appendField(new Blockly.FieldDropdown([[Lang.General.note_c + "", "4"], [Lang.General.note_c + "#", "5"], [Lang.General.note_d + "", "6"], [Lang.General.note_e + "b", "7"], [Lang.General.note_e + "", "8"], [Lang.General.note_f + "", "9"], [Lang.General.note_f + "#", "10"], [Lang.General.note_g + "", "11"], [Lang.General.note_g + "#", "12"], [Lang.General.note_a + "", "13"], [Lang.General.note_b + "b", "14"], [Lang.General.note_b + 
+  "", "15"]]), "NOTE").appendField(Lang.Blocks.HAMSTER_play_note_for_2).appendField(new Blockly.FieldDropdown([["1", "1"], ["2", "2"], ["3", "3"], ["4", "4"], ["5", "5"], ["6", "6"], ["7", "7"]]), "OCTAVE").appendField(Lang.Blocks.HAMSTER_play_note_for_3);
+  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_play_note_for_4).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.albert_play_note_for = function(a, b) {
+  var c = Entry.hw.sendQueue;
+  if (b.isStart) {
+    if (1 == b.timeFlag) {
+      return c.note = b.note, b;
+    }
+    delete b.timeFlag;
+    delete b.isStart;
+    delete b.note;
+    Entry.engine.isContinue = !1;
+    c.note = 0;
+    return b.callReturn();
+  }
+  var d = b.getNumberField("NOTE", b), e = b.getNumberField("OCTAVE", b), f = b.getNumberValue("VALUE", b), g = Entry.Albert.tempo, f = 6E4 * f / g;
+  b.note = d + 12 * (e - 1);
+  b.isStart = !0;
+  b.timeFlag = 1;
+  100 < f && setTimeout(function() {
+    c.note = 0;
+  }, f - 100);
+  setTimeout(function() {
+    b.timeFlag = 0;
+  }, f);
+  return b;
+};
+Blockly.Blocks.albert_rest_for = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_rest_for_1);
+  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_rest_for_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.albert_rest_for = function(a, b) {
+  var c = Entry.hw.sendQueue;
+  if (b.isStart) {
+    return delete b.isStart, delete b.timeFlag, Entry.engine.isContinue = !1, b.callReturn();
+  }
+  b.isStart = !0;
+  b.timeFlag = 1;
+  var d = b.getNumberValue("VALUE"), d = 6E4 * d / Entry.Albert.tempo;
+  c.note = 0;
+  setTimeout(function() {
+    b.timeFlag = 0;
+  }, d);
+  return b;
+};
+Blockly.Blocks.albert_change_tempo_by = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_change_tempo_by_1);
+  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_change_tempo_by_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.albert_change_tempo_by = function(a, b) {
+  Entry.Albert.tempo += b.getNumberValue("VALUE");
+  return b.callReturn();
+};
+Blockly.Blocks.albert_set_tempo_to = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_set_tempo_to_1);
+  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_set_tempo_to_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.albert_set_tempo_to = function(a, b) {
+  Entry.Albert.tempo = b.getNumberValue("VALUE");
+  return b.callReturn();
+};
+Blockly.Blocks.albert_change_both_wheels_by = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_change_both_wheels_by_1);
+  this.appendValueInput("LEFT").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_change_both_wheels_by_2);
+  this.appendValueInput("RIGHT").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_change_both_wheels_by_3).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.albert_change_both_wheels_by = function(a, b) {
+  var c = Entry.hw.sendQueue, d = Entry.hw.portData, e = void 0 != c.leftWheel ? c.leftWheel : d.leftWheel, d = void 0 != c.rightWheel ? c.rightWheel : d.rightWheel, e = e + b.getNumberValue("LEFT"), d = d + b.getNumberValue("RIGHT");
+  c.leftWheel = e;
+  c.rightWheel = d;
+  return b.callReturn();
+};
+Blockly.Blocks.albert_set_both_wheels_to = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_set_both_wheels_to_1);
+  this.appendValueInput("LEFT").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_set_both_wheels_to_2);
+  this.appendValueInput("RIGHT").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_set_both_wheels_to_3).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.albert_set_both_wheels_to = function(a, b) {
+  var c = Entry.hw.sendQueue;
+  c.leftWheel = b.getNumberValue("LEFT");
+  c.rightWheel = b.getNumberValue("RIGHT");
+  return b.callReturn();
+};
+Blockly.Blocks.albert_change_wheels_by = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_change_wheels_by_1).appendField(new Blockly.FieldDropdown([[Lang.General.left, "LEFT"], [Lang.General.right, "RIGHT"], [Lang.General.both, "FRONT"]]), "DIRECTION").appendField(Lang.Blocks.HAMSTER_change_wheels_by_2);
+  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_change_wheels_by_3).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.albert_change_wheels_by = function(a, b) {
+  var c = Entry.hw.sendQueue, d = Entry.hw.portData, e = b.getField("DIRECTION"), f = b.getNumberValue("VALUE");
+  "LEFT" == e ? c.leftWheel = void 0 != c.leftWheel ? c.leftWheel + f : d.leftWheel + f : ("RIGHT" != e && (c.leftWheel = void 0 != c.leftWheel ? c.leftWheel + f : d.leftWheel + f), c.rightWheel = void 0 != c.rightWheel ? c.rightWheel + f : d.rightWheel + f);
+  return b.callReturn();
+};
+Blockly.Blocks.albert_set_wheels_to = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_set_wheels_to_1).appendField(new Blockly.FieldDropdown([[Lang.General.left, "LEFT"], [Lang.General.right, "RIGHT"], [Lang.General.both, "FRONT"]]), "DIRECTION").appendField(Lang.Blocks.HAMSTER_set_wheels_to_2);
+  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_set_wheels_to_3).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.albert_set_wheels_to = function(a, b) {
+  var c = Entry.hw.sendQueue, d = b.getField("DIRECTION"), e = b.getNumberValue("VALUE");
+  "LEFT" == d ? c.leftWheel = e : ("RIGHT" != d && (c.leftWheel = e), c.rightWheel = e);
+  return b.callReturn();
+};
+Blockly.Blocks.albert_stop = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_stop).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.albert_stop = function(a, b) {
+  var c = Entry.hw.sendQueue;
+  c.leftWheel = 0;
+  c.rightWheel = 0;
+  return b.callReturn();
+};
+Blockly.Blocks.albert_change_buzzer_by = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_change_buzzer_by_1);
+  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_change_buzzer_by_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.albert_change_buzzer_by = function(a, b) {
+  var c = Entry.hw.sendQueue;
+  value = b.getNumberValue("VALUE");
+  delete c.note;
+  c.buzzer = void 0 == c.buzzer ? value : c.buzzer + value;
+  return b.callReturn();
+};
+Blockly.Blocks.albert_set_buzzer_to = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_set_buzzer_to_1);
+  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_set_buzzer_to_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.albert_set_buzzer_to = function(a, b) {
+  var c = Entry.hw.sendQueue;
+  delete c.note;
+  c.buzzer = b.getNumberValue("VALUE");
+  return b.callReturn();
+};
+Blockly.Blocks.albert_clear_buzzer = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_clear_buzzer).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.albert_clear_buzzer = function(a, b) {
+  Entry.hw.sendQueue.buzzer = 0;
+  return b.callReturn();
+};
+Blockly.Blocks.albert_value = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("").appendField(new Blockly.FieldDropdown([[Lang.Blocks.HAMSTER_sensor_leftProximity, "leftProximity"], [Lang.Blocks.HAMSTER_sensor_rightProximity, "rightProximity"], [Lang.Blocks.HAMSTER_sensor_leftFloor, "leftFloor"], [Lang.Blocks.HAMSTER_sensor_rightFloor, "rightFloor"], [Lang.Blocks.HAMSTER_sensor_accelerationX, "accelerationX"], [Lang.Blocks.HAMSTER_sensor_accelerationY, "accelerationY"], [Lang.Blocks.HAMSTER_sensor_accelerationZ, "accelerationZ"], [Lang.Blocks.HAMSTER_sensor_light, 
+  "light"], [Lang.Blocks.HAMSTER_sensor_temperature, "temperature"], [Lang.Blocks.HAMSTER_sensor_signalStrength, "signalStrength"], [Lang.Blocks.HAMSTER_sensor_inputA, "inputA"], [Lang.Blocks.HAMSTER_sensor_inputB, "inputB"]]), "PORT");
+  this.setInputsInline(!0);
+  this.setOutput(!0, "Number");
+}};
+Entry.block.albert_value = function(a, b) {
+  var c = Entry.hw, d = c.sendQueue, c = c.portData, e = b.getField("PORT");
+  return void 0 != d[e] ? d[e] : c[e];
+};
 Entry.Arduino = {name:"arduino", setZero:function() {
   for (var a = 0;14 > a;a++) {
     Entry.hw.sendQueue[a] = 0;
@@ -202,7 +684,7 @@ Blockly.Blocks.arduino_toggle_led = {init:function() {
   this.appendDummyInput().appendField(Lang.Blocks.ARDUINO_num_pin_1);
   this.appendValueInput("VALUE").setCheck(["Number", "String", null]);
   this.appendDummyInput().appendField(Lang.Blocks.ARDUINO_num_pin_2);
-  this.appendDummyInput().appendField(new Blockly.FieldDropdown([[Lang.Blocks.ARDUINO_on, "on"], [Lang.Blocks.ARDUINO_off, "off"]]), "OPERATOR").appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", "*"));
+  this.appendDummyInput().appendField(new Blockly.FieldDropdown([[Lang.Blocks.ARDUINO_on, "on"], [Lang.Blocks.ARDUINO_off, "off"]]), "OPERATOR").appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -219,7 +701,7 @@ Blockly.Blocks.arduino_toggle_pwm = {init:function() {
   this.appendDummyInput().appendField(Lang.Blocks.ARDUINO_toggle_pwm_2);
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
   this.appendDummyInput().appendField(Lang.Blocks.ARDUINO_toggle_pwm_3);
-  this.appendDummyInput().appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", "*"));
+  this.appendDummyInput().appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -246,15 +728,15 @@ Blockly.Blocks.arduino_convert_scale = {init:function() {
   this.setInputsInline(!0);
 }};
 Entry.block.arduino_convert_scale = function(a, b) {
-  var c = b.getNumberValue("VALUE1", b), d = b.getNumberValue("VALUE2", b), e = b.getNumberValue("VALUE3", b), f = b.getNumberValue("VALUE4", b), h = b.getNumberValue("VALUE5", b);
+  var c = b.getNumberValue("VALUE1", b), d = b.getNumberValue("VALUE2", b), e = b.getNumberValue("VALUE3", b), f = b.getNumberValue("VALUE4", b), g = b.getNumberValue("VALUE5", b);
   if (d > e) {
-    var g = d, d = e, e = g
+    var h = d, d = e, e = h
   }
-  f > h && (g = f, f = h, h = g);
+  f > g && (h = f, f = g, g = h);
   c -= d;
-  c *= (h - f) / (e - d);
+  c *= (g - f) / (e - d);
   c += f;
-  c = Math.min(h, c);
+  c = Math.min(g, c);
   c = Math.max(f, c);
   return Math.round(c);
 };
@@ -279,7 +761,7 @@ Entry.block.sensorBoard_is_button_pressed = function(a, b) {
 };
 Blockly.Blocks.sensorBoard_led = {init:function() {
   this.setColour("#00979D");
-  this.appendDummyInput().appendField("").appendField(new Blockly.FieldDropdown([["\ube68\uac04", "2"], ["\ucd08\ub85d", "3"], ["\ud30c\ub780", "4"], ["\ud770\uc0c9", "5"]]), "PORT").appendField(" LED").appendField(new Blockly.FieldDropdown([["\ucf1c\uae30", "255"], ["\ub044\uae30", "0"]]), "OPERATOR").appendField(" ").appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", "*"));
+  this.appendDummyInput().appendField("").appendField(new Blockly.FieldDropdown([["\ube68\uac04", "2"], ["\ucd08\ub85d", "3"], ["\ud30c\ub780", "4"], ["\ud770\uc0c9", "5"]]), "PORT").appendField(" LED").appendField(new Blockly.FieldDropdown([["\ucf1c\uae30", "255"], ["\ub044\uae30", "0"]]), "OPERATOR").appendField(" ").appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -342,7 +824,7 @@ Entry.block.bitbrick_is_touch_pressed = function(a, b) {
 };
 Blockly.Blocks.bitbrick_turn_off_color_led = {init:function() {
   this.setColour("#00979D");
-  this.appendDummyInput().appendField("\uceec\ub7ec LED \ub044\uae30").appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", "*"));
+  this.appendDummyInput().appendField("\uceec\ub7ec LED \ub044\uae30").appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -361,21 +843,21 @@ Blockly.Blocks.bitbrick_turn_on_color_led_by_rgb = {init:function() {
   this.appendValueInput("gValue").setCheck(["Number", "String"]);
   this.appendDummyInput().appendField("B");
   this.appendValueInput("bValue").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", "*"));
+  this.appendDummyInput().appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
 }};
 Entry.block.bitbrick_turn_on_color_led_by_rgb = function(a, b) {
-  var c = b.getNumberValue("rValue"), d = b.getNumberValue("gValue"), e = b.getNumberValue("bValue"), f = Entry.adjustValueWithMaxMin, h = Entry.hw.sendQueue;
-  h.LEDR = f(c, 0, 255);
-  h.LEDG = f(d, 0, 255);
-  h.LEDB = f(e, 0, 255);
+  var c = b.getNumberValue("rValue"), d = b.getNumberValue("gValue"), e = b.getNumberValue("bValue"), f = Entry.adjustValueWithMaxMin, g = Entry.hw.sendQueue;
+  g.LEDR = f(c, 0, 255);
+  g.LEDG = f(d, 0, 255);
+  g.LEDB = f(e, 0, 255);
   return b.callReturn();
 };
 Blockly.Blocks.bitbrick_turn_on_color_led_by_picker = {init:function() {
   this.setColour("#00979D");
-  this.appendDummyInput().appendField("\uceec\ub7ec LED \uc0c9 ").appendField(new Blockly.FieldColour("#ff0000"), "VALUE").appendField("\ub85c \uc815\ud558\uae30").appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", "*"));
+  this.appendDummyInput().appendField("\uceec\ub7ec LED \uc0c9 ").appendField(new Blockly.FieldColour("#ff0000"), "VALUE").appendField("\ub85c \uc815\ud558\uae30").appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -391,7 +873,7 @@ Blockly.Blocks.bitbrick_turn_on_color_led_by_value = {init:function() {
   this.setColour("#00979D");
   this.appendDummyInput().appendField("\uceec\ub7ec LED \ucf1c\uae30 \uc0c9");
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField("\ub85c \uc815\ud558\uae30").appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", "*"));
+  this.appendDummyInput().appendField("\ub85c \uc815\ud558\uae30").appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -408,7 +890,7 @@ Blockly.Blocks.bitbrick_buzzer = {init:function() {
   this.setColour("#00979D");
   this.appendDummyInput().appendField("\ubd80\uc800\uc74c ");
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField("\ub0b4\uae30").appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", "*"));
+  this.appendDummyInput().appendField("\ub0b4\uae30").appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -424,7 +906,7 @@ Entry.block.bitbrick_buzzer = function(a, b) {
 };
 Blockly.Blocks.bitbrick_turn_off_all_motors = {init:function() {
   this.setColour("#00979D");
-  this.appendDummyInput().appendField("\ubaa8\ub4e0 \ubaa8\ud130 \ub044\uae30").appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", "*"));
+  this.appendDummyInput().appendField("\ubaa8\ub4e0 \ubaa8\ud130 \ub044\uae30").appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -443,7 +925,7 @@ Blockly.Blocks.bitbrick_dc_speed = {init:function() {
   this.setColour("#00979D");
   this.appendDummyInput().appendField("DC \ubaa8\ud130").appendField(new Blockly.FieldDropdownDynamic(Entry.Bitbrick.dcList), "PORT").appendField(" \uc18d\ub3c4");
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField("").appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", "*"));
+  this.appendDummyInput().appendField("").appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
   this.setInputsInline(!0);
@@ -457,7 +939,7 @@ Blockly.Blocks.bitbrick_dc_direction_speed = {init:function() {
   this.setColour("#00979D");
   this.appendDummyInput().appendField("DC \ubaa8\ud130").appendField(new Blockly.FieldDropdownDynamic(Entry.Bitbrick.dcList), "PORT").appendField(" \ubc29\ud5a5").appendField(new Blockly.FieldDropdown([["CCW", "CCW"], ["CW", "CW"]]), "DIRECTION").appendField(" \uc18d\ub825");
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField("").appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", "*"));
+  this.appendDummyInput().appendField("").appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
   this.setInputsInline(!0);
@@ -471,7 +953,7 @@ Blockly.Blocks.bitbrick_servomotor_angle = {init:function() {
   this.setColour("#00979D");
   this.appendDummyInput().appendField("\uc11c\ubcf4 \ubaa8\ud130").appendField(new Blockly.FieldDropdownDynamic(Entry.Bitbrick.servoList), "PORT").appendField(" \uac01\ub3c4");
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField("").appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", "*"));
+  this.appendDummyInput().appendField("").appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
   this.setInputsInline(!0);
@@ -484,7 +966,7 @@ Entry.block.bitbrick_servomotor_angle = function(a, b) {
 var categoryColor = "#FF9E20";
 Blockly.Blocks.start_drawing = {init:function() {
   this.setColour(categoryColor);
-  this.appendDummyInput().appendField(Lang.Blocks.BRUSH_start_drawing).appendField(new Blockly.FieldIcon("/img/assets/block_icon/brush_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.BRUSH_start_drawing).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/brush_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -497,7 +979,7 @@ Entry.block.start_drawing = function(a, b) {
 };
 Blockly.Blocks.stop_drawing = {init:function() {
   this.setColour(categoryColor);
-  this.appendDummyInput().appendField(Lang.Blocks.BRUSH_stop_drawing).appendField(new Blockly.FieldIcon("/img/assets/block_icon/brush_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.BRUSH_stop_drawing).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/brush_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -510,7 +992,7 @@ Blockly.Blocks.set_color = {init:function() {
   this.setColour(categoryColor);
   this.appendDummyInput().appendField(Lang.Blocks.BRUSH_set_color_1);
   this.appendDummyInput().appendField(new Blockly.FieldColour("#ff0000"), "VALUE");
-  this.appendDummyInput().appendField(Lang.Blocks.BRUSH_set_color_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/brush_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.BRUSH_set_color_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/brush_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -523,7 +1005,7 @@ Entry.block.set_color = function(a, b) {
 };
 Blockly.Blocks.set_random_color = {init:function() {
   this.setColour(categoryColor);
-  this.appendDummyInput().appendField(Lang.Blocks.BRUSH_set_random_color).appendField(new Blockly.FieldIcon("/img/assets/block_icon/brush_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.BRUSH_set_random_color).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/brush_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -543,7 +1025,7 @@ Blockly.Blocks.change_thickness = {init:function() {
   this.setColour(categoryColor);
   this.appendDummyInput().appendField(Lang.Blocks.BRUSH_change_thickness_1);
   this.appendValueInput("VALUE").setCheck(["Number", "Boolean"]);
-  this.appendDummyInput().appendField(Lang.Blocks.BRUSH_change_thickness_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/brush_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.BRUSH_change_thickness_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/brush_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -558,7 +1040,7 @@ Blockly.Blocks.set_thickness = {init:function() {
   this.setColour(categoryColor);
   this.appendDummyInput().appendField(Lang.Blocks.BRUSH_set_thickness_1);
   this.appendValueInput("VALUE").setCheck(["Number", "Boolean"]);
-  this.appendDummyInput().appendField(Lang.Blocks.BRUSH_set_thickness_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/brush_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.BRUSH_set_thickness_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/brush_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -573,7 +1055,7 @@ Blockly.Blocks.change_opacity = {init:function() {
   this.setColour(categoryColor);
   this.appendDummyInput().appendField(Lang.Blocks.BRUSH_change_opacity_1);
   this.appendValueInput("VALUE").setCheck(["Number", "Boolean"]);
-  this.appendDummyInput().appendField(Lang.Blocks.BRUSH_change_opacity_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/brush_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.BRUSH_change_opacity_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/brush_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -589,7 +1071,7 @@ Blockly.Blocks.set_opacity = {init:function() {
   this.setColour(categoryColor);
   this.appendDummyInput().appendField(Lang.Blocks.BRUSH_set_opacity_1);
   this.appendValueInput("VALUE").setCheck(["Number", "Boolean"]);
-  this.appendDummyInput().appendField(Lang.Blocks.BRUSH_set_opacity_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/brush_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.BRUSH_set_opacity_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/brush_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -602,7 +1084,7 @@ Entry.block.set_opacity = function(a, b) {
 };
 Blockly.Blocks.brush_erase_all = {init:function() {
   this.setColour(categoryColor);
-  this.appendDummyInput().appendField(Lang.Blocks.BRUSH_brush_erase_all).appendField(new Blockly.FieldIcon("/img/assets/block_icon/brush_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.BRUSH_brush_erase_all).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/brush_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -623,7 +1105,7 @@ Entry.block.brush_erase_all = function(a, b) {
 };
 Blockly.Blocks.brush_stamp = {init:function() {
   this.setColour(categoryColor);
-  this.appendDummyInput().appendField(Lang.Blocks.BRUSH_stamp).appendField(new Blockly.FieldIcon("/img/assets/block_icon/brush_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.BRUSH_stamp).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/brush_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -636,7 +1118,7 @@ Blockly.Blocks.change_brush_transparency = {init:function() {
   this.setColour(categoryColor);
   this.appendDummyInput().appendField(Lang.Blocks.BRUSH_change_brush_transparency_1);
   this.appendValueInput("VALUE").setCheck(["Number", "Boolean"]);
-  this.appendDummyInput().appendField(Lang.Blocks.BRUSH_change_brush_transparency_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/brush_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.BRUSH_change_brush_transparency_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/brush_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -652,7 +1134,7 @@ Blockly.Blocks.set_brush_tranparency = {init:function() {
   this.setColour(categoryColor);
   this.appendDummyInput().appendField(Lang.Blocks.BRUSH_set_brush_transparency_1);
   this.appendValueInput("VALUE").setCheck(["Number", "Boolean"]);
-  this.appendDummyInput().appendField(Lang.Blocks.BRUSH_set_brush_transparency_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/brush_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.BRUSH_set_brush_transparency_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/brush_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -967,7 +1449,7 @@ Blockly.Blocks.set_visible_project_timer = {init:function() {
   this.setColour(calcBlockColor);
   this.appendDummyInput().appendField(Lang.Blocks.CALC_timer_visible_1, calcFontColor);
   this.appendDummyInput().appendField(new Blockly.FieldDropdown([[Lang.Blocks.CALC_timer_visible_show, "SHOW"], [Lang.Blocks.CALC_timer_visible_hide, "HIDE"]], null, !0, calcArrowColor), "ACTION");
-  this.appendDummyInput().appendField(Lang.Blocks.CALC_timer_visible_2, calcFontColor).appendField(new Blockly.FieldIcon("/img/assets/block_icon/calc_01.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.CALC_timer_visible_2, calcFontColor).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/calc_01.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -1135,7 +1617,7 @@ Entry.block.quotient_and_mod = function(a, b) {
 };
 Blockly.Blocks.choose_project_timer_action = {init:function() {
   this.setColour(calcBlockColor);
-  this.appendDummyInput().appendField(Lang.Blocks.CALC_choose_project_timer_action_1, calcFontColor).appendField(new Blockly.FieldDropdown([[Lang.Blocks.CALC_choose_project_timer_action_sub_1, "START"], [Lang.Blocks.CALC_choose_project_timer_action_sub_2, "STOP"], [Lang.Blocks.CALC_choose_project_timer_action_sub_3, "RESET"]], null, !0, calcArrowColor), "ACTION").appendField(Lang.Blocks.CALC_choose_project_timer_action_2, calcFontColor).appendField(new Blockly.FieldIcon("/img/assets/block_icon/calc_01.png", 
+  this.appendDummyInput().appendField(Lang.Blocks.CALC_choose_project_timer_action_1, calcFontColor).appendField(new Blockly.FieldDropdown([[Lang.Blocks.CALC_choose_project_timer_action_sub_1, "START"], [Lang.Blocks.CALC_choose_project_timer_action_sub_2, "STOP"], [Lang.Blocks.CALC_choose_project_timer_action_sub_3, "RESET"]], null, !0, calcArrowColor), "ACTION").appendField(Lang.Blocks.CALC_choose_project_timer_action_2, calcFontColor).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/calc_01.png", 
   "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
@@ -1154,7 +1636,7 @@ Blockly.Blocks.wait_second = {init:function() {
   this.setColour("#498deb");
   this.appendDummyInput().appendField(Lang.Blocks.FLOW_wait_second_1);
   this.appendValueInput("SECOND").setCheck(["Number", "String", null]);
-  this.appendDummyInput().appendField(Lang.Blocks.FLOW_wait_second_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/flow_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.FLOW_wait_second_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/flow_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -1181,7 +1663,7 @@ Blockly.Blocks.repeat_basic = {init:function() {
   this.setColour("#498deb");
   this.appendDummyInput().appendField(Lang.Blocks.FLOW_repeat_basic_1);
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.FLOW_repeat_basic_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/flow_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.FLOW_repeat_basic_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/flow_03.png", "*"));
   this.appendStatementInput("DO");
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
@@ -1205,7 +1687,7 @@ Entry.block.repeat_basic = function(a, b) {
 };
 Blockly.Blocks.repeat_inf = {init:function() {
   this.setColour("#498deb");
-  this.appendDummyInput().appendField(Lang.Blocks.FLOW_repeat_inf).appendField(new Blockly.FieldIcon("/img/assets/block_icon/flow_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.FLOW_repeat_inf).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/flow_03.png", "*"));
   this.appendStatementInput("DO");
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
@@ -1217,7 +1699,7 @@ Entry.block.repeat_inf = function(a, b) {
 };
 Blockly.Blocks.stop_repeat = {init:function() {
   this.setColour("#498deb");
-  this.appendDummyInput().appendField(Lang.Blocks.FLOW_stop_repeat).appendField(new Blockly.FieldIcon("/img/assets/block_icon/flow_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.FLOW_stop_repeat).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/flow_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -1233,7 +1715,7 @@ Blockly.Blocks.wait_until_true = {init:function() {
   this.setColour("#498deb");
   this.appendDummyInput().appendField(Lang.Blocks.FLOW_wait_until_true_1);
   this.appendValueInput("BOOL").setCheck("Boolean");
-  this.appendDummyInput().appendField(Lang.Blocks.FLOW_wait_until_true_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/flow_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.FLOW_wait_until_true_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/flow_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -1245,7 +1727,7 @@ Blockly.Blocks._if = {init:function() {
   this.setColour("#498deb");
   this.appendDummyInput().appendField(Lang.Blocks.FLOW__if_1);
   this.appendValueInput("BOOL").setCheck("Boolean");
-  this.appendDummyInput().appendField(Lang.Blocks.FLOW__if_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/flow_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.FLOW__if_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/flow_03.png", "*"));
   this.appendStatementInput("STACK");
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
@@ -1258,7 +1740,7 @@ Blockly.Blocks.if_else = {init:function() {
   this.setColour("#498deb");
   this.appendDummyInput().appendField(Lang.Blocks.FLOW_if_else_1);
   this.appendValueInput("BOOL").setCheck("Boolean");
-  this.appendDummyInput().appendField(Lang.Blocks.FLOW_if_else_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/flow_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.FLOW_if_else_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/flow_03.png", "*"));
   this.appendStatementInput("STACK_IF");
   this.appendDummyInput().appendField(Lang.Blocks.FLOW_if_else_3);
   this.appendStatementInput("STACK_ELSE");
@@ -1278,7 +1760,7 @@ Blockly.Blocks.create_clone = {init:function() {
   this.setColour("#498deb");
   this.appendDummyInput().appendField(Lang.Blocks.FLOW_create_clone_1);
   this.appendDummyInput().appendField(new Blockly.FieldDropdownDynamic("clone"), "VALUE");
-  this.appendDummyInput().appendField(Lang.Blocks.FLOW_create_clone_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/flow_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.FLOW_create_clone_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/flow_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -1290,7 +1772,7 @@ Entry.block.create_clone = function(a, b) {
 };
 Blockly.Blocks.delete_clone = {init:function() {
   this.setColour("#498deb");
-  this.appendDummyInput().appendField(Lang.Blocks.FLOW_delete_clone).appendField(new Blockly.FieldIcon("/img/assets/block_icon/flow_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.FLOW_delete_clone).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/flow_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
 }};
@@ -1302,7 +1784,7 @@ Entry.block.delete_clone = function(a, b) {
 };
 Blockly.Blocks.when_clone_start = {init:function() {
   this.setColour("#498deb");
-  this.appendDummyInput().appendField(new Blockly.FieldIcon("/img/assets/block_icon/start_icon_clone.png", "*", "start")).appendField(Lang.Blocks.FLOW_when_clone_start);
+  this.appendDummyInput().appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/start_icon_clone.png", "*", "start")).appendField(Lang.Blocks.FLOW_when_clone_start);
   this.setInputsInline(!0);
   this.setNextStatement(!0);
 }};
@@ -1311,7 +1793,7 @@ Entry.block.when_clone_start = function(a, b) {
 };
 Blockly.Blocks.stop_run = {init:function() {
   this.setColour("#498deb");
-  this.appendDummyInput().appendField(Lang.Blocks.FLOW_stop_run).appendField(new Blockly.FieldIcon("/img/assets/block_icon/flow_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.FLOW_stop_run).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/flow_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -1337,7 +1819,7 @@ Blockly.Blocks.stop_object = {init:function() {
   this.setColour("#498deb");
   this.appendDummyInput().appendField(Lang.Blocks.FLOW_stop_object_1);
   this.appendDummyInput().appendField(new Blockly.FieldDropdown([[Lang.Blocks.FLOW_stop_object_all, "all"], [Lang.Blocks.FLOW_stop_object_this_object, "thisOnly"], [Lang.Blocks.FLOW_stop_object_this_thread, "thisThread"], [Lang.Blocks.FLOW_stop_object_other_thread, "otherThread"]]), "TARGET");
-  this.appendDummyInput().appendField(Lang.Blocks.FLOW_stop_object_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/flow_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.FLOW_stop_object_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/flow_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -1369,7 +1851,7 @@ Entry.block.stop_object = function(a, b) {
 };
 Blockly.Blocks.restart_project = {init:function() {
   this.setColour("#498deb");
-  this.appendDummyInput().appendField(Lang.Blocks.FLOW_restart).appendField(new Blockly.FieldIcon("/img/assets/block_icon/flow_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.FLOW_restart).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/flow_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
 }};
@@ -1379,7 +1861,7 @@ Entry.block.restart_project = function(a, b) {
 };
 Blockly.Blocks.remove_all_clones = {init:function() {
   this.setColour("#498deb");
-  this.appendDummyInput().appendField(Lang.Blocks.FLOW_delete_clone_all).appendField(new Blockly.FieldIcon("/img/assets/block_icon/flow_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.FLOW_delete_clone_all).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/flow_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -1453,7 +1935,7 @@ Blockly.Blocks.function_create = {init:function() {
   this.appendDummyInput().appendField(Lang.Blocks.FUNCTION_define);
   this.setColour("#cc7337");
   this.appendValueInput("FIELD").setCheck(["Param"]);
-  this.appendDummyInput().appendField(new Blockly.FieldIcon("/img/assets/block_icon/function_03.png", "*"));
+  this.appendDummyInput().appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/function_03.png", "*"));
   this.setInputsInline(!0);
   this.setNextStatement(!0);
 }};
@@ -1483,7 +1965,7 @@ Blockly.Blocks.function_general = {init:function() {
     }
   }
   this.hashId = a.getAttribute("hashid");
-  this.appendDummyInput().appendField(new Blockly.FieldIcon("/img/assets/block_icon/function_03.png", "*"));
+  this.appendDummyInput().appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/function_03.png", "*"));
 }, mutationToDom:function() {
   for (var a = document.createElement("mutation"), b = 1;b < this.inputList.length;b++) {
     var c = this.inputList[b];
@@ -1526,7 +2008,7 @@ Entry.Hamster = {PORT_MAP:{leftWheel:0, rightWheel:0, buzzer:0, outputA:0, outpu
 }, tempo:60, name:"hamster"};
 Blockly.Blocks.hamster_move_forward = {init:function() {
   this.setColour("#00979D");
-  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_move_forward).appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_move_forward).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -1553,7 +2035,7 @@ Entry.block.hamster_move_forward = function(a, b) {
 };
 Blockly.Blocks.hamster_move_backward = {init:function() {
   this.setColour("#00979D");
-  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_move_backward).appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_move_backward).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -1580,7 +2062,7 @@ Entry.block.hamster_move_backward = function(a, b) {
 };
 Blockly.Blocks.hamster_turn_around = {init:function() {
   this.setColour("#00979D");
-  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_turn_around_1).appendField(new Blockly.FieldDropdown([[Lang.General.left, "LEFT"], [Lang.General.right, "RIGHT"]]), "DIRECTION").appendField(Lang.Blocks.HAMSTER_turn_around_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_turn_around_1).appendField(new Blockly.FieldDropdown([[Lang.General.left, "LEFT"], [Lang.General.right, "RIGHT"]]), "DIRECTION").appendField(Lang.Blocks.HAMSTER_turn_around_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -1612,8 +2094,8 @@ Entry.block.hamster_turn_around = function(a, b) {
 };
 Blockly.Blocks.hamster_set_led_to = {init:function() {
   this.setColour("#00979D");
-  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_set_led_to_1).appendField(new Blockly.FieldDropdown([[Lang.General.left, "LEFT"], [Lang.General.right, "RIGHT"], [Lang.General.both, "FRONT"]]), "DIRECTION").appendField(Lang.Blocks.HAMSTER_set_led_to_2).appendField(new Blockly.FieldDropdown([[Lang.General.red, "4"], [Lang.General.yellow, "6"], [Lang.General.green, "2"], [Lang.General.skyblue, "3"], [Lang.General.blue, "1"], [Lang.General.purple, "5"], [Lang.General.white, "7"]]), "COLOR").appendField(Lang.Blocks.HAMSTER_set_led_to_3).appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", 
-  "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_set_led_to_1).appendField(new Blockly.FieldDropdown([[Lang.General.left, "LEFT"], [Lang.General.right, "RIGHT"], [Lang.General.both, "FRONT"]]), "DIRECTION").appendField(Lang.Blocks.HAMSTER_set_led_to_2).appendField(new Blockly.FieldDropdown([[Lang.General.red, "4"], [Lang.General.yellow, "6"], [Lang.General.green, "2"], [Lang.General.skyblue, "3"], [Lang.General.blue, "1"], [Lang.General.purple, "5"], [Lang.General.white, "7"]]), "COLOR").appendField(Lang.Blocks.HAMSTER_set_led_to_3).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + 
+  "block_icon/hardware_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -1625,7 +2107,7 @@ Entry.block.hamster_set_led_to = function(a, b) {
 };
 Blockly.Blocks.hamster_clear_led = {init:function() {
   this.setColour("#00979D");
-  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_clear_led_1).appendField(new Blockly.FieldDropdown([[Lang.General.left, "LEFT"], [Lang.General.right, "RIGHT"], [Lang.General.both, "FRONT"]]), "DIRECTION").appendField(Lang.Blocks.HAMSTER_clear_led_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_clear_led_1).appendField(new Blockly.FieldDropdown([[Lang.General.left, "LEFT"], [Lang.General.right, "RIGHT"], [Lang.General.both, "FRONT"]]), "DIRECTION").appendField(Lang.Blocks.HAMSTER_clear_led_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -1637,7 +2119,7 @@ Entry.block.hamster_clear_led = function(a, b) {
 };
 Blockly.Blocks.hamster_beep = {init:function() {
   this.setColour("#00979D");
-  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_beep).appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_beep).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -1670,7 +2152,7 @@ Blockly.Blocks.hamster_move_forward_for_secs = {init:function() {
   this.setColour("#00979D");
   this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_move_forward_for_secs_1);
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_move_forward_for_secs_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_move_forward_for_secs_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -1700,7 +2182,7 @@ Blockly.Blocks.hamster_move_backward_for_secs = {init:function() {
   this.setColour("#00979D");
   this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_move_backward_for_secs_1);
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_move_backward_for_secs_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_move_backward_for_secs_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -1730,7 +2212,7 @@ Blockly.Blocks.hamster_turn_for_secs = {init:function() {
   this.setColour("#00979D");
   this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_turn_for_secs_1).appendField(new Blockly.FieldDropdown([[Lang.General.left, "LEFT"], [Lang.General.right, "RIGHT"]]), "DIRECTION").appendField(Lang.Blocks.HAMSTER_turn_for_secs_2);
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_turn_for_secs_3).appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_turn_for_secs_3).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -1766,7 +2248,7 @@ Blockly.Blocks.hamster_play_note_for = {init:function() {
   this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_play_note_for_1).appendField(new Blockly.FieldDropdown([[Lang.General.note_c + "", "4"], [Lang.General.note_c + "#", "5"], [Lang.General.note_d + "", "6"], [Lang.General.note_e + "b", "7"], [Lang.General.note_e + "", "8"], [Lang.General.note_f + "", "9"], [Lang.General.note_f + "#", "10"], [Lang.General.note_g + "", "11"], [Lang.General.note_g + "#", "12"], [Lang.General.note_a + "", "13"], [Lang.General.note_b + "b", "14"], [Lang.General.note_b + 
   "", "15"]]), "NOTE").appendField(Lang.Blocks.HAMSTER_play_note_for_2).appendField(new Blockly.FieldDropdown([["1", "1"], ["2", "2"], ["3", "3"], ["4", "4"], ["5", "5"], ["6", "6"], ["7", "7"]]), "OCTAVE").appendField(Lang.Blocks.HAMSTER_play_note_for_3);
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_play_note_for_4).appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_play_note_for_4).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -1784,7 +2266,7 @@ Entry.block.hamster_play_note_for = function(a, b) {
     c.note = 0;
     return b.callReturn();
   }
-  var d = b.getNumberField("NOTE", b), e = b.getNumberField("OCTAVE", b), f = b.getNumberValue("VALUE", b), h = Entry.Hamster.tempo, f = 6E4 * f / h;
+  var d = b.getNumberField("NOTE", b), e = b.getNumberField("OCTAVE", b), f = b.getNumberValue("VALUE", b), g = Entry.Hamster.tempo, f = 6E4 * f / g;
   b.note = d + 12 * (e - 1);
   b.isStart = !0;
   b.timeFlag = 1;
@@ -1800,7 +2282,7 @@ Blockly.Blocks.hamster_rest_for = {init:function() {
   this.setColour("#00979D");
   this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_rest_for_1);
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_rest_for_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_rest_for_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -1823,7 +2305,7 @@ Blockly.Blocks.hamster_change_tempo_by = {init:function() {
   this.setColour("#00979D");
   this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_change_tempo_by_1);
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_change_tempo_by_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_change_tempo_by_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -1836,7 +2318,7 @@ Blockly.Blocks.hamster_set_tempo_to = {init:function() {
   this.setColour("#00979D");
   this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_set_tempo_to_1);
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_set_tempo_to_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_set_tempo_to_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -1851,7 +2333,7 @@ Blockly.Blocks.hamster_change_both_wheels_by = {init:function() {
   this.appendValueInput("LEFT").setCheck(["Number", "String"]);
   this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_change_both_wheels_by_2);
   this.appendValueInput("RIGHT").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_change_both_wheels_by_3).appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_change_both_wheels_by_3).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -1868,7 +2350,7 @@ Blockly.Blocks.hamster_set_both_wheels_to = {init:function() {
   this.appendValueInput("LEFT").setCheck(["Number", "String"]);
   this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_set_both_wheels_to_2);
   this.appendValueInput("RIGHT").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_set_both_wheels_to_3).appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_set_both_wheels_to_3).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -1883,7 +2365,7 @@ Blockly.Blocks.hamster_change_wheels_by = {init:function() {
   this.setColour("#00979D");
   this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_change_wheels_by_1).appendField(new Blockly.FieldDropdown([[Lang.General.left, "LEFT"], [Lang.General.right, "RIGHT"], [Lang.General.both, "FRONT"]]), "DIRECTION").appendField(Lang.Blocks.HAMSTER_change_wheels_by_2);
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_change_wheels_by_3).appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_change_wheels_by_3).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -1897,7 +2379,7 @@ Blockly.Blocks.hamster_set_wheels_to = {init:function() {
   this.setColour("#00979D");
   this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_set_wheels_to_1).appendField(new Blockly.FieldDropdown([[Lang.General.left, "LEFT"], [Lang.General.right, "RIGHT"], [Lang.General.both, "FRONT"]]), "DIRECTION").appendField(Lang.Blocks.HAMSTER_set_wheels_to_2);
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_set_wheels_to_3).appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_set_wheels_to_3).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -1909,7 +2391,7 @@ Entry.block.hamster_set_wheels_to = function(a, b) {
 };
 Blockly.Blocks.hamster_stop = {init:function() {
   this.setColour("#00979D");
-  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_stop).appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_stop).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -1924,7 +2406,7 @@ Blockly.Blocks.hamster_change_buzzer_by = {init:function() {
   this.setColour("#00979D");
   this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_change_buzzer_by_1);
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_change_buzzer_by_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_change_buzzer_by_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -1940,7 +2422,7 @@ Blockly.Blocks.hamster_set_buzzer_to = {init:function() {
   this.setColour("#00979D");
   this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_set_buzzer_to_1);
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_set_buzzer_to_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_set_buzzer_to_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -1953,7 +2435,7 @@ Entry.block.hamster_set_buzzer_to = function(a, b) {
 };
 Blockly.Blocks.hamster_clear_buzzer = {init:function() {
   this.setColour("#00979D");
-  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_clear_buzzer).appendField(new Blockly.FieldIcon("/img/assets/block_icon/hardware_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_clear_buzzer).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -2045,9 +2527,9 @@ Entry.block.reach_something = function(a, b) {
       if (Entry.checkCollisionRect(d, f)) {
         return !0;
       }
-      for (var c = c.parent.clonedEntities, e = 0, h = c.length;e < h;e++) {
-        var g = c[e];
-        if (g.getVisible() && !g.isStamp && Entry.checkCollisionRect(d, g.object.getTransformedBounds())) {
+      for (var c = c.parent.clonedEntities, e = 0, g = c.length;e < g;e++) {
+        var h = c[e];
+        if (h.getVisible() && !h.isStamp && Entry.checkCollisionRect(d, h.object.getTransformedBounds())) {
           return !0;
         }
       }
@@ -2057,8 +2539,8 @@ Entry.block.reach_something = function(a, b) {
       }
       c = c.parent.clonedEntities;
       e = 0;
-      for (h = c.length;e < h;e++) {
-        if (g = c[e], g.getVisible() && !g.isStamp && f(d, g.object, .2, !0)) {
+      for (g = c.length;e < g;e++) {
+        if (h = c[e], h.getVisible() && !h.isStamp && f(d, h.object, .2, !0)) {
           return !0;
         }
       }
@@ -2215,7 +2697,7 @@ Entry.block.boolean_basic_operator = function(a, b) {
 };
 Blockly.Blocks.show = {init:function() {
   this.setColour("#EC4466");
-  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_show).appendField(new Blockly.FieldIcon("/img/assets/block_icon/looks_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_show).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/looks_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -2226,7 +2708,7 @@ Entry.block.show = function(a, b) {
 };
 Blockly.Blocks.hide = {init:function() {
   this.setColour("#EC4466");
-  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_hide).appendField(new Blockly.FieldIcon("/img/assets/block_icon/looks_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_hide).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/looks_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -2243,7 +2725,7 @@ Blockly.Blocks.dialog_time = {init:function() {
   this.appendValueInput("SECOND").setCheck(["Number", "String"]);
   this.appendDummyInput().appendField(Lang.Blocks.LOOKS_dialog_time_3);
   this.appendDummyInput().appendField(new Blockly.FieldDropdown([[Lang.Blocks.speak, "speak"]]), "OPTION");
-  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_dialog_time_4).appendField(new Blockly.FieldIcon("/img/assets/block_icon/looks_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_dialog_time_4).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/looks_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -2269,7 +2751,7 @@ Blockly.Blocks.dialog = {init:function() {
   this.appendValueInput("VALUE").setCheck(["String", "Number", null]);
   this.appendDummyInput().appendField(Lang.Blocks.LOOKS_dialog_2);
   this.appendDummyInput().appendField(new Blockly.FieldDropdown([[Lang.Blocks.speak, "speak"]]), "OPTION");
-  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_dialog_3).appendField(new Blockly.FieldIcon("/img/assets/block_icon/looks_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_dialog_3).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/looks_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -2284,7 +2766,7 @@ Entry.block.dialog = function(a, b) {
 };
 Blockly.Blocks.remove_dialog = {init:function() {
   this.setColour("#EC4466");
-  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_remove_dialog).appendField(new Blockly.FieldIcon("/img/assets/block_icon/looks_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_remove_dialog).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/looks_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -2297,7 +2779,7 @@ Blockly.Blocks.change_to_nth_shape = {init:function() {
   this.setColour("#EC4466");
   this.appendDummyInput().appendField(Lang.Blocks.LOOKS_change_to_nth_shape_1);
   this.appendDummyInput().appendField(new Blockly.FieldDropdownDynamic("pictures"), "VALUE");
-  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_change_to_nth_shape_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/looks_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_change_to_nth_shape_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/looks_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -2309,7 +2791,7 @@ Entry.block.change_to_nth_shape = function(a, b) {
 };
 Blockly.Blocks.change_to_next_shape = {init:function() {
   this.setColour("#EC4466");
-  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_change_to_next_shape).appendField(new Blockly.FieldIcon("/img/assets/block_icon/looks_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_change_to_next_shape).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/looks_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -2325,7 +2807,7 @@ Blockly.Blocks.set_effect_volume = {init:function() {
   this.appendDummyInput().appendField(new Blockly.FieldDropdown([[Lang.Blocks.color, "color"], [Lang.Blocks.brightness, "brightness"], [Lang.Blocks.opacity, "opacity"]]), "EFFECT");
   this.appendDummyInput().appendField(Lang.Blocks.LOOKS_set_effect_volume_2);
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_set_effect_volume_3).appendField(new Blockly.FieldIcon("/img/assets/block_icon/looks_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_set_effect_volume_3).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/looks_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -2342,7 +2824,7 @@ Blockly.Blocks.set_effect = {init:function() {
   this.appendDummyInput().appendField(new Blockly.FieldDropdown([[Lang.Blocks.color, "color"], [Lang.Blocks.brightness, "brightness"], [Lang.Blocks.opacity, "opacity"]]), "EFFECT");
   this.appendDummyInput().appendField(Lang.Blocks.LOOKS_set_effect_2);
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_set_effect_3).appendField(new Blockly.FieldIcon("/img/assets/block_icon/looks_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_set_effect_3).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/looks_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -2355,7 +2837,7 @@ Entry.block.set_effect = function(a, b) {
 };
 Blockly.Blocks.erase_all_effects = {init:function() {
   this.setColour("#EC4466");
-  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_erase_all_effects).appendField(new Blockly.FieldIcon("/img/assets/block_icon/looks_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_erase_all_effects).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/looks_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -2368,7 +2850,7 @@ Blockly.Blocks.change_scale_percent = {init:function() {
   this.setColour("#EC4466");
   this.appendDummyInput().appendField(Lang.Blocks.LOOKS_change_scale_percent_1);
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_change_scale_percent_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/looks_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_change_scale_percent_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/looks_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -2383,7 +2865,7 @@ Blockly.Blocks.set_scale_percent = {init:function() {
   this.setColour("#EC4466");
   this.appendDummyInput().appendField(Lang.Blocks.LOOKS_set_scale_percent_1);
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_set_scale_percent_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/looks_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_set_scale_percent_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/looks_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -2398,7 +2880,7 @@ Blockly.Blocks.change_scale_size = {init:function() {
   this.setColour("#EC4466");
   this.appendDummyInput().appendField(Lang.Blocks.LOOKS_change_scale_percent_1);
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_change_scale_percent_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/looks_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_change_scale_percent_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/looks_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -2412,7 +2894,7 @@ Blockly.Blocks.set_scale_size = {init:function() {
   this.setColour("#EC4466");
   this.appendDummyInput().appendField(Lang.Blocks.LOOKS_set_scale_percent_1);
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_set_scale_percent_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/looks_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_set_scale_percent_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/looks_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -2424,7 +2906,7 @@ Entry.block.set_scale_size = function(a, b) {
 };
 Blockly.Blocks.flip_y = {init:function() {
   this.setColour("#EC4466");
-  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_flip_y).appendField(new Blockly.FieldIcon("/img/assets/block_icon/looks_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_flip_y).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/looks_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -2435,7 +2917,7 @@ Entry.block.flip_y = function(a, b) {
 };
 Blockly.Blocks.flip_x = {init:function() {
   this.setColour("#EC4466");
-  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_flip_x).appendField(new Blockly.FieldIcon("/img/assets/block_icon/looks_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_flip_x).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/looks_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -2448,7 +2930,7 @@ Blockly.Blocks.set_object_order = {init:function() {
   this.setColour("#EC4466");
   this.appendDummyInput().appendField(Lang.Blocks.LOOKS_set_object_order_1);
   this.appendDummyInput().appendField(new Blockly.FieldDropdownDynamic("objectSequence"), "VALUE");
-  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_set_object_order_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/looks_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_set_object_order_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/looks_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -2475,7 +2957,7 @@ Blockly.Blocks.change_to_some_shape = {init:function() {
   this.setColour("#EC4466");
   this.appendDummyInput().appendField(Lang.Blocks.LOOKS_change_to_nth_shape_1);
   this.appendValueInput("VALUE").setCheck(["String", "Number"]);
-  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_change_to_nth_shape_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/looks_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_change_to_nth_shape_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/looks_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -2493,7 +2975,7 @@ Blockly.Blocks.add_effect_amount = {init:function() {
   this.appendDummyInput().appendField(new Blockly.FieldDropdown([[Lang.Blocks.color, "color"], [Lang.Blocks.brightness, "brightness"], [Lang.Blocks.transparency, "transparency"]]), "EFFECT");
   this.appendDummyInput().appendField(Lang.Blocks.LOOKS_set_effect_volume_2);
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_set_effect_volume_3).appendField(new Blockly.FieldIcon("/img/assets/block_icon/looks_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_set_effect_volume_3).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/looks_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -2510,7 +2992,7 @@ Blockly.Blocks.change_effect_amount = {init:function() {
   this.appendDummyInput().appendField(new Blockly.FieldDropdown([[Lang.Blocks.color, "color"], [Lang.Blocks.brightness, "brightness"], [Lang.Blocks.transparency, "transparency"]]), "EFFECT");
   this.appendDummyInput().appendField(Lang.Blocks.LOOKS_set_effect_2);
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_set_effect_3).appendField(new Blockly.FieldIcon("/img/assets/block_icon/looks_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_set_effect_3).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/looks_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -2527,7 +3009,7 @@ Blockly.Blocks.set_effect_amount = {init:function() {
   this.appendDummyInput().appendField(new Blockly.FieldDropdown([[Lang.Blocks.color, "color"], [Lang.Blocks.brightness, "brightness"], [Lang.Blocks.transparency, "transparency"]]), "EFFECT");
   this.appendDummyInput().appendField(Lang.Blocks.LOOKS_set_effect_volume_2);
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_set_effect_volume_3).appendField(new Blockly.FieldIcon("/img/assets/block_icon/looks_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_set_effect_volume_3).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/looks_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -2544,7 +3026,7 @@ Blockly.Blocks.set_entity_effect = {init:function() {
   this.appendDummyInput().appendField(new Blockly.FieldDropdown([[Lang.Blocks.color, "color"], [Lang.Blocks.brightness, "brightness"], [Lang.Blocks.transparency, "transparency"]]), "EFFECT");
   this.appendDummyInput().appendField(Lang.Blocks.LOOKS_set_effect_2);
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_set_effect_3).appendField(new Blockly.FieldIcon("/img/assets/block_icon/looks_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_set_effect_3).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/looks_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -2558,7 +3040,7 @@ Entry.block.set_entity_effect = function(a, b) {
 Blockly.Blocks.change_object_index = {init:function() {
   this.setColour("#EC4466");
   this.appendDummyInput().appendField(Lang.Blocks.LOOKS_change_object_index_1);
-  this.appendDummyInput().appendField(new Blockly.FieldDropdown([[Lang.Blocks.LOOKS_change_object_index_sub_1, "FRONT"], [Lang.Blocks.LOOKS_change_object_index_sub_2, "FORWARD"], [Lang.Blocks.LOOKS_change_object_index_sub_3, "BACKWARD"], [Lang.Blocks.LOOKS_change_object_index_sub_4, "BACK"]]), "LOCATION").appendField(Lang.Blocks.LOOKS_change_object_index_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/looks_03.png", "*"));
+  this.appendDummyInput().appendField(new Blockly.FieldDropdown([[Lang.Blocks.LOOKS_change_object_index_sub_1, "FRONT"], [Lang.Blocks.LOOKS_change_object_index_sub_2, "FORWARD"], [Lang.Blocks.LOOKS_change_object_index_sub_3, "BACKWARD"], [Lang.Blocks.LOOKS_change_object_index_sub_4, "BACK"]]), "LOCATION").appendField(Lang.Blocks.LOOKS_change_object_index_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/looks_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -2588,7 +3070,7 @@ Blockly.Blocks.move_direction = {init:function() {
   this.setColour("#A751E3");
   this.appendDummyInput().appendField(Lang.Blocks.MOVING_move_direction_1);
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_move_direction_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/moving_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.MOVING_move_direction_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/moving_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -2604,7 +3086,7 @@ Blockly.Blocks.move_x = {init:function() {
   this.setColour("#A751E3");
   this.appendDummyInput().appendField(Lang.Blocks.MOVING_move_x_1);
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_move_x_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/moving_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.MOVING_move_x_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/moving_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -2619,7 +3101,7 @@ Blockly.Blocks.move_y = {init:function() {
   this.setColour("#A751E3");
   this.appendDummyInput().appendField(Lang.Blocks.MOVING_move_y_1);
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_move_y_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/moving_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.MOVING_move_y_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/moving_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -2638,7 +3120,7 @@ Blockly.Blocks.locate_xy_time = {init:function() {
   this.appendValueInput("VALUE2").setCheck(["Number", "String"]);
   this.appendDummyInput().appendField(Lang.Blocks.MOVING_locate_xy_time_3);
   this.appendValueInput("VALUE3").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_locate_xy_time_4).appendField(new Blockly.FieldIcon("/img/assets/block_icon/moving_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.MOVING_locate_xy_time_4).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/moving_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -2664,7 +3146,7 @@ Blockly.Blocks.rotate_by_angle = {init:function() {
   this.setColour("#A751E3");
   this.appendDummyInput().appendField(Lang.Blocks.MOVING_rotate_by_angle_1);
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_rotate_by_angle_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/moving_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.MOVING_rotate_by_angle_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/moving_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -2677,7 +3159,7 @@ Entry.block.rotate_by_angle = function(a, b) {
 Blockly.Blocks.rotate_by_angle_dropdown = {init:function() {
   this.setColour("#A751E3");
   this.appendDummyInput().appendField(Lang.Blocks.MOVING_rotate_by_angle_dropdown_1);
-  this.appendDummyInput().appendField(new Blockly.FieldDropdown([["45", "45"], ["90", "90"], ["135", "135"], ["180", "180"]]), "VALUE").appendField(Lang.Blocks.MOVING_rotate_by_angle_dropdown_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/moving_03.png", "*"));
+  this.appendDummyInput().appendField(new Blockly.FieldDropdown([["45", "45"], ["90", "90"], ["135", "135"], ["180", "180"]]), "VALUE").appendField(Lang.Blocks.MOVING_rotate_by_angle_dropdown_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/moving_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -2691,7 +3173,7 @@ Blockly.Blocks.see_angle = {init:function() {
   this.setColour("#A751E3");
   this.appendDummyInput().appendField(Lang.Blocks.MOVING_see_angle_1);
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_see_angle_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/moving_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.MOVING_see_angle_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/moving_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -2705,7 +3187,7 @@ Blockly.Blocks.see_direction = {init:function() {
   this.setColour("#A751E3");
   this.appendDummyInput().appendField(Lang.Blocks.MOVING_see_direction_1);
   this.appendDummyInput().appendField(new Blockly.FieldDropdownDynamic("sprites"), "VALUE");
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_see_direction_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/moving_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.MOVING_see_direction_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/moving_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -2721,7 +3203,7 @@ Blockly.Blocks.locate_xy = {init:function() {
   this.appendValueInput("VALUE1").setCheck(["Number", "String"]);
   this.appendDummyInput().appendField(Lang.Blocks.MOVING_locate_xy_2);
   this.appendValueInput("VALUE2").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_locate_xy_3).appendField(new Blockly.FieldIcon("/img/assets/block_icon/moving_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.MOVING_locate_xy_3).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/moving_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -2738,7 +3220,7 @@ Blockly.Blocks.locate_x = {init:function() {
   this.setColour("#A751E3");
   this.appendDummyInput().appendField(Lang.Blocks.MOVING_locate_x_1);
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_locate_x_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/moving_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.MOVING_locate_x_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/moving_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -2753,7 +3235,7 @@ Blockly.Blocks.locate_y = {init:function() {
   this.setColour("#A751E3");
   this.appendDummyInput().appendField(Lang.Blocks.MOVING_locate_y_1);
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_locate_y_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/moving_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.MOVING_locate_y_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/moving_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -2768,7 +3250,7 @@ Blockly.Blocks.locate = {init:function() {
   this.setColour("#A751E3");
   this.appendDummyInput().appendField(Lang.Blocks.MOVING_locate_1);
   this.appendDummyInput().appendField(new Blockly.FieldDropdownDynamic("spritesWithMouse"), "VALUE");
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_locate_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/moving_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.MOVING_locate_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/moving_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -2789,7 +3271,7 @@ Blockly.Blocks.move_xy_time = {init:function() {
   this.appendValueInput("VALUE2").setCheck(["Number", "String"]);
   this.appendDummyInput().appendField(Lang.Blocks.MOVING_move_xy_time_3);
   this.appendValueInput("VALUE3").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_move_xy_time_4).appendField(new Blockly.FieldIcon("/img/assets/block_icon/moving_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.MOVING_move_xy_time_4).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/moving_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -2817,7 +3299,7 @@ Blockly.Blocks.locate_time = {init:function() {
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
   this.appendDummyInput().appendField(Lang.Blocks.MOVING_locate_time_2);
   this.appendDummyInput().appendField(new Blockly.FieldDropdownDynamic("sprites"), "VALUE");
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_locate_time_3).appendField(new Blockly.FieldIcon("/img/assets/block_icon/moving_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.MOVING_locate_time_3).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/moving_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -2828,7 +3310,7 @@ Blockly.Blocks.rotate_by_angle_time = {init:function() {
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
   this.appendDummyInput().appendField(Lang.Blocks.MOVING_rotate_by_angle_time_2);
   this.appendDummyInput().appendField(new Blockly.FieldAngle("90"), "VALUE");
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_rotate_by_angle_time_3).appendField(new Blockly.FieldIcon("/img/assets/block_icon/moving_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.MOVING_rotate_by_angle_time_3).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/moving_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -2853,14 +3335,14 @@ Blockly.Blocks.bounce_when = {init:function() {
   this.setColour("#A751E3");
   this.appendDummyInput().appendField(Lang.Blocks.MOVING_bounce_when_1);
   this.appendDummyInput().appendField(new Blockly.FieldDropdownDynamic("bounce"), "VALUE");
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_bounce_when_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/moving_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.MOVING_bounce_when_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/moving_03.png", "*"));
   this.setPreviousStatement(!0);
   this.setInputsInline(!0);
   this.setNextStatement(!0);
 }};
 Blockly.Blocks.bounce_wall = {init:function() {
   this.setColour("#A751E3");
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_bounce_wall).appendField(new Blockly.FieldIcon("/img/assets/block_icon/moving_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.MOVING_bounce_wall).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/moving_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -2870,20 +3352,20 @@ Entry.block.bounce_wall = function(a, b) {
   e = d.width * Math.sqrt(1 + d.height / d.width * (d.height / d.width));
   var d = d.height * Math.sqrt(1 + d.width / d.height * (d.width / d.height)), f = "free" == c ? (a.getRotation() + a.getDirection()).mod(360) : a.getDirection();
   if (90 > f && 0 <= f || 360 > f && 270 <= f) {
-    var h = ndgmr.checkPixelCollision(Entry.stage.wall.up, a.object, 0, !1);
-    if (h) {
+    var g = ndgmr.checkPixelCollision(Entry.stage.wall.up, a.object, 0, !1);
+    if (g) {
       "free" == c ? a.setRotation(-a.getRotation() - 2 * a.getDirection() + 180) : a.setDirection(-a.getDirection() + 180), a.setY(135 - d / 2 - 1);
     } else {
-      if (h = ndgmr.checkPixelCollision(Entry.stage.wall.down, a.object, 0, !1)) {
+      if (g = ndgmr.checkPixelCollision(Entry.stage.wall.down, a.object, 0, !1)) {
         "free" == c ? a.setRotation(-a.getRotation() - 2 * a.getDirection() + 180) : a.setDirection(-a.getDirection() + 180), a.setY(d / 2 + -134);
       }
     }
   } else {
     if (270 > f && 90 <= f) {
-      if (h = ndgmr.checkPixelCollision(Entry.stage.wall.down, a.object, 0, !1)) {
+      if (g = ndgmr.checkPixelCollision(Entry.stage.wall.down, a.object, 0, !1)) {
         "free" == c ? a.setRotation(-a.getRotation() - 2 * a.getDirection() + 180) : a.setDirection(-a.getDirection() + 180), a.setY(d / 2 + -134);
       } else {
-        if (h = ndgmr.checkPixelCollision(Entry.stage.wall.up, a.object, 0, !1)) {
+        if (g = ndgmr.checkPixelCollision(Entry.stage.wall.up, a.object, 0, !1)) {
           "free" == c ? a.setRotation(-a.getRotation() - 2 * a.getDirection() + 180) : a.setDirection(-a.getDirection() + 180), a.setY(135 - d / 2 - 1);
         }
       }
@@ -2912,7 +3394,7 @@ Entry.block.bounce_wall = function(a, b) {
 };
 Blockly.Blocks.flip_arrow_horizontal = {init:function() {
   this.setColour("#A751E3");
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_flip_arrow_horizontal).appendField(new Blockly.FieldIcon("/img/assets/block_icon/moving_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.MOVING_flip_arrow_horizontal).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/moving_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -2923,7 +3405,7 @@ Entry.block.flip_arrow_horizontal = function(a, b) {
 };
 Blockly.Blocks.flip_arrow_vertical = {init:function() {
   this.setColour("#A751E3");
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_flip_arrow_vertical).appendField(new Blockly.FieldIcon("/img/assets/block_icon/moving_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.MOVING_flip_arrow_vertical).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/moving_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -2936,7 +3418,7 @@ Blockly.Blocks.see_angle_object = {init:function() {
   this.setColour("#A751E3");
   this.appendDummyInput().appendField(Lang.Blocks.MOVING_see_angle_object_1);
   this.appendDummyInput().appendField(new Blockly.FieldDropdownDynamic("spritesWithMouse"), "VALUE");
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_see_angle_object_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/moving_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.MOVING_see_angle_object_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/moving_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -2956,7 +3438,7 @@ Blockly.Blocks.see_angle_direction = {init:function() {
   this.setColour("#A751E3");
   this.appendDummyInput().appendField(Lang.Blocks.MOVING_see_angle_direction_1);
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_see_angle_direction_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/moving_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.MOVING_see_angle_direction_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/moving_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -2970,7 +3452,7 @@ Blockly.Blocks.rotate_direction = {init:function() {
   this.setColour("#A751E3");
   this.appendDummyInput().appendField(Lang.Blocks.MOVING_rotate_direction_1);
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_rotate_direction_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/moving_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.MOVING_rotate_direction_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/moving_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -2986,7 +3468,7 @@ Blockly.Blocks.locate_object_time = {init:function() {
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
   this.appendDummyInput().appendField(Lang.Blocks.MOVING_locate_object_time_2);
   this.appendDummyInput().appendField(new Blockly.FieldDropdownDynamic("spritesWithMouse"), "TARGET");
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_locate_object_time_3).appendField(new Blockly.FieldIcon("/img/assets/block_icon/moving_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.MOVING_locate_object_time_3).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/moving_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -3015,7 +3497,7 @@ Blockly.Blocks.rotate_absolute = {init:function() {
   this.setColour("#A751E3");
   this.appendDummyInput().appendField(Lang.Blocks.MOVING_set_direction_by_angle_1);
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_set_direction_by_angle_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/moving_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.MOVING_set_direction_by_angle_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/moving_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -3029,7 +3511,7 @@ Blockly.Blocks.rotate_relative = {init:function() {
   this.setColour("#A751E3");
   this.appendDummyInput().appendField(Lang.Blocks.MOVING_add_direction_by_angle_1);
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_add_direction_by_angle_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/moving_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.MOVING_add_direction_by_angle_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/moving_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -3043,7 +3525,7 @@ Blockly.Blocks.direction_absolute = {init:function() {
   this.setColour("#A751E3");
   this.appendDummyInput().appendField(Lang.Blocks.MOVING_see_angle_1);
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_see_angle_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/moving_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.MOVING_see_angle_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/moving_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -3057,7 +3539,7 @@ Blockly.Blocks.direction_relative = {init:function() {
   this.setColour("#A751E3");
   this.appendDummyInput().appendField(Lang.Blocks.MOVING_rotate_direction_1);
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_rotate_direction_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/moving_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.MOVING_rotate_direction_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/moving_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -3073,7 +3555,7 @@ Blockly.Blocks.move_to_angle = {init:function() {
   this.appendValueInput("ANGLE").setCheck(["Number", "String"]);
   this.appendDummyInput().appendField(Lang.Blocks.MOVING_move_direction_angle_2);
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_move_direction_angle_3).appendField(new Blockly.FieldIcon("/img/assets/block_icon/moving_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.MOVING_move_direction_angle_3).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/moving_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -3092,7 +3574,7 @@ Blockly.Blocks.rotate_by_time = {init:function() {
   this.appendDummyInput().appendField(Lang.Blocks.MOVING_add_direction_by_angle_time_2);
   this.appendDummyInput().appendField(Lang.Blocks.MOVING_add_direction_by_angle_time_1);
   this.appendValueInput("ANGLE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_add_direction_by_angle_time_3).appendField(new Blockly.FieldIcon("/img/assets/block_icon/moving_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.MOVING_add_direction_by_angle_time_3).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/moving_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -3119,7 +3601,7 @@ Blockly.Blocks.direction_relative_duration = {init:function() {
   this.appendValueInput("DURATION").setCheck(["Number", "String"]);
   this.appendDummyInput().appendField(Lang.Blocks.MOVING_direction_relative_duration_2);
   this.appendValueInput("AMOUNT").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.MOVING_direction_relative_duration_3).appendField(new Blockly.FieldIcon("/img/assets/block_icon/moving_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.MOVING_direction_relative_duration_3).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/moving_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -3143,7 +3625,7 @@ Entry.block.direction_relative_duration = function(a, b) {
 };
 Blockly.Blocks.when_scene_start = {init:function() {
   this.setColour("#3BBD70");
-  this.appendDummyInput().appendField(new Blockly.FieldIcon("/img/assets/block_icon/start_icon_scene_1_2.png", "*", "start")).appendField(Lang.Blocks.SCENE_when_scene_start);
+  this.appendDummyInput().appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/start_icon_scene_1_2.png", "*", "start")).appendField(Lang.Blocks.SCENE_when_scene_start);
   this.setInputsInline(!0);
   this.setNextStatement(!0);
 }};
@@ -3152,7 +3634,7 @@ Entry.block.when_scene_start = function(a, b) {
 };
 Blockly.Blocks.start_scene = {init:function() {
   this.setColour("#3BBD70");
-  this.appendDummyInput().appendField(Lang.Blocks.SCENE_start_scene_1).appendField(new Blockly.FieldDropdownDynamic("scenes"), "VALUE").appendField(Lang.Blocks.SCENE_start_scene_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/start_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.SCENE_start_scene_1).appendField(new Blockly.FieldDropdownDynamic("scenes"), "VALUE").appendField(Lang.Blocks.SCENE_start_scene_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/start_03.png", "*"));
   this.setInputsInline(!0);
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
@@ -3166,7 +3648,7 @@ Entry.block.start_scene = function(a, b) {
 };
 Blockly.Blocks.start_neighbor_scene = {init:function() {
   this.setColour("#3BBD70");
-  this.appendDummyInput().appendField(Lang.Blocks.SCENE_start_neighbor_scene_1).appendField(new Blockly.FieldDropdown([[Lang.Blocks.SCENE_start_scene_pre, "pre"], [Lang.Blocks.SCENE_start_scene_next, "next"]]), "OPERATOR").appendField(Lang.Blocks.SCENE_start_neighbor_scene_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/start_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.SCENE_start_neighbor_scene_1).appendField(new Blockly.FieldDropdown([[Lang.Blocks.SCENE_start_scene_pre, "pre"], [Lang.Blocks.SCENE_start_scene_next, "next"]]), "OPERATOR").appendField(Lang.Blocks.SCENE_start_neighbor_scene_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/start_03.png", "*"));
   this.setInputsInline(!0);
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
@@ -3180,7 +3662,7 @@ Blockly.Blocks.sound_something = {init:function() {
   this.setColour("#A4D01D");
   this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_something_1);
   this.appendDummyInput().appendField(new Blockly.FieldDropdownDynamic("sounds"), "VALUE");
-  this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_something_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/sound_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_something_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/sound_03.png", "*"));
   this.setInputsInline(!0);
   this.setNextStatement(!0);
   this.setPreviousStatement(!0);
@@ -3196,7 +3678,7 @@ Blockly.Blocks.sound_something_second = {init:function() {
   this.appendDummyInput().appendField(new Blockly.FieldDropdownDynamic("sounds"), "VALUE");
   this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_something_second_2);
   this.appendValueInput("SECOND").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_something_second_3).appendField(new Blockly.FieldIcon("/img/assets/block_icon/sound_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_something_second_3).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/sound_03.png", "*"));
   this.setInputsInline(!0);
   this.setNextStatement(!0);
   this.setPreviousStatement(!0);
@@ -3215,7 +3697,7 @@ Blockly.Blocks.sound_something_wait = {init:function() {
   this.setColour("#A4D01D");
   this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_something_wait_1);
   this.appendDummyInput().appendField(new Blockly.FieldDropdownDynamic("sounds"), "VALUE");
-  this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_something_wait_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/sound_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_something_wait_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/sound_03.png", "*"));
   this.setInputsInline(!0);
   this.setNextStatement(!0);
   this.setPreviousStatement(!0);
@@ -3243,7 +3725,7 @@ Blockly.Blocks.sound_something_second_wait = {init:function() {
   this.appendDummyInput().appendField(new Blockly.FieldDropdownDynamic("sounds"), "VALUE");
   this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_something_second_wait_2);
   this.appendValueInput("SECOND").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_something_second_wait_3).appendField(new Blockly.FieldIcon("/img/assets/block_icon/sound_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_something_second_wait_3).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/sound_03.png", "*"));
   this.setInputsInline(!0);
   this.setNextStatement(!0);
   this.setPreviousStatement(!0);
@@ -3275,7 +3757,7 @@ Blockly.Blocks.sound_volume_change = {init:function() {
   this.setColour("#A4D01D");
   this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_volume_change_1);
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_volume_change_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/sound_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_volume_change_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/sound_03.png", "*"));
   this.setInputsInline(!0);
   this.setNextStatement(!0);
   this.setPreviousStatement(!0);
@@ -3291,7 +3773,7 @@ Blockly.Blocks.sound_volume_set = {init:function() {
   this.setColour("#A4D01D");
   this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_volume_set_1);
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_volume_set_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/sound_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_volume_set_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/sound_03.png", "*"));
   this.setInputsInline(!0);
   this.setNextStatement(!0);
   this.setPreviousStatement(!0);
@@ -3305,7 +3787,7 @@ Entry.block.sound_volume_set = function(a, b) {
 };
 Blockly.Blocks.sound_silent_all = {init:function() {
   this.setColour("#A4D01D");
-  this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_silent_all).appendField(new Blockly.FieldIcon("/img/assets/block_icon/sound_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_silent_all).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/sound_03.png", "*"));
   this.setInputsInline(!0);
   this.setNextStatement(!0);
   this.setPreviousStatement(!0);
@@ -3329,7 +3811,7 @@ Blockly.Blocks.sound_something_with_block = {init:function() {
   this.setColour("#A4D01D");
   this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_something_1);
   this.appendValueInput("VALUE").setCheck(["String", "Number"]);
-  this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_something_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/sound_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_something_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/sound_03.png", "*"));
   this.setInputsInline(!0);
   this.setNextStatement(!0);
   this.setPreviousStatement(!0);
@@ -3345,7 +3827,7 @@ Blockly.Blocks.sound_something_second_with_block = {init:function() {
   this.appendValueInput("VALUE").setCheck(["String", "Number"]);
   this.appendDummyInput().appendField(" ").appendField(Lang.Blocks.SOUND_sound_something_second_2);
   this.appendValueInput("SECOND").setCheck(["String", "Number"]);
-  this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_something_second_3).appendField(new Blockly.FieldIcon("/img/assets/block_icon/sound_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_something_second_3).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/sound_03.png", "*"));
   this.setInputsInline(!0);
   this.setNextStatement(!0);
   this.setPreviousStatement(!0);
@@ -3359,7 +3841,7 @@ Blockly.Blocks.sound_something_wait_with_block = {init:function() {
   this.setColour("#A4D01D");
   this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_something_wait_1);
   this.appendValueInput("VALUE").setCheck(["String", "Number"]);
-  this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_something_wait_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/sound_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_something_wait_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/sound_03.png", "*"));
   this.setInputsInline(!0);
   this.setNextStatement(!0);
   this.setPreviousStatement(!0);
@@ -3389,7 +3871,7 @@ Blockly.Blocks.sound_something_second_wait_with_block = {init:function() {
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
   this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_something_second_wait_2).appendField(" ");
   this.appendValueInput("SECOND").setCheck(["String", "Number"]);
-  this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_something_second_wait_3).appendField(new Blockly.FieldIcon("/img/assets/block_icon/sound_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_something_second_wait_3).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/sound_03.png", "*"));
   this.setInputsInline(!0);
   this.setNextStatement(!0);
   this.setPreviousStatement(!0);
@@ -3423,7 +3905,7 @@ Blockly.Blocks.sound_from_to = {init:function() {
   this.appendValueInput("START").setCheck(["String", "Number"]);
   this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_from_to_3);
   this.appendValueInput("END").setCheck(["String", "Number"]);
-  this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_from_to_4).appendField(new Blockly.FieldIcon("/img/assets/block_icon/sound_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_from_to_4).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/sound_03.png", "*"));
   this.setInputsInline(!0);
   this.setNextStatement(!0);
   this.setPreviousStatement(!0);
@@ -3442,7 +3924,7 @@ Blockly.Blocks.sound_from_to_and_wait = {init:function() {
   this.appendValueInput("START").setCheck(["String", "Number"]);
   this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_from_to_and_wait_3);
   this.appendValueInput("END").setCheck(["String", "Number"]);
-  this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_from_to_and_wait_4).appendField(new Blockly.FieldIcon("/img/assets/block_icon/sound_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_from_to_and_wait_4).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/sound_03.png", "*"));
   this.setInputsInline(!0);
   this.setNextStatement(!0);
   this.setPreviousStatement(!0);
@@ -3470,7 +3952,7 @@ Entry.block.sound_from_to_and_wait = function(a, b) {
 };
 Blockly.Blocks.when_run_button_click = {init:function() {
   this.setColour("#3BBD70");
-  this.appendDummyInput().appendField(new Blockly.FieldIcon("/img/assets/block_icon/start_icon_play.png", "*", "start")).appendField(Lang.Blocks.START_when_run_button_click);
+  this.appendDummyInput().appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/start_icon_play.png", "*", "start")).appendField(Lang.Blocks.START_when_run_button_click);
   this.setInputsInline(!0);
   this.setNextStatement(!0);
 }};
@@ -3479,8 +3961,8 @@ Entry.block.when_run_button_click = function(a, b) {
 };
 Blockly.Blocks.press_some_key = {init:function() {
   this.setColour("#3BBD70");
-  this.appendDummyInput().appendField(new Blockly.FieldIcon("/img/assets/block_icon/start_icon_keyboard.png", "*", "start")).appendField(Lang.Blocks.START_press_some_key_1).appendField(new Blockly.FieldDropdown([["q", "81"], ["w", "87"], ["e", "69"], ["r", "82"], ["a", "65"], ["s", "83"], ["d", "68"], [Lang.Blocks.START_press_some_key_up, "38"], [Lang.Blocks.START_press_some_key_down, "40"], [Lang.Blocks.START_press_some_key_left, "37"], [Lang.Blocks.START_press_some_key_right, "39"], [Lang.Blocks.START_press_some_key_enter, 
-  "13"], [Lang.Blocks.START_press_some_key_space, "32"]]), "VALUE").appendField(Lang.Blocks.START_press_some_key_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/start_03.png", "*"));
+  this.appendDummyInput().appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/start_icon_keyboard.png", "*", "start")).appendField(Lang.Blocks.START_press_some_key_1).appendField(new Blockly.FieldDropdown([["q", "81"], ["w", "87"], ["e", "69"], ["r", "82"], ["a", "65"], ["s", "83"], ["d", "68"], [Lang.Blocks.START_press_some_key_up, "38"], [Lang.Blocks.START_press_some_key_down, "40"], [Lang.Blocks.START_press_some_key_left, "37"], [Lang.Blocks.START_press_some_key_right, "39"], [Lang.Blocks.START_press_some_key_enter, 
+  "13"], [Lang.Blocks.START_press_some_key_space, "32"]]), "VALUE").appendField(Lang.Blocks.START_press_some_key_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/start_03.png", "*"));
   this.setInputsInline(!0);
   this.setNextStatement(!0);
 }};
@@ -3489,7 +3971,7 @@ Entry.block.press_some_key = function(a, b) {
 };
 Blockly.Blocks.when_some_key_pressed = {init:function() {
   this.setColour("#3BBD70");
-  this.appendDummyInput().appendField(new Blockly.FieldIcon("/img/assets/block_icon/start_icon_keyboard.png", "*", "start")).appendField(Lang.Blocks.START_press_some_key_1).appendField(new Blockly.FieldKeydownInput("81"), "VALUE").appendField(Lang.Blocks.START_press_some_key_2);
+  this.appendDummyInput().appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/start_icon_keyboard.png", "*", "start")).appendField(Lang.Blocks.START_press_some_key_1).appendField(new Blockly.FieldKeydownInput("81"), "VALUE").appendField(Lang.Blocks.START_press_some_key_2);
   this.setInputsInline(!0);
   this.setNextStatement(!0);
 }};
@@ -3498,7 +3980,7 @@ Entry.block.when_some_key_pressed = function(a, b) {
 };
 Blockly.Blocks.mouse_clicked = {init:function() {
   this.setColour("#3BBD70");
-  this.appendDummyInput().appendField(new Blockly.FieldIcon("/img/assets/block_icon/start_icon_mouse.png", "*", "start")).appendField(Lang.Blocks.START_mouse_clicked);
+  this.appendDummyInput().appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/start_icon_mouse.png", "*", "start")).appendField(Lang.Blocks.START_mouse_clicked);
   this.setInputsInline(!0);
   this.setNextStatement(!0);
 }};
@@ -3507,7 +3989,7 @@ Entry.block.mouse_clicked = function(a, b) {
 };
 Blockly.Blocks.mouse_click_cancled = {init:function() {
   this.setColour("#3BBD70");
-  this.appendDummyInput().appendField(new Blockly.FieldIcon("/img/assets/block_icon/start_icon_mouse.png", "*", "start")).appendField(Lang.Blocks.START_mouse_click_cancled);
+  this.appendDummyInput().appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/start_icon_mouse.png", "*", "start")).appendField(Lang.Blocks.START_mouse_click_cancled);
   this.setInputsInline(!0);
   this.setNextStatement(!0);
 }};
@@ -3516,7 +3998,7 @@ Entry.block.mouse_click_cancled = function(a, b) {
 };
 Blockly.Blocks.when_object_click = {init:function() {
   this.setColour("#3BBD70");
-  this.appendDummyInput().appendField(new Blockly.FieldIcon("/img/assets/block_icon/start_icon_mouse.png", "*", "start")).appendField(Lang.Blocks.START_when_object_click);
+  this.appendDummyInput().appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/start_icon_mouse.png", "*", "start")).appendField(Lang.Blocks.START_when_object_click);
   this.setInputsInline(!0);
   this.setNextStatement(!0);
 }};
@@ -3525,7 +4007,7 @@ Entry.block.when_object_click = function(a, b) {
 };
 Blockly.Blocks.when_object_click_canceled = {init:function() {
   this.setColour("#3BBD70");
-  this.appendDummyInput().appendField(new Blockly.FieldIcon("/img/assets/block_icon/start_icon_mouse.png", "*", "start")).appendField(Lang.Blocks.START_when_object_click_canceled);
+  this.appendDummyInput().appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/start_icon_mouse.png", "*", "start")).appendField(Lang.Blocks.START_when_object_click_canceled);
   this.setInputsInline(!0);
   this.setNextStatement(!0);
 }};
@@ -3534,7 +4016,7 @@ Entry.block.when_object_click_canceled = function(a, b) {
 };
 Blockly.Blocks.when_some_key_click = {init:function() {
   this.setColour("#3BBD70");
-  this.appendDummyInput().appendField(new Blockly.FieldIcon("/img/assets/block_icon/start_icon_keyboard.png", "*", "start")).appendField(Lang.Blocks.START_when_some_key_click);
+  this.appendDummyInput().appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/start_icon_keyboard.png", "*", "start")).appendField(Lang.Blocks.START_when_some_key_click);
   this.setInputsInline(!0);
   this.setNextStatement(!0);
 }};
@@ -3543,7 +4025,7 @@ Entry.block.when_some_key_click = function(a, b) {
 };
 Blockly.Blocks.when_message_cast = {init:function() {
   this.setColour("#3BBD70");
-  this.appendDummyInput().appendField(new Blockly.FieldIcon("/img/assets/block_icon/start_icon_signal.png", "*", "start")).appendField(Lang.Blocks.START_when_message_cast_1).appendField(new Blockly.FieldDropdownDynamic("messages"), "VALUE").appendField(Lang.Blocks.START_when_message_cast_2);
+  this.appendDummyInput().appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/start_icon_signal.png", "*", "start")).appendField(Lang.Blocks.START_when_message_cast_1).appendField(new Blockly.FieldDropdownDynamic("messages"), "VALUE").appendField(Lang.Blocks.START_when_message_cast_2);
   this.setInputsInline(!0);
   this.setNextStatement(!0);
 }};
@@ -3552,7 +4034,7 @@ Entry.block.when_message_cast = function(a, b) {
 };
 Blockly.Blocks.message_cast = {init:function() {
   this.setColour("#3BBD70");
-  this.appendDummyInput().appendField(Lang.Blocks.START_message_cast_1).appendField(new Blockly.FieldDropdownDynamic("messages"), "VALUE").appendField(Lang.Blocks.START_message_cast_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/start_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.START_message_cast_1).appendField(new Blockly.FieldDropdownDynamic("messages"), "VALUE").appendField(Lang.Blocks.START_message_cast_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/start_03.png", "*"));
   this.setInputsInline(!0);
   this.setInputsInline(!0);
   this.setNextStatement(!0);
@@ -3568,7 +4050,7 @@ Entry.block.message_cast = function(a, b) {
 };
 Blockly.Blocks.add_message = {init:function() {
   this.setColour("#3BBD70");
-  this.appendDummyInput().appendField(Lang.Blocks.START_add_message).appendField(new Blockly.FieldIcon("/img/assets/block_icon/start_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.START_add_message).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/start_03.png", "*"));
   this.setInputsInline(!0);
 }};
 Entry.block.add_massage = function(a, b) {
@@ -3576,7 +4058,7 @@ Entry.block.add_massage = function(a, b) {
 };
 Blockly.Blocks.message_cast_wait = {init:function() {
   this.setColour("#3BBD70");
-  this.appendDummyInput().appendField(Lang.Blocks.START_message_send_wait_1).appendField(new Blockly.FieldDropdownDynamic("messages"), "VALUE").appendField(Lang.Blocks.START_message_send_wait_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/start_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.START_message_send_wait_1).appendField(new Blockly.FieldDropdownDynamic("messages"), "VALUE").appendField(Lang.Blocks.START_message_send_wait_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/start_03.png", "*"));
   this.setInputsInline(!0);
   this.setNextStatement(!0);
   this.setPreviousStatement(!0);
@@ -3672,7 +4154,7 @@ Blockly.Blocks.change_variable = {init:function() {
   this.appendDummyInput().appendField(new Blockly.FieldDropdownDynamic("variables"), "VARIABLE");
   this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_change_variable_2);
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_change_variable_3).appendField(new Blockly.FieldIcon("/img/assets/block_icon/variable_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_change_variable_3).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/variable_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -3693,7 +4175,7 @@ Blockly.Blocks.set_variable = {init:function() {
   this.appendDummyInput().appendField(new Blockly.FieldDropdownDynamic("variables"), "VARIABLE");
   this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_set_variable_2);
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_set_variable_3).appendField(new Blockly.FieldIcon("/img/assets/block_icon/variable_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_set_variable_3).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/variable_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -3706,7 +4188,7 @@ Entry.block.set_variable = function(a, b) {
 Blockly.Blocks.show_variable = {init:function() {
   this.setColour("#E457DC");
   this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_show_variable_1);
-  this.appendDummyInput().appendField(new Blockly.FieldDropdownDynamic("variables"), "VARIABLE").appendField(Lang.Blocks.VARIABLE_show_variable_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/variable_03.png", "*"));
+  this.appendDummyInput().appendField(new Blockly.FieldDropdownDynamic("variables"), "VARIABLE").appendField(Lang.Blocks.VARIABLE_show_variable_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/variable_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -3720,7 +4202,7 @@ Entry.block.show_variable = function(a, b) {
 Blockly.Blocks.hide_variable = {init:function() {
   this.setColour("#E457DC");
   this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_hide_variable_1);
-  this.appendDummyInput().appendField(new Blockly.FieldDropdownDynamic("variables"), "VARIABLE").appendField(Lang.Blocks.VARIABLE_hide_variable_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/variable_03.png", "*"));
+  this.appendDummyInput().appendField(new Blockly.FieldDropdownDynamic("variables"), "VARIABLE").appendField(Lang.Blocks.VARIABLE_hide_variable_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/variable_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -3732,7 +4214,7 @@ Entry.block.hide_variable = function(a, b) {
 };
 Blockly.Blocks.get_y = {init:function() {
   this.setColour(230);
-  this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_get_y).appendField(new Blockly.FieldIcon("/img/assets/block_icon/variable_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_get_y).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/variable_03.png", "*"));
   this.setOutput(!0, "Number");
 }};
 Blockly.Blocks.get_variable = {init:function() {
@@ -3750,7 +4232,7 @@ Blockly.Blocks.ask_and_wait = {init:function() {
   this.setColour("#E457DC");
   this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_ask_and_wait_1);
   this.appendValueInput("VALUE").setCheck(["String", "Number", null]);
-  this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_ask_and_wait_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/variable_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_ask_and_wait_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/variable_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -3801,7 +4283,7 @@ Blockly.Blocks.add_value_to_list = {init:function() {
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
   this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_add_value_to_list_2);
   this.appendDummyInput().appendField(new Blockly.FieldDropdownDynamic("lists"), "LIST");
-  this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_add_value_to_list_3).appendField(new Blockly.FieldIcon("/img/assets/block_icon/variable_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_add_value_to_list_3).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/variable_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -3819,7 +4301,7 @@ Blockly.Blocks.remove_value_from_list = {init:function() {
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
   this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_remove_value_from_list_2);
   this.appendDummyInput().appendField(new Blockly.FieldDropdownDynamic("lists"), "LIST");
-  this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_remove_value_from_list_3).appendField(new Blockly.FieldIcon("/img/assets/block_icon/variable_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_remove_value_from_list_3).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/variable_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -3841,7 +4323,7 @@ Blockly.Blocks.insert_value_to_list = {init:function() {
   this.appendDummyInput().appendField(new Blockly.FieldDropdownDynamic("lists"), "LIST");
   this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_insert_value_to_list_3);
   this.appendValueInput("INDEX").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_insert_value_to_list_4).appendField(new Blockly.FieldIcon("/img/assets/block_icon/variable_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_insert_value_to_list_4).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/variable_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -3863,7 +4345,7 @@ Blockly.Blocks.change_value_list_index = {init:function() {
   this.appendValueInput("INDEX").setCheck(["Number", "String"]);
   this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_change_value_list_index_3);
   this.appendValueInput("DATA").setCheck(["Number", "String"]);
-  this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_change_value_list_index_4).appendField(new Blockly.FieldIcon("/img/assets/block_icon/variable_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_change_value_list_index_4).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/variable_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -3909,7 +4391,7 @@ Entry.block.length_of_list = function(a, b) {
 Blockly.Blocks.show_list = {init:function() {
   this.setColour("#E457DC");
   this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_show_list_1);
-  this.appendDummyInput().appendField(new Blockly.FieldDropdownDynamic("lists"), "LIST").appendField(Lang.Blocks.VARIABLE_show_list_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/variable_03.png", "*"));
+  this.appendDummyInput().appendField(new Blockly.FieldDropdownDynamic("lists"), "LIST").appendField(Lang.Blocks.VARIABLE_show_list_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/variable_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -3922,7 +4404,7 @@ Entry.block.show_list = function(a, b) {
 Blockly.Blocks.hide_list = {init:function() {
   this.setColour("#E457DC");
   this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_hide_list_1);
-  this.appendDummyInput().appendField(new Blockly.FieldDropdownDynamic("lists"), "LIST").appendField(Lang.Blocks.VARIABLE_hide_list_2).appendField(new Blockly.FieldIcon("/img/assets/block_icon/variable_03.png", "*"));
+  this.appendDummyInput().appendField(new Blockly.FieldDropdownDynamic("lists"), "LIST").appendField(Lang.Blocks.VARIABLE_hide_list_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/variable_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -3947,7 +4429,7 @@ Blockly.Blocks.set_visible_answer = {init:function() {
   this.setColour("#E457DC");
   this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_get_canvas_input_value);
   this.appendDummyInput().appendField(new Blockly.FieldDropdown([[Lang.Blocks.CALC_timer_visible_show, "SHOW"], [Lang.Blocks.CALC_timer_visible_hide, "HIDE"]]), "BOOL");
-  this.appendDummyInput().appendField("").appendField(new Blockly.FieldIcon("/img/assets/block_icon/variable_03.png", "*"));
+  this.appendDummyInput().appendField("").appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/variable_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
@@ -3982,74 +4464,187 @@ Entry.block.is_included_in_list = function(a, b) {
   }
   return !1;
 };
-Entry.Model = function() {
-  this.data = this.schema;
+Entry.Collection = function(a) {
+  this.length = 0;
+  this._hashMap = {};
+  this._observers = [];
+  this.set(a);
 };
-(function(a) {
-  a.schema = {id:null};
+(function(a, b) {
+  a.set = function(a) {
+    for (;this.length;) {
+      b.pop.call(this);
+    }
+    var d = this._hashMap, e;
+    for (e in d) {
+      delete d[e];
+    }
+    if (void 0 !== a) {
+      e = 0;
+      for (var f = a.length;e < f;e++) {
+        var g = a[e];
+        d[g.id] = g;
+        b.push.call(this, g);
+      }
+    }
+  };
+  a.push = function(a) {
+    this._hashMap[a.id] = a;
+    b.push.call(this, a);
+  };
+  a.unshift = function() {
+    for (var a = Array.prototype.slice.call(arguments, 0), d = this._hashMap, e = a.length - 1;0 <= e;e--) {
+      var f = a[e];
+      b.unshift.call(this, f);
+      d[f.id] = f;
+    }
+  };
+  a.insert = function(a, d) {
+    b.splice.call(this, d, 0, a);
+    this._hashMap[a.id] = a;
+  };
+  a.has = function(a) {
+    return !!this._hashMap[a];
+  };
   a.get = function(a) {
-    return this.data[a];
+    return this._hashMap[a];
   };
-  a.set = function(a) {
-    for (var c in a) {
-      this.data[c] = a[c];
+  a.at = function(a) {
+    return this[a];
+  };
+  a.getAll = function() {
+    for (var a = this.length, b = [], e = 0;e < a;e++) {
+      b.push(this[e]);
     }
+    return b;
   };
-})(Entry.Model.prototype);
-Entry.LoopModel = function() {
-  Entry.Model.call(this);
-  this._observers = [];
-};
-Entry.LoopModel.prototype = new Entry.Model;
-(function(a) {
-  a.base = Entry.Model;
-  a.bind = function(a) {
-    this._observers.push(a);
+  a.indexOf = function(a) {
+    return b.indexOf.call(this, a);
   };
-  a.unbind = function(a) {
-    for (var c in this._observers) {
-      if (this._observers[c] === a) {
-        return this._observers.splice(c, 1), !0;
+  a.find = function(a) {
+    for (var b = [], e, f = 0, g = this.length;f < g;f++) {
+      e = !0;
+      var h = this[f], k;
+      for (k in a) {
+        if (a[k] != h[k]) {
+          e = !1;
+          break;
+        }
       }
+      e && b.push(h);
     }
-    return !1;
+    return b;
+  };
+  a.pop = function() {
+    var a = b.pop.call(this);
+    delete this._hashMap[a.id];
+    return a;
+  };
+  a.shift = function() {
+    var a = b.shift.call(this);
+    delete this._hashMap[a.id];
+    return a;
+  };
+  a.slice = function(a, d) {
+    var e = b.slice.call(this, a, d), f = this._hashMap, g;
+    for (g in e) {
+      delete f[e[g].id];
+    }
+    return e;
+  };
+  a.remove = function(a) {
+    var b = this.indexOf(a);
+    -1 < b && (delete this._hashMap[a.id], this.splice(b, 1));
+  };
+  a.splice = function(a, d) {
+    var e = b.slice.call(arguments, 2), f = this._hashMap;
+    d = void 0 === d ? this.length - a : d;
+    for (var g = b.splice.call(this, a, d), h = 0, k = g.length;h < k;h++) {
+      delete f[g[h].id];
+    }
+    h = 0;
+    for (k = e.length;h < k;h++) {
+      f = e[h], b.splice.call(this, a++, 0, f), this._hashMap[f.id] = f;
+    }
+    return g;
+  };
+  a.clear = function() {
+    for (;this.length;) {
+      b.pop.call(this);
+    }
+    this._hashMap = {};
+  };
+  a.map = function(a, b) {
+    for (var e = 0, f = this.length;e < f;e++) {
+      a(this[e], b);
+    }
+  };
+  a.moveFromTo = function(a, d) {
+    var e = this.length - 1;
+    0 > a || 0 > d || a > e || d > e || b.splice.call(this, d, 0, b.splice.call(this, a, 1)[0]);
+  };
+  a.sort = function() {
+  };
+  a.fromJSON = function() {
+  };
+  a.toJSON = function() {
+    for (var a = [], b = 0, e = this.length;b < e;b++) {
+      a.push(this[b].toJSON());
+    }
+    return a;
+  };
+  a.observe = function() {
+  };
+  a.unobserve = function() {
   };
   a.notify = function() {
-    var a = Array.prototype.slice.call(arguments, 0), c;
-    for (c in this._observers) {
-      this._observers[c].update.apply(null, a);
-    }
   };
-})(Entry.LoopModel.prototype);
-Entry.ObserverModel = function() {
-  Entry.Model.call(this);
-  this._observers = [];
+  a.destroy = function() {
+  };
+})(Entry.Collection.prototype, Array.prototype);
+Entry.Event = function(a) {
+  this._sender = a;
+  this._listeners = [];
 };
-Entry.ObserverModel.prototype = new Entry.Model;
 (function(a) {
-  a.base = Entry.Model;
-  a.set = function(a) {
-    this.base.prototype.set.call(this, a);
-    this.notify();
+  a.attach = function(a, c) {
+    var d = {obj:a, fn:c};
+    this._listeners.push(d);
+    return d;
   };
-  a.observe = function(a) {
-    this._observers.push(a);
-  };
-  a.unobserve = function(a) {
-    for (var c in this._observers) {
-      if (this._observers[c] === a) {
-        return this._observers.splice(c, 1), !0;
-      }
-    }
-    return !1;
-  };
-  a.notify = function() {
-    var a = Array.prototype.slice.call(arguments, 0), c;
-    for (c in this._observers) {
-      this._observers[c].update.apply(null, a);
+  a.detach = function(a) {
+    var c = this._listeners;
+    a = c.indexOf(a);
+    if (-1 < a) {
+      return c.splice(a, 1);
     }
   };
-})(Entry.ObserverModel.prototype);
+  a.clear = function() {
+    for (var a = this._listeners;a.length;) {
+      a.pop();
+    }
+  };
+  a.notify = function(a) {
+    var c = this._sender;
+    this._listeners.slice().forEach(function(d) {
+      d.fn.call(d.obj, c, a);
+    });
+  };
+})(Entry.Event.prototype);
+Entry.Observer = function(a, b, c, d) {
+  this.parent = a;
+  this.object = b;
+  this.funcName = c;
+  this.attrs = d;
+  a.push(this);
+};
+(function(a) {
+  a.destroy = function() {
+    var a = this.parent, c = a.indexOf(this);
+    -1 < c && a.splice(c, 1);
+    return this;
+  };
+})(Entry.Observer.prototype);
 Entry.Container = function() {
   this.objects_ = [];
   this.cachedPicture = {};
@@ -4136,7 +4731,7 @@ Entry.Container.prototype.setObjects = function(a) {
 Entry.Container.prototype.addObject = function(a, b) {
   var c = new Entry.EntryObject(a);
   c.name = Entry.getOrderedName(c.name, this.objects_);
-  Entry.stateManager.addCommand("add object", this, this.removeObject, c);
+  Entry.stateManager && Entry.stateManager.addCommand("add object", this, this.removeObject, c);
   c.scene || (c.scene = Entry.scene.selectedScene);
   "number" == typeof b ? a.sprite.category && "background" == a.sprite.category.main ? (c.setLock(!0), this.objects_.push(c)) : this.objects_.splice(b, 0, c) : a.sprite.category && "background" == a.sprite.category.main ? this.objects_.push(c) : this.objects_.unshift(c);
   c.generateView();
@@ -4163,13 +4758,13 @@ Entry.Container.prototype.addCloneObject = function(a, b) {
 };
 Entry.Container.prototype.removeObject = function(a) {
   var b = this.objects_.indexOf(a), c = a.toJSON();
-  Entry.stateManager.addCommand("remove object", this, this.addObject, c, b);
+  Entry.stateManager && Entry.stateManager.addCommand("remove object", this, this.addObject, c, b);
   c = new Entry.State(this.addObject, c, b);
   a.destroy();
   this.objects_.splice(b, 1);
   this.setCurrentObjects();
   Entry.stage.sortZorder();
-  this.objects_.length && 0 != b ? Entry.container.selectObject(this.objects_[b - 1].id) : this.objects_.length && 0 == b ? Entry.container.selectObject(this.getCurrentObjects()[0].id) : (Entry.container.selectObject(), Entry.playground.flushPlayground());
+  this.objects_.length && 0 !== b ? Entry.container.selectObject(this.objects_[b - 1].id) : this.objects_.length && 0 === b ? Entry.container.selectObject(this.getCurrentObjects()[0].id) : (Entry.container.selectObject(), Entry.playground.flushPlayground());
   Entry.toast.success(Lang.Workspace.remove_object, a.name + " " + Lang.Workspace.remove_object_msg);
   Entry.variableContainer.removeLocalVariables(a.id);
   Entry.playground.reloadPlayground();
@@ -4216,7 +4811,7 @@ Entry.Container.prototype.moveElement = function(a, b, c) {
   d = this.getCurrentObjects();
   a = this.getAllObjects().indexOf(d[a]);
   b = this.getAllObjects().indexOf(d[b]);
-  c || Entry.stateManager.addCommand("reorder object", Entry.container, Entry.container.moveElement, b, a, !0);
+  !c && Entry.stateManager && Entry.stateManager.addCommand("reorder object", Entry.container, Entry.container.moveElement, b, a, !0);
   this.objects_.splice(b, 0, this.objects_.splice(a, 1)[0]);
   this.setCurrentObjects();
   Entry.container.updateListView();
@@ -4239,7 +4834,7 @@ Entry.Container.prototype.addMessage = function(a) {
   return !0;
 };
 Entry.Container.prototype.deleteMessage = function() {
-  0 == this.messages_.length ? Entry.toast.alert(Lang.Msgs.warn, Lang.Workspace.no_message_to_remove, "true") : Entry.dispatchEvent("deleteMessage");
+  0 === this.messages_.length ? Entry.toast.alert(Lang.Msgs.warn, Lang.Workspace.no_message_to_remove, "true") : Entry.dispatchEvent("deleteMessage");
 };
 Entry.Container.prototype.removeMessage = function(a) {
   for (var b = this.messages_, c = 0;c < b.length;c++) {
@@ -4339,14 +4934,14 @@ Entry.Container.prototype.getDropdownList = function(a) {
                 for (a = 0;a < c.length;a++) {
                   d = c[a], d.object_ && d.object_ != Entry.playground.object.id || b.push([d.getName(), d.getId()]);
                 }
-                b && 0 != b.length || b.push([Lang.Blocks.VARIABLE_variable, "null"]);
+                b && 0 !== b.length || b.push([Lang.Blocks.VARIABLE_variable, "null"]);
               } else {
                 if ("lists" == a) {
                   c = Entry.variableContainer.lists_;
                   for (a = 0;a < c.length;a++) {
                     d = c[a], b.push([d.getName(), d.getId()]);
                   }
-                  b && 0 != b.length || b.push([Lang.Blocks.VARIABLE_list, "null"]);
+                  b && 0 !== b.length || b.push([Lang.Blocks.VARIABLE_list, "null"]);
                 } else {
                   if ("scenes" == a) {
                     for (c = Entry.scene.scenes_, a = 0;a < c.length;a++) {
@@ -4422,20 +5017,20 @@ Entry.Container.prototype.mapEntityOnScene = function(a, b) {
 };
 Entry.Container.prototype.mapEntityIncludeClone = function(a, b) {
   for (var c = this.objects_, d = c.length, e = 0;e < d;e++) {
-    var f = c[e], h = f.clonedEntities.length;
+    var f = c[e], g = f.clonedEntities.length;
     a(f.entity, b);
-    for (var g = 0;g < h;g++) {
-      var k = f.clonedEntities[g];
+    for (var h = 0;h < g;h++) {
+      var k = f.clonedEntities[h];
       k && !k.isStamp && a(k, b);
     }
   }
 };
 Entry.Container.prototype.mapEntityIncludeCloneOnScene = function(a, b) {
   for (var c = this.getCurrentObjects(), d = c.length, e = 0;e < d;e++) {
-    var f = c[e], h = f.clonedEntities.length;
+    var f = c[e], g = f.clonedEntities.length;
     a(f.entity, b);
-    for (var g = 0;g < h;g++) {
-      var k = f.clonedEntities[g];
+    for (var h = 0;h < g;h++) {
+      var k = f.clonedEntities[h];
       k && !k.isStamp && a(k, b);
     }
   }
@@ -4517,7 +5112,7 @@ Entry.Container.prototype.setCurrentObjects = function() {
 };
 Entry.Container.prototype.getCurrentObjects = function() {
   var a = this.currentObjects_;
-  a && 0 != a.length || this.setCurrentObjects();
+  a && 0 !== a.length || this.setCurrentObjects();
   return this.currentObjects_;
 };
 Entry.Container.prototype.getProjectWithJSON = function(a) {
@@ -4656,14 +5251,52 @@ Entry.Container.prototype.hideProjectAnswer = function(a) {
   var b = this.inputValue;
   if (b && b.isVisible() && !Entry.engine.isState("run")) {
     for (var c = Entry.container.getAllObjects(), d = ["ask_and_wait", "get_canvas_input_value", "set_visible_answer"], e = 0, f = c.length;e < f;e++) {
-      for (var h = c[e].script.getElementsByTagName("block"), g = 0, k = h.length;g < k;g++) {
-        if (-1 < d.indexOf(h[g].getAttribute("type")) && h[g].getAttribute("id") != a.getAttribute("id")) {
+      for (var g = c[e].script.getElementsByTagName("block"), h = 0, k = g.length;h < k;h++) {
+        if (-1 < d.indexOf(g[h].getAttribute("type")) && g[h].getAttribute("id") != a.getAttribute("id")) {
           return;
         }
       }
     }
     b.setVisible(!1);
   }
+};
+Entry.db = {data:{}, typeMap:{}};
+(function(a) {
+  a.add = function(a) {
+    this.data[a.id] = a;
+    var c = a.type;
+    void 0 === this.typeMap[c] && (this.typeMap[c] = {});
+    this.typeMap[c][a.id] = a;
+  };
+  a.has = function(a) {
+    return this.data.hasOwnProperty(a);
+  };
+  a.remove = function(a) {
+    this.has(a) && (delete this.typeMap[this.data[a].type][a], delete this.data[a]);
+  };
+  a.get = function(a) {
+    return this.data[a];
+  };
+  a.find = function() {
+  };
+  a.clear = function() {
+    this.data = {};
+    this.typeMap = {};
+  };
+})(Entry.db);
+Entry.Dom = function(a, b) {
+  var c = /<(\w+)>/, d;
+  d = a instanceof HTMLElement ? $(a) : a instanceof jQuery ? a : c.test(a) ? $(a) : $("<" + a + "></" + a + ">");
+  if (void 0 === b) {
+    return d;
+  }
+  b.id && d.attr("id", b.id);
+  b.class && d.addClass(b.class);
+  b.classes && b.classes.map(function(a) {
+    d.addClass(a);
+  });
+  b.parent && b.parent.append(d);
+  return d;
 };
 Entry.Dialog = function(a, b, c, d) {
   a.dialog && a.dialog.remove();
@@ -4925,8 +5558,8 @@ Entry.Engine.prototype.computeFunction = function(a) {
     for (var c = a.shift(), d = !0, e = !1;c && d && !e;) {
       try {
         var d = !c.isLooped, f = c.run(), e = f && f.type == c.type, c = f;
-      } catch (h) {
-        throw Entry.engine.toggleStop(), Entry.engine.isUpdating = !1, "workspace" == Entry.type && (Entry.container.selectObject(), Entry.container.selectObject(c.entity.parent.id), Entry.playground.changeViewMode("code"), Blockly.mainWorkspace.activatePreviousBlock(c.id)), Entry.toast.alert(Lang.Msgs.runtime_error, Lang.Workspace.check_runtime_error, !0), h;
+      } catch (g) {
+        throw Entry.engine.toggleStop(), Entry.engine.isUpdating = !1, "workspace" == Entry.type && (Entry.container.selectObject(), Entry.container.selectObject(c.entity.parent.id), Entry.playground.changeViewMode("code"), Blockly.mainWorkspace.activatePreviousBlock(c.id)), Entry.toast.alert(Lang.Msgs.runtime_error, Lang.Workspace.check_runtime_error, !0), g;
       }
     }
     c && a.push(c);
@@ -5028,9 +5661,9 @@ Entry.Engine.prototype.raiseEventOnEntity = function(a, b) {
     for (var c = b[1], d = a.parent.script.childNodes, e = 0;e < d.length;e++) {
       var f = d[e];
       if (Entry.Xml.isTypeOf(c, f)) {
-        var h = new Entry.Script(a);
-        h.init(f);
-        a.runningScript.push(h);
+        var g = new Entry.Script(a);
+        g.init(f);
+        a.runningScript.push(g);
       }
     }
   }
@@ -5048,8 +5681,8 @@ Entry.Engine.prototype.captureKeyUpEvent = function(a) {
 };
 Entry.Engine.prototype.raiseKeyEvent = function(a, b) {
   for (var c = b[0], d = b[1], e = a.parent.script.childNodes, f = 0;f < e.length;f++) {
-    var h = e[f], g = Entry.Xml.getField("VALUE", h);
-    Entry.Xml.isTypeOf(c, h) && g == d && (g = new Entry.Script(a), g.init(h), a.runningScript.push(g));
+    var g = e[f], h = Entry.Xml.getField("VALUE", g);
+    Entry.Xml.isTypeOf(c, g) && h == d && (h = new Entry.Script(a), h.init(g), a.runningScript.push(h));
   }
 };
 Entry.Engine.prototype.updateMouseView = function() {
@@ -5084,8 +5717,8 @@ Entry.Engine.prototype.hideProjectTimer = function(a) {
   var b = this.projectTimer;
   if (b && b.isVisible() && !this.isState("run")) {
     for (var c = Entry.container.getAllObjects(), d = ["get_project_timer_value", "reset_project_timer", "set_visible_project_timer"], e = 0, f = c.length;e < f;e++) {
-      for (var h = c[e].script.getElementsByTagName("block"), g = 0, k = h.length;g < k;g++) {
-        if (-1 < d.indexOf(h[g].getAttribute("type")) && h[g].getAttribute("id") != a.getAttribute("id")) {
+      for (var g = c[e].script.getElementsByTagName("block"), h = 0, k = g.length;h < k;h++) {
+        if (-1 < d.indexOf(g[h].getAttribute("type")) && g[h].getAttribute("id") != a.getAttribute("id")) {
           return;
         }
       }
@@ -5170,7 +5803,7 @@ Entry.EntityObject.prototype.syncModel_ = function(a) {
   this.setVisible(a.visible);
 };
 Entry.EntityObject.prototype.initCommand = function() {
-  Entry.engine.isState("stop") && (this.isCommandValid = !1, Entry.stateManager.addCommand("edit entity", this, this.restoreEntity, this.toJSON()));
+  Entry.engine.isState("stop") && (this.isCommandValid = !1, Entry.stateManager && Entry.stateManager.addCommand("edit entity", this, this.restoreEntity, this.toJSON()));
 };
 Entry.EntityObject.prototype.doCommand = function() {
   this.isCommandValid = !0;
@@ -5182,7 +5815,7 @@ Entry.EntityObject.prototype.restoreEntity = function(a) {
   var b = this.toJSON();
   this.syncModel_(a);
   Entry.dispatchEvent("updateObject");
-  Entry.stateManager.addCommand("restore object", this, this.restoreEntity, b);
+  Entry.stateManager && Entry.stateManager.addCommand("restore object", this, this.restoreEntity, b);
 };
 Entry.EntityObject.prototype.clearScript = function(a) {
   for (;this.runningScript.length;) {
@@ -5399,20 +6032,20 @@ Entry.EntityObject.prototype.getFontName = function() {
   }
 };
 Entry.EntityObject.prototype.setText = function(a) {
-  "textBox" == this.parent.objectType && (null == a && (a = ""), this.text = a, this.textObject.text = this.text, this.lineBreak || (this.setWidth(this.textObject.getMeasuredWidth()), this.parent.updateCoordinateView()), this.updateBG(), Entry.stage.updateObject());
+  "textBox" == this.parent.objectType && (void 0 === a && (a = ""), this.text = a, this.textObject.text = this.text, this.lineBreak || (this.setWidth(this.textObject.getMeasuredWidth()), this.parent.updateCoordinateView()), this.updateBG(), Entry.stage.updateObject());
 };
 Entry.EntityObject.prototype.getText = function() {
   return this.text;
 };
 Entry.EntityObject.prototype.setTextAlign = function(a) {
-  "textBox" == this.parent.objectType && (null == a && (a = Entry.TEXT_ALIGN_CENTER), this.textAlign = a, this.textObject.textAlign = Entry.TEXT_ALIGNS[this.textAlign], this.alignTextBox(), this.updateBG(), Entry.stage.updateObject());
+  "textBox" == this.parent.objectType && (void 0 === a && (a = Entry.TEXT_ALIGN_CENTER), this.textAlign = a, this.textObject.textAlign = Entry.TEXT_ALIGNS[this.textAlign], this.alignTextBox(), this.updateBG(), Entry.stage.updateObject());
 };
 Entry.EntityObject.prototype.getTextAlign = function() {
   return this.textAlign;
 };
 Entry.EntityObject.prototype.setLineBreak = function(a) {
   if ("textBox" == this.parent.objectType) {
-    null == a && (a = !1);
+    void 0 === a && (a = !1);
     var b = this.lineBreak;
     this.lineBreak = a;
     b && !this.lineBreak ? (this.textObject.lineWidth = null, this.setHeight(this.textObject.getMeasuredLineHeight()), this.setText(this.getText().replace(/\n/g, ""))) : !b && this.lineBreak && (this.setFontSize(this.getFontSize() * this.getScaleX()), this.setHeight(3 * this.textObject.getMeasuredLineHeight()), this.setWidth(this.getWidth() * this.getScaleX()), this.setScaleX(1), this.setScaleY(1), this.textObject.lineWidth = this.getWidth(), this.alignTextBox());
@@ -5423,7 +6056,7 @@ Entry.EntityObject.prototype.getLineBreak = function() {
   return this.lineBreak;
 };
 Entry.EntityObject.prototype.setVisible = function(a) {
-  null == a && (a = !0);
+  void 0 === a && (a = !0);
   this.visible = a;
   this.object.visible = this.visible;
   this.dialog && this.syncDialogVisible();
@@ -5450,8 +6083,7 @@ Entry.EntityObject.prototype.setImage = function(a) {
     Entry.image = e, this.object.image = e, this.object.cache(0, 0, this.getWidth(), this.getHeight());
   } else {
     e = new Image;
-    b = a.filename;
-    e.src = "/uploads/" + b.substring(0, 2) + "/" + b.substring(2, 4) + "/image/" + b + ".png";
+    a.fileurl ? e.src = a.fileurl : (b = a.filename, e.src = "/uploads/" + b.substring(0, 2) + "/" + b.substring(2, 4) + "/image/" + b + ".png");
     var f = this;
     e.onload = function(b) {
       Entry.container.cachePicture(a.id, e);
@@ -5475,9 +6107,9 @@ Entry.EntityObject.prototype.applyFilter = function() {
   e.adjustColor(0, 0, 0, b.hue);
   e = new createjs.ColorMatrixFilter(e);
   c.push(e);
-  var e = [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1], f = 10.8 * b.hsv * Math.PI / 180, h = Math.cos(f), f = Math.sin(f), g = Math.abs(b.hsv / 100);
-  1 < g && (g -= Math.floor(g));
-  0 < g && .33 >= g ? e = [1, 0, 0, 0, 0, 0, h, f, 0, 0, 0, -1 * f, h, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1] : .66 >= g ? e = [h, 0, f, 0, 0, 0, 1, 0, 0, 0, f, 0, h, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1] : .99 >= g && (e = [h, f, 0, 0, 0, -1 * f, h, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1]);
+  var e = [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1], f = 10.8 * b.hsv * Math.PI / 180, g = Math.cos(f), f = Math.sin(f), h = Math.abs(b.hsv / 100);
+  1 < h && (h -= Math.floor(h));
+  0 < h && .33 >= h ? e = [1, 0, 0, 0, 0, 0, g, f, 0, 0, 0, -1 * f, g, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1] : .66 >= h ? e = [g, 0, f, 0, 0, 0, 1, 0, 0, 0, f, 0, g, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1] : .99 >= h && (e = [g, f, 0, 0, 0, -1 * f, g, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1]);
   e = (new createjs.ColorMatrix).concat(e);
   e = new createjs.ColorMatrixFilter(e);
   c.push(e);
@@ -5661,7 +6293,7 @@ Entry.HW = function() {
   this.settingQueue = {};
   this.hwModule = this.selectedDevice = null;
   Entry.addEventListener("stop", this.setZero);
-  this.hwInfo = {11:Entry.Arduino, 12:Entry.SensorBoard, 24:Entry.Hamster, 31:Entry.Bitbrick};
+  this.hwInfo = {11:Entry.Arduino, 12:Entry.SensorBoard, 24:Entry.Hamster, 25:Entry.Albert, 31:Entry.Bitbrick};
 };
 Entry.HW.TRIAL_LIMIT = 1;
 p = Entry.HW.prototype;
@@ -5725,10 +6357,10 @@ p.closeConnection = function() {
   this.socket && this.socket.close();
 };
 p.downloadConnector = function() {
-  window.open("/file/entry_v0.1.zip", "_blank").focus();
+  window.open("http://play-entry.com/file/entry_v0.1.zip", "_blank").focus();
 };
 p.downloadSource = function() {
-  window.open("/lib/EntryArduino/arduino/entry.ino", "_blank").focus();
+  window.open("http://play-entry.com/lib/EntryArduino/arduino/entry.ino", "_blank").focus();
 };
 p.setZero = function() {
   Entry.hw.hwModule && Entry.hw.hwModule.setZero();
@@ -5748,11 +6380,12 @@ Entry.init = function(a, b) {
   this.interfaceState = {menuWidth:264};
   this.options = b;
   this.parseOptions(b);
+  this.mediaFilePath = (b.libDir ? b.libDir : "/lib") + "/entryjs/images/";
   "workspace" == this.type && this.isPhone() && (this.type = "phone");
   this.initialize_();
   this.view_ = a;
   this.view_.setAttribute("class", "entry");
-  Entry.initFonts();
+  Entry.initFonts(b.fonts);
   this.createDom(a, this.type);
   this.loadInterfaceState();
   this.overridePrototype();
@@ -5772,8 +6405,11 @@ Entry.init = function(a, b) {
   Entry.addEventListener("saveWorkspace", function(a) {
     Entry.addActivity("save");
   });
-  "IE" != Entry.getBrowserType().substr(0, 2) || window.flashaudio ? (createjs.Sound.registerPlugins([createjs.WebAudioPlugin]), Entry.soundQueue = new createjs.LoadQueue, Entry.soundQueue.installPlugin(createjs.Sound), Entry.loadAudio_(["/media/click.mp3", "/media/click.wav", "/media/click.ogg"], "click"), Entry.loadAudio_(["/media/delete.mp3", "/media/delete.ogg", "/media/delete.wav"], "delete")) : (createjs.FlashAudioPlugin.swfPath = "/media/", createjs.Sound.registerPlugins([createjs.FlashAudioPlugin]), 
-  Entry.soundQueue = new createjs.LoadQueue, Entry.soundQueue.installPlugin(createjs.Sound), Entry.loadAudio_(["/media/click.mp3", "/media/click.wav", "/media/click.ogg"], "click"), Entry.loadAudio_(["/media/delete.mp3", "/media/delete.ogg", "/media/delete.wav"], "delete"), window.flashaudio = !0);
+  "IE" != Entry.getBrowserType().substr(0, 2) || window.flashaudio ? createjs.Sound.registerPlugins([createjs.WebAudioPlugin]) : (createjs.FlashAudioPlugin.swfPath = this.mediaFilePath + "media/", createjs.Sound.registerPlugins([createjs.FlashAudioPlugin]), window.flashaudio = !0);
+  Entry.soundQueue = new createjs.LoadQueue;
+  Entry.soundQueue.installPlugin(createjs.Sound);
+  Entry.loadAudio_([Entry.mediaFilePath + "media/click.mp3", Entry.mediaFilePath + "media/click.wav", Entry.mediaFilePath + "media/click.ogg"], "click");
+  Entry.loadAudio_([Entry.mediaFilePath + "media/delete.mp3", Entry.mediaFilePath + "media/delete.ogg", Entry.mediaFilePath + "media/delete.wav"], "delete");
 };
 Entry.loadAudio_ = function(a, b) {
   if (window.Audio && a.length) {
@@ -5894,13 +6530,8 @@ Entry.initContextMenu = function() {
   }, above:"auto", preventDoubleContext:!0, compress:!0});
 };
 Entry.initFonts = function(a) {
-  this.fonts = [];
-  this.fonts.push({name:"\ubc14\ud0d5\uccb4", family:"KoPub Batang", url:"/css/kopubbatang.css"});
-  this.fonts.push({name:"\uba85\uc870\uccb4", family:"Nanum Myeongjo", url:"/css/nanummyeongjo.css"});
-  this.fonts.push({name:"\uace0\ub515\uccb4", family:"Nanum Gothic", url:"/css/nanumgothic.css"});
-  this.fonts.push({name:"\ud544\uae30\uccb4", family:"Nanum Pen Script", url:"/css/nanumpenscript.css"});
-  this.fonts.push({name:"\ud55c\ub77c\uc0b0\uccb4", family:"Jeju Hallasan", url:"/css/jejuhallasan.css"});
-  this.fonts.push({name:"\ucf54\ub529\uace0\ub515\uccb4", family:"Nanum Gothic Coding", url:"/css/nanumgothiccoding.css"});
+  this.fonts = a;
+  a || (this.fonts = []);
   var b = {custom:{families:[], urls:[]}};
   for (a = 0;a < this.fonts.length;a++) {
     var c = this.fonts[a];
@@ -5911,6 +6542,35 @@ Entry.initFonts = function(a) {
     WebFont.load(b);
   }, 1E3);
 };
+Entry.Activity = function(a, b) {
+  this.name = a;
+  this.timestamp = new Date;
+  var c = [];
+  if (void 0 !== b) {
+    for (var d = 0, e = b.length;d < e;d++) {
+      var f = b[d];
+      c.push({key:f[0], value:f[1]});
+    }
+  }
+  this.data = c;
+};
+Entry.ActivityReporter = function() {
+  this._activities = [];
+};
+(function(a) {
+  a.add = function(a) {
+    if (!(a instanceof Entry.Activity)) {
+      return console.error("Activity must be an instanceof Entry.MazeActivity");
+    }
+    this._activities.push(a);
+  };
+  a.clear = function() {
+    this._activities = [];
+  };
+  a.get = function() {
+    return this._activities;
+  };
+})(Entry.ActivityReporter.prototype);
 Entry.EntryObject = function(a) {
   if (a) {
     this.id = a.id;
@@ -5937,8 +6597,7 @@ Entry.EntryObject = function(a) {
       var c = this.pictures[b];
       c.id || (c.id = Entry.generateHash());
       var d = new Image;
-      a = c.filename;
-      d.src = "/uploads/" + a.substring(0, 2) + "/" + a.substring(2, 4) + "/image/" + a + ".png";
+      c.fileurl ? d.src = c.fileurl : c.fileurl ? d.src = c.fileurl : (a = c.filename, d.src = "/uploads/" + a.substring(0, 2) + "/" + a.substring(2, 4) + "/image/" + a + ".png");
       d.onload = function(a) {
         Entry.container.cachePicture(c.id, d);
       };
@@ -6062,16 +6721,16 @@ Entry.EntryObject.prototype.generateView = function() {
       a.stopPropagation();
       this.select();
     });
-    var h = Entry.createElement("span");
-    h.addClass("entryObjectCoordinateSpanWorkspace");
-    h.innerHTML = "Y:";
-    var g = Entry.createElement("input");
-    g.addClass("entryObjectCoordinateInputWorkspace entryObjectCoordinateInputWorkspace_right");
-    g.bindOnClick(function(a) {
+    var g = Entry.createElement("span");
+    g.addClass("entryObjectCoordinateSpanWorkspace");
+    g.innerHTML = "Y:";
+    var h = Entry.createElement("input");
+    h.addClass("entryObjectCoordinateInputWorkspace entryObjectCoordinateInputWorkspace_right");
+    h.bindOnClick(function(a) {
       a.stopPropagation();
       this.select();
     });
-    g.setAttribute("disabled", "disabled");
+    h.setAttribute("disabled", "disabled");
     var k = Entry.createElement("span");
     k.addClass("entryObjectCoordinateSizeWorkspace");
     k.innerHTML = "\ud06c\uae30 :";
@@ -6084,12 +6743,12 @@ Entry.EntryObject.prototype.generateView = function() {
     m.setAttribute("disabled", "disabled");
     d.appendChild(e);
     d.appendChild(f);
-    d.appendChild(h);
     d.appendChild(g);
+    d.appendChild(h);
     d.appendChild(k);
     d.appendChild(m);
     d.xInput_ = f;
-    d.yInput_ = g;
+    d.yInput_ = h;
     d.sizeInput_ = m;
     this.coordinateView_ = d;
     c = this;
@@ -6101,11 +6760,11 @@ Entry.EntryObject.prototype.generateView = function() {
       c.updateCoordinateView();
       Entry.stage.updateObject();
     };
-    g.onkeypress = function(a) {
+    h.onkeypress = function(a) {
       13 == a.keyCode && this.blur();
     };
-    g.onblur = function(a) {
-      isNaN(g.value) || c.entity.setY(Number(g.value));
+    h.onblur = function(a) {
+      isNaN(h.value) || c.entity.setY(Number(h.value));
       c.updateCoordinateView();
       Entry.stage.updateObject();
     };
@@ -6133,9 +6792,9 @@ Entry.EntryObject.prototype.generateView = function() {
     });
     this.rotateSpan_ = e;
     this.rotateInput_ = n;
-    h = Entry.createElement("span");
-    h.addClass("entryObjectDirectionSpanWorkspace");
-    h.innerHTML = Lang.Workspace.direction + " : ";
+    g = Entry.createElement("span");
+    g.addClass("entryObjectDirectionSpanWorkspace");
+    g.innerHTML = Lang.Workspace.direction + " : ";
     var l = Entry.createElement("input");
     l.addClass("entryObjectDirectionInputWorkspace");
     l.setAttribute("disabled", "disabled");
@@ -6146,7 +6805,7 @@ Entry.EntryObject.prototype.generateView = function() {
     this.directionInput_ = l;
     d.appendChild(e);
     d.appendChild(n);
-    d.appendChild(h);
+    d.appendChild(g);
     d.appendChild(l);
     d.rotateInput_ = n;
     d.directionInput_ = l;
@@ -6237,7 +6896,7 @@ Entry.EntryObject.prototype.generateView = function() {
         Entry.container.selectObject(a.id), Entry.playground.injectObject(a);
       }
     }), this.view_.appendChild(d), d = Entry.createElement("div"), d.addClass("entryObjectInformationWorkspace"), d.object = this, this.isInformationToggle = !1, a.appendChild(d), this.informationView_ = d, d = Entry.createElement("div"), d.addClass("entryObjectRotateLabelWrapperWorkspace"), this.view_.appendChild(d), this.rotateLabelWrapperView_ = d, e = Entry.createElement("span"), e.addClass("entryObjectRotateSpanWorkspace"), e.innerHTML = Lang.Workspace.rotation + " : ", n = Entry.createElement("input"), 
-    n.addClass("entryObjectRotateInputWorkspace"), this.rotateSpan_ = e, this.rotateInput_ = n, h = Entry.createElement("span"), h.addClass("entryObjectDirectionSpanWorkspace"), h.innerHTML = Lang.Workspace.direction + " : ", l = Entry.createElement("input"), l.addClass("entryObjectDirectionInputWorkspace"), this.directionInput_ = l, d.appendChild(e), d.appendChild(n), d.appendChild(h), d.appendChild(l), d.rotateInput_ = n, d.directionInput_ = l, c = this, n.onkeypress = function(a) {
+    n.addClass("entryObjectRotateInputWorkspace"), this.rotateSpan_ = e, this.rotateInput_ = n, g = Entry.createElement("span"), g.addClass("entryObjectDirectionSpanWorkspace"), g.innerHTML = Lang.Workspace.direction + " : ", l = Entry.createElement("input"), l.addClass("entryObjectDirectionInputWorkspace"), this.directionInput_ = l, d.appendChild(e), d.appendChild(n), d.appendChild(g), d.appendChild(l), d.rotateInput_ = n, d.directionInput_ = l, c = this, n.onkeypress = function(a) {
       13 == a.keyCode && (a = n.value, -1 != a.indexOf("\u02da") && (a = a.substring(0, a.indexOf("\u02da"))), isNaN(a) || c.entity.setRotation(Number(a)), c.updateRotationView(), n.blur());
     }, n.onblur = function(a) {
       c.entity.setRotation(c.entity.getRotation());
@@ -6247,16 +6906,16 @@ Entry.EntryObject.prototype.generateView = function() {
     }, l.onblur = function(a) {
       c.entity.setDirection(c.entity.getDirection());
       Entry.stage.updateObject();
-    }, a = Entry.createElement("div"), a.addClass("entryObjectRotationWrapperWorkspace"), a.object = this, this.view_.appendChild(a), d = Entry.createElement("span"), d.addClass("entryObjectCoordinateWorkspace"), a.appendChild(d), e = Entry.createElement("span"), e.addClass("entryObjectCoordinateSpanWorkspace"), e.innerHTML = "X:", f = Entry.createElement("input"), f.addClass("entryObjectCoordinateInputWorkspace"), h = Entry.createElement("span"), h.addClass("entryObjectCoordinateSpanWorkspace"), 
-    h.innerHTML = "Y:", g = Entry.createElement("input"), g.addClass("entryObjectCoordinateInputWorkspace entryObjectCoordinateInputWorkspace_right"), k = Entry.createElement("span"), k.addClass("entryObjectCoordinateSpanWorkspace"), k.innerHTML = Lang.Workspace.Size, m = Entry.createElement("input"), m.addClass("entryObjectCoordinateInputWorkspace", "entryObjectCoordinateInputWorkspace_size"), d.appendChild(e), d.appendChild(f), d.appendChild(h), d.appendChild(g), d.appendChild(k), d.appendChild(m), 
-    d.xInput_ = f, d.yInput_ = g, d.sizeInput_ = m, this.coordinateView_ = d, c = this, f.onkeypress = function(a) {
+    }, a = Entry.createElement("div"), a.addClass("entryObjectRotationWrapperWorkspace"), a.object = this, this.view_.appendChild(a), d = Entry.createElement("span"), d.addClass("entryObjectCoordinateWorkspace"), a.appendChild(d), e = Entry.createElement("span"), e.addClass("entryObjectCoordinateSpanWorkspace"), e.innerHTML = "X:", f = Entry.createElement("input"), f.addClass("entryObjectCoordinateInputWorkspace"), g = Entry.createElement("span"), g.addClass("entryObjectCoordinateSpanWorkspace"), 
+    g.innerHTML = "Y:", h = Entry.createElement("input"), h.addClass("entryObjectCoordinateInputWorkspace entryObjectCoordinateInputWorkspace_right"), k = Entry.createElement("span"), k.addClass("entryObjectCoordinateSpanWorkspace"), k.innerHTML = Lang.Workspace.Size, m = Entry.createElement("input"), m.addClass("entryObjectCoordinateInputWorkspace", "entryObjectCoordinateInputWorkspace_size"), d.appendChild(e), d.appendChild(f), d.appendChild(g), d.appendChild(h), d.appendChild(k), d.appendChild(m), 
+    d.xInput_ = f, d.yInput_ = h, d.sizeInput_ = m, this.coordinateView_ = d, c = this, f.onkeypress = function(a) {
       13 == a.keyCode && (isNaN(f.value) || c.entity.setX(Number(f.value)), c.updateCoordinateView(), f.blur());
     }, f.onblur = function(a) {
       c.entity.setX(c.entity.getX());
       Entry.stage.updateObject();
-    }, g.onkeypress = function(a) {
-      13 == a.keyCode && (isNaN(g.value) || c.entity.setY(Number(g.value)), c.updateCoordinateView(), g.blur());
-    }, g.onblur = function(a) {
+    }, h.onkeypress = function(a) {
+      13 == a.keyCode && (isNaN(h.value) || c.entity.setY(Number(h.value)), c.updateCoordinateView(), h.blur());
+    }, h.onblur = function(a) {
       c.entity.setY(c.entity.getY());
       Entry.stage.updateObject();
     }, d = Entry.createElement("div"), d.addClass("rotationMethodWrapper"), a.appendChild(d), this.rotationMethodWrapper_ = d, a = Entry.createElement("span"), a.addClass("entryObjectRotateMethodLabelWorkspace"), d.appendChild(a), a.innerHTML = Lang.Workspace.rotate_method + " : ", a = Entry.createElement("div"), a.addClass("entryObjectRotateModeWorkspace"), a.addClass("entryObjectRotateModeAWorkspace"), a.object = this, this.rotateModeAView_ = a, d.appendChild(a), a.bindOnClick(function(a) {
@@ -6296,22 +6955,20 @@ Entry.EntryObject.prototype.initEntity = function(a) {
     var c = a.sprite.pictures[0].dimension;
     b.regX = c.width / 2;
     b.regY = c.height / 2;
-    a = "background" == a.sprite.category.main ? Math.max(270 / c.height, 480 / c.width) : "new" == a.sprite.category.main ? 1 : 200 / (c.width + c.height);
-    b.scaleX = b.scaleY = a;
+    b.scaleX = b.scaleY = "background" == a.sprite.category.main ? Math.max(270 / c.height, 480 / c.width) : "new" == a.sprite.category.main ? 1 : 200 / (c.width + c.height);
     b.width = c.width;
     b.height = c.height;
   } else {
     if ("textBox" == this.objectType) {
       if (b.regX = 25, b.regY = 12, b.scaleX = b.scaleY = 1.5, b.width = 50, b.height = 24, b.text = a.name, a.options) {
-        if (c = a.options, a = "", c.bold && (a += "bold "), c.italic && (a += "italic "), b.underline = c.underline, b.strike = c.strike, b.font = a + "20px " + c.font.family, b.colour = c.colour, b.bgColor = c.background, b.lineBreak = c.lineBreak) {
-          c = b.text.split("\n");
-          if (1 < c.length) {
-            a = c[0].length;
-            for (var d = 1, e = c.length;d < e;d++) {
-              c[d].length > a && (a = c[d].length);
+        if (a = a.options, c = "", a.bold && (c += "bold "), a.italic && (c += "italic "), b.underline = a.underline, b.strike = a.strike, b.font = c + "20px " + a.font.family, b.colour = a.colour, b.bgColor = a.background, b.lineBreak = a.lineBreak) {
+          a = b.text.split("\n");
+          if (1 < a.length) {
+            for (var c = a[0].length, d = 1, e = a.length;d < e;d++) {
+              a[d].length > c && (c = a[d].length);
             }
-            b.width = 25 * a;
-            b.height = 24 * c.length;
+            b.width = 25 * c;
+            b.height = 24 * a.length;
           } else {
             b.width = 25 * b.text.length;
           }
@@ -6327,10 +6984,14 @@ Entry.EntryObject.prototype.initEntity = function(a) {
 };
 Entry.EntryObject.prototype.updateThumbnailView = function() {
   if ("sprite" == this.objectType) {
-    var a = this.entity.picture.filename;
-    this.thumbnailView_.style.backgroundImage = 'url("/uploads/' + a.substring(0, 2) + "/" + a.substring(2, 4) + "/thumb/" + a + '.png")';
+    if (this.entity.picture.fileurl) {
+      this.thumbnailView_.style.backgroundImage = 'url("' + this.entity.picture.fileurl + '")';
+    } else {
+      var a = this.entity.picture.filename;
+      this.thumbnailView_.style.backgroundImage = 'url("/uploads/' + a.substring(0, 2) + "/" + a.substring(2, 4) + "/thumb/" + a + '.png")';
+    }
   } else {
-    "textBox" == this.objectType && (this.thumbnailView_.style.backgroundImage = "url('/img/assets/text_icon.png')");
+    "textBox" == this.objectType && (this.thumbnailView_.style.backgroundImage = "url(" + (Entry.mediaFilePath + "/text_icon.png") + ")");
   }
 };
 Entry.EntryObject.prototype.updateCoordinateView = function(a) {
@@ -6351,8 +7012,8 @@ Entry.EntryObject.prototype.select = function(a) {
   console.log(this);
 };
 Entry.EntryObject.prototype.addPicture = function(a, b) {
-  Entry.stateManager.addCommand("add sprite", this, this.removePicture, a.id);
-  b || 0 == b ? (this.pictures.splice(b, 0, a), Entry.playground.injectPicture(this)) : this.pictures.push(a);
+  Entry.stateManager && Entry.stateManager.addCommand("add sprite", this, this.removePicture, a.id);
+  b || 0 === b ? (this.pictures.splice(b, 0, a), Entry.playground.injectPicture(this)) : this.pictures.push(a);
   return new Entry.State(this, this.removePicture, a.id);
 };
 Entry.EntryObject.prototype.removePicture = function(a) {
@@ -6361,7 +7022,7 @@ Entry.EntryObject.prototype.removePicture = function(a) {
   }
   a = this.getPicture(a);
   var b = this.pictures.indexOf(a);
-  Entry.stateManager.addCommand("remove sprite", this, this.addPicture, a, b);
+  Entry.stateManager && Entry.stateManager.addCommand("remove sprite", this, this.addPicture, a, b);
   this.pictures.splice(b, 1);
   a === this.selectedPicture && Entry.playground.selectPicture(this.pictures[0]);
   Entry.playground.injectPicture(this);
@@ -6384,10 +7045,10 @@ Entry.EntryObject.prototype.getPicture = function(a) {
     }
   }
   a = Entry.parseNumber(a);
-  if ((0 != a || "boolean" != typeof a) && c >= a && 0 < a) {
+  if ((!1 !== a || "boolean" != typeof a) && c >= a && 0 < a) {
     return b[a - 1];
   }
-  throw Error("No picture with pictureId : " + pictureId);
+  throw Error("No picture found");
 };
 Entry.EntryObject.prototype.setPicture = function(a) {
   for (var b in this.pictures) {
@@ -6396,7 +7057,7 @@ Entry.EntryObject.prototype.setPicture = function(a) {
       return;
     }
   }
-  throw Error("No picture with pictureId : " + pictureId);
+  throw Error("No picture found");
 };
 Entry.EntryObject.prototype.getNextPicture = function(a) {
   for (var b = this.pictures, c = b.length, d = 0;d < c;d++) {
@@ -6415,27 +7076,27 @@ Entry.EntryObject.prototype.selectPicture = function(a) {
 };
 Entry.EntryObject.prototype.addSound = function(a, b) {
   a.id || (a.id = Entry.generateHash());
-  Entry.stateManager.addCommand("add sound", this, this.removeSound, a.id);
+  Entry.stateManager && Entry.stateManager.addCommand("add sound", this, this.removeSound, a.id);
   Entry.initSound(a, b);
-  b || 0 == b ? (this.sounds.splice(b, 0, a), Entry.playground.injectSound(this)) : this.sounds.push(a);
+  b || 0 === b ? (this.sounds.splice(b, 0, a), Entry.playground.injectSound(this)) : this.sounds.push(a);
   return new Entry.State(this, this.removeSound, a.id);
 };
 Entry.EntryObject.prototype.removeSound = function(a) {
   var b;
   b = this.getSound(a);
   a = this.sounds.indexOf(b);
-  Entry.stateManager.addCommand("remove sound", this, this.addSound, b, a);
+  Entry.stateManager && Entry.stateManager.addCommand("remove sound", this, this.addSound, b, a);
   this.sounds.splice(a, 1);
   Entry.playground.reloadPlayground();
   Entry.playground.injectSound(this);
   return new Entry.State(this, this.addSound, b, a);
 };
 Entry.EntryObject.prototype.getRotateMethod = function() {
-  null == this.rotateMethod && (this.rotateMethod = "free");
+  this.rotateMethod || (this.rotateMethod = "free");
   return this.rotateMethod;
 };
 Entry.EntryObject.prototype.setRotateMethod = function(a) {
-  null == a && (a = "free");
+  a || (a = "free");
   this.rotateMethod = a;
   this.updateRotateMethodView();
 };
@@ -6445,7 +7106,7 @@ Entry.EntryObject.prototype.updateRotateMethodView = function() {
 };
 Entry.EntryObject.prototype.toggleInformation = function(a) {
   this.setRotateMethod(this.getRotateMethod());
-  null == a && (a = this.isInformationToggle = !this.isInformationToggle);
+  void 0 === a && (a = this.isInformationToggle = !this.isInformationToggle);
   a ? this.view_.addClass("informationToggle") : this.view_.removeClass("informationToggle");
 };
 Entry.EntryObject.prototype.addCloneEntity = function(a, b, c) {
@@ -6500,7 +7161,7 @@ Entry.EntryObject.prototype.getSound = function(a) {
     }
   }
   a = Entry.parseNumber(a);
-  if ((0 != a || "boolean" != typeof a) && c >= a && 0 < a) {
+  if ((!1 !== a || "boolean" != typeof a) && c >= a && 0 < a) {
     return b[a - 1];
   }
   throw Error("No Sound");
@@ -6534,7 +7195,8 @@ Entry.EntryObject.prototype.updateInputViews = function(a) {
 };
 var tog = !0;
 Entry.EntryObject.prototype.editObjectValues = function(a) {
-  var b = this.getLock() ? [this.nameView_] : [this.nameView_, this.coordinateView_.xInput_, this.coordinateView_.yInput_, this.rotateInput_, this.directionInput_, this.coordinateView_.sizeInput_];
+  var b;
+  b = this.getLock() ? [this.nameView_] : [this.nameView_, this.coordinateView_.xInput_, this.coordinateView_.yInput_, this.rotateInput_, this.directionInput_, this.coordinateView_.sizeInput_];
   if (a) {
     for (a = 0;a < b.length;a++) {
       b[a].removeAttribute("disabled"), b[a].addClass("selectedEditingObject");
@@ -6604,7 +7266,7 @@ Entry.Painter.prototype.initialize = function(a) {
   var b = this;
   Entry.addEventListener("textUpdate", function() {
     var a = b.inputField.value();
-    "" == a ? (b.inputField.hide(), delete b.inputField) : (b.inputField.hide(), b.drawText(a), b.selectToolbox("cursor"));
+    "" === a ? (b.inputField.hide(), delete b.inputField) : (b.inputField.hide(), b.drawText(a), b.selectToolbox("cursor"));
   });
   this.selectToolbox("cursor");
 };
@@ -6782,7 +7444,7 @@ Entry.Painter.prototype.clearCanvas = function() {
   this.reloadContext();
 };
 Entry.Painter.prototype.newPicture = function() {
-  var a = {dimension:{height:1, width:1}, filename:"_1x1", name:"\uc0c8\uadf8\ub9bc"};
+  var a = {dimension:{height:1, width:1}, fileurl:Entry.mediaFilePath + "_1x1.png", name:Lang.Workspace.new_picture};
   a.id = Entry.generateHash();
   Entry.playground.addPicture(a, !0);
 };
@@ -6798,7 +7460,7 @@ Entry.Painter.prototype.initPicture = function() {
       a.file.id = c.id;
       a.file.name = b.name;
       a.file.mode = "edit";
-      c.src = "/uploads/" + b.filename.substring(0, 2) + "/" + b.filename.substring(2, 4) + "/image/" + b.filename + ".png";
+      c.src = b.fileurl ? b.fileurl : "/uploads/" + b.filename.substring(0, 2) + "/" + b.filename.substring(2, 4) + "/image/" + b.filename + ".png";
       c.onload = function(b) {
         a.addImage(b.target);
       };
@@ -6864,9 +7526,9 @@ Entry.Painter.prototype.updateHandle_ = function() {
   this.stage.update();
 };
 Entry.Painter.prototype.matchTolerance = function(a, b, c, d, e) {
-  var f = this.colorLayerData.data[a], h = this.colorLayerData.data[a + 1];
+  var f = this.colorLayerData.data[a], g = this.colorLayerData.data[a + 1];
   a = this.colorLayerData.data[a + 2];
-  return f >= b - e / 100 * b && f <= b + e / 100 * b && h >= c - e / 100 * c && h <= c + e / 100 * c && a >= d - e / 100 * d && a <= d + e / 100 * d;
+  return f >= b - e / 100 * b && f <= b + e / 100 * b && g >= c - e / 100 * c && g <= c + e / 100 * c && a >= d - e / 100 * d && a <= d + e / 100 * d;
 };
 Entry.Painter.prototype.matchColorOnly = function(a, b, c, d) {
   return b === this.colorLayerData.data[a] && c === this.colorLayerData.data[a + 1] && d === this.colorLayerData.data[a + 2] ? !0 : !1;
@@ -6883,8 +7545,7 @@ Entry.Painter.prototype.colorPixel = function(a, b, c, d, e) {
   this.colorLayerData.data[a + 3] = e;
 };
 Entry.Painter.prototype.pickStrokeColor = function(a) {
-  var b = Math.round(a.stageX);
-  a = 4 * (Math.round(a.stageY) * this.canvas.width + b);
+  a = 4 * (Math.round(a.stageY) * this.canvas.width + Math.round(a.stageX));
   this.stroke.lineColor = Entry.rgb2hex(this.colorLayerData.data[a], this.colorLayerData.data[a + 1], this.colorLayerData.data[a + 2]);
   document.getElementById("entryPainterAttrCircle").style.backgroundColor = this.stroke.lineColor;
   document.getElementById("entryPainterAttrCircleInput").value = this.stroke.lineColor;
@@ -6941,7 +7602,7 @@ Entry.Painter.prototype.initCommand = function() {
   (a || b) && this.stage.update();
   this.isCommandValid = !1;
   this.colorLayerModel = this.ctx.getImageData(0, 0, this.canvas.width, this.canvas.height);
-  Entry.stateManager.addCommand("edit sprite", this, this.restorePainter, this.colorLayerModel);
+  Entry.stateManager && Entry.stateManager.addCommand("edit sprite", this, this.restorePainter, this.colorLayerModel);
   a && (this.handle.visible = !0);
   b && (this.coordinator.visible = !0);
   (a || b) && this.stage.update();
@@ -6965,7 +7626,7 @@ Entry.Painter.prototype.restorePainter = function(a) {
     c.objectContainer.removeAllChildren();
     c.objectContainer.addChild(a);
   };
-  Entry.stateManager.addCommand("restore sprite", this, this.restorePainter, b);
+  Entry.stateManager && Entry.stateManager.addCommand("restore sprite", this, this.restorePainter, b);
 };
 Entry.Painter.prototype.platten = function() {
   this.colorLayerData = this.ctx.getImageData(0, 0, this.canvas.width, this.canvas.height);
@@ -6982,20 +7643,19 @@ Entry.Painter.prototype.fill = function() {
     var c = new createjs.Point(this.stage.mouseX, this.stage.mouseY);
     c.x = Math.round(c.x);
     c.y = Math.round(c.y);
-    for (var d = 4 * (c.y * a + c.x), e = this.colorLayerData.data[d], f = this.colorLayerData.data[d + 1], h = this.colorLayerData.data[d + 2], g = this.colorLayerData.data[d + 3], k, m, c = [[c.x, c.y]], n = Entry.hex2rgb(this.stroke.lineColor);c.length;) {
-      for (var d = c.pop(), l = d[0], q = d[1], d = 4 * (q * a + l);0 <= q && this.matchColor(d, e, f, h, g);) {
+    for (var d = 4 * (c.y * a + c.x), e = this.colorLayerData.data[d], f = this.colorLayerData.data[d + 1], g = this.colorLayerData.data[d + 2], h = this.colorLayerData.data[d + 3], k, m, c = [[c.x, c.y]], n = Entry.hex2rgb(this.stroke.lineColor);c.length;) {
+      for (var d = c.pop(), l = d[0], q = d[1], d = 4 * (q * a + l);0 <= q && this.matchColor(d, e, f, g, h);) {
         --q, d -= 4 * a;
       }
       d += 4 * a;
       q += 1;
-      for (m = k = !1;q < b - 1 && this.matchColor(d, e, f, h, g);) {
-        q += 1, this.colorPixel(d, n.r, n.g, n.b), 0 < l && (this.matchColor(d - 4, e, f, h, g) ? k || (c.push([l - 1, q]), k = !0) : k && (k = !1)), l < a - 1 && (this.matchColor(d + 4, e, f, h, g) ? m || (c.push([l + 1, q]), m = !0) : m && (m = !1)), d += 4 * a;
+      for (m = k = !1;q < b - 1 && this.matchColor(d, e, f, g, h);) {
+        q += 1, this.colorPixel(d, n.r, n.g, n.b), 0 < l && (this.matchColor(d - 4, e, f, g, h) ? k || (c.push([l - 1, q]), k = !0) : k && (k = !1)), l < a - 1 && (this.matchColor(d + 4, e, f, g, h) ? m || (c.push([l + 1, q]), m = !0) : m && (m = !1)), d += 4 * a;
       }
       if (1080 < c.length) {
         break;
       }
     }
-    delete c;
     this.file.modified = !0;
     this.reloadContext();
   }
@@ -7032,7 +7692,7 @@ Entry.Painter.prototype.move_line = function() {
 Entry.Painter.prototype.move_rect = function() {
   var a = this.stage.mouseX - this.oldPt.x, b = this.stage.mouseY - this.oldPt.y;
   event.shiftKey && (b = a);
-  this.stroke.fill ? 0 == this.stroke.thickness ? this.brush.graphics.clear().setStrokeStyle(this.stroke.thickness, "round").beginFill(this.stroke.fillColor).drawRect(this.oldPt.x, this.oldPt.y, a, b) : this.brush.graphics.clear().beginStroke(this.stroke.lineColor).setStrokeStyle(this.stroke.thickness, "round").beginFill(this.stroke.fillColor).drawRect(this.oldPt.x, this.oldPt.y, a, b) : 0 == this.stroke.thickness ? this.brush.graphics.clear().setStrokeStyle(this.stroke.thickness, "round").drawRect(this.oldPt.x, 
+  this.stroke.fill ? 0 === this.stroke.thickness ? this.brush.graphics.clear().setStrokeStyle(this.stroke.thickness, "round").beginFill(this.stroke.fillColor).drawRect(this.oldPt.x, this.oldPt.y, a, b) : this.brush.graphics.clear().beginStroke(this.stroke.lineColor).setStrokeStyle(this.stroke.thickness, "round").beginFill(this.stroke.fillColor).drawRect(this.oldPt.x, this.oldPt.y, a, b) : 0 === this.stroke.thickness ? this.brush.graphics.clear().setStrokeStyle(this.stroke.thickness, "round").drawRect(this.oldPt.x, 
   this.oldPt.y, a, b) : this.brush.graphics.clear().beginStroke(this.stroke.lineColor).setStrokeStyle(this.stroke.thickness, "round").drawRect(this.oldPt.x, this.oldPt.y, a, b);
   this.file.modified = !0;
   this.stage.update();
@@ -7040,7 +7700,7 @@ Entry.Painter.prototype.move_rect = function() {
 Entry.Painter.prototype.move_circle = function() {
   var a = this.stage.mouseX - this.oldPt.x, b = this.stage.mouseY - this.oldPt.y;
   event.shiftKey && (b = a);
-  this.stroke.fill ? 0 == this.stroke.thickness ? this.brush.graphics.clear().beginStroke(this.stroke.fillColor).setStrokeStyle(this.stroke.thickness, "round").beginFill(this.stroke.fillColor).drawEllipse(this.oldPt.x, this.oldPt.y, a, b) : this.brush.graphics.clear().beginStroke(this.stroke.lineColor).setStrokeStyle(this.stroke.thickness, "round").beginFill(this.stroke.fillColor).drawEllipse(this.oldPt.x, this.oldPt.y, a, b) : this.stroke.fill || (0 == this.stroke.thickness ? this.brush.graphics.clear().drawEllipse(this.oldPt.x, 
+  this.stroke.fill ? 0 === this.stroke.thickness ? this.brush.graphics.clear().beginStroke(this.stroke.fillColor).setStrokeStyle(this.stroke.thickness, "round").beginFill(this.stroke.fillColor).drawEllipse(this.oldPt.x, this.oldPt.y, a, b) : this.brush.graphics.clear().beginStroke(this.stroke.lineColor).setStrokeStyle(this.stroke.thickness, "round").beginFill(this.stroke.fillColor).drawEllipse(this.oldPt.x, this.oldPt.y, a, b) : this.stroke.fill || (0 === this.stroke.thickness ? this.brush.graphics.clear().drawEllipse(this.oldPt.x, 
   this.oldPt.y, a, b) : this.brush.graphics.clear().beginStroke(this.stroke.lineColor).setStrokeStyle(this.stroke.thickness, "round").drawEllipse(this.oldPt.x, this.oldPt.y, a, b));
   this.file.modified = !0;
   this.stage.update();
@@ -7154,12 +7814,12 @@ Entry.Painter.prototype.fillTransparent = function(a, b) {
   this.fill();
 };
 Entry.Painter.prototype.trim = function() {
-  var a = this.canvas.width, b = this.ctx.getImageData(0, 0, a, this.canvas.height), c = b.data.length, d, e = null, f = null, h = null, g = null, k;
+  var a = this.canvas.width, b = this.ctx.getImageData(0, 0, a, this.canvas.height), c = b.data.length, d, e = null, f = null, g = null, h = null, k;
   for (d = 0;d < c;d += 4) {
-    0 !== b.data[d + 3] && (h = d / 4 % a, k = ~~(d / 4 / a), null === e && (e = k), null === f ? f = h : h < f && (f = h), null === g ? g = k : g < k && (g = k));
+    0 !== b.data[d + 3] && (g = d / 4 % a, k = ~~(d / 4 / a), null === e && (e = k), null === f ? f = g : g < f && (f = g), null === h ? h = k : h < k && (h = k));
   }
-  a = g - e;
-  b = h - f;
+  a = h - e;
+  b = g - f;
   c = null;
   0 === a || 0 === b ? (c = this.ctx.getImageData(0, 0, 1, 1), c.data[0] = 255, c.data[1] = 255, c.data[2] = 255, c.data[3] = 255, this.canvas_.width = 1, this.canvas_.height = 1) : (c = this.ctx.getImageData(f, e, b, a), this.canvas_.width = b, this.canvas_.height = a);
   this.ctx_.putImageData(c, 0, 0);
@@ -7173,7 +7833,7 @@ Entry.Painter.prototype.addPicture = function(a) {
   this.initCommand();
   var b = new Image;
   b.id = Entry.generateHash();
-  b.src = "/uploads/" + a.filename.substring(0, 2) + "/" + a.filename.substring(2, 4) + "/image/" + a.filename + ".png";
+  b.src = a.fileurl ? a.fileurl : "/uploads/" + a.filename.substring(0, 2) + "/" + a.filename.substring(2, 4) + "/image/" + a.filename + ".png";
   var c = this;
   b.onload = function(a) {
     c.addImage(a.target);
@@ -7181,7 +7841,7 @@ Entry.Painter.prototype.addPicture = function(a) {
   };
 };
 Entry.Painter.prototype.initCoordinator = function() {
-  var a = new createjs.Container, b = new createjs.Bitmap("/img/assets/workspace_coordinate.png");
+  var a = new createjs.Container, b = new createjs.Bitmap(Entry.mediaFilePath + "/workspace_coordinate.png");
   a.addChild(b);
   this.stage.addChild(a);
   a.visible = !1;
@@ -7194,12 +7854,12 @@ Entry.Painter.prototype.toggleCoordinator = function() {
 Entry.Painter.prototype.initDashedLine = function() {
   createjs.Graphics.prototype.dashedLineTo = function(a, b, c, d, e) {
     this.moveTo(a, b);
-    var f = c - a, h = d - b;
-    e = Math.floor(Math.sqrt(f * f + h * h) / e);
-    for (var f = f / e, h = h / e, g = 0;g++ < e;) {
-      a += f, b += h, this[0 == g % 2 ? "moveTo" : "lineTo"](a, b);
+    var f = c - a, g = d - b;
+    e = Math.floor(Math.sqrt(f * f + g * g) / e);
+    for (var f = f / e, g = g / e, h = 0;h++ < e;) {
+      a += f, b += g, this[0 === h % 2 ? "moveTo" : "lineTo"](a, b);
     }
-    this[0 == g % 2 ? "moveTo" : "lineTo"](c, d);
+    this[0 === h % 2 ? "moveTo" : "lineTo"](c, d);
     return this;
   };
   createjs.Graphics.prototype.drawDashedRect = function(a, b, c, d, e) {
@@ -7250,12 +7910,12 @@ Entry.Painter.prototype.generateView = function(a) {
     e.width = 960;
     e.height = 540;
     f.appendChild(e);
-    var h = Entry.createElement("div", "entryPainterAttr");
-    h.addClass("entryPlaygroundPainterAttr");
-    this.view_.appendChild(h);
+    var g = Entry.createElement("div", "entryPainterAttr");
+    g.addClass("entryPlaygroundPainterAttr");
+    this.view_.appendChild(g);
     this.flipObject = Entry.createElement("div", "entryPictureFlip");
     this.flipObject.addClass("entryPlaygroundPainterFlip");
-    h.appendChild(this.flipObject);
+    g.appendChild(this.flipObject);
     e = Entry.createElement("div", "entryPictureFlipX");
     e.title = "\uc88c\uc6b0\ub4a4\uc9d1\uae30";
     e.bindOnClick(function() {
@@ -7277,40 +7937,40 @@ Entry.Painter.prototype.generateView = function(a) {
       a.style.width = c + "px";
       f.style.width = c - 54 + "px";
       f.style.height = d + "px";
-      h.style.top = d + 30 + "px";
-      h.style.height = b - d + "px";
+      g.style.top = d + 30 + "px";
+      g.style.height = b - d + "px";
     });
-    var g = Entry.createElement("nav", "entryPainterTopMenu");
-    g.addClass("entryPlaygroundPainterTopMenu");
-    c.appendChild(g);
+    var h = Entry.createElement("nav", "entryPainterTopMenu");
+    h.addClass("entryPlaygroundPainterTopMenu");
+    c.appendChild(h);
     e = Entry.createElement("ul");
-    g.appendChild(e);
+    h.appendChild(e);
     var k = Entry.createElement("li");
-    g.appendChild(k);
-    g = Entry.createElement("a", "entryPainterTopMenuFileNew");
-    g.bindOnClick(function() {
+    h.appendChild(k);
+    h = Entry.createElement("a", "entryPainterTopMenuFileNew");
+    h.bindOnClick(function() {
       b.newPicture();
     });
-    g.addClass("entryPlaygroundPainterTopMenuFileNew");
-    g.innerHTML = Lang.Workspace.new_picture;
-    k.appendChild(g);
-    g = Entry.createElement("li", "entryPainterTopMenuFile");
-    g.addClass("entryPlaygroundPainterTopMenuFile");
-    g.innerHTML = Lang.Workspace.painter_file;
-    e.appendChild(g);
+    h.addClass("entryPlaygroundPainterTopMenuFileNew");
+    h.innerHTML = Lang.Workspace.new_picture;
+    k.appendChild(h);
+    h = Entry.createElement("li", "entryPainterTopMenuFile");
+    h.addClass("entryPlaygroundPainterTopMenuFile");
+    h.innerHTML = Lang.Workspace.painter_file;
+    e.appendChild(h);
     k = Entry.createElement("ul");
-    g.appendChild(k);
-    g = Entry.createElement("li");
-    k.appendChild(g);
+    h.appendChild(k);
+    h = Entry.createElement("li");
+    k.appendChild(h);
     var m = Entry.createElement("a", "entryPainterTopMenuFileSave");
     m.bindOnClick(function() {
       b.file_save(!1);
     });
     m.addClass("entryPainterTopMenuFileSave");
     m.innerHTML = Lang.Workspace.painter_file_save;
-    g.appendChild(m);
-    g = Entry.createElement("li");
-    k.appendChild(g);
+    h.appendChild(m);
+    h = Entry.createElement("li");
+    k.appendChild(h);
     k = Entry.createElement("a", "entryPainterTopMenuFileSaveAs");
     k.bindOnClick(function() {
       b.file.mode = "new";
@@ -7318,7 +7978,7 @@ Entry.Painter.prototype.generateView = function(a) {
     });
     k.addClass("entryPlaygroundPainterTopMenuFileSaveAs");
     k.innerHTML = Lang.Workspace.painter_file_saveas;
-    g.appendChild(k);
+    h.appendChild(k);
     k = Entry.createElement("li", "entryPainterTopMenuEdit");
     k.addClass("entryPlaygroundPainterTopMenuEdit");
     k.innerHTML = Lang.Workspace.painter_edit;
@@ -7327,40 +7987,40 @@ Entry.Painter.prototype.generateView = function(a) {
     k.appendChild(e);
     k = Entry.createElement("li");
     e.appendChild(k);
-    g = Entry.createElement("a", "entryPainterTopMenuEditImportLink");
-    g.bindOnClick(function() {
+    h = Entry.createElement("a", "entryPainterTopMenuEditImportLink");
+    h.bindOnClick(function() {
       Entry.dispatchEvent("openPictureImport");
     });
-    g.addClass("entryPainterTopMenuEditImport");
-    g.innerHTML = Lang.Workspace.get_file;
-    k.appendChild(g);
+    h.addClass("entryPainterTopMenuEditImport");
+    h.innerHTML = Lang.Workspace.get_file;
+    k.appendChild(h);
     k = Entry.createElement("li");
     e.appendChild(k);
-    g = Entry.createElement("a", "entryPainterTopMenuEditCopy");
-    g.bindOnClick(function() {
+    h = Entry.createElement("a", "entryPainterTopMenuEditCopy");
+    h.bindOnClick(function() {
       b.edit_copy();
     });
-    g.addClass("entryPlaygroundPainterTopMenuEditCopy");
-    g.innerHTML = Lang.Workspace.copy_file;
-    k.appendChild(g);
+    h.addClass("entryPlaygroundPainterTopMenuEditCopy");
+    h.innerHTML = Lang.Workspace.copy_file;
+    k.appendChild(h);
     k = Entry.createElement("li");
     e.appendChild(k);
-    g = Entry.createElement("a", "entryPainterTopMenuEditCut");
-    g.bindOnClick(function() {
+    h = Entry.createElement("a", "entryPainterTopMenuEditCut");
+    h.bindOnClick(function() {
       b.edit_cut();
     });
-    g.addClass("entryPlaygroundPainterTopMenuEditCut");
-    g.innerHTML = Lang.Workspace.cut_picture;
-    k.appendChild(g);
+    h.addClass("entryPlaygroundPainterTopMenuEditCut");
+    h.innerHTML = Lang.Workspace.cut_picture;
+    k.appendChild(h);
     k = Entry.createElement("li");
     e.appendChild(k);
-    g = Entry.createElement("a", "entryPainterTopMenuEditPaste");
-    g.bindOnClick(function() {
+    h = Entry.createElement("a", "entryPainterTopMenuEditPaste");
+    h.bindOnClick(function() {
       b.edit_paste();
     });
-    g.addClass("entryPlaygroundPainterTopMenuEditPaste");
-    g.innerHTML = Lang.Workspace.paste_picture;
-    k.appendChild(g);
+    h.addClass("entryPlaygroundPainterTopMenuEditPaste");
+    h.innerHTML = Lang.Workspace.paste_picture;
+    k.appendChild(h);
     k = Entry.createElement("li");
     e.appendChild(k);
     e = Entry.createElement("a", "entryPainterTopMenuEditEraseAll");
@@ -7460,7 +8120,7 @@ Entry.Painter.prototype.generateView = function(a) {
     c.appendChild(d);
     this.attrResizeArea = Entry.createElement("fieldset", "painterAttrResize");
     this.attrResizeArea.addClass("entryPlaygroundPainterAttrResize");
-    h.appendChild(this.attrResizeArea);
+    g.appendChild(this.attrResizeArea);
     d = Entry.createElement("legend");
     d.innerHTML = Lang.Workspace.picture_size;
     this.attrResizeArea.appendChild(d);
@@ -7504,7 +8164,7 @@ Entry.Painter.prototype.generateView = function(a) {
     d.appendChild(this.objectHeightInput);
     this.attrRotateArea = Entry.createElement("div", "painterAttrRotateArea");
     this.attrRotateArea.addClass("painterAttrRotateArea");
-    h.appendChild(this.attrRotateArea);
+    g.appendChild(this.attrRotateArea);
     d = Entry.createElement("fieldset", "entryPainterAttrRotate");
     d.addClass("entryPlaygroundPainterAttrRotate");
     this.attrRotateArea.appendChild(d);
@@ -7530,13 +8190,13 @@ Entry.Painter.prototype.generateView = function(a) {
     d.appendChild(this.objectRotateInput);
     this.attrColorArea = Entry.createElement("fieldset", "entryPainterAttrColor");
     this.attrColorArea.addClass("entryPlaygroundPainterAttrColor");
-    h.appendChild(this.attrColorArea);
+    g.appendChild(this.attrColorArea);
     var n = Entry.createElement("div");
     n.addClass("entryPlaygroundPainterAttrColorContainer");
     this.attrColorArea.appendChild(n);
     this.attrCircleArea = Entry.createElement("div");
     this.attrCircleArea.addClass("painterAttrCircleArea");
-    h.appendChild(this.attrCircleArea);
+    g.appendChild(this.attrCircleArea);
     d = Entry.createElement("div", "entryPainterAttrCircle");
     d.addClass("painterAttrCircle");
     this.attrCircleArea.appendChild(d);
@@ -7550,11 +8210,11 @@ Entry.Painter.prototype.generateView = function(a) {
       b.selectToolbox("spoid");
     });
     this.attrColorSpoid.addClass("painterAttrColorSpoid");
-    h.appendChild(this.attrColorSpoid);
+    g.appendChild(this.attrColorSpoid);
     Entry.getColourCodes().forEach(function(a) {
       var c = Entry.createElement("div");
       c.addClass("entryPlaygroundPainterAttrColorElement");
-      "transparent" === a ? c.style.backgroundImage = "url('/img/assets/transparent.png')" : c.style.backgroundColor = a;
+      "transparent" === a ? c.style.backgroundImage = "url(" + (Entry.mediaFilePath + "/transparent.png") + ")" : c.style.backgroundColor = a;
       c.bindOnClick(function(c) {
         "transparent" === a ? (b.stroke.transparent = !0, b.stroke.lineColor = "#ffffff") : (b.stroke.transparent = !1, r && (document.getElementById("entryPainterShapeBackgroundColor").style.backgroundColor = a, b.stroke.fillColor = a), r || (document.getElementById("entryPainterShapeLineColor").style.backgroundColor = a, b.stroke.lineColor = a));
         document.getElementById("entryPainterAttrCircle").style.backgroundColor = b.stroke.lineColor;
@@ -7564,7 +8224,7 @@ Entry.Painter.prototype.generateView = function(a) {
     });
     this.attrThickArea = Entry.createElement("div", "painterAttrThickArea");
     this.attrThickArea.addClass("entryPlaygroundentryPlaygroundPainterAttrThickArea");
-    h.appendChild(this.attrThickArea);
+    g.appendChild(this.attrThickArea);
     d = Entry.createElement("legend");
     d.addClass("painterAttrThickName");
     d.innerHTML = Lang.Workspace.thickness;
@@ -7599,7 +8259,7 @@ Entry.Painter.prototype.generateView = function(a) {
     });
     this.attrBackgroundArea = Entry.createElement("div", "painterAttrBackgroundArea");
     this.attrBackgroundArea.addClass("entryPlaygroundPainterBackgroundArea");
-    h.appendChild(this.attrBackgroundArea);
+    g.appendChild(this.attrBackgroundArea);
     d = Entry.createElement("fieldset", "entryPainterAttrbackground");
     d.addClass("entryPlaygroundPainterAttrBackground");
     this.attrBackgroundArea.appendChild(d);
@@ -7614,12 +8274,11 @@ Entry.Painter.prototype.generateView = function(a) {
     q.bindOnClick(function(a) {
       l.style.zIndex = "1";
       this.style.zIndex = "10";
-      this.style.zIndex = new String("10");
       r = !0;
     });
     this.attrFontArea = Entry.createElement("div", "painterAttrFont");
     this.attrFontArea.addClass("entryPlaygroundPainterAttrFont");
-    h.appendChild(this.attrFontArea);
+    g.appendChild(this.attrFontArea);
     e = Entry.createElement("div");
     e.addClass("entryPlaygroundPainterAttrTop");
     this.attrFontArea.appendChild(e);
@@ -7636,7 +8295,7 @@ Entry.Painter.prototype.generateView = function(a) {
       b.font.name = a.target.value;
     };
     for (d = 0;d < Entry.fonts.length;d++) {
-      g = Entry.fonts[d], c = Entry.createElement("option"), c.value = g.family, c.innerHTML = g.name, k.appendChild(c);
+      h = Entry.fonts[d], c = Entry.createElement("option"), c.value = h.family, c.innerHTML = h.name, k.appendChild(c);
     }
     e.appendChild(k);
     e = Entry.createElement("div");
@@ -7667,14 +8326,14 @@ Entry.Painter.prototype.generateView = function(a) {
     k.onchange = function(a) {
       b.font.style = a.target.value;
     };
-    g = [{label:"\ubcf4\ud1b5", value:"normal"}, {label:"\uad75\uac8c", value:"bold"}, {label:"\uae30\uc6b8\uc784", value:"italic"}];
-    for (d = 0;d < g.length;d++) {
-      m = g[d], c = Entry.createElement("option"), c.value = m.value, c.innerHTML = m.label, k.appendChild(c);
+    h = [{label:"\ubcf4\ud1b5", value:"normal"}, {label:"\uad75\uac8c", value:"bold"}, {label:"\uae30\uc6b8\uc784", value:"italic"}];
+    for (d = 0;d < h.length;d++) {
+      m = h[d], c = Entry.createElement("option"), c.value = m.value, c.innerHTML = m.label, k.appendChild(c);
     }
     e.appendChild(k);
     this.attrLineArea = Entry.createElement("div", "painterAttrLineStyle");
     this.attrLineArea.addClass("entryPlaygroundPainterAttrLineStyle");
-    h.appendChild(this.attrLineArea);
+    g.appendChild(this.attrLineArea);
     var t = Entry.createElement("div");
     t.addClass("entryPlaygroundPainterAttrLineStyleLine");
     this.attrLineArea.appendChild(t);
@@ -7844,13 +8503,6 @@ Entry.Playground = function() {
   Entry.addEventListener("entryBlocklyChanged", this.editBlock);
   Entry.addEventListener("entryBlocklyMouseUp", this.mouseupBlock);
   Entry.addEventListener("hwChanged", this.updateHW);
-  this.fonts = [];
-  this.fonts.push({name:"\ubc14\ud0d5\uccb4", family:"KoPub Batang", url:"/css/kopubbatang.css"});
-  this.fonts.push({name:"\uba85\uc870\uccb4", family:"Nanum Myeongjo", url:"/css/nanummyeongjo.css"});
-  this.fonts.push({name:"\uace0\ub515\uccb4", family:"Nanum Gothic", url:"/css/nanumgothic.css"});
-  this.fonts.push({name:"\ud544\uae30\uccb4", family:"Nanum Pen Script", url:"/css/nanumpenscript.css"});
-  this.fonts.push({name:"\ud55c\ub77c\uc0b0\uccb4", family:"Jeju Hallasan", url:"/css/jejuhallasan.css"});
-  this.fonts.push({name:"\ucf54\ub529\uace0\ub515\uccb4", family:"Nanum Gothic Coding", url:"/css/nanumgothiccoding.css"});
 };
 Entry.Playground.prototype.generateView = function(a, b) {
   this.view_ = a;
@@ -7983,7 +8635,7 @@ Entry.Playground.prototype.generateCodeView = function(a) {
     });
     a.appendChild(b);
     c = Entry.parseTexttoXML("<xml></xml>");
-    Blockly.inject(b, {path:".././", toolbox:c, trashcan:!0, blockmenu:this.blockMenuView_});
+    Blockly.inject(b, {path:".././", toolbox:c, trashcan:!0, blockmenu:this.blockMenuView_, mediaFilePath:Entry.mediaFilePath});
     Blockly.mainWorkspace.flyout_.hide();
     Blockly.mainWorkspace.blockMenu.hide();
     document.addEventListener("blocklyWorkspaceChange", this.syncObjectWithEvent, !1);
@@ -7993,7 +8645,7 @@ Entry.Playground.prototype.generateCodeView = function(a) {
   }
   if ("phone" == Entry.type) {
     return b = Entry.createElement("div", "entryCategory"), b.addClass("entryCategoryPhone"), a.appendChild(b), this.categoryView_ = b, c = Entry.createElement("ul", "entryCategoryList"), c.addClass("entryCategoryListPhone"), b.appendChild(c), this.categoryListView_ = c, b = this.createVariableView(), a.appendChild(b), this.variableView_ = b, b = Entry.createElement("div", "entryBlockly"), b.addClass("entryBlocklyPhone"), this.blocklyView_ = b, a.appendChild(b), c = Entry.parseTexttoXML("<xml></xml>"), 
-    Blockly.inject(b, {path:".././", toolbox:c, trashcan:!0}), Blockly.mainWorkspace.flyout_.autoClose = !0, Blockly.mainWorkspace.flyout_.hide(), document.addEventListener("blocklyWorkspaceChange", this.syncObjectWithEvent, !1), this.blockMenu = Blockly.mainWorkspace.flyout_, Entry.hw.banHW(), a;
+    Blockly.inject(b, {path:".././", toolbox:c, trashcan:!0, mediaFilePath:Entry.mediaFilePath}), Blockly.mainWorkspace.flyout_.autoClose = !0, Blockly.mainWorkspace.flyout_.hide(), document.addEventListener("blocklyWorkspaceChange", this.syncObjectWithEvent, !1), this.blockMenu = Blockly.mainWorkspace.flyout_, Entry.hw.banHW(), a;
   }
 };
 Entry.Playground.prototype.generatePictureView = function(a) {
@@ -8013,8 +8665,8 @@ Entry.Playground.prototype.generatePictureView = function(a) {
     $ && $(b).sortable({start:function(a, b) {
       b.item.data("start_pos", b.item.index());
     }, stop:function(a, b) {
-      var c = b.item.data("start_pos"), h = b.item.index();
-      Entry.playground.movePicture(c, h);
+      var c = b.item.data("start_pos"), g = b.item.index();
+      Entry.playground.movePicture(c, g);
     }, axis:"y"});
     a.appendChild(b);
     this.pictureListView_ = b;
@@ -8029,8 +8681,8 @@ Entry.Playground.prototype.generatePictureView = function(a) {
     }), c = Entry.createElement("div", "entryAddPictureInner"), c.addClass("entryPlaygroundAddPictureInnerPhone"), c.innerHTML = Lang.Workspace.picture_add, b.appendChild(c), a.appendChild(b), b = Entry.createElement("ul", "entryPictureList"), b.addClass("entryPlaygroundPictureListPhone"), $ && $(b).sortable({start:function(a, b) {
       b.item.data("start_pos", b.item.index());
     }, stop:function(a, b) {
-      var c = b.item.data("start_pos"), h = b.item.index();
-      Entry.playground.movePicture(c, h);
+      var c = b.item.data("start_pos"), g = b.item.index();
+      Entry.playground.movePicture(c, g);
     }, axis:"y"}), a.appendChild(b), this.pictureListView_ = b);
   }
 };
@@ -8049,11 +8701,11 @@ Entry.Playground.prototype.generateTextView = function(a) {
   d.onchange = function(a) {
     Entry.playground.object.entity.setFontType(a.target.value);
   };
-  for (var e = 0;e < this.fonts.length;e++) {
-    var f = this.fonts[e], h = Entry.createElement("option");
-    h.value = f.family;
-    h.innerHTML = f.name;
-    d.appendChild(h);
+  for (var e = 0;e < Entry.fonts.length;e++) {
+    var f = Entry.fonts[e], g = Entry.createElement("option");
+    g.value = f.family;
+    g.innerHTML = f.name;
+    d.appendChild(g);
   }
   this.fontName_ = d;
   c.appendChild(d);
@@ -8086,33 +8738,33 @@ Entry.Playground.prototype.generateTextView = function(a) {
   d = Entry.createElement("a");
   c.appendChild(d);
   d.bindOnClick(function() {
-    Entry.playground.object.entity.toggleFontBold() ? g.src = "/img/assets/text_button_bold_true.png" : g.src = "/img/assets/text_button_bold_false.png";
+    Entry.playground.object.entity.toggleFontBold() ? h.src = Entry.mediaFilePath + "text_button_bold_true.png" : h.src = Entry.mediaFilePath + "text_button_bold_false.png";
   });
-  var g = Entry.createElement("img", "entryPlaygroundText_boldImage");
-  d.appendChild(g);
-  g.src = "/img/assets/text_button_bold_false.png";
+  var h = Entry.createElement("img", "entryPlaygroundText_boldImage");
+  d.appendChild(h);
+  h.src = Entry.mediaFilePath + "text_button_bold_false.png";
   c = Entry.createElement("li");
   e.appendChild(c);
   d = Entry.createElement("a");
   c.appendChild(d);
   d.bindOnClick(function() {
     var a = !Entry.playground.object.entity.getUnderLine() || !1;
-    k.src = "/img/assets/text_button_underline_" + a + ".png";
+    k.src = Entry.mediaFilePath + "text_button_underline_" + a + ".png";
     Entry.playground.object.entity.setUnderLine(a);
   });
   var k = Entry.createElement("img", "entryPlaygroundText_underlineImage");
   d.appendChild(k);
-  k.src = "/img/assets/text_button_underline_false.png";
+  k.src = Entry.mediaFilePath + "text_button_underline_false.png";
   c = Entry.createElement("li");
   e.appendChild(c);
   d = Entry.createElement("a");
   c.appendChild(d);
   d.bindOnClick(function() {
-    Entry.playground.object.entity.toggleFontItalic() ? m.src = "/img/assets/text_button_italic_true.png" : m.src = "/img/assets/text_button_italic_false.png";
+    Entry.playground.object.entity.toggleFontItalic() ? m.src = Entry.mediaFilePath + "text_button_italic_true.png" : m.src = Entry.mediaFilePath + "/text_button_italic_false.png";
   });
   var m = Entry.createElement("img", "entryPlaygroundText_italicImage");
   d.appendChild(m);
-  m.src = "/img/assets/text_button_italic_false.png";
+  m.src = Entry.mediaFilePath + "text_button_italic_false.png";
   c = Entry.createElement("li");
   e.appendChild(c);
   d = Entry.createElement("a");
@@ -8120,11 +8772,11 @@ Entry.Playground.prototype.generateTextView = function(a) {
   d.bindOnClick(function() {
     var a = !Entry.playground.object.entity.getStrike() || !1;
     Entry.playground.object.entity.setStrike(a);
-    n.src = "/img/assets/text_button_strike_" + a + ".png";
+    n.src = Entry.mediaFilePath + "text_button_strike_" + a + ".png";
   });
   var n = Entry.createElement("img", "entryPlaygroundText_strikeImage");
   d.appendChild(n);
-  n.src = "/img/assets/text_button_strike_false.png";
+  n.src = Entry.mediaFilePath + "text_button_strike_false.png";
   d = Entry.createElement("li");
   e.appendChild(d);
   c = Entry.createElement("a");
@@ -8134,7 +8786,7 @@ Entry.Playground.prototype.generateTextView = function(a) {
   });
   d = Entry.createElement("img");
   c.appendChild(d);
-  d.src = "/img/assets/text_button_color_false.png";
+  d.src = Entry.mediaFilePath + "text_button_color_false.png";
   c = Entry.createElement("li");
   e.appendChild(c);
   e = Entry.createElement("a");
@@ -8144,7 +8796,7 @@ Entry.Playground.prototype.generateTextView = function(a) {
   });
   c = Entry.createElement("img");
   e.appendChild(c);
-  c.src = "/img/assets/text_button_background_false.png";
+  c.src = Entry.mediaFilePath + "text_button_background_false.png";
   e = Entry.createElement("div");
   e.addClass("entryPlayground_fgColorDiv");
   c = Entry.createElement("div");
@@ -8238,14 +8890,14 @@ Entry.Playground.prototype.generateTextView = function(a) {
   e.bindOnClick(function() {
     Entry.playground.toggleLineBreak(!1);
   });
-  e.src = "/img/assets/text-linebreak-off-true.png";
+  e.src = Entry.mediaFilePath + "text-linebreak-off-true.png";
   b.appendChild(e);
   this.linebreakOffImage = e;
   e = Entry.createElement("img");
   e.bindOnClick(function() {
     Entry.playground.toggleLineBreak(!0);
   });
-  e.src = "/img/assets/text-linebreak-on-false.png";
+  e.src = Entry.mediaFilePath + "text-linebreak-on-false.png";
   b.appendChild(e);
   this.linebreakOnImage = e;
   b = Entry.createElement("div");
@@ -8280,8 +8932,8 @@ Entry.Playground.prototype.generateSoundView = function(a) {
     $ && $(b).sortable({start:function(a, b) {
       b.item.data("start_pos", b.item.index());
     }, stop:function(a, b) {
-      var c = b.item.data("start_pos"), h = b.item.index();
-      Entry.playground.moveSound(c, h);
+      var c = b.item.data("start_pos"), g = b.item.index();
+      Entry.playground.moveSound(c, g);
     }, axis:"y"});
     a.appendChild(b);
     this.soundListView_ = b;
@@ -8291,8 +8943,8 @@ Entry.Playground.prototype.generateSoundView = function(a) {
     }), c = Entry.createElement("div", "entryAddSoundInner"), c.addClass("entryPlaygroundAddSoundInnerPhone"), c.innerHTML = Lang.Workspace.sound_add, b.appendChild(c), a.appendChild(b), b = Entry.createElement("ul", "entrySoundList"), b.addClass("entryPlaygroundSoundListPhone"), $ && $(b).sortable({start:function(a, b) {
       b.item.data("start_pos", b.item.index());
     }, stop:function(a, b) {
-      var c = b.item.data("start_pos"), h = b.item.index();
-      Entry.playground.moveSound(c, h);
+      var c = b.item.data("start_pos"), g = b.item.index();
+      Entry.playground.moveSound(c, g);
     }, axis:"y"}), a.appendChild(b), this.soundListView_ = b);
   }
 };
@@ -8350,8 +9002,13 @@ Entry.Playground.prototype.setPicture = function(a) {
   var b = document.getElementById(a.id);
   a.view = b;
   b.picture = a;
-  var b = document.getElementById("t_" + a.id), c = a.filename;
-  b.style.backgroundImage = 'url("/uploads/' + c.substring(0, 2) + "/" + c.substring(2, 4) + "/thumb/" + c + '.png")';
+  b = document.getElementById("t_" + a.id);
+  if (a.fileurl) {
+    b.style.backgroundImage = 'url("' + a.fileurl + '")';
+  } else {
+    var c = a.filename;
+    b.style.backgroundImage = 'url("/uploads/' + c.substring(0, 2) + "/" + c.substring(2, 4) + "/thumb/" + c + '.png")';
+  }
   document.getElementById("s_" + a.id).innerHTML = a.dimension.width + " X " + a.dimension.height;
   Entry.playground.object.setPicture(a);
 };
@@ -8379,14 +9036,14 @@ Entry.Playground.prototype.injectText = function() {
     Entry.playground.fontName_.value = Entry.playground.object.entity.getFontName();
     if (Entry.playground.object.entity.font) {
       var a = -1 < Entry.playground.object.entity.font.indexOf("bold") || !1;
-      $("#entryPlaygroundText_boldImage").attr("src", "/img/assets/text_button_bold_" + a + ".png");
+      $("#entryPlaygroundText_boldImage").attr("src", Entry.mediaFilePath + "text_button_bold_" + a + ".png");
       a = -1 < Entry.playground.object.entity.font.indexOf("italic") || !1;
-      $("#entryPlaygroundText_italicImage").attr("src", "/img/assets/text_button_italic_" + a + ".png");
+      $("#entryPlaygroundText_italicImage").attr("src", Entry.mediaFilePath + "text_button_italic_" + a + ".png");
     }
     a = Entry.playground.object.entity.getUnderLine() || !1;
-    $("#entryPlaygroundText_underlineImage").attr("src", "/img/assets/text_button_underline_" + a + ".png");
+    $("#entryPlaygroundText_underlineImage").attr("src", Entry.mediaFilePath + "text_button_underline_" + a + ".png");
     a = Entry.playground.object.entity.getStrike() || !1;
-    $("#entryPlaygroundText_strikeImage").attr("src", "/img/assets/text_button_strike_" + a + ".png");
+    $("#entryPlaygroundText_strikeImage").attr("src", Entry.mediaFilePath + "text_button_strike_" + a + ".png");
     $(".entryPlayground_fgColorDiv").css("backgroundColor", Entry.playground.object.entity.colour);
     $(".entryPlayground_bgColorDiv").css("backgroundColor", Entry.playground.object.entity.bgColour);
     Entry.playground.toggleLineBreak(Entry.playground.object.entity.getLineBreak());
@@ -8482,7 +9139,7 @@ Entry.Playground.prototype.syncObject = function(a) {
 };
 Entry.Playground.prototype.editBlock = function() {
   var a = Entry.playground;
-  Entry.stateManager.addCommand("edit block", a, a.restoreBlock, a.object, a.object.getScriptText());
+  Entry.stateManager && Entry.stateManager.addCommand("edit block", a, a.restoreBlock, a.object, a.object.getScriptText());
 };
 Entry.Playground.prototype.mouseupBlock = function() {
   if (Entry.reporter) {
@@ -8492,7 +9149,7 @@ Entry.Playground.prototype.mouseupBlock = function() {
 };
 Entry.Playground.prototype.restoreBlock = function(a, b) {
   Entry.container.selectObject(a.id);
-  Entry.stateManager.addCommand("restore block", this, this.restoreBlock, this.object, this.object.getScriptText());
+  Entry.stateManager && Entry.stateManager.addCommand("restore block", this, this.restoreBlock, this.object, this.object.getScriptText());
   var c = Blockly.Xml.textToDom(b);
   Blockly.mainWorkspace.clear();
   Blockly.Xml.domToWorkspace(Blockly.mainWorkspace, c);
@@ -8532,8 +9189,9 @@ Entry.Playground.prototype.selectMenu = function(a, b) {
       }
     } else {
       if ("phone" == Entry.type) {
-        for (d = 0;d < categories.length;d++) {
-          e = categories[d].attributes[0].value, "string" == typeof a && e == a || "number" == typeof a && a == d ? c[d].hasClass("entrySelectedCategory") ? (this.blockMenu.hide(), c[d].removeClass("entrySelectedCategory"), this.menuInjected = !0, this.selectedMenu = e) : (c[d].addClass("entrySelectedCategory"), this.blockMenu.show(categories[d].childNodes), this.menuInjected = !0, delete this.selctedMenu) : c[d].removeClass("entrySelectedCategory");
+        var f = [];
+        for (d = 0;d < f.length;d++) {
+          e = f[d].attributes[0].value, "string" == typeof a && e == a || "number" == typeof a && a == d ? c[d].hasClass("entrySelectedCategory") ? (this.blockMenu.hide(), c[d].removeClass("entrySelectedCategory"), this.menuInjected = !0, this.selectedMenu = e) : (c[d].addClass("entrySelectedCategory"), this.blockMenu.show(f[d].childNodes), this.menuInjected = !0, delete this.selctedMenu) : c[d].removeClass("entrySelectedCategory");
         }
       }
     }
@@ -8635,7 +9293,7 @@ Entry.Playground.prototype.generatePictureElement = function(a) {
     Entry.playground.object.removePicture(a.id) ? (Entry.removeElement(c), Entry.toast.success(Lang.Workspace.shape_remove_ok, a.name + " " + Lang.Workspace.shape_remove_ok_msg)) : Entry.toast.alert(Lang.Workspace.shape_remove_fail, Lang.Workspace.shape_remove_fail_msg);
   }}, {divider:!0}, {text:Lang.Workspace.context_download, href:"/", action:function(b) {
     b.preventDefault();
-    window.open("/api/sprite/download/image/" + encodeURIComponent(a.filename) + "/" + encodeURIComponent(a.name) + ".png");
+    a.fileurl ? window.open(a.fileurl) : window.open("/api/sprite/download/image/" + encodeURIComponent(a.filename) + "/" + encodeURIComponent(a.name) + ".png");
   }}]);
   var d = Entry.createElement("div");
   d.addClass("entryPlaygroundPictureOrder");
@@ -8643,8 +9301,12 @@ Entry.Playground.prototype.generatePictureElement = function(a) {
   c.appendChild(d);
   d = Entry.createElement("div", "t_" + a.id);
   d.addClass("entryPlaygroundPictureThumbnail");
-  var e = a.filename;
-  d.style.backgroundImage = 'url("/uploads/' + e.substring(0, 2) + "/" + e.substring(2, 4) + "/thumb/" + e + '.png")';
+  if (a.fileurl) {
+    d.style.backgroundImage = 'url("' + a.fileurl + '")';
+  } else {
+    var e = a.filename;
+    d.style.backgroundImage = 'url("/uploads/' + e.substring(0, 2) + "/" + e.substring(2, 4) + "/thumb/" + e + '.png")';
+  }
   c.appendChild(d);
   var f = Entry.createElement("input");
   f.addClass("entryPlaygroundPictureName");
@@ -8668,7 +9330,7 @@ Entry.Playground.prototype.generateSoundElement = function(a) {
   b.sound = a;
   $ && context.attach("#" + a.id, [{text:Lang.Workspace.context_rename, href:"/", action:function(a) {
     a.preventDefault();
-    h.focus();
+    g.focus();
   }}, {text:Lang.Workspace.context_duplicate, href:"/", action:function(b) {
     b.preventDefault();
     Entry.playground.addSound(a, !0);
@@ -8695,17 +9357,17 @@ Entry.Playground.prototype.generateSoundElement = function(a) {
     }));
   });
   b.appendChild(d);
-  var h = Entry.createElement("input");
-  h.addClass("entryPlaygroundSoundName");
-  h.sound = a;
-  h.value = a.name;
-  var g = document.getElementsByClassName("entryPlaygroundSoundName");
-  h.onblur = function() {
+  var g = Entry.createElement("input");
+  g.addClass("entryPlaygroundSoundName");
+  g.sound = a;
+  g.value = a.name;
+  var h = document.getElementsByClassName("entryPlaygroundSoundName");
+  g.onblur = function() {
     if ("" === this.value) {
       alert("\uc774\ub984\uc744 \uc785\ub825\ud558\uc5ec \uc8fc\uc138\uc694."), this.focus();
     } else {
-      for (var a = 0, b = 0;b < g.length;b++) {
-        if (g[b].value == h.value && (a += 1, 1 < a)) {
+      for (var a = 0, b = 0;b < h.length;b++) {
+        if (h[b].value == g.value && (a += 1, 1 < a)) {
           alert("\uc774\ub984\uc774 \uc911\ubcf5 \ub418\uc5c8\uc2b5\ub2c8\ub2e4.");
           this.focus();
           return;
@@ -8714,10 +9376,10 @@ Entry.Playground.prototype.generateSoundElement = function(a) {
       this.sound.name = this.value;
     }
   };
-  h.onkeypress = function(a) {
+  g.onkeypress = function(a) {
     13 == a.keyCode && this.blur();
   };
-  b.appendChild(h);
+  b.appendChild(g);
   c = Entry.createElement("div");
   c.addClass("entryPlaygroundSoundLength");
   c.innerHTML = a.duration + " \ucd08";
@@ -8754,8 +9416,8 @@ Entry.Playground.prototype.updateHW = function() {
   }
 };
 Entry.Playground.prototype.toggleLineBreak = function(a) {
-  this.object && "textBox" == this.object.objectType && (a ? (Entry.playground.object.entity.setLineBreak(!0), $(".entryPlayground_textArea").css("display", "block"), $(".entryPlayground_textBox").css("display", "none"), this.linebreakOffImage.src = "/img/assets/text-linebreak-off-false.png", this.linebreakOnImage.src = "/img/assets/text-linebreak-on-true.png", this.fontSizeWrapper.removeClass("entryHide")) : (Entry.playground.object.entity.setLineBreak(!1), $(".entryPlayground_textArea").css("display", 
-  "none"), $(".entryPlayground_textBox").css("display", "block"), this.linebreakOffImage.src = "/img/assets/text-linebreak-off-true.png", this.linebreakOnImage.src = "/img/assets/text-linebreak-on-false.png", this.fontSizeWrapper.addClass("entryHide")));
+  this.object && "textBox" == this.object.objectType && (a ? (Entry.playground.object.entity.setLineBreak(!0), $(".entryPlayground_textArea").css("display", "block"), $(".entryPlayground_textBox").css("display", "none"), this.linebreakOffImage.src = Entry.mediaFilePath + "text-linebreak-off-false.png", this.linebreakOnImage.src = Entry.mediaFilePath + "text-linebreak-on-true.png", this.fontSizeWrapper.removeClass("entryHide")) : (Entry.playground.object.entity.setLineBreak(!1), $(".entryPlayground_textArea").css("display", 
+  "none"), $(".entryPlayground_textBox").css("display", "block"), this.linebreakOffImage.src = Entry.mediaFilePath + "text-linebreak-off-true.png", this.linebreakOnImage.src = Entry.mediaFilePath + "text-linebreak-on-false.png", this.fontSizeWrapper.addClass("entryHide")));
 };
 Entry.Playground.prototype.setFontAlign = function(a) {
   if ("textBox" == this.object.objectType) {
@@ -8810,9 +9472,13 @@ Entry.Popup.prototype.resize = function(a) {
   a.style.width = String(b) + "px";
   a.style.height = String(c + 35) + "px";
 };
+Entry.getStartProject = function(a) {
+  return {category:"\uae30\ud0c0", scenes:[{name:"\uc7a5\uba74 1", id:"7dwq"}], variables:[{name:"\ucd08\uc2dc\uacc4", id:"brih", visible:!1, value:"0", variableType:"timer", x:150, y:-70, array:[], object:null, isCloud:!1}, {name:"\ub300\ub2f5", id:"1vu8", visible:!1, value:"0", variableType:"answer", x:150, y:-100, array:[], object:null, isCloud:!1}], objects:[{id:"7y0y", name:"\uc5d4\ud2b8\ub9ac\ubd07", script:'<xml><block type="when_run_button_click" x="136" y="47"><next><block type="repeat_basic"><value name="VALUE"><block type="number"><field name="NUM">10</field></block></value><statement name="DO"><block type="move_direction"><value name="VALUE"><block type="number"><field name="NUM">10</field></block></value></block></statement></block></next></block></xml>', 
+  selectedPictureId:"vx80", objectType:"sprite", rotateMethod:"free", scene:"7dwq", sprite:{sounds:[{duration:1.3, ext:".mp3", id:"8el5", fileurl:a + "media/bark.mp3", name:"\uac15\uc544\uc9c0 \uc9d6\ub294\uc18c\ub9ac"}], pictures:[{id:"vx80", fileurl:a + "media/entrybot1.png", name:"\uc5d4\ud2b8\ub9ac\ubd07_\uac77\uae301", scale:100, dimension:{width:284, height:350}}, {id:"4t48", fileurl:a + "media/entrybot2.png", name:"\uc5d4\ud2b8\ub9ac\ubd07_\uac77\uae302", scale:100, dimension:{width:284, height:350}}]}, 
+  entity:{x:0, y:0, regX:142, regY:175, scaleX:.3154574132492113, scaleY:.3154574132492113, rotation:0, direction:90, width:284, height:350, visible:!0}, lock:!1, active:!0}], speed:60};
+};
 Entry.Reporter = function(a) {
-  this.userId;
-  this.projectId;
+  this.projectId = this.userId = null;
   this.isRealTime = a;
   this.activities = [];
 };
@@ -8848,8 +9514,8 @@ Entry.Scene.prototype.generateView = function(a, b) {
       b.item.data("start_pos", b.item.index());
       $(b.item[0]).clone(!0);
     }, stop:function(a, b) {
-      var c = b.item.data("start_pos"), h = b.item.index();
-      Entry.scene.moveScene(c, h);
+      var c = b.item.data("start_pos"), g = b.item.index();
+      Entry.scene.moveScene(c, g);
     }, axis:"x", tolerance:"pointer"});
     this.view_.appendChild(c);
     this.listView_ = c;
@@ -8921,7 +9587,7 @@ Entry.Scene.prototype.updateView = function() {
   }
 };
 Entry.Scene.prototype.addScenes = function(a) {
-  if ((this.scenes_ = a) && 0 != a.length) {
+  if ((this.scenes_ = a) && 0 !== a.length) {
     for (var b = 0, c = a.length;b < c;b++) {
       this.generateElement(a[b]);
     }
@@ -8932,7 +9598,7 @@ Entry.Scene.prototype.addScenes = function(a) {
   this.updateView();
 };
 Entry.Scene.prototype.addScene = function(a, b) {
-  null == a && (a = this.createScene());
+  void 0 === a && (a = this.createScene());
   a.view || this.generateElement(a);
   b || "number" == typeof b ? this.getScenes().splice(b, 0, a) : this.getScenes().push(a);
   Entry.stage.objectContainers.push(Entry.stage.createObjectContainer(a));
@@ -8957,7 +9623,7 @@ Entry.Scene.prototype.removeScene = function(a) {
 };
 Entry.Scene.prototype.selectScene = function(a) {
   a = a || this.getScenes()[0];
-  this.selectedScene && this.selectedScene.id == a.id || (Entry.engine.isState("run") && Entry.container.resetSceneDuringRun(), this.selectedScene = a, Entry.container.setCurrentObjects(), Entry.stage.objectContainers && 0 != Entry.stage.objectContainers.length && Entry.stage.selectObjectContainer(a), (a = Entry.container.getCurrentObjects()[0]) && "minimize" != Entry.type ? Entry.container.selectObject(a.id) : (Entry.stage.selectObject(null), Entry.playground.flushPlayground(), Entry.variableContainer.updateList()), 
+  this.selectedScene && this.selectedScene.id == a.id || (Entry.engine.isState("run") && Entry.container.resetSceneDuringRun(), this.selectedScene = a, Entry.container.setCurrentObjects(), Entry.stage.objectContainers && 0 !== Entry.stage.objectContainers.length && Entry.stage.selectObjectContainer(a), (a = Entry.container.getCurrentObjects()[0]) && "minimize" != Entry.type ? Entry.container.selectObject(a.id) : (Entry.stage.selectObject(null), Entry.playground.flushPlayground(), Entry.variableContainer.updateList()), 
   Entry.container.listView_ || Entry.stage.sortZorder(), Entry.container.updateListView(), this.updateView());
 };
 Entry.Scene.prototype.toJSON = function() {
@@ -9051,7 +9717,7 @@ p.clone = function(a, b) {
     }
   }
   this.nextScript && 1 != b && (c.nextScript = this.nextScript.clone(a, 0), c.nextScript.previousScript = this);
-  this.previousScript && 0 != b && (c.previousScript = this.previousScript.clone(a, 1), c.previousScript.previousScript = this);
+  this.previousScript && 0 !== b && (c.previousScript = this.previousScript.clone(a, 1), c.previousScript.previousScript = this);
   if (this.fields) {
     c.fields = {};
     for (var e in this.fields) {
@@ -9230,8 +9896,8 @@ Entry.Stage.prototype.unloadDialog = function(a) {
 };
 Entry.Stage.prototype.sortZorder = function() {
   for (var a = Entry.container.getCurrentObjects(), b = this.selectedObjectContainer, c = 0, d = a.length - 1;0 <= d;d--) {
-    for (var e = a[d], f = e.clonedEntities, h = 0, g = f.length;h < g;h++) {
-      b.setChildIndex(f[h].object, c++);
+    for (var e = a[d], f = e.clonedEntities, g = 0, h = f.length;g < h;g++) {
+      b.setChildIndex(f[g].object, c++);
     }
     e = e.entity;
     e.shape && b.setChildIndex(e.shape, c++);
@@ -9239,7 +9905,7 @@ Entry.Stage.prototype.sortZorder = function() {
   }
 };
 Entry.Stage.prototype.initCoordinator = function() {
-  var a = new createjs.Container, b = new createjs.Bitmap("/img/assets/workspace_coordinate_v1.png");
+  var a = new createjs.Container, b = new createjs.Bitmap(Entry.mediaFilePath + "workspace_coordinate_v1.png");
   b.scaleX = .5;
   b.scaleY = .5;
   b.x = -240;
@@ -9275,11 +9941,13 @@ Entry.Stage.prototype.updateObject = function() {
       a = a.entity;
       this.handle.setWidth(a.getScaleX() * a.getWidth());
       this.handle.setHeight(a.getScaleY() * a.getHeight());
+      var b, c;
       if ("textBox" == a.type) {
         if (a.getLineBreak()) {
-          var b = a.regX * a.scaleX, c = -a.regY * a.scaleY
+          b = a.regX * a.scaleX, c = -a.regY * a.scaleY;
         } else {
-          var d = a.getTextAlign(), c = -a.regY * a.scaleY;
+          var d = a.getTextAlign();
+          c = -a.regY * a.scaleY;
           switch(d) {
             case Entry.TEXT_ALIGN_LEFT:
               b = -a.getWidth() / 2 * a.scaleX;
@@ -9347,7 +10015,7 @@ Entry.Stage.prototype.endEdit = function() {
 };
 Entry.Stage.prototype.initWall = function() {
   var a = new createjs.Container, b = new Image;
-  b.src = "/media/bound.png";
+  b.src = Entry.mediaFilePath + "media/bound.png";
   a.up = new createjs.Bitmap;
   a.up.scaleX = 16;
   a.up.y = -165;
@@ -9382,7 +10050,7 @@ Entry.Stage.prototype.showInputField = function(a) {
   }}));
   a = new createjs.Container;
   var b = new Image;
-  b.src = "/img/assets/confirm_button.png";
+  b.src = Entry.mediaFilePath + "confirm_button.png";
   var c = new createjs.Bitmap;
   c.scaleX = .23;
   c.scaleY = .23;
@@ -9404,7 +10072,7 @@ Entry.Stage.prototype.hideInputField = function() {
 };
 Entry.Stage.prototype.initObjectContainers = function() {
   var a = Entry.scene.scenes_;
-  if (a && 0 != a.length) {
+  if (a && 0 !== a.length) {
     for (var b = 0;b < a.length;b++) {
       this.objectContainers[b] = this.createObjectContainer(a[b]);
     }
@@ -9591,7 +10259,7 @@ Entry.StateManager.prototype.addStamp = function() {
   this.undoStack_.length && (this.undoStack_[this.undoStack_.length - 1].stamp = this.stamp);
 };
 Entry.StateManager.prototype.isSaved = function() {
-  return 0 == this.undoStack_.length || this.undoStack_[this.undoStack_.length - 1].stamp == this.stamp && "string" == typeof this.stamp;
+  return 0 === this.undoStack_.length || this.undoStack_[this.undoStack_.length - 1].stamp == this.stamp && "string" == typeof this.stamp;
 };
 Entry.StateManager.prototype.addActivity = function(a) {
   Entry.reporter && Entry.reporter.report(new Entry.State(a));
@@ -9679,11 +10347,60 @@ Entry.Toast.prototype.alert = function(a, b, c) {
     }, 20);
   }, 5E3);
 };
+Entry.STATIC = {OBJECT:0, ENTITY:1, SPRITE:2, SOUND:3, VARIABLE:4, FUNCTION:5, SCENE:6, MESSAGE:7, BLOCK_MODEL:8, BLOCK_RENDER_MODEL:9, BOX_MODEL:10, THREAD_MODEL:11, DRAG_INSTANCE:12, BLOCK_STATIC:0, BLOCK_MOVE:1, BLOCK_FOLLOW:2, RETURN:0, CONTINUE:1};
 Entry.Utils = {};
 Entry.overridePrototype = function() {
   Number.prototype.mod = function(a) {
     return (this % a + a) % a;
   };
+};
+Entry.Utils.generateId = function() {
+  return ("0000" + (Math.random() * Math.pow(36, 4) << 0).toString(36)).substr(-4);
+};
+Entry.Utils.intersectArray = function(a, b) {
+  for (var c = [], d = 0;d < a.length;d++) {
+    for (var e = 0;e < b.length;e++) {
+      if (a[d] == b[e]) {
+        c.push(a[d]);
+        break;
+      }
+    }
+  }
+  return c;
+};
+Entry.Utils.isPointInMatrix = function(a, b, c) {
+  c = void 0 === c ? 0 : c;
+  var d = a.offsetX ? a.x + a.offsetX : a.x, e = a.offsetY ? a.y + a.offsety : a.y;
+  return d - c <= b.x && d + a.width + c >= b.x && e - c <= b.y && e + a.height + c >= b.y;
+};
+Entry.Utils.colorDarken = function(a, b) {
+  var c, d, e;
+  7 === a.length ? (c = parseInt(a.substr(1, 2), 16), d = parseInt(a.substr(3, 2), 16), e = parseInt(a.substr(5, 2), 16)) : (c = parseInt(a.substr(1, 2), 16), d = parseInt(a.substr(2, 2), 16), e = parseInt(a.substr(3, 2), 16));
+  b = void 0 === b ? .7 : b;
+  c = Math.floor(c * b).toString(16);
+  d = Math.floor(d * b).toString(16);
+  e = Math.floor(e * b).toString(16);
+  return "#" + c + d + e;
+};
+Entry.Utils.bindGlobalEvent = function() {
+  Entry.windowReszied || (Entry.windowResized = new Entry.Event(window), $(window).on("resize", function() {
+    Entry.windowResized.notify();
+  }));
+  Entry.documentMousedown || (Entry.documentMousedown = new Entry.Event(window), $(document).on("mousedown", function(a) {
+    Entry.documentMousedown.notify(a);
+  }));
+  Entry.documentMousemove || (Entry.mouseCoordinate = {}, Entry.documentMousemove = new Entry.Event(window), $(document).on("mousemove", function(a) {
+    Entry.documentMousemove.notify(a);
+    Entry.mouseCoordinate.x = a.clientX;
+    Entry.mouseCoordinate.y = a.clientY;
+  }));
+};
+Entry.Utils.makeActivityReporter = function() {
+  Entry.activityReporter = new Entry.ActivityReporter;
+  return Entry.activityReporter;
+};
+Entry.Utils.initEntryEvent_ = function() {
+  Entry.events_ || (Entry.events_ = []);
 };
 Entry.sampleColours = [];
 Entry.assert = function(a, b) {
@@ -9692,13 +10409,8 @@ Entry.assert = function(a, b) {
   }
 };
 Entry.parseTexttoXML = function(a) {
-  if (window.ActiveXObject) {
-    var b = new ActiveXObject("Microsoft.XMLDOM");
-    b.async = "false";
-    b.loadXML(a);
-  } else {
-    b = (new DOMParser).parseFromString(a, "text/xml");
-  }
+  var b;
+  window.ActiveXObject ? (b = new ActiveXObject("Microsoft.XMLDOM"), b.async = "false", b.loadXML(a)) : b = (new DOMParser).parseFromString(a, "text/xml");
   return b;
 };
 Entry.createElement = function(a, b) {
@@ -9729,11 +10441,13 @@ Entry.generateHash = function() {
   return ("0000" + (Math.random() * Math.pow(36, 4) << 0).toString(36)).substr(-4);
 };
 Entry.addEventListener = function(a, b) {
+  this.events_ || (this.events_ = {});
   this.events_[a] || (this.events_[a] = []);
   b instanceof Function && this.events_[a].push(b);
   return !0;
 };
 Entry.dispatchEvent = function(a, b) {
+  this.events_ || (this.events_ = {});
   if (this.events_[a]) {
     for (var c = 0, d = this.events_[a].length;c < d;c++) {
       this.events_[a][c].call(window, b);
@@ -9814,7 +10528,7 @@ Entry.cutStringByLength = function(a, b) {
   return a.substr(0, c);
 };
 Entry.isChild = function(a, b) {
-  if (null != b) {
+  if (!b) {
     for (;b.parentNode;) {
       if ((b = b.parentNode) == a) {
         return !0;
@@ -9869,12 +10583,10 @@ Entry.isArrowOrBackspace = function(a) {
   return -1 < [37, 38, 39, 40, 8].indexOf(a);
 };
 Entry.hexStringToBin = function(a) {
-  bytes = [];
-  str;
-  for (var b = 0;b < a.length - 1;b += 2) {
-    bytes.push(parseInt(a.substr(b, 2), 16));
+  for (var b = [], c = 0;c < a.length - 1;c += 2) {
+    b.push(parseInt(a.substr(c, 2), 16));
   }
-  return str = String.fromCharCode.apply(String, bytes);
+  return String.fromCharCode.apply(String, b);
 };
 Entry.findObjsByKey = function(a, b, c) {
   for (var d = [], e = 0;e < a.length;e++) {
@@ -9884,7 +10596,7 @@ Entry.findObjsByKey = function(a, b, c) {
 };
 Entry.factorials = [];
 Entry.factorial = function(a) {
-  return 0 == a || 1 == a ? 1 : 0 < Entry.factorials[a] ? Entry.factorials[a] : Entry.factorials[a] = Entry.factorial(a - 1) * a;
+  return 0 === a || 1 == a ? 1 : 0 < Entry.factorials[a] ? Entry.factorials[a] : Entry.factorials[a] = Entry.factorial(a - 1) * a;
 };
 Entry.getListRealIndex = function(a, b) {
   if (isNaN(a)) {
@@ -9914,6 +10626,7 @@ Entry.getPicturesJSON = function(a) {
     f.id = e.id;
     f.dimension = e.dimension;
     f.filename = e.filename;
+    f.fileurl = e.fileurl;
     f.name = e.name;
     f.scale = e.scale;
     b.push(f);
@@ -9928,6 +10641,7 @@ Entry.getSoundsJSON = function(a) {
     f.ext = e.ext;
     f.id = e.id;
     f.filename = e.filename;
+    f.fileurl = e.fileurl;
     f.name = e.name;
     b.push(f);
   }
@@ -9992,9 +10706,9 @@ Entry.getOrderedName = function(a, b, c) {
     return a;
   }
   c || (c = "name");
-  for (var d = 0, e = Entry.getStringIndex(a), f = 0, h = b.length;f < h;f++) {
-    var g = Entry.getStringIndex(b[f][c]);
-    e.string === g.string && g.index > d && (d = g.index);
+  for (var d = 0, e = Entry.getStringIndex(a), f = 0, g = b.length;f < g;f++) {
+    var h = Entry.getStringIndex(b[f][c]);
+    e.string === h.string && h.index > d && (d = h.index);
   }
   return 0 < d ? e.string + d : a;
 };
@@ -10035,6 +10749,78 @@ Entry.isEmpty = function(a) {
   }
   return !0;
 };
+Entry.Model = function(a, b) {
+  var c = Entry.Model;
+  c.generateSchema(a);
+  c.generateSetter(a);
+  c.generateObserve(a);
+  (void 0 === b || b) && Object.seal(a);
+  return a;
+};
+(function(a) {
+  a.generateSchema = function(a) {
+    var c = a.schema;
+    if (void 0 !== c) {
+      c = JSON.parse(JSON.stringify(c));
+      a.data = {};
+      for (var d in c) {
+        (function(d) {
+          a.data[d] = c[d];
+          Object.defineProperty(a, d, {get:function() {
+            return a.data[d];
+          }});
+        })(d);
+      }
+      a._toJSON = this._toJSON;
+    }
+  };
+  a.generateSetter = function(a) {
+    a.set = this.set;
+  };
+  a.set = function(a, c) {
+    var d = {}, e;
+    for (e in this.data) {
+      void 0 !== a[e] && (a[e] === this.data[e] ? delete a[e] : (d[e] = this.data[e], this.data[e] = a[e]));
+    }
+    c || this.notify(Object.keys(a), d);
+  };
+  a.generateObserve = function(a) {
+    a.observers = [];
+    a.observe = this.observe;
+    a.unobserve = this.unobserve;
+    a.notify = this.notify;
+  };
+  a.observe = function(a, c, d, e) {
+    d = new Entry.Observer(this.observers, a, c, d);
+    if (!1 !== e) {
+      a[c]([]);
+    }
+    return d;
+  };
+  a.unobserve = function(a) {
+    a.destroy();
+  };
+  a.notify = function(a, c) {
+    "string" === typeof a && (a = [a]);
+    var d = this;
+    d.observers.map(function(e) {
+      var f = a;
+      void 0 !== e.attrs && (f = Entry.Utils.intersectArray(e.attrs, a));
+      if (f.length) {
+        e.object[e.funcName](f.map(function(a) {
+          return {name:a, object:d, oldValue:c[a]};
+        }));
+      }
+    });
+  };
+  a._toJSON = function() {
+    var a = {}, c;
+    for (c in this.data) {
+      a[c] = this.data[c];
+    }
+    return a;
+  };
+})(Entry.Model);
 Entry.Func = function() {
   this.id = Entry.generateHash();
   this.content = Blockly.Xml.textToDom(Entry.Func.CREATE_BLOCK);
@@ -10155,10 +10941,10 @@ Entry.Func.syncFunc = function() {
 };
 Entry.Func.updateMenu = function() {
   if ("func" == Entry.playground.selectedMenu && (Entry.playground.blockMenu.hide(), Entry.playground.blockMenu.show(Entry.Func.getMenuXml()), !Blockly.WidgetDiv.field_ && Entry.Func.targetFunc)) {
-    var a = Entry.Func.targetFunc, b = Blockly.Xml.workspaceToDom(Entry.Func.workspace), c = b.getElementsByClassName("function_general"), d = a.id, e, c = Entry.nodeListToArray(c), f = [], h = {};
+    var a = Entry.Func.targetFunc, b = Blockly.Xml.workspaceToDom(Entry.Func.workspace), c = b.getElementsByClassName("function_general"), d = a.id, e, c = Entry.nodeListToArray(c), f = [], g = {};
     c.map(function(a) {
       var b = a.getElementsByTagName("mutation")[0].getAttribute("hashid");
-      b == d ? f.push(a) : (h[b] || (h[b] = []), h[b].push(a));
+      b == d ? f.push(a) : (g[b] || (g[b] = []), g[b].push(a));
     });
     f.map(function(a) {
       e = Entry.Func.generateWsBlock(b, Blockly.Xml.workspaceToDom(Entry.Func.workspace), d).block;
@@ -10176,13 +10962,13 @@ Entry.Func.updateMenu = function() {
         a.appendChild(c.shift());
       }
     });
-    for (var g in h) {
-      var a = h[g], k = Entry.variableContainer.getFunction(g).content;
+    for (var h in g) {
+      var a = g[h], k = Entry.variableContainer.getFunction(h).content;
       a.map(function(a) {
-        e = Entry.Func.generateWsBlock(b, k, g).block;
+        e = Entry.Func.generateWsBlock(b, k, h).block;
         for (var c = [], d = !1;a.firstChild;) {
-          var f = a.firstChild, h = f.tagName;
-          if (d || "NEXT" == h) {
+          var f = a.firstChild, g = f.tagName;
+          if (d || "NEXT" == g) {
             d = !0, c.push(f);
           }
           a.removeChild(f);
@@ -10204,44 +10990,43 @@ Entry.Func.prototype.edit = function() {
 };
 Entry.Func.generateBlock = function(a, b, c) {
   b = Entry.nodeListToArray(b.childNodes);
-  for (var d in b) {
-    if ("function_create" == b[d].getAttribute("type")) {
-      var e = b[d]
-    }
+  var d, e;
+  for (e in b) {
+    "function_create" == b[e].getAttribute("type") && (d = b[e]);
   }
-  d = new Entry.Script;
-  d.init(e);
-  e = d;
-  e.values && (e = d.values.FIELD);
-  d = '<mutation hashid="' + c + '">';
+  e = new Entry.Script;
+  e.init(d);
+  d = e;
+  d.values && (d = e.values.FIELD);
+  e = '<mutation hashid="' + c + '">';
   c = b = "";
-  var f = 0, h = 0;
+  var f = 0, g = 0;
   a.stringHash = {};
   for (a.booleanHash = {};;) {
-    switch(e.type) {
+    switch(d.type) {
       case "function_field_label":
-        d += '<field type="label" content="' + e.fields.NAME.replace("<", "&lt;").replace(">", "&gt;") + '"></field>';
-        c += e.fields.NAME;
+        e += '<field type="label" content="' + d.fields.NAME.replace("<", "&lt;").replace(">", "&gt;") + '"></field>';
+        c += d.fields.NAME;
         break;
       case "function_field_boolean":
-        var g = e.values.PARAM.hashId;
-        d += '<field type="boolean" hashid="' + g + '"></field>';
-        b += '<value name="' + g + '"><block type="True"></block></value>';
-        a.booleanHash[g] = h;
-        h++;
-        c += "\ub17c\ub9ac\uac12" + h;
+        var h = d.values.PARAM.hashId;
+        e += '<field type="boolean" hashid="' + h + '"></field>';
+        b += '<value name="' + h + '"><block type="True"></block></value>';
+        a.booleanHash[h] = g;
+        g++;
+        c += "\ub17c\ub9ac\uac12" + g;
         break;
       case "function_field_string":
-        g = e.values.PARAM.hashId, d += '<field type="string" hashid="' + g + '"></field>', b += '<value name="' + g + '"><block type="text"><field name="NAME">10</field></block></value>', a.stringHash[g] = f, f++, c += "\ubb38\uc790\uac12" + f;
+        h = d.values.PARAM.hashId, e += '<field type="string" hashid="' + h + '"></field>', b += '<value name="' + h + '"><block type="text"><field name="NAME">10</field></block></value>', a.stringHash[h] = f, f++, c += "\ubb38\uc790\uac12" + f;
     }
-    if (e.values && e.values.NEXT) {
-      e = e.values.NEXT;
+    if (d.values && d.values.NEXT) {
+      d = d.values.NEXT;
     } else {
       break;
     }
     c += " ";
   }
-  a = Blockly.Xml.textToDom('<xml><block type="function_general">' + (d + "</mutation>") + b + "</block></xml>").childNodes[0];
+  a = Blockly.Xml.textToDom('<xml><block type="function_general">' + (e + "</mutation>") + b + "</block></xml>").childNodes[0];
   c || (c = "\ud568\uc218");
   return {block:a, description:c};
 };
@@ -10316,48 +11101,70 @@ Entry.Func.doWhenCancel = function() {
 };
 Entry.Func.generateWsBlock = function(a, b, c) {
   b = b.childNodes;
-  for (var d in b) {
-    if ("function_create" == b[d].getAttribute("type")) {
-      var e = b[d];
+  var d, e;
+  for (e in b) {
+    if ("function_create" == b[e].getAttribute("type")) {
+      d = b[e];
       break;
     }
   }
-  d = new Entry.Script;
-  d.init(e);
-  e = d;
-  e.values && (e = d.values.FIELD);
-  d = '<mutation hashid="' + c + '">';
+  e = new Entry.Script;
+  e.init(d);
+  d = e;
+  d.values && (d = e.values.FIELD);
+  e = '<mutation hashid="' + c + '">';
   c = b = "";
-  var f = 0, h = 0;
+  var f = 0, g = 0;
   a.stringHash = {};
   for (a.booleanHash = {};;) {
-    switch(e.type) {
+    switch(d.type) {
       case "function_field_label":
-        d += '<field type="label" content="' + e.fields.NAME.replace("<", "&lt;").replace(">", "&gt;") + '"></field>';
-        c += e.fields.NAME;
+        e += '<field type="label" content="' + d.fields.NAME.replace("<", "&lt;").replace(">", "&gt;") + '"></field>';
+        c += d.fields.NAME;
         break;
       case "function_field_boolean":
-        var g = e.values.PARAM.hashId;
-        d += '<field type="boolean" hashid="' + g + '"></field>';
-        b += '<value name="' + g + '"><block type="function_param_boolean"><mutation hashid="' + g + '"></mutation></block></value>';
-        a.booleanHash[g] = h;
-        h++;
-        c += "\ub17c\ub9ac\uac12" + h;
+        var h = d.values.PARAM.hashId;
+        e += '<field type="boolean" hashid="' + h + '"></field>';
+        b += '<value name="' + h + '"><block type="function_param_boolean"><mutation hashid="' + h + '"></mutation></block></value>';
+        a.booleanHash[h] = g;
+        g++;
+        c += "\ub17c\ub9ac\uac12" + g;
         break;
       case "function_field_string":
-        g = e.values.PARAM.hashId, d += '<field type="string" hashid="' + g + '"></field>', b += '<value name="' + g + '"><block type="function_param_string"><mutation hashid="' + g + '"></mutation></block></value>', a.stringHash[g] = f, f++, c += "\ubb38\uc790\uac12" + f;
+        h = d.values.PARAM.hashId, e += '<field type="string" hashid="' + h + '"></field>', b += '<value name="' + h + '"><block type="function_param_string"><mutation hashid="' + h + '"></mutation></block></value>', a.stringHash[h] = f, f++, c += "\ubb38\uc790\uac12" + f;
     }
-    if (e.values && e.values.NEXT) {
-      e = e.values.NEXT;
+    if (d.values && d.values.NEXT) {
+      d = d.values.NEXT;
     } else {
       break;
     }
     c += " ";
   }
-  a = '<xml><block type="function_general">' + (d + "</mutation>") + b + "</block></xml>";
+  a = '<xml><block type="function_general">' + (e + "</mutation>") + b + "</block></xml>";
   c || (c = "\ud568\uc218");
   return {block:Blockly.Xml.textToDom(a).childNodes[0], description:c};
 };
+Entry.BlockModel = function() {
+  Entry.Model(this);
+};
+Entry.BlockModel.prototype.schema = {id:null, x:0, y:0, type:null, params:{}, statements:{}, prev:null, next:null, view:null};
+Entry.BlockRenderModel = function() {
+  Entry.Model(this);
+};
+Entry.BlockRenderModel.prototype.schema = {id:0, type:Entry.STATIC.BLOCK_RENDER_MODEL, x:0, y:0, width:0, height:0, magneting:!1};
+Entry.BoxModel = function() {
+  Entry.Model(this);
+};
+Entry.BoxModel.prototype.schema = {id:0, type:Entry.STATIC.BOX_MODEL, x:0, y:0, width:0, height:0};
+Entry.DragInstance = function(a) {
+  Entry.Model(this);
+  this.set(a);
+};
+Entry.DragInstance.prototype.schema = {type:Entry.STATIC.DRAG_INSTANCE, startX:0, startY:0, offsetX:0, offsetY:0, prev:null, height:0, mode:0, isNew:!1};
+Entry.ThreadModel = function() {
+  Entry.Model(this);
+};
+Entry.ThreadModel.prototype.schema = {id:0, type:Entry.STATIC.THREAD_MODEL, x:0, y:0, width:0, minWidth:0, height:0};
 Entry.Variable = function(a) {
   Entry.assert("string" == typeof a.name, "Variable name must be given");
   this.name_ = a.name;
@@ -10451,7 +11258,7 @@ Entry.Variable.prototype.generateView = function(a) {
         this.cursor = "pointer";
         this.offsetY = isNaN(this.offsetY) || 0 > this.offsetY ? a.rawY / 2 : this.offsetY;
       }), this.scrollButton_.on("pressmove", function(a) {
-        void 0 == this.moveAmount ? (this.y = a.target.y, this.moveAmount = !0) : this.y = a.rawY / 2 - this.offsetY + this.list.height_ / 100 * 23;
+        void 0 === this.moveAmount ? (this.y = a.target.y, this.moveAmount = !0) : this.y = a.rawY / 2 - this.offsetY + this.list.height_ / 100 * 23;
         23 > this.y && (this.y = 23);
         this.y > this.list.getHeight() - 40 && (this.y = this.list.getHeight() - 40);
         this.list.updateView();
@@ -10624,8 +11431,8 @@ Entry.Variable.prototype.setType = function(a) {
   this.type = a;
 };
 Entry.Variable.prototype.getSlidePosition = function(a) {
-  var b = this.minValue_, c = this.maxValue_, b = Math.abs(this.value_ - b) / Math.abs(c - b);
-  return a * b + 10;
+  var b = this.minValue_;
+  return Math.abs(this.value_ - b) / Math.abs(this.maxValue_ - b) * a + 10;
 };
 Entry.Variable.prototype.setSlideCommandX = function(a, b) {
   var c = this.valueSetter_.graphics.command;
@@ -10634,7 +11441,7 @@ Entry.Variable.prototype.setSlideCommandX = function(a, b) {
   this.updateSlideValueByView();
 };
 Entry.Variable.prototype.updateSlideValueByView = function() {
-  var a = this.maxWidth, a = Math.max(this.valueSetter_.graphics.command.x - 10, 0) / a;
+  var a = Math.max(this.valueSetter_.graphics.command.x - 10, 0) / this.maxWidth;
   0 > a && (a = 0);
   1 < a && (a = 1);
   a = (this.minValue_ + Number(Math.abs(this.maxValue_ - this.minValue_) * a)).toFixed(2);
@@ -10665,7 +11472,7 @@ Entry.VariableContainer = function() {
   this.selected = null;
   this.variableAddPanel = {isOpen:!1, info:{object:null, isCloud:!1}};
   this.listAddPanel = {isOpen:!1, info:{object:null, isCloud:!1}};
-  null;
+  this.selectedVariable = null;
   Entry.addEventListener("stop", this.updateCloudVariables);
 };
 Entry.VariableContainer.prototype.createDom = function(a) {
@@ -10699,7 +11506,7 @@ Entry.VariableContainer.prototype.createDom = function(a) {
   c.bindOnClick(function(a) {
     a = f.variableAddPanel;
     var c = a.view.name.value.trim();
-    a.isOpen ? c && 0 != c.length ? b.addVariable() : (a.view.addClass("entryRemove"), a.isOpen = !1) : (a.view.removeClass("entryRemove"), a.view.name.focus(), a.isOpen = !0);
+    a.isOpen ? c && 0 !== c.length ? b.addVariable() : (a.view.addClass("entryRemove"), a.isOpen = !1) : (a.view.removeClass("entryRemove"), a.view.name.focus(), a.isOpen = !0);
   });
   this.generateVariableAddView();
   this.generateListAddView();
@@ -10722,7 +11529,7 @@ Entry.VariableContainer.prototype.createDom = function(a) {
   c.bindOnClick(function(a) {
     a = f.listAddPanel;
     var c = a.view.name.value.trim();
-    a.isOpen ? c && 0 != c.length ? b.addList() : (a.view.addClass("entryRemove"), a.isOpen = !1) : (a.view.removeClass("entryRemove"), a.view.name.focus(), a.isOpen = !0);
+    a.isOpen ? c && 0 !== c.length ? b.addList() : (a.view.addClass("entryRemove"), a.isOpen = !1) : (a.view.removeClass("entryRemove"), a.view.name.focus(), a.isOpen = !0);
   });
   c = Entry.createElement("li");
   c.addClass("entryVariableAddWorkspace");
@@ -10738,7 +11545,7 @@ Entry.VariableContainer.prototype.createDom = function(a) {
 };
 Entry.VariableContainer.prototype.createSelectButton = function(a, b) {
   var c = this;
-  void 0 == b && (b = !0);
+  void 0 === b && (b = !0);
   var d = Entry.createElement("td");
   d.addClass("entryVariableSelectButtonWorkspace", a);
   d.innerHTML = Lang.Workspace[a];
@@ -10771,31 +11578,31 @@ Entry.VariableContainer.prototype.updateVariableAddView = function(a) {
 Entry.VariableContainer.prototype.select = function(a) {
   a = this.selected == a ? null : a;
   this.selected && (this.selected.listElement.removeClass("selected"), this.listView_.removeChild(this.selected.callerListElement), delete this.selected.callerListElement, this.selected = null);
-  a && (a.listElement.addClass("selected"), this.selected = a, null != a && (a instanceof Entry.Variable ? (this.renderVariableReference(a), a.object_ && Entry.container.selectObject(a.object_, !0)) : a instanceof Entry.Func ? this.renderFunctionReference(a) : this.renderMessageReference(a)));
+  a && (a.listElement.addClass("selected"), this.selected = a, a instanceof Entry.Variable ? (this.renderVariableReference(a), a.object_ && Entry.container.selectObject(a.object_, !0)) : a instanceof Entry.Func ? this.renderFunctionReference(a) : this.renderMessageReference(a));
 };
 Entry.VariableContainer.prototype.renderMessageReference = function(a) {
   var b = this, c = Entry.container.objects_, d = ["when_message_cast", "message_cast", "message_cast_wait"], e = [], f = Entry.createElement("ul");
   f.addClass("entryVariableListCallerListWorkspace");
-  for (var h in c) {
-    for (var g = c[h], k = g.script.getElementsByTagName("block"), m = 0;m < k.length;m++) {
+  for (var g in c) {
+    for (var h = c[g], k = h.script.getElementsByTagName("block"), m = 0;m < k.length;m++) {
       var n = k[m], l = n.getAttribute("type");
       if (-1 < d.indexOf(l)) {
-        l = Entry.Xml.getField("VALUE", n), l == a.id && e.push({object:g, block:n});
+        l = Entry.Xml.getField("VALUE", n), l == a.id && e.push({object:h, block:n});
       } else {
         if ("function_general" == l) {
           var q = n.getElementsByTagName("mutation")[0].getAttribute("hashid");
           if (q = Entry.variableContainer.getFunction(q)) {
             for (var q = q.content, q = q.getElementsByTagName("block"), r = 0;r < q.length;r++) {
               var t = q[r], l = t.getAttribute("type");
-              -1 < d.indexOf(l) && (l = Entry.Xml.getField("VALUE", t), l == a.id && e.push({object:g, block:t, funcBlock:n}));
+              -1 < d.indexOf(l) && (l = Entry.Xml.getField("VALUE", t), l == a.id && e.push({object:h, block:t, funcBlock:n}));
             }
           }
         }
       }
     }
   }
-  for (h in e) {
-    c = e[h], d = Entry.createElement("li"), d.addClass("entryVariableListCallerWorkspace"), d.appendChild(c.object.thumbnailView_.cloneNode()), g = Entry.createElement("div"), g.addClass("entryVariableListCallerNameWorkspace"), g.innerHTML = c.object.name + " : " + Lang.Blocks["START_" + c.block.getAttribute("type")], d.appendChild(g), d.caller = c, d.message = a, d.bindOnClick(function(a) {
+  for (g in e) {
+    c = e[g], d = Entry.createElement("li"), d.addClass("entryVariableListCallerWorkspace"), d.appendChild(c.object.thumbnailView_.cloneNode()), h = Entry.createElement("div"), h.addClass("entryVariableListCallerNameWorkspace"), h.innerHTML = c.object.name + " : " + Lang.Blocks["START_" + c.block.getAttribute("type")], d.appendChild(h), d.caller = c, d.message = a, d.bindOnClick(function(a) {
       Entry.playground.object != this.caller.object && (Entry.container.selectObject(), Entry.container.selectObject(this.caller.object.id, !0), b.select(null), b.select(this.message));
       a = this.caller;
       a = a.funcBlock ? a.funcBlock.getAttribute("id") : a.block.getAttribute("id");
@@ -10804,7 +11611,7 @@ Entry.VariableContainer.prototype.renderMessageReference = function(a) {
       Entry.playground.changeViewMode("variable");
     }), f.appendChild(d);
   }
-  0 == e.length && (d = Entry.createElement("li"), d.addClass("entryVariableListCallerWorkspace"), d.addClass("entryVariableListCallerNoneWorkspace"), d.innerHTML = Lang.Workspace.no_use, f.appendChild(d));
+  0 === e.length && (d = Entry.createElement("li"), d.addClass("entryVariableListCallerWorkspace"), d.addClass("entryVariableListCallerNoneWorkspace"), d.innerHTML = Lang.Workspace.no_use, f.appendChild(d));
   a.callerListElement = f;
   this.listView_.insertBefore(f, a.listElement);
   this.listView_.insertBefore(a.listElement, f);
@@ -10812,18 +11619,21 @@ Entry.VariableContainer.prototype.renderMessageReference = function(a) {
 Entry.VariableContainer.prototype.renderVariableReference = function(a) {
   var b = this, c = Entry.container.objects_, d = "get_variable change_variable hide_variable set_variable show_variable add_value_to_list remove_value_from_list insert_value_to_list change_value_list_index value_of_index_from_list length_of_list show_list hide_list is_included_in_list".split(" "), e = [], f = Entry.createElement("ul");
   f.addClass("entryVariableListCallerListWorkspace");
-  for (var h in c) {
-    for (var g = c[h], k = g.script.getElementsByTagName("block"), m = 0;m < k.length;m++) {
-      var n = k[m], l = n.getAttribute("type");
-      if (-1 < d.indexOf(l)) {
-        l = Entry.Xml.getField("VARIABLE", n) || Entry.Xml.getField("LIST", n), l == a.id_ && e.push({object:g, block:n});
+  var g, h;
+  for (h in c) {
+    for (var k = c[h], m = k.script.getElementsByTagName("block"), n = 0;n < m.length;n++) {
+      var l = m[n];
+      g = l.getAttribute("type");
+      if (-1 < d.indexOf(g)) {
+        g = Entry.Xml.getField("VARIABLE", l) || Entry.Xml.getField("LIST", l), g == a.id_ && e.push({object:k, block:l});
       } else {
-        if ("function_general" == l) {
-          var q = n.getElementsByTagName("mutation")[0].getAttribute("hashid");
+        if ("function_general" == g) {
+          var q = l.getElementsByTagName("mutation")[0].getAttribute("hashid");
           if (q = Entry.variableContainer.getFunction(q)) {
             for (var q = q.content, q = q.getElementsByTagName("block"), r = 0;r < q.length;r++) {
-              var t = q[r], l = t.getAttribute("type");
-              -1 < d.indexOf(l) && (l = Entry.Xml.getField("VARIABLE", t) || Entry.Xml.getField("LIST", t), l == a.id_ && e.push({object:g, block:t, funcBlock:n}));
+              var t = q[r];
+              g = t.getAttribute("type");
+              -1 < d.indexOf(g) && (g = Entry.Xml.getField("VARIABLE", t) || Entry.Xml.getField("LIST", t), g == a.id_ && e.push({object:k, block:t, funcBlock:l}));
             }
           }
         }
@@ -10831,7 +11641,7 @@ Entry.VariableContainer.prototype.renderVariableReference = function(a) {
     }
   }
   for (h in e) {
-    c = e[h], d = Entry.createElement("li"), d.addClass("entryVariableListCallerWorkspace"), d.appendChild(c.object.thumbnailView_.cloneNode()), g = Entry.createElement("div"), g.addClass("entryVariableListCallerNameWorkspace"), g.innerHTML = c.object.name + " : " + Lang.Blocks["VARIABLE_" + c.block.getAttribute("type")], d.appendChild(g), d.caller = c, d.variable = a, d.bindOnClick(function(a) {
+    c = e[h], d = Entry.createElement("li"), d.addClass("entryVariableListCallerWorkspace"), d.appendChild(c.object.thumbnailView_.cloneNode()), k = Entry.createElement("div"), k.addClass("entryVariableListCallerNameWorkspace"), k.innerHTML = c.object.name + " : " + Lang.Blocks["VARIABLE_" + c.block.getAttribute("type")], d.appendChild(k), d.caller = c, d.variable = a, d.bindOnClick(function(a) {
       Entry.playground.object != this.caller.object && (Entry.container.selectObject(), Entry.container.selectObject(this.caller.object.id, !0), b.select(null));
       a = this.caller;
       a = a.funcBlock ? a.funcBlock.getAttribute("id") : a.block.getAttribute("id");
@@ -10840,7 +11650,7 @@ Entry.VariableContainer.prototype.renderVariableReference = function(a) {
       Entry.playground.changeViewMode("variable");
     }), f.appendChild(d);
   }
-  0 == e.length && (d = Entry.createElement("li"), d.addClass("entryVariableListCallerWorkspace"), d.addClass("entryVariableListCallerNoneWorkspace"), d.innerHTML = Lang.Workspace.no_use, f.appendChild(d));
+  0 === e.length && (d = Entry.createElement("li"), d.addClass("entryVariableListCallerWorkspace"), d.addClass("entryVariableListCallerNoneWorkspace"), d.innerHTML = Lang.Workspace.no_use, f.appendChild(d));
   a.callerListElement = f;
   this.listView_.insertBefore(f, a.listElement);
   this.listView_.insertBefore(a.listElement, f);
@@ -10849,21 +11659,21 @@ Entry.VariableContainer.prototype.renderFunctionReference = function(a) {
   var b = this, c = Entry.container.objects_, d = [], e = Entry.createElement("ul");
   e.addClass("entryVariableListCallerListWorkspace");
   for (var f in c) {
-    for (var h = c[f], g = h.script.getElementsByTagName("block"), k = 0;k < g.length;k++) {
-      var m = g[k];
-      "function_general" == m.getAttribute("type") && m.getElementsByTagName("mutation")[0].getAttribute("hashid") == a.id && d.push({object:h, block:m});
+    for (var g = c[f], h = g.script.getElementsByTagName("block"), k = 0;k < h.length;k++) {
+      var m = h[k];
+      "function_general" == m.getAttribute("type") && m.getElementsByTagName("mutation")[0].getAttribute("hashid") == a.id && d.push({object:g, block:m});
     }
   }
   for (f in d) {
-    c = d[f], h = Entry.createElement("li"), h.addClass("entryVariableListCallerWorkspace"), h.appendChild(c.object.thumbnailView_.cloneNode()), g = Entry.createElement("div"), g.addClass("entryVariableListCallerNameWorkspace"), g.innerHTML = c.object.name, h.appendChild(g), h.caller = c, h.bindOnClick(function(c) {
+    c = d[f], g = Entry.createElement("li"), g.addClass("entryVariableListCallerWorkspace"), g.appendChild(c.object.thumbnailView_.cloneNode()), h = Entry.createElement("div"), h.addClass("entryVariableListCallerNameWorkspace"), h.innerHTML = c.object.name, g.appendChild(h), g.caller = c, g.bindOnClick(function(c) {
       Entry.playground.object != this.caller.object && (Entry.container.selectObject(), Entry.container.selectObject(this.caller.object.id, !0), b.select(null), b.select(a));
       c = this.caller.block.getAttribute("id");
       Blockly.mainWorkspace.activatePreviousBlock(Number(c));
       Entry.playground.toggleOnVariableView();
       Entry.playground.changeViewMode("variable");
-    }), e.appendChild(h);
+    }), e.appendChild(g);
   }
-  0 == d.length && (h = Entry.createElement("li"), h.addClass("entryVariableListCallerWorkspace"), h.addClass("entryVariableListCallerNoneWorkspace"), h.innerHTML = Lang.Workspace.no_use, e.appendChild(h));
+  0 === d.length && (g = Entry.createElement("li"), g.addClass("entryVariableListCallerWorkspace"), g.addClass("entryVariableListCallerNoneWorkspace"), g.innerHTML = Lang.Workspace.no_use, e.appendChild(g));
   a.callerListElement = e;
   this.listView_.insertBefore(e, a.listElement);
   this.listView_.insertBefore(a.listElement, e);
@@ -10939,7 +11749,7 @@ Entry.VariableContainer.prototype.updateList = function() {
     }
     this.listView_.appendChild(this.variableSettingView);
     this.listView_.appendChild(this.listSettingView);
-    0 != b.length && this.select(b[0]);
+    0 !== b.length && this.select(b[0]);
   }
 };
 Entry.VariableContainer.prototype.setMessages = function(a) {
@@ -11063,7 +11873,7 @@ Entry.VariableContainer.prototype.addVariable = function(a) {
   if (!a) {
     var b = this.variableAddPanel;
     a = b.view.name.value.trim();
-    a && 0 != a.length || (a = Lang.Workspace.variable);
+    a && 0 !== a.length || (a = Lang.Workspace.variable);
     a = this.checkAllVariableName(a, "variables_") ? Entry.getOrderedName(a, this.variables_, "name_") : a;
     var c = b.info;
     a = {name:a, isCloud:c.isCloud, object:c.object, variableType:"variable"};
@@ -11071,7 +11881,7 @@ Entry.VariableContainer.prototype.addVariable = function(a) {
     this.resetVariableAddPanel("variable");
   }
   a = new Entry.Variable(a);
-  Entry.stateManager.addCommand("add variable", this, this.removeVariable, a);
+  Entry.stateManager && Entry.stateManager.addCommand("add variable", this, this.removeVariable, a);
   a.generateView(this.variables_.length);
   this.createVariableView(a);
   this.variables_.unshift(a);
@@ -11082,7 +11892,7 @@ Entry.VariableContainer.prototype.addVariable = function(a) {
 };
 Entry.VariableContainer.prototype.removeVariable = function(a) {
   var b = this.variables_.indexOf(a), c = a.toJSON();
-  Entry.stateManager.addCommand("remove variable", this, this.addVariable, c);
+  Entry.stateManager && Entry.stateManager.addCommand("remove variable", this, this.addVariable, c);
   this.selected == a && this.select(null);
   a.remove();
   this.variables_.splice(b, 1);
@@ -11098,7 +11908,7 @@ Entry.VariableContainer.prototype.changeListName = function(a, b) {
 };
 Entry.VariableContainer.prototype.removeList = function(a) {
   var b = this.lists_.indexOf(a), c = a.toJSON();
-  Entry.stateManager.addCommand("remove list", this, this.addList, c);
+  Entry.stateManager && Entry.stateManager.addCommand("remove list", this, this.addList, c);
   this.selected == a && this.select(null);
   a.remove();
   this.lists_.splice(b, 1);
@@ -11127,48 +11937,48 @@ Entry.VariableContainer.prototype.createVariableView = function(a) {
   f.addClass("entryVariableListElementEditWorkspace");
   f.bindOnClick(function(c) {
     c.stopPropagation();
-    g.removeAttribute("disabled");
-    h.removeClass("entryRemove");
+    h.removeAttribute("disabled");
+    g.removeClass("entryRemove");
     this.addClass("entryRemove");
     b.updateSelectedVariable(a);
-    g.focus();
+    h.focus();
   });
   c.editButton = f;
-  var h = Entry.createElement("button");
-  h.addClass("entryVariableListElementEditWorkspace");
-  h.addClass("entryRemove");
-  h.bindOnClick(function(a) {
+  var g = Entry.createElement("button");
+  g.addClass("entryVariableListElementEditWorkspace");
+  g.addClass("entryRemove");
+  g.bindOnClick(function(a) {
     a.stopPropagation();
-    g.blur();
-    g.setAttribute("disabled", "disabled");
+    h.blur();
+    h.setAttribute("disabled", "disabled");
     f.removeClass("entryRemove");
     this.addClass("entryRemove");
     b.updateSelectedVariable(null, "variable");
   });
-  c.editSaveButton = h;
-  var g = Entry.createElement("input");
-  g.addClass("entryVariableListElementNameWorkspace");
-  g.setAttribute("disabled", "disabled");
-  g.value = a.name_;
-  g.bindOnClick(function(a) {
+  c.editSaveButton = g;
+  var h = Entry.createElement("input");
+  h.addClass("entryVariableListElementNameWorkspace");
+  h.setAttribute("disabled", "disabled");
+  h.value = a.name_;
+  h.bindOnClick(function(a) {
     a.stopPropagation();
   });
-  g.onblur = function(c) {
-    (c = this.value.trim()) && 0 != c.length ? b.changeVariableName(a, this.value) : (Entry.toast.alert(Lang.Msgs.warn, Lang.Workspace.variable_can_not_space), this.value = a.getName());
+  h.onblur = function(c) {
+    (c = this.value.trim()) && 0 !== c.length ? b.changeVariableName(a, this.value) : (Entry.toast.alert(Lang.Msgs.warn, Lang.Workspace.variable_can_not_space), this.value = a.getName());
   };
-  g.onkeydown = function(a) {
+  h.onkeydown = function(a) {
     13 == a.keyCode && this.blur();
   };
-  c.nameField = g;
-  d.appendChild(g);
-  d.appendChild(f);
+  c.nameField = h;
   d.appendChild(h);
+  d.appendChild(f);
+  d.appendChild(g);
   d.appendChild(e);
   a.listElement = c;
 };
 Entry.VariableContainer.prototype.addMessage = function(a) {
   a.id || (a.id = Entry.generateHash());
-  Entry.stateManager.addCommand("add message", this, this.removeMessage, a);
+  Entry.stateManager && Entry.stateManager.addCommand("add message", this, this.removeMessage, a);
   this.createMessageView(a);
   this.messages_.unshift(a);
   Entry.playground.reloadPlayground();
@@ -11178,7 +11988,7 @@ Entry.VariableContainer.prototype.addMessage = function(a) {
 };
 Entry.VariableContainer.prototype.removeMessage = function(a) {
   this.selected == a && this.select(null);
-  Entry.stateManager.addCommand("remove message", this, this.addMessage, a);
+  Entry.stateManager && Entry.stateManager.addCommand("remove message", this, this.addMessage, a);
   var b = this.messages_.indexOf(a);
   this.messages_.splice(b, 1);
   this.updateList();
@@ -11205,8 +12015,8 @@ Entry.VariableContainer.prototype.createMessageView = function(a) {
   e.addClass("entryVariableListElementEditWorkspace");
   e.bindOnClick(function(a) {
     a.stopPropagation();
-    h.removeAttribute("disabled");
-    h.focus();
+    g.removeAttribute("disabled");
+    g.focus();
     f.removeClass("entryRemove");
     this.addClass("entryRemove");
   });
@@ -11215,24 +12025,24 @@ Entry.VariableContainer.prototype.createMessageView = function(a) {
   f.addClass("entryRemove");
   f.bindOnClick(function(a) {
     a.stopPropagation();
-    h.blur();
+    g.blur();
     e.removeClass("entryRemove");
     this.addClass("entryRemove");
   });
-  var h = Entry.createElement("input");
-  h.addClass("entryVariableListElementNameWorkspace");
-  h.value = a.name;
-  h.bindOnClick(function(a) {
+  var g = Entry.createElement("input");
+  g.addClass("entryVariableListElementNameWorkspace");
+  g.value = a.name;
+  g.bindOnClick(function(a) {
     a.stopPropagation();
   });
-  h.onblur = function(c) {
-    (c = this.value.trim()) && 0 != c.length ? (b.changeMessageName(a, this.value), e.removeClass("entryRemove"), f.addClass("entryRemove"), h.setAttribute("disabled", "disabled")) : (Entry.toast.alert(Lang.Msgs.warn, Lang.Msgs.sign_can_not_space), this.value = a.name);
+  g.onblur = function(c) {
+    (c = this.value.trim()) && 0 !== c.length ? (b.changeMessageName(a, this.value), e.removeClass("entryRemove"), f.addClass("entryRemove"), g.setAttribute("disabled", "disabled")) : (Entry.toast.alert(Lang.Msgs.warn, Lang.Msgs.sign_can_not_space), this.value = a.name);
   };
-  h.onkeydown = function(a) {
+  g.onkeydown = function(a) {
     13 == a.keyCode && this.blur();
   };
-  c.nameField = h;
-  c.appendChild(h);
+  c.nameField = g;
+  c.appendChild(g);
   c.appendChild(e);
   c.appendChild(f);
   c.appendChild(d);
@@ -11242,7 +12052,7 @@ Entry.VariableContainer.prototype.addList = function(a) {
   if (!a) {
     var b = this.listAddPanel;
     a = b.view.name.value.trim();
-    a && 0 != a.length || (a = Lang.Workspace.list);
+    a && 0 !== a.length || (a = Lang.Workspace.list);
     var c = b.info;
     a = this.checkAllVariableName(a, "lists_") ? Entry.getOrderedName(a, this.lists_, "name_") : a;
     a = {name:a, isCloud:c.isCloud, object:c.object, variableType:"list"};
@@ -11250,7 +12060,7 @@ Entry.VariableContainer.prototype.addList = function(a) {
     this.resetVariableAddPanel("list");
   }
   a = new Entry.Variable(a);
-  Entry.stateManager.addCommand("add list", this, this.removeList, a);
+  Entry.stateManager && Entry.stateManager.addCommand("add list", this, this.removeList, a);
   a.generateView(this.lists_.length);
   this.createListView(a);
   this.lists_.unshift(a);
@@ -11280,43 +12090,43 @@ Entry.VariableContainer.prototype.createListView = function(a) {
   f.addClass("entryVariableListElementEditWorkspace");
   f.bindOnClick(function(c) {
     c.stopPropagation();
-    g.removeAttribute("disabled");
-    h.removeClass("entryRemove");
+    h.removeAttribute("disabled");
+    g.removeClass("entryRemove");
     this.addClass("entryRemove");
     b.updateSelectedVariable(a);
-    g.focus();
+    h.focus();
   });
   c.editButton = f;
-  var h = Entry.createElement("button");
-  h.addClass("entryVariableListElementEditWorkspace");
-  h.addClass("entryRemove");
-  h.bindOnClick(function(c) {
+  var g = Entry.createElement("button");
+  g.addClass("entryVariableListElementEditWorkspace");
+  g.addClass("entryRemove");
+  g.bindOnClick(function(c) {
     c.stopPropagation();
-    g.blur();
-    g.setAttribute("disabled", "disabled");
+    h.blur();
+    h.setAttribute("disabled", "disabled");
     f.removeClass("entryRemove");
     this.addClass("entryRemove");
     b.select(a);
     b.updateSelectedVariable(null, "list");
   });
-  c.editSaveButton = h;
-  var g = Entry.createElement("input");
-  g.setAttribute("disabled", "disabled");
-  g.addClass("entryVariableListElementNameWorkspace");
-  g.value = a.name_;
-  g.bindOnClick(function(a) {
+  c.editSaveButton = g;
+  var h = Entry.createElement("input");
+  h.setAttribute("disabled", "disabled");
+  h.addClass("entryVariableListElementNameWorkspace");
+  h.value = a.name_;
+  h.bindOnClick(function(a) {
     a.stopPropagation();
   });
-  g.onblur = function(c) {
-    (c = this.value.trim()) && 0 != c.length ? b.changeListName(a, this.value) : (Entry.toast.alert(Lang.Msgs.warn, Lang.Msgs.list_can_not_space), this.value = a.getName());
+  h.onblur = function(c) {
+    (c = this.value.trim()) && 0 !== c.length ? b.changeListName(a, this.value) : (Entry.toast.alert(Lang.Msgs.warn, Lang.Msgs.list_can_not_space), this.value = a.getName());
   };
-  g.onkeydown = function(a) {
+  h.onkeydown = function(a) {
     13 == a.keyCode && this.blur();
   };
-  c.nameField = g;
-  d.appendChild(g);
-  d.appendChild(f);
+  c.nameField = h;
   d.appendChild(h);
+  d.appendChild(f);
+  d.appendChild(g);
   d.appendChild(e);
   a.listElement = c;
 };
@@ -11569,14 +12379,9 @@ Entry.VariableContainer.prototype.openVariableAddPanel = function(a) {
   this.updateVariableAddView(a);
 };
 Entry.VariableContainer.prototype.getMenuXml = function(a) {
-  for (var b = [], c = 0 != this.variables_.length, d = 0 != this.lists_.length, e = 0, f;f = a[e];e++) {
-    var h = f.tagName;
-    if (h && "BLOCK" == h.toUpperCase()) {
-      var g = f.getAttribute("bCategory");
-      !c && "variable" == g || !d && "list" == g || b.push(f);
-    } else {
-      !h || "SPLITTER" != h.toUpperCase() && "BTN" != h.toUpperCase() || !c && "variable" == g || (d || "list" != g) && b.push(f);
-    }
+  for (var b = [], c = 0 !== this.variables_.length, d = 0 !== this.lists_.length, e, f = 0, g;g = a[f];f++) {
+    var h = g.tagName;
+    h && "BLOCK" == h.toUpperCase() ? (e = g.getAttribute("bCategory"), !c && "variable" == e || !d && "list" == e || b.push(g)) : !h || "SPLITTER" != h.toUpperCase() && "BTN" != h.toUpperCase() || !c && "variable" == e || (d || "list" != e) && b.push(g);
   }
   return b;
 };
@@ -11669,24 +12474,14 @@ Entry.VariableContainer.prototype.generateVariableSettingView = function() {
   b.slideCheck = d;
   c.appendChild(d);
   c.bindOnClick(function(b) {
+    var c;
     b = a.selectedVariable;
-    var c = a.variables_, d = b.getType();
-    if ("variable" == d) {
-      var f = b.toJSON();
-      f.variableType = "slide";
-      f = new Entry.Variable(f);
-      c.splice(c.indexOf(b), 0, f);
-      0 > f.getValue() && f.setValue(0);
-      100 < f.getValue() && f.setValue(100);
-      e.removeAttribute("disabled");
-      h.removeAttribute("disabled");
-    } else {
-      "slide" == d && (f = b.toJSON(), f.variableType = "variable", f = new Entry.Variable(f), c.splice(c.indexOf(b), 0, f), e.setAttribute("disabled", "disabled"), h.setAttribute("disabled", "disabled"));
-    }
-    a.createVariableView(f);
+    var d = a.variables_, f = b.getType();
+    "variable" == f ? (c = b.toJSON(), c.variableType = "slide", c = new Entry.Variable(c), d.splice(d.indexOf(b), 0, c), 0 > c.getValue() && c.setValue(0), 100 < c.getValue() && c.setValue(100), e.removeAttribute("disabled"), g.removeAttribute("disabled")) : "slide" == f && (c = b.toJSON(), c.variableType = "variable", c = new Entry.Variable(c), d.splice(d.indexOf(b), 0, c), e.setAttribute("disabled", "disabled"), g.setAttribute("disabled", "disabled"));
+    a.createVariableView(c);
     a.removeVariable(b);
-    a.updateSelectedVariable(f);
-    f.generateView();
+    a.updateSelectedVariable(c);
+    c.generateView();
   });
   c = Entry.createElement("div");
   b.minMaxWrapper = c;
@@ -11708,21 +12503,21 @@ Entry.VariableContainer.prototype.generateVariableSettingView = function() {
   f.addClass("entryVariableSettingMaxValueSpanWorkspace");
   f.innerHTML = Lang.Workspace.max_value;
   c.appendChild(f);
-  var h = Entry.createElement("input");
-  h.addClass("entryVariableSettingMaxValueInputWorkspace");
-  h.value = d && "slide" == d.type ? d.maxValue_ : 100;
-  h.onblur = function(b) {
+  var g = Entry.createElement("input");
+  g.addClass("entryVariableSettingMaxValueInputWorkspace");
+  g.value = d && "slide" == d.type ? d.maxValue_ : 100;
+  g.onblur = function(b) {
     isNaN(this.value) || (b = a.selectedVariable, b.setMaxValue(Number(this.value)), a.updateVariableSettingView(b));
   };
-  b.maxValueInput = h;
-  c.appendChild(h);
+  b.maxValueInput = g;
+  c.appendChild(g);
 };
 Entry.VariableContainer.prototype.updateVariableSettingView = function(a) {
-  var b = this.variableSettingView, c = b.visibleCheck, d = b.initValueInput, e = b.slideCheck, f = b.minValueInput, h = b.maxValueInput, g = b.minMaxWrapper;
+  var b = this.variableSettingView, c = b.visibleCheck, d = b.initValueInput, e = b.slideCheck, f = b.minValueInput, g = b.maxValueInput, h = b.minMaxWrapper;
   c.removeClass("entryVariableSettingChecked");
   a.isVisible() && c.addClass("entryVariableSettingChecked");
   e.removeClass("entryVariableSettingChecked");
-  "slide" == a.getType() ? (e.addClass("entryVariableSettingChecked"), f.removeAttribute("disabled"), h.removeAttribute("disabled"), f.value = a.getMinValue(), h.value = a.getMaxValue(), g.removeClass("entryVariableMinMaxDisabledWorkspace")) : (g.addClass("entryVariableMinMaxDisabledWorkspace"), f.setAttribute("disabled", "disabled"), h.setAttribute("disabled", "disabled"));
+  "slide" == a.getType() ? (e.addClass("entryVariableSettingChecked"), f.removeAttribute("disabled"), g.removeAttribute("disabled"), f.value = a.getMinValue(), g.value = a.getMaxValue(), h.removeClass("entryVariableMinMaxDisabledWorkspace")) : (h.addClass("entryVariableMinMaxDisabledWorkspace"), f.setAttribute("disabled", "disabled"), g.setAttribute("disabled", "disabled"));
   d.value = a.getValue();
   a.listElement.appendChild(b);
   b.removeClass("entryRemove");
@@ -11798,16 +12593,16 @@ Entry.VariableContainer.prototype.generateListSettingView = function() {
 Entry.VariableContainer.prototype.updateListSettingView = function(a) {
   var b = this;
   a = a || this.selectedList;
-  var c = this.listSettingView, d = c.listValues, e = c.visibleCheck, f = c.lengthInput, h = c.seperator;
+  var c = this.listSettingView, d = c.listValues, e = c.visibleCheck, f = c.lengthInput, g = c.seperator;
   e.removeClass("entryListSettingCheckedWorkspace");
   a.isVisible() && e.addClass("entryListSettingCheckedWorkspace");
   f.value = a.array_.length;
   for (a.listElement.appendChild(c);d.firstChild;) {
     d.removeChild(d.firstChild);
   }
-  var g = a.array_;
-  0 == g.length ? h.addClass("entryRemove") : h.removeClass("entryRemove");
-  for (e = 0;e < g.length;e++) {
+  var h = a.array_;
+  0 === h.length ? g.addClass("entryRemove") : g.removeClass("entryRemove");
+  for (e = 0;e < h.length;e++) {
     (function(c) {
       var e = Entry.createElement("div");
       e.addClass("entryListSettingValueWrapperWorkspace");
@@ -11816,9 +12611,9 @@ Entry.VariableContainer.prototype.updateListSettingView = function(a) {
       f.innerHTML = c + 1;
       e.appendChild(f);
       f = Entry.createElement("input");
-      f.value = g[c].data;
+      f.value = h[c].data;
       f.onblur = function() {
-        g[c].data = this.value;
+        h[c].data = this.value;
         a.updateView();
       };
       f.onkeypress = function(a) {
@@ -11828,7 +12623,7 @@ Entry.VariableContainer.prototype.updateListSettingView = function(a) {
       e.appendChild(f);
       f = Entry.createElement("span");
       f.bindOnClick(function() {
-        g.splice(c, 1);
+        h.splice(c, 1);
         b.updateListSettingView();
       });
       f.addClass("entryListSettingValueRemoveWorkspace");
@@ -11891,6 +12686,1740 @@ Entry.VariableContainer.prototype.updateCloudVariables = function() {
     });
   }
 };
+Entry.block.run = {skeleton:"basic", color:"#3BBD70", contents:["this is", "basic block"], func:function() {
+}};
+Entry.block.jr_start = {skeleton:"pebble_event", event:"start", color:"#3BBD70", contents:[{type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_play_image.png", highlightColor:"#3BBD70", size:22}], func:function() {
+  var a = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT), b;
+  for (b in a) {
+    this._unit = a[b];
+  }
+  Ntry.unitComp = Ntry.entityManager.getComponent(this._unit.id, Ntry.STATIC.UNIT);
+}};
+Entry.block.jr_repeat = {skeleton:"pebble_loop", color:"#127CDB", contents:[{type:"Dropdown", key:"REPEAT", options:[1, 2, 3, 4, 5, 6, 7, 8, 9, 10], value:1}, {type:"Text", text:"\ubc18\ubcf5"}, {type:"Statement", key:"STATEMENT", accept:"pebble_basic"}], func:function() {
+  if (void 0 === this.repeatCount) {
+    return this.repeatCount = this.block.values.REPEAT, Entry.STATIC.CONTINUE;
+  }
+  if (0 < this.repeatCount) {
+    return console.log(this.repeatCount), this.repeatCount--, this.executor.stepInto(this.block.values.STATEMENT), Entry.STATIC.CONTINUE;
+  }
+  delete this.repeatCount;
+}};
+Entry.block.jr_item = {skeleton:"pebble_basic", color:"#F46C6C", contents:[{type:"Text", text:"\uaf43 \ubaa8\uc73c\uae30"}, {type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_item_image.png", highlightColor:"#FFF", position:{x:83, y:0}, size:22}], func:function() {
+  if (this.isContinue) {
+    if (this.isAction) {
+      return Entry.STATIC.CONTINUE;
+    }
+    delete this.isAction;
+    delete this.isContinue;
+  } else {
+    this.isAction = this.isContinue = !0;
+    var a = this;
+    Ntry.dispatchEvent("unitAction", Ntry.STATIC.GET_ITEM, function() {
+      Ntry.dispatchEvent("getItem");
+      a.isAction = !1;
+    });
+    return Entry.STATIC.CONTINUE;
+  }
+}};
+Entry.block.cparty_jr_item = {skeleton:"pebble_basic", color:"#8ABC1D", contents:[{type:"Text", text:"\uc5f0\ud544 \uc90d\uae30"}, {type:"Indicator", img:"/img/assets/ntry/bitmap/cpartyjr/pen.png", highlightColor:"#FFF", position:{x:83, y:0}, size:22}], func:function() {
+  if (this.isContinue) {
+    if (this.isAction) {
+      return Entry.STATIC.CONTINUE;
+    }
+    delete this.isAction;
+    delete this.isContinue;
+  } else {
+    this.isAction = this.isContinue = !0;
+    var a = this;
+    Ntry.dispatchEvent("unitAction", Ntry.STATIC.GET_ITEM, function() {
+      Ntry.dispatchEvent("getItem");
+      a.isAction = !1;
+    });
+    return Entry.STATIC.CONTINUE;
+  }
+}};
+Entry.block.jr_north = {skeleton:"pebble_basic", color:"#A751E3", contents:[{type:"Text", text:"  \uc704\ucabd"}, {type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_up_image.png", position:{x:83, y:0}, size:22}], func:function() {
+  if (this.isContinue) {
+    if (this.isAction) {
+      return Entry.STATIC.CONTINUE;
+    }
+    delete this.isAction;
+    delete this.isContinue;
+  } else {
+    this.isAction = this.isContinue = !0;
+    var a = Ntry.STATIC, b = this, c = function() {
+      window.setTimeout(function() {
+        Ntry.dispatchEvent("unitAction", Ntry.STATIC.WALK, function() {
+          b.isAction = !1;
+        });
+      }, 3);
+    }, d;
+    switch(Ntry.unitComp.direction) {
+      case Ntry.STATIC.EAST:
+        d = a.TURN_LEFT;
+        break;
+      case Ntry.STATIC.SOUTH:
+        d = a.HALF_ROTATION;
+        break;
+      case Ntry.STATIC.WEST:
+        d = a.TURN_RIGHT;
+        break;
+      default:
+        c();
+    }
+    d && Ntry.dispatchEvent("unitAction", d, c);
+    return Entry.STATIC.CONTINUE;
+  }
+}};
+Entry.block.jr_east = {skeleton:"pebble_basic", color:"#A751E3", contents:[{type:"Text", text:"\uc624\ub978\ucabd"}, {type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_right_image.png", position:{x:83, y:0}, size:22}], func:function() {
+  var a = Ntry.STATIC;
+  if (this.isContinue) {
+    if (this.isAction) {
+      return Entry.STATIC.CONTINUE;
+    }
+    delete this.isAction;
+    delete this.isContinue;
+  } else {
+    this.isAction = this.isContinue = !0;
+    var b = this, c = function() {
+      window.setTimeout(function() {
+        Ntry.dispatchEvent("unitAction", a.WALK, function() {
+          b.isAction = !1;
+        });
+      }, 3);
+    }, d;
+    switch(Ntry.unitComp.direction) {
+      case a.SOUTH:
+        d = a.TURN_LEFT;
+        break;
+      case a.WEST:
+        d = a.HALF_ROTATION;
+        break;
+      case a.NORTH:
+        d = a.TURN_RIGHT;
+        break;
+      default:
+        c();
+    }
+    d && Ntry.dispatchEvent("unitAction", d, c);
+    return Entry.STATIC.CONTINUE;
+  }
+}};
+Entry.block.jr_south = {skeleton:"pebble_basic", color:"#A751E3", contents:[{type:"Text", text:"  \uc544\ub798\ucabd"}, {type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_down_image.png", position:{x:83, y:0}, size:22}], func:function() {
+  if (this.isContinue) {
+    if (this.isAction) {
+      return Entry.STATIC.CONTINUE;
+    }
+    delete this.isAction;
+    delete this.isContinue;
+  } else {
+    this.isAction = this.isContinue = !0;
+    var a = Ntry.STATIC, b = this, c = function() {
+      window.setTimeout(function() {
+        Ntry.dispatchEvent("unitAction", Ntry.STATIC.WALK, function() {
+          b.isAction = !1;
+        });
+      }, 3);
+    }, d;
+    switch(Ntry.unitComp.direction) {
+      case a.EAST:
+        d = a.TURN_RIGHT;
+        break;
+      case a.NORTH:
+        d = a.HALF_ROTATION;
+        break;
+      case a.WEST:
+        d = a.TURN_LEFT;
+        break;
+      default:
+        c();
+    }
+    d && Ntry.dispatchEvent("unitAction", d, c);
+    return Entry.STATIC.CONTINUE;
+  }
+}};
+Entry.block.jr_west = {skeleton:"pebble_basic", color:"#A751E3", contents:[{type:"Text", text:"  \uc67c\ucabd"}, {type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_left_image.png", position:{x:83, y:0}, size:22}], func:function() {
+  if (this.isContinue) {
+    if (this.isAction) {
+      return Entry.STATIC.CONTINUE;
+    }
+    delete this.isAction;
+    delete this.isContinue;
+  } else {
+    this.isAction = this.isContinue = !0;
+    var a = Ntry.STATIC, b = this, c = function() {
+      window.setTimeout(function() {
+        Ntry.dispatchEvent("unitAction", a.WALK, function() {
+          b.isAction = !1;
+        });
+      }, 3);
+    }, d;
+    switch(Ntry.unitComp.direction) {
+      case a.SOUTH:
+        d = a.TURN_RIGHT;
+        break;
+      case a.EAST:
+        d = a.HALF_ROTATION;
+        break;
+      case a.NORTH:
+        d = a.TURN_LEFT;
+        break;
+      default:
+        c();
+    }
+    d && Ntry.dispatchEvent("unitAction", d, c);
+    return Entry.STATIC.CONTINUE;
+  }
+}};
+Entry.block.jr_start_basic = {skeleton:"basic_event", event:"start", color:"#3BBD70", contents:[{type:"Indicator", boxMultiplier:1, img:"/img/assets/block_icon/start_icon_play.png", highlightColor:"#3BBD70", size:17, position:{x:0, y:-2}}, "\uc2dc\uc791 \ubc84\ud2bc\uc744 \ub20c\ub800\uc744 \ub54c"], func:function() {
+  var a = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT), b;
+  for (b in a) {
+    this._unit = a[b];
+  }
+  Ntry.unitComp = Ntry.entityManager.getComponent(this._unit.id, Ntry.STATIC.UNIT);
+}};
+Entry.block.jr_go_straight = {skeleton:"basic", color:"#A751E3", contents:["\uc55e\uc73c\ub85c \uac00\uae30", {type:"Image", img:"/img/assets/ntry/bitmap/jr/cparty_go_straight.png", size:24}], func:function() {
+  if (this.isContinue) {
+    if (this.isAction) {
+      return Entry.STATIC.CONTINUE;
+    }
+    delete this.isAction;
+    delete this.isContinue;
+  } else {
+    this.isAction = this.isContinue = !0;
+    var a = this;
+    Ntry.dispatchEvent("unitAction", Ntry.STATIC.WALK, function() {
+      a.isAction = !1;
+    });
+    return Entry.STATIC.CONTINUE;
+  }
+}};
+Entry.block.jr_turn_left = {skeleton:"basic", color:"#A751E3", contents:["\uc67c\ucabd\uc73c\ub85c \ub3cc\uae30", {type:"Image", img:"/img/assets/ntry/bitmap/jr/cparty_rotate_l.png", size:24}], func:function() {
+  if (this.isContinue) {
+    if (this.isAction) {
+      return Entry.STATIC.CONTINUE;
+    }
+    delete this.isAction;
+    delete this.isContinue;
+  } else {
+    this.isAction = this.isContinue = !0;
+    var a = this;
+    Ntry.dispatchEvent("unitAction", Ntry.STATIC.TURN_LEFT, function() {
+      a.isAction = !1;
+    });
+    return Entry.STATIC.CONTINUE;
+  }
+}};
+Entry.block.jr_turn_right = {skeleton:"basic", color:"#A751E3", contents:["\uc624\ub978\ucabd\uc73c\ub85c \ub3cc\uae30", {type:"Image", img:"/img/assets/ntry/bitmap/jr/cparty_rotate_r.png", size:24}], func:function() {
+  if (this.isContinue) {
+    if (this.isAction) {
+      return Entry.STATIC.CONTINUE;
+    }
+    delete this.isAction;
+    delete this.isContinue;
+  } else {
+    this.isAction = this.isContinue = !0;
+    var a = this;
+    Ntry.dispatchEvent("unitAction", Ntry.STATIC.TURN_RIGHT, function() {
+      a.isAction = !1;
+    });
+    return Entry.STATIC.CONTINUE;
+  }
+}};
+Entry.block.jr_go_slow = {skeleton:"basic", color:"#f46c6c", contents:["\ucc9c\ucc9c\ud788 \uac00\uae30", {type:"Image", img:"/img/assets/ntry/bitmap/jr/cparty_go_slow.png", size:24}], func:function() {
+  if (this.isContinue) {
+    if (this.isAction) {
+      return Entry.STATIC.CONTINUE;
+    }
+    delete this.isAction;
+    delete this.isContinue;
+  } else {
+    this.isAction = this.isContinue = !0;
+    var a = this;
+    Ntry.dispatchEvent("unitAction", Ntry.STATIC.GO_SLOW, function() {
+      a.isAction = !1;
+    });
+    return Entry.STATIC.CONTINUE;
+  }
+}};
+Entry.block.jr_repeat_until_dest = {skeleton:"basic_loop", color:"#498DEB", contents:[{type:"Image", img:"/img/assets/ntry/bitmap/jr/jr_goal_image.png", size:18}, "\ub9cc\ub0a0 \ub54c \uae4c\uc9c0 \ubc18\ubcf5\ud558\uae30", {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}, {type:"Statement", key:"STATEMENT", accept:"basic", alignY:15, alignX:2}], func:function() {
+  this.executor.stepInto(this.block.values.STATEMENT);
+  return Entry.STATIC.CONTINUE;
+}};
+Entry.block.jr_if_construction = {skeleton:"basic_loop", color:"#498DEB", contents:["\ub9cc\uc57d", {type:"Image", img:"/img/assets/ntry/bitmap/jr/jr_construction_image.png", size:18}, "\uc55e\uc5d0 \uc788\ub2e4\uba74", {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}, {type:"Statement", key:"STATEMENT", accept:"basic", alignY:15, alignX:2}], func:function() {
+  if (!this.isContinue) {
+    var a = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT), b;
+    for (b in a) {
+      var c = a[b]
+    }
+    a = Ntry.entityManager.getComponent(c.id, Ntry.STATIC.UNIT);
+    c = Ntry.entityManager.getComponent(c.id, Ntry.STATIC.GRID);
+    c = {x:c.x, y:c.y};
+    Ntry.addVectorByDirection(c, a.direction, 1);
+    c = Ntry.entityManager.find({type:Ntry.STATIC.GRID, x:c.x, y:c.y}, {type:Ntry.STATIC.TILE, tileType:Ntry.STATIC.OBSTACLE_REPAIR});
+    this.isContinue = !0;
+    if (0 != c.length) {
+      return this.executor.stepInto(this.block.values.STATEMENT), Entry.STATIC.CONTINUE;
+    }
+  }
+}};
+Entry.block.jr_if_speed = {skeleton:"basic_loop", color:"#498DEB", contents:["\ub9cc\uc57d", {type:"Image", img:"/img/assets/ntry/bitmap/jr/jr_speed_image.png", size:18}, "\uc55e\uc5d0 \uc788\ub2e4\uba74", {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}, {type:"Statement", key:"STATEMENT", accept:"basic", alignY:15, alignX:2}], func:function() {
+  if (!this.isContinue) {
+    var a = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT), b;
+    for (b in a) {
+      var c = a[b]
+    }
+    a = Ntry.entityManager.getComponent(c.id, Ntry.STATIC.UNIT);
+    c = Ntry.entityManager.getComponent(c.id, Ntry.STATIC.GRID);
+    c = {x:c.x, y:c.y};
+    Ntry.addVectorByDirection(c, a.direction, 1);
+    c = Ntry.entityManager.find({type:Ntry.STATIC.GRID, x:c.x, y:c.y}, {type:Ntry.STATIC.TILE, tileType:Ntry.STATIC.OBSTACLE_SLOW});
+    this.isContinue = !0;
+    if (0 != c.length) {
+      return this.executor.stepInto(this.block.values.STATEMENT), Entry.STATIC.CONTINUE;
+    }
+  }
+}};
+Entry.BlockMenu = function(a, b) {
+  Entry.Model(this, !1);
+  this._align = b || "CENTER";
+  a = "string" === typeof a ? $("#" + a) : $(a);
+  if ("DIV" !== a.prop("tagName")) {
+    return console.error("Dom is not div element");
+  }
+  if ("function" !== typeof window.Snap) {
+    return console.error("Snap library is required");
+  }
+  this.svgDom = Entry.Dom($('<svg id="blockMenu" width="100%" height="100%"version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'), {parent:a});
+  this.offset = this.svgDom.offset();
+  this._svgWidth = this.svgDom.width();
+  this.snap = Snap("#blockMenu");
+  this.svgGroup = this.snap.group();
+  this.svgThreadGroup = this.svgGroup.group();
+  this.svgThreadGroup.board = this;
+  this.svgBlockGroup = this.svgGroup.group();
+  this.svgBlockGroup.board = this;
+  this.changeEvent = new Entry.Event(this);
+  this.observe(this, "generateDragBlockObserver", ["dragBlock"]);
+};
+(function(a) {
+  a.schema = {code:null, dragBlock:null, closeBlock:null};
+  a.changeCode = function(a) {
+    if (!(a instanceof Entry.Code)) {
+      return console.error("You must inject code instance");
+    }
+    this.codeListener && this.code.changeEvent.detach(this.codeListener);
+    this.set({code:a});
+    var c = this;
+    this.codeListener = this.code.changeEvent.attach(this, function() {
+      c.changeEvent.notify();
+    });
+    a.createView(this);
+    this.align();
+  };
+  a.bindCodeView = function(a) {
+    this.svgBlockGroup.remove();
+    this.svgThreadGroup.remove();
+    this.svgBlockGroup = a.svgBlockGroup;
+    this.svgThreadGroup = a.svgThreadGroup;
+    this.svgGroup.append(this.svgThreadGroup);
+    this.svgGroup.append(this.svgBlockGroup);
+  };
+  a.align = function() {
+    for (var a = this.code.getThreads(), c = 10, d = "LEFT" == this._align ? 20 : this.svgDom.width() / 2, e = 0, f = a.length;e < f;e++) {
+      var g = a[e].getFirstBlock(), h = g.view;
+      g.set({x:d, y:c});
+      h._moveTo(d, c, !1);
+      c += h.height + 15;
+    }
+    this.changeEvent.notify();
+  };
+  a.generateDragBlockObserver = function() {
+    var a = this.dragBlock;
+    a && (this.dragBlockObserver && this.removeDragBlockObserver(), this.dragBlockObserver = a.observe(this, "cloneThread", ["x", "y"], !1));
+  };
+  a.removeDragBlockObserver = function() {
+    var a = this.dragBlockObserver;
+    null !== a && (a.destroy(), this.dragBlockObserver = null);
+  };
+  a.cloneThread = function(a) {
+    a = void 0 === a ? !0 : a;
+    if (null !== this.dragBlock) {
+      this.dragBlockObserver && this.removeDragBlockObserver();
+      var c = this._svgWidth, d = this.dragBlock, e = d.block, f = this.code, g = e.getThread();
+      e && g && (f.cloneThread(g), a && d.observe(this, "moveBoardBlock", ["x", "y"], !1), d.dominate(), a = this.workspace.getBoard(), this._boardBlockView = a.code.cloneThread(g).getFirstBlock().view, this._boardBlockView.dragInstance = new Entry.DragInstance({height:0, isNew:!0}), a.set({dragBlock:this._boardBlockView}), this._boardBlockView.addDragging(), this._boardBlockView.dragMode = Entry.DRAG_MODE_MOUSEDOWN, this._boardBlockView._moveTo(d.x - c, d.y - 0, !1));
+      if (this._boardBlockView) {
+        return this._boardBlockView.block.id;
+      }
+    }
+  };
+  a.terminateDrag = function() {
+    if (this._boardBlockView) {
+      var a = this._boardBlockView;
+      if (a) {
+        var c = a.block, d = this.dragBlock, e = d.block, f = this.code, g = this.workspace, h = g.getBoard().code, k = !1;
+        a.dragMode = 0;
+        a.removeDragging();
+        d.x < this._svgWidth ? (k = !0, h.destroyThread(c.getThread(), k)) : c.view.terminateDrag();
+        g.getBoard().set({dragBlock:null});
+        f.destroyThread(e.getThread(), k);
+        delete a.dragInstance;
+        this._boardBlockView = null;
+      }
+    }
+  };
+  a.dominate = function(a) {
+    this.snap.append(a.svgGroup);
+  };
+  a.getCode = function(a) {
+    return this._code;
+  };
+  a.moveBoardBlock = function() {
+    var a = this.workspace.getBoard().offset, c = this.offset, d = a.left - c.left, a = a.top - c.top, e = this.dragBlock, c = this._boardBlockView, f = c.dragInstance, g = Entry.mouseCoordinate;
+    f.set({offsetX:g.x, offsetY:g.y});
+    if (0 === f.height) {
+      for (var g = c.block, h = 0;g;) {
+        h += g.view.height, g = g.next;
+      }
+      f.set({height:h});
+    }
+    e && c && (f = e.x, e = e.y, c.dragMode = 2, c._moveTo(f - d, e - a, !1));
+  };
+  a.setMagnetedBlock = function() {
+  };
+  a.findById = function(a) {
+    for (var c = this.code.getThreads(), d = 0, e = c.length;d < e;d++) {
+      var f = c[d];
+      if (f && (f = f.getFirstBlock()) && f.id == a) {
+        return f;
+      }
+    }
+  };
+})(Entry.BlockMenu.prototype);
+Entry.BlockView = function(a, b) {
+  Entry.Model(this, !1);
+  this.block = a;
+  this._board = b;
+  this.set(a);
+  this.svgGroup = b.svgBlockGroup.group();
+  this.svgGroup.block = this.block;
+  this._schema = Entry.block[a.type];
+  this._skeleton = Entry.skeleton[this._schema.skeleton];
+  this._contents = [];
+  this._skeleton.morph && this.block.observe(this, "_renderPath", this._skeleton.morph, !1);
+  this.prevObserver = null;
+  this._startRender(a);
+  this.block.observe(this, "_bindPrev", ["prev"]);
+  this.block.observe(this, "_createEmptyBG", ["next"]);
+  this.observe(this, "_updateBG", ["magneting"]);
+  b.code.observe(this, "_setBoard", ["board"], !1);
+  this.dragMode = Entry.DRAG_MODE_NONE;
+};
+(function(a) {
+  a.schema = {id:0, type:Entry.STATIC.BLOCK_RENDER_MODEL, x:0, y:0, offsetX:0, offsetY:0, width:0, height:0, contentWidth:0, contentHeight:0, magneting:!1, animating:!1};
+  a._startRender = function(a) {
+    this.svgGroup.attr({class:"block"});
+    a = this._skeleton.path(this);
+    this._darkenPath = this.svgGroup.path(a);
+    this._darkenPath.attr({transform:"t0 1", fill:Entry.Utils.colorDarken(this._schema.color, .7)});
+    this._path = this.svgGroup.path(a);
+    this._path.attr({strokeWidth:"2", fill:this._schema.color});
+    this._moveTo(this.x, this.y, !1);
+    this._startContentRender();
+    this._addControl();
+  };
+  a._startContentRender = function() {
+    this.contentSvgGroup = this.svgGroup.group();
+    var a = this._skeleton.contentPos();
+    this.contentSvgGroup.transform("t" + a.x + " " + a.y);
+    for (var a = this._schema.contents, c = 0;c < a.length;c++) {
+      var d = a[c];
+      "string" === typeof d ? this._contents.push(new Entry.FieldText({text:d}, this)) : this._contents.push(new Entry["Field" + d.type](d, this));
+    }
+    this._alignContent(!1);
+  };
+  a._alignContent = function(a) {
+    !0 !== a && (a = !1);
+    for (var c = 0, d = 0, e = 0;e < this._contents.length;e++) {
+      d = this._contents[e];
+      d.align(c, 0, a);
+      e !== this._contents.length - 1 && (c += 5);
+      var f = d.box, d = Math.max(f.y + f.height), c = c + f.width;
+    }
+    this.set({contentWidth:c, contentHeight:d});
+    this._render();
+  };
+  a._bindPrev = function() {
+    this.prevObserver && this.prevObserver.destroy();
+    this.block.prev ? (this._toLocalCoordinate(this.block.prev.view.svgGroup), this.prevObserver = this.block.prev.view.observe(this, "_align", ["height"])) : (this._toGlobalCoordinate(), delete this.prevObserver);
+  };
+  a._render = function() {
+    this._renderPath();
+    this.set(this._skeleton.box(this));
+  };
+  a._renderPath = function() {
+    var a = this._skeleton.path(this);
+    this._darkenPath.attr({d:a});
+    this._path.attr({d:a});
+    this.set({animating:!1});
+  };
+  a._align = function(a) {
+    if (null !== this.block.prev) {
+      var c = this.block.prev.view;
+      !0 === a && this.set({animating:!0});
+      this.set({x:0, y:c.height + 1});
+      this._setPosition(!0 === a || this.animating);
+    }
+  };
+  a._setPosition = function(a) {
+    a = void 0 === a ? !0 : a;
+    var c = "t" + this.x + " " + this.y;
+    this.svgGroup.stop();
+    a && 0 !== Entry.ANIMATION_DURATION ? this.svgGroup.animate({transform:c}, Entry.ANIMATION_DURATION, mina.easeinout) : this.svgGroup.attr({transform:c});
+  };
+  a._toLocalCoordinate = function(a) {
+    var c = a.transform().globalMatrix, d = this.svgGroup.transform().globalMatrix;
+    this._moveTo(d.e - c.e, d.f - c.f, !1);
+    a.append(this.svgGroup);
+  };
+  a._toGlobalCoordinate = function() {
+    var a = this.svgGroup.transform().globalMatrix;
+    this._moveTo(a.e, a.f, !1);
+    this._board.svgBlockGroup.append(this.svgGroup);
+  };
+  a._moveTo = function(a, c, d) {
+    this.set({x:a, y:c});
+    this._setPosition(d);
+  };
+  a._moveBy = function(a, c, d) {
+    return this._moveTo(this.x + a, this.y + c, d);
+  };
+  a._addControl = function() {
+    var a = this;
+    this.svgGroup.mousedown(function() {
+      a.onMouseDown.apply(a, arguments);
+    });
+  };
+  a.onMouseDown = function(a) {
+    function c(a) {
+      a.stopPropagation();
+      a.preventDefault();
+      var b = f.mouseDownCoordinate;
+      if ((f.dragMode == Entry.DRAG_MODE_DRAG || a.pageX !== b.x || a.pageY !== b.y) && f.block.isMovable()) {
+        f.block.prev && (f.block.prev.setNext(null), f.block.setPrev(null), f.block.thread.changeEvent.notify());
+        this.animating && this.set({animating:!1});
+        if (0 === f.dragInstance.height) {
+          for (var b = f.block, c = -1;b;) {
+            c += b.view.height + 1, b = b.next;
+          }
+          f.dragInstance.set({height:c});
+        }
+        a.originalEvent.touches && (a = a.originalEvent.touches[0]);
+        b = f.dragInstance;
+        f._moveBy(a.pageX - b.offsetX, a.pageY - b.offsetY, !1);
+        b.set({offsetX:a.pageX, offsetY:a.pageY});
+        f.dragMode = Entry.DRAG_MODE_DRAG;
+        (a = f._getCloseBlock()) ? (g = a.view.getBoard(), g.setMagnetedBlock(a.view)) : g.setMagnetedBlock(null);
+      }
+    }
+    function d(a) {
+      $(document).unbind(".block");
+      delete this.mouseDownCoordinate;
+      f.terminateDrag();
+      g && g.set({dragBlock:null});
+      delete f.dragInstance;
+    }
+    if (0 === a.button || a instanceof Touch) {
+      this.dominate();
+      Entry.documentMousedown && Entry.documentMousedown.notify();
+      this.mouseDownCoordinate = {x:a.pageX, y:a.pageY};
+      var e = $(document);
+      e.bind("mousemove.block", c);
+      e.bind("mouseup.block", d);
+      e.bind("touchmove.block", c);
+      e.bind("touchend.block", d);
+      this.getBoard().set({dragBlock:this});
+      this.dragInstance = new Entry.DragInstance({startX:a.pageX, startY:a.pageY, offsetX:a.pageX, offsetY:a.pageY, prev:this.block.prev, height:0, mode:!0});
+      this.addDragging();
+      this.dragMode = Entry.DRAG_MODE_MOUSEDOWN;
+    }
+    var f = this, g = this.getBoard();
+    a.stopPropagation();
+  };
+  a.terminateDrag = function() {
+    var a = this.getBoard(), c = this.dragMode, d = this.block;
+    this.removeDragging();
+    if (a instanceof Entry.BlockMenu) {
+      a.terminateDrag();
+    } else {
+      if (c !== Entry.DRAG_MODE_MOUSEDOWN) {
+        this.dragInstance && this.dragInstance.isNew && d.doAdd();
+        var e = this.dragInstance && this.dragInstance.prev, f = this._getCloseBlock();
+        e || f ? f ? (this.set({animating:!0}), f.next && f.next.view.set({animating:!0}), d.doInsert(f), createjs.Sound.play("entryMagneting")) : d.doSeparate() : c == Entry.DRAG_MODE_DRAG && d.doMove();
+        a.setMagnetedBlock(null);
+      }
+    }
+    this.dragMode = Entry.DRAG_MODE_NONE;
+    this.destroyShadow();
+  };
+  a._getCloseBlock = function() {
+    var a = this.getBoard(), c = a instanceof Entry.BlockMenu, d = this.x, e = this.y;
+    c && (d -= a._svgWidth, a = a.workspace.getBoard());
+    var f = a.relativeOffset, d = Snap.getElementByPoint(d + f.left, e + f.top);
+    if (null !== d) {
+      for (e = d.block;!e && d.parent() && "svg" !== d.type && "BODY" !== d.type;) {
+        d = d.parent(), e = d.block;
+      }
+      return void 0 === e || e === this.block ? null : c ? e : e.view.getBoard() == a ? e : null;
+    }
+  };
+  a._inheritAnimate = function() {
+    var a = this.block.prev.view;
+    a && this.set({animating:a.animating});
+  };
+  a.dominate = function() {
+    for (var a = this.getBoard().svgBlockGroup, c = this.svgGroup;c.parent() !== a;) {
+      c = c.parent();
+    }
+    a.append(c);
+  };
+  a.getBoard = function() {
+    return this._board;
+  };
+  a._setBoard = function() {
+    this._board = this._board.code.board;
+  };
+  a.destroy = function(a) {
+    var c = this.svgGroup;
+    a ? c.animate({opacity:0}, 100, null, function() {
+      this.remove();
+    }) : c.remove();
+  };
+  a.getShadow = function() {
+    this._shadow || (this._shadow = this.svgGroup.clone(), this._shadow.attr({opacity:.5}));
+    return this._shadow;
+  };
+  a.destroyShadow = function() {
+    delete this._shadow;
+  };
+  a._updateBG = function() {
+    if (this._board.dragBlock && this._board.dragBlock.dragInstance) {
+      var a = this._board.dragBlock.dragInstance.height, c = this, d = c.svgGroup;
+      if (c.magneting) {
+        var e = this._board.dragBlock.getShadow();
+        e.attr({transform:"t0 " + (this.height + 1)});
+        this.svgGroup.prepend(e);
+        this._clonedShadow = e;
+        c.background && (c.background.remove(), c.nextBackground.remove(), delete c.background, delete c.nextBackground);
+        a = c.height + a;
+        e = d.rect(0 - c.width / 2, 1.5 * c.height + 1, c.width, Math.max(0, a - 1.5 * c.height));
+        e.block = c.block.next;
+        c.nextBackground = e;
+        e.attr({fill:"transparent"});
+        d.prepend(e);
+        e = d.rect(0 - c.width / 2, 0, c.width, a);
+        c.background = e;
+        e.attr({fill:"transparent"});
+        d.prepend(e);
+        c.originalHeight = c.height;
+        c.set({height:a});
+      } else {
+        if (this._clonedShadow && (this._clonedShadow.remove(), delete this._clonedShadow), a = c.originalHeight) {
+          setTimeout(function() {
+            c.background && (c.background.remove(), c.nextBackground.remove(), delete c.background, delete c.nextBackground);
+          }, Entry.ANIMATION_DURATION), c.set({height:a}), delete c.originalHeight;
+        }
+      }
+      c.block.thread.changeEvent.notify();
+    }
+  };
+  a._createEmptyBG = function() {
+    if (this.block.next) {
+      this.emptyBackground && (this.emptyBackground.remove(), delete this.emptyBackground);
+    } else {
+      var a = this.svgGroup.rect(0 + this.offsetX, this.height, this.width, 20);
+      this.emptyBackground = a;
+      a.attr({fill:"transparent"});
+      this.svgGroup.prepend(a);
+    }
+  };
+  a.addDragging = function() {
+    this.svgGroup.addClass("dragging");
+  };
+  a.removeDragging = function() {
+    this.svgGroup.removeClass("dragging");
+  };
+  a.getSkeleton = function() {
+    return this._skeleton;
+  };
+})(Entry.BlockView.prototype);
+Entry.Code = function(a) {
+  Entry.Model(this, !1);
+  this._data = new Entry.Collection;
+  this._eventMap = {};
+  this.executors = [];
+  this.executeEndEvent = new Entry.Event(this);
+  this.changeEvent = new Entry.Event(this);
+  this.load(a);
+};
+(function(a) {
+  a.schema = {view:null, board:null};
+  a.load = function(a) {
+    if (!(a instanceof Array)) {
+      return console.error("code must be array");
+    }
+    for (var c = 0;c < a.length;c++) {
+      this._data.push(new Entry.Thread(a[c], this));
+    }
+  };
+  a.createView = function(a) {
+    null === this.view ? this.set({view:new Entry.CodeView(this, a), board:a}) : (this.set({board:a}), a.bindCodeView(this.view));
+  };
+  a.registerEvent = function(a, c) {
+    this._eventMap[c] || (this._eventMap[c] = []);
+    this._eventMap[c].push(a);
+  };
+  a.raiseEvent = function(a) {
+    a = this._eventMap[a];
+    if (void 0 !== a) {
+      for (var c = 0;c < a.length;c++) {
+        this.executors.push(new Entry.Executor(a[c]));
+      }
+    }
+  };
+  a.getEventMap = function(a) {
+    return this._eventMap;
+  };
+  a.map = function(a) {
+    this._data.map(a);
+  };
+  a.tick = function() {
+    for (var a = this.executors, c = 0;c < a.length;c++) {
+      var d = a[c];
+      d.execute();
+      null === d.scope.block && (a.splice(c, 1), c--, 0 === a.length && this.executeEndEvent.notify());
+    }
+  };
+  a.clearExecutors = function() {
+    this.executors = [];
+  };
+  a.createThread = function(a) {
+    if (!(a instanceof Array)) {
+      return console.error("blocks must be array");
+    }
+    this._data.push(new Entry.Thread(a, this));
+  };
+  a.cloneThread = function(a) {
+    a = a.clone(this);
+    this._data.push(a);
+    return a;
+  };
+  a.destroyThread = function(a, c) {
+    var d = this._data, e = d.indexOf(a);
+    0 > e || (d.splice(e, 1), (d = a.getFirstBlock()) && d.destroy(c));
+  };
+  a.doDestroyThread = function(a, c) {
+    var d = this._data, e = d.indexOf(a);
+    0 > e || (d.splice(e, 1), (d = a.getFirstBlock()) && d.doDestroy(c));
+  };
+  a.getThreads = function() {
+    return this._data;
+  };
+  a.toJSON = function() {
+    for (var a = this.getThreads(), c = [], d = 0, e = a.length;d < e;d++) {
+      c.push(a[d].toJSON());
+    }
+    return c;
+  };
+  a.countBlock = function() {
+    for (var a = this.getThreads(), c = 0, d = 0;d < a.length;d++) {
+      c += a[d].countBlock();
+    }
+    return c;
+  };
+  a.moveBy = function(a, c) {
+    for (var d = this.getThreads(), e = 0, f = d.length;e < f;e++) {
+      var g = d[e].getFirstBlock();
+      g && g.view._moveBy(a, c, !1);
+    }
+  };
+  a.stringify = function() {
+    return JSON.stringify(this.toJSON());
+  };
+})(Entry.Code.prototype);
+Entry.CodeView = function(a, b) {
+  Entry.Model(this, !1);
+  this.code = a;
+  this.set({board:b});
+  this.svgThreadGroup = b.svgGroup.group();
+  this.svgThreadGroup.attr({class:"svgThreadGroup"});
+  this.svgThreadGroup.board = b;
+  this.svgBlockGroup = b.svgGroup.group();
+  this.svgBlockGroup.attr({class:"svgBlockGroup"});
+  this.svgBlockGroup.board = b;
+  b.bindCodeView(this);
+  this.code.map(function(a) {
+    a.createView(b);
+  });
+  a.observe(this, "_setBoard", ["board"]);
+};
+(function(a) {
+  a.schema = {board:null, scrollX:0, scrollY:0};
+  a._setBoard = function() {
+    this.set({board:this.code.board});
+  };
+})(Entry.CodeView.prototype);
+Entry.Executor = function(a) {
+  this.scope = {block:a, executor:this};
+  this._callStack = [];
+};
+(function(a) {
+  a.execute = function() {
+    void 0 === this.scope.block._schema.func.call(this.scope) && (this.scope = {block:this.scope.block.next, executor:this});
+    null === this.scope.block && this._callStack.length && (this.scope = this._callStack.pop());
+  };
+  a.stepInto = function(a) {
+    a instanceof Entry.Thread || console.error("Must step in to thread");
+    this._callStack.push(this.scope);
+    a = a.getFirstBlock();
+    a instanceof Entry.DummyBlock && (a = a.next);
+    this.scope = {block:a, executor:this};
+  };
+})(Entry.Executor.prototype);
+Entry.FieldDropdown = function(a, b) {
+  this._block = b.block;
+  this.box = new Entry.BoxModel;
+  this.svgGroup = null;
+  this._contents = a;
+  this.renderStart(b);
+};
+(function(a) {
+  a.renderStart = function(a) {
+    var c = this;
+    this.options = this._contents.options;
+    this.key = this._contents.key;
+    this.value = this._block.values[this.key];
+    this.width = 39;
+    this.height = 22;
+    this.svgGroup = a.contentSvgGroup.group();
+    this.svgGroup.attr({class:"entry-field-dropdown"});
+    this.svgGroup.rect(0, -12, 39, 22, 3).attr({fill:"#80cbf8"});
+    this.textElement = this.svgGroup.text(5, 3, this.value);
+    this.svgGroup.polygon(28, -2, 34, -2, 31, 2).attr({fill:"#127cbd", stroke:"#127cbd"});
+    this.svgGroup.mouseup(function(a) {
+      c._block.view.dragMode == Entry.DRAG_MODE_MOUSEDOWN && c.renderOptions();
+    });
+    this.box.set({x:0, y:0, width:39, height:22});
+  };
+  a.renderOptions = function() {
+    var a = this;
+    this.destroyOption();
+    var c = this._block.view;
+    this.documentDownEvent = Entry.documentMousedown.attach(this, function() {
+      Entry.documentMousedown.detach(this.documentDownEvent);
+      a.optionGroup.remove();
+    });
+    this.optionGroup = c.getBoard().svgGroup.group();
+    var d = c.svgGroup.transform().globalMatrix, c = this.options;
+    this.optionGroup.attr({class:"entry-field-dropdown", transform:"t" + (d.e - 45) + " " + (d.f + 35)});
+    for (var e in c) {
+      d = Number(e), d = this.optionGroup.group().attr({class:"rect", transform:"t0 " + 23 * d}), d.rect(0, 0, 38, 23), d.text(3, 13, c[e]).attr({"alignment-baseline":"central"}), function(c, d) {
+        c.mousedown(function() {
+          a.applyValue(d);
+          a.destroyOption();
+        });
+      }(d, c[e]);
+    }
+  };
+  a.align = function(a, c, d) {
+    var e = this.svgGroup, f = "t" + a + " " + c;
+    void 0 === d || d ? e.animate({transform:f}, 300, mina.easeinout) : e.attr({transform:f});
+    this.box.set({x:a, y:c});
+  };
+  a.applyValue = function(a) {
+    this._block.values[this.key] = a;
+    this.textElement.node.textContent = a;
+  };
+  a.destroyOption = function() {
+    this.documentDownEvent && (Entry.documentMousedown.detach(this.documentDownEvent), delete this.documentDownEvent);
+    this.optionGroup && (this.optionGroup.remove(), delete this.optionGroup);
+  };
+})(Entry.FieldDropdown.prototype);
+Entry.FieldImage = function(a, b) {
+  this._block = b;
+  this.box = new Entry.BoxModel;
+  this._size = a.size;
+  this._imgUrl = a.img;
+  this._highlightColor = a.highlightColor ? a.highlightColor : "#F59900";
+  this._position = a.position;
+  this._imgElement = this._path = this.svgGroup = null;
+  this.renderStart();
+};
+(function(a) {
+  a.renderStart = function() {
+    this.svgGroup = this._block.contentSvgGroup.group();
+    this._imgElement = this.svgGroup.image(this._imgUrl, 0, -.5 * this._size, this._size, this._size);
+    this.box.set({x:this._size, y:0, width:this._size, height:this._size});
+  };
+  a.align = function(a, c, d) {
+    var e = this.svgGroup;
+    this._position && (a = this._position.x);
+    var f = "t" + a + " " + c;
+    void 0 === d || d ? e.animate({transform:f}, 300, mina.easeinout) : e.attr({transform:f});
+    this.box.set({x:a, y:c});
+  };
+  a.enableHighlight = function() {
+    var a = this._path.getTotalLength(), c = this._path;
+    this._path.attr({stroke:this._highlightColor, strokeWidth:2, "stroke-linecap":"round", "stroke-dasharray":a + " " + a, "stroke-dashoffset":a});
+    setInterval(function() {
+      c.attr({"stroke-dashoffset":a}).animate({"stroke-dashoffset":0}, 300);
+    }, 1400, mina.easeout);
+    setTimeout(function() {
+      setInterval(function() {
+        c.animate({"stroke-dashoffset":-a}, 300);
+      }, 1400, mina.easeout);
+    }, 500);
+  };
+})(Entry.FieldImage.prototype);
+Entry.FieldIndicator = function(a, b) {
+  this._block = b;
+  this.box = new Entry.BoxModel;
+  this._size = a.size;
+  this._imgUrl = a.img;
+  this._boxMultiplier = a.boxMultiplier || 2;
+  this._highlightColor = a.highlightColor ? a.highlightColor : "#F59900";
+  this._position = a.position;
+  this._imgElement = this._path = this.svgGroup = null;
+  this.renderStart();
+};
+(function(a) {
+  a.renderStart = function() {
+    this.svgGroup = this._block.contentSvgGroup.group();
+    this._imgElement = this.svgGroup.image(this._imgUrl, -1 * this._size, -1 * this._size, 2 * this._size, 2 * this._size);
+    var a = "m 0,-%s a %s,%s 0 1,1 -0.1,0 z".replace(/%s/gi, this._size);
+    this._path = this.svgGroup.path(a);
+    this._path.attr({stroke:"none", fill:"none"});
+    this.box.set({x:this._size, y:0, width:this._size * this._boxMultiplier, height:this._size * this._boxMultiplier});
+  };
+  a.align = function(a, c, d) {
+    var e = this.svgGroup;
+    this._position && (a = this._position.x, c = this._position.y);
+    var f = "t" + a + " " + c;
+    void 0 === d || d ? e.animate({transform:f}, 300, mina.easeinout) : e.attr({transform:f});
+    this.box.set({x:a, y:c});
+  };
+  a.enableHighlight = function() {
+    var a = this._path.getTotalLength(), c = this._path;
+    this._path.attr({stroke:this._highlightColor, strokeWidth:2, "stroke-linecap":"round", "stroke-dasharray":a + " " + a, "stroke-dashoffset":a});
+    setInterval(function() {
+      c.attr({"stroke-dashoffset":a}).animate({"stroke-dashoffset":0}, 300);
+    }, 1400, mina.easeout);
+    setTimeout(function() {
+      setInterval(function() {
+        c.animate({"stroke-dashoffset":-a}, 300);
+      }, 1400, mina.easeout);
+    }, 500);
+  };
+})(Entry.FieldIndicator.prototype);
+Entry.FieldStatement = function(a, b) {
+  this._blockView = b;
+  this.block = b.block;
+  this.key = a.key;
+  this.box = new Entry.BoxModel;
+  this.acceptType = a.accept;
+  this.dummyBlock = this.svgGroup = null;
+  a.alignX && (this._alignX = a.alignX);
+  a.alignY && (this._alignY = a.alignY);
+  this.box.observe(b, "_alignContent", ["height"]);
+  this.renderStart(b.getBoard());
+  this.block.observe(this, "_updateThread", ["thread"]);
+};
+(function(a) {
+  a.renderStart = function(a) {
+    this.svgGroup = this._blockView.contentSvgGroup.group();
+    this.box.set({x:46, y:0, width:20, height:20});
+    this._thread = this._blockView.block.values[this.key];
+    this.dummyBlock = new Entry.DummyBlock(this, this._blockView);
+    this._thread.insertDummyBlock(this.dummyBlock);
+    this._thread.createView(a);
+    this._thread.changeEvent.attach(this, this.calcHeight);
+    this.calcHeight();
+  };
+  a.calcHeight = function() {
+    for (var a = this.dummyBlock, c = -1;a;) {
+      c += a.view.height + 1, a = a.next;
+    }
+    this.box.set({height:c});
+  };
+  a.align = function(a, c, d) {
+    var e = this.svgGroup;
+    a = this._alignX || 46;
+    c = this._alignY || 14;
+    a = "t" + a + " " + c;
+    void 0 === d || d ? e.animate({transform:a}, 300, mina.easeinout) : e.attr({transform:a});
+  };
+  a._updateThread = function() {
+    this._threadChangeEvent && this._thread.changeEvent.detach(this._threadChangeEvent);
+    var a = this.block.thread;
+    this._threadChangeEvent = this._thread.changeEvent.attach(this, function() {
+      a.changeEvent.notify();
+    });
+  };
+})(Entry.FieldStatement.prototype);
+Entry.DummyBlock = function(a, b) {
+  Entry.Model(this, !1);
+  this.view = this;
+  this.originBlockView = b;
+  this._schema = {};
+  this._thread = a._thread;
+  this.statementField = a;
+  this.svgGroup = a.svgGroup.group();
+  this.svgGroup.block = this;
+  var c = Entry.skeleton[a.acceptType].box();
+  this.path = this.svgGroup.rect(c.offsetX, c.offsetY - 10, c.width, c.height);
+  this.path.attr({fill:"transparent"});
+  this.prevObserver = b.observe(this, "_align", ["x", "y"]);
+  this.prevAnimatingObserver = b.observe(this, "_inheritAnimate", ["animating"]);
+  this.observe(this, "_updateBG", ["magneting"]);
+  this._align();
+};
+(function(a) {
+  a.schema = {x:0, y:0, width:0, height:0, animating:!1, magneting:!1};
+  a._align = function(a) {
+    this.set({x:this.originBlockView.x, y:this.originBlockView.y});
+  };
+  a.insertAfter = function(a) {
+    this._thread.insertByBlock(this, a);
+    this.statementField.calcHeight();
+  };
+  a.createView = function() {
+  };
+  a.setThread = function() {
+  };
+  a.setPrev = function() {
+  };
+  a.setNext = function(a) {
+    this.next = a;
+  };
+  a.getBoard = function() {
+    return this.originBlockView.getBoard();
+  };
+  a._inheritAnimate = function() {
+    this.set({animating:this.originBlockView.animating});
+  };
+  a._updateBG = function() {
+    if (this.magneting) {
+      var a = this.getBoard().dragBlock.dragInstance.height;
+      this.set({height:a});
+      a = this.getBoard().dragBlock.getShadow();
+      a.attr({transform:"t0 0"});
+      this.svgGroup.prepend(a);
+      this._clonedShadow = a;
+    } else {
+      this._clonedShadow && (this._clonedShadow.remove(), delete this._clonedShadow), this.set({height:0});
+    }
+    this._thread.changeEvent.notify();
+  };
+  a.dominate = function() {
+    this.originBlockView.dominate();
+  };
+})(Entry.DummyBlock.prototype);
+Entry.FieldText = function(a, b) {
+  this._block = b;
+  this.box = new Entry.BoxModel;
+  this._fontSize = a.fontSize || b.getSkeleton().fontSize || 12;
+  this._text = a.text;
+  this.textElement = null;
+  this.renderStart();
+};
+(function(a) {
+  a.renderStart = function() {
+    this.textElement = this._block.contentSvgGroup.text(0, 0, this._text);
+    this.textElement.attr({style:"white-space: pre; font-size:" + this._fontSize + "px", "class":"dragNone", fill:"white"});
+    var a = this.textElement.getBBox();
+    this.textElement.attr({y:.25 * a.height});
+    this.box.set({x:0, y:0, width:this.textElement.node.getComputedTextLength(), height:a.height});
+  };
+  a.align = function(a, c, d) {
+    !0 !== d && (d = !1);
+    var e = this.textElement, f = {x:a};
+    d ? e.animate(f, 300, mina.easeinout) : e.attr(f);
+    this.box.set({x:a, width:this.textElement.node.getComputedTextLength(), y:c});
+  };
+})(Entry.FieldText.prototype);
+Entry.Scroller = function(a, b, c) {
+  this._horizontal = void 0 === b ? !0 : b;
+  this._vertical = void 0 === c ? !0 : c;
+  this.board = a;
+  this.board.changeEvent.attach(this, this.resizeScrollBar);
+  this.svgGroup = null;
+  this.vRatio = this.vY = this.vWidth = this.hRatio = this.hX = this.hWidth = 0;
+  this._visible = !0;
+  this.createScrollBar();
+  Entry.windowResized && Entry.windowResized.attach(this, this.resizeScrollBar);
+};
+Entry.Scroller.RADIUS = 7;
+(function(a) {
+  a.createScrollBar = function() {
+    var a = Entry.Scroller.RADIUS, c = this;
+    this.svgGroup = this.board.snap.group().attr({class:"boardScrollbar"});
+    this._horizontal && (this.hScrollbar = this.svgGroup.rect(0, 0, 0, 2 * a, a), this.hScrollbar.mousedown(function(a) {
+      function b(a) {
+        a.stopPropagation();
+        a.preventDefault();
+        a.originalEvent.touches && (a = a.originalEvent.touches[0]);
+        var d = c.dragInstance;
+        c.scroll((a.pageX - d.offsetX) / c.hRatio, 0);
+        d.set({offsetX:a.pageX, offsetY:a.pageY});
+      }
+      function f(a) {
+        $(document).unbind(".scroll");
+        delete c.dragInstance;
+      }
+      if (0 === a.button || a instanceof Touch) {
+        Entry.documentMousedown && Entry.documentMousedown.notify(a);
+        var g = $(document);
+        g.bind("mousemove.scroll", b);
+        g.bind("mouseup.scroll", f);
+        g.bind("touchmove.scroll", b);
+        g.bind("touchend.scroll", f);
+        c.dragInstance = new Entry.DragInstance({startX:a.pageX, startY:a.pageY, offsetX:a.pageX, offsetY:a.pageY});
+      }
+      a.stopPropagation();
+    }));
+    this._vertical && (this.vScrollbar = this.svgGroup.rect(0, 0, 2 * a, 0, a), this.vScrollbar.mousedown(function(a) {
+      function b(a) {
+        a.stopPropagation();
+        a.preventDefault();
+        a.originalEvent.touches && (a = a.originalEvent.touches[0]);
+        var d = c.dragInstance;
+        c.scroll(0, (a.pageY - d.offsetY) / c.vRatio);
+        d.set({offsetX:a.pageX, offsetY:a.pageY});
+      }
+      function f(a) {
+        $(document).unbind(".scroll");
+        delete c.dragInstance;
+      }
+      if (0 === a.button || a instanceof Touch) {
+        Entry.documentMousedown && Entry.documentMousedown.notify(a);
+        var g = $(document);
+        g.bind("mousemove.scroll", b);
+        g.bind("mouseup.scroll", f);
+        g.bind("touchmove.scroll", b);
+        g.bind("touchend.scroll", f);
+        c.dragInstance = new Entry.DragInstance({startX:a.pageX, startY:a.pageY, offsetX:a.pageX, offsetY:a.pageY});
+      }
+      a.stopPropagation();
+    }));
+    this.resizeScrollBar();
+  };
+  a.resizeScrollBar = function() {
+    var a = this.board.svgBlockGroup.getBBox(), c = this.board.svgDom, d = c.width(), c = c.height();
+    this.setVisible(!0);
+    if (this._horizontal) {
+      var e = -a.width + Entry.BOARD_PADDING, f = d - Entry.BOARD_PADDING, g = (d + 2 * Entry.Scroller.RADIUS) * a.width / (f - e + a.width);
+      isNaN(g) && (g = 0);
+      this.hX = (a.x - e) / (f - e) * (d - g - 2 * Entry.Scroller.RADIUS);
+      this.hScrollbar.attr({width:g, x:this.hX, y:c - 2 * Entry.Scroller.RADIUS});
+      this.hRatio = (d - g - 2 * Entry.Scroller.RADIUS) / (f - e);
+    }
+    this._vertical && (e = -a.height + Entry.BOARD_PADDING, f = c - Entry.BOARD_PADDING, g = (c + 2 * Entry.Scroller.RADIUS) * a.height / (f - e + a.height), this.vY = (a.y - e) / (f - e) * (c - g - 2 * Entry.Scroller.RADIUS), this.vScrollbar.attr({height:g, y:this.vY, x:d - 2 * Entry.Scroller.RADIUS}), this.vRatio = (c - g - 2 * Entry.Scroller.RADIUS) / (f - e));
+  };
+  a.updateScrollBar = function(a, c) {
+    this._horizontal && (this.hX += a * this.hRatio, this.hScrollbar.attr({x:this.hX}));
+    this._vertical && (this.vY += c * this.vRatio, this.vScrollbar.attr({y:this.vY}));
+  };
+  a.scroll = function(a, c) {
+    var d = this.board.svgBlockGroup.getBBox(), e = this.board.svgDom;
+    a = Math.max(-d.width + Entry.BOARD_PADDING - d.x, a);
+    c = Math.max(-d.height + Entry.BOARD_PADDING - d.y, c);
+    a = Math.min(e.width() - Entry.BOARD_PADDING - d.x, a);
+    c = Math.min(e.height() - Entry.BOARD_PADDING - d.y, c);
+    this.board.code.moveBy(a, c);
+    this.updateScrollBar(a, c);
+  };
+  a.setVisible = function(a) {
+    a != this.isVisible() && (this._visible = a, this.svgGroup.attr({display:!0 === a ? "block" : "none"}));
+  };
+  a.isVisible = function() {
+    return this._visible;
+  };
+})(Entry.Scroller.prototype);
+Entry.skeleton = function() {
+};
+Entry.skeleton.basic = {path:function(a) {
+  a = a.contentWidth;
+  a = Math.max(0, a - 6);
+  return "m -8,0 l 8,8 8,-8 h %w a 15,15 0 0,1 0,30 h -%w l -8,8 -8,-8 v -30 z".replace(/%w/gi, a);
+}, box:function(a) {
+  return {offsetX:0, offsetY:0, width:(a ? a.contentWidth : 150) + 30, height:30, marginBottom:0};
+}, magnets:{previous:{}, next:{x:0, y:31}}, contentPos:function(a) {
+  return {x:14, y:15};
+}};
+Entry.skeleton.basic_event = {path:function(a) {
+  a = a.contentWidth;
+  a = Math.max(0, a);
+  return "m -8,0 m 0,-5 a 19.5,19.5 0, 0,1 16,0 c 10,5 15,5 20,5 h %w a 15,15 0 0,1 0,30 H 8 l -8,8 -8,-8 l 0,0.5 a 19.5,19.5 0, 0,1 0,-35 z".replace(/%w/gi, a - 30);
+}, box:function(a) {
+  return {offsetX:0, offsetY:0, width:a.contentWidth + 30, height:30, marginBottom:0};
+}, magnets:{previous:{}, next:{x:0, y:31}}, contentPos:function(a) {
+  return {x:1, y:15};
+}};
+Entry.skeleton.basic_loop = {path:function(a) {
+  var b = Math.max(a.contentHeight, 25);
+  return "m -8,0 l 8,8 8,-8 h %cw a 15,15 0 0,1 0,30 H 24 l -8,8 -8,-8 h -0.4 v %ch h 0.4 l 8,8 8,-8 h %cw h -8 a 8,8 0 0,1 0,16 H 8 l -8,8 -8,-8 z".replace(/%cw/gi, Math.max(0, a.contentWidth - 31)).replace(/%ch/gi, b);
+}, magnets:function() {
+  return {previous:{x:0, y:0}, next:{x:0, y:105}};
+}, box:function(a) {
+  return {offsetX:0, offsetY:0, width:a.contentWidth, height:Math.max(a.contentHeight, 25) + 46, marginBottom:0};
+}, contentPos:function() {
+  return {x:14, y:15};
+}};
+Entry.skeleton.pebble_event = {path:function(a) {
+  return "m 0,0 a 25,25 0 0,1 9,48.3 a 9,9 0 0,1 -18,0 a 25,25 0 0,1 9,-48.3 z";
+}, box:function(a) {
+  return {offsetX:-25, offsetY:0, width:50, height:48.3, marginBottom:0};
+}, magnets:function(a) {
+  return {next:{x:0, y:49.3}};
+}, contentPos:function() {
+  return {x:0, y:25};
+}};
+Entry.skeleton.pebble_loop = {fontSize:16, path:function(a) {
+  a = Math.max(a.contentHeight, 50);
+  return "M 0,9 a 9,9 0 0,0 9,-9 h %cw q 25,0 25,25 v %ch q 0,25 -25,25 h -%cw a 9,9 0 0,1 -18,0 h -%cw q -25,0 -25,-25 v -%ch q 0,-25 25,-25 h %cw a 9,9 0 0,0 9,9 M 0,49 a 9,9 0 0,1 -9,-9 h -28 a 25,25 0 0,0 -25,25 v %cih a 25,25 0 0,0 25,25 h 28 a 9,9 0 0,0 18,0 h 28 a 25,25 0 0,0 25,-25 v -%cih a 25,25 0 0,0 -25,-25 h -28 a 9,9 0 0,1 -9,9 z".replace(/%cw/gi, 41).replace(/%ch/gi, a + 4).replace(/%cih/gi, a - 50);
+}, magnets:function() {
+  return {previous:{x:0, y:0}, next:{x:0, y:105}};
+}, box:function(a) {
+  return {offsetX:-75, offsetY:0, width:150, height:Math.max(a.contentHeight, 50) + 54, marginBottom:0};
+}, contentPos:function() {
+  return {x:-46, y:25};
+}};
+Entry.skeleton.pebble_basic = {fontSize:16, morph:["prev", "next"], path:function(a) {
+  var b = a.block;
+  a = b.prev && "pebble_basic" === b.prev._schema.skeleton;
+  b = b.next && "pebble_basic" === b.next._schema.skeleton;
+  return "m 0,9 a 9,9 0 0,0 9,-9 h 28 " + (a ? "l 25,0 0,25" : "q 25,0 25,25") + (b ? "l 0,25 -25,0" : "q 0,25 -25,25") + "h -28 a 9,9 0 0,1 -18,0 h -28 " + (b ? "l -25,0 0,-25" : "q -25,0 -25,-25") + (a ? "l 0,-25 25,0" : "q 0,-25 25,-25") + "h 28 a 9,9 0 0,0 9,9 z";
+}, magnets:function() {
+  return {previous:{x:0, y:0}, next:{x:0, y:51}};
+}, box:function() {
+  return {offsetX:-62, offsetY:0, width:124, height:50, marginBottom:0};
+}, contentPos:function() {
+  return {x:-46, y:25};
+}};
+Entry.Block = function(a, b) {
+  Entry.Model(this, !1);
+  this._schema = null;
+  this.setThread(b);
+  this.load(a);
+};
+Entry.Block.MAGNET_RANGE = 10;
+Entry.Block.MAGNET_OFFSET = .4;
+(function(a) {
+  a.schema = {id:null, name:null, x:0, y:0, type:null, values:{}, prev:null, next:null, view:null, thread:null, movable:!0, deletable:!0};
+  a.load = function(a) {
+    a.id || (a.id = Entry.Utils.generateId());
+    this.set(a);
+    this.getSchema();
+  };
+  a.getSchema = function() {
+    this._schema = Entry.block[this.type];
+    this._schema.event && this.thread.registerEvent(this, this._schema.event);
+    for (var a = this._schema.contents, c = 0;c < a.length;c++) {
+      var d = a[c];
+      !this.values[d.key] && d.value && (this.values[d.key] = d.value);
+      "Statement" == d.type && (this.values[d.key] = new Entry.Thread(this.values[d.key], this.getCode()));
+    }
+  };
+  a.setThread = function(a) {
+    this.set({thread:a});
+  };
+  a.getThread = function() {
+    return this.thread;
+  };
+  a.setPrev = function(a) {
+    a !== this && this.set({prev:a});
+  };
+  a.setNext = function(a) {
+    a !== this && this.set({next:a});
+  };
+  a.next = function() {
+    return this.next;
+  };
+  a.insertAfter = function(a) {
+    this.thread.insertByBlock(this, a);
+  };
+  a._updatePos = function() {
+    this.view && this.set({x:this.view.x, y:this.view.y});
+    this.next && this.next._updatePos();
+  };
+  a.createView = function(a) {
+    this.view || (this.set({view:new Entry.BlockView(this, a)}), this._updatePos());
+  };
+  a.clone = function(a) {
+    return new Entry.Block(this.toJSON(!0), a);
+  };
+  a.toJSON = function(a) {
+    var c = this._toJSON();
+    delete c.prev;
+    delete c.next;
+    delete c.view;
+    delete c.thread;
+    a && delete c.id;
+    var d = {}, e;
+    for (e in c.values) {
+      d[e] = c.values[e];
+    }
+    c.values = d;
+    d = this._schema.contents;
+    for (e = 0;e < d.length;e++) {
+      var f = d[e];
+      "Statement" == f.type && (c.values[f.key] = this.values[f.key].toJSON(a));
+    }
+    return c;
+  };
+  a.destroy = function(a) {
+    this.view && this.view.destroy(a);
+    (!this.prev || this.prev instanceof Entry.DummyBlock) && this.thread.destroy();
+    var c = this.values.STATEMENT;
+    c && (c = c.getFirstBlock(), c instanceof Entry.DummyBlock && (c = c.next), c && c.destroy(a));
+    this.next && this.next.destroy(a);
+  };
+  a.getView = function() {
+    return this.view;
+  };
+  a.setMovable = function(a) {
+    this.movable != a && this.set({movable:a});
+  };
+  a.isMovable = function() {
+    return this.movable;
+  };
+  a.setDeletable = function(a) {
+    this.deletable != a && this.set({deletable:a});
+  };
+  a.isDeletable = function() {
+    return this.deletable;
+  };
+  a.getCode = function() {
+    return this.thread.getCode();
+  };
+  a.doAdd = function() {
+    var a = this.id;
+    console.log("doAdd", a);
+    Entry.activityReporter && (a = [["blockId", a], ["code", this.getCode().stringify()]], Entry.activityReporter.add(new Entry.Activity("addBlock", a)));
+    this.getCode().changeEvent.notify();
+  };
+  a.doMove = function() {
+    var a = this.id, c = this.view.x - this.x, d = this.view.y - this.y;
+    console.log("doMove", a, c, d);
+    this._updatePos();
+    this.getCode().changeEvent.notify();
+    Entry.activityReporter && (a = [["blockId", a], ["moveX", c], ["moveY", d], ["code", this.getCode().stringify()]], Entry.activityReporter.add(new Entry.Activity("moveBlock", a)));
+  };
+  a.doSeparate = function() {
+    var a = this.id, c = this.x, d = this.y;
+    console.log("separate", a, c, d);
+    this.thread.separate(this);
+    this._updatePos();
+    this.getCode().changeEvent.notify();
+    Entry.activityReporter && (a = [["blockId", a], ["positionX", c], ["positionY", d], ["code", this.getCode().stringify()]], Entry.activityReporter.add(new Entry.Activity("seperateBlock", a)));
+  };
+  a.doInsert = function(a) {
+    var c = this.id, d = a.id, e = this.x, f = this.y;
+    console.log("insert", c, d, e, f);
+    var g = this.thread.cut(this);
+    a.insertAfter(g);
+    this._updatePos();
+    this.getCode().changeEvent.notify();
+    Entry.activityReporter && (a = [["targetBlockId", d], ["blockId", c], ["positionX", e], ["positionY", f], ["code", this.getCode().stringify()]], Entry.activityReporter.add(new Entry.Activity("insertBlock", a)));
+  };
+  a.doDestroy = function(a) {
+    var c = this.id, d = this.x, e = this.y;
+    console.log("destroy", c, d, e);
+    this.destroy(a);
+    this.getCode().changeEvent.notify();
+    Entry.activityReporter && (a = [["blockId", c], ["positionX", d], ["positionY", e], ["code", this.getCode().stringify()]], Entry.activityReporter.add(new Entry.Activity("destroyBlock", a)));
+  };
+})(Entry.Block.prototype);
+Entry.Thread = function(a, b) {
+  this._data = new Entry.Collection;
+  this._code = b;
+  this.changeEvent = new Entry.Event(this);
+  this.changeEvent.attach(this, this.inspectExist);
+  this.load(a);
+};
+(function(a) {
+  a.load = function(a) {
+    void 0 === a && (a = []);
+    if (!(a instanceof Array)) {
+      return console.error("thread must be array");
+    }
+    for (var c = 0;c < a.length;c++) {
+      var d = a[c];
+      d instanceof Entry.Block || d instanceof Entry.DummyBlock ? (d.setThread(this), this._data.push(d)) : this._data.push(new Entry.Block(d, this));
+    }
+    this._setRelation();
+    (a = this._code.view) && this.createView(a.board);
+  };
+  a._setRelation = function() {
+    var a = this._data.getAll();
+    if (0 !== a.length) {
+      var c = a[0];
+      c.setPrev(null);
+      a[a.length - 1].setNext(null);
+      for (var d = 1;d < a.length;d++) {
+        var e = a[d];
+        e.setPrev(c);
+        c.setNext(e);
+        c = e;
+      }
+    }
+  };
+  a.registerEvent = function(a, c) {
+    this._code.registerEvent(a, c);
+  };
+  a.createView = function(a) {
+    this.view || (this.view = new Entry.ThreadView(this, a));
+    this._data.map(function(c) {
+      c.createView(a);
+    });
+  };
+  a.separate = function(a) {
+    this._data.has(a.id) && (a.prev && (a.prev.setNext(null), a.setPrev(null)), a = this._data.splice(this._data.indexOf(a)), this._code.createThread(a), this.changeEvent.notify());
+  };
+  a.cut = function(a) {
+    a = this._data.indexOf(a);
+    var c = this._data.splice(a);
+    this._data[a - 1] && this._data[a - 1].setNext(null);
+    this.changeEvent.notify();
+    return c;
+  };
+  a.insertDummyBlock = function(a) {
+    this._data.unshift(a);
+    this._data[1] && (this._data[1].setPrev(a), a.setNext(this._data[1]));
+  };
+  a.insertByBlock = function(a, c) {
+    var d = this._data.indexOf(a);
+    a.setNext(c[0]);
+    c[0].setPrev(a);
+    for (var e in c) {
+      c[e].setThread(this);
+    }
+    this._data.splice.apply(this._data, [d + 1, 0].concat(c));
+    this._setRelation();
+    this.changeEvent.notify();
+  };
+  a.clone = function(a) {
+    a = a || this._code;
+    a = new Entry.Thread([], a);
+    for (var c = this._data, d = [], e = 0, f = c.length;e < f;e++) {
+      d.push(c[e].clone(a));
+    }
+    a.load(d);
+    return a;
+  };
+  a.toJSON = function(a) {
+    for (var c = [], d = 0;d < this._data.length;d++) {
+      this._data[d] instanceof Entry.Block && c.push(this._data[d].toJSON(a));
+    }
+    return c;
+  };
+  a.destroy = function(a) {
+    this._code.destroyThread(this, !1);
+    this.view && this.view.destroy(a);
+  };
+  a.getFirstBlock = function() {
+    return this._data[0];
+  };
+  a.getBlocks = function() {
+    return this._data;
+  };
+  a.countBlock = function() {
+    for (var a = 0, c = 0;c < this._data.length;c++) {
+      var d = this._data[c];
+      if (d.type) {
+        a++;
+        for (var e = Entry.block[d.type].contents, f = 0;f < e.length;f++) {
+          var g = e[f];
+          "Statement" == g.type && (a += d.values[g.key].countBlock());
+        }
+      }
+    }
+    return a;
+  };
+  a.inspectExist = function() {
+  };
+  a.getCode = function() {
+    return this._code;
+  };
+  a.setCode = function(a) {
+    this._code = a;
+  };
+})(Entry.Thread.prototype);
+Entry.ThreadView = function(a, b) {
+  Entry.Model(this, !1);
+  this.thread = a;
+  this.svgGroup = b.svgThreadGroup.group();
+};
+(function(a) {
+  a.schema = {scrollX:0, scrollY:0};
+  a.destroy = function() {
+    this.svgGroup.remove();
+  };
+})(Entry.ThreadView.prototype);
+Entry.FieldTrashcan = function(a) {
+  this.board = a;
+  this.svgGroup = a.snap.group();
+  this.renderStart();
+  this.dragBlockObserver = this.dragBlock = null;
+  this.isOver = !1;
+  a.observe(this, "updateDragBlock", ["dragBlock"]);
+  this.setPosition();
+  Entry.windowResized && Entry.windowResized.attach(this, this.setPosition);
+};
+(function(a) {
+  a.renderStart = function() {
+    var a = Entry.mediaFilePath + "delete_";
+    this.trashcanTop = this.svgGroup.image(a + "cover.png", 0, 0, 60, 20);
+    this.trashcan = this.svgGroup.image(a + "body.png", 0, 20, 60, 60);
+    a = this.svgGroup.filter(Snap.filter.shadow(1, 1, 2));
+    this.svgGroup.attr({filter:a});
+  };
+  a.updateDragBlock = function() {
+    var a = this.board.dragBlock, c = this.dragBlockObserver;
+    a ? a.observe(this, "checkBlock", ["x", "y"]) : (c && c.destroy(), this.isOver && this.dragBlock && (this.dragBlock.block.doDestroy(!0), createjs.Sound.play("entryDelete")), this.tAnimation(!1));
+    this.dragBlock = a;
+  };
+  a.checkBlock = function() {
+    var a = this.dragBlock;
+    if (a && a.block.isDeletable()) {
+      var c = this.board.offset, d = this.getPosition(), e = d.x + c.left, c = d.y + c.top, f, g;
+      if (a = a.dragInstance) {
+        f = a.offsetX, g = a.offsetY;
+      }
+      this.tAnimation(f >= e && g >= c);
+    }
+  };
+  a.align = function() {
+    var a = this.getPosition();
+    this.svgGroup.attr({transform:"t" + a.x + " " + a.y});
+  };
+  a.setPosition = function() {
+    var a = this.board.svgDom;
+    this._x = a.width() - 110;
+    this._y = a.height() - 110;
+    this.align();
+  };
+  a.getPosition = function() {
+    return {x:this._x, y:this._y};
+  };
+  a.tAnimation = function(a) {
+    if (a !== this.isOver) {
+      a = void 0 === a ? !0 : a;
+      var c = this.trashcanTop;
+      a ? c.animate({transform:"t5 -20 r30"}, 50) : c.animate({transform:"r0"}, 50);
+      this.isOver = a;
+    }
+  };
+})(Entry.FieldTrashcan.prototype);
+Entry.Board = function(a) {
+  a = "string" === typeof a ? $("#" + a) : $(a);
+  if ("DIV" !== a.prop("tagName")) {
+    return console.error("Dom is not div element");
+  }
+  if ("function" !== typeof window.Snap) {
+    return console.error("Snap library is required");
+  }
+  Entry.Model(this, !1);
+  this.svgDom = Entry.Dom($('<svg id="play" class="entryBoard" width="100%" height="100%"version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'), {parent:a});
+  this.relativeOffset = this.offset = this.svgDom.offset();
+  var b = this;
+  $(window).scroll(function(a) {
+    var d = $(window);
+    a = d.scrollTop();
+    var d = d.scrollLeft(), e = b.offset;
+    b.relativeOffset = {top:e.top - a, left:e.left - d};
+  });
+  this.snap = Snap("#play");
+  this._blockViews = [];
+  this.trashcan = new Entry.FieldTrashcan(this);
+  this.svgGroup = this.snap.group();
+  this.svgThreadGroup = this.svgGroup.group();
+  this.svgThreadGroup.board = this;
+  this.svgBlockGroup = this.svgGroup.group();
+  this.svgBlockGroup.board = this;
+  Entry.ANIMATION_DURATION = 200;
+  Entry.BOARD_PADDING = 100;
+  this.changeEvent = new Entry.Event(this);
+  this.scroller = new Entry.Scroller(this, !0, !0);
+  this._addControl(a);
+};
+(function(a) {
+  a.schema = {code:null, dragBlock:null, magnetedBlockView:null};
+  a.changeCode = function(a) {
+    this.codeListener && this.code.changeEvent.detach(this.codeListener);
+    this.set({code:a});
+    var c = this;
+    this.codeListener = this.code.changeEvent.attach(this, function() {
+      c.changeEvent.notify();
+    });
+    a.createView(this);
+    this.changeEvent.notify();
+  };
+  a.bindCodeView = function(a) {
+    this.svgBlockGroup.remove();
+    this.svgThreadGroup.remove();
+    this.svgBlockGroup = a.svgBlockGroup;
+    this.svgThreadGroup = a.svgThreadGroup;
+    this.svgGroup.append(this.svgThreadGroup);
+    this.svgGroup.append(this.svgBlockGroup);
+  };
+  a.setMagnetedBlock = function(a) {
+    if (this.magnetedBlockView) {
+      if (this.magnetedBlockView === a) {
+        return;
+      }
+      this.magnetedBlockView.set({magneting:!1});
+    }
+    this.set({magnetedBlockView:a});
+    a && (a.set({magneting:!0, animating:!0}), a.dominate(), this.dragBlock.dominate());
+  };
+  a.getCode = function() {
+    return this.code;
+  };
+  a.findById = function(a) {
+    for (var c = this.code.getThreads(), d = 0, e = c.length;d < e;d++) {
+      var f = c[d];
+      if (f) {
+        for (var f = f.getBlocks(), g = 0, e = f.length;g < e;g++) {
+          if (f[g] && f[g].id == a) {
+            return f[g];
+          }
+        }
+      }
+    }
+  };
+  a._addControl = function(a) {
+    var c = this;
+    a.mousedown(function() {
+      c.onMouseDown.apply(c, arguments);
+    });
+    a.bind("touchstart", function() {
+      c.onMouseDown.apply(c, arguments);
+    });
+    a.on("mousewheel", function() {
+      c.mouseWheel.apply(c, arguments);
+    });
+  };
+  a.onMouseDown = function(a) {
+    function c(a) {
+      a.stopPropagation();
+      a.preventDefault();
+      a.originalEvent.touches && (a = a.originalEvent.touches[0]);
+      var b = f.dragInstance;
+      f.scroller.scroll(a.pageX - b.offsetX, a.pageY - b.offsetY);
+      b.set({offsetX:a.pageX, offsetY:a.pageY});
+    }
+    function d(a) {
+      $(document).unbind(".entryBoard");
+      delete f.dragInstance;
+    }
+    a.originalEvent.touches && (a = a.originalEvent.touches[0]);
+    if (0 === a.button || a instanceof Touch) {
+      Entry.documentMousedown && Entry.documentMousedown.notify(a);
+      var e = $(document);
+      e.bind("mousemove.entryBoard", c);
+      e.bind("mouseup.entryBoard", d);
+      e.bind("touchmove.entryBoard", c);
+      e.bind("touchend.entryBoard", d);
+      this.dragInstance = new Entry.DragInstance({startX:a.pageX, startY:a.pageY, offsetX:a.pageX, offsetY:a.pageY});
+    }
+    var f = this;
+    a.stopPropagation();
+  };
+  a.mouseWheel = function(a) {
+    a = a.originalEvent;
+    this.scroller.scroll(a.wheelDeltaX || -a.deltaX, a.wheelDeltaY || -a.deltaY);
+  };
+})(Entry.Board.prototype);
+Entry.Workspace = function(a, b) {
+  Entry.Model(this, !1);
+  a.workspace = this;
+  b.workspace = this;
+  this._blockMenu = a;
+  this._board = b;
+  this.svgGroup = a.snap.group();
+  this._stopEvent = new Entry.Event(this);
+};
+(function(a) {
+  a.getBoard = function() {
+    return this._board;
+  };
+  a.getBlockMenu = function() {
+    return this._blockMenu;
+  };
+  a.playAddBlock = function(a) {
+    var c = this, d;
+    a.cloneId ? (d = this._blockMenu.findById(a.cloneId)) || (d = this._board.findById(a.cloneId)) : d = this._blockMenu.findById(a.target);
+    if (d) {
+      if (a.dest.id) {
+        var e = this._board.findById(a.dest.id);
+        a.dest.x = this.getBlockMenu()._svgWidth + e.view.x;
+        a.dest.y = e.view.y + e.view.height;
+      }
+      var f = d.view, g = f.getBoard();
+      g.set({dragBlock:f});
+      d = g.cloneThread();
+      a.cloneId = d;
+      (d = f.moveBoardBlockObserver) && d.destroy();
+      d = a.dest.x;
+      e = a.dest.y;
+      f._moveTo(d, e, !0, a.duration - 300);
+      var h = this.getBoard().offset, k = this.getBlockMenu().offset, m = h.left - k.left, h = h.top - k.top;
+      this.getBoard().dragBlock._moveTo(d - m, e - h, !0, a.duration - 300);
+      setTimeout(function() {
+        f._align(!0);
+        var d = f._getCloseBlock();
+        d ? g.setMagnetedBlock(d.view) : g.setMagnetedBlock(null);
+        f.terminateDrag();
+        g && g.set({dragBoard:null});
+        c._stopEvent.notify(a);
+      }, a.duration - 300);
+    }
+  };
+  a.playMoveBlock = function(a) {
+    var c = this, d;
+    console.log("cloneId=", a.cloneId);
+    d = a.cloneId ? this._board.findById(a.cloneId) : this._board.findById(a.target);
+    if (a.dest.id) {
+      var e = this._board.findById(a.dest.id);
+      a.dest.x = this.getBlockMenu()._svgWidth + e.view.x;
+      a.dest.y = e.view.y + e.view.height;
+    }
+    var f = d.view, g = f.getBoard();
+    g.set({dragBlock:f});
+    (d = f.moveBoardBlockObserver) && d.destroy();
+    d = a.dest.x;
+    e = a.dest.y;
+    f._moveTo(d, e, !0, a.duration - 300);
+    var h = this.getBoard().offset, k = this.getBlockMenu().offset;
+    f._moveTo(d - (h.left - k.left), e - (h.top - k.top), !0, a.duration - 300);
+    setTimeout(function() {
+      f._align(!0);
+      var d = f._getCloseBlock();
+      d ? g.setMagnetedBlock(d.view) : g.setMagnetedBlock(null);
+      f.terminateDrag();
+      g && g.set({dragBoard:null});
+      c._stopEvent.notify(a);
+    }, a.duration - 300);
+  };
+  a.moveMouse = function(a, c) {
+  };
+  a.generateImage = function(a) {
+    var c = this.getBoard().svgDom[0], d = c.clientWidth / 2, c = c.clientHeight / 2;
+    this.svgGroup = this._board.snap.group();
+    this.image = this.svgGroup.image(a, d, c, 30, 30);
+  };
+})(Entry.Workspace.prototype);
 Entry.Xml = {};
 Entry.Xml.isTypeOf = function(a, b) {
   return b.getAttribute("type") == a;

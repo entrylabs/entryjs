@@ -10,7 +10,7 @@ Blockly.Blocks.wait_second = {
         .setCheck(["Number", "String", null]);
     this.appendDummyInput()
         .appendField(Lang.Blocks.FLOW_wait_second_2)
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/flow_03.png', '*'));
+        .appendField(new Blockly.FieldIcon(Entry.mediaFilePath + 'block_icon/flow_03.png', '*'));
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
@@ -48,7 +48,7 @@ Blockly.Blocks.repeat_basic = {
         .setCheck(["Number", "String"]);
         this.appendDummyInput()
             .appendField(Lang.Blocks.FLOW_repeat_basic_2)
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/flow_03.png', '*'));
+        .appendField(new Blockly.FieldIcon(Entry.mediaFilePath + 'block_icon/flow_03.png', '*'));
         this.appendStatementInput('DO');
         this.setInputsInline(true);
         this.setPreviousStatement(true);
@@ -80,7 +80,7 @@ Blockly.Blocks.repeat_inf = {
         this.setColour("#498deb");
         this.appendDummyInput()
             .appendField(Lang.Blocks.FLOW_repeat_inf)
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/flow_03.png', '*'));
+        .appendField(new Blockly.FieldIcon(Entry.mediaFilePath + 'block_icon/flow_03.png', '*'));
         this.appendStatementInput('DO');
         this.setInputsInline(true);
         this.setPreviousStatement(true);
@@ -100,7 +100,7 @@ Blockly.Blocks.stop_repeat = {
     this.setColour("#498deb");
     this.appendDummyInput()
         .appendField(Lang.Blocks.FLOW_stop_repeat)
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/flow_03.png', '*'));
+        .appendField(new Blockly.FieldIcon(Entry.mediaFilePath + 'block_icon/flow_03.png', '*'));
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
@@ -135,7 +135,7 @@ Blockly.Blocks.wait_until_true = {
         .setCheck("Boolean");
         this.appendDummyInput()
             .appendField(Lang.Blocks.FLOW_wait_until_true_2)
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/flow_03.png', '*'));
+        .appendField(new Blockly.FieldIcon(Entry.mediaFilePath + 'block_icon/flow_03.png', '*'));
         this.setInputsInline(true);
         this.setPreviousStatement(true);
         this.setNextStatement(true);
@@ -161,7 +161,7 @@ Blockly.Blocks._if = {
             .setCheck("Boolean");
         this.appendDummyInput()
             .appendField(Lang.Blocks.FLOW__if_2)
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/flow_03.png', '*'));
+        .appendField(new Blockly.FieldIcon(Entry.mediaFilePath + 'block_icon/flow_03.png', '*'));
         this.appendStatementInput("STACK");
         this.setInputsInline(true);
         this.setPreviousStatement(true);
@@ -193,7 +193,7 @@ Blockly.Blocks.if_else = {
             .setCheck("Boolean");
         this.appendDummyInput()
             .appendField(Lang.Blocks.FLOW_if_else_2)
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/flow_03.png', '*'));
+        .appendField(new Blockly.FieldIcon(Entry.mediaFilePath + 'block_icon/flow_03.png', '*'));
         this.appendStatementInput("STACK_IF");
         this.appendDummyInput()
             .appendField(Lang.Blocks.FLOW_if_else_3);
@@ -226,7 +226,7 @@ Blockly.Blocks.create_clone = {
             .appendField(new Blockly.FieldDropdownDynamic("clone"), "VALUE");
         this.appendDummyInput()
             .appendField(Lang.Blocks.FLOW_create_clone_2)
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/flow_03.png', '*'));
+        .appendField(new Blockly.FieldIcon(Entry.mediaFilePath + 'block_icon/flow_03.png', '*'));
         this.setInputsInline(true);
         this.setPreviousStatement(true);
         this.setNextStatement(true);
@@ -250,7 +250,7 @@ Blockly.Blocks.delete_clone = {
         this.setColour("#498deb");
         this.appendDummyInput()
             .appendField(Lang.Blocks.FLOW_delete_clone)
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/flow_03.png', '*'));
+        .appendField(new Blockly.FieldIcon(Entry.mediaFilePath + 'block_icon/flow_03.png', '*'));
         this.setInputsInline(true);
         this.setPreviousStatement(true);
     }
@@ -267,7 +267,7 @@ Blockly.Blocks.when_clone_start = {
     init: function() {
         this.setColour("#498deb");
         this.appendDummyInput()
-            .appendField(new Blockly.FieldIcon('/img/assets/block_icon/start_icon_clone.png', '*', "start"))
+            .appendField(new Blockly.FieldIcon(Entry.mediaFilePath + 'block_icon/start_icon_clone.png', '*', "start"))
             .appendField(Lang.Blocks.FLOW_when_clone_start);
         this.setInputsInline(true);
         this.setNextStatement(true);
@@ -283,7 +283,7 @@ Blockly.Blocks.stop_run = {
     this.setColour("#498deb");
     this.appendDummyInput()
         .appendField(Lang.Blocks.FLOW_stop_run)
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/flow_03.png', '*'));
+        .appendField(new Blockly.FieldIcon(Entry.mediaFilePath + 'block_icon/flow_03.png', '*'));
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
@@ -359,7 +359,7 @@ Blockly.Blocks.stop_object = {
                 ]), "TARGET");
         this.appendDummyInput()
             .appendField(Lang.Blocks.FLOW_stop_object_2)
-            .appendField(new Blockly.FieldIcon('/img/assets/block_icon/flow_03.png', '*'));
+            .appendField(new Blockly.FieldIcon(Entry.mediaFilePath + 'block_icon/flow_03.png', '*'));
         this.setInputsInline(true);
         this.setPreviousStatement(true);
         this.setNextStatement(true);
@@ -404,7 +404,7 @@ Blockly.Blocks.restart_project = {
         this.setColour("#498deb");
         this.appendDummyInput()
             .appendField(Lang.Blocks.FLOW_restart)
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/flow_03.png', '*'));
+        .appendField(new Blockly.FieldIcon(Entry.mediaFilePath + 'block_icon/flow_03.png', '*'));
         this.setInputsInline(true);
         this.setPreviousStatement(true);
     }
@@ -420,7 +420,7 @@ Blockly.Blocks.remove_all_clones = {
         this.setColour("#498deb");
         this.appendDummyInput()
             .appendField(Lang.Blocks.FLOW_delete_clone_all)
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/flow_03.png', '*'));
+        .appendField(new Blockly.FieldIcon(Entry.mediaFilePath + 'block_icon/flow_03.png', '*'));
         this.setInputsInline(true);
         this.setPreviousStatement(true);
         this.setNextStatement(true);

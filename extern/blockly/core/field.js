@@ -263,7 +263,7 @@ Blockly.Field.prototype.onMouseUp_ = function(e) {
   } else if (Blockly.Block.dragMode_ == 2) {
     // Drag operation is concluding.  Don't open the editor.
     return;
-  } else if (this.sourceBlock_.isEditable() && !this.sourceBlock_.isInFlyout) {
+  } else if (this.sourceBlock_.isEditable()) {
     // Non-abstract sub-classes must define a showEditor_ method.
     this.sourceBlock_.isDrag = true;
     this.showEditor_();

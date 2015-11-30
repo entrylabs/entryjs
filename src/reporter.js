@@ -1,10 +1,11 @@
+"use strict";
 /**
  * @fileoverview Show dialog on canvas
  */
 
 Entry.Reporter = function(isRealTime) {
-    this.userId;
-    this.projectId;
+    this.userId = null;
+    this.projectId = null;
     this.isRealTime = isRealTime;
     this.activities = [];
 };

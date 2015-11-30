@@ -69,7 +69,7 @@ Entry.Painter.prototype.initialize = function(painterView) {
     var painter = this;
     Entry.addEventListener('textUpdate', function() {
         var string = painter.inputField.value();
-        if(string==""){
+        if(string === ""){
             painter.inputField.hide();
             delete painter.inputField;
             return;
@@ -120,7 +120,7 @@ Entry.Painter.prototype.initHandle = function() {
         painter.checkCommand();
     });
 
-    handle.rect.cursor = "move"
+    handle.rect.cursor = "move";
     handle.addChild(handle.rect);
     handle.notch = new createjs.Shape();
     handle.addChild(handle.notch);
@@ -369,8 +369,9 @@ Entry.Painter.prototype.newPicture = function() {
             height: 1,
             width: 1
         },
-        filename: "_1x1",
-        name: "새그림"
+        //filename: "_1x1",
+        fileurl: Entry.mediaFilePath + '_1x1.png',
+        name: Lang.Workspace.new_picture
     };
 
     newPicture.id = Entry.generateHash();
@@ -405,8 +406,12 @@ Entry.Painter.prototype.initPicture = function() {
         painter.file.name = picture.name;
         painter.file.mode = 'edit';
 
-        image.src = '/uploads/' + picture.filename.substring(0,2)+'/'
-            +picture.filename.substring(2,4)+'/image/'+picture.filename+'.png';
+        if (picture.fileurl) {
+            image.src = picture.fileurl;
+        } else {
+            // deprecated
+            image.src = '/uploads/' + picture.filename.substring(0,2)+'/' + picture.filename.substring(2,4)+'/image/'+picture.filename+'.png';
+        }
 
         image.onload = function(event) {
             painter.addImage(event.target);
@@ -547,9 +552,7 @@ Entry.Painter.prototype.matchTolerance = function(pos, startR, startG, startB, t
     var b = this.colorLayerData.data[pos+2];
 
     return (
-        (r >= rMin && r <= rMax)
-        && (g >= gMin && g <= gMax)
-        && (b >= bMin && b <= bMax)
+        (r >= rMin && r <= rMax) && (g >= gMin && g <= gMax) && (b >= bMin && b <= bMax)
         );
 };
 
@@ -606,7 +609,7 @@ Entry.Painter.prototype.pickStrokeColor = function(event) {
     document.getElementById('entryPainterAttrCircle').style.backgroundColor = this.stroke.lineColor;
     document.getElementById('entryPainterAttrCircleInput').value = this.stroke.lineColor;
 
-}
+};
 
 Entry.Painter.prototype.drawText = function(string) {
     var fontStyle = document.getElementById('entryPainterAttrFontStyle').value;
@@ -689,13 +692,19 @@ Entry.Painter.prototype.initCommand = function() {
         this.stage.update();
 
     this.isCommandValid = false;
-    this.colorLayerModel = this.ctx.getImageData(0, 0,
-                                                this.canvas.width,
-                                                this.canvas.height);
-    Entry.stateManager.addCommand("edit sprite",
-                                 this,
-                                 this.restorePainter,
-                                 this.colorLayerModel);
+    this.colorLayerModel = this.ctx.getImageData(
+        0, 0,
+        this.canvas.width,
+        this.canvas.height
+    );
+
+    if (Entry.stateManager)
+        Entry.stateManager.addCommand(
+            "edit sprite",
+            this,
+            this.restorePainter,
+            this.colorLayerModel
+        );
 
     if (restoreHandle)
         this.handle.visible = true;
@@ -736,10 +745,13 @@ Entry.Painter.prototype.restorePainter = function(colorLayerModel) {
         painter.objectContainer.addChild(bitmap);
     };
 
-    Entry.stateManager.addCommand("restore sprite",
-                                 this,
-                                 this.restorePainter,
-                                 currentColorModel);
+    if (Entry.stateManager)
+        Entry.stateManager.addCommand(
+            "restore sprite",
+            this,
+            this.restorePainter,
+            currentColorModel
+        );
 };
 
 Entry.Painter.prototype.platten = function() {
@@ -832,12 +844,9 @@ Entry.Painter.prototype.fill = function() {
         if (pixelStack.length > 1080)
             break;
     }
-    delete pixelStack;
 
     this.file.modified = true;
     this.reloadContext();
-
-
 };
 
 Entry.Painter.prototype.reloadContext = function() {
@@ -899,7 +908,7 @@ Entry.Painter.prototype.move_rect = function() {
         height= width;
     }
     if (this.stroke.fill) {
-        if( this.stroke.thickness == 0){
+        if( this.stroke.thickness === 0){
             this.brush.graphics.clear()
             .setStrokeStyle(this.stroke.thickness, 'round')
             .beginFill(this.stroke.fillColor)
@@ -919,7 +928,7 @@ Entry.Painter.prototype.move_rect = function() {
                 height);
         }
     } else {
-        if( this.stroke.thickness == 0) {
+        if( this.stroke.thickness === 0) {
             this.brush.graphics.clear()
             .setStrokeStyle(this.stroke.thickness, 'round')
             .drawRect(this.oldPt.x,
@@ -947,7 +956,7 @@ Entry.Painter.prototype.move_circle = function() {
         height= width;
     }
     if(this.stroke.fill){
-        if(this.stroke.thickness ==0){
+        if(this.stroke.thickness === 0){
             this.brush.graphics.clear()
             .beginStroke(this.stroke.fillColor)
             .setStrokeStyle(this.stroke.thickness, 'round')
@@ -962,7 +971,7 @@ Entry.Painter.prototype.move_circle = function() {
                 this.oldPt.y,width,height);
         }
     }else if(!this.stroke.fill){
-        if(this.stroke.thickness==0){
+        if(this.stroke.thickness === 0){
             this.brush.graphics.clear()
             .drawEllipse(this.oldPt.x,this.oldPt.y,width,height);
         }else{
@@ -1117,7 +1126,7 @@ Entry.Painter.prototype.edit_select = function() {
     };
 
 
-}
+};
 
 Entry.Painter.prototype.move_erase = function(event) {
     var midPt = new createjs.Point(this.oldPt.x + this.stage.mouseX >> 1,
@@ -1338,7 +1347,7 @@ Entry.Painter.prototype.trim = function() {
             if (bound.right === null) {
                 bound.right = x;
             } else {
-                bound.right = x;;
+                bound.right = x;
             }
 
             if (bound.bottom === null) {
@@ -1370,7 +1379,7 @@ Entry.Painter.prototype.trim = function() {
     }
     this.ctx_.putImageData(trimmed, 0, 0);
 
-}
+};
 
 Entry.Painter.prototype.showInputField = function(event) {
     if (!this.inputField) {
@@ -1410,8 +1419,11 @@ Entry.Painter.prototype.addPicture = function(picture) {
 
     var image = new Image();
     image.id = Entry.generateHash();
-    image.src = '/uploads/' + picture.filename.substring(0,2)+'/'
-        +picture.filename.substring(2,4)+'/image/'+picture.filename+'.png';
+    if (picture.fileurl) {
+        image.src = picture.fileurl;
+    } else {
+        image.src = '/uploads/' + picture.filename.substring(0,2)+'/'+picture.filename.substring(2,4)+'/image/'+picture.filename+'.png';
+    }
 
     var painter = this;
     image.onload = function(event) {
@@ -1425,7 +1437,7 @@ Entry.Painter.prototype.addPicture = function(picture) {
  */
 Entry.Painter.prototype.initCoordinator = function() {
     var coordinator = new createjs.Container();
-    var img = new createjs.Bitmap("/img/assets/workspace_coordinate.png");
+    var img = new createjs.Bitmap(Entry.mediaFilePath + "/workspace_coordinate.png");
     coordinator.addChild(img);
     this.stage.addChild(coordinator);
 
@@ -1457,9 +1469,9 @@ Entry.Painter.prototype.initDashedLine = function() {
         while( q++ < dashes ){
             x1 += dashX;
             y1 += dashY;
-            this[q % 2 == 0 ? 'moveTo' : 'lineTo'](x1, y1);
+            this[q % 2 === 0 ? 'moveTo' : 'lineTo'](x1, y1);
         }
-        this[q % 2 == 0 ? 'moveTo' : 'lineTo'](x2, y2);
+        this[q % 2 === 0 ? 'moveTo' : 'lineTo'](x2, y2);
         return this;
     };
 
@@ -1498,7 +1510,7 @@ Entry.Painter.prototype.generateView = function(painterView) {
         this.view_.appendChild(painterTop);
         var painterToolbox = Entry.createElement('div', 'entryPainterToolbox');
         painterToolbox.addClass('entryPlaygroundPainterToolbox');
-        this.view_.appendChild(painterToolbox)
+        this.view_.appendChild(painterToolbox);
         var painterToolboxTop = Entry.createElement('div','entryPainterToolboxTop');
         painterToolboxTop.addClass('entryPainterToolboxTop');
         painterToolbox.appendChild(painterToolboxTop);
@@ -1515,7 +1527,7 @@ Entry.Painter.prototype.generateView = function(painterView) {
         painterCanvas_.width = 960;
         painterCanvas_.height = 540;
         painterContainer.appendChild(painterCanvas_);
-        var painterAttr = Entry.createElement('div', 'entryPainterAttr')
+        var painterAttr = Entry.createElement('div', 'entryPainterAttr');
         painterAttr.addClass('entryPlaygroundPainterAttr');
         this.view_.appendChild(painterAttr);
 
@@ -1564,13 +1576,9 @@ Entry.Painter.prototype.generateView = function(painterView) {
             var ow = 960;
             var oh = 540;
 
-            var iw = window.innerWidth
-                    || document.documentElement.clientWidth
-                    || document.body.clientWidth;
+            var iw = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
 
-            var ih = window.innerHeight
-                    || document.documentElement.clientHeight
-                    || document.body.clientHeight;
+            var ih = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
 
             var ecw = parseInt(document.getElementById('entryCanvas').style.width);
 
@@ -1579,8 +1587,8 @@ Entry.Painter.prototype.generateView = function(painterView) {
             painterView.style.width = w + 'px';
             painterContainer.style.width = (w - 54) + 'px';
             painterContainer.style.height = h + 'px';
-            painterAttr.style.top = (h+30) + 'px'
-            painterAttr.style.height = (ih-h) + 'px'
+            painterAttr.style.top = (h+30) + 'px';
+            painterAttr.style.height = (ih-h) + 'px';
 
         });
         //- 레이아웃 끝
@@ -1961,7 +1969,8 @@ Entry.Painter.prototype.generateView = function(painterView) {
             var element = Entry.createElement('div');
             element.addClass('entryPlaygroundPainterAttrColorElement');
             if (color === 'transparent') {
-                element.style.backgroundImage = "url('/img/assets/transparent.png')";
+                var transparentImage = Entry.mediaFilePath + '/transparent.png';
+                element.style.backgroundImage = "url("+transparentImage+")";
             } else {
                 element.style.backgroundColor = color;
             }
@@ -2055,8 +2064,7 @@ Entry.Painter.prototype.generateView = function(painterView) {
         var backgroundClick = false;
         painterAttrShapeBackgroundColor.bindOnClick(function(evt) {
             painterAttrThick.style.zIndex='1';
-            this.style.zIndex='10';
-            this.style.zIndex= new String('10');
+            this.style.zIndex = '10';
             backgroundClick = true;
         });
 
@@ -2081,7 +2089,7 @@ Entry.Painter.prototype.generateView = function(painterView) {
         painterAttrFontName.size = '1';
         painterAttrFontName.onchange = function(evt) {
             painter.font.name = evt.target.value;
-        }
+        };
         for (var i=0; i<Entry.fonts.length; i++) {
             var font = Entry.fonts[i];
             var element = Entry.createElement('option');
@@ -2147,7 +2155,7 @@ Entry.Painter.prototype.generateView = function(painterView) {
         for (var i=0; i<fontStyles.length; i++) {
             var style = fontStyles[i];
             var element = Entry.createElement('option');
-            element.value = style.value;;
+            element.value = style.value;
             element.innerHTML = style.label;
             painterAttrFontStyle.appendChild(element);
         }

@@ -43,14 +43,14 @@ Blockly.Trashcan = function(workspace) {
  * @type {string}
  * @private
  */
-Blockly.Trashcan.prototype.BODY_URL_ = 'media/trashbody.png';
+Blockly.Trashcan.prototype.BODY_URL_ = '/media/trashbody.png';
 
 /**
  * URL of the lid image.
  * @type {string}
  * @private
  */
-Blockly.Trashcan.prototype.LID_URL_ = 'media/trashlid.png';
+Blockly.Trashcan.prototype.LID_URL_ = '/media/trashlid.png';
 
 /**
  * Width of both the trash can and lid images.
@@ -166,13 +166,13 @@ Blockly.Trashcan.prototype.createDom = function() {
       {'width': this.WIDTH_, 'height': this.BODY_HEIGHT_},
       this.svgGroup_);
   this.svgBody_.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href',
-      Blockly.pathToBlockly + this.BODY_URL_);
+      Blockly.mediaFilePath + this.BODY_URL_);
   this.svgBody_.setAttribute('y', this.LID_HEIGHT_);
   this.svgLid_ = Blockly.createSvgElement('image',
       {'width': this.WIDTH_, 'height': this.LID_HEIGHT_},
       this.svgGroup_);
   this.svgLid_.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href',
-      Blockly.pathToBlockly + this.LID_URL_);
+      Blockly.mediaFilePath + this.LID_URL_);
   return this.svgGroup_;
 };
 

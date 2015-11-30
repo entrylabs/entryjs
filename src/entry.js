@@ -4,16 +4,6 @@ goog.provide("Entry");
 
 Entry = {};
 
-/**
- * events handle in entry
- * @type {Array<events>}
- */
-Entry.events_ = {};
-
-/**
- * block functions in entry
- * @type {Array<functions>}
- */
 Entry.block = {};
 
 Entry.TEXT_ALIGN_CENTER = 0;
@@ -29,27 +19,63 @@ Entry.TEXT_ALIGNS = ["center", "left", "right"];
  * @param {?Project} project
  */
 Entry.loadProject = function(project) {
-    if (project) {
-        if (this.type == 'workspace')
-            Entry.stateManager.startIgnore();
-        Entry.projectId = project._id;
-        Entry.variableContainer.setVariables(project.variables);
-        Entry.variableContainer.setMessages(project.messages);
-        Entry.variableContainer.setFunctions(project.functions);
-        Entry.scene.addScenes(project.scenes);
-        Entry.stage.initObjectContainers();
-        Entry.container.setObjects(project.objects);
-        Entry.FPS = project.speed ? project.speed : 60;
-        createjs.Ticker.setFPS(Entry.FPS);
-        if (this.type == 'workspace')
-            Entry.stateManager.endIgnore();
+    if (!project) {
+        project = Entry.getStartProject(Entry.mediaFilePath);
     }
+
+    if (this.type == 'workspace')
+        Entry.stateManager.startIgnore();
+    Entry.projectId = project._id;
+    Entry.variableContainer.setVariables(project.variables);
+    Entry.variableContainer.setMessages(project.messages);
+    Entry.variableContainer.setFunctions(project.functions);
+    Entry.scene.addScenes(project.scenes);
+    Entry.stage.initObjectContainers();
+    Entry.container.setObjects(project.objects);
+    Entry.FPS = project.speed ? project.speed : 60;
+    createjs.Ticker.setFPS(Entry.FPS);
+    if (this.type == 'workspace')
+        Entry.stateManager.endIgnore();
+
     if (!Entry.engine.projectTimer)
         Entry.variableContainer.generateTimer();
 
     if (Object.keys(Entry.container.inputValue).length === 0)
         Entry.variableContainer.generateAnswer();
     Entry.start();
+    return project;
+};
+
+/**
+ * Export project
+ * @param {?Project} project
+ */
+Entry.exportProject = function(project) {
+    if (!project) {
+        project = {};
+    }
+
+    if (!Entry.engine.isState('stop')) {
+        Entry.engine.toggleStop();
+    }
+
+    if (Entry.Func &&
+        Entry.Func.workspace &&
+        Entry.Func.workspace.visible ) {
+        Entry.Func.cancelEdit();
+    }
+
+    //Entry.stage.handle.setVisible(false);
+    //Entry.stage.update();
+
+    project.objects = Entry.container.toJSON();
+    project.scenes = Entry.scene.toJSON();
+    project.variables = Entry.variableContainer.getVariableJSON();
+    project.messages = Entry.variableContainer.getMessageJSON();
+    project.functions = Entry.variableContainer.getFunctionJSON();
+    project.scenes = Entry.scene.toJSON();
+    project.speed = Entry.FPS;
+    return project;
 };
 
 /**
@@ -64,20 +90,20 @@ Entry.setBlockByText = function(objectType, blockText) {
     var categories = xml.getElementsByTagName('category');
     for (var i = 0; i < categories.length; i++) {
         var category = categories[i];
-        var json = {category: category.getAttribute("id"), blocks: []}
+        var json = {category: category.getAttribute("id"), blocks: []};
         var blocks = category.childNodes;
         for (var j = 0; j < blocks.length; j++) {
             var b = blocks[j];
             if (b.tagName &&
                 (b.tagName.toUpperCase() == 'BLOCK' ||
                  b.tagName.toUpperCase() == 'BTN')) {
-                json.blocks.push(b.getAttribute('type'))
+                json.blocks.push(b.getAttribute('type'));
             }
         }
         blockJSON.push(json);
     }
     Entry.playground.setBlockMenu(blockJSON);
-}
+};
 
 /**
  * inject blocks to Entry menu.
@@ -87,23 +113,23 @@ Entry.setBlockByText = function(objectType, blockText) {
  */
 Entry.setBlock = function(objectType, XML) {
     Entry.playground.setMenuBlock(objectType, XML);
-}
+};
 
 Entry.enableArduino = function() {
     return;
-    $.ajax('http://localhost:23518/arduino/')
-        .done(function(data){
-            var xmlHttp = new XMLHttpRequest();
-            xmlHttp.open( "GET", '/xml/arduino_blocks.xml', false );
-            xmlHttp.send('');
-            if (!Entry.playground.menuBlocks_.sprite.getElementById("arduino")) {
-                Entry.setBlockByText('arduino', xmlHttp.responseText);
-                Entry.playground.currentObjectType = '';
-                Entry.playground.setMenu(Entry.playground.object.objectType);
-            }
-            Entry.toast.success(Lang.Workspace.arduino_connect, Lang.Workspace.arduino_connect_success, false);
-        }).fail(function(){
-    });
+    //$.ajax('http://localhost:23518/arduino/')
+        //.done(function(data){
+            //var xmlHttp = new XMLHttpRequest();
+            //xmlHttp.open( "GET", '/xml/arduino_blocks.xml', false );
+            //xmlHttp.send('');
+            //if (!Entry.playground.menuBlocks_.sprite.getElementById("arduino")) {
+                //Entry.setBlockByText('arduino', xmlHttp.responseText);
+                //Entry.playground.currentObjectType = '';
+                //Entry.playground.setMenu(Entry.playground.object.objectType);
+            //}
+            //Entry.toast.success(Lang.Workspace.arduino_connect, Lang.Workspace.arduino_connect_success, false);
+        //}).fail(function(){
+    //});
 };
 
 /**
@@ -111,13 +137,18 @@ Entry.enableArduino = function() {
  * @param {sound object} sound
  */
 Entry.initSound = function(sound) {
-    var path = '/uploads/' + sound.filename.substring(0,2)+'/'+
-        sound.filename.substring(2,4)+'/'+sound.filename+sound.ext;
-    //createjs.Sound.removeSound(path);
-    //createjs.Sound.registerSound(path, sound.id, 4);
+    if (sound.fileurl) {
+        sound.path = sound.fileurl;
+    } else {
+        sound.path = '/uploads/' + sound.filename.substring(0,2)+'/'+
+            sound.filename.substring(2,4)+'/'+sound.filename+sound.ext;
+        //createjs.Sound.removeSound(path);
+        //createjs.Sound.registerSound(path, sound.id, 4);
+    }
+    console.log(Entry.soundQueue);
     Entry.soundQueue.loadFile({
         id: sound.id,
-        src: path,
+        src: sound.path,
         type: createjs.LoadQueue.SOUND
     });
 };
@@ -155,7 +186,7 @@ Entry.loadInterfaceState = function() {
             });
         }
     }
-}
+};
 
 /**
  * Resize element's size.
@@ -263,7 +294,7 @@ Entry.resizeElement = function(interfaceModel) {
  */
 Entry.getUpTime = function() {
     return new Date().getTime() - this.startTime;
-}
+};
 
 /**
  * @param {String} activityType
@@ -271,7 +302,7 @@ Entry.getUpTime = function() {
 Entry.addActivity = function(activityType) {
     if (Entry.stateManager)
         Entry.stateManager.addActivity(activityType);
-}
+};
 
 Entry.startActivityLogging = function() {
     if (Entry.reporter)
@@ -290,6 +321,10 @@ Entry.getActivityLog = function() {
     if (Entry.stateManager)
         log.activityLog = Entry.stateManager.activityLog_;
     return log;
-}
+};
+//block drag mode for Entry.BlockView
+Entry.DRAG_MODE_NONE = 0;
+Entry.DRAG_MODE_MOUSEDOWN = 1;
+Entry.DRAG_MODE_DRAG = 2;
 
 window.Entry = Entry;

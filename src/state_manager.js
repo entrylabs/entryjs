@@ -7,23 +7,23 @@
  * @constructor
  */
 Entry.StateManager = function() {
-    this.undoStack_ = new Array();
-    this.redoStack_ = new Array();
+    this.undoStack_ = [];
+    this.redoStack_ = [];
     /** prevent add command when undo and redo */
     this.isRestore = false;
     this.isIgnore = false;
     Entry.addEventListener('cancelLastCommand', function(e) {
-        Entry.stateManager.cancelLastCommand()});
+        Entry.stateManager.cancelLastCommand();});
     Entry.addEventListener('run', function(e) {
-        Entry.stateManager.updateView()});
+        Entry.stateManager.updateView();});
     Entry.addEventListener('stop', function(e) {
-        Entry.stateManager.updateView()});
+        Entry.stateManager.updateView();});
     Entry.addEventListener('saveWorkspace', function(e) {
-        Entry.stateManager.addStamp()});
+        Entry.stateManager.addStamp();});
     Entry.addEventListener('undo', function(e) {
-        Entry.stateManager.undo()});
+        Entry.stateManager.undo();});
     Entry.addEventListener('redo', function(e) {
-        Entry.stateManager.redo()});
+        Entry.stateManager.redo();});
 };
 
 /**
@@ -218,7 +218,7 @@ Entry.StateManager.prototype.addStamp = function () {
  * @return {!boolean} return true when project is up-to-date
  */
 Entry.StateManager.prototype.isSaved = function () {
-    return this.undoStack_.length == 0 ||
+    return this.undoStack_.length === 0 ||
         (this.undoStack_[this.undoStack_.length-1].stamp == this.stamp &&
         typeof this.stamp == 'string');
 };

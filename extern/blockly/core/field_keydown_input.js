@@ -67,7 +67,7 @@ fkip.clone = function() {
  * @return {!Element} The field's SVG group.
  */
 Blockly.FieldKeydownInput.createDom = function() {
-  var url = 'media/keyboard_workspace.png';
+  var url = Blockly.mediaFilePath + 'media/keyboard_workspace.png';
   var svgGroup = Blockly.createSvgElement('g',
       {'class': 'blocklyHelperDiv blocklyHidden'}, null);
   var helpImg = Blockly.createSvgElement('image',
@@ -76,7 +76,7 @@ Blockly.FieldKeydownInput.createDom = function() {
        'height': '106'
       }, svgGroup);
   helpImg.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href',
-      Blockly.pathToBlockly + url);
+      url);
 
   Blockly.FieldKeydownInput.helperSvgGroup_ = svgGroup;
   return svgGroup;
@@ -161,7 +161,7 @@ fkip.onHtmlInputChange_ = function(e) {
   if ((c>=65 && c<=90) || (c>=37 && c<=40) ||
       (c>=48 && c<=57) ||  c == 32 || c == 13) {
       Blockly.WidgetDiv.hide();
-   	  Blockly.FieldKeydownInput.hide(); 	
+   	  Blockly.FieldKeydownInput.hide();
       this.setValue(c);
   }
 };
@@ -230,7 +230,8 @@ fkip.resizeEditor_ = function() {
   var div = Blockly.WidgetDiv.DIV;
   var bBox = this.fieldGroup_.getBBox();
   div.style.width = bBox.width + 'px';
-  var xy = Blockly.getAbsoluteXY_(/** @type {!Element} */ (this.borderRect_));
+  var xy = Blockly.getAbsoluteXY_(/** @type {!Element} */ (this.borderRect_),
+                                 this.sourceBlock_.workspace.svgGroup_.parentNode);
   // In RTL mode block fields and LTR input fields the left edge moves,
   // whereas the right edge is fixed.  Reposition the editor.
   if (Blockly.RTL) {

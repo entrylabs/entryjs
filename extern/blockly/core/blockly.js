@@ -437,6 +437,8 @@ Blockly.onKeyDown_ = function(e) {
         if (!(Blockly.primitiveTypes.indexOf(blockType) > -1 &&
               block.getParent()))
             block.dispose(true, true);
+            if (typeof(Entry) == "object")
+                Entry.dispatchEvent("entryBlocklyChanged");
       }
     } finally {
       // Stop the browser from going back to the previous page.

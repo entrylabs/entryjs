@@ -4,7 +4,7 @@ Blockly.Blocks.when_scene_start = {
     init: function() {
     this.setColour("#3BBD70");
     this.appendDummyInput()
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/start_icon_scene_1_2.png', '*', "start"))
+        .appendField(new Blockly.FieldIcon(Entry.mediaFilePath + 'block_icon/start_icon_scene_1_2.png', '*', "start"))
         .appendField(Lang.Blocks.SCENE_when_scene_start);
     this.setInputsInline(true);
     this.setNextStatement(true);
@@ -22,7 +22,7 @@ Blockly.Blocks.start_scene = {
         .appendField(Lang.Blocks.SCENE_start_scene_1)
         .appendField(new Blockly.FieldDropdownDynamic("scenes"), "VALUE")
         .appendField(Lang.Blocks.SCENE_start_scene_2)
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/start_03.png', '*'));
+        .appendField(new Blockly.FieldIcon(Entry.mediaFilePath + 'block_icon/start_03.png', '*'));
     this.setInputsInline(true);
     this.setInputsInline(true);
     this.setPreviousStatement(true);
@@ -50,7 +50,7 @@ Blockly.Blocks.start_neighbor_scene = {
           [Lang.Blocks.SCENE_start_scene_next,"next"]
           ]), "OPERATOR")
         .appendField(Lang.Blocks.SCENE_start_neighbor_scene_2)
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/start_03.png', '*'));
+        .appendField(new Blockly.FieldIcon(Entry.mediaFilePath + 'block_icon/start_03.png', '*'));
     this.setInputsInline(true);
     this.setInputsInline(true);
     this.setPreviousStatement(true);

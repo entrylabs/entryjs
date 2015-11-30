@@ -23,6 +23,7 @@
   "license": "MIT",
   "dependencies": {},
   "devDependencies": {
+    "chai": "^3.2.0",
     "closurecompiler": "1.5.2",
     "grunt": "0.4.5",
     "grunt-cli": "0.1.13",
@@ -32,7 +33,10 @@
     "grunt-contrib-watch": "~0.6.1",
     "grunt-karma": "^0.11.1",
     "grunt-mocha-test": "0.12.7",
+    "grunt-contrib-less": "1.0.0",
     "karma": "^0.12.36",
+    "karma-chai": "^0.1.0",
+    "karma-chrome-launcher": "^0.2.0",
     "karma-mocha": "^0.2.0",
     "karma-phantomjs-launcher": "^0.2.0",
     "phantomjs": "^1.9.17"

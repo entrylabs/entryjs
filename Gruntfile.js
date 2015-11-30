@@ -13,20 +13,25 @@ module.exports = function(grunt) {
                 files: ['test/**/*.js'],
                 tasks: [
                     'karma'
-                ],
-                options: {
-                    livereload: true
-                }
+                ]
             },
             js: {
                 files: ['src/**'],
                 tasks: [
-                    'closureCompiler',
+                    'closureCompiler:targetName',
                     'karma',
-                    'jshint'
-                ],
-                options: {
-                    livereload: true
+                    'jshint',
+                    'less'
+                ]
+            }
+        },
+        less: {
+            options: {
+                compress: false
+            },
+            development: {
+                files: {
+                    "dist/entry.css": "src/css/*.less"
                 }
             }
         },
@@ -35,13 +40,16 @@ module.exports = function(grunt) {
                 'src/**/*.js'
             ],
             options: {
-                jshintrc: true
+                jshintrc: true,
+                ignores: ['src/blocks/*.js']
             }
         },
         karma: {
             options: {
                 frameworks: ['mocha', 'chai'],
                 files: [
+                    'test_util/*.js',
+                    'extern/jquery/jquery.js',
                     'extern/blockly/blockly_compressed.js',
                     'dist/entry.js'
                 ]
@@ -60,6 +68,8 @@ module.exports = function(grunt) {
                 checkModified: true,
                 compilerOpts: {
                     compilation_level: 'SIMPLE_OPTIMIZATIONS',
+                    language_in: 'ECMASCRIPT5',
+                    language_out: 'ECMASCRIPT5',
                     formatting: 'pretty_print'
                 }
             },
@@ -70,7 +80,9 @@ module.exports = function(grunt) {
             dist: {
                 options: {
                     compilerOpts: {
-                        compilation_level: 'SIMPLE_OPTIMIZATIONS'
+                        compilation_level: 'SIMPLE_OPTIMIZATIONS',
+                        language_in: 'ECMASCRIPT5',
+                        language_out: 'ECMASCRIPT5'
                     }
                 },
                 expand: false,
@@ -87,18 +99,21 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-concurrent');
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-karma');
+    grunt.loadNpmTasks('grunt-contrib-less');
+
+    grunt.option('force', true);
 
     // Default tasks.
     grunt.registerTask('default', [
         'closureCompiler',
         'karma',
-        'jshint'
+        'jshint',
+        'less'
     ]);
 
     grunt.registerTask('development', [
-        'closureCompiler',
+        'closureCompiler:targetName',
         'karma',
-        'jshint',
         'concurrent'
     ]);
 
