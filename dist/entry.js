@@ -14358,7 +14358,7 @@ Entry.Board = function(a) {
   a.setSelectedBlock = function(a) {
     var c = this.selectedBlockView;
     c && c.removeSelected();
-    a instanceof Entry.BlockView && (this.set({selectedBlockView:a}), a.addSelected());
+    a instanceof Entry.BlockView ? (this.set({selectedBlockView:a}), a.addSelected()) : this.set({selectedBlockView:null});
   };
 })(Entry.Board.prototype);
 Entry.Workspace = function(a, b) {
