@@ -47,13 +47,16 @@ Entry.BlockMenu = function(dom, align) {
     //this.scroller = new Entry.Scroller(this, false, true);
 
     this.observe(this, "generateDragBlockObserver", ['dragBlock']);
+    if (Entry.documentMousedown)
+        Entry.documentMousedown.attach(this, this.setSelectedBlock);
 };
 
 (function(p) {
     p.schema = {
         code: null,
         dragBlock: null,
-        closeBlock: null
+        closeBlock: null,
+        selectedBlockView: null
     };
 
     p.changeCode = function(code) {
@@ -154,6 +157,7 @@ Entry.BlockMenu = function(dom, align) {
                 workspaceBoard.set({
                     dragBlock : this._boardBlockView
                 });
+                workspaceBoard.setSelectedBlock(this._boardBlockView);
                 this._boardBlockView.addDragging();
                 this._boardBlockView.dragMode = Entry.DRAG_MODE_MOUSEDOWN;
 
@@ -259,6 +263,17 @@ Entry.BlockMenu = function(dom, align) {
             if (block && block.id == id) {
                 return block;
             }
+        }
+    };
+
+    p.setSelectedBlock = function(blockView) {
+        var old = this.selectedBlockView;
+
+        if (old) old.removeSelected();
+
+        if (blockView instanceof Entry.BlockView) {
+            this.set({selectedBlockView:blockView});
+            blockView.addSelected();
         }
     };
 

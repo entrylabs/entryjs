@@ -70,13 +70,16 @@ Entry.Board = function(dom) {
     this.scroller = new Entry.Scroller(this, true, true);
 
     this._addControl(dom);
+    if (Entry.documentMousedown)
+        Entry.documentMousedown.attach(this, this.setSelectedBlock);
 };
 
 (function(p) {
     p.schema = {
         code: null,
         dragBlock: null,
-        magnetedBlockView: null
+        magnetedBlockView: null,
+        selectedBlockView: null
     };
 
     p.changeCode = function(code) {
@@ -204,6 +207,16 @@ Entry.Board = function(dom) {
         );
     };
 
+    p.setSelectedBlock = function(blockView) {
+        var old = this.selectedBlockView;
+
+        if (old) old.removeSelected();
+
+        if (blockView instanceof Entry.BlockView) {
+            this.set({selectedBlockView:blockView});
+            blockView.addSelected();
+        }
+    };
 
 
 })(Entry.Board.prototype);
