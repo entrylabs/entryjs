@@ -13101,7 +13101,8 @@ Entry.BlockMenu = function(a, b) {
   a.setSelectedBlock = function(a) {
     var c = this.selectedBlockView;
     c && c.removeSelected();
-    a instanceof Entry.BlockView && (this.set({selectedBlockView:a}), a.addSelected());
+    a instanceof Entry.BlockView ? a.addSelected() : a = null;
+    this.set({selectedBlockView:a});
   };
 })(Entry.BlockMenu.prototype);
 Entry.BlockView = function(a, b) {
@@ -14359,7 +14360,8 @@ Entry.Board = function(a) {
   a.setSelectedBlock = function(a) {
     var c = this.selectedBlockView;
     c && c.removeSelected();
-    a instanceof Entry.BlockView ? (this.set({selectedBlockView:a}), a.addSelected()) : this.set({selectedBlockView:null});
+    a instanceof Entry.BlockView ? a.addSelected() : a = null;
+    this.set({selectedBlockView:a});
   };
 })(Entry.Board.prototype);
 Entry.Workspace = function(a, b) {
