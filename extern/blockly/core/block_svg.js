@@ -961,7 +961,7 @@ Blockly.BlockSvg.prototype.renderDrawRight_ = function(steps,
           var param = 0;
           l += 1;
           var inputType = input.connection.check_ ? input.connection.check_[0] : "null";
-          var inlineCursorY = cursorY + (row.height - 2*r)/2 - 1;
+          var inlineCursorY = cursorY + (row.height - 2*r)/2;
           if (inputType.toUpperCase() == "BOOLEAN") {
             inlineSteps.push('M', (cursorX - Blockly.BlockSvg.SEP_SPACE_X - r) +
                              ',' + (inlineCursorY + 0.5));
@@ -971,6 +971,7 @@ Blockly.BlockSvg.prototype.renderDrawRight_ = function(steps,
             inlineSteps.push('l', r + ',-' + r + ' -' + r + ',-' + r);
             inlineSteps.push('z');
           } else if (inputType.toUpperCase() == "PARAM") {
+            inlineCursorY += 1;
             if (this.block_.outputConnection) {
               cursorX -= input.renderWidth + Blockly.BlockSvg.SEP_SPACE_X;
               param = input.renderWidth + Blockly.BlockSvg.SEP_SPACE_X + 9;

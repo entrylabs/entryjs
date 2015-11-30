@@ -112,7 +112,8 @@ Blockly.parseOptions_ = function(options) {
     hasScrollbars: hasScrollbars,
     hasTrashcan: hasTrashcan,
     hasBlockMenu: hasBlockMenu,
-    languageTree: tree
+    languageTree: tree,
+    mediaFilePath: options['mediaFilePath'] || './'
   };
 };
 
@@ -235,7 +236,7 @@ Blockly.createDom_ = function(container) {
         {'width': 125, 'height': 33, 'x': 0, 'y': 0
         }, blockPattern);
     blockImg.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href",
-                       "/img/assets/block_pattern_" + i + ".png");
+                       Blockly.mediaFilePath + "block_pattern_" + i + ".png");
   }
   Blockly.mainWorkspace = new Blockly.Workspace(
       Blockly.getMainWorkspaceMetrics_,

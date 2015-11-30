@@ -18,13 +18,15 @@ Entry.init = function(container, options) {
     /** @type {object} */
     this.options = options;
     this.parseOptions(options);
+    this.mediaFilePath = (options.libDir ? options.libDir : '/lib') + '/entryjs/images/';
+
     if (this.type == 'workspace' && this.isPhone())
         this.type = 'phone';
     this.initialize_();
     /** @type {!Element} */
     this.view_ = container;
     this.view_.setAttribute('class', 'entry');
-    Entry.initFonts();
+    Entry.initFonts(options.fonts);
     this.createDom(container, this.type);
     this.loadInterfaceState();
     this.overridePrototype();
@@ -33,52 +35,43 @@ Entry.init = function(container, options) {
     this.startTime = new Date().getTime();
 
     document.onkeydown=function(e){
-        Entry.dispatchEvent('keyPressed', e)
+        Entry.dispatchEvent('keyPressed', e);
     };
     document.onkeyup=function(e){
-        Entry.dispatchEvent('keyUpped', e)
+        Entry.dispatchEvent('keyUpped', e);
     };
     window.onresize = function(e) {
-        Entry.dispatchEvent('windowResized', e)
+        Entry.dispatchEvent('windowResized', e);
     };
     window.onbeforeunload = this.beforeUnload;
 
     Entry.addEventListener("saveWorkspace", function(e) {
-        Entry.addActivity("save")
+        Entry.addActivity("save");
     });
 
     if (Entry.getBrowserType().substr(0,2) == 'IE' && !window.flashaudio) {
-        createjs.FlashAudioPlugin.swfPath = "/media/";
+        createjs.FlashAudioPlugin.swfPath = this.mediaFilePath + "media/";
         createjs.Sound.registerPlugins([createjs.FlashAudioPlugin]);
         //createjs.Sound.registerPlugins([createjs.WebAudioPlugin]);
         //createjs.Sound.registerPlugins([createjs.HTMLAudioPlugin]);
-
-        Entry.soundQueue = new createjs.LoadQueue();
-        Entry.soundQueue.installPlugin(createjs.Sound);
-
-        Entry.loadAudio_(
-            ['/media/click.mp3', '/media/click.wav', '/media/click.ogg'], 'click');
-        Entry.loadAudio_(
-            ['/media/delete.mp3', '/media/delete.ogg', '/media/delete.wav'], 'delete');
-
         window.flashaudio = true;
     } else {
         createjs.Sound.registerPlugins([createjs.WebAudioPlugin]);
-
-        Entry.soundQueue = new createjs.LoadQueue();
-        Entry.soundQueue.installPlugin(createjs.Sound);
-
-        Entry.loadAudio_(
-            ['/media/click.mp3', '/media/click.wav', '/media/click.ogg'], 'click');
-        Entry.loadAudio_(
-            ['/media/delete.mp3', '/media/delete.ogg', '/media/delete.wav'], 'delete');
-
     }
+
+    Entry.soundQueue = new createjs.LoadQueue();
+    Entry.soundQueue.installPlugin(createjs.Sound);
+
+    Entry.loadAudio_(
+        [Entry.mediaFilePath + 'media/click.mp3', Entry.mediaFilePath + 'media/click.wav', Entry.mediaFilePath + 'media/click.ogg'], 'click');
+    Entry.loadAudio_(
+        [Entry.mediaFilePath + 'media/delete.mp3', Entry.mediaFilePath + 'media/delete.ogg', Entry.mediaFilePath + 'media/delete.wav'], 'delete');
+
 
 };
 
 Entry.loadAudio_ = function(filenames, name) {
-  if (!window['Audio'] || !filenames.length) {
+  if (!window.Audio || !filenames.length) {
     // No browser support for Audio.
     return;
   }
@@ -95,7 +88,7 @@ Entry.loadAudio_ = function(filenames, name) {
     });
     break;
   }
-}
+};
 
 /**
  * Initialize function for Entry.
@@ -310,7 +303,7 @@ Entry.start = function(FPS) {
     /** @type {number} */
     if (!this.FPS)
         this.FPS = 60;
-    Entry.assert(typeof(this.FPS) == 'number', 'FPS must be number')
+    Entry.assert(typeof(this.FPS) == 'number', 'FPS must be number');
     Entry.engine.start(this.FPS);
 };
 
@@ -322,61 +315,61 @@ Entry.parseOptions = function(options) {
     /** @type {string} */
     this.type = options.type;
 
-    this.projectSaveable = options['projectsaveable'];
+    this.projectSaveable = options.projectsaveable;
     if (this.projectSaveable === undefined)
         this.projectSaveable = true;
 
-    this.objectAddable = options['objectaddable'];
+    this.objectAddable = options.objectaddable;
     if (this.objectAddable === undefined)
         this.objectAddable = true;
 //sj
-    this.objectEditable = options['objectEditable'];
+    this.objectEditable = options.objectEditable;
     if (this.objectEditable === undefined)
         this.objectEditable = true;
     if (!this.objectEditable)
         this.objectAddable = false;
 
-    this.objectDeletable = options['objectdeletable'];
+    this.objectDeletable = options.objectdeletable;
     if (this.objectDeletable === undefined)
         this.objectDeletable = true;
 
-    this.soundEditable = options['soundeditable'];
+    this.soundEditable = options.soundeditable;
     if (this.soundEditable === undefined)
         this.soundEditable = true;
 
-    this.pictureEditable = options['pictureeditable'];
+    this.pictureEditable = options.pictureeditable;
     if (this.pictureEditable === undefined)
         this.pictureEditable = true;
 
-    this.sceneEditable = options['sceneEditable'];
+    this.sceneEditable = options.sceneEditable;
     if (this.sceneEditable === undefined)
         this.sceneEditable = true;
 
-    this.functionEnable = options['functionEnable'];
+    this.functionEnable = options.functionEnable;
     if (this.functionEnable === undefined)
         this.functionEnable = true;
 
-    this.messageEnable = options['messageEnable'];
+    this.messageEnable = options.messageEnable;
     if (this.messageEnable === undefined)
         this.messageEnable = true;
 
-    this.variableEnable = options['variableEnable'];
+    this.variableEnable = options.variableEnable;
     if (this.variableEnable === undefined)
         this.variableEnable = true;
 
-    this.listEnable = options['listEnable'];
+    this.listEnable = options.listEnable;
     if (this.listEnable === undefined)
         this.listEnable = true;
 
-    this.hasVariableManager = options['hasvariablemanager'];
+    this.hasVariableManager = options.hasvariablemanager;
     if (!(this.variableEnable || this.messageEnable ||
           this.listEnable || this.functionEnable))
         this.hasVariableManager = false;
     else if (this.hasVariableManager === undefined)
         this.hasVariableManager = true;
 
-    this.isForLecture = options['isForLecture'];
-}
+    this.isForLecture = options.isForLecture;
+};
 
 /**
  * Initialize context menu library.
@@ -392,38 +385,9 @@ Entry.initContextMenu = function() {
     });
 };
 
-Entry.initFonts = function(painterView) {
-    this.fonts = [];
-    this.fonts.push({
-        name: '바탕체',
-        family: 'KoPub Batang',
-        url: '/css/kopubbatang.css'
-    });
-    this.fonts.push({
-        name: '명조체',
-        family: 'Nanum Myeongjo',
-        url: '/css/nanummyeongjo.css'
-    });
-    this.fonts.push({
-        name: '고딕체',
-        family: 'Nanum Gothic',
-        url: '/css/nanumgothic.css'
-    });
-    this.fonts.push({
-        name: '필기체',
-        family: 'Nanum Pen Script',
-        url: '/css/nanumpenscript.css'
-    });
-    this.fonts.push({
-        name: '한라산체',
-        family: 'Jeju Hallasan',
-        url: '/css/jejuhallasan.css'
-    });
-    this.fonts.push({
-        name: '코딩고딕체',
-        family: 'Nanum Gothic Coding',
-        url: '/css/nanumgothiccoding.css'
-    });
+Entry.initFonts = function(fonts) {
+    this.fonts = fonts;
+    if (!fonts) this.fonts = [];
 
     var config = {
         custom: {

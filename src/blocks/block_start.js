@@ -5,7 +5,7 @@ Blockly.Blocks.when_run_button_click = {
   init: function() {
     this.setColour("#3BBD70");
     this.appendDummyInput()
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/start_icon_play.png', '*', "start"))
+        .appendField(new Blockly.FieldIcon(Entry.mediaFilePath + 'block_icon/start_icon_play.png', '*', "start"))
         .appendField(Lang.Blocks.START_when_run_button_click);
     this.setInputsInline(true);
     this.setNextStatement(true);
@@ -21,7 +21,7 @@ Blockly.Blocks.press_some_key = {
     init: function() {
         this.setColour("#3BBD70");
         this.appendDummyInput()
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/start_icon_keyboard.png', '*', "start"))
+        .appendField(new Blockly.FieldIcon(Entry.mediaFilePath + 'block_icon/start_icon_keyboard.png', '*', "start"))
         .appendField(Lang.Blocks.START_press_some_key_1)
         .appendField(new Blockly.FieldDropdown([
             ["q","81"],
@@ -39,7 +39,7 @@ Blockly.Blocks.press_some_key = {
             [Lang.Blocks.START_press_some_key_space, "32"]
             ]), "VALUE")
         .appendField(Lang.Blocks.START_press_some_key_2)
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/start_03.png', '*'));
+        .appendField(new Blockly.FieldIcon(Entry.mediaFilePath + 'block_icon/start_03.png', '*'));
         this.setInputsInline(true);
         this.setNextStatement(true);
     }
@@ -53,7 +53,7 @@ Blockly.Blocks.when_some_key_pressed = {
   init: function() {
     this.setColour("#3BBD70");
     this.appendDummyInput()
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/start_icon_keyboard.png', '*', "start"))
+        .appendField(new Blockly.FieldIcon(Entry.mediaFilePath + 'block_icon/start_icon_keyboard.png', '*', "start"))
         .appendField(Lang.Blocks.START_press_some_key_1)
         .appendField(new Blockly.FieldKeydownInput('81'), "VALUE")
         .appendField(Lang.Blocks.START_press_some_key_2);
@@ -71,7 +71,7 @@ Blockly.Blocks["mouse_clicked"] = {
     init: function() {
         this.setColour("#3BBD70");
         this.appendDummyInput()
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/start_icon_mouse.png', '*', "start"))
+        .appendField(new Blockly.FieldIcon(Entry.mediaFilePath + 'block_icon/start_icon_mouse.png', '*', "start"))
         .appendField(Lang.Blocks.START_mouse_clicked);
         this.setInputsInline(true);
         this.setNextStatement(true);
@@ -87,7 +87,7 @@ Blockly.Blocks.mouse_click_cancled = {
     init: function() {
         this.setColour("#3BBD70");
         this.appendDummyInput()
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/start_icon_mouse.png', '*', "start"))
+        .appendField(new Blockly.FieldIcon(Entry.mediaFilePath + 'block_icon/start_icon_mouse.png', '*', "start"))
         .appendField(Lang.Blocks.START_mouse_click_cancled);
         this.setInputsInline(true);
         this.setNextStatement(true);
@@ -104,7 +104,7 @@ Entry.block.mouse_click_cancled = function (sprite, script) {
 //   init: function() {
 //       this.setColour("#3BBD70");
 //     this.appendDummyInput()
-//         .appendField(new Blockly.FieldIcon('/img/assets/block_icon/start_icon_start.png', '*', "start"))
+//         .appendField(new Blockly.FieldIcon(Entry.mediaFilePath + 'block_icon/start_icon_start.png', '*', "start"))
 //         .appendField(Lang.Blocks.START_when_scene_start);
 //     this.setInputsInline(true);
 //     this.setNextStatement(true);
@@ -120,7 +120,7 @@ Blockly.Blocks.when_object_click = {
   init: function() {
     this.setColour("#3BBD70");
     this.appendDummyInput()
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/start_icon_mouse.png', '*', "start"))
+        .appendField(new Blockly.FieldIcon(Entry.mediaFilePath + 'block_icon/start_icon_mouse.png', '*', "start"))
         .appendField(Lang.Blocks.START_when_object_click);
     this.setInputsInline(true);
     this.setNextStatement(true);
@@ -136,7 +136,7 @@ Blockly.Blocks.when_object_click_canceled = {
   init: function() {
     this.setColour("#3BBD70");
     this.appendDummyInput()
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/start_icon_mouse.png', '*', "start"))
+        .appendField(new Blockly.FieldIcon(Entry.mediaFilePath + 'block_icon/start_icon_mouse.png', '*', "start"))
         .appendField(Lang.Blocks.START_when_object_click_canceled);
     this.setInputsInline(true);
     this.setNextStatement(true);
@@ -152,7 +152,7 @@ Blockly.Blocks.when_some_key_click = {
   init: function() {
     this.setColour("#3BBD70");
     this.appendDummyInput()
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/start_icon_keyboard.png', '*', "start"))
+        .appendField(new Blockly.FieldIcon(Entry.mediaFilePath + 'block_icon/start_icon_keyboard.png', '*', "start"))
         .appendField(Lang.Blocks.START_when_some_key_click);
     this.setInputsInline(true);
     this.setNextStatement(true);
@@ -168,7 +168,7 @@ Blockly.Blocks.when_message_cast = {
   init: function() {
     this.setColour("#3BBD70");
     this.appendDummyInput()
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/start_icon_signal.png', '*', "start"))
+        .appendField(new Blockly.FieldIcon(Entry.mediaFilePath + 'block_icon/start_icon_signal.png', '*', "start"))
         .appendField(Lang.Blocks.START_when_message_cast_1)
         .appendField(new Blockly.FieldDropdownDynamic("messages"), "VALUE")
         .appendField(Lang.Blocks.START_when_message_cast_2);
@@ -189,7 +189,7 @@ Blockly.Blocks.message_cast = {
         .appendField(Lang.Blocks.START_message_cast_1)
         .appendField(new Blockly.FieldDropdownDynamic("messages"), "VALUE")
         .appendField(Lang.Blocks.START_message_cast_2)
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/start_03.png', '*'));
+        .appendField(new Blockly.FieldIcon(Entry.mediaFilePath + 'block_icon/start_03.png', '*'));
     this.setInputsInline(true);
     this.setInputsInline(true);
     this.setNextStatement(true);
@@ -217,7 +217,7 @@ Blockly.Blocks.add_message = {
     this.setColour("#3BBD70");
     this.appendDummyInput()
         .appendField(Lang.Blocks.START_add_message)
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/start_03.png', '*'));
+        .appendField(new Blockly.FieldIcon(Entry.mediaFilePath + 'block_icon/start_03.png', '*'));
     this.setInputsInline(true);
   }
 };
@@ -233,7 +233,7 @@ Blockly.Blocks.message_cast_wait = {
         .appendField(Lang.Blocks.START_message_send_wait_1)
         .appendField(new Blockly.FieldDropdownDynamic("messages"), "VALUE")
         .appendField(Lang.Blocks.START_message_send_wait_2)
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/start_03.png', '*'));
+        .appendField(new Blockly.FieldIcon(Entry.mediaFilePath + 'block_icon/start_03.png', '*'));
     this.setInputsInline(true);
     this.setNextStatement(true);
     this.setPreviousStatement(true);

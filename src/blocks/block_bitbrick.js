@@ -124,7 +124,7 @@ Blockly.Blocks.bitbrick_turn_off_color_led = {
     this.setColour("#00979D");
     this.appendDummyInput()
     .appendField('컬러 LED 끄기')
-    .appendField(new Blockly.FieldIcon('/img/assets/block_icon/hardware_03.png', '*'));
+    .appendField(new Blockly.FieldIcon(Entry.mediaFilePath + 'block_icon/hardware_03.png', '*'));
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
@@ -154,7 +154,7 @@ Blockly.Blocks.bitbrick_turn_on_color_led_by_rgb = {
     this.appendValueInput("bValue")
     .setCheck(["Number", "String"]);
     this.appendDummyInput()
-    .appendField(new Blockly.FieldIcon('/img/assets/block_icon/hardware_03.png', '*'));
+    .appendField(new Blockly.FieldIcon(Entry.mediaFilePath + 'block_icon/hardware_03.png', '*'));
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
@@ -183,7 +183,7 @@ Blockly.Blocks.bitbrick_turn_on_color_led_by_picker = {
     .appendField('컬러 LED 색 ')
     .appendField(new Blockly.FieldColour('#ff0000'),'VALUE')
     .appendField('로 정하기')
-    .appendField(new Blockly.FieldIcon('/img/assets/block_icon/hardware_03.png', '*'));
+    .appendField(new Blockly.FieldIcon(Entry.mediaFilePath + 'block_icon/hardware_03.png', '*'));
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
@@ -207,7 +207,7 @@ Blockly.Blocks.bitbrick_turn_on_color_led_by_value = {
     .setCheck(["Number", "String"]);
     this.appendDummyInput()
     .appendField('로 정하기')
-    .appendField(new Blockly.FieldIcon('/img/assets/block_icon/hardware_03.png', '*'));
+    .appendField(new Blockly.FieldIcon(Entry.mediaFilePath + 'block_icon/hardware_03.png', '*'));
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
@@ -248,7 +248,7 @@ Blockly.Blocks.bitbrick_buzzer = {
     .setCheck(["Number", "String"]);
     this.appendDummyInput()
     .appendField('내기')
-    .appendField(new Blockly.FieldIcon('/img/assets/block_icon/hardware_03.png', '*'));
+    .appendField(new Blockly.FieldIcon(Entry.mediaFilePath + 'block_icon/hardware_03.png', '*'));
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
@@ -273,7 +273,7 @@ Blockly.Blocks.bitbrick_turn_off_all_motors = {
     this.setColour("#00979D");
     this.appendDummyInput()
     .appendField('모든 모터 끄기')
-    .appendField(new Blockly.FieldIcon('/img/assets/block_icon/hardware_03.png', '*'));
+    .appendField(new Blockly.FieldIcon(Entry.mediaFilePath + 'block_icon/hardware_03.png', '*'));
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
@@ -303,7 +303,7 @@ Blockly.Blocks.bitbrick_dc_speed = {
     .setCheck(["Number", "String"]);
     this.appendDummyInput()
     .appendField("")
-    .appendField(new Blockly.FieldIcon('/img/assets/block_icon/hardware_03.png', '*'));
+    .appendField(new Blockly.FieldIcon(Entry.mediaFilePath + 'block_icon/hardware_03.png', '*'));
     this.setPreviousStatement(true);
     this.setNextStatement(true);
     this.setInputsInline(true);
@@ -336,7 +336,7 @@ Blockly.Blocks.bitbrick_dc_direction_speed = {
     .setCheck(["Number", "String"]);
     this.appendDummyInput()
     .appendField("")
-    .appendField(new Blockly.FieldIcon('/img/assets/block_icon/hardware_03.png', '*'));
+    .appendField(new Blockly.FieldIcon(Entry.mediaFilePath + 'block_icon/hardware_03.png', '*'));
     this.setPreviousStatement(true);
     this.setNextStatement(true);
     this.setInputsInline(true);
@@ -365,7 +365,7 @@ Blockly.Blocks.bitbrick_servomotor_angle = {
     .setCheck(["Number", "String"]);
     this.appendDummyInput()
     .appendField("")
-    .appendField(new Blockly.FieldIcon('/img/assets/block_icon/hardware_03.png', '*'));
+    .appendField(new Blockly.FieldIcon(Entry.mediaFilePath + 'block_icon/hardware_03.png', '*'));
     this.setPreviousStatement(true);
     this.setNextStatement(true);
     this.setInputsInline(true);

@@ -293,7 +293,7 @@ Entry.Engine.prototype.generateView = function(controlView, option) {
             Entry.engine.toggleStop();
         });
     }
-}
+};
 
 Entry.Engine.prototype.toggleSpeedPanel = function() {
     if (this.speedPanelOn) {
@@ -351,7 +351,7 @@ Entry.Engine.prototype.toggleSpeedPanel = function() {
         this.view_.insertBefore(this.speedHandle_, this.maximizeButton);
         this.setSpeedMeter(Entry.FPS);
     }
-}
+};
 
 Entry.Engine.prototype.setSpeedMeter = function(FPS) {
     var level = this.speeds.indexOf(FPS);
@@ -369,7 +369,7 @@ Entry.Engine.prototype.setSpeedMeter = function(FPS) {
     clearInterval(this.ticker);
     this.ticker = setInterval(this.update, Math.floor(1000/FPS));
     Entry.FPS = FPS;
-}
+};
 
 /**
  * Start engine
@@ -438,7 +438,7 @@ Entry.Engine.prototype.computeFunction = function(entity) {
         }
         if (script)
             scripts.push(script);
-    };
+    }
 };
 
 Entry.Engine.computeThread = function(entity, script) {
@@ -446,7 +446,7 @@ Entry.Engine.computeThread = function(entity, script) {
     var isSame = false;
     while (script && Entry.engine.isContinue && !isSame) {
         Entry.engine.isContinue = !script.isRepeat;
-        var newScript = script.run()
+        var newScript = script.run();
         isSame = (newScript && newScript.type == script.type);
         script = newScript;
     }
@@ -565,7 +565,7 @@ Entry.Engine.prototype.toggleStop = function() {
     this.state = 'stop';
     Entry.dispatchEvent('stop');
     Entry.stage.hideInputField();
-}
+};
 
 /**
  * toggle this engine state pause
@@ -581,7 +581,7 @@ Entry.Engine.prototype.togglePause = function() {
         this.stopButton.removeClass('entryRemove');
         //this.pauseButton.addClass('entryRemove');
     }
-}
+};
 
 /**
  * @param {string} eventName
@@ -606,7 +606,7 @@ Entry.Engine.prototype.raiseEvent = function(entity, eventName) {
             script.init(block);
             entity.runningScript.push(script);
         }
-    };
+    }
 };
 
 /**
@@ -636,7 +636,7 @@ Entry.Engine.prototype.raiseEventOnEntity = function(entity, param) {
             script.init(block);
             entity.runningScript.push(script);
         }
-    };
+    }
 };
 /**
  * capture keyboard press input
@@ -707,7 +707,7 @@ Entry.Engine.prototype.raiseKeyEvent = function(entity, param) {
             script.init(block);
             entity.runningScript.push(script);
         }
-    };
+    }
 };
 
 /**
@@ -755,7 +755,7 @@ Entry.Engine.prototype.exitFullScreen = function() {
         Entry.engine.footerView_.removeClass('entryRemove');
         Entry.engine.headerView_.removeClass('entryRemove');
     }
-}
+};
 
 
 //projectTimer to show
@@ -793,7 +793,7 @@ Entry.Engine.prototype.hideProjectTimer = function(removeBlock) {
 Entry.Engine.prototype.clearTimer = function() {
     clearInterval(this.ticker);
     clearInterval(this.projectTimer.tick);
-}
+};
 
 Entry.Engine.prototype.startProjectTimer = function() {
     var timer = this.projectTimer;
@@ -803,9 +803,9 @@ Entry.Engine.prototype.startProjectTimer = function() {
     timer.isInit = true;
     timer.pausedTime = 0;
     timer.tick = setInterval(function (e) {
-        Entry.engine.updateProjectTimer()
+        Entry.engine.updateProjectTimer();
     }, 1000/60);
-}
+};
 
 Entry.Engine.prototype.stopProjectTimer = function() {
     var timer = this.projectTimer;
@@ -816,7 +816,7 @@ Entry.Engine.prototype.stopProjectTimer = function() {
     timer.isInit = false;
     timer.pausedTime = 0;
     clearInterval(timer.tick);
-}
+};
 
 Entry.Engine.prototype.updateProjectTimer = function(value) {
     var timer = Entry.engine.projectTimer;
@@ -831,7 +831,7 @@ Entry.Engine.prototype.updateProjectTimer = function(value) {
         timer.pausedTime = 0;
         timer.start = current;
     }
-}
+};
 
 
 

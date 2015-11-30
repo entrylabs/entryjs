@@ -45,7 +45,7 @@ goog.require('Blockly.Field');
  * @constructor
  */
 Blockly.FieldDropdown = function(menuGenerator, opt_changeHandler,
-                                 arrowOption) {
+                                 arrowOption, arrowColor) {
   this.menuGenerator_ = menuGenerator;
   this.changeHandler_ = opt_changeHandler;
   this.trimOptions_();
@@ -54,6 +54,7 @@ Blockly.FieldDropdown = function(menuGenerator, opt_changeHandler,
 
   // Add dropdown arrow: "option ▾" (LTR) or "▾ אופציה" (RTL)
   this.arrow_ = Blockly.createSvgElement('tspan', {}, null);
+  if (arrowColor) this.arrowColor_ = arrowColor;
   if (arrowOption != false) {
     this.arrow_.appendChild(document.createTextNode(
         Blockly.RTL ? '\u25BE ' : ' \u25BE'));
@@ -78,8 +79,8 @@ Blockly.FieldDropdown.prototype.clone = function() {
  * @return {!Element} The field's SVG group.
  */
 Blockly.FieldDropdown.createDom = function() {
-  var url_up = 'media/scroll_up.png';
-  var url_down = 'media/scroll_down.png';
+  var url_up = Blockly.mediaFilePath + 'media/scroll_up.png';
+  var url_down = Blockly.mediaFilePath + 'media/scroll_down.png';
   Blockly.FieldDropdown.currentPosition = 0;
   var svg = Blockly.createSvgElement('svg', {
     'xmlns': 'http://www.w3.org/2000/svg',
@@ -109,7 +110,7 @@ Blockly.FieldDropdown.createDom = function() {
   var upperImg = Blockly.createSvgElement('image', {'width':'10','height':'40', 'x':'5','opacity':'0.5'},
                            Blockly.FieldDropdown.scrollbarUpWrapper_);
   upperImg.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href',
-      Blockly.pathToBlockly + url_up);
+      url_up);
 
   Blockly.FieldDropdown.scrollbarDownWrapper_ = Blockly.createSvgElement('g',
       {'transform':'translate(0 160)', 'cursor':'pointer'}, Blockly.FieldDropdown.scrollbarWrapper_);
@@ -118,7 +119,7 @@ Blockly.FieldDropdown.createDom = function() {
   var upperImg = Blockly.createSvgElement('image', {'width':'10','height':'40', 'x':'5','opacity':'0.5'},
                            Blockly.FieldDropdown.scrollbarDownWrapper_);
   upperImg.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href',
-      Blockly.pathToBlockly + url_down);;
+      url_down);;
 
 
   return svg;
@@ -236,6 +237,13 @@ Blockly.FieldDropdown.openDropdown_ = null;
  * @private
  */
 Blockly.FieldDropdown.prototype.showEditor_ = function() {
+  if (Blockly.FieldDropdown.workspace !== this.sourceBlock_.workspace) {
+    goog.dom.removeChildren(/** @type {!Element} */ (Blockly.FieldDropdown.svgWrapper_));
+    var svg = Blockly.FieldDropdown.createDom();
+    this.sourceBlock_.workspace.svgGroup_.appendChild(svg);
+    Blockly.FieldDropdown.workspace = this.sourceBlock_.workspace
+  }
+
   var svgWrapper = Blockly.FieldDropdown.svgWrapper_;
   var svgGroup = Blockly.FieldDropdown.svgGroup_;
   var svgOptions = Blockly.FieldDropdown.svgOptions_;
@@ -452,7 +460,9 @@ Blockly.FieldDropdown.prototype.setValue = function(newValue) {
 Blockly.FieldDropdown.prototype.setText = function(text) {
   if (this.sourceBlock_) {
     // Update arrow's colour.
-    this.arrow_.style.fill = Blockly.makeColour(this.sourceBlock_.getColour());
+    if (this.arrowColor_) this.arrow_.style.fill = this.arrowColor_;
+    else
+        this.arrow_.style.fill = Blockly.makeColour(this.sourceBlock_.getColour());
   }
   if (text === null) {
     // No change if null.

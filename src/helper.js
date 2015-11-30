@@ -7,7 +7,7 @@
  * Helper provide block description with 'blockHelper'
  */
 Entry.Helper = function() {
-}
+};
 
 var p = Entry.Helper.prototype;
 
@@ -20,7 +20,7 @@ p.initBlockHelper = function(parentView) {
         return;
     /** @type {!Element} parent view */
     this.parentView_ = parentView;
-}
+};
 
 /**
  * toggle on block helper
@@ -38,7 +38,7 @@ p.blockHelperOn = function() {
     if (!Entry.isForLecture) {
         var blockHelperHeader = Entry.createElement('div',
                                 'entryBlockHelperHeaderWorkspace');
-        blockHelperHeader.innerHTML = Lang.Helper.Block_info
+        blockHelperHeader.innerHTML = Lang.Helper.Block_info;
         var blockHelperDispose = Entry.createElement('button',
                                 'entryBlockHelperDisposeWorkspace');
         blockHelperDispose.addClass('entryBtn');
@@ -78,7 +78,7 @@ p.blockHelperOn = function() {
             'blocklySelectChange', this, this.updateSelectedBlock);
 
     this.first = true;
-}
+};
 
 /**
  * toggle on block helper
@@ -127,5 +127,5 @@ p.renderBlock = function(type) {
     this.blockHelperDescription_.innerHTML = Lang.Helper[type];
     $(this.blockHelperDescription_).css({
         top: blockHeight + 40
-    })
+    });
 };

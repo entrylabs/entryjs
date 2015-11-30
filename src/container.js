@@ -69,7 +69,7 @@ Entry.Container.prototype.generateView = function(containerView, option) {
         addButton.innerHTML = Lang.Workspace.add_object;
         addButton.bindOnClick(function(e){
             Entry.dispatchEvent('openSpriteManager');
-        })
+        });
         //this.view_.appendChild(addButton);
 
         var ulWrapper = Entry.createElement('div');
@@ -116,7 +116,7 @@ Entry.Container.prototype.generateView = function(containerView, option) {
         addButton.innerHTML = Lang.Workspace.add_object;
         addButton.bindOnClick(function(e){
             Entry.dispatchEvent('openSpriteManager');
-        })
+        });
         //this.view_.appendChild(addButton);
 
         var ulWrapper = Entry.createElement('div');
@@ -197,7 +197,7 @@ Entry.Container.prototype.setObjects = function(objectModels) {
             Entry.playground.generateSoundElement(s);
         });
     }
-    this.updateObjectsOrder()
+    this.updateObjectsOrder();
     this.updateListView();
     Entry.stage.sortZorder();
     Entry.variableContainer.updateViews();
@@ -220,10 +220,15 @@ Entry.Container.prototype.addObject = function(objectModel, index) {
     var object = new Entry.EntryObject(objectModel);
     object.name = Entry.getOrderedName(object.name, this.objects_);
 
-    Entry.stateManager.addCommand("add object",
-                                  this,
-                                  this.removeObject,
-                                  object);
+
+    if (Entry.stateManager) {
+        Entry.stateManager.addCommand(
+            "add object",
+              this,
+              this.removeObject,
+              object
+        );
+    }
     if (!object.scene)
         object.scene = Entry.scene.selectedScene;
     if (typeof index == 'number') {
@@ -284,11 +289,15 @@ Entry.Container.prototype.addCloneObject = function(object, scene) {
 Entry.Container.prototype.removeObject = function(object) {
     var index = this.objects_.indexOf(object);
     var objectJSON = object.toJSON();
-    Entry.stateManager.addCommand("remove object",
-                                  this,
-                                  this.addObject,
-                                  objectJSON,
-                                 index);
+    if (Entry.stateManager) {
+        Entry.stateManager.addCommand(
+            "remove object",
+            this,
+            this.addObject,
+            objectJSON,
+            index
+        );
+    }
     var state = new Entry.State(
                                 this.addObject,
                                 objectJSON,
@@ -299,9 +308,9 @@ Entry.Container.prototype.removeObject = function(object) {
     this.setCurrentObjects();
     Entry.stage.sortZorder();
 
-    if (this.objects_.length && index != 0)
+    if (this.objects_.length && index !== 0)
         Entry.container.selectObject(this.objects_[index -1].id);
-    else if (this.objects_.length && index == 0)
+    else if (this.objects_.length && index === 0)
         Entry.container.selectObject(this.getCurrentObjects()[0].id);
     else {
         Entry.container.selectObject();
@@ -335,7 +344,7 @@ Entry.Container.prototype.selectObject = function(objectId, changeScene) {
         if (object.view_)
             object.view_.addClass('selectedObject');
         object.isSelected_ = true;
-    };
+    }
     if (Entry.playground)
         Entry.playground.injectObject(object);
     if (Entry.type != "minimize" && Entry.engine.isState('stop'))
@@ -360,7 +369,7 @@ Entry.Container.prototype.getObject = function(objectId) {
         var object = this.objects_[i];
         if (object.id == objectId)
             return object;
-    };
+    }
 };
 
 /**
@@ -390,7 +399,7 @@ Entry.Container.prototype.getVariable = function(variableId) {
             return variable;
         if (variable.getName() == variableId)
             return variable;
-    };
+    }
 };
 
 /**
@@ -406,11 +415,13 @@ Entry.Container.prototype.moveElement = function(start, end, isCallFromState) {
     objs = this.getCurrentObjects();
     startIndex = this.getAllObjects().indexOf(objs[start]);
     endIndex = this.getAllObjects().indexOf(objs[end]);
-    if (!isCallFromState)
-        Entry.stateManager.addCommand("reorder object",
-                                      Entry.container,
-                                      Entry.container.moveElement,
-                                      endIndex, startIndex, true);
+    if (!isCallFromState && Entry.stateManager)
+        Entry.stateManager.addCommand(
+            "reorder object",
+            Entry.container,
+            Entry.container.moveElement,
+            endIndex, startIndex, true
+        );
 
     this.objects_.splice(endIndex, 0, this.objects_.splice(startIndex, 1)[0]);
     this.setCurrentObjects();
@@ -474,7 +485,7 @@ Entry.Container.prototype.addMessage = function(message) {
  * Real deleting message action is do in 'this.removeMessage'
  */
 Entry.Container.prototype.deleteMessage = function() {
-    if ( this.messages_.length == 0 ){
+    if ( this.messages_.length === 0 ){
         Entry.toast.alert(Lang.Msgs.warn, Lang.Workspace.no_message_to_remove, 'true');
         return;
     }
@@ -644,29 +655,29 @@ Entry.Container.prototype.getDropdownList = function(menuName) {
             if (variable.object_ && variable.object_ != Entry.playground.object.id)
                 continue;
             result.push([variable.getName(), variable.getId()]);
-        };
-        if (!result || result.length == 0)
+        }
+        if (!result || result.length === 0)
             result.push([Lang.Blocks.VARIABLE_variable, 'null']);
     } else if (menuName == 'lists') {
         var lists = Entry.variableContainer.lists_;
         for (var i = 0; i<lists.length; i++) {
             var list = lists[i];
             result.push([list.getName(), list.getId()]);
-        };
-        if (!result || result.length == 0)
+        }
+        if (!result || result.length === 0)
             result.push([Lang.Blocks.VARIABLE_list, 'null']);
     } else if (menuName == 'scenes') {
         var scenes = Entry.scene.scenes_;
         for (var i = 0; i<scenes.length; i++) {
             var scene = scenes[i];
             result.push([scene.name, scene.id]);
-        };
+        }
     } else if (menuName == 'sounds') {
         var sounds = Entry.playground.object.sounds;
         for (var i = 0; i<sounds.length; i++) {
             var sound = sounds[i];
             result.push([sound.name, sound.id]);
-        };
+        }
     } else if (menuName == 'clone') {
         result.push([Lang.Blocks.oneself, 'self']);
         var length = this.objects_.length;
@@ -681,7 +692,7 @@ Entry.Container.prototype.getDropdownList = function(menuName) {
         }
     }
     if (!result.length) {
-        result = [[Lang.Blocks.no_target, 'null']]
+        result = [[Lang.Blocks.no_target, 'null']];
     }
     return result;
 };
@@ -695,7 +706,7 @@ Entry.Container.prototype.clearRunningState = function() {
         for (var j = object.clonedEntities.length; j>0; j--) {
             var entity = object.clonedEntities[j-1];
             entity.removeClone();
-        };
+        }
         object.clonedEntities = [];
     });
 };
@@ -713,7 +724,7 @@ Entry.Container.prototype.mapObject = function(mapFunction, param) {
         var object = this.objects_[i];
         mapFunction(object, param);
     }
-}
+};
 
 
 Entry.Container.prototype.mapObjectOnScene = function(mapFunction, param) {
@@ -731,7 +742,7 @@ Entry.Container.prototype.clearRunningStateOnScene = function() {
         for (var j = object.clonedEntities.length; j>0; j--) {
             var entity = object.clonedEntities[j-1];
             entity.removeClone();
-        };
+        }
         object.clonedEntities = [];
     });
 };
@@ -779,7 +790,7 @@ Entry.Container.prototype.mapEntityIncludeClone = function(mapFunction, param) {
             var entity = object.clonedEntities[j];
             if (entity && !entity.isStamp)
                 mapFunction(entity, param);
-        };
+        }
     }
 };
 
@@ -794,7 +805,7 @@ Entry.Container.prototype.mapEntityIncludeCloneOnScene = function(mapFunction, p
             var entity = object.clonedEntities[j];
             if (entity && !entity.isStamp)
                 mapFunction(entity, param);
-        };
+        }
     }
 };
 
@@ -827,7 +838,7 @@ Entry.Container.prototype.toJSON = function() {
     for (var i = 0; i<length; i++) {
         var object = this.objects_[i];
         json.push(object.toJSON());
-    };
+    }
     return json;
 };
 
@@ -875,7 +886,7 @@ Entry.Container.prototype.getVariableJSON = function() {
     for (var i = 0; i<this.variables_.length; i++) {
         var variable = this.variables_[i];
         json.push(variable.toJSON());
-    };
+    }
     return json;
 };
 
@@ -956,7 +967,7 @@ Entry.Container.prototype.setCurrentObjects = function() {
  */
 Entry.Container.prototype.getCurrentObjects = function() {
     var objs = this.currentObjects_;
-    if (!objs || objs.length == 0)
+    if (!objs || objs.length === 0)
         this.setCurrentObjects();
     return this.currentObjects_;
 };
@@ -1092,7 +1103,7 @@ Entry.Container.prototype.changeTabView = function(tab) {
 };
 
 Entry.Container.prototype.initYoutube = function(youtubeHash) {
-    this.youtubeHash = youtubeHash
+    this.youtubeHash = youtubeHash;
     this.youtubeTab.removeClass('entryRemove');
     var view = this.view_;
     var width = view.style.width.substring(0,
@@ -1110,7 +1121,7 @@ Entry.Container.prototype.initYoutube = function(youtubeHash) {
 };
 
 Entry.Container.prototype.initTvcast = function(tvcast) {
-    this.tvcast = tvcast
+    this.tvcast = tvcast;
     this.youtubeTab.removeClass('entryRemove');
     var view = this.view_;
     var width = view.style.width.substring(0,
@@ -1140,7 +1151,7 @@ Entry.Container.prototype.initDoneProject = function(projectId) {
     iframe.setAttribute('src', url + this.doneProject);
     this.doneProjectFrame = iframe;
     this.doneContainer.appendChild(iframe);
-}
+};
 
 Entry.Container.prototype.blurAllInputs = function() {
     var objects = this.getSceneObjects();
@@ -1149,7 +1160,7 @@ Entry.Container.prototype.blurAllInputs = function() {
         for (var i=0, len=inputs.length; i<len; i++)
             inputs[i].blur();
     });
-}
+};
 
 Entry.Container.prototype.showProjectAnswer = function() {
     var answer = this.inputValue;

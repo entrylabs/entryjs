@@ -868,6 +868,7 @@ Blockly.ScrollbarSvg.prototype.onScroll_ = function() {
     xyRatio.y = ratio;
   }
   this.workspace_.setMetrics(xyRatio);
+  Blockly.hideChaff(true);
 };
 
 /**
