@@ -278,6 +278,8 @@ EntryStatic.getAllBlocks = function() {
                 "albert_turn_around",
                 "albert_set_led_to",
                 "albert_clear_led",
+                "albert_body_led",
+                "albert_front_led",
                 "albert_beep",
                 "albert_hand_found",
                 "albert_move_forward_for_secs",
@@ -1535,6 +1537,16 @@ EntryStatic.blockInfo = {
     "albert_clear_led": {
         "isNotFor": ["albert"],
         "xml": "<block type='albert_clear_led'></block>",
+        "class": "albert_novice"
+    },
+    "albert_body_led": {
+        "isNotFor": ["albert"],
+        "xml": "<block type='albert_body_led'></block>",
+        "class": "albert_novice"
+    },
+    "albert_front_led": {
+        "isNotFor": ["albert"],
+        "xml": "<block type='albert_front_led'></block>",
         "class": "albert_novice"
     },
     "albert_beep": {
