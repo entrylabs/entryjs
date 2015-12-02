@@ -78,6 +78,8 @@ Entry.Board = function(dom) {
     this._addControl(dom);
     if (Entry.documentMousedown)
         Entry.documentMousedown.attach(this, this.setSelectedBlock);
+    if (Entry.keyPressed)
+        Entry.keyPressed.attach(this, this._keyboardControl);
 };
 
 (function(p) {
@@ -223,6 +225,16 @@ Entry.Board = function(dom) {
         } else blockView = null;
 
         this.set({selectedBlockView:blockView});
+    };
+
+    p._keyboardControl = function(sender, event) {
+        var selected = this.selectedBlockView;
+        if (!selected) return;
+
+        if (event.keyCode == 46) {
+            if (selected.block.doDestroyAlone(true))
+                this.set({selectedBlockView:null});
+        }
     };
 
 

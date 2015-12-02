@@ -14016,6 +14016,10 @@ Entry.Block.MAGNET_OFFSET = .4;
     c && (c = c.getFirstBlock(), c instanceof Entry.DummyBlock && (c = c.next), c && c.destroy(a));
     this.next && this.next.destroy(a);
   };
+  a.destroyAlone = function(a) {
+    this.view && this.view.destroy(a);
+    this.getThread().spliceBlock(this);
+  };
   a.getView = function() {
     return this.view;
   };
@@ -14070,6 +14074,16 @@ Entry.Block.MAGNET_OFFSET = .4;
     this.destroy(a);
     this.getCode().changeEvent.notify();
     Entry.activityReporter && (a = [["blockId", c], ["positionX", d], ["positionY", e], ["code", this.getCode().stringify()]], Entry.activityReporter.add(new Entry.Activity("destroyBlock", a)));
+  };
+  a.doDestroyAlone = function(a) {
+    if (this.isDeletable()) {
+      var c = this.id, d = this.x, e = this.y;
+      console.log("destroy alone", c, d, e);
+      this.destroyAlone(a);
+      this.getCode().changeEvent.notify();
+      Entry.activityReporter && (a = [["blockId", c], ["positionX", d], ["positionY", e], ["code", this.getCode().stringify()]], Entry.activityReporter.add(new Entry.Activity("destroyBlockAlone", a)));
+      return !0;
+    }
   };
 })(Entry.Block.prototype);
 Entry.Thread = function(a, b) {
@@ -14186,6 +14200,12 @@ Entry.Thread = function(a, b) {
   a.setCode = function(a) {
     this._code = a;
   };
+  a.spliceBlock = function(a) {
+    var c = this.getBlocks();
+    c.remove(a);
+    0 !== c.length ? (null === a.prev ? a.next.setPrev(null) : null === a.next ? a.prev.setNext(null) : (a.prev.setNext(a.next), a.next.setPrev(a.prev)), this._setRelation()) : this.destroy();
+    this.changeEvent.notify();
+  };
 })(Entry.Thread.prototype);
 Entry.ThreadView = function(a, b) {
   Entry.Model(this, !1);
@@ -14291,6 +14311,7 @@ Entry.Board = function(a) {
   this.scroller = new Entry.Scroller(this, !0, !0);
   this._addControl(a);
   Entry.documentMousedown && Entry.documentMousedown.attach(this, this.setSelectedBlock);
+  Entry.keyPressed && Entry.keyPressed.attach(this, this._keyboardControl);
 };
 (function(a) {
   a.schema = {code:null, dragBlock:null, magnetedBlockView:null, selectedBlockView:null};
@@ -14384,6 +14405,10 @@ Entry.Board = function(a) {
     c && c.removeSelected();
     a instanceof Entry.BlockView ? a.addSelected() : a = null;
     this.set({selectedBlockView:a});
+  };
+  a._keyboardControl = function(a, c) {
+    var d = this.selectedBlockView;
+    d && 46 == c.keyCode && d.block.doDestroyAlone(!0) && this.set({selectedBlockView:null});
   };
 })(Entry.Board.prototype);
 Entry.Workspace = function(a, b) {
