@@ -77,6 +77,8 @@ Entry.BlockView = function(block, board) {
     };
 
     p._startContentRender = function() {
+        if (this.contentSvgGroup) this.contentSvgGroup.remove();
+
         this.contentSvgGroup = this.svgGroup.group();
         var contentPos = this._skeleton.contentPos();
         this.contentSvgGroup.transform("t" + contentPos.x + ' ' + contentPos.y);
@@ -91,10 +93,10 @@ Entry.BlockView = function(block, board) {
                     new Entry['Field' + content.type](content, this)
                 );
         }
-        this._alignContent(false);
+        this.alignContent(false);
     };
 
-    p._alignContent = function(animate) {
+    p.alignContent = function(animate) {
         if (animate !== true) animate = false;
         var cursor = {x: 0, y: 0, height: 0};
         for (var i = 0; i < this._contents.length; i++) {
