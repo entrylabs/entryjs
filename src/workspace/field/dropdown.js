@@ -54,10 +54,12 @@ Entry.FieldDropdown = function(content, blockView) {
         this.svgGroup.append(this.textElement);
 
         this._arrow = this.svgGroup.polygon(
-            width-11, -2, width-5, -2, width-8, 2).
+            //width-11, -2, width-5, -2, width-8, 2).
+            0, -2, 6, -2, 3, 2).
             attr({
                 fill: "#127cbd",
-                stroke: "#127cbd"
+                stroke: "#127cbd",
+                transform: "t"+ (width-11) + " 0",
             });
 
         this.svgGroup.mouseup(function(e) {
@@ -82,12 +84,10 @@ Entry.FieldDropdown = function(content, blockView) {
         });
 
         this._arrow.attr({
-            points: [width-11, -2, width-5, -2, width-8, 2]
+            transform: "t"+ (width-11) + " 0"
         });
 
-        this.box.set({
-            width: width
-        });
+        this.box.set({width: width});
         this._block.view.alignContent();
     };
 

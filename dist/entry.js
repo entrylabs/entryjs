@@ -13575,7 +13575,7 @@ Entry.FieldDropdown = function(a, b) {
     a = this.textElement.node.getComputedTextLength() + 18;
     this._header = this.svgGroup.rect(0, -12, a, 23, 3).attr({fill:"#80cbf8"});
     this.svgGroup.append(this.textElement);
-    this._arrow = this.svgGroup.polygon(a - 11, -2, a - 5, -2, a - 8, 2).attr({fill:"#127cbd", stroke:"#127cbd"});
+    this._arrow = this.svgGroup.polygon(0, -2, 6, -2, 3, 2).attr({fill:"#127cbd", stroke:"#127cbd", transform:"t" + (a - 11) + " 0"});
     this.svgGroup.mouseup(function(a) {
       c._block.view.dragMode == Entry.DRAG_MODE_MOUSEDOWN && c.renderOptions();
     });
@@ -13584,7 +13584,7 @@ Entry.FieldDropdown = function(a, b) {
   a.resize = function() {
     var a = this.textElement.node.getComputedTextLength() + 18;
     this._header.attr({width:a});
-    this._arrow.attr({points:[a - 11, -2, a - 5, -2, a - 8, 2]});
+    this._arrow.attr({transform:"t" + (a - 11) + " 0"});
     this.box.set({width:a});
     this._block.view.alignContent();
   };
