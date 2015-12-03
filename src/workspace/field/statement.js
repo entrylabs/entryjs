@@ -25,7 +25,7 @@ Entry.FieldStatement = function(content, blockView) {
     if (content.alignX) this._alignX = content.alignX;
     if (content.alignY) this._alignY = content.alignY;
 
-    this.box.observe(blockView, "_alignContent", ["height"]);
+    this.box.observe(blockView, "alignContent", ["height"]);
 
     this.renderStart(blockView.getBoard());
     this.block.observe(this, "_updateThread", ["thread"]);

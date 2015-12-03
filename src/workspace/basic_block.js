@@ -44,7 +44,18 @@ Entry.block.jr_repeat = {
         {
             type: "Dropdown",
             key: "REPEAT",
-            options: [1,2,3,4,5,6,7,8,9,10],
+            options: [
+                [1,1],
+                [2,2],
+                [3,3],
+                [4,4],
+                [5,5],
+                [6,6],
+                [7,7],
+                [8,8],
+                [9,9],
+                [10,10]
+            ],
             value: 1
         },
         {
@@ -713,5 +724,4 @@ Entry.block.jr_if_speed = {
             return Entry.STATIC.CONTINUE;
         }
     }
-
 };
