@@ -161,6 +161,11 @@ Entry.Block.MAGNET_OFFSET = 0.4;
         if (this.next) this.next.destroy(animate);
     };
 
+    p.destroyAlone = function(animate) {
+        if (this.view) this.view.destroy(animate);
+        this.getThread().spliceBlock(this);
+    };
+
     p.getView = function() {return this.view;};
 
     p.setMovable = function(movable) {
@@ -290,6 +295,32 @@ Entry.Block.MAGNET_OFFSET = 0.4;
             ];
             Entry.activityReporter.add(new Entry.Activity('destroyBlock', data));
         }
+    };
+
+    p.doDestroyAlone = function(animate) {
+        if (!this.isDeletable()) return;
+        var id = this.id;
+        var positionX = this.x;
+        var positionY = this.y;
+
+        console.log(
+            "destroy alone",
+            id,
+            positionX,
+            positionY
+        );
+        this.destroyAlone(animate);
+        this.getCode().changeEvent.notify();
+        if (Entry.activityReporter) {
+            var data = [
+                ['blockId',id],
+                ['positionX',positionX],
+                ['positionY',positionY],
+                ['code',this.getCode().stringify()]
+            ];
+            Entry.activityReporter.add(new Entry.Activity('destroyBlockAlone', data));
+        }
+        return true;
     };
 
 })(Entry.Block.prototype);

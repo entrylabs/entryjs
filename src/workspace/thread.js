@@ -183,4 +183,23 @@ Entry.Thread = function(thread, code) {
         this._code = code;
     };
 
+    p.spliceBlock = function(block) {
+        var blocks = this.getBlocks();
+        blocks.remove(block);
+
+        if (blocks.length !== 0) {
+            if (block.prev === null)
+                block.next.setPrev(null);
+            else if (block.next === null)
+                block.prev.setNext(null);
+            else {
+                block.prev.setNext(block.next);
+                block.next.setPrev(block.prev);
+            }
+            this._setRelation();
+        } else this.destroy();
+
+        this.changeEvent.notify();
+    };
+
 })(Entry.Thread.prototype);
