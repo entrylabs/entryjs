@@ -10788,6 +10788,18 @@ Entry.isEmpty = function(a) {
   }
   return !0;
 };
+Entry.Utils.disableContextmenu = function(a) {
+  if (a) {
+    $(a).on("contextmenu", function(a) {
+      a.stopPropagation();
+      a.preventDefault();
+      return !1;
+    });
+  }
+};
+Entry.Utils.isRightButton = function(a) {
+  return 2 == a.button || a.ctrlKey;
+};
 Entry.Model = function(a, b) {
   var c = Entry.Model;
   c.generateSchema(a);
@@ -13156,6 +13168,7 @@ Entry.BlockView = function(a, b) {
   this._schema = Entry.block[a.type];
   this._skeleton = Entry.skeleton[this._schema.skeleton];
   this._contents = [];
+  this.isInBlockMenu = !(this.getBoard() instanceof Entry.Board);
   this._skeleton.morph && this.block.observe(this, "_renderPath", this._skeleton.morph, !1);
   this.prevObserver = null;
   this._startRender(a);
@@ -13164,6 +13177,7 @@ Entry.BlockView = function(a, b) {
   this.observe(this, "_updateBG", ["magneting"]);
   b.code.observe(this, "_setBoard", ["board"], !1);
   this.dragMode = Entry.DRAG_MODE_NONE;
+  Entry.Utils.disableContextmenu(this.svgGroup.node);
 };
 (function(a) {
   a.schema = {id:0, type:Entry.STATIC.BLOCK_RENDER_MODEL, x:0, y:0, offsetX:0, offsetY:0, width:0, height:0, contentWidth:0, contentHeight:0, magneting:!1, animating:!1};
@@ -13253,33 +13267,33 @@ Entry.BlockView = function(a, b) {
   };
   a.onMouseDown = function(a) {
     function c(a) {
-      a.stopPropagation();
-      a.preventDefault();
-      var b = f.mouseDownCoordinate;
-      if ((f.dragMode == Entry.DRAG_MODE_DRAG || a.pageX !== b.x || a.pageY !== b.y) && f.block.isMovable()) {
-        f.block.prev && (f.block.prev.setNext(null), f.block.setPrev(null), f.block.thread.changeEvent.notify());
+      var b = g.mouseDownCoordinate;
+      if ((g.dragMode == Entry.DRAG_MODE_DRAG || a.pageX !== b.x || a.pageY !== b.y) && g.block.isMovable()) {
+        g.block.prev && (g.block.prev.setNext(null), g.block.setPrev(null), g.block.thread.changeEvent.notify());
         this.animating && this.set({animating:!1});
-        if (0 === f.dragInstance.height) {
-          for (var b = f.block, c = -1;b;) {
+        if (0 === g.dragInstance.height) {
+          for (var b = g.block, c = -1;b;) {
             c += b.view.height + 1, b = b.next;
           }
-          f.dragInstance.set({height:c});
+          g.dragInstance.set({height:c});
         }
         a.originalEvent.touches && (a = a.originalEvent.touches[0]);
-        b = f.dragInstance;
-        f._moveBy(a.pageX - b.offsetX, a.pageY - b.offsetY, !1);
+        b = g.dragInstance;
+        g._moveBy(a.pageX - b.offsetX, a.pageY - b.offsetY, !1);
         b.set({offsetX:a.pageX, offsetY:a.pageY});
-        f.dragMode = Entry.DRAG_MODE_DRAG;
-        (a = f._getCloseBlock()) ? (g = a.view.getBoard(), g.setMagnetedBlock(a.view)) : g.setMagnetedBlock(null);
+        g.dragMode = Entry.DRAG_MODE_DRAG;
+        (a = g._getCloseBlock()) ? (h = a.view.getBoard(), h.setMagnetedBlock(a.view)) : h.setMagnetedBlock(null);
       }
     }
     function d(a) {
       $(document).unbind(".block");
       delete this.mouseDownCoordinate;
-      f.terminateDrag();
-      g && g.set({dragBlock:null});
-      delete f.dragInstance;
+      g.terminateDrag();
+      h && h.set({dragBlock:null});
+      delete g.dragInstance;
     }
+    a.stopPropagation();
+    a.preventDefault();
     if (0 === a.button || a instanceof Touch) {
       this.dominate();
       Entry.documentMousedown && Entry.documentMousedown.notify();
@@ -13294,8 +13308,24 @@ Entry.BlockView = function(a, b) {
       this.addDragging();
       this.getBoard().setSelectedBlock(this);
       this.dragMode = Entry.DRAG_MODE_MOUSEDOWN;
+    } else {
+      if (Entry.Utils.isRightButton(a)) {
+        if (this.isInBlockMenu) {
+          return;
+        }
+        var e = [], f = {text:"\ubcf5\uc0ac", callback:function() {
+          console.log(1111111);
+        }};
+        e.push(f);
+        e.push(f);
+        e.push(f);
+        e.push(f);
+        e.push(f);
+        e.push(f);
+        Entry.ContextMenu.show(e);
+      }
     }
-    var f = this, g = this.getBoard();
+    var g = this, h = this.getBoard();
     a.stopPropagation();
   };
   a.terminateDrag = function() {
@@ -13532,12 +13562,33 @@ Entry.ContextMenu = {};
   a.X_PADDING = 20;
   a.Y_HEIGHT = 20;
   a.visible = !1;
-  this._board = this.svgGroup = null;
   a.createDom = function() {
+    this.dom = Entry.Dom("ul", {id:"entry-contextmenu", parent:$("body")});
+    Entry.Utils.disableContextmenu(this.dom);
   };
-  a.show = function(a, c) {
+  a.show = function(a) {
+    this.dom || this.createDom();
+    var c = this;
+    console.log("show");
+    var d = this.dom;
+    d.empty();
+    for (var e = 0, f = a.length;e < f;e++) {
+      var g = a[e], h = g.text, k = Entry.Dom("li", {class:"entry-contextmenu-each", parent:d});
+      k.text(h);
+      (function(a, b) {
+        a.mousedown(function() {
+          b && b();
+          c.hide();
+        });
+      })(k, g.callback);
+    }
+    a = Entry.mouseCoordinate;
+    d.css({left:a.x, top:a.y});
+    d.removeClass("entryRemove");
   };
   a.hide = function() {
+    this.dom.empty();
+    this.dom.addClass("entryRemove");
   };
 })(Entry.ContextMenu);
 Entry.Executor = function(a) {

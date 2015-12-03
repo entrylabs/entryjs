@@ -20,6 +20,8 @@ Entry.BlockView = function(block, board) {
     this._skeleton = Entry.skeleton[this._schema.skeleton];
     this._contents = [];
 
+    this.isInBlockMenu = !(this.getBoard() instanceof Entry.Board);
+
     if (this._skeleton.morph) {
         this.block.observe(this, "_renderPath", this._skeleton.morph, false);
     }
@@ -34,6 +36,7 @@ Entry.BlockView = function(block, board) {
     board.code.observe(this, '_setBoard', ['board'], false);
 
     this.dragMode = Entry.DRAG_MODE_NONE;
+    Entry.Utils.disableContextmenu(this.svgGroup.node);
 };
 
 (function(p) {
@@ -231,6 +234,8 @@ Entry.BlockView = function(block, board) {
     };
 
     p.onMouseDown = function(e) {
+        e.stopPropagation();
+        e.preventDefault();
         if (e.button === 0 || e instanceof Touch) {
             this.dominate();
             if (Entry.documentMousedown)
@@ -256,13 +261,32 @@ Entry.BlockView = function(block, board) {
             this.addDragging();
             this.getBoard().setSelectedBlock(this);
             this.dragMode = Entry.DRAG_MODE_MOUSEDOWN;
+        } else if (Entry.Utils.isRightButton(e)) {
+            if (this.isInBlockMenu) return;
+
+            var options = [];
+
+            var copy = {
+                text: '복사',
+                callback: function(){
+                    console.log(1111111);
+                }
+            };
+
+            options.push(copy);
+            options.push(copy);
+            options.push(copy);
+            options.push(copy);
+            options.push(copy);
+            options.push(copy);
+
+
+            Entry.ContextMenu.show(options);
         }
 
         var blockView = this;
         var board = this.getBoard();
         function onMouseMove(e) {
-            e.stopPropagation();
-            e.preventDefault();
             var mouseDownCoordinate = blockView.mouseDownCoordinate;
             if (blockView.dragMode == Entry.DRAG_MODE_DRAG ||
                 e.pageX !== mouseDownCoordinate.x ||
