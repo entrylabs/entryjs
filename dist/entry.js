@@ -6381,7 +6381,7 @@ p.closeConnection = function() {
   this.socket && this.socket.close();
 };
 p.downloadConnector = function() {
-  window.open("http://play-entry.com/file/entry_v0.1.zip", "_blank").focus();
+  window.open("http://play-entry.org/down/entry_v1.1.zip", "_blank").focus();
 };
 p.downloadSource = function() {
   window.open("http://play-entry.com/lib/EntryArduino/arduino/entry.ino", "_blank").focus();
