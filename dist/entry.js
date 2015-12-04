@@ -13313,15 +13313,13 @@ Entry.BlockView = function(a, b) {
         if (this.isInBlockMenu) {
           return;
         }
-        var e = [], f = {text:"\ubcf5\uc0ac", callback:function() {
-          console.log(1111111);
-        }};
-        e.push(f);
-        e.push(f);
-        e.push(f);
-        e.push(f);
-        e.push(f);
-        e.push(f);
+        var e = [], f = this;
+        e.push({text:"\ubcf5\uc0ac", enable:!0, callback:function() {
+          console.log(f);
+        }});
+        e.push({text:"\ubcf5\uc0ac", enable:!0, callback:function() {
+          f.block.doDestroyAlone(!0);
+        }});
         Entry.ContextMenu.show(e);
       }
     }

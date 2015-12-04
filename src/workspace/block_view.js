@@ -266,19 +266,25 @@ Entry.BlockView = function(block, board) {
 
             var options = [];
 
+            var that = this;
             var copy = {
                 text: '복사',
+                enable: true,
                 callback: function(){
-                    console.log(1111111);
+                    console.log(that)
+                }
+            };
+
+            var remove = {
+                text: '복사',
+                enable: true,
+                callback: function(){
+                    that.block.doDestroyAlone(true);
                 }
             };
 
             options.push(copy);
-            options.push(copy);
-            options.push(copy);
-            options.push(copy);
-            options.push(copy);
-            options.push(copy);
+            options.push(remove);
 
 
             Entry.ContextMenu.show(options);
