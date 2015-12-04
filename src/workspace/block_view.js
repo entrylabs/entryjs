@@ -264,6 +264,8 @@ Entry.BlockView = function(block, board) {
         } else if (Entry.Utils.isRightButton(e)) {
             if (this.isInBlockMenu) return;
 
+            this.getBoard().setSelectedBlock(this);
+
             var options = [];
 
             var that = this;
@@ -276,7 +278,7 @@ Entry.BlockView = function(block, board) {
             };
 
             var remove = {
-                text: '복사',
+                text: '삭제',
                 enable: true,
                 callback: function(){
                     that.block.doDestroyAlone(true);

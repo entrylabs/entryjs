@@ -13313,11 +13313,12 @@ Entry.BlockView = function(a, b) {
         if (this.isInBlockMenu) {
           return;
         }
+        this.getBoard().setSelectedBlock(this);
         var e = [], f = this;
         e.push({text:"\ubcf5\uc0ac", enable:!0, callback:function() {
           console.log(f);
         }});
-        e.push({text:"\ubcf5\uc0ac", enable:!0, callback:function() {
+        e.push({text:"\uc0ad\uc81c", enable:!0, callback:function() {
           f.block.doDestroyAlone(!0);
         }});
         Entry.ContextMenu.show(e);
