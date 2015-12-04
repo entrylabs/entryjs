@@ -163,7 +163,7 @@ p.closeConnection = function() {
 };
 
 p.downloadConnector = function() {
-    var url = "http://play-entry.com/file/entry_v0.1.zip";
+    var url = "http://play-entry.com/file/entry_v1.1.zip";
     var win = window.open(url, '_blank');
     win.focus();
 };
@@ -204,4 +204,3 @@ p.banHW = function() {
     for (var i in hwOptions)
         Entry.playground.blockMenu.banClass(hwOptions[i].name);
 };
-
