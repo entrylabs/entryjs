@@ -29,8 +29,6 @@ Entry.VariableContainer = function() {
         }
     };
     this.selectedVariable = null;
-
-    Entry.addEventListener("updateCloudVariables", this.updateCloudVariables);
 };
 
 Entry.VariableContainer.prototype.createDom = function(view) {
