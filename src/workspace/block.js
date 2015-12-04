@@ -13,13 +13,12 @@ goog.require("Entry.skeleton");
 /*
  *
  */
-Entry.Block = function(block, thread, view) {
-    view = view === false ? false : true;
+Entry.Block = function(block, thread) {
     Entry.Model(this, false);
     this._schema = null;
 
     this.setThread(thread);
-    this.load(block, view);
+    this.load(block);
 };
 
 Entry.Block.MAGNET_RANGE = 10;
@@ -38,18 +37,19 @@ Entry.Block.MAGNET_OFFSET = 0.4;
         view: null,
         thread: null,
         movable: true,
-        deletable: true
+        deletable: true,
+        readOnly: false
     };
 
-    p.load = function(block, view) {
+    p.load = function(block) {
         if (!block.id)
             block.id = Entry.Utils.generateId();
 
         this.set(block);
-        this.getSchema(view);
+        this.getSchema();
     };
 
-    p.getSchema = function(view) {
+    p.getSchema = function() {
         this._schema = Entry.block[this.type];
         if (this._schema.event)
             this.thread.registerEvent(this, this._schema.event);
@@ -62,7 +62,7 @@ Entry.Block.MAGNET_OFFSET = 0.4;
 
             if (content.type == "Statement") {
                 this.values[content.key] = new Entry.Thread(
-                    this.values[content.key], this.getCode(), view);
+                    this.values[content.key], this.getCode());
             }
         }
     };
@@ -115,11 +115,10 @@ Entry.Block.MAGNET_OFFSET = 0.4;
         }
     };
 
-    p.clone = function(thread, view) {
+    p.clone = function(thread) {
         return new Entry.Block(
             this.toJSON(true),
-            thread,
-            view
+            thread
         );
     };
 
@@ -183,6 +182,8 @@ Entry.Block.MAGNET_OFFSET = 0.4;
     };
 
     p.isDeletable = function() {return this.deletable;};
+
+    p.isReadOnly = function() {return this.readOnly;};
 
     p.getCode = function() {return this.thread.getCode();};
 

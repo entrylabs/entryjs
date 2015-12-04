@@ -12,20 +12,18 @@ goog.require("Entry.DummyBlock");
 /*
  *
  */
-Entry.Thread = function(thread, code, view) {
-    view = view === false ? false : true;
+Entry.Thread = function(thread, code) {
     this._data = new Entry.Collection();
     this._code = code;
 
     this.changeEvent = new Entry.Event(this);
     this.changeEvent.attach(this, this.inspectExist);
 
-    this.load(thread, view);
+    this.load(thread);
 };
 
 (function(p) {
-    p.load = function(thread, view) {
-        view = view === false ? false : true;
+    p.load = function(thread) {
         if (thread === undefined)
             thread = [];
         if (!(thread instanceof Array)) {
@@ -45,7 +43,7 @@ Entry.Thread = function(thread, code, view) {
         this._setRelation();
 
         var codeView = this._code.view;
-        if (codeView && view) this.createView(codeView.board);
+        if (codeView) this.createView(codeView.board);
     };
 
     p._setRelation = function() {
@@ -131,9 +129,10 @@ Entry.Thread = function(thread, code, view) {
         return newThread;
     };
 
-    p.toJSON = function(isNew) {
+    p.toJSON = function(isNew, start) {
         var array = [];
-        for (var i = 0; i < this._data.length; i++) {
+        start = start === undefined ? 0 : start;
+        for (var i = start; i < this._data.length; i++) {
             var block = this._data[i];
             if (block instanceof Entry.Block)
                 array.push(this._data[i].toJSON(isNew));
@@ -202,31 +201,6 @@ Entry.Thread = function(thread, code, view) {
         } else this.destroy();
 
         this.changeEvent.notify();
-    };
-
-    p.cloneBelow = function(block) {
-        if (!this._data.has(block.id)) return;
-
-        var blocks = this.getBelow(block);
-
-        var cloned = [];
-        var newThread = new Entry.Thread([], this._code, false);
-        for (var i=0, len=blocks.length; i<len; i++)
-            cloned.push(blocks[i].clone(newThread, false));
-
-        return cloned;
-    };
-
-    p.getBelow = function(block) {
-        if (!this._data.has(block.id)) return;
-        var arr = [];
-        var blocks = this._data;
-        var index = blocks.indexOf(block);
-
-        for (var i = index; i<blocks.length; i++)
-            arr.push(blocks[i]);
-
-        return arr;
     };
 
 })(Entry.Thread.prototype);

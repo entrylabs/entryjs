@@ -266,25 +266,32 @@ Entry.BlockView = function(block, board) {
 
             var options = [];
             var that = this;
+            var block = that.block;
 
             var copyAndPaste = {
                 text: '블록 복사 & 붙여넣기',
+                enable: !block.isReadOnly(),
                 callback: function(){
-                    var block = that.block;
                     var thread = block.getThread();
-                    var cloned = thread.cloneBelow(block);
+                    var index = thread.getBlocks().indexOf(block);
+                    var json = thread.toJSON(true, index);
+                    var cloned = [];
+                    var newThread = new Entry.Thread([], block.getCode());
+                    for (var i=0; i<json.length; i++)
+                        cloned.push(new Entry.Block(json[i], newThread));
+
                     var matrix = that.svgGroup.transform().globalMatrix;
                     cloned[0].set({
                         x: matrix.e + 20,
                         y: matrix.f + 20
                     });
-                    var newThread = thread.getCode().createThread(cloned);
+                    thread.getCode().createThread(cloned);
                 }
             };
 
             var remove = {
                 text: '블록 삭제',
-                enable: that.block.isDeletable(),
+                enable: block.isDeletable(),
                 callback: function(){
                     that.block.doDestroyAlone(true);
                 }
