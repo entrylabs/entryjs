@@ -30,7 +30,7 @@ Entry.VariableContainer = function() {
     };
     this.selectedVariable = null;
 
-    Entry.addEventListener("stop", this.updateCloudVariables);
+    Entry.addEventListener("updateCloudVariables", this.updateCloudVariables);
 };
 
 Entry.VariableContainer.prototype.createDom = function(view) {

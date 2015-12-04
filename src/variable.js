@@ -553,6 +553,9 @@ Entry.Variable.prototype.setValue = function(value) {
         else
             this.value_ = value;
     }
+
+    if (this.isCloud_)
+        Entry.dispatchEvent('updateCloudVariables');
     this.updateView();
 };
 
