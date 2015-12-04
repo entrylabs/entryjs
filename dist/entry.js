@@ -11384,6 +11384,7 @@ Entry.Variable.prototype.isNumber = function() {
 };
 Entry.Variable.prototype.setValue = function(a) {
   this.value_ = "slide" != this.type ? a : a < this.minValue_ ? this.minValue_ : a > this.maxValue_ ? this.maxValue_ : a;
+  this.isCloud_ && Entry.variableContainer.updateCloudVariables();
   this.updateView();
 };
 Entry.Variable.prototype.isVisible = function() {
@@ -11512,7 +11513,6 @@ Entry.VariableContainer = function() {
   this.variableAddPanel = {isOpen:!1, info:{object:null, isCloud:!1}};
   this.listAddPanel = {isOpen:!1, info:{object:null, isCloud:!1}};
   this.selectedVariable = null;
-  Entry.addEventListener("stop", this.updateCloudVariables);
 };
 Entry.VariableContainer.prototype.createDom = function(a) {
   var b = this;
