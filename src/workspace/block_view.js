@@ -262,15 +262,14 @@ Entry.BlockView = function(block, board) {
             this.addDragging();
             this.dragMode = Entry.DRAG_MODE_MOUSEDOWN;
         } else if (Entry.Utils.isRightButton(e)) {
-            if (this.isInBlockMenu) return;
-
-            var options = [];
             var that = this;
             var block = that.block;
+            if (this.isInBlockMenu || block.isReadOnly()) return;
+
+            var options = [];
 
             var copyAndPaste = {
                 text: '블록 복사 & 붙여넣기',
-                enable: !block.isReadOnly(),
                 callback: function(){
                     var thread = block.getThread();
                     var index = thread.getBlocks().indexOf(block);
@@ -285,6 +284,7 @@ Entry.BlockView = function(block, board) {
                         x: matrix.e + 20,
                         y: matrix.f + 20
                     });
+                    cloned[0].doAdd();
                     thread.getCode().createThread(cloned);
                 }
             };

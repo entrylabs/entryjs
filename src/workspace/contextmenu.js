@@ -45,12 +45,33 @@ goog.provide('Entry.ContextMenu');
             }
         }
 
-        var mousePos = Entry.mouseCoordinate;
-        parent.css({
-            left: mousePos.x,
-            top: mousePos.y
-        });
         parent.removeClass('entryRemove');
+        this.position(Entry.mouseCoordinate);
+    };
+
+    ctx.position = function(pos) {
+        var dom = this.dom;
+        dom.css({
+            left: 0,
+            top: 0
+        });
+        var width = dom.width();
+        var height = dom.height();
+
+        var win = $(window);
+        var winWidth = win.width();
+        var winHeight = win.height();
+
+        if (pos.x + width > winWidth)
+            pos.x -= width + 3;
+        if (pos.y + height > winHeight)
+            pos.y -= height;
+
+        dom.css({
+            left: pos.x,
+            top: pos.y
+        });
+
     };
 
     ctx.hide = function() {

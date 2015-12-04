@@ -13267,30 +13267,30 @@ Entry.BlockView = function(a, b) {
   };
   a.onMouseDown = function(a) {
     function c(a) {
-      var b = l.mouseDownCoordinate;
-      if ((l.dragMode == Entry.DRAG_MODE_DRAG || a.pageX !== b.x || a.pageY !== b.y) && l.block.isMovable()) {
-        l.block.prev && (l.block.prev.setNext(null), l.block.setPrev(null), l.block.thread.changeEvent.notify());
+      var b = k.mouseDownCoordinate;
+      if ((k.dragMode == Entry.DRAG_MODE_DRAG || a.pageX !== b.x || a.pageY !== b.y) && k.block.isMovable()) {
+        k.block.prev && (k.block.prev.setNext(null), k.block.setPrev(null), k.block.thread.changeEvent.notify());
         this.animating && this.set({animating:!1});
-        if (0 === l.dragInstance.height) {
-          for (var b = l.block, c = -1;b;) {
+        if (0 === k.dragInstance.height) {
+          for (var b = k.block, c = -1;b;) {
             c += b.view.height + 1, b = b.next;
           }
-          l.dragInstance.set({height:c});
+          k.dragInstance.set({height:c});
         }
         a.originalEvent.touches && (a = a.originalEvent.touches[0]);
-        b = l.dragInstance;
-        l._moveBy(a.pageX - b.offsetX, a.pageY - b.offsetY, !1);
+        b = k.dragInstance;
+        k._moveBy(a.pageX - b.offsetX, a.pageY - b.offsetY, !1);
         b.set({offsetX:a.pageX, offsetY:a.pageY});
-        l.dragMode = Entry.DRAG_MODE_DRAG;
-        (a = l._getCloseBlock()) ? (n = a.view.getBoard(), n.setMagnetedBlock(a.view)) : n.setMagnetedBlock(null);
+        k.dragMode = Entry.DRAG_MODE_DRAG;
+        (a = k._getCloseBlock()) ? (l = a.view.getBoard(), l.setMagnetedBlock(a.view)) : l.setMagnetedBlock(null);
       }
     }
     function d(a) {
       $(document).unbind(".block");
       delete this.mouseDownCoordinate;
-      l.terminateDrag();
-      n && n.set({dragBlock:null});
-      delete l.dragInstance;
+      k.terminateDrag();
+      l && l.set({dragBlock:null});
+      delete k.dragInstance;
     }
     a.stopPropagation();
     a.preventDefault();
@@ -13310,25 +13310,27 @@ Entry.BlockView = function(a, b) {
       this.dragMode = Entry.DRAG_MODE_MOUSEDOWN;
     } else {
       if (Entry.Utils.isRightButton(a)) {
-        if (this.isInBlockMenu) {
+        var f = this, g = f.block;
+        if (this.isInBlockMenu || g.isReadOnly()) {
           return;
         }
-        var e = [], f = this, g = f.block, h = {text:"\ube14\ub85d \ubcf5\uc0ac & \ubd99\uc5ec\ub123\uae30", enable:!g.isReadOnly(), callback:function() {
+        var e = [], h = {text:"\ube14\ub85d \uc0ad\uc81c", enable:g.isDeletable(), callback:function() {
+          f.block.doDestroyAlone(!0);
+        }};
+        e.push(h);
+        e.push({text:"\ube14\ub85d \ubcf5\uc0ac & \ubd99\uc5ec\ub123\uae30", callback:function() {
           for (var a = g.getThread(), b = a.getBlocks().indexOf(g), c = a.toJSON(!0, b), b = [], d = new Entry.Thread([], g.getCode()), e = 0;e < c.length;e++) {
             b.push(new Entry.Block(c[e], d));
           }
           c = f.svgGroup.transform().globalMatrix;
           b[0].set({x:c.e + 20, y:c.f + 20});
+          b[0].doAdd();
           a.getCode().createThread(b);
-        }}, k = {text:"\ube14\ub85d \uc0ad\uc81c", enable:g.isDeletable(), callback:function() {
-          f.block.doDestroyAlone(!0);
-        }};
-        e.push(k);
-        e.push(h);
+        }});
         Entry.ContextMenu.show(e);
       }
     }
-    var l = this, n = this.getBoard();
+    var k = this, l = this.getBoard();
     a.stopPropagation();
   };
   a.terminateDrag = function() {
@@ -13583,10 +13585,17 @@ Entry.ContextMenu = {};
           });
         }(k, f.callback);
       }
-      a = Entry.mouseCoordinate;
-      c.css({left:a.x, top:a.y});
       c.removeClass("entryRemove");
+      this.position(Entry.mouseCoordinate);
     }
+  };
+  a.position = function(a) {
+    var c = this.dom;
+    c.css({left:0, top:0});
+    var d = c.width(), e = c.height(), f = $(window), g = f.width(), f = f.height();
+    a.x + d > g && (a.x -= d + 3);
+    a.y + e > f && (a.y -= e);
+    c.css({left:a.x, top:a.y});
   };
   a.hide = function() {
     this.dom.empty();
