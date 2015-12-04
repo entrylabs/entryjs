@@ -11000,11 +11000,11 @@ Entry.Func.updateMenu = function() {
     f.map(function(a) {
       e = Entry.Func.generateWsBlock(b, Blockly.Xml.workspaceToDom(Entry.Func.workspace), d).block;
       for (var c = [], f = !1;a.firstChild;) {
-        var g = a.firstChild, h = g.tagName;
-        if (f || "NEXT" == h) {
-          f = !0, c.push(g);
+        var h = a.firstChild, g = h.tagName;
+        if (f || "NEXT" == g) {
+          f = !0, c.push(h);
         }
-        a.removeChild(g);
+        a.removeChild(h);
       }
       for (;e.firstChild;) {
         a.appendChild(e.firstChild);
@@ -13267,36 +13267,37 @@ Entry.BlockView = function(a, b) {
   };
   a.onMouseDown = function(a) {
     function c(a) {
-      var b = g.mouseDownCoordinate;
-      if ((g.dragMode == Entry.DRAG_MODE_DRAG || a.pageX !== b.x || a.pageY !== b.y) && g.block.isMovable()) {
-        g.block.prev && (g.block.prev.setNext(null), g.block.setPrev(null), g.block.thread.changeEvent.notify());
+      var b = h.mouseDownCoordinate;
+      if ((h.dragMode == Entry.DRAG_MODE_DRAG || a.pageX !== b.x || a.pageY !== b.y) && h.block.isMovable()) {
+        h.block.prev && (h.block.prev.setNext(null), h.block.setPrev(null), h.block.thread.changeEvent.notify());
         this.animating && this.set({animating:!1});
-        if (0 === g.dragInstance.height) {
-          for (var b = g.block, c = -1;b;) {
+        if (0 === h.dragInstance.height) {
+          for (var b = h.block, c = -1;b;) {
             c += b.view.height + 1, b = b.next;
           }
-          g.dragInstance.set({height:c});
+          h.dragInstance.set({height:c});
         }
         a.originalEvent.touches && (a = a.originalEvent.touches[0]);
-        b = g.dragInstance;
-        g._moveBy(a.pageX - b.offsetX, a.pageY - b.offsetY, !1);
+        b = h.dragInstance;
+        h._moveBy(a.pageX - b.offsetX, a.pageY - b.offsetY, !1);
         b.set({offsetX:a.pageX, offsetY:a.pageY});
-        g.dragMode = Entry.DRAG_MODE_DRAG;
-        (a = g._getCloseBlock()) ? (h = a.view.getBoard(), h.setMagnetedBlock(a.view)) : h.setMagnetedBlock(null);
+        h.dragMode = Entry.DRAG_MODE_DRAG;
+        (a = h._getCloseBlock()) ? (k = a.view.getBoard(), k.setMagnetedBlock(a.view)) : k.setMagnetedBlock(null);
       }
     }
     function d(a) {
       $(document).unbind(".block");
       delete this.mouseDownCoordinate;
-      g.terminateDrag();
-      h && h.set({dragBlock:null});
-      delete g.dragInstance;
+      h.terminateDrag();
+      k && k.set({dragBlock:null});
+      delete h.dragInstance;
     }
     a.stopPropagation();
     a.preventDefault();
+    Entry.documentMousedown && Entry.documentMousedown.notify();
+    this.getBoard().setSelectedBlock(this);
+    this.dominate();
     if (0 === a.button || a instanceof Touch) {
-      this.dominate();
-      Entry.documentMousedown && Entry.documentMousedown.notify();
       this.mouseDownCoordinate = {x:a.pageX, y:a.pageY};
       var e = $(document);
       e.bind("mousemove.block", c);
@@ -13306,25 +13307,25 @@ Entry.BlockView = function(a, b) {
       this.getBoard().set({dragBlock:this});
       this.dragInstance = new Entry.DragInstance({startX:a.pageX, startY:a.pageY, offsetX:a.pageX, offsetY:a.pageY, prev:this.block.prev, height:0, mode:!0});
       this.addDragging();
-      this.getBoard().setSelectedBlock(this);
       this.dragMode = Entry.DRAG_MODE_MOUSEDOWN;
     } else {
       if (Entry.Utils.isRightButton(a)) {
         if (this.isInBlockMenu) {
           return;
         }
-        this.getBoard().setSelectedBlock(this);
-        var e = [], f = this;
-        e.push({text:"\ubcf5\uc0ac", enable:!0, callback:function() {
-          console.log(f);
-        }});
-        e.push({text:"\uc0ad\uc81c", enable:!0, callback:function() {
+        var e = [], f = this, g = {text:"\ube14\ub85d \uc0ad\uc81c", enable:f.block.isDeletable(), callback:function() {
           f.block.doDestroyAlone(!0);
+        }};
+        e.push(g);
+        e.push({text:"\ube14\ub85d \ubcf5\uc0ac & \ubd99\uc5ec\ub123\uae30", callback:function() {
+          var a = f.block, b = a.getThread(), a = b.cloneBelow(a), c = f.svgGroup.transform().globalMatrix;
+          a[0].set({x:c.e + 20, y:c.f + 20});
+          b.getCode().createThread(a);
         }});
         Entry.ContextMenu.show(e);
       }
     }
-    var g = this, h = this.getBoard();
+    var h = this, k = this.getBoard();
     a.stopPropagation();
   };
   a.terminateDrag = function() {
@@ -13558,32 +13559,31 @@ Entry.CodeView = function(a, b) {
 })(Entry.CodeView.prototype);
 Entry.ContextMenu = {};
 (function(a) {
-  a.X_PADDING = 20;
-  a.Y_HEIGHT = 20;
-  a.visible = !1;
   a.createDom = function() {
     this.dom = Entry.Dom("ul", {id:"entry-contextmenu", parent:$("body")});
     Entry.Utils.disableContextmenu(this.dom);
+    Entry.documentMousedown.attach(this, function() {
+      this.hide();
+    });
   };
   a.show = function(a) {
     this.dom || this.createDom();
-    var c = this;
-    console.log("show");
-    var d = this.dom;
-    d.empty();
-    for (var e = 0, f = a.length;e < f;e++) {
-      var g = a[e], h = g.text, k = Entry.Dom("li", {class:"entry-contextmenu-each", parent:d});
-      k.text(h);
-      (function(a, b) {
-        a.mousedown(function() {
-          b && b();
-          c.hide();
-        });
-      })(k, g.callback);
+    if (0 !== a.length) {
+      var c = this.dom;
+      c.empty();
+      for (var d = 0, e = a.length;d < e;d++) {
+        var f = a[d], g = f.text, h = !1 !== f.enable, k = Entry.Dom("li", {class:h ? "menuAble" : "menuDisable", parent:c});
+        k.text(g);
+        h && f.callback && function(a, b) {
+          a.mousedown(function() {
+            b();
+          });
+        }(k, f.callback);
+      }
+      a = Entry.mouseCoordinate;
+      c.css({left:a.x, top:a.y});
+      c.removeClass("entryRemove");
     }
-    a = Entry.mouseCoordinate;
-    d.css({left:a.x, top:a.y});
-    d.removeClass("entryRemove");
   };
   a.hide = function() {
     this.dom.empty();
@@ -14052,28 +14052,29 @@ Entry.skeleton.pebble_basic = {fontSize:16, morph:["prev", "next"], path:functio
 }, contentPos:function() {
   return {x:-46, y:25};
 }};
-Entry.Block = function(a, b) {
+Entry.Block = function(a, b, c) {
+  c = !1 === c ? !1 : !0;
   Entry.Model(this, !1);
   this._schema = null;
   this.setThread(b);
-  this.load(a);
+  this.load(a, c);
 };
 Entry.Block.MAGNET_RANGE = 10;
 Entry.Block.MAGNET_OFFSET = .4;
 (function(a) {
   a.schema = {id:null, name:null, x:0, y:0, type:null, values:{}, prev:null, next:null, view:null, thread:null, movable:!0, deletable:!0};
-  a.load = function(a) {
+  a.load = function(a, c) {
     a.id || (a.id = Entry.Utils.generateId());
     this.set(a);
-    this.getSchema();
+    this.getSchema(c);
   };
-  a.getSchema = function() {
+  a.getSchema = function(a) {
     this._schema = Entry.block[this.type];
     this._schema.event && this.thread.registerEvent(this, this._schema.event);
-    for (var a = this._schema.contents, c = 0;c < a.length;c++) {
-      var d = a[c];
-      !this.values[d.key] && d.value && (this.values[d.key] = d.value);
-      "Statement" == d.type && (this.values[d.key] = new Entry.Thread(this.values[d.key], this.getCode()));
+    for (var c = this._schema.contents, d = 0;d < c.length;d++) {
+      var e = c[d];
+      !this.values[e.key] && e.value && (this.values[e.key] = e.value);
+      "Statement" == e.type && (this.values[e.key] = new Entry.Thread(this.values[e.key], this.getCode(), a));
     }
   };
   a.setThread = function(a) {
@@ -14101,8 +14102,8 @@ Entry.Block.MAGNET_OFFSET = .4;
   a.createView = function(a) {
     this.view || (this.set({view:new Entry.BlockView(this, a)}), this._updatePos());
   };
-  a.clone = function(a) {
-    return new Entry.Block(this.toJSON(!0), a);
+  a.clone = function(a, c) {
+    return new Entry.Block(this.toJSON(!0), a, c);
   };
   a.toJSON = function(a) {
     var c = this._toJSON();
@@ -14200,25 +14201,27 @@ Entry.Block.MAGNET_OFFSET = .4;
     }
   };
 })(Entry.Block.prototype);
-Entry.Thread = function(a, b) {
+Entry.Thread = function(a, b, c) {
+  c = !1 === c ? !1 : !0;
   this._data = new Entry.Collection;
   this._code = b;
   this.changeEvent = new Entry.Event(this);
   this.changeEvent.attach(this, this.inspectExist);
-  this.load(a);
+  this.load(a, c);
 };
 (function(a) {
-  a.load = function(a) {
+  a.load = function(a, c) {
+    c = !1 === c ? !1 : !0;
     void 0 === a && (a = []);
     if (!(a instanceof Array)) {
       return console.error("thread must be array");
     }
-    for (var c = 0;c < a.length;c++) {
-      var d = a[c];
-      d instanceof Entry.Block || d instanceof Entry.DummyBlock ? (d.setThread(this), this._data.push(d)) : this._data.push(new Entry.Block(d, this));
+    for (var d = 0;d < a.length;d++) {
+      var e = a[d];
+      e instanceof Entry.Block || e instanceof Entry.DummyBlock ? (e.setThread(this), this._data.push(e)) : this._data.push(new Entry.Block(e, this));
     }
     this._setRelation();
-    (a = this._code.view) && this.createView(a.board);
+    (d = this._code.view) && c && this.createView(d.board);
   };
   a._setRelation = function() {
     var a = this._data.getAll();
@@ -14319,6 +14322,24 @@ Entry.Thread = function(a, b) {
     c.remove(a);
     0 !== c.length ? (null === a.prev ? a.next.setPrev(null) : null === a.next ? a.prev.setNext(null) : (a.prev.setNext(a.next), a.next.setPrev(a.prev)), this._setRelation()) : this.destroy();
     this.changeEvent.notify();
+  };
+  a.cloneBelow = function(a) {
+    if (this._data.has(a.id)) {
+      a = this.getBelow(a);
+      for (var c = [], d = new Entry.Thread([], this._code, !1), e = 0, f = a.length;e < f;e++) {
+        c.push(a[e].clone(d, !1));
+      }
+      return c;
+    }
+  };
+  a.getBelow = function(a) {
+    if (this._data.has(a.id)) {
+      var c = [], d = this._data;
+      for (a = d.indexOf(a);a < d.length;a++) {
+        c.push(d[a]);
+      }
+      return c;
+    }
   };
 })(Entry.Thread.prototype);
 Entry.ThreadView = function(a, b) {

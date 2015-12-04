@@ -13,12 +13,13 @@ goog.require("Entry.skeleton");
 /*
  *
  */
-Entry.Block = function(block, thread) {
+Entry.Block = function(block, thread, view) {
+    view = view === false ? false : true;
     Entry.Model(this, false);
     this._schema = null;
 
     this.setThread(thread);
-    this.load(block);
+    this.load(block, view);
 };
 
 Entry.Block.MAGNET_RANGE = 10;
@@ -40,15 +41,15 @@ Entry.Block.MAGNET_OFFSET = 0.4;
         deletable: true
     };
 
-    p.load = function(block) {
+    p.load = function(block, view) {
         if (!block.id)
             block.id = Entry.Utils.generateId();
 
         this.set(block);
-        this.getSchema();
+        this.getSchema(view);
     };
 
-    p.getSchema = function() {
+    p.getSchema = function(view) {
         this._schema = Entry.block[this.type];
         if (this._schema.event)
             this.thread.registerEvent(this, this._schema.event);
@@ -61,7 +62,7 @@ Entry.Block.MAGNET_OFFSET = 0.4;
 
             if (content.type == "Statement") {
                 this.values[content.key] = new Entry.Thread(
-                    this.values[content.key], this.getCode());
+                    this.values[content.key], this.getCode(), view);
             }
         }
     };
@@ -114,10 +115,11 @@ Entry.Block.MAGNET_OFFSET = 0.4;
         }
     };
 
-    p.clone = function(thread) {
+    p.clone = function(thread, view) {
         return new Entry.Block(
             this.toJSON(true),
-            thread
+            thread,
+            view
         );
     };
 

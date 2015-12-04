@@ -3,24 +3,22 @@
 goog.provide('Entry.ContextMenu');
 
 (function(ctx) {
-    ctx.X_PADDING = 20;
-
-    ctx.Y_HEIGHT = 20;
-
-    ctx.visible = false;
-
     ctx.createDom = function() {
         this.dom = Entry.Dom('ul', {
             id: 'entry-contextmenu',
             parent: $('body')
         });
         Entry.Utils.disableContextmenu(this.dom);
+
+        Entry.documentMousedown.attach(
+            this, function(){this.hide();}
+        );
     };
 
     ctx.show = function(options) {
         if (!this.dom) this.createDom();
+        if (options.length === 0) return;
         var that = this;
-        console.log('show');
 
         var parent = this.dom;
 
@@ -29,20 +27,22 @@ goog.provide('Entry.ContextMenu');
         for (var i=0, len=options.length; i<len; i++) {
             var option = options[i];
             var text = option.text;
+            var enable = option.enable !== false;
 
             var elem = Entry.Dom('li', {
-                class: 'entry-contextmenu-each',
+                class: enable ? 'menuAble' : 'menuDisable',
                 parent: parent
             });
 
             elem.text(text);
 
-            (function(elem, cb) {
-                elem.mousedown(function(){
-                    if (cb) cb();
-                    that.hide();
-                });
-            })(elem, option.callback);
+            if (enable && option.callback) {
+                (function(elem, cb) {
+                    elem.mousedown(function(){
+                        cb();
+                    });
+                })(elem, option.callback);
+            }
         }
 
         var mousePos = Entry.mouseCoordinate;

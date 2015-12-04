@@ -236,10 +236,11 @@ Entry.BlockView = function(block, board) {
     p.onMouseDown = function(e) {
         e.stopPropagation();
         e.preventDefault();
+        if (Entry.documentMousedown)
+            Entry.documentMousedown.notify();
+        this.getBoard().setSelectedBlock(this);
+        this.dominate();
         if (e.button === 0 || e instanceof Touch) {
-            this.dominate();
-            if (Entry.documentMousedown)
-                Entry.documentMousedown.notify();
             this.mouseDownCoordinate = {
                 x: e.pageX, y: e.pageY
             };
@@ -259,35 +260,38 @@ Entry.BlockView = function(block, board) {
                 mode: true
             });
             this.addDragging();
-            this.getBoard().setSelectedBlock(this);
             this.dragMode = Entry.DRAG_MODE_MOUSEDOWN;
         } else if (Entry.Utils.isRightButton(e)) {
             if (this.isInBlockMenu) return;
 
-            this.getBoard().setSelectedBlock(this);
-
             var options = [];
-
             var that = this;
-            var copy = {
-                text: '복사',
-                enable: true,
+
+            var copyAndPaste = {
+                text: '블록 복사 & 붙여넣기',
                 callback: function(){
-                    console.log(that)
+                    var block = that.block;
+                    var thread = block.getThread();
+                    var cloned = thread.cloneBelow(block);
+                    var matrix = that.svgGroup.transform().globalMatrix;
+                    cloned[0].set({
+                        x: matrix.e + 20,
+                        y: matrix.f + 20
+                    });
+                    var newThread = thread.getCode().createThread(cloned);
                 }
             };
 
             var remove = {
-                text: '삭제',
-                enable: true,
+                text: '블록 삭제',
+                enable: that.block.isDeletable(),
                 callback: function(){
                     that.block.doDestroyAlone(true);
                 }
             };
 
-            options.push(copy);
             options.push(remove);
-
+            options.push(copyAndPaste);
 
             Entry.ContextMenu.show(options);
         }

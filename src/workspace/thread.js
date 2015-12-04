@@ -12,18 +12,20 @@ goog.require("Entry.DummyBlock");
 /*
  *
  */
-Entry.Thread = function(thread, code) {
+Entry.Thread = function(thread, code, view) {
+    view = view === false ? false : true;
     this._data = new Entry.Collection();
     this._code = code;
 
     this.changeEvent = new Entry.Event(this);
     this.changeEvent.attach(this, this.inspectExist);
 
-    this.load(thread);
+    this.load(thread, view);
 };
 
 (function(p) {
-    p.load = function(thread) {
+    p.load = function(thread, view) {
+        view = view === false ? false : true;
         if (thread === undefined)
             thread = [];
         if (!(thread instanceof Array)) {
@@ -43,7 +45,7 @@ Entry.Thread = function(thread, code) {
         this._setRelation();
 
         var codeView = this._code.view;
-        if (codeView) this.createView(codeView.board);
+        if (codeView && view) this.createView(codeView.board);
     };
 
     p._setRelation = function() {
@@ -200,6 +202,31 @@ Entry.Thread = function(thread, code) {
         } else this.destroy();
 
         this.changeEvent.notify();
+    };
+
+    p.cloneBelow = function(block) {
+        if (!this._data.has(block.id)) return;
+
+        var blocks = this.getBelow(block);
+
+        var cloned = [];
+        var newThread = new Entry.Thread([], this._code, false);
+        for (var i=0, len=blocks.length; i<len; i++)
+            cloned.push(blocks[i].clone(newThread, false));
+
+        return cloned;
+    };
+
+    p.getBelow = function(block) {
+        if (!this._data.has(block.id)) return;
+        var arr = [];
+        var blocks = this._data;
+        var index = blocks.indexOf(block);
+
+        for (var i = index; i<blocks.length; i++)
+            arr.push(blocks[i]);
+
+        return arr;
     };
 
 })(Entry.Thread.prototype);
