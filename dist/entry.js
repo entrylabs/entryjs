@@ -13317,7 +13317,6 @@ Entry.BlockView = function(a, b) {
         var e = [], h = {text:"\ube14\ub85d \uc0ad\uc81c", enable:g.isDeletable(), callback:function() {
           f.block.doDestroyAlone(!0);
         }};
-        e.push(h);
         e.push({text:"\ube14\ub85d \ubcf5\uc0ac & \ubd99\uc5ec\ub123\uae30", callback:function() {
           for (var a = g.getThread(), b = a.getBlocks().indexOf(g), c = a.toJSON(!0, b), b = [], d = new Entry.Thread([], g.getCode()), e = 0;e < c.length;e++) {
             b.push(new Entry.Block(c[e], d));
@@ -13327,6 +13326,7 @@ Entry.BlockView = function(a, b) {
           b[0].doAdd();
           a.getCode().createThread(b);
         }});
+        e.push(h);
         Entry.ContextMenu.show(e);
       }
     }

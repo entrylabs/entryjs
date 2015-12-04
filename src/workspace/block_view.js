@@ -297,8 +297,8 @@ Entry.BlockView = function(block, board) {
                 }
             };
 
-            options.push(remove);
             options.push(copyAndPaste);
+            options.push(remove);
 
             Entry.ContextMenu.show(options);
         }
