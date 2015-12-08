@@ -9,7 +9,6 @@ goog.provide('Entry.ContextMenu');
             parent: $('body')
         });
         Entry.Utils.disableContextmenu(this.dom);
-
         Entry.documentMousedown.attach(
             this, function(){this.hide();}
         );
@@ -38,7 +37,8 @@ goog.provide('Entry.ContextMenu');
 
             if (enable && option.callback) {
                 (function(elem, cb) {
-                    elem.mousedown(function(){
+                    elem.mousedown(function(e){
+                        e.preventDefault();
                         cb();
                     });
                 })(elem, option.callback);

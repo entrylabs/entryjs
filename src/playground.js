@@ -1470,27 +1470,25 @@ Entry.Playground.prototype.generatePictureElement = function(picture) {
     element.bindOnClick(function(e) {
         Entry.playground.selectPicture(this.picture);
     });
-    if ($) {
-        context.attach('#' + picture.id, [
+
+    Entry.Utils.disableContextmenu(picture.view);
+    $(picture.view).on('contextmenu', function(){
+        var options = [
             {
                 text: Lang.Workspace.context_rename,
-                href: '/',
-                action: function(e){
-                    e.preventDefault();
+                callback: function(){
                     nameView.focus();
                 }
-            },{
+            },
+            {
                 text: Lang.Workspace.context_duplicate,
-                href: '/',
-                action: function(e){
-                    e.preventDefault();
+                callback: function(){
                     Entry.playground.clonePicture(picture.id);
                 }
-            },{
+            },
+            {
                 text: Lang.Workspace.context_remove,
-                href: '/',
-                action: function(e){
-                    e.preventDefault();
+                callback: function(){
                     if (Entry.playground.object.removePicture(picture.id)) {
                         Entry.removeElement(element);
                         Entry.toast.success(Lang.Workspace.shape_remove_ok,
@@ -1500,13 +1498,13 @@ Entry.Playground.prototype.generatePictureElement = function(picture) {
                             Lang.Workspace.shape_remove_fail_msg);
                     }
                 }
-            },{
+            },
+            {
                 divider: true
-            },{
+            },
+            {
                 text: Lang.Workspace.context_download,
-                href: '/',
-                action: function(e){
-                    e.preventDefault();
+                callback: function(){
                     if (picture.fileurl) {
                         window.open(picture.fileurl);
                     } else {
@@ -1514,11 +1512,62 @@ Entry.Playground.prototype.generatePictureElement = function(picture) {
                         window.open('/api/sprite/download/image/'+
                                 encodeURIComponent(picture.filename)+'/'+encodeURIComponent(picture.name) + '.png');
                     }
-
                 }
             }
-        ]);
-    }
+        ];
+        Entry.ContextMenu.show(options);
+    });
+
+
+    // if ($) {
+    //     context.attach('#' + picture.id, [
+    //         {
+    //             text: Lang.Workspace.context_rename,
+    //             href: '/',
+    //             action: function(e){
+    //                 e.preventDefault();
+    //                 nameView.focus();
+    //             }
+    //         },{
+    //             text: Lang.Workspace.context_duplicate,
+    //             href: '/',
+    //             action: function(e){
+    //                 e.preventDefault();
+    //                 Entry.playground.clonePicture(picture.id);
+    //             }
+    //         },{
+    //             text: Lang.Workspace.context_remove,
+    //             href: '/',
+    //             action: function(e){
+    //                 e.preventDefault();
+    //                 if (Entry.playground.object.removePicture(picture.id)) {
+    //                     Entry.removeElement(element);
+    //                     Entry.toast.success(Lang.Workspace.shape_remove_ok,
+    //                         picture.name +' '+Lang.Workspace.shape_remove_ok_msg);
+    //                 } else {
+    //                     Entry.toast.alert(Lang.Workspace.shape_remove_fail,
+    //                         Lang.Workspace.shape_remove_fail_msg);
+    //                 }
+    //             }
+    //         },{
+    //             divider: true
+    //         },{
+    //             text: Lang.Workspace.context_download,
+    //             href: '/',
+    //             action: function(e){
+    //                 e.preventDefault();
+    //                 if (picture.fileurl) {
+    //                     window.open(picture.fileurl);
+    //                 } else {
+    //                     // deprecated
+    //                     window.open('/api/sprite/download/image/'+
+    //                             encodeURIComponent(picture.filename)+'/'+encodeURIComponent(picture.name) + '.png');
+    //                 }
+
+    //             }
+    //         }
+    //     ]);
+    // }
     var orderHolder = Entry.createElement('div');
     orderHolder.addClass('entryPlaygroundPictureOrder');
     element.orderHolder = orderHolder;
@@ -1582,30 +1631,25 @@ Entry.Playground.prototype.generateSoundElement = function(sound) {
     sound.view = element;
     element.addClass('entryPlaygroundSoundElement');
     element.sound = sound;
-    if ($) {
-        var soundId = sound.id;
-        context.attach('#' + sound.id, [
+   
+    Entry.Utils.disableContextmenu(sound.view);
+    $(sound.view).on('contextmenu', function(){
+        var options = [
             {
                 text: Lang.Workspace.context_rename,
-                href: '/',
-                action: function(e){
-                    e.preventDefault();
+                callback: function(){
                     nameView.focus();
                 }
             },
             {
                 text: Lang.Workspace.context_duplicate,
-                href: '/',
-                action: function(e){
-                    e.preventDefault();
+                callback: function(){
                     Entry.playground.addSound(sound, true);
                 }
             },
             {
                 text: Lang.Workspace.context_remove,
-                href: '/',
-                action: function(e){
-                    e.preventDefault();
+                callback: function(){
                     if (Entry.playground.object.removeSound(sound.id)) {
                         Entry.removeElement(element);
                         Entry.toast.success(Lang.Workspace.sound_remove_ok,
@@ -1616,8 +1660,10 @@ Entry.Playground.prototype.generateSoundElement = function(sound) {
                     Entry.removeElement(element);
                 }
             }
-        ]);
-    }
+        ];
+        Entry.ContextMenu.show(options);
+    });
+
     var orderHolder = Entry.createElement('div');
     orderHolder.addClass('entryPlaygroundSoundOrder');
     element.orderHolder = orderHolder;

@@ -106,12 +106,13 @@ Entry.EntryObject.prototype.generateView= function() {
         });
 
         // generate context menu
-        Entry.Utils.disableContextMenu(objectView);
-        $(objectView).on('conextmenu', function(){
+        Entry.Utils.disableContextmenu(objectView);
+        var object = this;
+        $(objectView).on('contextmenu', function(){
             var options = [
-            {
+                {
                     text: Lang.Workspace.context_rename,
-                    callback: function(e){
+                    callback: function(){
                         (function (o){
                             o.setLock(false);
                             o.editObjectValues(true);
@@ -121,35 +122,36 @@ Entry.EntryObject.prototype.generateView= function() {
                 },
                 {
                     text: Lang.Workspace.context_duplicate,
-                    callback: function(e){
+                    callback: function(){
                         Entry.container.addCloneObject(object);
                     }
                 },
                 {
                     text: Lang.Workspace.context_remove,
-                    callback: function(e){
+                    callback: function(){
                         Entry.container.removeObject(object);
                     }
                 },
                 {
-                    text: '복사하기',
-                    callback: function(e){
+                    text: Lang.Workspace.copy_file,
+                    callback: function(){
                         Entry.container.setCopiedObject(object);
                     }
                 },
                 {
-                    text: '붙여넣기',
-                    callback: function(e){
+                    text: Lang.Blocks.Paste_blocks,
+                    callback: function(){
                         if (Entry.container.copiedObject)
                             Entry.container.addCloneObject(Entry.container.copiedObject);
                         else
-                            Entry.toast.alert('경고', '붙여넣기 할 오브젝트가 없습니다.');
+                            Entry.toast.alert(Lang.Workspace.add_object_alert, Lang.Workspace.object_not_found_for_paste);
                     }
                  }
 
             ];
+            Entry.ContextMenu.show(options);
+
         });
-        Entry.ContextMenu.show(options);
         /** @type {!Element} */
         this.view_ = objectView;
 
