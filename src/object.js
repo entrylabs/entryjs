@@ -106,15 +106,13 @@ Entry.EntryObject.prototype.generateView= function() {
         });
 
         // generate context menu
-        if ($) {
-            var object = this;
-            context.attach('#' + this.id, [
-                {
+        Entry.Utils.disableContextMenu(objectView);
+        $(objectView).on('conextmenu', function(){
+            var options = [
+            {
                     text: Lang.Workspace.context_rename,
-                    href: '/',
-                    action: function(e){
+                    callback: function(e){
                         (function (o){
-                            e.preventDefault();
                             o.setLock(false);
                             o.editObjectValues(true);
                             o.nameView_.select();
@@ -123,41 +121,35 @@ Entry.EntryObject.prototype.generateView= function() {
                 },
                 {
                     text: Lang.Workspace.context_duplicate,
-                    href: '/',
-                    action: function(e){
-                        e.preventDefault();
+                    callback: function(e){
                         Entry.container.addCloneObject(object);
                     }
                 },
                 {
                     text: Lang.Workspace.context_remove,
-                    href: '/',
-                    action: function(e){
-                        e.preventDefault();
+                    callback: function(e){
                         Entry.container.removeObject(object);
                     }
                 },
                 {
                     text: '복사하기',
-                    href: '/',
-                    action: function(e){
-                        e.preventDefault();
+                    callback: function(e){
                         Entry.container.setCopiedObject(object);
                     }
                 },
                 {
                     text: '붙여넣기',
-                    href: '/',
-                    action: function(e){
-                        e.preventDefault();
+                    callback: function(e){
                         if (Entry.container.copiedObject)
                             Entry.container.addCloneObject(Entry.container.copiedObject);
                         else
                             Entry.toast.alert('경고', '붙여넣기 할 오브젝트가 없습니다.');
                     }
                  }
-            ]);
-        }
+
+            ];
+        });
+        Entry.ContextMenu.show(options);
         /** @type {!Element} */
         this.view_ = objectView;
 
