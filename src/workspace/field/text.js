@@ -65,4 +65,6 @@ Entry.FieldText = function(content, block) {
         });
     };
 
+    p.destroy = function() {};
+
 })(Entry.FieldText.prototype);

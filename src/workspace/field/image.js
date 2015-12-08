@@ -87,4 +87,6 @@ Entry.FieldImage = function(content, block) {
         }, 500);
     };
 
+    p.destroy = function() {};
+
 })(Entry.FieldImage.prototype);
