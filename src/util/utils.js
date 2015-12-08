@@ -793,3 +793,17 @@ Entry.isEmpty = function(obj) {
 
     return true;
 };
+
+Entry.Utils.disableContextmenu = function(node) {
+    if (!node) return;
+
+    $(node).on('contextmenu', function(e){
+        e.stopPropagation();
+        e.preventDefault();
+        return false;
+    });
+};
+
+Entry.Utils.isRightButton = function(e) {
+    return e.button == 2 || e.ctrlKey;
+};

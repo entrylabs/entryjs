@@ -129,9 +129,10 @@ Entry.Thread = function(thread, code) {
         return newThread;
     };
 
-    p.toJSON = function(isNew) {
+    p.toJSON = function(isNew, start) {
         var array = [];
-        for (var i = 0; i < this._data.length; i++) {
+        start = start === undefined ? 0 : start;
+        for (var i = start; i < this._data.length; i++) {
             var block = this._data[i];
             if (block instanceof Entry.Block)
                 array.push(this._data[i].toJSON(isNew));

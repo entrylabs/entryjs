@@ -236,6 +236,4 @@ Entry.Board = function(dom) {
                 this.set({selectedBlockView:null});
         }
     };
-
-
 })(Entry.Board.prototype);

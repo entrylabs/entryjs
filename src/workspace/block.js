@@ -37,7 +37,8 @@ Entry.Block.MAGNET_OFFSET = 0.4;
         view: null,
         thread: null,
         movable: true,
-        deletable: true
+        deletable: true,
+        readOnly: false
     };
 
     p.load = function(block) {
@@ -181,6 +182,8 @@ Entry.Block.MAGNET_OFFSET = 0.4;
     };
 
     p.isDeletable = function() {return this.deletable;};
+
+    p.isReadOnly = function() {return this.readOnly;};
 
     p.getCode = function() {return this.thread.getCode();};
 

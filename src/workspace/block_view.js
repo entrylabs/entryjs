@@ -20,6 +20,8 @@ Entry.BlockView = function(block, board) {
     this._skeleton = Entry.skeleton[this._schema.skeleton];
     this._contents = [];
 
+    this.isInBlockMenu = !(this.getBoard() instanceof Entry.Board);
+
     if (this._skeleton.morph) {
         this.block.observe(this, "_renderPath", this._skeleton.morph, false);
     }
@@ -34,6 +36,7 @@ Entry.BlockView = function(block, board) {
     board.code.observe(this, '_setBoard', ['board'], false);
 
     this.dragMode = Entry.DRAG_MODE_NONE;
+    Entry.Utils.disableContextmenu(this.svgGroup.node);
 };
 
 (function(p) {
@@ -231,10 +234,13 @@ Entry.BlockView = function(block, board) {
     };
 
     p.onMouseDown = function(e) {
+        e.stopPropagation();
+        e.preventDefault();
+        if (Entry.documentMousedown)
+            Entry.documentMousedown.notify();
+        this.getBoard().setSelectedBlock(this);
+        this.dominate();
         if (e.button === 0 || e instanceof Touch) {
-            this.dominate();
-            if (Entry.documentMousedown)
-                Entry.documentMousedown.notify();
             this.mouseDownCoordinate = {
                 x: e.pageX, y: e.pageY
             };
@@ -254,15 +260,52 @@ Entry.BlockView = function(block, board) {
                 mode: true
             });
             this.addDragging();
-            this.getBoard().setSelectedBlock(this);
             this.dragMode = Entry.DRAG_MODE_MOUSEDOWN;
+        } else if (Entry.Utils.isRightButton(e)) {
+            var that = this;
+            var block = that.block;
+            if (this.isInBlockMenu || block.isReadOnly()) return;
+
+            var options = [];
+
+            var copyAndPaste = {
+                text: '블록 복사 & 붙여넣기',
+                callback: function(){
+                    var thread = block.getThread();
+                    var index = thread.getBlocks().indexOf(block);
+                    var json = thread.toJSON(true, index);
+                    var cloned = [];
+                    var newThread = new Entry.Thread([], block.getCode());
+                    for (var i=0; i<json.length; i++)
+                        cloned.push(new Entry.Block(json[i], newThread));
+
+                    var matrix = that.svgGroup.transform().globalMatrix;
+                    cloned[0].set({
+                        x: matrix.e + 20,
+                        y: matrix.f + 20
+                    });
+                    cloned[0].doAdd();
+                    thread.getCode().createThread(cloned);
+                }
+            };
+
+            var remove = {
+                text: '블록 삭제',
+                enable: block.isDeletable(),
+                callback: function(){
+                    that.block.doDestroyAlone(true);
+                }
+            };
+
+            options.push(copyAndPaste);
+            options.push(remove);
+
+            Entry.ContextMenu.show(options);
         }
 
         var blockView = this;
         var board = this.getBoard();
         function onMouseMove(e) {
-            e.stopPropagation();
-            e.preventDefault();
             var mouseDownCoordinate = blockView.mouseDownCoordinate;
             if (blockView.dragMode == Entry.DRAG_MODE_DRAG ||
                 e.pageX !== mouseDownCoordinate.x ||

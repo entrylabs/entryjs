@@ -4129,6 +4129,30 @@
   color: #B4B4B5;
   font-size: 11px;
 }
+#entry-contextmenu {
+  position: fixed;
+  background-color: white;
+  display: inline-block;
+  list-style: none;
+  padding: 4px 0;
+  border-color: #ccc #666 #666 #ccc;
+  border-style: solid;
+  border-width: 1px;
+  outline: none;
+  font-size: 13px;
+}
+#entry-contextmenu .menuAble {
+  cursor: pointer;
+  padding: 3px 20px;
+}
+#entry-contextmenu .menuAble:hover {
+  color: white;
+  background-color: #57e;
+}
+#entry-contextmenu .menuDisable {
+  color: #ccc;
+  padding: 3px 20px;
+}
 
 .block {
   cursor: url('../images/handopen.cur') 8 5, auto;
