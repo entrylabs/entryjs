@@ -469,6 +469,10 @@ Entry.BlockView = function(block, board) {
                 }
             );
         } else svgGroup.remove();
+
+        this._contents.forEach(function(c) {
+            c.destroy();
+        });
     };
 
     p.getShadow = function() {

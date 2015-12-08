@@ -54,7 +54,6 @@ Entry.FieldDropdown = function(content, blockView) {
         this.svgGroup.append(this.textElement);
 
         this._arrow = this.svgGroup.polygon(
-            //width-11, -2, width-5, -2, width-8, 2).
             0, -2, 6, -2, 3, 2).
             attr({
                 fill: "#127cbd",
@@ -221,4 +220,6 @@ Entry.FieldDropdown = function(content, blockView) {
         }
         return value;
     };
+
+    p.destroy = function() {};
 })(Entry.FieldDropdown.prototype);

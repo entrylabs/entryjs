@@ -100,4 +100,6 @@ Entry.FieldIndicator = function(content, block) {
         }, 500);
     };
 
+    p.destroy = function() {};
+
 })(Entry.FieldIndicator.prototype);
