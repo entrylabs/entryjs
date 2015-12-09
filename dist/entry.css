@@ -4189,5 +4189,28 @@
 .boardScrollbar:hover {
   opacity: 0.6;
 }
+.entry-field-color {
+  cursor: pointer;
+}
+.entry-widget-color-table {
+  border: 1px solid #666;
+  border-collapse: collapse;
+  z-index: 1001;
+  position: fixed;
+}
+.entry-widget-color-table .entry-widget-color-row {
+  border-bottom: 2px solid #666;
+}
+.entry-widget-color-table .entry-widget-color-cell {
+  height: 13px;
+  width: 15px;
+  margin: 0;
+  border: 0;
+  text-align: center;
+  vertical-align: middle;
+  border-right: 2px solid #666;
+  font-size: 1px;
+  cursor: pointer;
+}
 
 
