@@ -4189,6 +4189,7 @@
 .boardScrollbar:hover {
   opacity: 0.6;
 }
+<<<<<<< HEAD
 .entry-field-color {
   cursor: pointer;
 }
@@ -4211,6 +4212,10 @@
   border-right: 2px solid #666;
   font-size: 1px;
   cursor: pointer;
+=======
+.entry-input-field {
+  cursor: text;
+>>>>>>> feature/fieldKeyBoard
 }
 
 

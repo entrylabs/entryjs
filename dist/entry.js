@@ -13074,6 +13074,8 @@ Entry.block.jr_if_speed = {skeleton:"basic_loop", color:"#498DEB", contents:["\u
     }
   }
 }};
+Entry.block.test = {skeleton:"basic", color:"#127CDB", contents:[{type:"Text", text:"\ubc18\ubcf5"}, {type:"Dropdown", key:"REPEAT", options:[[1, 1], [2, 2], [3, 3], [4, 4], [5, 5], [6, 6], [7, 7], [8, 8], [9, 9], [10, 10]], value:1}, {type:"Text", text:"\ubc18\ubcf5"}], func:function() {
+}};
 Entry.BlockMenu = function(a, b) {
   Entry.Model(this, !1);
   this._align = b || "CENTER";
@@ -13421,6 +13423,9 @@ Entry.BlockView = function(a, b) {
     a ? c.animate({opacity:0}, 100, null, function() {
       this.remove();
     }) : c.remove();
+    this._contents.forEach(function(a) {
+      a.destroy();
+    });
   };
   a.getShadow = function() {
     this._shadow || (this._shadow = this.svgGroup.clone(), this._shadow.attr({opacity:.5}));
@@ -13776,6 +13781,8 @@ Entry.FieldDropdown = function(a, b) {
     }
     return a;
   };
+  a.destroy = function() {
+  };
 })(Entry.FieldDropdown.prototype);
 Entry.FieldImage = function(a, b) {
   this._block = b;
@@ -13811,6 +13818,8 @@ Entry.FieldImage = function(a, b) {
         c.animate({"stroke-dashoffset":-a}, 300);
       }, 1400, mina.easeout);
     }, 500);
+  };
+  a.destroy = function() {
   };
 })(Entry.FieldImage.prototype);
 Entry.FieldIndicator = function(a, b) {
@@ -13852,7 +13861,86 @@ Entry.FieldIndicator = function(a, b) {
       }, 1400, mina.easeout);
     }, 500);
   };
+  a.destroy = function() {
+  };
 })(Entry.FieldIndicator.prototype);
+Entry.Keyboard = {};
+Entry.FieldKeyboard = function(a, b) {
+  this._block = b.block;
+  this.box = new Entry.BoxModel;
+  this.svgGroup = null;
+  this.position = a.position;
+  this._contents = a;
+  this.key = a.key;
+  this.value = this._block.values[this.key];
+  this._optionVisible = !1;
+  this.renderStart(b);
+  Entry.keyPressed && (this.keyPressed = Entry.keyPressed.attach(this, this._keyboardControl));
+};
+(function(a) {
+  a.renderStart = function(a) {
+    var c = this;
+    this.svgGroup = a.contentSvgGroup.group();
+    this.svgGroup.attr({class:"entry-input-field"});
+    this.textElement = this.svgGroup.text(4, 4, Entry.getKeyCodeMap()[this.value]);
+    this.textElement.attr({"font-size":"9pt"});
+    a = this.getWidth();
+    this._header = this.svgGroup.rect(0, this.position && this.position.y ? this.position.y : 0, a, 16, 3).attr({fill:"#fff", "fill-opacity":.4});
+    this.svgGroup.append(this.textElement);
+    this.svgGroup.mouseup(function(a) {
+      c._block.view.dragMode == Entry.DRAG_MODE_MOUSEDOWN && c.renderOptions();
+    });
+    this.box.set({x:0, y:0, width:a, height:16});
+  };
+  a.align = function(a, c, d) {
+    var e = this.svgGroup, f = "t" + a + " " + c;
+    void 0 === d || d ? e.animate({transform:f}, 300, mina.easeinout) : e.attr({transform:f});
+    this.box.set({x:a, y:c});
+  };
+  a.renderOptions = function() {
+    var a = this;
+    this.destroyOption();
+    this._optionVisible = !0;
+    var c = this._block.view;
+    this.documentDownEvent = Entry.documentMousedown.attach(this, function() {
+      Entry.documentMousedown.detach(this.documentDownEvent);
+      a.destroyOption();
+    });
+    this.optionGroup = c.getBoard().svgGroup.group();
+    this.optionGroup.image(Entry.mediaFilePath + "/media/keyboard_workspace.png", -5, 0, 249, 106);
+    var d = c.svgGroup.transform().globalMatrix, c = c.getContentPos(), e = this.box;
+    this.optionGroup.attr({class:"entry-field-keyboard", transform:"t" + (d.e + e.x + c.x - 5) + " " + (d.f + e.y + c.y + e.height / 2)});
+  };
+  a.destroyOption = function() {
+    this.documentDownEvent && (Entry.documentMousedown.detach(this.documentDownEvent), delete this.documentDownEvent);
+    this.optionGroup && (this.optionGroup.remove(), delete this.optionGroup);
+    this._optionVisible = !1;
+  };
+  a._keyboardControl = function(a, c) {
+    c.stopPropagation();
+    if (this._optionVisible) {
+      var d = c.keyCode, e = Entry.getKeyCodeMap()[d];
+      void 0 !== e && this.applyValue(e, d);
+    }
+  };
+  a.applyValue = function(a, c) {
+    this.destroyOption();
+    this.value != c && (this.value = this._block.values[this.key] = c, this.textElement.node.textContent = a, this.resize());
+  };
+  a.resize = function() {
+    var a = this.getWidth();
+    this._header.attr({width:a});
+    this.box.set({width:a});
+    this._block.view.alignContent();
+  };
+  a.getWidth = function() {
+    return this.textElement.node.getComputedTextLength() + 8;
+  };
+  a.destroy = function() {
+    this.destroyOption();
+    Entry.keyPressed && this.keyPressed && Entry.keyPressed.detach(this.keyPressed);
+  };
+})(Entry.FieldKeyboard.prototype);
 Entry.FieldStatement = function(a, b) {
   this._blockView = b;
   this.block = b.block;
@@ -13955,6 +14043,8 @@ Entry.DummyBlock = function(a, b) {
   a.dominate = function() {
     this.originBlockView.dominate();
   };
+  a.destroy = function() {
+  };
 })(Entry.DummyBlock.prototype);
 Entry.FieldText = function(a, b) {
   this._block = b;
@@ -13977,6 +14067,8 @@ Entry.FieldText = function(a, b) {
     var e = this.textElement, f = {x:a};
     d ? e.animate(f, 300, mina.easeinout) : e.attr(f);
     this.box.set({x:a, width:this.textElement.node.getComputedTextLength(), y:c});
+  };
+  a.destroy = function() {
   };
 })(Entry.FieldText.prototype);
 Entry.Scroller = function(a, b, c) {

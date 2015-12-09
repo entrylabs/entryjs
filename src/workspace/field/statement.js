@@ -188,4 +188,6 @@ Entry.DummyBlock = function(statementField, blockView) {
         this.originBlockView.dominate();
     };
 
+    p.destroy = function() {};
+
 })(Entry.DummyBlock.prototype);
