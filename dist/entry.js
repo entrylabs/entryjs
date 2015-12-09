@@ -13828,12 +13828,12 @@ Entry.FieldKeyboard = function(a, b) {
     var c = this._block.view;
     this.documentDownEvent = Entry.documentMousedown.attach(this, function() {
       Entry.documentMousedown.detach(this.documentDownEvent);
-      a.optionGroup.remove();
+      a.destroyOption();
     });
     this.optionGroup = c.getBoard().svgGroup.group();
-    this.optionGroup.image(Entry.mediaFilePath + "/media/keyboard_workspace.png", 0, 0, 249, 106);
-    c = c.svgGroup.transform().globalMatrix;
-    this.optionGroup.attr({class:"entry-field-keyboard", transform:"t" + (c.e + 14) + " " + (c.f + 26)});
+    this.optionGroup.image(Entry.mediaFilePath + "/media/keyboard_workspace.png", -5, 0, 249, 106);
+    var d = c.svgGroup.transform().globalMatrix, c = c.getContentPos(), e = this.box;
+    this.optionGroup.attr({class:"entry-field-keyboard", transform:"t" + (d.e + e.x + c.x - 5) + " " + (d.f + e.y + c.y + e.height / 2)});
   };
   a.destroyOption = function() {
     this.documentDownEvent && (Entry.documentMousedown.detach(this.documentDownEvent), delete this.documentDownEvent);

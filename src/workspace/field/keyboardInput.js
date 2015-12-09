@@ -105,26 +105,28 @@ Entry.FieldKeyboard = function(content, blockView) {
         this.documentDownEvent = Entry.documentMousedown.attach(
             this, function(){
                 Entry.documentMousedown.detach(this.documentDownEvent);
-                that.optionGroup.remove();
+                that.destroyOption();
             }
         );
 
         this.optionGroup = blockView.getBoard().svgGroup.group();
         this.optionGroup.image(
             Entry.mediaFilePath + '/media/keyboard_workspace.png',
-            0,
+            -5,
             0,
             249,
             106
         );
 
         var matrix = blockView.svgGroup.transform().globalMatrix;
-        var x = matrix.e;
-        var y = matrix.f;
+        var contentPos = blockView.getContentPos();
+        var box = this.box;
+        var x = matrix.e + box.x + contentPos.x -5;
+        var y = matrix.f + box.y + contentPos.y + box.height/2;
 
         this.optionGroup.attr({
             class: 'entry-field-keyboard',
-            transform: "t" + (x + 14) + " " + (y + 26)
+            transform: "t" + x + " " + y
         });
 
     };
