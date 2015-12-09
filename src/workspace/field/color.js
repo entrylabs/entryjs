@@ -4,6 +4,7 @@
 
 goog.provide("Entry.FieldColor");
 
+goog.require("Entry.Field");
 /*
  *
  */
@@ -17,11 +18,14 @@ Entry.FieldColor = function(content, blockView) {
 
     this._contents = content;
     this._position = content.position;
+    console.log(this._position);
     this.key = content.key;
     this.value = this._block.values[this.key] || '#FF0000';
 
     this.renderStart(blockView);
 };
+
+Entry.Utils.inherit(Entry.Field, Entry.FieldColor);
 
 (function(p) {
     var WIDTH = 14.5,
@@ -43,7 +47,7 @@ Entry.FieldColor = function(content, blockView) {
             y = position.y || 0;
         } else {
             x = 0;
-            y = 0;
+            y = -HEIGHT/2;
         }
 
         this._header = this.svgGroup.rect(
@@ -58,8 +62,8 @@ Entry.FieldColor = function(content, blockView) {
         });
 
         this.box.set({
-            x: 0,
-            y: 0,
+            x: x,
+            y: y,
             width: WIDTH,
             height: HEIGHT
         });
@@ -119,26 +123,6 @@ Entry.FieldColor = function(content, blockView) {
 
     };
 
-    p.align = function(x, y, animate) {
-        animate = animate === undefined ? true : animate;
-        var svgGroup = this.svgGroup;
-
-        var transform = "t" + x + " " + y;
-        if (animate)
-            svgGroup.animate({
-                transform: transform
-            }, 300, mina.easeinout);
-        else
-            svgGroup.attr({
-                transform: transform
-            });
-
-        this.box.set({
-            x: x,
-            y: y
-        });
-    };
-
     p.applyValue = function(value) {
         if (this.value == value) return;
         this._block.values[this.key] = value;
@@ -146,21 +130,6 @@ Entry.FieldColor = function(content, blockView) {
         this._header.attr({fill: value});
     };
 
-    p.destroyOption = function() {
-        if (this.documentDownEvent) {
-            Entry.documentMousedown.detach(this.documentDownEvent);
-            delete this.documentDownEvent;
-        }
-
-        if (this.optionGroup) {
-            this.optionGroup.remove();
-            delete this.optionGroup;
-        }
-    };
-
-    p.destroy = function() {
-         this.destroyOption();
-    };
 })(Entry.FieldColor.prototype);
 
 Entry.FieldColor.getWidgetColorList = function() {

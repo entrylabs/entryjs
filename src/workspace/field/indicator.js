@@ -4,6 +4,7 @@
 
 goog.provide("Entry.FieldIndicator");
 
+goog.require("Entry.Field");
 /*
  *
  */
@@ -19,6 +20,8 @@ Entry.FieldIndicator = function(content, block) {
     this._highlightColor =
         content.highlightColor? content.highlightColor : "#F59900";
     this._position = content.position;
+    this._alignX = content.alignX;
+    this._alignY= content.alignY;
 
     this.svgGroup = null;
     this._path = null;
@@ -26,6 +29,8 @@ Entry.FieldIndicator = function(content, block) {
 
     this.renderStart();
 };
+
+Entry.Utils.inherit(Entry.Field, Entry.FieldIndicator);
 
 (function(p) {
     p.renderStart = function() {
@@ -54,31 +59,6 @@ Entry.FieldIndicator = function(content, block) {
         });
     };
 
-    p.align = function(x, y, animate) {
-        animate = animate === undefined ? true : animate;
-        var svgGroup = this.svgGroup;
-        if (this._position) {
-            x = this._position.x;
-            y = this._position.y;
-        }
-
-        var transform = "t" + x + " " + y;
-
-        if (animate)
-            svgGroup.animate({
-                transform: transform
-            }, 300, mina.easeinout);
-        else
-            svgGroup.attr({
-                transform: transform
-            });
-
-        this.box.set({
-            x: x,
-            y: y
-        });
-    };
-
     p.enableHighlight = function() {
         var pathLen = this._path.getTotalLength();
         var path = this._path;
@@ -99,7 +79,5 @@ Entry.FieldIndicator = function(content, block) {
             }, 1400, mina.easeout);
         }, 500);
     };
-
-    p.destroy = function() {};
 
 })(Entry.FieldIndicator.prototype);

@@ -4,6 +4,7 @@
 
 goog.provide("Entry.Keyboard");
 
+goog.require("Entry.Field");
 /*
  *
  */
@@ -26,6 +27,8 @@ Entry.FieldKeyboard = function(content, blockView) {
     if (Entry.keyPressed)
         this.keyPressed = Entry.keyPressed.attach(this, this._keyboardControl);
 };
+
+Entry.Utils.inherit(Entry.Field, Entry.FieldKeyboard);
 
 (function(p) {
     var X_PADDING = 8,
@@ -72,27 +75,6 @@ Entry.FieldKeyboard = function(content, blockView) {
             y: 0,
             width: width,
             height: CONTENT_HEIGHT
-        });
-    };
-
-    p.align = function(x, y, animate) {
-        animate = animate === undefined ? true : animate;
-        var svgGroup = this.svgGroup;
-
-        var transform = "t" + x + " " + y;
-
-        if (animate)
-            svgGroup.animate({
-                transform: transform
-            }, 300, mina.easeinout);
-        else
-            svgGroup.attr({
-                transform: transform
-            });
-
-        this.box.set({
-            x: x,
-            y: y
         });
     };
 

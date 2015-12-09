@@ -807,3 +807,10 @@ Entry.Utils.disableContextmenu = function(node) {
 Entry.Utils.isRightButton = function(e) {
     return e.button == 2 || e.ctrlKey;
 };
+
+Entry.Utils.inherit = function(parent, child) {
+    function F() {}
+    F.prototype = parent.prototype;
+    child.prototype = new F();
+    return child;
+};

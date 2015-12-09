@@ -5,6 +5,8 @@
 
 goog.provide("Entry.FieldText");
 
+goog.require("Entry.Field");
+
 /*
  *
  */
@@ -22,10 +24,15 @@ Entry.FieldText = function(content, block) {
     this.renderStart();
 };
 
+Entry.Utils.inherit(Entry.Field, Entry.FieldText);
+
 (function(p) {
     p.renderStart = function() {
         var that = this;
-        this.textElement = this._block.contentSvgGroup.text(0, 0, this._text);
+
+        this.svgGroup = this._block.contentSvgGroup.group();
+
+        this.textElement = this.svgGroup.text(0, 0, this._text);
         this.textElement.attr({
             'style': 'white-space: pre; font-size:' + that._fontSize + 'px',
             "class": "dragNone",
@@ -43,28 +50,5 @@ Entry.FieldText = function(content, block) {
         });
     };
 
-    p.align = function(x, y, animate) {
-        if (animate !== true) animate = false;
-        var elem = this.textElement;
-
-        var attr = {x: x};
-
-        if (animate)
-            elem.animate(
-                attr,
-                300,
-                mina.easeinout
-            );
-        else elem.attr(attr);
-
-
-        this.box.set({
-            x: x,
-            width: this.textElement.node.getComputedTextLength(),
-            y: y
-        });
-    };
-
-    p.destroy = function() {};
 
 })(Entry.FieldText.prototype);

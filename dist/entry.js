@@ -10840,6 +10840,13 @@ Entry.Utils.disableContextmenu = function(a) {
 Entry.Utils.isRightButton = function(a) {
   return 2 == a.button || a.ctrlKey;
 };
+Entry.Utils.inherit = function(a, b) {
+  function c() {
+  }
+  c.prototype = a.prototype;
+  b.prototype = new c;
+  return b;
+};
 Entry.Model = function(a, b) {
   var c = Entry.Model;
   c.generateSchema(a);
@@ -12786,7 +12793,7 @@ Entry.block.jr_start = {skeleton:"pebble_event", event:"start", color:"#3BBD70",
   }
   Ntry.unitComp = Ntry.entityManager.getComponent(this._unit.id, Ntry.STATIC.UNIT);
 }};
-Entry.block.jr_repeat = {skeleton:"pebble_loop", color:"#127CDB", contents:[{type:"Dropdown", key:"REPEAT", options:[[1, 1], [2, 2], [3, 3], [4, 4], [5, 5], [6, 6], [7, 7], [8, 8], [9, 9], [10, 10]], value:1}, {type:"Text", text:"\ubc18\ubcf5"}, {type:"Statement", key:"STATEMENT", accept:"pebble_basic"}], func:function() {
+Entry.block.jr_repeat = {skeleton:"pebble_loop", color:"#127CDB", contents:[{type:"Dropdown", key:"REPEAT", options:[[1, 1], [2, 2], [3, 3], [4, 4], [5, 5], [6, 6], [7, 7], [8, 8], [9, 9], [10, 10]], value:1}, {type:"Text", text:"\ubc18\ubcf5"}, {type:"Statement", key:"STATEMENT", accept:"pebble_basic", position:{x:46, y:14}}], func:function() {
   if (void 0 === this.repeatCount) {
     return this.repeatCount = this.block.values.REPEAT, Entry.STATIC.CONTINUE;
   }
@@ -13033,12 +13040,12 @@ Entry.block.jr_go_slow = {skeleton:"basic", color:"#f46c6c", contents:["\ucc9c\u
     return Entry.STATIC.CONTINUE;
   }
 }};
-Entry.block.jr_repeat_until_dest = {skeleton:"basic_loop", color:"#498DEB", contents:[{type:"Image", img:"/img/assets/ntry/bitmap/jr/jr_goal_image.png", size:18}, "\ub9cc\ub0a0 \ub54c \uae4c\uc9c0 \ubc18\ubcf5\ud558\uae30", {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}, {type:"Statement", key:"STATEMENT", accept:"basic", alignY:15, alignX:2}], func:function() {
+Entry.block.jr_repeat_until_dest = {skeleton:"basic_loop", color:"#498DEB", contents:[{type:"Image", img:"/img/assets/ntry/bitmap/jr/jr_goal_image.png", size:18}, "\ub9cc\ub0a0 \ub54c \uae4c\uc9c0 \ubc18\ubcf5\ud558\uae30", {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}, {type:"Statement", key:"STATEMENT", accept:"basic", position:{x:2, y:15}}], func:function() {
   if (1 !== this.block.values.STATEMENT.getBlocks().length) {
     return this.executor.stepInto(this.block.values.STATEMENT), Entry.STATIC.CONTINUE;
   }
 }};
-Entry.block.jr_if_construction = {skeleton:"basic_loop", color:"#498DEB", contents:["\ub9cc\uc57d", {type:"Image", img:"/img/assets/ntry/bitmap/jr/jr_construction_image.png", size:18}, "\uc55e\uc5d0 \uc788\ub2e4\uba74", {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}, {type:"Statement", key:"STATEMENT", accept:"basic", alignY:15, alignX:2}], func:function() {
+Entry.block.jr_if_construction = {skeleton:"basic_loop", color:"#498DEB", contents:["\ub9cc\uc57d", {type:"Image", img:"/img/assets/ntry/bitmap/jr/jr_construction_image.png", size:18}, "\uc55e\uc5d0 \uc788\ub2e4\uba74", {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}, {type:"Statement", key:"STATEMENT", accept:"basic", position:{x:2, y:15}}], func:function() {
   if (!this.isContinue) {
     var a = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT), b, c;
     for (c in a) {
@@ -13056,7 +13063,7 @@ Entry.block.jr_if_construction = {skeleton:"basic_loop", color:"#498DEB", conten
     }
   }
 }};
-Entry.block.jr_if_speed = {skeleton:"basic_loop", color:"#498DEB", contents:["\ub9cc\uc57d", {type:"Image", img:"/img/assets/ntry/bitmap/jr/jr_speed_image.png", size:18}, "\uc55e\uc5d0 \uc788\ub2e4\uba74", {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}, {type:"Statement", key:"STATEMENT", accept:"basic", alignY:15, alignX:2}], func:function() {
+Entry.block.jr_if_speed = {skeleton:"basic_loop", color:"#498DEB", contents:["\ub9cc\uc57d", {type:"Image", img:"/img/assets/ntry/bitmap/jr/jr_speed_image.png", size:18}, "\uc55e\uc5d0 \uc788\ub2e4\uba74", {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}, {type:"Statement", key:"STATEMENT", accept:"basic", position:{x:2, y:15}}], func:function() {
   if (!this.isContinue) {
     var a = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT), b, c;
     for (c in a) {
@@ -13074,7 +13081,7 @@ Entry.block.jr_if_speed = {skeleton:"basic_loop", color:"#498DEB", contents:["\u
     }
   }
 }};
-Entry.block.test = {skeleton:"basic", color:"#127CDB", contents:[{type:"Text", text:"\ubc18\ubcf5"}, {type:"Dropdown", key:"REPEAT", options:[[1, 1], [2, 2], [3, 3], [4, 4], [5, 5], [6, 6], [7, 7], [8, 8], [9, 9], [10, 10]], value:1}, {type:"Text", text:"\ubc18\ubcf5"}], func:function() {
+Entry.block.test = {skeleton:"basic", color:"#127CDB", contents:[{type:"Text", text:"\ubc18\ubcf5"}, {type:"Color", key:"COLOR"}, {type:"Text", text:"\ubc18\ubcf5"}], func:function() {
 }};
 Entry.BlockMenu = function(a, b) {
   Entry.Model(this, !1);
@@ -13627,28 +13634,48 @@ Entry.Executor = function(a) {
     this.scope = {block:a, executor:this};
   };
 })(Entry.Executor.prototype);
+Entry.Field = function() {
+};
+(function(a) {
+  a.destroy = function() {
+    this.destroyOption();
+  };
+  a.destroyOption = function() {
+    this.documentDownEvent && (Entry.documentMousedown.detach(this.documentDownEvent), delete this.documentDownEvent);
+    this.optionGroup && (this.optionGroup.remove(), delete this.optionGroup);
+  };
+  a.align = function(a, c, d) {
+    var e = this.svgGroup;
+    this._position && (this._position.x && (a = this._position.x), this._position.y && (c = this._position.y));
+    var f = "t" + a + " " + c;
+    void 0 === d || d ? e.animate({transform:f}, 300, mina.easeinout) : e.attr({transform:f});
+    this.box.set({x:a, y:c});
+  };
+})(Entry.Field.prototype);
 Entry.FieldColor = function(a, b) {
   this._block = b.block;
   this.box = new Entry.BoxModel;
   this.svgGroup = null;
   this._contents = a;
   this._position = a.position;
+  console.log(this._position);
   this.key = a.key;
   this.value = this._block.values[this.key] || "#FF0000";
   this.renderStart(b);
 };
+Entry.Utils.inherit(Entry.Field, Entry.FieldColor);
 (function(a) {
   a.renderStart = function(a) {
     var c = this;
     this.svgGroup = a.contentSvgGroup.group();
     this.svgGroup.attr({class:"entry-field-color"});
     var d = this._position;
-    d ? (a = d.x || 0, d = d.y || 0) : d = a = 0;
+    d ? (a = d.x || 0, d = d.y || 0) : (a = 0, d = -8);
     this._header = this.svgGroup.rect(a, d, 14.5, 16, 0).attr({fill:this.value});
     this.svgGroup.mouseup(function(a) {
       c._block.view.dragMode == Entry.DRAG_MODE_MOUSEDOWN && c.renderOptions();
     });
-    this.box.set({x:0, y:0, width:14.5, height:16});
+    this.box.set({x:a, y:d, width:14.5, height:16});
   };
   a.renderOptions = function() {
     var a = this;
@@ -13678,20 +13705,8 @@ Entry.FieldColor = function(a, b) {
     c = c.getContentPos();
     this.optionGroup.css({left:d.e + e.left + this.box.x + c.x, top:d.f + e.top + this.box.y + c.y + this.box.height / 2});
   };
-  a.align = function(a, c, d) {
-    var e = this.svgGroup, f = "t" + a + " " + c;
-    void 0 === d || d ? e.animate({transform:f}, 300, mina.easeinout) : e.attr({transform:f});
-    this.box.set({x:a, y:c});
-  };
   a.applyValue = function(a) {
     this.value != a && (this.value = this._block.values[this.key] = a, this._header.attr({fill:a}));
-  };
-  a.destroyOption = function() {
-    this.documentDownEvent && (Entry.documentMousedown.detach(this.documentDownEvent), delete this.documentDownEvent);
-    this.optionGroup && (this.optionGroup.remove(), delete this.optionGroup);
-  };
-  a.destroy = function() {
-    this.destroyOption();
   };
 })(Entry.FieldColor.prototype);
 Entry.FieldColor.getWidgetColorList = function() {
@@ -13707,6 +13722,7 @@ Entry.FieldDropdown = function(a, b) {
   this.value = this._block.values[this.key];
   this.renderStart(b);
 };
+Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
 (function(a) {
   a.renderStart = function(a) {
     var c = this;
@@ -13760,17 +13776,8 @@ Entry.FieldDropdown = function(a, b) {
       a.attr(n);
     });
   };
-  a.align = function(a, c, d) {
-    var e = this.svgGroup, f = "t" + a + " " + c;
-    void 0 === d || d ? e.animate({transform:f}, 300, mina.easeinout) : e.attr({transform:f});
-    this.box.set({x:a, y:c});
-  };
   a.applyValue = function(a) {
     this.value != a && (this.value = this._block.values[this.key] = a, this.textElement.node.textContent = this.getTextByValue(a), this.resize());
-  };
-  a.destroyOption = function() {
-    this.documentDownEvent && (Entry.documentMousedown.detach(this.documentDownEvent), delete this.documentDownEvent);
-    this.optionGroup && (this.optionGroup.remove(), delete this.optionGroup);
   };
   a.getTextByValue = function(a) {
     for (var c = this._contents.options, d = 0, e = c.length;d < e;d++) {
@@ -13780,8 +13787,6 @@ Entry.FieldDropdown = function(a, b) {
       }
     }
     return a;
-  };
-  a.destroy = function() {
   };
 })(Entry.FieldDropdown.prototype);
 Entry.FieldImage = function(a, b) {
@@ -13794,18 +13799,12 @@ Entry.FieldImage = function(a, b) {
   this._imgElement = this._path = this.svgGroup = null;
   this.renderStart();
 };
+Entry.Utils.inherit(Entry.Field, Entry.FieldImage);
 (function(a) {
   a.renderStart = function() {
     this.svgGroup = this._block.contentSvgGroup.group();
     this._imgElement = this.svgGroup.image(this._imgUrl, 0, -.5 * this._size, this._size, this._size);
     this.box.set({x:this._size, y:0, width:this._size, height:this._size});
-  };
-  a.align = function(a, c, d) {
-    var e = this.svgGroup;
-    this._position && (a = this._position.x);
-    var f = "t" + a + " " + c;
-    void 0 === d || d ? e.animate({transform:f}, 300, mina.easeinout) : e.attr({transform:f});
-    this.box.set({x:a, y:c});
   };
   a.enableHighlight = function() {
     var a = this._path.getTotalLength(), c = this._path;
@@ -13818,8 +13817,6 @@ Entry.FieldImage = function(a, b) {
         c.animate({"stroke-dashoffset":-a}, 300);
       }, 1400, mina.easeout);
     }, 500);
-  };
-  a.destroy = function() {
   };
 })(Entry.FieldImage.prototype);
 Entry.FieldIndicator = function(a, b) {
@@ -13830,9 +13827,12 @@ Entry.FieldIndicator = function(a, b) {
   this._boxMultiplier = a.boxMultiplier || 2;
   this._highlightColor = a.highlightColor ? a.highlightColor : "#F59900";
   this._position = a.position;
+  this._alignX = a.alignX;
+  this._alignY = a.alignY;
   this._imgElement = this._path = this.svgGroup = null;
   this.renderStart();
 };
+Entry.Utils.inherit(Entry.Field, Entry.FieldIndicator);
 (function(a) {
   a.renderStart = function() {
     this.svgGroup = this._block.contentSvgGroup.group();
@@ -13841,13 +13841,6 @@ Entry.FieldIndicator = function(a, b) {
     this._path = this.svgGroup.path(a);
     this._path.attr({stroke:"none", fill:"none"});
     this.box.set({x:this._size, y:0, width:this._size * this._boxMultiplier, height:this._size * this._boxMultiplier});
-  };
-  a.align = function(a, c, d) {
-    var e = this.svgGroup;
-    this._position && (a = this._position.x, c = this._position.y);
-    var f = "t" + a + " " + c;
-    void 0 === d || d ? e.animate({transform:f}, 300, mina.easeinout) : e.attr({transform:f});
-    this.box.set({x:a, y:c});
   };
   a.enableHighlight = function() {
     var a = this._path.getTotalLength(), c = this._path;
@@ -13860,8 +13853,6 @@ Entry.FieldIndicator = function(a, b) {
         c.animate({"stroke-dashoffset":-a}, 300);
       }, 1400, mina.easeout);
     }, 500);
-  };
-  a.destroy = function() {
   };
 })(Entry.FieldIndicator.prototype);
 Entry.Keyboard = {};
@@ -13877,6 +13868,7 @@ Entry.FieldKeyboard = function(a, b) {
   this.renderStart(b);
   Entry.keyPressed && (this.keyPressed = Entry.keyPressed.attach(this, this._keyboardControl));
 };
+Entry.Utils.inherit(Entry.Field, Entry.FieldKeyboard);
 (function(a) {
   a.renderStart = function(a) {
     var c = this;
@@ -13891,11 +13883,6 @@ Entry.FieldKeyboard = function(a, b) {
       c._block.view.dragMode == Entry.DRAG_MODE_MOUSEDOWN && c.renderOptions();
     });
     this.box.set({x:0, y:0, width:a, height:16});
-  };
-  a.align = function(a, c, d) {
-    var e = this.svgGroup, f = "t" + a + " " + c;
-    void 0 === d || d ? e.animate({transform:f}, 300, mina.easeinout) : e.attr({transform:f});
-    this.box.set({x:a, y:c});
   };
   a.renderOptions = function() {
     var a = this;
@@ -13948,12 +13935,12 @@ Entry.FieldStatement = function(a, b) {
   this.box = new Entry.BoxModel;
   this.acceptType = a.accept;
   this.dummyBlock = this.svgGroup = null;
-  a.alignX && (this._alignX = a.alignX);
-  a.alignY && (this._alignY = a.alignY);
+  this._position = a.position;
   this.box.observe(b, "alignContent", ["height"]);
   this.renderStart(b.getBoard());
   this.block.observe(this, "_updateThread", ["thread"]);
 };
+Entry.Utils.inherit(Entry.Field, Entry.FieldStatement);
 (function(a) {
   a.renderStart = function(a) {
     this.svgGroup = this._blockView.contentSvgGroup.group();
@@ -13965,18 +13952,17 @@ Entry.FieldStatement = function(a, b) {
     this._thread.changeEvent.attach(this, this.calcHeight);
     this.calcHeight();
   };
+  a.align = function(a, c, d) {
+    var e = this.svgGroup;
+    this._position && (this._position.x && (a = this._position.x), this._position.y && (c = this._position.y));
+    a = "t" + a + " " + c;
+    void 0 === d || d ? e.animate({transform:a}, 300, mina.easeinout) : e.attr({transform:a});
+  };
   a.calcHeight = function() {
     for (var a = this.dummyBlock, c = -1;a;) {
       c += a.view.height + 1, a = a.next;
     }
     this.box.set({height:c});
-  };
-  a.align = function(a, c, d) {
-    var e = this.svgGroup;
-    a = this._alignX || 46;
-    c = this._alignY || 14;
-    a = "t" + a + " " + c;
-    void 0 === d || d ? e.animate({transform:a}, 300, mina.easeinout) : e.attr({transform:a});
   };
   a._updateThread = function() {
     this._threadChangeEvent && this._thread.changeEvent.detach(this._threadChangeEvent);
@@ -14043,8 +14029,6 @@ Entry.DummyBlock = function(a, b) {
   a.dominate = function() {
     this.originBlockView.dominate();
   };
-  a.destroy = function() {
-  };
 })(Entry.DummyBlock.prototype);
 Entry.FieldText = function(a, b) {
   this._block = b;
@@ -14054,21 +14038,15 @@ Entry.FieldText = function(a, b) {
   this.textElement = null;
   this.renderStart();
 };
+Entry.Utils.inherit(Entry.Field, Entry.FieldText);
 (function(a) {
   a.renderStart = function() {
-    this.textElement = this._block.contentSvgGroup.text(0, 0, this._text);
+    this.svgGroup = this._block.contentSvgGroup.group();
+    this.textElement = this.svgGroup.text(0, 0, this._text);
     this.textElement.attr({style:"white-space: pre; font-size:" + this._fontSize + "px", "class":"dragNone", fill:"white"});
     var a = this.textElement.getBBox();
     this.textElement.attr({y:.25 * a.height});
     this.box.set({x:0, y:0, width:this.textElement.node.getComputedTextLength(), height:a.height});
-  };
-  a.align = function(a, c, d) {
-    !0 !== d && (d = !1);
-    var e = this.textElement, f = {x:a};
-    d ? e.animate(f, 300, mina.easeinout) : e.attr(f);
-    this.box.set({x:a, width:this.textElement.node.getComputedTextLength(), y:c});
-  };
-  a.destroy = function() {
   };
 })(Entry.FieldText.prototype);
 Entry.Scroller = function(a, b, c) {

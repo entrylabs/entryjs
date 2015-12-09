@@ -65,7 +65,11 @@ Entry.block.jr_repeat = {
         {
             type: "Statement",
             key: "STATEMENT",
-            accept: "pebble_basic"
+            accept: "pebble_basic",
+            position: {
+                 x: 46,
+                 y: 14
+            }
         }
     ],
     func: function() {
@@ -578,8 +582,10 @@ Entry.block.jr_repeat_until_dest = {
             type: "Statement",
             key: "STATEMENT",
             accept: "basic",
-            alignY: 15,
-            alignX: 2
+            position: {
+                x: 2,
+                y: 15
+            }
         }
     ],
     func: function() {
@@ -611,8 +617,10 @@ Entry.block.jr_if_construction = {
             type: "Statement",
             key: "STATEMENT",
             accept: "basic",
-            alignY: 15,
-            alignX: 2
+            position: {
+                x: 2,
+                y: 15
+            }
         }
     ],
     func: function() {
@@ -679,8 +687,10 @@ Entry.block.jr_if_speed = {
             type: "Statement",
             key: "STATEMENT",
             accept: "basic",
-            alignY: 15,
-            alignX: 2
+            position: {
+                x: 2,
+                y: 15
+            }
         }
     ],
     func: function()  {
@@ -735,21 +745,8 @@ Entry.block.test = {
             text: "반복"
         },
         {
-            type: "Dropdown",
-            key: "REPEAT",
-            options: [
-                [1,1],
-                [2,2],
-                [3,3],
-                [4,4],
-                [5,5],
-                [6,6],
-                [7,7],
-                [8,8],
-                [9,9],
-                [10,10]
-            ],
-            value: 1
+            type: "Color",
+            key: "COLOR"
         },
         {
             type: "Text",

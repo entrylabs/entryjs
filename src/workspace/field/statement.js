@@ -5,6 +5,7 @@
 goog.provide("Entry.FieldStatement");
 goog.provide("Entry.DummyBlock");
 
+goog.require("Entry.Field");
 /*
  *
  */
@@ -22,14 +23,15 @@ Entry.FieldStatement = function(content, blockView) {
     this.svgGroup = null;
     this.dummyBlock = null;
 
-    if (content.alignX) this._alignX = content.alignX;
-    if (content.alignY) this._alignY = content.alignY;
+    this._position = content.position;
 
     this.box.observe(blockView, "alignContent", ["height"]);
 
     this.renderStart(blockView.getBoard());
     this.block.observe(this, "_updateThread", ["thread"]);
 };
+
+Entry.Utils.inherit(Entry.Field, Entry.FieldStatement);
 
 (function(p) {
     p.renderStart = function(board) {
@@ -48,21 +50,16 @@ Entry.FieldStatement = function(content, blockView) {
         this.calcHeight();
     };
 
-    p.calcHeight = function() {
-        var block = this.dummyBlock,
-            height = - 1;
-        while (block) {
-            height += block.view.height + 1;
-            block = block.next;
-        }
-        this.box.set({height: height});
-    };
-
     p.align = function(x, y, animate) {
         animate = animate === undefined ? true : animate;
         var svgGroup = this.svgGroup;
-        var x = this._alignX || 46;
-        var y = this._alignY || 14;
+        if (this._position) {
+            if (this._position.x)
+                x = this._position.x;
+            if (this._position.y)
+                y = this._position.y;
+        }
+
         var transform = "t" + x + " " + y;
 
         if (animate)
@@ -73,6 +70,16 @@ Entry.FieldStatement = function(content, blockView) {
             svgGroup.attr({
                 transform: transform
             });
+    };
+
+    p.calcHeight = function() {
+        var block = this.dummyBlock,
+            height = - 1;
+        while (block) {
+            height += block.view.height + 1;
+            block = block.next;
+        }
+        this.box.set({height: height});
     };
 
     p._updateThread = function() {
@@ -187,7 +194,5 @@ Entry.DummyBlock = function(statementField, blockView) {
     p.dominate = function() {
         this.originBlockView.dominate();
     };
-
-    p.destroy = function() {};
 
 })(Entry.DummyBlock.prototype);

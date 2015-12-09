@@ -4,6 +4,7 @@
 
 goog.provide("Entry.FieldDropdown");
 
+goog.require("Entry.Field");
 /*
  *
  */
@@ -21,6 +22,8 @@ Entry.FieldDropdown = function(content, blockView) {
 
     this.renderStart(blockView);
 };
+
+Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
 
 (function(p) {
     var X_PADDING = 18,
@@ -170,45 +173,12 @@ Entry.FieldDropdown = function(content, blockView) {
         });
     };
 
-    p.align = function(x, y, animate) {
-        animate = animate === undefined ? true : animate;
-        var svgGroup = this.svgGroup;
-
-        var transform = "t" + x + " " + y;
-
-        if (animate)
-            svgGroup.animate({
-                transform: transform
-            }, 300, mina.easeinout);
-        else
-            svgGroup.attr({
-                transform: transform
-            });
-
-        this.box.set({
-            x: x,
-            y: y
-        });
-    };
-
     p.applyValue = function(value) {
         if (this.value == value) return;
         this._block.values[this.key] = value;
         this.value = value;
         this.textElement.node.textContent = this.getTextByValue(value);
         this.resize();
-    };
-
-    p.destroyOption = function() {
-        if (this.documentDownEvent) {
-            Entry.documentMousedown.detach(this.documentDownEvent);
-            delete this.documentDownEvent;
-        }
-
-        if (this.optionGroup) {
-            this.optionGroup.remove();
-            delete this.optionGroup;
-        }
     };
 
     p.getTextByValue = function(value) {
@@ -220,6 +190,4 @@ Entry.FieldDropdown = function(content, blockView) {
         }
         return value;
     };
-
-    p.destroy = function() {};
 })(Entry.FieldDropdown.prototype);
