@@ -38,10 +38,12 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldText);
             "class": "dragNone",
             "fill": "white"
         });
+
         var bBox = this.textElement.getBBox();
         this.textElement.attr({
             'y': bBox.height * 0.25
         });
+
         this.box.set({
             x: 0,
             y: 0,

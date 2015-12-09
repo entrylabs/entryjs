@@ -735,24 +735,3 @@ Entry.block.jr_if_speed = {
         }
     }
 };
-
-Entry.block.test = {
-    skeleton: "basic",
-    color: "#127CDB",
-    contents: [
-        {
-            type: "Text",
-            text: "반복"
-        },
-        {
-            type: "Color",
-            key: "COLOR"
-        },
-        {
-            type: "Text",
-            text: "반복"
-        }
-    ],
-    func: function() {
-    }
-};

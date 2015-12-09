@@ -19,7 +19,7 @@ Entry.FieldKeyboard = function(content, blockView) {
     this.position = content.position;
     this._contents = content;
     this.key = content.key;
-    this.value = this._block.values[this.key];
+    this.value = this._block.values[this.key]  || 81;
 
     this._optionVisible = false;
 
@@ -51,9 +51,10 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldKeyboard);
             );
         this.textElement.attr({'font-size' : '9pt'});
 
-        var width = this.getWidth();
+        var width = this.getTextWidth();
 
         var y = this.position && this.position.y ? this.position.y : 0;
+        y -= CONTENT_HEIGHT/2;
         this._header = this.svgGroup.rect(
                 0, y,
                 width,
@@ -100,15 +101,13 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldKeyboard);
             106
         );
 
-        var matrix = blockView.svgGroup.transform().globalMatrix;
-        var contentPos = blockView.getContentPos();
-        var box = this.box;
-        var x = matrix.e + box.x + contentPos.x -5;
-        var y = matrix.f + box.y + contentPos.y + box.height/2;
+        var pos = this.getRelativePos();
+        pos.x -= 5;
+        pos.y += this.box.height/2;
 
         this.optionGroup.attr({
             class: 'entry-field-keyboard',
-            transform: "t" + x + " " + y
+            transform: "t" + pos.x + " " + pos.y
         });
 
     };
@@ -146,7 +145,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldKeyboard);
     };
 
     p.resize = function() {
-        var width = this.getWidth();
+        var width = this.getTextWidth();
 
         this._header.attr({width: width});
 
@@ -154,7 +153,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldKeyboard);
         this._block.view.alignContent();
     };
 
-    p.getWidth = function() {
+    p.getTextWidth = function() {
          return this.textElement.node.getComputedTextLength() + X_PADDING;
     };
 

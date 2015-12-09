@@ -13081,8 +13081,6 @@ Entry.block.jr_if_speed = {skeleton:"basic_loop", color:"#498DEB", contents:["\u
     }
   }
 }};
-Entry.block.test = {skeleton:"basic", color:"#127CDB", contents:[{type:"Text", text:"\ubc18\ubcf5"}, {type:"Color", key:"COLOR"}, {type:"Text", text:"\ubc18\ubcf5"}], func:function() {
-}};
 Entry.BlockMenu = function(a, b) {
   Entry.Model(this, !1);
   this._align = b || "CENTER";
@@ -13651,6 +13649,14 @@ Entry.Field = function() {
     void 0 === d || d ? e.animate({transform:f}, 300, mina.easeinout) : e.attr({transform:f});
     this.box.set({x:a, y:c});
   };
+  a.getAbsolutePos = function() {
+    var a = this._block.view, c = a.svgGroup.transform().globalMatrix, d = a.getBoard().svgDom.offset(), a = a.getContentPos();
+    return {x:c.e + d.left + this.box.x + a.x, y:c.f + d.top + this.box.y + a.y};
+  };
+  a.getRelativePos = function() {
+    var a = this._block.view, c = a.svgGroup.transform().globalMatrix, a = a.getContentPos(), d = this.box;
+    return {x:c.e + d.x + a.x, y:c.f + d.y + a.y};
+  };
 })(Entry.Field.prototype);
 Entry.FieldColor = function(a, b) {
   this._block = b.block;
@@ -13658,7 +13664,6 @@ Entry.FieldColor = function(a, b) {
   this.svgGroup = null;
   this._contents = a;
   this._position = a.position;
-  console.log(this._position);
   this.key = a.key;
   this.value = this._block.values[this.key] || "#FF0000";
   this.renderStart(b);
@@ -13700,10 +13705,12 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldColor);
         })(h, k);
       }
     }
-    d = c.svgGroup.transform().globalMatrix;
-    e = c.getBoard().svgDom.offset();
-    c = c.getContentPos();
-    this.optionGroup.css({left:d.e + e.left + this.box.x + c.x, top:d.f + e.top + this.box.y + c.y + this.box.height / 2});
+    c.svgGroup.transform();
+    c.getBoard().svgDom.offset();
+    c.getContentPos();
+    c = this.getAbsolutePos();
+    c.y += this.box.height / 2 + 1;
+    this.optionGroup.css({left:c.x, top:c.y});
   };
   a.applyValue = function(a) {
     this.value != a && (this.value = this._block.values[this.key] = a, this._header.attr({fill:a}));
@@ -13754,13 +13761,12 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
       a.optionGroup.remove();
     });
     this.optionGroup = c.getBoard().svgGroup.group();
-    var d = c.svgGroup.transform().globalMatrix, c = this._contents.options;
-    this.optionGroup.attr({class:"entry-field-dropdown", transform:"t" + (d.e - 60) + " " + (d.f + 35)});
-    var d = [], e = 0;
-    d.push(this.optionGroup.rect(0, 0, 0, 23 * c.length).attr({fill:"white"}));
-    for (var f = 0, g = c.length;f < g;f++) {
-      var h = c[f], k = h[0], h = h[1], l = this.optionGroup.group().attr({class:"rect", transform:"t0 " + 23 * f});
-      d.push(l.rect(0, 0, 0, 23));
+    c.svgGroup.transform();
+    var d = this._contents.options, c = [], e = 0;
+    c.push(this.optionGroup.rect(0, 0, 0, 23 * d.length).attr({fill:"white"}));
+    for (var f = 0, g = d.length;f < g;f++) {
+      var h = d[f], k = h[0], h = h[1], l = this.optionGroup.group().attr({class:"rect", transform:"t0 " + 23 * f});
+      c.push(l.rect(0, 0, 0, 23));
       this.value == h && l.text(5, 13, "\u2713").attr({"alignment-baseline":"central"});
       k = l.text(20, 13, k).attr({"alignment-baseline":"central"});
       e = Math.max(k.node.getComputedTextLength() + 50, e);
@@ -13771,8 +13777,12 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
         });
       })(l, h);
     }
+    d = this.getRelativePos();
+    d.y += this.box.height / 2;
+    d.x = d.x - e / 2 + this.box.width / 2;
+    this.optionGroup.attr({class:"entry-field-dropdown", transform:"t" + d.x + " " + d.y});
     var n = {width:e};
-    d.forEach(function(a) {
+    c.forEach(function(a) {
       a.attr(n);
     });
   };
@@ -13863,7 +13873,7 @@ Entry.FieldKeyboard = function(a, b) {
   this.position = a.position;
   this._contents = a;
   this.key = a.key;
-  this.value = this._block.values[this.key];
+  this.value = this._block.values[this.key] || 81;
   this._optionVisible = !1;
   this.renderStart(b);
   Entry.keyPressed && (this.keyPressed = Entry.keyPressed.attach(this, this._keyboardControl));
@@ -13876,8 +13886,9 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldKeyboard);
     this.svgGroup.attr({class:"entry-input-field"});
     this.textElement = this.svgGroup.text(4, 4, Entry.getKeyCodeMap()[this.value]);
     this.textElement.attr({"font-size":"9pt"});
-    a = this.getWidth();
-    this._header = this.svgGroup.rect(0, this.position && this.position.y ? this.position.y : 0, a, 16, 3).attr({fill:"#fff", "fill-opacity":.4});
+    a = this.getTextWidth();
+    var d = this.position && this.position.y ? this.position.y : 0;
+    this._header = this.svgGroup.rect(0, d - 8, a, 16, 3).attr({fill:"#fff", "fill-opacity":.4});
     this.svgGroup.append(this.textElement);
     this.svgGroup.mouseup(function(a) {
       c._block.view.dragMode == Entry.DRAG_MODE_MOUSEDOWN && c.renderOptions();
@@ -13895,8 +13906,10 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldKeyboard);
     });
     this.optionGroup = c.getBoard().svgGroup.group();
     this.optionGroup.image(Entry.mediaFilePath + "/media/keyboard_workspace.png", -5, 0, 249, 106);
-    var d = c.svgGroup.transform().globalMatrix, c = c.getContentPos(), e = this.box;
-    this.optionGroup.attr({class:"entry-field-keyboard", transform:"t" + (d.e + e.x + c.x - 5) + " " + (d.f + e.y + c.y + e.height / 2)});
+    c = this.getRelativePos();
+    c.x -= 5;
+    c.y += this.box.height / 2;
+    this.optionGroup.attr({class:"entry-field-keyboard", transform:"t" + c.x + " " + c.y});
   };
   a.destroyOption = function() {
     this.documentDownEvent && (Entry.documentMousedown.detach(this.documentDownEvent), delete this.documentDownEvent);
@@ -13915,12 +13928,12 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldKeyboard);
     this.value != c && (this.value = this._block.values[this.key] = c, this.textElement.node.textContent = a, this.resize());
   };
   a.resize = function() {
-    var a = this.getWidth();
+    var a = this.getTextWidth();
     this._header.attr({width:a});
     this.box.set({width:a});
     this._block.view.alignContent();
   };
-  a.getWidth = function() {
+  a.getTextWidth = function() {
     return this.textElement.node.getComputedTextLength() + 8;
   };
   a.destroy = function() {

@@ -18,7 +18,6 @@ Entry.FieldColor = function(content, blockView) {
 
     this._contents = content;
     this._position = content.position;
-    console.log(this._position);
     this.key = content.key;
     this.value = this._block.values[this.key] || '#FF0000';
 
@@ -112,13 +111,16 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldColor);
         }
         var matrix = blockView.svgGroup.transform().globalMatrix;
         var offset = blockView.getBoard().svgDom.offset();
+
+
         var contentPos = blockView.getContentPos();
 
-        var x = matrix.e + offset.left + this.box.x + contentPos.x;
-        var y = matrix.f + offset.top + this.box.y + contentPos.y + this.box.height/2;
+        var pos = this.getAbsolutePos();
+        pos.y += this.box.height/2 + 1;
 
         this.optionGroup.css({
-            left:x, top:y
+            left:pos.x,
+            top:pos.y
         });
 
     };

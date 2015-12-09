@@ -113,10 +113,6 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
         var y = matrix.f;
 
         var options = this._contents.options;
-        this.optionGroup.attr({
-            class: 'entry-field-dropdown',
-            transform: "t" + (x -60) + " " + (y + 35)
-        });
 
         var resizeList = [];
         var OPTION_X_PADDING = 50;
@@ -166,6 +162,15 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
                 });
             })(element, value);
         }
+
+        var pos = this.getRelativePos();
+        pos.y += this.box.height/2;
+        pos.x = pos.x - maxWidth/2 + this.box.width/2;
+
+        this.optionGroup.attr({
+            class: 'entry-field-dropdown',
+            transform: "t" + pos.x + " " + pos.y
+        });
 
         var attr = {width:maxWidth};
         resizeList.forEach(function(elem){
