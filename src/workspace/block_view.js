@@ -607,4 +607,8 @@ Entry.BlockView = function(block, board) {
 
     p.getSkeleton = function() {return this._skeleton;};
 
+    p.getContentPos = function() {
+        return this._skeleton.contentPos(this);
+    };
+
 })(Entry.BlockView.prototype);

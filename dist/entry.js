@@ -10371,6 +10371,46 @@ Entry.Toast.prototype.alert = function(a, b, c) {
     }, 20);
   }, 5E3);
 };
+Entry.ContextMenu = {};
+(function(a) {
+  a.createDom = function() {
+    this.dom = Entry.Dom("ul", {id:"entry-contextmenu", parent:$("body")});
+    Entry.Utils.disableContextmenu(this.dom);
+    Entry.documentMousedown.attach(this, function() {
+      this.hide();
+    });
+  };
+  a.show = function(a) {
+    this.dom || this.createDom();
+    if (0 !== a.length) {
+      var c = this.dom;
+      c.empty();
+      for (var d = 0, e = a.length;d < e;d++) {
+        var f = a[d], g = f.text, h = !1 !== f.enable, k = Entry.Dom("li", {class:h ? "menuAble" : "menuDisable", parent:c});
+        k.text(g);
+        h && f.callback && function(a, b) {
+          a.mousedown(function() {
+            b();
+          });
+        }(k, f.callback);
+      }
+      c.removeClass("entryRemove");
+      this.position(Entry.mouseCoordinate);
+    }
+  };
+  a.position = function(a) {
+    var c = this.dom;
+    c.css({left:0, top:0});
+    var d = c.width(), e = c.height(), f = $(window), g = f.width(), f = f.height();
+    a.x + d > g && (a.x -= d + 3);
+    a.y + e > f && (a.y -= e);
+    c.css({left:a.x, top:a.y});
+  };
+  a.hide = function() {
+    this.dom.empty();
+    this.dom.addClass("entryRemove");
+  };
+})(Entry.ContextMenu);
 Entry.STATIC = {OBJECT:0, ENTITY:1, SPRITE:2, SOUND:3, VARIABLE:4, FUNCTION:5, SCENE:6, MESSAGE:7, BLOCK_MODEL:8, BLOCK_RENDER_MODEL:9, BOX_MODEL:10, THREAD_MODEL:11, DRAG_INSTANCE:12, BLOCK_STATIC:0, BLOCK_MOVE:1, BLOCK_FOLLOW:2, RETURN:0, CONTINUE:1};
 Entry.Utils = {};
 Entry.overridePrototype = function() {
@@ -13445,6 +13485,9 @@ Entry.BlockView = function(a, b) {
   a.getSkeleton = function() {
     return this._skeleton;
   };
+  a.getContentPos = function() {
+    return this._skeleton.contentPos(this);
+  };
 })(Entry.BlockView.prototype);
 Entry.Code = function(a) {
   Entry.Model(this, !1);
@@ -13562,46 +13605,6 @@ Entry.CodeView = function(a, b) {
     this.set({board:this.code.board});
   };
 })(Entry.CodeView.prototype);
-Entry.ContextMenu = {};
-(function(a) {
-  a.createDom = function() {
-    this.dom = Entry.Dom("ul", {id:"entry-contextmenu", parent:$("body")});
-    Entry.Utils.disableContextmenu(this.dom);
-    Entry.documentMousedown.attach(this, function() {
-      this.hide();
-    });
-  };
-  a.show = function(a) {
-    this.dom || this.createDom();
-    if (0 !== a.length) {
-      var c = this.dom;
-      c.empty();
-      for (var d = 0, e = a.length;d < e;d++) {
-        var f = a[d], g = f.text, h = !1 !== f.enable, k = Entry.Dom("li", {class:h ? "menuAble" : "menuDisable", parent:c});
-        k.text(g);
-        h && f.callback && function(a, b) {
-          a.mousedown(function() {
-            b();
-          });
-        }(k, f.callback);
-      }
-      c.removeClass("entryRemove");
-      this.position(Entry.mouseCoordinate);
-    }
-  };
-  a.position = function(a) {
-    var c = this.dom;
-    c.css({left:0, top:0});
-    var d = c.width(), e = c.height(), f = $(window), g = f.width(), f = f.height();
-    a.x + d > g && (a.x -= d + 3);
-    a.y + e > f && (a.y -= e);
-    c.css({left:a.x, top:a.y});
-  };
-  a.hide = function() {
-    this.dom.empty();
-    this.dom.addClass("entryRemove");
-  };
-})(Entry.ContextMenu);
 Entry.Executor = function(a) {
   this.scope = {block:a, executor:this};
   this._callStack = [];
@@ -13619,6 +13622,77 @@ Entry.Executor = function(a) {
     this.scope = {block:a, executor:this};
   };
 })(Entry.Executor.prototype);
+Entry.FieldColor = function(a, b) {
+  this._block = b.block;
+  this.box = new Entry.BoxModel;
+  this.svgGroup = null;
+  this._contents = a;
+  this._position = a.position;
+  this.key = a.key;
+  this.value = this._block.values[this.key] || "#FF0000";
+  this.renderStart(b);
+};
+(function(a) {
+  a.renderStart = function(a) {
+    var c = this;
+    this.svgGroup = a.contentSvgGroup.group();
+    this.svgGroup.attr({class:"entry-field-color"});
+    var d = this._position;
+    d ? (a = d.x || 0, d = d.y || 0) : d = a = 0;
+    this._header = this.svgGroup.rect(a, d, 14.5, 16, 0).attr({fill:this.value});
+    this.svgGroup.mouseup(function(a) {
+      c._block.view.dragMode == Entry.DRAG_MODE_MOUSEDOWN && c.renderOptions();
+    });
+    this.box.set({x:0, y:0, width:14.5, height:16});
+  };
+  a.renderOptions = function() {
+    var a = this;
+    this.destroyOption();
+    var c = this._block.view;
+    this.documentDownEvent = Entry.documentMousedown.attach(this, function() {
+      Entry.documentMousedown.detach(this.documentDownEvent);
+      a.optionGroup.remove();
+    });
+    var d = Entry.FieldColor.getWidgetColorList();
+    this.optionGroup = Entry.Dom("table", {class:"entry-widget-color-table", parent:$("body")});
+    for (var e = 0;e < d.length;e++) {
+      for (var f = Entry.Dom("tr", {class:"entry-widget-color-row", parent:this.optionGroup}), g = 0;g < d[e].length;g++) {
+        var h = Entry.Dom("td", {class:"entry-widget-color-cell", parent:f}), k = d[e][g];
+        h.css({"background-color":k});
+        h.attr({"data-color-value":k});
+        (function(c, d) {
+          c.mousedown(function() {
+            a.applyValue(d);
+            a.destroyOption();
+          });
+        })(h, k);
+      }
+    }
+    d = c.svgGroup.transform().globalMatrix;
+    e = c.getBoard().svgDom.offset();
+    c = c.getContentPos();
+    this.optionGroup.css({left:d.e + e.left + this.box.x + c.x, top:d.f + e.top + this.box.y + c.y + this.box.height / 2});
+  };
+  a.align = function(a, c, d) {
+    var e = this.svgGroup, f = "t" + a + " " + c;
+    void 0 === d || d ? e.animate({transform:f}, 300, mina.easeinout) : e.attr({transform:f});
+    this.box.set({x:a, y:c});
+  };
+  a.applyValue = function(a) {
+    this.value != a && (this.value = this._block.values[this.key] = a, this._header.attr({fill:a}));
+  };
+  a.destroyOption = function() {
+    this.documentDownEvent && (Entry.documentMousedown.detach(this.documentDownEvent), delete this.documentDownEvent);
+    this.optionGroup && (this.optionGroup.remove(), delete this.optionGroup);
+  };
+  a.destroy = function() {
+    this.destroyOption();
+  };
+})(Entry.FieldColor.prototype);
+Entry.FieldColor.getWidgetColorList = function() {
+  return ["#FFFFFF #CCCCCC #C0C0C0 #999999 #666666 #333333 #000000".split(" "), "#FFCCCC #FF6666 #FF0000 #CC0000 #990000 #660000 #330000".split(" "), "#FFCC99 #FF9966 #FF9900 #FF6600 #CC6600 #993300 #663300".split(" "), "#FFFF99 #FFFF66 #FFCC66 #FFCC33 #CC9933 #996633 #663333".split(" "), "#FFFFCC #FFFF33 #FFFF00 #FFCC00 #999900 #666600 #333300".split(" "), "#99FF99 #66FF99 #33FF33 #33CC00 #009900 #006600 #003300".split(" "), "#99FFFF #33FFFF #66CCCC #00CCCC #339999 #336666 #003333".split(" "), "#CCFFFF #66FFFF #33CCFF #3366FF #3333FF #000099 #000066".split(" "), 
+  "#CCCCFF #9999FF #6666CC #6633FF #6609CC #333399 #330099".split(" "), "#FFCCFF #FF99FF #CC66CC #CC33CC #993399 #663366 #330033".split(" ")];
+};
 Entry.FieldDropdown = function(a, b) {
   this._block = b.block;
   this.box = new Entry.BoxModel;
