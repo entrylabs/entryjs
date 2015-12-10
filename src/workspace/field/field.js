@@ -11,6 +11,8 @@ goog.provide("Entry.Field");
 Entry.Field = function() {};
 
 (function(p) {
+    p.TEXT_LIMIT_LENGTH = 20;
+
     p.destroy = function() {
          this.destroyOption();
     };
@@ -80,4 +82,12 @@ Entry.Field = function() {};
         };
     };
 
+    p.truncate = function() {
+        var value = String(this.value);
+        var limit = this.TEXT_LIMIT_LENGTH;
+        var ret = value.substring(0, limit);
+        if (value.length > limit)
+            ret += '...';
+        return ret;
+    };
 })(Entry.Field.prototype);

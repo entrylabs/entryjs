@@ -13635,6 +13635,7 @@ Entry.Executor = function(a) {
 Entry.Field = function() {
 };
 (function(a) {
+  a.TEXT_LIMIT_LENGTH = 20;
   a.destroy = function() {
     this.destroyOption();
   };
@@ -13656,6 +13657,11 @@ Entry.Field = function() {
   a.getRelativePos = function() {
     var a = this._block.view, c = a.svgGroup.transform().globalMatrix, a = a.getContentPos(), d = this.box;
     return {x:c.e + d.x + a.x, y:c.f + d.y + a.y};
+  };
+  a.truncate = function() {
+    var a = String(this.value), c = this.TEXT_LIMIT_LENGTH, d = a.substring(0, c);
+    a.length > c && (d += "...");
+    return d;
   };
 })(Entry.Field.prototype);
 Entry.FieldColor = function(a, b) {
@@ -14060,6 +14066,74 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldText);
     this.box.set({x:0, y:0, width:this.textElement.node.getComputedTextLength(), height:a.height});
   };
 })(Entry.FieldText.prototype);
+Entry.TextInput = {};
+Entry.FieldTextInput = function(a, b) {
+  this._block = b.block;
+  this.box = new Entry.BoxModel;
+  this.svgGroup = null;
+  this.position = a.position;
+  this._contents = a;
+  this.key = a.key;
+  this.value = this._block.values[this.key] || "";
+  this.renderStart(b);
+};
+Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
+(function(a) {
+  a.renderStart = function(a) {
+    var c = this;
+    this.svgGroup = a.contentSvgGroup.group();
+    this.svgGroup.attr({class:"entry-input-field"});
+    this.textElement = this.svgGroup.text(4, 4, this.truncate());
+    this.textElement.attr({"font-size":"9pt"});
+    a = this.getTextWidth();
+    var d = this.position && this.position.y ? this.position.y : 0;
+    this._header = this.svgGroup.rect(0, d - 8, a, 16, 3).attr({fill:"#fff", "fill-opacity":.4});
+    this.svgGroup.append(this.textElement);
+    this.svgGroup.mouseup(function(a) {
+      c._block.view.dragMode == Entry.DRAG_MODE_MOUSEDOWN && c.renderOptions();
+    });
+    this.box.set({x:0, y:0, width:a, height:16});
+  };
+  a.renderOptions = function() {
+    var a = this;
+    this.destroyOption();
+    this.documentDownEvent = Entry.documentMousedown.attach(this, function() {
+      Entry.documentMousedown.detach(this.documentDownEvent);
+      a.applyValue();
+      a.destroyOption();
+    });
+    this.optionGroup = Entry.Dom("input", {class:"entry-widget-input-field", parent:$("body")});
+    this.optionGroup.val(this.value);
+    this.optionGroup.on("mousedown", function(a) {
+      a.stopPropagation();
+    });
+    this.optionGroup.on("keyup", function(c) {
+      var e = c.keyCode || c.which;
+      a.applyValue(c);
+      -1 < [13, 27].indexOf(e) && a.destroyOption();
+    });
+    var c = this.getAbsolutePos();
+    c.y -= this.box.height / 2;
+    this.optionGroup.css({height:16, left:c.x, top:c.y, width:a.box.width});
+    this.optionGroup.focus();
+  };
+  a.applyValue = function(a) {
+    a = this.optionGroup.val();
+    this.value = this._block.values[this.key] = a;
+    this.textElement.node.textContent = this.truncate();
+    this.resize();
+  };
+  a.resize = function() {
+    var a = this.getTextWidth();
+    this._header.attr({width:a});
+    this.optionGroup.css({width:a});
+    this.box.set({width:a});
+    this._block.view.alignContent();
+  };
+  a.getTextWidth = function() {
+    return this.textElement.node.getComputedTextLength() + 8;
+  };
+})(Entry.FieldTextInput.prototype);
 Entry.Scroller = function(a, b, c) {
   this._horizontal = void 0 === b ? !0 : b;
   this._vertical = void 0 === c ? !0 : c;
