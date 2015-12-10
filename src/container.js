@@ -80,23 +80,21 @@ Entry.Container.prototype.generateView = function(containerView, option) {
             ulWrapper.addClass('lecture');
         }
 
-        if ($) {
-            var container = this;
-            context.attach('.entryContainerListWorkspaceWrapper', [
-               {
-                    text: '붙여넣기',
-                    href: '/',
-                    action: function(e){
-                        e.preventDefault();
-                        if (container.copiedObject)
-                            container.addCloneObject(container.copiedObject);
+        Entry.Utils.disableContextmenu(ulWrapper);
+        $(ulWrapper).on('contextmenu', function(e){
+            var options = [
+                {
+                    text: Lang.Blocks.Paste_blocks,
+                    callback: function(){
+                        if (Entry.container.copiedObject)
+                            Entry.container.addCloneObject(Entry.container.copiedObject);
                         else
-                            Entry.toast.alert('경고', '붙여넣기 할 오브젝트가 없습니다.');
+                            Entry.toast.alert(Lang.Workspace.add_object_alert, Lang.Workspace.object_not_found_for_paste);
                     }
-                }
-            ]);
-        }
-
+                 }
+            ];
+            Entry.ContextMenu.show(options, 'workspace-contextmenu');
+        });
 
         this.view_.appendChild(ulWrapper);
 

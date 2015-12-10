@@ -15,6 +15,8 @@ Entry.init = function(container, options) {
         menuWidth: 264
     };
 
+    Entry.Utils.bindGlobalEvent(['mousedown', 'mousemove']);
+
     /** @type {object} */
     this.options = options;
     this.parseOptions(options);
@@ -165,7 +167,6 @@ Entry.initialize_ = function() {
     else if (this.type == 'workspace' || this.type == 'phone')
         this.reporter = new Entry.Reporter(true);
 
-    this.initContextMenu();
 };
 
 /**
@@ -322,7 +323,7 @@ Entry.parseOptions = function(options) {
     this.objectAddable = options.objectaddable;
     if (this.objectAddable === undefined)
         this.objectAddable = true;
-//sj
+    
     this.objectEditable = options.objectEditable;
     if (this.objectEditable === undefined)
         this.objectEditable = true;
@@ -371,19 +372,6 @@ Entry.parseOptions = function(options) {
     this.isForLecture = options.isForLecture;
 };
 
-/**
- * Initialize context menu library.
- * http://lab.jakiestfu.com/contextjs/
- */
-Entry.initContextMenu = function() {
-    context.init({
-        fadeSpeed: 100,
-        filter: function ($obj){},
-        above: 'auto',
-        preventDoubleContext: true,
-        compress: true
-    });
-};
 
 Entry.initFonts = function(fonts) {
     this.fonts = fonts;

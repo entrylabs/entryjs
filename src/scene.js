@@ -143,18 +143,20 @@ Entry.Scene.prototype.generateElement = function(scene) {
         removeButtonCover.appendChild(removeButton);
     }
 
-    if ($) {
-        context.attach('#' + scene.id, [
+    Entry.Utils.disableContextmenu(viewTemplate);
+
+    $(viewTemplate).on('contextmenu', function(){
+        var options = [
             {
-                text: '복제하기',
-                href: '/',
-                action: function(e){
-                    e.preventDefault();
+                text: Lang.Workspace.duplicate_scene,
+                callback: function(){
                     Entry.scene.cloneScene(scene);
                 }
             }
-        ]);
-    }
+        ];
+        Entry.ContextMenu.show(options, 'workspace-contextmenu');
+    });
+
     scene.view = viewTemplate;
 
     return viewTemplate;
