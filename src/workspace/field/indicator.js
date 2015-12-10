@@ -20,8 +20,6 @@ Entry.FieldIndicator = function(content, block) {
     this._highlightColor =
         content.highlightColor? content.highlightColor : "#F59900";
     this._position = content.position;
-    this._alignX = content.alignX;
-    this._alignY= content.alignY;
 
     this.svgGroup = null;
     this._path = null;

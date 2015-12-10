@@ -13837,8 +13837,6 @@ Entry.FieldIndicator = function(a, b) {
   this._boxMultiplier = a.boxMultiplier || 2;
   this._highlightColor = a.highlightColor ? a.highlightColor : "#F59900";
   this._position = a.position;
-  this._alignX = a.alignX;
-  this._alignY = a.alignY;
   this._imgElement = this._path = this.svgGroup = null;
   this.renderStart();
 };
