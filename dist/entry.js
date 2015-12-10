@@ -6467,7 +6467,6 @@ Entry.initialize_ = function() {
       this.reporter = new Entry.Reporter(!0);
     }
   }
-  this.initContextMenu();
 };
 Entry.createDom = function(a, b) {
   if (b && "workspace" != b) {
@@ -6548,10 +6547,6 @@ Entry.parseOptions = function(a) {
   this.hasVariableManager = a.hasvariablemanager;
   this.variableEnable || this.messageEnable || this.listEnable || this.functionEnable ? void 0 === this.hasVariableManager && (this.hasVariableManager = !0) : this.hasVariableManager = !1;
   this.isForLecture = a.isForLecture;
-};
-Entry.initContextMenu = function() {
-  context.init({fadeSpeed:100, filter:function(a) {
-  }, above:"auto", preventDoubleContext:!0, compress:!0});
 };
 Entry.initFonts = function(a) {
   this.fonts = a;

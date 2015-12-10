@@ -167,7 +167,6 @@ Entry.initialize_ = function() {
     else if (this.type == 'workspace' || this.type == 'phone')
         this.reporter = new Entry.Reporter(true);
 
-    this.initContextMenu();
 };
 
 /**
@@ -373,19 +372,6 @@ Entry.parseOptions = function(options) {
     this.isForLecture = options.isForLecture;
 };
 
-/**
- * Initialize context menu library.
- * http://lab.jakiestfu.com/contextjs/
- */
-Entry.initContextMenu = function() {
-    context.init({
-        fadeSpeed: 100,
-        filter: function ($obj){},
-        above: 'auto',
-        preventDoubleContext: true,
-        compress: true
-    });
-};
 
 Entry.initFonts = function(fonts) {
     this.fonts = fonts;
