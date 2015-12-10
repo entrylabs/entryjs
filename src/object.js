@@ -108,7 +108,7 @@ Entry.EntryObject.prototype.generateView= function() {
         // generate context menu
         Entry.Utils.disableContextmenu(objectView);
         var object = this;
-        $(objectView).on('contextmenu', function(){
+        $(objectView).on('contextmenu', function(e){
             var options = [
                 {
                     text: Lang.Workspace.context_rename,
@@ -149,7 +149,7 @@ Entry.EntryObject.prototype.generateView= function() {
                  }
 
             ];
-            Entry.ContextMenu.show(options);
+            Entry.ContextMenu.show(options, 'workspace-contextmenu');
 
         });
         /** @type {!Element} */

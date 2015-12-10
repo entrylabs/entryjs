@@ -154,7 +154,7 @@ Entry.Scene.prototype.generateElement = function(scene) {
                 }
             }
         ];
-        Entry.ContextMenu.show(options);
+        Entry.ContextMenu.show(options, 'workspace-contextmenu');
     });
 
     scene.view = viewTemplate;

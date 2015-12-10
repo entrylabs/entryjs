@@ -14,10 +14,14 @@ goog.provide('Entry.ContextMenu');
         );
     };
 
-    ctx.show = function(options) {
+    ctx.show = function(options, className) {
         if (!this.dom) this.createDom();
         if (options.length === 0) return;
-        var that = this;
+
+        if (className !== undefined) {
+            this._className = className;
+            this.dom.addClass(className);
+        }
 
         var parent = this.dom;
 
@@ -77,6 +81,10 @@ goog.provide('Entry.ContextMenu');
     ctx.hide = function() {
         this.dom.empty();
         this.dom.addClass('entryRemove');
+        if (this._className) {
+            this.dom.removeClass(this._className);
+            delete this._className;
+        }
     };
 
 

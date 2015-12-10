@@ -4683,7 +4683,7 @@ Entry.Container.prototype.generateView = function(a, b) {
   if (b && "workspace" != b) {
     "phone" == b && (this.view_.addClass("entryContainerPhone"), c = Entry.createElement("div"), c.addClass("entryAddObjectWorkspace"), c.innerHTML = Lang.Workspace.add_object, c.bindOnClick(function(a) {
       Entry.dispatchEvent("openSpriteManager");
-    }), c = Entry.createElement("div"), c.addClass("entryContainerListPhoneWrapper"), this.view_.appendChild(c), e = Entry.createElement("ul"), e.addClass("entryContainerListPhone"), c.appendChild(e), this.listView_ = e);
+    }), c = Entry.createElement("div"), c.addClass("entryContainerListPhoneWrapper"), this.view_.appendChild(c), d = Entry.createElement("ul"), d.addClass("entryContainerListPhone"), c.appendChild(d), this.listView_ = d);
   } else {
     this.view_.addClass("entryContainerWorkspace");
     var c = Entry.createElement("div");
@@ -4695,18 +4695,17 @@ Entry.Container.prototype.generateView = function(a, b) {
     c = Entry.createElement("div");
     c.addClass("entryContainerListWorkspaceWrapper");
     Entry.isForLecture && (this.generateTabView(), c.addClass("lecture"));
-    if ($) {
-      var d = this;
-      context.attach(".entryContainerListWorkspaceWrapper", [{text:"\ubd99\uc5ec\ub123\uae30", href:"/", action:function(a) {
-        a.preventDefault();
-        d.copiedObject ? d.addCloneObject(d.copiedObject) : Entry.toast.alert("\uacbd\uace0", "\ubd99\uc5ec\ub123\uae30 \ud560 \uc624\ube0c\uc81d\ud2b8\uac00 \uc5c6\uc2b5\ub2c8\ub2e4.");
-      }}]);
-    }
+    Entry.Utils.disableContextmenu(c);
+    $(c).on("contextmenu", function(a) {
+      Entry.ContextMenu.show([{text:Lang.Blocks.Paste_blocks, callback:function() {
+        Entry.container.copiedObject ? Entry.container.addCloneObject(Entry.container.copiedObject) : Entry.toast.alert(Lang.Workspace.add_object_alert, Lang.Workspace.object_not_found_for_paste);
+      }}], "workspace-contextmenu");
+    });
     this.view_.appendChild(c);
-    var e = Entry.createElement("ul");
-    e.addClass("entryContainerListWorkspace");
-    c.appendChild(e);
-    this.listView_ = e;
+    var d = Entry.createElement("ul");
+    d.addClass("entryContainerListWorkspace");
+    c.appendChild(d);
+    this.listView_ = d;
     this.enableSort();
   }
 };
@@ -6402,6 +6401,7 @@ Entry.init = function(a, b) {
   Entry.assert("object" === typeof b, "Init option is not object");
   this.events_ = {};
   this.interfaceState = {menuWidth:264};
+  Entry.Utils.bindGlobalEvent(["mousedown", "mousemove"]);
   this.options = b;
   this.parseOptions(b);
   this.mediaFilePath = (b.libDir ? b.libDir : "/lib") + "/entryjs/images/";
@@ -6639,7 +6639,7 @@ Entry.EntryObject.prototype.generateView = function() {
     });
     Entry.Utils.disableContextmenu(a);
     var b = this;
-    $(a).on("contextmenu", function() {
+    $(a).on("contextmenu", function(a) {
       Entry.ContextMenu.show([{text:Lang.Workspace.context_rename, callback:function() {
         var a = b;
         a.setLock(!1);
@@ -6653,7 +6653,7 @@ Entry.EntryObject.prototype.generateView = function() {
         Entry.container.setCopiedObject(b);
       }}, {text:Lang.Blocks.Paste_blocks, callback:function() {
         Entry.container.copiedObject ? Entry.container.addCloneObject(Entry.container.copiedObject) : Entry.toast.alert(Lang.Workspace.add_object_alert, Lang.Workspace.object_not_found_for_paste);
-      }}]);
+      }}], "workspace-contextmenu");
     });
     this.view_ = a;
     var c = this, a = Entry.createElement("ul");
@@ -9312,7 +9312,7 @@ Entry.Playground.prototype.generatePictureElement = function(a) {
       Entry.playground.object.removePicture(a.id) ? (Entry.removeElement(c), Entry.toast.success(Lang.Workspace.shape_remove_ok, a.name + " " + Lang.Workspace.shape_remove_ok_msg)) : Entry.toast.alert(Lang.Workspace.shape_remove_fail, Lang.Workspace.shape_remove_fail_msg);
     }}, {divider:!0}, {text:Lang.Workspace.context_download, callback:function() {
       a.fileurl ? window.open(a.fileurl) : window.open("/api/sprite/download/image/" + encodeURIComponent(a.filename) + "/" + encodeURIComponent(a.name) + ".png");
-    }}]);
+    }}], "workspace-contextmenu");
   });
   var d = Entry.createElement("div");
   d.addClass("entryPlaygroundPictureOrder");
@@ -9356,7 +9356,7 @@ Entry.Playground.prototype.generateSoundElement = function(a) {
     }}, {text:Lang.Workspace.context_remove, callback:function() {
       Entry.playground.object.removeSound(a.id) ? (Entry.removeElement(b), Entry.toast.success(Lang.Workspace.sound_remove_ok, a.name + " " + Lang.Workspace.sound_remove_ok_msg)) : Entry.toast.alert(Lang.Workspace.sound_remove_fail, "");
       Entry.removeElement(b);
-    }}]);
+    }}], "workspace-contextmenu");
   });
   var c = Entry.createElement("div");
   c.addClass("entryPlaygroundSoundOrder");
@@ -9590,7 +9590,7 @@ Entry.Scene.prototype.generateElement = function(a) {
   $(b).on("contextmenu", function() {
     Entry.ContextMenu.show([{text:Lang.Workspace.duplicate_scene, callback:function() {
       Entry.scene.cloneScene(a);
-    }}]);
+    }}], "workspace-contextmenu");
   });
   return a.view = b;
 };
@@ -10377,22 +10377,23 @@ Entry.ContextMenu = {};
       this.hide();
     });
   };
-  a.show = function(a) {
+  a.show = function(a, c) {
     this.dom || this.createDom();
     if (0 !== a.length) {
-      var c = this.dom;
-      c.empty();
-      for (var d = 0, e = a.length;d < e;d++) {
-        var f = a[d], g = f.text, h = !1 !== f.enable, k = Entry.Dom("li", {class:h ? "menuAble" : "menuDisable", parent:c});
-        k.text(g);
-        h && f.callback && function(a, b) {
+      void 0 !== c && (this._className = c, this.dom.addClass(c));
+      var d = this.dom;
+      d.empty();
+      for (var e = 0, f = a.length;e < f;e++) {
+        var g = a[e], h = g.text, k = !1 !== g.enable, l = Entry.Dom("li", {class:k ? "menuAble" : "menuDisable", parent:d});
+        l.text(h);
+        k && g.callback && function(a, b) {
           a.mousedown(function(a) {
             a.preventDefault();
             b();
           });
-        }(k, f.callback);
+        }(l, g.callback);
       }
-      c.removeClass("entryRemove");
+      d.removeClass("entryRemove");
       this.position(Entry.mouseCoordinate);
     }
   };
@@ -10407,6 +10408,7 @@ Entry.ContextMenu = {};
   a.hide = function() {
     this.dom.empty();
     this.dom.addClass("entryRemove");
+    this._className && (this.dom.removeClass(this._className), delete this._className);
   };
 })(Entry.ContextMenu);
 Entry.STATIC = {OBJECT:0, ENTITY:1, SPRITE:2, SOUND:3, VARIABLE:4, FUNCTION:5, SCENE:6, MESSAGE:7, BLOCK_MODEL:8, BLOCK_RENDER_MODEL:9, BOX_MODEL:10, THREAD_MODEL:11, DRAG_INSTANCE:12, BLOCK_STATIC:0, BLOCK_MOVE:1, BLOCK_FOLLOW:2, RETURN:0, CONTINUE:1};
@@ -10444,31 +10446,27 @@ Entry.Utils.colorDarken = function(a, b) {
   e = Math.floor(e * b).toString(16);
   return "#" + c + d + e;
 };
-Entry.Utils.bindGlobalEvent = function() {
-  Entry.windowReszied || (Entry.windowResized = new Entry.Event(window), $(window).on("resize", function(a) {
+Entry.Utils.bindGlobalEvent = function(a) {
+  void 0 === a && (a = ["resize", "mousedown", "mousemove", "keydown", "keyup"]);
+  !Entry.windowReszied && -1 < a.indexOf("resize") && (Entry.windowResized = new Entry.Event(window), $(window).on("resize", function(a) {
     Entry.windowResized.notify(a);
   }));
-  Entry.documentMousedown || (Entry.documentMousedown = new Entry.Event(window), $(document).on("mousedown", function(a) {
+  !Entry.documentMousedown && -1 < a.indexOf("mousedown") && (Entry.documentMousedown = new Entry.Event(window), $(document).on("mousedown", function(a) {
     Entry.documentMousedown.notify(a);
   }));
-  Entry.documentMousemove || (Entry.mouseCoordinate = {}, Entry.documentMousemove = new Entry.Event(window), $(document).on("mousemove", function(a) {
+  !Entry.documentMousemove && -1 < a.indexOf("mousemove") && (Entry.mouseCoordinate = {}, Entry.documentMousemove = new Entry.Event(window), $(document).on("mousemove", function(a) {
     Entry.documentMousemove.notify(a);
     Entry.mouseCoordinate.x = a.clientX;
     Entry.mouseCoordinate.y = a.clientY;
   }));
-  Entry.documentMousemove || (Entry.mouseCoordinate = {}, Entry.documentMousemove = new Entry.Event(window), $(document).on("mousemove", function(a) {
-    Entry.documentMousemove.notify(a);
-    Entry.mouseCoordinate.x = a.clientX;
-    Entry.mouseCoordinate.y = a.clientY;
-  }));
-  Entry.keyPressed || (Entry.pressedKeys = [], Entry.keyPressed = new Entry.Event(window), $(document).on("keydown", function(a) {
-    var b = a.keyCode;
-    0 > Entry.pressedKeys.indexOf(b) && Entry.pressedKeys.push(b);
+  !Entry.keyPressed && -1 < a.indexOf("keydown") && (Entry.pressedKeys = [], Entry.keyPressed = new Entry.Event(window), $(document).on("keydown", function(a) {
+    var c = a.keyCode;
+    0 > Entry.pressedKeys.indexOf(c) && Entry.pressedKeys.push(c);
     Entry.keyPressed.notify(a);
   }));
-  Entry.keyUpped || (Entry.keyUpped = new Entry.Event(window), $(document).on("keyup", function(a) {
-    var b = Entry.pressedKeys.indexOf(a.keyCode);
-    -1 < b && Entry.pressedKeys.splice(b, 1);
+  !Entry.keyUpped && -1 < a.indexOf("keyup") && (Entry.keyUpped = new Entry.Event(window), $(document).on("keyup", function(a) {
+    var c = Entry.pressedKeys.indexOf(a.keyCode);
+    -1 < c && Entry.pressedKeys.splice(c, 1);
     Entry.keyUpped.notify(a);
   }));
 };

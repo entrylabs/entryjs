@@ -15,6 +15,8 @@ Entry.init = function(container, options) {
         menuWidth: 264
     };
 
+    Entry.Utils.bindGlobalEvent(['mousedown', 'mousemove']);
+
     /** @type {object} */
     this.options = options;
     this.parseOptions(options);
@@ -322,7 +324,7 @@ Entry.parseOptions = function(options) {
     this.objectAddable = options.objectaddable;
     if (this.objectAddable === undefined)
         this.objectAddable = true;
-//sj
+    
     this.objectEditable = options.objectEditable;
     if (this.objectEditable === undefined)
         this.objectEditable = true;
