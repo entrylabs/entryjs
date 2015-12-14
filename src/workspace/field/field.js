@@ -90,4 +90,8 @@ Entry.Field = function() {};
             ret += '...';
         return ret;
     };
+
+    p.makeSvgOptionGroup = function() {
+        return this._block.view.getBoard().svgGroup.group();
+    };
 })(Entry.Field.prototype);

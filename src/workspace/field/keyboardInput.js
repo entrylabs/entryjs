@@ -92,7 +92,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldKeyboard);
             }
         );
 
-        this.optionGroup = blockView.getBoard().svgGroup.group();
+        this.optionGroup = this.makeSvgOptionGroup();
         this.optionGroup.image(
             Entry.mediaFilePath + '/media/keyboard_workspace.png',
             -5,
@@ -163,4 +163,5 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldKeyboard);
         if (Entry.keyPressed && this.keyPressed)
             Entry.keyPressed.detach(this.keyPressed);
     };
+
 })(Entry.FieldKeyboard.prototype);

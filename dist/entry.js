@@ -13081,6 +13081,8 @@ Entry.block.jr_if_speed = {skeleton:"basic_loop", color:"#498DEB", contents:["\u
     }
   }
 }};
+Entry.block.test = {skeleton:"basic", color:"#3BBD70", contents:["\ud0a4\ub97c \ub20c\ub800\uc744 \ub54c", {type:"Angle", key:"ANGLE", value:550}, "\ud0a4\ub97c \ub20c\ub800\uc744 \ub54c"], func:function() {
+}};
 Entry.BlockMenu = function(a, b) {
   Entry.Model(this, !1);
   this._align = b || "CENTER";
@@ -13663,7 +13665,108 @@ Entry.Field = function() {
     a.length > c && (d += "...");
     return d;
   };
+  a.makeSvgOptionGroup = function() {
+    return this._block.view.getBoard().svgGroup.group();
+  };
 })(Entry.Field.prototype);
+Entry.FieldAngle = function(a, b) {
+  this._block = b.block;
+  this.box = new Entry.BoxModel;
+  this.svgGroup = null;
+  this.position = a.position;
+  this._contents = a;
+  this.key = a.key;
+  this.value = this.modValue(this._block.values[this.key] || 0);
+  this.renderStart(b);
+};
+Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
+Entry.FieldAngle.RADIUS = 49;
+Entry.FieldAngle.FILL_PATH = "M 0, 0 v -49 A 49,49 0 %LARGE 1 %X,%Y z";
+(function(a) {
+  a.renderStart = function(a) {
+    var c = this;
+    this.svgGroup = a.contentSvgGroup.group();
+    this.svgGroup.attr({class:"entry-input-field"});
+    this.textElement = this.svgGroup.text(4, 4, c.getText());
+    this.textElement.attr({"font-size":"9pt"});
+    a = this.getTextWidth();
+    var d = this.position && this.position.y ? this.position.y : 0;
+    this._header = this.svgGroup.rect(0, d - 8, a, 16, 3).attr({fill:"#fff", "fill-opacity":.4});
+    this.svgGroup.append(this.textElement);
+    this.svgGroup.mouseup(function(a) {
+      c._block.view.dragMode == Entry.DRAG_MODE_MOUSEDOWN && c.renderOptions();
+    });
+    this.box.set({x:0, y:0, width:a, height:16});
+  };
+  a.renderOptions = function() {
+    var a = this;
+    this.destroyOption();
+    this.documentDownEvent = Entry.documentMousedown.attach(this, function() {
+      Entry.documentMousedown.detach(this.documentDownEvent);
+      a.applyValue();
+      a.destroyOption();
+    });
+    this.optionGroup = Entry.Dom("input", {class:"entry-widget-input-field", parent:$("body")});
+    this.optionGroup.val(this.value);
+    this.optionGroup.on("mousedown", function(a) {
+      a.stopPropagation();
+    });
+    this.optionGroup.on("keyup", function(c) {
+      var d = c.keyCode || c.which;
+      a.applyValue(c);
+      -1 < [13, 27].indexOf(d) && a.destroyOption();
+    });
+    var c = this.getAbsolutePos();
+    c.y -= this.box.height / 2;
+    this.optionGroup.css({height:16, left:c.x, top:c.y, width:a.box.width});
+    this.optionGroup.focus();
+    c = Entry.FieldAngle.RADIUS;
+    this.svgOptionGroup = this.makeSvgOptionGroup();
+    this.svgOptionGroup.circle(0, 0, c).attr({class:"entry-field-angle-circle"});
+    for (var d = 0;360 > d;d += 15) {
+      this.svgOptionGroup.line(c, 0, c - (0 === d % 45 ? 10 : 5), 0).attr({transform:"rotate(" + d + ", 0, 0)", class:"entry-angle-divider"});
+    }
+    c = this.getRelativePos();
+    c.x += this.box.width / 2;
+    c.y = c.y + this.box.height / 2 + Entry.FieldAngle.RADIUS + 1;
+    this.svgOptionGroup.attr({class:"entry-field-angle", transform:"t" + c.x + " " + c.y});
+    this.updateGraph();
+  };
+  a.updateGraph = function() {
+    this._fillPath && this._fillPath.remove();
+    var a = Entry.FieldAngle.RADIUS, c = Entry.toRadian(this.value), d = Math.sin(c) * a, a = Math.cos(c) * -a, c = c > Math.PI ? 1 : 0;
+    this._fillPath = this.svgOptionGroup.path(Entry.FieldAngle.FILL_PATH.replace("%X", d).replace("%Y", a).replace("%LARGE", c));
+    this._fillPath.attr({class:"entry-angle-fill-area"});
+    this._indicator && this._indicator.remove();
+    this._indicator = this.svgOptionGroup.line(0, 0, d, a);
+    this._indicator.attr({class:"entry-angle-indicator"});
+  };
+  a.applyValue = function(a) {
+    a = this.optionGroup.val();
+    isNaN(a) || (a = this.modValue(a), this.value = this._block.values[this.key] = a, this.textElement.node.textContent = this.truncate(), this.resize());
+  };
+  a.resize = function() {
+    var a = this.getTextWidth();
+    this._header.attr({width:a});
+    this.optionGroup.css({width:a});
+    this.box.set({width:a});
+    this._block.view.alignContent();
+  };
+  a.getTextWidth = function() {
+    return this.textElement.node.getComputedTextLength() + 8;
+  };
+  a.getText = function() {
+    return this.value + "\u00b0";
+  };
+  a.modValue = function(a) {
+    return a % 360;
+  };
+  a.destroyOption = function() {
+    this.documentDownEvent && (Entry.documentMousedown.detach(this.documentDownEvent), delete this.documentDownEvent);
+    this.optionGroup && (this.optionGroup.remove(), delete this.optionGroup);
+    this.svgOptionGroup && (this.svgOptionGroup.remove(), delete this.svgOptionGroup);
+  };
+})(Entry.FieldAngle.prototype);
 Entry.FieldColor = function(a, b) {
   this._block = b.block;
   this.box = new Entry.BoxModel;
@@ -13903,14 +14006,13 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldKeyboard);
     var a = this;
     this.destroyOption();
     this._optionVisible = !0;
-    var c = this._block.view;
     this.documentDownEvent = Entry.documentMousedown.attach(this, function() {
       Entry.documentMousedown.detach(this.documentDownEvent);
       a.destroyOption();
     });
-    this.optionGroup = c.getBoard().svgGroup.group();
+    this.optionGroup = this.makeSvgOptionGroup();
     this.optionGroup.image(Entry.mediaFilePath + "/media/keyboard_workspace.png", -5, 0, 249, 106);
-    c = this.getRelativePos();
+    var c = this.getRelativePos();
     c.x -= 5;
     c.y += this.box.height / 2;
     this.optionGroup.attr({class:"entry-field-keyboard", transform:"t" + c.x + " " + c.y});
@@ -14066,7 +14168,6 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldText);
     this.box.set({x:0, y:0, width:this.textElement.node.getComputedTextLength(), height:a.height});
   };
 })(Entry.FieldText.prototype);
-Entry.TextInput = {};
 Entry.FieldTextInput = function(a, b) {
   this._block = b.block;
   this.box = new Entry.BoxModel;

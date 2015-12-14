@@ -4226,5 +4226,27 @@ svg .svgBlockGroup text {
   outline: none;
   line-height: normal;
 }
+.entry-field-angle {
+  cursor: default;
+}
+.entry-field-angle-circle {
+  stroke: #444;
+  stroke-width: 1;
+  fill: #ddd;
+  fill-opacity: 0.8;
+}
+.entry-angle-divider {
+  stroke: #444;
+  stroke-width: 1;
+}
+.entry-angle-indicator {
+  stroke: #f00;
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+.entry-angle-fill-area {
+  fill: #f88;
+  fill-opacity: 0.8;
+}
 
 

@@ -735,3 +735,19 @@ Entry.block.jr_if_speed = {
         }
     }
 };
+
+Entry.block.test = {
+    skeleton: "basic",
+    color: "#3BBD70",
+    contents: [
+        "키를 눌렀을 때",
+        {
+            type: "Angle",
+            key: "ANGLE",
+            value: 550
+        },
+        "키를 눌렀을 때"
+    ],
+    func: function() {
+    }
+};
