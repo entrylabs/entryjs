@@ -8510,6 +8510,50 @@ Entry.Painter.prototype.selectToolbox = function(a) {
       this.toggleCoordinator();
   }
 };
+Entry.JSParser = {};
+(function(a) {
+  a.Program = function(a) {
+    var c = [];
+    a = a.body;
+    for (var d = 0;d < a.length;d++) {
+      var e = a[d];
+      console.log(e.type);
+      c.push(this[e.type](e));
+    }
+    return c;
+  };
+  a.Identifier = function(a) {
+    return a.name;
+  };
+  a.ExpressionStatement = function(a) {
+    a = a.expression;
+    return this[a.type](a);
+  };
+  a.CallExpression = function(a) {
+    a = a.callee;
+    return {type:this[a.type](a)};
+  };
+  a.MemberExpression = function(a) {
+    var c = a.object;
+    a = a.property;
+    c = this[c.type](c);
+    a = this[a.type](a);
+    return c[a];
+  };
+  a.ThisExpression = function(a) {
+    return Entry.Parser.ThisObject;
+  };
+})(Entry.JSParser);
+Entry.Parser = {};
+Entry.Parser.ThisObject = {};
+Entry.Parser.jsToBlock = function(a) {
+  a = acorn.parse(a);
+  var b = null, b = Entry.JSParser.Program(a);
+  console.log(a);
+  return b;
+};
+Entry.Parser.pythonToBlock = function(a) {
+};
 Entry.Playground = function() {
   this.menuBlocks_ = {};
   this.enableArduino = this.isTextBGMode_ = !1;
