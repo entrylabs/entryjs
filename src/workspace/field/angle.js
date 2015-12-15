@@ -122,17 +122,24 @@ Entry.FieldAngle.FILL_PATH = 'M 0, 0 v -49 A 49,49 0 %LARGE 1 %X,%Y z';
             width: that.box.width
         });
 
-        this.optionGroup.focus();
+        this.optionGroup.select();
 
         //svg option dom
         var RADIUS = Entry.FieldAngle.RADIUS;
-        this.svgOptionGroup = this.makeSvgOptionGroup();
-        this.svgOptionGroup.circle(
+        this.svgOptionGroup = this.appendSvgOptionGroup();
+        var circle = this.svgOptionGroup.circle(
             0, 0, RADIUS
-        ).attr({class:'entry-field-angle-circle'});
+        );
 
+        circle.attr({class:'entry-field-angle-circle'});
+
+        //TODO
+        circle.mousemove(function(e){
+        });
+
+        this._dividerGroup = this.svgOptionGroup.group();
         for (var a = 0; a < 360; a += 15) {
-            this.svgOptionGroup.line(
+            this._dividerGroup.line(
                 RADIUS, 0,
                 RADIUS - (a % 45 === 0 ? 10 : 5), 0
             ).attr({
@@ -148,6 +155,7 @@ Entry.FieldAngle.FILL_PATH = 'M 0, 0 v -49 A 49,49 0 %LARGE 1 %X,%Y z';
             class: 'entry-field-angle',
             transform: "t" + pos.x + " " + pos.y
         });
+
 
         this.updateGraph();
 
@@ -169,6 +177,8 @@ Entry.FieldAngle.FILL_PATH = 'M 0, 0 v -49 A 49,49 0 %LARGE 1 %X,%Y z';
                 replace('%LARGE', largeFlag)
         );
         this._fillPath.attr({class:'entry-angle-fill-area'});
+
+        this.svgOptionGroup.append(this._dividerGroup);
 
         if (this._indicator) this._indicator.remove();
 

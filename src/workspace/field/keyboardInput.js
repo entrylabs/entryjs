@@ -92,7 +92,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldKeyboard);
             }
         );
 
-        this.optionGroup = this.makeSvgOptionGroup();
+        this.optionGroup = this.appendSvgOptionGroup();
         this.optionGroup.image(
             Entry.mediaFilePath + '/media/keyboard_workspace.png',
             -5,

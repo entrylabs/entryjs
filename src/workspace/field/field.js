@@ -91,7 +91,7 @@ Entry.Field = function() {};
         return ret;
     };
 
-    p.makeSvgOptionGroup = function() {
+    p.appendSvgOptionGroup = function() {
         return this._block.view.getBoard().svgGroup.group();
     };
 })(Entry.Field.prototype);

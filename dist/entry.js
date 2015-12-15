@@ -13665,7 +13665,7 @@ Entry.Field = function() {
     a.length > c && (d += "...");
     return d;
   };
-  a.makeSvgOptionGroup = function() {
+  a.appendSvgOptionGroup = function() {
     return this._block.view.getBoard().svgGroup.group();
   };
 })(Entry.Field.prototype);
@@ -13719,12 +13719,16 @@ Entry.FieldAngle.FILL_PATH = "M 0, 0 v -49 A 49,49 0 %LARGE 1 %X,%Y z";
     var c = this.getAbsolutePos();
     c.y -= this.box.height / 2;
     this.optionGroup.css({height:16, left:c.x, top:c.y, width:a.box.width});
-    this.optionGroup.focus();
+    this.optionGroup.select();
     c = Entry.FieldAngle.RADIUS;
-    this.svgOptionGroup = this.makeSvgOptionGroup();
-    this.svgOptionGroup.circle(0, 0, c).attr({class:"entry-field-angle-circle"});
-    for (var d = 0;360 > d;d += 15) {
-      this.svgOptionGroup.line(c, 0, c - (0 === d % 45 ? 10 : 5), 0).attr({transform:"rotate(" + d + ", 0, 0)", class:"entry-angle-divider"});
+    this.svgOptionGroup = this.appendSvgOptionGroup();
+    var d = this.svgOptionGroup.circle(0, 0, c);
+    d.attr({class:"entry-field-angle-circle"});
+    d.mousemove(function(a) {
+    });
+    this._dividerGroup = this.svgOptionGroup.group();
+    for (d = 0;360 > d;d += 15) {
+      this._dividerGroup.line(c, 0, c - (0 === d % 45 ? 10 : 5), 0).attr({transform:"rotate(" + d + ", 0, 0)", class:"entry-angle-divider"});
     }
     c = this.getRelativePos();
     c.x += this.box.width / 2;
@@ -13737,6 +13741,7 @@ Entry.FieldAngle.FILL_PATH = "M 0, 0 v -49 A 49,49 0 %LARGE 1 %X,%Y z";
     var a = Entry.FieldAngle.RADIUS, c = Entry.toRadian(this.value), d = Math.sin(c) * a, a = Math.cos(c) * -a, c = c > Math.PI ? 1 : 0;
     this._fillPath = this.svgOptionGroup.path(Entry.FieldAngle.FILL_PATH.replace("%X", d).replace("%Y", a).replace("%LARGE", c));
     this._fillPath.attr({class:"entry-angle-fill-area"});
+    this.svgOptionGroup.append(this._dividerGroup);
     this._indicator && this._indicator.remove();
     this._indicator = this.svgOptionGroup.line(0, 0, d, a);
     this._indicator.attr({class:"entry-angle-indicator"});
@@ -13869,7 +13874,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
       Entry.documentMousedown.detach(this.documentDownEvent);
       a.optionGroup.remove();
     });
-    this.optionGroup = c.getBoard().svgGroup.group();
+    this.optionGroup = this.appendSvgOptionGroup();
     c.svgGroup.transform();
     var d = this._contents.options, c = [], e = 0;
     c.push(this.optionGroup.rect(0, 0, 0, 23 * d.length).attr({fill:"white"}));
@@ -14010,7 +14015,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldKeyboard);
       Entry.documentMousedown.detach(this.documentDownEvent);
       a.destroyOption();
     });
-    this.optionGroup = this.makeSvgOptionGroup();
+    this.optionGroup = this.appendSvgOptionGroup();
     this.optionGroup.image(Entry.mediaFilePath + "/media/keyboard_workspace.png", -5, 0, 249, 106);
     var c = this.getRelativePos();
     c.x -= 5;

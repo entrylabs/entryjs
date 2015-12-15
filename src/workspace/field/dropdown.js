@@ -106,7 +106,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
             }
         );
 
-        this.optionGroup = blockView.getBoard().svgGroup.group();
+        this.optionGroup = this.appendSvgOptionGroup();
 
         var matrix = blockView.svgGroup.transform().globalMatrix;
         var x = matrix.e;
