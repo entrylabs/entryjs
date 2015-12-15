@@ -1,0 +1,15 @@
+{
+  "name": "entryjs-example-bower",
+  "version": "0.1.0",
+  "dependencies": {
+    "bootstrap": "3.1.0",
+    "Collision-Detection-for-EaselJS": "olsn/Collision-Detection-for-EaselJS",
+    "components-webfontloader": "~1.5.2",
+    "jquery": "~1.9.0",
+    "jquery-ui": "~1.10.4",
+    "underscore": "~1.8.3",
+    "EaselJS": "boolgom/EaselJS",
+    "SoundJS": "0.6.0",
+    "PreloadJS": "0.6.0"
+  }
+}

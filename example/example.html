@@ -1,0 +1,81 @@
+<!DOCTYPE htm<!DOCTYPE html>
+<html>
+<head>
+<title>entryjs example page</title>
+<meta charset="utf-8">
+<link rel='stylesheet' href='lib/bootstrap/dist/css/bootstrap.min.css'>
+<link rel='stylesheet' href='../dist/entry.css'>
+</head>
+<body>
+
+<section class="wrapper">
+    <div id="workspace">
+    </div>
+</section>
+
+
+<script src='lib/es5-shim/es5-shim.min.js'></script>
+<script src='lib/html5shiv/dist/html5shiv.min.js'></script>
+
+<!--Jquery -->
+<script src="lib/jquery/jquery.min.js"></script>
+<script src='lib/jquery-ui/ui/minified/jquery-ui.min.js'>
+<script src='lib/ui-sortable/sortable.min.js'>
+
+<!--underscore -->
+<script src="lib/underscore/underscore-min.js"></script>
+
+<!--language-->
+<script src="../extern/util/ko.js"></script>
+
+<script src="lib/bootstrap/dist/js/bootstrap.min.js"></script>
+
+<!--canvas input-->
+<script src='../extern/util/CanvasInput.js'></script>
+
+<!--Blockly-->
+<script src='../extern/blockly/blockly_compressed.js'></script>
+<script src='../extern/blockly/msg/js/ko.js'></script>
+
+<script src="lib/PreloadJS/lib/preloadjs-0.6.0.min.js"></script>
+<script src="lib/EaselJS/lib/easeljs-0.8.0.min.js"></script>
+<script src="lib/SoundJS/lib/soundjs-0.6.0.min.js"></script>
+<script src="lib/SoundJS/lib/flashaudioplugin-0.6.0.min.js"></script>
+<script src="lib/components-webfontloader/webfont.js"></script>
+<script src='../extern/util/ndgmr.Collision.js'></script>
+<script src='../extern/util/handle.js'></script>
+
+<!--entryjs-->
+<script src='../extern/util/static.js'></script>
+<script src='../dist/entry.js'></script>
+
+<!--main ssript-->
+<script>
+    $(document).ready(function(){
+        var workspaceElement = document.getElementById('workspace');
+        var initOption = {
+            type: 'workspace',
+            fonts: EntryStatic.fonts,
+            libDir: '../..'
+        }
+        Entry.init(
+            workspaceElement,
+            initOption
+        );
+        setBlocks();
+    });
+
+    function setBlocks() {
+        Entry.playground.setBlockMenu();
+        injectWorkspace();
+    };
+
+    function injectWorkspace() {
+        Entry.enableArduino();
+        Entry.loadProject();
+    };
+
+
+</script>
+
+</body>
