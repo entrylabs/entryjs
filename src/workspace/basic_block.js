@@ -758,7 +758,8 @@ Entry.block.jr_jump = {
             };
 
             // turn direction
-            Ntry.dispatchEvent("unitAction", Ntry.STATIC.Ntry.STATIC.JUMP, callBack);
+
+            Ntry.dispatchEvent("unitAction", Ntry.STATIC.JUMP, callBack);
 
             return Entry.STATIC.CONTINUE;
         } else if (this.isAction) {
@@ -1028,7 +1029,7 @@ Entry.block.jr_promise_call = {
     func: function() {
         Entry.block.jr_promise_wrap.func(this.executor,statement);
     }
-}
+};
 
 Entry.block.jr_promise_wrap = {
     skeleton: "basic_define",

@@ -13240,7 +13240,7 @@ Entry.block.jr_jump = {skeleton:"basic", color:"#FF6E4B", contents:["\ub6f0\uc5b
   } else {
     this.isAction = this.isContinue = !0;
     var a = this;
-    Ntry.dispatchEvent("unitAction", Ntry.STATIC.Ntry.STATIC.JUMP, function() {
+    Ntry.dispatchEvent("unitAction", Ntry.STATIC.JUMP, function() {
       a.isAction = !1;
     });
     return Entry.STATIC.CONTINUE;
