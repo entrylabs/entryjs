@@ -55,13 +55,12 @@ body {
 <!--main script-->
 <script>
     $(document).ready(function(){
-        var workspaceElement = document.getElementById('workspace');
         var initOption = {
             type: 'workspace',
             libDir: 'http://play-entry.com/lib'
         }
         Entry.init(
-            workspaceElement,
+            document.getElementById('workspace'),
             initOption
         );
         Entry.playground.setBlockMenu();
