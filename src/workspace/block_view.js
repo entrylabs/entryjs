@@ -469,6 +469,10 @@ Entry.BlockView = function(block, board) {
                 }
             );
         } else svgGroup.remove();
+
+        this._contents.forEach(function(c) {
+            c.destroy();
+        });
     };
 
     p.getShadow = function() {
@@ -606,5 +610,9 @@ Entry.BlockView = function(block, board) {
     };
 
     p.getSkeleton = function() {return this._skeleton;};
+
+    p.getContentPos = function() {
+        return this._skeleton.contentPos(this);
+    };
 
 })(Entry.BlockView.prototype);

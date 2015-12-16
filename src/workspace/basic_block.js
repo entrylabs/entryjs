@@ -65,7 +65,11 @@ Entry.block.jr_repeat = {
         {
             type: "Statement",
             key: "STATEMENT",
-            accept: "pebble_basic"
+            accept: "pebble_basic",
+            position: {
+                 x: 46,
+                 y: 14
+            }
         }
     ],
     func: function() {
@@ -578,8 +582,10 @@ Entry.block.jr_repeat_until_dest = {
             type: "Statement",
             key: "STATEMENT",
             accept: "basic",
-            alignY: 15,
-            alignX: 2
+            position: {
+                x: 2,
+                y: 15
+            }
         }
     ],
     func: function() {
@@ -611,8 +617,10 @@ Entry.block.jr_if_construction = {
             type: "Statement",
             key: "STATEMENT",
             accept: "basic",
-            alignY: 15,
-            alignX: 2
+            position: {
+                x: 2,
+                y: 15
+            }
         }
     ],
     func: function() {
@@ -679,8 +687,10 @@ Entry.block.jr_if_speed = {
             type: "Statement",
             key: "STATEMENT",
             accept: "basic",
-            alignY: 15,
-            alignX: 2
+            position: {
+                x: 2,
+                y: 15
+            }
         }
     ],
     func: function()  {
@@ -835,3 +845,18 @@ Entry.block.jr_repeat_count = {
 //             alignX: 2
 //         }
 //     ],
+Entry.block.test = {
+    skeleton: "basic",
+    color: "#3BBD70",
+    contents: [
+        "키를 눌렀을 때",
+        {
+            type: "Angle",
+            key: "ANGLE",
+            value: 550
+        },
+        "키를 눌렀을 때"
+    ],
+    func: function() {
+    }
+};

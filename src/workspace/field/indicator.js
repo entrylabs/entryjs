@@ -4,6 +4,7 @@
 
 goog.provide("Entry.FieldIndicator");
 
+goog.require("Entry.Field");
 /*
  *
  */
@@ -26,6 +27,8 @@ Entry.FieldIndicator = function(content, block) {
 
     this.renderStart();
 };
+
+Entry.Utils.inherit(Entry.Field, Entry.FieldIndicator);
 
 (function(p) {
     p.renderStart = function() {
@@ -51,31 +54,6 @@ Entry.FieldIndicator = function(content, block) {
             y: 0,
             width: this._size * this._boxMultiplier,
             height: this._size * this._boxMultiplier
-        });
-    };
-
-    p.align = function(x, y, animate) {
-        animate = animate === undefined ? true : animate;
-        var svgGroup = this.svgGroup;
-        if (this._position) {
-            x = this._position.x;
-            y = this._position.y;
-        }
-
-        var transform = "t" + x + " " + y;
-
-        if (animate)
-            svgGroup.animate({
-                transform: transform
-            }, 300, mina.easeinout);
-        else
-            svgGroup.attr({
-                transform: transform
-            });
-
-        this.box.set({
-            x: x,
-            y: y
         });
     };
 

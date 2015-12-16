@@ -4,6 +4,7 @@
 
 goog.provide("Entry.FieldImage");
 
+goog.require("Entry.Field");
 /*
  *
  */
@@ -26,6 +27,8 @@ Entry.FieldImage = function(content, block) {
     this.renderStart();
 };
 
+Entry.Utils.inherit(Entry.Field, Entry.FieldImage);
+
 (function(p) {
     p.renderStart = function() {
         this.svgGroup = this._block.contentSvgGroup.group();
@@ -42,27 +45,6 @@ Entry.FieldImage = function(content, block) {
             y: 0,
             width: this._size,
             height: this._size
-        });
-    };
-
-    p.align = function(x, y, animate) {
-        animate = animate === undefined ? true : animate;
-        var svgGroup = this.svgGroup;
-        if (this._position) x = this._position.x;
-        var transform = "t" + x + " " + y;
-
-        if (animate)
-            svgGroup.animate({
-                transform: transform
-            }, 300, mina.easeinout);
-        else
-            svgGroup.attr({
-                transform: transform
-            });
-
-        this.box.set({
-            x: x,
-            y: y
         });
     };
 

@@ -4,6 +4,7 @@
 
 goog.provide("Entry.FieldDropdown");
 
+goog.require("Entry.Field");
 /*
  *
  */
@@ -21,6 +22,8 @@ Entry.FieldDropdown = function(content, blockView) {
 
     this.renderStart(blockView);
 };
+
+Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
 
 (function(p) {
     var X_PADDING = 18,
@@ -54,7 +57,6 @@ Entry.FieldDropdown = function(content, blockView) {
         this.svgGroup.append(this.textElement);
 
         this._arrow = this.svgGroup.polygon(
-            //width-11, -2, width-5, -2, width-8, 2).
             0, -2, 6, -2, 3, 2).
             attr({
                 fill: "#127cbd",
@@ -104,17 +106,13 @@ Entry.FieldDropdown = function(content, blockView) {
             }
         );
 
-        this.optionGroup = blockView.getBoard().svgGroup.group();
+        this.optionGroup = this.appendSvgOptionGroup();
 
         var matrix = blockView.svgGroup.transform().globalMatrix;
         var x = matrix.e;
         var y = matrix.f;
 
         var options = this._contents.options;
-        this.optionGroup.attr({
-            class: 'entry-field-dropdown',
-            transform: "t" + (x -60) + " " + (y + 35)
-        });
 
         var resizeList = [];
         var OPTION_X_PADDING = 50;
@@ -165,30 +163,18 @@ Entry.FieldDropdown = function(content, blockView) {
             })(element, value);
         }
 
+        var pos = this.getRelativePos();
+        pos.y += this.box.height/2;
+        pos.x = pos.x - maxWidth/2 + this.box.width/2;
+
+        this.optionGroup.attr({
+            class: 'entry-field-dropdown',
+            transform: "t" + pos.x + " " + pos.y
+        });
+
         var attr = {width:maxWidth};
         resizeList.forEach(function(elem){
             elem.attr(attr);
-        });
-    };
-
-    p.align = function(x, y, animate) {
-        animate = animate === undefined ? true : animate;
-        var svgGroup = this.svgGroup;
-
-        var transform = "t" + x + " " + y;
-
-        if (animate)
-            svgGroup.animate({
-                transform: transform
-            }, 300, mina.easeinout);
-        else
-            svgGroup.attr({
-                transform: transform
-            });
-
-        this.box.set({
-            x: x,
-            y: y
         });
     };
 
@@ -198,18 +184,6 @@ Entry.FieldDropdown = function(content, blockView) {
         this.value = value;
         this.textElement.node.textContent = this.getTextByValue(value);
         this.resize();
-    };
-
-    p.destroyOption = function() {
-        if (this.documentDownEvent) {
-            Entry.documentMousedown.detach(this.documentDownEvent);
-            delete this.documentDownEvent;
-        }
-
-        if (this.optionGroup) {
-            this.optionGroup.remove();
-            delete this.optionGroup;
-        }
     };
 
     p.getTextByValue = function(value) {

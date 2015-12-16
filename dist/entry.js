@@ -10989,6 +10989,13 @@ Entry.Utils.disableContextmenu = function(a) {
 Entry.Utils.isRightButton = function(a) {
   return 2 == a.button || a.ctrlKey;
 };
+Entry.Utils.inherit = function(a, b) {
+  function c() {
+  }
+  c.prototype = a.prototype;
+  b.prototype = new c;
+  return b;
+};
 Entry.Model = function(a, b) {
   var c = Entry.Model;
   c.generateSchema(a);
@@ -12935,7 +12942,7 @@ Entry.block.jr_start = {skeleton:"pebble_event", event:"start", color:"#3BBD70",
   }
   Ntry.unitComp = Ntry.entityManager.getComponent(this._unit.id, Ntry.STATIC.UNIT);
 }};
-Entry.block.jr_repeat = {skeleton:"pebble_loop", color:"#127CDB", contents:[{type:"Dropdown", key:"REPEAT", options:[[1, 1], [2, 2], [3, 3], [4, 4], [5, 5], [6, 6], [7, 7], [8, 8], [9, 9], [10, 10]], value:1}, {type:"Text", text:"\ubc18\ubcf5"}, {type:"Statement", key:"STATEMENT", accept:"pebble_basic"}], func:function() {
+Entry.block.jr_repeat = {skeleton:"pebble_loop", color:"#127CDB", contents:[{type:"Dropdown", key:"REPEAT", options:[[1, 1], [2, 2], [3, 3], [4, 4], [5, 5], [6, 6], [7, 7], [8, 8], [9, 9], [10, 10]], value:1}, {type:"Text", text:"\ubc18\ubcf5"}, {type:"Statement", key:"STATEMENT", accept:"pebble_basic", position:{x:46, y:14}}], func:function() {
   if (void 0 === this.repeatCount) {
     return this.repeatCount = this.block.values.REPEAT, Entry.STATIC.CONTINUE;
   }
@@ -13182,12 +13189,12 @@ Entry.block.jr_go_slow = {skeleton:"basic", color:"#f46c6c", contents:["\ucc9c\u
     return Entry.STATIC.CONTINUE;
   }
 }};
-Entry.block.jr_repeat_until_dest = {skeleton:"basic_loop", color:"#498DEB", contents:[{type:"Image", img:"/img/assets/ntry/bitmap/jr/jr_goal_image.png", size:18}, "\ub9cc\ub0a0 \ub54c \uae4c\uc9c0 \ubc18\ubcf5\ud558\uae30", {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}, {type:"Statement", key:"STATEMENT", accept:"basic", alignY:15, alignX:2}], func:function() {
+Entry.block.jr_repeat_until_dest = {skeleton:"basic_loop", color:"#498DEB", contents:[{type:"Image", img:"/img/assets/ntry/bitmap/jr/jr_goal_image.png", size:18}, "\ub9cc\ub0a0 \ub54c \uae4c\uc9c0 \ubc18\ubcf5\ud558\uae30", {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}, {type:"Statement", key:"STATEMENT", accept:"basic", position:{x:2, y:15}}], func:function() {
   if (1 !== this.block.values.STATEMENT.getBlocks().length) {
     return this.executor.stepInto(this.block.values.STATEMENT), Entry.STATIC.CONTINUE;
   }
 }};
-Entry.block.jr_if_construction = {skeleton:"basic_loop", color:"#498DEB", contents:["\ub9cc\uc57d", {type:"Image", img:"/img/assets/ntry/bitmap/jr/jr_construction_image.png", size:18}, "\uc55e\uc5d0 \uc788\ub2e4\uba74", {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}, {type:"Statement", key:"STATEMENT", accept:"basic", alignY:15, alignX:2}], func:function() {
+Entry.block.jr_if_construction = {skeleton:"basic_loop", color:"#498DEB", contents:["\ub9cc\uc57d", {type:"Image", img:"/img/assets/ntry/bitmap/jr/jr_construction_image.png", size:18}, "\uc55e\uc5d0 \uc788\ub2e4\uba74", {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}, {type:"Statement", key:"STATEMENT", accept:"basic", position:{x:2, y:15}}], func:function() {
   if (!this.isContinue) {
     var a = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT), b, c;
     for (c in a) {
@@ -13205,7 +13212,7 @@ Entry.block.jr_if_construction = {skeleton:"basic_loop", color:"#498DEB", conten
     }
   }
 }};
-Entry.block.jr_if_speed = {skeleton:"basic_loop", color:"#498DEB", contents:["\ub9cc\uc57d", {type:"Image", img:"/img/assets/ntry/bitmap/jr/jr_speed_image.png", size:18}, "\uc55e\uc5d0 \uc788\ub2e4\uba74", {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}, {type:"Statement", key:"STATEMENT", accept:"basic", alignY:15, alignX:2}], func:function() {
+Entry.block.jr_if_speed = {skeleton:"basic_loop", color:"#498DEB", contents:["\ub9cc\uc57d", {type:"Image", img:"/img/assets/ntry/bitmap/jr/jr_speed_image.png", size:18}, "\uc55e\uc5d0 \uc788\ub2e4\uba74", {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}, {type:"Statement", key:"STATEMENT", accept:"basic", position:{x:2, y:15}}], func:function() {
   if (!this.isContinue) {
     var a = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT), b, c;
     for (c in a) {
@@ -13247,6 +13254,8 @@ Entry.block.jr_repeat_count = {skeleton:"basic_loop", color:"#127CDB", contents:
     return console.log(this.repeatCount), this.repeatCount--, this.executor.stepInto(this.block.values.STATEMENT), Entry.STATIC.CONTINUE;
   }
   delete this.repeatCount;
+}};
+Entry.block.test = {skeleton:"basic", color:"#3BBD70", contents:["\ud0a4\ub97c \ub20c\ub800\uc744 \ub54c", {type:"Angle", key:"ANGLE", value:550}, "\ud0a4\ub97c \ub20c\ub800\uc744 \ub54c"], func:function() {
 }};
 Entry.BlockMenu = function(a, b) {
   Entry.Model(this, !1);
@@ -13595,6 +13604,9 @@ Entry.BlockView = function(a, b) {
     a ? c.animate({opacity:0}, 100, null, function() {
       this.remove();
     }) : c.remove();
+    this._contents.forEach(function(a) {
+      a.destroy();
+    });
   };
   a.getShadow = function() {
     this._shadow || (this._shadow = this.svgGroup.clone(), this._shadow.attr({opacity:.5}));
@@ -13658,6 +13670,9 @@ Entry.BlockView = function(a, b) {
   };
   a.getSkeleton = function() {
     return this._skeleton;
+  };
+  a.getContentPos = function() {
+    return this._skeleton.contentPos(this);
   };
 })(Entry.BlockView.prototype);
 Entry.Code = function(a) {
@@ -13793,6 +13808,206 @@ Entry.Executor = function(a) {
     this.scope = {block:a, executor:this};
   };
 })(Entry.Executor.prototype);
+Entry.Field = function() {
+};
+(function(a) {
+  a.TEXT_LIMIT_LENGTH = 20;
+  a.destroy = function() {
+    this.destroyOption();
+  };
+  a.destroyOption = function() {
+    this.documentDownEvent && (Entry.documentMousedown.detach(this.documentDownEvent), delete this.documentDownEvent);
+    this.optionGroup && (this.optionGroup.remove(), delete this.optionGroup);
+  };
+  a.align = function(a, c, d) {
+    var e = this.svgGroup;
+    this._position && (this._position.x && (a = this._position.x), this._position.y && (c = this._position.y));
+    var f = "t" + a + " " + c;
+    void 0 === d || d ? e.animate({transform:f}, 300, mina.easeinout) : e.attr({transform:f});
+    this.box.set({x:a, y:c});
+  };
+  a.getAbsolutePos = function() {
+    var a = this._block.view, c = a.svgGroup.transform().globalMatrix, d = a.getBoard().svgDom.offset(), a = a.getContentPos();
+    return {x:c.e + d.left + this.box.x + a.x, y:c.f + d.top + this.box.y + a.y};
+  };
+  a.getRelativePos = function() {
+    var a = this._block.view, c = a.svgGroup.transform().globalMatrix, a = a.getContentPos(), d = this.box;
+    return {x:c.e + d.x + a.x, y:c.f + d.y + a.y};
+  };
+  a.truncate = function() {
+    var a = String(this.value), c = this.TEXT_LIMIT_LENGTH, d = a.substring(0, c);
+    a.length > c && (d += "...");
+    return d;
+  };
+  a.appendSvgOptionGroup = function() {
+    return this._block.view.getBoard().svgGroup.group();
+  };
+})(Entry.Field.prototype);
+Entry.FieldAngle = function(a, b) {
+  this._block = b.block;
+  this.box = new Entry.BoxModel;
+  this.svgGroup = null;
+  this.position = a.position;
+  this._contents = a;
+  this.key = a.key;
+  this.value = this.modValue(this._block.values[this.key] || 0);
+  this.renderStart(b);
+};
+Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
+Entry.FieldAngle.RADIUS = 49;
+Entry.FieldAngle.FILL_PATH = "M 0, 0 v -49 A 49,49 0 %LARGE 1 %X,%Y z";
+(function(a) {
+  a.renderStart = function(a) {
+    var c = this;
+    this.svgGroup = a.contentSvgGroup.group();
+    this.svgGroup.attr({class:"entry-input-field"});
+    this.textElement = this.svgGroup.text(4, 4, c.getText());
+    this.textElement.attr({"font-size":"9pt"});
+    a = this.getTextWidth();
+    var d = this.position && this.position.y ? this.position.y : 0;
+    this._header = this.svgGroup.rect(0, d - 8, a, 16, 3).attr({fill:"#fff", "fill-opacity":.4});
+    this.svgGroup.append(this.textElement);
+    this.svgGroup.mouseup(function(a) {
+      c._block.view.dragMode == Entry.DRAG_MODE_MOUSEDOWN && c.renderOptions();
+    });
+    this.box.set({x:0, y:0, width:a, height:16});
+  };
+  a.renderOptions = function() {
+    var a = this;
+    this.destroyOption();
+    this.documentDownEvent = Entry.documentMousedown.attach(this, function() {
+      Entry.documentMousedown.detach(this.documentDownEvent);
+      a.applyValue();
+      a.destroyOption();
+    });
+    this.optionGroup = Entry.Dom("input", {class:"entry-widget-input-field", parent:$("body")});
+    this.optionGroup.val(this.value);
+    this.optionGroup.on("mousedown", function(a) {
+      a.stopPropagation();
+    });
+    this.optionGroup.on("keyup", function(c) {
+      var d = c.keyCode || c.which;
+      a.applyValue(c);
+      -1 < [13, 27].indexOf(d) && a.destroyOption();
+    });
+    var c = this.getAbsolutePos();
+    c.y -= this.box.height / 2;
+    this.optionGroup.css({height:16, left:c.x, top:c.y, width:a.box.width});
+    this.optionGroup.select();
+    c = Entry.FieldAngle.RADIUS;
+    this.svgOptionGroup = this.appendSvgOptionGroup();
+    var d = this.svgOptionGroup.circle(0, 0, c);
+    d.attr({class:"entry-field-angle-circle"});
+    d.mousemove(function(a) {
+    });
+    this._dividerGroup = this.svgOptionGroup.group();
+    for (d = 0;360 > d;d += 15) {
+      this._dividerGroup.line(c, 0, c - (0 === d % 45 ? 10 : 5), 0).attr({transform:"rotate(" + d + ", 0, 0)", class:"entry-angle-divider"});
+    }
+    c = this.getRelativePos();
+    c.x += this.box.width / 2;
+    c.y = c.y + this.box.height / 2 + Entry.FieldAngle.RADIUS + 1;
+    this.svgOptionGroup.attr({class:"entry-field-angle", transform:"t" + c.x + " " + c.y});
+    this.updateGraph();
+  };
+  a.updateGraph = function() {
+    this._fillPath && this._fillPath.remove();
+    var a = Entry.FieldAngle.RADIUS, c = Entry.toRadian(this.value), d = Math.sin(c) * a, a = Math.cos(c) * -a, c = c > Math.PI ? 1 : 0;
+    this._fillPath = this.svgOptionGroup.path(Entry.FieldAngle.FILL_PATH.replace("%X", d).replace("%Y", a).replace("%LARGE", c));
+    this._fillPath.attr({class:"entry-angle-fill-area"});
+    this.svgOptionGroup.append(this._dividerGroup);
+    this._indicator && this._indicator.remove();
+    this._indicator = this.svgOptionGroup.line(0, 0, d, a);
+    this._indicator.attr({class:"entry-angle-indicator"});
+  };
+  a.applyValue = function(a) {
+    a = this.optionGroup.val();
+    isNaN(a) || (a = this.modValue(a), this.value = this._block.values[this.key] = a, this.textElement.node.textContent = this.truncate(), this.resize());
+  };
+  a.resize = function() {
+    var a = this.getTextWidth();
+    this._header.attr({width:a});
+    this.optionGroup.css({width:a});
+    this.box.set({width:a});
+    this._block.view.alignContent();
+  };
+  a.getTextWidth = function() {
+    return this.textElement.node.getComputedTextLength() + 8;
+  };
+  a.getText = function() {
+    return this.value + "\u00b0";
+  };
+  a.modValue = function(a) {
+    return a % 360;
+  };
+  a.destroyOption = function() {
+    this.documentDownEvent && (Entry.documentMousedown.detach(this.documentDownEvent), delete this.documentDownEvent);
+    this.optionGroup && (this.optionGroup.remove(), delete this.optionGroup);
+    this.svgOptionGroup && (this.svgOptionGroup.remove(), delete this.svgOptionGroup);
+  };
+})(Entry.FieldAngle.prototype);
+Entry.FieldColor = function(a, b) {
+  this._block = b.block;
+  this.box = new Entry.BoxModel;
+  this.svgGroup = null;
+  this._contents = a;
+  this._position = a.position;
+  this.key = a.key;
+  this.value = this._block.values[this.key] || "#FF0000";
+  this.renderStart(b);
+};
+Entry.Utils.inherit(Entry.Field, Entry.FieldColor);
+(function(a) {
+  a.renderStart = function(a) {
+    var c = this;
+    this.svgGroup = a.contentSvgGroup.group();
+    this.svgGroup.attr({class:"entry-field-color"});
+    var d = this._position;
+    d ? (a = d.x || 0, d = d.y || 0) : (a = 0, d = -8);
+    this._header = this.svgGroup.rect(a, d, 14.5, 16, 0).attr({fill:this.value});
+    this.svgGroup.mouseup(function(a) {
+      c._block.view.dragMode == Entry.DRAG_MODE_MOUSEDOWN && c.renderOptions();
+    });
+    this.box.set({x:a, y:d, width:14.5, height:16});
+  };
+  a.renderOptions = function() {
+    var a = this;
+    this.destroyOption();
+    var c = this._block.view;
+    this.documentDownEvent = Entry.documentMousedown.attach(this, function() {
+      Entry.documentMousedown.detach(this.documentDownEvent);
+      a.optionGroup.remove();
+    });
+    var d = Entry.FieldColor.getWidgetColorList();
+    this.optionGroup = Entry.Dom("table", {class:"entry-widget-color-table", parent:$("body")});
+    for (var e = 0;e < d.length;e++) {
+      for (var f = Entry.Dom("tr", {class:"entry-widget-color-row", parent:this.optionGroup}), g = 0;g < d[e].length;g++) {
+        var h = Entry.Dom("td", {class:"entry-widget-color-cell", parent:f}), k = d[e][g];
+        h.css({"background-color":k});
+        h.attr({"data-color-value":k});
+        (function(c, d) {
+          c.mousedown(function() {
+            a.applyValue(d);
+            a.destroyOption();
+          });
+        })(h, k);
+      }
+    }
+    c.svgGroup.transform();
+    c.getBoard().svgDom.offset();
+    c.getContentPos();
+    c = this.getAbsolutePos();
+    c.y += this.box.height / 2 + 1;
+    this.optionGroup.css({left:c.x, top:c.y});
+  };
+  a.applyValue = function(a) {
+    this.value != a && (this.value = this._block.values[this.key] = a, this._header.attr({fill:a}));
+  };
+})(Entry.FieldColor.prototype);
+Entry.FieldColor.getWidgetColorList = function() {
+  return ["#FFFFFF #CCCCCC #C0C0C0 #999999 #666666 #333333 #000000".split(" "), "#FFCCCC #FF6666 #FF0000 #CC0000 #990000 #660000 #330000".split(" "), "#FFCC99 #FF9966 #FF9900 #FF6600 #CC6600 #993300 #663300".split(" "), "#FFFF99 #FFFF66 #FFCC66 #FFCC33 #CC9933 #996633 #663333".split(" "), "#FFFFCC #FFFF33 #FFFF00 #FFCC00 #999900 #666600 #333300".split(" "), "#99FF99 #66FF99 #33FF33 #33CC00 #009900 #006600 #003300".split(" "), "#99FFFF #33FFFF #66CCCC #00CCCC #339999 #336666 #003333".split(" "), "#CCFFFF #66FFFF #33CCFF #3366FF #3333FF #000099 #000066".split(" "), 
+  "#CCCCFF #9999FF #6666CC #6633FF #6609CC #333399 #330099".split(" "), "#FFCCFF #FF99FF #CC66CC #CC33CC #993399 #663366 #330033".split(" ")];
+};
 Entry.FieldDropdown = function(a, b) {
   this._block = b.block;
   this.box = new Entry.BoxModel;
@@ -13802,6 +14017,7 @@ Entry.FieldDropdown = function(a, b) {
   this.value = this._block.values[this.key];
   this.renderStart(b);
 };
+Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
 (function(a) {
   a.renderStart = function(a) {
     var c = this;
@@ -13832,14 +14048,13 @@ Entry.FieldDropdown = function(a, b) {
       Entry.documentMousedown.detach(this.documentDownEvent);
       a.optionGroup.remove();
     });
-    this.optionGroup = c.getBoard().svgGroup.group();
-    var d = c.svgGroup.transform().globalMatrix, c = this._contents.options;
-    this.optionGroup.attr({class:"entry-field-dropdown", transform:"t" + (d.e - 60) + " " + (d.f + 35)});
-    var d = [], e = 0;
-    d.push(this.optionGroup.rect(0, 0, 0, 23 * c.length).attr({fill:"white"}));
-    for (var f = 0, g = c.length;f < g;f++) {
-      var h = c[f], k = h[0], h = h[1], l = this.optionGroup.group().attr({class:"rect", transform:"t0 " + 23 * f});
-      d.push(l.rect(0, 0, 0, 23));
+    this.optionGroup = this.appendSvgOptionGroup();
+    c.svgGroup.transform();
+    var d = this._contents.options, c = [], e = 0;
+    c.push(this.optionGroup.rect(0, 0, 0, 23 * d.length).attr({fill:"white"}));
+    for (var f = 0, g = d.length;f < g;f++) {
+      var h = d[f], k = h[0], h = h[1], l = this.optionGroup.group().attr({class:"rect", transform:"t0 " + 23 * f});
+      c.push(l.rect(0, 0, 0, 23));
       this.value == h && l.text(5, 13, "\u2713").attr({"alignment-baseline":"central"});
       k = l.text(20, 13, k).attr({"alignment-baseline":"central"});
       e = Math.max(k.node.getComputedTextLength() + 50, e);
@@ -13850,22 +14065,17 @@ Entry.FieldDropdown = function(a, b) {
         });
       })(l, h);
     }
+    d = this.getRelativePos();
+    d.y += this.box.height / 2;
+    d.x = d.x - e / 2 + this.box.width / 2;
+    this.optionGroup.attr({class:"entry-field-dropdown", transform:"t" + d.x + " " + d.y});
     var n = {width:e};
-    d.forEach(function(a) {
+    c.forEach(function(a) {
       a.attr(n);
     });
   };
-  a.align = function(a, c, d) {
-    var e = this.svgGroup, f = "t" + a + " " + c;
-    void 0 === d || d ? e.animate({transform:f}, 300, mina.easeinout) : e.attr({transform:f});
-    this.box.set({x:a, y:c});
-  };
   a.applyValue = function(a) {
     this.value != a && (this.value = this._block.values[this.key] = a, this.textElement.node.textContent = this.getTextByValue(a), this.resize());
-  };
-  a.destroyOption = function() {
-    this.documentDownEvent && (Entry.documentMousedown.detach(this.documentDownEvent), delete this.documentDownEvent);
-    this.optionGroup && (this.optionGroup.remove(), delete this.optionGroup);
   };
   a.getTextByValue = function(a) {
     for (var c = this._contents.options, d = 0, e = c.length;d < e;d++) {
@@ -13887,18 +14097,12 @@ Entry.FieldImage = function(a, b) {
   this._imgElement = this._path = this.svgGroup = null;
   this.renderStart();
 };
+Entry.Utils.inherit(Entry.Field, Entry.FieldImage);
 (function(a) {
   a.renderStart = function() {
     this.svgGroup = this._block.contentSvgGroup.group();
     this._imgElement = this.svgGroup.image(this._imgUrl, 0, -.5 * this._size, this._size, this._size);
     this.box.set({x:this._size, y:0, width:this._size, height:this._size});
-  };
-  a.align = function(a, c, d) {
-    var e = this.svgGroup;
-    this._position && (a = this._position.x);
-    var f = "t" + a + " " + c;
-    void 0 === d || d ? e.animate({transform:f}, 300, mina.easeinout) : e.attr({transform:f});
-    this.box.set({x:a, y:c});
   };
   a.enableHighlight = function() {
     var a = this._path.getTotalLength(), c = this._path;
@@ -13924,6 +14128,7 @@ Entry.FieldIndicator = function(a, b) {
   this._imgElement = this._path = this.svgGroup = null;
   this.renderStart();
 };
+Entry.Utils.inherit(Entry.Field, Entry.FieldIndicator);
 (function(a) {
   a.renderStart = function() {
     this.svgGroup = this._block.contentSvgGroup.group();
@@ -13932,13 +14137,6 @@ Entry.FieldIndicator = function(a, b) {
     this._path = this.svgGroup.path(a);
     this._path.attr({stroke:"none", fill:"none"});
     this.box.set({x:this._size, y:0, width:this._size * this._boxMultiplier, height:this._size * this._boxMultiplier});
-  };
-  a.align = function(a, c, d) {
-    var e = this.svgGroup;
-    this._position && (a = this._position.x, c = this._position.y);
-    var f = "t" + a + " " + c;
-    void 0 === d || d ? e.animate({transform:f}, 300, mina.easeinout) : e.attr({transform:f});
-    this.box.set({x:a, y:c});
   };
   a.enableHighlight = function() {
     var a = this._path.getTotalLength(), c = this._path;
@@ -13953,6 +14151,81 @@ Entry.FieldIndicator = function(a, b) {
     }, 500);
   };
 })(Entry.FieldIndicator.prototype);
+Entry.Keyboard = {};
+Entry.FieldKeyboard = function(a, b) {
+  this._block = b.block;
+  this.box = new Entry.BoxModel;
+  this.svgGroup = null;
+  this.position = a.position;
+  this._contents = a;
+  this.key = a.key;
+  this.value = this._block.values[this.key] || 81;
+  this._optionVisible = !1;
+  this.renderStart(b);
+  Entry.keyPressed && (this.keyPressed = Entry.keyPressed.attach(this, this._keyboardControl));
+};
+Entry.Utils.inherit(Entry.Field, Entry.FieldKeyboard);
+(function(a) {
+  a.renderStart = function(a) {
+    var c = this;
+    this.svgGroup = a.contentSvgGroup.group();
+    this.svgGroup.attr({class:"entry-input-field"});
+    this.textElement = this.svgGroup.text(4, 4, Entry.getKeyCodeMap()[this.value]);
+    this.textElement.attr({"font-size":"9pt"});
+    a = this.getTextWidth();
+    var d = this.position && this.position.y ? this.position.y : 0;
+    this._header = this.svgGroup.rect(0, d - 8, a, 16, 3).attr({fill:"#fff", "fill-opacity":.4});
+    this.svgGroup.append(this.textElement);
+    this.svgGroup.mouseup(function(a) {
+      c._block.view.dragMode == Entry.DRAG_MODE_MOUSEDOWN && c.renderOptions();
+    });
+    this.box.set({x:0, y:0, width:a, height:16});
+  };
+  a.renderOptions = function() {
+    var a = this;
+    this.destroyOption();
+    this._optionVisible = !0;
+    this.documentDownEvent = Entry.documentMousedown.attach(this, function() {
+      Entry.documentMousedown.detach(this.documentDownEvent);
+      a.destroyOption();
+    });
+    this.optionGroup = this.appendSvgOptionGroup();
+    this.optionGroup.image(Entry.mediaFilePath + "/media/keyboard_workspace.png", -5, 0, 249, 106);
+    var c = this.getRelativePos();
+    c.x -= 5;
+    c.y += this.box.height / 2;
+    this.optionGroup.attr({class:"entry-field-keyboard", transform:"t" + c.x + " " + c.y});
+  };
+  a.destroyOption = function() {
+    this.documentDownEvent && (Entry.documentMousedown.detach(this.documentDownEvent), delete this.documentDownEvent);
+    this.optionGroup && (this.optionGroup.remove(), delete this.optionGroup);
+    this._optionVisible = !1;
+  };
+  a._keyboardControl = function(a, c) {
+    c.stopPropagation();
+    if (this._optionVisible) {
+      var d = c.keyCode, e = Entry.getKeyCodeMap()[d];
+      void 0 !== e && this.applyValue(e, d);
+    }
+  };
+  a.applyValue = function(a, c) {
+    this.destroyOption();
+    this.value != c && (this.value = this._block.values[this.key] = c, this.textElement.node.textContent = a, this.resize());
+  };
+  a.resize = function() {
+    var a = this.getTextWidth();
+    this._header.attr({width:a});
+    this.box.set({width:a});
+    this._block.view.alignContent();
+  };
+  a.getTextWidth = function() {
+    return this.textElement.node.getComputedTextLength() + 8;
+  };
+  a.destroy = function() {
+    this.destroyOption();
+    Entry.keyPressed && this.keyPressed && Entry.keyPressed.detach(this.keyPressed);
+  };
+})(Entry.FieldKeyboard.prototype);
 Entry.FieldStatement = function(a, b) {
   this._blockView = b;
   this.block = b.block;
@@ -13960,12 +14233,12 @@ Entry.FieldStatement = function(a, b) {
   this.box = new Entry.BoxModel;
   this.acceptType = a.accept;
   this.dummyBlock = this.svgGroup = null;
-  a.alignX && (this._alignX = a.alignX);
-  a.alignY && (this._alignY = a.alignY);
+  this._position = a.position;
   this.box.observe(b, "alignContent", ["height"]);
   this.renderStart(b.getBoard());
   this.block.observe(this, "_updateThread", ["thread"]);
 };
+Entry.Utils.inherit(Entry.Field, Entry.FieldStatement);
 (function(a) {
   a.renderStart = function(a) {
     this.svgGroup = this._blockView.contentSvgGroup.group();
@@ -13977,18 +14250,17 @@ Entry.FieldStatement = function(a, b) {
     this._thread.changeEvent.attach(this, this.calcHeight);
     this.calcHeight();
   };
+  a.align = function(a, c, d) {
+    var e = this.svgGroup;
+    this._position && (this._position.x && (a = this._position.x), this._position.y && (c = this._position.y));
+    a = "t" + a + " " + c;
+    void 0 === d || d ? e.animate({transform:a}, 300, mina.easeinout) : e.attr({transform:a});
+  };
   a.calcHeight = function() {
     for (var a = this.dummyBlock, c = -1;a;) {
       c += a.view.height + 1, a = a.next;
     }
     this.box.set({height:c});
-  };
-  a.align = function(a, c, d) {
-    var e = this.svgGroup;
-    a = this._alignX || 46;
-    c = this._alignY || 14;
-    a = "t" + a + " " + c;
-    void 0 === d || d ? e.animate({transform:a}, 300, mina.easeinout) : e.attr({transform:a});
   };
   a._updateThread = function() {
     this._threadChangeEvent && this._thread.changeEvent.detach(this._threadChangeEvent);
@@ -14064,21 +14336,84 @@ Entry.FieldText = function(a, b) {
   this.textElement = null;
   this.renderStart();
 };
+Entry.Utils.inherit(Entry.Field, Entry.FieldText);
 (function(a) {
   a.renderStart = function() {
-    this.textElement = this._block.contentSvgGroup.text(0, 0, this._text);
+    this.svgGroup = this._block.contentSvgGroup.group();
+    this.textElement = this.svgGroup.text(0, 0, this._text);
     this.textElement.attr({style:"white-space: pre; font-size:" + this._fontSize + "px", "class":"dragNone", fill:"white"});
     var a = this.textElement.getBBox();
     this.textElement.attr({y:.25 * a.height});
     this.box.set({x:0, y:0, width:this.textElement.node.getComputedTextLength(), height:a.height});
   };
-  a.align = function(a, c, d) {
-    !0 !== d && (d = !1);
-    var e = this.textElement, f = {x:a};
-    d ? e.animate(f, 300, mina.easeinout) : e.attr(f);
-    this.box.set({x:a, width:this.textElement.node.getComputedTextLength(), y:c});
-  };
 })(Entry.FieldText.prototype);
+Entry.FieldTextInput = function(a, b) {
+  this._block = b.block;
+  this.box = new Entry.BoxModel;
+  this.svgGroup = null;
+  this.position = a.position;
+  this._contents = a;
+  this.key = a.key;
+  this.value = this._block.values[this.key] || "";
+  this.renderStart(b);
+};
+Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
+(function(a) {
+  a.renderStart = function(a) {
+    var c = this;
+    this.svgGroup = a.contentSvgGroup.group();
+    this.svgGroup.attr({class:"entry-input-field"});
+    this.textElement = this.svgGroup.text(4, 4, this.truncate());
+    this.textElement.attr({"font-size":"9pt"});
+    a = this.getTextWidth();
+    var d = this.position && this.position.y ? this.position.y : 0;
+    this._header = this.svgGroup.rect(0, d - 8, a, 16, 3).attr({fill:"#fff", "fill-opacity":.4});
+    this.svgGroup.append(this.textElement);
+    this.svgGroup.mouseup(function(a) {
+      c._block.view.dragMode == Entry.DRAG_MODE_MOUSEDOWN && c.renderOptions();
+    });
+    this.box.set({x:0, y:0, width:a, height:16});
+  };
+  a.renderOptions = function() {
+    var a = this;
+    this.destroyOption();
+    this.documentDownEvent = Entry.documentMousedown.attach(this, function() {
+      Entry.documentMousedown.detach(this.documentDownEvent);
+      a.applyValue();
+      a.destroyOption();
+    });
+    this.optionGroup = Entry.Dom("input", {class:"entry-widget-input-field", parent:$("body")});
+    this.optionGroup.val(this.value);
+    this.optionGroup.on("mousedown", function(a) {
+      a.stopPropagation();
+    });
+    this.optionGroup.on("keyup", function(c) {
+      var e = c.keyCode || c.which;
+      a.applyValue(c);
+      -1 < [13, 27].indexOf(e) && a.destroyOption();
+    });
+    var c = this.getAbsolutePos();
+    c.y -= this.box.height / 2;
+    this.optionGroup.css({height:16, left:c.x, top:c.y, width:a.box.width});
+    this.optionGroup.focus();
+  };
+  a.applyValue = function(a) {
+    a = this.optionGroup.val();
+    this.value = this._block.values[this.key] = a;
+    this.textElement.node.textContent = this.truncate();
+    this.resize();
+  };
+  a.resize = function() {
+    var a = this.getTextWidth();
+    this._header.attr({width:a});
+    this.optionGroup.css({width:a});
+    this.box.set({width:a});
+    this._block.view.alignContent();
+  };
+  a.getTextWidth = function() {
+    return this.textElement.node.getComputedTextLength() + 8;
+  };
+})(Entry.FieldTextInput.prototype);
 Entry.Scroller = function(a, b, c) {
   this._horizontal = void 0 === b ? !0 : b;
   this._vertical = void 0 === c ? !0 : c;
