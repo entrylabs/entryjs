@@ -18,6 +18,7 @@ Entry.JSParser = {};
             block.push(this[childNode.type](childNode));
         }
 
+        console.log("block" , block);
         return block;
     };
 
@@ -36,7 +37,16 @@ Entry.JSParser = {};
             test = node.test,
             update = node.update,
             body = node.body;
-        return new Error();
+        // console.log("init  =" ,init);
+        // console.log("test  = " ,test);
+        // console.log("update = " ,update);
+        // console.log("body = " ,body);
+
+
+        return { 'init' : init , 
+                 'test': test , 
+                 'update' : update, 
+                 'body' :body} ;
     };
 
     p.BlockStatement = function(node) {
@@ -91,7 +101,11 @@ Entry.JSParser = {};
             consequent = node.consequent,
             alternate  = node.alternate;
 
-        return new Error();   
+        return {
+            'test' : test,
+            'consequent' : consequent,
+            'alternate' : alternate
+        };   
     }    
 
     p.SwitchStatement = function(node) {
@@ -216,22 +230,22 @@ Entry.JSParser = {};
     };
 
     p.UnaryOperator = function(){
-        return  {"-" | "+" | "!" | "~" | "typeof" | "void" | "delete"};
+        return  ["-" , "+" , "!" , "~" , "typeof" , "void" , "delete"];
     }
 
     p.updateOperator = function() {
-        return {"++" | "--"};
+        return ["++" , "--"];
     };
 
     //Binary expression 
     p.BinaryOperator = function() {
 
-        return {"==" | "!=" | "===" | "!=="
-         | "<" | "<=" | ">" | ">="
-         | "<<" | ">>" | ">>>"
-         | "+" | "-" | "*" | "/" | "%"
-         | "|" | "^" | "&" | "in"
-         | "instanceof"};
+        return ["==" , "!=" , "===" , "!=="
+         , "<" , "<=" , ">" , ">="
+         , "<<" , ">>" , ">>>"
+         , "+" , "-" , "*" , "/" , "%"
+         , "," , "^" , "&" , "in"
+         , "instanceof"];
     };
 
     p.AssignmentExpression = function(node) {
@@ -244,9 +258,9 @@ Entry.JSParser = {};
 
     p.AssignmentOperator = function() {
 
-        return {"=" | "+=" | "-=" | "*=" | "/=" | "%="
-        | "<<=" | ">>=" | ">>>="
-        | "|=" | "^=" | "&="};
+        return ["=" , "+=" , "-=" , "*=" , "/=" , "%="
+        , "<<=" , ">>=" , ">>>="
+        , ",=" , "^=" , "&="];
     };
 
     p.LogicalExpression = function(node) {
@@ -257,7 +271,7 @@ Entry.JSParser = {};
     };
 
     p.LogicalOperator = function() {
-        return {"||" | "&&"};
+        return ["||" , "&&"];
     };
 
     p.MemberExpression = function(node) {

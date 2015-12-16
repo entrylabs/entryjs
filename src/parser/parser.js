@@ -16,7 +16,7 @@ Entry.Parser.jsToBlock = function(code) {
         block = null;
 
     block = Entry.JSParser.Program(astTree);
-    console.log(astTree);
+    console.log("asTree ====", block);
 
     return block;
 };

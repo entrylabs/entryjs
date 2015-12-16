@@ -8520,6 +8520,7 @@ Entry.JSParser = {};
       console.log(e.type);
       c.push(this[e.type](e));
     }
+    console.log("block", c);
     return c;
   };
   a.Identifier = function(a) {
@@ -8529,9 +8530,109 @@ Entry.JSParser = {};
     a = a.expression;
     return this[a.type](a);
   };
-  a.CallExpression = function(a) {
-    a = a.callee;
-    return {type:this[a.type](a)};
+  a.ForStatement = function(a) {
+    return {init:a.init, test:a.test, update:a.update, body:a.body};
+  };
+  a.BlockStatement = function(a) {
+    return Error();
+  };
+  a.EmptyStatement = function(a) {
+    return Error();
+  };
+  a.DebuggerStatement = function(a) {
+    return Error();
+  };
+  a.WithStatement = function(a) {
+    return Error();
+  };
+  a.ReturnStaement = function(a) {
+    return Error();
+  };
+  a.LabeledStatement = function(a) {
+    return Error();
+  };
+  a.BreakStatement = function(a) {
+    return Error();
+  };
+  a.ContinueStatement = function(a) {
+    return Error();
+  };
+  a.IfStatement = function(a) {
+    return {test:a.test, consequent:a.consequent, alternate:a.alternate};
+  };
+  a.SwitchStatement = function(a) {
+    return Error();
+  };
+  a.SwitchCase = function(a) {
+    return Error();
+  };
+  a.ThrowStatement = function(a) {
+    return Error();
+  };
+  a.TryStatement = function(a) {
+    return Error();
+  };
+  a.CatchClause = function(a) {
+    return Error();
+  };
+  a.WhileStatement = function(a) {
+    test = a.test;
+    body = a.body;
+    return Error();
+  };
+  a.DoWhileStatement = function(a) {
+    return Error();
+  };
+  a.ForInStatement = function(a) {
+    return Error();
+  };
+  a.FunctionDeclaration = function(a) {
+    return Error();
+  };
+  a.VariableDeclaration = function(a) {
+    return Error();
+  };
+  a.VariableDeclaration = function(a) {
+    return Error();
+  };
+  a.ThisExpression = function(a) {
+    return Entry.Parser.ThisObject;
+  };
+  a.ArrayExpression = function(a) {
+    return Error();
+  };
+  a.ObjectExpression = function(a) {
+    return Error();
+  };
+  a.property = function(a) {
+    return Error();
+  };
+  a.FunctionExpression = function(a) {
+    return Error();
+  };
+  a.UnaryExpression = function(a) {
+    return Error();
+  };
+  a.UnaryOperator = function() {
+    return "- + ! ~ typeof void delete".split(" ");
+  };
+  a.updateOperator = function() {
+    return ["++", "--"];
+  };
+  a.BinaryOperator = function() {
+    return "== != === !== < <= > >= << >> >>> + - * / % , ^ & in instanceof".split(" ");
+  };
+  a.AssignmentExpression = function(a) {
+    return Error();
+  };
+  a.AssignmentOperator = function() {
+    return "= += -= *= /= %= <<= >>= >>>= ,= ^= &=".split(" ");
+  };
+  a.LogicalExpression = function(a) {
+    return Error();
+  };
+  a.LogicalOperator = function() {
+    return ["||", "&&"];
   };
   a.MemberExpression = function(a) {
     var c = a.object;
@@ -8540,8 +8641,21 @@ Entry.JSParser = {};
     a = this[a.type](a);
     return c[a];
   };
-  a.ThisExpression = function(a) {
-    return Entry.Parser.ThisObject;
+  a.ConditionalExpression = function(a) {
+    return Error();
+  };
+  a.UpdateExpression = function(a) {
+    return Error();
+  };
+  a.CallExpression = function(a) {
+    a = a.callee;
+    return {type:this[a.type](a)};
+  };
+  a.NewExpression = function(a) {
+    return Error();
+  };
+  a.SequenceExpression = function(a) {
+    return Error();
   };
 })(Entry.JSParser);
 Entry.Parser = {};
@@ -8549,8 +8663,10 @@ Entry.Parser.ThisObject = {};
 Entry.Parser.jsToBlock = function(a) {
   a = acorn.parse(a);
   var b = null, b = Entry.JSParser.Program(a);
-  console.log(a);
+  console.log("asTree ====", b);
   return b;
+};
+Entry.Parser.jsForStatement = function(a) {
 };
 Entry.Parser.pythonToBlock = function(a) {
 };
