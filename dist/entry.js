@@ -13246,7 +13246,7 @@ Entry.block.jr_jump = {skeleton:"basic", color:"#FF6E4B", contents:["\ub6f0\uc5b
     return Entry.STATIC.CONTINUE;
   }
 }};
-Entry.block.jr_repeat_count = {skeleton:"basic_loop", color:"#127CDB", contents:[{type:"Dropdown", key:"REPEAT", options:[[1, 1], [2, 2], [3, 3], [4, 4], [5, 5], [6, 6], [7, 7], [8, 8], [9, 9], [10, 10]], value:1}, "\ubc88 \ubc18\ubcf5\ud558\uae30", {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}, {type:"Statement", key:"STATEMENT", accept:"basic", alignY:15, alignX:2}], func:function() {
+Entry.block.jr_repeat_count = {skeleton:"basic_loop", color:"#127CDB", contents:[{type:"Dropdown", key:"REPEAT", options:[[1, 1], [2, 2], [3, 3], [4, 4], [5, 5], [6, 6], [7, 7], [8, 8], [9, 9], [10, 10]], value:1}, "\ubc88 \ubc18\ubcf5\ud558\uae30", {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}, {type:"Statement", key:"STATEMENT", accept:"basic", position:{x:2, y:15}}], func:function() {
   if (void 0 === this.repeatCount) {
     return this.repeatCount = this.block.values.REPEAT, Entry.STATIC.CONTINUE;
   }
@@ -13256,6 +13256,90 @@ Entry.block.jr_repeat_count = {skeleton:"basic_loop", color:"#127CDB", contents:
   delete this.repeatCount;
 }};
 Entry.block.test = {skeleton:"basic", color:"#3BBD70", contents:["\ud0a4\ub97c \ub20c\ub800\uc744 \ub54c", {type:"Angle", key:"ANGLE", value:550}, "\ud0a4\ub97c \ub20c\ub800\uc744 \ub54c"], func:function() {
+}};
+Entry.block.jr_repeat_maze_until_dest = {skeleton:"basic_loop", color:"#498DEB", contents:[{type:"Image", img:"/img/assets/ntry/block_inner/repeat_goal_1.png", size:18}, "\ub9cc\ub0a0 \ub54c \uae4c\uc9c0 \ubc18\ubcf5\ud558\uae30", {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}, {type:"Statement", key:"STATEMENT", accept:"basic", position:{x:2, y:15}}], func:function() {
+  if (1 !== this.block.values.STATEMENT.getBlocks().length) {
+    return this.executor.stepInto(this.block.values.STATEMENT), Entry.STATIC.CONTINUE;
+  }
+}};
+Entry.block.jr_maze_if_wall = {skeleton:"basic_loop", color:"#498DEB", contents:["\ub9cc\uc57d", {type:"Image", img:"/img/assets/ntry/block_inner/if_target_1.png", size:18}, "\uc55e\uc5d0 \uc788\ub2e4\uba74", {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}, {type:"Statement", key:"STATEMENT", accept:"basic", position:{x:2, y:15}}], func:function() {
+  if (!this.isContinue) {
+    var a = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT), b, c;
+    for (c in a) {
+      b = a[c];
+    }
+    a = Ntry.entityManager.getComponent(b.id, Ntry.STATIC.UNIT);
+    b = Ntry.entityManager.getComponent(b.id, Ntry.STATIC.GRID);
+    b = {x:b.x, y:b.y};
+    Ntry.addVectorByDirection(b, a.direction, 1);
+    b = Ntry.entityManager.find({type:Ntry.STATIC.GRID, x:b.x, y:b.y}, {type:Ntry.STATIC.WALL, tileType:Ntry.STATIC.WALL_CRASH});
+    this.isContinue = !0;
+    a = this.block.values.STATEMENT;
+    if (0 !== b.length && 1 !== a.getBlocks().length) {
+      return this.executor.stepInto(a), Entry.STATIC.CONTINUE;
+    }
+  }
+}};
+Entry.block.jr_maze_if_obstacle = {skeleton:"basic_loop", color:"#498DEB", contents:["\ub9cc\uc57d", {type:"Image", img:"/img/assets/ntry/bitmap/maze2/obstacle_01.png", size:18}, "\uc55e\uc5d0 \uc788\ub2e4\uba74", {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}, {type:"Statement", key:"STATEMENT", accept:"basic", position:{x:2, y:15}}], func:function() {
+  if (!this.isContinue) {
+    var a = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT), b, c;
+    for (c in a) {
+      b = a[c];
+    }
+    a = Ntry.entityManager.getComponent(b.id, Ntry.STATIC.UNIT);
+    b = Ntry.entityManager.getComponent(b.id, Ntry.STATIC.GRID);
+    b = {x:b.x, y:b.y};
+    Ntry.addVectorByDirection(b, a.direction, 1);
+    b = Ntry.entityManager.find({type:Ntry.STATIC.GRID, x:b.x, y:b.y}, {type:Ntry.STATIC.TILE, tileType:Ntry.STATIC.OBSTACLE_BEE});
+    this.isContinue = !0;
+    a = this.block.values.STATEMENT;
+    if (0 !== b.length && 1 !== a.getBlocks().length) {
+      return this.executor.stepInto(a), Entry.STATIC.CONTINUE;
+    }
+  }
+}};
+Entry.block.jr_promise_call = {skeleton:"basic", color:"#B57242", contents:["\uc57d\uc18d \ubd88\ub7ec\uc624\uae30", {type:"Image", img:"/img/assets/week/blocks/function.png", size:24}], func:function() {
+  Entry.block.jr_promise_wrap.func(this.executor, statement);
+}};
+Entry.block.jr_promise_wrap = {skeleton:"basic_define", color:"#B57242", contents:["\uc57d\uc18d\ud558\uae30", {type:"Image", img:"/img/assets/week/blocks/function.png", size:24}, {type:"Statement", key:"STATEMENT", accept:"basic", position:{x:2, y:15}}], func:function(a) {
+  console.log(a);
+  a.stepInto(this.block.values.STATEMENT);
+}};
+Entry.block.jr_maze_if_obstacle_banana = {skeleton:"basic_loop", color:"#498DEB", contents:["\ub9cc\uc57d", {type:"Image", img:"/img/assets/ntry/block_inner/if_target_3.png", size:18}, "\uc55e\uc5d0 \uc788\ub2e4\uba74", {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}, {type:"Statement", key:"STATEMENT", accept:"basic", position:{x:2, y:15}}], func:function() {
+  if (!this.isContinue) {
+    var a = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT), b, c;
+    for (c in a) {
+      b = a[c];
+    }
+    a = Ntry.entityManager.getComponent(b.id, Ntry.STATIC.UNIT);
+    b = Ntry.entityManager.getComponent(b.id, Ntry.STATIC.GRID);
+    b = {x:b.x, y:b.y};
+    Ntry.addVectorByDirection(b, a.direction, 1);
+    b = Ntry.entityManager.find({type:Ntry.STATIC.GRID, x:b.x, y:b.y}, {type:Ntry.STATIC.OBSTACLE, tileType:Ntry.STATIC.OBSTACLE_BANANA});
+    this.isContinue = !0;
+    a = this.block.values.STATEMENT;
+    if (0 !== b.length && 1 !== a.getBlocks().length) {
+      return this.executor.stepInto(a), Entry.STATIC.CONTINUE;
+    }
+  }
+}};
+Entry.block.jr_maze_if_tile_house = {skeleton:"basic_loop", color:"#498DEB", contents:["\ub9cc\uc57d", {type:"Image", img:"/img/assets/ntry/block_inner/if_target_2.png", size:18}, "\uc55e\uc5d0 \uc788\ub2e4\uba74", {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}, {type:"Statement", key:"STATEMENT", accept:"basic", position:{x:2, y:15}}], func:function() {
+  if (!this.isContinue) {
+    var a = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT), b, c;
+    for (c in a) {
+      b = a[c];
+    }
+    a = Ntry.entityManager.getComponent(b.id, Ntry.STATIC.UNIT);
+    b = Ntry.entityManager.getComponent(b.id, Ntry.STATIC.GRID);
+    b = {x:b.x, y:b.y};
+    Ntry.addVectorByDirection(b, a.direction, 1);
+    b = Ntry.entityManager.find({type:Ntry.STATIC.GRID, x:b.x, y:b.y}, {type:Ntry.STATIC.WALL, tileType:Ntry.STATIC.WALL});
+    this.isContinue = !0;
+    a = this.block.values.STATEMENT;
+    if (0 !== b.length && 1 !== a.getBlocks().length) {
+      return this.executor.stepInto(a), Entry.STATIC.CONTINUE;
+    }
+  }
 }};
 Entry.BlockMenu = function(a, b) {
   Entry.Model(this, !1);
@@ -14535,6 +14619,16 @@ Entry.skeleton.basic_event = {path:function(a) {
 Entry.skeleton.basic_loop = {path:function(a) {
   var b = Math.max(a.contentHeight, 25);
   return "m -8,0 l 8,8 8,-8 h %cw a 15,15 0 0,1 0,30 H 24 l -8,8 -8,-8 h -0.4 v %ch h 0.4 l 8,8 8,-8 h %cw h -8 a 8,8 0 0,1 0,16 H 8 l -8,8 -8,-8 z".replace(/%cw/gi, Math.max(0, a.contentWidth - 31)).replace(/%ch/gi, b);
+}, magnets:function() {
+  return {previous:{x:0, y:0}, next:{x:0, y:105}};
+}, box:function(a) {
+  return {offsetX:0, offsetY:0, width:a.contentWidth, height:Math.max(a.contentHeight, 25) + 46, marginBottom:0};
+}, contentPos:function() {
+  return {x:14, y:15};
+}};
+Entry.skeleton.basic_define = {path:function(a) {
+  var b = Math.max(a.contentHeight, 25);
+  return "m -8,0 h 16 h %cw a 15,15 0 0,1 0,30 H 24 l -8,8 -8,-8 h -0.4 v %ch h 0.4 l 8,8 8,-8 h %cw h -8 a 8,8 0 0,1 0,16 H 8 l -8,8 -8,-8 z".replace(/%cw/gi, Math.max(0, a.contentWidth - 31)).replace(/%ch/gi, b);
 }, magnets:function() {
   return {previous:{x:0, y:0}, next:{x:0, y:105}};
 }, box:function(a) {

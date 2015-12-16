@@ -100,6 +100,41 @@ Entry.skeleton.basic_loop = {
     }
 };
 
+
+Entry.skeleton.basic_define = {
+    path: function(block) {
+        var contentWidth = Math.max(0, block.contentWidth - 31);
+        var contentHeight = Math.max(block.contentHeight, 25);
+        return ("m -8,0 h 16 h %cw a 15,15 0 0,1 0,30 H 24 l -8,8 -8,-8 h -0.4 v %ch h 0.4 l 8,8 8,-8 h %cw h -8 a 8,8 0 0,1 0,16 H 8 l -8,8 -8,-8 z")
+            .replace(/%cw/gi, contentWidth)
+            .replace(/%ch/gi, contentHeight);
+    },
+    magnets: function() {
+        var contentWidth = 124;
+        var contentHeight = 50;
+        // apply scale required.
+        return {
+            previous: {x: 0, y: 0},
+            next: {x: 0, y: contentHeight + 55}
+        };
+    },
+    box: function(block) {
+        var contentWidth = block.contentWidth;
+        var contentHeight = Math.max(block.contentHeight, 25);
+        return {
+            offsetX: 0, offsetY: 0,
+            width: contentWidth,
+            height: contentHeight + 46,
+            marginBottom: 0
+        };
+    },
+    contentPos: function() {
+        // apply scale required.
+        return {x: 14, y: 15};
+    }
+};
+
+
 Entry.skeleton.pebble_event = {
     path: function(block) {
         var width = block.contentWidth;

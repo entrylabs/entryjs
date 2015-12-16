@@ -802,8 +802,10 @@ Entry.block.jr_repeat_count = {
             type: "Statement",
             key: "STATEMENT",
             accept: "basic",
-            alignY: 15,
-            alignX: 2
+            position: {
+                x: 2,
+                y: 15
+            }
         }
     ],
     func: function() {
@@ -821,30 +823,6 @@ Entry.block.jr_repeat_count = {
     }
 };
 
-
-// Entry.block.jr_repeat_until_dest = {
-//     skeleton: "basic_loop",
-//     color: "#498DEB",
-//     contents: [
-//         {
-//             type: "Image",
-//             img: "/img/assets/ntry/bitmap/jr/jr_goal_image.png",
-//             size: 18
-//         },
-//         "만날 때 까지 반복하기",
-//         {
-//             type: "Image",
-//             img: "/img/assets/week/blocks/for.png",
-//             size: 24
-//         },
-//         {
-//             type: "Statement",
-//             key: "STATEMENT",
-//             accept: "basic",
-//             alignY: 15,
-//             alignX: 2
-//         }
-//     ],
 Entry.block.test = {
     skeleton: "basic",
     color: "#3BBD70",
@@ -860,3 +838,363 @@ Entry.block.test = {
     func: function() {
     }
 };
+
+Entry.block.jr_repeat_maze_until_dest = {
+    skeleton: "basic_loop",
+    color: "#498DEB",
+    contents: [
+        {
+            type: "Image",
+            img: "/img/assets/ntry/block_inner/repeat_goal_1.png",
+            size: 18
+        },
+        "만날 때 까지 반복하기",
+        {
+            type: "Image",
+            img: "/img/assets/week/blocks/for.png",
+            size: 24
+        },
+        {
+            type: "Statement",
+            key: "STATEMENT",
+            accept: "basic",
+            position: {
+                x: 2,
+                y: 15
+            }
+        }
+    ],
+    func: function() {
+        if (this.block.values.STATEMENT.getBlocks().length === 1)
+            return;
+
+        this.executor.stepInto(this.block.values.STATEMENT);
+        return Entry.STATIC.CONTINUE;
+    }
+};
+
+
+Entry.block.jr_maze_if_wall = {
+    skeleton: "basic_loop",
+    color: "#498DEB",
+    contents: [
+        "만약",
+        {
+            type: "Image",
+            img: "/img/assets/ntry/block_inner/if_target_1.png",
+            size: 18
+        },
+        "앞에 있다면",
+        {
+            type: "Image",
+            img: "/img/assets/week/blocks/for.png",
+            size: 24
+        },
+        {
+            type: "Statement",
+            key: "STATEMENT",
+            accept: "basic",
+            position: {
+                x: 2,
+                y: 15
+            }
+        }
+    ],
+    func: function() {
+        if (this.isContinue)
+            return;
+        var entities = Ntry.entityManager.getEntitiesByComponent(
+        Ntry.STATIC.UNIT);
+
+        var entity;
+        for (var key in entities)
+            entity = entities[key];
+
+        var unitComp = Ntry.entityManager.getComponent(
+            entity.id, Ntry.STATIC.UNIT);
+        var gridComp = Ntry.entityManager.getComponent(
+            entity.id, Ntry.STATIC.GRID);
+
+        var grid = {x: gridComp.x, y: gridComp.y};
+        Ntry.addVectorByDirection(grid, unitComp.direction, 1);
+
+        var fitEntities = Ntry.entityManager.find(
+            {
+                type: Ntry.STATIC.GRID,
+                x: grid.x,
+                y: grid.y
+            },
+            {
+                type: Ntry.STATIC.WALL,
+                tileType: Ntry.STATIC.WALL_CRASH
+            }
+        );
+
+        this.isContinue = true;
+
+        var statement = this.block.values.STATEMENT;
+        if (fitEntities.length === 0) {
+            return;
+        } else if (statement.getBlocks().length === 1)
+            return;
+        else {
+            this.executor.stepInto(statement);
+            return Entry.STATIC.CONTINUE;
+        }
+    }
+};
+
+Entry.block.jr_maze_if_obstacle = {
+    skeleton: "basic_loop",
+    color: "#498DEB",
+    contents: [
+        "만약",
+        {
+            type: "Image",
+            img: "/img/assets/ntry/bitmap/maze2/obstacle_01.png",
+            size: 18
+        },
+        "앞에 있다면",
+        {
+            type: "Image",
+            img: "/img/assets/week/blocks/for.png",
+            size: 24
+        },
+        {
+            type: "Statement",
+            key: "STATEMENT",
+            accept: "basic",
+            position: {
+                x: 2,
+                y: 15
+            }
+        }
+    ],
+    func: function() {
+        if (this.isContinue)
+            return;
+        var entities = Ntry.entityManager.getEntitiesByComponent(
+        Ntry.STATIC.UNIT);
+
+        var entity;
+        for (var key in entities)
+            entity = entities[key];
+
+        var unitComp = Ntry.entityManager.getComponent(
+            entity.id, Ntry.STATIC.UNIT);
+        var gridComp = Ntry.entityManager.getComponent(
+            entity.id, Ntry.STATIC.GRID);
+
+        var grid = {x: gridComp.x, y: gridComp.y};
+        Ntry.addVectorByDirection(grid, unitComp.direction, 1);
+
+        var fitEntities = Ntry.entityManager.find(
+            {
+                type: Ntry.STATIC.GRID,
+                x: grid.x,
+                y: grid.y
+            },
+            {
+                type: Ntry.STATIC.TILE,
+                tileType: Ntry.STATIC.OBSTACLE_BEE
+            }
+        );
+
+        this.isContinue = true;
+
+        var statement = this.block.values.STATEMENT;
+        if (fitEntities.length === 0) {
+            return;
+        } else if (statement.getBlocks().length === 1)
+            return;
+        else {
+            this.executor.stepInto(statement);
+            return Entry.STATIC.CONTINUE;
+        }
+    }
+};
+
+Entry.block.jr_promise_call = {
+    skeleton: "basic",
+    color: "#B57242",
+    contents: [
+        "약속 불러오기",
+        {
+            type: "Image",
+            img: "/img/assets/week/blocks/function.png",
+            size: 24
+        }
+    ],
+    func: function() {
+        Entry.block.jr_promise_wrap.func(this.executor,statement);
+    }
+}
+
+Entry.block.jr_promise_wrap = {
+    skeleton: "basic_define",
+    color: "#B57242",
+    contents: [
+        "약속하기",
+        {
+            type: "Image",
+            img: "/img/assets/week/blocks/function.png",
+            size: 24
+        },
+        {
+            type: "Statement",
+            key: "STATEMENT",
+            accept: "basic",
+            position: {
+                x: 2,
+                y: 15
+            }
+        }
+    ],
+    func: function(executor) {
+        console.log(executor);
+        executor.stepInto(this.block.values.STATEMENT);
+    }
+}; 
+
+Entry.block.jr_maze_if_obstacle_banana = {
+    skeleton: "basic_loop",
+    color: "#498DEB",
+    contents: [
+        "만약",
+        {
+            type: "Image",
+            img: "/img/assets/ntry/block_inner/if_target_3.png",
+            size: 18
+        },
+        "앞에 있다면",
+        {
+            type: "Image",
+            img: "/img/assets/week/blocks/for.png",
+            size: 24
+        },
+        {
+            type: "Statement",
+            key: "STATEMENT",
+            accept: "basic",
+            position: {
+                x: 2,
+                y: 15
+            }
+        }
+    ],
+    func: function() {
+        if (this.isContinue)
+            return;
+        var entities = Ntry.entityManager.getEntitiesByComponent(
+        Ntry.STATIC.UNIT);
+
+        var entity;
+        for (var key in entities)
+            entity = entities[key];
+
+        var unitComp = Ntry.entityManager.getComponent(
+            entity.id, Ntry.STATIC.UNIT);
+        var gridComp = Ntry.entityManager.getComponent(
+            entity.id, Ntry.STATIC.GRID);
+
+        var grid = {x: gridComp.x, y: gridComp.y};
+        Ntry.addVectorByDirection(grid, unitComp.direction, 1);
+
+        var fitEntities = Ntry.entityManager.find(
+            {
+                type: Ntry.STATIC.GRID,
+                x: grid.x,
+                y: grid.y
+            },
+            {
+                type: Ntry.STATIC.OBSTACLE,
+                tileType: Ntry.STATIC.OBSTACLE_BANANA
+            }
+        );
+
+        this.isContinue = true;
+
+        var statement = this.block.values.STATEMENT;
+        if (fitEntities.length === 0) {
+            return;
+        } else if (statement.getBlocks().length === 1)
+            return;
+        else {
+            this.executor.stepInto(statement);
+            return Entry.STATIC.CONTINUE;
+        }
+    }
+};
+
+Entry.block.jr_maze_if_tile_house = {
+    skeleton: "basic_loop",
+    color: "#498DEB",
+    contents: [
+        "만약",
+        {
+            type: "Image",
+            img: "/img/assets/ntry/block_inner/if_target_2.png",
+            size: 18
+        },
+        "앞에 있다면",
+        {
+            type: "Image",
+            img: "/img/assets/week/blocks/for.png",
+            size: 24
+        },
+        {
+            type: "Statement",
+            key: "STATEMENT",
+            accept: "basic",
+            position: {
+                x: 2,
+                y: 15
+            }
+        }
+    ],
+    func: function() {
+        if (this.isContinue)
+            return;
+        var entities = Ntry.entityManager.getEntitiesByComponent(
+        Ntry.STATIC.UNIT);
+
+        var entity;
+        for (var key in entities)
+            entity = entities[key];
+
+        var unitComp = Ntry.entityManager.getComponent(
+            entity.id, Ntry.STATIC.UNIT);
+        var gridComp = Ntry.entityManager.getComponent(
+            entity.id, Ntry.STATIC.GRID);
+
+        var grid = {x: gridComp.x, y: gridComp.y};
+        Ntry.addVectorByDirection(grid, unitComp.direction, 1);
+
+        var fitEntities = Ntry.entityManager.find(
+            {
+                type: Ntry.STATIC.GRID,
+                x: grid.x,
+                y: grid.y
+            },
+            {
+                type: Ntry.STATIC.WALL,
+                tileType: Ntry.STATIC.WALL
+            }
+        );
+
+        this.isContinue = true;
+
+        var statement = this.block.values.STATEMENT;
+        if (fitEntities.length === 0) {
+            return;
+        } else if (statement.getBlocks().length === 1)
+            return;
+        else {
+            this.executor.stepInto(statement);
+            return Entry.STATIC.CONTINUE;
+        }
+    }
+};
+
+
+// Entry.block.jr_promise_call = Entry.block.jr_promise_wrap;
