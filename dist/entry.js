@@ -2006,21 +2006,19 @@ Blockly.Blocks.function_general = {init:function() {
   return a;
 }};
 Entry.block.function_general = function(a, b) {
-  if (b.thread) {
-    var c = Entry.Engine.computeThread(a, b.thread);
-    if (c) {
-      return b.thread = c, b;
+  if (!b.thread) {
+    var c = Entry.variableContainer.getFunction(b.hashId);
+    b.thread = new Entry.Script(a);
+    b.thread.register = b.values;
+    for (var d = 0;d < c.content.childNodes.length;d++) {
+      "function_create" == c.content.childNodes[d].getAttribute("type") && b.thread.init(c.content.childNodes[d]);
     }
-    delete b.thread;
-    return b.callReturn();
   }
-  c = Entry.variableContainer.getFunction(b.hashId);
-  b.thread = new Entry.Script(a);
-  b.thread.register = b.values;
-  for (var d = 0;d < c.content.childNodes.length;d++) {
-    "function_create" == c.content.childNodes[d].getAttribute("type") && b.thread.init(c.content.childNodes[d]);
+  if (c = Entry.Engine.computeThread(a, b.thread)) {
+    return b.thread = c, b;
   }
-  return b;
+  delete b.thread;
+  return b.callReturn();
 };
 Entry.Hamster = {PORT_MAP:{leftWheel:0, rightWheel:0, buzzer:0, outputA:0, outputB:0, leftLed:0, rightLed:0, note:0, ioModeA:0, ioModeB:0}, setZero:function() {
   var a = Entry.Hamster.PORT_MAP, b;
