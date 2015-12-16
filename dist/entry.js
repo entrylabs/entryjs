@@ -8666,8 +8666,6 @@ Entry.Parser.jsToBlock = function(a) {
   console.log("asTree ====", b);
   return b;
 };
-Entry.Parser.jsForStatement = function(a) {
-};
 Entry.Parser.pythonToBlock = function(a) {
 };
 Entry.Playground = function() {
@@ -13224,6 +13222,31 @@ Entry.block.jr_if_speed = {skeleton:"basic_loop", color:"#498DEB", contents:["\u
       return this.executor.stepInto(a), Entry.STATIC.CONTINUE;
     }
   }
+}};
+Entry.block.jr_jump = {skeleton:"basic", color:"#FF6E4B", contents:["\ub6f0\uc5b4\ub118\uae30", {type:"Image", img:"/img/assets/week/blocks/jump.png", size:24}], func:function() {
+  if (this.isContinue) {
+    if (this.isAction) {
+      return Entry.STATIC.CONTINUE;
+    }
+    delete this.isAction;
+    delete this.isContinue;
+  } else {
+    this.isAction = this.isContinue = !0;
+    var a = this;
+    Ntry.dispatchEvent("unitAction", Ntry.STATIC.Ntry.STATIC.JUMP, function() {
+      a.isAction = !1;
+    });
+    return Entry.STATIC.CONTINUE;
+  }
+}};
+Entry.block.jr_repeat_count = {skeleton:"basic_loop", color:"#127CDB", contents:[{type:"Dropdown", key:"REPEAT", options:[[1, 1], [2, 2], [3, 3], [4, 4], [5, 5], [6, 6], [7, 7], [8, 8], [9, 9], [10, 10]], value:1}, "\ubc88 \ubc18\ubcf5\ud558\uae30", {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}, {type:"Statement", key:"STATEMENT", accept:"basic", alignY:15, alignX:2}], func:function() {
+  if (void 0 === this.repeatCount) {
+    return this.repeatCount = this.block.values.REPEAT, Entry.STATIC.CONTINUE;
+  }
+  if (0 < this.repeatCount) {
+    return console.log(this.repeatCount), this.repeatCount--, this.executor.stepInto(this.block.values.STATEMENT), Entry.STATIC.CONTINUE;
+  }
+  delete this.repeatCount;
 }};
 Entry.BlockMenu = function(a, b) {
   Entry.Model(this, !1);

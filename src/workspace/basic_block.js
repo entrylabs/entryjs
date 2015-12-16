@@ -725,3 +725,113 @@ Entry.block.jr_if_speed = {
         }
     }
 };
+
+Entry.block.jr_jump = {
+    skeleton: "basic",
+    color: "#FF6E4B",
+    contents: [
+        "뛰어넘기",
+        {
+            type: "Image",
+            img: "/img/assets/week/blocks/jump.png",
+            size: 24
+        }
+    ],
+    func: function() {
+        if (!this.isContinue) {
+
+            this.isContinue = true;
+            this.isAction = true;
+            var self = this;
+            var callBack = function() {
+                self.isAction = false;
+            };
+
+            // turn direction
+            Ntry.dispatchEvent("unitAction", Ntry.STATIC.Ntry.STATIC.JUMP, callBack);
+
+            return Entry.STATIC.CONTINUE;
+        } else if (this.isAction) {
+            return Entry.STATIC.CONTINUE;
+        } else {
+            delete this.isAction;
+            delete this.isContinue;
+        }
+    }
+};
+
+Entry.block.jr_repeat_count = {
+    skeleton: "basic_loop",
+    color: "#127CDB",
+    contents: [
+        {
+            type: "Dropdown",
+            key: "REPEAT",
+            options: [
+                [1,1],
+                [2,2],
+                [3,3],
+                [4,4],
+                [5,5],
+                [6,6],
+                [7,7],
+                [8,8],
+                [9,9],
+                [10,10]
+            ],
+            value: 1
+        },
+        "번 반복하기"
+        ,
+        {
+            type: "Image",
+            img: "/img/assets/week/blocks/for.png",
+            size: 24
+        },
+        {
+            type: "Statement",
+            key: "STATEMENT",
+            accept: "basic",
+            alignY: 15,
+            alignX: 2
+        }
+    ],
+    func: function() {
+        if (this.repeatCount === undefined) {
+            this.repeatCount = this.block.values.REPEAT;
+            return Entry.STATIC.CONTINUE;
+        } else if (this.repeatCount > 0) {
+            console.log(this.repeatCount);
+            this.repeatCount--;
+            this.executor.stepInto(this.block.values.STATEMENT);
+            return Entry.STATIC.CONTINUE;
+        } else {
+            delete this.repeatCount;
+        }
+    }
+};
+
+
+// Entry.block.jr_repeat_until_dest = {
+//     skeleton: "basic_loop",
+//     color: "#498DEB",
+//     contents: [
+//         {
+//             type: "Image",
+//             img: "/img/assets/ntry/bitmap/jr/jr_goal_image.png",
+//             size: 18
+//         },
+//         "만날 때 까지 반복하기",
+//         {
+//             type: "Image",
+//             img: "/img/assets/week/blocks/for.png",
+//             size: 24
+//         },
+//         {
+//             type: "Statement",
+//             key: "STATEMENT",
+//             accept: "basic",
+//             alignY: 15,
+//             alignX: 2
+//         }
+//     ],
