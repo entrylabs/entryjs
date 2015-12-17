@@ -1042,13 +1042,30 @@ Entry.block.maze_call_function = {
         }
     ],
     func: function() {
-        Entry.block.jr_promise_wrap.func(this.executor,statement);
+        if (!this.funcExecutor) {
+            var codes = Ntry.entityManager.getEntitiesByComponent(
+            Ntry.STATIC.CODE);
+
+            for (var key in codes) {
+                code = codes[key].components[Ntry.STATIC.CODE].code;
+                this.funcExecutor = new Entry.Executor(
+                    code.getEventMap("define")[0]
+                );
+            }
+        }
+
+        this.funcExecutor.execute();
+        if (this.funcExecutor.scope.block === null)
+            return;
+        else
+            return Entry.STATIC.CONTINUE;
     }
 };
 
 Entry.block.maze_define_function = {
     skeleton: "basic_define",
     color: "#B57242",
+    event: "define",
     contents: [
         "약속하기",
         {
@@ -1067,7 +1084,11 @@ Entry.block.maze_define_function = {
         }
     ],
     func: function(executor) {
-        executor.stepInto(this.block.values.STATEMENT);
+        if (this.executed)
+            return;
+        this.executor.stepInto(this.block.values.STATEMENT);
+        this.executed = true;
+        return Entry.STATIC.CONTINUE;
     }
 };
 

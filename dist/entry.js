@@ -4599,9 +4599,10 @@ Entry.Collection = function(a) {
     this._hashMap = {};
   };
   a.map = function(a, b) {
-    for (var e = 0, f = this.length;e < f;e++) {
-      a(this[e], b);
+    for (var e = [], f = 0, g = this.length;f < g;f++) {
+      e.push(a(this[f], b));
     }
+    return e;
   };
   a.moveFromTo = function(a, d) {
     var e = this.length - 1;
@@ -13303,10 +13304,21 @@ Entry.block.maze_step_if_2 = {skeleton:"basic_loop", color:"#498DEB", contents:[
   }
 }};
 Entry.block.maze_call_function = {skeleton:"basic", color:"#B57242", contents:["\uc57d\uc18d \ubd88\ub7ec\uc624\uae30", {type:"Image", img:"/img/assets/week/blocks/function.png", size:24}], func:function() {
-  Entry.block.jr_promise_wrap.func(this.executor, statement);
+  if (!this.funcExecutor) {
+    var a = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.CODE), b;
+    for (b in a) {
+      code = a[b].components[Ntry.STATIC.CODE].code, this.funcExecutor = new Entry.Executor(code.getEventMap("define")[0]);
+    }
+  }
+  this.funcExecutor.execute();
+  if (null !== this.funcExecutor.scope.block) {
+    return Entry.STATIC.CONTINUE;
+  }
 }};
-Entry.block.maze_define_function = {skeleton:"basic_define", color:"#B57242", contents:["\uc57d\uc18d\ud558\uae30", {type:"Image", img:"/img/assets/week/blocks/function.png", size:24}, {type:"Statement", key:"STATEMENT", accept:"basic", position:{x:2, y:15}}], func:function(a) {
-  a.stepInto(this.block.values.STATEMENT);
+Entry.block.maze_define_function = {skeleton:"basic_define", color:"#B57242", event:"define", contents:["\uc57d\uc18d\ud558\uae30", {type:"Image", img:"/img/assets/week/blocks/function.png", size:24}, {type:"Statement", key:"STATEMENT", accept:"basic", position:{x:2, y:15}}], func:function(a) {
+  if (!this.executed) {
+    return this.executor.stepInto(this.block.values.STATEMENT), this.executed = !0, Entry.STATIC.CONTINUE;
+  }
 }};
 Entry.block.maze_step_if_3 = {skeleton:"basic_loop", color:"#498DEB", contents:["\ub9cc\uc57d", {type:"Image", img:"/img/assets/ntry/block_inner/if_target_3.png", size:18}, "\uc55e\uc5d0 \uc788\ub2e4\uba74", {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}, {type:"Statement", key:"STATEMENT", accept:"basic", position:{x:2, y:15}}], func:function() {
   if (!this.isContinue) {
@@ -13852,7 +13864,7 @@ Entry.Code = function(a) {
     }
   };
   a.getEventMap = function(a) {
-    return this._eventMap;
+    return this._eventMap[a];
   };
   a.map = function(a) {
     this._data.map(a);
@@ -13887,7 +13899,9 @@ Entry.Code = function(a) {
     0 > e || (d.splice(e, 1), (d = a.getFirstBlock()) && d.doDestroy(c));
   };
   a.getThreads = function() {
-    return this._data;
+    return this._data.map(function(a) {
+      return a;
+    });
   };
   a.toJSON = function() {
     for (var a = this.getThreads(), c = [], d = 0, e = a.length;d < e;d++) {

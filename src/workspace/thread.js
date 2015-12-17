@@ -15,7 +15,6 @@ goog.require("Entry.DummyBlock");
 Entry.Thread = function(thread, code) {
     this._data = new Entry.Collection();
     this._code = code;
-
     this.changeEvent = new Entry.Event(this);
     this.changeEvent.attach(this, this.inspectExist);
 
