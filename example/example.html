@@ -47,17 +47,17 @@ body {
 <script src="http://play-entry.com/lib/entryjs/extern/util/handle.js"></script>
 
 <!--entryjs-->
-<script src="http://play-entry.com/js/lang/ko.js"></script>
 <script src="http://play-entry.com/lib/components-webfontloader/webfont.js"></script>
-<script src="http://play-entry.com/lib/entryjs/extern/util/static.js"></script>
-<script src="http://play-entry.com/lib/entryjs/dist/entry.min.js"></script>
+<script src="../extern/util/ko.js"></script>
+<script src="../extern/util/static.js"></script>
+<script src="../dist/entry.min.js"></script>
 
 <!--main script-->
 <script>
     $(document).ready(function(){
         var initOption = {
             type: 'workspace',
-            libDir: 'http://play-entry.com/lib'
+            libDir: '../../'
         }
         Entry.init(
             document.getElementById('workspace'),
