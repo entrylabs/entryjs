@@ -79,7 +79,6 @@ Entry.block.jr_repeat = {
             this.repeatCount = this.block.values.REPEAT;
             return Entry.STATIC.CONTINUE;
         } else if (this.repeatCount > 0) {
-            console.log(this.repeatCount);
             this.repeatCount--;
             this.executor.stepInto(this.block.values.STATEMENT);
             return Entry.STATIC.CONTINUE;
@@ -815,7 +814,6 @@ Entry.block.maze_step_for = {
             this.repeatCount = this.block.values.REPEAT;
             return Entry.STATIC.CONTINUE;
         } else if (this.repeatCount > 0) {
-            console.log(this.repeatCount);
             this.repeatCount--;
             this.executor.stepInto(this.block.values.STATEMENT);
             return Entry.STATIC.CONTINUE;
@@ -876,7 +874,7 @@ Entry.block.maze_repeat_until_1 = {
 };
 
 
-Entry.block.maze_step_unif_1 = {
+Entry.block.maze_step_if_1 = {
     skeleton: "basic_loop",
     color: "#498DEB",
     contents: [
@@ -927,8 +925,8 @@ Entry.block.maze_step_unif_1 = {
                 y: grid.y
             },
             {
-                type: Ntry.STATIC.WALL,
-                tileType: Ntry.STATIC.WALL_CRASH
+                type: Ntry.STATIC.TILE,
+                tileType: Ntry.STATIC.WALL
             }
         );
 
@@ -1053,7 +1051,6 @@ Entry.block.maze_define_function = {
         }
     ],
     func: function(executor) {
-        console.log(executor);
         executor.stepInto(this.block.values.STATEMENT);
     }
 };
@@ -1220,7 +1217,6 @@ Entry.block.maze_step_start = {
         "시작 버튼을 눌렀을 때"
     ],
     func: function() {
-        console.log("11111");
         var entities = Ntry.entityManager.getEntitiesByComponent(
         Ntry.STATIC.UNIT);
 
@@ -1243,8 +1239,8 @@ Entry.block.maze_step_move_step = {
             size: 24
         }
     ],
+
     func: function() {
-        console.log(2);
         if (!this.isContinue) {
 
             this.isContinue = true;
