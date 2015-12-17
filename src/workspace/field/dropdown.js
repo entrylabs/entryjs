@@ -20,19 +20,26 @@ Entry.FieldDropdown = function(content, blockView) {
     this.key = content.key;
     this.value = this._block.values[this.key];
 
+    this._CONTENT_HEIGHT =
+        content.dropdownHeight || blockView.getSkeleton().dropdownHeight || 16;
+
+    this._fONT_SIZE =
+        content.fontSize || blockView.getSkeleton().fontSize || 12;
+
+    this._ROUND = content.roundValue || 0;
+
     this.renderStart(blockView);
 };
 
 Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
 
 (function(p) {
-    var X_PADDING = 18,
-        TEXT_Y_PADDING = 3,
-        CONTENT_HEIGHT = 23;
+    var X_PADDING = 18;
 
     p.renderStart = function(blockView) {
         var that = this;
         var contents = this._contents;
+
 
         this.svgGroup = blockView.contentSvgGroup.group();
         this.svgGroup.attr({
@@ -41,26 +48,37 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
 
         this.textElement =
             this.svgGroup.text(
-                2, TEXT_Y_PADDING,
+                2, 0,
                 this.getTextByValue(this.value)
             );
+
+        var bBox = this.textElement.getBBox();
+        this.textElement.attr({
+            'style': 'white-space: pre; font-size:' + that._FONT_SIZE + 'px',
+            'y': bBox.height * 0.25
+        });
 
         var width =
             this.textElement.node.getComputedTextLength() + X_PADDING;
 
+        var CONTENT_HEIGHT = this._CONTENT_HEIGHT;
+
         this._header = this.svgGroup.rect(
-                0, -12,
+                0, -CONTENT_HEIGHT/2,
                 width,
-                CONTENT_HEIGHT,
-            3).attr({fill: "#80cbf8"});
+                CONTENT_HEIGHT, that._ROUND).
+                    attr({
+                        fill: "#fff",
+                        'fill-opacity': 0.4
+                    });
 
         this.svgGroup.append(this.textElement);
 
         this._arrow = this.svgGroup.polygon(
             0, -2, 6, -2, 3, 2).
             attr({
-                fill: "#127cbd",
-                stroke: "#127cbd",
+                fill: blockView._schema.color,
+                stroke: blockView._schema.color,
                 transform: "t"+ (width-11) + " 0",
             });
 
@@ -118,6 +136,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
         var OPTION_X_PADDING = 50;
         var maxWidth = 0;
 
+        var CONTENT_HEIGHT = 23;
         resizeList.push(this.optionGroup.rect(
             0, 0,
             0, CONTENT_HEIGHT * options.length
@@ -193,6 +212,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
             if (option[1] == value)
                 return option[0];
         }
+        //no match found
         return value;
     };
 })(Entry.FieldDropdown.prototype);

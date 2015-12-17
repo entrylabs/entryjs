@@ -4683,7 +4683,7 @@ Entry.Container.prototype.generateView = function(a, b) {
   if (b && "workspace" != b) {
     "phone" == b && (this.view_.addClass("entryContainerPhone"), c = Entry.createElement("div"), c.addClass("entryAddObjectWorkspace"), c.innerHTML = Lang.Workspace.add_object, c.bindOnClick(function(a) {
       Entry.dispatchEvent("openSpriteManager");
-    }), c = Entry.createElement("div"), c.addClass("entryContainerListPhoneWrapper"), this.view_.appendChild(c), e = Entry.createElement("ul"), e.addClass("entryContainerListPhone"), c.appendChild(e), this.listView_ = e);
+    }), c = Entry.createElement("div"), c.addClass("entryContainerListPhoneWrapper"), this.view_.appendChild(c), d = Entry.createElement("ul"), d.addClass("entryContainerListPhone"), c.appendChild(d), this.listView_ = d);
   } else {
     this.view_.addClass("entryContainerWorkspace");
     var c = Entry.createElement("div");
@@ -4695,18 +4695,17 @@ Entry.Container.prototype.generateView = function(a, b) {
     c = Entry.createElement("div");
     c.addClass("entryContainerListWorkspaceWrapper");
     Entry.isForLecture && (this.generateTabView(), c.addClass("lecture"));
-    if ($) {
-      var d = this;
-      context.attach(".entryContainerListWorkspaceWrapper", [{text:"\ubd99\uc5ec\ub123\uae30", href:"/", action:function(a) {
-        a.preventDefault();
-        d.copiedObject ? d.addCloneObject(d.copiedObject) : Entry.toast.alert("\uacbd\uace0", "\ubd99\uc5ec\ub123\uae30 \ud560 \uc624\ube0c\uc81d\ud2b8\uac00 \uc5c6\uc2b5\ub2c8\ub2e4.");
-      }}]);
-    }
+    Entry.Utils.disableContextmenu(c);
+    $(c).on("contextmenu", function(a) {
+      Entry.ContextMenu.show([{text:Lang.Blocks.Paste_blocks, callback:function() {
+        Entry.container.copiedObject ? Entry.container.addCloneObject(Entry.container.copiedObject) : Entry.toast.alert(Lang.Workspace.add_object_alert, Lang.Workspace.object_not_found_for_paste);
+      }}], "workspace-contextmenu");
+    });
     this.view_.appendChild(c);
-    var e = Entry.createElement("ul");
-    e.addClass("entryContainerListWorkspace");
-    c.appendChild(e);
-    this.listView_ = e;
+    var d = Entry.createElement("ul");
+    d.addClass("entryContainerListWorkspace");
+    c.appendChild(d);
+    this.listView_ = d;
     this.enableSort();
   }
 };
@@ -6402,6 +6401,7 @@ Entry.init = function(a, b) {
   Entry.assert("object" === typeof b, "Init option is not object");
   this.events_ = {};
   this.interfaceState = {menuWidth:264};
+  Entry.Utils.bindGlobalEvent(["mousedown", "mousemove"]);
   this.options = b;
   this.parseOptions(b);
   this.mediaFilePath = (b.libDir ? b.libDir : "/lib") + "/entryjs/images/";
@@ -6467,7 +6467,6 @@ Entry.initialize_ = function() {
       this.reporter = new Entry.Reporter(!0);
     }
   }
-  this.initContextMenu();
 };
 Entry.createDom = function(a, b) {
   if (b && "workspace" != b) {
@@ -6548,10 +6547,6 @@ Entry.parseOptions = function(a) {
   this.hasVariableManager = a.hasvariablemanager;
   this.variableEnable || this.messageEnable || this.listEnable || this.functionEnable ? void 0 === this.hasVariableManager && (this.hasVariableManager = !0) : this.hasVariableManager = !1;
   this.isForLecture = a.isForLecture;
-};
-Entry.initContextMenu = function() {
-  context.init({fadeSpeed:100, filter:function(a) {
-  }, above:"auto", preventDoubleContext:!0, compress:!0});
 };
 Entry.initFonts = function(a) {
   this.fonts = a;
@@ -6637,28 +6632,24 @@ Entry.EntryObject.prototype.generateView = function() {
       Entry.container.getObject(this.id) && Entry.container.selectObject(this.id);
       Entry.container.blurAllInputs();
     });
-    if ($) {
-      var b = this;
-      context.attach("#" + this.id, [{text:Lang.Workspace.context_rename, href:"/", action:function(a) {
-        var c = b;
-        a.preventDefault();
-        c.setLock(!1);
-        c.editObjectValues(!0);
-        c.nameView_.select();
-      }}, {text:Lang.Workspace.context_duplicate, href:"/", action:function(a) {
-        a.preventDefault();
+    Entry.Utils.disableContextmenu(a);
+    var b = this;
+    $(a).on("contextmenu", function(a) {
+      Entry.ContextMenu.show([{text:Lang.Workspace.context_rename, callback:function() {
+        var a = b;
+        a.setLock(!1);
+        a.editObjectValues(!0);
+        a.nameView_.select();
+      }}, {text:Lang.Workspace.context_duplicate, callback:function() {
         Entry.container.addCloneObject(b);
-      }}, {text:Lang.Workspace.context_remove, href:"/", action:function(a) {
-        a.preventDefault();
+      }}, {text:Lang.Workspace.context_remove, callback:function() {
         Entry.container.removeObject(b);
-      }}, {text:"\ubcf5\uc0ac\ud558\uae30", href:"/", action:function(a) {
-        a.preventDefault();
+      }}, {text:Lang.Workspace.copy_file, callback:function() {
         Entry.container.setCopiedObject(b);
-      }}, {text:"\ubd99\uc5ec\ub123\uae30", href:"/", action:function(a) {
-        a.preventDefault();
-        Entry.container.copiedObject ? Entry.container.addCloneObject(Entry.container.copiedObject) : Entry.toast.alert("\uacbd\uace0", "\ubd99\uc5ec\ub123\uae30 \ud560 \uc624\ube0c\uc81d\ud2b8\uac00 \uc5c6\uc2b5\ub2c8\ub2e4.");
-      }}]);
-    }
+      }}, {text:Lang.Blocks.Paste_blocks, callback:function() {
+        Entry.container.copiedObject ? Entry.container.addCloneObject(Entry.container.copiedObject) : Entry.toast.alert(Lang.Workspace.add_object_alert, Lang.Workspace.object_not_found_for_paste);
+      }}], "workspace-contextmenu");
+    });
     this.view_ = a;
     var c = this, a = Entry.createElement("ul");
     a.addClass("objectInfoView");
@@ -8519,6 +8510,164 @@ Entry.Painter.prototype.selectToolbox = function(a) {
       this.toggleCoordinator();
   }
 };
+Entry.JSParser = {};
+(function(a) {
+  a.Program = function(a) {
+    var c = [];
+    a = a.body;
+    for (var d = 0;d < a.length;d++) {
+      var e = a[d];
+      console.log(e.type);
+      c.push(this[e.type](e));
+    }
+    console.log("block", c);
+    return c;
+  };
+  a.Identifier = function(a) {
+    return a.name;
+  };
+  a.ExpressionStatement = function(a) {
+    a = a.expression;
+    return this[a.type](a);
+  };
+  a.ForStatement = function(a) {
+    return {init:a.init, test:a.test, update:a.update, body:a.body};
+  };
+  a.BlockStatement = function(a) {
+    return Error();
+  };
+  a.EmptyStatement = function(a) {
+    return Error();
+  };
+  a.DebuggerStatement = function(a) {
+    return Error();
+  };
+  a.WithStatement = function(a) {
+    return Error();
+  };
+  a.ReturnStaement = function(a) {
+    return Error();
+  };
+  a.LabeledStatement = function(a) {
+    return Error();
+  };
+  a.BreakStatement = function(a) {
+    return Error();
+  };
+  a.ContinueStatement = function(a) {
+    return Error();
+  };
+  a.IfStatement = function(a) {
+    return {test:a.test, consequent:a.consequent, alternate:a.alternate};
+  };
+  a.SwitchStatement = function(a) {
+    return Error();
+  };
+  a.SwitchCase = function(a) {
+    return Error();
+  };
+  a.ThrowStatement = function(a) {
+    return Error();
+  };
+  a.TryStatement = function(a) {
+    return Error();
+  };
+  a.CatchClause = function(a) {
+    return Error();
+  };
+  a.WhileStatement = function(a) {
+    test = a.test;
+    body = a.body;
+    return Error();
+  };
+  a.DoWhileStatement = function(a) {
+    return Error();
+  };
+  a.ForInStatement = function(a) {
+    return Error();
+  };
+  a.FunctionDeclaration = function(a) {
+    return Error();
+  };
+  a.VariableDeclaration = function(a) {
+    return Error();
+  };
+  a.VariableDeclaration = function(a) {
+    return Error();
+  };
+  a.ThisExpression = function(a) {
+    return Entry.Parser.ThisObject;
+  };
+  a.ArrayExpression = function(a) {
+    return Error();
+  };
+  a.ObjectExpression = function(a) {
+    return Error();
+  };
+  a.property = function(a) {
+    return Error();
+  };
+  a.FunctionExpression = function(a) {
+    return Error();
+  };
+  a.UnaryExpression = function(a) {
+    return Error();
+  };
+  a.UnaryOperator = function() {
+    return "- + ! ~ typeof void delete".split(" ");
+  };
+  a.updateOperator = function() {
+    return ["++", "--"];
+  };
+  a.BinaryOperator = function() {
+    return "== != === !== < <= > >= << >> >>> + - * / % , ^ & in instanceof".split(" ");
+  };
+  a.AssignmentExpression = function(a) {
+    return Error();
+  };
+  a.AssignmentOperator = function() {
+    return "= += -= *= /= %= <<= >>= >>>= ,= ^= &=".split(" ");
+  };
+  a.LogicalExpression = function(a) {
+    return Error();
+  };
+  a.LogicalOperator = function() {
+    return ["||", "&&"];
+  };
+  a.MemberExpression = function(a) {
+    var c = a.object;
+    a = a.property;
+    c = this[c.type](c);
+    a = this[a.type](a);
+    return c[a];
+  };
+  a.ConditionalExpression = function(a) {
+    return Error();
+  };
+  a.UpdateExpression = function(a) {
+    return Error();
+  };
+  a.CallExpression = function(a) {
+    a = a.callee;
+    return {type:this[a.type](a)};
+  };
+  a.NewExpression = function(a) {
+    return Error();
+  };
+  a.SequenceExpression = function(a) {
+    return Error();
+  };
+})(Entry.JSParser);
+Entry.Parser = {};
+Entry.Parser.ThisObject = {};
+Entry.Parser.jsToBlock = function(a) {
+  a = acorn.parse(a);
+  var b = null, b = Entry.JSParser.Program(a);
+  console.log("asTree ====", b);
+  return b;
+};
+Entry.Parser.pythonToBlock = function(a) {
+};
 Entry.Playground = function() {
   this.menuBlocks_ = {};
   this.enableArduino = this.isTextBGMode_ = !1;
@@ -9306,19 +9455,18 @@ Entry.Playground.prototype.generatePictureElement = function(a) {
   c.bindOnClick(function(a) {
     Entry.playground.selectPicture(this.picture);
   });
-  $ && context.attach("#" + a.id, [{text:Lang.Workspace.context_rename, href:"/", action:function(a) {
-    a.preventDefault();
-    f.focus();
-  }}, {text:Lang.Workspace.context_duplicate, href:"/", action:function(b) {
-    b.preventDefault();
-    Entry.playground.clonePicture(a.id);
-  }}, {text:Lang.Workspace.context_remove, href:"/", action:function(b) {
-    b.preventDefault();
-    Entry.playground.object.removePicture(a.id) ? (Entry.removeElement(c), Entry.toast.success(Lang.Workspace.shape_remove_ok, a.name + " " + Lang.Workspace.shape_remove_ok_msg)) : Entry.toast.alert(Lang.Workspace.shape_remove_fail, Lang.Workspace.shape_remove_fail_msg);
-  }}, {divider:!0}, {text:Lang.Workspace.context_download, href:"/", action:function(b) {
-    b.preventDefault();
-    a.fileurl ? window.open(a.fileurl) : window.open("/api/sprite/download/image/" + encodeURIComponent(a.filename) + "/" + encodeURIComponent(a.name) + ".png");
-  }}]);
+  Entry.Utils.disableContextmenu(a.view);
+  $(a.view).on("contextmenu", function() {
+    Entry.ContextMenu.show([{text:Lang.Workspace.context_rename, callback:function() {
+      f.focus();
+    }}, {text:Lang.Workspace.context_duplicate, callback:function() {
+      Entry.playground.clonePicture(a.id);
+    }}, {text:Lang.Workspace.context_remove, callback:function() {
+      Entry.playground.object.removePicture(a.id) ? (Entry.removeElement(c), Entry.toast.success(Lang.Workspace.shape_remove_ok, a.name + " " + Lang.Workspace.shape_remove_ok_msg)) : Entry.toast.alert(Lang.Workspace.shape_remove_fail, Lang.Workspace.shape_remove_fail_msg);
+    }}, {divider:!0}, {text:Lang.Workspace.context_download, callback:function() {
+      a.fileurl ? window.open(a.fileurl) : window.open("/api/sprite/download/image/" + encodeURIComponent(a.filename) + "/" + encodeURIComponent(a.name) + ".png");
+    }}], "workspace-contextmenu");
+  });
   var d = Entry.createElement("div");
   d.addClass("entryPlaygroundPictureOrder");
   c.orderHolder = d;
@@ -9352,17 +9500,17 @@ Entry.Playground.prototype.generateSoundElement = function(a) {
   a.view = b;
   b.addClass("entryPlaygroundSoundElement");
   b.sound = a;
-  $ && context.attach("#" + a.id, [{text:Lang.Workspace.context_rename, href:"/", action:function(a) {
-    a.preventDefault();
-    g.focus();
-  }}, {text:Lang.Workspace.context_duplicate, href:"/", action:function(b) {
-    b.preventDefault();
-    Entry.playground.addSound(a, !0);
-  }}, {text:Lang.Workspace.context_remove, href:"/", action:function(c) {
-    c.preventDefault();
-    Entry.playground.object.removeSound(a.id) ? (Entry.removeElement(b), Entry.toast.success(Lang.Workspace.sound_remove_ok, a.name + " " + Lang.Workspace.sound_remove_ok_msg)) : Entry.toast.alert(Lang.Workspace.sound_remove_fail, "");
-    Entry.removeElement(b);
-  }}]);
+  Entry.Utils.disableContextmenu(a.view);
+  $(a.view).on("contextmenu", function() {
+    Entry.ContextMenu.show([{text:Lang.Workspace.context_rename, callback:function() {
+      g.focus();
+    }}, {text:Lang.Workspace.context_duplicate, callback:function() {
+      Entry.playground.addSound(a, !0);
+    }}, {text:Lang.Workspace.context_remove, callback:function() {
+      Entry.playground.object.removeSound(a.id) ? (Entry.removeElement(b), Entry.toast.success(Lang.Workspace.sound_remove_ok, a.name + " " + Lang.Workspace.sound_remove_ok_msg)) : Entry.toast.alert(Lang.Workspace.sound_remove_fail, "");
+      Entry.removeElement(b);
+    }}], "workspace-contextmenu");
+  });
   var c = Entry.createElement("div");
   c.addClass("entryPlaygroundSoundOrder");
   b.orderHolder = c;
@@ -9591,10 +9739,12 @@ Entry.Scene.prototype.generateElement = function(a) {
     });
     d.appendChild(e);
   }
-  $ && context.attach("#" + a.id, [{text:"\ubcf5\uc81c\ud558\uae30", href:"/", action:function(b) {
-    b.preventDefault();
-    Entry.scene.cloneScene(a);
-  }}]);
+  Entry.Utils.disableContextmenu(b);
+  $(b).on("contextmenu", function() {
+    Entry.ContextMenu.show([{text:Lang.Workspace.duplicate_scene, callback:function() {
+      Entry.scene.cloneScene(a);
+    }}], "workspace-contextmenu");
+  });
   return a.view = b;
 };
 Entry.Scene.prototype.updateView = function() {
@@ -10380,21 +10530,23 @@ Entry.ContextMenu = {};
       this.hide();
     });
   };
-  a.show = function(a) {
+  a.show = function(a, c) {
     this.dom || this.createDom();
     if (0 !== a.length) {
-      var c = this.dom;
-      c.empty();
-      for (var d = 0, e = a.length;d < e;d++) {
-        var f = a[d], g = f.text, h = !1 !== f.enable, k = Entry.Dom("li", {class:h ? "menuAble" : "menuDisable", parent:c});
-        k.text(g);
-        h && f.callback && function(a, b) {
-          a.mousedown(function() {
+      void 0 !== c && (this._className = c, this.dom.addClass(c));
+      var d = this.dom;
+      d.empty();
+      for (var e = 0, f = a.length;e < f;e++) {
+        var g = a[e], h = g.text, k = !1 !== g.enable, l = Entry.Dom("li", {class:k ? "menuAble" : "menuDisable", parent:d});
+        l.text(h);
+        k && g.callback && function(a, b) {
+          a.mousedown(function(a) {
+            a.preventDefault();
             b();
           });
-        }(k, f.callback);
+        }(l, g.callback);
       }
-      c.removeClass("entryRemove");
+      d.removeClass("entryRemove");
       this.position(Entry.mouseCoordinate);
     }
   };
@@ -10409,6 +10561,7 @@ Entry.ContextMenu = {};
   a.hide = function() {
     this.dom.empty();
     this.dom.addClass("entryRemove");
+    this._className && (this.dom.removeClass(this._className), delete this._className);
   };
 })(Entry.ContextMenu);
 Entry.STATIC = {OBJECT:0, ENTITY:1, SPRITE:2, SOUND:3, VARIABLE:4, FUNCTION:5, SCENE:6, MESSAGE:7, BLOCK_MODEL:8, BLOCK_RENDER_MODEL:9, BOX_MODEL:10, THREAD_MODEL:11, DRAG_INSTANCE:12, BLOCK_STATIC:0, BLOCK_MOVE:1, BLOCK_FOLLOW:2, RETURN:0, CONTINUE:1};
@@ -10446,31 +10599,27 @@ Entry.Utils.colorDarken = function(a, b) {
   e = Math.floor(e * b).toString(16);
   return "#" + c + d + e;
 };
-Entry.Utils.bindGlobalEvent = function() {
-  Entry.windowReszied || (Entry.windowResized = new Entry.Event(window), $(window).on("resize", function(a) {
+Entry.Utils.bindGlobalEvent = function(a) {
+  void 0 === a && (a = ["resize", "mousedown", "mousemove", "keydown", "keyup"]);
+  !Entry.windowReszied && -1 < a.indexOf("resize") && (Entry.windowResized = new Entry.Event(window), $(window).on("resize", function(a) {
     Entry.windowResized.notify(a);
   }));
-  Entry.documentMousedown || (Entry.documentMousedown = new Entry.Event(window), $(document).on("mousedown", function(a) {
+  !Entry.documentMousedown && -1 < a.indexOf("mousedown") && (Entry.documentMousedown = new Entry.Event(window), $(document).on("mousedown", function(a) {
     Entry.documentMousedown.notify(a);
   }));
-  Entry.documentMousemove || (Entry.mouseCoordinate = {}, Entry.documentMousemove = new Entry.Event(window), $(document).on("mousemove", function(a) {
+  !Entry.documentMousemove && -1 < a.indexOf("mousemove") && (Entry.mouseCoordinate = {}, Entry.documentMousemove = new Entry.Event(window), $(document).on("mousemove", function(a) {
     Entry.documentMousemove.notify(a);
     Entry.mouseCoordinate.x = a.clientX;
     Entry.mouseCoordinate.y = a.clientY;
   }));
-  Entry.documentMousemove || (Entry.mouseCoordinate = {}, Entry.documentMousemove = new Entry.Event(window), $(document).on("mousemove", function(a) {
-    Entry.documentMousemove.notify(a);
-    Entry.mouseCoordinate.x = a.clientX;
-    Entry.mouseCoordinate.y = a.clientY;
-  }));
-  Entry.keyPressed || (Entry.pressedKeys = [], Entry.keyPressed = new Entry.Event(window), $(document).on("keydown", function(a) {
-    var b = a.keyCode;
-    0 > Entry.pressedKeys.indexOf(b) && Entry.pressedKeys.push(b);
+  !Entry.keyPressed && -1 < a.indexOf("keydown") && (Entry.pressedKeys = [], Entry.keyPressed = new Entry.Event(window), $(document).on("keydown", function(a) {
+    var c = a.keyCode;
+    0 > Entry.pressedKeys.indexOf(c) && Entry.pressedKeys.push(c);
     Entry.keyPressed.notify(a);
   }));
-  Entry.keyUpped || (Entry.keyUpped = new Entry.Event(window), $(document).on("keyup", function(a) {
-    var b = Entry.pressedKeys.indexOf(a.keyCode);
-    -1 < b && Entry.pressedKeys.splice(b, 1);
+  !Entry.keyUpped && -1 < a.indexOf("keyup") && (Entry.keyUpped = new Entry.Event(window), $(document).on("keyup", function(a) {
+    var c = Entry.pressedKeys.indexOf(a.keyCode);
+    -1 < c && Entry.pressedKeys.splice(c, 1);
     Entry.keyUpped.notify(a);
   }));
 };
@@ -12793,7 +12942,7 @@ Entry.block.jr_start = {skeleton:"pebble_event", event:"start", color:"#3BBD70",
   }
   Ntry.unitComp = Ntry.entityManager.getComponent(this._unit.id, Ntry.STATIC.UNIT);
 }};
-Entry.block.jr_repeat = {skeleton:"pebble_loop", color:"#127CDB", contents:[{type:"Dropdown", key:"REPEAT", options:[[1, 1], [2, 2], [3, 3], [4, 4], [5, 5], [6, 6], [7, 7], [8, 8], [9, 9], [10, 10]], value:1}, {type:"Text", text:"\ubc18\ubcf5"}, {type:"Statement", key:"STATEMENT", accept:"pebble_basic", position:{x:46, y:14}}], func:function() {
+Entry.block.jr_repeat = {skeleton:"pebble_loop", color:"#127CDB", contents:[{type:"Dropdown", key:"REPEAT", options:[[1, 1], [2, 2], [3, 3], [4, 4], [5, 5], [6, 6], [7, 7], [8, 8], [9, 9], [10, 10]], value:1, fontSize:14, roundValue:3}, {type:"Text", text:"\ubc18\ubcf5"}, {type:"Statement", key:"STATEMENT", accept:"pebble_basic", position:{x:46, y:14}}], func:function() {
   if (void 0 === this.repeatCount) {
     return this.repeatCount = this.block.values.REPEAT, Entry.STATIC.CONTINUE;
   }
@@ -13081,7 +13230,173 @@ Entry.block.jr_if_speed = {skeleton:"basic_loop", color:"#498DEB", contents:["\u
     }
   }
 }};
+Entry.block.maze_step_jump = {skeleton:"basic", color:"#FF6E4B", contents:["\ub6f0\uc5b4\ub118\uae30", {type:"Image", img:"/img/assets/week/blocks/jump.png", size:24}], func:function() {
+  if (this.isContinue) {
+    if (this.isAction) {
+      return Entry.STATIC.CONTINUE;
+    }
+    delete this.isAction;
+    delete this.isContinue;
+  } else {
+    this.isAction = this.isContinue = !0;
+    var a = this;
+    Ntry.dispatchEvent("unitAction", Ntry.STATIC.JUMP, function() {
+      a.isAction = !1;
+    });
+    return Entry.STATIC.CONTINUE;
+  }
+}};
+Entry.block.maze_step_for = {skeleton:"basic_loop", color:"#127CDB", contents:[{type:"Dropdown", key:"REPEAT", options:[[1, 1], [2, 2], [3, 3], [4, 4], [5, 5], [6, 6], [7, 7], [8, 8], [9, 9], [10, 10]], value:1}, "\ubc88 \ubc18\ubcf5\ud558\uae30", {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}, {type:"Statement", key:"STATEMENT", accept:"basic", position:{x:2, y:15}}], func:function() {
+  if (void 0 === this.repeatCount) {
+    return this.repeatCount = this.block.values.REPEAT, Entry.STATIC.CONTINUE;
+  }
+  if (0 < this.repeatCount) {
+    return console.log(this.repeatCount), this.repeatCount--, this.executor.stepInto(this.block.values.STATEMENT), Entry.STATIC.CONTINUE;
+  }
+  delete this.repeatCount;
+}};
 Entry.block.test = {skeleton:"basic", color:"#3BBD70", contents:["\ud0a4\ub97c \ub20c\ub800\uc744 \ub54c", {type:"Angle", key:"ANGLE", value:550}, "\ud0a4\ub97c \ub20c\ub800\uc744 \ub54c"], func:function() {
+}};
+Entry.block.maze_repeat_until_1 = {skeleton:"basic_loop", color:"#498DEB", contents:[{type:"Image", img:"/img/assets/ntry/block_inner/repeat_goal_1.png", size:18}, "\ub9cc\ub0a0 \ub54c \uae4c\uc9c0 \ubc18\ubcf5\ud558\uae30", {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}, {type:"Statement", key:"STATEMENT", accept:"basic", position:{x:2, y:15}}], func:function() {
+  if (1 !== this.block.values.STATEMENT.getBlocks().length) {
+    return this.executor.stepInto(this.block.values.STATEMENT), Entry.STATIC.CONTINUE;
+  }
+}};
+Entry.block.maze_step_unif_1 = {skeleton:"basic_loop", color:"#498DEB", contents:["\ub9cc\uc57d", {type:"Image", img:"/img/assets/ntry/block_inner/if_target_1.png", size:18}, "\uc55e\uc5d0 \uc788\ub2e4\uba74", {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}, {type:"Statement", key:"STATEMENT", accept:"basic", position:{x:2, y:15}}], func:function() {
+  if (!this.isContinue) {
+    var a = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT), b, c;
+    for (c in a) {
+      b = a[c];
+    }
+    a = Ntry.entityManager.getComponent(b.id, Ntry.STATIC.UNIT);
+    b = Ntry.entityManager.getComponent(b.id, Ntry.STATIC.GRID);
+    b = {x:b.x, y:b.y};
+    Ntry.addVectorByDirection(b, a.direction, 1);
+    b = Ntry.entityManager.find({type:Ntry.STATIC.GRID, x:b.x, y:b.y}, {type:Ntry.STATIC.WALL, tileType:Ntry.STATIC.WALL_CRASH});
+    this.isContinue = !0;
+    a = this.block.values.STATEMENT;
+    if (0 !== b.length && 1 !== a.getBlocks().length) {
+      return this.executor.stepInto(a), Entry.STATIC.CONTINUE;
+    }
+  }
+}};
+Entry.block.maze_step_if_2 = {skeleton:"basic_loop", color:"#498DEB", contents:["\ub9cc\uc57d", {type:"Image", img:"/img/assets/ntry/bitmap/maze2/obstacle_01.png", size:18}, "\uc55e\uc5d0 \uc788\ub2e4\uba74", {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}, {type:"Statement", key:"STATEMENT", accept:"basic", position:{x:2, y:15}}], func:function() {
+  if (!this.isContinue) {
+    var a = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT), b, c;
+    for (c in a) {
+      b = a[c];
+    }
+    a = Ntry.entityManager.getComponent(b.id, Ntry.STATIC.UNIT);
+    b = Ntry.entityManager.getComponent(b.id, Ntry.STATIC.GRID);
+    b = {x:b.x, y:b.y};
+    Ntry.addVectorByDirection(b, a.direction, 1);
+    b = Ntry.entityManager.find({type:Ntry.STATIC.GRID, x:b.x, y:b.y}, {type:Ntry.STATIC.TILE, tileType:Ntry.STATIC.OBSTACLE_BEE});
+    this.isContinue = !0;
+    a = this.block.values.STATEMENT;
+    if (0 !== b.length && 1 !== a.getBlocks().length) {
+      return this.executor.stepInto(a), Entry.STATIC.CONTINUE;
+    }
+  }
+}};
+Entry.block.maze_call_function = {skeleton:"basic", color:"#B57242", contents:["\uc57d\uc18d \ubd88\ub7ec\uc624\uae30", {type:"Image", img:"/img/assets/week/blocks/function.png", size:24}], func:function() {
+  Entry.block.jr_promise_wrap.func(this.executor, statement);
+}};
+Entry.block.maze_define_function = {skeleton:"basic_define", color:"#B57242", contents:["\uc57d\uc18d\ud558\uae30", {type:"Image", img:"/img/assets/week/blocks/function.png", size:24}, {type:"Statement", key:"STATEMENT", accept:"basic", position:{x:2, y:15}}], func:function(a) {
+  console.log(a);
+  a.stepInto(this.block.values.STATEMENT);
+}};
+Entry.block.maze_step_if_3 = {skeleton:"basic_loop", color:"#498DEB", contents:["\ub9cc\uc57d", {type:"Image", img:"/img/assets/ntry/block_inner/if_target_3.png", size:18}, "\uc55e\uc5d0 \uc788\ub2e4\uba74", {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}, {type:"Statement", key:"STATEMENT", accept:"basic", position:{x:2, y:15}}], func:function() {
+  if (!this.isContinue) {
+    var a = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT), b, c;
+    for (c in a) {
+      b = a[c];
+    }
+    a = Ntry.entityManager.getComponent(b.id, Ntry.STATIC.UNIT);
+    b = Ntry.entityManager.getComponent(b.id, Ntry.STATIC.GRID);
+    b = {x:b.x, y:b.y};
+    Ntry.addVectorByDirection(b, a.direction, 1);
+    b = Ntry.entityManager.find({type:Ntry.STATIC.GRID, x:b.x, y:b.y}, {type:Ntry.STATIC.OBSTACLE, tileType:Ntry.STATIC.OBSTACLE_BANANA});
+    this.isContinue = !0;
+    a = this.block.values.STATEMENT;
+    if (0 !== b.length && 1 !== a.getBlocks().length) {
+      return this.executor.stepInto(a), Entry.STATIC.CONTINUE;
+    }
+  }
+}};
+Entry.block.maze_step_if_4 = {skeleton:"basic_loop", color:"#498DEB", contents:["\ub9cc\uc57d", {type:"Image", img:"/img/assets/ntry/block_inner/if_target_2.png", size:18}, "\uc55e\uc5d0 \uc788\ub2e4\uba74", {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}, {type:"Statement", key:"STATEMENT", accept:"basic", position:{x:2, y:15}}], func:function() {
+  if (!this.isContinue) {
+    var a = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT), b, c;
+    for (c in a) {
+      b = a[c];
+    }
+    a = Ntry.entityManager.getComponent(b.id, Ntry.STATIC.UNIT);
+    b = Ntry.entityManager.getComponent(b.id, Ntry.STATIC.GRID);
+    b = {x:b.x, y:b.y};
+    Ntry.addVectorByDirection(b, a.direction, 1);
+    b = Ntry.entityManager.find({type:Ntry.STATIC.GRID, x:b.x, y:b.y}, {type:Ntry.STATIC.WALL, tileType:Ntry.STATIC.WALL});
+    this.isContinue = !0;
+    a = this.block.values.STATEMENT;
+    if (0 !== b.length && 1 !== a.getBlocks().length) {
+      return this.executor.stepInto(a), Entry.STATIC.CONTINUE;
+    }
+  }
+}};
+Entry.block.maze_step_start = {skeleton:"basic_event", event:"start", color:"#3BBD70", contents:[{type:"Indicator", boxMultiplier:1, img:"/img/assets/block_icon/start_icon_play.png", highlightColor:"#3BBD70", size:17, position:{x:0, y:-2}}, "\uc2dc\uc791 \ubc84\ud2bc\uc744 \ub20c\ub800\uc744 \ub54c"], func:function() {
+  console.log("11111");
+  var a = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT), b;
+  for (b in a) {
+    this._unit = a[b];
+  }
+  Ntry.unitComp = Ntry.entityManager.getComponent(this._unit.id, Ntry.STATIC.UNIT);
+}};
+Entry.block.maze_step_move_step = {skeleton:"basic", color:"#A751E3", contents:["\uc55e\uc73c\ub85c \uac00\uae30", {type:"Image", img:"/img/assets/ntry/bitmap/jr/cparty_go_straight.png", size:24}], func:function() {
+  console.log(2);
+  if (this.isContinue) {
+    if (this.isAction) {
+      return Entry.STATIC.CONTINUE;
+    }
+    delete this.isAction;
+    delete this.isContinue;
+  } else {
+    this.isAction = this.isContinue = !0;
+    var a = this;
+    Ntry.dispatchEvent("unitAction", Ntry.STATIC.WALK, function() {
+      a.isAction = !1;
+    });
+    return Entry.STATIC.CONTINUE;
+  }
+}};
+Entry.block.maze_step_rotate_left = {skeleton:"basic", color:"#A751E3", contents:["\uc67c\ucabd\uc73c\ub85c \ub3cc\uae30", {type:"Image", img:"/img/assets/ntry/bitmap/jr/cparty_rotate_l.png", size:24}], func:function() {
+  if (this.isContinue) {
+    if (this.isAction) {
+      return Entry.STATIC.CONTINUE;
+    }
+    delete this.isAction;
+    delete this.isContinue;
+  } else {
+    this.isAction = this.isContinue = !0;
+    var a = this;
+    Ntry.dispatchEvent("unitAction", Ntry.STATIC.TURN_LEFT, function() {
+      a.isAction = !1;
+    });
+    return Entry.STATIC.CONTINUE;
+  }
+}};
+Entry.block.maze_step_rotate_right = {skeleton:"basic", color:"#A751E3", contents:["\uc624\ub978\ucabd\uc73c\ub85c \ub3cc\uae30", {type:"Image", img:"/img/assets/ntry/bitmap/jr/cparty_rotate_r.png", size:24}], func:function() {
+  if (this.isContinue) {
+    if (this.isAction) {
+      return Entry.STATIC.CONTINUE;
+    }
+    delete this.isAction;
+    delete this.isContinue;
+  } else {
+    this.isAction = this.isContinue = !0;
+    var a = this;
+    Ntry.dispatchEvent("unitAction", Ntry.STATIC.TURN_RIGHT, function() {
+      a.isAction = !1;
+    });
+    return Entry.STATIC.CONTINUE;
+  }
 }};
 Entry.BlockMenu = function(a, b) {
   Entry.Model(this, !1);
@@ -13841,6 +14156,9 @@ Entry.FieldDropdown = function(a, b) {
   this._contents = a;
   this.key = a.key;
   this.value = this._block.values[this.key];
+  this._CONTENT_HEIGHT = a.dropdownHeight || b.getSkeleton().dropdownHeight || 16;
+  this._fONT_SIZE = a.fontSize || b.getSkeleton().fontSize || 12;
+  this._ROUND = a.roundValue || 0;
   this.renderStart(b);
 };
 Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
@@ -13849,15 +14167,17 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
     var c = this;
     this.svgGroup = a.contentSvgGroup.group();
     this.svgGroup.attr({class:"entry-field-dropdown"});
-    this.textElement = this.svgGroup.text(2, 3, this.getTextByValue(this.value));
-    a = this.textElement.node.getComputedTextLength() + 18;
-    this._header = this.svgGroup.rect(0, -12, a, 23, 3).attr({fill:"#80cbf8"});
+    this.textElement = this.svgGroup.text(2, 0, this.getTextByValue(this.value));
+    var d = this.textElement.getBBox();
+    this.textElement.attr({style:"white-space: pre; font-size:" + c._FONT_SIZE + "px", y:.25 * d.height});
+    var d = this.textElement.node.getComputedTextLength() + 18, e = this._CONTENT_HEIGHT;
+    this._header = this.svgGroup.rect(0, -e / 2, d, e, c._ROUND).attr({fill:"#fff", "fill-opacity":.4});
     this.svgGroup.append(this.textElement);
-    this._arrow = this.svgGroup.polygon(0, -2, 6, -2, 3, 2).attr({fill:"#127cbd", stroke:"#127cbd", transform:"t" + (a - 11) + " 0"});
+    this._arrow = this.svgGroup.polygon(0, -2, 6, -2, 3, 2).attr({fill:a._schema.color, stroke:a._schema.color, transform:"t" + (d - 11) + " 0"});
     this.svgGroup.mouseup(function(a) {
       c._block.view.dragMode == Entry.DRAG_MODE_MOUSEDOWN && c.renderOptions();
     });
-    this.box.set({x:0, y:0, width:a, height:23});
+    this.box.set({x:0, y:0, width:d, height:e});
   };
   a.resize = function() {
     var a = this.textElement.node.getComputedTextLength() + 18;
@@ -14368,6 +14688,16 @@ Entry.skeleton.basic_loop = {path:function(a) {
 }, contentPos:function() {
   return {x:14, y:15};
 }};
+Entry.skeleton.basic_define = {path:function(a) {
+  var b = Math.max(a.contentHeight, 25);
+  return "m -8,0 h 16 h %cw a 15,15 0 0,1 0,30 H 24 l -8,8 -8,-8 h -0.4 v %ch h 0.4 l 8,8 8,-8 h %cw h -8 a 8,8 0 0,1 0,16 H 8 l -8,8 -8,-8 z".replace(/%cw/gi, Math.max(0, a.contentWidth - 31)).replace(/%ch/gi, b);
+}, magnets:function() {
+  return {previous:{x:0, y:0}, next:{x:0, y:105}};
+}, box:function(a) {
+  return {offsetX:0, offsetY:0, width:a.contentWidth, height:Math.max(a.contentHeight, 25) + 46, marginBottom:0};
+}, contentPos:function() {
+  return {x:14, y:15};
+}};
 Entry.skeleton.pebble_event = {path:function(a) {
   return "m 0,0 a 25,25 0 0,1 9,48.3 a 9,9 0 0,1 -18,0 a 25,25 0 0,1 9,-48.3 z";
 }, box:function(a) {
@@ -14377,7 +14707,7 @@ Entry.skeleton.pebble_event = {path:function(a) {
 }, contentPos:function() {
   return {x:0, y:25};
 }};
-Entry.skeleton.pebble_loop = {fontSize:16, path:function(a) {
+Entry.skeleton.pebble_loop = {fontSize:16, dropdownHeight:23, path:function(a) {
   a = Math.max(a.contentHeight, 50);
   return "M 0,9 a 9,9 0 0,0 9,-9 h %cw q 25,0 25,25 v %ch q 0,25 -25,25 h -%cw a 9,9 0 0,1 -18,0 h -%cw q -25,0 -25,-25 v -%ch q 0,-25 25,-25 h %cw a 9,9 0 0,0 9,9 M 0,49 a 9,9 0 0,1 -9,-9 h -28 a 25,25 0 0,0 -25,25 v %cih a 25,25 0 0,0 25,25 h 28 a 9,9 0 0,0 18,0 h 28 a 25,25 0 0,0 25,-25 v -%cih a 25,25 0 0,0 -25,-25 h -28 a 9,9 0 0,1 -9,9 z".replace(/%cw/gi, 41).replace(/%ch/gi, a + 4).replace(/%cih/gi, a - 50);
 }, magnets:function() {

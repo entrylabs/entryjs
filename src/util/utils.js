@@ -60,22 +60,25 @@ Entry.Utils.colorDarken = function(color, factor) {
     return '#' + r + g + b;
 };
 
-Entry.Utils.bindGlobalEvent = function() {
-    if (!Entry.windowReszied) {
+Entry.Utils.bindGlobalEvent = function(options) {
+    if (options === undefined)
+        options = ['resize', 'mousedown', 'mousemove', 'keydown', 'keyup'];
+
+    if (!Entry.windowReszied && options.indexOf('resize') > -1) {
         Entry.windowResized = new Entry.Event(window);
         $(window).on('resize', (function(e) {
             Entry.windowResized.notify(e);
         }));
     }
 
-    if (!Entry.documentMousedown) {
+    if (!Entry.documentMousedown && options.indexOf('mousedown') > -1) {
         Entry.documentMousedown = new Entry.Event(window);
         $(document).on('mousedown', (function(e) {
             Entry.documentMousedown.notify(e);
         }));
     }
 
-    if (!Entry.documentMousemove) {
+    if (!Entry.documentMousemove && options.indexOf('mousemove') > -1) {
         Entry.mouseCoordinate = {};
         Entry.documentMousemove = new Entry.Event(window);
         $(document).on('mousemove', (function(e) {
@@ -85,17 +88,7 @@ Entry.Utils.bindGlobalEvent = function() {
         }));
     }
 
-    if (!Entry.documentMousemove) {
-        Entry.mouseCoordinate = {};
-        Entry.documentMousemove = new Entry.Event(window);
-        $(document).on('mousemove', (function(e) {
-            Entry.documentMousemove.notify(e);
-            Entry.mouseCoordinate.x = e.clientX;
-            Entry.mouseCoordinate.y = e.clientY;
-        }));
-    }
-
-    if (!Entry.keyPressed) {
+    if (!Entry.keyPressed && options.indexOf('keydown') > -1) {
         Entry.pressedKeys = [];
         Entry.keyPressed = new Entry.Event(window);
         $(document).on('keydown', (function(e) {
@@ -106,7 +99,7 @@ Entry.Utils.bindGlobalEvent = function() {
         }));
     }
 
-    if (!Entry.keyUpped) {
+    if (!Entry.keyUpped && options.indexOf('keyup') > -1) {
         Entry.keyUpped = new Entry.Event(window);
         $(document).on('keyup', (function(e) {
             var keyCode = e.keyCode;

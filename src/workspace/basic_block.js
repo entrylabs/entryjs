@@ -56,7 +56,9 @@ Entry.block.jr_repeat = {
                 [9,9],
                 [10,10]
             ],
-            value: 1
+            value: 1,
+            fontSize: 14,
+            roundValue: 3
         },
         {
             type: "Text",
@@ -447,7 +449,6 @@ Entry.block.jr_go_straight = {
             var callBack = function() {
                 self.isAction = false;
             };
-
             // turn direction
             Ntry.dispatchEvent("unitAction", Ntry.STATIC.WALK, callBack);
 
@@ -736,6 +737,94 @@ Entry.block.jr_if_speed = {
     }
 };
 
+Entry.block.maze_step_jump = {
+    skeleton: "basic",
+    color: "#FF6E4B",
+    contents: [
+        "뛰어넘기",
+        {
+            type: "Image",
+            img: "/img/assets/week/blocks/jump.png",
+            size: 24
+        }
+    ],
+    func: function() {
+        if (!this.isContinue) {
+
+            this.isContinue = true;
+            this.isAction = true;
+            var self = this;
+            var callBack = function() {
+                self.isAction = false;
+            };
+
+            // turn direction
+
+            Ntry.dispatchEvent("unitAction", Ntry.STATIC.JUMP, callBack);
+
+            return Entry.STATIC.CONTINUE;
+        } else if (this.isAction) {
+            return Entry.STATIC.CONTINUE;
+        } else {
+            delete this.isAction;
+            delete this.isContinue;
+        }
+    }
+};
+
+Entry.block.maze_step_for = {
+    skeleton: "basic_loop",
+    color: "#127CDB",
+    contents: [
+        {
+            type: "Dropdown",
+            key: "REPEAT",
+            options: [
+                [1,1],
+                [2,2],
+                [3,3],
+                [4,4],
+                [5,5],
+                [6,6],
+                [7,7],
+                [8,8],
+                [9,9],
+                [10,10]
+            ],
+            value: 1
+        },
+        "번 반복하기"
+        ,
+        {
+            type: "Image",
+            img: "/img/assets/week/blocks/for.png",
+            size: 24
+        },
+        {
+            type: "Statement",
+            key: "STATEMENT",
+            accept: "basic",
+            position: {
+                x: 2,
+                y: 15
+            }
+        }
+    ],
+    func: function() {
+        if (this.repeatCount === undefined) {
+            this.repeatCount = this.block.values.REPEAT;
+            return Entry.STATIC.CONTINUE;
+        } else if (this.repeatCount > 0) {
+            console.log(this.repeatCount);
+            this.repeatCount--;
+            this.executor.stepInto(this.block.values.STATEMENT);
+            return Entry.STATIC.CONTINUE;
+        } else {
+            delete this.repeatCount;
+        }
+    }
+};
+
 Entry.block.test = {
     skeleton: "basic",
     color: "#3BBD70",
@@ -751,3 +840,497 @@ Entry.block.test = {
     func: function() {
     }
 };
+
+Entry.block.maze_repeat_until_1 = {
+    skeleton: "basic_loop",
+    color: "#498DEB",
+    contents: [
+        {
+            type: "Image",
+            img: "/img/assets/ntry/block_inner/repeat_goal_1.png",
+            size: 18
+        },
+        "만날 때 까지 반복하기",
+        {
+            type: "Image",
+            img: "/img/assets/week/blocks/for.png",
+            size: 24
+        },
+        {
+            type: "Statement",
+            key: "STATEMENT",
+            accept: "basic",
+            position: {
+                x: 2,
+                y: 15
+            }
+        }
+    ],
+    func: function() {
+        if (this.block.values.STATEMENT.getBlocks().length === 1)
+            return;
+
+        this.executor.stepInto(this.block.values.STATEMENT);
+        return Entry.STATIC.CONTINUE;
+    }
+};
+
+
+Entry.block.maze_step_unif_1 = {
+    skeleton: "basic_loop",
+    color: "#498DEB",
+    contents: [
+        "만약",
+        {
+            type: "Image",
+            img: "/img/assets/ntry/block_inner/if_target_1.png",
+            size: 18
+        },
+        "앞에 있다면",
+        {
+            type: "Image",
+            img: "/img/assets/week/blocks/for.png",
+            size: 24
+        },
+        {
+            type: "Statement",
+            key: "STATEMENT",
+            accept: "basic",
+            position: {
+                x: 2,
+                y: 15
+            }
+        }
+    ],
+    func: function() {
+        if (this.isContinue)
+            return;
+        var entities = Ntry.entityManager.getEntitiesByComponent(
+        Ntry.STATIC.UNIT);
+
+        var entity;
+        for (var key in entities)
+            entity = entities[key];
+
+        var unitComp = Ntry.entityManager.getComponent(
+            entity.id, Ntry.STATIC.UNIT);
+        var gridComp = Ntry.entityManager.getComponent(
+            entity.id, Ntry.STATIC.GRID);
+
+        var grid = {x: gridComp.x, y: gridComp.y};
+        Ntry.addVectorByDirection(grid, unitComp.direction, 1);
+
+        var fitEntities = Ntry.entityManager.find(
+            {
+                type: Ntry.STATIC.GRID,
+                x: grid.x,
+                y: grid.y
+            },
+            {
+                type: Ntry.STATIC.WALL,
+                tileType: Ntry.STATIC.WALL_CRASH
+            }
+        );
+
+        this.isContinue = true;
+
+        var statement = this.block.values.STATEMENT;
+        if (fitEntities.length === 0) {
+            return;
+        } else if (statement.getBlocks().length === 1)
+            return;
+        else {
+            this.executor.stepInto(statement);
+            return Entry.STATIC.CONTINUE;
+        }
+    }
+};
+
+Entry.block.maze_step_if_2 = {
+    skeleton: "basic_loop",
+    color: "#498DEB",
+    contents: [
+        "만약",
+        {
+            type: "Image",
+            img: "/img/assets/ntry/bitmap/maze2/obstacle_01.png",
+            size: 18
+        },
+        "앞에 있다면",
+        {
+            type: "Image",
+            img: "/img/assets/week/blocks/for.png",
+            size: 24
+        },
+        {
+            type: "Statement",
+            key: "STATEMENT",
+            accept: "basic",
+            position: {
+                x: 2,
+                y: 15
+            }
+        }
+    ],
+    func: function() {
+        if (this.isContinue)
+            return;
+        var entities = Ntry.entityManager.getEntitiesByComponent(
+        Ntry.STATIC.UNIT);
+
+        var entity;
+        for (var key in entities)
+            entity = entities[key];
+
+        var unitComp = Ntry.entityManager.getComponent(
+            entity.id, Ntry.STATIC.UNIT);
+        var gridComp = Ntry.entityManager.getComponent(
+            entity.id, Ntry.STATIC.GRID);
+
+        var grid = {x: gridComp.x, y: gridComp.y};
+        Ntry.addVectorByDirection(grid, unitComp.direction, 1);
+
+        var fitEntities = Ntry.entityManager.find(
+            {
+                type: Ntry.STATIC.GRID,
+                x: grid.x,
+                y: grid.y
+            },
+            {
+                type: Ntry.STATIC.TILE,
+                tileType: Ntry.STATIC.OBSTACLE_BEE
+            }
+        );
+
+        this.isContinue = true;
+
+        var statement = this.block.values.STATEMENT;
+        if (fitEntities.length === 0) {
+            return;
+        } else if (statement.getBlocks().length === 1)
+            return;
+        else {
+            this.executor.stepInto(statement);
+            return Entry.STATIC.CONTINUE;
+        }
+    }
+};
+
+Entry.block.maze_call_function = {
+    skeleton: "basic",
+    color: "#B57242",
+    contents: [
+        "약속 불러오기",
+        {
+            type: "Image",
+            img: "/img/assets/week/blocks/function.png",
+            size: 24
+        }
+    ],
+    func: function() {
+        Entry.block.jr_promise_wrap.func(this.executor,statement);
+    }
+};
+
+Entry.block.maze_define_function = {
+    skeleton: "basic_define",
+    color: "#B57242",
+    contents: [
+        "약속하기",
+        {
+            type: "Image",
+            img: "/img/assets/week/blocks/function.png",
+            size: 24
+        },
+        {
+            type: "Statement",
+            key: "STATEMENT",
+            accept: "basic",
+            position: {
+                x: 2,
+                y: 15
+            }
+        }
+    ],
+    func: function(executor) {
+        console.log(executor);
+        executor.stepInto(this.block.values.STATEMENT);
+    }
+};
+
+Entry.block.maze_step_if_3 = {
+    skeleton: "basic_loop",
+    color: "#498DEB",
+    contents: [
+        "만약",
+        {
+            type: "Image",
+            img: "/img/assets/ntry/block_inner/if_target_3.png",
+            size: 18
+        },
+        "앞에 있다면",
+        {
+            type: "Image",
+            img: "/img/assets/week/blocks/for.png",
+            size: 24
+        },
+        {
+            type: "Statement",
+            key: "STATEMENT",
+            accept: "basic",
+            position: {
+                x: 2,
+                y: 15
+            }
+        }
+    ],
+    func: function() {
+        if (this.isContinue)
+            return;
+        var entities = Ntry.entityManager.getEntitiesByComponent(
+        Ntry.STATIC.UNIT);
+
+        var entity;
+        for (var key in entities)
+            entity = entities[key];
+
+        var unitComp = Ntry.entityManager.getComponent(
+            entity.id, Ntry.STATIC.UNIT);
+        var gridComp = Ntry.entityManager.getComponent(
+            entity.id, Ntry.STATIC.GRID);
+
+        var grid = {x: gridComp.x, y: gridComp.y};
+        Ntry.addVectorByDirection(grid, unitComp.direction, 1);
+
+        var fitEntities = Ntry.entityManager.find(
+            {
+                type: Ntry.STATIC.GRID,
+                x: grid.x,
+                y: grid.y
+            },
+            {
+                type: Ntry.STATIC.OBSTACLE,
+                tileType: Ntry.STATIC.OBSTACLE_BANANA
+            }
+        );
+
+        this.isContinue = true;
+
+        var statement = this.block.values.STATEMENT;
+        if (fitEntities.length === 0) {
+            return;
+        } else if (statement.getBlocks().length === 1)
+            return;
+        else {
+            this.executor.stepInto(statement);
+            return Entry.STATIC.CONTINUE;
+        }
+    }
+};
+
+Entry.block.maze_step_if_4 = {
+    skeleton: "basic_loop",
+    color: "#498DEB",
+    contents: [
+        "만약",
+        {
+            type: "Image",
+            img: "/img/assets/ntry/block_inner/if_target_2.png",
+            size: 18
+        },
+        "앞에 있다면",
+        {
+            type: "Image",
+            img: "/img/assets/week/blocks/for.png",
+            size: 24
+        },
+        {
+            type: "Statement",
+            key: "STATEMENT",
+            accept: "basic",
+            position: {
+                x: 2,
+                y: 15
+            }
+        }
+    ],
+    func: function() {
+        if (this.isContinue)
+            return;
+        var entities = Ntry.entityManager.getEntitiesByComponent(
+        Ntry.STATIC.UNIT);
+
+        var entity;
+        for (var key in entities)
+            entity = entities[key];
+
+        var unitComp = Ntry.entityManager.getComponent(
+            entity.id, Ntry.STATIC.UNIT);
+        var gridComp = Ntry.entityManager.getComponent(
+            entity.id, Ntry.STATIC.GRID);
+
+        var grid = {x: gridComp.x, y: gridComp.y};
+        Ntry.addVectorByDirection(grid, unitComp.direction, 1);
+
+        var fitEntities = Ntry.entityManager.find(
+            {
+                type: Ntry.STATIC.GRID,
+                x: grid.x,
+                y: grid.y
+            },
+            {
+                type: Ntry.STATIC.WALL,
+                tileType: Ntry.STATIC.WALL
+            }
+        );
+
+        this.isContinue = true;
+
+        var statement = this.block.values.STATEMENT;
+        if (fitEntities.length === 0) {
+            return;
+        } else if (statement.getBlocks().length === 1)
+            return;
+        else {
+            this.executor.stepInto(statement);
+            return Entry.STATIC.CONTINUE;
+        }
+    }
+};
+
+
+// Entry.block.jr_promise_call = Entry.block.jr_promise_wrap;
+// maze start block
+
+Entry.block.maze_step_start = {
+    skeleton: "basic_event",
+    event: "start",
+    color: "#3BBD70",
+    contents: [
+        {
+            type: "Indicator",
+            boxMultiplier: 1,
+            img: "/img/assets/block_icon/start_icon_play.png",
+            highlightColor: "#3BBD70",
+            size: 17,
+            position: {
+                 x: 0, y: -2
+            }
+        },
+        "시작 버튼을 눌렀을 때"
+    ],
+    func: function() {
+        console.log("11111");
+        var entities = Ntry.entityManager.getEntitiesByComponent(
+        Ntry.STATIC.UNIT);
+
+        for (var key in entities)
+            this._unit = entities[key];
+
+        Ntry.unitComp = Ntry.entityManager.getComponent(
+        this._unit.id, Ntry.STATIC.UNIT);
+    }
+};
+
+Entry.block.maze_step_move_step = {
+    skeleton: "basic",
+    color: "#A751E3",
+    contents: [
+        "앞으로 가기",
+        {
+            type: "Image",
+            img: "/img/assets/ntry/bitmap/jr/cparty_go_straight.png",
+            size: 24
+        }
+    ],
+    func: function() {
+        console.log(2);
+        if (!this.isContinue) {
+
+            this.isContinue = true;
+            this.isAction = true;
+            var self = this;
+            var callBack = function() {
+                self.isAction = false;
+            };
+            // turn direction
+            Ntry.dispatchEvent("unitAction", Ntry.STATIC.WALK, callBack);
+
+            return Entry.STATIC.CONTINUE;
+        } else if (this.isAction) {
+            return Entry.STATIC.CONTINUE;
+        } else {
+            delete this.isAction;
+            delete this.isContinue;
+        }
+    }
+};
+
+Entry.block.maze_step_rotate_left= {
+    skeleton: "basic",
+    color: "#A751E3",
+    contents: [
+        "왼쪽으로 돌기",
+        {
+            type: "Image",
+            img: "/img/assets/ntry/bitmap/jr/cparty_rotate_l.png",
+            size: 24
+        }
+    ],
+    func: function() {
+        if (!this.isContinue) {
+
+            this.isContinue = true;
+            this.isAction = true;
+            var self = this;
+            var callBack = function() {
+                self.isAction = false;
+            };
+
+            // turn direction
+            Ntry.dispatchEvent("unitAction", Ntry.STATIC.TURN_LEFT, callBack);
+
+            return Entry.STATIC.CONTINUE;
+        } else if (this.isAction) {
+            return Entry.STATIC.CONTINUE;
+        } else {
+            delete this.isAction;
+            delete this.isContinue;
+        }
+    }
+};
+
+Entry.block.maze_step_rotate_right = {
+    skeleton: "basic",
+    color: "#A751E3",
+    contents: [
+        "오른쪽으로 돌기",
+        {
+            type: "Image",
+            img: "/img/assets/ntry/bitmap/jr/cparty_rotate_r.png",
+            size: 24
+        }
+    ],
+    func: function() {
+        if (!this.isContinue) {
+
+            this.isContinue = true;
+            this.isAction = true;
+            var self = this;
+            var callBack = function() {
+                self.isAction = false;
+            };
+
+            // turn direction
+            Ntry.dispatchEvent("unitAction", Ntry.STATIC.TURN_RIGHT, callBack);
+
+            return Entry.STATIC.CONTINUE;
+        } else if (this.isAction) {
+            return Entry.STATIC.CONTINUE;
+        } else {
+            delete this.isAction;
+            delete this.isContinue;
+        }
+    }
+};
+
