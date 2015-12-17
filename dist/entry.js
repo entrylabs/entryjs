@@ -13272,9 +13272,13 @@ Entry.block.maze_step_if_1 = {skeleton:"basic_loop", color:"#498DEB", contents:[
     b = Ntry.entityManager.getComponent(b.id, Ntry.STATIC.GRID);
     b = {x:b.x, y:b.y};
     Ntry.addVectorByDirection(b, a.direction, 1);
+    c = Ntry.entityManager.find({type:Ntry.STATIC.GRID, x:b.x, y:b.y});
+    a = this.block.values.STATEMENT;
+    if (0 == c.length) {
+      return this.executor.stepInto(a), Entry.STATIC.CONTINUE;
+    }
     b = Ntry.entityManager.find({type:Ntry.STATIC.GRID, x:b.x, y:b.y}, {type:Ntry.STATIC.TILE, tileType:Ntry.STATIC.WALL});
     this.isContinue = !0;
-    a = this.block.values.STATEMENT;
     if (0 !== b.length && 1 !== a.getBlocks().length) {
       return this.executor.stepInto(a), Entry.STATIC.CONTINUE;
     }

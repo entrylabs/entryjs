@@ -918,6 +918,22 @@ Entry.block.maze_step_if_1 = {
         var grid = {x: gridComp.x, y: gridComp.y};
         Ntry.addVectorByDirection(grid, unitComp.direction, 1);
 
+        var existEntities = Ntry.entityManager.find(
+        {
+            type: Ntry.STATIC.GRID,
+            x: grid.x,
+            y: grid.y
+        });
+        
+        var statement = this.block.values.STATEMENT;
+        
+        if (existEntities.length == 0) {
+            this.executor.stepInto(statement);
+            return Entry.STATIC.CONTINUE;
+        }
+            
+
+
         var fitEntities = Ntry.entityManager.find(
             {
                 type: Ntry.STATIC.GRID,
@@ -932,7 +948,7 @@ Entry.block.maze_step_if_1 = {
 
         this.isContinue = true;
 
-        var statement = this.block.values.STATEMENT;
+        
         if (fitEntities.length === 0) {
             return;
         } else if (statement.getBlocks().length === 1)
