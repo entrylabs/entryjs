@@ -447,7 +447,6 @@ Entry.block.jr_go_straight = {
             var callBack = function() {
                 self.isAction = false;
             };
-
             // turn direction
             Ntry.dispatchEvent("unitAction", Ntry.STATIC.WALK, callBack);
 
@@ -736,7 +735,7 @@ Entry.block.jr_if_speed = {
     }
 };
 
-Entry.block.jr_jump = {
+Entry.block.maze_step_jump = {
     skeleton: "basic",
     color: "#FF6E4B",
     contents: [
@@ -771,7 +770,7 @@ Entry.block.jr_jump = {
     }
 };
 
-Entry.block.jr_repeat_count = {
+Entry.block.maze_step_for = {
     skeleton: "basic_loop",
     color: "#127CDB",
     contents: [
@@ -840,7 +839,7 @@ Entry.block.test = {
     }
 };
 
-Entry.block.jr_repeat_maze_until_dest = {
+Entry.block.maze_repeat_until_1 = {
     skeleton: "basic_loop",
     color: "#498DEB",
     contents: [
@@ -875,7 +874,7 @@ Entry.block.jr_repeat_maze_until_dest = {
 };
 
 
-Entry.block.jr_maze_if_wall = {
+Entry.block.maze_step_unif_1 = {
     skeleton: "basic_loop",
     color: "#498DEB",
     contents: [
@@ -945,7 +944,7 @@ Entry.block.jr_maze_if_wall = {
     }
 };
 
-Entry.block.jr_maze_if_obstacle = {
+Entry.block.maze_step_if_2 = {
     skeleton: "basic_loop",
     color: "#498DEB",
     contents: [
@@ -1015,7 +1014,7 @@ Entry.block.jr_maze_if_obstacle = {
     }
 };
 
-Entry.block.jr_promise_call = {
+Entry.block.maze_call_function = {
     skeleton: "basic",
     color: "#B57242",
     contents: [
@@ -1031,7 +1030,7 @@ Entry.block.jr_promise_call = {
     }
 };
 
-Entry.block.jr_promise_wrap = {
+Entry.block.maze_define_function = {
     skeleton: "basic_define",
     color: "#B57242",
     contents: [
@@ -1057,7 +1056,7 @@ Entry.block.jr_promise_wrap = {
     }
 }; 
 
-Entry.block.jr_maze_if_obstacle_banana = {
+Entry.block.maze_step_if_3 = {
     skeleton: "basic_loop",
     color: "#498DEB",
     contents: [
@@ -1127,7 +1126,7 @@ Entry.block.jr_maze_if_obstacle_banana = {
     }
 };
 
-Entry.block.jr_maze_if_tile_house = {
+Entry.block.maze_step_if_4 = {
     skeleton: "basic_loop",
     color: "#498DEB",
     contents: [
@@ -1197,5 +1196,139 @@ Entry.block.jr_maze_if_tile_house = {
     }
 };
 
+
+// maze start block 
+
+Entry.block.maze_step_start = {
+    skeleton: "basic_event",
+    event: "start",
+    color: "#3BBD70",
+    contents: [
+        {
+            type: "Indicator",
+            boxMultiplier: 1,
+            img: "/img/assets/block_icon/start_icon_play.png",
+            highlightColor: "#3BBD70",
+            size: 17,
+            position: {
+                 x: 0, y: -2
+            }
+        },
+        "시작 버튼을 눌렀을 때"
+    ],
+    func: function() {
+        console.log("11111");
+        var entities = Ntry.entityManager.getEntitiesByComponent(
+        Ntry.STATIC.UNIT);
+
+        for (var key in entities)
+            this._unit = entities[key];
+
+        Ntry.unitComp = Ntry.entityManager.getComponent(
+        this._unit.id, Ntry.STATIC.UNIT);
+    }
+};
+
+Entry.block.maze_step_move_step = {
+    skeleton: "basic",
+    color: "#A751E3",
+    contents: [
+        "앞으로 가기",
+        {
+            type: "Image",
+            img: "/img/assets/ntry/bitmap/jr/cparty_go_straight.png",
+            size: 24
+        }
+    ],
+    func: function() {
+        console.log(2);
+        if (!this.isContinue) {
+
+            this.isContinue = true;
+            this.isAction = true;
+            var self = this;
+            var callBack = function() {
+                self.isAction = false;
+            };
+            // turn direction
+            Ntry.dispatchEvent("unitAction", Ntry.STATIC.WALK, callBack);
+
+            return Entry.STATIC.CONTINUE;
+        } else if (this.isAction) {
+            return Entry.STATIC.CONTINUE;
+        } else {
+            delete this.isAction;
+            delete this.isContinue;
+        }
+    }                
+};
+
+Entry.block.maze_step_rotate_left= {
+    skeleton: "basic",
+    color: "#A751E3",
+    contents: [
+        "왼쪽으로 돌기",
+        {
+            type: "Image",
+            img: "/img/assets/ntry/bitmap/jr/cparty_rotate_l.png",
+            size: 24
+        }
+    ],
+    func: function() {
+        if (!this.isContinue) {
+
+            this.isContinue = true;
+            this.isAction = true;
+            var self = this;
+            var callBack = function() {
+                self.isAction = false;
+            };
+
+            // turn direction
+            Ntry.dispatchEvent("unitAction", Ntry.STATIC.TURN_LEFT, callBack);
+
+            return Entry.STATIC.CONTINUE;
+        } else if (this.isAction) {
+            return Entry.STATIC.CONTINUE;
+        } else {
+            delete this.isAction;
+            delete this.isContinue;
+        }
+    }
+};
+
+Entry.block.maze_step_rotate_right = {
+    skeleton: "basic",
+    color: "#A751E3",
+    contents: [
+        "오른쪽으로 돌기",
+        {
+            type: "Image",
+            img: "/img/assets/ntry/bitmap/jr/cparty_rotate_r.png",
+            size: 24
+        }
+    ],
+    func: function() {
+        if (!this.isContinue) {
+
+            this.isContinue = true;
+            this.isAction = true;
+            var self = this;
+            var callBack = function() {
+                self.isAction = false;
+            };
+
+            // turn direction
+            Ntry.dispatchEvent("unitAction", Ntry.STATIC.TURN_RIGHT, callBack);
+
+            return Entry.STATIC.CONTINUE;
+        } else if (this.isAction) {
+            return Entry.STATIC.CONTINUE;
+        } else {
+            delete this.isAction;
+            delete this.isContinue;
+        }
+    }
+};
 
 // Entry.block.jr_promise_call = Entry.block.jr_promise_wrap;
