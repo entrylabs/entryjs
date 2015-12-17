@@ -14035,25 +14035,36 @@ Entry.FieldAngle.FILL_PATH = "M 0, 0 v -49 A 49,49 0 %LARGE 1 %X,%Y z";
     c.y -= this.box.height / 2;
     this.optionGroup.css({height:16, left:c.x, top:c.y, width:a.box.width});
     this.optionGroup.select();
-    c = Entry.FieldAngle.RADIUS;
+    var d = Entry.FieldAngle.RADIUS;
     this.svgOptionGroup = this.appendSvgOptionGroup();
-    var d = this.svgOptionGroup.circle(0, 0, c);
-    d.attr({class:"entry-field-angle-circle"});
-    d.mousemove(function(a) {
+    this.svgOptionGroup.circle(0, 0, d).attr({class:"entry-field-angle-circle"});
+    this.svgOptionGroup.mousemove(function(c) {
+      c = [c.clientX, c.clientY];
+      var f = a.getAbsolutePos(), g = [f.x + a.box.width / 2, f.y + a.box.height / 2], f = [f.x + a.box.width / 2, g[1] + d];
+      if (Math.floor(c[0]) == Math.floor(f[0])) {
+        g = 180;
+      } else {
+        var h = Math.pow(f[0] - c[0], 2) + Math.pow(f[1] - c[1], 2), k = Math.pow(f[0] - g[0], 2) + Math.pow(f[1] - g[1], 2), g = Entry.toDegrees(Math.acos((h + k - (Math.pow(g[0] - c[0], 2) + Math.pow(g[1] - c[1], 2))) / Math.sqrt(4 * h * k)))
+      }
+      g = 15 * Math.round(g / 15);
+      c[0] < f[0] && (g = 360 - g);
+      a.value = g;
+      a.applyValue();
     });
     this._dividerGroup = this.svgOptionGroup.group();
-    for (d = 0;360 > d;d += 15) {
-      this._dividerGroup.line(c, 0, c - (0 === d % 45 ? 10 : 5), 0).attr({transform:"rotate(" + d + ", 0, 0)", class:"entry-angle-divider"});
+    for (c = 0;360 > c;c += 15) {
+      this._dividerGroup.line(d, 0, d - (0 === c % 45 ? 10 : 5), 0).attr({transform:"rotate(" + c + ", 0, 0)", class:"entry-angle-divider"});
     }
     c = this.getRelativePos();
     c.x += this.box.width / 2;
     c.y = c.y + this.box.height / 2 + Entry.FieldAngle.RADIUS + 1;
     this.svgOptionGroup.attr({class:"entry-field-angle", transform:"t" + c.x + " " + c.y});
-    this.updateGraph();
   };
   a.updateGraph = function() {
     this._fillPath && this._fillPath.remove();
-    var a = Entry.FieldAngle.RADIUS, c = Entry.toRadian(this.value), d = Math.sin(c) * a, a = Math.cos(c) * -a, c = c > Math.PI ? 1 : 0;
+    var a = Entry.FieldAngle.RADIUS;
+    console.log(this.value);
+    var c = Entry.toRadian(this.value), d = Math.sin(c) * a, a = Math.cos(c) * -a, c = c > Math.PI ? 1 : 0;
     this._fillPath = this.svgOptionGroup.path(Entry.FieldAngle.FILL_PATH.replace("%X", d).replace("%Y", a).replace("%LARGE", c));
     this._fillPath.attr({class:"entry-angle-fill-area"});
     this.svgOptionGroup.append(this._dividerGroup);
@@ -14063,7 +14074,7 @@ Entry.FieldAngle.FILL_PATH = "M 0, 0 v -49 A 49,49 0 %LARGE 1 %X,%Y z";
   };
   a.applyValue = function(a) {
     a = this.optionGroup.val();
-    isNaN(a) || (a = this.modValue(a), this.value = this._block.values[this.key] = a, this.textElement.node.textContent = this.truncate(), this.resize());
+    isNaN(a) || (a = this.modValue(a), this.value = this._block.values[this.key] = a, this.textElement.node.textContent = this.getText(), this.updateGraph(), this.resize());
   };
   a.resize = function() {
     var a = this.getTextWidth();
