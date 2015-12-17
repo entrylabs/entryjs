@@ -13330,7 +13330,7 @@ Entry.block.maze_step_if_3 = {skeleton:"basic_loop", color:"#498DEB", contents:[
     b = Ntry.entityManager.getComponent(b.id, Ntry.STATIC.GRID);
     b = {x:b.x, y:b.y};
     Ntry.addVectorByDirection(b, a.direction, 1);
-    b = Ntry.entityManager.find({type:Ntry.STATIC.GRID, x:b.x, y:b.y}, {type:Ntry.STATIC.OBSTACLE, tileType:Ntry.STATIC.OBSTACLE_BANANA});
+    b = Ntry.entityManager.find({type:Ntry.STATIC.GRID, x:b.x, y:b.y}, {type:Ntry.STATIC.TILE, tileType:Ntry.STATIC.OBSTACLE_BANANA});
     this.isContinue = !0;
     a = this.block.values.STATEMENT;
     if (0 !== b.length && 1 !== a.getBlocks().length) {
@@ -13348,7 +13348,7 @@ Entry.block.maze_step_if_4 = {skeleton:"basic_loop", color:"#498DEB", contents:[
     b = Ntry.entityManager.getComponent(b.id, Ntry.STATIC.GRID);
     b = {x:b.x, y:b.y};
     Ntry.addVectorByDirection(b, a.direction, 1);
-    b = Ntry.entityManager.find({type:Ntry.STATIC.GRID, x:b.x, y:b.y}, {type:Ntry.STATIC.WALL, tileType:Ntry.STATIC.WALL});
+    b = Ntry.entityManager.find({type:Ntry.STATIC.GRID, x:b.x, y:b.y}, {type:Ntry.STATIC.TILE, tileType:Ntry.STATIC.WALL});
     this.isContinue = !0;
     a = this.block.values.STATEMENT;
     if (0 !== b.length && 1 !== a.getBlocks().length) {

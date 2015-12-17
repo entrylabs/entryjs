@@ -1143,7 +1143,7 @@ Entry.block.maze_step_if_3 = {
                 y: grid.y
             },
             {
-                type: Ntry.STATIC.OBSTACLE,
+                type: Ntry.STATIC.TILE,
                 tileType: Ntry.STATIC.OBSTACLE_BANANA
             }
         );
@@ -1213,7 +1213,7 @@ Entry.block.maze_step_if_4 = {
                 y: grid.y
             },
             {
-                type: Ntry.STATIC.WALL,
+                type: Ntry.STATIC.TILE,
                 tileType: Ntry.STATIC.WALL
             }
         );
