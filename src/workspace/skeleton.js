@@ -162,6 +162,7 @@ Entry.skeleton.pebble_event = {
 
 Entry.skeleton.pebble_loop = {
     fontSize: 16,
+    dropdownHeight: 23,
     path: function(block) {
         var contentWidth = 124;
         var contentHeight = Math.max(block.contentHeight, 50);

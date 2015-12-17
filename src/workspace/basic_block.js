@@ -56,7 +56,9 @@ Entry.block.jr_repeat = {
                 [9,9],
                 [10,10]
             ],
-            value: 1
+            value: 1,
+            fontSize: 14,
+            roundValue: 3
         },
         {
             type: "Text",
@@ -1054,7 +1056,7 @@ Entry.block.jr_promise_wrap = {
         console.log(executor);
         executor.stepInto(this.block.values.STATEMENT);
     }
-}; 
+};
 
 Entry.block.jr_maze_if_obstacle_banana = {
     skeleton: "basic_loop",

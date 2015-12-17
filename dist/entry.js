@@ -12942,7 +12942,7 @@ Entry.block.jr_start = {skeleton:"pebble_event", event:"start", color:"#3BBD70",
   }
   Ntry.unitComp = Ntry.entityManager.getComponent(this._unit.id, Ntry.STATIC.UNIT);
 }};
-Entry.block.jr_repeat = {skeleton:"pebble_loop", color:"#127CDB", contents:[{type:"Dropdown", key:"REPEAT", options:[[1, 1], [2, 2], [3, 3], [4, 4], [5, 5], [6, 6], [7, 7], [8, 8], [9, 9], [10, 10]], value:1}, {type:"Text", text:"\ubc18\ubcf5"}, {type:"Statement", key:"STATEMENT", accept:"pebble_basic", position:{x:46, y:14}}], func:function() {
+Entry.block.jr_repeat = {skeleton:"pebble_loop", color:"#127CDB", contents:[{type:"Dropdown", key:"REPEAT", options:[[1, 1], [2, 2], [3, 3], [4, 4], [5, 5], [6, 6], [7, 7], [8, 8], [9, 9], [10, 10]], value:1, fontSize:14, roundValue:3}, {type:"Text", text:"\ubc18\ubcf5"}, {type:"Statement", key:"STATEMENT", accept:"pebble_basic", position:{x:46, y:14}}], func:function() {
   if (void 0 === this.repeatCount) {
     return this.repeatCount = this.block.values.REPEAT, Entry.STATIC.CONTINUE;
   }
@@ -14099,6 +14099,9 @@ Entry.FieldDropdown = function(a, b) {
   this._contents = a;
   this.key = a.key;
   this.value = this._block.values[this.key];
+  this._CONTENT_HEIGHT = a.dropdownHeight || b.getSkeleton().dropdownHeight || 16;
+  this._fONT_SIZE = a.fontSize || b.getSkeleton().fontSize || 12;
+  this._ROUND = a.roundValue || 0;
   this.renderStart(b);
 };
 Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
@@ -14107,15 +14110,17 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
     var c = this;
     this.svgGroup = a.contentSvgGroup.group();
     this.svgGroup.attr({class:"entry-field-dropdown"});
-    this.textElement = this.svgGroup.text(2, 3, this.getTextByValue(this.value));
-    a = this.textElement.node.getComputedTextLength() + 18;
-    this._header = this.svgGroup.rect(0, -12, a, 23, 3).attr({fill:"#80cbf8"});
+    this.textElement = this.svgGroup.text(2, 0, this.getTextByValue(this.value));
+    var d = this.textElement.getBBox();
+    this.textElement.attr({style:"white-space: pre; font-size:" + c._FONT_SIZE + "px", y:.25 * d.height});
+    var d = this.textElement.node.getComputedTextLength() + 18, e = this._CONTENT_HEIGHT;
+    this._header = this.svgGroup.rect(0, -e / 2, d, e, c._ROUND).attr({fill:"#fff", "fill-opacity":.4});
     this.svgGroup.append(this.textElement);
-    this._arrow = this.svgGroup.polygon(0, -2, 6, -2, 3, 2).attr({fill:"#127cbd", stroke:"#127cbd", transform:"t" + (a - 11) + " 0"});
+    this._arrow = this.svgGroup.polygon(0, -2, 6, -2, 3, 2).attr({fill:a._schema.color, stroke:a._schema.color, transform:"t" + (d - 11) + " 0"});
     this.svgGroup.mouseup(function(a) {
       c._block.view.dragMode == Entry.DRAG_MODE_MOUSEDOWN && c.renderOptions();
     });
-    this.box.set({x:0, y:0, width:a, height:23});
+    this.box.set({x:0, y:0, width:d, height:e});
   };
   a.resize = function() {
     var a = this.textElement.node.getComputedTextLength() + 18;
@@ -14645,7 +14650,7 @@ Entry.skeleton.pebble_event = {path:function(a) {
 }, contentPos:function() {
   return {x:0, y:25};
 }};
-Entry.skeleton.pebble_loop = {fontSize:16, path:function(a) {
+Entry.skeleton.pebble_loop = {fontSize:16, dropdownHeight:23, path:function(a) {
   a = Math.max(a.contentHeight, 50);
   return "M 0,9 a 9,9 0 0,0 9,-9 h %cw q 25,0 25,25 v %ch q 0,25 -25,25 h -%cw a 9,9 0 0,1 -18,0 h -%cw q -25,0 -25,-25 v -%ch q 0,-25 25,-25 h %cw a 9,9 0 0,0 9,9 M 0,49 a 9,9 0 0,1 -9,-9 h -28 a 25,25 0 0,0 -25,25 v %cih a 25,25 0 0,0 25,25 h 28 a 9,9 0 0,0 18,0 h 28 a 25,25 0 0,0 25,-25 v -%cih a 25,25 0 0,0 -25,-25 h -28 a 9,9 0 0,1 -9,9 z".replace(/%cw/gi, 41).replace(/%ch/gi, a + 4).replace(/%cih/gi, a - 50);
 }, magnets:function() {
