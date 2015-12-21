@@ -172,7 +172,7 @@ Entry.Thread = function(thread, code) {
     };
 
     p.inspectExist = function() {
-        //if (this._data.length === 0) this.destroy();
+        if (this._data.length === 0) this.destroy();
     };
 
     p.getCode = function() {

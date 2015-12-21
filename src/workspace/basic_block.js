@@ -568,10 +568,11 @@ Entry.block.jr_repeat_until_dest = {
         }
     ],
     func: function() {
-        if (this.block.values.STATEMENT.getBlocks().length === 1)
+        var statement = this.block.statements[0];
+        if (statement.getBlocks().length === 1)
             return;
 
-        this.executor.stepInto(this.block.values.STATEMENT);
+        this.executor.stepInto(statement);
         return Entry.STATIC.CONTINUE;
     }
 };
@@ -633,11 +634,9 @@ Entry.block.jr_if_construction = {
 
         this.isContinue = true;
 
-        var statement = this.block.values.STATEMENT;
-        if (fitEntities.length === 0) {
-            return;
-        } else if (statement.getBlocks().length === 1)
-            return;
+        var statement = this.block.statements[0];
+        if (fitEntities.length === 0) return;
+        else if (statement.getBlocks().length === 1) return;
         else {
             this.executor.stepInto(statement);
             return Entry.STATIC.CONTINUE;
@@ -703,7 +702,7 @@ Entry.block.jr_if_speed = {
 
         this.isContinue = true;
 
-        var statement = this.block.values.STATEMENT;
+        var statement = this.block.statements[0];
         if (fitEntities.length === 0) return;
         else if(statement.getBlocks().length === 1) return;
         else {
@@ -787,11 +786,11 @@ Entry.block.maze_step_for = {
     ],
     func: function() {
         if (this.repeatCount === undefined) {
-            this.repeatCount = this.block.values.REPEAT;
+            this.repeatCount = this.block.params[0];
             return Entry.STATIC.CONTINUE;
         } else if (this.repeatCount > 0) {
             this.repeatCount--;
-            this.executor.stepInto(this.block.values.STATEMENT);
+            this.executor.stepInto(this.block.statements[0]);
             return Entry.STATIC.CONTINUE;
         } else {
             delete this.repeatCount;
@@ -841,10 +840,11 @@ Entry.block.maze_repeat_until_1 = {
         }
     ],
     func: function() {
-        if (this.block.values.STATEMENT.getBlocks().length === 1)
+        var statement = this.block.statements[0];
+        if (statement.getBlocks().length === 1)
             return;
 
-        this.executor.stepInto(this.block.values.STATEMENT);
+        this.executor.stepInto(statement);
         return Entry.STATIC.CONTINUE;
     }
 };
@@ -862,7 +862,7 @@ Entry.block.maze_step_if_1 = {
         },
         {
             type: "Image",
-            img: "/img/assets/week/blocks/for.png",
+            img: "/img/assets/week/blocks/if.png",
             size: 24
         }
     ],
@@ -900,9 +900,9 @@ Entry.block.maze_step_if_1 = {
             y: grid.y
         });
 
-        var statement = this.block.values.STATEMENT;
+        var statement = this.block.statements[0];
 
-        if (existEntities.length == 0) {
+        if (existEntities.length === 0) {
             this.executor.stepInto(statement);
             return Entry.STATIC.CONTINUE;
         }
@@ -938,7 +938,7 @@ Entry.block.maze_step_if_1 = {
 Entry.block.maze_step_if_2 = {
     skeleton: "basic_loop",
     color: "#498DEB",
-    template: "만약 %1 앞에 있다면",
+    template: "만약 %1 앞에 있다면 %2",
     params: [
         {
             type: "Image",
@@ -947,7 +947,7 @@ Entry.block.maze_step_if_2 = {
         },
         {
             type: "Image",
-            img: "/img/assets/week/blocks/for.png",
+            img: "/img/assets/week/blocks/if.png",
             size: 24
         }
     ],
@@ -992,7 +992,7 @@ Entry.block.maze_step_if_2 = {
 
         this.isContinue = true;
 
-        var statement = this.block.values.STATEMENT;
+        var statement = this.block.statements[0];
         if (fitEntities.length === 0) {
             return;
         } else if (statement.getBlocks().length === 1)
@@ -1060,7 +1060,7 @@ Entry.block.maze_define_function = {
     func: function(executor) {
         if (this.executed)
             return;
-        this.executor.stepInto(this.block.values.STATEMENT);
+        this.executor.stepInto(this.block.statements[0]);
         this.executed = true;
         return Entry.STATIC.CONTINUE;
     }
@@ -1069,7 +1069,7 @@ Entry.block.maze_define_function = {
 Entry.block.maze_step_if_3 = {
     skeleton: "basic_loop",
     color: "#498DEB",
-    template: "만약 %1 앞에 있다면",
+    template: "만약 %1 앞에 있다면 %2",
     params: [
         {
             type: "Image",
@@ -1078,7 +1078,7 @@ Entry.block.maze_step_if_3 = {
         },
         {
             type: "Image",
-            img: "/img/assets/week/blocks/for.png",
+            img: "/img/assets/week/blocks/if.png",
             size: 24
         }
     ],
@@ -1123,7 +1123,7 @@ Entry.block.maze_step_if_3 = {
 
         this.isContinue = true;
 
-        var statement = this.block.values.STATEMENT;
+        var statement = this.block.statements[0];
         if (fitEntities.length === 0) {
             return;
         } else if (statement.getBlocks().length === 1)
@@ -1138,7 +1138,7 @@ Entry.block.maze_step_if_3 = {
 Entry.block.maze_step_if_4 = {
     skeleton: "basic_loop",
     color: "#498DEB",
-    template: "만약 %1 앞에 있다면",
+    template: "만약 %1 앞에 있다면 %2",
     params: [
         {
             type: "Image",
@@ -1147,7 +1147,7 @@ Entry.block.maze_step_if_4 = {
         },
         {
             type: "Image",
-            img: "/img/assets/week/blocks/for.png",
+            img: "/img/assets/week/blocks/if.png",
             size: 24
         }
     ],
@@ -1192,7 +1192,7 @@ Entry.block.maze_step_if_4 = {
 
         this.isContinue = true;
 
-        var statement = this.block.values.STATEMENT;
+        var statement = this.block.statements[0];
         if (fitEntities.length === 0) {
             return;
         } else if (statement.getBlocks().length === 1)

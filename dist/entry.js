@@ -13205,8 +13205,9 @@ Entry.block.jr_go_slow = {skeleton:"basic", color:"#f46c6c", template:"\ucc9c\uc
   }
 }};
 Entry.block.jr_repeat_until_dest = {skeleton:"basic_loop", color:"#498DEB", template:"%1 \ub9cc\ub0a0 \ub54c \uae4c\uc9c0 \ubc18\ubcf5\ud558\uae30 %2", params:[{type:"Image", img:"/img/assets/ntry/bitmap/jr/jr_goal_image.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic", position:{x:2, y:15}}], func:function() {
-  if (1 !== this.block.values.STATEMENT.getBlocks().length) {
-    return this.executor.stepInto(this.block.values.STATEMENT), Entry.STATIC.CONTINUE;
+  var a = this.block.statements[0];
+  if (1 !== a.getBlocks().length) {
+    return this.executor.stepInto(a), Entry.STATIC.CONTINUE;
   }
 }};
 Entry.block.jr_if_construction = {skeleton:"basic_loop", color:"#498DEB", template:"\ub9cc\uc57d %1 \uc55e\uc5d0 \uc788\ub2e4\uba74 %2", params:[{type:"Image", img:"/img/assets/ntry/bitmap/jr/jr_construction_image.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic", position:{x:2, y:15}}], func:function() {
@@ -13221,7 +13222,7 @@ Entry.block.jr_if_construction = {skeleton:"basic_loop", color:"#498DEB", templa
     Ntry.addVectorByDirection(b, a.direction, 1);
     b = Ntry.entityManager.find({type:Ntry.STATIC.GRID, x:b.x, y:b.y}, {type:Ntry.STATIC.TILE, tileType:Ntry.STATIC.OBSTACLE_REPAIR});
     this.isContinue = !0;
-    a = this.block.values.STATEMENT;
+    a = this.block.statements[0];
     if (0 !== b.length && 1 !== a.getBlocks().length) {
       return this.executor.stepInto(a), Entry.STATIC.CONTINUE;
     }
@@ -13239,7 +13240,7 @@ Entry.block.jr_if_speed = {skeleton:"basic_loop", color:"#498DEB", template:"\ub
     Ntry.addVectorByDirection(b, a.direction, 1);
     b = Ntry.entityManager.find({type:Ntry.STATIC.GRID, x:b.x, y:b.y}, {type:Ntry.STATIC.TILE, tileType:Ntry.STATIC.OBSTACLE_SLOW});
     this.isContinue = !0;
-    a = this.block.values.STATEMENT;
+    a = this.block.statements[0];
     if (0 !== b.length && 1 !== a.getBlocks().length) {
       return this.executor.stepInto(a), Entry.STATIC.CONTINUE;
     }
