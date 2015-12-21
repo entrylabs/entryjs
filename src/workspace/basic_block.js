@@ -17,7 +17,8 @@ Entry.block.jr_start = {
     skeleton: "pebble_event",
     event: "start",
     color: "#3BBD70",
-    contents: [
+    template: "%1",
+    params: [
         {
             type: "Indicator",
             img: "/img/assets/ntry/bitmap/jr/block_play_image.png",
@@ -40,10 +41,10 @@ Entry.block.jr_start = {
 Entry.block.jr_repeat = {
     skeleton: "pebble_loop",
     color: "#127CDB",
-    contents: [
+    template: "%1 반복",
+    params: [
         {
             type: "Dropdown",
-            key: "REPEAT",
             options: [
                 [1,1],
                 [2,2],
@@ -56,17 +57,13 @@ Entry.block.jr_repeat = {
                 [9,9],
                 [10,10]
             ],
-            value: 1,
+            value: 3,
             fontSize: 14,
             roundValue: 3
-        },
+        }
+    ],
+    statements: [
         {
-            type: "Text",
-            text: "반복"
-        },
-        {
-            type: "Statement",
-            key: "STATEMENT",
             accept: "pebble_basic",
             position: {
                  x: 46,
@@ -92,11 +89,8 @@ Entry.block.jr_repeat = {
 Entry.block.jr_item = {
     skeleton: "pebble_basic",
     color: "#F46C6C",
-    contents: [
-        {
-            type: "Text",
-            text: "꽃 모으기"
-        },
+    template: "꽃 모으기 %1",
+    params: [
         {
             type: "Indicator",
             img: "/img/assets/ntry/bitmap/jr/block_item_image.png",
@@ -129,11 +123,8 @@ Entry.block.jr_item = {
 Entry.block.cparty_jr_item = {
     skeleton: "pebble_basic",
     color: "#8ABC1D",
-    contents: [
-        {
-            type: "Text",
-            text: "연필 줍기"
-        },
+    template: "연필 줍기 %1",
+    params: [
         {
             type: "Indicator",
             img: "/img/assets/ntry/bitmap/cpartyjr/pen.png",
@@ -167,11 +158,8 @@ Entry.block.cparty_jr_item = {
 Entry.block.jr_north = {
     skeleton: "pebble_basic",
     color: "#A751E3",
-    contents: [
-        {
-            type: "Text",
-            text: "  위쪽"
-        },
+    template: "위쪽 %1",
+    params: [
         {
             type: "Indicator",
             img: "/img/assets/ntry/bitmap/jr/block_up_image.png",
@@ -223,11 +211,8 @@ Entry.block.jr_north = {
 Entry.block.jr_east = {
     skeleton: "pebble_basic",
     color: "#A751E3",
-    contents: [
-        {
-            type: "Text",
-            text: "오른쪽"
-        },
+    template: "오른쪽 %1",
+    params: [
         {
             type: "Indicator",
             img: "/img/assets/ntry/bitmap/jr/block_right_image.png",
@@ -283,11 +268,8 @@ Entry.block.jr_east = {
 Entry.block.jr_south = {
     skeleton: "pebble_basic",
     color: "#A751E3",
-    contents: [
-        {
-            type: "Text",
-            text: "  아래쪽"
-        },
+    template: "아래쪽 %1",
+    params: [
         {
             type: "Indicator",
             img: "/img/assets/ntry/bitmap/jr/block_down_image.png",
@@ -343,11 +325,8 @@ Entry.block.jr_south = {
 Entry.block.jr_west = {
     skeleton: "pebble_basic",
     color: "#A751E3",
-    contents: [
-        {
-            type: "Text",
-            text: "  왼쪽"
-        },
+    template: "왼쪽 %1",
+    params: [
         {
             type: "Indicator",
             img: "/img/assets/ntry/bitmap/jr/block_left_image.png",
@@ -404,7 +383,8 @@ Entry.block.jr_start_basic = {
     skeleton: "basic_event",
     event: "start",
     color: "#3BBD70",
-    contents: [
+    template: "%1 시작 버튼을 눌렀을 떄",
+    params: [
         {
             type: "Indicator",
             boxMultiplier: 1,
@@ -414,8 +394,7 @@ Entry.block.jr_start_basic = {
             position: {
                  x: 0, y: -2
             }
-        },
-        "시작 버튼을 눌렀을 때"
+        }
     ],
     func: function() {
         var entities = Ntry.entityManager.getEntitiesByComponent(
@@ -432,8 +411,8 @@ Entry.block.jr_start_basic = {
 Entry.block.jr_go_straight = {
     skeleton: "basic",
     color: "#A751E3",
-    contents: [
-        "앞으로 가기",
+    template: "앞으로 가기 %1",
+    params: [
         {
             type: "Image",
             img: "/img/assets/ntry/bitmap/jr/cparty_go_straight.png",
@@ -465,8 +444,8 @@ Entry.block.jr_go_straight = {
 Entry.block.jr_turn_left = {
     skeleton: "basic",
     color: "#A751E3",
-    contents: [
-        "왼쪽으로 돌기",
+    template: "왼쪽으로 돌기 %1",
+    params: [
         {
             type: "Image",
             img: "/img/assets/ntry/bitmap/jr/cparty_rotate_l.png",
@@ -499,8 +478,8 @@ Entry.block.jr_turn_left = {
 Entry.block.jr_turn_right = {
     skeleton: "basic",
     color: "#A751E3",
-    contents: [
-        "오른쪽으로 돌기",
+    template: "오른쪽으로 돌기 %1",
+    params: [
         {
             type: "Image",
             img: "/img/assets/ntry/bitmap/jr/cparty_rotate_r.png",
@@ -533,8 +512,8 @@ Entry.block.jr_turn_right = {
 Entry.block.jr_go_slow = {
     skeleton: "basic",
     color: "#f46c6c",
-    contents: [
-        "천천히 가기",
+    template: "천천히 가기 %1",
+    params: [
         {
             type: "Image",
             img: "/img/assets/ntry/bitmap/jr/cparty_go_slow.png",
@@ -567,21 +546,21 @@ Entry.block.jr_go_slow = {
 Entry.block.jr_repeat_until_dest = {
     skeleton: "basic_loop",
     color: "#498DEB",
-    contents: [
+    template: "%1 만날 때 까지 반복하기 %2",
+    params: [
         {
             type: "Image",
             img: "/img/assets/ntry/bitmap/jr/jr_goal_image.png",
             size: 18
         },
-        "만날 때 까지 반복하기",
         {
             type: "Image",
             img: "/img/assets/week/blocks/for.png",
             size: 24
-        },
+        }
+    ],
+    statements: [
         {
-            type: "Statement",
-            key: "STATEMENT",
             accept: "basic",
             position: {
                 x: 2,
@@ -601,22 +580,21 @@ Entry.block.jr_repeat_until_dest = {
 Entry.block.jr_if_construction = {
     skeleton: "basic_loop",
     color: "#498DEB",
-    contents: [
-        "만약",
+    template: "만약 %1 앞에 있다면 %2",
+    params: [
         {
             type: "Image",
             img: "/img/assets/ntry/bitmap/jr/jr_construction_image.png",
             size: 18
         },
-        "앞에 있다면",
         {
             type: "Image",
             img: "/img/assets/week/blocks/for.png",
             size: 24
-        },
+        }
+    ],
+    statements: [
         {
-            type: "Statement",
-            key: "STATEMENT",
             accept: "basic",
             position: {
                 x: 2,
@@ -671,22 +649,21 @@ Entry.block.jr_if_construction = {
 Entry.block.jr_if_speed = {
     skeleton: "basic_loop",
     color: "#498DEB",
-    contents: [
-        "만약",
+    template: "만약 %1 앞에 있다면 %2",
+    params: [
         {
             type: "Image",
             img: "/img/assets/ntry/bitmap/jr/jr_speed_image.png",
             size: 18
         },
-        "앞에 있다면",
         {
             type: "Image",
             img: "/img/assets/week/blocks/for.png",
             size: 24
-        },
+        }
+    ],
+    statements: [
         {
-            type: "Statement",
-            key: "STATEMENT",
             accept: "basic",
             position: {
                 x: 2,
@@ -740,8 +717,8 @@ Entry.block.jr_if_speed = {
 Entry.block.maze_step_jump = {
     skeleton: "basic",
     color: "#FF6E4B",
-    contents: [
-        "뛰어넘기",
+    template: "뛰어넘기 %1",
+    params: [
         {
             type: "Image",
             img: "/img/assets/week/blocks/jump.png",
@@ -775,7 +752,8 @@ Entry.block.maze_step_jump = {
 Entry.block.maze_step_for = {
     skeleton: "basic_loop",
     color: "#127CDB",
-    contents: [
+    template: "%1 번 반복하기 %2",
+    params: [
         {
             type: "Dropdown",
             key: "REPEAT",
@@ -793,16 +771,14 @@ Entry.block.maze_step_for = {
             ],
             value: 1
         },
-        "번 반복하기"
-        ,
         {
             type: "Image",
             img: "/img/assets/week/blocks/for.png",
             size: 24
-        },
+        }
+    ],
+    statements: [
         {
-            type: "Statement",
-            key: "STATEMENT",
             accept: "basic",
             position: {
                 x: 2,
@@ -844,21 +820,21 @@ Entry.block.test = {
 Entry.block.maze_repeat_until_1 = {
     skeleton: "basic_loop",
     color: "#498DEB",
-    contents: [
+    template: "%1 만날 때 까지 반복하기 %2",
+    params: [
         {
             type: "Image",
             img: "/img/assets/ntry/block_inner/repeat_goal_1.png",
             size: 18
         },
-        "만날 때 까지 반복하기",
         {
             type: "Image",
             img: "/img/assets/week/blocks/for.png",
             size: 24
-        },
+        }
+    ],
+    statements: [
         {
-            type: "Statement",
-            key: "STATEMENT",
             accept: "basic",
             position: {
                 x: 2,
@@ -879,22 +855,21 @@ Entry.block.maze_repeat_until_1 = {
 Entry.block.maze_step_unif_1 = {
     skeleton: "basic_loop",
     color: "#498DEB",
-    contents: [
-        "만약",
+    template: "만약 %1 앞에 있다면 %2",
+    params: [
         {
             type: "Image",
             img: "/img/assets/ntry/block_inner/if_target_1.png",
             size: 18
         },
-        "앞에 있다면",
         {
             type: "Image",
             img: "/img/assets/week/blocks/for.png",
             size: 24
-        },
+        }
+    ],
+    statements: [
         {
-            type: "Statement",
-            key: "STATEMENT",
             accept: "basic",
             position: {
                 x: 2,
@@ -949,22 +924,21 @@ Entry.block.maze_step_unif_1 = {
 Entry.block.maze_step_if_2 = {
     skeleton: "basic_loop",
     color: "#498DEB",
-    contents: [
-        "만약",
+    template: "만약 %1 앞에 있다면",
+    params: [
         {
             type: "Image",
             img: "/img/assets/ntry/bitmap/maze2/obstacle_01.png",
             size: 18
         },
-        "앞에 있다면",
         {
             type: "Image",
             img: "/img/assets/week/blocks/for.png",
             size: 24
-        },
+        }
+    ],
+    statements: [
         {
-            type: "Statement",
-            key: "STATEMENT",
             accept: "basic",
             position: {
                 x: 2,
@@ -1019,8 +993,8 @@ Entry.block.maze_step_if_2 = {
 Entry.block.maze_call_function = {
     skeleton: "basic",
     color: "#B57242",
-    contents: [
-        "약속 불러오기",
+    template: "약속 불러오기 %1",
+    params: [
         {
             type: "Image",
             img: "/img/assets/week/blocks/function.png",
@@ -1035,16 +1009,16 @@ Entry.block.maze_call_function = {
 Entry.block.maze_define_function = {
     skeleton: "basic_define",
     color: "#B57242",
-    contents: [
-        "약속하기",
+    template: "약속하기 %1",
+    params: [
         {
             type: "Image",
             img: "/img/assets/week/blocks/function.png",
             size: 24
-        },
+        }
+    ],
+    statements: [
         {
-            type: "Statement",
-            key: "STATEMENT",
             accept: "basic",
             position: {
                 x: 2,
@@ -1061,22 +1035,21 @@ Entry.block.maze_define_function = {
 Entry.block.maze_step_if_3 = {
     skeleton: "basic_loop",
     color: "#498DEB",
-    contents: [
-        "만약",
+    template: "만약 %1 앞에 있다면",
+    params: [
         {
             type: "Image",
             img: "/img/assets/ntry/block_inner/if_target_3.png",
             size: 18
         },
-        "앞에 있다면",
         {
             type: "Image",
             img: "/img/assets/week/blocks/for.png",
             size: 24
-        },
+        }
+    ],
+    statements: [
         {
-            type: "Statement",
-            key: "STATEMENT",
             accept: "basic",
             position: {
                 x: 2,
@@ -1131,22 +1104,21 @@ Entry.block.maze_step_if_3 = {
 Entry.block.maze_step_if_4 = {
     skeleton: "basic_loop",
     color: "#498DEB",
-    contents: [
-        "만약",
+    template: "만약 %1 앞에 있다면",
+    params: [
         {
             type: "Image",
             img: "/img/assets/ntry/block_inner/if_target_2.png",
             size: 18
         },
-        "앞에 있다면",
         {
             type: "Image",
             img: "/img/assets/week/blocks/for.png",
             size: 24
-        },
+        }
+    ],
+    statements: [
         {
-            type: "Statement",
-            key: "STATEMENT",
             accept: "basic",
             position: {
                 x: 2,
@@ -1206,7 +1178,8 @@ Entry.block.maze_step_start = {
     skeleton: "basic_event",
     event: "start",
     color: "#3BBD70",
-    contents: [
+    template: "%1 시작 버튼을 눌렀을 때",
+    params: [
         {
             type: "Indicator",
             boxMultiplier: 1,
@@ -1216,8 +1189,7 @@ Entry.block.maze_step_start = {
             position: {
                  x: 0, y: -2
             }
-        },
-        "시작 버튼을 눌렀을 때"
+        }
     ],
     func: function() {
         console.log("11111");
@@ -1235,8 +1207,8 @@ Entry.block.maze_step_start = {
 Entry.block.maze_step_move_step = {
     skeleton: "basic",
     color: "#A751E3",
-    contents: [
-        "앞으로 가기",
+    template: "앞으로 가기 %1",
+    params: [
         {
             type: "Image",
             img: "/img/assets/ntry/bitmap/jr/cparty_go_straight.png",
@@ -1269,8 +1241,8 @@ Entry.block.maze_step_move_step = {
 Entry.block.maze_step_rotate_left= {
     skeleton: "basic",
     color: "#A751E3",
-    contents: [
-        "왼쪽으로 돌기",
+    template: "왼쪽으로 돌기 %1",
+    params: [
         {
             type: "Image",
             img: "/img/assets/ntry/bitmap/jr/cparty_rotate_l.png",
@@ -1303,8 +1275,8 @@ Entry.block.maze_step_rotate_left= {
 Entry.block.maze_step_rotate_right = {
     skeleton: "basic",
     color: "#A751E3",
-    contents: [
-        "오른쪽으로 돌기",
+    template: "오른쪽으로 돌기 %1",
+    params: [
         {
             type: "Image",
             img: "/img/assets/ntry/bitmap/jr/cparty_rotate_r.png",

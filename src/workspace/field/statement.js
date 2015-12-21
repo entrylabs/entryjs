@@ -5,18 +5,18 @@
 goog.provide("Entry.FieldStatement");
 goog.provide("Entry.DummyBlock");
 
-goog.require("Entry.Field");
 /*
  *
  */
-Entry.FieldStatement = function(content, blockView) {
+Entry.FieldStatement = function(content, blockView, index) {
     this._blockView = blockView;
     this.block = blockView.block;
 
-    this.key = content.key;
 
     var box = new Entry.BoxModel();
     this.box = box;
+
+    this._index = index;
 
     this.acceptType = content.accept;
 
@@ -31,7 +31,6 @@ Entry.FieldStatement = function(content, blockView) {
     this.block.observe(this, "_updateThread", ["thread"]);
 };
 
-Entry.Utils.inherit(Entry.Field, Entry.FieldStatement);
 
 (function(p) {
     p.renderStart = function(board) {
@@ -42,7 +41,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldStatement);
             width: 20,
             height: 20
         });
-        this._thread = this._blockView.block.values[this.key];
+        this._thread = this.getValue();
         this.dummyBlock = new Entry.DummyBlock(this, this._blockView);
         this._thread.insertDummyBlock(this.dummyBlock);
         this._thread.createView(board);
@@ -90,6 +89,12 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldStatement);
             thread.changeEvent.notify();
         });
     };
+
+    p.getValue = function() {
+        return this.block.statements[this._index];
+    };
+
+    p.destroy = function() {};
 
 })(Entry.FieldStatement.prototype);
 
@@ -194,5 +199,4 @@ Entry.DummyBlock = function(statementField, blockView) {
     p.dominate = function() {
         this.originBlockView.dominate();
     };
-
 })(Entry.DummyBlock.prototype);

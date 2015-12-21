@@ -12935,14 +12935,14 @@ Entry.VariableContainer.prototype.updateCloudVariables = function() {
 };
 Entry.block.run = {skeleton:"basic", color:"#3BBD70", contents:["this is", "basic block"], func:function() {
 }};
-Entry.block.jr_start = {skeleton:"pebble_event", event:"start", color:"#3BBD70", contents:[{type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_play_image.png", highlightColor:"#3BBD70", size:22}], func:function() {
+Entry.block.jr_start = {skeleton:"pebble_event", event:"start", color:"#3BBD70", template:"%1", params:[{type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_play_image.png", highlightColor:"#3BBD70", size:22}], func:function() {
   var a = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT), b;
   for (b in a) {
     this._unit = a[b];
   }
   Ntry.unitComp = Ntry.entityManager.getComponent(this._unit.id, Ntry.STATIC.UNIT);
 }};
-Entry.block.jr_repeat = {skeleton:"pebble_loop", color:"#127CDB", contents:[{type:"Dropdown", key:"REPEAT", options:[[1, 1], [2, 2], [3, 3], [4, 4], [5, 5], [6, 6], [7, 7], [8, 8], [9, 9], [10, 10]], value:1, fontSize:14, roundValue:3}, {type:"Text", text:"\ubc18\ubcf5"}, {type:"Statement", key:"STATEMENT", accept:"pebble_basic", position:{x:46, y:14}}], func:function() {
+Entry.block.jr_repeat = {skeleton:"pebble_loop", color:"#127CDB", template:"%1 \ubc18\ubcf5", params:[{type:"Dropdown", options:[[1, 1], [2, 2], [3, 3], [4, 4], [5, 5], [6, 6], [7, 7], [8, 8], [9, 9], [10, 10]], value:3, fontSize:14, roundValue:3}], statements:[{accept:"pebble_basic", position:{x:46, y:14}}], func:function() {
   if (void 0 === this.repeatCount) {
     return this.repeatCount = this.block.values.REPEAT, Entry.STATIC.CONTINUE;
   }
@@ -12951,7 +12951,7 @@ Entry.block.jr_repeat = {skeleton:"pebble_loop", color:"#127CDB", contents:[{typ
   }
   delete this.repeatCount;
 }};
-Entry.block.jr_item = {skeleton:"pebble_basic", color:"#F46C6C", contents:[{type:"Text", text:"\uaf43 \ubaa8\uc73c\uae30"}, {type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_item_image.png", highlightColor:"#FFF", position:{x:83, y:0}, size:22}], func:function() {
+Entry.block.jr_item = {skeleton:"pebble_basic", color:"#F46C6C", template:"\uaf43 \ubaa8\uc73c\uae30 %1", params:[{type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_item_image.png", highlightColor:"#FFF", position:{x:83, y:0}, size:22}], func:function() {
   if (this.isContinue) {
     if (this.isAction) {
       return Entry.STATIC.CONTINUE;
@@ -12968,7 +12968,7 @@ Entry.block.jr_item = {skeleton:"pebble_basic", color:"#F46C6C", contents:[{type
     return Entry.STATIC.CONTINUE;
   }
 }};
-Entry.block.cparty_jr_item = {skeleton:"pebble_basic", color:"#8ABC1D", contents:[{type:"Text", text:"\uc5f0\ud544 \uc90d\uae30"}, {type:"Indicator", img:"/img/assets/ntry/bitmap/cpartyjr/pen.png", highlightColor:"#FFF", position:{x:83, y:0}, size:22}], func:function() {
+Entry.block.cparty_jr_item = {skeleton:"pebble_basic", color:"#8ABC1D", template:"\uc5f0\ud544 \uc90d\uae30 %1", params:[{type:"Indicator", img:"/img/assets/ntry/bitmap/cpartyjr/pen.png", highlightColor:"#FFF", position:{x:83, y:0}, size:22}], func:function() {
   if (this.isContinue) {
     if (this.isAction) {
       return Entry.STATIC.CONTINUE;
@@ -12985,7 +12985,7 @@ Entry.block.cparty_jr_item = {skeleton:"pebble_basic", color:"#8ABC1D", contents
     return Entry.STATIC.CONTINUE;
   }
 }};
-Entry.block.jr_north = {skeleton:"pebble_basic", color:"#A751E3", contents:[{type:"Text", text:"  \uc704\ucabd"}, {type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_up_image.png", position:{x:83, y:0}, size:22}], func:function() {
+Entry.block.jr_north = {skeleton:"pebble_basic", color:"#A751E3", template:"\uc704\ucabd %1", params:[{type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_up_image.png", position:{x:83, y:0}, size:22}], func:function() {
   if (this.isContinue) {
     if (this.isAction) {
       return Entry.STATIC.CONTINUE;
@@ -13018,7 +13018,7 @@ Entry.block.jr_north = {skeleton:"pebble_basic", color:"#A751E3", contents:[{typ
     return Entry.STATIC.CONTINUE;
   }
 }};
-Entry.block.jr_east = {skeleton:"pebble_basic", color:"#A751E3", contents:[{type:"Text", text:"\uc624\ub978\ucabd"}, {type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_right_image.png", position:{x:83, y:0}, size:22}], func:function() {
+Entry.block.jr_east = {skeleton:"pebble_basic", color:"#A751E3", template:"\uc624\ub978\ucabd %1", params:[{type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_right_image.png", position:{x:83, y:0}, size:22}], func:function() {
   var a = Ntry.STATIC;
   if (this.isContinue) {
     if (this.isAction) {
@@ -13052,7 +13052,7 @@ Entry.block.jr_east = {skeleton:"pebble_basic", color:"#A751E3", contents:[{type
     return Entry.STATIC.CONTINUE;
   }
 }};
-Entry.block.jr_south = {skeleton:"pebble_basic", color:"#A751E3", contents:[{type:"Text", text:"  \uc544\ub798\ucabd"}, {type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_down_image.png", position:{x:83, y:0}, size:22}], func:function() {
+Entry.block.jr_south = {skeleton:"pebble_basic", color:"#A751E3", template:"\uc544\ub798\ucabd %1", params:[{type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_down_image.png", position:{x:83, y:0}, size:22}], func:function() {
   if (this.isContinue) {
     if (this.isAction) {
       return Entry.STATIC.CONTINUE;
@@ -13085,7 +13085,7 @@ Entry.block.jr_south = {skeleton:"pebble_basic", color:"#A751E3", contents:[{typ
     return Entry.STATIC.CONTINUE;
   }
 }};
-Entry.block.jr_west = {skeleton:"pebble_basic", color:"#A751E3", contents:[{type:"Text", text:"  \uc67c\ucabd"}, {type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_left_image.png", position:{x:83, y:0}, size:22}], func:function() {
+Entry.block.jr_west = {skeleton:"pebble_basic", color:"#A751E3", template:"\uc67c\ucabd %1", params:[{type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_left_image.png", position:{x:83, y:0}, size:22}], func:function() {
   if (this.isContinue) {
     if (this.isAction) {
       return Entry.STATIC.CONTINUE;
@@ -13118,14 +13118,14 @@ Entry.block.jr_west = {skeleton:"pebble_basic", color:"#A751E3", contents:[{type
     return Entry.STATIC.CONTINUE;
   }
 }};
-Entry.block.jr_start_basic = {skeleton:"basic_event", event:"start", color:"#3BBD70", contents:[{type:"Indicator", boxMultiplier:1, img:"/img/assets/block_icon/start_icon_play.png", highlightColor:"#3BBD70", size:17, position:{x:0, y:-2}}, "\uc2dc\uc791 \ubc84\ud2bc\uc744 \ub20c\ub800\uc744 \ub54c"], func:function() {
+Entry.block.jr_start_basic = {skeleton:"basic_event", event:"start", color:"#3BBD70", template:"%1 \uc2dc\uc791 \ubc84\ud2bc\uc744 \ub20c\ub800\uc744 \ub584", params:[{type:"Indicator", boxMultiplier:1, img:"/img/assets/block_icon/start_icon_play.png", highlightColor:"#3BBD70", size:17, position:{x:0, y:-2}}], func:function() {
   var a = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT), b;
   for (b in a) {
     this._unit = a[b];
   }
   Ntry.unitComp = Ntry.entityManager.getComponent(this._unit.id, Ntry.STATIC.UNIT);
 }};
-Entry.block.jr_go_straight = {skeleton:"basic", color:"#A751E3", contents:["\uc55e\uc73c\ub85c \uac00\uae30", {type:"Image", img:"/img/assets/ntry/bitmap/jr/cparty_go_straight.png", size:24}], func:function() {
+Entry.block.jr_go_straight = {skeleton:"basic", color:"#A751E3", template:"\uc55e\uc73c\ub85c \uac00\uae30 %1", params:[{type:"Image", img:"/img/assets/ntry/bitmap/jr/cparty_go_straight.png", size:24}], func:function() {
   if (this.isContinue) {
     if (this.isAction) {
       return Entry.STATIC.CONTINUE;
@@ -13141,7 +13141,7 @@ Entry.block.jr_go_straight = {skeleton:"basic", color:"#A751E3", contents:["\uc5
     return Entry.STATIC.CONTINUE;
   }
 }};
-Entry.block.jr_turn_left = {skeleton:"basic", color:"#A751E3", contents:["\uc67c\ucabd\uc73c\ub85c \ub3cc\uae30", {type:"Image", img:"/img/assets/ntry/bitmap/jr/cparty_rotate_l.png", size:24}], func:function() {
+Entry.block.jr_turn_left = {skeleton:"basic", color:"#A751E3", template:"\uc67c\ucabd\uc73c\ub85c \ub3cc\uae30 %1", params:[{type:"Image", img:"/img/assets/ntry/bitmap/jr/cparty_rotate_l.png", size:24}], func:function() {
   if (this.isContinue) {
     if (this.isAction) {
       return Entry.STATIC.CONTINUE;
@@ -13157,7 +13157,7 @@ Entry.block.jr_turn_left = {skeleton:"basic", color:"#A751E3", contents:["\uc67c
     return Entry.STATIC.CONTINUE;
   }
 }};
-Entry.block.jr_turn_right = {skeleton:"basic", color:"#A751E3", contents:["\uc624\ub978\ucabd\uc73c\ub85c \ub3cc\uae30", {type:"Image", img:"/img/assets/ntry/bitmap/jr/cparty_rotate_r.png", size:24}], func:function() {
+Entry.block.jr_turn_right = {skeleton:"basic", color:"#A751E3", template:"\uc624\ub978\ucabd\uc73c\ub85c \ub3cc\uae30 %1", params:[{type:"Image", img:"/img/assets/ntry/bitmap/jr/cparty_rotate_r.png", size:24}], func:function() {
   if (this.isContinue) {
     if (this.isAction) {
       return Entry.STATIC.CONTINUE;
@@ -13173,7 +13173,7 @@ Entry.block.jr_turn_right = {skeleton:"basic", color:"#A751E3", contents:["\uc62
     return Entry.STATIC.CONTINUE;
   }
 }};
-Entry.block.jr_go_slow = {skeleton:"basic", color:"#f46c6c", contents:["\ucc9c\ucc9c\ud788 \uac00\uae30", {type:"Image", img:"/img/assets/ntry/bitmap/jr/cparty_go_slow.png", size:24}], func:function() {
+Entry.block.jr_go_slow = {skeleton:"basic", color:"#f46c6c", template:"\ucc9c\ucc9c\ud788 \uac00\uae30 %1", params:[{type:"Image", img:"/img/assets/ntry/bitmap/jr/cparty_go_slow.png", size:24}], func:function() {
   if (this.isContinue) {
     if (this.isAction) {
       return Entry.STATIC.CONTINUE;
@@ -13189,12 +13189,12 @@ Entry.block.jr_go_slow = {skeleton:"basic", color:"#f46c6c", contents:["\ucc9c\u
     return Entry.STATIC.CONTINUE;
   }
 }};
-Entry.block.jr_repeat_until_dest = {skeleton:"basic_loop", color:"#498DEB", contents:[{type:"Image", img:"/img/assets/ntry/bitmap/jr/jr_goal_image.png", size:18}, "\ub9cc\ub0a0 \ub54c \uae4c\uc9c0 \ubc18\ubcf5\ud558\uae30", {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}, {type:"Statement", key:"STATEMENT", accept:"basic", position:{x:2, y:15}}], func:function() {
+Entry.block.jr_repeat_until_dest = {skeleton:"basic_loop", color:"#498DEB", template:"%1 \ub9cc\ub0a0 \ub54c \uae4c\uc9c0 \ubc18\ubcf5\ud558\uae30 %2", params:[{type:"Image", img:"/img/assets/ntry/bitmap/jr/jr_goal_image.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic", position:{x:2, y:15}}], func:function() {
   if (1 !== this.block.values.STATEMENT.getBlocks().length) {
     return this.executor.stepInto(this.block.values.STATEMENT), Entry.STATIC.CONTINUE;
   }
 }};
-Entry.block.jr_if_construction = {skeleton:"basic_loop", color:"#498DEB", contents:["\ub9cc\uc57d", {type:"Image", img:"/img/assets/ntry/bitmap/jr/jr_construction_image.png", size:18}, "\uc55e\uc5d0 \uc788\ub2e4\uba74", {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}, {type:"Statement", key:"STATEMENT", accept:"basic", position:{x:2, y:15}}], func:function() {
+Entry.block.jr_if_construction = {skeleton:"basic_loop", color:"#498DEB", template:"\ub9cc\uc57d %1 \uc55e\uc5d0 \uc788\ub2e4\uba74 %2", params:[{type:"Image", img:"/img/assets/ntry/bitmap/jr/jr_construction_image.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic", position:{x:2, y:15}}], func:function() {
   if (!this.isContinue) {
     var a = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT), b, c;
     for (c in a) {
@@ -13212,7 +13212,7 @@ Entry.block.jr_if_construction = {skeleton:"basic_loop", color:"#498DEB", conten
     }
   }
 }};
-Entry.block.jr_if_speed = {skeleton:"basic_loop", color:"#498DEB", contents:["\ub9cc\uc57d", {type:"Image", img:"/img/assets/ntry/bitmap/jr/jr_speed_image.png", size:18}, "\uc55e\uc5d0 \uc788\ub2e4\uba74", {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}, {type:"Statement", key:"STATEMENT", accept:"basic", position:{x:2, y:15}}], func:function() {
+Entry.block.jr_if_speed = {skeleton:"basic_loop", color:"#498DEB", template:"\ub9cc\uc57d %1 \uc55e\uc5d0 \uc788\ub2e4\uba74 %2", params:[{type:"Image", img:"/img/assets/ntry/bitmap/jr/jr_speed_image.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic", position:{x:2, y:15}}], func:function() {
   if (!this.isContinue) {
     var a = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT), b, c;
     for (c in a) {
@@ -13230,7 +13230,7 @@ Entry.block.jr_if_speed = {skeleton:"basic_loop", color:"#498DEB", contents:["\u
     }
   }
 }};
-Entry.block.maze_step_jump = {skeleton:"basic", color:"#FF6E4B", contents:["\ub6f0\uc5b4\ub118\uae30", {type:"Image", img:"/img/assets/week/blocks/jump.png", size:24}], func:function() {
+Entry.block.maze_step_jump = {skeleton:"basic", color:"#FF6E4B", template:"\ub6f0\uc5b4\ub118\uae30 %1", params:[{type:"Image", img:"/img/assets/week/blocks/jump.png", size:24}], func:function() {
   if (this.isContinue) {
     if (this.isAction) {
       return Entry.STATIC.CONTINUE;
@@ -13246,7 +13246,7 @@ Entry.block.maze_step_jump = {skeleton:"basic", color:"#FF6E4B", contents:["\ub6
     return Entry.STATIC.CONTINUE;
   }
 }};
-Entry.block.maze_step_for = {skeleton:"basic_loop", color:"#127CDB", contents:[{type:"Dropdown", key:"REPEAT", options:[[1, 1], [2, 2], [3, 3], [4, 4], [5, 5], [6, 6], [7, 7], [8, 8], [9, 9], [10, 10]], value:1}, "\ubc88 \ubc18\ubcf5\ud558\uae30", {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}, {type:"Statement", key:"STATEMENT", accept:"basic", position:{x:2, y:15}}], func:function() {
+Entry.block.maze_step_for = {skeleton:"basic_loop", color:"#127CDB", template:"%1 \ubc88 \ubc18\ubcf5\ud558\uae30 %2", params:[{type:"Dropdown", key:"REPEAT", options:[[1, 1], [2, 2], [3, 3], [4, 4], [5, 5], [6, 6], [7, 7], [8, 8], [9, 9], [10, 10]], value:1}, {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic", position:{x:2, y:15}}], func:function() {
   if (void 0 === this.repeatCount) {
     return this.repeatCount = this.block.values.REPEAT, Entry.STATIC.CONTINUE;
   }
@@ -13257,12 +13257,12 @@ Entry.block.maze_step_for = {skeleton:"basic_loop", color:"#127CDB", contents:[{
 }};
 Entry.block.test = {skeleton:"basic", color:"#3BBD70", contents:["\ud0a4\ub97c \ub20c\ub800\uc744 \ub54c", {type:"Angle", key:"ANGLE", value:550}, "\ud0a4\ub97c \ub20c\ub800\uc744 \ub54c"], func:function() {
 }};
-Entry.block.maze_repeat_until_1 = {skeleton:"basic_loop", color:"#498DEB", contents:[{type:"Image", img:"/img/assets/ntry/block_inner/repeat_goal_1.png", size:18}, "\ub9cc\ub0a0 \ub54c \uae4c\uc9c0 \ubc18\ubcf5\ud558\uae30", {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}, {type:"Statement", key:"STATEMENT", accept:"basic", position:{x:2, y:15}}], func:function() {
+Entry.block.maze_repeat_until_1 = {skeleton:"basic_loop", color:"#498DEB", template:"%1 \ub9cc\ub0a0 \ub54c \uae4c\uc9c0 \ubc18\ubcf5\ud558\uae30 %2", params:[{type:"Image", img:"/img/assets/ntry/block_inner/repeat_goal_1.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic", position:{x:2, y:15}}], func:function() {
   if (1 !== this.block.values.STATEMENT.getBlocks().length) {
     return this.executor.stepInto(this.block.values.STATEMENT), Entry.STATIC.CONTINUE;
   }
 }};
-Entry.block.maze_step_unif_1 = {skeleton:"basic_loop", color:"#498DEB", contents:["\ub9cc\uc57d", {type:"Image", img:"/img/assets/ntry/block_inner/if_target_1.png", size:18}, "\uc55e\uc5d0 \uc788\ub2e4\uba74", {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}, {type:"Statement", key:"STATEMENT", accept:"basic", position:{x:2, y:15}}], func:function() {
+Entry.block.maze_step_unif_1 = {skeleton:"basic_loop", color:"#498DEB", template:"\ub9cc\uc57d %1 \uc55e\uc5d0 \uc788\ub2e4\uba74 %2", params:[{type:"Image", img:"/img/assets/ntry/block_inner/if_target_1.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic", position:{x:2, y:15}}], func:function() {
   if (!this.isContinue) {
     var a = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT), b, c;
     for (c in a) {
@@ -13280,7 +13280,7 @@ Entry.block.maze_step_unif_1 = {skeleton:"basic_loop", color:"#498DEB", contents
     }
   }
 }};
-Entry.block.maze_step_if_2 = {skeleton:"basic_loop", color:"#498DEB", contents:["\ub9cc\uc57d", {type:"Image", img:"/img/assets/ntry/bitmap/maze2/obstacle_01.png", size:18}, "\uc55e\uc5d0 \uc788\ub2e4\uba74", {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}, {type:"Statement", key:"STATEMENT", accept:"basic", position:{x:2, y:15}}], func:function() {
+Entry.block.maze_step_if_2 = {skeleton:"basic_loop", color:"#498DEB", template:"\ub9cc\uc57d %1 \uc55e\uc5d0 \uc788\ub2e4\uba74", params:[{type:"Image", img:"/img/assets/ntry/bitmap/maze2/obstacle_01.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic", position:{x:2, y:15}}], func:function() {
   if (!this.isContinue) {
     var a = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT), b, c;
     for (c in a) {
@@ -13298,14 +13298,14 @@ Entry.block.maze_step_if_2 = {skeleton:"basic_loop", color:"#498DEB", contents:[
     }
   }
 }};
-Entry.block.maze_call_function = {skeleton:"basic", color:"#B57242", contents:["\uc57d\uc18d \ubd88\ub7ec\uc624\uae30", {type:"Image", img:"/img/assets/week/blocks/function.png", size:24}], func:function() {
+Entry.block.maze_call_function = {skeleton:"basic", color:"#B57242", template:"\uc57d\uc18d \ubd88\ub7ec\uc624\uae30 %1", params:[{type:"Image", img:"/img/assets/week/blocks/function.png", size:24}], func:function() {
   Entry.block.jr_promise_wrap.func(this.executor, statement);
 }};
-Entry.block.maze_define_function = {skeleton:"basic_define", color:"#B57242", contents:["\uc57d\uc18d\ud558\uae30", {type:"Image", img:"/img/assets/week/blocks/function.png", size:24}, {type:"Statement", key:"STATEMENT", accept:"basic", position:{x:2, y:15}}], func:function(a) {
+Entry.block.maze_define_function = {skeleton:"basic_define", color:"#B57242", template:"\uc57d\uc18d\ud558\uae30 %1", params:[{type:"Image", img:"/img/assets/week/blocks/function.png", size:24}], statements:[{accept:"basic", position:{x:2, y:15}}], func:function(a) {
   console.log(a);
   a.stepInto(this.block.values.STATEMENT);
 }};
-Entry.block.maze_step_if_3 = {skeleton:"basic_loop", color:"#498DEB", contents:["\ub9cc\uc57d", {type:"Image", img:"/img/assets/ntry/block_inner/if_target_3.png", size:18}, "\uc55e\uc5d0 \uc788\ub2e4\uba74", {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}, {type:"Statement", key:"STATEMENT", accept:"basic", position:{x:2, y:15}}], func:function() {
+Entry.block.maze_step_if_3 = {skeleton:"basic_loop", color:"#498DEB", template:"\ub9cc\uc57d %1 \uc55e\uc5d0 \uc788\ub2e4\uba74", params:[{type:"Image", img:"/img/assets/ntry/block_inner/if_target_3.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic", position:{x:2, y:15}}], func:function() {
   if (!this.isContinue) {
     var a = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT), b, c;
     for (c in a) {
@@ -13323,7 +13323,7 @@ Entry.block.maze_step_if_3 = {skeleton:"basic_loop", color:"#498DEB", contents:[
     }
   }
 }};
-Entry.block.maze_step_if_4 = {skeleton:"basic_loop", color:"#498DEB", contents:["\ub9cc\uc57d", {type:"Image", img:"/img/assets/ntry/block_inner/if_target_2.png", size:18}, "\uc55e\uc5d0 \uc788\ub2e4\uba74", {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}, {type:"Statement", key:"STATEMENT", accept:"basic", position:{x:2, y:15}}], func:function() {
+Entry.block.maze_step_if_4 = {skeleton:"basic_loop", color:"#498DEB", template:"\ub9cc\uc57d %1 \uc55e\uc5d0 \uc788\ub2e4\uba74", params:[{type:"Image", img:"/img/assets/ntry/block_inner/if_target_2.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic", position:{x:2, y:15}}], func:function() {
   if (!this.isContinue) {
     var a = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT), b, c;
     for (c in a) {
@@ -13341,7 +13341,7 @@ Entry.block.maze_step_if_4 = {skeleton:"basic_loop", color:"#498DEB", contents:[
     }
   }
 }};
-Entry.block.maze_step_start = {skeleton:"basic_event", event:"start", color:"#3BBD70", contents:[{type:"Indicator", boxMultiplier:1, img:"/img/assets/block_icon/start_icon_play.png", highlightColor:"#3BBD70", size:17, position:{x:0, y:-2}}, "\uc2dc\uc791 \ubc84\ud2bc\uc744 \ub20c\ub800\uc744 \ub54c"], func:function() {
+Entry.block.maze_step_start = {skeleton:"basic_event", event:"start", color:"#3BBD70", template:"%1 \uc2dc\uc791 \ubc84\ud2bc\uc744 \ub20c\ub800\uc744 \ub54c", params:[{type:"Indicator", boxMultiplier:1, img:"/img/assets/block_icon/start_icon_play.png", highlightColor:"#3BBD70", size:17, position:{x:0, y:-2}}], func:function() {
   console.log("11111");
   var a = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT), b;
   for (b in a) {
@@ -13349,7 +13349,7 @@ Entry.block.maze_step_start = {skeleton:"basic_event", event:"start", color:"#3B
   }
   Ntry.unitComp = Ntry.entityManager.getComponent(this._unit.id, Ntry.STATIC.UNIT);
 }};
-Entry.block.maze_step_move_step = {skeleton:"basic", color:"#A751E3", contents:["\uc55e\uc73c\ub85c \uac00\uae30", {type:"Image", img:"/img/assets/ntry/bitmap/jr/cparty_go_straight.png", size:24}], func:function() {
+Entry.block.maze_step_move_step = {skeleton:"basic", color:"#A751E3", template:"\uc55e\uc73c\ub85c \uac00\uae30 %1", params:[{type:"Image", img:"/img/assets/ntry/bitmap/jr/cparty_go_straight.png", size:24}], func:function() {
   console.log(2);
   if (this.isContinue) {
     if (this.isAction) {
@@ -13366,7 +13366,7 @@ Entry.block.maze_step_move_step = {skeleton:"basic", color:"#A751E3", contents:[
     return Entry.STATIC.CONTINUE;
   }
 }};
-Entry.block.maze_step_rotate_left = {skeleton:"basic", color:"#A751E3", contents:["\uc67c\ucabd\uc73c\ub85c \ub3cc\uae30", {type:"Image", img:"/img/assets/ntry/bitmap/jr/cparty_rotate_l.png", size:24}], func:function() {
+Entry.block.maze_step_rotate_left = {skeleton:"basic", color:"#A751E3", template:"\uc67c\ucabd\uc73c\ub85c \ub3cc\uae30 %1", params:[{type:"Image", img:"/img/assets/ntry/bitmap/jr/cparty_rotate_l.png", size:24}], func:function() {
   if (this.isContinue) {
     if (this.isAction) {
       return Entry.STATIC.CONTINUE;
@@ -13382,7 +13382,7 @@ Entry.block.maze_step_rotate_left = {skeleton:"basic", color:"#A751E3", contents
     return Entry.STATIC.CONTINUE;
   }
 }};
-Entry.block.maze_step_rotate_right = {skeleton:"basic", color:"#A751E3", contents:["\uc624\ub978\ucabd\uc73c\ub85c \ub3cc\uae30", {type:"Image", img:"/img/assets/ntry/bitmap/jr/cparty_rotate_r.png", size:24}], func:function() {
+Entry.block.maze_step_rotate_right = {skeleton:"basic", color:"#A751E3", template:"\uc624\ub978\ucabd\uc73c\ub85c \ub3cc\uae30 %1", params:[{type:"Image", img:"/img/assets/ntry/bitmap/jr/cparty_rotate_r.png", size:24}], func:function() {
   if (this.isContinue) {
     if (this.isAction) {
       return Entry.STATIC.CONTINUE;
@@ -13561,9 +13561,21 @@ Entry.BlockView = function(a, b) {
     this.contentSvgGroup = this.svgGroup.group();
     var a = this._skeleton.contentPos();
     this.contentSvgGroup.transform("t" + a.x + " " + a.y);
-    for (var a = this._schema.contents, c = 0;c < a.length;c++) {
-      var d = a[c];
-      "string" === typeof d ? this._contents.push(new Entry.FieldText({text:d}, this)) : this._contents.push(new Entry["Field" + d.type](d, this));
+    for (var c = /(%\d)/, d = this._schema, e = d.template.split(c), f = d.params, a = 0;a < e.length;a++) {
+      var g = e[a];
+      if (0 !== g.length) {
+        if (c.test(g)) {
+          var h = Number(g.split("%")[1]) - 1, g = f[h];
+          this._contents.push(new Entry["Field" + g.type](g, this, h));
+        } else {
+          this._contents.push(new Entry.FieldText({text:g}, this));
+        }
+      }
+    }
+    if (c = d.statements) {
+      for (a = 0;a < c.length;a++) {
+        this._contents.push(new Entry.FieldStatement(c[a], this, a));
+      }
     }
     this.alignContent(!1);
   };
@@ -13976,22 +13988,29 @@ Entry.Field = function() {
     return {x:c.e + d.x + a.x, y:c.f + d.y + a.y};
   };
   a.truncate = function() {
-    var a = String(this.value), c = this.TEXT_LIMIT_LENGTH, d = a.substring(0, c);
+    var a = String(this.getValue()), c = this.TEXT_LIMIT_LENGTH, d = a.substring(0, c);
     a.length > c && (d += "...");
     return d;
   };
   a.appendSvgOptionGroup = function() {
     return this._block.view.getBoard().svgGroup.group();
   };
+  a.getValue = function() {
+    return this._block.params[this._index];
+  };
+  a.setValue = function(a) {
+    this.value = a;
+    this._block.params[this._index] = a;
+  };
 })(Entry.Field.prototype);
-Entry.FieldAngle = function(a, b) {
+Entry.FieldAngle = function(a, b, c) {
   this._block = b.block;
   this.box = new Entry.BoxModel;
   this.svgGroup = null;
   this.position = a.position;
   this._contents = a;
-  this.key = a.key;
-  this.value = this.modValue(this._block.values[this.key] || 0);
+  this._index = c;
+  this.setValue(this.modValue(this.getValue()));
   this.renderStart(b);
 };
 Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
@@ -14048,7 +14067,7 @@ Entry.FieldAngle.FILL_PATH = "M 0, 0 v -49 A 49,49 0 %LARGE 1 %X,%Y z";
       }
       g = 15 * Math.round(g / 15);
       c[0] < f[0] && (g = 360 - g);
-      a.value = g;
+      a.setValue(g);
       a.applyValue();
     });
     this._dividerGroup = this.svgOptionGroup.group();
@@ -14063,8 +14082,8 @@ Entry.FieldAngle.FILL_PATH = "M 0, 0 v -49 A 49,49 0 %LARGE 1 %X,%Y z";
   a.updateGraph = function() {
     this._fillPath && this._fillPath.remove();
     var a = Entry.FieldAngle.RADIUS;
-    console.log(this.value);
-    var c = Entry.toRadian(this.value), d = Math.sin(c) * a, a = Math.cos(c) * -a, c = c > Math.PI ? 1 : 0;
+    console.log(this.getValue());
+    var c = Entry.toRadian(this.getValue()), d = Math.sin(c) * a, a = Math.cos(c) * -a, c = c > Math.PI ? 1 : 0;
     this._fillPath = this.svgOptionGroup.path(Entry.FieldAngle.FILL_PATH.replace("%X", d).replace("%Y", a).replace("%LARGE", c));
     this._fillPath.attr({class:"entry-angle-fill-area"});
     this.svgOptionGroup.append(this._dividerGroup);
@@ -14074,7 +14093,7 @@ Entry.FieldAngle.FILL_PATH = "M 0, 0 v -49 A 49,49 0 %LARGE 1 %X,%Y z";
   };
   a.applyValue = function(a) {
     a = this.optionGroup.val();
-    isNaN(a) || (a = this.modValue(a), this.value = this._block.values[this.key] = a, this.textElement.node.textContent = this.getText(), this.updateGraph(), this.resize());
+    isNaN(a) || (a = this.modValue(a), this.setValue(a), this.textElement.node.textContent = this.getText(), this.updateGraph(), this.resize());
   };
   a.resize = function() {
     var a = this.getTextWidth();
@@ -14087,7 +14106,7 @@ Entry.FieldAngle.FILL_PATH = "M 0, 0 v -49 A 49,49 0 %LARGE 1 %X,%Y z";
     return this.textElement.node.getComputedTextLength() + 8;
   };
   a.getText = function() {
-    return this.value + "\u00b0";
+    return this.getValue() + "\u00b0";
   };
   a.modValue = function(a) {
     return a % 360;
@@ -14098,14 +14117,15 @@ Entry.FieldAngle.FILL_PATH = "M 0, 0 v -49 A 49,49 0 %LARGE 1 %X,%Y z";
     this.svgOptionGroup && (this.svgOptionGroup.remove(), delete this.svgOptionGroup);
   };
 })(Entry.FieldAngle.prototype);
-Entry.FieldColor = function(a, b) {
+Entry.FieldColor = function(a, b, c) {
   this._block = b.block;
   this.box = new Entry.BoxModel;
   this.svgGroup = null;
   this._contents = a;
+  this._index = c;
   this._position = a.position;
   this.key = a.key;
-  this.value = this._block.values[this.key] || "#FF0000";
+  this.setValue(this.getValue() || "#FF0000");
   this.renderStart(b);
 };
 Entry.Utils.inherit(Entry.Field, Entry.FieldColor);
@@ -14116,7 +14136,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldColor);
     this.svgGroup.attr({class:"entry-field-color"});
     var d = this._position;
     d ? (a = d.x || 0, d = d.y || 0) : (a = 0, d = -8);
-    this._header = this.svgGroup.rect(a, d, 14.5, 16, 0).attr({fill:this.value});
+    this._header = this.svgGroup.rect(a, d, 14.5, 16, 0).attr({fill:this.getValue()});
     this.svgGroup.mouseup(function(a) {
       c._block.view.dragMode == Entry.DRAG_MODE_MOUSEDOWN && c.renderOptions();
     });
@@ -14153,20 +14173,20 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldColor);
     this.optionGroup.css({left:c.x, top:c.y});
   };
   a.applyValue = function(a) {
-    this.value != a && (this.value = this._block.values[this.key] = a, this._header.attr({fill:a}));
+    this.value != a && (this.setValue(a), this._header.attr({fill:a}));
   };
 })(Entry.FieldColor.prototype);
 Entry.FieldColor.getWidgetColorList = function() {
   return ["#FFFFFF #CCCCCC #C0C0C0 #999999 #666666 #333333 #000000".split(" "), "#FFCCCC #FF6666 #FF0000 #CC0000 #990000 #660000 #330000".split(" "), "#FFCC99 #FF9966 #FF9900 #FF6600 #CC6600 #993300 #663300".split(" "), "#FFFF99 #FFFF66 #FFCC66 #FFCC33 #CC9933 #996633 #663333".split(" "), "#FFFFCC #FFFF33 #FFFF00 #FFCC00 #999900 #666600 #333300".split(" "), "#99FF99 #66FF99 #33FF33 #33CC00 #009900 #006600 #003300".split(" "), "#99FFFF #33FFFF #66CCCC #00CCCC #339999 #336666 #003333".split(" "), "#CCFFFF #66FFFF #33CCFF #3366FF #3333FF #000099 #000066".split(" "), 
   "#CCCCFF #9999FF #6666CC #6633FF #6609CC #333399 #330099".split(" "), "#FFCCFF #FF99FF #CC66CC #CC33CC #993399 #663366 #330033".split(" ")];
 };
-Entry.FieldDropdown = function(a, b) {
+Entry.FieldDropdown = function(a, b, c) {
   this._block = b.block;
   this.box = new Entry.BoxModel;
   this.svgGroup = null;
   this._contents = a;
-  this.key = a.key;
-  this.value = this._block.values[this.key];
+  this._index = c;
+  this.setValue(this.getValue());
   this._CONTENT_HEIGHT = a.dropdownHeight || b.getSkeleton().dropdownHeight || 16;
   this._fONT_SIZE = a.fontSize || b.getSkeleton().fontSize || 12;
   this._ROUND = a.roundValue || 0;
@@ -14178,7 +14198,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
     var c = this;
     this.svgGroup = a.contentSvgGroup.group();
     this.svgGroup.attr({class:"entry-field-dropdown"});
-    this.textElement = this.svgGroup.text(2, 0, this.getTextByValue(this.value));
+    this.textElement = this.svgGroup.text(2, 0, this.getTextByValue(this.getValue()));
     var d = this.textElement.getBBox();
     this.textElement.attr({style:"white-space: pre; font-size:" + c._FONT_SIZE + "px", y:.25 * d.height});
     var d = this.textElement.node.getComputedTextLength() + 18, e = this._CONTENT_HEIGHT;
@@ -14212,7 +14232,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
     for (var f = 0, g = d.length;f < g;f++) {
       var h = d[f], k = h[0], h = h[1], l = this.optionGroup.group().attr({class:"rect", transform:"t0 " + 23 * f});
       c.push(l.rect(0, 0, 0, 23));
-      this.value == h && l.text(5, 13, "\u2713").attr({"alignment-baseline":"central"});
+      this.getValue() == h && l.text(5, 13, "\u2713").attr({"alignment-baseline":"central"});
       k = l.text(20, 13, k).attr({"alignment-baseline":"central"});
       e = Math.max(k.node.getComputedTextLength() + 50, e);
       (function(c, d) {
@@ -14232,7 +14252,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
     });
   };
   a.applyValue = function(a) {
-    this.value != a && (this.value = this._block.values[this.key] = a, this.textElement.node.textContent = this.getTextByValue(a), this.resize());
+    this.value != a && (this.setValue(a), this.textElement.node.textContent = this.getTextByValue(a), this.resize());
   };
   a.getTextByValue = function(a) {
     for (var c = this._contents.options, d = 0, e = c.length;d < e;d++) {
@@ -14244,7 +14264,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
     return a;
   };
 })(Entry.FieldDropdown.prototype);
-Entry.FieldImage = function(a, b) {
+Entry.FieldImage = function(a, b, c) {
   this._block = b;
   this.box = new Entry.BoxModel;
   this._size = a.size;
@@ -14252,6 +14272,7 @@ Entry.FieldImage = function(a, b) {
   this._highlightColor = a.highlightColor ? a.highlightColor : "#F59900";
   this._position = a.position;
   this._imgElement = this._path = this.svgGroup = null;
+  this._index = c;
   this.renderStart();
 };
 Entry.Utils.inherit(Entry.Field, Entry.FieldImage);
@@ -14274,7 +14295,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldImage);
     }, 500);
   };
 })(Entry.FieldImage.prototype);
-Entry.FieldIndicator = function(a, b) {
+Entry.FieldIndicator = function(a, b, c) {
   this._block = b;
   this.box = new Entry.BoxModel;
   this._size = a.size;
@@ -14282,6 +14303,7 @@ Entry.FieldIndicator = function(a, b) {
   this._boxMultiplier = a.boxMultiplier || 2;
   this._highlightColor = a.highlightColor ? a.highlightColor : "#F59900";
   this._position = a.position;
+  this._index = c;
   this._imgElement = this._path = this.svgGroup = null;
   this.renderStart();
 };
@@ -14309,14 +14331,14 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldIndicator);
   };
 })(Entry.FieldIndicator.prototype);
 Entry.Keyboard = {};
-Entry.FieldKeyboard = function(a, b) {
+Entry.FieldKeyboard = function(a, b, c) {
   this._block = b.block;
   this.box = new Entry.BoxModel;
   this.svgGroup = null;
   this.position = a.position;
   this._contents = a;
-  this.key = a.key;
-  this.value = this._block.values[this.key] || 81;
+  this._index = c;
+  this.setValue(this.getValue());
   this._optionVisible = !1;
   this.renderStart(b);
   Entry.keyPressed && (this.keyPressed = Entry.keyPressed.attach(this, this._keyboardControl));
@@ -14327,7 +14349,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldKeyboard);
     var c = this;
     this.svgGroup = a.contentSvgGroup.group();
     this.svgGroup.attr({class:"entry-input-field"});
-    this.textElement = this.svgGroup.text(4, 4, Entry.getKeyCodeMap()[this.value]);
+    this.textElement = this.svgGroup.text(4, 4, Entry.getKeyCodeMap()[this.getValue()]);
     this.textElement.attr({"font-size":"9pt"});
     a = this.getTextWidth();
     var d = this.position && this.position.y ? this.position.y : 0;
@@ -14367,7 +14389,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldKeyboard);
   };
   a.applyValue = function(a, c) {
     this.destroyOption();
-    this.value != c && (this.value = this._block.values[this.key] = c, this.textElement.node.textContent = a, this.resize());
+    this.getValue() != c && (this.setValue(c), this.textElement.node.textContent = a, this.resize());
   };
   a.resize = function() {
     var a = this.getTextWidth();
@@ -14383,11 +14405,11 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldKeyboard);
     Entry.keyPressed && this.keyPressed && Entry.keyPressed.detach(this.keyPressed);
   };
 })(Entry.FieldKeyboard.prototype);
-Entry.FieldStatement = function(a, b) {
+Entry.FieldStatement = function(a, b, c) {
   this._blockView = b;
   this.block = b.block;
-  this.key = a.key;
   this.box = new Entry.BoxModel;
+  this._index = c;
   this.acceptType = a.accept;
   this.dummyBlock = this.svgGroup = null;
   this._position = a.position;
@@ -14395,12 +14417,11 @@ Entry.FieldStatement = function(a, b) {
   this.renderStart(b.getBoard());
   this.block.observe(this, "_updateThread", ["thread"]);
 };
-Entry.Utils.inherit(Entry.Field, Entry.FieldStatement);
 (function(a) {
   a.renderStart = function(a) {
     this.svgGroup = this._blockView.contentSvgGroup.group();
     this.box.set({x:46, y:0, width:20, height:20});
-    this._thread = this._blockView.block.values[this.key];
+    this._thread = this.getValue();
     this.dummyBlock = new Entry.DummyBlock(this, this._blockView);
     this._thread.insertDummyBlock(this.dummyBlock);
     this._thread.createView(a);
@@ -14425,6 +14446,11 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldStatement);
     this._threadChangeEvent = this._thread.changeEvent.attach(this, function() {
       a.changeEvent.notify();
     });
+  };
+  a.getValue = function() {
+    return this.block.statements[this._index];
+  };
+  a.destroy = function() {
   };
 })(Entry.FieldStatement.prototype);
 Entry.DummyBlock = function(a, b) {
@@ -14485,11 +14511,12 @@ Entry.DummyBlock = function(a, b) {
     this.originBlockView.dominate();
   };
 })(Entry.DummyBlock.prototype);
-Entry.FieldText = function(a, b) {
+Entry.FieldText = function(a, b, c) {
   this._block = b;
   this.box = new Entry.BoxModel;
   this._fontSize = a.fontSize || b.getSkeleton().fontSize || 12;
   this._text = a.text;
+  this._index = c;
   this.textElement = null;
   this.renderStart();
 };
@@ -14504,14 +14531,14 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldText);
     this.box.set({x:0, y:0, width:this.textElement.node.getComputedTextLength(), height:a.height});
   };
 })(Entry.FieldText.prototype);
-Entry.FieldTextInput = function(a, b) {
+Entry.FieldTextInput = function(a, b, c) {
   this._block = b.block;
   this.box = new Entry.BoxModel;
   this.svgGroup = null;
   this.position = a.position;
   this._contents = a;
-  this.key = a.key;
-  this.value = this._block.values[this.key] || "";
+  this._index = c;
+  this.value = this.getValue() || "";
   this.renderStart(b);
 };
 Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
@@ -14540,7 +14567,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
       a.destroyOption();
     });
     this.optionGroup = Entry.Dom("input", {class:"entry-widget-input-field", parent:$("body")});
-    this.optionGroup.val(this.value);
+    this.optionGroup.val(this.getValue());
     this.optionGroup.on("mousedown", function(a) {
       a.stopPropagation();
     });
@@ -14556,7 +14583,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
   };
   a.applyValue = function(a) {
     a = this.optionGroup.val();
-    this.value = this._block.values[this.key] = a;
+    this.setValue(a);
     this.textElement.node.textContent = this.truncate();
     this.resize();
   };
@@ -14749,7 +14776,7 @@ Entry.Block = function(a, b) {
 Entry.Block.MAGNET_RANGE = 10;
 Entry.Block.MAGNET_OFFSET = .4;
 (function(a) {
-  a.schema = {id:null, name:null, x:0, y:0, type:null, values:{}, prev:null, next:null, view:null, thread:null, movable:!0, deletable:!0, readOnly:!1};
+  a.schema = {id:null, name:null, x:0, y:0, type:null, params:[], statements:[], prev:null, next:null, view:null, thread:null, movable:!0, deletable:!0, readOnly:!1};
   a.load = function(a) {
     a.id || (a.id = Entry.Utils.generateId());
     this.set(a);
@@ -14758,10 +14785,13 @@ Entry.Block.MAGNET_OFFSET = .4;
   a.getSchema = function() {
     this._schema = Entry.block[this.type];
     this._schema.event && this.thread.registerEvent(this, this._schema.event);
-    for (var a = this._schema.contents, c = 0;c < a.length;c++) {
-      var d = a[c];
-      !this.values[d.key] && d.value && (this.values[d.key] = d.value);
-      "Statement" == d.type && (this.values[d.key] = new Entry.Thread(this.values[d.key], this.getCode()));
+    for (var a = this._schema.params, c = 0;c < a.length;c++) {
+      this.params.push(a[c].value);
+    }
+    if (a = this._schema.statements) {
+      for (c = 0;c < a.length;c++) {
+        this.statements.splice(c, 1, new Entry.Thread(this.statements[c], this.getCode()));
+      }
     }
   };
   a.setThread = function(a) {
@@ -14799,23 +14829,25 @@ Entry.Block.MAGNET_OFFSET = .4;
     delete c.view;
     delete c.thread;
     a && delete c.id;
-    var d = {}, e;
-    for (e in c.values) {
-      d[e] = c.values[e];
-    }
-    c.values = d;
-    d = this._schema.contents;
-    for (e = 0;e < d.length;e++) {
-      var f = d[e];
-      "Statement" == f.type && (c.values[f.key] = this.values[f.key].toJSON(a));
-    }
+    c.params = c.params.map(function(a) {
+      return a;
+    });
+    c.statements = c.statements.map(function(c) {
+      return c.toJSON(a);
+    });
     return c;
   };
   a.destroy = function(a) {
     this.view && this.view.destroy(a);
     (!this.prev || this.prev instanceof Entry.DummyBlock) && this.thread.destroy();
-    var c = this.values.STATEMENT;
-    c && (c = c.getFirstBlock(), c instanceof Entry.DummyBlock && (c = c.next), c && c.destroy(a));
+    var c = this.statements;
+    if (c) {
+      for (var d = 0;d < c.length;d++) {
+        var e = c[d].getFirstBlock();
+        e instanceof Entry.DummyBlock && (e = e.next);
+        e && e.destroy(a);
+      }
+    }
     this.next && this.next.destroy(a);
   };
   a.destroyAlone = function(a) {
@@ -14987,11 +15019,9 @@ Entry.Thread = function(a, b) {
   a.countBlock = function() {
     for (var a = 0, c = 0;c < this._data.length;c++) {
       var d = this._data[c];
-      if (d.type) {
-        a++;
-        for (var e = Entry.block[d.type].contents, f = 0;f < e.length;f++) {
-          var g = e[f];
-          "Statement" == g.type && (a += d.values[g.key].countBlock());
+      if (d.type && (a++, d = d.statements)) {
+        for (var e = 0;e < d.length;e++) {
+          a += d[e].countBlock();
         }
       }
     }

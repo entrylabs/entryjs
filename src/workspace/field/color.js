@@ -8,7 +8,7 @@ goog.require("Entry.Field");
 /*
  *
  */
-Entry.FieldColor = function(content, blockView) {
+Entry.FieldColor = function(content, blockView, index) {
     this._block = blockView.block;
 
     var box = new Entry.BoxModel();
@@ -17,9 +17,10 @@ Entry.FieldColor = function(content, blockView) {
     this.svgGroup = null;
 
     this._contents = content;
+    this._index = index;
     this._position = content.position;
     this.key = content.key;
-    this.value = this._block.values[this.key] || '#FF0000';
+    this.setValue(this.getValue() || '#FF0000');
 
     this.renderStart(blockView);
 };
@@ -53,7 +54,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldColor);
                 x, y,
                 WIDTH,
                 HEIGHT,
-            0).attr({fill: this.value});
+            0).attr({fill: this.getValue()});
 
         this.svgGroup.mouseup(function(e) {
             if (that._block.view.dragMode == Entry.DRAG_MODE_MOUSEDOWN)
@@ -127,8 +128,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldColor);
 
     p.applyValue = function(value) {
         if (this.value == value) return;
-        this._block.values[this.key] = value;
-        this.value = value;
+        this.setValue(value);
         this._header.attr({fill: value});
     };
 

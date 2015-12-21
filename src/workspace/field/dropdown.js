@@ -8,7 +8,7 @@ goog.require("Entry.Field");
 /*
  *
  */
-Entry.FieldDropdown = function(content, blockView) {
+Entry.FieldDropdown = function(content, blockView, index) {
     this._block = blockView.block;
 
     var box = new Entry.BoxModel();
@@ -17,8 +17,8 @@ Entry.FieldDropdown = function(content, blockView) {
     this.svgGroup = null;
 
     this._contents = content;
-    this.key = content.key;
-    this.value = this._block.values[this.key];
+    this._index = index;
+    this.setValue(this.getValue());
 
     this._CONTENT_HEIGHT =
         content.dropdownHeight || blockView.getSkeleton().dropdownHeight || 16;
@@ -49,7 +49,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
         this.textElement =
             this.svgGroup.text(
                 2, 0,
-                this.getTextByValue(this.value)
+                this.getTextByValue(this.getValue())
             );
 
         var bBox = this.textElement.getBBox();
@@ -157,7 +157,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
             ));
 
 
-            if (this.value == value) {
+            if (this.getValue() == value) {
                 element.text(
                     5, 13,
                     '\u2713'
@@ -199,8 +199,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
 
     p.applyValue = function(value) {
         if (this.value == value) return;
-        this._block.values[this.key] = value;
-        this.value = value;
+        this.setValue(value);
         this.textElement.node.textContent = this.getTextByValue(value);
         this.resize();
     };

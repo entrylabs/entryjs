@@ -8,7 +8,7 @@ goog.require("Entry.Field");
 /*
  *
  */
-Entry.FieldAngle = function(content, blockView) {
+Entry.FieldAngle = function(content, blockView, index) {
     this._block = blockView.block;
 
     var box = new Entry.BoxModel();
@@ -18,8 +18,8 @@ Entry.FieldAngle = function(content, blockView) {
 
     this.position = content.position;
     this._contents = content;
-    this.key = content.key;
-    this.value = this.modValue(this._block.values[this.key]  || 0);
+    this._index = index;
+    this.setValue(this.modValue(this.getValue()));
 
     this.renderStart(blockView);
 };
@@ -158,7 +158,7 @@ Entry.FieldAngle.FILL_PATH = 'M 0, 0 v -49 A 49,49 0 %LARGE 1 %X,%Y z';
             angle = Math.round(angle / 15) * 15;
             if (mousePos[0] < centerPos[0]) angle = 360 - angle;
 
-            that.value = angle;
+            that.setValue(angle);
             that.applyValue();
         });
 
@@ -186,8 +186,8 @@ Entry.FieldAngle.FILL_PATH = 'M 0, 0 v -49 A 49,49 0 %LARGE 1 %X,%Y z';
         if (this._fillPath) this._fillPath.remove();
 
         var RADIUS = Entry.FieldAngle.RADIUS;
-        console.log(this.value);
-        var angleRadians = Entry.toRadian(this.value);
+        console.log(this.getValue());
+        var angleRadians = Entry.toRadian(this.getValue());
         var x = Math.sin(angleRadians) * RADIUS;
         var y = Math.cos(angleRadians) * -RADIUS;
         var largeFlag = (angleRadians > Math.PI) ? 1 : 0;
@@ -217,8 +217,7 @@ Entry.FieldAngle.FILL_PATH = 'M 0, 0 v -49 A 49,49 0 %LARGE 1 %X,%Y z';
         var value = this.optionGroup.val();
         if (isNaN(value)) return;
         value = this.modValue(value);
-        this._block.values[this.key] = value;
-        this.value = value;
+        this.setValue(value);
         this.textElement.node.textContent = this.getText();
         this.updateGraph();
         this.resize();
@@ -239,7 +238,7 @@ Entry.FieldAngle.FILL_PATH = 'M 0, 0 v -49 A 49,49 0 %LARGE 1 %X,%Y z';
     };
 
     p.getText = function() {
-        return this.value + '\u00B0';
+        return this.getValue() + '\u00B0';
     };
 
     p.modValue = function(value) {
