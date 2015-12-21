@@ -31,7 +31,8 @@ Entry.Block.MAGNET_OFFSET = 0.4;
         x: 0,
         y: 0,
         type: null,
-        values: {},
+        params: [],
+        statements: [],
         prev: null,
         next: null,
         view: null,
@@ -50,19 +51,23 @@ Entry.Block.MAGNET_OFFSET = 0.4;
     };
 
     p.getSchema = function() {
+        var that = this;
         this._schema = Entry.block[this.type];
         if (this._schema.event)
             this.thread.registerEvent(this, this._schema.event);
-        var contents = this._schema.contents;
-        for (var i = 0; i < contents.length; i++) {
-            var content = contents[i];
 
-            if (!this.values[content.key] && content.value)
-                this.values[content.key] = content.value;
+        var params = this._schema.params;
+        for (var i = 0; i < params.length; i++) {
+            this.params.push(params[i].value);
+        }
 
-            if (content.type == "Statement") {
-                this.values[content.key] = new Entry.Thread(
-                    this.values[content.key], this.getCode());
+        var statements = this._schema.statements;
+        if (statements) {
+            for (var i = 0; i < statements.length; i++) {
+                this.statements.splice(
+                    i, 1,
+                    new Entry.Thread(this.statements[i], that.getCode())
+                );
             }
         }
     };
@@ -130,19 +135,12 @@ Entry.Block.MAGNET_OFFSET = 0.4;
         delete json.thread;
         if (isNew)
             delete json.id;
-        var values = {};
-        for (var key in json.values) {
-            values[key] = json.values[key];
-        }
-        json.values = values;
-        var contents = this._schema.contents;
-        for (var i = 0; i < contents.length; i++) {
-            var content = contents[i];
-            if (content.type == "Statement") {
-                json.values[content.key] =
-                    this.values[content.key].toJSON(isNew);
-            }
-        }
+
+        json.params = json.params.map(function(p) {return p});
+
+        json.statements = json.statements.map(
+            function(s) {return s.toJSON(isNew)}
+        );
         return json;
     };
 
@@ -151,12 +149,16 @@ Entry.Block.MAGNET_OFFSET = 0.4;
         if (!this.prev || this.prev instanceof Entry.DummyBlock)
             this.thread.destroy();
 
-        var statement = this.values.STATEMENT;
-        if (statement) {
-            var block = statement.getFirstBlock();
-            if (block instanceof Entry.DummyBlock)
-                block = block.next;
-            if (block) block.destroy(animate);
+        var statements = this.statements;
+
+        if (statements) {
+            for (var i=0; i<statements.length; i++) {
+                var statement = statements[i];
+                var block = statement.getFirstBlock();
+                if (block instanceof Entry.DummyBlock)
+                    block = block.next;
+                if (block) block.destroy(animate);
+            }
         }
 
         if (this.next) this.next.destroy(animate);

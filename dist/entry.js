@@ -4597,9 +4597,10 @@ Entry.Collection = function(a) {
     this._hashMap = {};
   };
   a.map = function(a, b) {
-    for (var e = 0, f = this.length;e < f;e++) {
-      a(this[e], b);
+    for (var e = [], f = 0, g = this.length;f < g;f++) {
+      e.push(a(this[f], b));
     }
+    return e;
   };
   a.moveFromTo = function(a, d) {
     var e = this.length - 1;
@@ -8519,6 +8520,164 @@ Entry.Painter.prototype.selectToolbox = function(a) {
       this.toggleCoordinator();
   }
 };
+Entry.JSParser = {};
+(function(a) {
+  a.Program = function(a) {
+    var c = [];
+    a = a.body;
+    for (var d = 0;d < a.length;d++) {
+      var e = a[d];
+      console.log(e.type);
+      c.push(this[e.type](e));
+    }
+    console.log("block", c);
+    return c;
+  };
+  a.Identifier = function(a) {
+    return a.name;
+  };
+  a.ExpressionStatement = function(a) {
+    a = a.expression;
+    return this[a.type](a);
+  };
+  a.ForStatement = function(a) {
+    return {init:a.init, test:a.test, update:a.update, body:a.body};
+  };
+  a.BlockStatement = function(a) {
+    return Error();
+  };
+  a.EmptyStatement = function(a) {
+    return Error();
+  };
+  a.DebuggerStatement = function(a) {
+    return Error();
+  };
+  a.WithStatement = function(a) {
+    return Error();
+  };
+  a.ReturnStaement = function(a) {
+    return Error();
+  };
+  a.LabeledStatement = function(a) {
+    return Error();
+  };
+  a.BreakStatement = function(a) {
+    return Error();
+  };
+  a.ContinueStatement = function(a) {
+    return Error();
+  };
+  a.IfStatement = function(a) {
+    return {test:a.test, consequent:a.consequent, alternate:a.alternate};
+  };
+  a.SwitchStatement = function(a) {
+    return Error();
+  };
+  a.SwitchCase = function(a) {
+    return Error();
+  };
+  a.ThrowStatement = function(a) {
+    return Error();
+  };
+  a.TryStatement = function(a) {
+    return Error();
+  };
+  a.CatchClause = function(a) {
+    return Error();
+  };
+  a.WhileStatement = function(a) {
+    test = a.test;
+    body = a.body;
+    return Error();
+  };
+  a.DoWhileStatement = function(a) {
+    return Error();
+  };
+  a.ForInStatement = function(a) {
+    return Error();
+  };
+  a.FunctionDeclaration = function(a) {
+    return Error();
+  };
+  a.VariableDeclaration = function(a) {
+    return Error();
+  };
+  a.VariableDeclaration = function(a) {
+    return Error();
+  };
+  a.ThisExpression = function(a) {
+    return Entry.Parser.ThisObject;
+  };
+  a.ArrayExpression = function(a) {
+    return Error();
+  };
+  a.ObjectExpression = function(a) {
+    return Error();
+  };
+  a.property = function(a) {
+    return Error();
+  };
+  a.FunctionExpression = function(a) {
+    return Error();
+  };
+  a.UnaryExpression = function(a) {
+    return Error();
+  };
+  a.UnaryOperator = function() {
+    return "- + ! ~ typeof void delete".split(" ");
+  };
+  a.updateOperator = function() {
+    return ["++", "--"];
+  };
+  a.BinaryOperator = function() {
+    return "== != === !== < <= > >= << >> >>> + - * / % , ^ & in instanceof".split(" ");
+  };
+  a.AssignmentExpression = function(a) {
+    return Error();
+  };
+  a.AssignmentOperator = function() {
+    return "= += -= *= /= %= <<= >>= >>>= ,= ^= &=".split(" ");
+  };
+  a.LogicalExpression = function(a) {
+    return Error();
+  };
+  a.LogicalOperator = function() {
+    return ["||", "&&"];
+  };
+  a.MemberExpression = function(a) {
+    var c = a.object;
+    a = a.property;
+    c = this[c.type](c);
+    a = this[a.type](a);
+    return c[a];
+  };
+  a.ConditionalExpression = function(a) {
+    return Error();
+  };
+  a.UpdateExpression = function(a) {
+    return Error();
+  };
+  a.CallExpression = function(a) {
+    a = a.callee;
+    return {type:this[a.type](a)};
+  };
+  a.NewExpression = function(a) {
+    return Error();
+  };
+  a.SequenceExpression = function(a) {
+    return Error();
+  };
+})(Entry.JSParser);
+Entry.Parser = {};
+Entry.Parser.ThisObject = {};
+Entry.Parser.jsToBlock = function(a) {
+  a = acorn.parse(a);
+  var b = null, b = Entry.JSParser.Program(a);
+  console.log("asTree ====", b);
+  return b;
+};
+Entry.Parser.pythonToBlock = function(a) {
+};
 Entry.Playground = function() {
   this.menuBlocks_ = {};
   this.enableArduino = this.isTextBGMode_ = !1;
@@ -10840,6 +10999,13 @@ Entry.Utils.disableContextmenu = function(a) {
 Entry.Utils.isRightButton = function(a) {
   return 2 == a.button || a.ctrlKey;
 };
+Entry.Utils.inherit = function(a, b) {
+  function c() {
+  }
+  c.prototype = a.prototype;
+  b.prototype = new c;
+  return b;
+};
 Entry.Model = function(a, b) {
   var c = Entry.Model;
   c.generateSchema(a);
@@ -12779,23 +12945,23 @@ Entry.VariableContainer.prototype.updateCloudVariables = function() {
 };
 Entry.block.run = {skeleton:"basic", color:"#3BBD70", contents:["this is", "basic block"], func:function() {
 }};
-Entry.block.jr_start = {skeleton:"pebble_event", event:"start", color:"#3BBD70", contents:[{type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_play_image.png", highlightColor:"#3BBD70", size:22}], func:function() {
+Entry.block.jr_start = {skeleton:"pebble_event", event:"start", color:"#3BBD70", template:"%1", params:[{type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_play_image.png", highlightColor:"#3BBD70", size:22}], func:function() {
   var a = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT), b;
   for (b in a) {
     this._unit = a[b];
   }
   Ntry.unitComp = Ntry.entityManager.getComponent(this._unit.id, Ntry.STATIC.UNIT);
 }};
-Entry.block.jr_repeat = {skeleton:"pebble_loop", color:"#127CDB", contents:[{type:"Dropdown", key:"REPEAT", options:[[1, 1], [2, 2], [3, 3], [4, 4], [5, 5], [6, 6], [7, 7], [8, 8], [9, 9], [10, 10]], value:1}, {type:"Text", text:"\ubc18\ubcf5"}, {type:"Statement", key:"STATEMENT", accept:"pebble_basic"}], func:function() {
+Entry.block.jr_repeat = {skeleton:"pebble_loop", color:"#127CDB", template:"%1 \ubc18\ubcf5", params:[{type:"Dropdown", options:[[1, 1], [2, 2], [3, 3], [4, 4], [5, 5], [6, 6], [7, 7], [8, 8], [9, 9], [10, 10]], value:3, fontSize:14, roundValue:3}], statements:[{accept:"pebble_basic", position:{x:46, y:14}}], func:function() {
   if (void 0 === this.repeatCount) {
-    return this.repeatCount = this.block.values.REPEAT, Entry.STATIC.CONTINUE;
+    return this.repeatCount = this.block.params[0], Entry.STATIC.CONTINUE;
   }
   if (0 < this.repeatCount) {
-    return console.log(this.repeatCount), this.repeatCount--, this.executor.stepInto(this.block.values.STATEMENT), Entry.STATIC.CONTINUE;
+    return this.repeatCount--, this.executor.stepInto(this.block.statements[0]), Entry.STATIC.CONTINUE;
   }
   delete this.repeatCount;
 }};
-Entry.block.jr_item = {skeleton:"pebble_basic", color:"#F46C6C", contents:[{type:"Text", text:"\uaf43 \ubaa8\uc73c\uae30"}, {type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_item_image.png", highlightColor:"#FFF", position:{x:83, y:0}, size:22}], func:function() {
+Entry.block.jr_item = {skeleton:"pebble_basic", color:"#F46C6C", template:"\uaf43 \ubaa8\uc73c\uae30 %1", params:[{type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_item_image.png", highlightColor:"#FFF", position:{x:83, y:0}, size:22}], func:function() {
   if (this.isContinue) {
     if (this.isAction) {
       return Entry.STATIC.CONTINUE;
@@ -12812,7 +12978,7 @@ Entry.block.jr_item = {skeleton:"pebble_basic", color:"#F46C6C", contents:[{type
     return Entry.STATIC.CONTINUE;
   }
 }};
-Entry.block.cparty_jr_item = {skeleton:"pebble_basic", color:"#8ABC1D", contents:[{type:"Text", text:"\uc5f0\ud544 \uc90d\uae30"}, {type:"Indicator", img:"/img/assets/ntry/bitmap/cpartyjr/pen.png", highlightColor:"#FFF", position:{x:83, y:0}, size:22}], func:function() {
+Entry.block.cparty_jr_item = {skeleton:"pebble_basic", color:"#8ABC1D", template:"\uc5f0\ud544 \uc90d\uae30 %1", params:[{type:"Indicator", img:"/img/assets/ntry/bitmap/cpartyjr/pen.png", highlightColor:"#FFF", position:{x:83, y:0}, size:22}], func:function() {
   if (this.isContinue) {
     if (this.isAction) {
       return Entry.STATIC.CONTINUE;
@@ -12829,7 +12995,7 @@ Entry.block.cparty_jr_item = {skeleton:"pebble_basic", color:"#8ABC1D", contents
     return Entry.STATIC.CONTINUE;
   }
 }};
-Entry.block.jr_north = {skeleton:"pebble_basic", color:"#A751E3", contents:[{type:"Text", text:"  \uc704\ucabd"}, {type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_up_image.png", position:{x:83, y:0}, size:22}], func:function() {
+Entry.block.jr_north = {skeleton:"pebble_basic", color:"#A751E3", template:"\uc704\ucabd %1", params:[{type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_up_image.png", position:{x:83, y:0}, size:22}], func:function() {
   if (this.isContinue) {
     if (this.isAction) {
       return Entry.STATIC.CONTINUE;
@@ -12862,7 +13028,7 @@ Entry.block.jr_north = {skeleton:"pebble_basic", color:"#A751E3", contents:[{typ
     return Entry.STATIC.CONTINUE;
   }
 }};
-Entry.block.jr_east = {skeleton:"pebble_basic", color:"#A751E3", contents:[{type:"Text", text:"\uc624\ub978\ucabd"}, {type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_right_image.png", position:{x:83, y:0}, size:22}], func:function() {
+Entry.block.jr_east = {skeleton:"pebble_basic", color:"#A751E3", template:"\uc624\ub978\ucabd %1", params:[{type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_right_image.png", position:{x:83, y:0}, size:22}], func:function() {
   var a = Ntry.STATIC;
   if (this.isContinue) {
     if (this.isAction) {
@@ -12896,7 +13062,7 @@ Entry.block.jr_east = {skeleton:"pebble_basic", color:"#A751E3", contents:[{type
     return Entry.STATIC.CONTINUE;
   }
 }};
-Entry.block.jr_south = {skeleton:"pebble_basic", color:"#A751E3", contents:[{type:"Text", text:"  \uc544\ub798\ucabd"}, {type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_down_image.png", position:{x:83, y:0}, size:22}], func:function() {
+Entry.block.jr_south = {skeleton:"pebble_basic", color:"#A751E3", template:"\uc544\ub798\ucabd %1", params:[{type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_down_image.png", position:{x:83, y:0}, size:22}], func:function() {
   if (this.isContinue) {
     if (this.isAction) {
       return Entry.STATIC.CONTINUE;
@@ -12929,7 +13095,7 @@ Entry.block.jr_south = {skeleton:"pebble_basic", color:"#A751E3", contents:[{typ
     return Entry.STATIC.CONTINUE;
   }
 }};
-Entry.block.jr_west = {skeleton:"pebble_basic", color:"#A751E3", contents:[{type:"Text", text:"  \uc67c\ucabd"}, {type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_left_image.png", position:{x:83, y:0}, size:22}], func:function() {
+Entry.block.jr_west = {skeleton:"pebble_basic", color:"#A751E3", template:"\uc67c\ucabd %1", params:[{type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_left_image.png", position:{x:83, y:0}, size:22}], func:function() {
   if (this.isContinue) {
     if (this.isAction) {
       return Entry.STATIC.CONTINUE;
@@ -12962,14 +13128,14 @@ Entry.block.jr_west = {skeleton:"pebble_basic", color:"#A751E3", contents:[{type
     return Entry.STATIC.CONTINUE;
   }
 }};
-Entry.block.jr_start_basic = {skeleton:"basic_event", event:"start", color:"#3BBD70", contents:[{type:"Indicator", boxMultiplier:1, img:"/img/assets/block_icon/start_icon_play.png", highlightColor:"#3BBD70", size:17, position:{x:0, y:-2}}, "\uc2dc\uc791 \ubc84\ud2bc\uc744 \ub20c\ub800\uc744 \ub54c"], func:function() {
+Entry.block.jr_start_basic = {skeleton:"basic_event", event:"start", color:"#3BBD70", template:"%1 \uc2dc\uc791 \ubc84\ud2bc\uc744 \ub20c\ub800\uc744 \ub584", params:[{type:"Indicator", boxMultiplier:1, img:"/img/assets/block_icon/start_icon_play.png", highlightColor:"#3BBD70", size:17, position:{x:0, y:-2}}], func:function() {
   var a = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT), b;
   for (b in a) {
     this._unit = a[b];
   }
   Ntry.unitComp = Ntry.entityManager.getComponent(this._unit.id, Ntry.STATIC.UNIT);
 }};
-Entry.block.jr_go_straight = {skeleton:"basic", color:"#A751E3", contents:["\uc55e\uc73c\ub85c \uac00\uae30", {type:"Image", img:"/img/assets/ntry/bitmap/jr/cparty_go_straight.png", size:24}], func:function() {
+Entry.block.jr_go_straight = {skeleton:"basic", color:"#A751E3", template:"\uc55e\uc73c\ub85c \uac00\uae30 %1", params:[{type:"Image", img:"/img/assets/ntry/bitmap/jr/cparty_go_straight.png", size:24}], func:function() {
   if (this.isContinue) {
     if (this.isAction) {
       return Entry.STATIC.CONTINUE;
@@ -12985,7 +13151,7 @@ Entry.block.jr_go_straight = {skeleton:"basic", color:"#A751E3", contents:["\uc5
     return Entry.STATIC.CONTINUE;
   }
 }};
-Entry.block.jr_turn_left = {skeleton:"basic", color:"#A751E3", contents:["\uc67c\ucabd\uc73c\ub85c \ub3cc\uae30", {type:"Image", img:"/img/assets/ntry/bitmap/jr/cparty_rotate_l.png", size:24}], func:function() {
+Entry.block.jr_turn_left = {skeleton:"basic", color:"#A751E3", template:"\uc67c\ucabd\uc73c\ub85c \ub3cc\uae30 %1", params:[{type:"Image", img:"/img/assets/ntry/bitmap/jr/cparty_rotate_l.png", size:24}], func:function() {
   if (this.isContinue) {
     if (this.isAction) {
       return Entry.STATIC.CONTINUE;
@@ -13001,7 +13167,7 @@ Entry.block.jr_turn_left = {skeleton:"basic", color:"#A751E3", contents:["\uc67c
     return Entry.STATIC.CONTINUE;
   }
 }};
-Entry.block.jr_turn_right = {skeleton:"basic", color:"#A751E3", contents:["\uc624\ub978\ucabd\uc73c\ub85c \ub3cc\uae30", {type:"Image", img:"/img/assets/ntry/bitmap/jr/cparty_rotate_r.png", size:24}], func:function() {
+Entry.block.jr_turn_right = {skeleton:"basic", color:"#A751E3", template:"\uc624\ub978\ucabd\uc73c\ub85c \ub3cc\uae30 %1", params:[{type:"Image", img:"/img/assets/ntry/bitmap/jr/cparty_rotate_r.png", size:24}], func:function() {
   if (this.isContinue) {
     if (this.isAction) {
       return Entry.STATIC.CONTINUE;
@@ -13017,7 +13183,7 @@ Entry.block.jr_turn_right = {skeleton:"basic", color:"#A751E3", contents:["\uc62
     return Entry.STATIC.CONTINUE;
   }
 }};
-Entry.block.jr_go_slow = {skeleton:"basic", color:"#f46c6c", contents:["\ucc9c\ucc9c\ud788 \uac00\uae30", {type:"Image", img:"/img/assets/ntry/bitmap/jr/cparty_go_slow.png", size:24}], func:function() {
+Entry.block.jr_go_slow = {skeleton:"basic", color:"#f46c6c", template:"\ucc9c\ucc9c\ud788 \uac00\uae30 %1", params:[{type:"Image", img:"/img/assets/ntry/bitmap/jr/cparty_go_slow.png", size:24}], func:function() {
   if (this.isContinue) {
     if (this.isAction) {
       return Entry.STATIC.CONTINUE;
@@ -13033,12 +13199,13 @@ Entry.block.jr_go_slow = {skeleton:"basic", color:"#f46c6c", contents:["\ucc9c\u
     return Entry.STATIC.CONTINUE;
   }
 }};
-Entry.block.jr_repeat_until_dest = {skeleton:"basic_loop", color:"#498DEB", contents:[{type:"Image", img:"/img/assets/ntry/bitmap/jr/jr_goal_image.png", size:18}, "\ub9cc\ub0a0 \ub54c \uae4c\uc9c0 \ubc18\ubcf5\ud558\uae30", {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}, {type:"Statement", key:"STATEMENT", accept:"basic", alignY:15, alignX:2}], func:function() {
-  if (1 !== this.block.values.STATEMENT.getBlocks().length) {
-    return this.executor.stepInto(this.block.values.STATEMENT), Entry.STATIC.CONTINUE;
+Entry.block.jr_repeat_until_dest = {skeleton:"basic_loop", color:"#498DEB", template:"%1 \ub9cc\ub0a0 \ub54c \uae4c\uc9c0 \ubc18\ubcf5\ud558\uae30 %2", params:[{type:"Image", img:"/img/assets/ntry/bitmap/jr/jr_goal_image.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic", position:{x:2, y:15}}], func:function() {
+  var a = this.block.statements[0];
+  if (1 !== a.getBlocks().length) {
+    return this.executor.stepInto(a), Entry.STATIC.CONTINUE;
   }
 }};
-Entry.block.jr_if_construction = {skeleton:"basic_loop", color:"#498DEB", contents:["\ub9cc\uc57d", {type:"Image", img:"/img/assets/ntry/bitmap/jr/jr_construction_image.png", size:18}, "\uc55e\uc5d0 \uc788\ub2e4\uba74", {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}, {type:"Statement", key:"STATEMENT", accept:"basic", alignY:15, alignX:2}], func:function() {
+Entry.block.jr_if_construction = {skeleton:"basic_loop", color:"#498DEB", template:"\ub9cc\uc57d %1 \uc55e\uc5d0 \uc788\ub2e4\uba74 %2", params:[{type:"Image", img:"/img/assets/ntry/bitmap/jr/jr_construction_image.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic", position:{x:2, y:15}}], func:function() {
   if (!this.isContinue) {
     var a = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT), b, c;
     for (c in a) {
@@ -13050,13 +13217,13 @@ Entry.block.jr_if_construction = {skeleton:"basic_loop", color:"#498DEB", conten
     Ntry.addVectorByDirection(b, a.direction, 1);
     b = Ntry.entityManager.find({type:Ntry.STATIC.GRID, x:b.x, y:b.y}, {type:Ntry.STATIC.TILE, tileType:Ntry.STATIC.OBSTACLE_REPAIR});
     this.isContinue = !0;
-    a = this.block.values.STATEMENT;
+    a = this.block.statements[0];
     if (0 !== b.length && 1 !== a.getBlocks().length) {
       return this.executor.stepInto(a), Entry.STATIC.CONTINUE;
     }
   }
 }};
-Entry.block.jr_if_speed = {skeleton:"basic_loop", color:"#498DEB", contents:["\ub9cc\uc57d", {type:"Image", img:"/img/assets/ntry/bitmap/jr/jr_speed_image.png", size:18}, "\uc55e\uc5d0 \uc788\ub2e4\uba74", {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}, {type:"Statement", key:"STATEMENT", accept:"basic", alignY:15, alignX:2}], func:function() {
+Entry.block.jr_if_speed = {skeleton:"basic_loop", color:"#498DEB", template:"\ub9cc\uc57d %1 \uc55e\uc5d0 \uc788\ub2e4\uba74 %2", params:[{type:"Image", img:"/img/assets/ntry/bitmap/jr/jr_speed_image.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic", position:{x:2, y:15}}], func:function() {
   if (!this.isContinue) {
     var a = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT), b, c;
     for (c in a) {
@@ -13068,10 +13235,190 @@ Entry.block.jr_if_speed = {skeleton:"basic_loop", color:"#498DEB", contents:["\u
     Ntry.addVectorByDirection(b, a.direction, 1);
     b = Ntry.entityManager.find({type:Ntry.STATIC.GRID, x:b.x, y:b.y}, {type:Ntry.STATIC.TILE, tileType:Ntry.STATIC.OBSTACLE_SLOW});
     this.isContinue = !0;
+    a = this.block.statements[0];
+    if (0 !== b.length && 1 !== a.getBlocks().length) {
+      return this.executor.stepInto(a), Entry.STATIC.CONTINUE;
+    }
+  }
+}};
+Entry.block.maze_step_jump = {skeleton:"basic", color:"#FF6E4B", template:"\ub6f0\uc5b4\ub118\uae30 %1", params:[{type:"Image", img:"/img/assets/week/blocks/jump.png", size:24}], func:function() {
+  if (this.isContinue) {
+    if (this.isAction) {
+      return Entry.STATIC.CONTINUE;
+    }
+    delete this.isAction;
+    delete this.isContinue;
+  } else {
+    this.isAction = this.isContinue = !0;
+    var a = this;
+    Ntry.dispatchEvent("unitAction", Ntry.STATIC.JUMP, function() {
+      a.isAction = !1;
+    });
+    return Entry.STATIC.CONTINUE;
+  }
+}};
+Entry.block.maze_step_for = {skeleton:"basic_loop", color:"#127CDB", template:"%1 \ubc88 \ubc18\ubcf5\ud558\uae30 %2", params:[{type:"Dropdown", key:"REPEAT", options:[[1, 1], [2, 2], [3, 3], [4, 4], [5, 5], [6, 6], [7, 7], [8, 8], [9, 9], [10, 10]], value:1}, {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic", position:{x:2, y:15}}], func:function() {
+  if (void 0 === this.repeatCount) {
+    return this.repeatCount = this.block.values.REPEAT, Entry.STATIC.CONTINUE;
+  }
+  if (0 < this.repeatCount) {
+    return this.repeatCount--, this.executor.stepInto(this.block.values.STATEMENT), Entry.STATIC.CONTINUE;
+  }
+  delete this.repeatCount;
+}};
+Entry.block.test = {skeleton:"basic", color:"#3BBD70", contents:["\ud0a4\ub97c \ub20c\ub800\uc744 \ub54c", {type:"Angle", key:"ANGLE", value:550}, "\ud0a4\ub97c \ub20c\ub800\uc744 \ub54c"], func:function() {
+}};
+Entry.block.maze_repeat_until_1 = {skeleton:"basic_loop", color:"#498DEB", template:"%1 \ub9cc\ub0a0 \ub54c \uae4c\uc9c0 \ubc18\ubcf5\ud558\uae30 %2", params:[{type:"Image", img:"/img/assets/ntry/block_inner/repeat_goal_1.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic", position:{x:2, y:15}}], func:function() {
+  if (1 !== this.block.values.STATEMENT.getBlocks().length) {
+    return this.executor.stepInto(this.block.values.STATEMENT), Entry.STATIC.CONTINUE;
+  }
+}};
+Entry.block.maze_step_if_1 = {skeleton:"basic_loop", color:"#498DEB", template:"\ub9cc\uc57d %1 \uc55e\uc5d0 \uc788\ub2e4\uba74 %2", params:[{type:"Image", img:"/img/assets/ntry/block_inner/if_target_1.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic", position:{x:2, y:15}}], func:function() {
+  if (!this.isContinue) {
+    var a = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT), b, c;
+    for (c in a) {
+      b = a[c];
+    }
+    a = Ntry.entityManager.getComponent(b.id, Ntry.STATIC.UNIT);
+    b = Ntry.entityManager.getComponent(b.id, Ntry.STATIC.GRID);
+    b = {x:b.x, y:b.y};
+    Ntry.addVectorByDirection(b, a.direction, 1);
+    c = Ntry.entityManager.find({type:Ntry.STATIC.GRID, x:b.x, y:b.y});
+    a = this.block.values.STATEMENT;
+    if (0 == c.length) {
+      return this.executor.stepInto(a), Entry.STATIC.CONTINUE;
+    }
+    b = Ntry.entityManager.find({type:Ntry.STATIC.GRID, x:b.x, y:b.y}, {type:Ntry.STATIC.TILE, tileType:Ntry.STATIC.WALL});
+    this.isContinue = !0;
+    if (0 !== b.length && 1 !== a.getBlocks().length) {
+      return this.executor.stepInto(a), Entry.STATIC.CONTINUE;
+    }
+  }
+}};
+Entry.block.maze_step_if_2 = {skeleton:"basic_loop", color:"#498DEB", template:"\ub9cc\uc57d %1 \uc55e\uc5d0 \uc788\ub2e4\uba74", params:[{type:"Image", img:"/img/assets/ntry/bitmap/maze2/obstacle_01.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic", position:{x:2, y:15}}], func:function() {
+  if (!this.isContinue) {
+    var a = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT), b, c;
+    for (c in a) {
+      b = a[c];
+    }
+    a = Ntry.entityManager.getComponent(b.id, Ntry.STATIC.UNIT);
+    b = Ntry.entityManager.getComponent(b.id, Ntry.STATIC.GRID);
+    b = {x:b.x, y:b.y};
+    Ntry.addVectorByDirection(b, a.direction, 1);
+    b = Ntry.entityManager.find({type:Ntry.STATIC.GRID, x:b.x, y:b.y}, {type:Ntry.STATIC.TILE, tileType:Ntry.STATIC.OBSTACLE_BEE});
+    this.isContinue = !0;
     a = this.block.values.STATEMENT;
     if (0 !== b.length && 1 !== a.getBlocks().length) {
       return this.executor.stepInto(a), Entry.STATIC.CONTINUE;
     }
+  }
+}};
+Entry.block.maze_call_function = {skeleton:"basic", color:"#B57242", template:"\uc57d\uc18d \ubd88\ub7ec\uc624\uae30 %1", params:[{type:"Image", img:"/img/assets/week/blocks/function.png", size:24}], func:function() {
+  if (!this.funcExecutor) {
+    var a = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.CODE), b;
+    for (b in a) {
+      code = a[b].components[Ntry.STATIC.CODE].code, this.funcExecutor = new Entry.Executor(code.getEventMap("define")[0]);
+    }
+  }
+  this.funcExecutor.execute();
+  if (null !== this.funcExecutor.scope.block) {
+    return Entry.STATIC.CONTINUE;
+  }
+}};
+Entry.block.maze_define_function = {skeleton:"basic_define", color:"#B57242", event:"define", template:"\uc57d\uc18d\ud558\uae30 %1", params:[{type:"Image", img:"/img/assets/week/blocks/function.png", size:24}], statements:[{accept:"basic", position:{x:2, y:15}}], func:function(a) {
+  if (!this.executed) {
+    return this.executor.stepInto(this.block.values.STATEMENT), this.executed = !0, Entry.STATIC.CONTINUE;
+  }
+}};
+Entry.block.maze_step_if_3 = {skeleton:"basic_loop", color:"#498DEB", template:"\ub9cc\uc57d %1 \uc55e\uc5d0 \uc788\ub2e4\uba74", params:[{type:"Image", img:"/img/assets/ntry/block_inner/if_target_3.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic", position:{x:2, y:15}}], func:function() {
+  if (!this.isContinue) {
+    var a = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT), b, c;
+    for (c in a) {
+      b = a[c];
+    }
+    a = Ntry.entityManager.getComponent(b.id, Ntry.STATIC.UNIT);
+    b = Ntry.entityManager.getComponent(b.id, Ntry.STATIC.GRID);
+    b = {x:b.x, y:b.y};
+    Ntry.addVectorByDirection(b, a.direction, 1);
+    b = Ntry.entityManager.find({type:Ntry.STATIC.GRID, x:b.x, y:b.y}, {type:Ntry.STATIC.TILE, tileType:Ntry.STATIC.OBSTACLE_BANANA});
+    this.isContinue = !0;
+    a = this.block.values.STATEMENT;
+    if (0 !== b.length && 1 !== a.getBlocks().length) {
+      return this.executor.stepInto(a), Entry.STATIC.CONTINUE;
+    }
+  }
+}};
+Entry.block.maze_step_if_4 = {skeleton:"basic_loop", color:"#498DEB", template:"\ub9cc\uc57d %1 \uc55e\uc5d0 \uc788\ub2e4\uba74", params:[{type:"Image", img:"/img/assets/ntry/block_inner/if_target_2.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic", position:{x:2, y:15}}], func:function() {
+  if (!this.isContinue) {
+    var a = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT), b, c;
+    for (c in a) {
+      b = a[c];
+    }
+    a = Ntry.entityManager.getComponent(b.id, Ntry.STATIC.UNIT);
+    b = Ntry.entityManager.getComponent(b.id, Ntry.STATIC.GRID);
+    b = {x:b.x, y:b.y};
+    Ntry.addVectorByDirection(b, a.direction, 1);
+    b = Ntry.entityManager.find({type:Ntry.STATIC.GRID, x:b.x, y:b.y}, {type:Ntry.STATIC.TILE, tileType:Ntry.STATIC.WALL});
+    this.isContinue = !0;
+    a = this.block.values.STATEMENT;
+    if (0 !== b.length && 1 !== a.getBlocks().length) {
+      return this.executor.stepInto(a), Entry.STATIC.CONTINUE;
+    }
+  }
+}};
+Entry.block.maze_step_start = {skeleton:"basic_event", event:"start", color:"#3BBD70", template:"%1 \uc2dc\uc791 \ubc84\ud2bc\uc744 \ub20c\ub800\uc744 \ub54c", params:[{type:"Indicator", boxMultiplier:1, img:"/img/assets/block_icon/start_icon_play.png", highlightColor:"#3BBD70", size:17, position:{x:0, y:-2}}], func:function() {
+  var a = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT), b;
+  for (b in a) {
+    this._unit = a[b];
+  }
+  Ntry.unitComp = Ntry.entityManager.getComponent(this._unit.id, Ntry.STATIC.UNIT);
+}};
+Entry.block.maze_step_move_step = {skeleton:"basic", color:"#A751E3", template:"\uc55e\uc73c\ub85c \uac00\uae30 %1", params:[{type:"Image", img:"/img/assets/ntry/bitmap/jr/cparty_go_straight.png", size:24}], func:function() {
+  if (this.isContinue) {
+    if (this.isAction) {
+      return Entry.STATIC.CONTINUE;
+    }
+    delete this.isAction;
+    delete this.isContinue;
+  } else {
+    this.isAction = this.isContinue = !0;
+    var a = this;
+    Ntry.dispatchEvent("unitAction", Ntry.STATIC.WALK, function() {
+      a.isAction = !1;
+    });
+    return Entry.STATIC.CONTINUE;
+  }
+}};
+Entry.block.maze_step_rotate_left = {skeleton:"basic", color:"#A751E3", template:"\uc67c\ucabd\uc73c\ub85c \ub3cc\uae30 %1", params:[{type:"Image", img:"/img/assets/ntry/bitmap/jr/cparty_rotate_l.png", size:24}], func:function() {
+  if (this.isContinue) {
+    if (this.isAction) {
+      return Entry.STATIC.CONTINUE;
+    }
+    delete this.isAction;
+    delete this.isContinue;
+  } else {
+    this.isAction = this.isContinue = !0;
+    var a = this;
+    Ntry.dispatchEvent("unitAction", Ntry.STATIC.TURN_LEFT, function() {
+      a.isAction = !1;
+    });
+    return Entry.STATIC.CONTINUE;
+  }
+}};
+Entry.block.maze_step_rotate_right = {skeleton:"basic", color:"#A751E3", template:"\uc624\ub978\ucabd\uc73c\ub85c \ub3cc\uae30 %1", params:[{type:"Image", img:"/img/assets/ntry/bitmap/jr/cparty_rotate_r.png", size:24}], func:function() {
+  if (this.isContinue) {
+    if (this.isAction) {
+      return Entry.STATIC.CONTINUE;
+    }
+    delete this.isAction;
+    delete this.isContinue;
+  } else {
+    this.isAction = this.isContinue = !0;
+    var a = this;
+    Ntry.dispatchEvent("unitAction", Ntry.STATIC.TURN_RIGHT, function() {
+      a.isAction = !1;
+    });
+    return Entry.STATIC.CONTINUE;
   }
 }};
 Entry.BlockMenu = function(a, b) {
@@ -13237,9 +13584,21 @@ Entry.BlockView = function(a, b) {
     this.contentSvgGroup = this.svgGroup.group();
     var a = this._skeleton.contentPos();
     this.contentSvgGroup.transform("t" + a.x + " " + a.y);
-    for (var a = this._schema.contents, c = 0;c < a.length;c++) {
-      var d = a[c];
-      "string" === typeof d ? this._contents.push(new Entry.FieldText({text:d}, this)) : this._contents.push(new Entry["Field" + d.type](d, this));
+    for (var c = /(%\d)/gmi, d = this._schema, e = d.template.split(c), f = d.params, a = 0;a < e.length;a++) {
+      var g = e[a];
+      if (0 !== g.length) {
+        if (c.test(g)) {
+          var h = Number(g.split("%")[1]) - 1, g = f[h];
+          this._contents.push(new Entry["Field" + g.type](g, this, h));
+        } else {
+          this._contents.push(new Entry.FieldText({text:g}, this));
+        }
+      }
+    }
+    if (c = d.statements) {
+      for (a = 0;a < c.length;a++) {
+        this._contents.push(new Entry.FieldStatement(c[a], this, a));
+      }
     }
     this.alignContent(!1);
   };
@@ -13421,6 +13780,9 @@ Entry.BlockView = function(a, b) {
     a ? c.animate({opacity:0}, 100, null, function() {
       this.remove();
     }) : c.remove();
+    this._contents.forEach(function(a) {
+      a.destroy();
+    });
   };
   a.getShadow = function() {
     this._shadow || (this._shadow = this.svgGroup.clone(), this._shadow.attr({opacity:.5}));
@@ -13485,6 +13847,9 @@ Entry.BlockView = function(a, b) {
   a.getSkeleton = function() {
     return this._skeleton;
   };
+  a.getContentPos = function() {
+    return this._skeleton.contentPos(this);
+  };
 })(Entry.BlockView.prototype);
 Entry.Code = function(a) {
   Entry.Model(this, !1);
@@ -13521,7 +13886,7 @@ Entry.Code = function(a) {
     }
   };
   a.getEventMap = function(a) {
-    return this._eventMap;
+    return this._eventMap[a];
   };
   a.map = function(a) {
     this._data.map(a);
@@ -13556,7 +13921,9 @@ Entry.Code = function(a) {
     0 > e || (d.splice(e, 1), (d = a.getFirstBlock()) && d.doDestroy(c));
   };
   a.getThreads = function() {
-    return this._data;
+    return this._data.map(function(a) {
+      return a;
+    });
   };
   a.toJSON = function() {
     for (var a = this.getThreads(), c = [], d = 0, e = a.length;d < e;d++) {
@@ -13619,29 +13986,254 @@ Entry.Executor = function(a) {
     this.scope = {block:a, executor:this};
   };
 })(Entry.Executor.prototype);
-Entry.FieldDropdown = function(a, b) {
+Entry.Field = function() {
+};
+(function(a) {
+  a.TEXT_LIMIT_LENGTH = 20;
+  a.destroy = function() {
+    this.destroyOption();
+  };
+  a.destroyOption = function() {
+    this.documentDownEvent && (Entry.documentMousedown.detach(this.documentDownEvent), delete this.documentDownEvent);
+    this.optionGroup && (this.optionGroup.remove(), delete this.optionGroup);
+  };
+  a.align = function(a, c, d) {
+    var e = this.svgGroup;
+    this._position && (this._position.x && (a = this._position.x), this._position.y && (c = this._position.y));
+    var f = "t" + a + " " + c;
+    void 0 === d || d ? e.animate({transform:f}, 300, mina.easeinout) : e.attr({transform:f});
+    this.box.set({x:a, y:c});
+  };
+  a.getAbsolutePos = function() {
+    var a = this._block.view, c = a.svgGroup.transform().globalMatrix, d = a.getBoard().svgDom.offset(), a = a.getContentPos();
+    return {x:c.e + d.left + this.box.x + a.x, y:c.f + d.top + this.box.y + a.y};
+  };
+  a.getRelativePos = function() {
+    var a = this._block.view, c = a.svgGroup.transform().globalMatrix, a = a.getContentPos(), d = this.box;
+    return {x:c.e + d.x + a.x, y:c.f + d.y + a.y};
+  };
+  a.truncate = function() {
+    var a = String(this.getValue()), c = this.TEXT_LIMIT_LENGTH, d = a.substring(0, c);
+    a.length > c && (d += "...");
+    return d;
+  };
+  a.appendSvgOptionGroup = function() {
+    return this._block.view.getBoard().svgGroup.group();
+  };
+  a.getValue = function() {
+    return this._block.params[this._index];
+  };
+  a.setValue = function(a) {
+    this.value = a;
+    this._block.params[this._index] = a;
+  };
+})(Entry.Field.prototype);
+Entry.FieldAngle = function(a, b, c) {
+  this._block = b.block;
+  this.box = new Entry.BoxModel;
+  this.svgGroup = null;
+  this.position = a.position;
+  this._contents = a;
+  this._index = c;
+  this.setValue(this.modValue(this.getValue()));
+  this.renderStart(b);
+};
+Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
+Entry.FieldAngle.RADIUS = 49;
+Entry.FieldAngle.FILL_PATH = "M 0, 0 v -49 A 49,49 0 %LARGE 1 %X,%Y z";
+(function(a) {
+  a.renderStart = function(a) {
+    var c = this;
+    this.svgGroup = a.contentSvgGroup.group();
+    this.svgGroup.attr({class:"entry-input-field"});
+    this.textElement = this.svgGroup.text(4, 4, c.getText());
+    this.textElement.attr({"font-size":"9pt"});
+    a = this.getTextWidth();
+    var d = this.position && this.position.y ? this.position.y : 0;
+    this._header = this.svgGroup.rect(0, d - 8, a, 16, 3).attr({fill:"#fff", "fill-opacity":.4});
+    this.svgGroup.append(this.textElement);
+    this.svgGroup.mouseup(function(a) {
+      c._block.view.dragMode == Entry.DRAG_MODE_MOUSEDOWN && c.renderOptions();
+    });
+    this.box.set({x:0, y:0, width:a, height:16});
+  };
+  a.renderOptions = function() {
+    var a = this;
+    this.destroyOption();
+    this.documentDownEvent = Entry.documentMousedown.attach(this, function() {
+      Entry.documentMousedown.detach(this.documentDownEvent);
+      a.applyValue();
+      a.destroyOption();
+    });
+    this.optionGroup = Entry.Dom("input", {class:"entry-widget-input-field", parent:$("body")});
+    this.optionGroup.val(this.value);
+    this.optionGroup.on("mousedown", function(a) {
+      a.stopPropagation();
+    });
+    this.optionGroup.on("keyup", function(c) {
+      var d = c.keyCode || c.which;
+      a.applyValue(c);
+      -1 < [13, 27].indexOf(d) && a.destroyOption();
+    });
+    var c = this.getAbsolutePos();
+    c.y -= this.box.height / 2;
+    this.optionGroup.css({height:16, left:c.x, top:c.y, width:a.box.width});
+    this.optionGroup.select();
+    var d = Entry.FieldAngle.RADIUS;
+    this.svgOptionGroup = this.appendSvgOptionGroup();
+    this.svgOptionGroup.circle(0, 0, d).attr({class:"entry-field-angle-circle"});
+    this.svgOptionGroup.mousemove(function(c) {
+      c = [c.clientX, c.clientY];
+      var f = a.getAbsolutePos(), g = [f.x + a.box.width / 2, f.y + a.box.height / 2], f = [f.x + a.box.width / 2, g[1] + d];
+      if (Math.floor(c[0]) == Math.floor(f[0])) {
+        g = 180;
+      } else {
+        var h = Math.pow(f[0] - c[0], 2) + Math.pow(f[1] - c[1], 2), k = Math.pow(f[0] - g[0], 2) + Math.pow(f[1] - g[1], 2), g = Entry.toDegrees(Math.acos((h + k - (Math.pow(g[0] - c[0], 2) + Math.pow(g[1] - c[1], 2))) / Math.sqrt(4 * h * k)))
+      }
+      g = 15 * Math.round(g / 15);
+      c[0] < f[0] && (g = 360 - g);
+      a.setValue(g);
+      a.applyValue();
+    });
+    this._dividerGroup = this.svgOptionGroup.group();
+    for (c = 0;360 > c;c += 15) {
+      this._dividerGroup.line(d, 0, d - (0 === c % 45 ? 10 : 5), 0).attr({transform:"rotate(" + c + ", 0, 0)", class:"entry-angle-divider"});
+    }
+    c = this.getRelativePos();
+    c.x += this.box.width / 2;
+    c.y = c.y + this.box.height / 2 + Entry.FieldAngle.RADIUS + 1;
+    this.svgOptionGroup.attr({class:"entry-field-angle", transform:"t" + c.x + " " + c.y});
+  };
+  a.updateGraph = function() {
+    this._fillPath && this._fillPath.remove();
+    var a = Entry.FieldAngle.RADIUS;
+    console.log(this.getValue());
+    var c = Entry.toRadian(this.getValue()), d = Math.sin(c) * a, a = Math.cos(c) * -a, c = c > Math.PI ? 1 : 0;
+    this._fillPath = this.svgOptionGroup.path(Entry.FieldAngle.FILL_PATH.replace("%X", d).replace("%Y", a).replace("%LARGE", c));
+    this._fillPath.attr({class:"entry-angle-fill-area"});
+    this.svgOptionGroup.append(this._dividerGroup);
+    this._indicator && this._indicator.remove();
+    this._indicator = this.svgOptionGroup.line(0, 0, d, a);
+    this._indicator.attr({class:"entry-angle-indicator"});
+  };
+  a.applyValue = function(a) {
+    a = this.optionGroup.val();
+    isNaN(a) || (a = this.modValue(a), this.setValue(a), this.textElement.node.textContent = this.getText(), this.updateGraph(), this.resize());
+  };
+  a.resize = function() {
+    var a = this.getTextWidth();
+    this._header.attr({width:a});
+    this.optionGroup.css({width:a});
+    this.box.set({width:a});
+    this._block.view.alignContent();
+  };
+  a.getTextWidth = function() {
+    return this.textElement.node.getComputedTextLength() + 8;
+  };
+  a.getText = function() {
+    return this.getValue() + "\u00b0";
+  };
+  a.modValue = function(a) {
+    return a % 360;
+  };
+  a.destroyOption = function() {
+    this.documentDownEvent && (Entry.documentMousedown.detach(this.documentDownEvent), delete this.documentDownEvent);
+    this.optionGroup && (this.optionGroup.remove(), delete this.optionGroup);
+    this.svgOptionGroup && (this.svgOptionGroup.remove(), delete this.svgOptionGroup);
+  };
+})(Entry.FieldAngle.prototype);
+Entry.FieldColor = function(a, b, c) {
   this._block = b.block;
   this.box = new Entry.BoxModel;
   this.svgGroup = null;
   this._contents = a;
+  this._index = c;
+  this._position = a.position;
   this.key = a.key;
-  this.value = this._block.values[this.key];
+  this.setValue(this.getValue() || "#FF0000");
   this.renderStart(b);
 };
+Entry.Utils.inherit(Entry.Field, Entry.FieldColor);
+(function(a) {
+  a.renderStart = function(a) {
+    var c = this;
+    this.svgGroup = a.contentSvgGroup.group();
+    this.svgGroup.attr({class:"entry-field-color"});
+    var d = this._position;
+    d ? (a = d.x || 0, d = d.y || 0) : (a = 0, d = -8);
+    this._header = this.svgGroup.rect(a, d, 14.5, 16, 0).attr({fill:this.getValue()});
+    this.svgGroup.mouseup(function(a) {
+      c._block.view.dragMode == Entry.DRAG_MODE_MOUSEDOWN && c.renderOptions();
+    });
+    this.box.set({x:a, y:d, width:14.5, height:16});
+  };
+  a.renderOptions = function() {
+    var a = this;
+    this.destroyOption();
+    var c = this._block.view;
+    this.documentDownEvent = Entry.documentMousedown.attach(this, function() {
+      Entry.documentMousedown.detach(this.documentDownEvent);
+      a.optionGroup.remove();
+    });
+    var d = Entry.FieldColor.getWidgetColorList();
+    this.optionGroup = Entry.Dom("table", {class:"entry-widget-color-table", parent:$("body")});
+    for (var e = 0;e < d.length;e++) {
+      for (var f = Entry.Dom("tr", {class:"entry-widget-color-row", parent:this.optionGroup}), g = 0;g < d[e].length;g++) {
+        var h = Entry.Dom("td", {class:"entry-widget-color-cell", parent:f}), k = d[e][g];
+        h.css({"background-color":k});
+        h.attr({"data-color-value":k});
+        (function(c, d) {
+          c.mousedown(function() {
+            a.applyValue(d);
+            a.destroyOption();
+          });
+        })(h, k);
+      }
+    }
+    c.svgGroup.transform();
+    c.getBoard().svgDom.offset();
+    c.getContentPos();
+    c = this.getAbsolutePos();
+    c.y += this.box.height / 2 + 1;
+    this.optionGroup.css({left:c.x, top:c.y});
+  };
+  a.applyValue = function(a) {
+    this.value != a && (this.setValue(a), this._header.attr({fill:a}));
+  };
+})(Entry.FieldColor.prototype);
+Entry.FieldColor.getWidgetColorList = function() {
+  return ["#FFFFFF #CCCCCC #C0C0C0 #999999 #666666 #333333 #000000".split(" "), "#FFCCCC #FF6666 #FF0000 #CC0000 #990000 #660000 #330000".split(" "), "#FFCC99 #FF9966 #FF9900 #FF6600 #CC6600 #993300 #663300".split(" "), "#FFFF99 #FFFF66 #FFCC66 #FFCC33 #CC9933 #996633 #663333".split(" "), "#FFFFCC #FFFF33 #FFFF00 #FFCC00 #999900 #666600 #333300".split(" "), "#99FF99 #66FF99 #33FF33 #33CC00 #009900 #006600 #003300".split(" "), "#99FFFF #33FFFF #66CCCC #00CCCC #339999 #336666 #003333".split(" "), "#CCFFFF #66FFFF #33CCFF #3366FF #3333FF #000099 #000066".split(" "), 
+  "#CCCCFF #9999FF #6666CC #6633FF #6609CC #333399 #330099".split(" "), "#FFCCFF #FF99FF #CC66CC #CC33CC #993399 #663366 #330033".split(" ")];
+};
+Entry.FieldDropdown = function(a, b, c) {
+  this._block = b.block;
+  this.box = new Entry.BoxModel;
+  this.svgGroup = null;
+  this._contents = a;
+  this._index = c;
+  this.setValue(this.getValue());
+  this._CONTENT_HEIGHT = a.dropdownHeight || b.getSkeleton().dropdownHeight || 16;
+  this._fONT_SIZE = a.fontSize || b.getSkeleton().fontSize || 12;
+  this._ROUND = a.roundValue || 0;
+  this.renderStart(b);
+};
+Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
 (function(a) {
   a.renderStart = function(a) {
     var c = this;
     this.svgGroup = a.contentSvgGroup.group();
     this.svgGroup.attr({class:"entry-field-dropdown"});
-    this.textElement = this.svgGroup.text(2, 3, this.getTextByValue(this.value));
-    a = this.textElement.node.getComputedTextLength() + 18;
-    this._header = this.svgGroup.rect(0, -12, a, 23, 3).attr({fill:"#80cbf8"});
+    this.textElement = this.svgGroup.text(2, 0, this.getTextByValue(this.getValue()));
+    var d = this.textElement.getBBox();
+    this.textElement.attr({style:"white-space: pre; font-size:" + c._FONT_SIZE + "px", y:.25 * d.height});
+    var d = this.textElement.node.getComputedTextLength() + 18, e = this._CONTENT_HEIGHT;
+    this._header = this.svgGroup.rect(0, -e / 2, d, e, c._ROUND).attr({fill:"#fff", "fill-opacity":.4});
     this.svgGroup.append(this.textElement);
-    this._arrow = this.svgGroup.polygon(0, -2, 6, -2, 3, 2).attr({fill:"#127cbd", stroke:"#127cbd", transform:"t" + (a - 11) + " 0"});
+    this._arrow = this.svgGroup.polygon(0, -2, 6, -2, 3, 2).attr({fill:a._schema.color, stroke:a._schema.color, transform:"t" + (d - 11) + " 0"});
     this.svgGroup.mouseup(function(a) {
       c._block.view.dragMode == Entry.DRAG_MODE_MOUSEDOWN && c.renderOptions();
     });
-    this.box.set({x:0, y:0, width:a, height:23});
+    this.box.set({x:0, y:0, width:d, height:e});
   };
   a.resize = function() {
     var a = this.textElement.node.getComputedTextLength() + 18;
@@ -13658,15 +14250,14 @@ Entry.FieldDropdown = function(a, b) {
       Entry.documentMousedown.detach(this.documentDownEvent);
       a.optionGroup.remove();
     });
-    this.optionGroup = c.getBoard().svgGroup.group();
-    var d = c.svgGroup.transform().globalMatrix, c = this._contents.options;
-    this.optionGroup.attr({class:"entry-field-dropdown", transform:"t" + (d.e - 60) + " " + (d.f + 35)});
-    var d = [], e = 0;
-    d.push(this.optionGroup.rect(0, 0, 0, 23 * c.length).attr({fill:"white"}));
-    for (var f = 0, g = c.length;f < g;f++) {
-      var h = c[f], k = h[0], h = h[1], l = this.optionGroup.group().attr({class:"rect", transform:"t0 " + 23 * f});
-      d.push(l.rect(0, 0, 0, 23));
-      this.value == h && l.text(5, 13, "\u2713").attr({"alignment-baseline":"central"});
+    this.optionGroup = this.appendSvgOptionGroup();
+    c.svgGroup.transform();
+    var d = this._contents.options, c = [], e = 0;
+    c.push(this.optionGroup.rect(0, 0, 0, 23 * d.length).attr({fill:"white"}));
+    for (var f = 0, g = d.length;f < g;f++) {
+      var h = d[f], k = h[0], h = h[1], l = this.optionGroup.group().attr({class:"rect", transform:"t0 " + 23 * f});
+      c.push(l.rect(0, 0, 0, 23));
+      this.getValue() == h && l.text(5, 13, "\u2713").attr({"alignment-baseline":"central"});
       k = l.text(20, 13, k).attr({"alignment-baseline":"central"});
       e = Math.max(k.node.getComputedTextLength() + 50, e);
       (function(c, d) {
@@ -13676,22 +14267,17 @@ Entry.FieldDropdown = function(a, b) {
         });
       })(l, h);
     }
+    d = this.getRelativePos();
+    d.y += this.box.height / 2;
+    d.x = d.x - e / 2 + this.box.width / 2;
+    this.optionGroup.attr({class:"entry-field-dropdown", transform:"t" + d.x + " " + d.y});
     var n = {width:e};
-    d.forEach(function(a) {
+    c.forEach(function(a) {
       a.attr(n);
     });
   };
-  a.align = function(a, c, d) {
-    var e = this.svgGroup, f = "t" + a + " " + c;
-    void 0 === d || d ? e.animate({transform:f}, 300, mina.easeinout) : e.attr({transform:f});
-    this.box.set({x:a, y:c});
-  };
   a.applyValue = function(a) {
-    this.value != a && (this.value = this._block.values[this.key] = a, this.textElement.node.textContent = this.getTextByValue(a), this.resize());
-  };
-  a.destroyOption = function() {
-    this.documentDownEvent && (Entry.documentMousedown.detach(this.documentDownEvent), delete this.documentDownEvent);
-    this.optionGroup && (this.optionGroup.remove(), delete this.optionGroup);
+    this.value != a && (this.setValue(a), this.textElement.node.textContent = this.getTextByValue(a), this.resize());
   };
   a.getTextByValue = function(a) {
     for (var c = this._contents.options, d = 0, e = c.length;d < e;d++) {
@@ -13703,7 +14289,7 @@ Entry.FieldDropdown = function(a, b) {
     return a;
   };
 })(Entry.FieldDropdown.prototype);
-Entry.FieldImage = function(a, b) {
+Entry.FieldImage = function(a, b, c) {
   this._block = b;
   this.box = new Entry.BoxModel;
   this._size = a.size;
@@ -13711,20 +14297,15 @@ Entry.FieldImage = function(a, b) {
   this._highlightColor = a.highlightColor ? a.highlightColor : "#F59900";
   this._position = a.position;
   this._imgElement = this._path = this.svgGroup = null;
+  this._index = c;
   this.renderStart();
 };
+Entry.Utils.inherit(Entry.Field, Entry.FieldImage);
 (function(a) {
   a.renderStart = function() {
     this.svgGroup = this._block.contentSvgGroup.group();
     this._imgElement = this.svgGroup.image(this._imgUrl, 0, -.5 * this._size, this._size, this._size);
     this.box.set({x:this._size, y:0, width:this._size, height:this._size});
-  };
-  a.align = function(a, c, d) {
-    var e = this.svgGroup;
-    this._position && (a = this._position.x);
-    var f = "t" + a + " " + c;
-    void 0 === d || d ? e.animate({transform:f}, 300, mina.easeinout) : e.attr({transform:f});
-    this.box.set({x:a, y:c});
   };
   a.enableHighlight = function() {
     var a = this._path.getTotalLength(), c = this._path;
@@ -13739,7 +14320,7 @@ Entry.FieldImage = function(a, b) {
     }, 500);
   };
 })(Entry.FieldImage.prototype);
-Entry.FieldIndicator = function(a, b) {
+Entry.FieldIndicator = function(a, b, c) {
   this._block = b;
   this.box = new Entry.BoxModel;
   this._size = a.size;
@@ -13747,9 +14328,11 @@ Entry.FieldIndicator = function(a, b) {
   this._boxMultiplier = a.boxMultiplier || 2;
   this._highlightColor = a.highlightColor ? a.highlightColor : "#F59900";
   this._position = a.position;
+  this._index = c;
   this._imgElement = this._path = this.svgGroup = null;
   this.renderStart();
 };
+Entry.Utils.inherit(Entry.Field, Entry.FieldIndicator);
 (function(a) {
   a.renderStart = function() {
     this.svgGroup = this._block.contentSvgGroup.group();
@@ -13758,13 +14341,6 @@ Entry.FieldIndicator = function(a, b) {
     this._path = this.svgGroup.path(a);
     this._path.attr({stroke:"none", fill:"none"});
     this.box.set({x:this._size, y:0, width:this._size * this._boxMultiplier, height:this._size * this._boxMultiplier});
-  };
-  a.align = function(a, c, d) {
-    var e = this.svgGroup;
-    this._position && (a = this._position.x, c = this._position.y);
-    var f = "t" + a + " " + c;
-    void 0 === d || d ? e.animate({transform:f}, 300, mina.easeinout) : e.attr({transform:f});
-    this.box.set({x:a, y:c});
   };
   a.enableHighlight = function() {
     var a = this._path.getTotalLength(), c = this._path;
@@ -13779,15 +14355,89 @@ Entry.FieldIndicator = function(a, b) {
     }, 500);
   };
 })(Entry.FieldIndicator.prototype);
-Entry.FieldStatement = function(a, b) {
+Entry.Keyboard = {};
+Entry.FieldKeyboard = function(a, b, c) {
+  this._block = b.block;
+  this.box = new Entry.BoxModel;
+  this.svgGroup = null;
+  this.position = a.position;
+  this._contents = a;
+  this._index = c;
+  this.setValue(this.getValue());
+  this._optionVisible = !1;
+  this.renderStart(b);
+  Entry.keyPressed && (this.keyPressed = Entry.keyPressed.attach(this, this._keyboardControl));
+};
+Entry.Utils.inherit(Entry.Field, Entry.FieldKeyboard);
+(function(a) {
+  a.renderStart = function(a) {
+    var c = this;
+    this.svgGroup = a.contentSvgGroup.group();
+    this.svgGroup.attr({class:"entry-input-field"});
+    this.textElement = this.svgGroup.text(4, 4, Entry.getKeyCodeMap()[this.getValue()]);
+    this.textElement.attr({"font-size":"9pt"});
+    a = this.getTextWidth();
+    var d = this.position && this.position.y ? this.position.y : 0;
+    this._header = this.svgGroup.rect(0, d - 8, a, 16, 3).attr({fill:"#fff", "fill-opacity":.4});
+    this.svgGroup.append(this.textElement);
+    this.svgGroup.mouseup(function(a) {
+      c._block.view.dragMode == Entry.DRAG_MODE_MOUSEDOWN && c.renderOptions();
+    });
+    this.box.set({x:0, y:0, width:a, height:16});
+  };
+  a.renderOptions = function() {
+    var a = this;
+    this.destroyOption();
+    this._optionVisible = !0;
+    this.documentDownEvent = Entry.documentMousedown.attach(this, function() {
+      Entry.documentMousedown.detach(this.documentDownEvent);
+      a.destroyOption();
+    });
+    this.optionGroup = this.appendSvgOptionGroup();
+    this.optionGroup.image(Entry.mediaFilePath + "/media/keyboard_workspace.png", -5, 0, 249, 106);
+    var c = this.getRelativePos();
+    c.x -= 5;
+    c.y += this.box.height / 2;
+    this.optionGroup.attr({class:"entry-field-keyboard", transform:"t" + c.x + " " + c.y});
+  };
+  a.destroyOption = function() {
+    this.documentDownEvent && (Entry.documentMousedown.detach(this.documentDownEvent), delete this.documentDownEvent);
+    this.optionGroup && (this.optionGroup.remove(), delete this.optionGroup);
+    this._optionVisible = !1;
+  };
+  a._keyboardControl = function(a, c) {
+    c.stopPropagation();
+    if (this._optionVisible) {
+      var d = c.keyCode, e = Entry.getKeyCodeMap()[d];
+      void 0 !== e && this.applyValue(e, d);
+    }
+  };
+  a.applyValue = function(a, c) {
+    this.destroyOption();
+    this.getValue() != c && (this.setValue(c), this.textElement.node.textContent = a, this.resize());
+  };
+  a.resize = function() {
+    var a = this.getTextWidth();
+    this._header.attr({width:a});
+    this.box.set({width:a});
+    this._block.view.alignContent();
+  };
+  a.getTextWidth = function() {
+    return this.textElement.node.getComputedTextLength() + 8;
+  };
+  a.destroy = function() {
+    this.destroyOption();
+    Entry.keyPressed && this.keyPressed && Entry.keyPressed.detach(this.keyPressed);
+  };
+})(Entry.FieldKeyboard.prototype);
+Entry.FieldStatement = function(a, b, c) {
   this._blockView = b;
   this.block = b.block;
-  this.key = a.key;
   this.box = new Entry.BoxModel;
+  this._index = c;
   this.acceptType = a.accept;
   this.dummyBlock = this.svgGroup = null;
-  a.alignX && (this._alignX = a.alignX);
-  a.alignY && (this._alignY = a.alignY);
+  this._position = a.position;
   this.box.observe(b, "alignContent", ["height"]);
   this.renderStart(b.getBoard());
   this.block.observe(this, "_updateThread", ["thread"]);
@@ -13796,12 +14446,18 @@ Entry.FieldStatement = function(a, b) {
   a.renderStart = function(a) {
     this.svgGroup = this._blockView.contentSvgGroup.group();
     this.box.set({x:46, y:0, width:20, height:20});
-    this._thread = this._blockView.block.values[this.key];
+    this._thread = this.getValue();
     this.dummyBlock = new Entry.DummyBlock(this, this._blockView);
     this._thread.insertDummyBlock(this.dummyBlock);
     this._thread.createView(a);
     this._thread.changeEvent.attach(this, this.calcHeight);
     this.calcHeight();
+  };
+  a.align = function(a, c, d) {
+    var e = this.svgGroup;
+    this._position && (this._position.x && (a = this._position.x), this._position.y && (c = this._position.y));
+    a = "t" + a + " " + c;
+    void 0 === d || d ? e.animate({transform:a}, 300, mina.easeinout) : e.attr({transform:a});
   };
   a.calcHeight = function() {
     for (var a = this.dummyBlock, c = -1;a;) {
@@ -13809,19 +14465,17 @@ Entry.FieldStatement = function(a, b) {
     }
     this.box.set({height:c});
   };
-  a.align = function(a, c, d) {
-    var e = this.svgGroup;
-    a = this._alignX || 46;
-    c = this._alignY || 14;
-    a = "t" + a + " " + c;
-    void 0 === d || d ? e.animate({transform:a}, 300, mina.easeinout) : e.attr({transform:a});
-  };
   a._updateThread = function() {
     this._threadChangeEvent && this._thread.changeEvent.detach(this._threadChangeEvent);
     var a = this.block.thread;
     this._threadChangeEvent = this._thread.changeEvent.attach(this, function() {
       a.changeEvent.notify();
     });
+  };
+  a.getValue = function() {
+    return this.block.statements[this._index];
+  };
+  a.destroy = function() {
   };
 })(Entry.FieldStatement.prototype);
 Entry.DummyBlock = function(a, b) {
@@ -13882,29 +14536,93 @@ Entry.DummyBlock = function(a, b) {
     this.originBlockView.dominate();
   };
 })(Entry.DummyBlock.prototype);
-Entry.FieldText = function(a, b) {
+Entry.FieldText = function(a, b, c) {
   this._block = b;
   this.box = new Entry.BoxModel;
   this._fontSize = a.fontSize || b.getSkeleton().fontSize || 12;
   this._text = a.text;
+  this._index = c;
   this.textElement = null;
   this.renderStart();
 };
+Entry.Utils.inherit(Entry.Field, Entry.FieldText);
 (function(a) {
   a.renderStart = function() {
-    this.textElement = this._block.contentSvgGroup.text(0, 0, this._text);
+    this.svgGroup = this._block.contentSvgGroup.group();
+    this.textElement = this.svgGroup.text(0, 0, this._text);
     this.textElement.attr({style:"white-space: pre; font-size:" + this._fontSize + "px", "class":"dragNone", fill:"white"});
     var a = this.textElement.getBBox();
     this.textElement.attr({y:.25 * a.height});
     this.box.set({x:0, y:0, width:this.textElement.node.getComputedTextLength(), height:a.height});
   };
-  a.align = function(a, c, d) {
-    !0 !== d && (d = !1);
-    var e = this.textElement, f = {x:a};
-    d ? e.animate(f, 300, mina.easeinout) : e.attr(f);
-    this.box.set({x:a, width:this.textElement.node.getComputedTextLength(), y:c});
-  };
 })(Entry.FieldText.prototype);
+Entry.FieldTextInput = function(a, b, c) {
+  this._block = b.block;
+  this.box = new Entry.BoxModel;
+  this.svgGroup = null;
+  this.position = a.position;
+  this._contents = a;
+  this._index = c;
+  this.value = this.getValue() || "";
+  this.renderStart(b);
+};
+Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
+(function(a) {
+  a.renderStart = function(a) {
+    var c = this;
+    this.svgGroup = a.contentSvgGroup.group();
+    this.svgGroup.attr({class:"entry-input-field"});
+    this.textElement = this.svgGroup.text(4, 4, this.truncate());
+    this.textElement.attr({"font-size":"9pt"});
+    a = this.getTextWidth();
+    var d = this.position && this.position.y ? this.position.y : 0;
+    this._header = this.svgGroup.rect(0, d - 8, a, 16, 3).attr({fill:"#fff", "fill-opacity":.4});
+    this.svgGroup.append(this.textElement);
+    this.svgGroup.mouseup(function(a) {
+      c._block.view.dragMode == Entry.DRAG_MODE_MOUSEDOWN && c.renderOptions();
+    });
+    this.box.set({x:0, y:0, width:a, height:16});
+  };
+  a.renderOptions = function() {
+    var a = this;
+    this.destroyOption();
+    this.documentDownEvent = Entry.documentMousedown.attach(this, function() {
+      Entry.documentMousedown.detach(this.documentDownEvent);
+      a.applyValue();
+      a.destroyOption();
+    });
+    this.optionGroup = Entry.Dom("input", {class:"entry-widget-input-field", parent:$("body")});
+    this.optionGroup.val(this.getValue());
+    this.optionGroup.on("mousedown", function(a) {
+      a.stopPropagation();
+    });
+    this.optionGroup.on("keyup", function(c) {
+      var e = c.keyCode || c.which;
+      a.applyValue(c);
+      -1 < [13, 27].indexOf(e) && a.destroyOption();
+    });
+    var c = this.getAbsolutePos();
+    c.y -= this.box.height / 2;
+    this.optionGroup.css({height:16, left:c.x, top:c.y, width:a.box.width});
+    this.optionGroup.focus();
+  };
+  a.applyValue = function(a) {
+    a = this.optionGroup.val();
+    this.setValue(a);
+    this.textElement.node.textContent = this.truncate();
+    this.resize();
+  };
+  a.resize = function() {
+    var a = this.getTextWidth();
+    this._header.attr({width:a});
+    this.optionGroup.css({width:a});
+    this.box.set({width:a});
+    this._block.view.alignContent();
+  };
+  a.getTextWidth = function() {
+    return this.textElement.node.getComputedTextLength() + 8;
+  };
+})(Entry.FieldTextInput.prototype);
 Entry.Scroller = function(a, b, c) {
   this._horizontal = void 0 === b ? !0 : b;
   this._vertical = void 0 === c ? !0 : c;
@@ -14033,6 +14751,16 @@ Entry.skeleton.basic_loop = {path:function(a) {
 }, contentPos:function() {
   return {x:14, y:15};
 }};
+Entry.skeleton.basic_define = {path:function(a) {
+  var b = Math.max(a.contentHeight, 25);
+  return "m -8,0 h 16 h %cw a 15,15 0 0,1 0,30 H 24 l -8,8 -8,-8 h -0.4 v %ch h 0.4 l 8,8 8,-8 h %cw h -8 a 8,8 0 0,1 0,16 H 8 l -8,8 -8,-8 z".replace(/%cw/gi, Math.max(0, a.contentWidth - 31)).replace(/%ch/gi, b);
+}, magnets:function() {
+  return {previous:{x:0, y:0}, next:{x:0, y:105}};
+}, box:function(a) {
+  return {offsetX:0, offsetY:0, width:a.contentWidth, height:Math.max(a.contentHeight, 25) + 46, marginBottom:0};
+}, contentPos:function() {
+  return {x:14, y:15};
+}};
 Entry.skeleton.pebble_event = {path:function(a) {
   return "m 0,0 a 25,25 0 0,1 9,48.3 a 9,9 0 0,1 -18,0 a 25,25 0 0,1 9,-48.3 z";
 }, box:function(a) {
@@ -14042,7 +14770,7 @@ Entry.skeleton.pebble_event = {path:function(a) {
 }, contentPos:function() {
   return {x:0, y:25};
 }};
-Entry.skeleton.pebble_loop = {fontSize:16, path:function(a) {
+Entry.skeleton.pebble_loop = {fontSize:16, dropdownHeight:23, path:function(a) {
   a = Math.max(a.contentHeight, 50);
   return "M 0,9 a 9,9 0 0,0 9,-9 h %cw q 25,0 25,25 v %ch q 0,25 -25,25 h -%cw a 9,9 0 0,1 -18,0 h -%cw q -25,0 -25,-25 v -%ch q 0,-25 25,-25 h %cw a 9,9 0 0,0 9,9 M 0,49 a 9,9 0 0,1 -9,-9 h -28 a 25,25 0 0,0 -25,25 v %cih a 25,25 0 0,0 25,25 h 28 a 9,9 0 0,0 18,0 h 28 a 25,25 0 0,0 25,-25 v -%cih a 25,25 0 0,0 -25,-25 h -28 a 9,9 0 0,1 -9,9 z".replace(/%cw/gi, 41).replace(/%ch/gi, a + 4).replace(/%cih/gi, a - 50);
 }, magnets:function() {
@@ -14073,7 +14801,7 @@ Entry.Block = function(a, b) {
 Entry.Block.MAGNET_RANGE = 10;
 Entry.Block.MAGNET_OFFSET = .4;
 (function(a) {
-  a.schema = {id:null, name:null, x:0, y:0, type:null, values:{}, prev:null, next:null, view:null, thread:null, movable:!0, deletable:!0, readOnly:!1};
+  a.schema = {id:null, name:null, x:0, y:0, type:null, params:[], statements:[], prev:null, next:null, view:null, thread:null, movable:!0, deletable:!0, readOnly:!1};
   a.load = function(a) {
     a.id || (a.id = Entry.Utils.generateId());
     this.set(a);
@@ -14082,10 +14810,13 @@ Entry.Block.MAGNET_OFFSET = .4;
   a.getSchema = function() {
     this._schema = Entry.block[this.type];
     this._schema.event && this.thread.registerEvent(this, this._schema.event);
-    for (var a = this._schema.contents, c = 0;c < a.length;c++) {
-      var d = a[c];
-      !this.values[d.key] && d.value && (this.values[d.key] = d.value);
-      "Statement" == d.type && (this.values[d.key] = new Entry.Thread(this.values[d.key], this.getCode()));
+    for (var a = this._schema.params, c = 0;c < a.length;c++) {
+      this.params.push(a[c].value);
+    }
+    if (a = this._schema.statements) {
+      for (c = 0;c < a.length;c++) {
+        this.statements.splice(c, 1, new Entry.Thread(this.statements[c], this.getCode()));
+      }
     }
   };
   a.setThread = function(a) {
@@ -14123,23 +14854,25 @@ Entry.Block.MAGNET_OFFSET = .4;
     delete c.view;
     delete c.thread;
     a && delete c.id;
-    var d = {}, e;
-    for (e in c.values) {
-      d[e] = c.values[e];
-    }
-    c.values = d;
-    d = this._schema.contents;
-    for (e = 0;e < d.length;e++) {
-      var f = d[e];
-      "Statement" == f.type && (c.values[f.key] = this.values[f.key].toJSON(a));
-    }
+    c.params = c.params.map(function(a) {
+      return a;
+    });
+    c.statements = c.statements.map(function(c) {
+      return c.toJSON(a);
+    });
     return c;
   };
   a.destroy = function(a) {
     this.view && this.view.destroy(a);
     (!this.prev || this.prev instanceof Entry.DummyBlock) && this.thread.destroy();
-    var c = this.values.STATEMENT;
-    c && (c = c.getFirstBlock(), c instanceof Entry.DummyBlock && (c = c.next), c && c.destroy(a));
+    var c = this.statements;
+    if (c) {
+      for (var d = 0;d < c.length;d++) {
+        var e = c[d].getFirstBlock();
+        e instanceof Entry.DummyBlock && (e = e.next);
+        e && e.destroy(a);
+      }
+    }
     this.next && this.next.destroy(a);
   };
   a.destroyAlone = function(a) {
@@ -14311,11 +15044,9 @@ Entry.Thread = function(a, b) {
   a.countBlock = function() {
     for (var a = 0, c = 0;c < this._data.length;c++) {
       var d = this._data[c];
-      if (d.type) {
-        a++;
-        for (var e = Entry.block[d.type].contents, f = 0;f < e.length;f++) {
-          var g = e[f];
-          "Statement" == g.type && (a += d.values[g.key].countBlock());
+      if (d.type && (a++, d = d.statements)) {
+        for (var e = 0;e < d.length;e++) {
+          a += d[e].countBlock();
         }
       }
     }
