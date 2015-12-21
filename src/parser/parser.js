@@ -9,10 +9,10 @@ goog.require("Entry.JSParser");
 
 Entry.Parser = function(mode) {
     this._mode = mode; // maze ai workspace
-    this.scope = {};
+    this.syntax = {};
 
-    this.mappingScope();
-    this._parser = new Entry.JSParser(this.scope);
+    this.mappingSyntax(mode);
+    this._parser = new Entry.JSParser(this.syntax);
 };
 
 (function(p) {
@@ -26,14 +26,28 @@ Entry.Parser = function(mode) {
         return block;
     };
 
-    p.mappingScope = function(mode) {
-        var types = Entry.blocks;
+    p.mappingSyntax = function(mode) {
+        var types = Object.keys(Entry.block);
 
         for (var i = 0; i < types.length; i++) {
             var type = types[i];
-            var block = Entry.blocks[type];
-            if (block.mode) {
-                this.scope
+            var block = Entry.block[type];
+            if (block.mode === mode) {
+                var syntaxArray = block.syntax;
+                if (!syntaxArray)
+                    continue;
+                var syntax = this.syntax;
+                for (var j = 0; j < syntaxArray.length; j++) {
+                    var key = syntaxArray[j];
+                    if (!syntax[key]) {
+                        syntax[key] = {};
+                    }
+                    if (j === syntaxArray.length - 1) {
+                        syntax[key] = type;
+                    } else {
+                        syntax = syntax[key];
+                    }
+                }
             }
         }
     };

@@ -712,8 +712,43 @@ Entry.block.jr_if_speed = {
     }
 };
 
+// Entry.block.jr_promise_call = Entry.block.jr_promise_wrap;
+// maze start block
+
+Entry.block.maze_step_start = {
+    skeleton: "basic_event",
+    mode: "maze",
+    event: "start",
+    color: "#3BBD70",
+    template: "%1 시작 버튼을 눌렀을 때",
+    syntax: ["Program"],
+    params: [
+        {
+            type: "Indicator",
+            boxMultiplier: 1,
+            img: "/img/assets/block_icon/start_icon_play.png",
+            highlightColor: "#3BBD70",
+            size: 17,
+            position: {
+                 x: 0, y: -2
+            }
+        }
+    ],
+    func: function() {
+        var entities = Ntry.entityManager.getEntitiesByComponent(
+        Ntry.STATIC.UNIT);
+
+        for (var key in entities)
+            this._unit = entities[key];
+
+        Ntry.unitComp = Ntry.entityManager.getComponent(
+        this._unit.id, Ntry.STATIC.UNIT);
+    }
+};
+
 Entry.block.maze_step_jump = {
     skeleton: "basic",
+    mode: "maze",
     color: "#FF6E4B",
     template: "뛰어넘기 %1",
     params: [
@@ -749,6 +784,7 @@ Entry.block.maze_step_jump = {
 
 Entry.block.maze_step_for = {
     skeleton: "basic_loop",
+    mode: "maze",
     color: "#127CDB",
     template: "%1 번 반복하기 %2",
     params: [
@@ -800,6 +836,7 @@ Entry.block.maze_step_for = {
 
 Entry.block.test = {
     skeleton: "basic",
+    mode: "maze",
     color: "#3BBD70",
     contents: [
         "키를 눌렀을 때",
@@ -816,6 +853,7 @@ Entry.block.test = {
 
 Entry.block.maze_repeat_until_1 = {
     skeleton: "basic_loop",
+    mode: "maze",
     color: "#498DEB",
     template: "%1 만날 때 까지 반복하기 %2",
     params: [
@@ -852,6 +890,7 @@ Entry.block.maze_repeat_until_1 = {
 
 Entry.block.maze_step_if_1 = {
     skeleton: "basic_loop",
+    mode: "maze",
     color: "#498DEB",
     template: "만약 %1 앞에 있다면 %2",
     params: [
@@ -937,6 +976,7 @@ Entry.block.maze_step_if_1 = {
 
 Entry.block.maze_step_if_2 = {
     skeleton: "basic_loop",
+    mode: "maze",
     color: "#498DEB",
     template: "만약 %1 앞에 있다면 %2",
     params: [
@@ -1006,6 +1046,7 @@ Entry.block.maze_step_if_2 = {
 
 Entry.block.maze_call_function = {
     skeleton: "basic",
+    mode: "maze",
     color: "#B57242",
     template: "약속 불러오기 %1",
     params: [
@@ -1038,6 +1079,7 @@ Entry.block.maze_call_function = {
 
 Entry.block.maze_define_function = {
     skeleton: "basic_define",
+    mode: "maze",
     color: "#B57242",
     event: "define",
     template: "약속하기 %1",
@@ -1068,6 +1110,7 @@ Entry.block.maze_define_function = {
 
 Entry.block.maze_step_if_3 = {
     skeleton: "basic_loop",
+    mode: "maze",
     color: "#498DEB",
     template: "만약 %1 앞에 있다면 %2",
     params: [
@@ -1137,6 +1180,7 @@ Entry.block.maze_step_if_3 = {
 
 Entry.block.maze_step_if_4 = {
     skeleton: "basic_loop",
+    mode: "maze",
     color: "#498DEB",
     template: "만약 %1 앞에 있다면 %2",
     params: [
@@ -1204,43 +1248,12 @@ Entry.block.maze_step_if_4 = {
     }
 };
 
-
-// Entry.block.jr_promise_call = Entry.block.jr_promise_wrap;
-// maze start block
-
-Entry.block.maze_step_start = {
-    skeleton: "basic_event",
-    event: "start",
-    color: "#3BBD70",
-    template: "%1 시작 버튼을 눌렀을 때",
-    params: [
-        {
-            type: "Indicator",
-            boxMultiplier: 1,
-            img: "/img/assets/block_icon/start_icon_play.png",
-            highlightColor: "#3BBD70",
-            size: 17,
-            position: {
-                 x: 0, y: -2
-            }
-        }
-    ],
-    func: function() {
-        var entities = Ntry.entityManager.getEntitiesByComponent(
-        Ntry.STATIC.UNIT);
-
-        for (var key in entities)
-            this._unit = entities[key];
-
-        Ntry.unitComp = Ntry.entityManager.getComponent(
-        this._unit.id, Ntry.STATIC.UNIT);
-    }
-};
-
 Entry.block.maze_step_move_step = {
     skeleton: "basic",
+    mode: "maze",
     color: "#A751E3",
     template: "앞으로 가기 %1",
+    syntax: ["ThisObject", "move"],
     params: [
         {
             type: "Image",
@@ -1248,7 +1261,6 @@ Entry.block.maze_step_move_step = {
             size: 24
         }
     ],
-
     func: function() {
         if (!this.isContinue) {
 
@@ -1273,6 +1285,7 @@ Entry.block.maze_step_move_step = {
 
 Entry.block.maze_step_rotate_left= {
     skeleton: "basic",
+    mode: "maze",
     color: "#A751E3",
     template: "왼쪽으로 돌기 %1",
     params: [
@@ -1307,6 +1320,7 @@ Entry.block.maze_step_rotate_left= {
 
 Entry.block.maze_step_rotate_right = {
     skeleton: "basic",
+    mode: "maze",
     color: "#A751E3",
     template: "오른쪽으로 돌기 %1",
     params: [

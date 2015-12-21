@@ -5,14 +5,18 @@
 
 goog.provide("Entry.JSParser");
 
-Entry.JSParser = function(scope) {
-    this.scope = scope;
+Entry.JSParser = function(syntax) {
+    this.syntax = syntax;
 };
 
 (function(p){
     p.Program = function(node) {
         var block = [];
         var body = node.body;
+
+        block.push({
+            type: this.syntax.Program
+        });
 
         for (var i = 0; i < body.length; i++) {
             var childNode = body[i];
@@ -196,7 +200,7 @@ Entry.JSParser = function(scope) {
 
     // Expression
     p.ThisExpression = function(node) {
-        return Entry.Parser.ThisObject;
+        return this.syntax.ThisObject;
     };
 
     p.ArrayExpression = function(node) {
