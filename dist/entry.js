@@ -8542,11 +8542,8 @@ Entry.JSParser = function(a) {
     return this[a.type](a);
   };
   a.ForStatement = function(a) {
-<<<<<<< HEAD
-=======
     a = a.body;
     return {type:null, body:this[a.type](a)};
->>>>>>> origin/new/text-mode
   };
   a.BlockStatement = function(a) {
     var c = [];
@@ -8678,25 +8675,12 @@ Entry.JSParser = function(a) {
   a.SequenceExpression = function(a) {
     return Error();
   };
-<<<<<<< HEAD
-})(Entry.JSParser);
-Entry.Parser = {};
-Entry.Parser.ThisObject = {};
-Entry.Parser.jsToBlock = function(a) {
-  a = acorn.parse(a);
-  var b = null, b = Entry.JSParser.Program(a);
-  console.log("asTree ====", b);
-  return b;
-};
-Entry.Parser.pythonToBlock = function(a) {
-=======
 })(Entry.JSParser.prototype);
 Entry.Parser = function(a) {
   this._mode = a;
   this.syntax = {};
   this.mappingSyntax(a);
   this._parser = new Entry.JSParser(this.syntax);
->>>>>>> origin/new/text-mode
 };
 (function(a) {
   a.parse = function(a) {
@@ -13315,21 +13299,13 @@ Entry.block.maze_step_for = {skeleton:"basic_loop", mode:"maze", color:"#127CDB"
 }};
 Entry.block.test = {skeleton:"basic", mode:"maze", color:"#3BBD70", contents:["\ud0a4\ub97c \ub20c\ub800\uc744 \ub54c", {type:"Angle", key:"ANGLE", value:550}, "\ud0a4\ub97c \ub20c\ub800\uc744 \ub54c"], func:function() {
 }};
-<<<<<<< HEAD
-Entry.block.maze_repeat_until_1 = {skeleton:"basic_loop", color:"#498DEB", template:"%1 \ub9cc\ub0a0 \ub54c \uae4c\uc9c0 \ubc18\ubcf5\ud558\uae30 %2", params:[{type:"Image", img:"/img/assets/ntry/block_inner/repeat_goal_1.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic", position:{x:2, y:15}}], func:function() {
-=======
 Entry.block.maze_repeat_until_1 = {skeleton:"basic_loop", mode:"maze", color:"#498DEB", template:"%1 \ub9cc\ub0a0 \ub54c \uae4c\uc9c0 \ubc18\ubcf5\ud558\uae30 %2", params:[{type:"Image", img:"/img/assets/ntry/block_inner/repeat_goal_1.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic", position:{x:2, y:15}}], func:function() {
->>>>>>> origin/new/text-mode
   var a = this.block.statements[0];
   if (1 !== a.getBlocks().length) {
     return this.executor.stepInto(a), Entry.STATIC.CONTINUE;
   }
 }};
-<<<<<<< HEAD
-Entry.block.maze_step_if_1 = {skeleton:"basic_loop", color:"#498DEB", template:"\ub9cc\uc57d %1 \uc55e\uc5d0 \uc788\ub2e4\uba74 %2", params:[{type:"Image", img:"/img/assets/ntry/block_inner/if_target_1.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/if.png", size:24}], statements:[{accept:"basic", position:{x:2, y:15}}], func:function() {
-=======
 Entry.block.maze_step_if_1 = {skeleton:"basic_loop", mode:"maze", color:"#498DEB", template:"\ub9cc\uc57d %1 \uc55e\uc5d0 \uc788\ub2e4\uba74 %2", params:[{type:"Image", img:"/img/assets/ntry/block_inner/if_target_1.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/if.png", size:24}], statements:[{accept:"basic", position:{x:2, y:15}}], func:function() {
->>>>>>> origin/new/text-mode
   if (!this.isContinue) {
     var a = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT), b, c;
     for (c in a) {
@@ -13351,11 +13327,7 @@ Entry.block.maze_step_if_1 = {skeleton:"basic_loop", mode:"maze", color:"#498DEB
     }
   }
 }};
-<<<<<<< HEAD
-Entry.block.maze_step_if_2 = {skeleton:"basic_loop", color:"#498DEB", template:"\ub9cc\uc57d %1 \uc55e\uc5d0 \uc788\ub2e4\uba74 %2", params:[{type:"Image", img:"/img/assets/ntry/bitmap/maze2/obstacle_01.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/if.png", size:24}], statements:[{accept:"basic", position:{x:2, y:15}}], func:function() {
-=======
 Entry.block.maze_step_if_2 = {skeleton:"basic_loop", mode:"maze", color:"#498DEB", template:"\ub9cc\uc57d %1 \uc55e\uc5d0 \uc788\ub2e4\uba74 %2", params:[{type:"Image", img:"/img/assets/ntry/bitmap/maze2/obstacle_01.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/if.png", size:24}], statements:[{accept:"basic", position:{x:2, y:15}}], func:function() {
->>>>>>> origin/new/text-mode
   if (!this.isContinue) {
     var a = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT), b, c;
     for (c in a) {
@@ -13390,11 +13362,7 @@ Entry.block.maze_define_function = {skeleton:"basic_define", mode:"maze", color:
     return this.executor.stepInto(this.block.statements[0]), this.executed = !0, Entry.STATIC.CONTINUE;
   }
 }};
-<<<<<<< HEAD
-Entry.block.maze_step_if_3 = {skeleton:"basic_loop", color:"#498DEB", template:"\ub9cc\uc57d %1 \uc55e\uc5d0 \uc788\ub2e4\uba74 %2", params:[{type:"Image", img:"/img/assets/ntry/block_inner/if_target_3.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/if.png", size:24}], statements:[{accept:"basic", position:{x:2, y:15}}], func:function() {
-=======
 Entry.block.maze_step_if_3 = {skeleton:"basic_loop", mode:"maze", color:"#498DEB", template:"\ub9cc\uc57d %1 \uc55e\uc5d0 \uc788\ub2e4\uba74 %2", params:[{type:"Image", img:"/img/assets/ntry/block_inner/if_target_3.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/if.png", size:24}], statements:[{accept:"basic", position:{x:2, y:15}}], func:function() {
->>>>>>> origin/new/text-mode
   if (!this.isContinue) {
     var a = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT), b, c;
     for (c in a) {
@@ -13412,11 +13380,7 @@ Entry.block.maze_step_if_3 = {skeleton:"basic_loop", mode:"maze", color:"#498DEB
     }
   }
 }};
-<<<<<<< HEAD
-Entry.block.maze_step_if_4 = {skeleton:"basic_loop", color:"#498DEB", template:"\ub9cc\uc57d %1 \uc55e\uc5d0 \uc788\ub2e4\uba74 %2", params:[{type:"Image", img:"/img/assets/ntry/block_inner/if_target_2.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/if.png", size:24}], statements:[{accept:"basic", position:{x:2, y:15}}], func:function() {
-=======
 Entry.block.maze_step_if_4 = {skeleton:"basic_loop", mode:"maze", color:"#498DEB", template:"\ub9cc\uc57d %1 \uc55e\uc5d0 \uc788\ub2e4\uba74 %2", params:[{type:"Image", img:"/img/assets/ntry/block_inner/if_target_2.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/if.png", size:24}], statements:[{accept:"basic", position:{x:2, y:15}}], func:function() {
->>>>>>> origin/new/text-mode
   if (!this.isContinue) {
     var a = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT), b, c;
     for (c in a) {
@@ -15350,7 +15314,7 @@ Entry.Vim = function(a) {
 };
 (function(a) {
   a.createDom = function(a) {
-    this.view = Entry.Dom("div", {parent:a, class:"vimBoard"});
+    this.view = Entry.Dom("div", {parent:a, class:"entryVimBoard"});
     this.codeMirror = CodeMirror(this.view[0], {lineNumbers:!0, value:"this.move();\nthat.move();\nthis.move();\n", mode:{name:"javascript", globalVars:!0}, theme:"default", indentUnit:4, styleActiveLine:!0, extraKeys:{"Ctrl-Space":"autocomplete"}, lint:!0});
   };
   a.hide = function() {

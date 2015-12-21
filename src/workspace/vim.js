@@ -21,7 +21,7 @@ Entry.Vim = function(dom) {
         var parent = dom;
         this.view = Entry.Dom('div', {
             parent:parent,
-            class: 'vimBoard'
+            class: 'entryVimBoard'
         });
 
         this.codeMirror = CodeMirror(this.view[0], {
