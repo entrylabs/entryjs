@@ -8,28 +8,29 @@ goog.provide("Entry.DummyBlock");
 /*
  *
  */
-Entry.FieldStatement = function(content, blockView) {
+Entry.FieldStatement = function(content, blockView, index) {
     this._blockView = blockView;
     this.block = blockView.block;
 
-    this.key = content.key;
 
     var box = new Entry.BoxModel();
     this.box = box;
+
+    this._index = index;
 
     this.acceptType = content.accept;
 
     this.svgGroup = null;
     this.dummyBlock = null;
 
-    if (content.alignX) this._alignX = content.alignX;
-    if (content.alignY) this._alignY = content.alignY;
+    this._position = content.position;
 
     this.box.observe(blockView, "alignContent", ["height"]);
 
     this.renderStart(blockView.getBoard());
     this.block.observe(this, "_updateThread", ["thread"]);
 };
+
 
 (function(p) {
     p.renderStart = function(board) {
@@ -40,7 +41,7 @@ Entry.FieldStatement = function(content, blockView) {
             width: 20,
             height: 20
         });
-        this._thread = this._blockView.block.values[this.key];
+        this._thread = this.getValue();
         this.dummyBlock = new Entry.DummyBlock(this, this._blockView);
         this._thread.insertDummyBlock(this.dummyBlock);
         this._thread.createView(board);
@@ -48,21 +49,16 @@ Entry.FieldStatement = function(content, blockView) {
         this.calcHeight();
     };
 
-    p.calcHeight = function() {
-        var block = this.dummyBlock,
-            height = - 1;
-        while (block) {
-            height += block.view.height + 1;
-            block = block.next;
-        }
-        this.box.set({height: height});
-    };
-
     p.align = function(x, y, animate) {
         animate = animate === undefined ? true : animate;
         var svgGroup = this.svgGroup;
-        var x = this._alignX || 46;
-        var y = this._alignY || 14;
+        if (this._position) {
+            if (this._position.x)
+                x = this._position.x;
+            if (this._position.y)
+                y = this._position.y;
+        }
+
         var transform = "t" + x + " " + y;
 
         if (animate)
@@ -75,6 +71,16 @@ Entry.FieldStatement = function(content, blockView) {
             });
     };
 
+    p.calcHeight = function() {
+        var block = this.dummyBlock,
+            height = - 1;
+        while (block) {
+            height += block.view.height + 1;
+            block = block.next;
+        }
+        this.box.set({height: height});
+    };
+
     p._updateThread = function() {
         if (this._threadChangeEvent)
             this._thread.changeEvent.detach(this._threadChangeEvent);
@@ -83,6 +89,12 @@ Entry.FieldStatement = function(content, blockView) {
             thread.changeEvent.notify();
         });
     };
+
+    p.getValue = function() {
+        return this.block.statements[this._index];
+    };
+
+    p.destroy = function() {};
 
 })(Entry.FieldStatement.prototype);
 
@@ -187,5 +199,4 @@ Entry.DummyBlock = function(statementField, blockView) {
     p.dominate = function() {
         this.originBlockView.dominate();
     };
-
 })(Entry.DummyBlock.prototype);

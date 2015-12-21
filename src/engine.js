@@ -124,6 +124,7 @@ Entry.Engine.prototype.generateView = function(controlView, option) {
 
         this.view_.appendChild(this.runButton);
         this.runButton.bindOnClick(function(e) {
+            e.preventDefault();
             Entry.engine.toggleRun();
         });
         this.runButton2 = Entry.createElement('button');
@@ -132,6 +133,7 @@ Entry.Engine.prototype.generateView = function(controlView, option) {
 
         this.view_.appendChild(this.runButton2);
         this.runButton2.bindOnClick(function(e) {
+            e.preventDefault();
             Entry.engine.toggleRun();
         });
 
@@ -142,6 +144,7 @@ Entry.Engine.prototype.generateView = function(controlView, option) {
         this.stopButton.innerHTML = Lang.Workspace.stop;
         this.view_.appendChild(this.stopButton);
         this.stopButton.bindOnClick(function(e) {
+            e.preventDefault();
             Entry.engine.toggleStop();
         });
 
@@ -152,6 +155,7 @@ Entry.Engine.prototype.generateView = function(controlView, option) {
         this.stopButton2.innerHTML = Lang.Workspace.stop;
         this.view_.appendChild(this.stopButton2);
         this.stopButton2.bindOnClick(function(e) {
+            e.preventDefault();
             Entry.engine.toggleStop();
         });
 
@@ -161,6 +165,7 @@ Entry.Engine.prototype.generateView = function(controlView, option) {
         this.pauseButton.addClass('entryRemove');
         this.view_.appendChild(this.pauseButton);
         this.pauseButton.bindOnClick(function(e) {
+            e.preventDefault();
             Entry.engine.togglePause();
         });
 
@@ -200,6 +205,7 @@ Entry.Engine.prototype.generateView = function(controlView, option) {
         this.runButton.innerHTML = Lang.Blocks.START;
         this.view_.appendChild(this.runButton);
         this.runButton.bindOnClick(function(e) {
+            e.preventDefault();
             Entry.engine.toggleRun();
         });
 
@@ -208,6 +214,7 @@ Entry.Engine.prototype.generateView = function(controlView, option) {
         this.runButton2.addClass('entryEngineBigButtonMinimize_popup_run');
         this.view_.appendChild(this.runButton2);
         this.runButton2.bindOnClick(function(e) {
+            e.preventDefault();
             Entry.engine.toggleRun();
         });
 
@@ -219,6 +226,7 @@ Entry.Engine.prototype.generateView = function(controlView, option) {
         this.view_.appendChild(this.stopButton);
         this.stopButton.bindOnClick(function(e) {
             this.blur();
+            e.preventDefault();
             Entry.engine.toggleStop();
         });
 
@@ -230,6 +238,7 @@ Entry.Engine.prototype.generateView = function(controlView, option) {
         this.view_.appendChild(this.pauseButton);
         this.pauseButton.bindOnClick(function(e) {
             this.blur();
+            e.preventDefault();
             Entry.engine.togglePause();
         });
 
@@ -277,6 +286,7 @@ Entry.Engine.prototype.generateView = function(controlView, option) {
 
         this.footerView_.appendChild(this.runButton);
         this.runButton.bindOnClick(function(e) {
+            e.preventDefault();
             Entry.engine.toggleRun();
         });
 
@@ -290,6 +300,7 @@ Entry.Engine.prototype.generateView = function(controlView, option) {
 
         this.footerView_.appendChild(this.stopButton);
         this.stopButton.bindOnClick(function(e) {
+            e.preventDefault();
             Entry.engine.toggleStop();
         });
     }

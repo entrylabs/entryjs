@@ -15,7 +15,6 @@ goog.require("Entry.DummyBlock");
 Entry.Thread = function(thread, code) {
     this._data = new Entry.Collection();
     this._code = code;
-
     this.changeEvent = new Entry.Event(this);
     this.changeEvent.attach(this, this.inspectExist);
 
@@ -160,12 +159,12 @@ Entry.Thread = function(thread, code) {
             if (!block.type)
                 continue;
             count++;
-            var schema = Entry.block[block.type];
-            var contents = schema.contents;
-            for (var j = 0; j < contents.length; j++) {
-                var content = contents[j];
-                if (content.type == "Statement") {
-                    count += block.values[content.key].countBlock();
+
+            var statements = block.statements;
+            if (statements) {
+                for (var j = 0; j < statements.length; j++) {
+                    var statement = statements[j];
+                    count += statement.countBlock();
                 }
             }
         }

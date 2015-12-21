@@ -68,7 +68,7 @@ Entry.Code = function(code) {
         }
     };
 
-    p.getEventMap = function(eventType) {return this._eventMap;};
+    p.getEventMap = function(eventType) {return this._eventMap[eventType];};
 
     p.map = function(func) {
         this._data.map(func);
@@ -126,7 +126,7 @@ Entry.Code = function(code) {
     };
 
     p.getThreads = function() {
-        return this._data;
+        return this._data.map(function(t){return t});
     };
 
     p.toJSON = function() {

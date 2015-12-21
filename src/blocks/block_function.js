@@ -185,17 +185,15 @@ Entry.block.function_general = function (sprite, script) {
                 script.thread.init(func.content.childNodes[i]);
         }
         // get parameter
-        return script;
+    }
+    var thread = Entry.Engine.computeThread(sprite,
+                                            script.thread
+                                            );
+    if (!thread) {
+        delete script.thread;
+        return script.callReturn();
     } else {
-        var thread = Entry.Engine.computeThread(sprite,
-                                                script.thread
-                                                );
-        if (!thread) {
-            delete script.thread;
-            return script.callReturn();
-        } else {
-            script.thread = thread;
-            return script;
-        }
+        script.thread = thread;
+        return script;
     }
 };
