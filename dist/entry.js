@@ -8517,10 +8517,8 @@ Entry.JSParser = {};
     a = a.body;
     for (var d = 0;d < a.length;d++) {
       var e = a[d];
-      console.log(e.type);
       c.push(this[e.type](e));
     }
-    console.log("block", c);
     return c;
   };
   a.Identifier = function(a) {
@@ -8531,10 +8529,17 @@ Entry.JSParser = {};
     return this[a.type](a);
   };
   a.ForStatement = function(a) {
-    return {init:a.init, test:a.test, update:a.update, body:a.body};
+    var c = a.body;
+    return {init:a.init, test:a.test, update:a.update, body:this[c.type](c)};
   };
   a.BlockStatement = function(a) {
-    return Error();
+    var c = [];
+    a = a.body;
+    for (var d = 0;d < a.length;d++) {
+      var e = a[d];
+      c.push(this[e.type](e));
+    }
+    return c;
   };
   a.EmptyStatement = function(a) {
     return Error();
@@ -8663,10 +8668,8 @@ Entry.Parser.ThisObject = {};
 Entry.Parser.jsToBlock = function(a) {
   a = acorn.parse(a);
   var b = null, b = Entry.JSParser.Program(a);
-  console.log("asTree ====", b);
+  console.log(a, b);
   return b;
-};
-Entry.Parser.jsForStatement = function(a) {
 };
 Entry.Parser.pythonToBlock = function(a) {
 };

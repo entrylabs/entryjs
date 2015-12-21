@@ -14,11 +14,9 @@ Entry.JSParser = {};
 
         for (var i = 0; i < body.length; i++) {
             var childNode = body[i];
-            console.log(childNode.type);
             block.push(this[childNode.type](childNode));
         }
 
-        console.log("block" , block);
         return block;
     };
 
@@ -37,22 +35,26 @@ Entry.JSParser = {};
             test = node.test,
             update = node.update,
             body = node.body;
-        // console.log("init  =" ,init);
-        // console.log("test  = " ,test);
-        // console.log("update = " ,update);
-        // console.log("body = " ,body);
+
+        var contents = "";
 
 
-        return { 'init' : init , 
-                 'test': test , 
-                 'update' : update, 
-                 'body' :body} ;
+        return {
+            type:
+            body: this[body.type](body)
+        } ;
     };
 
     p.BlockStatement = function(node) {
+        var block = [];
         var body = node.body;
 
-        return new Error();
+        for (var i = 0; i < body.length; i++) {
+            var childNode = body[i];
+            block.push(this[childNode.type](childNode));
+        }
+
+        return block;
     };
 
     p.EmptyStatement = function(node) {
@@ -87,7 +89,7 @@ Entry.JSParser = {};
     p.BreakStatement = function(node) {
         var label = node.label;
 
-        return new Error();  
+        return new Error();
     };
 
     p.ContinueStatement = function(node) {
@@ -96,17 +98,17 @@ Entry.JSParser = {};
         return new Error();
     }
 
-    p.IfStatement = function(node) {    
+    p.IfStatement = function(node) {
         var test = node.test,
             consequent = node.consequent,
             alternate  = node.alternate;
 
         return {
-            'test' : test,
-            'consequent' : consequent,
-            'alternate' : alternate
-        };   
-    }    
+            test : test,
+            consequent : consequent,
+            alternate : alternate
+        };
+    }
 
     p.SwitchStatement = function(node) {
         var discriminant = node.discriminant,
@@ -178,7 +180,7 @@ Entry.JSParser = {};
 
     p.VariableDeclaration = function(node) {
         var declaration = node.declarations,
-            kind = node.kind;        
+            kind = node.kind;
 
         return new Error();
     };
@@ -219,7 +221,7 @@ Entry.JSParser = {};
 
         return new Error();
     };
-    // unary expression 
+    // unary expression
 
     p.UnaryExpression = function(node) {
         var operator = node.operator,
@@ -237,7 +239,7 @@ Entry.JSParser = {};
         return ["++" , "--"];
     };
 
-    //Binary expression 
+    //Binary expression
     p.BinaryOperator = function() {
 
         return ["==" , "!=" , "===" , "!=="
