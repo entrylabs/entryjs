@@ -8520,7 +8520,9 @@ Entry.Painter.prototype.selectToolbox = function(a) {
       this.toggleCoordinator();
   }
 };
-Entry.JSParser = {};
+Entry.JSParser = function(a) {
+  this.scope = a;
+};
 (function(a) {
   a.Program = function(a) {
     var c = [];
@@ -8539,8 +8541,8 @@ Entry.JSParser = {};
     return this[a.type](a);
   };
   a.ForStatement = function(a) {
-    var c = a.body;
-    return {init:a.init, test:a.test, update:a.update, body:this[c.type](c)};
+    a = a.body;
+    return {type:null, body:this[a.type](a)};
   };
   a.BlockStatement = function(a) {
     var c = [];
@@ -8672,17 +8674,27 @@ Entry.JSParser = {};
   a.SequenceExpression = function(a) {
     return Error();
   };
-})(Entry.JSParser);
-Entry.Parser = {};
-Entry.Parser.ThisObject = {};
-Entry.Parser.jsToBlock = function(a) {
-  a = acorn.parse(a);
-  var b = null, b = Entry.JSParser.Program(a);
-  console.log(a, b);
-  return b;
+})(Entry.JSParser.prototype);
+Entry.Parser = function(a) {
+  this._mode = a;
+  this.scope = {};
+  this.mappingScope();
+  this._parser = new Entry.JSParser(this.scope);
 };
-Entry.Parser.pythonToBlock = function(a) {
-};
+(function(a) {
+  a.parse = function(a) {
+    a = acorn.parse(a);
+    var c = null, c = this._parser.Program(a);
+    console.log("asTree ====", c);
+    return c;
+  };
+  a.mappingScope = function(a) {
+    a = Entry.blocks;
+    for (var c = 0;c < a.length;c++) {
+      Entry.blocks[a[c]].mode && this.scope;
+    }
+  };
+})(Entry.Parser.prototype);
 Entry.Playground = function() {
   this.menuBlocks_ = {};
   this.enableArduino = this.isTextBGMode_ = !1;

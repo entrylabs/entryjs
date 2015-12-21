@@ -5,7 +5,9 @@
 
 goog.provide("Entry.JSParser");
 
-Entry.JSParser = {};
+Entry.JSParser = function(scope) {
+    this.scope = scope;
+};
 
 (function(p){
     p.Program = function(node) {
@@ -40,9 +42,9 @@ Entry.JSParser = {};
 
 
         return {
-            type:
+            type: null,
             body: this[body.type](body)
-        } ;
+        }
     };
 
     p.BlockStatement = function(node) {
@@ -324,4 +326,4 @@ Entry.JSParser = {};
         return new Error();
     };
 
-})(Entry.JSParser);
+})(Entry.JSParser.prototype);
