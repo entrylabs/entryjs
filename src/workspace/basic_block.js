@@ -568,10 +568,11 @@ Entry.block.jr_repeat_until_dest = {
         }
     ],
     func: function() {
-        if (this.block.values.STATEMENT.getBlocks().length === 1)
+        var statement = this.block.statements[0];
+        if (statement.getBlocks().length === 1)
             return;
 
-        this.executor.stepInto(this.block.values.STATEMENT);
+        this.executor.stepInto(statement);
         return Entry.STATIC.CONTINUE;
     }
 };
@@ -633,11 +634,9 @@ Entry.block.jr_if_construction = {
 
         this.isContinue = true;
 
-        var statement = this.block.values.STATEMENT;
-        if (fitEntities.length === 0) {
-            return;
-        } else if (statement.getBlocks().length === 1)
-            return;
+        var statement = this.block.statements[0];
+        if (fitEntities.length === 0) return;
+        else if (statement.getBlocks().length === 1) return;
         else {
             this.executor.stepInto(statement);
             return Entry.STATIC.CONTINUE;
@@ -703,7 +702,7 @@ Entry.block.jr_if_speed = {
 
         this.isContinue = true;
 
-        var statement = this.block.values.STATEMENT;
+        var statement = this.block.statements[0];
         if (fitEntities.length === 0) return;
         else if(statement.getBlocks().length === 1) return;
         else {
