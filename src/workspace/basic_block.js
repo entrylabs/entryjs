@@ -73,12 +73,11 @@ Entry.block.jr_repeat = {
     ],
     func: function() {
         if (this.repeatCount === undefined) {
-            this.repeatCount = this.block.values.REPEAT;
+            this.repeatCount = this.block.params[0];
             return Entry.STATIC.CONTINUE;
         } else if (this.repeatCount > 0) {
-            console.log(this.repeatCount);
             this.repeatCount--;
-            this.executor.stepInto(this.block.values.STATEMENT);
+            this.executor.stepInto(this.block.statements[0]);
             return Entry.STATIC.CONTINUE;
         } else {
             delete this.repeatCount;
@@ -791,7 +790,6 @@ Entry.block.maze_step_for = {
             this.repeatCount = this.block.values.REPEAT;
             return Entry.STATIC.CONTINUE;
         } else if (this.repeatCount > 0) {
-            console.log(this.repeatCount);
             this.repeatCount--;
             this.executor.stepInto(this.block.values.STATEMENT);
             return Entry.STATIC.CONTINUE;
@@ -852,7 +850,7 @@ Entry.block.maze_repeat_until_1 = {
 };
 
 
-Entry.block.maze_step_unif_1 = {
+Entry.block.maze_step_if_1 = {
     skeleton: "basic_loop",
     color: "#498DEB",
     template: "만약 %1 앞에 있다면 %2",
@@ -895,6 +893,22 @@ Entry.block.maze_step_unif_1 = {
         var grid = {x: gridComp.x, y: gridComp.y};
         Ntry.addVectorByDirection(grid, unitComp.direction, 1);
 
+        var existEntities = Ntry.entityManager.find(
+        {
+            type: Ntry.STATIC.GRID,
+            x: grid.x,
+            y: grid.y
+        });
+
+        var statement = this.block.values.STATEMENT;
+
+        if (existEntities.length == 0) {
+            this.executor.stepInto(statement);
+            return Entry.STATIC.CONTINUE;
+        }
+
+
+
         var fitEntities = Ntry.entityManager.find(
             {
                 type: Ntry.STATIC.GRID,
@@ -902,14 +916,14 @@ Entry.block.maze_step_unif_1 = {
                 y: grid.y
             },
             {
-                type: Ntry.STATIC.WALL,
-                tileType: Ntry.STATIC.WALL_CRASH
+                type: Ntry.STATIC.TILE,
+                tileType: Ntry.STATIC.WALL
             }
         );
 
         this.isContinue = true;
 
-        var statement = this.block.values.STATEMENT;
+
         if (fitEntities.length === 0) {
             return;
         } else if (statement.getBlocks().length === 1)
@@ -1002,13 +1016,30 @@ Entry.block.maze_call_function = {
         }
     ],
     func: function() {
-        Entry.block.jr_promise_wrap.func(this.executor,statement);
+        if (!this.funcExecutor) {
+            var codes = Ntry.entityManager.getEntitiesByComponent(
+            Ntry.STATIC.CODE);
+
+            for (var key in codes) {
+                code = codes[key].components[Ntry.STATIC.CODE].code;
+                this.funcExecutor = new Entry.Executor(
+                    code.getEventMap("define")[0]
+                );
+            }
+        }
+
+        this.funcExecutor.execute();
+        if (this.funcExecutor.scope.block === null)
+            return;
+        else
+            return Entry.STATIC.CONTINUE;
     }
 };
 
 Entry.block.maze_define_function = {
     skeleton: "basic_define",
     color: "#B57242",
+    event: "define",
     template: "약속하기 %1",
     params: [
         {
@@ -1027,8 +1058,11 @@ Entry.block.maze_define_function = {
         }
     ],
     func: function(executor) {
-        console.log(executor);
-        executor.stepInto(this.block.values.STATEMENT);
+        if (this.executed)
+            return;
+        this.executor.stepInto(this.block.values.STATEMENT);
+        this.executed = true;
+        return Entry.STATIC.CONTINUE;
     }
 };
 
@@ -1082,7 +1116,7 @@ Entry.block.maze_step_if_3 = {
                 y: grid.y
             },
             {
-                type: Ntry.STATIC.OBSTACLE,
+                type: Ntry.STATIC.TILE,
                 tileType: Ntry.STATIC.OBSTACLE_BANANA
             }
         );
@@ -1151,7 +1185,7 @@ Entry.block.maze_step_if_4 = {
                 y: grid.y
             },
             {
-                type: Ntry.STATIC.WALL,
+                type: Ntry.STATIC.TILE,
                 tileType: Ntry.STATIC.WALL
             }
         );
@@ -1192,7 +1226,6 @@ Entry.block.maze_step_start = {
         }
     ],
     func: function() {
-        console.log("11111");
         var entities = Ntry.entityManager.getEntitiesByComponent(
         Ntry.STATIC.UNIT);
 
@@ -1215,8 +1248,8 @@ Entry.block.maze_step_move_step = {
             size: 24
         }
     ],
+
     func: function() {
-        console.log(2);
         if (!this.isContinue) {
 
             this.isContinue = true;
@@ -1304,5 +1337,6 @@ Entry.block.maze_step_rotate_right = {
             delete this.isContinue;
         }
     }
+
 };
 

@@ -2006,21 +2006,19 @@ Blockly.Blocks.function_general = {init:function() {
   return a;
 }};
 Entry.block.function_general = function(a, b) {
-  if (b.thread) {
-    var c = Entry.Engine.computeThread(a, b.thread);
-    if (c) {
-      return b.thread = c, b;
+  if (!b.thread) {
+    var c = Entry.variableContainer.getFunction(b.hashId);
+    b.thread = new Entry.Script(a);
+    b.thread.register = b.values;
+    for (var d = 0;d < c.content.childNodes.length;d++) {
+      "function_create" == c.content.childNodes[d].getAttribute("type") && b.thread.init(c.content.childNodes[d]);
     }
-    delete b.thread;
-    return b.callReturn();
   }
-  c = Entry.variableContainer.getFunction(b.hashId);
-  b.thread = new Entry.Script(a);
-  b.thread.register = b.values;
-  for (var d = 0;d < c.content.childNodes.length;d++) {
-    "function_create" == c.content.childNodes[d].getAttribute("type") && b.thread.init(c.content.childNodes[d]);
+  if (c = Entry.Engine.computeThread(a, b.thread)) {
+    return b.thread = c, b;
   }
-  return b;
+  delete b.thread;
+  return b.callReturn();
 };
 Entry.Hamster = {PORT_MAP:{leftWheel:0, rightWheel:0, buzzer:0, outputA:0, outputB:0, leftLed:0, rightLed:0, note:0, ioModeA:0, ioModeB:0}, setZero:function() {
   var a = Entry.Hamster.PORT_MAP, b;
@@ -4599,9 +4597,10 @@ Entry.Collection = function(a) {
     this._hashMap = {};
   };
   a.map = function(a, b) {
-    for (var e = 0, f = this.length;e < f;e++) {
-      a(this[e], b);
+    for (var e = [], f = 0, g = this.length;f < g;f++) {
+      e.push(a(this[f], b));
     }
+    return e;
   };
   a.moveFromTo = function(a, d) {
     var e = this.length - 1;
@@ -5413,14 +5412,18 @@ Entry.Engine.prototype.generateView = function(a, b) {
       this.hasClass("toggleOn") ? this.removeClass("toggleOn") : this.addClass("toggleOn");
       Entry.stage.toggleCoordinator();
     }), this.runButton = Entry.createElement("button"), this.runButton.addClass("entryEngineButtonMinimize"), this.runButton.addClass("entryRunButtonMinimize"), this.runButton.innerHTML = Lang.Blocks.START, this.view_.appendChild(this.runButton), this.runButton.bindOnClick(function(a) {
+      a.preventDefault();
       Entry.engine.toggleRun();
     }), this.runButton2 = Entry.createElement("button"), this.runButton2.addClass("entryEngineBigButtonMinimize_popup"), this.runButton2.addClass("entryEngineBigButtonMinimize_popup_run"), this.view_.appendChild(this.runButton2), this.runButton2.bindOnClick(function(a) {
+      a.preventDefault();
       Entry.engine.toggleRun();
     }), this.stopButton = Entry.createElement("button"), this.stopButton.addClass("entryEngineButtonMinimize"), this.stopButton.addClass("entryStopButtonMinimize"), this.stopButton.addClass("entryRemove"), this.stopButton.innerHTML = Lang.Workspace.stop, this.view_.appendChild(this.stopButton), this.stopButton.bindOnClick(function(a) {
       this.blur();
+      a.preventDefault();
       Entry.engine.toggleStop();
     }), this.pauseButton = Entry.createElement("button"), this.pauseButton.innerHTML = Lang.Workspace.pause, this.pauseButton.addClass("entryEngineButtonMinimize"), this.pauseButton.addClass("entryPauseButtonMinimize"), this.pauseButton.addClass("entryRemove"), this.view_.appendChild(this.pauseButton), this.pauseButton.bindOnClick(function(a) {
       this.blur();
+      a.preventDefault();
       Entry.engine.togglePause();
     }), this.mouseView = Entry.createElement("div"), this.mouseView.addClass("entryMouseViewMinimize"), this.mouseView.addClass("entryRemove"), this.view_.appendChild(this.mouseView)) : "phone" == b && (this.view_ = a, this.view_.addClass("entryEngine", "entryEnginePhone"), this.headerView_ = Entry.createElement("div", "entryEngineHeader"), this.headerView_.addClass("entryEngineHeaderPhone"), this.view_.appendChild(this.headerView_), this.maximizeButton = Entry.createElement("button"), this.maximizeButton.addClass("entryEngineButtonPhone", 
     "entryMaximizeButtonPhone"), this.headerView_.appendChild(this.maximizeButton), this.maximizeButton.bindOnClick(function(a) {
@@ -5434,8 +5437,10 @@ Entry.Engine.prototype.generateView = function(a, b) {
     }), document.addEventListener("mozfullscreenchange", function(a) {
       Entry.engine.exitFullScreen();
     }), this.footerView_ = Entry.createElement("div", "entryEngineFooter"), this.footerView_.addClass("entryEngineFooterPhone"), this.view_.appendChild(this.footerView_), this.runButton = Entry.createElement("button"), this.runButton.addClass("entryEngineButtonPhone", "entryRunButtonPhone"), Entry.objectAddable && this.runButton.addClass("small"), this.runButton.innerHTML = Lang.Workspace.run, this.footerView_.appendChild(this.runButton), this.runButton.bindOnClick(function(a) {
+      a.preventDefault();
       Entry.engine.toggleRun();
     }), this.stopButton = Entry.createElement("button"), this.stopButton.addClass("entryEngineButtonPhone", "entryStopButtonPhone", "entryRemove"), Entry.objectAddable && this.stopButton.addClass("small"), this.stopButton.innerHTML = Lang.Workspace.stop, this.footerView_.appendChild(this.stopButton), this.stopButton.bindOnClick(function(a) {
+      a.preventDefault();
       Entry.engine.toggleStop();
     }));
   } else {
@@ -5479,6 +5484,7 @@ Entry.Engine.prototype.generateView = function(a, b) {
     this.runButton.innerHTML = Lang.Workspace.run;
     this.view_.appendChild(this.runButton);
     this.runButton.bindOnClick(function(a) {
+      a.preventDefault();
       Entry.engine.toggleRun();
     });
     this.runButton2 = Entry.createElement("button");
@@ -5486,6 +5492,7 @@ Entry.Engine.prototype.generateView = function(a, b) {
     this.runButton2.addClass("entryRunButtonWorkspace_w2");
     this.view_.appendChild(this.runButton2);
     this.runButton2.bindOnClick(function(a) {
+      a.preventDefault();
       Entry.engine.toggleRun();
     });
     this.stopButton = Entry.createElement("button");
@@ -5495,6 +5502,7 @@ Entry.Engine.prototype.generateView = function(a, b) {
     this.stopButton.innerHTML = Lang.Workspace.stop;
     this.view_.appendChild(this.stopButton);
     this.stopButton.bindOnClick(function(a) {
+      a.preventDefault();
       Entry.engine.toggleStop();
     });
     this.stopButton2 = Entry.createElement("button");
@@ -5504,6 +5512,7 @@ Entry.Engine.prototype.generateView = function(a, b) {
     this.stopButton2.innerHTML = Lang.Workspace.stop;
     this.view_.appendChild(this.stopButton2);
     this.stopButton2.bindOnClick(function(a) {
+      a.preventDefault();
       Entry.engine.toggleStop();
     });
     this.pauseButton = Entry.createElement("button");
@@ -5512,6 +5521,7 @@ Entry.Engine.prototype.generateView = function(a, b) {
     this.pauseButton.addClass("entryRemove");
     this.view_.appendChild(this.pauseButton);
     this.pauseButton.bindOnClick(function(a) {
+      a.preventDefault();
       Entry.engine.togglePause();
     });
     this.mouseView = Entry.createElement("div");
@@ -12944,10 +12954,10 @@ Entry.block.jr_start = {skeleton:"pebble_event", event:"start", color:"#3BBD70",
 }};
 Entry.block.jr_repeat = {skeleton:"pebble_loop", color:"#127CDB", template:"%1 \ubc18\ubcf5", params:[{type:"Dropdown", options:[[1, 1], [2, 2], [3, 3], [4, 4], [5, 5], [6, 6], [7, 7], [8, 8], [9, 9], [10, 10]], value:3, fontSize:14, roundValue:3}], statements:[{accept:"pebble_basic", position:{x:46, y:14}}], func:function() {
   if (void 0 === this.repeatCount) {
-    return this.repeatCount = this.block.values.REPEAT, Entry.STATIC.CONTINUE;
+    return this.repeatCount = this.block.params[0], Entry.STATIC.CONTINUE;
   }
   if (0 < this.repeatCount) {
-    return console.log(this.repeatCount), this.repeatCount--, this.executor.stepInto(this.block.values.STATEMENT), Entry.STATIC.CONTINUE;
+    return this.repeatCount--, this.executor.stepInto(this.block.statements[0]), Entry.STATIC.CONTINUE;
   }
   delete this.repeatCount;
 }};
@@ -13251,7 +13261,7 @@ Entry.block.maze_step_for = {skeleton:"basic_loop", color:"#127CDB", template:"%
     return this.repeatCount = this.block.values.REPEAT, Entry.STATIC.CONTINUE;
   }
   if (0 < this.repeatCount) {
-    return console.log(this.repeatCount), this.repeatCount--, this.executor.stepInto(this.block.values.STATEMENT), Entry.STATIC.CONTINUE;
+    return this.repeatCount--, this.executor.stepInto(this.block.values.STATEMENT), Entry.STATIC.CONTINUE;
   }
   delete this.repeatCount;
 }};
@@ -13262,7 +13272,7 @@ Entry.block.maze_repeat_until_1 = {skeleton:"basic_loop", color:"#498DEB", templ
     return this.executor.stepInto(this.block.values.STATEMENT), Entry.STATIC.CONTINUE;
   }
 }};
-Entry.block.maze_step_unif_1 = {skeleton:"basic_loop", color:"#498DEB", template:"\ub9cc\uc57d %1 \uc55e\uc5d0 \uc788\ub2e4\uba74 %2", params:[{type:"Image", img:"/img/assets/ntry/block_inner/if_target_1.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic", position:{x:2, y:15}}], func:function() {
+Entry.block.maze_step_if_1 = {skeleton:"basic_loop", color:"#498DEB", template:"\ub9cc\uc57d %1 \uc55e\uc5d0 \uc788\ub2e4\uba74 %2", params:[{type:"Image", img:"/img/assets/ntry/block_inner/if_target_1.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic", position:{x:2, y:15}}], func:function() {
   if (!this.isContinue) {
     var a = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT), b, c;
     for (c in a) {
@@ -13272,9 +13282,13 @@ Entry.block.maze_step_unif_1 = {skeleton:"basic_loop", color:"#498DEB", template
     b = Ntry.entityManager.getComponent(b.id, Ntry.STATIC.GRID);
     b = {x:b.x, y:b.y};
     Ntry.addVectorByDirection(b, a.direction, 1);
-    b = Ntry.entityManager.find({type:Ntry.STATIC.GRID, x:b.x, y:b.y}, {type:Ntry.STATIC.WALL, tileType:Ntry.STATIC.WALL_CRASH});
-    this.isContinue = !0;
+    c = Ntry.entityManager.find({type:Ntry.STATIC.GRID, x:b.x, y:b.y});
     a = this.block.values.STATEMENT;
+    if (0 == c.length) {
+      return this.executor.stepInto(a), Entry.STATIC.CONTINUE;
+    }
+    b = Ntry.entityManager.find({type:Ntry.STATIC.GRID, x:b.x, y:b.y}, {type:Ntry.STATIC.TILE, tileType:Ntry.STATIC.WALL});
+    this.isContinue = !0;
     if (0 !== b.length && 1 !== a.getBlocks().length) {
       return this.executor.stepInto(a), Entry.STATIC.CONTINUE;
     }
@@ -13299,11 +13313,21 @@ Entry.block.maze_step_if_2 = {skeleton:"basic_loop", color:"#498DEB", template:"
   }
 }};
 Entry.block.maze_call_function = {skeleton:"basic", color:"#B57242", template:"\uc57d\uc18d \ubd88\ub7ec\uc624\uae30 %1", params:[{type:"Image", img:"/img/assets/week/blocks/function.png", size:24}], func:function() {
-  Entry.block.jr_promise_wrap.func(this.executor, statement);
+  if (!this.funcExecutor) {
+    var a = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.CODE), b;
+    for (b in a) {
+      code = a[b].components[Ntry.STATIC.CODE].code, this.funcExecutor = new Entry.Executor(code.getEventMap("define")[0]);
+    }
+  }
+  this.funcExecutor.execute();
+  if (null !== this.funcExecutor.scope.block) {
+    return Entry.STATIC.CONTINUE;
+  }
 }};
-Entry.block.maze_define_function = {skeleton:"basic_define", color:"#B57242", template:"\uc57d\uc18d\ud558\uae30 %1", params:[{type:"Image", img:"/img/assets/week/blocks/function.png", size:24}], statements:[{accept:"basic", position:{x:2, y:15}}], func:function(a) {
-  console.log(a);
-  a.stepInto(this.block.values.STATEMENT);
+Entry.block.maze_define_function = {skeleton:"basic_define", color:"#B57242", event:"define", template:"\uc57d\uc18d\ud558\uae30 %1", params:[{type:"Image", img:"/img/assets/week/blocks/function.png", size:24}], statements:[{accept:"basic", position:{x:2, y:15}}], func:function(a) {
+  if (!this.executed) {
+    return this.executor.stepInto(this.block.values.STATEMENT), this.executed = !0, Entry.STATIC.CONTINUE;
+  }
 }};
 Entry.block.maze_step_if_3 = {skeleton:"basic_loop", color:"#498DEB", template:"\ub9cc\uc57d %1 \uc55e\uc5d0 \uc788\ub2e4\uba74", params:[{type:"Image", img:"/img/assets/ntry/block_inner/if_target_3.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic", position:{x:2, y:15}}], func:function() {
   if (!this.isContinue) {
@@ -13315,7 +13339,7 @@ Entry.block.maze_step_if_3 = {skeleton:"basic_loop", color:"#498DEB", template:"
     b = Ntry.entityManager.getComponent(b.id, Ntry.STATIC.GRID);
     b = {x:b.x, y:b.y};
     Ntry.addVectorByDirection(b, a.direction, 1);
-    b = Ntry.entityManager.find({type:Ntry.STATIC.GRID, x:b.x, y:b.y}, {type:Ntry.STATIC.OBSTACLE, tileType:Ntry.STATIC.OBSTACLE_BANANA});
+    b = Ntry.entityManager.find({type:Ntry.STATIC.GRID, x:b.x, y:b.y}, {type:Ntry.STATIC.TILE, tileType:Ntry.STATIC.OBSTACLE_BANANA});
     this.isContinue = !0;
     a = this.block.values.STATEMENT;
     if (0 !== b.length && 1 !== a.getBlocks().length) {
@@ -13333,7 +13357,7 @@ Entry.block.maze_step_if_4 = {skeleton:"basic_loop", color:"#498DEB", template:"
     b = Ntry.entityManager.getComponent(b.id, Ntry.STATIC.GRID);
     b = {x:b.x, y:b.y};
     Ntry.addVectorByDirection(b, a.direction, 1);
-    b = Ntry.entityManager.find({type:Ntry.STATIC.GRID, x:b.x, y:b.y}, {type:Ntry.STATIC.WALL, tileType:Ntry.STATIC.WALL});
+    b = Ntry.entityManager.find({type:Ntry.STATIC.GRID, x:b.x, y:b.y}, {type:Ntry.STATIC.TILE, tileType:Ntry.STATIC.WALL});
     this.isContinue = !0;
     a = this.block.values.STATEMENT;
     if (0 !== b.length && 1 !== a.getBlocks().length) {
@@ -13342,7 +13366,6 @@ Entry.block.maze_step_if_4 = {skeleton:"basic_loop", color:"#498DEB", template:"
   }
 }};
 Entry.block.maze_step_start = {skeleton:"basic_event", event:"start", color:"#3BBD70", template:"%1 \uc2dc\uc791 \ubc84\ud2bc\uc744 \ub20c\ub800\uc744 \ub54c", params:[{type:"Indicator", boxMultiplier:1, img:"/img/assets/block_icon/start_icon_play.png", highlightColor:"#3BBD70", size:17, position:{x:0, y:-2}}], func:function() {
-  console.log("11111");
   var a = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT), b;
   for (b in a) {
     this._unit = a[b];
@@ -13350,7 +13373,6 @@ Entry.block.maze_step_start = {skeleton:"basic_event", event:"start", color:"#3B
   Ntry.unitComp = Ntry.entityManager.getComponent(this._unit.id, Ntry.STATIC.UNIT);
 }};
 Entry.block.maze_step_move_step = {skeleton:"basic", color:"#A751E3", template:"\uc55e\uc73c\ub85c \uac00\uae30 %1", params:[{type:"Image", img:"/img/assets/ntry/bitmap/jr/cparty_go_straight.png", size:24}], func:function() {
-  console.log(2);
   if (this.isContinue) {
     if (this.isAction) {
       return Entry.STATIC.CONTINUE;
@@ -13561,7 +13583,7 @@ Entry.BlockView = function(a, b) {
     this.contentSvgGroup = this.svgGroup.group();
     var a = this._skeleton.contentPos();
     this.contentSvgGroup.transform("t" + a.x + " " + a.y);
-    for (var c = /(%\d)/, d = this._schema, e = d.template.split(c), f = d.params, a = 0;a < e.length;a++) {
+    for (var c = /(%\d)/gmi, d = this._schema, e = d.template.split(c), f = d.params, a = 0;a < e.length;a++) {
       var g = e[a];
       if (0 !== g.length) {
         if (c.test(g)) {
@@ -13863,7 +13885,7 @@ Entry.Code = function(a) {
     }
   };
   a.getEventMap = function(a) {
-    return this._eventMap;
+    return this._eventMap[a];
   };
   a.map = function(a) {
     this._data.map(a);
@@ -13898,7 +13920,9 @@ Entry.Code = function(a) {
     0 > e || (d.splice(e, 1), (d = a.getFirstBlock()) && d.doDestroy(c));
   };
   a.getThreads = function() {
-    return this._data;
+    return this._data.map(function(a) {
+      return a;
+    });
   };
   a.toJSON = function() {
     for (var a = this.getThreads(), c = [], d = 0, e = a.length;d < e;d++) {
