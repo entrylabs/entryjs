@@ -13574,7 +13574,7 @@ Entry.BlockView = function(a, b) {
     this.contentSvgGroup = this.svgGroup.group();
     var a = this._skeleton.contentPos();
     this.contentSvgGroup.transform("t" + a.x + " " + a.y);
-    for (var c = /(%\d)/, d = this._schema, e = d.template.split(c), f = d.params, a = 0;a < e.length;a++) {
+    for (var c = /(%\d)/gmi, d = this._schema, e = d.template.split(c), f = d.params, a = 0;a < e.length;a++) {
       var g = e[a];
       if (0 !== g.length) {
         if (c.test(g)) {

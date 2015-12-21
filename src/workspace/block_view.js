@@ -83,7 +83,7 @@ Entry.BlockView = function(block, board) {
         var contentPos = this._skeleton.contentPos();
         this.contentSvgGroup.transform("t" + contentPos.x + ' ' + contentPos.y);
 
-        var reg = /(%\d)/;
+        var reg = /(%\d)/gmi;
         var schema = this._schema;
         var templateParams = schema.template.split(reg);
         var params = schema.params;
@@ -96,9 +96,7 @@ Entry.BlockView = function(block, board) {
                 this._contents.push(
                     new Entry['Field' + param.type](param, this, paramIndex)
                 );
-            } else {
-                this._contents.push(new Entry.FieldText({text: param}, this));
-            }
+            } else this._contents.push(new Entry.FieldText({text: param}, this));
         }
 
         var statements = schema.statements;
