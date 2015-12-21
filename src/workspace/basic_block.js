@@ -73,11 +73,11 @@ Entry.block.jr_repeat = {
     ],
     func: function() {
         if (this.repeatCount === undefined) {
-            this.repeatCount = this.block.values.REPEAT;
+            this.repeatCount = this.block.params[0];
             return Entry.STATIC.CONTINUE;
         } else if (this.repeatCount > 0) {
             this.repeatCount--;
-            this.executor.stepInto(this.block.values.STATEMENT);
+            this.executor.stepInto(this.block.statements[0]);
             return Entry.STATIC.CONTINUE;
         } else {
             delete this.repeatCount;
@@ -899,14 +899,14 @@ Entry.block.maze_step_if_1 = {
             x: grid.x,
             y: grid.y
         });
-        
+
         var statement = this.block.values.STATEMENT;
-        
+
         if (existEntities.length == 0) {
             this.executor.stepInto(statement);
             return Entry.STATIC.CONTINUE;
         }
-            
+
 
 
         var fitEntities = Ntry.entityManager.find(
@@ -923,7 +923,7 @@ Entry.block.maze_step_if_1 = {
 
         this.isContinue = true;
 
-        
+
         if (fitEntities.length === 0) {
             return;
         } else if (statement.getBlocks().length === 1)
@@ -1337,6 +1337,6 @@ Entry.block.maze_step_rotate_right = {
             delete this.isContinue;
         }
     }
-    
+
 };
 

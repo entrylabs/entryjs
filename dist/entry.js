@@ -12945,10 +12945,10 @@ Entry.block.jr_start = {skeleton:"pebble_event", event:"start", color:"#3BBD70",
 }};
 Entry.block.jr_repeat = {skeleton:"pebble_loop", color:"#127CDB", template:"%1 \ubc18\ubcf5", params:[{type:"Dropdown", options:[[1, 1], [2, 2], [3, 3], [4, 4], [5, 5], [6, 6], [7, 7], [8, 8], [9, 9], [10, 10]], value:3, fontSize:14, roundValue:3}], statements:[{accept:"pebble_basic", position:{x:46, y:14}}], func:function() {
   if (void 0 === this.repeatCount) {
-    return this.repeatCount = this.block.values.REPEAT, Entry.STATIC.CONTINUE;
+    return this.repeatCount = this.block.params[0], Entry.STATIC.CONTINUE;
   }
   if (0 < this.repeatCount) {
-    return this.repeatCount--, this.executor.stepInto(this.block.values.STATEMENT), Entry.STATIC.CONTINUE;
+    return this.repeatCount--, this.executor.stepInto(this.block.statements[0]), Entry.STATIC.CONTINUE;
   }
   delete this.repeatCount;
 }};
