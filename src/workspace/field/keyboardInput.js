@@ -8,7 +8,7 @@ goog.require("Entry.Field");
 /*
  *
  */
-Entry.FieldKeyboard = function(content, blockView) {
+Entry.FieldKeyboard = function(content, blockView, index) {
     this._block = blockView.block;
 
     var box = new Entry.BoxModel();
@@ -18,8 +18,8 @@ Entry.FieldKeyboard = function(content, blockView) {
 
     this.position = content.position;
     this._contents = content;
-    this.key = content.key;
-    this.value = this._block.values[this.key]  || 81;
+    this._index = index;
+    this.setValue(this.getValue());
 
     this._optionVisible = false;
 
@@ -47,7 +47,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldKeyboard);
         this.textElement =
             this.svgGroup.text(
                 X_PADDING/2, TEXT_Y_PADDING,
-                Entry.getKeyCodeMap()[this.value]
+                Entry.getKeyCodeMap()[this.getValue()]
             );
         this.textElement.attr({'font-size' : '9pt'});
 
@@ -137,9 +137,8 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldKeyboard);
 
     p.applyValue = function(text, value) {
         this.destroyOption();
-        if (this.value == value) return;
-        this._block.values[this.key] = value;
-        this.value = value;
+        if (this.getValue() == value) return;
+        this.setValue(value);
         this.textElement.node.textContent = text;
         this.resize();
     };

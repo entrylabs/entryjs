@@ -10,7 +10,7 @@ goog.require("Entry.Field");
 /*
  *
  */
-Entry.FieldText = function(content, block) {
+Entry.FieldText = function(content, block, index) {
     this._block = block;
 
     var box = new Entry.BoxModel();
@@ -18,6 +18,7 @@ Entry.FieldText = function(content, block) {
 
     this._fontSize = content.fontSize || block.getSkeleton().fontSize || 12;
     this._text = content.text;
+    this._index = index;
 
     this.textElement = null;
 

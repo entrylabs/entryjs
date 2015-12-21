@@ -8,7 +8,7 @@ goog.require("Entry.Field");
 /*
  *
  */
-Entry.FieldTextInput = function(content, blockView) {
+Entry.FieldTextInput = function(content, blockView, index) {
     this._block = blockView.block;
 
     var box = new Entry.BoxModel();
@@ -18,8 +18,8 @@ Entry.FieldTextInput = function(content, blockView) {
 
     this.position = content.position;
     this._contents = content;
-    this.key = content.key;
-    this.value = this._block.values[this.key]  || '';
+    this._index = index;
+    this.value = this.getValue()  || '';
 
     this.renderStart(blockView);
 };
@@ -93,7 +93,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
             parent: $('body')
         });
 
-        this.optionGroup.val(this.value);
+        this.optionGroup.val(this.getValue());
 
         this.optionGroup.on('mousedown', function(e) {
             e.stopPropagation();
@@ -123,8 +123,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
 
     p.applyValue = function(event) {
         var value = this.optionGroup.val();
-        this._block.values[this.key] = value;
-        this.value = value;
+        this.setValue(value);
         this.textElement.node.textContent = this.truncate();
         this.resize();
     };

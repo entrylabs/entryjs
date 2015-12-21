@@ -8,7 +8,7 @@ goog.require("Entry.Field");
 /*
  *
  */
-Entry.FieldAngle = function(content, blockView) {
+Entry.FieldAngle = function(content, blockView, index) {
     this._block = blockView.block;
 
     var box = new Entry.BoxModel();
@@ -18,8 +18,8 @@ Entry.FieldAngle = function(content, blockView) {
 
     this.position = content.position;
     this._contents = content;
-    this.key = content.key;
-    this.value = this.modValue(this._block.values[this.key]  || 0);
+    this._index = index;
+    this.setValue(this.modValue(this.getValue()));
 
     this.renderStart(blockView);
 };
@@ -134,7 +134,32 @@ Entry.FieldAngle.FILL_PATH = 'M 0, 0 v -49 A 49,49 0 %LARGE 1 %X,%Y z';
         circle.attr({class:'entry-field-angle-circle'});
 
         //TODO
-        circle.mousemove(function(e){
+        this.svgOptionGroup.mousemove(function(e){
+            var mousePos = [e.clientX, e.clientY];
+
+            var absolutePos = that.getAbsolutePos();
+            var zeroPos = [
+                absolutePos.x + that.box.width/2,
+                absolutePos.y + that.box.height/2
+            ];
+            var centerPos = [
+                absolutePos.x + that.box.width/2,
+                zeroPos[1] + RADIUS
+            ];
+            var angle = compute(mousePos, centerPos, zeroPos);
+            function compute(p0, p1, p2) {
+                if (Math.floor(p0[0]) == Math.floor(p1[0])) return 180;
+                var a = Math.pow(p1[0]-p0[0],2) + Math.pow(p1[1]-p0[1],2),
+                    b = Math.pow(p1[0]-p2[0],2) + Math.pow(p1[1]-p2[1],2),
+                    c = Math.pow(p2[0]-p0[0],2) + Math.pow(p2[1]-p0[1],2);
+                return Entry.toDegrees(Math.acos( (a+b-c) / Math.sqrt(4*a*b)));
+            }
+
+            angle = Math.round(angle / 15) * 15;
+            if (mousePos[0] < centerPos[0]) angle = 360 - angle;
+
+            that.setValue(angle);
+            that.applyValue();
         });
 
         this._dividerGroup = this.svgOptionGroup.group();
@@ -155,17 +180,14 @@ Entry.FieldAngle.FILL_PATH = 'M 0, 0 v -49 A 49,49 0 %LARGE 1 %X,%Y z';
             class: 'entry-field-angle',
             transform: "t" + pos.x + " " + pos.y
         });
-
-
-        this.updateGraph();
-
     };
 
     p.updateGraph = function() {
         if (this._fillPath) this._fillPath.remove();
 
         var RADIUS = Entry.FieldAngle.RADIUS;
-        var angleRadians = Entry.toRadian(this.value);
+        console.log(this.getValue());
+        var angleRadians = Entry.toRadian(this.getValue());
         var x = Math.sin(angleRadians) * RADIUS;
         var y = Math.cos(angleRadians) * -RADIUS;
         var largeFlag = (angleRadians > Math.PI) ? 1 : 0;
@@ -195,9 +217,9 @@ Entry.FieldAngle.FILL_PATH = 'M 0, 0 v -49 A 49,49 0 %LARGE 1 %X,%Y z';
         var value = this.optionGroup.val();
         if (isNaN(value)) return;
         value = this.modValue(value);
-        this._block.values[this.key] = value;
-        this.value = value;
-        this.textElement.node.textContent = this.truncate();
+        this.setValue(value);
+        this.textElement.node.textContent = this.getText();
+        this.updateGraph();
         this.resize();
     };
 
@@ -216,7 +238,7 @@ Entry.FieldAngle.FILL_PATH = 'M 0, 0 v -49 A 49,49 0 %LARGE 1 %X,%Y z';
     };
 
     p.getText = function() {
-        return this.value + '\u00B0';
+        return this.getValue() + '\u00B0';
     };
 
     p.modValue = function(value) {

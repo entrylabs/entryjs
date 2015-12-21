@@ -8,7 +8,7 @@ goog.require("Entry.Field");
 /*
  *
  */
-Entry.FieldIndicator = function(content, block) {
+Entry.FieldIndicator = function(content, block, index) {
     this._block = block;
 
     var box = new Entry.BoxModel();
@@ -21,6 +21,7 @@ Entry.FieldIndicator = function(content, block) {
         content.highlightColor? content.highlightColor : "#F59900";
     this._position = content.position;
 
+    this._index = index;
     this.svgGroup = null;
     this._path = null;
     this._imgElement = null;

@@ -8,7 +8,7 @@ goog.require("Entry.Field");
 /*
  *
  */
-Entry.FieldImage = function(content, block) {
+Entry.FieldImage = function(content, block, index) {
     this._block = block;
 
     var box = new Entry.BoxModel();
@@ -23,6 +23,7 @@ Entry.FieldImage = function(content, block) {
     this.svgGroup = null;
     this._path = null;
     this._imgElement = null;
+    this._index = index;
 
     this.renderStart();
 };

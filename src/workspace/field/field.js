@@ -83,7 +83,7 @@ Entry.Field = function() {};
     };
 
     p.truncate = function() {
-        var value = String(this.value);
+        var value = String(this.getValue());
         var limit = this.TEXT_LIMIT_LENGTH;
         var ret = value.substring(0, limit);
         if (value.length > limit)
@@ -93,5 +93,14 @@ Entry.Field = function() {};
 
     p.appendSvgOptionGroup = function() {
         return this._block.view.getBoard().svgGroup.group();
+    };
+
+    p.getValue = function() {
+        return this._block.params[this._index];
+    };
+
+    p.setValue = function(value) {
+        this.value = value;
+        this._block.params[this._index] = value;
     };
 })(Entry.Field.prototype);
