@@ -22,9 +22,8 @@ Entry.BlockView = function(block, board) {
 
     this.isInBlockMenu = !(this.getBoard() instanceof Entry.Board);
 
-    if (this._skeleton.morph) {
+    if (this._skeleton.morph)
         this.block.observe(this, "_renderPath", this._skeleton.morph, false);
-    }
 
     this.prevObserver = null;
     this._startRender(block);
@@ -56,9 +55,7 @@ Entry.BlockView = function(block, board) {
     };
 
     p._startRender = function(block) {
-        this.svgGroup.attr({
-            class: "block"
-        });
+        this.svgGroup.attr({class: "block"});
 
         var path = this._skeleton.path(this);
 
@@ -86,16 +83,30 @@ Entry.BlockView = function(block, board) {
         var contentPos = this._skeleton.contentPos();
         this.contentSvgGroup.transform("t" + contentPos.x + ' ' + contentPos.y);
 
-        var contents = this._schema.contents;
-        for (var i = 0; i < contents.length; i++) {
-            var content = contents[i];
-            if (typeof content === "string")
-                this._contents.push(new Entry.FieldText({text: content}, this));
-            else
+        var reg = /(%\d)/;
+        var schema = this._schema;
+        var templateParams = schema.template.split(reg);
+        var params = schema.params;
+        for (var i=0; i<templateParams.length; i++) {
+            var param = templateParams[i];
+            if (param.length === 0) continue;
+            if (reg.test(param)) {
+                var paramIndex = Number(param.split('%')[1]) - 1;
+                param = params[paramIndex];
                 this._contents.push(
-                    new Entry['Field' + content.type](content, this)
+                    new Entry['Field' + param.type](param, this, paramIndex)
                 );
+            } else {
+                this._contents.push(new Entry.FieldText({text: param}, this));
+            }
         }
+
+        var statements = schema.statements;
+        if (statements) {
+            for (i=0; i<statements.length; i++)
+                this._contents.push(new Entry.FieldStatement(statements[i], this, i));
+        }
+
         this.alignContent(false);
     };
 
@@ -469,6 +480,10 @@ Entry.BlockView = function(block, board) {
                 }
             );
         } else svgGroup.remove();
+
+        this._contents.forEach(function(c) {
+            c.destroy();
+        });
     };
 
     p.getShadow = function() {
@@ -606,5 +621,9 @@ Entry.BlockView = function(block, board) {
     };
 
     p.getSkeleton = function() {return this._skeleton;};
+
+    p.getContentPos = function() {
+        return this._skeleton.contentPos(this);
+    };
 
 })(Entry.BlockView.prototype);

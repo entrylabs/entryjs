@@ -4164,6 +4164,9 @@
   stroke-width: 3px;
   stroke: #798EB1;
 }
+svg .svgBlockGroup text {
+  white-space: pre;
+}
 .entry-field-dropdown {
   cursor: pointer;
 }
@@ -4188,6 +4191,62 @@
 }
 .boardScrollbar:hover {
   opacity: 0.6;
+}
+.entry-field-color {
+  cursor: pointer;
+}
+.entry-widget-color-table {
+  border: 1px solid #666;
+  border-collapse: collapse;
+  z-index: 1001;
+  position: fixed;
+}
+.entry-widget-color-table .entry-widget-color-row {
+  border-bottom: 2px solid #666;
+}
+.entry-widget-color-table .entry-widget-color-cell {
+  height: 13px;
+  width: 15px;
+  margin: 0;
+  border: 0;
+  text-align: center;
+  vertical-align: middle;
+  border-right: 2px solid #666;
+  font-size: 1px;
+  cursor: pointer;
+}
+.entry-input-field {
+  cursor: text;
+}
+.entry-widget-input-field {
+  position: fixed;
+  font-family: ng;
+  font-size: 9pt;
+  border: none;
+  outline: none;
+  line-height: normal;
+}
+.entry-field-angle {
+  cursor: default;
+}
+.entry-field-angle-circle {
+  stroke: #444;
+  stroke-width: 1;
+  fill: #ddd;
+  fill-opacity: 0.8;
+}
+.entry-angle-divider {
+  stroke: #444;
+  stroke-width: 1;
+}
+.entry-angle-indicator {
+  stroke: #f00;
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+.entry-angle-fill-area {
+  fill: #f88;
+  fill-opacity: 0.8;
 }
 
 

@@ -4,10 +4,11 @@
 
 goog.provide("Entry.FieldIndicator");
 
+goog.require("Entry.Field");
 /*
  *
  */
-Entry.FieldIndicator = function(content, block) {
+Entry.FieldIndicator = function(content, block, index) {
     this._block = block;
 
     var box = new Entry.BoxModel();
@@ -20,12 +21,15 @@ Entry.FieldIndicator = function(content, block) {
         content.highlightColor? content.highlightColor : "#F59900";
     this._position = content.position;
 
+    this._index = index;
     this.svgGroup = null;
     this._path = null;
     this._imgElement = null;
 
     this.renderStart();
 };
+
+Entry.Utils.inherit(Entry.Field, Entry.FieldIndicator);
 
 (function(p) {
     p.renderStart = function() {
@@ -51,31 +55,6 @@ Entry.FieldIndicator = function(content, block) {
             y: 0,
             width: this._size * this._boxMultiplier,
             height: this._size * this._boxMultiplier
-        });
-    };
-
-    p.align = function(x, y, animate) {
-        animate = animate === undefined ? true : animate;
-        var svgGroup = this.svgGroup;
-        if (this._position) {
-            x = this._position.x;
-            y = this._position.y;
-        }
-
-        var transform = "t" + x + " " + y;
-
-        if (animate)
-            svgGroup.animate({
-                transform: transform
-            }, 300, mina.easeinout);
-        else
-            svgGroup.attr({
-                transform: transform
-            });
-
-        this.box.set({
-            x: x,
-            y: y
         });
     };
 

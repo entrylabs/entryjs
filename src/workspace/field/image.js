@@ -4,10 +4,11 @@
 
 goog.provide("Entry.FieldImage");
 
+goog.require("Entry.Field");
 /*
  *
  */
-Entry.FieldImage = function(content, block) {
+Entry.FieldImage = function(content, block, index) {
     this._block = block;
 
     var box = new Entry.BoxModel();
@@ -22,9 +23,12 @@ Entry.FieldImage = function(content, block) {
     this.svgGroup = null;
     this._path = null;
     this._imgElement = null;
+    this._index = index;
 
     this.renderStart();
 };
+
+Entry.Utils.inherit(Entry.Field, Entry.FieldImage);
 
 (function(p) {
     p.renderStart = function() {
@@ -42,27 +46,6 @@ Entry.FieldImage = function(content, block) {
             y: 0,
             width: this._size,
             height: this._size
-        });
-    };
-
-    p.align = function(x, y, animate) {
-        animate = animate === undefined ? true : animate;
-        var svgGroup = this.svgGroup;
-        if (this._position) x = this._position.x;
-        var transform = "t" + x + " " + y;
-
-        if (animate)
-            svgGroup.animate({
-                transform: transform
-            }, 300, mina.easeinout);
-        else
-            svgGroup.attr({
-                transform: transform
-            });
-
-        this.box.set({
-            x: x,
-            y: y
         });
     };
 
