@@ -8520,11 +8520,14 @@ Entry.Painter.prototype.selectToolbox = function(a) {
       this.toggleCoordinator();
   }
 };
-Entry.JSParser = {};
+Entry.JSParser = function(a) {
+  this.syntax = a;
+};
 (function(a) {
   a.Program = function(a) {
     var c = [];
     a = a.body;
+    c.push({type:this.syntax.Program});
     for (var d = 0;d < a.length;d++) {
       var e = a[d];
       c.push(this[e.type](e));
@@ -8539,6 +8542,11 @@ Entry.JSParser = {};
     return this[a.type](a);
   };
   a.ForStatement = function(a) {
+<<<<<<< HEAD
+=======
+    a = a.body;
+    return {type:null, body:this[a.type](a)};
+>>>>>>> origin/new/text-mode
   };
   a.BlockStatement = function(a) {
     var c = [];
@@ -8609,7 +8617,7 @@ Entry.JSParser = {};
     return Error();
   };
   a.ThisExpression = function(a) {
-    return Entry.Parser.ThisObject;
+    return this.syntax.ThisObject;
   };
   a.ArrayExpression = function(a) {
     return Error();
@@ -8670,6 +8678,7 @@ Entry.JSParser = {};
   a.SequenceExpression = function(a) {
     return Error();
   };
+<<<<<<< HEAD
 })(Entry.JSParser);
 Entry.Parser = {};
 Entry.Parser.ThisObject = {};
@@ -8680,7 +8689,35 @@ Entry.Parser.jsToBlock = function(a) {
   return b;
 };
 Entry.Parser.pythonToBlock = function(a) {
+=======
+})(Entry.JSParser.prototype);
+Entry.Parser = function(a) {
+  this._mode = a;
+  this.syntax = {};
+  this.mappingSyntax(a);
+  this._parser = new Entry.JSParser(this.syntax);
+>>>>>>> origin/new/text-mode
 };
+(function(a) {
+  a.parse = function(a) {
+    a = acorn.parse(a);
+    var c = null, c = this._parser.Program(a);
+    console.log("asTree ====", c);
+    return c;
+  };
+  a.mappingSyntax = function(a) {
+    for (var c = Object.keys(Entry.block), d = 0;d < c.length;d++) {
+      var e = c[d], f = Entry.block[e];
+      if (f.mode === a && (f = f.syntax)) {
+        for (var g = this.syntax, h = 0;h < f.length;h++) {
+          var k = f[h];
+          g[k] || (g[k] = {});
+          h === f.length - 1 ? g[k] = e : g = g[k];
+        }
+      }
+    }
+  };
+})(Entry.Parser.prototype);
 Entry.Playground = function() {
   this.menuBlocks_ = {};
   this.enableArduino = this.isTextBGMode_ = !1;
@@ -13244,7 +13281,14 @@ Entry.block.jr_if_speed = {skeleton:"basic_loop", color:"#498DEB", template:"\ub
     }
   }
 }};
-Entry.block.maze_step_jump = {skeleton:"basic", color:"#FF6E4B", template:"\ub6f0\uc5b4\ub118\uae30 %1", params:[{type:"Image", img:"/img/assets/week/blocks/jump.png", size:24}], func:function() {
+Entry.block.maze_step_start = {skeleton:"basic_event", mode:"maze", event:"start", color:"#3BBD70", template:"%1 \uc2dc\uc791 \ubc84\ud2bc\uc744 \ub20c\ub800\uc744 \ub54c", syntax:["Program"], params:[{type:"Indicator", boxMultiplier:1, img:"/img/assets/block_icon/start_icon_play.png", highlightColor:"#3BBD70", size:17, position:{x:0, y:-2}}], func:function() {
+  var a = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT), b;
+  for (b in a) {
+    this._unit = a[b];
+  }
+  Ntry.unitComp = Ntry.entityManager.getComponent(this._unit.id, Ntry.STATIC.UNIT);
+}};
+Entry.block.maze_step_jump = {skeleton:"basic", mode:"maze", color:"#FF6E4B", template:"\ub6f0\uc5b4\ub118\uae30 %1", params:[{type:"Image", img:"/img/assets/week/blocks/jump.png", size:24}], func:function() {
   if (this.isContinue) {
     if (this.isAction) {
       return Entry.STATIC.CONTINUE;
@@ -13260,7 +13304,7 @@ Entry.block.maze_step_jump = {skeleton:"basic", color:"#FF6E4B", template:"\ub6f
     return Entry.STATIC.CONTINUE;
   }
 }};
-Entry.block.maze_step_for = {skeleton:"basic_loop", color:"#127CDB", template:"%1 \ubc88 \ubc18\ubcf5\ud558\uae30 %2", params:[{type:"Dropdown", key:"REPEAT", options:[[1, 1], [2, 2], [3, 3], [4, 4], [5, 5], [6, 6], [7, 7], [8, 8], [9, 9], [10, 10]], value:1}, {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic", position:{x:2, y:15}}], func:function() {
+Entry.block.maze_step_for = {skeleton:"basic_loop", mode:"maze", color:"#127CDB", template:"%1 \ubc88 \ubc18\ubcf5\ud558\uae30 %2", params:[{type:"Dropdown", key:"REPEAT", options:[[1, 1], [2, 2], [3, 3], [4, 4], [5, 5], [6, 6], [7, 7], [8, 8], [9, 9], [10, 10]], value:1}, {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic", position:{x:2, y:15}}], func:function() {
   if (void 0 === this.repeatCount) {
     return this.repeatCount = this.block.params[0], Entry.STATIC.CONTINUE;
   }
@@ -13269,15 +13313,23 @@ Entry.block.maze_step_for = {skeleton:"basic_loop", color:"#127CDB", template:"%
   }
   delete this.repeatCount;
 }};
-Entry.block.test = {skeleton:"basic", color:"#3BBD70", contents:["\ud0a4\ub97c \ub20c\ub800\uc744 \ub54c", {type:"Angle", key:"ANGLE", value:550}, "\ud0a4\ub97c \ub20c\ub800\uc744 \ub54c"], func:function() {
+Entry.block.test = {skeleton:"basic", mode:"maze", color:"#3BBD70", contents:["\ud0a4\ub97c \ub20c\ub800\uc744 \ub54c", {type:"Angle", key:"ANGLE", value:550}, "\ud0a4\ub97c \ub20c\ub800\uc744 \ub54c"], func:function() {
 }};
+<<<<<<< HEAD
 Entry.block.maze_repeat_until_1 = {skeleton:"basic_loop", color:"#498DEB", template:"%1 \ub9cc\ub0a0 \ub54c \uae4c\uc9c0 \ubc18\ubcf5\ud558\uae30 %2", params:[{type:"Image", img:"/img/assets/ntry/block_inner/repeat_goal_1.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic", position:{x:2, y:15}}], func:function() {
+=======
+Entry.block.maze_repeat_until_1 = {skeleton:"basic_loop", mode:"maze", color:"#498DEB", template:"%1 \ub9cc\ub0a0 \ub54c \uae4c\uc9c0 \ubc18\ubcf5\ud558\uae30 %2", params:[{type:"Image", img:"/img/assets/ntry/block_inner/repeat_goal_1.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic", position:{x:2, y:15}}], func:function() {
+>>>>>>> origin/new/text-mode
   var a = this.block.statements[0];
   if (1 !== a.getBlocks().length) {
     return this.executor.stepInto(a), Entry.STATIC.CONTINUE;
   }
 }};
+<<<<<<< HEAD
 Entry.block.maze_step_if_1 = {skeleton:"basic_loop", color:"#498DEB", template:"\ub9cc\uc57d %1 \uc55e\uc5d0 \uc788\ub2e4\uba74 %2", params:[{type:"Image", img:"/img/assets/ntry/block_inner/if_target_1.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/if.png", size:24}], statements:[{accept:"basic", position:{x:2, y:15}}], func:function() {
+=======
+Entry.block.maze_step_if_1 = {skeleton:"basic_loop", mode:"maze", color:"#498DEB", template:"\ub9cc\uc57d %1 \uc55e\uc5d0 \uc788\ub2e4\uba74 %2", params:[{type:"Image", img:"/img/assets/ntry/block_inner/if_target_1.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/if.png", size:24}], statements:[{accept:"basic", position:{x:2, y:15}}], func:function() {
+>>>>>>> origin/new/text-mode
   if (!this.isContinue) {
     var a = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT), b, c;
     for (c in a) {
@@ -13299,7 +13351,11 @@ Entry.block.maze_step_if_1 = {skeleton:"basic_loop", color:"#498DEB", template:"
     }
   }
 }};
+<<<<<<< HEAD
 Entry.block.maze_step_if_2 = {skeleton:"basic_loop", color:"#498DEB", template:"\ub9cc\uc57d %1 \uc55e\uc5d0 \uc788\ub2e4\uba74 %2", params:[{type:"Image", img:"/img/assets/ntry/bitmap/maze2/obstacle_01.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/if.png", size:24}], statements:[{accept:"basic", position:{x:2, y:15}}], func:function() {
+=======
+Entry.block.maze_step_if_2 = {skeleton:"basic_loop", mode:"maze", color:"#498DEB", template:"\ub9cc\uc57d %1 \uc55e\uc5d0 \uc788\ub2e4\uba74 %2", params:[{type:"Image", img:"/img/assets/ntry/bitmap/maze2/obstacle_01.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/if.png", size:24}], statements:[{accept:"basic", position:{x:2, y:15}}], func:function() {
+>>>>>>> origin/new/text-mode
   if (!this.isContinue) {
     var a = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT), b, c;
     for (c in a) {
@@ -13317,7 +13373,7 @@ Entry.block.maze_step_if_2 = {skeleton:"basic_loop", color:"#498DEB", template:"
     }
   }
 }};
-Entry.block.maze_call_function = {skeleton:"basic", color:"#B57242", template:"\uc57d\uc18d \ubd88\ub7ec\uc624\uae30 %1", params:[{type:"Image", img:"/img/assets/week/blocks/function.png", size:24}], func:function() {
+Entry.block.maze_call_function = {skeleton:"basic", mode:"maze", color:"#B57242", template:"\uc57d\uc18d \ubd88\ub7ec\uc624\uae30 %1", params:[{type:"Image", img:"/img/assets/week/blocks/function.png", size:24}], func:function() {
   if (!this.funcExecutor) {
     var a = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.CODE), b;
     for (b in a) {
@@ -13329,12 +13385,16 @@ Entry.block.maze_call_function = {skeleton:"basic", color:"#B57242", template:"\
     return Entry.STATIC.CONTINUE;
   }
 }};
-Entry.block.maze_define_function = {skeleton:"basic_define", color:"#B57242", event:"define", template:"\uc57d\uc18d\ud558\uae30 %1", params:[{type:"Image", img:"/img/assets/week/blocks/function.png", size:24}], statements:[{accept:"basic", position:{x:2, y:15}}], func:function(a) {
+Entry.block.maze_define_function = {skeleton:"basic_define", mode:"maze", color:"#B57242", event:"define", template:"\uc57d\uc18d\ud558\uae30 %1", params:[{type:"Image", img:"/img/assets/week/blocks/function.png", size:24}], statements:[{accept:"basic", position:{x:2, y:15}}], func:function(a) {
   if (!this.executed) {
     return this.executor.stepInto(this.block.statements[0]), this.executed = !0, Entry.STATIC.CONTINUE;
   }
 }};
+<<<<<<< HEAD
 Entry.block.maze_step_if_3 = {skeleton:"basic_loop", color:"#498DEB", template:"\ub9cc\uc57d %1 \uc55e\uc5d0 \uc788\ub2e4\uba74 %2", params:[{type:"Image", img:"/img/assets/ntry/block_inner/if_target_3.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/if.png", size:24}], statements:[{accept:"basic", position:{x:2, y:15}}], func:function() {
+=======
+Entry.block.maze_step_if_3 = {skeleton:"basic_loop", mode:"maze", color:"#498DEB", template:"\ub9cc\uc57d %1 \uc55e\uc5d0 \uc788\ub2e4\uba74 %2", params:[{type:"Image", img:"/img/assets/ntry/block_inner/if_target_3.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/if.png", size:24}], statements:[{accept:"basic", position:{x:2, y:15}}], func:function() {
+>>>>>>> origin/new/text-mode
   if (!this.isContinue) {
     var a = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT), b, c;
     for (c in a) {
@@ -13352,7 +13412,11 @@ Entry.block.maze_step_if_3 = {skeleton:"basic_loop", color:"#498DEB", template:"
     }
   }
 }};
+<<<<<<< HEAD
 Entry.block.maze_step_if_4 = {skeleton:"basic_loop", color:"#498DEB", template:"\ub9cc\uc57d %1 \uc55e\uc5d0 \uc788\ub2e4\uba74 %2", params:[{type:"Image", img:"/img/assets/ntry/block_inner/if_target_2.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/if.png", size:24}], statements:[{accept:"basic", position:{x:2, y:15}}], func:function() {
+=======
+Entry.block.maze_step_if_4 = {skeleton:"basic_loop", mode:"maze", color:"#498DEB", template:"\ub9cc\uc57d %1 \uc55e\uc5d0 \uc788\ub2e4\uba74 %2", params:[{type:"Image", img:"/img/assets/ntry/block_inner/if_target_2.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/if.png", size:24}], statements:[{accept:"basic", position:{x:2, y:15}}], func:function() {
+>>>>>>> origin/new/text-mode
   if (!this.isContinue) {
     var a = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT), b, c;
     for (c in a) {
@@ -13370,14 +13434,7 @@ Entry.block.maze_step_if_4 = {skeleton:"basic_loop", color:"#498DEB", template:"
     }
   }
 }};
-Entry.block.maze_step_start = {skeleton:"basic_event", event:"start", color:"#3BBD70", template:"%1 \uc2dc\uc791 \ubc84\ud2bc\uc744 \ub20c\ub800\uc744 \ub54c", params:[{type:"Indicator", boxMultiplier:1, img:"/img/assets/block_icon/start_icon_play.png", highlightColor:"#3BBD70", size:17, position:{x:0, y:-2}}], func:function() {
-  var a = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT), b;
-  for (b in a) {
-    this._unit = a[b];
-  }
-  Ntry.unitComp = Ntry.entityManager.getComponent(this._unit.id, Ntry.STATIC.UNIT);
-}};
-Entry.block.maze_step_move_step = {skeleton:"basic", color:"#A751E3", template:"\uc55e\uc73c\ub85c \uac00\uae30 %1", params:[{type:"Image", img:"/img/assets/ntry/bitmap/jr/cparty_go_straight.png", size:24}], func:function() {
+Entry.block.maze_step_move_step = {skeleton:"basic", mode:"maze", color:"#A751E3", template:"\uc55e\uc73c\ub85c \uac00\uae30 %1", syntax:["ThisObject", "move"], params:[{type:"Image", img:"/img/assets/ntry/bitmap/jr/cparty_go_straight.png", size:24}], func:function() {
   if (this.isContinue) {
     if (this.isAction) {
       return Entry.STATIC.CONTINUE;
@@ -13393,7 +13450,7 @@ Entry.block.maze_step_move_step = {skeleton:"basic", color:"#A751E3", template:"
     return Entry.STATIC.CONTINUE;
   }
 }};
-Entry.block.maze_step_rotate_left = {skeleton:"basic", color:"#A751E3", template:"\uc67c\ucabd\uc73c\ub85c \ub3cc\uae30 %1", params:[{type:"Image", img:"/img/assets/ntry/bitmap/jr/cparty_rotate_l.png", size:24}], func:function() {
+Entry.block.maze_step_rotate_left = {skeleton:"basic", mode:"maze", color:"#A751E3", template:"\uc67c\ucabd\uc73c\ub85c \ub3cc\uae30 %1", params:[{type:"Image", img:"/img/assets/ntry/bitmap/jr/cparty_rotate_l.png", size:24}], func:function() {
   if (this.isContinue) {
     if (this.isAction) {
       return Entry.STATIC.CONTINUE;
@@ -13409,7 +13466,7 @@ Entry.block.maze_step_rotate_left = {skeleton:"basic", color:"#A751E3", template
     return Entry.STATIC.CONTINUE;
   }
 }};
-Entry.block.maze_step_rotate_right = {skeleton:"basic", color:"#A751E3", template:"\uc624\ub978\ucabd\uc73c\ub85c \ub3cc\uae30 %1", params:[{type:"Image", img:"/img/assets/ntry/bitmap/jr/cparty_rotate_r.png", size:24}], func:function() {
+Entry.block.maze_step_rotate_right = {skeleton:"basic", mode:"maze", color:"#A751E3", template:"\uc624\ub978\ucabd\uc73c\ub85c \ub3cc\uae30 %1", params:[{type:"Image", img:"/img/assets/ntry/bitmap/jr/cparty_rotate_r.png", size:24}], func:function() {
   if (this.isContinue) {
     if (this.isAction) {
       return Entry.STATIC.CONTINUE;

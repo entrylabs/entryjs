@@ -5,12 +5,18 @@
 
 goog.provide("Entry.JSParser");
 
-Entry.JSParser = {};
+Entry.JSParser = function(syntax) {
+    this.syntax = syntax;
+};
 
 (function(p){
     p.Program = function(node) {
         var block = [];
         var body = node.body;
+
+        block.push({
+            type: this.syntax.Program
+        });
 
         for (var i = 0; i < body.length; i++) {
             var childNode = body[i];
@@ -40,9 +46,9 @@ Entry.JSParser = {};
 
 
         return {
-            type:
+            type: null,
             body: this[body.type](body)
-        } ;
+        }
     };
 
     p.BlockStatement = function(node) {
@@ -194,7 +200,7 @@ Entry.JSParser = {};
 
     // Expression
     p.ThisExpression = function(node) {
-        return Entry.Parser.ThisObject;
+        return this.syntax.ThisObject;
     };
 
     p.ArrayExpression = function(node) {
@@ -324,4 +330,4 @@ Entry.JSParser = {};
         return new Error();
     };
 
-})(Entry.JSParser);
+})(Entry.JSParser.prototype);
