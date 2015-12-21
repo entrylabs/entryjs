@@ -8539,8 +8539,6 @@ Entry.JSParser = {};
     return this[a.type](a);
   };
   a.ForStatement = function(a) {
-    var c = a.body;
-    return {init:a.init, test:a.test, update:a.update, body:this[c.type](c)};
   };
   a.BlockStatement = function(a) {
     var c = [];
@@ -8678,7 +8676,7 @@ Entry.Parser.ThisObject = {};
 Entry.Parser.jsToBlock = function(a) {
   a = acorn.parse(a);
   var b = null, b = Entry.JSParser.Program(a);
-  console.log(a, b);
+  console.log("asTree ====", b);
   return b;
 };
 Entry.Parser.pythonToBlock = function(a) {
@@ -13264,21 +13262,22 @@ Entry.block.maze_step_jump = {skeleton:"basic", color:"#FF6E4B", template:"\ub6f
 }};
 Entry.block.maze_step_for = {skeleton:"basic_loop", color:"#127CDB", template:"%1 \ubc88 \ubc18\ubcf5\ud558\uae30 %2", params:[{type:"Dropdown", key:"REPEAT", options:[[1, 1], [2, 2], [3, 3], [4, 4], [5, 5], [6, 6], [7, 7], [8, 8], [9, 9], [10, 10]], value:1}, {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic", position:{x:2, y:15}}], func:function() {
   if (void 0 === this.repeatCount) {
-    return this.repeatCount = this.block.values.REPEAT, Entry.STATIC.CONTINUE;
+    return this.repeatCount = this.block.params[0], Entry.STATIC.CONTINUE;
   }
   if (0 < this.repeatCount) {
-    return this.repeatCount--, this.executor.stepInto(this.block.values.STATEMENT), Entry.STATIC.CONTINUE;
+    return this.repeatCount--, this.executor.stepInto(this.block.statements[0]), Entry.STATIC.CONTINUE;
   }
   delete this.repeatCount;
 }};
 Entry.block.test = {skeleton:"basic", color:"#3BBD70", contents:["\ud0a4\ub97c \ub20c\ub800\uc744 \ub54c", {type:"Angle", key:"ANGLE", value:550}, "\ud0a4\ub97c \ub20c\ub800\uc744 \ub54c"], func:function() {
 }};
 Entry.block.maze_repeat_until_1 = {skeleton:"basic_loop", color:"#498DEB", template:"%1 \ub9cc\ub0a0 \ub54c \uae4c\uc9c0 \ubc18\ubcf5\ud558\uae30 %2", params:[{type:"Image", img:"/img/assets/ntry/block_inner/repeat_goal_1.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic", position:{x:2, y:15}}], func:function() {
-  if (1 !== this.block.values.STATEMENT.getBlocks().length) {
-    return this.executor.stepInto(this.block.values.STATEMENT), Entry.STATIC.CONTINUE;
+  var a = this.block.statements[0];
+  if (1 !== a.getBlocks().length) {
+    return this.executor.stepInto(a), Entry.STATIC.CONTINUE;
   }
 }};
-Entry.block.maze_step_if_1 = {skeleton:"basic_loop", color:"#498DEB", template:"\ub9cc\uc57d %1 \uc55e\uc5d0 \uc788\ub2e4\uba74 %2", params:[{type:"Image", img:"/img/assets/ntry/block_inner/if_target_1.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic", position:{x:2, y:15}}], func:function() {
+Entry.block.maze_step_if_1 = {skeleton:"basic_loop", color:"#498DEB", template:"\ub9cc\uc57d %1 \uc55e\uc5d0 \uc788\ub2e4\uba74 %2", params:[{type:"Image", img:"/img/assets/ntry/block_inner/if_target_1.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/if.png", size:24}], statements:[{accept:"basic", position:{x:2, y:15}}], func:function() {
   if (!this.isContinue) {
     var a = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT), b, c;
     for (c in a) {
@@ -13289,8 +13288,8 @@ Entry.block.maze_step_if_1 = {skeleton:"basic_loop", color:"#498DEB", template:"
     b = {x:b.x, y:b.y};
     Ntry.addVectorByDirection(b, a.direction, 1);
     c = Ntry.entityManager.find({type:Ntry.STATIC.GRID, x:b.x, y:b.y});
-    a = this.block.values.STATEMENT;
-    if (0 == c.length) {
+    a = this.block.statements[0];
+    if (0 === c.length) {
       return this.executor.stepInto(a), Entry.STATIC.CONTINUE;
     }
     b = Ntry.entityManager.find({type:Ntry.STATIC.GRID, x:b.x, y:b.y}, {type:Ntry.STATIC.TILE, tileType:Ntry.STATIC.WALL});
@@ -13300,7 +13299,7 @@ Entry.block.maze_step_if_1 = {skeleton:"basic_loop", color:"#498DEB", template:"
     }
   }
 }};
-Entry.block.maze_step_if_2 = {skeleton:"basic_loop", color:"#498DEB", template:"\ub9cc\uc57d %1 \uc55e\uc5d0 \uc788\ub2e4\uba74", params:[{type:"Image", img:"/img/assets/ntry/bitmap/maze2/obstacle_01.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic", position:{x:2, y:15}}], func:function() {
+Entry.block.maze_step_if_2 = {skeleton:"basic_loop", color:"#498DEB", template:"\ub9cc\uc57d %1 \uc55e\uc5d0 \uc788\ub2e4\uba74 %2", params:[{type:"Image", img:"/img/assets/ntry/bitmap/maze2/obstacle_01.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/if.png", size:24}], statements:[{accept:"basic", position:{x:2, y:15}}], func:function() {
   if (!this.isContinue) {
     var a = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT), b, c;
     for (c in a) {
@@ -13312,7 +13311,7 @@ Entry.block.maze_step_if_2 = {skeleton:"basic_loop", color:"#498DEB", template:"
     Ntry.addVectorByDirection(b, a.direction, 1);
     b = Ntry.entityManager.find({type:Ntry.STATIC.GRID, x:b.x, y:b.y}, {type:Ntry.STATIC.TILE, tileType:Ntry.STATIC.OBSTACLE_BEE});
     this.isContinue = !0;
-    a = this.block.values.STATEMENT;
+    a = this.block.statements[0];
     if (0 !== b.length && 1 !== a.getBlocks().length) {
       return this.executor.stepInto(a), Entry.STATIC.CONTINUE;
     }
@@ -13332,10 +13331,10 @@ Entry.block.maze_call_function = {skeleton:"basic", color:"#B57242", template:"\
 }};
 Entry.block.maze_define_function = {skeleton:"basic_define", color:"#B57242", event:"define", template:"\uc57d\uc18d\ud558\uae30 %1", params:[{type:"Image", img:"/img/assets/week/blocks/function.png", size:24}], statements:[{accept:"basic", position:{x:2, y:15}}], func:function(a) {
   if (!this.executed) {
-    return this.executor.stepInto(this.block.values.STATEMENT), this.executed = !0, Entry.STATIC.CONTINUE;
+    return this.executor.stepInto(this.block.statements[0]), this.executed = !0, Entry.STATIC.CONTINUE;
   }
 }};
-Entry.block.maze_step_if_3 = {skeleton:"basic_loop", color:"#498DEB", template:"\ub9cc\uc57d %1 \uc55e\uc5d0 \uc788\ub2e4\uba74", params:[{type:"Image", img:"/img/assets/ntry/block_inner/if_target_3.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic", position:{x:2, y:15}}], func:function() {
+Entry.block.maze_step_if_3 = {skeleton:"basic_loop", color:"#498DEB", template:"\ub9cc\uc57d %1 \uc55e\uc5d0 \uc788\ub2e4\uba74 %2", params:[{type:"Image", img:"/img/assets/ntry/block_inner/if_target_3.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/if.png", size:24}], statements:[{accept:"basic", position:{x:2, y:15}}], func:function() {
   if (!this.isContinue) {
     var a = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT), b, c;
     for (c in a) {
@@ -13347,13 +13346,13 @@ Entry.block.maze_step_if_3 = {skeleton:"basic_loop", color:"#498DEB", template:"
     Ntry.addVectorByDirection(b, a.direction, 1);
     b = Ntry.entityManager.find({type:Ntry.STATIC.GRID, x:b.x, y:b.y}, {type:Ntry.STATIC.TILE, tileType:Ntry.STATIC.OBSTACLE_BANANA});
     this.isContinue = !0;
-    a = this.block.values.STATEMENT;
+    a = this.block.statements[0];
     if (0 !== b.length && 1 !== a.getBlocks().length) {
       return this.executor.stepInto(a), Entry.STATIC.CONTINUE;
     }
   }
 }};
-Entry.block.maze_step_if_4 = {skeleton:"basic_loop", color:"#498DEB", template:"\ub9cc\uc57d %1 \uc55e\uc5d0 \uc788\ub2e4\uba74", params:[{type:"Image", img:"/img/assets/ntry/block_inner/if_target_2.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic", position:{x:2, y:15}}], func:function() {
+Entry.block.maze_step_if_4 = {skeleton:"basic_loop", color:"#498DEB", template:"\ub9cc\uc57d %1 \uc55e\uc5d0 \uc788\ub2e4\uba74 %2", params:[{type:"Image", img:"/img/assets/ntry/block_inner/if_target_2.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/if.png", size:24}], statements:[{accept:"basic", position:{x:2, y:15}}], func:function() {
   if (!this.isContinue) {
     var a = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT), b, c;
     for (c in a) {
@@ -13365,7 +13364,7 @@ Entry.block.maze_step_if_4 = {skeleton:"basic_loop", color:"#498DEB", template:"
     Ntry.addVectorByDirection(b, a.direction, 1);
     b = Ntry.entityManager.find({type:Ntry.STATIC.GRID, x:b.x, y:b.y}, {type:Ntry.STATIC.TILE, tileType:Ntry.STATIC.WALL});
     this.isContinue = !0;
-    a = this.block.values.STATEMENT;
+    a = this.block.statements[0];
     if (0 !== b.length && 1 !== a.getBlocks().length) {
       return this.executor.stepInto(a), Entry.STATIC.CONTINUE;
     }
@@ -15058,6 +15057,7 @@ Entry.Thread = function(a, b) {
     return a;
   };
   a.inspectExist = function() {
+    0 === this._data.length && this.destroy();
   };
   a.getCode = function() {
     return this._code;
@@ -15154,7 +15154,8 @@ Entry.Board = function(a) {
     return console.error("Snap library is required");
   }
   Entry.Model(this, !1);
-  this.svgDom = Entry.Dom($('<svg id="play" class="entryBoard" width="100%" height="100%"version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'), {parent:a});
+  this.wrapper = Entry.Dom("div", {parent:a, class:"entryBoardWrapper"});
+  this.svgDom = Entry.Dom($('<svg id="play" class="entryBoard" width="100%" height="100%"version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'), {parent:this.wrapper});
   this.offset = this.svgDom.offset();
   this.offset.top = 130;
   this.offset.left -= $(window).scrollLeft();
@@ -15275,15 +15276,38 @@ Entry.Board = function(a) {
     var d = this.selectedBlockView;
     d && 46 == c.keyCode && d.block.doDestroyAlone(!0) && this.set({selectedBlockView:null});
   };
+  a.hide = function() {
+    this.wrapper.addClass("entryRemove");
+  };
+  a.show = function() {
+    this.wrapper.removeClass("entryRemove");
+  };
 })(Entry.Board.prototype);
-Entry.Workspace = function(a, b) {
+Entry.Vim = function(a) {
+  a = "string" === typeof a ? $("#" + a) : $(a);
+  if ("DIV" !== a.prop("tagName")) {
+    return console.error("Dom is not div element");
+  }
+  this.createDom(a);
   Entry.Model(this, !1);
+};
+(function(a) {
+  a.createDom = function(a) {
+    this.view = Entry.Dom("div", {parent:a, class:"vimBoard"});
+    this.codeMirror = CodeMirror(this.view[0], {lineNumbers:!0, value:"this.move();\nthat.move();\nthis.move();\n", mode:{name:"javascript", globalVars:!0}, theme:"default", indentUnit:4, styleActiveLine:!0, extraKeys:{"Ctrl-Space":"autocomplete"}, lint:!0});
+  };
+  a.hide = function() {
+    this.view.addClass("entryRemove");
+  };
+  a.show = function() {
+    this.view.removeClass("entryRemove");
+  };
+})(Entry.Vim.prototype);
+Entry.Workspace = function(a, b) {
   a.workspace = this;
   b.workspace = this;
   this._blockMenu = a;
   this._board = b;
-  this.svgGroup = a.snap.group();
-  this._stopEvent = new Entry.Event(this);
 };
 (function(a) {
   a.getBoard = function() {
@@ -15291,68 +15315,6 @@ Entry.Workspace = function(a, b) {
   };
   a.getBlockMenu = function() {
     return this._blockMenu;
-  };
-  a.playAddBlock = function(a) {
-    var c = this, d;
-    a.cloneId ? (d = this._blockMenu.findById(a.cloneId)) || (d = this._board.findById(a.cloneId)) : d = this._blockMenu.findById(a.target);
-    if (d) {
-      if (a.dest.id) {
-        var e = this._board.findById(a.dest.id);
-        a.dest.x = this.getBlockMenu()._svgWidth + e.view.x;
-        a.dest.y = e.view.y + e.view.height;
-      }
-      var f = d.view, g = f.getBoard();
-      g.set({dragBlock:f});
-      d = g.cloneThread();
-      a.cloneId = d;
-      (d = f.moveBoardBlockObserver) && d.destroy();
-      d = a.dest.x;
-      e = a.dest.y;
-      f._moveTo(d, e, !0, a.duration - 300);
-      var h = this.getBoard().offset, k = this.getBlockMenu().offset, l = h.left - k.left, h = h.top - k.top;
-      this.getBoard().dragBlock._moveTo(d - l, e - h, !0, a.duration - 300);
-      setTimeout(function() {
-        f._align(!0);
-        var d = f._getCloseBlock();
-        d ? g.setMagnetedBlock(d.view) : g.setMagnetedBlock(null);
-        f.terminateDrag();
-        g && g.set({dragBoard:null});
-        c._stopEvent.notify(a);
-      }, a.duration - 300);
-    }
-  };
-  a.playMoveBlock = function(a) {
-    var c = this, d;
-    console.log("cloneId=", a.cloneId);
-    d = a.cloneId ? this._board.findById(a.cloneId) : this._board.findById(a.target);
-    if (a.dest.id) {
-      var e = this._board.findById(a.dest.id);
-      a.dest.x = this.getBlockMenu()._svgWidth + e.view.x;
-      a.dest.y = e.view.y + e.view.height;
-    }
-    var f = d.view, g = f.getBoard();
-    g.set({dragBlock:f});
-    (d = f.moveBoardBlockObserver) && d.destroy();
-    d = a.dest.x;
-    e = a.dest.y;
-    f._moveTo(d, e, !0, a.duration - 300);
-    var h = this.getBoard().offset, k = this.getBlockMenu().offset;
-    f._moveTo(d - (h.left - k.left), e - (h.top - k.top), !0, a.duration - 300);
-    setTimeout(function() {
-      f._align(!0);
-      var d = f._getCloseBlock();
-      d ? g.setMagnetedBlock(d.view) : g.setMagnetedBlock(null);
-      f.terminateDrag();
-      g && g.set({dragBoard:null});
-      c._stopEvent.notify(a);
-    }, a.duration - 300);
-  };
-  a.moveMouse = function(a, c) {
-  };
-  a.generateImage = function(a) {
-    var c = this.getBoard().svgDom[0], d = c.clientWidth / 2, c = c.clientHeight / 2;
-    this.svgGroup = this._board.snap.group();
-    this.image = this.svgGroup.image(a, d, c, 30, 30);
   };
 })(Entry.Workspace.prototype);
 Entry.Xml = {};

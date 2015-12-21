@@ -29,10 +29,15 @@ Entry.Board = function(dom) {
 
     Entry.Model(this, false);
 
+    this.wrapper = Entry.Dom('div', {
+        parent: dom,
+        class: 'entryBoardWrapper'
+    });
+
     this.svgDom = Entry.Dom(
         $('<svg id="play" class="entryBoard" width="100%" height="100%"' +
           'version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'),
-        { parent: dom }
+        { parent: this.wrapper }
     );
 
     var zoom = document.documentElement.clientWidth / window.innerWidth;
@@ -235,5 +240,13 @@ Entry.Board = function(dom) {
             if (selected.block.doDestroyAlone(true))
                 this.set({selectedBlockView:null});
         }
+    };
+
+    p.hide = function() {
+        this.wrapper.addClass('entryRemove');
+    };
+
+    p.show = function() {
+        this.wrapper.removeClass('entryRemove');
     };
 })(Entry.Board.prototype);
