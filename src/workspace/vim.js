@@ -40,6 +40,14 @@ Entry.Vim = function(dom) {
     p.hide = function() {this.view.addClass('entryRemove');};
 
     p.show = function() {this.view.removeClass('entryRemove');};
+
+    p.textToCode = function() {
+        return code;
+    };
+
+    p.codeToText = function(code) {
+
+    };
 })(Entry.Vim.prototype);
 
 

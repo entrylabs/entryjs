@@ -13456,6 +13456,7 @@ Entry.BlockMenu = function(a, b) {
   if ("function" !== typeof window.Snap) {
     return console.error("Snap library is required");
   }
+  this.view = a;
   this.svgDom = Entry.Dom($('<svg id="blockMenu" width="100%" height="100%"version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'), {parent:a});
   this.offset = this.svgDom.offset();
   this._svgWidth = this.svgDom.width();
@@ -13568,6 +13569,12 @@ Entry.BlockMenu = function(a, b) {
     c && c.removeSelected();
     a instanceof Entry.BlockView ? a.addSelected() : a = null;
     this.set({selectedBlockView:a});
+  };
+  a.hide = function() {
+    this.view.addClass("entryRemove");
+  };
+  a.show = function() {
+    this.view.removeClass("entryRemove");
   };
 })(Entry.BlockMenu.prototype);
 Entry.BlockView = function(a, b) {
@@ -15302,6 +15309,7 @@ Entry.Board = function(a) {
   };
   a.show = function() {
     this.wrapper.removeClass("entryRemove");
+    this.trashcan.setPosition();
   };
 })(Entry.Board.prototype);
 Entry.Vim = function(a) {
@@ -15323,19 +15331,51 @@ Entry.Vim = function(a) {
   a.show = function() {
     this.view.removeClass("entryRemove");
   };
+  a.textToCode = function() {
+    return code;
+  };
+  a.codeToText = function(a) {
+  };
 })(Entry.Vim.prototype);
-Entry.Workspace = function(a, b) {
-  a.workspace = this;
-  b.workspace = this;
-  this._blockMenu = a;
-  this._board = b;
+Entry.Workspace = function(a) {
+  var b = a.blockMenu;
+  b && (this.blockMenu = new Entry.BlockMenu(b.domId, b.align), this.blockMenu.workspace = this);
+  if (b = a.board) {
+    this.board = new Entry.Board(b.domId), this.board.workspace = this;
+  }
+  if (b = a.vimBoard) {
+    this.vimBoard = new Entry.Vim(b.domId), this.vimBoard.workspace = this;
+  }
+  this.mode = Entry.Workspace.MODE_BOARD;
 };
+Entry.Workspace.MODE_BOARD = 0;
+Entry.Workspace.MODE_VIMBOARD = 1;
 (function(a) {
   a.getBoard = function() {
-    return this._board;
+    return this.board;
   };
   a.getBlockMenu = function() {
-    return this._blockMenu;
+    return this.blockMenu;
+  };
+  a.getVimBoard = function() {
+    return this.vimBoard;
+  };
+  a.getMode = function() {
+    return this.mode;
+  };
+  a.setMode = function(a) {
+    this.mode != a && (this.mode = a, a == Entry.Workspace.MODE_VIMBOARD ? (this.board.hide(), this.vimBoard.show()) : (this.vimBoard.hide(), this.board.show()));
+  };
+  a.changeBoardCode = function(a) {
+    (this.mode == Entry.Workspace.MODE_BOARD ? this.board : this.vimBoard).changeCode(a);
+  };
+  a.changeBlockMenuCode = function(a) {
+    this.blockMenu.changeCode(a);
+  };
+  a.textToCode = function() {
+  };
+  a.codeToText = function(a) {
+    this.mode === Entry.Workspace.MODE_VIMBOARD && this.vimBoard.codeToText(a);
   };
 })(Entry.Workspace.prototype);
 Entry.Xml = {};

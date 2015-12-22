@@ -23,6 +23,7 @@ Entry.BlockMenu = function(dom, align) {
     if (typeof window.Snap !== "function")
         return console.error("Snap library is required");
 
+    this.view = dom;
     this.svgDom = Entry.Dom(
         $('<svg id="blockMenu" width="100%" height="100%"' +
           'version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'),
@@ -277,5 +278,9 @@ Entry.BlockMenu = function(dom, align) {
 
         this.set({selectedBlockView:blockView});
     };
+
+    p.hide = function() {this.view.addClass('entryRemove');};
+
+    p.show = function() {this.view.removeClass('entryRemove');};
 
 })(Entry.BlockMenu.prototype);

@@ -248,5 +248,6 @@ Entry.Board = function(dom) {
 
     p.show = function() {
         this.wrapper.removeClass('entryRemove');
+        this.trashcan.setPosition();
     };
 })(Entry.Board.prototype);
