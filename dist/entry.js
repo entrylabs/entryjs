@@ -13295,7 +13295,7 @@ Entry.block.maze_step_for = {skeleton:"basic_loop", mode:"maze", color:"#127CDB"
   }
   delete this.repeatCount;
 }};
-Entry.block.test = {skeleton:"basic", mode:"maze", color:"#3BBD70", contents:["\ud0a4\ub97c \ub20c\ub800\uc744 \ub54c", {type:"Angle", key:"ANGLE", value:550}, "\ud0a4\ub97c \ub20c\ub800\uc744 \ub54c"], func:function() {
+Entry.block.test = {skeleton:"basic", mode:"maze", color:"#3BBD70", template:"\ud0a4\ub97c \ub20c\ub800\uc744 \ub54c %1", params:[{type:"Angle", value:550}], func:function() {
 }};
 Entry.block.maze_repeat_until_1 = {skeleton:"basic_loop", mode:"maze", color:"#498DEB", template:"%1 \ub9cc\ub0a0 \ub54c \uae4c\uc9c0 \ubc18\ubcf5\ud558\uae30 %2", params:[{type:"Image", img:"/img/assets/ntry/block_inner/repeat_goal_1.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic", position:{x:2, y:15}}], func:function() {
   var a = this.block.statements[0];
@@ -13615,7 +13615,7 @@ Entry.BlockView = function(a, b) {
     var a = this._skeleton.contentPos();
     this.contentSvgGroup.transform("t" + a.x + " " + a.y);
     for (var c = /(%\d)/gmi, d = this._schema, e = d.template.split(c), f = d.params, a = 0;a < e.length;a++) {
-      var g = e[a];
+      var g = e[a].trim();
       if (0 !== g.length) {
         if (c.test(g)) {
           var h = Number(g.split("%")[1]) - 1, g = f[h];
@@ -14069,8 +14069,6 @@ Entry.FieldAngle = function(a, b, c) {
   this.renderStart(b);
 };
 Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
-Entry.FieldAngle.RADIUS = 49;
-Entry.FieldAngle.FILL_PATH = "M 0, 0 v -49 A 49,49 0 %LARGE 1 %X,%Y z";
 (function(a) {
   a.renderStart = function(a) {
     var c = this;
@@ -14109,51 +14107,45 @@ Entry.FieldAngle.FILL_PATH = "M 0, 0 v -49 A 49,49 0 %LARGE 1 %X,%Y z";
     c.y -= this.box.height / 2;
     this.optionGroup.css({height:16, left:c.x, top:c.y, width:a.box.width});
     this.optionGroup.select();
-    var d = Entry.FieldAngle.RADIUS;
     this.svgOptionGroup = this.appendSvgOptionGroup();
-    this.svgOptionGroup.circle(0, 0, d).attr({class:"entry-field-angle-circle"});
-    this.svgOptionGroup.mousemove(function(c) {
-      c = [c.clientX, c.clientY];
-      var f = a.getAbsolutePos(), g = [f.x + a.box.width / 2, f.y + a.box.height / 2], f = [f.x + a.box.width / 2, g[1] + d];
-      if (Math.floor(c[0]) == Math.floor(f[0])) {
-        g = 180;
-      } else {
-        var h = Math.pow(f[0] - c[0], 2) + Math.pow(f[1] - c[1], 2), k = Math.pow(f[0] - g[0], 2) + Math.pow(f[1] - g[1], 2), g = Entry.toDegrees(Math.acos((h + k - (Math.pow(g[0] - c[0], 2) + Math.pow(g[1] - c[1], 2))) / Math.sqrt(4 * h * k)))
-      }
-      g = 15 * Math.round(g / 15);
-      c[0] < f[0] && (g = 360 - g);
-      a.setValue(g);
-      a.applyValue();
-    });
+    this.svgOptionGroup.circle(0, 0, 49).attr({class:"entry-field-angle-circle"});
     this._dividerGroup = this.svgOptionGroup.group();
     for (c = 0;360 > c;c += 15) {
-      this._dividerGroup.line(d, 0, d - (0 === c % 45 ? 10 : 5), 0).attr({transform:"rotate(" + c + ", 0, 0)", class:"entry-angle-divider"});
+      this._dividerGroup.line(49, 0, 49 - (0 === c % 45 ? 10 : 5), 0).attr({transform:"rotate(" + c + ", 0, 0)", class:"entry-angle-divider"});
     }
     c = this.getRelativePos();
     c.x += this.box.width / 2;
-    c.y = c.y + this.box.height / 2 + Entry.FieldAngle.RADIUS + 1;
+    c.y = c.y + this.box.height / 2 + 49 + 1;
     this.svgOptionGroup.attr({class:"entry-field-angle", transform:"t" + c.x + " " + c.y});
+    var c = a.getAbsolutePos(), d = [c.x + a.box.width / 2, c.y + a.box.height / 2 + 1];
+    this.svgOptionGroup.mousemove(function(c) {
+      var f = [c.clientX, c.clientY];
+      c = f[0] - d[0];
+      var f = f[1] - d[1] - 49 - 1, g = Math.atan(-f / c), g = Entry.toDegrees(g), g = 90 - g;
+      0 > c ? g += 180 : 0 < f && (g += 360);
+      a.optionGroup.val(a.modValue(15 * Math.round(g / 15)));
+      a.applyValue();
+    });
+    this.updateGraph();
   };
   a.updateGraph = function() {
     this._fillPath && this._fillPath.remove();
-    var a = Entry.FieldAngle.RADIUS;
-    console.log(this.getValue());
-    var c = Entry.toRadian(this.getValue()), d = Math.sin(c) * a, a = Math.cos(c) * -a, c = c > Math.PI ? 1 : 0;
-    this._fillPath = this.svgOptionGroup.path(Entry.FieldAngle.FILL_PATH.replace("%X", d).replace("%Y", a).replace("%LARGE", c));
+    var a = Entry.toRadian(this.getValue()), c = 49 * Math.sin(a), d = -49 * Math.cos(a), a = a > Math.PI ? 1 : 0;
+    this._fillPath = this.svgOptionGroup.path("M 0, 0 v -49 A 49,49 0 %LARGE 1 %X,%Y z".replace("%X", c).replace("%Y", d).replace("%LARGE", a));
     this._fillPath.attr({class:"entry-angle-fill-area"});
     this.svgOptionGroup.append(this._dividerGroup);
     this._indicator && this._indicator.remove();
-    this._indicator = this.svgOptionGroup.line(0, 0, d, a);
+    this._indicator = this.svgOptionGroup.line(0, 0, c, d);
     this._indicator.attr({class:"entry-angle-indicator"});
   };
-  a.applyValue = function(a) {
-    a = this.optionGroup.val();
-    isNaN(a) || (a = this.modValue(a), this.setValue(a), this.textElement.node.textContent = this.getText(), this.updateGraph(), this.resize());
+  a.applyValue = function() {
+    var a = this.optionGroup.val();
+    isNaN(a) || (a = this.modValue(a), this.setValue(a), this.updateGraph(), this.textElement.node.textContent = this.getValue(), this.optionGroup && this.optionGroup.val(a), this.resize());
   };
   a.resize = function() {
     var a = this.getTextWidth();
     this._header.attr({width:a});
-    this.optionGroup.css({width:a});
+    this.optionGroup && this.optionGroup.css({width:a});
     this.box.set({width:a});
     this._block.view.alignContent();
   };
@@ -14170,6 +14162,8 @@ Entry.FieldAngle.FILL_PATH = "M 0, 0 v -49 A 49,49 0 %LARGE 1 %X,%Y z";
     this.documentDownEvent && (Entry.documentMousedown.detach(this.documentDownEvent), delete this.documentDownEvent);
     this.optionGroup && (this.optionGroup.remove(), delete this.optionGroup);
     this.svgOptionGroup && (this.svgOptionGroup.remove(), delete this.svgOptionGroup);
+    this.textElement.node.textContent = this.getText();
+    this.resize();
   };
 })(Entry.FieldAngle.prototype);
 Entry.FieldColor = function(a, b, c) {

@@ -88,7 +88,7 @@ Entry.BlockView = function(block, board) {
         var templateParams = schema.template.split(reg);
         var params = schema.params;
         for (var i=0; i<templateParams.length; i++) {
-            var param = templateParams[i];
+            var param = templateParams[i].trim();
             if (param.length === 0) continue;
             if (reg.test(param)) {
                 var paramIndex = Number(param.split('%')[1]) - 1;

@@ -838,14 +838,12 @@ Entry.block.test = {
     skeleton: "basic",
     mode: "maze",
     color: "#3BBD70",
-    contents: [
-        "키를 눌렀을 때",
+    template: "키를 눌렀을 때 %1",
+    params: [
         {
             type: "Angle",
-            key: "ANGLE",
             value: 550
-        },
-        "키를 눌렀을 때"
+        }
     ],
     func: function() {
     }

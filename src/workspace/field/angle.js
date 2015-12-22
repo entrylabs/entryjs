@@ -26,13 +26,13 @@ Entry.FieldAngle = function(content, blockView, index) {
 
 Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
 
-Entry.FieldAngle.RADIUS = 49;
-Entry.FieldAngle.FILL_PATH = 'M 0, 0 v -49 A 49,49 0 %LARGE 1 %X,%Y z';
 
 (function(p) {
     var X_PADDING = 8,
         TEXT_Y_PADDING = 4,
-        CONTENT_HEIGHT = 16;
+        CONTENT_HEIGHT = 16,
+        RADIUS = 49,
+        FILL_PATH = 'M 0, 0 v -49 A 49,49 0 %LARGE 1 %X,%Y z';
 
     p.renderStart = function(blockView) {
         var that = this;
@@ -125,42 +125,12 @@ Entry.FieldAngle.FILL_PATH = 'M 0, 0 v -49 A 49,49 0 %LARGE 1 %X,%Y z';
         this.optionGroup.select();
 
         //svg option dom
-        var RADIUS = Entry.FieldAngle.RADIUS;
         this.svgOptionGroup = this.appendSvgOptionGroup();
         var circle = this.svgOptionGroup.circle(
             0, 0, RADIUS
         );
 
         circle.attr({class:'entry-field-angle-circle'});
-
-        //TODO
-        this.svgOptionGroup.mousemove(function(e){
-            var mousePos = [e.clientX, e.clientY];
-
-            var absolutePos = that.getAbsolutePos();
-            var zeroPos = [
-                absolutePos.x + that.box.width/2,
-                absolutePos.y + that.box.height/2
-            ];
-            var centerPos = [
-                absolutePos.x + that.box.width/2,
-                zeroPos[1] + RADIUS
-            ];
-            var angle = compute(mousePos, centerPos, zeroPos);
-            function compute(p0, p1, p2) {
-                if (Math.floor(p0[0]) == Math.floor(p1[0])) return 180;
-                var a = Math.pow(p1[0]-p0[0],2) + Math.pow(p1[1]-p0[1],2),
-                    b = Math.pow(p1[0]-p2[0],2) + Math.pow(p1[1]-p2[1],2),
-                    c = Math.pow(p2[0]-p0[0],2) + Math.pow(p2[1]-p0[1],2);
-                return Entry.toDegrees(Math.acos( (a+b-c) / Math.sqrt(4*a*b)));
-            }
-
-            angle = Math.round(angle / 15) * 15;
-            if (mousePos[0] < centerPos[0]) angle = 360 - angle;
-
-            that.setValue(angle);
-            that.applyValue();
-        });
 
         this._dividerGroup = this.svgOptionGroup.group();
         for (var a = 0; a < 360; a += 15) {
@@ -174,26 +144,49 @@ Entry.FieldAngle.FILL_PATH = 'M 0, 0 v -49 A 49,49 0 %LARGE 1 %X,%Y z';
         }
         var pos = this.getRelativePos();
         pos.x = pos.x + this.box.width/2;
-        pos.y = pos.y + this.box.height/2 + Entry.FieldAngle.RADIUS + 1;
+        pos.y = pos.y + this.box.height/2 + RADIUS + 1;
 
         this.svgOptionGroup.attr({
             class: 'entry-field-angle',
             transform: "t" + pos.x + " " + pos.y
         });
+
+        //TODO
+        var absolutePos = that.getAbsolutePos();
+        var zeroPos = [
+            absolutePos.x + that.box.width/2,
+            absolutePos.y + that.box.height/2 + 1
+        ];
+        this.svgOptionGroup.mousemove(function(e){
+            var mousePos = [e.clientX, e.clientY];
+
+            var angle = compute(zeroPos, mousePos);
+            function compute(zeroPos, mousePos) {
+                var dx = mousePos[0] - zeroPos[0];
+                var dy = mousePos[1] - zeroPos[1] - RADIUS - 1;
+                var angle = Math.atan(-dy / dx);
+                angle = Entry.toDegrees(angle);
+                angle = 90 - angle;
+                if (dx < 0) angle += 180;
+                else if (dy > 0) angle += 360;
+                return Math.round(angle / 15) * 15;
+            }
+            that.optionGroup.val(that.modValue(angle));
+            that.applyValue();
+        });
+        this.updateGraph();
     };
 
     p.updateGraph = function() {
         if (this._fillPath) this._fillPath.remove();
 
-        var RADIUS = Entry.FieldAngle.RADIUS;
-        console.log(this.getValue());
         var angleRadians = Entry.toRadian(this.getValue());
         var x = Math.sin(angleRadians) * RADIUS;
         var y = Math.cos(angleRadians) * -RADIUS;
         var largeFlag = (angleRadians > Math.PI) ? 1 : 0;
 
         this._fillPath = this.svgOptionGroup.path(
-            Entry.FieldAngle.FILL_PATH.
+            FILL_PATH.
                 replace('%X', x).
                 replace('%Y', y).
                 replace('%LARGE', largeFlag)
@@ -204,22 +197,20 @@ Entry.FieldAngle.FILL_PATH = 'M 0, 0 v -49 A 49,49 0 %LARGE 1 %X,%Y z';
 
         if (this._indicator) this._indicator.remove();
 
-        this._indicator = this.svgOptionGroup.line(
-            0,0, x,y
-        );
+        this._indicator =
+            this.svgOptionGroup.line(0,0, x,y);
 
         this._indicator.attr({class:'entry-angle-indicator'});
-
-
     };
 
-    p.applyValue = function(event) {
+    p.applyValue = function() {
         var value = this.optionGroup.val();
         if (isNaN(value)) return;
         value = this.modValue(value);
         this.setValue(value);
-        this.textElement.node.textContent = this.getText();
         this.updateGraph();
+        this.textElement.node.textContent = this.getValue();
+        if (this.optionGroup) this.optionGroup.val(value);
         this.resize();
     };
 
@@ -227,7 +218,8 @@ Entry.FieldAngle.FILL_PATH = 'M 0, 0 v -49 A 49,49 0 %LARGE 1 %X,%Y z';
         var width = this.getTextWidth();
 
         this._header.attr({width: width});
-        this.optionGroup.css({width: width});
+        if (this.optionGroup)
+            this.optionGroup.css({width: width});
 
         this.box.set({width: width});
         this._block.view.alignContent();
@@ -241,9 +233,7 @@ Entry.FieldAngle.FILL_PATH = 'M 0, 0 v -49 A 49,49 0 %LARGE 1 %X,%Y z';
         return this.getValue() + '\u00B0';
     };
 
-    p.modValue = function(value) {
-        return value % 360;
-    };
+    p.modValue = function(value) {return value % 360;};
 
     p.destroyOption = function() {
         if (this.documentDownEvent) {
@@ -260,8 +250,8 @@ Entry.FieldAngle.FILL_PATH = 'M 0, 0 v -49 A 49,49 0 %LARGE 1 %X,%Y z';
             this.svgOptionGroup.remove();
             delete this.svgOptionGroup;
         }
+        this.textElement.node.textContent = this.getText();
+        this.resize();
     };
-
-
 })(Entry.FieldAngle.prototype);
 
