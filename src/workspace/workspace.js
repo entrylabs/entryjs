@@ -25,13 +25,14 @@ Entry.Workspace = function(options) {
         this.vimBoard.workspace = this;
     }
 
+    if (this.board && this.vimBoard)
+        this.vimBoard.hide();
+
     this.mode = Entry.Workspace.MODE_BOARD;
 };
 
 Entry.Workspace.MODE_BOARD = 0;
 Entry.Workspace.MODE_VIMBOARD = 1;
-
-
 
 (function(p) {
     p.getBoard = function(){return this.board;};
@@ -46,10 +47,10 @@ Entry.Workspace.MODE_VIMBOARD = 1;
         if (this.mode == mode) return;
         this.mode = mode;
         if (mode == Entry.Workspace.MODE_VIMBOARD) {
-            this.board.hide();
+            if (this.board) this.board.hide();
             this.vimBoard.show();
         } else {
-            this.vimBoard.hide();
+            if (this.vimBoard) this.vimBoard.hide();
             this.board.show();
         }
     };
