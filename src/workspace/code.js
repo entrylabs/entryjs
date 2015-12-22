@@ -126,7 +126,7 @@ Entry.Code = function(code) {
     };
 
     p.getThreads = function() {
-        return this._data.map(function(t){return t});
+        return this._data.map(function(t){return t;});
     };
 
     p.toJSON = function() {

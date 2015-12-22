@@ -136,10 +136,10 @@ Entry.Block.MAGNET_OFFSET = 0.4;
         if (isNew)
             delete json.id;
 
-        json.params = json.params.map(function(p) {return p});
+        json.params = json.params.map(function(p) {return p;});
 
         json.statements = json.statements.map(
-            function(s) {return s.toJSON(isNew)}
+            function(s) {return s.toJSON(isNew);}
         );
         return json;
     };

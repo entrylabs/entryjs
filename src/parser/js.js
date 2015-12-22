@@ -48,7 +48,7 @@ Entry.JSParser = function(syntax) {
         return {
             type: null,
             body: this[body.type](body)
-        }
+        };
     };
 
     p.BlockStatement = function(node) {
@@ -69,14 +69,14 @@ Entry.JSParser = function(syntax) {
 
     p.DebuggerStatement = function(node) {
         return new Error();
-    }
+    };
 
     p.WithStatement = function(node) {
         var object = node.object,
             body = node.body;
 
         return new Error();
-    }
+    };
 
     //control flow
     p.ReturnStaement = function(node) {
@@ -102,7 +102,7 @@ Entry.JSParser = function(syntax) {
         var label = node.label;
 
         return new Error();
-    }
+    };
 
     p.IfStatement = function(node) {
         var test = node.test,
@@ -114,14 +114,14 @@ Entry.JSParser = function(syntax) {
             consequent : consequent,
             alternate : alternate
         };
-    }
+    };
 
     p.SwitchStatement = function(node) {
         var discriminant = node.discriminant,
             cases = node.cases;
 
         return new Error();
-    }
+    };
 
     p.SwitchCase = function(node) {
         var test = node.test,
@@ -136,7 +136,7 @@ Entry.JSParser = function(syntax) {
         var args = node.arguments;
 
         return new Error();
-    }
+    };
 
     p.TryStatement = function(node) {
         var block = node.block,
@@ -144,28 +144,28 @@ Entry.JSParser = function(syntax) {
             finalizer = node.finalizer;
 
         return new Error();
-    }
+    };
 
     p.CatchClause = function(node) {
         var param = node.param,
             body = node.body;
 
         return new Error();
-    }
+    };
 
     p.WhileStatement = function(node) {
-        test = node.test,
-        body = node.body;
+        var test = node.test,
+            body = node.body;
 
         return new Error();
-    }
+    };
 
     p.DoWhileStatement = function(node) {
         var body = node.body,
             test = node.test;
 
         return new Error();
-    }
+    };
 
 
     p.ForInStatement = function(node) {
@@ -174,7 +174,7 @@ Entry.JSParser = function(syntax) {
             body = node.body;
 
         return new Error();
-    }
+    };
 
     //Declaration
 
@@ -239,7 +239,7 @@ Entry.JSParser = function(syntax) {
 
     p.UnaryOperator = function(){
         return  ["-" , "+" , "!" , "~" , "typeof" , "void" , "delete"];
-    }
+    };
 
     p.updateOperator = function() {
         return ["++" , "--"];
@@ -247,13 +247,14 @@ Entry.JSParser = function(syntax) {
 
     //Binary expression
     p.BinaryOperator = function() {
-
-        return ["==" , "!=" , "===" , "!=="
-         , "<" , "<=" , ">" , ">="
-         , "<<" , ">>" , ">>>"
-         , "+" , "-" , "*" , "/" , "%"
-         , "," , "^" , "&" , "in"
-         , "instanceof"];
+        return [
+            "==" , "!=" , "===" , "!==",
+            "<" , "<=" , ">" , ">=",
+            "<<" , ">>" , ">>>",
+            "+" , "-" , "*" , "/" , "%",
+            "," , "^" , "&" , "in",
+            "instanceof"
+        ];
     };
 
     p.AssignmentExpression = function(node) {
@@ -265,10 +266,11 @@ Entry.JSParser = function(syntax) {
     };
 
     p.AssignmentOperator = function() {
-
-        return ["=" , "+=" , "-=" , "*=" , "/=" , "%="
-        , "<<=" , ">>=" , ">>>="
-        , ",=" , "^=" , "&="];
+        return [
+            "=" , "+=" , "-=" , "*=" , "/=" , "%=",
+            "<<=" , ">>=" , ">>>=",
+            ",=" , "^=" , "&="
+        ];
     };
 
     p.LogicalExpression = function(node) {

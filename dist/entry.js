@@ -8594,8 +8594,6 @@ Entry.JSParser = function(a) {
     return Error();
   };
   a.WhileStatement = function(a) {
-    test = a.test;
-    body = a.body;
     return Error();
   };
   a.DoWhileStatement = function(a) {
@@ -13349,7 +13347,7 @@ Entry.block.maze_call_function = {skeleton:"basic", mode:"maze", color:"#B57242"
   if (!this.funcExecutor) {
     var a = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.CODE), b;
     for (b in a) {
-      code = a[b].components[Ntry.STATIC.CODE].code, this.funcExecutor = new Entry.Executor(code.getEventMap("define")[0]);
+      this.funcExecutor = new Entry.Executor(a[b].components[Ntry.STATIC.CODE].code.getEventMap("define")[0]);
     }
   }
   this.funcExecutor.execute();

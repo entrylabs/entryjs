@@ -1062,7 +1062,7 @@ Entry.block.maze_call_function = {
             Ntry.STATIC.CODE);
 
             for (var key in codes) {
-                code = codes[key].components[Ntry.STATIC.CODE].code;
+                var code = codes[key].components[Ntry.STATIC.CODE].code;
                 this.funcExecutor = new Entry.Executor(
                     code.getEventMap("define")[0]
                 );

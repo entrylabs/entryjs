@@ -25,6 +25,7 @@
         "mina": true,
         "Touch": true,
         "io": true,
-        "ActiveXObject": true
+        "ActiveXObject": true,
+        "CodeMirror": true
     }
 }
