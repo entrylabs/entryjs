@@ -45,6 +45,7 @@ Entry.Workspace.MODE_VIMBOARD = 1;
     p.getMode = function() {return this.mode;};
 
     p.setMode = function(mode){
+        mode = Number(mode);
         if (this.mode == mode) return;
         this.mode = mode;
         if (mode == Entry.Workspace.MODE_VIMBOARD) {
@@ -72,6 +73,7 @@ Entry.Workspace.MODE_VIMBOARD = 1;
 
     p.textToCode = function() {
         if (this.mode !== Entry.Workspace.MODE_VIMBOARD) return;
+        var a = this.vimBoard.textToCode();
     };
 
     p.codeToText = function(code) {
