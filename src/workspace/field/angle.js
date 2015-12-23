@@ -160,7 +160,8 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
         this.svgOptionGroup.mousemove(function(e){
             var mousePos = [e.clientX, e.clientY];
 
-            var angle = compute(zeroPos, mousePos);
+            that.optionGroup.val(that.modValue(
+                compute(zeroPos, mousePos)));
             function compute(zeroPos, mousePos) {
                 var dx = mousePos[0] - zeroPos[0];
                 var dy = mousePos[1] - zeroPos[1] - RADIUS - 1;
@@ -171,7 +172,6 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
                 else if (dy > 0) angle += 360;
                 return Math.round(angle / 15) * 15;
             }
-            that.optionGroup.val(that.modValue(angle));
             that.applyValue();
         });
         this.updateGraph();

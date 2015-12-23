@@ -14119,11 +14119,11 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
     this.svgOptionGroup.attr({class:"entry-field-angle", transform:"t" + c.x + " " + c.y});
     var c = a.getAbsolutePos(), d = [c.x + a.box.width / 2, c.y + a.box.height / 2 + 1];
     this.svgOptionGroup.mousemove(function(c) {
-      var f = [c.clientX, c.clientY];
-      c = f[0] - d[0];
-      var f = f[1] - d[1] - 49 - 1, g = Math.atan(-f / c), g = Entry.toDegrees(g), g = 90 - g;
-      0 > c ? g += 180 : 0 < f && (g += 360);
-      a.optionGroup.val(a.modValue(15 * Math.round(g / 15)));
+      a.optionGroup.val(a.modValue(function(a, b) {
+        var c = b[0] - a[0], d = b[1] - a[1] - 49 - 1, e = Math.atan(-d / c), e = Entry.toDegrees(e), e = 90 - e;
+        0 > c ? e += 180 : 0 < d && (e += 360);
+        return 15 * Math.round(e / 15);
+      }(d, [c.clientX, c.clientY])));
       a.applyValue();
     });
     this.updateGraph();
