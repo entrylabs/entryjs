@@ -15420,7 +15420,7 @@ Entry.Workspace.MODE_VIMBOARD = 1;
   };
   a.setMode = function(a) {
     a = Number(a);
-    this.mode != a && (this.mode = a, a == Entry.Workspace.MODE_VIMBOARD ? (this.board && this.board.hide(), this.selectedBoard = this.vimBoard, this.vimBoard.show(), this.vimBoard.codeToText(this.board.code)) : (this.vimBoard && this.vimBoard.hide(), this.selectedBoard = this.board, this.board.show(), a = this.vimBoard.textToCode(), this.board.code.load(a), this.board.alignThreads()));
+    this.mode != a && (this.mode = a, a == Entry.Workspace.MODE_VIMBOARD ? (this.board && this.board.hide(), this.selectedBoard = this.vimBoard, this.vimBoard.show(), this.vimBoard.codeToText(this.board.code)) : (this.vimBoard && this.vimBoard.hide(), this.selectedBoard = this.board, this.board.show(), this.textToCode()));
   };
   a.changeBoardCode = function(a) {
     this.selectedBoard.changeCode(a);
@@ -15429,10 +15429,12 @@ Entry.Workspace.MODE_VIMBOARD = 1;
     this.blockMenu.changeCode(a);
   };
   a.textToCode = function() {
-    this.mode === Entry.Workspace.MODE_VIMBOARD && this.vimBoard.textToCode();
+    var a = this.vimBoard.textToCode();
+    this.board.code.load(a);
+    this.board.alignThreads();
   };
   a.codeToText = function(a) {
-    this.mode === Entry.Workspace.MODE_VIMBOARD && this.vimBoard.codeToText(a);
+    this.vimBoard.codeToText(a);
   };
 })(Entry.Workspace.prototype);
 Entry.Xml = {};

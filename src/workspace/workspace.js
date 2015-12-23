@@ -57,9 +57,7 @@ Entry.Workspace.MODE_VIMBOARD = 1;
             if (this.vimBoard) this.vimBoard.hide();
             this.selectedBoard = this.board;
             this.board.show();
-            var changedCode = this.vimBoard.textToCode();
-            this.board.code.load(changedCode);
-            this.board.alignThreads();
+            this.textToCode();
         }
     };
 
@@ -72,12 +70,12 @@ Entry.Workspace.MODE_VIMBOARD = 1;
     };
 
     p.textToCode = function() {
-        if (this.mode !== Entry.Workspace.MODE_VIMBOARD) return;
-        var a = this.vimBoard.textToCode();
+        var changedCode = this.vimBoard.textToCode();
+        this.board.code.load(changedCode);
+        this.board.alignThreads();
     };
 
     p.codeToText = function(code) {
-        if (this.mode !== Entry.Workspace.MODE_VIMBOARD) return;
         this.vimBoard.codeToText(code);
     };
 
