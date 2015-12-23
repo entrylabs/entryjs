@@ -10544,7 +10544,7 @@ Entry.removeEventListener = function(a, b) {
   }
 };
 Entry.removeAllEventListener = function(a) {
-  a && delete this.events_[a];
+  this.events_ && this.events_[a] && delete this.events_[a];
 };
 Entry.addTwoNumber = function(a, b) {
   if (isNaN(a) || isNaN(b)) {
