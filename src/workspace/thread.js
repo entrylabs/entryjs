@@ -17,6 +17,7 @@ Entry.Thread = function(thread, code) {
     this._code = code;
     this.changeEvent = new Entry.Event(this);
     this.changeEvent.attach(this, this.inspectExist);
+    this._event;
 
     this.load(thread);
 };
@@ -61,6 +62,7 @@ Entry.Thread = function(thread, code) {
     };
 
     p.registerEvent = function(block, eventType) {
+        this._event = eventType;
         this._code.registerEvent(block, eventType);
     };
 
@@ -203,6 +205,8 @@ Entry.Thread = function(thread, code) {
     };
 
     p.toJS = function() {
+        if (!this._event)
+            return "";
         var textCode = "";
         for (var i = 0; i < this._data.length; i++) {
             var block = this._data[i];

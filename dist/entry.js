@@ -14991,6 +14991,7 @@ Entry.Thread = function(a, b) {
   this._code = b;
   this.changeEvent = new Entry.Event(this);
   this.changeEvent.attach(this, this.inspectExist);
+  this._event;
   this.load(a);
 };
 (function(a) {
@@ -15021,6 +15022,7 @@ Entry.Thread = function(a, b) {
     }
   };
   a.registerEvent = function(a, c) {
+    this._event = c;
     this._code.registerEvent(a, c);
   };
   a.createView = function(a) {
@@ -15106,6 +15108,9 @@ Entry.Thread = function(a, b) {
     this.changeEvent.notify();
   };
   a.toJS = function() {
+    if (!this._event) {
+      return "";
+    }
     for (var a = "", c = 0;c < this._data.length;c++) {
       a += this._data[c].toJS();
     }
