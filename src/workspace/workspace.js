@@ -47,7 +47,7 @@ Entry.Workspace.MODE_VIMBOARD = 1;
     p.setMode = function(mode){
         mode = Number(mode);
         if (this.mode == mode) return;
-        this.mode = mode;
+        var originMode = this.mode;
         if (mode == Entry.Workspace.MODE_VIMBOARD) {
             if (this.board) this.board.hide();
             this.selectedBoard = this.vimBoard;
@@ -57,8 +57,9 @@ Entry.Workspace.MODE_VIMBOARD = 1;
             if (this.vimBoard) this.vimBoard.hide();
             this.selectedBoard = this.board;
             this.board.show();
-            this.textToCode();
+            this.textToCode(originMode);
         }
+        this.mode = mode;
     };
 
     p.changeBoardCode = function(code) {
@@ -70,6 +71,7 @@ Entry.Workspace.MODE_VIMBOARD = 1;
     };
 
     p.textToCode = function() {
+        if (this.mode != Entry.Workspace.MODE_VIMBOARD) return;
         var changedCode = this.vimBoard.textToCode();
         this.board.code.load(changedCode);
         this.board.alignThreads();
