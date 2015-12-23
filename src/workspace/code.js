@@ -36,11 +36,21 @@ Entry.Code = function(code) {
         if (!(code instanceof Array))
             return console.error("code must be array");
 
-        for (var i = this._data.length - 1; i >= 0; i--)
-            this._data[i].getFirstBlock().destroy();
+        this.clear();
 
         for (var i = 0; i < code.length; i++)
             this._data.push(new Entry.Thread(code[i], this));
+
+        return this;
+    };
+
+    p.clear = function() {
+        for (var i = this._data.length - 1; i >= 0; i--)
+            this._data[i].getFirstBlock().destroy();
+
+        this.clearExecutors();
+
+        this._eventMap = {};
     };
 
     p.createView = function(board) {

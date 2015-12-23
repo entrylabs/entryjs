@@ -13896,12 +13896,18 @@ Entry.Code = function(a) {
     if (!(a instanceof Array)) {
       return console.error("code must be array");
     }
-    for (var c = this._data.length - 1;0 <= c;c--) {
-      this._data[c].getFirstBlock().destroy();
-    }
-    for (c = 0;c < a.length;c++) {
+    this.clear();
+    for (var c = 0;c < a.length;c++) {
       this._data.push(new Entry.Thread(a[c], this));
     }
+    return this;
+  };
+  a.clear = function() {
+    for (var a = this._data.length - 1;0 <= a;a--) {
+      this._data[a].getFirstBlock().destroy();
+    }
+    this.clearExecutors();
+    this._eventMap = {};
   };
   a.createView = function(a) {
     null === this.view ? this.set({view:new Entry.CodeView(this, a), board:a}) : (this.set({board:a}), a.bindCodeView(this.view));
