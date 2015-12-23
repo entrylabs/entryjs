@@ -202,4 +202,13 @@ Entry.Thread = function(thread, code) {
         this.changeEvent.notify();
     };
 
+    p.toJS = function() {
+        var textCode = "";
+        for (var i = 0; i < this._data.length; i++) {
+            var block = this._data[i];
+            textCode += block.toJS();
+        }
+        return textCode;
+    };
+
 })(Entry.Thread.prototype);

@@ -758,6 +758,7 @@ Entry.block.maze_step_jump = {
             size: 24
         }
     ],
+    syntax: ["this", "jump"],
     func: function() {
         if (!this.isContinue) {
 
@@ -1251,7 +1252,7 @@ Entry.block.maze_step_move_step = {
     mode: "maze",
     color: "#A751E3",
     template: "앞으로 가기 %1",
-    syntax: ["ThisObject", "move"],
+    syntax: ["this", "move"],
     params: [
         {
             type: "Image",
@@ -1286,6 +1287,7 @@ Entry.block.maze_step_rotate_left= {
     mode: "maze",
     color: "#A751E3",
     template: "왼쪽으로 돌기 %1",
+    syntax: ["this", "left"],
     params: [
         {
             type: "Image",
@@ -1321,6 +1323,7 @@ Entry.block.maze_step_rotate_right = {
     mode: "maze",
     color: "#A751E3",
     template: "오른쪽으로 돌기 %1",
+    syntax: ["this", "right"],
     params: [
         {
             type: "Image",

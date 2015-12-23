@@ -200,7 +200,7 @@ Entry.JSParser = function(syntax) {
 
     // Expression
     p.ThisExpression = function(node) {
-        return this.syntax.ThisObject;
+        return this.syntax.this;
     };
 
     p.ArrayExpression = function(node) {

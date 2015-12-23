@@ -328,4 +328,13 @@ Entry.Block.MAGNET_OFFSET = 0.4;
         return true;
     };
 
+    p.toJS = function() {
+        var syntax = this._schema.syntax;
+        if (!syntax || this._schema.event)
+            return "";
+        else {
+            return syntax.join(".") + "();\n";
+        }
+    };
+
 })(Entry.Block.prototype);
