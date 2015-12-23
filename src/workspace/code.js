@@ -36,6 +36,8 @@ Entry.Code = function(code) {
         if (!(code instanceof Array))
             return console.error("code must be array");
 
+        for (var i = 0; i<this._data.length; i++)
+            this._data[i].destroy(false);
         this._data.clear();
         for (var i = 0; i < code.length; i++) {
             this._data.push(new Entry.Thread(code[i], this));

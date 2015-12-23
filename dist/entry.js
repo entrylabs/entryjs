@@ -13896,8 +13896,11 @@ Entry.Code = function(a) {
     if (!(a instanceof Array)) {
       return console.error("code must be array");
     }
+    for (var c = 0;c < this._data.length;c++) {
+      this._data[c].destroy(!1);
+    }
     this._data.clear();
-    for (var c = 0;c < a.length;c++) {
+    for (c = 0;c < a.length;c++) {
       this._data.push(new Entry.Thread(a[c], this));
     }
   };
@@ -15361,7 +15364,7 @@ Entry.Workspace.MODE_VIMBOARD = 1;
     return this.mode;
   };
   a.setMode = function(a) {
-    this.mode != a && (this.mode = a, a == Entry.Workspace.MODE_VIMBOARD ? (this.board && this.board.hide(), this.selectedBoard = this.vimBoard, this.vimBoard.show()) : (this.vimBoard && this.vimBoard.hide(), this.selectedBoard = this.board, this.board.show(), a = this.vimBoard.textToCode(), console.log(a), this.board.code.load(a)));
+    this.mode != a && (this.mode = a, a == Entry.Workspace.MODE_VIMBOARD ? (this.board && this.board.hide(), this.selectedBoard = this.vimBoard, this.vimBoard.show()) : (this.vimBoard && this.vimBoard.hide(), this.selectedBoard = this.board, this.board.show(), a = this.vimBoard.textToCode(), this.board.code.load(a)));
   };
   a.changeBoardCode = function(a) {
     this.selectedBoard.changeCode(a);
