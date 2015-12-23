@@ -13896,6 +13896,7 @@ Entry.Code = function(a) {
     if (!(a instanceof Array)) {
       return console.error("code must be array");
     }
+    this._data.clear();
     for (var c = 0;c < a.length;c++) {
       this._data.push(new Entry.Thread(a[c], this));
     }
@@ -15310,12 +15311,13 @@ Entry.Vim = function(a) {
     return console.error("Dom is not div element");
   }
   this.createDom(a);
+  this._parser = new Entry.Parser("maze");
   Entry.Model(this, !1);
 };
 (function(a) {
   a.createDom = function(a) {
     this.view = Entry.Dom("div", {parent:a, class:"entryVimBoard"});
-    this.codeMirror = CodeMirror(this.view[0], {lineNumbers:!0, value:"this.move();\nthat.move();\nthis.move();\n", mode:{name:"javascript", globalVars:!0}, theme:"default", indentUnit:4, styleActiveLine:!0, extraKeys:{"Ctrl-Space":"autocomplete"}, lint:!0});
+    this.codeMirror = CodeMirror(this.view[0], {lineNumbers:!0, value:"this.move();\nthis.move();\nthis.move();\n", mode:{name:"javascript", globalVars:!0}, theme:"default", indentUnit:4, styleActiveLine:!0, extraKeys:{"Shift-Space":"autocomplete"}, lint:!0});
   };
   a.hide = function() {
     this.view.addClass("entryRemove");
@@ -15324,7 +15326,8 @@ Entry.Vim = function(a) {
     this.view.removeClass("entryRemove");
   };
   a.textToCode = function() {
-    return code;
+    var a = this.codeMirror.getValue();
+    return [this._parser.parse(a)];
   };
   a.codeToText = function(a) {
   };
@@ -15358,7 +15361,7 @@ Entry.Workspace.MODE_VIMBOARD = 1;
     return this.mode;
   };
   a.setMode = function(a) {
-    this.mode != a && (this.mode = a, a == Entry.Workspace.MODE_VIMBOARD ? (this.board && this.board.hide(), this.selectedBoard = this.vimBoard, this.vimBoard.show()) : (this.vimBoard && this.vimBoard.hide(), this.selectedBoard = this.board, this.board.show()));
+    this.mode != a && (this.mode = a, a == Entry.Workspace.MODE_VIMBOARD ? (this.board && this.board.hide(), this.selectedBoard = this.vimBoard, this.vimBoard.show()) : (this.vimBoard && this.vimBoard.hide(), this.selectedBoard = this.board, this.board.show(), a = this.vimBoard.textToCode(), console.log(a), this.board.code.load(a)));
   };
   a.changeBoardCode = function(a) {
     this.selectedBoard.changeCode(a);

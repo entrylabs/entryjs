@@ -55,6 +55,9 @@ Entry.Workspace.MODE_VIMBOARD = 1;
             if (this.vimBoard) this.vimBoard.hide();
             this.selectedBoard = this.board;
             this.board.show();
+            var changedCode = this.vimBoard.textToCode();
+            console.log(changedCode);
+            this.board.code.load(changedCode);
         }
     };
 

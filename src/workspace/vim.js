@@ -13,6 +13,8 @@ Entry.Vim = function(dom) {
 
     this.createDom(dom);
 
+    this._parser = new Entry.Parser("maze");
+
     Entry.Model(this, false);
 };
 
@@ -26,28 +28,29 @@ Entry.Vim = function(dom) {
 
         this.codeMirror = CodeMirror(this.view[0], {
             lineNumbers: true,
-            value: "this.move();\nthat.move();\nthis.move();\n",
+            value: "this.move();\nthis.move();\nthis.move();\n",
             mode:  {name:"javascript", globalVars: true},
             theme: "default",
             indentUnit: 4,
             styleActiveLine: true,
-            extraKeys: {"Ctrl-Space": "autocomplete"},
+            extraKeys: {"Shift-Space": "autocomplete"},
             // gutters: ["CodeMirror-lint-markers"],
             lint: true
         });
     };
 
-    p.hide = function() {this.view.addClass('entryRemove');};
+    p.hide = function() {
+        this.view.addClass('entryRemove');
+    };
 
     p.show = function() {this.view.removeClass('entryRemove');};
 
     p.textToCode = function() {
-        return code;
+        var textCode = this.codeMirror.getValue();
+        return [this._parser.parse(textCode)];
     };
 
     p.codeToText = function(code) {
-
     };
+
 })(Entry.Vim.prototype);
-
-
