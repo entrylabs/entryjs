@@ -58,6 +58,7 @@ Entry.Workspace.MODE_VIMBOARD = 1;
             this.board.show();
             var changedCode = this.vimBoard.textToCode();
             this.board.code.load(changedCode);
+            this.board.alignThreads();
         }
     };
 
