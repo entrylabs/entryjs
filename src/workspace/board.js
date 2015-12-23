@@ -250,4 +250,32 @@ Entry.Board = function(dom) {
         this.wrapper.removeClass('entryRemove');
         this.trashcan.setPosition();
     };
+
+    p.alignThreads = function() {
+        var domHeight = this.svgDom.height();
+        var threads = this.code.getThreads();
+
+        var verticalGap = 15;
+        var acculmulatedTop = 15;
+        var columWidth = 0;
+        var limitTopPosition = domHeight - 30;
+        var left = 50;
+
+        for (var i =0; i < threads.length; i++) {
+            var block = threads[i].getFirstBlock();
+            var blockView = block.view;
+            var bBox = blockView.svgGroup.getBBox();
+            var top = acculmulatedTop + verticalGap;
+            if (top > limitTopPosition) {
+                left = left + columWidth + 10;
+                columWidth = 0;
+                acculmulatedTop = 15;
+            }
+            columWidth = Math.max(columWidth, bBox.width);
+            top = acculmulatedTop + verticalGap;
+            blockView._moveTo(left, top, false);
+            acculmulatedTop = acculmulatedTop + bBox.height + verticalGap;
+        }
+        this.scroller.resizeScrollBar();
+    };
 })(Entry.Board.prototype);

@@ -15307,6 +15307,17 @@ Entry.Board = function(a) {
     this.wrapper.removeClass("entryRemove");
     this.trashcan.setPosition();
   };
+  a.alignThreads = function() {
+    for (var a = this.svgDom.height(), c = this.code.getThreads(), d = 15, e = 0, a = a - 30, f = 50, g = 0;g < c.length;g++) {
+      var h = c[g].getFirstBlock().view, k = h.svgGroup.getBBox(), l = d + 15;
+      l > a && (f = f + e + 10, e = 0, d = 15);
+      e = Math.max(e, k.width);
+      l = d + 15;
+      h._moveTo(f, l, !1);
+      d = d + k.height + 15;
+    }
+    this.scroller.resizeScrollBar();
+  };
 })(Entry.Board.prototype);
 Entry.Vim = function(a) {
   a = "string" === typeof a ? $("#" + a) : $(a);
