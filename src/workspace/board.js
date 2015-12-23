@@ -45,6 +45,8 @@ Entry.Board = function(dom) {
     this.offset.top = 130;
     this.offset.left -= $(window).scrollLeft();
     this.relativeOffset = this.offset;
+
+    this.visible = true;
     var that = this;
     $(window).scroll(updateOffset);
     Entry.windowResized.attach(this, updateOffset);
@@ -79,6 +81,8 @@ Entry.Board = function(dom) {
 
     this.changeEvent = new Entry.Event(this);
     this.scroller = new Entry.Scroller(this, true, true);
+
+    Entry.Utils.disableContextmenu(this.svgDom);
 
     this._addControl(dom);
     if (Entry.documentMousedown)
@@ -183,6 +187,22 @@ Entry.Board = function(dom) {
                 offsetX: e.pageX,
                 offsetY: e.pageY
             });
+        } else if (Entry.Utils.isRightButton(e)) {
+            if (!this.visible) return;
+            var that = this;
+
+            var options = [];
+
+            var align = {
+                text: '블록 정리하기',
+                callback: function(){
+                    that.alignThreads();
+                }
+            };
+
+            options.push(align);
+
+            Entry.ContextMenu.show(options);
         }
 
         var board = this;
@@ -244,10 +264,12 @@ Entry.Board = function(dom) {
 
     p.hide = function() {
         this.wrapper.addClass('entryRemove');
+        this.visible = false;
     };
 
     p.show = function() {
         this.wrapper.removeClass('entryRemove');
+        this.visible = true;
         this.trashcan.setPosition();
     };
 

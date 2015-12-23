@@ -15200,6 +15200,7 @@ Entry.Board = function(a) {
   this.offset.top = 130;
   this.offset.left -= $(window).scrollLeft();
   this.relativeOffset = this.offset;
+  this.visible = !0;
   var c = this;
   $(window).scroll(b);
   Entry.windowResized.attach(this, b);
@@ -15215,6 +15216,7 @@ Entry.Board = function(a) {
   Entry.BOARD_PADDING = 100;
   this.changeEvent = new Entry.Event(this);
   this.scroller = new Entry.Scroller(this, !0, !0);
+  Entry.Utils.disableContextmenu(this.svgDom);
   this._addControl(a);
   Entry.documentMousedown && Entry.documentMousedown.attach(this, this.setSelectedBlock);
   Entry.keyPressed && Entry.keyPressed.attach(this, this._keyboardControl);
@@ -15281,13 +15283,13 @@ Entry.Board = function(a) {
       a.stopPropagation();
       a.preventDefault();
       a.originalEvent.touches && (a = a.originalEvent.touches[0]);
-      var b = f.dragInstance;
-      f.scroller.scroll(a.pageX - b.offsetX, a.pageY - b.offsetY);
+      var b = g.dragInstance;
+      g.scroller.scroll(a.pageX - b.offsetX, a.pageY - b.offsetY);
       b.set({offsetX:a.pageX, offsetY:a.pageY});
     }
     function d(a) {
       $(document).unbind(".entryBoard");
-      delete f.dragInstance;
+      delete g.dragInstance;
     }
     a.originalEvent.touches && (a = a.originalEvent.touches[0]);
     if (0 === a.button || a instanceof Touch) {
@@ -15298,8 +15300,19 @@ Entry.Board = function(a) {
       e.bind("touchmove.entryBoard", c);
       e.bind("touchend.entryBoard", d);
       this.dragInstance = new Entry.DragInstance({startX:a.pageX, startY:a.pageY, offsetX:a.pageX, offsetY:a.pageY});
+    } else {
+      if (Entry.Utils.isRightButton(a)) {
+        if (!this.visible) {
+          return;
+        }
+        var f = this, e = [];
+        e.push({text:"\ube14\ub85d \uc815\ub9ac\ud558\uae30", callback:function() {
+          f.alignThreads();
+        }});
+        Entry.ContextMenu.show(e);
+      }
     }
-    var f = this;
+    var g = this;
     a.stopPropagation();
   };
   a.mouseWheel = function(a) {
@@ -15318,9 +15331,11 @@ Entry.Board = function(a) {
   };
   a.hide = function() {
     this.wrapper.addClass("entryRemove");
+    this.visible = !1;
   };
   a.show = function() {
     this.wrapper.removeClass("entryRemove");
+    this.visible = !0;
     this.trashcan.setPosition();
   };
   a.alignThreads = function() {
