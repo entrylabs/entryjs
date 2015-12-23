@@ -15340,6 +15340,7 @@ Entry.Workspace = function(a) {
   }
   this.board && this.vimBoard && this.vimBoard.hide();
   this.mode = Entry.Workspace.MODE_BOARD;
+  this.selectedBoard = this.board;
 };
 Entry.Workspace.MODE_BOARD = 0;
 Entry.Workspace.MODE_VIMBOARD = 1;
@@ -15357,10 +15358,10 @@ Entry.Workspace.MODE_VIMBOARD = 1;
     return this.mode;
   };
   a.setMode = function(a) {
-    this.mode != a && (this.mode = a, a == Entry.Workspace.MODE_VIMBOARD ? (this.board && this.board.hide(), this.vimBoard.show()) : (this.vimBoard && this.vimBoard.hide(), this.board.show()));
+    this.mode != a && (this.mode = a, a == Entry.Workspace.MODE_VIMBOARD ? (this.board && this.board.hide(), this.selectedBoard = this.vimBoard, this.vimBoard.show()) : (this.vimBoard && this.vimBoard.hide(), this.selectedBoard = this.board, this.board.show()));
   };
   a.changeBoardCode = function(a) {
-    (this.mode == Entry.Workspace.MODE_BOARD ? this.board : this.vimBoard).changeCode(a);
+    this.selectedBoard.changeCode(a);
   };
   a.changeBlockMenuCode = function(a) {
     this.blockMenu.changeCode(a);

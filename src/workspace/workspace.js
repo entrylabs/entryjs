@@ -29,6 +29,7 @@ Entry.Workspace = function(options) {
         this.vimBoard.hide();
 
     this.mode = Entry.Workspace.MODE_BOARD;
+    this.selectedBoard = this.board;
 };
 
 Entry.Workspace.MODE_BOARD = 0;
@@ -48,17 +49,17 @@ Entry.Workspace.MODE_VIMBOARD = 1;
         this.mode = mode;
         if (mode == Entry.Workspace.MODE_VIMBOARD) {
             if (this.board) this.board.hide();
+            this.selectedBoard = this.vimBoard;
             this.vimBoard.show();
         } else {
             if (this.vimBoard) this.vimBoard.hide();
+            this.selectedBoard = this.board;
             this.board.show();
         }
     };
 
     p.changeBoardCode = function(code) {
-        var targetBoard = this.mode == Entry.Workspace.MODE_BOARD ?
-            this.board : this.vimBoard;
-        targetBoard.changeCode(code);
+        this.selectedBoard.changeCode(code);
     };
 
     p.changeBlockMenuCode = function(code) {
