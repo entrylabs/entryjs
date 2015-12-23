@@ -13896,10 +13896,9 @@ Entry.Code = function(a) {
     if (!(a instanceof Array)) {
       return console.error("code must be array");
     }
-    for (var c = 0;c < this._data.length;c++) {
-      this._data[c].destroy(!1);
+    for (var c = this._data.length - 1;0 <= c;c--) {
+      this._data[c].getFirstBlock().destroy();
     }
-    this._data.clear();
     for (c = 0;c < a.length;c++) {
       this._data.push(new Entry.Thread(a[c], this));
     }
