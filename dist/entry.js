@@ -13524,12 +13524,14 @@ Entry.BlockMenu = function(a, b) {
     if (this._boardBlockView) {
       var a = this._boardBlockView;
       if (a) {
-        var c = a.block, d = this.dragBlock, e = d.block, f = this.code, g = this.workspace, h = g.getBoard().code, k = !1;
+        var c = a.block, d = this.dragBlock, e = d.block, f = this.workspace;
+        f.getBoard();
+        var g = !1;
         a.dragMode = 0;
         a.removeDragging();
-        d.x < this._svgWidth ? (k = !0, h.destroyThread(c.getThread(), k)) : c.view.terminateDrag();
-        g.getBoard().set({dragBlock:null});
-        f.destroyThread(e.getThread(), k);
+        d.x < this._svgWidth ? (g = !0, c.destroy(g)) : c.view.terminateDrag();
+        f.getBoard().set({dragBlock:null});
+        e.destroy(g);
         delete a.dragInstance;
         this._boardBlockView = null;
       }
@@ -13916,6 +13918,13 @@ Entry.Code = function(a) {
     this._eventMap[c] || (this._eventMap[c] = []);
     this._eventMap[c].push(a);
   };
+  a.unregisterEvent = function(a, c) {
+    var d = this._eventMap[c];
+    if (d && 0 !== d.length) {
+      var e = d.indexOf(a);
+      0 > e || d.splice(e, 1);
+    }
+  };
   a.raiseEvent = function(a) {
     a = this._eventMap[a];
     if (void 0 !== a) {
@@ -13953,11 +13962,11 @@ Entry.Code = function(a) {
   };
   a.destroyThread = function(a, c) {
     var d = this._data, e = d.indexOf(a);
-    0 > e || (d.splice(e, 1), (d = a.getFirstBlock()) && d.destroy(c));
+    0 > e || d.splice(e, 1);
   };
   a.doDestroyThread = function(a, c) {
     var d = this._data, e = d.indexOf(a);
-    0 > e || (d.splice(e, 1), (d = a.getFirstBlock()) && d.doDestroy(c));
+    0 > e || d.splice(e, 1);
   };
   a.getThreads = function() {
     return this._data.map(function(a) {
@@ -14903,7 +14912,7 @@ Entry.Block.MAGNET_OFFSET = .4;
   };
   a.destroy = function(a) {
     this.view && this.view.destroy(a);
-    (!this.prev || this.prev instanceof Entry.DummyBlock) && this.thread.destroy();
+    (!this.prev || this.prev instanceof Entry.DummyBlock) && this.thread.destroy(a, !1);
     var c = this.statements;
     if (c) {
       for (var d = 0;d < c.length;d++) {
@@ -14912,11 +14921,13 @@ Entry.Block.MAGNET_OFFSET = .4;
         e && e.destroy(a);
       }
     }
+    this._schema.event && this.thread.unregisterEvent(this, this._schema.event);
     this.next && this.next.destroy(a);
   };
   a.destroyAlone = function(a) {
     this.view && this.view.destroy(a);
     this.getThread().spliceBlock(this);
+    this._schema.event && this.thread.unregisterEvent(this, this._schema.event);
   };
   a.getView = function() {
     return this.view;
@@ -15029,6 +15040,9 @@ Entry.Thread = function(a, b) {
   a.registerEvent = function(a, c) {
     this._event = c;
     this._code.registerEvent(a, c);
+  };
+  a.unregisterEvent = function(a, c) {
+    this._code.unregisterEvent(a, c);
   };
   a.createView = function(a) {
     this.view || (this.view = new Entry.ThreadView(this, a));

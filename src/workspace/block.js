@@ -147,7 +147,7 @@ Entry.Block.MAGNET_OFFSET = 0.4;
     p.destroy = function(animate) {
         if (this.view) this.view.destroy(animate);
         if (!this.prev || this.prev instanceof Entry.DummyBlock)
-            this.thread.destroy();
+            this.thread.destroy(animate, false);
 
         var statements = this.statements;
 
@@ -161,12 +161,17 @@ Entry.Block.MAGNET_OFFSET = 0.4;
             }
         }
 
+        if (this._schema.event)
+            this.thread.unregisterEvent(this, this._schema.event);
+
         if (this.next) this.next.destroy(animate);
     };
 
     p.destroyAlone = function(animate) {
         if (this.view) this.view.destroy(animate);
         this.getThread().spliceBlock(this);
+        if (this._schema.event)
+            this.thread.unregisterEvent(this, this._schema.event);
     };
 
     p.getView = function() {return this.view;};
