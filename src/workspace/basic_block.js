@@ -720,7 +720,7 @@ Entry.block.maze_step_start = {
     mode: "maze",
     event: "start",
     color: "#3BBD70",
-    template: "%1 시작 버튼을 눌렀을 때",
+    template: "%1 시작하기를 클릭했을 때",
     syntax: ["Program"],
     params: [
         {
@@ -750,7 +750,7 @@ Entry.block.maze_step_jump = {
     skeleton: "basic",
     mode: "maze",
     color: "#FF6E4B",
-    template: "뛰어넘기 %1",
+    template: "뛰어넘기%1",
     params: [
         {
             type: "Image",
@@ -787,7 +787,7 @@ Entry.block.maze_step_for = {
     skeleton: "basic_loop",
     mode: "maze",
     color: "#127CDB",
-    template: "%1 번 반복하기 %2",
+    template: "%1 번 반복하기%2",
     params: [
         {
             type: "Dropdown",
@@ -854,7 +854,7 @@ Entry.block.maze_repeat_until_1 = {
     skeleton: "basic_loop",
     mode: "maze",
     color: "#498DEB",
-    template: "%1 만날 때 까지 반복하기 %2",
+    template: "%1 만날 때 까지 반복%2",
     params: [
         {
             type: "Image",
@@ -891,7 +891,7 @@ Entry.block.maze_step_if_1 = {
     skeleton: "basic_loop",
     mode: "maze",
     color: "#498DEB",
-    template: "만약 %1 앞에 있다면 %2",
+    template: "만약 앞에 %1 있다면%2",
     params: [
         {
             type: "Image",
@@ -977,7 +977,7 @@ Entry.block.maze_step_if_2 = {
     skeleton: "basic_loop",
     mode: "maze",
     color: "#498DEB",
-    template: "만약 %1 앞에 있다면 %2",
+    template: "만약 앞에 %1 있다면%2",
     params: [
         {
             type: "Image",
@@ -1047,7 +1047,7 @@ Entry.block.maze_call_function = {
     skeleton: "basic",
     mode: "maze",
     color: "#B57242",
-    template: "약속 불러오기 %1",
+    template: "약속 불러오기%1",
     params: [
         {
             type: "Image",
@@ -1081,7 +1081,7 @@ Entry.block.maze_define_function = {
     mode: "maze",
     color: "#B57242",
     event: "define",
-    template: "약속하기 %1",
+    template: "약속하기%1",
     params: [
         {
             type: "Image",
@@ -1111,7 +1111,7 @@ Entry.block.maze_step_if_3 = {
     skeleton: "basic_loop",
     mode: "maze",
     color: "#498DEB",
-    template: "만약 %1 앞에 있다면 %2",
+    template: "만약 앞에 %1 있다면%2",
     params: [
         {
             type: "Image",
@@ -1181,7 +1181,7 @@ Entry.block.maze_step_if_4 = {
     skeleton: "basic_loop",
     mode: "maze",
     color: "#498DEB",
-    template: "만약 %1 앞에 있다면 %2",
+    template: "만약 앞에 %1 있다면%2",
     params: [
         {
             type: "Image",
@@ -1251,7 +1251,7 @@ Entry.block.maze_step_move_step = {
     skeleton: "basic",
     mode: "maze",
     color: "#A751E3",
-    template: "앞으로 가기 %1",
+    template: "앞으로 한 칸 이동%1",
     syntax: ["this", "move"],
     params: [
         {
@@ -1286,7 +1286,7 @@ Entry.block.maze_step_rotate_left= {
     skeleton: "basic",
     mode: "maze",
     color: "#A751E3",
-    template: "왼쪽으로 돌기 %1",
+    template: "왼쪽으로 회전%1",
     syntax: ["this", "left"],
     params: [
         {
@@ -1322,7 +1322,7 @@ Entry.block.maze_step_rotate_right = {
     skeleton: "basic",
     mode: "maze",
     color: "#A751E3",
-    template: "오른쪽으로 돌기 %1",
+    template: "오른쪽으로 회전%1",
     syntax: ["this", "right"],
     params: [
         {
