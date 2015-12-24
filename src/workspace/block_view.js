@@ -280,21 +280,17 @@ Entry.BlockView = function(block, board) {
             var copyAndPaste = {
                 text: '블록 복사 & 붙여넣기',
                 callback: function(){
-                    var thread = block.getThread();
-                    var index = thread.getBlocks().indexOf(block);
-                    var json = thread.toJSON(true, index);
-                    var cloned = [];
-                    var newThread = new Entry.Thread([], block.getCode());
-                    for (var i=0; i<json.length; i++)
-                        cloned.push(new Entry.Block(json[i], newThread));
+                    var cloned = block.copy();
+                    var first = cloned[0];
+                    first.doAdd();
+                    first.getThread().getCode().createThread(cloned);
+                }
+            };
 
-                    var matrix = that.svgGroup.transform().globalMatrix;
-                    cloned[0].set({
-                        x: matrix.e + 20,
-                        y: matrix.f + 20
-                    });
-                    cloned[0].doAdd();
-                    thread.getCode().createThread(cloned);
+            var copy = {
+                text: '블록 복사',
+                callback: function(){
+                    that.block.copyToClipboard();
                 }
             };
 
@@ -307,6 +303,7 @@ Entry.BlockView = function(block, board) {
             };
 
             options.push(copyAndPaste);
+            options.push(copy);
             options.push(remove);
 
             Entry.ContextMenu.show(options);

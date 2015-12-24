@@ -192,11 +192,11 @@ Entry.BlockMenu = function(dom, align) {
         boardBlockView.removeDragging();
         if (dragBlockView.x < this._svgWidth) {
             animate = true;
-            boardCode.destroyThread(boardBlock.getThread(), animate);
+            boardBlock.destroy(animate);
         } else boardBlock.view.terminateDrag();
 
         workspace.getBoard().set({dragBlock:null});
-        thisCode.destroyThread(dragBlock.getThread(), animate);
+        dragBlock.destroy(animate);
         delete boardBlockView.dragInstance;
         this._boardBlockView = null;
     };

@@ -147,7 +147,7 @@ Entry.Block.MAGNET_OFFSET = 0.4;
     p.destroy = function(animate) {
         if (this.view) this.view.destroy(animate);
         if (!this.prev || this.prev instanceof Entry.DummyBlock)
-            this.thread.destroy();
+            this.thread.destroy(animate, false);
 
         var statements = this.statements;
 
@@ -161,12 +161,17 @@ Entry.Block.MAGNET_OFFSET = 0.4;
             }
         }
 
+        if (this._schema.event)
+            this.thread.unregisterEvent(this, this._schema.event);
+
         if (this.next) this.next.destroy(animate);
     };
 
     p.destroyAlone = function(animate) {
         if (this.view) this.view.destroy(animate);
         this.getThread().spliceBlock(this);
+        if (this._schema.event)
+            this.thread.unregisterEvent(this, this._schema.event);
     };
 
     p.getView = function() {return this.view;};
@@ -336,5 +341,24 @@ Entry.Block.MAGNET_OFFSET = 0.4;
             return syntax.join(".") + "();\n";
         }
     };
+
+    p.copy = function() {
+        var thread = this.getThread();
+        var index = thread.getBlocks().indexOf(this);
+        var json = thread.toJSON(true, index);
+        var cloned = [];
+        var newThread = new Entry.Thread([], this.getCode());
+        for (var i=0; i<json.length; i++)
+            cloned.push(new Entry.Block(json[i], newThread));
+
+        var matrix = this.view.svgGroup.transform().globalMatrix;
+        cloned[0].set({
+            x: matrix.e + 20,
+            y: matrix.f + 20
+        });
+        return cloned;
+    };
+
+    p.copyToClipboard = function() {Entry.clipboard = this.copy();};
 
 })(Entry.Block.prototype);

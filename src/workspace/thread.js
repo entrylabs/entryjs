@@ -66,6 +66,10 @@ Entry.Thread = function(thread, code) {
         this._code.registerEvent(block, eventType);
     };
 
+    p.unregisterEvent = function(block, eventType) {
+        this._code.unregisterEvent(block, eventType);
+    };
+
     p.createView = function(board) {
         if (!this.view)
             this.view = new Entry.ThreadView(this, board);
@@ -214,5 +218,4 @@ Entry.Thread = function(thread, code) {
         }
         return textCode;
     };
-
 })(Entry.Thread.prototype);

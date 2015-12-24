@@ -72,6 +72,15 @@ Entry.Code = function(code) {
         this._eventMap[eventType].push(block);
     };
 
+    p.unregisterEvent = function(block, eventType) {
+        var blocks = this._eventMap[eventType];
+        if (!blocks || blocks.length === 0) return;
+
+        var index = blocks.indexOf(block);
+        if (index < 0) return;
+        blocks.splice(index,1);
+    };
+
     p.raiseEvent = function(eventType) {
         var blocks = this._eventMap[eventType];
         if (blocks === undefined) return;
@@ -123,8 +132,6 @@ Entry.Code = function(code) {
         // case of statement thread
         if (index < 0) return;
         data.splice(index, 1);
-        var firstBlock = thread.getFirstBlock();
-        if (firstBlock) firstBlock.destroy(animate);
     };
 
     p.doDestroyThread = function(thread, animate) {
@@ -133,8 +140,6 @@ Entry.Code = function(code) {
         // case of statement thread
         if (index < 0) return;
         data.splice(index, 1);
-        var firstBlock = thread.getFirstBlock();
-        if (firstBlock) firstBlock.doDestroy(animate);
     };
 
     p.getThreads = function() {
