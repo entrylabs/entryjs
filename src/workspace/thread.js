@@ -16,7 +16,7 @@ Entry.Thread = function(thread, code) {
     this._data = new Entry.Collection();
     this._code = code;
     this.changeEvent = new Entry.Event(this);
-    this.changeEvent.attach(this, this.inspectExist);
+    this.changeEvent.attach(this, this.handleChange);
     this._event;
 
     this.load(thread);
@@ -177,7 +177,7 @@ Entry.Thread = function(thread, code) {
         return count;
     };
 
-    p.inspectExist = function() {
+    p.handleChange = function() {
         if (this._data.length === 0) this.destroy();
     };
 

@@ -8537,6 +8537,18 @@ Entry.Painter.prototype.selectToolbox = function(a) {
       this.toggleCoordinator();
   }
 };
+Entry.BlockParser = function(a) {
+  this.syntax = a;
+};
+(function(a) {
+  a.Program = function(a) {
+    for (var c = 0;c < a.length;c++) {
+    }
+    return "";
+  };
+  a.Thread = function(a) {
+  };
+})(Entry.BlockParser.prototype);
 Entry.JSParser = function(a) {
   this.syntax = a;
 };
@@ -15049,7 +15061,7 @@ Entry.Thread = function(a, b) {
   this._data = new Entry.Collection;
   this._code = b;
   this.changeEvent = new Entry.Event(this);
-  this.changeEvent.attach(this, this.inspectExist);
+  this.changeEvent.attach(this, this.handleChange);
   this._event;
   this.load(a);
 };
@@ -15154,7 +15166,7 @@ Entry.Thread = function(a, b) {
     }
     return a;
   };
-  a.inspectExist = function() {
+  a.handleChange = function() {
     0 === this._data.length && this.destroy();
   };
   a.getCode = function() {
