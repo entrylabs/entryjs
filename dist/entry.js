@@ -8537,6 +8537,18 @@ Entry.Painter.prototype.selectToolbox = function(a) {
       this.toggleCoordinator();
   }
 };
+Entry.BlockParser = function(a) {
+  this.syntax = a;
+};
+(function(a) {
+  a.Program = function(a) {
+    for (var c = 0;c < a.length;c++) {
+    }
+    return "";
+  };
+  a.Thread = function(a) {
+  };
+})(Entry.BlockParser.prototype);
 Entry.JSParser = function(a) {
   this.syntax = a;
 };
