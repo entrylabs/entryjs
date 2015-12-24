@@ -14,6 +14,8 @@ Entry.TEXT_ALIGN_RIGHT = 2;
 
 Entry.TEXT_ALIGNS = ["center", "left", "right"];
 
+Entry.clipboard;
+
 /**
  * Load project
  * @param {?Project} project

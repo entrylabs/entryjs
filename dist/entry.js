@@ -1,4 +1,6 @@
-var Entry = {block:{}, TEXT_ALIGN_CENTER:0, TEXT_ALIGN_LEFT:1, TEXT_ALIGN_RIGHT:2, TEXT_ALIGNS:["center", "left", "right"], loadProject:function(a) {
+var Entry = {block:{}, TEXT_ALIGN_CENTER:0, TEXT_ALIGN_LEFT:1, TEXT_ALIGN_RIGHT:2, TEXT_ALIGNS:["center", "left", "right"]};
+Entry.clipboard;
+Entry.loadProject = function(a) {
   a || (a = Entry.getStartProject(Entry.mediaFilePath));
   "workspace" == this.type && Entry.stateManager.startIgnore();
   Entry.projectId = a._id;
@@ -15,7 +17,8 @@ var Entry = {block:{}, TEXT_ALIGN_CENTER:0, TEXT_ALIGN_LEFT:1, TEXT_ALIGN_RIGHT:
   0 === Object.keys(Entry.container.inputValue).length && Entry.variableContainer.generateAnswer();
   Entry.start();
   return a;
-}, exportProject:function(a) {
+};
+Entry.exportProject = function(a) {
   a || (a = {});
   Entry.engine.isState("stop") || Entry.engine.toggleStop();
   Entry.Func && Entry.Func.workspace && Entry.Func.workspace.visible && Entry.Func.cancelEdit();
@@ -27,7 +30,8 @@ var Entry = {block:{}, TEXT_ALIGN_CENTER:0, TEXT_ALIGN_LEFT:1, TEXT_ALIGN_RIGHT:
   a.scenes = Entry.scene.toJSON();
   a.speed = Entry.FPS;
   return a;
-}, setBlockByText:function(a, b) {
+};
+Entry.setBlockByText = function(a, b) {
   for (var c = [], d = jQuery.parseXML(b).getElementsByTagName("category"), e = 0;e < d.length;e++) {
     for (var f = d[e], g = {category:f.getAttribute("id"), blocks:[]}, f = f.childNodes, h = 0;h < f.length;h++) {
       var k = f[h];
@@ -36,19 +40,24 @@ var Entry = {block:{}, TEXT_ALIGN_CENTER:0, TEXT_ALIGN_LEFT:1, TEXT_ALIGN_RIGHT:
     c.push(g);
   }
   Entry.playground.setBlockMenu(c);
-}, setBlock:function(a, b) {
+};
+Entry.setBlock = function(a, b) {
   Entry.playground.setMenuBlock(a, b);
-}, enableArduino:function() {
-}, initSound:function(a) {
+};
+Entry.enableArduino = function() {
+};
+Entry.initSound = function(a) {
   a.path = a.fileurl ? a.fileurl : "/uploads/" + a.filename.substring(0, 2) + "/" + a.filename.substring(2, 4) + "/" + a.filename + a.ext;
   Entry.soundQueue.loadFile({id:a.id, src:a.path, type:createjs.LoadQueue.SOUND});
-}, beforeUnload:function(a) {
+};
+Entry.beforeUnload = function(a) {
   Entry.hw.closeConnection();
   Entry.variableContainer.updateCloudVariables();
   if ("workspace" == Entry.type && (localStorage && Entry.interfaceState && localStorage.setItem("workspace-interface", JSON.stringify(Entry.interfaceState)), !Entry.stateManager.isSaved())) {
     return Lang.Workspace.project_changed;
   }
-}, loadInterfaceState:function() {
+};
+Entry.loadInterfaceState = function() {
   if ("workspace" == Entry.type) {
     if (localStorage && localStorage.getItem("workspace-interface")) {
       var a = localStorage.getItem("workspace-interface");
@@ -57,7 +66,8 @@ var Entry = {block:{}, TEXT_ALIGN_CENTER:0, TEXT_ALIGN_LEFT:1, TEXT_ALIGN_RIGHT:
       this.resizeElement({menuWidth:280, canvasWidth:480});
     }
   }
-}, resizeElement:function(a) {
+};
+Entry.resizeElement = function(a) {
   if ("workspace" == Entry.type) {
     var b = this.interfaceState;
     !a.canvasWidth && b.canvasWidth && (a.canvasWidth = b.canvasWidth);
@@ -93,17 +103,24 @@ var Entry = {block:{}, TEXT_ALIGN_CENTER:0, TEXT_ALIGN_LEFT:1, TEXT_ALIGN_RIGHT:
     this.interfaceState = a;
   }
   Blockly.fireUiEvent(window, "resize");
-}, getUpTime:function() {
+};
+Entry.getUpTime = function() {
   return (new Date).getTime() - this.startTime;
-}, addActivity:function(a) {
+};
+Entry.addActivity = function(a) {
   Entry.stateManager && Entry.stateManager.addActivity(a);
-}, startActivityLogging:function() {
+};
+Entry.startActivityLogging = function() {
   Entry.reporter && Entry.reporter.start(Entry.projectId, window.user ? window.user._id : null, Entry.startTime);
-}, getActivityLog:function() {
+};
+Entry.getActivityLog = function() {
   var a = {};
   Entry.stateManager && (a.activityLog = Entry.stateManager.activityLog_);
   return a;
-}, DRAG_MODE_NONE:0, DRAG_MODE_MOUSEDOWN:1, DRAG_MODE_DRAG:2};
+};
+Entry.DRAG_MODE_NONE = 0;
+Entry.DRAG_MODE_MOUSEDOWN = 1;
+Entry.DRAG_MODE_DRAG = 2;
 window.Entry = Entry;
 Entry.Albert = {PORT_MAP:{leftWheel:0, rightWheel:0, buzzer:0, bodyLed:0, frontLed:0, leftEye:0, rightEye:0, topology:0, note:0, ioModeA:0, ioModeB:0}, setZero:function() {
   var a = Entry.Albert.PORT_MAP, b;
@@ -13749,13 +13766,12 @@ Entry.BlockView = function(a, b) {
           f.block.doDestroyAlone(!0);
         }};
         e.push({text:"\ube14\ub85d \ubcf5\uc0ac & \ubd99\uc5ec\ub123\uae30", callback:function() {
-          for (var a = g.getThread(), b = a.getBlocks().indexOf(g), c = a.toJSON(!0, b), b = [], d = new Entry.Thread([], g.getCode()), e = 0;e < c.length;e++) {
-            b.push(new Entry.Block(c[e], d));
-          }
-          c = f.svgGroup.transform().globalMatrix;
-          b[0].set({x:c.e + 20, y:c.f + 20});
-          b[0].doAdd();
-          a.getCode().createThread(b);
+          var a = g.copy(), b = a[0];
+          b.doAdd();
+          b.getThread().getCode().createThread(a);
+        }});
+        e.push({text:"\ube14\ub85d \ubcf5\uc0ac", callback:function() {
+          f.block.copyToClipboard();
         }});
         e.push(h);
         Entry.ContextMenu.show(e);
@@ -15001,6 +15017,17 @@ Entry.Block.MAGNET_OFFSET = .4;
     var a = this._schema.syntax;
     return !a || this._schema.event ? "" : a.join(".") + "();\n";
   };
+  a.copy = function() {
+    for (var a = this.getThread(), c = a.getBlocks().indexOf(this), c = a.toJSON(!0, c), a = [], d = new Entry.Thread([], this.getCode()), e = 0;e < c.length;e++) {
+      a.push(new Entry.Block(c[e], d));
+    }
+    c = this.view.svgGroup.transform().globalMatrix;
+    a[0].set({x:c.e + 20, y:c.f + 20});
+    return a;
+  };
+  a.copyToClipboard = function() {
+    Entry.clipboard = this.copy();
+  };
 })(Entry.Block.prototype);
 Entry.Thread = function(a, b) {
   this._data = new Entry.Collection;
@@ -15330,6 +15357,12 @@ Entry.Board = function(a) {
           return;
         }
         var f = this, e = [];
+        e.push({text:"\ubd99\uc5ec\ub123\uae30", enable:!!Entry.clipboard, callback:function() {
+          var a = Entry.clipboard, b = a[0];
+          b.doAdd();
+          f.code.createThread(a);
+          b.copyToClipboard();
+        }});
         e.push({text:"\ube14\ub85d \uc815\ub9ac\ud558\uae30", callback:function() {
           f.alignThreads();
         }});

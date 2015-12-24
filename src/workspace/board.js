@@ -193,6 +193,18 @@ Entry.Board = function(dom) {
 
             var options = [];
 
+            var paste = {
+                text: '붙여넣기',
+                enable: !!Entry.clipboard,
+                callback: function(){
+                    var cloned = Entry.clipboard;
+                    var first = cloned[0];
+                    first.doAdd();
+                    that.code.createThread(cloned);
+                    first.copyToClipboard();
+                }
+            };
+
             var align = {
                 text: '블록 정리하기',
                 callback: function(){
@@ -200,6 +212,7 @@ Entry.Board = function(dom) {
                 }
             };
 
+            options.push(paste);
             options.push(align);
 
             Entry.ContextMenu.show(options);
