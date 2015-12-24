@@ -13,7 +13,7 @@ Entry.Vim = function(dom) {
 
     this.createDom(dom);
 
-    this._parser = new Entry.Parser("maze");
+    this._parser = new Entry.Parser("maze", this.codeMirror);
     this._blockParser = new Entry.Parser("maze", "block");
 
     Entry.Model(this, false);

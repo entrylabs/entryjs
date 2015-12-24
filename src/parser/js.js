@@ -64,44 +64,65 @@ Entry.JSParser = function(syntax) {
     };
 
     p.EmptyStatement = function(node) {
-        return new Error();
+        throw {
+            message : 'empty는 지원하지 않는 표현식 입니다.',
+            node : node
+        }
     };
 
     p.DebuggerStatement = function(node) {
-        return new Error();
+        throw {
+            message : 'debugger는 지원하지 않는 표현식 입니다.',
+            node : node
+        }
     };
 
     p.WithStatement = function(node) {
         var object = node.object,
             body = node.body;
 
-        return new Error();
+        throw {
+            message : 'with는 지원하지 않는 표현식 입니다.',
+            node : node
+        }
     };
 
     //control flow
     p.ReturnStaement = function(node) {
         var args = node.arguments;
 
-        return new Error();
+        throw {
+            message : 'return은 지원하지 않는 표현식 입니다.',
+            node : node
+        }
     };
 
     p.LabeledStatement = function(node) {
         var label = node.label,
             body = node.body;
 
-        return new Error();
+        throw {
+            message : 'label은 지원하지 않는 표현식 입니다.',
+            node : node
+        }
     };
 
     p.BreakStatement = function(node) {
         var label = node.label;
 
-        return new Error();
+        throw {
+            message : 'break는 지원하지 않는 표현식 입니다.',
+            node : node
+        }
     };
 
     p.ContinueStatement = function(node) {
         var label = node.label;
 
-        return new Error();
+        throw {
+            message : 'continue는 지원하지 않는 표현식 입니다.',
+            node : node
+        }
     };
 
     p.IfStatement = function(node) {
@@ -120,14 +141,20 @@ Entry.JSParser = function(syntax) {
         var discriminant = node.discriminant,
             cases = node.cases;
 
-        return new Error();
+        throw {
+            message : 'switch는 지원하지 않는 표현식 입니다.',
+            node : node
+        }
     };
 
     p.SwitchCase = function(node) {
         var test = node.test,
             consequent = node.consequent;
 
-        return new Error();
+        throw {
+            message : 'switch ~ case는 지원하지 않는 표현식 입니다.',
+            node : node
+        }
     };
 
     //throwstatement
@@ -135,7 +162,10 @@ Entry.JSParser = function(syntax) {
     p.ThrowStatement = function(node) {
         var args = node.arguments;
 
-        return new Error();
+        throw {
+            message : 'throw는 지원하지 않는 표현식 입니다.',
+            node : node
+        }
     };
 
     p.TryStatement = function(node) {
@@ -143,28 +173,40 @@ Entry.JSParser = function(syntax) {
             handler = node.handler,
             finalizer = node.finalizer;
 
-        return new Error();
+        throw {
+            message : 'try는 지원하지 않는 표현식 입니다.',
+            node : node
+        }
     };
 
     p.CatchClause = function(node) {
         var param = node.param,
             body = node.body;
 
-        return new Error();
+        throw {
+            message : 'catch는 지원하지 않는 표현식 입니다.',
+            node : node
+        }
     };
 
     p.WhileStatement = function(node) {
         var test = node.test,
             body = node.body;
 
-        return new Error();
+        throw {
+            message : 'while은 지원하지 않는 표현식 입니다.',
+            node : node
+        }
     };
 
     p.DoWhileStatement = function(node) {
         var body = node.body,
             test = node.test;
 
-        return new Error();
+        throw {
+            message : 'do ~ while은 지원하지 않는 표현식 입니다.',
+            node : node
+        }
     };
 
 
@@ -173,7 +215,10 @@ Entry.JSParser = function(syntax) {
             right = node.right,
             body = node.body;
 
-        return new Error();
+        throw {
+            message : 'for ~ in은 지원하지 않는 표현식 입니다.',
+            node : node
+        }
     };
 
     //Declaration
@@ -181,21 +226,20 @@ Entry.JSParser = function(syntax) {
     p.FunctionDeclaration = function(node) {
         var id = node.id;
 
-        return new Error();
+        throw {
+            message : 'function은 지원하지 않는 표현식 입니다.',
+            node : node
+        }
     };
 
     p.VariableDeclaration = function(node) {
         var declaration = node.declarations,
             kind = node.kind;
 
-        return new Error();
-    };
-
-    p.VariableDeclaration = function(node) {
-        var id = node.id,
-            init = node.init;
-
-        return new Error();
+        throw {
+            message : 'var은 지원하지 않는 표현식 입니다.',
+            node : node
+        }
     };
 
     // Expression
@@ -206,13 +250,19 @@ Entry.JSParser = function(syntax) {
     p.ArrayExpression = function(node) {
         var elements = node.elements;
 
-        return new Error();
+        throw {
+            message : 'array는 지원하지 않는 표현식 입니다.',
+            node : node
+        }
     };
 
     p.ObjectExpression = function(node) {
         var property = node.property;
 
-        return new Error();
+        throw {
+            message : 'object는 지원하지 않는 표현식 입니다.',
+            node : node
+        }
     };
 
     p.property = function(node) {
@@ -220,12 +270,18 @@ Entry.JSParser = function(syntax) {
             value = node.value,
             kind = node.kind;
 
-        return new Error();
+        throw {
+            message : 'init, get, set은 지원하지 않는 표현식 입니다.',
+            node : node
+        }
     };
 
     p.FunctionExpression = function(node) {
 
-        return new Error();
+        throw {
+            message : 'function은 지원하지 않는 표현식 입니다.',
+            node : node
+        }
     };
     // unary expression
 
@@ -234,7 +290,10 @@ Entry.JSParser = function(syntax) {
             prefix = node.prefix,
             args  = node.argument;
 
-        return new Error();
+        throw {
+            message : operator + '은(는) 지원하지 않는 명령어 입니다.',
+            node : node
+        }
     };
 
     p.UnaryOperator = function(){
@@ -262,7 +321,10 @@ Entry.JSParser = function(syntax) {
             left = node.left,
             right = node.right;
 
-        return new Error();
+        throw {
+            message : operator + '은(는) 지원하지 않는 명령어 입니다.',
+            node : node
+        }
     };
 
     p.AssignmentOperator = function() {
@@ -277,7 +339,10 @@ Entry.JSParser = function(syntax) {
         var operator = node.operator,
             left = node.left,
             right = node.right;
-        return new Error();
+        throw {
+            message : operator + '은(는) 지원하지 않는 명령어 입니다.',
+            node : node
+        }
     };
 
     p.LogicalOperator = function() {
@@ -293,7 +358,20 @@ Entry.JSParser = function(syntax) {
 
         property = this[property.type](property);
 
+        if(!(Object(object) === object && Object.getPrototypeOf(object) === Object.prototype)) {
+            throw {
+                message : object + '은(는) 잘못된 멤버 변수입니다.',
+                node : node
+            }  
+        }
+
         var blockType = object[property];
+        if(!blockType) {
+            throw {
+                message : property + '이(가) 존재하지 않습니다.',
+                node : node
+            }
+        }
         return blockType;
     };
 
@@ -302,7 +380,10 @@ Entry.JSParser = function(syntax) {
             alternate = node.alternate,
             consequent = node.consequent;
 
-        return new Error();
+        throw {
+            message : '지원하지 않는 표현식 입니다.',
+            node : node
+        }
     };
 
     p.UpdateExpression = function(node) {
@@ -310,7 +391,10 @@ Entry.JSParser = function(syntax) {
             args = node.argument,
             prefix = node.prefix;
 
-        return new Error();
+        throw {
+            message : operator + '은(는) 지원하지 않는 명렁어 입니다.',
+            node : node
+        }
     };
 
     p.CallExpression = function(node) {
@@ -323,13 +407,19 @@ Entry.JSParser = function(syntax) {
     };
 
     p.NewExpression = function(node) {
-        return new Error();
+        throw {
+            message : 'new는 지원하지 않는 표현식 입니다.',
+            node : node
+        }
     };
 
     p.SequenceExpression = function(node) {
         var expressions = node.expressions;
 
-        return new Error();
+        throw {
+            message : '지원하지 않는 표현식 입니다.',
+            node : node
+        }
     };
 
 })(Entry.JSParser.prototype);

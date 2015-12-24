@@ -7,9 +7,10 @@ goog.provide("Entry.Parser");
 
 goog.require("Entry.JSParser");
 
-Entry.Parser = function(mode) {
+Entry.Parser = function(mode, cm) {
     this._mode = mode; // maze ai workspace
     this.syntax = {};
+    this.codeMirror = cm;
 
     this.mappingSyntax(mode);
     this._parser = new Entry.JSParser(this.syntax);
@@ -20,11 +21,43 @@ Entry.Parser = function(mode) {
         var astTree = acorn.parse(code),
             block = null;
 
-        block = this._parser.Program(astTree);
+        try {
+            block = this._parser.Program(astTree);
+        } catch(error) {
+            // alert(error.message);
+            var anotation = this.getLineNumber(error.node.start, error.node.end);
+            anotation.message = error.message;
+            anotation.severity = "error";
+            var a = this.codeMirror.markText(anotation.from, anotation.to, {
+                className: "CodeMirror-lint-mark-error",
+                __annotation: anotation,
+                clearOnEnter: true
+            });
+            block = [];
+        }
+
         console.log("asTree ====", block);
 
         return block;
     };
+
+    p.getLineNumber = function (start, end) {
+        var value = this.codeMirror.getValue();
+        var lines = {
+            'from' : {},
+            'to' : {}
+        }
+
+        var startline = value.substring(0, start).split(/\n/gi);
+        lines.from.line = startline.length - 1;
+        lines.from.ch = startline[startline.length - 1].length;
+
+        var endline = value.substring(0, end).split(/\n/gi);
+        lines.to.line = endline.length - 1;
+        lines.to.ch = endline[endline.length - 1].length;
+
+        return lines;
+    }
 
     p.mappingSyntax = function(mode) {
         var types = Object.keys(Entry.block);

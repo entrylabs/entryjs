@@ -8555,79 +8555,76 @@ Entry.JSParser = function(a) {
     return c;
   };
   a.EmptyStatement = function(a) {
-    return Error();
+    throw {message:"empty\ub294 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a};
   };
   a.DebuggerStatement = function(a) {
-    return Error();
+    throw {message:"debugger\ub294 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a};
   };
   a.WithStatement = function(a) {
-    return Error();
+    throw {message:"with\ub294 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a};
   };
   a.ReturnStaement = function(a) {
-    return Error();
+    throw {message:"return\uc740 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a};
   };
   a.LabeledStatement = function(a) {
-    return Error();
+    throw {message:"label\uc740 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a};
   };
   a.BreakStatement = function(a) {
-    return Error();
+    throw {message:"break\ub294 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a};
   };
   a.ContinueStatement = function(a) {
-    return Error();
+    throw {message:"continue\ub294 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a};
   };
   a.IfStatement = function(a) {
     return {test:a.test, consequent:a.consequent, alternate:a.alternate};
   };
   a.SwitchStatement = function(a) {
-    return Error();
+    throw {message:"switch\ub294 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a};
   };
   a.SwitchCase = function(a) {
-    return Error();
+    throw {message:"switch ~ case\ub294 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a};
   };
   a.ThrowStatement = function(a) {
-    return Error();
+    throw {message:"throw\ub294 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a};
   };
   a.TryStatement = function(a) {
-    return Error();
+    throw {message:"try\ub294 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a};
   };
   a.CatchClause = function(a) {
-    return Error();
+    throw {message:"catch\ub294 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a};
   };
   a.WhileStatement = function(a) {
-    return Error();
+    throw {message:"while\uc740 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a};
   };
   a.DoWhileStatement = function(a) {
-    return Error();
+    throw {message:"do ~ while\uc740 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a};
   };
   a.ForInStatement = function(a) {
-    return Error();
+    throw {message:"for ~ in\uc740 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a};
   };
   a.FunctionDeclaration = function(a) {
-    return Error();
+    throw {message:"function\uc740 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a};
   };
   a.VariableDeclaration = function(a) {
-    return Error();
-  };
-  a.VariableDeclaration = function(a) {
-    return Error();
+    throw {message:"var\uc740 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a};
   };
   a.ThisExpression = function(a) {
     return this.syntax.this;
   };
   a.ArrayExpression = function(a) {
-    return Error();
+    throw {message:"array\ub294 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a};
   };
   a.ObjectExpression = function(a) {
-    return Error();
+    throw {message:"object\ub294 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a};
   };
   a.property = function(a) {
-    return Error();
+    throw {message:"init, get, set\uc740 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a};
   };
   a.FunctionExpression = function(a) {
-    return Error();
+    throw {message:"function\uc740 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a};
   };
   a.UnaryExpression = function(a) {
-    return Error();
+    throw {message:a.operator + "\uc740(\ub294) \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \uba85\ub839\uc5b4 \uc785\ub2c8\ub2e4.", node:a};
   };
   a.UnaryOperator = function() {
     return "- + ! ~ typeof void delete".split(" ");
@@ -8639,53 +8636,72 @@ Entry.JSParser = function(a) {
     return "== != === !== < <= > >= << >> >>> + - * / % , ^ & in instanceof".split(" ");
   };
   a.AssignmentExpression = function(a) {
-    return Error();
+    throw {message:a.operator + "\uc740(\ub294) \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \uba85\ub839\uc5b4 \uc785\ub2c8\ub2e4.", node:a};
   };
   a.AssignmentOperator = function() {
     return "= += -= *= /= %= <<= >>= >>>= ,= ^= &=".split(" ");
   };
   a.LogicalExpression = function(a) {
-    return Error();
+    throw {message:a.operator + "\uc740(\ub294) \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \uba85\ub839\uc5b4 \uc785\ub2c8\ub2e4.", node:a};
   };
   a.LogicalOperator = function() {
     return ["||", "&&"];
   };
   a.MemberExpression = function(a) {
-    var c = a.object;
-    a = a.property;
-    c = this[c.type](c);
-    a = this[a.type](a);
-    return c[a];
+    var c = a.object, d = a.property, c = this[c.type](c), d = this[d.type](d);
+    if (Object(c) !== c || Object.getPrototypeOf(c) !== Object.prototype) {
+      throw {message:c + "\uc740(\ub294) \uc798\ubabb\ub41c \uba64\ubc84 \ubcc0\uc218\uc785\ub2c8\ub2e4.", node:a};
+    }
+    c = c[d];
+    if (!c) {
+      throw {message:d + "\uc774(\uac00) \uc874\uc7ac\ud558\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4.", node:a};
+    }
+    return c;
   };
   a.ConditionalExpression = function(a) {
-    return Error();
+    throw {message:"\uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a};
   };
   a.UpdateExpression = function(a) {
-    return Error();
+    throw {message:a.operator + "\uc740(\ub294) \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \uba85\ub801\uc5b4 \uc785\ub2c8\ub2e4.", node:a};
   };
   a.CallExpression = function(a) {
     a = a.callee;
     return {type:this[a.type](a)};
   };
   a.NewExpression = function(a) {
-    return Error();
+    throw {message:"new\ub294 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a};
   };
   a.SequenceExpression = function(a) {
-    return Error();
+    throw {message:"\uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a};
   };
 })(Entry.JSParser.prototype);
-Entry.Parser = function(a) {
+Entry.Parser = function(a, b) {
   this._mode = a;
   this.syntax = {};
+  this.codeMirror = b;
   this.mappingSyntax(a);
   this._parser = new Entry.JSParser(this.syntax);
 };
 (function(a) {
   a.parse = function(a) {
     a = acorn.parse(a);
-    var c = null, c = this._parser.Program(a);
+    var c = null;
+    try {
+      c = this._parser.Program(a);
+    } catch (d) {
+      a = this.getLineNumber(d.node.start, d.node.end), a.message = d.message, a.severity = "error", this.codeMirror.markText(a.from, a.to, {className:"CodeMirror-lint-mark-error", __annotation:a, clearOnEnter:!0}), c = [];
+    }
     console.log("asTree ====", c);
     return c;
+  };
+  a.getLineNumber = function(a, c) {
+    var d = this.codeMirror.getValue(), e = {from:{}, to:{}}, f = d.substring(0, a).split(/\n/gi);
+    e.from.line = f.length - 1;
+    e.from.ch = f[f.length - 1].length;
+    d = d.substring(0, c).split(/\n/gi);
+    e.to.line = d.length - 1;
+    e.to.ch = d[d.length - 1].length;
+    return e;
   };
   a.mappingSyntax = function(a) {
     for (var c = Object.keys(Entry.block), d = 0;d < c.length;d++) {
@@ -15366,7 +15382,7 @@ Entry.Vim = function(a) {
     return console.error("Dom is not div element");
   }
   this.createDom(a);
-  this._parser = new Entry.Parser("maze");
+  this._parser = new Entry.Parser("maze", this.codeMirror);
   this._blockParser = new Entry.Parser("maze", "block");
   Entry.Model(this, !1);
 };
