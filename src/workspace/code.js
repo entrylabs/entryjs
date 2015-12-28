@@ -175,13 +175,4 @@ Entry.Code = function(code) {
         return JSON.stringify(this.toJSON());
     };
 
-    p.toJS = function() {
-        var textCode = "";
-        for (var i = 0; i < this._data.length; i++) {
-            var thread = this._data[i];
-            textCode += thread.toJS();
-        }
-        return textCode;
-    };
-
 })(Entry.Code.prototype);

@@ -155,7 +155,7 @@ Entry.Thread = function(thread, code) {
     };
 
     p.getBlocks = function() {
-        return this._data;
+        return this._data.map(function(b){return b;});
     };
 
     p.countBlock = function() {
@@ -206,16 +206,5 @@ Entry.Thread = function(thread, code) {
         } else this.destroy();
 
         this.changeEvent.notify();
-    };
-
-    p.toJS = function() {
-        if (!this._event)
-            return "";
-        var textCode = "";
-        for (var i = 0; i < this._data.length; i++) {
-            var block = this._data[i];
-            textCode += block.toJS();
-        }
-        return textCode;
     };
 })(Entry.Thread.prototype);

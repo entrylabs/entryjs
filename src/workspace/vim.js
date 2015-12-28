@@ -52,7 +52,7 @@ Entry.Vim = function(dom) {
     };
 
     p.codeToText = function(code) {
-        var textCode = code.toJS();
+        var textCode = this._blockParser.parse(code);
         this.codeMirror.setValue(textCode);
     };
 

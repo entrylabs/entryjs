@@ -333,15 +333,6 @@ Entry.Block.MAGNET_OFFSET = 0.4;
         return true;
     };
 
-    p.toJS = function() {
-        var syntax = this._schema.syntax;
-        if (!syntax || this._schema.event)
-            return "";
-        else {
-            return syntax.splice(1, syntax.length - 1).join(".") + "();\n";
-        }
-    };
-
     p.copy = function() {
         var thread = this.getThread();
         var index = thread.getBlocks().indexOf(this);

@@ -54,6 +54,9 @@ Entry.Parser = function(mode, syntax, cm) {
                     result = [];
                 }
                 break;
+            case "block":
+                result = this._parser.Code(code);
+                break;
         }
 
         return result;
@@ -90,11 +93,9 @@ Entry.Parser = function(mode, syntax, cm) {
                 var syntax = this.syntax;
                 for (var j = 0; j < syntaxArray.length; j++) {
                     var key = syntaxArray[j];
-                    console.log(key);
                     if (j === syntaxArray.length - 2 &&
                        typeof syntaxArray[j + 1] === "function") {
                         syntax[key] = syntaxArray[j + 1];
-                        debugger;
                         break;
                     }
                     if (!syntax[key]) {
@@ -108,6 +109,5 @@ Entry.Parser = function(mode, syntax, cm) {
                 }
             }
         }
-        console.log(this.syntax);
     };
 })(Entry.Parser.prototype);

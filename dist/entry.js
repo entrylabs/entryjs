@@ -8541,12 +8541,44 @@ Entry.BlockParser = function(a) {
   this.syntax = a;
 };
 (function(a) {
-  a.Program = function(a) {
-    for (var c = 0;c < a.length;c++) {
+  a.Code = function(a) {
+    var c = "";
+    a = a.getThreads();
+    for (var d = 0;d < a.length;d++) {
+      c += this.Thread(a[d]);
     }
-    return "";
+    return c;
   };
   a.Thread = function(a) {
+    var c = "";
+    a = a.getBlocks();
+    for (var d = 0;d < a.length;d++) {
+      c += this.Block(a[d]);
+    }
+    return c;
+  };
+  a.Block = function(a) {
+    var c = a._schema.syntax;
+    return c ? this[c[0]](a) : "";
+  };
+  a.Program = function(a) {
+    return "";
+  };
+  a.Scope = function(a) {
+    a = a._schema.syntax.concat();
+    return a.splice(1, a.length - 1).join(".") + "();\n";
+  };
+  a.ForStatement = function(a) {
+    var c = a.params[0];
+    console.log(a.statements[0]);
+    a = this.Thread(a.statements[0]);
+    return "for (var i = 0; i < " + c + "; i++){\n" + this.indent(a) + "}\n";
+  };
+  a.indent = function(a) {
+    var c = "    ";
+    a = a.split("\n");
+    a.pop();
+    return c += a.join("\n    ") + "\n";
   };
 })(Entry.BlockParser.prototype);
 Entry.JSParser = function(a) {
@@ -8733,7 +8765,9 @@ Entry.Parser = function(a, b, c) {
         } catch (d) {
           console.log(d), this.codeMirror && (c = this.getLineNumber(d.node.start, d.node.end), c.message = d.message, c.severity = "error", this.codeMirror.markText(c.from, c.to, {className:"CodeMirror-lint-mark-error", __annotation:c, clearOnEnter:!0})), c = [];
         }
-      ;
+        break;
+      case "block":
+        c = this._parser.Code(a);
     }
     return c;
   };
@@ -8752,10 +8786,8 @@ Entry.Parser = function(a, b, c) {
       if (f.mode === a && (f = f.syntax)) {
         for (var g = this.syntax, h = 0;h < f.length;h++) {
           var k = f[h];
-          console.log(k);
           if (h === f.length - 2 && "function" === typeof f[h + 1]) {
             g[k] = f[h + 1];
-            debugger;
             break;
           }
           g[k] || (g[k] = {});
@@ -8763,7 +8795,6 @@ Entry.Parser = function(a, b, c) {
         }
       }
     }
-    console.log(this.syntax);
   };
 })(Entry.Parser.prototype);
 Entry.Playground = function() {
@@ -14079,12 +14110,6 @@ Entry.Code = function(a) {
   a.stringify = function() {
     return JSON.stringify(this.toJSON());
   };
-  a.toJS = function() {
-    for (var a = "", c = 0;c < this._data.length;c++) {
-      a += this._data[c].toJS();
-    }
-    return a;
-  };
 })(Entry.Code.prototype);
 Entry.CodeView = function(a, b) {
   Entry.Model(this, !1);
@@ -15082,10 +15107,6 @@ Entry.Block.MAGNET_OFFSET = .4;
       return !0;
     }
   };
-  a.toJS = function() {
-    var a = this._schema.syntax;
-    return !a || this._schema.event ? "" : a.splice(1, a.length - 1).join(".") + "();\n";
-  };
   a.copy = function() {
     for (var a = this.getThread(), c = a.getBlocks().indexOf(this), c = a.toJSON(!0, c), a = [], d = new Entry.Thread([], this.getCode()), e = 0;e < c.length;e++) {
       a.push(new Entry.Block(c[e], d));
@@ -15194,7 +15215,9 @@ Entry.Thread = function(a, b) {
     return this._data[0];
   };
   a.getBlocks = function() {
-    return this._data;
+    return this._data.map(function(a) {
+      return a;
+    });
   };
   a.countBlock = function() {
     for (var a = 0, c = 0;c < this._data.length;c++) {
@@ -15221,15 +15244,6 @@ Entry.Thread = function(a, b) {
     c.remove(a);
     0 !== c.length ? (null === a.prev ? a.next.setPrev(null) : null === a.next ? a.prev.setNext(null) : (a.prev.setNext(a.next), a.next.setPrev(a.prev)), this._setRelation()) : this.destroy();
     this.changeEvent.notify();
-  };
-  a.toJS = function() {
-    if (!this._event) {
-      return "";
-    }
-    for (var a = "", c = 0;c < this._data.length;c++) {
-      a += this._data[c].toJS();
-    }
-    return a;
   };
 })(Entry.Thread.prototype);
 Entry.ThreadView = function(a, b) {
@@ -15502,7 +15516,7 @@ Entry.Vim = function(a) {
     return [this._parser.parse(a)];
   };
   a.codeToText = function(a) {
-    a = a.toJS();
+    a = this._blockParser.parse(a);
     this.codeMirror.setValue(a);
   };
 })(Entry.Vim.prototype);
