@@ -758,7 +758,7 @@ Entry.block.maze_step_jump = {
             size: 24
         }
     ],
-    syntax: ["this", "jump"],
+    syntax: ["Scope", "this", "jump"],
     func: function() {
         if (!this.isContinue) {
 
@@ -788,6 +788,50 @@ Entry.block.maze_step_for = {
     mode: "maze",
     color: "#127CDB",
     template: "%1 번 반복하기%2",
+    syntax: [
+        "ForStatement",
+        function(init, test, update, body) {
+
+            var startVal = init.declarations[0].init.value;
+            var test = test;
+            var op = test.operator;
+            var endVal = test.right.value;
+            var updateOp = update.operator;
+
+            var res = 0;
+            if(!(updateOp == '++')){
+                var temp = startVal;
+                var startVal = endVal;
+                var endVal = temp;
+            }
+
+            switch (op) {
+                case '<':
+                    res = endVal - startVal;
+                break;
+
+                case '<=':
+                    res = ((endVal+1) - startVal);
+                break;
+
+                case '>':
+                    res =  startVal - endVal;
+                break;
+
+                case '>=':
+                    res = ((startVal+ 1) - endVal);
+                break;
+            }
+
+            var block = {
+                params: [res],
+                type: "maze_step_for",
+                statements: [body]
+            };
+
+            return block;
+        }
+    ],
     params: [
         {
             type: "Dropdown",
@@ -1252,7 +1296,7 @@ Entry.block.maze_step_move_step = {
     mode: "maze",
     color: "#A751E3",
     template: "앞으로 한 칸 이동%1",
-    syntax: ["this", "move"],
+    syntax: ["Scope", "this", "move"],
     params: [
         {
             type: "Image",
@@ -1287,7 +1331,7 @@ Entry.block.maze_step_rotate_left= {
     mode: "maze",
     color: "#A751E3",
     template: "왼쪽으로 회전%1",
-    syntax: ["this", "left"],
+    syntax: ["Scope", "this", "left"],
     params: [
         {
             type: "Image",
@@ -1323,7 +1367,7 @@ Entry.block.maze_step_rotate_right = {
     mode: "maze",
     color: "#A751E3",
     template: "오른쪽으로 회전%1",
-    syntax: ["this", "right"],
+    syntax: ["Scope", "this", "right"],
     params: [
         {
             type: "Image",

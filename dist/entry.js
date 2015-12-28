@@ -8571,8 +8571,11 @@ Entry.JSParser = function(a) {
     return this[a.type](a);
   };
   a.ForStatement = function(a) {
+    var c = a.init, d = a.test, e = a.update;
     a = a.body;
-    return {type:null, body:this[a.type](a)};
+    var f = this.syntax.ForStatement;
+    a = this[a.type](a);
+    return f(c, d, e, a);
   };
   a.BlockStatement = function(a) {
     var c = [];
@@ -8638,7 +8641,7 @@ Entry.JSParser = function(a) {
     throw {message:"var\uc740 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a};
   };
   a.ThisExpression = function(a) {
-    return this.syntax.this;
+    return "this";
   };
   a.ArrayExpression = function(a) {
     throw {message:"array\ub294 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a};
@@ -8677,7 +8680,7 @@ Entry.JSParser = function(a) {
     return ["||", "&&"];
   };
   a.MemberExpression = function(a) {
-    var c = a.object, d = a.property, c = this[c.type](c), d = this[d.type](d);
+    var c = a.object, d = a.property, c = this.syntax.Scope[this[c.type](c)], d = this[d.type](d);
     if (Object(c) !== c || Object.getPrototypeOf(c) !== Object.prototype) {
       throw {message:c + "\uc740(\ub294) \uc798\ubabb\ub41c \uba64\ubc84 \ubcc0\uc218\uc785\ub2c8\ub2e4.", node:a};
     }
@@ -8704,23 +8707,34 @@ Entry.JSParser = function(a) {
     throw {message:"\uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a};
   };
 })(Entry.JSParser.prototype);
-Entry.Parser = function(a, b) {
+Entry.Parser = function(a, b, c) {
   this._mode = a;
   this.syntax = {};
-  this.codeMirror = b;
+  this.codeMirror = c;
+  this._lang = b || "js";
   this.mappingSyntax(a);
-  this._parser = new Entry.JSParser(this.syntax);
+  switch(this._lang) {
+    case "js":
+      this._parser = new Entry.JSParser(this.syntax);
+      break;
+    case "block":
+      this._parser = new Entry.BlockParser(this.syntax);
+  }
 };
 (function(a) {
   a.parse = function(a) {
-    a = acorn.parse(a);
     var c = null;
-    try {
-      c = this._parser.Program(a);
-    } catch (d) {
-      this.codeMirror && (a = this.getLineNumber(d.node.start, d.node.end), a.message = d.message, a.severity = "error", this.codeMirror.markText(a.from, a.to, {className:"CodeMirror-lint-mark-error", __annotation:a, clearOnEnter:!0})), c = [];
+    switch(this._lang) {
+      case "js":
+        a = acorn.parse(a);
+        console.log(a);
+        try {
+          c = this._parser.Program(a);
+        } catch (d) {
+          console.log(d), this.codeMirror && (c = this.getLineNumber(d.node.start, d.node.end), c.message = d.message, c.severity = "error", this.codeMirror.markText(c.from, c.to, {className:"CodeMirror-lint-mark-error", __annotation:c, clearOnEnter:!0})), c = [];
+        }
+      ;
     }
-    console.log("asTree ====", c);
     return c;
   };
   a.getLineNumber = function(a, c) {
@@ -8738,11 +8752,18 @@ Entry.Parser = function(a, b) {
       if (f.mode === a && (f = f.syntax)) {
         for (var g = this.syntax, h = 0;h < f.length;h++) {
           var k = f[h];
+          console.log(k);
+          if (h === f.length - 2 && "function" === typeof f[h + 1]) {
+            g[k] = f[h + 1];
+            debugger;
+            break;
+          }
           g[k] || (g[k] = {});
           h === f.length - 1 ? g[k] = e : g = g[k];
         }
       }
     }
+    console.log(this.syntax);
   };
 })(Entry.Parser.prototype);
 Entry.Playground = function() {
@@ -13315,7 +13336,7 @@ Entry.block.maze_step_start = {skeleton:"basic_event", mode:"maze", event:"start
   }
   Ntry.unitComp = Ntry.entityManager.getComponent(this._unit.id, Ntry.STATIC.UNIT);
 }};
-Entry.block.maze_step_jump = {skeleton:"basic", mode:"maze", color:"#FF6E4B", template:"\ub6f0\uc5b4\ub118\uae30%1", params:[{type:"Image", img:"/img/assets/week/blocks/jump.png", size:24}], syntax:["this", "jump"], func:function() {
+Entry.block.maze_step_jump = {skeleton:"basic", mode:"maze", color:"#FF6E4B", template:"\ub6f0\uc5b4\ub118\uae30%1", params:[{type:"Image", img:"/img/assets/week/blocks/jump.png", size:24}], syntax:["Scope", "this", "jump"], func:function() {
   if (this.isContinue) {
     if (this.isAction) {
       return Entry.STATIC.CONTINUE;
@@ -13331,7 +13352,27 @@ Entry.block.maze_step_jump = {skeleton:"basic", mode:"maze", color:"#FF6E4B", te
     return Entry.STATIC.CONTINUE;
   }
 }};
-Entry.block.maze_step_for = {skeleton:"basic_loop", mode:"maze", color:"#127CDB", template:"%1 \ubc88 \ubc18\ubcf5\ud558\uae30%2", params:[{type:"Dropdown", key:"REPEAT", options:[[1, 1], [2, 2], [3, 3], [4, 4], [5, 5], [6, 6], [7, 7], [8, 8], [9, 9], [10, 10]], value:1}, {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic", position:{x:2, y:15}}], func:function() {
+Entry.block.maze_step_for = {skeleton:"basic_loop", mode:"maze", color:"#127CDB", template:"%1 \ubc88 \ubc18\ubcf5\ud558\uae30%2", syntax:["ForStatement", function(a, b, c, d) {
+  a = a.declarations[0].init.value;
+  var e = b.operator;
+  b = b.right.value;
+  var f = 0;
+  "++" != c.operator && (c = a, a = b, b = c);
+  switch(e) {
+    case "<":
+      f = b - a;
+      break;
+    case "<=":
+      f = b + 1 - a;
+      break;
+    case ">":
+      f = a - b;
+      break;
+    case ">=":
+      f = a + 1 - b;
+  }
+  return {params:[f], type:"maze_step_for", statements:[d]};
+}], params:[{type:"Dropdown", key:"REPEAT", options:[[1, 1], [2, 2], [3, 3], [4, 4], [5, 5], [6, 6], [7, 7], [8, 8], [9, 9], [10, 10]], value:1}, {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic", position:{x:2, y:15}}], func:function() {
   if (void 0 === this.repeatCount) {
     return this.repeatCount = this.block.params[0], Entry.STATIC.CONTINUE;
   }
@@ -13441,7 +13482,7 @@ Entry.block.maze_step_if_4 = {skeleton:"basic_loop", mode:"maze", color:"#498DEB
     }
   }
 }};
-Entry.block.maze_step_move_step = {skeleton:"basic", mode:"maze", color:"#A751E3", template:"\uc55e\uc73c\ub85c \ud55c \uce78 \uc774\ub3d9%1", syntax:["this", "move"], params:[{type:"Image", img:"/img/assets/ntry/bitmap/jr/cparty_go_straight.png", size:24}], func:function() {
+Entry.block.maze_step_move_step = {skeleton:"basic", mode:"maze", color:"#A751E3", template:"\uc55e\uc73c\ub85c \ud55c \uce78 \uc774\ub3d9%1", syntax:["Scope", "this", "move"], params:[{type:"Image", img:"/img/assets/ntry/bitmap/jr/cparty_go_straight.png", size:24}], func:function() {
   if (this.isContinue) {
     if (this.isAction) {
       return Entry.STATIC.CONTINUE;
@@ -13457,7 +13498,7 @@ Entry.block.maze_step_move_step = {skeleton:"basic", mode:"maze", color:"#A751E3
     return Entry.STATIC.CONTINUE;
   }
 }};
-Entry.block.maze_step_rotate_left = {skeleton:"basic", mode:"maze", color:"#A751E3", template:"\uc67c\ucabd\uc73c\ub85c \ud68c\uc804%1", syntax:["this", "left"], params:[{type:"Image", img:"/img/assets/ntry/bitmap/jr/cparty_rotate_l.png", size:24}], func:function() {
+Entry.block.maze_step_rotate_left = {skeleton:"basic", mode:"maze", color:"#A751E3", template:"\uc67c\ucabd\uc73c\ub85c \ud68c\uc804%1", syntax:["Scope", "this", "left"], params:[{type:"Image", img:"/img/assets/ntry/bitmap/jr/cparty_rotate_l.png", size:24}], func:function() {
   if (this.isContinue) {
     if (this.isAction) {
       return Entry.STATIC.CONTINUE;
@@ -13473,7 +13514,7 @@ Entry.block.maze_step_rotate_left = {skeleton:"basic", mode:"maze", color:"#A751
     return Entry.STATIC.CONTINUE;
   }
 }};
-Entry.block.maze_step_rotate_right = {skeleton:"basic", mode:"maze", color:"#A751E3", template:"\uc624\ub978\ucabd\uc73c\ub85c \ud68c\uc804%1", syntax:["this", "right"], params:[{type:"Image", img:"/img/assets/ntry/bitmap/jr/cparty_rotate_r.png", size:24}], func:function() {
+Entry.block.maze_step_rotate_right = {skeleton:"basic", mode:"maze", color:"#A751E3", template:"\uc624\ub978\ucabd\uc73c\ub85c \ud68c\uc804%1", syntax:["Scope", "this", "right"], params:[{type:"Image", img:"/img/assets/ntry/bitmap/jr/cparty_rotate_r.png", size:24}], func:function() {
   if (this.isContinue) {
     if (this.isAction) {
       return Entry.STATIC.CONTINUE;
@@ -15043,7 +15084,7 @@ Entry.Block.MAGNET_OFFSET = .4;
   };
   a.toJS = function() {
     var a = this._schema.syntax;
-    return !a || this._schema.event ? "" : a.join(".") + "();\n";
+    return !a || this._schema.event ? "" : a.splice(1, a.length - 1).join(".") + "();\n";
   };
   a.copy = function() {
     for (var a = this.getThread(), c = a.getBlocks().indexOf(this), c = a.toJSON(!0, c), a = [], d = new Entry.Thread([], this.getCode()), e = 0;e < c.length;e++) {

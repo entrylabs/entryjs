@@ -44,11 +44,10 @@ Entry.JSParser = function(syntax) {
 
         var contents = "";
 
+        var analyzer = this.syntax.ForStatement;
+        body = this[body.type](body);
 
-        return {
-            type: null,
-            body: this[body.type](body)
-        };
+        return analyzer(init, test, update, body);
     };
 
     p.BlockStatement = function(node) {
@@ -244,7 +243,7 @@ Entry.JSParser = function(syntax) {
 
     // Expression
     p.ThisExpression = function(node) {
-        return this.syntax.this;
+        return "this";
     };
 
     p.ArrayExpression = function(node) {
@@ -354,7 +353,7 @@ Entry.JSParser = function(syntax) {
             property = node.property,
             computed = node.computed;
 
-        object = this[object.type](object);
+        object = this.syntax.Scope[this[object.type](object)];
 
         property = this[property.type](property);
 
@@ -421,5 +420,4 @@ Entry.JSParser = function(syntax) {
             node : node
         }
     };
-
 })(Entry.JSParser.prototype);

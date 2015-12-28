@@ -8,40 +8,55 @@ goog.provide("Entry.Parser");
 goog.require("Entry.JSParser");
 goog.require("Entry.BlockParser");
 
-Entry.Parser = function(mode, cm) {
+Entry.Parser = function(mode, syntax, cm) {
     this._mode = mode; // maze ai workspace
     this.syntax = {};
     this.codeMirror = cm;
+    this._lang = syntax || "js";
 
     this.mappingSyntax(mode);
-    this._parser = new Entry.JSParser(this.syntax);
+    switch (this._lang) {
+        case "js":
+            this._parser = new Entry.JSParser(this.syntax);
+            break;
+        case "block":
+            this._parser = new Entry.BlockParser(this.syntax);
+            break;
+    }
 };
 
 (function(p) {
     p.parse = function(code) {
-        var astTree = acorn.parse(code),
-            block = null;
+        var result = null;
 
-        try {
-            block = this._parser.Program(astTree);
-        } catch(error) {
-            // alert(error.message);
-            if (this.codeMirror) {
-                var anotation = this.getLineNumber(error.node.start, error.node.end);
-                anotation.message = error.message;
-                anotation.severity = "error";
-                var a = this.codeMirror.markText(anotation.from, anotation.to, {
-                    className: "CodeMirror-lint-mark-error",
-                    __annotation: anotation,
-                    clearOnEnter: true
-                });
-            }
-            block = [];
+        switch (this._lang) {
+            case "js":
+                var astTree = acorn.parse(code);
+                console.log(astTree);
+
+                try {
+                    result = this._parser.Program(astTree);
+                } catch(error) {
+                    console.log(error);
+                    // alert(error.message);
+                    if (this.codeMirror) {
+                        var anotation = this.getLineNumber(error.node.start,
+                                                           error.node.end);
+                        anotation.message = error.message;
+                        anotation.severity = "error";
+                        var a = this.codeMirror.markText(
+                            anotation.from, anotation.to, {
+                            className: "CodeMirror-lint-mark-error",
+                            __annotation: anotation,
+                            clearOnEnter: true
+                        });
+                    }
+                    result = [];
+                }
+                break;
         }
 
-        console.log("asTree ====", block);
-
-        return block;
+        return result;
     };
 
     p.getLineNumber = function (start, end) {
@@ -75,6 +90,13 @@ Entry.Parser = function(mode, cm) {
                 var syntax = this.syntax;
                 for (var j = 0; j < syntaxArray.length; j++) {
                     var key = syntaxArray[j];
+                    console.log(key);
+                    if (j === syntaxArray.length - 2 &&
+                       typeof syntaxArray[j + 1] === "function") {
+                        syntax[key] = syntaxArray[j + 1];
+                        debugger;
+                        break;
+                    }
                     if (!syntax[key]) {
                         syntax[key] = {};
                     }
@@ -86,5 +108,6 @@ Entry.Parser = function(mode, cm) {
                 }
             }
         }
+        console.log(this.syntax);
     };
 })(Entry.Parser.prototype);
