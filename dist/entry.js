@@ -8646,7 +8646,7 @@ Entry.JSParser = function(a) {
   a.ObjectExpression = function(a) {
     throw {message:"object\ub294 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a};
   };
-  a.property = function(a) {
+  a.Property = function(a) {
     throw {message:"init, get, set\uc740 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a};
   };
   a.FunctionExpression = function(a) {
@@ -8718,7 +8718,7 @@ Entry.Parser = function(a, b) {
     try {
       c = this._parser.Program(a);
     } catch (d) {
-      a = this.getLineNumber(d.node.start, d.node.end), a.message = d.message, a.severity = "error", this.codeMirror.markText(a.from, a.to, {className:"CodeMirror-lint-mark-error", __annotation:a, clearOnEnter:!0}), c = [];
+      this.codeMirror && (a = this.getLineNumber(d.node.start, d.node.end), a.message = d.message, a.severity = "error", this.codeMirror.markText(a.from, a.to, {className:"CodeMirror-lint-mark-error", __annotation:a, clearOnEnter:!0})), c = [];
     }
     console.log("asTree ====", c);
     return c;
@@ -15441,7 +15441,7 @@ Entry.Vim = function(a) {
     return console.error("Dom is not div element");
   }
   this.createDom(a);
-  this._parser = new Entry.Parser("maze", this.codeMirror);
+  this._parser = new Entry.Parser("maze", "js", this.codeMirror);
   this._blockParser = new Entry.Parser("maze", "block");
   Entry.Model(this, !1);
 };

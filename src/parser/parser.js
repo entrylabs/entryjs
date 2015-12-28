@@ -6,6 +6,7 @@
 goog.provide("Entry.Parser");
 
 goog.require("Entry.JSParser");
+goog.require("Entry.BlockParser");
 
 Entry.Parser = function(mode, cm) {
     this._mode = mode; // maze ai workspace
@@ -25,14 +26,16 @@ Entry.Parser = function(mode, cm) {
             block = this._parser.Program(astTree);
         } catch(error) {
             // alert(error.message);
-            var anotation = this.getLineNumber(error.node.start, error.node.end);
-            anotation.message = error.message;
-            anotation.severity = "error";
-            var a = this.codeMirror.markText(anotation.from, anotation.to, {
-                className: "CodeMirror-lint-mark-error",
-                __annotation: anotation,
-                clearOnEnter: true
-            });
+            if (this.codeMirror) {
+                var anotation = this.getLineNumber(error.node.start, error.node.end);
+                anotation.message = error.message;
+                anotation.severity = "error";
+                var a = this.codeMirror.markText(anotation.from, anotation.to, {
+                    className: "CodeMirror-lint-mark-error",
+                    __annotation: anotation,
+                    clearOnEnter: true
+                });
+            }
             block = [];
         }
 

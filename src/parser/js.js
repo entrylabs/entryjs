@@ -265,7 +265,7 @@ Entry.JSParser = function(syntax) {
         }
     };
 
-    p.property = function(node) {
+    p.Property = function(node) {
         var key = node.key,
             value = node.value,
             kind = node.kind;
@@ -362,7 +362,7 @@ Entry.JSParser = function(syntax) {
             throw {
                 message : object + '은(는) 잘못된 멤버 변수입니다.',
                 node : node
-            }  
+            }
         }
 
         var blockType = object[property];
