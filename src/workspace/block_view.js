@@ -311,7 +311,28 @@ Entry.BlockView = function(block, board) {
 
         var blockView = this;
         var board = this.getBoard();
+
+        if(board.workspace.getMode() === Entry.Workspace.MODE_VIMBOARD) {
+            if(e) {
+                var dragEnd = new MouseEvent('dragStart', {
+                    'view': window,
+                    'bubbles': true,
+                    'cancelable': true,
+                    'clientX' : e.clientX,
+                    'clientY' : e.clientY
+                });
+
+                document.getElementsByClassName('CodeMirror')[0].dispatchEvent(dragEnd);                
+            }
+        }
+
         function onMouseMove(e) {
+            var workspaceMode = board.workspace.getMode();
+
+            if(workspaceMode === Entry.Workspace.MODE_VIMBOARD) {
+                p.vimBoardEvent(e, 'dragOver');
+            }
+
             var mouseDownCoordinate = blockView.mouseDownCoordinate;
             if (blockView.dragMode == Entry.DRAG_MODE_DRAG ||
                 e.pageX !== mouseDownCoordinate.x ||
@@ -369,38 +390,69 @@ Entry.BlockView = function(block, board) {
             Entry.GlobalSvg.remove();
             $(document).unbind('.block');
             delete this.mouseDownCoordinate;
-            blockView.terminateDrag();
+            blockView.terminateDrag(e);
             if (board) board.set({dragBlock: null});
             delete blockView.dragInstance;
         }
         e.stopPropagation();
     };
 
-    p.terminateDrag = function() {
+    p.vimBoardEvent = function(event, type, block) {
+        if(event) {
+            var dragEvent = new MouseEvent(type, {
+                'view': window,
+                'bubbles': true,
+                'cancelable': true,
+                'clientX' : event.clientX,
+                'clientY' : event.clientY
+            });
+
+            if(block) {
+                // dragEvent.block = block;
+            }
+
+            if(!this._vimBoard) {
+                this._vimBoard = document.getElementsByClassName('CodeMirror')[0];
+            }
+            this._vimBoard.dispatchEvent(dragEvent);                
+        }
+    }
+
+    p.terminateDrag = function(e) {
         var board = this.getBoard();
         var dragMode = this.dragMode;
         var block = this.block;
+        var workspaceMode = board.workspace.getMode();
         this.removeDragging();
-        if (board instanceof Entry.BlockMenu) {
-            board.terminateDrag();
-        } else if (dragMode !== Entry.DRAG_MODE_MOUSEDOWN) {
-            if (this.dragInstance && this.dragInstance.isNew)
-                block.doAdd();
-            var prevBlock = this.dragInstance && this.dragInstance.prev;
-            var closeBlock = this._getCloseBlock();
-            if (!prevBlock && !closeBlock) {
-                if (dragMode == Entry.DRAG_MODE_DRAG)
-                    block.doMove();
-            } else {
-                if (closeBlock) {
-                    this.set({animating: true});
-                    if (closeBlock.next)
-                        closeBlock.next.view.set({animating: true});
-                    block.doInsert(closeBlock);
-                    createjs.Sound.play('entryMagneting');
-                } else block.doSeparate();
+
+
+        if(workspaceMode === Entry.Workspace.MODE_VIMBOARD) {
+            if (board instanceof Entry.BlockMenu) {
+                board.terminateDrag();
             }
-            board.setMagnetedBlock(null);
+            this.vimBoardEvent(e, 'dragEnd', block);
+        } else {
+            if (board instanceof Entry.BlockMenu) {
+                board.terminateDrag();
+            } else if (dragMode !== Entry.DRAG_MODE_MOUSEDOWN) {
+                if (this.dragInstance && this.dragInstance.isNew)
+                    block.doAdd();
+                var prevBlock = this.dragInstance && this.dragInstance.prev;
+                var closeBlock = this._getCloseBlock();
+                if (!prevBlock && !closeBlock) {
+                    if (dragMode == Entry.DRAG_MODE_DRAG)
+                        block.doMove();
+                } else {
+                    if (closeBlock) {
+                        this.set({animating: true});
+                        if (closeBlock.next)
+                            closeBlock.next.view.set({animating: true});
+                        block.doInsert(closeBlock);
+                        createjs.Sound.play('entryMagneting');
+                    } else block.doSeparate();
+                }
+                board.setMagnetedBlock(null);
+            }
         }
         this.dragMode = Entry.DRAG_MODE_NONE;
 

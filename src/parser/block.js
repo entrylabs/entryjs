@@ -14,7 +14,7 @@ Entry.BlockParser = function(syntax) {
 
 (function(p){
     p.Code = function(code) {
-        if (code instanceof Entry.Thread)
+        if (!(code instanceof Entry.Thread))
             return this.Thread(code);
 
         var textCode = "",
@@ -29,7 +29,7 @@ Entry.BlockParser = function(syntax) {
     };
 
     p.Thread = function(thread) {
-        if (code instanceof Entry.Block)
+        if (thread instanceof Entry.Block)
             return this.Block(thread);
         var code = "",
             blocks = thread.getBlocks();
