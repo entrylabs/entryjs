@@ -22,7 +22,7 @@ Entry.skeleton.basic = {
     box: function(block) {
         var width = block ? block.contentWidth : 150;
         return {
-            offsetX: 0, offsetY: 0,
+            offsetX: -8, offsetY: 0,
             width: width + 30,
             height: 30,
             marginBottom: 0
@@ -88,7 +88,7 @@ Entry.skeleton.basic_loop = {
         var contentWidth = block.contentWidth;
         var contentHeight = Math.max(block.contentHeight, 25);
         return {
-            offsetX: 0, offsetY: 0,
+            offsetX: -8, offsetY: 0,
             width: contentWidth,
             height: contentHeight + 46,
             marginBottom: 0

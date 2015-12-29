@@ -17,6 +17,7 @@ goog.provide('Entry.GlobalSvg');
             position: 'fixed',
             width: 0,
             height: 0,
+            'background-color': 'orange',
             display: 'none',
             'z-index': '1111'
         });

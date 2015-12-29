@@ -14790,7 +14790,7 @@ Entry.GlobalSvg = {};
       return console.error("Snap library is required");
     }
     this.svgDom = Entry.Dom($('<svg id="globalSvg" width="200" height="200"version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'), {parent:$("body")});
-    this.svgDom.css({position:"fixed", width:0, height:0, display:"none", "z-index":"1111"});
+    this.svgDom.css({position:"fixed", width:0, height:0, "background-color":"orange", display:"none", "z-index":"1111"});
     this.snap = Snap("#globalSvg");
   };
   a.setView = function(a, c) {
@@ -14935,7 +14935,7 @@ Entry.skeleton.basic = {path:function(a) {
   a = Math.max(0, a - 6);
   return "m -8,0 l 8,8 8,-8 h %w a 15,15 0 0,1 0,30 h -%w l -8,8 -8,-8 v -30 z".replace(/%w/gi, a);
 }, box:function(a) {
-  return {offsetX:0, offsetY:0, width:(a ? a.contentWidth : 150) + 30, height:30, marginBottom:0};
+  return {offsetX:-8, offsetY:0, width:(a ? a.contentWidth : 150) + 30, height:30, marginBottom:0};
 }, magnets:{previous:{}, next:{x:0, y:31}}, contentPos:function(a) {
   return {x:14, y:15};
 }};
@@ -14954,7 +14954,7 @@ Entry.skeleton.basic_loop = {path:function(a) {
 }, magnets:function() {
   return {previous:{x:0, y:0}, next:{x:0, y:105}};
 }, box:function(a) {
-  return {offsetX:0, offsetY:0, width:a.contentWidth, height:Math.max(a.contentHeight, 25) + 46, marginBottom:0};
+  return {offsetX:-8, offsetY:0, width:a.contentWidth, height:Math.max(a.contentHeight, 25) + 46, marginBottom:0};
 }, contentPos:function() {
   return {x:14, y:15};
 }};
