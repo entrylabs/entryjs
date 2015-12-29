@@ -8539,9 +8539,14 @@ Entry.Painter.prototype.selectToolbox = function(a) {
 };
 Entry.BlockParser = function(a) {
   this.syntax = a;
+  this._iterVariableCount = 0;
+  this._iterVariableChunk = ["i", "j", "k"];
 };
 (function(a) {
   a.Code = function(a) {
+    if (a instanceof Entry.Thread) {
+      return this.Thread(a);
+    }
     var c = "";
     a = a.getThreads();
     for (var d = 0;d < a.length;d++) {
@@ -8550,6 +8555,9 @@ Entry.BlockParser = function(a) {
     return c;
   };
   a.Thread = function(a) {
+    if (c instanceof Entry.Block) {
+      return this.Block(a);
+    }
     var c = "";
     a = a.getBlocks();
     for (var d = 0;d < a.length;d++) {
@@ -8568,17 +8576,28 @@ Entry.BlockParser = function(a) {
     a = a._schema.syntax.concat();
     return a.splice(1, a.length - 1).join(".") + "();\n";
   };
-  a.ForStatement = function(a) {
-    var c = a.params[0];
-    console.log(a.statements[0]);
+  a.BasicIteration = function(a) {
+    var c = a.params[0], d = this.publishIterateVariable();
     a = this.Thread(a.statements[0]);
-    return "for (var i = 0; i < " + c + "; i++){\n" + this.indent(a) + "}\n";
+    this.unpublishIterateVariable();
+    return "for (var " + d + " = 0; " + d + " < " + c + "; " + d + "++){\n" + this.indent(a) + "}\n";
   };
   a.indent = function(a) {
     var c = "    ";
     a = a.split("\n");
     a.pop();
     return c += a.join("\n    ") + "\n";
+  };
+  a.publishIterateVariable = function() {
+    var a = "", c = this._iterVariableCount;
+    do {
+      a = this._iterVariableChunk[c % 3] + a, c = parseInt(c / 3) - 1, 0 === c && (a = this._iterVariableChunk[0] + a);
+    } while (0 < c);
+    this._iterVariableCount++;
+    return a;
+  };
+  a.unpublishIterateVariable = function() {
+    this._iterVariableCount && this._iterVariableCount--;
   };
 })(Entry.BlockParser.prototype);
 Entry.JSParser = function(a) {
@@ -8595,19 +8614,34 @@ Entry.JSParser = function(a) {
     }
     return c;
   };
-  a.Identifier = function(a) {
-    return a.name;
+  a.Identifier = function(a, c) {
+    return c ? c[a.name] : this.syntax.Scope[a.name];
   };
   a.ExpressionStatement = function(a) {
     a = a.expression;
     return this[a.type](a);
   };
   a.ForStatement = function(a) {
-    var c = a.init, d = a.test, e = a.update;
-    a = a.body;
-    var f = this.syntax.ForStatement;
-    a = this[a.type](a);
-    return f(c, d, e, a);
+    var c = a.init, d = a.test, e = a.update, f = a.body;
+    if (this.syntax.ForStatement) {
+      throw {message:"\uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a};
+    }
+    var f = this[f.type](f), c = c.declarations[0].init.value, g = d.operator, d = d.right.value, h = 0;
+    "++" != e.operator && (e = c, c = d, d = e);
+    switch(g) {
+      case "<":
+        h = d - c;
+        break;
+      case "<=":
+        h = d + 1 - c;
+        break;
+      case ">":
+        h = c - d;
+        break;
+      case ">=":
+        h = c + 1 - d;
+    }
+    return this.BasicIteration(a, h, f);
   };
   a.BlockStatement = function(a) {
     var c = [];
@@ -8712,7 +8746,7 @@ Entry.JSParser = function(a) {
     return ["||", "&&"];
   };
   a.MemberExpression = function(a) {
-    var c = a.object, d = a.property, c = this.syntax.Scope[this[c.type](c)], d = this[d.type](d);
+    var c = a.object, d = a.property, c = this[c.type](c), d = this[d.type](d, c);
     if (Object(c) !== c || Object.getPrototypeOf(c) !== Object.prototype) {
       throw {message:c + "\uc740(\ub294) \uc798\ubabb\ub41c \uba64\ubc84 \ubcc0\uc218\uc785\ub2c8\ub2e4.", node:a};
     }
@@ -8737,6 +8771,13 @@ Entry.JSParser = function(a) {
   };
   a.SequenceExpression = function(a) {
     throw {message:"\uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a};
+  };
+  a.BasicIteration = function(a, c, d) {
+    var e = this.syntax.BasicIteration;
+    if (!e) {
+      throw {message:"\uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a};
+    }
+    return {params:[c], type:e, statements:[d]};
   };
 })(Entry.JSParser.prototype);
 Entry.Parser = function(a, b, c) {
@@ -13367,7 +13408,7 @@ Entry.block.maze_step_start = {skeleton:"basic_event", mode:"maze", event:"start
   }
   Ntry.unitComp = Ntry.entityManager.getComponent(this._unit.id, Ntry.STATIC.UNIT);
 }};
-Entry.block.maze_step_jump = {skeleton:"basic", mode:"maze", color:"#FF6E4B", template:"\ub6f0\uc5b4\ub118\uae30%1", params:[{type:"Image", img:"/img/assets/week/blocks/jump.png", size:24}], syntax:["Scope", "this", "jump"], func:function() {
+Entry.block.maze_step_jump = {skeleton:"basic", mode:"maze", color:"#FF6E4B", template:"\ub6f0\uc5b4\ub118\uae30%1", params:[{type:"Image", img:"/img/assets/week/blocks/jump.png", size:24}], syntax:["Scope", "jump"], func:function() {
   if (this.isContinue) {
     if (this.isAction) {
       return Entry.STATIC.CONTINUE;
@@ -13383,27 +13424,7 @@ Entry.block.maze_step_jump = {skeleton:"basic", mode:"maze", color:"#FF6E4B", te
     return Entry.STATIC.CONTINUE;
   }
 }};
-Entry.block.maze_step_for = {skeleton:"basic_loop", mode:"maze", color:"#127CDB", template:"%1 \ubc88 \ubc18\ubcf5\ud558\uae30%2", syntax:["ForStatement", function(a, b, c, d) {
-  a = a.declarations[0].init.value;
-  var e = b.operator;
-  b = b.right.value;
-  var f = 0;
-  "++" != c.operator && (c = a, a = b, b = c);
-  switch(e) {
-    case "<":
-      f = b - a;
-      break;
-    case "<=":
-      f = b + 1 - a;
-      break;
-    case ">":
-      f = a - b;
-      break;
-    case ">=":
-      f = a + 1 - b;
-  }
-  return {params:[f], type:"maze_step_for", statements:[d]};
-}], params:[{type:"Dropdown", key:"REPEAT", options:[[1, 1], [2, 2], [3, 3], [4, 4], [5, 5], [6, 6], [7, 7], [8, 8], [9, 9], [10, 10]], value:1}, {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic", position:{x:2, y:15}}], func:function() {
+Entry.block.maze_step_for = {skeleton:"basic_loop", mode:"maze", color:"#127CDB", template:"%1 \ubc88 \ubc18\ubcf5\ud558\uae30%2", syntax:["BasicIteration"], params:[{type:"Dropdown", key:"REPEAT", options:[[1, 1], [2, 2], [3, 3], [4, 4], [5, 5], [6, 6], [7, 7], [8, 8], [9, 9], [10, 10]], value:1}, {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic", position:{x:2, y:15}}], func:function() {
   if (void 0 === this.repeatCount) {
     return this.repeatCount = this.block.params[0], Entry.STATIC.CONTINUE;
   }
@@ -13513,7 +13534,7 @@ Entry.block.maze_step_if_4 = {skeleton:"basic_loop", mode:"maze", color:"#498DEB
     }
   }
 }};
-Entry.block.maze_step_move_step = {skeleton:"basic", mode:"maze", color:"#A751E3", template:"\uc55e\uc73c\ub85c \ud55c \uce78 \uc774\ub3d9%1", syntax:["Scope", "this", "move"], params:[{type:"Image", img:"/img/assets/ntry/bitmap/jr/cparty_go_straight.png", size:24}], func:function() {
+Entry.block.maze_step_move_step = {skeleton:"basic", mode:"maze", color:"#A751E3", template:"\uc55e\uc73c\ub85c \ud55c \uce78 \uc774\ub3d9%1", syntax:["Scope", "move"], params:[{type:"Image", img:"/img/assets/ntry/bitmap/jr/cparty_go_straight.png", size:24}], func:function() {
   if (this.isContinue) {
     if (this.isAction) {
       return Entry.STATIC.CONTINUE;
@@ -13529,7 +13550,7 @@ Entry.block.maze_step_move_step = {skeleton:"basic", mode:"maze", color:"#A751E3
     return Entry.STATIC.CONTINUE;
   }
 }};
-Entry.block.maze_step_rotate_left = {skeleton:"basic", mode:"maze", color:"#A751E3", template:"\uc67c\ucabd\uc73c\ub85c \ud68c\uc804%1", syntax:["Scope", "this", "left"], params:[{type:"Image", img:"/img/assets/ntry/bitmap/jr/cparty_rotate_l.png", size:24}], func:function() {
+Entry.block.maze_step_rotate_left = {skeleton:"basic", mode:"maze", color:"#A751E3", template:"\uc67c\ucabd\uc73c\ub85c \ud68c\uc804%1", syntax:["Scope", "left"], params:[{type:"Image", img:"/img/assets/ntry/bitmap/jr/cparty_rotate_l.png", size:24}], func:function() {
   if (this.isContinue) {
     if (this.isAction) {
       return Entry.STATIC.CONTINUE;
@@ -13545,7 +13566,7 @@ Entry.block.maze_step_rotate_left = {skeleton:"basic", mode:"maze", color:"#A751
     return Entry.STATIC.CONTINUE;
   }
 }};
-Entry.block.maze_step_rotate_right = {skeleton:"basic", mode:"maze", color:"#A751E3", template:"\uc624\ub978\ucabd\uc73c\ub85c \ud68c\uc804%1", syntax:["Scope", "this", "right"], params:[{type:"Image", img:"/img/assets/ntry/bitmap/jr/cparty_rotate_r.png", size:24}], func:function() {
+Entry.block.maze_step_rotate_right = {skeleton:"basic", mode:"maze", color:"#A751E3", template:"\uc624\ub978\ucabd\uc73c\ub85c \ud68c\uc804%1", syntax:["Scope", "right"], params:[{type:"Image", img:"/img/assets/ntry/bitmap/jr/cparty_rotate_r.png", size:24}], func:function() {
   if (this.isContinue) {
     if (this.isAction) {
       return Entry.STATIC.CONTINUE;
