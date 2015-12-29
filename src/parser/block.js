@@ -14,9 +14,11 @@ Entry.BlockParser = function(syntax) {
 
 (function(p){
     p.Code = function(code) {
-        var textCode = "";
+        if (code instanceof Entry.Thread)
+            return this.Thread(code);
 
-        var threads = code.getThreads();
+        var textCode = "",
+            threads = code.getThreads();
 
         for (var i = 0; i < threads.length; i++) {
             var thread = threads[i];
@@ -27,8 +29,10 @@ Entry.BlockParser = function(syntax) {
     };
 
     p.Thread = function(thread) {
-        var code = "";
-        var blocks = thread.getBlocks();
+        if (code instanceof Entry.Block)
+            return this.Block(thread);
+        var code = "",
+            blocks = thread.getBlocks();
 
         for (var i = 0; i < blocks.length; i++) {
             var block = blocks[i];

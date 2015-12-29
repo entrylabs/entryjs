@@ -8544,6 +8544,9 @@ Entry.BlockParser = function(a) {
 };
 (function(a) {
   a.Code = function(a) {
+    if (a instanceof Entry.Thread) {
+      return this.Thread(a);
+    }
     var c = "";
     a = a.getThreads();
     for (var d = 0;d < a.length;d++) {
@@ -8552,6 +8555,9 @@ Entry.BlockParser = function(a) {
     return c;
   };
   a.Thread = function(a) {
+    if (c instanceof Entry.Block) {
+      return this.Block(c);
+    }
     var c = "";
     a = a.getBlocks();
     for (var d = 0;d < a.length;d++) {
