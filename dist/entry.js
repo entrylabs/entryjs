@@ -8539,6 +8539,8 @@ Entry.Painter.prototype.selectToolbox = function(a) {
 };
 Entry.BlockParser = function(a) {
   this.syntax = a;
+  this._iterVariableCount = 0;
+  this._iterVariableChunk = ["i", "j", "k"];
 };
 (function(a) {
   a.Code = function(a) {
@@ -8569,16 +8571,27 @@ Entry.BlockParser = function(a) {
     return a.splice(1, a.length - 1).join(".") + "();\n";
   };
   a.ForStatement = function(a) {
-    var c = a.params[0];
-    console.log(a.statements[0]);
+    var c = a.params[0], d = this.publishIterateVariable();
     a = this.Thread(a.statements[0]);
-    return "for (var i = 0; i < " + c + "; i++){\n" + this.indent(a) + "}\n";
+    this.unpublishIterateVariable();
+    return "for (var " + d + " = 0; " + d + " < " + c + "; " + d + "++){\n" + this.indent(a) + "}\n";
   };
   a.indent = function(a) {
     var c = "    ";
     a = a.split("\n");
     a.pop();
     return c += a.join("\n    ") + "\n";
+  };
+  a.publishIterateVariable = function() {
+    var a = "", c = this._iterVariableCount;
+    do {
+      a = this._iterVariableChunk[c % 3] + a, c = parseInt(c / 3) - 1, 0 === c && (a = this._iterVariableChunk[0] + a);
+    } while (0 < c);
+    this._iterVariableCount++;
+    return a;
+  };
+  a.unpublishIterateVariable = function() {
+    this._iterVariableCount && this._iterVariableCount--;
   };
 })(Entry.BlockParser.prototype);
 Entry.JSParser = function(a) {

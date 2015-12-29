@@ -7,6 +7,9 @@ goog.provide("Entry.BlockParser");
 
 Entry.BlockParser = function(syntax) {
     this.syntax = syntax;
+
+    this._iterVariableCount = 0;
+    this._iterVariableChunk = ["i", "j", "k"];
 };
 
 (function(p){
@@ -53,9 +56,11 @@ Entry.BlockParser = function(syntax) {
 
     p.ForStatement = function(block) {
         var iterateNumber = block.params[0];
-        console.log(block.statements[0]);
+        var iterVariable = this.publishIterateVariable();
         var statementCode = this.Thread(block.statements[0]);
-        var code = "for (var i = 0; i < " + iterateNumber + "; i++){\n" +
+        this.unpublishIterateVariable();
+        var code = "for (var " + iterVariable + " = 0; " + iterVariable +
+            " < " + iterateNumber + "; " + iterVariable + "++){\n" +
             this.indent(statementCode) + "}\n"
         return code;
     };
@@ -66,6 +71,25 @@ Entry.BlockParser = function(syntax) {
         indentedCode.pop();
         result += indentedCode.join("\n    ") + "\n";
         return result;
+    };
+
+    p.publishIterateVariable = function() {
+        var iterVariable = "";
+        var iterVariableCount = this._iterVariableCount;
+        do {
+            var chunk = this._iterVariableChunk[iterVariableCount % 3];
+            iterVariable = chunk + iterVariable;
+            iterVariableCount = parseInt(iterVariableCount / 3) - 1;
+            if (iterVariableCount === 0)
+                iterVariable = this._iterVariableChunk[0] + iterVariable;
+        } while (iterVariableCount > 0)
+        this._iterVariableCount++;
+        return iterVariable;
+    };
+
+    p.unpublishIterateVariable = function() {
+        if (this._iterVariableCount)
+            this._iterVariableCount--;
     };
 
 })(Entry.BlockParser.prototype);
