@@ -4,6 +4,7 @@ goog.provide('Entry.GlobalSvg');
 
 (function(gs) {
     gs.createDom = function() {
+        if (this.svgDom) return;
         if (typeof window.Snap !== "function")
             return console.error("Snap library is required");
 
@@ -25,7 +26,7 @@ goog.provide('Entry.GlobalSvg');
         this.snap = Snap('#globalSvg');
     };
 
-    gs.setView = function(view, event) {
+    gs.setView = function(view) {
         if (view == this._view) {
             this.position();
             return;
