@@ -408,7 +408,7 @@ Entry.BlockView = function(block, board) {
             });
 
             if(block) {
-                // dragEvent.block = block;
+                dragEvent.block = block;
             }
 
             if(!this._vimBoard) {

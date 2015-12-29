@@ -41,16 +41,20 @@ Entry.Vim = function(dom) {
             lint: true,
             viewportMargin: 10
         });
-        var cm = this.codeMirror;
+
         var parent = this;
-        window.c = this.codeMirror;
         document.addEventListener('dragEnd', function (e) {
-            // var textCode = parent.getCodeToText(e.block);
+            var textCode = parent.getCodeToText(e.block);
             parent.codeMirror.display.dragFunctions.leave(e);
-            console.log(e);
-            CodeMirror.signal(cm, 'mousedown', e);
-            // parent.codeMirror.replaceSelection(textCode);
-            console.log(parent.codeMirror.getCursor());
+            var mousedown = new MouseEvent('mousedown', {
+                'view': window,
+                'bubbles': true,
+                'cancelable': true,
+                'clientX' : e.clientX,
+                'clientY' : e.clientY
+            });
+            parent.codeMirror.display.scroller.dispatchEvent(mousedown);
+            parent.codeMirror.replaceSelection(textCode);
         });
         document.addEventListener('dragOver', function (e) {
             parent.codeMirror.display.dragFunctions.over(e);

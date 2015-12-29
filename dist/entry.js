@@ -8544,8 +8544,11 @@ Entry.BlockParser = function(a) {
 };
 (function(a) {
   a.Code = function(a) {
-    if (!(a instanceof Entry.Thread)) {
+    if (a instanceof Entry.Thread) {
       return this.Thread(a);
+    }
+    if (a instanceof Entry.Block) {
+      return this.Block(a);
     }
     var c = "";
     a = a.getThreads();
@@ -13906,7 +13909,7 @@ Entry.BlockView = function(a, b) {
     b.stopPropagation();
   };
   a.vimBoardEvent = function(a, c, d) {
-    a && (a = new MouseEvent(c, {view:window, bubbles:!0, cancelable:!0, clientX:a.clientX, clientY:a.clientY}), this._vimBoard || (this._vimBoard = document.getElementsByClassName("CodeMirror")[0]), this._vimBoard.dispatchEvent(a));
+    a && (a = new MouseEvent(c, {view:window, bubbles:!0, cancelable:!0, clientX:a.clientX, clientY:a.clientY}), d && (a.block = d), this._vimBoard || (this._vimBoard = document.getElementsByClassName("CodeMirror")[0]), this._vimBoard.dispatchEvent(a));
   };
   a.terminateDrag = function(a) {
     var c = this.getBoard(), d = this.dragMode, e = this.block, f = c.workspace.getMode();
@@ -15574,13 +15577,14 @@ Entry.Vim = function(a) {
   a.createDom = function(a) {
     var c = a;
     this.view = Entry.Dom("div", {parent:c, class:"entryVimBoard"});
-    var d = this.codeMirror = CodeMirror(this.view[0], {lineNumbers:!0, value:"this.move();\nthis.move();\nthis.move();\n", mode:{name:"javascript", globalVars:!0}, theme:"default", indentUnit:4, styleActiveLine:!0, extraKeys:{"Shift-Space":"autocomplete"}, lint:!0, viewportMargin:10}), c = this;
-    window.c = this.codeMirror;
+    this.codeMirror = CodeMirror(this.view[0], {lineNumbers:!0, value:"this.move();\nthis.move();\nthis.move();\n", mode:{name:"javascript", globalVars:!0}, theme:"default", indentUnit:4, styleActiveLine:!0, extraKeys:{"Shift-Space":"autocomplete"}, lint:!0, viewportMargin:10});
+    c = this;
     document.addEventListener("dragEnd", function(a) {
+      var b = c.getCodeToText(a.block);
       c.codeMirror.display.dragFunctions.leave(a);
-      console.log(a);
-      CodeMirror.signal(d, "mousedown", a);
-      console.log(c.codeMirror.getCursor());
+      a = new MouseEvent("mousedown", {view:window, bubbles:!0, cancelable:!0, clientX:a.clientX, clientY:a.clientY});
+      c.codeMirror.display.scroller.dispatchEvent(a);
+      c.codeMirror.replaceSelection(b);
     });
     document.addEventListener("dragOver", function(a) {
       c.codeMirror.display.dragFunctions.over(a);
