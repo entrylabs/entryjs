@@ -239,6 +239,7 @@ EntryStatic.getAllBlocks = function() {
                 "arduino_toggle_led",
                 "arduino_toggle_pwm",
                 "arduino_convert_scale",
+                "neobot_sensor_value",
                 "bitbrick_sensor_value",
                 "bitbrick_is_touch_pressed",
                 "bitbrick_turn_off_color_led",
@@ -1324,6 +1325,11 @@ EntryStatic.blockInfo = {
         "class": "calc_string",
         "isNotFor": [],
         "usage": []
+    },
+    "neobot_sensor_value": {
+        "isNotFor": ['neobot'],
+        "xml": "<block type='neobot_sensor_value'></block>",
+        "class": "condition"
     },
     "bitbrick_sensor_value": {
         "isNotFor": ['bitbrick'],

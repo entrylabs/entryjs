@@ -3645,6 +3645,22 @@ Entry.block.direction_relative_duration = function(a, b) {
   delete b.dDirection;
   return b.callReturn();
 };
+Entry.Neobot = {name:"neobot", PORT_MAP:{1:0, 4:0, 5:0, 6:0, 7:0, 8:0, 9:0}, sensorList:function() {
+  return [["1", "1"], ["2", "2"], ["3", "3"], ["4", "4"]];
+}, setZero:function() {
+}};
+Blockly.Blocks.neobot_sensor_value = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("").appendField(new Blockly.FieldDropdown([["1", "1"], ["2", "2"], ["3", "3"], ["4", "4"]]), "PORT").appendField(" \uac12");
+  this.setOutput(!0, "Number");
+  this.setInputsInline(!0);
+}};
+Entry.block.neobot_sensor_value = function(a, b) {
+  var c = b.getStringField("PORT");
+  console.log(c);
+  console.log(Entry.hw.portData[c]);
+  return Entry.hw.portData[c];
+};
 Blockly.Blocks.when_scene_start = {init:function() {
   this.setColour("#3BBD70");
   this.appendDummyInput().appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/start_icon_scene_1_2.png", "*", "start")).appendField(Lang.Blocks.SCENE_when_scene_start);
@@ -6325,7 +6341,7 @@ Entry.HW = function() {
   this.settingQueue = {};
   this.hwModule = this.selectedDevice = null;
   Entry.addEventListener("stop", this.setZero);
-  this.hwInfo = {11:Entry.Arduino, 12:Entry.SensorBoard, 24:Entry.Hamster, 25:Entry.Albert, 31:Entry.Bitbrick};
+  this.hwInfo = {11:Entry.Arduino, 12:Entry.SensorBoard, 24:Entry.Hamster, 25:Entry.Albert, 31:Entry.Bitbrick, 51:Entry.Neobot};
 };
 Entry.HW.TRIAL_LIMIT = 1;
 p = Entry.HW.prototype;

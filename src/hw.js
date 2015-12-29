@@ -32,7 +32,8 @@ Entry.HW = function() {
         '12': Entry.SensorBoard,
         '24': Entry.Hamster,
         '25': Entry.Albert,
-        '31': Entry.Bitbrick
+        '31': Entry.Bitbrick,
+        '51': Entry.Neobot
     };
 };
 
