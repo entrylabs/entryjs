@@ -28,6 +28,9 @@ Entry.Workspace = function(options) {
     if (this.board && this.vimBoard)
         this.vimBoard.hide();
 
+    if(!Entry.GlobalSvg.svgDom)
+        Entry.GlobalSvg.createDom();
+
     this.mode = Entry.Workspace.MODE_BOARD;
     this.selectedBoard = this.board;
 };

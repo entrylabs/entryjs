@@ -13851,10 +13851,12 @@ Entry.BlockView = function(a, b) {
         k._moveBy(a.pageX - b.offsetX, a.pageY - b.offsetY, !1);
         b.set({offsetX:a.pageX, offsetY:a.pageY});
         k.dragMode = Entry.DRAG_MODE_DRAG;
-        (a = k._getCloseBlock()) ? (l = a.view.getBoard(), l.setMagnetedBlock(a.view)) : l.setMagnetedBlock(null);
+        (b = k._getCloseBlock()) ? (l = b.view.getBoard(), l.setMagnetedBlock(b.view)) : l.setMagnetedBlock(null);
+        Entry.GlobalSvg.setView(k, a);
       }
     }
     function d(a) {
+      Entry.GlobalSvg.remove();
       $(document).unbind(".block");
       delete this.mouseDownCoordinate;
       k.terminateDrag();
@@ -13920,7 +13922,7 @@ Entry.BlockView = function(a, b) {
   a._getCloseBlock = function() {
     var a = this.getBoard(), c = a instanceof Entry.BlockMenu, d = this.x, e = this.y;
     c && (d -= a._svgWidth, a = a.workspace.getBoard());
-    var f = a.relativeOffset, d = Snap.getElementByPoint(d + f.left, e + f.top);
+    var f = a.relativeOffset, d = Snap.getElementByPoint(d + f.left, e + f.top - 1);
     if (null !== d) {
       for (e = d.block;!e && d.parent() && "svg" !== d.type && "BODY" !== d.type;) {
         d = d.parent(), e = d.block;
@@ -14802,6 +14804,53 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
     return this.textElement.node.getComputedTextLength() + 8;
   };
 })(Entry.FieldTextInput.prototype);
+Entry.GlobalSvg = {};
+(function(a) {
+  a.createDom = function() {
+    if ("function" !== typeof window.Snap) {
+      return console.error("Snap library is required");
+    }
+    this.svgDom = Entry.Dom($('<svg id="globalSvg" width="200" height="200"version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'), {parent:$("body")});
+    this.svgDom.css({position:"fixed", width:0, height:0, "background-color":"orange", display:"none", "z-index":"1111"});
+    this.snap = Snap("#globalSvg");
+  };
+  a.setView = function(a, c) {
+    if (a == this._view) {
+      this.position();
+    } else {
+      var d = a.block;
+      !d.isReadOnly() && d.isMovable() && (this._view = a, this.draw(), this.resize(), this.align(), this.position());
+    }
+  };
+  a.draw = function() {
+    this._svg && this.remove();
+    this.svg = this._view.svgGroup.clone();
+    this.snap.append(this.svg);
+    this.show();
+  };
+  a.remove = function() {
+    this.svg && (this.svg.remove(), delete this.svg, delete this._view, delete this._offsetX, this.hide());
+  };
+  a.resize = function() {
+    var a = this._view.svgGroup.getBBox();
+    this.svgDom.css({width:a.width + 2, height:a.height});
+  };
+  a.align = function() {
+    var a = this._view.getSkeleton().box(this._view).offsetX || 0;
+    this._offsetX = a *= -1;
+    this.svg.attr({transform:"t" + (a + 1) + " 1"});
+  };
+  a.show = function() {
+    this.svgDom.css("display", "block");
+  };
+  a.hide = function() {
+    this.svgDom.css("display", "none");
+  };
+  a.position = function() {
+    var a = this._view, c = a.svgGroup.transform().globalMatrix, a = a.getBoard().svgDom.offset();
+    this.svgDom.css({left:c.e + a.left - this._offsetX - 1, top:c.f + a.top + 1});
+  };
+})(Entry.GlobalSvg);
 Entry.Scroller = function(a, b, c) {
   this._horizontal = void 0 === b ? !0 : b;
   this._vertical = void 0 === c ? !0 : c;
@@ -14907,7 +14956,7 @@ Entry.skeleton.basic = {path:function(a) {
   a = Math.max(0, a - 6);
   return "m -8,0 l 8,8 8,-8 h %w a 15,15 0 0,1 0,30 h -%w l -8,8 -8,-8 v -30 z".replace(/%w/gi, a);
 }, box:function(a) {
-  return {offsetX:0, offsetY:0, width:(a ? a.contentWidth : 150) + 30, height:30, marginBottom:0};
+  return {offsetX:-8, offsetY:0, width:(a ? a.contentWidth : 150) + 30, height:30, marginBottom:0};
 }, magnets:{previous:{}, next:{x:0, y:31}}, contentPos:function(a) {
   return {x:14, y:15};
 }};
@@ -14926,7 +14975,7 @@ Entry.skeleton.basic_loop = {path:function(a) {
 }, magnets:function() {
   return {previous:{x:0, y:0}, next:{x:0, y:105}};
 }, box:function(a) {
-  return {offsetX:0, offsetY:0, width:a.contentWidth, height:Math.max(a.contentHeight, 25) + 46, marginBottom:0};
+  return {offsetX:-8, offsetY:0, width:a.contentWidth, height:Math.max(a.contentHeight, 25) + 46, marginBottom:0};
 }, contentPos:function() {
   return {x:14, y:15};
 }};
@@ -15551,6 +15600,7 @@ Entry.Workspace = function(a) {
     this.vimBoard = new Entry.Vim(b.domId), this.vimBoard.workspace = this;
   }
   this.board && this.vimBoard && this.vimBoard.hide();
+  Entry.GlobalSvg.svgDom || Entry.GlobalSvg.createDom();
   this.mode = Entry.Workspace.MODE_BOARD;
   this.selectedBoard = this.board;
 };

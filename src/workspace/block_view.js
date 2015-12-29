@@ -361,10 +361,12 @@ Entry.BlockView = function(block, board) {
                 } else {
                     board.setMagnetedBlock(null);
                 }
+                Entry.GlobalSvg.setView(blockView, e);
             }
         }
 
         function onMouseUp(e) {
+            Entry.GlobalSvg.remove();
             $(document).unbind('.block');
             delete this.mouseDownCoordinate;
             blockView.terminateDrag();
@@ -420,7 +422,7 @@ Entry.BlockView = function(block, board) {
 
         var offset = board.relativeOffset;
         var targetElement = Snap.getElementByPoint(
-                x + offset.left, y + offset.top
+                x + offset.left, y + offset.top -1
             );
         if (targetElement === null) return;
 
