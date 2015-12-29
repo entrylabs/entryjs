@@ -361,6 +361,8 @@ Entry.BlockView = function(block, board) {
                 } else {
                     board.setMagnetedBlock(null);
                 }
+                Entry.GlobalSvg.setView(blockView);
+                Entry.GlobalSvg.position(e);
             }
         }
 
@@ -369,6 +371,7 @@ Entry.BlockView = function(block, board) {
             delete this.mouseDownCoordinate;
             blockView.terminateDrag();
             if (board) board.set({dragBlock: null});
+            Entry.GlobalSvg.remove();
             delete blockView.dragInstance;
         }
         e.stopPropagation();

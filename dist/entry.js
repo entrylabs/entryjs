@@ -13830,7 +13830,9 @@ Entry.BlockView = function(a, b) {
         k._moveBy(a.pageX - b.offsetX, a.pageY - b.offsetY, !1);
         b.set({offsetX:a.pageX, offsetY:a.pageY});
         k.dragMode = Entry.DRAG_MODE_DRAG;
-        (a = k._getCloseBlock()) ? (l = a.view.getBoard(), l.setMagnetedBlock(a.view)) : l.setMagnetedBlock(null);
+        (b = k._getCloseBlock()) ? (l = b.view.getBoard(), l.setMagnetedBlock(b.view)) : l.setMagnetedBlock(null);
+        Entry.GlobalSvg.setView(k);
+        Entry.GlobalSvg.position(a);
       }
     }
     function d(a) {
@@ -13838,6 +13840,7 @@ Entry.BlockView = function(a, b) {
       delete this.mouseDownCoordinate;
       k.terminateDrag();
       l && l.set({dragBlock:null});
+      Entry.GlobalSvg.remove();
       delete k.dragInstance;
     }
     a.stopPropagation();
@@ -14781,6 +14784,48 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
     return this.textElement.node.getComputedTextLength() + 8;
   };
 })(Entry.FieldTextInput.prototype);
+Entry.GlobalSvg = {};
+(function(a) {
+  a.createDom = function() {
+    if ("function" !== typeof window.Snap) {
+      return console.error("Snap library is required");
+    }
+    this.svgDom = Entry.Dom($('<svg id="globalSvg" width="200" height="200"version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'), {parent:$("body")});
+    this.svgDom.css({position:"fixed", width:400, height:400, left:"50%", top:"50%", display:"none", "margin-left":"-200", "margin-top":"-200", "background-color":"red", "z-index":"1111"});
+    this.snap = Snap("#globalSvg");
+  };
+  a.setView = function(a) {
+    if (a != this._view) {
+      var c = a.block;
+      !c.isReadOnly() && c.isMovable() && (this._view = a, this.draw(), this.resize(), this.align());
+    }
+  };
+  a.draw = function() {
+    this._svg && this.remove();
+    this.svg = this._view.svgGroup.clone();
+    this.snap.append(this.svg);
+    this.show();
+  };
+  a.remove = function() {
+    this.svg && (this.svg.remove(), delete this.svg, delete this._view, this.hide());
+  };
+  a.resize = function() {
+    var a = this._view.svgGroup.getBBox();
+    this.svgDom.css({width:a.width + 2, height:a.height});
+  };
+  a.align = function() {
+    var a = this._view.getSkeleton().box(this._view).offsetX || 0;
+    this.svg.attr({transform:"t" + (-1 * a + 1) + " 1"});
+  };
+  a.show = function() {
+    this.svgDom.css("display", "block");
+  };
+  a.hide = function() {
+    this.svgDom.css("display", "none");
+  };
+  a.position = function() {
+  };
+})(Entry.GlobalSvg);
 Entry.Scroller = function(a, b, c) {
   this._horizontal = void 0 === b ? !0 : b;
   this._vertical = void 0 === c ? !0 : c;
@@ -15530,6 +15575,7 @@ Entry.Workspace = function(a) {
     this.vimBoard = new Entry.Vim(b.domId), this.vimBoard.workspace = this;
   }
   this.board && this.vimBoard && this.vimBoard.hide();
+  Entry.GlobalSvg.svgDom || Entry.GlobalSvg.createDom();
   this.mode = Entry.Workspace.MODE_BOARD;
   this.selectedBoard = this.board;
 };
