@@ -44,10 +44,49 @@ Entry.JSParser = function(syntax) {
 
         var contents = "";
 
-        var analyzer = this.syntax.ForStatement;
-        body = this[body.type](body);
+        var blockType = this.syntax.ForStatement;
 
-        return analyzer(init, test, update, body);
+        if (!blockType) {
+            body = this[body.type](body);
+
+            var startVal = init.declarations[0].init.value;
+            var test = test;
+            var op = test.operator;
+            var endVal = test.right.value;
+            var updateOp = update.operator;
+
+            var res = 0;
+            if(!(updateOp == '++')){
+                var temp = startVal;
+                var startVal = endVal;
+                var endVal = temp;
+            }
+
+            switch (op) {
+                case '<':
+                    res = endVal - startVal;
+                break;
+
+                case '<=':
+                    res = ((endVal+1) - startVal);
+                break;
+
+                case '>':
+                    res =  startVal - endVal;
+                break;
+
+                case '>=':
+                    res = ((startVal+ 1) - endVal);
+                break;
+            }
+
+            return this.BasicIteration(node, res, body);
+        } else {
+            throw {
+                message : '지원하지 않는 표현식 입니다.',
+                node : node
+            }
+        }
     };
 
     p.BlockStatement = function(node) {
@@ -419,5 +458,20 @@ Entry.JSParser = function(syntax) {
             message : '지원하지 않는 표현식 입니다.',
             node : node
         }
+    };
+
+    // custom node parser
+    p.BasicIteration = function(node, iterCount, body) {
+        var blockType = this.syntax.BasicIteration;
+        if (!blockType)
+            throw {
+                message : '지원하지 않는 표현식 입니다.',
+                node : node
+            }
+        return {
+            params: [iterCount],
+            type: blockType,
+            statements: [body]
+        };
     };
 })(Entry.JSParser.prototype);

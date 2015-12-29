@@ -32,8 +32,6 @@ Entry.Parser = function(mode, syntax, cm) {
         switch (this._lang) {
             case "js":
                 var astTree = acorn.parse(code);
-                console.log(astTree);
-
                 try {
                     result = this._parser.Program(astTree);
                 } catch(error) {

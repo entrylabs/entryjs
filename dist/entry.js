@@ -8556,7 +8556,7 @@ Entry.BlockParser = function(a) {
   };
   a.Thread = function(a) {
     if (c instanceof Entry.Block) {
-      return this.Block(c);
+      return this.Block(a);
     }
     var c = "";
     a = a.getBlocks();
@@ -8576,7 +8576,7 @@ Entry.BlockParser = function(a) {
     a = a._schema.syntax.concat();
     return a.splice(1, a.length - 1).join(".") + "();\n";
   };
-  a.ForStatement = function(a) {
+  a.BasicIteration = function(a) {
     var c = a.params[0], d = this.publishIterateVariable();
     a = this.Thread(a.statements[0]);
     this.unpublishIterateVariable();
@@ -8622,11 +8622,26 @@ Entry.JSParser = function(a) {
     return this[a.type](a);
   };
   a.ForStatement = function(a) {
-    var c = a.init, d = a.test, e = a.update;
-    a = a.body;
-    var f = this.syntax.ForStatement;
-    a = this[a.type](a);
-    return f(c, d, e, a);
+    var c = a.init, d = a.test, e = a.update, f = a.body;
+    if (this.syntax.ForStatement) {
+      throw {message:"\uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a};
+    }
+    var f = this[f.type](f), c = c.declarations[0].init.value, g = d.operator, d = d.right.value, h = 0;
+    "++" != e.operator && (e = c, c = d, d = e);
+    switch(g) {
+      case "<":
+        h = d - c;
+        break;
+      case "<=":
+        h = d + 1 - c;
+        break;
+      case ">":
+        h = c - d;
+        break;
+      case ">=":
+        h = c + 1 - d;
+    }
+    return this.BasicIteration(a, h, f);
   };
   a.BlockStatement = function(a) {
     var c = [];
@@ -8757,6 +8772,13 @@ Entry.JSParser = function(a) {
   a.SequenceExpression = function(a) {
     throw {message:"\uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a};
   };
+  a.BasicIteration = function(a, c, d) {
+    var e = this.syntax.BasicIteration;
+    if (!e) {
+      throw {message:"\uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a};
+    }
+    return {params:[c], type:e, statements:[d]};
+  };
 })(Entry.JSParser.prototype);
 Entry.Parser = function(a, b, c) {
   this._mode = a;
@@ -8778,7 +8800,6 @@ Entry.Parser = function(a, b, c) {
     switch(this._lang) {
       case "js":
         a = acorn.parse(a);
-        console.log(a);
         try {
           c = this._parser.Program(a);
         } catch (d) {
@@ -13402,27 +13423,7 @@ Entry.block.maze_step_jump = {skeleton:"basic", mode:"maze", color:"#FF6E4B", te
     return Entry.STATIC.CONTINUE;
   }
 }};
-Entry.block.maze_step_for = {skeleton:"basic_loop", mode:"maze", color:"#127CDB", template:"%1 \ubc88 \ubc18\ubcf5\ud558\uae30%2", syntax:["ForStatement", function(a, b, c, d) {
-  a = a.declarations[0].init.value;
-  var e = b.operator;
-  b = b.right.value;
-  var f = 0;
-  "++" != c.operator && (c = a, a = b, b = c);
-  switch(e) {
-    case "<":
-      f = b - a;
-      break;
-    case "<=":
-      f = b + 1 - a;
-      break;
-    case ">":
-      f = a - b;
-      break;
-    case ">=":
-      f = a + 1 - b;
-  }
-  return {params:[f], type:"maze_step_for", statements:[d]};
-}], params:[{type:"Dropdown", key:"REPEAT", options:[[1, 1], [2, 2], [3, 3], [4, 4], [5, 5], [6, 6], [7, 7], [8, 8], [9, 9], [10, 10]], value:1}, {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic", position:{x:2, y:15}}], func:function() {
+Entry.block.maze_step_for = {skeleton:"basic_loop", mode:"maze", color:"#127CDB", template:"%1 \ubc88 \ubc18\ubcf5\ud558\uae30%2", syntax:["BasicIteration"], params:[{type:"Dropdown", key:"REPEAT", options:[[1, 1], [2, 2], [3, 3], [4, 4], [5, 5], [6, 6], [7, 7], [8, 8], [9, 9], [10, 10]], value:1}, {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic", position:{x:2, y:15}}], func:function() {
   if (void 0 === this.repeatCount) {
     return this.repeatCount = this.block.params[0], Entry.STATIC.CONTINUE;
   }

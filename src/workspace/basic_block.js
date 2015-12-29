@@ -788,50 +788,7 @@ Entry.block.maze_step_for = {
     mode: "maze",
     color: "#127CDB",
     template: "%1 번 반복하기%2",
-    syntax: [
-        "ForStatement",
-        function(init, test, update, body) {
-
-            var startVal = init.declarations[0].init.value;
-            var test = test;
-            var op = test.operator;
-            var endVal = test.right.value;
-            var updateOp = update.operator;
-
-            var res = 0;
-            if(!(updateOp == '++')){
-                var temp = startVal;
-                var startVal = endVal;
-                var endVal = temp;
-            }
-
-            switch (op) {
-                case '<':
-                    res = endVal - startVal;
-                break;
-
-                case '<=':
-                    res = ((endVal+1) - startVal);
-                break;
-
-                case '>':
-                    res =  startVal - endVal;
-                break;
-
-                case '>=':
-                    res = ((startVal+ 1) - endVal);
-                break;
-            }
-
-            var block = {
-                params: [res],
-                type: "maze_step_for",
-                statements: [body]
-            };
-
-            return block;
-        }
-    ],
+    syntax: ["BasicIteration"],
     params: [
         {
             type: "Dropdown",
