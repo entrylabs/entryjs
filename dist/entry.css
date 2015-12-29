@@ -1,9 +1,12 @@
 /* BASICS */
 .CodeMirror {
   /* Set height, width, borders, and global font properties here */
-  font-family: monospace;
+  font-family: 'Nanum Gothic Coding' !important;
   height: 100%;
   color: black;
+}
+.CodeMirror * {
+  font-family: 'Nanum Gothic Coding' !important;
 }
 /* PADDING */
 .CodeMirror-sizer {

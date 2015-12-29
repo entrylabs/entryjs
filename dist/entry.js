@@ -8544,7 +8544,7 @@ Entry.BlockParser = function(a) {
 };
 (function(a) {
   a.Code = function(a) {
-    if (a instanceof Entry.Thread) {
+    if (!(a instanceof Entry.Thread)) {
       return this.Thread(a);
     }
     var c = "";
@@ -8555,7 +8555,7 @@ Entry.BlockParser = function(a) {
     return c;
   };
   a.Thread = function(a) {
-    if (c instanceof Entry.Block) {
+    if (a instanceof Entry.Block) {
       return this.Block(a);
     }
     var c = "";
@@ -13834,51 +13834,52 @@ Entry.BlockView = function(a, b) {
       a.onMouseDown.apply(a, arguments);
     });
   };
-  a.onMouseDown = function(a) {
-    function c(a) {
-      var b = k.mouseDownCoordinate;
-      if ((k.dragMode == Entry.DRAG_MODE_DRAG || a.pageX !== b.x || a.pageY !== b.y) && k.block.isMovable()) {
+  a.onMouseDown = function(b) {
+    function c(b) {
+      l.workspace.getMode() === Entry.Workspace.MODE_VIMBOARD && a.vimBoardEvent(b, "dragOver");
+      var c = k.mouseDownCoordinate;
+      if ((k.dragMode == Entry.DRAG_MODE_DRAG || b.pageX !== c.x || b.pageY !== c.y) && k.block.isMovable()) {
         k.block.prev && (k.block.prev.setNext(null), k.block.setPrev(null), k.block.thread.changeEvent.notify());
         this.animating && this.set({animating:!1});
         if (0 === k.dragInstance.height) {
-          for (var b = k.block, c = -1;b;) {
-            c += b.view.height + 1, b = b.next;
+          for (var c = k.block, d = -1;c;) {
+            d += c.view.height + 1, c = c.next;
           }
-          k.dragInstance.set({height:c});
+          k.dragInstance.set({height:d});
         }
-        a.originalEvent.touches && (a = a.originalEvent.touches[0]);
-        b = k.dragInstance;
-        k._moveBy(a.pageX - b.offsetX, a.pageY - b.offsetY, !1);
-        b.set({offsetX:a.pageX, offsetY:a.pageY});
+        b.originalEvent.touches && (b = b.originalEvent.touches[0]);
+        c = k.dragInstance;
+        k._moveBy(b.pageX - c.offsetX, b.pageY - c.offsetY, !1);
+        c.set({offsetX:b.pageX, offsetY:b.pageY});
         k.dragMode = Entry.DRAG_MODE_DRAG;
-        (a = k._getCloseBlock()) ? (l = a.view.getBoard(), l.setMagnetedBlock(a.view)) : l.setMagnetedBlock(null);
+        (b = k._getCloseBlock()) ? (l = b.view.getBoard(), l.setMagnetedBlock(b.view)) : l.setMagnetedBlock(null);
       }
     }
     function d(a) {
       $(document).unbind(".block");
       delete this.mouseDownCoordinate;
-      k.terminateDrag();
+      k.terminateDrag(a);
       l && l.set({dragBlock:null});
       delete k.dragInstance;
     }
-    a.stopPropagation();
-    a.preventDefault();
+    b.stopPropagation();
+    b.preventDefault();
     Entry.documentMousedown && Entry.documentMousedown.notify();
     this.getBoard().setSelectedBlock(this);
     this.dominate();
-    if (0 === a.button || a instanceof Touch) {
-      this.mouseDownCoordinate = {x:a.pageX, y:a.pageY};
+    if (0 === b.button || b instanceof Touch) {
+      this.mouseDownCoordinate = {x:b.pageX, y:b.pageY};
       var e = $(document);
       e.bind("mousemove.block", c);
       e.bind("mouseup.block", d);
       e.bind("touchmove.block", c);
       e.bind("touchend.block", d);
       this.getBoard().set({dragBlock:this});
-      this.dragInstance = new Entry.DragInstance({startX:a.pageX, startY:a.pageY, offsetX:a.pageX, offsetY:a.pageY, prev:this.block.prev, height:0, mode:!0});
+      this.dragInstance = new Entry.DragInstance({startX:b.pageX, startY:b.pageY, offsetX:b.pageX, offsetY:b.pageY, prev:this.block.prev, height:0, mode:!0});
       this.addDragging();
       this.dragMode = Entry.DRAG_MODE_MOUSEDOWN;
     } else {
-      if (Entry.Utils.isRightButton(a)) {
+      if (Entry.Utils.isRightButton(b)) {
         var f = this, g = f.block;
         if (this.isInBlockMenu || g.isReadOnly()) {
           return;
@@ -13899,21 +13900,17 @@ Entry.BlockView = function(a, b) {
       }
     }
     var k = this, l = this.getBoard();
-    a.stopPropagation();
+    l.workspace.getMode() === Entry.Workspace.MODE_VIMBOARD && b && (e = new MouseEvent("dragStart", {view:window, bubbles:!0, cancelable:!0, clientX:b.clientX, clientY:b.clientY}), document.getElementsByClassName("CodeMirror")[0].dispatchEvent(e));
+    b.stopPropagation();
   };
-  a.terminateDrag = function() {
-    var a = this.getBoard(), c = this.dragMode, d = this.block;
+  a.vimBoardEvent = function(a, c, d) {
+    a && (a = new MouseEvent(c, {view:window, bubbles:!0, cancelable:!0, clientX:a.clientX, clientY:a.clientY}), this._vimBoard || (this._vimBoard = document.getElementsByClassName("CodeMirror")[0]), this._vimBoard.dispatchEvent(a));
+  };
+  a.terminateDrag = function(a) {
+    var c = this.getBoard(), d = this.dragMode, e = this.block, f = c.workspace.getMode();
     this.removeDragging();
-    if (a instanceof Entry.BlockMenu) {
-      a.terminateDrag();
-    } else {
-      if (c !== Entry.DRAG_MODE_MOUSEDOWN) {
-        this.dragInstance && this.dragInstance.isNew && d.doAdd();
-        var e = this.dragInstance && this.dragInstance.prev, f = this._getCloseBlock();
-        e || f ? f ? (this.set({animating:!0}), f.next && f.next.view.set({animating:!0}), d.doInsert(f), createjs.Sound.play("entryMagneting")) : d.doSeparate() : c == Entry.DRAG_MODE_DRAG && d.doMove();
-        a.setMagnetedBlock(null);
-      }
-    }
+    f === Entry.Workspace.MODE_VIMBOARD ? (c instanceof Entry.BlockMenu && c.terminateDrag(), this.vimBoardEvent(a, "dragEnd", e)) : c instanceof Entry.BlockMenu ? c.terminateDrag() : d !== Entry.DRAG_MODE_MOUSEDOWN && (this.dragInstance && this.dragInstance.isNew && e.doAdd(), a = this.dragInstance && this.dragInstance.prev, f = this._getCloseBlock(), a || f ? f ? (this.set({animating:!0}), f.next && f.next.view.set({animating:!0}), e.doInsert(f), createjs.Sound.play("entryMagneting")) : e.doSeparate() : 
+    d == Entry.DRAG_MODE_DRAG && e.doMove(), c.setMagnetedBlock(null));
     this.dragMode = Entry.DRAG_MODE_NONE;
     this.destroyShadow();
   };
@@ -15516,15 +15513,27 @@ Entry.Vim = function(a) {
   if ("DIV" !== a.prop("tagName")) {
     return console.error("Dom is not div element");
   }
-  this.createDom(a);
   this._parser = new Entry.Parser("maze", "js", this.codeMirror);
   this._blockParser = new Entry.Parser("maze", "block");
+  this.createDom(a);
   Entry.Model(this, !1);
+  window.eventset = [];
 };
 (function(a) {
   a.createDom = function(a) {
-    this.view = Entry.Dom("div", {parent:a, class:"entryVimBoard"});
-    this.codeMirror = CodeMirror(this.view[0], {lineNumbers:!0, value:"this.move();\nthis.move();\nthis.move();\n", mode:{name:"javascript", globalVars:!0}, theme:"default", indentUnit:4, styleActiveLine:!0, extraKeys:{"Shift-Space":"autocomplete"}, lint:!0});
+    var c = a;
+    this.view = Entry.Dom("div", {parent:c, class:"entryVimBoard"});
+    var d = this.codeMirror = CodeMirror(this.view[0], {lineNumbers:!0, value:"this.move();\nthis.move();\nthis.move();\n", mode:{name:"javascript", globalVars:!0}, theme:"default", indentUnit:4, styleActiveLine:!0, extraKeys:{"Shift-Space":"autocomplete"}, lint:!0, viewportMargin:10}), c = this;
+    window.c = this.codeMirror;
+    document.addEventListener("dragEnd", function(a) {
+      c.codeMirror.display.dragFunctions.leave(a);
+      console.log(a);
+      CodeMirror.signal(d, "mousedown", a);
+      console.log(c.codeMirror.getCursor());
+    });
+    document.addEventListener("dragOver", function(a) {
+      c.codeMirror.display.dragFunctions.over(a);
+    });
   };
   a.hide = function() {
     this.view.addClass("entryRemove");
@@ -15539,6 +15548,9 @@ Entry.Vim = function(a) {
   a.codeToText = function(a) {
     a = this._blockParser.parse(a);
     this.codeMirror.setValue(a);
+  };
+  a.getCodeToText = function(a) {
+    return this._blockParser.parse(a);
   };
 })(Entry.Vim.prototype);
 Entry.Workspace = function(a) {
