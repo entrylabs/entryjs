@@ -26,8 +26,11 @@ Entry.JSParser = function(syntax) {
         return block;
     };
 
-    p.Identifier = function(node) {
-        return node.name;
+    p.Identifier = function(node, scope) {
+        if (scope)
+            return scope[node.name];
+        else
+            return this.syntax.Scope[node.name];
     };
 
     // Statement
@@ -392,9 +395,9 @@ Entry.JSParser = function(syntax) {
             property = node.property,
             computed = node.computed;
 
-        object = this.syntax.Scope[this[object.type](object)];
+        object = this[object.type](object);
 
-        property = this[property.type](property);
+        property = this[property.type](property, object);
 
         if(!(Object(object) === object && Object.getPrototypeOf(object) === Object.prototype)) {
             throw {
