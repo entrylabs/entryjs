@@ -13831,16 +13831,15 @@ Entry.BlockView = function(a, b) {
         b.set({offsetX:a.pageX, offsetY:a.pageY});
         k.dragMode = Entry.DRAG_MODE_DRAG;
         (b = k._getCloseBlock()) ? (l = b.view.getBoard(), l.setMagnetedBlock(b.view)) : l.setMagnetedBlock(null);
-        Entry.GlobalSvg.setView(k);
-        Entry.GlobalSvg.position(a);
+        Entry.GlobalSvg.setView(k, a);
       }
     }
     function d(a) {
+      Entry.GlobalSvg.remove();
       $(document).unbind(".block");
       delete this.mouseDownCoordinate;
       k.terminateDrag();
       l && l.set({dragBlock:null});
-      Entry.GlobalSvg.remove();
       delete k.dragInstance;
     }
     a.stopPropagation();
@@ -13902,7 +13901,7 @@ Entry.BlockView = function(a, b) {
   a._getCloseBlock = function() {
     var a = this.getBoard(), c = a instanceof Entry.BlockMenu, d = this.x, e = this.y;
     c && (d -= a._svgWidth, a = a.workspace.getBoard());
-    var f = a.relativeOffset, d = Snap.getElementByPoint(d + f.left, e + f.top);
+    var f = a.relativeOffset, d = Snap.getElementByPoint(d + f.left, e + f.top - 1);
     if (null !== d) {
       for (e = d.block;!e && d.parent() && "svg" !== d.type && "BODY" !== d.type;) {
         d = d.parent(), e = d.block;
@@ -14791,13 +14790,15 @@ Entry.GlobalSvg = {};
       return console.error("Snap library is required");
     }
     this.svgDom = Entry.Dom($('<svg id="globalSvg" width="200" height="200"version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'), {parent:$("body")});
-    this.svgDom.css({position:"fixed", width:400, height:400, left:"50%", top:"50%", display:"none", "margin-left":"-200", "margin-top":"-200", "background-color":"red", "z-index":"1111"});
+    this.svgDom.css({position:"fixed", width:0, height:0, display:"none", "z-index":"1111"});
     this.snap = Snap("#globalSvg");
   };
-  a.setView = function(a) {
-    if (a != this._view) {
-      var c = a.block;
-      !c.isReadOnly() && c.isMovable() && (this._view = a, this.draw(), this.resize(), this.align());
+  a.setView = function(a, c) {
+    if (a == this._view) {
+      this.position();
+    } else {
+      var d = a.block;
+      !d.isReadOnly() && d.isMovable() && (this._view = a, this.draw(), this.resize(), this.align(), this.position());
     }
   };
   a.draw = function() {
@@ -14807,7 +14808,7 @@ Entry.GlobalSvg = {};
     this.show();
   };
   a.remove = function() {
-    this.svg && (this.svg.remove(), delete this.svg, delete this._view, this.hide());
+    this.svg && (this.svg.remove(), delete this.svg, delete this._view, delete this._offsetX, this.hide());
   };
   a.resize = function() {
     var a = this._view.svgGroup.getBBox();
@@ -14815,7 +14816,8 @@ Entry.GlobalSvg = {};
   };
   a.align = function() {
     var a = this._view.getSkeleton().box(this._view).offsetX || 0;
-    this.svg.attr({transform:"t" + (-1 * a + 1) + " 1"});
+    this._offsetX = a *= -1;
+    this.svg.attr({transform:"t" + (a + 1) + " 1"});
   };
   a.show = function() {
     this.svgDom.css("display", "block");
@@ -14824,6 +14826,8 @@ Entry.GlobalSvg = {};
     this.svgDom.css("display", "none");
   };
   a.position = function() {
+    var a = this._view, c = a.svgGroup.transform().globalMatrix, a = a.getBoard().svgDom.offset();
+    this.svgDom.css({left:c.e + a.left - this._offsetX - 1, top:c.f + a.top + 1});
   };
 })(Entry.GlobalSvg);
 Entry.Scroller = function(a, b, c) {
