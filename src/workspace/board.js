@@ -170,6 +170,8 @@ Entry.Board = function(dom) {
     };
 
     p.onMouseDown = function(e) {
+        if (this.workspace.getMode() == Entry.Workspace.MODE_VIMBOARD)
+            return;
         if (e.originalEvent.touches)
             e = e.originalEvent.touches[0];
 
@@ -276,12 +278,14 @@ Entry.Board = function(dom) {
     };
 
     p.hide = function() {
-        this.wrapper.addClass('entryRemove');
+        //this.wrapper.addClass('entryRemove');
+        this.wrapper.css('opacity', '0');
         this.visible = false;
     };
 
     p.show = function() {
-        this.wrapper.removeClass('entryRemove');
+        //this.wrapper.removeClass('entryRemove');
+        this.wrapper.css('opacity', '1');
         this.visible = true;
         this.trashcan.setPosition();
     };

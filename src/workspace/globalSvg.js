@@ -24,9 +24,12 @@ goog.provide('Entry.GlobalSvg');
         });
 
         this.snap = Snap('#globalSvg');
+
+        this.left = 0;
+        this.top = 0;
     };
 
-    gs.setView = function(view) {
+    gs.setView = function(view, mode) {
         if (view == this._view) {
             this.position();
             return;
@@ -34,6 +37,7 @@ goog.provide('Entry.GlobalSvg');
         var data = view.block;
         if (data.isReadOnly() || !data.isMovable()) return;
         this._view = view;
+        this._mode = mode;
         this.draw();
         this.resize();
         this.align();
@@ -64,13 +68,14 @@ goog.provide('Entry.GlobalSvg');
             width: bBox.width + 2,
             height: bBox.height
         });
+        this.width = bBox.width + 2;
     };
 
     gs.align = function() {
         var offsetX = this._view.getSkeleton().box(this._view).offsetX || 0;
         offsetX *= -1;
         this._offsetX = offsetX;
-        var transform = "t" + (offsetX + 1) + " 1";
+        var transform = "t" + (offsetX + 1) + " 0";
         this.svg.attr({transform: transform});
     };
 
@@ -79,13 +84,21 @@ goog.provide('Entry.GlobalSvg');
     gs.hide = function() {this.svgDom.css('display', 'none');};
 
     gs.position = function() {
+        var that = this;
         var blockView = this._view;
         var matrix = blockView.svgGroup.transform().globalMatrix;
         var offset = blockView.getBoard().svgDom.offset();
-        this.svgDom.css({
-            left: matrix.e + offset.left - this._offsetX - 1,
-            top: matrix.f + offset.top + 1
-        });
+        this.left = matrix.e + offset.left - this._offsetX - 1;
+        this.top = matrix.f + offset.top;
+
+        var style = {
+            left: that.left,
+            top: that.top
+        };
+
+        if (this._mode == Entry.Workspace.MODE_VIMBOARD)
+            style.opacity = 0.3;
+        this.svgDom.css(style);
     };
 
 })(Entry.GlobalSvg);

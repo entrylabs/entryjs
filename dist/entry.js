@@ -13606,7 +13606,6 @@ Entry.BlockMenu = function(a, b) {
   this.svgBlockGroup = this.svgGroup.group();
   this.svgBlockGroup.board = this;
   this.changeEvent = new Entry.Event(this);
-  this.observe(this, "generateDragBlockObserver", ["dragBlock"]);
   Entry.documentMousedown && Entry.documentMousedown.attach(this, this.setSelectedBlock);
 };
 (function(a) {
@@ -13634,76 +13633,40 @@ Entry.BlockMenu = function(a, b) {
   };
   a.align = function() {
     for (var a = this.code.getThreads(), c = 10, d = "LEFT" == this._align ? 20 : this.svgDom.width() / 2, e = 0, f = a.length;e < f;e++) {
-      var g = a[e].getFirstBlock(), h = g.view;
-      g.set({x:d, y:c});
-      h._moveTo(d, c, !1);
-      c += h.height + 15;
+      var g = a[e].getFirstBlock().view;
+      g._moveTo(d, c, !1);
+      c += g.height + 15;
     }
     this.changeEvent.notify();
   };
-  a.generateDragBlockObserver = function() {
-    var a = this.dragBlock;
-    a && (this.dragBlockObserver && this.removeDragBlockObserver(), this.dragBlockObserver = a.observe(this, "cloneThread", ["x", "y"], !1));
-  };
-  a.removeDragBlockObserver = function() {
-    var a = this.dragBlockObserver;
-    null !== a && (a.destroy(), this.dragBlockObserver = null);
-  };
-  a.cloneThread = function(a) {
-    a = void 0 === a ? !0 : a;
-    if (null !== this.dragBlock) {
-      this.dragBlockObserver && this.removeDragBlockObserver();
-      var c = this._svgWidth, d = this.dragBlock, e = d.block, f = this.code, g = e.getThread();
-      e && g && (f.cloneThread(g), a && d.observe(this, "moveBoardBlock", ["x", "y"], !1), d.dominate(), a = this.workspace.getBoard(), this._boardBlockView = a.code.cloneThread(g).getFirstBlock().view, this._boardBlockView.dragInstance = new Entry.DragInstance({height:0, isNew:!0}), a.set({dragBlock:this._boardBlockView}), a.setSelectedBlock(this._boardBlockView), this._boardBlockView.addDragging(), this._boardBlockView.dragMode = Entry.DRAG_MODE_MOUSEDOWN, this._boardBlockView._moveTo(d.x - c, 
-      d.y - 0, !1));
-      if (this._boardBlockView) {
-        return this._boardBlockView.block.id;
-      }
+  a.cloneToBoard = function(a) {
+    if (null !== this.dragBlock && !this._boardBlockView) {
+      var c = this._svgWidth, d = this.dragBlock, e = d.block, f = e.getThread();
+      e && f && (this._boardBlockView = this.workspace.getBoard().code.cloneThread(f).getFirstBlock().view, this._boardBlockView._moveTo(d.x - c, d.y - 0, !1), this._boardBlockView.onMouseDown.call(this._boardBlockView, a), this._dragObserver = this._boardBlockView.observe(this, "_editDragInstance", ["x", "y"], !1));
     }
+  };
+  a._editDragInstance = function() {
+    this._boardBlockView && this._boardBlockView.dragInstance.set({isNew:!0});
+    this._dragObserver && this._dragObserver.destroy();
   };
   a.terminateDrag = function() {
     if (this._boardBlockView) {
       var a = this._boardBlockView;
       if (a) {
-        var c = a.block, d = this.dragBlock, e = d.block, f = this.workspace;
-        f.getBoard();
-        var g = !1;
+        var c = a.block;
+        this.workspace.getBoard();
+        var d = !1;
         a.dragMode = 0;
         a.removeDragging();
-        d.x < this._svgWidth ? (g = !0, c.destroy(g)) : c.view.terminateDrag();
-        f.getBoard().set({dragBlock:null});
-        e.destroy(g);
-        delete a.dragInstance;
+        var e = Entry.GlobalSvg.left, f = Entry.GlobalSvg.width / 2, a = a.getBoard().offset.left;
+        e < a - f && (d = !0, c.destroy());
         this._boardBlockView = null;
+        return d;
       }
     }
-  };
-  a.dominate = function(a) {
-    this.snap.append(a.svgGroup);
   };
   a.getCode = function(a) {
     return this._code;
-  };
-  a.moveBoardBlock = function() {
-    var a = this.workspace.getBoard().offset, c = this.offset, d = a.left - c.left, a = a.top - c.top, e = this.dragBlock, c = this._boardBlockView, f = c.dragInstance, g = Entry.mouseCoordinate;
-    f.set({offsetX:g.x, offsetY:g.y});
-    if (0 === f.height) {
-      for (var g = c.block, h = 0;g;) {
-        h += g.view.height, g = g.next;
-      }
-      f.set({height:h});
-    }
-    e && c && (f = e.x, e = e.y, c.dragMode = 2, c._moveTo(f - d, e - a, !1));
-  };
-  a.setMagnetedBlock = function() {
-  };
-  a.findById = function(a) {
-    for (var c = this.code.getThreads(), d = 0, e = c.length;d < e;d++) {
-      var f = c[d];
-      if (f && (f = f.getFirstBlock()) && f.id == a) {
-        return f;
-      }
-    }
   };
   a.setSelectedBlock = function(a) {
     var c = this.selectedBlockView;
@@ -13839,24 +13802,30 @@ Entry.BlockView = function(a, b) {
   };
   a.onMouseDown = function(b) {
     function c(b) {
-      l.workspace.getMode() === Entry.Workspace.MODE_VIMBOARD && a.vimBoardEvent(b, "dragOver");
-      var c = k.mouseDownCoordinate;
-      if ((k.dragMode == Entry.DRAG_MODE_DRAG || b.pageX !== c.x || b.pageY !== c.y) && k.block.isMovable()) {
-        k.block.prev && (k.block.prev.setNext(null), k.block.setPrev(null), k.block.thread.changeEvent.notify());
-        this.animating && this.set({animating:!1});
-        if (0 === k.dragInstance.height) {
-          for (var c = k.block, d = -1;c;) {
-            d += c.view.height + 1, c = c.next;
+      var c = l.workspace.getMode(), d = l instanceof Entry.BlockMenu;
+      c === Entry.Workspace.MODE_VIMBOARD && a.vimBoardEvent(b, "dragOver");
+      var e = k.mouseDownCoordinate;
+      if ((k.dragMode == Entry.DRAG_MODE_DRAG || b.pageX !== e.x || b.pageY !== e.y) && k.block.isMovable()) {
+        if (d) {
+          l.cloneToBoard(b);
+        } else {
+          k.block.prev && (k.block.prev.setNext(null), k.block.setPrev(null), k.block.thread.changeEvent.notify());
+          this.animating && this.set({animating:!1});
+          if (0 === k.dragInstance.height) {
+            d = k.block;
+            for (e = -1;d;) {
+              e += d.view.height + 1, d = d.next;
+            }
+            k.dragInstance.set({height:e});
           }
-          k.dragInstance.set({height:d});
+          b.originalEvent.touches && (b = b.originalEvent.touches[0]);
+          d = k.dragInstance;
+          k._moveBy(b.pageX - d.offsetX, b.pageY - d.offsetY, !1);
+          d.set({offsetX:b.pageX, offsetY:b.pageY});
+          k.dragMode = Entry.DRAG_MODE_DRAG;
+          (b = k._getCloseBlock()) ? (l = b.view.getBoard(), l.setMagnetedBlock(b.view)) : l.setMagnetedBlock(null);
+          Entry.GlobalSvg.setView(k, c);
         }
-        b.originalEvent.touches && (b = b.originalEvent.touches[0]);
-        c = k.dragInstance;
-        k._moveBy(b.pageX - c.offsetX, b.pageY - c.offsetY, !1);
-        c.set({offsetX:b.pageX, offsetY:b.pageY});
-        k.dragMode = Entry.DRAG_MODE_DRAG;
-        (c = k._getCloseBlock()) ? (l = c.view.getBoard(), l.setMagnetedBlock(c.view)) : l.setMagnetedBlock(null);
-        Entry.GlobalSvg.setView(k, b);
       }
     }
     function d(a) {
@@ -13914,8 +13883,16 @@ Entry.BlockView = function(a, b) {
   a.terminateDrag = function(a) {
     var c = this.getBoard(), d = this.dragMode, e = this.block, f = c.workspace.getMode();
     this.removeDragging();
-    f === Entry.Workspace.MODE_VIMBOARD ? (c instanceof Entry.BlockMenu && c.terminateDrag(), this.vimBoardEvent(a, "dragEnd", e)) : c instanceof Entry.BlockMenu ? c.terminateDrag() : d !== Entry.DRAG_MODE_MOUSEDOWN && (this.dragInstance && this.dragInstance.isNew && e.doAdd(), a = this.dragInstance && this.dragInstance.prev, f = this._getCloseBlock(), a || f ? f ? (this.set({animating:!0}), f.next && f.next.view.set({animating:!0}), e.doInsert(f), createjs.Sound.play("entryMagneting")) : e.doSeparate() : 
-    d == Entry.DRAG_MODE_DRAG && e.doMove(), c.setMagnetedBlock(null));
+    if (f === Entry.Workspace.MODE_VIMBOARD) {
+      c instanceof Entry.BlockMenu && (c.terminateDrag(), this.vimBoardEvent(a, "dragEnd", e));
+    } else {
+      if (d !== Entry.DRAG_MODE_MOUSEDOWN) {
+        (a = this.dragInstance && this.dragInstance.isNew) && (c.workspace.blockMenu.terminateDrag() || e.doAdd());
+        var f = this.dragInstance && this.dragInstance.prev, g = this._getCloseBlock();
+        f || g ? g ? (this.set({animating:!0}), g.next && g.next.view.set({animating:!0}), e.doInsert(g), createjs.Sound.play("entryMagneting")) : e.doSeparate() : d != Entry.DRAG_MODE_DRAG || a || e.doMove();
+        c.setMagnetedBlock(null);
+      }
+    }
     this.dragMode = Entry.DRAG_MODE_NONE;
     this.destroyShadow();
   };
@@ -14814,14 +14791,15 @@ Entry.GlobalSvg = {};
       this.svgDom = Entry.Dom($('<svg id="globalSvg" width="200" height="200"version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'), {parent:$("body")});
       this.svgDom.css({position:"fixed", width:0, height:0, "background-color":"orange", display:"none", "z-index":"1111"});
       this.snap = Snap("#globalSvg");
+      this.top = this.left = 0;
     }
   };
-  a.setView = function(a) {
+  a.setView = function(a, c) {
     if (a == this._view) {
       this.position();
     } else {
-      var c = a.block;
-      !c.isReadOnly() && c.isMovable() && (this._view = a, this.draw(), this.resize(), this.align(), this.position());
+      var d = a.block;
+      !d.isReadOnly() && d.isMovable() && (this._view = a, this._mode = c, this.draw(), this.resize(), this.align(), this.position());
     }
   };
   a.draw = function() {
@@ -14836,11 +14814,12 @@ Entry.GlobalSvg = {};
   a.resize = function() {
     var a = this._view.svgGroup.getBBox();
     this.svgDom.css({width:a.width + 2, height:a.height});
+    this.width = a.width + 2;
   };
   a.align = function() {
     var a = this._view.getSkeleton().box(this._view).offsetX || 0;
     this._offsetX = a *= -1;
-    this.svg.attr({transform:"t" + (a + 1) + " 1"});
+    this.svg.attr({transform:"t" + (a + 1) + " 0"});
   };
   a.show = function() {
     this.svgDom.css("display", "block");
@@ -14850,7 +14829,11 @@ Entry.GlobalSvg = {};
   };
   a.position = function() {
     var a = this._view, c = a.svgGroup.transform().globalMatrix, a = a.getBoard().svgDom.offset();
-    this.svgDom.css({left:c.e + a.left - this._offsetX - 1, top:c.f + a.top + 1});
+    this.left = c.e + a.left - this._offsetX - 1;
+    this.top = c.f + a.top;
+    c = {left:this.left, top:this.top};
+    this._mode == Entry.Workspace.MODE_VIMBOARD && (c.opacity = .3);
+    this.svgDom.css(c);
   };
 })(Entry.GlobalSvg);
 Entry.Scroller = function(a, b, c) {
@@ -15497,35 +15480,37 @@ Entry.Board = function(a) {
       $(document).unbind(".entryBoard");
       delete g.dragInstance;
     }
-    a.originalEvent.touches && (a = a.originalEvent.touches[0]);
-    if (0 === a.button || a instanceof Touch) {
-      Entry.documentMousedown && Entry.documentMousedown.notify(a);
-      var e = $(document);
-      e.bind("mousemove.entryBoard", c);
-      e.bind("mouseup.entryBoard", d);
-      e.bind("touchmove.entryBoard", c);
-      e.bind("touchend.entryBoard", d);
-      this.dragInstance = new Entry.DragInstance({startX:a.pageX, startY:a.pageY, offsetX:a.pageX, offsetY:a.pageY});
-    } else {
-      if (Entry.Utils.isRightButton(a)) {
-        if (!this.visible) {
-          return;
+    if (this.workspace.getMode() != Entry.Workspace.MODE_VIMBOARD) {
+      a.originalEvent.touches && (a = a.originalEvent.touches[0]);
+      if (0 === a.button || a instanceof Touch) {
+        Entry.documentMousedown && Entry.documentMousedown.notify(a);
+        var e = $(document);
+        e.bind("mousemove.entryBoard", c);
+        e.bind("mouseup.entryBoard", d);
+        e.bind("touchmove.entryBoard", c);
+        e.bind("touchend.entryBoard", d);
+        this.dragInstance = new Entry.DragInstance({startX:a.pageX, startY:a.pageY, offsetX:a.pageX, offsetY:a.pageY});
+      } else {
+        if (Entry.Utils.isRightButton(a)) {
+          if (!this.visible) {
+            return;
+          }
+          var f = this, e = [];
+          e.push({text:"\ubd99\uc5ec\ub123\uae30", enable:!!Entry.clipboard, callback:function() {
+            var a = Entry.clipboard, b = a[0];
+            b.doAdd();
+            f.code.createThread(a);
+            b.copyToClipboard();
+          }});
+          e.push({text:"\ube14\ub85d \uc815\ub9ac\ud558\uae30", callback:function() {
+            f.alignThreads();
+          }});
+          Entry.ContextMenu.show(e);
         }
-        var f = this, e = [];
-        e.push({text:"\ubd99\uc5ec\ub123\uae30", enable:!!Entry.clipboard, callback:function() {
-          var a = Entry.clipboard, b = a[0];
-          b.doAdd();
-          f.code.createThread(a);
-          b.copyToClipboard();
-        }});
-        e.push({text:"\ube14\ub85d \uc815\ub9ac\ud558\uae30", callback:function() {
-          f.alignThreads();
-        }});
-        Entry.ContextMenu.show(e);
       }
+      var g = this;
+      a.stopPropagation();
     }
-    var g = this;
-    a.stopPropagation();
   };
   a.mouseWheel = function(a) {
     a = a.originalEvent;
@@ -15542,11 +15527,11 @@ Entry.Board = function(a) {
     d && 46 == c.keyCode && d.block.doDestroyAlone(!0) && this.set({selectedBlockView:null});
   };
   a.hide = function() {
-    this.wrapper.addClass("entryRemove");
+    this.wrapper.css("opacity", "0");
     this.visible = !1;
   };
   a.show = function() {
-    this.wrapper.removeClass("entryRemove");
+    this.wrapper.css("opacity", "1");
     this.visible = !0;
     this.trashcan.setPosition();
   };

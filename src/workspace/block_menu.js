@@ -47,7 +47,6 @@ Entry.BlockMenu = function(dom, align) {
     //TODO scroller should be attached
     //this.scroller = new Entry.Scroller(this, false, true);
 
-    this.observe(this, "generateDragBlockObserver", ['dragBlock']);
     if (Entry.documentMousedown)
         Entry.documentMousedown.attach(this, this.setSelectedBlock);
 };
@@ -93,39 +92,15 @@ Entry.BlockMenu = function(dom, align) {
         for (var i=0,len=threads.length; i<len; i++) {
             var block = threads[i].getFirstBlock();
             var blockView = block.view;
-            block.set({
-                x: hPadding,
-                y: marginFromTop,
-            });
             blockView._moveTo(hPadding, marginFromTop, false);
             marginFromTop += blockView.height + vPadding;
         }
         this.changeEvent.notify();
     };
 
-    p.generateDragBlockObserver = function() {
-        var block = this.dragBlock;
-        if (!block) return;
-
-        if (this.dragBlockObserver)
-            this.removeDragBlockObserver();
-        this.dragBlockObserver =
-            block.observe(this, "cloneThread", ['x', 'y'], false);
-    };
-
-    p.removeDragBlockObserver = function() {
-        var observer = this.dragBlockObserver;
-        if (observer === null) return;
-        observer.destroy();
-        this.dragBlockObserver = null;
-    };
-
-    p.cloneThread = function(forMouseMove) {
-        forMouseMove = forMouseMove === undefined ?
-            true : forMouseMove;
+    p.cloneToBoard = function(e) {
         if (this.dragBlock === null) return;
-        if (this.dragBlockObserver)
-            this.removeDragBlockObserver();
+        if (this._boardBlockView) return;
 
         var svgWidth = this._svgWidth;
         var blockView = this.dragBlock;
@@ -134,44 +109,26 @@ Entry.BlockMenu = function(dom, align) {
         var code = this.code;
         var currentThread = block.getThread();
         if (block && currentThread) {
-            clonedThread = code.cloneThread(currentThread);
-            if (forMouseMove)
-                blockView.observe(
-                    this,
-                    "moveBoardBlock",
-                    ['x', 'y'],
-                    false
-                );
-                //original block should be top of svg
-                blockView.dominate();
+            var workspaceBoard = this.workspace.getBoard();
+            this._boardBlockView = workspaceBoard.code.
+                cloneThread(currentThread).getFirstBlock().view;
 
-                var workspaceBoard = this.workspace.getBoard();
-                this._boardBlockView = workspaceBoard.code.
-                    cloneThread(currentThread).
-                    getFirstBlock().view;
-                this._boardBlockView.dragInstance =
-                    new Entry.DragInstance({
-                        height: 0,
-                        isNew: true
-                    });
-
-                workspaceBoard.set({
-                    dragBlock : this._boardBlockView
-                });
-                workspaceBoard.setSelectedBlock(this._boardBlockView);
-                this._boardBlockView.addDragging();
-                this._boardBlockView.dragMode = Entry.DRAG_MODE_MOUSEDOWN;
-
-                this._boardBlockView._moveTo(
-                    blockView.x-svgWidth,
-                    blockView.y-0,
-                    false
-                );
+            this._boardBlockView._moveTo(
+                blockView.x-svgWidth,
+                blockView.y-0,
+                false
+            );
+            this._boardBlockView.onMouseDown.call(this._boardBlockView, e);
+            this._dragObserver =
+                this._boardBlockView.observe(this, "_editDragInstance", ['x', 'y'], false);
         }
+    };
 
+    p._editDragInstance = function() {
         if (this._boardBlockView)
-            return this._boardBlockView.block.id;
-
+            this._boardBlockView.dragInstance.set({isNew:true});
+        if (this._dragObserver)
+            this._dragObserver.destroy();
     };
 
     p.terminateDrag = function() {
@@ -180,91 +137,28 @@ Entry.BlockMenu = function(dom, align) {
         var boardBlockView = this._boardBlockView;
         if (!boardBlockView) return;
         var boardBlock = boardBlockView.block;
-        var dragBlockView = this.dragBlock;
-        var dragBlock = dragBlockView.block;
         var thisCode = this.code;
         var workspace = this.workspace;
         var boardCode = workspace.getBoard().code;
 
         //destroy boardBlock below the range
-        var animate = false;
+        var removed = false;
         boardBlockView.dragMode = 0;
         boardBlockView.removeDragging();
-        if (dragBlockView.x < this._svgWidth) {
-            animate = true;
-            boardBlock.destroy(animate);
-        } else boardBlock.view.terminateDrag();
+        var blockLeft = Entry.GlobalSvg.left;
+        var width = Entry.GlobalSvg.width/2;
+        var boardLeft = boardBlockView.getBoard().offset.left;
+        if (blockLeft < boardLeft - width) {
+            removed = true;
+            boardBlock.destroy();
+        }
 
-        workspace.getBoard().set({dragBlock:null});
-        dragBlock.destroy(animate);
-        delete boardBlockView.dragInstance;
         this._boardBlockView = null;
-    };
-
-    p.dominate = function(thread) {
-        this.snap.append(thread.svgGroup);
+        return removed;
     };
 
     p.getCode = function(thread) {
         return this._code;
-    };
-
-    p.moveBoardBlock = function() {
-        var boardOffset = this.workspace.getBoard().offset;
-        var thisOffset = this.offset;
-        var offsetX = boardOffset.left - thisOffset.left,
-            offsetY = boardOffset.top - thisOffset.top;
-
-        var dragBlockView = this.dragBlock;
-        var boardBlockView = this._boardBlockView;
-
-        var instance = boardBlockView.dragInstance;
-
-        var mouse = Entry.mouseCoordinate;
-        instance.set({
-            offsetX: mouse.x,
-            offsetY: mouse.y
-        });
-        if (instance.height === 0) {
-            var block = boardBlockView.block;
-            var height = 0;
-            while (block) {
-                height += block.view.height;
-                block = block.next;
-            }
-            instance.set({
-                height: height
-            });
-        }
-
-        if (dragBlockView && boardBlockView) {
-            var x = dragBlockView.x;
-            var y = dragBlockView.y;
-            boardBlockView.dragMode = 2;
-            boardBlockView._moveTo(
-                x-offsetX,
-                y-offsetY,
-                false
-            );
-        }
-    };
-
-    p.setMagnetedBlock = function() {
-    };
-
-    p.findById = function(id) {
-        var code = this.code;
-        var threads = code.getThreads();
-        for (var i=0,len=threads.length; i<len; i++) {
-            var thread = threads[i];
-            if (!thread)
-                continue;
-
-            var block = thread.getFirstBlock();
-            if (block && block.id == id) {
-                return block;
-            }
-        }
     };
 
     p.setSelectedBlock = function(blockView) {
