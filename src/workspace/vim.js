@@ -65,7 +65,9 @@ Entry.Vim = function(dom) {
         this.view.addClass('entryRemove');
     };
 
-    p.show = function() {this.view.removeClass('entryRemove');};
+    p.show = function() {
+        this.view.removeClass('entryRemove');
+    };
 
     p.textToCode = function() {
         var textCode = this.codeMirror.getValue();

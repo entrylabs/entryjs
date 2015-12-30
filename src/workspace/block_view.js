@@ -322,16 +322,16 @@ Entry.BlockView = function(block, board) {
                     'clientY' : e.clientY
                 });
 
-                document.getElementsByClassName('CodeMirror')[0].dispatchEvent(dragEnd);                
+                document.getElementsByClassName('CodeMirror')[0].dispatchEvent(dragEnd);
             }
         }
 
         function onMouseMove(e) {
             var workspaceMode = board.workspace.getMode();
+            var isInBlockMenu = board instanceof Entry.BlockMenu;
 
-            if(workspaceMode === Entry.Workspace.MODE_VIMBOARD) {
+            if (workspaceMode === Entry.Workspace.MODE_VIMBOARD)
                 p.vimBoardEvent(e, 'dragOver');
-            }
 
             var mouseDownCoordinate = blockView.mouseDownCoordinate;
             if (blockView.dragMode == Entry.DRAG_MODE_DRAG ||
@@ -339,50 +339,50 @@ Entry.BlockView = function(block, board) {
                 e.pageY !== mouseDownCoordinate.y) {
                 if (!blockView.block.isMovable()) return;
 
-                if(blockView.block.prev) {
-                    blockView.block.prev.setNext(null);
-                    blockView.block.setPrev(null);
-                    blockView.block.thread.changeEvent.notify();
-                }
-
-                if (this.animating)
-                    this.set({animating: false});
-
-                if (blockView.dragInstance.height === 0) {
-                    var block = blockView.block;
-                    var height = - 1;
-                    while (block) {
-                        height += block.view.height + 1;
-                        block = block.next;
+                if (!isInBlockMenu) {
+                    if(blockView.block.prev) {
+                        blockView.block.prev.setNext(null);
+                        blockView.block.setPrev(null);
+                        blockView.block.thread.changeEvent.notify();
                     }
-                    blockView.dragInstance.set({
-                        height: height
+
+                    if (this.animating)
+                        this.set({animating: false});
+
+                    if (blockView.dragInstance.height === 0) {
+                        var block = blockView.block;
+                        var height = - 1;
+                        while (block) {
+                            height += block.view.height + 1;
+                            block = block.next;
+                        }
+                        blockView.dragInstance.set({
+                            height: height
+                        });
+                    }
+
+                    if (e.originalEvent.touches) {
+                        e = e.originalEvent.touches[0];
+                    }
+                    var dragInstance = blockView.dragInstance;
+                    blockView._moveBy(
+                        e.pageX - dragInstance.offsetX,
+                        e.pageY - dragInstance.offsetY,
+                        false
+                    );
+                    dragInstance.set({
+                        offsetX: e.pageX,
+                        offsetY: e.pageY
                     });
-                }
+                    blockView.dragMode = Entry.DRAG_MODE_DRAG;
 
-                if (e.originalEvent.touches) {
-                    e = e.originalEvent.touches[0];
-                }
-                var dragInstance = blockView.dragInstance;
-                blockView._moveBy(
-                    e.pageX - dragInstance.offsetX,
-                    e.pageY - dragInstance.offsetY,
-                    false
-                );
-                dragInstance.set({
-                    offsetX: e.pageX,
-                    offsetY: e.pageY
-                });
-                blockView.dragMode = Entry.DRAG_MODE_DRAG;
-
-                var magnetedBlock = blockView._getCloseBlock();
-                if (magnetedBlock) {
-                    board = magnetedBlock.view.getBoard();
-                    board.setMagnetedBlock(magnetedBlock.view);
-                } else {
-                    board.setMagnetedBlock(null);
-                }
-                Entry.GlobalSvg.setView(blockView, e);
+                    var magnetedBlock = blockView._getCloseBlock();
+                    if (magnetedBlock) {
+                        board = magnetedBlock.view.getBoard();
+                        board.setMagnetedBlock(magnetedBlock.view);
+                    } else board.setMagnetedBlock(null);
+                    Entry.GlobalSvg.setView(blockView, workspaceMode);
+                } else board.cloneToBoard(e);
             }
         }
 
@@ -411,10 +411,9 @@ Entry.BlockView = function(block, board) {
                 dragEvent.block = block;
             }
 
-            if(!this._vimBoard) {
+            if (!this._vimBoard)
                 this._vimBoard = document.getElementsByClassName('CodeMirror')[0];
-            }
-            this._vimBoard.dispatchEvent(dragEvent);                
+            this._vimBoard.dispatchEvent(dragEvent);
         }
     }
 
@@ -425,22 +424,23 @@ Entry.BlockView = function(block, board) {
         var workspaceMode = board.workspace.getMode();
         this.removeDragging();
 
-
-        if(workspaceMode === Entry.Workspace.MODE_VIMBOARD) {
+        if (workspaceMode === Entry.Workspace.MODE_VIMBOARD) {
             if (board instanceof Entry.BlockMenu) {
                 board.terminateDrag();
+                this.vimBoardEvent(e, 'dragEnd', block);
             }
-            this.vimBoardEvent(e, 'dragEnd', block);
         } else {
-            if (board instanceof Entry.BlockMenu) {
-                board.terminateDrag();
-            } else if (dragMode !== Entry.DRAG_MODE_MOUSEDOWN) {
-                if (this.dragInstance && this.dragInstance.isNew)
-                    block.doAdd();
+            if (dragMode !== Entry.DRAG_MODE_MOUSEDOWN) {
+                var fromBlockMenu = this.dragInstance && this.dragInstance.isNew;
+                if (fromBlockMenu) {
+                    var removed = board.workspace.blockMenu.terminateDrag();
+                    if (!removed) block.doAdd();
+                }
+
                 var prevBlock = this.dragInstance && this.dragInstance.prev;
                 var closeBlock = this._getCloseBlock();
                 if (!prevBlock && !closeBlock) {
-                    if (dragMode == Entry.DRAG_MODE_DRAG)
+                    if (dragMode == Entry.DRAG_MODE_DRAG && !fromBlockMenu)
                         block.doMove();
                 } else {
                     if (closeBlock) {
