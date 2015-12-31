@@ -3645,21 +3645,128 @@ Entry.block.direction_relative_duration = function(a, b) {
   delete b.dDirection;
   return b.callReturn();
 };
-Entry.Neobot = {name:"neobot", PORT_MAP:{1:0, 4:0, 5:0, 6:0, 7:0, 8:0, 9:0}, sensorList:function() {
-  return [["1", "1"], ["2", "2"], ["3", "3"], ["4", "4"]];
-}, setZero:function() {
+Entry.Neobot = {name:"neobot", PORT_MAP:{1:0, 2:0, 3:0, SERVO1:0, SERVO2:0, SERVO1_SPEED:3, SERVO2_SPEED:3, LMOT:0, RMOT:0, note:0, octave:0, duration:0, sound_check:0}, setZero:function() {
+  for (var a in Entry.Neobot.PORT_MAP) {
+    Entry.hw.sendQueue[a] = Entry.Neobot.PORT_MAP[a];
+  }
+  Entry.hw.update();
 }};
 Blockly.Blocks.neobot_sensor_value = {init:function() {
   this.setColour("#00979D");
-  this.appendDummyInput().appendField("").appendField(new Blockly.FieldDropdown([["1", "1"], ["2", "2"], ["3", "3"], ["4", "4"]]), "PORT").appendField(" \uac12");
+  this.appendDummyInput().appendField("").appendField(new Blockly.FieldDropdown([["1\ubc88 \ud3ec\ud2b8", "1"], ["2\ubc88 \ud3ec\ud2b8", "2"], ["3\ubc88 \ud3ec\ud2b8", "3"], ["\ub9ac\ubaa8 \ucee8", "4"]]), "PORT").appendField(" \uac12");
   this.setOutput(!0, "Number");
   this.setInputsInline(!0);
 }};
 Entry.block.neobot_sensor_value = function(a, b) {
   var c = b.getStringField("PORT");
-  console.log(c);
-  console.log(Entry.hw.portData[c]);
   return Entry.hw.portData[c];
+};
+Blockly.Blocks.neobot_turn_left = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("\uc67c\ucabd\ubaa8\ud130\ub97c").appendField(new Blockly.FieldDropdown([["\uc55e\uc73c\ub85c", "1"], ["\ub4a4\ub85c", "-1"]]), "DIRECTION").appendField(new Blockly.FieldDropdown([["\ub290\ub9ac\uac8c", "1"], ["\ubcf4\ud1b5", "2"], ["\ube60\ub974\uac8c", "3"]]), "VALUE").appendField("\ud68c\uc804").appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.neobot_turn_left = function(a, b) {
+  var c = b.getNumberField("VALUE"), d = b.getNumberField("DIRECTION");
+  Entry.hw.sendQueue.LMOT = c * d;
+  return b.callReturn();
+};
+Blockly.Blocks.neobot_stop_left = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("\uc67c\ucabd\ubaa8\ud130 \uc815\uc9c0").appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.neobot_stop_left = function(a, b) {
+  Entry.hw.sendQueue.LMOT = 0;
+  return b.callReturn();
+};
+Blockly.Blocks.neobot_turn_right = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("\uc624\ub978\ucabd\ubaa8\ud130\ub97c").appendField(new Blockly.FieldDropdown([["\uc55e\uc73c\ub85c", "1"], ["\ub4a4\ub85c", "-1"]]), "DIRECTION").appendField(new Blockly.FieldDropdown([["\ub290\ub9ac\uac8c", "1"], ["\ubcf4\ud1b5", "2"], ["\ube60\ub974\uac8c", "3"]]), "VALUE").appendField("\ud68c\uc804").appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.neobot_turn_right = function(a, b) {
+  var c = b.getNumberField("VALUE"), d = b.getNumberField("DIRECTION");
+  Entry.hw.sendQueue.RMOT = c * d;
+  return b.callReturn();
+};
+Blockly.Blocks.neobot_stop_right = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("\uc624\ub978\ucabd\ubaa8\ud130 \uc815\uc9c0").appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.neobot_stop_right = function(a, b) {
+  Entry.hw.sendQueue.RMOT = 0;
+  return b.callReturn();
+};
+Blockly.Blocks.neobot_servo_1 = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("SERVO1\uc5d0 \uc5f0\uacb0\ub41c \uc11c\ubcf4\ubaa8\ud130\ub97c").appendField(new Blockly.FieldDropdown([["\ube60\ub978", "3"], ["\ubcf4\ud1b5", "2"], ["\ub290\ub9b0", "1"]]), "SPEED").appendField("\uc18d\ub3c4\ub85c").appendField(new Blockly.FieldDropdown([["0\ub3c4", "0"], ["10\ub3c4", "1"], ["20\ub3c4", "2"], ["30\ub3c4", "3"], ["40\ub3c4", "4"], ["50\ub3c4", "5"], ["60\ub3c4", "6"], ["70\ub3c4", "7"], ["80\ub3c4", "8"], ["90\ub3c4", "9"], ["100\ub3c4", "10"], 
+  ["110\ub3c4", "11"], ["120\ub3c4", "12"], ["130\ub3c4", "13"], ["140\ub3c4", "14"], ["150\ub3c4", "15"], ["160\ub3c4", "16"]]), "VALUE").appendField("\ub85c \uc774\ub3d9").appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.neobot_servo_1 = function(a, b) {
+  var c = b.getNumberField("VALUE"), d = b.getNumberField("SPEED");
+  Entry.hw.sendQueue.SERVO1 = c;
+  Entry.hw.sendQueue.SERVO1_SPEED = d;
+  return b.callReturn();
+};
+Blockly.Blocks.neobot_servo_2 = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("SERVO2\uc5d0 \uc5f0\uacb0\ub41c \uc11c\ubcf4\ubaa8\ud130\ub97c").appendField(new Blockly.FieldDropdown([["\ube60\ub978", "3"], ["\ubcf4\ud1b5", "2"], ["\ub290\ub9b0", "1"]]), "SPEED").appendField("\uc18d\ub3c4\ub85c").appendField(new Blockly.FieldDropdown([["0\ub3c4", "0"], ["10\ub3c4", "1"], ["20\ub3c4", "2"], ["30\ub3c4", "3"], ["40\ub3c4", "4"], ["50\ub3c4", "5"], ["60\ub3c4", "6"], ["70\ub3c4", "7"], ["80\ub3c4", "8"], ["90\ub3c4", "9"], ["100\ub3c4", "10"], 
+  ["110\ub3c4", "11"], ["120\ub3c4", "12"], ["130\ub3c4", "13"], ["140\ub3c4", "14"], ["150\ub3c4", "15"], ["160\ub3c4", "16"]]), "VALUE").appendField("\ub85c \uc774\ub3d9").appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.neobot_servo_2 = function(a, b) {
+  var c = b.getNumberField("VALUE"), d = b.getNumberField("SPEED");
+  Entry.hw.sendQueue.SERVO2 = c;
+  Entry.hw.sendQueue.SERVO2_SPEED = d;
+  return b.callReturn();
+};
+Blockly.Blocks.neobot_play_note_for = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("\uba5c\ub85c\ub514").appendField(new Blockly.FieldDropdown([[Lang.General.note_c + "", "1"], [Lang.General.note_d + "", "2"], [Lang.General.note_e + "", "3"], [Lang.General.note_f + "", "4"], [Lang.General.note_g + "", "5"], [Lang.General.note_a + "", "6"], [Lang.General.note_b + "", "7"], [Lang.General.note_c + "", "8"]]), "NOTE").appendField("\uc744(\ub97c)").appendField(new Blockly.FieldDropdown([["1", "0"], ["2", "1"], ["3", "2"]]), "OCTAVE").appendField("\uc625\ud0c0\ube0c\ub85c").appendField(new Blockly.FieldDropdown([["2\ubd84\uc74c\ud45c", 
+  "2"], ["4\ubd84\uc74c\ud45c", "4"], ["8\ubd84\uc74c\ud45c", "8"]]), "DURATION");
+  this.appendDummyInput().appendField("\uae38\uc774\ub9cc\ud07c \uc18c\ub9ac\ub0b4\uae30").appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.neobot_play_note_for = function(a, b) {
+  var c = Entry.hw.sendQueue;
+  if (b.isStart) {
+    if (1 == b.timeFlag) {
+      return b;
+    }
+    delete b.timeFlag;
+    delete b.isStart;
+    Entry.engine.isContinue = !1;
+    return b.callReturn();
+  }
+  var d = b.getNumberField("NOTE", b), e = b.getNumberField("OCTAVE", b), f = b.getNumberField("DURATION", b);
+  b.note = d;
+  b.isStart = !0;
+  b.timeFlag = 1;
+  c.note = d;
+  c.octave = e;
+  c.duration = f;
+  c.sound_check = (1E5 * Math.random()).toFixed(0);
+  setTimeout(function() {
+    b.timeFlag = 0;
+  }, 1 / f * 4E3);
+  return b;
 };
 Blockly.Blocks.when_scene_start = {init:function() {
   this.setColour("#3BBD70");
