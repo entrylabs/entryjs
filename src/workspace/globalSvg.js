@@ -44,14 +44,20 @@ goog.provide('Entry.GlobalSvg');
     };
 
     gs.draw = function() {
+        var that = this;
         if (this._svg) this.remove();
         var isVimMode = this._mode == Entry.Workspace.MODE_VIMBOARD;
 
-        if (isVimMode) {
-            this._view.blockToText();
-            this._view.strip();
-        }
         this.svg = this._view.svgGroup.clone();
+        if (isVimMode) {
+            that._view.setVisible(false);
+            this.svg.selectAll('path').animate({
+                opacity: 0
+            }, 1400, mina.easeinout, function() {
+                if (that.svg)
+                    that.svg.selectAll('text').attr({fill: 'black'});
+            });
+        }
         this.snap.append(this.svg);
         this.show();
     };

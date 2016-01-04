@@ -8,7 +8,7 @@ goog.provide("Entry.BlockView");
 /*
  *
  */
-Entry.BlockView = function(block, board) {
+Entry.BlockView = function(block, board, mode) {
     Entry.Model(this, false);
     this.block = block;
     this._board = board;
@@ -26,7 +26,7 @@ Entry.BlockView = function(block, board) {
         this.block.observe(this, "_renderPath", this._skeleton.morph, false);
 
     this.prevObserver = null;
-    this._startRender(block);
+    this._startRender(block, mode);
 
     // observe
     this.block.observe(this, "_bindPrev", ["prev"]);
@@ -54,7 +54,7 @@ Entry.BlockView = function(block, board) {
         animating: false
     };
 
-    p._startRender = function(block) {
+    p._startRender = function(block, mode) {
         this.svgGroup.attr({class: "block"});
 
         var path = this._skeleton.path(this);
@@ -72,13 +72,13 @@ Entry.BlockView = function(block, board) {
         });
 
         this._moveTo(this.x, this.y, false);
-        this._startContentRender();
+        this._startContentRender(mode);
         this._addControl();
     };
 
     p._startContentRender = function(mode) {
         mode = mode === undefined ?
-            Entry.Workspace.MODE_BOARD : Entry.Workspace.MODE_VIMBOARD;
+            Entry.Workspace.MODE_BOARD : mode;
         if (this.contentSvgGroup) this.contentSvgGroup.remove();
         this._contents = [];
 
@@ -113,17 +113,16 @@ Entry.BlockView = function(block, board) {
             case Entry.Workspace.MODE_VIMBOARD:
                 var text = this.getBoard().workspace.getCodeToText(this.block);
                 this._contents.push(
-                    new Entry.FieldText({text: text, color: 'black'}, this)
+                    new Entry.FieldText({text: text, color: 'white'}, this)
                 );
                 break;
-
-
         }
         this.alignContent(false);
     };
 
     p.alignContent = function(animate) {
         if (animate !== true) animate = false;
+        console.log('align');
         var cursor = {x: 0, y: 0, height: 0};
         for (var i = 0; i < this._contents.length; i++) {
             var c = this._contents[i];
@@ -696,15 +695,9 @@ Entry.BlockView = function(block, board) {
     p.textToBlock = function() {
     };
 
-    p.strip = function() {
-        this._path.attr({
-            'fill': 'transparent'
-        });
-        this._darkenPath.attr({
-            'fill': 'transparent'
-        });
-        this.removeSelected();
+    p.setVisible = function(visible) {
+        visible = visible === false ? 0 : 1;
+        this.svgGroup.attr({opacity:visible});
     };
-
 
 })(Entry.BlockView.prototype);

@@ -110,8 +110,9 @@ Entry.BlockMenu = function(dom, align) {
         var currentThread = block.getThread();
         if (block && currentThread) {
             var workspaceBoard = this.workspace.getBoard();
+            var mode = this.workspace.getMode();
             this._boardBlockView = workspaceBoard.code.
-                cloneThread(currentThread).getFirstBlock().view;
+                cloneThread(currentThread, mode).getFirstBlock().view;
 
             this._boardBlockView._moveTo(
                 blockView.x-svgWidth,
@@ -176,5 +177,15 @@ Entry.BlockMenu = function(dom, align) {
     p.hide = function() {this.view.addClass('entryRemove');};
 
     p.show = function() {this.view.removeClass('entryRemove');};
+
+    p.codeToText = function() {
+        var threads = this.code.getThreads();
+        for (var i=0; i<threads.length; i++) {
+            var thread = threads[i];
+            var blocks = thread.getBlocks();
+            for (var j=0; j<blocks.length; j++)
+                blocks[j].view.blockToText();
+        }
+    };
 
 })(Entry.BlockMenu.prototype);

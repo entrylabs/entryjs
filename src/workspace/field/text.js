@@ -34,6 +34,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldText);
 
         this.svgGroup = this._block.contentSvgGroup.group();
 
+        this._text = this._text.replace(/(\r\n|\n|\r)/gm," ");
         this.textElement = this.svgGroup.text(0, 0, this._text);
         this.textElement.attr({
             'style': 'white-space: pre; font-size:' + that._fontSize + 'px',

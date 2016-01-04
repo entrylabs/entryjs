@@ -69,7 +69,7 @@ Entry.skeleton.basic_event = {
 
 Entry.skeleton.basic_loop = {
     path: function(block) {
-        var contentWidth = Math.max(0, block.contentWidth - 31);
+        var contentWidth = Math.max(0, block.contentWidth - 6);
         var contentHeight = Math.max(block.contentHeight, 25);
         return ("m -8,0 l 8,8 8,-8 h %cw a 15,15 0 0,1 0,30 H 24 l -8,8 -8,-8 h -0.4 v %ch h 0.4 l 8,8 8,-8 h %cw h -8 a 8,8 0 0,1 0,16 H 8 l -8,8 -8,-8 z")
             .replace(/%cw/gi, contentWidth)
@@ -89,7 +89,7 @@ Entry.skeleton.basic_loop = {
         var contentHeight = Math.max(block.contentHeight, 25);
         return {
             offsetX: -8, offsetY: 0,
-            width: contentWidth,
+            width: contentWidth + 30,
             height: contentHeight + 46,
             marginBottom: 0
         };

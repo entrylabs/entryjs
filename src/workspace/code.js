@@ -120,8 +120,8 @@ Entry.Code = function(code) {
         this._data.push(new Entry.Thread(blocks, this));
     };
 
-    p.cloneThread = function(thread) {
-        var newThread = thread.clone(this);
+    p.cloneThread = function(thread, mode) {
+        var newThread = thread.clone(this, mode);
         this._data.push(newThread);
         return newThread;
     };
