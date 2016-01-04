@@ -17,6 +17,7 @@ Entry.FieldText = function(content, block, index) {
     this.box = box;
 
     this._fontSize = content.fontSize || block.getSkeleton().fontSize || 12;
+    this._color = content.color || block.getSkeleton().color || 'white';
     this._text = content.text;
     this._index = index;
 
@@ -37,7 +38,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldText);
         this.textElement.attr({
             'style': 'white-space: pre; font-size:' + that._fontSize + 'px',
             "class": "dragNone",
-            "fill": "white"
+            "fill": that._color
         });
 
         var bBox = this.textElement.getBBox();

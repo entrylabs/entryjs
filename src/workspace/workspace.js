@@ -79,7 +79,11 @@ Entry.Workspace.MODE_VIMBOARD = 1;
     };
 
     p.codeToText = function(code) {
-        this.vimBoard.codeToText(code);
+        return this.vimBoard.codeToText(code);
+    };
+
+    p.getCodeToText = function(code) {
+        return this.vimBoard.getCodeToText(code);
     };
 
 

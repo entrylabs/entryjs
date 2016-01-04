@@ -76,35 +76,49 @@ Entry.BlockView = function(block, board) {
         this._addControl();
     };
 
-    p._startContentRender = function() {
+    p._startContentRender = function(mode) {
+        mode = mode === undefined ?
+            Entry.Workspace.MODE_BOARD : Entry.Workspace.MODE_VIMBOARD;
         if (this.contentSvgGroup) this.contentSvgGroup.remove();
+        this._contents = [];
 
         this.contentSvgGroup = this.svgGroup.group();
         var contentPos = this._skeleton.contentPos();
         this.contentSvgGroup.transform("t" + contentPos.x + ' ' + contentPos.y);
 
-        var reg = /(%\d)/gmi;
-        var schema = this._schema;
-        var templateParams = schema.template.split(reg);
-        var params = schema.params;
-        for (var i=0; i<templateParams.length; i++) {
-            var param = templateParams[i].trim();
-            if (param.length === 0) continue;
-            if (reg.test(param)) {
-                var paramIndex = Number(param.split('%')[1]) - 1;
-                param = params[paramIndex];
+        switch (mode) {
+            case Entry.Workspace.MODE_BOARD:
+                var reg = /(%\d)/gmi;
+                var schema = this._schema;
+                var templateParams = schema.template.split(reg);
+                var params = schema.params;
+                for (var i=0; i<templateParams.length; i++) {
+                    var param = templateParams[i].trim();
+                    if (param.length === 0) continue;
+                    if (reg.test(param)) {
+                        var paramIndex = Number(param.split('%')[1]) - 1;
+                        param = params[paramIndex];
+                        this._contents.push(
+                            new Entry['Field' + param.type](param, this, paramIndex)
+                        );
+                    } else this._contents.push(new Entry.FieldText({text: param}, this));
+                }
+
+                var statements = schema.statements;
+                if (statements) {
+                    for (i=0; i<statements.length; i++)
+                        this._contents.push(new Entry.FieldStatement(statements[i], this, i));
+                }
+                break;
+            case Entry.Workspace.MODE_VIMBOARD:
+                var text = this.getBoard().workspace.getCodeToText(this.block);
                 this._contents.push(
-                    new Entry['Field' + param.type](param, this, paramIndex)
+                    new Entry.FieldText({text: text, color: 'black'}, this)
                 );
-            } else this._contents.push(new Entry.FieldText({text: param}, this));
-        }
+                break;
 
-        var statements = schema.statements;
-        if (statements) {
-            for (i=0; i<statements.length; i++)
-                this._contents.push(new Entry.FieldStatement(statements[i], this, i));
-        }
 
+        }
         this.alignContent(false);
     };
 
@@ -674,5 +688,23 @@ Entry.BlockView = function(block, board) {
     p.getContentPos = function() {
         return this._skeleton.contentPos(this);
     };
+
+    p.blockToText = function() {
+        this._startContentRender(Entry.Workspace.MODE_VIMBOARD);
+    };
+
+    p.textToBlock = function() {
+    };
+
+    p.strip = function() {
+        this._path.attr({
+            'fill': 'transparent'
+        });
+        this._darkenPath.attr({
+            'fill': 'transparent'
+        });
+        this.removeSelected();
+    };
+
 
 })(Entry.BlockView.prototype);

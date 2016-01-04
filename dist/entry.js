@@ -13715,26 +13715,35 @@ Entry.BlockView = function(a, b) {
     this._startContentRender();
     this._addControl();
   };
-  a._startContentRender = function() {
+  a._startContentRender = function(a) {
+    a = void 0 === a ? Entry.Workspace.MODE_BOARD : Entry.Workspace.MODE_VIMBOARD;
     this.contentSvgGroup && this.contentSvgGroup.remove();
+    this._contents = [];
     this.contentSvgGroup = this.svgGroup.group();
-    var a = this._skeleton.contentPos();
-    this.contentSvgGroup.transform("t" + a.x + " " + a.y);
-    for (var c = /(%\d)/gmi, d = this._schema, e = d.template.split(c), f = d.params, a = 0;a < e.length;a++) {
-      var g = e[a].trim();
-      if (0 !== g.length) {
-        if (c.test(g)) {
-          var h = Number(g.split("%")[1]) - 1, g = f[h];
-          this._contents.push(new Entry["Field" + g.type](g, this, h));
-        } else {
-          this._contents.push(new Entry.FieldText({text:g}, this));
+    var c = this._skeleton.contentPos();
+    this.contentSvgGroup.transform("t" + c.x + " " + c.y);
+    switch(a) {
+      case Entry.Workspace.MODE_BOARD:
+        var c = /(%\d)/gmi, d = this._schema, e = d.template.split(c), f = d.params;
+        for (a = 0;a < e.length;a++) {
+          var g = e[a].trim();
+          if (0 !== g.length) {
+            if (c.test(g)) {
+              var h = Number(g.split("%")[1]) - 1, g = f[h];
+              this._contents.push(new Entry["Field" + g.type](g, this, h));
+            } else {
+              this._contents.push(new Entry.FieldText({text:g}, this));
+            }
+          }
         }
-      }
-    }
-    if (c = d.statements) {
-      for (a = 0;a < c.length;a++) {
-        this._contents.push(new Entry.FieldStatement(c[a], this, a));
-      }
+        if (c = d.statements) {
+          for (a = 0;a < c.length;a++) {
+            this._contents.push(new Entry.FieldStatement(c[a], this, a));
+          }
+        }
+        break;
+      case Entry.Workspace.MODE_VIMBOARD:
+        a = this.getBoard().workspace.getCodeToText(this.block), this._contents.push(new Entry.FieldText({text:a, color:"black"}, this));
     }
     this.alignContent(!1);
   };
@@ -13997,6 +14006,16 @@ Entry.BlockView = function(a, b) {
   };
   a.getContentPos = function() {
     return this._skeleton.contentPos(this);
+  };
+  a.blockToText = function() {
+    this._startContentRender(Entry.Workspace.MODE_VIMBOARD);
+  };
+  a.textToBlock = function() {
+  };
+  a.strip = function() {
+    this._path.attr({fill:"transparent"});
+    this._darkenPath.attr({fill:"transparent"});
+    this.removeSelected();
   };
 })(Entry.BlockView.prototype);
 Entry.Code = function(a) {
@@ -14698,6 +14717,7 @@ Entry.FieldText = function(a, b, c) {
   this._block = b;
   this.box = new Entry.BoxModel;
   this._fontSize = a.fontSize || b.getSkeleton().fontSize || 12;
+  this._color = a.color || b.getSkeleton().color || "white";
   this._text = a.text;
   this._index = c;
   this.textElement = null;
@@ -14708,7 +14728,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldText);
   a.renderStart = function() {
     this.svgGroup = this._block.contentSvgGroup.group();
     this.textElement = this.svgGroup.text(0, 0, this._text);
-    this.textElement.attr({style:"white-space: pre; font-size:" + this._fontSize + "px", "class":"dragNone", fill:"white"});
+    this.textElement.attr({style:"white-space: pre; font-size:" + this._fontSize + "px", "class":"dragNone", fill:this._color});
     var a = this.textElement.getBBox();
     this.textElement.attr({y:.25 * a.height});
     this.box.set({x:0, y:0, width:this.textElement.node.getComputedTextLength(), height:a.height});
@@ -14789,7 +14809,7 @@ Entry.GlobalSvg = {};
         return console.error("Snap library is required");
       }
       this.svgDom = Entry.Dom($('<svg id="globalSvg" width="200" height="200"version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'), {parent:$("body")});
-      this.svgDom.css({position:"fixed", width:0, height:0, "background-color":"orange", display:"none", "z-index":"1111"});
+      this.svgDom.css({position:"fixed", width:0, height:0, display:"none", "z-index":"1111"});
       this.snap = Snap("#globalSvg");
       this.top = this.left = 0;
     }
@@ -14804,6 +14824,7 @@ Entry.GlobalSvg = {};
   };
   a.draw = function() {
     this._svg && this.remove();
+    this._mode == Entry.Workspace.MODE_VIMBOARD && (this._view.blockToText(), this._view.strip());
     this.svg = this._view.svgGroup.clone();
     this.snap.append(this.svg);
     this.show();
@@ -14831,9 +14852,7 @@ Entry.GlobalSvg = {};
     var a = this._view, c = a.svgGroup.transform().globalMatrix, a = a.getBoard().svgDom.offset();
     this.left = c.e + a.left - this._offsetX - 1;
     this.top = c.f + a.top;
-    c = {left:this.left, top:this.top};
-    this._mode == Entry.Workspace.MODE_VIMBOARD && (c.opacity = .3);
-    this.svgDom.css(c);
+    this.svgDom.css({left:this.left, top:this.top});
   };
 })(Entry.GlobalSvg);
 Entry.Scroller = function(a, b, c) {
@@ -15640,7 +15659,10 @@ Entry.Workspace.MODE_VIMBOARD = 1;
     }
   };
   a.codeToText = function(a) {
-    this.vimBoard.codeToText(a);
+    return this.vimBoard.codeToText(a);
+  };
+  a.getCodeToText = function(a) {
+    return this.vimBoard.getCodeToText(a);
   };
 })(Entry.Workspace.prototype);
 Entry.Xml = {};

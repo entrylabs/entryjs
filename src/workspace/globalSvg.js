@@ -18,7 +18,6 @@ goog.provide('Entry.GlobalSvg');
             position: 'fixed',
             width: 0,
             height: 0,
-            'background-color': 'orange',
             display: 'none',
             'z-index': '1111'
         });
@@ -47,6 +46,10 @@ goog.provide('Entry.GlobalSvg');
     gs.draw = function() {
         if (this._svg) this.remove();
 
+        if (this._mode == Entry.Workspace.MODE_VIMBOARD) {
+            this._view.blockToText();
+            this._view.strip();
+        }
         this.svg = this._view.svgGroup.clone();
         this.snap.append(this.svg);
         this.show();
@@ -96,8 +99,6 @@ goog.provide('Entry.GlobalSvg');
             top: that.top
         };
 
-        if (this._mode == Entry.Workspace.MODE_VIMBOARD)
-            style.opacity = 0.3;
         this.svgDom.css(style);
     };
 
