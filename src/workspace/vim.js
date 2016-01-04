@@ -23,7 +23,8 @@ Entry.Vim = function(dom) {
 
 (function(p) {
     p.createDom = function (dom) {
-        var parent = dom;
+        var parent, _self, target;
+        parent = dom;
         this.view = Entry.Dom('div', {
             parent:parent,
             class: 'entryVimBoard'
@@ -42,10 +43,11 @@ Entry.Vim = function(dom) {
             viewportMargin: 10
         });
 
-        var parent = this;
-        document.addEventListener('dragEnd', function (e) {
-            var textCode = parent.getCodeToText(e.block);
-            parent.codeMirror.display.dragFunctions.leave(e);
+        _self = this;
+        target = this.view[0];
+        function eventDragEnd(e) {
+            var textCode = _self.getCodeToText(e.block);
+            _self.codeMirror.display.dragFunctions.leave(e);
             var mousedown = new MouseEvent('mousedown', {
                 'view': window,
                 'bubbles': true,
@@ -53,12 +55,19 @@ Entry.Vim = function(dom) {
                 'clientX' : e.clientX,
                 'clientY' : e.clientY
             });
-            parent.codeMirror.display.scroller.dispatchEvent(mousedown);
-            parent.codeMirror.replaceSelection(textCode);
-        });
-        document.addEventListener('dragOver', function (e) {
-            parent.codeMirror.display.dragFunctions.over(e);
-        });
+
+            _self.codeMirror.display.scroller.dispatchEvent(mousedown);
+            _self.codeMirror.replaceSelection(textCode);
+        }
+
+        function eventDragOver(e) {
+            _self.codeMirror.display.dragFunctions.over(e);
+        }
+
+        target.removeEventListener("dragEnd", eventDragEnd);
+        target.removeEventListener("dragOver", eventDragOver);
+        target.addEventListener('dragEnd', eventDragEnd);
+        target.addEventListener('dragOver', eventDragOver);
     };
 
     p.hide = function() {

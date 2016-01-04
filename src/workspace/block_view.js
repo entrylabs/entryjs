@@ -425,9 +425,9 @@ Entry.BlockView = function(block, board) {
                 dragEvent.block = block;
             }
 
-            if (!this._vimBoard)
-                this._vimBoard = document.getElementsByClassName('CodeMirror')[0];
-            this._vimBoard.dispatchEvent(dragEvent);
+            
+            var _vimBoard = document.getElementsByClassName('CodeMirror')[0];
+            _vimBoard.dispatchEvent(dragEvent);
         }
     }
 
