@@ -45,8 +45,9 @@ goog.provide('Entry.GlobalSvg');
 
     gs.draw = function() {
         if (this._svg) this.remove();
+        var isVimMode = this._mode == Entry.Workspace.MODE_VIMBOARD;
 
-        if (this._mode == Entry.Workspace.MODE_VIMBOARD) {
+        if (isVimMode) {
             this._view.blockToText();
             this._view.strip();
         }
