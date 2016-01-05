@@ -54,11 +54,11 @@ goog.provide('Entry.GlobalSvg');
             var svg = this.svg;
             svg.selectAll('path').animate({
                 opacity: 0
-            }, 600, mina.easeinout);
+            }, 500, mina.easeinout);
 
             svg.selectAll('text').animate({
                 fill: '#000000'
-            }, 600, mina.easeinout);
+            }, 530, mina.easeinout);
         }
         this.snap.append(this.svg);
         this.show();

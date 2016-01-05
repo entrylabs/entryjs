@@ -55,6 +55,7 @@ Entry.Workspace.MODE_VIMBOARD = 1;
             this.vimBoard.show();
             this.vimBoard.codeToText(this.board.code);
             this.blockMenu.renderText();
+            this.board.clear();
         } else {
             if (this.vimBoard) this.vimBoard.hide();
             this.selectedBoard = this.board;

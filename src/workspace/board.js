@@ -319,7 +319,9 @@ Entry.Board = function(dom) {
     };
 
     p.clear = function() {
-        var svgBlockGroup = this.svgBlockGroup;
-
+        var node = this.svgBlockGroup.node;
+        while (node.firstChild)
+            node.removeChild(node.firstChild);
     };
+
 })(Entry.Board.prototype);

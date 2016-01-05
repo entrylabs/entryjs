@@ -440,7 +440,7 @@ Entry.BlockView = function(block, board, mode) {
             if (board instanceof Entry.BlockMenu) {
                 board.terminateDrag();
                 this.vimBoardEvent(e, 'dragEnd', block);
-            }
+            } else board.clear();
         } else {
             if (dragMode !== Entry.DRAG_MODE_MOUSEDOWN) {
                 var fromBlockMenu = this.dragInstance && this.dragInstance.isNew;

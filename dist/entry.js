@@ -13911,7 +13911,7 @@ Entry.BlockView = function(a, b, c) {
     var c = this.getBoard(), d = this.dragMode, e = this.block, f = c.workspace.getMode();
     this.removeDragging();
     if (f === Entry.Workspace.MODE_VIMBOARD) {
-      c instanceof Entry.BlockMenu && (c.terminateDrag(), this.vimBoardEvent(a, "dragEnd", e));
+      c instanceof Entry.BlockMenu ? (c.terminateDrag(), this.vimBoardEvent(a, "dragEnd", e)) : c.clear();
     } else {
       if (d !== Entry.DRAG_MODE_MOUSEDOWN) {
         (a = this.dragInstance && this.dragInstance.isNew) && (c.workspace.blockMenu.terminateDrag() || e.doAdd());
@@ -14845,7 +14845,7 @@ Entry.GlobalSvg = {};
     this._svg && this.remove();
     var c = this._mode == Entry.Workspace.MODE_VIMBOARD;
     this.svg = a.svgGroup.clone();
-    c && (c = this.svg, c.selectAll("path").animate({opacity:0}, 600, mina.easeinout), c.selectAll("text").animate({fill:"#000000"}, 600, mina.easeinout));
+    c && (c = this.svg, c.selectAll("path").animate({opacity:0}, 500, mina.easeinout), c.selectAll("text").animate({fill:"#000000"}, 530, mina.easeinout));
     this.snap.append(this.svg);
     this.show();
     a.set({visible:!1});
@@ -15006,7 +15006,7 @@ Entry.skeleton.basic_loop = {path:function(a) {
 }};
 Entry.skeleton.basic_define = {path:function(a) {
   var b = Math.max(a.contentHeight, 25);
-  return "m -8,0 h 16 h %cw a 15,15 0 0,1 0,30 H 24 l -8,8 -8,-8 h -0.4 v %ch h 0.4 l 8,8 8,-8 h %cw h -8 a 8,8 0 0,1 0,16 H 8 l -8,8 -8,-8 z".replace(/%cw/gi, Math.max(0, a.contentWidth - 31)).replace(/%ch/gi, b);
+  return "m -8,0 h 16 h %cw a 15,15 0 0,1 0,30 H 24 l -8,8 -8,-8 h -0.4 v %ch h 0.4 l 8,8 8,-8 h %cw h -8 a 8,8 0 0,1 0,16 H 8 l -8,8 -8,-8 z".replace(/%cw/gi, Math.max(0, a.contentWidth - 6)).replace(/%ch/gi, b);
 }, magnets:function() {
   return {previous:{x:0, y:0}, next:{x:0, y:105}};
 }, box:function(a) {
@@ -15596,6 +15596,9 @@ Entry.Board = function(a) {
     this.scroller.resizeScrollBar();
   };
   a.clear = function() {
+    for (var a = this.svgBlockGroup.node;a.firstChild;) {
+      a.removeChild(a.firstChild);
+    }
   };
 })(Entry.Board.prototype);
 Entry.Vim = function(a) {
@@ -15680,7 +15683,7 @@ Entry.Workspace.MODE_VIMBOARD = 1;
   };
   a.setMode = function(a) {
     a = Number(a);
-    this.mode != a && (a == Entry.Workspace.MODE_VIMBOARD ? (this.board && this.board.hide(), this.selectedBoard = this.vimBoard, this.vimBoard.show(), this.vimBoard.codeToText(this.board.code), this.blockMenu.renderText()) : (this.vimBoard && this.vimBoard.hide(), this.selectedBoard = this.board, this.board.show(), this.textToCode(), this.blockMenu.renderBlock()), this.mode = a);
+    this.mode != a && (a == Entry.Workspace.MODE_VIMBOARD ? (this.board && this.board.hide(), this.selectedBoard = this.vimBoard, this.vimBoard.show(), this.vimBoard.codeToText(this.board.code), this.blockMenu.renderText(), this.board.clear()) : (this.vimBoard && this.vimBoard.hide(), this.selectedBoard = this.board, this.board.show(), this.textToCode(), this.blockMenu.renderBlock()), this.mode = a);
   };
   a.changeBoardCode = function(a) {
     this.selectedBoard.changeCode(a);
