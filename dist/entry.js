@@ -4793,8 +4793,6 @@ Entry.Observer = function(a, b, c, d) {
 Entry.Container = function() {
   this.objects_ = [];
   this.cachedPicture = {};
-  this.variables_ = [];
-  this.messages_ = [];
   this.inputValue = {};
   this.currentObjects_ = this.copiedObject = null;
 };
@@ -4967,156 +4965,95 @@ Entry.Container.prototype.moveElementByBlock = function(a, b) {
   Entry.stage.sortZorder();
   this.updateListView();
 };
-Entry.Container.prototype.createMessage = function() {
-  var a = prompt(Lang.Workspace.enter_new_message);
-  a ? Entry.isExist(a, "name", Entry.variableContainer.messages_) ? Entry.toast.alert(Lang.Workspace.message_add_fail, Lang.Workspace.message_add_fail_msg) : Entry.variableContainer.addMessage({name:a}) && Entry.toast.success(Lang.Workspace.message_add_ok, a + " " + Lang.Workspace.message_add_ok_msg) : Entry.toast.alert(Lang.Workspace.message_add_cancel, Lang.Workspace.message_add_cancel_msg);
-};
-Entry.Container.prototype.addMessage = function(a) {
-  a.id || (a.id = Entry.generateHash());
-  this.messages_.push(a);
-  Entry.playground.reloadPlayground();
-  return !0;
-};
-Entry.Container.prototype.deleteMessage = function() {
-  0 === this.messages_.length ? Entry.toast.alert(Lang.Msgs.warn, Lang.Workspace.no_message_to_remove, "true") : Entry.dispatchEvent("deleteMessage");
-};
-Entry.Container.prototype.removeMessage = function(a) {
-  for (var b = this.messages_, c = 0;c < b.length;c++) {
-    if (b[c].id == a.id) {
-      b.splice(c, 1);
-      Entry.playground.reloadPlayground();
-      break;
-    }
-  }
-};
-Entry.Container.prototype.createVariable = function() {
-  var a = prompt(Lang.Workspace.enter_variable_name);
-  a && 10 >= a.length ? Entry.isExist(a, "name_", Entry.variableContainer.variables_) ? Entry.toast.alert(Lang.Workspace.variable_add_fail, Lang.Workspace.variable_add_fail_msg1) : Entry.variableContainer.addVariable({name:a}) && Entry.toast.success(Lang.Workspace.variable_add_ok, a + " " + Lang.Workspace.variable_add_ok_msg) : a && 10 <= a.length ? Entry.toast.alert(Lang.Workspace.variable_add_fail, Lang.Workspace.variable_add_fail_msg2, !0) : Entry.toast.alert(Lang.Workspace.variable_add_calcel, 
-  Lang.Workspace.variable_add_calcel_msg);
-};
-Entry.Container.prototype.removeVariable = function() {
-  Entry.dispatchEvent("removeVariable");
-};
-Entry.Container.prototype.changeVariableName = function() {
-  Entry.dispatchEvent("changeVariableName");
-};
-Entry.Container.prototype.changeEntryVariableName = function(a) {
-  var b = this.variables_;
-  if (Entry.isExist(a.newName, "name_", b)) {
-    Entry.toast.alert(Lang.Workspace.variable_rename_failed, Lang.Workspace.variable_dup);
-  } else {
-    for (var c = 0;c < b.length;c++) {
-      if (b[c].getId() == a.varId) {
-        this.variables_[c].setName(a.newName);
-        break;
-      }
-    }
-    Entry.toast.success(Lang.Workspace.variable_rename, Lang.Workspace.variable_rename_ok);
-    Entry.playground.reloadPlayground();
-  }
-};
-Entry.Container.prototype.removeEntryVariable = function(a) {
-  for (var b = this.variables_, c = 0;c < b.length;c++) {
-    if (b[c].getId() == a) {
-      b[c].remove();
-      this.variables_.splice(c, 1);
-      Entry.playground.reloadPlayground();
-      break;
-    }
-  }
-};
 Entry.Container.prototype.getDropdownList = function(a) {
   var b = [];
-  if ("sprites" == a) {
-    var c = this.getCurrentObjects(), d = c.length;
-    for (a = 0;a < d;a++) {
-      var e = c[a];
-      b.push([e.name, e.id]);
-    }
-  } else {
-    if ("spritesWithMouse" == a) {
+  switch(a) {
+    case "sprites":
+      var c = this.getCurrentObjects(), d = c.length;
+      for (a = 0;a < d;a++) {
+        var e = c[a];
+        b.push([e.name, e.id]);
+      }
+      break;
+    case "spritesWithMouse":
       c = this.getCurrentObjects();
       d = c.length;
       for (a = 0;a < d;a++) {
         e = c[a], b.push([e.name, e.id]);
       }
       b.push([Lang.Blocks.mouse_pointer, "mouse"]);
-    } else {
-      if ("spritesWithSelf" == a) {
-        c = this.getCurrentObjects();
-        d = c.length;
-        for (a = 0;a < d;a++) {
-          e = c[a], b.push([e.name, e.id]);
-        }
-        b.push([Lang.Blocks.self, "self"]);
-      } else {
-        if ("collision" == a) {
-          b.push([Lang.Blocks.mouse_pointer, "mouse"]);
-          c = this.getCurrentObjects();
-          d = c.length;
-          for (a = 0;a < d;a++) {
-            e = c[a], b.push([e.name, e.id]);
-          }
-          b.push([Lang.Blocks.wall, "wall"]);
-          b.push([Lang.Blocks.wall_up, "wall_up"]);
-          b.push([Lang.Blocks.wall_down, "wall_down"]);
-          b.push([Lang.Blocks.wall_right, "wall_right"]);
-          b.push([Lang.Blocks.wall_left, "wall_left"]);
-        } else {
-          if ("pictures" == a) {
-            for (c = Entry.playground.object.pictures, a = 0;a < c.length;a++) {
-              d = c[a], b.push([d.name, d.id]);
-            }
-          } else {
-            if ("messages" == a) {
-              for (c = Entry.variableContainer.messages_, a = 0;a < c.length;a++) {
-                d = c[a], b.push([d.name, d.id]);
-              }
-            } else {
-              if ("variables" == a) {
-                c = Entry.variableContainer.variables_;
-                for (a = 0;a < c.length;a++) {
-                  d = c[a], d.object_ && d.object_ != Entry.playground.object.id || b.push([d.getName(), d.getId()]);
-                }
-                b && 0 !== b.length || b.push([Lang.Blocks.VARIABLE_variable, "null"]);
-              } else {
-                if ("lists" == a) {
-                  c = Entry.variableContainer.lists_;
-                  for (a = 0;a < c.length;a++) {
-                    d = c[a], b.push([d.getName(), d.getId()]);
-                  }
-                  b && 0 !== b.length || b.push([Lang.Blocks.VARIABLE_list, "null"]);
-                } else {
-                  if ("scenes" == a) {
-                    for (c = Entry.scene.scenes_, a = 0;a < c.length;a++) {
-                      d = c[a], b.push([d.name, d.id]);
-                    }
-                  } else {
-                    if ("sounds" == a) {
-                      for (c = Entry.playground.object.sounds, a = 0;a < c.length;a++) {
-                        d = c[a], b.push([d.name, d.id]);
-                      }
-                    } else {
-                      if ("clone" == a) {
-                        for (b.push([Lang.Blocks.oneself, "self"]), d = this.objects_.length, a = 0;a < d;a++) {
-                          e = this.objects_[a], b.push([e.name, e.id]);
-                        }
-                      } else {
-                        if ("objectSequence" == a) {
-                          for (d = this.getCurrentObjects().length, a = 0;a < d;a++) {
-                            b.push([(a + 1).toString(), a.toString()]);
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
+      break;
+    case "spritesWithSelf":
+      c = this.getCurrentObjects();
+      d = c.length;
+      for (a = 0;a < d;a++) {
+        e = c[a], b.push([e.name, e.id]);
       }
-    }
+      b.push([Lang.Blocks.self, "self"]);
+      break;
+    case "collision":
+      b.push([Lang.Blocks.mouse_pointer, "mouse"]);
+      c = this.getCurrentObjects();
+      d = c.length;
+      for (a = 0;a < d;a++) {
+        e = c[a], b.push([e.name, e.id]);
+      }
+      b.push([Lang.Blocks.wall, "wall"]);
+      b.push([Lang.Blocks.wall_up, "wall_up"]);
+      b.push([Lang.Blocks.wall_down, "wall_down"]);
+      b.push([Lang.Blocks.wall_right, "wall_right"]);
+      b.push([Lang.Blocks.wall_left, "wall_left"]);
+      break;
+    case "pictures":
+      c = Entry.playground.object.pictures;
+      for (a = 0;a < c.length;a++) {
+        d = c[a], b.push([d.name, d.id]);
+      }
+      break;
+    case "messages":
+      c = Entry.variableContainer.messages_;
+      for (a = 0;a < c.length;a++) {
+        d = c[a], b.push([d.name, d.id]);
+      }
+      break;
+    case "variables":
+      c = Entry.variableContainer.variables_;
+      for (a = 0;a < c.length;a++) {
+        d = c[a], d.object_ && d.object_ != Entry.playground.object.id || b.push([d.getName(), d.getId()]);
+      }
+      b && 0 !== b.length || b.push([Lang.Blocks.VARIABLE_variable, "null"]);
+      break;
+    case "lists":
+      c = Entry.variableContainer.lists_;
+      for (a = 0;a < c.length;a++) {
+        d = c[a], b.push([d.getName(), d.getId()]);
+      }
+      b && 0 !== b.length || b.push([Lang.Blocks.VARIABLE_list, "null"]);
+      break;
+    case "scenes":
+      c = Entry.scene.scenes_;
+      for (a = 0;a < c.length;a++) {
+        d = c[a], b.push([d.name, d.id]);
+      }
+      break;
+    case "sounds":
+      c = Entry.playground.object.sounds;
+      for (a = 0;a < c.length;a++) {
+        d = c[a], b.push([d.name, d.id]);
+      }
+      break;
+    case "clone":
+      b.push([Lang.Blocks.oneself, "self"]);
+      d = this.objects_.length;
+      for (a = 0;a < d;a++) {
+        e = this.objects_[a], b.push([e.name, e.id]);
+      }
+      break;
+    case "objectSequence":
+      for (d = this.getCurrentObjects().length, a = 0;a < d;a++) {
+        b.push([(a + 1).toString(), a.toString()]);
+      }
+    ;
   }
   b.length || (b = [[Lang.Blocks.no_target, "null"]]);
   return b;
@@ -5207,15 +5144,6 @@ Entry.Container.prototype.loadSequenceSnapshot = function() {
   this.setCurrentObjects();
   Entry.stage.sortZorder();
   this.updateListView();
-};
-Entry.Container.prototype.getMessageJSON = function() {
-  return this.messages_;
-};
-Entry.Container.prototype.getVariableJSON = function() {
-  for (var a = [], b = 0;b < this.variables_.length;b++) {
-    a.push(this.variables_[b].toJSON());
-  }
-  return a;
 };
 Entry.Container.prototype.getInputValue = function() {
   return this.inputValue.getValue();
@@ -5712,7 +5640,7 @@ Entry.Engine.prototype.computeFunction = function(a) {
   for (var b = 0;b < a.length;b++) {
     for (var c = a.shift(), d = !0, e = !1;c && d && !e;) {
       try {
-        var d = !c.isLooped, f = c.run(), e = f && f.type == c.type, c = f;
+        var d = !c.isLooped, f = c.run(), e = f && f === c, c = f;
       } catch (g) {
         throw Entry.engine.toggleStop(), Entry.engine.isUpdating = !1, "workspace" == Entry.type && (Entry.container.selectObject(), Entry.container.selectObject(c.entity.parent.id), Entry.playground.changeViewMode("code"), Blockly.mainWorkspace.activatePreviousBlock(c.id)), Entry.toast.alert(Lang.Msgs.runtime_error, Lang.Workspace.check_runtime_error, !0), g;
       }
@@ -5724,7 +5652,7 @@ Entry.Engine.computeThread = function(a, b) {
   Entry.engine.isContinue = !0;
   for (var c = !1;b && Entry.engine.isContinue && !c;) {
     Entry.engine.isContinue = !b.isRepeat;
-    var d = b.run(), c = d && d.type == b.type;
+    var d = b.run(), c = d && d === b;
     b = d;
   }
   return b;
@@ -9623,6 +9551,12 @@ Entry.getStartProject = function(a) {
   selectedPictureId:"vx80", objectType:"sprite", rotateMethod:"free", scene:"7dwq", sprite:{sounds:[{duration:1.3, ext:".mp3", id:"8el5", fileurl:a + "media/bark.mp3", name:"\uac15\uc544\uc9c0 \uc9d6\ub294\uc18c\ub9ac"}], pictures:[{id:"vx80", fileurl:a + "media/entrybot1.png", name:"\uc5d4\ud2b8\ub9ac\ubd07_\uac77\uae301", scale:100, dimension:{width:284, height:350}}, {id:"4t48", fileurl:a + "media/entrybot2.png", name:"\uc5d4\ud2b8\ub9ac\ubd07_\uac77\uae302", scale:100, dimension:{width:284, height:350}}]}, 
   entity:{x:0, y:0, regX:142, regY:175, scaleX:.3154574132492113, scaleY:.3154574132492113, rotation:0, direction:90, width:284, height:350, visible:!0}, lock:!1, active:!0}], speed:60};
 };
+Entry.PropertyPanel = function() {
+};
+(function(a) {
+  a.generateView = function() {
+  };
+})(Entry.PropertyPanel.prototype);
 Entry.Reporter = function(a) {
   this.projectId = this.userId = null;
   this.isRealTime = a;
