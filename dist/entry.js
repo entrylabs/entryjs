@@ -3645,7 +3645,7 @@ Entry.block.direction_relative_duration = function(a, b) {
   delete b.dDirection;
   return b.callReturn();
 };
-Entry.Neobot = {name:"neobot", PORT_MAP:{1:0, 2:0, 3:0, SERVO1:0, SERVO2:0, SERVO1_SPEED:3, SERVO2_SPEED:3, LMOT:0, RMOT:0, note:0, octave:0, duration:0, sound_check:0}, setZero:function() {
+Entry.Neobot = {name:"neobot", PORT_MAP:{1:0, 2:0, 3:0, SERVO1:0, SERVO2:0, SERVO1_SPEED:3, SERVO2_SPEED:3, LMOT:0, RMOT:0, note:0, octave:0, duration:0, sound_check:0, O_1:0, O_2:0}, setZero:function() {
   for (var a in Entry.Neobot.PORT_MAP) {
     Entry.hw.sendQueue[a] = Entry.Neobot.PORT_MAP[a];
   }
@@ -3767,6 +3767,19 @@ Entry.block.neobot_play_note_for = function(a, b) {
     b.timeFlag = 0;
   }, 1 / f * 4E3);
   return b;
+};
+Blockly.Blocks.neobot_set_sensor_value = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(new Blockly.FieldDropdown([["1", "O_1"], ["2", "O_2"]]), "PORT").appendField("\ubc88 \ud3ec\ud2b8\uc758 \uac12\uc744").appendField(new Blockly.FieldDropdown([["\ucf1c\uae30", "1"], ["\ub044\uae30", "0"]]), "VALUE");
+  this.appendDummyInput().appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.neobot_set_sensor_value = function(a, b) {
+  var c = Entry.hw.sendQueue, d = b.getStringField("PORT", b), e = b.getNumberField("VALUE", b);
+  c[d] = e;
+  return b.callReturn();
 };
 Blockly.Blocks.when_scene_start = {init:function() {
   this.setColour("#3BBD70");

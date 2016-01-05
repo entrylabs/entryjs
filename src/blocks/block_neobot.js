@@ -13,7 +13,9 @@ Entry.Neobot = {
         "note":0,
         "octave":0,
         "duration":0,
-        "sound_check":0
+        "sound_check":0,
+        "O_1":0,
+        "O_2":0
     },
     setZero: function () {
         for(var port in Entry.Neobot.PORT_MAP) {
@@ -297,3 +299,34 @@ Entry.block.neobot_play_note_for = function (sprite, script) {
     }
 
 };
+
+Blockly.Blocks.neobot_set_sensor_value = {
+  init: function() {
+    
+    this.setColour("#00979D");
+    this.appendDummyInput()
+        .appendField(new Blockly.FieldDropdown([
+          ['1',"O_1"],
+          ['2',"O_2"]
+          ]), "PORT")
+        .appendField('번 포트의 값을')
+        .appendField(new Blockly.FieldDropdown([
+          ['켜기',"1"],
+          ['끄기',"0"]
+          ]), "VALUE");
+    this.appendDummyInput()
+        .appendField(new Blockly.FieldIcon(Entry.mediaFilePath + 'block_icon/hardware_03.png', '*'));
+    this.setInputsInline(true);
+    this.setPreviousStatement(true);
+    this.setNextStatement(true);
+  }
+};
+
+Entry.block.neobot_set_sensor_value = function (sprite, script) {
+    var sq = Entry.hw.sendQueue;
+
+    var port = script.getStringField("PORT", script);
+    var value = script.getNumberField("VALUE", script);
+    sq[port] = value;
+    return script.callReturn(); 
+}
