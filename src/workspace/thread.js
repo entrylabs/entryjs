@@ -207,4 +207,5 @@ Entry.Thread = function(thread, code) {
 
         this.changeEvent.notify();
     };
+
 })(Entry.Thread.prototype);

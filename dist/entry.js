@@ -13686,11 +13686,14 @@ Entry.BlockMenu = function(a, b) {
   a.show = function() {
     this.view.removeClass("entryRemove");
   };
-  a.codeToText = function() {
+  a.renderText = function() {
     for (var a = this.code.getThreads(), c = 0;c < a.length;c++) {
-      for (var d = a[c].getBlocks(), e = 0;e < d.length;e++) {
-        d[e].view.blockToText();
-      }
+      a[c].view.renderText();
+    }
+  };
+  a.renderBlock = function() {
+    for (var a = this.code.getThreads(), c = 0;c < a.length;c++) {
+      a[c].view.renderBlock();
     }
   };
 })(Entry.BlockMenu.prototype);
@@ -13711,12 +13714,13 @@ Entry.BlockView = function(a, b, c) {
   this.block.observe(this, "_bindPrev", ["prev"]);
   this.block.observe(this, "_createEmptyBG", ["next"]);
   this.observe(this, "_updateBG", ["magneting"]);
+  this.observe(this, "_updateOpacity", ["visible"]);
   b.code.observe(this, "_setBoard", ["board"], !1);
   this.dragMode = Entry.DRAG_MODE_NONE;
   Entry.Utils.disableContextmenu(this.svgGroup.node);
 };
 (function(a) {
-  a.schema = {id:0, type:Entry.STATIC.BLOCK_RENDER_MODEL, x:0, y:0, offsetX:0, offsetY:0, width:0, height:0, contentWidth:0, contentHeight:0, magneting:!1, animating:!1};
+  a.schema = {id:0, type:Entry.STATIC.BLOCK_RENDER_MODEL, x:0, y:0, offsetX:0, offsetY:0, width:0, height:0, contentWidth:0, contentHeight:0, magneting:!1, visible:!0, animating:!1};
   a._startRender = function(a, c) {
     this.svgGroup.attr({class:"block"});
     var d = this._skeleton.path(this);
@@ -13762,7 +13766,6 @@ Entry.BlockView = function(a, b, c) {
   };
   a.alignContent = function(a) {
     !0 !== a && (a = !1);
-    console.log("align");
     for (var c = 0, d = 0, e = 0;e < this._contents.length;e++) {
       d = this._contents[e];
       d.align(c, 0, a);
@@ -13853,6 +13856,7 @@ Entry.BlockView = function(a, b, c) {
     }
     function d(a) {
       Entry.GlobalSvg.remove();
+      k.set({visible:!0});
       $(document).unbind(".block");
       delete this.mouseDownCoordinate;
       k.terminateDrag(a);
@@ -14021,13 +14025,14 @@ Entry.BlockView = function(a, b, c) {
   a.getContentPos = function() {
     return this._skeleton.contentPos(this);
   };
-  a.blockToText = function() {
+  a.renderText = function() {
     this._startContentRender(Entry.Workspace.MODE_VIMBOARD);
   };
-  a.textToBlock = function() {
+  a.renderBlock = function() {
+    this._startContentRender(Entry.Workspace.MODE_BOARD);
   };
-  a.setVisible = function(a) {
-    this.svgGroup.attr({opacity:!1 === a ? 0 : 1});
+  a._updateOpacity = function() {
+    this.svgGroup.attr({opacity:!1 === this.visible ? 0 : 1});
   };
 })(Entry.BlockView.prototype);
 Entry.Code = function(a) {
@@ -14836,15 +14841,14 @@ Entry.GlobalSvg = {};
     }
   };
   a.draw = function() {
-    var a = this;
+    var a = this._view;
     this._svg && this.remove();
     var c = this._mode == Entry.Workspace.MODE_VIMBOARD;
-    this.svg = this._view.svgGroup.clone();
-    c && (a._view.setVisible(!1), this.svg.selectAll("path").animate({opacity:0}, 1400, mina.easeinout, function() {
-      a.svg && a.svg.selectAll("text").attr({fill:"black"});
-    }));
+    this.svg = a.svgGroup.clone();
+    c && (c = this.svg, c.selectAll("path").animate({opacity:0}, 600, mina.easeinout), c.selectAll("text").animate({fill:"#000000"}, 600, mina.easeinout));
     this.snap.append(this.svg);
     this.show();
+    a.set({visible:!1});
   };
   a.remove = function() {
     this.svg && (this.svg.remove(), delete this.svg, delete this._view, delete this._offsetX, this.hide());
@@ -14857,7 +14861,7 @@ Entry.GlobalSvg = {};
   a.align = function() {
     var a = this._view.getSkeleton().box(this._view).offsetX || 0;
     this._offsetX = a *= -1;
-    this.svg.attr({transform:"t" + (a + 1) + " 0"});
+    this.svg.attr({transform:"t" + (a + 1) + " 1"});
   };
   a.show = function() {
     this.svgDom.css("display", "block");
@@ -15346,6 +15350,16 @@ Entry.ThreadView = function(a, b) {
   a.destroy = function() {
     this.svgGroup.remove();
   };
+  a.renderText = function() {
+    for (var a = this.thread.getBlocks(), c = 0;c < a.length;c++) {
+      a[c].view.renderText();
+    }
+  };
+  a.renderBlock = function() {
+    for (var a = this.thread.getBlocks(), c = 0;c < a.length;c++) {
+      a[c].view.renderBlock();
+    }
+  };
 })(Entry.ThreadView.prototype);
 Entry.FieldTrashcan = function(a) {
   this.board = a;
@@ -15581,6 +15595,8 @@ Entry.Board = function(a) {
     }
     this.scroller.resizeScrollBar();
   };
+  a.clear = function() {
+  };
 })(Entry.Board.prototype);
 Entry.Vim = function(a) {
   a = "string" === typeof a ? $("#" + a) : $(a);
@@ -15664,7 +15680,7 @@ Entry.Workspace.MODE_VIMBOARD = 1;
   };
   a.setMode = function(a) {
     a = Number(a);
-    this.mode != a && (a == Entry.Workspace.MODE_VIMBOARD ? (this.board && this.board.hide(), this.selectedBoard = this.vimBoard, this.vimBoard.show(), this.vimBoard.codeToText(this.board.code), this.blockMenu.codeToText()) : (this.vimBoard && this.vimBoard.hide(), this.selectedBoard = this.board, this.board.show(), this.textToCode()), this.mode = a);
+    this.mode != a && (a == Entry.Workspace.MODE_VIMBOARD ? (this.board && this.board.hide(), this.selectedBoard = this.vimBoard, this.vimBoard.show(), this.vimBoard.codeToText(this.board.code), this.blockMenu.renderText()) : (this.vimBoard && this.vimBoard.hide(), this.selectedBoard = this.board, this.board.show(), this.textToCode(), this.blockMenu.renderBlock()), this.mode = a);
   };
   a.changeBoardCode = function(a) {
     this.selectedBoard.changeCode(a);

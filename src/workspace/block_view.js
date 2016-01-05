@@ -32,6 +32,7 @@ Entry.BlockView = function(block, board, mode) {
     this.block.observe(this, "_bindPrev", ["prev"]);
     this.block.observe(this, "_createEmptyBG", ["next"]);
     this.observe(this, "_updateBG", ["magneting"]);
+    this.observe(this, "_updateOpacity", ["visible"]);
     board.code.observe(this, '_setBoard', ['board'], false);
 
     this.dragMode = Entry.DRAG_MODE_NONE;
@@ -51,6 +52,7 @@ Entry.BlockView = function(block, board, mode) {
         contentWidth: 0,
         contentHeight: 0,
         magneting: false,
+        visible: true,
         animating: false
     };
 
@@ -122,7 +124,6 @@ Entry.BlockView = function(block, board, mode) {
 
     p.alignContent = function(animate) {
         if (animate !== true) animate = false;
-        console.log('align');
         var cursor = {x: 0, y: 0, height: 0};
         for (var i = 0; i < this._contents.length; i++) {
             var c = this._contents[i];
@@ -401,6 +402,7 @@ Entry.BlockView = function(block, board, mode) {
 
         function onMouseUp(e) {
             Entry.GlobalSvg.remove();
+            blockView.set({visible:true});
             $(document).unbind('.block');
             delete this.mouseDownCoordinate;
             blockView.terminateDrag(e);
@@ -411,7 +413,7 @@ Entry.BlockView = function(block, board, mode) {
     };
 
     p.vimBoardEvent = function(event, type, block) {
-        if(event) {
+        if (event) {
             var dragEvent = new MouseEvent(type, {
                 'view': window,
                 'bubbles': true,
@@ -420,11 +422,8 @@ Entry.BlockView = function(block, board, mode) {
                 'clientY' : event.clientY
             });
 
-            if(block) {
-                dragEvent.block = block;
-            }
+            if (block) dragEvent.block = block;
 
-            
             var _vimBoard = document.getElementsByClassName('CodeMirror')[0];
             _vimBoard.dispatchEvent(dragEvent);
         }
@@ -688,16 +687,18 @@ Entry.BlockView = function(block, board, mode) {
         return this._skeleton.contentPos(this);
     };
 
-    p.blockToText = function() {
+    p.renderText = function() {
         this._startContentRender(Entry.Workspace.MODE_VIMBOARD);
     };
 
-    p.textToBlock = function() {
+    p.renderBlock = function() {
+        this._startContentRender(Entry.Workspace.MODE_BOARD);
     };
 
-    p.setVisible = function(visible) {
-        visible = visible === false ? 0 : 1;
-        this.svgGroup.attr({opacity:visible});
+    p._updateOpacity = function() {
+        this.svgGroup.attr({
+            opacity:this.visible === false ? 0 : 1
+        });
     };
 
 })(Entry.BlockView.prototype);

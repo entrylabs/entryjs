@@ -317,4 +317,9 @@ Entry.Board = function(dom) {
         }
         this.scroller.resizeScrollBar();
     };
+
+    p.clear = function() {
+        var svgBlockGroup = this.svgBlockGroup;
+
+    };
 })(Entry.Board.prototype);

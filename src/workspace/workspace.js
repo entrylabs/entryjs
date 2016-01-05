@@ -54,12 +54,13 @@ Entry.Workspace.MODE_VIMBOARD = 1;
             this.selectedBoard = this.vimBoard;
             this.vimBoard.show();
             this.vimBoard.codeToText(this.board.code);
-            this.blockMenu.codeToText();
+            this.blockMenu.renderText();
         } else {
             if (this.vimBoard) this.vimBoard.hide();
             this.selectedBoard = this.board;
             this.board.show();
             this.textToCode();
+            this.blockMenu.renderBlock();
         }
         this.mode = mode;
     };

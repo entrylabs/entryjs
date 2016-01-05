@@ -45,21 +45,24 @@ goog.provide('Entry.GlobalSvg');
 
     gs.draw = function() {
         var that = this;
+        var blockView = this._view;
         if (this._svg) this.remove();
         var isVimMode = this._mode == Entry.Workspace.MODE_VIMBOARD;
 
-        this.svg = this._view.svgGroup.clone();
+        this.svg = blockView.svgGroup.clone();
         if (isVimMode) {
-            that._view.setVisible(false);
-            this.svg.selectAll('path').animate({
+            var svg = this.svg;
+            svg.selectAll('path').animate({
                 opacity: 0
-            }, 1400, mina.easeinout, function() {
-                if (that.svg)
-                    that.svg.selectAll('text').attr({fill: 'black'});
-            });
+            }, 600, mina.easeinout);
+
+            svg.selectAll('text').animate({
+                fill: '#000000'
+            }, 600, mina.easeinout);
         }
         this.snap.append(this.svg);
         this.show();
+        blockView.set({visible:false});
     };
 
     gs.remove = function() {
@@ -85,7 +88,7 @@ goog.provide('Entry.GlobalSvg');
         var offsetX = this._view.getSkeleton().box(this._view).offsetX || 0;
         offsetX *= -1;
         this._offsetX = offsetX;
-        var transform = "t" + (offsetX + 1) + " 0";
+        var transform = "t" + (offsetX + 1) + " 1";
         this.svg.attr({transform: transform});
     };
 

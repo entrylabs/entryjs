@@ -26,4 +26,16 @@ Entry.ThreadView = function(thread, board) {
         this.svgGroup.remove();
     };
 
+    p.renderText = function() {
+        var blocks = this.thread.getBlocks();
+        for (var i=0; i<blocks.length; i++)
+            blocks[i].view.renderText();
+    };
+
+    p.renderBlock = function() {
+        var blocks = this.thread.getBlocks();
+        for (var i=0; i<blocks.length; i++)
+            blocks[i].view.renderBlock();
+    };
+
 })(Entry.ThreadView.prototype);

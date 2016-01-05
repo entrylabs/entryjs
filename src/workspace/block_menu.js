@@ -178,14 +178,16 @@ Entry.BlockMenu = function(dom, align) {
 
     p.show = function() {this.view.removeClass('entryRemove');};
 
-    p.codeToText = function() {
+    p.renderText = function() {
         var threads = this.code.getThreads();
-        for (var i=0; i<threads.length; i++) {
-            var thread = threads[i];
-            var blocks = thread.getBlocks();
-            for (var j=0; j<blocks.length; j++)
-                blocks[j].view.blockToText();
-        }
+        for (var i=0; i<threads.length; i++)
+            threads[i].view.renderText();
+    };
+
+    p.renderBlock = function() {
+        var threads = this.code.getThreads();
+        for (var i=0; i<threads.length; i++)
+            threads[i].view.renderBlock();
     };
 
 })(Entry.BlockMenu.prototype);
