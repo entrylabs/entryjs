@@ -110,11 +110,12 @@ Entry.Block.MAGNET_OFFSET = 0.4;
             this.next._updatePos();
     };
 
-    p.createView = function(board) {
+    p.createView = function(board, mode) {
         if (!this.view) {
             this.set({view: new Entry.BlockView(
                 this,
-                board)
+                board,
+                mode)
             });
             this._updatePos();
         }

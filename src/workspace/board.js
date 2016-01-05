@@ -317,4 +317,11 @@ Entry.Board = function(dom) {
         }
         this.scroller.resizeScrollBar();
     };
+
+    p.clear = function() {
+        var node = this.svgBlockGroup.node;
+        while (node.firstChild)
+            node.removeChild(node.firstChild);
+    };
+
 })(Entry.Board.prototype);

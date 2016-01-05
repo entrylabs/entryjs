@@ -38,7 +38,7 @@ Entry.FieldStatement = function(content, blockView, index) {
         this.box.set({
             x: 46,
             y: 0,
-            width: 20,
+            width: 0,
             height: 20
         });
         this._thread = this.getValue();

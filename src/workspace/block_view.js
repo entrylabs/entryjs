@@ -8,7 +8,7 @@ goog.provide("Entry.BlockView");
 /*
  *
  */
-Entry.BlockView = function(block, board) {
+Entry.BlockView = function(block, board, mode) {
     Entry.Model(this, false);
     this.block = block;
     this._board = board;
@@ -26,12 +26,13 @@ Entry.BlockView = function(block, board) {
         this.block.observe(this, "_renderPath", this._skeleton.morph, false);
 
     this.prevObserver = null;
-    this._startRender(block);
+    this._startRender(block, mode);
 
     // observe
     this.block.observe(this, "_bindPrev", ["prev"]);
     this.block.observe(this, "_createEmptyBG", ["next"]);
     this.observe(this, "_updateBG", ["magneting"]);
+    this.observe(this, "_updateOpacity", ["visible"]);
     board.code.observe(this, '_setBoard', ['board'], false);
 
     this.dragMode = Entry.DRAG_MODE_NONE;
@@ -51,10 +52,11 @@ Entry.BlockView = function(block, board) {
         contentWidth: 0,
         contentHeight: 0,
         magneting: false,
+        visible: true,
         animating: false
     };
 
-    p._startRender = function(block) {
+    p._startRender = function(block, mode) {
         this.svgGroup.attr({class: "block"});
 
         var path = this._skeleton.path(this);
@@ -72,39 +74,51 @@ Entry.BlockView = function(block, board) {
         });
 
         this._moveTo(this.x, this.y, false);
-        this._startContentRender();
+        this._startContentRender(mode);
         this._addControl();
     };
 
-    p._startContentRender = function() {
+    p._startContentRender = function(mode) {
+        mode = mode === undefined ?
+            Entry.Workspace.MODE_BOARD : mode;
         if (this.contentSvgGroup) this.contentSvgGroup.remove();
+        this._contents = [];
 
         this.contentSvgGroup = this.svgGroup.group();
         var contentPos = this._skeleton.contentPos();
         this.contentSvgGroup.transform("t" + contentPos.x + ' ' + contentPos.y);
 
-        var reg = /(%\d)/gmi;
-        var schema = this._schema;
-        var templateParams = schema.template.split(reg);
-        var params = schema.params;
-        for (var i=0; i<templateParams.length; i++) {
-            var param = templateParams[i].trim();
-            if (param.length === 0) continue;
-            if (reg.test(param)) {
-                var paramIndex = Number(param.split('%')[1]) - 1;
-                param = params[paramIndex];
+        switch (mode) {
+            case Entry.Workspace.MODE_BOARD:
+                var reg = /(%\d)/gmi;
+                var schema = this._schema;
+                var templateParams = schema.template.split(reg);
+                var params = schema.params;
+                for (var i=0; i<templateParams.length; i++) {
+                    var param = templateParams[i].trim();
+                    if (param.length === 0) continue;
+                    if (reg.test(param)) {
+                        var paramIndex = Number(param.split('%')[1]) - 1;
+                        param = params[paramIndex];
+                        this._contents.push(
+                            new Entry['Field' + param.type](param, this, paramIndex)
+                        );
+                    } else this._contents.push(new Entry.FieldText({text: param}, this));
+                }
+
+                var statements = schema.statements;
+                if (statements) {
+                    for (i=0; i<statements.length; i++)
+                        this._contents.push(new Entry.FieldStatement(statements[i], this, i));
+                }
+                break;
+            case Entry.Workspace.MODE_VIMBOARD:
+                var text = this.getBoard().workspace.getCodeToText(this.block);
                 this._contents.push(
-                    new Entry['Field' + param.type](param, this, paramIndex)
+                    new Entry.FieldText({text: text, color: 'white'}, this)
                 );
-            } else this._contents.push(new Entry.FieldText({text: param}, this));
+                break;
         }
-
-        var statements = schema.statements;
-        if (statements) {
-            for (i=0; i<statements.length; i++)
-                this._contents.push(new Entry.FieldStatement(statements[i], this, i));
-        }
-
         this.alignContent(false);
     };
 
@@ -388,6 +402,7 @@ Entry.BlockView = function(block, board) {
 
         function onMouseUp(e) {
             Entry.GlobalSvg.remove();
+            blockView.set({visible:true});
             $(document).unbind('.block');
             delete this.mouseDownCoordinate;
             blockView.terminateDrag(e);
@@ -398,7 +413,7 @@ Entry.BlockView = function(block, board) {
     };
 
     p.vimBoardEvent = function(event, type, block) {
-        if(event) {
+        if (event) {
             var dragEvent = new MouseEvent(type, {
                 'view': window,
                 'bubbles': true,
@@ -407,13 +422,10 @@ Entry.BlockView = function(block, board) {
                 'clientY' : event.clientY
             });
 
-            if(block) {
-                dragEvent.block = block;
-            }
+            if (block) dragEvent.block = block;
 
-            if (!this._vimBoard)
-                this._vimBoard = document.getElementsByClassName('CodeMirror')[0];
-            this._vimBoard.dispatchEvent(dragEvent);
+            var _vimBoard = document.getElementsByClassName('CodeMirror')[0];
+            _vimBoard.dispatchEvent(dragEvent);
         }
     }
 
@@ -428,7 +440,7 @@ Entry.BlockView = function(block, board) {
             if (board instanceof Entry.BlockMenu) {
                 board.terminateDrag();
                 this.vimBoardEvent(e, 'dragEnd', block);
-            }
+            } else board.clear();
         } else {
             if (dragMode !== Entry.DRAG_MODE_MOUSEDOWN) {
                 var fromBlockMenu = this.dragInstance && this.dragInstance.isNew;
@@ -673,6 +685,20 @@ Entry.BlockView = function(block, board) {
 
     p.getContentPos = function() {
         return this._skeleton.contentPos(this);
+    };
+
+    p.renderText = function() {
+        this._startContentRender(Entry.Workspace.MODE_VIMBOARD);
+    };
+
+    p.renderBlock = function() {
+        this._startContentRender(Entry.Workspace.MODE_BOARD);
+    };
+
+    p._updateOpacity = function() {
+        this.svgGroup.attr({
+            opacity:this.visible === false ? 0 : 1
+        });
     };
 
 })(Entry.BlockView.prototype);

@@ -23,7 +23,7 @@ Entry.Thread = function(thread, code) {
 };
 
 (function(p) {
-    p.load = function(thread) {
+    p.load = function(thread, mode) {
         if (thread === undefined)
             thread = [];
         if (!(thread instanceof Array)) {
@@ -43,7 +43,7 @@ Entry.Thread = function(thread, code) {
         this._setRelation();
 
         var codeView = this._code.view;
-        if (codeView) this.createView(codeView.board);
+        if (codeView) this.createView(codeView.board, mode);
     };
 
     p._setRelation = function() {
@@ -70,11 +70,11 @@ Entry.Thread = function(thread, code) {
         this._code.unregisterEvent(block, eventType);
     };
 
-    p.createView = function(board) {
+    p.createView = function(board, mode) {
         if (!this.view)
             this.view = new Entry.ThreadView(this, board);
         this._data.map(function(b) {
-            b.createView(board);
+            b.createView(board, mode);
         });
     };
 
@@ -122,7 +122,7 @@ Entry.Thread = function(thread, code) {
         this.changeEvent.notify();
     };
 
-    p.clone = function(code) {
+    p.clone = function(code, mode) {
         var code = code || this._code;
         var newThread = new Entry.Thread([], code);
         var data = this._data;
@@ -130,7 +130,7 @@ Entry.Thread = function(thread, code) {
         for (var i=0, len=data.length; i<len; i++) {
             cloned.push(data[i].clone(newThread));
         }
-        newThread.load(cloned);
+        newThread.load(cloned, mode);
         return newThread;
     };
 
@@ -207,4 +207,5 @@ Entry.Thread = function(thread, code) {
 
         this.changeEvent.notify();
     };
+
 })(Entry.Thread.prototype);
