@@ -837,14 +837,26 @@ Entry.block.maze_step_for = {
 };
 
 Entry.block.test = {
-    skeleton: "basic",
+    skeleton: "basic_field",
     mode: "maze",
     color: "#3BBD70",
-    template: "키를 눌렀을 때 %1",
+    template: "%1 this is test block ",
     params: [
         {
-            type: "Angle",
-            value: 550
+            type: "Dropdown",
+            options: [
+                [1,1],
+                [2,2],
+                [3,3],
+                [4,4],
+                [5,5],
+                [6,6],
+                [7,7],
+                [8,8],
+                [9,9],
+                [10,10]
+            ],
+            value: 1
         }
     ],
     func: function() {
