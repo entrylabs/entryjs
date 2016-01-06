@@ -244,6 +244,7 @@ EntryStatic.getAllBlocks = function() {
                 "neobot_stop_left",
                 "neobot_turn_right",
                 "neobot_stop_right",
+                "neobot_run_motor",
                 "neobot_servo_1",
                 "neobot_servo_2",
                 "neobot_play_note_for",
@@ -1357,6 +1358,11 @@ EntryStatic.blockInfo = {
     "neobot_stop_right": {
         "isNotFor": ['neobot'],
         "xml": "<block type='neobot_stop_right'></block>",
+        "class": "neobot_motor"
+    },
+    "neobot_run_motor": {
+        "isNotFor": ['neobot'],
+        "xml": "<block type='neobot_run_motor'><value name='DURATION'><block type='text'><field name='NAME'>1</field></block></value></block>",
         "class": "neobot_motor"
     },
     "neobot_servo_1": {

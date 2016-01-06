@@ -3707,6 +3707,53 @@ Entry.block.neobot_stop_right = function(a, b) {
   Entry.hw.sendQueue.RMOT = 0;
   return b.callReturn();
 };
+Blockly.Blocks.neobot_run_motor = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(new Blockly.FieldDropdown([["\uc591\ucabd", "1"], ["\uc67c\ucabd", "2"], ["\uc624\ub978\ucabd", "3"]]), "TYPE").appendField("\ubaa8\ud130\ub97c ");
+  this.appendValueInput("DURATION").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField("\ucd08\uac04").appendField(new Blockly.FieldDropdown([["\ub290\ub9ac\uac8c", "1"], ["\ubcf4\ud1b5", "2"], ["\ube60\ub974\uac8c", "3"]]), "VALUE").appendField(new Blockly.FieldDropdown([["\uc804\uc9c4", "1"], ["\ud6c4\uc9c4", "2"], ["\uc88c\ud68c\uc804", "3"], ["\uc6b0\ud68c\uc804", "4"]]), "DIRECTION").appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.neobot_run_motor = function(a, b) {
+  if (b.isStart) {
+    if (1 == b.timeFlag) {
+      var c = b.getNumberField("TYPE"), d = b.getNumberField("VALUE");
+      switch(b.getNumberField("DIRECTION")) {
+        case 1:
+          Entry.hw.sendQueue.LMOT = d;
+          Entry.hw.sendQueue.RMOT = d;
+          break;
+        case 2:
+          Entry.hw.sendQueue.LMOT = -1 * d;
+          Entry.hw.sendQueue.RMOT = -1 * d;
+          break;
+        case 3:
+          Entry.hw.sendQueue.LMOT = d;
+          Entry.hw.sendQueue.RMOT = -1 * d;
+          break;
+        case 4:
+          Entry.hw.sendQueue.LMOT = -1 * d, Entry.hw.sendQueue.RMOT = d;
+      }
+      2 === c ? Entry.hw.sendQueue.RMOT = 0 : 3 === c && (Entry.hw.sendQueue.LMOT = 0);
+      return b;
+    }
+    delete b.timeFlag;
+    delete b.isStart;
+    Entry.engine.isContinue = !1;
+    Entry.hw.sendQueue.LMOT = 0;
+    Entry.hw.sendQueue.RMOT = 0;
+    return b.callReturn();
+  }
+  b.isStart = !0;
+  b.timeFlag = 1;
+  c = 1E3 * b.getNumberValue("DURATION");
+  setTimeout(function() {
+    b.timeFlag = 0;
+  }, c);
+  return b;
+};
 Blockly.Blocks.neobot_servo_1 = {init:function() {
   this.setColour("#00979D");
   this.appendDummyInput().appendField("SERVO1\uc5d0 \uc5f0\uacb0\ub41c \uc11c\ubcf4\ubaa8\ud130\ub97c").appendField(new Blockly.FieldDropdown([["\ube60\ub978", "3"], ["\ubcf4\ud1b5", "2"], ["\ub290\ub9b0", "1"]]), "SPEED").appendField("\uc18d\ub3c4\ub85c").appendField(new Blockly.FieldDropdown([["0\ub3c4", "0"], ["10\ub3c4", "1"], ["20\ub3c4", "2"], ["30\ub3c4", "3"], ["40\ub3c4", "4"], ["50\ub3c4", "5"], ["60\ub3c4", "6"], ["70\ub3c4", "7"], ["80\ub3c4", "8"], ["90\ub3c4", "9"], ["100\ub3c4", "10"], 
