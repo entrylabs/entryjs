@@ -3,6 +3,10 @@
 goog.provide('Entry.GlobalSvg');
 
 (function(gs) {
+    gs.DONE = 0;
+    gs.REMOVE = 1;
+    gs.RETURN = 2;
+
     gs.createDom = function() {
         if (this.svgDom) return;
         if (typeof window.Snap !== "function")
@@ -24,6 +28,7 @@ goog.provide('Entry.GlobalSvg');
 
         this.snap = Snap('#globalSvg');
 
+        this.width = 0;
         this.left = 0;
         this.top = 0;
     };
@@ -104,12 +109,23 @@ goog.provide('Entry.GlobalSvg');
         this.left = matrix.e + offset.left - this._offsetX - 1;
         this.top = matrix.f + offset.top;
 
-        var style = {
+        this.svgDom.css({
             left: that.left,
             top: that.top
-        };
+        });
+    };
 
-        this.svgDom.css(style);
+    gs.terminateDrag = function(blockView) {
+        var mousePos = Entry.mouseCoordinate;
+        var blockMenu = blockView.getBoard().workspace.blockMenu;
+        var bLeft = blockMenu.offset.left;
+        var bTop = blockMenu.offset.top;
+        var bWidth = blockMenu.svgDom.width();
+        if (mousePos.y > bTop && mousePos.x > bLeft + bWidth)
+            return this.DONE;
+        else if (mousePos.y > bTop && mousePos.x > bLeft)
+            return this.REMOVE;
+        else return this.RETURN;
     };
 
 })(Entry.GlobalSvg);

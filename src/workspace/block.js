@@ -242,9 +242,7 @@ Entry.Block.MAGNET_OFFSET = 0.4;
             positionX,
             positionY
         );
-        this.thread.separate(this);
-        this._updatePos();
-        this.getCode().changeEvent.notify();
+        this.separate();
         if (Entry.activityReporter) {
             var data = [
                 ['blockId',id],
@@ -268,10 +266,7 @@ Entry.Block.MAGNET_OFFSET = 0.4;
             positionX,
             positionY
         );
-        var blocks = this.thread.cut(this);
-        targetBlock.insertAfter(blocks);
-        this._updatePos();
-        this.getCode().changeEvent.notify();
+        this.insert(targetBlock);
         if (Entry.activityReporter) {
             var data = [
                 ['targetBlockId',targetId],
@@ -352,5 +347,20 @@ Entry.Block.MAGNET_OFFSET = 0.4;
     };
 
     p.copyToClipboard = function() {Entry.clipboard = this.copy();};
+
+    p.separate = function() {
+        this.thread.separate(this);
+        this._updatePos();
+        this.getCode().changeEvent.notify();
+    };
+
+    p.insert = function(targetBlock) {
+        var blocks = this.thread.cut(this);
+        targetBlock.insertAfter(blocks);
+        this._updatePos();
+        this.getCode().changeEvent.notify();
+    };
+
+
 
 })(Entry.Block.prototype);

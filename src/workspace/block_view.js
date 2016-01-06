@@ -396,6 +396,8 @@ Entry.BlockView = function(block, board, mode) {
                         board.setMagnetedBlock(magnetedBlock.view);
                     } else board.setMagnetedBlock(null);
                     Entry.GlobalSvg.setView(blockView, workspaceMode);
+                    if (!blockView.originPos)
+                        blockView.originPos = {x: blockView.x, y: blockView.y};
                 } else board.cloneToBoard(e);
             }
         }
@@ -427,7 +429,7 @@ Entry.BlockView = function(block, board, mode) {
             var _vimBoard = document.getElementsByClassName('CodeMirror')[0];
             _vimBoard.dispatchEvent(dragEvent);
         }
-    }
+    };
 
     p.terminateDrag = function(e) {
         var board = this.getBoard();
@@ -449,61 +451,79 @@ Entry.BlockView = function(block, board, mode) {
                     if (!removed) block.doAdd();
                 }
 
+                var gs = Entry.GlobalSvg;
                 var prevBlock = this.dragInstance && this.dragInstance.prev;
-                var closeBlock = this._getCloseBlock();
-                if (!prevBlock && !closeBlock) {
-                    if (dragMode == Entry.DRAG_MODE_DRAG && !fromBlockMenu)
-                        block.doMove();
-                } else {
-                    if (closeBlock) {
-                        this.set({animating: true});
-                        if (closeBlock.next)
-                            closeBlock.next.view.set({animating: true});
-                        block.doInsert(closeBlock);
-                        createjs.Sound.play('entryMagneting');
-                    } else block.doSeparate();
+                switch (Entry.GlobalSvg.terminateDrag(this)) {
+                    case gs.DONE:
+                        var closeBlock = this._getCloseBlock();
+                        if (!prevBlock && !closeBlock) {
+                            if (dragMode == Entry.DRAG_MODE_DRAG && !fromBlockMenu)
+                                block.doMove();
+                        } else {
+                            if (closeBlock) {
+                                this.set({animating: true});
+                                if (closeBlock.next)
+                                    closeBlock.next.view.set({animating: true});
+                                block.doInsert(closeBlock);
+                                createjs.Sound.play('entryMagneting');
+                            } else block.doSeparate();
+                        }
+                        break;
+                        case gs.RETURN:
+                            var originPos = this.originPos;
+                            if (prevBlock) {
+                                this.set({animating: false});
+                                createjs.Sound.play('entryMagneting');
+                                block.insert(prevBlock);
+                            } else this._moveTo(originPos.x, originPos.y, false);
+                            break;
+                        case gs.REMOVE:
+                            createjs.Sound.play('entryDelete');
+                            if (!fromBlockMenu) {
+                                if (prevBlock) block.doSeparate();
+                                this.block.doDestroy(false);
+                            } else {
+                                if (prevBlock) block.separate();
+                                this.block.destroy(false);
+                            }
+                            break;
                 }
                 board.setMagnetedBlock(null);
             }
         }
+
         this.dragMode = Entry.DRAG_MODE_NONE;
-
         this.destroyShadow();
-
+        delete this.originPos;
         return;
     };
 
     p._getCloseBlock = function() {
         var board = this.getBoard();
-        var isInBlockMenu = board instanceof Entry.BlockMenu;
         var x = this.x,
             y = this.y;
 
-        if (isInBlockMenu) {
-            x -= board._svgWidth;
-            board = board.workspace.getBoard();
-        }
-
         var offset = board.relativeOffset;
-        var targetElement = Snap.getElementByPoint(
-                x + offset.left, y + offset.top -1
-            );
+        var x = x + offset.left;
+
+        //below the board
+        if (x + this.offsetX < board.offset.left) return null;
+
+        var targetElement = Snap.getElementByPoint(x, y + offset.top -1);
+
         if (targetElement === null) return;
 
         var targetBlock = targetElement.block;
 
-        while (!targetBlock &&
-               targetElement.parent() &&
-               targetElement.type !== "svg" &&
-               targetElement.type !== "BODY") {
+        while (!targetBlock && targetElement.parent() &&
+               targetElement.type !== "svg" && targetElement.type !== "BODY") {
             targetElement = targetElement.parent();
             targetBlock = targetElement.block;
         }
-        if (targetBlock === undefined) return null;
-        if (targetBlock === this.block) return null;
-        if (isInBlockMenu) return targetBlock;
-        return targetBlock.view.getBoard() ==
-            board ? targetBlock : null;
+
+        if (targetBlock === undefined || targetBlock === this.block) return null;
+
+        return targetBlock;
     };
 
     p._inheritAnimate = function() {

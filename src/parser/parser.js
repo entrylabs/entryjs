@@ -67,7 +67,7 @@ Entry.Parser = function(mode, syntax, cm) {
         var lines = {
             'from' : {},
             'to' : {}
-        }
+        };
 
         var startline = value.substring(0, start).split(/\n/gi);
         lines.from.line = startline.length - 1;
@@ -78,7 +78,7 @@ Entry.Parser = function(mode, syntax, cm) {
         lines.to.ch = endline[endline.length - 1].length;
 
         return lines;
-    }
+    };
 
     p.mappingSyntax = function(mode) {
         var types = Object.keys(Entry.block);

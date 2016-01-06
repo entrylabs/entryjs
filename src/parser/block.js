@@ -67,7 +67,7 @@ Entry.BlockParser = function(syntax) {
         this.unpublishIterateVariable();
         var code = "for (var " + iterVariable + " = 0; " + iterVariable +
             " < " + iterateNumber + "; " + iterVariable + "++){\n" +
-            this.indent(statementCode) + "}\n"
+            this.indent(statementCode) + "}\n";
         return code;
     };
 
@@ -88,7 +88,7 @@ Entry.BlockParser = function(syntax) {
             iterVariableCount = parseInt(iterVariableCount / 3) - 1;
             if (iterVariableCount === 0)
                 iterVariable = this._iterVariableChunk[0] + iterVariable;
-        } while (iterVariableCount > 0)
+        } while (iterVariableCount > 0);
         this._iterVariableCount++;
         return iterVariable;
     };

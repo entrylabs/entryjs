@@ -9,6 +9,7 @@
     "validthis": true,
     "globals": {
         "goog": true,
+        "acorn": true,
         "createjs": true,
         "Entry": true,
         "Blockly": true,
