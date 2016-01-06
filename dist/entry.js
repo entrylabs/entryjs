@@ -6445,21 +6445,18 @@ Entry.HWMonitor = function(a) {
     c.rect(0, 0, 150, 30);
     this.snap.text(0, 0, a.name);
     c.text(0, 15, a.name).attr({fill:"#fff"});
-    a = c.text(100, 15, 0);
-    a.attr({fill:"#fff"});
-    return {group:c, value:a};
+    var d = c.text(100, 15, 0);
+    d.attr({fill:"#fff"});
+    return {group:c, value:d, type:a.type};
   };
   a.getView = function() {
     return this.svgDom;
   };
   a.update = function() {
     var a = Entry.hw.portData, c = Entry.hw.sendQueue, d;
-    for (d in a) {
+    for (d in this._portViews) {
       var e = this._portViews[d];
-      e && e.value.attr({text:a[d]});
-    }
-    for (d in c) {
-      (e = this._portViews[d]) && e.value.attr({text:c[d]});
+      "input" == e.type ? e.value.attr({text:a[d]}) : e.value.attr({text:c[d]});
     }
   };
   a.resize = function(a) {

@@ -47,7 +47,8 @@ Entry.HWMonitor = function(hwModule) {
         });
         return {
             group: svgGroup,
-            value: valueView
+            value: valueView,
+            type: port.type
         };
     };
 
@@ -58,15 +59,13 @@ Entry.HWMonitor = function(hwModule) {
     p.update = function() {
         var portData = Entry.hw.portData;
         var sendQueue = Entry.hw.sendQueue;
-        for (var key in portData) {
-            var portView = this._portViews[key];
-            if (portView)
-                portView.value.attr({text: portData[key]});
-        }
-        for (var key in sendQueue) {
-            var portView = this._portViews[key];
-            if (portView)
-                portView.value.attr({text: sendQueue[key]});
+        for (var key in this._portViews) {
+            var port = this._portViews[key];
+            if (port.type == "input") {
+                port.value.attr({text: portData[key]});
+            } else {
+                port.value.attr({text: sendQueue[key]});
+            }
         }
     };
 
