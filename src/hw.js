@@ -3,6 +3,8 @@
  */
 'use strict';
 
+goog.require("Entry.HWMontior");
+
 Entry.HW = function() {
     this.connectTrial = 0;
     this.isFirstConnect = true;
@@ -156,6 +158,8 @@ p.update = function() {
 
 p.updatePortData = function(data) {
     this.portData = data;
+    if (this.hwMonitor)
+        this.hwMonitor.update();
 };
 
 p.closeConnection = function() {
@@ -198,6 +202,11 @@ p.checkDevice = function(data) {
         ),
         false
     );
+    if (this.hwModule.monitorTemplate) {
+        this.hwMonitor = new Entry.HWMonitor(this.hwModule);
+        Entry.propertyPanel.addMode("hw", this.hwMonitor.getView());
+        this.hwMonitor.generateView();
+    }
 };
 
 p.banHW = function() {

@@ -64,17 +64,17 @@
   position: relative;
   z-index: 999;
   cursor: pointer;
-  background: url("../images/top_icon_add_b_nor.png");
+  background-image: url("../images/top_icon_add_b_nor.png");
 }
 .selectedScene .entrySceneLeftWorkspace {
-  background: url("../images/top_tab_b_sel_left.png");
+  background-image: url("../images/top_tab_b_sel_left.png");
 }
 .entrySceneLeftWorkspace {
   display: inline-block;
   float: left;
   width: 15px;
   height: 40px;
-  background: url("../images/top_tab_b_nor_left_blue.png");
+  background-image: url("../images/top_tab_b_nor_left_blue.png");
 }
 .entrySceneInputCover {
   margin-left: -1px;
@@ -123,10 +123,10 @@
   float: left;
   height: 40px;
   position: relative;
-  background: url("../images/top_tab_b_nor_right_blue.png");
+  background-image: url("../images/top_tab_b_nor_right_blue.png");
 }
 .selectedScene .entrySceneRemoveButtonCoverWorkspace {
-  background: url("../images/top_tab_b_sel_right.png");
+  background-image: url("../images/top_tab_b_sel_right.png");
 }
 .entrySceneRemoveButtonWorkspace {
   border: 0;
@@ -173,6 +173,12 @@
   border-bottom: 2pt solid #639FBD;
   border-right: 2pt solid #639FBD;
 }
+.entryUndoButtonWorkspace {
+  background-image: url("/img/assets/undo.png");
+}
+.entryRedoButtonWorkspace {
+  background-image: url("/img/assets/redo.png");
+}
 .entryCanvasWrapper {
   position: absolute;
 }
@@ -183,6 +189,9 @@
   display: block;
   position: absolute;
   top: 24px;
+}
+.entryPopupWindow .entryCanvasWorkspace {
+  top: -11px !important;
 }
 .entryCanvasPhone {
   width: 100%;
@@ -611,6 +620,9 @@
 .entryStopButtonWorkspace_w2 {
   display: none;
 }
+.entryPauseButtonWorkspace_w {
+  display: none;
+}
 .entryEngineBlueWorkspace > .entryStopButtonWorkspace {
   background-image: url("../images/stopbutton_play.png");
   color: white;
@@ -632,13 +644,71 @@
   background-image: url("../images/pausebutton_play.png");
   color: white;
 }
-.entryContainerWorkspace {
+.propertyPanel {
   position: absolute;
   top: 326px;
   bottom: 0px;
   width: 400px;
   background-color: #e7e7e7;
   border-top: 2px solid #5096f5;
+}
+.propertyTab {
+  width: 50px;
+  height: 100%;
+  background-color: #f5f5f5;
+}
+.collapsed .propertyTab {
+  width: 30px;
+}
+.propertyTabElement {
+  width: 100%;
+  height: 40px;
+  border-top-left-radius: 4px;
+  border-bottom-left-radius: 4px;
+  background-color: #dbdcdc;
+  background-repeat: no-repeat;
+  background-position: 50% 6px;
+  color: #9e9e9f;
+  font-size: 11px;
+  padding-top: 24px;
+  cursor: pointer;
+}
+.collapsed .propertyTabElement {
+  background-position: 50% 9px;
+  height: 36px;
+  font-size: 0;
+}
+.propertyTabElement.selected {
+  background-color: #5096f5;
+  color: #fff;
+}
+.propertyTabcontainer {
+  background-image: url("../images/property/container_off.png");
+}
+.propertyTabcontainer.selected {
+  background-image: url("../images/property/container_on.png");
+}
+.propertyTabhw {
+  background-image: url("../images/property/hw_off.png");
+}
+.propertyTabhw.selected {
+  background-image: url("../images/property/hw_on.png");
+}
+.propertyContent {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50px;
+  right: 0;
+}
+.collapsed .propertyContent {
+  left: 30px;
+}
+.hwMonitor {
+  background-color: #363c46;
+}
+.entryContainerWorkspace {
+  background-color: #e7e7e7;
 }
 .entryContainerPhone {
   width: 100%;
@@ -707,7 +777,7 @@
   border-top: 1px solid #aaaaaa;
   border-bottom: 1px solid #aaaaaa;
 }
-.collapsed > .entryContainerListElementWorkspace.selectedObject {
+.collapsed .selectedObject {
   height: 149px;
 }
 .entryContainerListElementWorkspace:first-child,
@@ -962,7 +1032,7 @@
   border-top: 1px solid #e1e1e1;
   background-color: #e5e5e5;
 }
-.collapsed > .entryContainerListElementWorkspace > .entryObjectRotationWrapperWorkspace {
+.collapsed .entryObjectRotationWrapperWorkspace {
   height: 90px;
 }
 .selectedObject .entryObjectRotationWrapperWorkspace {
@@ -976,7 +1046,7 @@
   width: 180px;
   position: relative;
 }
-.collapsed > .entryContainerListElementWorkspace > .entryObjectRotationWrapperWorkspace > .rotationMethodWrapper {
+.collapsed .rotationMethodWrapper {
   float: left;
   top: 39px;
 }
@@ -3329,13 +3399,13 @@
   display: none;
 }
 .entryPlaygroundPainterAttrAddButton {
-  background: url("../images/fill_in.png");
+  background-image: url("../images/fill_in.png");
 }
 .entryPlaygroundPainterAttrRemoveButton {
-  background: url("../images/fill_out.png");
+  background-image: url("../images/fill_out.png");
 }
 .painterAttrColorSpoid:hover {
-  background: url("../images/color_on_spoid_1.png");
+  background-image: url("../images/color_on_spoid_1.png");
   background-repeat: no-repeat;
 }
 .displayPaintArea {
@@ -3376,63 +3446,63 @@
 .entryPlaygroundPainterAttrLineStyleLine {
   position: absolute;
   top: 10px;
-  background: url("../images/line1_category_off.png");
+  background-image: url("../images/line1_category_off.png");
   background-repeat: no-repeat;
   background-color: #f5f5f5;
   width: 76px;
   height: 24px;
 }
 .entryPlaygroundPainterAttrLineStyleLine:hover {
-  background: url("../images/line1_category_on.png");
+  background-image: url("../images/line1_category_on.png");
   background-repeat: no-repeat;
 }
 .entryPlaygroundPainterAttrLineStyleDot1 {
   position: absolute;
   top: -9px;
   left: 1px;
-  background: url("../images/line2_off.png");
+  background-image: url("../images/line2_off.png");
   background-repeat: no-repeat;
   background-color: #f5f5f5;
   width: 75px;
   height: 20px;
 }
 .entryPlaygroundPainterAttrLineStyleDot1:hover {
-  background: url("../images/line2_on.png");
+  background-image: url("../images/line2_on.png");
   background-repeat: no-repeat;
 }
 .entryPlaygroundPainterAttrLineStyleDot2 {
   position: absolute;
   top: -29px;
   left: 1px;
-  background: url("../images/line3_off.png");
+  background-image: url("../images/line3_off.png");
   background-repeat: no-repeat;
   background-color: #f5f5f5;
   width: 75px;
   height: 20px;
 }
 .entryPlaygroundPainterAttrLineStyleDot2:hover {
-  background: url("../images/line3_on.png");
+  background-image: url("../images/line3_on.png");
   background-repeat: no-repeat;
 }
 .entryPlaygroundPainterAttrLineStyleDot3 {
   position: absolute;
   top: -48px;
   left: 1px;
-  background: url("../images/line4_off.png");
+  background-image: url("../images/line4_off.png");
   background-repeat: no-repeat;
   background-color: #f5f5f5;
   width: 75px;
   height: 19px;
 }
 .entryPlaygroundPainterAttrLineStyleDot3:hover {
-  background: url("../images/line4_on.png");
+  background-image: url("../images/line4_on.png");
   background-repeat: no-repeat;
 }
 .entryPlaygroundPainterAttrLineStyleLine1 {
   position: absolute;
   top: -67px;
   left: 1px;
-  background: url("../images/line1_off.png");
+  background-image: url("../images/line1_off.png");
   background-repeat: no-repeat;
   background-color: #f5f5f5;
   width: 75px;
@@ -3440,7 +3510,7 @@
   border-radius: 4px;
 }
 .entryPlaygroundPainterAttrLineStyleLine1:hover {
-  background: url("../images/line1_on.png");
+  background-image: url("../images/line1_on.png");
   background-repeat: no-repeat;
 }
 .painterAttrLineStyleBackgroundDot1,
@@ -3455,59 +3525,59 @@
   height: 21px;
 }
 .painterAttrLineStyleBackgroundDot1 {
-  background: url("../images/line2_category_off.png");
+  background-image: url("../images/line2_category_off.png");
 }
 .painterAttrLineStyleBackgroundDot2 {
-  background: url("../images/line3_category_off.png");
+  background-image: url("../images/line3_category_off.png");
 }
 .painterAttrLineStyleBackgroundDot3 {
-  background: url("../images/line4_category_off.png");
+  background-image: url("../images/line4_category_off.png");
 }
 .painterAttrLineStyleBackgroundLine {
-  background: url("../images/line1_category_off_1.png");
+  background-image: url("../images/line1_category_off_1.png");
 }
 .painterAttrLineStyleBackgroundDot1:hover {
-  background: url("../images/line2_category_on.png");
+  background-image: url("../images/line2_category_on.png");
   background-repeat: no-repeat;
 }
 .painterAttrLineStyleBackgroundDot2:hover {
-  background: url("../images/line3_category_on.png");
+  background-image: url("../images/line3_category_on.png");
   background-repeat: no-repeat;
 }
 .painterAttrLineStyleBackgroundDot3:hover {
-  background: url("../images/line4_category_on.png");
+  background-image: url("../images/line4_category_on.png");
   background-repeat: no-repeat;
 }
 .painterAttrLineStyleBackgroundLine:hover {
-  background: url("../images/line1_category_on_1.png");
+  background-image: url("../images/line1_category_on_1.png");
   background-repeat: no-repeat;
 }
 .entryToolboxCursorClicked {
-  background: url("../images/on_hand_1.png");
+  background-image: url("../images/on_hand_1.png");
 }
 .entryToolboxSelectClicked {
-  background: url("../images/on_choice_1.png");
+  background-image: url("../images/on_choice_1.png");
 }
 .entryToolboxPenClicked {
-  background: url("../images/on_pen_1.png");
+  background-image: url("../images/on_pen_1.png");
 }
 .entryToolboxLineClicked {
-  background: url("../images/on_line_1.png");
+  background-image: url("../images/on_line_1.png");
 }
 .entryToolboxRectClicked {
-  background: url("../images/on_square_1.png");
+  background-image: url("../images/on_square_1.png");
 }
 .entryToolBoxCircleClicked {
-  background: url("../images/on_circle_1.png");
+  background-image: url("../images/on_circle_1.png");
 }
 .entryToolBoxTextClicked {
-  background: url("../images/on_text_1.png");
+  background-image: url("../images/on_text_1.png");
 }
 .entryToolBoxFillClicked {
-  background: url("../images/on_paint_1.png");
+  background-image: url("../images/on_paint_1.png");
 }
 .entryToolBoxEraseClicked {
-  background: url("../images/on_eraser_1.png");
+  background-image: url("../images/on_eraser_1.png");
 }
 .dd {
   cursor: url("../images/cursor_eraser.cur");
@@ -4129,7 +4199,7 @@
   color: #B4B4B5;
   font-size: 11px;
 }
-#entry-contextmenu {
+#entry-contextmenu.workspace-contextmenu {
   position: fixed;
   background-color: white;
   display: inline-block;
@@ -4139,17 +4209,21 @@
   border-style: solid;
   border-width: 1px;
   outline: none;
-  font-size: 13px;
+  font-size: 14px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+  min-width: 160px;
+  border-radius: 4px;
+  background-clip: padding-box;
+  color: #262626;
 }
-#entry-contextmenu .menuAble {
-  cursor: pointer;
+#entry-contextmenu.workspace-contextmenu .menuAble {
   padding: 3px 20px;
 }
-#entry-contextmenu .menuAble:hover {
+#entry-contextmenu.workspace-contextmenu .menuAble:hover {
   color: white;
   background-color: #57e;
 }
-#entry-contextmenu .menuDisable {
+#entry-contextmenu.workspace-contextmenu .menuDisable {
   color: #ccc;
   padding: 3px 20px;
 }

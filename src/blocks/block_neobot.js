@@ -20,6 +20,19 @@ Entry.Neobot = {
             Entry.hw.sendQueue[port] = Entry.Neobot.PORT_MAP[port];
         }
         Entry.hw.update();
+    },
+    monitorTemplate: {
+        ports: {
+            "1":{name: "1번 포트", type: "input"},
+            "2":{name: "2번 포트", type: "input"},
+            "3":{name: "3번 포트", type: "input"},
+            //{name: "리모컨", type: "input"},
+            "LMOT":{name: "왼쪽 모터", type: "output"},
+            "RMOT":{name: "오른쪽 모터", type: "output"},
+            "note":{name: "부저", type: "output"},
+            "SERVO1":{name: "SERVO 모터 1", type: "output"},
+            "SERVO2":{name: "SERVO 모터 2", type: "output"}
+        }
     }
 }
 
@@ -32,7 +45,7 @@ Blockly.Blocks.neobot_sensor_value = {
                 ['1번 포트',"1"],
                 ['2번 포트',"2"],
                 ['3번 포트',"3"],
-                ['리모 컨',"4"]
+                ['리모컨',"4"]
                 ]), "PORT")
             .appendField(" 값");
         this.setOutput(true, 'Number');
