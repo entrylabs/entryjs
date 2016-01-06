@@ -244,9 +244,11 @@ EntryStatic.getAllBlocks = function() {
                 "neobot_stop_left",
                 "neobot_turn_right",
                 "neobot_stop_right",
+                "neobot_run_motor",
                 "neobot_servo_1",
                 "neobot_servo_2",
                 "neobot_play_note_for",
+                "neobot_set_sensor_value",
                 "bitbrick_sensor_value",
                 "bitbrick_is_touch_pressed",
                 "bitbrick_turn_off_color_led",
@@ -1358,6 +1360,11 @@ EntryStatic.blockInfo = {
         "xml": "<block type='neobot_stop_right'></block>",
         "class": "neobot_motor"
     },
+    "neobot_run_motor": {
+        "isNotFor": ['neobot'],
+        "xml": "<block type='neobot_run_motor'><value name='DURATION'><block type='text'><field name='NAME'>1</field></block></value></block>",
+        "class": "neobot_motor"
+    },
     "neobot_servo_1": {
         "isNotFor": ['neobot'],
         "xml": "<block type='neobot_servo_1'></block>",
@@ -1372,6 +1379,11 @@ EntryStatic.blockInfo = {
         "isNotFor": ['neobot'],
         "xml": "<block type='neobot_play_note_for'></block>",
         "class": "neobot_note"
+    },
+    "neobot_set_sensor_value": {
+        "isNotFor": ['neobot'],
+        "xml": "<block type='neobot_set_sensor_value'></block>",
+        "class": "neobot_set_value" 
     },
     "bitbrick_sensor_value": {
         "isNotFor": ['bitbrick'],

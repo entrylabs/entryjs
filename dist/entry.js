@@ -3644,7 +3644,7 @@ Entry.block.direction_relative_duration = function(a, b) {
   delete b.dDirection;
   return b.callReturn();
 };
-Entry.Neobot = {name:"neobot", PORT_MAP:{1:0, 2:0, 3:0, SERVO1:0, SERVO2:0, SERVO1_SPEED:3, SERVO2_SPEED:3, LMOT:0, RMOT:0, note:0, octave:0, duration:0, sound_check:0}, setZero:function() {
+Entry.Neobot = {name:"neobot", PORT_MAP:{1:0, 2:0, 3:0, SERVO1:0, SERVO2:0, SERVO1_SPEED:3, SERVO2_SPEED:3, LMOT:0, RMOT:0, note:0, octave:0, duration:0, sound_check:0, O_1:0, O_2:0}, setZero:function() {
   for (var a in Entry.Neobot.PORT_MAP) {
     Entry.hw.sendQueue[a] = Entry.Neobot.PORT_MAP[a];
   }
@@ -3706,6 +3706,53 @@ Entry.block.neobot_stop_right = function(a, b) {
   Entry.hw.sendQueue.RMOT = 0;
   return b.callReturn();
 };
+Blockly.Blocks.neobot_run_motor = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(new Blockly.FieldDropdown([["\uc591\ucabd", "1"], ["\uc67c\ucabd", "2"], ["\uc624\ub978\ucabd", "3"]]), "TYPE").appendField("\ubaa8\ud130\ub97c ");
+  this.appendValueInput("DURATION").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField("\ucd08\uac04").appendField(new Blockly.FieldDropdown([["\ub290\ub9ac\uac8c", "1"], ["\ubcf4\ud1b5", "2"], ["\ube60\ub974\uac8c", "3"]]), "VALUE").appendField(new Blockly.FieldDropdown([["\uc804\uc9c4", "1"], ["\ud6c4\uc9c4", "2"], ["\uc88c\ud68c\uc804", "3"], ["\uc6b0\ud68c\uc804", "4"]]), "DIRECTION").appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.neobot_run_motor = function(a, b) {
+  if (b.isStart) {
+    if (1 == b.timeFlag) {
+      var c = b.getNumberField("TYPE"), d = b.getNumberField("VALUE");
+      switch(b.getNumberField("DIRECTION")) {
+        case 1:
+          Entry.hw.sendQueue.LMOT = d;
+          Entry.hw.sendQueue.RMOT = d;
+          break;
+        case 2:
+          Entry.hw.sendQueue.LMOT = -1 * d;
+          Entry.hw.sendQueue.RMOT = -1 * d;
+          break;
+        case 3:
+          Entry.hw.sendQueue.LMOT = d;
+          Entry.hw.sendQueue.RMOT = -1 * d;
+          break;
+        case 4:
+          Entry.hw.sendQueue.LMOT = -1 * d, Entry.hw.sendQueue.RMOT = d;
+      }
+      2 === c ? Entry.hw.sendQueue.RMOT = 0 : 3 === c && (Entry.hw.sendQueue.LMOT = 0);
+      return b;
+    }
+    delete b.timeFlag;
+    delete b.isStart;
+    Entry.engine.isContinue = !1;
+    Entry.hw.sendQueue.LMOT = 0;
+    Entry.hw.sendQueue.RMOT = 0;
+    return b.callReturn();
+  }
+  b.isStart = !0;
+  b.timeFlag = 1;
+  c = 1E3 * b.getNumberValue("DURATION");
+  setTimeout(function() {
+    b.timeFlag = 0;
+  }, c);
+  return b;
+};
 Blockly.Blocks.neobot_servo_1 = {init:function() {
   this.setColour("#00979D");
   this.appendDummyInput().appendField("SERVO1\uc5d0 \uc5f0\uacb0\ub41c \uc11c\ubcf4\ubaa8\ud130\ub97c").appendField(new Blockly.FieldDropdown([["\ube60\ub978", "3"], ["\ubcf4\ud1b5", "2"], ["\ub290\ub9b0", "1"]]), "SPEED").appendField("\uc18d\ub3c4\ub85c").appendField(new Blockly.FieldDropdown([["0\ub3c4", "0"], ["10\ub3c4", "1"], ["20\ub3c4", "2"], ["30\ub3c4", "3"], ["40\ub3c4", "4"], ["50\ub3c4", "5"], ["60\ub3c4", "6"], ["70\ub3c4", "7"], ["80\ub3c4", "8"], ["90\ub3c4", "9"], ["100\ub3c4", "10"], 
@@ -3766,6 +3813,19 @@ Entry.block.neobot_play_note_for = function(a, b) {
     b.timeFlag = 0;
   }, 1 / f * 4E3);
   return b;
+};
+Blockly.Blocks.neobot_set_sensor_value = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(new Blockly.FieldDropdown([["1", "O_1"], ["2", "O_2"]]), "PORT").appendField("\ubc88 \ud3ec\ud2b8\uc758 \uac12\uc744").appendField(new Blockly.FieldDropdown([["\ucf1c\uae30", "1"], ["\ub044\uae30", "0"]]), "VALUE");
+  this.appendDummyInput().appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.neobot_set_sensor_value = function(a, b) {
+  var c = Entry.hw.sendQueue, d = b.getStringField("PORT", b), e = b.getNumberField("VALUE", b);
+  c[d] = e;
+  return b.callReturn();
 };
 Blockly.Blocks.when_scene_start = {init:function() {
   this.setColour("#3BBD70");

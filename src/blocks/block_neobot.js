@@ -13,7 +13,9 @@ Entry.Neobot = {
         "note":0,
         "octave":0,
         "duration":0,
-        "sound_check":0
+        "sound_check":0,
+        "O_1":0,
+        "O_2":0
     },
     setZero: function () {
         for(var port in Entry.Neobot.PORT_MAP) {
@@ -57,7 +59,6 @@ Entry.block.neobot_sensor_value = function (sprite, script) {
     var port = script.getStringField("PORT");
     return Entry.hw.portData[port];
 };
-
 
 Blockly.Blocks.neobot_turn_left = {
     init: function() {
@@ -151,6 +152,90 @@ Entry.block.neobot_stop_right = function (sprite, script) {
     Entry.hw.sendQueue["RMOT"] = 0;
     return script.callReturn();
 };
+
+
+
+Blockly.Blocks.neobot_run_motor = {
+    init: function() {
+        this.setColour("#00979D");
+        this.appendDummyInput()
+            .appendField(new Blockly.FieldDropdown([
+                ['양쪽',"1"],
+                ['왼쪽',"2"],
+                ['오른쪽',"3"]
+                ]), "TYPE")
+            .appendField('모터를 ')
+        this.appendValueInput("DURATION")
+            .setCheck(["Number", "String"]);
+        this.appendDummyInput()
+            .appendField('초간')
+            .appendField(new Blockly.FieldDropdown([
+                ['느리게',"1"],
+                ['보통',"2"],
+                ['빠르게',"3"]
+                ]), "VALUE")
+            .appendField(new Blockly.FieldDropdown([
+                ['전진',"1"],
+                ['후진',"2"],
+                ['좌회전',"3"],
+                ['우회전',"4"],
+                ]), "DIRECTION")
+            .appendField(new Blockly.FieldIcon(Entry.mediaFilePath + 'block_icon/hardware_03.png', '*'));
+        this.setInputsInline(true);
+        this.setPreviousStatement(true);
+        this.setNextStatement(true);
+    }
+};
+
+Entry.block.neobot_run_motor = function (sprite, script) {
+    if (!script.isStart) {
+        script.isStart = true;
+        script.timeFlag = 1;
+        var timeValue = script.getNumberValue("DURATION") * 1000;
+        setTimeout(function() {
+            script.timeFlag = 0;
+        }, timeValue);
+        return script;
+    } else if (script.timeFlag == 1) {
+        var type = script.getNumberField("TYPE");
+        var value = script.getNumberField("VALUE");
+        var direction = script.getNumberField("DIRECTION");
+        switch (direction) {
+            case 1:
+            Entry.hw.sendQueue["LMOT"] = value;
+            Entry.hw.sendQueue["RMOT"] = value;
+            break;
+            case 2:
+            Entry.hw.sendQueue["LMOT"] = value * -1;
+            Entry.hw.sendQueue["RMOT"] = value * -1;
+            break;
+            case 3:
+            Entry.hw.sendQueue["LMOT"] = value;
+            Entry.hw.sendQueue["RMOT"] = value * -1;
+            break;
+            case 4:
+            Entry.hw.sendQueue["LMOT"] = value * -1;
+            Entry.hw.sendQueue["RMOT"] = value;
+            break;
+        }
+
+        if(type === 2)  {
+            Entry.hw.sendQueue["RMOT"] = 0;
+        } else if(type === 3) {
+            Entry.hw.sendQueue["LMOT"] = 0;
+        }
+
+        return script;
+    } else {
+        delete script.timeFlag;
+        delete script.isStart;
+        Entry.engine.isContinue = false;
+        Entry.hw.sendQueue["LMOT"] = 0;
+        Entry.hw.sendQueue["RMOT"] = 0;
+        return script.callReturn();
+    }
+};
+
 
 Blockly.Blocks.neobot_servo_1 = {
     init: function() {
@@ -310,3 +395,33 @@ Entry.block.neobot_play_note_for = function (sprite, script) {
     }
 
 };
+Blockly.Blocks.neobot_set_sensor_value = {
+  init: function() {
+
+    this.setColour("#00979D");
+    this.appendDummyInput()
+        .appendField(new Blockly.FieldDropdown([
+          ['1',"O_1"],
+          ['2',"O_2"]
+          ]), "PORT")
+        .appendField('번 포트의 값을')
+        .appendField(new Blockly.FieldDropdown([
+          ['켜기',"1"],
+          ['끄기',"0"]
+          ]), "VALUE");
+    this.appendDummyInput()
+        .appendField(new Blockly.FieldIcon(Entry.mediaFilePath + 'block_icon/hardware_03.png', '*'));
+    this.setInputsInline(true);
+    this.setPreviousStatement(true);
+    this.setNextStatement(true);
+  }
+};
+
+Entry.block.neobot_set_sensor_value = function (sprite, script) {
+    var sq = Entry.hw.sendQueue;
+
+    var port = script.getStringField("PORT", script);
+    var value = script.getNumberField("VALUE", script);
+    sq[port] = value;
+    return script.callReturn();
+}
