@@ -13436,7 +13436,7 @@ Entry.block.maze_step_for = {skeleton:"basic_loop", mode:"maze", color:"#127CDB"
   }
   delete this.repeatCount;
 }};
-Entry.block.test = {skeleton:"basic_field", mode:"maze", color:"#3BBD70", template:"%1 this is test block ", params:[{type:"Dropdown", options:[[1, 1], [2, 2], [3, 3], [4, 4], [5, 5], [6, 6], [7, 7], [8, 8], [9, 9], [10, 10]], value:1}], func:function() {
+Entry.block.test = {skeleton:"basic_boolean_field", mode:"maze", color:"#3BBD70", template:"%1 this is test block ", params:[{type:"Dropdown", options:[[1, 1], [2, 2], [3, 3], [4, 4], [5, 5], [6, 6], [7, 7], [8, 8], [9, 9], [10, 10]], value:1}], func:function() {
 }};
 Entry.block.maze_repeat_until_1 = {skeleton:"basic_loop", mode:"maze", color:"#498DEB", template:"%1 \ub9cc\ub0a0 \ub54c \uae4c\uc9c0 \ubc18\ubcf5%2", params:[{type:"Image", img:"/img/assets/ntry/block_inner/repeat_goal_1.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic", position:{x:2, y:15}}], func:function() {
   var a = this.block.statements[0];
@@ -15045,12 +15045,23 @@ Entry.skeleton.pebble_basic = {fontSize:16, morph:["prev", "next"], path:functio
 }, contentPos:function() {
   return {x:-46, y:25};
 }};
-Entry.skeleton.basic_field = {path:function(a) {
+Entry.skeleton.basic_string_field = {path:function(a) {
   var b = a.contentWidth;
   a = a.contentHeight;
   b = Math.max(0, b - 2);
   a = Math.max(0, a + 6);
   return "m 11,0 h %w a 10,10 0 1,1 0,%h H 11 a 10,10 0 1,1 0,-%h z".replace(/%w/gi, b).replace(/%h/gi, a);
+}, box:function(a) {
+  return {offsetX:0, offsetY:0, width:(a ? a.contentWidth : 150) + 10, height:a.contentHeight, marginBottom:0};
+}, magnets:{previous:{}, next:{x:0, y:31}}, contentPos:function(a) {
+  return {x:11, y:11};
+}};
+Entry.skeleton.basic_boolean_field = {path:function(a) {
+  var b = a.contentWidth;
+  a = a.contentHeight;
+  b = Math.max(0, b - 2);
+  a = Math.max(0, a + 6);
+  return "m 11,0 h %w l 10,10 -10,10 H 11 l -10,-10 10,-10 z ".replace(/%w/gi, b).replace(/%h/gi, a);
 }, box:function(a) {
   return {offsetX:0, offsetY:0, width:(a ? a.contentWidth : 150) + 10, height:a.contentHeight, marginBottom:0};
 }, magnets:{previous:{}, next:{x:0, y:31}}, contentPos:function(a) {

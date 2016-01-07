@@ -238,13 +238,44 @@ Entry.skeleton.pebble_basic = {
     }
 };
 
-Entry.skeleton.basic_field = {
+Entry.skeleton.basic_string_field = {
     path: function(block) {
         var width = block.contentWidth;
         var height = block.contentHeight;
         width = Math.max(0, width - 2);
         height = Math.max(0, height + 6);
         return "m 11,0 h %w a 10,10 0 1,1 0,%h H 11 a 10,10 0 1,1 0,-%h z"
+            .replace(/%w/gi, width)
+            .replace(/%h/gi, height);
+    },
+    box: function(block) {
+        var width = block ? block.contentWidth : 150;
+        var height = block.contentHeight;
+        return {
+            offsetX: 0, offsetY: 0,
+            width: width + 10,
+            height: height,
+            marginBottom: 0
+        };
+    },
+    magnets: {
+        // apply scale required.
+        previous: {},
+        next: {x: 0, y: 31}
+    },
+    contentPos: function(block) {
+        // apply scale required.
+        return {x: 11, y: 11};
+    }
+};
+
+Entry.skeleton.basic_boolean_field = {
+    path: function(block) {
+        var width = block.contentWidth;
+        var height = block.contentHeight;
+        width = Math.max(0, width - 2);
+        height = Math.max(0, height + 6);
+        return "m 11,0 h %w l 10,10 -10,10 H 11 l -10,-10 10,-10 z "
             .replace(/%w/gi, width)
             .replace(/%h/gi, height);
     },

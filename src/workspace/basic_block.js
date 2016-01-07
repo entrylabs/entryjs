@@ -837,7 +837,7 @@ Entry.block.maze_step_for = {
 };
 
 Entry.block.test = {
-    skeleton: "basic_field",
+    skeleton: "basic_boolean_field",
     mode: "maze",
     color: "#3BBD70",
     template: "%1 this is test block ",
