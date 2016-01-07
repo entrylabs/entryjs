@@ -17,7 +17,7 @@ Entry.Thread = function(thread, code) {
     this._code = code;
     this.changeEvent = new Entry.Event(this);
     this.changeEvent.attach(this, this.handleChange);
-    this._event;
+    this._event = null;
 
     this.load(thread);
 };

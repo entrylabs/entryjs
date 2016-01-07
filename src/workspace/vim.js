@@ -91,6 +91,6 @@ Entry.Vim = function(dom) {
     p.getCodeToText = function(code) {
         var textCode = this._blockParser.parse(code);
         return textCode;
-    }
+    };
 
 })(Entry.Vim.prototype);
