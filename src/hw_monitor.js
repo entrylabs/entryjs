@@ -29,7 +29,7 @@ Entry.HWMonitor = function(hwModule) {
             portView.group.attr({
                 transform: "t0," + cursor
             });
-            cursor += 50;
+            cursor += 30;
         }
     };
 
@@ -62,9 +62,11 @@ Entry.HWMonitor = function(hwModule) {
         for (var key in this._portViews) {
             var port = this._portViews[key];
             if (port.type == "input") {
-                port.value.attr({text: portData[key]});
+                var value = portData[key];
+                port.value.attr({text: value ? value : 0});
             } else {
-                port.value.attr({text: sendQueue[key]});
+                var value = sendQueue[key];
+                port.value.attr({text: value ? value : 0});
             }
         }
     };

@@ -6437,7 +6437,7 @@ Entry.HWMonitor = function(a) {
       var e = this.generatePortView(a[d]);
       this._portViews[d] = e;
       e.group.attr({transform:"t0," + c});
-      c += 50;
+      c += 30;
     }
   };
   a.generatePortView = function(a) {
@@ -6455,8 +6455,8 @@ Entry.HWMonitor = function(a) {
   a.update = function() {
     var a = Entry.hw.portData, c = Entry.hw.sendQueue, d;
     for (d in this._portViews) {
-      var e = this._portViews[d];
-      "input" == e.type ? e.value.attr({text:a[d]}) : e.value.attr({text:c[d]});
+      var e = this._portViews[d], f = "input" == e.type ? a[d] : c[d];
+      e.value.attr({text:f ? f : 0});
     }
   };
   a.resize = function(a) {
