@@ -546,6 +546,7 @@ Entry.block.jr_repeat_until_dest = {
     skeleton: "basic_loop",
     color: "#498DEB",
     template: "%1 만날 때 까지 반복하기 %2",
+    syntax: ["BasicWhile", "true"],
     params: [
         {
             type: "Image",
@@ -868,6 +869,7 @@ Entry.block.maze_repeat_until_1 = {
     mode: "maze",
     color: "#498DEB",
     template: "%1 만날 때 까지 반복%2",
+    syntax: ["BasicWhile", "true"],
     params: [
         {
             type: "Image",
@@ -905,6 +907,7 @@ Entry.block.maze_step_if_1 = {
     mode: "maze",
     color: "#498DEB",
     template: "만약 앞에 %1 있다면%2",
+    syntax: ["BasicIf", 'front == "wall"'],
     params: [
         {
             type: "Image",
@@ -958,8 +961,6 @@ Entry.block.maze_step_if_1 = {
             return Entry.STATIC.CONTINUE;
         }
 
-
-
         var fitEntities = Ntry.entityManager.find(
             {
                 type: Ntry.STATIC.GRID,
@@ -973,7 +974,6 @@ Entry.block.maze_step_if_1 = {
         );
 
         this.isContinue = true;
-
 
         if (fitEntities.length === 0) {
             return;
@@ -991,6 +991,7 @@ Entry.block.maze_step_if_2 = {
     mode: "maze",
     color: "#498DEB",
     template: "만약 앞에 %1 있다면%2",
+    syntax: ["BasicIf", 'front == "Bee"'],
     params: [
         {
             type: "Image",
@@ -1061,6 +1062,7 @@ Entry.block.maze_call_function = {
     mode: "maze",
     color: "#B57242",
     template: "약속 불러오기%1",
+    syntax: ["Scope", "promise"],
     params: [
         {
             type: "Image",
@@ -1095,6 +1097,7 @@ Entry.block.maze_define_function = {
     color: "#B57242",
     event: "define",
     template: "약속하기%1",
+    syntax: ["Function", "promise"],
     params: [
         {
             type: "Image",
