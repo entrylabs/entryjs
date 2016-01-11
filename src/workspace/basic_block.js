@@ -839,8 +839,8 @@ Entry.block.maze_step_for = {
 Entry.block.test = {
     skeleton: "basic_boolean_field",
     mode: "maze",
-    color: "#3BBD70",
-    template: "%1 this is test block ",
+    color: "#127CDB",
+    template: "%1 this is test block",
     params: [
         {
             type: "Dropdown",
@@ -1368,3 +1368,39 @@ Entry.block.maze_step_rotate_right = {
 
 };
 
+Entry.block.test_wrapper = {
+    skeleton: "basic",
+    mode: "maze",
+    color: "#3BBD70",
+    template: "%1 this is test block %2",
+    params: [
+        {
+            type: "Block",
+            value: [
+                {
+                    accept: "basic_boolean_field",
+                    type: "test",
+                    params: [1]
+                }
+            ]
+        },
+        {
+            type: "Dropdown",
+            options: [
+                [1,1],
+                [2,2],
+                [3,3],
+                [4,4],
+                [5,5],
+                [6,6],
+                [7,7],
+                [8,8],
+                [9,9],
+                [10,10]
+            ],
+            value: 1
+        }
+    ],
+    func: function() {
+    }
+};

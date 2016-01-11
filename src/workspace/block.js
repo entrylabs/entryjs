@@ -58,7 +58,11 @@ Entry.Block.MAGNET_OFFSET = 0.4;
 
         var params = this._schema.params;
         for (var i = 0; i < params.length; i++) {
-            this.params.push(params[i].value);
+            if (params[i].type == 'Block') {
+                this.params.push(
+                    new Entry.Thread(params[i].value, that.getCode())
+                );
+            } else this.params.push(params[i].value);
         }
 
         var statements = this._schema.statements;

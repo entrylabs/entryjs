@@ -79,12 +79,16 @@ Entry.Thread = function(thread, code) {
     };
 
     p.separate = function(block) {
-        if (!this._data.has(block.id))
-            return;
+        if (!this._data.has(block.id)) return;
+
         if (block.prev) {
             block.prev.setNext(null);
             block.setPrev(null);
         }
+
+        if (block.view && !block.view.darken)
+            block.view.set({darken:true});
+
         var blocks = this._data.splice(this._data.indexOf(block));
         this._code.createThread(blocks);
         this.changeEvent.notify();

@@ -33,6 +33,7 @@ Entry.BlockView = function(block, board, mode) {
     this.block.observe(this, "_createEmptyBG", ["next"]);
     this.observe(this, "_updateBG", ["magneting"]);
     this.observe(this, "_updateOpacity", ["visible"]);
+    this.observe(this, "_updateShadow", ["shadow"]);
     board.code.observe(this, '_setBoard', ['board'], false);
 
     this.dragMode = Entry.DRAG_MODE_NONE;
@@ -53,7 +54,9 @@ Entry.BlockView = function(block, board, mode) {
         contentHeight: 0,
         magneting: false,
         visible: true,
-        animating: false
+        animating: false,
+        shadow: true
+
     };
 
     p._startRender = function(block, mode) {
@@ -170,24 +173,29 @@ Entry.BlockView = function(block, board, mode) {
 
         if (false && Entry.ANIMATION_DURATION !== 0) {
             setTimeout(function() {
-                that._darkenPath.animate({
-                    d: path
-                }, Entry.ANIMATION_DURATION, mina.easeinout, function() {
-                    that.set({animating: false});
-                });
+                if (that.shadow) {
+                    that._darkenPath.animate({
+                        d: path
+                    }, Entry.ANIMATION_DURATION, mina.easeinout, function() {
+                        that.set({animating: false});
+                    });
+                }
 
                 that._path.animate({
                     d: path
                 }, Entry.ANIMATION_DURATION, mina.easeinout);
             }, 0);
         } else {
-            this._darkenPath.attr({
-                d: path
-            });
+            if (this.shadow) {
+                this._darkenPath.attr({
+                    d: path
+                });
+            }
 
             this._path.attr({
                 d: path
             });
+
             this.set({animating: false});
         }
     };
@@ -719,6 +727,16 @@ Entry.BlockView = function(block, board, mode) {
         this.svgGroup.attr({
             opacity:this.visible === false ? 0 : 1
         });
+    };
+
+    p._updateShadow = function() {
+        var shadow = this.shadow;
+        var fill;
+
+        if (shadow) fill = Entry.Utils.colorDarken(this._schema.color, 0.7);
+        else fill = 'transparent';
+
+        this._darkenPath.attr({fill: fill});
     };
 
 })(Entry.BlockView.prototype);

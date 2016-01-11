@@ -13419,7 +13419,7 @@ Entry.block.maze_step_for = {skeleton:"basic_loop", mode:"maze", color:"#127CDB"
   }
   delete this.repeatCount;
 }};
-Entry.block.test = {skeleton:"basic_boolean_field", mode:"maze", color:"#3BBD70", template:"%1 this is test block ", params:[{type:"Dropdown", options:[[1, 1], [2, 2], [3, 3], [4, 4], [5, 5], [6, 6], [7, 7], [8, 8], [9, 9], [10, 10]], value:1}], func:function() {
+Entry.block.test = {skeleton:"basic_boolean_field", mode:"maze", color:"#127CDB", template:"%1 this is test block", params:[{type:"Dropdown", options:[[1, 1], [2, 2], [3, 3], [4, 4], [5, 5], [6, 6], [7, 7], [8, 8], [9, 9], [10, 10]], value:1}], func:function() {
 }};
 Entry.block.maze_repeat_until_1 = {skeleton:"basic_loop", mode:"maze", color:"#498DEB", template:"%1 \ub9cc\ub0a0 \ub54c \uae4c\uc9c0 \ubc18\ubcf5%2", params:[{type:"Image", img:"/img/assets/ntry/block_inner/repeat_goal_1.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic", position:{x:2, y:15}}], func:function() {
   var a = this.block.statements[0];
@@ -13568,6 +13568,8 @@ Entry.block.maze_step_rotate_right = {skeleton:"basic", mode:"maze", color:"#A75
     return Entry.STATIC.CONTINUE;
   }
 }};
+Entry.block.test_wrapper = {skeleton:"basic", mode:"maze", color:"#3BBD70", template:"%1 this is test block %2", params:[{type:"Block", value:[{accept:"basic_boolean_field", type:"test", params:[1]}]}, {type:"Dropdown", options:[[1, 1], [2, 2], [3, 3], [4, 4], [5, 5], [6, 6], [7, 7], [8, 8], [9, 9], [10, 10]], value:1}], func:function() {
+}};
 Entry.BlockMenu = function(a, b) {
   Entry.Model(this, !1);
   this._align = b || "CENTER";
@@ -13698,12 +13700,13 @@ Entry.BlockView = function(a, b, c) {
   this.block.observe(this, "_createEmptyBG", ["next"]);
   this.observe(this, "_updateBG", ["magneting"]);
   this.observe(this, "_updateOpacity", ["visible"]);
+  this.observe(this, "_updateShadow", ["shadow"]);
   b.code.observe(this, "_setBoard", ["board"], !1);
   this.dragMode = Entry.DRAG_MODE_NONE;
   Entry.Utils.disableContextmenu(this.svgGroup.node);
 };
 (function(a) {
-  a.schema = {id:0, type:Entry.STATIC.BLOCK_RENDER_MODEL, x:0, y:0, offsetX:0, offsetY:0, width:0, height:0, contentWidth:0, contentHeight:0, magneting:!1, visible:!0, animating:!1};
+  a.schema = {id:0, type:Entry.STATIC.BLOCK_RENDER_MODEL, x:0, y:0, offsetX:0, offsetY:0, width:0, height:0, contentWidth:0, contentHeight:0, magneting:!1, visible:!0, animating:!1, shadow:!0};
   a._startRender = function(a, c) {
     this.svgGroup.attr({class:"block"});
     var d = this._skeleton.path(this);
@@ -13768,7 +13771,7 @@ Entry.BlockView = function(a, b, c) {
   };
   a._renderPath = function() {
     var a = this._skeleton.path(this);
-    this._darkenPath.attr({d:a});
+    this.shadow && this._darkenPath.attr({d:a});
     this._path.attr({d:a});
     this.set({animating:!1});
   };
@@ -14032,6 +14035,11 @@ Entry.BlockView = function(a, b, c) {
   };
   a._updateOpacity = function() {
     this.svgGroup.attr({opacity:!1 === this.visible ? 0 : 1});
+  };
+  a._updateShadow = function() {
+    var a;
+    a = this.shadow ? Entry.Utils.colorDarken(this._schema.color, .7) : "transparent";
+    this._darkenPath.attr({fill:a});
   };
 })(Entry.BlockView.prototype);
 Entry.Code = function(a) {
@@ -14729,6 +14737,62 @@ Entry.DummyBlock = function(a, b) {
     this.originBlockView.dominate();
   };
 })(Entry.DummyBlock.prototype);
+Entry.FieldBlock = function(a, b, c) {
+  this._blockView = b;
+  this._block = b.block;
+  this.box = new Entry.BoxModel;
+  this._index = c;
+  this._content = a;
+  this.dummyBlock = null;
+  this.acceptType = a.value[0].accept;
+  this.svgGroup = null;
+  this._position = a.position;
+  this.box.observe(b, "alignContent", ["height"]);
+  this.renderStart(b.getBoard());
+  this._block.observe(this, "_updateThread", ["thread"]);
+};
+Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
+(function(a) {
+  a.renderStart = function(a) {
+    this.svgGroup = this._blockView.contentSvgGroup.group();
+    this.box.set({x:0, y:0, width:0, height:20});
+    this._thread = this.getValue();
+    this._thread.getFirstBlock();
+    this.dummyBlock = new Entry.DummyBlock(this, this._blockView);
+    this._thread.insertDummyBlock(this.dummyBlock);
+    this._thread.createView(a);
+    this._thread.changeEvent.attach(this, this.calcWH);
+    this.calcWH();
+  };
+  a.align = function(a, c, d) {
+    d = void 0 === d ? !0 : d;
+    var e = this.svgGroup;
+    this._position && this._position.x && (a = this._position.x);
+    c = -.5 * this.box.height - 4;
+    a = "t" + a + " " + c;
+    c = this._thread.getFirstBlock();
+    c instanceof Entry.DummyBlock && (c = c.next);
+    c && (c = c.view, c.shadow && c.set({shadow:!1}));
+    d ? e.animate({transform:a}, 300, mina.easeinout) : e.attr({transform:a});
+  };
+  a.calcHeight = function() {
+    this.calcWH();
+  };
+  a.calcWH = function() {
+    var a = this._thread.getFirstBlock();
+    a instanceof Entry.DummyBlock && (a = a.next);
+    a ? (a = a.view, this.box.set({width:a.width, height:a.height})) : this.box.set({width:15, height:20});
+  };
+  a._updateThread = function() {
+    this._threadChangeEvent && this._thread.changeEvent.detach(this._threadChangeEvent);
+    var a = this._block.thread;
+    this._threadChangeEvent = this._thread.changeEvent.attach(this, function() {
+      a.changeEvent.notify();
+    });
+  };
+  a.destroy = function() {
+  };
+})(Entry.FieldBlock.prototype);
 Entry.FieldText = function(a, b, c) {
   this._block = b;
   this.box = new Entry.BoxModel;
@@ -15071,7 +15135,7 @@ Entry.skeleton.basic_boolean_field = {path:function(a) {
   a = Math.max(0, a + 6);
   return "m 11,0 h %w l 10,10 -10,10 H 11 l -10,-10 10,-10 z ".replace(/%w/gi, b).replace(/%h/gi, a);
 }, box:function(a) {
-  return {offsetX:0, offsetY:0, width:(a ? a.contentWidth : 150) + 10, height:a.contentHeight, marginBottom:0};
+  return {offsetX:0, offsetY:0, width:(a ? a.contentWidth : 5) + 20, height:a ? a.contentHeight : 20, marginBottom:0};
 }, magnets:{previous:{}, next:{x:0, y:31}}, contentPos:function(a) {
   return {x:11, y:11};
 }};
@@ -15094,7 +15158,7 @@ Entry.Block.MAGNET_OFFSET = .4;
     this._schema = Entry.block[this.type];
     this._schema.event && this.thread.registerEvent(this, this._schema.event);
     for (var a = this._schema.params, c = 0;c < a.length;c++) {
-      this.params.push(a[c].value);
+      "Block" == a[c].type ? this.params.push(new Entry.Thread(a[c].value, this.getCode())) : this.params.push(a[c].value);
     }
     if (a = this._schema.statements) {
       for (c = 0;c < a.length;c++) {
@@ -15299,7 +15363,7 @@ Entry.Thread = function(a, b) {
     });
   };
   a.separate = function(a) {
-    this._data.has(a.id) && (a.prev && (a.prev.setNext(null), a.setPrev(null)), a = this._data.splice(this._data.indexOf(a)), this._code.createThread(a), this.changeEvent.notify());
+    this._data.has(a.id) && (a.prev && (a.prev.setNext(null), a.setPrev(null)), a.view && !a.view.darken && a.view.set({darken:!0}), a = this._data.splice(this._data.indexOf(a)), this._code.createThread(a), this.changeEvent.notify());
   };
   a.cut = function(a) {
     a = this._data.indexOf(a);
