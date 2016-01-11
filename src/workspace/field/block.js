@@ -12,6 +12,7 @@ goog.require("Entry.DummyBlock");
 Entry.FieldBlock = function(content, blockView, index) {
     this._blockView = blockView;
     this._block = blockView.block;
+    this._valueBlock = null;
 
     var box = new Entry.BoxModel();
     this.box = box;
@@ -26,7 +27,7 @@ Entry.FieldBlock = function(content, blockView, index) {
 
     this._position = content.position;
 
-    this.box.observe(blockView, "alignContent", ["height"]);
+    this.box.observe(blockView, "alignContent", ["width", "height"]);
 
     this.renderStart(blockView.getBoard());
     this._block.observe(this, "_updateThread", ["thread"]);
@@ -44,7 +45,6 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
             height: 20
         });
         this._thread = this.getValue();
-        var block = this._thread.getFirstBlock();
         this.dummyBlock = new Entry.DummyBlock(this, this._blockView);
         this._thread.insertDummyBlock(this.dummyBlock);
         this._thread.createView(board);
@@ -70,9 +70,19 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
         if (block instanceof Entry.DummyBlock)
             block = block.next;
 
-        if (block) {
-            var blockView = block.view;
-            if (blockView.shadow) blockView.set({shadow:false});
+        if (block != this._valueBlock) {
+            if (this._valueBlock)
+                this._valueBlock.view.set({shadow:true});
+
+            this._valueBlock = block;
+            if (this._valueBlockObserver) this._valueBlockObserver.destroy();
+            if (this._valueBlock) {
+                var blockView = this._valueBlock.view;
+                this._valueBlockObserver =
+                    blockView.observe(this, "calcWH", ["width", "height"]);
+
+                if (blockView.shadow) blockView.set({shadow:false});
+            }
         }
 
         if (animate)
@@ -83,10 +93,6 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
             svgGroup.attr({
                 transform: transform
             });
-    };
-
-    p.calcHeight = function() {
-        this.calcWH();
     };
 
     p.calcWH = function() {
@@ -106,6 +112,8 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
             });
         }
     };
+
+    p.calcHeight = p.calcWH;
 
     p._updateThread = function() {
         if (this._threadChangeEvent)

@@ -86,9 +86,6 @@ Entry.Thread = function(thread, code) {
             block.setPrev(null);
         }
 
-        if (block.view && !block.view.darken)
-            block.view.set({darken:true});
-
         var blocks = this._data.splice(this._data.indexOf(block));
         this._code.createThread(blocks);
         this.changeEvent.notify();

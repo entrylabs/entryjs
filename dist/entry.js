@@ -14740,6 +14740,7 @@ Entry.DummyBlock = function(a, b) {
 Entry.FieldBlock = function(a, b, c) {
   this._blockView = b;
   this._block = b.block;
+  this._valueBlock = null;
   this.box = new Entry.BoxModel;
   this._index = c;
   this._content = a;
@@ -14747,7 +14748,7 @@ Entry.FieldBlock = function(a, b, c) {
   this.acceptType = a.value[0].accept;
   this.svgGroup = null;
   this._position = a.position;
-  this.box.observe(b, "alignContent", ["height"]);
+  this.box.observe(b, "alignContent", ["width", "height"]);
   this.renderStart(b.getBoard());
   this._block.observe(this, "_updateThread", ["thread"]);
 };
@@ -14757,7 +14758,6 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
     this.svgGroup = this._blockView.contentSvgGroup.group();
     this.box.set({x:0, y:0, width:0, height:20});
     this._thread = this.getValue();
-    this._thread.getFirstBlock();
     this.dummyBlock = new Entry.DummyBlock(this, this._blockView);
     this._thread.insertDummyBlock(this.dummyBlock);
     this._thread.createView(a);
@@ -14772,17 +14772,15 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
     a = "t" + a + " " + c;
     c = this._thread.getFirstBlock();
     c instanceof Entry.DummyBlock && (c = c.next);
-    c && (c = c.view, c.shadow && c.set({shadow:!1}));
+    c != this._valueBlock && (this._valueBlock && this._valueBlock.view.set({shadow:!0}), this._valueBlock = c, this._valueBlockObserver && this._valueBlockObserver.destroy(), this._valueBlock && (c = this._valueBlock.view, this._valueBlockObserver = c.observe(this, "calcWH", ["width", "height"]), c.shadow && c.set({shadow:!1})));
     d ? e.animate({transform:a}, 300, mina.easeinout) : e.attr({transform:a});
-  };
-  a.calcHeight = function() {
-    this.calcWH();
   };
   a.calcWH = function() {
     var a = this._thread.getFirstBlock();
     a instanceof Entry.DummyBlock && (a = a.next);
     a ? (a = a.view, this.box.set({width:a.width, height:a.height})) : this.box.set({width:15, height:20});
   };
+  a.calcHeight = a.calcWH;
   a._updateThread = function() {
     this._threadChangeEvent && this._thread.changeEvent.detach(this._threadChangeEvent);
     var a = this._block.thread;
@@ -15363,7 +15361,7 @@ Entry.Thread = function(a, b) {
     });
   };
   a.separate = function(a) {
-    this._data.has(a.id) && (a.prev && (a.prev.setNext(null), a.setPrev(null)), a.view && !a.view.darken && a.view.set({darken:!0}), a = this._data.splice(this._data.indexOf(a)), this._code.createThread(a), this.changeEvent.notify());
+    this._data.has(a.id) && (a.prev && (a.prev.setNext(null), a.setPrev(null)), a = this._data.splice(this._data.indexOf(a)), this._code.createThread(a), this.changeEvent.notify());
   };
   a.cut = function(a) {
     a = this._data.indexOf(a);
