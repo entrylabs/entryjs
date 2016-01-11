@@ -512,7 +512,10 @@ Entry.JSParser = function(syntax) {
 
     p.unloadScope = function() {
         this.scopeChain.pop();
-        this.scope = this.scopeChain[this.scopeChain.length - 1];
+        if (this.scopeChain.length)
+            this.scope = this.scopeChain[this.scopeChain.length - 1];
+        else
+            this.scope = null;
     };
 
     p.scanDefinition = function(node) {

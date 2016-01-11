@@ -8799,7 +8799,7 @@ Entry.JSParser = function(a) {
   };
   a.unloadScope = function() {
     this.scopeChain.pop();
-    this.scope = this.scopeChain[this.scopeChain.length - 1];
+    this.scope = this.scopeChain.length ? this.scopeChain[this.scopeChain.length - 1] : null;
   };
   a.scanDefinition = function(a) {
     a = a.body;
