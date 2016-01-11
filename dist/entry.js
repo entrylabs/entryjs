@@ -8645,8 +8645,11 @@ Entry.JSParser = function(a) {
     var c = [];
     a = a.body;
     for (var d = 0;d < a.length;d++) {
-      var e = a[d];
-      (e = this[e.type](e)) && c.push(e);
+      var e = a[d], f = this[e.type](e);
+      if (void 0 === f.type) {
+        throw {message:"\ud574\ub2f9\ud558\ub294 \ube14\ub85d\uc774 \uc5c6\uc2b5\ub2c8\ub2e4.", node:e};
+      }
+      f && c.push(f);
     }
     return c;
   };
@@ -8839,6 +8842,7 @@ Entry.Parser = function(a, b, c) {
   this.syntax = {};
   this.codeMirror = c;
   this._lang = b || "js";
+  this.toast = void 0;
   this.mappingSyntax(a);
   switch(this._lang) {
     case "js":
@@ -8858,7 +8862,7 @@ Entry.Parser = function(a, b, c) {
         try {
           c = this._parser.Program(a);
         } catch (d) {
-          console.log(d), this.codeMirror && (c = this.getLineNumber(d.node.start, d.node.end), c.message = d.message, c.severity = "error", this.codeMirror.markText(c.from, c.to, {className:"CodeMirror-lint-mark-error", __annotation:c, clearOnEnter:!0})), c = [];
+          console.log(d), this.codeMirror && (c = this.getLineNumber(d.node.start, d.node.end), c.message = d.message, c.severity = "error", this.codeMirror.markText(c.from, c.to, {className:"CodeMirror-lint-mark-error", __annotation:c, clearOnEnter:!0}), Entry.toast.alert("Error", d.message)), c = [];
         }
         break;
       case "block":
@@ -15711,9 +15715,9 @@ Entry.Vim = function(a) {
   if ("DIV" !== a.prop("tagName")) {
     return console.error("Dom is not div element");
   }
+  this.createDom(a);
   this._parser = new Entry.Parser("maze", "js", this.codeMirror);
   this._blockParser = new Entry.Parser("maze", "block");
-  this.createDom(a);
   Entry.Model(this, !1);
   window.eventset = [];
 };
@@ -15746,8 +15750,11 @@ Entry.Vim = function(a) {
     this.view.removeClass("entryRemove");
   };
   a.textToCode = function() {
-    var a = this.codeMirror.getValue();
-    return this._parser.parse(a);
+    var a = this.codeMirror.getValue(), a = this._parser.parse(a);
+    if (0 === a.length) {
+      throw "\ube14\ub85d \ud30c\uc2f1 \uc624\ub958";
+    }
+    return a;
   };
   a.codeToText = function(a) {
     a = this._blockParser.parse(a);
@@ -15786,9 +15793,20 @@ Entry.Workspace.MODE_VIMBOARD = 1;
   a.getMode = function() {
     return this.mode;
   };
-  a.setMode = function(a) {
+  a.setMode = function(a, c) {
     a = Number(a);
-    this.mode != a && (a == Entry.Workspace.MODE_VIMBOARD ? (this.board && this.board.hide(), this.selectedBoard = this.vimBoard, this.vimBoard.show(), this.vimBoard.codeToText(this.board.code), this.blockMenu.renderText(), this.board.clear()) : (this.vimBoard && this.vimBoard.hide(), this.selectedBoard = this.board, this.board.show(), this.textToCode(), this.blockMenu.renderBlock()), this.mode = a);
+    if (this.mode != a) {
+      if (a == Entry.Workspace.MODE_VIMBOARD) {
+        this.board && this.board.hide(), this.selectedBoard = this.vimBoard, this.vimBoard.show(), this.vimBoard.codeToText(this.board.code), this.blockMenu.renderText(), this.board.clear();
+      } else {
+        try {
+          this.textToCode(), this.vimBoard && this.vimBoard.hide(), this.selectedBoard = this.board, this.board.show(), this.blockMenu.renderBlock();
+        } catch (d) {
+          a = this.mode, "function" === typeof c && c(a), console.log("textToCode error : " + d);
+        }
+      }
+      this.mode = a;
+    }
   };
   a.changeBoardCode = function(a) {
     this.selectedBoard.changeCode(a);

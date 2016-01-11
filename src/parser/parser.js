@@ -38,7 +38,7 @@ Entry.Parser = function(mode, syntax, cm) {
                     result = this._parser.Program(astTree);
                 } catch(error) {
                     console.log(error);
-                    // alert(error.message);
+
                     if (this.codeMirror) {
                         var anotation = this.getLineNumber(error.node.start,
                                                            error.node.end);
@@ -50,6 +50,8 @@ Entry.Parser = function(mode, syntax, cm) {
                             __annotation: anotation,
                             clearOnEnter: true
                         });
+
+                        Entry.toast.alert('Error', error.message);
                     }
                     result = [];
                 }

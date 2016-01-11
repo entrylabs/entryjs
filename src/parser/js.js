@@ -109,7 +109,13 @@ Entry.JSParser = function(syntax) {
         for (var i = 0; i < body.length; i++) {
             var childNode = body[i];
             var block = this[childNode.type](childNode);
-            if (block)
+            if(block.type === undefined) {
+                throw {
+                    message : '해당하는 블록이 없습니다.',
+                    node : childNode
+                };
+            }
+            else if (block)
                 blocks.push(block);
         }
 

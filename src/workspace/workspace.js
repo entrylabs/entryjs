@@ -46,7 +46,7 @@ Entry.Workspace.MODE_VIMBOARD = 1;
 
     p.getMode = function() {return this.mode;};
 
-    p.setMode = function(mode){
+    p.setMode = function(mode, error_cb){
         mode = Number(mode);
         if (this.mode == mode) return;
         if (mode == Entry.Workspace.MODE_VIMBOARD) {
@@ -57,11 +57,19 @@ Entry.Workspace.MODE_VIMBOARD = 1;
             this.blockMenu.renderText();
             this.board.clear();
         } else {
-            if (this.vimBoard) this.vimBoard.hide();
-            this.selectedBoard = this.board;
-            this.board.show();
-            this.textToCode();
-            this.blockMenu.renderBlock();
+            try{
+                this.textToCode();
+                if (this.vimBoard) this.vimBoard.hide();
+                this.selectedBoard = this.board;
+                this.board.show();
+                this.blockMenu.renderBlock();
+            } catch(e) {
+                mode = this.mode;
+                if(typeof error_cb === 'function') {
+                    error_cb(mode);
+                }
+                console.log('textToCode error : ' + e ); 
+            }
         }
         this.mode = mode;
     };
