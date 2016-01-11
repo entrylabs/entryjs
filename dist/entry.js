@@ -8562,7 +8562,7 @@ Entry.BlockParser = function(a) {
     a = a._schema.syntax.concat();
     return a.splice(1, a.length - 1).join(".") + "();\n";
   };
-  a.Function = function(a) {
+  a.BasicFunction = function(a) {
     a = this.Thread(a.statements[0]);
     return "function promise() {\n" + this.indent(a) + "}\n";
   };
@@ -8600,20 +8600,20 @@ Entry.BlockParser = function(a) {
 })(Entry.BlockParser.prototype);
 Entry.JSParser = function(a) {
   this.syntax = a;
+  this.scopeChain = [];
+  this.scope = null;
 };
 (function(a) {
   a.Program = function(a) {
-    var c = [];
-    a = a.body;
-    c.push({type:this.syntax.Program});
-    for (var d = 0;d < a.length;d++) {
-      var e = a[d];
-      c.push(this[e.type](e));
-    }
-    return c;
+    var c = [], d = [];
+    d.push({type:this.syntax.Program});
+    var e = this.initScope(a), d = d.concat(this.BlockStatement(a));
+    this.unloadScope();
+    c.push(d);
+    return c = c.concat(e);
   };
   a.Identifier = function(a, c) {
-    return c ? c[a.name] : this.syntax.Scope[a.name];
+    return c ? c[a.name] : this.scope[a.name];
   };
   a.ExpressionStatement = function(a) {
     a = a.expression;
@@ -8646,7 +8646,7 @@ Entry.JSParser = function(a) {
     a = a.body;
     for (var d = 0;d < a.length;d++) {
       var e = a[d];
-      c.push(this[e.type](e));
+      (e = this[e.type](e)) && c.push(e);
     }
     return c;
   };
@@ -8672,7 +8672,10 @@ Entry.JSParser = function(a) {
     throw {message:"continue\ub294 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a};
   };
   a.IfStatement = function(a) {
-    return {test:a.test, consequent:a.consequent, alternate:a.alternate};
+    if (this.syntax.IfStatement) {
+      throw {message:"if\ub294 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a};
+    }
+    return this.BasicIf(a);
   };
   a.SwitchStatement = function(a) {
     throw {message:"switch\ub294 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a};
@@ -8690,7 +8693,11 @@ Entry.JSParser = function(a) {
     throw {message:"catch\ub294 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a};
   };
   a.WhileStatement = function(a) {
-    throw {message:"while\uc740 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a};
+    var c = a.body, d = this.syntax.WhileStatement, c = this[c.type](c);
+    if (d) {
+      throw {message:"while\uc740 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a};
+    }
+    return this.BasicWhile(a, c);
   };
   a.DoWhileStatement = function(a) {
     throw {message:"do ~ while\uc740 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a};
@@ -8699,13 +8706,16 @@ Entry.JSParser = function(a) {
     throw {message:"for ~ in\uc740 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a};
   };
   a.FunctionDeclaration = function(a) {
-    throw {message:"function\uc740 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a};
+    if (this.syntax.FunctionDeclaration) {
+      throw {message:"function\uc740 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a};
+    }
+    return null;
   };
   a.VariableDeclaration = function(a) {
     throw {message:"var\uc740 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a};
   };
   a.ThisExpression = function(a) {
-    return "this";
+    return this.scope.this;
   };
   a.ArrayExpression = function(a) {
     throw {message:"array\ub294 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a};
@@ -8744,11 +8754,15 @@ Entry.JSParser = function(a) {
     return ["||", "&&"];
   };
   a.MemberExpression = function(a) {
-    var c = a.object, d = a.property, c = this[c.type](c), d = this[d.type](d, c);
+    var c = a.object, d = a.property;
+    console.log(c.type);
+    c = this[c.type](c);
+    console.log(c);
+    d = this[d.type](d, c);
     if (Object(c) !== c || Object.getPrototypeOf(c) !== Object.prototype) {
       throw {message:c + "\uc740(\ub294) \uc798\ubabb\ub41c \uba64\ubc84 \ubcc0\uc218\uc785\ub2c8\ub2e4.", node:a};
     }
-    c = c[d];
+    c = d;
     if (!c) {
       throw {message:d + "\uc774(\uac00) \uc874\uc7ac\ud558\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4.", node:a};
     }
@@ -8770,12 +8784,54 @@ Entry.JSParser = function(a) {
   a.SequenceExpression = function(a) {
     throw {message:"\uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a};
   };
+  a.initScope = function(a) {
+    if (null === this.scope) {
+      var c = function() {
+      };
+      c.prototype = this.syntax.Scope;
+    } else {
+      c = function() {
+      }, c.prototype = this.scope;
+    }
+    this.scope = new c;
+    this.scopeChain.push(this.scope);
+    return this.scanDefinition(a);
+  };
+  a.unloadScope = function() {
+    this.scopeChain.pop();
+    this.scope = this.scopeChain[this.scopeChain.length - 1];
+  };
+  a.scanDefinition = function(a) {
+    a = a.body;
+    for (var c = [], d = 0;d < a.length;d++) {
+      var e = a[d];
+      "FunctionDeclaration" === e.type && (console.log(e), this.scope[e.id.name] = this.scope.promise, this.syntax.BasicFunction && (e = e.body, c.push([{type:this.syntax.BasicFunction, statements:[this[e.type](e)]}])));
+    }
+    return c;
+  };
+  a.BasicFunction = function(a, c) {
+    return null;
+  };
   a.BasicIteration = function(a, c, d) {
     var e = this.syntax.BasicIteration;
     if (!e) {
       throw {message:"\uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a};
     }
     return {params:[c], type:e, statements:[d]};
+  };
+  a.BasicWhile = function(a, c) {
+    var d = a.test.raw;
+    if (this.syntax.BasicWhile[d]) {
+      return {type:this.syntax.BasicWhile[d], statements:[c]};
+    }
+    throw {message:"\uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a.test};
+  };
+  a.BasicIf = function(a) {
+    var c = a.consequent, c = this[c.type](c), d = a.test.left.name + " " + a.test.operator + " " + a.test.right.raw;
+    if (this.syntax.BasicIf[d]) {
+      return {type:this.syntax.BasicIf[d], statements:[c]};
+    }
+    throw {message:"\uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a.test};
   };
 })(Entry.JSParser.prototype);
 Entry.Parser = function(a, b, c) {
@@ -13491,12 +13547,12 @@ Entry.block.maze_call_function = {skeleton:"basic", mode:"maze", color:"#B57242"
     return Entry.STATIC.CONTINUE;
   }
 }};
-Entry.block.maze_define_function = {skeleton:"basic_define", mode:"maze", color:"#B57242", event:"define", template:"\uc57d\uc18d\ud558\uae30%1", syntax:["Function", "promise"], params:[{type:"Image", img:"/img/assets/week/blocks/function.png", size:24}], statements:[{accept:"basic", position:{x:2, y:15}}], func:function(a) {
+Entry.block.maze_define_function = {skeleton:"basic_define", mode:"maze", color:"#B57242", event:"define", template:"\uc57d\uc18d\ud558\uae30%1", syntax:["BasicFunction"], params:[{type:"Image", img:"/img/assets/week/blocks/function.png", size:24}], statements:[{accept:"basic", position:{x:2, y:15}}], func:function(a) {
   if (!this.executed) {
     return this.executor.stepInto(this.block.statements[0]), this.executed = !0, Entry.STATIC.CONTINUE;
   }
 }};
-Entry.block.maze_step_if_3 = {skeleton:"basic_loop", mode:"maze", color:"#498DEB", template:"\ub9cc\uc57d \uc55e\uc5d0 %1 \uc788\ub2e4\uba74%2", params:[{type:"Image", img:"/img/assets/ntry/block_inner/if_target_3.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/if.png", size:24}], statements:[{accept:"basic", position:{x:2, y:15}}], func:function() {
+Entry.block.maze_step_if_3 = {skeleton:"basic_loop", mode:"maze", color:"#498DEB", template:"\ub9cc\uc57d \uc55e\uc5d0 %1 \uc788\ub2e4\uba74%2", syntax:["BasicIf", 'front == "banana"'], params:[{type:"Image", img:"/img/assets/ntry/block_inner/if_target_3.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/if.png", size:24}], statements:[{accept:"basic", position:{x:2, y:15}}], func:function() {
   if (!this.isContinue) {
     var a = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT), b, c;
     for (c in a) {
@@ -13514,7 +13570,7 @@ Entry.block.maze_step_if_3 = {skeleton:"basic_loop", mode:"maze", color:"#498DEB
     }
   }
 }};
-Entry.block.maze_step_if_4 = {skeleton:"basic_loop", mode:"maze", color:"#498DEB", template:"\ub9cc\uc57d \uc55e\uc5d0 %1 \uc788\ub2e4\uba74%2", params:[{type:"Image", img:"/img/assets/ntry/block_inner/if_target_2.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/if.png", size:24}], statements:[{accept:"basic", position:{x:2, y:15}}], func:function() {
+Entry.block.maze_step_if_4 = {skeleton:"basic_loop", mode:"maze", color:"#498DEB", template:"\ub9cc\uc57d \uc55e\uc5d0 %1 \uc788\ub2e4\uba74%2", syntax:["BasicIf", 'front == "wall"'], params:[{type:"Image", img:"/img/assets/ntry/block_inner/if_target_2.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/if.png", size:24}], statements:[{accept:"basic", position:{x:2, y:15}}], func:function() {
   if (!this.isContinue) {
     var a = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT), b, c;
     for (c in a) {
@@ -13532,7 +13588,7 @@ Entry.block.maze_step_if_4 = {skeleton:"basic_loop", mode:"maze", color:"#498DEB
     }
   }
 }};
-Entry.block.maze_step_move_step = {skeleton:"basic", mode:"maze", color:"#A751E3", template:"\uc55e\uc73c\ub85c \ud55c \uce78 \uc774\ub3d9%1", syntax:["Scope", "move"], params:[{type:"Image", img:"/img/assets/ntry/bitmap/jr/cparty_go_straight.png", size:24}], func:function() {
+Entry.block.maze_step_move_step = {skeleton:"basic", mode:"maze", color:"#A751E3", template:"\uc55e\uc73c\ub85c \ud55c \uce78 \uc774\ub3d9%1", syntax:["Scope", "this", "move"], params:[{type:"Image", img:"/img/assets/ntry/bitmap/jr/cparty_go_straight.png", size:24}], func:function() {
   if (this.isContinue) {
     if (this.isAction) {
       return Entry.STATIC.CONTINUE;
@@ -15691,7 +15747,7 @@ Entry.Vim = function(a) {
   };
   a.textToCode = function() {
     var a = this.codeMirror.getValue();
-    return [this._parser.parse(a)];
+    return this._parser.parse(a);
   };
   a.codeToText = function(a) {
     a = this._blockParser.parse(a);

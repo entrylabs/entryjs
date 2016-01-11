@@ -80,7 +80,7 @@ Entry.Vim = function(dom) {
 
     p.textToCode = function() {
         var textCode = this.codeMirror.getValue();
-        return [this._parser.parse(textCode)];
+        return this._parser.parse(textCode);
     };
 
     p.codeToText = function(code) {
