@@ -1270,7 +1270,7 @@ Entry.block.maze_step_move_step = {
     mode: "maze",
     color: "#A751E3",
     template: "앞으로 한 칸 이동%1",
-    syntax: ["Scope", "this", "move"],
+    syntax: ["Scope", "move"],
     params: [
         {
             type: "Image",
