@@ -11,11 +11,10 @@ Entry.Vim = function(dom) {
     if (dom.prop("tagName") !== "DIV")
         return console.error("Dom is not div element");
 
+    this.createDom(dom);
 
     this._parser = new Entry.Parser("maze", "js", this.codeMirror);
     this._blockParser = new Entry.Parser("maze", "block");
-
-    this.createDom(dom);
 
     Entry.Model(this, false);
     window.eventset = [];
@@ -32,12 +31,14 @@ Entry.Vim = function(dom) {
 
         this.codeMirror = CodeMirror(this.view[0], {
             lineNumbers: true,
-            value: "this.move();\nthis.move();\nthis.move();\n",
+            value: "",
             mode:  {name:"javascript", globalVars: true},
             theme: "default",
             indentUnit: 4,
             styleActiveLine: true,
-            extraKeys: {"Shift-Space": "autocomplete"},
+            extraKeys: {
+                "Shift-Space": "javascript_complete"
+            },
             // gutters: ["CodeMirror-lint-markers"],
             lint: true,
             viewportMargin: 10
@@ -80,7 +81,11 @@ Entry.Vim = function(dom) {
 
     p.textToCode = function() {
         var textCode = this.codeMirror.getValue();
-        return [this._parser.parse(textCode)];
+        var code = this._parser.parse(textCode);
+        if(code.length === 0) {
+            throw ('블록 파싱 오류');
+        }
+        return code; 
     };
 
     p.codeToText = function(code) {

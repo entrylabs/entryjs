@@ -1097,7 +1097,7 @@ Entry.block.maze_define_function = {
     color: "#B57242",
     event: "define",
     template: "약속하기%1",
-    syntax: ["Function", "promise"],
+    syntax: ["BasicFunction"],
     params: [
         {
             type: "Image",
@@ -1128,6 +1128,7 @@ Entry.block.maze_step_if_3 = {
     mode: "maze",
     color: "#498DEB",
     template: "만약 앞에 %1 있다면%2",
+    syntax: ["BasicIf", 'front == "banana"'],
     params: [
         {
             type: "Image",
@@ -1198,6 +1199,7 @@ Entry.block.maze_step_if_4 = {
     mode: "maze",
     color: "#498DEB",
     template: "만약 앞에 %1 있다면%2",
+    syntax: ["BasicIf", 'front == "wall"'],
     params: [
         {
             type: "Image",

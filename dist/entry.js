@@ -8562,7 +8562,7 @@ Entry.BlockParser = function(a) {
     a = a._schema.syntax.concat();
     return a.splice(1, a.length - 1).join(".") + "();\n";
   };
-  a.Function = function(a) {
+  a.BasicFunction = function(a) {
     a = this.Thread(a.statements[0]);
     return "function promise() {\n" + this.indent(a) + "}\n";
   };
@@ -8600,20 +8600,20 @@ Entry.BlockParser = function(a) {
 })(Entry.BlockParser.prototype);
 Entry.JSParser = function(a) {
   this.syntax = a;
+  this.scopeChain = [];
+  this.scope = null;
 };
 (function(a) {
   a.Program = function(a) {
-    var c = [];
-    a = a.body;
-    c.push({type:this.syntax.Program});
-    for (var d = 0;d < a.length;d++) {
-      var e = a[d];
-      c.push(this[e.type](e));
-    }
-    return c;
+    var c = [], d = [];
+    d.push({type:this.syntax.Program});
+    var e = this.initScope(a), d = d.concat(this.BlockStatement(a));
+    this.unloadScope();
+    c.push(d);
+    return c = c.concat(e);
   };
   a.Identifier = function(a, c) {
-    return c ? c[a.name] : this.syntax.Scope[a.name];
+    return c ? c[a.name] : this.scope[a.name];
   };
   a.ExpressionStatement = function(a) {
     a = a.expression;
@@ -8645,8 +8645,13 @@ Entry.JSParser = function(a) {
     var c = [];
     a = a.body;
     for (var d = 0;d < a.length;d++) {
-      var e = a[d];
-      c.push(this[e.type](e));
+      var e = a[d], f = this[e.type](e);
+      if (f) {
+        if (void 0 === f.type) {
+          throw {message:"\ud574\ub2f9\ud558\ub294 \ube14\ub85d\uc774 \uc5c6\uc2b5\ub2c8\ub2e4.", node:e};
+        }
+        f && c.push(f);
+      }
     }
     return c;
   };
@@ -8672,7 +8677,10 @@ Entry.JSParser = function(a) {
     throw {message:"continue\ub294 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a};
   };
   a.IfStatement = function(a) {
-    return {test:a.test, consequent:a.consequent, alternate:a.alternate};
+    if (this.syntax.IfStatement) {
+      throw {message:"if\ub294 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a};
+    }
+    return this.BasicIf(a);
   };
   a.SwitchStatement = function(a) {
     throw {message:"switch\ub294 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a};
@@ -8690,7 +8698,11 @@ Entry.JSParser = function(a) {
     throw {message:"catch\ub294 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a};
   };
   a.WhileStatement = function(a) {
-    throw {message:"while\uc740 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a};
+    var c = a.body, d = this.syntax.WhileStatement, c = this[c.type](c);
+    if (d) {
+      throw {message:"while\uc740 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a};
+    }
+    return this.BasicWhile(a, c);
   };
   a.DoWhileStatement = function(a) {
     throw {message:"do ~ while\uc740 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a};
@@ -8699,13 +8711,16 @@ Entry.JSParser = function(a) {
     throw {message:"for ~ in\uc740 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a};
   };
   a.FunctionDeclaration = function(a) {
-    throw {message:"function\uc740 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a};
+    if (this.syntax.FunctionDeclaration) {
+      throw {message:"function\uc740 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a};
+    }
+    return null;
   };
   a.VariableDeclaration = function(a) {
     throw {message:"var\uc740 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a};
   };
   a.ThisExpression = function(a) {
-    return "this";
+    return this.scope.this;
   };
   a.ArrayExpression = function(a) {
     throw {message:"array\ub294 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a};
@@ -8744,11 +8759,15 @@ Entry.JSParser = function(a) {
     return ["||", "&&"];
   };
   a.MemberExpression = function(a) {
-    var c = a.object, d = a.property, c = this[c.type](c), d = this[d.type](d, c);
+    var c = a.object, d = a.property;
+    console.log(c.type);
+    c = this[c.type](c);
+    console.log(c);
+    d = this[d.type](d, c);
     if (Object(c) !== c || Object.getPrototypeOf(c) !== Object.prototype) {
       throw {message:c + "\uc740(\ub294) \uc798\ubabb\ub41c \uba64\ubc84 \ubcc0\uc218\uc785\ub2c8\ub2e4.", node:a};
     }
-    c = c[d];
+    c = d;
     if (!c) {
       throw {message:d + "\uc774(\uac00) \uc874\uc7ac\ud558\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4.", node:a};
     }
@@ -8770,6 +8789,34 @@ Entry.JSParser = function(a) {
   a.SequenceExpression = function(a) {
     throw {message:"\uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a};
   };
+  a.initScope = function(a) {
+    if (null === this.scope) {
+      var c = function() {
+      };
+      c.prototype = this.syntax.Scope;
+    } else {
+      c = function() {
+      }, c.prototype = this.scope;
+    }
+    this.scope = new c;
+    this.scopeChain.push(this.scope);
+    return this.scanDefinition(a);
+  };
+  a.unloadScope = function() {
+    this.scopeChain.pop();
+    this.scope = this.scopeChain.length ? this.scopeChain[this.scopeChain.length - 1] : null;
+  };
+  a.scanDefinition = function(a) {
+    a = a.body;
+    for (var c = [], d = 0;d < a.length;d++) {
+      var e = a[d];
+      "FunctionDeclaration" === e.type && (console.log(e), this.scope[e.id.name] = this.scope.promise, this.syntax.BasicFunction && (e = e.body, c.push([{type:this.syntax.BasicFunction, statements:[this[e.type](e)]}])));
+    }
+    return c;
+  };
+  a.BasicFunction = function(a, c) {
+    return null;
+  };
   a.BasicIteration = function(a, c, d) {
     var e = this.syntax.BasicIteration;
     if (!e) {
@@ -8777,16 +8824,54 @@ Entry.JSParser = function(a) {
     }
     return {params:[c], type:e, statements:[d]};
   };
+  a.BasicWhile = function(a, c) {
+    var d = a.test.raw;
+    if (this.syntax.BasicWhile[d]) {
+      return {type:this.syntax.BasicWhile[d], statements:[c]};
+    }
+    throw {message:"\uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a.test};
+  };
+  a.BasicIf = function(a) {
+    var c = a.consequent, c = this[c.type](c);
+    try {
+      var d = "", e = "===" === a.test.operator ? "==" : a.test.operator;
+      if ("Identifier" === a.test.left.type && "Literal" === a.test.right.type) {
+        d = a.test.left.name + " " + e + " " + a.test.right.raw;
+      } else {
+        if ("Literal" === a.test.left.type && "Identifier" === a.test.right.type) {
+          d = a.test.right.name + " " + e + " " + a.test.left.raw;
+        } else {
+          throw Error();
+        }
+      }
+      if (this.syntax.BasicIf[d]) {
+        return {type:this.syntax.BasicIf[d], statements:[c]};
+      }
+      throw Error();
+    } catch (f) {
+      throw {message:"\uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a.test};
+    }
+  };
 })(Entry.JSParser.prototype);
 Entry.Parser = function(a, b, c) {
   this._mode = a;
   this.syntax = {};
   this.codeMirror = c;
   this._lang = b || "js";
+  this.availableCode = [];
+  this._stageId = Number(Ntry.configManager.getConfig("stageId"));
+  this.setAvailableCode(NtryData.config[this._stageId].availableCode, NtryData.player[this._stageId].code);
   this.mappingSyntax(a);
   switch(this._lang) {
     case "js":
       this._parser = new Entry.JSParser(this.syntax);
+      b = this.syntax;
+      CodeMirror.commands.javascript_complete = function(a) {
+        CodeMirror.showHint(a, null, {globalScope:b.Scope});
+      };
+      c.on("keyup", function(a, c) {
+        !a.state.completionActive && 65 <= c.keyCode && 95 >= c.keyCode && CodeMirror.showHint(a, null, {completeSingle:!1, globalScope:b.Scope});
+      });
       break;
     case "block":
       this._parser = new Entry.BlockParser(this.syntax);
@@ -8797,12 +8882,11 @@ Entry.Parser = function(a, b, c) {
     var c = null;
     switch(this._lang) {
       case "js":
-        a = acorn.parse(a);
-        console.log(a);
         try {
-          c = this._parser.Program(a);
-        } catch (d) {
-          console.log(d), this.codeMirror && (c = this.getLineNumber(d.node.start, d.node.end), c.message = d.message, c.severity = "error", this.codeMirror.markText(c.from, c.to, {className:"CodeMirror-lint-mark-error", __annotation:c, clearOnEnter:!0})), c = [];
+          var d = acorn.parse(a), c = this._parser.Program(d);
+          console.log(c);
+        } catch (e) {
+          console.dir(e), console.log(e instanceof SyntaxError), this.codeMirror && (e instanceof SyntaxError ? e.message = "\ubb38\ubc95 \uc624\ub958\uc785\ub2c8\ub2e4." : (a = this.getLineNumber(e.node.start, e.node.end), a.message = e.message, a.severity = "error", this.codeMirror.markText(a.from, a.to, {className:"CodeMirror-lint-mark-error", __annotation:a, clearOnEnter:!0})), Entry.toast.alert("Error", e.message)), c = [];
         }
         break;
       case "block":
@@ -8822,7 +8906,7 @@ Entry.Parser = function(a, b, c) {
   a.mappingSyntax = function(a) {
     for (var c = Object.keys(Entry.block), d = 0;d < c.length;d++) {
       var e = c[d], f = Entry.block[e];
-      if (f.mode === a && (f = f.syntax)) {
+      if (f.mode === a && -1 < this.availableCode.indexOf(e) && (f = f.syntax)) {
         for (var g = this.syntax, h = 0;h < f.length;h++) {
           var k = f[h];
           if (h === f.length - 2 && "function" === typeof f[h + 1]) {
@@ -8834,6 +8918,20 @@ Entry.Parser = function(a, b, c) {
         }
       }
     }
+  };
+  a.setAvailableCode = function(a, c) {
+    var d = [];
+    a.forEach(function(a, b) {
+      a.forEach(function(a, b) {
+        d.push(a.type);
+      });
+    });
+    c.forEach(function(a, b) {
+      a.forEach(function(a, b) {
+        a.type !== NtryData.START && -1 === d.indexOf(a.type) && d.push(a.type);
+      });
+    });
+    this.availableCode = this.availableCode.concat(d);
   };
 })(Entry.Parser.prototype);
 Entry.Playground = function() {
@@ -13491,12 +13589,12 @@ Entry.block.maze_call_function = {skeleton:"basic", mode:"maze", color:"#B57242"
     return Entry.STATIC.CONTINUE;
   }
 }};
-Entry.block.maze_define_function = {skeleton:"basic_define", mode:"maze", color:"#B57242", event:"define", template:"\uc57d\uc18d\ud558\uae30%1", syntax:["Function", "promise"], params:[{type:"Image", img:"/img/assets/week/blocks/function.png", size:24}], statements:[{accept:"basic", position:{x:2, y:15}}], func:function(a) {
+Entry.block.maze_define_function = {skeleton:"basic_define", mode:"maze", color:"#B57242", event:"define", template:"\uc57d\uc18d\ud558\uae30%1", syntax:["BasicFunction"], params:[{type:"Image", img:"/img/assets/week/blocks/function.png", size:24}], statements:[{accept:"basic", position:{x:2, y:15}}], func:function(a) {
   if (!this.executed) {
     return this.executor.stepInto(this.block.statements[0]), this.executed = !0, Entry.STATIC.CONTINUE;
   }
 }};
-Entry.block.maze_step_if_3 = {skeleton:"basic_loop", mode:"maze", color:"#498DEB", template:"\ub9cc\uc57d \uc55e\uc5d0 %1 \uc788\ub2e4\uba74%2", params:[{type:"Image", img:"/img/assets/ntry/block_inner/if_target_3.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/if.png", size:24}], statements:[{accept:"basic", position:{x:2, y:15}}], func:function() {
+Entry.block.maze_step_if_3 = {skeleton:"basic_loop", mode:"maze", color:"#498DEB", template:"\ub9cc\uc57d \uc55e\uc5d0 %1 \uc788\ub2e4\uba74%2", syntax:["BasicIf", 'front == "banana"'], params:[{type:"Image", img:"/img/assets/ntry/block_inner/if_target_3.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/if.png", size:24}], statements:[{accept:"basic", position:{x:2, y:15}}], func:function() {
   if (!this.isContinue) {
     var a = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT), b, c;
     for (c in a) {
@@ -13514,7 +13612,7 @@ Entry.block.maze_step_if_3 = {skeleton:"basic_loop", mode:"maze", color:"#498DEB
     }
   }
 }};
-Entry.block.maze_step_if_4 = {skeleton:"basic_loop", mode:"maze", color:"#498DEB", template:"\ub9cc\uc57d \uc55e\uc5d0 %1 \uc788\ub2e4\uba74%2", params:[{type:"Image", img:"/img/assets/ntry/block_inner/if_target_2.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/if.png", size:24}], statements:[{accept:"basic", position:{x:2, y:15}}], func:function() {
+Entry.block.maze_step_if_4 = {skeleton:"basic_loop", mode:"maze", color:"#498DEB", template:"\ub9cc\uc57d \uc55e\uc5d0 %1 \uc788\ub2e4\uba74%2", syntax:["BasicIf", 'front == "wall"'], params:[{type:"Image", img:"/img/assets/ntry/block_inner/if_target_2.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/if.png", size:24}], statements:[{accept:"basic", position:{x:2, y:15}}], func:function() {
   if (!this.isContinue) {
     var a = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT), b, c;
     for (c in a) {
@@ -15655,9 +15753,9 @@ Entry.Vim = function(a) {
   if ("DIV" !== a.prop("tagName")) {
     return console.error("Dom is not div element");
   }
+  this.createDom(a);
   this._parser = new Entry.Parser("maze", "js", this.codeMirror);
   this._blockParser = new Entry.Parser("maze", "block");
-  this.createDom(a);
   Entry.Model(this, !1);
   window.eventset = [];
 };
@@ -15675,7 +15773,7 @@ Entry.Vim = function(a) {
     }
     var e;
     this.view = Entry.Dom("div", {parent:a, class:"entryVimBoard"});
-    this.codeMirror = CodeMirror(this.view[0], {lineNumbers:!0, value:"this.move();\nthis.move();\nthis.move();\n", mode:{name:"javascript", globalVars:!0}, theme:"default", indentUnit:4, styleActiveLine:!0, extraKeys:{"Shift-Space":"autocomplete"}, lint:!0, viewportMargin:10});
+    this.codeMirror = CodeMirror(this.view[0], {lineNumbers:!0, value:"", mode:{name:"javascript", globalVars:!0}, theme:"default", indentUnit:4, styleActiveLine:!0, extraKeys:{"Shift-Space":"javascript_complete"}, lint:!0, viewportMargin:10});
     e = this;
     a = this.view[0];
     a.removeEventListener("dragEnd", c);
@@ -15690,8 +15788,11 @@ Entry.Vim = function(a) {
     this.view.removeClass("entryRemove");
   };
   a.textToCode = function() {
-    var a = this.codeMirror.getValue();
-    return [this._parser.parse(a)];
+    var a = this.codeMirror.getValue(), a = this._parser.parse(a);
+    if (0 === a.length) {
+      throw "\ube14\ub85d \ud30c\uc2f1 \uc624\ub958";
+    }
+    return a;
   };
   a.codeToText = function(a) {
     a = this._blockParser.parse(a);
@@ -15730,9 +15831,20 @@ Entry.Workspace.MODE_VIMBOARD = 1;
   a.getMode = function() {
     return this.mode;
   };
-  a.setMode = function(a) {
+  a.setMode = function(a, c) {
     a = Number(a);
-    this.mode != a && (a == Entry.Workspace.MODE_VIMBOARD ? (this.board && this.board.hide(), this.selectedBoard = this.vimBoard, this.vimBoard.show(), this.vimBoard.codeToText(this.board.code), this.blockMenu.renderText(), this.board.clear()) : (this.vimBoard && this.vimBoard.hide(), this.selectedBoard = this.board, this.board.show(), this.textToCode(), this.blockMenu.renderBlock()), this.mode = a);
+    if (this.mode != a) {
+      if (a == Entry.Workspace.MODE_VIMBOARD) {
+        this.board && this.board.hide(), this.selectedBoard = this.vimBoard, this.vimBoard.show(), this.vimBoard.codeToText(this.board.code), this.blockMenu.renderText(), this.board.clear();
+      } else {
+        try {
+          this.textToCode(), this.vimBoard && this.vimBoard.hide(), this.selectedBoard = this.board, this.board.show(), this.blockMenu.renderBlock();
+        } catch (d) {
+          a = this.mode, "function" === typeof c && c(a), console.log("textToCode error : " + d);
+        }
+      }
+      this.mode = a;
+    }
   };
   a.changeBoardCode = function(a) {
     this.selectedBoard.changeCode(a);

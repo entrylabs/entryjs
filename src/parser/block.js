@@ -60,7 +60,7 @@ Entry.BlockParser = function(syntax) {
         return syntax.splice(1, syntax.length - 1).join(".") + "();\n";
     };
 
-    p.Function = function(block) {
+    p.BasicFunction = function(block) {
         var statementCode = this.Thread(block.statements[0]);
         var code = "function promise() {\n" +
             this.indent(statementCode) + "}\n"

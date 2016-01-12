@@ -13,11 +13,30 @@ Entry.Parser = function(mode, syntax, cm) {
     this.syntax = {};
     this.codeMirror = cm;
     this._lang = syntax || "js";
+    this.availableCode = [];
 
+
+    this._stageId = Number(Ntry.configManager.getConfig('stageId'));
+    var configCode = NtryData.config[this._stageId].availableCode;
+    var playerCode = NtryData.player[this._stageId].code;
+    this.setAvailableCode(configCode, playerCode);
     this.mappingSyntax(mode);
+
     switch (this._lang) {
         case "js":
             this._parser = new Entry.JSParser(this.syntax);
+
+            var syntax = this.syntax;
+            CodeMirror.commands.javascript_complete = function (cm) {
+                CodeMirror.showHint(cm, null, {globalScope:syntax.Scope});
+            }
+
+            cm.on("keyup", function (cm, event) {
+                if (!cm.state.completionActive &&  (event.keyCode >= 65 && event.keyCode <= 95))  {
+                    CodeMirror.showHint(cm, null, {completeSingle: false, globalScope:syntax.Scope});
+                }
+            });
+
             break;
         case "block":
             this._parser = new Entry.BlockParser(this.syntax);
@@ -31,25 +50,36 @@ Entry.Parser = function(mode, syntax, cm) {
 
         switch (this._lang) {
             case "js":
-                var astTree = acorn.parse(code);
-                console.log(astTree);
-
                 try {
+                    var astTree = acorn.parse(code);
                     result = this._parser.Program(astTree);
                 } catch(error) {
-                    console.log(error);
-                    // alert(error.message);
+                    console.dir(error);
+                    console.log(error instanceof SyntaxError);
                     if (this.codeMirror) {
-                        var anotation = this.getLineNumber(error.node.start,
-                                                           error.node.end);
-                        anotation.message = error.message;
-                        anotation.severity = "error";
-                        var a = this.codeMirror.markText(
-                            anotation.from, anotation.to, {
-                            className: "CodeMirror-lint-mark-error",
-                            __annotation: anotation,
-                            clearOnEnter: true
-                        });
+                        var annotation;
+                        if (error instanceof SyntaxError) {
+                            annotation = {
+                                from: {line: error.loc.line - 1, ch: error.loc.column - 2},
+                                to: {line: error.loc.line - 1, ch: error.loc.column + 1}
+                            }
+                            error.message = "문법 오류입니다.";
+                        } else {
+                            annotation = this.getLineNumber(error.node.start,
+                                                               error.node.end);
+                            annotation.message = error.message;
+                            annotation.severity = "error";
+                            var a = this.codeMirror.markText(
+                                annotation.from, annotation.to, {
+                                className: "CodeMirror-lint-mark-error",
+                                __annotation: annotation,
+                                clearOnEnter: true
+                            });
+                        }
+
+                        
+
+                        Entry.toast.alert('Error', error.message);
                     }
                     result = [];
                 }
@@ -86,7 +116,7 @@ Entry.Parser = function(mode, syntax, cm) {
         for (var i = 0; i < types.length; i++) {
             var type = types[i];
             var block = Entry.block[type];
-            if (block.mode === mode) {
+            if (block.mode === mode && this.availableCode.indexOf(type) > -1) {
                 var syntaxArray = block.syntax;
                 if (!syntaxArray)
                     continue;
@@ -110,4 +140,26 @@ Entry.Parser = function(mode, syntax, cm) {
             }
         }
     };
+
+    p.setAvailableCode = function (configCode, playerCode) {
+
+        var availableList = [];
+        configCode.forEach(function (items, i) {
+            items.forEach(function (item, i) {
+                availableList.push(item.type);
+            });
+        });
+
+        playerCode.forEach(function (items, i) {
+            items.forEach(function (item, i) {
+                if(item.type !== NtryData.START && availableList.indexOf(item.type) === -1) {
+                    availableList.push(item.type);
+                }
+            });
+        });
+
+        this.availableCode = this.availableCode.concat(availableList);
+    }
+
+
 })(Entry.Parser.prototype);
