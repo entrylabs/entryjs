@@ -840,8 +840,13 @@ Entry.block.test = {
     skeleton: "basic_boolean_field",
     mode: "maze",
     color: "#127CDB",
-    template: "%1 this is test block",
+    template: "%1 this is test block %2",
     params: [
+        {
+            type: "Angle",
+            value: "90"
+
+        },
         {
             type: "Dropdown",
             options: [
@@ -1380,7 +1385,7 @@ Entry.block.test_wrapper = {
                 {
                     accept: "basic_boolean_field",
                     type: "test",
-                    params: [1]
+                    params: [30,50]
                 }
             ]
         },

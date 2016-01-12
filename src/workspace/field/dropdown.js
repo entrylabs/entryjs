@@ -23,7 +23,7 @@ Entry.FieldDropdown = function(content, blockView, index) {
     this._CONTENT_HEIGHT =
         content.dropdownHeight || blockView.getSkeleton().dropdownHeight || 16;
 
-    this._fONT_SIZE =
+    this._FONT_SIZE =
         content.fontSize || blockView.getSkeleton().fontSize || 12;
 
     this._ROUND = content.roundValue || 0;
