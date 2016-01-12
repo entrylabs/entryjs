@@ -55,14 +55,22 @@ Entry.Block.MAGNET_OFFSET = 0.4;
         this._schema = Entry.block[this.type];
         if (this._schema.event)
             this.thread.registerEvent(this, this._schema.event);
+        var thisParams = this.params;
 
         var params = this._schema.params;
         for (var i = 0; i < params.length; i++) {
+            var value = thisParams[i] !== undefined ? thisParams[i] : params[i].value;
+
+            var paramInjected = thisParams[i] !== undefined;
+
             if (params[i].type == 'Block') {
-                this.params.push(
-                    new Entry.Thread(params[i].value, that.getCode())
-                );
-            } else this.params.push(params[i].value);
+                if (paramInjected)
+                    thisParams.splice(i, 1, new Entry.Thread(value, that.getCode()));
+                else thisParams.push(new Entry.Thread(value, that.getCode()));
+            } else {
+                if (paramInjected) thisParams.splice(i, 1, value);
+                else thisParams.push(value);
+            }
         }
 
         var statements = this._schema.statements;

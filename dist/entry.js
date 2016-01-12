@@ -15155,12 +15155,13 @@ Entry.Block.MAGNET_OFFSET = .4;
   a.getSchema = function() {
     this._schema = Entry.block[this.type];
     this._schema.event && this.thread.registerEvent(this, this._schema.event);
-    for (var a = this._schema.params, c = 0;c < a.length;c++) {
-      "Block" == a[c].type ? this.params.push(new Entry.Thread(a[c].value, this.getCode())) : this.params.push(a[c].value);
+    for (var a = this.params, c = this._schema.params, d = 0;d < c.length;d++) {
+      var e = void 0 !== a[d] ? a[d] : c[d].value, f = void 0 !== a[d];
+      "Block" == c[d].type ? f ? a.splice(d, 1, new Entry.Thread(e, this.getCode())) : a.push(new Entry.Thread(e, this.getCode())) : f ? a.splice(d, 1, e) : a.push(e);
     }
     if (a = this._schema.statements) {
-      for (c = 0;c < a.length;c++) {
-        this.statements.splice(c, 1, new Entry.Thread(this.statements[c], this.getCode()));
+      for (d = 0;d < a.length;d++) {
+        this.statements.splice(d, 1, new Entry.Thread(this.statements[d], this.getCode()));
       }
     }
   };
