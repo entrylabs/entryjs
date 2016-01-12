@@ -1409,3 +1409,19 @@ Entry.block.test_wrapper = {
     func: function() {
     }
 };
+
+Entry.block.basic_button = {
+    skeleton: "basic_button",
+    color: "#eee",
+    template: "%1",
+    params: [
+        {
+            type: "Text",
+            text: "basic button",
+            color: "#333",
+            align: "center"
+        }
+    ],
+    func: function() {
+    }
+};

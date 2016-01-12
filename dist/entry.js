@@ -13570,6 +13570,8 @@ Entry.block.maze_step_rotate_right = {skeleton:"basic", mode:"maze", color:"#A75
 }};
 Entry.block.test_wrapper = {skeleton:"basic", mode:"maze", color:"#3BBD70", template:"%1 this is test block %2", params:[{type:"Block", value:[{accept:"basic_boolean_field", type:"test", params:[30, 50]}]}, {type:"Dropdown", options:[[1, 1], [2, 2], [3, 3], [4, 4], [5, 5], [6, 6], [7, 7], [8, 8], [9, 9], [10, 10]], value:1}], func:function() {
 }};
+Entry.block.basic_button = {skeleton:"basic_button", color:"#eee", template:"%1", params:[{type:"Text", text:"basic button", color:"#333", align:"center"}], func:function() {
+}};
 Entry.BlockMenu = function(a, b) {
   Entry.Model(this, !1);
   this._align = b || "CENTER";
@@ -13688,10 +13690,10 @@ Entry.BlockView = function(a, b, c) {
   this._board = b;
   this.set(a);
   this.svgGroup = b.svgBlockGroup.group();
-  this.svgGroup.block = this.block;
   this._schema = Entry.block[a.type];
   this._skeleton = Entry.skeleton[this._schema.skeleton];
   this._contents = [];
+  this.magnets && this._skeleton.magnets.next && (this.svgGroup.block = this.block);
   this.isInBlockMenu = !(this.getBoard() instanceof Entry.Board);
   this._skeleton.morph && this.block.observe(this, "_renderPath", this._skeleton.morph, !1);
   this.prevObserver = null;
@@ -14792,24 +14794,27 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
   };
 })(Entry.FieldBlock.prototype);
 Entry.FieldText = function(a, b, c) {
-  this._block = b;
+  this._block = b.block;
+  this._index = c;
   this.box = new Entry.BoxModel;
   this._fontSize = a.fontSize || b.getSkeleton().fontSize || 12;
   this._color = a.color || b.getSkeleton().color || "white";
-  this._text = a.text;
-  this._index = c;
+  this._align = a.align || "left";
+  this._text = this.getValue() || a.text;
   this.textElement = null;
-  this.renderStart();
+  this.renderStart(b);
 };
 Entry.Utils.inherit(Entry.Field, Entry.FieldText);
 (function(a) {
-  a.renderStart = function() {
-    this.svgGroup = this._block.contentSvgGroup.group();
+  a.renderStart = function(a) {
+    this.svgGroup = a.contentSvgGroup.group();
     this._text = this._text.replace(/(\r\n|\n|\r)/gm, " ");
     this.textElement = this.svgGroup.text(0, 0, this._text);
     this.textElement.attr({style:"white-space: pre; font-size:" + this._fontSize + "px", "class":"dragNone", fill:this._color});
-    var a = this.textElement.getBBox();
-    this.textElement.attr({y:.25 * a.height});
+    a = this.textElement.getBBox();
+    var c = 0;
+    "center" == this._align && (c = -a.width / 2);
+    this.textElement.attr({x:c, y:.25 * a.height});
     this.box.set({x:0, y:0, width:this.textElement.node.getComputedTextLength(), height:a.height});
   };
 })(Entry.FieldText.prototype);
@@ -15137,6 +15142,13 @@ Entry.skeleton.basic_boolean_field = {path:function(a) {
 }, magnets:{previous:{}, next:{x:0, y:31}}, contentPos:function(a) {
   return {x:11, y:11};
 }};
+Entry.skeleton.basic_button = {path:function() {
+  return "m -64,0 h 128 a 6,6 0, 0,1 6,6 v 18 a 6,6 0, 0,1 -6,6 h -128 a 6,6 0, 0,1 -6,-6 v -18 a 6,6 0, 0,1 6,-6 z";
+}, box:function() {
+  return {offsetX:-70, offsetY:0, width:140, height:30};
+}, contentPos:function() {
+  return {x:0, y:15};
+}};
 Entry.Block = function(a, b) {
   Entry.Model(this, !1);
   this._schema = null;
@@ -15156,7 +15168,7 @@ Entry.Block.MAGNET_OFFSET = .4;
     this._schema = Entry.block[this.type];
     this._schema.event && this.thread.registerEvent(this, this._schema.event);
     for (var a = this.params, c = this._schema.params, d = 0;d < c.length;d++) {
-      var e = void 0 !== a[d] ? a[d] : c[d].value, f = void 0 !== a[d];
+      var e = void 0 !== a[d] ? a[d] : c[d].value, f = a[d];
       "Block" == c[d].type ? f ? a.splice(d, 1, new Entry.Thread(e, this.getCode())) : a.push(new Entry.Thread(e, this.getCode())) : f ? a.splice(d, 1, e) : a.push(e);
     }
     if (a = this._schema.statements) {

@@ -298,6 +298,22 @@ Entry.skeleton.basic_boolean_field = {
         // apply scale required.
         return {x: 11, y: 11};
     }
+};
 
+Entry.skeleton.basic_button = {
+    path: function() {
+        return "m -64,0 h 128 a 6,6 0, 0,1 6,6 v 18 a 6,6 0, 0,1 -6,6 h -128 a 6,6 0, 0,1 -6,-6 v -18 a 6,6 0, 0,1 6,-6 z";
+    },
+    box: function() {
+        return {
+            offsetX: -70, offsetY: 0,
+            width: 140,
+            height: 30
+        };
+    },
+    contentPos: function() {
+        // apply scale required.
+        return {x: 0, y: 15};
+    }
 };
 

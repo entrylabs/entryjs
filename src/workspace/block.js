@@ -61,7 +61,7 @@ Entry.Block.MAGNET_OFFSET = 0.4;
         for (var i = 0; i < params.length; i++) {
             var value = thisParams[i] !== undefined ? thisParams[i] : params[i].value;
 
-            var paramInjected = thisParams[i] !== undefined;
+            var paramInjected = thisParams[i];
 
             if (params[i].type == 'Block') {
                 if (paramInjected)

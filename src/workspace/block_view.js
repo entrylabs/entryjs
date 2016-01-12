@@ -14,11 +14,13 @@ Entry.BlockView = function(block, board, mode) {
     this._board = board;
     this.set(block);
     this.svgGroup = board.svgBlockGroup.group();
-    this.svgGroup.block = this.block;
 
     this._schema = Entry.block[block.type];
     this._skeleton = Entry.skeleton[this._schema.skeleton];
     this._contents = [];
+
+    if (this.magnets && this._skeleton.magnets.next)
+        this.svgGroup.block = this.block;
 
     this.isInBlockMenu = !(this.getBoard() instanceof Entry.Board);
 
