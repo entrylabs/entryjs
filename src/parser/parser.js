@@ -18,6 +18,18 @@ Entry.Parser = function(mode, syntax, cm) {
     switch (this._lang) {
         case "js":
             this._parser = new Entry.JSParser(this.syntax);
+
+            var syntax = this.syntax;
+            CodeMirror.commands.javascript_complete = function (cm) {
+                CodeMirror.showHint(cm, null, {globalScope:syntax.Scope});
+            }
+
+            cm.on("keyup", function (cm, event) {
+                if (!cm.state.completionActive &&  (event.keyCode >= 65 && event.keyCode <= 95))  {
+                    CodeMirror.commands.autocomplete(cm, null, {completeSingle: false, globalScope:syntax.Scope});
+                }
+            });
+
             break;
         case "block":
             this._parser = new Entry.BlockParser(this.syntax);

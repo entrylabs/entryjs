@@ -31,12 +31,14 @@ Entry.Vim = function(dom) {
 
         this.codeMirror = CodeMirror(this.view[0], {
             lineNumbers: true,
-            value: "this.move();\nthis.move();\nthis.move();\n",
+            value: "",
             mode:  {name:"javascript", globalVars: true},
             theme: "default",
             indentUnit: 4,
             styleActiveLine: true,
-            extraKeys: {"Shift-Space": "autocomplete"},
+            extraKeys: {
+                "Shift-Space": "javascript_complete"
+            },
             // gutters: ["CodeMirror-lint-markers"],
             lint: true,
             viewportMargin: 10
