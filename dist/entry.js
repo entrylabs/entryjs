@@ -8646,10 +8646,12 @@ Entry.JSParser = function(a) {
     a = a.body;
     for (var d = 0;d < a.length;d++) {
       var e = a[d], f = this[e.type](e);
-      if (void 0 === f.type) {
-        throw {message:"\ud574\ub2f9\ud558\ub294 \ube14\ub85d\uc774 \uc5c6\uc2b5\ub2c8\ub2e4.", node:e};
+      if (f) {
+        if (void 0 === f.type) {
+          throw {message:"\ud574\ub2f9\ud558\ub294 \ube14\ub85d\uc774 \uc5c6\uc2b5\ub2c8\ub2e4.", node:e};
+        }
+        f && c.push(f);
       }
-      f && c.push(f);
     }
     return c;
   };
@@ -8830,11 +8832,25 @@ Entry.JSParser = function(a) {
     throw {message:"\uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a.test};
   };
   a.BasicIf = function(a) {
-    var c = a.consequent, c = this[c.type](c), d = a.test.left.name + " " + a.test.operator + " " + a.test.right.raw;
-    if (this.syntax.BasicIf[d]) {
-      return {type:this.syntax.BasicIf[d], statements:[c]};
+    var c = a.consequent, c = this[c.type](c);
+    try {
+      var d = "", e = "===" === a.test.operator ? "==" : a.test.operator;
+      if ("Identifier" === a.test.left.type && "Literal" === a.test.right.type) {
+        d = a.test.left.name + " " + e + " " + a.test.right.raw;
+      } else {
+        if ("Literal" === a.test.left.type && "Identifier" === a.test.right.type) {
+          d = a.test.right.name + " " + e + " " + a.test.left.raw;
+        } else {
+          throw Error();
+        }
+      }
+      if (this.syntax.BasicIf[d]) {
+        return {type:this.syntax.BasicIf[d], statements:[c]};
+      }
+      throw Error();
+    } catch (f) {
+      throw {message:"\uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a.test};
     }
-    throw {message:"\uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a.test};
   };
 })(Entry.JSParser.prototype);
 Entry.Parser = function(a, b, c) {
@@ -8842,6 +8858,9 @@ Entry.Parser = function(a, b, c) {
   this.syntax = {};
   this.codeMirror = c;
   this._lang = b || "js";
+  this.availableCode = [];
+  this._stageId = Number(Ntry.configManager.getConfig("stageId"));
+  this.setAvailableCode(NtryData.config[this._stageId].availableCode, NtryData.player[this._stageId].code);
   this.mappingSyntax(a);
   switch(this._lang) {
     case "js":
@@ -8887,7 +8906,7 @@ Entry.Parser = function(a, b, c) {
   a.mappingSyntax = function(a) {
     for (var c = Object.keys(Entry.block), d = 0;d < c.length;d++) {
       var e = c[d], f = Entry.block[e];
-      if (f.mode === a && (f = f.syntax)) {
+      if (f.mode === a && -1 < this.availableCode.indexOf(e) && (f = f.syntax)) {
         for (var g = this.syntax, h = 0;h < f.length;h++) {
           var k = f[h];
           if (h === f.length - 2 && "function" === typeof f[h + 1]) {
@@ -8899,6 +8918,20 @@ Entry.Parser = function(a, b, c) {
         }
       }
     }
+  };
+  a.setAvailableCode = function(a, c) {
+    var d = [];
+    a.forEach(function(a, b) {
+      a.forEach(function(a, b) {
+        d.push(a.type);
+      });
+    });
+    c.forEach(function(a, b) {
+      a.forEach(function(a, b) {
+        a.type !== NtryData.START && -1 === d.indexOf(a.type) && d.push(a.type);
+      });
+    });
+    this.availableCode = this.availableCode.concat(d);
   };
 })(Entry.Parser.prototype);
 Entry.Playground = function() {
