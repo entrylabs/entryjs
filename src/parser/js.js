@@ -105,11 +105,14 @@ Entry.JSParser = function(syntax) {
         var blocks = [];
         var body = node.body;
 
-
         for (var i = 0; i < body.length; i++) {
             var childNode = body[i];
+
             var block = this[childNode.type](childNode);
-            if(block.type === undefined) {
+            if(!block) {
+                continue;
+            }
+            else if(block.type === undefined) {
                 throw {
                     message : '해당하는 블록이 없습니다.',
                     node : childNode
@@ -582,16 +585,31 @@ Entry.JSParser = function(syntax) {
     p.BasicIf = function(node) {
         var consequent = node.consequent;
         consequent = this[consequent.type](consequent);
+        try{
+            var test = '';
+            var operator = (node.test.operator === '===') ? '==' : node.test.operator;
 
-        var test = node.test.left.name + " " +
-            node.test.operator + " " +
-            node.test.right.raw;
-        if (this.syntax.BasicIf[test]) {
-            return {
-                type: this.syntax.BasicIf[test],
-                statements: [consequent]
+            if(node.test.left.type === 'Identifier' && node.test.right.type === 'Literal') {
+                test = node.test.left.name + " " +
+                operator + " " +
+                node.test.right.raw;
+            } else if(node.test.left.type === 'Literal' && node.test.right.type === 'Identifier') {
+                test = node.test.right.name + " " +
+                operator + " " +
+                node.test.left.raw;
+            } else {
+                throw new Error();
             }
-        } else {
+
+            if (this.syntax.BasicIf[test]) {
+                return {
+                    type: this.syntax.BasicIf[test],
+                    statements: [consequent]
+                }
+            } else {
+                throw new Error();
+            }
+        } catch (e) {
             throw {
                 message : '지원하지 않는 표현식 입니다.',
                 node : node.test

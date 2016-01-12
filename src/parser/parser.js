@@ -13,8 +13,15 @@ Entry.Parser = function(mode, syntax, cm) {
     this.syntax = {};
     this.codeMirror = cm;
     this._lang = syntax || "js";
+    this.availableCode = [];
 
+
+    this._stageId = Number(Ntry.configManager.getConfig('stageId'));
+    var configCode = NtryData.config[this._stageId].availableCode;
+    var playerCode = NtryData.player[this._stageId].code;
+    this.setAvailableCode(configCode, playerCode);
     this.mappingSyntax(mode);
+
     switch (this._lang) {
         case "js":
             this._parser = new Entry.JSParser(this.syntax);
@@ -46,7 +53,6 @@ Entry.Parser = function(mode, syntax, cm) {
                 try {
                     var astTree = acorn.parse(code);
                     result = this._parser.Program(astTree);
-                    console.log(result);
                 } catch(error) {
                     console.dir(error);
                     console.log(error instanceof SyntaxError);
@@ -110,7 +116,7 @@ Entry.Parser = function(mode, syntax, cm) {
         for (var i = 0; i < types.length; i++) {
             var type = types[i];
             var block = Entry.block[type];
-            if (block.mode === mode) {
+            if (block.mode === mode && this.availableCode.indexOf(type) > -1) {
                 var syntaxArray = block.syntax;
                 if (!syntaxArray)
                     continue;
@@ -134,4 +140,26 @@ Entry.Parser = function(mode, syntax, cm) {
             }
         }
     };
+
+    p.setAvailableCode = function (configCode, playerCode) {
+
+        var availableList = [];
+        configCode.forEach(function (items, i) {
+            items.forEach(function (item, i) {
+                availableList.push(item.type);
+            });
+        });
+
+        playerCode.forEach(function (items, i) {
+            items.forEach(function (item, i) {
+                if(item.type !== NtryData.START && availableList.indexOf(item.type) === -1) {
+                    availableList.push(item.type);
+                }
+            });
+        });
+
+        this.availableCode = this.availableCode.concat(availableList);
+    }
+
+
 })(Entry.Parser.prototype);
