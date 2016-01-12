@@ -8842,7 +8842,6 @@ Entry.Parser = function(a, b, c) {
   this.syntax = {};
   this.codeMirror = c;
   this._lang = b || "js";
-  this.toast = void 0;
   this.mappingSyntax(a);
   switch(this._lang) {
     case "js":
@@ -8857,12 +8856,11 @@ Entry.Parser = function(a, b, c) {
     var c = null;
     switch(this._lang) {
       case "js":
-        a = acorn.parse(a);
-        console.log(a);
         try {
-          c = this._parser.Program(a);
-        } catch (d) {
-          console.log(d), this.codeMirror && (c = this.getLineNumber(d.node.start, d.node.end), c.message = d.message, c.severity = "error", this.codeMirror.markText(c.from, c.to, {className:"CodeMirror-lint-mark-error", __annotation:c, clearOnEnter:!0}), Entry.toast.alert("Error", d.message)), c = [];
+          var d = acorn.parse(a), c = this._parser.Program(d);
+        } catch (e) {
+          console.dir(e), console.log(e instanceof SyntaxError), this.codeMirror && (e instanceof SyntaxError ? (a = {from:{line:e.loc.line, ch:e.loc.column - 2}, to:{line:e.loc.line, ch:e.loc.column + 1}}, e.message = "\ubb38\ubc95 \uc624\ub958\uc785\ub2c8\ub2e4.") : a = this.getLineNumber(e.node.start, e.node.end), a.message = e.message, a.severity = "error", this.codeMirror.markText(a.from, a.to, {className:"CodeMirror-lint-mark-error", __annotation:a, clearOnEnter:!0}), Entry.toast.alert("Error", 
+          e.message)), c = [];
         }
         break;
       case "block":

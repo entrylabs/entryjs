@@ -31,23 +31,30 @@ Entry.Parser = function(mode, syntax, cm) {
 
         switch (this._lang) {
             case "js":
-                var astTree = acorn.parse(code);
-                console.log(astTree);
-
                 try {
+                    var astTree = acorn.parse(code);
                     result = this._parser.Program(astTree);
                 } catch(error) {
-                    console.log(error);
-
+                    console.dir(error);
+                    console.log(error instanceof SyntaxError);
                     if (this.codeMirror) {
-                        var anotation = this.getLineNumber(error.node.start,
-                                                           error.node.end);
-                        anotation.message = error.message;
-                        anotation.severity = "error";
+                        var annotation;
+                        if (error instanceof SyntaxError) {
+                            annotation = {
+                                from: {line: error.loc.line, ch: error.loc.column - 2},
+                                to: {line: error.loc.line, ch: error.loc.column + 1}
+                            }
+                            error.message = "문법 오류입니다.";
+                        } else {
+                            annotation = this.getLineNumber(error.node.start,
+                                                               error.node.end);
+                        }
+                        annotation.message = error.message;
+                        annotation.severity = "error";
                         var a = this.codeMirror.markText(
-                            anotation.from, anotation.to, {
+                            annotation.from, annotation.to, {
                             className: "CodeMirror-lint-mark-error",
-                            __annotation: anotation,
+                            __annotation: annotation,
                             clearOnEnter: true
                         });
 
