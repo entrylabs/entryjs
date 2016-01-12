@@ -8851,7 +8851,7 @@ Entry.Parser = function(a, b, c) {
         CodeMirror.showHint(a, null, {globalScope:b.Scope});
       };
       c.on("keyup", function(a, c) {
-        !a.state.completionActive && 65 <= c.keyCode && 95 >= c.keyCode && CodeMirror.commands.autocomplete(a, null, {completeSingle:!1, globalScope:b.Scope});
+        !a.state.completionActive && 65 <= c.keyCode && 95 >= c.keyCode && CodeMirror.showHint(a, null, {completeSingle:!1, globalScope:b.Scope});
       });
       break;
     case "block":

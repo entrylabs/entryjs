@@ -26,7 +26,7 @@ Entry.Parser = function(mode, syntax, cm) {
 
             cm.on("keyup", function (cm, event) {
                 if (!cm.state.completionActive &&  (event.keyCode >= 65 && event.keyCode <= 95))  {
-                    CodeMirror.commands.autocomplete(cm, null, {completeSingle: false, globalScope:syntax.Scope});
+                    CodeMirror.showHint(cm, null, {completeSingle: false, globalScope:syntax.Scope});
                 }
             });
 
