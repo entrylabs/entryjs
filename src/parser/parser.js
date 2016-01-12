@@ -46,6 +46,7 @@ Entry.Parser = function(mode, syntax, cm) {
                 try {
                     var astTree = acorn.parse(code);
                     result = this._parser.Program(astTree);
+                    console.log(result);
                 } catch(error) {
                     console.dir(error);
                     console.log(error instanceof SyntaxError);
@@ -53,22 +54,24 @@ Entry.Parser = function(mode, syntax, cm) {
                         var annotation;
                         if (error instanceof SyntaxError) {
                             annotation = {
-                                from: {line: error.loc.line, ch: error.loc.column - 2},
-                                to: {line: error.loc.line, ch: error.loc.column + 1}
+                                from: {line: error.loc.line - 1, ch: error.loc.column - 2},
+                                to: {line: error.loc.line - 1, ch: error.loc.column + 1}
                             }
                             error.message = "문법 오류입니다.";
                         } else {
                             annotation = this.getLineNumber(error.node.start,
                                                                error.node.end);
+                            annotation.message = error.message;
+                            annotation.severity = "error";
+                            var a = this.codeMirror.markText(
+                                annotation.from, annotation.to, {
+                                className: "CodeMirror-lint-mark-error",
+                                __annotation: annotation,
+                                clearOnEnter: true
+                            });
                         }
-                        annotation.message = error.message;
-                        annotation.severity = "error";
-                        var a = this.codeMirror.markText(
-                            annotation.from, annotation.to, {
-                            className: "CodeMirror-lint-mark-error",
-                            __annotation: annotation,
-                            clearOnEnter: true
-                        });
+
+                        
 
                         Entry.toast.alert('Error', error.message);
                     }

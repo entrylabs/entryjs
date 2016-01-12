@@ -8865,9 +8865,9 @@ Entry.Parser = function(a, b, c) {
       case "js":
         try {
           var d = acorn.parse(a), c = this._parser.Program(d);
+          console.log(c);
         } catch (e) {
-          console.dir(e), console.log(e instanceof SyntaxError), this.codeMirror && (e instanceof SyntaxError ? (a = {from:{line:e.loc.line, ch:e.loc.column - 2}, to:{line:e.loc.line, ch:e.loc.column + 1}}, e.message = "\ubb38\ubc95 \uc624\ub958\uc785\ub2c8\ub2e4.") : a = this.getLineNumber(e.node.start, e.node.end), a.message = e.message, a.severity = "error", this.codeMirror.markText(a.from, a.to, {className:"CodeMirror-lint-mark-error", __annotation:a, clearOnEnter:!0}), Entry.toast.alert("Error", 
-          e.message)), c = [];
+          console.dir(e), console.log(e instanceof SyntaxError), this.codeMirror && (e instanceof SyntaxError ? e.message = "\ubb38\ubc95 \uc624\ub958\uc785\ub2c8\ub2e4." : (a = this.getLineNumber(e.node.start, e.node.end), a.message = e.message, a.severity = "error", this.codeMirror.markText(a.from, a.to, {className:"CodeMirror-lint-mark-error", __annotation:a, clearOnEnter:!0})), Entry.toast.alert("Error", e.message)), c = [];
         }
         break;
       case "block":
