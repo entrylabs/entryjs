@@ -8846,6 +8846,13 @@ Entry.Parser = function(a, b, c) {
   switch(this._lang) {
     case "js":
       this._parser = new Entry.JSParser(this.syntax);
+      b = this.syntax;
+      CodeMirror.commands.javascript_complete = function(a) {
+        CodeMirror.showHint(a, null, {globalScope:b.Scope});
+      };
+      c.on("keyup", function(a, c) {
+        !a.state.completionActive && 65 <= c.keyCode && 95 >= c.keyCode && CodeMirror.commands.autocomplete(a, null, {completeSingle:!1, globalScope:b.Scope});
+      });
       break;
     case "block":
       this._parser = new Entry.BlockParser(this.syntax);
@@ -15733,7 +15740,7 @@ Entry.Vim = function(a) {
     }
     var e;
     this.view = Entry.Dom("div", {parent:a, class:"entryVimBoard"});
-    this.codeMirror = CodeMirror(this.view[0], {lineNumbers:!0, value:"this.move();\nthis.move();\nthis.move();\n", mode:{name:"javascript", globalVars:!0}, theme:"default", indentUnit:4, styleActiveLine:!0, extraKeys:{"Shift-Space":"autocomplete"}, lint:!0, viewportMargin:10});
+    this.codeMirror = CodeMirror(this.view[0], {lineNumbers:!0, value:"", mode:{name:"javascript", globalVars:!0}, theme:"default", indentUnit:4, styleActiveLine:!0, extraKeys:{"Shift-Space":"javascript_complete"}, lint:!0, viewportMargin:10});
     e = this;
     a = this.view[0];
     a.removeEventListener("dragEnd", c);
