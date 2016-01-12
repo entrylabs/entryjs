@@ -502,9 +502,11 @@ Entry.block.bounce_wall = function(sprite, script) {
 
     var method = sprite.parent.getRotateMethod();
     var bound = sprite.object.getTransformedBounds();
+    /*
     var size = {};
     size.width = bound.width * Math.sqrt(1.0 + (bound.height/bound.width) * (bound.height/bound.width));
     size.height = bound.height * Math.sqrt(1.0 + (bound.width/bound.height) * (bound.width/bound.height));
+    */
 
     if (method == 'free')
         var angle = (sprite.getRotation() + sprite.getDirection()).mod(360);
@@ -519,7 +521,7 @@ Entry.block.bounce_wall = function(sprite, script) {
             else
                 sprite.setDirection(- sprite.getDirection() + 180);
 
-            sprite.setY(135 - size.height/2 - 1);
+            sprite.setY(135 - bound.height/2 - 1);
         } else {
             var down = ndgmr.checkPixelCollision(Entry.stage.wall.down,sprite.object,threshold,false);
             if (down) {
@@ -528,7 +530,7 @@ Entry.block.bounce_wall = function(sprite, script) {
                 else
                     sprite.setDirection(- sprite.getDirection() + 180);
 
-                sprite.setY(-135 + size.height/2 + 1);
+                sprite.setY(-135 + bound.height/2 + 1);
             }
 
         }
@@ -540,7 +542,7 @@ Entry.block.bounce_wall = function(sprite, script) {
             else
                 sprite.setDirection(- sprite.getDirection() + 180);
 
-            sprite.setY(-135 + size.height/2 + 1);
+            sprite.setY(-135 + bound.height/2 + 1);
         } else {
             var up = ndgmr.checkPixelCollision(Entry.stage.wall.up,sprite.object,threshold,false);
             if (up) {
@@ -549,7 +551,7 @@ Entry.block.bounce_wall = function(sprite, script) {
                 else
                     sprite.setDirection(- sprite.getDirection() + 180);
 
-                sprite.setY(135 - size.height/2 - 1);
+                sprite.setY(135 - bound.height/2 - 1);
             }
         }
     }
@@ -561,7 +563,7 @@ Entry.block.bounce_wall = function(sprite, script) {
             else
                 sprite.setDirection(- sprite.getDirection() + 360);
 
-            sprite.setX(-240 + size.width/2 + 1);
+            sprite.setX(-240 + bound.width/2 + 1);
         } else {
             var right = ndgmr.checkPixelCollision(Entry.stage.wall.right,sprite.object,threshold,false);
             if (right) {
@@ -570,7 +572,7 @@ Entry.block.bounce_wall = function(sprite, script) {
                 else
                     sprite.setDirection(- sprite.getDirection() + 360);
 
-                sprite.setX(240 - size.width/2 - 1);
+                sprite.setX(240 - bound.width/2 - 1);
             }
 
         }
@@ -582,7 +584,7 @@ Entry.block.bounce_wall = function(sprite, script) {
             else
                 sprite.setDirection(- sprite.getDirection() + 360);
 
-            sprite.setX(240 - size.width/2 - 1);
+            sprite.setX(240 - bound.width/2 - 1);
         } else {
             var left = ndgmr.checkPixelCollision(Entry.stage.wall.left,sprite.object,threshold,false);
             if (left) {
@@ -591,7 +593,7 @@ Entry.block.bounce_wall = function(sprite, script) {
                 else
                     sprite.setDirection(- sprite.getDirection() + 360);
 
-                sprite.setX(-240 + size.width/2 + 1);
+                sprite.setX(-240 + bound.width/2 + 1);
             }
         }
     }
