@@ -193,7 +193,8 @@
   width: 100% !important;
   height: 100% !important;
   position: relative;
-  /*padding-bottom: 35px;*/
+  border-bottom: 1px solid #ccc;
+  border-top: 0px;
 }
 .entryPopupWindow > .entryEngine_w {
   width: 100% !important;
@@ -203,9 +204,11 @@
   border-top: 1px solid #ccc;
 }
 .entryPopupWindow > div > .entryCanvasWorkspace {
-  border-top: 1px solid #ccc;
+  bottom: 24px;
+  border-bottom: 1px solid #ccc;
   width: 100% !important;
   height: 100% !important;
+  top: -25px !important;
 }
 .entryEngineWorkspace {
   height: 35px;
@@ -235,44 +238,55 @@
 .entryPopupWindow > .entryEngineWorkspace_w {
   position: absolute;
   width: 100% !important;
-  top: -15px !important;
+  top: 0px !important;
 }
 .entryPopupWindow > .entryEngineWorkspace_w > .entryRunButtonWorkspace_w {
   display: none;
+  top: 37%;
+  left: 46%;
 }
 .entryPopupWindow > .entryEngineWorkspace_w > .entryRunButtonWorkspace_w2 {
   display: block;
-  width: 84px;
-  height: 84px;
-  background-image: url("../images/screen_btn_play_nor.png");
+  width: 111px;
+  height: 111px;
+  background-image: url("../images/play_btn.png");
+  background-position: 40px center;
+  background-color: rgba(0, 0, 0, 0.5);
+  border-radius: 55px;
   background-repeat: no-repeat;
   right: 5px;
   /*bottom: 5px;*/
   bottom: -10px;
+  left: 44%;
+  top: 35%;
 }
 .entryPopupWindow > .entryEngineWorkspace_w > .entryStopButtonWorkspace_w2 {
   display: block;
-  width: 84px;
-  height: 84px;
-  background-image: url("../images/screen_btn_stop_nor.png");
+  background-image: url("../images/stop_btn.png");
   background-repeat: no-repeat;
-  right: 5px;
-  /*bottom: 5px;*/
+  left: 20px;
+  color: transparent;
   bottom: -10px;
+  width: 90px;
+  background-position: left;
+  color: #4b37a0;
 }
 .entryPopupWindow > .entryEngineWorkspace_w > .entryStopButtonWorkspace_w {
   display: none;
 }
 .entryPopupWindow > .entryEngineWorkspace_w > .entryCoordinateButtonWorkspace_w {
-  left: 5px;
+  background-image: url("../images/grid.png") !important;
+  right: 34px;
+  color: #4b37a0;
 }
 .entryPopupWindow > .entryEngineWorkspace_w > .entryMaximizeButtonWorkspace_w {
-  background-image: url("../images/layers_icon_fullmode02_nor.png");
+  background-image: url("../images/zoom_out_btn.png");
   background-repeat: no-repeat;
   right: 5px;
 }
 .entryPopupWindow > .entryEngineWorkspace_w > .entryEngineButtonWorkspace_w {
   position: absolute;
+  bottom: 1px;
 }
 .entryPopupWindow > .entryEngineWorkspace_w > .entryAddButtonWorkspace_w {
   display: none;
@@ -418,6 +432,16 @@
 }
 .entryPopupWindow > div > .entrySpeedButtonWorkspace {
   display: none;
+}
+.entryPopupWindow .entryMouseViewWorkspace_w {
+  font-size: 9pt;
+  margin: 0 auto;
+  width: 100%;
+  color: #4b37a0;
+  line-height: 24px;
+  bottom: 1px;
+  position: absolute;
+  text-align: center;
 }
 #entrySpeedProgressWorkspace {
   position: absolute;
@@ -4152,6 +4176,19 @@
 #entry-contextmenu .menuDisable {
   color: #ccc;
   padding: 3px 20px;
+}
+.entryPauseButtonWorkspace_w {
+  display: none;
+}
+.entryPopupWindow .entryPauseButtonWorkspace_w {
+  display: inline-block;
+  background: url("../images/pause_btn.png");
+  background-repeat: no-repeat;
+  color: transparent;
+  width: 90px;
+  left: 103px;
+  color: #4b37a0;
+  background-position: center left;
 }
 
 .block {
