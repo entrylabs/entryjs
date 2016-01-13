@@ -13592,6 +13592,7 @@ Entry.BlockMenu = function(a, b) {
   this.svgThreadGroup.board = this;
   this.svgBlockGroup = this.svgGroup.group();
   this.svgBlockGroup.board = this;
+  this._splitters = [];
   this.changeEvent = new Entry.Event(this);
   Entry.documentMousedown && Entry.documentMousedown.attach(this, this.setSelectedBlock);
 };
@@ -13621,6 +13622,7 @@ Entry.BlockMenu = function(a, b) {
   a.align = function() {
     for (var a = this.code.getThreads(), c = 10, d = "LEFT" == this._align ? 20 : this.svgDom.width() / 2, e = 0, f = a.length;e < f;e++) {
       var g = a[e].getFirstBlock().view;
+      0 != e && (this._createSplitter(c), c += 15);
       g._moveTo(d, c, !1);
       c += g.height + 15;
     }
@@ -13682,6 +13684,17 @@ Entry.BlockMenu = function(a, b) {
     for (var a = this.code.getThreads(), c = 0;c < a.length;c++) {
       a[c].view.renderBlock();
     }
+  };
+  a._createSplitter = function(a) {
+    a = this.svgBlockGroup.line(30, a, this._svgWidth - 30, a);
+    a.attr({stroke:"#b5b5b5"});
+    this._splitters.push(a);
+  };
+  a._updateSplitters = function() {
+    var a = this.svgWidth - 30;
+    this._splitters.forEach(function(c) {
+      c.attr({x2:a});
+    });
   };
 })(Entry.BlockMenu.prototype);
 Entry.BlockView = function(a, b, c) {

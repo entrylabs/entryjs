@@ -43,6 +43,8 @@ Entry.BlockMenu = function(dom, align) {
     this.svgBlockGroup = this.svgGroup.group();
     this.svgBlockGroup.board = this;
 
+    this._splitters = [];
+
     this.changeEvent = new Entry.Event(this);
     //TODO scroller should be attached
     //this.scroller = new Entry.Scroller(this, false, true);
@@ -92,6 +94,12 @@ Entry.BlockMenu = function(dom, align) {
         for (var i=0,len=threads.length; i<len; i++) {
             var block = threads[i].getFirstBlock();
             var blockView = block.view;
+
+            //TODO splitter generate condition needed
+            if (i != 0) {
+                this._createSplitter(marginFromTop);
+                marginFromTop += vPadding;
+            }
             blockView._moveTo(hPadding, marginFromTop, false);
             marginFromTop += blockView.height + vPadding;
         }
@@ -188,6 +196,25 @@ Entry.BlockMenu = function(dom, align) {
         var threads = this.code.getThreads();
         for (var i=0; i<threads.length; i++)
             threads[i].view.renderBlock();
+    };
+
+    p._createSplitter = function(topPos) {
+        var width = this._svgWidth;
+        var hPadding = 30;
+        var svgBlockGroup = this.svgBlockGroup;
+        var line = svgBlockGroup.line(hPadding, topPos, width-hPadding, topPos);
+        line.attr({'stroke' : '#b5b5b5'});
+        this._splitters.push(line);
+    };
+
+    p._updateSplitters = function() {
+        var splitters = this._splitters;
+        var width = this. svgWidth;
+        var hPadding = 30;
+        var dest = width - hPadding;
+        splitters.forEach(function(line) {
+            line.attr({x2: dest});
+        });
     };
 
 })(Entry.BlockMenu.prototype);
