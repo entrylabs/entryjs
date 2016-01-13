@@ -39,7 +39,7 @@ goog.provide('Entry.GlobalSvg');
             return;
         }
         var data = view.block;
-        if (data.isReadOnly() || !data.isMovable()) return;
+        if (data.isReadOnly() || !view.movable) return;
         this._view = view;
         this._mode = mode;
         this.draw();

@@ -16,16 +16,16 @@ Entry.BlockView = function(block, board, mode) {
     this.svgGroup = board.svgBlockGroup.group();
 
     this._schema = Entry.block[block.type];
-    this._skeleton = Entry.skeleton[this._schema.skeleton];
+    var skeleton = this._skeleton = Entry.skeleton[this._schema.skeleton];
     this._contents = [];
 
-    if (this.magnets && this._skeleton.magnets.next)
+    if (skeleton.magnets && skeleton.magnets().next)
         this.svgGroup.block = this.block;
 
     this.isInBlockMenu = !(this.getBoard() instanceof Entry.Board);
 
-    if (this._skeleton.morph)
-        this.block.observe(this, "_renderPath", this._skeleton.morph, false);
+    if (skeleton.morph)
+        this.block.observe(this, "_renderPath", skeleton.morph, false);
 
     this.prevObserver = null;
     this._startRender(block, mode);
@@ -33,6 +33,7 @@ Entry.BlockView = function(block, board, mode) {
     // observe
     this.block.observe(this, "_bindPrev", ["prev"]);
     this.block.observe(this, "_createEmptyBG", ["next"]);
+    this.block.observe(this, "_setMovable", ["movable"]);
     this.observe(this, "_updateBG", ["magneting"]);
     this.observe(this, "_updateOpacity", ["visible"]);
     this.observe(this, "_updateShadow", ["shadow"]);
@@ -361,7 +362,7 @@ Entry.BlockView = function(block, board, mode) {
             if (blockView.dragMode == Entry.DRAG_MODE_DRAG ||
                 e.pageX !== mouseDownCoordinate.x ||
                 e.pageY !== mouseDownCoordinate.y) {
-                if (!blockView.block.isMovable()) return;
+                if (!blockView.movable) return;
 
                 if (!isInBlockMenu) {
                     if(blockView.block.prev) {
@@ -739,6 +740,11 @@ Entry.BlockView = function(block, board, mode) {
         else fill = 'transparent';
 
         this._darkenPath.attr({fill: fill});
+    };
+
+    p._setMovable = function() {
+        this.movable = this.block.isMovable() !== null ? this.block.isMovable() :
+            (this._skeleton.movable !== undefined ? this._skeleton.movable : true);
     };
 
 })(Entry.BlockView.prototype);

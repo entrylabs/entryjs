@@ -13691,15 +13691,16 @@ Entry.BlockView = function(a, b, c) {
   this.set(a);
   this.svgGroup = b.svgBlockGroup.group();
   this._schema = Entry.block[a.type];
-  this._skeleton = Entry.skeleton[this._schema.skeleton];
+  var d = this._skeleton = Entry.skeleton[this._schema.skeleton];
   this._contents = [];
-  this.magnets && this._skeleton.magnets.next && (this.svgGroup.block = this.block);
+  d.magnets && d.magnets().next && (this.svgGroup.block = this.block);
   this.isInBlockMenu = !(this.getBoard() instanceof Entry.Board);
-  this._skeleton.morph && this.block.observe(this, "_renderPath", this._skeleton.morph, !1);
+  d.morph && this.block.observe(this, "_renderPath", d.morph, !1);
   this.prevObserver = null;
   this._startRender(a, c);
   this.block.observe(this, "_bindPrev", ["prev"]);
   this.block.observe(this, "_createEmptyBG", ["next"]);
+  this.block.observe(this, "_setMovable", ["movable"]);
   this.observe(this, "_updateBG", ["magneting"]);
   this.observe(this, "_updateOpacity", ["visible"]);
   this.observe(this, "_updateShadow", ["shadow"]);
@@ -13819,7 +13820,7 @@ Entry.BlockView = function(a, b, c) {
       var c = l.workspace.getMode(), d = l instanceof Entry.BlockMenu;
       c === Entry.Workspace.MODE_VIMBOARD && a.vimBoardEvent(b, "dragOver");
       var e = k.mouseDownCoordinate;
-      if ((k.dragMode == Entry.DRAG_MODE_DRAG || b.pageX !== e.x || b.pageY !== e.y) && k.block.isMovable()) {
+      if ((k.dragMode == Entry.DRAG_MODE_DRAG || b.pageX !== e.x || b.pageY !== e.y) && k.movable) {
         if (d) {
           l.cloneToBoard(b);
         } else {
@@ -14042,6 +14043,9 @@ Entry.BlockView = function(a, b, c) {
     var a;
     a = this.shadow ? Entry.Utils.colorDarken(this._schema.color, .7) : "transparent";
     this._darkenPath.attr({fill:a});
+  };
+  a._setMovable = function() {
+    this.movable = null !== this.block.isMovable() ? this.block.isMovable() : void 0 !== this._skeleton.movable ? this._skeleton.movable : !0;
   };
 })(Entry.BlockView.prototype);
 Entry.Code = function(a) {
@@ -14902,12 +14906,7 @@ Entry.GlobalSvg = {};
     }
   };
   a.setView = function(a, c) {
-    if (a == this._view) {
-      this.position();
-    } else {
-      var d = a.block;
-      !d.isReadOnly() && d.isMovable() && (this._view = a, this._mode = c, this.draw(), this.resize(), this.align(), this.position());
-    }
+    a == this._view ? this.position() : !a.block.isReadOnly() && a.movable && (this._view = a, this._mode = c, this.draw(), this.resize(), this.align(), this.position());
   };
   a.draw = function() {
     var a = this._view;
@@ -15148,7 +15147,7 @@ Entry.skeleton.basic_button = {path:function() {
   return {offsetX:-70, offsetY:0, width:140, height:30};
 }, contentPos:function() {
   return {x:0, y:15};
-}};
+}, movable:!1};
 Entry.Block = function(a, b) {
   Entry.Model(this, !1);
   this._schema = null;
@@ -15158,7 +15157,7 @@ Entry.Block = function(a, b) {
 Entry.Block.MAGNET_RANGE = 10;
 Entry.Block.MAGNET_OFFSET = .4;
 (function(a) {
-  a.schema = {id:null, name:null, x:0, y:0, type:null, params:[], statements:[], prev:null, next:null, view:null, thread:null, movable:!0, deletable:!0, readOnly:!1};
+  a.schema = {id:null, name:null, x:0, y:0, type:null, params:[], statements:[], prev:null, next:null, view:null, thread:null, movable:null, deletable:!0, readOnly:!1};
   a.load = function(a) {
     a.id || (a.id = Entry.Utils.generateId());
     this.set(a);

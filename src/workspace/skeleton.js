@@ -314,6 +314,7 @@ Entry.skeleton.basic_button = {
     contentPos: function() {
         // apply scale required.
         return {x: 0, y: 15};
-    }
+    },
+    movable: false
 };
 

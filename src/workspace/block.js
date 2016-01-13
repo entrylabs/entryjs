@@ -37,7 +37,7 @@ Entry.Block.MAGNET_OFFSET = 0.4;
         next: null,
         view: null,
         thread: null,
-        movable: true,
+        movable: null,
         deletable: true,
         readOnly: false
     };
