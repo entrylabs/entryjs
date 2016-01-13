@@ -315,6 +315,7 @@ Entry.skeleton.basic_button = {
         // apply scale required.
         return {x: 0, y: 15};
     },
-    movable: false
+    movable: false,
+    readOnly: true
 };
 

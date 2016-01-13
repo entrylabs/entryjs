@@ -13701,6 +13701,7 @@ Entry.BlockView = function(a, b, c) {
   this.block.observe(this, "_bindPrev", ["prev"]);
   this.block.observe(this, "_createEmptyBG", ["next"]);
   this.block.observe(this, "_setMovable", ["movable"]);
+  this.block.observe(this, "_setReadOnly", ["movable"]);
   this.observe(this, "_updateBG", ["magneting"]);
   this.observe(this, "_updateOpacity", ["visible"]);
   this.observe(this, "_updateShadow", ["shadow"]);
@@ -13812,6 +13813,10 @@ Entry.BlockView = function(a, b, c) {
   a._addControl = function() {
     var a = this;
     this.svgGroup.mousedown(function() {
+      var c = a.block.events;
+      c && c.mousedown && c.mousedown.forEach(function(a) {
+        a();
+      });
       a.onMouseDown.apply(a, arguments);
     });
   };
@@ -13856,43 +13861,45 @@ Entry.BlockView = function(a, b, c) {
     b.stopPropagation();
     b.preventDefault();
     Entry.documentMousedown && Entry.documentMousedown.notify();
-    this.getBoard().setSelectedBlock(this);
-    this.dominate();
-    if (0 === b.button || b instanceof Touch) {
-      this.mouseDownCoordinate = {x:b.pageX, y:b.pageY};
-      var e = $(document);
-      e.bind("mousemove.block", c);
-      e.bind("mouseup.block", d);
-      e.bind("touchmove.block", c);
-      e.bind("touchend.block", d);
-      this.getBoard().set({dragBlock:this});
-      this.dragInstance = new Entry.DragInstance({startX:b.pageX, startY:b.pageY, offsetX:b.pageX, offsetY:b.pageY, prev:this.block.prev, height:0, mode:!0});
-      this.addDragging();
-      this.dragMode = Entry.DRAG_MODE_MOUSEDOWN;
-    } else {
-      if (Entry.Utils.isRightButton(b)) {
-        var f = this, g = f.block;
-        if (this.isInBlockMenu || g.isReadOnly()) {
-          return;
+    if (!this.readOnly) {
+      this.getBoard().setSelectedBlock(this);
+      this.dominate();
+      if (0 === b.button || b instanceof Touch) {
+        this.mouseDownCoordinate = {x:b.pageX, y:b.pageY};
+        var e = $(document);
+        e.bind("mousemove.block", c);
+        e.bind("mouseup.block", d);
+        e.bind("touchmove.block", c);
+        e.bind("touchend.block", d);
+        this.getBoard().set({dragBlock:this});
+        this.dragInstance = new Entry.DragInstance({startX:b.pageX, startY:b.pageY, offsetX:b.pageX, offsetY:b.pageY, prev:this.block.prev, height:0, mode:!0});
+        this.addDragging();
+        this.dragMode = Entry.DRAG_MODE_MOUSEDOWN;
+      } else {
+        if (Entry.Utils.isRightButton(b)) {
+          var f = this, g = f.block;
+          if (this.isInBlockMenu) {
+            return;
+          }
+          var e = [], h = {text:"\ube14\ub85d \uc0ad\uc81c", enable:g.isDeletable(), callback:function() {
+            f.block.doDestroyAlone(!0);
+          }};
+          e.push({text:"\ube14\ub85d \ubcf5\uc0ac & \ubd99\uc5ec\ub123\uae30", callback:function() {
+            var a = g.copy(), b = a[0];
+            b.doAdd();
+            b.getThread().getCode().createThread(a);
+          }});
+          e.push({text:"\ube14\ub85d \ubcf5\uc0ac", callback:function() {
+            f.block.copyToClipboard();
+          }});
+          e.push(h);
+          Entry.ContextMenu.show(e);
         }
-        var e = [], h = {text:"\ube14\ub85d \uc0ad\uc81c", enable:g.isDeletable(), callback:function() {
-          f.block.doDestroyAlone(!0);
-        }};
-        e.push({text:"\ube14\ub85d \ubcf5\uc0ac & \ubd99\uc5ec\ub123\uae30", callback:function() {
-          var a = g.copy(), b = a[0];
-          b.doAdd();
-          b.getThread().getCode().createThread(a);
-        }});
-        e.push({text:"\ube14\ub85d \ubcf5\uc0ac", callback:function() {
-          f.block.copyToClipboard();
-        }});
-        e.push(h);
-        Entry.ContextMenu.show(e);
       }
+      var k = this, l = this.getBoard();
+      l.workspace.getMode() === Entry.Workspace.MODE_VIMBOARD && b && (e = new MouseEvent("dragStart", {view:window, bubbles:!0, cancelable:!0, clientX:b.clientX, clientY:b.clientY}), document.getElementsByClassName("CodeMirror")[0].dispatchEvent(e));
+      b.stopPropagation();
     }
-    var k = this, l = this.getBoard();
-    l.workspace.getMode() === Entry.Workspace.MODE_VIMBOARD && b && (e = new MouseEvent("dragStart", {view:window, bubbles:!0, cancelable:!0, clientX:b.clientX, clientY:b.clientY}), document.getElementsByClassName("CodeMirror")[0].dispatchEvent(e));
-    b.stopPropagation();
   };
   a.vimBoardEvent = function(a, c, d) {
     a && (a = new MouseEvent(c, {view:window, bubbles:!0, cancelable:!0, clientX:a.clientX, clientY:a.clientY}), d && (a.block = d), document.getElementsByClassName("CodeMirror")[0].dispatchEvent(a));
@@ -14046,6 +14053,9 @@ Entry.BlockView = function(a, b, c) {
   };
   a._setMovable = function() {
     this.movable = null !== this.block.isMovable() ? this.block.isMovable() : void 0 !== this._skeleton.movable ? this._skeleton.movable : !0;
+  };
+  a._setReadOnly = function() {
+    this.readOnly = null !== this.block.isReadOnly() ? this.block.isReadOnly() : void 0 !== this._skeleton.readOnly ? this._skeleton.readOnly : !1;
   };
 })(Entry.BlockView.prototype);
 Entry.Code = function(a) {
@@ -15147,7 +15157,7 @@ Entry.skeleton.basic_button = {path:function() {
   return {offsetX:-70, offsetY:0, width:140, height:30};
 }, contentPos:function() {
   return {x:0, y:15};
-}, movable:!1};
+}, movable:!1, readOnly:!0};
 Entry.Block = function(a, b) {
   Entry.Model(this, !1);
   this._schema = null;
@@ -15157,7 +15167,7 @@ Entry.Block = function(a, b) {
 Entry.Block.MAGNET_RANGE = 10;
 Entry.Block.MAGNET_OFFSET = .4;
 (function(a) {
-  a.schema = {id:null, name:null, x:0, y:0, type:null, params:[], statements:[], prev:null, next:null, view:null, thread:null, movable:null, deletable:!0, readOnly:!1};
+  a.schema = {id:null, name:null, x:0, y:0, type:null, params:[], statements:[], prev:null, next:null, view:null, thread:null, movable:null, deletable:!0, readOnly:null, events:null};
   a.load = function(a) {
     a.id || (a.id = Entry.Utils.generateId());
     this.set(a);

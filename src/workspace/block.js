@@ -39,7 +39,8 @@ Entry.Block.MAGNET_OFFSET = 0.4;
         thread: null,
         movable: null,
         deletable: true,
-        readOnly: false
+        readOnly: null,
+        events: null
     };
 
     p.load = function(block) {

@@ -34,6 +34,7 @@ Entry.BlockView = function(block, board, mode) {
     this.block.observe(this, "_bindPrev", ["prev"]);
     this.block.observe(this, "_createEmptyBG", ["next"]);
     this.block.observe(this, "_setMovable", ["movable"]);
+    this.block.observe(this, "_setReadOnly", ["movable"]);
     this.observe(this, "_updateBG", ["magneting"]);
     this.observe(this, "_updateOpacity", ["visible"]);
     this.observe(this, "_updateShadow", ["shadow"]);
@@ -263,6 +264,10 @@ Entry.BlockView = function(block, board, mode) {
     p._addControl = function() {
         var that = this;
         this.svgGroup.mousedown(function() {
+            var events = that.block.events;
+            if (events && events.mousedown)
+                events.mousedown.forEach(function(fn){fn();});
+
             that.onMouseDown.apply(that, arguments);
         });
     };
@@ -272,6 +277,8 @@ Entry.BlockView = function(block, board, mode) {
         e.preventDefault();
         if (Entry.documentMousedown)
             Entry.documentMousedown.notify();
+        if (this.readOnly) return;
+
         this.getBoard().setSelectedBlock(this);
         this.dominate();
         if (e.button === 0 || e instanceof Touch) {
@@ -298,7 +305,7 @@ Entry.BlockView = function(block, board, mode) {
         } else if (Entry.Utils.isRightButton(e)) {
             var that = this;
             var block = that.block;
-            if (this.isInBlockMenu || block.isReadOnly()) return;
+            if (this.isInBlockMenu) return;
 
             var options = [];
 
@@ -745,6 +752,11 @@ Entry.BlockView = function(block, board, mode) {
     p._setMovable = function() {
         this.movable = this.block.isMovable() !== null ? this.block.isMovable() :
             (this._skeleton.movable !== undefined ? this._skeleton.movable : true);
+    };
+
+    p._setReadOnly = function() {
+        this.readOnly = this.block.isReadOnly() !== null ? this.block.isReadOnly() :
+            (this._skeleton.readOnly !== undefined ? this._skeleton.readOnly : false);
     };
 
 })(Entry.BlockView.prototype);
