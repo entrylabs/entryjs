@@ -295,6 +295,12 @@ Entry.skeleton.basic_boolean_field = {
             marginBottom: 0
         };
     },
+    magnets: function() {
+        // apply scale required.
+        return {
+            previous: {}
+        };
+    },
     contentPos: function(block) {
         // apply scale required.
         return {x: 11, y: 11};

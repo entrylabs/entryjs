@@ -13587,14 +13587,14 @@ Entry.BlockMenu = function(a, b) {
   this.view = a;
   this.svgDom = Entry.Dom($('<svg id="blockMenu" width="100%" height="100%"version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'), {parent:a});
   this.offset = this.svgDom.offset();
-  this._svgWidth = this.svgDom.width();
+  this._splitters = [];
+  this._setWidth();
   this.snap = Snap("#blockMenu");
   this.svgGroup = this.snap.group();
   this.svgThreadGroup = this.svgGroup.group();
   this.svgThreadGroup.board = this;
   this.svgBlockGroup = this.svgGroup.group();
   this.svgBlockGroup.board = this;
-  this._splitters = [];
   this.changeEvent = new Entry.Event(this);
   Entry.documentMousedown && Entry.documentMousedown.attach(this, this.setSelectedBlock);
 };
@@ -13688,7 +13688,7 @@ Entry.BlockMenu = function(a, b) {
     this._splitters.push(a);
   };
   a._updateSplitters = function() {
-    var a = this.svgWidth - 30;
+    var a = this._svgWidth - 30;
     this._splitters.forEach(function(c) {
       c.attr({x2:a});
     });
@@ -13697,6 +13697,10 @@ Entry.BlockMenu = function(a, b) {
     for (var a = this._splitters, c = a.length - 1;0 <= c;c--) {
       a[c].remove(), a.pop();
     }
+  };
+  a._setWidth = function() {
+    this._svgWidth = this.svgDom.width();
+    this._updateSplitters();
   };
 })(Entry.BlockMenu.prototype);
 Entry.BlockView = function(a, b, c) {
@@ -15213,6 +15217,8 @@ Entry.skeleton.basic_boolean_field = {path:function(a) {
   return "m 11,0 h %w l 10,10 -10,10 H 11 l -10,-10 10,-10 z ".replace(/%w/gi, b).replace(/%h/gi, a);
 }, box:function(a) {
   return {offsetX:0, offsetY:0, width:(a ? a.contentWidth : 5) + 20, height:a ? a.contentHeight : 20, marginBottom:0};
+}, magnets:function() {
+  return {previous:{}};
 }, contentPos:function(a) {
   return {x:11, y:11};
 }};

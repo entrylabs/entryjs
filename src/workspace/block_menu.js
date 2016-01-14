@@ -31,7 +31,8 @@ Entry.BlockMenu = function(dom, align) {
     );
 
     this.offset = this.svgDom.offset();
-    this._svgWidth = this.svgDom.width();
+    this._splitters = [];
+    this._setWidth();
 
     this.snap = Snap('#blockMenu');
 
@@ -43,7 +44,6 @@ Entry.BlockMenu = function(dom, align) {
     this.svgBlockGroup = this.svgGroup.group();
     this.svgBlockGroup.board = this;
 
-    this._splitters = [];
 
     this.changeEvent = new Entry.Event(this);
     //TODO scroller should be attached
@@ -199,7 +199,7 @@ Entry.BlockMenu = function(dom, align) {
 
     p._updateSplitters = function() {
         var splitters = this._splitters;
-        var width = this. svgWidth;
+        var width = this._svgWidth;
         var hPadding = 30;
         var dest = width - hPadding;
         splitters.forEach(function(line) {
@@ -213,6 +213,11 @@ Entry.BlockMenu = function(dom, align) {
             splitters[i].remove();
             splitters.pop();
         }
+    };
+
+    p._setWidth = function() {
+        this._svgWidth = this.svgDom.width();
+        this._updateSplitters();
     };
 
 })(Entry.BlockMenu.prototype);
