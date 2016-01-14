@@ -13952,16 +13952,18 @@ Entry.BlockView = function(a, b, c) {
     delete this.originPos;
   };
   a._getCloseBlock = function() {
-    var a = this.getBoard(), c = this.x, d = this.y, e = a.relativeOffset, c = c + e.left;
-    if (c + this.offsetX < a.offset.left) {
-      return null;
-    }
-    a = Snap.getElementByPoint(c, d + e.top - 1);
-    if (null !== a) {
-      for (c = a.block;!c && a.parent() && "svg" !== a.type && "BODY" !== a.type;) {
-        a = a.parent(), c = a.block;
+    if (this._skeleton.magnets && this._skeleton.magnets().previous) {
+      var a = this.getBoard(), c = this.x, d = this.y, e = a.relativeOffset, c = c + e.left;
+      if (c + this.offsetX < a.offset.left) {
+        return null;
       }
-      return void 0 === c || c === this.block ? null : c;
+      a = Snap.getElementByPoint(c, d + e.top - 1);
+      if (null !== a) {
+        for (c = a.block;!c && a.parent() && "svg" !== a.type && "BODY" !== a.type;) {
+          a = a.parent(), c = a.block;
+        }
+        return void 0 === c || c === this.block ? null : c;
+      }
     }
   };
   a._inheritAnimate = function() {

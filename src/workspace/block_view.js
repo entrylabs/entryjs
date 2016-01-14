@@ -534,6 +534,8 @@ Entry.BlockView = function(block, board, mode) {
     };
 
     p._getCloseBlock = function() {
+        if (!this._skeleton.magnets || !this._skeleton.magnets().previous)
+            return;
         var board = this.getBoard();
         var x = this.x,
             y = this.y;
