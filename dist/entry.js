@@ -3372,43 +3372,18 @@ Blockly.Blocks.bounce_wall = {init:function() {
 Entry.block.bounce_wall = function(a, b) {
   var c = a.parent.getRotateMethod(), d = "free" == c ? (a.getRotation() + a.getDirection()).mod(360) : a.getDirection(), e = Entry.Utils.COLLISION.NONE;
   if (90 > d && 0 <= d || 360 > d && 270 <= d) {
-    if (e = a.collision == Entry.Utils.COLLISION.UP, e = ndgmr.checkPixelCollision(Entry.stage.wall.up, a.object, 0, !1, e)) {
-      "free" == c ? a.setRotation(-a.getRotation() - 2 * a.getDirection() + 180) : a.setDirection(-a.getDirection() + 180), a.collision = Entry.Utils.COLLISION.UP;
-    } else {
-      if (e = a.collision == Entry.Utils.COLLISION.DOWN, e = ndgmr.checkPixelCollision(Entry.stage.wall.down, a.object, 0, !1, e)) {
-        "free" == c ? a.setRotation(-a.getRotation() - 2 * a.getDirection() + 180) : a.setDirection(-a.getDirection() + 180), a.collision = Entry.Utils.COLLISION.DOWN;
-      }
-    }
+    var e = a.collision == Entry.Utils.COLLISION.UP, f = ndgmr.checkPixelCollision(Entry.stage.wall.up, a.object, 0, !1);
+    !f && e && (a.collision = Entry.Utils.COLLISION.NONE);
+    f && e && (f = !1);
+    f ? ("free" == c ? a.setRotation(-a.getRotation() - 2 * a.getDirection() + 180) : a.setDirection(-a.getDirection() + 180), a.collision = Entry.Utils.COLLISION.UP) : (e = a.collision == Entry.Utils.COLLISION.DOWN, f = ndgmr.checkPixelCollision(Entry.stage.wall.down, a.object, 0, !1), !f && e && (a.collision = Entry.Utils.COLLISION.NONE), f && e && (f = !1), f && ("free" == c ? a.setRotation(-a.getRotation() - 2 * a.getDirection() + 180) : a.setDirection(-a.getDirection() + 180), a.collision = 
+    Entry.Utils.COLLISION.DOWN));
   } else {
-    if (270 > d && 90 <= d) {
-      if (e = a.collision == Entry.Utils.COLLISION.DOWN, e = ndgmr.checkPixelCollision(Entry.stage.wall.down, a.object, 0, !1, e)) {
-        "free" == c ? a.setRotation(-a.getRotation() - 2 * a.getDirection() + 180) : a.setDirection(-a.getDirection() + 180), a.collision = Entry.Utils.COLLISION.DOWN;
-      } else {
-        if (e = a.collision == Entry.Utils.COLLISION.UP, e = ndgmr.checkPixelCollision(Entry.stage.wall.up, a.object, 0, !1, e)) {
-          "free" == c ? a.setRotation(-a.getRotation() - 2 * a.getDirection() + 180) : a.setDirection(-a.getDirection() + 180), a.collision = Entry.Utils.COLLISION.UP;
-        }
-      }
-    }
+    270 > d && 90 <= d && (e = a.collision == Entry.Utils.COLLISION.DOWN, f = ndgmr.checkPixelCollision(Entry.stage.wall.down, a.object, 0, !1), !f && e && (a.collision = Entry.Utils.COLLISION.NONE), f && e && (f = !1), f ? ("free" == c ? a.setRotation(-a.getRotation() - 2 * a.getDirection() + 180) : a.setDirection(-a.getDirection() + 180), a.collision = Entry.Utils.COLLISION.DOWN) : (e = a.collision == Entry.Utils.COLLISION.UP, f = ndgmr.checkPixelCollision(Entry.stage.wall.up, a.object, 0, !1), 
+    !f && e && (a.collision = Entry.Utils.COLLISION.NONE), f && e && (f = !1), f && ("free" == c ? a.setRotation(-a.getRotation() - 2 * a.getDirection() + 180) : a.setDirection(-a.getDirection() + 180), a.collision = Entry.Utils.COLLISION.UP)));
   }
-  if (360 > d && 180 <= d) {
-    if (e = a.collision == Entry.Utils.COLLISION.LEFT, d = ndgmr.checkPixelCollision(Entry.stage.wall.left, a.object, 0, !1, e)) {
-      "free" == c ? a.setRotation(-a.getRotation() - 2 * a.getDirection()) : a.setDirection(-a.getDirection() + 360), a.collision = Entry.Utils.COLLISION.LEFT;
-    } else {
-      if (e = a.collision == Entry.Utils.COLLISION.RIGHT, d = ndgmr.checkPixelCollision(Entry.stage.wall.right, a.object, 0, !1, e)) {
-        "free" == c ? a.setRotation(-a.getRotation() - 2 * a.getDirection()) : a.setDirection(-a.getDirection() + 360), a.collision = Entry.Utils.COLLISION.RIGHT;
-      }
-    }
-  } else {
-    if (180 > d && 0 <= d) {
-      if (e = a.collision == Entry.Utils.COLLISION.RIGHT, d = ndgmr.checkPixelCollision(Entry.stage.wall.right, a.object, 0, !1, e)) {
-        "free" == c ? a.setRotation(-a.getRotation() - 2 * a.getDirection()) : a.setDirection(-a.getDirection() + 360), a.collision = Entry.Utils.COLLISION.RIGHT;
-      } else {
-        if (e = a.collision == Entry.Utils.COLLISION.LEFT, d = ndgmr.checkPixelCollision(Entry.stage.wall.left, a.object, 0, !1, e)) {
-          "free" == c ? a.setRotation(-a.getRotation() - 2 * a.getDirection()) : a.setDirection(-a.getDirection() + 360), a.collision = Entry.Utils.COLLISION.LEFT;
-        }
-      }
-    }
-  }
+  360 > d && 180 <= d ? (e = a.collision == Entry.Utils.COLLISION.LEFT, d = ndgmr.checkPixelCollision(Entry.stage.wall.left, a.object, 0, !1), !d && e && (a.collision = Entry.Utils.COLLISION.NONE), d && e && (d = !1), d ? ("free" == c ? a.setRotation(-a.getRotation() - 2 * a.getDirection()) : a.setDirection(-a.getDirection() + 360), a.collision = Entry.Utils.COLLISION.LEFT) : (e = a.collision == Entry.Utils.COLLISION.RIGHT, d = ndgmr.checkPixelCollision(Entry.stage.wall.right, a.object, 0, !1), !d && 
+  e && (a.collision = Entry.Utils.COLLISION.NONE), d && e && (d = !1), d && ("free" == c ? a.setRotation(-a.getRotation() - 2 * a.getDirection()) : a.setDirection(-a.getDirection() + 360), a.collision = Entry.Utils.COLLISION.RIGHT))) : 180 > d && 0 <= d && (e = a.collision == Entry.Utils.COLLISION.RIGHT, d = ndgmr.checkPixelCollision(Entry.stage.wall.right, a.object, 0, !1), !d && e && (a.collision = Entry.Utils.COLLISION.NONE), d && e && (d = !1), d ? ("free" == c ? a.setRotation(-a.getRotation() - 
+  2 * a.getDirection()) : a.setDirection(-a.getDirection() + 360), a.collision = Entry.Utils.COLLISION.RIGHT) : (e = a.collision == Entry.Utils.COLLISION.LEFT, d = ndgmr.checkPixelCollision(Entry.stage.wall.left, a.object, 0, !1), !d && e && (a.collision = Entry.Utils.COLLISION.NONE), d && e && (d = !1), d && ("free" == c ? a.setRotation(-a.getRotation() - 2 * a.getDirection()) : a.setDirection(-a.getDirection() + 360), a.collision = Entry.Utils.COLLISION.LEFT)));
   return b.callReturn();
 };
 Blockly.Blocks.flip_arrow_horizontal = {init:function() {

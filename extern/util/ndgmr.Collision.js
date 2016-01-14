@@ -57,9 +57,7 @@ this.ndgmr = this.ndgmr || {};
   }
   ndgmr.checkRectCollision = checkRectCollision;
 
-  var checkPixelCollision = function(bitmap1, bitmap2, alphaThreshold, getRect, skip) {
-    if (skip)
-        return false;
+  var checkPixelCollision = function(bitmap1, bitmap2, alphaThreshold, getRect) {
     //display the intersecting canvases for debugging
     if ( ndgmr.DEBUG || ndgmr.DEBUG_COLLISION ) {
       document.body.appendChild(collisionCanvas);
