@@ -3370,42 +3370,41 @@ Blockly.Blocks.bounce_wall = {init:function() {
   this.setNextStatement(!0);
 }};
 Entry.block.bounce_wall = function(a, b) {
-  var c = a.parent.getRotateMethod(), d = a.object.getTransformedBounds(), e = "free" == c ? (a.getRotation() + a.getDirection()).mod(360) : a.getDirection();
-  if (90 > e && 0 <= e || 360 > e && 270 <= e) {
-    var f = ndgmr.checkPixelCollision(Entry.stage.wall.up, a.object, 0, !1);
-    if (f) {
-      "free" == c ? a.setRotation(-a.getRotation() - 2 * a.getDirection() + 180) : a.setDirection(-a.getDirection() + 180), a.setY(135 - d.height / 2 - 1);
+  var c = a.parent.getRotateMethod(), d = "free" == c ? (a.getRotation() + a.getDirection()).mod(360) : a.getDirection(), e = Entry.Utils.COLLISION.NONE;
+  if (90 > d && 0 <= d || 360 > d && 270 <= d) {
+    if (e = a.collision == Entry.Utils.COLLISION.UP, e = ndgmr.checkPixelCollision(Entry.stage.wall.up, a.object, 0, !1, e)) {
+      "free" == c ? a.setRotation(-a.getRotation() - 2 * a.getDirection() + 180) : a.setDirection(-a.getDirection() + 180), a.collision = Entry.Utils.COLLISION.UP;
     } else {
-      if (f = ndgmr.checkPixelCollision(Entry.stage.wall.down, a.object, 0, !1)) {
-        "free" == c ? a.setRotation(-a.getRotation() - 2 * a.getDirection() + 180) : a.setDirection(-a.getDirection() + 180), a.setY(d.height / 2 + -134);
+      if (e = a.collision == Entry.Utils.COLLISION.DOWN, e = ndgmr.checkPixelCollision(Entry.stage.wall.down, a.object, 0, !1, e)) {
+        "free" == c ? a.setRotation(-a.getRotation() - 2 * a.getDirection() + 180) : a.setDirection(-a.getDirection() + 180), a.collision = Entry.Utils.COLLISION.DOWN;
       }
     }
   } else {
-    if (270 > e && 90 <= e) {
-      if (f = ndgmr.checkPixelCollision(Entry.stage.wall.down, a.object, 0, !1)) {
-        "free" == c ? a.setRotation(-a.getRotation() - 2 * a.getDirection() + 180) : a.setDirection(-a.getDirection() + 180), a.setY(d.height / 2 + -134);
+    if (270 > d && 90 <= d) {
+      if (e = a.collision == Entry.Utils.COLLISION.DOWN, e = ndgmr.checkPixelCollision(Entry.stage.wall.down, a.object, 0, !1, e)) {
+        "free" == c ? a.setRotation(-a.getRotation() - 2 * a.getDirection() + 180) : a.setDirection(-a.getDirection() + 180), a.collision = Entry.Utils.COLLISION.DOWN;
       } else {
-        if (f = ndgmr.checkPixelCollision(Entry.stage.wall.up, a.object, 0, !1)) {
-          "free" == c ? a.setRotation(-a.getRotation() - 2 * a.getDirection() + 180) : a.setDirection(-a.getDirection() + 180), a.setY(135 - d.height / 2 - 1);
+        if (e = a.collision == Entry.Utils.COLLISION.UP, e = ndgmr.checkPixelCollision(Entry.stage.wall.up, a.object, 0, !1, e)) {
+          "free" == c ? a.setRotation(-a.getRotation() - 2 * a.getDirection() + 180) : a.setDirection(-a.getDirection() + 180), a.collision = Entry.Utils.COLLISION.UP;
         }
       }
     }
   }
-  if (360 > e && 180 <= e) {
-    if (e = ndgmr.checkPixelCollision(Entry.stage.wall.left, a.object, 0, !1)) {
-      "free" == c ? a.setRotation(-a.getRotation() - 2 * a.getDirection()) : a.setDirection(-a.getDirection() + 360), a.setX(d.width / 2 + -239);
+  if (360 > d && 180 <= d) {
+    if (e = a.collision == Entry.Utils.COLLISION.LEFT, d = ndgmr.checkPixelCollision(Entry.stage.wall.left, a.object, 0, !1, e)) {
+      "free" == c ? a.setRotation(-a.getRotation() - 2 * a.getDirection()) : a.setDirection(-a.getDirection() + 360), a.collision = Entry.Utils.COLLISION.LEFT;
     } else {
-      if (e = ndgmr.checkPixelCollision(Entry.stage.wall.right, a.object, 0, !1)) {
-        "free" == c ? a.setRotation(-a.getRotation() - 2 * a.getDirection()) : a.setDirection(-a.getDirection() + 360), a.setX(240 - d.width / 2 - 1);
+      if (e = a.collision == Entry.Utils.COLLISION.RIGHT, d = ndgmr.checkPixelCollision(Entry.stage.wall.right, a.object, 0, !1, e)) {
+        "free" == c ? a.setRotation(-a.getRotation() - 2 * a.getDirection()) : a.setDirection(-a.getDirection() + 360), a.collision = Entry.Utils.COLLISION.RIGHT;
       }
     }
   } else {
-    if (180 > e && 0 <= e) {
-      if (e = ndgmr.checkPixelCollision(Entry.stage.wall.right, a.object, 0, !1)) {
-        "free" == c ? a.setRotation(-a.getRotation() - 2 * a.getDirection()) : a.setDirection(-a.getDirection() + 360), a.setX(240 - d.width / 2 - 1);
+    if (180 > d && 0 <= d) {
+      if (e = a.collision == Entry.Utils.COLLISION.RIGHT, d = ndgmr.checkPixelCollision(Entry.stage.wall.right, a.object, 0, !1, e)) {
+        "free" == c ? a.setRotation(-a.getRotation() - 2 * a.getDirection()) : a.setDirection(-a.getDirection() + 360), a.collision = Entry.Utils.COLLISION.RIGHT;
       } else {
-        if (e = ndgmr.checkPixelCollision(Entry.stage.wall.left, a.object, 0, !1)) {
-          "free" == c ? a.setRotation(-a.getRotation() - 2 * a.getDirection()) : a.setDirection(-a.getDirection() + 360), a.setX(d.width / 2 + -239);
+        if (e = a.collision == Entry.Utils.COLLISION.LEFT, d = ndgmr.checkPixelCollision(Entry.stage.wall.left, a.object, 0, !1, e)) {
+          "free" == c ? a.setRotation(-a.getRotation() - 2 * a.getDirection()) : a.setDirection(-a.getDirection() + 360), a.collision = Entry.Utils.COLLISION.LEFT;
         }
       }
     }
@@ -5779,6 +5778,7 @@ Entry.EntityObject = function(a) {
   this.type = a.objectType;
   this.runningScript = [];
   this.flip = !1;
+  this.collision = Entry.Utils.COLLISION.NONE;
   this.id = Entry.generateHash();
   "sprite" == this.type ? (this.object = new createjs.Bitmap, this.effect = {}, this.setInitialEffectValue()) : "textBox" == this.type && (this.object = new createjs.Container, this.textObject = new createjs.Text, this.textObject.font = "20px Nanum Gothic", this.textObject.textBaseline = "middle", this.textObject.textAlign = "center", this.bgObject = new createjs.Shape, this.bgObject.graphics.setStrokeStyle(1).beginStroke("#f00").drawRect(0, 0, 100, 100), this.object.addChild(this.bgObject), this.object.addChild(this.textObject), 
   this.fontType = "Nanum Gothic", this.fontSize = 20, this.strike = this.underLine = this.fontItalic = this.fontBold = !1);
@@ -6155,6 +6155,7 @@ Entry.EntityObject.prototype.updateDialog = function() {
 };
 Entry.EntityObject.prototype.takeSnapshot = function() {
   this.snapshot_ = this.toJSON();
+  this.collision = Entry.Utils.COLLISION.NONE;
 };
 Entry.EntityObject.prototype.loadSnapshot = function() {
   this.snapshot_ && this.syncModel_(this.snapshot_);
@@ -10841,6 +10842,7 @@ Entry.Utils.disableContextmenu = function(a) {
 Entry.Utils.isRightButton = function(a) {
   return 2 == a.button || a.ctrlKey;
 };
+Entry.Utils.COLLISION = {NONE:0, UP:1, RIGHT:2, LEFT:3, DOWN:4};
 Entry.Model = function(a, b) {
   var c = Entry.Model;
   c.generateSchema(a);
