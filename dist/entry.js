@@ -3811,7 +3811,7 @@ Entry.block.neobot_play_note_for = function(a, b) {
   c.sound_check = (1E5 * Math.random()).toFixed(0);
   setTimeout(function() {
     b.timeFlag = 0;
-  }, 1 / f * 4E3);
+  }, 1 / f * 2E3);
   return b;
 };
 Blockly.Blocks.neobot_set_sensor_value = {init:function() {

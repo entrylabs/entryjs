@@ -383,7 +383,7 @@ Entry.block.neobot_play_note_for = function (sprite, script) {
         sq.sound_check = (Math.random() * 100000).toFixed(0);
         setTimeout(function() {
             script.timeFlag = 0;
-        }, 1 / duration * 4000);
+        }, 1 / duration * 2000);
         return script;
     } else if (script.timeFlag == 1) {
         return script;
