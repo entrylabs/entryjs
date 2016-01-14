@@ -3649,7 +3649,8 @@ Entry.Neobot = {name:"neobot", PORT_MAP:{1:0, 2:0, 3:0, SERVO1:0, SERVO2:0, SERV
     Entry.hw.sendQueue[a] = Entry.Neobot.PORT_MAP[a];
   }
   Entry.hw.update();
-}, monitorTemplate:{ports:{1:{name:"1\ubc88 \ud3ec\ud2b8", type:"input"}, 2:{name:"2\ubc88 \ud3ec\ud2b8", type:"input"}, 3:{name:"3\ubc88 \ud3ec\ud2b8", type:"input"}, LMOT:{name:"\uc67c\ucabd \ubaa8\ud130", type:"output"}, RMOT:{name:"\uc624\ub978\ucabd \ubaa8\ud130", type:"output"}, note:{name:"\ubd80\uc800", type:"output"}, SERVO1:{name:"SERVO \ubaa8\ud130 1", type:"output"}, SERVO2:{name:"SERVO \ubaa8\ud130 2", type:"output"}}}};
+}, monitorTemplate:{imgPath:"hw/neobot.png", width:268, height:270, ports:{1:{name:"1\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:78, y:9}}, 2:{name:"2\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:115, y:9}}, 3:{name:"3\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:153, y:9}}, LMOT:{name:"\uc67c\ucabd \ubaa8\ud130", type:"output", pos:{x:78, y:259}}, RMOT:{name:"\uc624\ub978\ucabd \ubaa8\ud130", type:"output", pos:{x:191, y:259}}, note:{name:"\ubd80\uc800", type:"output", pos:{x:98, y:184}}, SERVO1:{name:"SERVO \ubaa8\ud130 1", 
+type:"output", pos:{x:115, y:259}}, SERVO2:{name:"SERVO \ubaa8\ud130 2", type:"output", pos:{x:191, y:9}}}}};
 Blockly.Blocks.neobot_sensor_value = {init:function() {
   this.setColour("#00979D");
   this.appendDummyInput().appendField("").appendField(new Blockly.FieldDropdown([["1\ubc88 \ud3ec\ud2b8", "1"], ["2\ubc88 \ud3ec\ud2b8", "2"], ["3\ubc88 \ud3ec\ud2b8", "3"], ["\ub9ac\ubaa8\ucee8", "4"]]), "PORT").appendField(" \uac12");
@@ -4856,14 +4857,14 @@ Entry.Container = function() {
   this.currentObjects_ = this.copiedObject = null;
 };
 Entry.Container.prototype.generateView = function(a, b) {
-  this.view_ = a;
-  this.view_.addClass("entryContainer");
+  this._view = a;
+  this._view.addClass("entryContainer");
   if (b && "workspace" != b) {
-    "phone" == b && (this.view_.addClass("entryContainerPhone"), c = Entry.createElement("div"), c.addClass("entryAddObjectWorkspace"), c.innerHTML = Lang.Workspace.add_object, c.bindOnClick(function(a) {
+    "phone" == b && (this._view.addClass("entryContainerPhone"), c = Entry.createElement("div"), c.addClass("entryAddObjectWorkspace"), c.innerHTML = Lang.Workspace.add_object, c.bindOnClick(function(a) {
       Entry.dispatchEvent("openSpriteManager");
-    }), c = Entry.createElement("div"), c.addClass("entryContainerListPhoneWrapper"), this.view_.appendChild(c), d = Entry.createElement("ul"), d.addClass("entryContainerListPhone"), c.appendChild(d), this.listView_ = d);
+    }), c = Entry.createElement("div"), c.addClass("entryContainerListPhoneWrapper"), this._view.appendChild(c), d = Entry.createElement("ul"), d.addClass("entryContainerListPhone"), c.appendChild(d), this.listView_ = d);
   } else {
-    this.view_.addClass("entryContainerWorkspace");
+    this._view.addClass("entryContainerWorkspace");
     var c = Entry.createElement("div");
     c.addClass("entryAddObjectWorkspace");
     c.innerHTML = Lang.Workspace.add_object;
@@ -4879,7 +4880,7 @@ Entry.Container.prototype.generateView = function(a, b) {
         Entry.container.copiedObject ? Entry.container.addCloneObject(Entry.container.copiedObject) : Entry.toast.alert(Lang.Workspace.add_object_alert, Lang.Workspace.object_not_found_for_paste);
       }}], "workspace-contextmenu");
     });
-    this.view_.appendChild(c);
+    this._view.appendChild(c);
     var d = Entry.createElement("ul");
     d.addClass("entryContainerListWorkspace");
     c.appendChild(d);
@@ -5254,7 +5255,7 @@ Entry.Container.prototype.getProjectWithJSON = function(a) {
   return a;
 };
 Entry.Container.prototype.generateTabView = function() {
-  var a = this.view_, b = this;
+  var a = this._view, b = this;
   this.tabViews = [];
   var c = Entry.createElement("div");
   c.addClass("entryContainerTabViewWorkspace");
@@ -5322,13 +5323,13 @@ Entry.Container.prototype.changeTabView = function(a) {
   this.movieContainer.addClass("entryHide");
   this.doneContainer.addClass("entryHide");
   this.helperContainer.addClass("entryHide");
-  "object" == a ? b[0].addClass("selected") : "movie" == a ? (a = this.view_, a = a.style.width.substring(0, a.style.width.length - 2), this.movieFrame.setAttribute("width", a), this.movieFrame.setAttribute("height", 9 * a / 16), this.movieContainer.removeClass("entryHide"), b[1].addClass("selected")) : "done" == a ? (c = $(this.doneContainer).height(), a = $(this.doneContainer).width(), 9 * a / 16 + 35 < c ? c = 9 * a / 16 + 35 : a = (c - 35) / 9 * 16, this.doneProjectFrame.setAttribute("width", 
+  "object" == a ? b[0].addClass("selected") : "movie" == a ? (a = this._view, a = a.style.width.substring(0, a.style.width.length - 2), this.movieFrame.setAttribute("width", a), this.movieFrame.setAttribute("height", 9 * a / 16), this.movieContainer.removeClass("entryHide"), b[1].addClass("selected")) : "done" == a ? (c = $(this.doneContainer).height(), a = $(this.doneContainer).width(), 9 * a / 16 + 35 < c ? c = 9 * a / 16 + 35 : a = (c - 35) / 9 * 16, this.doneProjectFrame.setAttribute("width", 
   a), this.doneProjectFrame.setAttribute("height", c), this.doneContainer.removeClass("entryHide"), b[2].addClass("selected")) : "helper" == a && (Entry.helper.blockHelperOn(), this.helperContainer.removeClass("entryHide"), b[3].addClass("selected"));
 };
 Entry.Container.prototype.initYoutube = function(a) {
   this.youtubeHash = a;
   this.youtubeTab.removeClass("entryRemove");
-  a = this.view_;
+  a = this._view;
   a = a.style.width.substring(0, a.style.width.length - 2);
   var b = this.movieContainer, c = Entry.createElement("iframe");
   c.setAttribute("width", a);
@@ -5342,7 +5343,7 @@ Entry.Container.prototype.initYoutube = function(a) {
 Entry.Container.prototype.initTvcast = function(a) {
   this.tvcast = a;
   this.youtubeTab.removeClass("entryRemove");
-  a = this.view_;
+  a = this._view;
   a = a.style.width.substring(0, a.style.width.length - 2);
   var b = this.movieContainer, c = Entry.createElement("iframe");
   c.setAttribute("width", a);
@@ -5356,7 +5357,7 @@ Entry.Container.prototype.initTvcast = function(a) {
 Entry.Container.prototype.initDoneProject = function(a) {
   this.doneProject = a;
   this.iframeTab.removeClass("entryRemove");
-  a = this.view_;
+  a = this._view;
   a = a.style.width.substring(0, a.style.width.length - 2);
   var b = Entry.createElement("iframe");
   b.setAttribute("width", a);
@@ -5390,6 +5391,11 @@ Entry.Container.prototype.hideProjectAnswer = function(a) {
     }
     b.setVisible(!1);
   }
+};
+Entry.Container.prototype.getView = function() {
+  return this._view;
+};
+Entry.Container.prototype.resize = function() {
 };
 Entry.db = {data:{}, typeMap:{}};
 (function(a) {
@@ -6426,28 +6432,64 @@ p.renderBlock = function(a) {
 Entry.HWMontior = {};
 Entry.HWMonitor = function(a) {
   this.svgDom = Entry.Dom($('<svg id="hwMonitor" class="hwMonitor" width="100%" height="100%"version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'), {parent:this.view});
+  var b = this;
+  Entry.addEventListener("windowResized", function() {
+    b.resize();
+  });
   this._hwModule = a;
   this._portViews = {};
+  this._portMap = {n:[], e:[], s:[], w:[]};
 };
 (function(a) {
   a.generateView = function() {
     this.snap = Snap("#hwMonitor");
-    var a = this._hwModule.monitorTemplate.ports, c = 0, d;
+    this._svgGroup = this.snap.group();
+    var a = this._hwModule.monitorTemplate;
+    this.hwView = this._svgGroup.group();
+    this.hwView.image(Entry.mediaFilePath + "hw/neobot.png", -a.width / 2, -a.height / 2, a.width, a.height);
+    this._template = a;
+    var a = a.ports, c = [], d;
     for (d in a) {
       var e = this.generatePortView(a[d]);
       this._portViews[d] = e;
-      e.group.attr({transform:"t0," + c});
-      c += 30;
+      c.push(e);
     }
+    c.sort(function(a, b) {
+      return a.box.x - b.box.x;
+    });
+    var f = this._portMap;
+    c.map(function(a) {
+      switch(Math.round(Math.atan2(a.box.y, a.box.x) / Math.PI * 2)) {
+        case -1:
+          f.n.push(a);
+          break;
+        case 0:
+          f.e.push(a);
+          break;
+        case 1:
+          f.s.push(a);
+          break;
+        case 2:
+          f.w.push(a);
+      }
+    });
+    console.log(c);
+    this.resize();
   };
   a.generatePortView = function(a) {
-    var c = this.snap.group();
-    c.rect(0, 0, 150, 30);
-    this.snap.text(0, 0, a.name);
-    c.text(0, 15, a.name).attr({fill:"#fff"});
-    var d = c.text(100, 15, 0);
-    d.attr({fill:"#fff"});
-    return {group:c, value:d, type:a.type};
+    var c = this._svgGroup.group();
+    c.addClass("hwComponent");
+    var d = c.rect(0, 0, 150, 22, 4);
+    d.attr({fill:"#fff", stroke:"#a0a1a1"});
+    var e = c.text(4, 12, a.name);
+    e.attr({fill:"#000", "class":"hwComponentName", "alignment-baseline":"central"});
+    e = e.node.getComputedTextLength();
+    c.rect(e + 8, 2, 30, 18, 9).attr({fill:"input" === a.type ? "#00979d" : "#A751E3"});
+    var f = c.text(e + 13, 12, "0");
+    f.attr({fill:"#fff", "class":"hwComponentValue", "alignment-baseline":"central"});
+    e += 40;
+    d.attr({width:e + "px"});
+    return {group:c, value:f, type:a.type, box:{x:a.pos.x - this._template.width / 2, y:a.pos.y - this._template.height / 2, width:e}, width:e};
   };
   a.getView = function() {
     return this.svgDom;
@@ -6459,9 +6501,34 @@ Entry.HWMonitor = function(a) {
       e.value.attr({text:f ? f : 0});
     }
   };
-  a.resize = function(a) {
-    this._view.css({width:a + "px", top:9 * a / 16 + 123 - 22 + "px"});
-    430 <= a ? this._view.removeClass("collapsed") : this._view.addClass("collapsed");
+  a.resize = function() {
+    var a = this.svgDom.get(0).getBoundingClientRect();
+    this._svgGroup.attr({transform:"t" + a.width / 2 + "," + a.height / 2});
+    this._rect = a;
+    this.align();
+  };
+  a.align = function() {
+    for (var a = this._portMap.n, c = a.length, d = 0;d < a.length;d++) {
+      a[d].group.attr({transform:"t" + this._template.width * (d / c - .5) + "," + (-this._template.width / 2 - 30)});
+    }
+    a = this._portMap.s.concat();
+    this._alignNS(a, this._template.width / 2 + 5, 27);
+    a = this._portMap.n.concat();
+    this._alignNS(a, -this._template.width / 2 - 32, -27);
+  };
+  a._alignNS = function(a, c, d) {
+    for (var e = -this._rect.width / 2, f = this._rect.width / 2, g = this._rect.width, h = 0, k = 0;k < a.length;k++) {
+      h += a[k].width + 5;
+    }
+    for (;1 < a.length;) {
+      var k = a.shift(), l = a.pop(), n = d;
+      h < f - e ? (e += k.width + 5, f -= l.width + 5, d = 0) : 0 === a.length ? (e = (e + f) / 2 - 3, f = e + 6) : (e = Math.max(e, -g / 2 + k.width) + 15, f = Math.min(f, g / 2 - l.width) - 15);
+      k.group.attr({transform:"t" + (e - k.width) + "," + c});
+      l.group.attr({transform:"t" + f + "," + c});
+      h -= k.width + l.width + 10;
+      c += n;
+    }
+    a.length && a[0].group.attr({transform:"t" + (f + e - a[0].width) / 2 + "," + c});
   };
 })(Entry.HWMonitor.prototype);
 Entry.HW = function() {
@@ -6556,7 +6623,7 @@ p.setZero = function() {
   Entry.hw.hwModule && Entry.hw.hwModule.setZero();
 };
 p.checkDevice = function(a) {
-  void 0 !== a.company && (a = "" + a.company + a.model, a != this.selectedDevice && (this.selectedDevice = a, this.hwModule = this.hwInfo[a], Entry.dispatchEvent("hwChanged"), Entry.toast.success(Lang.Menus.connect_hw, Lang.Menus.connect_message.replace("%1", Lang.Device[Entry.hw.hwModule.name]), !1), this.hwModule.monitorTemplate && (this.hwMonitor = new Entry.HWMonitor(this.hwModule), Entry.propertyPanel.addMode("hw", this.hwMonitor.getView()), this.hwMonitor.generateView())));
+  void 0 !== a.company && (a = "" + a.company + a.model, a != this.selectedDevice && (this.selectedDevice = a, this.hwModule = this.hwInfo[a], Entry.dispatchEvent("hwChanged"), Entry.toast.success(Lang.Menus.connect_hw, Lang.Menus.connect_message.replace("%1", Lang.Device[Entry.hw.hwModule.name]), !1), this.hwModule.monitorTemplate && (this.hwMonitor = new Entry.HWMonitor(this.hwModule), Entry.propertyPanel.addMode("hw", this.hwMonitor), this.hwMonitor.generateView())));
 };
 p.banHW = function() {
   var a = this.hwInfo, b;
@@ -6710,12 +6777,6 @@ Entry.EntryObject.prototype.generateView = function() {
     Entry.objectEditable && Entry.objectDeletable && (d = Entry.createElement("div"), d.addClass("entryObjectDeleteWorkspace"), d.object = this, this.deleteView_ = d, this.view_.appendChild(d), d.bindOnClick(function(a) {
       Entry.engine.isState("run") || Entry.container.removeObject(this.object);
     }));
-    d = Entry.createElement("div");
-    d.addClass("entryObjectSelectedImgWorkspace");
-    this.selectedImgView_ = d;
-    this.view_.appendChild(d);
-    this.initializeSplitter(d);
-    this.splitter = d;
     d = Entry.createElement("div");
     d.addClass("entryObjectInformationWorkspace");
     d.object = this;
@@ -9496,25 +9557,32 @@ Entry.getStartProject = function(a) {
 };
 Entry.PropertyPanel = function() {
   this.modes = {};
+  this.selected = null;
 };
 (function(a) {
   a.generateView = function(a, c) {
     this._view = Entry.Dom("div", {class:"propertyPanel", parent:$(a)});
     this._tabView = Entry.Dom("div", {class:"propertyTab", parent:this._view});
     this._contentView = Entry.Dom("div", {class:"propertyContent", parent:this._view});
+    var d = Entry.createElement("div");
+    d.addClass("entryObjectSelectedImgWorkspace");
+    this.selectedImgView_ = d;
+    this._view.append(d);
+    this.initializeSplitter(d);
+    this.splitter = d;
   };
   a.addMode = function(a, c) {
-    c = Entry.Dom(c, {parent:this._contentView});
-    var d = Entry.Dom("<div>" + a + "</div>", {classes:["propertyTabElement", "propertyTab" + a], parent:this._tabView}), e = this;
-    d.bindOnClick(function() {
-      e.select(a);
+    var d = c.getView(), d = Entry.Dom(d, {parent:this._contentView}), e = Entry.Dom("<div>" + a + "</div>", {classes:["propertyTabElement", "propertyTab" + a], parent:this._tabView}), f = this;
+    e.bindOnClick(function() {
+      f.select(a);
     });
     this.modes[a] && (this.modes[a].tabDom.remove(), this.modes[a].contentDom.remove());
-    this.modes[a] = {tabDom:d, contentDom:c};
+    this.modes[a] = {obj:c, tabDom:e, contentDom:d};
   };
   a.resize = function(a) {
     this._view.css({width:a + "px", top:9 * a / 16 + 123 - 22 + "px"});
     430 <= a ? this._view.removeClass("collapsed") : this._view.addClass("collapsed");
+    this.modes[this.selected].obj.resize();
   };
   a.select = function(a) {
     for (var c in this.modes) {
@@ -9522,8 +9590,24 @@ Entry.PropertyPanel = function() {
       d.tabDom.removeClass("selected");
       d.contentDom.addClass("entryHidden");
     }
-    this.modes[a].tabDom.addClass("selected");
-    this.modes[a].contentDom.removeClass("entryHidden");
+    c = this.modes[a];
+    c.tabDom.addClass("selected");
+    c.contentDom.removeClass("entryHidden");
+    c.obj.resize();
+    this.selected = a;
+  };
+  a.initializeSplitter = function(a) {
+    a.onmousedown = function(a) {
+      Entry.container.disableSort();
+      Entry.container.splitterEnable = !0;
+    };
+    document.addEventListener("mousemove", function(a) {
+      Entry.container.splitterEnable && Entry.resizeElement({canvasWidth:a.x || a.clientX});
+    });
+    document.addEventListener("mouseup", function(a) {
+      Entry.container.splitterEnable = !1;
+      Entry.container.enableSort();
+    });
   };
 })(Entry.PropertyPanel.prototype);
 Entry.init = function(a, b) {
@@ -9637,7 +9721,7 @@ Entry.createDom = function(a, b) {
     this.propertyPanel.generateView(a, b);
     this.containerView = c;
     this.container.generateView(this.containerView, b);
-    this.propertyPanel.addMode("container", this.containerView);
+    this.propertyPanel.addMode("container", this.container);
     this.propertyPanel.select("container");
     this.helper.initBlockHelper(c);
     c = Entry.createElement("div");

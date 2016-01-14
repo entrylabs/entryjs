@@ -47,10 +47,10 @@ Entry.Container = function() {
  */
 Entry.Container.prototype.generateView = function(containerView, option) {
     /** @type {!Element} */
-    this.view_ = containerView;
-    this.view_.addClass('entryContainer');
+    this._view = containerView;
+    this._view.addClass('entryContainer');
     if (!option || option == 'workspace') {
-        this.view_.addClass('entryContainerWorkspace');
+        this._view.addClass('entryContainerWorkspace');
 
         var addButton = Entry.createElement('div');
         addButton.addClass('entryAddObjectWorkspace');
@@ -58,7 +58,7 @@ Entry.Container.prototype.generateView = function(containerView, option) {
         addButton.bindOnClick(function(e){
             Entry.dispatchEvent('openSpriteManager');
         });
-        //this.view_.appendChild(addButton);
+        //this._view.appendChild(addButton);
 
         var ulWrapper = Entry.createElement('div');
         ulWrapper.addClass('entryContainerListWorkspaceWrapper');
@@ -84,18 +84,18 @@ Entry.Container.prototype.generateView = function(containerView, option) {
             Entry.ContextMenu.show(options, 'workspace-contextmenu');
         });
 
-        this.view_.appendChild(ulWrapper);
+        this._view.appendChild(ulWrapper);
 
         var listView = Entry.createElement('ul');
         listView.addClass('entryContainerListWorkspace');
 
         ulWrapper.appendChild(listView);
-        //this.view_.appendChild(listView);
+        //this._view.appendChild(listView);
         /** @param {!Element} */
         this.listView_ = listView;
         this.enableSort();
     } else if (option == 'phone') {
-        this.view_.addClass('entryContainerPhone');
+        this._view.addClass('entryContainerPhone');
 
         var addButton = Entry.createElement('div');
         addButton.addClass('entryAddObjectWorkspace');
@@ -103,17 +103,16 @@ Entry.Container.prototype.generateView = function(containerView, option) {
         addButton.bindOnClick(function(e){
             Entry.dispatchEvent('openSpriteManager');
         });
-        //this.view_.appendChild(addButton);
+        //this._view.appendChild(addButton);
 
         var ulWrapper = Entry.createElement('div');
         ulWrapper.addClass('entryContainerListPhoneWrapper');
-        this.view_.appendChild(ulWrapper);
+        this._view.appendChild(ulWrapper);
 
         var listView = Entry.createElement('ul');
         listView.addClass('entryContainerListPhone');
 
         ulWrapper.appendChild(listView);
-        //this.view_.appendChild(listView);
         /** @param {!Element} */
         this.listView_ = listView;
         //this.enableSort();
@@ -801,7 +800,7 @@ Entry.Container.prototype.getCurrentObjects = function() {
 };
 
 /**
- *  get project jsons in art_view for saving especially for art_view_controller
+ *  get project jsons in art_view for saving especially for art_viewcontroller
  *  @param {!resource project} project
  *  @return {entry project} project
  */
@@ -815,7 +814,7 @@ Entry.Container.prototype.getProjectWithJSON = function(project) {
 
 
 Entry.Container.prototype.generateTabView = function() {
-    var view = this.view_;
+    var view = this._view;
     var that = this;
     this.tabViews = [];
 
@@ -903,7 +902,7 @@ Entry.Container.prototype.changeTabView = function(tab) {
     if (tab == 'object') {
         tabViews[0].addClass('selected');
     } else if (tab == 'movie') {
-        var view = this.view_;
+        var view = this._view;
         var width = view.style.width.substring(0,
                                               view.style.width.length-2);
         this.movieFrame.setAttribute('width', width);
@@ -912,7 +911,7 @@ Entry.Container.prototype.changeTabView = function(tab) {
         this.movieContainer.removeClass('entryHide');
         tabViews[1].addClass('selected');
     } else if (tab == 'done') {
-        var view = this.view_;
+        var view = this._view;
         var height = $(this.doneContainer).height();
         var width = $(this.doneContainer).width();
         if (width*9/16 + 35 < height)
@@ -933,7 +932,7 @@ Entry.Container.prototype.changeTabView = function(tab) {
 Entry.Container.prototype.initYoutube = function(youtubeHash) {
     this.youtubeHash = youtubeHash;
     this.youtubeTab.removeClass('entryRemove');
-    var view = this.view_;
+    var view = this._view;
     var width = view.style.width.substring(0,
                                           view.style.width.length-2);
     var movieContainer = this.movieContainer;
@@ -951,7 +950,7 @@ Entry.Container.prototype.initYoutube = function(youtubeHash) {
 Entry.Container.prototype.initTvcast = function(tvcast) {
     this.tvcast = tvcast;
     this.youtubeTab.removeClass('entryRemove');
-    var view = this.view_;
+    var view = this._view;
     var width = view.style.width.substring(0,
                                           view.style.width.length-2);
     var movieContainer = this.movieContainer;
@@ -968,7 +967,7 @@ Entry.Container.prototype.initTvcast = function(tvcast) {
 Entry.Container.prototype.initDoneProject = function(projectId) {
     this.doneProject = projectId;
     this.iframeTab.removeClass('entryRemove');
-    var view = this.view_;
+    var view = this._view;
     var width = view.style.width.substring(0,
                                           view.style.width.length-2);
     var url = '/api/project/iframe/';
@@ -1018,4 +1017,13 @@ Entry.Container.prototype.hideProjectAnswer = function(removeBlock) {
         }
     }
     answer.setVisible(false);
+};
+
+Entry.Container.prototype.getView = function() {
+    return this._view;
+};
+
+// dummy
+Entry.Container.prototype.resize = function() {
+    return;
 };

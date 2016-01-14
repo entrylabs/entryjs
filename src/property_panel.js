@@ -7,6 +7,7 @@ goog.provide("Entry.PropertyPanel");
 
 Entry.PropertyPanel = function() {
     this.modes = {};
+    this.selected = null;
 };
 
 (function(p) {
@@ -27,10 +28,19 @@ Entry.PropertyPanel = function() {
         this._contentView = Entry.Dom("div", {
             class: "propertyContent",
             parent: this._view
-        })
+        });
+
+        var selectedImgView = Entry.createElement('div');
+        selectedImgView.addClass('entryObjectSelectedImgWorkspace');
+        this.selectedImgView_ = selectedImgView;
+        this._view.append(selectedImgView);
+        this.initializeSplitter(selectedImgView);
+        this.splitter = selectedImgView;
     };
 
-    p.addMode = function(mode, contentDom) {
+    p.addMode = function(mode, contentObj) {
+        var contentDom = contentObj.getView();
+        // will be removed after apply new Dom class
         contentDom = Entry.Dom(contentDom, {
             parent: this._contentView
         });
@@ -47,6 +57,7 @@ Entry.PropertyPanel = function() {
             this.modes[mode].contentDom.remove();
         }
         this.modes[mode] = {
+            obj: contentObj,
             tabDom: tabDom,
             contentDom: contentDom
         };
@@ -62,6 +73,8 @@ Entry.PropertyPanel = function() {
             this._view.removeClass("collapsed");
         else
             this._view.addClass("collapsed");
+
+        this.modes[this.selected].obj.resize();
     };
 
     p.select = function(modeName) {
@@ -70,7 +83,26 @@ Entry.PropertyPanel = function() {
             mode.tabDom.removeClass("selected");
             mode.contentDom.addClass("entryHidden");
         }
-        this.modes[modeName].tabDom.addClass("selected");
-        this.modes[modeName].contentDom.removeClass("entryHidden");
+        var selected = this.modes[modeName];
+        selected.tabDom.addClass("selected");
+        selected.contentDom.removeClass("entryHidden");
+        selected.obj.resize();
+        this.selected = modeName;
+    };
+
+    p.initializeSplitter = function(splitter) {
+        splitter.onmousedown = function(e) {
+            Entry.container.disableSort();
+            Entry.container.splitterEnable = true;
+        };
+        document.addEventListener('mousemove', function(e) {
+            if (Entry.container.splitterEnable) {
+                Entry.resizeElement({canvasWidth: e.x || e.clientX});
+            }
+        });
+        document.addEventListener('mouseup', function(e) {
+            Entry.container.splitterEnable = false;
+            Entry.container.enableSort();
+        });
     };
 })(Entry.PropertyPanel.prototype)

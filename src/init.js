@@ -248,7 +248,7 @@ Entry.createDom = function(container, option) {
         /** @type {!Element} */
         this.containerView = containerView;
         this.container.generateView(this.containerView, option);
-        this.propertyPanel.addMode("container", this.containerView);
+        this.propertyPanel.addMode("container", this.container);
         this.propertyPanel.select("container");
 
         this.helper.initBlockHelper(containerView);

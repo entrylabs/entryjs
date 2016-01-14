@@ -24,16 +24,19 @@ Entry.Neobot = {
         Entry.hw.update();
     },
     monitorTemplate: {
+        imgPath: "hw/neobot.png",
+        width: 268,
+        height: 270,
         ports: {
-            "1":{name: "1번 포트", type: "input"},
-            "2":{name: "2번 포트", type: "input"},
-            "3":{name: "3번 포트", type: "input"},
+            "1":{name: "1번 포트", type: "input", pos: {x: 78, y: 9}},
+            "2":{name: "2번 포트", type: "input", pos: {x : 115, y: 9}},
+            "3":{name: "3번 포트", type: "input", pos: {x: 153, y: 9}},
             //{name: "리모컨", type: "input"},
-            "LMOT":{name: "왼쪽 모터", type: "output"},
-            "RMOT":{name: "오른쪽 모터", type: "output"},
-            "note":{name: "부저", type: "output"},
-            "SERVO1":{name: "SERVO 모터 1", type: "output"},
-            "SERVO2":{name: "SERVO 모터 2", type: "output"}
+            "LMOT":{name: "왼쪽 모터", type: "output", pos: {x: 78, y: 259}},
+            "RMOT":{name: "오른쪽 모터", type: "output", pos: {x: 191, y: 259}},
+            "note":{name: "부저", type: "output", pos: {x: 98, y: 184}},
+            "SERVO1":{name: "SERVO 모터 1", type: "output", pos: {x: 115, y: 259}},
+            "SERVO2":{name: "SERVO 모터 2", type: "output", pos: {x: 191, y: 9}}
         }
     }
 }
