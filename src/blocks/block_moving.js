@@ -501,8 +501,8 @@ Entry.block.bounce_wall = function(sprite, script) {
     var threshold = 0;
 
     var method = sprite.parent.getRotateMethod();
-    var bound = sprite.object.getTransformedBounds();
     /*
+    var bound = sprite.object.getTransformedBounds();
     var size = {};
     size.width = bound.width * Math.sqrt(1.0 + (bound.height/bound.width) * (bound.height/bound.width));
     size.height = bound.height * Math.sqrt(1.0 + (bound.width/bound.height) * (bound.width/bound.height));
@@ -513,87 +513,152 @@ Entry.block.bounce_wall = function(sprite, script) {
     else
         var angle = sprite.getDirection();
 
+    var skip = Entry.Utils.COLLISION.NONE;
     if ((angle < 90 && angle >= 0) || (angle < 360 && angle >= 270)) {
+        skip = (sprite.collision == Entry.Utils.COLLISION.UP);
         var up = ndgmr.checkPixelCollision(Entry.stage.wall.up,sprite.object,threshold,false);
+        if (!up && skip)
+            sprite.collision = Entry.Utils.COLLISION.NONE;
+
+        if (up && skip)
+            up = false;
+
         if (up) {
             if (method == 'free')
                 sprite.setRotation(- sprite.getRotation() - sprite.getDirection() * 2 + 180);
             else
                 sprite.setDirection(- sprite.getDirection() + 180);
 
-            sprite.setY(135 - bound.height/2 - 1);
+            sprite.collision = Entry.Utils.COLLISION.UP;
+            //sprite.setY(135 - bound.height/2 - 1);
         } else {
+            skip = (sprite.collision == Entry.Utils.COLLISION.DOWN);
             var down = ndgmr.checkPixelCollision(Entry.stage.wall.down,sprite.object,threshold,false);
+            if (!down && skip)
+                sprite.collision = Entry.Utils.COLLISION.NONE;
+
+            if (down && skip)
+                down = false;
+
             if (down) {
                 if (method == 'free')
                     sprite.setRotation(- sprite.getRotation() - sprite.getDirection() * 2 + 180);
                 else
                     sprite.setDirection(- sprite.getDirection() + 180);
 
-                sprite.setY(-135 + bound.height/2 + 1);
+                sprite.collision = Entry.Utils.COLLISION.DOWN;
+                //sprite.setY(-135 + bound.height/2 + 1);
             }
 
         }
     } else if (angle < 270 && angle >= 90) {
+        skip = (sprite.collision == Entry.Utils.COLLISION.DOWN);
         var down = ndgmr.checkPixelCollision(Entry.stage.wall.down,sprite.object,threshold,false);
+        if (!down && skip)
+            sprite.collision = Entry.Utils.COLLISION.NONE;
+
+        if (down && skip)
+            down = false;
+
         if (down) {
             if (method == 'free')
                 sprite.setRotation(- sprite.getRotation() - sprite.getDirection() * 2 + 180);
             else
                 sprite.setDirection(- sprite.getDirection() + 180);
 
-            sprite.setY(-135 + bound.height/2 + 1);
+            sprite.collision = Entry.Utils.COLLISION.DOWN;
+            //sprite.setY(-135 + bound.height/2 + 1);
         } else {
+            skip = (sprite.collision == Entry.Utils.COLLISION.UP);
             var up = ndgmr.checkPixelCollision(Entry.stage.wall.up,sprite.object,threshold,false);
+            if (!up && skip)
+                sprite.collision = Entry.Utils.COLLISION.NONE;
+
+            if (up && skip)
+                up = false;
+
             if (up) {
                 if (method == 'free')
                     sprite.setRotation(- sprite.getRotation() - sprite.getDirection() * 2 + 180);
                 else
                     sprite.setDirection(- sprite.getDirection() + 180);
 
-                sprite.setY(135 - bound.height/2 - 1);
+                sprite.collision = Entry.Utils.COLLISION.UP;
+                //sprite.setY(135 - bound.height/2 - 1);
             }
         }
     }
     if (angle < 360 && angle >= 180) {
+        skip = (sprite.collision == Entry.Utils.COLLISION.LEFT);
         var left = ndgmr.checkPixelCollision(Entry.stage.wall.left,sprite.object,threshold,false);
+        if (!left && skip)
+            sprite.collision = Entry.Utils.COLLISION.NONE;
+
+        if (left && skip)
+            left = false;
+
         if (left) {
             if (method == 'free')
                 sprite.setRotation(- sprite.getRotation() - sprite.getDirection() * 2);
             else
                 sprite.setDirection(- sprite.getDirection() + 360);
 
-            sprite.setX(-240 + bound.width/2 + 1);
+            sprite.collision = Entry.Utils.COLLISION.LEFT;
+            //sprite.setX(-240 + bound.width/2 + 1);
         } else {
+            skip = (sprite.collision == Entry.Utils.COLLISION.RIGHT);
             var right = ndgmr.checkPixelCollision(Entry.stage.wall.right,sprite.object,threshold,false);
+            if (!right && skip)
+                sprite.collision = Entry.Utils.COLLISION.NONE;
+
+            if (right && skip)
+                right = false;
+
             if (right) {
                 if (method == 'free')
                     sprite.setRotation(- sprite.getRotation() - sprite.getDirection() * 2);
                 else
                     sprite.setDirection(- sprite.getDirection() + 360);
 
-                sprite.setX(240 - bound.width/2 - 1);
+                sprite.collision = Entry.Utils.COLLISION.RIGHT;
+                //sprite.setX(240 - bound.width/2 - 1);
             }
 
         }
     } else if (angle < 180 && angle >= 0) {
+        skip = (sprite.collision == Entry.Utils.COLLISION.RIGHT);
         var right = ndgmr.checkPixelCollision(Entry.stage.wall.right,sprite.object,threshold,false);
+        if (!right && skip)
+            sprite.collision = Entry.Utils.COLLISION.NONE;
+
+        if (right && skip)
+            right = false;
+
         if (right) {
             if (method == 'free')
                 sprite.setRotation(- sprite.getRotation() - sprite.getDirection() * 2);
             else
                 sprite.setDirection(- sprite.getDirection() + 360);
 
-            sprite.setX(240 - bound.width/2 - 1);
+            sprite.collision = Entry.Utils.COLLISION.RIGHT;
+            //sprite.setX(240 - bound.width/2 - 1);
         } else {
+            skip = (sprite.collision == Entry.Utils.COLLISION.LEFT);
             var left = ndgmr.checkPixelCollision(Entry.stage.wall.left,sprite.object,threshold,false);
+            if (!left && skip)
+                sprite.collision = Entry.Utils.COLLISION.NONE;
+
+            if (left && skip)
+                left = false;
+
             if (left) {
                 if (method == 'free')
                     sprite.setRotation(- sprite.getRotation() - sprite.getDirection() * 2);
                 else
                     sprite.setDirection(- sprite.getDirection() + 360);
 
-                sprite.setX(-240 + bound.width/2 + 1);
+                sprite.collision = Entry.Utils.COLLISION.LEFT;
+                //sprite.setX(-240 + bound.width/2 + 1);
             }
         }
     }

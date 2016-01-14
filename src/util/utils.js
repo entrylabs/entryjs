@@ -800,3 +800,11 @@ Entry.Utils.disableContextmenu = function(node) {
 Entry.Utils.isRightButton = function(e) {
     return e.button == 2 || e.ctrlKey;
 };
+
+Entry.Utils.COLLISION = {
+    NONE: 0,
+    UP: 1,
+    RIGHT: 2,
+    LEFT: 3,
+    DOWN: 4
+};

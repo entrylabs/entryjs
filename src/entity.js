@@ -15,6 +15,7 @@ Entry.EntityObject = function(object) {
     /** @type {Array<xml script>} */
     this.runningScript = [];
     this.flip = false;
+    this.collision = Entry.Utils.COLLISION.NONE;
     this.id = Entry.generateHash();
 
     if (this.type == 'sprite') {
@@ -930,6 +931,7 @@ Entry.EntityObject.prototype.updateDialog = function() {
  */
 Entry.EntityObject.prototype.takeSnapshot = function() {
     this.snapshot_ = this.toJSON();
+    this.collision = Entry.Utils.COLLISION.NONE;
 };
 
 /**
