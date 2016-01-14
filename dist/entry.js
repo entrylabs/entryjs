@@ -6520,9 +6520,10 @@ Entry.HWMonitor = function(a) {
     for (var e = -this._rect.width / 2, f = this._rect.width / 2, g = this._rect.width, h = 0, k = 0;k < a.length;k++) {
       h += a[k].width + 5;
     }
+    h < f - e && (f = h / 2 + 3, e = -h / 2 - 3);
     for (;1 < a.length;) {
       var k = a.shift(), l = a.pop(), n = d;
-      h < f - e ? (e += k.width + 5, f -= l.width + 5, d = 0) : 0 === a.length ? (e = (e + f) / 2 - 3, f = e + 6) : (e = Math.max(e, -g / 2 + k.width) + 15, f = Math.min(f, g / 2 - l.width) - 15);
+      h <= f - e ? (e += k.width + 5, f -= l.width + 5, n = 0) : 0 === a.length ? (e = (e + f) / 2 - 3, f = e + 6) : (e = Math.max(e, -g / 2 + k.width) + 15, f = Math.min(f, g / 2 - l.width) - 15);
       k.group.attr({transform:"t" + (e - k.width) + "," + c});
       l.group.attr({transform:"t" + f + "," + c});
       h -= k.width + l.width + 10;

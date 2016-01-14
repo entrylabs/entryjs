@@ -176,14 +176,18 @@ Entry.HWMonitor = function(hwModule) {
         for (var i = 0; i < ports.length; i++)
             wholeWidth += ports[i].width + 5;
 
+        if (wholeWidth < rP - lP) {
+            rP = wholeWidth / 2 + 3;
+            lP = - wholeWidth / 2 - 3;
+        }
         while (ports.length > 1) {
             var lPort = ports.shift();
             var rPort = ports.pop();
-            var gapTemp = gap
-            if (wholeWidth < rP - lP) {
+            var gapTemp = gap;
+            if (wholeWidth <= rP - lP) {
                 lP += lPort.width + 5;
                 rP -= rPort.width + 5;
-                gap = 0;
+                gapTemp = 0;
             } else if (ports.length === 0) {
                 lP = (lP + rP) / 2 - 3;
                 rP = lP + 6;
