@@ -175,8 +175,9 @@ Entry.Block.MAGNET_OFFSET = 0.4;
 
     p.destroy = function(animate) {
         if (this.view) this.view.destroy(animate);
-        if (!this.prev || this.prev instanceof Entry.DummyBlock)
+        if (!this.prev || this.prev.isDummy)
             this.thread.destroy(animate, false);
+        else this.prev.setNext(this.next);
 
         var statements = this.statements;
 
@@ -184,7 +185,7 @@ Entry.Block.MAGNET_OFFSET = 0.4;
             for (var i=0; i<statements.length; i++) {
                 var statement = statements[i];
                 var block = statement.getFirstBlock();
-                if (block instanceof Entry.DummyBlock)
+                if (block.isDummy)
                     block = block.next;
                 if (block) block.destroy(animate);
             }

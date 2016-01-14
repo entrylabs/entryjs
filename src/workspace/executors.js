@@ -36,8 +36,8 @@ Entry.Executor = function(block) {
         this._callStack.push(this.scope);
 
         var block = thread.getFirstBlock();
-        if (block instanceof Entry.DummyBlock)
-            block = block.next;
+        if (block.isDummy) block = block.next;
+
         this.scope = {
             block: block,
             executor: this

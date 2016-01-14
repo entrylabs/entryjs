@@ -28,10 +28,12 @@ Entry.skeleton.basic = {
             marginBottom: 0
         };
     },
-    magnets: {
+    magnets: function() {
         // apply scale required.
-        previous: {},
-        next: {x: 0, y: 31}
+        return {
+            previous: {},
+            next: {x: 0, y: 31}
+        };
     },
     contentPos: function(block) {
         // apply scale required.
@@ -56,10 +58,12 @@ Entry.skeleton.basic_event = {
             marginBottom: 0
         };
     },
-    magnets: {
+    magnets: function() {
         // apply scale required.
-        previous: {},
-        next: {x: 0, y: 31}
+        return {
+            previous: {},
+            next: {x: 0, y: 31}
+        };
     },
     contentPos: function(block) {
         // apply scale required.
@@ -258,10 +262,12 @@ Entry.skeleton.basic_string_field = {
             marginBottom: 0
         };
     },
-    magnets: {
+    magnets: function() {
         // apply scale required.
-        previous: {},
-        next: {x: 0, y: 31}
+        return {
+            previous: {},
+            next: {x: 0, y: 31}
+        };
     },
     contentPos: function(block) {
         // apply scale required.
@@ -288,11 +294,6 @@ Entry.skeleton.basic_boolean_field = {
             height: height,
             marginBottom: 0
         };
-    },
-    magnets: {
-        // apply scale required.
-        previous: {},
-        next: {x: 0, y: 31}
     },
     contentPos: function(block) {
         // apply scale required.

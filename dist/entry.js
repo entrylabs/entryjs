@@ -13568,9 +13568,11 @@ Entry.block.maze_step_rotate_right = {skeleton:"basic", mode:"maze", color:"#A75
     return Entry.STATIC.CONTINUE;
   }
 }};
-Entry.block.test_wrapper = {skeleton:"basic", mode:"maze", color:"#3BBD70", template:"%1 this is test block %2", params:[{type:"Block", value:[{accept:"basic_boolean_field", type:"test", params:[30, 50]}]}, {type:"Dropdown", options:[[1, 1], [2, 2], [3, 3], [4, 4], [5, 5], [6, 6], [7, 7], [8, 8], [9, 9], [10, 10]], value:1}], func:function() {
+Entry.block.test_wrapper = {skeleton:"basic", mode:"maze", color:"#3BBD70", template:"%1 this is test block %2", params:[{type:"Block", accept:"basic_boolean_field", value:[{type:"test", params:[30, 50]}]}, {type:"Dropdown", options:[[1, 1], [2, 2], [3, 3], [4, 4], [5, 5], [6, 6], [7, 7], [8, 8], [9, 9], [10, 10]], value:1}], func:function() {
 }};
 Entry.block.basic_button = {skeleton:"basic_button", color:"#eee", template:"%1", params:[{type:"Text", text:"basic button", color:"#333", align:"center"}], func:function() {
+}};
+Entry.block.True = {skeleton:"basic_boolean_field", color:"#eee", template:"%1", params:[{type:"Text", text:"\ucc38", color:"#333"}], func:function() {
 }};
 Entry.BlockMenu = function(a, b) {
   Entry.Model(this, !1);
@@ -13933,7 +13935,7 @@ Entry.BlockView = function(a, b, c) {
         switch(Entry.GlobalSvg.terminateDrag(this)) {
           case g.DONE:
             g = this._getCloseBlock();
-            a || g ? g ? (this.set({animating:!0}), g.next && g.next.view.set({animating:!0}), e.doInsert(g), createjs.Sound.play("entryMagneting")) : e.doSeparate() : d != Entry.DRAG_MODE_DRAG || f || e.doMove();
+            a || g ? g ? (this.set({animating:!0}), g.next && g.next.view.set({animating:!0}), e.doInsert(g), createjs.Sound.play("entryMagneting"), g instanceof Entry.FieldDummyBlock && (e = e.next, -1 < Entry.FieldDummyBlock.PRIMITIVE_TYPES.indexOf(e.type) ? (e.getThread().cut(e), e.destroy(!1)) : (e.separate(), e.view._moveBy(10, 10, !1)))) : e.doSeparate() : d != Entry.DRAG_MODE_DRAG || f || e.doMove();
             break;
           case g.RETURN:
             d = this.originPos;
@@ -14225,7 +14227,7 @@ Entry.Executor = function(a) {
     a instanceof Entry.Thread || console.error("Must step in to thread");
     this._callStack.push(this.scope);
     a = a.getFirstBlock();
-    a instanceof Entry.DummyBlock && (a = a.next);
+    a.isDummy && (a = a.next);
     this.scope = {block:a, executor:this};
   };
 })(Entry.Executor.prototype);
@@ -14717,6 +14719,7 @@ Entry.FieldStatement = function(a, b, c) {
 })(Entry.FieldStatement.prototype);
 Entry.DummyBlock = function(a, b) {
   Entry.Model(this, !1);
+  this.isDummy = !0;
   this.view = this;
   this.originBlockView = b;
   this._schema = {};
@@ -14781,7 +14784,7 @@ Entry.FieldBlock = function(a, b, c) {
   this._index = c;
   this._content = a;
   this.dummyBlock = null;
-  this.acceptType = a.value[0].accept;
+  this.acceptType = a.accept;
   this.svgGroup = null;
   this._position = a.position;
   this.box.observe(b, "alignContent", ["width", "height"]);
@@ -14794,10 +14797,11 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
     this.svgGroup = this._blockView.contentSvgGroup.group();
     this.box.set({x:0, y:0, width:0, height:20});
     this._thread = this.getValue();
-    this.dummyBlock = new Entry.DummyBlock(this, this._blockView);
+    this.dummyBlock = new Entry.FieldDummyBlock(this, this._blockView);
     this._thread.insertDummyBlock(this.dummyBlock);
     this._thread.createView(a);
     this._thread.changeEvent.attach(this, this.calcWH);
+    this._thread.changeEvent.attach(this, this._inspectThread);
     this.calcWH();
   };
   a.align = function(a, c, d) {
@@ -14807,13 +14811,13 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
     c = -.5 * this.box.height - 4;
     a = "t" + a + " " + c;
     c = this._thread.getFirstBlock();
-    c instanceof Entry.DummyBlock && (c = c.next);
+    c.isDummy && (c = c.next);
     c != this._valueBlock && (this._valueBlock && this._valueBlock.view.set({shadow:!0}), this._valueBlock = c, this._valueBlockObserver && this._valueBlockObserver.destroy(), this._valueBlock && (c = this._valueBlock.view, this._valueBlockObserver = c.observe(this, "calcWH", ["width", "height"]), c.shadow && c.set({shadow:!1})));
     d ? e.animate({transform:a}, 300, mina.easeinout) : e.attr({transform:a});
   };
   a.calcWH = function() {
     var a = this._thread.getFirstBlock();
-    a instanceof Entry.DummyBlock && (a = a.next);
+    a.isDummy && (a = a.next);
     a ? (a = a.view, this.box.set({width:a.width, height:a.height})) : this.box.set({width:15, height:20});
   };
   a.calcHeight = a.calcWH;
@@ -14826,7 +14830,40 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
   };
   a.destroy = function() {
   };
+  a._inspectThread = function() {
+    function a(b, d) {
+      var e = b._block.getThread(), f = b._blockView.getBoard(), e = new Entry.Block(d, e);
+      e.createView(f, f.workspace.getMode());
+      return e;
+    }
+    if (null === this._valueBlock) {
+      switch(this.acceptType) {
+        case "basic_boolean_field":
+          this.dummyBlock.insertAfter([a(this, {type:"True"})]);
+      }
+    }
+  };
 })(Entry.FieldBlock.prototype);
+Entry.FieldDummyBlock = function(a, b) {
+  Entry.Model(this, !1);
+  this.isDummy = !0;
+  this.view = this;
+  this.originBlockView = b;
+  this._schema = {};
+  this._thread = a._thread;
+  this.statementField = a;
+  this.svgGroup = a.svgGroup.group();
+  this.svgGroup.block = this;
+  var c = Entry.skeleton[a.acceptType].box();
+  this.path = this.svgGroup.rect(c.offsetX, c.offsetY - 10, c.width, c.height);
+  this.path.attr({fill:"transparent"});
+  this.prevObserver = b.observe(this, "_align", ["x", "y"]);
+  this.prevAnimatingObserver = b.observe(this, "_inheritAnimate", ["animating"]);
+  this.observe(this, "_updateBG", ["magneting"]);
+  this._align();
+};
+Entry.FieldDummyBlock.PRIMITIVE_TYPES = ["True"];
+Entry.FieldDummyBlock.prototype = Entry.DummyBlock.prototype;
 Entry.FieldText = function(a, b, c) {
   this._block = b.block;
   this._index = c;
@@ -15086,7 +15123,9 @@ Entry.skeleton.basic = {path:function(a) {
   return "m -8,0 l 8,8 8,-8 h %w a 15,15 0 0,1 0,30 h -%w l -8,8 -8,-8 v -30 z".replace(/%w/gi, a);
 }, box:function(a) {
   return {offsetX:-8, offsetY:0, width:(a ? a.contentWidth : 150) + 30, height:30, marginBottom:0};
-}, magnets:{previous:{}, next:{x:0, y:31}}, contentPos:function(a) {
+}, magnets:function() {
+  return {previous:{}, next:{x:0, y:31}};
+}, contentPos:function(a) {
   return {x:14, y:15};
 }};
 Entry.skeleton.basic_event = {path:function(a) {
@@ -15095,7 +15134,9 @@ Entry.skeleton.basic_event = {path:function(a) {
   return "m -8,0 m 0,-5 a 19.5,19.5 0, 0,1 16,0 c 10,5 15,5 20,5 h %w a 15,15 0 0,1 0,30 H 8 l -8,8 -8,-8 l 0,0.5 a 19.5,19.5 0, 0,1 0,-35 z".replace(/%w/gi, a - 30);
 }, box:function(a) {
   return {offsetX:0, offsetY:0, width:a.contentWidth + 30, height:30, marginBottom:0};
-}, magnets:{previous:{}, next:{x:0, y:31}}, contentPos:function(a) {
+}, magnets:function() {
+  return {previous:{}, next:{x:0, y:31}};
+}, contentPos:function(a) {
   return {x:1, y:15};
 }};
 Entry.skeleton.basic_loop = {path:function(a) {
@@ -15157,7 +15198,9 @@ Entry.skeleton.basic_string_field = {path:function(a) {
   return "m 11,0 h %w a 10,10 0 1,1 0,%h H 11 a 10,10 0 1,1 0,-%h z".replace(/%w/gi, b).replace(/%h/gi, a);
 }, box:function(a) {
   return {offsetX:0, offsetY:0, width:(a ? a.contentWidth : 150) + 10, height:a.contentHeight, marginBottom:0};
-}, magnets:{previous:{}, next:{x:0, y:31}}, contentPos:function(a) {
+}, magnets:function() {
+  return {previous:{}, next:{x:0, y:31}};
+}, contentPos:function(a) {
   return {x:11, y:11};
 }};
 Entry.skeleton.basic_boolean_field = {path:function(a) {
@@ -15168,7 +15211,7 @@ Entry.skeleton.basic_boolean_field = {path:function(a) {
   return "m 11,0 h %w l 10,10 -10,10 H 11 l -10,-10 10,-10 z ".replace(/%w/gi, b).replace(/%h/gi, a);
 }, box:function(a) {
   return {offsetX:0, offsetY:0, width:(a ? a.contentWidth : 5) + 20, height:a ? a.contentHeight : 20, marginBottom:0};
-}, magnets:{previous:{}, next:{x:0, y:31}}, contentPos:function(a) {
+}, contentPos:function(a) {
   return {x:11, y:11};
 }};
 Entry.skeleton.basic_button = {path:function() {
@@ -15262,12 +15305,12 @@ Entry.Block.MAGNET_OFFSET = .4;
   };
   a.destroy = function(a) {
     this.view && this.view.destroy(a);
-    (!this.prev || this.prev instanceof Entry.DummyBlock) && this.thread.destroy(a, !1);
+    !this.prev || this.prev.isDummy ? this.thread.destroy(a, !1) : this.prev.setNext(this.next);
     var c = this.statements;
     if (c) {
       for (var d = 0;d < c.length;d++) {
         var e = c[d].getFirstBlock();
-        e instanceof Entry.DummyBlock && (e = e.next);
+        e.isDummy && (e = e.next);
         e && e.destroy(a);
       }
     }
@@ -15381,7 +15424,7 @@ Entry.Thread = function(a, b) {
     }
     for (var d = 0;d < a.length;d++) {
       var e = a[d];
-      e instanceof Entry.Block || e instanceof Entry.DummyBlock ? (e.setThread(this), this._data.push(e)) : this._data.push(new Entry.Block(e, this));
+      e instanceof Entry.Block || e.isDummy ? (e.setThread(this), this._data.push(e)) : this._data.push(new Entry.Block(e, this));
     }
     this._setRelation();
     (d = this._code.view) && this.createView(d.board, c);

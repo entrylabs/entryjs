@@ -3,6 +3,7 @@
 "use strict";
 
 goog.provide("Entry.FieldBlock");
+goog.provide("Entry.FieldDummyBlock");
 
 goog.require("Entry.Field");
 goog.require("Entry.DummyBlock");
@@ -21,7 +22,7 @@ Entry.FieldBlock = function(content, blockView, index) {
     this._content = content;
     this.dummyBlock = null;
 
-    this.acceptType = content.value[0].accept;
+    this.acceptType = content.accept;
 
     this.svgGroup = null;
 
@@ -45,11 +46,12 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
             height: 20
         });
         this._thread = this.getValue();
-        this.dummyBlock = new Entry.DummyBlock(this, this._blockView);
+        this.dummyBlock = new Entry.FieldDummyBlock(this, this._blockView);
         this._thread.insertDummyBlock(this.dummyBlock);
         this._thread.createView(board);
 
         this._thread.changeEvent.attach(this, this.calcWH);
+        this._thread.changeEvent.attach(this, this._inspectThread);
         this.calcWH();
     };
 
@@ -67,7 +69,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
         var transform = "t" + x + " " + y;
 
         var block = this._thread.getFirstBlock();
-        if (block instanceof Entry.DummyBlock)
+        if (block.isDummy)
             block = block.next;
 
         if (block != this._valueBlock) {
@@ -97,7 +99,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
 
     p.calcWH = function() {
         var block = this._thread.getFirstBlock();
-        if (block instanceof Entry.DummyBlock)
+        if (block.isDummy)
             block = block.next;
         if (block) {
             var blockView = block.view;
@@ -126,4 +128,67 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
 
     p.destroy = function() {};
 
+    p._inspectThread = function() {
+        if (this._valueBlock === null) {
+            switch (this.acceptType) {
+                case "basic_boolean_field":
+                    this.dummyBlock.insertAfter([getBlock(this, {type: "True"})]);
+                    break;
+            }
+        } else {
+        }
+
+        function getBlock(field, data) {
+            var thread = field._block.getThread();
+            var board = field._blockView.getBoard();
+
+            var block = new Entry.Block(data, thread);
+            block.createView(board, board.workspace.getMode());
+            return block;
+        }
+    };
+
 })(Entry.FieldBlock.prototype);
+
+Entry.FieldDummyBlock = function(statementField, blockView) {
+    Entry.Model(this, false);
+    this.isDummy = true;
+
+    this.view = this;
+    this.originBlockView = blockView;
+    this._schema = {};
+    this._thread = statementField._thread;
+    this.statementField = statementField;
+
+    this.svgGroup = statementField.svgGroup.group();
+    this.svgGroup.block = this;
+
+    var acceptBox = Entry.skeleton[statementField.acceptType].box();
+
+    this.path = this.svgGroup.rect(
+        acceptBox.offsetX,
+        acceptBox.offsetY - 10,
+        acceptBox.width,
+        acceptBox.height
+    );
+
+    this.path.attr({
+        fill: "transparent"
+    });
+
+    this.prevObserver = blockView.observe(
+        this, "_align", ["x", "y"]
+    );
+
+    this.prevAnimatingObserver = blockView.observe(
+        this, "_inheritAnimate", ["animating"]
+    );
+
+    this.observe(this, "_updateBG", ["magneting"]);
+
+    this._align();
+};
+
+Entry.FieldDummyBlock.PRIMITIVE_TYPES = ['True'];
+
+Entry.FieldDummyBlock.prototype = Entry.DummyBlock.prototype;

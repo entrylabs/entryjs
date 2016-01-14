@@ -32,13 +32,10 @@ Entry.Thread = function(thread, code) {
 
         for (var i = 0; i < thread.length; i++) {
             var block = thread[i];
-            if (block instanceof Entry.Block ||
-               block instanceof Entry.DummyBlock) {
+            if (block instanceof Entry.Block || block.isDummy) {
                 block.setThread(this);
                 this._data.push(block);
-            } else {
-                this._data.push(new Entry.Block(block, this));
-            }
+            } else this._data.push(new Entry.Block(block, this));
         }
         this._setRelation();
 

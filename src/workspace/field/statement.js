@@ -100,6 +100,7 @@ Entry.FieldStatement = function(content, blockView, index) {
 
 Entry.DummyBlock = function(statementField, blockView) {
     Entry.Model(this, false);
+    this.isDummy = true;
 
     this.view = this;
     this.originBlockView = blockView;
@@ -118,6 +119,7 @@ Entry.DummyBlock = function(statementField, blockView) {
         acceptBox.width,
         acceptBox.height
     );
+
     this.path.attr({
         fill: "transparent"
     });

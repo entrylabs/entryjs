@@ -1381,9 +1381,9 @@ Entry.block.test_wrapper = {
     params: [
         {
             type: "Block",
+            accept: "basic_boolean_field",
             value: [
                 {
-                    accept: "basic_boolean_field",
                     type: "test",
                     params: [30,50]
                 }
@@ -1420,6 +1420,21 @@ Entry.block.basic_button = {
             text: "basic button",
             color: "#333",
             align: "center"
+        }
+    ],
+    func: function() {
+    }
+};
+
+Entry.block.True = {
+    skeleton: "basic_boolean_field",
+    color: "#eee",
+    template: "%1",
+    params: [
+        {
+            type: "Text",
+            text: "참",
+            color: "#333",
         }
     ],
     func: function() {

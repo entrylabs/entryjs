@@ -486,8 +486,21 @@ Entry.BlockView = function(block, board, mode) {
                                 this.set({animating: true});
                                 if (closeBlock.next)
                                     closeBlock.next.view.set({animating: true});
+
                                 block.doInsert(closeBlock);
                                 createjs.Sound.play('entryMagneting');
+
+                                if (closeBlock instanceof Entry.FieldDummyBlock) {
+                                    var orphan = block.next;
+                                    if (Entry.FieldDummyBlock.PRIMITIVE_TYPES.indexOf(orphan.type) > -1) {
+                                        orphan.getThread().cut(orphan);
+                                        orphan.destroy(false);
+                                    } else {
+                                        orphan.separate();
+                                        orphan.view._moveBy(10, 10, false);
+                                    }
+                                }
+
                             } else block.doSeparate();
                         }
                         break;
