@@ -22,7 +22,7 @@ Entry.BlockView = function(block, board, mode) {
     if (skeleton.magnets && skeleton.magnets().next)
         this.svgGroup.block = this.block;
 
-    this.isInBlockMenu = !(this.getBoard() instanceof Entry.Board);
+    this.isInBlockMenu = this.getBoard() instanceof Entry.BlockMenu;
 
     if (skeleton.morph)
         this.block.observe(this, "_renderPath", skeleton.morph, false);
@@ -169,6 +169,11 @@ Entry.BlockView = function(block, board, mode) {
     p._render = function() {
         this._renderPath();
         this.set(this._skeleton.box(this));
+
+        var block = this.block;
+        var events = block.events.blockAdd;
+        if (events && !this.isInBlockMenu)
+            events.forEach(function(fn){fn(block);});
     };
 
     p._renderPath = function() {
@@ -360,7 +365,6 @@ Entry.BlockView = function(block, board, mode) {
 
         function onMouseMove(e) {
             var workspaceMode = board.workspace.getMode();
-            var isInBlockMenu = board instanceof Entry.BlockMenu;
 
             if (workspaceMode === Entry.Workspace.MODE_VIMBOARD)
                 p.vimBoardEvent(e, 'dragOver');
@@ -371,7 +375,7 @@ Entry.BlockView = function(block, board, mode) {
                 e.pageY !== mouseDownCoordinate.y) {
                 if (!blockView.movable) return;
 
-                if (!isInBlockMenu) {
+                if (!blockView.isInBlockMenu) {
                     if(blockView.block.prev) {
                         blockView.block.prev.setNext(null);
                         blockView.block.setPrev(null);
@@ -522,7 +526,7 @@ Entry.BlockView = function(block, board, mode) {
             y = this.y;
 
         var offset = board.relativeOffset;
-        var x = x + offset.left;
+        x += offset.left;
 
         //below the board
         if (x + this.offsetX < board.offset.left) return null;
@@ -583,6 +587,11 @@ Entry.BlockView = function(block, board, mode) {
         this._contents.forEach(function(c) {
             c.destroy();
         });
+
+        var block = this.block;
+        var events = block.events.blockDestroy;
+        if (events && !this.isInBlockMenu)
+            events.forEach(function(fn){fn(block);});
     };
 
     p.getShadow = function() {

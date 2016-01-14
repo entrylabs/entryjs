@@ -13622,7 +13622,7 @@ Entry.BlockMenu = function(a, b) {
   a.align = function() {
     for (var a = this.code.getThreads(), c = 10, d = "LEFT" == this._align ? 20 : this.svgDom.width() / 2, e = 0, f = a.length;e < f;e++) {
       var g = a[e].getFirstBlock().view;
-      0 != e && (this._createSplitter(c), c += 15);
+      0 !== e && (this._createSplitter(c), c += 15);
       g._moveTo(d, c, !1);
       c += g.height + 15;
     }
@@ -13648,15 +13648,10 @@ Entry.BlockMenu = function(a, b) {
     if (this._boardBlockView) {
       var a = this._boardBlockView;
       if (a) {
-        var c = a.block;
         this.workspace.getBoard();
-        var d = !1;
-        a.dragMode = 0;
-        a.removeDragging();
-        var e = Entry.GlobalSvg.left, f = Entry.GlobalSvg.width / 2, a = a.getBoard().offset.left;
-        e < a - f && (d = !0, c.destroy());
         this._boardBlockView = null;
-        return d;
+        var c = Entry.GlobalSvg.left, d = Entry.GlobalSvg.width / 2, a = a.getBoard().offset.left;
+        return c < a - d;
       }
     }
   };
@@ -13707,7 +13702,7 @@ Entry.BlockView = function(a, b, c) {
   var d = this._skeleton = Entry.skeleton[this._schema.skeleton];
   this._contents = [];
   d.magnets && d.magnets().next && (this.svgGroup.block = this.block);
-  this.isInBlockMenu = !(this.getBoard() instanceof Entry.Board);
+  this.isInBlockMenu = this.getBoard() instanceof Entry.BlockMenu;
   d.morph && this.block.observe(this, "_renderPath", d.morph, !1);
   this.prevObserver = null;
   this._startRender(a, c);
@@ -13785,6 +13780,10 @@ Entry.BlockView = function(a, b, c) {
   a._render = function() {
     this._renderPath();
     this.set(this._skeleton.box(this));
+    var a = this.block, c = a.events.blockAdd;
+    c && !this.isInBlockMenu && c.forEach(function(c) {
+      c(a);
+    });
   };
   a._renderPath = function() {
     var a = this._skeleton.path(this);
@@ -13835,18 +13834,17 @@ Entry.BlockView = function(a, b, c) {
   };
   a.onMouseDown = function(b) {
     function c(b) {
-      var c = l.workspace.getMode(), d = l instanceof Entry.BlockMenu;
+      var c = l.workspace.getMode();
       c === Entry.Workspace.MODE_VIMBOARD && a.vimBoardEvent(b, "dragOver");
-      var e = k.mouseDownCoordinate;
-      if ((k.dragMode == Entry.DRAG_MODE_DRAG || b.pageX !== e.x || b.pageY !== e.y) && k.movable) {
-        if (d) {
+      var d = k.mouseDownCoordinate;
+      if ((k.dragMode == Entry.DRAG_MODE_DRAG || b.pageX !== d.x || b.pageY !== d.y) && k.movable) {
+        if (k.isInBlockMenu) {
           l.cloneToBoard(b);
         } else {
           k.block.prev && (k.block.prev.setNext(null), k.block.setPrev(null), k.block.thread.changeEvent.notify());
           this.animating && this.set({animating:!1});
           if (0 === k.dragInstance.height) {
-            d = k.block;
-            for (e = -1;d;) {
+            for (var d = k.block, e = -1;d;) {
               e += d.view.height + 1, d = d.next;
             }
             k.dragInstance.set({height:e});
@@ -13982,6 +13980,10 @@ Entry.BlockView = function(a, b, c) {
     }) : c.remove();
     this._contents.forEach(function(a) {
       a.destroy();
+    });
+    var d = this.block;
+    (a = d.events.blockDestroy) && !this.isInBlockMenu && a.forEach(function(a) {
+      a(d);
     });
   };
   a.getShadow = function() {
@@ -15180,7 +15182,7 @@ Entry.Block = function(a, b) {
 Entry.Block.MAGNET_RANGE = 10;
 Entry.Block.MAGNET_OFFSET = .4;
 (function(a) {
-  a.schema = {id:null, name:null, x:0, y:0, type:null, params:[], statements:[], prev:null, next:null, view:null, thread:null, movable:null, deletable:!0, readOnly:null, events:null};
+  a.schema = {id:null, name:null, x:0, y:0, type:null, params:[], statements:[], prev:null, next:null, view:null, thread:null, movable:null, deletable:!0, readOnly:null, events:{}};
   a.load = function(a) {
     a.id || (a.id = Entry.Utils.generateId());
     this.set(a);
@@ -15188,14 +15190,25 @@ Entry.Block.MAGNET_OFFSET = .4;
   };
   a.getSchema = function() {
     this._schema = Entry.block[this.type];
+    var a = this._schema.events;
+    if (a) {
+      for (var c in a) {
+        this.events[c] || (this.events[c] = []);
+        for (var d = a[c], e = 0;e < d.length;e++) {
+          var f = d[e];
+          0 > this.events[c].indexOf(f) && this.events[c].push(f);
+        }
+      }
+    }
     this._schema.event && this.thread.registerEvent(this, this._schema.event);
-    for (var a = this.params, c = this._schema.params, d = 0;d < c.length;d++) {
-      var e = void 0 !== a[d] ? a[d] : c[d].value, f = a[d];
-      "Block" == c[d].type ? f ? a.splice(d, 1, new Entry.Thread(e, this.getCode())) : a.push(new Entry.Thread(e, this.getCode())) : f ? a.splice(d, 1, e) : a.push(e);
+    a = this.params;
+    c = this._schema.params;
+    for (e = 0;e < c.length;e++) {
+      d = void 0 !== a[e] ? a[e] : c[e].value, f = a[e], "Block" == c[e].type ? f ? a.splice(e, 1, new Entry.Thread(d, this.getCode())) : a.push(new Entry.Thread(d, this.getCode())) : f ? a.splice(e, 1, d) : a.push(d);
     }
     if (a = this._schema.statements) {
-      for (d = 0;d < a.length;d++) {
-        this.statements.splice(d, 1, new Entry.Thread(this.statements[d], this.getCode()));
+      for (e = 0;e < a.length;e++) {
+        this.statements.splice(e, 1, new Entry.Thread(this.statements[e], this.getCode()));
       }
     }
   };

@@ -40,7 +40,7 @@ Entry.Block.MAGNET_OFFSET = 0.4;
         movable: null,
         deletable: true,
         readOnly: null,
-        events: null
+        events: {}
     };
 
     p.load = function(block) {
@@ -54,6 +54,20 @@ Entry.Block.MAGNET_OFFSET = 0.4;
     p.getSchema = function() {
         var that = this;
         this._schema = Entry.block[this.type];
+
+        var events = this._schema.events;
+        if (events) {
+            for (var key in events) {
+                if (!this.events[key]) this.events[key] = [];
+                var funcs = events[key];
+                for (var i=0; i<funcs.length; i++) {
+                    var func = funcs[i];
+                    var index = this.events[key].indexOf(func);
+                    if (index < 0) this.events[key].push(func);
+                }
+            }
+        }
+
         if (this._schema.event)
             this.thread.registerEvent(this, this._schema.event);
         var thisParams = this.params;
@@ -147,6 +161,7 @@ Entry.Block.MAGNET_OFFSET = 0.4;
         delete json.next;
         delete json.view;
         delete json.thread;
+
         if (isNew)
             delete json.id;
 

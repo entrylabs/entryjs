@@ -96,7 +96,7 @@ Entry.BlockMenu = function(dom, align) {
             var blockView = block.view;
 
             //TODO splitter generate condition needed
-            if (i != 0) {
+            if (i !== 0) {
                 this._createSplitter(marginFromTop);
                 marginFromTop += vPadding;
             }
@@ -145,25 +145,17 @@ Entry.BlockMenu = function(dom, align) {
 
         var boardBlockView = this._boardBlockView;
         if (!boardBlockView) return;
-        var boardBlock = boardBlockView.block;
         var thisCode = this.code;
         var workspace = this.workspace;
         var boardCode = workspace.getBoard().code;
 
-        //destroy boardBlock below the range
-        var removed = false;
-        boardBlockView.dragMode = 0;
-        boardBlockView.removeDragging();
+        this._boardBlockView = null;
+
+        //board block should be removed below the amount of range
         var blockLeft = Entry.GlobalSvg.left;
         var width = Entry.GlobalSvg.width/2;
         var boardLeft = boardBlockView.getBoard().offset.left;
-        if (blockLeft < boardLeft - width) {
-            removed = true;
-            boardBlock.destroy();
-        }
-
-        this._boardBlockView = null;
-        return removed;
+        return blockLeft < boardLeft - width;
     };
 
     p.getCode = function(thread) {
