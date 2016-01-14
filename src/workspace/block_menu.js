@@ -158,9 +158,7 @@ Entry.BlockMenu = function(dom, align) {
         return blockLeft < boardLeft - width;
     };
 
-    p.getCode = function(thread) {
-        return this._code;
-    };
+    p.getCode = function(thread) {return this._code;};
 
     p.setSelectedBlock = function(blockView) {
         var old = this.selectedBlockView;
@@ -207,6 +205,14 @@ Entry.BlockMenu = function(dom, align) {
         splitters.forEach(function(line) {
             line.attr({x2: dest});
         });
+    };
+
+    p._clearSplitters = function() {
+        var splitters = this._splitters;
+        for (var i = splitters.length-1; i>=0; i--) {
+            splitters[i].remove();
+            splitters.pop();
+        }
     };
 
 })(Entry.BlockMenu.prototype);

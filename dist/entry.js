@@ -13691,6 +13691,11 @@ Entry.BlockMenu = function(a, b) {
       c.attr({x2:a});
     });
   };
+  a._clearSplitters = function() {
+    for (var a = this._splitters, c = a.length - 1;0 <= c;c--) {
+      a[c].remove(), a.pop();
+    }
+  };
 })(Entry.BlockMenu.prototype);
 Entry.BlockView = function(a, b, c) {
   Entry.Model(this, !1);
