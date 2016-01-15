@@ -266,19 +266,39 @@ Entry.Playground.prototype.generateTabView = function(tabView) {
  * @return {Element}
  */
 Entry.Playground.prototype.generateCodeView = function(codeView) {
-        var categoryView = Entry.createElement('div', 'entryCategory');
-        categoryView.addClass('entryCategoryWorkspace');
-        codeView.appendChild(categoryView);
-        this.categoryView_ = categoryView;
+    var categoryView = Entry.createElement('div', 'entryCategory');
+    categoryView.addClass('entryCategoryWorkspace');
+    codeView.appendChild(categoryView);
+    this.categoryView_ = categoryView;
 
-        var categoryListView = Entry.createElement('ul', 'entryCategoryList');
-        categoryListView.addClass('entryCategoryListWorkspace');
-        categoryView.appendChild(categoryListView);
-        this.categoryListView_ = categoryListView;
+    var categoryListView = Entry.createElement('ul', 'entryCategoryList');
+    categoryListView.addClass('entryCategoryListWorkspace');
+    categoryView.appendChild(categoryListView);
+    this.categoryListView_ = categoryListView;
 
-        var variableView = this.createVariableView();
-        codeView.appendChild(variableView);
-        this.variableView_ = variableView;
+    var variableView = this.createVariableView();
+    codeView.appendChild(variableView);
+    this.variableView_ = variableView;
+
+
+    //"entryWorkspaceBoard";
+    //".entryWorkspaceBlockmenu";
+
+    return;
+    this.mainWorkspace = new Entry.Workspace(
+        {
+            'blockMenu': {
+                domId: 'ntryPlaygroundBlockMenu',
+            },
+            'board': {
+                domId: "ntryPlaygroundWorkspace"
+            },
+            'vimBoard': {
+                domId: "ntryPlaygroundWorkspace"
+            }
+        }
+    );
+
 };
 
 /**
