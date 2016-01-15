@@ -99,7 +99,7 @@ Entry.HWMonitor = function(hwModule) {
         var valueRect = svgGroup.rect(width + 8, 2, 30, 18, 9).attr({
             "fill": port.type === "input" ? "#00979d" : "#A751E3"
         });
-        var valueView = svgGroup.text(width + 13, 12, '0').attr({
+        var valueView = svgGroup.text(width + 28, 12, '0').attr({
             "fill": "#fff",
             "class": "hwComponentValue",
             "alignment-baseline": "central"
