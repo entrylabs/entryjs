@@ -11318,6 +11318,7 @@ Entry.HWMonitor = function(a) {
     b.resize();
   });
   this._hwModule = a;
+  this.scale = .5;
   this._portViews = {};
   this._portMap = {n:[], e:[], s:[], w:[]};
 };
@@ -11329,7 +11330,9 @@ Entry.HWMonitor = function(a) {
     this.hwView = this._svgGroup.group();
     this.hwView.image(Entry.mediaFilePath + "hw/neobot.png", -a.width / 2, -a.height / 2, a.width, a.height);
     this._template = a;
-    var a = a.ports, c = [], d;
+    a = a.ports;
+    this.pathGroup = this._svgGroup.group();
+    var c = [], d;
     for (d in a) {
       var e = this.generatePortView(a[d]);
       this._portViews[d] = e;
@@ -11354,13 +11357,12 @@ Entry.HWMonitor = function(a) {
           f.w.push(a);
       }
     });
-    console.log(c);
     this.resize();
   };
   a.generatePortView = function(a) {
     var c = this._svgGroup.group();
     c.addClass("hwComponent");
-    var d = c.path("m0,0").attr({fill:"none", stroke:"input" === a.type ? "#00979d" : "#A751E3", "stroke-width":3}), e = c.rect(0, 0, 150, 22, 4).attr({fill:"#fff", stroke:"#a0a1a1"}), f = c.text(4, 12, a.name).attr({fill:"#000", "class":"hwComponentName", "alignment-baseline":"central"}).node.getComputedTextLength();
+    var d = this.pathGroup.path("m0,0").attr({fill:"none", stroke:"input" === a.type ? "#00979d" : "#A751E3", "stroke-width":3}), e = c.rect(0, 0, 150, 22, 4).attr({fill:"#fff", stroke:"#a0a1a1"}), f = c.text(4, 12, a.name).attr({fill:"#000", "class":"hwComponentName", "alignment-baseline":"central"}).node.getComputedTextLength();
     c.rect(f + 8, 2, 30, 18, 9).attr({fill:"input" === a.type ? "#00979d" : "#A751E3"});
     var g = c.text(f + 13, 12, "0").attr({fill:"#fff", "class":"hwComponentValue", "alignment-baseline":"central"}), f = f + 40;
     e.attr({width:f + "px"});
@@ -11377,9 +11379,11 @@ Entry.HWMonitor = function(a) {
     }
   };
   a.resize = function() {
+    this.hwView.attr({transform:"s" + this.scale});
     var a = this.svgDom.get(0).getBoundingClientRect();
     this._svgGroup.attr({transform:"t" + a.width / 2 + "," + a.height / 2});
     this._rect = a;
+    this.scale = a.height / this._template.height / 2;
     this.align();
   };
   a.align = function() {
@@ -11387,9 +11391,9 @@ Entry.HWMonitor = function(a) {
       a[d].group.attr({transform:"t" + this._template.width * (d / c - .5) + "," + (-this._template.width / 2 - 30)});
     }
     a = this._portMap.s.concat();
-    this._alignNS(a, this._template.width / 2 + 5, 27);
+    this._alignNS(a, this._template.width * this.scale / 2 + 5, 27);
     a = this._portMap.n.concat();
-    this._alignNS(a, -this._template.width / 2 - 32, -27);
+    this._alignNS(a, -this._template.width * this.scale / 2 - 32, -27);
   };
   a._alignNS = function(a, c, d) {
     for (var e = -this._rect.width / 2, f = this._rect.width / 2, g = this._rect.width, h = 0, k = 0;k < a.length;k++) {
@@ -11407,8 +11411,8 @@ Entry.HWMonitor = function(a) {
     a.length && a[0].group.attr({transform:"t" + (f + e - a[0].width) / 2 + "," + c});
   };
   a._movePort = function(a, c, d, e) {
-    var f = c;
-    c > e ? (f = c - a.width, c = c > a.box.x && a.box.x > e ? "m" + (a.box.x - f) + ",11L" + (a.box.x - f) + "," + (a.box.y - d) : "M" + (a.width - (f - e) / 2) + ",0l0," + (a.box.y > d ? 28 : -22) + "H" + (a.box.x - f) + "L" + (a.box.x - f) + "," + (a.box.y - d)) : c = c < a.box.x && a.box.x < e ? "m" + (a.box.x - c) + ",11L" + (a.box.x - c) + "," + (a.box.y - d) : "m" + (e - c) / 2 + ",0l0," + (a.box.y > d ? 28 : -22) + "H" + (a.box.x - c) + "L" + (a.box.x - c) + "," + (a.box.y - d);
+    var f = c, g = a.box.x * this.scale, h = a.box.y * this.scale;
+    c > e ? (f = c - a.width, c = c > g && g > e ? "M" + g + "," + d + "L" + g + "," + h : "M" + (c + e) / 2 + "," + d + "l0," + (h > d ? 28 : -3) + "H" + g + "L" + g + "," + h) : c = c < g && g < e ? "m" + g + "," + d + "L" + g + "," + h : "m" + (e + c) / 2 + "," + d + "l0," + (h > d ? 28 : -3) + "H" + g + "L" + g + "," + h;
     a.group.attr({transform:"t" + f + "," + d});
     a.path.attr({d:c});
   };

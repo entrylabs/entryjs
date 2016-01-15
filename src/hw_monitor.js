@@ -15,6 +15,7 @@ Entry.HWMonitor = function(hwModule) {
 
     this._hwModule = hwModule;
 
+    this.scale = 0.5;
     this._portViews = {};
     this._portMap = {
         n: [],
@@ -42,6 +43,8 @@ Entry.HWMonitor = function(hwModule) {
         );
         this._template = monitorTemplate;
         var ports = monitorTemplate.ports;
+
+        this.pathGroup = this._svgGroup.group();
 
         var portsTemp = [];
         for (var key in ports) {
@@ -71,7 +74,6 @@ Entry.HWMonitor = function(hwModule) {
                     break;
             }
         });
-        console.log(portsTemp);
 
         this.resize();
     };
@@ -79,7 +81,7 @@ Entry.HWMonitor = function(hwModule) {
     p.generatePortView = function(port) {
         var svgGroup = this._svgGroup.group();
         svgGroup.addClass("hwComponent");
-        var path = svgGroup.path("m0,0").attr({
+        var path = this.pathGroup.path("m0,0").attr({
             "fill": "none",
             "stroke": port.type === "input" ? "#00979d" : "#A751E3",
             "stroke-width": 3
@@ -140,33 +142,35 @@ Entry.HWMonitor = function(hwModule) {
     };
 
     p.resize = function() {
+        this.hwView.attr({ transform: "s" + this.scale });
         var bRect = this.svgDom.get(0).getBoundingClientRect();
         this._svgGroup.attr({
             transform: "t" + bRect.width / 2 + "," + bRect.height / 2
         });
         this._rect = bRect;
+        this.scale = bRect.height / this._template.height / 2;
         this.align();
     };
 
     p.align = function() {
         //for (var direction in this._portMap) {
             //var ports = this._portMap[direction];
-            var ports = this._portMap.n;
-            var length = ports.length;
-            for (var i = 0; i < ports.length; i++) {
-                var port = ports[i];
-                var x = this._template.width * (i / length - 0.5);
-                port.group.attr({
-                    transform: "t" + x + "," +
-                        (- this._template.width/2 - 30)
-                });
-            }
+        var ports = this._portMap.n;
+        var length = ports.length;
+        for (var i = 0; i < ports.length; i++) {
+            var port = ports[i];
+            var x = this._template.width * (i / length - 0.5);
+            port.group.attr({
+                transform: "t" + x + "," +
+                    (- this._template.width/2 - 30)
+            });
+        }
 
         var ports = this._portMap.s.concat();
-        this._alignNS(ports, this._template.width / 2 + 5, 27)
+        this._alignNS(ports, this._template.width * this.scale / 2 + 5, 27)
 
         ports = this._portMap.n.concat();
-        this._alignNS(ports, - this._template.width / 2 - 32, - 27);
+        this._alignNS(ports, - this._template.width * this.scale / 2 - 32, - 27);
     };
 
     p._alignNS = function(ports, yCursor, gap) {
@@ -218,27 +222,29 @@ Entry.HWMonitor = function(hwModule) {
     p._movePort = function(port, x, y, prevPointer) {
         var groupX = x;
         var path;
+        var portX = port.box.x * this.scale,
+            portY = port.box.y * this.scale;
 
         if (x > prevPointer) { // left side
             groupX = x - port.width;
-            if (x > port.box.x && port.box.x > prevPointer)
-                path = "m" + (port.box.x - groupX) + ",11" +
-                    "L" + (port.box.x - groupX) + "," + (port.box.y - y);
+            if (x > portX && portX > prevPointer)
+                path = "M" + (portX) + "," + y +
+                    "L" + (portX) + "," + (portY);
             else
-                path = "M" + (port.width - ((groupX - prevPointer) / 2)) + ",0" +
-                    "l0," + (port.box.y > y ? 28 : -22) +
-                    "H" + (port.box.x - groupX) +
-                    "L" + (port.box.x - groupX) + "," + (port.box.y - y)
+                path = "M" + ((x + prevPointer) / 2) + "," + y +
+                    "l0," + (portY > y ? 28 : -3) +
+                    "H" + (portX) +
+                    "L" + (portX) + "," + (portY)
         }
         else // right side
-            if (x < port.box.x && port.box.x < prevPointer)
-                path = "m" + (port.box.x - x) + ",11" +
-                    "L" + (port.box.x- x) + "," + (port.box.y - y);
+            if (x < portX && portX < prevPointer)
+                path = "m" + (portX) + "," + y +
+                    "L" + (portX) + "," + (portY);
             else
-                path = "m" + ((prevPointer - x) / 2) + ",0" +
-                    "l0," + (port.box.y > y ? 28 : -22) +
-                    "H" + (port.box.x - x) +
-                    "L" + (port.box.x- x) + "," + (port.box.y - y)
+                path = "m" + ((prevPointer + x) / 2) + "," + y +
+                    "l0," + (portY > y ? 28 : -3) +
+                    "H" + (portX) +
+                    "L" + (portX) + "," + (portY)
 
         port.group.attr({ transform: "t" + groupX + "," + y });
         port.path.attr({ "d": path });
