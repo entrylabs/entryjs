@@ -199,11 +199,8 @@ Entry.Board = function(dom) {
                 text: '붙여넣기',
                 enable: !!Entry.clipboard,
                 callback: function(){
-                    var cloned = Entry.clipboard;
-                    var first = cloned[0];
-                    first.doAdd();
-                    that.code.createThread(cloned);
-                    first.copyToClipboard();
+                    that.code.createThread(Entry.clipboard)
+                        .getFirstBlock().copyToClipboard();
                 }
             };
 

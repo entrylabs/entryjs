@@ -13907,9 +13907,7 @@ Entry.BlockView = function(a, b, c) {
             f.block.doDestroyAlone(!0);
           }};
           e.push({text:"\ube14\ub85d \ubcf5\uc0ac & \ubd99\uc5ec\ub123\uae30", callback:function() {
-            var a = g.copy(), b = a[0];
-            b.doAdd();
-            b.getThread().getCode().createThread(a);
+            f.getBoard().code.createThread(g.copy());
           }});
           e.push({text:"\ube14\ub85d \ubcf5\uc0ac", callback:function() {
             f.block.copyToClipboard();
@@ -14166,7 +14164,9 @@ Entry.Code = function(a) {
     if (!(a instanceof Array)) {
       return console.error("blocks must be array");
     }
-    this._data.push(new Entry.Thread(a, this));
+    a = new Entry.Thread(a, this);
+    this._data.push(a);
+    return a;
   };
   a.cloneThread = function(a, c) {
     var d = a.clone(this, c);
@@ -15409,11 +15409,12 @@ Entry.Block.MAGNET_OFFSET = .4;
     }
   };
   a.copy = function() {
-    for (var a = this.getThread(), c = a.getBlocks().indexOf(this), c = a.toJSON(!0, c), a = [], d = new Entry.Thread([], this.getCode()), e = 0;e < c.length;e++) {
-      a.push(new Entry.Block(c[e], d));
+    for (var a = this.getThread(), c = a.getBlocks().indexOf(this), c = a.toJSON(!0, c), a = [], d = 0;d < c.length;d++) {
+      a.push(c[d]);
     }
     c = this.view.svgGroup.transform().globalMatrix;
-    a[0].set({x:c.e + 20, y:c.f + 20});
+    a[0].x = c.e + 15;
+    a[0].y = c.f + 15;
     return a;
   };
   a.copyToClipboard = function() {
@@ -15763,10 +15764,7 @@ Entry.Board = function(a) {
           }
           var f = this, e = [];
           e.push({text:"\ubd99\uc5ec\ub123\uae30", enable:!!Entry.clipboard, callback:function() {
-            var a = Entry.clipboard, b = a[0];
-            b.doAdd();
-            f.code.createThread(a);
-            b.copyToClipboard();
+            f.code.createThread(Entry.clipboard).getFirstBlock().copyToClipboard();
           }});
           e.push({text:"\ube14\ub85d \uc815\ub9ac\ud558\uae30", callback:function() {
             f.alignThreads();

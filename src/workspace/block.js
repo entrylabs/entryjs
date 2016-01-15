@@ -378,15 +378,12 @@ Entry.Block.MAGNET_OFFSET = 0.4;
         var index = thread.getBlocks().indexOf(this);
         var json = thread.toJSON(true, index);
         var cloned = [];
-        var newThread = new Entry.Thread([], this.getCode());
-        for (var i=0; i<json.length; i++)
-            cloned.push(new Entry.Block(json[i], newThread));
+        for (var i=0; i<json.length; i++) cloned.push(json[i]);
 
         var matrix = this.view.svgGroup.transform().globalMatrix;
-        cloned[0].set({
-            x: matrix.e + 20,
-            y: matrix.f + 20
-        });
+        cloned[0].x = matrix.e + 15;
+        cloned[0].y = matrix.f + 15;
+
         return cloned;
     };
 

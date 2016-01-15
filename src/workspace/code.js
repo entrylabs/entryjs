@@ -117,7 +117,9 @@ Entry.Code = function(code) {
         if (!(blocks instanceof Array))
             return console.error("blocks must be array");
 
-        this._data.push(new Entry.Thread(blocks, this));
+        var thread = new Entry.Thread(blocks, this);
+        this._data.push(thread);
+        return thread;
     };
 
     p.cloneThread = function(thread, mode) {

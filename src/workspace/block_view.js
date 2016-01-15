@@ -317,10 +317,7 @@ Entry.BlockView = function(block, board, mode) {
             var copyAndPaste = {
                 text: '블록 복사 & 붙여넣기',
                 callback: function(){
-                    var cloned = block.copy();
-                    var first = cloned[0];
-                    first.doAdd();
-                    first.getThread().getCode().createThread(cloned);
+                    that.getBoard().code.createThread(block.copy());
                 }
             };
 
