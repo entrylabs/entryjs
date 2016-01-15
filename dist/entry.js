@@ -13939,7 +13939,17 @@ Entry.BlockView = function(a, b, c) {
         switch(Entry.GlobalSvg.terminateDrag(this)) {
           case g.DONE:
             g = this._getCloseBlock();
-            a || g ? g ? (this.set({animating:!0}), g.next && g.next.view.set({animating:!0}), e.doInsert(g), createjs.Sound.play("entryMagneting"), g instanceof Entry.FieldDummyBlock && (e = e.next, -1 < Entry.FieldDummyBlock.PRIMITIVE_TYPES.indexOf(e.type) ? (e.getThread().cut(e), e.destroy(!1)) : (e.separate(), e.view._moveBy(10, 10, !1)))) : e.doSeparate() : d != Entry.DRAG_MODE_DRAG || f || e.doMove();
+            if (a || g) {
+              if (g) {
+                if (this.set({animating:!0}), g.next && g.next.view.set({animating:!0}), e.doInsert(g), createjs.Sound.play("entryMagneting"), g instanceof Entry.FieldDummyBlock && (e = e.next)) {
+                  -1 < Entry.FieldDummyBlock.PRIMITIVE_TYPES.indexOf(e.type) ? (e.getThread().cut(e), e.destroy(!1)) : (e.separate(), e.view._moveBy(10, 10, !1));
+                }
+              } else {
+                e.doSeparate();
+              }
+            } else {
+              d != Entry.DRAG_MODE_DRAG || f || e.doMove();
+            }
             break;
           case g.RETURN:
             d = this.originPos;

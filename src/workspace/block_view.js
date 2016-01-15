@@ -492,12 +492,14 @@ Entry.BlockView = function(block, board, mode) {
 
                                 if (closeBlock instanceof Entry.FieldDummyBlock) {
                                     var orphan = block.next;
-                                    if (Entry.FieldDummyBlock.PRIMITIVE_TYPES.indexOf(orphan.type) > -1) {
-                                        orphan.getThread().cut(orphan);
-                                        orphan.destroy(false);
-                                    } else {
-                                        orphan.separate();
-                                        orphan.view._moveBy(10, 10, false);
+                                    if (orphan) {
+                                        if (Entry.FieldDummyBlock.PRIMITIVE_TYPES.indexOf(orphan.type) > -1) {
+                                            orphan.getThread().cut(orphan);
+                                            orphan.destroy(false);
+                                        } else {
+                                            orphan.separate();
+                                            orphan.view._moveBy(10, 10, false);
+                                        }
                                     }
                                 }
 
