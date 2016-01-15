@@ -6429,209 +6429,6 @@ p.renderBlock = function(a) {
   var b = this.blockHelpData[a];
   b && (b = jQuery.parseXML(b.xml), b = this.blockMenu_.show(b.childNodes), this.blockHelperDescription_.innerHTML = Lang.Helper[a], $(this.blockHelperDescription_).css({top:b + 40}));
 };
-Entry.HWMontior = {};
-Entry.HWMonitor = function(a) {
-  this.svgDom = Entry.Dom($('<svg id="hwMonitor" class="hwMonitor" width="100%" height="100%"version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'), {parent:this.view});
-  var b = this;
-  Entry.addEventListener("windowResized", function() {
-    b.resize();
-  });
-  this._hwModule = a;
-  this._portViews = {};
-  this._portMap = {n:[], e:[], s:[], w:[]};
-};
-(function(a) {
-  a.generateView = function() {
-    this.snap = Snap("#hwMonitor");
-    this._svgGroup = this.snap.group();
-    var a = this._hwModule.monitorTemplate;
-    this.hwView = this._svgGroup.group();
-    this.hwView.image(Entry.mediaFilePath + "hw/neobot.png", -a.width / 2, -a.height / 2, a.width, a.height);
-    this._template = a;
-    var a = a.ports, c = [], d;
-    for (d in a) {
-      var e = this.generatePortView(a[d]);
-      this._portViews[d] = e;
-      c.push(e);
-    }
-    c.sort(function(a, b) {
-      return a.box.x - b.box.x;
-    });
-    var f = this._portMap;
-    c.map(function(a) {
-      switch(Math.round(Math.atan2(a.box.y, a.box.x) / Math.PI * 2)) {
-        case -1:
-          f.n.push(a);
-          break;
-        case 0:
-          f.e.push(a);
-          break;
-        case 1:
-          f.s.push(a);
-          break;
-        case 2:
-          f.w.push(a);
-      }
-    });
-    console.log(c);
-    this.resize();
-  };
-  a.generatePortView = function(a) {
-    var c = this._svgGroup.group();
-    c.addClass("hwComponent");
-    var d = c.rect(0, 0, 150, 22, 4);
-    d.attr({fill:"#fff", stroke:"#a0a1a1"});
-    var e = c.text(4, 12, a.name);
-    e.attr({fill:"#000", "class":"hwComponentName", "alignment-baseline":"central"});
-    e = e.node.getComputedTextLength();
-    c.rect(e + 8, 2, 30, 18, 9).attr({fill:"input" === a.type ? "#00979d" : "#A751E3"});
-    var f = c.text(e + 13, 12, "0");
-    f.attr({fill:"#fff", "class":"hwComponentValue", "alignment-baseline":"central"});
-    e += 40;
-    d.attr({width:e + "px"});
-    return {group:c, value:f, type:a.type, box:{x:a.pos.x - this._template.width / 2, y:a.pos.y - this._template.height / 2, width:e}, width:e};
-  };
-  a.getView = function() {
-    return this.svgDom;
-  };
-  a.update = function() {
-    var a = Entry.hw.portData, c = Entry.hw.sendQueue, d;
-    for (d in this._portViews) {
-      var e = this._portViews[d], f = "input" == e.type ? a[d] : c[d];
-      e.value.attr({text:f ? f : 0});
-    }
-  };
-  a.resize = function() {
-    var a = this.svgDom.get(0).getBoundingClientRect();
-    this._svgGroup.attr({transform:"t" + a.width / 2 + "," + a.height / 2});
-    this._rect = a;
-    this.align();
-  };
-  a.align = function() {
-    for (var a = this._portMap.n, c = a.length, d = 0;d < a.length;d++) {
-      a[d].group.attr({transform:"t" + this._template.width * (d / c - .5) + "," + (-this._template.width / 2 - 30)});
-    }
-    a = this._portMap.s.concat();
-    this._alignNS(a, this._template.width / 2 + 5, 27);
-    a = this._portMap.n.concat();
-    this._alignNS(a, -this._template.width / 2 - 32, -27);
-  };
-  a._alignNS = function(a, c, d) {
-    for (var e = -this._rect.width / 2, f = this._rect.width / 2, g = this._rect.width, h = 0, k = 0;k < a.length;k++) {
-      h += a[k].width + 5;
-    }
-    h < f - e && (f = h / 2 + 3, e = -h / 2 - 3);
-    for (;1 < a.length;) {
-      var k = a.shift(), l = a.pop(), n = d;
-      h <= f - e ? (e += k.width + 5, f -= l.width + 5, n = 0) : 0 === a.length ? (e = (e + f) / 2 - 3, f = e + 6) : (e = Math.max(e, -g / 2 + k.width) + 15, f = Math.min(f, g / 2 - l.width) - 15);
-      k.group.attr({transform:"t" + (e - k.width) + "," + c});
-      l.group.attr({transform:"t" + f + "," + c});
-      h -= k.width + l.width + 10;
-      c += n;
-    }
-    a.length && a[0].group.attr({transform:"t" + (f + e - a[0].width) / 2 + "," + c});
-  };
-})(Entry.HWMonitor.prototype);
-Entry.HW = function() {
-  this.connectTrial = 0;
-  this.isFirstConnect = !0;
-  if ("WebSocket" in window) {
-    try {
-      this.initSocket();
-    } catch (a) {
-      console.log("socket error:", a);
-    }
-  } else {
-    console.log("socket not exist");
-  }
-  this.connected = !1;
-  this.portData = {};
-  this.sendQueue = {};
-  this.settingQueue = {};
-  this.hwModule = this.selectedDevice = null;
-  Entry.addEventListener("stop", this.setZero);
-  this.hwInfo = {11:Entry.Arduino, 12:Entry.SensorBoard, 24:Entry.Hamster, 25:Entry.Albert, 31:Entry.Bitbrick, 51:Entry.Neobot};
-};
-Entry.HW.TRIAL_LIMIT = 1;
-p = Entry.HW.prototype;
-p.initSocket = function() {
-  if (this.connectTrial >= Entry.HW.TRIAL_LIMIT) {
-    this.isFirstConnect || Entry.toast.alert(Lang.Menus.connect_hw, Lang.Menus.connect_fail, !1), this.isFirstConnect = !1;
-  } else {
-    var a = this, b = new WebSocket("ws://localhost:23518");
-    this.socket = b;
-    this.connected = !1;
-    b.binaryType = "arraybuffer";
-    this.connectTrial++;
-    b.onopen = function() {
-      a.initHardware();
-    };
-    b.onmessage = function(b) {
-      b = JSON.parse(b.data);
-      a.checkDevice(b);
-      a.updatePortData(b);
-    };
-    b.onclose = function() {
-      a.initSocket();
-    };
-    Entry.dispatchEvent("hwChanged");
-  }
-};
-p.retryConnect = function() {
-  this.connectTrial = 0;
-  this.initSocket();
-};
-p.initHardware = function() {
-  this.connectTrial = 0;
-  this.connected = !0;
-  Entry.dispatchEvent("hwChanged");
-  Entry.playground && Entry.playground.object && Entry.playground.setMenu(Entry.playground.object.objectType);
-};
-p.setDigitalPortValue = function(a, b) {
-  this.sendQueue[a] = b;
-};
-p.getAnalogPortValue = function(a) {
-  return this.connected ? this.portData["a" + a] : 0;
-};
-p.getDigitalPortValue = function(a) {
-  if (!this.connected) {
-    return 0;
-  }
-  this.setPortReadable(a);
-  return void 0 !== this.portData[a] ? this.portData[a] : 0;
-};
-p.setPortReadable = function(a) {
-  this.sendQueue.readablePorts || (this.sendQueue.readablePorts = []);
-  this.sendQueue.readablePorts.push(a);
-};
-p.update = function() {
-  this.socket && 1 == this.socket.readyState && (this.socket.send(JSON.stringify(this.sendQueue)), this.sendQueue.readablePorts = []);
-};
-p.updatePortData = function(a) {
-  this.portData = a;
-  this.hwMonitor && this.hwMonitor.update();
-};
-p.closeConnection = function() {
-  this.socket && this.socket.close();
-};
-p.downloadConnector = function() {
-  window.open("http://play-entry.org/down/entry-hw_v1.1.zip", "_blank").focus();
-};
-p.downloadSource = function() {
-  window.open("http://play-entry.com/lib/EntryArduino/arduino/entry.ino", "_blank").focus();
-};
-p.setZero = function() {
-  Entry.hw.hwModule && Entry.hw.hwModule.setZero();
-};
-p.checkDevice = function(a) {
-  void 0 !== a.company && (a = "" + a.company + a.model, a != this.selectedDevice && (this.selectedDevice = a, this.hwModule = this.hwInfo[a], Entry.dispatchEvent("hwChanged"), Entry.toast.success(Lang.Menus.connect_hw, Lang.Menus.connect_message.replace("%1", Lang.Device[Entry.hw.hwModule.name]), !1), this.hwModule.monitorTemplate && (this.hwMonitor = new Entry.HWMonitor(this.hwModule), Entry.propertyPanel.addMode("hw", this.hwMonitor), this.hwMonitor.generateView())));
-};
-p.banHW = function() {
-  var a = this.hwInfo, b;
-  for (b in a) {
-    Entry.playground.blockMenu.banClass(a[b].name);
-  }
-};
 Entry.Activity = function(a, b) {
   this.name = a;
   this.timestamp = new Date;
@@ -11512,6 +11309,209 @@ Entry.Func.generateWsBlock = function(a, b, c) {
   a = '<xml><block type="function_general">' + (e + "</mutation>") + b + "</block></xml>";
   c || (c = "\ud568\uc218");
   return {block:Blockly.Xml.textToDom(a).childNodes[0], description:c};
+};
+Entry.HWMontior = {};
+Entry.HWMonitor = function(a) {
+  this.svgDom = Entry.Dom($('<svg id="hwMonitor" class="hwMonitor" width="100%" height="100%"version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'), {parent:this.view});
+  var b = this;
+  Entry.addEventListener("windowResized", function() {
+    b.resize();
+  });
+  this._hwModule = a;
+  this._portViews = {};
+  this._portMap = {n:[], e:[], s:[], w:[]};
+};
+(function(a) {
+  a.generateView = function() {
+    this.snap = Snap("#hwMonitor");
+    this._svgGroup = this.snap.group();
+    var a = this._hwModule.monitorTemplate;
+    this.hwView = this._svgGroup.group();
+    this.hwView.image(Entry.mediaFilePath + "hw/neobot.png", -a.width / 2, -a.height / 2, a.width, a.height);
+    this._template = a;
+    var a = a.ports, c = [], d;
+    for (d in a) {
+      var e = this.generatePortView(a[d]);
+      this._portViews[d] = e;
+      c.push(e);
+    }
+    c.sort(function(a, b) {
+      return a.box.x - b.box.x;
+    });
+    var f = this._portMap;
+    c.map(function(a) {
+      switch(Math.round(Math.atan2(a.box.y, a.box.x) / Math.PI * 2)) {
+        case -1:
+          f.n.push(a);
+          break;
+        case 0:
+          f.e.push(a);
+          break;
+        case 1:
+          f.s.push(a);
+          break;
+        case 2:
+          f.w.push(a);
+      }
+    });
+    console.log(c);
+    this.resize();
+  };
+  a.generatePortView = function(a) {
+    var c = this._svgGroup.group();
+    c.addClass("hwComponent");
+    var d = c.path("m0,0").attr({fill:"none", stroke:"input" === a.type ? "#00979d" : "#A751E3", "stroke-width":3}), e = c.rect(0, 0, 150, 22, 4).attr({fill:"#fff", stroke:"#a0a1a1"}), f = c.text(4, 12, a.name).attr({fill:"#000", "class":"hwComponentName", "alignment-baseline":"central"}).node.getComputedTextLength();
+    c.rect(f + 8, 2, 30, 18, 9).attr({fill:"input" === a.type ? "#00979d" : "#A751E3"});
+    var g = c.text(f + 13, 12, "0").attr({fill:"#fff", "class":"hwComponentValue", "alignment-baseline":"central"}), f = f + 40;
+    e.attr({width:f + "px"});
+    return {group:c, value:g, type:a.type, path:d, box:{x:a.pos.x - this._template.width / 2, y:a.pos.y - this._template.height / 2, width:f}, width:f};
+  };
+  a.getView = function() {
+    return this.svgDom;
+  };
+  a.update = function() {
+    var a = Entry.hw.portData, c = Entry.hw.sendQueue, d;
+    for (d in this._portViews) {
+      var e = this._portViews[d], f = "input" == e.type ? a[d] : c[d];
+      e.value.attr({text:f ? f : 0});
+    }
+  };
+  a.resize = function() {
+    var a = this.svgDom.get(0).getBoundingClientRect();
+    this._svgGroup.attr({transform:"t" + a.width / 2 + "," + a.height / 2});
+    this._rect = a;
+    this.align();
+  };
+  a.align = function() {
+    for (var a = this._portMap.n, c = a.length, d = 0;d < a.length;d++) {
+      a[d].group.attr({transform:"t" + this._template.width * (d / c - .5) + "," + (-this._template.width / 2 - 30)});
+    }
+    a = this._portMap.s.concat();
+    this._alignNS(a, this._template.width / 2 + 5, 27);
+    a = this._portMap.n.concat();
+    this._alignNS(a, -this._template.width / 2 - 32, -27);
+  };
+  a._alignNS = function(a, c, d) {
+    for (var e = -this._rect.width / 2, f = this._rect.width / 2, g = this._rect.width, h = 0, k = 0;k < a.length;k++) {
+      h += a[k].width + 5;
+    }
+    h < f - e && (f = h / 2 + 3, e = -h / 2 - 3);
+    for (;1 < a.length;) {
+      var k = a.shift(), l = a.pop(), n = e, m = f, q = d;
+      h <= f - e ? (e += k.width + 5, f -= l.width + 5, q = 0) : 0 === a.length ? (e = (e + f) / 2 - 3, f = e + 6) : (e = Math.max(e, -g / 2 + k.width) + 15, f = Math.min(f, g / 2 - l.width) - 15);
+      this._movePort(k, e, c, n);
+      this._movePort(l, f, c, m);
+      h -= k.width + l.width + 10;
+      c += q;
+    }
+    a.length && a[0].group.attr({transform:"t" + (f + e - a[0].width) / 2 + "," + c});
+  };
+  a._movePort = function(a, c, d, e) {
+    var f = c;
+    c > e ? (f = c - a.width, c = c > a.box.x && a.box.x > e ? "m" + (a.box.x - f) + ",11L" + (a.box.x - f) + "," + (a.box.y - d) : "M" + (a.width - (f - e) / 2) + ",0l0," + (a.box.y > d ? 28 : -22) + "H" + (a.box.x - f) + "L" + (a.box.x - f) + "," + (a.box.y - d)) : c = c < a.box.x && a.box.x < e ? "m" + (a.box.x - c) + ",11L" + (a.box.x - c) + "," + (a.box.y - d) : "m" + (e - c) / 2 + ",0l0," + (a.box.y > d ? 28 : -22) + "H" + (a.box.x - c) + "L" + (a.box.x - c) + "," + (a.box.y - d);
+    a.group.attr({transform:"t" + f + "," + d});
+    a.path.attr({d:c});
+  };
+})(Entry.HWMonitor.prototype);
+Entry.HW = function() {
+  this.connectTrial = 0;
+  this.isFirstConnect = !0;
+  if ("WebSocket" in window) {
+    try {
+      this.initSocket();
+    } catch (a) {
+      console.log("socket error:", a);
+    }
+  } else {
+    console.log("socket not exist");
+  }
+  this.connected = !1;
+  this.portData = {};
+  this.sendQueue = {};
+  this.settingQueue = {};
+  this.hwModule = this.selectedDevice = null;
+  Entry.addEventListener("stop", this.setZero);
+  this.hwInfo = {11:Entry.Arduino, 12:Entry.SensorBoard, 24:Entry.Hamster, 25:Entry.Albert, 31:Entry.Bitbrick, 51:Entry.Neobot};
+};
+Entry.HW.TRIAL_LIMIT = 1;
+p = Entry.HW.prototype;
+p.initSocket = function() {
+  if (this.connectTrial >= Entry.HW.TRIAL_LIMIT) {
+    this.isFirstConnect || Entry.toast.alert(Lang.Menus.connect_hw, Lang.Menus.connect_fail, !1), this.isFirstConnect = !1;
+  } else {
+    var a = this, b = new WebSocket("ws://localhost:23518");
+    this.socket = b;
+    this.connected = !1;
+    b.binaryType = "arraybuffer";
+    this.connectTrial++;
+    b.onopen = function() {
+      a.initHardware();
+    };
+    b.onmessage = function(b) {
+      b = JSON.parse(b.data);
+      a.checkDevice(b);
+      a.updatePortData(b);
+    };
+    b.onclose = function() {
+      a.initSocket();
+    };
+    Entry.dispatchEvent("hwChanged");
+  }
+};
+p.retryConnect = function() {
+  this.connectTrial = 0;
+  this.initSocket();
+};
+p.initHardware = function() {
+  this.connectTrial = 0;
+  this.connected = !0;
+  Entry.dispatchEvent("hwChanged");
+  Entry.playground && Entry.playground.object && Entry.playground.setMenu(Entry.playground.object.objectType);
+};
+p.setDigitalPortValue = function(a, b) {
+  this.sendQueue[a] = b;
+};
+p.getAnalogPortValue = function(a) {
+  return this.connected ? this.portData["a" + a] : 0;
+};
+p.getDigitalPortValue = function(a) {
+  if (!this.connected) {
+    return 0;
+  }
+  this.setPortReadable(a);
+  return void 0 !== this.portData[a] ? this.portData[a] : 0;
+};
+p.setPortReadable = function(a) {
+  this.sendQueue.readablePorts || (this.sendQueue.readablePorts = []);
+  this.sendQueue.readablePorts.push(a);
+};
+p.update = function() {
+  this.socket && 1 == this.socket.readyState && (this.socket.send(JSON.stringify(this.sendQueue)), this.sendQueue.readablePorts = []);
+};
+p.updatePortData = function(a) {
+  this.portData = a;
+  this.hwMonitor && this.hwMonitor.update();
+};
+p.closeConnection = function() {
+  this.socket && this.socket.close();
+};
+p.downloadConnector = function() {
+  window.open("http://play-entry.org/down/entry-hw_v1.1.zip", "_blank").focus();
+};
+p.downloadSource = function() {
+  window.open("http://play-entry.com/lib/EntryArduino/arduino/entry.ino", "_blank").focus();
+};
+p.setZero = function() {
+  Entry.hw.hwModule && Entry.hw.hwModule.setZero();
+};
+p.checkDevice = function(a) {
+  void 0 !== a.company && (a = "" + a.company + a.model, a != this.selectedDevice && (this.selectedDevice = a, this.hwModule = this.hwInfo[a], Entry.dispatchEvent("hwChanged"), Entry.toast.success(Lang.Menus.connect_hw, Lang.Menus.connect_message.replace("%1", Lang.Device[Entry.hw.hwModule.name]), !1), this.hwModule.monitorTemplate && (this.hwMonitor = new Entry.HWMonitor(this.hwModule), Entry.propertyPanel.addMode("hw", this.hwMonitor), this.hwMonitor.generateView())));
+};
+p.banHW = function() {
+  var a = this.hwInfo, b;
+  for (b in a) {
+    Entry.playground.blockMenu.banClass(a[b].name);
+  }
 };
 Entry.BlockModel = function() {
   Entry.Model(this);
