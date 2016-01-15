@@ -22,18 +22,6 @@ Entry.Container = function() {
     this.cachedPicture = {};
 
     /**
-     * Array for entry variables
-     * @type {Array.<entry variable>}
-     */
-    this.variables_ = [];
-
-    /**
-     * Array for entry block event
-     * @type {Array.<block event>}
-     */
-    this.messages_ = [];
-
-    /**
      * variable for canvas input
      * @type {String}
      */
@@ -59,10 +47,10 @@ Entry.Container = function() {
  */
 Entry.Container.prototype.generateView = function(containerView, option) {
     /** @type {!Element} */
-    this.view_ = containerView;
-    this.view_.addClass('entryContainer');
+    this._view = containerView;
+    this._view.addClass('entryContainer');
     if (!option || option == 'workspace') {
-        this.view_.addClass('entryContainerWorkspace');
+        this._view.addClass('entryContainerWorkspace');
 
         var addButton = Entry.createElement('div');
         addButton.addClass('entryAddObjectWorkspace');
@@ -70,7 +58,7 @@ Entry.Container.prototype.generateView = function(containerView, option) {
         addButton.bindOnClick(function(e){
             Entry.dispatchEvent('openSpriteManager');
         });
-        //this.view_.appendChild(addButton);
+        //this._view.appendChild(addButton);
 
         var ulWrapper = Entry.createElement('div');
         ulWrapper.addClass('entryContainerListWorkspaceWrapper');
@@ -96,18 +84,18 @@ Entry.Container.prototype.generateView = function(containerView, option) {
             Entry.ContextMenu.show(options, 'workspace-contextmenu');
         });
 
-        this.view_.appendChild(ulWrapper);
+        this._view.appendChild(ulWrapper);
 
         var listView = Entry.createElement('ul');
         listView.addClass('entryContainerListWorkspace');
 
         ulWrapper.appendChild(listView);
-        //this.view_.appendChild(listView);
+        //this._view.appendChild(listView);
         /** @param {!Element} */
         this.listView_ = listView;
         this.enableSort();
     } else if (option == 'phone') {
-        this.view_.addClass('entryContainerPhone');
+        this._view.addClass('entryContainerPhone');
 
         var addButton = Entry.createElement('div');
         addButton.addClass('entryAddObjectWorkspace');
@@ -115,17 +103,16 @@ Entry.Container.prototype.generateView = function(containerView, option) {
         addButton.bindOnClick(function(e){
             Entry.dispatchEvent('openSpriteManager');
         });
-        //this.view_.appendChild(addButton);
+        //this._view.appendChild(addButton);
 
         var ulWrapper = Entry.createElement('div');
         ulWrapper.addClass('entryContainerListPhoneWrapper');
-        this.view_.appendChild(ulWrapper);
+        this._view.appendChild(ulWrapper);
 
         var listView = Entry.createElement('ul');
         listView.addClass('entryContainerListPhone');
 
         ulWrapper.appendChild(listView);
-        //this.view_.appendChild(listView);
         /** @param {!Element} */
         this.listView_ = listView;
         //this.enableSort();
@@ -443,251 +430,114 @@ Entry.Container.prototype.moveElementByBlock = function(currentIndex, targetInde
 };
 
 /**
- * Create event for block. This include user's input to define message.
- * Real adding message action is do in 'this.addMessage'
- */
-Entry.Container.prototype.createMessage = function() {
-    var messageName = prompt(Lang.Workspace.enter_new_message);
-    if (messageName) {
-        var exist = Entry.isExist(messageName, 'name',
-                                  Entry.variableContainer.messages_);
-        if (!exist) {
-            if (Entry.variableContainer.addMessage({name:messageName}))
-                Entry.toast.success(Lang.Workspace.message_add_ok,
-                                   messageName + ' ' + Lang.Workspace.message_add_ok_msg);
-        } else {
-                Entry.toast.alert(Lang.Workspace.message_add_fail,
-                                   Lang.Workspace.message_add_fail_msg);
-        }
-    } else {
-        Entry.toast.alert(Lang.Workspace.message_add_cancel,
-                           Lang.Workspace.message_add_cancel_msg);
-    }
-};
-
-/**
- * Add event for block
- * @param {message model} message
- * @return {boolean} return true when success
- */
-Entry.Container.prototype.addMessage = function(message) {
-    if (!message.id)
-        message.id = Entry.generateHash();
-    this.messages_.push(message);
-    Entry.playground.reloadPlayground();
-    return true;
-};
-
-/**
- * Delete event for block. This just dispatch an event for workspace.
- * Real deleting message action is do in 'this.removeMessage'
- */
-Entry.Container.prototype.deleteMessage = function() {
-    if ( this.messages_.length === 0 ){
-        Entry.toast.alert(Lang.Msgs.warn, Lang.Workspace.no_message_to_remove, 'true');
-        return;
-    }
-
-    Entry.dispatchEvent('deleteMessage');
-};
-
-/**
- * Remove message from container.
- * @param {message model} message
- */
-Entry.Container.prototype.removeMessage = function(message) {
-    var messages = this.messages_;
-
-    for ( var i = 0; i < messages.length; i++ ) {
-        if ( messages[i].id == message.id ){
-            messages.splice(i, 1);
-
-            Entry.playground.reloadPlayground();
-
-            break;
-        }
-    }
-};
-
-/**
- * Create variable for block. This include user's input to define variable.
- * Real adding variable action is do in 'this.addVariable'
- */
-Entry.Container.prototype.createVariable = function() {
-    var variableName = prompt(Lang.Workspace.enter_variable_name);
-    if (variableName && variableName.length <= 10) {
-        var exist = Entry.isExist(variableName, 'name_',
-                                  Entry.variableContainer.variables_);
-        if (!exist) {
-            if (Entry.variableContainer.addVariable({name:variableName}))
-                Entry.toast.success(Lang.Workspace.variable_add_ok,
-                                   variableName + ' ' + Lang.Workspace.variable_add_ok_msg);
-        } else {
-                Entry.toast.alert(Lang.Workspace.variable_add_fail,
-                                   Lang.Workspace.variable_add_fail_msg1);
-        }
-    } else {
-        if (variableName && variableName.length >= 10)
-            Entry.toast.alert(Lang.Workspace.variable_add_fail,Lang.Workspace.variable_add_fail_msg2, true);
-        else
-            Entry.toast.alert(Lang.Workspace.variable_add_calcel,Lang.Workspace.variable_add_calcel_msg);
-
-    }
-};
-
-/**
- * Remove variable for block. This include variable.id_ from workspace.
- */
-Entry.Container.prototype.removeVariable = function() {
-    Entry.dispatchEvent('removeVariable');
-};
-
-/**
- * Change variable name for block. This include variable.id_ from workspace.
- */
-Entry.Container.prototype.changeVariableName = function() {
-    Entry.dispatchEvent('changeVariableName');
-};
-
-/**
- * Change variable name from container.variables_ list
- * @param {Object} {varId, newName}
- */
-Entry.Container.prototype.changeEntryVariableName = function(object) {
-    var varList = this.variables_;
-    var exist = Entry.isExist(object.newName, 'name_', varList);
-
-    if (exist) {
-        Entry.toast.alert(Lang.Workspace.variable_rename_failed,
-                           Lang.Workspace.variable_dup);
-        return;
-    }
-    for(var i=0; i<varList.length; i++){
-        if(varList[i].getId() == object.varId){
-            this.variables_[i].setName(object.newName);
-            break;
-        }
-    }
-    Entry.toast.success(Lang.Workspace.variable_rename, Lang.Workspace.variable_rename_ok);
-    Entry.playground.reloadPlayground();
-};
-
-/**
- * Rmove variable from container.variables_ list
- * Call stage.removeVariable for remove from stage.
- * @param {Variable.id_} varId
- */
-Entry.Container.prototype.removeEntryVariable = function(varId) {
-    var varList = this.variables_;
-    for(var i=0; i<varList.length; i++){
-        if(varList[i].getId() == varId){
-            varList[i].remove();
-            this.variables_.splice(i,1);
-
-            Entry.playground.reloadPlayground();
-
-            return;
-        }
-    }
-};
-
-
-/**
  * generate list for blockly dropdown dynamic
  * @param {string} menuName
  */
 Entry.Container.prototype.getDropdownList = function(menuName) {
     var result = [];
-    if (menuName == 'sprites') {
-        var objs = this.getCurrentObjects();
-        var length = objs.length;
-        for (var i = 0; i<length; i++) {
-            var object = objs[i];
-            result.push([object.name, object.id]);
-        }
-    } else if (menuName == 'spritesWithMouse') {
-        var objs = this.getCurrentObjects();
-        var length = objs.length;
-        for (var i = 0; i<length; i++) {
-            var object = objs[i];
-            result.push([object.name, object.id]);
-        }
-        result.push([Lang.Blocks.mouse_pointer, 'mouse']);
-    } else if (menuName == 'spritesWithSelf') {
-        var objs = this.getCurrentObjects();
-        var length = objs.length;
-        for (var i = 0; i<length; i++) {
-            var object = objs[i];
-            result.push([object.name, object.id]);
-        }
-        result.push([Lang.Blocks.self, 'self']);
-    } else if (menuName == 'collision') {
-        result.push([Lang.Blocks.mouse_pointer, 'mouse']);
-        var objs = this.getCurrentObjects();
-        var length = objs.length;
-        for (var i = 0; i<length; i++) {
-            var object = objs[i];
-            result.push([object.name, object.id]);
-        }
-        result.push([Lang.Blocks.wall, 'wall']);
-        result.push([Lang.Blocks.wall_up, 'wall_up']);
-        result.push([Lang.Blocks.wall_down, 'wall_down']);
-        result.push([Lang.Blocks.wall_right, 'wall_right']);
-        result.push([Lang.Blocks.wall_left, 'wall_left']);
-    } else if (menuName == 'pictures') {
-        var pictures = Entry.playground.object.pictures;
-        for (var i = 0; i<pictures.length; i++) {
-            var picture = pictures[i];
-            result.push([picture.name, picture.id]);
-        }
-    } else if (menuName == 'messages') {
-        var messages = Entry.variableContainer.messages_;
-        for (var i = 0; i<messages.length; i++) {
-            var message = messages[i];
-            result.push([message.name, message.id]);
-        }
-    } else if (menuName == 'variables') {
-        var variables = Entry.variableContainer.variables_;
-        for (var i = 0; i<variables.length; i++) {
-            var variable = variables[i];
-            if (variable.object_ && variable.object_ != Entry.playground.object.id)
-                continue;
-            result.push([variable.getName(), variable.getId()]);
-        }
-        if (!result || result.length === 0)
-            result.push([Lang.Blocks.VARIABLE_variable, 'null']);
-    } else if (menuName == 'lists') {
-        var lists = Entry.variableContainer.lists_;
-        for (var i = 0; i<lists.length; i++) {
-            var list = lists[i];
-            result.push([list.getName(), list.getId()]);
-        }
-        if (!result || result.length === 0)
-            result.push([Lang.Blocks.VARIABLE_list, 'null']);
-    } else if (menuName == 'scenes') {
-        var scenes = Entry.scene.scenes_;
-        for (var i = 0; i<scenes.length; i++) {
-            var scene = scenes[i];
-            result.push([scene.name, scene.id]);
-        }
-    } else if (menuName == 'sounds') {
-        var sounds = Entry.playground.object.sounds;
-        for (var i = 0; i<sounds.length; i++) {
-            var sound = sounds[i];
-            result.push([sound.name, sound.id]);
-        }
-    } else if (menuName == 'clone') {
-        result.push([Lang.Blocks.oneself, 'self']);
-        var length = this.objects_.length;
-        for (var i = 0; i<length; i++) {
-            var object = this.objects_[i];
-            result.push([object.name, object.id]);
-        }
-    } else if (menuName == 'objectSequence') {
-        var length = this.getCurrentObjects().length;
-        for (var i = 0; i<length; i++) {
-            result.push([(i+1).toString(), (i).toString()]);
-        }
+    switch (menuName) {
+        case 'sprites':
+            var objs = this.getCurrentObjects();
+            var length = objs.length;
+            for (var i = 0; i<length; i++) {
+                var object = objs[i];
+                result.push([object.name, object.id]);
+            }
+            break;
+        case 'spritesWithMouse':
+            var objs = this.getCurrentObjects();
+            var length = objs.length;
+            for (var i = 0; i<length; i++) {
+                var object = objs[i];
+                result.push([object.name, object.id]);
+            }
+            result.push([Lang.Blocks.mouse_pointer, 'mouse']);
+            break;
+        case 'spritesWithSelf':
+            var objs = this.getCurrentObjects();
+            var length = objs.length;
+            for (var i = 0; i<length; i++) {
+                var object = objs[i];
+                result.push([object.name, object.id]);
+            }
+            result.push([Lang.Blocks.self, 'self']);
+            break;
+        case 'collision':
+            result.push([Lang.Blocks.mouse_pointer, 'mouse']);
+            var objs = this.getCurrentObjects();
+            var length = objs.length;
+            for (var i = 0; i<length; i++) {
+                var object = objs[i];
+                result.push([object.name, object.id]);
+            }
+            result.push([Lang.Blocks.wall, 'wall']);
+            result.push([Lang.Blocks.wall_up, 'wall_up']);
+            result.push([Lang.Blocks.wall_down, 'wall_down']);
+            result.push([Lang.Blocks.wall_right, 'wall_right']);
+            result.push([Lang.Blocks.wall_left, 'wall_left']);
+            break;
+        case 'pictures':
+            var pictures = Entry.playground.object.pictures;
+            for (var i = 0; i<pictures.length; i++) {
+                var picture = pictures[i];
+                result.push([picture.name, picture.id]);
+            }
+            break;
+        case 'messages':
+            var messages = Entry.variableContainer.messages_;
+            for (var i = 0; i<messages.length; i++) {
+                var message = messages[i];
+                result.push([message.name, message.id]);
+            }
+            break;
+        case 'variables':
+            var variables = Entry.variableContainer.variables_;
+            for (var i = 0; i<variables.length; i++) {
+                var variable = variables[i];
+                if (variable.object_ && variable.object_ != Entry.playground.object.id)
+                    continue;
+                result.push([variable.getName(), variable.getId()]);
+            }
+            if (!result || result.length === 0)
+                result.push([Lang.Blocks.VARIABLE_variable, 'null']);
+            break;
+        case 'lists':
+            var lists = Entry.variableContainer.lists_;
+            for (var i = 0; i<lists.length; i++) {
+                var list = lists[i];
+                result.push([list.getName(), list.getId()]);
+            }
+            if (!result || result.length === 0)
+                result.push([Lang.Blocks.VARIABLE_list, 'null']);
+            break;
+        case 'scenes':
+            var scenes = Entry.scene.scenes_;
+            for (var i = 0; i<scenes.length; i++) {
+                var scene = scenes[i];
+                result.push([scene.name, scene.id]);
+            }
+            break;
+        case 'sounds':
+            var sounds = Entry.playground.object.sounds;
+            for (var i = 0; i<sounds.length; i++) {
+                var sound = sounds[i];
+                result.push([sound.name, sound.id]);
+            }
+            break;
+        case 'clone':
+            result.push([Lang.Blocks.oneself, 'self']);
+            var length = this.objects_.length;
+            for (var i = 0; i<length; i++) {
+                var object = this.objects_[i];
+                result.push([object.name, object.id]);
+            }
+            break;
+        case 'objectSequence':
+            var length = this.getCurrentObjects().length;
+            for (var i = 0; i<length; i++) {
+                result.push([(i+1).toString(), (i).toString()]);
+            }
+            break;
     }
     if (!result.length) {
         result = [[Lang.Blocks.no_target, 'null']];
@@ -868,27 +718,6 @@ Entry.Container.prototype.loadSequenceSnapshot = function() {
 };
 
 /**
- * convert this message's data to JSON.
- * @return {JSON}
- */
-Entry.Container.prototype.getMessageJSON = function() {
-    return this.messages_;
-};
-
-/**
- * convert this variable's data to JSON.
- * @return {JSON}
- */
-Entry.Container.prototype.getVariableJSON = function() {
-    var json = [];
-    for (var i = 0; i<this.variables_.length; i++) {
-        var variable = this.variables_[i];
-        json.push(variable.toJSON());
-    }
-    return json;
-};
-
-/**
  * return canvas inputValue
  * @return {String}
  */
@@ -971,7 +800,7 @@ Entry.Container.prototype.getCurrentObjects = function() {
 };
 
 /**
- *  get project jsons in art_view for saving especially for art_view_controller
+ *  get project jsons in art_view for saving especially for art_viewcontroller
  *  @param {!resource project} project
  *  @return {entry project} project
  */
@@ -985,7 +814,7 @@ Entry.Container.prototype.getProjectWithJSON = function(project) {
 
 
 Entry.Container.prototype.generateTabView = function() {
-    var view = this.view_;
+    var view = this._view;
     var that = this;
     this.tabViews = [];
 
@@ -1073,7 +902,7 @@ Entry.Container.prototype.changeTabView = function(tab) {
     if (tab == 'object') {
         tabViews[0].addClass('selected');
     } else if (tab == 'movie') {
-        var view = this.view_;
+        var view = this._view;
         var width = view.style.width.substring(0,
                                               view.style.width.length-2);
         this.movieFrame.setAttribute('width', width);
@@ -1082,7 +911,7 @@ Entry.Container.prototype.changeTabView = function(tab) {
         this.movieContainer.removeClass('entryHide');
         tabViews[1].addClass('selected');
     } else if (tab == 'done') {
-        var view = this.view_;
+        var view = this._view;
         var height = $(this.doneContainer).height();
         var width = $(this.doneContainer).width();
         if (width*9/16 + 35 < height)
@@ -1103,7 +932,7 @@ Entry.Container.prototype.changeTabView = function(tab) {
 Entry.Container.prototype.initYoutube = function(youtubeHash) {
     this.youtubeHash = youtubeHash;
     this.youtubeTab.removeClass('entryRemove');
-    var view = this.view_;
+    var view = this._view;
     var width = view.style.width.substring(0,
                                           view.style.width.length-2);
     var movieContainer = this.movieContainer;
@@ -1121,7 +950,7 @@ Entry.Container.prototype.initYoutube = function(youtubeHash) {
 Entry.Container.prototype.initTvcast = function(tvcast) {
     this.tvcast = tvcast;
     this.youtubeTab.removeClass('entryRemove');
-    var view = this.view_;
+    var view = this._view;
     var width = view.style.width.substring(0,
                                           view.style.width.length-2);
     var movieContainer = this.movieContainer;
@@ -1138,7 +967,7 @@ Entry.Container.prototype.initTvcast = function(tvcast) {
 Entry.Container.prototype.initDoneProject = function(projectId) {
     this.doneProject = projectId;
     this.iframeTab.removeClass('entryRemove');
-    var view = this.view_;
+    var view = this._view;
     var width = view.style.width.substring(0,
                                           view.style.width.length-2);
     var url = '/api/project/iframe/';
@@ -1188,4 +1017,13 @@ Entry.Container.prototype.hideProjectAnswer = function(removeBlock) {
         }
     }
     answer.setVisible(false);
+};
+
+Entry.Container.prototype.getView = function() {
+    return this._view;
+};
+
+// dummy
+Entry.Container.prototype.resize = function() {
+    return;
 };

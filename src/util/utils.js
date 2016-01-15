@@ -257,7 +257,7 @@ Entry.removeEventListener = function(eventName, fn) {
  * @param {!string} eventName
  */
 Entry.removeAllEventListener = function(eventName) {
-    if (!eventName) return;
+    if (!this.events_ || !this.events_[eventName]) return;
     delete this.events_[eventName];
 };
 

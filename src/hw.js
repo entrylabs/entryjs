@@ -3,6 +3,8 @@
  */
 'use strict';
 
+goog.require("Entry.HWMontior");
+
 Entry.HW = function() {
     this.connectTrial = 0;
     this.isFirstConnect = true;
@@ -32,7 +34,8 @@ Entry.HW = function() {
         '12': Entry.SensorBoard,
         '24': Entry.Hamster,
         '25': Entry.Albert,
-        '31': Entry.Bitbrick
+        '31': Entry.Bitbrick,
+        '51': Entry.Neobot
     };
 };
 
@@ -155,6 +158,8 @@ p.update = function() {
 
 p.updatePortData = function(data) {
     this.portData = data;
+    if (this.hwMonitor)
+        this.hwMonitor.update();
 };
 
 p.closeConnection = function() {
@@ -163,7 +168,7 @@ p.closeConnection = function() {
 };
 
 p.downloadConnector = function() {
-    var url = "http://play-entry.org/down/entry_v1.1.zip";
+    var url = "http://play-entry.org/down/entry-hw_v1.1.zip";
     var win = window.open(url, '_blank');
     win.focus();
 };
@@ -197,6 +202,11 @@ p.checkDevice = function(data) {
         ),
         false
     );
+    if (this.hwModule.monitorTemplate) {
+        this.hwMonitor = new Entry.HWMonitor(this.hwModule);
+        Entry.propertyPanel.addMode("hw", this.hwMonitor);
+        this.hwMonitor.generateView();
+    }
 };
 
 p.banHW = function() {

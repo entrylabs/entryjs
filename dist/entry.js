@@ -63,7 +63,7 @@ var Entry = {block:{}, TEXT_ALIGN_CENTER:0, TEXT_ALIGN_LEFT:1, TEXT_ALIGN_RIGHT:
     !a.canvasWidth && b.canvasWidth && (a.canvasWidth = b.canvasWidth);
     !a.menuWidth && this.interfaceState.menuWidth && (a.menuWidth = b.menuWidth);
     Entry.engine.speedPanelOn && Entry.engine.toggleSpeedPanel();
-    (b = a.canvasWidth) ? 300 > b ? b = 300 : 720 < b && (b = 720) : b = 400;
+    (b = a.canvasWidth) ? 325 > b ? b = 325 : 720 < b && (b = 720) : b = 400;
     a.canvasWidth = b;
     var c = 9 * b / 16;
     Entry.engine.view_.style.width = b + "px";
@@ -71,10 +71,9 @@ var Entry = {block:{}, TEXT_ALIGN_CENTER:0, TEXT_ALIGN_LEFT:1, TEXT_ALIGN_RIGHT:
     Entry.engine.view_.style.top = "40px";
     Entry.stage.canvas.canvas.style.height = c + "px";
     Entry.stage.canvas.canvas.style.width = b + "px";
-    Entry.container.view_.style.width = b + "px";
-    Entry.container.view_.style.top = c + 35 + 40 + 48 - 22 + "px";
-    400 <= b ? (Entry.engine.view_.removeClass("collapsed"), Entry.container.listView_.removeClass("collapsed")) : (Entry.engine.view_.addClass("collapsed"), Entry.container.listView_.addClass("collapsed"));
+    400 <= b ? Entry.engine.view_.removeClass("collapsed") : Entry.engine.view_.addClass("collapsed");
     Entry.playground.view_.style.left = b + .5 + "px";
+    Entry.propertyPanel.resize(b);
     var d = Entry.engine.view_.getElementsByClassName("entryAddButtonWorkspace_w")[0];
     d && (Entry.objectAddable ? (d.style.top = c + 24 + "px", d.style.width = .7 * b + "px") : d.style.display = "none");
     if (d = Entry.engine.view_.getElementsByClassName("entryRunButtonWorkspace_w")[0]) {
@@ -3644,6 +3643,190 @@ Entry.block.direction_relative_duration = function(a, b) {
   delete b.dDirection;
   return b.callReturn();
 };
+Entry.Neobot = {name:"neobot", PORT_MAP:{1:0, 2:0, 3:0, SERVO1:0, SERVO2:0, SERVO1_SPEED:3, SERVO2_SPEED:3, LMOT:0, RMOT:0, note:0, octave:0, duration:0, sound_check:0, O_1:0, O_2:0}, setZero:function() {
+  for (var a in Entry.Neobot.PORT_MAP) {
+    Entry.hw.sendQueue[a] = Entry.Neobot.PORT_MAP[a];
+  }
+  Entry.hw.update();
+}, monitorTemplate:{imgPath:"hw/neobot.png", width:268, height:270, ports:{1:{name:"1\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:78, y:9}}, 2:{name:"2\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:115, y:9}}, 3:{name:"3\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:153, y:9}}, LMOT:{name:"\uc67c\ucabd \ubaa8\ud130", type:"output", pos:{x:78, y:259}}, RMOT:{name:"\uc624\ub978\ucabd \ubaa8\ud130", type:"output", pos:{x:191, y:259}}, note:{name:"\ubd80\uc800", type:"output", pos:{x:98, y:184}}, SERVO1:{name:"SERVO \ubaa8\ud130 1", 
+type:"output", pos:{x:115, y:259}}, SERVO2:{name:"SERVO \ubaa8\ud130 2", type:"output", pos:{x:191, y:9}}}}};
+Blockly.Blocks.neobot_sensor_value = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("").appendField(new Blockly.FieldDropdown([["1\ubc88 \ud3ec\ud2b8", "1"], ["2\ubc88 \ud3ec\ud2b8", "2"], ["3\ubc88 \ud3ec\ud2b8", "3"], ["\ub9ac\ubaa8\ucee8", "4"]]), "PORT").appendField(" \uac12");
+  this.setOutput(!0, "Number");
+  this.setInputsInline(!0);
+}};
+Entry.block.neobot_sensor_value = function(a, b) {
+  var c = b.getStringField("PORT");
+  return Entry.hw.portData[c];
+};
+Blockly.Blocks.neobot_turn_left = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("\uc67c\ucabd\ubaa8\ud130\ub97c").appendField(new Blockly.FieldDropdown([["\uc55e\uc73c\ub85c", "1"], ["\ub4a4\ub85c", "-1"]]), "DIRECTION").appendField(new Blockly.FieldDropdown([["\ub290\ub9ac\uac8c", "1"], ["\ubcf4\ud1b5", "2"], ["\ube60\ub974\uac8c", "3"]]), "VALUE").appendField("\ud68c\uc804").appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.neobot_turn_left = function(a, b) {
+  var c = b.getNumberField("VALUE"), d = b.getNumberField("DIRECTION");
+  Entry.hw.sendQueue.LMOT = c * d;
+  return b.callReturn();
+};
+Blockly.Blocks.neobot_stop_left = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("\uc67c\ucabd\ubaa8\ud130 \uc815\uc9c0").appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.neobot_stop_left = function(a, b) {
+  Entry.hw.sendQueue.LMOT = 0;
+  return b.callReturn();
+};
+Blockly.Blocks.neobot_turn_right = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("\uc624\ub978\ucabd\ubaa8\ud130\ub97c").appendField(new Blockly.FieldDropdown([["\uc55e\uc73c\ub85c", "1"], ["\ub4a4\ub85c", "-1"]]), "DIRECTION").appendField(new Blockly.FieldDropdown([["\ub290\ub9ac\uac8c", "1"], ["\ubcf4\ud1b5", "2"], ["\ube60\ub974\uac8c", "3"]]), "VALUE").appendField("\ud68c\uc804").appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.neobot_turn_right = function(a, b) {
+  var c = b.getNumberField("VALUE"), d = b.getNumberField("DIRECTION");
+  Entry.hw.sendQueue.RMOT = c * d;
+  return b.callReturn();
+};
+Blockly.Blocks.neobot_stop_right = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("\uc624\ub978\ucabd\ubaa8\ud130 \uc815\uc9c0").appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.neobot_stop_right = function(a, b) {
+  Entry.hw.sendQueue.RMOT = 0;
+  return b.callReturn();
+};
+Blockly.Blocks.neobot_run_motor = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(new Blockly.FieldDropdown([["\uc591\ucabd", "1"], ["\uc67c\ucabd", "2"], ["\uc624\ub978\ucabd", "3"]]), "TYPE").appendField("\ubaa8\ud130\ub97c ");
+  this.appendValueInput("DURATION").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField("\ucd08\uac04").appendField(new Blockly.FieldDropdown([["\ub290\ub9ac\uac8c", "1"], ["\ubcf4\ud1b5", "2"], ["\ube60\ub974\uac8c", "3"]]), "VALUE").appendField(new Blockly.FieldDropdown([["\uc804\uc9c4", "1"], ["\ud6c4\uc9c4", "2"], ["\uc88c\ud68c\uc804", "3"], ["\uc6b0\ud68c\uc804", "4"]]), "DIRECTION").appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.neobot_run_motor = function(a, b) {
+  if (b.isStart) {
+    if (1 == b.timeFlag) {
+      var c = b.getNumberField("TYPE"), d = b.getNumberField("VALUE");
+      switch(b.getNumberField("DIRECTION")) {
+        case 1:
+          Entry.hw.sendQueue.LMOT = d;
+          Entry.hw.sendQueue.RMOT = d;
+          break;
+        case 2:
+          Entry.hw.sendQueue.LMOT = -1 * d;
+          Entry.hw.sendQueue.RMOT = -1 * d;
+          break;
+        case 3:
+          Entry.hw.sendQueue.LMOT = d;
+          Entry.hw.sendQueue.RMOT = -1 * d;
+          break;
+        case 4:
+          Entry.hw.sendQueue.LMOT = -1 * d, Entry.hw.sendQueue.RMOT = d;
+      }
+      2 === c ? Entry.hw.sendQueue.RMOT = 0 : 3 === c && (Entry.hw.sendQueue.LMOT = 0);
+      return b;
+    }
+    delete b.timeFlag;
+    delete b.isStart;
+    Entry.engine.isContinue = !1;
+    Entry.hw.sendQueue.LMOT = 0;
+    Entry.hw.sendQueue.RMOT = 0;
+    return b.callReturn();
+  }
+  b.isStart = !0;
+  b.timeFlag = 1;
+  c = 1E3 * b.getNumberValue("DURATION");
+  setTimeout(function() {
+    b.timeFlag = 0;
+  }, c);
+  return b;
+};
+Blockly.Blocks.neobot_servo_1 = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("SERVO1\uc5d0 \uc5f0\uacb0\ub41c \uc11c\ubcf4\ubaa8\ud130\ub97c").appendField(new Blockly.FieldDropdown([["\ube60\ub978", "3"], ["\ubcf4\ud1b5", "2"], ["\ub290\ub9b0", "1"]]), "SPEED").appendField("\uc18d\ub3c4\ub85c").appendField(new Blockly.FieldDropdown([["0\ub3c4", "0"], ["10\ub3c4", "1"], ["20\ub3c4", "2"], ["30\ub3c4", "3"], ["40\ub3c4", "4"], ["50\ub3c4", "5"], ["60\ub3c4", "6"], ["70\ub3c4", "7"], ["80\ub3c4", "8"], ["90\ub3c4", "9"], ["100\ub3c4", "10"], 
+  ["110\ub3c4", "11"], ["120\ub3c4", "12"], ["130\ub3c4", "13"], ["140\ub3c4", "14"], ["150\ub3c4", "15"], ["160\ub3c4", "16"]]), "VALUE").appendField("\ub85c \uc774\ub3d9").appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.neobot_servo_1 = function(a, b) {
+  var c = b.getNumberField("VALUE"), d = b.getNumberField("SPEED");
+  Entry.hw.sendQueue.SERVO1 = c;
+  Entry.hw.sendQueue.SERVO1_SPEED = d;
+  return b.callReturn();
+};
+Blockly.Blocks.neobot_servo_2 = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("SERVO2\uc5d0 \uc5f0\uacb0\ub41c \uc11c\ubcf4\ubaa8\ud130\ub97c").appendField(new Blockly.FieldDropdown([["\ube60\ub978", "3"], ["\ubcf4\ud1b5", "2"], ["\ub290\ub9b0", "1"]]), "SPEED").appendField("\uc18d\ub3c4\ub85c").appendField(new Blockly.FieldDropdown([["0\ub3c4", "0"], ["10\ub3c4", "1"], ["20\ub3c4", "2"], ["30\ub3c4", "3"], ["40\ub3c4", "4"], ["50\ub3c4", "5"], ["60\ub3c4", "6"], ["70\ub3c4", "7"], ["80\ub3c4", "8"], ["90\ub3c4", "9"], ["100\ub3c4", "10"], 
+  ["110\ub3c4", "11"], ["120\ub3c4", "12"], ["130\ub3c4", "13"], ["140\ub3c4", "14"], ["150\ub3c4", "15"], ["160\ub3c4", "16"]]), "VALUE").appendField("\ub85c \uc774\ub3d9").appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.neobot_servo_2 = function(a, b) {
+  var c = b.getNumberField("VALUE"), d = b.getNumberField("SPEED");
+  Entry.hw.sendQueue.SERVO2 = c;
+  Entry.hw.sendQueue.SERVO2_SPEED = d;
+  return b.callReturn();
+};
+Blockly.Blocks.neobot_play_note_for = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("\uba5c\ub85c\ub514").appendField(new Blockly.FieldDropdown([[Lang.General.note_c + "", "1"], [Lang.General.note_d + "", "2"], [Lang.General.note_e + "", "3"], [Lang.General.note_f + "", "4"], [Lang.General.note_g + "", "5"], [Lang.General.note_a + "", "6"], [Lang.General.note_b + "", "7"], [Lang.General.note_c + "", "8"]]), "NOTE").appendField("\uc744(\ub97c)").appendField(new Blockly.FieldDropdown([["1", "0"], ["2", "1"], ["3", "2"]]), "OCTAVE").appendField("\uc625\ud0c0\ube0c\ub85c").appendField(new Blockly.FieldDropdown([["2\ubd84\uc74c\ud45c", 
+  "2"], ["4\ubd84\uc74c\ud45c", "4"], ["8\ubd84\uc74c\ud45c", "8"]]), "DURATION");
+  this.appendDummyInput().appendField("\uae38\uc774\ub9cc\ud07c \uc18c\ub9ac\ub0b4\uae30").appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.neobot_play_note_for = function(a, b) {
+  var c = Entry.hw.sendQueue;
+  if (b.isStart) {
+    if (1 == b.timeFlag) {
+      return b;
+    }
+    delete b.timeFlag;
+    delete b.isStart;
+    Entry.engine.isContinue = !1;
+    return b.callReturn();
+  }
+  var d = b.getNumberField("NOTE", b), e = b.getNumberField("OCTAVE", b), f = b.getNumberField("DURATION", b);
+  b.note = d;
+  b.isStart = !0;
+  b.timeFlag = 1;
+  c.note = d;
+  c.octave = e;
+  c.duration = f;
+  c.sound_check = (1E5 * Math.random()).toFixed(0);
+  setTimeout(function() {
+    b.timeFlag = 0;
+  }, 1 / f * 2E3);
+  return b;
+};
+Blockly.Blocks.neobot_set_sensor_value = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(new Blockly.FieldDropdown([["1", "O_1"], ["2", "O_2"]]), "PORT").appendField("\ubc88 \ud3ec\ud2b8\uc758 \uac12\uc744").appendField(new Blockly.FieldDropdown([["\ucf1c\uae30", "1"], ["\ub044\uae30", "0"]]), "VALUE");
+  this.appendDummyInput().appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.neobot_set_sensor_value = function(a, b) {
+  var c = Entry.hw.sendQueue, d = b.getStringField("PORT", b), e = b.getNumberField("VALUE", b);
+  c[d] = e;
+  return b.callReturn();
+};
 Blockly.Blocks.when_scene_start = {init:function() {
   this.setColour("#3BBD70");
   this.appendDummyInput().appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/start_icon_scene_1_2.png", "*", "start")).appendField(Lang.Blocks.SCENE_when_scene_start);
@@ -4670,20 +4853,18 @@ Entry.Observer = function(a, b, c, d) {
 Entry.Container = function() {
   this.objects_ = [];
   this.cachedPicture = {};
-  this.variables_ = [];
-  this.messages_ = [];
   this.inputValue = {};
   this.currentObjects_ = this.copiedObject = null;
 };
 Entry.Container.prototype.generateView = function(a, b) {
-  this.view_ = a;
-  this.view_.addClass("entryContainer");
+  this._view = a;
+  this._view.addClass("entryContainer");
   if (b && "workspace" != b) {
-    "phone" == b && (this.view_.addClass("entryContainerPhone"), c = Entry.createElement("div"), c.addClass("entryAddObjectWorkspace"), c.innerHTML = Lang.Workspace.add_object, c.bindOnClick(function(a) {
+    "phone" == b && (this._view.addClass("entryContainerPhone"), c = Entry.createElement("div"), c.addClass("entryAddObjectWorkspace"), c.innerHTML = Lang.Workspace.add_object, c.bindOnClick(function(a) {
       Entry.dispatchEvent("openSpriteManager");
-    }), c = Entry.createElement("div"), c.addClass("entryContainerListPhoneWrapper"), this.view_.appendChild(c), d = Entry.createElement("ul"), d.addClass("entryContainerListPhone"), c.appendChild(d), this.listView_ = d);
+    }), c = Entry.createElement("div"), c.addClass("entryContainerListPhoneWrapper"), this._view.appendChild(c), d = Entry.createElement("ul"), d.addClass("entryContainerListPhone"), c.appendChild(d), this.listView_ = d);
   } else {
-    this.view_.addClass("entryContainerWorkspace");
+    this._view.addClass("entryContainerWorkspace");
     var c = Entry.createElement("div");
     c.addClass("entryAddObjectWorkspace");
     c.innerHTML = Lang.Workspace.add_object;
@@ -4699,7 +4880,7 @@ Entry.Container.prototype.generateView = function(a, b) {
         Entry.container.copiedObject ? Entry.container.addCloneObject(Entry.container.copiedObject) : Entry.toast.alert(Lang.Workspace.add_object_alert, Lang.Workspace.object_not_found_for_paste);
       }}], "workspace-contextmenu");
     });
-    this.view_.appendChild(c);
+    this._view.appendChild(c);
     var d = Entry.createElement("ul");
     d.addClass("entryContainerListWorkspace");
     c.appendChild(d);
@@ -4844,156 +5025,95 @@ Entry.Container.prototype.moveElementByBlock = function(a, b) {
   Entry.stage.sortZorder();
   this.updateListView();
 };
-Entry.Container.prototype.createMessage = function() {
-  var a = prompt(Lang.Workspace.enter_new_message);
-  a ? Entry.isExist(a, "name", Entry.variableContainer.messages_) ? Entry.toast.alert(Lang.Workspace.message_add_fail, Lang.Workspace.message_add_fail_msg) : Entry.variableContainer.addMessage({name:a}) && Entry.toast.success(Lang.Workspace.message_add_ok, a + " " + Lang.Workspace.message_add_ok_msg) : Entry.toast.alert(Lang.Workspace.message_add_cancel, Lang.Workspace.message_add_cancel_msg);
-};
-Entry.Container.prototype.addMessage = function(a) {
-  a.id || (a.id = Entry.generateHash());
-  this.messages_.push(a);
-  Entry.playground.reloadPlayground();
-  return !0;
-};
-Entry.Container.prototype.deleteMessage = function() {
-  0 === this.messages_.length ? Entry.toast.alert(Lang.Msgs.warn, Lang.Workspace.no_message_to_remove, "true") : Entry.dispatchEvent("deleteMessage");
-};
-Entry.Container.prototype.removeMessage = function(a) {
-  for (var b = this.messages_, c = 0;c < b.length;c++) {
-    if (b[c].id == a.id) {
-      b.splice(c, 1);
-      Entry.playground.reloadPlayground();
-      break;
-    }
-  }
-};
-Entry.Container.prototype.createVariable = function() {
-  var a = prompt(Lang.Workspace.enter_variable_name);
-  a && 10 >= a.length ? Entry.isExist(a, "name_", Entry.variableContainer.variables_) ? Entry.toast.alert(Lang.Workspace.variable_add_fail, Lang.Workspace.variable_add_fail_msg1) : Entry.variableContainer.addVariable({name:a}) && Entry.toast.success(Lang.Workspace.variable_add_ok, a + " " + Lang.Workspace.variable_add_ok_msg) : a && 10 <= a.length ? Entry.toast.alert(Lang.Workspace.variable_add_fail, Lang.Workspace.variable_add_fail_msg2, !0) : Entry.toast.alert(Lang.Workspace.variable_add_calcel, 
-  Lang.Workspace.variable_add_calcel_msg);
-};
-Entry.Container.prototype.removeVariable = function() {
-  Entry.dispatchEvent("removeVariable");
-};
-Entry.Container.prototype.changeVariableName = function() {
-  Entry.dispatchEvent("changeVariableName");
-};
-Entry.Container.prototype.changeEntryVariableName = function(a) {
-  var b = this.variables_;
-  if (Entry.isExist(a.newName, "name_", b)) {
-    Entry.toast.alert(Lang.Workspace.variable_rename_failed, Lang.Workspace.variable_dup);
-  } else {
-    for (var c = 0;c < b.length;c++) {
-      if (b[c].getId() == a.varId) {
-        this.variables_[c].setName(a.newName);
-        break;
-      }
-    }
-    Entry.toast.success(Lang.Workspace.variable_rename, Lang.Workspace.variable_rename_ok);
-    Entry.playground.reloadPlayground();
-  }
-};
-Entry.Container.prototype.removeEntryVariable = function(a) {
-  for (var b = this.variables_, c = 0;c < b.length;c++) {
-    if (b[c].getId() == a) {
-      b[c].remove();
-      this.variables_.splice(c, 1);
-      Entry.playground.reloadPlayground();
-      break;
-    }
-  }
-};
 Entry.Container.prototype.getDropdownList = function(a) {
   var b = [];
-  if ("sprites" == a) {
-    var c = this.getCurrentObjects(), d = c.length;
-    for (a = 0;a < d;a++) {
-      var e = c[a];
-      b.push([e.name, e.id]);
-    }
-  } else {
-    if ("spritesWithMouse" == a) {
+  switch(a) {
+    case "sprites":
+      var c = this.getCurrentObjects(), d = c.length;
+      for (a = 0;a < d;a++) {
+        var e = c[a];
+        b.push([e.name, e.id]);
+      }
+      break;
+    case "spritesWithMouse":
       c = this.getCurrentObjects();
       d = c.length;
       for (a = 0;a < d;a++) {
         e = c[a], b.push([e.name, e.id]);
       }
       b.push([Lang.Blocks.mouse_pointer, "mouse"]);
-    } else {
-      if ("spritesWithSelf" == a) {
-        c = this.getCurrentObjects();
-        d = c.length;
-        for (a = 0;a < d;a++) {
-          e = c[a], b.push([e.name, e.id]);
-        }
-        b.push([Lang.Blocks.self, "self"]);
-      } else {
-        if ("collision" == a) {
-          b.push([Lang.Blocks.mouse_pointer, "mouse"]);
-          c = this.getCurrentObjects();
-          d = c.length;
-          for (a = 0;a < d;a++) {
-            e = c[a], b.push([e.name, e.id]);
-          }
-          b.push([Lang.Blocks.wall, "wall"]);
-          b.push([Lang.Blocks.wall_up, "wall_up"]);
-          b.push([Lang.Blocks.wall_down, "wall_down"]);
-          b.push([Lang.Blocks.wall_right, "wall_right"]);
-          b.push([Lang.Blocks.wall_left, "wall_left"]);
-        } else {
-          if ("pictures" == a) {
-            for (c = Entry.playground.object.pictures, a = 0;a < c.length;a++) {
-              d = c[a], b.push([d.name, d.id]);
-            }
-          } else {
-            if ("messages" == a) {
-              for (c = Entry.variableContainer.messages_, a = 0;a < c.length;a++) {
-                d = c[a], b.push([d.name, d.id]);
-              }
-            } else {
-              if ("variables" == a) {
-                c = Entry.variableContainer.variables_;
-                for (a = 0;a < c.length;a++) {
-                  d = c[a], d.object_ && d.object_ != Entry.playground.object.id || b.push([d.getName(), d.getId()]);
-                }
-                b && 0 !== b.length || b.push([Lang.Blocks.VARIABLE_variable, "null"]);
-              } else {
-                if ("lists" == a) {
-                  c = Entry.variableContainer.lists_;
-                  for (a = 0;a < c.length;a++) {
-                    d = c[a], b.push([d.getName(), d.getId()]);
-                  }
-                  b && 0 !== b.length || b.push([Lang.Blocks.VARIABLE_list, "null"]);
-                } else {
-                  if ("scenes" == a) {
-                    for (c = Entry.scene.scenes_, a = 0;a < c.length;a++) {
-                      d = c[a], b.push([d.name, d.id]);
-                    }
-                  } else {
-                    if ("sounds" == a) {
-                      for (c = Entry.playground.object.sounds, a = 0;a < c.length;a++) {
-                        d = c[a], b.push([d.name, d.id]);
-                      }
-                    } else {
-                      if ("clone" == a) {
-                        for (b.push([Lang.Blocks.oneself, "self"]), d = this.objects_.length, a = 0;a < d;a++) {
-                          e = this.objects_[a], b.push([e.name, e.id]);
-                        }
-                      } else {
-                        if ("objectSequence" == a) {
-                          for (d = this.getCurrentObjects().length, a = 0;a < d;a++) {
-                            b.push([(a + 1).toString(), a.toString()]);
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
+      break;
+    case "spritesWithSelf":
+      c = this.getCurrentObjects();
+      d = c.length;
+      for (a = 0;a < d;a++) {
+        e = c[a], b.push([e.name, e.id]);
       }
-    }
+      b.push([Lang.Blocks.self, "self"]);
+      break;
+    case "collision":
+      b.push([Lang.Blocks.mouse_pointer, "mouse"]);
+      c = this.getCurrentObjects();
+      d = c.length;
+      for (a = 0;a < d;a++) {
+        e = c[a], b.push([e.name, e.id]);
+      }
+      b.push([Lang.Blocks.wall, "wall"]);
+      b.push([Lang.Blocks.wall_up, "wall_up"]);
+      b.push([Lang.Blocks.wall_down, "wall_down"]);
+      b.push([Lang.Blocks.wall_right, "wall_right"]);
+      b.push([Lang.Blocks.wall_left, "wall_left"]);
+      break;
+    case "pictures":
+      c = Entry.playground.object.pictures;
+      for (a = 0;a < c.length;a++) {
+        d = c[a], b.push([d.name, d.id]);
+      }
+      break;
+    case "messages":
+      c = Entry.variableContainer.messages_;
+      for (a = 0;a < c.length;a++) {
+        d = c[a], b.push([d.name, d.id]);
+      }
+      break;
+    case "variables":
+      c = Entry.variableContainer.variables_;
+      for (a = 0;a < c.length;a++) {
+        d = c[a], d.object_ && d.object_ != Entry.playground.object.id || b.push([d.getName(), d.getId()]);
+      }
+      b && 0 !== b.length || b.push([Lang.Blocks.VARIABLE_variable, "null"]);
+      break;
+    case "lists":
+      c = Entry.variableContainer.lists_;
+      for (a = 0;a < c.length;a++) {
+        d = c[a], b.push([d.getName(), d.getId()]);
+      }
+      b && 0 !== b.length || b.push([Lang.Blocks.VARIABLE_list, "null"]);
+      break;
+    case "scenes":
+      c = Entry.scene.scenes_;
+      for (a = 0;a < c.length;a++) {
+        d = c[a], b.push([d.name, d.id]);
+      }
+      break;
+    case "sounds":
+      c = Entry.playground.object.sounds;
+      for (a = 0;a < c.length;a++) {
+        d = c[a], b.push([d.name, d.id]);
+      }
+      break;
+    case "clone":
+      b.push([Lang.Blocks.oneself, "self"]);
+      d = this.objects_.length;
+      for (a = 0;a < d;a++) {
+        e = this.objects_[a], b.push([e.name, e.id]);
+      }
+      break;
+    case "objectSequence":
+      for (d = this.getCurrentObjects().length, a = 0;a < d;a++) {
+        b.push([(a + 1).toString(), a.toString()]);
+      }
+    ;
   }
   b.length || (b = [[Lang.Blocks.no_target, "null"]]);
   return b;
@@ -5085,15 +5205,6 @@ Entry.Container.prototype.loadSequenceSnapshot = function() {
   Entry.stage.sortZorder();
   this.updateListView();
 };
-Entry.Container.prototype.getMessageJSON = function() {
-  return this.messages_;
-};
-Entry.Container.prototype.getVariableJSON = function() {
-  for (var a = [], b = 0;b < this.variables_.length;b++) {
-    a.push(this.variables_[b].toJSON());
-  }
-  return a;
-};
 Entry.Container.prototype.getInputValue = function() {
   return this.inputValue.getValue();
 };
@@ -5144,7 +5255,7 @@ Entry.Container.prototype.getProjectWithJSON = function(a) {
   return a;
 };
 Entry.Container.prototype.generateTabView = function() {
-  var a = this.view_, b = this;
+  var a = this._view, b = this;
   this.tabViews = [];
   var c = Entry.createElement("div");
   c.addClass("entryContainerTabViewWorkspace");
@@ -5212,13 +5323,13 @@ Entry.Container.prototype.changeTabView = function(a) {
   this.movieContainer.addClass("entryHide");
   this.doneContainer.addClass("entryHide");
   this.helperContainer.addClass("entryHide");
-  "object" == a ? b[0].addClass("selected") : "movie" == a ? (a = this.view_, a = a.style.width.substring(0, a.style.width.length - 2), this.movieFrame.setAttribute("width", a), this.movieFrame.setAttribute("height", 9 * a / 16), this.movieContainer.removeClass("entryHide"), b[1].addClass("selected")) : "done" == a ? (c = $(this.doneContainer).height(), a = $(this.doneContainer).width(), 9 * a / 16 + 35 < c ? c = 9 * a / 16 + 35 : a = (c - 35) / 9 * 16, this.doneProjectFrame.setAttribute("width", 
+  "object" == a ? b[0].addClass("selected") : "movie" == a ? (a = this._view, a = a.style.width.substring(0, a.style.width.length - 2), this.movieFrame.setAttribute("width", a), this.movieFrame.setAttribute("height", 9 * a / 16), this.movieContainer.removeClass("entryHide"), b[1].addClass("selected")) : "done" == a ? (c = $(this.doneContainer).height(), a = $(this.doneContainer).width(), 9 * a / 16 + 35 < c ? c = 9 * a / 16 + 35 : a = (c - 35) / 9 * 16, this.doneProjectFrame.setAttribute("width", 
   a), this.doneProjectFrame.setAttribute("height", c), this.doneContainer.removeClass("entryHide"), b[2].addClass("selected")) : "helper" == a && (Entry.helper.blockHelperOn(), this.helperContainer.removeClass("entryHide"), b[3].addClass("selected"));
 };
 Entry.Container.prototype.initYoutube = function(a) {
   this.youtubeHash = a;
   this.youtubeTab.removeClass("entryRemove");
-  a = this.view_;
+  a = this._view;
   a = a.style.width.substring(0, a.style.width.length - 2);
   var b = this.movieContainer, c = Entry.createElement("iframe");
   c.setAttribute("width", a);
@@ -5232,7 +5343,7 @@ Entry.Container.prototype.initYoutube = function(a) {
 Entry.Container.prototype.initTvcast = function(a) {
   this.tvcast = a;
   this.youtubeTab.removeClass("entryRemove");
-  a = this.view_;
+  a = this._view;
   a = a.style.width.substring(0, a.style.width.length - 2);
   var b = this.movieContainer, c = Entry.createElement("iframe");
   c.setAttribute("width", a);
@@ -5246,7 +5357,7 @@ Entry.Container.prototype.initTvcast = function(a) {
 Entry.Container.prototype.initDoneProject = function(a) {
   this.doneProject = a;
   this.iframeTab.removeClass("entryRemove");
-  a = this.view_;
+  a = this._view;
   a = a.style.width.substring(0, a.style.width.length - 2);
   var b = Entry.createElement("iframe");
   b.setAttribute("width", a);
@@ -5280,6 +5391,11 @@ Entry.Container.prototype.hideProjectAnswer = function(a) {
     }
     b.setVisible(!1);
   }
+};
+Entry.Container.prototype.getView = function() {
+  return this._view;
+};
+Entry.Container.prototype.resize = function() {
 };
 Entry.db = {data:{}, typeMap:{}};
 (function(a) {
@@ -5317,6 +5433,12 @@ Entry.Dom = function(a, b) {
     d.addClass(a);
   });
   b.parent && b.parent.append(d);
+  d.bindOnClick = function(a) {
+    $(this).on("click touchstart", function(b) {
+      b.stopImmediatePropagation();
+      b.handled || (b.handled = !0, a.call(this, b));
+    });
+  };
   return d;
 };
 Entry.Dialog = function(a, b, c, d) {
@@ -5589,7 +5711,7 @@ Entry.Engine.prototype.computeFunction = function(a) {
   for (var b = 0;b < a.length;b++) {
     for (var c = a.shift(), d = !0, e = !1;c && d && !e;) {
       try {
-        var d = !c.isLooped, f = c.run(), e = f && f.type == c.type, c = f;
+        var d = !c.isLooped, f = c.run(), e = f && f === c, c = f;
       } catch (g) {
         throw Entry.engine.toggleStop(), Entry.engine.isUpdating = !1, "workspace" == Entry.type && (Entry.container.selectObject(), Entry.container.selectObject(c.entity.parent.id), Entry.playground.changeViewMode("code"), Blockly.mainWorkspace.activatePreviousBlock(c.id)), Entry.toast.alert(Lang.Msgs.runtime_error, Lang.Workspace.check_runtime_error, !0), g;
       }
@@ -5601,7 +5723,7 @@ Entry.Engine.computeThread = function(a, b) {
   Entry.engine.isContinue = !0;
   for (var c = !1;b && Entry.engine.isContinue && !c;) {
     Entry.engine.isContinue = !b.isRepeat;
-    var d = b.run(), c = d && d.type == b.type;
+    var d = b.run(), c = d && d === b;
     b = d;
   }
   return b;
@@ -6307,269 +6429,6 @@ p.renderBlock = function(a) {
   var b = this.blockHelpData[a];
   b && (b = jQuery.parseXML(b.xml), b = this.blockMenu_.show(b.childNodes), this.blockHelperDescription_.innerHTML = Lang.Helper[a], $(this.blockHelperDescription_).css({top:b + 40}));
 };
-Entry.HW = function() {
-  this.connectTrial = 0;
-  this.isFirstConnect = !0;
-  if ("WebSocket" in window) {
-    try {
-      this.initSocket();
-    } catch (a) {
-      console.log("socket error:", a);
-    }
-  } else {
-    console.log("socket not exist");
-  }
-  this.connected = !1;
-  this.portData = {};
-  this.sendQueue = {};
-  this.settingQueue = {};
-  this.hwModule = this.selectedDevice = null;
-  Entry.addEventListener("stop", this.setZero);
-  this.hwInfo = {11:Entry.Arduino, 12:Entry.SensorBoard, 24:Entry.Hamster, 25:Entry.Albert, 31:Entry.Bitbrick};
-};
-Entry.HW.TRIAL_LIMIT = 1;
-p = Entry.HW.prototype;
-p.initSocket = function() {
-  if (this.connectTrial >= Entry.HW.TRIAL_LIMIT) {
-    this.isFirstConnect || Entry.toast.alert(Lang.Menus.connect_hw, Lang.Menus.connect_fail, !1), this.isFirstConnect = !1;
-  } else {
-    var a = this, b = new WebSocket("ws://localhost:23518");
-    this.socket = b;
-    this.connected = !1;
-    b.binaryType = "arraybuffer";
-    this.connectTrial++;
-    b.onopen = function() {
-      a.initHardware();
-    };
-    b.onmessage = function(b) {
-      b = JSON.parse(b.data);
-      a.checkDevice(b);
-      a.updatePortData(b);
-    };
-    b.onclose = function() {
-      a.initSocket();
-    };
-    Entry.dispatchEvent("hwChanged");
-  }
-};
-p.retryConnect = function() {
-  this.connectTrial = 0;
-  this.initSocket();
-};
-p.initHardware = function() {
-  this.connectTrial = 0;
-  this.connected = !0;
-  Entry.dispatchEvent("hwChanged");
-  Entry.playground && Entry.playground.object && Entry.playground.setMenu(Entry.playground.object.objectType);
-};
-p.setDigitalPortValue = function(a, b) {
-  this.sendQueue[a] = b;
-};
-p.getAnalogPortValue = function(a) {
-  return this.connected ? this.portData["a" + a] : 0;
-};
-p.getDigitalPortValue = function(a) {
-  if (!this.connected) {
-    return 0;
-  }
-  this.setPortReadable(a);
-  return void 0 !== this.portData[a] ? this.portData[a] : 0;
-};
-p.setPortReadable = function(a) {
-  this.sendQueue.readablePorts || (this.sendQueue.readablePorts = []);
-  this.sendQueue.readablePorts.push(a);
-};
-p.update = function() {
-  this.socket && 1 == this.socket.readyState && (this.socket.send(JSON.stringify(this.sendQueue)), this.sendQueue.readablePorts = []);
-};
-p.updatePortData = function(a) {
-  this.portData = a;
-};
-p.closeConnection = function() {
-  this.socket && this.socket.close();
-};
-p.downloadConnector = function() {
-  window.open("http://play-entry.org/down/entry_v1.1.zip", "_blank").focus();
-};
-p.downloadSource = function() {
-  window.open("http://play-entry.com/lib/EntryArduino/arduino/entry.ino", "_blank").focus();
-};
-p.setZero = function() {
-  Entry.hw.hwModule && Entry.hw.hwModule.setZero();
-};
-p.checkDevice = function(a) {
-  void 0 !== a.company && (a = "" + a.company + a.model, a != this.selectedDevice && (this.selectedDevice = a, this.hwModule = this.hwInfo[a], Entry.dispatchEvent("hwChanged"), Entry.toast.success(Lang.Menus.connect_hw, Lang.Menus.connect_message.replace("%1", Lang.Device[Entry.hw.hwModule.name]), !1)));
-};
-p.banHW = function() {
-  var a = this.hwInfo, b;
-  for (b in a) {
-    Entry.playground.blockMenu.banClass(a[b].name);
-  }
-};
-Entry.init = function(a, b) {
-  Entry.assert("object" === typeof b, "Init option is not object");
-  this.events_ = {};
-  this.interfaceState = {menuWidth:264};
-  Entry.Utils.bindGlobalEvent(["mousedown", "mousemove"]);
-  this.options = b;
-  this.parseOptions(b);
-  this.mediaFilePath = (b.libDir ? b.libDir : "/lib") + "/entryjs/images/";
-  "workspace" == this.type && this.isPhone() && (this.type = "phone");
-  this.initialize_();
-  this.view_ = a;
-  this.view_.setAttribute("class", "entry");
-  Entry.initFonts(b.fonts);
-  this.createDom(a, this.type);
-  this.loadInterfaceState();
-  this.overridePrototype();
-  this.maxCloneLimit = 302;
-  this.cloudSavable = !0;
-  this.startTime = (new Date).getTime();
-  document.onkeydown = function(a) {
-    Entry.dispatchEvent("keyPressed", a);
-  };
-  document.onkeyup = function(a) {
-    Entry.dispatchEvent("keyUpped", a);
-  };
-  window.onresize = function(a) {
-    Entry.dispatchEvent("windowResized", a);
-  };
-  window.onbeforeunload = this.beforeUnload;
-  Entry.addEventListener("saveWorkspace", function(a) {
-    Entry.addActivity("save");
-  });
-  "IE" != Entry.getBrowserType().substr(0, 2) || window.flashaudio ? createjs.Sound.registerPlugins([createjs.WebAudioPlugin]) : (createjs.FlashAudioPlugin.swfPath = this.mediaFilePath + "media/", createjs.Sound.registerPlugins([createjs.FlashAudioPlugin]), window.flashaudio = !0);
-  Entry.soundQueue = new createjs.LoadQueue;
-  Entry.soundQueue.installPlugin(createjs.Sound);
-  Entry.loadAudio_([Entry.mediaFilePath + "media/click.mp3", Entry.mediaFilePath + "media/click.wav", Entry.mediaFilePath + "media/click.ogg"], "click");
-  Entry.loadAudio_([Entry.mediaFilePath + "media/delete.mp3", Entry.mediaFilePath + "media/delete.ogg", Entry.mediaFilePath + "media/delete.wav"], "delete");
-};
-Entry.loadAudio_ = function(a, b) {
-  if (window.Audio && a.length) {
-    for (;0 < a.length;) {
-      var c = a[0];
-      c.match(/\/([^.]+)./);
-      Entry.soundQueue.loadFile({id:b, src:c, type:createjs.LoadQueue.SOUND});
-      break;
-    }
-  }
-};
-Entry.initialize_ = function() {
-  this.stage = new Entry.Stage;
-  Entry.engine && Entry.engine.clearTimer();
-  this.engine = new Entry.Engine;
-  this.container = new Entry.Container;
-  this.helper = new Entry.Helper;
-  this.variableContainer = new Entry.VariableContainer;
-  if ("workspace" == this.type || "phone" == this.type) {
-    this.stateManager = new Entry.StateManager;
-  }
-  this.scene = new Entry.Scene;
-  this.playground = new Entry.Playground;
-  this.toast = new Entry.Toast;
-  this.hw && this.hw.closeConnection();
-  this.hw = new Entry.HW;
-  if (Entry.enableActivityLogging) {
-    this.reporter = new Entry.Reporter(!1);
-  } else {
-    if ("workspace" == this.type || "phone" == this.type) {
-      this.reporter = new Entry.Reporter(!0);
-    }
-  }
-};
-Entry.createDom = function(a, b) {
-  if (b && "workspace" != b) {
-    "minimize" == b ? (c = Entry.createElement("canvas"), c.className = "entryCanvasWorkspace", c.id = "entryCanvas", c.width = 640, c.height = 360, d = Entry.createElement("div", "entryCanvasWrapper"), d.appendChild(c), a.appendChild(d), this.canvas_ = c, this.stage.initStage(this.canvas_), d = Entry.createElement("div"), a.appendChild(d), this.engineView = d, this.engine.generateView(this.engineView, b)) : "phone" == b && (this.stateManagerView = c = Entry.createElement("div"), this.stateManager.generateView(this.stateManagerView, 
-    b), d = Entry.createElement("div"), a.appendChild(d), this.engineView = d, this.engine.generateView(this.engineView, b), c = Entry.createElement("canvas"), c.addClass("entryCanvasPhone"), c.id = "entryCanvas", c.width = 640, c.height = 360, d.insertBefore(c, this.engine.footerView_), this.canvas_ = c, this.stage.initStage(this.canvas_), c = Entry.createElement("div"), a.appendChild(c), this.containerView = c, this.container.generateView(this.containerView, b), c = Entry.createElement("div"), 
-    a.appendChild(c), this.playgroundView = c, this.playground.generateView(this.playgroundView, b));
-  } else {
-    var c = Entry.createElement("div");
-    a.appendChild(c);
-    this.sceneView = c;
-    this.scene.generateView(this.sceneView, b);
-    c = Entry.createElement("div");
-    this.sceneView.appendChild(c);
-    this.stateManagerView = c;
-    this.stateManager.generateView(this.stateManagerView, b);
-    var d = Entry.createElement("div");
-    a.appendChild(d);
-    this.engineView = d;
-    this.engine.generateView(this.engineView, b);
-    c = Entry.createElement("canvas");
-    c.addClass("entryCanvasWorkspace");
-    c.id = "entryCanvas";
-    c.width = 640;
-    c.height = 360;
-    d.insertBefore(c, this.engine.addButton);
-    c.addEventListener("mousewheel", function(a) {
-      var b = Entry.variableContainer.getListById(Entry.stage.mouseCoordinate);
-      a = 0 < a.wheelDelta ? !0 : !1;
-      for (var c = 0;c < b.length;c++) {
-        var d = b[c];
-        d.scrollButton_.y = a ? 46 <= d.scrollButton_.y ? d.scrollButton_.y - 23 : 23 : d.scrollButton_.y + 23;
-        d.updateView();
-      }
-    });
-    this.canvas_ = c;
-    this.stage.initStage(this.canvas_);
-    c = Entry.createElement("div");
-    a.appendChild(c);
-    this.containerView = c;
-    this.container.generateView(this.containerView, b);
-    this.helper.initBlockHelper(c);
-    c = Entry.createElement("div");
-    a.appendChild(c);
-    this.playgroundView = c;
-    this.playground.generateView(this.playgroundView, b);
-  }
-};
-Entry.start = function(a) {
-  this.FPS || (this.FPS = 60);
-  Entry.assert("number" == typeof this.FPS, "FPS must be number");
-  Entry.engine.start(this.FPS);
-};
-Entry.parseOptions = function(a) {
-  this.type = a.type;
-  this.projectSaveable = a.projectsaveable;
-  void 0 === this.projectSaveable && (this.projectSaveable = !0);
-  this.objectAddable = a.objectaddable;
-  void 0 === this.objectAddable && (this.objectAddable = !0);
-  this.objectEditable = a.objectEditable;
-  void 0 === this.objectEditable && (this.objectEditable = !0);
-  this.objectEditable || (this.objectAddable = !1);
-  this.objectDeletable = a.objectdeletable;
-  void 0 === this.objectDeletable && (this.objectDeletable = !0);
-  this.soundEditable = a.soundeditable;
-  void 0 === this.soundEditable && (this.soundEditable = !0);
-  this.pictureEditable = a.pictureeditable;
-  void 0 === this.pictureEditable && (this.pictureEditable = !0);
-  this.sceneEditable = a.sceneEditable;
-  void 0 === this.sceneEditable && (this.sceneEditable = !0);
-  this.functionEnable = a.functionEnable;
-  void 0 === this.functionEnable && (this.functionEnable = !0);
-  this.messageEnable = a.messageEnable;
-  void 0 === this.messageEnable && (this.messageEnable = !0);
-  this.variableEnable = a.variableEnable;
-  void 0 === this.variableEnable && (this.variableEnable = !0);
-  this.listEnable = a.listEnable;
-  void 0 === this.listEnable && (this.listEnable = !0);
-  this.hasVariableManager = a.hasvariablemanager;
-  this.variableEnable || this.messageEnable || this.listEnable || this.functionEnable ? void 0 === this.hasVariableManager && (this.hasVariableManager = !0) : this.hasVariableManager = !1;
-  this.isForLecture = a.isForLecture;
-};
-Entry.initFonts = function(a) {
-  this.fonts = a;
-  a || (this.fonts = []);
-  var b = {custom:{families:[], urls:[]}};
-  for (a = 0;a < this.fonts.length;a++) {
-    var c = this.fonts[a];
-    b.custom.families.push(c.family);
-    b.custom.urls.push(c.url);
-  }
-  setTimeout(function() {
-    WebFont.load(b);
-  }, 1E3);
-};
 Entry.Activity = function(a, b) {
   this.name = a;
   this.timestamp = new Date;
@@ -6716,12 +6575,6 @@ Entry.EntryObject.prototype.generateView = function() {
     Entry.objectEditable && Entry.objectDeletable && (d = Entry.createElement("div"), d.addClass("entryObjectDeleteWorkspace"), d.object = this, this.deleteView_ = d, this.view_.appendChild(d), d.bindOnClick(function(a) {
       Entry.engine.isState("run") || Entry.container.removeObject(this.object);
     }));
-    d = Entry.createElement("div");
-    d.addClass("entryObjectSelectedImgWorkspace");
-    this.selectedImgView_ = d;
-    this.view_.appendChild(d);
-    this.initializeSplitter(d);
-    this.splitter = d;
     d = Entry.createElement("div");
     d.addClass("entryObjectInformationWorkspace");
     d.object = this;
@@ -9398,6 +9251,7 @@ Entry.Stage.prototype.updateHandle = function() {
 Entry.Stage.prototype.startEdit = function() {
   this.selectedObject.entity.initCommand();
 };
+<<<<<<< HEAD
 Entry.Stage.prototype.endEdit = function() {
   this.selectedObject.entity.checkCommand();
 };
@@ -9483,6 +9337,275 @@ Entry.Stage.prototype.selectObjectContainer = function(a) {
 Entry.Stage.prototype.reAttachToCanvas = function() {
   for (var a = [this.selectedObjectContainer, this.variableContainer, this.coordinator, this.handle, this.dialogContainer], b = 0;b < a.length;b++) {
     this.canvas.removeChild(a[b]), this.canvas.addChild(a[b]);
+=======
+Entry.PropertyPanel = function() {
+  this.modes = {};
+  this.selected = null;
+};
+(function(a) {
+  a.generateView = function(a, c) {
+    this._view = Entry.Dom("div", {class:"propertyPanel", parent:$(a)});
+    this._tabView = Entry.Dom("div", {class:"propertyTab", parent:this._view});
+    this._contentView = Entry.Dom("div", {class:"propertyContent", parent:this._view});
+    var d = Entry.createElement("div");
+    d.addClass("entryObjectSelectedImgWorkspace");
+    this.selectedImgView_ = d;
+    this._view.append(d);
+    this.initializeSplitter(d);
+    this.splitter = d;
+  };
+  a.addMode = function(a, c) {
+    var d = c.getView(), d = Entry.Dom(d, {parent:this._contentView}), e = Entry.Dom("<div>" + a + "</div>", {classes:["propertyTabElement", "propertyTab" + a], parent:this._tabView}), f = this;
+    e.bindOnClick(function() {
+      f.select(a);
+    });
+    this.modes[a] && (this.modes[a].tabDom.remove(), this.modes[a].contentDom.remove());
+    this.modes[a] = {obj:c, tabDom:e, contentDom:d};
+  };
+  a.resize = function(a) {
+    this._view.css({width:a + "px", top:9 * a / 16 + 123 - 22 + "px"});
+    430 <= a ? this._view.removeClass("collapsed") : this._view.addClass("collapsed");
+    this.modes[this.selected].obj.resize();
+  };
+  a.select = function(a) {
+    for (var c in this.modes) {
+      var d = this.modes[c];
+      d.tabDom.removeClass("selected");
+      d.contentDom.addClass("entryHidden");
+    }
+    c = this.modes[a];
+    c.tabDom.addClass("selected");
+    c.contentDom.removeClass("entryHidden");
+    c.obj.resize();
+    this.selected = a;
+  };
+  a.initializeSplitter = function(a) {
+    a.onmousedown = function(a) {
+      Entry.container.disableSort();
+      Entry.container.splitterEnable = !0;
+    };
+    document.addEventListener("mousemove", function(a) {
+      Entry.container.splitterEnable && Entry.resizeElement({canvasWidth:a.x || a.clientX});
+    });
+    document.addEventListener("mouseup", function(a) {
+      Entry.container.splitterEnable = !1;
+      Entry.container.enableSort();
+    });
+  };
+})(Entry.PropertyPanel.prototype);
+Entry.init = function(a, b) {
+  Entry.assert("object" === typeof b, "Init option is not object");
+  this.events_ = {};
+  this.interfaceState = {menuWidth:264};
+  Entry.Utils.bindGlobalEvent(["mousedown", "mousemove"]);
+  this.options = b;
+  this.parseOptions(b);
+  this.mediaFilePath = (b.libDir ? b.libDir : "/lib") + "/entryjs/images/";
+  "workspace" == this.type && this.isPhone() && (this.type = "phone");
+  this.initialize_();
+  this.view_ = a;
+  this.view_.setAttribute("class", "entry");
+  Entry.initFonts(b.fonts);
+  this.createDom(a, this.type);
+  this.loadInterfaceState();
+  this.overridePrototype();
+  this.maxCloneLimit = 302;
+  this.cloudSavable = !0;
+  this.startTime = (new Date).getTime();
+  document.onkeydown = function(a) {
+    Entry.dispatchEvent("keyPressed", a);
+  };
+  document.onkeyup = function(a) {
+    Entry.dispatchEvent("keyUpped", a);
+  };
+  window.onresize = function(a) {
+    Entry.dispatchEvent("windowResized", a);
+  };
+  window.onbeforeunload = this.beforeUnload;
+  Entry.addEventListener("saveWorkspace", function(a) {
+    Entry.addActivity("save");
+  });
+  "IE" != Entry.getBrowserType().substr(0, 2) || window.flashaudio ? createjs.Sound.registerPlugins([createjs.WebAudioPlugin]) : (createjs.FlashAudioPlugin.swfPath = this.mediaFilePath + "media/", createjs.Sound.registerPlugins([createjs.FlashAudioPlugin]), window.flashaudio = !0);
+  Entry.soundQueue = new createjs.LoadQueue;
+  Entry.soundQueue.installPlugin(createjs.Sound);
+  Entry.loadAudio_([Entry.mediaFilePath + "media/click.mp3", Entry.mediaFilePath + "media/click.wav", Entry.mediaFilePath + "media/click.ogg"], "click");
+  Entry.loadAudio_([Entry.mediaFilePath + "media/delete.mp3", Entry.mediaFilePath + "media/delete.ogg", Entry.mediaFilePath + "media/delete.wav"], "delete");
+};
+Entry.loadAudio_ = function(a, b) {
+  if (window.Audio && a.length) {
+    for (;0 < a.length;) {
+      var c = a[0];
+      c.match(/\/([^.]+)./);
+      Entry.soundQueue.loadFile({id:b, src:c, type:createjs.LoadQueue.SOUND});
+      break;
+    }
+  }
+};
+Entry.initialize_ = function() {
+  this.stage = new Entry.Stage;
+  Entry.engine && Entry.engine.clearTimer();
+  this.engine = new Entry.Engine;
+  this.propertyPanel = new Entry.PropertyPanel;
+  this.container = new Entry.Container;
+  this.helper = new Entry.Helper;
+  this.variableContainer = new Entry.VariableContainer;
+  if ("workspace" == this.type || "phone" == this.type) {
+    this.stateManager = new Entry.StateManager;
+  }
+  this.scene = new Entry.Scene;
+  this.playground = new Entry.Playground;
+  this.toast = new Entry.Toast;
+  this.hw && this.hw.closeConnection();
+  this.hw = new Entry.HW;
+  if (Entry.enableActivityLogging) {
+    this.reporter = new Entry.Reporter(!1);
+  } else {
+    if ("workspace" == this.type || "phone" == this.type) {
+      this.reporter = new Entry.Reporter(!0);
+    }
+  }
+};
+Entry.createDom = function(a, b) {
+  if (b && "workspace" != b) {
+    "minimize" == b ? (c = Entry.createElement("canvas"), c.className = "entryCanvasWorkspace", c.id = "entryCanvas", c.width = 640, c.height = 360, d = Entry.createElement("div", "entryCanvasWrapper"), d.appendChild(c), a.appendChild(d), this.canvas_ = c, this.stage.initStage(this.canvas_), d = Entry.createElement("div"), a.appendChild(d), this.engineView = d, this.engine.generateView(this.engineView, b)) : "phone" == b && (this.stateManagerView = c = Entry.createElement("div"), this.stateManager.generateView(this.stateManagerView, 
+    b), d = Entry.createElement("div"), a.appendChild(d), this.engineView = d, this.engine.generateView(this.engineView, b), c = Entry.createElement("canvas"), c.addClass("entryCanvasPhone"), c.id = "entryCanvas", c.width = 640, c.height = 360, d.insertBefore(c, this.engine.footerView_), this.canvas_ = c, this.stage.initStage(this.canvas_), c = Entry.createElement("div"), a.appendChild(c), this.containerView = c, this.container.generateView(this.containerView, b), c = Entry.createElement("div"), 
+    a.appendChild(c), this.playgroundView = c, this.playground.generateView(this.playgroundView, b));
+  } else {
+    var c = Entry.createElement("div");
+    a.appendChild(c);
+    this.sceneView = c;
+    this.scene.generateView(this.sceneView, b);
+    c = Entry.createElement("div");
+    this.sceneView.appendChild(c);
+    this.stateManagerView = c;
+    this.stateManager.generateView(this.stateManagerView, b);
+    var d = Entry.createElement("div");
+    a.appendChild(d);
+    this.engineView = d;
+    this.engine.generateView(this.engineView, b);
+    c = Entry.createElement("canvas");
+    c.addClass("entryCanvasWorkspace");
+    c.id = "entryCanvas";
+    c.width = 640;
+    c.height = 360;
+    d.insertBefore(c, this.engine.addButton);
+    c.addEventListener("mousewheel", function(a) {
+      var b = Entry.variableContainer.getListById(Entry.stage.mouseCoordinate);
+      a = 0 < a.wheelDelta ? !0 : !1;
+      for (var c = 0;c < b.length;c++) {
+        var d = b[c];
+        d.scrollButton_.y = a ? 46 <= d.scrollButton_.y ? d.scrollButton_.y - 23 : 23 : d.scrollButton_.y + 23;
+        d.updateView();
+      }
+    });
+    this.canvas_ = c;
+    this.stage.initStage(this.canvas_);
+    c = Entry.createElement("div");
+    this.propertyPanel.generateView(a, b);
+    this.containerView = c;
+    this.container.generateView(this.containerView, b);
+    this.propertyPanel.addMode("container", this.container);
+    this.propertyPanel.select("container");
+    this.helper.initBlockHelper(c);
+    c = Entry.createElement("div");
+    a.appendChild(c);
+    this.playgroundView = c;
+    this.playground.generateView(this.playgroundView, b);
+  }
+};
+Entry.start = function(a) {
+  this.FPS || (this.FPS = 60);
+  Entry.assert("number" == typeof this.FPS, "FPS must be number");
+  Entry.engine.start(this.FPS);
+};
+Entry.parseOptions = function(a) {
+  this.type = a.type;
+  this.projectSaveable = a.projectsaveable;
+  void 0 === this.projectSaveable && (this.projectSaveable = !0);
+  this.objectAddable = a.objectaddable;
+  void 0 === this.objectAddable && (this.objectAddable = !0);
+  this.objectEditable = a.objectEditable;
+  void 0 === this.objectEditable && (this.objectEditable = !0);
+  this.objectEditable || (this.objectAddable = !1);
+  this.objectDeletable = a.objectdeletable;
+  void 0 === this.objectDeletable && (this.objectDeletable = !0);
+  this.soundEditable = a.soundeditable;
+  void 0 === this.soundEditable && (this.soundEditable = !0);
+  this.pictureEditable = a.pictureeditable;
+  void 0 === this.pictureEditable && (this.pictureEditable = !0);
+  this.sceneEditable = a.sceneEditable;
+  void 0 === this.sceneEditable && (this.sceneEditable = !0);
+  this.functionEnable = a.functionEnable;
+  void 0 === this.functionEnable && (this.functionEnable = !0);
+  this.messageEnable = a.messageEnable;
+  void 0 === this.messageEnable && (this.messageEnable = !0);
+  this.variableEnable = a.variableEnable;
+  void 0 === this.variableEnable && (this.variableEnable = !0);
+  this.listEnable = a.listEnable;
+  void 0 === this.listEnable && (this.listEnable = !0);
+  this.hasVariableManager = a.hasvariablemanager;
+  this.variableEnable || this.messageEnable || this.listEnable || this.functionEnable ? void 0 === this.hasVariableManager && (this.hasVariableManager = !0) : this.hasVariableManager = !1;
+  this.isForLecture = a.isForLecture;
+};
+Entry.initFonts = function(a) {
+  this.fonts = a;
+  a || (this.fonts = []);
+  var b = {custom:{families:[], urls:[]}};
+  for (a = 0;a < this.fonts.length;a++) {
+    var c = this.fonts[a];
+    b.custom.families.push(c.family);
+    b.custom.urls.push(c.url);
+  }
+  setTimeout(function() {
+    WebFont.load(b);
+  }, 1E3);
+};
+Entry.Reporter = function(a) {
+  this.projectId = this.userId = null;
+  this.isRealTime = a;
+  this.activities = [];
+};
+Entry.Reporter.prototype.start = function(a, b, c) {
+  this.isRealTime && (-1 < window.location.href.indexOf("localhost") ? this.io = io("localhost:7000") : this.io = io("play04.play-entry.com:7000"), this.io.emit("activity", {message:"start", userId:b, projectId:a, time:c}));
+  this.userId = b;
+  this.projectId = a;
+};
+Entry.Reporter.prototype.report = function(a) {
+  if (!this.isRealTime || this.io) {
+    var b = [], c;
+    for (c in a.params) {
+      var d = a.params[c];
+      "object" !== typeof d ? b.push(d) : d.id && b.push(d.id);
+    }
+    a = {message:a.message, userId:this.userId, projectId:this.projectId, time:a.time, params:b};
+    this.isRealTime ? this.io.emit("activity", a) : this.activities.push(a);
+  }
+};
+Entry.Scene = function() {
+  this.scenes_ = [];
+  this.selectedScene = null;
+  this.maxCount = 10;
+};
+Entry.Scene.prototype.generateView = function(a, b) {
+  this.view_ = a;
+  this.view_.addClass("entryScene");
+  if (!b || "workspace" == b) {
+    this.view_.addClass("entrySceneWorkspace");
+    var c = Entry.createElement("ul");
+    c.addClass("entrySceneListWorkspace");
+    Entry.sceneEditable && $ && $(c).sortable({start:function(a, b) {
+      b.item.data("start_pos", b.item.index());
+      $(b.item[0]).clone(!0);
+    }, stop:function(a, b) {
+      var c = b.item.data("start_pos"), g = b.item.index();
+      Entry.scene.moveScene(c, g);
+    }, axis:"x", tolerance:"pointer"});
+    this.view_.appendChild(c);
+    this.listView_ = c;
+    Entry.sceneEditable && (c = Entry.createElement("span"), c.addClass("entrySceneElementWorkspace"), c.addClass("entrySceneAddButtonWorkspace"), c.bindOnClick(function(a) {
+      Entry.engine.isState("run") || Entry.scene.addScene();
+    }), this.view_.appendChild(c), this.addButton_ = c);
+>>>>>>> feature/neobot
   }
   console.log(this.canvas.getChildIndex(this.selectedObjectContainer));
 };
@@ -10304,8 +10427,54 @@ Entry.Func.executeFunction = function(a) {
   delete this.threads[a];
   return !1;
 };
+<<<<<<< HEAD
 Entry.Func.clearThreads = function() {
   this.threads = {};
+=======
+Entry.addEventListener = function(a, b) {
+  this.events_ || (this.events_ = {});
+  this.events_[a] || (this.events_[a] = []);
+  b instanceof Function && this.events_[a].push(b);
+  return !0;
+};
+Entry.dispatchEvent = function(a, b) {
+  this.events_ || (this.events_ = {});
+  if (this.events_[a]) {
+    for (var c = 0, d = this.events_[a].length;c < d;c++) {
+      this.events_[a][c].call(window, b);
+    }
+  }
+};
+Entry.removeEventListener = function(a, b) {
+  if (this.events_[a]) {
+    for (var c = 0, d = this.events_[a].length;c < d;c++) {
+      if (this.events_[a][c] === b) {
+        this.events_[a].splice(c, 1);
+        break;
+      }
+    }
+  }
+};
+Entry.removeAllEventListener = function(a) {
+  this.events_ && this.events_[a] && delete this.events_[a];
+};
+Entry.addTwoNumber = function(a, b) {
+  if (isNaN(a) || isNaN(b)) {
+    return a + b;
+  }
+  a += "";
+  b += "";
+  var c = a.indexOf("."), d = b.indexOf("."), e = 0, f = 0;
+  0 < c && (e = a.length - c - 1);
+  0 < d && (f = b.length - d - 1);
+  return 0 < e || 0 < f ? e >= f ? (parseFloat(a) + parseFloat(b)).toFixed(e) : (parseFloat(a) + parseFloat(b)).toFixed(f) : parseInt(a) + parseInt(b);
+};
+Entry.hex2rgb = function(a) {
+  return (a = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(a)) ? {r:parseInt(a[1], 16), g:parseInt(a[2], 16), b:parseInt(a[3], 16)} : null;
+};
+Entry.rgb2hex = function(a, b, c) {
+  return "#" + (16777216 + (a << 16) + (b << 8) + c).toString(16).slice(1);
+>>>>>>> feature/neobot
 };
 Entry.Func.prototype.init = function(a) {
   this.id = a.id;
@@ -10889,8 +11058,220 @@ Entry.Variable.prototype.clone = function() {
 Entry.Variable.prototype.getType = function() {
   return this.type;
 };
+<<<<<<< HEAD
 Entry.Variable.prototype.setType = function(a) {
   this.type = a;
+=======
+Entry.HWMontior = {};
+Entry.HWMonitor = function(a) {
+  this.svgDom = Entry.Dom($('<svg id="hwMonitor" class="hwMonitor" width="100%" height="100%"version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'), {parent:this.view});
+  var b = this;
+  Entry.addEventListener("windowResized", function() {
+    b.resize();
+  });
+  this._hwModule = a;
+  this.scale = .5;
+  this._portViews = {};
+  this._portMap = {n:[], e:[], s:[], w:[]};
+};
+(function(a) {
+  a.generateView = function() {
+    this.snap = Snap("#hwMonitor");
+    this._svgGroup = this.snap.group();
+    var a = this._hwModule.monitorTemplate;
+    this.hwView = this._svgGroup.group();
+    this.hwView.image(Entry.mediaFilePath + "hw/neobot.png", -a.width / 2, -a.height / 2, a.width, a.height);
+    this._template = a;
+    a = a.ports;
+    this.pathGroup = this._svgGroup.group();
+    var c = [], d;
+    for (d in a) {
+      var e = this.generatePortView(a[d]);
+      this._portViews[d] = e;
+      c.push(e);
+    }
+    c.sort(function(a, b) {
+      return a.box.x - b.box.x;
+    });
+    var f = this._portMap;
+    c.map(function(a) {
+      switch(Math.round(Math.atan2(a.box.y, a.box.x) / Math.PI * 2)) {
+        case -1:
+          f.n.push(a);
+          break;
+        case 0:
+          f.e.push(a);
+          break;
+        case 1:
+          f.s.push(a);
+          break;
+        case 2:
+          f.w.push(a);
+      }
+    });
+    this.resize();
+  };
+  a.generatePortView = function(a) {
+    var c = this._svgGroup.group();
+    c.addClass("hwComponent");
+    var d = this.pathGroup.path("m0,0").attr({fill:"none", stroke:"input" === a.type ? "#00979d" : "#A751E3", "stroke-width":3}), e = c.rect(0, 0, 150, 22, 4).attr({fill:"#fff", stroke:"#a0a1a1"}), f = c.text(4, 12, a.name).attr({fill:"#000", "class":"hwComponentName", "alignment-baseline":"central"}).node.getComputedTextLength();
+    c.rect(f + 8, 2, 30, 18, 9).attr({fill:"input" === a.type ? "#00979d" : "#A751E3"});
+    var g = c.text(f + 13, 12, "0").attr({fill:"#fff", "class":"hwComponentValue", "alignment-baseline":"central"}), f = f + 40;
+    e.attr({width:f + "px"});
+    return {group:c, value:g, type:a.type, path:d, box:{x:a.pos.x - this._template.width / 2, y:a.pos.y - this._template.height / 2, width:f}, width:f};
+  };
+  a.getView = function() {
+    return this.svgDom;
+  };
+  a.update = function() {
+    var a = Entry.hw.portData, c = Entry.hw.sendQueue, d;
+    for (d in this._portViews) {
+      var e = this._portViews[d], f = "input" == e.type ? a[d] : c[d];
+      e.value.attr({text:f ? f : 0});
+    }
+  };
+  a.resize = function() {
+    this.hwView.attr({transform:"s" + this.scale});
+    var a = this.svgDom.get(0).getBoundingClientRect();
+    this._svgGroup.attr({transform:"t" + a.width / 2 + "," + a.height / 2});
+    this._rect = a;
+    this.scale = a.height / this._template.height / 2;
+    this.align();
+  };
+  a.align = function() {
+    for (var a = this._portMap.n, c = a.length, d = 0;d < a.length;d++) {
+      a[d].group.attr({transform:"t" + this._template.width * (d / c - .5) + "," + (-this._template.width / 2 - 30)});
+    }
+    a = this._portMap.s.concat();
+    this._alignNS(a, this._template.width * this.scale / 2 + 5, 27);
+    a = this._portMap.n.concat();
+    this._alignNS(a, -this._template.width * this.scale / 2 - 32, -27);
+  };
+  a._alignNS = function(a, c, d) {
+    for (var e = -this._rect.width / 2, f = this._rect.width / 2, g = this._rect.width, h = 0, k = 0;k < a.length;k++) {
+      h += a[k].width + 5;
+    }
+    h < f - e && (f = h / 2 + 3, e = -h / 2 - 3);
+    for (;1 < a.length;) {
+      var k = a.shift(), l = a.pop(), n = e, m = f, q = d;
+      h <= f - e ? (e += k.width + 5, f -= l.width + 5, q = 0) : 0 === a.length ? (e = (e + f) / 2 - 3, f = e + 6) : (e = Math.max(e, -g / 2 + k.width) + 15, f = Math.min(f, g / 2 - l.width) - 15);
+      this._movePort(k, e, c, n);
+      this._movePort(l, f, c, m);
+      h -= k.width + l.width + 10;
+      c += q;
+    }
+    a.length && a[0].group.attr({transform:"t" + (f + e - a[0].width) / 2 + "," + c});
+  };
+  a._movePort = function(a, c, d, e) {
+    var f = c, g = a.box.x * this.scale, h = a.box.y * this.scale;
+    c > e ? (f = c - a.width, c = c > g && g > e ? "M" + g + "," + d + "L" + g + "," + h : "M" + (c + e) / 2 + "," + d + "l0," + (h > d ? 28 : -3) + "H" + g + "L" + g + "," + h) : c = c < g && g < e ? "m" + g + "," + d + "L" + g + "," + h : "m" + (e + c) / 2 + "," + d + "l0," + (h > d ? 28 : -3) + "H" + g + "L" + g + "," + h;
+    a.group.attr({transform:"t" + f + "," + d});
+    a.path.attr({d:c});
+  };
+})(Entry.HWMonitor.prototype);
+Entry.HW = function() {
+  this.connectTrial = 0;
+  this.isFirstConnect = !0;
+  if ("WebSocket" in window) {
+    try {
+      this.initSocket();
+    } catch (a) {
+      console.log("socket error:", a);
+    }
+  } else {
+    console.log("socket not exist");
+  }
+  this.connected = !1;
+  this.portData = {};
+  this.sendQueue = {};
+  this.settingQueue = {};
+  this.hwModule = this.selectedDevice = null;
+  Entry.addEventListener("stop", this.setZero);
+  this.hwInfo = {11:Entry.Arduino, 12:Entry.SensorBoard, 24:Entry.Hamster, 25:Entry.Albert, 31:Entry.Bitbrick, 51:Entry.Neobot};
+};
+Entry.HW.TRIAL_LIMIT = 1;
+p = Entry.HW.prototype;
+p.initSocket = function() {
+  if (this.connectTrial >= Entry.HW.TRIAL_LIMIT) {
+    this.isFirstConnect || Entry.toast.alert(Lang.Menus.connect_hw, Lang.Menus.connect_fail, !1), this.isFirstConnect = !1;
+  } else {
+    var a = this, b = new WebSocket("ws://localhost:23518");
+    this.socket = b;
+    this.connected = !1;
+    b.binaryType = "arraybuffer";
+    this.connectTrial++;
+    b.onopen = function() {
+      a.initHardware();
+    };
+    b.onmessage = function(b) {
+      b = JSON.parse(b.data);
+      a.checkDevice(b);
+      a.updatePortData(b);
+    };
+    b.onclose = function() {
+      a.initSocket();
+    };
+    Entry.dispatchEvent("hwChanged");
+  }
+};
+p.retryConnect = function() {
+  this.connectTrial = 0;
+  this.initSocket();
+};
+p.initHardware = function() {
+  this.connectTrial = 0;
+  this.connected = !0;
+  Entry.dispatchEvent("hwChanged");
+  Entry.playground && Entry.playground.object && Entry.playground.setMenu(Entry.playground.object.objectType);
+};
+p.setDigitalPortValue = function(a, b) {
+  this.sendQueue[a] = b;
+};
+p.getAnalogPortValue = function(a) {
+  return this.connected ? this.portData["a" + a] : 0;
+};
+p.getDigitalPortValue = function(a) {
+  if (!this.connected) {
+    return 0;
+  }
+  this.setPortReadable(a);
+  return void 0 !== this.portData[a] ? this.portData[a] : 0;
+};
+p.setPortReadable = function(a) {
+  this.sendQueue.readablePorts || (this.sendQueue.readablePorts = []);
+  this.sendQueue.readablePorts.push(a);
+};
+p.update = function() {
+  this.socket && 1 == this.socket.readyState && (this.socket.send(JSON.stringify(this.sendQueue)), this.sendQueue.readablePorts = []);
+};
+p.updatePortData = function(a) {
+  this.portData = a;
+  this.hwMonitor && this.hwMonitor.update();
+};
+p.closeConnection = function() {
+  this.socket && this.socket.close();
+};
+p.downloadConnector = function() {
+  window.open("http://play-entry.org/down/entry-hw_v1.1.zip", "_blank").focus();
+};
+p.downloadSource = function() {
+  window.open("http://play-entry.com/lib/EntryArduino/arduino/entry.ino", "_blank").focus();
+};
+p.setZero = function() {
+  Entry.hw.hwModule && Entry.hw.hwModule.setZero();
+};
+p.checkDevice = function(a) {
+  void 0 !== a.company && (a = "" + a.company + a.model, a != this.selectedDevice && (this.selectedDevice = a, this.hwModule = this.hwInfo[a], Entry.dispatchEvent("hwChanged"), Entry.toast.success(Lang.Menus.connect_hw, Lang.Menus.connect_message.replace("%1", Lang.Device[Entry.hw.hwModule.name]), !1), this.hwModule.monitorTemplate && (this.hwMonitor = new Entry.HWMonitor(this.hwModule), Entry.propertyPanel.addMode("hw", this.hwMonitor), this.hwMonitor.generateView())));
+};
+p.banHW = function() {
+  var a = this.hwInfo, b;
+  for (b in a) {
+    Entry.playground.blockMenu.banClass(a[b].name);
+  }
+};
+Entry.BlockModel = function() {
+  Entry.Model(this);
+>>>>>>> feature/neobot
 };
 Entry.Variable.prototype.getSlidePosition = function(a) {
   var b = this.minValue_;
