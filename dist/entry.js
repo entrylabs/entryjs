@@ -85,7 +85,6 @@ var Entry = {block:{}, TEXT_ALIGN_CENTER:0, TEXT_ALIGN_LEFT:1, TEXT_ALIGN_RIGHT:
     }
     (b = a.menuWidth) ? 244 > b ? b = 244 : 400 < b && (b = 400) : b = 264;
     a.menuWidth = b;
-    Entry.playground.blockMenuView_.style.width = b - 64 + "px";
     $(".entryBlockMenuWorkspace>svg").css({width:b - 64 + "px"});
     $(".entryBlocklyWorkspace").css({left:b + "px"});
     Entry.playground.resizeHandle_.style.left = b + "px";
@@ -8824,947 +8823,6 @@ Entry.Parser = function(a, b, c) {
     }
   };
 })(Entry.Parser.prototype);
-Entry.Playground = function() {
-  this.menuBlocks_ = {};
-  this.enableArduino = this.isTextBGMode_ = !1;
-  this.viewMode_ = "default";
-  Entry.addEventListener("textEdited", this.injectText);
-  Entry.addEventListener("entryBlocklyChanged", this.editBlock);
-  Entry.addEventListener("entryBlocklyMouseUp", this.mouseupBlock);
-  Entry.addEventListener("hwChanged", this.updateHW);
-};
-Entry.Playground.prototype.generateView = function(a, b) {
-  this.view_ = a;
-  this.view_.addClass("entryPlayground");
-  if (b && "workspace" != b) {
-    "phone" == b && (this.view_.addClass("entryPlaygroundPhone"), c = Entry.createElement("div", "entryCategoryTab"), c.addClass("entryPlaygroundTabPhone"), Entry.view_.insertBefore(c, this.view_), this.generateTabView(c), this.tabView_ = c, c = Entry.createElement("div", "entryCurtain"), c.addClass("entryPlaygroundCurtainPhone"), c.addClass("entryRemove"), c.innerHTML = Lang.Workspace.cannot_edit_click_to_stop, c.bindOnClick(function() {
-      Entry.engine.toggleStop();
-    }), this.view_.appendChild(c), this.curtainView_ = c, Entry.pictureEditable && (c = Entry.createElement("div", "entryPicture"), c.addClass("entryPlaygroundPicturePhone"), c.addClass("entryRemove"), this.view_.appendChild(c), this.generatePictureView(c), this.pictureView_ = c), c = Entry.createElement("div", "entryText"), c.addClass("entryRemove"), this.view_.appendChild(c), this.generateTextView(c), this.textView_ = c, Entry.soundEditable && (c = Entry.createElement("div", "entrySound"), c.addClass("entryPlaygroundSoundWorkspacePhone"), 
-    c.addClass("entryRemove"), this.view_.appendChild(c), this.generateSoundView(c), this.soundView_ = c), c = Entry.createElement("div", "entryDefault"), this.view_.appendChild(c), this.generateDefaultView(c), this.defaultView_ = c, c = Entry.createElement("div", "entryCode"), c.addClass("entryPlaygroundCodePhone"), this.view_.appendChild(c), this.generateCodeView(c), this.codeView_ = this.codeView_ = c, Entry.addEventListener("run", function(a) {
-      Entry.playground.curtainView_.removeClass("entryRemove");
-    }), Entry.addEventListener("stop", function(a) {
-      Entry.playground.curtainView_.addClass("entryRemove");
-    }));
-  } else {
-    this.view_.addClass("entryPlaygroundWorkspace");
-    var c = Entry.createElement("div", "entryCategoryTab");
-    c.addClass("entryPlaygroundTabWorkspace");
-    this.view_.appendChild(c);
-    this.generateTabView(c);
-    this.tabView_ = c;
-    c = Entry.createElement("div", "entryCurtain");
-    c.addClass("entryPlaygroundCurtainWorkspace");
-    c.addClass("entryRemove");
-    var d = Lang.Workspace.cannot_edit_click_to_stop.split(".");
-    c.innerHTML = d[0] + ".<br/>" + d[1];
-    c.addEventListener("click", function() {
-      Entry.engine.toggleStop();
-    });
-    this.view_.appendChild(c);
-    this.curtainView_ = c;
-    Entry.pictureEditable && (c = Entry.createElement("div", "entryPicture"), c.addClass("entryPlaygroundPictureWorkspace"), c.addClass("entryRemove"), this.view_.appendChild(c), this.generatePictureView(c), this.pictureView_ = c);
-    c = Entry.createElement("div", "entryText");
-    c.addClass("entryPlaygroundTextWorkspace");
-    c.addClass("entryRemove");
-    this.view_.appendChild(c);
-    this.generateTextView(c);
-    this.textView_ = c;
-    Entry.soundEditable && (c = Entry.createElement("div", "entrySound"), c.addClass("entryPlaygroundSoundWorkspace"), c.addClass("entryRemove"), this.view_.appendChild(c), this.generateSoundView(c), this.soundView_ = c);
-    c = Entry.createElement("div", "entryDefault");
-    c.addClass("entryPlaygroundDefaultWorkspace");
-    this.view_.appendChild(c);
-    this.generateDefaultView(c);
-    this.defaultView_ = c;
-    c = Entry.createElement("div", "entryCode");
-    c.addClass("entryPlaygroundCodeWorkspace");
-    c.addClass("entryRemove");
-    this.view_.appendChild(c);
-    this.generateCodeView(c);
-    this.codeView_ = c;
-    d = Entry.createElement("div");
-    d.addClass("entryPlaygroundResizeWorkspace", "entryRemove");
-    this.resizeHandle_ = d;
-    this.view_.appendChild(d);
-    this.initializeResizeHandle(d);
-    this.codeView_ = c;
-    Entry.addEventListener("run", function(a) {
-      Entry.playground.curtainView_.removeClass("entryRemove");
-    });
-    Entry.addEventListener("stop", function(a) {
-      Entry.playground.curtainView_.addClass("entryRemove");
-    });
-  }
-};
-Entry.Playground.prototype.generateDefaultView = function(a) {
-  return a;
-};
-Entry.Playground.prototype.generateTabView = function(a) {
-  var b = Entry.createElement("ul");
-  b.addClass("entryTabListWorkspace");
-  this.tabList_ = b;
-  a.appendChild(b);
-  this.tabViewElements = {};
-  a = Entry.createElement("li", "entryCodeTab");
-  a.innerHTML = Lang.Workspace.tab_code;
-  a.addClass("entryTabListItemWorkspace");
-  a.addClass("entryTabSelected");
-  b.appendChild(a);
-  a.bindOnClick(function(a) {
-    Entry.playground.changeViewMode("code");
-  });
-  this.tabViewElements.code = a;
-  Entry.pictureEditable && (a = Entry.createElement("li", "entryPictureTab"), a.innerHTML = Lang.Workspace.tab_picture, a.addClass("entryTabListItemWorkspace"), b.appendChild(a), a.bindOnClick(function(a) {
-    Entry.playground.changeViewMode("picture");
-  }), this.tabViewElements.picture = a, a = Entry.createElement("li", "entryTextboxTab"), a.innerHTML = Lang.Workspace.tab_text, a.addClass("entryTabListItemWorkspace"), b.appendChild(a), a.bindOnClick(function(a) {
-    Entry.playground.changeViewMode("text");
-  }), this.tabViewElements.text = a, a.addClass("entryRemove"));
-  Entry.soundEditable && (a = Entry.createElement("li", "entrySoundTab"), a.innerHTML = Lang.Workspace.tab_sound, a.addClass("entryTabListItemWorkspace"), b.appendChild(a), a.bindOnClick(function(a) {
-    Entry.playground.changeViewMode("sound");
-  }), this.tabViewElements.sound = a);
-  Entry.hasVariableManager && (a = Entry.createElement("li", "entryVariableTab"), a.innerHTML = Lang.Workspace.tab_attribute, a.addClass("entryTabListItemWorkspace"), a.addClass("entryVariableTabWorkspace"), b.appendChild(a), a.bindOnClick(function(a) {
-    Entry.playground.toggleOnVariableView();
-    Entry.playground.changeViewMode("variable");
-  }), this.tabViewElements.variable = a);
-};
-Entry.Playground.prototype.generateCodeView = function(a) {
-  if (!Entry.type || "workspace" == Entry.type) {
-    var b = Entry.createElement("div", "entryCategory");
-    b.addClass("entryCategoryWorkspace");
-    a.appendChild(b);
-    this.categoryView_ = b;
-    var c = Entry.createElement("ul", "entryCategoryList");
-    c.addClass("entryCategoryListWorkspace");
-    b.appendChild(c);
-    this.categoryListView_ = c;
-    var d = Entry.createElement("div", "entryBlocklyWorkspace");
-    d.addClass("entryBlockMenuWorkspace");
-    a.appendChild(d);
-    $(d).mouseenter(function(a) {
-      Entry.playground.resizing || (Entry.playground.focusBlockMenu = !0, a = Blockly.mainWorkspace.blockMenu.blockMenuWidth + 84, a > Entry.interfaceState.menuWidth && (this.widthBackup = Entry.interfaceState.menuWidth, $(".entryBlockMenuWorkspace>svg").stop().animate({width:a - 64}, 200)));
-    });
-    $(d).mouseleave(function(a) {
-      Entry.playground.resizing || (d.widthBackup && !Blockly.mainWorkspace.blockMenu.hasStalkerBlock && $(".entryBlockMenuWorkspace>svg").stop().animate({width:this.widthBackup - 64}, 200), delete this.widthBackup, delete Entry.playground.focusBlockMenu);
-    });
-    Entry.addEventListener("entryBlocklyChanged", function(a) {
-      a = Entry.playground.blockMenuView_;
-      a.widthBackup && Entry.resizeElement({menuWidth:a.widthBackup});
-      delete a.widthBackup;
-      delete Entry.playground.focusBlockMenu;
-    });
-    this.blockMenuView_ = d;
-    b = this.createVariableView();
-    a.appendChild(b);
-    this.variableView_ = b;
-    b = Entry.createElement("div", "entryBlockly");
-    b.addClass("entryBlocklyWorkspace");
-    this.blocklyView_ = b;
-    Entry.bindAnimationCallback(this.blocklyView_, function(a) {
-      Blockly.fireUiEvent(window, "resize");
-      Entry.playground.blocklyView_.removeClass("foldOut");
-    });
-    a.appendChild(b);
-    c = Entry.parseTexttoXML("<xml></xml>");
-    Blockly.inject(b, {path:".././", toolbox:c, trashcan:!0, blockmenu:this.blockMenuView_, mediaFilePath:Entry.mediaFilePath});
-    Blockly.mainWorkspace.flyout_.hide();
-    Blockly.mainWorkspace.blockMenu.hide();
-    document.addEventListener("blocklyWorkspaceChange", this.syncObjectWithEvent, !1);
-    this.blockMenu = Blockly.mainWorkspace.blockMenu;
-    Entry.hw.banHW();
-    return a;
-  }
-  if ("phone" == Entry.type) {
-    return b = Entry.createElement("div", "entryCategory"), b.addClass("entryCategoryPhone"), a.appendChild(b), this.categoryView_ = b, c = Entry.createElement("ul", "entryCategoryList"), c.addClass("entryCategoryListPhone"), b.appendChild(c), this.categoryListView_ = c, b = this.createVariableView(), a.appendChild(b), this.variableView_ = b, b = Entry.createElement("div", "entryBlockly"), b.addClass("entryBlocklyPhone"), this.blocklyView_ = b, a.appendChild(b), c = Entry.parseTexttoXML("<xml></xml>"), 
-    Blockly.inject(b, {path:".././", toolbox:c, trashcan:!0, mediaFilePath:Entry.mediaFilePath}), Blockly.mainWorkspace.flyout_.autoClose = !0, Blockly.mainWorkspace.flyout_.hide(), document.addEventListener("blocklyWorkspaceChange", this.syncObjectWithEvent, !1), this.blockMenu = Blockly.mainWorkspace.flyout_, Entry.hw.banHW(), a;
-  }
-};
-Entry.Playground.prototype.generatePictureView = function(a) {
-  if ("workspace" == Entry.type) {
-    var b = Entry.createElement("div", "entryAddPicture");
-    b.addClass("entryPlaygroundAddPicture");
-    b.bindOnClick(function(a) {
-      Entry.dispatchEvent("openPictureManager");
-    });
-    var c = Entry.createElement("div", "entryAddPictureInner");
-    c.addClass("entryPlaygroundAddPictureInner");
-    c.innerHTML = Lang.Workspace.picture_add;
-    b.appendChild(c);
-    a.appendChild(b);
-    b = Entry.createElement("ul", "entryPictureList");
-    b.addClass("entryPlaygroundPictureList");
-    $ && $(b).sortable({start:function(a, b) {
-      b.item.data("start_pos", b.item.index());
-    }, stop:function(a, b) {
-      var c = b.item.data("start_pos"), g = b.item.index();
-      Entry.playground.movePicture(c, g);
-    }, axis:"y"});
-    a.appendChild(b);
-    this.pictureListView_ = b;
-    b = Entry.createElement("div", "entryPainter");
-    b.addClass("entryPlaygroundPainter");
-    a.appendChild(b);
-    this.painter = new Entry.Painter;
-    this.painter.initialize(b);
-  } else {
-    "phone" == Entry.type && (b = Entry.createElement("div", "entryAddPicture"), b.addClass("entryPlaygroundAddPicturePhone"), b.bindOnClick(function(a) {
-      Entry.dispatchEvent("openPictureManager");
-    }), c = Entry.createElement("div", "entryAddPictureInner"), c.addClass("entryPlaygroundAddPictureInnerPhone"), c.innerHTML = Lang.Workspace.picture_add, b.appendChild(c), a.appendChild(b), b = Entry.createElement("ul", "entryPictureList"), b.addClass("entryPlaygroundPictureListPhone"), $ && $(b).sortable({start:function(a, b) {
-      b.item.data("start_pos", b.item.index());
-    }, stop:function(a, b) {
-      var c = b.item.data("start_pos"), g = b.item.index();
-      Entry.playground.movePicture(c, g);
-    }, axis:"y"}), a.appendChild(b), this.pictureListView_ = b);
-  }
-};
-Entry.Playground.prototype.generateTextView = function(a) {
-  var b = Entry.createElement("div");
-  a.appendChild(b);
-  a = Entry.createElement("div");
-  a.addClass("textProperties");
-  b.appendChild(a);
-  var c = Entry.createElement("div");
-  c.addClass("entryTextFontSelect");
-  a.appendChild(c);
-  var d = Entry.createElement("select", "entryPainterAttrFontName");
-  d.addClass("entryPlaygroundPainterAttrFontName", "entryTextFontSelecter");
-  d.size = "1";
-  d.onchange = function(a) {
-    Entry.playground.object.entity.setFontType(a.target.value);
-  };
-  for (var e = 0;e < Entry.fonts.length;e++) {
-    var f = Entry.fonts[e], g = Entry.createElement("option");
-    g.value = f.family;
-    g.innerHTML = f.name;
-    d.appendChild(g);
-  }
-  this.fontName_ = d;
-  c.appendChild(d);
-  e = Entry.createElement("ul");
-  e.addClass("entryPlayground_text_buttons");
-  a.appendChild(e);
-  c = Entry.createElement("li");
-  c.addClass("entryPlaygroundTextAlignLeft");
-  c.bindOnClick(function(a) {
-    Entry.playground.setFontAlign(Entry.TEXT_ALIGN_LEFT);
-  });
-  e.appendChild(c);
-  this.alignLeftBtn = c;
-  c = Entry.createElement("li");
-  c.addClass("entryPlaygroundTextAlignCenter");
-  c.bindOnClick(function(a) {
-    Entry.playground.setFontAlign(Entry.TEXT_ALIGN_CENTER);
-  });
-  e.appendChild(c);
-  this.alignCenterBtn = c;
-  c = Entry.createElement("li");
-  c.addClass("entryPlaygroundTextAlignRight");
-  c.bindOnClick(function(a) {
-    Entry.playground.setFontAlign(Entry.TEXT_ALIGN_RIGHT);
-  });
-  e.appendChild(c);
-  this.alignRightBtn = c;
-  c = Entry.createElement("li");
-  e.appendChild(c);
-  d = Entry.createElement("a");
-  c.appendChild(d);
-  d.bindOnClick(function() {
-    Entry.playground.object.entity.toggleFontBold() ? h.src = Entry.mediaFilePath + "text_button_bold_true.png" : h.src = Entry.mediaFilePath + "text_button_bold_false.png";
-  });
-  var h = Entry.createElement("img", "entryPlaygroundText_boldImage");
-  d.appendChild(h);
-  h.src = Entry.mediaFilePath + "text_button_bold_false.png";
-  c = Entry.createElement("li");
-  e.appendChild(c);
-  d = Entry.createElement("a");
-  c.appendChild(d);
-  d.bindOnClick(function() {
-    var a = !Entry.playground.object.entity.getUnderLine() || !1;
-    k.src = Entry.mediaFilePath + "text_button_underline_" + a + ".png";
-    Entry.playground.object.entity.setUnderLine(a);
-  });
-  var k = Entry.createElement("img", "entryPlaygroundText_underlineImage");
-  d.appendChild(k);
-  k.src = Entry.mediaFilePath + "text_button_underline_false.png";
-  c = Entry.createElement("li");
-  e.appendChild(c);
-  d = Entry.createElement("a");
-  c.appendChild(d);
-  d.bindOnClick(function() {
-    Entry.playground.object.entity.toggleFontItalic() ? l.src = Entry.mediaFilePath + "text_button_italic_true.png" : l.src = Entry.mediaFilePath + "/text_button_italic_false.png";
-  });
-  var l = Entry.createElement("img", "entryPlaygroundText_italicImage");
-  d.appendChild(l);
-  l.src = Entry.mediaFilePath + "text_button_italic_false.png";
-  c = Entry.createElement("li");
-  e.appendChild(c);
-  d = Entry.createElement("a");
-  c.appendChild(d);
-  d.bindOnClick(function() {
-    var a = !Entry.playground.object.entity.getStrike() || !1;
-    Entry.playground.object.entity.setStrike(a);
-    n.src = Entry.mediaFilePath + "text_button_strike_" + a + ".png";
-  });
-  var n = Entry.createElement("img", "entryPlaygroundText_strikeImage");
-  d.appendChild(n);
-  n.src = Entry.mediaFilePath + "text_button_strike_false.png";
-  d = Entry.createElement("li");
-  e.appendChild(d);
-  c = Entry.createElement("a");
-  d.appendChild(c);
-  c.bindOnClick(function() {
-    Entry.playground.toggleColourChooser("foreground");
-  });
-  d = Entry.createElement("img");
-  c.appendChild(d);
-  d.src = Entry.mediaFilePath + "text_button_color_false.png";
-  c = Entry.createElement("li");
-  e.appendChild(c);
-  e = Entry.createElement("a");
-  c.appendChild(e);
-  e.bindOnClick(function() {
-    Entry.playground.toggleColourChooser("background");
-  });
-  c = Entry.createElement("img");
-  e.appendChild(c);
-  c.src = Entry.mediaFilePath + "text_button_background_false.png";
-  e = Entry.createElement("div");
-  e.addClass("entryPlayground_fgColorDiv");
-  c = Entry.createElement("div");
-  c.addClass("entryPlayground_bgColorDiv");
-  a.appendChild(e);
-  a.appendChild(c);
-  d = Entry.createElement("div");
-  d.addClass("entryPlaygroundTextColoursWrapper");
-  this.coloursWrapper = d;
-  b.appendChild(d);
-  a = Entry.getColourCodes();
-  for (e = 0;e < a.length;e++) {
-    c = Entry.createElement("div"), c.addClass("modal_colour"), c.setAttribute("colour", a[e]), c.style.backgroundColor = a[e], 0 === e && c.addClass("modalColourTrans"), c.bindOnClick(function(a) {
-      Entry.playground.setTextColour(a.target.getAttribute("colour"));
-    }), d.appendChild(c);
-  }
-  d.style.display = "none";
-  d = Entry.createElement("div");
-  d.addClass("entryPlaygroundTextBackgroundsWrapper");
-  this.backgroundsWrapper = d;
-  b.appendChild(d);
-  for (e = 0;e < a.length;e++) {
-    c = Entry.createElement("div"), c.addClass("modal_colour"), c.setAttribute("colour", a[e]), c.style.backgroundColor = a[e], 0 === e && c.addClass("modalColourTrans"), c.bindOnClick(function(a) {
-      Entry.playground.setBackgroundColour(a.target.getAttribute("colour"));
-    }), d.appendChild(c);
-  }
-  d.style.display = "none";
-  a = Entry.createElement("input");
-  a.addClass("entryPlayground_textBox");
-  a.onkeyup = function() {
-    Entry.playground.object.setText(this.value);
-    Entry.playground.object.entity.setText(this.value);
-  };
-  a.onblur = function() {
-    Entry.dispatchEvent("textEdited");
-  };
-  this.textEditInput = a;
-  b.appendChild(a);
-  a = Entry.createElement("textarea");
-  a.addClass("entryPlayground_textArea");
-  a.style.display = "none";
-  a.onkeyup = function() {
-    Entry.playground.object.setText(this.value);
-    Entry.playground.object.entity.setText(this.value);
-  };
-  a.onblur = function() {
-    Entry.dispatchEvent("textEdited");
-  };
-  this.textEditArea = a;
-  b.appendChild(a);
-  a = Entry.createElement("div");
-  a.addClass("entryPlaygroundFontSizeWrapper");
-  b.appendChild(a);
-  this.fontSizeWrapper = a;
-  var m = Entry.createElement("div");
-  m.addClass("entryPlaygroundFontSizeSlider");
-  a.appendChild(m);
-  var q = Entry.createElement("div");
-  q.addClass("entryPlaygroundFontSizeIndicator");
-  m.appendChild(q);
-  this.fontSizeIndiciator = q;
-  var r = Entry.createElement("div");
-  r.addClass("entryPlaygroundFontSizeKnob");
-  m.appendChild(r);
-  this.fontSizeKnob = r;
-  e = Entry.createElement("div");
-  e.addClass("entryPlaygroundFontSizeLabel");
-  e.innerHTML = "\uae00\uc790 \ud06c\uae30";
-  a.appendChild(e);
-  var t = !1, u = 0;
-  r.onmousedown = function(a) {
-    t = !0;
-    u = $(m).offset().left;
-  };
-  document.addEventListener("mousemove", function(a) {
-    t && (a = a.pageX - u, a = Math.max(a, 5), a = Math.min(a, 88), r.style.left = a + "px", a /= .88, q.style.width = a + "%", Entry.playground.object.entity.setFontSize(a));
-  });
-  document.addEventListener("mouseup", function(a) {
-    t = !1;
-  });
-  a = Entry.createElement("div");
-  a.addClass("entryPlaygroundLinebreakWrapper");
-  b.appendChild(a);
-  b = Entry.createElement("hr");
-  b.addClass("entryPlaygroundLinebreakHorizontal");
-  a.appendChild(b);
-  b = Entry.createElement("div");
-  b.addClass("entryPlaygroundLinebreakButtons");
-  a.appendChild(b);
-  e = Entry.createElement("img");
-  e.bindOnClick(function() {
-    Entry.playground.toggleLineBreak(!1);
-  });
-  e.src = Entry.mediaFilePath + "text-linebreak-off-true.png";
-  b.appendChild(e);
-  this.linebreakOffImage = e;
-  e = Entry.createElement("img");
-  e.bindOnClick(function() {
-    Entry.playground.toggleLineBreak(!0);
-  });
-  e.src = Entry.mediaFilePath + "text-linebreak-on-false.png";
-  b.appendChild(e);
-  this.linebreakOnImage = e;
-  b = Entry.createElement("div");
-  b.addClass("entryPlaygroundLinebreakDescription");
-  a.appendChild(b);
-  a = Entry.createElement("p");
-  a.innerHTML = "\uae00\uc0c1\uc790\uc758 \ud06c\uae30\uac00 \uae00\uc790\uac00 \uc4f0\uc77c \uc218 \uc788\ub294 \uc601\uc5ed\uc744 \uacb0\uc815\ud569\ub2c8\ub2e4.";
-  b.appendChild(a);
-  a = Entry.createElement("ul");
-  b.appendChild(a);
-  b = Entry.createElement("li");
-  b.innerHTML = "\ub0b4\uc6a9 \uc791\uc131\uc2dc \uc5d4\ud130\ud0a4\ub85c \uc904\ubc14\uafc8\uc744 \ud560 \uc218 \uc788\uc2b5\ub2c8\ub2e4.";
-  a.appendChild(b);
-  b = Entry.createElement("li");
-  b.innerHTML = "\ub0b4\uc6a9\uc744 \uc791\uc131\ud558\uc2dc\uac70\ub098 \uc0c8\ub85c\uc6b4 \uae00\uc790\ub97c \ucd94\uac00\uc2dc \uae38\uc774\uac00 \uae00\uc0c1\uc790\uc758 \uac00\ub85c \uc601\uc5ed\uc744 \ub118\uc5b4\uc11c\uba74 \uc790\ub3d9\uc73c\ub85c \uc904\uc774 \ubc14\ub01d\ub2c8\ub2e4.";
-  a.appendChild(b);
-};
-Entry.Playground.prototype.generateSoundView = function(a) {
-  if ("workspace" == Entry.type) {
-    var b = Entry.createElement("div", "entryAddSound");
-    b.addClass("entryPlaygroundAddSound");
-    b.bindOnClick(function(a) {
-      Entry.dispatchEvent("openSoundManager");
-    });
-    var c = Entry.createElement("div", "entryAddSoundInner");
-    c.addClass("entryPlaygroundAddSoundInner");
-    c.innerHTML = Lang.Workspace.sound_add;
-    b.appendChild(c);
-    a.appendChild(b);
-    b = Entry.createElement("ul", "entrySoundList");
-    b.addClass("entryPlaygroundSoundList");
-    $ && $(b).sortable({start:function(a, b) {
-      b.item.data("start_pos", b.item.index());
-    }, stop:function(a, b) {
-      var c = b.item.data("start_pos"), g = b.item.index();
-      Entry.playground.moveSound(c, g);
-    }, axis:"y"});
-    a.appendChild(b);
-    this.soundListView_ = b;
-  } else {
-    "phone" == Entry.type && (b = Entry.createElement("div", "entryAddSound"), b.addClass("entryPlaygroundAddSoundPhone"), b.bindOnClick(function(a) {
-      Entry.dispatchEvent("openSoundManager");
-    }), c = Entry.createElement("div", "entryAddSoundInner"), c.addClass("entryPlaygroundAddSoundInnerPhone"), c.innerHTML = Lang.Workspace.sound_add, b.appendChild(c), a.appendChild(b), b = Entry.createElement("ul", "entrySoundList"), b.addClass("entryPlaygroundSoundListPhone"), $ && $(b).sortable({start:function(a, b) {
-      b.item.data("start_pos", b.item.index());
-    }, stop:function(a, b) {
-      var c = b.item.data("start_pos"), g = b.item.index();
-      Entry.playground.moveSound(c, g);
-    }, axis:"y"}), a.appendChild(b), this.soundListView_ = b);
-  }
-};
-Entry.Playground.prototype.injectObject = function(a) {
-  if (!a) {
-    this.changeViewMode("default"), this.object = null;
-  } else {
-    if (a !== this.object) {
-      this.object && (this.syncObject(this.object), this.object.toggleInformation(!1));
-      this.object = a;
-      this.setMenu(a.objectType);
-      this.injectCode();
-      "sprite" == a.objectType && Entry.pictureEditable ? (this.tabViewElements.text && this.tabViewElements.text.addClass("entryRemove"), this.tabViewElements.picture && this.tabViewElements.picture.removeClass("entryRemove")) : "textBox" == a.objectType && (this.tabViewElements.picture && this.tabViewElements.picture.addClass("entryRemove"), this.tabViewElements.text && this.tabViewElements.text.removeClass("entryRemove"));
-      var b = this.viewMode_;
-      "default" == b ? this.changeViewMode("code") : "picture" != b && "text" != b || "textBox" != a.objectType ? "text" != b && "picture" != b || "sprite" != a.objectType ? "sound" == b && this.changeViewMode("sound") : this.changeViewMode("picture") : this.changeViewMode("text");
-      this.menuInjected || this.selectMenu(0);
-    }
-  }
-};
-Entry.Playground.prototype.injectCode = function() {
-  var a = this.object;
-  Blockly.mainWorkspace.clear();
-  Blockly.Xml.domToWorkspace(Blockly.mainWorkspace, a.script);
-};
-Entry.Playground.prototype.injectPicture = function() {
-  var a = this.pictureListView_;
-  if (a) {
-    for (;a.hasChildNodes();) {
-      a.removeChild(a.lastChild);
-    }
-    if (this.object) {
-      for (var b = this.object.pictures, c = 0, d = b.length;c < d;c++) {
-        var e = b[c].view;
-        e || console.log(e);
-        e.orderHolder.innerHTML = c + 1;
-        a.appendChild(e);
-      }
-      this.selectPicture(this.object.selectedPicture);
-    }
-  }
-};
-Entry.Playground.prototype.addPicture = function(a, b) {
-  var c = Entry.cloneSimpleObject(a);
-  delete c.id;
-  delete c.view;
-  a = JSON.parse(JSON.stringify(c));
-  a.id = Entry.generateHash();
-  a.name = Entry.getOrderedName(a.name, this.object.pictures);
-  this.generatePictureElement(a);
-  this.object.addPicture(a);
-  this.injectPicture();
-  this.selectPicture(a);
-};
-Entry.Playground.prototype.setPicture = function(a) {
-  var b = document.getElementById(a.id);
-  a.view = b;
-  b.picture = a;
-  b = document.getElementById("t_" + a.id);
-  if (a.fileurl) {
-    b.style.backgroundImage = 'url("' + a.fileurl + '")';
-  } else {
-    var c = a.filename;
-    b.style.backgroundImage = 'url("/uploads/' + c.substring(0, 2) + "/" + c.substring(2, 4) + "/thumb/" + c + '.png")';
-  }
-  document.getElementById("s_" + a.id).innerHTML = a.dimension.width + " X " + a.dimension.height;
-  Entry.playground.object.setPicture(a);
-};
-Entry.Playground.prototype.clonePicture = function(a) {
-  a = Entry.playground.object.getPicture(a);
-  this.addPicture(a, !0);
-};
-Entry.Playground.prototype.selectPicture = function(a) {
-  for (var b = this.object.pictures, c = 0, d = b.length;c < d;c++) {
-    var e = b[c];
-    e === a ? e.view.addClass("entryPictureSelected") : e.view.removeClass("entryPictureSelected");
-  }
-  Entry.playground.object.selectPicture(a.id);
-  Entry.dispatchEvent("pictureSelected", a);
-};
-Entry.Playground.prototype.movePicture = function(a, b) {
-  this.object.pictures.splice(b, 0, this.object.pictures.splice(a, 1)[0]);
-  this.injectPicture();
-  Entry.stage.sortZorder();
-};
-Entry.Playground.prototype.injectText = function() {
-  if (Entry.playground.object) {
-    Entry.playground.textEditInput.value = Entry.playground.object.entity.getText();
-    Entry.playground.textEditArea.value = Entry.playground.object.entity.getText();
-    Entry.playground.fontName_.value = Entry.playground.object.entity.getFontName();
-    if (Entry.playground.object.entity.font) {
-      var a = -1 < Entry.playground.object.entity.font.indexOf("bold") || !1;
-      $("#entryPlaygroundText_boldImage").attr("src", Entry.mediaFilePath + "text_button_bold_" + a + ".png");
-      a = -1 < Entry.playground.object.entity.font.indexOf("italic") || !1;
-      $("#entryPlaygroundText_italicImage").attr("src", Entry.mediaFilePath + "text_button_italic_" + a + ".png");
-    }
-    a = Entry.playground.object.entity.getUnderLine() || !1;
-    $("#entryPlaygroundText_underlineImage").attr("src", Entry.mediaFilePath + "text_button_underline_" + a + ".png");
-    a = Entry.playground.object.entity.getStrike() || !1;
-    $("#entryPlaygroundText_strikeImage").attr("src", Entry.mediaFilePath + "text_button_strike_" + a + ".png");
-    $(".entryPlayground_fgColorDiv").css("backgroundColor", Entry.playground.object.entity.colour);
-    $(".entryPlayground_bgColorDiv").css("backgroundColor", Entry.playground.object.entity.bgColour);
-    Entry.playground.toggleLineBreak(Entry.playground.object.entity.getLineBreak());
-    Entry.playground.setFontAlign(Entry.playground.object.entity.getTextAlign());
-    a = Entry.playground.object.entity.getFontSize();
-    Entry.playground.fontSizeIndiciator.style.width = a + "%";
-    Entry.playground.fontSizeKnob.style.left = .88 * a + "px";
-  }
-};
-Entry.Playground.prototype.injectSound = function() {
-  var a = this.soundListView_;
-  if (a) {
-    for (;a.hasChildNodes();) {
-      a.removeChild(a.lastChild);
-    }
-    if (this.object) {
-      for (var b = this.object.sounds, c = 0, d = b.length;c < d;c++) {
-        var e = b[c].view;
-        e.orderHolder.innerHTML = c + 1;
-        a.appendChild(e);
-      }
-    }
-  }
-};
-Entry.Playground.prototype.moveSound = function(a, b) {
-  this.object.sounds.splice(b, 0, this.object.sounds.splice(a, 1)[0]);
-  this.updateListViewOrder("sound");
-  Entry.stage.sortZorder();
-};
-Entry.Playground.prototype.addSound = function(a, b) {
-  var c = Entry.cloneSimpleObject(a);
-  delete c.view;
-  delete c.id;
-  a = JSON.parse(JSON.stringify(c));
-  a.id = Entry.generateHash();
-  a.name = Entry.getOrderedName(a.name, this.object.sounds);
-  this.generateSoundElement(a);
-  this.object.addSound(a);
-  this.injectSound();
-};
-Entry.Playground.prototype.changeViewMode = function(a) {
-  for (var b in this.tabViewElements) {
-    this.tabViewElements[b].removeClass("entryTabSelected");
-  }
-  "default" != a && this.tabViewElements[a].addClass("entryTabSelected");
-  if ("variable" != a) {
-    var c = this.view_.children;
-    this.viewMode_ = a;
-    for (b = 0;b < c.length;b++) {
-      var d = c[b];
-      -1 < d.id.toUpperCase().indexOf(a.toUpperCase()) ? d.removeClass("entryRemove") : d.addClass("entryRemove");
-    }
-    if ("picture" == a && (!this.pictureView_.object || this.pictureView_.object != this.object)) {
-      this.pictureView_.object = this.object, this.injectPicture();
-    } else {
-      if ("sound" == a && (!this.soundView_.object || this.soundView_.object != this.object)) {
-        this.soundView_.object = this.object, this.injectSound();
-      } else {
-        if ("text" == a && "textBox" == this.object.objectType || this.textView_.object != this.object) {
-          this.textView_.object = this.object, this.injectText();
-        }
-      }
-    }
-    "code" == a && this.resizeHandle_ && this.resizeHandle_.removeClass("entryRemove");
-    Entry.engine.isState("run") && this.curtainView_.removeClass("entryRemove");
-    this.viewMode_ = a;
-    this.toggleOffVariableView();
-  }
-};
-Entry.Playground.prototype.createVariableView = function() {
-  var a = Entry.createElement("div");
-  Entry.type && "workspace" != Entry.type ? "phone" == Entry.type && a.addClass("entryVariablePanelPhone") : a.addClass("entryVariablePanelWorkspace");
-  this.variableViewWrapper_ = a;
-  Entry.variableContainer.createDom(a);
-  return a;
-};
-Entry.Playground.prototype.toggleOnVariableView = function() {
-  Entry.playground.changeViewMode("code");
-  this.categoryView_.addClass("entryRemove");
-  this.blockMenuView_ && this.blockMenuView_.addClass("entryHidden");
-  Entry.variableContainer.updateList();
-  this.variableView_.removeClass("entryRemove");
-  this.resizeHandle_.removeClass("entryRemove");
-};
-Entry.Playground.prototype.toggleOffVariableView = function() {
-  this.categoryView_.removeClass("entryRemove");
-  this.blockMenuView_ && this.blockMenuView_.removeClass("entryHidden");
-  this.variableView_.addClass("entryRemove");
-};
-Entry.Playground.prototype.syncObject = function(a) {
-  this.object && !a && (a = this.object);
-  a && a.setScript(Blockly.Xml.workspaceToDom(Blockly.mainWorkspace));
-};
-Entry.Playground.prototype.editBlock = function() {
-  var a = Entry.playground;
-  Entry.stateManager && Entry.stateManager.addCommand("edit block", a, a.restoreBlock, a.object, a.object.getScriptText());
-};
-Entry.Playground.prototype.mouseupBlock = function() {
-  if (Entry.reporter) {
-    var a = Entry.playground, b = a.object;
-    Entry.reporter.report(new Entry.State("edit block mouseup", a, a.restoreBlock, b, b.getScriptText()));
-  }
-};
-Entry.Playground.prototype.restoreBlock = function(a, b) {
-  Entry.container.selectObject(a.id);
-  Entry.stateManager && Entry.stateManager.addCommand("restore block", this, this.restoreBlock, this.object, this.object.getScriptText());
-  var c = Blockly.Xml.textToDom(b);
-  Blockly.mainWorkspace.clear();
-  Blockly.Xml.domToWorkspace(Blockly.mainWorkspace, c);
-  this.syncObject();
-};
-Entry.Playground.prototype.syncObjectWithEvent = function(a) {
-  Entry.playground.syncObject();
-};
-Entry.Playground.prototype.setMenu = function(a) {
-  if (this.currentObjectType != a) {
-    this.categoryListView_.innerHTML = "";
-    this.blockMenu.unbanClass(this.currentObjectType);
-    this.blockMenu.banClass(a);
-    for (var b in this.blockJSON) {
-      var c = this.blockJSON[b].category, d = Entry.createElement("li", "entryCategory" + c);
-      ("brush" == c && "textBox" == a || "text" == c && "sprite" == a || !("func" == c || this.blockJSON[b].blocks && this.blockJSON[b].blocks.length)) && d.addClass("entryRemove");
-      d.innerHTML = Lang.Blocks[c.toUpperCase()];
-      d.bindOnClick(function() {
-        Entry.playground.selectMenu(this.id.substring(13));
-      });
-      Entry.type && "workspace" != Entry.type ? "phone" == Entry.type && d.addClass("entryCategoryElementPhone") : d.addClass("entryCategoryElementWorkspace");
-      this.categoryListView_.appendChild(d);
-    }
-    this.selectMenu(0);
-    this.currentObjectType = a;
-  }
-};
-Entry.Playground.prototype.selectMenu = function(a, b) {
-  if (this.object) {
-    this.lastSelector = a;
-    var c = this.categoryListView_.children;
-    if (!Entry.type || "workspace" == Entry.type) {
-      for (var d in this.blockJSON) {
-        var e = this.blockJSON[d].category;
-        "string" == typeof a && e == a || "number" == typeof a && a == d ? c[d].hasClass("entrySelectedCategory") && !b ? (this.blocklyView_.addClass("folding"), this.blocklyView_.removeClass("foldOut"), this.hideTabs(), c[d].removeClass("entrySelectedCategory"), delete this.selectedMenu) : ("func" == e ? this.blockMenu.show(Entry.Func.getMenuXml()) : ("variable" == e && this.checkVariables(), this.blockMenu.showCategory(this.blockJSON[d])), this.menuInjected = !0, this.blocklyView_.hasClass("folding") && 
-        (this.blocklyView_.addClass("foldOut"), this.blocklyView_.removeClass("folding")), this.showTabs(), c[d].addClass("entrySelectedCategory"), this.selectedMenu = e) : c[d].removeClass("entrySelectedCategory");
-      }
-    } else {
-      if ("phone" == Entry.type) {
-        var f = [];
-        for (d = 0;d < f.length;d++) {
-          e = f[d].attributes[0].value, "string" == typeof a && e == a || "number" == typeof a && a == d ? c[d].hasClass("entrySelectedCategory") ? (this.blockMenu.hide(), c[d].removeClass("entrySelectedCategory"), this.menuInjected = !0, this.selectedMenu = e) : (c[d].addClass("entrySelectedCategory"), this.blockMenu.show(f[d].childNodes), this.menuInjected = !0, delete this.selctedMenu) : c[d].removeClass("entrySelectedCategory");
-        }
-      }
-    }
-  } else {
-    Entry.toast.alert(Lang.Workspace.add_object_alert, Lang.Workspace.add_object_alert_msg);
-  }
-};
-Entry.Playground.prototype.hideTabs = function() {
-  var a = ["picture", "text", "sound", "variable"], b;
-  for (b in a) {
-    this.hideTab([a[b]]);
-  }
-};
-Entry.Playground.prototype.hideTab = function(a) {
-  this.tabViewElements[a] && (this.tabViewElements[a].addClass("hideTab"), this.tabViewElements[a].removeClass("showTab"));
-};
-Entry.Playground.prototype.showTabs = function() {
-  var a = ["picture", "text", "sound", "variable"], b;
-  for (b in a) {
-    this.showTab(a[b]);
-  }
-};
-Entry.Playground.prototype.showTab = function(a) {
-  this.tabViewElements[a] && (this.tabViewElements[a].addClass("showTab"), this.tabViewElements[a].removeClass("hideTab"));
-};
-Entry.Playground.prototype.setBlockMenu = function(a) {
-  a || (a = EntryStatic.getAllBlocks());
-  Entry.functionEnable && 1 < a.length && "arduino" == a[a.length - 1].category && a.splice(a.length - 1, 0, {category:"func"});
-  Entry.messageEnable || this.blockMenu.banClass("message");
-  Entry.variableEnable || this.blockMenu.banClass("variable");
-  Entry.listEnable || this.blockMenu.banClass("list");
-  this.updateHW();
-  if (!Entry.sceneEditable) {
-    for (var b in a) {
-      "scene" == a[b].category && a.splice(b, 1);
-    }
-  }
-  this.blockJSON = a;
-};
-Entry.Playground.prototype.initializeResizeHandle = function(a) {
-  a.onmousedown = function(a) {
-    Entry.playground.resizing = !0;
-  };
-  document.addEventListener("mousemove", function(a) {
-    Entry.playground.resizing && Entry.resizeElement({menuWidth:a.x - Entry.interfaceState.canvasWidth});
-  });
-  document.addEventListener("mouseup", function(a) {
-    Entry.playground.resizing = !1;
-  });
-};
-Entry.Playground.prototype.reloadPlayground = function() {
-  var a, b;
-  document.getElementsByClassName("entrySelectedCategory")[0] && (a = document.getElementsByClassName("entrySelectedCategory")[0], b = a.getAttribute("id").substring(13), a.removeClass("entrySelectedCategory"), Entry.playground.selectMenu(b));
-  Entry.stage.selectedObject && (Blockly.mainWorkspace.clear(), Blockly.Xml.domToWorkspace(Blockly.mainWorkspace, Entry.stage.selectedObject.script));
-};
-Entry.Playground.prototype.flushPlayground = function() {
-  this.object = null;
-  Entry.playground && Entry.playground.view_ && (Blockly.mainWorkspace.clear(), this.injectPicture(), this.injectSound());
-};
-Entry.Playground.prototype.updateListViewOrder = function(a) {
-  a = "picture" == a ? this.pictureListView_.childNodes : this.soundListView_.childNodes;
-  for (var b = 0, c = a.length;b < c;b++) {
-    a[b].orderHolder.innerHTML = b + 1;
-  }
-};
-Entry.Playground.prototype.generatePictureElement = function(a) {
-  function b() {
-    if ("" === this.value.trim()) {
-      Entry.deAttachEventListener(this, "blur", b), alert("\uc774\ub984\uc744 \uc785\ub825\ud558\uc5ec \uc8fc\uc138\uc694."), this.focus(), Entry.attachEventListener(this, "blur", b);
-    } else {
-      for (var a = $(".entryPlaygroundPictureName"), c = 0;c < a.length;c++) {
-        if (a.eq(c).val() == f.value && a[c] != this) {
-          Entry.deAttachEventListener(this, "blur", b);
-          alert("\uc774\ub984\uc774 \uc911\ubcf5 \ub418\uc5c8\uc2b5\ub2c8\ub2e4.");
-          this.focus();
-          Entry.attachEventListener(this, "blur", b);
-          return;
-        }
-      }
-      this.picture.name = this.value;
-      Entry.dispatchEvent("pictureNameChanged", this.picture);
-    }
-  }
-  var c = Entry.createElement("li", a.id);
-  a.view = c;
-  c.addClass("entryPlaygroundPictureElement");
-  c.picture = a;
-  c.bindOnClick(function(a) {
-    Entry.playground.selectPicture(this.picture);
-  });
-  Entry.Utils.disableContextmenu(a.view);
-  $(a.view).on("contextmenu", function() {
-    Entry.ContextMenu.show([{text:Lang.Workspace.context_rename, callback:function() {
-      f.focus();
-    }}, {text:Lang.Workspace.context_duplicate, callback:function() {
-      Entry.playground.clonePicture(a.id);
-    }}, {text:Lang.Workspace.context_remove, callback:function() {
-      Entry.playground.object.removePicture(a.id) ? (Entry.removeElement(c), Entry.toast.success(Lang.Workspace.shape_remove_ok, a.name + " " + Lang.Workspace.shape_remove_ok_msg)) : Entry.toast.alert(Lang.Workspace.shape_remove_fail, Lang.Workspace.shape_remove_fail_msg);
-    }}, {divider:!0}, {text:Lang.Workspace.context_download, callback:function() {
-      a.fileurl ? window.open(a.fileurl) : window.open("/api/sprite/download/image/" + encodeURIComponent(a.filename) + "/" + encodeURIComponent(a.name) + ".png");
-    }}], "workspace-contextmenu");
-  });
-  var d = Entry.createElement("div");
-  d.addClass("entryPlaygroundPictureOrder");
-  c.orderHolder = d;
-  c.appendChild(d);
-  d = Entry.createElement("div", "t_" + a.id);
-  d.addClass("entryPlaygroundPictureThumbnail");
-  if (a.fileurl) {
-    d.style.backgroundImage = 'url("' + a.fileurl + '")';
-  } else {
-    var e = a.filename;
-    d.style.backgroundImage = 'url("/uploads/' + e.substring(0, 2) + "/" + e.substring(2, 4) + "/thumb/" + e + '.png")';
-  }
-  c.appendChild(d);
-  var f = Entry.createElement("input");
-  f.addClass("entryPlaygroundPictureName");
-  f.addClass("entryEllipsis");
-  f.picture = a;
-  f.value = a.name;
-  Entry.attachEventListener(f, "blur", b);
-  f.onkeypress = function(a) {
-    13 == a.keyCode && this.blur();
-  };
-  c.appendChild(f);
-  d = Entry.createElement("div", "s_" + a.id);
-  d.addClass("entryPlaygroundPictureSize");
-  d.innerHTML = a.dimension.width + " X " + a.dimension.height;
-  c.appendChild(d);
-};
-Entry.Playground.prototype.generateSoundElement = function(a) {
-  var b = Entry.createElement("sound", a.id);
-  a.view = b;
-  b.addClass("entryPlaygroundSoundElement");
-  b.sound = a;
-  Entry.Utils.disableContextmenu(a.view);
-  $(a.view).on("contextmenu", function() {
-    Entry.ContextMenu.show([{text:Lang.Workspace.context_rename, callback:function() {
-      g.focus();
-    }}, {text:Lang.Workspace.context_duplicate, callback:function() {
-      Entry.playground.addSound(a, !0);
-    }}, {text:Lang.Workspace.context_remove, callback:function() {
-      Entry.playground.object.removeSound(a.id) ? (Entry.removeElement(b), Entry.toast.success(Lang.Workspace.sound_remove_ok, a.name + " " + Lang.Workspace.sound_remove_ok_msg)) : Entry.toast.alert(Lang.Workspace.sound_remove_fail, "");
-      Entry.removeElement(b);
-    }}], "workspace-contextmenu");
-  });
-  var c = Entry.createElement("div");
-  c.addClass("entryPlaygroundSoundOrder");
-  b.orderHolder = c;
-  b.appendChild(c);
-  var d = Entry.createElement("div");
-  d.addClass("entryPlaygroundSoundThumbnail");
-  d.addClass("entryPlaygroundSoundPlay");
-  var e = !1, f;
-  d.addEventListener("click", function() {
-    e ? (e = !1, d.removeClass("entryPlaygroundSoundStop"), d.addClass("entryPlaygroundSoundPlay"), f.stop()) : (e = !0, d.removeClass("entryPlaygroundSoundPlay"), d.addClass("entryPlaygroundSoundStop"), f = createjs.Sound.play(a.id), f.addEventListener("complete", function(a) {
-      d.removeClass("entryPlaygroundSoundStop");
-      d.addClass("entryPlaygroundSoundPlay");
-      e = !1;
-    }), f.addEventListener("loop", function(a) {
-    }), f.addEventListener("failed", function(a) {
-    }));
-  });
-  b.appendChild(d);
-  var g = Entry.createElement("input");
-  g.addClass("entryPlaygroundSoundName");
-  g.sound = a;
-  g.value = a.name;
-  var h = document.getElementsByClassName("entryPlaygroundSoundName");
-  g.onblur = function() {
-    if ("" === this.value) {
-      alert("\uc774\ub984\uc744 \uc785\ub825\ud558\uc5ec \uc8fc\uc138\uc694."), this.focus();
-    } else {
-      for (var a = 0, b = 0;b < h.length;b++) {
-        if (h[b].value == g.value && (a += 1, 1 < a)) {
-          alert("\uc774\ub984\uc774 \uc911\ubcf5 \ub418\uc5c8\uc2b5\ub2c8\ub2e4.");
-          this.focus();
-          return;
-        }
-      }
-      this.sound.name = this.value;
-    }
-  };
-  g.onkeypress = function(a) {
-    13 == a.keyCode && this.blur();
-  };
-  b.appendChild(g);
-  c = Entry.createElement("div");
-  c.addClass("entryPlaygroundSoundLength");
-  c.innerHTML = a.duration + " \ucd08";
-  b.appendChild(c);
-};
-Entry.Playground.prototype.toggleColourChooser = function(a) {
-  "foreground" === a ? "none" === this.coloursWrapper.style.display ? (this.coloursWrapper.style.display = "block", this.backgroundsWrapper.style.display = "none") : this.coloursWrapper.style.display = "none" : "background" === a && ("none" === this.backgroundsWrapper.style.display ? (this.backgroundsWrapper.style.display = "block", this.coloursWrapper.style.display = "none") : this.backgroundsWrapper.style.display = "none");
-};
-Entry.Playground.prototype.setTextColour = function(a) {
-  Entry.playground.object.entity.setColour(a);
-  Entry.playground.toggleColourChooser("foreground");
-  $(".entryPlayground_fgColorDiv").css("backgroundColor", a);
-};
-Entry.Playground.prototype.setBackgroundColour = function(a) {
-  Entry.playground.object.entity.setBGColour(a);
-  Entry.playground.toggleColourChooser("background");
-  $(".entryPlayground_bgColorDiv").css("backgroundColor", a);
-};
-Entry.Playground.prototype.isTextBGMode = function() {
-  return this.isTextBGMode_;
-};
-Entry.Playground.prototype.checkVariables = function() {
-  Entry.forEBS || (Entry.variableContainer.lists_.length ? this.blockMenu.unbanClass("listNotExist") : this.blockMenu.banClass("listNotExist"), Entry.variableContainer.variables_.length ? this.blockMenu.unbanClass("variableNotExist") : this.blockMenu.banClass("variableNotExist"));
-};
-Entry.Playground.prototype.getViewMode = function() {
-  return this.viewMode_;
-};
-Entry.Playground.prototype.updateHW = function() {
-  var a = Entry.playground;
-  if (a.blockMenu) {
-    var b = Entry.hw;
-    b && b.connected ? (a.blockMenu.unbanClass("arduinoConnected"), a.blockMenu.banClass("arduinoDisconnected"), b.banHW(), b.hwModule && a.blockMenu.unbanClass(b.hwModule.name)) : (a.blockMenu.banClass("arduinoConnected"), a.blockMenu.unbanClass("arduinoDisconnected"), Entry.hw.banHW());
-    a.object && a.selectMenu(a.lastSelector, !0);
-  }
-};
-Entry.Playground.prototype.toggleLineBreak = function(a) {
-  this.object && "textBox" == this.object.objectType && (a ? (Entry.playground.object.entity.setLineBreak(!0), $(".entryPlayground_textArea").css("display", "block"), $(".entryPlayground_textBox").css("display", "none"), this.linebreakOffImage.src = Entry.mediaFilePath + "text-linebreak-off-false.png", this.linebreakOnImage.src = Entry.mediaFilePath + "text-linebreak-on-true.png", this.fontSizeWrapper.removeClass("entryHide")) : (Entry.playground.object.entity.setLineBreak(!1), $(".entryPlayground_textArea").css("display", 
-  "none"), $(".entryPlayground_textBox").css("display", "block"), this.linebreakOffImage.src = Entry.mediaFilePath + "text-linebreak-off-true.png", this.linebreakOnImage.src = Entry.mediaFilePath + "text-linebreak-on-false.png", this.fontSizeWrapper.addClass("entryHide")));
-};
-Entry.Playground.prototype.setFontAlign = function(a) {
-  if ("textBox" == this.object.objectType) {
-    this.alignLeftBtn.removeClass("toggle");
-    this.alignCenterBtn.removeClass("toggle");
-    this.alignRightBtn.removeClass("toggle");
-    switch(a) {
-      case Entry.TEXT_ALIGN_LEFT:
-        this.alignLeftBtn.addClass("toggle");
-        break;
-      case Entry.TEXT_ALIGN_CENTER:
-        this.alignCenterBtn.addClass("toggle");
-        break;
-      case Entry.TEXT_ALIGN_RIGHT:
-        this.alignRightBtn.addClass("toggle");
-    }
-    this.object.entity.setTextAlign(a);
-  }
-};
 Entry.Popup = function() {
   Entry.assert(!window.popup, "Popup exist");
   this.body_ = Entry.createElement("div");
@@ -15920,6 +14978,879 @@ Entry.Workspace.MODE_VIMBOARD = 1;
     return this.vimBoard.getCodeToText(a);
   };
 })(Entry.Workspace.prototype);
+Entry.Playground = function() {
+  this.menuBlocks_ = {};
+  this.enableArduino = this.isTextBGMode_ = !1;
+  this.viewMode_ = "default";
+  Entry.addEventListener("textEdited", this.injectText);
+  Entry.addEventListener("entryBlocklyChanged", this.editBlock);
+  Entry.addEventListener("entryBlocklyMouseUp", this.mouseupBlock);
+  Entry.addEventListener("hwChanged", this.updateHW);
+};
+Entry.Playground.prototype.generateView = function(a, b) {
+  this.view_ = a;
+  this.view_.addClass("entryPlayground");
+  if (b && "workspace" != b) {
+    "phone" == b && (this.view_.addClass("entryPlaygroundPhone"), c = Entry.createElement("div", "entryCategoryTab"), c.addClass("entryPlaygroundTabPhone"), Entry.view_.insertBefore(c, this.view_), this.generateTabView(c), this.tabView_ = c, c = Entry.createElement("div", "entryCurtain"), c.addClass("entryPlaygroundCurtainPhone"), c.addClass("entryRemove"), c.innerHTML = Lang.Workspace.cannot_edit_click_to_stop, c.bindOnClick(function() {
+      Entry.engine.toggleStop();
+    }), this.view_.appendChild(c), this.curtainView_ = c, Entry.pictureEditable && (c = Entry.createElement("div", "entryPicture"), c.addClass("entryPlaygroundPicturePhone"), c.addClass("entryRemove"), this.view_.appendChild(c), this.generatePictureView(c), this.pictureView_ = c), c = Entry.createElement("div", "entryText"), c.addClass("entryRemove"), this.view_.appendChild(c), this.generateTextView(c), this.textView_ = c, Entry.soundEditable && (c = Entry.createElement("div", "entrySound"), c.addClass("entryPlaygroundSoundWorkspacePhone"), 
+    c.addClass("entryRemove"), this.view_.appendChild(c), this.generateSoundView(c), this.soundView_ = c), c = Entry.createElement("div", "entryDefault"), this.view_.appendChild(c), this.generateDefaultView(c), this.defaultView_ = c, c = Entry.createElement("div", "entryCode"), c.addClass("entryPlaygroundCodePhone"), this.view_.appendChild(c), this.generateCodeView(c), this.codeView_ = this.codeView_ = c, Entry.addEventListener("run", function(a) {
+      Entry.playground.curtainView_.removeClass("entryRemove");
+    }), Entry.addEventListener("stop", function(a) {
+      Entry.playground.curtainView_.addClass("entryRemove");
+    }));
+  } else {
+    this.view_.addClass("entryPlaygroundWorkspace");
+    var c = Entry.createElement("div", "entryCategoryTab");
+    c.addClass("entryPlaygroundTabWorkspace");
+    this.view_.appendChild(c);
+    this.generateTabView(c);
+    this.tabView_ = c;
+    c = Entry.createElement("div", "entryCurtain");
+    c.addClass("entryPlaygroundCurtainWorkspace");
+    c.addClass("entryRemove");
+    var d = Lang.Workspace.cannot_edit_click_to_stop.split(".");
+    c.innerHTML = d[0] + ".<br/>" + d[1];
+    c.addEventListener("click", function() {
+      Entry.engine.toggleStop();
+    });
+    this.view_.appendChild(c);
+    this.curtainView_ = c;
+    Entry.pictureEditable && (c = Entry.createElement("div", "entryPicture"), c.addClass("entryPlaygroundPictureWorkspace"), c.addClass("entryRemove"), this.view_.appendChild(c), this.generatePictureView(c), this.pictureView_ = c);
+    c = Entry.createElement("div", "entryText");
+    c.addClass("entryPlaygroundTextWorkspace");
+    c.addClass("entryRemove");
+    this.view_.appendChild(c);
+    this.generateTextView(c);
+    this.textView_ = c;
+    Entry.soundEditable && (c = Entry.createElement("div", "entrySound"), c.addClass("entryPlaygroundSoundWorkspace"), c.addClass("entryRemove"), this.view_.appendChild(c), this.generateSoundView(c), this.soundView_ = c);
+    c = Entry.createElement("div", "entryDefault");
+    c.addClass("entryPlaygroundDefaultWorkspace");
+    this.view_.appendChild(c);
+    this.generateDefaultView(c);
+    this.defaultView_ = c;
+    c = Entry.createElement("div", "entryCode");
+    c.addClass("entryPlaygroundCodeWorkspace");
+    c.addClass("entryRemove");
+    this.view_.appendChild(c);
+    this.generateCodeView(c);
+    this.codeView_ = c;
+    d = Entry.createElement("div");
+    d.addClass("entryPlaygroundResizeWorkspace", "entryRemove");
+    this.resizeHandle_ = d;
+    this.view_.appendChild(d);
+    this.initializeResizeHandle(d);
+    this.codeView_ = c;
+    Entry.addEventListener("run", function(a) {
+      Entry.playground.curtainView_.removeClass("entryRemove");
+    });
+    Entry.addEventListener("stop", function(a) {
+      Entry.playground.curtainView_.addClass("entryRemove");
+    });
+  }
+};
+Entry.Playground.prototype.generateDefaultView = function(a) {
+  return a;
+};
+Entry.Playground.prototype.generateTabView = function(a) {
+  var b = Entry.createElement("ul");
+  b.addClass("entryTabListWorkspace");
+  this.tabList_ = b;
+  a.appendChild(b);
+  this.tabViewElements = {};
+  a = Entry.createElement("li", "entryCodeTab");
+  a.innerHTML = Lang.Workspace.tab_code;
+  a.addClass("entryTabListItemWorkspace");
+  a.addClass("entryTabSelected");
+  b.appendChild(a);
+  a.bindOnClick(function(a) {
+    Entry.playground.changeViewMode("code");
+  });
+  this.tabViewElements.code = a;
+  Entry.pictureEditable && (a = Entry.createElement("li", "entryPictureTab"), a.innerHTML = Lang.Workspace.tab_picture, a.addClass("entryTabListItemWorkspace"), b.appendChild(a), a.bindOnClick(function(a) {
+    Entry.playground.changeViewMode("picture");
+  }), this.tabViewElements.picture = a, a = Entry.createElement("li", "entryTextboxTab"), a.innerHTML = Lang.Workspace.tab_text, a.addClass("entryTabListItemWorkspace"), b.appendChild(a), a.bindOnClick(function(a) {
+    Entry.playground.changeViewMode("text");
+  }), this.tabViewElements.text = a, a.addClass("entryRemove"));
+  Entry.soundEditable && (a = Entry.createElement("li", "entrySoundTab"), a.innerHTML = Lang.Workspace.tab_sound, a.addClass("entryTabListItemWorkspace"), b.appendChild(a), a.bindOnClick(function(a) {
+    Entry.playground.changeViewMode("sound");
+  }), this.tabViewElements.sound = a);
+  Entry.hasVariableManager && (a = Entry.createElement("li", "entryVariableTab"), a.innerHTML = Lang.Workspace.tab_attribute, a.addClass("entryTabListItemWorkspace"), a.addClass("entryVariableTabWorkspace"), b.appendChild(a), a.bindOnClick(function(a) {
+    Entry.playground.toggleOnVariableView();
+    Entry.playground.changeViewMode("variable");
+  }), this.tabViewElements.variable = a);
+};
+Entry.Playground.prototype.generateCodeView = function(a) {
+  var b = Entry.createElement("div", "entryCategory");
+  b.addClass("entryCategoryWorkspace");
+  a.appendChild(b);
+  this.categoryView_ = b;
+  var c = Entry.createElement("ul", "entryCategoryList");
+  c.addClass("entryCategoryListWorkspace");
+  b.appendChild(c);
+  this.categoryListView_ = c;
+  b = this.createVariableView();
+  a.appendChild(b);
+  this.variableView_ = b;
+};
+Entry.Playground.prototype.generatePictureView = function(a) {
+  if ("workspace" == Entry.type) {
+    var b = Entry.createElement("div", "entryAddPicture");
+    b.addClass("entryPlaygroundAddPicture");
+    b.bindOnClick(function(a) {
+      Entry.dispatchEvent("openPictureManager");
+    });
+    var c = Entry.createElement("div", "entryAddPictureInner");
+    c.addClass("entryPlaygroundAddPictureInner");
+    c.innerHTML = Lang.Workspace.picture_add;
+    b.appendChild(c);
+    a.appendChild(b);
+    b = Entry.createElement("ul", "entryPictureList");
+    b.addClass("entryPlaygroundPictureList");
+    $ && $(b).sortable({start:function(a, b) {
+      b.item.data("start_pos", b.item.index());
+    }, stop:function(a, b) {
+      var c = b.item.data("start_pos"), g = b.item.index();
+      Entry.playground.movePicture(c, g);
+    }, axis:"y"});
+    a.appendChild(b);
+    this.pictureListView_ = b;
+    b = Entry.createElement("div", "entryPainter");
+    b.addClass("entryPlaygroundPainter");
+    a.appendChild(b);
+    this.painter = new Entry.Painter;
+    this.painter.initialize(b);
+  } else {
+    "phone" == Entry.type && (b = Entry.createElement("div", "entryAddPicture"), b.addClass("entryPlaygroundAddPicturePhone"), b.bindOnClick(function(a) {
+      Entry.dispatchEvent("openPictureManager");
+    }), c = Entry.createElement("div", "entryAddPictureInner"), c.addClass("entryPlaygroundAddPictureInnerPhone"), c.innerHTML = Lang.Workspace.picture_add, b.appendChild(c), a.appendChild(b), b = Entry.createElement("ul", "entryPictureList"), b.addClass("entryPlaygroundPictureListPhone"), $ && $(b).sortable({start:function(a, b) {
+      b.item.data("start_pos", b.item.index());
+    }, stop:function(a, b) {
+      var c = b.item.data("start_pos"), g = b.item.index();
+      Entry.playground.movePicture(c, g);
+    }, axis:"y"}), a.appendChild(b), this.pictureListView_ = b);
+  }
+};
+Entry.Playground.prototype.generateTextView = function(a) {
+  var b = Entry.createElement("div");
+  a.appendChild(b);
+  a = Entry.createElement("div");
+  a.addClass("textProperties");
+  b.appendChild(a);
+  var c = Entry.createElement("div");
+  c.addClass("entryTextFontSelect");
+  a.appendChild(c);
+  var d = Entry.createElement("select", "entryPainterAttrFontName");
+  d.addClass("entryPlaygroundPainterAttrFontName", "entryTextFontSelecter");
+  d.size = "1";
+  d.onchange = function(a) {
+    Entry.playground.object.entity.setFontType(a.target.value);
+  };
+  for (var e = 0;e < Entry.fonts.length;e++) {
+    var f = Entry.fonts[e], g = Entry.createElement("option");
+    g.value = f.family;
+    g.innerHTML = f.name;
+    d.appendChild(g);
+  }
+  this.fontName_ = d;
+  c.appendChild(d);
+  e = Entry.createElement("ul");
+  e.addClass("entryPlayground_text_buttons");
+  a.appendChild(e);
+  c = Entry.createElement("li");
+  c.addClass("entryPlaygroundTextAlignLeft");
+  c.bindOnClick(function(a) {
+    Entry.playground.setFontAlign(Entry.TEXT_ALIGN_LEFT);
+  });
+  e.appendChild(c);
+  this.alignLeftBtn = c;
+  c = Entry.createElement("li");
+  c.addClass("entryPlaygroundTextAlignCenter");
+  c.bindOnClick(function(a) {
+    Entry.playground.setFontAlign(Entry.TEXT_ALIGN_CENTER);
+  });
+  e.appendChild(c);
+  this.alignCenterBtn = c;
+  c = Entry.createElement("li");
+  c.addClass("entryPlaygroundTextAlignRight");
+  c.bindOnClick(function(a) {
+    Entry.playground.setFontAlign(Entry.TEXT_ALIGN_RIGHT);
+  });
+  e.appendChild(c);
+  this.alignRightBtn = c;
+  c = Entry.createElement("li");
+  e.appendChild(c);
+  d = Entry.createElement("a");
+  c.appendChild(d);
+  d.bindOnClick(function() {
+    Entry.playground.object.entity.toggleFontBold() ? h.src = Entry.mediaFilePath + "text_button_bold_true.png" : h.src = Entry.mediaFilePath + "text_button_bold_false.png";
+  });
+  var h = Entry.createElement("img", "entryPlaygroundText_boldImage");
+  d.appendChild(h);
+  h.src = Entry.mediaFilePath + "text_button_bold_false.png";
+  c = Entry.createElement("li");
+  e.appendChild(c);
+  d = Entry.createElement("a");
+  c.appendChild(d);
+  d.bindOnClick(function() {
+    var a = !Entry.playground.object.entity.getUnderLine() || !1;
+    k.src = Entry.mediaFilePath + "text_button_underline_" + a + ".png";
+    Entry.playground.object.entity.setUnderLine(a);
+  });
+  var k = Entry.createElement("img", "entryPlaygroundText_underlineImage");
+  d.appendChild(k);
+  k.src = Entry.mediaFilePath + "text_button_underline_false.png";
+  c = Entry.createElement("li");
+  e.appendChild(c);
+  d = Entry.createElement("a");
+  c.appendChild(d);
+  d.bindOnClick(function() {
+    Entry.playground.object.entity.toggleFontItalic() ? l.src = Entry.mediaFilePath + "text_button_italic_true.png" : l.src = Entry.mediaFilePath + "/text_button_italic_false.png";
+  });
+  var l = Entry.createElement("img", "entryPlaygroundText_italicImage");
+  d.appendChild(l);
+  l.src = Entry.mediaFilePath + "text_button_italic_false.png";
+  c = Entry.createElement("li");
+  e.appendChild(c);
+  d = Entry.createElement("a");
+  c.appendChild(d);
+  d.bindOnClick(function() {
+    var a = !Entry.playground.object.entity.getStrike() || !1;
+    Entry.playground.object.entity.setStrike(a);
+    n.src = Entry.mediaFilePath + "text_button_strike_" + a + ".png";
+  });
+  var n = Entry.createElement("img", "entryPlaygroundText_strikeImage");
+  d.appendChild(n);
+  n.src = Entry.mediaFilePath + "text_button_strike_false.png";
+  d = Entry.createElement("li");
+  e.appendChild(d);
+  c = Entry.createElement("a");
+  d.appendChild(c);
+  c.bindOnClick(function() {
+    Entry.playground.toggleColourChooser("foreground");
+  });
+  d = Entry.createElement("img");
+  c.appendChild(d);
+  d.src = Entry.mediaFilePath + "text_button_color_false.png";
+  c = Entry.createElement("li");
+  e.appendChild(c);
+  e = Entry.createElement("a");
+  c.appendChild(e);
+  e.bindOnClick(function() {
+    Entry.playground.toggleColourChooser("background");
+  });
+  c = Entry.createElement("img");
+  e.appendChild(c);
+  c.src = Entry.mediaFilePath + "text_button_background_false.png";
+  e = Entry.createElement("div");
+  e.addClass("entryPlayground_fgColorDiv");
+  c = Entry.createElement("div");
+  c.addClass("entryPlayground_bgColorDiv");
+  a.appendChild(e);
+  a.appendChild(c);
+  d = Entry.createElement("div");
+  d.addClass("entryPlaygroundTextColoursWrapper");
+  this.coloursWrapper = d;
+  b.appendChild(d);
+  a = Entry.getColourCodes();
+  for (e = 0;e < a.length;e++) {
+    c = Entry.createElement("div"), c.addClass("modal_colour"), c.setAttribute("colour", a[e]), c.style.backgroundColor = a[e], 0 === e && c.addClass("modalColourTrans"), c.bindOnClick(function(a) {
+      Entry.playground.setTextColour(a.target.getAttribute("colour"));
+    }), d.appendChild(c);
+  }
+  d.style.display = "none";
+  d = Entry.createElement("div");
+  d.addClass("entryPlaygroundTextBackgroundsWrapper");
+  this.backgroundsWrapper = d;
+  b.appendChild(d);
+  for (e = 0;e < a.length;e++) {
+    c = Entry.createElement("div"), c.addClass("modal_colour"), c.setAttribute("colour", a[e]), c.style.backgroundColor = a[e], 0 === e && c.addClass("modalColourTrans"), c.bindOnClick(function(a) {
+      Entry.playground.setBackgroundColour(a.target.getAttribute("colour"));
+    }), d.appendChild(c);
+  }
+  d.style.display = "none";
+  a = Entry.createElement("input");
+  a.addClass("entryPlayground_textBox");
+  a.onkeyup = function() {
+    Entry.playground.object.setText(this.value);
+    Entry.playground.object.entity.setText(this.value);
+  };
+  a.onblur = function() {
+    Entry.dispatchEvent("textEdited");
+  };
+  this.textEditInput = a;
+  b.appendChild(a);
+  a = Entry.createElement("textarea");
+  a.addClass("entryPlayground_textArea");
+  a.style.display = "none";
+  a.onkeyup = function() {
+    Entry.playground.object.setText(this.value);
+    Entry.playground.object.entity.setText(this.value);
+  };
+  a.onblur = function() {
+    Entry.dispatchEvent("textEdited");
+  };
+  this.textEditArea = a;
+  b.appendChild(a);
+  a = Entry.createElement("div");
+  a.addClass("entryPlaygroundFontSizeWrapper");
+  b.appendChild(a);
+  this.fontSizeWrapper = a;
+  var m = Entry.createElement("div");
+  m.addClass("entryPlaygroundFontSizeSlider");
+  a.appendChild(m);
+  var q = Entry.createElement("div");
+  q.addClass("entryPlaygroundFontSizeIndicator");
+  m.appendChild(q);
+  this.fontSizeIndiciator = q;
+  var r = Entry.createElement("div");
+  r.addClass("entryPlaygroundFontSizeKnob");
+  m.appendChild(r);
+  this.fontSizeKnob = r;
+  e = Entry.createElement("div");
+  e.addClass("entryPlaygroundFontSizeLabel");
+  e.innerHTML = "\uae00\uc790 \ud06c\uae30";
+  a.appendChild(e);
+  var t = !1, u = 0;
+  r.onmousedown = function(a) {
+    t = !0;
+    u = $(m).offset().left;
+  };
+  document.addEventListener("mousemove", function(a) {
+    t && (a = a.pageX - u, a = Math.max(a, 5), a = Math.min(a, 88), r.style.left = a + "px", a /= .88, q.style.width = a + "%", Entry.playground.object.entity.setFontSize(a));
+  });
+  document.addEventListener("mouseup", function(a) {
+    t = !1;
+  });
+  a = Entry.createElement("div");
+  a.addClass("entryPlaygroundLinebreakWrapper");
+  b.appendChild(a);
+  b = Entry.createElement("hr");
+  b.addClass("entryPlaygroundLinebreakHorizontal");
+  a.appendChild(b);
+  b = Entry.createElement("div");
+  b.addClass("entryPlaygroundLinebreakButtons");
+  a.appendChild(b);
+  e = Entry.createElement("img");
+  e.bindOnClick(function() {
+    Entry.playground.toggleLineBreak(!1);
+  });
+  e.src = Entry.mediaFilePath + "text-linebreak-off-true.png";
+  b.appendChild(e);
+  this.linebreakOffImage = e;
+  e = Entry.createElement("img");
+  e.bindOnClick(function() {
+    Entry.playground.toggleLineBreak(!0);
+  });
+  e.src = Entry.mediaFilePath + "text-linebreak-on-false.png";
+  b.appendChild(e);
+  this.linebreakOnImage = e;
+  b = Entry.createElement("div");
+  b.addClass("entryPlaygroundLinebreakDescription");
+  a.appendChild(b);
+  a = Entry.createElement("p");
+  a.innerHTML = "\uae00\uc0c1\uc790\uc758 \ud06c\uae30\uac00 \uae00\uc790\uac00 \uc4f0\uc77c \uc218 \uc788\ub294 \uc601\uc5ed\uc744 \uacb0\uc815\ud569\ub2c8\ub2e4.";
+  b.appendChild(a);
+  a = Entry.createElement("ul");
+  b.appendChild(a);
+  b = Entry.createElement("li");
+  b.innerHTML = "\ub0b4\uc6a9 \uc791\uc131\uc2dc \uc5d4\ud130\ud0a4\ub85c \uc904\ubc14\uafc8\uc744 \ud560 \uc218 \uc788\uc2b5\ub2c8\ub2e4.";
+  a.appendChild(b);
+  b = Entry.createElement("li");
+  b.innerHTML = "\ub0b4\uc6a9\uc744 \uc791\uc131\ud558\uc2dc\uac70\ub098 \uc0c8\ub85c\uc6b4 \uae00\uc790\ub97c \ucd94\uac00\uc2dc \uae38\uc774\uac00 \uae00\uc0c1\uc790\uc758 \uac00\ub85c \uc601\uc5ed\uc744 \ub118\uc5b4\uc11c\uba74 \uc790\ub3d9\uc73c\ub85c \uc904\uc774 \ubc14\ub01d\ub2c8\ub2e4.";
+  a.appendChild(b);
+};
+Entry.Playground.prototype.generateSoundView = function(a) {
+  if ("workspace" == Entry.type) {
+    var b = Entry.createElement("div", "entryAddSound");
+    b.addClass("entryPlaygroundAddSound");
+    b.bindOnClick(function(a) {
+      Entry.dispatchEvent("openSoundManager");
+    });
+    var c = Entry.createElement("div", "entryAddSoundInner");
+    c.addClass("entryPlaygroundAddSoundInner");
+    c.innerHTML = Lang.Workspace.sound_add;
+    b.appendChild(c);
+    a.appendChild(b);
+    b = Entry.createElement("ul", "entrySoundList");
+    b.addClass("entryPlaygroundSoundList");
+    $ && $(b).sortable({start:function(a, b) {
+      b.item.data("start_pos", b.item.index());
+    }, stop:function(a, b) {
+      var c = b.item.data("start_pos"), g = b.item.index();
+      Entry.playground.moveSound(c, g);
+    }, axis:"y"});
+    a.appendChild(b);
+    this.soundListView_ = b;
+  } else {
+    "phone" == Entry.type && (b = Entry.createElement("div", "entryAddSound"), b.addClass("entryPlaygroundAddSoundPhone"), b.bindOnClick(function(a) {
+      Entry.dispatchEvent("openSoundManager");
+    }), c = Entry.createElement("div", "entryAddSoundInner"), c.addClass("entryPlaygroundAddSoundInnerPhone"), c.innerHTML = Lang.Workspace.sound_add, b.appendChild(c), a.appendChild(b), b = Entry.createElement("ul", "entrySoundList"), b.addClass("entryPlaygroundSoundListPhone"), $ && $(b).sortable({start:function(a, b) {
+      b.item.data("start_pos", b.item.index());
+    }, stop:function(a, b) {
+      var c = b.item.data("start_pos"), g = b.item.index();
+      Entry.playground.moveSound(c, g);
+    }, axis:"y"}), a.appendChild(b), this.soundListView_ = b);
+  }
+};
+Entry.Playground.prototype.injectObject = function(a) {
+  if (!a) {
+    this.changeViewMode("default"), this.object = null;
+  } else {
+    if (a !== this.object) {
+      this.object && (this.syncObject(this.object), this.object.toggleInformation(!1));
+      this.object = a;
+      this.setMenu(a.objectType);
+      this.injectCode();
+      "sprite" == a.objectType && Entry.pictureEditable ? (this.tabViewElements.text && this.tabViewElements.text.addClass("entryRemove"), this.tabViewElements.picture && this.tabViewElements.picture.removeClass("entryRemove")) : "textBox" == a.objectType && (this.tabViewElements.picture && this.tabViewElements.picture.addClass("entryRemove"), this.tabViewElements.text && this.tabViewElements.text.removeClass("entryRemove"));
+      var b = this.viewMode_;
+      "default" == b ? this.changeViewMode("code") : "picture" != b && "text" != b || "textBox" != a.objectType ? "text" != b && "picture" != b || "sprite" != a.objectType ? "sound" == b && this.changeViewMode("sound") : this.changeViewMode("picture") : this.changeViewMode("text");
+      this.menuInjected || this.selectMenu(0);
+    }
+  }
+};
+Entry.Playground.prototype.injectCode = function() {
+};
+Entry.Playground.prototype.injectPicture = function() {
+  var a = this.pictureListView_;
+  if (a) {
+    for (;a.hasChildNodes();) {
+      a.removeChild(a.lastChild);
+    }
+    if (this.object) {
+      for (var b = this.object.pictures, c = 0, d = b.length;c < d;c++) {
+        var e = b[c].view;
+        e || console.log(e);
+        e.orderHolder.innerHTML = c + 1;
+        a.appendChild(e);
+      }
+      this.selectPicture(this.object.selectedPicture);
+    }
+  }
+};
+Entry.Playground.prototype.addPicture = function(a, b) {
+  var c = Entry.cloneSimpleObject(a);
+  delete c.id;
+  delete c.view;
+  a = JSON.parse(JSON.stringify(c));
+  a.id = Entry.generateHash();
+  a.name = Entry.getOrderedName(a.name, this.object.pictures);
+  this.generatePictureElement(a);
+  this.object.addPicture(a);
+  this.injectPicture();
+  this.selectPicture(a);
+};
+Entry.Playground.prototype.setPicture = function(a) {
+  var b = document.getElementById(a.id);
+  a.view = b;
+  b.picture = a;
+  b = document.getElementById("t_" + a.id);
+  if (a.fileurl) {
+    b.style.backgroundImage = 'url("' + a.fileurl + '")';
+  } else {
+    var c = a.filename;
+    b.style.backgroundImage = 'url("/uploads/' + c.substring(0, 2) + "/" + c.substring(2, 4) + "/thumb/" + c + '.png")';
+  }
+  document.getElementById("s_" + a.id).innerHTML = a.dimension.width + " X " + a.dimension.height;
+  Entry.playground.object.setPicture(a);
+};
+Entry.Playground.prototype.clonePicture = function(a) {
+  a = Entry.playground.object.getPicture(a);
+  this.addPicture(a, !0);
+};
+Entry.Playground.prototype.selectPicture = function(a) {
+  for (var b = this.object.pictures, c = 0, d = b.length;c < d;c++) {
+    var e = b[c];
+    e === a ? e.view.addClass("entryPictureSelected") : e.view.removeClass("entryPictureSelected");
+  }
+  Entry.playground.object.selectPicture(a.id);
+  Entry.dispatchEvent("pictureSelected", a);
+};
+Entry.Playground.prototype.movePicture = function(a, b) {
+  this.object.pictures.splice(b, 0, this.object.pictures.splice(a, 1)[0]);
+  this.injectPicture();
+  Entry.stage.sortZorder();
+};
+Entry.Playground.prototype.injectText = function() {
+  if (Entry.playground.object) {
+    Entry.playground.textEditInput.value = Entry.playground.object.entity.getText();
+    Entry.playground.textEditArea.value = Entry.playground.object.entity.getText();
+    Entry.playground.fontName_.value = Entry.playground.object.entity.getFontName();
+    if (Entry.playground.object.entity.font) {
+      var a = -1 < Entry.playground.object.entity.font.indexOf("bold") || !1;
+      $("#entryPlaygroundText_boldImage").attr("src", Entry.mediaFilePath + "text_button_bold_" + a + ".png");
+      a = -1 < Entry.playground.object.entity.font.indexOf("italic") || !1;
+      $("#entryPlaygroundText_italicImage").attr("src", Entry.mediaFilePath + "text_button_italic_" + a + ".png");
+    }
+    a = Entry.playground.object.entity.getUnderLine() || !1;
+    $("#entryPlaygroundText_underlineImage").attr("src", Entry.mediaFilePath + "text_button_underline_" + a + ".png");
+    a = Entry.playground.object.entity.getStrike() || !1;
+    $("#entryPlaygroundText_strikeImage").attr("src", Entry.mediaFilePath + "text_button_strike_" + a + ".png");
+    $(".entryPlayground_fgColorDiv").css("backgroundColor", Entry.playground.object.entity.colour);
+    $(".entryPlayground_bgColorDiv").css("backgroundColor", Entry.playground.object.entity.bgColour);
+    Entry.playground.toggleLineBreak(Entry.playground.object.entity.getLineBreak());
+    Entry.playground.setFontAlign(Entry.playground.object.entity.getTextAlign());
+    a = Entry.playground.object.entity.getFontSize();
+    Entry.playground.fontSizeIndiciator.style.width = a + "%";
+    Entry.playground.fontSizeKnob.style.left = .88 * a + "px";
+  }
+};
+Entry.Playground.prototype.injectSound = function() {
+  var a = this.soundListView_;
+  if (a) {
+    for (;a.hasChildNodes();) {
+      a.removeChild(a.lastChild);
+    }
+    if (this.object) {
+      for (var b = this.object.sounds, c = 0, d = b.length;c < d;c++) {
+        var e = b[c].view;
+        e.orderHolder.innerHTML = c + 1;
+        a.appendChild(e);
+      }
+    }
+  }
+};
+Entry.Playground.prototype.moveSound = function(a, b) {
+  this.object.sounds.splice(b, 0, this.object.sounds.splice(a, 1)[0]);
+  this.updateListViewOrder("sound");
+  Entry.stage.sortZorder();
+};
+Entry.Playground.prototype.addSound = function(a, b) {
+  var c = Entry.cloneSimpleObject(a);
+  delete c.view;
+  delete c.id;
+  a = JSON.parse(JSON.stringify(c));
+  a.id = Entry.generateHash();
+  a.name = Entry.getOrderedName(a.name, this.object.sounds);
+  this.generateSoundElement(a);
+  this.object.addSound(a);
+  this.injectSound();
+};
+Entry.Playground.prototype.changeViewMode = function(a) {
+  for (var b in this.tabViewElements) {
+    this.tabViewElements[b].removeClass("entryTabSelected");
+  }
+  "default" != a && this.tabViewElements[a].addClass("entryTabSelected");
+  if ("variable" != a) {
+    var c = this.view_.children;
+    this.viewMode_ = a;
+    for (b = 0;b < c.length;b++) {
+      var d = c[b];
+      -1 < d.id.toUpperCase().indexOf(a.toUpperCase()) ? d.removeClass("entryRemove") : d.addClass("entryRemove");
+    }
+    if ("picture" == a && (!this.pictureView_.object || this.pictureView_.object != this.object)) {
+      this.pictureView_.object = this.object, this.injectPicture();
+    } else {
+      if ("sound" == a && (!this.soundView_.object || this.soundView_.object != this.object)) {
+        this.soundView_.object = this.object, this.injectSound();
+      } else {
+        if ("text" == a && "textBox" == this.object.objectType || this.textView_.object != this.object) {
+          this.textView_.object = this.object, this.injectText();
+        }
+      }
+    }
+    "code" == a && this.resizeHandle_ && this.resizeHandle_.removeClass("entryRemove");
+    Entry.engine.isState("run") && this.curtainView_.removeClass("entryRemove");
+    this.viewMode_ = a;
+    this.toggleOffVariableView();
+  }
+};
+Entry.Playground.prototype.createVariableView = function() {
+  var a = Entry.createElement("div");
+  Entry.type && "workspace" != Entry.type ? "phone" == Entry.type && a.addClass("entryVariablePanelPhone") : a.addClass("entryVariablePanelWorkspace");
+  this.variableViewWrapper_ = a;
+  Entry.variableContainer.createDom(a);
+  return a;
+};
+Entry.Playground.prototype.toggleOnVariableView = function() {
+  Entry.playground.changeViewMode("code");
+  this.categoryView_.addClass("entryRemove");
+  Entry.variableContainer.updateList();
+  this.variableView_.removeClass("entryRemove");
+  this.resizeHandle_.removeClass("entryRemove");
+};
+Entry.Playground.prototype.toggleOffVariableView = function() {
+  this.categoryView_.removeClass("entryRemove");
+  this.variableView_.addClass("entryRemove");
+};
+Entry.Playground.prototype.syncObject = function(a) {
+};
+Entry.Playground.prototype.editBlock = function() {
+  var a = Entry.playground;
+  Entry.stateManager && Entry.stateManager.addCommand("edit block", a, a.restoreBlock, a.object, a.object.getScriptText());
+};
+Entry.Playground.prototype.mouseupBlock = function() {
+  if (Entry.reporter) {
+    var a = Entry.playground, b = a.object;
+    Entry.reporter.report(new Entry.State("edit block mouseup", a, a.restoreBlock, b, b.getScriptText()));
+  }
+};
+Entry.Playground.prototype.restoreBlock = function(a, b) {
+  Entry.container.selectObject(a.id);
+  Entry.stateManager && Entry.stateManager.addCommand("restore block", this, this.restoreBlock, this.object, this.object.getScriptText());
+  Blockly.Xml.textToDom(b);
+  this.syncObject();
+};
+Entry.Playground.prototype.syncObjectWithEvent = function(a) {
+  Entry.playground.syncObject();
+};
+Entry.Playground.prototype.setMenu = function(a) {
+  if (this.currentObjectType != a) {
+    this.categoryListView_.innerHTML = "";
+    for (var b in this.blockJSON) {
+      var c = this.blockJSON[b].category, d = Entry.createElement("li", "entryCategory" + c);
+      ("brush" == c && "textBox" == a || "text" == c && "sprite" == a || !("func" == c || this.blockJSON[b].blocks && this.blockJSON[b].blocks.length)) && d.addClass("entryRemove");
+      d.innerHTML = Lang.Blocks[c.toUpperCase()];
+      d.bindOnClick(function() {
+        Entry.playground.selectMenu(this.id.substring(13));
+      });
+      Entry.type && "workspace" != Entry.type ? "phone" == Entry.type && d.addClass("entryCategoryElementPhone") : d.addClass("entryCategoryElementWorkspace");
+      this.categoryListView_.appendChild(d);
+    }
+    this.selectMenu(0);
+    this.currentObjectType = a;
+  }
+};
+Entry.Playground.prototype.selectMenu = function(a, b) {
+  if (this.object) {
+    this.lastSelector = a;
+    var c = this.categoryListView_.children;
+    if (!Entry.type || "workspace" == Entry.type) {
+      for (var d in this.blockJSON) {
+        var e = this.blockJSON[d].category;
+        "string" == typeof a && e == a || "number" == typeof a && a == d ? c[d].hasClass("entrySelectedCategory") && !b ? (this.blocklyView_.addClass("folding"), this.blocklyView_.removeClass("foldOut"), this.hideTabs(), c[d].removeClass("entrySelectedCategory"), delete this.selectedMenu) : ("func" != e && "variable" == e && this.checkVariables(), this.menuInjected = !0, this.blocklyView_.hasClass("folding") && (this.blocklyView_.addClass("foldOut"), this.blocklyView_.removeClass("folding")), this.showTabs(), 
+        c[d].addClass("entrySelectedCategory"), this.selectedMenu = e) : c[d].removeClass("entrySelectedCategory");
+      }
+    } else {
+      if ("phone" == Entry.type) {
+        var f = [];
+        for (d = 0;d < f.length;d++) {
+          e = f[d].attributes[0].value, "string" == typeof a && e == a || "number" == typeof a && a == d ? c[d].hasClass("entrySelectedCategory") ? (c[d].removeClass("entrySelectedCategory"), this.menuInjected = !0, this.selectedMenu = e) : (c[d].addClass("entrySelectedCategory"), this.menuInjected = !0, delete this.selctedMenu) : c[d].removeClass("entrySelectedCategory");
+        }
+      }
+    }
+  } else {
+    Entry.toast.alert(Lang.Workspace.add_object_alert, Lang.Workspace.add_object_alert_msg);
+  }
+};
+Entry.Playground.prototype.hideTabs = function() {
+  var a = ["picture", "text", "sound", "variable"], b;
+  for (b in a) {
+    this.hideTab([a[b]]);
+  }
+};
+Entry.Playground.prototype.hideTab = function(a) {
+  this.tabViewElements[a] && (this.tabViewElements[a].addClass("hideTab"), this.tabViewElements[a].removeClass("showTab"));
+};
+Entry.Playground.prototype.showTabs = function() {
+  var a = ["picture", "text", "sound", "variable"], b;
+  for (b in a) {
+    this.showTab(a[b]);
+  }
+};
+Entry.Playground.prototype.showTab = function(a) {
+  this.tabViewElements[a] && (this.tabViewElements[a].addClass("showTab"), this.tabViewElements[a].removeClass("hideTab"));
+};
+Entry.Playground.prototype.setBlockMenu = function(a) {
+};
+Entry.Playground.prototype.initializeResizeHandle = function(a) {
+  a.onmousedown = function(a) {
+    Entry.playground.resizing = !0;
+  };
+  document.addEventListener("mousemove", function(a) {
+    Entry.playground.resizing && Entry.resizeElement({menuWidth:a.x - Entry.interfaceState.canvasWidth});
+  });
+  document.addEventListener("mouseup", function(a) {
+    Entry.playground.resizing = !1;
+  });
+};
+Entry.Playground.prototype.reloadPlayground = function() {
+  var a, b;
+  document.getElementsByClassName("entrySelectedCategory")[0] && (a = document.getElementsByClassName("entrySelectedCategory")[0], b = a.getAttribute("id").substring(13), a.removeClass("entrySelectedCategory"), Entry.playground.selectMenu(b));
+};
+Entry.Playground.prototype.flushPlayground = function() {
+  this.object = null;
+  Entry.playground && Entry.playground.view_ && (this.injectPicture(), this.injectSound());
+};
+Entry.Playground.prototype.updateListViewOrder = function(a) {
+  a = "picture" == a ? this.pictureListView_.childNodes : this.soundListView_.childNodes;
+  for (var b = 0, c = a.length;b < c;b++) {
+    a[b].orderHolder.innerHTML = b + 1;
+  }
+};
+Entry.Playground.prototype.generatePictureElement = function(a) {
+  function b() {
+    if ("" === this.value.trim()) {
+      Entry.deAttachEventListener(this, "blur", b), alert("\uc774\ub984\uc744 \uc785\ub825\ud558\uc5ec \uc8fc\uc138\uc694."), this.focus(), Entry.attachEventListener(this, "blur", b);
+    } else {
+      for (var a = $(".entryPlaygroundPictureName"), c = 0;c < a.length;c++) {
+        if (a.eq(c).val() == f.value && a[c] != this) {
+          Entry.deAttachEventListener(this, "blur", b);
+          alert("\uc774\ub984\uc774 \uc911\ubcf5 \ub418\uc5c8\uc2b5\ub2c8\ub2e4.");
+          this.focus();
+          Entry.attachEventListener(this, "blur", b);
+          return;
+        }
+      }
+      this.picture.name = this.value;
+      Entry.dispatchEvent("pictureNameChanged", this.picture);
+    }
+  }
+  var c = Entry.createElement("li", a.id);
+  a.view = c;
+  c.addClass("entryPlaygroundPictureElement");
+  c.picture = a;
+  c.bindOnClick(function(a) {
+    Entry.playground.selectPicture(this.picture);
+  });
+  Entry.Utils.disableContextmenu(a.view);
+  $(a.view).on("contextmenu", function() {
+    Entry.ContextMenu.show([{text:Lang.Workspace.context_rename, callback:function() {
+      f.focus();
+    }}, {text:Lang.Workspace.context_duplicate, callback:function() {
+      Entry.playground.clonePicture(a.id);
+    }}, {text:Lang.Workspace.context_remove, callback:function() {
+      Entry.playground.object.removePicture(a.id) ? (Entry.removeElement(c), Entry.toast.success(Lang.Workspace.shape_remove_ok, a.name + " " + Lang.Workspace.shape_remove_ok_msg)) : Entry.toast.alert(Lang.Workspace.shape_remove_fail, Lang.Workspace.shape_remove_fail_msg);
+    }}, {divider:!0}, {text:Lang.Workspace.context_download, callback:function() {
+      a.fileurl ? window.open(a.fileurl) : window.open("/api/sprite/download/image/" + encodeURIComponent(a.filename) + "/" + encodeURIComponent(a.name) + ".png");
+    }}], "workspace-contextmenu");
+  });
+  var d = Entry.createElement("div");
+  d.addClass("entryPlaygroundPictureOrder");
+  c.orderHolder = d;
+  c.appendChild(d);
+  d = Entry.createElement("div", "t_" + a.id);
+  d.addClass("entryPlaygroundPictureThumbnail");
+  if (a.fileurl) {
+    d.style.backgroundImage = 'url("' + a.fileurl + '")';
+  } else {
+    var e = a.filename;
+    d.style.backgroundImage = 'url("/uploads/' + e.substring(0, 2) + "/" + e.substring(2, 4) + "/thumb/" + e + '.png")';
+  }
+  c.appendChild(d);
+  var f = Entry.createElement("input");
+  f.addClass("entryPlaygroundPictureName");
+  f.addClass("entryEllipsis");
+  f.picture = a;
+  f.value = a.name;
+  Entry.attachEventListener(f, "blur", b);
+  f.onkeypress = function(a) {
+    13 == a.keyCode && this.blur();
+  };
+  c.appendChild(f);
+  d = Entry.createElement("div", "s_" + a.id);
+  d.addClass("entryPlaygroundPictureSize");
+  d.innerHTML = a.dimension.width + " X " + a.dimension.height;
+  c.appendChild(d);
+};
+Entry.Playground.prototype.generateSoundElement = function(a) {
+  var b = Entry.createElement("sound", a.id);
+  a.view = b;
+  b.addClass("entryPlaygroundSoundElement");
+  b.sound = a;
+  Entry.Utils.disableContextmenu(a.view);
+  $(a.view).on("contextmenu", function() {
+    Entry.ContextMenu.show([{text:Lang.Workspace.context_rename, callback:function() {
+      g.focus();
+    }}, {text:Lang.Workspace.context_duplicate, callback:function() {
+      Entry.playground.addSound(a, !0);
+    }}, {text:Lang.Workspace.context_remove, callback:function() {
+      Entry.playground.object.removeSound(a.id) ? (Entry.removeElement(b), Entry.toast.success(Lang.Workspace.sound_remove_ok, a.name + " " + Lang.Workspace.sound_remove_ok_msg)) : Entry.toast.alert(Lang.Workspace.sound_remove_fail, "");
+      Entry.removeElement(b);
+    }}], "workspace-contextmenu");
+  });
+  var c = Entry.createElement("div");
+  c.addClass("entryPlaygroundSoundOrder");
+  b.orderHolder = c;
+  b.appendChild(c);
+  var d = Entry.createElement("div");
+  d.addClass("entryPlaygroundSoundThumbnail");
+  d.addClass("entryPlaygroundSoundPlay");
+  var e = !1, f;
+  d.addEventListener("click", function() {
+    e ? (e = !1, d.removeClass("entryPlaygroundSoundStop"), d.addClass("entryPlaygroundSoundPlay"), f.stop()) : (e = !0, d.removeClass("entryPlaygroundSoundPlay"), d.addClass("entryPlaygroundSoundStop"), f = createjs.Sound.play(a.id), f.addEventListener("complete", function(a) {
+      d.removeClass("entryPlaygroundSoundStop");
+      d.addClass("entryPlaygroundSoundPlay");
+      e = !1;
+    }), f.addEventListener("loop", function(a) {
+    }), f.addEventListener("failed", function(a) {
+    }));
+  });
+  b.appendChild(d);
+  var g = Entry.createElement("input");
+  g.addClass("entryPlaygroundSoundName");
+  g.sound = a;
+  g.value = a.name;
+  var h = document.getElementsByClassName("entryPlaygroundSoundName");
+  g.onblur = function() {
+    if ("" === this.value) {
+      alert("\uc774\ub984\uc744 \uc785\ub825\ud558\uc5ec \uc8fc\uc138\uc694."), this.focus();
+    } else {
+      for (var a = 0, b = 0;b < h.length;b++) {
+        if (h[b].value == g.value && (a += 1, 1 < a)) {
+          alert("\uc774\ub984\uc774 \uc911\ubcf5 \ub418\uc5c8\uc2b5\ub2c8\ub2e4.");
+          this.focus();
+          return;
+        }
+      }
+      this.sound.name = this.value;
+    }
+  };
+  g.onkeypress = function(a) {
+    13 == a.keyCode && this.blur();
+  };
+  b.appendChild(g);
+  c = Entry.createElement("div");
+  c.addClass("entryPlaygroundSoundLength");
+  c.innerHTML = a.duration + " \ucd08";
+  b.appendChild(c);
+};
+Entry.Playground.prototype.toggleColourChooser = function(a) {
+  "foreground" === a ? "none" === this.coloursWrapper.style.display ? (this.coloursWrapper.style.display = "block", this.backgroundsWrapper.style.display = "none") : this.coloursWrapper.style.display = "none" : "background" === a && ("none" === this.backgroundsWrapper.style.display ? (this.backgroundsWrapper.style.display = "block", this.coloursWrapper.style.display = "none") : this.backgroundsWrapper.style.display = "none");
+};
+Entry.Playground.prototype.setTextColour = function(a) {
+  Entry.playground.object.entity.setColour(a);
+  Entry.playground.toggleColourChooser("foreground");
+  $(".entryPlayground_fgColorDiv").css("backgroundColor", a);
+};
+Entry.Playground.prototype.setBackgroundColour = function(a) {
+  Entry.playground.object.entity.setBGColour(a);
+  Entry.playground.toggleColourChooser("background");
+  $(".entryPlayground_bgColorDiv").css("backgroundColor", a);
+};
+Entry.Playground.prototype.isTextBGMode = function() {
+  return this.isTextBGMode_;
+};
+Entry.Playground.prototype.checkVariables = function() {
+};
+Entry.Playground.prototype.getViewMode = function() {
+  return this.viewMode_;
+};
+Entry.Playground.prototype.updateHW = function() {
+  self.object && self.selectMenu(self.lastSelector, !0);
+};
+Entry.Playground.prototype.toggleLineBreak = function(a) {
+  this.object && "textBox" == this.object.objectType && (a ? (Entry.playground.object.entity.setLineBreak(!0), $(".entryPlayground_textArea").css("display", "block"), $(".entryPlayground_textBox").css("display", "none"), this.linebreakOffImage.src = Entry.mediaFilePath + "text-linebreak-off-false.png", this.linebreakOnImage.src = Entry.mediaFilePath + "text-linebreak-on-true.png", this.fontSizeWrapper.removeClass("entryHide")) : (Entry.playground.object.entity.setLineBreak(!1), $(".entryPlayground_textArea").css("display", 
+  "none"), $(".entryPlayground_textBox").css("display", "block"), this.linebreakOffImage.src = Entry.mediaFilePath + "text-linebreak-off-true.png", this.linebreakOnImage.src = Entry.mediaFilePath + "text-linebreak-on-false.png", this.fontSizeWrapper.addClass("entryHide")));
+};
+Entry.Playground.prototype.setFontAlign = function(a) {
+  if ("textBox" == this.object.objectType) {
+    this.alignLeftBtn.removeClass("toggle");
+    this.alignCenterBtn.removeClass("toggle");
+    this.alignRightBtn.removeClass("toggle");
+    switch(a) {
+      case Entry.TEXT_ALIGN_LEFT:
+        this.alignLeftBtn.addClass("toggle");
+        break;
+      case Entry.TEXT_ALIGN_CENTER:
+        this.alignCenterBtn.addClass("toggle");
+        break;
+      case Entry.TEXT_ALIGN_RIGHT:
+        this.alignRightBtn.addClass("toggle");
+    }
+    this.object.entity.setTextAlign(a);
+  }
+};
 Entry.Xml = {};
 Entry.Xml.isTypeOf = function(a, b) {
   return b.getAttribute("type") == a;
