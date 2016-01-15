@@ -99,8 +99,8 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
 
     p.calcWH = function() {
         var block = this._thread.getFirstBlock();
-        if (block.isDummy)
-            block = block.next;
+        if (block.isDummy) block = block.next;
+
         if (block) {
             var blockView = block.view;
             this.box.set({

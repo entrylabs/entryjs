@@ -162,10 +162,13 @@ Entry.Block.MAGNET_OFFSET = 0.4;
         delete json.view;
         delete json.thread;
 
-        if (isNew)
-            delete json.id;
+        if (isNew) delete json.id;
 
-        json.params = json.params.map(function(p) {return p;});
+        json.params = json.params.map(function(p) {
+            if (p instanceof Entry.Thread)
+                p = p.toJSON(isNew);
+            return p;
+        });
 
         json.statements = json.statements.map(
             function(s) {return s.toJSON(isNew);}

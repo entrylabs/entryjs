@@ -15303,8 +15303,9 @@ Entry.Block.MAGNET_OFFSET = .4;
     delete c.view;
     delete c.thread;
     a && delete c.id;
-    c.params = c.params.map(function(a) {
-      return a;
+    c.params = c.params.map(function(c) {
+      c instanceof Entry.Thread && (c = c.toJSON(a));
+      return c;
     });
     c.statements = c.statements.map(function(c) {
       return c.toJSON(a);
