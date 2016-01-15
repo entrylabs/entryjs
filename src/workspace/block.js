@@ -182,8 +182,20 @@ Entry.Block.MAGNET_OFFSET = 0.4;
             this.thread.destroy(animate, false);
         else this.prev.setNext(this.next);
 
-        var statements = this.statements;
 
+        var params = this.params;
+        if (params) {
+            for (var i=0; i<params.length; i++) {
+                var param = params[i];
+                if (param instanceof Entry.Thread) {
+                    var block = param.getFirstBlock();
+                    if (block.isDummy) block = block.next;
+                    if (block) block.destroy(animate);
+                }
+            }
+        }
+
+        var statements = this.statements;
         if (statements) {
             for (var i=0; i<statements.length; i++) {
                 var statement = statements[i];

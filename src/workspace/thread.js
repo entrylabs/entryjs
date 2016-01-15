@@ -188,7 +188,7 @@ Entry.Thread = function(thread, code) {
     };
 
     p.spliceBlock = function(block) {
-        var blocks = this.getBlocks();
+        var blocks = this._data;
         blocks.remove(block);
 
         if (blocks.length !== 0) {

@@ -15315,12 +15315,16 @@ Entry.Block.MAGNET_OFFSET = .4;
   a.destroy = function(a) {
     this.view && this.view.destroy(a);
     !this.prev || this.prev.isDummy ? this.thread.destroy(a, !1) : this.prev.setNext(this.next);
-    var c = this.statements;
+    var c = this.params;
     if (c) {
       for (var d = 0;d < c.length;d++) {
-        var e = c[d].getFirstBlock();
-        e.isDummy && (e = e.next);
-        e && e.destroy(a);
+        var e = c[d];
+        e instanceof Entry.Thread && (e = e.getFirstBlock(), e.isDummy && (e = e.next), e && e.destroy(a));
+      }
+    }
+    if (c = this.statements) {
+      for (d = 0;d < c.length;d++) {
+        e = c[d].getFirstBlock(), e.isDummy && (e = e.next), e && e.destroy(a);
       }
     }
     this._schema.event && this.thread.unregisterEvent(this, this._schema.event);
@@ -15537,7 +15541,7 @@ Entry.Thread = function(a, b) {
     this._code = a;
   };
   a.spliceBlock = function(a) {
-    var c = this.getBlocks();
+    var c = this._data;
     c.remove(a);
     0 !== c.length ? (null === a.prev ? a.next.setPrev(null) : null === a.next ? a.prev.setNext(null) : (a.prev.setNext(a.next), a.next.setPrev(a.prev)), this._setRelation()) : this.destroy();
     this.changeEvent.notify();
