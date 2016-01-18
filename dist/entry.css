@@ -4618,28 +4618,6 @@ span.CodeMirror-selectedtext {
   color: #707074;
   padding: 0 50px;
 }
-.navbar-default {
-  background-color: #89c1e4;
-  border-color: #89c1e4;
-  /*background-color: #4accaa;
-    border-color: #4accaa;*/
-}
-#project_name.normal {
-  background-color: #89c1e4;
-  /*background-color: #4accaa;*/
-}
-.btn-group > .btn {
-  background-color: transparent;
-  border-color: transparent;
-  /*background-color: #4accaa;
-    border-color: #4accaa;*/
-}
-.art_project_name {
-  background-color: white !important;
-}
-.art_project_name:hover {
-  border: 1px solid #b4b4b4 !important;
-}
 
 .dragNone {
   -webkit-touch-callout: none;
