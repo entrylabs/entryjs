@@ -2,6 +2,20 @@
 
 var colour = '#FFCA36';
 
+Blockly.Blocks.text = {
+  init: function() {
+    this.setColour("#FFD974");
+    this.appendDummyInput()
+        .appendField(new Blockly.FieldTextInput(Lang.Blocks.TEXT_text), "NAME");
+    this.setOutput(true, 'String');
+    this.setInputsInline(true);
+  }
+};
+
+Entry.block.text = function (sprite, script) {
+    return script.getField('NAME');
+};
+
 Blockly.Blocks.text_write = {
   init: function() {
     this.setColour(colour);

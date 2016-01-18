@@ -4080,6 +4080,15 @@ Entry.block.message_cast_wait = function(a, b) {
   return b;
 };
 var colour = "#FFCA36";
+Blockly.Blocks.text = {init:function() {
+  this.setColour("#FFD974");
+  this.appendDummyInput().appendField(new Blockly.FieldTextInput(Lang.Blocks.TEXT_text), "NAME");
+  this.setOutput(!0, "String");
+  this.setInputsInline(!0);
+}};
+Entry.block.text = function(a, b) {
+  return b.getField("NAME");
+};
 Blockly.Blocks.text_write = {init:function() {
   this.setColour(colour);
   this.appendDummyInput().appendField(Lang.Blocks.TEXT_text_write_1);
