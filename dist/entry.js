@@ -12974,6 +12974,8 @@ Entry.BlockMenu = function(a, b, c) {
     return console.error("Snap library is required");
   }
   this.view = a;
+  this._categoryCodes = [_.range(20)];
+  this._selectedCategoryView = null;
   this._generateView(c);
   this.offset = this.svgDom.offset();
   this._splitters = [];
@@ -12990,17 +12992,28 @@ Entry.BlockMenu = function(a, b, c) {
 (function(a) {
   a.schema = {code:null, dragBlock:null, closeBlock:null, selectedBlockView:null};
   a._generateView = function(b) {
-    var a = this.view;
-    b && Entry.Dom("div", {class:"entryCategoryWorkspace", parent:a});
+    var a = this.view, d = this;
+    if (b) {
+      for (var e = Entry.Dom("ul", {class:"entryCategoryListWorkspace", parent:a}), f = 0;f < b.length;f++) {
+        var g = b[f].category;
+        (function(b, a) {
+          b.text(Lang.Blocks[g.toUpperCase()]);
+          b.bindOnClick(function(c) {
+            d._setCategory(b, a);
+          });
+        })(Entry.Dom("li", {id:"entryCategory" + g, class:"entryCategoryElementWorkspace", parent:e}), f);
+      }
+    }
     this.svgDom = Entry.Dom($('<svg id="blockMenu"version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'), {parent:a});
+    b || this.svgDom.attr({class:"full"});
   };
   a.changeCode = function(b) {
     if (!(b instanceof Entry.Code)) {
       return console.error("You must inject code instance");
     }
     this.codeListener && this.code.changeEvent.detach(this.codeListener);
-    this.set({code:b});
     var a = this;
+    this.set({code:b});
     this.codeListener = this.code.changeEvent.attach(this, function() {
       a.changeEvent.notify();
     });
@@ -13095,6 +13108,12 @@ Entry.BlockMenu = function(a, b, c) {
   a._setWidth = function() {
     this._svgWidth = this.svgDom.width();
     this._updateSplitters();
+  };
+  a._setCategory = function(b, a) {
+    var d = this._selectedCategoryView;
+    d && d.removeClass("entrySelectedCategory");
+    b.addClass("entrySelectedCategory");
+    this._selectedCategoryView = b;
   };
 })(Entry.BlockMenu.prototype);
 Entry.BlockView = function(a, b, c) {
@@ -13664,12 +13683,12 @@ Entry.Field = function() {
     return {x:a.e + d.left + this.box.x + b.x, y:a.f + d.top + this.box.y + b.y};
   };
   a.getRelativePos = function() {
-    var a = this._block.view, c = a.svgGroup.transform().globalMatrix, a = a.getContentPos(), d = this.box;
-    return {x:c.e + d.x + a.x, y:c.f + d.y + a.y};
+    var b = this._block.view, a = b.svgGroup.transform().globalMatrix, b = b.getContentPos(), d = this.box;
+    return {x:a.e + d.x + b.x, y:a.f + d.y + b.y};
   };
   a.truncate = function() {
-    var a = String(this.getValue()), c = this.TEXT_LIMIT_LENGTH, d = a.substring(0, c);
-    a.length > c && (d += "...");
+    var b = String(this.getValue()), a = this.TEXT_LIMIT_LENGTH, d = b.substring(0, a);
+    b.length > a && (d += "...");
     return d;
   };
   a.appendSvgOptionGroup = function() {

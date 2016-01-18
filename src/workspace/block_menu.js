@@ -25,6 +25,8 @@ Entry.BlockMenu = function(dom, align, categoryData) {
 
     this.view = dom;
 
+    this._categoryCodes = [_.range(20)];
+    this._selectedCategoryView = null;
     this._generateView(categoryData);
 
     this.offset = this.svgDom.offset();
@@ -45,6 +47,7 @@ Entry.BlockMenu = function(dom, align, categoryData) {
     this.changeEvent = new Entry.Event(this);
     //TODO scroller should be attached
     //this.scroller = new Entry.Scroller(this, false, true);
+    //
 
     if (Entry.documentMousedown)
         Entry.documentMousedown.attach(this, this.setSelectedBlock);
@@ -60,12 +63,27 @@ Entry.BlockMenu = function(dom, align, categoryData) {
 
     p._generateView = function(categoryData) {
         var parent = this.view;
+        var that = this;
 
         if (categoryData) {
-            var categoryCol = Entry.Dom('div', {
-                class: 'entryCategoryWorkspace',
+            var categoryCol = Entry.Dom('ul', {
+                class: 'entryCategoryListWorkspace',
                 parent: parent
             });
+
+            for (var i=0; i<categoryData.length; i++) {
+                var name = categoryData[i].category;
+                var element = Entry.Dom('li', {
+                    id: 'entryCategory' + name,
+                    class: 'entryCategoryElementWorkspace',
+                    parent: categoryCol
+                });
+
+                (function(elem, index){
+                    elem.text(Lang.Blocks[name.toUpperCase()]);
+                    elem.bindOnClick(function(e){that._setCategory(elem, index);});
+                })(element, i);
+            }
         }
 
         this.svgDom = Entry.Dom(
@@ -73,6 +91,7 @@ Entry.BlockMenu = function(dom, align, categoryData) {
             { parent: parent }
         );
 
+        if (!categoryData) this.svgDom.attr({class:'full'});
 
     };
 
@@ -81,8 +100,8 @@ Entry.BlockMenu = function(dom, align, categoryData) {
             return console.error("You must inject code instance");
         if (this.codeListener)
             this.code.changeEvent.detach(this.codeListener);
-        this.set({code: code});
         var that = this;
+        this.set({code:code});;
         this.codeListener = this.code.changeEvent.attach(
             this,
             function() {that.changeEvent.notify();}
@@ -235,4 +254,16 @@ Entry.BlockMenu = function(dom, align, categoryData) {
         this._updateSplitters();
     };
 
+    p._setCategory = function(elem, index) {
+        var code = this._categoryCodes[index];
+        var className = 'entrySelectedCategory';
+
+        var oldView = this._selectedCategoryView;
+        if (oldView) oldView.removeClass(className);
+
+        elem.addClass(className);
+        this._selectedCategoryView = elem;
+
+        //this.changeCode(this._categoryCodes[index]);
+    };
 })(Entry.BlockMenu.prototype);
