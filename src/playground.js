@@ -5,6 +5,7 @@
 'use strict';
 
 goog.require("Entry.Workspace");
+goog.require("Entry.BlockDriver");
 
 /**
  * Class for a playground.
@@ -293,6 +294,9 @@ Entry.Playground.prototype.generateCodeView = function(codeView) {
         class: "entryWorkspaceBlockMenu"
     });
 
+    var blockDriver = new Entry.BlockDriver();
+    blockDriver.convert();
+
     this.mainWorkspace = new Entry.Workspace(
         {
             'blockMenu': {
@@ -303,6 +307,15 @@ Entry.Playground.prototype.generateCodeView = function(codeView) {
             }
         }
     );
+
+    var code = new Entry.Code([
+        [
+            {
+                type: "stop_repeat"
+            }
+        ]
+    ]);
+    this.mainWorkspace.changeBoardCode(code);
 
 };
 

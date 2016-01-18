@@ -9810,6 +9810,55 @@ Entry.Toast.prototype.alert = function(a, b, c) {
     }, 20);
   }, 5E3);
 };
+Entry.BlockDriver = function() {
+};
+(function(a) {
+  a.convert = function() {
+    this._convertBlock("stop_repeat");
+  };
+  a._convertBlock = function(b) {
+    var a = (new Entry.BlockMockup(Blockly.Blocks[b])).toJSON();
+    a.func = Entry.block[b];
+    console.log();
+    Entry.block[b] = a;
+  };
+})(Entry.BlockDriver.prototype);
+Entry.BlockMockup = function(a) {
+  this.params = [];
+  this.color = "";
+  this.isNext = this.isPrev = !1;
+  this.simulate(a);
+};
+(function(a) {
+  a.simulate = function(b) {
+    b.init.call(this);
+  };
+  a.toJSON = function() {
+    var b = "";
+    this.isPrev && (b = "basic");
+    return {color:this.color, skeleton:b, template:this.params.filter(function(b) {
+      return "string" === typeof b;
+    }).join(), params:[]};
+  };
+  a.appendDummyInput = function() {
+    return this;
+  };
+  a.appendField = function(b) {
+    this.params.push(b);
+    return this;
+  };
+  a.setColour = function(b) {
+    this.color = b;
+  };
+  a.setInputsInline = function() {
+  };
+  a.setPreviousStatement = function(b) {
+    this.isPrev = b;
+  };
+  a.setNextStatement = function(b) {
+    this.isNext = b;
+  };
+})(Entry.BlockMockup.prototype);
 Entry.ContextMenu = {};
 (function(a) {
   a.createDom = function() {
@@ -15377,7 +15426,10 @@ Entry.Playground.prototype.generateCodeView = function(a) {
   a = Entry.Dom(a);
   b = Entry.Dom("div", {parent:a, id:"entryWorkspaceBoard", class:"entryWorkspaceBoard"});
   a = Entry.Dom("div", {parent:a, id:"entryWorkspaceBlockMenu", class:"entryWorkspaceBlockMenu"});
+  (new Entry.BlockDriver).convert();
   this.mainWorkspace = new Entry.Workspace({blockMenu:{dom:a}, board:{dom:b}});
+  a = new Entry.Code([[{type:"stop_repeat"}]]);
+  this.mainWorkspace.changeBoardCode(a);
 };
 Entry.Playground.prototype.generatePictureView = function(a) {
   if ("workspace" == Entry.type) {
