@@ -167,7 +167,7 @@ Entry.HWMonitor = function(hwModule) {
         }
 
         var ports = this._portMap.s.concat();
-        this._alignNS(ports, this._template.width * this.scale / 2 + 5, 27)
+        this._alignNS(ports, this._template.width * this.scale / 2 + 5, 27);
 
         ports = this._portMap.n.concat();
         this._alignNS(ports, - this._template.width * this.scale / 2 - 32, - 27);
@@ -211,12 +211,12 @@ Entry.HWMonitor = function(hwModule) {
 
             wholeWidth -= lPort.width + rPort.width + 10;
             yCursor += gapTemp;
-        };
+        }
         if (ports.length) {
             ports[0].group.attr({
                 transform: "t" + (rP + lP - ports[0].width) / 2 + "," + yCursor
             });
-        };
+        }
     };
 
     p._movePort = function(port, x, y, prevPointer) {
@@ -234,7 +234,7 @@ Entry.HWMonitor = function(hwModule) {
                 path = "M" + ((x + prevPointer) / 2) + "," + y +
                     "l0," + (portY > y ? 28 : -3) +
                     "H" + (portX) +
-                    "L" + (portX) + "," + (portY)
+                    "L" + (portX) + "," + (portY);
         }
         else // right side
             if (x < portX && portX < prevPointer)
@@ -244,10 +244,10 @@ Entry.HWMonitor = function(hwModule) {
                 path = "m" + ((prevPointer + x) / 2) + "," + y +
                     "l0," + (portY > y ? 28 : -3) +
                     "H" + (portX) +
-                    "L" + (portX) + "," + (portY)
+                    "L" + (portX) + "," + (portY);
 
         port.group.attr({ transform: "t" + groupX + "," + y });
         port.path.attr({ "d": path });
     };
 
-})(Entry.HWMonitor.prototype)
+})(Entry.HWMonitor.prototype);

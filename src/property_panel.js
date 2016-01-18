@@ -105,4 +105,4 @@ Entry.PropertyPanel = function() {
             Entry.container.enableSort();
         });
     };
-})(Entry.PropertyPanel.prototype)
+})(Entry.PropertyPanel.prototype);
