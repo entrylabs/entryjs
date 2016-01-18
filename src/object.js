@@ -223,8 +223,8 @@ Entry.EntryObject.prototype.generateView= function() {
             this.entryObject.name = this.value;
         };
         this.nameView_.onkeypress = function(e) {
-            if (e.keyCode == 13)
-                this.blur();
+            if (e.keyCode == 13) 
+                this.entryObject.editObjectValues(tog);
         };
         this.nameView_.value = this.name;
 
@@ -332,8 +332,8 @@ Entry.EntryObject.prototype.generateView= function() {
         this.coordinateView_ = coordinateView;
         var thisPointer = this;
         xInput.onkeypress = function (e) {
-            if (e.keyCode == 13)
-                this.blur();
+            if (e.keyCode == 13) 
+                thisPointer.editObjectValues(tog);
         };
 
         xInput.onblur = function (e) {
@@ -344,8 +344,8 @@ Entry.EntryObject.prototype.generateView= function() {
             Entry.stage.updateObject();
         };
         yInput.onkeypress = function (e) {
-            if (e.keyCode == 13)
-                this.blur();
+            if (e.keyCode == 13) 
+                thisPointer.editObjectValues(tog);
         };
         yInput.onblur = function (e) {
             if (!isNaN(yInput.value)) {
@@ -355,8 +355,8 @@ Entry.EntryObject.prototype.generateView= function() {
             Entry.stage.updateObject();
         };
         sizeInput.onkeypress = function (e) {
-            if (e.keyCode == 13)
-                this.blur();
+            if (e.keyCode == 13) 
+                thisPointer.editObjectValues(tog);
         };
         sizeInput.onblur = function (e) {
             if (!isNaN(sizeInput.value)) {
@@ -404,8 +404,8 @@ Entry.EntryObject.prototype.generateView= function() {
         rotateLabelWrapperView.directionInput_ = directionInput;
         var thisPointer = this;
         rotateInput.onkeypress = function (e) {
-            if (e.keyCode == 13)
-                this.blur();
+            if (e.keyCode == 13) 
+                thisPointer.editObjectValues(tog)
         };
         rotateInput.onblur = function (e) {
             var value = rotateInput.value;
@@ -418,8 +418,8 @@ Entry.EntryObject.prototype.generateView= function() {
             Entry.stage.updateObject();
         };
         directionInput.onkeypress = function (e) {
-            if (e.keyCode == 13)
-                this.blur();
+            if (e.keyCode == 13) 
+                thisPointer.editObjectValues(tog);
         };
         directionInput.onblur = function (e) {
             var value = directionInput.value;
