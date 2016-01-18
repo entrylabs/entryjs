@@ -21,13 +21,15 @@ Entry.Painter = function() {
         modified: false,
         mode: 'new' // new or edit
     };
+
     this.font = {
         name: 'KoPub Batang',
         size: 20,
         style: 'normal'
     };
-
     this.selectArea = {};
+
+    this.firstStatement  = false;
 };
 
 
@@ -698,13 +700,15 @@ Entry.Painter.prototype.initCommand = function() {
         this.canvas.height
     );
 
-    if (Entry.stateManager)
+    if (Entry.stateManager && this.firstStatement)
         Entry.stateManager.addCommand(
             "edit sprite",
             this,
             this.restorePainter,
             this.colorLayerModel
         );
+
+    this.firstStatement =  true;
 
     if (restoreHandle)
         this.handle.visible = true;
