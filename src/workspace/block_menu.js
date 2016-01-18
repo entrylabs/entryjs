@@ -10,7 +10,7 @@ goog.require("Entry.Utils");
  *
  * @param {object} dom which to inject playground
  */
-Entry.BlockMenu = function(dom, align) {
+Entry.BlockMenu = function(dom, align, categoryData) {
     Entry.Model(this, false);
     this._align = align || "CENTER";
 
@@ -24,11 +24,8 @@ Entry.BlockMenu = function(dom, align) {
         return console.error("Snap library is required");
 
     this.view = dom;
-    this.svgDom = Entry.Dom(
-        $('<svg id="blockMenu" width="100%" height="100%"' +
-          'version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'),
-        { parent: dom }
-    );
+
+    this._generateView(categoryData);
 
     this.offset = this.svgDom.offset();
     this._splitters = [];
@@ -59,6 +56,24 @@ Entry.BlockMenu = function(dom, align) {
         dragBlock: null,
         closeBlock: null,
         selectedBlockView: null
+    };
+
+    p._generateView = function(categoryData) {
+        var parent = this.view;
+
+        if (categoryData) {
+            var categoryCol = Entry.Dom('div', {
+                class: 'entryCategoryWorkspace',
+                parent: parent
+            });
+        }
+
+        this.svgDom = Entry.Dom(
+            $('<svg id="blockMenu"' + 'version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'),
+            { parent: parent }
+        );
+
+
     };
 
     p.changeCode = function(code) {
