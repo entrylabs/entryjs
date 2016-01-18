@@ -481,4 +481,37 @@
     color: white;
 }
 
+.entryEngineBigButtonMinimize_popup {
+    border: none;
+    display: none;
+    margin: 0;
+    padding: 0;
+    position: absolute;
+    left: 50%;
+    width: 111px;
+    height: 111px;
+    margin-left: -55.5px;
+    top: 50%;
+    margin-top: -55.5px;
+    background-repeat: no-repeat;
+    background-position: 40px center;
+    background-color: rgba(0,0,0,0.5);
+    border-radius: 55px;
+}
+
+.entryEngineBigButtonMinimize_popup:hover {
+    opacity: 0.8;
+}
+
+.entryEngineBigButtonMinimize_popup:focus {
+    outline: none;
+}
+
+.entryEngineBigButtonMinimize_popup.entryEngineBigButtonMinimize_popup_run {
+    .backgroundImage("play_btn.png");
+}
+
+.entryPopupWindow .entryEngineBigButtonMinimize_popup {
+    display: block;
+}
 

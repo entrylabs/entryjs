@@ -84,4 +84,75 @@
     border-top: 0;
 }
 
+.entryContainerTabViewWorkspace {
+    width: 100%;
+    height: 45px;
+    border-bottom: 2px solid #1bafea;
+}
+
+.entryContainerTabItemWorkspace {
+    vertical-align: top;
+    height: 100%;
+    width: 25%;
+    text-align: center;
+    display: inline-block;
+    background-color: rgb(229, 229, 229);
+    color: rgb(158,159,159);
+    font-size: 13px;
+    cursor: pointer;
+    padding-top: 13px;
+}
+
+.entryContainerTabItemWorkspace:nth-child(2) {
+    border-left: 2px solid white;
+    border-right: 2px solid white;
+}
+
+.entryContainerTabItemWorkspace:nth-child(3) {
+    border-right: 2px solid white;
+}
+
+.entryContainerTabItemWorkspace.selected {
+    background-color: #1bafea;
+    color: white;
+}
+
+.entryContainerListWorkspaceWrapper.lecture {
+    top: 45px;
+}
+
+.entryContainerMovieWorkspace {
+    position: absolute;
+    width: 100%;
+    top: 45px;
+    bottom: 0px;
+    background-color: #363C46;
+    z-index: 1000;
+    overflow: scroll;
+}
+.entryContainerMovieWorkspace::-webkit-scrollbar {
+    display: none;
+}
+
+.entryContainerDoneWorkspace {
+    position: absolute;
+    width: 100%;
+    top: 45px;
+    bottom: 0;
+    background-color: #363C46;
+    z-index: 1000;
+    overflow: hidden;
+    text-align: center;
+}
+
+
+.entryContainerHelperWorkspace {
+    position: absolute;
+    width: 100%;
+    top: 45px;
+    bottom: 0;
+    background-color: #fff;
+    z-index: 1000;
+    background: gray;
+}
 
