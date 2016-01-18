@@ -17,7 +17,7 @@ Entry.init = function(container, options) {
         menuWidth: 264
     };
 
-    Entry.Utils.bindGlobalEvent(['mousedown', 'mousemove']);
+    Entry.Utils.bindGlobalEvent(['resize', 'mousedown', 'mousemove']);
 
     /** @type {object} */
     this.options = options;

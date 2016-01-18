@@ -9,19 +9,19 @@ goog.require("Entry.Model");
 Entry.Workspace = function(options) {
     var option = options.blockMenu;
     if (option) {
-        this.blockMenu = new Entry.BlockMenu(option.domId, option.align);
+        this.blockMenu = new Entry.BlockMenu(option.dom, option.align);
         this.blockMenu.workspace = this;
     }
 
     option = options.board;
     if (option) {
-        this.board = new Entry.Board(option.domId);
+        this.board = new Entry.Board(option.dom);
         this.board.workspace = this;
     }
 
     option = options.vimBoard;
     if (option) {
-        this.vimBoard = new Entry.Vim(option.domId);
+        this.vimBoard = new Entry.Vim(option.dom);
         this.vimBoard.workspace = this;
     }
 

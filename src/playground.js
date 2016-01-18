@@ -280,21 +280,26 @@ Entry.Playground.prototype.generateCodeView = function(codeView) {
     codeView.appendChild(variableView);
     this.variableView_ = variableView;
 
+    codeView = Entry.Dom(codeView);
+    var boardView = Entry.Dom("div", {
+        parent: codeView,
+        id: "entryWorkspaceBoard",
+        class: "entryWorkspaceBoard"
+    });
 
-    //"entryWorkspaceBoard";
-    //".entryWorkspaceBlockmenu";
+    var blockMenuView = Entry.Dom("div", {
+        parent: codeView,
+        id: "entryWorkspaceBlockMenu",
+        class: "entryWorkspaceBlockMenu"
+    });
 
-    return;
     this.mainWorkspace = new Entry.Workspace(
         {
             'blockMenu': {
-                domId: 'ntryPlaygroundBlockMenu',
+                dom: blockMenuView,
             },
             'board': {
-                domId: "ntryPlaygroundWorkspace"
-            },
-            'vimBoard': {
-                domId: "ntryPlaygroundWorkspace"
+                dom: boardView,
             }
         }
     );

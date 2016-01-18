@@ -8775,7 +8775,7 @@ Entry.init = function(a, b) {
   Entry.assert("object" === typeof b, "Init option is not object");
   this.events_ = {};
   this.interfaceState = {menuWidth:264};
-  Entry.Utils.bindGlobalEvent(["mousedown", "mousemove"]);
+  Entry.Utils.bindGlobalEvent(["resize", "mousedown", "mousemove"]);
   this.options = b;
   this.parseOptions(b);
   this.mediaFilePath = (b.libDir ? b.libDir : "/lib") + "/entryjs/images/";
@@ -13606,8 +13606,8 @@ Entry.Field = function() {
     this.box.set({x:b, y:a});
   };
   a.getAbsolutePos = function() {
-    var b = this._block.view, a = b.svgGroup.transform().globalMatrix, d = b.getBoard().svgDom.offset(), b = b.getContentPos();
-    return {x:a.e + d.left + this.box.x + b.x, y:a.f + d.top + this.box.y + b.y};
+    var a = this._block.view, c = a.svgGroup.transform().globalMatrix, d = a.getBoard().svgDom.offset(), a = a.getContentPos();
+    return {x:c.e + d.left + this.box.x + a.x, y:c.f + d.top + this.box.y + a.y};
   };
   a.getRelativePos = function() {
     var a = this._block.view, c = a.svgGroup.transform().globalMatrix, a = a.getContentPos(), d = this.box;
@@ -15209,12 +15209,12 @@ Entry.Vim = function(a) {
 })(Entry.Vim.prototype);
 Entry.Workspace = function(a) {
   var b = a.blockMenu;
-  b && (this.blockMenu = new Entry.BlockMenu(b.domId, b.align), this.blockMenu.workspace = this);
+  b && (this.blockMenu = new Entry.BlockMenu(b.dom, b.align), this.blockMenu.workspace = this);
   if (b = a.board) {
-    this.board = new Entry.Board(b.domId), this.board.workspace = this;
+    this.board = new Entry.Board(b.dom), this.board.workspace = this;
   }
   if (b = a.vimBoard) {
-    this.vimBoard = new Entry.Vim(b.domId), this.vimBoard.workspace = this;
+    this.vimBoard = new Entry.Vim(b.dom), this.vimBoard.workspace = this;
   }
   this.board && this.vimBoard && this.vimBoard.hide();
   Entry.GlobalSvg.createDom();
@@ -15374,6 +15374,10 @@ Entry.Playground.prototype.generateCodeView = function(a) {
   b = this.createVariableView();
   a.appendChild(b);
   this.variableView_ = b;
+  a = Entry.Dom(a);
+  b = Entry.Dom("div", {parent:a, id:"entryWorkspaceBoard", class:"entryWorkspaceBoard"});
+  a = Entry.Dom("div", {parent:a, id:"entryWorkspaceBlockMenu", class:"entryWorkspaceBlockMenu"});
+  this.mainWorkspace = new Entry.Workspace({blockMenu:{dom:a}, board:{dom:b}});
 };
 Entry.Playground.prototype.generatePictureView = function(a) {
   if ("workspace" == Entry.type) {
