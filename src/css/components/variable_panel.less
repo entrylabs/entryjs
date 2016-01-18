@@ -1,0 +1,259 @@
+.entryVariablePanelWorkspace {
+    position: absolute;
+    width: 250px;
+    top: 47px;
+    bottom: 0px;
+    padding: 6px 4px 0px 4px;
+}
+
+.entryVariablePanelPhone {
+    width: 250px;
+    top: 47px;
+    bottom: 0px;
+    padding: 6px 4px 0px 4px;
+}
+
+.entryVariableSelectorWorkspace {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+.entryVariableSelectButtonWorkspace {
+    font-family: nanumBarunBold !important;
+    width: 25%;
+    border-collapse: collapse;
+    text-align: center;
+    vertical-align: center;
+    background-color: #EDEDED;
+    height: 38px;
+    border: solid 1px #bdbdbd;
+    border-left: none;
+    color: #535353;
+    padding-top: 4px;
+    cursor: pointer;
+}
+
+.entryVariableSelectButtonWorkspace.selected {
+    color: #ffffff;
+    background-color: #0e68e3;
+}
+
+.entryVariableSelectButtonWorkspace.allButton {
+    border-radius: 6px 0 0 6px;
+    border-left: solid 1px #bdbdbd;
+}
+
+.entryVariableSelectButtonWorkspace.message {
+    border-radius: 0 6px 0px 0;
+}
+
+.entryVariableSelectButtonWorkspace.list {
+    border-top: none;
+}
+
+.entryVariableSelectButtonWorkspace.func {
+    border-top: none;
+    border-radius: 0 0px 6px 0;
+}
+
+.entryVariableSelectButtonWorkspace.disable {
+    color: #bdbdbd;
+    cursor: default;
+}
+
+.entryVariableListWorkspace {
+    position: absolute;
+    top: 88px; 
+    bottom: 0px;
+    right: 4px;
+    left: 4px;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    overflow: auto;
+}
+
+.entryVariableListElementWorkspace {
+    background-repeat: no-repeat;
+    background-position: 14px 10px;
+    background-color: #efefef;
+    border: solid 1px #a8a8a8;
+    margin-bottom: -1px;
+    min-height: 50px;
+}
+
+.entryVariableAddWorkspace {
+    padding: 0;
+    font-size: 13pt;
+    color: #717171;
+    cursor: pointer;
+    line-height: 49px;
+    position: relative;
+    text-align: center;
+}
+
+.entryVariableAddWorkspace:hover {
+    background-color: #d3d3d3;
+    color: #333;
+}
+
+.entryVariableListElementWorkspace.selected {
+    background-color: #d3d3d3;
+}
+
+.entryVariableListElementNameWorkspace {
+    position: absolute;
+    left: 47px;
+    margin-top: 12px;
+    background-color: #efefef;
+    width: 55%;
+    border: 1px solid transparent;
+    padding-left: 5px;
+}
+.selected .entryVariableListElementNameWorkspace {
+    background-color: #d3d3d3;
+}
+
+.entryVariableListElementNameWorkspace:focus {
+    background-color: white;
+    border: 1px solid gray;
+}
+
+.entryVariableFunctionElementNameWorkspace {
+    border: none;
+    position: absolute;
+    left: 55px;
+    margin-top: 12px;
+    background-color: transparent;
+    width: 60%;
+    overflow: hidden;
+    height: 20px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.entryVariableListElementDeleteWorkspace {
+    position: absolute;
+    margin-top: 5px;
+    padding-right: 5px;
+    right: 3px;
+    border: 0;
+    outline: 0;
+    width: 22px;
+    height: 40px;
+    opacity: 0;
+    background-color: transparent;
+    .backgroundImage("layers_icon_close_nor_new_1.png");
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.entryVariableListElementWorkspace:hover
+.entryVariableListElementDeleteWorkspace {
+    opacity: 1;
+}
+
+.entryVariableListElementEditWorkspace {
+    display: inline-block;
+    float: right;
+    border: 0;
+    outline: 0;
+    width: 20px;
+    height: 40px;
+    margin-top: 5px;
+    margin-right: 25px;
+    background-color: transparent;
+    .backgroundImage("layers_icon_edit_nor_new_1.png");
+    background-repeat: no-repeat;
+    background-position: center;
+    opacity: 0;
+}
+
+.entryVariableListElementWorkspace:hover
+.entryVariableListElementEditWorkspace {
+    opacity: 1;
+}
+
+.entryVariableListCallerListWorkspace {
+    list-style: none;
+    padding: 0;
+}
+
+.entryVariableListCallerWorkspace {
+    border: solid 1px #c8c8c8;
+    border-top: none;
+    height: 50px;
+    cursor: pointer;
+    overflow: hidden;
+}
+
+.entryVariableListCallerWorkspace:hover {
+    background-color: #e0e0e0;
+}
+
+.entryVariableListCallerWorkspace:first-child {
+    border-top: none;
+}
+
+.entryVariableListCallerWorkspace>.entryObjectThumbnailWorkspace {
+    position: inherit;
+    display:block;
+    float: left;
+    top: 0; left: 0;
+    margin: 5px 0 0 5px;
+    height: 40px;
+    width: 40px;
+}
+
+.entryVariableListCallerNameWorkspace {
+    position: absolute;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    float: left;
+    height: 49px;
+    line-height: 49px;
+    left: 60px; right: 0;
+    padding-right: 7px;
+}
+
+.entryVariableListCallerNoneWorkspace {
+    color: #C16B6B;
+    cursor: default;
+    line-height: 48px;
+    padding-left: 50px;
+}
+
+.entryVariableLocalElementWorkspace {
+    .backgroundImage("local_question_icon.png");
+}
+
+.entryVariableCloudElementWorkspace {
+    .backgroundImage("cloud_question_icon.png");
+}
+
+.entryVariableGlobalElementWorkspace {
+    .backgroundImage("list_icon_question.png");
+}
+
+.entryMessageElementWorkspace {
+    .backgroundImage("list_icon_signal.png");
+}
+
+.entryListCloudElementWorkspace {
+    .backgroundImage("cloud_list_icon.png");
+}
+
+.entryListGlobalElementWorkspace {
+    .backgroundImage("list_icon_list.png");
+}
+
+.entryListLocalElementWorkspace {
+    .backgroundImage("local_list_icon.png");
+}
+
+.entryFunctionElementWorkspace {
+    .backgroundImage("list_icon_function_v1.png");
+}
+

@@ -1,0 +1,901 @@
+.entryPlaygroundWorkspace {
+    position: absolute;
+    top: 40px;
+    bottom: 0px;
+    left: 400.5px;
+    right: 0px;
+    background-color: #F5F5F5;
+    overflow: hidden;
+}
+
+.entryPlaygroundPhone {
+    width: 100%;
+    height: 500px;
+    background-color: #F5F5F5;
+}
+
+.entryPlaygroundResizeWorkspace {
+    position: absolute;
+    top: 45%;
+    height: 28px;
+    width: 11px;
+    left: 272px;
+    cursor: ew-resize;
+    border: solid 1px #afafaf;
+    border-left: none;
+    z-index: 250;
+    .backgroundImage("entry_scroll_02.png");
+}
+
+.entryPlaygroundTabWorkspace {
+    position: absolute;
+    /*margin-top: 1px;*/
+    top: 0;
+    height: 43px;
+    width: 100%;
+    background-color: #f1f1f1;
+}
+
+.entryPlaygroundTabWorkspace.entryRemove {
+    display: block !important;
+}
+
+.entryPlaygroundTabPhone {
+    width: 100%;
+    height: 43px;
+    position: relative;
+    background-color: #f1f1f1;
+}
+
+.entryTabListWorkspace {
+    list-style: none;
+    height: 44px;
+    padding: 0;
+    margin: 1px 0 0 0;
+    border-bottom: 2px solid #643cd9;
+}
+
+.entryTabListItemWorkspace {
+    float: left;
+    width: 59px;
+    height: 42px;
+    margin: 0 1px 0 1px;
+    cursor: pointer;
+    display:block;
+    padding: 10px 0 0 0;
+    text-align: center;
+    font-family: nanumBarunBold !important;
+    color: gray;
+    background-color: #e5e5e5;
+    border-top-right-radius: 7px;
+    border-top-left-radius: 7px;
+}
+
+.entryTabSelected {
+    color: white;
+    background-color: #6e5ae6;
+}
+
+.entryTabListItemWorkspace:hover {
+}
+
+#entrySoundTab {
+    .animation-delay(0.1s);
+}
+#entryPictureTab.hideTab, #entryTextTab.hideTab{
+    .animation-delay(0.2s);
+}
+#entrySoundTab.hideTab {
+    .animation-delay(0.1s);
+}
+#entryVariableTab.showTab {
+    .animation-delay(0.2s);
+}
+
+
+.hideTab {
+    .animation-duration(0.7s);
+    .animation-name(hideTab);
+    .animation-fill-mode(forwards);
+}
+
+@keyframes hideTab {
+    from {}
+    to {margin-top: 44px;opacity:0}
+}
+
+@-o-keyframes hideTab {
+    from {}
+    to {margin-top: 44px;opacity:0}
+}
+
+@-ms-keyframes hideTab {
+    from {}
+    to {margin-top: 44px;opacity:0}
+}
+
+@-moz-keyframes hideTab {
+    from {}
+    to {margin-top: 44px;opacity:0}
+}
+
+@-webkit-keyframes hideTab {
+    from {}
+    to {margin-top: 44px;opacity:0}
+}
+
+.showTab {
+    opacity: 0;
+    .animation-duration(0.7s);
+    .animation-name(showTab);
+    .animation-fill-mode(forwards);
+}
+
+@keyframes showTab {
+    from {margin-top: 44px;opacity:0}
+    to {opacity: 1}
+}
+
+@-o-keyframes showTab {
+    from {margin-top: 44px;opacity:0}
+    to {opacity: 1}
+}
+
+@-ms-keyframes showTab {
+    from {margin-top: 44px;opacity:0}
+    to {opacity: 1}
+}
+
+@-moz-keyframes showTab {
+    from {margin-top: 44px;opacity:0}
+    to {opacity: 1}
+}
+
+@-webkit-keyframes showTab {
+    from {margin-top: 44px;opacity:0}
+    to {opacity: 1}
+}
+
+.entryPlaygroundCurtainWorkspace {
+    position: absolute;
+    background-color: black;
+    color: white;
+    padding-top: 270px;
+    text-align: center;
+    font-size: 40px;
+    height: 100%;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    opacity: 0.5;
+    z-index: 5000;
+    cursor: pointer;
+}
+
+.entryPlaygroundCurtainPhone {
+    position: absolute;
+    background-color: rgba(0,0,0,0.8);
+    color: white;
+    padding-top: 100px;
+    text-align: center;
+    font-size: 17px;
+    height: 110%;
+    width: 100%;
+    opacity: 0.5;
+    z-index: 5000;
+    cursor: pointer;
+}
+
+
+.entryPlaygroundCodeWorkspace {
+    height: 100%;
+    background-color: #F5F5F5;
+}
+
+.entryPlaygroundCodeWorkspace.entryRemove {
+    display: block !important;
+    visibility: hidden;
+}
+
+.entryPlaygroundCodePhone {
+    position: relative;
+    height: 100%;
+    background-color: #F5F5F5;
+}
+
+.entryPlaygroundCodePhone.entryRemove {
+    display: block !important;
+    visibility: hidden;
+}
+
+.entryPlaygroundPictureWorkspace {
+    position: absolute;
+    top: 47px;
+    margin-left: 0;
+    height: 100%;
+    background-color: #ececec;
+}
+
+.entryPlaygroundPicturePhone {
+    margin-left: 0;
+    height: 100%;
+    background-color: #ececec;
+}
+
+.entryPlaygroundAddPicture {
+    position: absolute;
+    width: 240px;
+    height: 60px;
+    background-color: #e5e5e5;
+    cursor: pointer;
+    border-bottom: 1pt solid #ebeff1;
+}
+
+.entryPlaygroundAddPicturePhone {
+    position: relative;
+    padding: 0;
+    margin: 0;
+    height: 50px;
+    cursor: pointer;
+    border-bottom: 1pt solid #ebeff1;
+}
+
+.entryPlaygroundAddPictureInner {
+    display: block;
+    width: 141px;
+    height: 30px;
+    background-color: #eeeeee;
+    color: black;
+    text-align: center;
+    font-size: 11px;
+    line-height: 28px;
+    border: 1px solid #cccccc;
+    border-radius: 7px;
+    margin-top: 15px;
+    margin-left: 49.5px;
+}
+
+.entryPlaygroundAddPictureInnerPhone {
+    display: block;
+    height: 50px;
+    background-color: #CDCFC9;
+    color: #656565;
+    text-align: center;
+    font-size: 10.5pt;
+    line-height: 36px;
+    border: 2px dashed #737373;
+    width: 240px;
+    padding: 8px 10px 12px 10px;
+}
+
+.entryPlaygroundPictureList {
+    position: absolute;
+    padding: 0px;
+    margin: 0px;
+    width: 240px;
+    top: 60px;
+    margin-bottom: 47px;
+    bottom: 0px;
+    overflow: auto;
+    list-style: none;
+    background-color: #Cfcfcf;
+}
+
+.entryPlaygroundPictureListPhone {
+    position: relative;
+    padding: 0px;
+    margin: 0px;
+    width: 240px;
+    bottom: 0px;
+    overflow: auto;
+    list-style: none;
+    background-color: #Cfcfcf;
+}
+
+.entryPlaygroundPictureElement {
+    display: block;
+    background-color: #f4f4f4;
+    border-bottom: 1pt solid #ebeff1;
+    height: 60px;
+    color: #294117;
+    cursor: pointer;
+}
+
+.entryPlaygroundPictureElement:hover {
+    background-color: #C0C0C0;
+    cursor: move;
+}
+
+.entryPlaygroundPictureElement:hover .entryPlaygroundPictureOrder,
+.entryPlaygroundSoundElement:hover .entryPlaygroundSoundOrder {
+    background-color: #634cd9;
+    color: white;
+}
+
+.entryPictureSelected {
+    background-color: #c1c1c1;
+}
+
+.entryPlaygroundPictureThumbnail {
+    float: left;
+    position: relative;
+    height: 49px;
+    width: 49px;
+    top: 5px;
+    left: 10px;
+    border: 1px solid #bcc2c8;
+    background-color: #ccc;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.entryPlaygroundPictureName {
+    float: left;
+    position: relative;
+    top: 17px;
+    left: 17px;
+    width: 78px;
+    background-color: transparent;
+    font-size: 10pt;
+    text-overflow: ellipsis;
+    color: #294117;
+    cursor: text;
+    border: 1px solid transparent;
+}
+
+.entryPlaygroundPictureName:focus, .entryPlaygroundSoundName:focus {
+    border: 1px solid gray;
+    background-color: white;
+}
+
+.entryPlaygroundPictureName:hover, .entryPlaygroundSoundName:hover {
+    border: 1px solid gray;
+}
+
+.entryPlaygroundPictureSize {
+    float: right;
+    position: relative;
+    top: 21px;
+    right: 10px;
+    font-size: 8pt;
+}
+
+.entryPlaygroundTextWorkspace {
+    position: absolute;
+    top: 45px;
+    height: 100%;
+    width: 100%;
+    background-color: #ececec;
+    padding-left: 20px;
+    padding-top: 20px;
+}
+
+.entryTextHead {
+    font-size: 18px;
+}
+
+.entryTextEdit {
+    font-size: 17px;
+    width: 220px;
+    height: 30px;
+    border: 1px solid #808080;
+    border-radius: 3px;
+}
+
+#entryTextProperty {
+    width: 220px;
+    height: 32px;
+    margin-top: 12px;
+}
+
+.entryTextFontSelect {
+    display: inline-block;
+    width: 96px;
+    height: 32px;
+    border: 1px solid #808080;
+    border-radius: 4px;
+    background-color: white;
+    float: left;
+}
+
+.entryTextFontSelecter {
+    margin-top: 5px;
+    margin-left: 2px;
+}
+
+.entryFontToggle {
+    display: inline-block;
+    width: 96px;
+    width: 32px;
+    height: 32px;
+    float: right;
+}
+
+#entryFontColorToggle {
+    .backgroundImage("text_in_off.png");
+}
+
+#entryFontColorToggle.selected {
+    .backgroundImage("text_in_on.png");
+}
+
+#entryFontBGToggle {
+    margin-left: 6px;
+    .backgroundImage("text_out_off.png");
+}
+
+#entryFontBGToggle.selected {
+    .backgroundImage("text_out_on.png");
+}
+
+.entryPlaygroundSoundWorkspace {
+    position: absolute;
+    top: 47px;
+    margin-left: 0;
+    height: 100%;
+    background-color: #ececec;
+}
+
+.entryPlaygroundAddSound {
+    position: absolute;
+    height: 60px;
+    width: 240px;
+    background-color: #e5e5e5;
+    cursor: pointer;
+    border-bottom: 1pt solid #ebeff1;
+}
+
+.entryPlaygroundAddSoundPhone {
+    position: relative;
+    height: 50px;
+    cursor: pointer;
+    border-bottom: 1pt solid #ebeff1;
+}
+
+.entryPlaygroundAddSoundInner {
+    display: block;
+    width: 141px;
+    height: 30px;
+    background-color: #eeeeee;
+    color: black;
+    text-align: center;
+    font-size: 11px;
+    line-height: 28px;
+    border: 1px solid #cccccc;
+    border-radius: 7px;
+    margin-top: 15px;
+    margin-left: 49.5px;
+}
+
+.entryPlaygroundAddSoundInnerPhone {
+    display: block;
+    height: 40px;
+    background-color: #CDCFC9;
+    color: #656565;
+    text-align: center;
+    font-size: 10.5pt;
+    line-height: 36px;
+    margin: 10px;
+    border: 2px dashed #737373;
+    width: 220px;
+}
+
+.entryPlaygroundSoundList {
+    position: absolute;
+    padding: 0px;
+    margin: 0px;
+    width: 240px;
+    top: 60px;
+    margin-bottom: 47px;
+    bottom: 0px;
+    overflow: auto;
+    list-style: none;
+    background-color: #cfcfcf;
+}
+
+.entryPlaygroundSoundListPhone {
+    position: relative;
+    padding: 0px;
+    margin: 0px;
+    width: 240px;
+    bottom: 0px;
+    overflow: auto;
+    list-style: none;
+    background-color: #cfcfcf;
+}
+
+.entryPlaygroundSoundElement {
+    display: block;
+    background-color: #f4f4f4;
+    border-bottom: 1pt solid #ebeff1;
+    height: 60px;
+    color: #294117;
+    cursor: pointer;
+}
+
+.entryPlaygroundSoundElement:hover {
+    background-color: #c1c1c1;
+    cursor: move;
+}
+
+.entryPlaygroundSoundThumbnail {
+    float: left;
+    position: relative;
+    height: 49px;
+    width: 49px;
+    top: 5px;
+    left: 10px;
+    border: 1px solid #bcc2c8;
+    background-color: #ccc;
+    background-size: 32px 32px;
+    background-repeat: no-repeat;
+    background-position: center;
+    cursor: pointer;
+}
+
+.entryPlaygroundSoundThumbnail.entryPlaygroundSoundPlay {
+    .backgroundImage("workspace_sound_play.png");
+}
+
+.entryPlaygroundSoundThumbnail.entryPlaygroundSoundStop {
+    .backgroundImage("workspace_sound_stop.png");
+}
+
+.entryPlaygroundSoundName {
+    float: left;
+    position: relative;
+    top: 18px;
+    left: 17px;
+    width: 95px;
+    background-color: transparent;
+    font-size: 10pt;
+    border: 1px solid transparent;
+    text-overflow: ellipsis;
+    color: #294117;
+}
+
+.entryPlaygroundSoundLength {
+    float: right;
+    position: relative;
+    top: 20px;
+    right: 10px;
+    font-size: 9pt;
+}
+
+.entryPlaygroundDefaultWorkspace {
+    height: 100%;
+    background-color: #363C46;
+    color: white;
+}
+
+.entryCategoryWorkspace {
+    width: 74px;
+    height: 100%;
+    display: block;
+}
+
+.entryCategoryPhone{
+}
+
+.entryCategoryListWorkspace {
+    padding: 44px 0 0 0;
+    margin: 0;
+    list-style-type: none;
+}
+
+.entryCategoryListPhone {
+    padding: 0;
+    margin: 0;
+    list-style-type: none;
+}
+
+.entryCategoryElementWorkspace {
+    clear: both;
+    padding-top: 38px;
+    width: 64px;
+    text-align: center;
+    background-color: #edf5f7;
+    font-size: 13px;
+    color: #474747;
+    float: left;
+    border-bottom: 1px solid #a6cafb;
+    cursor: pointer;
+    font-family: nanumBarunBold !important;
+}
+
+@media screen and (max-height: 10000px) {
+    .entryCategoryElementWorkspace {
+        height: 61px;
+        background-position: 50% 6px;
+        padding-top: 38px;
+    }
+}
+
+@media screen and (max-height: 880px) {
+    .entryCategoryElementWorkspace {
+        height: 56px;
+        background-position: 50% 4px;
+        padding-top: 34px;
+    }
+}
+
+@media screen and (max-height: 810px) {
+    .entryCategoryElementWorkspace {
+        height: 50px;
+        background-position: 50% 2px;
+        padding-top: 30px;
+    }
+}
+
+@media screen and (max-height: 740px) {
+    .entryCategoryElementWorkspace {
+        height: 42px;
+        background-position: 50% 1px;
+        background-size: 35px;
+        padding-top: 23px;
+    }
+
+}
+
+@media screen and (max-height: 640px) {
+    .entryCategoryElementWorkspace {
+        height: 36px;
+        background-position: 50% 1px;
+        background-size: 30px;
+        padding-top: 18px;
+    }
+}
+
+.entryCategoryElementPhone {
+    height: 50px;
+    clear: both;
+    width: 56px;
+    padding-top: 30px;
+    text-align: center;
+    background-color: #E2E9F0;
+    font-size: 13px;
+    color: #474747;
+    float: left;
+    border-bottom: 1px solid #B7C4CC;
+    background-position: 5px 2px;
+    cursor: pointer;
+}
+
+.entryCategoryElementEndWorkspace {
+    clear: both;
+    width: 3px;
+    margin-left: 56px;
+    background-color: #515B7C;
+    height: 4000px;
+}
+
+.entrySelectedCategory {
+    margin: 0;
+    background-color: #e5e5e5;
+}
+
+.entryWorkspaceBlockmenu {
+    background-color: #e5e5e5;
+    position: absolute;
+    left: 64px;
+    top: 45px;
+    width: 186px;
+    bottom: 0px;
+    z-index: 100;
+}
+
+.entryWorkspaceBoard {
+    position: absolute;
+    left: 250px;
+    top: 8px;
+    bottom: 0px;
+    right: 0px;
+    overflow: hidden;
+    border: solid 1px #C4C4B9;
+    border-top-left-radius: 10px;
+    .backgroundImage("entry_bg.png");
+}
+
+.entryWorkspaceBoard.folding {
+    z-index: 300;
+    border-left: solid 1px #C4C4B9;
+    .animation-duration(0.7s);
+    .animation-name(foldBlockly);
+    .animation-fill-mode(forwards);
+}
+
+@keyframes foldBlockly {
+    from {}
+    to {left: 64px;}
+}
+
+@-ot-keyframes foldBlockly {
+    from {}
+    to {left: 64px;}
+}
+
+@-ms-keyframes foldBlockly {
+    from {}
+    to {left: 64px;}
+}
+
+@-moz-keyframes foldBlockly {
+    from {}
+    to {left: 64px;}
+}
+
+@-webkit-keyframes foldBlockly {
+    from {}
+    to {left: 64px;}
+}
+
+.entryWorkspaceBoard.foldOut {
+    z-index:300;
+    .animation-duration(0.7s);
+    .animation-name(foldOutBlockly);
+    .animation-fill-mode(forwards);
+}
+
+@keyframes foldOutBlockly {
+    from {left: 64px;}
+    to {}
+}
+
+@-o-keyframes foldOutBlockly {
+    from {left: 64px;}
+    to {}
+}
+
+@-ms-keyframes foldOutBlockly {
+    from {left: 64px;}
+    to {}
+}
+
+@-moz-keyframes foldOutBlockly {
+    from {left: 64px;}
+    to {}
+}
+
+@-webkit-keyframes foldOutBlockly {
+    from {left: 64px;}
+    to {}
+}
+
+.entryBlocklyPhone {
+    position: absolute;
+    top: 0px;
+    left: 56px;
+    right: 0px;
+    bottom: 0px;
+    overflow: hidden;
+    border: solid 1px #C4C4B9;
+    border-left: 0;
+    .backgroundImage("entry_bg_1.png");
+}
+
+#entryCategorymoving {
+    /*border-right: 4px solid #A751E3;*/
+    .backgroundImage("movement.png");
+    background-repeat: no-repeat;
+}
+
+.entrySelectedCategory#entryCategorymoving {
+    /*border-left: 4px solid #A751E3;*/
+    border-right: none;
+}
+
+#entryCategorylooks {
+    /*border-right: 4px solid #EC4466;*/
+    .backgroundImage("looks.png");
+    background-repeat: no-repeat;
+}
+
+.entrySelectedCategory#entryCategorylooks {
+    /*border-left: 4px solid #EC4466;*/
+    border-right: none;
+}
+
+#entryCategorybrush {
+    /*border-right: 4px solid #FF9E20;*/
+    .backgroundImage("brush.png");
+    background-repeat: no-repeat;
+}
+
+.entrySelectedCategory#entryCategorybrush {
+    border-right: none;
+}
+
+#entryCategorytext {
+    .backgroundImage("postbox_new.png");
+    background-repeat: no-repeat;
+}
+
+.entrySelectedCategory#entryCategorytext {
+    border-right: none;
+}
+
+#entryCategorysound {
+    .backgroundImage("sound.png");
+    background-repeat: no-repeat;
+}
+
+.entrySelectedCategory#entryCategorysound {
+    border-right: none;
+}
+
+#entryCategorystart {
+    .backgroundImage("start.png");
+    background-repeat: no-repeat;
+}
+
+.entrySelectedCategory#entryCategorystart {
+    border-right: none;
+}
+
+#entryCategoryflow {
+    .backgroundImage("flow.png");
+    background-repeat: no-repeat;
+}
+
+.entrySelectedCategory#entryCategoryflow {
+    border-right: none;
+}
+
+#entryCategoryjudgement {
+    .backgroundImage("judgement.png");
+    background-repeat: no-repeat;
+}
+
+.entrySelectedCategory#entryCategoryjudgement {
+    border-right: none;
+}
+
+#entryCategorycalc {
+    .backgroundImage("calc.png");
+    background-repeat: no-repeat;
+}
+
+.entrySelectedCategory#entryCategorycalc {
+    border-right: none;
+}
+
+#entryCategoryvariable {
+    .backgroundImage("variable.png");
+    background-repeat: no-repeat;
+}
+
+.entrySelectedCategory#entryCategoryvariable {
+    border-right: none;
+}
+
+#entryCategoryfunc {
+    .backgroundImage("function.png");
+    background-repeat: no-repeat;
+}
+
+.entrySelectedCategory#entryCategoryfunc {
+    border-right: none;
+}
+
+#entryCategoryscene {
+    border-right: none;
+    .backgroundImage("scene.png");
+    background-repeat: no-repeat;
+}
+
+.entrySelectedCategory#entryCategoryscene {
+    border-left: none;
+    border-right: none;
+}
+
+#entryCategoryarduino {
+    .backgroundImage("arduino.png");
+    background-repeat: no-repeat;
+}
+
+.entrySelectedCategory#entryCategoryarduino {
+    border-right: none;
+}
+
