@@ -14662,7 +14662,7 @@ Entry.skeleton.basic_string_field = {path:function(a) {
 }, box:function(a) {
   return {offsetX:0, offsetY:0, width:(a ? a.contentWidth : 5) + 10, height:a ? a.contentHeight : 20, marginBottom:0};
 }, magnets:function() {
-  return {previous:{}, next:{x:0, y:31}};
+  return {};
 }, contentPos:function(a) {
   return {x:11, y:11};
 }};
@@ -14675,7 +14675,7 @@ Entry.skeleton.basic_boolean_field = {path:function(a) {
 }, box:function(a) {
   return {offsetX:0, offsetY:0, width:(a ? a.contentWidth : 5) + 20, height:a ? a.contentHeight : 20, marginBottom:0};
 }, magnets:function() {
-  return {previous:{}};
+  return {};
 }, contentPos:function(a) {
   return {x:11, y:11};
 }};
