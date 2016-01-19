@@ -267,16 +267,6 @@ Entry.Playground.prototype.generateTabView = function(tabView) {
  * @return {Element}
  */
 Entry.Playground.prototype.generateCodeView = function(codeView) {
-    var categoryView = Entry.createElement('div', 'entryCategory');
-    categoryView.addClass('entryCategoryWorkspace');
-    codeView.appendChild(categoryView);
-    this.categoryView_ = categoryView;
-
-    var categoryListView = Entry.createElement('ul', 'entryCategoryList');
-    categoryListView.addClass('entryCategoryListWorkspace');
-    categoryView.appendChild(categoryListView);
-    this.categoryListView_ = categoryListView;
-
     var variableView = this.createVariableView();
     codeView.appendChild(variableView);
     this.variableView_ = variableView;
@@ -301,9 +291,11 @@ Entry.Playground.prototype.generateCodeView = function(codeView) {
         {
             'blockMenu': {
                 dom: blockMenuView,
+                align: "LEFT",
+                categoryData: EntryStatic.getAllBlocks(),
             },
             'board': {
-                dom: boardView,
+                dom: boardView
             }
         }
     );
@@ -1099,7 +1091,6 @@ Entry.Playground.prototype.toggleOnVariableView = function() {
 };
 
 Entry.Playground.prototype.toggleOffVariableView = function() {
-    this.categoryView_.removeClass('entryRemove');
     this.variableView_.addClass('entryRemove');
 };
 
@@ -1179,7 +1170,7 @@ Entry.Playground.prototype.syncObjectWithEvent = function(e) {
 Entry.Playground.prototype.setMenu = function(objectType) {
     if (this.currentObjectType == objectType)
         return;
-    this.categoryListView_.innerHTML = '';
+    //this.categoryListView_.innerHTML = '';
     //TODO: process
     //this.blockMenu.unbanClass(this.currentObjectType);
     //this.blockMenu.banClass(objectType);
@@ -1211,6 +1202,7 @@ Entry.Playground.prototype.setMenu = function(objectType) {
  * @param {?boolean} disableTab
  */
 Entry.Playground.prototype.selectMenu = function(selector, disableTab) {
+    return;
     if (!this.object) {
         Entry.toast.alert(Lang.Workspace.add_object_alert,
                           Lang.Workspace.add_object_alert_msg);
@@ -1357,7 +1349,7 @@ Entry.Playground.prototype.reloadPlayground = function () {
     if (document.getElementsByClassName('entrySelectedCategory')[0]) {
         selectedCategory = document.getElementsByClassName('entrySelectedCategory')[0];
         selector = selectedCategory.getAttribute('id').substring(13);
-        selectedCategory.removeClass('entrySelectedCategory');
+        //selectedCategory.removeClass('entrySelectedCategory');
         Entry.playground.selectMenu(selector);
     }
 

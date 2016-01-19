@@ -10,7 +10,7 @@ goog.require("Entry.Utils");
  *
  * @param {object} dom which to inject playground
  */
-Entry.BlockMenu = function(dom, align) {
+Entry.BlockMenu = function(dom, align, categoryData) {
     Entry.Model(this, false);
     this._align = align || "CENTER";
 
@@ -24,11 +24,11 @@ Entry.BlockMenu = function(dom, align) {
         return console.error("Snap library is required");
 
     this.view = dom;
-    this.svgDom = Entry.Dom(
-        $('<svg id="blockMenu" width="100%" height="100%"' +
-          'version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'),
-        { parent: dom }
-    );
+
+    this._categoryCodes = null;
+    this._categoryElems = {};
+    this._selectedCategoryView = null;
+    this._generateView(categoryData);
 
     this.offset = this.svgDom.offset();
     this._splitters = [];
@@ -48,6 +48,12 @@ Entry.BlockMenu = function(dom, align) {
     this.changeEvent = new Entry.Event(this);
     //TODO scroller should be attached
     //this.scroller = new Entry.Scroller(this, false, true);
+    //
+
+    if (categoryData) {
+        this._generateCategoryCodes(categoryData);
+        this.setMenu(Object.keys(this._categoryCodes)[0]);
+    }
 
     if (Entry.documentMousedown)
         Entry.documentMousedown.attach(this, this.setSelectedBlock);
@@ -61,13 +67,47 @@ Entry.BlockMenu = function(dom, align) {
         selectedBlockView: null
     };
 
+    p._generateView = function(categoryData) {
+        var parent = this.view;
+        var that = this;
+
+        if (categoryData) {
+            var categoryCol = Entry.Dom('ul', {
+                class: 'entryCategoryListWorkspace',
+                parent: parent
+            });
+
+            for (var i=0; i<categoryData.length; i++) {
+                var name = categoryData[i].category;
+                var element = Entry.Dom('li', {
+                    id: 'entryCategory' + name,
+                    class: 'entryCategoryElementWorkspace',
+                    parent: categoryCol
+                });
+
+                (function(elem, name){
+                    elem.text(Lang.Blocks[name.toUpperCase()]);
+                    that._categoryElems[name] = elem;
+                    elem.bindOnClick(function(e){that.setMenu(name);});
+                })(element, name);
+            }
+        }
+
+        this.svgDom = Entry.Dom(
+            $('<svg id="blockMenu"' + 'version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'),
+            { parent: parent }
+        );
+
+        if (!categoryData) this.svgDom.attr({class:'full'});
+    };
+
     p.changeCode = function(code) {
         if (!(code instanceof Entry.Code))
             return console.error("You must inject code instance");
         if (this.codeListener)
             this.code.changeEvent.detach(this.codeListener);
-        this.set({code: code});
         var that = this;
+        this.set({code:code});;
         this.codeListener = this.code.changeEvent.attach(
             this,
             function() {that.changeEvent.notify();}
@@ -220,4 +260,29 @@ Entry.BlockMenu = function(dom, align) {
         this._updateSplitters();
     };
 
+    p.setMenu = function(name) {
+        var code = this._categoryCodes[name];
+        var className = 'entrySelectedCategory';
+
+        var oldView = this._selectedCategoryView;
+        if (oldView) oldView.removeClass(className);
+
+        var elem = this._categoryElems[name];
+        elem.addClass(className);
+        this._selectedCategoryView = elem;
+        if (code.constructor !== Entry.Code)
+            code = this._categoryCodes[name] = new Entry.Code(code);
+
+        //this.changeCode(code);
+    };
+
+    p._generateCategoryCodes = function(categoryData) {
+        this._categoryCodes = {};
+        for (var i=0; i<categoryData.length; i++) {
+            var datum = categoryData[i];
+            var codesJSON = [];
+            //TODO blockJSON by blockName
+            this._categoryCodes[datum.category] = codesJSON;
+        }
+    };
 })(Entry.BlockMenu.prototype);

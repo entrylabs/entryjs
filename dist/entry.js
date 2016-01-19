@@ -84,8 +84,8 @@ var Entry = {block:{}, TEXT_ALIGN_CENTER:0, TEXT_ALIGN_LEFT:1, TEXT_ALIGN_RIGHT:
     }
     (b = a.menuWidth) ? 244 > b ? b = 244 : 400 < b && (b = 400) : b = 264;
     a.menuWidth = b;
-    $(".entryBlockMenuWorkspace>svg").css({width:b - 64 + "px"});
-    $(".entryBlocklyWorkspace").css({left:b + "px"});
+    $(".entryWorkspaceBlockMenu>svg").css({width:b - 64 + "px"});
+    $(".entryWorkspaceBoard").css({left:b + "px"});
     Entry.playground.resizeHandle_.style.left = b + "px";
     Entry.playground.variableViewWrapper_.style.width = b + "px";
     this.interfaceState = a;
@@ -12976,7 +12976,7 @@ Entry.block.basic_button = {skeleton:"basic_button", color:"#eee", template:"%1"
 }};
 Entry.block.True = {skeleton:"basic_boolean_field", color:"#eee", template:"%1", params:[{type:"Text", text:"\ucc38", color:"#333"}], func:function() {
 }};
-Entry.BlockMenu = function(a, b) {
+Entry.BlockMenu = function(a, b, c) {
   Entry.Model(this, !1);
   this._align = b || "CENTER";
   a = "string" === typeof a ? $("#" + a) : $(a);
@@ -12987,7 +12987,10 @@ Entry.BlockMenu = function(a, b) {
     return console.error("Snap library is required");
   }
   this.view = a;
-  this.svgDom = Entry.Dom($('<svg id="blockMenu" width="100%" height="100%"version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'), {parent:a});
+  this._categoryCodes = null;
+  this._categoryElems = {};
+  this._selectedCategoryView = null;
+  this._generateView(c);
   this.offset = this.svgDom.offset();
   this._splitters = [];
   this._setWidth();
@@ -12998,17 +13001,35 @@ Entry.BlockMenu = function(a, b) {
   this.svgBlockGroup = this.svgGroup.group();
   this.svgBlockGroup.board = this;
   this.changeEvent = new Entry.Event(this);
+  c && (this._generateCategoryCodes(c), this.setMenu(Object.keys(this._categoryCodes)[0]));
   Entry.documentMousedown && Entry.documentMousedown.attach(this, this.setSelectedBlock);
 };
 (function(a) {
   a.schema = {code:null, dragBlock:null, closeBlock:null, selectedBlockView:null};
+  a._generateView = function(b) {
+    var a = this.view, d = this;
+    if (b) {
+      for (var e = Entry.Dom("ul", {class:"entryCategoryListWorkspace", parent:a}), f = 0;f < b.length;f++) {
+        var g = b[f].category;
+        (function(b, a) {
+          b.text(Lang.Blocks[a.toUpperCase()]);
+          d._categoryElems[a] = b;
+          b.bindOnClick(function(b) {
+            d.setMenu(a);
+          });
+        })(Entry.Dom("li", {id:"entryCategory" + g, class:"entryCategoryElementWorkspace", parent:e}), g);
+      }
+    }
+    this.svgDom = Entry.Dom($('<svg id="blockMenu"version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'), {parent:a});
+    b || this.svgDom.attr({class:"full"});
+  };
   a.changeCode = function(b) {
     if (!(b instanceof Entry.Code)) {
       return console.error("You must inject code instance");
     }
     this.codeListener && this.code.changeEvent.detach(this.codeListener);
-    this.set({code:b});
     var a = this;
+    this.set({code:b});
     this.codeListener = this.code.changeEvent.attach(this, function() {
       a.changeEvent.notify();
     });
@@ -13103,6 +13124,20 @@ Entry.BlockMenu = function(a, b) {
   a._setWidth = function() {
     this._svgWidth = this.svgDom.width();
     this._updateSplitters();
+  };
+  a.setMenu = function(b) {
+    var a = this._categoryCodes[b], d = this._selectedCategoryView;
+    d && d.removeClass("entrySelectedCategory");
+    d = this._categoryElems[b];
+    d.addClass("entrySelectedCategory");
+    this._selectedCategoryView = d;
+    a.constructor !== Entry.Code && (this._categoryCodes[b] = new Entry.Code(a));
+  };
+  a._generateCategoryCodes = function(b) {
+    this._categoryCodes = {};
+    for (var a = 0;a < b.length;a++) {
+      this._categoryCodes[b[a].category] = [];
+    }
   };
 })(Entry.BlockMenu.prototype);
 Entry.BlockView = function(a, b, c) {
@@ -15271,7 +15306,7 @@ Entry.Vim = function(a) {
 })(Entry.Vim.prototype);
 Entry.Workspace = function(a) {
   var b = a.blockMenu;
-  b && (this.blockMenu = new Entry.BlockMenu(b.dom, b.align), this.blockMenu.workspace = this);
+  b && (this.blockMenu = new Entry.BlockMenu(b.dom, b.align, b.categoryData), this.blockMenu.workspace = this);
   if (b = a.board) {
     this.board = new Entry.Board(b.dom), this.board.workspace = this;
   }
@@ -15425,24 +15460,22 @@ Entry.Playground.prototype.generateTabView = function(a) {
   }), this.tabViewElements.variable = a);
 };
 Entry.Playground.prototype.generateCodeView = function(a) {
-  var b = Entry.createElement("div", "entryCategory");
-  b.addClass("entryCategoryWorkspace");
-  a.appendChild(b);
-  this.categoryView_ = b;
-  var c = Entry.createElement("ul", "entryCategoryList");
-  c.addClass("entryCategoryListWorkspace");
-  b.appendChild(c);
-  this.categoryListView_ = c;
-  b = this.createVariableView();
+  var b = this.createVariableView();
   a.appendChild(b);
   this.variableView_ = b;
   a = Entry.Dom(a);
   b = Entry.Dom("div", {parent:a, id:"entryWorkspaceBoard", class:"entryWorkspaceBoard"});
   a = Entry.Dom("div", {parent:a, id:"entryWorkspaceBlockMenu", class:"entryWorkspaceBlockMenu"});
+<<<<<<< HEAD
   this.blockDriver = new Entry.BlockDriver;
   this.blockDriver.convert();
   this.mainWorkspace = new Entry.Workspace({blockMenu:{dom:a}, board:{dom:b}});
   a = new Entry.Code([[{type:"when_run_button_click"}, {type:"repeat_basic"}, {type:"stop_repeat"}]]);
+=======
+  (new Entry.BlockDriver).convert();
+  this.mainWorkspace = new Entry.Workspace({blockMenu:{dom:a, align:"LEFT", categoryData:EntryStatic.getAllBlocks()}, board:{dom:b}});
+  a = new Entry.Code([[{type:"stop_repeat"}]]);
+>>>>>>> origin/new/entry-block
   this.mainWorkspace.changeBoardCode(a);
 };
 Entry.Playground.prototype.generatePictureView = function(a) {
@@ -15922,7 +15955,6 @@ Entry.Playground.prototype.toggleOnVariableView = function() {
   this.resizeHandle_.removeClass("entryRemove");
 };
 Entry.Playground.prototype.toggleOffVariableView = function() {
-  this.categoryView_.removeClass("entryRemove");
   this.variableView_.addClass("entryRemove");
 };
 Entry.Playground.prototype.syncObject = function(a) {
@@ -15948,7 +15980,6 @@ Entry.Playground.prototype.syncObjectWithEvent = function(a) {
 };
 Entry.Playground.prototype.setMenu = function(a) {
   if (this.currentObjectType != a) {
-    this.categoryListView_.innerHTML = "";
     for (var b in this.blockJSON) {
       var c = this.blockJSON[b].category, d = Entry.createElement("li", "entryCategory" + c);
       ("brush" == c && "textBox" == a || "text" == c && "sprite" == a || !("func" == c || this.blockJSON[b].blocks && this.blockJSON[b].blocks.length)) && d.addClass("entryRemove");
@@ -15964,26 +15995,6 @@ Entry.Playground.prototype.setMenu = function(a) {
   }
 };
 Entry.Playground.prototype.selectMenu = function(a, b) {
-  if (this.object) {
-    this.lastSelector = a;
-    var c = this.categoryListView_.children;
-    if (!Entry.type || "workspace" == Entry.type) {
-      for (var d in this.blockJSON) {
-        var e = this.blockJSON[d].category;
-        "string" == typeof a && e == a || "number" == typeof a && a == d ? c[d].hasClass("entrySelectedCategory") && !b ? (this.blocklyView_.addClass("folding"), this.blocklyView_.removeClass("foldOut"), this.hideTabs(), c[d].removeClass("entrySelectedCategory"), delete this.selectedMenu) : ("func" != e && "variable" == e && this.checkVariables(), this.menuInjected = !0, this.blocklyView_.hasClass("folding") && (this.blocklyView_.addClass("foldOut"), this.blocklyView_.removeClass("folding")), this.showTabs(), 
-        c[d].addClass("entrySelectedCategory"), this.selectedMenu = e) : c[d].removeClass("entrySelectedCategory");
-      }
-    } else {
-      if ("phone" == Entry.type) {
-        var f = [];
-        for (d = 0;d < f.length;d++) {
-          e = f[d].attributes[0].value, "string" == typeof a && e == a || "number" == typeof a && a == d ? c[d].hasClass("entrySelectedCategory") ? (c[d].removeClass("entrySelectedCategory"), this.menuInjected = !0, this.selectedMenu = e) : (c[d].addClass("entrySelectedCategory"), this.menuInjected = !0, delete this.selctedMenu) : c[d].removeClass("entrySelectedCategory");
-        }
-      }
-    }
-  } else {
-    Entry.toast.alert(Lang.Workspace.add_object_alert, Lang.Workspace.add_object_alert_msg);
-  }
 };
 Entry.Playground.prototype.hideTabs = function() {
   var a = ["picture", "text", "sound", "variable"], b;
@@ -16017,8 +16028,8 @@ Entry.Playground.prototype.initializeResizeHandle = function(a) {
   });
 };
 Entry.Playground.prototype.reloadPlayground = function() {
-  var a, b;
-  document.getElementsByClassName("entrySelectedCategory")[0] && (a = document.getElementsByClassName("entrySelectedCategory")[0], b = a.getAttribute("id").substring(13), a.removeClass("entrySelectedCategory"), Entry.playground.selectMenu(b));
+  var a;
+  document.getElementsByClassName("entrySelectedCategory")[0] && (a = document.getElementsByClassName("entrySelectedCategory")[0], a = a.getAttribute("id").substring(13), Entry.playground.selectMenu(a));
 };
 Entry.Playground.prototype.flushPlayground = function() {
   this.object = null;

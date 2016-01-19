@@ -9,7 +9,11 @@ goog.require("Entry.Model");
 Entry.Workspace = function(options) {
     var option = options.blockMenu;
     if (option) {
-        this.blockMenu = new Entry.BlockMenu(option.dom, option.align);
+        this.blockMenu = new Entry.BlockMenu(
+            option.dom,
+            option.align,
+            option.categoryData
+        );
         this.blockMenu.workspace = this;
     }
 
