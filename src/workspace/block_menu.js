@@ -265,7 +265,6 @@ Entry.BlockMenu = function(dom, align, categoryData) {
     };
 
     p.setMenu = function(name) {
-        console.log('111A;')
         var elem = this._categoryElems[name];
         var oldView = this._selectedCategoryView;
         var className = 'entrySelectedCategory';

@@ -13142,7 +13142,6 @@ Entry.BlockMenu = function(a, b, c) {
     this._updateSplitters();
   };
   a.setMenu = function(b) {
-    console.log("111A;");
     var a = this._categoryElems[b], d = this._selectedCategoryView, e = !1, f = this.workspace.board, g = f.view;
     d && d.removeClass("entrySelectedCategory");
     a == d ? (g.addClass("folding"), this._selectedCategoryView = null, a.removeClass("entrySelectedCategory"), Entry.playground.hideTabs(), e = !0, this.visible = !1) : d || (g.addClass("foldOut"), g.removeClass("folding"), Entry.playground.showTabs(), e = this.visible = !0);
