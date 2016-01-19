@@ -265,44 +265,49 @@ Entry.BlockMenu = function(dom, align, categoryData) {
     };
 
     p.setMenu = function(name) {
+        console.log('111A;')
         var elem = this._categoryElems[name];
         var oldView = this._selectedCategoryView;
         var className = 'entrySelectedCategory';
+        var animate = false;
         var board = this.workspace.board,
             boardView = board.view;
 
         if (oldView) oldView.removeClass(className);
 
-        Entry.bindAnimationCallbackOnce(boardView, function(){
-            board.scroller.resizeScrollBar.call(board.scroller);
-        });
-
         if (elem == oldView) {
             boardView.addClass('folding');
-            boardView.removeClass('foldOut');
             this._selectedCategoryView = null;
             elem.removeClass(className);
             Entry.playground.hideTabs();
+            animate = true;
             this.visible = false;
-            return;
-        }
-
-        if (boardView.hasClass('folding')) {
+        } else if (!oldView) {
             boardView.addClass('foldOut');
             boardView.removeClass('folding');
             Entry.playground.showTabs();
             this.visible = true;
+            animate = true;
         }
 
-        elem.addClass(className);
-        var code = this._categoryCodes[name];
+        if (animate) {
+            Entry.bindAnimationCallbackOnce(boardView, function(){
+                board.scroller.resizeScrollBar.call(board.scroller);
+                boardView.removeClass('foldOut');
+            });
+        }
 
-        this._selectedCategoryView = elem;
-        elem.addClass(className);
-        if (code.constructor !== Entry.Code)
-            code = this._categoryCodes[name] = new Entry.Code(code);
+        if (this.visible) {
+            elem.addClass(className);
+            var code = this._categoryCodes[name];
 
-        this.changeCode(code);
+            this._selectedCategoryView = elem;
+            elem.addClass(className);
+            if (code.constructor !== Entry.Code)
+                code = this._categoryCodes[name] = new Entry.Code(code);
+
+            this.changeCode(code);
+        }
     };
 
     p._generateCategoryCodes = function(categoryData) {

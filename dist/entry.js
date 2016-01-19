@@ -13142,13 +13142,15 @@ Entry.BlockMenu = function(a, b, c) {
     this._updateSplitters();
   };
   a.setMenu = function(b) {
-    var a = this._categoryElems[b], d = this._selectedCategoryView, e = this.workspace.board, f = e.view;
+    console.log("111A;");
+    var a = this._categoryElems[b], d = this._selectedCategoryView, e = !1, f = this.workspace.board, g = f.view;
     d && d.removeClass("entrySelectedCategory");
-    Entry.bindAnimationCallbackOnce(f, function() {
-      e.scroller.resizeScrollBar.call(e.scroller);
+    a == d ? (g.addClass("folding"), this._selectedCategoryView = null, a.removeClass("entrySelectedCategory"), Entry.playground.hideTabs(), e = !0, this.visible = !1) : d || (g.addClass("foldOut"), g.removeClass("folding"), Entry.playground.showTabs(), e = this.visible = !0);
+    e && Entry.bindAnimationCallbackOnce(g, function() {
+      f.scroller.resizeScrollBar.call(f.scroller);
+      g.removeClass("foldOut");
     });
-    a == d ? (f.addClass("folding"), f.removeClass("foldOut"), this._selectedCategoryView = null, a.removeClass("entrySelectedCategory"), Entry.playground.hideTabs(), this.visible = !1) : (f.hasClass("folding") && (f.addClass("foldOut"), f.removeClass("folding"), Entry.playground.showTabs(), this.visible = !0), a.addClass("entrySelectedCategory"), d = this._categoryCodes[b], this._selectedCategoryView = a, a.addClass("entrySelectedCategory"), d.constructor !== Entry.Code && (d = this._categoryCodes[b] = 
-    new Entry.Code(d)), this.changeCode(d));
+    this.visible && (a.addClass("entrySelectedCategory"), d = this._categoryCodes[b], this._selectedCategoryView = a, a.addClass("entrySelectedCategory"), d.constructor !== Entry.Code && (d = this._categoryCodes[b] = new Entry.Code(d)), this.changeCode(d));
   };
   a._generateCategoryCodes = function(b) {
     this._categoryCodes = {};
@@ -14457,9 +14459,10 @@ Entry.GlobalSvg = {};
     this._svg && this.remove();
     var c = this._mode == Entry.Workspace.MODE_VIMBOARD;
     this.svg = a.svgGroup.clone();
-    c && (a = this.svg, a.selectAll("path").animate({opacity:0}, 500, mina.easeinout), a.selectAll("text").animate({fill:"#000000"}, 530, mina.easeinout));
+    c && (c = this.svg, c.selectAll("path").animate({opacity:0}, 500, mina.easeinout), c.selectAll("text").animate({fill:"#000000"}, 530, mina.easeinout));
     this.snap.append(this.svg);
     this.show();
+    a.set({visible:!1});
   };
   a.remove = function() {
     this.svg && (this.svg.remove(), delete this.svg, delete this._view, delete this._offsetX, delete this._offsetY, this.hide());
