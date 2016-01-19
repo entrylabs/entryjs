@@ -294,8 +294,8 @@ Entry.Playground.prototype.generateCodeView = function(codeView) {
         class: "entryWorkspaceBlockMenu"
     });
 
-    var blockDriver = new Entry.BlockDriver();
-    blockDriver.convert();
+    this.blockDriver = new Entry.BlockDriver();
+    this.blockDriver.convert();
 
     this.mainWorkspace = new Entry.Workspace(
         {
@@ -310,6 +310,12 @@ Entry.Playground.prototype.generateCodeView = function(codeView) {
 
     var code = new Entry.Code([
         [
+            {
+                type: "when_run_button_click"
+            },
+            {
+                type: "repeat_basic"
+            },
             {
                 type: "stop_repeat"
             }

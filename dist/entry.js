@@ -4252,14 +4252,6 @@ Entry.block.message_cast = function(a, b) {
   Entry.container.mapEntityIncludeCloneOnScene(Entry.engine.raiseKeyEvent, ["when_message_cast", c]);
   return b.callReturn();
 };
-Blockly.Blocks.add_message = {init:function() {
-  this.setColour("#3BBD70");
-  this.appendDummyInput().appendField(Lang.Blocks.START_add_message).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/start_03.png", "*"));
-  this.setInputsInline(!0);
-}};
-Entry.block.add_massage = function(a, b) {
-  return b.callReturn();
-};
 Blockly.Blocks.message_cast_wait = {init:function() {
   this.setColour("#3BBD70");
   this.appendDummyInput().appendField(Lang.Blocks.START_message_send_wait_1).appendField(new Blockly.FieldDropdownDynamic("messages"), "VALUE").appendField(Lang.Blocks.START_message_send_wait_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/start_03.png", "*"));
@@ -5065,6 +5057,9 @@ Entry.Container.prototype.getDropdownList = function(a) {
       b.push([Lang.Blocks.wall_left, "wall_left"]);
       break;
     case "pictures":
+      if (!Entry.playground.object) {
+        break;
+      }
       c = Entry.playground.object.pictures;
       for (a = 0;a < c.length;a++) {
         d = c[a], b.push([d.name, d.id]);
@@ -5097,6 +5092,9 @@ Entry.Container.prototype.getDropdownList = function(a) {
       }
       break;
     case "sounds":
+      if (!Entry.playground.object) {
+        break;
+      }
       c = Entry.playground.object.sounds;
       for (a = 0;a < c.length;a++) {
         d = c[a], b.push([d.name, d.id]);
@@ -9814,19 +9812,22 @@ Entry.BlockDriver = function() {
 };
 (function(a) {
   a.convert = function() {
-    this._convertBlock("stop_repeat");
+    for (var b in Entry.block) {
+      "function" === typeof Entry.block[b] && this._convertBlock(b);
+    }
   };
   a._convertBlock = function(b) {
     var a = (new Entry.BlockMockup(Blockly.Blocks[b])).toJSON();
     a.func = Entry.block[b];
-    console.log();
     Entry.block[b] = a;
   };
 })(Entry.BlockDriver.prototype);
 Entry.BlockMockup = function(a) {
+  this.templates = [];
   this.params = [];
+  this.statements = [];
   this.color = "";
-  this.isNext = this.isPrev = !1;
+  this.output = this.isNext = this.isPrev = !1;
   this.simulate(a);
 };
 (function(a) {
@@ -9834,17 +9835,24 @@ Entry.BlockMockup = function(a) {
     b.init.call(this);
   };
   a.toJSON = function() {
-    var b = "";
-    this.isPrev && (b = "basic");
-    return {color:this.color, skeleton:b, template:this.params.filter(function(b) {
+    var b = "", b = "Number" === this.output ? "basic_string_field" : "Boolean" === this.output ? "basic_boolean_field" : !this.isPrev && this.isNext ? "basic_event" : this.statements.length ? "basic_loop" : "basic";
+    return {color:this.color, skeleton:b, statements:this.statements, template:this.templates.filter(function(b) {
       return "string" === typeof b;
-    }).join(), params:[]};
+    }).join(" "), params:this.params};
   };
   a.appendDummyInput = function() {
     return this;
   };
+  a.appendValueInput = function(b) {
+    return this;
+  };
+  a.appendStatementInput = function(b) {
+    this.statements.push({accept:"basic", position:{x:2, y:15}});
+  };
+  a.setCheck = function(b) {
+  };
   a.appendField = function(b) {
-    this.params.push(b);
+    "string" === typeof b && 0 < b.length ? this.templates.push(b) : b instanceof Blockly.FieldIcon && (this.params.push({type:"Image", img:b.src_, size:24}), this.templates.push("%1"));
     return this;
   };
   a.setColour = function(b) {
@@ -9852,11 +9860,16 @@ Entry.BlockMockup = function(a) {
   };
   a.setInputsInline = function() {
   };
+  a.setOutput = function(b, a) {
+    b && (this.output = a);
+  };
   a.setPreviousStatement = function(b) {
     this.isPrev = b;
   };
   a.setNextStatement = function(b) {
     this.isNext = b;
+  };
+  a.setEditable = function(b) {
   };
 })(Entry.BlockMockup.prototype);
 Entry.ContextMenu = {};
@@ -13655,8 +13668,8 @@ Entry.Field = function() {
     this.box.set({x:b, y:a});
   };
   a.getAbsolutePos = function() {
-    var a = this._block.view, c = a.svgGroup.transform().globalMatrix, d = a.getBoard().svgDom.offset(), a = a.getContentPos();
-    return {x:c.e + d.left + this.box.x + a.x, y:c.f + d.top + this.box.y + a.y};
+    var b = this._block.view, a = b.svgGroup.transform().globalMatrix, d = b.getBoard().svgDom.offset(), b = b.getContentPos();
+    return {x:a.e + d.left + this.box.x + b.x, y:a.f + d.top + this.box.y + b.y};
   };
   a.getRelativePos = function() {
     var a = this._block.view, c = a.svgGroup.transform().globalMatrix, a = a.getContentPos(), d = this.box;
@@ -15426,9 +15439,10 @@ Entry.Playground.prototype.generateCodeView = function(a) {
   a = Entry.Dom(a);
   b = Entry.Dom("div", {parent:a, id:"entryWorkspaceBoard", class:"entryWorkspaceBoard"});
   a = Entry.Dom("div", {parent:a, id:"entryWorkspaceBlockMenu", class:"entryWorkspaceBlockMenu"});
-  (new Entry.BlockDriver).convert();
+  this.blockDriver = new Entry.BlockDriver;
+  this.blockDriver.convert();
   this.mainWorkspace = new Entry.Workspace({blockMenu:{dom:a}, board:{dom:b}});
-  a = new Entry.Code([[{type:"stop_repeat"}]]);
+  a = new Entry.Code([[{type:"when_run_button_click"}, {type:"repeat_basic"}, {type:"stop_repeat"}]]);
   this.mainWorkspace.changeBoardCode(a);
 };
 Entry.Playground.prototype.generatePictureView = function(a) {

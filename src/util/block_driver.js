@@ -5,7 +5,11 @@ Entry.BlockDriver = function() {
 
 (function(p) {
     p.convert = function() {
-        this._convertBlock("stop_repeat");
+        for (var blockType in Entry.block) {
+            if (typeof Entry.block[blockType] === "function") {
+                this._convertBlock(blockType);
+            }
+        }
     };
 
     p._convertBlock = function(blockType) {
@@ -14,8 +18,7 @@ Entry.BlockDriver = function() {
 
         var blockObject = mockup.toJSON();
 
-        blockObject.func = Entry.block[blockType]
-        console.log()
+        blockObject.func = Entry.block[blockType];
 
         Entry.block[blockType] = blockObject;
     };
@@ -23,10 +26,13 @@ Entry.BlockDriver = function() {
 })(Entry.BlockDriver.prototype);
 
 Entry.BlockMockup = function(blocklyInfo) {
+    this.templates = [];
     this.params = [];
+    this.statements = [];
     this.color = "";
     this.isPrev = false;
     this.isNext = false;
+    this.output = false;
 
     this.simulate(blocklyInfo);
 };
@@ -38,13 +44,22 @@ Entry.BlockMockup = function(blocklyInfo) {
 
     p.toJSON = function() {
         var skeleton = "";
-        if (this.isPrev)
+        if (this.output === "Number")
+            skeleton = "basic_string_field";
+        else if (this.output === "Boolean")
+            skeleton = "basic_boolean_field";
+        else if (!this.isPrev && this.isNext)
+            skeleton = "basic_event";
+        else if (this.statements.length)
+            skeleton = "basic_loop";
+        else
             skeleton = "basic";
         return {
             color: this.color,
             skeleton: skeleton,
-            template: this.params.filter(function(p) {return typeof p === "string"}).join(),
-            params: []
+            statements: this.statements,
+            template: this.templates.filter(function(p) {return typeof p === "string"}).join(" "),
+            params: this.params
         }
     };
 
@@ -52,8 +67,44 @@ Entry.BlockMockup = function(blocklyInfo) {
         return this;
     };
 
-    p.appendField = function(param) {
-        this.params.push(param);
+    p.appendValueInput = function(key) {
+        // field block
+        return this;
+    };
+
+    p.appendStatementInput = function(key) {
+        var statement = {
+            accept: "basic",
+            position: {
+                x: 2,
+                y: 15
+            }
+        };
+        this.statements.push(statement);
+    };
+
+    p.setCheck = function(accept) {
+        //add value
+    };
+
+    p.appendField = function(field) {
+        if (typeof field === "string" && field.length > 0)
+            this.templates.push(field);
+        else {
+            if (field instanceof Blockly.FieldIcon) {
+                this.params.push({
+                    type: "Image",
+                    img: field.src_,
+                    size: 24
+                });
+                this.templates.push("%1");
+            } else if (field instanceof Blockly.FieldDropDown) {
+            } else if (field instanceof Blockly.FieldDropDownDynamic) {
+            } else if (field instanceof Blockly.FieldTextInput) {
+            } else if (field instanceof Blockly.FieldAngle) {
+            } else {
+            }
+        }
         return this;
     };
 
@@ -64,12 +115,22 @@ Entry.BlockMockup = function(blocklyInfo) {
     p.setInputsInline = function() {
     };
 
+    p.setOutput = function(bool, type) {
+        if (!bool)
+            return;
+        this.output = type;
+    };
+
     p.setPreviousStatement = function(bool) {
         this.isPrev = bool;
     };
 
     p.setNextStatement = function(bool) {
         this.isNext = bool;
+    };
+
+    p.setEditable = function(bool) {
+         // Not implemented
     };
 
 })(Entry.BlockMockup.prototype);

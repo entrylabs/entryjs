@@ -477,6 +477,8 @@ Entry.Container.prototype.getDropdownList = function(menuName) {
             result.push([Lang.Blocks.wall_left, 'wall_left']);
             break;
         case 'pictures':
+            if (!Entry.playground.object)
+                break;
             var pictures = Entry.playground.object.pictures;
             for (var i = 0; i<pictures.length; i++) {
                 var picture = pictures[i];
@@ -518,6 +520,8 @@ Entry.Container.prototype.getDropdownList = function(menuName) {
             }
             break;
         case 'sounds':
+            if (!Entry.playground.object)
+                break;
             var sounds = Entry.playground.object.sounds;
             for (var i = 0; i<sounds.length; i++) {
                 var sound = sounds[i];
