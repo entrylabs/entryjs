@@ -145,7 +145,6 @@ EntryStatic.getAllBlocks = function() {
         {
             category: "text",
             blocks: [
-                "text",
                 "text_write",
                 "text_append",
                 "text_prepend",
@@ -1088,12 +1087,6 @@ EntryStatic.blockInfo = {
         "class": "list_visibility",
         "isNotFor": ["list", "listNotExist"],
         "usage": ["list"]
-    },
-    "text": {
-        "xml": "<block type='text'></block>",
-        "class": "text",
-        "isNotFor": ["sprite"],
-        "description": "해당 글상자가 표시하고 있는 문자값을 의미합니다."
     },
     "text_write": {
         "xml": "<block type='text_write'><value name='VALUE'><block type='text'></block></value></block>",
