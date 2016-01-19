@@ -6673,7 +6673,7 @@ Entry.EntryObject.prototype.generateView = function() {
       this.entryObject.name = this.value;
     };
     this.nameView_.onkeypress = function(a) {
-      13 == a.keyCode && this.blur();
+      13 == a.keyCode && this.entryObject.editObjectValues(tog);
     };
     this.nameView_.value = this.name;
     d = Entry.createElement("div");
@@ -6751,7 +6751,7 @@ Entry.EntryObject.prototype.generateView = function() {
     this.coordinateView_ = d;
     c = this;
     f.onkeypress = function(a) {
-      13 == a.keyCode && this.blur();
+      13 == a.keyCode && c.editObjectValues(tog);
     };
     f.onblur = function(a) {
       isNaN(f.value) || c.entity.setX(Number(f.value));
@@ -6759,7 +6759,7 @@ Entry.EntryObject.prototype.generateView = function() {
       Entry.stage.updateObject();
     };
     h.onkeypress = function(a) {
-      13 == a.keyCode && this.blur();
+      13 == a.keyCode && c.editObjectValues(tog);
     };
     h.onblur = function(a) {
       isNaN(h.value) || c.entity.setY(Number(h.value));
@@ -6767,7 +6767,7 @@ Entry.EntryObject.prototype.generateView = function() {
       Entry.stage.updateObject();
     };
     l.onkeypress = function(a) {
-      13 == a.keyCode && this.blur();
+      13 == a.keyCode && c.editObjectValues(tog);
     };
     l.onblur = function(a) {
       isNaN(l.value) || c.entity.setSize(Number(l.value));
@@ -6809,7 +6809,7 @@ Entry.EntryObject.prototype.generateView = function() {
     d.directionInput_ = m;
     c = this;
     n.onkeypress = function(a) {
-      13 == a.keyCode && this.blur();
+      13 == a.keyCode && c.editObjectValues(tog);
     };
     n.onblur = function(a) {
       a = n.value;
@@ -6819,7 +6819,7 @@ Entry.EntryObject.prototype.generateView = function() {
       Entry.stage.updateObject();
     };
     m.onkeypress = function(a) {
-      13 == a.keyCode && this.blur();
+      13 == a.keyCode && c.editObjectValues(tog);
     };
     m.onblur = function(a) {
       a = m.value;
