@@ -9821,6 +9821,8 @@ Entry.BlockDriver = function() {
   a._convertBlock = function(b) {
     var a = (new Entry.BlockMockup(Blockly.Blocks[b])).toJSON();
     a.func = Entry.block[b];
+    var d = EntryStatic.blockInfo[b];
+    d && (a.class = d.class);
     Entry.block[b] = a;
   };
 })(Entry.BlockDriver.prototype);
@@ -13057,11 +13059,12 @@ Entry.BlockMenu = function(a, b, c) {
     this.svgGroup.append(this.svgBlockGroup);
   };
   a.align = function() {
-    for (var b = this.code.getThreads(), a = 10, d = "LEFT" == this._align ? 20 : this.svgDom.width() / 2, e = 0, f = b.length;e < f;e++) {
-      var g = b[e].getFirstBlock().view;
-      0 !== e && (this._createSplitter(a), a += 15);
-      g._moveTo(d, a, !1);
-      a += g.height + 15;
+    for (var b = this.code.getThreads(), a = 10, d = "LEFT" == this._align ? 20 : this.svgDom.width() / 2, e, f = 0, g = b.length;f < g;f++) {
+      var h = b[f].getFirstBlock(), k = h.view, h = Entry.block[h.type].class;
+      e && e !== h && (this._createSplitter(a), a += 15);
+      e = h;
+      k._moveTo(d, a, !1);
+      a += k.height + 15;
     }
     this.changeEvent.notify();
   };
@@ -13723,8 +13726,8 @@ Entry.Field = function() {
     return {x:c.e + d.left + this.box.x + a.x, y:c.f + d.top + this.box.y + a.y};
   };
   a.getRelativePos = function() {
-    var b = this._block.view, a = b.svgGroup.transform().globalMatrix, b = b.getContentPos(), d = this.box;
-    return {x:a.e + d.x + b.x, y:a.f + d.y + b.y};
+    var a = this._block.view, c = a.svgGroup.transform().globalMatrix, a = a.getContentPos(), d = this.box;
+    return {x:c.e + d.x + a.x, y:c.f + d.y + a.y};
   };
   a.truncate = function() {
     var a = String(this.getValue()), c = this.TEXT_LIMIT_LENGTH, d = a.substring(0, c);

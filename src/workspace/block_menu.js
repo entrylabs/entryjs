@@ -131,15 +131,18 @@ Entry.BlockMenu = function(dom, align, categoryData) {
             marginFromTop = 10,
             hPadding = this._align == 'LEFT' ? 20 : this.svgDom.width()/2;
 
+        var pastClass;
         for (var i=0,len=threads.length; i<len; i++) {
             var block = threads[i].getFirstBlock();
             var blockView = block.view;
 
-            //TODO splitter generate condition needed
-            if (i !== 0) {
+            var className = Entry.block[block.type].class;
+            if (pastClass && pastClass !== className) {
                 this._createSplitter(marginFromTop);
                 marginFromTop += vPadding;
             }
+            pastClass = className;
+
             blockView._moveTo(hPadding, marginFromTop, false);
             marginFromTop += blockView.height + vPadding;
         }
