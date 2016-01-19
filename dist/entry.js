@@ -10354,6 +10354,9 @@ Entry.Utils.inherit = function(a, b) {
   b.prototype = new c;
   return b;
 };
+Entry.bindAnimationCallbackOnce = function(a, b) {
+  a.one("webkitAnimationEnd animationendo animationend", b);
+};
 Entry.Model = function(a, b) {
   var c = Entry.Model;
   c.generateSchema(a);
@@ -13008,7 +13011,7 @@ Entry.BlockMenu = function(a, b, c) {
   this.svgBlockGroup = this.svgGroup.group();
   this.svgBlockGroup.board = this;
   this.changeEvent = new Entry.Event(this);
-  c && (this._generateCategoryCodes(c), this.setMenu(Object.keys(this._categoryCodes)[0]));
+  c && this._generateCategoryCodes(c);
   Entry.documentMousedown && Entry.documentMousedown.attach(this, this.setSelectedBlock);
 };
 (function(a) {
@@ -13133,12 +13136,12 @@ Entry.BlockMenu = function(a, b, c) {
     this._updateSplitters();
   };
   a.setMenu = function(b) {
-    var a = this._categoryCodes[b], d = this._selectedCategoryView;
+    var a = this._categoryElems[b], d = this._selectedCategoryView, e = this.workspace.board, f = e.view;
     d && d.removeClass("entrySelectedCategory");
-    d = this._categoryElems[b];
-    d.addClass("entrySelectedCategory");
-    this._selectedCategoryView = d;
-    a.constructor !== Entry.Code && (this._categoryCodes[b] = new Entry.Code(a));
+    Entry.bindAnimationCallbackOnce(f, function() {
+      e.scroller.resizeScrollBar.call(e.scroller);
+    });
+    a == d ? (f.addClass("folding"), f.removeClass("foldOut"), this._selectedCategoryView = null, a.removeClass("entrySelectedCategory"), Entry.playground.hideTabs()) : (f.hasClass("folding") && (f.addClass("foldOut"), f.removeClass("folding"), Entry.playground.showTabs()), a.addClass("entrySelectedCategory"), d = this._categoryCodes[b], this._selectedCategoryView = a, a.addClass("entrySelectedCategory"), d.constructor !== Entry.Code && (d = this._categoryCodes[b] = new Entry.Code(d)));
   };
   a._generateCategoryCodes = function(b) {
     this._categoryCodes = {};
@@ -13683,12 +13686,12 @@ Entry.Executor = function(a) {
     void 0 === this.scope.block._schema.func.call(this.scope) && (this.scope = {block:this.scope.block.next, executor:this});
     null === this.scope.block && this._callStack.length && (this.scope = this._callStack.pop());
   };
-  a.stepInto = function(b) {
-    b instanceof Entry.Thread || console.error("Must step in to thread");
+  a.stepInto = function(a) {
+    a instanceof Entry.Thread || console.error("Must step in to thread");
     this._callStack.push(this.scope);
-    b = b.getFirstBlock();
-    b.isDummy && (b = b.next);
-    this.scope = {block:b, executor:this};
+    a = a.getFirstBlock();
+    a.isDummy && (a = a.next);
+    this.scope = {block:a, executor:this};
   };
 })(Entry.Executor.prototype);
 Entry.Field = function() {
@@ -13702,12 +13705,12 @@ Entry.Field = function() {
     this.documentDownEvent && (Entry.documentMousedown.detach(this.documentDownEvent), delete this.documentDownEvent);
     this.optionGroup && (this.optionGroup.remove(), delete this.optionGroup);
   };
-  a.align = function(b, a, d) {
+  a.align = function(a, c, d) {
     var e = this.svgGroup;
-    this._position && (this._position.x && (b = this._position.x), this._position.y && (a = this._position.y));
-    var f = "t" + b + " " + a;
+    this._position && (this._position.x && (a = this._position.x), this._position.y && (c = this._position.y));
+    var f = "t" + a + " " + c;
     void 0 === d || d ? e.animate({transform:f}, 300, mina.easeinout) : e.attr({transform:f});
-    this.box.set({x:b, y:a});
+    this.box.set({x:a, y:c});
   };
   a.getAbsolutePos = function() {
     var b = this._block.view, a = b.svgGroup.transform().globalMatrix, d = b.getBoard().svgDom.offset(), b = b.getContentPos();
@@ -15094,6 +15097,7 @@ Entry.Board = function(a) {
     return console.error("Snap library is required");
   }
   Entry.Model(this, !1);
+  this.view = a;
   this.wrapper = Entry.Dom("div", {parent:a, class:"entryBoardWrapper"});
   this.svgDom = Entry.Dom($('<svg id="play" class="entryBoard" width="100%" height="100%"version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'), {parent:this.wrapper});
   this.offset = this.svgDom.offset();

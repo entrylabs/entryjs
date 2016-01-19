@@ -2294,38 +2294,38 @@ span.CodeMirror-selectedtext {
   -moz-animation-duration: 0.7s;
   -ms-animation-duration: 0.7s;
   -o-animation-duration: 0.7s;
-  -webkit-animation-name: foldBlockly;
-  -moz-animation-name: foldBlockly;
-  -ms-animation-name: foldBlockly;
-  -o-animation-name: foldBlockly;
-  animation-name: foldBlockly;
+  -webkit-animation-name: foldBoard;
+  -moz-animation-name: foldBoard;
+  -ms-animation-name: foldBoard;
+  -o-animation-name: foldBoard;
+  animation-name: foldBoard;
   -webkit-animation-fill-mode: forwards;
   -moz-animation-fill-mode: forwards;
   -ms-animation-fill-mode: forwards;
   -o-animation-fill-mode: forwards;
   animation-fill-mode: forwards;
 }
-@keyframes foldBlockly {
+@keyframes foldBoard {
   to {
     left: 64px;
   }
 }
-@-ot-keyframes foldBlockly {
+@-ot-keyframes foldBoard {
   to {
     left: 64px;
   }
 }
-@-ms-keyframes foldBlockly {
+@-ms-keyframes foldBoard {
   to {
     left: 64px;
   }
 }
-@-moz-keyframes foldBlockly {
+@-moz-keyframes foldBoard {
   to {
     left: 64px;
   }
 }
-@-webkit-keyframes foldBlockly {
+@-webkit-keyframes foldBoard {
   to {
     left: 64px;
   }
@@ -2336,38 +2336,38 @@ span.CodeMirror-selectedtext {
   -moz-animation-duration: 0.7s;
   -ms-animation-duration: 0.7s;
   -o-animation-duration: 0.7s;
-  -webkit-animation-name: foldOutBlockly;
-  -moz-animation-name: foldOutBlockly;
-  -ms-animation-name: foldOutBlockly;
-  -o-animation-name: foldOutBlockly;
-  animation-name: foldOutBlockly;
+  -webkit-animation-name: foldOutBoard;
+  -moz-animation-name: foldOutBoard;
+  -ms-animation-name: foldOutBoard;
+  -o-animation-name: foldOutBoard;
+  animation-name: foldOutBoard;
   -webkit-animation-fill-mode: forwards;
   -moz-animation-fill-mode: forwards;
   -ms-animation-fill-mode: forwards;
   -o-animation-fill-mode: forwards;
   animation-fill-mode: forwards;
 }
-@keyframes foldOutBlockly {
+@keyframes foldOutBoard {
   from {
     left: 64px;
   }
 }
-@-o-keyframes foldOutBlockly {
+@-o-keyframes foldOutBoard {
   from {
     left: 64px;
   }
 }
-@-ms-keyframes foldOutBlockly {
+@-ms-keyframes foldOutBoard {
   from {
     left: 64px;
   }
 }
-@-moz-keyframes foldOutBlockly {
+@-moz-keyframes foldOutBoard {
   from {
     left: 64px;
   }
 }
-@-webkit-keyframes foldOutBlockly {
+@-webkit-keyframes foldOutBoard {
   from {
     left: 64px;
   }

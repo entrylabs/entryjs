@@ -29,6 +29,8 @@ Entry.Board = function(dom) {
 
     Entry.Model(this, false);
 
+    this.view = dom;
+
     this.wrapper = Entry.Dom('div', {
         parent: dom,
         class: 'entryBoardWrapper'

@@ -807,3 +807,7 @@ Entry.Utils.inherit = function(parent, child) {
     child.prototype = new F();
     return child;
 };
+
+Entry.bindAnimationCallbackOnce = function($elem, func) {
+    $elem.one("webkitAnimationEnd animationendo animationend", func);
+};

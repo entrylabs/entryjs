@@ -52,7 +52,7 @@ Entry.BlockMenu = function(dom, align, categoryData) {
 
     if (categoryData) {
         this._generateCategoryCodes(categoryData);
-        this.setMenu(Object.keys(this._categoryCodes)[0]);
+        //this.setMenu(Object.keys(this._categoryCodes)[0]);
     }
 
     if (Entry.documentMousedown)
@@ -261,15 +261,38 @@ Entry.BlockMenu = function(dom, align, categoryData) {
     };
 
     p.setMenu = function(name) {
-        var code = this._categoryCodes[name];
-        var className = 'entrySelectedCategory';
-
+        var elem = this._categoryElems[name];
         var oldView = this._selectedCategoryView;
+        var className = 'entrySelectedCategory';
+        var board = this.workspace.board,
+            boardView = board.view;
+
         if (oldView) oldView.removeClass(className);
 
-        var elem = this._categoryElems[name];
+        Entry.bindAnimationCallbackOnce(boardView, function(){
+            board.scroller.resizeScrollBar.call(board.scroller);
+        });
+
+        if (elem == oldView) {
+            boardView.addClass('folding');
+            boardView.removeClass('foldOut');
+            this._selectedCategoryView = null;
+            elem.removeClass(className);
+            Entry.playground.hideTabs();
+            return;
+        }
+
+        if (boardView.hasClass('folding')) {
+            boardView.addClass('foldOut');
+            boardView.removeClass('folding');
+            Entry.playground.showTabs();
+        }
+
         elem.addClass(className);
+        var code = this._categoryCodes[name];
+
         this._selectedCategoryView = elem;
+        elem.addClass(className);
         if (code.constructor !== Entry.Code)
             code = this._categoryCodes[name] = new Entry.Code(code);
 
