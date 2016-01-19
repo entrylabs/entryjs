@@ -52,7 +52,7 @@ Entry.skeleton.basic_event = {
     },
     box: function(block) {
         return {
-            offsetX: 0, offsetY: 0,
+            offsetX: -19, offsetY: -7,
             width: block.contentWidth + 30,
             height: 30,
             marginBottom: 0

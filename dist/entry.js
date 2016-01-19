@@ -13728,8 +13728,8 @@ Entry.Field = function() {
     return {x:a.e + d.left + this.box.x + b.x, y:a.f + d.top + this.box.y + b.y};
   };
   a.getRelativePos = function() {
-    var a = this._block.view, c = a.svgGroup.transform().globalMatrix, a = a.getContentPos(), d = this.box;
-    return {x:c.e + d.x + a.x, y:c.f + d.y + a.y};
+    var b = this._block.view, a = b.svgGroup.transform().globalMatrix, b = b.getContentPos(), d = this.box;
+    return {x:a.e + d.x + b.x, y:a.f + d.y + b.y};
   };
   a.truncate = function() {
     var a = String(this.getValue()), c = this.TEXT_LIMIT_LENGTH, d = a.substring(0, c);
@@ -14457,13 +14457,12 @@ Entry.GlobalSvg = {};
     this._svg && this.remove();
     var c = this._mode == Entry.Workspace.MODE_VIMBOARD;
     this.svg = a.svgGroup.clone();
-    c && (c = this.svg, c.selectAll("path").animate({opacity:0}, 500, mina.easeinout), c.selectAll("text").animate({fill:"#000000"}, 530, mina.easeinout));
+    c && (a = this.svg, a.selectAll("path").animate({opacity:0}, 500, mina.easeinout), a.selectAll("text").animate({fill:"#000000"}, 530, mina.easeinout));
     this.snap.append(this.svg);
     this.show();
-    a.set({visible:!1});
   };
   a.remove = function() {
-    this.svg && (this.svg.remove(), delete this.svg, delete this._view, delete this._offsetX, this.hide());
+    this.svg && (this.svg.remove(), delete this.svg, delete this._view, delete this._offsetX, delete this._offsetY, this.hide());
   };
   a.resize = function() {
     var a = this._view.svgGroup.getBBox();
@@ -14471,9 +14470,10 @@ Entry.GlobalSvg = {};
     this.width = a.width + 2;
   };
   a.align = function() {
-    var a = this._view.getSkeleton().box(this._view).offsetX || 0;
-    this._offsetX = a *= -1;
-    this.svg.attr({transform:"t" + (a + 1) + " 1"});
+    var a = this._view.getSkeleton().box(this._view).offsetX || 0, c = this._view.getSkeleton().box(this._view).offsetY || 1, a = -1 * a, c = -1 * c;
+    this._offsetX = a;
+    this._offsetY = c;
+    this.svg.attr({transform:"t" + (a + 1) + " " + c});
   };
   a.show = function() {
     this.svgDom.css("display", "block");
@@ -14484,7 +14484,7 @@ Entry.GlobalSvg = {};
   a.position = function() {
     var a = this._view, c = a.svgGroup.transform().globalMatrix, a = a.getBoard().svgDom.offset();
     this.left = c.e + a.left - this._offsetX - 1;
-    this.top = c.f + a.top;
+    this.top = c.f + a.top - this._offsetY;
     this.svgDom.css({left:this.left, top:this.top});
   };
   a.terminateDrag = function(a) {
@@ -14610,7 +14610,7 @@ Entry.skeleton.basic_event = {path:function(a) {
   a = Math.max(0, a);
   return "m -8,0 m 0,-5 a 19.5,19.5 0, 0,1 16,0 c 10,5 15,5 20,5 h %w a 15,15 0 0,1 0,30 H 8 l -8,8 -8,-8 l 0,0.5 a 19.5,19.5 0, 0,1 0,-35 z".replace(/%w/gi, a - 30);
 }, box:function(a) {
-  return {offsetX:0, offsetY:0, width:a.contentWidth + 30, height:30, marginBottom:0};
+  return {offsetX:-19, offsetY:-7, width:a.contentWidth + 30, height:30, marginBottom:0};
 }, magnets:function() {
   return {previous:{}, next:{x:0, y:31}};
 }, contentPos:function(a) {

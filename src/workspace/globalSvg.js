@@ -76,6 +76,7 @@ goog.provide('Entry.GlobalSvg');
         delete this.svg;
         delete this._view;
         delete this._offsetX;
+        delete this._offsetY;
         this.hide();
     };
 
@@ -91,9 +92,12 @@ goog.provide('Entry.GlobalSvg');
 
     gs.align = function() {
         var offsetX = this._view.getSkeleton().box(this._view).offsetX || 0;
+        var offsetY = this._view.getSkeleton().box(this._view).offsetY || 1;
         offsetX *= -1;
+        offsetY *= -1;
         this._offsetX = offsetX;
-        var transform = "t" + (offsetX + 1) + " 1";
+        this._offsetY = offsetY;
+        var transform = "t" + (offsetX + 1) + " " + offsetY;
         this.svg.attr({transform: transform});
     };
 
@@ -107,7 +111,7 @@ goog.provide('Entry.GlobalSvg');
         var matrix = blockView.svgGroup.transform().globalMatrix;
         var offset = blockView.getBoard().svgDom.offset();
         this.left = matrix.e + offset.left - this._offsetX - 1;
-        this.top = matrix.f + offset.top;
+        this.top = matrix.f + offset.top - this._offsetY;
 
         this.svgDom.css({
             left: that.left,
