@@ -84,8 +84,8 @@ var Entry = {block:{}, TEXT_ALIGN_CENTER:0, TEXT_ALIGN_LEFT:1, TEXT_ALIGN_RIGHT:
     }
     (b = a.menuWidth) ? 244 > b ? b = 244 : 400 < b && (b = 400) : b = 264;
     a.menuWidth = b;
-    $(".entryBlockMenuWorkspace>svg").css({width:b - 64 + "px"});
-    $(".entryBlocklyWorkspace").css({left:b + "px"});
+    $(".entryWorkspaceBlockMenu>svg").css({width:b - 64 + "px"});
+    $(".entryWorkspaceBoard").css({left:b + "px"});
     Entry.playground.resizeHandle_.style.left = b + "px";
     Entry.playground.variableViewWrapper_.style.width = b + "px";
     this.interfaceState = a;

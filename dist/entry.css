@@ -4523,7 +4523,6 @@ span.CodeMirror-selectedtext {
   background-color: #e5e5e5;
   position: absolute;
   top: 45px;
-  width: 250px;
   bottom: 0px;
   z-index: 100;
 }
