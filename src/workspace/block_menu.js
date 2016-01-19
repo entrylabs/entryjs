@@ -28,6 +28,7 @@ Entry.BlockMenu = function(dom, align, categoryData) {
     this._categoryCodes = null;
     this._categoryElems = {};
     this._selectedCategoryView = null;
+    this.visible = true;
     this._generateView(categoryData);
 
     this.offset = this.svgDom.offset();
@@ -282,6 +283,7 @@ Entry.BlockMenu = function(dom, align, categoryData) {
             this._selectedCategoryView = null;
             elem.removeClass(className);
             Entry.playground.hideTabs();
+            this.visible = false;
             return;
         }
 
@@ -289,6 +291,7 @@ Entry.BlockMenu = function(dom, align, categoryData) {
             boardView.addClass('foldOut');
             boardView.removeClass('folding');
             Entry.playground.showTabs();
+            this.visible = true;
         }
 
         elem.addClass(className);

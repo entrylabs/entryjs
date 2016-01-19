@@ -120,10 +120,10 @@ goog.provide('Entry.GlobalSvg');
         var blockMenu = blockView.getBoard().workspace.blockMenu;
         var bLeft = blockMenu.offset.left;
         var bTop = blockMenu.offset.top;
-        var bWidth = blockMenu.svgDom.width();
+        var bWidth = blockMenu.visible ? blockMenu.svgDom.width() : 0;
         if (mousePos.y > bTop && mousePos.x > bLeft + bWidth)
             return this.DONE;
-        else if (mousePos.y > bTop && mousePos.x > bLeft)
+        else if (mousePos.y > bTop && mousePos.x > bLeft && blockMenu.visible)
             return this.REMOVE;
         else return this.RETURN;
     };

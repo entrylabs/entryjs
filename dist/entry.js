@@ -13004,6 +13004,7 @@ Entry.BlockMenu = function(a, b, c) {
   this._categoryCodes = null;
   this._categoryElems = {};
   this._selectedCategoryView = null;
+  this.visible = !0;
   this._generateView(c);
   this.offset = this.svgDom.offset();
   this._splitters = [];
@@ -13146,7 +13147,8 @@ Entry.BlockMenu = function(a, b, c) {
     Entry.bindAnimationCallbackOnce(f, function() {
       e.scroller.resizeScrollBar.call(e.scroller);
     });
-    a == d ? (f.addClass("folding"), f.removeClass("foldOut"), this._selectedCategoryView = null, a.removeClass("entrySelectedCategory"), Entry.playground.hideTabs()) : (f.hasClass("folding") && (f.addClass("foldOut"), f.removeClass("folding"), Entry.playground.showTabs()), a.addClass("entrySelectedCategory"), d = this._categoryCodes[b], this._selectedCategoryView = a, a.addClass("entrySelectedCategory"), d.constructor !== Entry.Code && (d = this._categoryCodes[b] = new Entry.Code(d)), this.changeCode(d));
+    a == d ? (f.addClass("folding"), f.removeClass("foldOut"), this._selectedCategoryView = null, a.removeClass("entrySelectedCategory"), Entry.playground.hideTabs(), this.visible = !1) : (f.hasClass("folding") && (f.addClass("foldOut"), f.removeClass("folding"), Entry.playground.showTabs(), this.visible = !0), a.addClass("entrySelectedCategory"), d = this._categoryCodes[b], this._selectedCategoryView = a, a.addClass("entrySelectedCategory"), d.constructor !== Entry.Code && (d = this._categoryCodes[b] = 
+    new Entry.Code(d)), this.changeCode(d));
   };
   a._generateCategoryCodes = function(b) {
     this._categoryCodes = {};
@@ -13722,8 +13724,8 @@ Entry.Field = function() {
     this.box.set({x:b, y:a});
   };
   a.getAbsolutePos = function() {
-    var a = this._block.view, c = a.svgGroup.transform().globalMatrix, d = a.getBoard().svgDom.offset(), a = a.getContentPos();
-    return {x:c.e + d.left + this.box.x + a.x, y:c.f + d.top + this.box.y + a.y};
+    var b = this._block.view, a = b.svgGroup.transform().globalMatrix, d = b.getBoard().svgDom.offset(), b = b.getContentPos();
+    return {x:a.e + d.left + this.box.x + b.x, y:a.f + d.top + this.box.y + b.y};
   };
   a.getRelativePos = function() {
     var a = this._block.view, c = a.svgGroup.transform().globalMatrix, a = a.getContentPos(), d = this.box;
@@ -14486,10 +14488,10 @@ Entry.GlobalSvg = {};
     this.svgDom.css({left:this.left, top:this.top});
   };
   a.terminateDrag = function(a) {
-    var c = Entry.mouseCoordinate, d = a.getBoard().workspace.blockMenu;
-    a = d.offset.left;
-    var e = d.offset.top, d = d.svgDom.width();
-    return c.y > e && c.x > a + d ? this.DONE : c.y > e && c.x > a ? this.REMOVE : this.RETURN;
+    var c = Entry.mouseCoordinate;
+    a = a.getBoard().workspace.blockMenu;
+    var d = a.offset.left, e = a.offset.top, f = a.visible ? a.svgDom.width() : 0;
+    return c.y > e && c.x > d + f ? this.DONE : c.y > e && c.x > d && a.visible ? this.REMOVE : this.RETURN;
   };
 })(Entry.GlobalSvg);
 Entry.Scroller = function(a, b, c) {
