@@ -5,11 +5,13 @@ Entry.BlockDriver = function() {
 
 (function(p) {
     p.convert = function() {
+        var time = new Date();
         for (var blockType in Entry.block) {
             if (typeof Entry.block[blockType] === "function") {
                 this._convertBlock(blockType);
             }
         }
+        console.log(new Date().getTime() - time.getTime());
     };
 
     p._convertBlock = function(blockType) {

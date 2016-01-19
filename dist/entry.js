@@ -9812,9 +9812,11 @@ Entry.BlockDriver = function() {
 };
 (function(a) {
   a.convert = function() {
-    for (var b in Entry.block) {
-      "function" === typeof Entry.block[b] && this._convertBlock(b);
+    var b = new Date, a;
+    for (a in Entry.block) {
+      "function" === typeof Entry.block[a] && this._convertBlock(a);
     }
+    console.log((new Date).getTime() - b.getTime());
   };
   a._convertBlock = function(b) {
     var a = (new Entry.BlockMockup(Blockly.Blocks[b])).toJSON();
@@ -13717,8 +13719,8 @@ Entry.Field = function() {
     this.box.set({x:b, y:a});
   };
   a.getAbsolutePos = function() {
-    var b = this._block.view, a = b.svgGroup.transform().globalMatrix, d = b.getBoard().svgDom.offset(), b = b.getContentPos();
-    return {x:a.e + d.left + this.box.x + b.x, y:a.f + d.top + this.box.y + b.y};
+    var a = this._block.view, c = a.svgGroup.transform().globalMatrix, d = a.getBoard().svgDom.offset(), a = a.getContentPos();
+    return {x:c.e + d.left + this.box.x + a.x, y:c.f + d.top + this.box.y + a.y};
   };
   a.getRelativePos = function() {
     var b = this._block.view, a = b.svgGroup.transform().globalMatrix, b = b.getContentPos(), d = this.box;
@@ -14307,6 +14309,9 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
       switch(this.acceptType) {
         case "basic_boolean_field":
           this.dummyBlock.insertAfter([a(this, {type:"True"})]);
+          break;
+        case "basic_string_field":
+          this.dummyBlock.insertAfter([a(this, {type:"text"})]);
       }
     }
   };
@@ -14660,15 +14665,15 @@ Entry.skeleton.pebble_basic = {fontSize:16, morph:["prev", "next"], path:functio
 Entry.skeleton.basic_string_field = {path:function(a) {
   var b = a.contentWidth;
   a = a.contentHeight;
-  b = Math.max(0, b - 2);
+  b = Math.max(0, b - 11);
   a = Math.max(0, a + 6);
-  return "m 11,0 h %w a 10,10 0 1,1 0,%h H 11 a 10,10 0 1,1 0,-%h z".replace(/%w/gi, b).replace(/%h/gi, a);
+  return "m 10,0 h %w a 10,10 0 1,1 0,%h H 10 a 10,10 0 1,1 0,-%h z".replace(/%w/gi, b).replace(/%h/gi, a);
 }, box:function(a) {
-  return {offsetX:0, offsetY:0, width:(a ? a.contentWidth : 5) + 10, height:a ? a.contentHeight : 20, marginBottom:0};
+  return {offsetX:0, offsetY:0, width:(a ? a.contentWidth : 5) + 8, height:a ? a.contentHeight : 20, marginBottom:0};
 }, magnets:function() {
   return {};
 }, contentPos:function(a) {
-  return {x:11, y:11};
+  return {x:4, y:10};
 }};
 Entry.skeleton.basic_boolean_field = {path:function(a) {
   var b = a.contentWidth;

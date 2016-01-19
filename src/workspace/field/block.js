@@ -134,6 +134,9 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
                 case "basic_boolean_field":
                     this.dummyBlock.insertAfter([getBlock(this, {type: "True"})]);
                     break;
+                case "basic_string_field":
+                    this.dummyBlock.insertAfter([getBlock(this, {type: "text"})]);
+                    break;
             }
         } else {
         }
