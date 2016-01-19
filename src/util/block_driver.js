@@ -33,6 +33,7 @@ Entry.BlockMockup = function(blocklyInfo) {
     this.isPrev = false;
     this.isNext = false;
     this.output = false;
+    this.fieldCount = 0;
 
     this.simulate(blocklyInfo);
 };
@@ -44,10 +45,11 @@ Entry.BlockMockup = function(blocklyInfo) {
 
     p.toJSON = function() {
         var skeleton = "";
-        if (this.output === "Number")
-            skeleton = "basic_string_field";
-        else if (this.output === "Boolean")
-            skeleton = "basic_boolean_field";
+        if (this.output)
+            if (this.output === "Boolean")
+                skeleton = "basic_boolean_field";
+            else
+                skeleton = "basic_string_field";
         else if (!this.isPrev && this.isNext)
             skeleton = "basic_event";
         else if (this.statements.length)
@@ -69,6 +71,17 @@ Entry.BlockMockup = function(blocklyInfo) {
 
     p.appendValueInput = function(key) {
         // field block
+        this.params.push({
+            type: "Block",
+            accept: "basic_string_field",
+            value: [
+                {
+                    type: "text",
+                    params: [10]
+                }
+            ]
+        });
+        this.templates.push(this.getFieldCount());
         return this;
     };
 
@@ -97,10 +110,15 @@ Entry.BlockMockup = function(blocklyInfo) {
                     img: field.src_,
                     size: 24
                 });
-                this.templates.push("%1");
-            } else if (field instanceof Blockly.FieldDropDown) {
-            } else if (field instanceof Blockly.FieldDropDownDynamic) {
+                this.templates.push(this.getFieldCount());
+            } else if (field instanceof Blockly.FieldDropdown) {
+            } else if (field instanceof Blockly.FieldDropdownDynamic) {
             } else if (field instanceof Blockly.FieldTextInput) {
+                this.params.push({
+                    type: "TextInput",
+                    value: 10
+                });
+                this.templates.push(this.getFieldCount());
             } else if (field instanceof Blockly.FieldAngle) {
             } else {
             }
@@ -131,6 +149,11 @@ Entry.BlockMockup = function(blocklyInfo) {
 
     p.setEditable = function(bool) {
          // Not implemented
+    };
+
+    p.getFieldCount = function() {
+        this.fieldCount++;
+        return "%" + this.fieldCount;
     };
 
 })(Entry.BlockMockup.prototype);

@@ -253,8 +253,8 @@ Entry.skeleton.basic_string_field = {
             .replace(/%h/gi, height);
     },
     box: function(block) {
-        var width = block ? block.contentWidth : 150;
-        var height = block.contentHeight;
+        var width = block ? block.contentWidth : 5;
+        var height = block ? block.contentHeight : 20;
         return {
             offsetX: 0, offsetY: 0,
             width: width + 10,

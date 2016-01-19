@@ -303,10 +303,19 @@ Entry.Playground.prototype.generateCodeView = function(codeView) {
     var code = new Entry.Code([
         [
             {
-                type: "when_run_button_click"
+                type: "when_run_button_click",
+                x: 40,
+                y: 40
             },
             {
-                type: "repeat_basic"
+                type: "repeat_basic",
+                statements: [
+                    [
+                        {
+                            type: "move_direction"
+                        }
+                    ]
+                ]
             },
             {
                 type: "stop_repeat"

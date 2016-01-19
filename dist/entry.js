@@ -9828,6 +9828,7 @@ Entry.BlockMockup = function(a) {
   this.statements = [];
   this.color = "";
   this.output = this.isNext = this.isPrev = !1;
+  this.fieldCount = 0;
   this.simulate(a);
 };
 (function(a) {
@@ -9835,7 +9836,7 @@ Entry.BlockMockup = function(a) {
     b.init.call(this);
   };
   a.toJSON = function() {
-    var b = "", b = "Number" === this.output ? "basic_string_field" : "Boolean" === this.output ? "basic_boolean_field" : !this.isPrev && this.isNext ? "basic_event" : this.statements.length ? "basic_loop" : "basic";
+    var b = "", b = this.output ? "Boolean" === this.output ? "basic_boolean_field" : "basic_string_field" : !this.isPrev && this.isNext ? "basic_event" : this.statements.length ? "basic_loop" : "basic";
     return {color:this.color, skeleton:b, statements:this.statements, template:this.templates.filter(function(b) {
       return "string" === typeof b;
     }).join(" "), params:this.params};
@@ -9844,6 +9845,8 @@ Entry.BlockMockup = function(a) {
     return this;
   };
   a.appendValueInput = function(b) {
+    this.params.push({type:"Block", accept:"basic_string_field", value:[{type:"text", params:[10]}]});
+    this.templates.push(this.getFieldCount());
     return this;
   };
   a.appendStatementInput = function(b) {
@@ -9852,7 +9855,7 @@ Entry.BlockMockup = function(a) {
   a.setCheck = function(b) {
   };
   a.appendField = function(b) {
-    "string" === typeof b && 0 < b.length ? this.templates.push(b) : b instanceof Blockly.FieldIcon && (this.params.push({type:"Image", img:b.src_, size:24}), this.templates.push("%1"));
+    "string" === typeof b && 0 < b.length ? this.templates.push(b) : b instanceof Blockly.FieldIcon ? (this.params.push({type:"Image", img:b.src_, size:24}), this.templates.push(this.getFieldCount())) : !(b instanceof Blockly.FieldDropdown || b instanceof Blockly.FieldDropdownDynamic) && b instanceof Blockly.FieldTextInput && (this.params.push({type:"TextInput", value:10}), this.templates.push(this.getFieldCount()));
     return this;
   };
   a.setColour = function(b) {
@@ -9870,6 +9873,10 @@ Entry.BlockMockup = function(a) {
     this.isNext = b;
   };
   a.setEditable = function(b) {
+  };
+  a.getFieldCount = function() {
+    this.fieldCount++;
+    return "%" + this.fieldCount;
   };
 })(Entry.BlockMockup.prototype);
 Entry.ContextMenu = {};
@@ -13707,8 +13714,8 @@ Entry.Field = function() {
     return {x:a.e + d.left + this.box.x + b.x, y:a.f + d.top + this.box.y + b.y};
   };
   a.getRelativePos = function() {
-    var a = this._block.view, c = a.svgGroup.transform().globalMatrix, a = a.getContentPos(), d = this.box;
-    return {x:c.e + d.x + a.x, y:c.f + d.y + a.y};
+    var b = this._block.view, a = b.svgGroup.transform().globalMatrix, b = b.getContentPos(), d = this.box;
+    return {x:a.e + d.x + b.x, y:a.f + d.y + b.y};
   };
   a.truncate = function() {
     var a = String(this.getValue()), c = this.TEXT_LIMIT_LENGTH, d = a.substring(0, c);
@@ -14650,7 +14657,7 @@ Entry.skeleton.basic_string_field = {path:function(a) {
   a = Math.max(0, a + 6);
   return "m 11,0 h %w a 10,10 0 1,1 0,%h H 11 a 10,10 0 1,1 0,-%h z".replace(/%w/gi, b).replace(/%h/gi, a);
 }, box:function(a) {
-  return {offsetX:0, offsetY:0, width:(a ? a.contentWidth : 150) + 10, height:a.contentHeight, marginBottom:0};
+  return {offsetX:0, offsetY:0, width:(a ? a.contentWidth : 5) + 10, height:a ? a.contentHeight : 20, marginBottom:0};
 }, magnets:function() {
   return {previous:{}, next:{x:0, y:31}};
 }, contentPos:function(a) {
@@ -15466,16 +15473,10 @@ Entry.Playground.prototype.generateCodeView = function(a) {
   a = Entry.Dom(a);
   b = Entry.Dom("div", {parent:a, id:"entryWorkspaceBoard", class:"entryWorkspaceBoard"});
   a = Entry.Dom("div", {parent:a, id:"entryWorkspaceBlockMenu", class:"entryWorkspaceBlockMenu"});
-<<<<<<< HEAD
   this.blockDriver = new Entry.BlockDriver;
   this.blockDriver.convert();
-  this.mainWorkspace = new Entry.Workspace({blockMenu:{dom:a}, board:{dom:b}});
-  a = new Entry.Code([[{type:"when_run_button_click"}, {type:"repeat_basic"}, {type:"stop_repeat"}]]);
-=======
-  (new Entry.BlockDriver).convert();
   this.mainWorkspace = new Entry.Workspace({blockMenu:{dom:a, align:"LEFT", categoryData:EntryStatic.getAllBlocks()}, board:{dom:b}});
-  a = new Entry.Code([[{type:"stop_repeat"}]]);
->>>>>>> origin/new/entry-block
+  a = new Entry.Code([[{type:"when_run_button_click", x:40, y:40}, {type:"repeat_basic", statements:[[{type:"move_direction"}]]}, {type:"stop_repeat"}]]);
   this.mainWorkspace.changeBoardCode(a);
 };
 Entry.Playground.prototype.generatePictureView = function(a) {
