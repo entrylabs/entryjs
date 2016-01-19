@@ -12974,7 +12974,8 @@ Entry.BlockMenu = function(a, b, c) {
     return console.error("Snap library is required");
   }
   this.view = a;
-  this._categoryCodes = [_.range(20)];
+  this._categoryCodes = null;
+  this._categoryElems = {};
   this._selectedCategoryView = null;
   this._generateView(c);
   this.offset = this.svgDom.offset();
@@ -12987,6 +12988,7 @@ Entry.BlockMenu = function(a, b, c) {
   this.svgBlockGroup = this.svgGroup.group();
   this.svgBlockGroup.board = this;
   this.changeEvent = new Entry.Event(this);
+  c && (this._generateCategoryCodes(c), this.setMenu(Object.keys(this._categoryCodes)[0]));
   Entry.documentMousedown && Entry.documentMousedown.attach(this, this.setSelectedBlock);
 };
 (function(a) {
@@ -12997,11 +12999,12 @@ Entry.BlockMenu = function(a, b, c) {
       for (var e = Entry.Dom("ul", {class:"entryCategoryListWorkspace", parent:a}), f = 0;f < b.length;f++) {
         var g = b[f].category;
         (function(b, a) {
-          b.text(Lang.Blocks[g.toUpperCase()]);
-          b.bindOnClick(function(c) {
-            d._setCategory(b, a);
+          b.text(Lang.Blocks[a.toUpperCase()]);
+          d._categoryElems[a] = b;
+          b.bindOnClick(function(b) {
+            d.setMenu(a);
           });
-        })(Entry.Dom("li", {id:"entryCategory" + g, class:"entryCategoryElementWorkspace", parent:e}), f);
+        })(Entry.Dom("li", {id:"entryCategory" + g, class:"entryCategoryElementWorkspace", parent:e}), g);
       }
     }
     this.svgDom = Entry.Dom($('<svg id="blockMenu"version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'), {parent:a});
@@ -13109,11 +13112,19 @@ Entry.BlockMenu = function(a, b, c) {
     this._svgWidth = this.svgDom.width();
     this._updateSplitters();
   };
-  a._setCategory = function(b, a) {
-    var d = this._selectedCategoryView;
+  a.setMenu = function(b) {
+    var a = this._categoryCodes[b], d = this._selectedCategoryView;
     d && d.removeClass("entrySelectedCategory");
-    b.addClass("entrySelectedCategory");
-    this._selectedCategoryView = b;
+    d = this._categoryElems[b];
+    d.addClass("entrySelectedCategory");
+    this._selectedCategoryView = d;
+    a.constructor !== Entry.Code && (this._categoryCodes[b] = new Entry.Code(a));
+  };
+  a._generateCategoryCodes = function(b) {
+    this._categoryCodes = {};
+    for (var a = 0;a < b.length;a++) {
+      this._categoryCodes[b[a].category] = [];
+    }
   };
 })(Entry.BlockMenu.prototype);
 Entry.BlockView = function(a, b, c) {
@@ -13679,16 +13690,16 @@ Entry.Field = function() {
     this.box.set({x:b, y:a});
   };
   a.getAbsolutePos = function() {
-    var b = this._block.view, a = b.svgGroup.transform().globalMatrix, d = b.getBoard().svgDom.offset(), b = b.getContentPos();
-    return {x:a.e + d.left + this.box.x + b.x, y:a.f + d.top + this.box.y + b.y};
+    var a = this._block.view, c = a.svgGroup.transform().globalMatrix, d = a.getBoard().svgDom.offset(), a = a.getContentPos();
+    return {x:c.e + d.left + this.box.x + a.x, y:c.f + d.top + this.box.y + a.y};
   };
   a.getRelativePos = function() {
-    var b = this._block.view, a = b.svgGroup.transform().globalMatrix, b = b.getContentPos(), d = this.box;
-    return {x:a.e + d.x + b.x, y:a.f + d.y + b.y};
+    var a = this._block.view, c = a.svgGroup.transform().globalMatrix, a = a.getContentPos(), d = this.box;
+    return {x:c.e + d.x + a.x, y:c.f + d.y + a.y};
   };
   a.truncate = function() {
-    var b = String(this.getValue()), a = this.TEXT_LIMIT_LENGTH, d = b.substring(0, a);
-    b.length > a && (d += "...");
+    var a = String(this.getValue()), c = this.TEXT_LIMIT_LENGTH, d = a.substring(0, c);
+    a.length > c && (d += "...");
     return d;
   };
   a.appendSvgOptionGroup = function() {
@@ -15997,8 +16008,8 @@ Entry.Playground.prototype.initializeResizeHandle = function(a) {
   });
 };
 Entry.Playground.prototype.reloadPlayground = function() {
-  var a, b;
-  document.getElementsByClassName("entrySelectedCategory")[0] && (a = document.getElementsByClassName("entrySelectedCategory")[0], b = a.getAttribute("id").substring(13), a.removeClass("entrySelectedCategory"), Entry.playground.selectMenu(b));
+  var a;
+  document.getElementsByClassName("entrySelectedCategory")[0] && (a = document.getElementsByClassName("entrySelectedCategory")[0], a = a.getAttribute("id").substring(13), Entry.playground.selectMenu(a));
 };
 Entry.Playground.prototype.flushPlayground = function() {
   this.object = null;

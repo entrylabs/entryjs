@@ -25,7 +25,8 @@ Entry.BlockMenu = function(dom, align, categoryData) {
 
     this.view = dom;
 
-    this._categoryCodes = [_.range(20)];
+    this._categoryCodes = null;
+    this._categoryElems = {};
     this._selectedCategoryView = null;
     this._generateView(categoryData);
 
@@ -48,6 +49,11 @@ Entry.BlockMenu = function(dom, align, categoryData) {
     //TODO scroller should be attached
     //this.scroller = new Entry.Scroller(this, false, true);
     //
+
+    if (categoryData) {
+        this._generateCategoryCodes(categoryData);
+        this.setMenu(Object.keys(this._categoryCodes)[0]);
+    }
 
     if (Entry.documentMousedown)
         Entry.documentMousedown.attach(this, this.setSelectedBlock);
@@ -79,10 +85,11 @@ Entry.BlockMenu = function(dom, align, categoryData) {
                     parent: categoryCol
                 });
 
-                (function(elem, index){
+                (function(elem, name){
                     elem.text(Lang.Blocks[name.toUpperCase()]);
-                    elem.bindOnClick(function(e){that._setCategory(elem, index);});
-                })(element, i);
+                    that._categoryElems[name] = elem;
+                    elem.bindOnClick(function(e){that.setMenu(name);});
+                })(element, name);
             }
         }
 
@@ -92,7 +99,6 @@ Entry.BlockMenu = function(dom, align, categoryData) {
         );
 
         if (!categoryData) this.svgDom.attr({class:'full'});
-
     };
 
     p.changeCode = function(code) {
@@ -254,16 +260,29 @@ Entry.BlockMenu = function(dom, align, categoryData) {
         this._updateSplitters();
     };
 
-    p._setCategory = function(elem, index) {
-        var code = this._categoryCodes[index];
+    p.setMenu = function(name) {
+        var code = this._categoryCodes[name];
         var className = 'entrySelectedCategory';
 
         var oldView = this._selectedCategoryView;
         if (oldView) oldView.removeClass(className);
 
+        var elem = this._categoryElems[name];
         elem.addClass(className);
         this._selectedCategoryView = elem;
+        if (code.constructor !== Entry.Code)
+            code = this._categoryCodes[name] = new Entry.Code(code);
 
-        //this.changeCode(this._categoryCodes[index]);
+        //this.changeCode(code);
+    };
+
+    p._generateCategoryCodes = function(categoryData) {
+        this._categoryCodes = {};
+        for (var i=0; i<categoryData.length; i++) {
+            var datum = categoryData[i];
+            var codesJSON = [];
+            //TODO blockJSON by blockName
+            this._categoryCodes[datum.category] = codesJSON;
+        }
     };
 })(Entry.BlockMenu.prototype);
