@@ -13141,12 +13141,16 @@ Entry.BlockMenu = function(a, b, c) {
     Entry.bindAnimationCallbackOnce(f, function() {
       e.scroller.resizeScrollBar.call(e.scroller);
     });
-    a == d ? (f.addClass("folding"), f.removeClass("foldOut"), this._selectedCategoryView = null, a.removeClass("entrySelectedCategory"), Entry.playground.hideTabs()) : (f.hasClass("folding") && (f.addClass("foldOut"), f.removeClass("folding"), Entry.playground.showTabs()), a.addClass("entrySelectedCategory"), d = this._categoryCodes[b], this._selectedCategoryView = a, a.addClass("entrySelectedCategory"), d.constructor !== Entry.Code && (d = this._categoryCodes[b] = new Entry.Code(d)));
+    a == d ? (f.addClass("folding"), f.removeClass("foldOut"), this._selectedCategoryView = null, a.removeClass("entrySelectedCategory"), Entry.playground.hideTabs()) : (f.hasClass("folding") && (f.addClass("foldOut"), f.removeClass("folding"), Entry.playground.showTabs()), a.addClass("entrySelectedCategory"), d = this._categoryCodes[b], this._selectedCategoryView = a, a.addClass("entrySelectedCategory"), d.constructor !== Entry.Code && (d = this._categoryCodes[b] = new Entry.Code(d)), this.changeCode(d));
   };
   a._generateCategoryCodes = function(b) {
     this._categoryCodes = {};
     for (var a = 0;a < b.length;a++) {
-      this._categoryCodes[b[a].category] = [];
+      var d = b[a], e = [];
+      d.blocks.forEach(function(b) {
+        e.push([{type:b}]);
+      });
+      this._categoryCodes[d.category] = e;
     }
   };
 })(Entry.BlockMenu.prototype);
@@ -13717,8 +13721,8 @@ Entry.Field = function() {
     return {x:a.e + d.left + this.box.x + b.x, y:a.f + d.top + this.box.y + b.y};
   };
   a.getRelativePos = function() {
-    var a = this._block.view, c = a.svgGroup.transform().globalMatrix, a = a.getContentPos(), d = this.box;
-    return {x:c.e + d.x + a.x, y:c.f + d.y + a.y};
+    var b = this._block.view, a = b.svgGroup.transform().globalMatrix, b = b.getContentPos(), d = this.box;
+    return {x:a.e + d.x + b.x, y:a.f + d.y + b.y};
   };
   a.truncate = function() {
     var a = String(this.getValue()), c = this.TEXT_LIMIT_LENGTH, d = a.substring(0, c);

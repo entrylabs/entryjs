@@ -296,15 +296,21 @@ Entry.BlockMenu = function(dom, align, categoryData) {
         if (code.constructor !== Entry.Code)
             code = this._categoryCodes[name] = new Entry.Code(code);
 
-        //this.changeCode(code);
+        this.changeCode(code);
     };
 
     p._generateCategoryCodes = function(categoryData) {
         this._categoryCodes = {};
         for (var i=0; i<categoryData.length; i++) {
             var datum = categoryData[i];
+            var blocks = datum.blocks;
             var codesJSON = [];
             //TODO blockJSON by blockName
+            blocks.forEach(function(b){
+                codesJSON.push([{
+                    type:b
+                }]);
+            });
             this._categoryCodes[datum.category] = codesJSON;
         }
     };
