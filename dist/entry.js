@@ -90,7 +90,7 @@ var Entry = {block:{}, TEXT_ALIGN_CENTER:0, TEXT_ALIGN_LEFT:1, TEXT_ALIGN_RIGHT:
     Entry.playground.variableViewWrapper_.style.width = b + "px";
     this.interfaceState = a;
   }
-  Blockly.fireUiEvent(window, "resize");
+  Entry.windowResized.notify();
 }, getUpTime:function() {
   return (new Date).getTime() - this.startTime;
 }, addActivity:function(a) {
@@ -13686,12 +13686,12 @@ Entry.Executor = function(a) {
     void 0 === this.scope.block._schema.func.call(this.scope) && (this.scope = {block:this.scope.block.next, executor:this});
     null === this.scope.block && this._callStack.length && (this.scope = this._callStack.pop());
   };
-  a.stepInto = function(a) {
-    a instanceof Entry.Thread || console.error("Must step in to thread");
+  a.stepInto = function(b) {
+    b instanceof Entry.Thread || console.error("Must step in to thread");
     this._callStack.push(this.scope);
-    a = a.getFirstBlock();
-    a.isDummy && (a = a.next);
-    this.scope = {block:a, executor:this};
+    b = b.getFirstBlock();
+    b.isDummy && (b = b.next);
+    this.scope = {block:b, executor:this};
   };
 })(Entry.Executor.prototype);
 Entry.Field = function() {
@@ -13705,20 +13705,20 @@ Entry.Field = function() {
     this.documentDownEvent && (Entry.documentMousedown.detach(this.documentDownEvent), delete this.documentDownEvent);
     this.optionGroup && (this.optionGroup.remove(), delete this.optionGroup);
   };
-  a.align = function(a, c, d) {
+  a.align = function(b, a, d) {
     var e = this.svgGroup;
-    this._position && (this._position.x && (a = this._position.x), this._position.y && (c = this._position.y));
-    var f = "t" + a + " " + c;
+    this._position && (this._position.x && (b = this._position.x), this._position.y && (a = this._position.y));
+    var f = "t" + b + " " + a;
     void 0 === d || d ? e.animate({transform:f}, 300, mina.easeinout) : e.attr({transform:f});
-    this.box.set({x:a, y:c});
+    this.box.set({x:b, y:a});
   };
   a.getAbsolutePos = function() {
     var b = this._block.view, a = b.svgGroup.transform().globalMatrix, d = b.getBoard().svgDom.offset(), b = b.getContentPos();
     return {x:a.e + d.left + this.box.x + b.x, y:a.f + d.top + this.box.y + b.y};
   };
   a.getRelativePos = function() {
-    var b = this._block.view, a = b.svgGroup.transform().globalMatrix, b = b.getContentPos(), d = this.box;
-    return {x:a.e + d.x + b.x, y:a.f + d.y + b.y};
+    var a = this._block.view, c = a.svgGroup.transform().globalMatrix, a = a.getContentPos(), d = this.box;
+    return {x:c.e + d.x + a.x, y:c.f + d.y + a.y};
   };
   a.truncate = function() {
     var a = String(this.getValue()), c = this.TEXT_LIMIT_LENGTH, d = a.substring(0, c);
@@ -15083,11 +15083,11 @@ Entry.FieldTrashcan = function(a) {
 })(Entry.FieldTrashcan.prototype);
 Entry.Board = function(a) {
   function b(a) {
+    c.offset = c.svgDom.offset();
     var b = $(window);
     a = b.scrollTop();
     var b = b.scrollLeft(), f = c.offset;
     c.relativeOffset = {top:f.top - a, left:f.left - b};
-    console.log("update");
   }
   a = "string" === typeof a ? $("#" + a) : $(a);
   if ("DIV" !== a.prop("tagName")) {
@@ -15101,7 +15101,6 @@ Entry.Board = function(a) {
   this.wrapper = Entry.Dom("div", {parent:a, class:"entryBoardWrapper"});
   this.svgDom = Entry.Dom($('<svg id="play" class="entryBoard" width="100%" height="100%"version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'), {parent:this.wrapper});
   this.offset = this.svgDom.offset();
-  this.offset.top = 130;
   this.offset.left -= $(window).scrollLeft();
   this.relativeOffset = this.offset;
   this.visible = !0;
@@ -15480,7 +15479,7 @@ Entry.Playground.prototype.generateCodeView = function(a) {
   this.blockDriver = new Entry.BlockDriver;
   this.blockDriver.convert();
   this.mainWorkspace = new Entry.Workspace({blockMenu:{dom:a, align:"LEFT", categoryData:EntryStatic.getAllBlocks()}, board:{dom:b}});
-  a = new Entry.Code([[{type:"when_run_button_click", x:40, y:40}, {type:"repeat_basic", statements:[[{type:"move_direction"}]]}, {type:"stop_repeat"}]]);
+  a = new Entry.Code([[{type:"when_run_button_click", x:40, y:240}, {type:"repeat_basic", statements:[[{type:"move_direction"}]]}, {type:"stop_repeat"}], [{type:"when_run_button_click", x:40, y:40}, {type:"repeat_basic", statements:[[{type:"move_direction"}]]}, {type:"stop_repeat"}]]);
   this.mainWorkspace.changeBoardCode(a);
 };
 Entry.Playground.prototype.generatePictureView = function(a) {

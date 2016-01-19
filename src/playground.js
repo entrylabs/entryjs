@@ -305,6 +305,26 @@ Entry.Playground.prototype.generateCodeView = function(codeView) {
             {
                 type: "when_run_button_click",
                 x: 40,
+                y: 240
+            },
+            {
+                type: "repeat_basic",
+                statements: [
+                    [
+                        {
+                            type: "move_direction"
+                        }
+                    ]
+                ]
+            },
+            {
+                type: "stop_repeat"
+            }
+        ],
+        [
+            {
+                type: "when_run_button_click",
+                x: 40,
                 y: 40
             },
             {

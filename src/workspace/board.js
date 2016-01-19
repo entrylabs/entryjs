@@ -44,7 +44,6 @@ Entry.Board = function(dom) {
 
     var zoom = document.documentElement.clientWidth / window.innerWidth;
     this.offset = this.svgDom.offset();
-    this.offset.top = 130;
     this.offset.left -= $(window).scrollLeft();
     this.relativeOffset = this.offset;
 
@@ -53,6 +52,7 @@ Entry.Board = function(dom) {
     $(window).scroll(updateOffset);
     Entry.windowResized.attach(this, updateOffset);
     function updateOffset(e) {
+        that.offset = that.svgDom.offset();
         var w = $(window),
             scrollTop = w.scrollTop(),
             scrollLeft = w.scrollLeft(),
@@ -62,7 +62,6 @@ Entry.Board = function(dom) {
             top: offset.top - scrollTop,
             left: offset.left - scrollLeft
         };
-        console.log('update');
     }
 
     this.snap = Snap('#play');

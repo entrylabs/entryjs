@@ -284,7 +284,7 @@ Entry.resizeElement = function(interfaceModel) {
 
         this.interfaceState = interfaceModel;
     }
-    Blockly.fireUiEvent(window, 'resize');
+    Entry.windowResized.notify();
 };
 
 /**
