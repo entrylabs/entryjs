@@ -84,7 +84,8 @@ var Entry = {block:{}, TEXT_ALIGN_CENTER:0, TEXT_ALIGN_LEFT:1, TEXT_ALIGN_RIGHT:
     }
     (b = a.menuWidth) ? 244 > b ? b = 244 : 400 < b && (b = 400) : b = 264;
     a.menuWidth = b;
-    $(".entryWorkspaceBlockMenu>svg").css({width:b - 64 + "px"});
+    $(".blockMenuContainer").css({width:b - 64 + "px"});
+    $(".blockMenuContainer>svg").css({width:b - 64 + "px"});
     $(".entryWorkspaceBoard").css({left:b + "px"});
     Entry.playground.resizeHandle_.style.left = b + "px";
     Entry.playground.variableViewWrapper_.style.width = b + "px";
@@ -13035,8 +13036,14 @@ Entry.BlockMenu = function(a, b, c) {
         })(Entry.Dom("li", {id:"entryCategory" + g, class:"entryCategoryElementWorkspace", parent:e}), g);
       }
     }
-    this.svgDom = Entry.Dom($('<svg id="blockMenu"version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'), {parent:a});
-    b || this.svgDom.attr({class:"full"});
+    this.blockMenuContainer = Entry.Dom("div", {"class":"blockMenuContainer", parent:a});
+    this.svgDom = Entry.Dom($('<svg id="blockMenu"version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'), {parent:this.blockMenuContainer});
+    this.svgDom.mouseenter(function(b) {
+      Entry.playground.resizing || (Entry.playground.focusBlockMenu = !0, b = d.expandWidth + 64, b > Entry.interfaceState.menuWidth && (this.widthBackup = Entry.interfaceState.menuWidth - 64, $(".blockMenuContainer>svg").stop().animate({width:b - 64}, 200)));
+    });
+    this.svgDom.mouseleave(function(b) {
+      Entry.playground.resizing || (b = this.widthBackup, console.log(b), b && $(".blockMenuContainer>svg").stop().animate({width:b}, 200), delete this.widthBackup, delete Entry.playground.focusBlockMenu);
+    });
   };
   a.changeCode = function(b) {
     if (!(b instanceof Entry.Code)) {
@@ -13068,6 +13075,7 @@ Entry.BlockMenu = function(a, b, c) {
       a += k.height + 15;
     }
     this.changeEvent.notify();
+    this.expandWidth = this.svgGroup.getBBox().width + d;
   };
   a.cloneToBoard = function(b) {
     if (null !== this.dragBlock && !this._boardBlockView) {
@@ -13729,12 +13737,12 @@ Entry.Field = function() {
     return {x:a.e + d.left + this.box.x + b.x, y:a.f + d.top + this.box.y + b.y};
   };
   a.getRelativePos = function() {
-    var a = this._block.view, c = a.svgGroup.transform().globalMatrix, a = a.getContentPos(), d = this.box;
-    return {x:c.e + d.x + a.x, y:c.f + d.y + a.y};
+    var b = this._block.view, a = b.svgGroup.transform().globalMatrix, b = b.getContentPos(), d = this.box;
+    return {x:a.e + d.x + b.x, y:a.f + d.y + b.y};
   };
   a.truncate = function() {
-    var a = String(this.getValue()), c = this.TEXT_LIMIT_LENGTH, d = a.substring(0, c);
-    a.length > c && (d += "...");
+    var b = String(this.getValue()), a = this.TEXT_LIMIT_LENGTH, d = b.substring(0, a);
+    b.length > a && (d += "...");
     return d;
   };
   a.appendSvgOptionGroup = function() {
@@ -13743,9 +13751,9 @@ Entry.Field = function() {
   a.getValue = function() {
     return this._block.params[this._index];
   };
-  a.setValue = function(a) {
-    this.value = a;
-    this._block.params[this._index] = a;
+  a.setValue = function(b) {
+    this.value = b;
+    this._block.params[this._index] = b;
   };
 })(Entry.Field.prototype);
 Entry.FieldAngle = function(a, b, c) {
@@ -13760,20 +13768,20 @@ Entry.FieldAngle = function(a, b, c) {
 };
 Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
 (function(a) {
-  a.renderStart = function(a) {
-    var c = this;
-    this.svgGroup = a.contentSvgGroup.group();
+  a.renderStart = function(b) {
+    var a = this;
+    this.svgGroup = b.contentSvgGroup.group();
     this.svgGroup.attr({class:"entry-input-field"});
-    this.textElement = this.svgGroup.text(4, 4, c.getText());
+    this.textElement = this.svgGroup.text(4, 4, a.getText());
     this.textElement.attr({"font-size":"9pt"});
-    a = this.getTextWidth();
+    b = this.getTextWidth();
     var d = this.position && this.position.y ? this.position.y : 0;
-    this._header = this.svgGroup.rect(0, d - 8, a, 16, 3).attr({fill:"#fff", "fill-opacity":.4});
+    this._header = this.svgGroup.rect(0, d - 8, b, 16, 3).attr({fill:"#fff", "fill-opacity":.4});
     this.svgGroup.append(this.textElement);
-    this.svgGroup.mouseup(function(a) {
-      c._block.view.dragMode == Entry.DRAG_MODE_MOUSEDOWN && c.renderOptions();
+    this.svgGroup.mouseup(function(b) {
+      a._block.view.dragMode == Entry.DRAG_MODE_MOUSEDOWN && a.renderOptions();
     });
-    this.box.set({x:0, y:0, width:a, height:16});
+    this.box.set({x:0, y:0, width:b, height:16});
   };
   a.renderOptions = function() {
     var a = this;

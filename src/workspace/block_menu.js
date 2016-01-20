@@ -94,12 +94,42 @@ Entry.BlockMenu = function(dom, align, categoryData) {
             }
         }
 
+        this.blockMenuContainer = Entry.Dom('div', {
+            'class':'blockMenuContainer',
+            'parent':parent
+        });
+
         this.svgDom = Entry.Dom(
             $('<svg id="blockMenu"' + 'version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'),
-            { parent: parent }
+            { parent: this.blockMenuContainer }
         );
 
-        if (!categoryData) this.svgDom.attr({class:'full'});
+        //IN PROGRESS
+        this.svgDom.mouseenter(function(e) {
+            if (Entry.playground.resizing) return;
+            Entry.playground.focusBlockMenu = true;
+            var width = that.expandWidth + 64;
+            if (width > Entry.interfaceState.menuWidth) {
+                this.widthBackup = Entry.interfaceState.menuWidth - 64;
+                $('.blockMenuContainer>svg').stop().animate({
+                    width: width - 64
+                }, 200);
+            }
+        });
+
+        this.svgDom.mouseleave(function(e) {
+            if (Entry.playground.resizing) return;
+
+            var widthBackup = this.widthBackup;
+            console.log(widthBackup);
+            if (widthBackup)
+                $('.blockMenuContainer>svg').stop().animate({
+                    width: widthBackup
+                }, 200);
+            delete this.widthBackup;
+            delete Entry.playground.focusBlockMenu;
+        });
+
     };
 
     p.changeCode = function(code) {
@@ -146,8 +176,11 @@ Entry.BlockMenu = function(dom, align, categoryData) {
 
             blockView._moveTo(hPadding, marginFromTop, false);
             marginFromTop += blockView.height + vPadding;
+
         }
+
         this.changeEvent.notify();
+        this.expandWidth = this.svgGroup.getBBox().width + hPadding;
     };
 
     p.cloneToBoard = function(e) {

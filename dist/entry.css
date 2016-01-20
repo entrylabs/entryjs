@@ -4535,13 +4535,14 @@ span.CodeMirror-selectedtext {
   margin: 0;
   padding: 0;
 }
-#blockMenu {
+.blockMenuContainer {
   display: inline-block;
   vertical-align: top;
   width: 186px;
   height: 100%;
 }
-#blockMenu.full {
+#blockMenu {
+  height: 100%;
   width: 100%;
 }
 /*.entryCategoryListWorkspace {*/
