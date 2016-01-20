@@ -555,7 +555,7 @@ Entry.BlockView = function(block, board, mode) {
 
         if (targetType.previous) targetType = 'nextMagnet';
         else if (targetType == 'STRING') targetType = 'stringMagnet';
-        else if (targetType == 'BOOLEAN') targetType = 'nextMagnet';
+        else if (targetType == 'BOOLEAN') targetType = 'booleanMagnet';
         else targetType = null;
 
         if (!targetType) return;

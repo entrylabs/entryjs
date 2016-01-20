@@ -13441,7 +13441,7 @@ Entry.BlockView = function(a, b, c) {
         return null;
       }
       b = Snap.getElementByPoint(a, d + e.top - 1);
-      if (null !== b && (a = this._skeleton.magnets(), a = a.previous ? "nextMagnet" : "STRING" == a ? "stringMagnet" : "BOOLEAN" == a ? "nextMagnet" : null)) {
+      if (null !== b && (a = this._skeleton.magnets(), a = a.previous ? "nextMagnet" : "STRING" == a ? "stringMagnet" : "BOOLEAN" == a ? "booleanMagnet" : null)) {
         for (d = b[a];!d && b.parent() && "svg" !== b.type && "BODY" !== b.type;) {
           b = b.parent(), d = b[a];
         }
