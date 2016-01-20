@@ -204,3 +204,12 @@ Entry.FieldDummyBlock = function(statementField, blockView) {
 Entry.FieldDummyBlock.PRIMITIVE_TYPES = ['True'];
 
 Entry.FieldDummyBlock.prototype = Entry.DummyBlock.prototype;
+
+Entry.FieldDummyBlock.prototype.schema = {
+        x: 0,
+        y: 0,
+        width: 0,
+        height: 0,
+        animating: false,
+        magneting: false
+};

@@ -13788,45 +13788,45 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
     this.box.set({x:0, y:0, width:b, height:16});
   };
   a.renderOptions = function() {
-    var a = this;
+    var b = this;
     this.destroyOption();
     this.documentDownEvent = Entry.documentMousedown.attach(this, function() {
       Entry.documentMousedown.detach(this.documentDownEvent);
-      a.applyValue();
-      a.destroyOption();
+      b.applyValue();
+      b.destroyOption();
     });
     this.optionGroup = Entry.Dom("input", {class:"entry-widget-input-field", parent:$("body")});
     this.optionGroup.val(this.value);
     this.optionGroup.on("mousedown", function(a) {
       a.stopPropagation();
     });
-    this.optionGroup.on("keyup", function(c) {
-      var d = c.keyCode || c.which;
-      a.applyValue(c);
-      -1 < [13, 27].indexOf(d) && a.destroyOption();
+    this.optionGroup.on("keyup", function(a) {
+      var c = a.keyCode || a.which;
+      b.applyValue(a);
+      -1 < [13, 27].indexOf(c) && b.destroyOption();
     });
-    var c = this.getAbsolutePos();
-    c.y -= this.box.height / 2;
-    this.optionGroup.css({height:16, left:c.x, top:c.y, width:a.box.width});
+    var a = this.getAbsolutePos();
+    a.y -= this.box.height / 2;
+    this.optionGroup.css({height:16, left:a.x, top:a.y, width:b.box.width});
     this.optionGroup.select();
     this.svgOptionGroup = this.appendSvgOptionGroup();
     this.svgOptionGroup.circle(0, 0, 49).attr({class:"entry-field-angle-circle"});
     this._dividerGroup = this.svgOptionGroup.group();
-    for (c = 0;360 > c;c += 15) {
-      this._dividerGroup.line(49, 0, 49 - (0 === c % 45 ? 10 : 5), 0).attr({transform:"rotate(" + c + ", 0, 0)", class:"entry-angle-divider"});
+    for (a = 0;360 > a;a += 15) {
+      this._dividerGroup.line(49, 0, 49 - (0 === a % 45 ? 10 : 5), 0).attr({transform:"rotate(" + a + ", 0, 0)", class:"entry-angle-divider"});
     }
-    c = this.getRelativePos();
-    c.x += this.box.width / 2;
-    c.y = c.y + this.box.height / 2 + 49 + 1;
-    this.svgOptionGroup.attr({class:"entry-field-angle", transform:"t" + c.x + " " + c.y});
-    var c = a.getAbsolutePos(), d = [c.x + a.box.width / 2, c.y + a.box.height / 2 + 1];
-    this.svgOptionGroup.mousemove(function(c) {
-      a.optionGroup.val(a.modValue(function(a, b) {
+    a = this.getRelativePos();
+    a.x += this.box.width / 2;
+    a.y = a.y + this.box.height / 2 + 49 + 1;
+    this.svgOptionGroup.attr({class:"entry-field-angle", transform:"t" + a.x + " " + a.y});
+    var a = b.getAbsolutePos(), d = [a.x + b.box.width / 2, a.y + b.box.height / 2 + 1];
+    this.svgOptionGroup.mousemove(function(a) {
+      b.optionGroup.val(b.modValue(function(a, b) {
         var c = b[0] - a[0], d = b[1] - a[1] - 49 - 1, e = Math.atan(-d / c), e = Entry.toDegrees(e), e = 90 - e;
         0 > c ? e += 180 : 0 < d && (e += 360);
         return 15 * Math.round(e / 15);
-      }(d, [c.clientX, c.clientY])));
-      a.applyValue();
+      }(d, [a.clientX, a.clientY])));
+      b.applyValue();
     });
     this.updateGraph();
   };
@@ -14255,7 +14255,7 @@ Entry.DummyBlock = function(a, b) {
       this.svgGroup.prepend(a);
       this._clonedShadow = a;
     } else {
-      this._clonedShadow && (this._clonedShadow.remove(), delete this._clonedShadow), this.set({height:-1});
+      this._clonedShadow && (this._clonedShadow.remove(), delete this._clonedShadow), this.set({height:this.schema.height});
     }
     this._thread.changeEvent.notify();
   };
@@ -14361,6 +14361,7 @@ Entry.FieldDummyBlock = function(a, b) {
 };
 Entry.FieldDummyBlock.PRIMITIVE_TYPES = ["True"];
 Entry.FieldDummyBlock.prototype = Entry.DummyBlock.prototype;
+Entry.FieldDummyBlock.prototype.schema = {x:0, y:0, width:0, height:0, animating:!1, magneting:!1};
 Entry.FieldText = function(a, b, c) {
   this._block = b.block;
   this._index = c;
