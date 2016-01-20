@@ -111,11 +111,21 @@ Entry.BlockMockup = function(blocklyInfo) {
             this.templates.push(field);
         else {
             if (field instanceof Blockly.FieldIcon) {
-                this.params.push({
-                    type: "Image",
-                    img: field.src_,
-                    size: 24
-                });
+                if (field.type === "start")
+                    this.params.push({
+                        type: "Indicator",
+                        img: field.src_,
+                        size: 17,
+                        position: {
+                            x: 0, y: -2
+                        }
+                    });
+                else
+                    this.params.push({
+                        type: "Indicator",
+                        img: field.src_,
+                        size: 12,
+                    });
                 this.templates.push(this.getFieldCount());
             } else if (field instanceof Blockly.FieldDropdown) {
             } else if (field instanceof Blockly.FieldDropdownDynamic) {

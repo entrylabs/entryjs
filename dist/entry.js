@@ -9859,7 +9859,7 @@ Entry.BlockMockup = function(a) {
   a.setCheck = function(b) {
   };
   a.appendField = function(b) {
-    "string" === typeof b && 0 < b.length ? this.templates.push(b) : b instanceof Blockly.FieldIcon ? (this.params.push({type:"Image", img:b.src_, size:24}), this.templates.push(this.getFieldCount())) : !(b instanceof Blockly.FieldDropdown || b instanceof Blockly.FieldDropdownDynamic) && b instanceof Blockly.FieldTextInput && (this.params.push({type:"TextInput", value:10}), this.templates.push(this.getFieldCount()));
+    "string" === typeof b && 0 < b.length ? this.templates.push(b) : b instanceof Blockly.FieldIcon ? ("start" === b.type ? this.params.push({type:"Indicator", img:b.src_, size:17, position:{x:0, y:-2}}) : this.params.push({type:"Indicator", img:b.src_, size:12}), this.templates.push(this.getFieldCount())) : !(b instanceof Blockly.FieldDropdown || b instanceof Blockly.FieldDropdownDynamic) && b instanceof Blockly.FieldTextInput && (this.params.push({type:"TextInput", value:10}), this.templates.push(this.getFieldCount()));
     return this;
   };
   a.setColour = function(b) {
@@ -12507,7 +12507,7 @@ Entry.VariableContainer.prototype.updateCloudVariables = function() {
 };
 Entry.block.run = {skeleton:"basic", color:"#3BBD70", contents:["this is", "basic block"], func:function() {
 }};
-Entry.block.jr_start = {skeleton:"pebble_event", event:"start", color:"#3BBD70", template:"%1", params:[{type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_play_image.png", highlightColor:"#3BBD70", size:22}], func:function() {
+Entry.block.jr_start = {skeleton:"pebble_event", event:"start", color:"#3BBD70", template:"%1", params:[{type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_play_image.png", highlightColor:"#3BBD70", position:{x:0, y:0}, size:22}], func:function() {
   var a = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT), b;
   for (b in a) {
     this._unit = a[b];
@@ -13195,7 +13195,7 @@ Entry.BlockView = function(a, b, c) {
     this._darkenPath = this.svgGroup.path(d);
     this._darkenPath.attr({transform:"t0 1", fill:Entry.Utils.colorDarken(this._schema.color, .7)});
     this._path = this.svgGroup.path(d);
-    this._path.attr({strokeWidth:"2", fill:this._schema.color});
+    this._path.attr({strokeWidth:"0.5", fill:this._schema.color, stroke:Entry.Utils.colorDarken(this._schema.color, .8)});
     this._moveTo(this.x, this.y, !1);
     this._startContentRender(a);
     this._addControl();
@@ -14050,11 +14050,11 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldIndicator);
 (function(a) {
   a.renderStart = function() {
     this.svgGroup = this._block.contentSvgGroup.group();
-    this._imgElement = this.svgGroup.image(this._imgUrl, -1 * this._size, -1 * this._size, 2 * this._size, 2 * this._size);
+    this._imgElement = this.svgGroup.image(this._imgUrl, this._position ? -1 * this._size : 0, -1 * this._size, 2 * this._size, 2 * this._size);
     var a = "m 0,-%s a %s,%s 0 1,1 -0.1,0 z".replace(/%s/gi, this._size);
     this._path = this.svgGroup.path(a);
     this._path.attr({stroke:"none", fill:"none"});
-    this.box.set({x:this._size, y:0, width:this._size * this._boxMultiplier, height:this._size * this._boxMultiplier});
+    this.box.set({width:this._size * this._boxMultiplier + (this._position ? -this._size : 0), height:this._size * this._boxMultiplier});
   };
   a.enableHighlight = function() {
     var a = this._path.getTotalLength(), c = this._path;
@@ -14627,7 +14627,7 @@ Entry.skeleton.basic_event = {path:function(a) {
 }};
 Entry.skeleton.basic_loop = {path:function(a) {
   var b = Math.max(a.contentHeight, 25);
-  return "m -8,0 l 8,8 8,-8 h %cw a 15,15 0 0,1 0,30 H 24 l -8,8 -8,-8 h -0.4 v %ch h 0.4 l 8,8 8,-8 h %cw h -8 a 8,8 0 0,1 0,16 H 8 l -8,8 -8,-8 z".replace(/%cw/gi, Math.max(0, a.contentWidth - 6)).replace(/%ch/gi, b);
+  return "m -8,0 l 8,8 8,-8 h %cw a 15,15 0 0,1 0,30 H 24 l -8,8 -8,-8 h -0.4 v %ch h 0.4 l 8,8 8,-8 h %cw h -8 a 8,8 0 0,1 0,16 H 8 l -8,8 -8,-8 z".replace(/%cw/gi, Math.max(0, a.contentWidth - 11)).replace(/%ch/gi, b);
 }, magnets:function() {
   return {previous:{x:0, y:0}, next:{x:0, y:105}};
 }, box:function(a) {
@@ -14682,7 +14682,7 @@ Entry.skeleton.basic_string_field = {path:function(a) {
   b = Math.max(0, b - 11);
   a = Math.max(0, a + 6);
   return "m 10,0 h %w a 10,10 0 1,1 0,%h H 10 a 10,10 0 1,1 0,-%h z".replace(/%w/gi, b).replace(/%h/gi, a);
-}, box:function(a) {
+}, color:"#000", box:function(a) {
   return {offsetX:0, offsetY:0, width:(a ? a.contentWidth : 5) + 8, height:a ? a.contentHeight : 20, marginBottom:0};
 }, magnets:function() {
   return "STRING";
@@ -14695,7 +14695,7 @@ Entry.skeleton.basic_boolean_field = {path:function(a) {
   b = Math.max(0, b - 2);
   a = Math.max(0, a + 6);
   return "m 11,0 h %w l 10,10 -10,10 H 11 l -10,-10 10,-10 z ".replace(/%w/gi, b).replace(/%h/gi, a);
-}, box:function(a) {
+}, color:"#000", box:function(a) {
   return {offsetX:0, offsetY:0, width:(a ? a.contentWidth : 5) + 20, height:a ? a.contentHeight : 20, marginBottom:0};
 }, magnets:function() {
   return "BOOLEAN";

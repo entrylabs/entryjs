@@ -72,7 +72,7 @@ Entry.skeleton.basic_event = {
 
 Entry.skeleton.basic_loop = {
     path: function(block) {
-        var contentWidth = Math.max(0, block.contentWidth - 6);
+        var contentWidth = Math.max(0, block.contentWidth - 11);
         var contentHeight = Math.max(block.contentHeight, 25);
         return ("m -8,0 l 8,8 8,-8 h %cw a 15,15 0 0,1 0,30 H 24 l -8,8 -8,-8 h -0.4 v %ch h 0.4 l 8,8 8,-8 h %cw h -8 a 8,8 0 0,1 0,16 H 8 l -8,8 -8,-8 z")
             .replace(/%cw/gi, contentWidth)
@@ -251,6 +251,7 @@ Entry.skeleton.basic_string_field = {
             .replace(/%w/gi, width)
             .replace(/%h/gi, height);
     },
+    color: "#000",
     box: function(block) {
         var width = block ? block.contentWidth : 5;
         var height = block ? block.contentHeight : 20;
@@ -280,6 +281,7 @@ Entry.skeleton.basic_boolean_field = {
             .replace(/%w/gi, width)
             .replace(/%h/gi, height);
     },
+    color: "#000",
     box: function(block) {
         var width = block ? block.contentWidth : 5;
         var height = block ? block.contentHeight : 20;

@@ -36,7 +36,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldIndicator);
         this.svgGroup = this._block.contentSvgGroup.group();
         this._imgElement = this.svgGroup.image(
             this._imgUrl,
-            this._size * -1,
+            this._position ? this._size * -1 : 0,
             this._size * -1,
             this._size * 2,
             this._size * 2
@@ -51,9 +51,8 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldIndicator);
         });
 
         this.box.set({
-            x: this._size,
-            y: 0,
-            width: this._size * this._boxMultiplier,
+            width: this._size * this._boxMultiplier +
+                (this._position ? - this._size : 0),
             height: this._size * this._boxMultiplier
         });
     };

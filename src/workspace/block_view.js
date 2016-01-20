@@ -76,8 +76,9 @@ Entry.BlockView = function(block, board, mode) {
 
         this._path = this.svgGroup.path(path);
         this._path.attr({
-            strokeWidth: "2",
-            fill: this._schema.color
+            strokeWidth: "0.5",
+            fill: this._schema.color,
+            stroke: Entry.Utils.colorDarken(this._schema.color, 0.8)
         });
 
         this._moveTo(this.x, this.y, false);

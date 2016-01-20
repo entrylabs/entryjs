@@ -23,6 +23,7 @@ Entry.block.jr_start = {
             type: "Indicator",
             img: "/img/assets/ntry/bitmap/jr/block_play_image.png",
             highlightColor: "#3BBD70",
+            position: {x: 0, y: 0},
             size: 22
         }
     ],
