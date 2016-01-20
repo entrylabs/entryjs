@@ -33,7 +33,7 @@ Entry.BlockMenu = function(dom, align, categoryData) {
 
     this.offset = this.svgDom.offset();
     this._splitters = [];
-    this._setWidth();
+    this.setWidth();
 
     this.snap = Snap('#blockMenu');
 
@@ -121,7 +121,6 @@ Entry.BlockMenu = function(dom, align, categoryData) {
             if (Entry.playground.resizing) return;
 
             var widthBackup = this.widthBackup;
-            console.log(widthBackup);
             if (widthBackup)
                 $('.blockMenuContainer>svg').stop().animate({
                     width: widthBackup
@@ -199,9 +198,11 @@ Entry.BlockMenu = function(dom, align, categoryData) {
             this._boardBlockView = workspaceBoard.code.
                 cloneThread(currentThread, mode).getFirstBlock().view;
 
+            var distance = this.offset.top - workspaceBoard.offset.top;
+
             this._boardBlockView._moveTo(
                 blockView.x-svgWidth,
-                blockView.y-0,
+                blockView.y+distance,
                 false
             );
             this._boardBlockView.onMouseDown.call(this._boardBlockView, e);
@@ -292,9 +293,10 @@ Entry.BlockMenu = function(dom, align, categoryData) {
         }
     };
 
-    p._setWidth = function() {
+    p.setWidth = function() {
         this._svgWidth = this.svgDom.width();
         this._updateSplitters();
+        this.offset = this.svgDom.offset();
     };
 
     p.setMenu = function(name) {

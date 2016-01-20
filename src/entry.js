@@ -279,6 +279,7 @@ Entry.resizeElement = function(interfaceModel) {
 
         $('.blockMenuContainer').css({width: (menuWidth - 64) + 'px'});
         $('.blockMenuContainer>svg').css({width: (menuWidth - 64) + 'px'});
+        Entry.playground.mainWorkspace.blockMenu.setWidth();
         $('.entryWorkspaceBoard').css({left: (menuWidth) + 'px'});
         Entry.playground.resizeHandle_.style.left = (menuWidth) + 'px';
         Entry.playground.variableViewWrapper_.style.width = menuWidth + 'px';

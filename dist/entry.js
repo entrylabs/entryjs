@@ -86,6 +86,7 @@ var Entry = {block:{}, TEXT_ALIGN_CENTER:0, TEXT_ALIGN_LEFT:1, TEXT_ALIGN_RIGHT:
     a.menuWidth = b;
     $(".blockMenuContainer").css({width:b - 64 + "px"});
     $(".blockMenuContainer>svg").css({width:b - 64 + "px"});
+    Entry.playground.mainWorkspace.blockMenu.setWidth();
     $(".entryWorkspaceBoard").css({left:b + "px"});
     Entry.playground.resizeHandle_.style.left = b + "px";
     Entry.playground.variableViewWrapper_.style.width = b + "px";
@@ -13009,7 +13010,7 @@ Entry.BlockMenu = function(a, b, c) {
   this._generateView(c);
   this.offset = this.svgDom.offset();
   this._splitters = [];
-  this._setWidth();
+  this.setWidth();
   this.snap = Snap("#blockMenu");
   this.svgGroup = this.snap.group();
   this.svgThreadGroup = this.svgGroup.group();
@@ -13042,7 +13043,7 @@ Entry.BlockMenu = function(a, b, c) {
       Entry.playground.resizing || (Entry.playground.focusBlockMenu = !0, b = d.expandWidth + 64, b > Entry.interfaceState.menuWidth && (this.widthBackup = Entry.interfaceState.menuWidth - 64, $(".blockMenuContainer>svg").stop().animate({width:b - 64}, 200)));
     });
     this.svgDom.mouseleave(function(b) {
-      Entry.playground.resizing || (b = this.widthBackup, console.log(b), b && $(".blockMenuContainer>svg").stop().animate({width:b}, 200), delete this.widthBackup, delete Entry.playground.focusBlockMenu);
+      Entry.playground.resizing || ((b = this.widthBackup) && $(".blockMenuContainer>svg").stop().animate({width:b}, 200), delete this.widthBackup, delete Entry.playground.focusBlockMenu);
     });
   };
   a.changeCode = function(b) {
@@ -13083,7 +13084,7 @@ Entry.BlockMenu = function(a, b, c) {
       if (e && f) {
         var e = this.workspace.getBoard(), g = this.workspace.getMode();
         this._boardBlockView = e.code.cloneThread(f, g).getFirstBlock().view;
-        this._boardBlockView._moveTo(d.x - a, d.y - 0, !1);
+        this._boardBlockView._moveTo(d.x - a, d.y + (this.offset.top - e.offset.top), !1);
         this._boardBlockView.onMouseDown.call(this._boardBlockView, b);
         this._dragObserver = this._boardBlockView.observe(this, "_editDragInstance", ["x", "y"], !1);
       }
@@ -13145,9 +13146,10 @@ Entry.BlockMenu = function(a, b, c) {
       b[a].remove(), b.pop();
     }
   };
-  a._setWidth = function() {
+  a.setWidth = function() {
     this._svgWidth = this.svgDom.width();
     this._updateSplitters();
+    this.offset = this.svgDom.offset();
   };
   a.setMenu = function(b) {
     var a = this._categoryElems[b], d = this._selectedCategoryView, e = !1, f = this.workspace.board, g = f.view;
