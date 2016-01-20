@@ -1,3 +1,5 @@
+"use strict";
+
 goog.provide("Entry.BlockDriver");
 
 Entry.BlockDriver = function() {

@@ -13245,10 +13245,12 @@ Entry.BlockView = function(a, b, c) {
   a.alignContent = function(b) {
     !0 !== b && (b = !1);
     for (var a = 0, d = 0, e = 0;e < this._contents.length;e++) {
-      d = this._contents[e];
-      d.align(a, 0, b);
+      var f = this._contents[e];
+      f.align(a, 0, b);
       e !== this._contents.length - 1 && (a += 5);
-      var f = d.box, d = Math.max(f.y + f.height), a = a + f.width;
+      f = f.box;
+      d = Math.max(f.y + f.height, d);
+      a += f.width;
     }
     this.set({contentWidth:a, contentHeight:d});
     b = this.getContentPos();
@@ -13269,7 +13271,7 @@ Entry.BlockView = function(a, b, c) {
   };
   a._renderPath = function() {
     var b = this._skeleton.path(this);
-    this.shadow && this._darkenPath.attr({d:b});
+    this._darkenPath.attr({d:b});
     this._path.attr({d:b});
     this.set({animating:!1});
   };
@@ -14294,10 +14296,10 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
   a.align = function(a, c, d) {
     d = void 0 === d ? !0 : d;
     var e = this.svgGroup;
-    this._position && this._position.x && (a = this._position.x);
+    this._position && (this._position.x && (a = this._position.x), this._position.y && (c = this._position.y));
     var f = this._thread.getFirstBlock();
     f.isDummy && (f = f.next);
-    c = -.5 * f.view.height;
+    f && (c = -.5 * f.view.height);
     a = "t" + a + " " + c;
     f != this._valueBlock && (this._valueBlock && this._valueBlock.view.set({shadow:!0}), this._valueBlock = f, this._valueBlockObserver && this._valueBlockObserver.destroy(), this._valueBlock && (f = this._valueBlock.view, this._valueBlockObserver = f.observe(this, "calcWH", ["width", "height"]), f.shadow && f.set({shadow:!1})));
     d ? e.animate({transform:a}, 300, mina.easeinout) : e.attr({transform:a});
@@ -14618,15 +14620,17 @@ Entry.Scroller.RADIUS = 7;
 Entry.skeleton = function() {
 };
 Entry.skeleton.basic = {path:function(a) {
-  a = a.contentWidth;
-  a = Math.max(0, a - 6);
-  return "m -8,0 l 8,8 8,-8 h %w a 15,15 0 0,1 0,30 h -%w l -8,8 -8,-8 v -30 z".replace(/%w/gi, a);
+  var b = a.contentWidth;
+  a = a.contentHeight;
+  a = Math.max(30, a + 2);
+  b = Math.max(0, b + 9 - a / 2);
+  return "m -8,0 l 8,8 8,-8 h %w a %h,%h 0 0,1 0,%wh h -%w l -8,8 -8,-8 v -%wh z".replace(/%wh/gi, a).replace(/%w/gi, b).replace(/%h/gi, a / 2);
 }, box:function(a) {
-  return {offsetX:-8, offsetY:0, width:(a ? a.contentWidth : 150) + 30, height:30, marginBottom:0};
+  return {offsetX:-8, offsetY:0, width:(a ? a.contentWidth : 150) + 30, height:Math.max(30, (a ? a.contentHeight : 28) + 2), marginBottom:0};
 }, magnets:function() {
   return {previous:{}, next:{x:0, y:31}};
 }, contentPos:function(a) {
-  return {x:14, y:15};
+  return {x:14, y:Math.max(a.contentHeight, 28) / 2 + 1};
 }};
 Entry.skeleton.basic_event = {path:function(a) {
   a = a.contentWidth;
@@ -14693,15 +14697,15 @@ Entry.skeleton.pebble_basic = {fontSize:16, morph:["prev", "next"], path:functio
 Entry.skeleton.basic_string_field = {path:function(a) {
   var b = a.contentWidth;
   a = a.contentHeight;
-  a = Math.max(0, a + 2);
+  a = Math.max(18, a + 2);
   b = Math.max(0, b - a + 4);
   return "m %h,0 h %w a %h,%h 0 1,1 0,%wh H %h A %h,%h 0 1,1 %h,0 z".replace(/%wh/gi, a).replace(/%w/gi, b).replace(/%h/gi, a / 2);
 }, color:"#000", outerLine:!0, box:function(a) {
-  return {offsetX:0, offsetY:0, width:(a ? a.contentWidth : 5) + 4, height:(a ? a.contentHeight : 20) + 2, marginBottom:0};
+  return {offsetX:0, offsetY:0, width:(a ? a.contentWidth : 5) + 4, height:Math.max((a ? a.contentHeight : 18) + 2, 18), marginBottom:0};
 }, magnets:function() {
   return "STRING";
 }, contentPos:function(a) {
-  return {x:2, y:a.contentHeight / 2 + 1};
+  return {x:2, y:Math.max(a.contentHeight, 16) / 2 + 1};
 }};
 Entry.skeleton.basic_boolean_field = {path:function(a) {
   var b = a.contentWidth;

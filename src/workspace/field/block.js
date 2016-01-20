@@ -69,7 +69,9 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
         if (block.isDummy)
             block = block.next;
 
-        y = block.view.height * -0.5;
+        if (block) {
+            y = block.view.height * -0.5;
+        }
         var transform = "t" + x + " " + y;
 
         if (block != this._valueBlock) {

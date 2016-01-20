@@ -15,16 +15,21 @@ Entry.skeleton = function() {
 Entry.skeleton.basic = {
     path: function(block) {
         var width = block.contentWidth;
-        width = Math.max(0, width - 6);
-        return "m -8,0 l 8,8 8,-8 h %w a 15,15 0 0,1 0,30 h -%w l -8,8 -8,-8 v -30 z"
-            .replace(/%w/gi, width);
+        var height = block.contentHeight;
+        height = Math.max(30, height + 2);
+        width = Math.max(0, width + 9 - height / 2);
+        return "m -8,0 l 8,8 8,-8 h %w a %h,%h 0 0,1 0,%wh h -%w l -8,8 -8,-8 v -%wh z"
+            .replace(/%wh/gi, height)
+            .replace(/%w/gi, width)
+            .replace(/%h/gi, height / 2);
     },
     box: function(block) {
         var width = block ? block.contentWidth : 150;
+        var height = block ? block.contentHeight : 28;
         return {
             offsetX: -8, offsetY: 0,
             width: width + 30,
-            height: 30,
+            height: Math.max(30, height + 2),
             marginBottom: 0
         };
     },
@@ -37,7 +42,8 @@ Entry.skeleton.basic = {
     },
     contentPos: function(block) {
         // apply scale required.
-        return {x: 14, y: 15};
+        var height = Math.max(block.contentHeight, 28);
+        return {x: 14, y: height / 2 + 1};
     }
 
 };
@@ -245,7 +251,7 @@ Entry.skeleton.basic_string_field = {
     path: function(block) {
         var width = block.contentWidth;
         var height = block.contentHeight;
-        height = Math.max(0, height + 2);
+        height = Math.max(18, height + 2);
         width = Math.max(0, width - height + 4);
         return "m %h,0 h %w a %h,%h 0 1,1 0,%wh H %h A %h,%h 0 1,1 %h,0 z"
             .replace(/%wh/gi, height)
@@ -256,11 +262,11 @@ Entry.skeleton.basic_string_field = {
     outerLine: true,
     box: function(block) {
         var width = block ? block.contentWidth : 5;
-        var height = block ? block.contentHeight : 20;
+        var height = block ? block.contentHeight : 18;
         return {
             offsetX: 0, offsetY: 0,
             width: width + 4,
-            height: height + 2,
+            height: Math.max(height + 2, 18),
             marginBottom: 0
         };
     },
@@ -269,7 +275,7 @@ Entry.skeleton.basic_string_field = {
     },
     contentPos: function(block) {
         // apply scale required.
-        var height = block.contentHeight;
+        var height = Math.max(block.contentHeight, 16);
         return {x: 2, y: height / 2 + 1};
     }
 };

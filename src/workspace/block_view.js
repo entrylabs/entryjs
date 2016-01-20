@@ -140,7 +140,7 @@ Entry.BlockView = function(block, board, mode) {
                 cursor.x += 5;
 
             var box = c.box;
-            cursor.height = Math.max(box.y + box.height);
+            cursor.height = Math.max(box.y + box.height, cursor.height);
             cursor.x += box.width;
         }
 
@@ -184,24 +184,20 @@ Entry.BlockView = function(block, board, mode) {
 
         if (false && Entry.ANIMATION_DURATION !== 0) {
             setTimeout(function() {
-                if (that.shadow) {
-                    that._darkenPath.animate({
-                        d: path
-                    }, Entry.ANIMATION_DURATION, mina.easeinout, function() {
-                        that.set({animating: false});
-                    });
-                }
+                that._darkenPath.animate({
+                    d: path
+                }, Entry.ANIMATION_DURATION, mina.easeinout, function() {
+                    that.set({animating: false});
+                });
 
                 that._path.animate({
                     d: path
                 }, Entry.ANIMATION_DURATION, mina.easeinout);
             }, 0);
         } else {
-            if (this.shadow) {
-                this._darkenPath.attr({
-                    d: path
-                });
-            }
+            this._darkenPath.attr({
+                d: path
+            });
 
             this._path.attr({
                 d: path
