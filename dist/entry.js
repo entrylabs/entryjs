@@ -13205,7 +13205,9 @@ Entry.BlockView = function(a, b, c) {
     this._darkenPath = this.svgGroup.path(d);
     this._darkenPath.attr({transform:"t0 1", fill:Entry.Utils.colorDarken(this._schema.color, .7)});
     this._path = this.svgGroup.path(d);
-    this._path.attr({strokeWidth:"0.5", fill:this._schema.color, stroke:Entry.Utils.colorDarken(this._schema.color, .8)});
+    d = {fill:this._schema.color};
+    this._skeleton.outerLine && (d.strokeWidth = "0.5", d.stroke = Entry.Utils.colorDarken(this._schema.color, .8));
+    this._path.attr(d);
     this._moveTo(this.x, this.y, !1);
     this._startContentRender(a);
     this._addControl();
@@ -13215,8 +13217,6 @@ Entry.BlockView = function(a, b, c) {
     this.contentSvgGroup && this.contentSvgGroup.remove();
     this._contents = [];
     this.contentSvgGroup = this.svgGroup.group();
-    var a = this._skeleton.contentPos();
-    this.contentSvgGroup.transform("t" + a.x + " " + a.y);
     switch(b) {
       case Entry.Workspace.MODE_BOARD:
         var a = /(%\d)/gmi, d = this._schema, e = d.template.split(a), f = d.params;
@@ -13251,6 +13251,8 @@ Entry.BlockView = function(a, b, c) {
       var f = d.box, d = Math.max(f.y + f.height), a = a + f.width;
     }
     this.set({contentWidth:a, contentHeight:d});
+    b = this.getContentPos();
+    this.contentSvgGroup.transform("t" + b.x + " " + b.y);
     this._render();
   };
   a._bindPrev = function() {
@@ -14221,7 +14223,7 @@ Entry.DummyBlock = function(a, b) {
   this._align();
 };
 (function(a) {
-  a.schema = {x:0, y:0, width:0, height:0, animating:!1, magneting:!1};
+  a.schema = {x:0, y:0, width:0, height:-1, animating:!1, magneting:!1};
   a._align = function(a) {
     this.set({x:this.originBlockView.x, y:this.originBlockView.y});
   };
@@ -14253,7 +14255,7 @@ Entry.DummyBlock = function(a, b) {
       this.svgGroup.prepend(a);
       this._clonedShadow = a;
     } else {
-      this._clonedShadow && (this._clonedShadow.remove(), delete this._clonedShadow), this.set({height:0});
+      this._clonedShadow && (this._clonedShadow.remove(), delete this._clonedShadow), this.set({height:-1});
     }
     this._thread.changeEvent.notify();
   };
@@ -14293,11 +14295,11 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
     d = void 0 === d ? !0 : d;
     var e = this.svgGroup;
     this._position && this._position.x && (a = this._position.x);
-    c = -.5 * this.box.height - 4;
+    var f = this._thread.getFirstBlock();
+    f.isDummy && (f = f.next);
+    c = -.5 * f.view.height;
     a = "t" + a + " " + c;
-    c = this._thread.getFirstBlock();
-    c.isDummy && (c = c.next);
-    c != this._valueBlock && (this._valueBlock && this._valueBlock.view.set({shadow:!0}), this._valueBlock = c, this._valueBlockObserver && this._valueBlockObserver.destroy(), this._valueBlock && (c = this._valueBlock.view, this._valueBlockObserver = c.observe(this, "calcWH", ["width", "height"]), c.shadow && c.set({shadow:!1})));
+    f != this._valueBlock && (this._valueBlock && this._valueBlock.view.set({shadow:!0}), this._valueBlock = f, this._valueBlockObserver && this._valueBlockObserver.destroy(), this._valueBlock && (f = this._valueBlock.view, this._valueBlockObserver = f.observe(this, "calcWH", ["width", "height"]), f.shadow && f.set({shadow:!1})));
     d ? e.animate({transform:a}, 300, mina.easeinout) : e.attr({transform:a});
   };
   a.calcWH = function() {
@@ -14690,15 +14692,15 @@ Entry.skeleton.pebble_basic = {fontSize:16, morph:["prev", "next"], path:functio
 Entry.skeleton.basic_string_field = {path:function(a) {
   var b = a.contentWidth;
   a = a.contentHeight;
-  b = Math.max(0, b - 11);
-  a = Math.max(0, a + 6);
-  return "m 10,0 h %w a 10,10 0 1,1 0,%h H 10 a 10,10 0 1,1 0,-%h z".replace(/%w/gi, b).replace(/%h/gi, a);
-}, color:"#000", box:function(a) {
-  return {offsetX:0, offsetY:0, width:(a ? a.contentWidth : 5) + 8, height:a ? a.contentHeight : 20, marginBottom:0};
+  a = Math.max(0, a + 2);
+  b = Math.max(0, b - a + 4);
+  return "m %h,0 h %w a %h,%h 0 1,1 0,%wh H %h A %h,%h 0 1,1 %h,0 z".replace(/%wh/gi, a).replace(/%w/gi, b).replace(/%h/gi, a / 2);
+}, color:"#000", outerLine:!0, box:function(a) {
+  return {offsetX:0, offsetY:0, width:(a ? a.contentWidth : 5) + 4, height:(a ? a.contentHeight : 20) + 2, marginBottom:0};
 }, magnets:function() {
   return "STRING";
 }, contentPos:function(a) {
-  return {x:4, y:10};
+  return {x:2, y:a.contentHeight / 2 + 1};
 }};
 Entry.skeleton.basic_boolean_field = {path:function(a) {
   var b = a.contentWidth;
@@ -14706,8 +14708,8 @@ Entry.skeleton.basic_boolean_field = {path:function(a) {
   b = Math.max(0, b - 2);
   a = Math.max(0, a + 6);
   return "m 11,0 h %w l 10,10 -10,10 H 11 l -10,-10 10,-10 z ".replace(/%w/gi, b).replace(/%h/gi, a);
-}, color:"#000", box:function(a) {
-  return {offsetX:0, offsetY:0, width:(a ? a.contentWidth : 5) + 20, height:a ? a.contentHeight : 20, marginBottom:0};
+}, color:"#000", outerLine:!0, box:function(a) {
+  return {offsetX:0, offsetY:0, width:(a ? a.contentWidth : 5) + 20, height:(a ? a.contentHeight : 20) + 2, marginBottom:0};
 }, magnets:function() {
   return "BOOLEAN";
 }, contentPos:function(a) {

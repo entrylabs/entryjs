@@ -142,7 +142,7 @@ Entry.DummyBlock = function(statementField, blockView) {
         x: 0,
         y: 0,
         width: 0,
-        height: 0,
+        height: -1,
         animating: false,
         magneting: false
     };
@@ -193,7 +193,7 @@ Entry.DummyBlock = function(statementField, blockView) {
                 this._clonedShadow.remove();
                 delete this._clonedShadow;
             }
-            this.set({height: 0});
+            this.set({height: -1});
         }
         this._thread.changeEvent.notify();
     };
