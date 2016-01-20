@@ -155,6 +155,14 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
 
 Entry.FieldDummyBlock = function(statementField, blockView) {
     Entry.Model(this, false);
+    this.schema = {
+        x: 0,
+        y: 0,
+        width: 0,
+        height: -1,
+        animating: false,
+        magneting: false
+    };
     this.isDummy = true;
 
     this.view = this;
@@ -205,11 +213,3 @@ Entry.FieldDummyBlock.PRIMITIVE_TYPES = ['True'];
 
 Entry.FieldDummyBlock.prototype = Entry.DummyBlock.prototype;
 
-Entry.FieldDummyBlock.prototype.schema = {
-        x: 0,
-        y: 0,
-        width: 0,
-        height: 0,
-        animating: false,
-        magneting: false
-};

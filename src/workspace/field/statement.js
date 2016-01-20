@@ -142,7 +142,7 @@ Entry.DummyBlock = function(statementField, blockView) {
         x: 0,
         y: 0,
         width: 0,
-        height: -1,
+        height: 0,
         animating: false,
         magneting: false
     };

@@ -14223,7 +14223,7 @@ Entry.DummyBlock = function(a, b) {
   this._align();
 };
 (function(a) {
-  a.schema = {x:0, y:0, width:0, height:-1, animating:!1, magneting:!1};
+  a.schema = {x:0, y:0, width:0, height:0, animating:!1, magneting:!1};
   a._align = function(a) {
     this.set({x:this.originBlockView.x, y:this.originBlockView.y});
   };
@@ -14336,6 +14336,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
 })(Entry.FieldBlock.prototype);
 Entry.FieldDummyBlock = function(a, b) {
   Entry.Model(this, !1);
+  this.schema = {x:0, y:0, width:0, height:-1, animating:!1, magneting:!1};
   this.isDummy = !0;
   this.view = this;
   this.originBlockView = b;
@@ -14361,7 +14362,6 @@ Entry.FieldDummyBlock = function(a, b) {
 };
 Entry.FieldDummyBlock.PRIMITIVE_TYPES = ["True"];
 Entry.FieldDummyBlock.prototype = Entry.DummyBlock.prototype;
-Entry.FieldDummyBlock.prototype.schema = {x:0, y:0, width:0, height:0, animating:!1, magneting:!1};
 Entry.FieldText = function(a, b, c) {
   this._block = b.block;
   this._index = c;
