@@ -25,10 +25,8 @@ Entry.BlockDriver = function() {
         blockObject.func = Entry.block[blockType];
 
         var blockInfo = EntryStatic.blockInfo[blockType];
-        if (blockInfo) {
+        if (blockInfo)
             blockObject.class = blockInfo.class;
-            blockObject.isNotFor = blockInfo.isNotFor;
-        }
 
         Entry.block[blockType] = blockObject;
     };
@@ -132,6 +130,13 @@ Entry.BlockMockup = function(blocklyInfo) {
                     });
                 this.templates.push(this.getFieldCount());
             } else if (field instanceof Blockly.FieldDropdown) {
+                this.params.push({
+                    type: "Dropdown",
+                    options: field.menuGenerator_,
+                    value: field.menuGenerator_[0][0],
+                    fontSize: 11
+                });
+                this.templates.push(this.getFieldCount());
             } else if (field instanceof Blockly.FieldDropdownDynamic) {
             } else if (field instanceof Blockly.FieldTextInput) {
                 this.params.push({

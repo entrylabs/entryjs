@@ -9824,7 +9824,7 @@ Entry.BlockDriver = function() {
     var a = (new Entry.BlockMockup(Blockly.Blocks[b])).toJSON();
     a.func = Entry.block[b];
     var d = EntryStatic.blockInfo[b];
-    d && (a.class = d.class, a.isNotFor = d.isNotFor);
+    d && (a.class = d.class);
     Entry.block[b] = a;
   };
 })(Entry.BlockDriver.prototype);
@@ -9861,7 +9861,8 @@ Entry.BlockMockup = function(a) {
   a.setCheck = function(b) {
   };
   a.appendField = function(b) {
-    "string" === typeof b && 0 < b.length ? this.templates.push(b) : b instanceof Blockly.FieldIcon ? ("start" === b.type ? this.params.push({type:"Indicator", img:b.src_, size:17, position:{x:0, y:-2}}) : this.params.push({type:"Indicator", img:b.src_, size:12}), this.templates.push(this.getFieldCount())) : !(b instanceof Blockly.FieldDropdown || b instanceof Blockly.FieldDropdownDynamic) && b instanceof Blockly.FieldTextInput && (this.params.push({type:"TextInput", value:10}), this.templates.push(this.getFieldCount()));
+    "string" === typeof b && 0 < b.length ? this.templates.push(b) : b instanceof Blockly.FieldIcon ? ("start" === b.type ? this.params.push({type:"Indicator", img:b.src_, size:17, position:{x:0, y:-2}}) : this.params.push({type:"Indicator", img:b.src_, size:12}), this.templates.push(this.getFieldCount())) : b instanceof Blockly.FieldDropdown ? (this.params.push({type:"Dropdown", options:b.menuGenerator_, value:b.menuGenerator_[0][0], fontSize:11}), this.templates.push(this.getFieldCount())) : !(b instanceof 
+    Blockly.FieldDropdownDynamic) && b instanceof Blockly.FieldTextInput && (this.params.push({type:"TextInput", value:10}), this.templates.push(this.getFieldCount()));
     return this;
   };
   a.setColour = function(b) {
