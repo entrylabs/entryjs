@@ -92,9 +92,11 @@ goog.provide('Entry.GlobalSvg');
 
     gs.align = function() {
         var offsetX = this._view.getSkeleton().box(this._view).offsetX || 0;
-        var offsetY = this._view.getSkeleton().box(this._view).offsetY || 1;
+        var offsetY = this._view.getSkeleton().box(this._view).offsetY || 0;
         offsetX *= -1;
         offsetY *= -1;
+        offsetY += 1;
+        console.log(offsetY);
         this._offsetX = offsetX;
         this._offsetY = offsetY;
         var transform = "t" + (offsetX + 1) + " " + offsetY;

@@ -14489,7 +14489,8 @@ Entry.GlobalSvg = {};
     this.width = a.width + 2;
   };
   a.align = function() {
-    var a = this._view.getSkeleton().box(this._view).offsetX || 0, c = this._view.getSkeleton().box(this._view).offsetY || 1, a = -1 * a, c = -1 * c;
+    var a = this._view.getSkeleton().box(this._view).offsetX || 0, c = this._view.getSkeleton().box(this._view).offsetY || 0, a = -1 * a, c = -1 * c + 1;
+    console.log(c);
     this._offsetX = a;
     this._offsetY = c;
     this.svg.attr({transform:"t" + (a + 1) + " " + c});
