@@ -109,7 +109,7 @@ Entry.DummyBlock = function(statementField, blockView) {
     this.statementField = statementField;
 
     this.svgGroup = statementField.svgGroup.group();
-    this.svgGroup.block = this;
+    this.svgGroup.nextMagnet = this;
 
     var acceptBox = Entry.skeleton[statementField.acceptType].box();
 

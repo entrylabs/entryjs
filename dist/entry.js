@@ -13171,7 +13171,7 @@ Entry.BlockView = function(a, b, c) {
   this._schema = Entry.block[a.type];
   var d = this._skeleton = Entry.skeleton[this._schema.skeleton];
   this._contents = [];
-  d.magnets && d.magnets().next && (this.svgGroup.block = this.block);
+  d.magnets && d.magnets().next && (this.svgGroup.nextMagnet = this.block);
   this.isInBlockMenu = this.getBoard() instanceof Entry.BlockMenu;
   d.morph && this.block.observe(this, "_renderPath", d.morph, !1);
   this.prevObserver = null;
@@ -13423,17 +13423,17 @@ Entry.BlockView = function(a, b, c) {
     delete this.originPos;
   };
   a._getCloseBlock = function() {
-    if (this._skeleton.magnets && this._skeleton.magnets().previous) {
+    if (this._skeleton.magnets) {
       var b = this.getBoard(), a = this.x, d = this.y, e = b.relativeOffset, a = a + e.left;
       if (a + this.offsetX < b.offset.left) {
         return null;
       }
       b = Snap.getElementByPoint(a, d + e.top - 1);
-      if (null !== b) {
-        for (a = b.block;!a && b.parent() && "svg" !== b.type && "BODY" !== b.type;) {
-          b = b.parent(), a = b.block;
+      if (null !== b && (a = this._skeleton.magnets(), a = a.previous ? "nextMagnet" : "STRING" == a ? "stringMagnet" : "BOOLEAN" == a ? "nextMagnet" : null)) {
+        for (d = b[a];!d && b.parent() && "svg" !== b.type && "BODY" !== b.type;) {
+          b = b.parent(), d = b[a];
         }
-        return void 0 === a || a === this.block ? null : a;
+        return void 0 === d || d === this.block ? null : d;
       }
     }
   };
@@ -13729,8 +13729,8 @@ Entry.Field = function() {
     return {x:a.e + d.left + this.box.x + b.x, y:a.f + d.top + this.box.y + b.y};
   };
   a.getRelativePos = function() {
-    var b = this._block.view, a = b.svgGroup.transform().globalMatrix, b = b.getContentPos(), d = this.box;
-    return {x:a.e + d.x + b.x, y:a.f + d.y + b.y};
+    var a = this._block.view, c = a.svgGroup.transform().globalMatrix, a = a.getContentPos(), d = this.box;
+    return {x:c.e + d.x + a.x, y:c.f + d.y + a.y};
   };
   a.truncate = function() {
     var a = String(this.getValue()), c = this.TEXT_LIMIT_LENGTH, d = a.substring(0, c);
@@ -14201,7 +14201,7 @@ Entry.DummyBlock = function(a, b) {
   this._thread = a._thread;
   this.statementField = a;
   this.svgGroup = a.svgGroup.group();
-  this.svgGroup.block = this;
+  this.svgGroup.nextMagnet = this;
   var c = Entry.skeleton[a.acceptType].box();
   this.path = this.svgGroup.rect(c.offsetX, c.offsetY - 10, c.width, c.height);
   this.path.attr({fill:"transparent"});
@@ -14331,8 +14331,15 @@ Entry.FieldDummyBlock = function(a, b) {
   this._thread = a._thread;
   this.statementField = a;
   this.svgGroup = a.svgGroup.group();
-  this.svgGroup.block = this;
-  var c = Entry.skeleton[a.acceptType].box();
+  var c = a.acceptType;
+  switch(c) {
+    case "basic_string_field":
+      this.svgGroup.stringMagnet = this;
+      break;
+    case "basic_boolean_field":
+      this.svgGroup.booleanMagnet = this;
+  }
+  c = Entry.skeleton[c].box();
   this.path = this.svgGroup.rect(c.offsetX, c.offsetY - 10, c.width, c.height);
   this.path.attr({fill:"transparent"});
   this.prevObserver = b.observe(this, "_align", ["x", "y"]);
@@ -14614,7 +14621,7 @@ Entry.skeleton.basic_event = {path:function(a) {
 }, box:function(a) {
   return {offsetX:-19, offsetY:-7, width:a.contentWidth + 30, height:30, marginBottom:0};
 }, magnets:function() {
-  return {previous:{}, next:{x:0, y:31}};
+  return {next:{x:0, y:31}};
 }, contentPos:function(a) {
   return {x:1, y:15};
 }};
@@ -14678,7 +14685,7 @@ Entry.skeleton.basic_string_field = {path:function(a) {
 }, box:function(a) {
   return {offsetX:0, offsetY:0, width:(a ? a.contentWidth : 5) + 8, height:a ? a.contentHeight : 20, marginBottom:0};
 }, magnets:function() {
-  return {};
+  return "STRING";
 }, contentPos:function(a) {
   return {x:4, y:10};
 }};
@@ -14691,7 +14698,7 @@ Entry.skeleton.basic_boolean_field = {path:function(a) {
 }, box:function(a) {
   return {offsetX:0, offsetY:0, width:(a ? a.contentWidth : 5) + 20, height:a ? a.contentHeight : 20, marginBottom:0};
 }, magnets:function() {
-  return {};
+  return "BOOLEAN";
 }, contentPos:function(a) {
   return {x:11, y:11};
 }};

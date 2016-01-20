@@ -164,9 +164,18 @@ Entry.FieldDummyBlock = function(statementField, blockView) {
     this.statementField = statementField;
 
     this.svgGroup = statementField.svgGroup.group();
-    this.svgGroup.block = this;
 
-    var acceptBox = Entry.skeleton[statementField.acceptType].box();
+    var acceptType = statementField.acceptType;
+    switch (acceptType) {
+        case "basic_string_field":
+            this.svgGroup.stringMagnet = this;
+            break;
+        case "basic_boolean_field":
+            this.svgGroup.booleanMagnet = this;
+            break;
+    }
+
+    var acceptBox = Entry.skeleton[acceptType].box();
 
     this.path = this.svgGroup.rect(
         acceptBox.offsetX,

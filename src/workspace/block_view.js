@@ -20,7 +20,7 @@ Entry.BlockView = function(block, board, mode) {
     this._contents = [];
 
     if (skeleton.magnets && skeleton.magnets().next)
-        this.svgGroup.block = this.block;
+        this.svgGroup.nextMagnet = this.block;
 
     this.isInBlockMenu = this.getBoard() instanceof Entry.BlockMenu;
 
@@ -533,7 +533,7 @@ Entry.BlockView = function(block, board, mode) {
     };
 
     p._getCloseBlock = function() {
-        if (!this._skeleton.magnets || !this._skeleton.magnets().previous)
+        if (!this._skeleton.magnets)
             return;
         var board = this.getBoard();
         var x = this.x,
@@ -549,12 +549,21 @@ Entry.BlockView = function(block, board, mode) {
 
         if (targetElement === null) return;
 
-        var targetBlock = targetElement.block;
+        var targetType = this._skeleton.magnets();
+
+        if (targetType.previous) targetType = 'nextMagnet';
+        else if (targetType == 'STRING') targetType = 'stringMagnet';
+        else if (targetType == 'BOOLEAN') targetType = 'nextMagnet';
+        else targetType = null;
+
+        if (!targetType) return;
+
+        var targetBlock = targetElement[targetType];
 
         while (!targetBlock && targetElement.parent() &&
                targetElement.type !== "svg" && targetElement.type !== "BODY") {
             targetElement = targetElement.parent();
-            targetBlock = targetElement.block;
+            targetBlock = targetElement[targetType];
         }
 
         if (targetBlock === undefined || targetBlock === this.block) return null;

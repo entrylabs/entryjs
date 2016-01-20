@@ -61,7 +61,6 @@ Entry.skeleton.basic_event = {
     magnets: function() {
         // apply scale required.
         return {
-            previous: {},
             next: {x: 0, y: 31}
         };
     },
@@ -263,9 +262,7 @@ Entry.skeleton.basic_string_field = {
         };
     },
     magnets: function() {
-        // apply scale required.
-        return {
-        };
+        return "STRING"
     },
     contentPos: function(block) {
         // apply scale required.
@@ -294,9 +291,7 @@ Entry.skeleton.basic_boolean_field = {
         };
     },
     magnets: function() {
-        // apply scale required.
-        return {
-        };
+        return "BOOLEAN"
     },
     contentPos: function(block) {
         // apply scale required.
