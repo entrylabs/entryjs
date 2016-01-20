@@ -96,7 +96,6 @@ goog.provide('Entry.GlobalSvg');
         offsetX *= -1;
         offsetY *= -1;
         offsetY += 1;
-        console.log(offsetY);
         this._offsetX = offsetX;
         this._offsetY = offsetY;
         var transform = "t" + (offsetX + 1) + " " + offsetY;

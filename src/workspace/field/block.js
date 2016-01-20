@@ -201,6 +201,10 @@ Entry.FieldDummyBlock = function(statementField, blockView) {
     this._align();
 };
 
-Entry.FieldDummyBlock.PRIMITIVE_TYPES = ['True'];
+Entry.FieldDummyBlock.PRIMITIVE_TYPES = [
+    'True', "text"
+];
 
-Entry.FieldDummyBlock.prototype = Entry.DummyBlock.prototype;
+Entry.Utils.inherit(Entry.DummyBlock, Entry.FieldDummyBlock);
+
+Entry.FieldDummyBlock.prototype.constructor = Entry.FieldDummyBlock;

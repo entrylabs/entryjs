@@ -9824,7 +9824,7 @@ Entry.BlockDriver = function() {
     var a = (new Entry.BlockMockup(Blockly.Blocks[b])).toJSON();
     a.func = Entry.block[b];
     var d = EntryStatic.blockInfo[b];
-    d && (a.class = d.class);
+    d && (a.class = d.class, a.isNotFor = d.isNotFor);
     Entry.block[b] = a;
   };
 })(Entry.BlockDriver.prototype);
@@ -13408,7 +13408,7 @@ Entry.BlockView = function(a, b, c) {
             g = this._getCloseBlock();
             if (b || g) {
               if (g) {
-                if (this.set({animating:!0}), g.next && g.next.view.set({animating:!0}), e.doInsert(g), createjs.Sound.play("entryMagneting"), g instanceof Entry.FieldDummyBlock && (e = e.next)) {
+                if (this.set({animating:!0}), g.next && g.next.view.set({animating:!0}), e.doInsert(g), createjs.Sound.play("entryMagneting"), g.constructor == Entry.FieldDummyBlock && (e = e.next)) {
                   -1 < Entry.FieldDummyBlock.PRIMITIVE_TYPES.indexOf(e.type) ? (e.getThread().cut(e), e.destroy(!1)) : (e.separate(), e.view._moveBy(10, 10, !1));
                 }
               } else {
@@ -14357,8 +14357,9 @@ Entry.FieldDummyBlock = function(a, b) {
   this.observe(this, "_updateBG", ["magneting"]);
   this._align();
 };
-Entry.FieldDummyBlock.PRIMITIVE_TYPES = ["True"];
-Entry.FieldDummyBlock.prototype = Entry.DummyBlock.prototype;
+Entry.FieldDummyBlock.PRIMITIVE_TYPES = ["True", "text"];
+Entry.Utils.inherit(Entry.DummyBlock, Entry.FieldDummyBlock);
+Entry.FieldDummyBlock.prototype.constructor = Entry.FieldDummyBlock;
 Entry.FieldText = function(a, b, c) {
   this._block = b.block;
   this._index = c;
@@ -14490,7 +14491,6 @@ Entry.GlobalSvg = {};
   };
   a.align = function() {
     var a = this._view.getSkeleton().box(this._view).offsetX || 0, c = this._view.getSkeleton().box(this._view).offsetY || 0, a = -1 * a, c = -1 * c + 1;
-    console.log(c);
     this._offsetX = a;
     this._offsetY = c;
     this.svg.attr({transform:"t" + (a + 1) + " " + c});

@@ -488,7 +488,7 @@ Entry.BlockView = function(block, board, mode) {
                                 block.doInsert(closeBlock);
                                 createjs.Sound.play('entryMagneting');
 
-                                if (closeBlock instanceof Entry.FieldDummyBlock) {
+                                if (closeBlock.constructor == Entry.FieldDummyBlock) {
                                     var orphan = block.next;
                                     if (orphan) {
                                         if (Entry.FieldDummyBlock.PRIMITIVE_TYPES.indexOf(orphan.type) > -1) {

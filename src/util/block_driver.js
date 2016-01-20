@@ -23,8 +23,10 @@ Entry.BlockDriver = function() {
         blockObject.func = Entry.block[blockType];
 
         var blockInfo = EntryStatic.blockInfo[blockType];
-        if (blockInfo)
+        if (blockInfo) {
             blockObject.class = blockInfo.class;
+            blockObject.isNotFor = blockInfo.isNotFor;
+        }
 
         Entry.block[blockType] = blockObject;
     };
