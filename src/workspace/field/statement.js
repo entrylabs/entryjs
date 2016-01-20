@@ -193,7 +193,7 @@ Entry.DummyBlock = function(statementField, blockView) {
                 this._clonedShadow.remove();
                 delete this._clonedShadow;
             }
-            this.set({height: 0});
+            this.set({height: this.schema.height});
         }
         this._thread.changeEvent.notify();
     };

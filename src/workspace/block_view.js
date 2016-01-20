@@ -75,11 +75,12 @@ Entry.BlockView = function(block, board, mode) {
         });
 
         this._path = this.svgGroup.path(path);
-        this._path.attr({
-            strokeWidth: "0.5",
-            fill: this._schema.color,
-            stroke: Entry.Utils.colorDarken(this._schema.color, 0.8)
-        });
+        var pathStyle = {fill: this._schema.color};
+        if (this._skeleton.outerLine) {
+            pathStyle.strokeWidth = "0.5";
+            pathStyle.stroke = Entry.Utils.colorDarken(this._schema.color, 0.8);
+        }
+        this._path.attr(pathStyle);
 
         this._moveTo(this.x, this.y, false);
         this._startContentRender(mode);
@@ -93,9 +94,6 @@ Entry.BlockView = function(block, board, mode) {
         this._contents = [];
 
         this.contentSvgGroup = this.svgGroup.group();
-        var contentPos = this._skeleton.contentPos();
-        this.contentSvgGroup.transform("t" + contentPos.x + ' ' + contentPos.y);
-
         switch (mode) {
             case Entry.Workspace.MODE_BOARD:
                 var reg = /(%\d)/gmi;
@@ -150,6 +148,9 @@ Entry.BlockView = function(block, board, mode) {
             contentWidth: cursor.x,
             contentHeight: cursor.height
         });
+
+        var contentPos = this.getContentPos();
+        this.contentSvgGroup.transform("t" + contentPos.x + ' ' + contentPos.y);
         this._render();
     };
 

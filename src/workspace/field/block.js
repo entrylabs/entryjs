@@ -65,12 +65,12 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
                 y = this._position.y;
         }
 
-        y = this.box.height * -0.5 - 4;
-        var transform = "t" + x + " " + y;
-
         var block = this._thread.getFirstBlock();
         if (block.isDummy)
             block = block.next;
+
+        y = block.view.height * -0.5;
+        var transform = "t" + x + " " + y;
 
         if (block != this._valueBlock) {
             if (this._valueBlock)
@@ -155,6 +155,14 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
 
 Entry.FieldDummyBlock = function(statementField, blockView) {
     Entry.Model(this, false);
+    this.schema = {
+        x: 0,
+        y: 0,
+        width: 0,
+        height: -1,
+        animating: false,
+        magneting: false
+    };
     this.isDummy = true;
 
     this.view = this;
@@ -208,3 +216,4 @@ Entry.FieldDummyBlock.PRIMITIVE_TYPES = [
 Entry.Utils.inherit(Entry.DummyBlock, Entry.FieldDummyBlock);
 
 Entry.FieldDummyBlock.prototype.constructor = Entry.FieldDummyBlock;
+

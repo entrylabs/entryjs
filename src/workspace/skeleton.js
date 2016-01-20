@@ -245,20 +245,22 @@ Entry.skeleton.basic_string_field = {
     path: function(block) {
         var width = block.contentWidth;
         var height = block.contentHeight;
-        width = Math.max(0, width - 11);
-        height = Math.max(0, height + 6);
-        return "m 10,0 h %w a 10,10 0 1,1 0,%h H 10 a 10,10 0 1,1 0,-%h z"
+        height = Math.max(0, height + 2);
+        width = Math.max(0, width - height + 4);
+        return "m %h,0 h %w a %h,%h 0 1,1 0,%wh H %h A %h,%h 0 1,1 %h,0 z"
+            .replace(/%wh/gi, height)
             .replace(/%w/gi, width)
-            .replace(/%h/gi, height);
+            .replace(/%h/gi, height / 2);
     },
     color: "#000",
+    outerLine: true,
     box: function(block) {
         var width = block ? block.contentWidth : 5;
         var height = block ? block.contentHeight : 20;
         return {
             offsetX: 0, offsetY: 0,
-            width: width + 8,
-            height: height,
+            width: width + 4,
+            height: height + 2,
             marginBottom: 0
         };
     },
@@ -267,7 +269,8 @@ Entry.skeleton.basic_string_field = {
     },
     contentPos: function(block) {
         // apply scale required.
-        return {x: 4, y: 10};
+        var height = block.contentHeight;
+        return {x: 2, y: height / 2 + 1};
     }
 };
 
@@ -282,13 +285,14 @@ Entry.skeleton.basic_boolean_field = {
             .replace(/%h/gi, height);
     },
     color: "#000",
+    outerLine: true,
     box: function(block) {
         var width = block ? block.contentWidth : 5;
         var height = block ? block.contentHeight : 20;
         return {
             offsetX: 0, offsetY: 0,
             width: width + 20,
-            height: height,
+            height: height + 2,
             marginBottom: 0
         };
     },
