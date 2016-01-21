@@ -1778,7 +1778,11 @@ Entry.VariableContainer.prototype.addCloneLocalVariables = function (param) {
             delete newVar.x;
             delete newVar.y;
             variables.push(newVar);
-            param.json.script = param.json.script.replace(newVar.originId, newVar.id);
+
+            var reg = new RegExp(newVar.originId, 'g');
+            param.json.script = param.json.script.replace(reg, newVar.id);
+
+            //param.json.script = param.json.script.replace(newVar.originId, newVar.id);
         }
     }, param);
 
