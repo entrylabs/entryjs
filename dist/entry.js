@@ -7452,7 +7452,7 @@ Entry.Painter.prototype.initPicture = function() {
   Entry.addEventListener("pictureSelected", function(b) {
     a.selectToolbox("cursor");
     if (a.file.id !== b.id) {
-      a.file.modified && confirm("\uc218\uc815\ub41c \ub0b4\uc6a9\uc744 \uc800\uc7a5\ud558\uc2dc\uaca0\uc2b5\ub2c8\uae4c?") && (a.file_ = JSON.parse(JSON.stringify(a.file)), a.file_save(!0), a.file.modified = !1);
+      a.file.modified && (confirm("\uc218\uc815\ub41c \ub0b4\uc6a9\uc744 \uc800\uc7a5\ud558\uc2dc\uaca0\uc2b5\ub2c8\uae4c?") && (a.file_ = JSON.parse(JSON.stringify(a.file)), a.file_save(!0)), a.file.modified = !1);
       a.clearCanvas();
       var c = new Image;
       c.id = b.id ? b.id : Entry.generateHash();
@@ -7470,6 +7470,11 @@ Entry.Painter.prototype.initPicture = function() {
   });
   Entry.addEventListener("pictureNameChanged", function(b) {
     a.file.name = b.name;
+  });
+  Entry.addEventListener("pictureClear", function(b) {
+    a.file.id = "";
+    a.file.name = "";
+    a.clearCanvas();
   });
 };
 Entry.Painter.prototype.initDraw = function() {
@@ -8983,6 +8988,8 @@ Entry.Playground.prototype.injectPicture = function() {
         a.appendChild(e);
       }
       this.selectPicture(this.object.selectedPicture);
+    } else {
+      Entry.dispatchEvent("pictureClear");
     }
   }
 };

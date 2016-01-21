@@ -919,6 +919,8 @@ Entry.Playground.prototype.injectPicture = function() {
             view.appendChild(element);
         }
         this.selectPicture(this.object.selectedPicture);
+    } else {
+        Entry.dispatchEvent('pictureClear');
     }
 };
 
