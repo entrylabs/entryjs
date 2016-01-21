@@ -270,13 +270,16 @@ Entry.Scene.prototype.selectScene = function(scene) {
         Entry.stage.selectObjectContainer(scene);
 
     var targetObject = Entry.container.getCurrentObjects()[0];
-    if (targetObject && Entry.type != 'minimize')
+    if (targetObject && Entry.type != 'minimize') {
         Entry.container.selectObject(targetObject.id);
+        Entry.playground.refreshPlayground();
+    }
     else {
         Entry.stage.selectObject(null);
         Entry.playground.flushPlayground();
         Entry.variableContainer.updateList();
     }
+
     if (!Entry.container.listView_)
         Entry.stage.sortZorder();
     Entry.container.updateListView();

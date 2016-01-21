@@ -850,7 +850,7 @@ Entry.Playground.prototype.generateSoundView = function(SoundView) {
 Entry.Playground.prototype.injectObject = function(object) {
     /** @type {Entry.Entryobject} */
     if (!object) {
-        this.changeViewMode('default');
+        this.changeViewMode('code');
         this.object = null;
         return;
     }
@@ -1447,6 +1447,13 @@ Entry.Playground.prototype.flushPlayground = function () {
     this.object = null;
     if (Entry.playground && Entry.playground.view_) {
         Blockly.mainWorkspace.clear();
+        this.injectPicture();
+        this.injectSound();
+    }
+};
+
+Entry.Playground.prototype.refreshPlayground = function () {
+    if (Entry.playground && Entry.playground.view_) {
         this.injectPicture();
         this.injectSound();
     }

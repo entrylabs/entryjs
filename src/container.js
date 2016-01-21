@@ -306,8 +306,15 @@ Entry.Container.prototype.removeObject = function(object) {
     this.setCurrentObjects();
     Entry.stage.sortZorder();
 
-    if (this.objects_.length && index !== 0)
-        Entry.container.selectObject(this.objects_[index -1].id);
+    if (this.objects_.length && index !== 0) {
+        // Entry.container.selectObject(this.objects_[index -1].id);
+        var currentObjects_ = this.getCurrentObjects();
+        if(currentObjects_.length > 0) {
+            Entry.container.selectObject(this.getCurrentObjects()[0].id);
+        } else {
+            Entry.container.selectObject();
+        }
+    }
     else if (this.objects_.length && index === 0)
         Entry.container.selectObject(this.getCurrentObjects()[0].id);
     else {
