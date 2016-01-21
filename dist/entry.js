@@ -13271,8 +13271,8 @@ Entry.BlockView = function(a, b, c) {
     }
     if (this._statements.length) {
       for (f = this._skeleton.statementPos(this), e = 0;e < this._statements.length;e++) {
-        var g = f[e];
-        this._statements[e].align(g.x, g.y, b);
+        var g = this._statements[e], h = f[e];
+        h && g.align(h.x, h.y, b);
       }
     }
     this.set({contentWidth:a, contentHeight:d});

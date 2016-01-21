@@ -154,7 +154,8 @@ Entry.BlockView = function(block, board, mode) {
             for (var i = 0; i < this._statements.length; i++) {
                 var s = this._statements[i];
                 var pos = positions[i];
-                s.align(pos.x, pos.y, animate);
+                if (pos)
+                    s.align(pos.x, pos.y, animate);
             }
         }
 
