@@ -59,9 +59,6 @@ p.blockHelperOn = function() {
 
     var blockHelperBlock = Entry.createElement('div',
                             'entryBlockHelperBlockWorkspace');
-    this.blockMenu_ = new Blockly.BlockMenu(blockHelperBlock);
-    this.blockMenu_.isViewOnly = true;
-    this.blockMenu_.isCenterAlign = true;
     helper.blockHelperContent_.appendChild(blockHelperBlock);
 
     var blockHelperDescription = Entry.createElement('div',
@@ -70,13 +67,13 @@ p.blockHelperOn = function() {
     blockHelperDescription.innerHTML = Lang.Helper.Block_click_msg;
     this.blockHelperDescription_ = blockHelperDescription;
 
-    this.blockChangeEvent = Blockly.bindEvent_(Blockly.mainWorkspace.getCanvas(),
-        'blocklySelectChange', this, this.updateSelectedBlock);
-    if (Entry.playground.blockMenu)
-        this.menuBlockChangeEvent = Blockly.bindEvent_(
-            Entry.playground.blockMenu.workspace_.getCanvas(),
-            'blocklySelectChange', this, this.updateSelectedBlock);
-
+    this.blockMenu_ = new Entry.BlockMenu($(blockHelperBlock), 'LEFT');
+    this.blockMenu_.viewOnly = true;
+    var ws = Entry.playground.mainWorkspace;
+    if (ws)
+        this.workspace = ws;
+        this._blockViewObserver =
+        ws.observe(this, "updateSelectedBlock", ['selectedBlockView']);
     this.first = true;
 };
 
@@ -84,48 +81,67 @@ p.blockHelperOn = function() {
  * toggle on block helper
  */
 p.blockHelperOff = function() {
-    if (!this.blockHelperView_)
-        return;
-    if (Entry.isForLecture)
+    if (!this.blockHelperView_ || Entry.isForLecture)
         return;
     var helper = this;
     helper.blockHelperView_.addClass('dispose');
-    Blockly.unbindEvent_(this.blockChangeEvent);
-    delete this.blockChangeEvent;
-    if (Entry.playground.blockMenu) {
-        Blockly.unbindEvent_(this.menuBlockChangeEvent);
-        delete this.menuBlockChangeEvent;
-    }
+
     Entry.bindAnimationCallback(helper.blockHelperView_, function(e) {
         helper.parentView_.removeChild(helper.blockHelperView_);
         delete helper.blockHelperContent_;
         delete helper.blockHelperView_;
     });
+
+    if (this._blockViewObserver)
+        this._blockViewObserver.destroy();
+    this.code = null;
 };
 
 /**
  * toggle on block helper
  */
 p.updateSelectedBlock = function() {
-    if (!Blockly.selected)
-        return;
+    var blockView = this.workspace.selectedBlockView;
+    if (!blockView) return;
+
     if (this.first) {
         this.blockHelperContent_.removeClass('entryBlockHelperIntro');
         this.first = false;
     }
-    var type = Blockly.selected.type;
+    var type = blockView.block.type;
     this.renderBlock(type);
 };
 
 p.renderBlock = function(type) {
-    var data = this.blockHelpData[type];
-    if (!data)
-        return;
-    var xmlText = data.xml;
-    var XML = jQuery.parseXML(xmlText);
-    var blockHeight = this.blockMenu_.show(XML.childNodes);
+    if (!type) return;
+    if (this.code) this.code = null;
+
+    this.code = new Entry.Code([
+        [
+            {
+                type:type,
+                readOnly: true
+            }
+        ]
+    ]);
+
+    this.blockMenu_.changeCode(this.code);
+
+    var blockView = this.code.getThreads()[0].getFirstBlock().view;
+    var bBox = blockView.svgGroup.getBBox();
+    var blockWidth = bBox.width;
+    var blockHeight = bBox.height;
+    var offsetX =blockView.getSkeleton().box(blockView).offsetX;
+    if (isNaN(offsetX)) offsetX = 0;
     this.blockHelperDescription_.innerHTML = Lang.Helper[type];
+
     $(this.blockHelperDescription_).css({
-        top: blockHeight + 40
+        top: blockHeight + 30
+    });
+
+    var blockMenu = this.blockMenu_;
+    var dom = blockMenu.svgDom;
+    dom.css({
+        'margin-left':-(blockWidth/2) -20 - offsetX
     });
 };

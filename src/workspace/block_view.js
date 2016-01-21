@@ -556,15 +556,15 @@ Entry.BlockView = function(block, board, mode) {
         //below the board
         if (x + this.offsetX < board.offset.left) return null;
 
-        var targetElement = Snap.getElementByPoint(x, y + offset.top - 1);
+        var targetElement = Snap.getElementByPoint(x, y + offset.top - 2);
 
         if (targetElement === null) return;
 
         var targetType = this._skeleton.magnets();
 
         if (targetType.previous) targetType = 'nextMagnet';
-        else if (targetType == 'STRING') targetType = 'stringMagnet';
-        else if (targetType == 'BOOLEAN') targetType = 'booleanMagnet';
+        else if (targetType.string) targetType = 'stringMagnet';
+        else if (targetType.bool) targetType = 'booleanMagnet';
         else targetType = null;
 
         if (!targetType) return;

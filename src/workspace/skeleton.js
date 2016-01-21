@@ -284,7 +284,9 @@ Entry.skeleton.basic_string_field = {
         };
     },
     magnets: function() {
-        return "STRING"
+        return {
+            string: {}
+        };
     },
     contentPos: function(blockView) {
         // apply scale required.
@@ -316,7 +318,9 @@ Entry.skeleton.basic_boolean_field = {
         };
     },
     magnets: function() {
-        return "BOOLEAN"
+        return {
+            bool: {}
+        };
     },
     contentPos: function(blockView) {
         // apply scale required.

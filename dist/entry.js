@@ -6396,38 +6396,47 @@ p.blockHelperOn = function() {
   a.blockHelperContent_ = c;
   a.blockHelperView_ = b;
   b = Entry.createElement("div", "entryBlockHelperBlockWorkspace");
-  this.blockMenu_ = new Blockly.BlockMenu(b);
-  this.blockMenu_.isViewOnly = !0;
-  this.blockMenu_.isCenterAlign = !0;
   a.blockHelperContent_.appendChild(b);
-  b = Entry.createElement("div", "entryBlockHelperDescriptionWorkspace");
-  a.blockHelperContent_.appendChild(b);
-  b.innerHTML = Lang.Helper.Block_click_msg;
-  this.blockHelperDescription_ = b;
-  this.blockChangeEvent = Blockly.bindEvent_(Blockly.mainWorkspace.getCanvas(), "blocklySelectChange", this, this.updateSelectedBlock);
-  Entry.playground.blockMenu && (this.menuBlockChangeEvent = Blockly.bindEvent_(Entry.playground.blockMenu.workspace_.getCanvas(), "blocklySelectChange", this, this.updateSelectedBlock));
+  c = Entry.createElement("div", "entryBlockHelperDescriptionWorkspace");
+  a.blockHelperContent_.appendChild(c);
+  c.innerHTML = Lang.Helper.Block_click_msg;
+  this.blockHelperDescription_ = c;
+  this.blockMenu_ = new Entry.BlockMenu($(b), "LEFT");
+  this.blockMenu_.viewOnly = !0;
+  if (b = Entry.playground.mainWorkspace) {
+    this.workspace = b;
+  }
+  this._blockViewObserver = b.observe(this, "updateSelectedBlock", ["selectedBlockView"]);
   this.first = !0;
 };
 p.blockHelperOff = function() {
   if (this.blockHelperView_ && !Entry.isForLecture) {
     var a = this;
     a.blockHelperView_.addClass("dispose");
-    Blockly.unbindEvent_(this.blockChangeEvent);
-    delete this.blockChangeEvent;
-    Entry.playground.blockMenu && (Blockly.unbindEvent_(this.menuBlockChangeEvent), delete this.menuBlockChangeEvent);
     Entry.bindAnimationCallback(a.blockHelperView_, function(b) {
       a.parentView_.removeChild(a.blockHelperView_);
       delete a.blockHelperContent_;
       delete a.blockHelperView_;
     });
+    this._blockViewObserver && this._blockViewObserver.destroy();
+    this.code = null;
   }
 };
 p.updateSelectedBlock = function() {
-  Blockly.selected && (this.first && (this.blockHelperContent_.removeClass("entryBlockHelperIntro"), this.first = !1), this.renderBlock(Blockly.selected.type));
+  var a = this.workspace.selectedBlockView;
+  a && (this.first && (this.blockHelperContent_.removeClass("entryBlockHelperIntro"), this.first = !1), this.renderBlock(a.block.type));
 };
 p.renderBlock = function(a) {
-  var b = this.blockHelpData[a];
-  b && (b = jQuery.parseXML(b.xml), b = this.blockMenu_.show(b.childNodes), this.blockHelperDescription_.innerHTML = Lang.Helper[a], $(this.blockHelperDescription_).css({top:b + 40}));
+  if (a) {
+    this.code && (this.code = null);
+    this.code = new Entry.Code([[{type:a, readOnly:!0}]]);
+    this.blockMenu_.changeCode(this.code);
+    var b = this.code.getThreads()[0].getFirstBlock().view, c = b.svgGroup.getBBox(), d = c.width, c = c.height, b = b.getSkeleton().box(b).offsetX;
+    isNaN(b) && (b = 0);
+    this.blockHelperDescription_.innerHTML = Lang.Helper[a];
+    $(this.blockHelperDescription_).css({top:c + 30});
+    this.blockMenu_.svgDom.css({"margin-left":-(d / 2) - 20 - b});
+  }
 };
 Entry.Activity = function(a, b) {
   this.name = a;
@@ -13008,11 +13017,13 @@ Entry.BlockMenu = function(a, b, c) {
   this._categoryElems = {};
   this._selectedCategoryView = null;
   this.visible = !0;
+  this.viewOnly = !1;
+  this._snapId = "blockMenu" + (new Date).getTime();
   this._generateView(c);
   this.offset = this.svgDom.offset();
   this._splitters = [];
   this.setWidth();
-  this.snap = Snap("#blockMenu");
+  this.snap = Snap("#" + this._snapId);
   this.svgGroup = this.snap.group();
   this.svgThreadGroup = this.svgGroup.group();
   this.svgThreadGroup.board = this;
@@ -13039,12 +13050,12 @@ Entry.BlockMenu = function(a, b, c) {
       }
     }
     this.blockMenuContainer = Entry.Dom("div", {"class":"blockMenuContainer", parent:a});
-    this.svgDom = Entry.Dom($('<svg id="blockMenu"version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'), {parent:this.blockMenuContainer});
+    this.svgDom = Entry.Dom($('<svg id="' + this._snapId + '" class="blockMenu" version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'), {parent:this.blockMenuContainer});
     this.svgDom.mouseenter(function(b) {
-      Entry.playground.resizing || (Entry.playground.focusBlockMenu = !0, b = d.expandWidth + 64, b > Entry.interfaceState.menuWidth && (this.widthBackup = Entry.interfaceState.menuWidth - 64, $(".blockMenuContainer>svg").stop().animate({width:b - 64}, 200)));
+      Entry.playground.resizing || d.viewOnly || (Entry.playground.focusBlockMenu = !0, b = d.expandWidth + 64, b > Entry.interfaceState.menuWidth && (this.widthBackup = Entry.interfaceState.menuWidth - 64, $(this).stop().animate({width:b - 64}, 200)));
     });
     this.svgDom.mouseleave(function(b) {
-      Entry.playground.resizing || ((b = this.widthBackup) && $(".blockMenuContainer>svg").stop().animate({width:b}, 200), delete this.widthBackup, delete Entry.playground.focusBlockMenu);
+      Entry.playground.resizing || d.viewOnly || ((b = this.widthBackup) && $(this).stop().animate({width:b}, 200), delete this.widthBackup, delete Entry.playground.focusBlockMenu);
     });
   };
   a.changeCode = function(b) {
@@ -13454,8 +13465,8 @@ Entry.BlockView = function(a, b, c) {
       if (a + this.offsetX < b.offset.left) {
         return null;
       }
-      b = Snap.getElementByPoint(a, d + e.top - 1);
-      if (null !== b && (a = this._skeleton.magnets(), a = a.previous ? "nextMagnet" : "STRING" == a ? "stringMagnet" : "BOOLEAN" == a ? "booleanMagnet" : null)) {
+      b = Snap.getElementByPoint(a, d + e.top - 2);
+      if (null !== b && (a = this._skeleton.magnets(), a = a.previous ? "nextMagnet" : a.string ? "stringMagnet" : a.bool ? "booleanMagnet" : null)) {
         for (d = b[a];!d && b.parent() && "svg" !== b.type && "BODY" !== b.type;) {
           b = b.parent(), d = b[a];
         }
@@ -13727,12 +13738,12 @@ Entry.Executor = function(a) {
     void 0 === this.scope.block._schema.func.call(this.scope) && (this.scope = {block:this.scope.block.next, executor:this});
     null === this.scope.block && this._callStack.length && (this.scope = this._callStack.pop());
   };
-  a.stepInto = function(b) {
-    b instanceof Entry.Thread || console.error("Must step in to thread");
+  a.stepInto = function(a) {
+    a instanceof Entry.Thread || console.error("Must step in to thread");
     this._callStack.push(this.scope);
-    b = b.getFirstBlock();
-    b.isDummy && (b = b.next);
-    this.scope = {block:b, executor:this};
+    a = a.getFirstBlock();
+    a.isDummy && (a = a.next);
+    this.scope = {block:a, executor:this};
   };
 })(Entry.Executor.prototype);
 Entry.Field = function() {
@@ -13746,16 +13757,16 @@ Entry.Field = function() {
     this.documentDownEvent && (Entry.documentMousedown.detach(this.documentDownEvent), delete this.documentDownEvent);
     this.optionGroup && (this.optionGroup.remove(), delete this.optionGroup);
   };
-  a.align = function(b, a, d) {
+  a.align = function(a, c, d) {
     var e = this.svgGroup;
-    this._position && (this._position.x && (b = this._position.x), this._position.y && (a = this._position.y));
-    var f = "t" + b + " " + a;
+    this._position && (this._position.x && (a = this._position.x), this._position.y && (c = this._position.y));
+    var f = "t" + a + " " + c;
     void 0 === d || d ? e.animate({transform:f}, 300, mina.easeinout) : e.attr({transform:f});
-    this.box.set({x:b, y:a});
+    this.box.set({x:a, y:c});
   };
   a.getAbsolutePos = function() {
-    var b = this._block.view, a = b.svgGroup.transform().globalMatrix, d = b.getBoard().svgDom.offset(), b = b.getContentPos();
-    return {x:a.e + d.left + this.box.x + b.x, y:a.f + d.top + this.box.y + b.y};
+    var a = this._block.view, c = a.svgGroup.transform().globalMatrix, d = a.getBoard().svgDom.offset(), a = a.getContentPos();
+    return {x:c.e + d.left + this.box.x + a.x, y:c.f + d.top + this.box.y + a.y};
   };
   a.getRelativePos = function() {
     var a = this._block.view, c = a.svgGroup.transform().globalMatrix, a = a.getContentPos(), d = this.box;
@@ -14721,7 +14732,7 @@ Entry.skeleton.basic_string_field = {path:function(a) {
 }, color:"#000", outerLine:!0, box:function(a) {
   return {offsetX:0, offsetY:0, width:(a ? a.contentWidth : 5) + 4, height:Math.max((a ? a.contentHeight : 18) + 2, 18), marginBottom:0};
 }, magnets:function() {
-  return "STRING";
+  return {string:{}};
 }, contentPos:function(a) {
   return {x:2, y:Math.max(a.contentHeight, 16) / 2 + 1};
 }};
@@ -14734,7 +14745,7 @@ Entry.skeleton.basic_boolean_field = {path:function(a) {
 }, color:"#000", outerLine:!0, box:function(a) {
   return {offsetX:0, offsetY:0, width:(a ? a.contentWidth : 5) + 20, height:(a ? a.contentHeight : 20) + 2, marginBottom:0};
 }, magnets:function() {
-  return "BOOLEAN";
+  return {bool:{}};
 }, contentPos:function(a) {
   return {x:11, y:11};
 }};
@@ -15374,10 +15385,11 @@ Entry.Vim = function(a) {
   };
 })(Entry.Vim.prototype);
 Entry.Workspace = function(a) {
+  Entry.Model(this, !1);
   var b = a.blockMenu;
-  b && (this.blockMenu = new Entry.BlockMenu(b.dom, b.align, b.categoryData), this.blockMenu.workspace = this);
+  b && (this.blockMenu = new Entry.BlockMenu(b.dom, b.align, b.categoryData), this.blockMenu.workspace = this, this.blockMenu.observe(this, "_setSelectedBlockView", ["selectedBlockView"], !1));
   if (b = a.board) {
-    this.board = new Entry.Board(b.dom), this.board.workspace = this;
+    this.board = new Entry.Board(b.dom), this.board.workspace = this, this.board.observe(this, "_setSelectedBlockView", ["selectedBlockView"], !1);
   }
   if (b = a.vimBoard) {
     this.vimBoard = new Entry.Vim(b.dom), this.vimBoard.workspace = this;
@@ -15390,6 +15402,7 @@ Entry.Workspace = function(a) {
 Entry.Workspace.MODE_BOARD = 0;
 Entry.Workspace.MODE_VIMBOARD = 1;
 (function(a) {
+  a.schema = {selectedBlockView:null};
   a.getBoard = function() {
     return this.board;
   };
@@ -15424,6 +15437,9 @@ Entry.Workspace.MODE_VIMBOARD = 1;
   };
   a.getCodeToText = function(a) {
     return this.vimBoard.getCodeToText(a);
+  };
+  a._setSelectedBlockView = function() {
+    this.set({selectedBlockView:this.board.selectedBlockView || this.blockMenu.selectedBlockView});
   };
 })(Entry.Workspace.prototype);
 Entry.Playground = function() {
@@ -15538,6 +15554,8 @@ Entry.Playground.prototype.generateCodeView = function(a) {
   this.blockDriver = new Entry.BlockDriver;
   this.blockDriver.convert();
   this.mainWorkspace = new Entry.Workspace({blockMenu:{dom:a, align:"LEFT", categoryData:EntryStatic.getAllBlocks()}, board:{dom:b}});
+  this.blockMenu = this.mainWorkspace.blockMenu;
+  this.board = this.mainWorkspace.board;
   a = new Entry.Code([[{type:"when_run_button_click", x:40, y:240}, {type:"repeat_basic", statements:[[{type:"move_direction"}]]}, {type:"stop_repeat"}], [{type:"when_run_button_click", x:40, y:40}, {type:"repeat_basic", statements:[[{type:"move_direction"}]]}, {type:"stop_repeat"}]]);
   this.mainWorkspace.changeBoardCode(a);
 };

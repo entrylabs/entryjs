@@ -29,13 +29,17 @@ Entry.BlockMenu = function(dom, align, categoryData) {
     this._categoryElems = {};
     this._selectedCategoryView = null;
     this.visible = true;
+    this.viewOnly = false;
+    this._snapId = 'blockMenu' + new Date().getTime();
     this._generateView(categoryData);
 
     this.offset = this.svgDom.offset();
     this._splitters = [];
     this.setWidth();
 
-    this.snap = Snap('#blockMenu');
+
+    //this.snap = Snap('#blockMenu');
+    this.snap = Snap('#' + this._snapId);
 
     this.svgGroup = this.snap.group();
 
@@ -100,29 +104,29 @@ Entry.BlockMenu = function(dom, align, categoryData) {
         });
 
         this.svgDom = Entry.Dom(
-            $('<svg id="blockMenu"' + 'version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'),
+            $('<svg id="' + this._snapId +'" class="blockMenu" version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'),
             { parent: this.blockMenuContainer }
         );
 
         //IN PROGRESS
         this.svgDom.mouseenter(function(e) {
-            if (Entry.playground.resizing) return;
+            if (Entry.playground.resizing || that.viewOnly) return;
             Entry.playground.focusBlockMenu = true;
             var width = that.expandWidth + 64;
             if (width > Entry.interfaceState.menuWidth) {
                 this.widthBackup = Entry.interfaceState.menuWidth - 64;
-                $('.blockMenuContainer>svg').stop().animate({
+                $(this).stop().animate({
                     width: width - 64
                 }, 200);
             }
         });
 
         this.svgDom.mouseleave(function(e) {
-            if (Entry.playground.resizing) return;
+            if (Entry.playground.resizing || that.viewOnly) return;
 
             var widthBackup = this.widthBackup;
             if (widthBackup)
-                $('.blockMenuContainer>svg').stop().animate({
+                $(this).stop().animate({
                     width: widthBackup
                 }, 200);
             delete this.widthBackup;

@@ -125,15 +125,21 @@
 }
 
 #entryBlockHelperBlockWorkspace {
-    position: absolute;
     width: 400px;
     height: 160px;
     top: 16px;
-    left: 50%;
+    overflow: hidden;
 }
 
-#entryBlockHelperBlockWorkspace>svg {
-    position: relative; left: -50%;
+#entryBlockHelperBlockWorkspace>.blockMenuContainer {
+    width: 100%;
+}
+
+#entryBlockHelperBlockWorkspace>.blockMenuContainer>svg {
+    position: absolute;
+    overflow: visible;
+    left: 50%;
+    padding-top: 10px;
 }
 
 #entryBlockHelperDescriptionWorkspace {
