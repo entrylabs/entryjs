@@ -18,6 +18,7 @@ Entry.BlockView = function(block, board, mode) {
     this._schema = Entry.block[block.type];
     var skeleton = this._skeleton = Entry.skeleton[this._schema.skeleton];
     this._contents = [];
+    this._statements = [];
 
     if (skeleton.magnets && skeleton.magnets().next)
         this.svgGroup.nextMagnet = this.block;
@@ -60,7 +61,6 @@ Entry.BlockView = function(block, board, mode) {
         visible: true,
         animating: false,
         shadow: true
-
     };
 
     p._startRender = function(block, mode) {
@@ -90,14 +90,19 @@ Entry.BlockView = function(block, board, mode) {
     p._startContentRender = function(mode) {
         mode = mode === undefined ?
             Entry.Workspace.MODE_BOARD : mode;
-        if (this.contentSvgGroup) this.contentSvgGroup.remove();
+        if (this.contentSvgGroup)
+            this.contentSvgGroup.remove();
+        var schema = this._schema;
+        if (schema.statements.length && this.statementSvgGroup)
+            this.statementSvgGroup.remove();
         this._contents = [];
 
         this.contentSvgGroup = this.svgGroup.group();
+        if (schema.statements.length)
+            this.statementSvgGroup = this.svgGroup.group();
         switch (mode) {
             case Entry.Workspace.MODE_BOARD:
                 var reg = /(%\d)/gmi;
-                var schema = this._schema;
                 var templateParams = schema.template.split(reg);
                 var params = schema.params;
                 for (var i=0; i<templateParams.length; i++) {
@@ -113,9 +118,9 @@ Entry.BlockView = function(block, board, mode) {
                 }
 
                 var statements = schema.statements;
-                if (statements) {
+                if (statements.length) {
                     for (i=0; i<statements.length; i++)
-                        this._contents.push(new Entry.FieldStatement(statements[i], this, i));
+                        this._statements.push(new Entry.FieldStatement(statements[i], this, i));
                 }
                 break;
             case Entry.Workspace.MODE_VIMBOARD:
@@ -142,6 +147,15 @@ Entry.BlockView = function(block, board, mode) {
             var box = c.box;
             cursor.height = Math.max(box.y + box.height, cursor.height);
             cursor.x += box.width;
+        }
+
+        if (this._statements.length) {
+            var positions = this._skeleton.statementPos(this);
+            for (var i = 0; i < this._statements.length; i++) {
+                var s = this._statements[i];
+                var pos = positions[i];
+                s.align(pos.x, pos.y, animate);
+            }
         }
 
         this.set({
@@ -497,7 +511,6 @@ Entry.BlockView = function(block, board, mode) {
                                         }
                                     }
                                 }
-
                             } else block.doSeparate();
                         }
                         break;
@@ -543,7 +556,7 @@ Entry.BlockView = function(block, board, mode) {
         //below the board
         if (x + this.offsetX < board.offset.left) return null;
 
-        var targetElement = Snap.getElementByPoint(x, y + offset.top - 2);
+        var targetElement = Snap.getElementByPoint(x, y + offset.top - 1);
 
         if (targetElement === null) return;
 
@@ -560,12 +573,9 @@ Entry.BlockView = function(block, board, mode) {
 
         while (!targetBlock && targetElement.parent() &&
                targetElement.type !== "svg" && targetElement.type !== "BODY") {
-            console.log(targetElement);
             targetElement = targetElement.parent();
             targetBlock = targetElement[targetType];
         }
-
-        console.log(x, y, targetBlock, targetElement);
 
         if (targetBlock === undefined || targetBlock === this.block) return null;
 
@@ -612,6 +622,10 @@ Entry.BlockView = function(block, board, mode) {
             c.destroy();
         });
 
+        this._statements.forEach(function(c) {
+            c.destroy();
+        });
+
         var block = this.block;
         var events = block.events.blockDestroy;
         if (events && !this.isInBlockMenu)
@@ -640,7 +654,6 @@ Entry.BlockView = function(block, board, mode) {
         var magneting = blockView.magneting;
         var block = blockView.block;
         var svgGroup = blockView.svgGroup;
-        console.log(magneting);
         if (magneting) {
             var shadow = this._board.dragBlock.getShadow();
             $(shadow.node).attr({
@@ -689,7 +702,6 @@ Entry.BlockView = function(block, board, mode) {
                 height: height,
                 animating: false
             });
-            console.log(this.animating);
         } else {
             if (this._clonedShadow) {
                 this._clonedShadow.remove();

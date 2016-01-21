@@ -13,9 +13,9 @@ Entry.skeleton = function() {
 };
 
 Entry.skeleton.basic = {
-    path: function(block) {
-        var width = block.contentWidth;
-        var height = block.contentHeight;
+    path: function(blockView) {
+        var width = blockView.contentWidth;
+        var height = blockView.contentHeight;
         height = Math.max(30, height + 2);
         width = Math.max(0, width + 9 - height / 2);
         return "m -8,0 l 8,8 8,-8 h %w a %h,%h 0 0,1 0,%wh h -%w l -8,8 -8,-8 v -%wh z"
@@ -23,9 +23,9 @@ Entry.skeleton.basic = {
             .replace(/%w/gi, width)
             .replace(/%h/gi, height / 2);
     },
-    box: function(block) {
-        var width = block ? block.contentWidth : 150;
-        var height = block ? block.contentHeight : 28;
+    box: function(blockView) {
+        var width = blockView ? blockView.contentWidth : 150;
+        var height = blockView ? blockView.contentHeight : 28;
         return {
             offsetX: -8, offsetY: 0,
             width: width + 30,
@@ -40,26 +40,26 @@ Entry.skeleton.basic = {
             next: {x: 0, y: 31}
         };
     },
-    contentPos: function(block) {
+    contentPos: function(blockView) {
         // apply scale required.
-        var height = Math.max(block.contentHeight, 28);
+        var height = Math.max(blockView.contentHeight, 28);
         return {x: 14, y: height / 2 + 1};
     }
 
 };
 
 Entry.skeleton.basic_event = {
-    path: function(block) {
-        var width = block.contentWidth;
+    path: function(blockView) {
+        var width = blockView.contentWidth;
         width = Math.max(0, width);
         return ("m -8,0 m 0,-5 a 19.5,19.5 0, 0,1 16,0 c 10,5 15,5 20,5 h %w " +
             "a 15,15 0 0,1 0,30 H 8 l -8,8 -8,-8 l 0,0.5 a 19.5,19.5 0, 0,1 0,-35 z")
             .replace(/%w/gi, width - 30);
     },
-    box: function(block) {
+    box: function(blockView) {
         return {
             offsetX: -19, offsetY: -7,
-            width: block.contentWidth + 30,
+            width: blockView.contentWidth + 30,
             height: 30,
             marginBottom: 0
         };
@@ -70,19 +70,24 @@ Entry.skeleton.basic_event = {
             next: {x: 0, y: 31}
         };
     },
-    contentPos: function(block) {
+    contentPos: function(blockView) {
         // apply scale required.
         return {x: 1, y: 15};
     }
 };
 
 Entry.skeleton.basic_loop = {
-    path: function(block) {
-        var contentWidth = Math.max(0, block.contentWidth - 11);
-        var contentHeight = Math.max(block.contentHeight, 25);
-        return ("m -8,0 l 8,8 8,-8 h %cw a 15,15 0 0,1 0,30 H 24 l -8,8 -8,-8 h -0.4 v %ch h 0.4 l 8,8 8,-8 h %cw h -8 a 8,8 0 0,1 0,16 H 8 l -8,8 -8,-8 z")
-            .replace(/%cw/gi, contentWidth)
-            .replace(/%ch/gi, contentHeight);
+    path: function(blockView) {
+        var width = blockView.contentWidth;
+        var height = blockView.contentHeight;
+        height = Math.max(30, height + 2);
+        width = Math.max(0, width + 9 - height / 2);
+        var statementHeight = blockView._statements[0] ? blockView._statements[0].box.height : 30;
+        return ("m -8,0 l 8,8 8,-8 h %w a %h,%h 0 0,1 0,%wh H 24 l -8,8 -8,-8 h -0.4 v %sh h 0.4 l 8,8 8,-8 h %w h -8 a 8,8 0 0,1 0,16 H 8 l -8,8 -8,-8 z")
+            .replace(/%wh/gi, height)
+            .replace(/%w/gi, width)
+            .replace(/%h/gi, height / 2)
+            .replace(/%sh/gi, statementHeight + 1);
     },
     magnets: function() {
         var contentWidth = 124;
@@ -93,27 +98,35 @@ Entry.skeleton.basic_loop = {
             next: {x: 0, y: contentHeight + 55}
         };
     },
-    box: function(block) {
-        var contentWidth = block.contentWidth;
-        var contentHeight = Math.max(block.contentHeight, 25);
+    box: function(blockView) {
+        var contentWidth = blockView.contentWidth;
+        var contentHeight = Math.max(blockView.contentHeight + 2, 30);
+        var statementHeight = blockView._statements[0] ? blockView._statements[0].box.height : 30;
         return {
             offsetX: -8, offsetY: 0,
             width: contentWidth + 30,
-            height: contentHeight + 46,
+            height: contentHeight + statementHeight + 17,
             marginBottom: 0
         };
     },
-    contentPos: function() {
+    statementPos: function(blockView) {
+        var height = Math.max(30, blockView.contentHeight + 2);
+        return [{
+            x: 16, y: height
+        }];
+    },
+    contentPos: function(blockView) {
         // apply scale required.
-        return {x: 14, y: 15};
+        var height = Math.max(blockView.contentHeight, 28);
+        return {x: 14, y: height / 2 + 1};
     }
 };
 
 
 Entry.skeleton.basic_define = {
-    path: function(block) {
-        var contentWidth = Math.max(0, block.contentWidth - 6);
-        var contentHeight = Math.max(block.contentHeight, 25);
+    path: function(blockView) {
+        var contentWidth = Math.max(0, blockView.contentWidth - 6);
+        var contentHeight = Math.max(blockView.contentHeight, 25);
         return ("m -8,0 h 16 h %cw a 15,15 0 0,1 0,30 H 24 l -8,8 -8,-8 h -0.4 v %ch h 0.4 l 8,8 8,-8 h %cw h -8 a 8,8 0 0,1 0,16 H 8 l -8,8 -8,-8 z")
             .replace(/%cw/gi, contentWidth)
             .replace(/%ch/gi, contentHeight);
@@ -127,9 +140,9 @@ Entry.skeleton.basic_define = {
             next: {x: 0, y: contentHeight + 55}
         };
     },
-    box: function(block) {
-        var contentWidth = block.contentWidth;
-        var contentHeight = Math.max(block.contentHeight, 25);
+    box: function(blockView) {
+        var contentWidth = blockView.contentWidth;
+        var contentHeight = Math.max(blockView.contentHeight, 25);
         return {
             offsetX: 0, offsetY: 0,
             width: contentWidth,
@@ -145,11 +158,11 @@ Entry.skeleton.basic_define = {
 
 
 Entry.skeleton.pebble_event = {
-    path: function(block) {
-        var width = block.contentWidth;
+    path: function(blockView) {
+        var width = blockView.contentWidth;
         return "m 0,0 a 25,25 0 0,1 9,48.3 a 9,9 0 0,1 -18,0 a 25,25 0 0,1 9,-48.3 z";
     },
-    box: function(block) {
+    box: function(blockView) {
         return {
             offsetX: -25, offsetY: 0,
             width: 50,
@@ -157,7 +170,7 @@ Entry.skeleton.pebble_event = {
             marginBottom: 0
         };
     },
-    magnets: function(block) {
+    magnets: function(blockView) {
         // apply scale required.
         return {
             next: {x: 0, y: 49.3}
@@ -172,9 +185,9 @@ Entry.skeleton.pebble_event = {
 Entry.skeleton.pebble_loop = {
     fontSize: 16,
     dropdownHeight: 23,
-    path: function(block) {
+    path: function(blockView) {
         var contentWidth = 124;
-        var contentHeight = Math.max(block.contentHeight, 50);
+        var contentHeight = Math.max(blockView.contentHeight, 50);
         return ("M 0,9 a 9,9 0 0,0 9,-9 h %cw q 25,0 25,25 v %ch q 0,25 -25,25 h -%cw a 9,9 0 0,1 -18,0 " +
             "h -%cw q -25,0 -25,-25 v -%ch q 0,-25 25,-25 h %cw a 9,9 0 0,0 9,9 " +
             "M 0,49 a 9,9 0 0,1 -9,-9 h -28 a 25,25 0 0,0 -25,25 v %cih a 25,25 0 0,0 25,25 h 28 a 9,9 0 0,0 18,0 " +
@@ -192,9 +205,9 @@ Entry.skeleton.pebble_loop = {
             next: {x: 0, y: contentHeight + 55}
         };
     },
-    box: function(block) {
+    box: function(blockView) {
         var contentWidth = 124;
-        var contentHeight = Math.max(block.contentHeight, 50);
+        var contentHeight = Math.max(blockView.contentHeight, 50);
         return {
             offsetX: -(contentWidth / 2 + 13), offsetY: 0,
             width: contentWidth + 26,
@@ -213,10 +226,10 @@ Entry.skeleton.pebble_basic = {
     morph: [
         "prev", "next"
     ],
-    path: function(blockView) {
-        var block = blockView.block;
-        var isPrevSame = block.prev && block.prev._schema.skeleton === "pebble_basic";
-        var isNextSame = block.next && block.next._schema.skeleton === "pebble_basic";
+    path: function(blockViewView) {
+        var blockView = blockViewView.blockView;
+        var isPrevSame = blockView.prev && blockView.prev._schema.skeleton === "pebble_basic";
+        var isNextSame = blockView.next && blockView.next._schema.skeleton === "pebble_basic";
 
         return "m 0,9 a 9,9 0 0,0 9,-9 h 28 " +
             (isPrevSame ? "l 25,0 0,25" : "q 25,0 25,25") +
@@ -248,9 +261,9 @@ Entry.skeleton.pebble_basic = {
 };
 
 Entry.skeleton.basic_string_field = {
-    path: function(block) {
-        var width = block.contentWidth;
-        var height = block.contentHeight;
+    path: function(blockView) {
+        var width = blockView.contentWidth;
+        var height = blockView.contentHeight;
         height = Math.max(18, height + 2);
         width = Math.max(0, width - height + 4);
         return "m %h,0 h %w a %h,%h 0 1,1 0,%wh H %h A %h,%h 0 1,1 %h,0 z"
@@ -260,9 +273,9 @@ Entry.skeleton.basic_string_field = {
     },
     color: "#000",
     outerLine: true,
-    box: function(block) {
-        var width = block ? block.contentWidth : 5;
-        var height = block ? block.contentHeight : 18;
+    box: function(blockView) {
+        var width = blockView ? blockView.contentWidth : 5;
+        var height = blockView ? blockView.contentHeight : 18;
         return {
             offsetX: 0, offsetY: 0,
             width: width + 4,
@@ -273,17 +286,17 @@ Entry.skeleton.basic_string_field = {
     magnets: function() {
         return "STRING"
     },
-    contentPos: function(block) {
+    contentPos: function(blockView) {
         // apply scale required.
-        var height = Math.max(block.contentHeight, 16);
+        var height = Math.max(blockView.contentHeight, 16);
         return {x: 2, y: height / 2 + 1};
     }
 };
 
 Entry.skeleton.basic_boolean_field = {
-    path: function(block) {
-        var width = block.contentWidth;
-        var height = block.contentHeight;
+    path: function(blockView) {
+        var width = blockView.contentWidth;
+        var height = blockView.contentHeight;
         width = Math.max(0, width - 2);
         height = Math.max(0, height + 6);
         return "m 11,0 h %w l 10,10 -10,10 H 11 l -10,-10 10,-10 z "
@@ -292,9 +305,9 @@ Entry.skeleton.basic_boolean_field = {
     },
     color: "#000",
     outerLine: true,
-    box: function(block) {
-        var width = block ? block.contentWidth : 5;
-        var height = block ? block.contentHeight : 20;
+    box: function(blockView) {
+        var width = blockView ? blockView.contentWidth : 5;
+        var height = blockView ? blockView.contentHeight : 20;
         return {
             offsetX: 0, offsetY: 0,
             width: width + 20,
@@ -305,7 +318,7 @@ Entry.skeleton.basic_boolean_field = {
     magnets: function() {
         return "BOOLEAN"
     },
-    contentPos: function(block) {
+    contentPos: function(blockView) {
         // apply scale required.
         return {x: 11, y: 11};
     }

@@ -95,11 +95,7 @@ Entry.BlockMockup = function(blocklyInfo) {
 
     p.appendStatementInput = function(key) {
         var statement = {
-            accept: "basic",
-            position: {
-                x: 2,
-                y: 15
-            }
+            accept: "basic"
         };
         this.statements.push(statement);
     };

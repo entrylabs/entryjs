@@ -9856,7 +9856,7 @@ Entry.BlockMockup = function(a) {
     return this;
   };
   a.appendStatementInput = function(b) {
-    this.statements.push({accept:"basic", position:{x:2, y:15}});
+    this.statements.push({accept:"basic"});
   };
   a.setCheck = function(b) {
   };
@@ -13182,6 +13182,7 @@ Entry.BlockView = function(a, b, c) {
   this._schema = Entry.block[a.type];
   var d = this._skeleton = Entry.skeleton[this._schema.skeleton];
   this._contents = [];
+  this._statements = [];
   d.magnets && d.magnets().next && (this.svgGroup.nextMagnet = this.block);
   this.isInBlockMenu = this.getBoard() instanceof Entry.BlockMenu;
   d.morph && this.block.observe(this, "_renderPath", d.morph, !1);
@@ -13216,15 +13217,18 @@ Entry.BlockView = function(a, b, c) {
   a._startContentRender = function(b) {
     b = void 0 === b ? Entry.Workspace.MODE_BOARD : b;
     this.contentSvgGroup && this.contentSvgGroup.remove();
+    var a = this._schema;
+    a.statements.length && this.statementSvgGroup && this.statementSvgGroup.remove();
     this._contents = [];
     this.contentSvgGroup = this.svgGroup.group();
+    a.statements.length && (this.statementSvgGroup = this.svgGroup.group());
     switch(b) {
       case Entry.Workspace.MODE_BOARD:
-        var a = /(%\d)/gmi, d = this._schema, e = d.template.split(a), f = d.params;
+        var d = /(%\d)/gmi, e = a.template.split(d), f = a.params;
         for (b = 0;b < e.length;b++) {
           var g = e[b].trim();
           if (0 !== g.length) {
-            if (a.test(g)) {
+            if (d.test(g)) {
               var h = Number(g.split("%")[1]) - 1, g = f[h];
               this._contents.push(new Entry["Field" + g.type](g, this, h));
             } else {
@@ -13232,14 +13236,15 @@ Entry.BlockView = function(a, b, c) {
             }
           }
         }
-        if (a = d.statements) {
+        a = a.statements;
+        if (a.length) {
           for (b = 0;b < a.length;b++) {
-            this._contents.push(new Entry.FieldStatement(a[b], this, b));
+            this._statements.push(new Entry.FieldStatement(a[b], this, b));
           }
         }
         break;
       case Entry.Workspace.MODE_VIMBOARD:
-        b = this.getBoard().workspace.getCodeToText(this.block), this._contents.push(new Entry.FieldText({text:b, color:"white"}, this));
+        a = this.getBoard().workspace.getCodeToText(this.block), this._contents.push(new Entry.FieldText({text:a, color:"white"}, this));
     }
     this.alignContent(!1);
   };
@@ -13252,6 +13257,12 @@ Entry.BlockView = function(a, b, c) {
       f = f.box;
       d = Math.max(f.y + f.height, d);
       a += f.width;
+    }
+    if (this._statements.length) {
+      for (f = this._skeleton.statementPos(this), e = 0;e < this._statements.length;e++) {
+        var g = f[e];
+        this._statements[e].align(g.x, g.y, b);
+      }
     }
     this.set({contentWidth:a, contentHeight:d});
     b = this.getContentPos();
@@ -13443,13 +13454,12 @@ Entry.BlockView = function(a, b, c) {
       if (a + this.offsetX < b.offset.left) {
         return null;
       }
-      b = Snap.getElementByPoint(a, d + e.top - 2);
-      if (null !== b && (e = this._skeleton.magnets(), e = e.previous ? "nextMagnet" : "STRING" == e ? "stringMagnet" : "BOOLEAN" == e ? "booleanMagnet" : null)) {
-        for (var f = b[e];!f && b.parent() && "svg" !== b.type && "BODY" !== b.type;) {
-          console.log(b), b = b.parent(), f = b[e];
+      b = Snap.getElementByPoint(a, d + e.top - 1);
+      if (null !== b && (a = this._skeleton.magnets(), a = a.previous ? "nextMagnet" : "STRING" == a ? "stringMagnet" : "BOOLEAN" == a ? "booleanMagnet" : null)) {
+        for (d = b[a];!d && b.parent() && "svg" !== b.type && "BODY" !== b.type;) {
+          b = b.parent(), d = b[a];
         }
-        console.log(a, d, f, b);
-        return void 0 === f || f === this.block ? null : f;
+        return void 0 === d || d === this.block ? null : d;
       }
     }
   };
@@ -13477,6 +13487,9 @@ Entry.BlockView = function(a, b, c) {
     this._contents.forEach(function(b) {
       b.destroy();
     });
+    this._statements.forEach(function(b) {
+      b.destroy();
+    });
     var d = this.block;
     (b = d.events.blockDestroy) && !this.isInBlockMenu && b.forEach(function(b) {
       b(d);
@@ -13491,11 +13504,25 @@ Entry.BlockView = function(a, b, c) {
   };
   a._updateBG = function() {
     if (this._board.dragBlock && this._board.dragBlock.dragInstance) {
-      var b = this._board.dragBlock.dragInstance.height, a = this, d = a.magneting, e = a.svgGroup;
-      console.log(d);
-      if (d) {
-        d = this._board.dragBlock.getShadow(), $(d.node).attr({transform:"translate(0 " + (this.height + 1) + ")"}), this.svgGroup.prepend(d), this._clonedShadow = d, a.background && (a.background.remove(), a.nextBackground.remove(), delete a.background, delete a.nextBackground), b = a.height + b, d = e.rect(0 - a.width / 2, 1.5 * a.height + 1, a.width, Math.max(0, b - 1.5 * a.height)), d.block = a.block.next, a.nextBackground = d, d.attr({fill:"transparent"}), e.prepend(d), d = e.rect(0 - a.width / 
-        2, 0, a.width, b), a.background = d, d.attr({fill:"transparent"}), e.prepend(d), a.originalHeight = a.height, a.set({height:b, animating:!1}), console.log(this.animating);
+      var b = this._board.dragBlock.dragInstance.height, a = this, d = a.svgGroup;
+      if (a.magneting) {
+        var e = this._board.dragBlock.getShadow();
+        $(e.node).attr({transform:"translate(0 " + (this.height + 1) + ")"});
+        this.svgGroup.prepend(e);
+        this._clonedShadow = e;
+        a.background && (a.background.remove(), a.nextBackground.remove(), delete a.background, delete a.nextBackground);
+        b = a.height + b;
+        e = d.rect(0 - a.width / 2, 1.5 * a.height + 1, a.width, Math.max(0, b - 1.5 * a.height));
+        e.block = a.block.next;
+        a.nextBackground = e;
+        e.attr({fill:"transparent"});
+        d.prepend(e);
+        e = d.rect(0 - a.width / 2, 0, a.width, b);
+        a.background = e;
+        e.attr({fill:"transparent"});
+        d.prepend(e);
+        a.originalHeight = a.height;
+        a.set({height:b, animating:!1});
       } else {
         if (this._clonedShadow && (this._clonedShadow.remove(), delete this._clonedShadow), b = a.originalHeight) {
           setTimeout(function() {
@@ -13731,12 +13758,12 @@ Entry.Field = function() {
     return {x:a.e + d.left + this.box.x + b.x, y:a.f + d.top + this.box.y + b.y};
   };
   a.getRelativePos = function() {
-    var b = this._block.view, a = b.svgGroup.transform().globalMatrix, b = b.getContentPos(), d = this.box;
-    return {x:a.e + d.x + b.x, y:a.f + d.y + b.y};
+    var a = this._block.view, c = a.svgGroup.transform().globalMatrix, a = a.getContentPos(), d = this.box;
+    return {x:c.e + d.x + a.x, y:c.f + d.y + a.y};
   };
   a.truncate = function() {
-    var b = String(this.getValue()), a = this.TEXT_LIMIT_LENGTH, d = b.substring(0, a);
-    b.length > a && (d += "...");
+    var a = String(this.getValue()), c = this.TEXT_LIMIT_LENGTH, d = a.substring(0, c);
+    a.length > c && (d += "...");
     return d;
   };
   a.appendSvgOptionGroup = function() {
@@ -13745,9 +13772,9 @@ Entry.Field = function() {
   a.getValue = function() {
     return this._block.params[this._index];
   };
-  a.setValue = function(b) {
-    this.value = b;
-    this._block.params[this._index] = b;
+  a.setValue = function(a) {
+    this.value = a;
+    this._block.params[this._index] = a;
   };
 })(Entry.Field.prototype);
 Entry.FieldAngle = function(a, b, c) {
@@ -13762,61 +13789,61 @@ Entry.FieldAngle = function(a, b, c) {
 };
 Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
 (function(a) {
-  a.renderStart = function(b) {
-    var a = this;
-    this.svgGroup = b.contentSvgGroup.group();
+  a.renderStart = function(a) {
+    var c = this;
+    this.svgGroup = a.contentSvgGroup.group();
     this.svgGroup.attr({class:"entry-input-field"});
-    this.textElement = this.svgGroup.text(4, 4, a.getText());
+    this.textElement = this.svgGroup.text(4, 4, c.getText());
     this.textElement.attr({"font-size":"9pt"});
-    b = this.getTextWidth();
+    a = this.getTextWidth();
     var d = this.position && this.position.y ? this.position.y : 0;
-    this._header = this.svgGroup.rect(0, d - 8, b, 16, 3).attr({fill:"#fff", "fill-opacity":.4});
+    this._header = this.svgGroup.rect(0, d - 8, a, 16, 3).attr({fill:"#fff", "fill-opacity":.4});
     this.svgGroup.append(this.textElement);
-    this.svgGroup.mouseup(function(b) {
-      a._block.view.dragMode == Entry.DRAG_MODE_MOUSEDOWN && a.renderOptions();
+    this.svgGroup.mouseup(function(a) {
+      c._block.view.dragMode == Entry.DRAG_MODE_MOUSEDOWN && c.renderOptions();
     });
-    this.box.set({x:0, y:0, width:b, height:16});
+    this.box.set({x:0, y:0, width:a, height:16});
   };
   a.renderOptions = function() {
-    var b = this;
+    var a = this;
     this.destroyOption();
     this.documentDownEvent = Entry.documentMousedown.attach(this, function() {
       Entry.documentMousedown.detach(this.documentDownEvent);
-      b.applyValue();
-      b.destroyOption();
+      a.applyValue();
+      a.destroyOption();
     });
     this.optionGroup = Entry.Dom("input", {class:"entry-widget-input-field", parent:$("body")});
     this.optionGroup.val(this.value);
     this.optionGroup.on("mousedown", function(a) {
       a.stopPropagation();
     });
-    this.optionGroup.on("keyup", function(a) {
-      var c = a.keyCode || a.which;
-      b.applyValue(a);
-      -1 < [13, 27].indexOf(c) && b.destroyOption();
+    this.optionGroup.on("keyup", function(c) {
+      var d = c.keyCode || c.which;
+      a.applyValue(c);
+      -1 < [13, 27].indexOf(d) && a.destroyOption();
     });
-    var a = this.getAbsolutePos();
-    a.y -= this.box.height / 2;
-    this.optionGroup.css({height:16, left:a.x, top:a.y, width:b.box.width});
+    var c = this.getAbsolutePos();
+    c.y -= this.box.height / 2;
+    this.optionGroup.css({height:16, left:c.x, top:c.y, width:a.box.width});
     this.optionGroup.select();
     this.svgOptionGroup = this.appendSvgOptionGroup();
     this.svgOptionGroup.circle(0, 0, 49).attr({class:"entry-field-angle-circle"});
     this._dividerGroup = this.svgOptionGroup.group();
-    for (a = 0;360 > a;a += 15) {
-      this._dividerGroup.line(49, 0, 49 - (0 === a % 45 ? 10 : 5), 0).attr({transform:"rotate(" + a + ", 0, 0)", class:"entry-angle-divider"});
+    for (c = 0;360 > c;c += 15) {
+      this._dividerGroup.line(49, 0, 49 - (0 === c % 45 ? 10 : 5), 0).attr({transform:"rotate(" + c + ", 0, 0)", class:"entry-angle-divider"});
     }
-    a = this.getRelativePos();
-    a.x += this.box.width / 2;
-    a.y = a.y + this.box.height / 2 + 49 + 1;
-    this.svgOptionGroup.attr({class:"entry-field-angle", transform:"t" + a.x + " " + a.y});
-    var a = b.getAbsolutePos(), d = [a.x + b.box.width / 2, a.y + b.box.height / 2 + 1];
-    this.svgOptionGroup.mousemove(function(a) {
-      b.optionGroup.val(b.modValue(function(a, b) {
+    c = this.getRelativePos();
+    c.x += this.box.width / 2;
+    c.y = c.y + this.box.height / 2 + 49 + 1;
+    this.svgOptionGroup.attr({class:"entry-field-angle", transform:"t" + c.x + " " + c.y});
+    var c = a.getAbsolutePos(), d = [c.x + a.box.width / 2, c.y + a.box.height / 2 + 1];
+    this.svgOptionGroup.mousemove(function(c) {
+      a.optionGroup.val(a.modValue(function(a, b) {
         var c = b[0] - a[0], d = b[1] - a[1] - 49 - 1, e = Math.atan(-d / c), e = Entry.toDegrees(e), e = 90 - e;
         0 > c ? e += 180 : 0 < d && (e += 360);
         return 15 * Math.round(e / 15);
-      }(d, [a.clientX, a.clientY])));
-      b.applyValue();
+      }(d, [c.clientX, c.clientY])));
+      a.applyValue();
     });
     this.updateGraph();
   };
@@ -14160,7 +14187,7 @@ Entry.FieldStatement = function(a, b, c) {
 };
 (function(a) {
   a.renderStart = function(a) {
-    this.svgGroup = this._blockView.contentSvgGroup.group();
+    this.svgGroup = this._blockView.statementSvgGroup.group();
     this.box.set({x:46, y:0, width:0, height:20});
     this._thread = this.getValue();
     this.dummyBlock = new Entry.DummyBlock(this, this._blockView);
@@ -14179,7 +14206,7 @@ Entry.FieldStatement = function(a, b, c) {
     for (var a = this.dummyBlock, c = -1;a;) {
       c += a.view.height + 1, a = a.next;
     }
-    this.box.set({height:c});
+    this.box.set({height:Math.max(c, 20)});
   };
   a._updateThread = function() {
     this._threadChangeEvent && this._thread.changeEvent.detach(this._threadChangeEvent);
@@ -14632,14 +14659,17 @@ Entry.skeleton.basic_event = {path:function(a) {
   return {x:1, y:15};
 }};
 Entry.skeleton.basic_loop = {path:function(a) {
-  var b = Math.max(a.contentHeight, 25);
-  return "m -8,0 l 8,8 8,-8 h %cw a 15,15 0 0,1 0,30 H 24 l -8,8 -8,-8 h -0.4 v %ch h 0.4 l 8,8 8,-8 h %cw h -8 a 8,8 0 0,1 0,16 H 8 l -8,8 -8,-8 z".replace(/%cw/gi, Math.max(0, a.contentWidth - 11)).replace(/%ch/gi, b);
+  var b = a.contentWidth, c = a.contentHeight, c = Math.max(30, c + 2), b = Math.max(0, b + 9 - c / 2);
+  a = a._statements[0] ? a._statements[0].box.height : 30;
+  return "m -8,0 l 8,8 8,-8 h %w a %h,%h 0 0,1 0,%wh H 24 l -8,8 -8,-8 h -0.4 v %sh h 0.4 l 8,8 8,-8 h %w h -8 a 8,8 0 0,1 0,16 H 8 l -8,8 -8,-8 z".replace(/%wh/gi, c).replace(/%w/gi, b).replace(/%h/gi, c / 2).replace(/%sh/gi, a + 1);
 }, magnets:function() {
   return {previous:{x:0, y:0}, next:{x:0, y:105}};
 }, box:function(a) {
-  return {offsetX:-8, offsetY:0, width:a.contentWidth + 30, height:Math.max(a.contentHeight, 25) + 46, marginBottom:0};
-}, contentPos:function() {
-  return {x:14, y:15};
+  return {offsetX:-8, offsetY:0, width:a.contentWidth + 30, height:Math.max(a.contentHeight + 2, 30) + (a._statements[0] ? a._statements[0].box.height : 30) + 17, marginBottom:0};
+}, statementPos:function(a) {
+  return [{x:16, y:Math.max(30, a.contentHeight + 2)}];
+}, contentPos:function(a) {
+  return {x:14, y:Math.max(a.contentHeight, 28) / 2 + 1};
 }};
 Entry.skeleton.basic_define = {path:function(a) {
   var b = Math.max(a.contentHeight, 25);
@@ -14671,7 +14701,7 @@ Entry.skeleton.pebble_loop = {fontSize:16, dropdownHeight:23, path:function(a) {
   return {x:-46, y:25};
 }};
 Entry.skeleton.pebble_basic = {fontSize:16, morph:["prev", "next"], path:function(a) {
-  var b = a.block;
+  var b = a.blockView;
   a = b.prev && "pebble_basic" === b.prev._schema.skeleton;
   b = b.next && "pebble_basic" === b.next._schema.skeleton;
   return "m 0,9 a 9,9 0 0,0 9,-9 h 28 " + (a ? "l 25,0 0,25" : "q 25,0 25,25") + (b ? "l 0,25 -25,0" : "q 0,25 -25,25") + "h -28 a 9,9 0 0,1 -18,0 h -28 " + (b ? "l -25,0 0,-25" : "q -25,0 -25,-25") + (a ? "l 0,-25 25,0" : "q 0,-25 25,-25") + "h 28 a 9,9 0 0,0 9,9 z";

@@ -34,7 +34,7 @@ Entry.FieldStatement = function(content, blockView, index) {
 
 (function(p) {
     p.renderStart = function(board) {
-        this.svgGroup = this._blockView.contentSvgGroup.group();
+        this.svgGroup = this._blockView.statementSvgGroup.group();
         this.box.set({
             x: 46,
             y: 0,
@@ -78,7 +78,7 @@ Entry.FieldStatement = function(content, blockView, index) {
             height += block.view.height + 1;
             block = block.next;
         }
-        this.box.set({height: height});
+        this.box.set({height: Math.max(height, 20)});
     };
 
     p._updateThread = function() {
