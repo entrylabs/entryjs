@@ -407,12 +407,12 @@ Entry.BlockView = function(block, board, mode) {
                     });
                     blockView.dragMode = Entry.DRAG_MODE_DRAG;
 
+                    Entry.GlobalSvg.setView(blockView, workspaceMode);
                     var magnetedBlock = blockView._getCloseBlock();
                     if (magnetedBlock) {
                         board = magnetedBlock.view.getBoard();
                         board.setMagnetedBlock(magnetedBlock.view);
                     } else board.setMagnetedBlock(null);
-                    Entry.GlobalSvg.setView(blockView, workspaceMode);
                     if (!blockView.originPos)
                         blockView.originPos = {x: blockView.x, y: blockView.y};
                 } else board.cloneToBoard(e);
@@ -543,7 +543,7 @@ Entry.BlockView = function(block, board, mode) {
         //below the board
         if (x + this.offsetX < board.offset.left) return null;
 
-        var targetElement = Snap.getElementByPoint(x, y + offset.top -1);
+        var targetElement = Snap.getElementByPoint(x, y + offset.top - 2);
 
         if (targetElement === null) return;
 
@@ -560,9 +560,12 @@ Entry.BlockView = function(block, board, mode) {
 
         while (!targetBlock && targetElement.parent() &&
                targetElement.type !== "svg" && targetElement.type !== "BODY") {
+            console.log(targetElement);
             targetElement = targetElement.parent();
             targetBlock = targetElement[targetType];
         }
+
+        console.log(x, y, targetBlock, targetElement);
 
         if (targetBlock === undefined || targetBlock === this.block) return null;
 
@@ -637,6 +640,7 @@ Entry.BlockView = function(block, board, mode) {
         var magneting = blockView.magneting;
         var block = blockView.block;
         var svgGroup = blockView.svgGroup;
+        console.log(magneting);
         if (magneting) {
             var shadow = this._board.dragBlock.getShadow();
             $(shadow.node).attr({
@@ -682,8 +686,10 @@ Entry.BlockView = function(block, board, mode) {
 
             blockView.originalHeight = blockView.height;
             blockView.set({
-                height: height
+                height: height,
+                animating: false
             });
+            console.log(this.animating);
         } else {
             if (this._clonedShadow) {
                 this._clonedShadow.remove();
@@ -712,7 +718,7 @@ Entry.BlockView = function(block, board, mode) {
 
     p._createEmptyBG = function() {
         var blockView = this;
-        if (!this.block.next) {
+        if (this.svgGroup.nextMagnet && !this.block.next) {
             var bg = this.svgGroup.rect(
                 0 + blockView.offsetX,
                 blockView.height,

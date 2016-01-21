@@ -13339,8 +13339,8 @@ Entry.BlockView = function(a, b, c) {
           k._moveBy(b.pageX - d.offsetX, b.pageY - d.offsetY, !1);
           d.set({offsetX:b.pageX, offsetY:b.pageY});
           k.dragMode = Entry.DRAG_MODE_DRAG;
-          (b = k._getCloseBlock()) ? (l = b.view.getBoard(), l.setMagnetedBlock(b.view)) : l.setMagnetedBlock(null);
           Entry.GlobalSvg.setView(k, c);
+          (b = k._getCloseBlock()) ? (l = b.view.getBoard(), l.setMagnetedBlock(b.view)) : l.setMagnetedBlock(null);
           k.originPos || (k.originPos = {x:k.x, y:k.y});
         }
       }
@@ -13443,12 +13443,13 @@ Entry.BlockView = function(a, b, c) {
       if (a + this.offsetX < b.offset.left) {
         return null;
       }
-      b = Snap.getElementByPoint(a, d + e.top - 1);
-      if (null !== b && (a = this._skeleton.magnets(), a = a.previous ? "nextMagnet" : "STRING" == a ? "stringMagnet" : "BOOLEAN" == a ? "booleanMagnet" : null)) {
-        for (d = b[a];!d && b.parent() && "svg" !== b.type && "BODY" !== b.type;) {
-          b = b.parent(), d = b[a];
+      b = Snap.getElementByPoint(a, d + e.top - 2);
+      if (null !== b && (e = this._skeleton.magnets(), e = e.previous ? "nextMagnet" : "STRING" == e ? "stringMagnet" : "BOOLEAN" == e ? "booleanMagnet" : null)) {
+        for (var f = b[e];!f && b.parent() && "svg" !== b.type && "BODY" !== b.type;) {
+          console.log(b), b = b.parent(), f = b[e];
         }
-        return void 0 === d || d === this.block ? null : d;
+        console.log(a, d, f, b);
+        return void 0 === f || f === this.block ? null : f;
       }
     }
   };
@@ -13490,25 +13491,11 @@ Entry.BlockView = function(a, b, c) {
   };
   a._updateBG = function() {
     if (this._board.dragBlock && this._board.dragBlock.dragInstance) {
-      var b = this._board.dragBlock.dragInstance.height, a = this, d = a.svgGroup;
-      if (a.magneting) {
-        var e = this._board.dragBlock.getShadow();
-        $(e.node).attr({transform:"translate(0 " + (this.height + 1) + ")"});
-        this.svgGroup.prepend(e);
-        this._clonedShadow = e;
-        a.background && (a.background.remove(), a.nextBackground.remove(), delete a.background, delete a.nextBackground);
-        b = a.height + b;
-        e = d.rect(0 - a.width / 2, 1.5 * a.height + 1, a.width, Math.max(0, b - 1.5 * a.height));
-        e.block = a.block.next;
-        a.nextBackground = e;
-        e.attr({fill:"transparent"});
-        d.prepend(e);
-        e = d.rect(0 - a.width / 2, 0, a.width, b);
-        a.background = e;
-        e.attr({fill:"transparent"});
-        d.prepend(e);
-        a.originalHeight = a.height;
-        a.set({height:b});
+      var b = this._board.dragBlock.dragInstance.height, a = this, d = a.magneting, e = a.svgGroup;
+      console.log(d);
+      if (d) {
+        d = this._board.dragBlock.getShadow(), $(d.node).attr({transform:"translate(0 " + (this.height + 1) + ")"}), this.svgGroup.prepend(d), this._clonedShadow = d, a.background && (a.background.remove(), a.nextBackground.remove(), delete a.background, delete a.nextBackground), b = a.height + b, d = e.rect(0 - a.width / 2, 1.5 * a.height + 1, a.width, Math.max(0, b - 1.5 * a.height)), d.block = a.block.next, a.nextBackground = d, d.attr({fill:"transparent"}), e.prepend(d), d = e.rect(0 - a.width / 
+        2, 0, a.width, b), a.background = d, d.attr({fill:"transparent"}), e.prepend(d), a.originalHeight = a.height, a.set({height:b, animating:!1}), console.log(this.animating);
       } else {
         if (this._clonedShadow && (this._clonedShadow.remove(), delete this._clonedShadow), b = a.originalHeight) {
           setTimeout(function() {
@@ -13520,13 +13507,13 @@ Entry.BlockView = function(a, b, c) {
     }
   };
   a._createEmptyBG = function() {
-    if (this.block.next) {
-      this.emptyBackground && (this.emptyBackground.remove(), delete this.emptyBackground);
-    } else {
+    if (this.svgGroup.nextMagnet && !this.block.next) {
       var b = this.svgGroup.rect(0 + this.offsetX, this.height, this.width, 20);
       this.emptyBackground = b;
       b.attr({fill:"transparent"});
       this.svgGroup.prepend(b);
+    } else {
+      this.emptyBackground && (this.emptyBackground.remove(), delete this.emptyBackground);
     }
   };
   a.addDragging = function() {
@@ -15194,7 +15181,7 @@ Entry.Board = function(a) {
       this.magnetedBlockView.set({magneting:!1});
     }
     this.set({magnetedBlockView:a});
-    a && (a.set({magneting:!0, animating:!0}), a.dominate(), this.dragBlock.dominate());
+    a && (a.set({magneting:!0}), a.dominate(), this.dragBlock.dominate());
   };
   a.getCode = function() {
     return this.code;
