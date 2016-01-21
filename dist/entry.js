@@ -13455,12 +13455,11 @@ Entry.BlockView = function(a, b, c) {
         return null;
       }
       b = Snap.getElementByPoint(a, d + e.top - 2);
-      if (null !== b && (e = this._skeleton.magnets(), e = e.previous ? "nextMagnet" : "STRING" == e ? "stringMagnet" : "BOOLEAN" == e ? "booleanMagnet" : null)) {
-        for (var f = b[e];!f && b.parent() && "svg" !== b.type && "BODY" !== b.type;) {
-          console.log(b), b = b.parent(), f = b[e];
+      if (null !== b && (a = this._skeleton.magnets(), a = a.previous ? "nextMagnet" : a.string ? "stringMagnet" : a.bool ? "booleanMagnet" : null)) {
+        for (d = b[a];!d && b.parent() && "svg" !== b.type && "BODY" !== b.type;) {
+          b = b.parent(), d = b[a];
         }
-        console.log(a, d, f, b);
-        return void 0 === f || f === this.block ? null : f;
+        return void 0 === d || d === this.block ? null : d;
       }
     }
   };
@@ -13502,11 +13501,25 @@ Entry.BlockView = function(a, b, c) {
   };
   a._updateBG = function() {
     if (this._board.dragBlock && this._board.dragBlock.dragInstance) {
-      var b = this._board.dragBlock.dragInstance.height, a = this, d = a.magneting, e = a.svgGroup;
-      console.log(d);
-      if (d) {
-        d = this._board.dragBlock.getShadow(), $(d.node).attr({transform:"translate(0 " + (this.height + 1) + ")"}), this.svgGroup.prepend(d), this._clonedShadow = d, a.background && (a.background.remove(), a.nextBackground.remove(), delete a.background, delete a.nextBackground), b = a.height + b, d = e.rect(0 - a.width / 2, 1.5 * a.height + 1, a.width, Math.max(0, b - 1.5 * a.height)), d.block = a.block.next, a.nextBackground = d, d.attr({fill:"transparent"}), e.prepend(d), d = e.rect(0 - a.width / 
-        2, 0, a.width, b), a.background = d, d.attr({fill:"transparent"}), e.prepend(d), a.originalHeight = a.height, a.set({height:b, animating:!1}), console.log(this.animating);
+      var b = this._board.dragBlock.dragInstance.height, a = this, d = a.svgGroup;
+      if (a.magneting) {
+        var e = this._board.dragBlock.getShadow();
+        $(e.node).attr({transform:"translate(0 " + (this.height + 1) + ")"});
+        this.svgGroup.prepend(e);
+        this._clonedShadow = e;
+        a.background && (a.background.remove(), a.nextBackground.remove(), delete a.background, delete a.nextBackground);
+        b = a.height + b;
+        e = d.rect(0 - a.width / 2, 1.5 * a.height + 1, a.width, Math.max(0, b - 1.5 * a.height));
+        e.block = a.block.next;
+        a.nextBackground = e;
+        e.attr({fill:"transparent"});
+        d.prepend(e);
+        e = d.rect(0 - a.width / 2, 0, a.width, b);
+        a.background = e;
+        e.attr({fill:"transparent"});
+        d.prepend(e);
+        a.originalHeight = a.height;
+        a.set({height:b, animating:!1});
       } else {
         if (this._clonedShadow && (this._clonedShadow.remove(), delete this._clonedShadow), b = a.originalHeight) {
           setTimeout(function() {
@@ -13746,8 +13759,8 @@ Entry.Field = function() {
     return {x:a.e + d.x + b.x, y:a.f + d.y + b.y};
   };
   a.truncate = function() {
-    var a = String(this.getValue()), c = this.TEXT_LIMIT_LENGTH, d = a.substring(0, c);
-    a.length > c && (d += "...");
+    var b = String(this.getValue()), a = this.TEXT_LIMIT_LENGTH, d = b.substring(0, a);
+    b.length > a && (d += "...");
     return d;
   };
   a.appendSvgOptionGroup = function() {
@@ -14702,7 +14715,7 @@ Entry.skeleton.basic_string_field = {path:function(a) {
 }, color:"#000", outerLine:!0, box:function(a) {
   return {offsetX:0, offsetY:0, width:(a ? a.contentWidth : 5) + 4, height:Math.max((a ? a.contentHeight : 18) + 2, 18), marginBottom:0};
 }, magnets:function() {
-  return "STRING";
+  return {string:{}};
 }, contentPos:function(a) {
   return {x:2, y:Math.max(a.contentHeight, 16) / 2 + 1};
 }};
@@ -14715,7 +14728,7 @@ Entry.skeleton.basic_boolean_field = {path:function(a) {
 }, color:"#000", outerLine:!0, box:function(a) {
   return {offsetX:0, offsetY:0, width:(a ? a.contentWidth : 5) + 20, height:(a ? a.contentHeight : 20) + 2, marginBottom:0};
 }, magnets:function() {
-  return "BOOLEAN";
+  return {bool:{}};
 }, contentPos:function(a) {
   return {x:11, y:11};
 }};

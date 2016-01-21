@@ -550,8 +550,8 @@ Entry.BlockView = function(block, board, mode) {
         var targetType = this._skeleton.magnets();
 
         if (targetType.previous) targetType = 'nextMagnet';
-        else if (targetType == 'STRING') targetType = 'stringMagnet';
-        else if (targetType == 'BOOLEAN') targetType = 'booleanMagnet';
+        else if (targetType.string) targetType = 'stringMagnet';
+        else if (targetType.bool) targetType = 'booleanMagnet';
         else targetType = null;
 
         if (!targetType) return;
@@ -560,12 +560,9 @@ Entry.BlockView = function(block, board, mode) {
 
         while (!targetBlock && targetElement.parent() &&
                targetElement.type !== "svg" && targetElement.type !== "BODY") {
-            console.log(targetElement);
             targetElement = targetElement.parent();
             targetBlock = targetElement[targetType];
         }
-
-        console.log(x, y, targetBlock, targetElement);
 
         if (targetBlock === undefined || targetBlock === this.block) return null;
 
@@ -640,7 +637,6 @@ Entry.BlockView = function(block, board, mode) {
         var magneting = blockView.magneting;
         var block = blockView.block;
         var svgGroup = blockView.svgGroup;
-        console.log(magneting);
         if (magneting) {
             var shadow = this._board.dragBlock.getShadow();
             $(shadow.node).attr({
@@ -689,7 +685,6 @@ Entry.BlockView = function(block, board, mode) {
                 height: height,
                 animating: false
             });
-            console.log(this.animating);
         } else {
             if (this._clonedShadow) {
                 this._clonedShadow.remove();
