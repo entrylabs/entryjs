@@ -7,6 +7,8 @@ goog.provide("Entry.Workspace");
 goog.require("Entry.Model");
 
 Entry.Workspace = function(options) {
+    Entry.Model(this, false);
+
     var option = options.blockMenu;
     if (option) {
         this.blockMenu = new Entry.BlockMenu(
@@ -15,12 +17,14 @@ Entry.Workspace = function(options) {
             option.categoryData
         );
         this.blockMenu.workspace = this;
+        this.blockMenu.observe(this, "_setSelectedBlockView", ["selectedBlockView"], false);
     }
 
     option = options.board;
     if (option) {
         this.board = new Entry.Board(option.dom);
         this.board.workspace = this;
+        this.board.observe(this, "_setSelectedBlockView", ["selectedBlockView"], false);
     }
 
     option = options.vimBoard;
@@ -42,6 +46,9 @@ Entry.Workspace.MODE_BOARD = 0;
 Entry.Workspace.MODE_VIMBOARD = 1;
 
 (function(p) {
+    p.schema = {
+        selectedBlockView: null
+    };
     p.getBoard = function(){return this.board;};
 
     p.getBlockMenu = function(){return this.blockMenu;};
@@ -91,6 +98,11 @@ Entry.Workspace.MODE_VIMBOARD = 1;
 
     p.getCodeToText = function(code) {
         return this.vimBoard.getCodeToText(code);
+    };
+
+    p._setSelectedBlockView = function() {
+        var blockView = this.board.selectedBlockView || this.blockMenu.selectedBlockView;
+        this.set({selectedBlockView:blockView});
     };
 
 

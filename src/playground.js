@@ -299,6 +299,8 @@ Entry.Playground.prototype.generateCodeView = function(codeView) {
             }
         }
     );
+    this.blockMenu = this.mainWorkspace.blockMenu;
+    this.board = this.mainWorkspace.board;
 
     var code = new Entry.Code([
         [
