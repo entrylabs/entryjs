@@ -415,41 +415,16 @@ Entry.Engine.prototype.update = function() {
  * compute each object with runningScript on entity.
  */
 Entry.Engine.prototype.computeObjects = function() {
-    Entry.container.mapEntityIncludeCloneOnScene(this.computeFunction);
+    Entry.container.mapObjectOnScene(this.computeFunction);
 };
 
 /**
  * Compute function for map.
  * @param {Entry.EntryObject} object
  */
-Entry.Engine.prototype.computeFunction = function(entity) {
-    var scripts = entity.runningScript;
-    for (var i=0; i<scripts.length; i++) {
-        var script = scripts.shift();
-        var isContinue = true;
-        var isSame = false;
-        while (script && isContinue && !isSame) {
-            try {
-                isContinue = !script.isLooped;
-                var newScript = script.run();
-                isSame = (newScript && newScript === script);
-                script = newScript;
-            } catch (exception) {
-                Entry.engine.toggleStop();
-                Entry.engine.isUpdating = false;
-                if (Entry.type == 'workspace') {
-                    Entry.container.selectObject();
-                    Entry.container.selectObject(script.entity.parent.id);
-                    Entry.playground.changeViewMode('code');
-                    Blockly.mainWorkspace.activatePreviousBlock(script.id);
-                }
-                Entry.toast.alert(Lang.Msgs.runtime_error, Lang.Workspace.check_runtime_error, true);
-                throw exception;
-            }
-        }
-        if (script)
-            scripts.push(script);
-    }
+Entry.Engine.prototype.computeFunction = function(object) {
+    var code = object.script;
+    code.tick();
 };
 
 Entry.Engine.computeThread = function(entity, script) {
@@ -503,7 +478,7 @@ Entry.Engine.prototype.toggleRun = function() {
         Entry.container.takeSequenceSnapshot();
         Entry.scene.takeStartSceneSnapshot();
         this.state = 'run';
-        this.fireEvent('when_run_button_click');
+        this.fireEvent('start');
     }
     this.state = 'run';
     if (Entry.type == 'mobile')
@@ -608,16 +583,8 @@ Entry.Engine.prototype.fireEvent = function(eventName) {
  * @param {string} eventName
  */
 Entry.Engine.prototype.raiseEvent = function(entity, eventName) {
-    var blocks = entity.parent.script.childNodes;
-    //handle clone entity
-    for (var i=0; i<blocks.length; i++) {
-        var block = blocks[i];
-        if (Entry.Xml.isTypeOf(eventName, block)) {
-            var script = new Entry.Script(entity);
-            script.init(block);
-            entity.runningScript.push(script);
-        }
-    }
+    var code = entity.parent.script;
+    code.raiseEvent(eventName, entity);
 };
 
 /**
@@ -638,17 +605,10 @@ Entry.Engine.prototype.raiseEventOnEntity = function(entity, param) {
     if (entity !== param[0])
         return;
     var eventName = param[1];
-    var blocks = entity.parent.script.childNodes;
-    //handle clone entity
-    for (var i=0; i<blocks.length; i++) {
-        var block = blocks[i];
-        if (Entry.Xml.isTypeOf(eventName, block)) {
-            var script = new Entry.Script(entity);
-            script.init(block);
-            entity.runningScript.push(script);
-        }
-    }
+    var code = entity.parent.script;
+    code.raiseEvent(eventName, entity);
 };
+
 /**
  * capture keyboard press input
  * @param {keyboard event} e

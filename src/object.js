@@ -23,11 +23,29 @@ Entry.EntryObject = function(model) {
         if (!this.objectType)
             this.objectType = 'sprite';
 
-        /** @type {Blockly Xml} */
-        if (model.script)
-            this.script = Blockly.Xml.textToDom(model.script);
-        else
-            this.script = Blockly.Xml.textToDom('<xml></xml>');
+        model.script = [
+            [
+                {
+                    type: "when_run_button_click",
+                    x: 40,
+                    y: 240
+                },
+                {
+                    type: "repeat_basic",
+                    statements: [
+                        [
+                            {
+                                type: "move_direction"
+                            }
+                        ]
+                    ]
+                },
+                {
+                    type: "stop_repeat"
+                }
+            ]
+        ];
+        this.script = new Entry.Code(model.script ? model.script : []);
 
         /** @type {Array.<picture object>} */
         this.pictures = model.sprite.pictures;

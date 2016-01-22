@@ -287,6 +287,8 @@ Entry.Playground.prototype.generateCodeView = function(codeView) {
     this.blockDriver = new Entry.BlockDriver();
     this.blockDriver.convert();
 
+    Entry.block.when_run_button_click.event = "start";
+
     this.mainWorkspace = new Entry.Workspace(
         {
             'blockMenu': {
@@ -302,49 +304,6 @@ Entry.Playground.prototype.generateCodeView = function(codeView) {
     this.blockMenu = this.mainWorkspace.blockMenu;
     this.board = this.mainWorkspace.board;
 
-    var code = new Entry.Code([
-        [
-            {
-                type: "when_run_button_click",
-                x: 40,
-                y: 240
-            },
-            {
-                type: "repeat_basic",
-                statements: [
-                    [
-                        {
-                            type: "move_direction"
-                        }
-                    ]
-                ]
-            },
-            {
-                type: "stop_repeat"
-            }
-        ],
-        [
-            {
-                type: "when_run_button_click",
-                x: 40,
-                y: 40
-            },
-            {
-                type: "repeat_basic",
-                statements: [
-                    [
-                        {
-                            type: "move_direction"
-                        }
-                    ]
-                ]
-            },
-            {
-                type: "stop_repeat"
-            }
-        ]
-    ]);
-    this.mainWorkspace.changeBoardCode(code);
 
 };
 
@@ -853,7 +812,7 @@ Entry.Playground.prototype.injectObject = function(object) {
  */
 Entry.Playground.prototype.injectCode = function() {
     var object = this.object;
-    // TODO: inject code
+    this.mainWorkspace.changeBoardCode(object.script);
 };
 
 /**
@@ -1133,7 +1092,7 @@ Entry.Playground.prototype.syncObject = function(object) {
     if (this.object && !object)
         object = this.object;
     if (object) {
-        //TODO: sync object with loaded block
+        // TODO : save code to object ?
     }
 };
 

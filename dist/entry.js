@@ -3102,6 +3102,7 @@ Entry.block.move_direction = function(a, b) {
   a.setX(a.getX() + c * Math.cos((a.getRotation() + a.getDirection() - 90) / 180 * Math.PI));
   a.setY(a.getY() - c * Math.sin((a.getRotation() + a.getDirection() - 90) / 180 * Math.PI));
   a.brush && !a.brush.stop && a.brush.lineTo(a.getX(), -1 * a.getY());
+  console.log(c);
   return b.callReturn();
 };
 Blockly.Blocks.move_x = {init:function() {
@@ -5704,20 +5705,10 @@ Entry.Engine.prototype.update = function() {
   Entry.engine.isState("run") && (Entry.engine.computeObjects(), Entry.hw.update());
 };
 Entry.Engine.prototype.computeObjects = function() {
-  Entry.container.mapEntityIncludeCloneOnScene(this.computeFunction);
+  Entry.container.mapObjectOnScene(this.computeFunction);
 };
 Entry.Engine.prototype.computeFunction = function(a) {
-  a = a.runningScript;
-  for (var b = 0;b < a.length;b++) {
-    for (var c = a.shift(), d = !0, e = !1;c && d && !e;) {
-      try {
-        var d = !c.isLooped, f = c.run(), e = f && f === c, c = f;
-      } catch (g) {
-        throw Entry.engine.toggleStop(), Entry.engine.isUpdating = !1, "workspace" == Entry.type && (Entry.container.selectObject(), Entry.container.selectObject(c.entity.parent.id), Entry.playground.changeViewMode("code"), Blockly.mainWorkspace.activatePreviousBlock(c.id)), Entry.toast.alert(Lang.Msgs.runtime_error, Lang.Workspace.check_runtime_error, !0), g;
-      }
-    }
-    c && a.push(c);
-  }
+  a.script.tick();
 };
 Entry.Engine.computeThread = function(a, b) {
   Entry.engine.isContinue = !0;
@@ -5742,7 +5733,7 @@ Entry.Engine.prototype.toggleRun = function() {
     a.takeSnapshot();
   }), Entry.variableContainer.mapList(function(a) {
     a.takeSnapshot();
-  }), Entry.container.takeSequenceSnapshot(), Entry.scene.takeStartSceneSnapshot(), this.state = "run", this.fireEvent("when_run_button_click"));
+  }), Entry.container.takeSequenceSnapshot(), Entry.scene.takeStartSceneSnapshot(), this.state = "run", this.fireEvent("start"));
   this.state = "run";
   "mobile" == Entry.type && this.view_.addClass("entryEngineBlueWorkspace");
   this.pauseButton.innerHTML = Lang.Workspace.pause;
@@ -5798,29 +5789,13 @@ Entry.Engine.prototype.fireEvent = function(a) {
   "run" == this.state && Entry.container.mapEntityIncludeCloneOnScene(this.raiseEvent, a);
 };
 Entry.Engine.prototype.raiseEvent = function(a, b) {
-  for (var c = a.parent.script.childNodes, d = 0;d < c.length;d++) {
-    var e = c[d];
-    if (Entry.Xml.isTypeOf(b, e)) {
-      var f = new Entry.Script(a);
-      f.init(e);
-      a.runningScript.push(f);
-    }
-  }
+  a.parent.script.raiseEvent(b, a);
 };
 Entry.Engine.prototype.fireEventOnEntity = function(a, b) {
   "run" == this.state && Entry.container.mapEntityIncludeCloneOnScene(this.raiseEventOnEntity, [b, a]);
 };
 Entry.Engine.prototype.raiseEventOnEntity = function(a, b) {
-  if (a === b[0]) {
-    for (var c = b[1], d = a.parent.script.childNodes, e = 0;e < d.length;e++) {
-      var f = d[e];
-      if (Entry.Xml.isTypeOf(c, f)) {
-        var g = new Entry.Script(a);
-        g.init(f);
-        a.runningScript.push(g);
-      }
-    }
-  }
+  a === b[0] && a.parent.script.raiseEvent(b[1], a);
 };
 Entry.Engine.prototype.captureKeyEvent = function(a) {
   var b = a.keyCode, c = Entry.type;
@@ -6463,7 +6438,8 @@ Entry.EntryObject = function(a) {
     this.text = a.text || this.name;
     this.objectType = a.objectType;
     this.objectType || (this.objectType = "sprite");
-    this.script = a.script ? Blockly.Xml.textToDom(a.script) : Blockly.Xml.textToDom("<xml></xml>");
+    a.script = [[{type:"when_run_button_click", x:40, y:240}, {type:"repeat_basic", statements:[[{type:"move_direction"}]]}, {type:"stop_repeat"}]];
+    this.script = new Entry.Code(a.script ? a.script : []);
     this.pictures = a.sprite.pictures;
     this.sounds = [];
     this.sounds = a.sprite.sounds;
@@ -13628,11 +13604,11 @@ Entry.Code = function(a) {
       0 > e || d.splice(e, 1);
     }
   };
-  a.raiseEvent = function(b) {
-    b = this._eventMap[b];
-    if (void 0 !== b) {
-      for (var a = 0;a < b.length;a++) {
-        this.executors.push(new Entry.Executor(b[a]));
+  a.raiseEvent = function(b, a) {
+    var d = this._eventMap[b];
+    if (void 0 !== d) {
+      for (var e = 0;e < d.length;e++) {
+        this.executors.push(new Entry.Executor(d[e], a));
       }
     }
   };
@@ -13722,23 +13698,54 @@ Entry.CodeView = function(a, b) {
     this.set({board:this.code.board});
   };
 })(Entry.CodeView.prototype);
-Entry.Executor = function(a) {
-  this.scope = {block:a, executor:this};
+Entry.Executor = function(a, b) {
+  this.scope = new Entry.Scope(a, this);
+  this.entity = b;
   this._callStack = [];
 };
 (function(a) {
   a.execute = function() {
-    void 0 === this.scope.block._schema.func.call(this.scope) && (this.scope = {block:this.scope.block.next, executor:this});
-    null === this.scope.block && this._callStack.length && (this.scope = this._callStack.pop());
+    for (;;) {
+      var b = this.scope.block._schema.func.call(this.scope, this.entity, this.scope);
+      if (void 0 === b || null === b) {
+        if (this.scope = new Entry.Scope(this.scope.block.next, this), null === this.scope.block) {
+          if (this._callStack.length) {
+            this.scope = this._callStack.pop();
+          } else {
+            break;
+          }
+        }
+      } else {
+        if (b === Entry.STATIC.CONTINUE) {
+          break;
+        }
+      }
+    }
   };
-  a.stepInto = function(a) {
-    a instanceof Entry.Thread || console.error("Must step in to thread");
+  a.stepInto = function(b) {
+    b instanceof Entry.Thread || console.error("Must step in to thread");
     this._callStack.push(this.scope);
-    a = a.getFirstBlock();
-    a.isDummy && (a = a.next);
-    this.scope = {block:a, executor:this};
+    b = b.getFirstBlock();
+    b.isDummy && (b = b.next);
+    this.scope = new Entry.Scope(b, this);
   };
 })(Entry.Executor.prototype);
+Entry.Scope = function(a, b) {
+  this.type = (this.block = a) ? a.type : null;
+  this.executor = b;
+  this.entity = b.entity;
+};
+(function(a) {
+  a.callReturn = function() {
+  };
+  a.getNumberValue = function(b, a) {
+    return 10;
+  };
+  a.getStatement = function(b) {
+    this.executor.stepInto(this.block.statements[0]);
+    return Entry.STATIC.CONTINUE;
+  };
+})(Entry.Scope.prototype);
 Entry.Field = function() {
 };
 (function(a) {
@@ -13750,16 +13757,16 @@ Entry.Field = function() {
     this.documentDownEvent && (Entry.documentMousedown.detach(this.documentDownEvent), delete this.documentDownEvent);
     this.optionGroup && (this.optionGroup.remove(), delete this.optionGroup);
   };
-  a.align = function(a, c, d) {
+  a.align = function(b, a, d) {
     var e = this.svgGroup;
-    this._position && (this._position.x && (a = this._position.x), this._position.y && (c = this._position.y));
-    var f = "t" + a + " " + c;
+    this._position && (this._position.x && (b = this._position.x), this._position.y && (a = this._position.y));
+    var f = "t" + b + " " + a;
     void 0 === d || d ? e.animate({transform:f}, 300, mina.easeinout) : e.attr({transform:f});
-    this.box.set({x:a, y:c});
+    this.box.set({x:b, y:a});
   };
   a.getAbsolutePos = function() {
-    var a = this._block.view, c = a.svgGroup.transform().globalMatrix, d = a.getBoard().svgDom.offset(), a = a.getContentPos();
-    return {x:c.e + d.left + this.box.x + a.x, y:c.f + d.top + this.box.y + a.y};
+    var b = this._block.view, a = b.svgGroup.transform().globalMatrix, d = b.getBoard().svgDom.offset(), b = b.getContentPos();
+    return {x:a.e + d.left + this.box.x + b.x, y:a.f + d.top + this.box.y + b.y};
   };
   a.getRelativePos = function() {
     var a = this._block.view, c = a.svgGroup.transform().globalMatrix, a = a.getContentPos(), d = this.box;
@@ -15617,11 +15624,10 @@ Entry.Playground.prototype.generateCodeView = function(a) {
   a = Entry.Dom("div", {parent:a, id:"entryWorkspaceBlockMenu", class:"entryWorkspaceBlockMenu"});
   this.blockDriver = new Entry.BlockDriver;
   this.blockDriver.convert();
+  Entry.block.when_run_button_click.event = "start";
   this.mainWorkspace = new Entry.Workspace({blockMenu:{dom:a, align:"LEFT", categoryData:EntryStatic.getAllBlocks()}, board:{dom:b}});
   this.blockMenu = this.mainWorkspace.blockMenu;
   this.board = this.mainWorkspace.board;
-  a = new Entry.Code([[{type:"when_run_button_click", x:40, y:240}, {type:"repeat_basic", statements:[[{type:"move_direction"}]]}, {type:"stop_repeat"}], [{type:"when_run_button_click", x:40, y:40}, {type:"repeat_basic", statements:[[{type:"move_direction"}]]}, {type:"stop_repeat"}]]);
-  this.mainWorkspace.changeBoardCode(a);
 };
 Entry.Playground.prototype.generatePictureView = function(a) {
   if ("workspace" == Entry.type) {
@@ -15940,6 +15946,7 @@ Entry.Playground.prototype.injectObject = function(a) {
   }
 };
 Entry.Playground.prototype.injectCode = function() {
+  this.mainWorkspace.changeBoardCode(this.object.script);
 };
 Entry.Playground.prototype.injectPicture = function() {
   var a = this.pictureListView_;
