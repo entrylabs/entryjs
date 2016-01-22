@@ -578,7 +578,9 @@ Entry.BlockView = function(block, board, mode) {
             targetBlock = targetElement[targetType];
         }
 
-        if (targetBlock === undefined || targetBlock === this.block) return null;
+        if (targetBlock === undefined || targetBlock === this.block ||
+               targetBlock.view.getBoard() !== board)
+           return null;
 
         return targetBlock;
     };

@@ -13457,12 +13457,12 @@ Entry.BlockView = function(a, b, c) {
       if (a + this.offsetX < b.offset.left) {
         return null;
       }
-      b = Snap.getElementByPoint(a, d + e.top - 2);
-      if (null !== b && (a = this._skeleton.magnets(), a = a.previous ? "nextMagnet" : a.string ? "stringMagnet" : a.bool ? "booleanMagnet" : null)) {
-        for (d = b[a];!d && b.parent() && "svg" !== b.type && "BODY" !== b.type;) {
-          b = b.parent(), d = b[a];
+      a = Snap.getElementByPoint(a, d + e.top - 2);
+      if (null !== a && (d = this._skeleton.magnets(), d = d.previous ? "nextMagnet" : d.string ? "stringMagnet" : d.bool ? "booleanMagnet" : null)) {
+        for (e = a[d];!e && a.parent() && "svg" !== a.type && "BODY" !== a.type;) {
+          a = a.parent(), e = a[d];
         }
-        return void 0 === d || d === this.block ? null : d;
+        return void 0 === e || e === this.block || e.view.getBoard() !== b ? null : e;
       }
     }
   };
@@ -13664,35 +13664,35 @@ Entry.Code = function(a) {
     this._data.push(d);
     return d;
   };
-  a.destroyThread = function(b, a) {
-    var d = this._data, e = d.indexOf(b);
+  a.destroyThread = function(a, c) {
+    var d = this._data, e = d.indexOf(a);
     0 > e || d.splice(e, 1);
   };
-  a.doDestroyThread = function(b, a) {
-    var d = this._data, e = d.indexOf(b);
+  a.doDestroyThread = function(a, c) {
+    var d = this._data, e = d.indexOf(a);
     0 > e || d.splice(e, 1);
   };
   a.getThreads = function() {
-    return this._data.map(function(b) {
-      return b;
+    return this._data.map(function(a) {
+      return a;
     });
   };
   a.toJSON = function() {
-    for (var b = this.getThreads(), a = [], d = 0, e = b.length;d < e;d++) {
-      a.push(b[d].toJSON());
+    for (var a = this.getThreads(), c = [], d = 0, e = a.length;d < e;d++) {
+      c.push(a[d].toJSON());
     }
-    return a;
+    return c;
   };
   a.countBlock = function() {
-    for (var b = this.getThreads(), a = 0, d = 0;d < b.length;d++) {
-      a += b[d].countBlock();
+    for (var a = this.getThreads(), c = 0, d = 0;d < a.length;d++) {
+      c += a[d].countBlock();
     }
-    return a;
+    return c;
   };
-  a.moveBy = function(b, a) {
+  a.moveBy = function(a, c) {
     for (var d = this.getThreads(), e = 0, f = d.length;e < f;e++) {
       var g = d[e].getFirstBlock();
-      g && g.view._moveBy(b, a, !1);
+      g && g.view._moveBy(a, c, !1);
     }
   };
   a.stringify = function() {
