@@ -84,16 +84,17 @@ goog.provide('Entry.GlobalSvg');
         var bBox = this._view.svgGroup.getBBox();
 
         this.svgDom.css({
-            width: bBox.width + 2,
-            height: bBox.height
+            width: bBox.width + 3,
+            height: bBox.height + 3
         });
-        this.width = bBox.width + 2;
+        this.width = bBox.width + 3;
     };
 
     gs.align = function() {
         var offsetX = this._view.getSkeleton().box(this._view).offsetX || 0;
         var offsetY = this._view.getSkeleton().box(this._view).offsetY || 0;
         offsetX *= -1;
+        offsetX += 1;
         offsetY *= -1;
         offsetY += 1;
         this._offsetX = offsetX;
@@ -111,7 +112,7 @@ goog.provide('Entry.GlobalSvg');
         var blockView = this._view;
         var matrix = blockView.svgGroup.transform().globalMatrix;
         var offset = blockView.getBoard().svgDom.offset();
-        this.left = matrix.e + offset.left - this._offsetX - 1;
+        this.left = matrix.e + offset.left - this._offsetX;
         this.top = matrix.f + offset.top - this._offsetY;
 
         this.svgDom.css({

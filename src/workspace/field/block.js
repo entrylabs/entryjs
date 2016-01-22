@@ -194,16 +194,10 @@ Entry.FieldDummyBlock = function(statementField, blockView) {
         acceptBox.height
     );
 
-    this.path.attr({
-        fill: "transparent"
-    });
+    this.path.attr({fill: "transparent"});
 
     this.prevObserver = blockView.observe(
         this, "_align", ["x", "y"]
-    );
-
-    this.prevAnimatingObserver = blockView.observe(
-        this, "_inheritAnimate", ["animating"]
     );
 
     this.observe(this, "_updateBG", ["magneting"]);
@@ -219,3 +213,22 @@ Entry.Utils.inherit(Entry.DummyBlock, Entry.FieldDummyBlock);
 
 Entry.FieldDummyBlock.prototype.constructor = Entry.FieldDummyBlock;
 
+/*
+Entry.FieldDummyBlock.prototype._updateBG = function() {
+    if (this.magneting) {
+        var dragThreadHeight = this.getBoard().dragBlock.dragInstance.height;
+        this.set({height: dragThreadHeight});
+        var shadow = this.getBoard().dragBlock.getShadow();
+        shadow.attr({transform: "t0 " + 0});
+        this.svgGroup.prepend(shadow);
+        this._clonedShadow = shadow;
+    } else {
+        if (this._clonedShadow) {
+            this._clonedShadow.remove();
+            delete this._clonedShadow;
+        }
+        this.set({height: this.schema.height});
+    }
+    this._thread.changeEvent.notify();
+};
+*/

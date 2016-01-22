@@ -14376,7 +14376,6 @@ Entry.FieldDummyBlock = function(a, b) {
   this.path = this.svgGroup.rect(c.offsetX, c.offsetY - 10, c.width, c.height);
   this.path.attr({fill:"transparent"});
   this.prevObserver = b.observe(this, "_align", ["x", "y"]);
-  this.prevAnimatingObserver = b.observe(this, "_inheritAnimate", ["animating"]);
   this.observe(this, "_updateBG", ["magneting"]);
   this._align();
 };
@@ -14509,11 +14508,11 @@ Entry.GlobalSvg = {};
   };
   a.resize = function() {
     var a = this._view.svgGroup.getBBox();
-    this.svgDom.css({width:a.width + 2, height:a.height});
-    this.width = a.width + 2;
+    this.svgDom.css({width:a.width + 3, height:a.height + 3});
+    this.width = a.width + 3;
   };
   a.align = function() {
-    var a = this._view.getSkeleton().box(this._view).offsetX || 0, c = this._view.getSkeleton().box(this._view).offsetY || 0, a = -1 * a, c = -1 * c + 1;
+    var a = this._view.getSkeleton().box(this._view).offsetX || 0, c = this._view.getSkeleton().box(this._view).offsetY || 0, a = -1 * a + 1, c = -1 * c + 1;
     this._offsetX = a;
     this._offsetY = c;
     this.svg.attr({transform:"t" + (a + 1) + " " + c});
@@ -14526,7 +14525,7 @@ Entry.GlobalSvg = {};
   };
   a.position = function() {
     var a = this._view, c = a.svgGroup.transform().globalMatrix, a = a.getBoard().svgDom.offset();
-    this.left = c.e + a.left - this._offsetX - 1;
+    this.left = c.e + a.left - this._offsetX;
     this.top = c.f + a.top - this._offsetY;
     this.svgDom.css({left:this.left, top:this.top});
   };
@@ -15079,7 +15078,8 @@ Entry.Thread = function(a, b) {
   a.clone = function(a, c) {
     a = a || this._code;
     for (var d = new Entry.Thread([], a), e = this._data, f = [], g = 0, h = e.length;g < h;g++) {
-      f.push(e[g].clone(d));
+      var k = e[g];
+      0 === g && k instanceof Entry.DummyBlock || f.push(e[g].clone(d));
     }
     d.load(f, c);
     return d;

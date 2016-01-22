@@ -126,6 +126,9 @@ Entry.Thread = function(thread, code) {
         var data = this._data;
         var cloned = [];
         for (var i=0, len=data.length; i<len; i++) {
+            var block = data[i];
+            if (i===0 && block instanceof Entry.DummyBlock)
+                continue;
             cloned.push(data[i].clone(newThread));
         }
         newThread.load(cloned, mode);
