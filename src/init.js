@@ -249,15 +249,20 @@ Entry.createDom = function(container, option) {
         this.containerView = containerView;
         this.container.generateView(this.containerView, option);
         this.propertyPanel.addMode("container", this.container);
-        this.propertyPanel.select("container");
 
-        this.helper.initBlockHelper(containerView);
+        this.helper.generateView(this.containerView, option);
+        this.propertyPanel.addMode("helper", this.helper);
+
+        this.propertyPanel.select("container");
 
         var playgroundView = Entry.createElement('div');
         container.appendChild(playgroundView);
         /** @type {!Element} */
         this.playgroundView = playgroundView;
         this.playground.generateView(this.playgroundView, option);
+
+        //bind workspace for select block observing
+        this.helper.bindWorkspace(this.playground.mainWorkspace);
     } else if (option == 'minimize') {
         var canvas = Entry.createElement('canvas');
         canvas.className = 'entryCanvasWorkspace';

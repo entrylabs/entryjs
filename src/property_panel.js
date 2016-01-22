@@ -82,11 +82,13 @@ Entry.PropertyPanel = function() {
             var mode = this.modes[key];
             mode.tabDom.removeClass("selected");
             mode.contentDom.addClass("entryHidden");
+            mode.obj.visible = false;
         }
         var selected = this.modes[modeName];
         selected.tabDom.addClass("selected");
         selected.contentDom.removeClass("entryHidden");
         selected.obj.resize();
+        selected.obj.visible = true;
         this.selected = modeName;
     };
 

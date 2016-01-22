@@ -29,7 +29,6 @@ Entry.BlockMenu = function(dom, align, categoryData) {
     this._categoryElems = {};
     this._selectedCategoryView = null;
     this.visible = true;
-    this.viewOnly = false;
     this._snapId = 'blockMenu' + new Date().getTime();
     this._generateView(categoryData);
 
@@ -108,9 +107,8 @@ Entry.BlockMenu = function(dom, align, categoryData) {
             { parent: this.blockMenuContainer }
         );
 
-        //IN PROGRESS
         this.svgDom.mouseenter(function(e) {
-            if (Entry.playground.resizing || that.viewOnly) return;
+            if (Entry.playground.resizing) return;
             Entry.playground.focusBlockMenu = true;
             var width = that.expandWidth + 64;
             if (width > Entry.interfaceState.menuWidth) {
@@ -122,7 +120,7 @@ Entry.BlockMenu = function(dom, align, categoryData) {
         });
 
         this.svgDom.mouseleave(function(e) {
-            if (Entry.playground.resizing || that.viewOnly) return;
+            if (Entry.playground.resizing) return;
 
             var widthBackup = this.widthBackup;
             if (widthBackup)
@@ -167,7 +165,8 @@ Entry.BlockMenu = function(dom, align, categoryData) {
 
         var pastClass;
         for (var i=0,len=threads.length; i<len; i++) {
-            var block = threads[i].getFirstBlock();
+            var thread = threads[i];
+            var block = thread.getFirstBlock();
             var blockView = block.view;
 
             var className = Entry.block[block.type].class;
