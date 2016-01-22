@@ -945,22 +945,24 @@ Entry.Playground.prototype.addPicture = function(picture, NotForView) {
 
 Entry.Playground.prototype.setPicture = function(picture) {
     var element = document.getElementById(picture.id);
-    picture.view = element;
-    element.picture = picture;
+    if(element) {
+        picture.view = element;
+        element.picture = picture;
 
-    var thumbnailView = document.getElementById('t_'+picture.id);
-    if (picture.fileurl) {
-        thumbnailView.style.backgroundImage = 'url("' + picture.fileurl + '")';
-    } else {
-        // deprecated
-        var fileName = picture.filename;
-        thumbnailView.style.backgroundImage =
-            'url("' + '/uploads/' + fileName.substring(0, 2) + '/' +
-            fileName.substring(2, 4) + '/thumb/' + fileName + '.png")';
+        var thumbnailView = document.getElementById('t_'+picture.id);
+        if (picture.fileurl) {
+            thumbnailView.style.backgroundImage = 'url("' + picture.fileurl + '")';
+        } else {
+            // deprecated
+            var fileName = picture.filename;
+            thumbnailView.style.backgroundImage =
+                'url("' + '/uploads/' + fileName.substring(0, 2) + '/' +
+                fileName.substring(2, 4) + '/thumb/' + fileName + '.png")';
+        }
+        var sizeView = document.getElementById('s_'+picture.id);
+        sizeView.innerHTML = picture.dimension.width + ' X ' +
+            picture.dimension.height;
     }
-    var sizeView = document.getElementById('s_'+picture.id);
-    sizeView.innerHTML = picture.dimension.width + ' X ' +
-        picture.dimension.height;
     Entry.playground.object.setPicture(picture);
 };
 
@@ -983,7 +985,7 @@ Entry.Playground.prototype.selectPicture = function(picture) {
             target.view.removeClass('entryPictureSelected');
     }
     Entry.playground.object.selectPicture(picture.id);
-    Entry.dispatchEvent('pictureSelected', picture);
+    Entry.dispatchEvent('pictureSelected', [picture, this.object.id]);
 };
 
 /**

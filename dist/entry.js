@@ -7450,17 +7450,21 @@ Entry.Painter.prototype.newPicture = function() {
 Entry.Painter.prototype.initPicture = function() {
   var a = this;
   Entry.addEventListener("pictureSelected", function(b) {
+    var c = b[0];
+    b = b[1];
     a.selectToolbox("cursor");
-    if (a.file.id !== b.id) {
-      a.file.modified && (confirm("\uc218\uc815\ub41c \ub0b4\uc6a9\uc744 \uc800\uc7a5\ud558\uc2dc\uaca0\uc2b5\ub2c8\uae4c?") && (a.file_ = JSON.parse(JSON.stringify(a.file)), a.file_save(!0)), a.file.modified = !1);
+    if (a.file.id !== c.id) {
+      a.file.modified && b === a.prevObjectId && confirm("\uc218\uc815\ub41c \ub0b4\uc6a9\uc744 \uc800\uc7a5\ud558\uc2dc\uaca0\uc2b5\ub2c8\uae4c?") && (a.file_ = JSON.parse(JSON.stringify(a.file)), a.file_save(!0));
+      a.file.modified = !1;
       a.clearCanvas();
-      var c = new Image;
-      c.id = b.id ? b.id : Entry.generateHash();
-      a.file.id = c.id;
-      a.file.name = b.name;
+      var d = new Image;
+      d.id = c.id ? c.id : Entry.generateHash();
+      a.file.id = d.id;
+      a.file.name = c.name;
       a.file.mode = "edit";
-      c.src = b.fileurl ? b.fileurl : "/uploads/" + b.filename.substring(0, 2) + "/" + b.filename.substring(2, 4) + "/image/" + b.filename + ".png";
-      c.onload = function(b) {
+      a.prevObjectId = b;
+      d.src = c.fileurl ? c.fileurl : "/uploads/" + c.filename.substring(0, 2) + "/" + c.filename.substring(2, 4) + "/image/" + c.filename + ".png";
+      d.onload = function(b) {
         a.addImage(b.target);
       };
     }
@@ -7472,6 +7476,7 @@ Entry.Painter.prototype.initPicture = function() {
     a.file.name = b.name;
   });
   Entry.addEventListener("pictureClear", function(b) {
+    a.file.modified = !1;
     a.file.id = "";
     a.file.name = "";
     a.clearCanvas();
@@ -9007,16 +9012,18 @@ Entry.Playground.prototype.addPicture = function(a, b) {
 };
 Entry.Playground.prototype.setPicture = function(a) {
   var b = document.getElementById(a.id);
-  a.view = b;
-  b.picture = a;
-  b = document.getElementById("t_" + a.id);
-  if (a.fileurl) {
-    b.style.backgroundImage = 'url("' + a.fileurl + '")';
-  } else {
-    var c = a.filename;
-    b.style.backgroundImage = 'url("/uploads/' + c.substring(0, 2) + "/" + c.substring(2, 4) + "/thumb/" + c + '.png")';
+  if (b) {
+    a.view = b;
+    b.picture = a;
+    b = document.getElementById("t_" + a.id);
+    if (a.fileurl) {
+      b.style.backgroundImage = 'url("' + a.fileurl + '")';
+    } else {
+      var c = a.filename;
+      b.style.backgroundImage = 'url("/uploads/' + c.substring(0, 2) + "/" + c.substring(2, 4) + "/thumb/" + c + '.png")';
+    }
+    document.getElementById("s_" + a.id).innerHTML = a.dimension.width + " X " + a.dimension.height;
   }
-  document.getElementById("s_" + a.id).innerHTML = a.dimension.width + " X " + a.dimension.height;
   Entry.playground.object.setPicture(a);
 };
 Entry.Playground.prototype.clonePicture = function(a) {
@@ -9029,7 +9036,7 @@ Entry.Playground.prototype.selectPicture = function(a) {
     e === a ? e.view.addClass("entryPictureSelected") : e.view.removeClass("entryPictureSelected");
   }
   Entry.playground.object.selectPicture(a.id);
-  Entry.dispatchEvent("pictureSelected", a);
+  Entry.dispatchEvent("pictureSelected", [a, this.object.id]);
 };
 Entry.Playground.prototype.movePicture = function(a, b) {
   this.object.pictures.splice(b, 0, this.object.pictures.splice(a, 1)[0]);
