@@ -199,22 +199,31 @@ Entry.Variable.prototype.generateView = function(variableIndex) {
 
         this.resizeHandle_ = new createjs.Shape();
         this.resizeHandle_.graphics.f("#1bafea").ss(1,0,0).s("#1bafea")
-            .lt(0,-7).lt(-7,0).lt(0,0);
+            .lt(0,-9).lt(-9,0).lt(0,0);
         this.view_.addChild(this.resizeHandle_);
 
         this.resizeHandle_.list = this;
+        
+        this.resizeHandle_.on("mouseover", function(evt) {
+            this.cursor = 'nwse-resize';
+        });
+
         this.resizeHandle_.on("mousedown", function(evt) {
             // if(Entry.type != 'workspace') return;
             this.list.isResizing = true;
             this.offset = {x:evt.stageX*0.75 - this.list.getWidth(),
                 y:evt.stageY*0.75-this.list.getHeight()};
-            this.parent.cursor = 'se-resize';
+            this.parent.cursor = 'nwse-resize';
         });
         this.resizeHandle_.on("pressmove", function(evt) {
             // if(Entry.type != 'workspace') return;
             this.list.setWidth(evt.stageX*0.75 - this.offset.x);
             this.list.setHeight(evt.stageY*0.75 - this.offset.y);
             this.list.updateView();
+        });
+
+        this.view_.on("mouseover", function(evt) {
+            this.cursor = 'move';
         });
 
         this.view_.on("mousedown", function(evt) {
