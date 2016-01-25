@@ -6808,6 +6808,7 @@ Entry.EntryObject.prototype.generateView = function() {
     d.setAttribute("disabled", "disabled");
     this.nameView_.onblur = function() {
       this.entryObject.name = this.value;
+      Entry.playground.reloadPlayground();
     };
     this.nameView_.onkeypress = function(a) {
       13 == a.keyCode && this.entryObject.editObjectValues(tog);
@@ -7022,6 +7023,7 @@ Entry.EntryObject.prototype.generateView = function() {
     }}])), this.view_ = a, a = Entry.createElement("ul"), a.addClass("objectInfoView"), d = Entry.createElement("li"), d.addClass("objectInfo_visible"), e = Entry.createElement("li"), e.addClass("objectInfo_lock"), a.appendChild(d), a.appendChild(e), this.view_.appendChild(a), a = Entry.createElement("div"), a.addClass("entryObjectThumbnailWorkspace"), this.view_.appendChild(a), this.thumbnailView_ = a, a = Entry.createElement("div"), a.addClass("entryObjectWrapperWorkspace"), this.view_.appendChild(a), 
     d = Entry.createElement("input"), d.addClass("entryObjectNameWorkspace"), a.appendChild(d), this.nameView_ = d, this.nameView_.entryObject = this, this.nameView_.onblur = function() {
       this.entryObject.name = this.value;
+      Entry.playground.reloadPlayground();
     }, this.nameView_.onkeypress = function(a) {
       13 == a.keyCode && this.blur();
     }, this.nameView_.value = this.name, Entry.objectEditable && Entry.objectDeletable && (d = Entry.createElement("div"), d.addClass("entryObjectDeletePhone"), d.object = this, this.deleteView_ = d, this.view_.appendChild(d), d.bindOnClick(function(a) {
@@ -11442,14 +11444,18 @@ Entry.Variable.prototype.generateView = function(a) {
       this.getX() && this.getY() ? (this.setX(this.getX()), this.setY(this.getY())) : (this.setX(-230 + 80 * Math.floor(b / 11)), this.setY(24 * a + 20 - 135 - 264 * Math.floor(b / 11)));
     } else {
       this.view_ = new createjs.Container, this.rect_ = new createjs.Shape, this.view_.addChild(this.rect_), this.view_.variable = this, this.titleView_ = new createjs.Text("asdf", this.FONT, "#000"), this.titleView_.textBaseline = "alphabetic", this.titleView_.textAlign = "center", this.titleView_.width = this.width_ - 2 * this.BORDER, this.titleView_.y = this.BORDER + 10, this.titleView_.x = this.width_ / 2, this.view_.addChild(this.titleView_), this.resizeHandle_ = new createjs.Shape, this.resizeHandle_.graphics.f("#1bafea").ss(1, 
-      0, 0).s("#1bafea").lt(0, -7).lt(-7, 0).lt(0, 0), this.view_.addChild(this.resizeHandle_), this.resizeHandle_.list = this, this.resizeHandle_.on("mousedown", function(a) {
+      0, 0).s("#1bafea").lt(0, -9).lt(-9, 0).lt(0, 0), this.view_.addChild(this.resizeHandle_), this.resizeHandle_.list = this, this.resizeHandle_.on("mouseover", function(a) {
+        this.cursor = "nwse-resize";
+      }), this.resizeHandle_.on("mousedown", function(a) {
         this.list.isResizing = !0;
         this.offset = {x:.75 * a.stageX - this.list.getWidth(), y:.75 * a.stageY - this.list.getHeight()};
-        this.parent.cursor = "se-resize";
+        this.parent.cursor = "nwse-resize";
       }), this.resizeHandle_.on("pressmove", function(a) {
         this.list.setWidth(.75 * a.stageX - this.offset.x);
         this.list.setHeight(.75 * a.stageY - this.offset.y);
         this.list.updateView();
+      }), this.view_.on("mouseover", function(a) {
+        this.cursor = "move";
       }), this.view_.on("mousedown", function(a) {
         "workspace" != Entry.type || this.variable.isResizing || (this.offset = {x:this.x - (.75 * a.stageX - 240), y:this.y - (.75 * a.stageY - 135)}, this.cursor = "move");
       }), this.view_.on("pressup", function(a) {
@@ -12097,10 +12103,10 @@ Entry.VariableContainer.prototype.addVariable = function(a) {
 };
 Entry.VariableContainer.prototype.removeVariable = function(a) {
   var b = this.variables_.indexOf(a), c = a.toJSON();
-  Entry.stateManager && Entry.stateManager.addCommand("remove variable", this, this.addVariable, c);
   this.selected == a && this.select(null);
   a.remove();
   this.variables_.splice(b, 1);
+  Entry.stateManager && Entry.stateManager.addCommand("remove variable", this, this.addVariable, c);
   Entry.playground.reloadPlayground();
   this.updateList();
   return new Entry.State(this, this.addVariable, c);
