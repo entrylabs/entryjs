@@ -594,6 +594,7 @@ Entry.Arduino = {name:"arduino", setZero:function() {
   Entry.hw.update();
 }};
 Entry.SensorBoard = {name:"sensorBoard", setZero:Entry.Arduino.setZero};
+Entry.CODEino = {name:"CODEIno", setZero:Entry.Arduino.setZero};
 Blockly.Blocks.arduino_text = {init:function() {
   this.setColour("#00979D");
   this.appendDummyInput().appendField(new Blockly.FieldTextInput("Arduino"), "NAME");
@@ -793,6 +794,54 @@ Blockly.Blocks.sensorBoard_led = {init:function() {
 Entry.block.sensorBoard_led = function(a, b) {
   Entry.hw.setDigitalPortValue(b.getField("PORT"), b.getNumberField("OPERATOR"));
   return b.callReturn();
+};
+Blockly.Blocks.CODEino_get_sensor_number = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(new Blockly.FieldDropdown([[Lang.Blocks.CODEino_get_sensor_number_0, "A0"], [Lang.Blocks.CODEino_get_sensor_number_1, "A1"], [Lang.Blocks.CODEino_get_sensor_number_2, "A2"], [Lang.Blocks.CODEino_get_sensor_number_3, "A3"], [Lang.Blocks.CODEino_get_sensor_number_4, "A4"], [Lang.Blocks.CODEino_get_sensor_number_5, "A5"], [Lang.Blocks.CODEino_get_sensor_number_6, "A6"]]), "PORT");
+  this.appendDummyInput().appendField(" ");
+  this.setOutput(!0, "Number");
+  this.setInputsInline(!0);
+}};
+Entry.block.CODEino_get_sensor_number = function(a, b) {
+  return b.getStringField("PORT");
+};
+Blockly.Blocks.CODEino_get_named_sensor_value = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(" ").appendField(new Blockly.FieldDropdown([[Lang.Blocks.CODEino_sensor_name_0, "0"], [Lang.Blocks.CODEino_sensor_name_1, "1"], [Lang.Blocks.CODEino_sensor_name_2, "2"], [Lang.Blocks.CODEino_sensor_name_3, "3"], [Lang.Blocks.CODEino_sensor_name_4, "4"], [Lang.Blocks.CODEino_sensor_name_5, "5"], [Lang.Blocks.CODEino_sensor_name_6, "6"]]), "PORT").appendField(Lang.Blocks.CODEino_string_1);
+  this.setOutput(!0, "Number");
+  this.setInputsInline(!0);
+}};
+Entry.block.CODEino_get_named_sensor_value = function(a, b) {
+  return Entry.hw.getAnalogPortValue(b.getField("PORT", b));
+};
+Blockly.Blocks.CODEino_is_button_pressed = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(Lang.Blocks.CODEino_string_2).appendField(new Blockly.FieldDropdown([[Lang.Blocks.CODEino_string_3, "4"], [Lang.Blocks.CODEino_string_4, "17"], [Lang.Blocks.CODEino_string_5, "18"], [Lang.Blocks.CODEino_string_6, "19"], [Lang.Blocks.CODEino_string_7, "20"]]), "PORT");
+  this.appendDummyInput().appendField(" ");
+  this.setInputsInline(!0);
+  this.setOutput(!0, "Boolean");
+}};
+Entry.block.CODEino_is_button_pressed = function(a, b) {
+  var c = b.getNumberField("PORT", b);
+  return 14 < c ? Entry.hw.getDigitalPortValue(c - 14) : !Entry.hw.getDigitalPortValue(c);
+};
+Blockly.Blocks.CODEino_get_accelerometer_value = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(Lang.Blocks.CODEino_string_8).appendField(new Blockly.FieldDropdown([[Lang.Blocks.CODEino_accelerometer_X, "3"], [Lang.Blocks.CODEino_accelerometer_Y, "4"], [Lang.Blocks.CODEino_accelerometer_Z, "5"]]), "PORT").appendField(Lang.Blocks.CODEino_string_9);
+  this.setOutput(!0, "Number");
+  this.setInputsInline(!0);
+}};
+Entry.block.CODEino_get_accelerometer_value = function(a, b) {
+  var c = 265, d = 402, e = -90, f = 90, g = Entry.hw.getAnalogPortValue(b.getField("PORT", b));
+  if (c > d) {
+    var h = c, c = d, d = h
+  }
+  e > f && (h = e, e = f, f = h);
+  g = (f - e) / (d - c) * (g - c);
+  g += e;
+  g = Math.min(f, g);
+  g = Math.max(e, g);
+  return Math.round(g);
 };
 Entry.Bitbrick = {SENSOR_MAP:{1:"light", 2:"IR", 3:"touch", 4:"potentiometer", 5:"MIC", 11:"USER INPUT", 20:"LED", 19:"SERVO", 18:"DC"}, PORT_MAP:{buzzer:2, 5:4, 6:6, 7:8, 8:10, LEDR:12, LEDG:14, LEDB:16}, sensorList:function() {
   for (var a = [], b = Entry.hw.portData, c = 1;5 > c;c++) {
@@ -6436,7 +6485,7 @@ Entry.HW = function() {
   this.settingQueue = {};
   this.hwModule = this.selectedDevice = null;
   Entry.addEventListener("stop", this.setZero);
-  this.hwInfo = {11:Entry.Arduino, 12:Entry.SensorBoard, 24:Entry.Hamster, 25:Entry.Albert, 31:Entry.Bitbrick};
+  this.hwInfo = {11:Entry.Arduino, 12:Entry.SensorBoard, 13:Entry.CODEino, 24:Entry.Hamster, 25:Entry.Albert, 31:Entry.Bitbrick};
 };
 Entry.HW.TRIAL_LIMIT = 1;
 p = Entry.HW.prototype;
