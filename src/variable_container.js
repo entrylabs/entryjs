@@ -930,6 +930,7 @@ Entry.VariableContainer.prototype.changeVariableName = function(variable, name) 
     }
     variable.name_ = name;
     variable.updateView();
+    Entry.playground.reloadPlayground();
     Entry.toast.success(Lang.Workspace.variable_rename,
                         Lang.Workspace.variable_rename_ok);
 };
@@ -957,6 +958,7 @@ Entry.VariableContainer.prototype.changeListName = function(list, name) {
     }
     list.name_ = name;
     list.updateView();
+    Entry.playground.reloadPlayground();
     Entry.toast.success(Lang.Workspace.list_rename,
                         Lang.Workspace.list_rename_ok);
 };
@@ -1141,6 +1143,7 @@ Entry.VariableContainer.prototype.changeMessageName = function(message, name) {
         return;
     }
     message.name = name;
+    Entry.playground.reloadPlayground();
     Entry.toast.success(Lang.Workspace.message_rename,
                         Lang.Workspace.message_rename_ok);
 };
