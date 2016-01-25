@@ -11444,14 +11444,18 @@ Entry.Variable.prototype.generateView = function(a) {
       this.getX() && this.getY() ? (this.setX(this.getX()), this.setY(this.getY())) : (this.setX(-230 + 80 * Math.floor(b / 11)), this.setY(24 * a + 20 - 135 - 264 * Math.floor(b / 11)));
     } else {
       this.view_ = new createjs.Container, this.rect_ = new createjs.Shape, this.view_.addChild(this.rect_), this.view_.variable = this, this.titleView_ = new createjs.Text("asdf", this.FONT, "#000"), this.titleView_.textBaseline = "alphabetic", this.titleView_.textAlign = "center", this.titleView_.width = this.width_ - 2 * this.BORDER, this.titleView_.y = this.BORDER + 10, this.titleView_.x = this.width_ / 2, this.view_.addChild(this.titleView_), this.resizeHandle_ = new createjs.Shape, this.resizeHandle_.graphics.f("#1bafea").ss(1, 
-      0, 0).s("#1bafea").lt(0, -7).lt(-7, 0).lt(0, 0), this.view_.addChild(this.resizeHandle_), this.resizeHandle_.list = this, this.resizeHandle_.on("mousedown", function(a) {
+      0, 0).s("#1bafea").lt(0, -9).lt(-9, 0).lt(0, 0), this.view_.addChild(this.resizeHandle_), this.resizeHandle_.list = this, this.resizeHandle_.on("mouseover", function(a) {
+        this.cursor = "nwse-resize";
+      }), this.resizeHandle_.on("mousedown", function(a) {
         this.list.isResizing = !0;
         this.offset = {x:.75 * a.stageX - this.list.getWidth(), y:.75 * a.stageY - this.list.getHeight()};
-        this.parent.cursor = "se-resize";
+        this.parent.cursor = "nwse-resize";
       }), this.resizeHandle_.on("pressmove", function(a) {
         this.list.setWidth(.75 * a.stageX - this.offset.x);
         this.list.setHeight(.75 * a.stageY - this.offset.y);
         this.list.updateView();
+      }), this.view_.on("mouseover", function(a) {
+        this.cursor = "move";
       }), this.view_.on("mousedown", function(a) {
         "workspace" != Entry.type || this.variable.isResizing || (this.offset = {x:this.x - (.75 * a.stageX - 240), y:this.y - (.75 * a.stageY - 135)}, this.cursor = "move");
       }), this.view_.on("pressup", function(a) {
