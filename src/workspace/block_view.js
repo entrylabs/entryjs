@@ -71,7 +71,8 @@ Entry.BlockView = function(block, board, mode) {
         this._darkenPath = this.svgGroup.path(path);
         this._darkenPath.attr({
             transform: "t0 1",
-            fill: Entry.Utils.colorDarken(this._schema.color, 0.7)
+            fill: Entry.Utils.colorDarken(this._schema.color, 0.7),
+            class: 'blockPathDarken'
         });
 
         this._path = this.svgGroup.path(path);
@@ -80,6 +81,7 @@ Entry.BlockView = function(block, board, mode) {
             pathStyle.strokeWidth = "0.5";
             pathStyle.stroke = Entry.Utils.colorDarken(this._schema.color, 0.8);
         }
+        pathStyle.class = 'blockPath';
         this._path.attr(pathStyle);
 
         this._moveTo(this.x, this.y, false);

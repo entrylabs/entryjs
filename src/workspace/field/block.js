@@ -213,22 +213,27 @@ Entry.Utils.inherit(Entry.DummyBlock, Entry.FieldDummyBlock);
 
 Entry.FieldDummyBlock.prototype.constructor = Entry.FieldDummyBlock;
 
-/*
 Entry.FieldDummyBlock.prototype._updateBG = function() {
     if (this.magneting) {
-        var dragThreadHeight = this.getBoard().dragBlock.dragInstance.height;
-        this.set({height: dragThreadHeight});
-        var shadow = this.getBoard().dragBlock.getShadow();
-        shadow.attr({transform: "t0 " + 0});
-        this.svgGroup.prepend(shadow);
+        var block = this.next;
+        if (!block) return;
+
+        var shadow = block.view.svgGroup.selectAll('.blockPath')[0].clone();
+        shadow.attr({
+            transform: "t0 " + 0,
+            "opacity": 1,
+            "fill": 'white',
+            'fill-opacity': 0.5,
+            'stroke': 'white',
+            'stroke-width': 2,
+            'stroke-opacity': 1
+        });
+        this.svgGroup.append(shadow);
         this._clonedShadow = shadow;
     } else {
         if (this._clonedShadow) {
             this._clonedShadow.remove();
             delete this._clonedShadow;
         }
-        this.set({height: this.schema.height});
     }
-    this._thread.changeEvent.notify();
 };
-*/

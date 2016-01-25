@@ -13208,10 +13208,11 @@ Entry.BlockView = function(a, b, c) {
     this.svgGroup.attr({class:"block"});
     var d = this._skeleton.path(this);
     this._darkenPath = this.svgGroup.path(d);
-    this._darkenPath.attr({transform:"t0 1", fill:Entry.Utils.colorDarken(this._schema.color, .7)});
+    this._darkenPath.attr({transform:"t0 1", fill:Entry.Utils.colorDarken(this._schema.color, .7), class:"blockPathDarken"});
     this._path = this.svgGroup.path(d);
     d = {fill:this._schema.color};
     this._skeleton.outerLine && (d.strokeWidth = "0.5", d.stroke = Entry.Utils.colorDarken(this._schema.color, .8));
+    d.class = "blockPath";
     this._path.attr(d);
     this._moveTo(this.x, this.y, !1);
     this._startContentRender(a);
@@ -13635,32 +13636,32 @@ Entry.Code = function(a) {
       }
     }
   };
-  a.getEventMap = function(b) {
-    return this._eventMap[b];
+  a.getEventMap = function(a) {
+    return this._eventMap[a];
   };
-  a.map = function(b) {
-    this._data.map(b);
+  a.map = function(a) {
+    this._data.map(a);
   };
   a.tick = function() {
-    for (var b = this.executors, a = 0;a < b.length;a++) {
-      var d = b[a];
+    for (var a = this.executors, c = 0;c < a.length;c++) {
+      var d = a[c];
       d.execute();
-      null === d.scope.block && (b.splice(a, 1), a--, 0 === b.length && this.executeEndEvent.notify());
+      null === d.scope.block && (a.splice(c, 1), c--, 0 === a.length && this.executeEndEvent.notify());
     }
   };
   a.clearExecutors = function() {
     this.executors = [];
   };
-  a.createThread = function(b) {
-    if (!(b instanceof Array)) {
+  a.createThread = function(a) {
+    if (!(a instanceof Array)) {
       return console.error("blocks must be array");
     }
-    b = new Entry.Thread(b, this);
-    this._data.push(b);
-    return b;
+    a = new Entry.Thread(a, this);
+    this._data.push(a);
+    return a;
   };
-  a.cloneThread = function(b, a) {
-    var d = b.clone(this, a);
+  a.cloneThread = function(a, c) {
+    var d = a.clone(this, c);
     this._data.push(d);
     return d;
   };
@@ -14382,6 +14383,14 @@ Entry.FieldDummyBlock = function(a, b) {
 Entry.FieldDummyBlock.PRIMITIVE_TYPES = ["True", "text"];
 Entry.Utils.inherit(Entry.DummyBlock, Entry.FieldDummyBlock);
 Entry.FieldDummyBlock.prototype.constructor = Entry.FieldDummyBlock;
+Entry.FieldDummyBlock.prototype._updateBG = function() {
+  if (this.magneting) {
+    var a = this.next;
+    a && (a = a.view.svgGroup.selectAll(".blockPath")[0].clone(), a.attr({transform:"t0 0", opacity:1, fill:"white", "fill-opacity":.5, stroke:"white", "stroke-width":2, "stroke-opacity":1}), this.svgGroup.append(a), this._clonedShadow = a);
+  } else {
+    this._clonedShadow && (this._clonedShadow.remove(), delete this._clonedShadow);
+  }
+};
 Entry.FieldText = function(a, b, c) {
   this._block = b.block;
   this._index = c;
