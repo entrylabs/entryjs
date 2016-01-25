@@ -304,7 +304,12 @@ EntryStatic.getAllBlocks = function() {
                 "sensorBoard_get_named_sensor_value",
                 "sensorBoard_is_button_pressed",
                 "sensorBoard_led",
-                "CODEino_get_sensor_number",
+                "sensorBoard_get_number_sensor_value",
+                "sensorBoard_get_digital_value",
+                "sensorBoard_toggle_led",
+                "sensorBoard_toggle_pwm",
+                "sensorBoard_convert_scale",
+                //CODEino
                 "CODEino_get_named_sensor_value",
                 "CODEino_is_button_pressed",
                 "CODEino_get_accelerometer_value",
@@ -312,12 +317,7 @@ EntryStatic.getAllBlocks = function() {
                 "CODEino_get_digital_value",
                 "CODEino_toggle_led",
                 "CODEino_toggle_pwm",
-                "CODEino_convert_scale",
-                "sensorBoard_get_number_sensor_value",
-                "sensorBoard_get_digital_value",
-                "sensorBoard_toggle_led",
-                "sensorBoard_toggle_pwm",
-                "sensorBoard_convert_scale"
+                "CODEino_convert_scale"
             ]
         }
     ]
@@ -1158,7 +1158,7 @@ EntryStatic.blockInfo = {
         "class": "arduino_value"
     },
     "CODEino_get_number_sensor_value": {
-        "xml": "<block type='arduino_get_number_sensor_value'><value name='VALUE'><block type='arduino_get_sensor_number'></block></value></block>",
+        "xml": "<block type='arduino_get_number_sensor_value'><value name='VALUE'><block type='CODEino_get_sensor_number'></block></value></block>",
         "isNotFor": ['CODEino'],
         "usage": ["arduino"],
         "class": "arduino_value"
@@ -1174,7 +1174,7 @@ EntryStatic.blockInfo = {
         "isNotFor": ['sensorBoard'],
         "usage": ["arduino"],
         "class": "arduino_value"
-    },
+    },    
     "CODEino_get_digital_value": {
         "xml": "<block type='arduino_get_digital_value'><value name='VALUE'><block type='arduino_get_port_number'></block></value></block>",
         "isNotFor": ['CODEino'],
@@ -1230,7 +1230,7 @@ EntryStatic.blockInfo = {
         "class": "arduino"
     },
     "CODEino_convert_scale": {
-        "xml": "<block type='arduino_convert_scale'><value name='VALUE1'><block type='arduino_get_number_sensor_value'><value name='VALUE'><block type='arduino_get_sensor_number'></block></value></block></value><value name='VALUE2'> <block type='number'><field name='NUM'>0</field></block> </value><value name='VALUE3'> <block type='number'><field name='NUM'>1023</field></block> </value><value name='VALUE4'> <block type='number'><field name='NUM'>0</field></block> </value><value name='VALUE5'> <block type='number'><field name='NUM'>100</field></block> </value></block>",
+        "xml": "<block type='arduino_convert_scale'><value name='VALUE1'><block type='arduino_get_number_sensor_value'><value name='VALUE'><block type='CODEino_get_sensor_number'></block></value></block></value><value name='VALUE2'> <block type='number'><field name='NUM'>0</field></block> </value><value name='VALUE3'> <block type='number'><field name='NUM'>1023</field></block> </value><value name='VALUE4'> <block type='number'><field name='NUM'>0</field></block> </value><value name='VALUE5'> <block type='number'><field name='NUM'>100</field></block> </value></block>",
         "isNotFor": ['CODEino'],
         "usage": ["arduino"],
         "class": "arduino"
@@ -1684,27 +1684,21 @@ EntryStatic.blockInfo = {
         "xml": "<block type='sensorBoard_led'></block>",
         "class": "sensorBoard"
     },
-    "CODEino_get_sensor_number": {
-        "isNotFor": ["CODEino"],
-        "xml": "<block type='CODEino_get_sensor_number'></block>",
-        "usage": ["arduino"],
-        "class": "CODEino"
-    },
     "CODEino_get_named_sensor_value": {
-        "isNotFor": ["CODEino"],
         "xml": "<block type='CODEino_get_named_sensor_value'></block>",
+        "isNotFor": ['CODEino'],
         "usage": ["arduino"],
         "class": "CODEino"
     },
     "CODEino_is_button_pressed": {
-        "isNotFor": ["CODEino"],
         "xml": "<block type='CODEino_is_button_pressed'></block>",
+        "isNotFor": ["CODEino"],
         "usage": ["arduino"],
         "class": "CODEino"
     },
     "CODEino_get_accelerometer_value": {
-        "isNotFor": ["CODEino"],
         "xml": "<block type='CODEino_get_accelerometer_value'></block>",
+        "isNotFor": ["CODEino"],
         "usage": ["arduino"],
         "class": "CODEino"
     },
