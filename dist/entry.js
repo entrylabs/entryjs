@@ -12096,11 +12096,13 @@ Entry.VariableContainer.prototype.addVariable = function(a) {
   return new Entry.State(this, this.removeVariable, a);
 };
 Entry.VariableContainer.prototype.removeVariable = function(a) {
-  var b = this.variables_.indexOf(a), c = a.toJSON();
-  Entry.stateManager && Entry.stateManager.addCommand("remove variable", this, this.addVariable, c);
+  var b = this.variables_.indexOf(a);
+  console.log("index", b);
+  var c = a.toJSON();
   this.selected == a && this.select(null);
   a.remove();
   this.variables_.splice(b, 1);
+  Entry.stateManager && Entry.stateManager.addCommand("remove variable", this, this.addVariable, c);
   Entry.playground.reloadPlayground();
   this.updateList();
   return new Entry.State(this, this.addVariable, c);
@@ -12685,6 +12687,7 @@ Entry.VariableContainer.prototype.generateVariableSettingView = function() {
     "variable" == f ? (c = b.toJSON(), c.variableType = "slide", c = new Entry.Variable(c), d.splice(d.indexOf(b), 0, c), 0 > c.getValue() && c.setValue(0), 100 < c.getValue() && c.setValue(100), e.removeAttribute("disabled"), g.removeAttribute("disabled")) : "slide" == f && (c = b.toJSON(), c.variableType = "variable", c = new Entry.Variable(c), d.splice(d.indexOf(b), 0, c), e.setAttribute("disabled", "disabled"), g.setAttribute("disabled", "disabled"));
     a.createVariableView(c);
     a.removeVariable(b);
+    console.log("remove variable");
     a.updateSelectedVariable(c);
     c.generateView();
   });
