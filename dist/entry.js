@@ -12097,10 +12097,10 @@ Entry.VariableContainer.prototype.addVariable = function(a) {
 };
 Entry.VariableContainer.prototype.removeVariable = function(a) {
   var b = this.variables_.indexOf(a), c = a.toJSON();
-  Entry.stateManager && Entry.stateManager.addCommand("remove variable", this, this.addVariable, c);
   this.selected == a && this.select(null);
   a.remove();
   this.variables_.splice(b, 1);
+  Entry.stateManager && Entry.stateManager.addCommand("remove variable", this, this.addVariable, c);
   Entry.playground.reloadPlayground();
   this.updateList();
   return new Entry.State(this, this.addVariable, c);

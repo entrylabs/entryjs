@@ -886,6 +886,12 @@ Entry.VariableContainer.prototype.addVariable = function(variable) {
 Entry.VariableContainer.prototype.removeVariable = function(variable) {
     var index = this.variables_.indexOf(variable);
     var variableJSON = variable.toJSON();
+
+    if (this.selected == variable)
+        this.select(null);
+    variable.remove();
+    this.variables_.splice(index, 1);
+
     if (Entry.stateManager)
         Entry.stateManager.addCommand(
             "remove variable",
@@ -893,10 +899,7 @@ Entry.VariableContainer.prototype.removeVariable = function(variable) {
             this.addVariable,
             variableJSON
         );
-    if (this.selected == variable)
-        this.select(null);
-    variable.remove();
-    this.variables_.splice(index, 1);
+
     Entry.playground.reloadPlayground();
     this.updateList();
     return new Entry.State(this,
@@ -1925,6 +1928,7 @@ Entry.VariableContainer.prototype.generateVariableSettingView = function () {
             maxValueInput.setAttribute('disabled', 'disabled');
         }
         that.createVariableView(newVariable);
+
         that.removeVariable(v);
         that.updateSelectedVariable(newVariable);
         newVariable.generateView();
