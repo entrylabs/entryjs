@@ -16,7 +16,7 @@ Entry.SensorBoard = {
 };
 
 Entry.CODEino = {
-    name: 'CODEIno',
+    name: 'CODEino',
     setZero: Entry.Arduino.setZero
 };
 

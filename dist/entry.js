@@ -594,7 +594,7 @@ Entry.Arduino = {name:"arduino", setZero:function() {
   Entry.hw.update();
 }};
 Entry.SensorBoard = {name:"sensorBoard", setZero:Entry.Arduino.setZero};
-Entry.CODEino = {name:"CODEIno", setZero:Entry.Arduino.setZero};
+Entry.CODEino = {name:"CODEino", setZero:Entry.Arduino.setZero};
 Blockly.Blocks.arduino_text = {init:function() {
   this.setColour("#00979D");
   this.appendDummyInput().appendField(new Blockly.FieldTextInput("Arduino"), "NAME");

@@ -1687,21 +1687,25 @@ EntryStatic.blockInfo = {
     "CODEino_get_sensor_number": {
         "isNotFor": ["CODEino"],
         "xml": "<block type='CODEino_get_sensor_number'></block>",
+        "usage": ["arduino"],
         "class": "CODEino"
     },
     "CODEino_get_named_sensor_value": {
         "isNotFor": ["CODEino"],
         "xml": "<block type='CODEino_get_named_sensor_value'></block>",
+        "usage": ["arduino"],
         "class": "CODEino"
     },
     "CODEino_is_button_pressed": {
         "isNotFor": ["CODEino"],
         "xml": "<block type='CODEino_is_button_pressed'></block>",
+        "usage": ["arduino"],
         "class": "CODEino"
     },
     "CODEino_get_accelerometer_value": {
         "isNotFor": ["CODEino"],
         "xml": "<block type='CODEino_get_accelerometer_value'></block>",
+        "usage": ["arduino"],
         "class": "CODEino"
     },
     "direction_relative_duration": {
