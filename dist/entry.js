@@ -6808,6 +6808,7 @@ Entry.EntryObject.prototype.generateView = function() {
     d.setAttribute("disabled", "disabled");
     this.nameView_.onblur = function() {
       this.entryObject.name = this.value;
+      Entry.playground.reloadPlayground();
     };
     this.nameView_.onkeypress = function(a) {
       13 == a.keyCode && this.entryObject.editObjectValues(tog);
@@ -7022,6 +7023,7 @@ Entry.EntryObject.prototype.generateView = function() {
     }}])), this.view_ = a, a = Entry.createElement("ul"), a.addClass("objectInfoView"), d = Entry.createElement("li"), d.addClass("objectInfo_visible"), e = Entry.createElement("li"), e.addClass("objectInfo_lock"), a.appendChild(d), a.appendChild(e), this.view_.appendChild(a), a = Entry.createElement("div"), a.addClass("entryObjectThumbnailWorkspace"), this.view_.appendChild(a), this.thumbnailView_ = a, a = Entry.createElement("div"), a.addClass("entryObjectWrapperWorkspace"), this.view_.appendChild(a), 
     d = Entry.createElement("input"), d.addClass("entryObjectNameWorkspace"), a.appendChild(d), this.nameView_ = d, this.nameView_.entryObject = this, this.nameView_.onblur = function() {
       this.entryObject.name = this.value;
+      Entry.playground.reloadPlayground();
     }, this.nameView_.onkeypress = function(a) {
       13 == a.keyCode && this.blur();
     }, this.nameView_.value = this.name, Entry.objectEditable && Entry.objectDeletable && (d = Entry.createElement("div"), d.addClass("entryObjectDeletePhone"), d.object = this, this.deleteView_ = d, this.view_.appendChild(d), d.bindOnClick(function(a) {
