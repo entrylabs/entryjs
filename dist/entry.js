@@ -13238,7 +13238,7 @@ Entry.BlockView = function(a, b, c) {
       a += f.width;
     }
     if (this._statements.length) {
-      for (f = this._skeleton.statementPos(this), e = 0;e < this._statements.length;e++) {
+      for (f = this._skeleton.statementPos ? this._skeleton.statementPos(this) : [], e = 0;e < this._statements.length;e++) {
         var g = this._statements[e], h = f[e];
         h && g.align(h.x, h.y, b);
       }
@@ -14780,7 +14780,7 @@ Entry.skeleton.pebble_loop = {fontSize:16, dropdownHeight:23, path:function(a) {
   return {x:-46, y:25};
 }};
 Entry.skeleton.pebble_basic = {fontSize:16, morph:["prev", "next"], path:function(a) {
-  var b = a.blockView;
+  var b = a.block;
   a = b.prev && "pebble_basic" === b.prev._schema.skeleton;
   b = b.next && "pebble_basic" === b.next._schema.skeleton;
   return "m 0,9 a 9,9 0 0,0 9,-9 h 28 " + (a ? "l 25,0 0,25" : "q 25,0 25,25") + (b ? "l 0,25 -25,0" : "q 0,25 -25,25") + "h -28 a 9,9 0 0,1 -18,0 h -28 " + (b ? "l -25,0 0,-25" : "q -25,0 -25,-25") + (a ? "l 0,-25 25,0" : "q 0,-25 25,-25") + "h 28 a 9,9 0 0,0 9,9 z";

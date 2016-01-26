@@ -152,7 +152,8 @@ Entry.BlockView = function(block, board, mode) {
         }
 
         if (this._statements.length) {
-            var positions = this._skeleton.statementPos(this);
+            var positions = this._skeleton.statementPos ?
+                this._skeleton.statementPos(this) : [];
             for (var i = 0; i < this._statements.length; i++) {
                 var s = this._statements[i];
                 var pos = positions[i];
