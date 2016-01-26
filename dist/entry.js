@@ -13198,10 +13198,10 @@ Entry.BlockView = function(a, b, c) {
     b = void 0 === b ? Entry.Workspace.MODE_BOARD : b;
     this.contentSvgGroup && this.contentSvgGroup.remove();
     var a = this._schema;
-    a.statements.length && this.statementSvgGroup && this.statementSvgGroup.remove();
+    a.statements && a.statements.length && this.statementSvgGroup && this.statementSvgGroup.remove();
     this._contents = [];
     this.contentSvgGroup = this.svgGroup.group();
-    a.statements.length && (this.statementSvgGroup = this.svgGroup.group());
+    a.statements && a.statements.length && (this.statementSvgGroup = this.svgGroup.group());
     switch(b) {
       case Entry.Workspace.MODE_BOARD:
         var d = /(%\d)/gmi, e = a.template.split(d), f = a.params;
@@ -13216,8 +13216,7 @@ Entry.BlockView = function(a, b, c) {
             }
           }
         }
-        a = a.statements;
-        if (a.length) {
+        if ((a = a.statements) && a.length) {
           for (b = 0;b < a.length;b++) {
             this._statements.push(new Entry.FieldStatement(a[b], this, b));
           }
@@ -13612,17 +13611,17 @@ Entry.Code = function(a) {
       }
     }
   };
-  a.getEventMap = function(a) {
-    return this._eventMap[a];
+  a.getEventMap = function(b) {
+    return this._eventMap[b];
   };
-  a.map = function(a) {
-    this._data.map(a);
+  a.map = function(b) {
+    this._data.map(b);
   };
   a.tick = function() {
-    for (var a = this.executors, c = 0;c < a.length;c++) {
-      var d = a[c];
+    for (var b = this.executors, a = 0;a < b.length;a++) {
+      var d = b[a];
       d.execute();
-      null === d.scope.block && (a.splice(c, 1), c--, 0 === a.length && this.executeEndEvent.notify());
+      null === d.scope.block && (b.splice(a, 1), a--, 0 === b.length && this.executeEndEvent.notify());
     }
   };
   a.clearExecutors = function() {
@@ -13706,8 +13705,8 @@ Entry.Executor = function(a, b) {
 (function(a) {
   a.execute = function() {
     for (;;) {
-      var b = this.scope.block._schema.func.call(this.scope, this.entity, this.scope);
-      if (void 0 === b || null === b) {
+      var a = this.scope.block._schema.func.call(this.scope, this.entity, this.scope);
+      if (void 0 === a || null === a) {
         if (this.scope = new Entry.Scope(this.scope.block.next, this), null === this.scope.block) {
           if (this._callStack.length) {
             this.scope = this._callStack.pop();
@@ -13716,18 +13715,18 @@ Entry.Executor = function(a, b) {
           }
         }
       } else {
-        if (b === Entry.STATIC.CONTINUE) {
+        if (a === Entry.STATIC.CONTINUE) {
           break;
         }
       }
     }
   };
-  a.stepInto = function(b) {
-    b instanceof Entry.Thread || console.error("Must step in to thread");
+  a.stepInto = function(a) {
+    a instanceof Entry.Thread || console.error("Must step in to thread");
     this._callStack.push(this.scope);
-    b = b.getFirstBlock();
-    b.isDummy && (b = b.next);
-    this.scope = new Entry.Scope(b, this);
+    a = a.getFirstBlock();
+    a.isDummy && (a = a.next);
+    this.scope = new Entry.Scope(a, this);
   };
 })(Entry.Executor.prototype);
 Entry.Scope = function(a, b) {
@@ -13738,10 +13737,10 @@ Entry.Scope = function(a, b) {
 (function(a) {
   a.callReturn = function() {
   };
-  a.getNumberValue = function(b, a) {
+  a.getNumberValue = function(a, c) {
     return 10;
   };
-  a.getStatement = function(b) {
+  a.getStatement = function(a) {
     this.executor.stepInto(this.block.statements[0]);
     return Entry.STATIC.CONTINUE;
   };
@@ -13757,16 +13756,16 @@ Entry.Field = function() {
     this.documentDownEvent && (Entry.documentMousedown.detach(this.documentDownEvent), delete this.documentDownEvent);
     this.optionGroup && (this.optionGroup.remove(), delete this.optionGroup);
   };
-  a.align = function(b, a, d) {
+  a.align = function(a, c, d) {
     var e = this.svgGroup;
-    this._position && (this._position.x && (b = this._position.x), this._position.y && (a = this._position.y));
-    var f = "t" + b + " " + a;
+    this._position && (this._position.x && (a = this._position.x), this._position.y && (c = this._position.y));
+    var f = "t" + a + " " + c;
     void 0 === d || d ? e.animate({transform:f}, 300, mina.easeinout) : e.attr({transform:f});
-    this.box.set({x:b, y:a});
+    this.box.set({x:a, y:c});
   };
   a.getAbsolutePos = function() {
-    var b = this._block.view, a = b.svgGroup.transform().globalMatrix, d = b.getBoard().svgDom.offset(), b = b.getContentPos();
-    return {x:a.e + d.left + this.box.x + b.x, y:a.f + d.top + this.box.y + b.y};
+    var a = this._block.view, c = a.svgGroup.transform().globalMatrix, d = a.getBoard().svgDom.offset(), a = a.getContentPos();
+    return {x:c.e + d.left + this.box.x + a.x, y:c.f + d.top + this.box.y + a.y};
   };
   a.getRelativePos = function() {
     var a = this._block.view, c = a.svgGroup.transform().globalMatrix, a = a.getContentPos(), d = this.box;

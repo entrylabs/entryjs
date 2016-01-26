@@ -95,12 +95,12 @@ Entry.BlockView = function(block, board, mode) {
         if (this.contentSvgGroup)
             this.contentSvgGroup.remove();
         var schema = this._schema;
-        if (schema.statements.length && this.statementSvgGroup)
+        if (schema.statements && schema.statements.length && this.statementSvgGroup)
             this.statementSvgGroup.remove();
         this._contents = [];
 
         this.contentSvgGroup = this.svgGroup.group();
-        if (schema.statements.length)
+        if (schema.statements && schema.statements.length)
             this.statementSvgGroup = this.svgGroup.group();
         switch (mode) {
             case Entry.Workspace.MODE_BOARD:
@@ -120,7 +120,7 @@ Entry.BlockView = function(block, board, mode) {
                 }
 
                 var statements = schema.statements;
-                if (statements.length) {
+                if (statements && statements.length) {
                     for (i=0; i<statements.length; i++)
                         this._statements.push(new Entry.FieldStatement(statements[i], this, i));
                 }
