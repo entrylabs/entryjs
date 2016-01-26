@@ -55,8 +55,9 @@ Entry.Scope = function(block, executor) {
     };
 
     p.getNumberValue = function(key, block) {
+        var fieldBlock = this.block.params[0];
         return 10;
-        return Number(this.block.params[0]);
+        return Entry.block[this.type](this.entity, this);
     };
 
     p.getStatement = function(key) {

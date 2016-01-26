@@ -1177,7 +1177,7 @@ Blockly.Blocks.number = {init:function() {
   this.setInputsInline(!0);
 }};
 Entry.block.number = function(a, b) {
-  return b.fields.NUM;
+  return b.getField("NUM");
 };
 Blockly.Blocks.angle = {init:function() {
   this.setColour(calcBlockColor);
