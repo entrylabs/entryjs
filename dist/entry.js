@@ -5698,7 +5698,7 @@ Entry.Engine.prototype.computeFunction = function(a) {
   for (var b = 0;b < a.length;b++) {
     for (var c = a.shift(), d = !0, e = !1;c && d && !e;) {
       try {
-        var d = !c.isLooped, f = c.run(), e = f && f.type == c.type, c = f;
+        var d = !c.isLooped, f = c.run(), e = f && f === c, c = f;
       } catch (g) {
         throw Entry.engine.toggleStop(), Entry.engine.isUpdating = !1, "workspace" == Entry.type && (Entry.container.selectObject(), Entry.container.selectObject(c.entity.parent.id), Entry.playground.changeViewMode("code"), Blockly.mainWorkspace.activatePreviousBlock(c.id)), Entry.toast.alert(Lang.Msgs.runtime_error, Lang.Workspace.check_runtime_error, !0), g;
       }
