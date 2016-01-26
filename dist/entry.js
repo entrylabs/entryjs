@@ -10259,7 +10259,7 @@ Entry.Stage.prototype.getObjectContainerByScene = function(a) {
 Entry.Stage.prototype.moveSprite = function(a) {
   if (this.selectedObject && Entry.stage.focused && !this.selectedObject.getLock()) {
     var b = 5;
-    a.shiftKey && (b = 10);
+    a.shiftKey && (b = 1);
     var c = this.selectedObject.entity;
     switch(a.keyCode) {
       case 38:
