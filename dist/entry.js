@@ -3102,7 +3102,6 @@ Entry.block.move_direction = function(a, b) {
   a.setX(a.getX() + c * Math.cos((a.getRotation() + a.getDirection() - 90) / 180 * Math.PI));
   a.setY(a.getY() - c * Math.sin((a.getRotation() + a.getDirection() - 90) / 180 * Math.PI));
   a.brush && !a.brush.stop && a.brush.lineTo(a.getX(), -1 * a.getY());
-  console.log(c);
   return b.callReturn();
 };
 Blockly.Blocks.move_x = {init:function() {
@@ -13737,8 +13736,27 @@ Entry.Scope = function(a, b) {
 (function(a) {
   a.callReturn = function() {
   };
+  a.getValue = function(a, c) {
+    var d = this.block.params[0]._data[1], e = new Entry.Scope(d, this.executor);
+    return Entry.block[d.type].func.call(e, this.entity, e);
+  };
+  a.getStringValue = function(a, c) {
+    return String(this.getValue(a, c));
+  };
   a.getNumberValue = function(a, c) {
-    return 10;
+    return Number(this.getValue(a, c));
+  };
+  a.getBooleanValue = function(a, c) {
+    return Number(this.getValue(a, c)) ? !0 : !1;
+  };
+  a.getField = function() {
+    return this.block.params[0];
+  };
+  a.getStringField = function() {
+    return String(this.getField());
+  };
+  a.getNumberField = function() {
+    return Number(this.getField());
   };
   a.getStatement = function(a) {
     this.executor.stepInto(this.block.statements[0]);

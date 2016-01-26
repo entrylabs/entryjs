@@ -24,7 +24,6 @@ Entry.block.move_direction = function (sprite, script) {
     if (sprite.brush && !sprite.brush.stop) {
         sprite.brush.lineTo(sprite.getX(), sprite.getY()*-1);
     }
-    console.log(value);
     return script.callReturn();
 };
 

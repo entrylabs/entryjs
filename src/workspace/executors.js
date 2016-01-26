@@ -54,10 +54,35 @@ Entry.Scope = function(block, executor) {
         return undefined;
     };
 
+    p.getValue = function(key, block) {
+        var fieldBlock = this.block.params[0]._data[1];
+        var newScope = new Entry.Scope(fieldBlock, this.executor);
+        var result = Entry.block[fieldBlock.type].func.call(newScope, this.entity, newScope);
+        return result;
+    };
+
+    p.getStringValue = function(key, block) {
+        return String(this.getValue(key, block));
+    };
+
     p.getNumberValue = function(key, block) {
-        var fieldBlock = this.block.params[0];
-        return 10;
-        return Entry.block[this.type](this.entity, this);
+        return Number(this.getValue(key, block));
+    };
+
+    p.getBooleanValue = function(key, block) {
+        return Number(this.getValue(key, block)) ? true : false;
+    };
+
+    p.getField = function() {
+        return this.block.params[0];
+    };
+
+    p.getStringField = function() {
+        return String(this.getField());
+    };
+
+    p.getNumberField = function() {
+        return Number(this.getField());
     };
 
     p.getStatement = function(key) {
