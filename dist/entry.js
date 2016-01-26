@@ -14381,11 +14381,9 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
 })(Entry.FieldBlock.prototype);
 Entry.FieldDummyBlock = function(a, b) {
   Entry.Model(this, !1);
-  this.schema = {x:0, y:0, width:0, height:-1, animating:!1, magneting:!1};
   this.isDummy = !0;
   this.view = this;
   this.originBlockView = b;
-  this._schema = {};
   this._thread = a._thread;
   this.statementField = a;
   this.svgGroup = a.svgGroup.group();
@@ -14407,6 +14405,7 @@ Entry.FieldDummyBlock = function(a, b) {
 Entry.FieldDummyBlock.PRIMITIVE_TYPES = ["True", "text"];
 Entry.Utils.inherit(Entry.DummyBlock, Entry.FieldDummyBlock);
 Entry.FieldDummyBlock.prototype.constructor = Entry.FieldDummyBlock;
+Entry.FieldDummyBlock.prototype.schema = {x:0, y:0, width:0, height:-1, animating:!1, magneting:!1};
 Entry.FieldDummyBlock.prototype._updateBG = function() {
   if (this.magneting) {
     var a = this.next;
