@@ -188,13 +188,14 @@ Entry.skeleton.pebble_loop = {
     path: function(blockView) {
         var contentWidth = 124;
         var contentHeight = Math.max(blockView.contentHeight, 50);
+        var statementHeight = Math.max(blockView._statements[0] ? blockView._statements[0].box.height : 50, 50);
         return ("M 0,9 a 9,9 0 0,0 9,-9 h %cw q 25,0 25,25 v %ch q 0,25 -25,25 h -%cw a 9,9 0 0,1 -18,0 " +
             "h -%cw q -25,0 -25,-25 v -%ch q 0,-25 25,-25 h %cw a 9,9 0 0,0 9,9 " +
             "M 0,49 a 9,9 0 0,1 -9,-9 h -28 a 25,25 0 0,0 -25,25 v %cih a 25,25 0 0,0 25,25 h 28 a 9,9 0 0,0 18,0 " +
             "h 28 a 25,25 0 0,0 25,-25 v -%cih a 25,25 0 0,0 -25,-25 h -28 a 9,9 0 0,1 -9,9 z")
             .replace(/%cw/gi, contentWidth/2 - 21)
-            .replace(/%ch/gi, contentHeight + 4)
-            .replace(/%cih/gi, contentHeight - 50);
+            .replace(/%ch/gi, statementHeight + 4)
+            .replace(/%cih/gi, statementHeight - 50);
     },
     magnets: function() {
         var contentWidth = 124;
@@ -207,13 +208,19 @@ Entry.skeleton.pebble_loop = {
     },
     box: function(blockView) {
         var contentWidth = 124;
-        var contentHeight = Math.max(blockView.contentHeight, 50);
+        var statementHeight = Math.max(blockView._statements[0] ? blockView._statements[0].box.height : 50, 50);
         return {
             offsetX: -(contentWidth / 2 + 13), offsetY: 0,
             width: contentWidth + 26,
-            height: contentHeight + 54,
+            height: statementHeight + 54,
             marginBottom: 0
         };
+    },
+    statementPos: function(blockView) {
+        var height = 39;
+        return [{
+            x: 0, y: height
+        }];
     },
     contentPos: function() {
         // apply scale required.

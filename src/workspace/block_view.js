@@ -296,11 +296,12 @@ Entry.BlockView = function(block, board, mode) {
     p.onMouseDown = function(e) {
         e.stopPropagation();
         e.preventDefault();
+        var board = this.getBoard();
         if (Entry.documentMousedown)
             Entry.documentMousedown.notify();
-        if (this.readOnly) return;
+        if (this.readOnly || board.viewOnly) return;
 
-        this.getBoard().setSelectedBlock(this);
+        board.setSelectedBlock(this);
         this.dominate();
         if (e.button === 0 || e instanceof Touch) {
             this.mouseDownCoordinate = {
@@ -311,7 +312,7 @@ Entry.BlockView = function(block, board, mode) {
             doc.bind('mouseup.block', onMouseUp);
             doc.bind('touchmove.block', onMouseMove);
             doc.bind('touchend.block', onMouseUp);
-            this.getBoard().set({dragBlock:this});
+            board.set({dragBlock:this});
             this.dragInstance = new Entry.DragInstance({
                 startX: e.pageX,
                 startY: e.pageY,
@@ -333,7 +334,7 @@ Entry.BlockView = function(block, board, mode) {
             var copyAndPaste = {
                 text: '블록 복사 & 붙여넣기',
                 callback: function(){
-                    that.getBoard().code.createThread(block.copy());
+                    board.code.createThread(block.copy());
                 }
             };
 
@@ -360,7 +361,6 @@ Entry.BlockView = function(block, board, mode) {
         }
 
         var blockView = this;
-        var board = this.getBoard();
 
         if(board.workspace.getMode() === Entry.Workspace.MODE_VIMBOARD) {
             if(e) {

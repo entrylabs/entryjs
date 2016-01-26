@@ -18,6 +18,7 @@ Entry.RenderView = function(dom, align) {
         return console.error("Snap library is required");
 
     this.view = dom;
+    this.viewOnly = true;
 
     this.visible = true;
     this._snapId = 'renderView_' + new Date().getTime();
@@ -26,15 +27,18 @@ Entry.RenderView = function(dom, align) {
     this.offset = this.svgDom.offset();
     this.setWidth();
 
+
     this.snap = Snap('#' + this._snapId);
 
-    this.svgGroup = this.snap.group();
+    if (this.snap) {
+        this.svgGroup = this.snap.group();
 
-    this.svgThreadGroup = this.svgGroup.group();
-    this.svgThreadGroup.board = this;
+        this.svgThreadGroup = this.svgGroup.group();
+        this.svgThreadGroup.board = this;
 
-    this.svgBlockGroup = this.svgGroup.group();
-    this.svgBlockGroup.board = this;
+        this.svgBlockGroup = this.svgGroup.group();
+        this.svgBlockGroup.board = this;
+    }
 };
 
 (function(p) {
@@ -54,8 +58,9 @@ Entry.RenderView = function(dom, align) {
             'parent':parent
         });
 
+
         this.svgDom = Entry.Dom(
-            $('<svg id="' + this._snapId +'" class="renderView_" version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'),
+            $('<svg id="' + this._snapId +'" class="renderView" version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'),
             { parent: this.renderViewContainer }
         );
     };
@@ -65,6 +70,16 @@ Entry.RenderView = function(dom, align) {
             return console.error("You must inject code instance");
         var that = this;
         this.code = code;
+        if (!this.snap) {
+            this.snap = Snap('#' + this._snapId);
+            this.svgGroup = this.snap.group();
+
+            this.svgThreadGroup = this.svgGroup.group();
+            this.svgThreadGroup.board = this;
+
+            this.svgBlockGroup = this.svgGroup.group();
+            this.svgBlockGroup.board = this;
+        }
 
         code.createView(this);
         this.align();
@@ -73,13 +88,22 @@ Entry.RenderView = function(dom, align) {
     p.align = function() {
         var threads = this.code.getThreads();
         if (!threads || threads.length === 0) return;
-
-        var blockView = threads[0].getFirstBlock().view;
+        var totalHeight = 0;
         var vPadding = 15,
             marginFromTop = 10,
             hPadding = this._align == 'LEFT' ? 20 : this.svgDom.width()/2;
 
-        blockView._moveTo(hPadding, marginFromTop, false);
+        for (var i=0,len=threads.length; i<len; i++) {
+            var thread = threads[i];
+            var block = thread.getFirstBlock();
+            var blockView = block.view;
+
+            var className = Entry.block[block.type].class;
+            blockView._moveTo(hPadding, marginFromTop, false);
+            var height = blockView.svgGroup.getBBox().height;
+            marginFromTop += height + vPadding;
+        }
+        this.height = this.svgGroup.getBBox().height;
     };
 
     p.hide = function() {this.view.addClass('entryRemove');};
@@ -99,4 +123,5 @@ Entry.RenderView = function(dom, align) {
         this.svgGroup.append(this.svgThreadGroup);
         this.svgGroup.append(this.svgBlockGroup);
     };
+
 })(Entry.RenderView.prototype);

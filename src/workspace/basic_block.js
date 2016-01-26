@@ -65,11 +65,7 @@ Entry.block.jr_repeat = {
     ],
     statements: [
         {
-            accept: "pebble_basic",
-            position: {
-                 x: 46,
-                 y: 14
-            }
+            accept: "pebble_basic"
         }
     ],
     func: function() {
@@ -387,7 +383,7 @@ Entry.block.jr_start_basic = {
     params: [
         {
             type: "Indicator",
-            boxMultiplier: 1,
+            boxMultiplier: 2,
             img: "/img/assets/block_icon/start_icon_play.png",
             highlightColor: "#3BBD70",
             size: 17,
@@ -561,11 +557,7 @@ Entry.block.jr_repeat_until_dest = {
     ],
     statements: [
         {
-            accept: "basic",
-            position: {
-                x: 2,
-                y: 15
-            }
+            accept: "basic"
         }
     ],
     func: function() {
@@ -596,11 +588,7 @@ Entry.block.jr_if_construction = {
     ],
     statements: [
         {
-            accept: "basic",
-            position: {
-                x: 2,
-                y: 15
-            }
+            accept: "basic"
         }
     ],
     func: function() {
@@ -663,11 +651,7 @@ Entry.block.jr_if_speed = {
     ],
     statements: [
         {
-            accept: "basic",
-            position: {
-                x: 2,
-                y: 15
-            }
+            accept: "basic"
         }
     ],
     func: function()  {

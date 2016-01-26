@@ -108,7 +108,7 @@ Entry.BlockMenu = function(dom, align, categoryData) {
         );
 
         this.svgDom.mouseenter(function(e) {
-            if (Entry.playground.resizing) return;
+            if (!Entry.playground || Entry.playground.resizing) return;
             Entry.playground.focusBlockMenu = true;
             var width = that.expandWidth + 64;
             if (width > Entry.interfaceState.menuWidth) {
@@ -120,7 +120,7 @@ Entry.BlockMenu = function(dom, align, categoryData) {
         });
 
         this.svgDom.mouseleave(function(e) {
-            if (Entry.playground.resizing) return;
+            if (!Entry.playground || Entry.playground.resizing) return;
 
             var widthBackup = this.widthBackup;
             if (widthBackup)

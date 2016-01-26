@@ -78,7 +78,7 @@ Entry.FieldStatement = function(content, blockView, index) {
             height += block.view.height + 1;
             block = block.next;
         }
-        this.box.set({height: Math.max(height, 20)});
+        this.box.set({height:Math.max(height, 20)});
     };
 
     p._updateThread = function() {

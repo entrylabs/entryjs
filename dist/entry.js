@@ -12494,7 +12494,7 @@ Entry.block.jr_start = {skeleton:"pebble_event", event:"start", color:"#3BBD70",
   }
   Ntry.unitComp = Ntry.entityManager.getComponent(this._unit.id, Ntry.STATIC.UNIT);
 }};
-Entry.block.jr_repeat = {skeleton:"pebble_loop", color:"#127CDB", template:"%1 \ubc18\ubcf5", params:[{type:"Dropdown", options:[[1, 1], [2, 2], [3, 3], [4, 4], [5, 5], [6, 6], [7, 7], [8, 8], [9, 9], [10, 10]], value:3, fontSize:14, roundValue:3}], statements:[{accept:"pebble_basic", position:{x:46, y:14}}], func:function() {
+Entry.block.jr_repeat = {skeleton:"pebble_loop", color:"#127CDB", template:"%1 \ubc18\ubcf5", params:[{type:"Dropdown", options:[[1, 1], [2, 2], [3, 3], [4, 4], [5, 5], [6, 6], [7, 7], [8, 8], [9, 9], [10, 10]], value:3, fontSize:14, roundValue:3}], statements:[{accept:"pebble_basic"}], func:function() {
   if (void 0 === this.repeatCount) {
     return this.repeatCount = this.block.params[0], Entry.STATIC.CONTINUE;
   }
@@ -12670,7 +12670,7 @@ Entry.block.jr_west = {skeleton:"pebble_basic", color:"#A751E3", template:"\uc67
     return Entry.STATIC.CONTINUE;
   }
 }};
-Entry.block.jr_start_basic = {skeleton:"basic_event", event:"start", color:"#3BBD70", template:"%1 \uc2dc\uc791 \ubc84\ud2bc\uc744 \ub20c\ub800\uc744 \ub584", params:[{type:"Indicator", boxMultiplier:1, img:"/img/assets/block_icon/start_icon_play.png", highlightColor:"#3BBD70", size:17, position:{x:0, y:-2}}], func:function() {
+Entry.block.jr_start_basic = {skeleton:"basic_event", event:"start", color:"#3BBD70", template:"%1 \uc2dc\uc791 \ubc84\ud2bc\uc744 \ub20c\ub800\uc744 \ub584", params:[{type:"Indicator", boxMultiplier:2, img:"/img/assets/block_icon/start_icon_play.png", highlightColor:"#3BBD70", size:17, position:{x:0, y:-2}}], func:function() {
   var a = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT), b;
   for (b in a) {
     this._unit = a[b];
@@ -12741,13 +12741,13 @@ Entry.block.jr_go_slow = {skeleton:"basic", color:"#f46c6c", template:"\ucc9c\uc
     return Entry.STATIC.CONTINUE;
   }
 }};
-Entry.block.jr_repeat_until_dest = {skeleton:"basic_loop", color:"#498DEB", template:"%1 \ub9cc\ub0a0 \ub54c \uae4c\uc9c0 \ubc18\ubcf5\ud558\uae30 %2", params:[{type:"Image", img:"/img/assets/ntry/bitmap/jr/jr_goal_image.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic", position:{x:2, y:15}}], func:function() {
+Entry.block.jr_repeat_until_dest = {skeleton:"basic_loop", color:"#498DEB", template:"%1 \ub9cc\ub0a0 \ub54c \uae4c\uc9c0 \ubc18\ubcf5\ud558\uae30 %2", params:[{type:"Image", img:"/img/assets/ntry/bitmap/jr/jr_goal_image.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic"}], func:function() {
   var a = this.block.statements[0];
   if (1 !== a.getBlocks().length) {
     return this.executor.stepInto(a), Entry.STATIC.CONTINUE;
   }
 }};
-Entry.block.jr_if_construction = {skeleton:"basic_loop", color:"#498DEB", template:"\ub9cc\uc57d %1 \uc55e\uc5d0 \uc788\ub2e4\uba74 %2", params:[{type:"Image", img:"/img/assets/ntry/bitmap/jr/jr_construction_image.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic", position:{x:2, y:15}}], func:function() {
+Entry.block.jr_if_construction = {skeleton:"basic_loop", color:"#498DEB", template:"\ub9cc\uc57d %1 \uc55e\uc5d0 \uc788\ub2e4\uba74 %2", params:[{type:"Image", img:"/img/assets/ntry/bitmap/jr/jr_construction_image.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic"}], func:function() {
   if (!this.isContinue) {
     var a = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT), b, c;
     for (c in a) {
@@ -12765,7 +12765,7 @@ Entry.block.jr_if_construction = {skeleton:"basic_loop", color:"#498DEB", templa
     }
   }
 }};
-Entry.block.jr_if_speed = {skeleton:"basic_loop", color:"#498DEB", template:"\ub9cc\uc57d %1 \uc55e\uc5d0 \uc788\ub2e4\uba74 %2", params:[{type:"Image", img:"/img/assets/ntry/bitmap/jr/jr_speed_image.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic", position:{x:2, y:15}}], func:function() {
+Entry.block.jr_if_speed = {skeleton:"basic_loop", color:"#498DEB", template:"\ub9cc\uc57d %1 \uc55e\uc5d0 \uc788\ub2e4\uba74 %2", params:[{type:"Image", img:"/img/assets/ntry/bitmap/jr/jr_speed_image.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic"}], func:function() {
   if (!this.isContinue) {
     var a = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT), b, c;
     for (c in a) {
@@ -13019,10 +13019,10 @@ Entry.BlockMenu = function(a, b, c) {
     this.blockMenuContainer = Entry.Dom("div", {"class":"blockMenuContainer", parent:a});
     this.svgDom = Entry.Dom($('<svg id="' + this._snapId + '" class="blockMenu" version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'), {parent:this.blockMenuContainer});
     this.svgDom.mouseenter(function(b) {
-      Entry.playground.resizing || (Entry.playground.focusBlockMenu = !0, b = d.expandWidth + 64, b > Entry.interfaceState.menuWidth && (this.widthBackup = Entry.interfaceState.menuWidth - 64, $(this).stop().animate({width:b - 64}, 200)));
+      Entry.playground && !Entry.playground.resizing && (Entry.playground.focusBlockMenu = !0, b = d.expandWidth + 64, b > Entry.interfaceState.menuWidth && (this.widthBackup = Entry.interfaceState.menuWidth - 64, $(this).stop().animate({width:b - 64}, 200)));
     });
     this.svgDom.mouseleave(function(b) {
-      Entry.playground.resizing || ((b = this.widthBackup) && $(this).stop().animate({width:b}, 200), delete this.widthBackup, delete Entry.playground.focusBlockMenu);
+      Entry.playground && !Entry.playground.resizing && ((b = this.widthBackup) && $(this).stop().animate({width:b}, 200), delete this.widthBackup, delete Entry.playground.focusBlockMenu);
     });
   };
   a.changeCode = function(b) {
@@ -13308,79 +13308,80 @@ Entry.BlockView = function(a, b, c) {
   };
   a.onMouseDown = function(b) {
     function c(b) {
-      var c = l.workspace.getMode();
+      var c = e.workspace.getMode();
       c === Entry.Workspace.MODE_VIMBOARD && a.vimBoardEvent(b, "dragOver");
-      var d = k.mouseDownCoordinate;
-      if ((k.dragMode == Entry.DRAG_MODE_DRAG || b.pageX !== d.x || b.pageY !== d.y) && k.movable) {
-        if (k.isInBlockMenu) {
-          l.cloneToBoard(b);
+      var d = l.mouseDownCoordinate;
+      if ((l.dragMode == Entry.DRAG_MODE_DRAG || b.pageX !== d.x || b.pageY !== d.y) && l.movable) {
+        if (l.isInBlockMenu) {
+          e.cloneToBoard(b);
         } else {
-          k.block.prev && (k.block.prev.setNext(null), k.block.setPrev(null), k.block.thread.changeEvent.notify());
+          l.block.prev && (l.block.prev.setNext(null), l.block.setPrev(null), l.block.thread.changeEvent.notify());
           this.animating && this.set({animating:!1});
-          if (0 === k.dragInstance.height) {
-            for (var d = k.block, e = -1;d;) {
-              e += d.view.height + 1, d = d.next;
+          if (0 === l.dragInstance.height) {
+            for (var d = l.block, f = -1;d;) {
+              f += d.view.height + 1, d = d.next;
             }
-            k.dragInstance.set({height:e});
+            l.dragInstance.set({height:f});
           }
           b.originalEvent.touches && (b = b.originalEvent.touches[0]);
-          d = k.dragInstance;
-          k._moveBy(b.pageX - d.offsetX, b.pageY - d.offsetY, !1);
+          d = l.dragInstance;
+          l._moveBy(b.pageX - d.offsetX, b.pageY - d.offsetY, !1);
           d.set({offsetX:b.pageX, offsetY:b.pageY});
-          k.dragMode = Entry.DRAG_MODE_DRAG;
-          Entry.GlobalSvg.setView(k, c);
-          (b = k._getCloseBlock()) ? (l = b.view.getBoard(), l.setMagnetedBlock(b.view)) : l.setMagnetedBlock(null);
-          k.originPos || (k.originPos = {x:k.x, y:k.y});
+          l.dragMode = Entry.DRAG_MODE_DRAG;
+          Entry.GlobalSvg.setView(l, c);
+          (b = l._getCloseBlock()) ? (e = b.view.getBoard(), e.setMagnetedBlock(b.view)) : e.setMagnetedBlock(null);
+          l.originPos || (l.originPos = {x:l.x, y:l.y});
         }
       }
     }
     function d(b) {
       Entry.GlobalSvg.remove();
-      k.set({visible:!0});
+      l.set({visible:!0});
       $(document).unbind(".block");
       delete this.mouseDownCoordinate;
-      k.terminateDrag(b);
-      l && l.set({dragBlock:null});
-      delete k.dragInstance;
+      l.terminateDrag(b);
+      e && e.set({dragBlock:null});
+      delete l.dragInstance;
     }
     b.stopPropagation();
     b.preventDefault();
+    var e = this.getBoard();
     Entry.documentMousedown && Entry.documentMousedown.notify();
-    if (!this.readOnly) {
-      this.getBoard().setSelectedBlock(this);
+    if (!this.readOnly && !e.viewOnly) {
+      e.setSelectedBlock(this);
       this.dominate();
       if (0 === b.button || b instanceof Touch) {
         this.mouseDownCoordinate = {x:b.pageX, y:b.pageY};
-        var e = $(document);
-        e.bind("mousemove.block", c);
-        e.bind("mouseup.block", d);
-        e.bind("touchmove.block", c);
-        e.bind("touchend.block", d);
-        this.getBoard().set({dragBlock:this});
+        var f = $(document);
+        f.bind("mousemove.block", c);
+        f.bind("mouseup.block", d);
+        f.bind("touchmove.block", c);
+        f.bind("touchend.block", d);
+        e.set({dragBlock:this});
         this.dragInstance = new Entry.DragInstance({startX:b.pageX, startY:b.pageY, offsetX:b.pageX, offsetY:b.pageY, prev:this.block.prev, height:0, mode:!0});
         this.addDragging();
         this.dragMode = Entry.DRAG_MODE_MOUSEDOWN;
       } else {
         if (Entry.Utils.isRightButton(b)) {
-          var f = this, g = f.block;
+          var g = this, h = g.block;
           if (this.isInBlockMenu) {
             return;
           }
-          var e = [], h = {text:"\ube14\ub85d \uc0ad\uc81c", enable:g.isDeletable(), callback:function() {
-            f.block.doDestroyAlone(!0);
+          var f = [], k = {text:"\ube14\ub85d \uc0ad\uc81c", enable:h.isDeletable(), callback:function() {
+            g.block.doDestroyAlone(!0);
           }};
-          e.push({text:"\ube14\ub85d \ubcf5\uc0ac & \ubd99\uc5ec\ub123\uae30", callback:function() {
-            f.getBoard().code.createThread(g.copy());
+          f.push({text:"\ube14\ub85d \ubcf5\uc0ac & \ubd99\uc5ec\ub123\uae30", callback:function() {
+            e.code.createThread(h.copy());
           }});
-          e.push({text:"\ube14\ub85d \ubcf5\uc0ac", callback:function() {
-            f.block.copyToClipboard();
+          f.push({text:"\ube14\ub85d \ubcf5\uc0ac", callback:function() {
+            g.block.copyToClipboard();
           }});
-          e.push(h);
-          Entry.ContextMenu.show(e);
+          f.push(k);
+          Entry.ContextMenu.show(f);
         }
       }
-      var k = this, l = this.getBoard();
-      l.workspace.getMode() === Entry.Workspace.MODE_VIMBOARD && b && (e = new MouseEvent("dragStart", {view:window, bubbles:!0, cancelable:!0, clientX:b.clientX, clientY:b.clientY}), document.getElementsByClassName("CodeMirror")[0].dispatchEvent(e));
+      var l = this;
+      e.workspace.getMode() === Entry.Workspace.MODE_VIMBOARD && b && (f = new MouseEvent("dragStart", {view:window, bubbles:!0, cancelable:!0, clientX:b.clientX, clientY:b.clientY}), document.getElementsByClassName("CodeMirror")[0].dispatchEvent(f));
       b.stopPropagation();
     }
   };
@@ -13610,17 +13611,17 @@ Entry.Code = function(a) {
       }
     }
   };
-  a.getEventMap = function(b) {
-    return this._eventMap[b];
+  a.getEventMap = function(a) {
+    return this._eventMap[a];
   };
-  a.map = function(b) {
-    this._data.map(b);
+  a.map = function(a) {
+    this._data.map(a);
   };
   a.tick = function() {
-    for (var b = this.executors, a = 0;a < b.length;a++) {
-      var d = b[a];
+    for (var a = this.executors, c = 0;c < a.length;c++) {
+      var d = a[c];
       d.execute();
-      null === d.scope.block && (b.splice(a, 1), a--, 0 === b.length && this.executeEndEvent.notify());
+      null === d.scope.block && (a.splice(c, 1), c--, 0 === a.length && this.executeEndEvent.notify());
     }
   };
   a.clearExecutors = function() {
@@ -14578,37 +14579,40 @@ Entry.RenderView = function(a, b) {
     return console.error("Snap library is required");
   }
   this.view = a;
-  this.visible = !0;
+  this.visible = this.viewOnly = !0;
   this._snapId = "renderView_" + (new Date).getTime();
   this._generateView();
   this.offset = this.svgDom.offset();
   this.setWidth();
-  this.snap = Snap("#" + this._snapId);
-  this.svgGroup = this.snap.group();
-  this.svgThreadGroup = this.svgGroup.group();
-  this.svgThreadGroup.board = this;
-  this.svgBlockGroup = this.svgGroup.group();
-  this.svgBlockGroup.board = this;
+  if (this.snap = Snap("#" + this._snapId)) {
+    this.svgGroup = this.snap.group(), this.svgThreadGroup = this.svgGroup.group(), this.svgThreadGroup.board = this, this.svgBlockGroup = this.svgGroup.group(), this.svgBlockGroup.board = this;
+  }
 };
 (function(a) {
   a.schema = {code:null, dragBlock:null, closeBlock:null, selectedBlockView:null};
   a._generateView = function() {
     this.renderViewContainer = Entry.Dom("div", {"class":"renderViewContainer", parent:this.view});
-    this.svgDom = Entry.Dom($('<svg id="' + this._snapId + '" class="renderView_" version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'), {parent:this.renderViewContainer});
+    this.svgDom = Entry.Dom($('<svg id="' + this._snapId + '" class="renderView" version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'), {parent:this.renderViewContainer});
   };
   a.changeCode = function(a) {
     if (!(a instanceof Entry.Code)) {
       return console.error("You must inject code instance");
     }
     this.code = a;
+    this.snap || (this.snap = Snap("#" + this._snapId), this.svgGroup = this.snap.group(), this.svgThreadGroup = this.svgGroup.group(), this.svgThreadGroup.board = this, this.svgBlockGroup = this.svgGroup.group(), this.svgBlockGroup.board = this);
     a.createView(this);
     this.align();
   };
   a.align = function() {
     var a = this.code.getThreads();
     if (a && 0 !== a.length) {
-      var a = a[0].getFirstBlock().view, c = "LEFT" == this._align ? 20 : this.svgDom.width() / 2;
-      a._moveTo(c, 10, !1);
+      for (var c = 10, d = "LEFT" == this._align ? 20 : this.svgDom.width() / 2, e = 0, f = a.length;e < f;e++) {
+        var g = a[e].getFirstBlock().view;
+        g._moveTo(d, c, !1);
+        g = g.svgGroup.getBBox().height;
+        c += g + 15;
+      }
+      this.height = this.svgGroup.getBBox().height;
     }
   };
   a.hide = function() {
@@ -14787,12 +14791,14 @@ Entry.skeleton.pebble_event = {path:function(a) {
   return {x:0, y:25};
 }};
 Entry.skeleton.pebble_loop = {fontSize:16, dropdownHeight:23, path:function(a) {
-  a = Math.max(a.contentHeight, 50);
+  a = Math.max(a._statements[0] ? a._statements[0].box.height : 50, 50);
   return "M 0,9 a 9,9 0 0,0 9,-9 h %cw q 25,0 25,25 v %ch q 0,25 -25,25 h -%cw a 9,9 0 0,1 -18,0 h -%cw q -25,0 -25,-25 v -%ch q 0,-25 25,-25 h %cw a 9,9 0 0,0 9,9 M 0,49 a 9,9 0 0,1 -9,-9 h -28 a 25,25 0 0,0 -25,25 v %cih a 25,25 0 0,0 25,25 h 28 a 9,9 0 0,0 18,0 h 28 a 25,25 0 0,0 25,-25 v -%cih a 25,25 0 0,0 -25,-25 h -28 a 9,9 0 0,1 -9,9 z".replace(/%cw/gi, 41).replace(/%ch/gi, a + 4).replace(/%cih/gi, a - 50);
 }, magnets:function() {
   return {previous:{x:0, y:0}, next:{x:0, y:105}};
 }, box:function(a) {
-  return {offsetX:-75, offsetY:0, width:150, height:Math.max(a.contentHeight, 50) + 54, marginBottom:0};
+  return {offsetX:-75, offsetY:0, width:150, height:Math.max(a._statements[0] ? a._statements[0].box.height : 50, 50) + 54, marginBottom:0};
+}, statementPos:function(a) {
+  return [{x:0, y:39}];
 }, contentPos:function() {
   return {x:-46, y:25};
 }};
