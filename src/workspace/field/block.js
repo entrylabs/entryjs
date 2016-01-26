@@ -32,6 +32,7 @@ Entry.FieldBlock = function(content, blockView, index) {
 
     this.renderStart(blockView.getBoard());
     this._block.observe(this, "_updateThread", ["thread"]);
+
 };
 
 Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
@@ -48,6 +49,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
         this._thread = this.getValue();
         this.dummyBlock = new Entry.FieldDummyBlock(this, this._blockView);
         this._thread.insertDummyBlock(this.dummyBlock);
+        this._inspectThread();
         this._thread.createView(board);
 
         this._thread.changeEvent.attach(this, this.calcWH);
@@ -205,12 +207,12 @@ Entry.Utils.inherit(Entry.DummyBlock, Entry.FieldDummyBlock);
 Entry.FieldDummyBlock.prototype.constructor = Entry.FieldDummyBlock;
 
 Entry.FieldDummyBlock.prototype.schema = {
-        x: 0,
-        y: 0,
-        width: 0,
-        height: -1,
-        animating: false,
-        magneting: false
+    x: 0,
+    y: 0,
+    width: 0,
+    height: -1,
+    animating: false,
+    magneting: false
 };
 
 Entry.FieldDummyBlock.prototype._updateBG = function() {

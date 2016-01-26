@@ -667,6 +667,7 @@ Entry.BlockView = function(block, board, mode) {
             });
             this.svgGroup.prepend(shadow);
             this._clonedShadow = shadow;
+            console.log(shadow);
 
             if (blockView.background) {
                 blockView.background.remove();

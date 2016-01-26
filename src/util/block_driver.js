@@ -81,13 +81,7 @@ Entry.BlockMockup = function(blocklyInfo) {
         // field block
         this.params.push({
             type: "Block",
-            accept: "basic_string_field",
-            value: [
-                {
-                    type: "text",
-                    params: [10]
-                }
-            ]
+            accept: "basic_string_field"
         });
         this.templates.push(this.getFieldCount());
         return this;
@@ -102,6 +96,10 @@ Entry.BlockMockup = function(blocklyInfo) {
 
     p.setCheck = function(accept) {
         //add value
+        var params = this.params;
+        if (accept === "Boolean")
+            params[params.length - 1].accept =
+                "basic_boolean_field";
     };
 
     p.appendField = function(field) {

@@ -306,21 +306,22 @@ Entry.skeleton.basic_boolean_field = {
     path: function(blockView) {
         var width = blockView.contentWidth;
         var height = blockView.contentHeight;
-        width = Math.max(0, width - 2);
-        height = Math.max(0, height + 6);
-        return "m 11,0 h %w l 10,10 -10,10 H 11 l -10,-10 10,-10 z "
+        height = Math.max(18, height + 2);
+        width = Math.max(0, width - height + 4);
+        return "m %h,0 h %w l %h,%h -%h,%h H %h l -%h,-%h %h,-%h z "
+            .replace(/%wh/gi, height)
             .replace(/%w/gi, width)
-            .replace(/%h/gi, height);
+            .replace(/%h/gi, height / 2);
     },
     color: "#000",
     outerLine: true,
     box: function(blockView) {
         var width = blockView ? blockView.contentWidth : 5;
-        var height = blockView ? blockView.contentHeight : 20;
+        var height = blockView ? blockView.contentHeight : 18;
         return {
             offsetX: 0, offsetY: 0,
-            width: width + 20,
-            height: height + 2,
+            width: width + 4,
+            height: Math.max(height + 2, 18),
             marginBottom: 0
         };
     },
@@ -331,7 +332,8 @@ Entry.skeleton.basic_boolean_field = {
     },
     contentPos: function(blockView) {
         // apply scale required.
-        return {x: 11, y: 11};
+        var height = Math.max(blockView.contentHeight, 16);
+        return {x: 2, y: height / 2 + 1};
     }
 };
 

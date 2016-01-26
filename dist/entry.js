@@ -9828,7 +9828,7 @@ Entry.BlockMockup = function(a) {
     return this;
   };
   a.appendValueInput = function(b) {
-    this.params.push({type:"Block", accept:"basic_string_field", value:[{type:"text", params:[10]}]});
+    this.params.push({type:"Block", accept:"basic_string_field"});
     this.templates.push(this.getFieldCount());
     return this;
   };
@@ -9836,6 +9836,8 @@ Entry.BlockMockup = function(a) {
     this.statements.push({accept:"basic"});
   };
   a.setCheck = function(b) {
+    var a = this.params;
+    "Boolean" === b && (a[a.length - 1].accept = "basic_boolean_field");
   };
   a.appendField = function(b) {
     "string" === typeof b && 0 < b.length ? this.templates.push(b) : b instanceof Blockly.FieldIcon ? ("start" === b.type ? this.params.push({type:"Indicator", img:b.src_, size:17, position:{x:0, y:-2}}) : this.params.push({type:"Indicator", img:b.src_, size:12}), this.templates.push(this.getFieldCount())) : b instanceof Blockly.FieldDropdown ? (this.params.push({type:"Dropdown", options:b.menuGenerator_, value:b.menuGenerator_[0][0], fontSize:11}), this.templates.push(this.getFieldCount())) : !(b instanceof 
@@ -13489,6 +13491,7 @@ Entry.BlockView = function(a, b, c) {
         $(e.node).attr({transform:"translate(0 " + (this.height + 1) + ")"});
         this.svgGroup.prepend(e);
         this._clonedShadow = e;
+        console.log(e);
         a.background && (a.background.remove(), a.nextBackground.remove(), delete a.background, delete a.nextBackground);
         b = a.height + b;
         e = d.rect(0 - a.width / 2, 1.5 * a.height + 1, a.width, Math.max(0, b - 1.5 * a.height));
@@ -14332,6 +14335,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
     this._thread = this.getValue();
     this.dummyBlock = new Entry.FieldDummyBlock(this, this._blockView);
     this._thread.insertDummyBlock(this.dummyBlock);
+    this._inspectThread();
     this._thread.createView(a);
     this._thread.changeEvent.attach(this, this.calcWH);
     this._thread.changeEvent.attach(this, this._inspectThread);
@@ -14830,15 +14834,15 @@ Entry.skeleton.basic_string_field = {path:function(a) {
 Entry.skeleton.basic_boolean_field = {path:function(a) {
   var b = a.contentWidth;
   a = a.contentHeight;
-  b = Math.max(0, b - 2);
-  a = Math.max(0, a + 6);
-  return "m 11,0 h %w l 10,10 -10,10 H 11 l -10,-10 10,-10 z ".replace(/%w/gi, b).replace(/%h/gi, a);
+  a = Math.max(18, a + 2);
+  b = Math.max(0, b - a + 4);
+  return "m %h,0 h %w l %h,%h -%h,%h H %h l -%h,-%h %h,-%h z ".replace(/%wh/gi, a).replace(/%w/gi, b).replace(/%h/gi, a / 2);
 }, color:"#000", outerLine:!0, box:function(a) {
-  return {offsetX:0, offsetY:0, width:(a ? a.contentWidth : 5) + 20, height:(a ? a.contentHeight : 20) + 2, marginBottom:0};
+  return {offsetX:0, offsetY:0, width:(a ? a.contentWidth : 5) + 4, height:Math.max((a ? a.contentHeight : 18) + 2, 18), marginBottom:0};
 }, magnets:function() {
   return {bool:{}};
 }, contentPos:function(a) {
-  return {x:11, y:11};
+  return {x:2, y:Math.max(a.contentHeight, 16) / 2 + 1};
 }};
 Entry.skeleton.basic_button = {path:function() {
   return "m -64,0 h 128 a 6,6 0, 0,1 6,6 v 18 a 6,6 0, 0,1 -6,6 h -128 a 6,6 0, 0,1 -6,-6 v -18 a 6,6 0, 0,1 6,-6 z";
