@@ -13599,18 +13599,18 @@ Entry.Code = function(a) {
     this._eventMap[a] || (this._eventMap[a] = []);
     this._eventMap[a].push(b);
   };
-  a.unregisterEvent = function(b, a) {
-    var d = this._eventMap[a];
+  a.unregisterEvent = function(a, c) {
+    var d = this._eventMap[c];
     if (d && 0 !== d.length) {
-      var e = d.indexOf(b);
+      var e = d.indexOf(a);
       0 > e || d.splice(e, 1);
     }
   };
-  a.raiseEvent = function(b, a) {
-    var d = this._eventMap[b];
+  a.raiseEvent = function(a, c) {
+    var d = this._eventMap[a];
     if (void 0 !== d) {
       for (var e = 0;e < d.length;e++) {
-        this.executors.push(new Entry.Executor(d[e], a));
+        this.executors.push(new Entry.Executor(d[e], c));
       }
     }
   };
@@ -14272,7 +14272,7 @@ Entry.DummyBlock = function(a, b) {
   this._align();
 };
 (function(a) {
-  a.schema = {x:0, y:0, width:0, height:0, animating:!1, magneting:!1};
+  a.schema = {x:0, y:0, width:0, height:0, next:null, animating:!1, magneting:!1};
   a._align = function(a) {
     this.set({x:this.originBlockView.x, y:this.originBlockView.y});
   };
@@ -14287,7 +14287,7 @@ Entry.DummyBlock = function(a, b) {
   a.setPrev = function() {
   };
   a.setNext = function(a) {
-    this.next = a;
+    this.set({next:a});
   };
   a.getBoard = function() {
     return this.originBlockView.getBoard();
@@ -14337,8 +14337,8 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
     this._thread.insertDummyBlock(this.dummyBlock);
     this._inspectThread();
     this._thread.createView(a);
-    this._thread.changeEvent.attach(this, this.calcWH);
-    this._thread.changeEvent.attach(this, this._inspectThread);
+    this.dummyBlock.observe(this, "_inspectThread", ["next"]);
+    this.dummyBlock.observe(this, "calcWH", ["next"]);
     this.calcWH();
   };
   a.align = function(a, c, d) {
@@ -14373,14 +14373,15 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
       e.createView(f, f.workspace.getMode());
       return e;
     }
-    if (null === this._valueBlock) {
+    if (!this.dummyBlock.next) {
       switch(this.acceptType) {
         case "basic_boolean_field":
-          this.dummyBlock.insertAfter([a(this, {type:"True"})]);
+          this._valueBlock = a(this, {type:"True"});
           break;
         case "basic_string_field":
-          this.dummyBlock.insertAfter([a(this, {type:"text"})]);
+          this._valueBlock = a(this, {type:"text"});
       }
+      this.dummyBlock.insertAfter([this._valueBlock]);
     }
   };
 })(Entry.FieldBlock.prototype);
@@ -14410,7 +14411,7 @@ Entry.FieldDummyBlock = function(a, b) {
 Entry.FieldDummyBlock.PRIMITIVE_TYPES = ["True", "text"];
 Entry.Utils.inherit(Entry.DummyBlock, Entry.FieldDummyBlock);
 Entry.FieldDummyBlock.prototype.constructor = Entry.FieldDummyBlock;
-Entry.FieldDummyBlock.prototype.schema = {x:0, y:0, width:0, height:-1, animating:!1, magneting:!1};
+Entry.FieldDummyBlock.prototype.schema = {x:0, y:0, width:0, height:-1, next:null, animating:!1, magneting:!1};
 Entry.FieldDummyBlock.prototype._updateBG = function() {
   if (this.magneting) {
     var a = this.next;

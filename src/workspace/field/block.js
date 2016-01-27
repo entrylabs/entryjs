@@ -32,7 +32,6 @@ Entry.FieldBlock = function(content, blockView, index) {
 
     this.renderStart(blockView.getBoard());
     this._block.observe(this, "_updateThread", ["thread"]);
-
 };
 
 Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
@@ -52,8 +51,8 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
         this._inspectThread();
         this._thread.createView(board);
 
-        this._thread.changeEvent.attach(this, this.calcWH);
-        this._thread.changeEvent.attach(this, this._inspectThread);
+        this.dummyBlock.observe(this, "_inspectThread", ["next"]);
+        this.dummyBlock.observe(this, "calcWH", ["next"]);
         this.calcWH();
     };
 
@@ -133,15 +132,16 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
     p.destroy = function() {};
 
     p._inspectThread = function() {
-        if (this._valueBlock === null) {
+        if (!this.dummyBlock.next) {
             switch (this.acceptType) {
                 case "basic_boolean_field":
-                    this.dummyBlock.insertAfter([getBlock(this, {type: "True"})]);
+                    this._valueBlock = getBlock(this, {type: "True"});
                     break;
                 case "basic_string_field":
-                    this.dummyBlock.insertAfter([getBlock(this, {type: "text"})]);
+                    this._valueBlock = getBlock(this, {type: "text"});
                     break;
             }
+            this.dummyBlock.insertAfter([this._valueBlock]);
         } else {
         }
 
@@ -211,6 +211,7 @@ Entry.FieldDummyBlock.prototype.schema = {
     y: 0,
     width: 0,
     height: -1,
+    next: null,
     animating: false,
     magneting: false
 };

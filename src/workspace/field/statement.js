@@ -143,6 +143,7 @@ Entry.DummyBlock = function(statementField, blockView) {
         y: 0,
         width: 0,
         height: 0,
+        next: null,
         animating: false,
         magneting: false
     };
@@ -169,7 +170,7 @@ Entry.DummyBlock = function(statementField, blockView) {
     };
 
     p.setNext = function(block) {
-        this.next = block;
+        this.set({next: block});
     };
 
     p.getBoard = function() {
