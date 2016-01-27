@@ -208,8 +208,8 @@ Entry.Container.prototype.setObjects = function(objectModels) {
 };
 
 /**
- * Set Pictures
- * @param {!Object picture} picture
+ * get Pictures element
+ * @param {!String} pictureId
  */
 Entry.Container.prototype.getPictureElement = function(pictureId) {
     for(var i in this.objects_) {
