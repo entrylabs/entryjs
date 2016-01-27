@@ -15,6 +15,10 @@ Entry.SensorBoard = {
     setZero: Entry.Arduino.setZero
 };
 
+Entry.CODEino = {
+    name: 'CODEino',
+    setZero: Entry.Arduino.setZero
+};
 
 Blockly.Blocks.arduino_text = {
   init: function() {
@@ -406,4 +410,121 @@ Entry.block.sensorBoard_led = function (sprite, script) {
     Entry.hw.setDigitalPortValue(script.getField("PORT"),
                                  script.getNumberField("OPERATOR"));
     return script.callReturn();
+};
+
+
+Blockly.Blocks.CODEino_get_sensor_number = {
+  init: function() {
+    this.setColour("#00979D");
+    this.appendDummyInput()
+        .appendField(new Blockly.FieldDropdown([
+          [Lang.Blocks.CODEino_get_sensor_number_0,"A0"],
+          [Lang.Blocks.CODEino_get_sensor_number_1,"A1"],
+          [Lang.Blocks.CODEino_get_sensor_number_2,"A2"],
+          [Lang.Blocks.CODEino_get_sensor_number_3,"A3"],
+          [Lang.Blocks.CODEino_get_sensor_number_4,"A4"],
+          [Lang.Blocks.CODEino_get_sensor_number_5,"A5"],
+          [Lang.Blocks.CODEino_get_sensor_number_6,"A6"],
+          ]), "PORT");
+    this.appendDummyInput()
+        .appendField(" ");
+    this.setOutput(true, 'Number');
+    this.setInputsInline(true);
+  }
+};
+
+Entry.block.CODEino_get_sensor_number = function (sprite, script) {
+    return script.getStringField("PORT");
+}
+
+Blockly.Blocks.CODEino_get_named_sensor_value = {
+  init: function() {
+    this.setColour("#00979D");
+    this.appendDummyInput()
+        .appendField(' ')
+        .appendField(new Blockly.FieldDropdown([
+          [Lang.Blocks.CODEino_sensor_name_0,"0"],
+          [Lang.Blocks.CODEino_sensor_name_1,"1"],
+          [Lang.Blocks.CODEino_sensor_name_2,"2"],
+          [Lang.Blocks.CODEino_sensor_name_3,"3"],
+          [Lang.Blocks.CODEino_sensor_name_4,"4"],
+          [Lang.Blocks.CODEino_sensor_name_5,"5"],
+          [Lang.Blocks.CODEino_sensor_name_6,"6"]
+          ]), "PORT")
+        .appendField(Lang.Blocks.CODEino_string_1);
+    this.setOutput(true, 'Number');
+    this.setInputsInline(true);
+  }
+};
+
+Entry.block.CODEino_get_named_sensor_value = function (sprite, script) {
+    return Entry.hw.getAnalogPortValue(script.getField("PORT", script));
+};
+
+Blockly.Blocks.CODEino_is_button_pressed = {
+  init: function() {
+    this.setColour("#00979D");
+    this.appendDummyInput()
+        .appendField(Lang.Blocks.CODEino_string_2)
+        .appendField(new Blockly.FieldDropdown([
+          [Lang.Blocks.CODEino_string_3,"4"],
+          [Lang.Blocks.CODEino_string_4,"17"],
+          [Lang.Blocks.CODEino_string_5,"18"],
+          [Lang.Blocks.CODEino_string_6,"19"],
+          [Lang.Blocks.CODEino_string_7,"20"]
+          ]), "PORT")
+    this.appendDummyInput()
+        .appendField(' ');
+    this.setInputsInline(true);
+    this.setOutput(true, 'Boolean');
+  }
+};
+
+Entry.block.CODEino_is_button_pressed = function (sprite, script) {
+    var value = script.getNumberField("PORT", script);
+    if (value > 14) {
+        value = value - 14;
+        return Entry.hw.getAnalogPortValue(value);
+    } else return !Entry.hw.getDigitalPortValue(value);
+};
+
+Blockly.Blocks.CODEino_get_accelerometer_value = {
+  init:function() {
+    this.setColour("#00979D");
+    this.appendDummyInput()
+        .appendField(Lang.Blocks.CODEino_string_8)
+        .appendField(new Blockly.FieldDropdown([
+          [Lang.Blocks.CODEino_accelerometer_X, "3"],
+          [Lang.Blocks.CODEino_accelerometer_Y, "4"],
+          [Lang.Blocks.CODEino_accelerometer_Z, "5"]
+          ]), "PORT")
+      .appendField(Lang.Blocks.CODEino_string_9);
+    this.setOutput(!0, "Number");
+    this.setInputsInline(!0);
+  }
+};
+
+Entry.block.CODEino_get_accelerometer_value = function (sprite, script) {
+    var value1 = Entry.hw.getAnalogPortValue(script.getField("PORT", script));
+    var value2 = 265;
+    var value3 = 402;
+    var value4 = -90;
+    var value5 = 90;
+    var result = value1;
+    if (value2 > value3) {
+        var swap = value2;
+        value2 = value3;
+        value3 = swap;
+    }
+    if (value4 > value5) {
+        var swap = value4;
+        value4 = value5;
+        value5 = swap;
+    }
+    result -= value2;
+    result = result * ((value5 - value4) / (value3 - value2));
+    result += value4;
+    result = Math.min(value5, result);
+    result = Math.max(value4, result);
+    return Math.round(result);
 };
