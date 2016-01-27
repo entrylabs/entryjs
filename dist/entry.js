@@ -4937,10 +4937,8 @@ Entry.Container.prototype.getPictureElement = function(a) {
 };
 Entry.Container.prototype.setPicture = function(a) {
   for (var b in this.objects_) {
-    console.log(b);
-    var c = this.objects_[b];
-    console.log(c);
-    for (var d in c.pictures) {
+    var c = this.objects_[b], d;
+    for (d in c.pictures) {
       if (a.id === c.pictures[d].id) {
         b = {};
         b.dimension = a.dimension;
