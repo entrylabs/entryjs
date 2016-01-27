@@ -20,9 +20,10 @@ goog.provide('Entry.GlobalSvg');
 
         this.svgDom.css({
             position: 'fixed',
-            width: 0,
-            height: 0,
+            width: 1,
+            height: 1,
             display: 'none',
+            overflow: 'visible',
             'z-index': '1111'
         });
 
@@ -81,13 +82,7 @@ goog.provide('Entry.GlobalSvg');
     };
 
     gs.resize = function() {
-        var bBox = this._view.svgGroup.getBBox();
-
-        this.svgDom.css({
-            width: bBox.width + 3,
-            height: bBox.height + 3
-        });
-        this.width = bBox.width + 3;
+        this.width = this._view.svgGroup.getBBox() + 3;
     };
 
     gs.align = function() {

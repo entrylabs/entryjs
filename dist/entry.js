@@ -13586,18 +13586,18 @@ Entry.Code = function(a) {
     return this;
   };
   a.clear = function() {
-    for (var b = this._data.length - 1;0 <= b;b--) {
-      this._data[b].getFirstBlock().destroy();
+    for (var a = this._data.length - 1;0 <= a;a--) {
+      this._data[a].getFirstBlock().destroy();
     }
     this.clearExecutors();
     this._eventMap = {};
   };
-  a.createView = function(b) {
-    null === this.view ? this.set({view:new Entry.CodeView(this, b), board:b}) : (this.set({board:b}), b.bindCodeView(this.view));
+  a.createView = function(a) {
+    null === this.view ? this.set({view:new Entry.CodeView(this, a), board:a}) : (this.set({board:a}), a.bindCodeView(this.view));
   };
-  a.registerEvent = function(b, a) {
-    this._eventMap[a] || (this._eventMap[a] = []);
-    this._eventMap[a].push(b);
+  a.registerEvent = function(a, c) {
+    this._eventMap[c] || (this._eventMap[c] = []);
+    this._eventMap[c].push(a);
   };
   a.unregisterEvent = function(a, c) {
     var d = this._eventMap[c];
@@ -14523,7 +14523,7 @@ Entry.GlobalSvg = {};
         return console.error("Snap library is required");
       }
       this.svgDom = Entry.Dom($('<svg id="globalSvg" width="200" height="200"version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'), {parent:$("body")});
-      this.svgDom.css({position:"fixed", width:0, height:0, display:"none", "z-index":"1111"});
+      this.svgDom.css({position:"fixed", width:1, height:1, display:"none", overflow:"visible", "z-index":"1111"});
       this.snap = Snap("#globalSvg");
       this.top = this.left = this.width = 0;
     }
@@ -14545,9 +14545,7 @@ Entry.GlobalSvg = {};
     this.svg && (this.svg.remove(), delete this.svg, delete this._view, delete this._offsetX, delete this._offsetY, this.hide());
   };
   a.resize = function() {
-    var a = this._view.svgGroup.getBBox();
-    this.svgDom.css({width:a.width + 3, height:a.height + 3});
-    this.width = a.width + 3;
+    this.width = this._view.svgGroup.getBBox() + 3;
   };
   a.align = function() {
     var a = this._view.getSkeleton().box(this._view).offsetX || 0, c = this._view.getSkeleton().box(this._view).offsetY || 0, a = -1 * a + 1, c = -1 * c + 1;
