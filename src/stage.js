@@ -653,7 +653,7 @@ Entry.Stage.prototype.moveSprite = function (e) {
 
     var distance = 5;
     if (e.shiftKey)
-        distance = 10;
+        distance = 1;
 
     var entity = this.selectedObject.entity;
     switch (e.keyCode) {

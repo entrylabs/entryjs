@@ -432,7 +432,7 @@ Entry.Engine.prototype.computeFunction = function(entity) {
             try {
                 isContinue = !script.isLooped;
                 var newScript = script.run();
-                isSame = (newScript && newScript.type == script.type);
+                isSame = (newScript && newScript === script);
                 script = newScript;
             } catch (exception) {
                 Entry.engine.toggleStop();
