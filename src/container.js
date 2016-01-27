@@ -208,6 +208,66 @@ Entry.Container.prototype.setObjects = function(objectModels) {
 };
 
 /**
+ * Set Pictures
+ * @param {!Object picture} picture
+ */
+Entry.Container.prototype.getPictureElement = function(pictureId) {
+    for(var i in this.objects_) {
+        var object = this.objects_[i];    
+        for (var j in object.pictures) {
+            if (pictureId === object.pictures[j].id) {
+                return object.pictures[j].view;
+            }
+        }
+    }
+    throw new Error('No picture found');
+};
+/**
+ * Set Pictures
+ * @param {!Object picture} picture
+ */
+Entry.Container.prototype.setPicture = function(picture) {
+    for(var i in this.objects_) {
+        console.log(i);
+        var object = this.objects_[i];        
+        console.log(object);
+        for (var j in object.pictures) {
+            if (picture.id === object.pictures[j].id) {
+                var picture_ = {};
+                picture_.dimension = picture.dimension;
+                picture_.id = picture.id;
+                picture_.filename = picture.filename;
+                picture_.name = picture.name;
+                picture_.view = object.pictures[j].view;
+                object.pictures[j] = picture_;
+                return;
+            }
+        }
+    }
+    throw new Error('No picture found');
+};
+
+/**
+ * Set Pictures
+ * @param {!String} pictureId
+ */
+Entry.Container.prototype.selectPicture = function(pictureId) {
+    for(var i in this.objects_) {
+        var object = this.objects_[i];
+        for (var j in object.pictures) {
+            var picture_ = object.pictures[j];
+            if (pictureId === picture_.id) {
+                object.selectedPicture = picture_;
+                object.entity.setImage(picture_);
+                object.updateThumbnailView();
+                return object.id;
+            }
+        }
+    }
+    throw new Error('No picture found');
+};
+
+/**
  * Add object
  * @param {!object model} objectModel
  * @param {?number} index exist when user add object

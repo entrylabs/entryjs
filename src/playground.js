@@ -943,13 +943,18 @@ Entry.Playground.prototype.addPicture = function(picture, NotForView) {
     this.selectPicture(picture);
 };
 
+/**
+ * set picture
+ * @param {picture}
+ */
 Entry.Playground.prototype.setPicture = function(picture) {
-    var element = document.getElementById(picture.id);
+    var element = Entry.container.getPictureElement(picture.id);
+    var $element = $(element);
     if(element) {
         picture.view = element;
         element.picture = picture;
 
-        var thumbnailView = document.getElementById('t_'+picture.id);
+        var thumbnailView = $element.find('#t_'+picture.id)[0];
         if (picture.fileurl) {
             thumbnailView.style.backgroundImage = 'url("' + picture.fileurl + '")';
         } else {
@@ -959,13 +964,19 @@ Entry.Playground.prototype.setPicture = function(picture) {
                 'url("' + '/uploads/' + fileName.substring(0, 2) + '/' +
                 fileName.substring(2, 4) + '/thumb/' + fileName + '.png")';
         }
-        var sizeView = document.getElementById('s_'+picture.id);
+        var sizeView = $element.find('#s_'+picture.id)[0];
         sizeView.innerHTML = picture.dimension.width + ' X ' +
             picture.dimension.height;
     }
-    Entry.playground.object.setPicture(picture);
+
+    Entry.container.setPicture(picture);
+    // Entry.playground.object.setPicture(picture);
 };
 
+/**
+ * Clone picture
+ * @param {!String} pictureId
+ */
 Entry.Playground.prototype.clonePicture = function(pictureId) {
     var sourcePicture = Entry.playground.object.getPicture(pictureId);
     this.addPicture(sourcePicture, true);
@@ -979,13 +990,17 @@ Entry.Playground.prototype.selectPicture = function(picture) {
     var pictures = this.object.pictures;
     for (var i = 0, len=pictures.length; i<len; i++) {
         var target = pictures[i];
-        if (target === picture)
+        if (target.id === picture.id)
             target.view.addClass('entryPictureSelected');
         else
             target.view.removeClass('entryPictureSelected');
     }
-    Entry.playground.object.selectPicture(picture.id);
-    Entry.dispatchEvent('pictureSelected', [picture, this.object.id]);
+
+    var objectId_ = Entry.container.selectPicture(picture.id);
+
+    if( this.object.id === objectId_) {
+        Entry.dispatchEvent('pictureSelected', picture);
+    }
 };
 
 /**

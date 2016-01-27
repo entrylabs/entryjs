@@ -4721,6 +4721,49 @@ Entry.Container.prototype.setObjects = function(a) {
   a = Entry.type;
   ("workspace" == a || "phone" == a) && (a = this.getCurrentObjects()[0]) && this.selectObject(a.id);
 };
+Entry.Container.prototype.getPictureElement = function(a) {
+  for (var b in this.objects_) {
+    var c = this.objects_[b], d;
+    for (d in c.pictures) {
+      if (a === c.pictures[d].id) {
+        return c.pictures[d].view;
+      }
+    }
+  }
+  throw Error("No picture found");
+};
+Entry.Container.prototype.setPicture = function(a) {
+  for (var b in this.objects_) {
+    console.log(b);
+    var c = this.objects_[b];
+    console.log(c);
+    for (var d in c.pictures) {
+      if (a.id === c.pictures[d].id) {
+        b = {};
+        b.dimension = a.dimension;
+        b.id = a.id;
+        b.filename = a.filename;
+        b.name = a.name;
+        b.view = c.pictures[d].view;
+        c.pictures[d] = b;
+        return;
+      }
+    }
+  }
+  throw Error("No picture found");
+};
+Entry.Container.prototype.selectPicture = function(a) {
+  for (var b in this.objects_) {
+    var c = this.objects_[b], d;
+    for (d in c.pictures) {
+      var e = c.pictures[d];
+      if (a === e.id) {
+        return c.selectedPicture = e, c.entity.setImage(e), c.updateThumbnailView(), c.id;
+      }
+    }
+  }
+  throw Error("No picture found");
+};
 Entry.Container.prototype.addObject = function(a, b) {
   var c = new Entry.EntryObject(a);
   c.name = Entry.getOrderedName(c.name, this.objects_);
@@ -7450,21 +7493,18 @@ Entry.Painter.prototype.newPicture = function() {
 Entry.Painter.prototype.initPicture = function() {
   var a = this;
   Entry.addEventListener("pictureSelected", function(b) {
-    var c = b[0];
-    b = b[1];
     a.selectToolbox("cursor");
-    if (a.file.id !== c.id) {
-      a.file.modified && b === a.prevObjectId && confirm("\uc218\uc815\ub41c \ub0b4\uc6a9\uc744 \uc800\uc7a5\ud558\uc2dc\uaca0\uc2b5\ub2c8\uae4c?") && (a.file_ = JSON.parse(JSON.stringify(a.file)), a.file_save(!0));
+    if (a.file.id !== b.id) {
+      a.file.modified && confirm("\uc218\uc815\ub41c \ub0b4\uc6a9\uc744 \uc800\uc7a5\ud558\uc2dc\uaca0\uc2b5\ub2c8\uae4c?") && (a.file_ = JSON.parse(JSON.stringify(a.file)), a.file_save(!0));
       a.file.modified = !1;
       a.clearCanvas();
-      var d = new Image;
-      d.id = c.id ? c.id : Entry.generateHash();
-      a.file.id = d.id;
-      a.file.name = c.name;
+      var c = new Image;
+      c.id = b.id ? b.id : Entry.generateHash();
+      a.file.id = c.id;
+      a.file.name = b.name;
       a.file.mode = "edit";
-      a.prevObjectId = b;
-      d.src = c.fileurl ? c.fileurl : "/uploads/" + c.filename.substring(0, 2) + "/" + c.filename.substring(2, 4) + "/image/" + c.filename + ".png";
-      d.onload = function(b) {
+      c.src = b.fileurl ? b.fileurl : "/uploads/" + b.filename.substring(0, 2) + "/" + b.filename.substring(2, 4) + "/image/" + b.filename + ".png";
+      c.onload = function(b) {
         a.addImage(b.target);
       };
     }
@@ -9011,20 +9051,20 @@ Entry.Playground.prototype.addPicture = function(a, b) {
   this.selectPicture(a);
 };
 Entry.Playground.prototype.setPicture = function(a) {
-  var b = document.getElementById(a.id);
+  var b = Entry.container.getPictureElement(a.id), c = $(b);
   if (b) {
     a.view = b;
     b.picture = a;
-    b = document.getElementById("t_" + a.id);
+    b = c.find("#t_" + a.id)[0];
     if (a.fileurl) {
       b.style.backgroundImage = 'url("' + a.fileurl + '")';
     } else {
-      var c = a.filename;
-      b.style.backgroundImage = 'url("/uploads/' + c.substring(0, 2) + "/" + c.substring(2, 4) + "/thumb/" + c + '.png")';
+      var d = a.filename;
+      b.style.backgroundImage = 'url("/uploads/' + d.substring(0, 2) + "/" + d.substring(2, 4) + "/thumb/" + d + '.png")';
     }
-    document.getElementById("s_" + a.id).innerHTML = a.dimension.width + " X " + a.dimension.height;
+    c.find("#s_" + a.id)[0].innerHTML = a.dimension.width + " X " + a.dimension.height;
   }
-  Entry.playground.object.setPicture(a);
+  Entry.container.setPicture(a);
 };
 Entry.Playground.prototype.clonePicture = function(a) {
   a = Entry.playground.object.getPicture(a);
@@ -9033,10 +9073,10 @@ Entry.Playground.prototype.clonePicture = function(a) {
 Entry.Playground.prototype.selectPicture = function(a) {
   for (var b = this.object.pictures, c = 0, d = b.length;c < d;c++) {
     var e = b[c];
-    e === a ? e.view.addClass("entryPictureSelected") : e.view.removeClass("entryPictureSelected");
+    e.id === a.id ? e.view.addClass("entryPictureSelected") : e.view.removeClass("entryPictureSelected");
   }
-  Entry.playground.object.selectPicture(a.id);
-  Entry.dispatchEvent("pictureSelected", [a, this.object.id]);
+  b = Entry.container.selectPicture(a.id);
+  this.object.id === b && Entry.dispatchEvent("pictureSelected", a);
 };
 Entry.Playground.prototype.movePicture = function(a, b) {
   this.object.pictures.splice(b, 0, this.object.pictures.splice(a, 1)[0]);

@@ -383,15 +383,12 @@ Entry.Painter.prototype.newPicture = function() {
 
 Entry.Painter.prototype.initPicture = function() {
     var painter = this;
-    Entry.addEventListener('pictureSelected', function(args) {
-        var picture = args[0];
-        var objectId = args[1];
-
+    Entry.addEventListener('pictureSelected', function(picture) {
         painter.selectToolbox('cursor');
         if (painter.file.id === picture.id)
             return;
 
-        if (painter.file.modified && objectId === painter.prevObjectId) {
+        if (painter.file.modified) {
             var save = confirm('수정된 내용을 저장하시겠습니까?');
             if (save) {
                 painter.file_ = JSON.parse(JSON.stringify(painter.file));
@@ -410,7 +407,6 @@ Entry.Painter.prototype.initPicture = function() {
         painter.file.id = image.id;
         painter.file.name = picture.name;
         painter.file.mode = 'edit';
-        painter.prevObjectId = objectId;
 
         if (picture.fileurl) {
             image.src = picture.fileurl;
