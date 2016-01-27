@@ -4924,6 +4924,49 @@ Entry.Container.prototype.setObjects = function(a) {
   a = Entry.type;
   ("workspace" == a || "phone" == a) && (a = this.getCurrentObjects()[0]) && this.selectObject(a.id);
 };
+Entry.Container.prototype.getPictureElement = function(a) {
+  for (var b in this.objects_) {
+    var c = this.objects_[b], d;
+    for (d in c.pictures) {
+      if (a === c.pictures[d].id) {
+        return c.pictures[d].view;
+      }
+    }
+  }
+  throw Error("No picture found");
+};
+Entry.Container.prototype.setPicture = function(a) {
+  for (var b in this.objects_) {
+    console.log(b);
+    var c = this.objects_[b];
+    console.log(c);
+    for (var d in c.pictures) {
+      if (a.id === c.pictures[d].id) {
+        b = {};
+        b.dimension = a.dimension;
+        b.id = a.id;
+        b.filename = a.filename;
+        b.name = a.name;
+        b.view = c.pictures[d].view;
+        c.pictures[d] = b;
+        return;
+      }
+    }
+  }
+  throw Error("No picture found");
+};
+Entry.Container.prototype.selectPicture = function(a) {
+  for (var b in this.objects_) {
+    var c = this.objects_[b], d;
+    for (d in c.pictures) {
+      var e = c.pictures[d];
+      if (a === e.id) {
+        return c.selectedPicture = e, c.entity.setImage(e), c.updateThumbnailView(), c.id;
+      }
+    }
+  }
+  throw Error("No picture found");
+};
 Entry.Container.prototype.addObject = function(a, b) {
   var c = new Entry.EntryObject(a);
   c.name = Entry.getOrderedName(c.name, this.objects_);
@@ -4960,7 +5003,7 @@ Entry.Container.prototype.removeObject = function(a) {
   this.objects_.splice(b, 1);
   this.setCurrentObjects();
   Entry.stage.sortZorder();
-  this.objects_.length && 0 !== b ? Entry.container.selectObject(this.objects_[b - 1].id) : this.objects_.length && 0 === b ? Entry.container.selectObject(this.getCurrentObjects()[0].id) : (Entry.container.selectObject(), Entry.playground.flushPlayground());
+  this.objects_.length && 0 !== b ? 0 < this.getCurrentObjects().length ? Entry.container.selectObject(this.getCurrentObjects()[0].id) : Entry.container.selectObject() : this.objects_.length && 0 === b ? Entry.container.selectObject(this.getCurrentObjects()[0].id) : (Entry.container.selectObject(), Entry.playground.flushPlayground());
   Entry.toast.success(Lang.Workspace.remove_object, a.name + " " + Lang.Workspace.remove_object_msg);
   Entry.variableContainer.removeLocalVariables(a.id);
   Entry.playground.reloadPlayground();
@@ -7657,7 +7700,8 @@ Entry.Painter.prototype.initPicture = function() {
   Entry.addEventListener("pictureSelected", function(b) {
     a.selectToolbox("cursor");
     if (a.file.id !== b.id) {
-      a.file.modified && confirm("\uc218\uc815\ub41c \ub0b4\uc6a9\uc744 \uc800\uc7a5\ud558\uc2dc\uaca0\uc2b5\ub2c8\uae4c?") && (a.file_ = JSON.parse(JSON.stringify(a.file)), a.file_save(!0), a.file.modified = !1);
+      a.file.modified && confirm("\uc218\uc815\ub41c \ub0b4\uc6a9\uc744 \uc800\uc7a5\ud558\uc2dc\uaca0\uc2b5\ub2c8\uae4c?") && (a.file_ = JSON.parse(JSON.stringify(a.file)), a.file_save(!0));
+      a.file.modified = !1;
       a.clearCanvas();
       var c = new Image;
       c.id = b.id ? b.id : Entry.generateHash();
@@ -7675,6 +7719,12 @@ Entry.Painter.prototype.initPicture = function() {
   });
   Entry.addEventListener("pictureNameChanged", function(b) {
     a.file.name = b.name;
+  });
+  Entry.addEventListener("pictureClear", function(b) {
+    a.file.modified = !1;
+    a.file.id = "";
+    a.file.name = "";
+    a.clearCanvas();
   });
 };
 Entry.Painter.prototype.initDraw = function() {
@@ -9155,7 +9205,7 @@ Entry.Playground.prototype.generateSoundView = function(a) {
 };
 Entry.Playground.prototype.injectObject = function(a) {
   if (!a) {
-    this.changeViewMode("default"), this.object = null;
+    this.changeViewMode("code"), this.object = null;
   } else {
     if (a !== this.object) {
       this.object && (this.syncObject(this.object), this.object.toggleInformation(!1));
@@ -9188,6 +9238,8 @@ Entry.Playground.prototype.injectPicture = function() {
         a.appendChild(e);
       }
       this.selectPicture(this.object.selectedPicture);
+    } else {
+      Entry.dispatchEvent("pictureClear");
     }
   }
 };
@@ -9204,18 +9256,20 @@ Entry.Playground.prototype.addPicture = function(a, b) {
   this.selectPicture(a);
 };
 Entry.Playground.prototype.setPicture = function(a) {
-  var b = document.getElementById(a.id);
-  a.view = b;
-  b.picture = a;
-  b = document.getElementById("t_" + a.id);
-  if (a.fileurl) {
-    b.style.backgroundImage = 'url("' + a.fileurl + '")';
-  } else {
-    var c = a.filename;
-    b.style.backgroundImage = 'url("/uploads/' + c.substring(0, 2) + "/" + c.substring(2, 4) + "/thumb/" + c + '.png")';
+  var b = Entry.container.getPictureElement(a.id), c = $(b);
+  if (b) {
+    a.view = b;
+    b.picture = a;
+    b = c.find("#t_" + a.id)[0];
+    if (a.fileurl) {
+      b.style.backgroundImage = 'url("' + a.fileurl + '")';
+    } else {
+      var d = a.filename;
+      b.style.backgroundImage = 'url("/uploads/' + d.substring(0, 2) + "/" + d.substring(2, 4) + "/thumb/" + d + '.png")';
+    }
+    c.find("#s_" + a.id)[0].innerHTML = a.dimension.width + " X " + a.dimension.height;
   }
-  document.getElementById("s_" + a.id).innerHTML = a.dimension.width + " X " + a.dimension.height;
-  Entry.playground.object.setPicture(a);
+  Entry.container.setPicture(a);
 };
 Entry.Playground.prototype.clonePicture = function(a) {
   a = Entry.playground.object.getPicture(a);
@@ -9224,10 +9278,10 @@ Entry.Playground.prototype.clonePicture = function(a) {
 Entry.Playground.prototype.selectPicture = function(a) {
   for (var b = this.object.pictures, c = 0, d = b.length;c < d;c++) {
     var e = b[c];
-    e === a ? e.view.addClass("entryPictureSelected") : e.view.removeClass("entryPictureSelected");
+    e.id === a.id ? e.view.addClass("entryPictureSelected") : e.view.removeClass("entryPictureSelected");
   }
-  Entry.playground.object.selectPicture(a.id);
-  Entry.dispatchEvent("pictureSelected", a);
+  b = Entry.container.selectPicture(a.id);
+  this.object.id === b && Entry.dispatchEvent("pictureSelected", a);
 };
 Entry.Playground.prototype.movePicture = function(a, b) {
   this.object.pictures.splice(b, 0, this.object.pictures.splice(a, 1)[0]);
@@ -9455,6 +9509,9 @@ Entry.Playground.prototype.reloadPlayground = function() {
 Entry.Playground.prototype.flushPlayground = function() {
   this.object = null;
   Entry.playground && Entry.playground.view_ && (Blockly.mainWorkspace.clear(), this.injectPicture(), this.injectSound());
+};
+Entry.Playground.prototype.refreshPlayground = function() {
+  Entry.playground && Entry.playground.view_ && (this.injectPicture(), this.injectSound());
 };
 Entry.Playground.prototype.updateListViewOrder = function(a) {
   a = "picture" == a ? this.pictureListView_.childNodes : this.soundListView_.childNodes;
@@ -9829,8 +9886,8 @@ Entry.Scene.prototype.removeScene = function(a) {
 };
 Entry.Scene.prototype.selectScene = function(a) {
   a = a || this.getScenes()[0];
-  this.selectedScene && this.selectedScene.id == a.id || (Entry.engine.isState("run") && Entry.container.resetSceneDuringRun(), this.selectedScene = a, Entry.container.setCurrentObjects(), Entry.stage.objectContainers && 0 !== Entry.stage.objectContainers.length && Entry.stage.selectObjectContainer(a), (a = Entry.container.getCurrentObjects()[0]) && "minimize" != Entry.type ? Entry.container.selectObject(a.id) : (Entry.stage.selectObject(null), Entry.playground.flushPlayground(), Entry.variableContainer.updateList()), 
-  Entry.container.listView_ || Entry.stage.sortZorder(), Entry.container.updateListView(), this.updateView());
+  this.selectedScene && this.selectedScene.id == a.id || (Entry.engine.isState("run") && Entry.container.resetSceneDuringRun(), this.selectedScene = a, Entry.container.setCurrentObjects(), Entry.stage.objectContainers && 0 !== Entry.stage.objectContainers.length && Entry.stage.selectObjectContainer(a), (a = Entry.container.getCurrentObjects()[0]) && "minimize" != Entry.type ? (Entry.container.selectObject(a.id), Entry.playground.refreshPlayground()) : (Entry.stage.selectObject(null), Entry.playground.flushPlayground(), 
+  Entry.variableContainer.updateList()), Entry.container.listView_ || Entry.stage.sortZorder(), Entry.container.updateListView(), this.updateView());
 };
 Entry.Scene.prototype.toJSON = function() {
   for (var a = [], b = this.getScenes().length, c = 0;c < b;c++) {

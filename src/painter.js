@@ -393,9 +393,9 @@ Entry.Painter.prototype.initPicture = function() {
             if (save) {
                 painter.file_ = JSON.parse(JSON.stringify(painter.file));
                 painter.file_save(true);
-                painter.file.modified = false;
             }
         }
+        painter.file.modified = false;
         painter.clearCanvas();
 
         var image = new Image();
@@ -426,6 +426,13 @@ Entry.Painter.prototype.initPicture = function() {
 
     Entry.addEventListener('pictureNameChanged', function(picture) {
         painter.file.name = picture.name;
+    });
+
+    Entry.addEventListener('pictureClear', function(picture) {
+        painter.file.modified = false;
+        painter.file.id = '';
+        painter.file.name = '';
+        painter.clearCanvas();
     });
 };
 
