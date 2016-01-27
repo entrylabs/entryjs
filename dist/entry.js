@@ -823,7 +823,7 @@ Blockly.Blocks.CODEino_is_button_pressed = {init:function() {
 }};
 Entry.block.CODEino_is_button_pressed = function(a, b) {
   var c = b.getNumberField("PORT", b);
-  return 14 < c ? !Entry.hw.getAnalogPortValue(c - 14) : !Entry.hw.getDigitalPortValue(c);
+  return 14 < c ? Entry.hw.getAnalogPortValue(c - 14) : !Entry.hw.getDigitalPortValue(c);
 };
 Blockly.Blocks.CODEino_get_accelerometer_value = {init:function() {
   this.setColour("#00979D");
