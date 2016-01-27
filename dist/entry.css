@@ -33,9 +33,7 @@
 }
 .entrySceneListWorkspace {
   margin: 0px;
-  margin-left: 30px;
-  padding: 0px 5px 0px 25px;
-  float: left;
+  padding: 0px 5px 0px 55px;
 }
 .entrySceneElementWorkspace {
   float: left;
@@ -81,6 +79,7 @@
   display: inline-block;
   float: left;
   height: 40px;
+  width: 76px;
   padding-top: 11px;
   padding-right: 2px;
   background-color: #0e68e3;
@@ -90,9 +89,8 @@
   display: inline-block;
   margin: 0px;
   height: 20px;
-  width: 76px;
+  width: 100%;
   color: white;
-  min-width: 70px;
   border: 1px solid transparent;
   background-color: #0e68e3;
   padding: 0px 0px 0px 5px;
@@ -103,6 +101,7 @@
 }
 .selectedScene .entrySceneInputCover {
   background-color: white;
+  min-width: 70px;
 }
 .selectedScene .entrySceneFieldWorkspace {
   background-color: white;
@@ -126,6 +125,7 @@
   background: url("../images/top_tab_b_nor_right_blue.png");
 }
 .selectedScene .entrySceneRemoveButtonCoverWorkspace {
+  display: block;
   background: url("../images/top_tab_b_sel_right.png");
 }
 .entrySceneRemoveButtonWorkspace {
@@ -139,8 +139,12 @@
   right: 45px;
   top: 12px;
 }
+.entrySceneRemoveButtonWorkspace {
+  display: none;
+}
 .selectedScene .entrySceneRemoveButtonWorkspace {
   background-color: white;
+  display: block;
   color: black;
 }
 .entrySceneRemoveButtonWorkspace:hover {

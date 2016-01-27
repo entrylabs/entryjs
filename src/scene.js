@@ -11,7 +11,7 @@
 Entry.Scene = function() {
     this.scenes_ = [];
     this.selectedScene = null;
-    this.maxCount = 10;
+    this.maxCount = 20;
 };
 
 /**
@@ -43,14 +43,7 @@ Entry.Scene.prototype.generateView = function(sceneView, option) {
                     },
                     axis: 'x',
                     tolerance: "pointer"
-                
-                }); 
-
-                // $(listView).draggable({
-                //     connectToSortable: listView,
-                //     revert: "invalid"
-                // });
-                // $(listView).disableSelection();
+                });
             }
         }
 
@@ -90,7 +83,7 @@ Entry.Scene.prototype.generateElement = function(scene) {
     var nameField = Entry.createElement('input');
     nameField.addClass('entrySceneFieldWorkspace');
     nameField.value = scene.name;
-    nameField.style.width = Entry.computeInputWidth(nameField);
+    //nameField.style.width = Entry.computeInputWidth(nameField);
 
     if (!Entry.sceneEditable)
         nameField.disabled = 'disabled';
@@ -101,6 +94,7 @@ Entry.Scene.prototype.generateElement = function(scene) {
 
     var divide = Entry.createElement('span');
     divide.addClass('entrySceneInputCover');
+    divide.style.width = Entry.computeInputWidth(nameField);
     viewTemplate.appendChild(divide);
 
     nameField.onkeyup = function (e) {
@@ -108,7 +102,7 @@ Entry.Scene.prototype.generateElement = function(scene) {
         if (Entry.isArrowOrBackspace(code))
             return;
         scene.name = this.value;
-        nameField.style.width = Entry.computeInputWidth(this);
+        divide.style.width = Entry.computeInputWidth(this);
         if (code == 13)
             this.blur();
         if (this.value.length > 9) {
@@ -119,7 +113,7 @@ Entry.Scene.prototype.generateElement = function(scene) {
     nameField.onblur = function (e) {
         nameField.value = this.value;
         scene.name = this.value;
-        nameField.style.width = Entry.computeInputWidth(this);
+        divide.style.width = Entry.computeInputWidth(this);
     };
     divide.appendChild(nameField);
     divide.nameField = nameField;
@@ -390,3 +384,39 @@ Entry.Scene.prototype.cloneScene = function(scene) {
     for (var i=objects.length-1; i>=0; i--)
         Entry.container.addCloneObject(objects[i], clonedScene.id);
 };
+
+/**
+ * resize html element by window size
+ * @param {!scene model} scene
+ */
+Entry.Scene.prototype.resize = function() {
+    console.log('resize');
+    var scenes = this.getScenes();
+    var selectedScene = this.selectedScene;
+
+    var totalWidth = $(this.view_).width();
+    var startPos = $(scenes[0]).offset().left;
+    var selectedWidth = $(selectedScene.view).width();
+    console.log(selectedScene);
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

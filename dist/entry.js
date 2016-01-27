@@ -9639,7 +9639,7 @@ Entry.Reporter.prototype.report = function(a) {
 Entry.Scene = function() {
   this.scenes_ = [];
   this.selectedScene = null;
-  this.maxCount = 10;
+  this.maxCount = 20;
 };
 Entry.Scene.prototype.generateView = function(a, b) {
   this.view_ = a;
@@ -9672,38 +9672,38 @@ Entry.Scene.prototype.generateElement = function(a) {
   var c = Entry.createElement("input");
   c.addClass("entrySceneFieldWorkspace");
   c.value = a.name;
-  c.style.width = Entry.computeInputWidth(c);
   Entry.sceneEditable || (c.disabled = "disabled");
   var d = Entry.createElement("span");
   d.addClass("entrySceneLeftWorkspace");
   b.appendChild(d);
-  d = Entry.createElement("span");
-  d.addClass("entrySceneInputCover");
-  b.appendChild(d);
+  var e = Entry.createElement("span");
+  e.addClass("entrySceneInputCover");
+  e.style.width = Entry.computeInputWidth(c);
+  b.appendChild(e);
   c.onkeyup = function(b) {
     b = b.keyCode;
-    Entry.isArrowOrBackspace(b) || (a.name = this.value, c.style.width = Entry.computeInputWidth(this), 13 == b && this.blur(), 9 < this.value.length && (this.value = this.value.substring(0, 10), this.blur()));
+    Entry.isArrowOrBackspace(b) || (a.name = this.value, e.style.width = Entry.computeInputWidth(this), 13 == b && this.blur(), 9 < this.value.length && (this.value = this.value.substring(0, 10), this.blur()));
   };
   c.onblur = function(b) {
     c.value = this.value;
     a.name = this.value;
-    c.style.width = Entry.computeInputWidth(this);
+    e.style.width = Entry.computeInputWidth(this);
   };
-  d.appendChild(c);
-  d.nameField = c;
+  e.appendChild(c);
+  e.nameField = c;
   d = Entry.createElement("span");
   d.addClass("entrySceneRemoveButtonCoverWorkspace");
   b.appendChild(d);
   if (Entry.sceneEditable) {
-    var e = Entry.createElement("button");
-    e.addClass("entrySceneRemoveButtonWorkspace");
-    e.innerHTML = "x";
-    e.scene = a;
-    e.bindOnClick(function(a) {
+    var f = Entry.createElement("button");
+    f.addClass("entrySceneRemoveButtonWorkspace");
+    f.innerHTML = "x";
+    f.scene = a;
+    f.bindOnClick(function(a) {
       a.stopPropagation();
       Entry.engine.isState("run") || confirm(Lang.Workspace.will_you_delete_scene) && Entry.scene.removeScene(this.scene);
     });
-    d.appendChild(e);
+    d.appendChild(f);
   }
   Entry.Utils.disableContextmenu(b);
   $(b).on("contextmenu", function() {
@@ -9815,6 +9815,14 @@ Entry.Scene.prototype.cloneScene = function(a) {
       Entry.container.addCloneObject(a[c], b.id);
     }
   }
+};
+Entry.Scene.prototype.resize = function() {
+  console.log("resize");
+  var a = this.getScenes(), b = this.selectedScene;
+  $(this.view_).width();
+  $(a[0]).offset();
+  $(b.view).width();
+  console.log(b);
 };
 Entry.Script = function(a) {
   this.entity = a;
