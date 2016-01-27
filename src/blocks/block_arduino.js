@@ -482,8 +482,10 @@ Blockly.Blocks.CODEino_is_button_pressed = {
 
 Entry.block.CODEino_is_button_pressed = function (sprite, script) {
     var value = script.getNumberField("PORT", script);
-    if (value > 14) value = value - 14;
-    return Entry.hw.getDigitalPortValue(value);
+    if (value > 14) {
+        value = value - 14;
+        return !Entry.hw.getAnalogPortValue(value);
+    } else return !Entry.hw.getDigitalPortValue(value);
 };
 
 Blockly.Blocks.CODEino_get_accelerometer_value = {
