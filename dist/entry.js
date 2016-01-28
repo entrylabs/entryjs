@@ -4944,6 +4944,7 @@ Entry.Container.prototype.setPicture = function(a) {
         b.dimension = a.dimension;
         b.id = a.id;
         b.filename = a.filename;
+        b.fileurl = a.fileurl;
         b.name = a.name;
         b.view = c.pictures[d].view;
         c.pictures[d] = b;
