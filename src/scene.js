@@ -446,24 +446,3 @@ Entry.Scene.prototype.resize = function() {
 
     }
 };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
