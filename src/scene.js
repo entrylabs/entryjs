@@ -81,7 +81,7 @@ Entry.Scene.prototype.generateElement = function(scene) {
     viewTemplate.addClass('entrySceneElementWorkspace');
     viewTemplate.addClass('entrySceneButtonWorkspace');
     viewTemplate.addClass('minValue');
-    viewTemplate.bindOnClick(function (e) {
+    $(viewTemplate).on('mousedown', function(e){
         if (Entry.engine.isState('run')) {
             e.preventDefault();
             return;

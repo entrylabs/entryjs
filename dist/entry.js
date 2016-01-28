@@ -9672,7 +9672,7 @@ Entry.Scene.prototype.generateElement = function(a) {
   c.addClass("entrySceneElementWorkspace");
   c.addClass("entrySceneButtonWorkspace");
   c.addClass("minValue");
-  c.bindOnClick(function(b) {
+  $(c).on("mousedown", function(b) {
     Entry.engine.isState("run") ? b.preventDefault() : Entry.scene.selectScene(a);
   });
   var d = Entry.createElement("input");
