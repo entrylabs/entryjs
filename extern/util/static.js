@@ -1050,7 +1050,7 @@ EntryStatic.blockInfo = {
         "usage": ["variable"]
     },
     "value_of_index_from_list": {
-        "xml": "<block type='value_of_index_from_list'> <value name='INDEX'> <block type='options_for_list'></block> </value> </block>",
+        "xml": "<block type='value_of_index_from_list'> <value name='INDEX'> <block type='number'><field name='NUM'>1</field></block> </value> </block>",
         "class": "list_element",
         "isNotFor": ["list", "listNotExist"],
         "usage": ["list"]
