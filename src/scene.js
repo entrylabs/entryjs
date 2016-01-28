@@ -406,12 +406,10 @@ Entry.Scene.prototype.resize = function() {
     var firstScene = scenes[0];
 
     if (scenes.length === 0 || !firstScene) return;
-
     var startPos = $(firstScene.view).offset().left;
     var marginLeft = parseFloat($(selectedScene.view).css('margin-left'));
     var selectedWidth = $(selectedScene.view).width();
-    var addButtonWidth = $(addButton).width();
-    var totalWidth = $(this.view_).width() - startPos - addButtonWidth;
+    var totalWidth = $(this.view_).width() - startPos;
 
 
     var normWidth = 0;
@@ -419,16 +417,22 @@ Entry.Scene.prototype.resize = function() {
         var scene = scenes[i];
         var view = scene.view;
         view.addClass('minValue');
+        var inputWrapper = scene.inputWrapper;
+        $(inputWrapper).width(
+            Entry.computeInputWidth(inputWrapper.nameField)
+        );
         view = $(view);
         normWidth = normWidth + view.width() + marginLeft;
+
+        if (normWidth > totalWidth) {
+            align();
+            break;
+        }
     }
 
-    normWidth += addButtonWidth;
-    if (normWidth > totalWidth) {
+    function align() {
         totalWidth = totalWidth - selectedWidth;
         var len = scenes.length - 1;
-        if (len + 1 == this.maxCount)
-            totalWidth += addButtonWidth;
         var eachWidth = Entry.Scene.viewBasicWidth + marginLeft;
         var fieldWidth = parseFloat(totalWidth/len) - eachWidth;
         for (i in scenes) {
@@ -437,7 +441,7 @@ Entry.Scene.prototype.resize = function() {
             if (selectedScene.id != scene.id) {
                 scene.view.removeClass('minValue');
                 $(scene.inputWrapper).width(fieldWidth);
-            }
+            } else scene.view.addClass('minValue');
         }
 
     }

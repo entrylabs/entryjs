@@ -9825,18 +9825,24 @@ Entry.Scene.prototype.cloneScene = function(a) {
   }
 };
 Entry.Scene.prototype.resize = function() {
-  var a = this.getScenes(), b = this.selectedScene, c = this.addButton_, d = a[0];
-  if (0 !== a.length && d) {
-    var e = $(d.view).offset().left, d = parseFloat($(b.view).css("margin-left")), f = $(b.view).width(), c = $(c).width(), e = $(this.view_).width() - e - c, g = 0, h;
-    for (h in a) {
-      var k = a[h], k = k.view;
+  var a = this.getScenes(), b = this.selectedScene, c = a[0];
+  if (0 !== a.length && c) {
+    var d = $(c.view).offset().left, c = parseFloat($(b.view).css("margin-left")), e = $(b.view).width(), d = $(this.view_).width() - d, f = 0, g;
+    for (g in a) {
+      var h = a[g], k = h.view;
       k.addClass("minValue");
+      h = h.inputWrapper;
+      $(h).width(Entry.computeInputWidth(h.nameField));
       k = $(k);
-      g = g + k.width() + d;
-    }
-    if (g + c > e) {
-      for (h in e -= f, f = a.length - 1, f + 1 == this.maxCount && (e += c), d = Entry.Scene.viewBasicWidth + d, d = parseFloat(e / f) - d, a) {
-        k = a[h], b.id != k.id && (k.view.removeClass("minValue"), $(k.inputWrapper).width(d));
+      f = f + k.width() + c;
+      if (f > d) {
+        d -= e;
+        c = Entry.Scene.viewBasicWidth + c;
+        c = parseFloat(d / (a.length - 1)) - c;
+        for (g in a) {
+          h = a[g], b.id != h.id ? (h.view.removeClass("minValue"), $(h.inputWrapper).width(c)) : h.view.addClass("minValue");
+        }
+        break;
       }
     }
   }

@@ -128,7 +128,7 @@
   background: url("../images/top_tab_b_nor_right_blue.png");
 }
 .selectedScene .entrySceneRemoveButtonCoverWorkspace {
-  display: block;
+  display: inline-block;
   background: url("../images/top_tab_b_sel_right.png");
 }
 .entrySceneRemoveButtonWorkspace {
