@@ -344,9 +344,11 @@ Entry.Painter.prototype.updateImageHandleCursor = function () {
     handle.NWHandle.cursor = cursorList[0];
 };
 
-Entry.Painter.prototype.clearCanvas = function() {
+Entry.Painter.prototype.clearCanvas = function(skipInit) {
     this.clearHandle();
-    this.initCommand();
+    if(!skipInit) {
+        this.initCommand();
+    }
 
     this.objectContainer.removeAllChildren();
     this.stage.update();
@@ -396,7 +398,7 @@ Entry.Painter.prototype.initPicture = function() {
             }
         }
         painter.file.modified = false;
-        painter.clearCanvas();
+        painter.clearCanvas(true);
 
         var image = new Image();
         if (picture.id)
@@ -407,7 +409,6 @@ Entry.Painter.prototype.initPicture = function() {
         painter.file.id = image.id;
         painter.file.name = picture.name;
         painter.file.mode = 'edit';
-
         if (picture.fileurl) {
             image.src = picture.fileurl;
         } else {

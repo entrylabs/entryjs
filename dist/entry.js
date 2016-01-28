@@ -7678,13 +7678,14 @@ Entry.Painter.prototype.updateImageHandleCursor = function() {
   a.WHandle.cursor = b[3];
   a.NWHandle.cursor = b[0];
 };
-Entry.Painter.prototype.clearCanvas = function() {
+Entry.Painter.prototype.clearCanvas = function(a) {
   this.clearHandle();
-  this.initCommand();
+  a || this.initCommand();
   this.objectContainer.removeAllChildren();
   this.stage.update();
   this.colorLayerData = this.ctx.getImageData(0, 0, this.canvas.width, this.canvas.height);
-  for (var a = 0, b = this.colorLayerData.data.length;a < b;a++) {
+  a = 0;
+  for (var b = this.colorLayerData.data.length;a < b;a++) {
     this.colorLayerData.data[a] = 255, this.colorLayerData.data[a + 1] = 255, this.colorLayerData.data[a + 2] = 255, this.colorLayerData.data[a + 3] = 255;
   }
   this.reloadContext();
@@ -7701,7 +7702,7 @@ Entry.Painter.prototype.initPicture = function() {
     if (a.file.id !== b.id) {
       a.file.modified && confirm("\uc218\uc815\ub41c \ub0b4\uc6a9\uc744 \uc800\uc7a5\ud558\uc2dc\uaca0\uc2b5\ub2c8\uae4c?") && (a.file_ = JSON.parse(JSON.stringify(a.file)), a.file_save(!0));
       a.file.modified = !1;
-      a.clearCanvas();
+      a.clearCanvas(!0);
       var c = new Image;
       c.id = b.id ? b.id : Entry.generateHash();
       a.file.id = c.id;
@@ -9510,7 +9511,7 @@ Entry.Playground.prototype.flushPlayground = function() {
   Entry.playground && Entry.playground.view_ && (Blockly.mainWorkspace.clear(), this.injectPicture(), this.injectSound());
 };
 Entry.Playground.prototype.refreshPlayground = function() {
-  Entry.playground && Entry.playground.view_ && Entry.engine.isState("stop") && (this.injectPicture(), this.injectSound());
+  Entry.playground && Entry.playground.view_ && (this.injectPicture(), this.injectSound());
 };
 Entry.Playground.prototype.updateListViewOrder = function(a) {
   a = "picture" == a ? this.pictureListView_.childNodes : this.soundListView_.childNodes;
