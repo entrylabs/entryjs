@@ -156,10 +156,10 @@ EntryStatic.getAllBlocks = function() {
             blocks: [
                 "sound_something_with_block",
                 "sound_something_second_with_block",
-                "sound_from_to_v2",
+                "sound_from_to",
                 "sound_something_wait_with_block",
                 "sound_something_second_wait_with_block",
-                "sound_from_to_and_wait_v2",
+                "sound_from_to_and_wait",
                 "sound_volume_change",
                 "sound_volume_set",
                 "sound_silent_all"
@@ -1658,22 +1658,12 @@ EntryStatic.blockInfo = {
     },
     "sound_from_to": {
         "isNotFor": [""],
-        "xml": "<block type='sound_from_to'><value name='START'><block type='text'><field name='NAME'>1</field></block></value><value name='END'><block type='text'><field name='NAME'>10</field></block></value></block>",
-        "class": ""
-    },
-    "sound_from_to_v2": {
-        "isNotFor": [""],
-        "xml": "<block type='sound_from_to_v2'><value name='VALUE'><block type='get_sounds'></block></value><value name='START'><block type='text'><field name='NAME'>1</field></block></value><value name='END'><block type='text'><field name='NAME'>10</field></block></value></block>",
+        "xml": "<block type='sound_from_to'><value name='VALUE'><block type='get_sounds'></block></value><value name='START'><block type='text'><field name='NAME'>1</field></block></value><value name='END'><block type='text'><field name='NAME'>10</field></block></value></block>",
         "class": ""
     },
     "sound_from_to_and_wait": {
         "isNotFor": [""],
-        "xml": "<block type='sound_from_to_and_wait'><value name='START'><block type='text'><field name='NAME'>1</field></block></value><value name='END'><block type='text'><field name='NAME'>10</field></block></value></block>",
-        "class": "sound_play"
-    },
-    "sound_from_to_and_wait_v2": {
-        "isNotFor": [""],
-        "xml": "<block type='sound_from_to_and_wait_v2'><value name='VALUE'><block type='get_sounds'></block></value><value name='START'><block type='text'><field name='NAME'>1</field></block></value><value name='END'><block type='text'><field name='NAME'>10</field></block></value></block>",
+        "xml": "<block type='sound_from_to_and_wait'><value name='VALUE'><block type='get_sounds'></block></value><value name='START'><block type='text'><field name='NAME'>1</field></block></value><value name='END'><block type='text'><field name='NAME'>10</field></block></value></block>",
         "class": "sound_play"
     },
     "quotient_and_mod": {

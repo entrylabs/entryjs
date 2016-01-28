@@ -4032,25 +4032,6 @@ Entry.block.sound_something_second_wait_with_block = function(a, b) {
 };
 Blockly.Blocks.sound_from_to = {init:function() {
   this.setColour("#A4D01D");
-  this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_from_to_1).appendField(new Blockly.FieldDropdownDynamic("sounds"), "SOUND").appendField(Lang.Blocks.SOUND_sound_from_to_2);
-  this.appendValueInput("START").setCheck(["String", "Number"]);
-  this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_from_to_3);
-  this.appendValueInput("END").setCheck(["String", "Number"]);
-  this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_from_to_4).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/sound_03.png", "*"));
-  this.setInputsInline(!0);
-  this.setNextStatement(!0);
-  this.setPreviousStatement(!0);
-}};
-Entry.block.sound_from_to = function(a, b) {
-  var c = b.getField("SOUND", b);
-  if (c = a.parent.getSound(c)) {
-    var d = 1E3 * b.getNumberValue("START", b), e = 1E3 * b.getNumberValue("END", b);
-    createjs.Sound.play(c.id, {startTime:Math.min(d, e), duration:Math.max(d, e) - Math.min(d, e)});
-  }
-  return b.callReturn();
-};
-Blockly.Blocks.sound_from_to_v2 = {init:function() {
-  this.setColour("#A4D01D");
   this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_from_to_1);
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
   this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_from_to_2);
@@ -4062,7 +4043,7 @@ Blockly.Blocks.sound_from_to_v2 = {init:function() {
   this.setNextStatement(!0);
   this.setPreviousStatement(!0);
 }};
-Entry.block.sound_from_to_v2 = function(a, b) {
+Entry.block.sound_from_to = function(a, b) {
   var c = b.getStringValue("VALUE", b);
   if (c = a.parent.getSound(c)) {
     var d = 1E3 * b.getNumberValue("START", b), e = 1E3 * b.getNumberValue("END", b);
@@ -4071,38 +4052,6 @@ Entry.block.sound_from_to_v2 = function(a, b) {
   return b.callReturn();
 };
 Blockly.Blocks.sound_from_to_and_wait = {init:function() {
-  this.setColour("#A4D01D");
-  this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_from_to_and_wait_1).appendField(new Blockly.FieldDropdownDynamic("sounds"), "SOUND").appendField(Lang.Blocks.SOUND_sound_from_to_and_wait_2);
-  this.appendValueInput("START").setCheck(["String", "Number"]);
-  this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_from_to_and_wait_3);
-  this.appendValueInput("END").setCheck(["String", "Number"]);
-  this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_from_to_and_wait_4).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/sound_03.png", "*"));
-  this.setInputsInline(!0);
-  this.setNextStatement(!0);
-  this.setPreviousStatement(!0);
-}};
-Entry.block.sound_from_to_and_wait = function(a, b) {
-  if (b.isPlay) {
-    if (1 == b.playState) {
-      return b;
-    }
-    delete b.isPlay;
-    delete b.playState;
-    return b.callReturn();
-  }
-  b.isPlay = !0;
-  b.playState = 1;
-  var c = a.parent.getSound(b.getField("SOUND", b));
-  if (c) {
-    var d = 1E3 * b.getNumberValue("START", b), e = 1E3 * b.getNumberValue("END", b), f = Math.min(d, e), d = Math.max(d, e) - f;
-    createjs.Sound.play(c.id, {startTime:f, duration:d});
-    setTimeout(function() {
-      b.playState = 0;
-    }, d);
-  }
-  return b;
-};
-Blockly.Blocks.sound_from_to_and_wait_v2 = {init:function() {
   this.setColour("#A4D01D");
   this.appendDummyInput().appendField(Lang.Blocks.SOUND_sound_from_to_and_wait_1);
   this.appendValueInput("VALUE").setCheck(["Number", "String"]);
@@ -4115,7 +4064,7 @@ Blockly.Blocks.sound_from_to_and_wait_v2 = {init:function() {
   this.setNextStatement(!0);
   this.setPreviousStatement(!0);
 }};
-Entry.block.sound_from_to_and_wait_v2 = function(a, b) {
+Entry.block.sound_from_to_and_wait = function(a, b) {
   if (b.isPlay) {
     if (1 == b.playState) {
       return b;
