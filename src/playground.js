@@ -1472,7 +1472,7 @@ Entry.Playground.prototype.flushPlayground = function () {
 };
 
 Entry.Playground.prototype.refreshPlayground = function () {
-    if (Entry.playground && Entry.playground.view_) {
+    if (Entry.playground && Entry.playground.view_ && Entry.engine.isState("stop")) {
         this.injectPicture();
         this.injectSound();
     }

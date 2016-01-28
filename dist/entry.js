@@ -9510,7 +9510,7 @@ Entry.Playground.prototype.flushPlayground = function() {
   Entry.playground && Entry.playground.view_ && (Blockly.mainWorkspace.clear(), this.injectPicture(), this.injectSound());
 };
 Entry.Playground.prototype.refreshPlayground = function() {
-  Entry.playground && Entry.playground.view_ && (this.injectPicture(), this.injectSound());
+  Entry.playground && Entry.playground.view_ && Entry.engine.isState("stop") && (this.injectPicture(), this.injectSound());
 };
 Entry.Playground.prototype.updateListViewOrder = function(a) {
   a = "picture" == a ? this.pictureListView_.childNodes : this.soundListView_.childNodes;
@@ -9885,8 +9885,8 @@ Entry.Scene.prototype.removeScene = function(a) {
 };
 Entry.Scene.prototype.selectScene = function(a) {
   a = a || this.getScenes()[0];
-  this.selectedScene && this.selectedScene.id == a.id || (Entry.engine.isState("run") && Entry.container.resetSceneDuringRun(), this.selectedScene = a, Entry.container.setCurrentObjects(), Entry.stage.objectContainers && 0 !== Entry.stage.objectContainers.length && Entry.stage.selectObjectContainer(a), (a = Entry.container.getCurrentObjects()[0]) && "minimize" != Entry.type ? Entry.container.selectObject(a.id) : (Entry.stage.selectObject(null), Entry.playground.flushPlayground(), Entry.variableContainer.updateList()), 
-  Entry.container.listView_ || Entry.stage.sortZorder(), Entry.container.updateListView(), this.updateView());
+  this.selectedScene && this.selectedScene.id == a.id || (Entry.engine.isState("run") && Entry.container.resetSceneDuringRun(), this.selectedScene = a, Entry.container.setCurrentObjects(), Entry.stage.objectContainers && 0 !== Entry.stage.objectContainers.length && Entry.stage.selectObjectContainer(a), (a = Entry.container.getCurrentObjects()[0]) && "minimize" != Entry.type ? (Entry.container.selectObject(a.id), Entry.playground.refreshPlayground()) : (Entry.stage.selectObject(null), Entry.playground.flushPlayground(), 
+  Entry.variableContainer.updateList()), Entry.container.listView_ || Entry.stage.sortZorder(), Entry.container.updateListView(), this.updateView());
 };
 Entry.Scene.prototype.toJSON = function() {
   for (var a = [], b = this.getScenes().length, c = 0;c < b;c++) {
