@@ -12,7 +12,12 @@ Entry.block.functionAddButton = {
             align: "center"
         }
     ],
-    func: function() {
+    events: {
+        mousedown: [
+            function() {
+                Entry.variableContainer.createFunction();
+            }
+        ]
     }
 };
 
