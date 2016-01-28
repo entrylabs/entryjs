@@ -307,7 +307,7 @@ Entry.skeleton.basic_boolean_field = {
         var width = blockView.contentWidth;
         var height = blockView.contentHeight;
         height = Math.max(18, height + 2);
-        width = Math.max(0, width - height + 4);
+        width = Math.max(0, width - height + 9);
         return "m %h,0 h %w l %h,%h -%h,%h H %h l -%h,-%h %h,-%h z "
             .replace(/%wh/gi, height)
             .replace(/%w/gi, width)
@@ -320,7 +320,7 @@ Entry.skeleton.basic_boolean_field = {
         var height = blockView ? blockView.contentHeight : 18;
         return {
             offsetX: 0, offsetY: 0,
-            width: width + 4,
+            width: width + 8,
             height: Math.max(height + 2, 18),
             marginBottom: 0
         };
@@ -333,7 +333,7 @@ Entry.skeleton.basic_boolean_field = {
     contentPos: function(blockView) {
         // apply scale required.
         var height = Math.max(blockView.contentHeight, 16);
-        return {x: 2, y: height / 2 + 1};
+        return {x: 4, y: height / 2 + 1};
     }
 };
 

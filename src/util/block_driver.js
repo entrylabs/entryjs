@@ -127,11 +127,18 @@ Entry.BlockMockup = function(blocklyInfo) {
                 this.params.push({
                     type: "Dropdown",
                     options: field.menuGenerator_,
-                    value: field.menuGenerator_[0][0],
+                    value: field.menuGenerator_[0][1],
                     fontSize: 11
                 });
                 this.templates.push(this.getFieldCount());
             } else if (field instanceof Blockly.FieldDropdownDynamic) {
+                this.params.push({
+                    type: "Dropdown",
+                    options: [["대상 없음", "null"]],
+                    value: "null",
+                    fontSize: 11
+                });
+                this.templates.push(this.getFieldCount());
             } else if (field instanceof Blockly.FieldTextInput) {
                 this.params.push({
                     type: "TextInput",

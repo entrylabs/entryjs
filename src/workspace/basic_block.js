@@ -1410,18 +1410,3 @@ Entry.block.basic_button = {
     func: function() {
     }
 };
-
-Entry.block.True = {
-    skeleton: "basic_boolean_field",
-    color: "#eee",
-    template: "%1",
-    params: [
-        {
-            type: "Text",
-            text: "참",
-            color: "#333",
-        }
-    ],
-    func: function() {
-    }
-};

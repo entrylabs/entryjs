@@ -1898,6 +1898,8 @@ Entry.block.remove_all_clones = function(a, b) {
   c = null;
   return b.callReturn();
 };
+Entry.block.functionAddButton = {skeleton:"basic_button", color:"#eee", template:"%1", params:[{type:"Text", text:"\ud568\uc218 \ucd94\uac00", color:"#333", align:"center"}], func:function() {
+}};
 Blockly.Blocks.function_field_label = {init:function() {
   this.setColour("#f9c535");
   this.appendDummyInput().appendField(new Blockly.FieldTextInput(Lang.Blocks.FUNCTION_explanation_1), "NAME");
@@ -2697,7 +2699,7 @@ Entry.block.False = function(a, b) {
 Blockly.Blocks.boolean_basic_operator = {init:function() {
   this.setColour("#AEB8FF");
   this.appendValueInput("LEFTHAND").setCheck(["String", "Number"]);
-  this.appendDummyInput("VALUE").appendField(new Blockly.FieldDropdown([["=", "EQUAL"], [">", "GREATER"], ["<", "LESS"], [">=", "GREATER_OR_EQUAL"], ["<=", "LESS_OR_EQUAL"]], null, !1), "OPERATOR");
+  this.appendDummyInput("VALUE").appendField(new Blockly.FieldDropdown([["=", "EQUAL"], ["\uff1e", "GREATER"], ["\uff1c", "LESS"], ["\u2265", "GREATER_OR_EQUAL"], ["\u2264", "LESS_OR_EQUAL"]], null, !1), "OPERATOR");
   this.appendValueInput("RIGHTHAND").setCheck(["Number", "String"]);
   this.setOutput(!0, "Boolean");
   this.setInputsInline(!0);
@@ -4346,6 +4348,10 @@ Entry.block.text_flush = function(a, b) {
   a.setText("");
   return b.callReturn();
 };
+Entry.block.variableAddButton = {skeleton:"basic_button", color:"#eee", template:"%1", params:[{type:"Text", text:"\ubcc0\uc218 \ucd94\uac00", color:"#333", align:"center"}], func:function() {
+}};
+Entry.block.listAddButton = {skeleton:"basic_button", color:"#eee", template:"%1", params:[{type:"Text", text:"\ub9ac\uc2a4\ud2b8 \ucd94\uac00", color:"#333", align:"center"}], func:function() {
+}};
 Blockly.Blocks.change_variable = {init:function() {
   this.setColour("#E457DC");
   this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_change_variable_1);
@@ -9840,8 +9846,8 @@ Entry.BlockMockup = function(a) {
     "Boolean" === b && (a[a.length - 1].accept = "basic_boolean_field");
   };
   a.appendField = function(b) {
-    "string" === typeof b && 0 < b.length ? this.templates.push(b) : b instanceof Blockly.FieldIcon ? ("start" === b.type ? this.params.push({type:"Indicator", img:b.src_, size:17, position:{x:0, y:-2}}) : this.params.push({type:"Indicator", img:b.src_, size:12}), this.templates.push(this.getFieldCount())) : b instanceof Blockly.FieldDropdown ? (this.params.push({type:"Dropdown", options:b.menuGenerator_, value:b.menuGenerator_[0][0], fontSize:11}), this.templates.push(this.getFieldCount())) : !(b instanceof 
-    Blockly.FieldDropdownDynamic) && b instanceof Blockly.FieldTextInput && (this.params.push({type:"TextInput", value:10}), this.templates.push(this.getFieldCount()));
+    "string" === typeof b && 0 < b.length ? this.templates.push(b) : b instanceof Blockly.FieldIcon ? ("start" === b.type ? this.params.push({type:"Indicator", img:b.src_, size:17, position:{x:0, y:-2}}) : this.params.push({type:"Indicator", img:b.src_, size:12}), this.templates.push(this.getFieldCount())) : b instanceof Blockly.FieldDropdown ? (this.params.push({type:"Dropdown", options:b.menuGenerator_, value:b.menuGenerator_[0][1], fontSize:11}), this.templates.push(this.getFieldCount())) : b instanceof 
+    Blockly.FieldDropdownDynamic ? (this.params.push({type:"Dropdown", options:[["\ub300\uc0c1 \uc5c6\uc74c", "null"]], value:"null", fontSize:11}), this.templates.push(this.getFieldCount())) : b instanceof Blockly.FieldTextInput && (this.params.push({type:"TextInput", value:10}), this.templates.push(this.getFieldCount()));
     return this;
   };
   a.setColour = function(b) {
@@ -12970,8 +12976,6 @@ Entry.block.test_wrapper = {skeleton:"basic", mode:"maze", color:"#3BBD70", temp
 }};
 Entry.block.basic_button = {skeleton:"basic_button", color:"#eee", template:"%1", params:[{type:"Text", text:"basic button", color:"#333", align:"center"}], func:function() {
 }};
-Entry.block.True = {skeleton:"basic_boolean_field", color:"#eee", template:"%1", params:[{type:"Text", text:"\ucc38", color:"#333"}], func:function() {
-}};
 Entry.BlockMenu = function(a, b, c) {
   Entry.Model(this, !1);
   this._align = b || "CENTER";
@@ -14834,14 +14838,14 @@ Entry.skeleton.basic_boolean_field = {path:function(a) {
   var b = a.contentWidth;
   a = a.contentHeight;
   a = Math.max(18, a + 2);
-  b = Math.max(0, b - a + 4);
+  b = Math.max(0, b - a + 9);
   return "m %h,0 h %w l %h,%h -%h,%h H %h l -%h,-%h %h,-%h z ".replace(/%wh/gi, a).replace(/%w/gi, b).replace(/%h/gi, a / 2);
 }, color:"#000", outerLine:!0, box:function(a) {
-  return {offsetX:0, offsetY:0, width:(a ? a.contentWidth : 5) + 4, height:Math.max((a ? a.contentHeight : 18) + 2, 18), marginBottom:0};
+  return {offsetX:0, offsetY:0, width:(a ? a.contentWidth : 5) + 8, height:Math.max((a ? a.contentHeight : 18) + 2, 18), marginBottom:0};
 }, magnets:function() {
   return {bool:{}};
 }, contentPos:function(a) {
-  return {x:2, y:Math.max(a.contentHeight, 16) / 2 + 1};
+  return {x:4, y:Math.max(a.contentHeight, 16) / 2 + 1};
 }};
 Entry.skeleton.basic_button = {path:function() {
   return "m -64,0 h 128 a 6,6 0, 0,1 6,6 v 18 a 6,6 0, 0,1 -6,6 h -128 a 6,6 0, 0,1 -6,-6 v -18 a 6,6 0, 0,1 6,-6 z";

@@ -1,5 +1,37 @@
 "use strict";
 
+Entry.block.variableAddButton = {
+    skeleton: "basic_button",
+    color: "#eee",
+    template: "%1",
+    params: [
+        {
+            type: "Text",
+            text: "변수 추가",
+            color: "#333",
+            align: "center"
+        }
+    ],
+    func: function() {
+    }
+};
+
+Entry.block.listAddButton = {
+    skeleton: "basic_button",
+    color: "#eee",
+    template: "%1",
+    params: [
+        {
+            type: "Text",
+            text: "리스트 추가",
+            color: "#333",
+            align: "center"
+        }
+    ],
+    func: function() {
+    }
+};
+
 // (변수▼) 를 () 만큼 바꾸기
 Blockly.Blocks.change_variable = {
   init: function() {

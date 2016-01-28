@@ -228,6 +228,12 @@ EntryStatic.getAllBlocks = function() {
             ]
         },
         {
+            category: "func",
+            blocks: [
+                "functionAddButton",
+            ]
+        },
+        {
             category: "arduino",
             blocks: [
                 "arduino_download_connector",
@@ -1383,7 +1389,7 @@ EntryStatic.blockInfo = {
     "neobot_set_sensor_value": {
         "isNotFor": ['neobot'],
         "xml": "<block type='neobot_set_sensor_value'></block>",
-        "class": "neobot_set_value" 
+        "class": "neobot_set_value"
     },
     "bitbrick_sensor_value": {
         "isNotFor": ['bitbrick'],
