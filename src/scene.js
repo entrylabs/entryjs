@@ -272,7 +272,6 @@ Entry.Scene.prototype.selectScene = function(scene) {
     var targetObject = Entry.container.getCurrentObjects()[0];
     if (targetObject && Entry.type != 'minimize') {
         Entry.container.selectObject(targetObject.id);
-        Entry.playground.refreshPlayground();
     }
     else {
         Entry.stage.selectObject(null);
