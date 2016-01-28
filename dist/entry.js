@@ -9637,10 +9637,15 @@ Entry.Reporter.prototype.report = function(a) {
   }
 };
 Entry.Scene = function() {
+  var a = this;
   this.scenes_ = [];
   this.selectedScene = null;
   this.maxCount = 20;
+  $(window).on("resize", function(b) {
+    a.resize();
+  });
 };
+Entry.Scene.viewBasicWidth = 70;
 Entry.Scene.prototype.generateView = function(a, b) {
   this.view_ = a;
   this.view_.addClass("entryScene");
@@ -9663,55 +9668,57 @@ Entry.Scene.prototype.generateView = function(a, b) {
   }
 };
 Entry.Scene.prototype.generateElement = function(a) {
-  var b = Entry.createElement("li", a.id);
-  b.addClass("entrySceneElementWorkspace");
-  b.addClass("entrySceneButtonWorkspace");
-  b.bindOnClick(function(b) {
+  var b = this, c = Entry.createElement("li", a.id);
+  c.addClass("entrySceneElementWorkspace");
+  c.addClass("entrySceneButtonWorkspace");
+  c.addClass("minValue");
+  c.bindOnClick(function(b) {
     Entry.engine.isState("run") ? b.preventDefault() : Entry.scene.selectScene(a);
   });
-  var c = Entry.createElement("input");
-  c.addClass("entrySceneFieldWorkspace");
-  c.value = a.name;
-  Entry.sceneEditable || (c.disabled = "disabled");
-  var d = Entry.createElement("span");
-  d.addClass("entrySceneLeftWorkspace");
-  b.appendChild(d);
+  var d = Entry.createElement("input");
+  d.addClass("entrySceneFieldWorkspace");
+  d.value = a.name;
+  Entry.sceneEditable || (d.disabled = "disabled");
   var e = Entry.createElement("span");
-  e.addClass("entrySceneInputCover");
-  e.style.width = Entry.computeInputWidth(c);
-  b.appendChild(e);
-  c.onkeyup = function(b) {
-    b = b.keyCode;
-    Entry.isArrowOrBackspace(b) || (a.name = this.value, e.style.width = Entry.computeInputWidth(this), 13 == b && this.blur(), 9 < this.value.length && (this.value = this.value.substring(0, 10), this.blur()));
+  e.addClass("entrySceneLeftWorkspace");
+  c.appendChild(e);
+  var f = Entry.createElement("span");
+  f.addClass("entrySceneInputCover");
+  f.style.width = Entry.computeInputWidth(d);
+  c.appendChild(f);
+  a.inputWrapper = f;
+  d.onkeyup = function(c) {
+    c = c.keyCode;
+    Entry.isArrowOrBackspace(c) || (a.name = this.value, f.style.width = Entry.computeInputWidth(this), b.resize(), 13 == c && this.blur(), 9 < this.value.length && (this.value = this.value.substring(0, 10), this.blur()));
   };
-  c.onblur = function(b) {
-    c.value = this.value;
+  d.onblur = function(b) {
+    d.value = this.value;
     a.name = this.value;
-    e.style.width = Entry.computeInputWidth(this);
+    f.style.width = Entry.computeInputWidth(this);
   };
-  e.appendChild(c);
-  e.nameField = c;
-  d = Entry.createElement("span");
-  d.addClass("entrySceneRemoveButtonCoverWorkspace");
-  b.appendChild(d);
+  f.appendChild(d);
+  f.nameField = d;
+  e = Entry.createElement("span");
+  e.addClass("entrySceneRemoveButtonCoverWorkspace");
+  c.appendChild(e);
   if (Entry.sceneEditable) {
-    var f = Entry.createElement("button");
-    f.addClass("entrySceneRemoveButtonWorkspace");
-    f.innerHTML = "x";
-    f.scene = a;
-    f.bindOnClick(function(a) {
+    var g = Entry.createElement("button");
+    g.addClass("entrySceneRemoveButtonWorkspace");
+    g.innerHTML = "x";
+    g.scene = a;
+    g.bindOnClick(function(a) {
       a.stopPropagation();
       Entry.engine.isState("run") || confirm(Lang.Workspace.will_you_delete_scene) && Entry.scene.removeScene(this.scene);
     });
-    d.appendChild(f);
+    e.appendChild(g);
   }
-  Entry.Utils.disableContextmenu(b);
-  $(b).on("contextmenu", function() {
+  Entry.Utils.disableContextmenu(c);
+  $(c).on("contextmenu", function() {
     Entry.ContextMenu.show([{text:Lang.Workspace.duplicate_scene, callback:function() {
       Entry.scene.cloneScene(a);
     }}], "workspace-contextmenu");
   });
-  return a.view = b;
+  return a.view = c;
 };
 Entry.Scene.prototype.updateView = function() {
   if (!Entry.type || "workspace" == Entry.type) {
@@ -9725,6 +9732,7 @@ Entry.Scene.prototype.updateView = function() {
     }
     this.addButton_ && (this.getScenes().length < this.maxCount ? this.addButton_.removeClass("entryRemove") : this.addButton_.addClass("entryRemove"));
   }
+  this.resize();
 };
 Entry.Scene.prototype.addScenes = function(a) {
   if ((this.scenes_ = a) && 0 !== a.length) {
@@ -9817,12 +9825,21 @@ Entry.Scene.prototype.cloneScene = function(a) {
   }
 };
 Entry.Scene.prototype.resize = function() {
-  console.log("resize");
-  var a = this.getScenes(), b = this.selectedScene;
-  $(this.view_).width();
-  $(a[0]).offset();
-  $(b.view).width();
-  console.log(b);
+  var a = this.getScenes(), b = this.selectedScene, c = this.addButton_, d = a[0];
+  if (0 !== a.length && d) {
+    var e = $(d.view).offset().left, d = parseFloat($(b.view).css("margin-left")), f = $(b.view).width(), c = $(c).width(), e = $(this.view_).width() - e - c, g = 0, h;
+    for (h in a) {
+      var k = a[h], k = k.view;
+      k.addClass("minValue");
+      k = $(k);
+      g = g + k.width() + d;
+    }
+    if (g + c > e) {
+      for (h in e -= f, f = a.length - 1, f + 1 == this.maxCount && (e += c), d = Entry.Scene.viewBasicWidth + d, d = parseFloat(e / f) - d, a) {
+        k = a[h], b.id != k.id && (k.view.removeClass("minValue"), $(k.inputWrapper).width(d));
+      }
+    }
+  }
 };
 Entry.Script = function(a) {
   this.entity = a;

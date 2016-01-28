@@ -9,10 +9,16 @@
  * @constructor
  */
 Entry.Scene = function() {
+    var that = this;
     this.scenes_ = [];
     this.selectedScene = null;
     this.maxCount = 20;
+    $(window).on('resize', (function(e) {
+        that.resize();
+    }));
 };
+
+Entry.Scene.viewBasicWidth = 70;
 
 /**
  * Control bar view generator.
@@ -70,9 +76,11 @@ Entry.Scene.prototype.generateView = function(sceneView, option) {
  * @param {!scene model} scene
  */
 Entry.Scene.prototype.generateElement = function(scene) {
+    var that = this;
     var viewTemplate = Entry.createElement('li', scene.id);
     viewTemplate.addClass('entrySceneElementWorkspace');
     viewTemplate.addClass('entrySceneButtonWorkspace');
+    viewTemplate.addClass('minValue');
     viewTemplate.bindOnClick(function (e) {
         if (Entry.engine.isState('run')) {
             e.preventDefault();
@@ -83,7 +91,6 @@ Entry.Scene.prototype.generateElement = function(scene) {
     var nameField = Entry.createElement('input');
     nameField.addClass('entrySceneFieldWorkspace');
     nameField.value = scene.name;
-    //nameField.style.width = Entry.computeInputWidth(nameField);
 
     if (!Entry.sceneEditable)
         nameField.disabled = 'disabled';
@@ -96,6 +103,7 @@ Entry.Scene.prototype.generateElement = function(scene) {
     divide.addClass('entrySceneInputCover');
     divide.style.width = Entry.computeInputWidth(nameField);
     viewTemplate.appendChild(divide);
+    scene.inputWrapper = divide;
 
     nameField.onkeyup = function (e) {
         var code = e.keyCode;
@@ -103,6 +111,7 @@ Entry.Scene.prototype.generateElement = function(scene) {
             return;
         scene.name = this.value;
         divide.style.width = Entry.computeInputWidth(this);
+        that.resize();
         if (code == 13)
             this.blur();
         if (this.value.length > 9) {
@@ -180,6 +189,7 @@ Entry.Scene.prototype.updateView = function() {
                 this.addButton_.addClass('entryRemove');
         }
     }
+    this.resize();
 };
 
 /**
@@ -390,14 +400,47 @@ Entry.Scene.prototype.cloneScene = function(scene) {
  * @param {!scene model} scene
  */
 Entry.Scene.prototype.resize = function() {
-    console.log('resize');
     var scenes = this.getScenes();
     var selectedScene = this.selectedScene;
+    var addButton = this.addButton_;
+    var firstScene = scenes[0];
 
-    var totalWidth = $(this.view_).width();
-    var startPos = $(scenes[0]).offset().left;
+    if (scenes.length === 0 || !firstScene) return;
+
+    var startPos = $(firstScene.view).offset().left;
+    var marginLeft = parseFloat($(selectedScene.view).css('margin-left'));
     var selectedWidth = $(selectedScene.view).width();
-    console.log(selectedScene);
+    var addButtonWidth = $(addButton).width();
+    var totalWidth = $(this.view_).width() - startPos - addButtonWidth;
+
+
+    var normWidth = 0;
+    for (var i in scenes) {
+        var scene = scenes[i];
+        var view = scene.view;
+        view.addClass('minValue');
+        view = $(view);
+        normWidth = normWidth + view.width() + marginLeft;
+    }
+
+    normWidth += addButtonWidth;
+    if (normWidth > totalWidth) {
+        totalWidth = totalWidth - selectedWidth;
+        var len = scenes.length - 1;
+        if (len + 1 == this.maxCount)
+            totalWidth += addButtonWidth;
+        var eachWidth = Entry.Scene.viewBasicWidth + marginLeft;
+        var fieldWidth = parseFloat(totalWidth/len) - eachWidth;
+        for (i in scenes) {
+            scene = scenes[i];
+
+            if (selectedScene.id != scene.id) {
+                scene.view.removeClass('minValue');
+                $(scene.inputWrapper).width(fieldWidth);
+            }
+        }
+
+    }
 };
 
 
