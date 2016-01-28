@@ -13205,7 +13205,7 @@ Entry.BlockView = function(a, b, c) {
     a.statements && a.statements.length && (this.statementSvgGroup = this.svgGroup.group());
     switch(b) {
       case Entry.Workspace.MODE_BOARD:
-        var d = /(%\d)/gmi, e = a.template.split(d), f = a.params;
+        var d = /(%\d)/mi, e = a.template.split(d), f = a.params;
         for (b = 0;b < e.length;b++) {
           var g = e[b].trim();
           if (0 !== g.length) {
