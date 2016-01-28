@@ -6608,7 +6608,7 @@ p.closeConnection = function() {
   this.socket && this.socket.close();
 };
 p.downloadConnector = function() {
-  window.open("http://play-entry.org/down/entry-hw_v1.1.zip", "_blank").focus();
+  window.open("http://play-entry.org/down/Entry_hw_v1.1.1_Setup.exe", "_blank").focus();
 };
 p.downloadSource = function() {
   window.open("http://play-entry.com/lib/EntryArduino/arduino/entry.ino", "_blank").focus();
