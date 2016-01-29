@@ -9827,22 +9827,18 @@ Entry.Scene.prototype.cloneScene = function(a) {
 Entry.Scene.prototype.resize = function() {
   var a = this.getScenes(), b = this.selectedScene, c = a[0];
   if (0 !== a.length && c) {
-    var d = $(c.view).offset().left, c = parseFloat($(b.view).css("margin-left")), e = $(b.view).width(), d = $(this.view_).width() - d, f = 0, g;
-    for (g in a) {
-      var h = a[g], k = h.view;
-      k.addClass("minValue");
-      h = h.inputWrapper;
-      $(h).width(Entry.computeInputWidth(h.nameField));
-      k = $(k);
-      f = f + k.width() + c;
-      if (f > d) {
-        d -= e;
-        c = Entry.Scene.viewBasicWidth + c;
-        c = parseFloat(d / (a.length - 1)) - c;
-        for (g in a) {
-          h = a[g], b.id != h.id ? (h.view.removeClass("minValue"), $(h.inputWrapper).width(c)) : h.view.addClass("minValue");
-        }
-        break;
+    var d = $(c.view).offset().left, c = parseFloat($(b.view).css("margin-left")), d = $(this.view_).width() - d, e = 0, f;
+    for (f in a) {
+      var g = a[f], h = g.view;
+      h.addClass("minValue");
+      g = g.inputWrapper;
+      $(g).width(Entry.computeInputWidth(g.nameField));
+      h = $(h);
+      e = e + h.width() + c;
+    }
+    if (e > d) {
+      for (f in d -= $(b.view).width(), c = d / (a.length - 1) - (Entry.Scene.viewBasicWidth + c), a) {
+        g = a[f], b.id != g.id ? (g.view.removeClass("minValue"), $(g.inputWrapper).width(c)) : g.view.addClass("minValue");
       }
     }
   }

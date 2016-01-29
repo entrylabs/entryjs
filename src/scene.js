@@ -408,7 +408,6 @@ Entry.Scene.prototype.resize = function() {
     if (scenes.length === 0 || !firstScene) return;
     var startPos = $(firstScene.view).offset().left;
     var marginLeft = parseFloat($(selectedScene.view).css('margin-left'));
-    var selectedWidth = $(selectedScene.view).width();
     var totalWidth = $(this.view_).width() - startPos;
 
 
@@ -423,18 +422,15 @@ Entry.Scene.prototype.resize = function() {
         );
         view = $(view);
         normWidth = normWidth + view.width() + marginLeft;
-
-        if (normWidth > totalWidth) {
-            align();
-            break;
-        }
     }
 
+    if (normWidth > totalWidth) align()
+
     function align() {
-        totalWidth = totalWidth - selectedWidth;
+        totalWidth = totalWidth - $(selectedScene.view).width();
         var len = scenes.length - 1;
         var eachWidth = Entry.Scene.viewBasicWidth + marginLeft;
-        var fieldWidth = parseFloat(totalWidth/len) - eachWidth;
+        var fieldWidth = totalWidth/len - eachWidth;
         for (i in scenes) {
             scene = scenes[i];
 
