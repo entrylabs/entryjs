@@ -249,6 +249,7 @@ EntryStatic.getAllBlocks = function() {
                 "bitbrick_dc_speed",
                 "bitbrick_dc_direction_speed",
                 "bitbrick_servomotor_angle",
+                "bitbrick_convert_scale",
 				"hamster_hand_found",
                 "hamster_value",
 				"hamster_move_forward_once",
@@ -1410,6 +1411,11 @@ EntryStatic.blockInfo = {
     "bitbrick_servomotor_angle": {
         "isNotFor": ['bitbrick'],
         "xml": "<block type='bitbrick_servomotor_angle'><value name='VALUE'><block type='text'><field name='NAME'>100</field></block></value></block>",
+        "class": "condition"
+    },    
+    "bitbrick_convert_scale": {
+        "isNotFor": ['bitbrick'],
+        "xml": "<block type='bitbrick_convert_scale'><value name='VALUE2'> <block type='number'><field name='NUM'>0</field></block> </value><value name='VALUE3'> <block type='number'><field name='NUM'>1023</field></block> </value><value name='VALUE4'> <block type='number'><field name='NUM'>-100</field></block> </value><value name='VALUE5'> <block type='number'><field name='NUM'>100</field></block> </value></block>",
         "class": "condition"
     },
 	"hamster_hand_found": {
