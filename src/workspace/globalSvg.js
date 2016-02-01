@@ -68,7 +68,6 @@ goog.provide('Entry.GlobalSvg');
         }
         this.snap.append(this.svg);
         this.show();
-        blockView.set({visible:false});
     };
 
     gs.remove = function() {
@@ -94,7 +93,7 @@ goog.provide('Entry.GlobalSvg');
         offsetY += 1;
         this._offsetX = offsetX;
         this._offsetY = offsetY;
-        var transform = "t" + (offsetX + 1) + " " + offsetY;
+        var transform = "t" + offsetX + " " + offsetY;
         this.svg.attr({transform: transform});
     };
 

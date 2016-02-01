@@ -434,13 +434,12 @@ Entry.BlockView = function(block, board, mode) {
                     } else board.setMagnetedBlock(null);
                     if (!blockView.originPos)
                         blockView.originPos = {x: blockView.x, y: blockView.y};
-                } else board.cloneToBoard(e);
+                } else board.cloneToGlobal(e);
             }
         }
 
         function onMouseUp(e) {
             Entry.GlobalSvg.remove();
-            blockView.set({visible:true});
             $(document).unbind('.block');
             delete this.mouseDownCoordinate;
             blockView.terminateDrag(e);

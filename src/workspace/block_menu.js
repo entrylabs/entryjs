@@ -185,32 +185,43 @@ Entry.BlockMenu = function(dom, align, categoryData) {
         this.expandWidth = this.svgGroup.getBBox().width + hPadding;
     };
 
-    p.cloneToBoard = function(e) {
+    p.cloneToGlobal = function(e) {
         if (this.dragBlock === null) return;
         if (this._boardBlockView) return;
 
-        var svgWidth = this._svgWidth;
+        var workspace = this.workspace;
+        var workspaceMode = workspace.getMode();
         var blockView = this.dragBlock;
-        var block = blockView.block;
-        var clonedThread;
-        var code = this.code;
-        var currentThread = block.getThread();
-        if (block && currentThread) {
-            var workspaceBoard = this.workspace.getBoard();
-            var mode = this.workspace.getMode();
-            this._boardBlockView = workspaceBoard.code.
-                cloneThread(currentThread, mode).getFirstBlock().view;
 
-            var distance = this.offset.top - workspaceBoard.offset.top;
+        var svgWidth = this._svgWidth;
 
-            this._boardBlockView._moveTo(
-                blockView.x-svgWidth,
-                blockView.y+distance,
-                false
-            );
-            this._boardBlockView.onMouseDown.call(this._boardBlockView, e);
-            this._dragObserver =
-                this._boardBlockView.observe(this, "_editDragInstance", ['x', 'y'], false);
+        var board = workspace.selectedBoard;
+
+        if (board && (workspaceMode == Entry.Workspace.MODE_BOARD ||
+                      workspaceMode == Entry.Workspace.MODE_OVERLAYBOARD)) {
+            var block = blockView.block;
+            var clonedThread;
+            var code = this.code;
+            var currentThread = block.getThread();
+            if (block && currentThread) {
+                this._boardBlockView = board.code.
+                    cloneThread(currentThread, workspaceMode).getFirstBlock().view;
+
+                var distance = this.offset.top - board.offset.top;
+
+                this._boardBlockView._moveTo(
+                    blockView.x-svgWidth,
+                    blockView.y+distance,
+                    false
+                );
+                this._boardBlockView.onMouseDown.call(this._boardBlockView, e);
+                this._dragObserver =
+                    this._boardBlockView.observe(this, "_editDragInstance", ['x', 'y'], false);
+            }
+        } else {
+            //TODO move by global svg
+            Entry.GlobalSvg.setView(blockView, workspace.getMode());
+
         }
     };
 
