@@ -150,7 +150,12 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
             var board = field._blockView.getBoard();
 
             var block = new Entry.Block(data, thread);
-            block.createView(board, board.workspace.getMode());
+            var workspace = board.workspace;
+            var mode;
+            if (workspace)
+                mode = workspace.getMode();
+
+            block.createView(board, mode);
             return block;
         }
     };

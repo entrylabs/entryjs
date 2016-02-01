@@ -14327,8 +14327,9 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
   };
   a._inspectThread = function() {
     function a(b, d) {
-      var e = b._block.getThread(), f = b._blockView.getBoard(), e = new Entry.Block(d, e);
-      e.createView(f, f.workspace.getMode());
+      var e = b._block.getThread(), f = b._blockView.getBoard(), e = new Entry.Block(d, e), g = f.workspace, h;
+      g && (h = g.getMode());
+      e.createView(f, h);
       return e;
     }
     if (!this.dummyBlock.next) {
