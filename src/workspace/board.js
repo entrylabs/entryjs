@@ -15,7 +15,8 @@ goog.require("Entry.Scroller");
  *
  * @param {object} dom which to inject playground
  */
-Entry.Board = function(dom) {
+Entry.Board = function(option) {
+    var dom = option.dom;
     if (typeof dom === "string")
         dom = $('#' + dom);
     else
@@ -30,6 +31,8 @@ Entry.Board = function(dom) {
     Entry.Model(this, false);
 
     this.view = dom;
+
+    this.workspace = option.workspace;
 
     this.wrapper = Entry.Dom('div', {
         parent: dom,
@@ -276,14 +279,14 @@ Entry.Board = function(dom) {
     };
 
     p.hide = function() {
-        //this.wrapper.addClass('entryRemove');
-        this.wrapper.css('opacity', '0');
+        this.wrapper.addClass('entryRemove');
+       // this.wrapper.css('opacity', '0');
         this.visible = false;
     };
 
     p.show = function() {
-        //this.wrapper.removeClass('entryRemove');
-        this.wrapper.css('opacity', '1');
+        this.wrapper.removeClass('entryRemove');
+        //this.wrapper.css('opacity', '1');
         this.visible = true;
         this.trashcan.setPosition();
     };

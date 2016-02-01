@@ -104,6 +104,7 @@ Entry.BlockView = function(block, board, mode) {
             this.statementSvgGroup = this.svgGroup.group();
         switch (mode) {
             case Entry.Workspace.MODE_BOARD:
+            case Entry.Workspace.MODE_OVERLAYBOARD:
                 var reg = /(%\d)/mi;
                 var templateParams = schema.template.split(reg);
                 var params = schema.params;

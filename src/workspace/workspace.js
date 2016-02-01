@@ -22,8 +22,8 @@ Entry.Workspace = function(options) {
 
     option = options.board;
     if (option) {
-        this.board = new Entry.Board(option.dom);
-        this.board.workspace = this;
+        option.workspace = this;
+        this.board = new Entry.Board(option);
         this.board.observe(this, "_setSelectedBlockView", ["selectedBlockView"], false);
     }
 
@@ -44,12 +44,15 @@ Entry.Workspace = function(options) {
 
 Entry.Workspace.MODE_BOARD = 0;
 Entry.Workspace.MODE_VIMBOARD = 1;
+Entry.Workspace.MODE_OVERLAYBOARD = 2;
 
 (function(p) {
     p.schema = {
         selectedBlockView: null
     };
     p.getBoard = function(){return this.board;};
+
+    p.getSelectedBoard = function(){return this.selectedBoard;};
 
     p.getBlockMenu = function(){return this.blockMenu;};
 
@@ -59,20 +62,31 @@ Entry.Workspace.MODE_VIMBOARD = 1;
 
     p.setMode = function(mode){
         mode = Number(mode);
-        if (this.mode == mode) return;
-        if (mode == Entry.Workspace.MODE_VIMBOARD) {
-            if (this.board) this.board.hide();
-            this.selectedBoard = this.vimBoard;
-            this.vimBoard.show();
-            this.vimBoard.codeToText(this.board.code);
-            this.blockMenu.renderText();
-            this.board.clear();
-        } else {
-            if (this.vimBoard) this.vimBoard.hide();
-            this.selectedBoard = this.board;
-            this.board.show();
-            this.textToCode();
-            this.blockMenu.renderBlock();
+        switch (mode) {
+            case this.mode:
+                return;
+            case Entry.Workspace.MODE_VIMBOARD:
+                if (this.board) this.board.hide();
+                if (this.overlayBoard) this.overlayBoard.hide();
+                this.selectedBoard = this.vimBoard;
+                this.vimBoard.show();
+                this.vimBoard.codeToText(this.board.code);
+                this.blockMenu.renderText();
+                this.board.clear();
+                break;
+            case Entry.Workspace.MODE_BOARD:
+                if (this.vimBoard) this.vimBoard.hide();
+                if (this.overlayBoard) this.overlayBoard.hide();
+                this.selectedBoard = this.board;
+                this.board.show();
+                this.textToCode();
+                this.blockMenu.renderBlock();
+                break;
+            case Entry.Workspace.MODE_OVERLAYBOARD:
+                if (!this.overlayBoard)
+                    this.initOverlayBoard();
+                this.overlayBoard.show();
+                break;
         }
         this.mode = mode;
     };
@@ -105,5 +119,13 @@ Entry.Workspace.MODE_VIMBOARD = 1;
         this.set({selectedBlockView:blockView});
     };
 
+    p.initOverlayBoard = function() {
+        this.overlayBoard = new Entry.Board({
+            dom: this.board.view,
+            workspace: this
+        });
+        this.overlayBoard.changeCode(new Entry.Code([]));
+        this.overlayBoard.workspace = this;
+    };
 
 })(Entry.Workspace.prototype);

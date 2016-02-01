@@ -4744,9 +4744,10 @@ svg .svgBlockGroup text {
   fill-opacity: 0.8;
 }
 .entryBoardWrapper {
-  position: absoulte;
+  position: absolute;
   top: 0;
   left: 0;
+  right: 0;
   height: 100%;
 }
 .entryVimBoard {

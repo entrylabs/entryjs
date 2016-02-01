@@ -106,7 +106,7 @@ goog.provide('Entry.GlobalSvg');
         var that = this;
         var blockView = this._view;
         var matrix = blockView.svgGroup.transform().globalMatrix;
-        var offset = blockView.getBoard().svgDom.offset();
+        var offset = blockView.getBoard().offset;
         this.left = matrix.e + offset.left - this._offsetX;
         this.top = matrix.f + offset.top - this._offsetY;
 
