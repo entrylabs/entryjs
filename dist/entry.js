@@ -6611,7 +6611,7 @@ p.downloadConnector = function() {
   window.open("http://play-entry.org/down/entry-hw_v1.1.zip", "_blank").focus();
 };
 p.downloadSource = function() {
-  window.open("http://play-entry.com/lib/EntryArduino/arduino/entry.ino", "_blank").focus();
+  window.open("http://play-entry.com/down/board.ino", "_blank").focus();
 };
 p.setZero = function() {
   Entry.hw.hwModule && Entry.hw.hwModule.setZero();

@@ -170,7 +170,7 @@ p.downloadConnector = function() {
 };
 
 p.downloadSource = function() {
-    var url = "http://play-entry.com/lib/EntryArduino/arduino/entry.ino";
+    var url = "http://play-entry.com/down/board.ino";
     var win = window.open(url, '_blank');
     win.focus();
 };
