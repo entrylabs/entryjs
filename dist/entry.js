@@ -15220,9 +15220,10 @@ Entry.Board = function(a) {
   }
   Entry.Model(this, !1);
   this.view = c;
+  this._snapId = "play" + (new Date).getTime();
   this.workspace = a.workspace;
   this.wrapper = Entry.Dom("div", {parent:c, class:"entryBoardWrapper"});
-  this.svgDom = Entry.Dom($('<svg id="play" class="entryBoard" width="100%" height="100%"version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'), {parent:this.wrapper});
+  this.svgDom = Entry.Dom($('<svg id="' + this._snapId + '" class="entryBoard" width="100%" height="100%"version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'), {parent:this.wrapper});
   this.offset = this.svgDom.offset();
   this.offset.left -= $(window).scrollLeft();
   this.relativeOffset = this.offset;
@@ -15230,7 +15231,7 @@ Entry.Board = function(a) {
   var d = this;
   $(window).scroll(b);
   Entry.windowResized.attach(this, b);
-  this.snap = Snap("#play");
+  this.snap = Snap("#" + this._snapId);
   this._blockViews = [];
   this.trashcan = new Entry.FieldTrashcan(this);
   this.svgGroup = this.snap.group();

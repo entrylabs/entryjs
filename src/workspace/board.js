@@ -31,6 +31,7 @@ Entry.Board = function(option) {
     Entry.Model(this, false);
 
     this.view = dom;
+    this._snapId = 'play' + new Date().getTime();
 
     this.workspace = option.workspace;
 
@@ -40,7 +41,7 @@ Entry.Board = function(option) {
     });
 
     this.svgDom = Entry.Dom(
-        $('<svg id="play" class="entryBoard" width="100%" height="100%"' +
+        $('<svg id="' + this._snapId + '" class="entryBoard" width="100%" height="100%"' +
           'version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'),
         { parent: this.wrapper }
     );
@@ -67,7 +68,7 @@ Entry.Board = function(option) {
         };
     }
 
-    this.snap = Snap('#play');
+    this.snap = Snap('#' + this._snapId);
 
     this._blockViews = [];
 
