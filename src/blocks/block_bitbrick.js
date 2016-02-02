@@ -327,11 +327,12 @@ Blockly.Blocks.bitbrick_dc_direction_speed = {
     this.appendDummyInput()
     .appendField("DC 모터")
     .appendField(new Blockly.FieldDropdownDynamic(Entry.Bitbrick.dcList), "PORT")
-    .appendField(" 방향")
+    .appendField(" ")
     .appendField(new Blockly.FieldDropdown([
-      ['CCW',"CCW"],
-      ['CW',"CW"]
+      [Lang.Blocks.BITBRICK_dc_direction_ccw,"CCW"],
+      [Lang.Blocks.BITBRICK_dc_direction_cw,"CW"]
       ]), "DIRECTION")
+    .appendField(" 방향")
     .appendField(" 속력");
     this.appendValueInput("VALUE")
     .setCheck(["Number", "String"]);
@@ -420,16 +421,13 @@ Entry.block.bitbrick_convert_scale = function (sprite, script) {
     var value4 = script.getNumberValue("VALUE4", script);
     var value5 = script.getNumberValue("VALUE5", script);
     var result = value1;
-    if (value2 > value3) {
-        var swap = value2;
-        value2 = value3;
-        value3 = swap;
-    }
+
     if (value4 > value5) {
         var swap = value4;
         value4 = value5;
         value5 = swap;
     }
+
     result -= value2;
     result = result * ((value5 - value4) / (value3 - value2));
     result += value4;
