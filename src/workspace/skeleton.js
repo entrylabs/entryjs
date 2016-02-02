@@ -337,6 +337,36 @@ Entry.skeleton.basic_boolean_field = {
     }
 };
 
+Entry.skeleton.basic_param = {
+    path: function(blockView) {
+        var width = blockView.contentWidth;
+        width = Math.max(0, width);
+        return ("m 4,0 h 10 h %w l 2,2 0,3 3,0 1,1 0,12 -1,1 -3,0 0,3 -2,2" +
+                "h -%w h -10 l -2,-2 0,-3 3,0 1,-1 0,-12 -1,-1 -3,0 0,-3 2,-2")
+            .replace(/%w/gi, width);
+    },
+    outerLine: true,
+    box: function(blockView) {
+        var width = blockView ? blockView.contentWidth : 5;
+        return {
+            offsetX: 0, offsetY: 0,
+            width: width + 18,
+            height: 24,
+            marginBottom: 0
+        };
+    },
+    magnets: function() {
+        return {
+            param: {}
+        };
+    },
+    contentPos: function(blockView) {
+        // apply scale required.
+        return {x: 11, y: 12};
+    }
+};
+
+
 Entry.skeleton.basic_button = {
     path: function() {
         return "m -64,0 h 128 a 6,6 0, 0,1 6,6 v 18 a 6,6 0, 0,1 -6,6 h -128 a 6,6 0, 0,1 -6,-6 v -18 a 6,6 0, 0,1 6,-6 z";

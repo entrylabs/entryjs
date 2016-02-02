@@ -1901,6 +1901,9 @@ Entry.block.remove_all_clones = function(a, b) {
 Entry.block.functionAddButton = {skeleton:"basic_button", color:"#eee", template:"%1", params:[{type:"Text", text:"\ud568\uc218 \ucd94\uac00", color:"#333", align:"center"}], events:{mousedown:[function() {
   Entry.variableContainer.createFunction();
 }]}};
+Entry.block.function_field_label = {skeleton:"basic_param", color:"#f9c535", template:"%1", params:[{type:"TextInput", value:"\ud568\uc218"}]};
+Entry.block.function_field_string = {skeleton:"basic_param", color:"#ffd974", template:"%1%2", params:[{type:"Block", accept:"basic_string_field"}, {type:"Block", accept:"basic_param"}]};
+Entry.block.function_field_boolean = {skeleton:"basic_param", color:"#aeb8ff", template:"%1%2", params:[{type:"Block", accept:"basic_boolean_field"}, {type:"Block", accept:"basic_param"}]};
 Blockly.Blocks.function_field_label = {init:function() {
   this.setColour("#f9c535");
   this.appendDummyInput().appendField(new Blockly.FieldTextInput(Lang.Blocks.FUNCTION_explanation_1), "NAME");
@@ -1969,6 +1972,7 @@ Blockly.Blocks.function_create = {init:function() {
 Entry.block.function_create = function(a, b) {
   return b.callReturn();
 };
+Entry.block.function_create = {skeleton:"basic", color:"#cc7337", template:"\ud568\uc218 \uc815\uc758\ud558\uae30 %1 %2", params:[{type:"Block", accept:"basic_param", value:[{type:"function_field_label"}]}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/function_03.png", size:12}]};
 Blockly.Blocks.function_general = {init:function() {
   this.setColour("#cc7337");
   this.setInputsInline(!0);
@@ -4861,7 +4865,7 @@ Entry.Container.prototype.generateView = function(a, b) {
   this._view = a;
   this._view.addClass("entryContainer");
   if (b && "workspace" != b) {
-    "phone" == b && (this._view.addClass("entryContainerPhone"), c = Entry.createElement("div"), c.addClass("entryAddObjectWorkspace"), c.innerHTML = Lang.Workspace.add_object, c.bindOnClick(function(b) {
+    "phone" == b && (this._view.addClass("entryContainerPhone"), c = Entry.createElement("div"), c.addClass("entryAddObjectWorkspace"), c.innerHTML = Lang.Workspace.add_object, c.bindOnClick(function(a) {
       Entry.dispatchEvent("openSpriteManager");
     }), c = Entry.createElement("div"), c.addClass("entryContainerListPhoneWrapper"), this._view.appendChild(c), d = Entry.createElement("ul"), d.addClass("entryContainerListPhone"), c.appendChild(d), this.listView_ = d);
   } else {
@@ -4869,14 +4873,14 @@ Entry.Container.prototype.generateView = function(a, b) {
     var c = Entry.createElement("div");
     c.addClass("entryAddObjectWorkspace");
     c.innerHTML = Lang.Workspace.add_object;
-    c.bindOnClick(function(b) {
+    c.bindOnClick(function(a) {
       Entry.dispatchEvent("openSpriteManager");
     });
     c = Entry.createElement("div");
     c.addClass("entryContainerListWorkspaceWrapper");
     Entry.isForLecture && (this.generateTabView(), c.addClass("lecture"));
     Entry.Utils.disableContextmenu(c);
-    $(c).on("contextmenu", function(b) {
+    $(c).on("contextmenu", function(a) {
       Entry.ContextMenu.show([{text:Lang.Blocks.Paste_blocks, callback:function() {
         Entry.container.copiedObject ? Entry.container.addCloneObject(Entry.container.copiedObject) : Entry.toast.alert(Lang.Workspace.add_object_alert, Lang.Workspace.object_not_found_for_paste);
       }}], "workspace-contextmenu");
@@ -4917,11 +4921,11 @@ Entry.Container.prototype.setObjects = function(a) {
     var c = new Entry.EntryObject(a[b]);
     this.objects_.push(c);
     c.generateView();
-    c.pictures.map(function(b) {
-      Entry.playground.generatePictureElement(b);
+    c.pictures.map(function(a) {
+      Entry.playground.generatePictureElement(a);
     });
-    c.sounds.map(function(b) {
-      Entry.playground.generateSoundElement(b);
+    c.sounds.map(function(a) {
+      Entry.playground.generateSoundElement(a);
     });
   }
   this.updateObjectsOrder();
@@ -4938,12 +4942,12 @@ Entry.Container.prototype.addObject = function(a, b) {
   c.scene || (c.scene = Entry.scene.selectedScene);
   "number" == typeof b ? a.sprite.category && "background" == a.sprite.category.main ? (c.setLock(!0), this.objects_.push(c)) : this.objects_.splice(b, 0, c) : a.sprite.category && "background" == a.sprite.category.main ? this.objects_.push(c) : this.objects_.unshift(c);
   c.generateView();
-  c.pictures.map(function(b) {
-    b.id = Entry.generateHash();
-    Entry.playground.generatePictureElement(b);
+  c.pictures.map(function(a) {
+    a.id = Entry.generateHash();
+    Entry.playground.generatePictureElement(a);
   });
-  c.sounds.map(function(b) {
-    Entry.playground.generateSoundElement(b);
+  c.sounds.map(function(a) {
+    Entry.playground.generateSoundElement(a);
   });
   this.setCurrentObjects();
   this.updateObjectsOrder();
@@ -4976,9 +4980,9 @@ Entry.Container.prototype.removeObject = function(a) {
 Entry.Container.prototype.selectObject = function(a, b) {
   var c = this.getObject(a);
   b && c && Entry.scene.selectScene(c.scene);
-  this.mapObjectOnScene(function(b) {
-    b.view_ && b.view_.removeClass("selectedObject");
-    b.isSelected_ = !1;
+  this.mapObjectOnScene(function(a) {
+    a.view_ && a.view_.removeClass("selectedObject");
+    a.isSelected_ = !1;
   });
   c && (c.view_ && c.view_.addClass("selectedObject"), c.isSelected_ = !0);
   Entry.playground && Entry.playground.injectObject(c);
@@ -5406,20 +5410,20 @@ Entry.Container.prototype.resize = function() {
 };
 Entry.db = {data:{}, typeMap:{}};
 (function(a) {
-  a.add = function(b) {
-    this.data[b.id] = b;
-    var a = b.type;
-    void 0 === this.typeMap[a] && (this.typeMap[a] = {});
-    this.typeMap[a][b.id] = b;
+  a.add = function(a) {
+    this.data[a.id] = a;
+    var c = a.type;
+    void 0 === this.typeMap[c] && (this.typeMap[c] = {});
+    this.typeMap[c][a.id] = a;
   };
-  a.has = function(b) {
-    return this.data.hasOwnProperty(b);
+  a.has = function(a) {
+    return this.data.hasOwnProperty(a);
   };
-  a.remove = function(b) {
-    this.has(b) && (delete this.typeMap[this.data[b].type][b], delete this.data[b]);
+  a.remove = function(a) {
+    this.has(a) && (delete this.typeMap[this.data[a].type][a], delete this.data[a]);
   };
-  a.get = function(b) {
-    return this.data[b];
+  a.get = function(a) {
+    return this.data[a];
   };
   a.find = function() {
   };
@@ -5436,14 +5440,14 @@ Entry.Dom = function(a, b) {
   }
   b.id && d.attr("id", b.id);
   b.class && d.addClass(b.class);
-  b.classes && b.classes.map(function(b) {
-    d.addClass(b);
+  b.classes && b.classes.map(function(a) {
+    d.addClass(a);
   });
   b.parent && b.parent.append(d);
-  d.bindOnClick = function(b) {
-    $(this).on("click touchstart", function(a) {
-      a.stopImmediatePropagation();
-      a.handled || (a.handled = !0, b.call(this, a));
+  d.bindOnClick = function(a) {
+    $(this).on("click touchstart", function(b) {
+      b.stopImmediatePropagation();
+      b.handled || (b.handled = !0, a.call(this, b));
     });
   };
   return d;
@@ -5497,9 +5501,9 @@ Entry.Dialog.prototype.remove = function() {
   this.parent.dialog = null;
 };
 Entry.Engine = function() {
-  function a(b) {
-    var a = [37, 38, 39, 40, 32], d = b.keyCode || b.which, e = Entry.stage.inputField;
-    32 == d && e && e.hasFocus() || -1 < a.indexOf(d) && b.preventDefault();
+  function a(a) {
+    var c = [37, 38, 39, 40, 32], d = a.keyCode || a.which, e = Entry.stage.inputField;
+    32 == d && e && e.hasFocus() || -1 < c.indexOf(d) && a.preventDefault();
   }
   this.state = "stop";
   this.popup = null;
@@ -5508,21 +5512,21 @@ Entry.Engine = function() {
   this.pressedKeys = [];
   Entry.addEventListener("keyPressed", this.captureKeyEvent);
   Entry.addEventListener("keyUpped", this.captureKeyUpEvent);
-  Entry.addEventListener("canvasClick", function(b) {
+  Entry.addEventListener("canvasClick", function(a) {
     Entry.engine.fireEvent("mouse_clicked");
   });
-  Entry.addEventListener("canvasClickCanceled", function(b) {
+  Entry.addEventListener("canvasClickCanceled", function(a) {
     Entry.engine.fireEvent("mouse_click_cancled");
   });
-  Entry.addEventListener("entityClick", function(b) {
-    Entry.engine.fireEventOnEntity("when_object_click", b);
+  Entry.addEventListener("entityClick", function(a) {
+    Entry.engine.fireEventOnEntity("when_object_click", a);
   });
-  Entry.addEventListener("entityClickCanceled", function(b) {
-    Entry.engine.fireEventOnEntity("when_object_click_canceled", b);
+  Entry.addEventListener("entityClickCanceled", function(a) {
+    Entry.engine.fireEventOnEntity("when_object_click_canceled", a);
   });
-  "phone" != Entry.type && (Entry.addEventListener("stageMouseMove", function(b) {
+  "phone" != Entry.type && (Entry.addEventListener("stageMouseMove", function(a) {
     Entry.engine.updateMouseView();
-  }), Entry.addEventListener("stageMouseOut", function(b) {
+  }), Entry.addEventListener("stageMouseOut", function(a) {
     Entry.engine.hideMouseView();
   }));
   Entry.addEventListener("run", function() {
@@ -5534,41 +5538,41 @@ Entry.Engine = function() {
 };
 Entry.Engine.prototype.generateView = function(a, b) {
   if (b && "workspace" != b) {
-    "minimize" == b ? (this.view_ = a, this.view_.addClass("entryEngine"), this.view_.addClass("entryEngineMinimize"), this.maximizeButton = Entry.createElement("button"), this.maximizeButton.addClass("entryEngineButtonMinimize"), this.maximizeButton.addClass("entryMaximizeButtonMinimize"), this.view_.appendChild(this.maximizeButton), this.maximizeButton.bindOnClick(function(b) {
+    "minimize" == b ? (this.view_ = a, this.view_.addClass("entryEngine"), this.view_.addClass("entryEngineMinimize"), this.maximizeButton = Entry.createElement("button"), this.maximizeButton.addClass("entryEngineButtonMinimize"), this.maximizeButton.addClass("entryMaximizeButtonMinimize"), this.view_.appendChild(this.maximizeButton), this.maximizeButton.bindOnClick(function(a) {
       Entry.engine.toggleFullscreen();
-    }), this.coordinateButton = Entry.createElement("button"), this.coordinateButton.addClass("entryEngineButtonMinimize"), this.coordinateButton.addClass("entryCoordinateButtonMinimize"), this.view_.appendChild(this.coordinateButton), this.coordinateButton.bindOnClick(function(b) {
+    }), this.coordinateButton = Entry.createElement("button"), this.coordinateButton.addClass("entryEngineButtonMinimize"), this.coordinateButton.addClass("entryCoordinateButtonMinimize"), this.view_.appendChild(this.coordinateButton), this.coordinateButton.bindOnClick(function(a) {
       this.hasClass("toggleOn") ? this.removeClass("toggleOn") : this.addClass("toggleOn");
       Entry.stage.toggleCoordinator();
-    }), this.runButton = Entry.createElement("button"), this.runButton.addClass("entryEngineButtonMinimize"), this.runButton.addClass("entryRunButtonMinimize"), this.runButton.innerHTML = Lang.Blocks.START, this.view_.appendChild(this.runButton), this.runButton.bindOnClick(function(b) {
-      b.preventDefault();
+    }), this.runButton = Entry.createElement("button"), this.runButton.addClass("entryEngineButtonMinimize"), this.runButton.addClass("entryRunButtonMinimize"), this.runButton.innerHTML = Lang.Blocks.START, this.view_.appendChild(this.runButton), this.runButton.bindOnClick(function(a) {
+      a.preventDefault();
       Entry.engine.toggleRun();
-    }), this.runButton2 = Entry.createElement("button"), this.runButton2.addClass("entryEngineBigButtonMinimize_popup"), this.runButton2.addClass("entryEngineBigButtonMinimize_popup_run"), this.view_.appendChild(this.runButton2), this.runButton2.bindOnClick(function(b) {
-      b.preventDefault();
+    }), this.runButton2 = Entry.createElement("button"), this.runButton2.addClass("entryEngineBigButtonMinimize_popup"), this.runButton2.addClass("entryEngineBigButtonMinimize_popup_run"), this.view_.appendChild(this.runButton2), this.runButton2.bindOnClick(function(a) {
+      a.preventDefault();
       Entry.engine.toggleRun();
-    }), this.stopButton = Entry.createElement("button"), this.stopButton.addClass("entryEngineButtonMinimize"), this.stopButton.addClass("entryStopButtonMinimize"), this.stopButton.addClass("entryRemove"), this.stopButton.innerHTML = Lang.Workspace.stop, this.view_.appendChild(this.stopButton), this.stopButton.bindOnClick(function(b) {
+    }), this.stopButton = Entry.createElement("button"), this.stopButton.addClass("entryEngineButtonMinimize"), this.stopButton.addClass("entryStopButtonMinimize"), this.stopButton.addClass("entryRemove"), this.stopButton.innerHTML = Lang.Workspace.stop, this.view_.appendChild(this.stopButton), this.stopButton.bindOnClick(function(a) {
       this.blur();
-      b.preventDefault();
+      a.preventDefault();
       Entry.engine.toggleStop();
-    }), this.pauseButton = Entry.createElement("button"), this.pauseButton.innerHTML = Lang.Workspace.pause, this.pauseButton.addClass("entryEngineButtonMinimize"), this.pauseButton.addClass("entryPauseButtonMinimize"), this.pauseButton.addClass("entryRemove"), this.view_.appendChild(this.pauseButton), this.pauseButton.bindOnClick(function(b) {
+    }), this.pauseButton = Entry.createElement("button"), this.pauseButton.innerHTML = Lang.Workspace.pause, this.pauseButton.addClass("entryEngineButtonMinimize"), this.pauseButton.addClass("entryPauseButtonMinimize"), this.pauseButton.addClass("entryRemove"), this.view_.appendChild(this.pauseButton), this.pauseButton.bindOnClick(function(a) {
       this.blur();
-      b.preventDefault();
+      a.preventDefault();
       Entry.engine.togglePause();
     }), this.mouseView = Entry.createElement("div"), this.mouseView.addClass("entryMouseViewMinimize"), this.mouseView.addClass("entryRemove"), this.view_.appendChild(this.mouseView)) : "phone" == b && (this.view_ = a, this.view_.addClass("entryEngine", "entryEnginePhone"), this.headerView_ = Entry.createElement("div", "entryEngineHeader"), this.headerView_.addClass("entryEngineHeaderPhone"), this.view_.appendChild(this.headerView_), this.maximizeButton = Entry.createElement("button"), this.maximizeButton.addClass("entryEngineButtonPhone", 
-    "entryMaximizeButtonPhone"), this.headerView_.appendChild(this.maximizeButton), this.maximizeButton.bindOnClick(function(b) {
+    "entryMaximizeButtonPhone"), this.headerView_.appendChild(this.maximizeButton), this.maximizeButton.bindOnClick(function(a) {
       Entry.engine.footerView_.addClass("entryRemove");
       Entry.engine.headerView_.addClass("entryRemove");
       Entry.launchFullScreen(Entry.engine.view_);
-    }), document.addEventListener("fullscreenchange", function(b) {
+    }), document.addEventListener("fullscreenchange", function(a) {
       Entry.engine.exitFullScreen();
-    }), document.addEventListener("webkitfullscreenchange", function(b) {
+    }), document.addEventListener("webkitfullscreenchange", function(a) {
       Entry.engine.exitFullScreen();
-    }), document.addEventListener("mozfullscreenchange", function(b) {
+    }), document.addEventListener("mozfullscreenchange", function(a) {
       Entry.engine.exitFullScreen();
-    }), this.footerView_ = Entry.createElement("div", "entryEngineFooter"), this.footerView_.addClass("entryEngineFooterPhone"), this.view_.appendChild(this.footerView_), this.runButton = Entry.createElement("button"), this.runButton.addClass("entryEngineButtonPhone", "entryRunButtonPhone"), Entry.objectAddable && this.runButton.addClass("small"), this.runButton.innerHTML = Lang.Workspace.run, this.footerView_.appendChild(this.runButton), this.runButton.bindOnClick(function(b) {
-      b.preventDefault();
+    }), this.footerView_ = Entry.createElement("div", "entryEngineFooter"), this.footerView_.addClass("entryEngineFooterPhone"), this.view_.appendChild(this.footerView_), this.runButton = Entry.createElement("button"), this.runButton.addClass("entryEngineButtonPhone", "entryRunButtonPhone"), Entry.objectAddable && this.runButton.addClass("small"), this.runButton.innerHTML = Lang.Workspace.run, this.footerView_.appendChild(this.runButton), this.runButton.bindOnClick(function(a) {
+      a.preventDefault();
       Entry.engine.toggleRun();
-    }), this.stopButton = Entry.createElement("button"), this.stopButton.addClass("entryEngineButtonPhone", "entryStopButtonPhone", "entryRemove"), Entry.objectAddable && this.stopButton.addClass("small"), this.stopButton.innerHTML = Lang.Workspace.stop, this.footerView_.appendChild(this.stopButton), this.stopButton.bindOnClick(function(b) {
-      b.preventDefault();
+    }), this.stopButton = Entry.createElement("button"), this.stopButton.addClass("entryEngineButtonPhone", "entryStopButtonPhone", "entryRemove"), Entry.objectAddable && this.stopButton.addClass("small"), this.stopButton.innerHTML = Lang.Workspace.stop, this.footerView_.appendChild(this.stopButton), this.stopButton.bindOnClick(function(a) {
+      a.preventDefault();
       Entry.engine.toggleStop();
     }));
   } else {
@@ -5579,21 +5583,21 @@ Entry.Engine.prototype.generateView = function(a, b) {
     this.speedButton = c;
     this.speedButton.addClass("entrySpeedButtonWorkspace", "entryEngineTopWorkspace", "entryEngineButtonWorkspace_w");
     this.view_.appendChild(this.speedButton);
-    this.speedButton.bindOnClick(function(b) {
+    this.speedButton.bindOnClick(function(a) {
       Entry.engine.toggleSpeedPanel();
       c.blur();
     });
     this.maximizeButton = Entry.createElement("button");
     this.maximizeButton.addClass("entryEngineButtonWorkspace_w", "entryEngineTopWorkspace", "entryMaximizeButtonWorkspace_w");
     this.view_.appendChild(this.maximizeButton);
-    this.maximizeButton.bindOnClick(function(b) {
+    this.maximizeButton.bindOnClick(function(a) {
       Entry.engine.toggleFullscreen();
     });
     var d = Entry.createElement("button");
     this.coordinateButton = d;
     this.coordinateButton.addClass("entryEngineButtonWorkspace_w", "entryEngineTopWorkspace", "entryCoordinateButtonWorkspace_w");
     this.view_.appendChild(this.coordinateButton);
-    this.coordinateButton.bindOnClick(function(b) {
+    this.coordinateButton.bindOnClick(function(a) {
       this.hasClass("toggleOn") ? this.removeClass("toggleOn") : this.addClass("toggleOn");
       d.blur();
       Entry.stage.toggleCoordinator();
@@ -5602,7 +5606,7 @@ Entry.Engine.prototype.generateView = function(a, b) {
     this.addButton.addClass("entryEngineButtonWorkspace_w");
     this.addButton.addClass("entryAddButtonWorkspace_w");
     this.addButton.innerHTML = Lang.Workspace.add_object;
-    this.addButton.bindOnClick(function(b) {
+    this.addButton.bindOnClick(function(a) {
       Entry.dispatchEvent("openSpriteManager");
     });
     this.view_.appendChild(this.addButton);
@@ -5611,16 +5615,16 @@ Entry.Engine.prototype.generateView = function(a, b) {
     this.runButton.addClass("entryRunButtonWorkspace_w");
     this.runButton.innerHTML = Lang.Workspace.run;
     this.view_.appendChild(this.runButton);
-    this.runButton.bindOnClick(function(b) {
-      b.preventDefault();
+    this.runButton.bindOnClick(function(a) {
+      a.preventDefault();
       Entry.engine.toggleRun();
     });
     this.runButton2 = Entry.createElement("button");
     this.runButton2.addClass("entryEngineButtonWorkspace_w");
     this.runButton2.addClass("entryRunButtonWorkspace_w2");
     this.view_.appendChild(this.runButton2);
-    this.runButton2.bindOnClick(function(b) {
-      b.preventDefault();
+    this.runButton2.bindOnClick(function(a) {
+      a.preventDefault();
       Entry.engine.toggleRun();
     });
     this.stopButton = Entry.createElement("button");
@@ -5629,8 +5633,8 @@ Entry.Engine.prototype.generateView = function(a, b) {
     this.stopButton.addClass("entryRemove");
     this.stopButton.innerHTML = Lang.Workspace.stop;
     this.view_.appendChild(this.stopButton);
-    this.stopButton.bindOnClick(function(b) {
-      b.preventDefault();
+    this.stopButton.bindOnClick(function(a) {
+      a.preventDefault();
       Entry.engine.toggleStop();
     });
     this.stopButton2 = Entry.createElement("button");
@@ -5639,8 +5643,8 @@ Entry.Engine.prototype.generateView = function(a, b) {
     this.stopButton2.addClass("entryRemove");
     this.stopButton2.innerHTML = Lang.Workspace.stop;
     this.view_.appendChild(this.stopButton2);
-    this.stopButton2.bindOnClick(function(b) {
-      b.preventDefault();
+    this.stopButton2.bindOnClick(function(a) {
+      a.preventDefault();
       Entry.engine.toggleStop();
     });
     this.pauseButton = Entry.createElement("button");
@@ -5648,8 +5652,8 @@ Entry.Engine.prototype.generateView = function(a, b) {
     this.pauseButton.addClass("entryPauseButtonWorkspace_w");
     this.pauseButton.addClass("entryRemove");
     this.view_.appendChild(this.pauseButton);
-    this.pauseButton.bindOnClick(function(b) {
-      b.preventDefault();
+    this.pauseButton.bindOnClick(function(a) {
+      a.preventDefault();
       Entry.engine.togglePause();
     });
     this.mouseView = Entry.createElement("div");
@@ -5660,7 +5664,7 @@ Entry.Engine.prototype.generateView = function(a, b) {
 };
 Entry.Engine.prototype.toggleSpeedPanel = function() {
   if (this.speedPanelOn) {
-    this.speedPanelOn = !1, $(Entry.stage.canvas.canvas).animate({top:"24px"}), this.coordinateButton.removeClass("entryRemove"), this.maximizeButton.removeClass("entryRemove"), this.mouseView.removeClass("entryRemoveElement"), $(this.speedLabel_).remove(), delete this.speedLabel_, $(this.speedProgress_).fadeOut(null, function(b) {
+    this.speedPanelOn = !1, $(Entry.stage.canvas.canvas).animate({top:"24px"}), this.coordinateButton.removeClass("entryRemove"), this.maximizeButton.removeClass("entryRemove"), this.mouseView.removeClass("entryRemoveElement"), $(this.speedLabel_).remove(), delete this.speedLabel_, $(this.speedProgress_).fadeOut(null, function(a) {
       $(this).remove();
       delete this.speedProgress_;
     }), $(this.speedHandle_).remove(), delete this.speedHandle_;
@@ -5687,8 +5691,8 @@ Entry.Engine.prototype.toggleSpeedPanel = function() {
     this.speedProgress_.appendChild(a);
     this.speedHandle_ = Entry.createElement("div", "entrySpeedHandleWorkspace");
     c = (Entry.interfaceState.canvasWidth - 84) / 5;
-    $(this.speedHandle_).draggable({axis:"x", grid:[c, c], containment:[80, 0, 4 * c + 80, 0], drag:function(b, a) {
-      var c = (a.position.left - 80) / (Entry.interfaceState.canvasWidth - 84) * 5, c = Math.floor(c);
+    $(this.speedHandle_).draggable({axis:"x", grid:[c, c], containment:[80, 0, 4 * c + 80, 0], drag:function(a, b) {
+      var c = (b.position.left - 80) / (Entry.interfaceState.canvasWidth - 84) * 5, c = Math.floor(c);
       0 > c || Entry.engine.setSpeedMeter(Entry.engine.speeds[c]);
     }});
     this.view_.insertBefore(this.speedHandle_, this.maximizeButton);
@@ -5756,19 +5760,19 @@ Entry.Engine.prototype.toggleRun = function() {
 Entry.Engine.prototype.toggleStop = function() {
   Entry.addActivity("stop");
   var a = Entry.container, b = Entry.variableContainer;
-  a.mapEntity(function(b) {
-    b.loadSnapshot();
-    b.object.filters = [];
-    b.resetFilter();
-    b.dialog && b.dialog.remove();
-    b.brush && b.removeBrush();
+  a.mapEntity(function(a) {
+    a.loadSnapshot();
+    a.object.filters = [];
+    a.resetFilter();
+    a.dialog && a.dialog.remove();
+    a.brush && a.removeBrush();
   });
-  b.mapVariable(function(b) {
-    b.loadSnapshot();
+  b.mapVariable(function(a) {
+    a.loadSnapshot();
   });
-  b.mapList(function(b) {
-    b.loadSnapshot();
-    b.updateView();
+  b.mapList(function(a) {
+    a.loadSnapshot();
+    a.updateView();
   });
   this.stopProjectTimer();
   a.clearRunningState();
@@ -5867,7 +5871,7 @@ Entry.Engine.prototype.clearTimer = function() {
 };
 Entry.Engine.prototype.startProjectTimer = function() {
   var a = this.projectTimer;
-  a && (a.start = (new Date).getTime(), a.isInit = !0, a.pausedTime = 0, a.tick = setInterval(function(b) {
+  a && (a.start = (new Date).getTime(), a.isInit = !0, a.pausedTime = 0, a.tick = setInterval(function(a) {
     Entry.engine.updateProjectTimer();
   }, 1E3 / 60));
 };
@@ -5889,19 +5893,19 @@ Entry.EntityObject = function(a) {
   this.fontType = "Nanum Gothic", this.fontSize = 20, this.strike = this.underLine = this.fontItalic = this.fontBold = !1);
   this.object.entity = this;
   this.object.cursor = "pointer";
-  this.object.on("mousedown", function(b) {
-    var a = this.entity.parent.id;
+  this.object.on("mousedown", function(a) {
+    var c = this.entity.parent.id;
     Entry.dispatchEvent("entityClick", this.entity);
     Entry.stage.isObjectClick = !0;
-    "minimize" != Entry.type && Entry.engine.isState("stop") && (this.offset = {x:-this.parent.x + this.entity.getX() - (.75 * b.stageX - 240), y:-this.parent.y - this.entity.getY() - (.75 * b.stageY - 135)}, this.cursor = "move", this.entity.initCommand(), Entry.container.selectObject(a));
+    "minimize" != Entry.type && Entry.engine.isState("stop") && (this.offset = {x:-this.parent.x + this.entity.getX() - (.75 * a.stageX - 240), y:-this.parent.y - this.entity.getY() - (.75 * a.stageY - 135)}, this.cursor = "move", this.entity.initCommand(), Entry.container.selectObject(c));
   });
-  this.object.on("pressup", function(b) {
+  this.object.on("pressup", function(a) {
     Entry.dispatchEvent("entityClickCanceled", this.entity);
     this.cursor = "pointer";
     this.entity.checkCommand();
   });
-  this.object.on("pressmove", function(b) {
-    "minimize" != Entry.type && Entry.engine.isState("stop") && !this.entity.parent.getLock() && (this.entity.doCommand(), this.entity.setX(.75 * b.stageX - 240 + this.offset.x), this.entity.setY(-(.75 * b.stageY - 135) - this.offset.y), Entry.stage.updateObject());
+  this.object.on("pressmove", function(a) {
+    "minimize" != Entry.type && Entry.engine.isState("stop") && !this.entity.parent.getLock() && (this.entity.doCommand(), this.entity.setX(.75 * a.stageX - 240 + this.offset.x), this.entity.setY(-(.75 * a.stageY - 135) - this.offset.y), Entry.stage.updateObject());
   });
 };
 Entry.EntityObject.prototype.injectModel = function(a, b) {
@@ -6424,11 +6428,11 @@ Entry.ActivityReporter = function() {
   this._activities = [];
 };
 (function(a) {
-  a.add = function(b) {
-    if (!(b instanceof Entry.Activity)) {
+  a.add = function(a) {
+    if (!(a instanceof Entry.Activity)) {
       return console.error("Activity must be an instanceof Entry.MazeActivity");
     }
-    this._activities.push(b);
+    this._activities.push(a);
   };
   a.clear = function() {
     this._activities = [];
@@ -6444,7 +6448,7 @@ Entry.EntryObject = function(a) {
     this.text = a.text || this.name;
     this.objectType = a.objectType;
     this.objectType || (this.objectType = "sprite");
-    a.script = [[{type:"when_run_button_click", x:40, y:240}, {type:"repeat_basic", statements:[[{type:"move_direction"}]]}, {type:"stop_repeat"}]];
+    a.script = [[{type:"when_run_button_click", x:40, y:240}, {type:"repeat_basic", statements:[[{type:"move_direction"}]]}, {type:"stop_repeat"}], [{type:"function_field_label", x:40, y:140}], [{type:"function_field_boolean", x:90, y:140}], [{type:"function_field_string", x:140, y:140}], [{type:"function_create", x:40, y:90}]];
     this.script = new Entry.Code(a.script ? a.script : []);
     this.pictures = a.sprite.pictures;
     this.sounds = [];
@@ -6465,7 +6469,7 @@ Entry.EntryObject = function(a) {
       c.id || (c.id = Entry.generateHash());
       var d = new Image;
       c.fileurl ? d.src = c.fileurl : c.fileurl ? d.src = c.fileurl : (a = c.filename, d.src = "/uploads/" + a.substring(0, 2) + "/" + a.substring(2, 4) + "/image/" + a + ".png");
-      d.onload = function(b) {
+      d.onload = function(a) {
         Entry.container.cachePicture(c.id, d);
       };
     }
@@ -6476,7 +6480,7 @@ Entry.EntryObject.prototype.generateView = function() {
     var a = Entry.createElement("li", this.id);
     a.addClass("entryContainerListElementWorkspace");
     a.object = this;
-    a.bindOnClick(function(b) {
+    a.bindOnClick(function(a) {
       Entry.container.getObject(this.id) && Entry.container.selectObject(this.id);
       Entry.container.blurAllInputs();
     });
@@ -6505,14 +6509,14 @@ Entry.EntryObject.prototype.generateView = function() {
     var d = Entry.createElement("li");
     d.addClass("objectInfo_visible");
     this.entity.getVisible() || d.addClass("objectInfo_unvisible");
-    d.bindOnClick(function(b) {
-      Entry.engine.isState("run") || (b = c.entity, b.setVisible(!b.getVisible()) ? this.removeClass("objectInfo_unvisible") : this.addClass("objectInfo_unvisible"));
+    d.bindOnClick(function(a) {
+      Entry.engine.isState("run") || (a = c.entity, a.setVisible(!a.getVisible()) ? this.removeClass("objectInfo_unvisible") : this.addClass("objectInfo_unvisible"));
     });
     var e = Entry.createElement("li");
     e.addClass("objectInfo_unlock");
     this.getLock() && e.addClass("objectInfo_lock");
-    e.bindOnClick(function(b) {
-      Entry.engine.isState("run") || (b = c, b.setLock(!b.getLock()) ? this.addClass("objectInfo_lock") : this.removeClass("objectInfo_lock"), b.updateInputViews(b.getLock()));
+    e.bindOnClick(function(a) {
+      Entry.engine.isState("run") || (a = c, a.setLock(!a.getLock()) ? this.addClass("objectInfo_lock") : this.removeClass("objectInfo_lock"), a.updateInputViews(a.getLock()));
     });
     a.appendChild(d);
     a.appendChild(e);
@@ -6525,8 +6529,8 @@ Entry.EntryObject.prototype.generateView = function() {
     a.addClass("entryObjectWrapperWorkspace");
     this.view_.appendChild(a);
     d = Entry.createElement("input");
-    d.bindOnClick(function(b) {
-      b.stopPropagation();
+    d.bindOnClick(function(a) {
+      a.stopPropagation();
       this.select();
     });
     d.addClass("entryObjectNameWorkspace");
@@ -6537,8 +6541,8 @@ Entry.EntryObject.prototype.generateView = function() {
     this.nameView_.onblur = function() {
       this.entryObject.name = this.value;
     };
-    this.nameView_.onkeypress = function(b) {
-      13 == b.keyCode && this.blur();
+    this.nameView_.onkeypress = function(a) {
+      13 == a.keyCode && this.blur();
     };
     this.nameView_.value = this.name;
     d = Entry.createElement("div");
@@ -6552,7 +6556,7 @@ Entry.EntryObject.prototype.generateView = function() {
     }), d.blur = function(a) {
       b.editObjectComplete();
     }) : d.addClass("entryRemove");
-    Entry.objectEditable && Entry.objectDeletable && (d = Entry.createElement("div"), d.addClass("entryObjectDeleteWorkspace"), d.object = this, this.deleteView_ = d, this.view_.appendChild(d), d.bindOnClick(function(b) {
+    Entry.objectEditable && Entry.objectDeletable && (d = Entry.createElement("div"), d.addClass("entryObjectDeleteWorkspace"), d.object = this, this.deleteView_ = d, this.view_.appendChild(d), d.bindOnClick(function(a) {
       Entry.engine.isState("run") || Entry.container.removeObject(this.object);
     }));
     d = Entry.createElement("div");
@@ -6574,8 +6578,8 @@ Entry.EntryObject.prototype.generateView = function() {
     var f = Entry.createElement("input");
     f.addClass("entryObjectCoordinateInputWorkspace");
     f.setAttribute("disabled", "disabled");
-    f.bindOnClick(function(b) {
-      b.stopPropagation();
+    f.bindOnClick(function(a) {
+      a.stopPropagation();
       this.select();
     });
     var g = Entry.createElement("span");
@@ -6583,8 +6587,8 @@ Entry.EntryObject.prototype.generateView = function() {
     g.innerHTML = "Y:";
     var h = Entry.createElement("input");
     h.addClass("entryObjectCoordinateInputWorkspace entryObjectCoordinateInputWorkspace_right");
-    h.bindOnClick(function(b) {
-      b.stopPropagation();
+    h.bindOnClick(function(a) {
+      a.stopPropagation();
       this.select();
     });
     h.setAttribute("disabled", "disabled");
@@ -6593,8 +6597,8 @@ Entry.EntryObject.prototype.generateView = function() {
     k.innerHTML = "\ud06c\uae30 :";
     var l = Entry.createElement("input");
     l.addClass("entryObjectCoordinateInputWorkspace", "entryObjectCoordinateInputWorkspace_size");
-    l.bindOnClick(function(b) {
-      b.stopPropagation();
+    l.bindOnClick(function(a) {
+      a.stopPropagation();
       this.select();
     });
     l.setAttribute("disabled", "disabled");
@@ -6609,26 +6613,26 @@ Entry.EntryObject.prototype.generateView = function() {
     d.sizeInput_ = l;
     this.coordinateView_ = d;
     c = this;
-    f.onkeypress = function(b) {
-      13 == b.keyCode && this.blur();
+    f.onkeypress = function(a) {
+      13 == a.keyCode && this.blur();
     };
-    f.onblur = function(b) {
+    f.onblur = function(a) {
       isNaN(f.value) || c.entity.setX(Number(f.value));
       c.updateCoordinateView();
       Entry.stage.updateObject();
     };
-    h.onkeypress = function(b) {
-      13 == b.keyCode && this.blur();
+    h.onkeypress = function(a) {
+      13 == a.keyCode && this.blur();
     };
-    h.onblur = function(b) {
+    h.onblur = function(a) {
       isNaN(h.value) || c.entity.setY(Number(h.value));
       c.updateCoordinateView();
       Entry.stage.updateObject();
     };
-    l.onkeypress = function(b) {
-      13 == b.keyCode && this.blur();
+    l.onkeypress = function(a) {
+      13 == a.keyCode && this.blur();
     };
-    l.onblur = function(b) {
+    l.onblur = function(a) {
       isNaN(l.value) || c.entity.setSize(Number(l.value));
       c.updateCoordinateView();
       Entry.stage.updateObject();
@@ -6643,8 +6647,8 @@ Entry.EntryObject.prototype.generateView = function() {
     var n = Entry.createElement("input");
     n.addClass("entryObjectRotateInputWorkspace");
     n.setAttribute("disabled", "disabled");
-    n.bindOnClick(function(b) {
-      b.stopPropagation();
+    n.bindOnClick(function(a) {
+      a.stopPropagation();
       this.select();
     });
     this.rotateSpan_ = e;
@@ -6655,8 +6659,8 @@ Entry.EntryObject.prototype.generateView = function() {
     var m = Entry.createElement("input");
     m.addClass("entryObjectDirectionInputWorkspace");
     m.setAttribute("disabled", "disabled");
-    m.bindOnClick(function(b) {
-      b.stopPropagation();
+    m.bindOnClick(function(a) {
+      a.stopPropagation();
       this.select();
     });
     this.directionInput_ = m;
@@ -6667,23 +6671,23 @@ Entry.EntryObject.prototype.generateView = function() {
     d.rotateInput_ = n;
     d.directionInput_ = m;
     c = this;
-    n.onkeypress = function(b) {
-      13 == b.keyCode && this.blur();
+    n.onkeypress = function(a) {
+      13 == a.keyCode && this.blur();
     };
-    n.onblur = function(b) {
-      b = n.value;
-      -1 != b.indexOf("\u02da") && (b = b.substring(0, b.indexOf("\u02da")));
-      isNaN(b) || c.entity.setRotation(Number(b));
+    n.onblur = function(a) {
+      a = n.value;
+      -1 != a.indexOf("\u02da") && (a = a.substring(0, a.indexOf("\u02da")));
+      isNaN(a) || c.entity.setRotation(Number(a));
       c.updateRotationView();
       Entry.stage.updateObject();
     };
-    m.onkeypress = function(b) {
-      13 == b.keyCode && this.blur();
+    m.onkeypress = function(a) {
+      13 == a.keyCode && this.blur();
     };
-    m.onblur = function(b) {
-      b = m.value;
-      -1 != b.indexOf("\u02da") && (b = b.substring(0, b.indexOf("\u02da")));
-      isNaN(b) || c.entity.setDirection(Number(b));
+    m.onblur = function(a) {
+      a = m.value;
+      -1 != a.indexOf("\u02da") && (a = a.substring(0, a.indexOf("\u02da")));
+      isNaN(a) || c.entity.setDirection(Number(a));
       c.updateRotationView();
       Entry.stage.updateObject();
     };
@@ -6701,7 +6705,7 @@ Entry.EntryObject.prototype.generateView = function() {
     a.object = this;
     this.rotateModeAView_ = a;
     d.appendChild(a);
-    a.bindOnClick(function(b) {
+    a.bindOnClick(function(a) {
       Entry.engine.isState("run") || this.object.getLock() || this.object.setRotateMethod("free");
     });
     a = Entry.createElement("div");
@@ -6710,7 +6714,7 @@ Entry.EntryObject.prototype.generateView = function() {
     a.object = this;
     this.rotateModeBView_ = a;
     d.appendChild(a);
-    a.bindOnClick(function(b) {
+    a.bindOnClick(function(a) {
       Entry.engine.isState("run") || this.object.getLock() || this.object.setRotateMethod("vertical");
     });
     a = Entry.createElement("div");
@@ -6719,7 +6723,7 @@ Entry.EntryObject.prototype.generateView = function() {
     a.object = this;
     this.rotateModeCView_ = a;
     d.appendChild(a);
-    a.bindOnClick(function(b) {
+    a.bindOnClick(function(a) {
       Entry.engine.isState("run") || this.object.getLock() || this.object.setRotateMethod("none");
     });
     this.updateThumbnailView();
@@ -6731,10 +6735,10 @@ Entry.EntryObject.prototype.generateView = function() {
     return this.view_;
   }
   if ("phone" == Entry.type) {
-    return a = Entry.createElement("li", this.id), a.addClass("entryContainerListElementWorkspace"), a.object = this, a.bindOnClick(function(b) {
+    return a = Entry.createElement("li", this.id), a.addClass("entryContainerListElementWorkspace"), a.object = this, a.bindOnClick(function(a) {
       Entry.container.getObject(this.id) && Entry.container.selectObject(this.id);
-    }), $ && (b = this, context.attach("#" + this.id, [{text:Lang.Workspace.context_rename, href:"/", action:function(b) {
-      b.preventDefault();
+    }), $ && (b = this, context.attach("#" + this.id, [{text:Lang.Workspace.context_rename, href:"/", action:function(a) {
+      a.preventDefault();
     }}, {text:Lang.Workspace.context_duplicate, href:"/", action:function(a) {
       a.preventDefault();
       Entry.container.addCloneObject(b);
@@ -6744,42 +6748,42 @@ Entry.EntryObject.prototype.generateView = function() {
     }}])), this.view_ = a, a = Entry.createElement("ul"), a.addClass("objectInfoView"), d = Entry.createElement("li"), d.addClass("objectInfo_visible"), e = Entry.createElement("li"), e.addClass("objectInfo_lock"), a.appendChild(d), a.appendChild(e), this.view_.appendChild(a), a = Entry.createElement("div"), a.addClass("entryObjectThumbnailWorkspace"), this.view_.appendChild(a), this.thumbnailView_ = a, a = Entry.createElement("div"), a.addClass("entryObjectWrapperWorkspace"), this.view_.appendChild(a), 
     d = Entry.createElement("input"), d.addClass("entryObjectNameWorkspace"), a.appendChild(d), this.nameView_ = d, this.nameView_.entryObject = this, this.nameView_.onblur = function() {
       this.entryObject.name = this.value;
-    }, this.nameView_.onkeypress = function(b) {
-      13 == b.keyCode && this.blur();
-    }, this.nameView_.value = this.name, Entry.objectEditable && Entry.objectDeletable && (d = Entry.createElement("div"), d.addClass("entryObjectDeletePhone"), d.object = this, this.deleteView_ = d, this.view_.appendChild(d), d.bindOnClick(function(b) {
+    }, this.nameView_.onkeypress = function(a) {
+      13 == a.keyCode && this.blur();
+    }, this.nameView_.value = this.name, Entry.objectEditable && Entry.objectDeletable && (d = Entry.createElement("div"), d.addClass("entryObjectDeletePhone"), d.object = this, this.deleteView_ = d, this.view_.appendChild(d), d.bindOnClick(function(a) {
       Entry.engine.isState("run") || Entry.container.removeObject(this.object);
-    })), d = Entry.createElement("button"), d.addClass("entryObjectEditPhone"), d.object = this, d.bindOnClick(function(b) {
-      if (b = Entry.container.getObject(this.id)) {
-        Entry.container.selectObject(b.id), Entry.playground.injectObject(b);
+    })), d = Entry.createElement("button"), d.addClass("entryObjectEditPhone"), d.object = this, d.bindOnClick(function(a) {
+      if (a = Entry.container.getObject(this.id)) {
+        Entry.container.selectObject(a.id), Entry.playground.injectObject(a);
       }
     }), this.view_.appendChild(d), d = Entry.createElement("div"), d.addClass("entryObjectInformationWorkspace"), d.object = this, this.isInformationToggle = !1, a.appendChild(d), this.informationView_ = d, d = Entry.createElement("div"), d.addClass("entryObjectRotateLabelWrapperWorkspace"), this.view_.appendChild(d), this.rotateLabelWrapperView_ = d, e = Entry.createElement("span"), e.addClass("entryObjectRotateSpanWorkspace"), e.innerHTML = Lang.Workspace.rotation + " : ", n = Entry.createElement("input"), 
-    n.addClass("entryObjectRotateInputWorkspace"), this.rotateSpan_ = e, this.rotateInput_ = n, g = Entry.createElement("span"), g.addClass("entryObjectDirectionSpanWorkspace"), g.innerHTML = Lang.Workspace.direction + " : ", m = Entry.createElement("input"), m.addClass("entryObjectDirectionInputWorkspace"), this.directionInput_ = m, d.appendChild(e), d.appendChild(n), d.appendChild(g), d.appendChild(m), d.rotateInput_ = n, d.directionInput_ = m, c = this, n.onkeypress = function(b) {
-      13 == b.keyCode && (b = n.value, -1 != b.indexOf("\u02da") && (b = b.substring(0, b.indexOf("\u02da"))), isNaN(b) || c.entity.setRotation(Number(b)), c.updateRotationView(), n.blur());
-    }, n.onblur = function(b) {
+    n.addClass("entryObjectRotateInputWorkspace"), this.rotateSpan_ = e, this.rotateInput_ = n, g = Entry.createElement("span"), g.addClass("entryObjectDirectionSpanWorkspace"), g.innerHTML = Lang.Workspace.direction + " : ", m = Entry.createElement("input"), m.addClass("entryObjectDirectionInputWorkspace"), this.directionInput_ = m, d.appendChild(e), d.appendChild(n), d.appendChild(g), d.appendChild(m), d.rotateInput_ = n, d.directionInput_ = m, c = this, n.onkeypress = function(a) {
+      13 == a.keyCode && (a = n.value, -1 != a.indexOf("\u02da") && (a = a.substring(0, a.indexOf("\u02da"))), isNaN(a) || c.entity.setRotation(Number(a)), c.updateRotationView(), n.blur());
+    }, n.onblur = function(a) {
       c.entity.setRotation(c.entity.getRotation());
       Entry.stage.updateObject();
-    }, m.onkeypress = function(b) {
-      13 == b.keyCode && (b = m.value, -1 != b.indexOf("\u02da") && (b = b.substring(0, b.indexOf("\u02da"))), isNaN(b) || c.entity.setDirection(Number(b)), c.updateRotationView(), m.blur());
-    }, m.onblur = function(b) {
+    }, m.onkeypress = function(a) {
+      13 == a.keyCode && (a = m.value, -1 != a.indexOf("\u02da") && (a = a.substring(0, a.indexOf("\u02da"))), isNaN(a) || c.entity.setDirection(Number(a)), c.updateRotationView(), m.blur());
+    }, m.onblur = function(a) {
       c.entity.setDirection(c.entity.getDirection());
       Entry.stage.updateObject();
     }, a = Entry.createElement("div"), a.addClass("entryObjectRotationWrapperWorkspace"), a.object = this, this.view_.appendChild(a), d = Entry.createElement("span"), d.addClass("entryObjectCoordinateWorkspace"), a.appendChild(d), e = Entry.createElement("span"), e.addClass("entryObjectCoordinateSpanWorkspace"), e.innerHTML = "X:", f = Entry.createElement("input"), f.addClass("entryObjectCoordinateInputWorkspace"), g = Entry.createElement("span"), g.addClass("entryObjectCoordinateSpanWorkspace"), 
     g.innerHTML = "Y:", h = Entry.createElement("input"), h.addClass("entryObjectCoordinateInputWorkspace entryObjectCoordinateInputWorkspace_right"), k = Entry.createElement("span"), k.addClass("entryObjectCoordinateSpanWorkspace"), k.innerHTML = Lang.Workspace.Size, l = Entry.createElement("input"), l.addClass("entryObjectCoordinateInputWorkspace", "entryObjectCoordinateInputWorkspace_size"), d.appendChild(e), d.appendChild(f), d.appendChild(g), d.appendChild(h), d.appendChild(k), d.appendChild(l), 
-    d.xInput_ = f, d.yInput_ = h, d.sizeInput_ = l, this.coordinateView_ = d, c = this, f.onkeypress = function(b) {
-      13 == b.keyCode && (isNaN(f.value) || c.entity.setX(Number(f.value)), c.updateCoordinateView(), f.blur());
-    }, f.onblur = function(b) {
+    d.xInput_ = f, d.yInput_ = h, d.sizeInput_ = l, this.coordinateView_ = d, c = this, f.onkeypress = function(a) {
+      13 == a.keyCode && (isNaN(f.value) || c.entity.setX(Number(f.value)), c.updateCoordinateView(), f.blur());
+    }, f.onblur = function(a) {
       c.entity.setX(c.entity.getX());
       Entry.stage.updateObject();
-    }, h.onkeypress = function(b) {
-      13 == b.keyCode && (isNaN(h.value) || c.entity.setY(Number(h.value)), c.updateCoordinateView(), h.blur());
-    }, h.onblur = function(b) {
+    }, h.onkeypress = function(a) {
+      13 == a.keyCode && (isNaN(h.value) || c.entity.setY(Number(h.value)), c.updateCoordinateView(), h.blur());
+    }, h.onblur = function(a) {
       c.entity.setY(c.entity.getY());
       Entry.stage.updateObject();
-    }, d = Entry.createElement("div"), d.addClass("rotationMethodWrapper"), a.appendChild(d), this.rotationMethodWrapper_ = d, a = Entry.createElement("span"), a.addClass("entryObjectRotateMethodLabelWorkspace"), d.appendChild(a), a.innerHTML = Lang.Workspace.rotate_method + " : ", a = Entry.createElement("div"), a.addClass("entryObjectRotateModeWorkspace"), a.addClass("entryObjectRotateModeAWorkspace"), a.object = this, this.rotateModeAView_ = a, d.appendChild(a), a.bindOnClick(function(b) {
+    }, d = Entry.createElement("div"), d.addClass("rotationMethodWrapper"), a.appendChild(d), this.rotationMethodWrapper_ = d, a = Entry.createElement("span"), a.addClass("entryObjectRotateMethodLabelWorkspace"), d.appendChild(a), a.innerHTML = Lang.Workspace.rotate_method + " : ", a = Entry.createElement("div"), a.addClass("entryObjectRotateModeWorkspace"), a.addClass("entryObjectRotateModeAWorkspace"), a.object = this, this.rotateModeAView_ = a, d.appendChild(a), a.bindOnClick(function(a) {
       Entry.engine.isState("run") || this.object.setRotateMethod("free");
-    }), a = Entry.createElement("div"), a.addClass("entryObjectRotateModeWorkspace"), a.addClass("entryObjectRotateModeBWorkspace"), a.object = this, this.rotateModeBView_ = a, d.appendChild(a), a.bindOnClick(function(b) {
+    }), a = Entry.createElement("div"), a.addClass("entryObjectRotateModeWorkspace"), a.addClass("entryObjectRotateModeBWorkspace"), a.object = this, this.rotateModeBView_ = a, d.appendChild(a), a.bindOnClick(function(a) {
       Entry.engine.isState("run") || this.object.setRotateMethod("vertical");
-    }), a = Entry.createElement("div"), a.addClass("entryObjectRotateModeWorkspace"), a.addClass("entryObjectRotateModeCWorkspace"), a.object = this, this.rotateModeCView_ = a, d.appendChild(a), a.bindOnClick(function(b) {
+    }), a = Entry.createElement("div"), a.addClass("entryObjectRotateModeWorkspace"), a.addClass("entryObjectRotateModeCWorkspace"), a.object = this, this.rotateModeCView_ = a, d.appendChild(a), a.bindOnClick(function(a) {
       Entry.engine.isState("run") || this.object.setRotateMethod("none");
     }), this.updateThumbnailView(), this.updateCoordinateView(), this.updateRotateMethodView(), this.updateInputViews(), this.view_;
   }
@@ -6971,14 +6975,14 @@ Entry.EntryObject.prototype.addCloneEntity = function(a, b, c) {
   [a, "when_clone_start"]), a.isClone = !0, a.isStarted = !0, this.addCloneVariables(this, a, b ? b.variables : null, b ? b.lists : null), this.clonedEntities.push(a), Entry.stage.loadEntity(a));
 };
 Entry.EntryObject.prototype.initializeSplitter = function(a) {
-  a.onmousedown = function(b) {
+  a.onmousedown = function(a) {
     Entry.container.disableSort();
     Entry.container.splitterEnable = !0;
   };
-  document.addEventListener("mousemove", function(b) {
-    Entry.container.splitterEnable && Entry.resizeElement({canvasWidth:b.x || b.clientX});
+  document.addEventListener("mousemove", function(a) {
+    Entry.container.splitterEnable && Entry.resizeElement({canvasWidth:a.x || a.clientX});
   });
-  document.addEventListener("mouseup", function(b) {
+  document.addEventListener("mouseup", function(a) {
     Entry.container.splitterEnable = !1;
     Entry.container.enableSort();
   });
@@ -7478,10 +7482,10 @@ Entry.Painter.prototype.restorePainter = function(a) {
   a = new Image;
   a.src = this.canvas.toDataURL();
   var c = this;
-  a.onload = function(b) {
-    b = new createjs.Bitmap(b.target);
+  a.onload = function(a) {
+    a = new createjs.Bitmap(a.target);
     c.objectContainer.removeAllChildren();
-    c.objectContainer.addChild(b);
+    c.objectContainer.addChild(a);
   };
   Entry.stateManager && Entry.stateManager.addCommand("restore sprite", this, this.restorePainter, b);
 };
@@ -7692,8 +7696,8 @@ Entry.Painter.prototype.addPicture = function(a) {
   b.id = Entry.generateHash();
   b.src = a.fileurl ? a.fileurl : "/uploads/" + a.filename.substring(0, 2) + "/" + a.filename.substring(2, 4) + "/image/" + a.filename + ".png";
   var c = this;
-  b.onload = function(b) {
-    c.addImage(b.target);
+  b.onload = function(a) {
+    c.addImage(a.target);
     c.selectToolbox("cursor");
   };
 };
@@ -8128,7 +8132,7 @@ Entry.Painter.prototype.generateView = function(a) {
     this.attrBackgroundArea.painterAttrShapeBackgroundColor = q;
     c.appendChild(q);
     var r = !1;
-    q.bindOnClick(function(b) {
+    q.bindOnClick(function(a) {
       m.style.zIndex = "1";
       this.style.zIndex = "10";
       r = !0;
@@ -8203,22 +8207,22 @@ Entry.Painter.prototype.generateView = function(a) {
     d.value = "line";
     var v = Entry.createElement("div");
     v.addClass("painterAttrLineStyleBackgroundLine");
-    t.bindOnClick(function(b) {
+    t.bindOnClick(function(a) {
       u.removeClass("entryRemove");
     });
-    u.blur = function(b) {
+    u.blur = function(a) {
       this.addClass("entryRemove");
     };
-    u.onmouseleave = function(b) {
+    u.onmouseleave = function(a) {
       this.addClass("entryRemove");
     };
-    d.bindOnClick(function(b) {
+    d.bindOnClick(function(a) {
       this.attrLineArea.removeClass(t);
       this.attrLineArea.appendChild(v);
-      this.attrLineArea.onchange(b);
+      this.attrLineArea.onchange(a);
       u.blur();
     });
-    v.bindOnClick(function(b) {
+    v.bindOnClick(function(a) {
       u.removeClass("entryRemove");
     });
     this.attrLineArea.onchange = function(a) {
@@ -8358,61 +8362,61 @@ Entry.BlockParser = function(a) {
   this._iterVariableChunk = ["i", "j", "k"];
 };
 (function(a) {
-  a.Code = function(b) {
-    if (b instanceof Entry.Thread) {
-      return this.Thread(b);
+  a.Code = function(a) {
+    if (a instanceof Entry.Thread) {
+      return this.Thread(a);
     }
-    if (b instanceof Entry.Block) {
-      return this.Block(b);
+    if (a instanceof Entry.Block) {
+      return this.Block(a);
     }
-    var a = "";
-    b = b.getThreads();
-    for (var d = 0;d < b.length;d++) {
-      a += this.Thread(b[d]);
+    var c = "";
+    a = a.getThreads();
+    for (var d = 0;d < a.length;d++) {
+      c += this.Thread(a[d]);
     }
-    return a;
+    return c;
   };
-  a.Thread = function(b) {
-    if (b instanceof Entry.Block) {
-      return this.Block(b);
+  a.Thread = function(a) {
+    if (a instanceof Entry.Block) {
+      return this.Block(a);
     }
-    var a = "";
-    b = b.getBlocks();
-    for (var d = 0;d < b.length;d++) {
-      a += this.Block(b[d]);
+    var c = "";
+    a = a.getBlocks();
+    for (var d = 0;d < a.length;d++) {
+      c += this.Block(a[d]);
     }
-    return a;
+    return c;
   };
-  a.Block = function(b) {
-    var a = b._schema.syntax;
-    return a ? this[a[0]](b) : "";
+  a.Block = function(a) {
+    var c = a._schema.syntax;
+    return c ? this[c[0]](a) : "";
   };
-  a.Program = function(b) {
+  a.Program = function(a) {
     return "";
   };
-  a.Scope = function(b) {
-    b = b._schema.syntax.concat();
-    return b.splice(1, b.length - 1).join(".") + "();\n";
+  a.Scope = function(a) {
+    a = a._schema.syntax.concat();
+    return a.splice(1, a.length - 1).join(".") + "();\n";
   };
-  a.BasicIteration = function(b) {
-    var a = b.params[0], d = this.publishIterateVariable();
-    b = this.Thread(b.statements[0]);
+  a.BasicIteration = function(a) {
+    var c = a.params[0], d = this.publishIterateVariable();
+    a = this.Thread(a.statements[0]);
     this.unpublishIterateVariable();
-    return "for (var " + d + " = 0; " + d + " < " + a + "; " + d + "++){\n" + this.indent(b) + "}\n";
+    return "for (var " + d + " = 0; " + d + " < " + c + "; " + d + "++){\n" + this.indent(a) + "}\n";
   };
-  a.indent = function(b) {
-    var a = "    ";
-    b = b.split("\n");
-    b.pop();
-    return a += b.join("\n    ") + "\n";
+  a.indent = function(a) {
+    var c = "    ";
+    a = a.split("\n");
+    a.pop();
+    return c += a.join("\n    ") + "\n";
   };
   a.publishIterateVariable = function() {
-    var b = "", a = this._iterVariableCount;
+    var a = "", c = this._iterVariableCount;
     do {
-      b = this._iterVariableChunk[a % 3] + b, a = parseInt(a / 3) - 1, 0 === a && (b = this._iterVariableChunk[0] + b);
-    } while (0 < a);
+      a = this._iterVariableChunk[c % 3] + a, c = parseInt(c / 3) - 1, 0 === c && (a = this._iterVariableChunk[0] + a);
+    } while (0 < c);
     this._iterVariableCount++;
-    return b;
+    return a;
   };
   a.unpublishIterateVariable = function() {
     this._iterVariableCount && this._iterVariableCount--;
@@ -8422,125 +8426,125 @@ Entry.JSParser = function(a) {
   this.syntax = a;
 };
 (function(a) {
-  a.Program = function(b) {
-    var a = [];
-    b = b.body;
-    a.push({type:this.syntax.Program});
-    for (var d = 0;d < b.length;d++) {
-      var e = b[d];
-      a.push(this[e.type](e));
+  a.Program = function(a) {
+    var c = [];
+    a = a.body;
+    c.push({type:this.syntax.Program});
+    for (var d = 0;d < a.length;d++) {
+      var e = a[d];
+      c.push(this[e.type](e));
     }
-    return a;
+    return c;
   };
-  a.Identifier = function(b, a) {
-    return a ? a[b.name] : this.syntax.Scope[b.name];
+  a.Identifier = function(a, c) {
+    return c ? c[a.name] : this.syntax.Scope[a.name];
   };
-  a.ExpressionStatement = function(b) {
-    b = b.expression;
-    return this[b.type](b);
+  a.ExpressionStatement = function(a) {
+    a = a.expression;
+    return this[a.type](a);
   };
-  a.ForStatement = function(b) {
-    var a = b.init, d = b.test, e = b.update, f = b.body;
+  a.ForStatement = function(a) {
+    var c = a.init, d = a.test, e = a.update, f = a.body;
     if (this.syntax.ForStatement) {
-      throw {message:"\uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:b};
+      throw {message:"\uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a};
     }
-    var f = this[f.type](f), a = a.declarations[0].init.value, g = d.operator, d = d.right.value, h = 0;
-    "++" != e.operator && (e = a, a = d, d = e);
+    var f = this[f.type](f), c = c.declarations[0].init.value, g = d.operator, d = d.right.value, h = 0;
+    "++" != e.operator && (e = c, c = d, d = e);
     switch(g) {
       case "<":
-        h = d - a;
+        h = d - c;
         break;
       case "<=":
-        h = d + 1 - a;
+        h = d + 1 - c;
         break;
       case ">":
-        h = a - d;
+        h = c - d;
         break;
       case ">=":
-        h = a + 1 - d;
+        h = c + 1 - d;
     }
-    return this.BasicIteration(b, h, f);
+    return this.BasicIteration(a, h, f);
   };
-  a.BlockStatement = function(b) {
-    var a = [];
-    b = b.body;
-    for (var d = 0;d < b.length;d++) {
-      var e = b[d];
-      a.push(this[e.type](e));
+  a.BlockStatement = function(a) {
+    var c = [];
+    a = a.body;
+    for (var d = 0;d < a.length;d++) {
+      var e = a[d];
+      c.push(this[e.type](e));
     }
-    return a;
+    return c;
   };
-  a.EmptyStatement = function(b) {
-    throw {message:"empty\ub294 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:b};
+  a.EmptyStatement = function(a) {
+    throw {message:"empty\ub294 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a};
   };
-  a.DebuggerStatement = function(b) {
-    throw {message:"debugger\ub294 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:b};
+  a.DebuggerStatement = function(a) {
+    throw {message:"debugger\ub294 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a};
   };
-  a.WithStatement = function(b) {
-    throw {message:"with\ub294 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:b};
+  a.WithStatement = function(a) {
+    throw {message:"with\ub294 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a};
   };
-  a.ReturnStaement = function(b) {
-    throw {message:"return\uc740 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:b};
+  a.ReturnStaement = function(a) {
+    throw {message:"return\uc740 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a};
   };
-  a.LabeledStatement = function(b) {
-    throw {message:"label\uc740 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:b};
+  a.LabeledStatement = function(a) {
+    throw {message:"label\uc740 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a};
   };
-  a.BreakStatement = function(b) {
-    throw {message:"break\ub294 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:b};
+  a.BreakStatement = function(a) {
+    throw {message:"break\ub294 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a};
   };
-  a.ContinueStatement = function(b) {
-    throw {message:"continue\ub294 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:b};
+  a.ContinueStatement = function(a) {
+    throw {message:"continue\ub294 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a};
   };
-  a.IfStatement = function(b) {
-    return {test:b.test, consequent:b.consequent, alternate:b.alternate};
+  a.IfStatement = function(a) {
+    return {test:a.test, consequent:a.consequent, alternate:a.alternate};
   };
-  a.SwitchStatement = function(b) {
-    throw {message:"switch\ub294 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:b};
+  a.SwitchStatement = function(a) {
+    throw {message:"switch\ub294 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a};
   };
-  a.SwitchCase = function(b) {
-    throw {message:"switch ~ case\ub294 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:b};
+  a.SwitchCase = function(a) {
+    throw {message:"switch ~ case\ub294 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a};
   };
-  a.ThrowStatement = function(b) {
-    throw {message:"throw\ub294 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:b};
+  a.ThrowStatement = function(a) {
+    throw {message:"throw\ub294 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a};
   };
-  a.TryStatement = function(b) {
-    throw {message:"try\ub294 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:b};
+  a.TryStatement = function(a) {
+    throw {message:"try\ub294 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a};
   };
-  a.CatchClause = function(b) {
-    throw {message:"catch\ub294 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:b};
+  a.CatchClause = function(a) {
+    throw {message:"catch\ub294 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a};
   };
-  a.WhileStatement = function(b) {
-    throw {message:"while\uc740 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:b};
+  a.WhileStatement = function(a) {
+    throw {message:"while\uc740 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a};
   };
-  a.DoWhileStatement = function(b) {
-    throw {message:"do ~ while\uc740 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:b};
+  a.DoWhileStatement = function(a) {
+    throw {message:"do ~ while\uc740 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a};
   };
-  a.ForInStatement = function(b) {
-    throw {message:"for ~ in\uc740 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:b};
+  a.ForInStatement = function(a) {
+    throw {message:"for ~ in\uc740 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a};
   };
-  a.FunctionDeclaration = function(b) {
-    throw {message:"function\uc740 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:b};
+  a.FunctionDeclaration = function(a) {
+    throw {message:"function\uc740 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a};
   };
-  a.VariableDeclaration = function(b) {
-    throw {message:"var\uc740 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:b};
+  a.VariableDeclaration = function(a) {
+    throw {message:"var\uc740 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a};
   };
-  a.ThisExpression = function(b) {
+  a.ThisExpression = function(a) {
     return "this";
   };
-  a.ArrayExpression = function(b) {
-    throw {message:"array\ub294 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:b};
+  a.ArrayExpression = function(a) {
+    throw {message:"array\ub294 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a};
   };
-  a.ObjectExpression = function(b) {
-    throw {message:"object\ub294 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:b};
+  a.ObjectExpression = function(a) {
+    throw {message:"object\ub294 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a};
   };
-  a.Property = function(b) {
-    throw {message:"init, get, set\uc740 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:b};
+  a.Property = function(a) {
+    throw {message:"init, get, set\uc740 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a};
   };
-  a.FunctionExpression = function(b) {
-    throw {message:"function\uc740 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:b};
+  a.FunctionExpression = function(a) {
+    throw {message:"function\uc740 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a};
   };
-  a.UnaryExpression = function(b) {
-    throw {message:b.operator + "\uc740(\ub294) \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \uba85\ub839\uc5b4 \uc785\ub2c8\ub2e4.", node:b};
+  a.UnaryExpression = function(a) {
+    throw {message:a.operator + "\uc740(\ub294) \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \uba85\ub839\uc5b4 \uc785\ub2c8\ub2e4.", node:a};
   };
   a.UnaryOperator = function() {
     return "- + ! ~ typeof void delete".split(" ");
@@ -8551,51 +8555,51 @@ Entry.JSParser = function(a) {
   a.BinaryOperator = function() {
     return "== != === !== < <= > >= << >> >>> + - * / % , ^ & in instanceof".split(" ");
   };
-  a.AssignmentExpression = function(b) {
-    throw {message:b.operator + "\uc740(\ub294) \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \uba85\ub839\uc5b4 \uc785\ub2c8\ub2e4.", node:b};
+  a.AssignmentExpression = function(a) {
+    throw {message:a.operator + "\uc740(\ub294) \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \uba85\ub839\uc5b4 \uc785\ub2c8\ub2e4.", node:a};
   };
   a.AssignmentOperator = function() {
     return "= += -= *= /= %= <<= >>= >>>= ,= ^= &=".split(" ");
   };
-  a.LogicalExpression = function(b) {
-    throw {message:b.operator + "\uc740(\ub294) \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \uba85\ub839\uc5b4 \uc785\ub2c8\ub2e4.", node:b};
+  a.LogicalExpression = function(a) {
+    throw {message:a.operator + "\uc740(\ub294) \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \uba85\ub839\uc5b4 \uc785\ub2c8\ub2e4.", node:a};
   };
   a.LogicalOperator = function() {
     return ["||", "&&"];
   };
-  a.MemberExpression = function(b) {
-    var a = b.object, d = b.property, a = this[a.type](a), d = this[d.type](d, a);
-    if (Object(a) !== a || Object.getPrototypeOf(a) !== Object.prototype) {
-      throw {message:a + "\uc740(\ub294) \uc798\ubabb\ub41c \uba64\ubc84 \ubcc0\uc218\uc785\ub2c8\ub2e4.", node:b};
+  a.MemberExpression = function(a) {
+    var c = a.object, d = a.property, c = this[c.type](c), d = this[d.type](d, c);
+    if (Object(c) !== c || Object.getPrototypeOf(c) !== Object.prototype) {
+      throw {message:c + "\uc740(\ub294) \uc798\ubabb\ub41c \uba64\ubc84 \ubcc0\uc218\uc785\ub2c8\ub2e4.", node:a};
     }
-    a = a[d];
-    if (!a) {
-      throw {message:d + "\uc774(\uac00) \uc874\uc7ac\ud558\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4.", node:b};
+    c = c[d];
+    if (!c) {
+      throw {message:d + "\uc774(\uac00) \uc874\uc7ac\ud558\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4.", node:a};
     }
-    return a;
+    return c;
   };
-  a.ConditionalExpression = function(b) {
-    throw {message:"\uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:b};
+  a.ConditionalExpression = function(a) {
+    throw {message:"\uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a};
   };
-  a.UpdateExpression = function(b) {
-    throw {message:b.operator + "\uc740(\ub294) \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \uba85\ub801\uc5b4 \uc785\ub2c8\ub2e4.", node:b};
+  a.UpdateExpression = function(a) {
+    throw {message:a.operator + "\uc740(\ub294) \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \uba85\ub801\uc5b4 \uc785\ub2c8\ub2e4.", node:a};
   };
-  a.CallExpression = function(b) {
-    b = b.callee;
-    return {type:this[b.type](b)};
+  a.CallExpression = function(a) {
+    a = a.callee;
+    return {type:this[a.type](a)};
   };
-  a.NewExpression = function(b) {
-    throw {message:"new\ub294 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:b};
+  a.NewExpression = function(a) {
+    throw {message:"new\ub294 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a};
   };
-  a.SequenceExpression = function(b) {
-    throw {message:"\uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:b};
+  a.SequenceExpression = function(a) {
+    throw {message:"\uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a};
   };
-  a.BasicIteration = function(b, a, d) {
+  a.BasicIteration = function(a, c, d) {
     var e = this.syntax.BasicIteration;
     if (!e) {
-      throw {message:"\uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:b};
+      throw {message:"\uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a};
     }
-    return {params:[a], type:e, statements:[d]};
+    return {params:[c], type:e, statements:[d]};
   };
 })(Entry.JSParser.prototype);
 Entry.Parser = function(a, b, c) {
@@ -8613,36 +8617,36 @@ Entry.Parser = function(a, b, c) {
   }
 };
 (function(a) {
-  a.parse = function(b) {
-    var a = null;
+  a.parse = function(a) {
+    var c = null;
     switch(this._lang) {
       case "js":
-        b = acorn.parse(b);
-        console.log(b);
+        a = acorn.parse(a);
+        console.log(a);
         try {
-          a = this._parser.Program(b);
+          c = this._parser.Program(a);
         } catch (d) {
-          console.log(d), this.codeMirror && (a = this.getLineNumber(d.node.start, d.node.end), a.message = d.message, a.severity = "error", this.codeMirror.markText(a.from, a.to, {className:"CodeMirror-lint-mark-error", __annotation:a, clearOnEnter:!0})), a = [];
+          console.log(d), this.codeMirror && (c = this.getLineNumber(d.node.start, d.node.end), c.message = d.message, c.severity = "error", this.codeMirror.markText(c.from, c.to, {className:"CodeMirror-lint-mark-error", __annotation:c, clearOnEnter:!0})), c = [];
         }
         break;
       case "block":
-        a = this._parser.Code(b);
+        c = this._parser.Code(a);
     }
-    return a;
+    return c;
   };
-  a.getLineNumber = function(b, a) {
-    var d = this.codeMirror.getValue(), e = {from:{}, to:{}}, f = d.substring(0, b).split(/\n/gi);
+  a.getLineNumber = function(a, c) {
+    var d = this.codeMirror.getValue(), e = {from:{}, to:{}}, f = d.substring(0, a).split(/\n/gi);
     e.from.line = f.length - 1;
     e.from.ch = f[f.length - 1].length;
-    d = d.substring(0, a).split(/\n/gi);
+    d = d.substring(0, c).split(/\n/gi);
     e.to.line = d.length - 1;
     e.to.ch = d[d.length - 1].length;
     return e;
   };
-  a.mappingSyntax = function(b) {
-    for (var a = Object.keys(Entry.block), d = 0;d < a.length;d++) {
-      var e = a[d], f = Entry.block[e];
-      if (f.mode === b && (f = f.syntax)) {
+  a.mappingSyntax = function(a) {
+    for (var c = Object.keys(Entry.block), d = 0;d < c.length;d++) {
+      var e = c[d], f = Entry.block[e];
+      if (f.mode === a && (f = f.syntax)) {
         for (var g = this.syntax, h = 0;h < f.length;h++) {
           var k = f[h];
           if (h === f.length - 2 && "function" === typeof f[h + 1]) {
@@ -8701,8 +8705,8 @@ Entry.PropertyPanel = function() {
   this.selected = null;
 };
 (function(a) {
-  a.generateView = function(b, a) {
-    this._view = Entry.Dom("div", {class:"propertyPanel", parent:$(b)});
+  a.generateView = function(a, c) {
+    this._view = Entry.Dom("div", {class:"propertyPanel", parent:$(a)});
     this._tabView = Entry.Dom("div", {class:"propertyTab", parent:this._view});
     this._contentView = Entry.Dom("div", {class:"propertyContent", parent:this._view});
     var d = Entry.createElement("div");
@@ -8712,42 +8716,42 @@ Entry.PropertyPanel = function() {
     this.initializeSplitter(d);
     this.splitter = d;
   };
-  a.addMode = function(b, a) {
-    var d = a.getView(), d = Entry.Dom(d, {parent:this._contentView}), e = Entry.Dom("<div>" + b + "</div>", {classes:["propertyTabElement", "propertyTab" + b], parent:this._tabView}), f = this;
+  a.addMode = function(a, c) {
+    var d = c.getView(), d = Entry.Dom(d, {parent:this._contentView}), e = Entry.Dom("<div>" + a + "</div>", {classes:["propertyTabElement", "propertyTab" + a], parent:this._tabView}), f = this;
     e.bindOnClick(function() {
-      f.select(b);
+      f.select(a);
     });
-    this.modes[b] && (this.modes[b].tabDom.remove(), this.modes[b].contentDom.remove());
-    this.modes[b] = {obj:a, tabDom:e, contentDom:d};
+    this.modes[a] && (this.modes[a].tabDom.remove(), this.modes[a].contentDom.remove());
+    this.modes[a] = {obj:c, tabDom:e, contentDom:d};
   };
-  a.resize = function(b) {
-    this._view.css({width:b + "px", top:9 * b / 16 + 123 - 22 + "px"});
-    430 <= b ? this._view.removeClass("collapsed") : this._view.addClass("collapsed");
+  a.resize = function(a) {
+    this._view.css({width:a + "px", top:9 * a / 16 + 123 - 22 + "px"});
+    430 <= a ? this._view.removeClass("collapsed") : this._view.addClass("collapsed");
     this.modes[this.selected].obj.resize();
   };
-  a.select = function(b) {
-    for (var a in this.modes) {
-      var d = this.modes[a];
+  a.select = function(a) {
+    for (var c in this.modes) {
+      var d = this.modes[c];
       d.tabDom.removeClass("selected");
       d.contentDom.addClass("entryHidden");
       d.obj.visible = !1;
     }
-    a = this.modes[b];
-    a.tabDom.addClass("selected");
-    a.contentDom.removeClass("entryHidden");
-    a.obj.resize();
-    a.obj.visible = !0;
-    this.selected = b;
+    c = this.modes[a];
+    c.tabDom.addClass("selected");
+    c.contentDom.removeClass("entryHidden");
+    c.obj.resize();
+    c.obj.visible = !0;
+    this.selected = a;
   };
-  a.initializeSplitter = function(b) {
-    b.onmousedown = function(b) {
+  a.initializeSplitter = function(a) {
+    a.onmousedown = function(a) {
       Entry.container.disableSort();
       Entry.container.splitterEnable = !0;
     };
-    document.addEventListener("mousemove", function(b) {
-      Entry.container.splitterEnable && Entry.resizeElement({canvasWidth:b.x || b.clientX});
+    document.addEventListener("mousemove", function(a) {
+      Entry.container.splitterEnable && Entry.resizeElement({canvasWidth:a.x || a.clientX});
     });
-    document.addEventListener("mouseup", function(b) {
+    document.addEventListener("mouseup", function(a) {
       Entry.container.splitterEnable = !1;
       Entry.container.enableSort();
     });
@@ -8772,17 +8776,17 @@ Entry.init = function(a, b) {
   this.maxCloneLimit = 302;
   this.cloudSavable = !0;
   this.startTime = (new Date).getTime();
-  document.onkeydown = function(b) {
-    Entry.dispatchEvent("keyPressed", b);
+  document.onkeydown = function(a) {
+    Entry.dispatchEvent("keyPressed", a);
   };
-  document.onkeyup = function(b) {
-    Entry.dispatchEvent("keyUpped", b);
+  document.onkeyup = function(a) {
+    Entry.dispatchEvent("keyUpped", a);
   };
-  window.onresize = function(b) {
-    Entry.dispatchEvent("windowResized", b);
+  window.onresize = function(a) {
+    Entry.dispatchEvent("windowResized", a);
   };
   window.onbeforeunload = this.beforeUnload;
-  Entry.addEventListener("saveWorkspace", function(b) {
+  Entry.addEventListener("saveWorkspace", function(a) {
     Entry.addActivity("save");
   });
   "IE" != Entry.getBrowserType().substr(0, 2) || window.flashaudio ? createjs.Sound.registerPlugins([createjs.WebAudioPlugin]) : (createjs.FlashAudioPlugin.swfPath = this.mediaFilePath + "media/", createjs.Sound.registerPlugins([createjs.FlashAudioPlugin]), window.flashaudio = !0);
@@ -8849,12 +8853,12 @@ Entry.createDom = function(a, b) {
     c.width = 640;
     c.height = 360;
     d.insertBefore(c, this.engine.addButton);
-    c.addEventListener("mousewheel", function(b) {
-      var a = Entry.variableContainer.getListById(Entry.stage.mouseCoordinate);
-      b = 0 < b.wheelDelta ? !0 : !1;
-      for (var c = 0;c < a.length;c++) {
-        var d = a[c];
-        d.scrollButton_.y = b ? 46 <= d.scrollButton_.y ? d.scrollButton_.y - 23 : 23 : d.scrollButton_.y + 23;
+    c.addEventListener("mousewheel", function(a) {
+      var b = Entry.variableContainer.getListById(Entry.stage.mouseCoordinate);
+      a = 0 < a.wheelDelta ? !0 : !1;
+      for (var c = 0;c < b.length;c++) {
+        var d = b[c];
+        d.scrollButton_.y = a ? 46 <= d.scrollButton_.y ? d.scrollButton_.y - 23 : 23 : d.scrollButton_.y + 23;
         d.updateView();
       }
     });
@@ -8955,16 +8959,16 @@ Entry.Scene.prototype.generateView = function(a, b) {
     this.view_.addClass("entrySceneWorkspace");
     var c = Entry.createElement("ul");
     c.addClass("entrySceneListWorkspace");
-    Entry.sceneEditable && $ && $(c).sortable({start:function(b, a) {
-      a.item.data("start_pos", a.item.index());
-      $(a.item[0]).clone(!0);
-    }, stop:function(b, a) {
-      var c = a.item.data("start_pos"), g = a.item.index();
+    Entry.sceneEditable && $ && $(c).sortable({start:function(a, b) {
+      b.item.data("start_pos", b.item.index());
+      $(b.item[0]).clone(!0);
+    }, stop:function(a, b) {
+      var c = b.item.data("start_pos"), g = b.item.index();
       Entry.scene.moveScene(c, g);
     }, axis:"x", tolerance:"pointer"});
     this.view_.appendChild(c);
     this.listView_ = c;
-    Entry.sceneEditable && (c = Entry.createElement("span"), c.addClass("entrySceneElementWorkspace"), c.addClass("entrySceneAddButtonWorkspace"), c.bindOnClick(function(b) {
+    Entry.sceneEditable && (c = Entry.createElement("span"), c.addClass("entrySceneElementWorkspace"), c.addClass("entrySceneAddButtonWorkspace"), c.bindOnClick(function(a) {
       Entry.engine.isState("run") || Entry.scene.addScene();
     }), this.view_.appendChild(c), this.addButton_ = c);
   }
@@ -9006,8 +9010,8 @@ Entry.Scene.prototype.generateElement = function(a) {
     e.addClass("entrySceneRemoveButtonWorkspace");
     e.innerHTML = "x";
     e.scene = a;
-    e.bindOnClick(function(b) {
-      b.stopPropagation();
+    e.bindOnClick(function(a) {
+      a.stopPropagation();
       Entry.engine.isState("run") || confirm(Lang.Workspace.will_you_delete_scene) && Entry.scene.removeScene(this.scene);
     });
     d.appendChild(e);
@@ -9244,56 +9248,56 @@ Entry.Stage.prototype.initStage = function(a) {
   this.initHandle();
   this.mouseCoordinate = {x:0, y:0};
   if (Entry.isPhone()) {
-    a.ontouchstart = function(b) {
-      Entry.dispatchEvent("canvasClick", b);
+    a.ontouchstart = function(a) {
+      Entry.dispatchEvent("canvasClick", a);
       Entry.stage.isClick = !0;
-    }, a.ontouchend = function(b) {
+    }, a.ontouchend = function(a) {
       Entry.stage.isClick = !1;
-      Entry.dispatchEvent("canvasClickCanceled", b);
+      Entry.dispatchEvent("canvasClickCanceled", a);
     };
   } else {
-    var b = function(b) {
-      Entry.dispatchEvent("canvasClick", b);
+    var b = function(a) {
+      Entry.dispatchEvent("canvasClick", a);
       Entry.stage.isClick = !0;
     };
     a.onmousedown = b;
     a.ontouchstart = b;
-    b = function(b) {
+    b = function(a) {
       Entry.stage.isClick = !1;
-      Entry.dispatchEvent("canvasClickCanceled", b);
+      Entry.dispatchEvent("canvasClickCanceled", a);
     };
     a.onmouseup = b;
     a.ontouchend = b;
-    $(document).click(function(b) {
-      Entry.stage.focused = "entryCanvas" === b.target.id ? !0 : !1;
+    $(document).click(function(a) {
+      Entry.stage.focused = "entryCanvas" === a.target.id ? !0 : !1;
     });
   }
-  Entry.addEventListener("canvasClick", function(b) {
+  Entry.addEventListener("canvasClick", function(a) {
     Entry.stage.isObjectClick = !1;
   });
-  b = function(b) {
-    b.preventDefault();
-    var a = this.getBoundingClientRect(), e;
-    -1 < Entry.getBrowserType().indexOf("IE") ? (e = 480 * ((b.pageX - a.left - document.documentElement.scrollLeft) / a.width - .5), b = -270 * ((b.pageY - a.top - document.documentElement.scrollTop) / a.height - .5)) : b.changedTouches ? (e = 480 * ((b.changedTouches[0].pageX - a.left - document.body.scrollLeft) / a.width - .5), b = -270 * ((b.changedTouches[0].pageY - a.top - document.body.scrollTop) / a.height - .5)) : (e = 480 * ((b.pageX - a.left - document.body.scrollLeft) / a.width - .5), 
-    b = -270 * ((b.pageY - a.top - document.body.scrollTop) / a.height - .5));
-    Entry.stage.mouseCoordinate = {x:e.toFixed(1), y:b.toFixed(1)};
+  b = function(a) {
+    a.preventDefault();
+    var b = this.getBoundingClientRect(), e;
+    -1 < Entry.getBrowserType().indexOf("IE") ? (e = 480 * ((a.pageX - b.left - document.documentElement.scrollLeft) / b.width - .5), a = -270 * ((a.pageY - b.top - document.documentElement.scrollTop) / b.height - .5)) : a.changedTouches ? (e = 480 * ((a.changedTouches[0].pageX - b.left - document.body.scrollLeft) / b.width - .5), a = -270 * ((a.changedTouches[0].pageY - b.top - document.body.scrollTop) / b.height - .5)) : (e = 480 * ((a.pageX - b.left - document.body.scrollLeft) / b.width - .5), 
+    a = -270 * ((a.pageY - b.top - document.body.scrollTop) / b.height - .5));
+    Entry.stage.mouseCoordinate = {x:e.toFixed(1), y:a.toFixed(1)};
     Entry.dispatchEvent("stageMouseMove");
   };
   a.onmousemove = b;
   a.ontouchmove = b;
-  a.onmouseout = function(b) {
+  a.onmouseout = function(a) {
     Entry.dispatchEvent("stageMouseOut");
   };
-  Entry.addEventListener("updateObject", function(b) {
+  Entry.addEventListener("updateObject", function(a) {
     Entry.engine.isState("stop") && Entry.stage.updateObject();
   });
-  Entry.addEventListener("canvasInputComplete", function(b) {
+  Entry.addEventListener("canvasInputComplete", function(a) {
     try {
-      var a = Entry.stage.inputField.value();
+      var b = Entry.stage.inputField.value();
       Entry.stage.hideInputField();
-      if (a) {
+      if (b) {
         var e = Entry.container;
-        e.setInputValue(a);
+        e.setInputValue(b);
         e.inputValue.complete = !0;
       }
     } catch (f) {
@@ -9506,7 +9510,7 @@ Entry.Stage.prototype.showInputField = function(a) {
   c.cursor = "pointer";
   c.image = b;
   a.addChild(c);
-  a.on("mousedown", function(b) {
+  a.on("mousedown", function(a) {
     Entry.dispatchEvent("canvasInputComplete");
   });
   this.inputSubmitButton || (this.inputField.value(""), this.canvas.addChild(a), this.inputSubmitButton = a);
@@ -9738,8 +9742,8 @@ Entry.Toast.prototype.warning = function(a, b, c) {
   this.body_.appendChild(d);
   c || window.setTimeout(function() {
     d.style.opacity = 1;
-    var b = setInterval(function() {
-      .05 > d.style.opacity && (clearInterval(b), d.style.display = "none", Entry.removeElement(d));
+    var a = setInterval(function() {
+      .05 > d.style.opacity && (clearInterval(a), d.style.display = "none", Entry.removeElement(d));
       d.style.opacity *= .9;
     }, 20);
   }, 1E3);
@@ -9763,8 +9767,8 @@ Entry.Toast.prototype.success = function(a, b, c) {
   this.body_.appendChild(d);
   c || window.setTimeout(function() {
     d.style.opacity = 1;
-    var b = setInterval(function() {
-      .05 > d.style.opacity && (clearInterval(b), d.style.display = "none", Entry.removeElement(d));
+    var a = setInterval(function() {
+      .05 > d.style.opacity && (clearInterval(a), d.style.display = "none", Entry.removeElement(d));
       d.style.opacity *= .9;
     }, 20);
   }, 1E3);
@@ -9788,8 +9792,8 @@ Entry.Toast.prototype.alert = function(a, b, c) {
   this.body_.appendChild(d);
   c || window.setTimeout(function() {
     d.style.opacity = 1;
-    var b = setInterval(function() {
-      .05 > d.style.opacity && (clearInterval(b), d.style.display = "none", Entry.toast.body_.removeChild(d));
+    var a = setInterval(function() {
+      .05 > d.style.opacity && (clearInterval(a), d.style.display = "none", Entry.toast.body_.removeChild(d));
       d.style.opacity *= .9;
     }, 20);
   }, 5E3);
@@ -9798,18 +9802,18 @@ Entry.BlockDriver = function() {
 };
 (function(a) {
   a.convert = function() {
-    var b = new Date, a;
-    for (a in Entry.block) {
-      "function" === typeof Entry.block[a] && this._convertBlock(a);
+    var a = new Date, c;
+    for (c in Entry.block) {
+      "function" === typeof Entry.block[c] && this._convertBlock(c);
     }
-    console.log((new Date).getTime() - b.getTime());
+    console.log((new Date).getTime() - a.getTime());
   };
-  a._convertBlock = function(b) {
-    var a = (new Entry.BlockMockup(Blockly.Blocks[b])).toJSON();
-    a.func = Entry.block[b];
-    var d = EntryStatic.blockInfo[b];
-    d && (a.class = d.class);
-    Entry.block[b] = a;
+  a._convertBlock = function(a) {
+    var c = (new Entry.BlockMockup(Blockly.Blocks[a])).toJSON();
+    c.func = Entry.block[a];
+    var d = EntryStatic.blockInfo[a];
+    d && (c.class = d.class);
+    Entry.block[a] = c;
   };
 })(Entry.BlockDriver.prototype);
 Entry.BlockMockup = function(a) {
@@ -9822,50 +9826,50 @@ Entry.BlockMockup = function(a) {
   this.simulate(a);
 };
 (function(a) {
-  a.simulate = function(b) {
-    b.init.call(this);
+  a.simulate = function(a) {
+    a.init.call(this);
   };
   a.toJSON = function() {
-    var b = "", b = this.output ? "Boolean" === this.output ? "basic_boolean_field" : "basic_string_field" : !this.isPrev && this.isNext ? "basic_event" : this.statements.length ? "basic_loop" : "basic";
-    return {color:this.color, skeleton:b, statements:this.statements, template:this.templates.filter(function(b) {
-      return "string" === typeof b;
+    var a = "", a = this.output ? "Boolean" === this.output ? "basic_boolean_field" : "basic_string_field" : !this.isPrev && this.isNext ? "basic_event" : this.statements.length ? "basic_loop" : "basic";
+    return {color:this.color, skeleton:a, statements:this.statements, template:this.templates.filter(function(a) {
+      return "string" === typeof a;
     }).join(" "), params:this.params};
   };
   a.appendDummyInput = function() {
     return this;
   };
-  a.appendValueInput = function(b) {
+  a.appendValueInput = function(a) {
     this.params.push({type:"Block", accept:"basic_string_field"});
     this.templates.push(this.getFieldCount());
     return this;
   };
-  a.appendStatementInput = function(b) {
+  a.appendStatementInput = function(a) {
     this.statements.push({accept:"basic"});
   };
-  a.setCheck = function(b) {
-    var a = this.params;
-    "Boolean" === b && (a[a.length - 1].accept = "basic_boolean_field");
+  a.setCheck = function(a) {
+    var c = this.params;
+    "Boolean" === a && (c[c.length - 1].accept = "basic_boolean_field");
   };
-  a.appendField = function(b) {
-    "string" === typeof b && 0 < b.length ? this.templates.push(b) : b instanceof Blockly.FieldIcon ? ("start" === b.type ? this.params.push({type:"Indicator", img:b.src_, size:17, position:{x:0, y:-2}}) : this.params.push({type:"Indicator", img:b.src_, size:12}), this.templates.push(this.getFieldCount())) : b instanceof Blockly.FieldDropdown ? (this.params.push({type:"Dropdown", options:b.menuGenerator_, value:b.menuGenerator_[0][1], fontSize:11}), this.templates.push(this.getFieldCount())) : b instanceof 
-    Blockly.FieldDropdownDynamic ? (this.params.push({type:"Dropdown", options:[["\ub300\uc0c1 \uc5c6\uc74c", "null"]], value:"null", fontSize:11}), this.templates.push(this.getFieldCount())) : b instanceof Blockly.FieldTextInput && (this.params.push({type:"TextInput", value:10}), this.templates.push(this.getFieldCount()));
+  a.appendField = function(a) {
+    "string" === typeof a && 0 < a.length ? this.templates.push(a) : a instanceof Blockly.FieldIcon ? ("start" === a.type ? this.params.push({type:"Indicator", img:a.src_, size:17, position:{x:0, y:-2}}) : this.params.push({type:"Indicator", img:a.src_, size:12}), this.templates.push(this.getFieldCount())) : a instanceof Blockly.FieldDropdown ? (this.params.push({type:"Dropdown", options:a.menuGenerator_, value:a.menuGenerator_[0][1], fontSize:11}), this.templates.push(this.getFieldCount())) : a instanceof 
+    Blockly.FieldDropdownDynamic ? (this.params.push({type:"Dropdown", options:[["\ub300\uc0c1 \uc5c6\uc74c", "null"]], value:"null", fontSize:11}), this.templates.push(this.getFieldCount())) : a instanceof Blockly.FieldTextInput && (this.params.push({type:"TextInput", value:10}), this.templates.push(this.getFieldCount()));
     return this;
   };
-  a.setColour = function(b) {
-    this.color = b;
+  a.setColour = function(a) {
+    this.color = a;
   };
   a.setInputsInline = function() {
   };
-  a.setOutput = function(b, a) {
-    b && (this.output = a);
+  a.setOutput = function(a, c) {
+    a && (this.output = c);
   };
-  a.setPreviousStatement = function(b) {
-    this.isPrev = b;
+  a.setPreviousStatement = function(a) {
+    this.isPrev = a;
   };
-  a.setNextStatement = function(b) {
-    this.isNext = b;
+  a.setNextStatement = function(a) {
+    this.isNext = a;
   };
-  a.setEditable = function(b) {
+  a.setEditable = function(a) {
   };
   a.getFieldCount = function() {
     this.fieldCount++;
@@ -9881,19 +9885,19 @@ Entry.ContextMenu = {};
       this.hide();
     });
   };
-  a.show = function(b, a) {
+  a.show = function(a, c) {
     this.dom || this.createDom();
-    if (0 !== b.length) {
-      void 0 !== a && (this._className = a, this.dom.addClass(a));
+    if (0 !== a.length) {
+      void 0 !== c && (this._className = c, this.dom.addClass(c));
       var d = this.dom;
       d.empty();
-      for (var e = 0, f = b.length;e < f;e++) {
-        var g = b[e], h = g.text, k = !1 !== g.enable, l = Entry.Dom("li", {class:k ? "menuAble" : "menuDisable", parent:d});
+      for (var e = 0, f = a.length;e < f;e++) {
+        var g = a[e], h = g.text, k = !1 !== g.enable, l = Entry.Dom("li", {class:k ? "menuAble" : "menuDisable", parent:d});
         l.text(h);
-        k && g.callback && function(b, a) {
-          b.mousedown(function(b) {
-            b.preventDefault();
-            a();
+        k && g.callback && function(a, b) {
+          a.mousedown(function(a) {
+            a.preventDefault();
+            b();
           });
         }(l, g.callback);
       }
@@ -9901,13 +9905,13 @@ Entry.ContextMenu = {};
       this.position(Entry.mouseCoordinate);
     }
   };
-  a.position = function(b) {
-    var a = this.dom;
-    a.css({left:0, top:0});
-    var d = a.width(), e = a.height(), f = $(window), g = f.width(), f = f.height();
-    b.x + d > g && (b.x -= d + 3);
-    b.y + e > f && (b.y -= e);
-    a.css({left:b.x, top:b.y});
+  a.position = function(a) {
+    var c = this.dom;
+    c.css({left:0, top:0});
+    var d = c.width(), e = c.height(), f = $(window), g = f.width(), f = f.height();
+    a.x + d > g && (a.x -= d + 3);
+    a.y + e > f && (a.y -= e);
+    c.css({left:a.x, top:a.y});
   };
   a.hide = function() {
     this.dom.empty();
@@ -9952,26 +9956,26 @@ Entry.Utils.colorDarken = function(a, b) {
 };
 Entry.Utils.bindGlobalEvent = function(a) {
   void 0 === a && (a = ["resize", "mousedown", "mousemove", "keydown", "keyup"]);
-  !Entry.windowReszied && -1 < a.indexOf("resize") && (Entry.windowResized = new Entry.Event(window), $(window).on("resize", function(b) {
-    Entry.windowResized.notify(b);
+  !Entry.windowReszied && -1 < a.indexOf("resize") && (Entry.windowResized = new Entry.Event(window), $(window).on("resize", function(a) {
+    Entry.windowResized.notify(a);
   }));
-  !Entry.documentMousedown && -1 < a.indexOf("mousedown") && (Entry.documentMousedown = new Entry.Event(window), $(document).on("mousedown", function(b) {
-    Entry.documentMousedown.notify(b);
+  !Entry.documentMousedown && -1 < a.indexOf("mousedown") && (Entry.documentMousedown = new Entry.Event(window), $(document).on("mousedown", function(a) {
+    Entry.documentMousedown.notify(a);
   }));
-  !Entry.documentMousemove && -1 < a.indexOf("mousemove") && (Entry.mouseCoordinate = {}, Entry.documentMousemove = new Entry.Event(window), $(document).on("mousemove", function(b) {
-    Entry.documentMousemove.notify(b);
-    Entry.mouseCoordinate.x = b.clientX;
-    Entry.mouseCoordinate.y = b.clientY;
+  !Entry.documentMousemove && -1 < a.indexOf("mousemove") && (Entry.mouseCoordinate = {}, Entry.documentMousemove = new Entry.Event(window), $(document).on("mousemove", function(a) {
+    Entry.documentMousemove.notify(a);
+    Entry.mouseCoordinate.x = a.clientX;
+    Entry.mouseCoordinate.y = a.clientY;
   }));
-  !Entry.keyPressed && -1 < a.indexOf("keydown") && (Entry.pressedKeys = [], Entry.keyPressed = new Entry.Event(window), $(document).on("keydown", function(b) {
-    var a = b.keyCode;
-    0 > Entry.pressedKeys.indexOf(a) && Entry.pressedKeys.push(a);
-    Entry.keyPressed.notify(b);
+  !Entry.keyPressed && -1 < a.indexOf("keydown") && (Entry.pressedKeys = [], Entry.keyPressed = new Entry.Event(window), $(document).on("keydown", function(a) {
+    var c = a.keyCode;
+    0 > Entry.pressedKeys.indexOf(c) && Entry.pressedKeys.push(c);
+    Entry.keyPressed.notify(a);
   }));
-  !Entry.keyUpped && -1 < a.indexOf("keyup") && (Entry.keyUpped = new Entry.Event(window), $(document).on("keyup", function(b) {
-    var a = Entry.pressedKeys.indexOf(b.keyCode);
-    -1 < a && Entry.pressedKeys.splice(a, 1);
-    Entry.keyUpped.notify(b);
+  !Entry.keyUpped && -1 < a.indexOf("keyup") && (Entry.keyUpped = new Entry.Event(window), $(document).on("keyup", function(a) {
+    var c = Entry.pressedKeys.indexOf(a.keyCode);
+    -1 < c && Entry.pressedKeys.splice(c, 1);
+    Entry.keyUpped.notify(a);
   }));
 };
 Entry.Utils.makeActivityReporter = function() {
@@ -9995,23 +9999,23 @@ Entry.parseTexttoXML = function(a) {
 Entry.createElement = function(a, b) {
   var c = document.createElement(a);
   b && (c.id = b);
-  c.hasClass = function(b) {
-    return this.className.match(new RegExp("(\\s|^)" + b + "(\\s|$)"));
+  c.hasClass = function(a) {
+    return this.className.match(new RegExp("(\\s|^)" + a + "(\\s|$)"));
   };
-  c.addClass = function(b) {
-    for (var a = 0;a < arguments.length;a++) {
-      b = arguments[a], this.hasClass(b) || (this.className += " " + b);
+  c.addClass = function(a) {
+    for (var b = 0;b < arguments.length;b++) {
+      a = arguments[b], this.hasClass(a) || (this.className += " " + a);
     }
   };
-  c.removeClass = function(b) {
-    for (var a = 0;a < arguments.length;a++) {
-      b = arguments[a], this.hasClass(b) && (this.className = this.className.replace(new RegExp("(\\s|^)" + b + "(\\s|$)"), " "));
+  c.removeClass = function(a) {
+    for (var b = 0;b < arguments.length;b++) {
+      a = arguments[b], this.hasClass(a) && (this.className = this.className.replace(new RegExp("(\\s|^)" + a + "(\\s|$)"), " "));
     }
   };
-  c.bindOnClick = function(b) {
-    $(this).on("click touchstart", function(a) {
-      a.stopImmediatePropagation();
-      a.handled || (a.handled = !0, b.call(this, a));
+  c.bindOnClick = function(a) {
+    $(this).on("click touchstart", function(b) {
+      b.stopImmediatePropagation();
+      b.handled || (b.handled = !0, a.call(this, b));
     });
   };
   return c;
@@ -10330,9 +10334,9 @@ Entry.isEmpty = function(a) {
 };
 Entry.Utils.disableContextmenu = function(a) {
   if (a) {
-    $(a).on("contextmenu", function(b) {
-      b.stopPropagation();
-      b.preventDefault();
+    $(a).on("contextmenu", function(a) {
+      a.stopPropagation();
+      a.preventDefault();
       return !1;
     });
   }
@@ -10359,67 +10363,67 @@ Entry.Model = function(a, b) {
   return a;
 };
 (function(a) {
-  a.generateSchema = function(b) {
-    var a = b.schema;
-    if (void 0 !== a) {
-      a = JSON.parse(JSON.stringify(a));
-      b.data = {};
-      for (var d in a) {
+  a.generateSchema = function(a) {
+    var c = a.schema;
+    if (void 0 !== c) {
+      c = JSON.parse(JSON.stringify(c));
+      a.data = {};
+      for (var d in c) {
         (function(d) {
-          b.data[d] = a[d];
-          Object.defineProperty(b, d, {get:function() {
-            return b.data[d];
+          a.data[d] = c[d];
+          Object.defineProperty(a, d, {get:function() {
+            return a.data[d];
           }});
         })(d);
       }
-      b._toJSON = this._toJSON;
+      a._toJSON = this._toJSON;
     }
   };
-  a.generateSetter = function(b) {
-    b.set = this.set;
+  a.generateSetter = function(a) {
+    a.set = this.set;
   };
-  a.set = function(b, a) {
+  a.set = function(a, c) {
     var d = {}, e;
     for (e in this.data) {
-      void 0 !== b[e] && (b[e] === this.data[e] ? delete b[e] : (d[e] = this.data[e], this.data[e] = b[e]));
+      void 0 !== a[e] && (a[e] === this.data[e] ? delete a[e] : (d[e] = this.data[e], this.data[e] = a[e]));
     }
-    a || this.notify(Object.keys(b), d);
+    c || this.notify(Object.keys(a), d);
   };
-  a.generateObserve = function(b) {
-    b.observers = [];
-    b.observe = this.observe;
-    b.unobserve = this.unobserve;
-    b.notify = this.notify;
+  a.generateObserve = function(a) {
+    a.observers = [];
+    a.observe = this.observe;
+    a.unobserve = this.unobserve;
+    a.notify = this.notify;
   };
-  a.observe = function(b, a, d, e) {
-    d = new Entry.Observer(this.observers, b, a, d);
+  a.observe = function(a, c, d, e) {
+    d = new Entry.Observer(this.observers, a, c, d);
     if (!1 !== e) {
-      b[a]([]);
+      a[c]([]);
     }
     return d;
   };
-  a.unobserve = function(b) {
-    b.destroy();
+  a.unobserve = function(a) {
+    a.destroy();
   };
-  a.notify = function(b, a) {
-    "string" === typeof b && (b = [b]);
+  a.notify = function(a, c) {
+    "string" === typeof a && (a = [a]);
     var d = this;
     d.observers.map(function(e) {
-      var f = b;
-      void 0 !== e.attrs && (f = Entry.Utils.intersectArray(e.attrs, b));
+      var f = a;
+      void 0 !== e.attrs && (f = Entry.Utils.intersectArray(e.attrs, a));
       if (f.length) {
-        e.object[e.funcName](f.map(function(b) {
-          return {name:b, object:d, oldValue:a[b]};
+        e.object[e.funcName](f.map(function(a) {
+          return {name:a, object:d, oldValue:c[a]};
         }));
       }
     });
   };
   a._toJSON = function() {
-    var b = {}, a;
-    for (a in this.data) {
-      b[a] = this.data[a];
+    var a = {}, c;
+    for (c in this.data) {
+      a[c] = this.data[c];
     }
-    return b;
+    return a;
   };
 })(Entry.Model);
 Entry.Func = function() {
@@ -10495,9 +10499,9 @@ Entry.Func.syncFunc = function() {
 Entry.Func.updateMenu = function() {
   if ("func" == Entry.playground.selectedMenu && (Entry.playground.blockMenu.hide(), Entry.playground.blockMenu.show(Entry.Func.getMenuXml()), !Blockly.WidgetDiv.field_ && Entry.Func.targetFunc)) {
     var a = Entry.Func.targetFunc, b = Blockly.Xml.workspaceToDom(Entry.Func.workspace), c = b.getElementsByClassName("function_general"), d = a.id, e, c = Entry.nodeListToArray(c), f = [], g = {};
-    c.map(function(b) {
-      var a = b.getElementsByTagName("mutation")[0].getAttribute("hashid");
-      a == d ? f.push(b) : (g[a] || (g[a] = []), g[a].push(b));
+    c.map(function(a) {
+      var b = a.getElementsByTagName("mutation")[0].getAttribute("hashid");
+      b == d ? f.push(a) : (g[b] || (g[b] = []), g[b].push(a));
     });
     f.map(function(a) {
       e = Entry.Func.generateWsBlock(b, Blockly.Xml.workspaceToDom(Entry.Func.workspace), d).block;
@@ -10713,95 +10717,95 @@ Entry.HWMonitor = function(a) {
   a.generateView = function() {
     this.snap = Snap("#hwMonitor");
     this._svgGroup = this.snap.group();
-    var b = this._hwModule.monitorTemplate;
+    var a = this._hwModule.monitorTemplate;
     this.hwView = this._svgGroup.group();
-    this.hwView.image(Entry.mediaFilePath + "hw/neobot.png", -b.width / 2, -b.height / 2, b.width, b.height);
-    this._template = b;
-    b = b.ports;
+    this.hwView.image(Entry.mediaFilePath + "hw/neobot.png", -a.width / 2, -a.height / 2, a.width, a.height);
+    this._template = a;
+    a = a.ports;
     this.pathGroup = this._svgGroup.group();
-    var a = [], d;
-    for (d in b) {
-      var e = this.generatePortView(b[d]);
+    var c = [], d;
+    for (d in a) {
+      var e = this.generatePortView(a[d]);
       this._portViews[d] = e;
-      a.push(e);
+      c.push(e);
     }
-    a.sort(function(b, a) {
-      return b.box.x - a.box.x;
+    c.sort(function(a, b) {
+      return a.box.x - b.box.x;
     });
     var f = this._portMap;
-    a.map(function(b) {
-      switch(Math.round(Math.atan2(b.box.y, b.box.x) / Math.PI * 2)) {
+    c.map(function(a) {
+      switch(Math.round(Math.atan2(a.box.y, a.box.x) / Math.PI * 2)) {
         case -1:
-          f.n.push(b);
+          f.n.push(a);
           break;
         case 0:
-          f.e.push(b);
+          f.e.push(a);
           break;
         case 1:
-          f.s.push(b);
+          f.s.push(a);
           break;
         case 2:
-          f.w.push(b);
+          f.w.push(a);
       }
     });
     this.resize();
   };
-  a.generatePortView = function(b) {
-    var a = this._svgGroup.group();
-    a.addClass("hwComponent");
-    var d = this.pathGroup.path("m0,0").attr({fill:"none", stroke:"input" === b.type ? "#00979d" : "#A751E3", "stroke-width":3}), e = a.rect(0, 0, 150, 22, 4).attr({fill:"#fff", stroke:"#a0a1a1"}), f = a.text(4, 12, b.name).attr({fill:"#000", "class":"hwComponentName", "alignment-baseline":"central"}).node.getComputedTextLength();
-    a.rect(f + 8, 2, 30, 18, 9).attr({fill:"input" === b.type ? "#00979d" : "#A751E3"});
-    var g = a.text(f + 13, 12, "0").attr({fill:"#fff", "class":"hwComponentValue", "alignment-baseline":"central"}), f = f + 40;
+  a.generatePortView = function(a) {
+    var c = this._svgGroup.group();
+    c.addClass("hwComponent");
+    var d = this.pathGroup.path("m0,0").attr({fill:"none", stroke:"input" === a.type ? "#00979d" : "#A751E3", "stroke-width":3}), e = c.rect(0, 0, 150, 22, 4).attr({fill:"#fff", stroke:"#a0a1a1"}), f = c.text(4, 12, a.name).attr({fill:"#000", "class":"hwComponentName", "alignment-baseline":"central"}).node.getComputedTextLength();
+    c.rect(f + 8, 2, 30, 18, 9).attr({fill:"input" === a.type ? "#00979d" : "#A751E3"});
+    var g = c.text(f + 13, 12, "0").attr({fill:"#fff", "class":"hwComponentValue", "alignment-baseline":"central"}), f = f + 40;
     e.attr({width:f + "px"});
-    return {group:a, value:g, type:b.type, path:d, box:{x:b.pos.x - this._template.width / 2, y:b.pos.y - this._template.height / 2, width:f}, width:f};
+    return {group:c, value:g, type:a.type, path:d, box:{x:a.pos.x - this._template.width / 2, y:a.pos.y - this._template.height / 2, width:f}, width:f};
   };
   a.getView = function() {
     return this.svgDom;
   };
   a.update = function() {
-    var b = Entry.hw.portData, a = Entry.hw.sendQueue, d;
+    var a = Entry.hw.portData, c = Entry.hw.sendQueue, d;
     for (d in this._portViews) {
-      var e = this._portViews[d], f = "input" == e.type ? b[d] : a[d];
+      var e = this._portViews[d], f = "input" == e.type ? a[d] : c[d];
       e.value.attr({text:f ? f : 0});
     }
   };
   a.resize = function() {
     this.hwView.attr({transform:"s" + this.scale});
-    var b = this.svgDom.get(0).getBoundingClientRect();
-    this._svgGroup.attr({transform:"t" + b.width / 2 + "," + b.height / 2});
-    this._rect = b;
-    this.scale = b.height / this._template.height / 2;
+    var a = this.svgDom.get(0).getBoundingClientRect();
+    this._svgGroup.attr({transform:"t" + a.width / 2 + "," + a.height / 2});
+    this._rect = a;
+    this.scale = a.height / this._template.height / 2;
     this.align();
   };
   a.align = function() {
-    for (var b = this._portMap.n, a = b.length, d = 0;d < b.length;d++) {
-      b[d].group.attr({transform:"t" + this._template.width * (d / a - .5) + "," + (-this._template.width / 2 - 30)});
+    for (var a = this._portMap.n, c = a.length, d = 0;d < a.length;d++) {
+      a[d].group.attr({transform:"t" + this._template.width * (d / c - .5) + "," + (-this._template.width / 2 - 30)});
     }
-    b = this._portMap.s.concat();
-    this._alignNS(b, this._template.width * this.scale / 2 + 5, 27);
-    b = this._portMap.n.concat();
-    this._alignNS(b, -this._template.width * this.scale / 2 - 32, -27);
+    a = this._portMap.s.concat();
+    this._alignNS(a, this._template.width * this.scale / 2 + 5, 27);
+    a = this._portMap.n.concat();
+    this._alignNS(a, -this._template.width * this.scale / 2 - 32, -27);
   };
-  a._alignNS = function(b, a, d) {
-    for (var e = -this._rect.width / 2, f = this._rect.width / 2, g = this._rect.width, h = 0, k = 0;k < b.length;k++) {
-      h += b[k].width + 5;
+  a._alignNS = function(a, c, d) {
+    for (var e = -this._rect.width / 2, f = this._rect.width / 2, g = this._rect.width, h = 0, k = 0;k < a.length;k++) {
+      h += a[k].width + 5;
     }
     h < f - e && (f = h / 2 + 3, e = -h / 2 - 3);
-    for (;1 < b.length;) {
-      var k = b.shift(), l = b.pop(), n = e, m = f, q = d;
-      h <= f - e ? (e += k.width + 5, f -= l.width + 5, q = 0) : 0 === b.length ? (e = (e + f) / 2 - 3, f = e + 6) : (e = Math.max(e, -g / 2 + k.width) + 15, f = Math.min(f, g / 2 - l.width) - 15);
-      this._movePort(k, e, a, n);
-      this._movePort(l, f, a, m);
+    for (;1 < a.length;) {
+      var k = a.shift(), l = a.pop(), n = e, m = f, q = d;
+      h <= f - e ? (e += k.width + 5, f -= l.width + 5, q = 0) : 0 === a.length ? (e = (e + f) / 2 - 3, f = e + 6) : (e = Math.max(e, -g / 2 + k.width) + 15, f = Math.min(f, g / 2 - l.width) - 15);
+      this._movePort(k, e, c, n);
+      this._movePort(l, f, c, m);
       h -= k.width + l.width + 10;
-      a += q;
+      c += q;
     }
-    b.length && b[0].group.attr({transform:"t" + (f + e - b[0].width) / 2 + "," + a});
+    a.length && a[0].group.attr({transform:"t" + (f + e - a[0].width) / 2 + "," + c});
   };
-  a._movePort = function(b, a, d, e) {
-    var f = a, g = b.box.x * this.scale, h = b.box.y * this.scale;
-    a > e ? (f = a - b.width, a = a > g && g > e ? "M" + g + "," + d + "L" + g + "," + h : "M" + (a + e) / 2 + "," + d + "l0," + (h > d ? 28 : -3) + "H" + g + "L" + g + "," + h) : a = a < g && g < e ? "m" + g + "," + d + "L" + g + "," + h : "m" + (e + a) / 2 + "," + d + "l0," + (h > d ? 28 : -3) + "H" + g + "L" + g + "," + h;
-    b.group.attr({transform:"t" + f + "," + d});
-    b.path.attr({d:a});
+  a._movePort = function(a, c, d, e) {
+    var f = c, g = a.box.x * this.scale, h = a.box.y * this.scale;
+    c > e ? (f = c - a.width, c = c > g && g > e ? "M" + g + "," + d + "L" + g + "," + h : "M" + (c + e) / 2 + "," + d + "l0," + (h > d ? 28 : -3) + "H" + g + "L" + g + "," + h) : c = c < g && g < e ? "m" + g + "," + d + "L" + g + "," + h : "m" + (e + c) / 2 + "," + d + "l0," + (h > d ? 28 : -3) + "H" + g + "L" + g + "," + h;
+    a.group.attr({transform:"t" + f + "," + d});
+    a.path.attr({d:c});
   };
 })(Entry.HWMonitor.prototype);
 Entry.HW = function() {
@@ -10941,10 +10945,10 @@ Entry.Variable.prototype.generateView = function(a) {
   var b = this.type;
   if ("variable" == b || "timer" == b || "answer" == b) {
     this.view_ = new createjs.Container, this.rect_ = new createjs.Shape, this.view_.addChild(this.rect_), this.view_.variable = this, this.wrapper_ = new createjs.Shape, this.view_.addChild(this.wrapper_), this.textView_ = new createjs.Text("asdf", this.FONT, "#000000"), this.textView_.textBaseline = "alphabetic", this.textView_.x = 4, this.textView_.y = 1, this.view_.addChild(this.textView_), this.valueView_ = new createjs.Text("asdf", "10pt NanumGothic", "#ffffff"), this.valueView_.textBaseline = 
-    "alphabetic", b = Entry.variableContainer.variables_.length, this.getX() && this.getY() ? (this.setX(this.getX()), this.setY(this.getY())) : (this.setX(-230 + 80 * Math.floor(b / 11)), this.setY(24 * a + 20 - 135 - 264 * Math.floor(b / 11))), this.view_.visible = this.visible_, this.view_.addChild(this.valueView_), this.view_.on("mousedown", function(b) {
-      "workspace" == Entry.type && (this.offset = {x:this.x - (.75 * b.stageX - 240), y:this.y - (.75 * b.stageY - 135)}, this.cursor = "move");
-    }), this.view_.on("pressmove", function(b) {
-      "workspace" == Entry.type && (this.variable.setX(.75 * b.stageX - 240 + this.offset.x), this.variable.setY(.75 * b.stageY - 135 + this.offset.y), this.variable.updateView());
+    "alphabetic", b = Entry.variableContainer.variables_.length, this.getX() && this.getY() ? (this.setX(this.getX()), this.setY(this.getY())) : (this.setX(-230 + 80 * Math.floor(b / 11)), this.setY(24 * a + 20 - 135 - 264 * Math.floor(b / 11))), this.view_.visible = this.visible_, this.view_.addChild(this.valueView_), this.view_.on("mousedown", function(a) {
+      "workspace" == Entry.type && (this.offset = {x:this.x - (.75 * a.stageX - 240), y:this.y - (.75 * a.stageY - 135)}, this.cursor = "move");
+    }), this.view_.on("pressmove", function(a) {
+      "workspace" == Entry.type && (this.variable.setX(.75 * a.stageX - 240 + this.offset.x), this.variable.setY(.75 * a.stageY - 135 + this.offset.y), this.variable.updateView());
     });
   } else {
     if ("slide" == b) {
@@ -10962,11 +10966,11 @@ Entry.Variable.prototype.generateView = function(a) {
       this.view_.addChild(this.textView_);
       this.valueView_ = new createjs.Text("value", "10pt NanumGothic", "#ffffff");
       this.valueView_.textBaseline = "alphabetic";
-      this.view_.on("mousedown", function(b) {
-        "workspace" == Entry.type && (this.offset = {x:this.x - (.75 * b.stageX - 240), y:this.y - (.75 * b.stageY - 135)});
+      this.view_.on("mousedown", function(a) {
+        "workspace" == Entry.type && (this.offset = {x:this.x - (.75 * a.stageX - 240), y:this.y - (.75 * a.stageY - 135)});
       });
-      this.view_.on("pressmove", function(b) {
-        "workspace" != Entry.type || c.isAdjusting || (this.variable.setX(.75 * b.stageX - 240 + this.offset.x), this.variable.setY(.75 * b.stageY - 135 + this.offset.y), this.variable.updateView());
+      this.view_.on("pressmove", function(a) {
+        "workspace" != Entry.type || c.isAdjusting || (this.variable.setX(.75 * a.stageX - 240 + this.offset.x), this.variable.setY(.75 * a.stageY - 135 + this.offset.y), this.variable.updateView());
       });
       this.view_.visible = this.visible_;
       this.view_.addChild(this.valueView_);
@@ -10980,16 +10984,16 @@ Entry.Variable.prototype.generateView = function(a) {
       this.valueSetter_ = new createjs.Shape;
       this.valueSetter_.graphics.beginFill("#1bafea").s("#A0A1A1").ss(1).dc(b, 10.5, 3);
       this.valueSetter_.cursor = "pointer";
-      this.valueSetter_.on("mousedown", function(b) {
-        Entry.engine.isState("run") && (c.isAdjusting = !0, this.offsetX = -(this.x - .75 * b.stageX + 240));
+      this.valueSetter_.on("mousedown", function(a) {
+        Entry.engine.isState("run") && (c.isAdjusting = !0, this.offsetX = -(this.x - .75 * a.stageX + 240));
       });
-      this.valueSetter_.on("pressmove", function(b) {
+      this.valueSetter_.on("pressmove", function(a) {
         if (Entry.engine.isState("run")) {
-          var a = .75 * b.stageX - 240 - this.offsetX, f = this.graphics.command.x;
-          0 >= a + f ? c.setSlideCommandX(0, !0) : a + f > c.maxWidth + 10 ? c.setSlideCommandX(c.maxWidth, !0) : (this.offsetX = -(this.x - .75 * b.stageX + 240), c.setSlideCommandX(a), c.updateView());
+          var b = .75 * a.stageX - 240 - this.offsetX, f = this.graphics.command.x;
+          0 >= b + f ? c.setSlideCommandX(0, !0) : b + f > c.maxWidth + 10 ? c.setSlideCommandX(c.maxWidth, !0) : (this.offsetX = -(this.x - .75 * a.stageX + 240), c.setSlideCommandX(b), c.updateView());
         }
       });
-      this.valueSetter_.on("pressup", function(b) {
+      this.valueSetter_.on("pressup", function(a) {
         c.isAdjusting = !1;
       });
       this.view_.addChild(this.valueSetter_);
@@ -10997,32 +11001,32 @@ Entry.Variable.prototype.generateView = function(a) {
       this.getX() && this.getY() ? (this.setX(this.getX()), this.setY(this.getY())) : (this.setX(-230 + 80 * Math.floor(b / 11)), this.setY(24 * a + 20 - 135 - 264 * Math.floor(b / 11)));
     } else {
       this.view_ = new createjs.Container, this.rect_ = new createjs.Shape, this.view_.addChild(this.rect_), this.view_.variable = this, this.titleView_ = new createjs.Text("asdf", this.FONT, "#000"), this.titleView_.textBaseline = "alphabetic", this.titleView_.textAlign = "center", this.titleView_.width = this.width_ - 2 * this.BORDER, this.titleView_.y = this.BORDER + 10, this.titleView_.x = this.width_ / 2, this.view_.addChild(this.titleView_), this.resizeHandle_ = new createjs.Shape, this.resizeHandle_.graphics.f("#1bafea").ss(1, 
-      0, 0).s("#1bafea").lt(0, -7).lt(-7, 0).lt(0, 0), this.view_.addChild(this.resizeHandle_), this.resizeHandle_.list = this, this.resizeHandle_.on("mousedown", function(b) {
+      0, 0).s("#1bafea").lt(0, -7).lt(-7, 0).lt(0, 0), this.view_.addChild(this.resizeHandle_), this.resizeHandle_.list = this, this.resizeHandle_.on("mousedown", function(a) {
         this.list.isResizing = !0;
-        this.offset = {x:.75 * b.stageX - this.list.getWidth(), y:.75 * b.stageY - this.list.getHeight()};
+        this.offset = {x:.75 * a.stageX - this.list.getWidth(), y:.75 * a.stageY - this.list.getHeight()};
         this.parent.cursor = "se-resize";
-      }), this.resizeHandle_.on("pressmove", function(b) {
-        this.list.setWidth(.75 * b.stageX - this.offset.x);
-        this.list.setHeight(.75 * b.stageY - this.offset.y);
+      }), this.resizeHandle_.on("pressmove", function(a) {
+        this.list.setWidth(.75 * a.stageX - this.offset.x);
+        this.list.setHeight(.75 * a.stageY - this.offset.y);
         this.list.updateView();
-      }), this.view_.on("mousedown", function(b) {
-        "workspace" != Entry.type || this.variable.isResizing || (this.offset = {x:this.x - (.75 * b.stageX - 240), y:this.y - (.75 * b.stageY - 135)}, this.cursor = "move");
-      }), this.view_.on("pressup", function(b) {
+      }), this.view_.on("mousedown", function(a) {
+        "workspace" != Entry.type || this.variable.isResizing || (this.offset = {x:this.x - (.75 * a.stageX - 240), y:this.y - (.75 * a.stageY - 135)}, this.cursor = "move");
+      }), this.view_.on("pressup", function(a) {
         this.cursor = "initial";
         this.variable.isResizing = !1;
-      }), this.view_.on("pressmove", function(b) {
-        "workspace" != Entry.type || this.variable.isResizing || (this.variable.setX(.75 * b.stageX - 240 + this.offset.x), this.variable.setY(.75 * b.stageY - 135 + this.offset.y), this.variable.updateView());
+      }), this.view_.on("pressmove", function(a) {
+        "workspace" != Entry.type || this.variable.isResizing || (this.variable.setX(.75 * a.stageX - 240 + this.offset.x), this.variable.setY(.75 * a.stageY - 135 + this.offset.y), this.variable.updateView());
       }), this.elementView = new createjs.Container, b = new createjs.Text("asdf", this.FONT, "#000"), b.textBaseline = "middle", b.y = 5, this.elementView.addChild(b), this.elementView.indexView = b, b = new createjs.Shape, this.elementView.addChild(b), this.elementView.valueWrapper = b, b = new createjs.Text("fdsa", this.FONT, "#eee"), b.x = 24, b.y = 6, b.textBaseline = "middle", this.elementView.addChild(b), this.elementView.valueView = b, this.elementView.x = this.BORDER, this.scrollButton_ = 
-      new createjs.Shape, this.scrollButton_.graphics.f("#aaa").rr(0, 0, 7, 30, 3.5), this.view_.addChild(this.scrollButton_), this.scrollButton_.y = 23, this.scrollButton_.list = this, this.scrollButton_.on("mousedown", function(b) {
+      new createjs.Shape, this.scrollButton_.graphics.f("#aaa").rr(0, 0, 7, 30, 3.5), this.view_.addChild(this.scrollButton_), this.scrollButton_.y = 23, this.scrollButton_.list = this, this.scrollButton_.on("mousedown", function(a) {
         this.list.isResizing = !0;
         this.cursor = "pointer";
-        this.offsetY = isNaN(this.offsetY) || 0 > this.offsetY ? b.rawY / 2 : this.offsetY;
-      }), this.scrollButton_.on("pressmove", function(b) {
-        void 0 === this.moveAmount ? (this.y = b.target.y, this.moveAmount = !0) : this.y = b.rawY / 2 - this.offsetY + this.list.height_ / 100 * 23;
+        this.offsetY = isNaN(this.offsetY) || 0 > this.offsetY ? a.rawY / 2 : this.offsetY;
+      }), this.scrollButton_.on("pressmove", function(a) {
+        void 0 === this.moveAmount ? (this.y = a.target.y, this.moveAmount = !0) : this.y = a.rawY / 2 - this.offsetY + this.list.height_ / 100 * 23;
         23 > this.y && (this.y = 23);
         this.y > this.list.getHeight() - 40 && (this.y = this.list.getHeight() - 40);
         this.list.updateView();
-      }), this.scrollButton_.on("pressup", function(b) {
+      }), this.scrollButton_.on("pressup", function(a) {
         this.moveAmount = void 0;
       }), this.getX() && this.getY() ? (this.setX(this.getX()), this.setY(this.getY())) : (b = Entry.variableContainer.lists_.length, this.setX(110 * -Math.floor(b / 6) + 120), this.setY(24 * a + 20 - 135 - 145 * Math.floor(b / 6)));
     }
@@ -11719,14 +11723,14 @@ Entry.VariableContainer.prototype.createVariableView = function(a) {
   h.addClass("entryVariableListElementNameWorkspace");
   h.setAttribute("disabled", "disabled");
   h.value = a.name_;
-  h.bindOnClick(function(b) {
-    b.stopPropagation();
+  h.bindOnClick(function(a) {
+    a.stopPropagation();
   });
   h.onblur = function(c) {
     (c = this.value.trim()) && 0 !== c.length ? b.changeVariableName(a, this.value) : (Entry.toast.alert(Lang.Msgs.warn, Lang.Workspace.variable_can_not_space), this.value = a.getName());
   };
-  h.onkeydown = function(b) {
-    13 == b.keyCode && this.blur();
+  h.onkeydown = function(a) {
+    13 == a.keyCode && this.blur();
   };
   c.nameField = h;
   d.appendChild(h);
@@ -11772,8 +11776,8 @@ Entry.VariableContainer.prototype.createMessageView = function(a) {
   });
   var e = Entry.createElement("button");
   e.addClass("entryVariableListElementEditWorkspace");
-  e.bindOnClick(function(b) {
-    b.stopPropagation();
+  e.bindOnClick(function(a) {
+    a.stopPropagation();
     g.removeAttribute("disabled");
     g.focus();
     f.removeClass("entryRemove");
@@ -11782,8 +11786,8 @@ Entry.VariableContainer.prototype.createMessageView = function(a) {
   var f = Entry.createElement("button");
   f.addClass("entryVariableListElementEditWorkspace");
   f.addClass("entryRemove");
-  f.bindOnClick(function(b) {
-    b.stopPropagation();
+  f.bindOnClick(function(a) {
+    a.stopPropagation();
     g.blur();
     e.removeClass("entryRemove");
     this.addClass("entryRemove");
@@ -11791,14 +11795,14 @@ Entry.VariableContainer.prototype.createMessageView = function(a) {
   var g = Entry.createElement("input");
   g.addClass("entryVariableListElementNameWorkspace");
   g.value = a.name;
-  g.bindOnClick(function(b) {
-    b.stopPropagation();
+  g.bindOnClick(function(a) {
+    a.stopPropagation();
   });
   g.onblur = function(c) {
     (c = this.value.trim()) && 0 !== c.length ? (b.changeMessageName(a, this.value), e.removeClass("entryRemove"), f.addClass("entryRemove"), g.setAttribute("disabled", "disabled")) : (Entry.toast.alert(Lang.Msgs.warn, Lang.Msgs.sign_can_not_space), this.value = a.name);
   };
-  g.onkeydown = function(b) {
-    13 == b.keyCode && this.blur();
+  g.onkeydown = function(a) {
+    13 == a.keyCode && this.blur();
   };
   c.nameField = g;
   c.appendChild(g);
@@ -11873,14 +11877,14 @@ Entry.VariableContainer.prototype.createListView = function(a) {
   h.setAttribute("disabled", "disabled");
   h.addClass("entryVariableListElementNameWorkspace");
   h.value = a.name_;
-  h.bindOnClick(function(b) {
-    b.stopPropagation();
+  h.bindOnClick(function(a) {
+    a.stopPropagation();
   });
   h.onblur = function(c) {
     (c = this.value.trim()) && 0 !== c.length ? b.changeListName(a, this.value) : (Entry.toast.alert(Lang.Msgs.warn, Lang.Msgs.list_can_not_space), this.value = a.getName());
   };
-  h.onkeydown = function(b) {
-    13 == b.keyCode && this.blur();
+  h.onkeydown = function(a) {
+    13 == a.keyCode && this.blur();
   };
   c.nameField = h;
   d.appendChild(h);
@@ -12158,8 +12162,8 @@ Entry.VariableContainer.prototype.addCloneLocalVariables = function(a) {
       c.json.script = c.json.script.replace(f.originId, f.id);
     }
   }, a);
-  b.map(function(b) {
-    c.addVariable(b);
+  b.map(function(a) {
+    c.addVariable(a);
   });
 };
 Entry.VariableContainer.prototype.generateTimer = function(a) {
@@ -12178,8 +12182,8 @@ Entry.VariableContainer.prototype.generateAnswer = function(a) {
 };
 Entry.VariableContainer.prototype.generateVariableSettingView = function() {
   var a = this, b = Entry.createElement("div");
-  b.bindOnClick(function(b) {
-    b.stopPropagation();
+  b.bindOnClick(function(a) {
+    a.stopPropagation();
   });
   this.variableSettingView = b;
   b.addClass("entryVariableSettingWorkspace");
@@ -12283,8 +12287,8 @@ Entry.VariableContainer.prototype.updateVariableSettingView = function(a) {
 };
 Entry.VariableContainer.prototype.generateListSettingView = function() {
   var a = this, b = Entry.createElement("div");
-  b.bindOnClick(function(b) {
-    b.stopPropagation();
+  b.bindOnClick(function(a) {
+    a.stopPropagation();
   });
   this.listSettingView = b;
   b.addClass("entryListSettingWorkspace");
@@ -12328,8 +12332,8 @@ Entry.VariableContainer.prototype.generateListSettingView = function() {
   d.onblur = function() {
     a.setListLength(this.value);
   };
-  d.onkeypress = function(b) {
-    13 == b.keyCode && this.blur();
+  d.onkeypress = function(a) {
+    13 == a.keyCode && this.blur();
   };
   b.lengthInput = d;
   c.appendChild(d);
@@ -12375,8 +12379,8 @@ Entry.VariableContainer.prototype.updateListSettingView = function(a) {
         h[c].data = this.value;
         a.updateView();
       };
-      f.onkeypress = function(b) {
-        13 == b.keyCode && this.blur();
+      f.onkeypress = function(a) {
+        13 == a.keyCode && this.blur();
       };
       f.addClass("entryListSettingEachInputWorkspace");
       e.appendChild(f);
@@ -12410,11 +12414,11 @@ Entry.VariableContainer.prototype.setListLength = function(a) {
 };
 Entry.VariableContainer.prototype.updateViews = function() {
   var a = this.lists_;
-  this.variables_.map(function(b) {
-    b.updateView();
+  this.variables_.map(function(a) {
+    a.updateView();
   });
-  a.map(function(b) {
-    b.updateView();
+  a.map(function(a) {
+    a.updateView();
   });
 };
 Entry.VariableContainer.prototype.updateSelectedVariable = function(a, b) {
@@ -12425,21 +12429,21 @@ Entry.VariableContainer.prototype.removeLocalVariables = function(a) {
   this.mapVariable(function(a, c) {
     a.object_ && a.object_ == c && b.push(a);
   }, a);
-  b.map(function(b) {
-    c.removeVariable(b);
+  b.map(function(a) {
+    c.removeVariable(a);
   });
 };
 Entry.VariableContainer.prototype.updateCloudVariables = function() {
   var a = Entry.projectId;
   if (Entry.cloudSavable && a) {
-    var b = Entry.variableContainer, a = b.variables_.filter(function(b) {
-      return b.isCloud_;
-    }), a = a.map(function(b) {
-      return b.toJSON();
-    }), b = b.lists_.filter(function(b) {
-      return b.isCloud_;
-    }), b = b.map(function(b) {
-      return b.toJSON();
+    var b = Entry.variableContainer, a = b.variables_.filter(function(a) {
+      return a.isCloud_;
+    }), a = a.map(function(a) {
+      return a.toJSON();
+    }), b = b.lists_.filter(function(a) {
+      return a.isCloud_;
+    }), b = b.map(function(a) {
+      return a.toJSON();
     });
     $.ajax({url:"/api/project/variable/" + Entry.projectId, type:"PUT", data:{variables:a, lists:b}}).done(function() {
     });
@@ -12960,69 +12964,69 @@ Entry.BlockMenu = function(a, b, c) {
 };
 (function(a) {
   a.schema = {code:null, dragBlock:null, closeBlock:null, selectedBlockView:null};
-  a._generateView = function(b) {
-    var a = this.view, d = this;
-    if (b) {
-      for (var e = Entry.Dom("ul", {class:"entryCategoryListWorkspace", parent:a}), f = 0;f < b.length;f++) {
-        var g = b[f].category;
-        (function(b, a) {
-          b.text(Lang.Blocks[a.toUpperCase()]);
-          d._categoryElems[a] = b;
-          b.bindOnClick(function(b) {
-            d.setMenu(a);
+  a._generateView = function(a) {
+    var c = this.view, d = this;
+    if (a) {
+      for (var e = Entry.Dom("ul", {class:"entryCategoryListWorkspace", parent:c}), f = 0;f < a.length;f++) {
+        var g = a[f].category;
+        (function(a, b) {
+          a.text(Lang.Blocks[b.toUpperCase()]);
+          d._categoryElems[b] = a;
+          a.bindOnClick(function(a) {
+            d.setMenu(b);
           });
         })(Entry.Dom("li", {id:"entryCategory" + g, class:"entryCategoryElementWorkspace", parent:e}), g);
       }
     }
-    this.blockMenuContainer = Entry.Dom("div", {"class":"blockMenuContainer", parent:a});
+    this.blockMenuContainer = Entry.Dom("div", {"class":"blockMenuContainer", parent:c});
     this.svgDom = Entry.Dom($('<svg id="' + this._snapId + '" class="blockMenu" version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'), {parent:this.blockMenuContainer});
-    this.svgDom.mouseenter(function(b) {
-      Entry.playground && !Entry.playground.resizing && (Entry.playground.focusBlockMenu = !0, b = d.expandWidth + 64, b > Entry.interfaceState.menuWidth && (this.widthBackup = Entry.interfaceState.menuWidth - 64, $(this).stop().animate({width:b - 64}, 200)));
+    this.svgDom.mouseenter(function(a) {
+      Entry.playground && !Entry.playground.resizing && (Entry.playground.focusBlockMenu = !0, a = d.expandWidth + 64, a > Entry.interfaceState.menuWidth && (this.widthBackup = Entry.interfaceState.menuWidth - 64, $(this).stop().animate({width:a - 64}, 200)));
     });
-    this.svgDom.mouseleave(function(b) {
-      Entry.playground && !Entry.playground.resizing && ((b = this.widthBackup) && $(this).stop().animate({width:b}, 200), delete this.widthBackup, delete Entry.playground.focusBlockMenu);
+    this.svgDom.mouseleave(function(a) {
+      Entry.playground && !Entry.playground.resizing && ((a = this.widthBackup) && $(this).stop().animate({width:a}, 200), delete this.widthBackup, delete Entry.playground.focusBlockMenu);
     });
   };
-  a.changeCode = function(b) {
-    if (!(b instanceof Entry.Code)) {
+  a.changeCode = function(a) {
+    if (!(a instanceof Entry.Code)) {
       return console.error("You must inject code instance");
     }
     this.codeListener && this.code.changeEvent.detach(this.codeListener);
-    var a = this;
-    this.set({code:b});
+    var c = this;
+    this.set({code:a});
     this.codeListener = this.code.changeEvent.attach(this, function() {
-      a.changeEvent.notify();
+      c.changeEvent.notify();
     });
-    b.createView(this);
+    a.createView(this);
     this.align();
   };
-  a.bindCodeView = function(b) {
+  a.bindCodeView = function(a) {
     this.svgBlockGroup.remove();
     this.svgThreadGroup.remove();
-    this.svgBlockGroup = b.svgBlockGroup;
-    this.svgThreadGroup = b.svgThreadGroup;
+    this.svgBlockGroup = a.svgBlockGroup;
+    this.svgThreadGroup = a.svgThreadGroup;
     this.svgGroup.append(this.svgThreadGroup);
     this.svgGroup.append(this.svgBlockGroup);
   };
   a.align = function() {
-    for (var b = this.code.getThreads(), a = 10, d = "LEFT" == this._align ? 20 : this.svgDom.width() / 2, e, f = 0, g = b.length;f < g;f++) {
-      var h = b[f].getFirstBlock(), k = h.view, h = Entry.block[h.type].class;
-      e && e !== h && (this._createSplitter(a), a += 15);
+    for (var a = this.code.getThreads(), c = 10, d = "LEFT" == this._align ? 20 : this.svgDom.width() / 2, e, f = 0, g = a.length;f < g;f++) {
+      var h = a[f].getFirstBlock(), k = h.view, h = Entry.block[h.type].class;
+      e && e !== h && (this._createSplitter(c), c += 15);
       e = h;
-      k._moveTo(d, a, !1);
-      a += k.height + 15;
+      k._moveTo(d, c, !1);
+      c += k.height + 15;
     }
     this.changeEvent.notify();
     this.expandWidth = this.svgGroup.getBBox().width + d;
   };
-  a.cloneToBoard = function(b) {
+  a.cloneToBoard = function(a) {
     if (null !== this.dragBlock && !this._boardBlockView) {
-      var a = this._svgWidth, d = this.dragBlock, e = d.block, f = e.getThread();
+      var c = this._svgWidth, d = this.dragBlock, e = d.block, f = e.getThread();
       if (e && f) {
         var e = this.workspace.getBoard(), g = this.workspace.getMode();
         this._boardBlockView = e.code.cloneThread(f, g).getFirstBlock().view;
-        this._boardBlockView._moveTo(d.x - a, d.y + (this.offset.top - e.offset.top), !1);
-        this._boardBlockView.onMouseDown.call(this._boardBlockView, b);
+        this._boardBlockView._moveTo(d.x - c, d.y + (this.offset.top - e.offset.top), !1);
+        this._boardBlockView.onMouseDown.call(this._boardBlockView, a);
         this._dragObserver = this._boardBlockView.observe(this, "_editDragInstance", ["x", "y"], !1);
       }
     }
@@ -13033,23 +13037,23 @@ Entry.BlockMenu = function(a, b, c) {
   };
   a.terminateDrag = function() {
     if (this._boardBlockView) {
-      var b = this._boardBlockView;
-      if (b) {
+      var a = this._boardBlockView;
+      if (a) {
         this.workspace.getBoard();
         this._boardBlockView = null;
-        var a = Entry.GlobalSvg.left, d = Entry.GlobalSvg.width / 2, b = b.getBoard().offset.left;
-        return a < b - d;
+        var c = Entry.GlobalSvg.left, d = Entry.GlobalSvg.width / 2, a = a.getBoard().offset.left;
+        return c < a - d;
       }
     }
   };
-  a.getCode = function(b) {
+  a.getCode = function(a) {
     return this._code;
   };
-  a.setSelectedBlock = function(b) {
-    var a = this.selectedBlockView;
-    a && a.removeSelected();
-    b instanceof Entry.BlockView ? b.addSelected() : b = null;
-    this.set({selectedBlockView:b});
+  a.setSelectedBlock = function(a) {
+    var c = this.selectedBlockView;
+    c && c.removeSelected();
+    a instanceof Entry.BlockView ? a.addSelected() : a = null;
+    this.set({selectedBlockView:a});
   };
   a.hide = function() {
     this.view.addClass("entryRemove");
@@ -13058,29 +13062,29 @@ Entry.BlockMenu = function(a, b, c) {
     this.view.removeClass("entryRemove");
   };
   a.renderText = function() {
-    for (var b = this.code.getThreads(), a = 0;a < b.length;a++) {
-      b[a].view.renderText();
+    for (var a = this.code.getThreads(), c = 0;c < a.length;c++) {
+      a[c].view.renderText();
     }
   };
   a.renderBlock = function() {
-    for (var b = this.code.getThreads(), a = 0;a < b.length;a++) {
-      b[a].view.renderBlock();
+    for (var a = this.code.getThreads(), c = 0;c < a.length;c++) {
+      a[c].view.renderBlock();
     }
   };
-  a._createSplitter = function(b) {
-    b = this.svgBlockGroup.line(30, b, this._svgWidth - 30, b);
-    b.attr({stroke:"#b5b5b5"});
-    this._splitters.push(b);
+  a._createSplitter = function(a) {
+    a = this.svgBlockGroup.line(30, a, this._svgWidth - 30, a);
+    a.attr({stroke:"#b5b5b5"});
+    this._splitters.push(a);
   };
   a._updateSplitters = function() {
-    var b = this._svgWidth - 30;
-    this._splitters.forEach(function(a) {
-      a.attr({x2:b});
+    var a = this._svgWidth - 30;
+    this._splitters.forEach(function(c) {
+      c.attr({x2:a});
     });
   };
   a._clearSplitters = function() {
-    for (var b = this._splitters, a = b.length - 1;0 <= a;a--) {
-      b[a].remove(), b.pop();
+    for (var a = this._splitters, c = a.length - 1;0 <= c;c--) {
+      a[c].remove(), a.pop();
     }
   };
   a.setWidth = function() {
@@ -13088,22 +13092,22 @@ Entry.BlockMenu = function(a, b, c) {
     this._updateSplitters();
     this.offset = this.svgDom.offset();
   };
-  a.setMenu = function(b) {
-    var a = this._categoryElems[b], d = this._selectedCategoryView, e = !1, f = this.workspace.board, g = f.view;
+  a.setMenu = function(a) {
+    var c = this._categoryElems[a], d = this._selectedCategoryView, e = !1, f = this.workspace.board, g = f.view;
     d && d.removeClass("entrySelectedCategory");
-    a == d ? (g.addClass("folding"), this._selectedCategoryView = null, a.removeClass("entrySelectedCategory"), Entry.playground.hideTabs(), e = !0, this.visible = !1) : d || (g.addClass("foldOut"), g.removeClass("folding"), Entry.playground.showTabs(), e = this.visible = !0);
+    c == d ? (g.addClass("folding"), this._selectedCategoryView = null, c.removeClass("entrySelectedCategory"), Entry.playground.hideTabs(), e = !0, this.visible = !1) : d || (g.addClass("foldOut"), g.removeClass("folding"), Entry.playground.showTabs(), e = this.visible = !0);
     e && Entry.bindAnimationCallbackOnce(g, function() {
       f.scroller.resizeScrollBar.call(f.scroller);
       g.removeClass("foldOut");
     });
-    this.visible && (a.addClass("entrySelectedCategory"), d = this._categoryCodes[b], this._selectedCategoryView = a, a.addClass("entrySelectedCategory"), d.constructor !== Entry.Code && (d = this._categoryCodes[b] = new Entry.Code(d)), this.changeCode(d));
+    this.visible && (c.addClass("entrySelectedCategory"), d = this._categoryCodes[a], this._selectedCategoryView = c, c.addClass("entrySelectedCategory"), d.constructor !== Entry.Code && (d = this._categoryCodes[a] = new Entry.Code(d)), this.changeCode(d));
   };
-  a._generateCategoryCodes = function(b) {
+  a._generateCategoryCodes = function(a) {
     this._categoryCodes = {};
-    for (var a = 0;a < b.length;a++) {
-      var d = b[a], e = [];
-      d.blocks.forEach(function(b) {
-        e.push([{type:b}]);
+    for (var c = 0;c < a.length;c++) {
+      var d = a[c], e = [];
+      d.blocks.forEach(function(a) {
+        e.push([{type:a}]);
       });
       this._categoryCodes[d.category] = e;
     }
@@ -13137,7 +13141,7 @@ Entry.BlockView = function(a, b, c) {
 };
 (function(a) {
   a.schema = {id:0, type:Entry.STATIC.BLOCK_RENDER_MODEL, x:0, y:0, offsetX:0, offsetY:0, width:0, height:0, contentWidth:0, contentHeight:0, magneting:!1, visible:!0, animating:!1, shadow:!0};
-  a._startRender = function(b, a) {
+  a._startRender = function(a, c) {
     this.svgGroup.attr({class:"block"});
     var d = this._skeleton.path(this);
     this._darkenPath = this.svgGroup.path(d);
@@ -13148,24 +13152,24 @@ Entry.BlockView = function(a, b, c) {
     d.class = "blockPath";
     this._path.attr(d);
     this._moveTo(this.x, this.y, !1);
-    this._startContentRender(a);
+    this._startContentRender(c);
     this._addControl();
   };
-  a._startContentRender = function(b) {
-    b = void 0 === b ? Entry.Workspace.MODE_BOARD : b;
+  a._startContentRender = function(a) {
+    a = void 0 === a ? Entry.Workspace.MODE_BOARD : a;
     this.contentSvgGroup && this.contentSvgGroup.remove();
-    var a = this._schema;
-    a.statements && a.statements.length && this.statementSvgGroup && this.statementSvgGroup.remove();
+    var c = this._schema;
+    c.statements && c.statements.length && this.statementSvgGroup && this.statementSvgGroup.remove();
     this._contents = [];
     this.contentSvgGroup = this.svgGroup.group();
-    a.statements && a.statements.length && (this.statementSvgGroup = this.svgGroup.group());
-    switch(b) {
+    c.statements && c.statements.length && (this.statementSvgGroup = this.svgGroup.group());
+    switch(a) {
       case Entry.Workspace.MODE_BOARD:
       ;
       case Entry.Workspace.MODE_OVERLAYBOARD:
-        var d = /(%\d)/mi, e = a.template.split(d), f = a.params;
-        for (b = 0;b < e.length;b++) {
-          var g = e[b].trim();
+        var d = /(%\d)/mi, e = c.template.split(d), f = c.params;
+        for (a = 0;a < e.length;a++) {
+          var g = e[a].trim();
           if (0 !== g.length) {
             if (d.test(g)) {
               var h = Number(g.split("%")[1]) - 1, g = f[h];
@@ -13175,36 +13179,36 @@ Entry.BlockView = function(a, b, c) {
             }
           }
         }
-        if ((a = a.statements) && a.length) {
-          for (b = 0;b < a.length;b++) {
-            this._statements.push(new Entry.FieldStatement(a[b], this, b));
+        if ((c = c.statements) && c.length) {
+          for (a = 0;a < c.length;a++) {
+            this._statements.push(new Entry.FieldStatement(c[a], this, a));
           }
         }
         break;
       case Entry.Workspace.MODE_VIMBOARD:
-        a = this.getBoard().workspace.getCodeToText(this.block), this._contents.push(new Entry.FieldText({text:a, color:"white"}, this));
+        c = this.getBoard().workspace.getCodeToText(this.block), this._contents.push(new Entry.FieldText({text:c, color:"white"}, this));
     }
     this.alignContent(!1);
   };
-  a.alignContent = function(b) {
-    !0 !== b && (b = !1);
-    for (var a = 0, d = 0, e = 0;e < this._contents.length;e++) {
+  a.alignContent = function(a) {
+    !0 !== a && (a = !1);
+    for (var c = 0, d = 0, e = 0;e < this._contents.length;e++) {
       var f = this._contents[e];
-      f.align(a, 0, b);
-      e !== this._contents.length - 1 && (a += 5);
+      f.align(c, 0, a);
+      e !== this._contents.length - 1 && (c += 5);
       f = f.box;
       d = Math.max(f.y + f.height, d);
-      a += f.width;
+      c += f.width;
     }
     if (this._statements.length) {
       for (f = this._skeleton.statementPos ? this._skeleton.statementPos(this) : [], e = 0;e < this._statements.length;e++) {
         var g = this._statements[e], h = f[e];
-        h && g.align(h.x, h.y, b);
+        h && g.align(h.x, h.y, a);
       }
     }
-    this.set({contentWidth:a, contentHeight:d});
-    b = this.getContentPos();
-    this.contentSvgGroup.transform("t" + b.x + " " + b.y);
+    this.set({contentWidth:c, contentHeight:d});
+    a = this.getContentPos();
+    this.contentSvgGroup.transform("t" + a.x + " " + a.y);
     this._render();
   };
   a._bindPrev = function() {
@@ -13214,56 +13218,56 @@ Entry.BlockView = function(a, b, c) {
   a._render = function() {
     this._renderPath();
     this.set(this._skeleton.box(this));
-    var b = this.block, a = b.events.blockAdd;
-    a && !this.isInBlockMenu && a.forEach(function(a) {
-      a(b);
+    var a = this.block, c = a.events.blockAdd;
+    c && !this.isInBlockMenu && c.forEach(function(c) {
+      c(a);
     });
   };
   a._renderPath = function() {
-    var b = this._skeleton.path(this);
-    this._darkenPath.attr({d:b});
-    this._path.attr({d:b});
+    var a = this._skeleton.path(this);
+    this._darkenPath.attr({d:a});
+    this._path.attr({d:a});
     this.set({animating:!1});
   };
-  a._align = function(b) {
+  a._align = function(a) {
     if (null !== this.block.prev) {
-      var a = this.block.prev.view;
-      !0 === b && this.set({animating:!0});
-      this.set({x:0, y:a.height + 1});
-      this._setPosition(!0 === b || this.animating);
+      var c = this.block.prev.view;
+      !0 === a && this.set({animating:!0});
+      this.set({x:0, y:c.height + 1});
+      this._setPosition(!0 === a || this.animating);
     }
   };
-  a._setPosition = function(b) {
-    b = void 0 === b ? !0 : b;
-    var a = "t" + this.x + " " + this.y;
+  a._setPosition = function(a) {
+    a = void 0 === a ? !0 : a;
+    var c = "t" + this.x + " " + this.y;
     this.svgGroup.stop();
-    b && 0 !== Entry.ANIMATION_DURATION ? this.svgGroup.animate({transform:a}, Entry.ANIMATION_DURATION, mina.easeinout) : $(this.svgGroup.node).attr({transform:"translate(" + this.x + " " + this.y + ")"});
+    a && 0 !== Entry.ANIMATION_DURATION ? this.svgGroup.animate({transform:c}, Entry.ANIMATION_DURATION, mina.easeinout) : $(this.svgGroup.node).attr({transform:"translate(" + this.x + " " + this.y + ")"});
   };
-  a._toLocalCoordinate = function(b) {
-    var a = b.transform().globalMatrix, d = this.svgGroup.transform().globalMatrix;
-    this._moveTo(d.e - a.e, d.f - a.f, !1);
-    b.append(this.svgGroup);
+  a._toLocalCoordinate = function(a) {
+    var c = a.transform().globalMatrix, d = this.svgGroup.transform().globalMatrix;
+    this._moveTo(d.e - c.e, d.f - c.f, !1);
+    a.append(this.svgGroup);
   };
   a._toGlobalCoordinate = function() {
-    var b = this.svgGroup.transform().globalMatrix;
-    this._moveTo(b.e, b.f, !1);
+    var a = this.svgGroup.transform().globalMatrix;
+    this._moveTo(a.e, a.f, !1);
     this._board.svgBlockGroup.append(this.svgGroup);
   };
-  a._moveTo = function(b, a, d) {
-    this.set({x:b, y:a});
+  a._moveTo = function(a, c, d) {
+    this.set({x:a, y:c});
     this._setPosition(d);
   };
-  a._moveBy = function(b, a, d) {
-    return this._moveTo(this.x + b, this.y + a, d);
+  a._moveBy = function(a, c, d) {
+    return this._moveTo(this.x + a, this.y + c, d);
   };
   a._addControl = function() {
-    var b = this;
+    var a = this;
     this.svgGroup.mousedown(function() {
-      var a = b.block.events;
-      a && a.mousedown && a.mousedown.forEach(function(b) {
-        b();
+      var c = a.block.events;
+      c && c.mousedown && c.mousedown.forEach(function(a) {
+        a();
       });
-      b.onMouseDown.apply(b, arguments);
+      a.onMouseDown.apply(a, arguments);
     });
   };
   a.onMouseDown = function(b) {
@@ -13294,12 +13298,12 @@ Entry.BlockView = function(a, b, c) {
         }
       }
     }
-    function d(b) {
+    function d(a) {
       Entry.GlobalSvg.remove();
       l.set({visible:!0});
       $(document).unbind(".block");
       delete this.mouseDownCoordinate;
-      l.terminateDrag(b);
+      l.terminateDrag(a);
       e && e.set({dragBlock:null});
       delete l.dragInstance;
     }
@@ -13345,23 +13349,23 @@ Entry.BlockView = function(a, b, c) {
       b.stopPropagation();
     }
   };
-  a.vimBoardEvent = function(b, a, d) {
-    b && (b = new MouseEvent(a, {view:window, bubbles:!0, cancelable:!0, clientX:b.clientX, clientY:b.clientY}), d && (b.block = d), document.getElementsByClassName("CodeMirror")[0].dispatchEvent(b));
+  a.vimBoardEvent = function(a, c, d) {
+    a && (a = new MouseEvent(c, {view:window, bubbles:!0, cancelable:!0, clientX:a.clientX, clientY:a.clientY}), d && (a.block = d), document.getElementsByClassName("CodeMirror")[0].dispatchEvent(a));
   };
-  a.terminateDrag = function(b) {
-    var a = this.getBoard(), d = this.dragMode, e = this.block, f = a.workspace.getMode();
+  a.terminateDrag = function(a) {
+    var c = this.getBoard(), d = this.dragMode, e = this.block, f = c.workspace.getMode();
     this.removeDragging();
     if (f === Entry.Workspace.MODE_VIMBOARD) {
-      a instanceof Entry.BlockMenu ? (a.terminateDrag(), this.vimBoardEvent(b, "dragEnd", e)) : a.clear();
+      c instanceof Entry.BlockMenu ? (c.terminateDrag(), this.vimBoardEvent(a, "dragEnd", e)) : c.clear();
     } else {
       if (d !== Entry.DRAG_MODE_MOUSEDOWN) {
-        (f = this.dragInstance && this.dragInstance.isNew) && (a.workspace.blockMenu.terminateDrag() || e.doAdd());
+        (f = this.dragInstance && this.dragInstance.isNew) && (c.workspace.blockMenu.terminateDrag() || e.doAdd());
         var g = Entry.GlobalSvg;
-        b = this.dragInstance && this.dragInstance.prev;
+        a = this.dragInstance && this.dragInstance.prev;
         switch(Entry.GlobalSvg.terminateDrag(this)) {
           case g.DONE:
             g = this._getCloseBlock();
-            if (b || g) {
+            if (a || g) {
               if (g) {
                 if (this.set({animating:!0}), g.next && g.next.view.set({animating:!0}), e.doInsert(g), createjs.Sound.play("entryMagneting"), g.constructor == Entry.FieldDummyBlock && (e = e.next)) {
                   -1 < Entry.FieldDummyBlock.PRIMITIVE_TYPES.indexOf(e.type) ? (e.getThread().cut(e), e.destroy(!1)) : (e.separate(), e.view._moveBy(10, 10, !1));
@@ -13375,12 +13379,12 @@ Entry.BlockView = function(a, b, c) {
             break;
           case g.RETURN:
             d = this.originPos;
-            b ? (this.set({animating:!1}), createjs.Sound.play("entryMagneting"), e.insert(b)) : this._moveTo(d.x, d.y, !1);
+            a ? (this.set({animating:!1}), createjs.Sound.play("entryMagneting"), e.insert(a)) : this._moveTo(d.x, d.y, !1);
             break;
           case g.REMOVE:
-            createjs.Sound.play("entryDelete"), f ? (b && e.separate(), this.block.destroy(!1)) : (b && e.doSeparate(), this.block.doDestroy(!1));
+            createjs.Sound.play("entryDelete"), f ? (a && e.separate(), this.block.destroy(!1)) : (a && e.doSeparate(), this.block.doDestroy(!1));
         }
-        a.setMagnetedBlock(null);
+        c.setMagnetedBlock(null);
       }
     }
     this.dragMode = Entry.DRAG_MODE_NONE;
@@ -13389,28 +13393,31 @@ Entry.BlockView = function(a, b, c) {
   };
   a._getCloseBlock = function() {
     if (this._skeleton.magnets) {
-      var b = this.getBoard(), a = this.x, d = this.y, e = b.relativeOffset, a = a + e.left;
-      if (a + this.offsetX < b.offset.left) {
-        return null;
-      }
-      a = Snap.getElementByPoint(a, d + e.top - 2);
-      if (null !== a && (d = this._skeleton.magnets(), d = d.previous ? "nextMagnet" : d.string ? "stringMagnet" : d.bool ? "booleanMagnet" : null)) {
-        for (e = a[d];!e && a.parent() && "svg" !== a.type && "BODY" !== a.type;) {
-          a = a.parent(), e = a[d];
+      var a = this._skeleton.magnets();
+      if (a = a.previous ? "nextMagnet" : a.string ? "stringMagnet" : a.bool ? "booleanMagnet" : a.param ? "paramMagnet" : null) {
+        var c = this.getBoard(), d = this.x, e = this.y, f = c.relativeOffset, d = d + f.left;
+        if (d + this.offsetX < c.offset.left) {
+          return null;
         }
-        return void 0 === e || e === this.block || e.view.getBoard() !== b ? null : e;
+        d = Snap.getElementByPoint(d, e + f.top - 2);
+        if (null !== d) {
+          for (e = d[a];!e && d.parent() && "svg" !== d.type && "BODY" !== d.type;) {
+            d = d.parent(), e = d[a];
+          }
+          return void 0 === e || e === this.block || e.view.getBoard() !== c ? null : e;
+        }
       }
     }
   };
   a._inheritAnimate = function() {
-    var b = this.block.prev.view;
-    b && this.set({animating:b.animating});
+    var a = this.block.prev.view;
+    a && this.set({animating:a.animating});
   };
   a.dominate = function() {
-    for (var b = this.getBoard().svgBlockGroup, a = this.svgGroup;a.parent() !== b;) {
-      a = a.parent();
+    for (var a = this.getBoard().svgBlockGroup, c = this.svgGroup;c.parent() !== a;) {
+      c = c.parent();
     }
-    b.append(a);
+    a.append(c);
   };
   a.getBoard = function() {
     return this._board;
@@ -13418,20 +13425,20 @@ Entry.BlockView = function(a, b, c) {
   a._setBoard = function() {
     this._board = this._board.code.board;
   };
-  a.destroy = function(b) {
-    var a = this.svgGroup;
-    b ? a.animate({opacity:0}, 100, null, function() {
+  a.destroy = function(a) {
+    var c = this.svgGroup;
+    a ? c.animate({opacity:0}, 100, null, function() {
       this.remove();
-    }) : a.remove();
-    this._contents.forEach(function(b) {
-      b.destroy();
+    }) : c.remove();
+    this._contents.forEach(function(a) {
+      a.destroy();
     });
-    this._statements.forEach(function(b) {
-      b.destroy();
+    this._statements.forEach(function(a) {
+      a.destroy();
     });
     var d = this.block;
-    (b = d.events.blockDestroy) && !this.isInBlockMenu && b.forEach(function(b) {
-      b(d);
+    (a = d.events.blockDestroy) && !this.isInBlockMenu && a.forEach(function(a) {
+      a(d);
     });
   };
   a.getShadow = function() {
@@ -13443,42 +13450,42 @@ Entry.BlockView = function(a, b, c) {
   };
   a._updateBG = function() {
     if (this._board.dragBlock && this._board.dragBlock.dragInstance) {
-      var b = this._board.dragBlock.dragInstance.height, a = this, d = a.svgGroup;
-      if (a.magneting) {
+      var a = this._board.dragBlock.dragInstance.height, c = this, d = c.svgGroup;
+      if (c.magneting) {
         var e = this._board.dragBlock.getShadow();
         $(e.node).attr({transform:"translate(0 " + (this.height + 1) + ")"});
         this.svgGroup.prepend(e);
         this._clonedShadow = e;
         console.log(e);
-        a.background && (a.background.remove(), a.nextBackground.remove(), delete a.background, delete a.nextBackground);
-        b = a.height + b;
-        e = d.rect(0 - a.width / 2, 1.5 * a.height + 1, a.width, Math.max(0, b - 1.5 * a.height));
-        e.block = a.block.next;
-        a.nextBackground = e;
+        c.background && (c.background.remove(), c.nextBackground.remove(), delete c.background, delete c.nextBackground);
+        a = c.height + a;
+        e = d.rect(0 - c.width / 2, 1.5 * c.height + 1, c.width, Math.max(0, a - 1.5 * c.height));
+        e.block = c.block.next;
+        c.nextBackground = e;
         e.attr({fill:"transparent"});
         d.prepend(e);
-        e = d.rect(0 - a.width / 2, 0, a.width, b);
-        a.background = e;
+        e = d.rect(0 - c.width / 2, 0, c.width, a);
+        c.background = e;
         e.attr({fill:"transparent"});
         d.prepend(e);
-        a.originalHeight = a.height;
-        a.set({height:b, animating:!1});
+        c.originalHeight = c.height;
+        c.set({height:a, animating:!1});
       } else {
-        if (this._clonedShadow && (this._clonedShadow.remove(), delete this._clonedShadow), b = a.originalHeight) {
+        if (this._clonedShadow && (this._clonedShadow.remove(), delete this._clonedShadow), a = c.originalHeight) {
           setTimeout(function() {
-            a.background && (a.background.remove(), a.nextBackground.remove(), delete a.background, delete a.nextBackground);
-          }, Entry.ANIMATION_DURATION), a.set({height:b}), delete a.originalHeight;
+            c.background && (c.background.remove(), c.nextBackground.remove(), delete c.background, delete c.nextBackground);
+          }, Entry.ANIMATION_DURATION), c.set({height:a}), delete c.originalHeight;
         }
       }
-      a.block.thread.changeEvent.notify();
+      c.block.thread.changeEvent.notify();
     }
   };
   a._createEmptyBG = function() {
     if (this.svgGroup.nextMagnet && !this.block.next) {
-      var b = this.svgGroup.rect(0 + this.offsetX, this.height, this.width, 20);
-      this.emptyBackground = b;
-      b.attr({fill:"transparent"});
-      this.svgGroup.prepend(b);
+      var a = this.svgGroup.rect(0 + this.offsetX, this.height, this.width, 20);
+      this.emptyBackground = a;
+      a.attr({fill:"transparent"});
+      this.svgGroup.prepend(a);
     } else {
       this.emptyBackground && (this.emptyBackground.remove(), delete this.emptyBackground);
     }
@@ -13511,9 +13518,9 @@ Entry.BlockView = function(a, b, c) {
     this.svgGroup.attr({opacity:!1 === this.visible ? 0 : 1});
   };
   a._updateShadow = function() {
-    var b;
-    b = this.shadow ? Entry.Utils.colorDarken(this._schema.color, .7) : "transparent";
-    this._darkenPath.attr({fill:b});
+    var a;
+    a = this.shadow ? Entry.Utils.colorDarken(this._schema.color, .7) : "transparent";
+    this._darkenPath.attr({fill:a});
   };
   a._setMovable = function() {
     this.movable = null !== this.block.isMovable() ? this.block.isMovable() : void 0 !== this._skeleton.movable ? this._skeleton.movable : !0;
@@ -13533,13 +13540,13 @@ Entry.Code = function(a) {
 };
 (function(a) {
   a.schema = {view:null, board:null};
-  a.load = function(b) {
-    if (!(b instanceof Array)) {
+  a.load = function(a) {
+    if (!(a instanceof Array)) {
       return console.error("code must be array");
     }
     this.clear();
-    for (var a = 0;a < b.length;a++) {
-      this._data.push(new Entry.Thread(b[a], this));
+    for (var c = 0;c < a.length;c++) {
+      this._data.push(new Entry.Thread(a[c], this));
     }
     return this;
   };
@@ -14338,8 +14345,11 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
           break;
         case "basic_string_field":
           this._valueBlock = a(this, {type:"text"});
+          break;
+        case "basic_param":
+          this._valueBlock = a(this, {type:"function_field_label"});
       }
-      this.dummyBlock.insertAfter([this._valueBlock]);
+      this._valueBlock && this.dummyBlock.insertAfter([this._valueBlock]);
     }
   };
 })(Entry.FieldBlock.prototype);
@@ -14358,6 +14368,9 @@ Entry.FieldDummyBlock = function(a, b) {
       break;
     case "basic_boolean_field":
       this.svgGroup.booleanMagnet = this;
+      break;
+    case "basic_param":
+      this.svgGroup.paramMagnet = this;
   }
   c = Entry.skeleton[c].box();
   this.path = this.svgGroup.rect(c.offsetX, c.offsetY - 10, c.width, c.height);
@@ -14800,6 +14813,17 @@ Entry.skeleton.basic_boolean_field = {path:function(a) {
   return {bool:{}};
 }, contentPos:function(a) {
   return {x:4, y:Math.max(a.contentHeight, 16) / 2 + 1};
+}};
+Entry.skeleton.basic_param = {path:function(a) {
+  a = a.contentWidth;
+  a = Math.max(0, a);
+  return "m 4,0 h 10 h %w l 2,2 0,3 3,0 1,1 0,12 -1,1 -3,0 0,3 -2,2h -%w h -10 l -2,-2 0,-3 3,0 1,-1 0,-12 -1,-1 -3,0 0,-3 2,-2".replace(/%w/gi, a);
+}, outerLine:!0, box:function(a) {
+  return {offsetX:0, offsetY:0, width:(a ? a.contentWidth : 5) + 18, height:24, marginBottom:0};
+}, magnets:function() {
+  return {param:{}};
+}, contentPos:function(a) {
+  return {x:11, y:12};
 }};
 Entry.skeleton.basic_button = {path:function() {
   return "m -64,0 h 128 a 6,6 0, 0,1 6,6 v 18 a 6,6 0, 0,1 -6,6 h -128 a 6,6 0, 0,1 -6,-6 v -18 a 6,6 0, 0,1 6,-6 z";

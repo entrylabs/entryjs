@@ -551,6 +551,16 @@ Entry.BlockView = function(block, board, mode) {
     p._getCloseBlock = function() {
         if (!this._skeleton.magnets)
             return;
+        var targetType = this._skeleton.magnets();
+
+        if (targetType.previous) targetType = 'nextMagnet';
+        else if (targetType.string) targetType = 'stringMagnet';
+        else if (targetType.bool) targetType = 'booleanMagnet';
+        else if (targetType.param) targetType = 'paramMagnet';
+        else targetType = null;
+
+        if (!targetType) return;
+
         var board = this.getBoard();
         var x = this.x,
             y = this.y;
@@ -564,15 +574,6 @@ Entry.BlockView = function(block, board, mode) {
         var targetElement = Snap.getElementByPoint(x, y + offset.top - 2);
 
         if (targetElement === null) return;
-
-        var targetType = this._skeleton.magnets();
-
-        if (targetType.previous) targetType = 'nextMagnet';
-        else if (targetType.string) targetType = 'stringMagnet';
-        else if (targetType.bool) targetType = 'booleanMagnet';
-        else targetType = null;
-
-        if (!targetType) return;
 
         var targetBlock = targetElement[targetType];
 

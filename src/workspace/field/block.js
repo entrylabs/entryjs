@@ -140,8 +140,12 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
                 case "basic_string_field":
                     this._valueBlock = getBlock(this, {type: "text"});
                     break;
+                case "basic_param":
+                    this._valueBlock = getBlock(this, {type: "function_field_label"});
+                    break;
             }
-            this.dummyBlock.insertAfter([this._valueBlock]);
+            if (this._valueBlock)
+                this.dummyBlock.insertAfter([this._valueBlock]);
         } else {
         }
 
@@ -175,6 +179,9 @@ Entry.FieldDummyBlock = function(statementField, blockView) {
             break;
         case "basic_boolean_field":
             this.svgGroup.booleanMagnet = this;
+            break;
+        case "basic_param":
+            this.svgGroup.paramMagnet = this;
             break;
     }
 
