@@ -1558,7 +1558,7 @@ EntryStatic.blockInfo = {
         "xml": "<block type='hamster_set_output_to'><value name='VALUE'><block type='text'><field name='NAME'>100</field></block></value></block>",
         "class": "hamster_port"
     },
-	
+
 	"albert_hand_found": {
         "isNotFor": ["albert"],
         "xml": "<block type='albert_hand_found'></block>",
@@ -1720,12 +1720,12 @@ EntryStatic.blockInfo = {
     },
     "sound_from_to": {
         "isNotFor": [""],
-        "xml": "<block type='sound_from_to'><value name='START'><block type='text'><field name='NAME'>1</field></block></value><value name='END'><block type='text'><field name='NAME'>10</field></block></value></block>",
+        "xml": "<block type='sound_from_to'><value name='VALUE'><block type='get_sounds'></block></value><value name='START'><block type='text'><field name='NAME'>1</field></block></value><value name='END'><block type='text'><field name='NAME'>10</field></block></value></block>",
         "class": ""
     },
     "sound_from_to_and_wait": {
         "isNotFor": [""],
-        "xml": "<block type='sound_from_to_and_wait'><value name='START'><block type='text'><field name='NAME'>1</field></block></value><value name='END'><block type='text'><field name='NAME'>10</field></block></value></block>",
+        "xml": "<block type='sound_from_to_and_wait'><value name='VALUE'><block type='get_sounds'></block></value><value name='START'><block type='text'><field name='NAME'>1</field></block></value><value name='END'><block type='text'><field name='NAME'>10</field></block></value></block>",
         "class": "sound_play"
     },
     "quotient_and_mod": {
