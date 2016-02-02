@@ -329,8 +329,8 @@ Blockly.Blocks.bitbrick_dc_direction_speed = {
     .appendField(new Blockly.FieldDropdownDynamic(Entry.Bitbrick.dcList), "PORT")
     .appendField(" ")
     .appendField(new Blockly.FieldDropdown([
-      [Lang.Blocks.BITBRICK_dc_direction_ccw,"CCW"],
-      [Lang.Blocks.BITBRICK_dc_direction_cw,"CW"]
+      [Lang.Blocks.BITBRICK_dc_direction_cw,"CW"],
+      [Lang.Blocks.BITBRICK_dc_direction_ccw,"CCW"]
       ]), "DIRECTION")
     .appendField(" 방향")
     .appendField(" 속력");
