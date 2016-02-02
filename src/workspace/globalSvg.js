@@ -44,7 +44,6 @@ goog.provide('Entry.GlobalSvg');
         this._view = view;
         this._mode = mode;
         this.draw();
-        this.resize();
         this.align();
         this.position();
     };
@@ -78,10 +77,6 @@ goog.provide('Entry.GlobalSvg');
         delete this._offsetX;
         delete this._offsetY;
         this.hide();
-    };
-
-    gs.resize = function() {
-        this.width = this._view.svgGroup.getBBox() + 3;
     };
 
     gs.align = function() {

@@ -142,7 +142,6 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
                     break;
             }
             this.dummyBlock.insertAfter([this._valueBlock]);
-        } else {
         }
 
         function getBlock(field, data) {
