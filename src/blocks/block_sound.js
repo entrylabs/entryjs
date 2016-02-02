@@ -483,4 +483,4 @@ Entry.block.sound_from_to_and_wait = function (sprite, script) {
         delete script.playState;
         return script.callReturn();
     }
-};;
+};
