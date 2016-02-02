@@ -257,7 +257,7 @@ Entry.removeEventListener = function(eventName, fn) {
  * @param {!string} eventName
  */
 Entry.removeAllEventListener = function(eventName) {
-    if (!eventName) return;
+    if (!this.events_ || !this.events_[eventName]) return;
     delete this.events_[eventName];
 };
 
@@ -806,4 +806,12 @@ Entry.Utils.inherit = function(parent, child) {
     F.prototype = parent.prototype;
     child.prototype = new F();
     return child;
+};
+
+Entry.bindAnimationCallbackOnce = function($elem, func) {
+    $elem.one("webkitAnimationEnd animationendo animationend", func);
+};
+
+Entry.Utils.isInInput = function(e) {
+    return e.target.type == 'textarea' || e.target.type == 'text';
 };

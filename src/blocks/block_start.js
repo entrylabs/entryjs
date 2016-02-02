@@ -210,22 +210,6 @@ Entry.block.message_cast = function (sprite, script) {
     return script.callReturn();
 };
 
-
-//메시지 추가
-Blockly.Blocks.add_message = {
-  init: function() {
-    this.setColour("#3BBD70");
-    this.appendDummyInput()
-        .appendField(Lang.Blocks.START_add_message)
-        .appendField(new Blockly.FieldIcon(Entry.mediaFilePath + 'block_icon/start_03.png', '*'));
-    this.setInputsInline(true);
-  }
-};
-
-Entry.block.add_massage = function (sprite, script) {
-    return script.callReturn();
-};
-
 Blockly.Blocks.message_cast_wait = {
   init: function() {
     this.setColour("#3BBD70");

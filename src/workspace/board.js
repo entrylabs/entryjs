@@ -15,7 +15,8 @@ goog.require("Entry.Scroller");
  *
  * @param {object} dom which to inject playground
  */
-Entry.Board = function(dom) {
+Entry.Board = function(option) {
+    var dom = option.dom;
     if (typeof dom === "string")
         dom = $('#' + dom);
     else
@@ -29,20 +30,24 @@ Entry.Board = function(dom) {
 
     Entry.Model(this, false);
 
+    this.view = dom;
+    this._snapId = 'play' + new Date().getTime();
+
+    this.workspace = option.workspace;
+
     this.wrapper = Entry.Dom('div', {
         parent: dom,
         class: 'entryBoardWrapper'
     });
 
     this.svgDom = Entry.Dom(
-        $('<svg id="play" class="entryBoard" width="100%" height="100%"' +
+        $('<svg id="' + this._snapId + '" class="entryBoard" width="100%" height="100%"' +
           'version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'),
         { parent: this.wrapper }
     );
 
     var zoom = document.documentElement.clientWidth / window.innerWidth;
     this.offset = this.svgDom.offset();
-    this.offset.top = 130;
     this.offset.left -= $(window).scrollLeft();
     this.relativeOffset = this.offset;
 
@@ -51,6 +56,7 @@ Entry.Board = function(dom) {
     $(window).scroll(updateOffset);
     Entry.windowResized.attach(this, updateOffset);
     function updateOffset(e) {
+        that.offset = that.svgDom.offset();
         var w = $(window),
             scrollTop = w.scrollTop(),
             scrollLeft = w.scrollLeft(),
@@ -60,10 +66,9 @@ Entry.Board = function(dom) {
             top: offset.top - scrollTop,
             left: offset.left - scrollLeft
         };
-        console.log('update');
     }
 
-    this.snap = Snap('#play');
+    this.snap = Snap('#' + this._snapId);
 
     this._blockViews = [];
 
@@ -130,7 +135,7 @@ Entry.Board = function(dom) {
         }
         this.set({magnetedBlockView: block});
         if (block) {
-            block.set({magneting: true, animating: true});
+            block.set({magneting: true});
             block.dominate();
             this.dragBlock.dominate();
         }
@@ -199,11 +204,8 @@ Entry.Board = function(dom) {
                 text: '붙여넣기',
                 enable: !!Entry.clipboard,
                 callback: function(){
-                    var cloned = Entry.clipboard;
-                    var first = cloned[0];
-                    first.doAdd();
-                    that.code.createThread(cloned);
-                    first.copyToClipboard();
+                    that.code.createThread(Entry.clipboard)
+                        .getFirstBlock().copyToClipboard();
                 }
             };
 
@@ -278,14 +280,14 @@ Entry.Board = function(dom) {
     };
 
     p.hide = function() {
-        //this.wrapper.addClass('entryRemove');
-        this.wrapper.css('opacity', '0');
+        this.wrapper.addClass('entryRemove');
+       // this.wrapper.css('opacity', '0');
         this.visible = false;
     };
 
     p.show = function() {
-        //this.wrapper.removeClass('entryRemove');
-        this.wrapper.css('opacity', '1');
+        this.wrapper.removeClass('entryRemove');
+        //this.wrapper.css('opacity', '1');
         this.visible = true;
         this.trashcan.setPosition();
     };

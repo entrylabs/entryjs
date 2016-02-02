@@ -416,6 +416,31 @@ span.CodeMirror-selectedtext {
   background: none;
 }
 
+.dragNone {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+.entryHidden {
+  visibility: hidden;
+}
+.entryRemove {
+  display: none !important;
+}
+.entryRemoveElement {
+  display: none !important;
+}
+.entryNoDeco {
+  text-decoration: none !important;
+}
+.entryBtn {
+  border: none;
+  margin: 0;
+  background-color: transparent;
+}
 
 .dragNone {
   -webkit-touch-callout: none;
@@ -482,17 +507,17 @@ span.CodeMirror-selectedtext {
   position: relative;
   z-index: 999;
   cursor: pointer;
-  background: url("../images/top_icon_add_b_nor.png");
+  background-image: url("../images/top_icon_add_b_nor.png");
 }
 .selectedScene .entrySceneLeftWorkspace {
-  background: url("../images/top_tab_b_sel_left.png");
+  background-image: url("../images/top_tab_b_sel_left.png");
 }
 .entrySceneLeftWorkspace {
   display: inline-block;
   float: left;
   width: 15px;
   height: 40px;
-  background: url("../images/top_tab_b_nor_left_blue.png");
+  background-image: url("../images/top_tab_b_nor_left_blue.png");
 }
 .entrySceneInputCover {
   margin-left: -1px;
@@ -541,10 +566,10 @@ span.CodeMirror-selectedtext {
   float: left;
   height: 40px;
   position: relative;
-  background: url("../images/top_tab_b_nor_right_blue.png");
+  background-image: url("../images/top_tab_b_nor_right_blue.png");
 }
 .selectedScene .entrySceneRemoveButtonCoverWorkspace {
-  background: url("../images/top_tab_b_sel_right.png");
+  background-image: url("../images/top_tab_b_sel_right.png");
 }
 .entrySceneRemoveButtonWorkspace {
   border: 0;
@@ -591,6 +616,12 @@ span.CodeMirror-selectedtext {
   border-bottom: 2pt solid #639FBD;
   border-right: 2pt solid #639FBD;
 }
+.entryUndoButtonWorkspace {
+  background-image: url("/img/assets/undo.png");
+}
+.entryRedoButtonWorkspace {
+  background-image: url("/img/assets/redo.png");
+}
 .entryCanvasWrapper {
   position: absolute;
 }
@@ -601,6 +632,9 @@ span.CodeMirror-selectedtext {
   display: block;
   position: absolute;
   top: 24px;
+}
+.entryPopupWindow .entryCanvasWorkspace {
+  top: -11px !important;
 }
 .entryCanvasPhone {
   width: 100%;
@@ -1029,6 +1063,9 @@ span.CodeMirror-selectedtext {
 .entryStopButtonWorkspace_w2 {
   display: none;
 }
+.entryPauseButtonWorkspace_w {
+  display: none;
+}
 .entryEngineBlueWorkspace > .entryStopButtonWorkspace {
   background-image: url("../images/stopbutton_play.png");
   color: white;
@@ -1050,13 +1087,102 @@ span.CodeMirror-selectedtext {
   background-image: url("../images/pausebutton_play.png");
   color: white;
 }
-.entryContainerWorkspace {
+.entryEngineBigButtonMinimize_popup {
+  border: none;
+  display: none;
+  margin: 0;
+  padding: 0;
+  position: absolute;
+  left: 50%;
+  width: 111px;
+  height: 111px;
+  margin-left: -55.5px;
+  top: 50%;
+  margin-top: -55.5px;
+  background-repeat: no-repeat;
+  background-position: 40px center;
+  background-color: rgba(0, 0, 0, 0.5);
+  border-radius: 55px;
+}
+.entryEngineBigButtonMinimize_popup:hover {
+  opacity: 0.8;
+}
+.entryEngineBigButtonMinimize_popup:focus {
+  outline: none;
+}
+.entryEngineBigButtonMinimize_popup.entryEngineBigButtonMinimize_popup_run {
+  background-image: url("../images/play_btn.png");
+}
+.entryPopupWindow .entryEngineBigButtonMinimize_popup {
+  display: block;
+}
+.propertyPanel {
   position: absolute;
   top: 326px;
   bottom: 0px;
   width: 400px;
   background-color: #e7e7e7;
   border-top: 2px solid #5096f5;
+}
+.propertyTab {
+  width: 50px;
+  height: 100%;
+  background-color: #f5f5f5;
+}
+.collapsed .propertyTab {
+  width: 30px;
+}
+.propertyTabElement {
+  width: 100%;
+  height: 40px;
+  background-color: #dbdcdc;
+  background-repeat: no-repeat;
+  background-position: 50% 6px;
+  color: #9e9e9f;
+  font-size: 11px;
+  padding-top: 24px;
+  cursor: pointer;
+  text-align: center;
+}
+.collapsed .propertyTabElement {
+  background-position: 50% 9px;
+  height: 36px;
+  font-size: 0;
+}
+.propertyTabElement.selected {
+  background-color: #5096f5;
+  color: #fff;
+}
+.propertyTabcontainer {
+  background-image: url("../images/property/container_off.png");
+}
+.propertyTabcontainer.selected {
+  background-image: url("../images/property/container_on.png");
+}
+.propertyTabhw {
+  background-image: url("../images/property/hw_off.png");
+}
+.propertyTabhw.selected {
+  background-image: url("../images/property/hw_on.png");
+}
+.propertyContent {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50px;
+  right: 0;
+}
+.collapsed .propertyContent {
+  left: 30px;
+}
+.hwMonitor {
+  background-color: #363c46;
+}
+.hwComponent text {
+  font-size: 12px;
+}
+.entryContainerWorkspace {
+  background-color: #e7e7e7;
 }
 .entryContainerPhone {
   width: 100%;
@@ -1125,12 +1251,74 @@ span.CodeMirror-selectedtext {
   border-top: 1px solid #aaaaaa;
   border-bottom: 1px solid #aaaaaa;
 }
-.collapsed > .entryContainerListElementWorkspace.selectedObject {
+.collapsed .selectedObject {
   height: 149px;
 }
 .entryContainerListElementWorkspace:first-child,
 .entryContainerListElementWorkspace.selectedObject + .entryContainerListElementWorkspace {
   border-top: 0;
+}
+.entryContainerTabViewWorkspace {
+  width: 100%;
+  height: 45px;
+  border-bottom: 2px solid #1bafea;
+}
+.entryContainerTabItemWorkspace {
+  vertical-align: top;
+  height: 100%;
+  width: 25%;
+  text-align: center;
+  display: inline-block;
+  background-color: #e5e5e5;
+  color: #9e9f9f;
+  font-size: 13px;
+  cursor: pointer;
+  padding-top: 13px;
+}
+.entryContainerTabItemWorkspace:nth-child(2) {
+  border-left: 2px solid white;
+  border-right: 2px solid white;
+}
+.entryContainerTabItemWorkspace:nth-child(3) {
+  border-right: 2px solid white;
+}
+.entryContainerTabItemWorkspace.selected {
+  background-color: #1bafea;
+  color: white;
+}
+.entryContainerListWorkspaceWrapper.lecture {
+  top: 45px;
+}
+.entryContainerMovieWorkspace {
+  position: absolute;
+  width: 100%;
+  top: 45px;
+  bottom: 0px;
+  background-color: #363C46;
+  z-index: 1000;
+  overflow: scroll;
+}
+.entryContainerMovieWorkspace::-webkit-scrollbar {
+  display: none;
+}
+.entryContainerDoneWorkspace {
+  position: absolute;
+  width: 100%;
+  top: 45px;
+  bottom: 0;
+  background-color: #363C46;
+  z-index: 1000;
+  overflow: hidden;
+  text-align: center;
+}
+.entryContainerHelperWorkspace {
+  position: absolute;
+  width: 100%;
+  top: 45px;
+  bottom: 0;
+  background-color: #fff;
+  z-index: 1000;
+  background: gray;
 }
 .objectInfoView {
   list-style: none;
@@ -1286,6 +1474,16 @@ span.CodeMirror-selectedtext {
   cursor: pointer;
   background-image: url("../images/glyphicons_150_edit.png");
 }
+.entryObjectSelectedImgWorkspace {
+  float: left;
+  position: absolute;
+  width: 14px;
+  height: 26px;
+  right: 0;
+  top: 20px;
+  cursor: col-resize;
+  background-image: url("../images/entry_scroll.png");
+}
 .selectedObject .entryObjectSelectedImgWorkspace {
   float: left;
   position: absolute;
@@ -1380,7 +1578,7 @@ span.CodeMirror-selectedtext {
   border-top: 1px solid #e1e1e1;
   background-color: #e5e5e5;
 }
-.collapsed > .entryContainerListElementWorkspace > .entryObjectRotationWrapperWorkspace {
+.collapsed .entryObjectRotationWrapperWorkspace {
   height: 90px;
 }
 .selectedObject .entryObjectRotationWrapperWorkspace {
@@ -1394,7 +1592,7 @@ span.CodeMirror-selectedtext {
   width: 180px;
   position: relative;
 }
-.collapsed > .entryContainerListElementWorkspace > .entryObjectRotationWrapperWorkspace > .rotationMethodWrapper {
+.collapsed .rotationMethodWrapper {
   float: left;
   top: 39px;
 }
@@ -1461,6 +1659,50 @@ span.CodeMirror-selectedtext {
 }
 .entryObjectRotateModeCWorkspace.selected {
   background-image: url("../images/layers_icon_rotate03_sel.png");
+}
+.entryObjectCoordinateSpanWorkspace {
+  float: left;
+  position: absolute;
+}
+.entryObjectCoordinateSpanWorkspace:nth-child(3) {
+  float: left;
+  margin-left: 57px;
+}
+.entryObjectCoordinateSizeWorkspace {
+  float: left;
+  margin-left: 113px;
+  position: absolute;
+}
+.entryObjectCoordinateInputWorkspace {
+  width: 40px;
+  height: 20px;
+  position: absolute;
+  float: left;
+  margin: -2px 5px 0px 15px;
+  background-color: #e5e5e5;
+  border: none;
+  border: 1px solid transparent;
+}
+.entryObjectCoordinateInputWorkspace_right {
+  margin-left: 70px;
+}
+.entryObjectCoordinateInputWorkspace_size {
+  float: left;
+  position: absolute;
+  margin-left: 145px;
+}
+.entryObjectCoordinateInputWorkspace:hover,
+.entryObjectCoordinateInputWorkspace:focus,
+.entryObjectRotateInputWorkspace:hover,
+.entryObjectDirectionInputWorkspace:hover,
+.entryObjectRotateInputWorkspace:focus,
+.entryObjectDirectionInputWorkspace:focus {
+  background-color: white;
+}
+.entryObjectCoordinateInputWorkspace:disabled,
+.entryObjectRotateInputWorkspace:disabled,
+.entryObjectDirectionInputWorkspace:disabled {
+  background-color: transparent;
 }
 .entryPlaygroundWorkspace {
   position: absolute;
@@ -1713,228 +1955,6 @@ span.CodeMirror-selectedtext {
 .entryPlaygroundCodePhone.entryRemove {
   display: block !important;
   visibility: hidden;
-}
-.entryVariablePanelWorkspace {
-  position: absolute;
-  width: 250px;
-  top: 47px;
-  bottom: 0px;
-  padding: 6px 4px 0px 4px;
-}
-.entryVariablePanelPhone {
-  width: 250px;
-  top: 47px;
-  bottom: 0px;
-  padding: 6px 4px 0px 4px;
-}
-.entryVariableSelectorWorkspace {
-  width: 100%;
-  border-collapse: separate;
-  border-spacing: 0;
-}
-.entryVariableSelectButtonWorkspace {
-  font-family: nanumBarunBold !important;
-  width: 25%;
-  border-collapse: collapse;
-  text-align: center;
-  vertical-align: center;
-  background-color: #EDEDED;
-  height: 38px;
-  border: solid 1px #bdbdbd;
-  border-left: none;
-  color: #535353;
-  padding-top: 4px;
-  cursor: pointer;
-}
-.entryVariableSelectButtonWorkspace.selected {
-  color: #ffffff;
-  background-color: #0e68e3;
-}
-.entryVariableSelectButtonWorkspace.allButton {
-  border-radius: 6px 0 0 6px;
-  border-left: solid 1px #bdbdbd;
-}
-.entryVariableSelectButtonWorkspace.message {
-  border-radius: 0 6px 0px 0;
-}
-.entryVariableSelectButtonWorkspace.list {
-  border-top: none;
-}
-.entryVariableSelectButtonWorkspace.func {
-  border-top: none;
-  border-radius: 0 0px 6px 0;
-}
-.entryVariableSelectButtonWorkspace.disable {
-  color: #bdbdbd;
-  cursor: default;
-}
-.entryVariableListWorkspace {
-  position: absolute;
-  top: 88px;
-  bottom: 0px;
-  right: 4px;
-  left: 4px;
-  padding: 0;
-  margin: 0;
-  list-style: none;
-  overflow: auto;
-}
-.entryVariableListElementWorkspace {
-  background-repeat: no-repeat;
-  background-position: 14px 10px;
-  background-color: #efefef;
-  border: solid 1px #a8a8a8;
-  margin-bottom: -1px;
-  min-height: 50px;
-}
-.entryVariableAddWorkspace {
-  padding: 0;
-  font-size: 13pt;
-  color: #717171;
-  cursor: pointer;
-  line-height: 49px;
-  position: relative;
-  text-align: center;
-}
-.entryVariableAddWorkspace:hover {
-  background-color: #d3d3d3;
-  color: #333;
-}
-.entryVariableListElementWorkspace.selected {
-  background-color: #d3d3d3;
-}
-.entryVariableListElementNameWorkspace {
-  position: absolute;
-  left: 47px;
-  margin-top: 12px;
-  background-color: #efefef;
-  width: 55%;
-  border: 1px solid transparent;
-  padding-left: 5px;
-}
-.selected .entryVariableListElementNameWorkspace {
-  background-color: #d3d3d3;
-}
-.entryVariableListElementNameWorkspace:focus {
-  background-color: white;
-  border: 1px solid gray;
-}
-.entryVariableFunctionElementNameWorkspace {
-  border: none;
-  position: absolute;
-  left: 55px;
-  margin-top: 12px;
-  background-color: transparent;
-  width: 60%;
-  overflow: hidden;
-  height: 20px;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-.entryVariableListElementDeleteWorkspace {
-  position: absolute;
-  margin-top: 5px;
-  padding-right: 5px;
-  right: 3px;
-  border: 0;
-  outline: 0;
-  width: 22px;
-  height: 40px;
-  opacity: 0;
-  background-color: transparent;
-  background-image: url("../images/layers_icon_close_nor_new_1.png");
-  background-repeat: no-repeat;
-  background-position: center;
-}
-.entryVariableListElementWorkspace:hover .entryVariableListElementDeleteWorkspace {
-  opacity: 1;
-}
-.entryVariableListElementEditWorkspace {
-  display: inline-block;
-  float: right;
-  border: 0;
-  outline: 0;
-  width: 20px;
-  height: 40px;
-  margin-top: 5px;
-  margin-right: 25px;
-  background-color: transparent;
-  background-image: url("../images/layers_icon_edit_nor_new_1.png");
-  background-repeat: no-repeat;
-  background-position: center;
-  opacity: 0;
-}
-.entryVariableListElementWorkspace:hover .entryVariableListElementEditWorkspace {
-  opacity: 1;
-}
-.entryVariableListCallerListWorkspace {
-  list-style: none;
-  padding: 0;
-}
-.entryVariableListCallerWorkspace {
-  border: solid 1px #c8c8c8;
-  border-top: none;
-  height: 50px;
-  cursor: pointer;
-  overflow: hidden;
-}
-.entryVariableListCallerWorkspace:hover {
-  background-color: #e0e0e0;
-}
-.entryVariableListCallerWorkspace:first-child {
-  border-top: none;
-}
-.entryVariableListCallerWorkspace > .entryObjectThumbnailWorkspace {
-  position: inherit;
-  display: block;
-  float: left;
-  top: 0;
-  left: 0;
-  margin: 5px 0 0 5px;
-  height: 40px;
-  width: 40px;
-}
-.entryVariableListCallerNameWorkspace {
-  position: absolute;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  float: left;
-  height: 49px;
-  line-height: 49px;
-  left: 60px;
-  right: 0;
-  padding-right: 7px;
-}
-.entryVariableListCallerNoneWorkspace {
-  color: #C16B6B;
-  cursor: default;
-  line-height: 48px;
-  padding-left: 50px;
-}
-.entryVariableLocalElementWorkspace {
-  background-image: url("../images/local_question_icon.png");
-}
-.entryVariableCloudElementWorkspace {
-  background-image: url("../images/cloud_question_icon.png");
-}
-.entryVariableGlobalElementWorkspace {
-  background-image: url("../images/list_icon_question.png");
-}
-.entryMessageElementWorkspace {
-  background-image: url("../images/list_icon_signal.png");
-}
-.entryListCloudElementWorkspace {
-  background-image: url("../images/cloud_list_icon.png");
-}
-.entryListGlobalElementWorkspace {
-  background-image: url("../images/list_icon_list.png");
-}
-.entryListLocalElementWorkspace {
-  background-image: url("../images/local_list_icon.png");
-}
-.entryFunctionElementWorkspace {
-  background-image: url("../images/list_icon_function_v1.png");
 }
 .entryPlaygroundPictureWorkspace {
   position: absolute;
@@ -2256,106 +2276,7 @@ span.CodeMirror-selectedtext {
   background-color: #363C46;
   color: white;
 }
-.entryCategoryWorkspace {
-  width: 74px;
-  height: 100%;
-  display: block;
-}
-.entryCategoryListWorkspace {
-  padding: 44px 0 0 0;
-  margin: 0;
-  list-style-type: none;
-}
-.entryCategoryListPhone {
-  padding: 0;
-  margin: 0;
-  list-style-type: none;
-}
-.entryCategoryElementWorkspace {
-  clear: both;
-  padding-top: 38px;
-  width: 64px;
-  text-align: center;
-  background-color: #edf5f7;
-  font-size: 13px;
-  color: #474747;
-  float: left;
-  border-bottom: 1px solid #a6cafb;
-  cursor: pointer;
-  font-family: nanumBarunBold !important;
-}
-@media screen and (max-height: 10000px) {
-  .entryCategoryElementWorkspace {
-    height: 61px;
-    background-position: 50% 6px;
-    padding-top: 38px;
-  }
-}
-@media screen and (max-height: 880px) {
-  .entryCategoryElementWorkspace {
-    height: 56px;
-    background-position: 50% 4px;
-    padding-top: 34px;
-  }
-}
-@media screen and (max-height: 810px) {
-  .entryCategoryElementWorkspace {
-    height: 50px;
-    background-position: 50% 2px;
-    padding-top: 30px;
-  }
-}
-@media screen and (max-height: 740px) {
-  .entryCategoryElementWorkspace {
-    height: 42px;
-    background-position: 50% 1px;
-    background-size: 35px;
-    padding-top: 23px;
-  }
-}
-@media screen and (max-height: 640px) {
-  .entryCategoryElementWorkspace {
-    height: 36px;
-    background-position: 50% 1px;
-    background-size: 30px;
-    padding-top: 18px;
-  }
-}
-.entryCategoryElementPhone {
-  height: 50px;
-  clear: both;
-  width: 56px;
-  padding-top: 30px;
-  text-align: center;
-  background-color: #E2E9F0;
-  font-size: 13px;
-  color: #474747;
-  float: left;
-  border-bottom: 1px solid #B7C4CC;
-  background-position: 5px 2px;
-  cursor: pointer;
-}
-.entryCategoryElementEndWorkspace {
-  clear: both;
-  width: 3px;
-  margin-left: 56px;
-  background-color: #515B7C;
-  height: 4000px;
-}
-.entrySelectedCategory {
-  margin: 0;
-  background-color: #e5e5e5;
-}
-.entryBlockMenuWorkspace {
-  background-color: #e5e5e5;
-  position: absolute;
-  left: 64px;
-  top: 45px;
-  width: 186px;
-  bottom: 0px;
-  z-index: 100;
-}
-.entryBlocklyWorkspace {
+.entryWorkspaceBoard {
   position: absolute;
   left: 250px;
   top: 8px;
@@ -2366,87 +2287,87 @@ span.CodeMirror-selectedtext {
   border-top-left-radius: 10px;
   background-image: url("../images/entry_bg.png");
 }
-.entryBlocklyWorkspace.folding {
+.entryWorkspaceBoard.folding {
   z-index: 300;
   border-left: solid 1px #C4C4B9;
   -webkit-animation-duration: 0.7s;
   -moz-animation-duration: 0.7s;
   -ms-animation-duration: 0.7s;
   -o-animation-duration: 0.7s;
-  -webkit-animation-name: foldBlockly;
-  -moz-animation-name: foldBlockly;
-  -ms-animation-name: foldBlockly;
-  -o-animation-name: foldBlockly;
-  animation-name: foldBlockly;
+  -webkit-animation-name: foldBoard;
+  -moz-animation-name: foldBoard;
+  -ms-animation-name: foldBoard;
+  -o-animation-name: foldBoard;
+  animation-name: foldBoard;
   -webkit-animation-fill-mode: forwards;
   -moz-animation-fill-mode: forwards;
   -ms-animation-fill-mode: forwards;
   -o-animation-fill-mode: forwards;
   animation-fill-mode: forwards;
 }
-@keyframes foldBlockly {
+@keyframes foldBoard {
   to {
     left: 64px;
   }
 }
-@-ot-keyframes foldBlockly {
+@-ot-keyframes foldBoard {
   to {
     left: 64px;
   }
 }
-@-ms-keyframes foldBlockly {
+@-ms-keyframes foldBoard {
   to {
     left: 64px;
   }
 }
-@-moz-keyframes foldBlockly {
+@-moz-keyframes foldBoard {
   to {
     left: 64px;
   }
 }
-@-webkit-keyframes foldBlockly {
+@-webkit-keyframes foldBoard {
   to {
     left: 64px;
   }
 }
-.entryBlocklyWorkspace.foldOut {
+.entryWorkspaceBoard.foldOut {
   z-index: 300;
   -webkit-animation-duration: 0.7s;
   -moz-animation-duration: 0.7s;
   -ms-animation-duration: 0.7s;
   -o-animation-duration: 0.7s;
-  -webkit-animation-name: foldOutBlockly;
-  -moz-animation-name: foldOutBlockly;
-  -ms-animation-name: foldOutBlockly;
-  -o-animation-name: foldOutBlockly;
-  animation-name: foldOutBlockly;
+  -webkit-animation-name: foldOutBoard;
+  -moz-animation-name: foldOutBoard;
+  -ms-animation-name: foldOutBoard;
+  -o-animation-name: foldOutBoard;
+  animation-name: foldOutBoard;
   -webkit-animation-fill-mode: forwards;
   -moz-animation-fill-mode: forwards;
   -ms-animation-fill-mode: forwards;
   -o-animation-fill-mode: forwards;
   animation-fill-mode: forwards;
 }
-@keyframes foldOutBlockly {
+@keyframes foldOutBoard {
   from {
     left: 64px;
   }
 }
-@-o-keyframes foldOutBlockly {
+@-o-keyframes foldOutBoard {
   from {
     left: 64px;
   }
 }
-@-ms-keyframes foldOutBlockly {
+@-ms-keyframes foldOutBoard {
   from {
     left: 64px;
   }
 }
-@-moz-keyframes foldOutBlockly {
+@-moz-keyframes foldOutBoard {
   from {
     left: 64px;
   }
 }
-@-webkit-keyframes foldOutBlockly {
+@-webkit-keyframes foldOutBoard {
   from {
     left: 64px;
   }
@@ -2560,6 +2481,672 @@ span.CodeMirror-selectedtext {
 .entrySelectedCategory#entryCategoryarduino {
   border-right: none;
 }
+.entryPlaygroundPictureOrder,
+.entryPlaygroundSoundOrder {
+  width: 15px;
+  height: 100%;
+  float: left;
+  line-height: 57px;
+  font-size: 10px;
+  text-align: center;
+  background-color: #d8d8d8;
+}
+.entryPictureSelected .entryPlaygroundPictureOrder {
+  background-color: #634cd9;
+  color: white;
+}
+.entryPlayground_text_buttons {
+  display: inline-block;
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+.entryPlayground_text_buttons > li {
+  float: left;
+  width: 32px;
+  height: 32px;
+  margin-left: 2px;
+  cursor: pointer;
+}
+.entryPlaygroundTextAlignLeft {
+  background-image: url("../images/text_align_left_off.png");
+}
+.entryPlaygroundTextAlignLeft.toggle {
+  background-image: url("../images/text_align_left_on.png");
+}
+.entryPlaygroundTextAlignCenter {
+  background-image: url("../images/text_align_center_off.png");
+}
+.entryPlaygroundTextAlignCenter.toggle {
+  background-image: url("../images/text_align_center_on.png");
+}
+.entryPlaygroundTextAlignRight {
+  background-image: url("../images/text_align_right_off.png");
+}
+.entryPlaygroundTextAlignRight.toggle {
+  background-image: url("../images/text_align_right_on.png");
+}
+.entryPlayground_fgColorDiv {
+  position: absolute;
+  width: 15px;
+  height: 4px;
+  margin-top: -15px;
+  margin-left: 345px;
+}
+.entryPlayground_bgColorDiv {
+  position: absolute;
+  width: 15px;
+  height: 4px;
+  margin-top: -15px;
+  margin-left: 379px;
+}
+.entryPlayground_textBox {
+  margin-top: 5px;
+  height: 33px;
+  width: 400px;
+}
+.entryPlayground_textArea {
+  margin-top: 5px;
+  height: 120px;
+  width: 400px;
+  resize: none;
+}
+.entryPlaygroundFontSizeWrapper {
+  width: 400px;
+  height: 39px;
+}
+.entryPlaygroundFontSizeLabel {
+  display: inline-block;
+  float: right;
+  font-size: 9px;
+  font-family: notoSansMedium;
+  color: #444;
+  line-height: 39px;
+}
+.entryPlaygroundFontSizeSlider {
+  display: inline-block;
+  float: right;
+  width: 96px;
+  height: 3px;
+  margin: 18px 0px 18px 4px;
+  background-color: #cfcfcf;
+  border-radius: 1.5px;
+}
+.entryPlaygroundFontSizeIndicator {
+  height: 100%;
+  width: 45%;
+  background-color: #643cd9;
+}
+.entryPlaygroundFontSizeKnob {
+  width: 16px;
+  height: 16px;
+  position: relative;
+  margin-top: -10px;
+  margin-left: -7px;
+  background-image: url("../images/text_size_knob.png");
+  cursor: pointer;
+}
+.entryPlaygroundTextColoursWrapper {
+  width: 260px;
+  height: 226px;
+  z-index: 10;
+  cursor: pointer;
+  margin-top: -5px;
+  margin-left: 335px;
+  padding: 20px 5px;
+  position: absolute;
+  background-image: url("../images/text_color_bg.png");
+  background-repeat: no-repeat;
+  background-size: 260px 226px;
+}
+.entryPlaygroundTextBackgroundsWrapper {
+  width: 260px;
+  height: 226px;
+  z-index: 10;
+  cursor: pointer;
+  margin-top: -5px;
+  margin-left: 369px;
+  padding: 20px 5px;
+  position: absolute;
+  background-image: url("../images/text_color_bg_1.png");
+  background-repeat: no-repeat;
+  background-size: 260px 226px;
+}
+.entryPlaygroundLinebreakWrapper {
+  position: fixed;
+  top: 351px;
+}
+.entryPlaygroundLinebreakButtons {
+  display: inline;
+  font-size: 0;
+}
+.entryPlaygroundLinebreakButtons img {
+  cursor: pointer;
+}
+.entryPlaygroundLinebreakHorizontal {
+  display: block;
+  border-top: 1px solid #808080;
+  margin: 0 0 12px 0;
+  padding: 0;
+  width: 260px;
+}
+.entryPlaygroundLinebreakDescription {
+  margin-top: 12px;
+}
+.entryPlaygroundLinebreakDescription p {
+  color: #8888;
+  font-size: 11px;
+  margin-bottom: 5px;
+}
+.entryPlaygroundLinebreakDescription ul {
+  padding-left: 20px;
+}
+.entryPlaygroundLinebreakDescription ul li {
+  color: #B4B4B5;
+  font-size: 11px;
+}
+.entryVariablePanelWorkspace {
+  position: absolute;
+  width: 250px;
+  top: 47px;
+  bottom: 0px;
+  padding: 6px 4px 0px 4px;
+}
+.entryVariablePanelPhone {
+  width: 250px;
+  top: 47px;
+  bottom: 0px;
+  padding: 6px 4px 0px 4px;
+}
+.entryVariableSelectorWorkspace {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+.entryVariableSelectButtonWorkspace {
+  font-family: nanumBarunBold !important;
+  width: 25%;
+  border-collapse: collapse;
+  text-align: center;
+  vertical-align: center;
+  background-color: #EDEDED;
+  height: 38px;
+  border: solid 1px #bdbdbd;
+  border-left: none;
+  color: #535353;
+  padding-top: 4px;
+  cursor: pointer;
+}
+.entryVariableSelectButtonWorkspace.selected {
+  color: #ffffff;
+  background-color: #0e68e3;
+}
+.entryVariableSelectButtonWorkspace.allButton {
+  border-radius: 6px 0 0 6px;
+  border-left: solid 1px #bdbdbd;
+}
+.entryVariableSelectButtonWorkspace.message {
+  border-radius: 0 6px 0px 0;
+}
+.entryVariableSelectButtonWorkspace.list {
+  border-top: none;
+}
+.entryVariableSelectButtonWorkspace.func {
+  border-top: none;
+  border-radius: 0 0px 6px 0;
+}
+.entryVariableSelectButtonWorkspace.disable {
+  color: #bdbdbd;
+  cursor: default;
+}
+.entryVariableListWorkspace {
+  position: absolute;
+  top: 88px;
+  bottom: 0px;
+  right: 4px;
+  left: 4px;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  overflow: auto;
+}
+.entryVariableListElementWorkspace {
+  background-repeat: no-repeat;
+  background-position: 14px 10px;
+  background-color: #efefef;
+  border: solid 1px #a8a8a8;
+  margin-bottom: -1px;
+  min-height: 50px;
+}
+.entryVariableAddWorkspace {
+  padding: 0;
+  font-size: 13pt;
+  color: #717171;
+  cursor: pointer;
+  line-height: 49px;
+  position: relative;
+  text-align: center;
+}
+.entryVariableAddWorkspace:hover {
+  background-color: #d3d3d3;
+  color: #333;
+}
+.entryVariableListElementWorkspace.selected {
+  background-color: #d3d3d3;
+}
+.entryVariableListElementNameWorkspace {
+  position: absolute;
+  left: 47px;
+  margin-top: 12px;
+  background-color: #efefef;
+  width: 55%;
+  border: 1px solid transparent;
+  padding-left: 5px;
+}
+.selected .entryVariableListElementNameWorkspace {
+  background-color: #d3d3d3;
+}
+.entryVariableListElementNameWorkspace:focus {
+  background-color: white;
+  border: 1px solid gray;
+}
+.entryVariableFunctionElementNameWorkspace {
+  border: none;
+  position: absolute;
+  left: 55px;
+  margin-top: 12px;
+  background-color: transparent;
+  width: 60%;
+  overflow: hidden;
+  height: 20px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.entryVariableListElementDeleteWorkspace {
+  position: absolute;
+  margin-top: 5px;
+  padding-right: 5px;
+  right: 3px;
+  border: 0;
+  outline: 0;
+  width: 22px;
+  height: 40px;
+  opacity: 0;
+  background-color: transparent;
+  background-image: url("../images/layers_icon_close_nor_new_1.png");
+  background-repeat: no-repeat;
+  background-position: center;
+}
+.entryVariableListElementWorkspace:hover .entryVariableListElementDeleteWorkspace {
+  opacity: 1;
+}
+.entryVariableListElementEditWorkspace {
+  display: inline-block;
+  float: right;
+  border: 0;
+  outline: 0;
+  width: 20px;
+  height: 40px;
+  margin-top: 5px;
+  margin-right: 25px;
+  background-color: transparent;
+  background-image: url("../images/layers_icon_edit_nor_new_1.png");
+  background-repeat: no-repeat;
+  background-position: center;
+  opacity: 0;
+}
+.entryVariableListElementWorkspace:hover .entryVariableListElementEditWorkspace {
+  opacity: 1;
+}
+.entryVariableListCallerListWorkspace {
+  list-style: none;
+  padding: 0;
+}
+.entryVariableListCallerWorkspace {
+  border: solid 1px #c8c8c8;
+  border-top: none;
+  height: 50px;
+  cursor: pointer;
+  overflow: hidden;
+}
+.entryVariableListCallerWorkspace:hover {
+  background-color: #e0e0e0;
+}
+.entryVariableListCallerWorkspace:first-child {
+  border-top: none;
+}
+.entryVariableListCallerWorkspace > .entryObjectThumbnailWorkspace {
+  position: inherit;
+  display: block;
+  float: left;
+  top: 0;
+  left: 0;
+  margin: 5px 0 0 5px;
+  height: 40px;
+  width: 40px;
+}
+.entryVariableListCallerNameWorkspace {
+  position: absolute;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  float: left;
+  height: 49px;
+  line-height: 49px;
+  left: 60px;
+  right: 0;
+  padding-right: 7px;
+}
+.entryVariableListCallerNoneWorkspace {
+  color: #C16B6B;
+  cursor: default;
+  line-height: 48px;
+  padding-left: 50px;
+}
+.entryVariableLocalElementWorkspace {
+  background-image: url("../images/local_question_icon.png");
+}
+.entryVariableCloudElementWorkspace {
+  background-image: url("../images/cloud_question_icon.png");
+}
+.entryVariableGlobalElementWorkspace {
+  background-image: url("../images/list_icon_question.png");
+}
+.entryMessageElementWorkspace {
+  background-image: url("../images/list_icon_signal.png");
+}
+.entryListCloudElementWorkspace {
+  background-image: url("../images/cloud_list_icon.png");
+}
+.entryListGlobalElementWorkspace {
+  background-image: url("../images/list_icon_list.png");
+}
+.entryListLocalElementWorkspace {
+  background-image: url("../images/local_list_icon.png");
+}
+.entryFunctionElementWorkspace {
+  background-image: url("../images/list_icon_function_v1.png");
+}
+.entryVariableAddSpaceWorkspace {
+  padding: 0;
+  padding-left: 16px;
+  padding-right: 16px;
+  margin: 0;
+  /*height: 215px;*/
+  height: 200px;
+  background-color: white;
+  border: 1px solid #a8a8a8;
+}
+.entryVariableAddSpaceNameWrapperWorkspace {
+  height: 28px;
+  margin-top: 16px;
+  background-image: url("../images/list_icon_question_1.png");
+  background-repeat: no-repeat;
+}
+.entryVariableAddSpaceNameWrapperWorkspace.entryListAddSpaceNameWrapperWorkspace {
+  background-image: url("../images/list_icon_list_1.png");
+}
+.entryVariableAddSpaceInputWorkspace {
+  width: 80%;
+  margin-left: 42px;
+  margin-top: 2px;
+}
+.entryVariableAddSpaceGlobalWrapperWorkspace {
+  margin-top: 16px;
+  color: #5e5e5e;
+  font-size: 11px;
+  position: relative;
+  cursor: pointer;
+}
+.entryVariableAddSpaceCheckWorkspace {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+  margin-top: 2px;
+  position: absolute;
+  right: 17px;
+  border: 1px solid gray;
+}
+.entryVariableAddSpaceCheckWorkspace.entryVariableAddChecked {
+  background-color: gray;
+}
+.entryVariableAddSpaceLocalWrapperWorkspace {
+  color: #5e5e5e;
+  font-size: 11px;
+  position: relative;
+  margin-top: 12px;
+  cursor: pointer;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #a8a8a8;
+}
+.entryVariableAddSpaceCloudWrapperWorkspace {
+  padding-top: 8px;
+}
+.entryVariableAddSpaceCloudWrapperWorkspace {
+  cursor: pointer;
+  color: #5e5e5e;
+  font-size: 11px;
+  position: relative;
+}
+.entryVariableAddSpaceUnCheckedWorkspace {
+  color: #afafaf;
+}
+.entryVariableAddSpaceCloudCheckWorkspace {
+  margin-top: -12px;
+}
+.entryVariableAddSpaceButtonWrapperWorkspace {
+  margin-top: 12px;
+}
+.entryVariableAddSpaceButtonWorkspace {
+  font-size: 11px;
+  display: inline-block;
+  width: 48px;
+  height: 24px;
+  border: 2px solid gray;
+  text-align: center;
+  line-height: 22px;
+  cursor: pointer;
+  float: right;
+}
+.entryVariableAddSpaceCancelWorkspace {
+  margin-left: 7px;
+}
+.entryVariableSplitterWorkspace {
+  height: 25px;
+  font-size: 11px;
+  border: 1px solid #a8a8a8;
+  border-top: none;
+  line-height: 25px;
+  padding-left: 9px;
+}
+/*first element after splitter should not have border-top*/
+.entryVariableSplitterWorkspace + .entryVariableListElementWorkspace {
+  border-top: none;
+}
+.entryVariableListCallerListWorkspace + .entryVariableListElementWorkspace {
+  border-top: none;
+}
+.entryVariableSettingWorkspace {
+  width: 100%;
+  height: 165px;
+  border-top: 1px solid #a8a8a8;
+  padding-left: 16px;
+  padding-right: 16px;
+  font-size: 11px;
+  background-color: #efefef;
+}
+.entryVariableSettingVisibleWrapperWorkspace {
+  padding-top: 22px;
+  cursor: pointer;
+}
+.entryVariableSettingCheckWorkspace {
+  display: inline-block;
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+  left: 90px;
+  margin-top: 2px;
+  border: 1px solid gray;
+  color: #5e5e5e;
+}
+.entryVariableAddSpaceCheckWorkspace.entryVariableAddChecked,
+.entryVariableSettingCheckWorkspace.entryVariableSettingChecked {
+  background-color: gray;
+}
+.entryVariableSettingInitValueWrapperWorkspace,
+.entryVariableSettingSlideWrapperWorkspace,
+.entryVariableSettingMinMaxWrapperWorkspace {
+  margin-top: 12px;
+}
+.entryVariableSettingSlideWrapperWorkspace {
+  cursor: pointer;
+}
+.entryVariableMinMaxDisabledWorkspace.entryVariableSettingMinMaxWrapperWorkspace {
+  color: #a8a8a8;
+}
+.entryVariableSettingInitValueInputWorkspace {
+  margin-left: 33px;
+  border: 2px solid #a8a8a8;
+  padding-left: 5px;
+  width: 65%;
+}
+.entryVariableSettingSplitterWorkspace {
+  width: 100%;
+  height: 1px;
+  background-color: #a8a8a8;
+  margin-top: 16px;
+}
+.entryVariableSettingMinValueInputWorkspace,
+.entryVariableSettingMaxValueInputWorkspace {
+  margin-left: 3px;
+  width: 22%;
+  border: 1px solid #afafaf;
+  padding-left: 5px;
+}
+.entryVariableSettingMinValueInputWorkspace:disabled,
+.entryVariableSettingMaxValueInputWorkspace:disabled {
+  background-color: #d3d3d3;
+}
+.entryVariableSettingMaxValueSpanWorkspace {
+  margin-left: 5px;
+}
+.entryVariableSettingButtonWrapperWorkspace {
+  margin-top: 18px;
+}
+.entryVariableListElementWrapperWorkspace {
+  width: 100%;
+  height: 50px;
+}
+.entryListSettingWorkspace {
+  width: 100%;
+  padding-top: 24px;
+  padding-bottom: 5px;
+  border-top: 1px solid #a8a8a8;
+  padding-left: 16px;
+  padding-right: 16px;
+  font-size: 13px;
+  background-color: #efefef;
+}
+.entryListSettingVisibleWrapperWorkspace {
+  cursor: pointer;
+}
+.entryListSettingCheckWorkspace {
+  display: inline-block;
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+  left: 103px;
+  margin-top: 4px;
+  border: 1px solid gray;
+  color: #5e5e5e;
+}
+.entryListSettingCheckedWorkspace {
+  background-color: gray;
+}
+.entryListSettingLengthWrapperWorkspace {
+  margin-top: 15px;
+  overflow: hidden;
+}
+.entryListSettingLengthControllerWorkspace {
+  margin-left: 5px;
+  height: 23px;
+  display: inline-block;
+  position: relative;
+}
+.entryListSettingLengthSpanWorkspace {
+  float: left;
+  margin-top: 2px;
+}
+.entryListSettingMinusWorkspace {
+  width: 23px;
+  height: 23px;
+  float: left;
+  background-image: url("../images/list_minus.png");
+  cursor: pointer;
+}
+.entryListSettingLengthInputWorkspace {
+  float: left;
+  height: 23px;
+  margin-left: 5px;
+  margin-right: 5px;
+  padding-left: 5px;
+  border: 2px solid #a8a8a8;
+  width: 60px;
+}
+.entryListSettingLengthInputWorkspace:focus {
+  border: 2px solid #1bafea;
+  outline: none;
+}
+.entryListSettingPlusWorkspace {
+  width: 23px;
+  height: 23px;
+  float: left;
+  background-image: url("../images/list_plus.png");
+  cursor: pointer;
+}
+.entryListSettingSeperatorWorkspace {
+  height: 1px;
+  background-color: gray;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+.entryListSettingListValuesWorkspace {
+  padding-left: 15px;
+  color: #a8a8a8;
+}
+.entryListSettingValueWrapperWorkspace {
+  margin-bottom: 10px;
+  overflow: hidden;
+}
+.entryListSettingEachInputWorkspace {
+  border: 2px solid #a8a8a8;
+  width: 130px;
+  float: left;
+  padding-left: 5px;
+}
+.entryListSettingEachInputWorkspace:focus {
+  border: 2px solid #1baefa;
+  outline: none;
+}
+.entryListSettingValueNumberSpanWorkspace {
+  width: 20px;
+  display: inline-block;
+  float: left;
+  margin-top: 3px;
+}
+.entryListSettingValueRemoveWorkspace {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  float: right;
+  margin-right: 10px;
+  margin-top: 4px;
+  cursor: pointer;
+  background-image: url("../images/list_remove_button.png");
+}
 .entryToastContainer {
   position: fixed;
   right: 0px;
@@ -2614,6 +3201,58 @@ span.CodeMirror-selectedtext {
   margin-top: 4px;
   margin-bottom: 2px;
 }
+#entry-contextmenu {
+  position: fixed;
+  background-color: white;
+  display: inline-block;
+  list-style: none;
+  padding: 4px 0;
+  border-color: #ccc #666 #666 #ccc;
+  border-style: solid;
+  border-width: 1px;
+  outline: none;
+  font-size: 13px;
+}
+#entry-contextmenu .menuAble {
+  cursor: pointer;
+  padding: 3px 20px;
+}
+#entry-contextmenu .menuAble:hover {
+  color: white;
+  background-color: #57e;
+}
+#entry-contextmenu .menuDisable {
+  color: #ccc;
+  padding: 3px 20px;
+}
+#entry-contextmenu.workspace-contextmenu {
+  position: fixed;
+  background-color: white;
+  display: inline-block;
+  list-style: none;
+  padding: 4px 0;
+  border-color: #ccc #666 #666 #ccc;
+  border-style: solid;
+  border-width: 1px;
+  outline: none;
+  font-size: 14px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+  min-width: 160px;
+  border-radius: 4px;
+  background-clip: padding-box;
+  color: #262626;
+}
+#entry-contextmenu.workspace-contextmenu .menuAble {
+  padding: 3px 20px;
+}
+#entry-contextmenu.workspace-contextmenu .menuAble:hover {
+  color: white;
+  background-color: #57e;
+}
+#entry-contextmenu.workspace-contextmenu .menuDisable {
+  color: #ccc;
+  padding: 3px 20px;
+}
 .entryPopup {
   position: absolute;
   margin: 0;
@@ -2640,124 +3279,12 @@ span.CodeMirror-selectedtext {
   z-index: 8000;
   background-color: white;
 }
-#entryTextColourTable {
-  margin-top: 12px;
-  cursor: pointer;
-  border-collapse: collapse;
-}
-.entryTd {
-  width: 22px;
-  height: 22px;
-}
-.entryTdTransparent {
-  width: 20px;
-  height: 20px;
-  background-color: white;
-  background-image: -webkit-linear-gradient(135deg, transparent 11.5px, #ff0000 13px, rgba(255, 255, 255, 0.5) 14.5px);
-  border: 1px solid;
-}
-.nav_right_wrapper {
-  right: 0;
-}
-.navbar-default {
-  background-color: #89c1e4;
-  border-color: #89c1e4;
-  /*background-color: #4accaa;
-    border-color: #4accaa;*/
-}
-#project_name.normal {
-  background-color: #89c1e4;
-  /*background-color: #4accaa;*/
-}
-.btn-group > .btn {
-  background-color: transparent;
-  border-color: transparent;
-  /*background-color: #4accaa;
-    border-color: #4accaa;*/
-}
-.art_project_name {
-  background-color: white !important;
-}
-.art_project_name:hover {
-  border: 1px solid #b4b4b4 !important;
-}
-.entryObjectCoordinateSpanWorkspace {
-  float: left;
-  position: absolute;
-}
-.entryObjectCoordinateSpanWorkspace:nth-child(3) {
-  float: left;
-  margin-left: 57px;
-}
-.entryObjectCoordinateSizeWorkspace {
-  float: left;
-  margin-left: 113px;
-  position: absolute;
-}
-.entryObjectCoordinateInputWorkspace {
-  width: 40px;
-  height: 20px;
-  position: absolute;
-  float: left;
-  margin: -2px 5px 0px 15px;
-  background-color: #e5e5e5;
-  border: none;
-  border: 1px solid transparent;
-}
-.entryObjectCoordinateInputWorkspace_right {
-  margin-left: 70px;
-}
-.entryObjectCoordinateInputWorkspace_size {
-  float: left;
-  position: absolute;
-  margin-left: 145px;
-}
-.entryObjectCoordinateInputWorkspace:hover,
-.entryObjectCoordinateInputWorkspace:focus,
-.entryObjectRotateInputWorkspace:hover,
-.entryObjectDirectionInputWorkspace:hover,
-.entryObjectRotateInputWorkspace:focus,
-.entryObjectDirectionInputWorkspace:focus {
-  background-color: white;
-}
-.entryObjectCoordinateInputWorkspace:disabled,
-.entryObjectRotateInputWorkspace:disabled,
-.entryObjectDirectionInputWorkspace:disabled {
-  background-color: transparent;
-}
 .entryFunctionEdit {
   position: absolute;
   width: 100%;
   height: 100%;
   background-color: rgba(180, 180, 180, 0.4) !important;
   z-index: 50;
-}
-#entryFunctionBtnWrapper {
-  position: absolute;
-  z-index: 100;
-  bottom: 90px;
-  margin: 0 auto;
-  left: 50%;
-}
-.entryFunctionBtn {
-  position: relative;
-  display: inline-block;
-  cursor: pointer;
-  border: solid 3px #888;
-  color: #666;
-  width: 55px;
-  height: 55px;
-  border-radius: 27.5px;
-  text-align: center;
-  line-height: 48px;
-  left: -50%;
-}
-.entryFunctionBtn:hover {
-  border: solid 3px #555;
-  color: #222;
-}
-#entryFunctionSave {
-  margin-right: 20px;
 }
 /* Painter css start */
 .entryPlaygroundPainter {
@@ -3215,119 +3742,6 @@ span.CodeMirror-selectedtext {
   width: 67px;
   height: 10px;
 }
-/* Painter css finish */
-.temp-element {
-  visibility: hidden;
-  white-space: pre;
-}
-.highlight {
-  margin: 0;
-  color: white;
-  width: 120px;
-  float: left;
-  list-style: none;
-  display: block;
-}
-.entryVariableAddSpaceWorkspace {
-  padding: 0;
-  padding-left: 16px;
-  padding-right: 16px;
-  margin: 0;
-  /*height: 215px;*/
-  height: 200px;
-  background-color: white;
-  border: 1px solid #a8a8a8;
-}
-.entryVariableAddSpaceNameWrapperWorkspace {
-  height: 28px;
-  margin-top: 16px;
-  background-image: url("../images/list_icon_question_1.png");
-  background-repeat: no-repeat;
-}
-.entryVariableAddSpaceNameWrapperWorkspace.entryListAddSpaceNameWrapperWorkspace {
-  background-image: url("../images/list_icon_list_1.png");
-}
-.entryVariableAddSpaceInputWorkspace {
-  width: 80%;
-  margin-left: 42px;
-  margin-top: 2px;
-}
-.entryVariableAddSpaceGlobalWrapperWorkspace {
-  margin-top: 16px;
-  color: #5e5e5e;
-  font-size: 11px;
-  position: relative;
-  cursor: pointer;
-}
-.entryVariableAddSpaceCheckWorkspace {
-  display: inline-block;
-  width: 10px;
-  height: 10px;
-  border-radius: 2px;
-  margin-top: 2px;
-  position: absolute;
-  right: 17px;
-  border: 1px solid gray;
-}
-.entryVariableAddSpaceCheckWorkspace.entryVariableAddChecked {
-  background-color: gray;
-}
-.entryVariableAddSpaceLocalWrapperWorkspace {
-  color: #5e5e5e;
-  font-size: 11px;
-  position: relative;
-  margin-top: 12px;
-  cursor: pointer;
-  padding-bottom: 10px;
-  border-bottom: 1px solid #a8a8a8;
-}
-.entryVariableAddSpaceCloudWrapperWorkspace {
-  padding-top: 8px;
-}
-.entryVariableAddSpaceCloudWrapperWorkspace {
-  cursor: pointer;
-  color: #5e5e5e;
-  font-size: 11px;
-  position: relative;
-}
-.entryVariableAddSpaceUnCheckedWorkspace {
-  color: #afafaf;
-}
-.entryVariableAddSpaceCloudCheckWorkspace {
-  margin-top: -12px;
-}
-.entryVariableAddSpaceButtonWrapperWorkspace {
-  margin-top: 12px;
-}
-.entryVariableAddSpaceButtonWorkspace {
-  font-size: 11px;
-  display: inline-block;
-  width: 48px;
-  height: 24px;
-  border: 2px solid gray;
-  text-align: center;
-  line-height: 22px;
-  cursor: pointer;
-  float: right;
-}
-.entryVariableAddSpaceCancelWorkspace {
-  margin-left: 7px;
-}
-.entryVariableSplitterWorkspace {
-  height: 25px;
-  font-size: 11px;
-  border: 1px solid #a8a8a8;
-  border-top: none;
-  line-height: 25px;
-  padding-left: 9px;
-}
-/*first element after splitter should not have border-top*/
-.entryVariableSplitterWorkspace + .entryVariableListElementWorkspace {
-  border-top: none;
-}
-.entryVariableListCallerListWorkspace + .entryVariableListElementWorkspace {
-  border-top: none;
-}
 .entryPlaygroundPainterTopMenuFileNew {
   position: absolute;
   color: white;
@@ -3725,35 +4139,14 @@ span.CodeMirror-selectedtext {
 .entryPlaygroundPainterAttrBGButton {
   left: 55px;
 }
-.btn_code,
-.btn_undo_workspace {
-  margin-left: 15px;
-}
-.entryPlaygroundPictureOrder,
-.entryPlaygroundSoundOrder {
-  width: 15px;
-  height: 100%;
-  float: left;
-  line-height: 57px;
-  font-size: 10px;
-  text-align: center;
-  background-color: #d8d8d8;
-}
-.entryPictureSelected .entryPlaygroundPictureOrder {
-  background-color: #634cd9;
-  color: white;
-}
-.deleteChild > * {
-  display: none;
-}
 .entryPlaygroundPainterAttrAddButton {
-  background: url("../images/fill_in.png");
+  background-image: url("../images/fill_in.png");
 }
 .entryPlaygroundPainterAttrRemoveButton {
-  background: url("../images/fill_out.png");
+  background-image: url("../images/fill_out.png");
 }
 .painterAttrColorSpoid:hover {
-  background: url("../images/color_on_spoid_1.png");
+  background-image: url("../images/color_on_spoid_1.png");
   background-repeat: no-repeat;
 }
 .displayPaintArea {
@@ -3794,63 +4187,63 @@ span.CodeMirror-selectedtext {
 .entryPlaygroundPainterAttrLineStyleLine {
   position: absolute;
   top: 10px;
-  background: url("../images/line1_category_off.png");
+  background-image: url("../images/line1_category_off.png");
   background-repeat: no-repeat;
   background-color: #f5f5f5;
   width: 76px;
   height: 24px;
 }
 .entryPlaygroundPainterAttrLineStyleLine:hover {
-  background: url("../images/line1_category_on.png");
+  background-image: url("../images/line1_category_on.png");
   background-repeat: no-repeat;
 }
 .entryPlaygroundPainterAttrLineStyleDot1 {
   position: absolute;
   top: -9px;
   left: 1px;
-  background: url("../images/line2_off.png");
+  background-image: url("../images/line2_off.png");
   background-repeat: no-repeat;
   background-color: #f5f5f5;
   width: 75px;
   height: 20px;
 }
 .entryPlaygroundPainterAttrLineStyleDot1:hover {
-  background: url("../images/line2_on.png");
+  background-image: url("../images/line2_on.png");
   background-repeat: no-repeat;
 }
 .entryPlaygroundPainterAttrLineStyleDot2 {
   position: absolute;
   top: -29px;
   left: 1px;
-  background: url("../images/line3_off.png");
+  background-image: url("../images/line3_off.png");
   background-repeat: no-repeat;
   background-color: #f5f5f5;
   width: 75px;
   height: 20px;
 }
 .entryPlaygroundPainterAttrLineStyleDot2:hover {
-  background: url("../images/line3_on.png");
+  background-image: url("../images/line3_on.png");
   background-repeat: no-repeat;
 }
 .entryPlaygroundPainterAttrLineStyleDot3 {
   position: absolute;
   top: -48px;
   left: 1px;
-  background: url("../images/line4_off.png");
+  background-image: url("../images/line4_off.png");
   background-repeat: no-repeat;
   background-color: #f5f5f5;
   width: 75px;
   height: 19px;
 }
 .entryPlaygroundPainterAttrLineStyleDot3:hover {
-  background: url("../images/line4_on.png");
+  background-image: url("../images/line4_on.png");
   background-repeat: no-repeat;
 }
 .entryPlaygroundPainterAttrLineStyleLine1 {
   position: absolute;
   top: -67px;
   left: 1px;
-  background: url("../images/line1_off.png");
+  background-image: url("../images/line1_off.png");
   background-repeat: no-repeat;
   background-color: #f5f5f5;
   width: 75px;
@@ -3858,7 +4251,7 @@ span.CodeMirror-selectedtext {
   border-radius: 4px;
 }
 .entryPlaygroundPainterAttrLineStyleLine1:hover {
-  background: url("../images/line1_on.png");
+  background-image: url("../images/line1_on.png");
   background-repeat: no-repeat;
 }
 .painterAttrLineStyleBackgroundDot1,
@@ -3873,62 +4266,77 @@ span.CodeMirror-selectedtext {
   height: 21px;
 }
 .painterAttrLineStyleBackgroundDot1 {
-  background: url("../images/line2_category_off.png");
+  background-image: url("../images/line2_category_off.png");
 }
 .painterAttrLineStyleBackgroundDot2 {
-  background: url("../images/line3_category_off.png");
+  background-image: url("../images/line3_category_off.png");
 }
 .painterAttrLineStyleBackgroundDot3 {
-  background: url("../images/line4_category_off.png");
+  background-image: url("../images/line4_category_off.png");
 }
 .painterAttrLineStyleBackgroundLine {
-  background: url("../images/line1_category_off_1.png");
+  background-image: url("../images/line1_category_off_1.png");
 }
 .painterAttrLineStyleBackgroundDot1:hover {
-  background: url("../images/line2_category_on.png");
+  background-image: url("../images/line2_category_on.png");
   background-repeat: no-repeat;
 }
 .painterAttrLineStyleBackgroundDot2:hover {
-  background: url("../images/line3_category_on.png");
+  background-image: url("../images/line3_category_on.png");
   background-repeat: no-repeat;
 }
 .painterAttrLineStyleBackgroundDot3:hover {
-  background: url("../images/line4_category_on.png");
+  background-image: url("../images/line4_category_on.png");
   background-repeat: no-repeat;
 }
 .painterAttrLineStyleBackgroundLine:hover {
-  background: url("../images/line1_category_on_1.png");
+  background-image: url("../images/line1_category_on_1.png");
   background-repeat: no-repeat;
 }
 .entryToolboxCursorClicked {
-  background: url("../images/on_hand_1.png");
+  background-image: url("../images/on_hand_1.png");
 }
 .entryToolboxSelectClicked {
-  background: url("../images/on_choice_1.png");
+  background-image: url("../images/on_choice_1.png");
 }
 .entryToolboxPenClicked {
-  background: url("../images/on_pen_1.png");
+  background-image: url("../images/on_pen_1.png");
 }
 .entryToolboxLineClicked {
-  background: url("../images/on_line_1.png");
+  background-image: url("../images/on_line_1.png");
 }
 .entryToolboxRectClicked {
-  background: url("../images/on_square_1.png");
+  background-image: url("../images/on_square_1.png");
 }
 .entryToolBoxCircleClicked {
-  background: url("../images/on_circle_1.png");
+  background-image: url("../images/on_circle_1.png");
 }
 .entryToolBoxTextClicked {
-  background: url("../images/on_text_1.png");
+  background-image: url("../images/on_text_1.png");
 }
 .entryToolBoxFillClicked {
-  background: url("../images/on_paint_1.png");
+  background-image: url("../images/on_paint_1.png");
 }
 .entryToolBoxEraseClicked {
-  background: url("../images/on_eraser_1.png");
+  background-image: url("../images/on_eraser_1.png");
 }
 .dd {
   cursor: url("../images/cursor_eraser.cur");
+}
+.entryPlaygroundPainterTopMenuEdit > ul > li {
+  list-style-type: none;
+  width: 120px;
+}
+.entryPlaygroundPainterTopMenuFile > ul > li {
+  list-style-type: none;
+  width: 120px;
+}
+.entryPlaygroundPainterTopMenu > ul {
+  position: absolute;
+  top: 5px;
+}
+.entryPainterTopMenuEditImport {
+  height: 40px;
 }
 /* helper */
 @keyframes blockHelperUp {
@@ -4018,15 +4426,8 @@ span.CodeMirror-selectedtext {
   height: 100%;
   background-color: #fff;
   z-index: 1000;
-  -webkit-animation-name: blockHelperUp;
-  -moz-animation-name: blockHelperUp;
-  -ms-animation-name: blockHelperUp;
-  -o-animation-name: blockHelperUp;
-  animation-name: blockHelperUp;
-  -webkit-animation-duration: 0.6s;
-  -moz-animation-duration: 0.6s;
-  -ms-animation-duration: 0.6s;
-  -o-animation-duration: 0.6s;
+  /*.animation-name(blockHelperUp);*/
+  /*.animation-duration(0.6s);*/
 }
 #entryBlockHelperWorkspace.lecture {
   -webkit-animation-duration: 0s;
@@ -4035,11 +4436,8 @@ span.CodeMirror-selectedtext {
   -o-animation-duration: 0s;
 }
 #entryBlockHelperWorkspace.dispose {
-  -webkit-animation-name: blockHelperDown;
-  -moz-animation-name: blockHelperDown;
-  -ms-animation-name: blockHelperDown;
-  -o-animation-name: blockHelperDown;
-  animation-name: blockHelperDown;
+  display: none;
+  /*.animation-name(blockHelperDown);*/
 }
 #entryBlockHelperHeaderWorkspace {
   position: absolute;
@@ -4092,15 +4490,19 @@ span.CodeMirror-selectedtext {
   z-index: 100;
 }
 #entryBlockHelperBlockWorkspace {
-  position: absolute;
   width: 400px;
   height: 160px;
   top: 16px;
-  left: 50%;
+  overflow: hidden;
 }
-#entryBlockHelperBlockWorkspace > svg {
-  position: relative;
-  left: -50%;
+#entryBlockHelperBlockWorkspace > .renderViewContainer {
+  width: 100%;
+}
+#entryBlockHelperBlockWorkspace > .renderViewContainer > svg {
+  position: absolute;
+  overflow: visible;
+  left: 50%;
+  padding-top: 10px;
 }
 #entryBlockHelperDescriptionWorkspace {
   position: absolute;
@@ -4111,467 +4513,142 @@ span.CodeMirror-selectedtext {
   color: #707074;
   padding: 0 50px;
 }
-.entryPlaygroundPainterTopMenuEdit > ul > li {
-  list-style-type: none;
-  width: 120px;
-}
-.entryPlaygroundPainterTopMenuFile > ul > li {
-  list-style-type: none;
-  width: 120px;
-}
-.entryPlaygroundPainterTopMenu > ul {
-  position: absolute;
-  top: 5px;
-}
-.entryPainterTopMenuEditImport {
-  height: 40px;
-}
-.entryVariableSettingWorkspace {
-  width: 100%;
-  height: 165px;
-  border-top: 1px solid #a8a8a8;
-  padding-left: 16px;
-  padding-right: 16px;
-  font-size: 11px;
-  background-color: #efefef;
-}
-.entryVariableSettingVisibleWrapperWorkspace {
-  padding-top: 22px;
-  cursor: pointer;
-}
-.entryVariableSettingCheckWorkspace {
-  display: inline-block;
-  position: absolute;
-  width: 10px;
-  height: 10px;
-  border-radius: 2px;
-  left: 90px;
-  margin-top: 2px;
-  border: 1px solid gray;
-  color: #5e5e5e;
-}
-.entryVariableAddSpaceCheckWorkspace.entryVariableAddChecked,
-.entryVariableSettingCheckWorkspace.entryVariableSettingChecked {
-  background-color: gray;
-}
-.entryVariableSettingInitValueWrapperWorkspace,
-.entryVariableSettingSlideWrapperWorkspace,
-.entryVariableSettingMinMaxWrapperWorkspace {
-  margin-top: 12px;
-}
-.entryVariableSettingSlideWrapperWorkspace {
-  cursor: pointer;
-}
-.entryVariableMinMaxDisabledWorkspace.entryVariableSettingMinMaxWrapperWorkspace {
-  color: #a8a8a8;
-}
-.entryVariableSettingInitValueInputWorkspace {
-  margin-left: 33px;
-  border: 2px solid #a8a8a8;
-  padding-left: 5px;
-  width: 65%;
-}
-.entryVariableSettingSplitterWorkspace {
-  width: 100%;
-  height: 1px;
-  background-color: #a8a8a8;
-  margin-top: 16px;
-}
-.entryVariableSettingMinValueInputWorkspace,
-.entryVariableSettingMaxValueInputWorkspace {
-  margin-left: 3px;
-  width: 22%;
-  border: 1px solid #afafaf;
-  padding-left: 5px;
-}
-.entryVariableSettingMinValueInputWorkspace:disabled,
-.entryVariableSettingMaxValueInputWorkspace:disabled {
-  background-color: #d3d3d3;
-}
-.entryVariableSettingMaxValueSpanWorkspace {
-  margin-left: 5px;
-}
-.entryVariableSettingButtonWrapperWorkspace {
-  margin-top: 18px;
-}
-.entryVariableListElementWrapperWorkspace {
-  width: 100%;
-  height: 50px;
-}
-.entryListSettingWorkspace {
-  width: 100%;
-  padding-top: 24px;
-  padding-bottom: 5px;
-  border-top: 1px solid #a8a8a8;
-  padding-left: 16px;
-  padding-right: 16px;
-  font-size: 13px;
-  background-color: #efefef;
-}
-.entryListSettingVisibleWrapperWorkspace {
-  cursor: pointer;
-}
-.entryListSettingCheckWorkspace {
-  display: inline-block;
-  position: absolute;
-  width: 10px;
-  height: 10px;
-  border-radius: 2px;
-  left: 103px;
-  margin-top: 4px;
-  border: 1px solid gray;
-  color: #5e5e5e;
-}
-.entryListSettingCheckedWorkspace {
-  background-color: gray;
-}
-.entryListSettingLengthWrapperWorkspace {
-  margin-top: 15px;
-  overflow: hidden;
-}
-.entryListSettingLengthControllerWorkspace {
-  margin-left: 5px;
-  height: 23px;
-  display: inline-block;
-  position: relative;
-}
-.entryListSettingLengthSpanWorkspace {
-  float: left;
-  margin-top: 2px;
-}
-.entryListSettingMinusWorkspace {
-  width: 23px;
-  height: 23px;
-  float: left;
-  background-image: url("../images/list_minus.png");
-  cursor: pointer;
-}
-.entryListSettingLengthInputWorkspace {
-  float: left;
-  height: 23px;
-  margin-left: 5px;
-  margin-right: 5px;
-  padding-left: 5px;
-  border: 2px solid #a8a8a8;
-  width: 60px;
-}
-.entryListSettingLengthInputWorkspace:focus {
-  border: 2px solid #1bafea;
-  outline: none;
-}
-.entryListSettingPlusWorkspace {
-  width: 23px;
-  height: 23px;
-  float: left;
-  background-image: url("../images/list_plus.png");
-  cursor: pointer;
-}
-.entryListSettingSeperatorWorkspace {
-  height: 1px;
-  background-color: gray;
-  margin-top: 10px;
-  margin-bottom: 10px;
-}
-.entryListSettingListValuesWorkspace {
-  padding-left: 15px;
-  color: #a8a8a8;
-}
-.entryListSettingValueWrapperWorkspace {
-  margin-bottom: 10px;
-  overflow: hidden;
-}
-.entryListSettingEachInputWorkspace {
-  border: 2px solid #a8a8a8;
-  width: 130px;
-  float: left;
-  padding-left: 5px;
-}
-.entryListSettingEachInputWorkspace:focus {
-  border: 2px solid #1baefa;
-  outline: none;
-}
-.entryListSettingValueNumberSpanWorkspace {
-  width: 20px;
-  display: inline-block;
-  float: left;
-  margin-top: 3px;
-}
-.entryListSettingValueRemoveWorkspace {
-  display: inline-block;
-  width: 16px;
-  height: 16px;
-  float: right;
-  margin-right: 10px;
-  margin-top: 4px;
-  cursor: pointer;
-  background-image: url("../images/list_remove_button.png");
-}
-.entryEngineBigButtonMinimize_popup {
-  border: none;
-  display: none;
-  margin: 0;
-  padding: 0;
-  position: absolute;
-  left: 50%;
-  width: 111px;
-  height: 111px;
-  margin-left: -55.5px;
-  top: 50%;
-  margin-top: -55.5px;
-  background-repeat: no-repeat;
-  background-position: 40px center;
-  background-color: rgba(0, 0, 0, 0.5);
-  border-radius: 55px;
-}
-.entryEngineBigButtonMinimize_popup:hover {
-  opacity: 0.8;
-}
-.entryEngineBigButtonMinimize_popup:focus {
-  outline: none;
-}
-.entryEngineBigButtonMinimize_popup.entryEngineBigButtonMinimize_popup_run {
-  background-image: url("../images/play_btn.png");
-}
-.entryPopupWindow .entryEngineBigButtonMinimize_popup {
-  display: block;
-}
-.entryContainerTabViewWorkspace {
-  width: 100%;
-  height: 45px;
-  border-bottom: 2px solid #1bafea;
-}
-.entryContainerTabItemWorkspace {
-  vertical-align: top;
-  height: 100%;
-  width: 25%;
-  text-align: center;
-  display: inline-block;
+.entryWorkspaceBlockMenu {
   background-color: #e5e5e5;
-  color: #9e9f9f;
-  font-size: 13px;
-  cursor: pointer;
-  padding-top: 13px;
-}
-.entryContainerTabItemWorkspace:nth-child(2) {
-  border-left: 2px solid white;
-  border-right: 2px solid white;
-}
-.entryContainerTabItemWorkspace:nth-child(3) {
-  border-right: 2px solid white;
-}
-.entryContainerTabItemWorkspace.selected {
-  background-color: #1bafea;
-  color: white;
-}
-.entryContainerListWorkspaceWrapper.lecture {
-  top: 45px;
-}
-.entryContainerMovieWorkspace {
   position: absolute;
-  width: 100%;
   top: 45px;
   bottom: 0px;
-  background-color: #363C46;
-  z-index: 1000;
-  overflow: scroll;
+  z-index: 100;
 }
-.entryContainerMovieWorkspace::-webkit-scrollbar {
-  display: none;
-}
-.entryContainerDoneWorkspace {
-  position: absolute;
-  width: 100%;
-  top: 45px;
-  bottom: 0;
-  background-color: #363C46;
-  z-index: 1000;
-  overflow: hidden;
-  text-align: center;
-}
-.entryContainerHelperWorkspace {
-  position: absolute;
-  width: 100%;
-  top: 45px;
-  bottom: 0;
-  background-color: #fff;
-  z-index: 1000;
-  background: gray;
-}
-.entryPlayground_text_buttons {
+.entryCategoryListWorkspace {
+  width: 64px;
+  height: 100%;
   display: inline-block;
+  background-color: orange;
   list-style-type: none;
   margin: 0;
   padding: 0;
 }
-.entryPlayground_text_buttons > li {
-  float: left;
-  width: 32px;
-  height: 32px;
-  margin-left: 2px;
-  cursor: pointer;
-}
-.entryPlaygroundTextAlignLeft {
-  background-image: url("../images/text_align_left_off.png");
-}
-.entryPlaygroundTextAlignLeft.toggle {
-  background-image: url("../images/text_align_left_on.png");
-}
-.entryPlaygroundTextAlignCenter {
-  background-image: url("../images/text_align_center_off.png");
-}
-.entryPlaygroundTextAlignCenter.toggle {
-  background-image: url("../images/text_align_center_on.png");
-}
-.entryPlaygroundTextAlignRight {
-  background-image: url("../images/text_align_right_off.png");
-}
-.entryPlaygroundTextAlignRight.toggle {
-  background-image: url("../images/text_align_right_on.png");
-}
-.entryPlayground_fgColorDiv {
-  position: absolute;
-  width: 15px;
-  height: 4px;
-  margin-top: -15px;
-  margin-left: 345px;
-}
-.entryPlayground_bgColorDiv {
-  position: absolute;
-  width: 15px;
-  height: 4px;
-  margin-top: -15px;
-  margin-left: 379px;
-}
-.entryPlayground_textBox {
-  margin-top: 5px;
-  height: 33px;
-  width: 400px;
-}
-.entryPlayground_textArea {
-  margin-top: 5px;
-  height: 120px;
-  width: 400px;
-  resize: none;
-}
-.entryPlaygroundFontSizeWrapper {
-  width: 400px;
-  height: 39px;
-}
-.entryPlaygroundFontSizeLabel {
+.blockMenuContainer {
   display: inline-block;
-  float: right;
-  font-size: 9px;
-  font-family: notoSansMedium;
-  color: #444;
-  line-height: 39px;
-}
-.entryPlaygroundFontSizeSlider {
-  display: inline-block;
-  float: right;
-  width: 96px;
-  height: 3px;
-  margin: 18px 0px 18px 4px;
-  background-color: #cfcfcf;
-  border-radius: 1.5px;
-}
-.entryPlaygroundFontSizeIndicator {
+  vertical-align: top;
+  width: 186px;
   height: 100%;
-  width: 45%;
-  background-color: #643cd9;
 }
-.entryPlaygroundFontSizeKnob {
-  width: 16px;
-  height: 16px;
-  position: relative;
-  margin-top: -10px;
-  margin-left: -7px;
-  background-image: url("../images/text_size_knob.png");
-  cursor: pointer;
+.blockMenu {
+  height: 100%;
+  width: 100%;
 }
-.entryPlaygroundTextColoursWrapper {
-  width: 260px;
-  height: 226px;
-  z-index: 10;
-  cursor: pointer;
-  margin-top: -5px;
-  margin-left: 335px;
-  padding: 20px 5px;
-  position: absolute;
-  background-image: url("../images/text_color_bg.png");
-  background-repeat: no-repeat;
-  background-size: 260px 226px;
-}
-.entryPlaygroundTextBackgroundsWrapper {
-  width: 260px;
-  height: 226px;
-  z-index: 10;
-  cursor: pointer;
-  margin-top: -5px;
-  margin-left: 369px;
-  padding: 20px 5px;
-  position: absolute;
-  background-image: url("../images/text_color_bg_1.png");
-  background-repeat: no-repeat;
-  background-size: 260px 226px;
-}
-.entryPlaygroundLinebreakWrapper {
-  position: fixed;
-  top: 351px;
-}
-.entryPlaygroundLinebreakButtons {
-  display: inline;
-  font-size: 0;
-}
-.entryPlaygroundLinebreakButtons img {
-  cursor: pointer;
-}
-.entryPlaygroundLinebreakHorizontal {
-  display: block;
-  border-top: 1px solid #808080;
-  margin: 0 0 12px 0;
+/*.entryCategoryListWorkspace {*/
+/*padding: 44px 0 0 0;*/
+/*margin: 0;*/
+/*}*/
+.entryCategoryListPhone {
   padding: 0;
-  width: 260px;
+  margin: 0;
+  list-style-type: none;
 }
-.entryPlaygroundLinebreakDescription {
-  margin-top: 12px;
-}
-.entryPlaygroundLinebreakDescription p {
-  color: #8888;
-  font-size: 11px;
-  margin-bottom: 5px;
-}
-.entryPlaygroundLinebreakDescription ul {
-  padding-left: 20px;
-}
-.entryPlaygroundLinebreakDescription ul li {
-  color: #B4B4B5;
-  font-size: 11px;
-}
-#entry-contextmenu {
-  position: fixed;
-  background-color: white;
-  display: inline-block;
-  list-style: none;
-  padding: 4px 0;
-  border-color: #ccc #666 #666 #ccc;
-  border-style: solid;
-  border-width: 1px;
-  outline: none;
+.entryCategoryElementWorkspace {
+  clear: both;
+  padding-top: 38px;
+  width: 64px;
+  text-align: center;
+  background-color: #edf5f7;
   font-size: 13px;
-}
-#entry-contextmenu .menuAble {
+  color: #474747;
+  float: left;
+  border-bottom: 1px solid #a6cafb;
   cursor: pointer;
-  padding: 3px 20px;
+  font-family: nanumBarunBold !important;
 }
-#entry-contextmenu .menuAble:hover {
-  color: white;
-  background-color: #57e;
+@media screen and (max-height: 10000px) {
+  .entryCategoryElementWorkspace {
+    height: 61px;
+    background-position: 50% 6px;
+    padding-top: 38px;
+  }
 }
-#entry-contextmenu .menuDisable {
-  color: #ccc;
-  padding: 3px 20px;
+@media screen and (max-height: 880px) {
+  .entryCategoryElementWorkspace {
+    height: 56px;
+    background-position: 50% 4px;
+    padding-top: 34px;
+  }
+}
+@media screen and (max-height: 810px) {
+  .entryCategoryElementWorkspace {
+    height: 50px;
+    background-position: 50% 2px;
+    padding-top: 30px;
+  }
+}
+@media screen and (max-height: 740px) {
+  .entryCategoryElementWorkspace {
+    height: 42px;
+    background-position: 50% 1px;
+    background-size: 35px;
+    padding-top: 23px;
+  }
+}
+@media screen and (max-height: 640px) {
+  .entryCategoryElementWorkspace {
+    height: 36px;
+    background-position: 50% 1px;
+    background-size: 30px;
+    padding-top: 18px;
+  }
+}
+.entryCategoryElementPhone {
+  height: 50px;
+  clear: both;
+  width: 56px;
+  padding-top: 30px;
+  text-align: center;
+  background-color: #E2E9F0;
+  font-size: 13px;
+  color: #474747;
+  float: left;
+  border-bottom: 1px solid #B7C4CC;
+  background-position: 5px 2px;
+  cursor: pointer;
+}
+.entryCategoryElementEndWorkspace {
+  clear: both;
+  width: 3px;
+  margin-left: 56px;
+  background-color: #515B7C;
+  height: 4000px;
+}
+.entrySelectedCategory {
+  margin: 0;
+  background-color: #e5e5e5;
 }
 
+.dragNone {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+.entryHidden {
+  visibility: hidden;
+}
+.entryRemove {
+  display: none !important;
+}
+.entryRemoveElement {
+  display: none !important;
+}
+.entryNoDeco {
+  text-decoration: none !important;
+}
+.entryBtn {
+  border: none;
+  margin: 0;
+  background-color: transparent;
+}
 .block {
   cursor: url('../images/handopen.cur') 8 5, auto;
 }
@@ -4667,9 +4744,10 @@ svg .svgBlockGroup text {
   fill-opacity: 0.8;
 }
 .entryBoardWrapper {
-  position: absoulte;
+  position: absolute;
   top: 0;
   left: 0;
+  right: 0;
   height: 100%;
 }
 .entryVimBoard {

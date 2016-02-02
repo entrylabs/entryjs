@@ -23,6 +23,7 @@ Entry.block.jr_start = {
             type: "Indicator",
             img: "/img/assets/ntry/bitmap/jr/block_play_image.png",
             highlightColor: "#3BBD70",
+            position: {x: 0, y: 0},
             size: 22
         }
     ],
@@ -64,11 +65,7 @@ Entry.block.jr_repeat = {
     ],
     statements: [
         {
-            accept: "pebble_basic",
-            position: {
-                 x: 46,
-                 y: 14
-            }
+            accept: "pebble_basic"
         }
     ],
     func: function() {
@@ -386,7 +383,7 @@ Entry.block.jr_start_basic = {
     params: [
         {
             type: "Indicator",
-            boxMultiplier: 1,
+            boxMultiplier: 2,
             img: "/img/assets/block_icon/start_icon_play.png",
             highlightColor: "#3BBD70",
             size: 17,
@@ -561,11 +558,7 @@ Entry.block.jr_repeat_until_dest = {
     ],
     statements: [
         {
-            accept: "basic",
-            position: {
-                x: 2,
-                y: 15
-            }
+            accept: "basic"
         }
     ],
     func: function() {
@@ -596,11 +589,7 @@ Entry.block.jr_if_construction = {
     ],
     statements: [
         {
-            accept: "basic",
-            position: {
-                x: 2,
-                y: 15
-            }
+            accept: "basic"
         }
     ],
     func: function() {
@@ -663,11 +652,7 @@ Entry.block.jr_if_speed = {
     ],
     statements: [
         {
-            accept: "basic",
-            position: {
-                x: 2,
-                y: 15
-            }
+            accept: "basic"
         }
     ],
     func: function()  {
@@ -840,9 +825,14 @@ Entry.block.maze_step_for = {
 Entry.block.test = {
     skeleton: "basic_boolean_field",
     mode: "maze",
-    color: "#3BBD70",
-    template: "%1 this is test block ",
+    color: "#127CDB",
+    template: "%1 this is test block %2",
     params: [
+        {
+            type: "Angle",
+            value: "90"
+
+        },
         {
             type: "Dropdown",
             options: [
@@ -1373,3 +1363,55 @@ Entry.block.maze_step_rotate_right = {
 
 };
 
+Entry.block.test_wrapper = {
+    skeleton: "basic",
+    mode: "maze",
+    color: "#3BBD70",
+    template: "%1 this is test block %2",
+    params: [
+        {
+            type: "Block",
+            accept: "basic_boolean_field",
+            value: [
+                {
+                    type: "test",
+                    params: [30,50]
+                }
+            ]
+        },
+        {
+            type: "Dropdown",
+            options: [
+                [1,1],
+                [2,2],
+                [3,3],
+                [4,4],
+                [5,5],
+                [6,6],
+                [7,7],
+                [8,8],
+                [9,9],
+                [10,10]
+            ],
+            value: 1
+        }
+    ],
+    func: function() {
+    }
+};
+
+Entry.block.basic_button = {
+    skeleton: "basic_button",
+    color: "#eee",
+    template: "%1",
+    params: [
+        {
+            type: "Text",
+            text: "basic button",
+            color: "#333",
+            align: "center"
+        }
+    ],
+    func: function() {
+    }
+};

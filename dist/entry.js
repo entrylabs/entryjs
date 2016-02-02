@@ -63,7 +63,7 @@ var Entry = {block:{}, TEXT_ALIGN_CENTER:0, TEXT_ALIGN_LEFT:1, TEXT_ALIGN_RIGHT:
     !a.canvasWidth && b.canvasWidth && (a.canvasWidth = b.canvasWidth);
     !a.menuWidth && this.interfaceState.menuWidth && (a.menuWidth = b.menuWidth);
     Entry.engine.speedPanelOn && Entry.engine.toggleSpeedPanel();
-    (b = a.canvasWidth) ? 300 > b ? b = 300 : 720 < b && (b = 720) : b = 400;
+    (b = a.canvasWidth) ? 325 > b ? b = 325 : 720 < b && (b = 720) : b = 400;
     a.canvasWidth = b;
     var c = 9 * b / 16;
     Entry.engine.view_.style.width = b + "px";
@@ -71,10 +71,9 @@ var Entry = {block:{}, TEXT_ALIGN_CENTER:0, TEXT_ALIGN_LEFT:1, TEXT_ALIGN_RIGHT:
     Entry.engine.view_.style.top = "40px";
     Entry.stage.canvas.canvas.style.height = c + "px";
     Entry.stage.canvas.canvas.style.width = b + "px";
-    Entry.container.view_.style.width = b + "px";
-    Entry.container.view_.style.top = c + 35 + 40 + 48 - 22 + "px";
-    400 <= b ? (Entry.engine.view_.removeClass("collapsed"), Entry.container.listView_.removeClass("collapsed")) : (Entry.engine.view_.addClass("collapsed"), Entry.container.listView_.addClass("collapsed"));
+    400 <= b ? Entry.engine.view_.removeClass("collapsed") : Entry.engine.view_.addClass("collapsed");
     Entry.playground.view_.style.left = b + .5 + "px";
+    Entry.propertyPanel.resize(b);
     var d = Entry.engine.view_.getElementsByClassName("entryAddButtonWorkspace_w")[0];
     d && (Entry.objectAddable ? (d.style.top = c + 24 + "px", d.style.width = .7 * b + "px") : d.style.display = "none");
     if (d = Entry.engine.view_.getElementsByClassName("entryRunButtonWorkspace_w")[0]) {
@@ -85,14 +84,15 @@ var Entry = {block:{}, TEXT_ALIGN_CENTER:0, TEXT_ALIGN_LEFT:1, TEXT_ALIGN_RIGHT:
     }
     (b = a.menuWidth) ? 244 > b ? b = 244 : 400 < b && (b = 400) : b = 264;
     a.menuWidth = b;
-    Entry.playground.blockMenuView_.style.width = b - 64 + "px";
-    $(".entryBlockMenuWorkspace>svg").css({width:b - 64 + "px"});
-    $(".entryBlocklyWorkspace").css({left:b + "px"});
+    $(".blockMenuContainer").css({width:b - 64 + "px"});
+    $(".blockMenuContainer>svg").css({width:b - 64 + "px"});
+    Entry.playground.mainWorkspace.blockMenu.setWidth();
+    $(".entryWorkspaceBoard").css({left:b + "px"});
     Entry.playground.resizeHandle_.style.left = b + "px";
     Entry.playground.variableViewWrapper_.style.width = b + "px";
     this.interfaceState = a;
   }
-  Blockly.fireUiEvent(window, "resize");
+  Entry.windowResized.notify();
 }, getUpTime:function() {
   return (new Date).getTime() - this.startTime;
 }, addActivity:function(a) {
@@ -937,11 +937,11 @@ Blockly.Blocks.bitbrick_turn_off_all_motors = {init:function() {
 }};
 Entry.block.bitbrick_turn_off_all_motors = function(a, b) {
   var c = Entry.hw.sendQueue, d = Entry.Bitbrick;
-  d.servoList().map(function(a) {
-    c[a[1]] = 0;
+  d.servoList().map(function(b) {
+    c[b[1]] = 0;
   });
-  d.dcList().map(function(a) {
-    c[a[1]] = 128;
+  d.dcList().map(function(b) {
+    c[b[1]] = 128;
   });
   return b.callReturn();
 };
@@ -1121,8 +1121,8 @@ Entry.block.brush_erase_all = function(a, b) {
     c.moveTo(a.getX(), -1 * a.getY());
   }
   c = a.parent.getStampEntities();
-  c.map(function(a) {
-    a.removeClone();
+  c.map(function(b) {
+    b.removeClone();
   });
   c = null;
   return b.callReturn();
@@ -1177,7 +1177,7 @@ Blockly.Blocks.number = {init:function() {
   this.setInputsInline(!0);
 }};
 Entry.block.number = function(a, b) {
-  return b.fields.NUM;
+  return b.getField("NUM");
 };
 Blockly.Blocks.angle = {init:function() {
   this.setColour(calcBlockColor);
@@ -1852,23 +1852,23 @@ Entry.block.stop_object = function(a, b) {
   var c = b.getField("TARGET", b), d = Entry.container;
   switch(c) {
     case "all":
-      d.mapEntityIncludeCloneOnScene(function(a) {
-        a.clearScript();
+      d.mapEntityIncludeCloneOnScene(function(b) {
+        b.clearScript();
       });
       break;
     case "thisObject":
       a.clearScript();
       c = a.parent.clonedEntities;
-      c.map(function(a) {
-        a.clearScript();
+      c.map(function(b) {
+        b.clearScript();
       });
       break;
     case "thisOnly":
       a.clearScript();
       break;
     case "otherThread":
-      return a.clearScript(), c = a.parent.clonedEntities, c.map(function(a) {
-        a.clearScript();
+      return a.clearScript(), c = a.parent.clonedEntities, c.map(function(b) {
+        b.clearScript();
       }), b.callReturn();
   }
   return null;
@@ -1892,12 +1892,15 @@ Blockly.Blocks.remove_all_clones = {init:function() {
 }};
 Entry.block.remove_all_clones = function(a, b) {
   var c = a.parent.getClonedEntities();
-  c.map(function(a) {
-    a.removeClone();
+  c.map(function(b) {
+    b.removeClone();
   });
   c = null;
   return b.callReturn();
 };
+Entry.block.functionAddButton = {skeleton:"basic_button", color:"#eee", template:"%1", params:[{type:"Text", text:"\ud568\uc218 \ucd94\uac00", color:"#333", align:"center"}], events:{mousedown:[function() {
+  Entry.variableContainer.createFunction();
+}]}};
 Blockly.Blocks.function_field_label = {init:function() {
   this.setColour("#f9c535");
   this.appendDummyInput().appendField(new Blockly.FieldTextInput(Lang.Blocks.FUNCTION_explanation_1), "NAME");
@@ -2697,7 +2700,7 @@ Entry.block.False = function(a, b) {
 Blockly.Blocks.boolean_basic_operator = {init:function() {
   this.setColour("#AEB8FF");
   this.appendValueInput("LEFTHAND").setCheck(["String", "Number"]);
-  this.appendDummyInput("VALUE").appendField(new Blockly.FieldDropdown([["=", "EQUAL"], [">", "GREATER"], ["<", "LESS"], [">=", "GREATER_OR_EQUAL"], ["<=", "LESS_OR_EQUAL"]], null, !1), "OPERATOR");
+  this.appendDummyInput("VALUE").appendField(new Blockly.FieldDropdown([["=", "EQUAL"], ["\uff1e", "GREATER"], ["\uff1c", "LESS"], ["\u2265", "GREATER_OR_EQUAL"], ["\u2264", "LESS_OR_EQUAL"]], null, !1), "OPERATOR");
   this.appendValueInput("RIGHTHAND").setCheck(["Number", "String"]);
   this.setOutput(!0, "Boolean");
   this.setInputsInline(!0);
@@ -3645,6 +3648,190 @@ Entry.block.direction_relative_duration = function(a, b) {
   delete b.dDirection;
   return b.callReturn();
 };
+Entry.Neobot = {name:"neobot", PORT_MAP:{1:0, 2:0, 3:0, SERVO1:0, SERVO2:0, SERVO1_SPEED:3, SERVO2_SPEED:3, LMOT:0, RMOT:0, note:0, octave:0, duration:0, sound_check:0, O_1:0, O_2:0}, setZero:function() {
+  for (var a in Entry.Neobot.PORT_MAP) {
+    Entry.hw.sendQueue[a] = Entry.Neobot.PORT_MAP[a];
+  }
+  Entry.hw.update();
+}, monitorTemplate:{imgPath:"hw/neobot.png", width:268, height:270, ports:{1:{name:"1\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:78, y:9}}, 2:{name:"2\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:115, y:9}}, 3:{name:"3\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:153, y:9}}, LMOT:{name:"\uc67c\ucabd \ubaa8\ud130", type:"output", pos:{x:78, y:259}}, RMOT:{name:"\uc624\ub978\ucabd \ubaa8\ud130", type:"output", pos:{x:191, y:259}}, note:{name:"\ubd80\uc800", type:"output", pos:{x:98, y:184}}, SERVO1:{name:"SERVO \ubaa8\ud130 1", 
+type:"output", pos:{x:115, y:259}}, SERVO2:{name:"SERVO \ubaa8\ud130 2", type:"output", pos:{x:191, y:9}}}}};
+Blockly.Blocks.neobot_sensor_value = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("").appendField(new Blockly.FieldDropdown([["1\ubc88 \ud3ec\ud2b8", "1"], ["2\ubc88 \ud3ec\ud2b8", "2"], ["3\ubc88 \ud3ec\ud2b8", "3"], ["\ub9ac\ubaa8\ucee8", "4"]]), "PORT").appendField(" \uac12");
+  this.setOutput(!0, "Number");
+  this.setInputsInline(!0);
+}};
+Entry.block.neobot_sensor_value = function(a, b) {
+  var c = b.getStringField("PORT");
+  return Entry.hw.portData[c];
+};
+Blockly.Blocks.neobot_turn_left = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("\uc67c\ucabd\ubaa8\ud130\ub97c").appendField(new Blockly.FieldDropdown([["\uc55e\uc73c\ub85c", "1"], ["\ub4a4\ub85c", "-1"]]), "DIRECTION").appendField(new Blockly.FieldDropdown([["\ub290\ub9ac\uac8c", "1"], ["\ubcf4\ud1b5", "2"], ["\ube60\ub974\uac8c", "3"]]), "VALUE").appendField("\ud68c\uc804").appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.neobot_turn_left = function(a, b) {
+  var c = b.getNumberField("VALUE"), d = b.getNumberField("DIRECTION");
+  Entry.hw.sendQueue.LMOT = c * d;
+  return b.callReturn();
+};
+Blockly.Blocks.neobot_stop_left = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("\uc67c\ucabd\ubaa8\ud130 \uc815\uc9c0").appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.neobot_stop_left = function(a, b) {
+  Entry.hw.sendQueue.LMOT = 0;
+  return b.callReturn();
+};
+Blockly.Blocks.neobot_turn_right = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("\uc624\ub978\ucabd\ubaa8\ud130\ub97c").appendField(new Blockly.FieldDropdown([["\uc55e\uc73c\ub85c", "1"], ["\ub4a4\ub85c", "-1"]]), "DIRECTION").appendField(new Blockly.FieldDropdown([["\ub290\ub9ac\uac8c", "1"], ["\ubcf4\ud1b5", "2"], ["\ube60\ub974\uac8c", "3"]]), "VALUE").appendField("\ud68c\uc804").appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.neobot_turn_right = function(a, b) {
+  var c = b.getNumberField("VALUE"), d = b.getNumberField("DIRECTION");
+  Entry.hw.sendQueue.RMOT = c * d;
+  return b.callReturn();
+};
+Blockly.Blocks.neobot_stop_right = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("\uc624\ub978\ucabd\ubaa8\ud130 \uc815\uc9c0").appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.neobot_stop_right = function(a, b) {
+  Entry.hw.sendQueue.RMOT = 0;
+  return b.callReturn();
+};
+Blockly.Blocks.neobot_run_motor = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(new Blockly.FieldDropdown([["\uc591\ucabd", "1"], ["\uc67c\ucabd", "2"], ["\uc624\ub978\ucabd", "3"]]), "TYPE").appendField("\ubaa8\ud130\ub97c ");
+  this.appendValueInput("DURATION").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField("\ucd08\uac04").appendField(new Blockly.FieldDropdown([["\ub290\ub9ac\uac8c", "1"], ["\ubcf4\ud1b5", "2"], ["\ube60\ub974\uac8c", "3"]]), "VALUE").appendField(new Blockly.FieldDropdown([["\uc804\uc9c4", "1"], ["\ud6c4\uc9c4", "2"], ["\uc88c\ud68c\uc804", "3"], ["\uc6b0\ud68c\uc804", "4"]]), "DIRECTION").appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.neobot_run_motor = function(a, b) {
+  if (b.isStart) {
+    if (1 == b.timeFlag) {
+      var c = b.getNumberField("TYPE"), d = b.getNumberField("VALUE");
+      switch(b.getNumberField("DIRECTION")) {
+        case 1:
+          Entry.hw.sendQueue.LMOT = d;
+          Entry.hw.sendQueue.RMOT = d;
+          break;
+        case 2:
+          Entry.hw.sendQueue.LMOT = -1 * d;
+          Entry.hw.sendQueue.RMOT = -1 * d;
+          break;
+        case 3:
+          Entry.hw.sendQueue.LMOT = d;
+          Entry.hw.sendQueue.RMOT = -1 * d;
+          break;
+        case 4:
+          Entry.hw.sendQueue.LMOT = -1 * d, Entry.hw.sendQueue.RMOT = d;
+      }
+      2 === c ? Entry.hw.sendQueue.RMOT = 0 : 3 === c && (Entry.hw.sendQueue.LMOT = 0);
+      return b;
+    }
+    delete b.timeFlag;
+    delete b.isStart;
+    Entry.engine.isContinue = !1;
+    Entry.hw.sendQueue.LMOT = 0;
+    Entry.hw.sendQueue.RMOT = 0;
+    return b.callReturn();
+  }
+  b.isStart = !0;
+  b.timeFlag = 1;
+  c = 1E3 * b.getNumberValue("DURATION");
+  setTimeout(function() {
+    b.timeFlag = 0;
+  }, c);
+  return b;
+};
+Blockly.Blocks.neobot_servo_1 = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("SERVO1\uc5d0 \uc5f0\uacb0\ub41c \uc11c\ubcf4\ubaa8\ud130\ub97c").appendField(new Blockly.FieldDropdown([["\ube60\ub978", "3"], ["\ubcf4\ud1b5", "2"], ["\ub290\ub9b0", "1"]]), "SPEED").appendField("\uc18d\ub3c4\ub85c").appendField(new Blockly.FieldDropdown([["0\ub3c4", "0"], ["10\ub3c4", "1"], ["20\ub3c4", "2"], ["30\ub3c4", "3"], ["40\ub3c4", "4"], ["50\ub3c4", "5"], ["60\ub3c4", "6"], ["70\ub3c4", "7"], ["80\ub3c4", "8"], ["90\ub3c4", "9"], ["100\ub3c4", "10"], 
+  ["110\ub3c4", "11"], ["120\ub3c4", "12"], ["130\ub3c4", "13"], ["140\ub3c4", "14"], ["150\ub3c4", "15"], ["160\ub3c4", "16"]]), "VALUE").appendField("\ub85c \uc774\ub3d9").appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.neobot_servo_1 = function(a, b) {
+  var c = b.getNumberField("VALUE"), d = b.getNumberField("SPEED");
+  Entry.hw.sendQueue.SERVO1 = c;
+  Entry.hw.sendQueue.SERVO1_SPEED = d;
+  return b.callReturn();
+};
+Blockly.Blocks.neobot_servo_2 = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("SERVO2\uc5d0 \uc5f0\uacb0\ub41c \uc11c\ubcf4\ubaa8\ud130\ub97c").appendField(new Blockly.FieldDropdown([["\ube60\ub978", "3"], ["\ubcf4\ud1b5", "2"], ["\ub290\ub9b0", "1"]]), "SPEED").appendField("\uc18d\ub3c4\ub85c").appendField(new Blockly.FieldDropdown([["0\ub3c4", "0"], ["10\ub3c4", "1"], ["20\ub3c4", "2"], ["30\ub3c4", "3"], ["40\ub3c4", "4"], ["50\ub3c4", "5"], ["60\ub3c4", "6"], ["70\ub3c4", "7"], ["80\ub3c4", "8"], ["90\ub3c4", "9"], ["100\ub3c4", "10"], 
+  ["110\ub3c4", "11"], ["120\ub3c4", "12"], ["130\ub3c4", "13"], ["140\ub3c4", "14"], ["150\ub3c4", "15"], ["160\ub3c4", "16"]]), "VALUE").appendField("\ub85c \uc774\ub3d9").appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.neobot_servo_2 = function(a, b) {
+  var c = b.getNumberField("VALUE"), d = b.getNumberField("SPEED");
+  Entry.hw.sendQueue.SERVO2 = c;
+  Entry.hw.sendQueue.SERVO2_SPEED = d;
+  return b.callReturn();
+};
+Blockly.Blocks.neobot_play_note_for = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("\uba5c\ub85c\ub514").appendField(new Blockly.FieldDropdown([[Lang.General.note_c + "", "1"], [Lang.General.note_d + "", "2"], [Lang.General.note_e + "", "3"], [Lang.General.note_f + "", "4"], [Lang.General.note_g + "", "5"], [Lang.General.note_a + "", "6"], [Lang.General.note_b + "", "7"], [Lang.General.note_c + "", "8"]]), "NOTE").appendField("\uc744(\ub97c)").appendField(new Blockly.FieldDropdown([["1", "0"], ["2", "1"], ["3", "2"]]), "OCTAVE").appendField("\uc625\ud0c0\ube0c\ub85c").appendField(new Blockly.FieldDropdown([["2\ubd84\uc74c\ud45c", 
+  "2"], ["4\ubd84\uc74c\ud45c", "4"], ["8\ubd84\uc74c\ud45c", "8"]]), "DURATION");
+  this.appendDummyInput().appendField("\uae38\uc774\ub9cc\ud07c \uc18c\ub9ac\ub0b4\uae30").appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.neobot_play_note_for = function(a, b) {
+  var c = Entry.hw.sendQueue;
+  if (b.isStart) {
+    if (1 == b.timeFlag) {
+      return b;
+    }
+    delete b.timeFlag;
+    delete b.isStart;
+    Entry.engine.isContinue = !1;
+    return b.callReturn();
+  }
+  var d = b.getNumberField("NOTE", b), e = b.getNumberField("OCTAVE", b), f = b.getNumberField("DURATION", b);
+  b.note = d;
+  b.isStart = !0;
+  b.timeFlag = 1;
+  c.note = d;
+  c.octave = e;
+  c.duration = f;
+  c.sound_check = (1E5 * Math.random()).toFixed(0);
+  setTimeout(function() {
+    b.timeFlag = 0;
+  }, 1 / f * 2E3);
+  return b;
+};
+Blockly.Blocks.neobot_set_sensor_value = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(new Blockly.FieldDropdown([["1", "O_1"], ["2", "O_2"]]), "PORT").appendField("\ubc88 \ud3ec\ud2b8\uc758 \uac12\uc744").appendField(new Blockly.FieldDropdown([["\ucf1c\uae30", "1"], ["\ub044\uae30", "0"]]), "VALUE");
+  this.appendDummyInput().appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.neobot_set_sensor_value = function(a, b) {
+  var c = Entry.hw.sendQueue, d = b.getStringField("PORT", b), e = b.getNumberField("VALUE", b);
+  c[d] = e;
+  return b.callReturn();
+};
 Blockly.Blocks.when_scene_start = {init:function() {
   this.setColour("#3BBD70");
   this.appendDummyInput().appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/start_icon_scene_1_2.png", "*", "start")).appendField(Lang.Blocks.SCENE_when_scene_start);
@@ -3770,7 +3957,7 @@ Entry.block.sound_something_second_wait = function(a, b) {
       d.stop();
       b.playState = 0;
     }, 1E3 * c);
-    d.addEventListener("complete", function(a) {
+    d.addEventListener("complete", function(b) {
     });
   }
   return b;
@@ -3916,7 +4103,7 @@ Entry.block.sound_something_second_wait_with_block = function(a, b) {
       d.stop();
       b.playState = 0;
     }, 1E3 * c);
-    d.addEventListener("complete", function(a) {
+    d.addEventListener("complete", function(b) {
     });
   }
   return b;
@@ -4070,14 +4257,6 @@ Entry.block.message_cast = function(a, b) {
   Entry.container.mapEntityIncludeCloneOnScene(Entry.engine.raiseKeyEvent, ["when_message_cast", c]);
   return b.callReturn();
 };
-Blockly.Blocks.add_message = {init:function() {
-  this.setColour("#3BBD70");
-  this.appendDummyInput().appendField(Lang.Blocks.START_add_message).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/start_03.png", "*"));
-  this.setInputsInline(!0);
-}};
-Entry.block.add_massage = function(a, b) {
-  return b.callReturn();
-};
 Blockly.Blocks.message_cast_wait = {init:function() {
   this.setColour("#3BBD70");
   this.appendDummyInput().appendField(Lang.Blocks.START_message_send_wait_1).appendField(new Blockly.FieldDropdownDynamic("messages"), "VALUE").appendField(Lang.Blocks.START_message_send_wait_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/start_03.png", "*"));
@@ -4098,10 +4277,10 @@ Entry.block.message_cast_wait = function(a, b) {
     throw Error("value can not be null or undefined");
   }
   var e = [];
-  Entry.container.mapEntityIncludeCloneOnScene(function(a, b) {
-    for (var c = b[0], d = b[1], l = a.parent.script.childNodes, n = 0;n < l.length;n++) {
+  Entry.container.mapEntityIncludeCloneOnScene(function(b, a) {
+    for (var c = a[0], d = a[1], l = b.parent.script.childNodes, n = 0;n < l.length;n++) {
       var m = l[n], q = Entry.Xml.getField("VALUE", m);
-      Entry.Xml.isTypeOf(c, m) && q == d && (q = new Entry.Script(a), q.init(m), e.push(q));
+      Entry.Xml.isTypeOf(c, m) && q == d && (q = new Entry.Script(b), q.init(m), e.push(q));
     }
   }, ["when_message_cast", c]);
   b.runningScript = e;
@@ -4170,6 +4349,10 @@ Entry.block.text_flush = function(a, b) {
   a.setText("");
   return b.callReturn();
 };
+Entry.block.variableAddButton = {skeleton:"basic_button", color:"#eee", template:"%1", params:[{type:"Text", text:"\ubcc0\uc218 \ucd94\uac00", color:"#333", align:"center"}], func:function() {
+}};
+Entry.block.listAddButton = {skeleton:"basic_button", color:"#eee", template:"%1", params:[{type:"Text", text:"\ub9ac\uc2a4\ud2b8 \ucd94\uac00", color:"#333", align:"center"}], func:function() {
+}};
 Blockly.Blocks.change_variable = {init:function() {
   this.setColour("#E457DC");
   this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_change_variable_1);
@@ -4525,37 +4708,37 @@ Entry.Collection = function(a) {
     b.splice.call(this, d, 0, a);
     this._hashMap[a.id] = a;
   };
-  a.has = function(a) {
-    return !!this._hashMap[a];
+  a.has = function(b) {
+    return !!this._hashMap[b];
   };
-  a.get = function(a) {
-    return this._hashMap[a];
+  a.get = function(b) {
+    return this._hashMap[b];
   };
-  a.at = function(a) {
-    return this[a];
+  a.at = function(b) {
+    return this[b];
   };
   a.getAll = function() {
-    for (var a = this.length, b = [], e = 0;e < a;e++) {
-      b.push(this[e]);
+    for (var b = this.length, a = [], e = 0;e < b;e++) {
+      a.push(this[e]);
     }
-    return b;
+    return a;
   };
   a.indexOf = function(a) {
     return b.indexOf.call(this, a);
   };
-  a.find = function(a) {
-    for (var b = [], e, f = 0, g = this.length;f < g;f++) {
+  a.find = function(b) {
+    for (var a = [], e, f = 0, g = this.length;f < g;f++) {
       e = !0;
       var h = this[f], k;
-      for (k in a) {
-        if (a[k] != h[k]) {
+      for (k in b) {
+        if (b[k] != h[k]) {
           e = !1;
           break;
         }
       }
-      e && b.push(h);
+      e && a.push(h);
     }
-    return b;
+    return a;
   };
   a.pop = function() {
     var a = b.pop.call(this);
@@ -4574,9 +4757,9 @@ Entry.Collection = function(a) {
     }
     return e;
   };
-  a.remove = function(a) {
-    var b = this.indexOf(a);
-    -1 < b && (delete this._hashMap[a.id], this.splice(b, 1));
+  a.remove = function(b) {
+    var a = this.indexOf(b);
+    -1 < a && (delete this._hashMap[b.id], this.splice(a, 1));
   };
   a.splice = function(a, d) {
     var e = b.slice.call(arguments, 2), f = this._hashMap;
@@ -4596,9 +4779,9 @@ Entry.Collection = function(a) {
     }
     this._hashMap = {};
   };
-  a.map = function(a, b) {
+  a.map = function(b, a) {
     for (var e = [], f = 0, g = this.length;f < g;f++) {
-      e.push(a(this[f], b));
+      e.push(b(this[f], a));
     }
     return e;
   };
@@ -4611,10 +4794,10 @@ Entry.Collection = function(a) {
   a.fromJSON = function() {
   };
   a.toJSON = function() {
-    for (var a = [], b = 0, e = this.length;b < e;b++) {
-      a.push(this[b].toJSON());
+    for (var b = [], a = 0, e = this.length;a < e;a++) {
+      b.push(this[a].toJSON());
     }
-    return a;
+    return b;
   };
   a.observe = function() {
   };
@@ -4630,16 +4813,16 @@ Entry.Event = function(a) {
   this._listeners = [];
 };
 (function(a) {
-  a.attach = function(a, c) {
-    var d = {obj:a, fn:c};
+  a.attach = function(b, a) {
+    var d = {obj:b, fn:a};
     this._listeners.push(d);
     return d;
   };
-  a.detach = function(a) {
-    var c = this._listeners;
-    a = c.indexOf(a);
-    if (-1 < a) {
-      return c.splice(a, 1);
+  a.detach = function(b) {
+    var a = this._listeners;
+    b = a.indexOf(b);
+    if (-1 < b) {
+      return a.splice(b, 1);
     }
   };
   a.clear = function() {
@@ -4671,20 +4854,18 @@ Entry.Observer = function(a, b, c, d) {
 Entry.Container = function() {
   this.objects_ = [];
   this.cachedPicture = {};
-  this.variables_ = [];
-  this.messages_ = [];
   this.inputValue = {};
   this.currentObjects_ = this.copiedObject = null;
 };
 Entry.Container.prototype.generateView = function(a, b) {
-  this.view_ = a;
-  this.view_.addClass("entryContainer");
+  this._view = a;
+  this._view.addClass("entryContainer");
   if (b && "workspace" != b) {
-    "phone" == b && (this.view_.addClass("entryContainerPhone"), c = Entry.createElement("div"), c.addClass("entryAddObjectWorkspace"), c.innerHTML = Lang.Workspace.add_object, c.bindOnClick(function(a) {
+    "phone" == b && (this._view.addClass("entryContainerPhone"), c = Entry.createElement("div"), c.addClass("entryAddObjectWorkspace"), c.innerHTML = Lang.Workspace.add_object, c.bindOnClick(function(a) {
       Entry.dispatchEvent("openSpriteManager");
-    }), c = Entry.createElement("div"), c.addClass("entryContainerListPhoneWrapper"), this.view_.appendChild(c), d = Entry.createElement("ul"), d.addClass("entryContainerListPhone"), c.appendChild(d), this.listView_ = d);
+    }), c = Entry.createElement("div"), c.addClass("entryContainerListPhoneWrapper"), this._view.appendChild(c), d = Entry.createElement("ul"), d.addClass("entryContainerListPhone"), c.appendChild(d), this.listView_ = d);
   } else {
-    this.view_.addClass("entryContainerWorkspace");
+    this._view.addClass("entryContainerWorkspace");
     var c = Entry.createElement("div");
     c.addClass("entryAddObjectWorkspace");
     c.innerHTML = Lang.Workspace.add_object;
@@ -4700,7 +4881,7 @@ Entry.Container.prototype.generateView = function(a, b) {
         Entry.container.copiedObject ? Entry.container.addCloneObject(Entry.container.copiedObject) : Entry.toast.alert(Lang.Workspace.add_object_alert, Lang.Workspace.object_not_found_for_paste);
       }}], "workspace-contextmenu");
     });
-    this.view_.appendChild(c);
+    this._view.appendChild(c);
     var d = Entry.createElement("ul");
     d.addClass("entryContainerListWorkspace");
     c.appendChild(d);
@@ -4845,156 +5026,101 @@ Entry.Container.prototype.moveElementByBlock = function(a, b) {
   Entry.stage.sortZorder();
   this.updateListView();
 };
-Entry.Container.prototype.createMessage = function() {
-  var a = prompt(Lang.Workspace.enter_new_message);
-  a ? Entry.isExist(a, "name", Entry.variableContainer.messages_) ? Entry.toast.alert(Lang.Workspace.message_add_fail, Lang.Workspace.message_add_fail_msg) : Entry.variableContainer.addMessage({name:a}) && Entry.toast.success(Lang.Workspace.message_add_ok, a + " " + Lang.Workspace.message_add_ok_msg) : Entry.toast.alert(Lang.Workspace.message_add_cancel, Lang.Workspace.message_add_cancel_msg);
-};
-Entry.Container.prototype.addMessage = function(a) {
-  a.id || (a.id = Entry.generateHash());
-  this.messages_.push(a);
-  Entry.playground.reloadPlayground();
-  return !0;
-};
-Entry.Container.prototype.deleteMessage = function() {
-  0 === this.messages_.length ? Entry.toast.alert(Lang.Msgs.warn, Lang.Workspace.no_message_to_remove, "true") : Entry.dispatchEvent("deleteMessage");
-};
-Entry.Container.prototype.removeMessage = function(a) {
-  for (var b = this.messages_, c = 0;c < b.length;c++) {
-    if (b[c].id == a.id) {
-      b.splice(c, 1);
-      Entry.playground.reloadPlayground();
-      break;
-    }
-  }
-};
-Entry.Container.prototype.createVariable = function() {
-  var a = prompt(Lang.Workspace.enter_variable_name);
-  a && 10 >= a.length ? Entry.isExist(a, "name_", Entry.variableContainer.variables_) ? Entry.toast.alert(Lang.Workspace.variable_add_fail, Lang.Workspace.variable_add_fail_msg1) : Entry.variableContainer.addVariable({name:a}) && Entry.toast.success(Lang.Workspace.variable_add_ok, a + " " + Lang.Workspace.variable_add_ok_msg) : a && 10 <= a.length ? Entry.toast.alert(Lang.Workspace.variable_add_fail, Lang.Workspace.variable_add_fail_msg2, !0) : Entry.toast.alert(Lang.Workspace.variable_add_calcel, 
-  Lang.Workspace.variable_add_calcel_msg);
-};
-Entry.Container.prototype.removeVariable = function() {
-  Entry.dispatchEvent("removeVariable");
-};
-Entry.Container.prototype.changeVariableName = function() {
-  Entry.dispatchEvent("changeVariableName");
-};
-Entry.Container.prototype.changeEntryVariableName = function(a) {
-  var b = this.variables_;
-  if (Entry.isExist(a.newName, "name_", b)) {
-    Entry.toast.alert(Lang.Workspace.variable_rename_failed, Lang.Workspace.variable_dup);
-  } else {
-    for (var c = 0;c < b.length;c++) {
-      if (b[c].getId() == a.varId) {
-        this.variables_[c].setName(a.newName);
-        break;
-      }
-    }
-    Entry.toast.success(Lang.Workspace.variable_rename, Lang.Workspace.variable_rename_ok);
-    Entry.playground.reloadPlayground();
-  }
-};
-Entry.Container.prototype.removeEntryVariable = function(a) {
-  for (var b = this.variables_, c = 0;c < b.length;c++) {
-    if (b[c].getId() == a) {
-      b[c].remove();
-      this.variables_.splice(c, 1);
-      Entry.playground.reloadPlayground();
-      break;
-    }
-  }
-};
 Entry.Container.prototype.getDropdownList = function(a) {
   var b = [];
-  if ("sprites" == a) {
-    var c = this.getCurrentObjects(), d = c.length;
-    for (a = 0;a < d;a++) {
-      var e = c[a];
-      b.push([e.name, e.id]);
-    }
-  } else {
-    if ("spritesWithMouse" == a) {
+  switch(a) {
+    case "sprites":
+      var c = this.getCurrentObjects(), d = c.length;
+      for (a = 0;a < d;a++) {
+        var e = c[a];
+        b.push([e.name, e.id]);
+      }
+      break;
+    case "spritesWithMouse":
       c = this.getCurrentObjects();
       d = c.length;
       for (a = 0;a < d;a++) {
         e = c[a], b.push([e.name, e.id]);
       }
       b.push([Lang.Blocks.mouse_pointer, "mouse"]);
-    } else {
-      if ("spritesWithSelf" == a) {
-        c = this.getCurrentObjects();
-        d = c.length;
-        for (a = 0;a < d;a++) {
-          e = c[a], b.push([e.name, e.id]);
-        }
-        b.push([Lang.Blocks.self, "self"]);
-      } else {
-        if ("collision" == a) {
-          b.push([Lang.Blocks.mouse_pointer, "mouse"]);
-          c = this.getCurrentObjects();
-          d = c.length;
-          for (a = 0;a < d;a++) {
-            e = c[a], b.push([e.name, e.id]);
-          }
-          b.push([Lang.Blocks.wall, "wall"]);
-          b.push([Lang.Blocks.wall_up, "wall_up"]);
-          b.push([Lang.Blocks.wall_down, "wall_down"]);
-          b.push([Lang.Blocks.wall_right, "wall_right"]);
-          b.push([Lang.Blocks.wall_left, "wall_left"]);
-        } else {
-          if ("pictures" == a) {
-            for (c = Entry.playground.object.pictures, a = 0;a < c.length;a++) {
-              d = c[a], b.push([d.name, d.id]);
-            }
-          } else {
-            if ("messages" == a) {
-              for (c = Entry.variableContainer.messages_, a = 0;a < c.length;a++) {
-                d = c[a], b.push([d.name, d.id]);
-              }
-            } else {
-              if ("variables" == a) {
-                c = Entry.variableContainer.variables_;
-                for (a = 0;a < c.length;a++) {
-                  d = c[a], d.object_ && d.object_ != Entry.playground.object.id || b.push([d.getName(), d.getId()]);
-                }
-                b && 0 !== b.length || b.push([Lang.Blocks.VARIABLE_variable, "null"]);
-              } else {
-                if ("lists" == a) {
-                  c = Entry.variableContainer.lists_;
-                  for (a = 0;a < c.length;a++) {
-                    d = c[a], b.push([d.getName(), d.getId()]);
-                  }
-                  b && 0 !== b.length || b.push([Lang.Blocks.VARIABLE_list, "null"]);
-                } else {
-                  if ("scenes" == a) {
-                    for (c = Entry.scene.scenes_, a = 0;a < c.length;a++) {
-                      d = c[a], b.push([d.name, d.id]);
-                    }
-                  } else {
-                    if ("sounds" == a) {
-                      for (c = Entry.playground.object.sounds, a = 0;a < c.length;a++) {
-                        d = c[a], b.push([d.name, d.id]);
-                      }
-                    } else {
-                      if ("clone" == a) {
-                        for (b.push([Lang.Blocks.oneself, "self"]), d = this.objects_.length, a = 0;a < d;a++) {
-                          e = this.objects_[a], b.push([e.name, e.id]);
-                        }
-                      } else {
-                        if ("objectSequence" == a) {
-                          for (d = this.getCurrentObjects().length, a = 0;a < d;a++) {
-                            b.push([(a + 1).toString(), a.toString()]);
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
+      break;
+    case "spritesWithSelf":
+      c = this.getCurrentObjects();
+      d = c.length;
+      for (a = 0;a < d;a++) {
+        e = c[a], b.push([e.name, e.id]);
       }
-    }
+      b.push([Lang.Blocks.self, "self"]);
+      break;
+    case "collision":
+      b.push([Lang.Blocks.mouse_pointer, "mouse"]);
+      c = this.getCurrentObjects();
+      d = c.length;
+      for (a = 0;a < d;a++) {
+        e = c[a], b.push([e.name, e.id]);
+      }
+      b.push([Lang.Blocks.wall, "wall"]);
+      b.push([Lang.Blocks.wall_up, "wall_up"]);
+      b.push([Lang.Blocks.wall_down, "wall_down"]);
+      b.push([Lang.Blocks.wall_right, "wall_right"]);
+      b.push([Lang.Blocks.wall_left, "wall_left"]);
+      break;
+    case "pictures":
+      if (!Entry.playground.object) {
+        break;
+      }
+      c = Entry.playground.object.pictures;
+      for (a = 0;a < c.length;a++) {
+        d = c[a], b.push([d.name, d.id]);
+      }
+      break;
+    case "messages":
+      c = Entry.variableContainer.messages_;
+      for (a = 0;a < c.length;a++) {
+        d = c[a], b.push([d.name, d.id]);
+      }
+      break;
+    case "variables":
+      c = Entry.variableContainer.variables_;
+      for (a = 0;a < c.length;a++) {
+        d = c[a], d.object_ && d.object_ != Entry.playground.object.id || b.push([d.getName(), d.getId()]);
+      }
+      b && 0 !== b.length || b.push([Lang.Blocks.VARIABLE_variable, "null"]);
+      break;
+    case "lists":
+      c = Entry.variableContainer.lists_;
+      for (a = 0;a < c.length;a++) {
+        d = c[a], b.push([d.getName(), d.getId()]);
+      }
+      b && 0 !== b.length || b.push([Lang.Blocks.VARIABLE_list, "null"]);
+      break;
+    case "scenes":
+      c = Entry.scene.scenes_;
+      for (a = 0;a < c.length;a++) {
+        d = c[a], b.push([d.name, d.id]);
+      }
+      break;
+    case "sounds":
+      if (!Entry.playground.object) {
+        break;
+      }
+      c = Entry.playground.object.sounds;
+      for (a = 0;a < c.length;a++) {
+        d = c[a], b.push([d.name, d.id]);
+      }
+      break;
+    case "clone":
+      b.push([Lang.Blocks.oneself, "self"]);
+      d = this.objects_.length;
+      for (a = 0;a < d;a++) {
+        e = this.objects_[a], b.push([e.name, e.id]);
+      }
+      break;
+    case "objectSequence":
+      for (d = this.getCurrentObjects().length, a = 0;a < d;a++) {
+        b.push([(a + 1).toString(), a.toString()]);
+      }
+    ;
   }
   b.length || (b = [[Lang.Blocks.no_target, "null"]]);
   return b;
@@ -5086,15 +5212,6 @@ Entry.Container.prototype.loadSequenceSnapshot = function() {
   Entry.stage.sortZorder();
   this.updateListView();
 };
-Entry.Container.prototype.getMessageJSON = function() {
-  return this.messages_;
-};
-Entry.Container.prototype.getVariableJSON = function() {
-  for (var a = [], b = 0;b < this.variables_.length;b++) {
-    a.push(this.variables_[b].toJSON());
-  }
-  return a;
-};
 Entry.Container.prototype.getInputValue = function() {
   return this.inputValue.getValue();
 };
@@ -5145,7 +5262,7 @@ Entry.Container.prototype.getProjectWithJSON = function(a) {
   return a;
 };
 Entry.Container.prototype.generateTabView = function() {
-  var a = this.view_, b = this;
+  var a = this._view, b = this;
   this.tabViews = [];
   var c = Entry.createElement("div");
   c.addClass("entryContainerTabViewWorkspace");
@@ -5213,13 +5330,13 @@ Entry.Container.prototype.changeTabView = function(a) {
   this.movieContainer.addClass("entryHide");
   this.doneContainer.addClass("entryHide");
   this.helperContainer.addClass("entryHide");
-  "object" == a ? b[0].addClass("selected") : "movie" == a ? (a = this.view_, a = a.style.width.substring(0, a.style.width.length - 2), this.movieFrame.setAttribute("width", a), this.movieFrame.setAttribute("height", 9 * a / 16), this.movieContainer.removeClass("entryHide"), b[1].addClass("selected")) : "done" == a ? (c = $(this.doneContainer).height(), a = $(this.doneContainer).width(), 9 * a / 16 + 35 < c ? c = 9 * a / 16 + 35 : a = (c - 35) / 9 * 16, this.doneProjectFrame.setAttribute("width", 
+  "object" == a ? b[0].addClass("selected") : "movie" == a ? (a = this._view, a = a.style.width.substring(0, a.style.width.length - 2), this.movieFrame.setAttribute("width", a), this.movieFrame.setAttribute("height", 9 * a / 16), this.movieContainer.removeClass("entryHide"), b[1].addClass("selected")) : "done" == a ? (c = $(this.doneContainer).height(), a = $(this.doneContainer).width(), 9 * a / 16 + 35 < c ? c = 9 * a / 16 + 35 : a = (c - 35) / 9 * 16, this.doneProjectFrame.setAttribute("width", 
   a), this.doneProjectFrame.setAttribute("height", c), this.doneContainer.removeClass("entryHide"), b[2].addClass("selected")) : "helper" == a && (Entry.helper.blockHelperOn(), this.helperContainer.removeClass("entryHide"), b[3].addClass("selected"));
 };
 Entry.Container.prototype.initYoutube = function(a) {
   this.youtubeHash = a;
   this.youtubeTab.removeClass("entryRemove");
-  a = this.view_;
+  a = this._view;
   a = a.style.width.substring(0, a.style.width.length - 2);
   var b = this.movieContainer, c = Entry.createElement("iframe");
   c.setAttribute("width", a);
@@ -5233,7 +5350,7 @@ Entry.Container.prototype.initYoutube = function(a) {
 Entry.Container.prototype.initTvcast = function(a) {
   this.tvcast = a;
   this.youtubeTab.removeClass("entryRemove");
-  a = this.view_;
+  a = this._view;
   a = a.style.width.substring(0, a.style.width.length - 2);
   var b = this.movieContainer, c = Entry.createElement("iframe");
   c.setAttribute("width", a);
@@ -5247,7 +5364,7 @@ Entry.Container.prototype.initTvcast = function(a) {
 Entry.Container.prototype.initDoneProject = function(a) {
   this.doneProject = a;
   this.iframeTab.removeClass("entryRemove");
-  a = this.view_;
+  a = this._view;
   a = a.style.width.substring(0, a.style.width.length - 2);
   var b = Entry.createElement("iframe");
   b.setAttribute("width", a);
@@ -5281,6 +5398,11 @@ Entry.Container.prototype.hideProjectAnswer = function(a) {
     }
     b.setVisible(!1);
   }
+};
+Entry.Container.prototype.getView = function() {
+  return this._view;
+};
+Entry.Container.prototype.resize = function() {
 };
 Entry.db = {data:{}, typeMap:{}};
 (function(a) {
@@ -5318,6 +5440,12 @@ Entry.Dom = function(a, b) {
     d.addClass(a);
   });
   b.parent && b.parent.append(d);
+  d.bindOnClick = function(a) {
+    $(this).on("click touchstart", function(b) {
+      b.stopImmediatePropagation();
+      b.handled || (b.handled = !0, a.call(this, b));
+    });
+  };
   return d;
 };
 Entry.Dialog = function(a, b, c, d) {
@@ -5583,26 +5711,16 @@ Entry.Engine.prototype.update = function() {
   Entry.engine.isState("run") && (Entry.engine.computeObjects(), Entry.hw.update());
 };
 Entry.Engine.prototype.computeObjects = function() {
-  Entry.container.mapEntityIncludeCloneOnScene(this.computeFunction);
+  Entry.container.mapObjectOnScene(this.computeFunction);
 };
 Entry.Engine.prototype.computeFunction = function(a) {
-  a = a.runningScript;
-  for (var b = 0;b < a.length;b++) {
-    for (var c = a.shift(), d = !0, e = !1;c && d && !e;) {
-      try {
-        var d = !c.isLooped, f = c.run(), e = f && f.type == c.type, c = f;
-      } catch (g) {
-        throw Entry.engine.toggleStop(), Entry.engine.isUpdating = !1, "workspace" == Entry.type && (Entry.container.selectObject(), Entry.container.selectObject(c.entity.parent.id), Entry.playground.changeViewMode("code"), Blockly.mainWorkspace.activatePreviousBlock(c.id)), Entry.toast.alert(Lang.Msgs.runtime_error, Lang.Workspace.check_runtime_error, !0), g;
-      }
-    }
-    c && a.push(c);
-  }
+  a.script.tick();
 };
 Entry.Engine.computeThread = function(a, b) {
   Entry.engine.isContinue = !0;
   for (var c = !1;b && Entry.engine.isContinue && !c;) {
     Entry.engine.isContinue = !b.isRepeat;
-    var d = b.run(), c = d && d.type == b.type;
+    var d = b.run(), c = d && d === b;
     b = d;
   }
   return b;
@@ -5621,7 +5739,7 @@ Entry.Engine.prototype.toggleRun = function() {
     a.takeSnapshot();
   }), Entry.variableContainer.mapList(function(a) {
     a.takeSnapshot();
-  }), Entry.container.takeSequenceSnapshot(), Entry.scene.takeStartSceneSnapshot(), this.state = "run", this.fireEvent("when_run_button_click"));
+  }), Entry.container.takeSequenceSnapshot(), Entry.scene.takeStartSceneSnapshot(), this.state = "run", this.fireEvent("start"));
   this.state = "run";
   "mobile" == Entry.type && this.view_.addClass("entryEngineBlueWorkspace");
   this.pauseButton.innerHTML = Lang.Workspace.pause;
@@ -5677,29 +5795,13 @@ Entry.Engine.prototype.fireEvent = function(a) {
   "run" == this.state && Entry.container.mapEntityIncludeCloneOnScene(this.raiseEvent, a);
 };
 Entry.Engine.prototype.raiseEvent = function(a, b) {
-  for (var c = a.parent.script.childNodes, d = 0;d < c.length;d++) {
-    var e = c[d];
-    if (Entry.Xml.isTypeOf(b, e)) {
-      var f = new Entry.Script(a);
-      f.init(e);
-      a.runningScript.push(f);
-    }
-  }
+  a.parent.script.raiseEvent(b, a);
 };
 Entry.Engine.prototype.fireEventOnEntity = function(a, b) {
   "run" == this.state && Entry.container.mapEntityIncludeCloneOnScene(this.raiseEventOnEntity, [b, a]);
 };
 Entry.Engine.prototype.raiseEventOnEntity = function(a, b) {
-  if (a === b[0]) {
-    for (var c = b[1], d = a.parent.script.childNodes, e = 0;e < d.length;e++) {
-      var f = d[e];
-      if (Entry.Xml.isTypeOf(c, f)) {
-        var g = new Entry.Script(a);
-        g.init(f);
-        a.runningScript.push(g);
-      }
-    }
-  }
+  a === b[0] && a.parent.script.raiseEvent(b[1], a);
 };
 Entry.Engine.prototype.captureKeyEvent = function(a) {
   var b = a.keyCode, c = Entry.type;
@@ -6243,333 +6345,68 @@ Entry.EntityObject.prototype.syncDialogVisible = function() {
   this.dialog && (this.dialog.object.visible = this.visible);
 };
 Entry.Helper = function() {
+  this.visible = !1;
 };
 var p = Entry.Helper.prototype;
-p.initBlockHelper = function(a) {
-  this.parentView_ || (this.parentView_ = a);
-};
-p.blockHelperOn = function() {
-  if (this.blockHelperView_) {
-    return this.blockHelperOff();
-  }
-  var a = this;
-  a.blockHelpData = EntryStatic.blockInfo;
-  var b = Entry.createElement("div", "entryBlockHelperWorkspace");
-  Entry.isForLecture && b.addClass("lecture");
-  a.parentView_.appendChild(b);
-  if (!Entry.isForLecture) {
-    var c = Entry.createElement("div", "entryBlockHelperHeaderWorkspace");
-    c.innerHTML = Lang.Helper.Block_info;
-    var d = Entry.createElement("button", "entryBlockHelperDisposeWorkspace");
-    d.addClass("entryBtn");
-    d.bindOnClick(function() {
-      a.blockHelperOff();
-    });
+p.generateView = function(a, b) {
+  if (!this.parentView_) {
+    this.parentView_ = a;
+    this.blockHelpData = EntryStatic.blockInfo;
+    var c = Entry.createElement("div", "entryBlockHelperWorkspace");
+    this.view = c;
+    Entry.isForLecture && c.addClass("lecture");
+    this.parentView_.appendChild(c);
+    if (!Entry.isForLecture) {
+      var d = Entry.createElement("div", "entryBlockHelperHeaderWorkspace");
+      d.innerHTML = Lang.Helper.Block_info;
+      c.appendChild(d);
+    }
+    d = Entry.createElement("div", "entryBlockHelperContentWorkspace");
+    d.addClass("entryBlockHelperIntro");
+    Entry.isForLecture && d.addClass("lecture");
     c.appendChild(d);
-    b.appendChild(c);
+    this.blockHelperContent_ = d;
+    this.blockHelperView_ = c;
+    c = Entry.createElement("div", "entryBlockHelperBlockWorkspace");
+    this.blockHelperContent_.appendChild(c);
+    d = Entry.createElement("div", "entryBlockHelperDescriptionWorkspace");
+    this.blockHelperContent_.appendChild(d);
+    d.innerHTML = Lang.Helper.Block_click_msg;
+    this.blockHelperDescription_ = d;
+    this._renderView = new Entry.RenderView($(c), "LEFT");
+    this.code = new Entry.Code([]);
+    this._renderView.changeCode(this.code);
+    this.first = !0;
   }
-  c = Entry.createElement("div", "entryBlockHelperContentWorkspace");
-  c.addClass("entryBlockHelperIntro");
-  Entry.isForLecture && c.addClass("lecture");
-  b.appendChild(c);
-  a.blockHelperContent_ = c;
-  a.blockHelperView_ = b;
-  b = Entry.createElement("div", "entryBlockHelperBlockWorkspace");
-  this.blockMenu_ = new Blockly.BlockMenu(b);
-  this.blockMenu_.isViewOnly = !0;
-  this.blockMenu_.isCenterAlign = !0;
-  a.blockHelperContent_.appendChild(b);
-  b = Entry.createElement("div", "entryBlockHelperDescriptionWorkspace");
-  a.blockHelperContent_.appendChild(b);
-  b.innerHTML = Lang.Helper.Block_click_msg;
-  this.blockHelperDescription_ = b;
-  this.blockChangeEvent = Blockly.bindEvent_(Blockly.mainWorkspace.getCanvas(), "blocklySelectChange", this, this.updateSelectedBlock);
-  Entry.playground.blockMenu && (this.menuBlockChangeEvent = Blockly.bindEvent_(Entry.playground.blockMenu.workspace_.getCanvas(), "blocklySelectChange", this, this.updateSelectedBlock));
-  this.first = !0;
 };
-p.blockHelperOff = function() {
-  if (this.blockHelperView_ && !Entry.isForLecture) {
-    var a = this;
-    a.blockHelperView_.addClass("dispose");
-    Blockly.unbindEvent_(this.blockChangeEvent);
-    delete this.blockChangeEvent;
-    Entry.playground.blockMenu && (Blockly.unbindEvent_(this.menuBlockChangeEvent), delete this.menuBlockChangeEvent);
-    Entry.bindAnimationCallback(a.blockHelperView_, function(b) {
-      a.parentView_.removeChild(a.blockHelperView_);
-      delete a.blockHelperContent_;
-      delete a.blockHelperView_;
-    });
-  }
+p.bindWorkspace = function(a) {
+  a && a && (this._blockViewObserver && this._blockViewObserver.destroy(), this.workspace = a, this._blockViewObserver = a.observe(this, "updateSelectedBlock", ["selectedBlockView"]));
 };
 p.updateSelectedBlock = function() {
-  Blockly.selected && (this.first && (this.blockHelperContent_.removeClass("entryBlockHelperIntro"), this.first = !1), this.renderBlock(Blockly.selected.type));
+  var a = this.workspace.selectedBlockView;
+  if (a && this.visible && a != this._blockView) {
+    this.first && (this.blockHelperContent_.removeClass("entryBlockHelperIntro"), this.first = !1);
+    var b = a.block.type;
+    this._blockView = a;
+    this.renderBlock(b);
+  }
 };
 p.renderBlock = function(a) {
-  var b = this.blockHelpData[a];
-  b && (b = jQuery.parseXML(b.xml), b = this.blockMenu_.show(b.childNodes), this.blockHelperDescription_.innerHTML = Lang.Helper[a], $(this.blockHelperDescription_).css({top:b + 40}));
-};
-Entry.HW = function() {
-  this.connectTrial = 0;
-  this.isFirstConnect = !0;
-  if ("WebSocket" in window) {
-    try {
-      this.initSocket();
-    } catch (a) {
-      console.log("socket error:", a);
-    }
-  } else {
-    console.log("socket not exist");
-  }
-  this.connected = !1;
-  this.portData = {};
-  this.sendQueue = {};
-  this.settingQueue = {};
-  this.hwModule = this.selectedDevice = null;
-  Entry.addEventListener("stop", this.setZero);
-  this.hwInfo = {11:Entry.Arduino, 12:Entry.SensorBoard, 24:Entry.Hamster, 25:Entry.Albert, 31:Entry.Bitbrick};
-};
-Entry.HW.TRIAL_LIMIT = 1;
-p = Entry.HW.prototype;
-p.initSocket = function() {
-  if (this.connectTrial >= Entry.HW.TRIAL_LIMIT) {
-    this.isFirstConnect || Entry.toast.alert(Lang.Menus.connect_hw, Lang.Menus.connect_fail, !1), this.isFirstConnect = !1;
-  } else {
-    var a = this, b = new WebSocket("ws://localhost:23518");
-    this.socket = b;
-    this.connected = !1;
-    b.binaryType = "arraybuffer";
-    this.connectTrial++;
-    b.onopen = function() {
-      a.initHardware();
-    };
-    b.onmessage = function(b) {
-      b = JSON.parse(b.data);
-      a.checkDevice(b);
-      a.updatePortData(b);
-    };
-    b.onclose = function() {
-      a.initSocket();
-    };
-    Entry.dispatchEvent("hwChanged");
+  if (a && this.visible) {
+    this.code.clear();
+    this.code.createThread([{type:a, readOnly:!0}]);
+    var b = this.code.getThreads()[0].getFirstBlock().view, c = b.svgGroup.getBBox(), d = c.width, c = c.height, b = b.getSkeleton().box(b).offsetX;
+    isNaN(b) && (b = 0);
+    this.blockHelperDescription_.innerHTML = Lang.Helper[a];
+    this._renderView.align();
+    $(this.blockHelperDescription_).css({top:c + 30});
+    this._renderView.svgDom.css({"margin-left":-(d / 2) - 20 - b});
   }
 };
-p.retryConnect = function() {
-  this.connectTrial = 0;
-  this.initSocket();
+p.getView = function() {
+  return this.view;
 };
-p.initHardware = function() {
-  this.connectTrial = 0;
-  this.connected = !0;
-  Entry.dispatchEvent("hwChanged");
-  Entry.playground && Entry.playground.object && Entry.playground.setMenu(Entry.playground.object.objectType);
-};
-p.setDigitalPortValue = function(a, b) {
-  this.sendQueue[a] = b;
-};
-p.getAnalogPortValue = function(a) {
-  return this.connected ? this.portData["a" + a] : 0;
-};
-p.getDigitalPortValue = function(a) {
-  if (!this.connected) {
-    return 0;
-  }
-  this.setPortReadable(a);
-  return void 0 !== this.portData[a] ? this.portData[a] : 0;
-};
-p.setPortReadable = function(a) {
-  this.sendQueue.readablePorts || (this.sendQueue.readablePorts = []);
-  this.sendQueue.readablePorts.push(a);
-};
-p.update = function() {
-  this.socket && 1 == this.socket.readyState && (this.socket.send(JSON.stringify(this.sendQueue)), this.sendQueue.readablePorts = []);
-};
-p.updatePortData = function(a) {
-  this.portData = a;
-};
-p.closeConnection = function() {
-  this.socket && this.socket.close();
-};
-p.downloadConnector = function() {
-  window.open("http://play-entry.org/down/entry_v1.1.zip", "_blank").focus();
-};
-p.downloadSource = function() {
-  window.open("http://play-entry.com/lib/EntryArduino/arduino/entry.ino", "_blank").focus();
-};
-p.setZero = function() {
-  Entry.hw.hwModule && Entry.hw.hwModule.setZero();
-};
-p.checkDevice = function(a) {
-  void 0 !== a.company && (a = "" + a.company + a.model, a != this.selectedDevice && (this.selectedDevice = a, this.hwModule = this.hwInfo[a], Entry.dispatchEvent("hwChanged"), Entry.toast.success(Lang.Menus.connect_hw, Lang.Menus.connect_message.replace("%1", Lang.Device[Entry.hw.hwModule.name]), !1)));
-};
-p.banHW = function() {
-  var a = this.hwInfo, b;
-  for (b in a) {
-    Entry.playground.blockMenu.banClass(a[b].name);
-  }
-};
-Entry.init = function(a, b) {
-  Entry.assert("object" === typeof b, "Init option is not object");
-  this.events_ = {};
-  this.interfaceState = {menuWidth:264};
-  Entry.Utils.bindGlobalEvent(["mousedown", "mousemove"]);
-  this.options = b;
-  this.parseOptions(b);
-  this.mediaFilePath = (b.libDir ? b.libDir : "/lib") + "/entryjs/images/";
-  "workspace" == this.type && this.isPhone() && (this.type = "phone");
-  this.initialize_();
-  this.view_ = a;
-  this.view_.setAttribute("class", "entry");
-  Entry.initFonts(b.fonts);
-  this.createDom(a, this.type);
-  this.loadInterfaceState();
-  this.overridePrototype();
-  this.maxCloneLimit = 302;
-  this.cloudSavable = !0;
-  this.startTime = (new Date).getTime();
-  document.onkeydown = function(a) {
-    Entry.dispatchEvent("keyPressed", a);
-  };
-  document.onkeyup = function(a) {
-    Entry.dispatchEvent("keyUpped", a);
-  };
-  window.onresize = function(a) {
-    Entry.dispatchEvent("windowResized", a);
-  };
-  window.onbeforeunload = this.beforeUnload;
-  Entry.addEventListener("saveWorkspace", function(a) {
-    Entry.addActivity("save");
-  });
-  "IE" != Entry.getBrowserType().substr(0, 2) || window.flashaudio ? createjs.Sound.registerPlugins([createjs.WebAudioPlugin]) : (createjs.FlashAudioPlugin.swfPath = this.mediaFilePath + "media/", createjs.Sound.registerPlugins([createjs.FlashAudioPlugin]), window.flashaudio = !0);
-  Entry.soundQueue = new createjs.LoadQueue;
-  Entry.soundQueue.installPlugin(createjs.Sound);
-  Entry.loadAudio_([Entry.mediaFilePath + "media/click.mp3", Entry.mediaFilePath + "media/click.wav", Entry.mediaFilePath + "media/click.ogg"], "click");
-  Entry.loadAudio_([Entry.mediaFilePath + "media/delete.mp3", Entry.mediaFilePath + "media/delete.ogg", Entry.mediaFilePath + "media/delete.wav"], "delete");
-};
-Entry.loadAudio_ = function(a, b) {
-  if (window.Audio && a.length) {
-    for (;0 < a.length;) {
-      var c = a[0];
-      c.match(/\/([^.]+)./);
-      Entry.soundQueue.loadFile({id:b, src:c, type:createjs.LoadQueue.SOUND});
-      break;
-    }
-  }
-};
-Entry.initialize_ = function() {
-  this.stage = new Entry.Stage;
-  Entry.engine && Entry.engine.clearTimer();
-  this.engine = new Entry.Engine;
-  this.container = new Entry.Container;
-  this.helper = new Entry.Helper;
-  this.variableContainer = new Entry.VariableContainer;
-  if ("workspace" == this.type || "phone" == this.type) {
-    this.stateManager = new Entry.StateManager;
-  }
-  this.scene = new Entry.Scene;
-  this.playground = new Entry.Playground;
-  this.toast = new Entry.Toast;
-  this.hw && this.hw.closeConnection();
-  this.hw = new Entry.HW;
-  if (Entry.enableActivityLogging) {
-    this.reporter = new Entry.Reporter(!1);
-  } else {
-    if ("workspace" == this.type || "phone" == this.type) {
-      this.reporter = new Entry.Reporter(!0);
-    }
-  }
-};
-Entry.createDom = function(a, b) {
-  if (b && "workspace" != b) {
-    "minimize" == b ? (c = Entry.createElement("canvas"), c.className = "entryCanvasWorkspace", c.id = "entryCanvas", c.width = 640, c.height = 360, d = Entry.createElement("div", "entryCanvasWrapper"), d.appendChild(c), a.appendChild(d), this.canvas_ = c, this.stage.initStage(this.canvas_), d = Entry.createElement("div"), a.appendChild(d), this.engineView = d, this.engine.generateView(this.engineView, b)) : "phone" == b && (this.stateManagerView = c = Entry.createElement("div"), this.stateManager.generateView(this.stateManagerView, 
-    b), d = Entry.createElement("div"), a.appendChild(d), this.engineView = d, this.engine.generateView(this.engineView, b), c = Entry.createElement("canvas"), c.addClass("entryCanvasPhone"), c.id = "entryCanvas", c.width = 640, c.height = 360, d.insertBefore(c, this.engine.footerView_), this.canvas_ = c, this.stage.initStage(this.canvas_), c = Entry.createElement("div"), a.appendChild(c), this.containerView = c, this.container.generateView(this.containerView, b), c = Entry.createElement("div"), 
-    a.appendChild(c), this.playgroundView = c, this.playground.generateView(this.playgroundView, b));
-  } else {
-    var c = Entry.createElement("div");
-    a.appendChild(c);
-    this.sceneView = c;
-    this.scene.generateView(this.sceneView, b);
-    c = Entry.createElement("div");
-    this.sceneView.appendChild(c);
-    this.stateManagerView = c;
-    this.stateManager.generateView(this.stateManagerView, b);
-    var d = Entry.createElement("div");
-    a.appendChild(d);
-    this.engineView = d;
-    this.engine.generateView(this.engineView, b);
-    c = Entry.createElement("canvas");
-    c.addClass("entryCanvasWorkspace");
-    c.id = "entryCanvas";
-    c.width = 640;
-    c.height = 360;
-    d.insertBefore(c, this.engine.addButton);
-    c.addEventListener("mousewheel", function(a) {
-      var b = Entry.variableContainer.getListById(Entry.stage.mouseCoordinate);
-      a = 0 < a.wheelDelta ? !0 : !1;
-      for (var c = 0;c < b.length;c++) {
-        var d = b[c];
-        d.scrollButton_.y = a ? 46 <= d.scrollButton_.y ? d.scrollButton_.y - 23 : 23 : d.scrollButton_.y + 23;
-        d.updateView();
-      }
-    });
-    this.canvas_ = c;
-    this.stage.initStage(this.canvas_);
-    c = Entry.createElement("div");
-    a.appendChild(c);
-    this.containerView = c;
-    this.container.generateView(this.containerView, b);
-    this.helper.initBlockHelper(c);
-    c = Entry.createElement("div");
-    a.appendChild(c);
-    this.playgroundView = c;
-    this.playground.generateView(this.playgroundView, b);
-  }
-};
-Entry.start = function(a) {
-  this.FPS || (this.FPS = 60);
-  Entry.assert("number" == typeof this.FPS, "FPS must be number");
-  Entry.engine.start(this.FPS);
-};
-Entry.parseOptions = function(a) {
-  this.type = a.type;
-  this.projectSaveable = a.projectsaveable;
-  void 0 === this.projectSaveable && (this.projectSaveable = !0);
-  this.objectAddable = a.objectaddable;
-  void 0 === this.objectAddable && (this.objectAddable = !0);
-  this.objectEditable = a.objectEditable;
-  void 0 === this.objectEditable && (this.objectEditable = !0);
-  this.objectEditable || (this.objectAddable = !1);
-  this.objectDeletable = a.objectdeletable;
-  void 0 === this.objectDeletable && (this.objectDeletable = !0);
-  this.soundEditable = a.soundeditable;
-  void 0 === this.soundEditable && (this.soundEditable = !0);
-  this.pictureEditable = a.pictureeditable;
-  void 0 === this.pictureEditable && (this.pictureEditable = !0);
-  this.sceneEditable = a.sceneEditable;
-  void 0 === this.sceneEditable && (this.sceneEditable = !0);
-  this.functionEnable = a.functionEnable;
-  void 0 === this.functionEnable && (this.functionEnable = !0);
-  this.messageEnable = a.messageEnable;
-  void 0 === this.messageEnable && (this.messageEnable = !0);
-  this.variableEnable = a.variableEnable;
-  void 0 === this.variableEnable && (this.variableEnable = !0);
-  this.listEnable = a.listEnable;
-  void 0 === this.listEnable && (this.listEnable = !0);
-  this.hasVariableManager = a.hasvariablemanager;
-  this.variableEnable || this.messageEnable || this.listEnable || this.functionEnable ? void 0 === this.hasVariableManager && (this.hasVariableManager = !0) : this.hasVariableManager = !1;
-  this.isForLecture = a.isForLecture;
-};
-Entry.initFonts = function(a) {
-  this.fonts = a;
-  a || (this.fonts = []);
-  var b = {custom:{families:[], urls:[]}};
-  for (a = 0;a < this.fonts.length;a++) {
-    var c = this.fonts[a];
-    b.custom.families.push(c.family);
-    b.custom.urls.push(c.url);
-  }
-  setTimeout(function() {
-    WebFont.load(b);
-  }, 1E3);
+p.resize = function() {
 };
 Entry.Activity = function(a, b) {
   this.name = a;
@@ -6607,7 +6444,8 @@ Entry.EntryObject = function(a) {
     this.text = a.text || this.name;
     this.objectType = a.objectType;
     this.objectType || (this.objectType = "sprite");
-    this.script = a.script ? Blockly.Xml.textToDom(a.script) : Blockly.Xml.textToDom("<xml></xml>");
+    a.script = [[{type:"when_run_button_click", x:40, y:240}, {type:"repeat_basic", statements:[[{type:"move_direction"}]]}, {type:"stop_repeat"}]];
+    this.script = new Entry.Code(a.script ? a.script : []);
     this.pictures = a.sprite.pictures;
     this.sounds = [];
     this.sounds = a.sprite.sounds;
@@ -6717,12 +6555,6 @@ Entry.EntryObject.prototype.generateView = function() {
     Entry.objectEditable && Entry.objectDeletable && (d = Entry.createElement("div"), d.addClass("entryObjectDeleteWorkspace"), d.object = this, this.deleteView_ = d, this.view_.appendChild(d), d.bindOnClick(function(a) {
       Entry.engine.isState("run") || Entry.container.removeObject(this.object);
     }));
-    d = Entry.createElement("div");
-    d.addClass("entryObjectSelectedImgWorkspace");
-    this.selectedImgView_ = d;
-    this.view_.appendChild(d);
-    this.initializeSplitter(d);
-    this.splitter = d;
     d = Entry.createElement("div");
     d.addClass("entryObjectInformationWorkspace");
     d.object = this;
@@ -8562,23 +8394,11 @@ Entry.BlockParser = function(a) {
     a = a._schema.syntax.concat();
     return a.splice(1, a.length - 1).join(".") + "();\n";
   };
-  a.BasicFunction = function(a) {
-    a = this.Thread(a.statements[0]);
-    return "function promise() {\n" + this.indent(a) + "}\n";
-  };
   a.BasicIteration = function(a) {
     var c = a.params[0], d = this.publishIterateVariable();
     a = this.Thread(a.statements[0]);
     this.unpublishIterateVariable();
     return "for (var " + d + " = 0; " + d + " < " + c + "; " + d + "++){\n" + this.indent(a) + "}\n";
-  };
-  a.BasicIf = function(a) {
-    var c = this.Thread(a.statements[0]);
-    return "if (" + a._schema.syntax.concat()[1] + ") {\n" + this.indent(c) + "}\n";
-  };
-  a.BasicWhile = function(a) {
-    var c = this.Thread(a.statements[0]);
-    return "while (" + a._schema.syntax.concat()[1] + ") {\n" + this.indent(c) + "}\n";
   };
   a.indent = function(a) {
     var c = "    ";
@@ -8600,20 +8420,20 @@ Entry.BlockParser = function(a) {
 })(Entry.BlockParser.prototype);
 Entry.JSParser = function(a) {
   this.syntax = a;
-  this.scopeChain = [];
-  this.scope = null;
 };
 (function(a) {
   a.Program = function(a) {
-    var c = [], d = [];
-    d.push({type:this.syntax.Program});
-    var e = this.initScope(a), d = d.concat(this.BlockStatement(a));
-    this.unloadScope();
-    c.push(d);
-    return c = c.concat(e);
+    var c = [];
+    a = a.body;
+    c.push({type:this.syntax.Program});
+    for (var d = 0;d < a.length;d++) {
+      var e = a[d];
+      c.push(this[e.type](e));
+    }
+    return c;
   };
   a.Identifier = function(a, c) {
-    return c ? c[a.name] : this.scope[a.name];
+    return c ? c[a.name] : this.syntax.Scope[a.name];
   };
   a.ExpressionStatement = function(a) {
     a = a.expression;
@@ -8645,13 +8465,8 @@ Entry.JSParser = function(a) {
     var c = [];
     a = a.body;
     for (var d = 0;d < a.length;d++) {
-      var e = a[d], f = this[e.type](e);
-      if (f) {
-        if (void 0 === f.type) {
-          throw {message:"\ud574\ub2f9\ud558\ub294 \ube14\ub85d\uc774 \uc5c6\uc2b5\ub2c8\ub2e4.", node:e};
-        }
-        f && c.push(f);
-      }
+      var e = a[d];
+      c.push(this[e.type](e));
     }
     return c;
   };
@@ -8677,10 +8492,7 @@ Entry.JSParser = function(a) {
     throw {message:"continue\ub294 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a};
   };
   a.IfStatement = function(a) {
-    if (this.syntax.IfStatement) {
-      throw {message:"if\ub294 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a};
-    }
-    return this.BasicIf(a);
+    return {test:a.test, consequent:a.consequent, alternate:a.alternate};
   };
   a.SwitchStatement = function(a) {
     throw {message:"switch\ub294 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a};
@@ -8698,11 +8510,7 @@ Entry.JSParser = function(a) {
     throw {message:"catch\ub294 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a};
   };
   a.WhileStatement = function(a) {
-    var c = a.body, d = this.syntax.WhileStatement, c = this[c.type](c);
-    if (d) {
-      throw {message:"while\uc740 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a};
-    }
-    return this.BasicWhile(a, c);
+    throw {message:"while\uc740 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a};
   };
   a.DoWhileStatement = function(a) {
     throw {message:"do ~ while\uc740 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a};
@@ -8711,16 +8519,13 @@ Entry.JSParser = function(a) {
     throw {message:"for ~ in\uc740 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a};
   };
   a.FunctionDeclaration = function(a) {
-    if (this.syntax.FunctionDeclaration) {
-      throw {message:"function\uc740 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a};
-    }
-    return null;
+    throw {message:"function\uc740 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a};
   };
   a.VariableDeclaration = function(a) {
     throw {message:"var\uc740 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a};
   };
   a.ThisExpression = function(a) {
-    return this.scope.this;
+    return "this";
   };
   a.ArrayExpression = function(a) {
     throw {message:"array\ub294 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a};
@@ -8759,15 +8564,11 @@ Entry.JSParser = function(a) {
     return ["||", "&&"];
   };
   a.MemberExpression = function(a) {
-    var c = a.object, d = a.property;
-    console.log(c.type);
-    c = this[c.type](c);
-    console.log(c);
-    d = this[d.type](d, c);
+    var c = a.object, d = a.property, c = this[c.type](c), d = this[d.type](d, c);
     if (Object(c) !== c || Object.getPrototypeOf(c) !== Object.prototype) {
       throw {message:c + "\uc740(\ub294) \uc798\ubabb\ub41c \uba64\ubc84 \ubcc0\uc218\uc785\ub2c8\ub2e4.", node:a};
     }
-    c = d;
+    c = c[d];
     if (!c) {
       throw {message:d + "\uc774(\uac00) \uc874\uc7ac\ud558\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4.", node:a};
     }
@@ -8789,34 +8590,6 @@ Entry.JSParser = function(a) {
   a.SequenceExpression = function(a) {
     throw {message:"\uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a};
   };
-  a.initScope = function(a) {
-    if (null === this.scope) {
-      var c = function() {
-      };
-      c.prototype = this.syntax.Scope;
-    } else {
-      c = function() {
-      }, c.prototype = this.scope;
-    }
-    this.scope = new c;
-    this.scopeChain.push(this.scope);
-    return this.scanDefinition(a);
-  };
-  a.unloadScope = function() {
-    this.scopeChain.pop();
-    this.scope = this.scopeChain.length ? this.scopeChain[this.scopeChain.length - 1] : null;
-  };
-  a.scanDefinition = function(a) {
-    a = a.body;
-    for (var c = [], d = 0;d < a.length;d++) {
-      var e = a[d];
-      "FunctionDeclaration" === e.type && (console.log(e), this.scope[e.id.name] = this.scope.promise, this.syntax.BasicFunction && (e = e.body, c.push([{type:this.syntax.BasicFunction, statements:[this[e.type](e)]}])));
-    }
-    return c;
-  };
-  a.BasicFunction = function(a, c) {
-    return null;
-  };
   a.BasicIteration = function(a, c, d) {
     var e = this.syntax.BasicIteration;
     if (!e) {
@@ -8824,54 +8597,16 @@ Entry.JSParser = function(a) {
     }
     return {params:[c], type:e, statements:[d]};
   };
-  a.BasicWhile = function(a, c) {
-    var d = a.test.raw;
-    if (this.syntax.BasicWhile[d]) {
-      return {type:this.syntax.BasicWhile[d], statements:[c]};
-    }
-    throw {message:"\uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a.test};
-  };
-  a.BasicIf = function(a) {
-    var c = a.consequent, c = this[c.type](c);
-    try {
-      var d = "", e = "===" === a.test.operator ? "==" : a.test.operator;
-      if ("Identifier" === a.test.left.type && "Literal" === a.test.right.type) {
-        d = a.test.left.name + " " + e + " " + a.test.right.raw;
-      } else {
-        if ("Literal" === a.test.left.type && "Identifier" === a.test.right.type) {
-          d = a.test.right.name + " " + e + " " + a.test.left.raw;
-        } else {
-          throw Error();
-        }
-      }
-      if (this.syntax.BasicIf[d]) {
-        return {type:this.syntax.BasicIf[d], statements:[c]};
-      }
-      throw Error();
-    } catch (f) {
-      throw {message:"\uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:a.test};
-    }
-  };
 })(Entry.JSParser.prototype);
 Entry.Parser = function(a, b, c) {
   this._mode = a;
   this.syntax = {};
   this.codeMirror = c;
   this._lang = b || "js";
-  this.availableCode = [];
-  this._stageId = Number(Ntry.configManager.getConfig("stageId"));
-  this.setAvailableCode(NtryData.config[this._stageId].availableCode, NtryData.player[this._stageId].code);
   this.mappingSyntax(a);
   switch(this._lang) {
     case "js":
       this._parser = new Entry.JSParser(this.syntax);
-      b = this.syntax;
-      CodeMirror.commands.javascript_complete = function(a) {
-        CodeMirror.showHint(a, null, {globalScope:b.Scope});
-      };
-      c.on("keyup", function(a, c) {
-        !a.state.completionActive && 65 <= c.keyCode && 95 >= c.keyCode && CodeMirror.showHint(a, null, {completeSingle:!1, globalScope:b.Scope});
-      });
       break;
     case "block":
       this._parser = new Entry.BlockParser(this.syntax);
@@ -8882,10 +8617,12 @@ Entry.Parser = function(a, b, c) {
     var c = null;
     switch(this._lang) {
       case "js":
+        a = acorn.parse(a);
+        console.log(a);
         try {
-          var d = acorn.parse(a), c = this._parser.Program(d);
-        } catch (e) {
-          console.dir(e), console.log(e instanceof SyntaxError), this.codeMirror && (e instanceof SyntaxError ? e.message = "\ubb38\ubc95 \uc624\ub958\uc785\ub2c8\ub2e4." : (a = this.getLineNumber(e.node.start, e.node.end), a.message = e.message, a.severity = "error", this.codeMirror.markText(a.from, a.to, {className:"CodeMirror-lint-mark-error", __annotation:a, clearOnEnter:!0})), Entry.toast.alert("Error", e.message)), c = [];
+          c = this._parser.Program(a);
+        } catch (d) {
+          console.log(d), this.codeMirror && (c = this.getLineNumber(d.node.start, d.node.end), c.message = d.message, c.severity = "error", this.codeMirror.markText(c.from, c.to, {className:"CodeMirror-lint-mark-error", __annotation:c, clearOnEnter:!0})), c = [];
         }
         break;
       case "block":
@@ -8905,7 +8642,7 @@ Entry.Parser = function(a, b, c) {
   a.mappingSyntax = function(a) {
     for (var c = Object.keys(Entry.block), d = 0;d < c.length;d++) {
       var e = c[d], f = Entry.block[e];
-      if (f.mode === a && -1 < this.availableCode.indexOf(e) && (f = f.syntax)) {
+      if (f.mode === a && (f = f.syntax)) {
         for (var g = this.syntax, h = 0;h < f.length;h++) {
           var k = f[h];
           if (h === f.length - 2 && "function" === typeof f[h + 1]) {
@@ -8918,962 +8655,7 @@ Entry.Parser = function(a, b, c) {
       }
     }
   };
-  a.setAvailableCode = function(a, c) {
-    var d = [];
-    a.forEach(function(a, b) {
-      a.forEach(function(a, b) {
-        d.push(a.type);
-      });
-    });
-    c.forEach(function(a, b) {
-      a.forEach(function(a, b) {
-        a.type !== NtryData.START && -1 === d.indexOf(a.type) && d.push(a.type);
-      });
-    });
-    this.availableCode = this.availableCode.concat(d);
-  };
 })(Entry.Parser.prototype);
-Entry.Playground = function() {
-  this.menuBlocks_ = {};
-  this.enableArduino = this.isTextBGMode_ = !1;
-  this.viewMode_ = "default";
-  Entry.addEventListener("textEdited", this.injectText);
-  Entry.addEventListener("entryBlocklyChanged", this.editBlock);
-  Entry.addEventListener("entryBlocklyMouseUp", this.mouseupBlock);
-  Entry.addEventListener("hwChanged", this.updateHW);
-};
-Entry.Playground.prototype.generateView = function(a, b) {
-  this.view_ = a;
-  this.view_.addClass("entryPlayground");
-  if (b && "workspace" != b) {
-    "phone" == b && (this.view_.addClass("entryPlaygroundPhone"), c = Entry.createElement("div", "entryCategoryTab"), c.addClass("entryPlaygroundTabPhone"), Entry.view_.insertBefore(c, this.view_), this.generateTabView(c), this.tabView_ = c, c = Entry.createElement("div", "entryCurtain"), c.addClass("entryPlaygroundCurtainPhone"), c.addClass("entryRemove"), c.innerHTML = Lang.Workspace.cannot_edit_click_to_stop, c.bindOnClick(function() {
-      Entry.engine.toggleStop();
-    }), this.view_.appendChild(c), this.curtainView_ = c, Entry.pictureEditable && (c = Entry.createElement("div", "entryPicture"), c.addClass("entryPlaygroundPicturePhone"), c.addClass("entryRemove"), this.view_.appendChild(c), this.generatePictureView(c), this.pictureView_ = c), c = Entry.createElement("div", "entryText"), c.addClass("entryRemove"), this.view_.appendChild(c), this.generateTextView(c), this.textView_ = c, Entry.soundEditable && (c = Entry.createElement("div", "entrySound"), c.addClass("entryPlaygroundSoundWorkspacePhone"), 
-    c.addClass("entryRemove"), this.view_.appendChild(c), this.generateSoundView(c), this.soundView_ = c), c = Entry.createElement("div", "entryDefault"), this.view_.appendChild(c), this.generateDefaultView(c), this.defaultView_ = c, c = Entry.createElement("div", "entryCode"), c.addClass("entryPlaygroundCodePhone"), this.view_.appendChild(c), this.generateCodeView(c), this.codeView_ = this.codeView_ = c, Entry.addEventListener("run", function(a) {
-      Entry.playground.curtainView_.removeClass("entryRemove");
-    }), Entry.addEventListener("stop", function(a) {
-      Entry.playground.curtainView_.addClass("entryRemove");
-    }));
-  } else {
-    this.view_.addClass("entryPlaygroundWorkspace");
-    var c = Entry.createElement("div", "entryCategoryTab");
-    c.addClass("entryPlaygroundTabWorkspace");
-    this.view_.appendChild(c);
-    this.generateTabView(c);
-    this.tabView_ = c;
-    c = Entry.createElement("div", "entryCurtain");
-    c.addClass("entryPlaygroundCurtainWorkspace");
-    c.addClass("entryRemove");
-    var d = Lang.Workspace.cannot_edit_click_to_stop.split(".");
-    c.innerHTML = d[0] + ".<br/>" + d[1];
-    c.addEventListener("click", function() {
-      Entry.engine.toggleStop();
-    });
-    this.view_.appendChild(c);
-    this.curtainView_ = c;
-    Entry.pictureEditable && (c = Entry.createElement("div", "entryPicture"), c.addClass("entryPlaygroundPictureWorkspace"), c.addClass("entryRemove"), this.view_.appendChild(c), this.generatePictureView(c), this.pictureView_ = c);
-    c = Entry.createElement("div", "entryText");
-    c.addClass("entryPlaygroundTextWorkspace");
-    c.addClass("entryRemove");
-    this.view_.appendChild(c);
-    this.generateTextView(c);
-    this.textView_ = c;
-    Entry.soundEditable && (c = Entry.createElement("div", "entrySound"), c.addClass("entryPlaygroundSoundWorkspace"), c.addClass("entryRemove"), this.view_.appendChild(c), this.generateSoundView(c), this.soundView_ = c);
-    c = Entry.createElement("div", "entryDefault");
-    c.addClass("entryPlaygroundDefaultWorkspace");
-    this.view_.appendChild(c);
-    this.generateDefaultView(c);
-    this.defaultView_ = c;
-    c = Entry.createElement("div", "entryCode");
-    c.addClass("entryPlaygroundCodeWorkspace");
-    c.addClass("entryRemove");
-    this.view_.appendChild(c);
-    this.generateCodeView(c);
-    this.codeView_ = c;
-    d = Entry.createElement("div");
-    d.addClass("entryPlaygroundResizeWorkspace", "entryRemove");
-    this.resizeHandle_ = d;
-    this.view_.appendChild(d);
-    this.initializeResizeHandle(d);
-    this.codeView_ = c;
-    Entry.addEventListener("run", function(a) {
-      Entry.playground.curtainView_.removeClass("entryRemove");
-    });
-    Entry.addEventListener("stop", function(a) {
-      Entry.playground.curtainView_.addClass("entryRemove");
-    });
-  }
-};
-Entry.Playground.prototype.generateDefaultView = function(a) {
-  return a;
-};
-Entry.Playground.prototype.generateTabView = function(a) {
-  var b = Entry.createElement("ul");
-  b.addClass("entryTabListWorkspace");
-  this.tabList_ = b;
-  a.appendChild(b);
-  this.tabViewElements = {};
-  a = Entry.createElement("li", "entryCodeTab");
-  a.innerHTML = Lang.Workspace.tab_code;
-  a.addClass("entryTabListItemWorkspace");
-  a.addClass("entryTabSelected");
-  b.appendChild(a);
-  a.bindOnClick(function(a) {
-    Entry.playground.changeViewMode("code");
-  });
-  this.tabViewElements.code = a;
-  Entry.pictureEditable && (a = Entry.createElement("li", "entryPictureTab"), a.innerHTML = Lang.Workspace.tab_picture, a.addClass("entryTabListItemWorkspace"), b.appendChild(a), a.bindOnClick(function(a) {
-    Entry.playground.changeViewMode("picture");
-  }), this.tabViewElements.picture = a, a = Entry.createElement("li", "entryTextboxTab"), a.innerHTML = Lang.Workspace.tab_text, a.addClass("entryTabListItemWorkspace"), b.appendChild(a), a.bindOnClick(function(a) {
-    Entry.playground.changeViewMode("text");
-  }), this.tabViewElements.text = a, a.addClass("entryRemove"));
-  Entry.soundEditable && (a = Entry.createElement("li", "entrySoundTab"), a.innerHTML = Lang.Workspace.tab_sound, a.addClass("entryTabListItemWorkspace"), b.appendChild(a), a.bindOnClick(function(a) {
-    Entry.playground.changeViewMode("sound");
-  }), this.tabViewElements.sound = a);
-  Entry.hasVariableManager && (a = Entry.createElement("li", "entryVariableTab"), a.innerHTML = Lang.Workspace.tab_attribute, a.addClass("entryTabListItemWorkspace"), a.addClass("entryVariableTabWorkspace"), b.appendChild(a), a.bindOnClick(function(a) {
-    Entry.playground.toggleOnVariableView();
-    Entry.playground.changeViewMode("variable");
-  }), this.tabViewElements.variable = a);
-};
-Entry.Playground.prototype.generateCodeView = function(a) {
-  if (!Entry.type || "workspace" == Entry.type) {
-    var b = Entry.createElement("div", "entryCategory");
-    b.addClass("entryCategoryWorkspace");
-    a.appendChild(b);
-    this.categoryView_ = b;
-    var c = Entry.createElement("ul", "entryCategoryList");
-    c.addClass("entryCategoryListWorkspace");
-    b.appendChild(c);
-    this.categoryListView_ = c;
-    var d = Entry.createElement("div", "entryBlocklyWorkspace");
-    d.addClass("entryBlockMenuWorkspace");
-    a.appendChild(d);
-    $(d).mouseenter(function(a) {
-      Entry.playground.resizing || (Entry.playground.focusBlockMenu = !0, a = Blockly.mainWorkspace.blockMenu.blockMenuWidth + 84, a > Entry.interfaceState.menuWidth && (this.widthBackup = Entry.interfaceState.menuWidth, $(".entryBlockMenuWorkspace>svg").stop().animate({width:a - 64}, 200)));
-    });
-    $(d).mouseleave(function(a) {
-      Entry.playground.resizing || (d.widthBackup && !Blockly.mainWorkspace.blockMenu.hasStalkerBlock && $(".entryBlockMenuWorkspace>svg").stop().animate({width:this.widthBackup - 64}, 200), delete this.widthBackup, delete Entry.playground.focusBlockMenu);
-    });
-    Entry.addEventListener("entryBlocklyChanged", function(a) {
-      a = Entry.playground.blockMenuView_;
-      a.widthBackup && Entry.resizeElement({menuWidth:a.widthBackup});
-      delete a.widthBackup;
-      delete Entry.playground.focusBlockMenu;
-    });
-    this.blockMenuView_ = d;
-    b = this.createVariableView();
-    a.appendChild(b);
-    this.variableView_ = b;
-    b = Entry.createElement("div", "entryBlockly");
-    b.addClass("entryBlocklyWorkspace");
-    this.blocklyView_ = b;
-    Entry.bindAnimationCallback(this.blocklyView_, function(a) {
-      Blockly.fireUiEvent(window, "resize");
-      Entry.playground.blocklyView_.removeClass("foldOut");
-    });
-    a.appendChild(b);
-    c = Entry.parseTexttoXML("<xml></xml>");
-    Blockly.inject(b, {path:".././", toolbox:c, trashcan:!0, blockmenu:this.blockMenuView_, mediaFilePath:Entry.mediaFilePath});
-    Blockly.mainWorkspace.flyout_.hide();
-    Blockly.mainWorkspace.blockMenu.hide();
-    document.addEventListener("blocklyWorkspaceChange", this.syncObjectWithEvent, !1);
-    this.blockMenu = Blockly.mainWorkspace.blockMenu;
-    Entry.hw.banHW();
-    return a;
-  }
-  if ("phone" == Entry.type) {
-    return b = Entry.createElement("div", "entryCategory"), b.addClass("entryCategoryPhone"), a.appendChild(b), this.categoryView_ = b, c = Entry.createElement("ul", "entryCategoryList"), c.addClass("entryCategoryListPhone"), b.appendChild(c), this.categoryListView_ = c, b = this.createVariableView(), a.appendChild(b), this.variableView_ = b, b = Entry.createElement("div", "entryBlockly"), b.addClass("entryBlocklyPhone"), this.blocklyView_ = b, a.appendChild(b), c = Entry.parseTexttoXML("<xml></xml>"), 
-    Blockly.inject(b, {path:".././", toolbox:c, trashcan:!0, mediaFilePath:Entry.mediaFilePath}), Blockly.mainWorkspace.flyout_.autoClose = !0, Blockly.mainWorkspace.flyout_.hide(), document.addEventListener("blocklyWorkspaceChange", this.syncObjectWithEvent, !1), this.blockMenu = Blockly.mainWorkspace.flyout_, Entry.hw.banHW(), a;
-  }
-};
-Entry.Playground.prototype.generatePictureView = function(a) {
-  if ("workspace" == Entry.type) {
-    var b = Entry.createElement("div", "entryAddPicture");
-    b.addClass("entryPlaygroundAddPicture");
-    b.bindOnClick(function(a) {
-      Entry.dispatchEvent("openPictureManager");
-    });
-    var c = Entry.createElement("div", "entryAddPictureInner");
-    c.addClass("entryPlaygroundAddPictureInner");
-    c.innerHTML = Lang.Workspace.picture_add;
-    b.appendChild(c);
-    a.appendChild(b);
-    b = Entry.createElement("ul", "entryPictureList");
-    b.addClass("entryPlaygroundPictureList");
-    $ && $(b).sortable({start:function(a, b) {
-      b.item.data("start_pos", b.item.index());
-    }, stop:function(a, b) {
-      var c = b.item.data("start_pos"), g = b.item.index();
-      Entry.playground.movePicture(c, g);
-    }, axis:"y"});
-    a.appendChild(b);
-    this.pictureListView_ = b;
-    b = Entry.createElement("div", "entryPainter");
-    b.addClass("entryPlaygroundPainter");
-    a.appendChild(b);
-    this.painter = new Entry.Painter;
-    this.painter.initialize(b);
-  } else {
-    "phone" == Entry.type && (b = Entry.createElement("div", "entryAddPicture"), b.addClass("entryPlaygroundAddPicturePhone"), b.bindOnClick(function(a) {
-      Entry.dispatchEvent("openPictureManager");
-    }), c = Entry.createElement("div", "entryAddPictureInner"), c.addClass("entryPlaygroundAddPictureInnerPhone"), c.innerHTML = Lang.Workspace.picture_add, b.appendChild(c), a.appendChild(b), b = Entry.createElement("ul", "entryPictureList"), b.addClass("entryPlaygroundPictureListPhone"), $ && $(b).sortable({start:function(a, b) {
-      b.item.data("start_pos", b.item.index());
-    }, stop:function(a, b) {
-      var c = b.item.data("start_pos"), g = b.item.index();
-      Entry.playground.movePicture(c, g);
-    }, axis:"y"}), a.appendChild(b), this.pictureListView_ = b);
-  }
-};
-Entry.Playground.prototype.generateTextView = function(a) {
-  var b = Entry.createElement("div");
-  a.appendChild(b);
-  a = Entry.createElement("div");
-  a.addClass("textProperties");
-  b.appendChild(a);
-  var c = Entry.createElement("div");
-  c.addClass("entryTextFontSelect");
-  a.appendChild(c);
-  var d = Entry.createElement("select", "entryPainterAttrFontName");
-  d.addClass("entryPlaygroundPainterAttrFontName", "entryTextFontSelecter");
-  d.size = "1";
-  d.onchange = function(a) {
-    Entry.playground.object.entity.setFontType(a.target.value);
-  };
-  for (var e = 0;e < Entry.fonts.length;e++) {
-    var f = Entry.fonts[e], g = Entry.createElement("option");
-    g.value = f.family;
-    g.innerHTML = f.name;
-    d.appendChild(g);
-  }
-  this.fontName_ = d;
-  c.appendChild(d);
-  e = Entry.createElement("ul");
-  e.addClass("entryPlayground_text_buttons");
-  a.appendChild(e);
-  c = Entry.createElement("li");
-  c.addClass("entryPlaygroundTextAlignLeft");
-  c.bindOnClick(function(a) {
-    Entry.playground.setFontAlign(Entry.TEXT_ALIGN_LEFT);
-  });
-  e.appendChild(c);
-  this.alignLeftBtn = c;
-  c = Entry.createElement("li");
-  c.addClass("entryPlaygroundTextAlignCenter");
-  c.bindOnClick(function(a) {
-    Entry.playground.setFontAlign(Entry.TEXT_ALIGN_CENTER);
-  });
-  e.appendChild(c);
-  this.alignCenterBtn = c;
-  c = Entry.createElement("li");
-  c.addClass("entryPlaygroundTextAlignRight");
-  c.bindOnClick(function(a) {
-    Entry.playground.setFontAlign(Entry.TEXT_ALIGN_RIGHT);
-  });
-  e.appendChild(c);
-  this.alignRightBtn = c;
-  c = Entry.createElement("li");
-  e.appendChild(c);
-  d = Entry.createElement("a");
-  c.appendChild(d);
-  d.bindOnClick(function() {
-    Entry.playground.object.entity.toggleFontBold() ? h.src = Entry.mediaFilePath + "text_button_bold_true.png" : h.src = Entry.mediaFilePath + "text_button_bold_false.png";
-  });
-  var h = Entry.createElement("img", "entryPlaygroundText_boldImage");
-  d.appendChild(h);
-  h.src = Entry.mediaFilePath + "text_button_bold_false.png";
-  c = Entry.createElement("li");
-  e.appendChild(c);
-  d = Entry.createElement("a");
-  c.appendChild(d);
-  d.bindOnClick(function() {
-    var a = !Entry.playground.object.entity.getUnderLine() || !1;
-    k.src = Entry.mediaFilePath + "text_button_underline_" + a + ".png";
-    Entry.playground.object.entity.setUnderLine(a);
-  });
-  var k = Entry.createElement("img", "entryPlaygroundText_underlineImage");
-  d.appendChild(k);
-  k.src = Entry.mediaFilePath + "text_button_underline_false.png";
-  c = Entry.createElement("li");
-  e.appendChild(c);
-  d = Entry.createElement("a");
-  c.appendChild(d);
-  d.bindOnClick(function() {
-    Entry.playground.object.entity.toggleFontItalic() ? l.src = Entry.mediaFilePath + "text_button_italic_true.png" : l.src = Entry.mediaFilePath + "/text_button_italic_false.png";
-  });
-  var l = Entry.createElement("img", "entryPlaygroundText_italicImage");
-  d.appendChild(l);
-  l.src = Entry.mediaFilePath + "text_button_italic_false.png";
-  c = Entry.createElement("li");
-  e.appendChild(c);
-  d = Entry.createElement("a");
-  c.appendChild(d);
-  d.bindOnClick(function() {
-    var a = !Entry.playground.object.entity.getStrike() || !1;
-    Entry.playground.object.entity.setStrike(a);
-    n.src = Entry.mediaFilePath + "text_button_strike_" + a + ".png";
-  });
-  var n = Entry.createElement("img", "entryPlaygroundText_strikeImage");
-  d.appendChild(n);
-  n.src = Entry.mediaFilePath + "text_button_strike_false.png";
-  d = Entry.createElement("li");
-  e.appendChild(d);
-  c = Entry.createElement("a");
-  d.appendChild(c);
-  c.bindOnClick(function() {
-    Entry.playground.toggleColourChooser("foreground");
-  });
-  d = Entry.createElement("img");
-  c.appendChild(d);
-  d.src = Entry.mediaFilePath + "text_button_color_false.png";
-  c = Entry.createElement("li");
-  e.appendChild(c);
-  e = Entry.createElement("a");
-  c.appendChild(e);
-  e.bindOnClick(function() {
-    Entry.playground.toggleColourChooser("background");
-  });
-  c = Entry.createElement("img");
-  e.appendChild(c);
-  c.src = Entry.mediaFilePath + "text_button_background_false.png";
-  e = Entry.createElement("div");
-  e.addClass("entryPlayground_fgColorDiv");
-  c = Entry.createElement("div");
-  c.addClass("entryPlayground_bgColorDiv");
-  a.appendChild(e);
-  a.appendChild(c);
-  d = Entry.createElement("div");
-  d.addClass("entryPlaygroundTextColoursWrapper");
-  this.coloursWrapper = d;
-  b.appendChild(d);
-  a = Entry.getColourCodes();
-  for (e = 0;e < a.length;e++) {
-    c = Entry.createElement("div"), c.addClass("modal_colour"), c.setAttribute("colour", a[e]), c.style.backgroundColor = a[e], 0 === e && c.addClass("modalColourTrans"), c.bindOnClick(function(a) {
-      Entry.playground.setTextColour(a.target.getAttribute("colour"));
-    }), d.appendChild(c);
-  }
-  d.style.display = "none";
-  d = Entry.createElement("div");
-  d.addClass("entryPlaygroundTextBackgroundsWrapper");
-  this.backgroundsWrapper = d;
-  b.appendChild(d);
-  for (e = 0;e < a.length;e++) {
-    c = Entry.createElement("div"), c.addClass("modal_colour"), c.setAttribute("colour", a[e]), c.style.backgroundColor = a[e], 0 === e && c.addClass("modalColourTrans"), c.bindOnClick(function(a) {
-      Entry.playground.setBackgroundColour(a.target.getAttribute("colour"));
-    }), d.appendChild(c);
-  }
-  d.style.display = "none";
-  a = Entry.createElement("input");
-  a.addClass("entryPlayground_textBox");
-  a.onkeyup = function() {
-    Entry.playground.object.setText(this.value);
-    Entry.playground.object.entity.setText(this.value);
-  };
-  a.onblur = function() {
-    Entry.dispatchEvent("textEdited");
-  };
-  this.textEditInput = a;
-  b.appendChild(a);
-  a = Entry.createElement("textarea");
-  a.addClass("entryPlayground_textArea");
-  a.style.display = "none";
-  a.onkeyup = function() {
-    Entry.playground.object.setText(this.value);
-    Entry.playground.object.entity.setText(this.value);
-  };
-  a.onblur = function() {
-    Entry.dispatchEvent("textEdited");
-  };
-  this.textEditArea = a;
-  b.appendChild(a);
-  a = Entry.createElement("div");
-  a.addClass("entryPlaygroundFontSizeWrapper");
-  b.appendChild(a);
-  this.fontSizeWrapper = a;
-  var m = Entry.createElement("div");
-  m.addClass("entryPlaygroundFontSizeSlider");
-  a.appendChild(m);
-  var q = Entry.createElement("div");
-  q.addClass("entryPlaygroundFontSizeIndicator");
-  m.appendChild(q);
-  this.fontSizeIndiciator = q;
-  var r = Entry.createElement("div");
-  r.addClass("entryPlaygroundFontSizeKnob");
-  m.appendChild(r);
-  this.fontSizeKnob = r;
-  e = Entry.createElement("div");
-  e.addClass("entryPlaygroundFontSizeLabel");
-  e.innerHTML = "\uae00\uc790 \ud06c\uae30";
-  a.appendChild(e);
-  var t = !1, u = 0;
-  r.onmousedown = function(a) {
-    t = !0;
-    u = $(m).offset().left;
-  };
-  document.addEventListener("mousemove", function(a) {
-    t && (a = a.pageX - u, a = Math.max(a, 5), a = Math.min(a, 88), r.style.left = a + "px", a /= .88, q.style.width = a + "%", Entry.playground.object.entity.setFontSize(a));
-  });
-  document.addEventListener("mouseup", function(a) {
-    t = !1;
-  });
-  a = Entry.createElement("div");
-  a.addClass("entryPlaygroundLinebreakWrapper");
-  b.appendChild(a);
-  b = Entry.createElement("hr");
-  b.addClass("entryPlaygroundLinebreakHorizontal");
-  a.appendChild(b);
-  b = Entry.createElement("div");
-  b.addClass("entryPlaygroundLinebreakButtons");
-  a.appendChild(b);
-  e = Entry.createElement("img");
-  e.bindOnClick(function() {
-    Entry.playground.toggleLineBreak(!1);
-  });
-  e.src = Entry.mediaFilePath + "text-linebreak-off-true.png";
-  b.appendChild(e);
-  this.linebreakOffImage = e;
-  e = Entry.createElement("img");
-  e.bindOnClick(function() {
-    Entry.playground.toggleLineBreak(!0);
-  });
-  e.src = Entry.mediaFilePath + "text-linebreak-on-false.png";
-  b.appendChild(e);
-  this.linebreakOnImage = e;
-  b = Entry.createElement("div");
-  b.addClass("entryPlaygroundLinebreakDescription");
-  a.appendChild(b);
-  a = Entry.createElement("p");
-  a.innerHTML = "\uae00\uc0c1\uc790\uc758 \ud06c\uae30\uac00 \uae00\uc790\uac00 \uc4f0\uc77c \uc218 \uc788\ub294 \uc601\uc5ed\uc744 \uacb0\uc815\ud569\ub2c8\ub2e4.";
-  b.appendChild(a);
-  a = Entry.createElement("ul");
-  b.appendChild(a);
-  b = Entry.createElement("li");
-  b.innerHTML = "\ub0b4\uc6a9 \uc791\uc131\uc2dc \uc5d4\ud130\ud0a4\ub85c \uc904\ubc14\uafc8\uc744 \ud560 \uc218 \uc788\uc2b5\ub2c8\ub2e4.";
-  a.appendChild(b);
-  b = Entry.createElement("li");
-  b.innerHTML = "\ub0b4\uc6a9\uc744 \uc791\uc131\ud558\uc2dc\uac70\ub098 \uc0c8\ub85c\uc6b4 \uae00\uc790\ub97c \ucd94\uac00\uc2dc \uae38\uc774\uac00 \uae00\uc0c1\uc790\uc758 \uac00\ub85c \uc601\uc5ed\uc744 \ub118\uc5b4\uc11c\uba74 \uc790\ub3d9\uc73c\ub85c \uc904\uc774 \ubc14\ub01d\ub2c8\ub2e4.";
-  a.appendChild(b);
-};
-Entry.Playground.prototype.generateSoundView = function(a) {
-  if ("workspace" == Entry.type) {
-    var b = Entry.createElement("div", "entryAddSound");
-    b.addClass("entryPlaygroundAddSound");
-    b.bindOnClick(function(a) {
-      Entry.dispatchEvent("openSoundManager");
-    });
-    var c = Entry.createElement("div", "entryAddSoundInner");
-    c.addClass("entryPlaygroundAddSoundInner");
-    c.innerHTML = Lang.Workspace.sound_add;
-    b.appendChild(c);
-    a.appendChild(b);
-    b = Entry.createElement("ul", "entrySoundList");
-    b.addClass("entryPlaygroundSoundList");
-    $ && $(b).sortable({start:function(a, b) {
-      b.item.data("start_pos", b.item.index());
-    }, stop:function(a, b) {
-      var c = b.item.data("start_pos"), g = b.item.index();
-      Entry.playground.moveSound(c, g);
-    }, axis:"y"});
-    a.appendChild(b);
-    this.soundListView_ = b;
-  } else {
-    "phone" == Entry.type && (b = Entry.createElement("div", "entryAddSound"), b.addClass("entryPlaygroundAddSoundPhone"), b.bindOnClick(function(a) {
-      Entry.dispatchEvent("openSoundManager");
-    }), c = Entry.createElement("div", "entryAddSoundInner"), c.addClass("entryPlaygroundAddSoundInnerPhone"), c.innerHTML = Lang.Workspace.sound_add, b.appendChild(c), a.appendChild(b), b = Entry.createElement("ul", "entrySoundList"), b.addClass("entryPlaygroundSoundListPhone"), $ && $(b).sortable({start:function(a, b) {
-      b.item.data("start_pos", b.item.index());
-    }, stop:function(a, b) {
-      var c = b.item.data("start_pos"), g = b.item.index();
-      Entry.playground.moveSound(c, g);
-    }, axis:"y"}), a.appendChild(b), this.soundListView_ = b);
-  }
-};
-Entry.Playground.prototype.injectObject = function(a) {
-  if (!a) {
-    this.changeViewMode("default"), this.object = null;
-  } else {
-    if (a !== this.object) {
-      this.object && (this.syncObject(this.object), this.object.toggleInformation(!1));
-      this.object = a;
-      this.setMenu(a.objectType);
-      this.injectCode();
-      "sprite" == a.objectType && Entry.pictureEditable ? (this.tabViewElements.text && this.tabViewElements.text.addClass("entryRemove"), this.tabViewElements.picture && this.tabViewElements.picture.removeClass("entryRemove")) : "textBox" == a.objectType && (this.tabViewElements.picture && this.tabViewElements.picture.addClass("entryRemove"), this.tabViewElements.text && this.tabViewElements.text.removeClass("entryRemove"));
-      var b = this.viewMode_;
-      "default" == b ? this.changeViewMode("code") : "picture" != b && "text" != b || "textBox" != a.objectType ? "text" != b && "picture" != b || "sprite" != a.objectType ? "sound" == b && this.changeViewMode("sound") : this.changeViewMode("picture") : this.changeViewMode("text");
-      this.menuInjected || this.selectMenu(0);
-    }
-  }
-};
-Entry.Playground.prototype.injectCode = function() {
-  var a = this.object;
-  Blockly.mainWorkspace.clear();
-  Blockly.Xml.domToWorkspace(Blockly.mainWorkspace, a.script);
-};
-Entry.Playground.prototype.injectPicture = function() {
-  var a = this.pictureListView_;
-  if (a) {
-    for (;a.hasChildNodes();) {
-      a.removeChild(a.lastChild);
-    }
-    if (this.object) {
-      for (var b = this.object.pictures, c = 0, d = b.length;c < d;c++) {
-        var e = b[c].view;
-        e || console.log(e);
-        e.orderHolder.innerHTML = c + 1;
-        a.appendChild(e);
-      }
-      this.selectPicture(this.object.selectedPicture);
-    }
-  }
-};
-Entry.Playground.prototype.addPicture = function(a, b) {
-  var c = Entry.cloneSimpleObject(a);
-  delete c.id;
-  delete c.view;
-  a = JSON.parse(JSON.stringify(c));
-  a.id = Entry.generateHash();
-  a.name = Entry.getOrderedName(a.name, this.object.pictures);
-  this.generatePictureElement(a);
-  this.object.addPicture(a);
-  this.injectPicture();
-  this.selectPicture(a);
-};
-Entry.Playground.prototype.setPicture = function(a) {
-  var b = document.getElementById(a.id);
-  a.view = b;
-  b.picture = a;
-  b = document.getElementById("t_" + a.id);
-  if (a.fileurl) {
-    b.style.backgroundImage = 'url("' + a.fileurl + '")';
-  } else {
-    var c = a.filename;
-    b.style.backgroundImage = 'url("/uploads/' + c.substring(0, 2) + "/" + c.substring(2, 4) + "/thumb/" + c + '.png")';
-  }
-  document.getElementById("s_" + a.id).innerHTML = a.dimension.width + " X " + a.dimension.height;
-  Entry.playground.object.setPicture(a);
-};
-Entry.Playground.prototype.clonePicture = function(a) {
-  a = Entry.playground.object.getPicture(a);
-  this.addPicture(a, !0);
-};
-Entry.Playground.prototype.selectPicture = function(a) {
-  for (var b = this.object.pictures, c = 0, d = b.length;c < d;c++) {
-    var e = b[c];
-    e === a ? e.view.addClass("entryPictureSelected") : e.view.removeClass("entryPictureSelected");
-  }
-  Entry.playground.object.selectPicture(a.id);
-  Entry.dispatchEvent("pictureSelected", a);
-};
-Entry.Playground.prototype.movePicture = function(a, b) {
-  this.object.pictures.splice(b, 0, this.object.pictures.splice(a, 1)[0]);
-  this.injectPicture();
-  Entry.stage.sortZorder();
-};
-Entry.Playground.prototype.injectText = function() {
-  if (Entry.playground.object) {
-    Entry.playground.textEditInput.value = Entry.playground.object.entity.getText();
-    Entry.playground.textEditArea.value = Entry.playground.object.entity.getText();
-    Entry.playground.fontName_.value = Entry.playground.object.entity.getFontName();
-    if (Entry.playground.object.entity.font) {
-      var a = -1 < Entry.playground.object.entity.font.indexOf("bold") || !1;
-      $("#entryPlaygroundText_boldImage").attr("src", Entry.mediaFilePath + "text_button_bold_" + a + ".png");
-      a = -1 < Entry.playground.object.entity.font.indexOf("italic") || !1;
-      $("#entryPlaygroundText_italicImage").attr("src", Entry.mediaFilePath + "text_button_italic_" + a + ".png");
-    }
-    a = Entry.playground.object.entity.getUnderLine() || !1;
-    $("#entryPlaygroundText_underlineImage").attr("src", Entry.mediaFilePath + "text_button_underline_" + a + ".png");
-    a = Entry.playground.object.entity.getStrike() || !1;
-    $("#entryPlaygroundText_strikeImage").attr("src", Entry.mediaFilePath + "text_button_strike_" + a + ".png");
-    $(".entryPlayground_fgColorDiv").css("backgroundColor", Entry.playground.object.entity.colour);
-    $(".entryPlayground_bgColorDiv").css("backgroundColor", Entry.playground.object.entity.bgColour);
-    Entry.playground.toggleLineBreak(Entry.playground.object.entity.getLineBreak());
-    Entry.playground.setFontAlign(Entry.playground.object.entity.getTextAlign());
-    a = Entry.playground.object.entity.getFontSize();
-    Entry.playground.fontSizeIndiciator.style.width = a + "%";
-    Entry.playground.fontSizeKnob.style.left = .88 * a + "px";
-  }
-};
-Entry.Playground.prototype.injectSound = function() {
-  var a = this.soundListView_;
-  if (a) {
-    for (;a.hasChildNodes();) {
-      a.removeChild(a.lastChild);
-    }
-    if (this.object) {
-      for (var b = this.object.sounds, c = 0, d = b.length;c < d;c++) {
-        var e = b[c].view;
-        e.orderHolder.innerHTML = c + 1;
-        a.appendChild(e);
-      }
-    }
-  }
-};
-Entry.Playground.prototype.moveSound = function(a, b) {
-  this.object.sounds.splice(b, 0, this.object.sounds.splice(a, 1)[0]);
-  this.updateListViewOrder("sound");
-  Entry.stage.sortZorder();
-};
-Entry.Playground.prototype.addSound = function(a, b) {
-  var c = Entry.cloneSimpleObject(a);
-  delete c.view;
-  delete c.id;
-  a = JSON.parse(JSON.stringify(c));
-  a.id = Entry.generateHash();
-  a.name = Entry.getOrderedName(a.name, this.object.sounds);
-  this.generateSoundElement(a);
-  this.object.addSound(a);
-  this.injectSound();
-};
-Entry.Playground.prototype.changeViewMode = function(a) {
-  for (var b in this.tabViewElements) {
-    this.tabViewElements[b].removeClass("entryTabSelected");
-  }
-  "default" != a && this.tabViewElements[a].addClass("entryTabSelected");
-  if ("variable" != a) {
-    var c = this.view_.children;
-    this.viewMode_ = a;
-    for (b = 0;b < c.length;b++) {
-      var d = c[b];
-      -1 < d.id.toUpperCase().indexOf(a.toUpperCase()) ? d.removeClass("entryRemove") : d.addClass("entryRemove");
-    }
-    if ("picture" == a && (!this.pictureView_.object || this.pictureView_.object != this.object)) {
-      this.pictureView_.object = this.object, this.injectPicture();
-    } else {
-      if ("sound" == a && (!this.soundView_.object || this.soundView_.object != this.object)) {
-        this.soundView_.object = this.object, this.injectSound();
-      } else {
-        if ("text" == a && "textBox" == this.object.objectType || this.textView_.object != this.object) {
-          this.textView_.object = this.object, this.injectText();
-        }
-      }
-    }
-    "code" == a && this.resizeHandle_ && this.resizeHandle_.removeClass("entryRemove");
-    Entry.engine.isState("run") && this.curtainView_.removeClass("entryRemove");
-    this.viewMode_ = a;
-    this.toggleOffVariableView();
-  }
-};
-Entry.Playground.prototype.createVariableView = function() {
-  var a = Entry.createElement("div");
-  Entry.type && "workspace" != Entry.type ? "phone" == Entry.type && a.addClass("entryVariablePanelPhone") : a.addClass("entryVariablePanelWorkspace");
-  this.variableViewWrapper_ = a;
-  Entry.variableContainer.createDom(a);
-  return a;
-};
-Entry.Playground.prototype.toggleOnVariableView = function() {
-  Entry.playground.changeViewMode("code");
-  this.categoryView_.addClass("entryRemove");
-  this.blockMenuView_ && this.blockMenuView_.addClass("entryHidden");
-  Entry.variableContainer.updateList();
-  this.variableView_.removeClass("entryRemove");
-  this.resizeHandle_.removeClass("entryRemove");
-};
-Entry.Playground.prototype.toggleOffVariableView = function() {
-  this.categoryView_.removeClass("entryRemove");
-  this.blockMenuView_ && this.blockMenuView_.removeClass("entryHidden");
-  this.variableView_.addClass("entryRemove");
-};
-Entry.Playground.prototype.syncObject = function(a) {
-  this.object && !a && (a = this.object);
-  a && a.setScript(Blockly.Xml.workspaceToDom(Blockly.mainWorkspace));
-};
-Entry.Playground.prototype.editBlock = function() {
-  var a = Entry.playground;
-  Entry.stateManager && Entry.stateManager.addCommand("edit block", a, a.restoreBlock, a.object, a.object.getScriptText());
-};
-Entry.Playground.prototype.mouseupBlock = function() {
-  if (Entry.reporter) {
-    var a = Entry.playground, b = a.object;
-    Entry.reporter.report(new Entry.State("edit block mouseup", a, a.restoreBlock, b, b.getScriptText()));
-  }
-};
-Entry.Playground.prototype.restoreBlock = function(a, b) {
-  Entry.container.selectObject(a.id);
-  Entry.stateManager && Entry.stateManager.addCommand("restore block", this, this.restoreBlock, this.object, this.object.getScriptText());
-  var c = Blockly.Xml.textToDom(b);
-  Blockly.mainWorkspace.clear();
-  Blockly.Xml.domToWorkspace(Blockly.mainWorkspace, c);
-  this.syncObject();
-};
-Entry.Playground.prototype.syncObjectWithEvent = function(a) {
-  Entry.playground.syncObject();
-};
-Entry.Playground.prototype.setMenu = function(a) {
-  if (this.currentObjectType != a) {
-    this.categoryListView_.innerHTML = "";
-    this.blockMenu.unbanClass(this.currentObjectType);
-    this.blockMenu.banClass(a);
-    for (var b in this.blockJSON) {
-      var c = this.blockJSON[b].category, d = Entry.createElement("li", "entryCategory" + c);
-      ("brush" == c && "textBox" == a || "text" == c && "sprite" == a || !("func" == c || this.blockJSON[b].blocks && this.blockJSON[b].blocks.length)) && d.addClass("entryRemove");
-      d.innerHTML = Lang.Blocks[c.toUpperCase()];
-      d.bindOnClick(function() {
-        Entry.playground.selectMenu(this.id.substring(13));
-      });
-      Entry.type && "workspace" != Entry.type ? "phone" == Entry.type && d.addClass("entryCategoryElementPhone") : d.addClass("entryCategoryElementWorkspace");
-      this.categoryListView_.appendChild(d);
-    }
-    this.selectMenu(0);
-    this.currentObjectType = a;
-  }
-};
-Entry.Playground.prototype.selectMenu = function(a, b) {
-  if (this.object) {
-    this.lastSelector = a;
-    var c = this.categoryListView_.children;
-    if (!Entry.type || "workspace" == Entry.type) {
-      for (var d in this.blockJSON) {
-        var e = this.blockJSON[d].category;
-        "string" == typeof a && e == a || "number" == typeof a && a == d ? c[d].hasClass("entrySelectedCategory") && !b ? (this.blocklyView_.addClass("folding"), this.blocklyView_.removeClass("foldOut"), this.hideTabs(), c[d].removeClass("entrySelectedCategory"), delete this.selectedMenu) : ("func" == e ? this.blockMenu.show(Entry.Func.getMenuXml()) : ("variable" == e && this.checkVariables(), this.blockMenu.showCategory(this.blockJSON[d])), this.menuInjected = !0, this.blocklyView_.hasClass("folding") && 
-        (this.blocklyView_.addClass("foldOut"), this.blocklyView_.removeClass("folding")), this.showTabs(), c[d].addClass("entrySelectedCategory"), this.selectedMenu = e) : c[d].removeClass("entrySelectedCategory");
-      }
-    } else {
-      if ("phone" == Entry.type) {
-        var f = [];
-        for (d = 0;d < f.length;d++) {
-          e = f[d].attributes[0].value, "string" == typeof a && e == a || "number" == typeof a && a == d ? c[d].hasClass("entrySelectedCategory") ? (this.blockMenu.hide(), c[d].removeClass("entrySelectedCategory"), this.menuInjected = !0, this.selectedMenu = e) : (c[d].addClass("entrySelectedCategory"), this.blockMenu.show(f[d].childNodes), this.menuInjected = !0, delete this.selctedMenu) : c[d].removeClass("entrySelectedCategory");
-        }
-      }
-    }
-  } else {
-    Entry.toast.alert(Lang.Workspace.add_object_alert, Lang.Workspace.add_object_alert_msg);
-  }
-};
-Entry.Playground.prototype.hideTabs = function() {
-  var a = ["picture", "text", "sound", "variable"], b;
-  for (b in a) {
-    this.hideTab([a[b]]);
-  }
-};
-Entry.Playground.prototype.hideTab = function(a) {
-  this.tabViewElements[a] && (this.tabViewElements[a].addClass("hideTab"), this.tabViewElements[a].removeClass("showTab"));
-};
-Entry.Playground.prototype.showTabs = function() {
-  var a = ["picture", "text", "sound", "variable"], b;
-  for (b in a) {
-    this.showTab(a[b]);
-  }
-};
-Entry.Playground.prototype.showTab = function(a) {
-  this.tabViewElements[a] && (this.tabViewElements[a].addClass("showTab"), this.tabViewElements[a].removeClass("hideTab"));
-};
-Entry.Playground.prototype.setBlockMenu = function(a) {
-  a || (a = EntryStatic.getAllBlocks());
-  Entry.functionEnable && 1 < a.length && "arduino" == a[a.length - 1].category && a.splice(a.length - 1, 0, {category:"func"});
-  Entry.messageEnable || this.blockMenu.banClass("message");
-  Entry.variableEnable || this.blockMenu.banClass("variable");
-  Entry.listEnable || this.blockMenu.banClass("list");
-  this.updateHW();
-  if (!Entry.sceneEditable) {
-    for (var b in a) {
-      "scene" == a[b].category && a.splice(b, 1);
-    }
-  }
-  this.blockJSON = a;
-};
-Entry.Playground.prototype.initializeResizeHandle = function(a) {
-  a.onmousedown = function(a) {
-    Entry.playground.resizing = !0;
-  };
-  document.addEventListener("mousemove", function(a) {
-    Entry.playground.resizing && Entry.resizeElement({menuWidth:a.x - Entry.interfaceState.canvasWidth});
-  });
-  document.addEventListener("mouseup", function(a) {
-    Entry.playground.resizing = !1;
-  });
-};
-Entry.Playground.prototype.reloadPlayground = function() {
-  var a, b;
-  document.getElementsByClassName("entrySelectedCategory")[0] && (a = document.getElementsByClassName("entrySelectedCategory")[0], b = a.getAttribute("id").substring(13), a.removeClass("entrySelectedCategory"), Entry.playground.selectMenu(b));
-  Entry.stage.selectedObject && (Blockly.mainWorkspace.clear(), Blockly.Xml.domToWorkspace(Blockly.mainWorkspace, Entry.stage.selectedObject.script));
-};
-Entry.Playground.prototype.flushPlayground = function() {
-  this.object = null;
-  Entry.playground && Entry.playground.view_ && (Blockly.mainWorkspace.clear(), this.injectPicture(), this.injectSound());
-};
-Entry.Playground.prototype.updateListViewOrder = function(a) {
-  a = "picture" == a ? this.pictureListView_.childNodes : this.soundListView_.childNodes;
-  for (var b = 0, c = a.length;b < c;b++) {
-    a[b].orderHolder.innerHTML = b + 1;
-  }
-};
-Entry.Playground.prototype.generatePictureElement = function(a) {
-  function b() {
-    if ("" === this.value.trim()) {
-      Entry.deAttachEventListener(this, "blur", b), alert("\uc774\ub984\uc744 \uc785\ub825\ud558\uc5ec \uc8fc\uc138\uc694."), this.focus(), Entry.attachEventListener(this, "blur", b);
-    } else {
-      for (var a = $(".entryPlaygroundPictureName"), c = 0;c < a.length;c++) {
-        if (a.eq(c).val() == f.value && a[c] != this) {
-          Entry.deAttachEventListener(this, "blur", b);
-          alert("\uc774\ub984\uc774 \uc911\ubcf5 \ub418\uc5c8\uc2b5\ub2c8\ub2e4.");
-          this.focus();
-          Entry.attachEventListener(this, "blur", b);
-          return;
-        }
-      }
-      this.picture.name = this.value;
-      Entry.dispatchEvent("pictureNameChanged", this.picture);
-    }
-  }
-  var c = Entry.createElement("li", a.id);
-  a.view = c;
-  c.addClass("entryPlaygroundPictureElement");
-  c.picture = a;
-  c.bindOnClick(function(a) {
-    Entry.playground.selectPicture(this.picture);
-  });
-  Entry.Utils.disableContextmenu(a.view);
-  $(a.view).on("contextmenu", function() {
-    Entry.ContextMenu.show([{text:Lang.Workspace.context_rename, callback:function() {
-      f.focus();
-    }}, {text:Lang.Workspace.context_duplicate, callback:function() {
-      Entry.playground.clonePicture(a.id);
-    }}, {text:Lang.Workspace.context_remove, callback:function() {
-      Entry.playground.object.removePicture(a.id) ? (Entry.removeElement(c), Entry.toast.success(Lang.Workspace.shape_remove_ok, a.name + " " + Lang.Workspace.shape_remove_ok_msg)) : Entry.toast.alert(Lang.Workspace.shape_remove_fail, Lang.Workspace.shape_remove_fail_msg);
-    }}, {divider:!0}, {text:Lang.Workspace.context_download, callback:function() {
-      a.fileurl ? window.open(a.fileurl) : window.open("/api/sprite/download/image/" + encodeURIComponent(a.filename) + "/" + encodeURIComponent(a.name) + ".png");
-    }}], "workspace-contextmenu");
-  });
-  var d = Entry.createElement("div");
-  d.addClass("entryPlaygroundPictureOrder");
-  c.orderHolder = d;
-  c.appendChild(d);
-  d = Entry.createElement("div", "t_" + a.id);
-  d.addClass("entryPlaygroundPictureThumbnail");
-  if (a.fileurl) {
-    d.style.backgroundImage = 'url("' + a.fileurl + '")';
-  } else {
-    var e = a.filename;
-    d.style.backgroundImage = 'url("/uploads/' + e.substring(0, 2) + "/" + e.substring(2, 4) + "/thumb/" + e + '.png")';
-  }
-  c.appendChild(d);
-  var f = Entry.createElement("input");
-  f.addClass("entryPlaygroundPictureName");
-  f.addClass("entryEllipsis");
-  f.picture = a;
-  f.value = a.name;
-  Entry.attachEventListener(f, "blur", b);
-  f.onkeypress = function(a) {
-    13 == a.keyCode && this.blur();
-  };
-  c.appendChild(f);
-  d = Entry.createElement("div", "s_" + a.id);
-  d.addClass("entryPlaygroundPictureSize");
-  d.innerHTML = a.dimension.width + " X " + a.dimension.height;
-  c.appendChild(d);
-};
-Entry.Playground.prototype.generateSoundElement = function(a) {
-  var b = Entry.createElement("sound", a.id);
-  a.view = b;
-  b.addClass("entryPlaygroundSoundElement");
-  b.sound = a;
-  Entry.Utils.disableContextmenu(a.view);
-  $(a.view).on("contextmenu", function() {
-    Entry.ContextMenu.show([{text:Lang.Workspace.context_rename, callback:function() {
-      g.focus();
-    }}, {text:Lang.Workspace.context_duplicate, callback:function() {
-      Entry.playground.addSound(a, !0);
-    }}, {text:Lang.Workspace.context_remove, callback:function() {
-      Entry.playground.object.removeSound(a.id) ? (Entry.removeElement(b), Entry.toast.success(Lang.Workspace.sound_remove_ok, a.name + " " + Lang.Workspace.sound_remove_ok_msg)) : Entry.toast.alert(Lang.Workspace.sound_remove_fail, "");
-      Entry.removeElement(b);
-    }}], "workspace-contextmenu");
-  });
-  var c = Entry.createElement("div");
-  c.addClass("entryPlaygroundSoundOrder");
-  b.orderHolder = c;
-  b.appendChild(c);
-  var d = Entry.createElement("div");
-  d.addClass("entryPlaygroundSoundThumbnail");
-  d.addClass("entryPlaygroundSoundPlay");
-  var e = !1, f;
-  d.addEventListener("click", function() {
-    e ? (e = !1, d.removeClass("entryPlaygroundSoundStop"), d.addClass("entryPlaygroundSoundPlay"), f.stop()) : (e = !0, d.removeClass("entryPlaygroundSoundPlay"), d.addClass("entryPlaygroundSoundStop"), f = createjs.Sound.play(a.id), f.addEventListener("complete", function(a) {
-      d.removeClass("entryPlaygroundSoundStop");
-      d.addClass("entryPlaygroundSoundPlay");
-      e = !1;
-    }), f.addEventListener("loop", function(a) {
-    }), f.addEventListener("failed", function(a) {
-    }));
-  });
-  b.appendChild(d);
-  var g = Entry.createElement("input");
-  g.addClass("entryPlaygroundSoundName");
-  g.sound = a;
-  g.value = a.name;
-  var h = document.getElementsByClassName("entryPlaygroundSoundName");
-  g.onblur = function() {
-    if ("" === this.value) {
-      alert("\uc774\ub984\uc744 \uc785\ub825\ud558\uc5ec \uc8fc\uc138\uc694."), this.focus();
-    } else {
-      for (var a = 0, b = 0;b < h.length;b++) {
-        if (h[b].value == g.value && (a += 1, 1 < a)) {
-          alert("\uc774\ub984\uc774 \uc911\ubcf5 \ub418\uc5c8\uc2b5\ub2c8\ub2e4.");
-          this.focus();
-          return;
-        }
-      }
-      this.sound.name = this.value;
-    }
-  };
-  g.onkeypress = function(a) {
-    13 == a.keyCode && this.blur();
-  };
-  b.appendChild(g);
-  c = Entry.createElement("div");
-  c.addClass("entryPlaygroundSoundLength");
-  c.innerHTML = a.duration + " \ucd08";
-  b.appendChild(c);
-};
-Entry.Playground.prototype.toggleColourChooser = function(a) {
-  "foreground" === a ? "none" === this.coloursWrapper.style.display ? (this.coloursWrapper.style.display = "block", this.backgroundsWrapper.style.display = "none") : this.coloursWrapper.style.display = "none" : "background" === a && ("none" === this.backgroundsWrapper.style.display ? (this.backgroundsWrapper.style.display = "block", this.coloursWrapper.style.display = "none") : this.backgroundsWrapper.style.display = "none");
-};
-Entry.Playground.prototype.setTextColour = function(a) {
-  Entry.playground.object.entity.setColour(a);
-  Entry.playground.toggleColourChooser("foreground");
-  $(".entryPlayground_fgColorDiv").css("backgroundColor", a);
-};
-Entry.Playground.prototype.setBackgroundColour = function(a) {
-  Entry.playground.object.entity.setBGColour(a);
-  Entry.playground.toggleColourChooser("background");
-  $(".entryPlayground_bgColorDiv").css("backgroundColor", a);
-};
-Entry.Playground.prototype.isTextBGMode = function() {
-  return this.isTextBGMode_;
-};
-Entry.Playground.prototype.checkVariables = function() {
-  Entry.forEBS || (Entry.variableContainer.lists_.length ? this.blockMenu.unbanClass("listNotExist") : this.blockMenu.banClass("listNotExist"), Entry.variableContainer.variables_.length ? this.blockMenu.unbanClass("variableNotExist") : this.blockMenu.banClass("variableNotExist"));
-};
-Entry.Playground.prototype.getViewMode = function() {
-  return this.viewMode_;
-};
-Entry.Playground.prototype.updateHW = function() {
-  var a = Entry.playground;
-  if (a.blockMenu) {
-    var b = Entry.hw;
-    b && b.connected ? (a.blockMenu.unbanClass("arduinoConnected"), a.blockMenu.banClass("arduinoDisconnected"), b.banHW(), b.hwModule && a.blockMenu.unbanClass(b.hwModule.name)) : (a.blockMenu.banClass("arduinoConnected"), a.blockMenu.unbanClass("arduinoDisconnected"), Entry.hw.banHW());
-    a.object && a.selectMenu(a.lastSelector, !0);
-  }
-};
-Entry.Playground.prototype.toggleLineBreak = function(a) {
-  this.object && "textBox" == this.object.objectType && (a ? (Entry.playground.object.entity.setLineBreak(!0), $(".entryPlayground_textArea").css("display", "block"), $(".entryPlayground_textBox").css("display", "none"), this.linebreakOffImage.src = Entry.mediaFilePath + "text-linebreak-off-false.png", this.linebreakOnImage.src = Entry.mediaFilePath + "text-linebreak-on-true.png", this.fontSizeWrapper.removeClass("entryHide")) : (Entry.playground.object.entity.setLineBreak(!1), $(".entryPlayground_textArea").css("display", 
-  "none"), $(".entryPlayground_textBox").css("display", "block"), this.linebreakOffImage.src = Entry.mediaFilePath + "text-linebreak-off-true.png", this.linebreakOnImage.src = Entry.mediaFilePath + "text-linebreak-on-false.png", this.fontSizeWrapper.addClass("entryHide")));
-};
-Entry.Playground.prototype.setFontAlign = function(a) {
-  if ("textBox" == this.object.objectType) {
-    this.alignLeftBtn.removeClass("toggle");
-    this.alignCenterBtn.removeClass("toggle");
-    this.alignRightBtn.removeClass("toggle");
-    switch(a) {
-      case Entry.TEXT_ALIGN_LEFT:
-        this.alignLeftBtn.addClass("toggle");
-        break;
-      case Entry.TEXT_ALIGN_CENTER:
-        this.alignCenterBtn.addClass("toggle");
-        break;
-      case Entry.TEXT_ALIGN_RIGHT:
-        this.alignRightBtn.addClass("toggle");
-    }
-    this.object.entity.setTextAlign(a);
-  }
-};
 Entry.Popup = function() {
   Entry.assert(!window.popup, "Popup exist");
   this.body_ = Entry.createElement("div");
@@ -9913,6 +8695,232 @@ Entry.getStartProject = function(a) {
   return {category:"\uae30\ud0c0", scenes:[{name:"\uc7a5\uba74 1", id:"7dwq"}], variables:[{name:"\ucd08\uc2dc\uacc4", id:"brih", visible:!1, value:"0", variableType:"timer", x:150, y:-70, array:[], object:null, isCloud:!1}, {name:"\ub300\ub2f5", id:"1vu8", visible:!1, value:"0", variableType:"answer", x:150, y:-100, array:[], object:null, isCloud:!1}], objects:[{id:"7y0y", name:"\uc5d4\ud2b8\ub9ac\ubd07", script:'<xml><block type="when_run_button_click" x="136" y="47"><next><block type="repeat_basic"><value name="VALUE"><block type="number"><field name="NUM">10</field></block></value><statement name="DO"><block type="move_direction"><value name="VALUE"><block type="number"><field name="NUM">10</field></block></value></block></statement></block></next></block></xml>', 
   selectedPictureId:"vx80", objectType:"sprite", rotateMethod:"free", scene:"7dwq", sprite:{sounds:[{duration:1.3, ext:".mp3", id:"8el5", fileurl:a + "media/bark.mp3", name:"\uac15\uc544\uc9c0 \uc9d6\ub294\uc18c\ub9ac"}], pictures:[{id:"vx80", fileurl:a + "media/entrybot1.png", name:"\uc5d4\ud2b8\ub9ac\ubd07_\uac77\uae301", scale:100, dimension:{width:284, height:350}}, {id:"4t48", fileurl:a + "media/entrybot2.png", name:"\uc5d4\ud2b8\ub9ac\ubd07_\uac77\uae302", scale:100, dimension:{width:284, height:350}}]}, 
   entity:{x:0, y:0, regX:142, regY:175, scaleX:.3154574132492113, scaleY:.3154574132492113, rotation:0, direction:90, width:284, height:350, visible:!0}, lock:!1, active:!0}], speed:60};
+};
+Entry.PropertyPanel = function() {
+  this.modes = {};
+  this.selected = null;
+};
+(function(a) {
+  a.generateView = function(a, c) {
+    this._view = Entry.Dom("div", {class:"propertyPanel", parent:$(a)});
+    this._tabView = Entry.Dom("div", {class:"propertyTab", parent:this._view});
+    this._contentView = Entry.Dom("div", {class:"propertyContent", parent:this._view});
+    var d = Entry.createElement("div");
+    d.addClass("entryObjectSelectedImgWorkspace");
+    this.selectedImgView_ = d;
+    this._view.append(d);
+    this.initializeSplitter(d);
+    this.splitter = d;
+  };
+  a.addMode = function(a, c) {
+    var d = c.getView(), d = Entry.Dom(d, {parent:this._contentView}), e = Entry.Dom("<div>" + a + "</div>", {classes:["propertyTabElement", "propertyTab" + a], parent:this._tabView}), f = this;
+    e.bindOnClick(function() {
+      f.select(a);
+    });
+    this.modes[a] && (this.modes[a].tabDom.remove(), this.modes[a].contentDom.remove());
+    this.modes[a] = {obj:c, tabDom:e, contentDom:d};
+  };
+  a.resize = function(a) {
+    this._view.css({width:a + "px", top:9 * a / 16 + 123 - 22 + "px"});
+    430 <= a ? this._view.removeClass("collapsed") : this._view.addClass("collapsed");
+    this.modes[this.selected].obj.resize();
+  };
+  a.select = function(a) {
+    for (var c in this.modes) {
+      var d = this.modes[c];
+      d.tabDom.removeClass("selected");
+      d.contentDom.addClass("entryHidden");
+      d.obj.visible = !1;
+    }
+    c = this.modes[a];
+    c.tabDom.addClass("selected");
+    c.contentDom.removeClass("entryHidden");
+    c.obj.resize();
+    c.obj.visible = !0;
+    this.selected = a;
+  };
+  a.initializeSplitter = function(a) {
+    a.onmousedown = function(a) {
+      Entry.container.disableSort();
+      Entry.container.splitterEnable = !0;
+    };
+    document.addEventListener("mousemove", function(a) {
+      Entry.container.splitterEnable && Entry.resizeElement({canvasWidth:a.x || a.clientX});
+    });
+    document.addEventListener("mouseup", function(a) {
+      Entry.container.splitterEnable = !1;
+      Entry.container.enableSort();
+    });
+  };
+})(Entry.PropertyPanel.prototype);
+Entry.init = function(a, b) {
+  Entry.assert("object" === typeof b, "Init option is not object");
+  this.events_ = {};
+  this.interfaceState = {menuWidth:264};
+  Entry.Utils.bindGlobalEvent(["resize", "mousedown", "mousemove"]);
+  this.options = b;
+  this.parseOptions(b);
+  this.mediaFilePath = (b.libDir ? b.libDir : "/lib") + "/entryjs/images/";
+  "workspace" == this.type && this.isPhone() && (this.type = "phone");
+  this.initialize_();
+  this.view_ = a;
+  this.view_.setAttribute("class", "entry");
+  Entry.initFonts(b.fonts);
+  this.createDom(a, this.type);
+  this.loadInterfaceState();
+  this.overridePrototype();
+  this.maxCloneLimit = 302;
+  this.cloudSavable = !0;
+  this.startTime = (new Date).getTime();
+  document.onkeydown = function(a) {
+    Entry.dispatchEvent("keyPressed", a);
+  };
+  document.onkeyup = function(a) {
+    Entry.dispatchEvent("keyUpped", a);
+  };
+  window.onresize = function(a) {
+    Entry.dispatchEvent("windowResized", a);
+  };
+  window.onbeforeunload = this.beforeUnload;
+  Entry.addEventListener("saveWorkspace", function(a) {
+    Entry.addActivity("save");
+  });
+  "IE" != Entry.getBrowserType().substr(0, 2) || window.flashaudio ? createjs.Sound.registerPlugins([createjs.WebAudioPlugin]) : (createjs.FlashAudioPlugin.swfPath = this.mediaFilePath + "media/", createjs.Sound.registerPlugins([createjs.FlashAudioPlugin]), window.flashaudio = !0);
+  Entry.soundQueue = new createjs.LoadQueue;
+  Entry.soundQueue.installPlugin(createjs.Sound);
+  Entry.loadAudio_([Entry.mediaFilePath + "media/click.mp3", Entry.mediaFilePath + "media/click.wav", Entry.mediaFilePath + "media/click.ogg"], "click");
+  Entry.loadAudio_([Entry.mediaFilePath + "media/delete.mp3", Entry.mediaFilePath + "media/delete.ogg", Entry.mediaFilePath + "media/delete.wav"], "delete");
+};
+Entry.loadAudio_ = function(a, b) {
+  if (window.Audio && a.length) {
+    for (;0 < a.length;) {
+      var c = a[0];
+      c.match(/\/([^.]+)./);
+      Entry.soundQueue.loadFile({id:b, src:c, type:createjs.LoadQueue.SOUND});
+      break;
+    }
+  }
+};
+Entry.initialize_ = function() {
+  this.stage = new Entry.Stage;
+  Entry.engine && Entry.engine.clearTimer();
+  this.engine = new Entry.Engine;
+  this.propertyPanel = new Entry.PropertyPanel;
+  this.container = new Entry.Container;
+  this.helper = new Entry.Helper;
+  this.variableContainer = new Entry.VariableContainer;
+  if ("workspace" == this.type || "phone" == this.type) {
+    this.stateManager = new Entry.StateManager;
+  }
+  this.scene = new Entry.Scene;
+  this.playground = new Entry.Playground;
+  this.toast = new Entry.Toast;
+  this.hw && this.hw.closeConnection();
+  this.hw = new Entry.HW;
+  if (Entry.enableActivityLogging) {
+    this.reporter = new Entry.Reporter(!1);
+  } else {
+    if ("workspace" == this.type || "phone" == this.type) {
+      this.reporter = new Entry.Reporter(!0);
+    }
+  }
+};
+Entry.createDom = function(a, b) {
+  if (b && "workspace" != b) {
+    "minimize" == b ? (c = Entry.createElement("canvas"), c.className = "entryCanvasWorkspace", c.id = "entryCanvas", c.width = 640, c.height = 360, d = Entry.createElement("div", "entryCanvasWrapper"), d.appendChild(c), a.appendChild(d), this.canvas_ = c, this.stage.initStage(this.canvas_), d = Entry.createElement("div"), a.appendChild(d), this.engineView = d, this.engine.generateView(this.engineView, b)) : "phone" == b && (this.stateManagerView = c = Entry.createElement("div"), this.stateManager.generateView(this.stateManagerView, 
+    b), d = Entry.createElement("div"), a.appendChild(d), this.engineView = d, this.engine.generateView(this.engineView, b), c = Entry.createElement("canvas"), c.addClass("entryCanvasPhone"), c.id = "entryCanvas", c.width = 640, c.height = 360, d.insertBefore(c, this.engine.footerView_), this.canvas_ = c, this.stage.initStage(this.canvas_), c = Entry.createElement("div"), a.appendChild(c), this.containerView = c, this.container.generateView(this.containerView, b), c = Entry.createElement("div"), 
+    a.appendChild(c), this.playgroundView = c, this.playground.generateView(this.playgroundView, b));
+  } else {
+    var c = Entry.createElement("div");
+    a.appendChild(c);
+    this.sceneView = c;
+    this.scene.generateView(this.sceneView, b);
+    c = Entry.createElement("div");
+    this.sceneView.appendChild(c);
+    this.stateManagerView = c;
+    this.stateManager.generateView(this.stateManagerView, b);
+    var d = Entry.createElement("div");
+    a.appendChild(d);
+    this.engineView = d;
+    this.engine.generateView(this.engineView, b);
+    c = Entry.createElement("canvas");
+    c.addClass("entryCanvasWorkspace");
+    c.id = "entryCanvas";
+    c.width = 640;
+    c.height = 360;
+    d.insertBefore(c, this.engine.addButton);
+    c.addEventListener("mousewheel", function(a) {
+      var b = Entry.variableContainer.getListById(Entry.stage.mouseCoordinate);
+      a = 0 < a.wheelDelta ? !0 : !1;
+      for (var c = 0;c < b.length;c++) {
+        var d = b[c];
+        d.scrollButton_.y = a ? 46 <= d.scrollButton_.y ? d.scrollButton_.y - 23 : 23 : d.scrollButton_.y + 23;
+        d.updateView();
+      }
+    });
+    this.canvas_ = c;
+    this.stage.initStage(this.canvas_);
+    c = Entry.createElement("div");
+    this.propertyPanel.generateView(a, b);
+    this.containerView = c;
+    this.container.generateView(this.containerView, b);
+    this.propertyPanel.addMode("container", this.container);
+    this.helper.generateView(this.containerView, b);
+    this.propertyPanel.addMode("helper", this.helper);
+    this.propertyPanel.select("container");
+    c = Entry.createElement("div");
+    a.appendChild(c);
+    this.playgroundView = c;
+    this.playground.generateView(this.playgroundView, b);
+    this.helper.bindWorkspace(this.playground.mainWorkspace);
+  }
+};
+Entry.start = function(a) {
+  this.FPS || (this.FPS = 60);
+  Entry.assert("number" == typeof this.FPS, "FPS must be number");
+  Entry.engine.start(this.FPS);
+};
+Entry.parseOptions = function(a) {
+  this.type = a.type;
+  this.projectSaveable = a.projectsaveable;
+  void 0 === this.projectSaveable && (this.projectSaveable = !0);
+  this.objectAddable = a.objectaddable;
+  void 0 === this.objectAddable && (this.objectAddable = !0);
+  this.objectEditable = a.objectEditable;
+  void 0 === this.objectEditable && (this.objectEditable = !0);
+  this.objectEditable || (this.objectAddable = !1);
+  this.objectDeletable = a.objectdeletable;
+  void 0 === this.objectDeletable && (this.objectDeletable = !0);
+  this.soundEditable = a.soundeditable;
+  void 0 === this.soundEditable && (this.soundEditable = !0);
+  this.pictureEditable = a.pictureeditable;
+  void 0 === this.pictureEditable && (this.pictureEditable = !0);
+  this.sceneEditable = a.sceneEditable;
+  void 0 === this.sceneEditable && (this.sceneEditable = !0);
+  this.functionEnable = a.functionEnable;
+  void 0 === this.functionEnable && (this.functionEnable = !0);
+  this.messageEnable = a.messageEnable;
+  void 0 === this.messageEnable && (this.messageEnable = !0);
+  this.variableEnable = a.variableEnable;
+  void 0 === this.variableEnable && (this.variableEnable = !0);
+  this.listEnable = a.listEnable;
+  void 0 === this.listEnable && (this.listEnable = !0);
+  this.hasVariableManager = a.hasvariablemanager;
+  this.variableEnable || this.messageEnable || this.listEnable || this.functionEnable ? void 0 === this.hasVariableManager && (this.hasVariableManager = !0) : this.hasVariableManager = !1;
+  this.isForLecture = a.isForLecture;
+};
+Entry.initFonts = function(a) {
+  this.fonts = a;
+  a || (this.fonts = []);
+  var b = {custom:{families:[], urls:[]}};
+  for (a = 0;a < this.fonts.length;a++) {
+    var c = this.fonts[a];
+    b.custom.families.push(c.family);
+    b.custom.urls.push(c.url);
+  }
+  setTimeout(function() {
+    WebFont.load(b);
+  }, 1E3);
 };
 Entry.Reporter = function(a) {
   this.projectId = this.userId = null;
@@ -10786,6 +9794,84 @@ Entry.Toast.prototype.alert = function(a, b, c) {
     }, 20);
   }, 5E3);
 };
+Entry.BlockDriver = function() {
+};
+(function(a) {
+  a.convert = function() {
+    var a = new Date, c;
+    for (c in Entry.block) {
+      "function" === typeof Entry.block[c] && this._convertBlock(c);
+    }
+    console.log((new Date).getTime() - a.getTime());
+  };
+  a._convertBlock = function(a) {
+    var c = (new Entry.BlockMockup(Blockly.Blocks[a])).toJSON();
+    c.func = Entry.block[a];
+    var d = EntryStatic.blockInfo[a];
+    d && (c.class = d.class);
+    Entry.block[a] = c;
+  };
+})(Entry.BlockDriver.prototype);
+Entry.BlockMockup = function(a) {
+  this.templates = [];
+  this.params = [];
+  this.statements = [];
+  this.color = "";
+  this.output = this.isNext = this.isPrev = !1;
+  this.fieldCount = 0;
+  this.simulate(a);
+};
+(function(a) {
+  a.simulate = function(a) {
+    a.init.call(this);
+  };
+  a.toJSON = function() {
+    var a = "", a = this.output ? "Boolean" === this.output ? "basic_boolean_field" : "basic_string_field" : !this.isPrev && this.isNext ? "basic_event" : this.statements.length ? "basic_loop" : "basic";
+    return {color:this.color, skeleton:a, statements:this.statements, template:this.templates.filter(function(a) {
+      return "string" === typeof a;
+    }).join(" "), params:this.params};
+  };
+  a.appendDummyInput = function() {
+    return this;
+  };
+  a.appendValueInput = function(a) {
+    this.params.push({type:"Block", accept:"basic_string_field"});
+    this.templates.push(this.getFieldCount());
+    return this;
+  };
+  a.appendStatementInput = function(a) {
+    this.statements.push({accept:"basic"});
+  };
+  a.setCheck = function(a) {
+    var c = this.params;
+    "Boolean" === a && (c[c.length - 1].accept = "basic_boolean_field");
+  };
+  a.appendField = function(a) {
+    "string" === typeof a && 0 < a.length ? this.templates.push(a) : a instanceof Blockly.FieldIcon ? ("start" === a.type ? this.params.push({type:"Indicator", img:a.src_, size:17, position:{x:0, y:-2}}) : this.params.push({type:"Indicator", img:a.src_, size:12}), this.templates.push(this.getFieldCount())) : a instanceof Blockly.FieldDropdown ? (this.params.push({type:"Dropdown", options:a.menuGenerator_, value:a.menuGenerator_[0][1], fontSize:11}), this.templates.push(this.getFieldCount())) : a instanceof 
+    Blockly.FieldDropdownDynamic ? (this.params.push({type:"Dropdown", options:[["\ub300\uc0c1 \uc5c6\uc74c", "null"]], value:"null", fontSize:11}), this.templates.push(this.getFieldCount())) : a instanceof Blockly.FieldTextInput && (this.params.push({type:"TextInput", value:10}), this.templates.push(this.getFieldCount()));
+    return this;
+  };
+  a.setColour = function(a) {
+    this.color = a;
+  };
+  a.setInputsInline = function() {
+  };
+  a.setOutput = function(a, c) {
+    a && (this.output = c);
+  };
+  a.setPreviousStatement = function(a) {
+    this.isPrev = a;
+  };
+  a.setNextStatement = function(a) {
+    this.isNext = a;
+  };
+  a.setEditable = function(a) {
+  };
+  a.getFieldCount = function() {
+    this.fieldCount++;
+    return "%" + this.fieldCount;
+  };
+})(Entry.BlockMockup.prototype);
 Entry.ContextMenu = {};
 (function(a) {
   a.createDom = function() {
@@ -10958,7 +10044,7 @@ Entry.removeEventListener = function(a, b) {
   }
 };
 Entry.removeAllEventListener = function(a) {
-  a && delete this.events_[a];
+  this.events_ && this.events_[a] && delete this.events_[a];
 };
 Entry.addTwoNumber = function(a, b) {
   if (isNaN(a) || isNaN(b)) {
@@ -11261,6 +10347,12 @@ Entry.Utils.inherit = function(a, b) {
   b.prototype = new c;
   return b;
 };
+Entry.bindAnimationCallbackOnce = function(a, b) {
+  a.one("webkitAnimationEnd animationendo animationend", b);
+};
+Entry.Utils.isInInput = function(a) {
+  return "textarea" == a.target.type || "text" == a.target.type;
+};
 Entry.Model = function(a, b) {
   var c = Entry.Model;
   c.generateSchema(a);
@@ -11372,57 +10464,9 @@ Entry.Func.edit = function(a) {
   this.cancelEdit();
   this.workspace && (this.workspace.visible = !0);
   this.initEditView();
-  this.targetFunc = a;
-  this.workspace.clear();
-  Blockly.Xml.domToWorkspace(this.workspace, a.content);
-  this.updateMenu();
-  this.position_();
 };
 Entry.Func.initEditView = function() {
-  this.parentView = Entry.playground.blocklyView_;
-  if (!this.svg) {
-    this.svg = Blockly.createSvgElement("svg", {xmlns:"http://www.w3.org/2000/svg", "xmlns:html":"http://www.w3.org/1999/xhtml", "xmlns:xlink":"http://www.w3.org/1999/xlink", version:"1.1", "class":"blocklySvg entryFunctionEdit"});
-    this.workspace = new Blockly.Workspace;
-    this.workspace.visible = !0;
-    this.generateButtons();
-    this.svg.appendChild(this.workspace.createDom());
-    this.workspace.scrollbar = new Blockly.ScrollbarPair(this.workspace);
-    var a = this.workspace.scrollbar;
-    a.resize();
-    this.workspace.addTrashcan();
-    Blockly.bindEvent_(window, "resize", a, a.resize);
-    document.addEventListener("blocklyWorkspaceChange", this.syncFunc, !1);
-    var b = this.workspace;
-    Blockly.bindEvent_(this.svg, "mousedown", null, function(a) {
-      b.dragMode = !0;
-      b.startDragMouseX = a.clientX;
-      b.startDragMouseY = a.clientY;
-      b.startDragMetrics = b.getMetrics();
-      b.startScrollX = b.scrollX;
-      b.startScrollY = b.scrollY;
-    });
-    Blockly.bindEvent_(this.svg, "mousemove", null, function(c) {
-      var d = a.hScroll;
-      a.hScroll.svgGroup_.setAttribute("opacity", "1");
-      d.svgGroup_.setAttribute("opacity", "1");
-      if (b.dragMode) {
-        Blockly.removeAllRanges();
-        var d = b.startDragMetrics, e = b.startScrollX + (c.clientX - b.startDragMouseX);
-        c = b.startScrollY + (c.clientY - b.startDragMouseY);
-        e = Math.min(e, -d.contentLeft);
-        c = Math.min(c, -d.contentTop);
-        e = Math.max(e, d.viewWidth - d.contentLeft - d.contentWidth);
-        c = Math.max(c, d.viewHeight - d.contentTop - d.contentHeight);
-        a.set(-e - d.contentLeft, -c - d.contentTop);
-      }
-    });
-    Blockly.bindEvent_(this.svg, "mouseup", null, function(a) {
-      b.dragMode = !1;
-    });
-  }
-  Blockly.mainWorkspace.blockMenu.targetWorkspace = this.workspace;
-  this.doWhenInit();
-  this.parentView.appendChild(this.svg);
+  console.log("start edit");
 };
 Entry.Func.save = function() {
   this.targetFunc.content = Blockly.Xml.workspaceToDom(this.workspace);
@@ -11655,6 +10699,213 @@ Entry.Func.generateWsBlock = function(a, b, c) {
   a = '<xml><block type="function_general">' + (e + "</mutation>") + b + "</block></xml>";
   c || (c = "\ud568\uc218");
   return {block:Blockly.Xml.textToDom(a).childNodes[0], description:c};
+};
+Entry.HWMontior = {};
+Entry.HWMonitor = function(a) {
+  this.svgDom = Entry.Dom($('<svg id="hwMonitor" class="hwMonitor" width="100%" height="100%"version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'), {parent:this.view});
+  var b = this;
+  Entry.addEventListener("windowResized", function() {
+    b.resize();
+  });
+  this._hwModule = a;
+  this.scale = .5;
+  this._portViews = {};
+  this._portMap = {n:[], e:[], s:[], w:[]};
+};
+(function(a) {
+  a.generateView = function() {
+    this.snap = Snap("#hwMonitor");
+    this._svgGroup = this.snap.group();
+    var a = this._hwModule.monitorTemplate;
+    this.hwView = this._svgGroup.group();
+    this.hwView.image(Entry.mediaFilePath + "hw/neobot.png", -a.width / 2, -a.height / 2, a.width, a.height);
+    this._template = a;
+    a = a.ports;
+    this.pathGroup = this._svgGroup.group();
+    var c = [], d;
+    for (d in a) {
+      var e = this.generatePortView(a[d]);
+      this._portViews[d] = e;
+      c.push(e);
+    }
+    c.sort(function(a, b) {
+      return a.box.x - b.box.x;
+    });
+    var f = this._portMap;
+    c.map(function(a) {
+      switch(Math.round(Math.atan2(a.box.y, a.box.x) / Math.PI * 2)) {
+        case -1:
+          f.n.push(a);
+          break;
+        case 0:
+          f.e.push(a);
+          break;
+        case 1:
+          f.s.push(a);
+          break;
+        case 2:
+          f.w.push(a);
+      }
+    });
+    this.resize();
+  };
+  a.generatePortView = function(a) {
+    var c = this._svgGroup.group();
+    c.addClass("hwComponent");
+    var d = this.pathGroup.path("m0,0").attr({fill:"none", stroke:"input" === a.type ? "#00979d" : "#A751E3", "stroke-width":3}), e = c.rect(0, 0, 150, 22, 4).attr({fill:"#fff", stroke:"#a0a1a1"}), f = c.text(4, 12, a.name).attr({fill:"#000", "class":"hwComponentName", "alignment-baseline":"central"}).node.getComputedTextLength();
+    c.rect(f + 8, 2, 30, 18, 9).attr({fill:"input" === a.type ? "#00979d" : "#A751E3"});
+    var g = c.text(f + 13, 12, "0").attr({fill:"#fff", "class":"hwComponentValue", "alignment-baseline":"central"}), f = f + 40;
+    e.attr({width:f + "px"});
+    return {group:c, value:g, type:a.type, path:d, box:{x:a.pos.x - this._template.width / 2, y:a.pos.y - this._template.height / 2, width:f}, width:f};
+  };
+  a.getView = function() {
+    return this.svgDom;
+  };
+  a.update = function() {
+    var a = Entry.hw.portData, c = Entry.hw.sendQueue, d;
+    for (d in this._portViews) {
+      var e = this._portViews[d], f = "input" == e.type ? a[d] : c[d];
+      e.value.attr({text:f ? f : 0});
+    }
+  };
+  a.resize = function() {
+    this.hwView.attr({transform:"s" + this.scale});
+    var a = this.svgDom.get(0).getBoundingClientRect();
+    this._svgGroup.attr({transform:"t" + a.width / 2 + "," + a.height / 2});
+    this._rect = a;
+    this.scale = a.height / this._template.height / 2;
+    this.align();
+  };
+  a.align = function() {
+    for (var a = this._portMap.n, c = a.length, d = 0;d < a.length;d++) {
+      a[d].group.attr({transform:"t" + this._template.width * (d / c - .5) + "," + (-this._template.width / 2 - 30)});
+    }
+    a = this._portMap.s.concat();
+    this._alignNS(a, this._template.width * this.scale / 2 + 5, 27);
+    a = this._portMap.n.concat();
+    this._alignNS(a, -this._template.width * this.scale / 2 - 32, -27);
+  };
+  a._alignNS = function(a, c, d) {
+    for (var e = -this._rect.width / 2, f = this._rect.width / 2, g = this._rect.width, h = 0, k = 0;k < a.length;k++) {
+      h += a[k].width + 5;
+    }
+    h < f - e && (f = h / 2 + 3, e = -h / 2 - 3);
+    for (;1 < a.length;) {
+      var k = a.shift(), l = a.pop(), n = e, m = f, q = d;
+      h <= f - e ? (e += k.width + 5, f -= l.width + 5, q = 0) : 0 === a.length ? (e = (e + f) / 2 - 3, f = e + 6) : (e = Math.max(e, -g / 2 + k.width) + 15, f = Math.min(f, g / 2 - l.width) - 15);
+      this._movePort(k, e, c, n);
+      this._movePort(l, f, c, m);
+      h -= k.width + l.width + 10;
+      c += q;
+    }
+    a.length && a[0].group.attr({transform:"t" + (f + e - a[0].width) / 2 + "," + c});
+  };
+  a._movePort = function(a, c, d, e) {
+    var f = c, g = a.box.x * this.scale, h = a.box.y * this.scale;
+    c > e ? (f = c - a.width, c = c > g && g > e ? "M" + g + "," + d + "L" + g + "," + h : "M" + (c + e) / 2 + "," + d + "l0," + (h > d ? 28 : -3) + "H" + g + "L" + g + "," + h) : c = c < g && g < e ? "m" + g + "," + d + "L" + g + "," + h : "m" + (e + c) / 2 + "," + d + "l0," + (h > d ? 28 : -3) + "H" + g + "L" + g + "," + h;
+    a.group.attr({transform:"t" + f + "," + d});
+    a.path.attr({d:c});
+  };
+})(Entry.HWMonitor.prototype);
+Entry.HW = function() {
+  this.connectTrial = 0;
+  this.isFirstConnect = !0;
+  if ("WebSocket" in window) {
+    try {
+      this.initSocket();
+    } catch (a) {
+      console.log("socket error:", a);
+    }
+  } else {
+    console.log("socket not exist");
+  }
+  this.connected = !1;
+  this.portData = {};
+  this.sendQueue = {};
+  this.settingQueue = {};
+  this.hwModule = this.selectedDevice = null;
+  Entry.addEventListener("stop", this.setZero);
+  this.hwInfo = {11:Entry.Arduino, 12:Entry.SensorBoard, 24:Entry.Hamster, 25:Entry.Albert, 31:Entry.Bitbrick, 51:Entry.Neobot};
+};
+Entry.HW.TRIAL_LIMIT = 1;
+p = Entry.HW.prototype;
+p.initSocket = function() {
+  if (this.connectTrial >= Entry.HW.TRIAL_LIMIT) {
+    this.isFirstConnect || Entry.toast.alert(Lang.Menus.connect_hw, Lang.Menus.connect_fail, !1), this.isFirstConnect = !1;
+  } else {
+    var a = this, b = new WebSocket("ws://localhost:23518");
+    this.socket = b;
+    this.connected = !1;
+    b.binaryType = "arraybuffer";
+    this.connectTrial++;
+    b.onopen = function() {
+      a.initHardware();
+    };
+    b.onmessage = function(b) {
+      b = JSON.parse(b.data);
+      a.checkDevice(b);
+      a.updatePortData(b);
+    };
+    b.onclose = function() {
+      a.initSocket();
+    };
+    Entry.dispatchEvent("hwChanged");
+  }
+};
+p.retryConnect = function() {
+  this.connectTrial = 0;
+  this.initSocket();
+};
+p.initHardware = function() {
+  this.connectTrial = 0;
+  this.connected = !0;
+  Entry.dispatchEvent("hwChanged");
+  Entry.playground && Entry.playground.object && Entry.playground.setMenu(Entry.playground.object.objectType);
+};
+p.setDigitalPortValue = function(a, b) {
+  this.sendQueue[a] = b;
+};
+p.getAnalogPortValue = function(a) {
+  return this.connected ? this.portData["a" + a] : 0;
+};
+p.getDigitalPortValue = function(a) {
+  if (!this.connected) {
+    return 0;
+  }
+  this.setPortReadable(a);
+  return void 0 !== this.portData[a] ? this.portData[a] : 0;
+};
+p.setPortReadable = function(a) {
+  this.sendQueue.readablePorts || (this.sendQueue.readablePorts = []);
+  this.sendQueue.readablePorts.push(a);
+};
+p.update = function() {
+  this.socket && 1 == this.socket.readyState && (this.socket.send(JSON.stringify(this.sendQueue)), this.sendQueue.readablePorts = []);
+};
+p.updatePortData = function(a) {
+  this.portData = a;
+  this.hwMonitor && this.hwMonitor.update();
+};
+p.closeConnection = function() {
+  this.socket && this.socket.close();
+};
+p.downloadConnector = function() {
+  window.open("http://play-entry.org/down/entry-hw_v1.1.zip", "_blank").focus();
+};
+p.downloadSource = function() {
+  window.open("http://play-entry.com/lib/EntryArduino/arduino/entry.ino", "_blank").focus();
+};
+p.setZero = function() {
+  Entry.hw.hwModule && Entry.hw.hwModule.setZero();
+};
+p.checkDevice = function(a) {
+  void 0 !== a.company && (a = "" + a.company + a.model, a != this.selectedDevice && (this.selectedDevice = a, this.hwModule = this.hwInfo[a], Entry.dispatchEvent("hwChanged"), Entry.toast.success(Lang.Menus.connect_hw, Lang.Menus.connect_message.replace("%1", Lang.Device[Entry.hw.hwModule.name]), !1), this.hwModule.monitorTemplate && (this.hwMonitor = new Entry.HWMonitor(this.hwModule), Entry.propertyPanel.addMode("hw", this.hwMonitor), this.hwMonitor.generateView())));
+};
+p.banHW = function() {
+  var a = this.hwInfo, b;
+  for (b in a) {
+    Entry.playground.blockMenu.banClass(a[b].name);
+  }
 };
 Entry.BlockModel = function() {
   Entry.Model(this);
@@ -12311,7 +11562,6 @@ Entry.VariableContainer.prototype.createFunction = function() {
   if (!Entry.Func.isEdit) {
     var a = new Entry.Func;
     Entry.Func.edit(a);
-    this.saveFunction(a);
   }
 };
 Entry.VariableContainer.prototype.addFunction = function(a) {
@@ -13200,14 +12450,14 @@ Entry.VariableContainer.prototype.updateCloudVariables = function() {
 };
 Entry.block.run = {skeleton:"basic", color:"#3BBD70", contents:["this is", "basic block"], func:function() {
 }};
-Entry.block.jr_start = {skeleton:"pebble_event", event:"start", color:"#3BBD70", template:"%1", params:[{type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_play_image.png", highlightColor:"#3BBD70", size:22}], func:function() {
+Entry.block.jr_start = {skeleton:"pebble_event", event:"start", color:"#3BBD70", template:"%1", params:[{type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_play_image.png", highlightColor:"#3BBD70", position:{x:0, y:0}, size:22}], func:function() {
   var a = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT), b;
   for (b in a) {
     this._unit = a[b];
   }
   Ntry.unitComp = Ntry.entityManager.getComponent(this._unit.id, Ntry.STATIC.UNIT);
 }};
-Entry.block.jr_repeat = {skeleton:"pebble_loop", color:"#127CDB", template:"%1 \ubc18\ubcf5", params:[{type:"Dropdown", options:[[1, 1], [2, 2], [3, 3], [4, 4], [5, 5], [6, 6], [7, 7], [8, 8], [9, 9], [10, 10]], value:3, fontSize:14, roundValue:3}], statements:[{accept:"pebble_basic", position:{x:46, y:14}}], func:function() {
+Entry.block.jr_repeat = {skeleton:"pebble_loop", color:"#127CDB", template:"%1 \ubc18\ubcf5", params:[{type:"Dropdown", options:[[1, 1], [2, 2], [3, 3], [4, 4], [5, 5], [6, 6], [7, 7], [8, 8], [9, 9], [10, 10]], value:3, fontSize:14, roundValue:3}], statements:[{accept:"pebble_basic"}], func:function() {
   if (void 0 === this.repeatCount) {
     return this.repeatCount = this.block.params[0], Entry.STATIC.CONTINUE;
   }
@@ -13383,7 +12633,7 @@ Entry.block.jr_west = {skeleton:"pebble_basic", color:"#A751E3", template:"\uc67
     return Entry.STATIC.CONTINUE;
   }
 }};
-Entry.block.jr_start_basic = {skeleton:"basic_event", event:"start", color:"#3BBD70", template:"%1 \uc2dc\uc791 \ubc84\ud2bc\uc744 \ub20c\ub800\uc744 \ub584", params:[{type:"Indicator", boxMultiplier:1, img:"/img/assets/block_icon/start_icon_play.png", highlightColor:"#3BBD70", size:17, position:{x:0, y:-2}}], func:function() {
+Entry.block.jr_start_basic = {skeleton:"basic_event", event:"start", color:"#3BBD70", template:"%1 \uc2dc\uc791 \ubc84\ud2bc\uc744 \ub20c\ub800\uc744 \ub584", params:[{type:"Indicator", boxMultiplier:2, img:"/img/assets/block_icon/start_icon_play.png", highlightColor:"#3BBD70", size:17, position:{x:0, y:-2}}], func:function() {
   var a = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT), b;
   for (b in a) {
     this._unit = a[b];
@@ -13454,13 +12704,13 @@ Entry.block.jr_go_slow = {skeleton:"basic", color:"#f46c6c", template:"\ucc9c\uc
     return Entry.STATIC.CONTINUE;
   }
 }};
-Entry.block.jr_repeat_until_dest = {skeleton:"basic_loop", color:"#498DEB", template:"%1 \ub9cc\ub0a0 \ub54c \uae4c\uc9c0 \ubc18\ubcf5\ud558\uae30 %2", syntax:["BasicWhile", "true"], params:[{type:"Image", img:"/img/assets/ntry/bitmap/jr/jr_goal_image.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic", position:{x:2, y:15}}], func:function() {
+Entry.block.jr_repeat_until_dest = {skeleton:"basic_loop", color:"#498DEB", template:"%1 \ub9cc\ub0a0 \ub54c \uae4c\uc9c0 \ubc18\ubcf5\ud558\uae30 %2", params:[{type:"Image", img:"/img/assets/ntry/bitmap/jr/jr_goal_image.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic"}], func:function() {
   var a = this.block.statements[0];
   if (1 !== a.getBlocks().length) {
     return this.executor.stepInto(a), Entry.STATIC.CONTINUE;
   }
 }};
-Entry.block.jr_if_construction = {skeleton:"basic_loop", color:"#498DEB", template:"\ub9cc\uc57d %1 \uc55e\uc5d0 \uc788\ub2e4\uba74 %2", params:[{type:"Image", img:"/img/assets/ntry/bitmap/jr/jr_construction_image.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic", position:{x:2, y:15}}], func:function() {
+Entry.block.jr_if_construction = {skeleton:"basic_loop", color:"#498DEB", template:"\ub9cc\uc57d %1 \uc55e\uc5d0 \uc788\ub2e4\uba74 %2", params:[{type:"Image", img:"/img/assets/ntry/bitmap/jr/jr_construction_image.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic"}], func:function() {
   if (!this.isContinue) {
     var a = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT), b, c;
     for (c in a) {
@@ -13478,7 +12728,7 @@ Entry.block.jr_if_construction = {skeleton:"basic_loop", color:"#498DEB", templa
     }
   }
 }};
-Entry.block.jr_if_speed = {skeleton:"basic_loop", color:"#498DEB", template:"\ub9cc\uc57d %1 \uc55e\uc5d0 \uc788\ub2e4\uba74 %2", params:[{type:"Image", img:"/img/assets/ntry/bitmap/jr/jr_speed_image.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic", position:{x:2, y:15}}], func:function() {
+Entry.block.jr_if_speed = {skeleton:"basic_loop", color:"#498DEB", template:"\ub9cc\uc57d %1 \uc55e\uc5d0 \uc788\ub2e4\uba74 %2", params:[{type:"Image", img:"/img/assets/ntry/bitmap/jr/jr_speed_image.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic"}], func:function() {
   if (!this.isContinue) {
     var a = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT), b, c;
     for (c in a) {
@@ -13528,15 +12778,15 @@ Entry.block.maze_step_for = {skeleton:"basic_loop", mode:"maze", color:"#127CDB"
   }
   delete this.repeatCount;
 }};
-Entry.block.test = {skeleton:"basic_boolean_field", mode:"maze", color:"#3BBD70", template:"%1 this is test block ", params:[{type:"Dropdown", options:[[1, 1], [2, 2], [3, 3], [4, 4], [5, 5], [6, 6], [7, 7], [8, 8], [9, 9], [10, 10]], value:1}], func:function() {
+Entry.block.test = {skeleton:"basic_boolean_field", mode:"maze", color:"#127CDB", template:"%1 this is test block %2", params:[{type:"Angle", value:"90"}, {type:"Dropdown", options:[[1, 1], [2, 2], [3, 3], [4, 4], [5, 5], [6, 6], [7, 7], [8, 8], [9, 9], [10, 10]], value:1}], func:function() {
 }};
-Entry.block.maze_repeat_until_1 = {skeleton:"basic_loop", mode:"maze", color:"#498DEB", template:"%1 \ub9cc\ub0a0 \ub54c \uae4c\uc9c0 \ubc18\ubcf5%2", syntax:["BasicWhile", "true"], params:[{type:"Image", img:"/img/assets/ntry/block_inner/repeat_goal_1.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic", position:{x:2, y:15}}], func:function() {
+Entry.block.maze_repeat_until_1 = {skeleton:"basic_loop", mode:"maze", color:"#498DEB", template:"%1 \ub9cc\ub0a0 \ub54c \uae4c\uc9c0 \ubc18\ubcf5%2", params:[{type:"Image", img:"/img/assets/ntry/block_inner/repeat_goal_1.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic", position:{x:2, y:15}}], func:function() {
   var a = this.block.statements[0];
   if (1 !== a.getBlocks().length) {
     return this.executor.stepInto(a), Entry.STATIC.CONTINUE;
   }
 }};
-Entry.block.maze_step_if_1 = {skeleton:"basic_loop", mode:"maze", color:"#498DEB", template:"\ub9cc\uc57d \uc55e\uc5d0 %1 \uc788\ub2e4\uba74%2", syntax:["BasicIf", 'front == "wall"'], params:[{type:"Image", img:"/img/assets/ntry/block_inner/if_target_1.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/if.png", size:24}], statements:[{accept:"basic", position:{x:2, y:15}}], func:function() {
+Entry.block.maze_step_if_1 = {skeleton:"basic_loop", mode:"maze", color:"#498DEB", template:"\ub9cc\uc57d \uc55e\uc5d0 %1 \uc788\ub2e4\uba74%2", params:[{type:"Image", img:"/img/assets/ntry/block_inner/if_target_1.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/if.png", size:24}], statements:[{accept:"basic", position:{x:2, y:15}}], func:function() {
   if (!this.isContinue) {
     var a = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT), b, c;
     for (c in a) {
@@ -13558,7 +12808,7 @@ Entry.block.maze_step_if_1 = {skeleton:"basic_loop", mode:"maze", color:"#498DEB
     }
   }
 }};
-Entry.block.maze_step_if_2 = {skeleton:"basic_loop", mode:"maze", color:"#498DEB", template:"\ub9cc\uc57d \uc55e\uc5d0 %1 \uc788\ub2e4\uba74%2", syntax:["BasicIf", 'front == "Bee"'], params:[{type:"Image", img:"/img/assets/ntry/bitmap/maze2/obstacle_01.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/if.png", size:24}], statements:[{accept:"basic", position:{x:2, y:15}}], func:function() {
+Entry.block.maze_step_if_2 = {skeleton:"basic_loop", mode:"maze", color:"#498DEB", template:"\ub9cc\uc57d \uc55e\uc5d0 %1 \uc788\ub2e4\uba74%2", params:[{type:"Image", img:"/img/assets/ntry/bitmap/maze2/obstacle_01.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/if.png", size:24}], statements:[{accept:"basic", position:{x:2, y:15}}], func:function() {
   if (!this.isContinue) {
     var a = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT), b, c;
     for (c in a) {
@@ -13576,7 +12826,7 @@ Entry.block.maze_step_if_2 = {skeleton:"basic_loop", mode:"maze", color:"#498DEB
     }
   }
 }};
-Entry.block.maze_call_function = {skeleton:"basic", mode:"maze", color:"#B57242", template:"\uc57d\uc18d \ubd88\ub7ec\uc624\uae30%1", syntax:["Scope", "promise"], params:[{type:"Image", img:"/img/assets/week/blocks/function.png", size:24}], func:function() {
+Entry.block.maze_call_function = {skeleton:"basic", mode:"maze", color:"#B57242", template:"\uc57d\uc18d \ubd88\ub7ec\uc624\uae30%1", params:[{type:"Image", img:"/img/assets/week/blocks/function.png", size:24}], func:function() {
   if (!this.funcExecutor) {
     var a = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.CODE), b;
     for (b in a) {
@@ -13588,12 +12838,12 @@ Entry.block.maze_call_function = {skeleton:"basic", mode:"maze", color:"#B57242"
     return Entry.STATIC.CONTINUE;
   }
 }};
-Entry.block.maze_define_function = {skeleton:"basic_define", mode:"maze", color:"#B57242", event:"define", template:"\uc57d\uc18d\ud558\uae30%1", syntax:["BasicFunction"], params:[{type:"Image", img:"/img/assets/week/blocks/function.png", size:24}], statements:[{accept:"basic", position:{x:2, y:15}}], func:function(a) {
+Entry.block.maze_define_function = {skeleton:"basic_define", mode:"maze", color:"#B57242", event:"define", template:"\uc57d\uc18d\ud558\uae30%1", params:[{type:"Image", img:"/img/assets/week/blocks/function.png", size:24}], statements:[{accept:"basic", position:{x:2, y:15}}], func:function(a) {
   if (!this.executed) {
     return this.executor.stepInto(this.block.statements[0]), this.executed = !0, Entry.STATIC.CONTINUE;
   }
 }};
-Entry.block.maze_step_if_3 = {skeleton:"basic_loop", mode:"maze", color:"#498DEB", template:"\ub9cc\uc57d \uc55e\uc5d0 %1 \uc788\ub2e4\uba74%2", syntax:["BasicIf", 'front == "banana"'], params:[{type:"Image", img:"/img/assets/ntry/block_inner/if_target_3.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/if.png", size:24}], statements:[{accept:"basic", position:{x:2, y:15}}], func:function() {
+Entry.block.maze_step_if_3 = {skeleton:"basic_loop", mode:"maze", color:"#498DEB", template:"\ub9cc\uc57d \uc55e\uc5d0 %1 \uc788\ub2e4\uba74%2", params:[{type:"Image", img:"/img/assets/ntry/block_inner/if_target_3.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/if.png", size:24}], statements:[{accept:"basic", position:{x:2, y:15}}], func:function() {
   if (!this.isContinue) {
     var a = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT), b, c;
     for (c in a) {
@@ -13611,7 +12861,7 @@ Entry.block.maze_step_if_3 = {skeleton:"basic_loop", mode:"maze", color:"#498DEB
     }
   }
 }};
-Entry.block.maze_step_if_4 = {skeleton:"basic_loop", mode:"maze", color:"#498DEB", template:"\ub9cc\uc57d \uc55e\uc5d0 %1 \uc788\ub2e4\uba74%2", syntax:["BasicIf", 'front == "wall"'], params:[{type:"Image", img:"/img/assets/ntry/block_inner/if_target_2.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/if.png", size:24}], statements:[{accept:"basic", position:{x:2, y:15}}], func:function() {
+Entry.block.maze_step_if_4 = {skeleton:"basic_loop", mode:"maze", color:"#498DEB", template:"\ub9cc\uc57d \uc55e\uc5d0 %1 \uc788\ub2e4\uba74%2", params:[{type:"Image", img:"/img/assets/ntry/block_inner/if_target_2.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/if.png", size:24}], statements:[{accept:"basic", position:{x:2, y:15}}], func:function() {
   if (!this.isContinue) {
     var a = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT), b, c;
     for (c in a) {
@@ -13677,7 +12927,11 @@ Entry.block.maze_step_rotate_right = {skeleton:"basic", mode:"maze", color:"#A75
     return Entry.STATIC.CONTINUE;
   }
 }};
-Entry.BlockMenu = function(a, b) {
+Entry.block.test_wrapper = {skeleton:"basic", mode:"maze", color:"#3BBD70", template:"%1 this is test block %2", params:[{type:"Block", accept:"basic_boolean_field", value:[{type:"test", params:[30, 50]}]}, {type:"Dropdown", options:[[1, 1], [2, 2], [3, 3], [4, 4], [5, 5], [6, 6], [7, 7], [8, 8], [9, 9], [10, 10]], value:1}], func:function() {
+}};
+Entry.block.basic_button = {skeleton:"basic_button", color:"#eee", template:"%1", params:[{type:"Text", text:"basic button", color:"#333", align:"center"}], func:function() {
+}};
+Entry.BlockMenu = function(a, b, c) {
   Entry.Model(this, !1);
   this._align = b || "CENTER";
   a = "string" === typeof a ? $("#" + a) : $(a);
@@ -13688,27 +12942,57 @@ Entry.BlockMenu = function(a, b) {
     return console.error("Snap library is required");
   }
   this.view = a;
-  this.svgDom = Entry.Dom($('<svg id="blockMenu" width="100%" height="100%"version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'), {parent:a});
+  this._categoryCodes = null;
+  this._categoryElems = {};
+  this._selectedCategoryView = null;
+  this.visible = !0;
+  this._snapId = "blockMenu" + (new Date).getTime();
+  this._generateView(c);
   this.offset = this.svgDom.offset();
-  this._svgWidth = this.svgDom.width();
-  this.snap = Snap("#blockMenu");
+  this._splitters = [];
+  this.setWidth();
+  this.snap = Snap("#" + this._snapId);
   this.svgGroup = this.snap.group();
   this.svgThreadGroup = this.svgGroup.group();
   this.svgThreadGroup.board = this;
   this.svgBlockGroup = this.svgGroup.group();
   this.svgBlockGroup.board = this;
   this.changeEvent = new Entry.Event(this);
+  c && this._generateCategoryCodes(c);
   Entry.documentMousedown && Entry.documentMousedown.attach(this, this.setSelectedBlock);
 };
 (function(a) {
   a.schema = {code:null, dragBlock:null, closeBlock:null, selectedBlockView:null};
+  a._generateView = function(a) {
+    var c = this.view, d = this;
+    if (a) {
+      for (var e = Entry.Dom("ul", {class:"entryCategoryListWorkspace", parent:c}), f = 0;f < a.length;f++) {
+        var g = a[f].category;
+        (function(a, b) {
+          a.text(Lang.Blocks[b.toUpperCase()]);
+          d._categoryElems[b] = a;
+          a.bindOnClick(function(a) {
+            d.setMenu(b);
+          });
+        })(Entry.Dom("li", {id:"entryCategory" + g, class:"entryCategoryElementWorkspace", parent:e}), g);
+      }
+    }
+    this.blockMenuContainer = Entry.Dom("div", {"class":"blockMenuContainer", parent:c});
+    this.svgDom = Entry.Dom($('<svg id="' + this._snapId + '" class="blockMenu" version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'), {parent:this.blockMenuContainer});
+    this.svgDom.mouseenter(function(a) {
+      Entry.playground && !Entry.playground.resizing && (Entry.playground.focusBlockMenu = !0, a = d.expandWidth + 64, a > Entry.interfaceState.menuWidth && (this.widthBackup = Entry.interfaceState.menuWidth - 64, $(this).stop().animate({width:a - 64}, 200)));
+    });
+    this.svgDom.mouseleave(function(a) {
+      Entry.playground && !Entry.playground.resizing && ((a = this.widthBackup) && $(this).stop().animate({width:a}, 200), delete this.widthBackup, delete Entry.playground.focusBlockMenu);
+    });
+  };
   a.changeCode = function(a) {
     if (!(a instanceof Entry.Code)) {
       return console.error("You must inject code instance");
     }
     this.codeListener && this.code.changeEvent.detach(this.codeListener);
-    this.set({code:a});
     var c = this;
+    this.set({code:a});
     this.codeListener = this.code.changeEvent.attach(this, function() {
       c.changeEvent.notify();
     });
@@ -13724,22 +13008,24 @@ Entry.BlockMenu = function(a, b) {
     this.svgGroup.append(this.svgBlockGroup);
   };
   a.align = function() {
-    for (var a = this.code.getThreads(), c = 10, d = "LEFT" == this._align ? 20 : this.svgDom.width() / 2, e = 0, f = a.length;e < f;e++) {
-      var g = a[e].getFirstBlock().view;
-      g._moveTo(d, c, !1);
-      c += g.height + 15;
+    for (var a = this.code.getThreads(), c = 10, d = "LEFT" == this._align ? 20 : this.svgDom.width() / 2, e, f = 0, g = a.length;f < g;f++) {
+      var h = a[f].getFirstBlock(), k = h.view, h = Entry.block[h.type].class;
+      e && e !== h && (this._createSplitter(c), c += 15);
+      e = h;
+      k._moveTo(d, c, !1);
+      c += k.height + 15;
     }
     this.changeEvent.notify();
+    this.expandWidth = this.svgGroup.getBBox().width + d;
   };
-  a.cloneToBoard = function(a) {
+  a.cloneToGlobal = function(a) {
     if (null !== this.dragBlock && !this._boardBlockView) {
-      var c = this._svgWidth, d = this.dragBlock, e = d.block, f = e.getThread();
-      if (e && f) {
-        var e = this.workspace.getBoard(), g = this.workspace.getMode();
-        this._boardBlockView = e.code.cloneThread(f, g).getFirstBlock().view;
-        this._boardBlockView._moveTo(d.x - c, d.y - 0, !1);
-        this._boardBlockView.onMouseDown.call(this._boardBlockView, a);
-        this._dragObserver = this._boardBlockView.observe(this, "_editDragInstance", ["x", "y"], !1);
+      var c = this.workspace, d = c.getMode(), e = this.dragBlock, f = this._svgWidth, g = c.selectedBoard;
+      if (!g || d != Entry.Workspace.MODE_BOARD && d != Entry.Workspace.MODE_OVERLAYBOARD) {
+        Entry.GlobalSvg.setView(e, c.getMode());
+      } else {
+        var c = e.block, h = c.getThread();
+        c && h && (this._boardBlockView = g.code.cloneThread(h, d).getFirstBlock().view, this._boardBlockView._moveTo(e.x - f, e.y + (this.offset.top - g.offset.top), !1), this._boardBlockView.onMouseDown.call(this._boardBlockView, a), this._dragObserver = this._boardBlockView.observe(this, "_editDragInstance", ["x", "y"], !1));
       }
     }
   };
@@ -13751,15 +13037,10 @@ Entry.BlockMenu = function(a, b) {
     if (this._boardBlockView) {
       var a = this._boardBlockView;
       if (a) {
-        var c = a.block;
         this.workspace.getBoard();
-        var d = !1;
-        a.dragMode = 0;
-        a.removeDragging();
-        var e = Entry.GlobalSvg.left, f = Entry.GlobalSvg.width / 2, a = a.getBoard().offset.left;
-        e < a - f && (d = !0, c.destroy());
         this._boardBlockView = null;
-        return d;
+        var c = Entry.GlobalSvg.left, d = Entry.GlobalSvg.width / 2, a = a.getBoard().offset.left;
+        return c < a - d;
       }
     }
   };
@@ -13788,6 +13069,47 @@ Entry.BlockMenu = function(a, b) {
       a[c].view.renderBlock();
     }
   };
+  a._createSplitter = function(a) {
+    a = this.svgBlockGroup.line(30, a, this._svgWidth - 30, a);
+    a.attr({stroke:"#b5b5b5"});
+    this._splitters.push(a);
+  };
+  a._updateSplitters = function() {
+    var a = this._svgWidth - 30;
+    this._splitters.forEach(function(c) {
+      c.attr({x2:a});
+    });
+  };
+  a._clearSplitters = function() {
+    for (var a = this._splitters, c = a.length - 1;0 <= c;c--) {
+      a[c].remove(), a.pop();
+    }
+  };
+  a.setWidth = function() {
+    this._svgWidth = this.svgDom.width();
+    this._updateSplitters();
+    this.offset = this.svgDom.offset();
+  };
+  a.setMenu = function(a) {
+    var c = this._categoryElems[a], d = this._selectedCategoryView, e = !1, f = this.workspace.board, g = f.view;
+    d && d.removeClass("entrySelectedCategory");
+    c == d ? (g.addClass("folding"), this._selectedCategoryView = null, c.removeClass("entrySelectedCategory"), Entry.playground.hideTabs(), e = !0, this.visible = !1) : d || (g.addClass("foldOut"), g.removeClass("folding"), Entry.playground.showTabs(), e = this.visible = !0);
+    e && Entry.bindAnimationCallbackOnce(g, function() {
+      f.scroller.resizeScrollBar.call(f.scroller);
+      g.removeClass("foldOut");
+    });
+    this.visible && (c.addClass("entrySelectedCategory"), d = this._categoryCodes[a], this._selectedCategoryView = c, c.addClass("entrySelectedCategory"), d.constructor !== Entry.Code && (d = this._categoryCodes[a] = new Entry.Code(d)), this.changeCode(d));
+  };
+  a._generateCategoryCodes = function(a) {
+    this._categoryCodes = {};
+    for (var c = 0;c < a.length;c++) {
+      var d = a[c], e = [];
+      d.blocks.forEach(function(a) {
+        e.push([{type:a}]);
+      });
+      this._categoryCodes[d.category] = e;
+    }
+  };
 })(Entry.BlockMenu.prototype);
 Entry.BlockView = function(a, b, c) {
   Entry.Model(this, !1);
@@ -13795,31 +13117,38 @@ Entry.BlockView = function(a, b, c) {
   this._board = b;
   this.set(a);
   this.svgGroup = b.svgBlockGroup.group();
-  this.svgGroup.block = this.block;
   this._schema = Entry.block[a.type];
-  this._skeleton = Entry.skeleton[this._schema.skeleton];
+  var d = this._skeleton = Entry.skeleton[this._schema.skeleton];
   this._contents = [];
-  this.isInBlockMenu = !(this.getBoard() instanceof Entry.Board);
-  this._skeleton.morph && this.block.observe(this, "_renderPath", this._skeleton.morph, !1);
+  this._statements = [];
+  d.magnets && d.magnets().next && (this.svgGroup.nextMagnet = this.block);
+  this.isInBlockMenu = this.getBoard() instanceof Entry.BlockMenu;
+  d.morph && this.block.observe(this, "_renderPath", d.morph, !1);
   this.prevObserver = null;
   this._startRender(a, c);
   this.block.observe(this, "_bindPrev", ["prev"]);
   this.block.observe(this, "_createEmptyBG", ["next"]);
+  this.block.observe(this, "_setMovable", ["movable"]);
+  this.block.observe(this, "_setReadOnly", ["movable"]);
   this.observe(this, "_updateBG", ["magneting"]);
   this.observe(this, "_updateOpacity", ["visible"]);
+  this.observe(this, "_updateShadow", ["shadow"]);
   b.code.observe(this, "_setBoard", ["board"], !1);
   this.dragMode = Entry.DRAG_MODE_NONE;
   Entry.Utils.disableContextmenu(this.svgGroup.node);
 };
 (function(a) {
-  a.schema = {id:0, type:Entry.STATIC.BLOCK_RENDER_MODEL, x:0, y:0, offsetX:0, offsetY:0, width:0, height:0, contentWidth:0, contentHeight:0, magneting:!1, visible:!0, animating:!1};
+  a.schema = {id:0, type:Entry.STATIC.BLOCK_RENDER_MODEL, x:0, y:0, offsetX:0, offsetY:0, width:0, height:0, contentWidth:0, contentHeight:0, magneting:!1, visible:!0, animating:!1, shadow:!0};
   a._startRender = function(a, c) {
     this.svgGroup.attr({class:"block"});
     var d = this._skeleton.path(this);
     this._darkenPath = this.svgGroup.path(d);
-    this._darkenPath.attr({transform:"t0 1", fill:Entry.Utils.colorDarken(this._schema.color, .7)});
+    this._darkenPath.attr({transform:"t0 1", fill:Entry.Utils.colorDarken(this._schema.color, .7), class:"blockPathDarken"});
     this._path = this.svgGroup.path(d);
-    this._path.attr({strokeWidth:"2", fill:this._schema.color});
+    d = {fill:this._schema.color};
+    this._skeleton.outerLine && (d.strokeWidth = "0.5", d.stroke = Entry.Utils.colorDarken(this._schema.color, .8));
+    d.class = "blockPath";
+    this._path.attr(d);
     this._moveTo(this.x, this.y, !1);
     this._startContentRender(c);
     this._addControl();
@@ -13827,17 +13156,20 @@ Entry.BlockView = function(a, b, c) {
   a._startContentRender = function(a) {
     a = void 0 === a ? Entry.Workspace.MODE_BOARD : a;
     this.contentSvgGroup && this.contentSvgGroup.remove();
+    var c = this._schema;
+    c.statements && c.statements.length && this.statementSvgGroup && this.statementSvgGroup.remove();
     this._contents = [];
     this.contentSvgGroup = this.svgGroup.group();
-    var c = this._skeleton.contentPos();
-    this.contentSvgGroup.transform("t" + c.x + " " + c.y);
+    c.statements && c.statements.length && (this.statementSvgGroup = this.svgGroup.group());
     switch(a) {
       case Entry.Workspace.MODE_BOARD:
-        var c = /(%\d)/gmi, d = this._schema, e = d.template.split(c), f = d.params;
+      ;
+      case Entry.Workspace.MODE_OVERLAYBOARD:
+        var d = /(%\d)/mi, e = c.template.split(d), f = c.params;
         for (a = 0;a < e.length;a++) {
           var g = e[a].trim();
           if (0 !== g.length) {
-            if (c.test(g)) {
+            if (d.test(g)) {
               var h = Number(g.split("%")[1]) - 1, g = f[h];
               this._contents.push(new Entry["Field" + g.type](g, this, h));
             } else {
@@ -13845,26 +13177,36 @@ Entry.BlockView = function(a, b, c) {
             }
           }
         }
-        if (c = d.statements) {
+        if ((c = c.statements) && c.length) {
           for (a = 0;a < c.length;a++) {
-            this._contents.push(new Entry.FieldStatement(c[a], this, a));
+            this._statements.push(new Entry.FieldStatement(c[a], this, a));
           }
         }
         break;
       case Entry.Workspace.MODE_VIMBOARD:
-        a = this.getBoard().workspace.getCodeToText(this.block), this._contents.push(new Entry.FieldText({text:a, color:"white"}, this));
+        c = this.getBoard().workspace.getCodeToText(this.block), this._contents.push(new Entry.FieldText({text:c, color:"white"}, this));
     }
     this.alignContent(!1);
   };
   a.alignContent = function(a) {
     !0 !== a && (a = !1);
     for (var c = 0, d = 0, e = 0;e < this._contents.length;e++) {
-      d = this._contents[e];
-      d.align(c, 0, a);
+      var f = this._contents[e];
+      f.align(c, 0, a);
       e !== this._contents.length - 1 && (c += 5);
-      var f = d.box, d = Math.max(f.y + f.height), c = c + f.width;
+      f = f.box;
+      d = Math.max(f.y + f.height, d);
+      c += f.width;
+    }
+    if (this._statements.length) {
+      for (f = this._skeleton.statementPos ? this._skeleton.statementPos(this) : [], e = 0;e < this._statements.length;e++) {
+        var g = this._statements[e], h = f[e];
+        h && g.align(h.x, h.y, a);
+      }
     }
     this.set({contentWidth:c, contentHeight:d});
+    a = this.getContentPos();
+    this.contentSvgGroup.transform("t" + a.x + " " + a.y);
     this._render();
   };
   a._bindPrev = function() {
@@ -13874,6 +13216,10 @@ Entry.BlockView = function(a, b, c) {
   a._render = function() {
     this._renderPath();
     this.set(this._skeleton.box(this));
+    var a = this.block, c = a.events.blockAdd;
+    c && !this.isInBlockMenu && c.forEach(function(c) {
+      c(a);
+    });
   };
   a._renderPath = function() {
     var a = this._skeleton.path(this);
@@ -13915,87 +13261,90 @@ Entry.BlockView = function(a, b, c) {
   a._addControl = function() {
     var a = this;
     this.svgGroup.mousedown(function() {
+      var c = a.block.events;
+      c && c.mousedown && c.mousedown.forEach(function(a) {
+        a();
+      });
       a.onMouseDown.apply(a, arguments);
     });
   };
   a.onMouseDown = function(b) {
     function c(b) {
-      var c = l.workspace.getMode(), d = l instanceof Entry.BlockMenu;
+      var c = e.workspace.getMode();
       c === Entry.Workspace.MODE_VIMBOARD && a.vimBoardEvent(b, "dragOver");
-      var e = k.mouseDownCoordinate;
-      if ((k.dragMode == Entry.DRAG_MODE_DRAG || b.pageX !== e.x || b.pageY !== e.y) && k.block.isMovable()) {
-        if (d) {
-          l.cloneToBoard(b);
+      var d = l.mouseDownCoordinate;
+      if ((l.dragMode == Entry.DRAG_MODE_DRAG || b.pageX !== d.x || b.pageY !== d.y) && l.movable) {
+        if (l.isInBlockMenu) {
+          e.cloneToGlobal(b);
         } else {
-          k.block.prev && (k.block.prev.setNext(null), k.block.setPrev(null), k.block.thread.changeEvent.notify());
+          l.block.prev && (l.block.prev.setNext(null), l.block.setPrev(null), l.block.thread.changeEvent.notify());
           this.animating && this.set({animating:!1});
-          if (0 === k.dragInstance.height) {
-            d = k.block;
-            for (e = -1;d;) {
-              e += d.view.height + 1, d = d.next;
+          if (0 === l.dragInstance.height) {
+            for (var d = l.block, f = -1;d;) {
+              f += d.view.height + 1, d = d.next;
             }
-            k.dragInstance.set({height:e});
+            l.dragInstance.set({height:f});
           }
           b.originalEvent.touches && (b = b.originalEvent.touches[0]);
-          d = k.dragInstance;
-          k._moveBy(b.pageX - d.offsetX, b.pageY - d.offsetY, !1);
+          d = l.dragInstance;
+          l._moveBy(b.pageX - d.offsetX, b.pageY - d.offsetY, !1);
           d.set({offsetX:b.pageX, offsetY:b.pageY});
-          k.dragMode = Entry.DRAG_MODE_DRAG;
-          (b = k._getCloseBlock()) ? (l = b.view.getBoard(), l.setMagnetedBlock(b.view)) : l.setMagnetedBlock(null);
-          Entry.GlobalSvg.setView(k, c);
-          k.originPos || (k.originPos = {x:k.x, y:k.y});
+          l.dragMode = Entry.DRAG_MODE_DRAG;
+          Entry.GlobalSvg.setView(l, c);
+          (b = l._getCloseBlock()) ? (e = b.view.getBoard(), e.setMagnetedBlock(b.view)) : e.setMagnetedBlock(null);
+          l.originPos || (l.originPos = {x:l.x, y:l.y});
         }
       }
     }
     function d(a) {
       Entry.GlobalSvg.remove();
-      k.set({visible:!0});
       $(document).unbind(".block");
       delete this.mouseDownCoordinate;
-      k.terminateDrag(a);
-      l && l.set({dragBlock:null});
-      delete k.dragInstance;
+      l.terminateDrag(a);
+      e && e.set({dragBlock:null});
+      delete l.dragInstance;
     }
     b.stopPropagation();
     b.preventDefault();
+    var e = this.getBoard();
     Entry.documentMousedown && Entry.documentMousedown.notify();
-    this.getBoard().setSelectedBlock(this);
-    this.dominate();
-    if (0 === b.button || b instanceof Touch) {
-      this.mouseDownCoordinate = {x:b.pageX, y:b.pageY};
-      var e = $(document);
-      e.bind("mousemove.block", c);
-      e.bind("mouseup.block", d);
-      e.bind("touchmove.block", c);
-      e.bind("touchend.block", d);
-      this.getBoard().set({dragBlock:this});
-      this.dragInstance = new Entry.DragInstance({startX:b.pageX, startY:b.pageY, offsetX:b.pageX, offsetY:b.pageY, prev:this.block.prev, height:0, mode:!0});
-      this.addDragging();
-      this.dragMode = Entry.DRAG_MODE_MOUSEDOWN;
-    } else {
-      if (Entry.Utils.isRightButton(b)) {
-        var f = this, g = f.block;
-        if (this.isInBlockMenu || g.isReadOnly()) {
-          return;
+    if (!this.readOnly && !e.viewOnly) {
+      e.setSelectedBlock(this);
+      this.dominate();
+      if (0 === b.button || b instanceof Touch) {
+        this.mouseDownCoordinate = {x:b.pageX, y:b.pageY};
+        var f = $(document);
+        f.bind("mousemove.block", c);
+        f.bind("mouseup.block", d);
+        f.bind("touchmove.block", c);
+        f.bind("touchend.block", d);
+        e.set({dragBlock:this});
+        this.dragInstance = new Entry.DragInstance({startX:b.pageX, startY:b.pageY, offsetX:b.pageX, offsetY:b.pageY, prev:this.block.prev, height:0, mode:!0});
+        this.addDragging();
+        this.dragMode = Entry.DRAG_MODE_MOUSEDOWN;
+      } else {
+        if (Entry.Utils.isRightButton(b)) {
+          var g = this, h = g.block;
+          if (this.isInBlockMenu) {
+            return;
+          }
+          var f = [], k = {text:"\ube14\ub85d \uc0ad\uc81c", enable:h.isDeletable(), callback:function() {
+            g.block.doDestroyAlone(!0);
+          }};
+          f.push({text:"\ube14\ub85d \ubcf5\uc0ac & \ubd99\uc5ec\ub123\uae30", callback:function() {
+            e.code.createThread(h.copy());
+          }});
+          f.push({text:"\ube14\ub85d \ubcf5\uc0ac", callback:function() {
+            g.block.copyToClipboard();
+          }});
+          f.push(k);
+          Entry.ContextMenu.show(f);
         }
-        var e = [], h = {text:"\ube14\ub85d \uc0ad\uc81c", enable:g.isDeletable(), callback:function() {
-          f.block.doDestroyAlone(!0);
-        }};
-        e.push({text:"\ube14\ub85d \ubcf5\uc0ac & \ubd99\uc5ec\ub123\uae30", callback:function() {
-          var a = g.copy(), b = a[0];
-          b.doAdd();
-          b.getThread().getCode().createThread(a);
-        }});
-        e.push({text:"\ube14\ub85d \ubcf5\uc0ac", callback:function() {
-          f.block.copyToClipboard();
-        }});
-        e.push(h);
-        Entry.ContextMenu.show(e);
       }
+      var l = this;
+      e.workspace.getMode() === Entry.Workspace.MODE_VIMBOARD && b && (f = new MouseEvent("dragStart", {view:window, bubbles:!0, cancelable:!0, clientX:b.clientX, clientY:b.clientY}), document.getElementsByClassName("CodeMirror")[0].dispatchEvent(f));
+      b.stopPropagation();
     }
-    var k = this, l = this.getBoard();
-    l.workspace.getMode() === Entry.Workspace.MODE_VIMBOARD && b && (e = new MouseEvent("dragStart", {view:window, bubbles:!0, cancelable:!0, clientX:b.clientX, clientY:b.clientY}), document.getElementsByClassName("CodeMirror")[0].dispatchEvent(e));
-    b.stopPropagation();
   };
   a.vimBoardEvent = function(a, c, d) {
     a && (a = new MouseEvent(c, {view:window, bubbles:!0, cancelable:!0, clientX:a.clientX, clientY:a.clientY}), d && (a.block = d), document.getElementsByClassName("CodeMirror")[0].dispatchEvent(a));
@@ -14013,7 +13362,17 @@ Entry.BlockView = function(a, b, c) {
         switch(Entry.GlobalSvg.terminateDrag(this)) {
           case g.DONE:
             g = this._getCloseBlock();
-            a || g ? g ? (this.set({animating:!0}), g.next && g.next.view.set({animating:!0}), e.doInsert(g), createjs.Sound.play("entryMagneting")) : e.doSeparate() : d != Entry.DRAG_MODE_DRAG || f || e.doMove();
+            if (a || g) {
+              if (g) {
+                if (this.set({animating:!0}), g.next && g.next.view.set({animating:!0}), e.doInsert(g), createjs.Sound.play("entryMagneting"), g.constructor == Entry.FieldDummyBlock && (e = e.next)) {
+                  -1 < Entry.FieldDummyBlock.PRIMITIVE_TYPES.indexOf(e.type) ? (e.getThread().cut(e), e.destroy(!1)) : (e.separate(), e.view._moveBy(10, 10, !1));
+                }
+              } else {
+                e.doSeparate();
+              }
+            } else {
+              d != Entry.DRAG_MODE_DRAG || f || e.doMove();
+            }
             break;
           case g.RETURN:
             d = this.originPos;
@@ -14030,16 +13389,18 @@ Entry.BlockView = function(a, b, c) {
     delete this.originPos;
   };
   a._getCloseBlock = function() {
-    var a = this.getBoard(), c = this.x, d = this.y, e = a.relativeOffset, c = c + e.left;
-    if (c + this.offsetX < a.offset.left) {
-      return null;
-    }
-    a = Snap.getElementByPoint(c, d + e.top - 1);
-    if (null !== a) {
-      for (c = a.block;!c && a.parent() && "svg" !== a.type && "BODY" !== a.type;) {
-        a = a.parent(), c = a.block;
+    if (this._skeleton.magnets) {
+      var a = this.getBoard(), c = this.x, d = this.y, e = a.relativeOffset, c = c + e.left;
+      if (c + this.offsetX < a.offset.left) {
+        return null;
       }
-      return void 0 === c || c === this.block ? null : c;
+      c = Snap.getElementByPoint(c, d + e.top - 2);
+      if (null !== c && (d = this._skeleton.magnets(), d = d.previous ? "nextMagnet" : d.string ? "stringMagnet" : d.bool ? "booleanMagnet" : null)) {
+        for (e = c[d];!e && c.parent() && "svg" !== c.type && "BODY" !== c.type;) {
+          c = c.parent(), e = c[d];
+        }
+        return void 0 === e || e === this.block || e.view.getBoard() !== a ? null : e;
+      }
     }
   };
   a._inheritAnimate = function() {
@@ -14066,6 +13427,13 @@ Entry.BlockView = function(a, b, c) {
     this._contents.forEach(function(a) {
       a.destroy();
     });
+    this._statements.forEach(function(a) {
+      a.destroy();
+    });
+    var d = this.block;
+    (a = d.events.blockDestroy) && !this.isInBlockMenu && a.forEach(function(a) {
+      a(d);
+    });
   };
   a.getShadow = function() {
     this._shadow || (this._shadow = this.svgGroup.clone(), this._shadow.attr({opacity:.5}));
@@ -14082,6 +13450,7 @@ Entry.BlockView = function(a, b, c) {
         $(e.node).attr({transform:"translate(0 " + (this.height + 1) + ")"});
         this.svgGroup.prepend(e);
         this._clonedShadow = e;
+        console.log(e);
         c.background && (c.background.remove(), c.nextBackground.remove(), delete c.background, delete c.nextBackground);
         a = c.height + a;
         e = d.rect(0 - c.width / 2, 1.5 * c.height + 1, c.width, Math.max(0, a - 1.5 * c.height));
@@ -14094,7 +13463,7 @@ Entry.BlockView = function(a, b, c) {
         e.attr({fill:"transparent"});
         d.prepend(e);
         c.originalHeight = c.height;
-        c.set({height:a});
+        c.set({height:a, animating:!1});
       } else {
         if (this._clonedShadow && (this._clonedShadow.remove(), delete this._clonedShadow), a = c.originalHeight) {
           setTimeout(function() {
@@ -14106,13 +13475,13 @@ Entry.BlockView = function(a, b, c) {
     }
   };
   a._createEmptyBG = function() {
-    if (this.block.next) {
-      this.emptyBackground && (this.emptyBackground.remove(), delete this.emptyBackground);
-    } else {
+    if (this.svgGroup.nextMagnet && !this.block.next) {
       var a = this.svgGroup.rect(0 + this.offsetX, this.height, this.width, 20);
       this.emptyBackground = a;
       a.attr({fill:"transparent"});
       this.svgGroup.prepend(a);
+    } else {
+      this.emptyBackground && (this.emptyBackground.remove(), delete this.emptyBackground);
     }
   };
   a.addDragging = function() {
@@ -14141,6 +13510,17 @@ Entry.BlockView = function(a, b, c) {
   };
   a._updateOpacity = function() {
     this.svgGroup.attr({opacity:!1 === this.visible ? 0 : 1});
+  };
+  a._updateShadow = function() {
+    var a;
+    a = this.shadow ? Entry.Utils.colorDarken(this._schema.color, .7) : "transparent";
+    this._darkenPath.attr({fill:a});
+  };
+  a._setMovable = function() {
+    this.movable = null !== this.block.isMovable() ? this.block.isMovable() : void 0 !== this._skeleton.movable ? this._skeleton.movable : !0;
+  };
+  a._setReadOnly = function() {
+    this.readOnly = null !== this.block.isReadOnly() ? this.block.isReadOnly() : void 0 !== this._skeleton.readOnly ? this._skeleton.readOnly : !1;
   };
 })(Entry.BlockView.prototype);
 Entry.Code = function(a) {
@@ -14185,11 +13565,11 @@ Entry.Code = function(a) {
       0 > e || d.splice(e, 1);
     }
   };
-  a.raiseEvent = function(a) {
-    a = this._eventMap[a];
-    if (void 0 !== a) {
-      for (var c = 0;c < a.length;c++) {
-        this.executors.push(new Entry.Executor(a[c]));
+  a.raiseEvent = function(a, c) {
+    var d = this._eventMap[a];
+    if (void 0 !== d) {
+      for (var e = 0;e < d.length;e++) {
+        this.executors.push(new Entry.Executor(d[e], c));
       }
     }
   };
@@ -14213,7 +13593,9 @@ Entry.Code = function(a) {
     if (!(a instanceof Array)) {
       return console.error("blocks must be array");
     }
-    this._data.push(new Entry.Thread(a, this));
+    a = new Entry.Thread(a, this);
+    this._data.push(a);
+    return a;
   };
   a.cloneThread = function(a, c) {
     var d = a.clone(this, c);
@@ -14277,23 +13659,73 @@ Entry.CodeView = function(a, b) {
     this.set({board:this.code.board});
   };
 })(Entry.CodeView.prototype);
-Entry.Executor = function(a) {
-  this.scope = {block:a, executor:this};
+Entry.Executor = function(a, b) {
+  this.scope = new Entry.Scope(a, this);
+  this.entity = b;
   this._callStack = [];
 };
 (function(a) {
   a.execute = function() {
-    void 0 === this.scope.block._schema.func.call(this.scope) && (this.scope = {block:this.scope.block.next, executor:this});
-    null === this.scope.block && this._callStack.length && (this.scope = this._callStack.pop());
+    for (;;) {
+      var a = this.scope.block._schema.func.call(this.scope, this.entity, this.scope);
+      if (void 0 === a || null === a) {
+        if (this.scope = new Entry.Scope(this.scope.block.next, this), null === this.scope.block) {
+          if (this._callStack.length) {
+            this.scope = this._callStack.pop();
+          } else {
+            break;
+          }
+        }
+      } else {
+        if (a === Entry.STATIC.CONTINUE) {
+          break;
+        }
+      }
+    }
   };
   a.stepInto = function(a) {
     a instanceof Entry.Thread || console.error("Must step in to thread");
     this._callStack.push(this.scope);
     a = a.getFirstBlock();
-    a instanceof Entry.DummyBlock && (a = a.next);
-    this.scope = {block:a, executor:this};
+    a.isDummy && (a = a.next);
+    this.scope = new Entry.Scope(a, this);
   };
 })(Entry.Executor.prototype);
+Entry.Scope = function(a, b) {
+  this.type = (this.block = a) ? a.type : null;
+  this.executor = b;
+  this.entity = b.entity;
+};
+(function(a) {
+  a.callReturn = function() {
+  };
+  a.getValue = function(a, c) {
+    var d = this.block.params[0]._data[1], e = new Entry.Scope(d, this.executor);
+    return Entry.block[d.type].func.call(e, this.entity, e);
+  };
+  a.getStringValue = function(a, c) {
+    return String(this.getValue(a, c));
+  };
+  a.getNumberValue = function(a, c) {
+    return Number(this.getValue(a, c));
+  };
+  a.getBooleanValue = function(a, c) {
+    return Number(this.getValue(a, c)) ? !0 : !1;
+  };
+  a.getField = function() {
+    return this.block.params[0];
+  };
+  a.getStringField = function() {
+    return String(this.getField());
+  };
+  a.getNumberField = function() {
+    return Number(this.getField());
+  };
+  a.getStatement = function(a) {
+    this.executor.stepInto(this.block.statements[0]);
+    return Entry.STATIC.CONTINUE;
+  };
+})(Entry.Scope.prototype);
 Entry.Field = function() {
 };
 (function(a) {
@@ -14515,7 +13947,7 @@ Entry.FieldDropdown = function(a, b, c) {
   this._index = c;
   this.setValue(this.getValue());
   this._CONTENT_HEIGHT = a.dropdownHeight || b.getSkeleton().dropdownHeight || 16;
-  this._fONT_SIZE = a.fontSize || b.getSkeleton().fontSize || 12;
+  this._FONT_SIZE = a.fontSize || b.getSkeleton().fontSize || 12;
   this._ROUND = a.roundValue || 0;
   this.renderStart(b);
 };
@@ -14638,11 +14070,11 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldIndicator);
 (function(a) {
   a.renderStart = function() {
     this.svgGroup = this._block.contentSvgGroup.group();
-    this._imgElement = this.svgGroup.image(this._imgUrl, -1 * this._size, -1 * this._size, 2 * this._size, 2 * this._size);
+    this._imgElement = this.svgGroup.image(this._imgUrl, this._position ? -1 * this._size : 0, -1 * this._size, 2 * this._size, 2 * this._size);
     var a = "m 0,-%s a %s,%s 0 1,1 -0.1,0 z".replace(/%s/gi, this._size);
     this._path = this.svgGroup.path(a);
     this._path.attr({stroke:"none", fill:"none"});
-    this.box.set({x:this._size, y:0, width:this._size * this._boxMultiplier, height:this._size * this._boxMultiplier});
+    this.box.set({width:this._size * this._boxMultiplier + (this._position ? -this._size : 0), height:this._size * this._boxMultiplier});
   };
   a.enableHighlight = function() {
     var a = this._path.getTotalLength(), c = this._path;
@@ -14746,7 +14178,7 @@ Entry.FieldStatement = function(a, b, c) {
 };
 (function(a) {
   a.renderStart = function(a) {
-    this.svgGroup = this._blockView.contentSvgGroup.group();
+    this.svgGroup = this._blockView.statementSvgGroup.group();
     this.box.set({x:46, y:0, width:0, height:20});
     this._thread = this.getValue();
     this.dummyBlock = new Entry.DummyBlock(this, this._blockView);
@@ -14765,7 +14197,7 @@ Entry.FieldStatement = function(a, b, c) {
     for (var a = this.dummyBlock, c = -1;a;) {
       c += a.view.height + 1, a = a.next;
     }
-    this.box.set({height:c});
+    this.box.set({height:Math.max(c, 20)});
   };
   a._updateThread = function() {
     this._threadChangeEvent && this._thread.changeEvent.detach(this._threadChangeEvent);
@@ -14782,13 +14214,14 @@ Entry.FieldStatement = function(a, b, c) {
 })(Entry.FieldStatement.prototype);
 Entry.DummyBlock = function(a, b) {
   Entry.Model(this, !1);
+  this.isDummy = !0;
   this.view = this;
   this.originBlockView = b;
   this._schema = {};
   this._thread = a._thread;
   this.statementField = a;
   this.svgGroup = a.svgGroup.group();
-  this.svgGroup.block = this;
+  this.svgGroup.nextMagnet = this;
   var c = Entry.skeleton[a.acceptType].box();
   this.path = this.svgGroup.rect(c.offsetX, c.offsetY - 10, c.width, c.height);
   this.path.attr({fill:"transparent"});
@@ -14798,7 +14231,7 @@ Entry.DummyBlock = function(a, b) {
   this._align();
 };
 (function(a) {
-  a.schema = {x:0, y:0, width:0, height:0, animating:!1, magneting:!1};
+  a.schema = {x:0, y:0, width:0, height:0, next:null, animating:!1, magneting:!1};
   a._align = function(a) {
     this.set({x:this.originBlockView.x, y:this.originBlockView.y});
   };
@@ -14813,7 +14246,7 @@ Entry.DummyBlock = function(a, b) {
   a.setPrev = function() {
   };
   a.setNext = function(a) {
-    this.next = a;
+    this.set({next:a});
   };
   a.getBoard = function() {
     return this.originBlockView.getBoard();
@@ -14830,7 +14263,7 @@ Entry.DummyBlock = function(a, b) {
       this.svgGroup.prepend(a);
       this._clonedShadow = a;
     } else {
-      this._clonedShadow && (this._clonedShadow.remove(), delete this._clonedShadow), this.set({height:0});
+      this._clonedShadow && (this._clonedShadow.remove(), delete this._clonedShadow), this.set({height:this.schema.height});
     }
     this._thread.changeEvent.notify();
   };
@@ -14838,25 +14271,137 @@ Entry.DummyBlock = function(a, b) {
     this.originBlockView.dominate();
   };
 })(Entry.DummyBlock.prototype);
+Entry.FieldBlock = function(a, b, c) {
+  this._blockView = b;
+  this._block = b.block;
+  this._valueBlock = null;
+  this.box = new Entry.BoxModel;
+  this._index = c;
+  this._content = a;
+  this.dummyBlock = null;
+  this.acceptType = a.accept;
+  this.svgGroup = null;
+  this._position = a.position;
+  this.box.observe(b, "alignContent", ["width", "height"]);
+  this.renderStart(b.getBoard());
+  this._block.observe(this, "_updateThread", ["thread"]);
+};
+Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
+(function(a) {
+  a.renderStart = function(a) {
+    this.svgGroup = this._blockView.contentSvgGroup.group();
+    this.box.set({x:0, y:0, width:0, height:20});
+    this._thread = this.getValue();
+    this.dummyBlock = new Entry.FieldDummyBlock(this, this._blockView);
+    this._thread.insertDummyBlock(this.dummyBlock);
+    this._inspectThread();
+    this._thread.createView(a);
+    this.dummyBlock.observe(this, "_inspectThread", ["next"]);
+    this.dummyBlock.observe(this, "calcWH", ["next"]);
+    this.calcWH();
+  };
+  a.align = function(a, c, d) {
+    d = void 0 === d ? !0 : d;
+    var e = this.svgGroup;
+    this._position && (this._position.x && (a = this._position.x), this._position.y && (c = this._position.y));
+    var f = this._thread.getFirstBlock();
+    f.isDummy && (f = f.next);
+    f && (c = -.5 * f.view.height);
+    a = "t" + a + " " + c;
+    f != this._valueBlock && (this._valueBlock && this._valueBlock.view.set({shadow:!0}), this._valueBlock = f, this._valueBlockObserver && this._valueBlockObserver.destroy(), this._valueBlock && (f = this._valueBlock.view, this._valueBlockObserver = f.observe(this, "calcWH", ["width", "height"]), f.shadow && f.set({shadow:!1})));
+    d ? e.animate({transform:a}, 300, mina.easeinout) : e.attr({transform:a});
+  };
+  a.calcWH = function() {
+    var a = this._thread.getFirstBlock();
+    a.isDummy && (a = a.next);
+    a ? (a = a.view, this.box.set({width:a.width, height:a.height})) : this.box.set({width:15, height:20});
+  };
+  a.calcHeight = a.calcWH;
+  a._updateThread = function() {
+    this._threadChangeEvent && this._thread.changeEvent.detach(this._threadChangeEvent);
+    var a = this._block.thread;
+    this._threadChangeEvent = this._thread.changeEvent.attach(this, function() {
+      a.changeEvent.notify();
+    });
+  };
+  a.destroy = function() {
+  };
+  a._inspectThread = function() {
+    function a(b, d) {
+      var e = b._block.getThread(), f = b._blockView.getBoard(), e = new Entry.Block(d, e), g = f.workspace, h;
+      g && (h = g.getMode());
+      e.createView(f, h);
+      return e;
+    }
+    if (!this.dummyBlock.next) {
+      switch(this.acceptType) {
+        case "basic_boolean_field":
+          this._valueBlock = a(this, {type:"True"});
+          break;
+        case "basic_string_field":
+          this._valueBlock = a(this, {type:"text"});
+      }
+      this.dummyBlock.insertAfter([this._valueBlock]);
+    }
+  };
+})(Entry.FieldBlock.prototype);
+Entry.FieldDummyBlock = function(a, b) {
+  Entry.Model(this, !1);
+  this.isDummy = !0;
+  this.view = this;
+  this.originBlockView = b;
+  this._thread = a._thread;
+  this.statementField = a;
+  this.svgGroup = a.svgGroup.group();
+  var c = a.acceptType;
+  switch(c) {
+    case "basic_string_field":
+      this.svgGroup.stringMagnet = this;
+      break;
+    case "basic_boolean_field":
+      this.svgGroup.booleanMagnet = this;
+  }
+  c = Entry.skeleton[c].box();
+  this.path = this.svgGroup.rect(c.offsetX, c.offsetY - 10, c.width, c.height);
+  this.path.attr({fill:"transparent"});
+  this.prevObserver = b.observe(this, "_align", ["x", "y"]);
+  this.observe(this, "_updateBG", ["magneting"]);
+  this._align();
+};
+Entry.FieldDummyBlock.PRIMITIVE_TYPES = ["True", "text"];
+Entry.Utils.inherit(Entry.DummyBlock, Entry.FieldDummyBlock);
+Entry.FieldDummyBlock.prototype.constructor = Entry.FieldDummyBlock;
+Entry.FieldDummyBlock.prototype.schema = {x:0, y:0, width:0, height:-1, next:null, animating:!1, magneting:!1};
+Entry.FieldDummyBlock.prototype._updateBG = function() {
+  if (this.magneting) {
+    var a = this.next;
+    a && (a = a.view.svgGroup.selectAll(".blockPath")[0].clone(), a.attr({transform:"t0 0", opacity:1, fill:"white", "fill-opacity":.5, stroke:"white", "stroke-width":2, "stroke-opacity":1}), this.svgGroup.append(a), this._clonedShadow = a);
+  } else {
+    this._clonedShadow && (this._clonedShadow.remove(), delete this._clonedShadow);
+  }
+};
 Entry.FieldText = function(a, b, c) {
-  this._block = b;
+  this._block = b.block;
+  this._index = c;
   this.box = new Entry.BoxModel;
   this._fontSize = a.fontSize || b.getSkeleton().fontSize || 12;
   this._color = a.color || b.getSkeleton().color || "white";
-  this._text = a.text;
-  this._index = c;
+  this._align = a.align || "left";
+  this._text = this.getValue() || a.text;
   this.textElement = null;
-  this.renderStart();
+  this.renderStart(b);
 };
 Entry.Utils.inherit(Entry.Field, Entry.FieldText);
 (function(a) {
-  a.renderStart = function() {
-    this.svgGroup = this._block.contentSvgGroup.group();
+  a.renderStart = function(a) {
+    this.svgGroup = a.contentSvgGroup.group();
     this._text = this._text.replace(/(\r\n|\n|\r)/gm, " ");
     this.textElement = this.svgGroup.text(0, 0, this._text);
     this.textElement.attr({style:"white-space: pre; font-size:" + this._fontSize + "px", "class":"dragNone", fill:this._color});
-    var a = this.textElement.getBBox();
-    this.textElement.attr({y:.25 * a.height});
+    a = this.textElement.getBBox();
+    var c = 0;
+    "center" == this._align && (c = -a.width / 2);
+    this.textElement.attr({x:c, y:.25 * a.height});
     this.box.set({x:0, y:0, width:this.textElement.node.getComputedTextLength(), height:a.height});
   };
 })(Entry.FieldText.prototype);
@@ -14938,41 +14483,34 @@ Entry.GlobalSvg = {};
         return console.error("Snap library is required");
       }
       this.svgDom = Entry.Dom($('<svg id="globalSvg" width="200" height="200"version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'), {parent:$("body")});
-      this.svgDom.css({position:"fixed", width:0, height:0, display:"none", "z-index":"1111"});
+      this.svgDom.css({position:"fixed", width:1, height:1, display:"none", overflow:"visible", "z-index":"1111"});
       this.snap = Snap("#globalSvg");
       this.top = this.left = this.width = 0;
     }
   };
   a.setView = function(a, c) {
-    if (a == this._view) {
-      this.position();
-    } else {
-      var d = a.block;
-      !d.isReadOnly() && d.isMovable() && (this._view = a, this._mode = c, this.draw(), this.resize(), this.align(), this.position());
-    }
+    a == this._view ? this.position() : !a.block.isReadOnly() && a.movable && (this._view = a, this._mode = c, this.draw(), this.resize(), this.align(), this.position());
   };
   a.draw = function() {
     var a = this._view;
     this._svg && this.remove();
     var c = this._mode == Entry.Workspace.MODE_VIMBOARD;
     this.svg = a.svgGroup.clone();
-    c && (c = this.svg, c.selectAll("path").animate({opacity:0}, 500, mina.easeinout), c.selectAll("text").animate({fill:"#000000"}, 530, mina.easeinout));
+    c && (a = this.svg, a.selectAll("path").animate({opacity:0}, 500, mina.easeinout), a.selectAll("text").animate({fill:"#000000"}, 530, mina.easeinout));
     this.snap.append(this.svg);
     this.show();
-    a.set({visible:!1});
   };
   a.remove = function() {
-    this.svg && (this.svg.remove(), delete this.svg, delete this._view, delete this._offsetX, this.hide());
+    this.svg && (this.svg.remove(), delete this.svg, delete this._view, delete this._offsetX, delete this._offsetY, this.hide());
   };
   a.resize = function() {
-    var a = this._view.svgGroup.getBBox();
-    this.svgDom.css({width:a.width + 2, height:a.height});
-    this.width = a.width + 2;
+    this.width = this._view.svgGroup.getBBox() + 3;
   };
   a.align = function() {
-    var a = this._view.getSkeleton().box(this._view).offsetX || 0;
-    this._offsetX = a *= -1;
-    this.svg.attr({transform:"t" + (a + 1) + " 1"});
+    var a = this._view.getSkeleton().box(this._view).offsetX || 0, c = this._view.getSkeleton().box(this._view).offsetY || 0, a = -1 * a + 1, c = -1 * c + 1;
+    this._offsetX = a;
+    this._offsetY = c;
+    this.svg.attr({transform:"t" + a + " " + c});
   };
   a.show = function() {
     this.svgDom.css("display", "block");
@@ -14981,18 +14519,83 @@ Entry.GlobalSvg = {};
     this.svgDom.css("display", "none");
   };
   a.position = function() {
-    var a = this._view, c = a.svgGroup.transform().globalMatrix, a = a.getBoard().svgDom.offset();
-    this.left = c.e + a.left - this._offsetX - 1;
-    this.top = c.f + a.top;
+    var a = this._view, c = a.svgGroup.transform().globalMatrix, a = a.getBoard().offset;
+    this.left = c.e + a.left - this._offsetX;
+    this.top = c.f + a.top - this._offsetY;
     this.svgDom.css({left:this.left, top:this.top});
   };
   a.terminateDrag = function(a) {
-    var c = Entry.mouseCoordinate, d = a.getBoard().workspace.blockMenu;
-    a = d.offset.left;
-    var e = d.offset.top, d = d.svgDom.width();
-    return c.y > e && c.x > a + d ? this.DONE : c.y > e && c.x > a ? this.REMOVE : this.RETURN;
+    var c = Entry.mouseCoordinate;
+    a = a.getBoard().workspace.blockMenu;
+    var d = a.offset.left, e = a.offset.top, f = a.visible ? a.svgDom.width() : 0;
+    return c.y > e && c.x > d + f ? this.DONE : c.y > e && c.x > d && a.visible ? this.REMOVE : this.RETURN;
   };
 })(Entry.GlobalSvg);
+Entry.RenderView = function(a, b) {
+  this._align = b || "CENTER";
+  a = "string" === typeof a ? $("#" + a) : $(a);
+  if ("DIV" !== a.prop("tagName")) {
+    return console.error("Dom is not div element");
+  }
+  if ("function" !== typeof window.Snap) {
+    return console.error("Snap library is required");
+  }
+  this.view = a;
+  this.visible = this.viewOnly = !0;
+  this._snapId = "renderView_" + (new Date).getTime();
+  this._generateView();
+  this.offset = this.svgDom.offset();
+  this.setWidth();
+  if (this.snap = Snap("#" + this._snapId)) {
+    this.svgGroup = this.snap.group(), this.svgThreadGroup = this.svgGroup.group(), this.svgThreadGroup.board = this, this.svgBlockGroup = this.svgGroup.group(), this.svgBlockGroup.board = this;
+  }
+};
+(function(a) {
+  a.schema = {code:null, dragBlock:null, closeBlock:null, selectedBlockView:null};
+  a._generateView = function() {
+    this.renderViewContainer = Entry.Dom("div", {"class":"renderViewContainer", parent:this.view});
+    this.svgDom = Entry.Dom($('<svg id="' + this._snapId + '" class="renderView" version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'), {parent:this.renderViewContainer});
+  };
+  a.changeCode = function(a) {
+    if (!(a instanceof Entry.Code)) {
+      return console.error("You must inject code instance");
+    }
+    this.code = a;
+    this.snap || (this.snap = Snap("#" + this._snapId), this.svgGroup = this.snap.group(), this.svgThreadGroup = this.svgGroup.group(), this.svgThreadGroup.board = this, this.svgBlockGroup = this.svgGroup.group(), this.svgBlockGroup.board = this);
+    a.createView(this);
+    this.align();
+  };
+  a.align = function() {
+    var a = this.code.getThreads();
+    if (a && 0 !== a.length) {
+      for (var c = 10, d = "LEFT" == this._align ? 20 : this.svgDom.width() / 2, e = 0, f = a.length;e < f;e++) {
+        var g = a[e].getFirstBlock().view;
+        g._moveTo(d, c, !1);
+        g = g.svgGroup.getBBox().height;
+        c += g + 15;
+      }
+      this.height = this.svgGroup.getBBox().height;
+    }
+  };
+  a.hide = function() {
+    this.view.addClass("entryRemove");
+  };
+  a.show = function() {
+    this.view.removeClass("entryRemove");
+  };
+  a.setWidth = function() {
+    this._svgWidth = this.svgDom.width();
+    this.offset = this.svgDom.offset();
+  };
+  a.bindCodeView = function(a) {
+    this.svgBlockGroup.remove();
+    this.svgThreadGroup.remove();
+    this.svgBlockGroup = a.svgBlockGroup;
+    this.svgThreadGroup = a.svgThreadGroup;
+    this.svgGroup.append(this.svgThreadGroup);
+    this.svgGroup.append(this.svgBlockGroup);
+  };
+})(Entry.RenderView.prototype);
 Entry.Scroller = function(a, b, c) {
   this._horizontal = void 0 === b ? !0 : b;
   this._vertical = void 0 === c ? !0 : c;
@@ -15094,33 +14697,41 @@ Entry.Scroller.RADIUS = 7;
 Entry.skeleton = function() {
 };
 Entry.skeleton.basic = {path:function(a) {
-  a = a.contentWidth;
-  a = Math.max(0, a - 6);
-  return "m -8,0 l 8,8 8,-8 h %w a 15,15 0 0,1 0,30 h -%w l -8,8 -8,-8 v -30 z".replace(/%w/gi, a);
+  var b = a.contentWidth;
+  a = a.contentHeight;
+  a = Math.max(30, a + 2);
+  b = Math.max(0, b + 9 - a / 2);
+  return "m -8,0 l 8,8 8,-8 h %w a %h,%h 0 0,1 0,%wh h -%w l -8,8 -8,-8 v -%wh z".replace(/%wh/gi, a).replace(/%w/gi, b).replace(/%h/gi, a / 2);
 }, box:function(a) {
-  return {offsetX:-8, offsetY:0, width:(a ? a.contentWidth : 150) + 30, height:30, marginBottom:0};
-}, magnets:{previous:{}, next:{x:0, y:31}}, contentPos:function(a) {
-  return {x:14, y:15};
+  return {offsetX:-8, offsetY:0, width:(a ? a.contentWidth : 150) + 30, height:Math.max(30, (a ? a.contentHeight : 28) + 2), marginBottom:0};
+}, magnets:function() {
+  return {previous:{}, next:{x:0, y:31}};
+}, contentPos:function(a) {
+  return {x:14, y:Math.max(a.contentHeight, 28) / 2 + 1};
 }};
 Entry.skeleton.basic_event = {path:function(a) {
   a = a.contentWidth;
   a = Math.max(0, a);
   return "m -8,0 m 0,-5 a 19.5,19.5 0, 0,1 16,0 c 10,5 15,5 20,5 h %w a 15,15 0 0,1 0,30 H 8 l -8,8 -8,-8 l 0,0.5 a 19.5,19.5 0, 0,1 0,-35 z".replace(/%w/gi, a - 30);
 }, box:function(a) {
-  return {offsetX:0, offsetY:0, width:a.contentWidth + 30, height:30, marginBottom:0};
-}, magnets:{previous:{}, next:{x:0, y:31}}, contentPos:function(a) {
+  return {offsetX:-19, offsetY:-7, width:a.contentWidth + 30, height:30, marginBottom:0};
+}, magnets:function() {
+  return {next:{x:0, y:31}};
+}, contentPos:function(a) {
   return {x:1, y:15};
 }};
 Entry.skeleton.basic_loop = {path:function(a) {
-  var b = Math.max(0, a.contentWidth - 6);
-  a = Math.max(a.contentHeight, 25);
-  return "m -8,0 l 8,8 8,-8 h %cw a 15,15 0 0,1 0,30 H 24 l -8,8 -8,-8 h -0.4 v %ch h 0.4 l 8,8 8,-8 h %crw a 8,8 0 0,1 0,16 H 8 l -8,8 -8,-8 z".replace(/%cw/gi, b).replace(/%crw/gi, b - 8).replace(/%ch/gi, a);
+  var b = a.contentWidth, c = a.contentHeight, c = Math.max(30, c + 2), b = Math.max(0, b + 9 - c / 2);
+  a = a._statements[0] ? a._statements[0].box.height : 30;
+  return "m -8,0 l 8,8 8,-8 h %w a %h,%h 0 0,1 0,%wh H 24 l -8,8 -8,-8 h -0.4 v %sh h 0.4 l 8,8 8,-8 h %w h -8 a 8,8 0 0,1 0,16 H 8 l -8,8 -8,-8 z".replace(/%wh/gi, c).replace(/%w/gi, b).replace(/%h/gi, c / 2).replace(/%sh/gi, a + 1);
 }, magnets:function() {
   return {previous:{x:0, y:0}, next:{x:0, y:105}};
 }, box:function(a) {
-  return {offsetX:-8, offsetY:0, width:a.contentWidth + 30, height:Math.max(a.contentHeight, 25) + 46, marginBottom:0};
-}, contentPos:function() {
-  return {x:14, y:15};
+  return {offsetX:-8, offsetY:0, width:a.contentWidth + 30, height:Math.max(a.contentHeight + 2, 30) + (a._statements[0] ? a._statements[0].box.height : 30) + 17, marginBottom:0};
+}, statementPos:function(a) {
+  return [{x:16, y:Math.max(30, a.contentHeight + 2)}];
+}, contentPos:function(a) {
+  return {x:14, y:Math.max(a.contentHeight, 28) / 2 + 1};
 }};
 Entry.skeleton.basic_define = {path:function(a) {
   var b = Math.max(a.contentHeight, 25);
@@ -15142,12 +14753,14 @@ Entry.skeleton.pebble_event = {path:function(a) {
   return {x:0, y:25};
 }};
 Entry.skeleton.pebble_loop = {fontSize:16, dropdownHeight:23, path:function(a) {
-  a = Math.max(a.contentHeight, 50);
+  a = Math.max(a._statements[0] ? a._statements[0].box.height : 50, 50);
   return "M 0,9 a 9,9 0 0,0 9,-9 h %cw q 25,0 25,25 v %ch q 0,25 -25,25 h -%cw a 9,9 0 0,1 -18,0 h -%cw q -25,0 -25,-25 v -%ch q 0,-25 25,-25 h %cw a 9,9 0 0,0 9,9 M 0,49 a 9,9 0 0,1 -9,-9 h -28 a 25,25 0 0,0 -25,25 v %cih a 25,25 0 0,0 25,25 h 28 a 9,9 0 0,0 18,0 h 28 a 25,25 0 0,0 25,-25 v -%cih a 25,25 0 0,0 -25,-25 h -28 a 9,9 0 0,1 -9,9 z".replace(/%cw/gi, 41).replace(/%ch/gi, a + 4).replace(/%cih/gi, a - 50);
 }, magnets:function() {
   return {previous:{x:0, y:0}, next:{x:0, y:105}};
 }, box:function(a) {
-  return {offsetX:-75, offsetY:0, width:150, height:Math.max(a.contentHeight, 50) + 54, marginBottom:0};
+  return {offsetX:-75, offsetY:0, width:150, height:Math.max(a._statements[0] ? a._statements[0].box.height : 50, 50) + 54, marginBottom:0};
+}, statementPos:function(a) {
+  return [{x:0, y:39}];
 }, contentPos:function() {
   return {x:-46, y:25};
 }};
@@ -15166,25 +14779,36 @@ Entry.skeleton.pebble_basic = {fontSize:16, morph:["prev", "next"], path:functio
 Entry.skeleton.basic_string_field = {path:function(a) {
   var b = a.contentWidth;
   a = a.contentHeight;
-  b = Math.max(0, b - 2);
-  a = Math.max(0, a + 6);
-  return "m 11,0 h %w a 10,10 0 1,1 0,%h H 11 a 10,10 0 1,1 0,-%h z".replace(/%w/gi, b).replace(/%h/gi, a);
-}, box:function(a) {
-  return {offsetX:0, offsetY:0, width:(a ? a.contentWidth : 150) + 10, height:a.contentHeight, marginBottom:0};
-}, magnets:{previous:{}, next:{x:0, y:31}}, contentPos:function(a) {
-  return {x:11, y:11};
+  a = Math.max(18, a + 2);
+  b = Math.max(0, b - a + 4);
+  return "m %h,0 h %w a %h,%h 0 1,1 0,%wh H %h A %h,%h 0 1,1 %h,0 z".replace(/%wh/gi, a).replace(/%w/gi, b).replace(/%h/gi, a / 2);
+}, color:"#000", outerLine:!0, box:function(a) {
+  return {offsetX:0, offsetY:0, width:(a ? a.contentWidth : 5) + 4, height:Math.max((a ? a.contentHeight : 18) + 2, 18), marginBottom:0};
+}, magnets:function() {
+  return {string:{}};
+}, contentPos:function(a) {
+  return {x:2, y:Math.max(a.contentHeight, 16) / 2 + 1};
 }};
 Entry.skeleton.basic_boolean_field = {path:function(a) {
   var b = a.contentWidth;
   a = a.contentHeight;
-  b = Math.max(0, b - 2);
-  a = Math.max(0, a + 6);
-  return "m 11,0 h %w l 10,10 -10,10 H 11 l -10,-10 10,-10 z ".replace(/%w/gi, b).replace(/%h/gi, a);
-}, box:function(a) {
-  return {offsetX:0, offsetY:0, width:(a ? a.contentWidth : 150) + 10, height:a.contentHeight, marginBottom:0};
-}, magnets:{previous:{}, next:{x:0, y:31}}, contentPos:function(a) {
-  return {x:11, y:11};
+  a = Math.max(18, a + 2);
+  b = Math.max(0, b - a + 9);
+  return "m %h,0 h %w l %h,%h -%h,%h H %h l -%h,-%h %h,-%h z ".replace(/%wh/gi, a).replace(/%w/gi, b).replace(/%h/gi, a / 2);
+}, color:"#000", outerLine:!0, box:function(a) {
+  return {offsetX:0, offsetY:0, width:(a ? a.contentWidth : 5) + 8, height:Math.max((a ? a.contentHeight : 18) + 2, 18), marginBottom:0};
+}, magnets:function() {
+  return {bool:{}};
+}, contentPos:function(a) {
+  return {x:4, y:Math.max(a.contentHeight, 16) / 2 + 1};
 }};
+Entry.skeleton.basic_button = {path:function() {
+  return "m -64,0 h 128 a 6,6 0, 0,1 6,6 v 18 a 6,6 0, 0,1 -6,6 h -128 a 6,6 0, 0,1 -6,-6 v -18 a 6,6 0, 0,1 6,-6 z";
+}, box:function() {
+  return {offsetX:-70, offsetY:0, width:140, height:30};
+}, contentPos:function() {
+  return {x:0, y:15};
+}, movable:!1, readOnly:!0};
 Entry.Block = function(a, b) {
   Entry.Model(this, !1);
   this._schema = null;
@@ -15194,7 +14818,7 @@ Entry.Block = function(a, b) {
 Entry.Block.MAGNET_RANGE = 10;
 Entry.Block.MAGNET_OFFSET = .4;
 (function(a) {
-  a.schema = {id:null, name:null, x:0, y:0, type:null, params:[], statements:[], prev:null, next:null, view:null, thread:null, movable:!0, deletable:!0, readOnly:!1};
+  a.schema = {id:null, name:null, x:0, y:0, type:null, params:[], statements:[], prev:null, next:null, view:null, thread:null, movable:null, deletable:!0, readOnly:null, events:{}};
   a.load = function(a) {
     a.id || (a.id = Entry.Utils.generateId());
     this.set(a);
@@ -15202,13 +14826,25 @@ Entry.Block.MAGNET_OFFSET = .4;
   };
   a.getSchema = function() {
     this._schema = Entry.block[this.type];
+    var a = this._schema.events;
+    if (a) {
+      for (var c in a) {
+        this.events[c] || (this.events[c] = []);
+        for (var d = a[c], e = 0;e < d.length;e++) {
+          var f = d[e];
+          0 > this.events[c].indexOf(f) && this.events[c].push(f);
+        }
+      }
+    }
     this._schema.event && this.thread.registerEvent(this, this._schema.event);
-    for (var a = this._schema.params, c = 0;c < a.length;c++) {
-      this.params.push(a[c].value);
+    a = this.params;
+    c = this._schema.params;
+    for (e = 0;e < c.length;e++) {
+      d = void 0 !== a[e] ? a[e] : c[e].value, f = a[e], "Block" == c[e].type ? f ? a.splice(e, 1, new Entry.Thread(d, this.getCode())) : a.push(new Entry.Thread(d, this.getCode())) : f ? a.splice(e, 1, d) : a.push(d);
     }
     if (a = this._schema.statements) {
-      for (c = 0;c < a.length;c++) {
-        this.statements.splice(c, 1, new Entry.Thread(this.statements[c], this.getCode()));
+      for (e = 0;e < a.length;e++) {
+        this.statements.splice(e, 1, new Entry.Thread(this.statements[e], this.getCode()));
       }
     }
   };
@@ -15247,8 +14883,9 @@ Entry.Block.MAGNET_OFFSET = .4;
     delete c.view;
     delete c.thread;
     a && delete c.id;
-    c.params = c.params.map(function(a) {
-      return a;
+    c.params = c.params.map(function(c) {
+      c instanceof Entry.Thread && (c = c.toJSON(a));
+      return c;
     });
     c.statements = c.statements.map(function(c) {
       return c.toJSON(a);
@@ -15257,13 +14894,17 @@ Entry.Block.MAGNET_OFFSET = .4;
   };
   a.destroy = function(a) {
     this.view && this.view.destroy(a);
-    (!this.prev || this.prev instanceof Entry.DummyBlock) && this.thread.destroy(a, !1);
-    var c = this.statements;
+    !this.prev || this.prev.isDummy ? this.thread.destroy(a, !1) : this.prev.setNext(this.next);
+    var c = this.params;
     if (c) {
       for (var d = 0;d < c.length;d++) {
-        var e = c[d].getFirstBlock();
-        e instanceof Entry.DummyBlock && (e = e.next);
-        e && e.destroy(a);
+        var e = c[d];
+        e instanceof Entry.Thread && (e = e.getFirstBlock(), e.isDummy && (e = e.next), e && e.destroy(a));
+      }
+    }
+    if (c = this.statements) {
+      for (d = 0;d < c.length;d++) {
+        e = c[d].getFirstBlock(), e.isDummy && (e = e.next), e && e.destroy(a);
       }
     }
     this._schema.event && this.thread.unregisterEvent(this, this._schema.event);
@@ -15338,11 +14979,12 @@ Entry.Block.MAGNET_OFFSET = .4;
     }
   };
   a.copy = function() {
-    for (var a = this.getThread(), c = a.getBlocks().indexOf(this), c = a.toJSON(!0, c), a = [], d = new Entry.Thread([], this.getCode()), e = 0;e < c.length;e++) {
-      a.push(new Entry.Block(c[e], d));
+    for (var a = this.getThread(), c = a.getBlocks().indexOf(this), c = a.toJSON(!0, c), a = [], d = 0;d < c.length;d++) {
+      a.push(c[d]);
     }
     c = this.view.svgGroup.transform().globalMatrix;
-    a[0].set({x:c.e + 20, y:c.f + 20});
+    a[0].x = c.e + 15;
+    a[0].y = c.f + 15;
     return a;
   };
   a.copyToClipboard = function() {
@@ -15376,7 +15018,7 @@ Entry.Thread = function(a, b) {
     }
     for (var d = 0;d < a.length;d++) {
       var e = a[d];
-      e instanceof Entry.Block || e instanceof Entry.DummyBlock ? (e.setThread(this), this._data.push(e)) : this._data.push(new Entry.Block(e, this));
+      e instanceof Entry.Block || e.isDummy ? (e.setThread(this), this._data.push(e)) : this._data.push(new Entry.Block(e, this));
     }
     this._setRelation();
     (d = this._code.view) && this.createView(d.board, c);
@@ -15436,7 +15078,8 @@ Entry.Thread = function(a, b) {
   a.clone = function(a, c) {
     a = a || this._code;
     for (var d = new Entry.Thread([], a), e = this._data, f = [], g = 0, h = e.length;g < h;g++) {
-      f.push(e[g].clone(d));
+      var k = e[g];
+      0 === g && k instanceof Entry.DummyBlock || f.push(e[g].clone(d));
     }
     d.load(f, c);
     return d;
@@ -15480,7 +15123,7 @@ Entry.Thread = function(a, b) {
     this._code = a;
   };
   a.spliceBlock = function(a) {
-    var c = this.getBlocks();
+    var c = this._data;
     c.remove(a);
     0 !== c.length ? (null === a.prev ? a.next.setPrev(null) : null === a.next ? a.prev.setNext(null) : (a.prev.setNext(a.next), a.next.setPrev(a.prev)), this._setRelation()) : this.destroy();
     this.changeEvent.notify();
@@ -15527,7 +15170,8 @@ Entry.FieldTrashcan = function(a) {
   };
   a.updateDragBlock = function() {
     var a = this.board.dragBlock, c = this.dragBlockObserver;
-    a ? a.observe(this, "checkBlock", ["x", "y"]) : (c && c.destroy(), this.isOver && this.dragBlock && (this.dragBlock.block.doDestroy(!0), createjs.Sound.play("entryDelete")), this.tAnimation(!1));
+    c && (c.destroy(), this.dragBlockObserver = null);
+    a ? this.dragBlockObserver = a.observe(this, "checkBlock", ["x", "y"]) : (this.isOver && this.dragBlock && (this.dragBlock.block.doDestroy(!0), createjs.Sound.play("entryDelete")), this.tAnimation(!1));
     this.dragBlock = a;
   };
   a.checkBlock = function() {
@@ -15564,31 +15208,33 @@ Entry.FieldTrashcan = function(a) {
 })(Entry.FieldTrashcan.prototype);
 Entry.Board = function(a) {
   function b(a) {
+    d.offset = d.svgDom.offset();
     var b = $(window);
     a = b.scrollTop();
-    var b = b.scrollLeft(), f = c.offset;
-    c.relativeOffset = {top:f.top - a, left:f.left - b};
-    console.log("update");
+    var b = b.scrollLeft(), c = d.offset;
+    d.relativeOffset = {top:c.top - a, left:c.left - b};
   }
-  a = "string" === typeof a ? $("#" + a) : $(a);
-  if ("DIV" !== a.prop("tagName")) {
+  var c = a.dom, c = "string" === typeof c ? $("#" + c) : $(c);
+  if ("DIV" !== c.prop("tagName")) {
     return console.error("Dom is not div element");
   }
   if ("function" !== typeof window.Snap) {
     return console.error("Snap library is required");
   }
   Entry.Model(this, !1);
-  this.wrapper = Entry.Dom("div", {parent:a, class:"entryBoardWrapper"});
-  this.svgDom = Entry.Dom($('<svg id="play" class="entryBoard" width="100%" height="100%"version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'), {parent:this.wrapper});
+  this.view = c;
+  this._snapId = "play" + (new Date).getTime();
+  this.workspace = a.workspace;
+  this.wrapper = Entry.Dom("div", {parent:c, class:"entryBoardWrapper"});
+  this.svgDom = Entry.Dom($('<svg id="' + this._snapId + '" class="entryBoard" width="100%" height="100%"version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'), {parent:this.wrapper});
   this.offset = this.svgDom.offset();
-  this.offset.top = 130;
   this.offset.left -= $(window).scrollLeft();
   this.relativeOffset = this.offset;
   this.visible = !0;
-  var c = this;
+  var d = this;
   $(window).scroll(b);
   Entry.windowResized.attach(this, b);
-  this.snap = Snap("#play");
+  this.snap = Snap("#" + this._snapId);
   this._blockViews = [];
   this.trashcan = new Entry.FieldTrashcan(this);
   this.svgGroup = this.snap.group();
@@ -15601,7 +15247,7 @@ Entry.Board = function(a) {
   this.changeEvent = new Entry.Event(this);
   this.scroller = new Entry.Scroller(this, !0, !0);
   Entry.Utils.disableContextmenu(this.svgDom);
-  this._addControl(a);
+  this._addControl(c);
   Entry.documentMousedown && Entry.documentMousedown.attach(this, this.setSelectedBlock);
   Entry.keyPressed && Entry.keyPressed.attach(this, this._keyboardControl);
 };
@@ -15633,7 +15279,7 @@ Entry.Board = function(a) {
       this.magnetedBlockView.set({magneting:!1});
     }
     this.set({magnetedBlockView:a});
-    a && (a.set({magneting:!0, animating:!0}), a.dominate(), this.dragBlock.dominate());
+    a && (a.set({magneting:!0}), a.dominate(), this.dragBlock.dominate());
   };
   a.getCode = function() {
     return this.code;
@@ -15692,10 +15338,7 @@ Entry.Board = function(a) {
           }
           var f = this, e = [];
           e.push({text:"\ubd99\uc5ec\ub123\uae30", enable:!!Entry.clipboard, callback:function() {
-            var a = Entry.clipboard, b = a[0];
-            b.doAdd();
-            f.code.createThread(a);
-            b.copyToClipboard();
+            f.code.createThread(Entry.clipboard).getFirstBlock().copyToClipboard();
           }});
           e.push({text:"\ube14\ub85d \uc815\ub9ac\ud558\uae30", callback:function() {
             f.alignThreads();
@@ -15722,11 +15365,11 @@ Entry.Board = function(a) {
     d && 46 == c.keyCode && d.block.doDestroyAlone(!0) && this.set({selectedBlockView:null});
   };
   a.hide = function() {
-    this.wrapper.css("opacity", "0");
+    this.wrapper.addClass("entryRemove");
     this.visible = !1;
   };
   a.show = function() {
-    this.wrapper.css("opacity", "1");
+    this.wrapper.removeClass("entryRemove");
     this.visible = !0;
     this.trashcan.setPosition();
   };
@@ -15752,9 +15395,9 @@ Entry.Vim = function(a) {
   if ("DIV" !== a.prop("tagName")) {
     return console.error("Dom is not div element");
   }
-  this.createDom(a);
   this._parser = new Entry.Parser("maze", "js", this.codeMirror);
   this._blockParser = new Entry.Parser("maze", "block");
+  this.createDom(a);
   Entry.Model(this, !1);
   window.eventset = [];
 };
@@ -15772,7 +15415,7 @@ Entry.Vim = function(a) {
     }
     var e;
     this.view = Entry.Dom("div", {parent:a, class:"entryVimBoard"});
-    this.codeMirror = CodeMirror(this.view[0], {lineNumbers:!0, value:"", mode:{name:"javascript", globalVars:!0}, theme:"default", indentUnit:4, styleActiveLine:!0, extraKeys:{"Shift-Space":"javascript_complete"}, lint:!0, viewportMargin:10});
+    this.codeMirror = CodeMirror(this.view[0], {lineNumbers:!0, value:"this.move();\nthis.move();\nthis.move();\n", mode:{name:"javascript", globalVars:!0}, theme:"default", indentUnit:4, styleActiveLine:!0, extraKeys:{"Shift-Space":"autocomplete"}, lint:!0, viewportMargin:10});
     e = this;
     a = this.view[0];
     a.removeEventListener("dragEnd", c);
@@ -15787,11 +15430,8 @@ Entry.Vim = function(a) {
     this.view.removeClass("entryRemove");
   };
   a.textToCode = function() {
-    var a = this.codeMirror.getValue(), a = this._parser.parse(a);
-    if (0 === a.length) {
-      throw "\ube14\ub85d \ud30c\uc2f1 \uc624\ub958";
-    }
-    return a;
+    var a = this.codeMirror.getValue();
+    return [this._parser.parse(a)];
   };
   a.codeToText = function(a) {
     a = this._blockParser.parse(a);
@@ -15802,24 +15442,38 @@ Entry.Vim = function(a) {
   };
 })(Entry.Vim.prototype);
 Entry.Workspace = function(a) {
-  var b = a.blockMenu;
-  b && (this.blockMenu = new Entry.BlockMenu(b.domId, b.align), this.blockMenu.workspace = this);
-  if (b = a.board) {
-    this.board = new Entry.Board(b.domId), this.board.workspace = this;
+  Entry.Model(this, !1);
+  var b = this, c = a.blockMenu;
+  c && (this.blockMenu = new Entry.BlockMenu(c.dom, c.align, c.categoryData), this.blockMenu.workspace = this, this.blockMenu.observe(this, "_setSelectedBlockView", ["selectedBlockView"], !1));
+  if (c = a.board) {
+    c.workspace = this, this.board = new Entry.Board(c), this.board.observe(this, "_setSelectedBlockView", ["selectedBlockView"], !1);
   }
-  if (b = a.vimBoard) {
-    this.vimBoard = new Entry.Vim(b.domId), this.vimBoard.workspace = this;
+  if (c = a.vimBoard) {
+    this.vimBoard = new Entry.Vim(c.dom), this.vimBoard.workspace = this;
   }
   this.board && this.vimBoard && this.vimBoard.hide();
   Entry.GlobalSvg.createDom();
   this.mode = Entry.Workspace.MODE_BOARD;
   this.selectedBoard = this.board;
+  $(document).on("keydown", function(a) {
+    var c = a.keyCode || a.which, f = a.ctrlKey;
+    if (!Entry.Utils.isInInput(a)) {
+      var g = b.selectedBlockView;
+      g && !g.isInBlockMenu && g.block.isDeletable() && (8 == c || 46 == c ? (g.block.doDestroyAlone(!0), a.preventDefault()) : f && (67 == c ? g.block.copyToClipboard() : 88 == c && (a = g.block, a.copyToClipboard(), a.destroy(!0))));
+      f && 86 == c && (c = b.selectedBoard) && c instanceof Entry.Board && Entry.clipboard && c.code.createThread(Entry.clipboard).getFirstBlock().copyToClipboard();
+    }
+  });
 };
 Entry.Workspace.MODE_BOARD = 0;
 Entry.Workspace.MODE_VIMBOARD = 1;
+Entry.Workspace.MODE_OVERLAYBOARD = 2;
 (function(a) {
+  a.schema = {selectedBlockView:null};
   a.getBoard = function() {
     return this.board;
+  };
+  a.getSelectedBoard = function() {
+    return this.selectedBoard;
   };
   a.getBlockMenu = function() {
     return this.blockMenu;
@@ -15830,20 +15484,32 @@ Entry.Workspace.MODE_VIMBOARD = 1;
   a.getMode = function() {
     return this.mode;
   };
-  a.setMode = function(a, c) {
+  a.setMode = function(a) {
     a = Number(a);
-    if (this.mode != a) {
-      if (a == Entry.Workspace.MODE_VIMBOARD) {
-        this.board && this.board.hide(), this.selectedBoard = this.vimBoard, this.vimBoard.show(), this.vimBoard.codeToText(this.board.code), this.blockMenu.renderText(), this.board.clear();
-      } else {
-        try {
-          this.textToCode(), this.vimBoard && this.vimBoard.hide(), this.selectedBoard = this.board, this.board.show(), this.blockMenu.renderBlock();
-        } catch (d) {
-          a = this.mode, "function" === typeof c && c(a), console.log("textToCode error : " + d);
-        }
-      }
-      this.mode = a;
+    switch(a) {
+      case this.mode:
+        return;
+      case Entry.Workspace.MODE_VIMBOARD:
+        this.board && this.board.hide();
+        this.overlayBoard && this.overlayBoard.hide();
+        this.selectedBoard = this.vimBoard;
+        this.vimBoard.show();
+        this.vimBoard.codeToText(this.board.code);
+        this.blockMenu.renderText();
+        this.board.clear();
+        break;
+      case Entry.Workspace.MODE_BOARD:
+        this.vimBoard && this.vimBoard.hide();
+        this.overlayBoard && this.overlayBoard.hide();
+        this.selectedBoard = this.board;
+        this.board.show();
+        this.textToCode();
+        this.blockMenu.renderBlock();
+        break;
+      case Entry.Workspace.MODE_OVERLAYBOARD:
+        this.overlayBoard || this.initOverlayBoard(), this.overlayBoard.show();
     }
+    this.mode = a;
   };
   a.changeBoardCode = function(a) {
     this.selectedBoard.changeCode(a);
@@ -15864,7 +15530,868 @@ Entry.Workspace.MODE_VIMBOARD = 1;
   a.getCodeToText = function(a) {
     return this.vimBoard.getCodeToText(a);
   };
+  a._setSelectedBlockView = function() {
+    this.set({selectedBlockView:this.board.selectedBlockView || this.blockMenu.selectedBlockView});
+  };
+  a.initOverlayBoard = function() {
+    this.overlayBoard = new Entry.Board({dom:this.board.view, workspace:this});
+    this.overlayBoard.changeCode(new Entry.Code([]));
+    this.overlayBoard.workspace = this;
+  };
 })(Entry.Workspace.prototype);
+Entry.Playground = function() {
+  this.menuBlocks_ = {};
+  this.enableArduino = this.isTextBGMode_ = !1;
+  this.viewMode_ = "default";
+  Entry.addEventListener("textEdited", this.injectText);
+  Entry.addEventListener("entryBlocklyChanged", this.editBlock);
+  Entry.addEventListener("entryBlocklyMouseUp", this.mouseupBlock);
+  Entry.addEventListener("hwChanged", this.updateHW);
+};
+Entry.Playground.prototype.generateView = function(a, b) {
+  this.view_ = a;
+  this.view_.addClass("entryPlayground");
+  if (b && "workspace" != b) {
+    "phone" == b && (this.view_.addClass("entryPlaygroundPhone"), c = Entry.createElement("div", "entryCategoryTab"), c.addClass("entryPlaygroundTabPhone"), Entry.view_.insertBefore(c, this.view_), this.generateTabView(c), this.tabView_ = c, c = Entry.createElement("div", "entryCurtain"), c.addClass("entryPlaygroundCurtainPhone"), c.addClass("entryRemove"), c.innerHTML = Lang.Workspace.cannot_edit_click_to_stop, c.bindOnClick(function() {
+      Entry.engine.toggleStop();
+    }), this.view_.appendChild(c), this.curtainView_ = c, Entry.pictureEditable && (c = Entry.createElement("div", "entryPicture"), c.addClass("entryPlaygroundPicturePhone"), c.addClass("entryRemove"), this.view_.appendChild(c), this.generatePictureView(c), this.pictureView_ = c), c = Entry.createElement("div", "entryText"), c.addClass("entryRemove"), this.view_.appendChild(c), this.generateTextView(c), this.textView_ = c, Entry.soundEditable && (c = Entry.createElement("div", "entrySound"), c.addClass("entryPlaygroundSoundWorkspacePhone"), 
+    c.addClass("entryRemove"), this.view_.appendChild(c), this.generateSoundView(c), this.soundView_ = c), c = Entry.createElement("div", "entryDefault"), this.view_.appendChild(c), this.generateDefaultView(c), this.defaultView_ = c, c = Entry.createElement("div", "entryCode"), c.addClass("entryPlaygroundCodePhone"), this.view_.appendChild(c), this.generateCodeView(c), this.codeView_ = this.codeView_ = c, Entry.addEventListener("run", function(a) {
+      Entry.playground.curtainView_.removeClass("entryRemove");
+    }), Entry.addEventListener("stop", function(a) {
+      Entry.playground.curtainView_.addClass("entryRemove");
+    }));
+  } else {
+    this.view_.addClass("entryPlaygroundWorkspace");
+    var c = Entry.createElement("div", "entryCategoryTab");
+    c.addClass("entryPlaygroundTabWorkspace");
+    this.view_.appendChild(c);
+    this.generateTabView(c);
+    this.tabView_ = c;
+    c = Entry.createElement("div", "entryCurtain");
+    c.addClass("entryPlaygroundCurtainWorkspace");
+    c.addClass("entryRemove");
+    var d = Lang.Workspace.cannot_edit_click_to_stop.split(".");
+    c.innerHTML = d[0] + ".<br/>" + d[1];
+    c.addEventListener("click", function() {
+      Entry.engine.toggleStop();
+    });
+    this.view_.appendChild(c);
+    this.curtainView_ = c;
+    Entry.pictureEditable && (c = Entry.createElement("div", "entryPicture"), c.addClass("entryPlaygroundPictureWorkspace"), c.addClass("entryRemove"), this.view_.appendChild(c), this.generatePictureView(c), this.pictureView_ = c);
+    c = Entry.createElement("div", "entryText");
+    c.addClass("entryPlaygroundTextWorkspace");
+    c.addClass("entryRemove");
+    this.view_.appendChild(c);
+    this.generateTextView(c);
+    this.textView_ = c;
+    Entry.soundEditable && (c = Entry.createElement("div", "entrySound"), c.addClass("entryPlaygroundSoundWorkspace"), c.addClass("entryRemove"), this.view_.appendChild(c), this.generateSoundView(c), this.soundView_ = c);
+    c = Entry.createElement("div", "entryDefault");
+    c.addClass("entryPlaygroundDefaultWorkspace");
+    this.view_.appendChild(c);
+    this.generateDefaultView(c);
+    this.defaultView_ = c;
+    c = Entry.createElement("div", "entryCode");
+    c.addClass("entryPlaygroundCodeWorkspace");
+    c.addClass("entryRemove");
+    this.view_.appendChild(c);
+    this.generateCodeView(c);
+    this.codeView_ = c;
+    d = Entry.createElement("div");
+    d.addClass("entryPlaygroundResizeWorkspace", "entryRemove");
+    this.resizeHandle_ = d;
+    this.view_.appendChild(d);
+    this.initializeResizeHandle(d);
+    this.codeView_ = c;
+    Entry.addEventListener("run", function(a) {
+      Entry.playground.curtainView_.removeClass("entryRemove");
+    });
+    Entry.addEventListener("stop", function(a) {
+      Entry.playground.curtainView_.addClass("entryRemove");
+    });
+  }
+};
+Entry.Playground.prototype.generateDefaultView = function(a) {
+  return a;
+};
+Entry.Playground.prototype.generateTabView = function(a) {
+  var b = Entry.createElement("ul");
+  b.addClass("entryTabListWorkspace");
+  this.tabList_ = b;
+  a.appendChild(b);
+  this.tabViewElements = {};
+  a = Entry.createElement("li", "entryCodeTab");
+  a.innerHTML = Lang.Workspace.tab_code;
+  a.addClass("entryTabListItemWorkspace");
+  a.addClass("entryTabSelected");
+  b.appendChild(a);
+  a.bindOnClick(function(a) {
+    Entry.playground.changeViewMode("code");
+  });
+  this.tabViewElements.code = a;
+  Entry.pictureEditable && (a = Entry.createElement("li", "entryPictureTab"), a.innerHTML = Lang.Workspace.tab_picture, a.addClass("entryTabListItemWorkspace"), b.appendChild(a), a.bindOnClick(function(a) {
+    Entry.playground.changeViewMode("picture");
+  }), this.tabViewElements.picture = a, a = Entry.createElement("li", "entryTextboxTab"), a.innerHTML = Lang.Workspace.tab_text, a.addClass("entryTabListItemWorkspace"), b.appendChild(a), a.bindOnClick(function(a) {
+    Entry.playground.changeViewMode("text");
+  }), this.tabViewElements.text = a, a.addClass("entryRemove"));
+  Entry.soundEditable && (a = Entry.createElement("li", "entrySoundTab"), a.innerHTML = Lang.Workspace.tab_sound, a.addClass("entryTabListItemWorkspace"), b.appendChild(a), a.bindOnClick(function(a) {
+    Entry.playground.changeViewMode("sound");
+  }), this.tabViewElements.sound = a);
+  Entry.hasVariableManager && (a = Entry.createElement("li", "entryVariableTab"), a.innerHTML = Lang.Workspace.tab_attribute, a.addClass("entryTabListItemWorkspace"), a.addClass("entryVariableTabWorkspace"), b.appendChild(a), a.bindOnClick(function(a) {
+    Entry.playground.toggleOnVariableView();
+    Entry.playground.changeViewMode("variable");
+  }), this.tabViewElements.variable = a);
+};
+Entry.Playground.prototype.generateCodeView = function(a) {
+  var b = this.createVariableView();
+  a.appendChild(b);
+  this.variableView_ = b;
+  a = Entry.Dom(a);
+  b = Entry.Dom("div", {parent:a, id:"entryWorkspaceBoard", class:"entryWorkspaceBoard"});
+  a = Entry.Dom("div", {parent:a, id:"entryWorkspaceBlockMenu", class:"entryWorkspaceBlockMenu"});
+  this.blockDriver = new Entry.BlockDriver;
+  this.blockDriver.convert();
+  Entry.block.when_run_button_click.event = "start";
+  this.mainWorkspace = new Entry.Workspace({blockMenu:{dom:a, align:"LEFT", categoryData:EntryStatic.getAllBlocks()}, board:{dom:b}});
+  this.blockMenu = this.mainWorkspace.blockMenu;
+  this.board = this.mainWorkspace.board;
+};
+Entry.Playground.prototype.generatePictureView = function(a) {
+  if ("workspace" == Entry.type) {
+    var b = Entry.createElement("div", "entryAddPicture");
+    b.addClass("entryPlaygroundAddPicture");
+    b.bindOnClick(function(a) {
+      Entry.dispatchEvent("openPictureManager");
+    });
+    var c = Entry.createElement("div", "entryAddPictureInner");
+    c.addClass("entryPlaygroundAddPictureInner");
+    c.innerHTML = Lang.Workspace.picture_add;
+    b.appendChild(c);
+    a.appendChild(b);
+    b = Entry.createElement("ul", "entryPictureList");
+    b.addClass("entryPlaygroundPictureList");
+    $ && $(b).sortable({start:function(a, b) {
+      b.item.data("start_pos", b.item.index());
+    }, stop:function(a, b) {
+      var c = b.item.data("start_pos"), g = b.item.index();
+      Entry.playground.movePicture(c, g);
+    }, axis:"y"});
+    a.appendChild(b);
+    this.pictureListView_ = b;
+    b = Entry.createElement("div", "entryPainter");
+    b.addClass("entryPlaygroundPainter");
+    a.appendChild(b);
+    this.painter = new Entry.Painter;
+    this.painter.initialize(b);
+  } else {
+    "phone" == Entry.type && (b = Entry.createElement("div", "entryAddPicture"), b.addClass("entryPlaygroundAddPicturePhone"), b.bindOnClick(function(a) {
+      Entry.dispatchEvent("openPictureManager");
+    }), c = Entry.createElement("div", "entryAddPictureInner"), c.addClass("entryPlaygroundAddPictureInnerPhone"), c.innerHTML = Lang.Workspace.picture_add, b.appendChild(c), a.appendChild(b), b = Entry.createElement("ul", "entryPictureList"), b.addClass("entryPlaygroundPictureListPhone"), $ && $(b).sortable({start:function(a, b) {
+      b.item.data("start_pos", b.item.index());
+    }, stop:function(a, b) {
+      var c = b.item.data("start_pos"), g = b.item.index();
+      Entry.playground.movePicture(c, g);
+    }, axis:"y"}), a.appendChild(b), this.pictureListView_ = b);
+  }
+};
+Entry.Playground.prototype.generateTextView = function(a) {
+  var b = Entry.createElement("div");
+  a.appendChild(b);
+  a = Entry.createElement("div");
+  a.addClass("textProperties");
+  b.appendChild(a);
+  var c = Entry.createElement("div");
+  c.addClass("entryTextFontSelect");
+  a.appendChild(c);
+  var d = Entry.createElement("select", "entryPainterAttrFontName");
+  d.addClass("entryPlaygroundPainterAttrFontName", "entryTextFontSelecter");
+  d.size = "1";
+  d.onchange = function(a) {
+    Entry.playground.object.entity.setFontType(a.target.value);
+  };
+  for (var e = 0;e < Entry.fonts.length;e++) {
+    var f = Entry.fonts[e], g = Entry.createElement("option");
+    g.value = f.family;
+    g.innerHTML = f.name;
+    d.appendChild(g);
+  }
+  this.fontName_ = d;
+  c.appendChild(d);
+  e = Entry.createElement("ul");
+  e.addClass("entryPlayground_text_buttons");
+  a.appendChild(e);
+  c = Entry.createElement("li");
+  c.addClass("entryPlaygroundTextAlignLeft");
+  c.bindOnClick(function(a) {
+    Entry.playground.setFontAlign(Entry.TEXT_ALIGN_LEFT);
+  });
+  e.appendChild(c);
+  this.alignLeftBtn = c;
+  c = Entry.createElement("li");
+  c.addClass("entryPlaygroundTextAlignCenter");
+  c.bindOnClick(function(a) {
+    Entry.playground.setFontAlign(Entry.TEXT_ALIGN_CENTER);
+  });
+  e.appendChild(c);
+  this.alignCenterBtn = c;
+  c = Entry.createElement("li");
+  c.addClass("entryPlaygroundTextAlignRight");
+  c.bindOnClick(function(a) {
+    Entry.playground.setFontAlign(Entry.TEXT_ALIGN_RIGHT);
+  });
+  e.appendChild(c);
+  this.alignRightBtn = c;
+  c = Entry.createElement("li");
+  e.appendChild(c);
+  d = Entry.createElement("a");
+  c.appendChild(d);
+  d.bindOnClick(function() {
+    Entry.playground.object.entity.toggleFontBold() ? h.src = Entry.mediaFilePath + "text_button_bold_true.png" : h.src = Entry.mediaFilePath + "text_button_bold_false.png";
+  });
+  var h = Entry.createElement("img", "entryPlaygroundText_boldImage");
+  d.appendChild(h);
+  h.src = Entry.mediaFilePath + "text_button_bold_false.png";
+  c = Entry.createElement("li");
+  e.appendChild(c);
+  d = Entry.createElement("a");
+  c.appendChild(d);
+  d.bindOnClick(function() {
+    var a = !Entry.playground.object.entity.getUnderLine() || !1;
+    k.src = Entry.mediaFilePath + "text_button_underline_" + a + ".png";
+    Entry.playground.object.entity.setUnderLine(a);
+  });
+  var k = Entry.createElement("img", "entryPlaygroundText_underlineImage");
+  d.appendChild(k);
+  k.src = Entry.mediaFilePath + "text_button_underline_false.png";
+  c = Entry.createElement("li");
+  e.appendChild(c);
+  d = Entry.createElement("a");
+  c.appendChild(d);
+  d.bindOnClick(function() {
+    Entry.playground.object.entity.toggleFontItalic() ? l.src = Entry.mediaFilePath + "text_button_italic_true.png" : l.src = Entry.mediaFilePath + "/text_button_italic_false.png";
+  });
+  var l = Entry.createElement("img", "entryPlaygroundText_italicImage");
+  d.appendChild(l);
+  l.src = Entry.mediaFilePath + "text_button_italic_false.png";
+  c = Entry.createElement("li");
+  e.appendChild(c);
+  d = Entry.createElement("a");
+  c.appendChild(d);
+  d.bindOnClick(function() {
+    var a = !Entry.playground.object.entity.getStrike() || !1;
+    Entry.playground.object.entity.setStrike(a);
+    n.src = Entry.mediaFilePath + "text_button_strike_" + a + ".png";
+  });
+  var n = Entry.createElement("img", "entryPlaygroundText_strikeImage");
+  d.appendChild(n);
+  n.src = Entry.mediaFilePath + "text_button_strike_false.png";
+  d = Entry.createElement("li");
+  e.appendChild(d);
+  c = Entry.createElement("a");
+  d.appendChild(c);
+  c.bindOnClick(function() {
+    Entry.playground.toggleColourChooser("foreground");
+  });
+  d = Entry.createElement("img");
+  c.appendChild(d);
+  d.src = Entry.mediaFilePath + "text_button_color_false.png";
+  c = Entry.createElement("li");
+  e.appendChild(c);
+  e = Entry.createElement("a");
+  c.appendChild(e);
+  e.bindOnClick(function() {
+    Entry.playground.toggleColourChooser("background");
+  });
+  c = Entry.createElement("img");
+  e.appendChild(c);
+  c.src = Entry.mediaFilePath + "text_button_background_false.png";
+  e = Entry.createElement("div");
+  e.addClass("entryPlayground_fgColorDiv");
+  c = Entry.createElement("div");
+  c.addClass("entryPlayground_bgColorDiv");
+  a.appendChild(e);
+  a.appendChild(c);
+  d = Entry.createElement("div");
+  d.addClass("entryPlaygroundTextColoursWrapper");
+  this.coloursWrapper = d;
+  b.appendChild(d);
+  a = Entry.getColourCodes();
+  for (e = 0;e < a.length;e++) {
+    c = Entry.createElement("div"), c.addClass("modal_colour"), c.setAttribute("colour", a[e]), c.style.backgroundColor = a[e], 0 === e && c.addClass("modalColourTrans"), c.bindOnClick(function(a) {
+      Entry.playground.setTextColour(a.target.getAttribute("colour"));
+    }), d.appendChild(c);
+  }
+  d.style.display = "none";
+  d = Entry.createElement("div");
+  d.addClass("entryPlaygroundTextBackgroundsWrapper");
+  this.backgroundsWrapper = d;
+  b.appendChild(d);
+  for (e = 0;e < a.length;e++) {
+    c = Entry.createElement("div"), c.addClass("modal_colour"), c.setAttribute("colour", a[e]), c.style.backgroundColor = a[e], 0 === e && c.addClass("modalColourTrans"), c.bindOnClick(function(a) {
+      Entry.playground.setBackgroundColour(a.target.getAttribute("colour"));
+    }), d.appendChild(c);
+  }
+  d.style.display = "none";
+  a = Entry.createElement("input");
+  a.addClass("entryPlayground_textBox");
+  a.onkeyup = function() {
+    Entry.playground.object.setText(this.value);
+    Entry.playground.object.entity.setText(this.value);
+  };
+  a.onblur = function() {
+    Entry.dispatchEvent("textEdited");
+  };
+  this.textEditInput = a;
+  b.appendChild(a);
+  a = Entry.createElement("textarea");
+  a.addClass("entryPlayground_textArea");
+  a.style.display = "none";
+  a.onkeyup = function() {
+    Entry.playground.object.setText(this.value);
+    Entry.playground.object.entity.setText(this.value);
+  };
+  a.onblur = function() {
+    Entry.dispatchEvent("textEdited");
+  };
+  this.textEditArea = a;
+  b.appendChild(a);
+  a = Entry.createElement("div");
+  a.addClass("entryPlaygroundFontSizeWrapper");
+  b.appendChild(a);
+  this.fontSizeWrapper = a;
+  var m = Entry.createElement("div");
+  m.addClass("entryPlaygroundFontSizeSlider");
+  a.appendChild(m);
+  var q = Entry.createElement("div");
+  q.addClass("entryPlaygroundFontSizeIndicator");
+  m.appendChild(q);
+  this.fontSizeIndiciator = q;
+  var r = Entry.createElement("div");
+  r.addClass("entryPlaygroundFontSizeKnob");
+  m.appendChild(r);
+  this.fontSizeKnob = r;
+  e = Entry.createElement("div");
+  e.addClass("entryPlaygroundFontSizeLabel");
+  e.innerHTML = "\uae00\uc790 \ud06c\uae30";
+  a.appendChild(e);
+  var t = !1, u = 0;
+  r.onmousedown = function(a) {
+    t = !0;
+    u = $(m).offset().left;
+  };
+  document.addEventListener("mousemove", function(a) {
+    t && (a = a.pageX - u, a = Math.max(a, 5), a = Math.min(a, 88), r.style.left = a + "px", a /= .88, q.style.width = a + "%", Entry.playground.object.entity.setFontSize(a));
+  });
+  document.addEventListener("mouseup", function(a) {
+    t = !1;
+  });
+  a = Entry.createElement("div");
+  a.addClass("entryPlaygroundLinebreakWrapper");
+  b.appendChild(a);
+  b = Entry.createElement("hr");
+  b.addClass("entryPlaygroundLinebreakHorizontal");
+  a.appendChild(b);
+  b = Entry.createElement("div");
+  b.addClass("entryPlaygroundLinebreakButtons");
+  a.appendChild(b);
+  e = Entry.createElement("img");
+  e.bindOnClick(function() {
+    Entry.playground.toggleLineBreak(!1);
+  });
+  e.src = Entry.mediaFilePath + "text-linebreak-off-true.png";
+  b.appendChild(e);
+  this.linebreakOffImage = e;
+  e = Entry.createElement("img");
+  e.bindOnClick(function() {
+    Entry.playground.toggleLineBreak(!0);
+  });
+  e.src = Entry.mediaFilePath + "text-linebreak-on-false.png";
+  b.appendChild(e);
+  this.linebreakOnImage = e;
+  b = Entry.createElement("div");
+  b.addClass("entryPlaygroundLinebreakDescription");
+  a.appendChild(b);
+  a = Entry.createElement("p");
+  a.innerHTML = "\uae00\uc0c1\uc790\uc758 \ud06c\uae30\uac00 \uae00\uc790\uac00 \uc4f0\uc77c \uc218 \uc788\ub294 \uc601\uc5ed\uc744 \uacb0\uc815\ud569\ub2c8\ub2e4.";
+  b.appendChild(a);
+  a = Entry.createElement("ul");
+  b.appendChild(a);
+  b = Entry.createElement("li");
+  b.innerHTML = "\ub0b4\uc6a9 \uc791\uc131\uc2dc \uc5d4\ud130\ud0a4\ub85c \uc904\ubc14\uafc8\uc744 \ud560 \uc218 \uc788\uc2b5\ub2c8\ub2e4.";
+  a.appendChild(b);
+  b = Entry.createElement("li");
+  b.innerHTML = "\ub0b4\uc6a9\uc744 \uc791\uc131\ud558\uc2dc\uac70\ub098 \uc0c8\ub85c\uc6b4 \uae00\uc790\ub97c \ucd94\uac00\uc2dc \uae38\uc774\uac00 \uae00\uc0c1\uc790\uc758 \uac00\ub85c \uc601\uc5ed\uc744 \ub118\uc5b4\uc11c\uba74 \uc790\ub3d9\uc73c\ub85c \uc904\uc774 \ubc14\ub01d\ub2c8\ub2e4.";
+  a.appendChild(b);
+};
+Entry.Playground.prototype.generateSoundView = function(a) {
+  if ("workspace" == Entry.type) {
+    var b = Entry.createElement("div", "entryAddSound");
+    b.addClass("entryPlaygroundAddSound");
+    b.bindOnClick(function(a) {
+      Entry.dispatchEvent("openSoundManager");
+    });
+    var c = Entry.createElement("div", "entryAddSoundInner");
+    c.addClass("entryPlaygroundAddSoundInner");
+    c.innerHTML = Lang.Workspace.sound_add;
+    b.appendChild(c);
+    a.appendChild(b);
+    b = Entry.createElement("ul", "entrySoundList");
+    b.addClass("entryPlaygroundSoundList");
+    $ && $(b).sortable({start:function(a, b) {
+      b.item.data("start_pos", b.item.index());
+    }, stop:function(a, b) {
+      var c = b.item.data("start_pos"), g = b.item.index();
+      Entry.playground.moveSound(c, g);
+    }, axis:"y"});
+    a.appendChild(b);
+    this.soundListView_ = b;
+  } else {
+    "phone" == Entry.type && (b = Entry.createElement("div", "entryAddSound"), b.addClass("entryPlaygroundAddSoundPhone"), b.bindOnClick(function(a) {
+      Entry.dispatchEvent("openSoundManager");
+    }), c = Entry.createElement("div", "entryAddSoundInner"), c.addClass("entryPlaygroundAddSoundInnerPhone"), c.innerHTML = Lang.Workspace.sound_add, b.appendChild(c), a.appendChild(b), b = Entry.createElement("ul", "entrySoundList"), b.addClass("entryPlaygroundSoundListPhone"), $ && $(b).sortable({start:function(a, b) {
+      b.item.data("start_pos", b.item.index());
+    }, stop:function(a, b) {
+      var c = b.item.data("start_pos"), g = b.item.index();
+      Entry.playground.moveSound(c, g);
+    }, axis:"y"}), a.appendChild(b), this.soundListView_ = b);
+  }
+};
+Entry.Playground.prototype.injectObject = function(a) {
+  if (!a) {
+    this.changeViewMode("default"), this.object = null;
+  } else {
+    if (a !== this.object) {
+      this.object && (this.syncObject(this.object), this.object.toggleInformation(!1));
+      this.object = a;
+      this.setMenu(a.objectType);
+      this.injectCode();
+      "sprite" == a.objectType && Entry.pictureEditable ? (this.tabViewElements.text && this.tabViewElements.text.addClass("entryRemove"), this.tabViewElements.picture && this.tabViewElements.picture.removeClass("entryRemove")) : "textBox" == a.objectType && (this.tabViewElements.picture && this.tabViewElements.picture.addClass("entryRemove"), this.tabViewElements.text && this.tabViewElements.text.removeClass("entryRemove"));
+      var b = this.viewMode_;
+      "default" == b ? this.changeViewMode("code") : "picture" != b && "text" != b || "textBox" != a.objectType ? "text" != b && "picture" != b || "sprite" != a.objectType ? "sound" == b && this.changeViewMode("sound") : this.changeViewMode("picture") : this.changeViewMode("text");
+      this.menuInjected || this.selectMenu(0);
+    }
+  }
+};
+Entry.Playground.prototype.injectCode = function() {
+  this.mainWorkspace.changeBoardCode(this.object.script);
+};
+Entry.Playground.prototype.injectPicture = function() {
+  var a = this.pictureListView_;
+  if (a) {
+    for (;a.hasChildNodes();) {
+      a.removeChild(a.lastChild);
+    }
+    if (this.object) {
+      for (var b = this.object.pictures, c = 0, d = b.length;c < d;c++) {
+        var e = b[c].view;
+        e || console.log(e);
+        e.orderHolder.innerHTML = c + 1;
+        a.appendChild(e);
+      }
+      this.selectPicture(this.object.selectedPicture);
+    }
+  }
+};
+Entry.Playground.prototype.addPicture = function(a, b) {
+  var c = Entry.cloneSimpleObject(a);
+  delete c.id;
+  delete c.view;
+  a = JSON.parse(JSON.stringify(c));
+  a.id = Entry.generateHash();
+  a.name = Entry.getOrderedName(a.name, this.object.pictures);
+  this.generatePictureElement(a);
+  this.object.addPicture(a);
+  this.injectPicture();
+  this.selectPicture(a);
+};
+Entry.Playground.prototype.setPicture = function(a) {
+  var b = document.getElementById(a.id);
+  a.view = b;
+  b.picture = a;
+  b = document.getElementById("t_" + a.id);
+  if (a.fileurl) {
+    b.style.backgroundImage = 'url("' + a.fileurl + '")';
+  } else {
+    var c = a.filename;
+    b.style.backgroundImage = 'url("/uploads/' + c.substring(0, 2) + "/" + c.substring(2, 4) + "/thumb/" + c + '.png")';
+  }
+  document.getElementById("s_" + a.id).innerHTML = a.dimension.width + " X " + a.dimension.height;
+  Entry.playground.object.setPicture(a);
+};
+Entry.Playground.prototype.clonePicture = function(a) {
+  a = Entry.playground.object.getPicture(a);
+  this.addPicture(a, !0);
+};
+Entry.Playground.prototype.selectPicture = function(a) {
+  for (var b = this.object.pictures, c = 0, d = b.length;c < d;c++) {
+    var e = b[c];
+    e === a ? e.view.addClass("entryPictureSelected") : e.view.removeClass("entryPictureSelected");
+  }
+  Entry.playground.object.selectPicture(a.id);
+  Entry.dispatchEvent("pictureSelected", a);
+};
+Entry.Playground.prototype.movePicture = function(a, b) {
+  this.object.pictures.splice(b, 0, this.object.pictures.splice(a, 1)[0]);
+  this.injectPicture();
+  Entry.stage.sortZorder();
+};
+Entry.Playground.prototype.injectText = function() {
+  if (Entry.playground.object) {
+    Entry.playground.textEditInput.value = Entry.playground.object.entity.getText();
+    Entry.playground.textEditArea.value = Entry.playground.object.entity.getText();
+    Entry.playground.fontName_.value = Entry.playground.object.entity.getFontName();
+    if (Entry.playground.object.entity.font) {
+      var a = -1 < Entry.playground.object.entity.font.indexOf("bold") || !1;
+      $("#entryPlaygroundText_boldImage").attr("src", Entry.mediaFilePath + "text_button_bold_" + a + ".png");
+      a = -1 < Entry.playground.object.entity.font.indexOf("italic") || !1;
+      $("#entryPlaygroundText_italicImage").attr("src", Entry.mediaFilePath + "text_button_italic_" + a + ".png");
+    }
+    a = Entry.playground.object.entity.getUnderLine() || !1;
+    $("#entryPlaygroundText_underlineImage").attr("src", Entry.mediaFilePath + "text_button_underline_" + a + ".png");
+    a = Entry.playground.object.entity.getStrike() || !1;
+    $("#entryPlaygroundText_strikeImage").attr("src", Entry.mediaFilePath + "text_button_strike_" + a + ".png");
+    $(".entryPlayground_fgColorDiv").css("backgroundColor", Entry.playground.object.entity.colour);
+    $(".entryPlayground_bgColorDiv").css("backgroundColor", Entry.playground.object.entity.bgColour);
+    Entry.playground.toggleLineBreak(Entry.playground.object.entity.getLineBreak());
+    Entry.playground.setFontAlign(Entry.playground.object.entity.getTextAlign());
+    a = Entry.playground.object.entity.getFontSize();
+    Entry.playground.fontSizeIndiciator.style.width = a + "%";
+    Entry.playground.fontSizeKnob.style.left = .88 * a + "px";
+  }
+};
+Entry.Playground.prototype.injectSound = function() {
+  var a = this.soundListView_;
+  if (a) {
+    for (;a.hasChildNodes();) {
+      a.removeChild(a.lastChild);
+    }
+    if (this.object) {
+      for (var b = this.object.sounds, c = 0, d = b.length;c < d;c++) {
+        var e = b[c].view;
+        e.orderHolder.innerHTML = c + 1;
+        a.appendChild(e);
+      }
+    }
+  }
+};
+Entry.Playground.prototype.moveSound = function(a, b) {
+  this.object.sounds.splice(b, 0, this.object.sounds.splice(a, 1)[0]);
+  this.updateListViewOrder("sound");
+  Entry.stage.sortZorder();
+};
+Entry.Playground.prototype.addSound = function(a, b) {
+  var c = Entry.cloneSimpleObject(a);
+  delete c.view;
+  delete c.id;
+  a = JSON.parse(JSON.stringify(c));
+  a.id = Entry.generateHash();
+  a.name = Entry.getOrderedName(a.name, this.object.sounds);
+  this.generateSoundElement(a);
+  this.object.addSound(a);
+  this.injectSound();
+};
+Entry.Playground.prototype.changeViewMode = function(a) {
+  for (var b in this.tabViewElements) {
+    this.tabViewElements[b].removeClass("entryTabSelected");
+  }
+  "default" != a && this.tabViewElements[a].addClass("entryTabSelected");
+  if ("variable" != a) {
+    var c = this.view_.children;
+    this.viewMode_ = a;
+    for (b = 0;b < c.length;b++) {
+      var d = c[b];
+      -1 < d.id.toUpperCase().indexOf(a.toUpperCase()) ? d.removeClass("entryRemove") : d.addClass("entryRemove");
+    }
+    if ("picture" == a && (!this.pictureView_.object || this.pictureView_.object != this.object)) {
+      this.pictureView_.object = this.object, this.injectPicture();
+    } else {
+      if ("sound" == a && (!this.soundView_.object || this.soundView_.object != this.object)) {
+        this.soundView_.object = this.object, this.injectSound();
+      } else {
+        if ("text" == a && "textBox" == this.object.objectType || this.textView_.object != this.object) {
+          this.textView_.object = this.object, this.injectText();
+        }
+      }
+    }
+    "code" == a && this.resizeHandle_ && this.resizeHandle_.removeClass("entryRemove");
+    Entry.engine.isState("run") && this.curtainView_.removeClass("entryRemove");
+    this.viewMode_ = a;
+    this.toggleOffVariableView();
+  }
+};
+Entry.Playground.prototype.createVariableView = function() {
+  var a = Entry.createElement("div");
+  Entry.type && "workspace" != Entry.type ? "phone" == Entry.type && a.addClass("entryVariablePanelPhone") : a.addClass("entryVariablePanelWorkspace");
+  this.variableViewWrapper_ = a;
+  Entry.variableContainer.createDom(a);
+  return a;
+};
+Entry.Playground.prototype.toggleOnVariableView = function() {
+  Entry.playground.changeViewMode("code");
+  this.categoryView_.addClass("entryRemove");
+  Entry.variableContainer.updateList();
+  this.variableView_.removeClass("entryRemove");
+  this.resizeHandle_.removeClass("entryRemove");
+};
+Entry.Playground.prototype.toggleOffVariableView = function() {
+  this.variableView_.addClass("entryRemove");
+};
+Entry.Playground.prototype.syncObject = function(a) {
+};
+Entry.Playground.prototype.editBlock = function() {
+  var a = Entry.playground;
+  Entry.stateManager && Entry.stateManager.addCommand("edit block", a, a.restoreBlock, a.object, a.object.getScriptText());
+};
+Entry.Playground.prototype.mouseupBlock = function() {
+  if (Entry.reporter) {
+    var a = Entry.playground, b = a.object;
+    Entry.reporter.report(new Entry.State("edit block mouseup", a, a.restoreBlock, b, b.getScriptText()));
+  }
+};
+Entry.Playground.prototype.restoreBlock = function(a, b) {
+  Entry.container.selectObject(a.id);
+  Entry.stateManager && Entry.stateManager.addCommand("restore block", this, this.restoreBlock, this.object, this.object.getScriptText());
+  Blockly.Xml.textToDom(b);
+  this.syncObject();
+};
+Entry.Playground.prototype.syncObjectWithEvent = function(a) {
+  Entry.playground.syncObject();
+};
+Entry.Playground.prototype.setMenu = function(a) {
+  if (this.currentObjectType != a) {
+    for (var b in this.blockJSON) {
+      var c = this.blockJSON[b].category, d = Entry.createElement("li", "entryCategory" + c);
+      ("brush" == c && "textBox" == a || "text" == c && "sprite" == a || !("func" == c || this.blockJSON[b].blocks && this.blockJSON[b].blocks.length)) && d.addClass("entryRemove");
+      d.innerHTML = Lang.Blocks[c.toUpperCase()];
+      d.bindOnClick(function() {
+        Entry.playground.selectMenu(this.id.substring(13));
+      });
+      Entry.type && "workspace" != Entry.type ? "phone" == Entry.type && d.addClass("entryCategoryElementPhone") : d.addClass("entryCategoryElementWorkspace");
+      this.categoryListView_.appendChild(d);
+    }
+    this.selectMenu(0);
+    this.currentObjectType = a;
+  }
+};
+Entry.Playground.prototype.selectMenu = function(a, b) {
+};
+Entry.Playground.prototype.hideTabs = function() {
+  var a = ["picture", "text", "sound", "variable"], b;
+  for (b in a) {
+    this.hideTab([a[b]]);
+  }
+};
+Entry.Playground.prototype.hideTab = function(a) {
+  this.tabViewElements[a] && (this.tabViewElements[a].addClass("hideTab"), this.tabViewElements[a].removeClass("showTab"));
+};
+Entry.Playground.prototype.showTabs = function() {
+  var a = ["picture", "text", "sound", "variable"], b;
+  for (b in a) {
+    this.showTab(a[b]);
+  }
+};
+Entry.Playground.prototype.showTab = function(a) {
+  this.tabViewElements[a] && (this.tabViewElements[a].addClass("showTab"), this.tabViewElements[a].removeClass("hideTab"));
+};
+Entry.Playground.prototype.setBlockMenu = function(a) {
+};
+Entry.Playground.prototype.initializeResizeHandle = function(a) {
+  a.onmousedown = function(a) {
+    Entry.playground.resizing = !0;
+  };
+  document.addEventListener("mousemove", function(a) {
+    Entry.playground.resizing && Entry.resizeElement({menuWidth:a.x - Entry.interfaceState.canvasWidth});
+  });
+  document.addEventListener("mouseup", function(a) {
+    Entry.playground.resizing = !1;
+  });
+};
+Entry.Playground.prototype.reloadPlayground = function() {
+  var a;
+  document.getElementsByClassName("entrySelectedCategory")[0] && (a = document.getElementsByClassName("entrySelectedCategory")[0], a = a.getAttribute("id").substring(13), Entry.playground.selectMenu(a));
+};
+Entry.Playground.prototype.flushPlayground = function() {
+  this.object = null;
+  Entry.playground && Entry.playground.view_ && (this.injectPicture(), this.injectSound());
+};
+Entry.Playground.prototype.updateListViewOrder = function(a) {
+  a = "picture" == a ? this.pictureListView_.childNodes : this.soundListView_.childNodes;
+  for (var b = 0, c = a.length;b < c;b++) {
+    a[b].orderHolder.innerHTML = b + 1;
+  }
+};
+Entry.Playground.prototype.generatePictureElement = function(a) {
+  function b() {
+    if ("" === this.value.trim()) {
+      Entry.deAttachEventListener(this, "blur", b), alert("\uc774\ub984\uc744 \uc785\ub825\ud558\uc5ec \uc8fc\uc138\uc694."), this.focus(), Entry.attachEventListener(this, "blur", b);
+    } else {
+      for (var a = $(".entryPlaygroundPictureName"), c = 0;c < a.length;c++) {
+        if (a.eq(c).val() == f.value && a[c] != this) {
+          Entry.deAttachEventListener(this, "blur", b);
+          alert("\uc774\ub984\uc774 \uc911\ubcf5 \ub418\uc5c8\uc2b5\ub2c8\ub2e4.");
+          this.focus();
+          Entry.attachEventListener(this, "blur", b);
+          return;
+        }
+      }
+      this.picture.name = this.value;
+      Entry.dispatchEvent("pictureNameChanged", this.picture);
+    }
+  }
+  var c = Entry.createElement("li", a.id);
+  a.view = c;
+  c.addClass("entryPlaygroundPictureElement");
+  c.picture = a;
+  c.bindOnClick(function(a) {
+    Entry.playground.selectPicture(this.picture);
+  });
+  Entry.Utils.disableContextmenu(a.view);
+  $(a.view).on("contextmenu", function() {
+    Entry.ContextMenu.show([{text:Lang.Workspace.context_rename, callback:function() {
+      f.focus();
+    }}, {text:Lang.Workspace.context_duplicate, callback:function() {
+      Entry.playground.clonePicture(a.id);
+    }}, {text:Lang.Workspace.context_remove, callback:function() {
+      Entry.playground.object.removePicture(a.id) ? (Entry.removeElement(c), Entry.toast.success(Lang.Workspace.shape_remove_ok, a.name + " " + Lang.Workspace.shape_remove_ok_msg)) : Entry.toast.alert(Lang.Workspace.shape_remove_fail, Lang.Workspace.shape_remove_fail_msg);
+    }}, {divider:!0}, {text:Lang.Workspace.context_download, callback:function() {
+      a.fileurl ? window.open(a.fileurl) : window.open("/api/sprite/download/image/" + encodeURIComponent(a.filename) + "/" + encodeURIComponent(a.name) + ".png");
+    }}], "workspace-contextmenu");
+  });
+  var d = Entry.createElement("div");
+  d.addClass("entryPlaygroundPictureOrder");
+  c.orderHolder = d;
+  c.appendChild(d);
+  d = Entry.createElement("div", "t_" + a.id);
+  d.addClass("entryPlaygroundPictureThumbnail");
+  if (a.fileurl) {
+    d.style.backgroundImage = 'url("' + a.fileurl + '")';
+  } else {
+    var e = a.filename;
+    d.style.backgroundImage = 'url("/uploads/' + e.substring(0, 2) + "/" + e.substring(2, 4) + "/thumb/" + e + '.png")';
+  }
+  c.appendChild(d);
+  var f = Entry.createElement("input");
+  f.addClass("entryPlaygroundPictureName");
+  f.addClass("entryEllipsis");
+  f.picture = a;
+  f.value = a.name;
+  Entry.attachEventListener(f, "blur", b);
+  f.onkeypress = function(a) {
+    13 == a.keyCode && this.blur();
+  };
+  c.appendChild(f);
+  d = Entry.createElement("div", "s_" + a.id);
+  d.addClass("entryPlaygroundPictureSize");
+  d.innerHTML = a.dimension.width + " X " + a.dimension.height;
+  c.appendChild(d);
+};
+Entry.Playground.prototype.generateSoundElement = function(a) {
+  var b = Entry.createElement("sound", a.id);
+  a.view = b;
+  b.addClass("entryPlaygroundSoundElement");
+  b.sound = a;
+  Entry.Utils.disableContextmenu(a.view);
+  $(a.view).on("contextmenu", function() {
+    Entry.ContextMenu.show([{text:Lang.Workspace.context_rename, callback:function() {
+      g.focus();
+    }}, {text:Lang.Workspace.context_duplicate, callback:function() {
+      Entry.playground.addSound(a, !0);
+    }}, {text:Lang.Workspace.context_remove, callback:function() {
+      Entry.playground.object.removeSound(a.id) ? (Entry.removeElement(b), Entry.toast.success(Lang.Workspace.sound_remove_ok, a.name + " " + Lang.Workspace.sound_remove_ok_msg)) : Entry.toast.alert(Lang.Workspace.sound_remove_fail, "");
+      Entry.removeElement(b);
+    }}], "workspace-contextmenu");
+  });
+  var c = Entry.createElement("div");
+  c.addClass("entryPlaygroundSoundOrder");
+  b.orderHolder = c;
+  b.appendChild(c);
+  var d = Entry.createElement("div");
+  d.addClass("entryPlaygroundSoundThumbnail");
+  d.addClass("entryPlaygroundSoundPlay");
+  var e = !1, f;
+  d.addEventListener("click", function() {
+    e ? (e = !1, d.removeClass("entryPlaygroundSoundStop"), d.addClass("entryPlaygroundSoundPlay"), f.stop()) : (e = !0, d.removeClass("entryPlaygroundSoundPlay"), d.addClass("entryPlaygroundSoundStop"), f = createjs.Sound.play(a.id), f.addEventListener("complete", function(a) {
+      d.removeClass("entryPlaygroundSoundStop");
+      d.addClass("entryPlaygroundSoundPlay");
+      e = !1;
+    }), f.addEventListener("loop", function(a) {
+    }), f.addEventListener("failed", function(a) {
+    }));
+  });
+  b.appendChild(d);
+  var g = Entry.createElement("input");
+  g.addClass("entryPlaygroundSoundName");
+  g.sound = a;
+  g.value = a.name;
+  var h = document.getElementsByClassName("entryPlaygroundSoundName");
+  g.onblur = function() {
+    if ("" === this.value) {
+      alert("\uc774\ub984\uc744 \uc785\ub825\ud558\uc5ec \uc8fc\uc138\uc694."), this.focus();
+    } else {
+      for (var a = 0, b = 0;b < h.length;b++) {
+        if (h[b].value == g.value && (a += 1, 1 < a)) {
+          alert("\uc774\ub984\uc774 \uc911\ubcf5 \ub418\uc5c8\uc2b5\ub2c8\ub2e4.");
+          this.focus();
+          return;
+        }
+      }
+      this.sound.name = this.value;
+    }
+  };
+  g.onkeypress = function(a) {
+    13 == a.keyCode && this.blur();
+  };
+  b.appendChild(g);
+  c = Entry.createElement("div");
+  c.addClass("entryPlaygroundSoundLength");
+  c.innerHTML = a.duration + " \ucd08";
+  b.appendChild(c);
+};
+Entry.Playground.prototype.toggleColourChooser = function(a) {
+  "foreground" === a ? "none" === this.coloursWrapper.style.display ? (this.coloursWrapper.style.display = "block", this.backgroundsWrapper.style.display = "none") : this.coloursWrapper.style.display = "none" : "background" === a && ("none" === this.backgroundsWrapper.style.display ? (this.backgroundsWrapper.style.display = "block", this.coloursWrapper.style.display = "none") : this.backgroundsWrapper.style.display = "none");
+};
+Entry.Playground.prototype.setTextColour = function(a) {
+  Entry.playground.object.entity.setColour(a);
+  Entry.playground.toggleColourChooser("foreground");
+  $(".entryPlayground_fgColorDiv").css("backgroundColor", a);
+};
+Entry.Playground.prototype.setBackgroundColour = function(a) {
+  Entry.playground.object.entity.setBGColour(a);
+  Entry.playground.toggleColourChooser("background");
+  $(".entryPlayground_bgColorDiv").css("backgroundColor", a);
+};
+Entry.Playground.prototype.isTextBGMode = function() {
+  return this.isTextBGMode_;
+};
+Entry.Playground.prototype.checkVariables = function() {
+};
+Entry.Playground.prototype.getViewMode = function() {
+  return this.viewMode_;
+};
+Entry.Playground.prototype.updateHW = function() {
+  self.object && self.selectMenu(self.lastSelector, !0);
+};
+Entry.Playground.prototype.toggleLineBreak = function(a) {
+  this.object && "textBox" == this.object.objectType && (a ? (Entry.playground.object.entity.setLineBreak(!0), $(".entryPlayground_textArea").css("display", "block"), $(".entryPlayground_textBox").css("display", "none"), this.linebreakOffImage.src = Entry.mediaFilePath + "text-linebreak-off-false.png", this.linebreakOnImage.src = Entry.mediaFilePath + "text-linebreak-on-true.png", this.fontSizeWrapper.removeClass("entryHide")) : (Entry.playground.object.entity.setLineBreak(!1), $(".entryPlayground_textArea").css("display", 
+  "none"), $(".entryPlayground_textBox").css("display", "block"), this.linebreakOffImage.src = Entry.mediaFilePath + "text-linebreak-off-true.png", this.linebreakOnImage.src = Entry.mediaFilePath + "text-linebreak-on-false.png", this.fontSizeWrapper.addClass("entryHide")));
+};
+Entry.Playground.prototype.setFontAlign = function(a) {
+  if ("textBox" == this.object.objectType) {
+    this.alignLeftBtn.removeClass("toggle");
+    this.alignCenterBtn.removeClass("toggle");
+    this.alignRightBtn.removeClass("toggle");
+    switch(a) {
+      case Entry.TEXT_ALIGN_LEFT:
+        this.alignLeftBtn.addClass("toggle");
+        break;
+      case Entry.TEXT_ALIGN_CENTER:
+        this.alignCenterBtn.addClass("toggle");
+        break;
+      case Entry.TEXT_ALIGN_RIGHT:
+        this.alignRightBtn.addClass("toggle");
+    }
+    this.object.entity.setTextAlign(a);
+  }
+};
 Entry.Xml = {};
 Entry.Xml.isTypeOf = function(a, b) {
   return b.getAttribute("type") == a;

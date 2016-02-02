@@ -58,7 +58,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
             3).attr({
                 fill: "#fff",
                 'fill-opacity': 0.4
-                });
+            });
 
         this.svgGroup.append(this.textElement);
 

@@ -3,6 +3,8 @@
  */
 'use strict';
 
+goog.require("Entry.PropertyPanel");
+
 /**
  * Initialize method with options.
  * @param {!Element} container for entry workspace or others.
@@ -15,7 +17,7 @@ Entry.init = function(container, options) {
         menuWidth: 264
     };
 
-    Entry.Utils.bindGlobalEvent(['mousedown', 'mousemove']);
+    Entry.Utils.bindGlobalEvent(['resize', 'mousedown', 'mousemove']);
 
     /** @type {object} */
     this.options = options;
@@ -100,6 +102,7 @@ Entry.initialize_ = function() {
     /**
      * Initialize stage
      * @type {!Entry.Stage}
+     * @type {!object}
      */
     this.stage = new Entry.Stage();
 
@@ -108,30 +111,41 @@ Entry.initialize_ = function() {
     /**
      * Initialize engine for run.
      * @type {!Entry.Engine}
+     * @type {!object}
      */
     this.engine = new Entry.Engine();
 
     /**
+     * Initialize PropertyPanel.
+     * @type {!object}
+     */
+    this.propertyPanel = new Entry.PropertyPanel();
+
+    /**
      * Initialize container for objects.
      * @type {!Entry.Container}
+     * @type {!object}
      */
     this.container = new Entry.Container();
 
     /**
      * Initialize helper.
      * @type {!Entry.Helper}
+     * @type {!object}
      */
     this.helper = new Entry.Helper();
 
     /**
      * Initialize container for objects.
      * @type {!Entry.VariableContainer}
+     * @type {!object}
      */
     this.variableContainer = new Entry.VariableContainer();
 
     /**
      * Initialize stateManager for redo and undo.
      * @type {!Entry.StateManager}
+     * @type {!object}
      */
     if (this.type == 'workspace' || this.type == 'phone')
         this.stateManager = new Entry.StateManager();
@@ -139,6 +153,7 @@ Entry.initialize_ = function() {
     /**
      * Initialize scenes.
      * @type {!Entry.Scene}
+     * @type {!object}
      */
     this.scene = new Entry.Scene();
 
@@ -228,18 +243,26 @@ Entry.createDom = function(container, option) {
         this.stage.initStage(this.canvas_);
 
         var containerView = Entry.createElement('div');
-        container.appendChild(containerView);
+        //container.appendChild(containerView);
+        this.propertyPanel.generateView(container, option);
         /** @type {!Element} */
         this.containerView = containerView;
         this.container.generateView(this.containerView, option);
+        this.propertyPanel.addMode("container", this.container);
 
-        this.helper.initBlockHelper(containerView);
+        this.helper.generateView(this.containerView, option);
+        this.propertyPanel.addMode("helper", this.helper);
+
+        this.propertyPanel.select("container");
 
         var playgroundView = Entry.createElement('div');
         container.appendChild(playgroundView);
         /** @type {!Element} */
         this.playgroundView = playgroundView;
         this.playground.generateView(this.playgroundView, option);
+
+        //bind workspace for select block observing
+        this.helper.bindWorkspace(this.playground.mainWorkspace);
     } else if (option == 'minimize') {
         var canvas = Entry.createElement('canvas');
         canvas.className = 'entryCanvasWorkspace';
@@ -323,7 +346,7 @@ Entry.parseOptions = function(options) {
     this.objectAddable = options.objectaddable;
     if (this.objectAddable === undefined)
         this.objectAddable = true;
-    
+
     this.objectEditable = options.objectEditable;
     if (this.objectEditable === undefined)
         this.objectEditable = true;

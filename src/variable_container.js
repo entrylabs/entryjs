@@ -711,7 +711,7 @@ Entry.VariableContainer.prototype.createFunction = function() {
         return;
     var func = new Entry.Func();
     Entry.Func.edit(func);
-    this.saveFunction(func);
+    //this.saveFunction(func);
 };
 
 /**

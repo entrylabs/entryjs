@@ -228,6 +228,12 @@ EntryStatic.getAllBlocks = function() {
             ]
         },
         {
+            category: "func",
+            blocks: [
+                "functionAddButton",
+            ]
+        },
+        {
             category: "arduino",
             blocks: [
                 "arduino_download_connector",
@@ -239,6 +245,16 @@ EntryStatic.getAllBlocks = function() {
                 "arduino_toggle_led",
                 "arduino_toggle_pwm",
                 "arduino_convert_scale",
+                "neobot_sensor_value",
+                "neobot_turn_left",
+                "neobot_stop_left",
+                "neobot_turn_right",
+                "neobot_stop_right",
+                "neobot_run_motor",
+                "neobot_servo_1",
+                "neobot_servo_2",
+                "neobot_play_note_for",
+                "neobot_set_sensor_value",
                 "bitbrick_sensor_value",
                 "bitbrick_is_touch_pressed",
                 "bitbrick_turn_off_color_led",
@@ -1324,6 +1340,56 @@ EntryStatic.blockInfo = {
         "class": "calc_string",
         "isNotFor": [],
         "usage": []
+    },
+    "neobot_sensor_value": {
+        "isNotFor": ['neobot'],
+        "xml": "<block type='neobot_sensor_value'></block>",
+        "class": "neobot_value"
+    },
+    "neobot_turn_left": {
+        "isNotFor": ['neobot'],
+        "xml": "<block type='neobot_turn_left'></block>",
+        "class": "neobot_motor"
+    },
+    "neobot_stop_left": {
+        "isNotFor": ['neobot'],
+        "xml": "<block type='neobot_stop_left'></block>",
+        "class": "neobot_motor"
+    },
+    "neobot_turn_right": {
+        "isNotFor": ['neobot'],
+        "xml": "<block type='neobot_turn_right'></block>",
+        "class": "neobot_motor"
+    },
+    "neobot_stop_right": {
+        "isNotFor": ['neobot'],
+        "xml": "<block type='neobot_stop_right'></block>",
+        "class": "neobot_motor"
+    },
+    "neobot_run_motor": {
+        "isNotFor": ['neobot'],
+        "xml": "<block type='neobot_run_motor'><value name='DURATION'><block type='text'><field name='NAME'>1</field></block></value></block>",
+        "class": "neobot_motor"
+    },
+    "neobot_servo_1": {
+        "isNotFor": ['neobot'],
+        "xml": "<block type='neobot_servo_1'></block>",
+        "class": "neobot_servo"
+    },
+    "neobot_servo_2": {
+        "isNotFor": ['neobot'],
+        "xml": "<block type='neobot_servo_2'></block>",
+        "class": "neobot_servo"
+    },
+    "neobot_play_note_for": {
+        "isNotFor": ['neobot'],
+        "xml": "<block type='neobot_play_note_for'></block>",
+        "class": "neobot_note"
+    },
+    "neobot_set_sensor_value": {
+        "isNotFor": ['neobot'],
+        "xml": "<block type='neobot_set_sensor_value'></block>",
+        "class": "neobot_set_value"
     },
     "bitbrick_sensor_value": {
         "isNotFor": ['bitbrick'],

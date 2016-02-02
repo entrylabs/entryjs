@@ -32,13 +32,10 @@ Entry.Thread = function(thread, code) {
 
         for (var i = 0; i < thread.length; i++) {
             var block = thread[i];
-            if (block instanceof Entry.Block ||
-               block instanceof Entry.DummyBlock) {
+            if (block instanceof Entry.Block || block.isDummy) {
                 block.setThread(this);
                 this._data.push(block);
-            } else {
-                this._data.push(new Entry.Block(block, this));
-            }
+            } else this._data.push(new Entry.Block(block, this));
         }
         this._setRelation();
 
@@ -79,12 +76,13 @@ Entry.Thread = function(thread, code) {
     };
 
     p.separate = function(block) {
-        if (!this._data.has(block.id))
-            return;
+        if (!this._data.has(block.id)) return;
+
         if (block.prev) {
             block.prev.setNext(null);
             block.setPrev(null);
         }
+
         var blocks = this._data.splice(this._data.indexOf(block));
         this._code.createThread(blocks);
         this.changeEvent.notify();
@@ -128,6 +126,9 @@ Entry.Thread = function(thread, code) {
         var data = this._data;
         var cloned = [];
         for (var i=0, len=data.length; i<len; i++) {
+            var block = data[i];
+            if (i===0 && block instanceof Entry.DummyBlock)
+                continue;
             cloned.push(data[i].clone(newThread));
         }
         newThread.load(cloned, mode);
@@ -190,7 +191,7 @@ Entry.Thread = function(thread, code) {
     };
 
     p.spliceBlock = function(block) {
-        var blocks = this.getBlocks();
+        var blocks = this._data;
         blocks.remove(block);
 
         if (blocks.length !== 0) {

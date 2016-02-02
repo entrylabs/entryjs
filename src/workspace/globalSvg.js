@@ -20,9 +20,10 @@ goog.provide('Entry.GlobalSvg');
 
         this.svgDom.css({
             position: 'fixed',
-            width: 0,
-            height: 0,
+            width: 1,
+            height: 1,
             display: 'none',
+            overflow: 'visible',
             'z-index': '1111'
         });
 
@@ -39,7 +40,7 @@ goog.provide('Entry.GlobalSvg');
             return;
         }
         var data = view.block;
-        if (data.isReadOnly() || !data.isMovable()) return;
+        if (data.isReadOnly() || !view.movable) return;
         this._view = view;
         this._mode = mode;
         this.draw();
@@ -67,7 +68,6 @@ goog.provide('Entry.GlobalSvg');
         }
         this.snap.append(this.svg);
         this.show();
-        blockView.set({visible:false});
     };
 
     gs.remove = function() {
@@ -76,24 +76,24 @@ goog.provide('Entry.GlobalSvg');
         delete this.svg;
         delete this._view;
         delete this._offsetX;
+        delete this._offsetY;
         this.hide();
     };
 
     gs.resize = function() {
-        var bBox = this._view.svgGroup.getBBox();
-
-        this.svgDom.css({
-            width: bBox.width + 2,
-            height: bBox.height
-        });
-        this.width = bBox.width + 2;
+        this.width = this._view.svgGroup.getBBox() + 3;
     };
 
     gs.align = function() {
         var offsetX = this._view.getSkeleton().box(this._view).offsetX || 0;
+        var offsetY = this._view.getSkeleton().box(this._view).offsetY || 0;
         offsetX *= -1;
+        offsetX += 1;
+        offsetY *= -1;
+        offsetY += 1;
         this._offsetX = offsetX;
-        var transform = "t" + (offsetX + 1) + " 1";
+        this._offsetY = offsetY;
+        var transform = "t" + offsetX + " " + offsetY;
         this.svg.attr({transform: transform});
     };
 
@@ -105,9 +105,9 @@ goog.provide('Entry.GlobalSvg');
         var that = this;
         var blockView = this._view;
         var matrix = blockView.svgGroup.transform().globalMatrix;
-        var offset = blockView.getBoard().svgDom.offset();
-        this.left = matrix.e + offset.left - this._offsetX - 1;
-        this.top = matrix.f + offset.top;
+        var offset = blockView.getBoard().offset;
+        this.left = matrix.e + offset.left - this._offsetX;
+        this.top = matrix.f + offset.top - this._offsetY;
 
         this.svgDom.css({
             left: that.left,
@@ -120,10 +120,10 @@ goog.provide('Entry.GlobalSvg');
         var blockMenu = blockView.getBoard().workspace.blockMenu;
         var bLeft = blockMenu.offset.left;
         var bTop = blockMenu.offset.top;
-        var bWidth = blockMenu.svgDom.width();
+        var bWidth = blockMenu.visible ? blockMenu.svgDom.width() : 0;
         if (mousePos.y > bTop && mousePos.x > bLeft + bWidth)
             return this.DONE;
-        else if (mousePos.y > bTop && mousePos.x > bLeft)
+        else if (mousePos.y > bTop && mousePos.x > bLeft && blockMenu.visible)
             return this.REMOVE;
         else return this.RETURN;
     };

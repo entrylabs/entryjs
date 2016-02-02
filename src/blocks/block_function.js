@@ -1,5 +1,27 @@
 "use strict";
 
+Entry.block.functionAddButton = {
+    skeleton: "basic_button",
+    color: "#eee",
+    template: "%1",
+    params: [
+        {
+            type: "Text",
+            text: "함수 추가",
+            color: "#333",
+            align: "center"
+        }
+    ],
+    events: {
+        mousedown: [
+            function() {
+                Entry.variableContainer.createFunction();
+            }
+        ]
+    }
+};
+
+
 Blockly.Blocks.function_field_label = {
   init: function() {
     this.setColour("#f9c535");

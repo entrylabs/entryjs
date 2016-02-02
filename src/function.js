@@ -79,6 +79,7 @@ Entry.Func.edit = function(func) {
     if (this.workspace)
         this.workspace.visible = true;
     this.initEditView();
+    return;
     this.targetFunc = func;
     this.workspace.clear();
     Blockly.Xml.domToWorkspace(this.workspace, func.content);
@@ -87,6 +88,12 @@ Entry.Func.edit = function(func) {
 };
 
 Entry.Func.initEditView = function() {
+
+    console.log("start edit");
+    return;
+
+
+
     this.parentView = Entry.playground.blocklyView_;
     if (!this.svg) {
         this.svg = Blockly.createSvgElement('svg', {

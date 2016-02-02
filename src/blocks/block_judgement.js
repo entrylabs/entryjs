@@ -362,10 +362,10 @@ Blockly.Blocks.boolean_basic_operator = {
     this.appendDummyInput("VALUE")
     .appendField(new Blockly.FieldDropdown([
       ["=","EQUAL"],
-      [">","GREATER"],
-      ["<","LESS"],
-      [">=","GREATER_OR_EQUAL"],
-      ["<=","LESS_OR_EQUAL"]
+      ["＞","GREATER"],
+      ["＜","LESS"],
+      ["≥","GREATER_OR_EQUAL"],
+      ["≤","LESS_OR_EQUAL"]
       ], null, false), "OPERATOR");
     this.appendValueInput("RIGHTHAND")
         .setCheck(["Number", "String"]);

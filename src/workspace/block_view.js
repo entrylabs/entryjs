@@ -14,16 +14,19 @@ Entry.BlockView = function(block, board, mode) {
     this._board = board;
     this.set(block);
     this.svgGroup = board.svgBlockGroup.group();
-    this.svgGroup.block = this.block;
 
     this._schema = Entry.block[block.type];
-    this._skeleton = Entry.skeleton[this._schema.skeleton];
+    var skeleton = this._skeleton = Entry.skeleton[this._schema.skeleton];
     this._contents = [];
+    this._statements = [];
 
-    this.isInBlockMenu = !(this.getBoard() instanceof Entry.Board);
+    if (skeleton.magnets && skeleton.magnets().next)
+        this.svgGroup.nextMagnet = this.block;
 
-    if (this._skeleton.morph)
-        this.block.observe(this, "_renderPath", this._skeleton.morph, false);
+    this.isInBlockMenu = this.getBoard() instanceof Entry.BlockMenu;
+
+    if (skeleton.morph)
+        this.block.observe(this, "_renderPath", skeleton.morph, false);
 
     this.prevObserver = null;
     this._startRender(block, mode);
@@ -31,8 +34,11 @@ Entry.BlockView = function(block, board, mode) {
     // observe
     this.block.observe(this, "_bindPrev", ["prev"]);
     this.block.observe(this, "_createEmptyBG", ["next"]);
+    this.block.observe(this, "_setMovable", ["movable"]);
+    this.block.observe(this, "_setReadOnly", ["movable"]);
     this.observe(this, "_updateBG", ["magneting"]);
     this.observe(this, "_updateOpacity", ["visible"]);
+    this.observe(this, "_updateShadow", ["shadow"]);
     board.code.observe(this, '_setBoard', ['board'], false);
 
     this.dragMode = Entry.DRAG_MODE_NONE;
@@ -53,7 +59,8 @@ Entry.BlockView = function(block, board, mode) {
         contentHeight: 0,
         magneting: false,
         visible: true,
-        animating: false
+        animating: false,
+        shadow: true
     };
 
     p._startRender = function(block, mode) {
@@ -64,14 +71,18 @@ Entry.BlockView = function(block, board, mode) {
         this._darkenPath = this.svgGroup.path(path);
         this._darkenPath.attr({
             transform: "t0 1",
-            fill: Entry.Utils.colorDarken(this._schema.color, 0.7)
+            fill: Entry.Utils.colorDarken(this._schema.color, 0.7),
+            class: 'blockPathDarken'
         });
 
         this._path = this.svgGroup.path(path);
-        this._path.attr({
-            strokeWidth: "2",
-            fill: this._schema.color
-        });
+        var pathStyle = {fill: this._schema.color};
+        if (this._skeleton.outerLine) {
+            pathStyle.strokeWidth = "0.5";
+            pathStyle.stroke = Entry.Utils.colorDarken(this._schema.color, 0.8);
+        }
+        pathStyle.class = 'blockPath';
+        this._path.attr(pathStyle);
 
         this._moveTo(this.x, this.y, false);
         this._startContentRender(mode);
@@ -81,17 +92,20 @@ Entry.BlockView = function(block, board, mode) {
     p._startContentRender = function(mode) {
         mode = mode === undefined ?
             Entry.Workspace.MODE_BOARD : mode;
-        if (this.contentSvgGroup) this.contentSvgGroup.remove();
+        if (this.contentSvgGroup)
+            this.contentSvgGroup.remove();
+        var schema = this._schema;
+        if (schema.statements && schema.statements.length && this.statementSvgGroup)
+            this.statementSvgGroup.remove();
         this._contents = [];
 
         this.contentSvgGroup = this.svgGroup.group();
-        var contentPos = this._skeleton.contentPos();
-        this.contentSvgGroup.transform("t" + contentPos.x + ' ' + contentPos.y);
-
+        if (schema.statements && schema.statements.length)
+            this.statementSvgGroup = this.svgGroup.group();
         switch (mode) {
             case Entry.Workspace.MODE_BOARD:
-                var reg = /(%\d)/gmi;
-                var schema = this._schema;
+            case Entry.Workspace.MODE_OVERLAYBOARD:
+                var reg = /(%\d)/mi;
                 var templateParams = schema.template.split(reg);
                 var params = schema.params;
                 for (var i=0; i<templateParams.length; i++) {
@@ -107,9 +121,9 @@ Entry.BlockView = function(block, board, mode) {
                 }
 
                 var statements = schema.statements;
-                if (statements) {
+                if (statements && statements.length) {
                     for (i=0; i<statements.length; i++)
-                        this._contents.push(new Entry.FieldStatement(statements[i], this, i));
+                        this._statements.push(new Entry.FieldStatement(statements[i], this, i));
                 }
                 break;
             case Entry.Workspace.MODE_VIMBOARD:
@@ -134,14 +148,28 @@ Entry.BlockView = function(block, board, mode) {
                 cursor.x += 5;
 
             var box = c.box;
-            cursor.height = Math.max(box.y + box.height);
+            cursor.height = Math.max(box.y + box.height, cursor.height);
             cursor.x += box.width;
+        }
+
+        if (this._statements.length) {
+            var positions = this._skeleton.statementPos ?
+                this._skeleton.statementPos(this) : [];
+            for (var i = 0; i < this._statements.length; i++) {
+                var s = this._statements[i];
+                var pos = positions[i];
+                if (pos)
+                    s.align(pos.x, pos.y, animate);
+            }
         }
 
         this.set({
             contentWidth: cursor.x,
             contentHeight: cursor.height
         });
+
+        var contentPos = this.getContentPos();
+        this.contentSvgGroup.transform("t" + contentPos.x + ' ' + contentPos.y);
         this._render();
     };
 
@@ -162,6 +190,11 @@ Entry.BlockView = function(block, board, mode) {
     p._render = function() {
         this._renderPath();
         this.set(this._skeleton.box(this));
+
+        var block = this.block;
+        var events = block.events.blockAdd;
+        if (events && !this.isInBlockMenu)
+            events.forEach(function(fn){fn(block);});
     };
 
     p._renderPath = function() {
@@ -188,6 +221,7 @@ Entry.BlockView = function(block, board, mode) {
             this._path.attr({
                 d: path
             });
+
             this.set({animating: false});
         }
     };
@@ -252,6 +286,10 @@ Entry.BlockView = function(block, board, mode) {
     p._addControl = function() {
         var that = this;
         this.svgGroup.mousedown(function() {
+            var events = that.block.events;
+            if (events && events.mousedown)
+                events.mousedown.forEach(function(fn){fn();});
+
             that.onMouseDown.apply(that, arguments);
         });
     };
@@ -259,9 +297,12 @@ Entry.BlockView = function(block, board, mode) {
     p.onMouseDown = function(e) {
         e.stopPropagation();
         e.preventDefault();
+        var board = this.getBoard();
         if (Entry.documentMousedown)
             Entry.documentMousedown.notify();
-        this.getBoard().setSelectedBlock(this);
+        if (this.readOnly || board.viewOnly) return;
+
+        board.setSelectedBlock(this);
         this.dominate();
         if (e.button === 0 || e instanceof Touch) {
             this.mouseDownCoordinate = {
@@ -272,7 +313,7 @@ Entry.BlockView = function(block, board, mode) {
             doc.bind('mouseup.block', onMouseUp);
             doc.bind('touchmove.block', onMouseMove);
             doc.bind('touchend.block', onMouseUp);
-            this.getBoard().set({dragBlock:this});
+            board.set({dragBlock:this});
             this.dragInstance = new Entry.DragInstance({
                 startX: e.pageX,
                 startY: e.pageY,
@@ -287,17 +328,14 @@ Entry.BlockView = function(block, board, mode) {
         } else if (Entry.Utils.isRightButton(e)) {
             var that = this;
             var block = that.block;
-            if (this.isInBlockMenu || block.isReadOnly()) return;
+            if (this.isInBlockMenu) return;
 
             var options = [];
 
             var copyAndPaste = {
                 text: '블록 복사 & 붙여넣기',
                 callback: function(){
-                    var cloned = block.copy();
-                    var first = cloned[0];
-                    first.doAdd();
-                    first.getThread().getCode().createThread(cloned);
+                    board.code.createThread(block.copy());
                 }
             };
 
@@ -324,7 +362,6 @@ Entry.BlockView = function(block, board, mode) {
         }
 
         var blockView = this;
-        var board = this.getBoard();
 
         if(board.workspace.getMode() === Entry.Workspace.MODE_VIMBOARD) {
             if(e) {
@@ -342,7 +379,6 @@ Entry.BlockView = function(block, board, mode) {
 
         function onMouseMove(e) {
             var workspaceMode = board.workspace.getMode();
-            var isInBlockMenu = board instanceof Entry.BlockMenu;
 
             if (workspaceMode === Entry.Workspace.MODE_VIMBOARD)
                 p.vimBoardEvent(e, 'dragOver');
@@ -351,9 +387,9 @@ Entry.BlockView = function(block, board, mode) {
             if (blockView.dragMode == Entry.DRAG_MODE_DRAG ||
                 e.pageX !== mouseDownCoordinate.x ||
                 e.pageY !== mouseDownCoordinate.y) {
-                if (!blockView.block.isMovable()) return;
+                if (!blockView.movable) return;
 
-                if (!isInBlockMenu) {
+                if (!blockView.isInBlockMenu) {
                     if(blockView.block.prev) {
                         blockView.block.prev.setNext(null);
                         blockView.block.setPrev(null);
@@ -390,21 +426,20 @@ Entry.BlockView = function(block, board, mode) {
                     });
                     blockView.dragMode = Entry.DRAG_MODE_DRAG;
 
+                    Entry.GlobalSvg.setView(blockView, workspaceMode);
                     var magnetedBlock = blockView._getCloseBlock();
                     if (magnetedBlock) {
                         board = magnetedBlock.view.getBoard();
                         board.setMagnetedBlock(magnetedBlock.view);
                     } else board.setMagnetedBlock(null);
-                    Entry.GlobalSvg.setView(blockView, workspaceMode);
                     if (!blockView.originPos)
                         blockView.originPos = {x: blockView.x, y: blockView.y};
-                } else board.cloneToBoard(e);
+                } else board.cloneToGlobal(e);
             }
         }
 
         function onMouseUp(e) {
             Entry.GlobalSvg.remove();
-            blockView.set({visible:true});
             $(document).unbind('.block');
             delete this.mouseDownCoordinate;
             blockView.terminateDrag(e);
@@ -464,8 +499,22 @@ Entry.BlockView = function(block, board, mode) {
                                 this.set({animating: true});
                                 if (closeBlock.next)
                                     closeBlock.next.view.set({animating: true});
+
                                 block.doInsert(closeBlock);
                                 createjs.Sound.play('entryMagneting');
+
+                                if (closeBlock.constructor == Entry.FieldDummyBlock) {
+                                    var orphan = block.next;
+                                    if (orphan) {
+                                        if (Entry.FieldDummyBlock.PRIMITIVE_TYPES.indexOf(orphan.type) > -1) {
+                                            orphan.getThread().cut(orphan);
+                                            orphan.destroy(false);
+                                        } else {
+                                            orphan.separate();
+                                            orphan.view._moveBy(10, 10, false);
+                                        }
+                                    }
+                                }
                             } else block.doSeparate();
                         }
                         break;
@@ -499,29 +548,42 @@ Entry.BlockView = function(block, board, mode) {
     };
 
     p._getCloseBlock = function() {
+        if (!this._skeleton.magnets)
+            return;
         var board = this.getBoard();
         var x = this.x,
             y = this.y;
 
         var offset = board.relativeOffset;
-        var x = x + offset.left;
+        x += offset.left;
 
         //below the board
         if (x + this.offsetX < board.offset.left) return null;
 
-        var targetElement = Snap.getElementByPoint(x, y + offset.top -1);
+        var targetElement = Snap.getElementByPoint(x, y + offset.top - 2);
 
         if (targetElement === null) return;
 
-        var targetBlock = targetElement.block;
+        var targetType = this._skeleton.magnets();
+
+        if (targetType.previous) targetType = 'nextMagnet';
+        else if (targetType.string) targetType = 'stringMagnet';
+        else if (targetType.bool) targetType = 'booleanMagnet';
+        else targetType = null;
+
+        if (!targetType) return;
+
+        var targetBlock = targetElement[targetType];
 
         while (!targetBlock && targetElement.parent() &&
                targetElement.type !== "svg" && targetElement.type !== "BODY") {
             targetElement = targetElement.parent();
-            targetBlock = targetElement.block;
+            targetBlock = targetElement[targetType];
         }
 
-        if (targetBlock === undefined || targetBlock === this.block) return null;
+        if (targetBlock === undefined || targetBlock === this.block ||
+               targetBlock.view.getBoard() !== board)
+           return null;
 
         return targetBlock;
     };
@@ -565,6 +627,15 @@ Entry.BlockView = function(block, board, mode) {
         this._contents.forEach(function(c) {
             c.destroy();
         });
+
+        this._statements.forEach(function(c) {
+            c.destroy();
+        });
+
+        var block = this.block;
+        var events = block.events.blockDestroy;
+        if (events && !this.isInBlockMenu)
+            events.forEach(function(fn){fn(block);});
     };
 
     p.getShadow = function() {
@@ -596,6 +667,7 @@ Entry.BlockView = function(block, board, mode) {
             });
             this.svgGroup.prepend(shadow);
             this._clonedShadow = shadow;
+            console.log(shadow);
 
             if (blockView.background) {
                 blockView.background.remove();
@@ -634,7 +706,8 @@ Entry.BlockView = function(block, board, mode) {
 
             blockView.originalHeight = blockView.height;
             blockView.set({
-                height: height
+                height: height,
+                animating: false
             });
         } else {
             if (this._clonedShadow) {
@@ -664,7 +737,7 @@ Entry.BlockView = function(block, board, mode) {
 
     p._createEmptyBG = function() {
         var blockView = this;
-        if (!this.block.next) {
+        if (this.svgGroup.nextMagnet && !this.block.next) {
             var bg = this.svgGroup.rect(
                 0 + blockView.offsetX,
                 blockView.height,
@@ -719,6 +792,26 @@ Entry.BlockView = function(block, board, mode) {
         this.svgGroup.attr({
             opacity:this.visible === false ? 0 : 1
         });
+    };
+
+    p._updateShadow = function() {
+        var shadow = this.shadow;
+        var fill;
+
+        if (shadow) fill = Entry.Utils.colorDarken(this._schema.color, 0.7);
+        else fill = 'transparent';
+
+        this._darkenPath.attr({fill: fill});
+    };
+
+    p._setMovable = function() {
+        this.movable = this.block.isMovable() !== null ? this.block.isMovable() :
+            (this._skeleton.movable !== undefined ? this._skeleton.movable : true);
+    };
+
+    p._setReadOnly = function() {
+        this.readOnly = this.block.isReadOnly() !== null ? this.block.isReadOnly() :
+            (this._skeleton.readOnly !== undefined ? this._skeleton.readOnly : false);
     };
 
 })(Entry.BlockView.prototype);

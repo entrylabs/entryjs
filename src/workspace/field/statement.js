@@ -34,7 +34,7 @@ Entry.FieldStatement = function(content, blockView, index) {
 
 (function(p) {
     p.renderStart = function(board) {
-        this.svgGroup = this._blockView.contentSvgGroup.group();
+        this.svgGroup = this._blockView.statementSvgGroup.group();
         this.box.set({
             x: 46,
             y: 0,
@@ -78,7 +78,7 @@ Entry.FieldStatement = function(content, blockView, index) {
             height += block.view.height + 1;
             block = block.next;
         }
-        this.box.set({height: height});
+        this.box.set({height:Math.max(height, 20)});
     };
 
     p._updateThread = function() {
@@ -100,6 +100,7 @@ Entry.FieldStatement = function(content, blockView, index) {
 
 Entry.DummyBlock = function(statementField, blockView) {
     Entry.Model(this, false);
+    this.isDummy = true;
 
     this.view = this;
     this.originBlockView = blockView;
@@ -108,7 +109,7 @@ Entry.DummyBlock = function(statementField, blockView) {
     this.statementField = statementField;
 
     this.svgGroup = statementField.svgGroup.group();
-    this.svgGroup.block = this;
+    this.svgGroup.nextMagnet = this;
 
     var acceptBox = Entry.skeleton[statementField.acceptType].box();
 
@@ -118,6 +119,7 @@ Entry.DummyBlock = function(statementField, blockView) {
         acceptBox.width,
         acceptBox.height
     );
+
     this.path.attr({
         fill: "transparent"
     });
@@ -141,6 +143,7 @@ Entry.DummyBlock = function(statementField, blockView) {
         y: 0,
         width: 0,
         height: 0,
+        next: null,
         animating: false,
         magneting: false
     };
@@ -167,7 +170,7 @@ Entry.DummyBlock = function(statementField, blockView) {
     };
 
     p.setNext = function(block) {
-        this.next = block;
+        this.set({next: block});
     };
 
     p.getBoard = function() {
@@ -191,7 +194,7 @@ Entry.DummyBlock = function(statementField, blockView) {
                 this._clonedShadow.remove();
                 delete this._clonedShadow;
             }
-            this.set({height: 0});
+            this.set({height: this.schema.height});
         }
         this._thread.changeEvent.notify();
     };

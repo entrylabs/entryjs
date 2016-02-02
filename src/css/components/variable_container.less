@@ -1,0 +1,588 @@
+.entryVariablePanelWorkspace {
+    position: absolute;
+    width: 250px;
+    top: 47px;
+    bottom: 0px;
+    padding: 6px 4px 0px 4px;
+}
+
+.entryVariablePanelPhone {
+    width: 250px;
+    top: 47px;
+    bottom: 0px;
+    padding: 6px 4px 0px 4px;
+}
+
+.entryVariableSelectorWorkspace {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+.entryVariableSelectButtonWorkspace {
+    font-family: nanumBarunBold !important;
+    width: 25%;
+    border-collapse: collapse;
+    text-align: center;
+    vertical-align: center;
+    background-color: #EDEDED;
+    height: 38px;
+    border: solid 1px #bdbdbd;
+    border-left: none;
+    color: #535353;
+    padding-top: 4px;
+    cursor: pointer;
+}
+
+.entryVariableSelectButtonWorkspace.selected {
+    color: #ffffff;
+    background-color: #0e68e3;
+}
+
+.entryVariableSelectButtonWorkspace.allButton {
+    border-radius: 6px 0 0 6px;
+    border-left: solid 1px #bdbdbd;
+}
+
+.entryVariableSelectButtonWorkspace.message {
+    border-radius: 0 6px 0px 0;
+}
+
+.entryVariableSelectButtonWorkspace.list {
+    border-top: none;
+}
+
+.entryVariableSelectButtonWorkspace.func {
+    border-top: none;
+    border-radius: 0 0px 6px 0;
+}
+
+.entryVariableSelectButtonWorkspace.disable {
+    color: #bdbdbd;
+    cursor: default;
+}
+
+.entryVariableListWorkspace {
+    position: absolute;
+    top: 88px; 
+    bottom: 0px;
+    right: 4px;
+    left: 4px;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    overflow: auto;
+}
+
+.entryVariableListElementWorkspace {
+    background-repeat: no-repeat;
+    background-position: 14px 10px;
+    background-color: #efefef;
+    border: solid 1px #a8a8a8;
+    margin-bottom: -1px;
+    min-height: 50px;
+}
+
+.entryVariableAddWorkspace {
+    padding: 0;
+    font-size: 13pt;
+    color: #717171;
+    cursor: pointer;
+    line-height: 49px;
+    position: relative;
+    text-align: center;
+}
+
+.entryVariableAddWorkspace:hover {
+    background-color: #d3d3d3;
+    color: #333;
+}
+
+.entryVariableListElementWorkspace.selected {
+    background-color: #d3d3d3;
+}
+
+.entryVariableListElementNameWorkspace {
+    position: absolute;
+    left: 47px;
+    margin-top: 12px;
+    background-color: #efefef;
+    width: 55%;
+    border: 1px solid transparent;
+    padding-left: 5px;
+}
+.selected .entryVariableListElementNameWorkspace {
+    background-color: #d3d3d3;
+}
+
+.entryVariableListElementNameWorkspace:focus {
+    background-color: white;
+    border: 1px solid gray;
+}
+
+.entryVariableFunctionElementNameWorkspace {
+    border: none;
+    position: absolute;
+    left: 55px;
+    margin-top: 12px;
+    background-color: transparent;
+    width: 60%;
+    overflow: hidden;
+    height: 20px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.entryVariableListElementDeleteWorkspace {
+    position: absolute;
+    margin-top: 5px;
+    padding-right: 5px;
+    right: 3px;
+    border: 0;
+    outline: 0;
+    width: 22px;
+    height: 40px;
+    opacity: 0;
+    background-color: transparent;
+    .backgroundImage("layers_icon_close_nor_new_1.png");
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.entryVariableListElementWorkspace:hover
+.entryVariableListElementDeleteWorkspace {
+    opacity: 1;
+}
+
+.entryVariableListElementEditWorkspace {
+    display: inline-block;
+    float: right;
+    border: 0;
+    outline: 0;
+    width: 20px;
+    height: 40px;
+    margin-top: 5px;
+    margin-right: 25px;
+    background-color: transparent;
+    .backgroundImage("layers_icon_edit_nor_new_1.png");
+    background-repeat: no-repeat;
+    background-position: center;
+    opacity: 0;
+}
+
+.entryVariableListElementWorkspace:hover
+.entryVariableListElementEditWorkspace {
+    opacity: 1;
+}
+
+.entryVariableListCallerListWorkspace {
+    list-style: none;
+    padding: 0;
+}
+
+.entryVariableListCallerWorkspace {
+    border: solid 1px #c8c8c8;
+    border-top: none;
+    height: 50px;
+    cursor: pointer;
+    overflow: hidden;
+}
+
+.entryVariableListCallerWorkspace:hover {
+    background-color: #e0e0e0;
+}
+
+.entryVariableListCallerWorkspace:first-child {
+    border-top: none;
+}
+
+.entryVariableListCallerWorkspace>.entryObjectThumbnailWorkspace {
+    position: inherit;
+    display:block;
+    float: left;
+    top: 0; left: 0;
+    margin: 5px 0 0 5px;
+    height: 40px;
+    width: 40px;
+}
+
+.entryVariableListCallerNameWorkspace {
+    position: absolute;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    float: left;
+    height: 49px;
+    line-height: 49px;
+    left: 60px; right: 0;
+    padding-right: 7px;
+}
+
+.entryVariableListCallerNoneWorkspace {
+    color: #C16B6B;
+    cursor: default;
+    line-height: 48px;
+    padding-left: 50px;
+}
+
+.entryVariableLocalElementWorkspace {
+    .backgroundImage("local_question_icon.png");
+}
+
+.entryVariableCloudElementWorkspace {
+    .backgroundImage("cloud_question_icon.png");
+}
+
+.entryVariableGlobalElementWorkspace {
+    .backgroundImage("list_icon_question.png");
+}
+
+.entryMessageElementWorkspace {
+    .backgroundImage("list_icon_signal.png");
+}
+
+.entryListCloudElementWorkspace {
+    .backgroundImage("cloud_list_icon.png");
+}
+
+.entryListGlobalElementWorkspace {
+    .backgroundImage("list_icon_list.png");
+}
+
+.entryListLocalElementWorkspace {
+    .backgroundImage("local_list_icon.png");
+}
+
+.entryFunctionElementWorkspace {
+    .backgroundImage("list_icon_function_v1.png");
+}
+
+.entryVariableAddSpaceWorkspace {
+    padding: 0;
+    padding-left: 16px;
+    padding-right: 16px;
+    margin: 0;
+    /*height: 215px;*/
+    height: 200px;
+    background-color: white;
+    border: 1px solid #a8a8a8;
+}
+
+.entryVariableAddSpaceNameWrapperWorkspace {
+    height: 28px;
+    margin-top: 16px;
+    .backgroundImage("list_icon_question_1.png");
+    background-repeat: no-repeat;
+}
+
+.entryVariableAddSpaceNameWrapperWorkspace.entryListAddSpaceNameWrapperWorkspace {
+    .backgroundImage("list_icon_list_1.png");
+}
+
+.entryVariableAddSpaceInputWorkspace {
+    width: 80%;
+    margin-left: 42px;
+    margin-top: 2px;
+}
+
+.entryVariableAddSpaceGlobalWrapperWorkspace {
+    margin-top: 16px;
+    color: #5e5e5e;
+    font-size: 11px;
+    position: relative;
+    cursor: pointer;
+}
+
+.entryVariableAddSpaceCheckWorkspace {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 2px;
+    margin-top: 2px;
+    position: absolute;
+    right: 17px;
+    border: 1px solid gray;
+}
+
+.entryVariableAddSpaceCheckWorkspace.entryVariableAddChecked {
+    background-color: gray;
+}
+
+.entryVariableAddSpaceLocalWrapperWorkspace {
+    color: #5e5e5e;
+    font-size: 11px;
+    position: relative;
+    margin-top: 12px;
+    cursor: pointer;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #a8a8a8;
+}
+
+.entryVariableAddSpaceCloudWrapperWorkspace {
+    padding-top: 8px;
+}
+
+.entryVariableAddSpaceCloudWrapperWorkspace {
+    cursor: pointer;
+    color: #5e5e5e;
+    font-size: 11px;
+    position: relative;
+}
+
+.entryVariableAddSpaceUnCheckedWorkspace {
+    color: #afafaf;
+}
+
+.entryVariableAddSpaceCloudCheckWorkspace {
+    margin-top: -12px;
+}
+
+.entryVariableAddSpaceButtonWrapperWorkspace {
+    margin-top: 12px;
+}
+
+.entryVariableAddSpaceButtonWorkspace {
+    font-size: 11px;
+    display: inline-block;
+    width: 48px;
+    height: 24px;
+    border: 2px solid gray;
+    text-align: center;
+    line-height: 22px;
+    cursor: pointer;
+    float: right;
+}
+
+.entryVariableAddSpaceCancelWorkspace {
+    margin-left: 7px;
+}
+
+.entryVariableSplitterWorkspace {
+    height: 25px;
+    font-size: 11px;
+    border: 1px solid #a8a8a8;
+    border-top: none;
+    line-height: 25px;
+    padding-left: 9px;
+}
+
+/*first element after splitter should not have border-top*/
+.entryVariableSplitterWorkspace + .entryVariableListElementWorkspace {
+    border-top: none;
+}
+
+.entryVariableListCallerListWorkspace + .entryVariableListElementWorkspace {
+    border-top: none;
+}
+
+.entryVariableSettingWorkspace {
+    width: 100%;
+    height: 165px;
+    border-top: 1px solid #a8a8a8;
+    padding-left: 16px;
+    padding-right: 16px;
+    font-size: 11px;
+    background-color: #efefef;
+}
+
+.entryVariableSettingVisibleWrapperWorkspace {
+    padding-top: 22px;
+    cursor: pointer;
+}
+
+.entryVariableSettingCheckWorkspace {
+    display: inline-block;
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    border-radius: 2px;
+    left: 90px;
+    margin-top: 2px;
+    border: 1px solid gray;
+    color: #5e5e5e;
+}
+
+.entryVariableAddSpaceCheckWorkspace.entryVariableAddChecked,
+.entryVariableSettingCheckWorkspace.entryVariableSettingChecked {
+    background-color: gray;
+}
+
+.entryVariableSettingInitValueWrapperWorkspace,
+.entryVariableSettingSlideWrapperWorkspace,
+.entryVariableSettingMinMaxWrapperWorkspace {
+    margin-top: 12px;
+}
+
+.entryVariableSettingSlideWrapperWorkspace {
+    cursor: pointer;
+}
+
+.entryVariableMinMaxDisabledWorkspace.entryVariableSettingMinMaxWrapperWorkspace {
+    color: #a8a8a8;
+}
+
+.entryVariableSettingInitValueInputWorkspace {
+    margin-left: 33px;
+    border: 2px solid #a8a8a8;
+    padding-left: 5px;
+    width: 65%;
+}
+
+.entryVariableSettingSplitterWorkspace {
+    width: 100%;
+    height: 1px;
+    background-color: #a8a8a8;
+    margin-top: 16px;
+}
+
+.entryVariableSettingMinValueInputWorkspace,
+.entryVariableSettingMaxValueInputWorkspace {
+    margin-left: 3px;
+    width: 22%;
+    border: 1px solid #afafaf;
+    padding-left: 5px;
+}
+
+.entryVariableSettingMinValueInputWorkspace:disabled,
+.entryVariableSettingMaxValueInputWorkspace:disabled {
+    background-color: #d3d3d3;
+}
+
+.entryVariableSettingMaxValueSpanWorkspace {
+    margin-left: 5px;
+}
+
+.entryVariableSettingButtonWrapperWorkspace {
+    margin-top: 18px;
+}
+
+.entryVariableListElementWrapperWorkspace {
+    width: 100%;
+    height: 50px;
+}
+
+
+.entryListSettingWorkspace {
+    width: 100%;
+    padding-top: 24px;
+    padding-bottom: 5px;
+    border-top: 1px solid #a8a8a8;
+    padding-left: 16px;
+    padding-right: 16px;
+    font-size: 13px;
+    background-color: #efefef;
+}
+
+.entryListSettingVisibleWrapperWorkspace {
+    cursor: pointer;
+}
+
+.entryListSettingCheckWorkspace {
+    display: inline-block;
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    border-radius: 2px;
+    left: 103px;
+    margin-top: 4px;
+    border: 1px solid gray;
+    color: #5e5e5e;
+}
+
+.entryListSettingCheckedWorkspace {
+    background-color: gray;
+}
+
+.entryListSettingLengthWrapperWorkspace {
+    margin-top: 15px;
+    overflow: hidden;
+}
+
+.entryListSettingLengthControllerWorkspace {
+    margin-left: 5px;
+    height: 23px;
+    display: inline-block;
+    position: relative;
+}
+
+.entryListSettingLengthSpanWorkspace {
+    float: left;
+    margin-top: 2px;
+}
+
+.entryListSettingMinusWorkspace {
+    width: 23px;
+    height: 23px;
+    float: left;
+    .backgroundImage("list_minus.png");
+    cursor: pointer;
+}
+
+.entryListSettingLengthInputWorkspace {
+    float: left;
+    height: 23px;
+    margin-left: 5px;
+    margin-right: 5px;
+    padding-left: 5px;
+    border: 2px solid #a8a8a8;
+    width: 60px;
+}
+
+.entryListSettingLengthInputWorkspace:focus {
+    border: 2px solid #1bafea;
+    outline: none;
+}
+
+.entryListSettingPlusWorkspace {
+    width: 23px;
+    height: 23px;
+    float: left;
+    .backgroundImage("list_plus.png");
+    cursor: pointer;
+}
+.entryListSettingSeperatorWorkspace {
+    height: 1px;
+    background-color: gray;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.entryListSettingListValuesWorkspace {
+    padding-left: 15px;
+    color: #a8a8a8;
+}
+
+.entryListSettingValueWrapperWorkspace {
+    margin-bottom: 10px;
+    overflow: hidden;
+}
+
+.entryListSettingEachInputWorkspace {
+    border: 2px solid #a8a8a8;
+    width: 130px;
+    float: left;
+    padding-left: 5px;
+}
+
+.entryListSettingEachInputWorkspace:focus {
+    border: 2px solid #1baefa;
+    outline: none;
+}
+
+.entryListSettingValueNumberSpanWorkspace {
+    width: 20px;
+    display: inline-block;
+    float: left;
+    margin-top: 3px;
+}
+
+.entryListSettingValueRemoveWorkspace {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    float: right;
+    margin-right: 10px;
+    margin-top: 4px;
+    cursor: pointer;
+    .backgroundImage("list_remove_button.png");
+}

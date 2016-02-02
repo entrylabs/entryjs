@@ -37,9 +37,10 @@ Entry.Block.MAGNET_OFFSET = 0.4;
         next: null,
         view: null,
         thread: null,
-        movable: true,
+        movable: null,
         deletable: true,
-        readOnly: false
+        readOnly: null,
+        events: {}
     };
 
     p.load = function(block) {
@@ -53,12 +54,38 @@ Entry.Block.MAGNET_OFFSET = 0.4;
     p.getSchema = function() {
         var that = this;
         this._schema = Entry.block[this.type];
+
+        var events = this._schema.events;
+        if (events) {
+            for (var key in events) {
+                if (!this.events[key]) this.events[key] = [];
+                var funcs = events[key];
+                for (var i=0; i<funcs.length; i++) {
+                    var func = funcs[i];
+                    var index = this.events[key].indexOf(func);
+                    if (index < 0) this.events[key].push(func);
+                }
+            }
+        }
+
         if (this._schema.event)
             this.thread.registerEvent(this, this._schema.event);
+        var thisParams = this.params;
 
         var params = this._schema.params;
         for (var i = 0; i < params.length; i++) {
-            this.params.push(params[i].value);
+            var value = thisParams[i] !== undefined ? thisParams[i] : params[i].value;
+
+            var paramInjected = thisParams[i];
+
+            if (params[i].type == 'Block') {
+                if (paramInjected)
+                    thisParams.splice(i, 1, new Entry.Thread(value, that.getCode()));
+                else thisParams.push(new Entry.Thread(value, that.getCode()));
+            } else {
+                if (paramInjected) thisParams.splice(i, 1, value);
+                else thisParams.push(value);
+            }
         }
 
         var statements = this._schema.statements;
@@ -134,10 +161,14 @@ Entry.Block.MAGNET_OFFSET = 0.4;
         delete json.next;
         delete json.view;
         delete json.thread;
-        if (isNew)
-            delete json.id;
 
-        json.params = json.params.map(function(p) {return p;});
+        if (isNew) delete json.id;
+
+        json.params = json.params.map(function(p) {
+            if (p instanceof Entry.Thread)
+                p = p.toJSON(isNew);
+            return p;
+        });
 
         json.statements = json.statements.map(
             function(s) {return s.toJSON(isNew);}
@@ -147,16 +178,29 @@ Entry.Block.MAGNET_OFFSET = 0.4;
 
     p.destroy = function(animate) {
         if (this.view) this.view.destroy(animate);
-        if (!this.prev || this.prev instanceof Entry.DummyBlock)
+        if (!this.prev || this.prev.isDummy)
             this.thread.destroy(animate, false);
+        else this.prev.setNext(this.next);
+
+
+        var params = this.params;
+        if (params) {
+            for (var i=0; i<params.length; i++) {
+                var param = params[i];
+                if (param instanceof Entry.Thread) {
+                    var block = param.getFirstBlock();
+                    if (block.isDummy) block = block.next;
+                    if (block) block.destroy(animate);
+                }
+            }
+        }
 
         var statements = this.statements;
-
         if (statements) {
             for (var i=0; i<statements.length; i++) {
                 var statement = statements[i];
                 var block = statement.getFirstBlock();
-                if (block instanceof Entry.DummyBlock)
+                if (block.isDummy)
                     block = block.next;
                 if (block) block.destroy(animate);
             }
@@ -334,15 +378,12 @@ Entry.Block.MAGNET_OFFSET = 0.4;
         var index = thread.getBlocks().indexOf(this);
         var json = thread.toJSON(true, index);
         var cloned = [];
-        var newThread = new Entry.Thread([], this.getCode());
-        for (var i=0; i<json.length; i++)
-            cloned.push(new Entry.Block(json[i], newThread));
+        for (var i=0; i<json.length; i++) cloned.push(json[i]);
 
         var matrix = this.view.svgGroup.transform().globalMatrix;
-        cloned[0].set({
-            x: matrix.e + 20,
-            y: matrix.f + 20
-        });
+        cloned[0].x = matrix.e + 15;
+        cloned[0].y = matrix.f + 15;
+
         return cloned;
     };
 

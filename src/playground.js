@@ -4,6 +4,9 @@
  */
 'use strict';
 
+goog.require("Entry.Workspace");
+goog.require("Entry.BlockDriver");
+
 /**
  * Class for a playground.
  * This manage all view related with block.
@@ -264,130 +267,44 @@ Entry.Playground.prototype.generateTabView = function(tabView) {
  * @return {Element}
  */
 Entry.Playground.prototype.generateCodeView = function(codeView) {
-    if (!Entry.type || Entry.type == 'workspace') {
-        var categoryView = Entry.createElement('div', 'entryCategory');
-        categoryView.addClass('entryCategoryWorkspace');
-        codeView.appendChild(categoryView);
-        this.categoryView_ = categoryView;
+    var variableView = this.createVariableView();
+    codeView.appendChild(variableView);
+    this.variableView_ = variableView;
 
-        var categoryListView = Entry.createElement('ul', 'entryCategoryList');
-        categoryListView.addClass('entryCategoryListWorkspace');
-        categoryView.appendChild(categoryListView);
-        this.categoryListView_ = categoryListView;
+    codeView = Entry.Dom(codeView);
+    var boardView = Entry.Dom("div", {
+        parent: codeView,
+        id: "entryWorkspaceBoard",
+        class: "entryWorkspaceBoard"
+    });
 
-        var blockMenuView = Entry.createElement('div', 'entryBlocklyWorkspace');
-        blockMenuView.addClass('entryBlockMenuWorkspace');
-        codeView.appendChild(blockMenuView);
-        $(blockMenuView).mouseenter(function(e) {
-            if (Entry.playground.resizing)
-                return;
-            Entry.playground.focusBlockMenu = true;
-            var width = Blockly.mainWorkspace.blockMenu.blockMenuWidth + 84;
-            if (width > Entry.interfaceState.menuWidth) {
-                this.widthBackup = Entry.interfaceState.menuWidth;
-                $('.entryBlockMenuWorkspace>svg').stop().animate({
-                    width: width - 64
-                }, 200);
-                //Entry.resizeElement({menuWidth: width})
+    var blockMenuView = Entry.Dom("div", {
+        parent: codeView,
+        id: "entryWorkspaceBlockMenu",
+        class: "entryWorkspaceBlockMenu"
+    });
+
+    this.blockDriver = new Entry.BlockDriver();
+    this.blockDriver.convert();
+
+    Entry.block.when_run_button_click.event = "start";
+
+    this.mainWorkspace = new Entry.Workspace(
+        {
+            'blockMenu': {
+                dom: blockMenuView,
+                align: "LEFT",
+                categoryData: EntryStatic.getAllBlocks(),
+            },
+            'board': {
+                dom: boardView
             }
-        });
-        $(blockMenuView).mouseleave(function(e) {
-            if (Entry.playground.resizing)
-                return;
-            if (blockMenuView.widthBackup &&
-                !Blockly.mainWorkspace.blockMenu.hasStalkerBlock)
-                $('.entryBlockMenuWorkspace>svg').stop().animate({
-                    width: this.widthBackup - 64
-                }, 200);
-            delete this.widthBackup;
-            delete Entry.playground.focusBlockMenu;
-        });
-        Entry.addEventListener('entryBlocklyChanged', function(e) {
-            var blockMenuView = Entry.playground.blockMenuView_;
-            if (blockMenuView.widthBackup)
-                Entry.resizeElement({menuWidth: blockMenuView.widthBackup});
-            delete blockMenuView.widthBackup;
-            delete Entry.playground.focusBlockMenu;
-        });
-        this.blockMenuView_ = blockMenuView;
-
-        var variableView = this.createVariableView();
-        codeView.appendChild(variableView);
-        this.variableView_ = variableView;
-
-        var blocklyView = Entry.createElement('div', 'entryBlockly');
-        blocklyView.addClass('entryBlocklyWorkspace');
-        this.blocklyView_ = blocklyView;
-        Entry.bindAnimationCallback(this.blocklyView_,
-            function(e) {Blockly.fireUiEvent(window, 'resize');
-            Entry.playground.blocklyView_.removeClass('foldOut');
-        });
-        codeView.appendChild(blocklyView);
-
-        var XML = Entry.parseTexttoXML('<xml></xml>');
-        Blockly.inject(
-            blocklyView,
-            {
-                path: '.././',
-                toolbox: XML,
-                trashcan: true,
-                blockmenu: this.blockMenuView_,
-                mediaFilePath: Entry.mediaFilePath
-            });
-        Blockly.mainWorkspace.flyout_.hide();
-        Blockly.mainWorkspace.blockMenu.hide();
-        document.addEventListener("blocklyWorkspaceChange", this.syncObjectWithEvent, false);
-
-        /*
-        var blockHelpBtn = Entry.createElement('button', 'entryBlockHelpBtn');
-        blockHelpBtn.addClass('entryBlockHelpBtn', 'entryBtn');
-        blockHelpBtn.bindOnClick(function() {
-            Entry.helper.blockHelperOn();
-        });
-        blocklyView.appendChild(blockHelpBtn);
-       */
-
-        this.blockMenu = Blockly.mainWorkspace.blockMenu;
-        Entry.hw.banHW();
-        return codeView;
-    } else if (Entry.type == 'phone') {
-        var categoryView = Entry.createElement('div', 'entryCategory');
-        categoryView.addClass('entryCategoryPhone');
-        codeView.appendChild(categoryView);
-        this.categoryView_ = categoryView;
-
-        var categoryListView = Entry.createElement('ul', 'entryCategoryList');
-        categoryListView.addClass('entryCategoryListPhone');
-        categoryView.appendChild(categoryListView);
-        this.categoryListView_ = categoryListView;
+        }
+    );
+    this.blockMenu = this.mainWorkspace.blockMenu;
+    this.board = this.mainWorkspace.board;
 
 
-        var variableView = this.createVariableView();
-        codeView.appendChild(variableView);
-        this.variableView_ = variableView;
-
-
-        var blocklyView = Entry.createElement('div', 'entryBlockly');
-        blocklyView.addClass('entryBlocklyPhone');
-        this.blocklyView_ = blocklyView;
-        codeView.appendChild(blocklyView);
-
-        var XML = Entry.parseTexttoXML('<xml></xml>');
-        Blockly.inject(
-            blocklyView,
-            {
-                path: '.././',
-                toolbox: XML,
-                trashcan: true,
-                mediaFilePath: Entry.mediaFilePath
-            });
-        Blockly.mainWorkspace.flyout_.autoClose = true;
-        Blockly.mainWorkspace.flyout_.hide();
-        document.addEventListener("blocklyWorkspaceChange", this.syncObjectWithEvent, false);
-        this.blockMenu = Blockly.mainWorkspace.flyout_;
-        Entry.hw.banHW();
-        return codeView;
-    }
 };
 
 /**
@@ -895,8 +812,7 @@ Entry.Playground.prototype.injectObject = function(object) {
  */
 Entry.Playground.prototype.injectCode = function() {
     var object = this.object;
-    Blockly.mainWorkspace.clear();
-    Blockly.Xml.domToWorkspace(Blockly.mainWorkspace, object.script);
+    this.mainWorkspace.changeBoardCode(object.script);
 };
 
 /**
@@ -1158,17 +1074,13 @@ Entry.Playground.prototype.createVariableView = function() {
 Entry.Playground.prototype.toggleOnVariableView = function() {
     Entry.playground.changeViewMode('code');
     this.categoryView_.addClass('entryRemove');
-    if (this.blockMenuView_)
-        this.blockMenuView_.addClass('entryHidden');
+    //TODO: block menu hide
     Entry.variableContainer.updateList();
     this.variableView_.removeClass('entryRemove');
     this.resizeHandle_.removeClass('entryRemove');
 };
 
 Entry.Playground.prototype.toggleOffVariableView = function() {
-    this.categoryView_.removeClass('entryRemove');
-    if (this.blockMenuView_)
-        this.blockMenuView_.removeClass('entryHidden');
     this.variableView_.addClass('entryRemove');
 };
 
@@ -1180,7 +1092,7 @@ Entry.Playground.prototype.syncObject = function(object) {
     if (this.object && !object)
         object = this.object;
     if (object) {
-        object.setScript(Blockly.Xml.workspaceToDom(Blockly.mainWorkspace));
+        // TODO : save code to object ?
     }
 };
 
@@ -1229,8 +1141,7 @@ Entry.Playground.prototype.restoreBlock = function(targetObject, blockString) {
         );
     }
     var script = Blockly.Xml.textToDom(blockString);
-    Blockly.mainWorkspace.clear();
-    Blockly.Xml.domToWorkspace(Blockly.mainWorkspace, script);
+    //TODO: restore block
     this.syncObject();
 };
 
@@ -1249,9 +1160,10 @@ Entry.Playground.prototype.syncObjectWithEvent = function(e) {
 Entry.Playground.prototype.setMenu = function(objectType) {
     if (this.currentObjectType == objectType)
         return;
-    this.categoryListView_.innerHTML = '';
-    this.blockMenu.unbanClass(this.currentObjectType);
-    this.blockMenu.banClass(objectType);
+    //this.categoryListView_.innerHTML = '';
+    //TODO: process
+    //this.blockMenu.unbanClass(this.currentObjectType);
+    //this.blockMenu.banClass(objectType);
     for (var i in this.blockJSON) {
         var categoryName = this.blockJSON[i].category;
         var element = Entry.createElement('li', 'entryCategory' + categoryName);
@@ -1280,6 +1192,7 @@ Entry.Playground.prototype.setMenu = function(objectType) {
  * @param {?boolean} disableTab
  */
 Entry.Playground.prototype.selectMenu = function(selector, disableTab) {
+    return;
     if (!this.object) {
         Entry.toast.alert(Lang.Workspace.add_object_alert,
                           Lang.Workspace.add_object_alert_msg);
@@ -1294,7 +1207,6 @@ Entry.Playground.prototype.selectMenu = function(selector, disableTab) {
             if (typeof selector == 'string' && categoryName == selector ||
                 typeof selector == 'number' && selector == i) {
                 if (elements[i].hasClass('entrySelectedCategory') && !disableTab) {
-                    //Blockly.mainWorkspace.blockMenu.hide();
                     this.blocklyView_.addClass('folding');
                     this.blocklyView_.removeClass('foldOut');
                     this.hideTabs();
@@ -1302,12 +1214,9 @@ Entry.Playground.prototype.selectMenu = function(selector, disableTab) {
                     delete this.selectedMenu;
                 } else {
                     if (categoryName == "func") {
-                        this.blockMenu.show(
-                            Entry.Func.getMenuXml());
                     } else {
                         if (categoryName == "variable")
                             this.checkVariables();
-                        this.blockMenu.showCategory(this.blockJSON[i]);
                     }
                     this.menuInjected = true;
                     if (this.blocklyView_.hasClass('folding')) {
@@ -1330,13 +1239,11 @@ Entry.Playground.prototype.selectMenu = function(selector, disableTab) {
             if (typeof selector == 'string' && categoryName == selector ||
                 typeof selector == 'number' && selector == i) {
                 if (elements[i].hasClass('entrySelectedCategory')) {
-                    this.blockMenu.hide();
                     elements[i].removeClass('entrySelectedCategory');
                     this.menuInjected = true;
                     this.selectedMenu = categoryName;
                 } else {
                     elements[i].addClass('entrySelectedCategory');
-                    this.blockMenu.show(categories[i].childNodes);
                     this.menuInjected = true;
                     delete this.selctedMenu;
                 }
@@ -1380,6 +1287,7 @@ Entry.Playground.prototype.showTab = function(item) {
  * @param {object} blockJSON
  */
 Entry.Playground.prototype.setBlockMenu = function(blockJSON) {
+    /*
     if (!blockJSON)
         blockJSON = EntryStatic.getAllBlocks();
     if (Entry.functionEnable)
@@ -1398,6 +1306,7 @@ Entry.Playground.prototype.setBlockMenu = function(blockJSON) {
             if (blockJSON[i].category == "scene")
                 blockJSON.splice(i, 1);
     this.blockJSON = blockJSON;
+    */
 };
 
 /**
@@ -1430,13 +1339,12 @@ Entry.Playground.prototype.reloadPlayground = function () {
     if (document.getElementsByClassName('entrySelectedCategory')[0]) {
         selectedCategory = document.getElementsByClassName('entrySelectedCategory')[0];
         selector = selectedCategory.getAttribute('id').substring(13);
-        selectedCategory.removeClass('entrySelectedCategory');
+        //selectedCategory.removeClass('entrySelectedCategory');
         Entry.playground.selectMenu(selector);
     }
 
     if (Entry.stage.selectedObject) {
-        Blockly.mainWorkspace.clear();
-        Blockly.Xml.domToWorkspace(Blockly.mainWorkspace, Entry.stage.selectedObject.script);
+        //TODO : reload board
     }
 };
 
@@ -1446,7 +1354,7 @@ Entry.Playground.prototype.reloadPlayground = function () {
 Entry.Playground.prototype.flushPlayground = function () {
     this.object = null;
     if (Entry.playground && Entry.playground.view_) {
-        Blockly.mainWorkspace.clear();
+        // TODO: reset board
         this.injectPicture();
         this.injectSound();
     }
@@ -1581,7 +1489,7 @@ Entry.Playground.prototype.generateSoundElement = function(sound) {
     sound.view = element;
     element.addClass('entryPlaygroundSoundElement');
     element.sound = sound;
-   
+
     Entry.Utils.disableContextmenu(sound.view);
     $(sound.view).on('contextmenu', function(){
         var options = [
@@ -1723,6 +1631,7 @@ Entry.Playground.prototype.isTextBGMode = function () {
 Entry.Playground.prototype.checkVariables = function () {
     if (Entry.forEBS)
         return;
+    /*
     if (Entry.variableContainer.lists_.length)
         this.blockMenu.unbanClass("listNotExist");
     else
@@ -1731,6 +1640,7 @@ Entry.Playground.prototype.checkVariables = function () {
         this.blockMenu.unbanClass("variableNotExist");
     else
         this.blockMenu.banClass("variableNotExist");
+        */
 };
 
 
@@ -1739,6 +1649,7 @@ Entry.Playground.prototype.getViewMode = function() {
 };
 
 Entry.Playground.prototype.updateHW = function() {
+    /*
     var self = Entry.playground;
     if (!self.blockMenu)
         return;
@@ -1755,6 +1666,7 @@ Entry.Playground.prototype.updateHW = function() {
         self.blockMenu.unbanClass("arduinoDisconnected");
         Entry.hw.banHW();
     }
+    */
     if (self.object)
         self.selectMenu(self.lastSelector, true);
 };

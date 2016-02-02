@@ -81,11 +81,11 @@ Entry.Code = function(code) {
         blocks.splice(index,1);
     };
 
-    p.raiseEvent = function(eventType) {
+    p.raiseEvent = function(eventType, entity) {
         var blocks = this._eventMap[eventType];
         if (blocks === undefined) return;
         for (var i = 0; i < blocks.length; i++) {
-            this.executors.push(new Entry.Executor(blocks[i]));
+            this.executors.push(new Entry.Executor(blocks[i], entity));
         }
     };
 
@@ -117,7 +117,9 @@ Entry.Code = function(code) {
         if (!(blocks instanceof Array))
             return console.error("blocks must be array");
 
-        this._data.push(new Entry.Thread(blocks, this));
+        var thread = new Entry.Thread(blocks, this);
+        this._data.push(thread);
+        return thread;
     };
 
     p.cloneThread = function(thread, mode) {
