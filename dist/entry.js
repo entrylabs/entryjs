@@ -2779,7 +2779,7 @@ Entry.block.reach_something = function(a, b) {
       }
       for (var c = c.parent.clonedEntities, e = 0, g = c.length;e < g;e++) {
         var h = c[e];
-        if (h.getVisible() && !h.isStamp && Entry.checkCollisionRect(d, h.object.getTransformedBounds())) {
+        if (!h.isStamp && h.getVisible() && Entry.checkCollisionRect(d, h.object.getTransformedBounds())) {
           return !0;
         }
       }
@@ -2790,7 +2790,7 @@ Entry.block.reach_something = function(a, b) {
       c = c.parent.clonedEntities;
       e = 0;
       for (g = c.length;e < g;e++) {
-        if (h = c[e], h.getVisible() && !h.isStamp && f(d, h.object, .2, !0)) {
+        if (h = c[e], !h.isStamp && h.getVisible() && f(d, h.object, .2, !0)) {
           return !0;
         }
       }
