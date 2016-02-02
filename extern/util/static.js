@@ -1733,7 +1733,7 @@ EntryStatic.blockInfo = {
     },
     "set_visible_answer": {
         "isNotFor": [""],
-        "xml": "<block type='set_visible_answer'><field name='BOOL'>SHOW</field></block>",
+        "xml": "<block type='set_visible_answer'><field name='BOOL'>HIDE</field></block>",
         "class": "ask"
     },
     "choose_project_timer_action": {

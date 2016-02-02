@@ -6608,10 +6608,10 @@ p.closeConnection = function() {
   this.socket && this.socket.close();
 };
 p.downloadConnector = function() {
-  window.open("http://play-entry.org/down/entry-hw_v1.1.zip", "_blank").focus();
+  window.open("http://play-entry.org/down/Entry_HW_v1.1.2.exe", "_blank").focus();
 };
 p.downloadSource = function() {
-  window.open("http://play-entry.com/lib/EntryArduino/arduino/entry.ino", "_blank").focus();
+  window.open("http://play-entry.com/down/board.ino", "_blank").focus();
 };
 p.setZero = function() {
   Entry.hw.hwModule && Entry.hw.hwModule.setZero();
@@ -9760,10 +9760,15 @@ Entry.Reporter.prototype.report = function(a) {
   }
 };
 Entry.Scene = function() {
+  var a = this;
   this.scenes_ = [];
   this.selectedScene = null;
-  this.maxCount = 10;
+  this.maxCount = 20;
+  $(window).on("resize", function(b) {
+    a.resize();
+  });
 };
+Entry.Scene.viewBasicWidth = 70;
 Entry.Scene.prototype.generateView = function(a, b) {
   this.view_ = a;
   this.view_.addClass("entryScene");
@@ -9786,55 +9791,57 @@ Entry.Scene.prototype.generateView = function(a, b) {
   }
 };
 Entry.Scene.prototype.generateElement = function(a) {
-  var b = Entry.createElement("li", a.id);
-  b.addClass("entrySceneElementWorkspace");
-  b.addClass("entrySceneButtonWorkspace");
-  b.bindOnClick(function(b) {
+  var b = this, c = Entry.createElement("li", a.id);
+  c.addClass("entrySceneElementWorkspace");
+  c.addClass("entrySceneButtonWorkspace");
+  c.addClass("minValue");
+  $(c).on("mousedown", function(b) {
     Entry.engine.isState("run") ? b.preventDefault() : Entry.scene.selectScene(a);
   });
-  var c = Entry.createElement("input");
-  c.addClass("entrySceneFieldWorkspace");
-  c.value = a.name;
-  c.style.width = Entry.computeInputWidth(c);
-  Entry.sceneEditable || (c.disabled = "disabled");
-  var d = Entry.createElement("span");
-  d.addClass("entrySceneLeftWorkspace");
-  b.appendChild(d);
-  d = Entry.createElement("span");
-  d.addClass("entrySceneInputCover");
-  b.appendChild(d);
-  c.onkeyup = function(b) {
-    b = b.keyCode;
-    Entry.isArrowOrBackspace(b) || (a.name = this.value, c.style.width = Entry.computeInputWidth(this), 13 == b && this.blur(), 9 < this.value.length && (this.value = this.value.substring(0, 10), this.blur()));
+  var d = Entry.createElement("input");
+  d.addClass("entrySceneFieldWorkspace");
+  d.value = a.name;
+  Entry.sceneEditable || (d.disabled = "disabled");
+  var e = Entry.createElement("span");
+  e.addClass("entrySceneLeftWorkspace");
+  c.appendChild(e);
+  var f = Entry.createElement("span");
+  f.addClass("entrySceneInputCover");
+  f.style.width = Entry.computeInputWidth(d);
+  c.appendChild(f);
+  a.inputWrapper = f;
+  d.onkeyup = function(c) {
+    c = c.keyCode;
+    Entry.isArrowOrBackspace(c) || (a.name = this.value, f.style.width = Entry.computeInputWidth(this), b.resize(), 13 == c && this.blur(), 9 < this.value.length && (this.value = this.value.substring(0, 10), this.blur()));
   };
-  c.onblur = function(b) {
-    c.value = this.value;
+  d.onblur = function(b) {
+    d.value = this.value;
     a.name = this.value;
-    c.style.width = Entry.computeInputWidth(this);
+    f.style.width = Entry.computeInputWidth(this);
   };
-  d.appendChild(c);
-  d.nameField = c;
-  d = Entry.createElement("span");
-  d.addClass("entrySceneRemoveButtonCoverWorkspace");
-  b.appendChild(d);
+  f.appendChild(d);
+  f.nameField = d;
+  e = Entry.createElement("span");
+  e.addClass("entrySceneRemoveButtonCoverWorkspace");
+  c.appendChild(e);
   if (Entry.sceneEditable) {
-    var e = Entry.createElement("button");
-    e.addClass("entrySceneRemoveButtonWorkspace");
-    e.innerHTML = "x";
-    e.scene = a;
-    e.bindOnClick(function(a) {
+    var g = Entry.createElement("button");
+    g.addClass("entrySceneRemoveButtonWorkspace");
+    g.innerHTML = "x";
+    g.scene = a;
+    g.bindOnClick(function(a) {
       a.stopPropagation();
       Entry.engine.isState("run") || confirm(Lang.Workspace.will_you_delete_scene) && Entry.scene.removeScene(this.scene);
     });
-    d.appendChild(e);
+    e.appendChild(g);
   }
-  Entry.Utils.disableContextmenu(b);
-  $(b).on("contextmenu", function() {
+  Entry.Utils.disableContextmenu(c);
+  $(c).on("contextmenu", function() {
     Entry.ContextMenu.show([{text:Lang.Workspace.duplicate_scene, callback:function() {
       Entry.scene.cloneScene(a);
     }}], "workspace-contextmenu");
   });
-  return a.view = b;
+  return a.view = c;
 };
 Entry.Scene.prototype.updateView = function() {
   if (!Entry.type || "workspace" == Entry.type) {
@@ -9848,6 +9855,7 @@ Entry.Scene.prototype.updateView = function() {
     }
     this.addButton_ && (this.getScenes().length < this.maxCount ? this.addButton_.removeClass("entryRemove") : this.addButton_.addClass("entryRemove"));
   }
+  this.resize();
 };
 Entry.Scene.prototype.addScenes = function(a) {
   if ((this.scenes_ = a) && 0 !== a.length) {
@@ -9936,6 +9944,25 @@ Entry.Scene.prototype.cloneScene = function(a) {
     a = Entry.container.getSceneObjects(a);
     for (var c = a.length - 1;0 <= c;c--) {
       Entry.container.addCloneObject(a[c], b.id);
+    }
+  }
+};
+Entry.Scene.prototype.resize = function() {
+  var a = this.getScenes(), b = this.selectedScene, c = a[0];
+  if (0 !== a.length && c) {
+    var d = $(c.view).offset().left, c = parseFloat($(b.view).css("margin-left")), d = $(this.view_).width() - d, e = 0, f;
+    for (f in a) {
+      var g = a[f], h = g.view;
+      h.addClass("minValue");
+      g = g.inputWrapper;
+      $(g).width(Entry.computeInputWidth(g.nameField));
+      h = $(h);
+      e = e + h.width() + c;
+    }
+    if (e > d) {
+      for (f in d -= $(b.view).width(), c = d / (a.length - 1) - (Entry.Scene.viewBasicWidth + c), a) {
+        g = a[f], b.id != g.id ? (g.view.removeClass("minValue"), $(g.inputWrapper).width(c)) : g.view.addClass("minValue");
+      }
     }
   }
 };

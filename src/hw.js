@@ -164,13 +164,13 @@ p.closeConnection = function() {
 };
 
 p.downloadConnector = function() {
-    var url = "http://play-entry.org/down/entry-hw_v1.1.zip";
+    var url = "http://play-entry.org/down/Entry_HW_v1.1.2.exe";
     var win = window.open(url, '_blank');
     win.focus();
 };
 
 p.downloadSource = function() {
-    var url = "http://play-entry.com/lib/EntryArduino/arduino/entry.ino";
+    var url = "http://play-entry.com/down/board.ino";
     var win = window.open(url, '_blank');
     win.focus();
 };
