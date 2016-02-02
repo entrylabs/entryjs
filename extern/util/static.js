@@ -115,7 +115,7 @@ EntryStatic.getAllBlocks = function() {
                 "dialog",
                 "remove_dialog",
                 "change_to_some_shape",
-                "change_to_next_shape",
+                "change_to_near_shape",
                 "add_effect_amount",
                 "change_effect_amount",
                 "erase_all_effects",
@@ -625,8 +625,8 @@ EntryStatic.blockInfo = {
         "isNotFor": ["textBox"],
         "usage": ["shape"]
     },
-    "change_to_next_shape": {
-        "xml": "<block type='change_to_next_shape'></block>",
+    "change_to_near_shape": {
+        "xml": "<block type='change_to_near_shape'></block>",
         "class": "shape",
         "isNotFor": ["textBox"],
         "usage": ["shape"]
