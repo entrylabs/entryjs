@@ -239,6 +239,7 @@ EntryStatic.getAllBlocks = function() {
                 "arduino_toggle_pwm",
                 "arduino_convert_scale",
                 "bitbrick_sensor_value",
+                "bitbrick_convert_scale",
                 "bitbrick_is_touch_pressed",
                 "bitbrick_turn_off_color_led",
                 "bitbrick_turn_on_color_led_by_rgb",
@@ -1050,7 +1051,7 @@ EntryStatic.blockInfo = {
         "usage": ["variable"]
     },
     "value_of_index_from_list": {
-        "xml": "<block type='value_of_index_from_list'> <value name='INDEX'> <block type='options_for_list'></block> </value> </block>",
+        "xml": "<block type='value_of_index_from_list'> <value name='INDEX'> <block type='number'><field name='NUM'>1</field></block> </value> </block>",
         "class": "list_element",
         "isNotFor": ["list", "listNotExist"],
         "usage": ["list"]
@@ -1346,7 +1347,7 @@ EntryStatic.blockInfo = {
         "usage": []
     },
     "change_string_case": {
-        "xml": "<block type='change_string_case'><value name='STRING'><block type='text'><field name='NAME'>안녕, 엔트리!</field></block></value></block>",
+        "xml": "<block type='change_string_case'><value name='STRING'><block type='text'><field name='NAME'>Hello, Entry!</field></block></value></block>",
         "class": "calc_string",
         "isNotFor": [],
         "usage": []
@@ -1410,6 +1411,11 @@ EntryStatic.blockInfo = {
     "bitbrick_servomotor_angle": {
         "isNotFor": ['bitbrick'],
         "xml": "<block type='bitbrick_servomotor_angle'><value name='VALUE'><block type='text'><field name='NAME'>100</field></block></value></block>",
+        "class": "condition"
+    },    
+    "bitbrick_convert_scale": {
+        "isNotFor": ['bitbrick'],
+        "xml": "<block type='bitbrick_convert_scale'><value name='VALUE2'> <block type='number'><field name='NUM'>0</field></block> </value><value name='VALUE3'> <block type='number'><field name='NUM'>1023</field></block> </value><value name='VALUE4'> <block type='number'><field name='NUM'>-100</field></block> </value><value name='VALUE5'> <block type='number'><field name='NUM'>100</field></block> </value></block>",
         "class": "condition"
     },
 	"hamster_hand_found": {
@@ -1733,7 +1739,7 @@ EntryStatic.blockInfo = {
     },
     "set_visible_answer": {
         "isNotFor": [""],
-        "xml": "<block type='set_visible_answer'><field name='BOOL'>SHOW</field></block>",
+        "xml": "<block type='set_visible_answer'><field name='BOOL'>HIDE</field></block>",
         "class": "ask"
     },
     "choose_project_timer_action": {
