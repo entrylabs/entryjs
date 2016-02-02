@@ -679,6 +679,27 @@ Entry.setBasicBrush = function (sprite) {
     sprite.shape = shape;
 };
 
+Entry.setCloneBrush = function (sprite, parentBrush) {
+    var brush = new createjs.Graphics();
+    brush.thickness = parentBrush.thickness;
+    brush.rgb = parentBrush.rgb;
+
+    brush.opacity = parentBrush.opacity;
+    brush.setStrokeStyle(brush.thickness);
+    brush.beginStroke("rgba("+brush.rgb.r+","+brush.rgb.g+","+brush.rgb.b+","+(brush.opacity/100)+")");
+
+    var shape = new createjs.Shape(brush);
+    Entry.stage.selectedObjectContainer.addChild(shape);
+
+    if (sprite.brush)
+        sprite.brush = null;
+    sprite.brush = brush;
+
+    if (sprite.shape)
+        sprite.shape = null;
+    sprite.shape = shape;
+};
+
 Entry.isFloat = function (num) {
     return /\d+\.{1}\d+/.test(num);
 };

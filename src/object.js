@@ -1230,6 +1230,9 @@ Entry.EntryObject.prototype.addCloneEntity = function(object, entity, script) {
             clonedEntity.effect = Entry.cloneSimpleObject(entity.effect);
             clonedEntity.applyFilter();
         }
+        if(entity.brush) {
+            Entry.setCloneBrush(clonedEntity, entity.brush);
+        }
     } else {
         clonedEntity.injectModel(
             this.entity.picture ? this.entity.picture : null,
@@ -1240,6 +1243,9 @@ Entry.EntryObject.prototype.addCloneEntity = function(object, entity, script) {
             clonedEntity.effect = Entry.cloneSimpleObject(this.entity.effect);
             clonedEntity.applyFilter();
         }
+        if(this.entity.brush) {
+            Entry.setCloneBrush(clonedEntity, this.entity.brush);
+        }
     }
     Entry.engine.raiseEventOnEntity(clonedEntity,
                                     [clonedEntity, 'when_clone_start']);
@@ -1248,6 +1254,7 @@ Entry.EntryObject.prototype.addCloneEntity = function(object, entity, script) {
     this.addCloneVariables(this, clonedEntity,
                            entity ? entity.variables : null,
                            entity ? entity.lists : null);
+
     this.clonedEntities.push(clonedEntity);
     Entry.stage.loadEntity(clonedEntity);
 };
