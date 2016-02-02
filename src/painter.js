@@ -344,9 +344,11 @@ Entry.Painter.prototype.updateImageHandleCursor = function () {
     handle.NWHandle.cursor = cursorList[0];
 };
 
-Entry.Painter.prototype.clearCanvas = function() {
+Entry.Painter.prototype.clearCanvas = function(skipInit) {
     this.clearHandle();
-    this.initCommand();
+    if(!skipInit) {
+        this.initCommand();
+    }
 
     this.objectContainer.removeAllChildren();
     this.stage.update();
@@ -393,10 +395,10 @@ Entry.Painter.prototype.initPicture = function() {
             if (save) {
                 painter.file_ = JSON.parse(JSON.stringify(painter.file));
                 painter.file_save(true);
-                painter.file.modified = false;
             }
         }
-        painter.clearCanvas();
+        painter.file.modified = false;
+        painter.clearCanvas(true);
 
         var image = new Image();
         if (picture.id)
@@ -407,7 +409,6 @@ Entry.Painter.prototype.initPicture = function() {
         painter.file.id = image.id;
         painter.file.name = picture.name;
         painter.file.mode = 'edit';
-
         if (picture.fileurl) {
             image.src = picture.fileurl;
         } else {
@@ -426,6 +427,13 @@ Entry.Painter.prototype.initPicture = function() {
 
     Entry.addEventListener('pictureNameChanged', function(picture) {
         painter.file.name = picture.name;
+    });
+
+    Entry.addEventListener('pictureClear', function(picture) {
+        painter.file.modified = false;
+        painter.file.id = '';
+        painter.file.name = '';
+        painter.clearCanvas();
     });
 };
 

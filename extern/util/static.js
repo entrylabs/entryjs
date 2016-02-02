@@ -308,7 +308,16 @@ EntryStatic.getAllBlocks = function() {
                 "sensorBoard_get_digital_value",
                 "sensorBoard_toggle_led",
                 "sensorBoard_toggle_pwm",
-                "sensorBoard_convert_scale"
+                "sensorBoard_convert_scale",
+                //CODEino
+                "CODEino_get_named_sensor_value",
+                "CODEino_is_button_pressed",
+                "CODEino_get_accelerometer_value",
+                "CODEino_get_number_sensor_value",
+                "CODEino_get_digital_value",
+                "CODEino_toggle_led",
+                "CODEino_toggle_pwm",
+                "CODEino_convert_scale"
             ]
         }
     ]
@@ -1041,7 +1050,7 @@ EntryStatic.blockInfo = {
         "usage": ["variable"]
     },
     "value_of_index_from_list": {
-        "xml": "<block type='value_of_index_from_list'> <value name='INDEX'> <block type='options_for_list'></block> </value> </block>",
+        "xml": "<block type='value_of_index_from_list'> <value name='INDEX'> <block type='number'><field name='NUM'>1</field></block> </value> </block>",
         "class": "list_element",
         "isNotFor": ["list", "listNotExist"],
         "usage": ["list"]
@@ -1148,6 +1157,12 @@ EntryStatic.blockInfo = {
         "usage": ["arduino"],
         "class": "arduino_value"
     },
+    "CODEino_get_number_sensor_value": {
+        "xml": "<block type='arduino_get_number_sensor_value'><value name='VALUE'><block type='CODEino_get_sensor_number'></block></value></block>",
+        "isNotFor": ['CODEino'],
+        "usage": ["arduino"],
+        "class": "arduino_value"
+    },
     "arduino_get_digital_value": {
         "xml": "<block type='arduino_get_digital_value'><value name='VALUE'><block type='arduino_get_port_number'></block></value></block>",
         "isNotFor": ['arduino'],
@@ -1157,6 +1172,12 @@ EntryStatic.blockInfo = {
     "sensorBoard_get_digital_value": {
         "xml": "<block type='arduino_get_digital_value'><value name='VALUE'><block type='arduino_get_port_number'></block></value></block>",
         "isNotFor": ['sensorBoard'],
+        "usage": ["arduino"],
+        "class": "arduino_value"
+    },    
+    "CODEino_get_digital_value": {
+        "xml": "<block type='arduino_get_digital_value'><value name='VALUE'><block type='arduino_get_port_number'></block></value></block>",
+        "isNotFor": ['CODEino'],
         "usage": ["arduino"],
         "class": "arduino_value"
     },
@@ -1172,6 +1193,12 @@ EntryStatic.blockInfo = {
         "usage": ["arduino"],
         "class": "arduino_set"
     },
+    "CODEino_toggle_led": {
+        "xml": "<block type='arduino_toggle_led'><value name='VALUE'><block type='arduino_get_port_number'></block></value></block>",
+        "isNotFor": ['CODEino'],
+        "usage": ["arduino"],
+        "class": "arduino_set"
+    },
     "arduino_toggle_pwm": {
         "xml": "<block type='arduino_toggle_pwm'><value name='PORT'><block type='arduino_get_pwm_port_number'></block></value><value name='VALUE'><block type='arduino_text'><field name='NAME'>255</field></block></value></block>",
         "isNotFor": ['arduino'],
@@ -1184,6 +1211,12 @@ EntryStatic.blockInfo = {
         "usage": ["arduino"],
         "class": "arduino_set"
     },
+    "CODEino_toggle_pwm": {
+        "xml": "<block type='arduino_toggle_pwm'><value name='PORT'><block type='arduino_get_pwm_port_number'></block></value><value name='VALUE'><block type='arduino_text'><field name='NAME'>255</field></block></value></block>",
+        "isNotFor": ['CODEino'],
+        "usage": ["arduino"],
+        "class": "arduino_set"
+    },
     "arduino_convert_scale": {
         "xml": "<block type='arduino_convert_scale'><value name='VALUE1'><block type='arduino_get_number_sensor_value'><value name='VALUE'><block type='arduino_get_sensor_number'></block></value></block></value><value name='VALUE2'> <block type='number'><field name='NUM'>0</field></block> </value><value name='VALUE3'> <block type='number'><field name='NUM'>1023</field></block> </value><value name='VALUE4'> <block type='number'><field name='NUM'>0</field></block> </value><value name='VALUE5'> <block type='number'><field name='NUM'>100</field></block> </value></block>",
         "isNotFor": ['arduino'],
@@ -1193,6 +1226,12 @@ EntryStatic.blockInfo = {
     "sensorBoard_convert_scale": {
         "xml": "<block type='arduino_convert_scale'><value name='VALUE1'><block type='arduino_get_number_sensor_value'><value name='VALUE'><block type='arduino_get_sensor_number'></block></value></block></value><value name='VALUE2'> <block type='number'><field name='NUM'>0</field></block> </value><value name='VALUE3'> <block type='number'><field name='NUM'>1023</field></block> </value><value name='VALUE4'> <block type='number'><field name='NUM'>0</field></block> </value><value name='VALUE5'> <block type='number'><field name='NUM'>100</field></block> </value></block>",
         "isNotFor": ['sensorBoard'],
+        "usage": ["arduino"],
+        "class": "arduino"
+    },
+    "CODEino_convert_scale": {
+        "xml": "<block type='arduino_convert_scale'><value name='VALUE1'><block type='arduino_get_number_sensor_value'><value name='VALUE'><block type='CODEino_get_sensor_number'></block></value></block></value><value name='VALUE2'> <block type='number'><field name='NUM'>0</field></block> </value><value name='VALUE3'> <block type='number'><field name='NUM'>1023</field></block> </value><value name='VALUE4'> <block type='number'><field name='NUM'>0</field></block> </value><value name='VALUE5'> <block type='number'><field name='NUM'>100</field></block> </value></block>",
+        "isNotFor": ['CODEino'],
         "usage": ["arduino"],
         "class": "arduino"
     },
@@ -1307,7 +1346,7 @@ EntryStatic.blockInfo = {
         "usage": []
     },
     "change_string_case": {
-        "xml": "<block type='change_string_case'><value name='STRING'><block type='text'><field name='NAME'>안녕, 엔트리!</field></block></value></block>",
+        "xml": "<block type='change_string_case'><value name='STRING'><block type='text'><field name='NAME'>Hello, Entry!</field></block></value></block>",
         "class": "calc_string",
         "isNotFor": [],
         "usage": []
@@ -1629,7 +1668,6 @@ EntryStatic.blockInfo = {
         "xml": "<block type='albert_set_tempo_to'><value name='VALUE'><block type='text'><field name='NAME'>60</field></block></value></block>",
         "class": "albert_buzzer"
     },
-
     "sensorBoard_get_named_sensor_value": {
         "xml": "<block type='sensorBoard_get_named_sensor_value'></block>",
         "isNotFor": ['sensorBoard'],
@@ -1645,6 +1683,24 @@ EntryStatic.blockInfo = {
         "isNotFor": ["sensorBoard"],
         "xml": "<block type='sensorBoard_led'></block>",
         "class": "sensorBoard"
+    },
+    "CODEino_get_named_sensor_value": {
+        "xml": "<block type='CODEino_get_named_sensor_value'></block>",
+        "isNotFor": ['CODEino'],
+        "usage": ["arduino"],
+        "class": "CODEino"
+    },
+    "CODEino_is_button_pressed": {
+        "xml": "<block type='CODEino_is_button_pressed'></block>",
+        "isNotFor": ["CODEino"],
+        "usage": ["arduino"],
+        "class": "CODEino"
+    },
+    "CODEino_get_accelerometer_value": {
+        "xml": "<block type='CODEino_get_accelerometer_value'></block>",
+        "isNotFor": ["CODEino"],
+        "usage": ["arduino"],
+        "class": "CODEino"
     },
     "direction_relative_duration": {
         "isNotFor": [""],
@@ -1677,7 +1733,7 @@ EntryStatic.blockInfo = {
     },
     "set_visible_answer": {
         "isNotFor": [""],
-        "xml": "<block type='set_visible_answer'><field name='BOOL'>SHOW</field></block>",
+        "xml": "<block type='set_visible_answer'><field name='BOOL'>HIDE</field></block>",
         "class": "ask"
     },
     "choose_project_timer_action": {
