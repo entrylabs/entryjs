@@ -802,9 +802,6 @@ Entry.Playground.prototype.injectObject = function(object) {
         this.changeViewMode('picture');
     else if (viewMode == 'sound')
         this.changeViewMode('sound');
-
-    if (!this.menuInjected)
-        this.selectMenu(0);
 };
 
 /**
@@ -1158,100 +1155,13 @@ Entry.Playground.prototype.syncObjectWithEvent = function(e) {
  * @param {!string} objectType
  */
 Entry.Playground.prototype.setMenu = function(objectType) {
-    if (this.currentObjectType == objectType)
-        return;
-    //this.categoryListView_.innerHTML = '';
-    //TODO: process
-    //this.blockMenu.unbanClass(this.currentObjectType);
-    //this.blockMenu.banClass(objectType);
-    for (var i in this.blockJSON) {
-        var categoryName = this.blockJSON[i].category;
-        var element = Entry.createElement('li', 'entryCategory' + categoryName);
-        if ((categoryName == "brush" && objectType == "textBox") ||
-            (categoryName == "text" && objectType == "sprite") ||
-            ((categoryName != "func") && (!this.blockJSON[i].blocks || !this.blockJSON[i].blocks.length)))
-            element.addClass("entryRemove");
-        element.innerHTML = Lang.Blocks[categoryName.toUpperCase()];
-        element.bindOnClick(function () {
-            Entry.playground.selectMenu(this.id.substring(13));
-        });
-        if (!Entry.type || Entry.type == 'workspace') {
-            element.addClass('entryCategoryElementWorkspace');
-        } else if (Entry.type == 'phone') {
-            element.addClass('entryCategoryElementPhone');
-        }
-        this.categoryListView_.appendChild(element);
-    }
-    this.selectMenu(0);
+    if (this.currentObjectType == objectType) return;
+    var blockMenu = this.blockMenu;
+    blockMenu.unbanClass(this.currentObjectType);
+    blockMenu.banClass(objectType);
+    blockMenu.setMenu();
+    blockMenu.selectMenu(0);
     this.currentObjectType = objectType;
-};
-
-/**blockMenu
- * Show blocks on blockly when user click
- * @param {string|number} selector
- * @param {?boolean} disableTab
- */
-Entry.Playground.prototype.selectMenu = function(selector, disableTab) {
-    return;
-    if (!this.object) {
-        Entry.toast.alert(Lang.Workspace.add_object_alert,
-                          Lang.Workspace.add_object_alert_msg);
-        return;
-    }
-    this.lastSelector = selector;
-
-    var elements = this.categoryListView_.children;
-    if (!Entry.type || Entry.type == 'workspace') {
-        for (var i in this.blockJSON) {
-            var categoryName = this.blockJSON[i].category;
-            if (typeof selector == 'string' && categoryName == selector ||
-                typeof selector == 'number' && selector == i) {
-                if (elements[i].hasClass('entrySelectedCategory') && !disableTab) {
-                    this.blocklyView_.addClass('folding');
-                    this.blocklyView_.removeClass('foldOut');
-                    this.hideTabs();
-                    elements[i].removeClass('entrySelectedCategory');
-                    delete this.selectedMenu;
-                } else {
-                    if (categoryName == "func") {
-                    } else {
-                        if (categoryName == "variable")
-                            this.checkVariables();
-                    }
-                    this.menuInjected = true;
-                    if (this.blocklyView_.hasClass('folding')) {
-                        this.blocklyView_.addClass('foldOut');
-                        this.blocklyView_.removeClass('folding');
-                    }
-                    this.showTabs();
-                    elements[i].addClass('entrySelectedCategory');
-                    this.selectedMenu = categoryName;
-                }
-            } else {
-                elements[i].removeClass('entrySelectedCategory');
-            }
-        }
-    } else if (Entry.type == 'phone') {
-        var categories = [];
-        for (var i = 0; i<categories.length; i++) {
-            var category = categories[i];
-            var categoryName = category.attributes[0].value;
-            if (typeof selector == 'string' && categoryName == selector ||
-                typeof selector == 'number' && selector == i) {
-                if (elements[i].hasClass('entrySelectedCategory')) {
-                    elements[i].removeClass('entrySelectedCategory');
-                    this.menuInjected = true;
-                    this.selectedMenu = categoryName;
-                } else {
-                    elements[i].addClass('entrySelectedCategory');
-                    this.menuInjected = true;
-                    delete this.selctedMenu;
-                }
-            } else {
-                elements[i].removeClass('entrySelectedCategory');
-            }
-        }
-    }
 };
 
 Entry.Playground.prototype.hideTabs = function() {
@@ -1280,33 +1190,6 @@ Entry.Playground.prototype.showTab = function(item) {
         this.tabViewElements[item].addClass('showTab');
         this.tabViewElements[item].removeClass('hideTab');
     }
-};
-
-/**
- * Set menu blocks by xml
- * @param {object} blockJSON
- */
-Entry.Playground.prototype.setBlockMenu = function(blockJSON) {
-    /*
-    if (!blockJSON)
-        blockJSON = EntryStatic.getAllBlocks();
-    if (Entry.functionEnable)
-        if (blockJSON.length > 1 &&
-            blockJSON[blockJSON.length-1].category == "arduino")
-            blockJSON.splice(blockJSON.length-1, 0, {category: "func"});
-    if (!Entry.messageEnable)
-        this.blockMenu.banClass("message");
-    if (!Entry.variableEnable)
-        this.blockMenu.banClass("variable");
-    if (!Entry.listEnable)
-        this.blockMenu.banClass("list");
-    this.updateHW();
-    if (!Entry.sceneEditable)
-        for (var i in blockJSON)
-            if (blockJSON[i].category == "scene")
-                blockJSON.splice(i, 1);
-    this.blockJSON = blockJSON;
-    */
 };
 
 /**
@@ -1631,7 +1514,6 @@ Entry.Playground.prototype.isTextBGMode = function () {
 Entry.Playground.prototype.checkVariables = function () {
     if (Entry.forEBS)
         return;
-    /*
     if (Entry.variableContainer.lists_.length)
         this.blockMenu.unbanClass("listNotExist");
     else
@@ -1640,7 +1522,6 @@ Entry.Playground.prototype.checkVariables = function () {
         this.blockMenu.unbanClass("variableNotExist");
     else
         this.blockMenu.banClass("variableNotExist");
-        */
 };
 
 
@@ -1649,7 +1530,6 @@ Entry.Playground.prototype.getViewMode = function() {
 };
 
 Entry.Playground.prototype.updateHW = function() {
-    /*
     var self = Entry.playground;
     if (!self.blockMenu)
         return;
@@ -1666,9 +1546,8 @@ Entry.Playground.prototype.updateHW = function() {
         self.blockMenu.unbanClass("arduinoDisconnected");
         Entry.hw.banHW();
     }
-    */
     if (self.object)
-        self.selectMenu(self.lastSelector, true);
+        self.blockMenu.selectMenu(self.blockMenu.lastSelector, true);
 };
 
 Entry.Playground.prototype.toggleLineBreak = function(isLineBreak) {
@@ -1711,3 +1590,6 @@ Entry.Playground.prototype.setFontAlign = function(fontAlign) {
     this.object.entity.setTextAlign(fontAlign);
 };
 
+Entry.Playground.prototype.setBlockMenu = function() {
+    return;
+}

@@ -13,6 +13,8 @@ goog.require("Entry.Utils");
 Entry.BlockMenu = function(dom, align, categoryData) {
     Entry.Model(this, false);
     this._align = align || "CENTER";
+    this._bannedClass = [];
+    this._categories = [];
 
     if (typeof dom === "string") dom = $('#' + dom);
     else dom = $(dom);
@@ -92,7 +94,7 @@ Entry.BlockMenu = function(dom, align, categoryData) {
                 (function(elem, name){
                     elem.text(Lang.Blocks[name.toUpperCase()]);
                     that._categoryElems[name] = elem;
-                    elem.bindOnClick(function(e){that.setMenu(name);});
+                    elem.bindOnClick(function(e){that.selectMenu(name);});
                 })(element, name);
             }
         }
@@ -169,7 +171,14 @@ Entry.BlockMenu = function(dom, align, categoryData) {
             var block = thread.getFirstBlock();
             var blockView = block.view;
 
-            var className = Entry.block[block.type].class;
+            var blockInfo = Entry.block[block.type];
+            if(this.checkBanClass(blockInfo)) {
+                blockView.set({visible:false});
+                continue;
+            }
+
+            blockView.set({visible:true});
+            var className = blockInfo.class;
             if (pastClass && pastClass !== className) {
                 this._createSplitter(marginFromTop);
                 marginFromTop += vPadding;
@@ -313,7 +322,49 @@ Entry.BlockMenu = function(dom, align, categoryData) {
         this.offset = this.svgDom.offset();
     };
 
-    p.setMenu = function(name) {
+    p.setMenu = function() {
+        var categoryCodes = this._categoryCodes;
+        var elems = this._categoryElems;
+        for (var key in categoryCodes) {
+            var code = categoryCodes[key];
+            if (!(code instanceof Entry.Code))
+                code = categoryCodes[key] = new Entry.Code(code);
+            var threads = code.getThreads();
+
+            var count = threads.length;
+            for (var i=0; i<threads.length; i++) {
+                var block = threads[i].getFirstBlock();
+                if(this.checkBanClass(Entry.block[block.type]))
+                    count--;
+            }
+
+            var elem = elems[key];
+            if (count === 0) elems[key].addClass('entryRemove');
+            else elems[key].removeClass('entryRemove');
+        }
+    };
+
+    p._convertSelector = function(selector) {
+        if (isNaN(selector)) return selector;
+
+        selector = Number(selector);
+        var categories = this._categories;
+        var elems = this._categoryElems;
+        for (var i = 0; i < categories.length; i++) {
+            var key = categories[i];
+            var visible = !elems[key].hasClass('entryRemove');
+            if (visible) {
+                if (selector-- === 0) return key;
+            }
+        }
+
+    };
+
+    p.selectMenu = function(selector, doNotFold) {
+        var name = this._convertSelector(selector);
+        if (name == 'variable')
+            Entry.playground.checkVariables();
+
         var elem = this._categoryElems[name];
         var oldView = this._selectedCategoryView;
         var className = 'entrySelectedCategory';
@@ -323,7 +374,7 @@ Entry.BlockMenu = function(dom, align, categoryData) {
 
         if (oldView) oldView.removeClass(className);
 
-        if (elem == oldView) {
+        if (elem == oldView && !doNotFold) {
             boardView.addClass('folding');
             this._selectedCategoryView = null;
             elem.removeClass(className);
@@ -356,7 +407,10 @@ Entry.BlockMenu = function(dom, align, categoryData) {
 
             this.changeCode(code);
         }
+
+        this.lastSelector = name;
     };
+
 
     p._generateCategoryCodes = function(categoryData) {
         this._categoryCodes = {};
@@ -370,7 +424,31 @@ Entry.BlockMenu = function(dom, align, categoryData) {
                     type:b
                 }]);
             });
-            this._categoryCodes[datum.category] = codesJSON;
+            var categoryName = datum.category;
+            this._categories.push(categoryName);
+            this._categoryCodes[categoryName] = codesJSON;
         }
     };
+
+    p.banClass = function(className) {
+        var index = this._bannedClass.indexOf(className);
+        if (index < 0)
+            this._bannedClass.push(className);
+    }
+
+    p.unbanClass = function(className) {
+        var index = this._bannedClass.indexOf(className);
+        if (index > -1)
+            this._bannedClass.splice(index, 1);
+    }
+
+    p.checkBanClass = function(blockInfo) {
+        if (!blockInfo) return;
+        var isNotFor = blockInfo.isNotFor;
+        for (var i in this._bannedClass) {
+            if (isNotFor && isNotFor.indexOf(this._bannedClass[i]) > -1)
+                return true;
+        }
+        return false;
+    }
 })(Entry.BlockMenu.prototype);
