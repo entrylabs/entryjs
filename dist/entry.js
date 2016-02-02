@@ -13122,6 +13122,7 @@ Entry.BlockMenu = function(a, b, c) {
     g && Entry.bindAnimationCallbackOnce(k, function() {
       h.scroller.resizeScrollBar.call(h.scroller);
       k.removeClass("foldOut");
+      Entry.windowResized.notify();
     });
     this.visible && (e.addClass("entrySelectedCategory"), f = this._categoryCodes[d], this._selectedCategoryView = e, e.addClass("entrySelectedCategory"), f.constructor !== Entry.Code && (f = this._categoryCodes[d] = new Entry.Code(f)), this.changeCode(f));
     this.lastSelector = d;
@@ -13591,45 +13592,45 @@ Entry.Code = function(a) {
     return this;
   };
   a.clear = function() {
-    for (var a = this._data.length - 1;0 <= a;a--) {
-      this._data[a].getFirstBlock().destroy();
+    for (var b = this._data.length - 1;0 <= b;b--) {
+      this._data[b].getFirstBlock().destroy();
     }
     this.clearExecutors();
     this._eventMap = {};
   };
-  a.createView = function(a) {
-    null === this.view ? this.set({view:new Entry.CodeView(this, a), board:a}) : (this.set({board:a}), a.bindCodeView(this.view));
+  a.createView = function(b) {
+    null === this.view ? this.set({view:new Entry.CodeView(this, b), board:b}) : (this.set({board:b}), b.bindCodeView(this.view));
   };
-  a.registerEvent = function(a, c) {
-    this._eventMap[c] || (this._eventMap[c] = []);
-    this._eventMap[c].push(a);
+  a.registerEvent = function(b, a) {
+    this._eventMap[a] || (this._eventMap[a] = []);
+    this._eventMap[a].push(b);
   };
-  a.unregisterEvent = function(a, c) {
-    var d = this._eventMap[c];
+  a.unregisterEvent = function(b, a) {
+    var d = this._eventMap[a];
     if (d && 0 !== d.length) {
-      var e = d.indexOf(a);
+      var e = d.indexOf(b);
       0 > e || d.splice(e, 1);
     }
   };
-  a.raiseEvent = function(a, c) {
-    var d = this._eventMap[a];
+  a.raiseEvent = function(b, a) {
+    var d = this._eventMap[b];
     if (void 0 !== d) {
       for (var e = 0;e < d.length;e++) {
-        this.executors.push(new Entry.Executor(d[e], c));
+        this.executors.push(new Entry.Executor(d[e], a));
       }
     }
   };
-  a.getEventMap = function(a) {
-    return this._eventMap[a];
+  a.getEventMap = function(b) {
+    return this._eventMap[b];
   };
-  a.map = function(a) {
-    this._data.map(a);
+  a.map = function(b) {
+    this._data.map(b);
   };
   a.tick = function() {
-    for (var a = this.executors, c = 0;c < a.length;c++) {
-      var d = a[c];
+    for (var b = this.executors, a = 0;a < b.length;a++) {
+      var d = b[a];
       d.execute();
-      null === d.scope.block && (a.splice(c, 1), c--, 0 === a.length && this.executeEndEvent.notify());
+      null === d.scope.block && (b.splice(a, 1), a--, 0 === b.length && this.executeEndEvent.notify());
     }
   };
   a.clearExecutors = function() {
@@ -15251,33 +15252,25 @@ Entry.FieldTrashcan = function(a) {
   };
 })(Entry.FieldTrashcan.prototype);
 Entry.Board = function(a) {
-  function b(a) {
-    d.offset = d.svgDom.offset();
-    var b = $(window);
-    a = b.scrollTop();
-    var b = b.scrollLeft(), c = d.offset;
-    d.relativeOffset = {top:c.top - a, left:c.left - b};
-  }
-  var c = a.dom, c = "string" === typeof c ? $("#" + c) : $(c);
-  if ("DIV" !== c.prop("tagName")) {
+  var b = a.dom, b = "string" === typeof b ? $("#" + b) : $(b);
+  if ("DIV" !== b.prop("tagName")) {
     return console.error("Dom is not div element");
   }
   if ("function" !== typeof window.Snap) {
     return console.error("Snap library is required");
   }
   Entry.Model(this, !1);
-  this.view = c;
+  this.view = b;
   this._snapId = "play" + (new Date).getTime();
   this.workspace = a.workspace;
-  this.wrapper = Entry.Dom("div", {parent:c, class:"entryBoardWrapper"});
+  this.wrapper = Entry.Dom("div", {parent:b, class:"entryBoardWrapper"});
   this.svgDom = Entry.Dom($('<svg id="' + this._snapId + '" class="entryBoard" width="100%" height="100%"version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'), {parent:this.wrapper});
   this.offset = this.svgDom.offset();
   this.offset.left -= $(window).scrollLeft();
   this.relativeOffset = this.offset;
   this.visible = !0;
-  var d = this;
-  $(window).scroll(b);
-  Entry.windowResized.attach(this, b);
+  $(window).scroll(this.updateOffset);
+  Entry.windowResized.attach(this, this.updateOffset);
   this.snap = Snap("#" + this._snapId);
   this._blockViews = [];
   this.trashcan = new Entry.FieldTrashcan(this);
@@ -15291,7 +15284,7 @@ Entry.Board = function(a) {
   this.changeEvent = new Entry.Event(this);
   this.scroller = new Entry.Scroller(this, !0, !0);
   Entry.Utils.disableContextmenu(this.svgDom);
-  this._addControl(c);
+  this._addControl(b);
   Entry.documentMousedown && Entry.documentMousedown.attach(this, this.setSelectedBlock);
   Entry.keyPressed && Entry.keyPressed.attach(this, this._keyboardControl);
 };
@@ -15432,6 +15425,11 @@ Entry.Board = function(a) {
     for (var a = this.svgBlockGroup.node;a.firstChild;) {
       a.removeChild(a.firstChild);
     }
+  };
+  a.updateOffset = function() {
+    this.offset = this.svgDom.offset();
+    var a = $(window), c = a.scrollTop(), a = a.scrollLeft(), d = this.offset;
+    this.relativeOffset = {top:d.top - c, left:d.left - a};
   };
 })(Entry.Board.prototype);
 Entry.Vim = function(a) {

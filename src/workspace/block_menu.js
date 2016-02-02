@@ -393,6 +393,7 @@ Entry.BlockMenu = function(dom, align, categoryData) {
             Entry.bindAnimationCallbackOnce(boardView, function(){
                 board.scroller.resizeScrollBar.call(board.scroller);
                 boardView.removeClass('foldOut');
+                Entry.windowResized.notify();
             });
         }
 
