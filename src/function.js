@@ -75,7 +75,8 @@ Entry.Func.CREATE_BLOCK =
     '</block></xml>';
 
 Entry.Func.edit = function(func) {
-    this.cancelEdit();
+    this.srcFName = func.description;
+    this.cancelEdit(); 
     if (this.workspace)
         this.workspace.visible = true;
     this.initEditView();
@@ -161,8 +162,35 @@ Entry.Func.save = function() {
     this.targetFunc.content = Blockly.Xml.workspaceToDom(this.workspace);
     this.targetFunc.generateBlock(true);
     Entry.variableContainer.saveFunction(this.targetFunc);
+    
+    var dstFName = this.targetFunc.description;
+    this.updateFuncName(dstFName);
+
     this.cancelEdit();
 };
+
+Entry.Func.updateFuncName = function(dstFName) {
+    var blocks = [];
+    blocks =  Blockly.mainWorkspace.getAllBlocks();
+    for(var i = 0; i < blocks.length; i++) { 
+        var block = blocks[i];
+        if(block.type === "function_general") {
+            var iList = [];
+            iList = block.inputList;
+            for(var j=0; j < iList.length; j++) {
+                var input = iList[j];
+                if(input.fieldRow.length > 0 && (input.fieldRow[0].text_ != undefined)) {
+                    if(input.fieldRow[0].text_ === this.srcFName) {
+                        input.fieldRow[0].text_ = dstFName;
+                    }
+                }
+            }
+        }
+    }
+    var updatedDom = Blockly.Xml.workspaceToDom(Blockly.mainWorkspace)
+    Blockly.mainWorkspace.clear();
+    Blockly.Xml.domToWorkspace(Blockly.mainWorkspace, updatedDom);
+}; 
 
 Entry.Func.cancelEdit = function() {
     if (!this.svg || !this.targetFunc)
@@ -540,3 +568,4 @@ Entry.Func.generateWsBlock = function(func, content, id) {
         description: description
     };
 };
+

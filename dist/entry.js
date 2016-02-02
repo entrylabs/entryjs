@@ -11214,6 +11214,7 @@ Entry.Func.FIELD_BLOCK = '<xml><block type="function_field_label"></block><block
 Entry.Func.fieldBlocks = Entry.nodeListToArray(Blockly.Xml.textToDom(Entry.Func.FIELD_BLOCK).childNodes);
 Entry.Func.CREATE_BLOCK = '<xml><block type="function_create" deletable="false" x="28" y="28"></block></xml>';
 Entry.Func.edit = function(a) {
+  this.srcFName = a.description;
   this.cancelEdit();
   this.workspace && (this.workspace.visible = !0);
   this.initEditView();
@@ -11273,7 +11274,22 @@ Entry.Func.save = function() {
   this.targetFunc.content = Blockly.Xml.workspaceToDom(this.workspace);
   this.targetFunc.generateBlock(!0);
   Entry.variableContainer.saveFunction(this.targetFunc);
+  this.updateFuncName(this.targetFunc.description);
   this.cancelEdit();
+};
+Entry.Func.updateFuncName = function(a) {
+  for (var b = [], b = Blockly.mainWorkspace.getAllBlocks(), c = 0;c < b.length;c++) {
+    var d = b[c];
+    if ("function_general" === d.type) {
+      for (var e = [], e = d.inputList, d = 0;d < e.length;d++) {
+        var f = e[d];
+        0 < f.fieldRow.length && void 0 != f.fieldRow[0].text_ && f.fieldRow[0].text_ === this.srcFName && (f.fieldRow[0].text_ = a);
+      }
+    }
+  }
+  a = Blockly.Xml.workspaceToDom(Blockly.mainWorkspace);
+  Blockly.mainWorkspace.clear();
+  Blockly.Xml.domToWorkspace(Blockly.mainWorkspace, a);
 };
 Entry.Func.cancelEdit = function() {
   this.svg && this.targetFunc && (this.workspace.visible = !1, this.parentView.removeChild(this.svg), Entry.Func.isEdit = !1, Blockly.mainWorkspace.blockMenu.targetWorkspace = Blockly.mainWorkspace, this.targetFunc.block || (delete Entry.variableContainer.functions_[this.targetFunc.id], delete Entry.variableContainer.selected), delete this.targetFunc, this.updateMenu(), this.doWhenCancel(), Entry.variableContainer.updateList());
