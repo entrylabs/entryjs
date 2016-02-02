@@ -27,13 +27,19 @@ Entry.Parser = function(mode, syntax, cm) {
             this._parser = new Entry.JSParser(this.syntax);
 
             var syntax = this.syntax;
+
+            var assistScope = {};
+
+            for(var key in syntax.Scope ) {
+                assistScope[key + '();'] = syntax.Scope[key];
+            }
             CodeMirror.commands.javascript_complete = function (cm) {
-                CodeMirror.showHint(cm, null, {globalScope:syntax.Scope});
+                CodeMirror.showHint(cm, null, {globalScope:assistScope});
             }
 
             cm.on("keyup", function (cm, event) {
                 if (!cm.state.completionActive &&  (event.keyCode >= 65 && event.keyCode <= 95))  {
-                    CodeMirror.showHint(cm, null, {completeSingle: false, globalScope:syntax.Scope});
+                    CodeMirror.showHint(cm, null, {completeSingle: false, globalScope:assistScope});
                 }
             });
 
