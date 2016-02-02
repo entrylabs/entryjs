@@ -1051,7 +1051,7 @@ EntryStatic.blockInfo = {
         "usage": ["variable"]
     },
     "value_of_index_from_list": {
-        "xml": "<block type='value_of_index_from_list'> <value name='INDEX'> <block type='options_for_list'></block> </value> </block>",
+        "xml": "<block type='value_of_index_from_list'> <value name='INDEX'> <block type='number'><field name='NUM'>1</field></block> </value> </block>",
         "class": "list_element",
         "isNotFor": ["list", "listNotExist"],
         "usage": ["list"]
@@ -1347,7 +1347,7 @@ EntryStatic.blockInfo = {
         "usage": []
     },
     "change_string_case": {
-        "xml": "<block type='change_string_case'><value name='STRING'><block type='text'><field name='NAME'>안녕, 엔트리!</field></block></value></block>",
+        "xml": "<block type='change_string_case'><value name='STRING'><block type='text'><field name='NAME'>Hello, Entry!</field></block></value></block>",
         "class": "calc_string",
         "isNotFor": [],
         "usage": []
@@ -1739,7 +1739,7 @@ EntryStatic.blockInfo = {
     },
     "set_visible_answer": {
         "isNotFor": [""],
-        "xml": "<block type='set_visible_answer'><field name='BOOL'>SHOW</field></block>",
+        "xml": "<block type='set_visible_answer'><field name='BOOL'>HIDE</field></block>",
         "class": "ask"
     },
     "choose_project_timer_action": {
