@@ -3041,13 +3041,14 @@ Entry.block.change_to_nth_shape = function(a, b) {
 };
 Blockly.Blocks.change_to_next_shape = {init:function() {
   this.setColour("#EC4466");
-  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_change_to_next_shape).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/looks_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.LOOKS_change_to_near_shape_1).appendField(new Blockly.FieldDropdown([[Lang.Blocks.LOOKS_change_shape_next, "next"], [Lang.Blocks.LOOKS_change_shape_prev, "prev"]]), "DRIECTION").appendField(Lang.Blocks.LOOKS_change_to_near_shape_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/looks_03.png", "*"));
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
 }};
 Entry.block.change_to_next_shape = function(a, b) {
-  var c = a.parent.getNextPicture(a.picture.id);
+  var c;
+  c = "prev" !== b.getStringField("DRIECTION") ? a.parent.getNextPicture(a.picture.id) : a.parent.getPrevPicture(a.picture.id);
   a.setImage(c);
   return b.callReturn();
 };
@@ -7332,6 +7333,13 @@ Entry.EntryObject.prototype.setPicture = function(a) {
     }
   }
   throw Error("No picture found");
+};
+Entry.EntryObject.prototype.getPrevPicture = function(a) {
+  for (var b = this.pictures, c = b.length, d = 0;d < c;d++) {
+    if (b[d].id == a) {
+      return b[0 == d ? c - 1 : d - 1];
+    }
+  }
 };
 Entry.EntryObject.prototype.getNextPicture = function(a) {
   for (var b = this.pictures, c = b.length, d = 0;d < c;d++) {
