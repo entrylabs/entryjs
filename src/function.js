@@ -173,7 +173,6 @@ Entry.Func.save = function() {
     this.targetFunc.content = Blockly.Xml.workspaceToDom(this.workspace);
     this.targetFunc.generateBlock(true);
     Entry.variableContainer.saveFunction(this.targetFunc);
-    
     var fieldElement = $(this.targetFunc.content.innerHTML).find('field');
 
     for(var i = 0; i < fieldElement.length; i++)
@@ -208,16 +207,24 @@ Entry.Func.updateFuncName = function(dstFName) {
                 }
             }
             name = name.trim();
-            if(name === this.srcFName) {
+            if(name === this.srcFName && (this.srcFName.split(' ').length == dstFNameTokens.length)) {
                 for(var k=0; k < iList.length; k++) {
                     var input = iList[k];             
                     if(input.fieldRow.length > 0 && (input.fieldRow[0] instanceof Blockly.FieldLabel) && (input.fieldRow[0].text_ != undefined)) {
-                        input.fieldRow[0].text_ = dstFNameTokens[index++];
+                        if(dstFNameTokens[index] === undefined) {
+                            iList.splice(k,1);
+                            break;
+                        }
+                        else {
+                           input.fieldRow[0].text_ = dstFNameTokens[index];
+                        }
+
+                        index++;
                     }
                 }
             }
-
-
+            name = '';
+            index = 0;
         }
     }
     var updatedDom = Blockly.Xml.workspaceToDom(Blockly.mainWorkspace)

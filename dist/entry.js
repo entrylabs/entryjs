@@ -11287,20 +11287,31 @@ Entry.Func.save = function() {
   this.cancelEdit();
 };
 Entry.Func.updateFuncName = function(a) {
-  var b = 0, c = [], c = a.split(" ");
-  a = "";
-  for (var d = [], d = Blockly.mainWorkspace.getAllBlocks(), e = 0;e < d.length;e++) {
-    var f = d[e];
+  var b = 0, c = [], c = a.split(" "), d = "";
+  a = [];
+  a = Blockly.mainWorkspace.getAllBlocks();
+  for (var e = 0;e < a.length;e++) {
+    var f = a[e];
     if ("function_general" === f.type) {
       for (var g = [], g = f.inputList, h = 0;h < g.length;h++) {
-        f = g[h], 0 < f.fieldRow.length && f.fieldRow[0] instanceof Blockly.FieldLabel && void 0 != f.fieldRow[0].text_ && (a += f.fieldRow[0].text_, a += " ");
+        f = g[h], 0 < f.fieldRow.length && f.fieldRow[0] instanceof Blockly.FieldLabel && void 0 != f.fieldRow[0].text_ && (d += f.fieldRow[0].text_, d += " ");
       }
-      a = a.trim();
-      if (a === this.srcFName) {
-        for (h = 0;h < g.length;h++) {
-          f = g[h], 0 < f.fieldRow.length && f.fieldRow[0] instanceof Blockly.FieldLabel && void 0 != f.fieldRow[0].text_ && (f.fieldRow[0].text_ = c[b++]);
+      d = d.trim();
+      if (d === this.srcFName && this.srcFName.split(" ").length == c.length) {
+        for (d = 0;d < g.length;d++) {
+          if (f = g[d], 0 < f.fieldRow.length && f.fieldRow[0] instanceof Blockly.FieldLabel && void 0 != f.fieldRow[0].text_) {
+            if (void 0 === c[b]) {
+              g.splice(d, 1);
+              break;
+            } else {
+              f.fieldRow[0].text_ = c[b];
+            }
+            b++;
+          }
         }
       }
+      d = "";
+      b = 0;
     }
   }
   b = Blockly.Xml.workspaceToDom(Blockly.mainWorkspace);
