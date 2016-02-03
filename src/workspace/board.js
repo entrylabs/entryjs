@@ -46,6 +46,9 @@ Entry.Board = function(option) {
         { parent: this.wrapper }
     );
 
+    if (option.isOverlay)
+        this.wrapper.addClass("entryOverlayBoard");
+
     var zoom = document.documentElement.clientWidth / window.innerWidth;
     this.offset = this.svgDom.offset();
     this.offset.left -= $(window).scrollLeft();

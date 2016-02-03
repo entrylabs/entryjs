@@ -89,6 +89,7 @@ Entry.Func.edit = function(func) {
 
 Entry.Func.initEditView = function() {
 
+    Entry.playground.mainWorkspace.setMode(Entry.Workspace.MODE_OVERLAYBOARD);
     console.log("start edit");
     return;
 

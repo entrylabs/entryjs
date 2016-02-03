@@ -157,7 +157,8 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
     p.initOverlayBoard = function() {
         this.overlayBoard = new Entry.Board({
             dom: this.board.view,
-            workspace: this
+            workspace: this,
+            isOverlay: true
         });
         this.overlayBoard.changeCode(new Entry.Code([]));
         this.overlayBoard.workspace = this;

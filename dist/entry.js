@@ -10470,6 +10470,7 @@ Entry.Func.edit = function(a) {
   this.initEditView();
 };
 Entry.Func.initEditView = function() {
+  Entry.playground.mainWorkspace.setMode(Entry.Workspace.MODE_OVERLAYBOARD);
   console.log("start edit");
 };
 Entry.Func.save = function() {
@@ -13677,10 +13678,10 @@ Entry.Code = function(a) {
     return a;
   };
   a.countBlock = function() {
-    for (var a = this.getThreads(), c = 0, d = 0;d < a.length;d++) {
-      c += a[d].countBlock();
+    for (var b = this.getThreads(), a = 0, d = 0;d < b.length;d++) {
+      a += b[d].countBlock();
     }
-    return c;
+    return a;
   };
   a.moveBy = function(a, c) {
     for (var d = this.getThreads(), e = 0, f = d.length;e < f;e++) {
@@ -15418,6 +15419,7 @@ Entry.Board = function(a) {
   this.workspace = a.workspace;
   this.wrapper = Entry.Dom("div", {parent:b, class:"entryBoardWrapper"});
   this.svgDom = Entry.Dom($('<svg id="' + this._snapId + '" class="entryBoard" width="100%" height="100%"version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'), {parent:this.wrapper});
+  a.isOverlay && this.wrapper.addClass("entryOverlayBoard");
   this.offset = this.svgDom.offset();
   this.offset.left -= $(window).scrollLeft();
   this.relativeOffset = this.offset;
@@ -15729,7 +15731,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
     this.set({selectedBlockView:this.board.selectedBlockView || this.blockMenu.selectedBlockView});
   };
   a.initOverlayBoard = function() {
-    this.overlayBoard = new Entry.Board({dom:this.board.view, workspace:this});
+    this.overlayBoard = new Entry.Board({dom:this.board.view, workspace:this, isOverlay:!0});
     this.overlayBoard.changeCode(new Entry.Code([]));
     this.overlayBoard.workspace = this;
   };
