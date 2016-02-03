@@ -14874,11 +14874,11 @@ Entry.Scroller.RADIUS = 7;
     this._vertical && (this.vY += c * this.vRatio, this.vScrollbar.attr({y:this.vY}));
   };
   a.scroll = function(a, c) {
-    var d = this.board.svgBlockGroup.getBBox(), e = this.board.svgDom;
-    a = Math.max(-d.width + Entry.BOARD_PADDING - d.x, a);
-    c = Math.max(-d.height + Entry.BOARD_PADDING - d.y, c);
-    a = Math.min(e.width() - Entry.BOARD_PADDING - d.x, a);
-    c = Math.min(e.height() - Entry.BOARD_PADDING - d.y, c);
+    var d = this.board.svgBlockGroup.node.getBoundingClientRect(), e = this.board.svgDom, f = d.left - this.board.offset.left, g = d.top - this.board.offset.top, h = d.height;
+    a = Math.max(-d.width + Entry.BOARD_PADDING - f, a);
+    c = Math.max(-h + Entry.BOARD_PADDING - g, c);
+    a = Math.min(e.width() - Entry.BOARD_PADDING - f, a);
+    c = Math.min(e.height() - Entry.BOARD_PADDING - g, c);
     this.board.code.moveBy(a, c);
     this.updateScrollBar(a, c);
   };
@@ -15501,6 +15501,7 @@ Entry.Board = function(a) {
     }
   };
   a._addControl = function(a) {
+    console.log("x");
     var c = this;
     a.mousedown(function() {
       c.onMouseDown.apply(c, arguments);
@@ -15518,6 +15519,7 @@ Entry.Board = function(a) {
       a.preventDefault();
       a.originalEvent.touches && (a = a.originalEvent.touches[0]);
       var b = g.dragInstance;
+      console.log(b.offsetX, a.pageX);
       g.scroller.scroll(a.pageX - b.offsetX, a.pageY - b.offsetY);
       b.set({offsetX:a.pageX, offsetY:a.pageY});
     }
@@ -15529,8 +15531,6 @@ Entry.Board = function(a) {
       a.originalEvent.touches && (a = a.originalEvent.touches[0]);
       if (0 === a.button || a instanceof Touch) {
         Entry.documentMousedown && Entry.documentMousedown.notify(a);
-        a.stopPropagation();
-        a.preventDefault();
         var e = $(document);
         e.bind("mousemove.entryBoard", c);
         e.bind("mouseup.entryBoard", d);
