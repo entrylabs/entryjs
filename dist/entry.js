@@ -13016,7 +13016,7 @@ Entry.BlockMenu = function(a, b, c) {
   a.align = function() {
     for (var b = this.code.getThreads(), a = 10, d = "LEFT" == this._align ? 10 : this.svgDom.width() / 2, e, f = 0, g = b.length;f < g;f++) {
       var h = b[f].getFirstBlock(), k = h.view, h = Entry.block[h.type];
-      this.checkBanClass(h) ? k.set({visible:!1}) : (k.set({visible:!0}), h = h.class, e && e !== h && (this._createSplitter(a), a += 15), e = h, k._moveTo(d - k.offsetX, a, !1), a += k.height + 15);
+      this.checkBanClass(h) ? k.set({visible:!1}) : (k.set({visible:!0}), h = h.class, e && e !== h && (this._createSplitter(a), a += 15), e = h, a -= k.offsetY, k._moveTo(d - k.offsetX, a, !1), a += k.height + 15);
     }
     this.changeEvent.notify();
     this.expandWidth = this.svgGroup.getBBox().width + d;
@@ -13661,20 +13661,20 @@ Entry.Code = function(a) {
     var d = this._data, e = d.indexOf(b);
     0 > e || d.splice(e, 1);
   };
-  a.doDestroyThread = function(a, c) {
-    var d = this._data, e = d.indexOf(a);
+  a.doDestroyThread = function(b, a) {
+    var d = this._data, e = d.indexOf(b);
     0 > e || d.splice(e, 1);
   };
   a.getThreads = function() {
-    return this._data.map(function(a) {
-      return a;
+    return this._data.map(function(b) {
+      return b;
     });
   };
   a.toJSON = function() {
-    for (var a = this.getThreads(), c = [], d = 0, e = a.length;d < e;d++) {
-      c.push(a[d].toJSON());
+    for (var b = this.getThreads(), a = [], d = 0, e = b.length;d < e;d++) {
+      a.push(b[d].toJSON());
     }
-    return c;
+    return a;
   };
   a.countBlock = function() {
     for (var a = this.getThreads(), c = 0, d = 0;d < a.length;d++) {

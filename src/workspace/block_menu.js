@@ -185,7 +185,11 @@ Entry.BlockMenu = function(dom, align, categoryData) {
             }
             pastClass = className;
 
-            blockView._moveTo(hPadding - blockView.offsetX, marginFromTop, false);
+            marginFromTop -= blockView.offsetY;
+            blockView._moveTo(
+                hPadding - blockView.offsetX,
+                marginFromTop,
+                false);
             marginFromTop += blockView.height + vPadding;
 
         }
