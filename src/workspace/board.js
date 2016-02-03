@@ -53,21 +53,8 @@ Entry.Board = function(option) {
 
     this.visible = true;
     var that = this;
-    $(window).scroll(updateOffset);
-    Entry.windowResized.attach(this, updateOffset);
-    function updateOffset(e) {
-        that.offset = that.svgDom.offset();
-        var w = $(window),
-            scrollTop = w.scrollTop(),
-            scrollLeft = w.scrollLeft(),
-            offset = that.offset;
-
-        that.relativeOffset = {
-            top: offset.top - scrollTop,
-            left: offset.left - scrollLeft
-        };
-    }
-
+    $(window).scroll(this.updateOffset);
+    Entry.windowResized.attach(this, this.updateOffset);
     this.snap = Snap('#' + this._snapId);
 
     this._blockViews = [];
@@ -325,5 +312,19 @@ Entry.Board = function(option) {
         while (node.firstChild)
             node.removeChild(node.firstChild);
     };
+
+    p.updateOffset = function () {
+        this.offset = this.svgDom.offset();
+        var w = $(window),
+            scrollTop = w.scrollTop(),
+            scrollLeft = w.scrollLeft(),
+            offset = this.offset;
+
+        this.relativeOffset = {
+            top: offset.top - scrollTop,
+            left: offset.left - scrollLeft
+        };
+    }
+
 
 })(Entry.Board.prototype);
