@@ -14361,9 +14361,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
     this.box.set({x:0, y:0, width:0, height:20});
     this._thread = this.getValue();
     var c = this._thread.getFirstBlock();
-    c && c.isDummy ? (this.dummyBlock = c, this.dummyBlock.appendSvg(this)) : (this.dummyBlock = new Entry.FieldDummyBlock(this, this._blockView), this._thread.insertDummyBlock(this.dummyBlock), this._inspectThread(), this._thread.createView(a));
-    this.dummyBlock.observe(this, "_inspectThread", ["next"]);
-    this.dummyBlock.observe(this, "calcWH", ["next"]);
+    c && c.isDummy ? (this.dummyBlock = c, this.dummyBlock.appendSvg(this)) : (this.dummyBlock = new Entry.FieldDummyBlock(this, this._blockView), this._thread.insertDummyBlock(this.dummyBlock), this._inspectThread(), this._thread.createView(a), this.dummyBlock.observe(this, "_inspectThread", ["next"]), this.dummyBlock.observe(this, "calcWH", ["next"]));
     this.calcWH();
   };
   a.align = function(a, c, d) {

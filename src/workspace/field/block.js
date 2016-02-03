@@ -52,13 +52,13 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
             this._thread.insertDummyBlock(this.dummyBlock);
             this._inspectThread();
             this._thread.createView(board);
+            this.dummyBlock.observe(this, "_inspectThread", ["next"]);
+            this.dummyBlock.observe(this, "calcWH", ["next"]);
         } else {
             this.dummyBlock = firstBlock;
             this.dummyBlock.appendSvg(this);
         }
 
-        this.dummyBlock.observe(this, "_inspectThread", ["next"]);
-        this.dummyBlock.observe(this, "calcWH", ["next"]);
         this.calcWH();
     };
 
