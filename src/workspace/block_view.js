@@ -428,7 +428,8 @@ Entry.BlockView.PARAM_SPACE = 5;
                     });
                     blockView.dragMode = Entry.DRAG_MODE_DRAG;
 
-                    Entry.GlobalSvg.setView(blockView, workspaceMode);
+                    if(!Entry.GlobalSvg.setView(blockView, workspaceMode))
+                        Entry.GlobalSvg.position();
                     var magnetedBlock = blockView._getCloseBlock();
                     if (magnetedBlock) {
                         board = magnetedBlock.view.getBoard();

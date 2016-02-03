@@ -13025,7 +13025,7 @@ Entry.BlockMenu = function(a, b, c) {
     if (null !== this.dragBlock && !this._boardBlockView) {
       var a = this.workspace, d = a.getMode(), e = this.dragBlock, f = this._svgWidth, g = a.selectedBoard;
       if (!g || d != Entry.Workspace.MODE_BOARD && d != Entry.Workspace.MODE_OVERLAYBOARD) {
-        Entry.GlobalSvg.setView(e, a.getMode());
+        Entry.GlobalSvg.setView(e, a.getMode()) && Entry.GlobalSvg.addControl(b);
       } else {
         var a = e.block, h = a.getThread();
         a && h && (this._boardBlockView = g.code.cloneThread(h, d).getFirstBlock().view, this._boardBlockView._moveTo(e.x - f, e.y + (this.offset.top - g.offset.top), !1), this._boardBlockView.onMouseDown.call(this._boardBlockView, b), this._dragObserver = this._boardBlockView.observe(this, "_editDragInstance", ["x", "y"], !1));
@@ -13342,7 +13342,7 @@ Entry.BlockView.PARAM_SPACE = 5;
           l._moveBy(b.pageX - d.offsetX, b.pageY - d.offsetY, !1);
           d.set({offsetX:b.pageX, offsetY:b.pageY});
           l.dragMode = Entry.DRAG_MODE_DRAG;
-          Entry.GlobalSvg.setView(l, c);
+          Entry.GlobalSvg.setView(l, c) || Entry.GlobalSvg.position();
           (b = l._getCloseBlock()) ? (e = b.view.getBoard(), e.setMagnetedBlock(b.view)) : e.setMagnetedBlock(null);
           l.originPos || (l.originPos = {x:l.x, y:l.y});
         }
@@ -13644,16 +13644,16 @@ Entry.Code = function(a) {
   a.clearExecutors = function() {
     this.executors = [];
   };
-  a.createThread = function(a) {
-    if (!(a instanceof Array)) {
+  a.createThread = function(b) {
+    if (!(b instanceof Array)) {
       return console.error("blocks must be array");
     }
-    a = new Entry.Thread(a, this);
-    this._data.push(a);
-    return a;
+    b = new Entry.Thread(b, this);
+    this._data.push(b);
+    return b;
   };
-  a.cloneThread = function(a, c) {
-    var d = a.clone(this, c);
+  a.cloneThread = function(b, a) {
+    var d = b.clone(this, a);
     this._data.push(d);
     return d;
   };
@@ -14640,7 +14640,9 @@ Entry.GlobalSvg = {};
     }
   };
   a.setView = function(a, c) {
-    a == this._view ? this.position() : !a.block.isReadOnly() && a.movable && (this._view = a, this._mode = c, this.draw(), this.align(), this.position());
+    if (a != this._view && !a.block.isReadOnly() && a.movable) {
+      return this._view = a, this._mode = c, this.draw(), this.align(), this.position(), !0;
+    }
   };
   a.draw = function() {
     var a = this._view;
@@ -14652,7 +14654,7 @@ Entry.GlobalSvg = {};
     this.show();
   };
   a.remove = function() {
-    this.svg && (this.svg.remove(), delete this.svg, delete this._view, delete this._offsetX, delete this._offsetY, this.hide());
+    this.svg && (this.svg.remove(), delete this.svg, delete this._view, delete this._offsetX, delete this._offsetY, delete this._startX, delete this._startY, delete this.left, delete this.top, this.hide());
   };
   a.align = function() {
     var a = this._view.getSkeleton().box(this._view).offsetX || 0, c = this._view.getSkeleton().box(this._view).offsetY || 0, a = -1 * a + 1, c = -1 * c + 1;
@@ -14677,6 +14679,35 @@ Entry.GlobalSvg = {};
     a = a.getBoard().workspace.blockMenu;
     var d = a.offset.left, e = a.offset.top, f = a.visible ? a.svgDom.width() : 0;
     return c.y > e && c.x > d + f ? this.DONE : c.y > e && c.x > d && a.visible ? this.REMOVE : this.RETURN;
+  };
+  a.addControl = function(a) {
+    this.onMouseDown.apply(this, arguments);
+  };
+  a.onMouseDown = function(a) {
+    function c(a) {
+      var b = a.pageX;
+      a = a.pageY;
+      var c = e.left + (b - e._startX), d = e.top + (a - e._startY);
+      e.svgDom.css({left:c, top:d});
+      e._startX = b;
+      e._startY = a;
+      e.left = c;
+      e.top = d;
+    }
+    function d(a) {
+      $(document).unbind(".block");
+    }
+    this._startY = a.pageY;
+    var e = this;
+    a.stopPropagation();
+    a.preventDefault();
+    var f = $(document);
+    f.bind("mousemove.block", c);
+    f.bind("mouseup.block", d);
+    f.bind("touchmove.block", c);
+    f.bind("touchend.block", d);
+    this._startX = a.pageX;
+    this._startY = a.pageY;
   };
 })(Entry.GlobalSvg);
 Entry.RenderView = function(a, b) {

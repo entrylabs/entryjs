@@ -198,6 +198,7 @@ Entry.BlockMenu = function(dom, align, categoryData) {
         if (this.dragBlock === null) return;
         if (this._boardBlockView) return;
 
+        var globalSvg = Entry.GlobalSvg;
         var workspace = this.workspace;
         var workspaceMode = workspace.getMode();
         var blockView = this.dragBlock;
@@ -228,9 +229,8 @@ Entry.BlockMenu = function(dom, align, categoryData) {
                     this._boardBlockView.observe(this, "_editDragInstance", ['x', 'y'], false);
             }
         } else {
-            //TODO move by global svg
-            Entry.GlobalSvg.setView(blockView, workspace.getMode());
-
+            if(Entry.GlobalSvg.setView(blockView, workspace.getMode()))
+                Entry.GlobalSvg.addControl(e);
         }
     };
 
