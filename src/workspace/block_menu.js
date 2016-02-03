@@ -163,7 +163,7 @@ Entry.BlockMenu = function(dom, align, categoryData) {
         var threads = this.code.getThreads();
         var vPadding = 15,
             marginFromTop = 10,
-            hPadding = this._align == 'LEFT' ? 20 : this.svgDom.width()/2;
+            hPadding = this._align == 'LEFT' ? 10 : this.svgDom.width()/2;
 
         var pastClass;
         for (var i=0,len=threads.length; i<len; i++) {
@@ -185,7 +185,7 @@ Entry.BlockMenu = function(dom, align, categoryData) {
             }
             pastClass = className;
 
-            blockView._moveTo(hPadding, marginFromTop, false);
+            blockView._moveTo(hPadding - blockView.offsetX, marginFromTop, false);
             marginFromTop += blockView.height + vPadding;
 
         }

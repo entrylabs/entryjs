@@ -378,7 +378,7 @@ Entry.skeleton.basic_button = {
     },
     box: function() {
         return {
-            offsetX: -70, offsetY: 0,
+            offsetX: -80, offsetY: 0,
             width: 140,
             height: 30
         };

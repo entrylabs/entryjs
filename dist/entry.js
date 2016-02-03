@@ -13014,9 +13014,9 @@ Entry.BlockMenu = function(a, b, c) {
     this.svgGroup.append(this.svgBlockGroup);
   };
   a.align = function() {
-    for (var b = this.code.getThreads(), a = 10, d = "LEFT" == this._align ? 20 : this.svgDom.width() / 2, e, f = 0, g = b.length;f < g;f++) {
+    for (var b = this.code.getThreads(), a = 10, d = "LEFT" == this._align ? 10 : this.svgDom.width() / 2, e, f = 0, g = b.length;f < g;f++) {
       var h = b[f].getFirstBlock(), k = h.view, h = Entry.block[h.type];
-      this.checkBanClass(h) ? k.set({visible:!1}) : (k.set({visible:!0}), h = h.class, e && e !== h && (this._createSplitter(a), a += 15), e = h, k._moveTo(d, a, !1), a += k.height + 15);
+      this.checkBanClass(h) ? k.set({visible:!1}) : (k.set({visible:!0}), h = h.class, e && e !== h && (this._createSplitter(a), a += 15), e = h, k._moveTo(d - k.offsetX, a, !1), a += k.height + 15);
     }
     this.changeEvent.notify();
     this.expandWidth = this.svgGroup.getBBox().width + d;
@@ -15002,7 +15002,7 @@ Entry.skeleton.basic_param = {path:function(a) {
 Entry.skeleton.basic_button = {path:function() {
   return "m -64,0 h 128 a 6,6 0, 0,1 6,6 v 18 a 6,6 0, 0,1 -6,6 h -128 a 6,6 0, 0,1 -6,-6 v -18 a 6,6 0, 0,1 6,-6 z";
 }, box:function() {
-  return {offsetX:-70, offsetY:0, width:140, height:30};
+  return {offsetX:-80, offsetY:0, width:140, height:30};
 }, contentPos:function() {
   return {x:0, y:15};
 }, movable:!1, readOnly:!0};
