@@ -165,25 +165,6 @@ Entry.block.change_to_nth_shape = function (sprite, script) {
 
 // 다음 모양으로 바꾸기
 Blockly.Blocks.change_to_next_shape = {
-  init: function() {
-    this.setColour("#EC4466");
-    this.appendDummyInput()
-        .appendField(Lang.Blocks.LOOKS_change_to_next_shape)
-        .appendField(new Blockly.FieldIcon(Entry.mediaFilePath + 'block_icon/looks_03.png', '*'));
-    this.setInputsInline(true);
-    this.setPreviousStatement(true);
-    this.setNextStatement(true);
-  }
-};
-
-Entry.block.change_to_next_shape = function (sprite, script) {
-    var picture = sprite.parent.getNextPicture(sprite.picture.id);
-    sprite.setImage(picture);
-    return script.callReturn();
-};
-
-// 이전/다음 모양으로 바꾸기
-Blockly.Blocks.change_to_near_shape = {
     init: function() {
         this.setColour("#EC4466");
         this.appendDummyInput()
@@ -200,9 +181,9 @@ Blockly.Blocks.change_to_near_shape = {
     }
 };
 
-Entry.block.change_to_near_shape = function (sprite, script) {
+Entry.block.change_to_next_shape = function (sprite, script) {
     var picture;
-    if(script.getStringField("DRIECTION") === 'next') {
+    if(script.getStringField("DRIECTION") !== 'prev') {
         picture = sprite.parent.getNextPicture(sprite.picture.id);
     } else {
         picture = sprite.parent.getPrevPicture(sprite.picture.id);
