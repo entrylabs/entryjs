@@ -45,6 +45,8 @@ Entry.BlockView = function(block, board, mode) {
     Entry.Utils.disableContextmenu(this.svgGroup.node);
 };
 
+Entry.BlockView.PARAM_SPACE = 5;
+
 (function(p) {
     p.schema = {
         id: 0,
@@ -145,7 +147,7 @@ Entry.BlockView = function(block, board, mode) {
 
             // space between content
             if (i !== this._contents.length - 1)
-                cursor.x += 5;
+                cursor.x += Entry.BlockView.PARAM_SPACE;
 
             var box = c.box;
             cursor.height = Math.max(box.y + box.height, cursor.height);
@@ -434,13 +436,12 @@ Entry.BlockView = function(block, board, mode) {
                     } else board.setMagnetedBlock(null);
                     if (!blockView.originPos)
                         blockView.originPos = {x: blockView.x, y: blockView.y};
-                } else board.cloneToBoard(e);
+                } else board.cloneToGlobal(e);
             }
         }
 
         function onMouseUp(e) {
             Entry.GlobalSvg.remove();
-            blockView.set({visible:true});
             $(document).unbind('.block');
             delete this.mouseDownCoordinate;
             blockView.terminateDrag(e);

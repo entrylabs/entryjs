@@ -2,15 +2,15 @@
  */
 "use strict";
 
-goog.provide("Entry.FieldBlock");
-goog.provide("Entry.FieldDummyBlock");
+goog.provide("Entry.FieldOutput");
+goog.provide("Entry.OutputDummyBlock");
 
 goog.require("Entry.Field");
 goog.require("Entry.DummyBlock");
 /*
  *
  */
-Entry.FieldBlock = function(content, blockView, index) {
+Entry.FieldOutput = function(content, blockView, index) {
     this._blockView = blockView;
     this._block = blockView.block;
     this._valueBlock = null;
@@ -34,19 +34,17 @@ Entry.FieldBlock = function(content, blockView, index) {
     this._block.observe(this, "_updateThread", ["thread"]);
 };
 
-Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
+Entry.Utils.inherit(Entry.Field, Entry.FieldOutput);
 
 (function(p) {
     p.renderStart = function(board) {
         this.svgGroup = this._blockView.contentSvgGroup.group();
         this.box.set({
-            x: 0,
-            y: 0,
-            width: 0,
-            height: 20
+            width: - Entry.BlockView.PARAM_SPACE,
+            height: 0
         });
         this._thread = this.getValue();
-        this.dummyBlock = new Entry.FieldDummyBlock(this, this._blockView);
+        this.dummyBlock = new Entry.OutputDummyBlock(this, this._blockView);
         this._thread.insertDummyBlock(this.dummyBlock);
         this._inspectThread();
         this._thread.createView(board);
@@ -65,6 +63,8 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
             if (this._position.y)
                 y = this._position.y;
         }
+
+        x -= 2;
 
         var block = this._thread.getFirstBlock();
         if (block.isDummy)
@@ -101,21 +101,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
     };
 
     p.calcWH = function() {
-        var block = this._thread.getFirstBlock();
-        if (block.isDummy) block = block.next;
-
-        if (block) {
-            var blockView = block.view;
-            this.box.set({
-                width: blockView.width,
-                height: blockView.height
-            });
-        } else {
-            this.box.set({
-                width: 15,
-                height: 20
-            });
-        }
+        this._blockView.alignContent();
     };
 
     p.calcHeight = p.calcWH;
@@ -134,14 +120,8 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
     p._inspectThread = function() {
         if (!this.dummyBlock.next) {
             switch (this.acceptType) {
-                case "basic_boolean_field":
-                    this._valueBlock = getBlock(this, {type: "True"});
-                    break;
-                case "basic_string_field":
-                    this._valueBlock = getBlock(this, {type: "text"});
-                    break;
                 case "basic_param":
-                    this._valueBlock = getBlock(this, {type: "function_field_label"});
+                    //this._valueBlock = getBlock(this, {type: "function_field_label"});
                     break;
             }
             if (this._valueBlock)
@@ -163,9 +143,9 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
         }
     };
 
-})(Entry.FieldBlock.prototype);
+})(Entry.FieldOutput.prototype);
 
-Entry.FieldDummyBlock = function(statementField, blockView) {
+Entry.OutputDummyBlock = function(statementField, blockView) {
     Entry.Model(this, false);
     this.isDummy = true;
 
@@ -178,12 +158,6 @@ Entry.FieldDummyBlock = function(statementField, blockView) {
 
     var acceptType = statementField.acceptType;
     switch (acceptType) {
-        case "basic_string_field":
-            this.svgGroup.stringMagnet = this;
-            break;
-        case "basic_boolean_field":
-            this.svgGroup.booleanMagnet = this;
-            break;
         case "basic_param":
             this.svgGroup.paramMagnet = this;
             break;
@@ -209,15 +183,15 @@ Entry.FieldDummyBlock = function(statementField, blockView) {
     this._align();
 };
 
-Entry.FieldDummyBlock.PRIMITIVE_TYPES = [
+Entry.OutputDummyBlock.PRIMITIVE_TYPES = [
     'True', "text"
 ];
 
-Entry.Utils.inherit(Entry.DummyBlock, Entry.FieldDummyBlock);
+Entry.Utils.inherit(Entry.DummyBlock, Entry.OutputDummyBlock);
 
-Entry.FieldDummyBlock.prototype.constructor = Entry.FieldDummyBlock;
+Entry.OutputDummyBlock.prototype.constructor = Entry.OutputDummyBlock;
 
-Entry.FieldDummyBlock.prototype.schema = {
+Entry.OutputDummyBlock.prototype.schema = {
     x: 0,
     y: 0,
     width: 0,
@@ -227,7 +201,7 @@ Entry.FieldDummyBlock.prototype.schema = {
     magneting: false
 };
 
-Entry.FieldDummyBlock.prototype._updateBG = function() {
+Entry.OutputDummyBlock.prototype._updateBG = function() {
     if (this.magneting) {
         var block = this.next;
         if (!block) return;

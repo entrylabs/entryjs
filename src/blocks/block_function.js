@@ -24,11 +24,15 @@ Entry.block.functionAddButton = {
 Entry.block.function_field_label = {
     skeleton: "basic_param",
     color: "#f9c535",
-    template: "%1",
+    template: "%1%2",
     params: [
         {
             type: "TextInput",
             value: "함수"
+        },
+        {
+            type: "Output",
+            accept: "basic_param"
         }
     ]
 };
@@ -43,7 +47,7 @@ Entry.block.function_field_string = {
             accept: "basic_string_field"
         },
         {
-            type: "Block",
+            type: "Output",
             accept: "basic_param"
         }
     ]
@@ -59,7 +63,7 @@ Entry.block.function_field_boolean = {
             accept: "basic_boolean_field"
         },
         {
-            type: "Block",
+            type: "Output",
             accept: "basic_param"
         }
     ]

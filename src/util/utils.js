@@ -811,3 +811,7 @@ Entry.Utils.inherit = function(parent, child) {
 Entry.bindAnimationCallbackOnce = function($elem, func) {
     $elem.one("webkitAnimationEnd animationendo animationend", func);
 };
+
+Entry.Utils.isInInput = function(e) {
+    return e.target.type == 'textarea' || e.target.type == 'text';
+};
