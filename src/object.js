@@ -1068,6 +1068,21 @@ Entry.EntryObject.prototype.setPicture = function(picture) {
 };
 
 /**
+ * Get previous picture object by Id.
+ * @param {?string} pictureId
+ * @return {picture object}
+ */
+Entry.EntryObject.prototype.getPrevPicture = function(pictureId) {
+    var pictures = this.pictures,
+        len = pictures.length;
+    for (var i = 0; i < len; i++) {
+        var picture = pictures[i];
+        if (picture.id == pictureId)
+            return pictures[i == 0 ? len-1 : i-1];
+    }
+};
+
+/**
  * Get next picture object by Id.
  * @param {?string} pictureId
  * @return {picture object}
