@@ -6344,6 +6344,34 @@ Entry.EntityObject.prototype.alignTextBox = function() {
 Entry.EntityObject.prototype.syncDialogVisible = function() {
   this.dialog && (this.dialog.object.visible = this.visible);
 };
+Entry.HelpPopup = function() {
+  Entry.assert(!window.HelpPopup, "Popup exist");
+  this.HelpBody_ = Entry.createElement("div");
+  this.HelpBody_.addClass("entryPopup");
+  this.HelpBody_.bindOnClick(function(a) {
+    a.target == this && this.popup.remove();
+  });
+  this.HelpBody_.popup = this;
+  this.HelpWindow_ = Entry.createElement("div");
+  this.HelpWindow_.addClass("entryPopupWindow");
+  this.HelpWindow_.bindOnClick(function() {
+  });
+  window.HelpPopup = this;
+  this.HelpBody_.appendChild(this.HelpWindow_);
+  document.body.appendChild(this.HelpBody_);
+};
+Entry.HelpPopup.prototype.remove = function() {
+  for (;this.window_.hasChildNodes();) {
+    "workspace" == Entry.type ? Entry.view_.insertBefore(this.window_.firstChild, Entry.container.view_) : Entry.view_.insertBefore(this.window_.lastChild, Entry.view_.firstChild);
+  }
+  $("body").css("overflow", "auto");
+  Entry.removeElement(this.body_);
+  window.popup = null;
+  Entry.removeEventListener("windowResized", this.resize);
+  Entry.engine.popup = null;
+};
+Entry.HelpPopup.prototype.resize = function(a) {
+};
 Entry.Helper = function() {
   this.visible = !1;
 };
@@ -13761,24 +13789,24 @@ Entry.Code = function(a) {
     this._data.push(d);
     return d;
   };
-  a.destroyThread = function(b, a) {
-    var d = this._data, e = d.indexOf(b);
+  a.destroyThread = function(a, c) {
+    var d = this._data, e = d.indexOf(a);
     0 > e || d.splice(e, 1);
   };
-  a.doDestroyThread = function(b, a) {
-    var d = this._data, e = d.indexOf(b);
+  a.doDestroyThread = function(a, c) {
+    var d = this._data, e = d.indexOf(a);
     0 > e || d.splice(e, 1);
   };
   a.getThreads = function() {
-    return this._data.map(function(b) {
-      return b;
+    return this._data.map(function(a) {
+      return a;
     });
   };
   a.toJSON = function() {
-    for (var b = this.getThreads(), a = [], d = 0, e = b.length;d < e;d++) {
-      a.push(b[d].toJSON());
+    for (var a = this.getThreads(), c = [], d = 0, e = a.length;d < e;d++) {
+      c.push(a[d].toJSON());
     }
-    return a;
+    return c;
   };
   a.countBlock = function() {
     for (var a = this.getThreads(), c = 0, d = 0;d < a.length;d++) {
