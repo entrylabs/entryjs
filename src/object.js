@@ -849,13 +849,8 @@ Entry.EntryObject.prototype.setScript = function(script) {
  * Object script getter
  * @return {!xml script} script
  */
-Entry.EntryObject.prototype.getScriptText = function(script) {
-    var xmlText = Blockly.Xml.domToText(this.script);
-    xmlText = xmlText.replace(/\sxmlns=\"(.*?)\"/,"");
-    xmlText = xmlText.replace(/\sclass=\"(.*?)\"/g,'');
-    xmlText = xmlText.replace(/\sid=\"(.*?)\"/g,"");
-    xmlText = xmlText.replace(/\sinline=\"(.*?)\"/g,"");
-    return xmlText;
+Entry.EntryObject.prototype.getScriptText = function() {
+    return this.script.toJSON();
 };
 
 /**

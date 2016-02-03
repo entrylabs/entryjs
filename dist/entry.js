@@ -6800,12 +6800,8 @@ Entry.EntryObject.prototype.setText = function(a) {
 Entry.EntryObject.prototype.setScript = function(a) {
   this.script = a;
 };
-Entry.EntryObject.prototype.getScriptText = function(a) {
-  a = Blockly.Xml.domToText(this.script);
-  a = a.replace(/\sxmlns=\"(.*?)\"/, "");
-  a = a.replace(/\sclass=\"(.*?)\"/g, "");
-  a = a.replace(/\sid=\"(.*?)\"/g, "");
-  return a = a.replace(/\sinline=\"(.*?)\"/g, "");
+Entry.EntryObject.prototype.getScriptText = function() {
+  return this.script.toJSON();
 };
 Entry.EntryObject.prototype.initEntity = function(a) {
   var b = {};
@@ -13683,10 +13679,10 @@ Entry.Code = function(a) {
     }
     return a;
   };
-  a.moveBy = function(a, c) {
+  a.moveBy = function(b, a) {
     for (var d = this.getThreads(), e = 0, f = d.length;e < f;e++) {
       var g = d[e].getFirstBlock();
-      g && g.view._moveBy(a, c, !1);
+      g && g.view._moveBy(b, a, !1);
     }
   };
   a.stringify = function() {
@@ -13739,8 +13735,8 @@ Entry.Executor = function(a, b) {
 (function(a) {
   a.execute = function() {
     for (;;) {
-      var a = this.scope.block._schema.func.call(this.scope, this.entity, this.scope);
-      if (void 0 === a || null === a) {
+      var b = this.scope.block._schema.func.call(this.scope, this.entity, this.scope);
+      if (void 0 === b || null === b) {
         if (this.scope = new Entry.Scope(this.scope.block.next, this), null === this.scope.block) {
           if (this._callStack.length) {
             this.scope = this._callStack.pop();
@@ -13749,18 +13745,18 @@ Entry.Executor = function(a, b) {
           }
         }
       } else {
-        if (a === Entry.STATIC.CONTINUE) {
+        if (b === Entry.STATIC.CONTINUE) {
           break;
         }
       }
     }
   };
-  a.stepInto = function(a) {
-    a instanceof Entry.Thread || console.error("Must step in to thread");
+  a.stepInto = function(b) {
+    b instanceof Entry.Thread || console.error("Must step in to thread");
     this._callStack.push(this.scope);
-    a = a.getFirstBlock();
-    a.isDummy && (a = a.next);
-    this.scope = new Entry.Scope(a, this);
+    b = b.getFirstBlock();
+    b.isDummy && (b = b.next);
+    this.scope = new Entry.Scope(b, this);
   };
 })(Entry.Executor.prototype);
 Entry.Scope = function(a, b) {
@@ -13771,15 +13767,15 @@ Entry.Scope = function(a, b) {
 (function(a) {
   a.callReturn = function() {
   };
-  a.getValue = function(a, c) {
+  a.getValue = function(b, a) {
     var d = this.block.params[0]._data[1], e = new Entry.Scope(d, this.executor);
     return Entry.block[d.type].func.call(e, this.entity, e);
   };
-  a.getStringValue = function(a, c) {
-    return String(this.getValue(a, c));
+  a.getStringValue = function(b, a) {
+    return String(this.getValue(b, a));
   };
-  a.getNumberValue = function(a, c) {
-    return Number(this.getValue(a, c));
+  a.getNumberValue = function(b, a) {
+    return Number(this.getValue(b, a));
   };
   a.getBooleanValue = function(a, c) {
     return Number(this.getValue(a, c)) ? !0 : !1;
@@ -15533,6 +15529,8 @@ Entry.Board = function(a) {
       a.originalEvent.touches && (a = a.originalEvent.touches[0]);
       if (0 === a.button || a instanceof Touch) {
         Entry.documentMousedown && Entry.documentMousedown.notify(a);
+        a.stopPropagation();
+        a.preventDefault();
         var e = $(document);
         e.bind("mousemove.entryBoard", c);
         e.bind("mouseup.entryBoard", d);
@@ -15720,12 +15718,15 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
         this.blockMenu.renderBlock();
         break;
       case Entry.Workspace.MODE_OVERLAYBOARD:
-        this.overlayBoard || this.initOverlayBoard(), this.overlayBoard.show();
+        this.overlayBoard || this.initOverlayBoard(), this.selectedBoard = this.overlayBoard, this.overlayBoard.show();
     }
     this.mode = a;
   };
   a.changeBoardCode = function(a) {
-    this.selectedBoard.changeCode(a);
+    this.board.changeCode(a);
+  };
+  a.changeOverlayBoardCode = function(a) {
+    this.overlayBoard && this.overlayBoard.changeCode(a);
   };
   a.changeBlockMenuCode = function(a) {
     this.blockMenu.changeCode(a);
