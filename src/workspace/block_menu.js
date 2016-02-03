@@ -295,7 +295,7 @@ Entry.BlockMenu = function(dom, align, categoryData) {
 
     p._createSplitter = function(topPos) {
         var width = this._svgWidth;
-        var hPadding = 30;
+        var hPadding = 10;
         var svgBlockGroup = this.svgBlockGroup;
         var line = svgBlockGroup.line(hPadding, topPos, width-hPadding, topPos);
         line.attr({'stroke' : '#b5b5b5'});

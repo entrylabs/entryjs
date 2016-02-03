@@ -13074,7 +13074,7 @@ Entry.BlockMenu = function(a, b, c) {
     }
   };
   a._createSplitter = function(b) {
-    b = this.svgBlockGroup.line(30, b, this._svgWidth - 30, b);
+    b = this.svgBlockGroup.line(10, b, this._svgWidth - 10, b);
     b.attr({stroke:"#b5b5b5"});
     this._splitters.push(b);
   };
@@ -13715,6 +13715,22 @@ Entry.CodeView = function(a, b) {
     this.set({board:this.code.board});
   };
 })(Entry.CodeView.prototype);
+Entry.ConnectionRipple = {};
+(function(a) {
+  a.createDom = function(a) {
+    if (!this.svgDom) {
+      if ("function" !== typeof window.Snap) {
+        return console.error("Snap library is required");
+      }
+      this._ripple = a.getBoard().svgGroup.circle(0, 0, 0);
+      this._ripple.attr({stroke:"#888", "stroke-width":10});
+    }
+  };
+  a.setView = function(a) {
+    this._ripple || this.createDom(a);
+    console.log("ripple", this._ripple);
+  };
+})(Entry.ConnectionRipple);
 Entry.Executor = function(a, b) {
   this.scope = new Entry.Scope(a, this);
   this.entity = b;
