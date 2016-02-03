@@ -13713,17 +13713,17 @@ Entry.CodeView = function(a, b) {
 })(Entry.CodeView.prototype);
 Entry.ConnectionRipple = {};
 (function(a) {
-  a.createDom = function(a) {
+  a.createDom = function(b) {
     if (!this.svgDom) {
       if ("function" !== typeof window.Snap) {
         return console.error("Snap library is required");
       }
-      this._ripple = a.getBoard().svgGroup.circle(0, 0, 0);
+      this._ripple = b.getBoard().svgGroup.circle(0, 0, 0);
       this._ripple.attr({stroke:"#888", "stroke-width":10});
     }
   };
-  a.setView = function(a) {
-    this._ripple || this.createDom(a);
+  a.setView = function(b) {
+    this._ripple || this.createDom(b);
     console.log("ripple", this._ripple);
   };
 })(Entry.ConnectionRipple);
@@ -13774,8 +13774,8 @@ Entry.Scope = function(a, b) {
   a.getStringValue = function(b, a) {
     return String(this.getValue(b, a));
   };
-  a.getNumberValue = function(b, a) {
-    return Number(this.getValue(b, a));
+  a.getNumberValue = function(a, c) {
+    return Number(this.getValue(a, c));
   };
   a.getBooleanValue = function(a, c) {
     return Number(this.getValue(a, c)) ? !0 : !1;
@@ -14360,10 +14360,8 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
     this.svgGroup = this._blockView.contentSvgGroup.group();
     this.box.set({x:0, y:0, width:0, height:20});
     this._thread = this.getValue();
-    this.dummyBlock = new Entry.FieldDummyBlock(this, this._blockView);
-    this._thread.insertDummyBlock(this.dummyBlock);
-    this._inspectThread();
-    this._thread.createView(a);
+    var c = this._thread.getFirstBlock();
+    c && c.isDummy ? (this.dummyBlock = c, this.dummyBlock.appendSvg(this)) : (this.dummyBlock = new Entry.FieldDummyBlock(this, this._blockView), this._thread.insertDummyBlock(this.dummyBlock), this._inspectThread(), this._thread.createView(a));
     this.dummyBlock.observe(this, "_inspectThread", ["next"]);
     this.dummyBlock.observe(this, "calcWH", ["next"]);
     this.calcWH();
@@ -14376,7 +14374,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
     f.isDummy && (f = f.next);
     f && (c = -.5 * f.view.height);
     a = "t" + a + " " + c;
-    f != this._valueBlock && (this._valueBlock && this._valueBlock.view.set({shadow:!0}), this._valueBlock = f, this._valueBlockObserver && this._valueBlockObserver.destroy(), this._valueBlock && (f = this._valueBlock.view, this._valueBlockObserver = f.observe(this, "calcWH", ["width", "height"]), f.shadow && f.set({shadow:!1})));
+    f && f != this._valueBlock && (this._valueBlock && this._valueBlock.view.set({shadow:!0}), this._valueBlock = f, this._valueBlockObserver && this._valueBlockObserver.destroy(), this._valueBlock && (f = this._valueBlock.view, this._valueBlockObserver = f.observe(this, "calcWH", ["width", "height"]), f.shadow && f.set({shadow:!1})));
     d ? e.animate({transform:a}, 300, mina.easeinout) : e.attr({transform:a});
   };
   a.calcWH = function() {
@@ -14453,6 +14451,10 @@ Entry.FieldDummyBlock.prototype._updateBG = function() {
   } else {
     this._clonedShadow && (this._clonedShadow.remove(), delete this._clonedShadow);
   }
+};
+Entry.FieldDummyBlock.prototype.appendSvg = function(a) {
+  this.svgGroup.remove();
+  a.svgGroup.append(this.svgGroup);
 };
 Entry.FieldOutput = function(a, b, c) {
   this._blockView = b;

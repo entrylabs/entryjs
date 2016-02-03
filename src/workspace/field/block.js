@@ -46,10 +46,16 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
             height: 20
         });
         this._thread = this.getValue();
-        this.dummyBlock = new Entry.FieldDummyBlock(this, this._blockView);
-        this._thread.insertDummyBlock(this.dummyBlock);
-        this._inspectThread();
-        this._thread.createView(board);
+        var firstBlock = this._thread.getFirstBlock();
+        if (!firstBlock || !firstBlock.isDummy) {
+            this.dummyBlock = new Entry.FieldDummyBlock(this, this._blockView);
+            this._thread.insertDummyBlock(this.dummyBlock);
+            this._inspectThread();
+            this._thread.createView(board);
+        } else {
+            this.dummyBlock = firstBlock;
+            this.dummyBlock.appendSvg(this);
+        }
 
         this.dummyBlock.observe(this, "_inspectThread", ["next"]);
         this.dummyBlock.observe(this, "calcWH", ["next"]);
@@ -75,7 +81,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
         }
         var transform = "t" + x + " " + y;
 
-        if (block != this._valueBlock) {
+        if (block && block != this._valueBlock) {
             if (this._valueBlock)
                 this._valueBlock.view.set({shadow:true});
 
@@ -207,6 +213,7 @@ Entry.FieldDummyBlock = function(statementField, blockView) {
     this.observe(this, "_updateBG", ["magneting"]);
 
     this._align();
+
 };
 
 Entry.FieldDummyBlock.PRIMITIVE_TYPES = [
@@ -250,4 +257,9 @@ Entry.FieldDummyBlock.prototype._updateBG = function() {
             delete this._clonedShadow;
         }
     }
+};
+
+Entry.FieldDummyBlock.prototype.appendSvg = function(statementField) {
+    this.svgGroup.remove();
+    statementField.svgGroup.append(this.svgGroup);
 };
