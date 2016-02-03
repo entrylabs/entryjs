@@ -6353,7 +6353,7 @@ Entry.HelpPopup = function() {
   });
   this.HelpBody_.popup = this;
   this.HelpWindow_ = Entry.createElement("div");
-  this.HelpWindow_.addClass("entryPopupWindow");
+  this.HelpWindow_.addClass("entryHelpPopupWindow");
   this.HelpWindow_.bindOnClick(function() {
   });
   window.HelpPopup = this;
@@ -6361,14 +6361,10 @@ Entry.HelpPopup = function() {
   document.body.appendChild(this.HelpBody_);
 };
 Entry.HelpPopup.prototype.remove = function() {
-  for (;this.window_.hasChildNodes();) {
-    "workspace" == Entry.type ? Entry.view_.insertBefore(this.window_.firstChild, Entry.container.view_) : Entry.view_.insertBefore(this.window_.lastChild, Entry.view_.firstChild);
-  }
   $("body").css("overflow", "auto");
-  Entry.removeElement(this.body_);
-  window.popup = null;
+  Entry.removeElement(this.HelpBody_);
+  window.HelpPopup = null;
   Entry.removeEventListener("windowResized", this.resize);
-  Entry.engine.popup = null;
 };
 Entry.HelpPopup.prototype.resize = function(a) {
 };

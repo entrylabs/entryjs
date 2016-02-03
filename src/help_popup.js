@@ -19,7 +19,7 @@ Entry.HelpPopup = function() {
     });
     this.HelpBody_.popup = this;
     this.HelpWindow_ = Entry.createElement('div');
-    this.HelpWindow_.addClass('entryPopupWindow');
+    this.HelpWindow_.addClass('entryHelpPopupWindow');
     this.HelpWindow_.bindOnClick(function() {
     });
     window.HelpPopup = this;
@@ -31,19 +31,10 @@ Entry.HelpPopup = function() {
  * Remove this popup
  */
 Entry.HelpPopup.prototype.remove = function() {
-    while (this.window_.hasChildNodes()) {
-        if (Entry.type == 'workspace')
-            Entry.view_.insertBefore(this.window_.firstChild,
-                                     Entry.container.view_);
-        else{
-            Entry.view_.insertBefore(this.window_.lastChild, Entry.view_.firstChild);
-        }
-    }
     $('body').css('overflow', 'auto');
-    Entry.removeElement(this.body_);
-    window.popup = null;
+    Entry.removeElement(this.HelpBody_);
+    window.HelpPopup = null;
     Entry.removeEventListener('windowResized', this.resize);
-    Entry.engine.popup = null;
 };
 
 /**
