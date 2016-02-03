@@ -152,7 +152,6 @@ Entry.Board = function(option) {
     };
 
     p._addControl = function(dom) {
-        console.log('x');
         var that = this;
         dom.mousedown(function() {
             that.onMouseDown.apply(that, arguments);

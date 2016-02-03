@@ -13771,8 +13771,8 @@ Entry.Scope = function(a, b) {
     var d = this.block.params[0]._data[1], e = new Entry.Scope(d, this.executor);
     return Entry.block[d.type].func.call(e, this.entity, e);
   };
-  a.getStringValue = function(b, a) {
-    return String(this.getValue(b, a));
+  a.getStringValue = function(a, c) {
+    return String(this.getValue(a, c));
   };
   a.getNumberValue = function(a, c) {
     return Number(this.getValue(a, c));
@@ -15519,7 +15519,6 @@ Entry.Board = function(a) {
       a.preventDefault();
       a.originalEvent.touches && (a = a.originalEvent.touches[0]);
       var b = g.dragInstance;
-      console.log(b.offsetX, a.pageX);
       g.scroller.scroll(a.pageX - b.offsetX, a.pageY - b.offsetY);
       b.set({offsetX:a.pageX, offsetY:a.pageY});
     }
