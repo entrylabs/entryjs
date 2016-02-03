@@ -101,6 +101,14 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldOutput);
     };
 
     p.calcWH = function() {
+        var block = this._thread.getFirstBlock();
+        if (block.isDummy) block = block.next;
+
+        if (block) {
+            var blockView = block.view;
+            this.outputWidth = blockView.width;
+        }
+
         this._blockView.alignContent();
     };
 

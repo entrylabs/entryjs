@@ -13657,8 +13657,8 @@ Entry.Code = function(a) {
     this._data.push(d);
     return d;
   };
-  a.destroyThread = function(a, c) {
-    var d = this._data, e = d.indexOf(a);
+  a.destroyThread = function(b, a) {
+    var d = this._data, e = d.indexOf(b);
     0 > e || d.splice(e, 1);
   };
   a.doDestroyThread = function(a, c) {
@@ -14483,6 +14483,9 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldOutput);
     d ? e.animate({transform:a}, 300, mina.easeinout) : e.attr({transform:a});
   };
   a.calcWH = function() {
+    var a = this._thread.getFirstBlock();
+    a.isDummy && (a = a.next);
+    a && (this.outputWidth = a.view.width);
     this._blockView.alignContent();
   };
   a.calcHeight = a.calcWH;
@@ -14986,7 +14989,11 @@ Entry.skeleton.basic_param = {path:function(a) {
   a = Math.max(0, a);
   return "m 4,0 h 10 h %w l 2,2 0,3 3,0 1,1 0,12 -1,1 -3,0 0,3 -2,2h -%w h -10 l -2,-2 0,-3 3,0 1,-1 0,-12 -1,-1 -3,0 0,-3 2,-2".replace(/%w/gi, a);
 }, outerLine:!0, box:function(a) {
-  return {offsetX:0, offsetY:0, width:(a ? a.contentWidth : 5) + 18, height:24, marginBottom:0};
+  var b = a ? a.contentWidth : 5;
+  a && a._contents.map(function(a) {
+    a.outputWidth && (b += a.outputWidth - 4);
+  });
+  return {offsetX:0, offsetY:0, width:b + 18, height:24, marginBottom:0};
 }, magnets:function() {
   return {param:{}};
 }, contentPos:function(a) {
