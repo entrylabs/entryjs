@@ -4760,5 +4760,21 @@ svg .svgBlockGroup text {
   height: 100%;
   width: 100%;
 }
+.entryFunctionButton {
+  stroke: #555;
+  stroke-width: 3;
+  fill: transparent;
+  cursor: pointer;
+}
+.entryFunctionButton:hover {
+  stroke: #000;
+}
+.entryFunctionButtonText {
+  font-family: ng !important;
+  font-size: 13 !important;
+  text-anchor: middle;
+  fill: black;
+  cursor: pointer !important;
+}
 
 

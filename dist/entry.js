@@ -1898,7 +1898,7 @@ Entry.block.remove_all_clones = function(a, b) {
   c = null;
   return b.callReturn();
 };
-Entry.block.functionAddButton = {skeleton:"basic_button", color:"#eee", template:"%1", params:[{type:"Text", text:"\ud568\uc218 \ucd94\uac00", color:"#333", align:"center"}], events:{mousedown:[function() {
+Entry.block.functionAddButton = {skeleton:"basic_button", color:"#eee", isNotFor:["functionInit"], template:"%1", params:[{type:"Text", text:"\ud568\uc218 \ucd94\uac00", color:"#333", align:"center"}], events:{mousedown:[function() {
   Entry.variableContainer.createFunction();
 }]}};
 Entry.block.function_field_label = {skeleton:"basic_param", color:"#f9c535", template:"%1%2", params:[{type:"TextInput", value:"\ud568\uc218"}, {type:"Output", accept:"basic_param"}]};
@@ -10467,7 +10467,7 @@ Entry.Func.edit = function(a) {
 };
 Entry.Func.initEditView = function() {
   Entry.playground.mainWorkspace.setMode(Entry.Workspace.MODE_OVERLAYBOARD);
-  console.log("start edit");
+  Entry.playground.mainWorkspace.getBlockMenu().banClass("functionInit");
 };
 Entry.Func.save = function() {
   this.targetFunc.content = Blockly.Xml.workspaceToDom(this.workspace);
@@ -10476,7 +10476,7 @@ Entry.Func.save = function() {
   this.cancelEdit();
 };
 Entry.Func.cancelEdit = function() {
-  this.svg && this.targetFunc && (this.workspace.visible = !1, this.parentView.removeChild(this.svg), Entry.Func.isEdit = !1, Blockly.mainWorkspace.blockMenu.targetWorkspace = Blockly.mainWorkspace, this.targetFunc.block || (delete Entry.variableContainer.functions_[this.targetFunc.id], delete Entry.variableContainer.selected), delete this.targetFunc, this.updateMenu(), this.doWhenCancel(), Entry.variableContainer.updateList());
+  this.svg && this.targetFunc && (this.workspace.visible = !1, this.parentView.removeChild(this.svg), Entry.Func.isEdit = !1, Blockly.mainWorkspace.blockMenu.targetWorkspace = Blockly.mainWorkspace, this.targetFunc.block || (delete Entry.variableContainer.functions_[this.targetFunc.id], delete Entry.variableContainer.selected), delete this.targetFunc, this.updateMenu(), Entry.variableContainer.updateList());
 };
 Entry.Func.getMenuXml = function() {
   var a = [];
@@ -10592,33 +10592,6 @@ Entry.Func.prototype.generateBlock = function(a) {
   this.block = a.block;
   this.description = a.description;
 };
-Entry.Func.prototype.syncViewSize_ = function() {
-  var a = this.parentView.getBoundingClientRect();
-  this.svg.style.width = a.width;
-  this.svg.style.height = a.height;
-};
-Entry.Func.generateButtons = function() {
-  var a = this, b = Blockly.createSvgElement("g", {}, this.svg);
-  this.btnWrapper = b;
-  var c = Blockly.createSvgElement("text", {x:"27", y:"33", "class":"entryFunctionButtonText"}, b), d = document.createTextNode(Lang.Buttons.save);
-  c.appendChild(d);
-  var d = Blockly.createSvgElement("text", {x:"102.5", y:"33", "class":"entryFunctionButtonText"}, b), e = document.createTextNode(Lang.Buttons.cancel);
-  d.appendChild(e);
-  e = Blockly.createSvgElement("circle", {cx:"27.5", cy:"27.5", r:"27.5", "class":"entryFunctionButton"}, b);
-  b = Blockly.createSvgElement("circle", {cx:"102.5", cy:"27.5", r:"27.5", "class":"entryFunctionButton"}, b);
-  e.onclick = function(b) {
-    a.save();
-  };
-  c.onclick = function(b) {
-    a.save();
-  };
-  b.onclick = function(b) {
-    a.cancelEdit();
-  };
-  d.onclick = function(b) {
-    a.cancelEdit();
-  };
-};
 Entry.Func.position_ = function() {
   var a = this.workspace.getMetrics();
   if (a && this.workspace.visible) {
@@ -10636,25 +10609,6 @@ Entry.Func.positionBlock_ = function(a) {
     a.getHeightWidth();
     a.moveBy(b.viewWidth / 2 - 80 - c.x, b.viewHeight / 2 - 50 - c.y);
   }
-};
-Entry.Func.doWhenInit = function() {
-  var a = this.svg;
-  a.appendChild(Blockly.fieldKeydownDom);
-  a.appendChild(Blockly.fieldDropdownDom);
-  a.appendChild(Blockly.contextMenu);
-  Blockly.bindEvent_(window, "resize", this, this.position_);
-  Blockly.bindEvent_(a, "mousedown", null, Blockly.onMouseDown_);
-  Blockly.bindEvent_(a, "contextmenu", null, Blockly.onContextMenu_);
-};
-Entry.Func.doWhenCancel = function() {
-  Blockly.clipboard_ = null;
-  var a = Blockly.svg;
-  a.appendChild(Blockly.fieldKeydownDom);
-  a.appendChild(Blockly.fieldDropdownDom);
-  a.appendChild(Blockly.contextMenu);
-  Blockly.unbindEvent_(window, "resize", this, this.position_);
-  Blockly.unbindEvent_(a, "mousedown", null, Blockly.onMouseDown_);
-  Blockly.unbindEvent_(a, "contextmenu", null, Blockly.onContextMenu_);
 };
 Entry.Func.generateWsBlock = function(a, b, c) {
   b = b.childNodes;
@@ -13011,12 +12965,14 @@ Entry.BlockMenu = function(a, b, c) {
     this.svgGroup.append(this.svgBlockGroup);
   };
   a.align = function() {
-    for (var b = this.code.getThreads(), a = 10, d = "LEFT" == this._align ? 10 : this.svgDom.width() / 2, e, f = 0, g = b.length;f < g;f++) {
-      var h = b[f].getFirstBlock(), k = h.view, h = Entry.block[h.type];
-      this.checkBanClass(h) ? k.set({visible:!1}) : (k.set({visible:!0}), h = h.class, e && e !== h && (this._createSplitter(a), a += 15), e = h, a -= k.offsetY, k._moveTo(d - k.offsetX, a, !1), a += k.height + 15);
+    if (this.code) {
+      for (var b = this.code.getThreads(), a = 10, d = "LEFT" == this._align ? 10 : this.svgDom.width() / 2, e, f = 0, g = b.length;f < g;f++) {
+        var h = b[f].getFirstBlock(), k = h.view, h = Entry.block[h.type];
+        this.checkBanClass(h) ? k.set({visible:!1}) : (k.set({visible:!0}), h = h.class, e && e !== h && (this._createSplitter(a), a += 15), e = h, a -= k.offsetY, k._moveTo(d - k.offsetX, a, !1), a += k.height + 15);
+      }
+      this.changeEvent.notify();
+      this.expandWidth = this.svgGroup.getBBox().width + d;
     }
-    this.changeEvent.notify();
-    this.expandWidth = this.svgGroup.getBBox().width + d;
   };
   a.cloneToGlobal = function(b) {
     if (null !== this.dragBlock && !this._boardBlockView) {
@@ -13142,6 +13098,7 @@ Entry.BlockMenu = function(a, b, c) {
   };
   a.banClass = function(b) {
     0 > this._bannedClass.indexOf(b) && this._bannedClass.push(b);
+    this.align();
   };
   a.unbanClass = function(b) {
     b = this._bannedClass.indexOf(b);
@@ -13771,14 +13728,14 @@ Entry.Scope = function(a, b) {
     var d = this.block.params[0]._data[1], e = new Entry.Scope(d, this.executor);
     return Entry.block[d.type].func.call(e, this.entity, e);
   };
-  a.getStringValue = function(a, c) {
-    return String(this.getValue(a, c));
+  a.getStringValue = function(b, a) {
+    return String(this.getValue(b, a));
   };
-  a.getNumberValue = function(a, c) {
-    return Number(this.getValue(a, c));
+  a.getNumberValue = function(b, a) {
+    return Number(this.getValue(b, a));
   };
-  a.getBooleanValue = function(a, c) {
-    return Number(this.getValue(a, c)) ? !0 : !1;
+  a.getBooleanValue = function(b, a) {
+    return Number(this.getValue(b, a)) ? !0 : !1;
   };
   a.getField = function() {
     return this.block.params[0];
@@ -13789,7 +13746,7 @@ Entry.Scope = function(a, b) {
   a.getNumberField = function() {
     return Number(this.getField());
   };
-  a.getStatement = function(a) {
+  a.getStatement = function(b) {
     this.executor.stepInto(this.block.statements[0]);
     return Entry.STATIC.CONTINUE;
   };
@@ -13805,16 +13762,16 @@ Entry.Field = function() {
     this.documentDownEvent && (Entry.documentMousedown.detach(this.documentDownEvent), delete this.documentDownEvent);
     this.optionGroup && (this.optionGroup.remove(), delete this.optionGroup);
   };
-  a.align = function(a, c, d) {
+  a.align = function(b, a, d) {
     var e = this.svgGroup;
-    this._position && (this._position.x && (a = this._position.x), this._position.y && (c = this._position.y));
-    var f = "t" + a + " " + c;
+    this._position && (this._position.x && (b = this._position.x), this._position.y && (a = this._position.y));
+    var f = "t" + b + " " + a;
     void 0 === d || d ? e.animate({transform:f}, 300, mina.easeinout) : e.attr({transform:f});
-    this.box.set({x:a, y:c});
+    this.box.set({x:b, y:a});
   };
   a.getAbsolutePos = function() {
-    var a = this._block.view, c = a.svgGroup.transform().globalMatrix, d = a.getBoard().svgDom.offset(), a = a.getContentPos();
-    return {x:c.e + d.left + this.box.x + a.x, y:c.f + d.top + this.box.y + a.y};
+    var b = this._block.view, a = b.svgGroup.transform().globalMatrix, d = b.getBoard().svgDom.offset(), b = b.getContentPos();
+    return {x:a.e + d.left + this.box.x + b.x, y:a.f + d.top + this.box.y + b.y};
   };
   a.getRelativePos = function() {
     var a = this._block.view, c = a.svgGroup.transform().globalMatrix, a = a.getContentPos(), d = this.box;
@@ -15431,10 +15388,6 @@ Entry.Board = function(a) {
   this.workspace = a.workspace;
   this.wrapper = Entry.Dom("div", {parent:b, class:"entryBoardWrapper"});
   this.svgDom = Entry.Dom($('<svg id="' + this._snapId + '" class="entryBoard" width="100%" height="100%"version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'), {parent:this.wrapper});
-  a.isOverlay && this.wrapper.addClass("entryOverlayBoard");
-  this.offset = this.svgDom.offset();
-  this.offset.left -= $(window).scrollLeft();
-  this.relativeOffset = this.offset;
   this.visible = !0;
   $(window).scroll(this.updateOffset);
   Entry.windowResized.attach(this, this.updateOffset);
@@ -15446,6 +15399,8 @@ Entry.Board = function(a) {
   this.svgThreadGroup.board = this;
   this.svgBlockGroup = this.svgGroup.group();
   this.svgBlockGroup.board = this;
+  a.isOverlay && (this.wrapper.addClass("entryOverlayBoard"), this.generateButtons());
+  this.updateOffset();
   Entry.ANIMATION_DURATION = 200;
   Entry.BOARD_PADDING = 100;
   this.changeEvent = new Entry.Event(this);
@@ -15501,7 +15456,6 @@ Entry.Board = function(a) {
     }
   };
   a._addControl = function(a) {
-    console.log("x");
     var c = this;
     a.mousedown(function() {
       c.onMouseDown.apply(c, arguments);
@@ -15595,9 +15549,18 @@ Entry.Board = function(a) {
     }
   };
   a.updateOffset = function() {
-    this.offset = this.svgDom.offset();
+    this.offset = this.snap.node.getBoundingClientRect();
     var a = $(window), c = a.scrollTop(), a = a.scrollLeft(), d = this.offset;
     this.relativeOffset = {top:d.top - c, left:d.left - a};
+    this.btnWrapper && this.btnWrapper.attr({transform:"t" + (d.width / 2 - 65) + " " + (d.height - 200)});
+  };
+  a.generateButtons = function() {
+    var a = this.svgGroup.group();
+    this.btnWrapper = a;
+    a.text(27, 33, Lang.Buttons.save).attr({"class":"entryFunctionButtonText"});
+    a.text(102.5, 33, Lang.Buttons.cancel).attr({"class":"entryFunctionButtonText"});
+    a.circle(27.5, 27.5, 27.5).attr({"class":"entryFunctionButton"});
+    a.circle(102.5, 27.5, 27.5).attr({"class":"entryFunctionButton"});
   };
 })(Entry.Board.prototype);
 Entry.Vim = function(a) {

@@ -160,6 +160,8 @@ Entry.BlockMenu = function(dom, align, categoryData) {
     };
 
     p.align = function() {
+        if (!this.code)
+            return;
         var threads = this.code.getThreads();
         var vPadding = 15,
             marginFromTop = 10,
@@ -439,6 +441,7 @@ Entry.BlockMenu = function(dom, align, categoryData) {
         var index = this._bannedClass.indexOf(className);
         if (index < 0)
             this._bannedClass.push(className);
+        this.align();
     }
 
     p.unbanClass = function(className) {

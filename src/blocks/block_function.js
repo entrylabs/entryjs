@@ -3,6 +3,7 @@
 Entry.block.functionAddButton = {
     skeleton: "basic_button",
     color: "#eee",
+    isNotFor: ["functionInit"],
     template: "%1",
     params: [
         {
