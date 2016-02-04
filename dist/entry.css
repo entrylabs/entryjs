@@ -3277,9 +3277,21 @@ span.CodeMirror-selectedtext {
   max-height: 100%;
   /*overflow: hidden;*/
   z-index: 8000;
-  background-color: white;
+  background-color: #ffffff;
 }
-.entryHelpPopupWindow {
+.hiddenPopup {
+  display: none;
+}
+.entryPopupHelperWindow .popupHelperClose {
+  width: 13px;
+  height: 13px;
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  background-image: url('/img/assets/loginBoxClose.png');
+  cursor: pointer;
+}
+.entryPopupHelperWindow.textCodingPopupWindow {
   width: 840px;
   height: 690px;
   position: absolute;
@@ -3290,9 +3302,70 @@ span.CodeMirror-selectedtext {
   margin: auto;
   max-width: 100%;
   max-height: 100%;
-  /*overflow: hidden;*/
   z-index: 8000;
-  background-color: white;
+  background-color: #ffffff;
+}
+.textCodingPopupWindow .entryPopupHelperTitle {
+  width: 100%;
+  height: 60px;
+  background-color: #2A7DEF;
+  font-weight: bold;
+  font-size: 20px;
+  line-height: 60px;
+  padding-left: 32px;
+  color: #ffffff;
+}
+.textCodingPopupWindow .entryPopupHelperStep {
+  background: #f4810f;
+  height: 36px;
+  width: 122px;
+  margin-left: 32px;
+  margin-top: 20px;
+  line-height: 36px;
+  padding: 0 29px;
+  color: #ffffff;
+  border: solid 1px #e8740c;
+  border-radius: 20px;
+  text-align: center;
+  font-size: 15px;
+  font-weight: bold;
+}
+.textCodingPopupWindow .entryPopupHelperLeft {
+  width: 62px;
+  height: 62px;
+  background-image: url("../images/left_btn.png");
+  position: absolute;
+  margin-left: 25px;
+  margin-top: 193px;
+  cursor: pointer;
+}
+.textCodingPopupWindow .entryPopupHelperLeft:active,
+.textCodingPopupWindow .entryPopupHelperLeft:hover {
+  background-image: url("../images/left_btn_on.png");
+}
+.textCodingPopupWindow .entryPopupHelperRight {
+  right: 0;
+  width: 62px;
+  height: 62px;
+  background-image: url("../images/right_btn.png");
+  position: absolute;
+  margin-right: 25px;
+  margin-top: 193px;
+  cursor: pointer;
+}
+.textCodingPopupWindow .entryPopupHelperRight:active,
+.textCodingPopupWindow .entryPopupHelperRight:hover {
+  background-image: url("../images/right_btn_on.png");
+}
+.textCodingPopupWindow .entryPopupHelperView {
+  width: 771px;
+  height: 155px;
+  background: url('../images/txt.png');
+  margin: 388px auto 0;
+  font-weight: bold;
+  font-size: 17px;
+  padding: 24px 150px 0 19px;
+  color: #004051;
 }
 .entryFunctionEdit {
   position: absolute;

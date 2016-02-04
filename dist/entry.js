@@ -6344,29 +6344,35 @@ Entry.EntityObject.prototype.alignTextBox = function() {
 Entry.EntityObject.prototype.syncDialogVisible = function() {
   this.dialog && (this.dialog.object.visible = this.visible);
 };
-Entry.HelpPopup = function() {
-  Entry.assert(!window.HelpPopup, "Popup exist");
-  this.HelpBody_ = Entry.createElement("div");
-  this.HelpBody_.addClass("entryPopup");
-  this.HelpBody_.bindOnClick(function(a) {
-    a.target == this && this.popup.remove();
+Entry.popupHelper = function() {
+  Entry.assert(!window.popupHelper, "Popup exist");
+  this.pageIndex = 0;
+  this.body_ = Entry.createElement("div");
+  this.body_.addClass("entryPopup hiddenPopup");
+  this.body_.bindOnClick(function(a) {
+    a.target == this && this.popup.hide();
   });
-  this.HelpBody_.popup = this;
-  this.HelpWindow_ = Entry.createElement("div");
-  this.HelpWindow_.addClass("entryHelpPopupWindow");
-  this.HelpWindow_.bindOnClick(function() {
-  });
-  window.HelpPopup = this;
-  this.HelpBody_.appendChild(this.HelpWindow_);
-  document.body.appendChild(this.HelpBody_);
+  window.popupHelper = this;
+  this.body_.popup = this;
+  this.window_ = Entry.createElement("div");
+  this.window_.addClass("entryPopupHelperWindow");
+  this.body_.appendChild(this.window_);
+  document.body.appendChild(this.body_);
 };
-Entry.HelpPopup.prototype.remove = function() {
-  $("body").css("overflow", "auto");
-  Entry.removeElement(this.HelpBody_);
-  window.HelpPopup = null;
-  Entry.removeEventListener("windowResized", this.resize);
+Entry.popupHelper.prototype.setPopup = function(a, b) {
+  a(this);
 };
-Entry.HelpPopup.prototype.resize = function(a) {
+Entry.popupHelper.prototype.remove = function() {
+  Entry.removeElement(this.body_);
+  window.popupHelper = null;
+};
+Entry.popupHelper.prototype.resize = function(a) {
+};
+Entry.popupHelper.prototype.show = function() {
+  this.body_.removeClass("hiddenPopup");
+};
+Entry.popupHelper.prototype.hide = function() {
+  this.body_.addClass("hiddenPopup");
 };
 Entry.Helper = function() {
   this.visible = !1;
