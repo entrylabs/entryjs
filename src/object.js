@@ -867,26 +867,6 @@ Entry.EntryObject.prototype.initEntity = function(model) {
             json.bgColor = options.background;
             json.lineBreak = options.lineBreak;
             if (options.lineBreak) {
-                /*
-                var lines = json.text.split('\n');
-                if (lines.length > 1) {
-                    var maxLen = lines[0].length;
-                    var maxHeight = lines.length;
-                    for(var i=1,len=lines.length;i<len;i++) {
-                        if (lines[i].length > maxLen) {
-                            maxLen = lines[i].length;
-                        }
-                    }
-                    if (maxLen > 20) maxLen= 20;
-                    if (maxHeight > 3) maxHeight = 3;
-
-                    json.width = 20 * maxLen;
-                    json.height = 35 * maxHeight;
-                } else {
-                    json.width = 20 * json.text.length;
-                    json.height = 35;
-                }
-                */
                 json.width = 256;
                 json.height = json.width * 0.5625;
                 json.regX = json.width / 2;
