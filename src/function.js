@@ -80,7 +80,6 @@ Entry.Func.edit = function(func) {
 
     for(var i = 0; i < fieldElement.length; i++)
         if($(fieldElement[i]).attr('name') === "NAME") {
-            
             this.srcFName+=$(fieldElement[i]).text();
             this.srcFName+=' ';
         }
@@ -182,12 +181,12 @@ Entry.Func.save = function() {
             dstFName+=' ';
         }
     dstFName = dstFName.trim();
-    this.updateFuncName(dstFName);
+    this.syncFuncName(dstFName);
 
     this.cancelEdit();
 };
 
-Entry.Func.updateFuncName = function(dstFName) {
+Entry.Func.syncFuncName = function(dstFName) {
     var index = 0;
     var dstFNameTokens = [];
     dstFNameTokens = dstFName.split(' ');

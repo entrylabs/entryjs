@@ -11283,10 +11283,10 @@ Entry.Func.save = function() {
     "NAME" === $(b[c]).attr("name") && (a += $(b[c]).text(), a += " ");
   }
   a = a.trim();
-  this.updateFuncName(a);
+  this.syncFuncName(a);
   this.cancelEdit();
 };
-Entry.Func.updateFuncName = function(a) {
+Entry.Func.syncFuncName = function(a) {
   var b = 0, c = [], c = a.split(" "), d = "";
   a = [];
   a = Blockly.mainWorkspace.getAllBlocks();
