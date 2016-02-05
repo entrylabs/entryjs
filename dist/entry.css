@@ -2882,7 +2882,9 @@
   border: 1px solid gray;
 }
 .entryVariableAddSpaceCheckWorkspace.entryVariableAddChecked {
-  background-color: gray;
+  /*background-color: gray;*/
+  background-image: url("../images/check_on.png");
+  background-repeat: no-repeat;
 }
 .entryVariableAddSpaceLocalWrapperWorkspace {
   color: #5e5e5e;
@@ -3764,7 +3766,9 @@
 }
 .entryVariableAddSpaceCheckWorkspace.entryVariableAddChecked,
 .entryVariableSettingCheckWorkspace.entryVariableSettingChecked {
-  background-color: gray;
+  /*background-color: gray;*/
+  background-image: url("../images/check_on.png");
+  background-repeat: no-repeat;
 }
 .entryVariableSettingInitValueWrapperWorkspace,
 .entryVariableSettingSlideWrapperWorkspace,
@@ -3835,7 +3839,9 @@
   color: #5e5e5e;
 }
 .entryListSettingCheckedWorkspace {
-  background-color: gray;
+  /*background-color: gray;*/
+  background-image: url("../images/check_on.png");
+  background-repeat: no-repeat;
 }
 .entryListSettingLengthWrapperWorkspace {
   margin-top: 15px;
