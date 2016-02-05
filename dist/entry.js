@@ -9306,8 +9306,9 @@ Entry.Playground.prototype.selectPicture = function(a) {
     var e = b[c];
     e.id === a.id ? e.view.addClass("entryPictureSelected") : e.view.removeClass("entryPictureSelected");
   }
-  b = Entry.container.selectPicture(a.id);
-  this.object.id === b && Entry.dispatchEvent("pictureSelected", a);
+  var f;
+  a && a.id && (f = Entry.container.selectPicture(a.id));
+  this.object.id === f && Entry.dispatchEvent("pictureSelected", a);
 };
 Entry.Playground.prototype.movePicture = function(a, b) {
   this.object.pictures.splice(b, 0, this.object.pictures.splice(a, 1)[0]);

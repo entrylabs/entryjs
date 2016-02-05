@@ -996,7 +996,10 @@ Entry.Playground.prototype.selectPicture = function(picture) {
             target.view.removeClass('entryPictureSelected');
     }
 
-    var objectId_ = Entry.container.selectPicture(picture.id);
+    var objectId_;
+    if(picture && picture.id) {
+        objectId_ = Entry.container.selectPicture(picture.id);
+    }
 
     if( this.object.id === objectId_) {
         Entry.dispatchEvent('pictureSelected', picture);
