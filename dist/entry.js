@@ -13370,7 +13370,7 @@ Entry.BlockView.PARAM_SPACE = 5;
             g = this._getCloseBlock();
             if (b || g) {
               if (g) {
-                if (this.set({animating:!0}), g.next && g.next.view.set({animating:!0}), e.doInsert(g), createjs.Sound.play("entryMagneting"), g.constructor == Entry.FieldDummyBlock && (e = e.next)) {
+                if (this.set({animating:!0}), g.next && g.next.view.set({animating:!0}), e.doInsert(g), createjs.Sound.play("entryMagneting"), Entry.ConnectionRipple.setView(g.view).dispose(), g.constructor == Entry.FieldDummyBlock && (e = e.next)) {
                   -1 < Entry.FieldDummyBlock.PRIMITIVE_TYPES.indexOf(e.type) ? (e.getThread().cut(e), e.destroy(!1)) : (e.separate(), e.view._moveBy(10, 10, !1));
                 }
               } else {
@@ -13675,13 +13675,26 @@ Entry.ConnectionRipple = {};
       if ("function" !== typeof window.Snap) {
         return console.error("Snap library is required");
       }
-      this._ripple = b.getBoard().svgGroup.circle(0, 0, 0);
+      this._ripple = b.svgGroup.circle(0, 0, 0);
       this._ripple.attr({stroke:"#888", "stroke-width":10});
     }
   };
   a.setView = function(b) {
     this._ripple || this.createDom(b);
-    console.log("ripple", this._ripple);
+    var a = this._ripple, d = b.svgGroup;
+    a.remove();
+    var e = b.svgGroup.getBBox().height;
+    (b = b.block) && (e -= b.next.view.svgGroup.getBBox().height);
+    a.attr({cy:e});
+    d.append(a);
+    a._startTime = new Date;
+    return this;
+  };
+  a.dispose = function() {
+    var b = this, a = this._ripple, d = (new Date - a._startTime) / 150;
+    1 < d ? a.remove() : (a.attr({r:25 * d, opacity:1 - d}), window.setTimeout(function() {
+      b.dispose();
+    }, 10));
   };
 })(Entry.ConnectionRipple);
 Entry.Executor = function(a, b) {
@@ -13692,8 +13705,8 @@ Entry.Executor = function(a, b) {
 (function(a) {
   a.execute = function() {
     for (;;) {
-      var b = this.scope.block._schema.func.call(this.scope, this.entity, this.scope);
-      if (void 0 === b || null === b) {
+      var a = this.scope.block._schema.func.call(this.scope, this.entity, this.scope);
+      if (void 0 === a || null === a) {
         if (this.scope = new Entry.Scope(this.scope.block.next, this), null === this.scope.block) {
           if (this._callStack.length) {
             this.scope = this._callStack.pop();
@@ -13702,18 +13715,18 @@ Entry.Executor = function(a, b) {
           }
         }
       } else {
-        if (b === Entry.STATIC.CONTINUE) {
+        if (a === Entry.STATIC.CONTINUE) {
           break;
         }
       }
     }
   };
-  a.stepInto = function(b) {
-    b instanceof Entry.Thread || console.error("Must step in to thread");
+  a.stepInto = function(a) {
+    a instanceof Entry.Thread || console.error("Must step in to thread");
     this._callStack.push(this.scope);
-    b = b.getFirstBlock();
-    b.isDummy && (b = b.next);
-    this.scope = new Entry.Scope(b, this);
+    a = a.getFirstBlock();
+    a.isDummy && (a = a.next);
+    this.scope = new Entry.Scope(a, this);
   };
 })(Entry.Executor.prototype);
 Entry.Scope = function(a, b) {
@@ -13724,7 +13737,7 @@ Entry.Scope = function(a, b) {
 (function(a) {
   a.callReturn = function() {
   };
-  a.getValue = function(b, a) {
+  a.getValue = function(a, c) {
     var d = this.block.params[0]._data[1], e = new Entry.Scope(d, this.executor);
     return Entry.block[d.type].func.call(e, this.entity, e);
   };

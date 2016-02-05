@@ -505,7 +505,9 @@ Entry.BlockView.PARAM_SPACE = 5;
 
                                 block.doInsert(closeBlock);
                                 createjs.Sound.play('entryMagneting');
-                                //Entry.ConnectionRipple.setView(block.view);
+                                Entry.ConnectionRipple
+                                    .setView(closeBlock.view)
+                                    .dispose();
 
                                 if (closeBlock.constructor == Entry.FieldDummyBlock) {
                                     var orphan = block.next;
