@@ -6448,7 +6448,7 @@ Entry.EntryObject = function(a) {
     this.text = a.text || this.name;
     this.objectType = a.objectType;
     this.objectType || (this.objectType = "sprite");
-    a.script = [[{type:"when_run_button_click", x:40, y:240}, {type:"repeat_basic", statements:[[{type:"move_direction"}]]}, {type:"stop_repeat"}], [{type:"function_field_label", x:40, y:140}], [{type:"function_field_boolean", x:90, y:140}], [{type:"function_field_string", x:140, y:140}], [{type:"function_create", x:40, y:90}]];
+    a.script = [[{type:"when_run_button_click", x:40, y:240}, {type:"repeat_basic", statements:[[{type:"move_direction"}]]}, {type:"stop_repeat"}]];
     this.script = new Entry.Code(a.script ? a.script : []);
     this.pictures = a.sprite.pictures;
     this.sounds = [];
@@ -10427,7 +10427,7 @@ Entry.Model = function(a, b) {
 })(Entry.Model);
 Entry.Func = function() {
   this.id = Entry.generateHash();
-  this.content = Blockly.Xml.textToDom(Entry.Func.CREATE_BLOCK);
+  this.content = new Entry.Code([[{type:"function_create", x:40, y:40, deletable:!1}]]);
   this.block = null;
   this.stringHash = {};
   this.booleanHash = {};
@@ -10464,10 +10464,13 @@ Entry.Func.edit = function(a) {
   this.cancelEdit();
   this.workspace && (this.workspace.visible = !0);
   this.initEditView();
+  this.targetFunc = a;
+  Entry.playground.mainWorkspace.changeOverlayBoardCode(a.content);
+  this.updateMenu();
 };
 Entry.Func.initEditView = function() {
   Entry.playground.mainWorkspace.setMode(Entry.Workspace.MODE_OVERLAYBOARD);
-  Entry.playground.mainWorkspace.getBlockMenu().banClass("functionInit");
+  Entry.playground.mainWorkspace.getBlockMenu();
 };
 Entry.Func.save = function() {
   this.targetFunc.content = Blockly.Xml.workspaceToDom(this.workspace);
@@ -10497,50 +10500,17 @@ Entry.Func.syncFunc = function() {
   }
 };
 Entry.Func.updateMenu = function() {
-  if ("func" == Entry.playground.selectedMenu && (Entry.playground.blockMenu.hide(), Entry.playground.blockMenu.show(Entry.Func.getMenuXml()), !Blockly.WidgetDiv.field_ && Entry.Func.targetFunc)) {
-    var a = Entry.Func.targetFunc, b = Blockly.Xml.workspaceToDom(Entry.Func.workspace), c = b.getElementsByClassName("function_general"), d = a.id, e, c = Entry.nodeListToArray(c), f = [], g = {};
-    c.map(function(b) {
-      var a = b.getElementsByTagName("mutation")[0].getAttribute("hashid");
-      a == d ? f.push(b) : (g[a] || (g[a] = []), g[a].push(b));
-    });
-    f.map(function(a) {
-      e = Entry.Func.generateWsBlock(b, Blockly.Xml.workspaceToDom(Entry.Func.workspace), d).block;
-      for (var c = [], f = !1;a.firstChild;) {
-        var g = a.firstChild, h = g.tagName;
-        if (f || "NEXT" == h) {
-          f = !0, c.push(g);
-        }
-        a.removeChild(g);
-      }
-      for (;e.firstChild;) {
-        a.appendChild(e.firstChild);
-      }
-      for (;c.length;) {
-        a.appendChild(c.shift());
-      }
-    });
-    for (var h in g) {
-      var a = g[h], k = Entry.variableContainer.getFunction(h).content;
-      a.map(function(a) {
-        e = Entry.Func.generateWsBlock(b, k, h).block;
-        for (var c = [], d = !1;a.firstChild;) {
-          var f = a.firstChild, g = f.tagName;
-          if (d || "NEXT" == g) {
-            d = !0, c.push(f);
-          }
-          a.removeChild(f);
-        }
-        for (;e.firstChild;) {
-          a.appendChild(e.firstChild);
-        }
-        for (;c.length;) {
-          a.appendChild(c.shift());
-        }
-      });
-    }
-    Entry.Func.workspace.clear();
-    Blockly.Xml.domToWorkspace(Entry.Func.workspace, b);
+  var a = Entry.playground.mainWorkspace.getBlockMenu();
+  if (!this.menuCode) {
+    var b = a.getCategoryCodes("func");
+    b.createThread([{type:"function_field_label"}]);
+    b.createThread([{type:"function_field_string"}]);
+    b.createThread([{type:"function_field_boolean"}]);
+    this.menuCode = b;
   }
+  a.banClass("functionInit");
+  a.unbanClass("functionEdit");
+  console.log(a.categoryCodes);
 };
 Entry.Func.prototype.edit = function() {
   Entry.Func.isEdit || (Entry.Func.isEdit = !0, Entry.Func.svg ? this.parentView.appendChild(this.svg) : Entry.Func.initEditView());
@@ -13058,6 +13028,10 @@ Entry.BlockMenu = function(a, b, c) {
       0 === f ? a[d].addClass("entryRemove") : a[d].removeClass("entryRemove");
     }
   };
+  a.getCategoryCodes = function(b) {
+    b = this._convertSelector(b);
+    return this._categoryCodes[b];
+  };
   a._convertSelector = function(b) {
     if (isNaN(b)) {
       return b;
@@ -13787,12 +13761,12 @@ Entry.Field = function() {
     return {x:a.e + d.left + this.box.x + b.x, y:a.f + d.top + this.box.y + b.y};
   };
   a.getRelativePos = function() {
-    var a = this._block.view, c = a.svgGroup.transform().globalMatrix, a = a.getContentPos(), d = this.box;
-    return {x:c.e + d.x + a.x, y:c.f + d.y + a.y};
+    var b = this._block.view, a = b.svgGroup.transform().globalMatrix, b = b.getContentPos(), d = this.box;
+    return {x:a.e + d.x + b.x, y:a.f + d.y + b.y};
   };
   a.truncate = function() {
-    var a = String(this.getValue()), c = this.TEXT_LIMIT_LENGTH, d = a.substring(0, c);
-    a.length > c && (d += "...");
+    var b = String(this.getValue()), a = this.TEXT_LIMIT_LENGTH, d = b.substring(0, a);
+    b.length > a && (d += "...");
     return d;
   };
   a.appendSvgOptionGroup = function() {
@@ -13801,9 +13775,9 @@ Entry.Field = function() {
   a.getValue = function() {
     return this._block.params[this._index];
   };
-  a.setValue = function(a) {
-    this.value = a;
-    this._block.params[this._index] = a;
+  a.setValue = function(b) {
+    this.value = b;
+    this._block.params[this._index] = b;
   };
 })(Entry.Field.prototype);
 Entry.FieldAngle = function(a, b, c) {
@@ -13818,61 +13792,61 @@ Entry.FieldAngle = function(a, b, c) {
 };
 Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
 (function(a) {
-  a.renderStart = function(a) {
-    var c = this;
-    this.svgGroup = a.contentSvgGroup.group();
+  a.renderStart = function(b) {
+    var a = this;
+    this.svgGroup = b.contentSvgGroup.group();
     this.svgGroup.attr({class:"entry-input-field"});
-    this.textElement = this.svgGroup.text(4, 4, c.getText());
+    this.textElement = this.svgGroup.text(4, 4, a.getText());
     this.textElement.attr({"font-size":"9pt"});
-    a = this.getTextWidth();
+    b = this.getTextWidth();
     var d = this.position && this.position.y ? this.position.y : 0;
-    this._header = this.svgGroup.rect(0, d - 8, a, 16, 3).attr({fill:"#fff", "fill-opacity":.4});
+    this._header = this.svgGroup.rect(0, d - 8, b, 16, 3).attr({fill:"#fff", "fill-opacity":.4});
     this.svgGroup.append(this.textElement);
-    this.svgGroup.mouseup(function(a) {
-      c._block.view.dragMode == Entry.DRAG_MODE_MOUSEDOWN && c.renderOptions();
+    this.svgGroup.mouseup(function(b) {
+      a._block.view.dragMode == Entry.DRAG_MODE_MOUSEDOWN && a.renderOptions();
     });
-    this.box.set({x:0, y:0, width:a, height:16});
+    this.box.set({x:0, y:0, width:b, height:16});
   };
   a.renderOptions = function() {
-    var a = this;
+    var b = this;
     this.destroyOption();
     this.documentDownEvent = Entry.documentMousedown.attach(this, function() {
       Entry.documentMousedown.detach(this.documentDownEvent);
-      a.applyValue();
-      a.destroyOption();
+      b.applyValue();
+      b.destroyOption();
     });
     this.optionGroup = Entry.Dom("input", {class:"entry-widget-input-field", parent:$("body")});
     this.optionGroup.val(this.value);
     this.optionGroup.on("mousedown", function(a) {
       a.stopPropagation();
     });
-    this.optionGroup.on("keyup", function(c) {
-      var d = c.keyCode || c.which;
-      a.applyValue(c);
-      -1 < [13, 27].indexOf(d) && a.destroyOption();
+    this.optionGroup.on("keyup", function(a) {
+      var c = a.keyCode || a.which;
+      b.applyValue(a);
+      -1 < [13, 27].indexOf(c) && b.destroyOption();
     });
-    var c = this.getAbsolutePos();
-    c.y -= this.box.height / 2;
-    this.optionGroup.css({height:16, left:c.x, top:c.y, width:a.box.width});
+    var a = this.getAbsolutePos();
+    a.y -= this.box.height / 2;
+    this.optionGroup.css({height:16, left:a.x, top:a.y, width:b.box.width});
     this.optionGroup.select();
     this.svgOptionGroup = this.appendSvgOptionGroup();
     this.svgOptionGroup.circle(0, 0, 49).attr({class:"entry-field-angle-circle"});
     this._dividerGroup = this.svgOptionGroup.group();
-    for (c = 0;360 > c;c += 15) {
-      this._dividerGroup.line(49, 0, 49 - (0 === c % 45 ? 10 : 5), 0).attr({transform:"rotate(" + c + ", 0, 0)", class:"entry-angle-divider"});
+    for (a = 0;360 > a;a += 15) {
+      this._dividerGroup.line(49, 0, 49 - (0 === a % 45 ? 10 : 5), 0).attr({transform:"rotate(" + a + ", 0, 0)", class:"entry-angle-divider"});
     }
-    c = this.getRelativePos();
-    c.x += this.box.width / 2;
-    c.y = c.y + this.box.height / 2 + 49 + 1;
-    this.svgOptionGroup.attr({class:"entry-field-angle", transform:"t" + c.x + " " + c.y});
-    var c = a.getAbsolutePos(), d = [c.x + a.box.width / 2, c.y + a.box.height / 2 + 1];
-    this.svgOptionGroup.mousemove(function(c) {
-      a.optionGroup.val(a.modValue(function(a, b) {
+    a = this.getRelativePos();
+    a.x += this.box.width / 2;
+    a.y = a.y + this.box.height / 2 + 49 + 1;
+    this.svgOptionGroup.attr({class:"entry-field-angle", transform:"t" + a.x + " " + a.y});
+    var a = b.getAbsolutePos(), d = [a.x + b.box.width / 2, a.y + b.box.height / 2 + 1];
+    this.svgOptionGroup.mousemove(function(a) {
+      b.optionGroup.val(b.modValue(function(a, b) {
         var c = b[0] - a[0], d = b[1] - a[1] - 49 - 1, e = Math.atan(-d / c), e = Entry.toDegrees(e), e = 90 - e;
         0 > c ? e += 180 : 0 < d && (e += 360);
         return 15 * Math.round(e / 15);
-      }(d, [c.clientX, c.clientY])));
-      a.applyValue();
+      }(d, [a.clientX, a.clientY])));
+      b.applyValue();
     });
     this.updateGraph();
   };

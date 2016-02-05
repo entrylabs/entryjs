@@ -43,34 +43,6 @@ Entry.EntryObject = function(model) {
                 {
                     type: "stop_repeat"
                 }
-            ],
-            [
-                {
-                    type: "function_field_label",
-                    x: 40,
-                    y: 140
-                }
-            ],
-            [
-                {
-                    type: "function_field_boolean",
-                    x: 90,
-                    y: 140
-                }
-            ],
-            [
-                {
-                    type: "function_field_string",
-                    x: 140,
-                    y: 140
-                }
-            ],
-            [
-                {
-                    type: "function_create",
-                    x: 40,
-                    y: 90
-                }
             ]
         ];
         this.script = new Entry.Code(model.script ? model.script : []);

@@ -1,4 +1,4 @@
-/**
+/*
  * @fileoverview Func object for entry function.
  */
 'use strict';
@@ -12,7 +12,15 @@ goog.require("Entry.Utils");
  */
 Entry.Func = function() {
     this.id = Entry.generateHash();
-    this.content = Blockly.Xml.textToDom(Entry.Func.CREATE_BLOCK);
+    this.content = new Entry.Code([
+        [
+            {
+                type: "function_create",
+                x: 40, y: 40,
+                deletable: false
+            }
+        ]
+    ]);
     this.block = null;
     this.stringHash = {};
     this.booleanHash = {};
@@ -79,18 +87,18 @@ Entry.Func.edit = function(func) {
     if (this.workspace)
         this.workspace.visible = true;
     this.initEditView();
-    return;
     this.targetFunc = func;
+    Entry.playground.mainWorkspace.changeOverlayBoardCode(func.content);
+    this.updateMenu();
+    return;
     this.workspace.clear();
     Blockly.Xml.domToWorkspace(this.workspace, func.content);
-    this.updateMenu();
     this.position_();
 };
 
 Entry.Func.initEditView = function() {
     Entry.playground.mainWorkspace.setMode(Entry.Workspace.MODE_OVERLAYBOARD);
     var blockMenu = Entry.playground.mainWorkspace.getBlockMenu();
-	blockMenu.banClass("functionInit");
 };
 
 Entry.Func.save = function() {
@@ -157,6 +165,18 @@ Entry.Func.syncFunc = function() {
 };
 
 Entry.Func.updateMenu = function() {
+    var blockMenu = Entry.playground.mainWorkspace.getBlockMenu();
+    if (!this.menuCode) {
+        var menuCode = blockMenu.getCategoryCodes("func");
+        menuCode.createThread([ { type: "function_field_label" } ]);
+        menuCode.createThread([ { type: "function_field_string" } ]);
+        menuCode.createThread([ { type: "function_field_boolean" } ]);
+        this.menuCode = menuCode;
+    }
+    blockMenu.banClass("functionInit");
+    blockMenu.unbanClass("functionEdit");
+    console.log(blockMenu.categoryCodes);
+    return;
     if (Entry.playground.selectedMenu == 'func') {
         Entry.playground.blockMenu.hide();
         Entry.playground.blockMenu.show(Entry.Func.getMenuXml());

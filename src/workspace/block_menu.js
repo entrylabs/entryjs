@@ -350,6 +350,11 @@ Entry.BlockMenu = function(dom, align, categoryData) {
         }
     };
 
+    p.getCategoryCodes = function(selector) {
+        var name = this._convertSelector(selector);
+        return this._categoryCodes[name];
+    };
+
     p._convertSelector = function(selector) {
         if (isNaN(selector)) return selector;
 
