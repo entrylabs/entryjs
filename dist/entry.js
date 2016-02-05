@@ -3048,7 +3048,7 @@ Blockly.Blocks.change_to_next_shape = {init:function() {
 }};
 Entry.block.change_to_next_shape = function(a, b) {
   var c;
-  c = "prev" !== b.getStringField("DRIECTION") ? a.parent.getNextPicture(a.picture.id) : a.parent.getPrevPicture(a.picture.id);
+  c = b.fields && "prev" === b.getStringField("DRIECTION") ? a.parent.getPrevPicture(a.picture.id) : a.parent.getNextPicture(a.picture.id);
   a.setImage(c);
   return b.callReturn();
 };
@@ -9925,10 +9925,12 @@ Entry.Scene.prototype.selectScene = function(a) {
 };
 Entry.Scene.prototype.toJSON = function() {
   for (var a = [], b = this.getScenes().length, c = 0;c < b;c++) {
-    var d = this.getScenes()[c], e = d.view;
+    var d = this.getScenes()[c], e = d.view, f = d.view;
     delete d.view;
+    delete d.inputWrapper;
     a.push(JSON.parse(JSON.stringify(d)));
     d.view = e;
+    d.inputWrapper = f;
   }
   return a;
 };

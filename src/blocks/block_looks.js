@@ -183,7 +183,7 @@ Blockly.Blocks.change_to_next_shape = {
 
 Entry.block.change_to_next_shape = function (sprite, script) {
     var picture;
-    if(script.getStringField("DRIECTION") !== 'prev') {
+    if(!script.fields || script.getStringField("DRIECTION") !== 'prev') {
         picture = sprite.parent.getNextPicture(sprite.picture.id);
     } else {
         picture = sprite.parent.getPrevPicture(sprite.picture.id);
