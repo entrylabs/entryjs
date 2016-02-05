@@ -987,9 +987,6 @@ Entry.Playground.prototype.clonePicture = function(pictureId) {
  * @param {picture}
  */
 Entry.Playground.prototype.selectPicture = function(picture) {
-    if(!picture) {
-        return;
-    }
     var pictures = this.object.pictures;
     for (var i = 0, len=pictures.length; i<len; i++) {
         var target = pictures[i];
@@ -999,7 +996,10 @@ Entry.Playground.prototype.selectPicture = function(picture) {
             target.view.removeClass('entryPictureSelected');
     }
 
-    var objectId_ = Entry.container.selectPicture(picture.id);
+    var objectId_;
+    if(picture && picture.id) {
+        objectId_ = Entry.container.selectPicture(picture.id);
+    }
 
     if( this.object.id === objectId_) {
         Entry.dispatchEvent('pictureSelected', picture);

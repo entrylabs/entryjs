@@ -9313,14 +9313,13 @@ Entry.Playground.prototype.clonePicture = function(a) {
   this.addPicture(a, !0);
 };
 Entry.Playground.prototype.selectPicture = function(a) {
-  if (a) {
-    for (var b = this.object.pictures, c = 0, d = b.length;c < d;c++) {
-      var e = b[c];
-      e.id === a.id ? e.view.addClass("entryPictureSelected") : e.view.removeClass("entryPictureSelected");
-    }
-    b = Entry.container.selectPicture(a.id);
-    this.object.id === b && Entry.dispatchEvent("pictureSelected", a);
+  for (var b = this.object.pictures, c = 0, d = b.length;c < d;c++) {
+    var e = b[c];
+    e.id === a.id ? e.view.addClass("entryPictureSelected") : e.view.removeClass("entryPictureSelected");
   }
+  var f;
+  a && a.id && (f = Entry.container.selectPicture(a.id));
+  this.object.id === f && Entry.dispatchEvent("pictureSelected", a);
 };
 Entry.Playground.prototype.movePicture = function(a, b) {
   this.object.pictures.splice(b, 0, this.object.pictures.splice(a, 1)[0]);
