@@ -6346,7 +6346,7 @@ Entry.EntityObject.prototype.syncDialogVisible = function() {
 };
 Entry.popupHelper = function() {
   Entry.assert(!window.popupHelper, "Popup exist");
-  this.pageIndex = 0;
+  this.pageIndex = 1;
   this.body_ = Entry.createElement("div");
   this.body_.addClass("entryPopup hiddenPopup");
   this.body_.bindOnClick(function(a) {
@@ -6356,11 +6356,21 @@ Entry.popupHelper = function() {
   this.body_.popup = this;
   this.window_ = Entry.createElement("div");
   this.window_.addClass("entryPopupHelperWindow");
+  this.title_ = Entry.createElement("div");
+  this.title_.addClass("entryPopupHelperTitle");
+  this.titleButton_ = Entry.createElement("div");
+  this.titleButton_.addClass("entryPopupHelperCloseButton");
+  this.titleButton_.addEventListener("click", function() {
+    this.hide();
+  }.bind(this));
+  this.window_.appendChild(this.titleButton_);
+  this.window_.appendChild(this.title_);
   this.body_.appendChild(this.window_);
   document.body.appendChild(this.body_);
 };
-Entry.popupHelper.prototype.setPopup = function(a, b) {
-  a(this);
+Entry.popupHelper.prototype.setPopup = function(a) {
+  this.title_.textContent = a.title;
+  "function" === typeof a.setPopupLayout && a.setPopupLayout(this, a.content);
 };
 Entry.popupHelper.prototype.remove = function() {
   Entry.removeElement(this.body_);
@@ -6374,7 +6384,67 @@ Entry.popupHelper.prototype.show = function() {
 Entry.popupHelper.prototype.hide = function() {
   this.body_.addClass("hiddenPopup");
 };
-Entry.Helper = function() {
+function test() {
+  window.p = new Entry.popupHelper;
+  p.setPopup({pageIndex:0, setPopupLayout:function(a) {
+    this.stepBadge_ = Entry.createElement("div");
+    this.stepBadge_.addClass("entryPopupHelperStep");
+    this.leftButton_ = Entry.createElement("div");
+    this.leftButton_.addClass("entryPopupHelperLeft");
+    this.leftButton_.addEventListener("click", function() {
+      this.setPrevStep();
+    }.bind(this));
+    this.rightButton_ = Entry.createElement("div");
+    this.rightButton_.addClass("entryPopupHelperRight");
+    this.rightButton_.addEventListener("click", function() {
+      this.setNextStep();
+    }.bind(this));
+    this.view_ = Entry.createElement("div");
+    this.view_.addClass("entryPopupHelperView");
+    window.testView = this.view_;
+    this.content_ = Entry.createElement("div");
+    this.content_.addClass("entryPopupHelperContents");
+    a.window_.addClass("operationPopupWindow");
+    a.window_.appendChild(this.stepBadge_);
+    a.window_.appendChild(this.leftButton_);
+    a.window_.appendChild(this.rightButton_);
+    a.window_.appendChild(this.content_);
+    a.window_.appendChild(this.view_);
+    this.setSetpBadge();
+    this.setContent();
+  }, setSetpBadge:function() {
+    this.stepBadge_.textContent = ["STEP ", this.pageIndex + 1, "/", this.content.length].join("");
+  }, setContent:function() {
+    0 < this.content.length ? 0 === this.pageIndex ? (this.rightButton_.addClass("show"), this.leftButton_.removeClass("show")) : this.pageIndex === this.content.length - 1 ? (this.leftButton_.addClass("show"), this.rightButton_.removeClass("show")) : (this.rightButton_.addClass("show"), this.leftButton_.addClass("show")) : (this.rightButton_.removeClass("show"), this.leftButton_.removeClass("show"));
+    this.setSetpBadge();
+    var a = this.content[this.pageIndex];
+    this.view_.innerHTML = a.description;
+    this.view_.className = ["entryPopupHelperView", a.descStyle].join(" ");
+    this.content_.innerHTML = "";
+    this.content_.className = ["entryPopupHelperContent", a.contentStyle].join(" ");
+    if (a.textSet && 0 < a.textSet.length) {
+      for (var b in a.textSet) {
+        var c = a.textSet[b], d = Entry.createElement("div");
+        d.textContent = c.text;
+        d.addClass("defaultChildText");
+        d.style.top = [-1 * c.x, "px"].join("");
+        d.style.left = [c.y, "px"].join("");
+        this.content_.appendChild(d);
+      }
+    }
+  }, setNextStep:function() {
+    this.pageIndex++;
+    this.setContent();
+  }, setPrevStep:function() {
+    this.pageIndex--;
+    this.setContent();
+  }, title:"7\ub2e8\uacc4 - \ubc18\ubcf5 \uba85\ub839 \uc54c\uc544\ubcf4\uae30(\ud69f\uc218\ubc18\ubcf5)", content:[{description:'<b>\ub611\uac19\uc740 \uc77c</b>\uc744 \ubc18\ubcf5\ud574\uc11c \uba85\ub839\ud558\ub294\uac74 \ub9e4\uc6b0 \uadc0\ucc2e\uc740 \uc77c\uc774\uc57c.</br>\uc774\ub7f4\ub550 <span class="text_shadow">\ubc18\ubcf5</span>\uacfc \uad00\ub828\ub41c \uba85\ub839\uc5b4\ub97c \uc0ac\uc6a9\ud558\uba74 \ud6e8\uc52c \uc27d\uac8c \uba85\ub839\uc744 \ub0b4\ub9b4 \uc218 \uc788\uc5b4.', 
+  contentStyle:"operation7_1", descStyle:"descStyle1", textSet:[]}, {description:'\uadf8\ub807\ub2e4\uba74 \ubc18\ubcf5\ub418\ub294 \uba85\ub839\uc744 \uc27d\uac8c \ub0b4\ub9ac\ub294 \ubc29\ubc95\uc744 \uc54c\uc544\ubcf4\uc790.</br>\uba3c\uc800 \ubc18\ubcf5\ud558\uae30 \uba85\ub839\uc5b4\ub97c \ud074\ub9ad\ud55c \ub2e4\uc74c, <span class="text_shadow">i<1</span> \uc758 \uc22b\uc790\ub97c \ubc14\uafd4\uc11c <span class="text_shadow">\ubc18\ubcf5\ud69f\uc218</span>\ub97c \uc815\ud558\uace0</br><span class="text_shadow">\uad04\ud638({})</span> \uc0ac\uc774\uc5d0 \ubc18\ubcf5\ud560 \uba85\ub839\uc5b4\ub97c \ub123\uc5b4\uc8fc\uba74 \ub3fc!', 
+  contentStyle:"operation7_2", descStyle:"descStyle1", text:[]}, {description:'\uc608\ub97c \ub4e4\uc5b4 \uc774 \uba85\ub839\uc5b4 <span class="number_1_badge">1</span>\uc740 10\ubc88 \ubc18\ubcf5\ud574\uc11c move(); \ub97c \uc2e4\ud589\ud574.</br><span class="number_2_badge">2</span>\uba85\ub839\uc5b4\uc640 \ub3d9\uc77c\ud55c \uba85\ub839\uc5b4\uc9c0.', contentStyle:"operation7_3", descStyle:"descStyle1"}, {description:'\uc774 \uba85\ub839\uc5b4\ub97c \uc0ac\uc6a9\ud560 \ub54c\ub294 <span class="text_shadow">{ } \uc548\uc5d0 \ubc18\ubcf5\ud560 \uba85\ub839\uc5b4</span>\ub97c \uc798 \uc785\ub825\ud588\ub294\uc9c0,</br><span class="text_shadow">`;`</span>\ub294 \ube60\uc9c0\uc9c0 \uc54a\uc558\ub294\uc9c0 \uc798 \uc0b4\ud3b4\ubd10!</br>\uc774 \uba85\ub839\uc5b4\uc5d0 \ub300\ud55c \uc790\uc138\ud55c \uc124\uba85\uc740 [\ub354 \uc54c\uc544\ubcf4\uae30]\uc5d0\uc11c \ubcfc \uc218 \uc788\uc5b4.', 
+  contentStyle:"operation7_4", descStyle:"descStyle1", text:[]}]});
+  p.show();
+}
+;Entry.Helper = function() {
   this.visible = !1;
 };
 var p = Entry.Helper.prototype;
@@ -13734,60 +13804,60 @@ Entry.Code = function(a) {
     return this;
   };
   a.clear = function() {
-    for (var b = this._data.length - 1;0 <= b;b--) {
-      this._data[b].getFirstBlock().destroy();
+    for (var a = this._data.length - 1;0 <= a;a--) {
+      this._data[a].getFirstBlock().destroy();
     }
     this.clearExecutors();
     this._eventMap = {};
   };
-  a.createView = function(b) {
-    null === this.view ? this.set({view:new Entry.CodeView(this, b), board:b}) : (this.set({board:b}), b.bindCodeView(this.view));
+  a.createView = function(a) {
+    null === this.view ? this.set({view:new Entry.CodeView(this, a), board:a}) : (this.set({board:a}), a.bindCodeView(this.view));
   };
-  a.registerEvent = function(b, a) {
-    this._eventMap[a] || (this._eventMap[a] = []);
-    this._eventMap[a].push(b);
+  a.registerEvent = function(a, c) {
+    this._eventMap[c] || (this._eventMap[c] = []);
+    this._eventMap[c].push(a);
   };
-  a.unregisterEvent = function(b, a) {
-    var d = this._eventMap[a];
+  a.unregisterEvent = function(a, c) {
+    var d = this._eventMap[c];
     if (d && 0 !== d.length) {
-      var e = d.indexOf(b);
+      var e = d.indexOf(a);
       0 > e || d.splice(e, 1);
     }
   };
-  a.raiseEvent = function(b, a) {
-    var d = this._eventMap[b];
+  a.raiseEvent = function(a, c) {
+    var d = this._eventMap[a];
     if (void 0 !== d) {
       for (var e = 0;e < d.length;e++) {
-        this.executors.push(new Entry.Executor(d[e], a));
+        this.executors.push(new Entry.Executor(d[e], c));
       }
     }
   };
-  a.getEventMap = function(b) {
-    return this._eventMap[b];
+  a.getEventMap = function(a) {
+    return this._eventMap[a];
   };
-  a.map = function(b) {
-    this._data.map(b);
+  a.map = function(a) {
+    this._data.map(a);
   };
   a.tick = function() {
-    for (var b = this.executors, a = 0;a < b.length;a++) {
-      var d = b[a];
+    for (var a = this.executors, c = 0;c < a.length;c++) {
+      var d = a[c];
       d.execute();
-      null === d.scope.block && (b.splice(a, 1), a--, 0 === b.length && this.executeEndEvent.notify());
+      null === d.scope.block && (a.splice(c, 1), c--, 0 === a.length && this.executeEndEvent.notify());
     }
   };
   a.clearExecutors = function() {
     this.executors = [];
   };
-  a.createThread = function(b) {
-    if (!(b instanceof Array)) {
+  a.createThread = function(a) {
+    if (!(a instanceof Array)) {
       return console.error("blocks must be array");
     }
-    b = new Entry.Thread(b, this);
-    this._data.push(b);
-    return b;
+    a = new Entry.Thread(a, this);
+    this._data.push(a);
+    return a;
   };
-  a.cloneThread = function(b, a) {
-    var d = b.clone(this, a);
+  a.cloneThread = function(a, c) {
+    var d = a.clone(this, c);
     this._data.push(d);
     return d;
   };
