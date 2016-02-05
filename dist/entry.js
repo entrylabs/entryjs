@@ -7235,20 +7235,9 @@ Entry.EntryObject.prototype.initEntity = function(a) {
     b.height = c.height;
   } else {
     if ("textBox" == this.objectType) {
-      if (b.regX = 25, b.regY = 12, b.scaleX = b.scaleY = 1.5, b.width = 50, b.height = 24, b.text = a.name, a.options) {
+      if (b.regX = 25, b.regY = 12, b.scaleX = b.scaleY = 1.5, b.width = 50, b.height = 24, b.text = a.text, a.options) {
         if (a = a.options, c = "", a.bold && (c += "bold "), a.italic && (c += "italic "), b.underline = a.underline, b.strike = a.strike, b.font = c + "20px " + a.font.family, b.colour = a.colour, b.bgColor = a.background, b.lineBreak = a.lineBreak) {
-          a = b.text.split("\n");
-          if (1 < a.length) {
-            for (var c = a[0].length, d = 1, e = a.length;d < e;d++) {
-              a[d].length > c && (c = a[d].length);
-            }
-            b.width = 25 * c;
-            b.height = 24 * a.length;
-          } else {
-            b.width = 25 * b.text.length;
-          }
-          b.regX = b.width / 2;
-          b.regY = b.height / 2;
+          b.width = 256, b.height = .5625 * b.width, b.regX = b.width / 2, b.regY = b.height / 2;
         }
       } else {
         b.underline = !1, b.strike = !1, b.font = "20px Nanum Gothic", b.colour = "#000000", b.bgColor = "#ffffff";
