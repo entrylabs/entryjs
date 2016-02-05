@@ -11264,6 +11264,11 @@ Entry.Func.FIELD_BLOCK = '<xml><block type="function_field_label"></block><block
 Entry.Func.fieldBlocks = Entry.nodeListToArray(Blockly.Xml.textToDom(Entry.Func.FIELD_BLOCK).childNodes);
 Entry.Func.CREATE_BLOCK = '<xml><block type="function_create" deletable="false" x="28" y="28"></block></xml>';
 Entry.Func.edit = function(a) {
+  this.srcFName = "";
+  for (var b = $(a.content.innerHTML).find("field"), c = 0;c < b.length;c++) {
+    "NAME" === $(b[c]).attr("name") && (this.srcFName += $(b[c]).text(), this.srcFName += " ");
+  }
+  this.srcFName = this.srcFName.trim();
   this.cancelEdit();
   this.workspace && (this.workspace.visible = !0);
   this.initEditView();
@@ -11320,10 +11325,48 @@ Entry.Func.initEditView = function() {
   this.parentView.appendChild(this.svg);
 };
 Entry.Func.save = function() {
+  var a = "";
   this.targetFunc.content = Blockly.Xml.workspaceToDom(this.workspace);
   this.targetFunc.generateBlock(!0);
   Entry.variableContainer.saveFunction(this.targetFunc);
+  for (var b = $(this.targetFunc.content.innerHTML).find("field"), c = 0;c < b.length;c++) {
+    "NAME" === $(b[c]).attr("name") && (a += $(b[c]).text(), a += " ");
+  }
+  a = a.trim();
+  this.syncFuncName(a);
   this.cancelEdit();
+};
+Entry.Func.syncFuncName = function(a) {
+  var b = 0, c = [], c = a.split(" "), d = "";
+  a = [];
+  a = Blockly.mainWorkspace.getAllBlocks();
+  for (var e = 0;e < a.length;e++) {
+    var f = a[e];
+    if ("function_general" === f.type) {
+      for (var g = [], g = f.inputList, h = 0;h < g.length;h++) {
+        f = g[h], 0 < f.fieldRow.length && f.fieldRow[0] instanceof Blockly.FieldLabel && void 0 != f.fieldRow[0].text_ && (d += f.fieldRow[0].text_, d += " ");
+      }
+      d = d.trim();
+      if (d === this.srcFName && this.srcFName.split(" ").length == c.length) {
+        for (d = 0;d < g.length;d++) {
+          if (f = g[d], 0 < f.fieldRow.length && f.fieldRow[0] instanceof Blockly.FieldLabel && void 0 != f.fieldRow[0].text_) {
+            if (void 0 === c[b]) {
+              g.splice(d, 1);
+              break;
+            } else {
+              f.fieldRow[0].text_ = c[b];
+            }
+            b++;
+          }
+        }
+      }
+      d = "";
+      b = 0;
+    }
+  }
+  b = Blockly.Xml.workspaceToDom(Blockly.mainWorkspace);
+  Blockly.mainWorkspace.clear();
+  Blockly.Xml.domToWorkspace(Blockly.mainWorkspace, b);
 };
 Entry.Func.cancelEdit = function() {
   this.svg && this.targetFunc && (this.workspace.visible = !1, this.parentView.removeChild(this.svg), Entry.Func.isEdit = !1, Blockly.mainWorkspace.blockMenu.targetWorkspace = Blockly.mainWorkspace, this.targetFunc.block || (delete Entry.variableContainer.functions_[this.targetFunc.id], delete Entry.variableContainer.selected), delete this.targetFunc, this.updateMenu(), this.doWhenCancel(), Entry.variableContainer.updateList());
