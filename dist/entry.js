@@ -8845,8 +8845,7 @@ Entry.popupHelper.prototype.hide = function() {
   this.body_.addClass("hiddenPopup");
 };
 function test() {
-  window.p = new Entry.popupHelper;
-  p.setPopup({pageIndex:0, setPopupLayout:function(a) {
+  var a = {pageIndex:0, setPopupLayout:function(b) {
     this.stepBadge_ = Entry.createElement("div");
     this.stepBadge_.addClass("entryPopupHelperStep");
     this.leftButton_ = Entry.createElement("div");
@@ -8864,12 +8863,12 @@ function test() {
     window.testView = this.view_;
     this.content_ = Entry.createElement("div");
     this.content_.addClass("entryPopupHelperContents");
-    a.window_.addClass("operationPopupWindow");
-    a.window_.appendChild(this.stepBadge_);
-    a.window_.appendChild(this.leftButton_);
-    a.window_.appendChild(this.rightButton_);
-    a.window_.appendChild(this.content_);
-    a.window_.appendChild(this.view_);
+    b.window_.addClass("operationPopupWindow");
+    b.window_.appendChild(this.stepBadge_);
+    b.window_.appendChild(this.leftButton_);
+    b.window_.appendChild(this.rightButton_);
+    b.window_.appendChild(this.content_);
+    b.window_.appendChild(this.view_);
     this.setSetpBadge();
     this.setContent();
   }, setSetpBadge:function() {
@@ -8877,19 +8876,20 @@ function test() {
   }, setContent:function() {
     0 < this.content.length ? 0 === this.pageIndex ? (this.rightButton_.addClass("show"), this.leftButton_.removeClass("show")) : this.pageIndex === this.content.length - 1 ? (this.leftButton_.addClass("show"), this.rightButton_.removeClass("show")) : (this.rightButton_.addClass("show"), this.leftButton_.addClass("show")) : (this.rightButton_.removeClass("show"), this.leftButton_.removeClass("show"));
     this.setSetpBadge();
-    var a = this.content[this.pageIndex];
-    this.view_.innerHTML = a.description;
-    this.view_.className = ["entryPopupHelperView", a.descStyle].join(" ");
+    var b = this.content[this.pageIndex];
+    this.view_.innerHTML = b.description;
+    this.view_.className = ["entryPopupHelperView", b.descStyle].join(" ");
     this.content_.innerHTML = "";
-    this.content_.className = ["entryPopupHelperContent", a.contentStyle].join(" ");
-    if (a.textSet && 0 < a.textSet.length) {
-      for (var b in a.textSet) {
-        var c = a.textSet[b], d = Entry.createElement("div");
-        d.textContent = c.text;
-        d.addClass("defaultChildText");
-        d.style.bottom = [c.y, "px"].join("");
-        d.style.left = [c.x, "px"].join("");
-        this.content_.appendChild(d);
+    this.content_.className = ["entryPopupHelperContent", b.contentStyle].join(" ");
+    if (b.textSet && 0 < b.textSet.length) {
+      for (var a in b.textSet) {
+        var d = b.textSet[a], e = Entry.createElement("div");
+        e.innerHTML = d.text;
+        e.addClass("defaultChildText");
+        e.style.bottom = [d.y, "px"].join("");
+        e.style.left = [d.x, "px"].join("");
+        e.style.textAlign = d.align || e.style.textAlign;
+        this.content_.appendChild(e);
       }
     }
   }, setNextStep:function() {
@@ -8898,11 +8898,11 @@ function test() {
   }, setPrevStep:function() {
     this.pageIndex--;
     this.setContent();
-  }, title:"7\ub2e8\uacc4 - \ubc18\ubcf5 \uba85\ub839 \uc54c\uc544\ubcf4\uae30(\ud69f\uc218\ubc18\ubcf5)", content:[{description:'<b>\ub611\uac19\uc740 \uc77c</b>\uc744 \ubc18\ubcf5\ud574\uc11c \uba85\ub839\ud558\ub294\uac74 \ub9e4\uc6b0 \uadc0\ucc2e\uc740 \uc77c\uc774\uc57c.</br>\uc774\ub7f4\ub550 <span class="text_shadow">\ubc18\ubcf5</span>\uacfc \uad00\ub828\ub41c \uba85\ub839\uc5b4\ub97c \uc0ac\uc6a9\ud558\uba74 \ud6e8\uc52c \uc27d\uac8c \uba85\ub839\uc744 \ub0b4\ub9b4 \uc218 \uc788\uc5b4.', 
-  contentStyle:"operation7_1", descStyle:"descStyle1", textSet:[{text:"\ub611\uac19\uc740 \uba85\ub839\uc5b4\ub97c \ubc18\ubcf5\ud574\uc11c \uc0ac\uc6a9\ud558\ub294 \uacbd\uc6b0", x:-310, y:240}, {text:"\ubc18\ubcf5 \uba85\ub839\uc5b4\ub97c \uc0ac\uc6a9\ud558\ub294 \uacbd\uc6b0", x:335, y:240}]}, {description:'\uadf8\ub807\ub2e4\uba74 \ubc18\ubcf5\ub418\ub294 \uba85\ub839\uc744 \uc27d\uac8c \ub0b4\ub9ac\ub294 \ubc29\ubc95\uc744 \uc54c\uc544\ubcf4\uc790.</br>\uba3c\uc800 \ubc18\ubcf5\ud558\uae30 \uba85\ub839\uc5b4\ub97c \ud074\ub9ad\ud55c \ub2e4\uc74c, <span class="text_shadow">i<1</span> \uc758 \uc22b\uc790\ub97c \ubc14\uafd4\uc11c <span class="text_shadow">\ubc18\ubcf5\ud69f\uc218</span>\ub97c \uc815\ud558\uace0</br><span class="text_shadow">\uad04\ud638({ })</span> \uc0ac\uc774\uc5d0 \ubc18\ubcf5\ud560 \uba85\ub839\uc5b4\ub97c \ub123\uc5b4\uc8fc\uba74 \ub3fc!', 
-  contentStyle:"operation7_2", descStyle:"descStyle1", textSet:[{text:"\ubc18\ubcf5 \ud69f\uc218", x:387, y:215}, {text:"\ubc18\ubcf5\ud560 \uba85\ub839", x:455, y:-160}]}, {description:'\uc608\ub97c \ub4e4\uc5b4 \uc774 \uba85\ub839\uc5b4<span class="text_badge number_1"></span>\uc740 10\ubc88 \ubc18\ubcf5\ud574\uc11c move(); \ub97c \uc2e4\ud589\ud574.</br><span class="text_badge number_2"></span>\uba85\ub839\uc5b4\uc640 \ub3d9\uc77c\ud55c \uba85\ub839\uc5b4\uc9c0.', contentStyle:"operation7_3", 
-  descStyle:"descStyle1"}, {description:'\uc774 \uba85\ub839\uc5b4\ub97c \uc0ac\uc6a9\ud560 \ub54c\ub294 <span class="text_shadow">{ } \uc548\uc5d0 \ubc18\ubcf5\ud560 \uba85\ub839\uc5b4</span>\ub97c \uc798 \uc785\ub825\ud588\ub294\uc9c0,</br><span class="text_shadow">`;`</span>\ub294 \ube60\uc9c0\uc9c0 \uc54a\uc558\ub294\uc9c0 \uc798 \uc0b4\ud3b4\ubd10!</br>\uc774 \uba85\ub839\uc5b4\uc5d0 \ub300\ud55c \uc790\uc138\ud55c \uc124\uba85\uc740 [\ub354 \uc54c\uc544\ubcf4\uae30]\uc5d0\uc11c \ubcfc \uc218 \uc788\uc5b4.', 
-  contentStyle:"operation7_4", descStyle:"descStyle1", textSet:[{text:"\uad04\ud638({})\uac00 \ube60\uc9c4 \uacbd\uc6b0", x:-360, y:-200}, {text:"\uc138\ubbf8\ucf5c\ub860(;)\uc774 \ube60\uc9c4 \uacbd\uc6b0", x:345, y:-200}]}]});
+  }, title:Lang.Menus.maze_operation10_title, content:[{description:Lang.Menus.maze_operation10_1_desc, contentStyle:"operation10_1", descStyle:"descStyle1", textSet:[{text:Lang.Menus.maze_operation10_1_textset_1, x:435, y:250}, {text:Lang.Menus.maze_operation10_1_textset_2, x:435, y:190}, {text:Lang.Menus.maze_operation10_1_textset_3, x:435, y:-110}, {text:Lang.Menus.maze_operation10_1_textset_4, x:435, y:-170}]}, {description:Lang.Menus.maze_operation10_2_desc, contentStyle:"operation10_2", descStyle:"descStyle1", 
+  textSet:[{text:Lang.Menus.maze_operation10_2_textset_1, x:-25, y:185}, {text:Lang.Menus.maze_operation10_2_textset_2, x:95, y:-195}]}, {description:Lang.Menus.maze_operation10_3_desc, contentStyle:"operation10_3", descStyle:"descStyle2", textSet:[{text:Lang.Menus.maze_operation10_3_textset_1, x:-28, y:185}, {text:Lang.Menus.maze_operation10_3_textset_2, x:95, y:-195}]}, {description:Lang.Menus.maze_operation10_4_desc, contentStyle:"operation10_4", descStyle:"descStyle1", textSet:[{align:"left", 
+  text:Lang.Menus.maze_operation10_4_textset_1, x:50, y:-160}, {align:"left", text:Lang.Menus.maze_operation10_4_textset_2, x:265, y:-160}, {align:"left", text:Lang.Menus.maze_operation10_4_textset_3, x:475, y:-160}]}]};
+  window.p = new Entry.popupHelper;
+  p.setPopup(a);
   p.show();
 }
 ;Entry.getStartProject = function(a) {
@@ -13805,87 +13805,87 @@ Entry.Code = function(a) {
     return this;
   };
   a.clear = function() {
-    for (var a = this._data.length - 1;0 <= a;a--) {
-      this._data[a].getFirstBlock().destroy();
+    for (var b = this._data.length - 1;0 <= b;b--) {
+      this._data[b].getFirstBlock().destroy();
     }
     this.clearExecutors();
     this._eventMap = {};
   };
-  a.createView = function(a) {
-    null === this.view ? this.set({view:new Entry.CodeView(this, a), board:a}) : (this.set({board:a}), a.bindCodeView(this.view));
+  a.createView = function(b) {
+    null === this.view ? this.set({view:new Entry.CodeView(this, b), board:b}) : (this.set({board:b}), b.bindCodeView(this.view));
   };
-  a.registerEvent = function(a, c) {
-    this._eventMap[c] || (this._eventMap[c] = []);
-    this._eventMap[c].push(a);
+  a.registerEvent = function(b, a) {
+    this._eventMap[a] || (this._eventMap[a] = []);
+    this._eventMap[a].push(b);
   };
-  a.unregisterEvent = function(a, c) {
-    var d = this._eventMap[c];
+  a.unregisterEvent = function(b, a) {
+    var d = this._eventMap[a];
     if (d && 0 !== d.length) {
-      var e = d.indexOf(a);
+      var e = d.indexOf(b);
       0 > e || d.splice(e, 1);
     }
   };
-  a.raiseEvent = function(a, c) {
-    var d = this._eventMap[a];
+  a.raiseEvent = function(b, a) {
+    var d = this._eventMap[b];
     if (void 0 !== d) {
       for (var e = 0;e < d.length;e++) {
-        this.executors.push(new Entry.Executor(d[e], c));
+        this.executors.push(new Entry.Executor(d[e], a));
       }
     }
   };
-  a.getEventMap = function(a) {
-    return this._eventMap[a];
+  a.getEventMap = function(b) {
+    return this._eventMap[b];
   };
-  a.map = function(a) {
-    this._data.map(a);
+  a.map = function(b) {
+    this._data.map(b);
   };
   a.tick = function() {
-    for (var a = this.executors, c = 0;c < a.length;c++) {
-      var d = a[c];
+    for (var b = this.executors, a = 0;a < b.length;a++) {
+      var d = b[a];
       d.execute();
-      null === d.scope.block && (a.splice(c, 1), c--, 0 === a.length && this.executeEndEvent.notify());
+      null === d.scope.block && (b.splice(a, 1), a--, 0 === b.length && this.executeEndEvent.notify());
     }
   };
   a.clearExecutors = function() {
     this.executors = [];
   };
-  a.createThread = function(a) {
-    if (!(a instanceof Array)) {
+  a.createThread = function(b) {
+    if (!(b instanceof Array)) {
       return console.error("blocks must be array");
     }
-    a = new Entry.Thread(a, this);
-    this._data.push(a);
-    return a;
+    b = new Entry.Thread(b, this);
+    this._data.push(b);
+    return b;
   };
-  a.cloneThread = function(a, c) {
-    var d = a.clone(this, c);
+  a.cloneThread = function(b, a) {
+    var d = b.clone(this, a);
     this._data.push(d);
     return d;
   };
-  a.destroyThread = function(a, c) {
-    var d = this._data, e = d.indexOf(a);
+  a.destroyThread = function(b, a) {
+    var d = this._data, e = d.indexOf(b);
     0 > e || d.splice(e, 1);
   };
-  a.doDestroyThread = function(a, c) {
-    var d = this._data, e = d.indexOf(a);
+  a.doDestroyThread = function(b, a) {
+    var d = this._data, e = d.indexOf(b);
     0 > e || d.splice(e, 1);
   };
   a.getThreads = function() {
-    return this._data.map(function(a) {
-      return a;
+    return this._data.map(function(b) {
+      return b;
     });
   };
   a.toJSON = function() {
-    for (var a = this.getThreads(), c = [], d = 0, e = a.length;d < e;d++) {
-      c.push(a[d].toJSON());
+    for (var b = this.getThreads(), a = [], d = 0, e = b.length;d < e;d++) {
+      a.push(b[d].toJSON());
     }
-    return c;
+    return a;
   };
   a.countBlock = function() {
-    for (var a = this.getThreads(), c = 0, d = 0;d < a.length;d++) {
-      c += a[d].countBlock();
+    for (var b = this.getThreads(), a = 0, d = 0;d < b.length;d++) {
+      a += b[d].countBlock();
     }
-    return c;
+    return a;
   };
   a.moveBy = function(a, c) {
     for (var d = this.getThreads(), e = 0, f = d.length;e < f;e++) {

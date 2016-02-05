@@ -142,38 +142,43 @@
     color: @viewText;
 }
 
-.operationPopupWindow .entryPopupHelperView .text_shadow{
+.operationPopupWindow .entryPopupHelperView .textShadow{
     background-color: @viewShadow;
     padding: 3px 1px 0;
 }
 
-.operationPopupWindow .entryPopupHelperView .text_underline{
-    border-bottom: @viewUnder solid 3px;
+.operationPopupWindow .entryPopupHelperView .textUnderline{
+    border-bottom: @viewUnder solid 2px;
+    box-shadow: inset 0 -1px 0px 0px @viewUnder;
 }
 
-.operationPopupWindow .entryPopupHelperView .text_badge {
+.operationPopupWindow .entryPopupHelperView .textBadge {
     margin-right: 30px;
     margin-left: 3px;
 }
 
-.number_before {
+.numberBefore {
     position: absolute;
     margin-top: -4px;
 }
 
-.operationPopupWindow .entryPopupHelperView .number_1:before{
+.pdb5 {
+    padding-bottom: 5px;
+}
+
+.operationPopupWindow .entryPopupHelperView .number1:before{
     content: url('../images/popup/number_1_r.png');
-    .number_before;
+    .numberBefore;
 }
 
-.operationPopupWindow .entryPopupHelperView .number_2:before{
+.operationPopupWindow .entryPopupHelperView .number2:before{
     content: url('../images/popup/number_2_r.png');
-    .number_before;
+    .numberBefore;
 }
 
-.operationPopupWindow .entryPopupHelperView .number_3:before{
+.operationPopupWindow .entryPopupHelperView .number3:before{
     content: url('../images/popup/number_3_r.png');
-    .number_before;
+    .numberBefore;
 }
 
 .operationPopupWindow .entryPopupHelperView.descStyle1 {
@@ -216,6 +221,14 @@
     text-align: center;
     color: #004051;
     font-size: 15px;
+}
+
+.operationPopupWindow .entryPopupHelperContent .defaultChildText .textMultiline {
+    line-height: 23px;
+}
+
+.operationPopupWindow .entryPopupHelperContent .defaultChildText .textEmphasis {
+    color: @viewEmphasis;
 }
 
 .operationPopupWindow .entryPopupHelperContent.operation1_1 {
@@ -264,4 +277,47 @@
     width: 680px;
     height: 214px;
     background: url('../images/popup/operation7_4.png');
+}
+
+.operationPopupWindow .entryPopupHelperContent.operation9_1 {
+    width: 213px;
+    height: 120px;
+    background: url('../images/popup/operation9_1.png');
+}
+
+.operationPopupWindow .entryPopupHelperContent.operation9_2 {
+    width: 534px;
+    height: 387px;
+    background: url('../images/popup/operation9_2.png');
+}
+
+.operationPopupWindow .entryPopupHelperContent.operation9_3 {
+    width: 506px;
+    height: 207px;
+    background: url('../images/popup/operation9_3.png');
+}
+
+
+.operationPopupWindow .entryPopupHelperContent.operation10_1 {
+    width: 665px;
+    height: 333px;
+    background: url('../images/popup/operation10_1.png');
+}
+
+.operationPopupWindow .entryPopupHelperContent.operation10_2 {
+    width: 271px;
+    height: 167px;
+    background: url('../images/popup/operation10_2.png');
+}
+
+.operationPopupWindow .entryPopupHelperContent.operation10_3 {
+    width: 275px;
+    height: 167px;
+    background: url('../images/popup/operation10_3.png');
+}
+
+.operationPopupWindow .entryPopupHelperContent.operation10_4 {
+    width: 637px;
+    height: 191px;
+    background: url('../images/popup/operation10_4.png');
 }
