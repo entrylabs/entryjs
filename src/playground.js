@@ -987,6 +987,9 @@ Entry.Playground.prototype.clonePicture = function(pictureId) {
  * @param {picture}
  */
 Entry.Playground.prototype.selectPicture = function(picture) {
+    if(!picture) {
+        return;
+    }
     var pictures = this.object.pictures;
     for (var i = 0, len=pictures.length; i<len; i++) {
         var target = pictures[i];
