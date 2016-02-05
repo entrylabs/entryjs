@@ -3389,6 +3389,29 @@ span.CodeMirror-selectedtext {
 .operationPopupWindow .entryPopupHelperView .text_underline {
   border-bottom: #ffae0b solid 3px;
 }
+.operationPopupWindow .entryPopupHelperView .text_badge {
+  margin-right: 30px;
+  margin-left: 3px;
+}
+.number_before {
+  position: absolute;
+  margin-top: -4px;
+}
+.operationPopupWindow .entryPopupHelperView .number_1:before {
+  content: url('../images/popup/number_1_r.png');
+  position: absolute;
+  margin-top: -4px;
+}
+.operationPopupWindow .entryPopupHelperView .number_2:before {
+  content: url('../images/popup/number_2_r.png');
+  position: absolute;
+  margin-top: -4px;
+}
+.operationPopupWindow .entryPopupHelperView .number_3:before {
+  content: url('../images/popup/number_3_r.png');
+  position: absolute;
+  margin-top: -4px;
+}
 .operationPopupWindow .entryPopupHelperView.descStyle1 {
   width: 771px;
   height: 155px;
@@ -3418,7 +3441,8 @@ span.CodeMirror-selectedtext {
   right: 0;
   top: 0;
   bottom: 0;
-  height: 1px;
+  height: 15px;
+  line-height: 15px;
   margin: auto;
   white-space: nowrap;
   text-align: center;

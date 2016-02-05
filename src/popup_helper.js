@@ -141,8 +141,8 @@ function test() {
                     var elem = Entry.createElement('div');
                     elem.textContent = item.text;
                     elem.addClass('defaultChildText');
-                    elem.style.top = [item.x*-1, 'px'].join('');
-                    elem.style.left = [item.y, 'px'].join('');
+                    elem.style.bottom = [item.y, 'px'].join('');
+                    elem.style.left = [item.x, 'px'].join('');
                     this.content_.appendChild(elem);
                 }
             }
@@ -178,21 +178,45 @@ function test() {
             description: '<b>똑같은 일</b>을 반복해서 명령하는건 매우 귀찮은 일이야.</br>이럴땐 <span class=\"text_shadow\">반복</span>과 관련된 명령어를 사용하면 훨씬 쉽게 명령을 내릴 수 있어.',
             contentStyle: 'operation7_1',
             descStyle: 'descStyle1',
-            textSet:[]
+            textSet:[{
+                text: '똑같은 명령어를 반복해서 사용하는 경우',
+                x: -310,
+                y: 240
+            }, {
+                text: '반복 명령어를 사용하는 경우',
+                x: 335,
+                y: 240
+            }]
         },{
-            description: '그렇다면 반복되는 명령을 쉽게 내리는 방법을 알아보자.</br>먼저 반복하기 명령어를 클릭한 다음, <span class=\"text_shadow\">i<1</span> 의 숫자를 바꿔서 <span class=\"text_shadow\">반복횟수</span>를 정하고</br><span class=\"text_shadow\">괄호({})</span> 사이에 반복할 명령어를 넣어주면 돼!',
+            description: '그렇다면 반복되는 명령을 쉽게 내리는 방법을 알아보자.</br>먼저 반복하기 명령어를 클릭한 다음, <span class=\"text_shadow\">i<1</span> 의 숫자를 바꿔서 <span class=\"text_shadow\">반복횟수</span>를 정하고</br><span class=\"text_shadow\">괄호({ })</span> 사이에 반복할 명령어를 넣어주면 돼!',
             contentStyle: 'operation7_2',
             descStyle: 'descStyle1',
-            text:[]
+            textSet:[{
+                text: '반복 횟수',
+                x: 387,
+                y: 215
+            }, {
+                text: '반복할 명령',
+                x: 455,
+                y: -160
+            }]
         },{
-            description: '예를 들어 이 명령어 <span class=\"number_1_badge\">1</span>은 10번 반복해서 move(); 를 실행해.</br><span class=\"number_2_badge\">2</span>명령어와 동일한 명령어지.',
+            description: '예를 들어 이 명령어<span class=\"text_badge number_1\"></span>은 10번 반복해서 move(); 를 실행해.</br><span class=\"text_badge number_2\"></span>명령어와 동일한 명령어지.',
             contentStyle: 'operation7_3',
             descStyle: 'descStyle1'
         },{
             description: '이 명령어를 사용할 때는 <span class=\"text_shadow\">{ } 안에 반복할 명령어</span>를 잘 입력했는지,</br><span class=\"text_shadow\">`;`</span>는 빠지지 않았는지 잘 살펴봐!</br>이 명령어에 대한 자세한 설명은 [더 알아보기]에서 볼 수 있어.',
             contentStyle: 'operation7_4',            
             descStyle: 'descStyle1',
-            text:[]
+            textSet:[{
+                text: '괄호({})가 빠진 경우',
+                x: -360,
+                y: -200
+            }, {
+                text: '세미콜론(;)이 빠진 경우',
+                x: 345,
+                y: -200
+            }]
         }],
     }
 
