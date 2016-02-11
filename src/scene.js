@@ -101,7 +101,7 @@ Entry.Scene.prototype.generateElement = function(scene) {
 
     var divide = Entry.createElement('span');
     divide.addClass('entrySceneInputCover');
-    divide.style.width = Entry.computeInputWidth(nameField);
+    divide.style.width = Entry.computeInputWidth(scene.name);
     viewTemplate.appendChild(divide);
     scene.inputWrapper = divide;
 
@@ -110,7 +110,7 @@ Entry.Scene.prototype.generateElement = function(scene) {
         if (Entry.isArrowOrBackspace(code))
             return;
         scene.name = this.value;
-        divide.style.width = Entry.computeInputWidth(this);
+        divide.style.width = Entry.computeInputWidth(scene.name);
         that.resize();
         if (code == 13)
             this.blur();
@@ -122,10 +122,9 @@ Entry.Scene.prototype.generateElement = function(scene) {
     nameField.onblur = function (e) {
         nameField.value = this.value;
         scene.name = this.value;
-        divide.style.width = Entry.computeInputWidth(this);
+        divide.style.width = Entry.computeInputWidth(scene.name);
     };
     divide.appendChild(nameField);
-    divide.nameField = nameField;
     var removeButtonCover = Entry.createElement('span');
     removeButtonCover.addClass('entrySceneRemoveButtonCoverWorkspace');
     viewTemplate.appendChild(removeButtonCover);
@@ -300,12 +299,9 @@ Entry.Scene.prototype.toJSON = function() {
     for (var i = 0; i<length; i++) {
         var scene = this.getScenes()[i];
         var view = scene.view;
-        var inputWrapper = scene.view;
         delete scene.view;
-        delete scene.inputWrapper;
         json.push(JSON.parse(JSON.stringify(scene)));
         scene.view = view;
-        scene.inputWrapper = inputWrapper;
     }
     return json;
 };
@@ -424,7 +420,7 @@ Entry.Scene.prototype.resize = function() {
         view.addClass('minValue');
         var inputWrapper = scene.inputWrapper;
         $(inputWrapper).width(
-            Entry.computeInputWidth(inputWrapper.nameField)
+            Entry.computeInputWidth(scene.name)
         );
         view = $(view);
         normWidth = normWidth + view.width() + marginLeft;
