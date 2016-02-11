@@ -9834,20 +9834,19 @@ Entry.Scene.prototype.generateElement = function(a) {
   c.appendChild(e);
   var f = Entry.createElement("span");
   f.addClass("entrySceneInputCover");
-  f.style.width = Entry.computeInputWidth(d);
+  f.style.width = Entry.computeInputWidth(a.name);
   c.appendChild(f);
   a.inputWrapper = f;
   d.onkeyup = function(c) {
     c = c.keyCode;
-    Entry.isArrowOrBackspace(c) || (a.name = this.value, f.style.width = Entry.computeInputWidth(this), b.resize(), 13 == c && this.blur(), 9 < this.value.length && (this.value = this.value.substring(0, 10), this.blur()));
+    Entry.isArrowOrBackspace(c) || (a.name = this.value, f.style.width = Entry.computeInputWidth(a.name), b.resize(), 13 == c && this.blur(), 9 < this.value.length && (this.value = this.value.substring(0, 10), this.blur()));
   };
   d.onblur = function(b) {
     d.value = this.value;
     a.name = this.value;
-    f.style.width = Entry.computeInputWidth(this);
+    f.style.width = Entry.computeInputWidth(a.name);
   };
   f.appendChild(d);
-  f.nameField = d;
   e = Entry.createElement("span");
   e.addClass("entrySceneRemoveButtonCoverWorkspace");
   c.appendChild(e);
@@ -9926,12 +9925,10 @@ Entry.Scene.prototype.selectScene = function(a) {
 };
 Entry.Scene.prototype.toJSON = function() {
   for (var a = [], b = this.getScenes().length, c = 0;c < b;c++) {
-    var d = this.getScenes()[c], e = d.view, f = d.view;
+    var d = this.getScenes()[c], e = d.view;
     delete d.view;
-    delete d.inputWrapper;
     a.push(JSON.parse(JSON.stringify(d)));
     d.view = e;
-    d.inputWrapper = f;
   }
   return a;
 };
@@ -9979,18 +9976,17 @@ Entry.Scene.prototype.cloneScene = function(a) {
 Entry.Scene.prototype.resize = function() {
   var a = this.getScenes(), b = this.selectedScene, c = a[0];
   if (0 !== a.length && c) {
-    var d = $(c.view).offset().left, c = parseFloat($(b.view).css("margin-left")), d = $(this.view_).width() - d, e = 0, f;
-    for (f in a) {
-      var g = a[f], h = g.view;
+    var d = $(c.view).offset().left, c = parseFloat($(b.view).css("margin-left")), e = $(this.view_).width() - d, f = 0, g;
+    for (g in a) {
+      var d = a[g], h = d.view;
       h.addClass("minValue");
-      g = g.inputWrapper;
-      $(g).width(Entry.computeInputWidth(g.nameField));
+      $(d.inputWrapper).width(Entry.computeInputWidth(d.name));
       h = $(h);
-      e = e + h.width() + c;
+      f = f + h.width() + c;
     }
-    if (e > d) {
-      for (f in d -= $(b.view).width(), c = d / (a.length - 1) - (Entry.Scene.viewBasicWidth + c), a) {
-        g = a[f], b.id != g.id ? (g.view.removeClass("minValue"), $(g.inputWrapper).width(c)) : g.view.addClass("minValue");
+    if (f > e) {
+      for (g in e -= $(b.view).width(), c = e / (a.length - 1) - (Entry.Scene.viewBasicWidth + c), a) {
+        d = a[g], b.id != d.id ? (d.view.removeClass("minValue"), $(d.inputWrapper).width(c)) : d.view.addClass("minValue");
       }
     }
   }
@@ -10945,7 +10941,7 @@ Entry.nodeListToArray = function(a) {
 Entry.computeInputWidth = function(a) {
   var b = document.createElement("span");
   b.className = "tmp-element";
-  b.innerHTML = a.value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  b.innerHTML = a.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
   document.body.appendChild(b);
   a = b.offsetWidth;
   document.body.removeChild(b);
