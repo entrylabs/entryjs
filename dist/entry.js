@@ -4886,7 +4886,12 @@ Entry.Container.prototype.generateView = function(a, b) {
   if (b && "workspace" != b) {
     "phone" == b && (this.view_.addClass("entryContainerPhone"), c = Entry.createElement("div"), c.addClass("entryAddObjectWorkspace"), c.innerHTML = Lang.Workspace.add_object, c.bindOnClick(function(a) {
       Entry.dispatchEvent("openSpriteManager");
-    }), c = Entry.createElement("div"), c.addClass("entryContainerListPhoneWrapper"), this.view_.appendChild(c), d = Entry.createElement("ul"), d.addClass("entryContainerListPhone"), c.appendChild(d), this.listView_ = d);
+    }), c = Entry.createElement("div"), c.addClass("entryContainerListPhoneWrapper"), this.view_.appendChild(c), c.bindOnClick(function(a) {
+      a = Entry.container.getAllObjects();
+      for (var b in a) {
+        a[b].editObjectValues(!1);
+      }
+    }), d = Entry.createElement("ul"), d.addClass("entryContainerListPhone"), c.appendChild(d), this.listView_ = d);
   } else {
     this.view_.addClass("entryContainerWorkspace");
     var c = Entry.createElement("div");
@@ -4898,6 +4903,12 @@ Entry.Container.prototype.generateView = function(a, b) {
     c = Entry.createElement("div");
     c.addClass("entryContainerListWorkspaceWrapper");
     Entry.isForLecture && (this.generateTabView(), c.addClass("lecture"));
+    c.bindOnClick(function(a) {
+      a = Entry.container.getAllObjects();
+      for (var b in a) {
+        a[b].editObjectValues(!1);
+      }
+    });
     Entry.Utils.disableContextmenu(c);
     $(c).on("contextmenu", function(a) {
       Entry.ContextMenu.show([{text:Lang.Blocks.Paste_blocks, callback:function() {
@@ -6887,6 +6898,10 @@ Entry.EntryObject.prototype.generateView = function() {
     a.addClass("entryContainerListElementWorkspace");
     a.object = this;
     a.bindOnClick(function(a) {
+      a = Entry.container.getAllObjects();
+      for (var b in a) {
+        a[b].editObjectValues(!1);
+      }
       Entry.container.getObject(this.id) && Entry.container.selectObject(this.id);
       Entry.container.blurAllInputs();
     });
@@ -6959,7 +6974,13 @@ Entry.EntryObject.prototype.generateView = function() {
     this.view_.appendChild(d);
     Entry.objectEditable ? (d.bindOnClick(function(a) {
       a.stopPropagation();
-      Entry.engine.isState("run") || b.editObjectValues(tog);
+      if (!Entry.engine.isState("run")) {
+        a = Entry.container.getAllObjects();
+        for (var c in a) {
+          a[c].editObjectValues(!1);
+        }
+        b.editObjectValues(tog);
+      }
     }), d.blur = function(a) {
       b.editObjectComplete();
     }) : d.addClass("entryRemove");
@@ -7149,6 +7170,10 @@ Entry.EntryObject.prototype.generateView = function() {
   }
   if ("phone" == Entry.type) {
     return a = Entry.createElement("li", this.id), a.addClass("entryContainerListElementWorkspace"), a.object = this, a.bindOnClick(function(a) {
+      a = Entry.container.getAllObjects();
+      for (var b in a) {
+        a[b].editObjectValues(!1);
+      }
       Entry.container.getObject(this.id) && Entry.container.selectObject(this.id);
     }), $ && (b = this, context.attach("#" + this.id, [{text:Lang.Workspace.context_rename, href:"/", action:function(a) {
       a.preventDefault();
@@ -8789,7 +8814,12 @@ Entry.Playground.prototype.generateView = function(a, b) {
   this.view_ = a;
   this.view_.addClass("entryPlayground");
   if (b && "workspace" != b) {
-    "phone" == b && (this.view_.addClass("entryPlaygroundPhone"), c = Entry.createElement("div", "entryCategoryTab"), c.addClass("entryPlaygroundTabPhone"), Entry.view_.insertBefore(c, this.view_), this.generateTabView(c), this.tabView_ = c, c = Entry.createElement("div", "entryCurtain"), c.addClass("entryPlaygroundCurtainPhone"), c.addClass("entryRemove"), c.innerHTML = Lang.Workspace.cannot_edit_click_to_stop, c.bindOnClick(function() {
+    "phone" == b && (this.view_.addClass("entryPlaygroundPhone"), this.view_.bindOnClick(function(a) {
+      a = Entry.container.getAllObjects();
+      for (var b in a) {
+        a[b].editObjectValues(!1);
+      }
+    }), c = Entry.createElement("div", "entryCategoryTab"), c.addClass("entryPlaygroundTabPhone"), Entry.view_.insertBefore(c, this.view_), this.generateTabView(c), this.tabView_ = c, c = Entry.createElement("div", "entryCurtain"), c.addClass("entryPlaygroundCurtainPhone"), c.addClass("entryRemove"), c.innerHTML = Lang.Workspace.cannot_edit_click_to_stop, c.bindOnClick(function() {
       Entry.engine.toggleStop();
     }), this.view_.appendChild(c), this.curtainView_ = c, Entry.pictureEditable && (c = Entry.createElement("div", "entryPicture"), c.addClass("entryPlaygroundPicturePhone"), c.addClass("entryRemove"), this.view_.appendChild(c), this.generatePictureView(c), this.pictureView_ = c), c = Entry.createElement("div", "entryText"), c.addClass("entryRemove"), this.view_.appendChild(c), this.generateTextView(c), this.textView_ = c, Entry.soundEditable && (c = Entry.createElement("div", "entrySound"), c.addClass("entryPlaygroundSoundWorkspacePhone"), 
     c.addClass("entryRemove"), this.view_.appendChild(c), this.generateSoundView(c), this.soundView_ = c), c = Entry.createElement("div", "entryDefault"), this.view_.appendChild(c), this.generateDefaultView(c), this.defaultView_ = c, c = Entry.createElement("div", "entryCode"), c.addClass("entryPlaygroundCodePhone"), this.view_.appendChild(c), this.generateCodeView(c), this.codeView_ = this.codeView_ = c, Entry.addEventListener("run", function(a) {
@@ -8799,6 +8829,12 @@ Entry.Playground.prototype.generateView = function(a, b) {
     }));
   } else {
     this.view_.addClass("entryPlaygroundWorkspace");
+    this.view_.bindOnClick(function(a) {
+      a = Entry.container.getAllObjects();
+      for (var b in a) {
+        a[b].editObjectValues(!1);
+      }
+    });
     var c = Entry.createElement("div", "entryCategoryTab");
     c.addClass("entryPlaygroundTabWorkspace");
     this.view_.appendChild(c);
@@ -8863,19 +8899,35 @@ Entry.Playground.prototype.generateTabView = function(a) {
   b.appendChild(a);
   a.bindOnClick(function(a) {
     Entry.playground.changeViewMode("code");
+    a = Entry.container.getAllObjects();
+    for (var b in a) {
+      a[b].editObjectValues(!1);
+    }
   });
   this.tabViewElements.code = a;
   Entry.pictureEditable && (a = Entry.createElement("li", "entryPictureTab"), a.innerHTML = Lang.Workspace.tab_picture, a.addClass("entryTabListItemWorkspace"), b.appendChild(a), a.bindOnClick(function(a) {
     Entry.playground.changeViewMode("picture");
+    a = Entry.container.getAllObjects();
+    for (var b in a) {
+      a[b].editObjectValues(!1);
+    }
   }), this.tabViewElements.picture = a, a = Entry.createElement("li", "entryTextboxTab"), a.innerHTML = Lang.Workspace.tab_text, a.addClass("entryTabListItemWorkspace"), b.appendChild(a), a.bindOnClick(function(a) {
     Entry.playground.changeViewMode("text");
   }), this.tabViewElements.text = a, a.addClass("entryRemove"));
   Entry.soundEditable && (a = Entry.createElement("li", "entrySoundTab"), a.innerHTML = Lang.Workspace.tab_sound, a.addClass("entryTabListItemWorkspace"), b.appendChild(a), a.bindOnClick(function(a) {
     Entry.playground.changeViewMode("sound");
+    a = Entry.container.getAllObjects();
+    for (var b in a) {
+      a[b].editObjectValues(!1);
+    }
   }), this.tabViewElements.sound = a);
   Entry.hasVariableManager && (a = Entry.createElement("li", "entryVariableTab"), a.innerHTML = Lang.Workspace.tab_attribute, a.addClass("entryTabListItemWorkspace"), a.addClass("entryVariableTabWorkspace"), b.appendChild(a), a.bindOnClick(function(a) {
     Entry.playground.toggleOnVariableView();
     Entry.playground.changeViewMode("variable");
+    a = Entry.container.getAllObjects();
+    for (var b in a) {
+      a[b].editObjectValues(!1);
+    }
   }), this.tabViewElements.variable = a);
 };
 Entry.Playground.prototype.generateCodeView = function(a) {
@@ -8896,6 +8948,12 @@ Entry.Playground.prototype.generateCodeView = function(a) {
     });
     $(d).mouseleave(function(a) {
       Entry.playground.resizing || (d.widthBackup && !Blockly.mainWorkspace.blockMenu.hasStalkerBlock && $(".entryBlockMenuWorkspace>svg").stop().animate({width:this.widthBackup - 64}, 200), delete this.widthBackup, delete Entry.playground.focusBlockMenu);
+    });
+    d.bindOnClick(function(a) {
+      a = Entry.container.getAllObjects();
+      for (var b in a) {
+        a[b].editObjectValues(!1);
+      }
     });
     Entry.addEventListener("entryBlocklyChanged", function(a) {
       a = Entry.playground.blockMenuView_;
@@ -8925,8 +8983,12 @@ Entry.Playground.prototype.generateCodeView = function(a) {
     return a;
   }
   if ("phone" == Entry.type) {
-    return b = Entry.createElement("div", "entryCategory"), b.addClass("entryCategoryPhone"), a.appendChild(b), this.categoryView_ = b, c = Entry.createElement("ul", "entryCategoryList"), c.addClass("entryCategoryListPhone"), b.appendChild(c), this.categoryListView_ = c, b = this.createVariableView(), a.appendChild(b), this.variableView_ = b, b = Entry.createElement("div", "entryBlockly"), b.addClass("entryBlocklyPhone"), this.blocklyView_ = b, a.appendChild(b), c = Entry.parseTexttoXML("<xml></xml>"), 
-    Blockly.inject(b, {path:".././", toolbox:c, trashcan:!0, mediaFilePath:Entry.mediaFilePath}), Blockly.mainWorkspace.flyout_.autoClose = !0, Blockly.mainWorkspace.flyout_.hide(), document.addEventListener("blocklyWorkspaceChange", this.syncObjectWithEvent, !1), this.blockMenu = Blockly.mainWorkspace.flyout_, Entry.hw.banHW(), a;
+    return b = Entry.createElement("div", "entryCategory"), b.addClass("entryCategoryPhone"), a.appendChild(b), this.categoryView_ = b, c = Entry.createElement("ul", "entryCategoryList"), c.addClass("entryCategoryListPhone"), b.appendChild(c), this.categoryListView_ = c, b = this.createVariableView(), a.appendChild(b), this.variableView_ = b, b = Entry.createElement("div", "entryBlockly"), b.addClass("entryBlocklyPhone"), this.blocklyView_ = b, a.appendChild(b), this.blocklyView_.bindOnClick(function(a) {
+      a = Entry.container.getAllObjects();
+      for (var b in a) {
+        a[b].editObjectValues(!1);
+      }
+    }), c = Entry.parseTexttoXML("<xml></xml>"), Blockly.inject(b, {path:".././", toolbox:c, trashcan:!0, mediaFilePath:Entry.mediaFilePath}), Blockly.mainWorkspace.flyout_.autoClose = !0, Blockly.mainWorkspace.flyout_.hide(), document.addEventListener("blocklyWorkspaceChange", this.syncObjectWithEvent, !1), this.blockMenu = Blockly.mainWorkspace.flyout_, Entry.hw.banHW(), a;
   }
 };
 Entry.Playground.prototype.generatePictureView = function(a) {
@@ -9454,6 +9516,11 @@ Entry.Playground.prototype.setMenu = function(a) {
       ("brush" == c && "textBox" == a || "text" == c && "sprite" == a || !("func" == c || this.blockJSON[b].blocks && this.blockJSON[b].blocks.length)) && d.addClass("entryRemove");
       d.innerHTML = Lang.Blocks[c.toUpperCase()];
       d.bindOnClick(function() {
+        var a = Entry.container.getAllObjects(), b;
+        for (b in a) {
+          a[b].editObjectValues(!1);
+        }
+        console.log(111);
         Entry.playground.selectMenu(this.id.substring(13));
       });
       Entry.type && "workspace" != Entry.type ? "phone" == Entry.type && d.addClass("entryCategoryElementPhone") : d.addClass("entryCategoryElementWorkspace");
