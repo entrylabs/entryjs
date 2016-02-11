@@ -1591,6 +1591,7 @@ Entry.Playground.prototype.generatePictureElement = function(picture) {
             }
         }
         this.picture.name = this.value;
+        Entry.playground.reloadPlayground();
         Entry.dispatchEvent('pictureNameChanged', this.picture);
     }
     nameView.onkeypress = function(e) {
@@ -1610,7 +1611,7 @@ Entry.Playground.prototype.generateSoundElement = function(sound) {
     sound.view = element;
     element.addClass('entryPlaygroundSoundElement');
     element.sound = sound;
-   
+
     Entry.Utils.disableContextmenu(sound.view);
     $(sound.view).on('contextmenu', function(){
         var options = [

@@ -9561,6 +9561,7 @@ Entry.Playground.prototype.generatePictureElement = function(a) {
         }
       }
       this.picture.name = this.value;
+      Entry.playground.reloadPlayground();
       Entry.dispatchEvent("pictureNameChanged", this.picture);
     }
   }
