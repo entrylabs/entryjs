@@ -100,11 +100,6 @@ Entry.EntryObject.prototype.generateView= function() {
         objectView.addClass('entryContainerListElementWorkspace');
         objectView.object = this;
         objectView.bindOnClick(function(e) {
-            var objects_ = Entry.container.getAllObjects();
-            for (var i in objects_) {
-                objects_[i].editObjectValues(false);
-            }
-            
             if (Entry.container.getObject(this.id))
                 Entry.container.selectObject(this.id);
             Entry.container.blurAllInputs();
@@ -159,6 +154,7 @@ Entry.EntryObject.prototype.generateView= function() {
         });
         /** @type {!Element} */
         this.view_ = objectView;
+
 
         var thisPointer = this;
         var objectInfoView = Entry.createElement('ul');
@@ -244,11 +240,7 @@ Entry.EntryObject.prototype.generateView= function() {
                 e.stopPropagation();
                 if(Entry.engine.isState('run')){
                     return;
-                } else {
-                    var objects_ = Entry.container.getAllObjects();
-                    for (var i in objects_) {
-                        objects_[i].editObjectValues(false);
-                    }
+                }else{
                     object.editObjectValues(tog);
                 }
 
@@ -259,6 +251,7 @@ Entry.EntryObject.prototype.generateView= function() {
         } else {
             editView.addClass("entryRemove");
         }
+
 
         if (Entry.objectEditable && Entry.objectDeletable) {
             var deleteView = Entry.createElement('div');
@@ -500,11 +493,6 @@ Entry.EntryObject.prototype.generateView= function() {
         objectView.addClass('entryContainerListElementWorkspace');
         objectView.object = this;
         objectView.bindOnClick(function(e) {
-            var objects_ = Entry.container.getAllObjects();
-            for (var i in objects_) {
-                objects_[i].editObjectValues(false);
-            }
-            
             if (Entry.container.getObject(this.id))
                 Entry.container.selectObject(this.id);
         });
