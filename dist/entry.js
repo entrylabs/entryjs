@@ -9675,6 +9675,10 @@ Entry.Playground.prototype.generatePictureElement = function(a) {
   c.addClass("entryPlaygroundPictureElement");
   c.picture = a;
   c.bindOnClick(function(a) {
+    a = Entry.container.getAllObjects();
+    for (var b in a) {
+      a[b].editObjectValues(!1);
+    }
     Entry.playground.selectPicture(this.picture);
   });
   Entry.Utils.disableContextmenu(a.view);

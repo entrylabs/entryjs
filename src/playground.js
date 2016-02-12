@@ -1562,6 +1562,10 @@ Entry.Playground.prototype.generatePictureElement = function(picture) {
     element.addClass('entryPlaygroundPictureElement');
     element.picture = picture;
     element.bindOnClick(function(e) {
+        var objects_ = Entry.container.getAllObjects();
+        for (var i in objects_) {
+            objects_[i].editObjectValues(false);
+        }
         Entry.playground.selectPicture(this.picture);
     });
 
