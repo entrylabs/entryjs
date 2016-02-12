@@ -8810,7 +8810,7 @@ Entry.popupHelper = function() {
   this.body_ = Entry.createElement("div");
   this.body_.addClass("entryPopup hiddenPopup");
   this.body_.bindOnClick(function(a) {
-    a.target == this && this.popup.hide();
+    a.target == this && this.popup.remove();
   });
   window.popupHelper = this;
   this.body_.popup = this;
@@ -8821,10 +8821,13 @@ Entry.popupHelper = function() {
   this.titleButton_ = Entry.createElement("div");
   this.titleButton_.addClass("entryPopupHelperCloseButton");
   this.titleButton_.addEventListener("click", function() {
-    this.hide();
+    this.remove();
   }.bind(this));
-  this.window_.appendChild(this.titleButton_);
-  this.window_.appendChild(this.title_);
+  this.popupWrapper_ = Entry.createElement("div");
+  this.popupWrapper_.appendChild(this.titleButton_);
+  this.popupWrapper_.appendChild(this.title_);
+  this.popupWrapper_.addClass("entryPopupHelperWrapper");
+  this.window_.appendChild(this.popupWrapper_);
   this.body_.appendChild(this.window_);
   document.body.appendChild(this.body_);
 };
@@ -8844,7 +8847,116 @@ Entry.popupHelper.prototype.show = function() {
 Entry.popupHelper.prototype.hide = function() {
   this.body_.addClass("hiddenPopup");
 };
-function test() {
+function testCm() {
+  var a = {pageIndex:0, setPopupLayout:function(b) {
+    this.exampleBadge_ = Entry.createElement("div");
+    this.exampleBadge_.addClass("entryPopupHelperExampleBadge");
+    this.exampleBadge_.textContent = "\uc608\uc2dc";
+    this.leftButton_ = Entry.createElement("div");
+    this.leftButton_.addClass("entryPopupHelperLeft");
+    this.leftButton_.addEventListener("click", function() {
+      this.setPrevStep();
+    }.bind(this));
+    this.rightButton_ = Entry.createElement("div");
+    this.rightButton_.addClass("entryPopupHelperRight");
+    this.rightButton_.addEventListener("click", function() {
+      this.setNextStep();
+    }.bind(this));
+    this.indicator_ = Entry.createElement("div");
+    this.indicator_.addClass("entryPopupHelperIndicator");
+    if (1 < this.content.length) {
+      var a = Entry.createElement("hr");
+      a.addClass("indicatorHr");
+      this.indicator_.appendChild(a);
+      a = Entry.createElement("span");
+      a.addClass("indicator");
+      for (var d = 0;d < this.content.length;d++) {
+        var e = a.cloneNode(!0);
+        this.indicator_.appendChild(e);
+      }
+      var f = this, g = $(this.indicator_);
+      g.off().on("click", "span:not(.on)", function() {
+        var b = g.find("span").index(this);
+        f.setNthStep(b);
+      });
+      this.indicator_.addClass("show");
+    }
+    this.content_ = Entry.createElement("div");
+    this.content_.addClass("entryPopupHelperContent");
+    this.contentCommand_ = Entry.createElement("div");
+    this.contentCommand_.addClass("entryPopupHelperContentCommand");
+    this.contentDesc_ = Entry.createElement("div");
+    this.contentDesc_.addClass("entryPopupHelperContentDesc");
+    a = Entry.createElement("div");
+    a.appendChild(this.leftButton_);
+    a.appendChild(this.rightButton_);
+    a.appendChild(this.contentCommand_);
+    a.appendChild(this.contentDesc_);
+    a.appendChild(this.exampleBadge_);
+    a.appendChild(this.content_);
+    a.appendChild(this.indicator_);
+    b.popupWrapper_.appendChild(a);
+    b.window_.addClass("commandPopupWindow");
+    this.setContent(this);
+  }, setContent:function() {
+    1 < this.content.length ? (0 === this.pageIndex ? (this.rightButton_.addClass("show"), this.leftButton_.removeClass("show")) : this.pageIndex === this.content.length - 1 ? (this.leftButton_.addClass("show"), this.rightButton_.removeClass("show")) : (this.rightButton_.addClass("show"), this.leftButton_.addClass("show")), $(this.indicator_).find("span").removeClass("on"), $(this.indicator_).find("span:eq(" + this.pageIndex + ")").addClass("on")) : (this.rightButton_.removeClass("show"), this.leftButton_.removeClass("show"));
+    var b = this.content[this.pageIndex];
+    this.contentCommand_.innerHTML = "<span>" + b.command + "</span>";
+    this.contentDesc_.innerHTML = b.description;
+    this.content_.innerHTML = "";
+    b.images.forEach(function(b) {
+      var a = Entry.createElement("div");
+      a.addClass(b);
+      this.content_.appendChild(a);
+    }.bind(this));
+  }, setNthStep:function(b) {
+    this.pageIndex = b;
+    this.setContent();
+  }, setNextStep:function() {
+    this.pageIndex++;
+    this.setContent();
+  }, setPrevStep:function() {
+    this.pageIndex--;
+    this.setContent();
+  }, title:Lang.Menus.maze_command_title, content:[{command:"move();", description:Lang.Menus.maze_command_move_desc, images:["move01", "move02"]}, {command:"jump();", description:Lang.Menus.maze_command_jump_desc, images:["jump01", "jump02"]}, {command:"right();", description:Lang.Menus.maze_command_right_desc, images:["right01", "right02"]}, {command:"left();", description:Lang.Menus.maze_command_left_desc, images:["left01", "left02"]}, {command:"for (var i = 0; i < 1; i++){</br>}", description:Lang.Menus.maze_command_for_desc, 
+  images:["for01", "for02"]}, {command:"while (true) {</br>}", description:Lang.Menus.maze_command_while_desc, images:["while01", "while02"]}, {command:'if (front == "wall") {</br>}', description:Lang.Menus.maze_command_if1_desc, images:["if01", "if02"]}, {command:'if (front == "Bee") {</br>}', description:Lang.Menus.maze_command_if2_desc, images:["if03", "if04"]}, {command:'if (front == "banana") {</br>}', description:Lang.Menus.maze_command_if3_desc, images:["if05", "if06"]}, {command:"promise();", 
+  description:Lang.Menus.maze_command_promise_desc, images:["promise01", "promise02"]}]};
+  window.cm = new Entry.popupHelper;
+  cm.setPopup(a);
+  cm.show();
+}
+function testOb() {
+  var a = {setPopupLayout:function(b) {
+    this.content_ = Entry.createElement("div");
+    this.content_.addClass("entryPopupHelperContent");
+    b.popupWrapper_.appendChild(this.content_);
+    b.window_.addClass("objectPopupWindow");
+    this.setContent(this, b);
+  }, setContent:function(b, a) {
+    1 === this.object.length ? (b.content_.addClass("singleItem"), a.window_.style.height = "219px") : (b.content_.addClass("multiItem"), a.window_.style.height = 107 * this.object.length + 102 + "px");
+    this.object.forEach(function(d, e) {
+      var f = Entry.createElement("div");
+      0 < e && (f.style.marginTop = "25px");
+      var g = Entry.createElement("div");
+      g.addClass(d.class);
+      var h = Entry.createElement("div");
+      h.addClass("equal");
+      var k = Entry.createElement("div");
+      k.addClass("objectText");
+      "small" === d.type ? (g.style.width = "82px", g.style.marginLeft = "35px") : (g.style.width = "162px", a.window_.style.width = "480px", b.content_.style.paddingLeft = "35px");
+      k.textContent = d.text;
+      f.appendChild(g);
+      f.appendChild(h);
+      f.appendChild(k);
+      b.content_.appendChild(f);
+    });
+  }, title:Lang.Menus.maze_object_title, popupType:"big", object:[{type:"small", text:Lang.Menus.maze_object_parts_box, class:"partsBox"}, {type:"small", text:Lang.Menus.maze_object_obstacle1, class:"obstacle1"}, {type:"small", text:Lang.Menus.maze_object_friend, class:"friend"}, {type:"small", text:Lang.Menus.maze_object_obstacle2, class:"obstacle2"}, {type:"big", text:Lang.Menus.maze_object_wall1, class:"wall1"}, {type:"big", text:Lang.Menus.maze_object_wall2, class:"wall2"}, {type:"small", text:Lang.Menus.maze_object_battery, 
+  class:"battery"}, {type:"big", text:Lang.Menus.maze_object_wall3, class:"wall3"}, {type:"small", text:Lang.Menus.maze_object_obstacle3, class:"obstacle3"}]};
+  window.ob = new Entry.popupHelper;
+  ob.setPopup(a);
+  ob.show();
+}
+function testOp() {
   var a = {pageIndex:0, setPopupLayout:function(b) {
     this.stepBadge_ = Entry.createElement("div");
     this.stepBadge_.addClass("entryPopupHelperStep");
@@ -8862,13 +8974,13 @@ function test() {
     this.view_.addClass("entryPopupHelperView");
     window.testView = this.view_;
     this.content_ = Entry.createElement("div");
-    this.content_.addClass("entryPopupHelperContents");
+    this.content_.addClass("entryPopupHelperContent");
     b.window_.addClass("operationPopupWindow");
-    b.window_.appendChild(this.stepBadge_);
-    b.window_.appendChild(this.leftButton_);
-    b.window_.appendChild(this.rightButton_);
-    b.window_.appendChild(this.content_);
-    b.window_.appendChild(this.view_);
+    b.popupWrapper_.appendChild(this.stepBadge_);
+    b.popupWrapper_.appendChild(this.leftButton_);
+    b.popupWrapper_.appendChild(this.rightButton_);
+    b.popupWrapper_.appendChild(this.content_);
+    b.popupWrapper_.appendChild(this.view_);
     this.setSetpBadge();
     this.setContent();
   }, setSetpBadge:function() {
@@ -8889,6 +9001,7 @@ function test() {
         e.style.bottom = [d.y, "px"].join("");
         e.style.left = [d.x, "px"].join("");
         e.style.textAlign = d.align || e.style.textAlign;
+        e.style.textAlign && "center" !== e.style.textAlign && (e.style.width = "1px");
         this.content_.appendChild(e);
       }
     }
@@ -8898,12 +9011,11 @@ function test() {
   }, setPrevStep:function() {
     this.pageIndex--;
     this.setContent();
-  }, title:Lang.Menus.maze_operation10_title, content:[{description:Lang.Menus.maze_operation10_1_desc, contentStyle:"operation10_1", descStyle:"descStyle1", textSet:[{text:Lang.Menus.maze_operation10_1_textset_1, x:435, y:250}, {text:Lang.Menus.maze_operation10_1_textset_2, x:435, y:190}, {text:Lang.Menus.maze_operation10_1_textset_3, x:435, y:-110}, {text:Lang.Menus.maze_operation10_1_textset_4, x:435, y:-170}]}, {description:Lang.Menus.maze_operation10_2_desc, contentStyle:"operation10_2", descStyle:"descStyle1", 
-  textSet:[{text:Lang.Menus.maze_operation10_2_textset_1, x:-25, y:185}, {text:Lang.Menus.maze_operation10_2_textset_2, x:95, y:-195}]}, {description:Lang.Menus.maze_operation10_3_desc, contentStyle:"operation10_3", descStyle:"descStyle2", textSet:[{text:Lang.Menus.maze_operation10_3_textset_1, x:-28, y:185}, {text:Lang.Menus.maze_operation10_3_textset_2, x:95, y:-195}]}, {description:Lang.Menus.maze_operation10_4_desc, contentStyle:"operation10_4", descStyle:"descStyle1", textSet:[{align:"left", 
-  text:Lang.Menus.maze_operation10_4_textset_1, x:50, y:-160}, {align:"left", text:Lang.Menus.maze_operation10_4_textset_2, x:265, y:-160}, {align:"left", text:Lang.Menus.maze_operation10_4_textset_3, x:475, y:-160}]}]};
-  window.p = new Entry.popupHelper;
-  p.setPopup(a);
-  p.show();
+  }, title:Lang.Menus.maze_operation9_title, content:[{description:Lang.Menus.maze_operation9_1_desc, contentStyle:"operation9_1", descStyle:"descStyle1", textSet:[{text:Lang.Menus.maze_operation9_1_textset_1, x:155, y:-90}]}, {description:Lang.Menus.maze_operation9_2_desc, contentStyle:"operation9_2", descStyle:"descStyle1"}, {description:Lang.Menus.maze_operation9_3_desc, contentStyle:"operation9_3", descStyle:"descStyle1", textSet:[{text:Lang.Menus.maze_operation9_3_textset_1, x:-345, y:-160}, 
+  {text:Lang.Menus.maze_operation9_3_textset_2, x:365, y:-160}]}]};
+  window.op = new Entry.popupHelper;
+  op.setPopup(a);
+  op.show();
 }
 ;Entry.getStartProject = function(a) {
   return {category:"\uae30\ud0c0", scenes:[{name:"\uc7a5\uba74 1", id:"7dwq"}], variables:[{name:"\ucd08\uc2dc\uacc4", id:"brih", visible:!1, value:"0", variableType:"timer", x:150, y:-70, array:[], object:null, isCloud:!1}, {name:"\ub300\ub2f5", id:"1vu8", visible:!1, value:"0", variableType:"answer", x:150, y:-100, array:[], object:null, isCloud:!1}], objects:[{id:"7y0y", name:"\uc5d4\ud2b8\ub9ac\ubd07", script:'<xml><block type="when_run_button_click" x="136" y="47"><next><block type="repeat_basic"><value name="VALUE"><block type="number"><field name="NUM">10</field></block></value><statement name="DO"><block type="move_direction"><value name="VALUE"><block type="number"><field name="NUM">10</field></block></value></block></statement></block></next></block></xml>', 
@@ -13871,21 +13983,21 @@ Entry.Code = function(a) {
     0 > e || d.splice(e, 1);
   };
   a.getThreads = function() {
-    return this._data.map(function(b) {
-      return b;
+    return this._data.map(function(a) {
+      return a;
     });
   };
   a.toJSON = function() {
-    for (var b = this.getThreads(), a = [], d = 0, e = b.length;d < e;d++) {
-      a.push(b[d].toJSON());
+    for (var a = this.getThreads(), c = [], d = 0, e = a.length;d < e;d++) {
+      c.push(a[d].toJSON());
     }
-    return a;
+    return c;
   };
   a.countBlock = function() {
-    for (var b = this.getThreads(), a = 0, d = 0;d < b.length;d++) {
-      a += b[d].countBlock();
+    for (var a = this.getThreads(), c = 0, d = 0;d < a.length;d++) {
+      c += a[d].countBlock();
     }
-    return a;
+    return c;
   };
   a.moveBy = function(a, c) {
     for (var d = this.getThreads(), e = 0, f = d.length;e < f;e++) {

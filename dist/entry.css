@@ -3288,7 +3288,7 @@ span.CodeMirror-selectedtext {
   position: absolute;
   right: 10px;
   top: 10px;
-  background-image: url('../images/popup/x_btn.png');
+  background-image: url('/img/assets/popup/x_btn.png');
   cursor: pointer;
 }
 .entryPopupHelperWindow.operationPopupWindow {
@@ -3309,7 +3309,7 @@ span.CodeMirror-selectedtext {
   border-bottom-left-radius: 5px;
   border-bottom-right-radius: 5px;
 }
-.operationPopupWindow .entryPopupHelperTitle {
+.entryPopupHelperWindow .entryPopupHelperTitle {
   width: 100%;
   height: 60px;
   background-color: #2A7DEF;
@@ -3341,38 +3341,44 @@ span.CodeMirror-selectedtext {
   display: none;
   width: 62px;
   height: 62px;
-  background-image: url("../images/popup/left_btn.png");
+  background-image: url("/img/assets/popup/left_btn.png");
   position: absolute;
   margin-left: 25px;
   margin-top: 193px;
   cursor: pointer;
   z-index: 1;
 }
-.operationPopupWindow .entryPopupHelperLeft.show {
+.operationPopupWindow .entryPopupHelperLeft.show,
+.commandPopupWindow .entryPopupHelperLeft.show {
   display: block;
 }
 .operationPopupWindow .entryPopupHelperLeft:active,
-.operationPopupWindow .entryPopupHelperLeft:hover {
-  background-image: url("../images/popup/left_btn_on.png");
+.operationPopupWindow .entryPopupHelperLeft:hover,
+.commandPopupWindow .entryPopupHelperLeft:active,
+.commandPopupWindow .entryPopupHelperLeft:hover {
+  background-image: url("/img/assets/popup/left_btn_on.png");
 }
 .operationPopupWindow .entryPopupHelperRight {
   display: none;
   right: 0;
   width: 62px;
   height: 62px;
-  background-image: url("../images/popup/right_btn.png");
+  background-image: url("/img/assets/popup/right_btn.png");
   position: absolute;
   margin-right: 25px;
   margin-top: 193px;
   cursor: pointer;
   z-index: 1;
 }
-.operationPopupWindow .entryPopupHelperRight.show {
+.operationPopupWindow .entryPopupHelperRight.show,
+.commandPopupWindow .entryPopupHelperRight.show {
   display: block;
 }
 .operationPopupWindow .entryPopupHelperRight:active,
-.operationPopupWindow .entryPopupHelperRight:hover {
-  background-image: url("../images/popup/right_btn_on.png");
+.operationPopupWindow .entryPopupHelperRight:hover,
+.commandPopupWindow .entryPopupHelperRight:active,
+.commandPopupWindow .entryPopupHelperRight:hover {
+  background-image: url("/img/assets/popup/right_btn_on.png");
 }
 .operationPopupWindow .entryPopupHelperView {
   position: absolute;
@@ -3382,7 +3388,8 @@ span.CodeMirror-selectedtext {
   padding: 24px 150px 0 19px;
   color: #004051;
 }
-.operationPopupWindow .entryPopupHelperView .textShadow {
+.operationPopupWindow .entryPopupHelperView .textShadow,
+.commandPopupWindow .entryPopupHelperContentDesc .textShadow {
   background-color: #ffed08;
   padding: 3px 1px 0;
 }
@@ -3402,34 +3409,34 @@ span.CodeMirror-selectedtext {
   padding-bottom: 5px;
 }
 .operationPopupWindow .entryPopupHelperView .number1:before {
-  content: url('../images/popup/number_1_r.png');
+  content: url('/img/assets/popup/number_1_r.png');
   position: absolute;
   margin-top: -4px;
 }
 .operationPopupWindow .entryPopupHelperView .number2:before {
-  content: url('../images/popup/number_2_r.png');
+  content: url('/img/assets/popup/number_2_r.png');
   position: absolute;
   margin-top: -4px;
 }
 .operationPopupWindow .entryPopupHelperView .number3:before {
-  content: url('../images/popup/number_3_r.png');
+  content: url('/img/assets/popup/number_3_r.png');
   position: absolute;
   margin-top: -4px;
 }
 .operationPopupWindow .entryPopupHelperView.descStyle1 {
   width: 771px;
   height: 155px;
-  background: url('../images/popup/txt_1.png');
+  background: url('/img/assets/popup/txt_1.png');
 }
 .operationPopupWindow .entryPopupHelperView.descStyle2 {
   width: 771px;
   height: 175px;
-  background: url('../images/popup/txt_2.png');
+  background: url('/img/assets/popup/txt_2.png');
 }
 .operationPopupWindow .entryPopupHelperView.descStyle3 {
   width: 771px;
   height: 226px;
-  background: url('../images/popup/txt_3.png');
+  background: url('/img/assets/popup/txt_3.png');
 }
 .operationPopupWindow .entryPopupHelperContent {
   position: absolute;
@@ -3440,7 +3447,7 @@ span.CodeMirror-selectedtext {
   margin: auto;
 }
 .operationPopupWindow .entryPopupHelperContent .defaultChildText {
-  position: absolute;
+  position: fixed;
   left: 0;
   right: 0;
   top: 0;
@@ -3462,78 +3469,423 @@ span.CodeMirror-selectedtext {
 .operationPopupWindow .entryPopupHelperContent.operation1_1 {
   width: 477px;
   height: 341px;
-  background: url('../images/popup/operation1_1.png');
+  background: url('/img/assets/popup/operation1_1.png');
 }
 .operationPopupWindow .entryPopupHelperContent.operation1_2 {
   width: 402px;
   height: 364px;
-  background: url('../images/popup/operation1_2.png');
+  background: url('/img/assets/popup/operation1_2.png');
 }
 .operationPopupWindow .entryPopupHelperContent.operation1_3 {
   width: 595px;
   height: 263px;
-  background: url('../images/popup/operation1_3.png');
+  background: url('/img/assets/popup/operation1_3.png');
 }
 .operationPopupWindow .entryPopupHelperContent.operation1_4 {
   width: 460px;
   height: 375px;
-  background: url('../images/popup/operation1_4.png');
+  background: url('/img/assets/popup/operation1_4.png');
 }
 .operationPopupWindow .entryPopupHelperContent.operation7_1 {
   width: 634px;
   height: 207px;
-  background: url('../images/popup/operation7_1.png');
+  background: url('/img/assets/popup/operation7_1.png');
 }
 .operationPopupWindow .entryPopupHelperContent.operation7_2 {
   width: 571px;
   height: 312px;
-  background: url('../images/popup/operation7_2.png');
+  background: url('/img/assets/popup/operation7_2.png');
 }
 .operationPopupWindow .entryPopupHelperContent.operation7_3 {
   width: 625px;
   height: 356px;
-  background: url('../images/popup/operation7_3.png');
+  background: url('/img/assets/popup/operation7_3.png');
 }
 .operationPopupWindow .entryPopupHelperContent.operation7_4 {
   width: 680px;
   height: 214px;
-  background: url('../images/popup/operation7_4.png');
+  background: url('/img/assets/popup/operation7_4.png');
 }
 .operationPopupWindow .entryPopupHelperContent.operation9_1 {
   width: 213px;
   height: 120px;
-  background: url('../images/popup/operation9_1.png');
+  background: url('/img/assets/popup/operation9_1.png');
 }
 .operationPopupWindow .entryPopupHelperContent.operation9_2 {
   width: 534px;
   height: 387px;
-  background: url('../images/popup/operation9_2.png');
+  background: url('/img/assets/popup/operation9_2.png');
 }
 .operationPopupWindow .entryPopupHelperContent.operation9_3 {
   width: 506px;
   height: 207px;
-  background: url('../images/popup/operation9_3.png');
+  background: url('/img/assets/popup/operation9_3.png');
 }
 .operationPopupWindow .entryPopupHelperContent.operation10_1 {
   width: 665px;
   height: 333px;
-  background: url('../images/popup/operation10_1.png');
+  background: url('/img/assets/popup/operation10_1.png');
 }
 .operationPopupWindow .entryPopupHelperContent.operation10_2 {
   width: 271px;
   height: 167px;
-  background: url('../images/popup/operation10_2.png');
+  background: url('/img/assets/popup/operation10_2.png');
 }
 .operationPopupWindow .entryPopupHelperContent.operation10_3 {
   width: 275px;
   height: 167px;
-  background: url('../images/popup/operation10_3.png');
+  background: url('/img/assets/popup/operation10_3.png');
 }
 .operationPopupWindow .entryPopupHelperContent.operation10_4 {
   width: 637px;
   height: 191px;
-  background: url('../images/popup/operation10_4.png');
+  background: url('/img/assets/popup/operation10_4.png');
 }
+.operationPopupWindow .entryPopupHelperContent.operation15_1 {
+  width: 611px;
+  height: 335px;
+  background: url('/img/assets/popup/operation15_1.png');
+}
+.operationPopupWindow .entryPopupHelperContent.operation15_2 {
+  width: 218px;
+  height: 161px;
+  background: url('/img/assets/popup/operation15_2.png');
+}
+.operationPopupWindow .entryPopupHelperContent.operation15_3 {
+  width: 209px;
+  height: 217px;
+  background: url('/img/assets/popup/operation15_3.png');
+}
+.operationPopupWindow .entryPopupHelperContent.operation15_4 {
+  width: 603px;
+  height: 280px;
+  background: url('/img/assets/popup/operation15_4.png');
+}
+/* Object Popup:Begin */
+.entryPopupHelperWindow.objectPopupWindow {
+  width: 400px;
+  height: 219px;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+  z-index: 8000;
+  background-color: #ffffff;
+  border-top-left-radius: 6px;
+  border-top-right-radius: 6px;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+}
+.objectPopupWindow .entryPopupHelperContent.singleItem {
+  margin: 33px 56px 44px 21px;
+}
+.objectPopupWindow .entryPopupHelperContent.multiItem {
+  margin: 33px 56px 34px 21px;
+}
+.objectPopupWindow .entryPopupHelperContent div {
+  float: left;
+}
+.objectPopupWindow .entryPopupHelperContent .equal {
+  margin-left: 45px;
+  margin-top: 27px;
+  display: inline-block;
+  width: 39px;
+  height: 27px;
+  background: url('/img/assets/popup/equal.png');
+}
+.objectPopupWindow .entryPopupHelperContent .objectText {
+  width: 97px;
+  display: inline-block;
+  margin-left: 25px;
+  font-weight: bold;
+  color: #494949;
+  font-size: 27px;
+  line-height: 82px;
+  text-align: center;
+}
+.objectPopupWindow .entryPopupHelperContent .partsBox {
+  height: 82px;
+  display: inline-block;
+  background: url('/img/assets/popup/img_1.png');
+}
+.objectPopupWindow .entryPopupHelperContent .obstacle1 {
+  height: 82px;
+  display: inline-block;
+  background: url('/img/assets/popup/img_2.png');
+}
+.objectPopupWindow .entryPopupHelperContent .friend {
+  height: 82px;
+  display: inline-block;
+  background: url('/img/assets/popup/img_3.png');
+}
+.objectPopupWindow .entryPopupHelperContent .obstacle2 {
+  height: 82px;
+  display: inline-block;
+  background: url('/img/assets/popup/img_4.png');
+}
+.objectPopupWindow .entryPopupHelperContent .wall1 {
+  height: 82px;
+  display: inline-block;
+  background: url('/img/assets/popup/img_5.png');
+}
+.objectPopupWindow .entryPopupHelperContent .wall2 {
+  height: 82px;
+  display: inline-block;
+  background: url('/img/assets/popup/img_6.png');
+}
+.objectPopupWindow .entryPopupHelperContent .battery {
+  height: 82px;
+  display: inline-block;
+  background: url('/img/assets/popup/img_7.png');
+}
+.objectPopupWindow .entryPopupHelperContent .wall3 {
+  height: 82px;
+  display: inline-block;
+  background: url('/img/assets/popup/img_8.png');
+}
+.objectPopupWindow .entryPopupHelperContent .obstacle3 {
+  height: 82px;
+  display: inline-block;
+  background: url('/img/assets/popup/img_9.png');
+}
+/* Object Popup:End */
+/* Command Popup:Start */
+.entryPopupHelperWindow.commandPopupWindow {
+  top: 50%;
+  width: 580px;
+  position: absolute;
+  left: 0;
+  right: 0;
+  margin: auto;
+  max-width: 100%;
+  max-height: 100%;
+  z-index: 8000;
+}
+.commandPopupWindow .entryPopupHelperWrapper {
+  top: -50%;
+  padding-bottom: 35px;
+  position: relative;
+  background: #ffffff;
+  border-top-left-radius: 6px;
+  border-top-right-radius: 6px;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+  transform: translate3d(0, -50%, 0);
+}
+.commandPopupWindow .entryPopupHelperExampleBadge {
+  background: #50a0ff;
+  height: 30px;
+  width: 104px;
+  margin: 35px auto 0;
+  line-height: 30px;
+  padding: 0 29px;
+  color: #ffffff;
+  border-radius: 20px;
+  text-align: center;
+  font-size: 15px;
+  font-weight: bold;
+  white-space: nowrap;
+}
+.commandPopupWindow .entryPopupHelperLeft {
+  display: none;
+  width: 62px;
+  height: 62px;
+  background-image: url("/img/assets/popup/left_btn.png");
+  position: absolute;
+  margin-left: 25px;
+  margin-top: 196px;
+  cursor: pointer;
+  z-index: 1;
+}
+.commandPopupWindow .entryPopupHelperRight {
+  display: none;
+  right: 0;
+  width: 62px;
+  height: 62px;
+  background-image: url("/img/assets/popup/right_btn.png");
+  position: absolute;
+  margin-right: 25px;
+  margin-top: 196px;
+  cursor: pointer;
+  z-index: 1;
+}
+.commandPopupWindow .entryPopupHelperContentCommand {
+  text-align: center;
+  margin-top: 40px;
+  font-size: 27px;
+  color: #494949;
+  font-weight: bold;
+}
+.commandPopupWindow .entryPopupHelperContentCommand span {
+  text-align: left;
+  display: inline-block;
+}
+.commandPopupWindow .entryPopupHelperContentDesc {
+  font-size: 15px;
+  text-align: center;
+  margin-top: 24px;
+  color: #494949;
+}
+.commandPopupWindow .entryPopupHelperIndicator {
+  display: none;
+  text-align: center;
+}
+.commandPopupWindow .entryPopupHelperIndicator.show {
+  display: block;
+}
+.commandPopupWindow .entryPopupHelperIndicator .indicatorHr {
+  border-top: 1px solid #aaaaaa;
+  margin-top: 23px;
+  margin-bottom: 0px;
+  width: 250px;
+}
+.commandPopupWindow .entryPopupHelperIndicator .indicator {
+  width: 20px;
+  height: 20px;
+  background: #828282;
+  border-radius: 50%;
+  display: inline-block;
+  margin: 20px 25px 0 0;
+  cursor: pointer;
+}
+.commandPopupWindow .entryPopupHelperIndicator .indicator.on {
+  background: #2f50f4;
+  cursor: inherit;
+}
+.commandPopupWindow .entryPopupHelperIndicator .indicator:last-child {
+  margin-right: 0;
+}
+.commandPopupWindow .entryPopupHelperContentDesc .obstacleSet {
+  margin: 15px auto 0;
+  width: 207px;
+  height: 72px;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-image: url('/img/assets/popup/obstacleSet.png');
+}
+.commandPopupWindow .entryPopupHelperContent .move01 {
+  margin: 10px auto 0;
+  width: 240px;
+  height: 160px;
+  background: url('/img/assets/popup/move01.png');
+}
+.commandPopupWindow .entryPopupHelperContent .move02 {
+  margin: 23px auto 0;
+  width: 72px;
+  height: 38px;
+  background: url('/img/assets/popup/move02.png');
+}
+.commandPopupWindow .entryPopupHelperContent .jump01 {
+  margin: 10px auto 0;
+  width: 320px;
+  height: 160px;
+  background: url('/img/assets/popup/jump01.png');
+}
+.commandPopupWindow .entryPopupHelperContent .jump02 {
+  margin: 23px auto 0;
+  width: 71px;
+  height: 40px;
+  background: url('/img/assets/popup/jump02.png');
+}
+.commandPopupWindow .entryPopupHelperContent .right01 {
+  margin: 10px auto 0;
+  width: 160px;
+  height: 240px;
+  background: url('/img/assets/popup/right01.png');
+}
+.commandPopupWindow .entryPopupHelperContent .right02 {
+  margin: 23px auto 0;
+  width: 83px;
+  height: 60px;
+  background: url('/img/assets/popup/right02.png');
+}
+.commandPopupWindow .entryPopupHelperContent .left01 {
+  margin: 10px auto 0;
+  width: 160px;
+  height: 240px;
+  background: url('/img/assets/popup/left01.png');
+}
+.commandPopupWindow .entryPopupHelperContent .left02 {
+  margin: 23px auto 0;
+  width: 72px;
+  height: 60px;
+  background: url('/img/assets/popup/left02.png');
+}
+.commandPopupWindow .entryPopupHelperContent .for01 {
+  margin: 10px auto 0;
+  width: 320px;
+  height: 160px;
+  background: url('/img/assets/popup/for01.png');
+}
+.commandPopupWindow .entryPopupHelperContent .for02 {
+  margin: 23px auto 0;
+  width: 301px;
+  height: 61px;
+  background: url('/img/assets/popup/for02.png');
+}
+.commandPopupWindow .entryPopupHelperContent .while01 {
+  margin: 10px auto 0;
+  width: 320px;
+  height: 160px;
+  background: url('/img/assets/popup/while01.png');
+}
+.commandPopupWindow .entryPopupHelperContent .while02 {
+  margin: 23px auto 0;
+  width: 151px;
+  height: 61px;
+  background: url('/img/assets/popup/while02.png');
+}
+.commandPopupWindow .entryPopupHelperContent .if01 {
+  margin: 10px auto 0;
+  width: 320px;
+  height: 160px;
+  background: url('/img/assets/popup/if01.png');
+}
+.commandPopupWindow .entryPopupHelperContent .if02 {
+  margin: 23px auto 0;
+  width: 259px;
+  height: 126px;
+  background: url('/img/assets/popup/if02.png');
+}
+.commandPopupWindow .entryPopupHelperContent .if03 {
+  margin: 10px auto 0;
+  width: 320px;
+  height: 160px;
+  background: url('/img/assets/popup/if03.png');
+}
+.commandPopupWindow .entryPopupHelperContent .if04 {
+  margin: 23px auto 0;
+  width: 249px;
+  height: 126px;
+  background: url('/img/assets/popup/if04.png');
+}
+.commandPopupWindow .entryPopupHelperContent .if05 {
+  margin: 10px auto 0;
+  width: 320px;
+  height: 160px;
+  background: url('/img/assets/popup/if05.png');
+}
+.commandPopupWindow .entryPopupHelperContent .if06 {
+  margin: 23px auto 0;
+  width: 281px;
+  height: 126px;
+  background: url('/img/assets/popup/if06.png');
+}
+.commandPopupWindow .entryPopupHelperContent .promise01 {
+  margin: 10px auto 0;
+  width: 320px;
+  height: 240px;
+  background: url('/img/assets/popup/promise01.png');
+}
+.commandPopupWindow .entryPopupHelperContent .promise02 {
+  margin: 23px auto 0;
+  width: 262px;
+  height: 104px;
+  background: url('/img/assets/popup/promise02.png');
+}
+/* Command Popup:End */
 .entryFunctionEdit {
   position: absolute;
   width: 100%;
