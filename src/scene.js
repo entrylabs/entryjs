@@ -48,12 +48,11 @@ Entry.Scene.prototype.generateView = function(sceneView, option) {
             var ret = 40 + slope*x;
 
             if (y > ret) {
-                 console.log('select next scene');
                  var nextScene = that.getNextScene();
                  if (nextScene) {
                     var $sceneView = $(nextScene.view);
+                    $(document).trigger('mouseup');
                     $sceneView.trigger('mousedown');
-                    $(selectedScene.view).trigger('mouseup');
                  }
             }
         });
@@ -93,31 +92,6 @@ Entry.Scene.prototype.generateView = function(sceneView, option) {
             this.view_.appendChild(addButton);
             this.addButton_ = addButton;
         }
-
-
-        //var dummyView = Entry.createElement('span');
-        //dummyView.addClass('entrySceneDummyView');
-        //$(dummyView).on('mousedown, mousemove', function (e) {
-            //var offset = $(this).offset();
-            //var $window = $(window);
-            //var x = e.pageX - offset.left + $window.scrollLeft();
-            //var y = e.pageY - offset.top + $window.scrollTop();
-            //y = 40 - y;
-            //var slope = -40/55;
-            //var ret = 40 + slope*x;
-            //if (y > ret) {
-                 //console.log('select next scene');
-                 //var nextScene = that.getNextScene();
-                 ////if (nextScene) that.selectScene(nextScene);
-                 //if (nextScene) {
-                    //var $sceneView = $(nextScene.view);
-                    //$sceneView.trigger('mousedown');
-                    //console.log(e);
-                 //}
-            //}
-        //});
-        //this.view_.appendChild(dummyView);
-        //this._dummyView = dummyView;
     }
 };
 
@@ -469,6 +443,11 @@ Entry.Scene.prototype.resize = function() {
         var scene = scenes[i];
         var view = scene.view;
         view.addClass('minValue');
+
+        //jquery sortable bug
+        //style properties are not removed sometimes
+        $(view).removeProp('style');
+
         var inputWrapper = scene.inputWrapper;
         $(inputWrapper).width(
             Entry.computeInputWidth(scene.name)

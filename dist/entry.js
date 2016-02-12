@@ -9804,10 +9804,12 @@ Entry.Scene.prototype.generateView = function(a, b) {
   if (!b || "workspace" == b) {
     this.view_.addClass("entrySceneWorkspace");
     $(this.view_).on("mousedown", function(a) {
-      var b = $(this).offset(), d = $(window), h = a.pageX - b.left + d.scrollLeft(), b = a.pageY - b.top + d.scrollTop(), b = 40 - b, d = -40 / 55;
-      a = c.selectedScene;
-      var k = $(a.view).find(".entrySceneRemoveButtonCoverWorkspace").offset().left;
-      !(h < k || h > k + 55) && b > 40 + d * (h - k) && (console.log("select next scene"), h = c.getNextScene()) && ($(h.view).trigger("mousedown"), $(a.view).trigger("mouseup"));
+      var b = $(this).offset(), d = $(window), h = a.pageX - b.left + d.scrollLeft();
+      a = a.pageY - b.top + d.scrollTop();
+      a = 40 - a;
+      b = -40 / 55;
+      d = $(c.selectedScene.view).find(".entrySceneRemoveButtonCoverWorkspace").offset().left;
+      !(h < d || h > d + 55) && a > 40 + b * (h - d) && (h = c.getNextScene()) && (h = $(h.view), $(document).trigger("mouseup"), h.trigger("mousedown"));
     });
     var d = Entry.createElement("ul");
     d.addClass("entrySceneListWorkspace");
@@ -9988,6 +9990,7 @@ Entry.Scene.prototype.resize = function() {
     for (g in a) {
       var d = a[g], h = d.view;
       h.addClass("minValue");
+      $(h).removeProp("style");
       $(d.inputWrapper).width(Entry.computeInputWidth(d.name));
       h = $(h);
       f = f + h.width() + c;
