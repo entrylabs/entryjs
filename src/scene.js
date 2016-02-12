@@ -27,10 +27,36 @@ Entry.Scene.viewBasicWidth = 70;
  */
 Entry.Scene.prototype.generateView = function(sceneView, option) {
     /** @type {!Element} */
+    var that = this;
     this.view_ = sceneView;
     this.view_.addClass('entryScene');
     if (!option || option == 'workspace') {
         this.view_.addClass('entrySceneWorkspace');
+
+        $(this.view_).on('mousedown', function (e) {
+            var offset = $(this).offset();
+            var $window = $(window);
+            var x = e.pageX - offset.left + $window.scrollLeft();
+            var y = e.pageY - offset.top + $window.scrollTop();
+            y = 40 - y;
+            var slope = -40/55;
+            var selectedScene = that.selectedScene;
+            var selectedLeft = $(selectedScene.view).find('.entrySceneRemoveButtonCoverWorkspace').offset().left;
+            if (x < selectedLeft || x > selectedLeft + 55) return;
+
+            x -= selectedLeft;
+            var ret = 40 + slope*x;
+
+            if (y > ret) {
+                 console.log('select next scene');
+                 var nextScene = that.getNextScene();
+                 if (nextScene) {
+                    var $sceneView = $(nextScene.view);
+                    $sceneView.trigger('mousedown');
+                    $(selectedScene.view).trigger('mouseup');
+                 }
+            }
+        });
 
         var listView = Entry.createElement('ul');
         listView.addClass('entrySceneListWorkspace');
@@ -68,6 +94,30 @@ Entry.Scene.prototype.generateView = function(sceneView, option) {
             this.addButton_ = addButton;
         }
 
+
+        //var dummyView = Entry.createElement('span');
+        //dummyView.addClass('entrySceneDummyView');
+        //$(dummyView).on('mousedown, mousemove', function (e) {
+            //var offset = $(this).offset();
+            //var $window = $(window);
+            //var x = e.pageX - offset.left + $window.scrollLeft();
+            //var y = e.pageY - offset.top + $window.scrollTop();
+            //y = 40 - y;
+            //var slope = -40/55;
+            //var ret = 40 + slope*x;
+            //if (y > ret) {
+                 //console.log('select next scene');
+                 //var nextScene = that.getNextScene();
+                 ////if (nextScene) that.selectScene(nextScene);
+                 //if (nextScene) {
+                    //var $sceneView = $(nextScene.view);
+                    //$sceneView.trigger('mousedown');
+                    //console.log(e);
+                 //}
+            //}
+        //});
+        //this.view_.appendChild(dummyView);
+        //this._dummyView = dummyView;
     }
 };
 
@@ -86,6 +136,7 @@ Entry.Scene.prototype.generateElement = function(scene) {
             e.preventDefault();
             return;
         }
+        var elems = document.elementsFromPoint(e.pageX, e.pageY);
         Entry.scene.selectScene(scene);
     });
     var nameField = Entry.createElement('input');
@@ -443,4 +494,9 @@ Entry.Scene.prototype.resize = function() {
         }
 
     }
+};
+
+Entry.Scene.prototype.getNextScene = function() {
+    var scenes = this.getScenes();
+    return scenes[scenes.indexOf(this.selectedScene) + 1];
 };
