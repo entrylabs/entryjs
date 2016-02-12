@@ -8,18 +8,15 @@
  * @constructor
  */
 Entry.popupHelper = function() {
-    Entry.assert(!window.popupHelper, 'Popup exist');
-
-    this.pageIndex = 1;
-    
+    // Entry.assert(!window.popupHelper, 'Popup exist');    
     this.body_ = Entry.createElement('div');
     this.body_.addClass('entryPopup hiddenPopup');
     this.body_.bindOnClick(function(e) {
         if (e.target==this) {
-            this.popup.remove();
+            this.popup.hide();
         }
     });
-    window.popupHelper = this;
+    // window.popupHelper = this;
     this.body_.popup = this;
     this.window_ = Entry.createElement('div');
     this.window_.addClass('entryPopupHelperWindow');
@@ -31,7 +28,7 @@ Entry.popupHelper = function() {
     this.titleButton_.addClass('entryPopupHelperCloseButton');    
 
     this.titleButton_.addEventListener('click', (function () {
-        this.remove();
+        this.hide();
     }).bind(this));
 
     this.popupWrapper_ = Entry.createElement('div');

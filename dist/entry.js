@@ -8805,14 +8805,11 @@ Entry.Popup.prototype.resize = function(a) {
   a.style.height = String(c + 35) + "px";
 };
 Entry.popupHelper = function() {
-  Entry.assert(!window.popupHelper, "Popup exist");
-  this.pageIndex = 1;
   this.body_ = Entry.createElement("div");
   this.body_.addClass("entryPopup hiddenPopup");
   this.body_.bindOnClick(function(a) {
-    a.target == this && this.popup.remove();
+    a.target == this && this.popup.hide();
   });
-  window.popupHelper = this;
   this.body_.popup = this;
   this.window_ = Entry.createElement("div");
   this.window_.addClass("entryPopupHelperWindow");
@@ -8821,7 +8818,7 @@ Entry.popupHelper = function() {
   this.titleButton_ = Entry.createElement("div");
   this.titleButton_.addClass("entryPopupHelperCloseButton");
   this.titleButton_.addEventListener("click", function() {
-    this.remove();
+    this.hide();
   }.bind(this));
   this.popupWrapper_ = Entry.createElement("div");
   this.popupWrapper_.appendChild(this.titleButton_);
