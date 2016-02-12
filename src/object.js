@@ -246,10 +246,15 @@ Entry.EntryObject.prototype.generateView= function() {
                     return;
                 } else {
                     var objects_ = Entry.container.getAllObjects();
-                    for (var i in objects_) {
-                        objects_[i].editObjectValues(false);
+                    if (objects_.length > 1) {
+                        for (var i in objects_) {
+                            if (objects_[i].nameView_.hasClass('selectedEditingObject')) {
+                                objects_[i].editObjectValues(tog, 'selected');
+                            }
+                        }
                     }
                     object.editObjectValues(tog);
+
                 }
 
             });
@@ -1413,7 +1418,7 @@ Entry.EntryObject.prototype.updateInputViews = function(isLocked) {
 };
 
 var tog = true;
-Entry.EntryObject.prototype.editObjectValues = function(click) {
+Entry.EntryObject.prototype.editObjectValues = function(click, status) {
 
     var inputs;
     if(this.getLock()) {
@@ -1432,14 +1437,17 @@ Entry.EntryObject.prototype.editObjectValues = function(click) {
             inputs[i].addClass("selectedEditingObject");
         }
         this.nameView_.select();
-        tog = false;
+        if (!status)
+            tog = false;
+
     } else {
         for(var i=0; i<inputs.length; i++){
             inputs[i].setAttribute('disabled', 'disabled');
             inputs[i].removeClass('selectedEditingObject');
         }
         inputs[0].blur();
-        tog = true;
+        if (!status)
+            tog = true;
     }
 };
 

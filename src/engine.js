@@ -71,6 +71,13 @@ Entry.Engine.prototype.generateView = function(controlView, option) {
         this.view_.addClass('entryEngine_w');
         this.view_.addClass('entryEngineWorkspace_w');
 
+        this.view_.bindOnClick(function(e) {
+            var objects_ = Entry.container.getAllObjects();
+            for (var i in objects_) {
+                objects_[i].editObjectValues(false);
+            }
+        });
+
         var speedButton = Entry.createElement('button');
         this.speedButton = speedButton;
         this.speedButton.addClass('entrySpeedButtonWorkspace',
@@ -78,6 +85,11 @@ Entry.Engine.prototype.generateView = function(controlView, option) {
                                   'entryEngineButtonWorkspace_w');
         this.view_.appendChild(this.speedButton);
         this.speedButton.bindOnClick(function(e) {
+            var objects_ = Entry.container.getAllObjects();
+            for (var i in objects_) {
+                objects_[i].editObjectValues(false);
+            }
+
             Entry.engine.toggleSpeedPanel();
             speedButton.blur();
         });
@@ -89,6 +101,11 @@ Entry.Engine.prototype.generateView = function(controlView, option) {
                                      'entryMaximizeButtonWorkspace_w');
         this.view_.appendChild(this.maximizeButton);
         this.maximizeButton.bindOnClick(function(e) {
+            var objects_ = Entry.container.getAllObjects();
+            for (var i in objects_) {
+                objects_[i].editObjectValues(false);
+            }
+
             Entry.engine.toggleFullscreen();
         });
 
@@ -100,6 +117,11 @@ Entry.Engine.prototype.generateView = function(controlView, option) {
                                        'entryCoordinateButtonWorkspace_w');
         this.view_.appendChild(this.coordinateButton);
         this.coordinateButton.bindOnClick(function(e) {
+            var objects_ = Entry.container.getAllObjects();
+            for (var i in objects_) {
+                objects_[i].editObjectValues(false);
+            }
+            
             if (this.hasClass('toggleOn'))
                 this.removeClass('toggleOn');
             else
@@ -113,6 +135,10 @@ Entry.Engine.prototype.generateView = function(controlView, option) {
         this.addButton.addClass('entryAddButtonWorkspace_w');
         this.addButton.innerHTML = Lang.Workspace.add_object;
         this.addButton.bindOnClick(function(e) {
+            var objects_ = Entry.container.getAllObjects();
+            for (var i in objects_) {
+                objects_[i].editObjectValues(false);
+            }
             Entry.dispatchEvent('openSpriteManager');
         });
         this.view_.appendChild(this.addButton);
@@ -124,6 +150,11 @@ Entry.Engine.prototype.generateView = function(controlView, option) {
 
         this.view_.appendChild(this.runButton);
         this.runButton.bindOnClick(function(e) {
+            var objects_ = Entry.container.getAllObjects();
+            for (var i in objects_) {
+                objects_[i].editObjectValues(false);
+            }
+
             e.preventDefault();
             Entry.engine.toggleRun();
         });
@@ -136,6 +167,7 @@ Entry.Engine.prototype.generateView = function(controlView, option) {
             e.preventDefault();
             Entry.engine.toggleRun();
         });
+
 
         this.stopButton = Entry.createElement('button');
         this.stopButton.addClass('entryEngineButtonWorkspace_w');
@@ -249,6 +281,13 @@ Entry.Engine.prototype.generateView = function(controlView, option) {
     } else if (option == 'phone') {
         this.view_ = controlView;
         this.view_.addClass('entryEngine', 'entryEnginePhone');
+
+        this.view_.bindOnClick(function(e) {
+            var objects_ = Entry.container.getAllObjects();
+            for (var i in objects_) {
+                objects_[i].editObjectValues(false);
+            }
+        });
 
         this.headerView_ = Entry.createElement('div', 'entryEngineHeader');
         this.headerView_.addClass('entryEngineHeaderPhone');

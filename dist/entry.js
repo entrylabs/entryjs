@@ -5682,8 +5682,12 @@ Entry.Engine.prototype.generateView = function(a, b) {
       this.blur();
       a.preventDefault();
       Entry.engine.togglePause();
-    }), this.mouseView = Entry.createElement("div"), this.mouseView.addClass("entryMouseViewMinimize"), this.mouseView.addClass("entryRemove"), this.view_.appendChild(this.mouseView)) : "phone" == b && (this.view_ = a, this.view_.addClass("entryEngine", "entryEnginePhone"), this.headerView_ = Entry.createElement("div", "entryEngineHeader"), this.headerView_.addClass("entryEngineHeaderPhone"), this.view_.appendChild(this.headerView_), this.maximizeButton = Entry.createElement("button"), this.maximizeButton.addClass("entryEngineButtonPhone", 
-    "entryMaximizeButtonPhone"), this.headerView_.appendChild(this.maximizeButton), this.maximizeButton.bindOnClick(function(a) {
+    }), this.mouseView = Entry.createElement("div"), this.mouseView.addClass("entryMouseViewMinimize"), this.mouseView.addClass("entryRemove"), this.view_.appendChild(this.mouseView)) : "phone" == b && (this.view_ = a, this.view_.addClass("entryEngine", "entryEnginePhone"), this.view_.bindOnClick(function(a) {
+      a = Entry.container.getAllObjects();
+      for (var b in a) {
+        a[b].editObjectValues(!1);
+      }
+    }), this.headerView_ = Entry.createElement("div", "entryEngineHeader"), this.headerView_.addClass("entryEngineHeaderPhone"), this.view_.appendChild(this.headerView_), this.maximizeButton = Entry.createElement("button"), this.maximizeButton.addClass("entryEngineButtonPhone", "entryMaximizeButtonPhone"), this.headerView_.appendChild(this.maximizeButton), this.maximizeButton.bindOnClick(function(a) {
       Entry.engine.footerView_.addClass("entryRemove");
       Entry.engine.headerView_.addClass("entryRemove");
       Entry.launchFullScreen(Entry.engine.view_);
@@ -5704,11 +5708,21 @@ Entry.Engine.prototype.generateView = function(a, b) {
     this.view_ = a;
     this.view_.addClass("entryEngine_w");
     this.view_.addClass("entryEngineWorkspace_w");
+    this.view_.bindOnClick(function(a) {
+      a = Entry.container.getAllObjects();
+      for (var b in a) {
+        a[b].editObjectValues(!1);
+      }
+    });
     var c = Entry.createElement("button");
     this.speedButton = c;
     this.speedButton.addClass("entrySpeedButtonWorkspace", "entryEngineTopWorkspace", "entryEngineButtonWorkspace_w");
     this.view_.appendChild(this.speedButton);
     this.speedButton.bindOnClick(function(a) {
+      a = Entry.container.getAllObjects();
+      for (var b in a) {
+        a[b].editObjectValues(!1);
+      }
       Entry.engine.toggleSpeedPanel();
       c.blur();
     });
@@ -5716,6 +5730,10 @@ Entry.Engine.prototype.generateView = function(a, b) {
     this.maximizeButton.addClass("entryEngineButtonWorkspace_w", "entryEngineTopWorkspace", "entryMaximizeButtonWorkspace_w");
     this.view_.appendChild(this.maximizeButton);
     this.maximizeButton.bindOnClick(function(a) {
+      a = Entry.container.getAllObjects();
+      for (var b in a) {
+        a[b].editObjectValues(!1);
+      }
       Entry.engine.toggleFullscreen();
     });
     var d = Entry.createElement("button");
@@ -5723,6 +5741,10 @@ Entry.Engine.prototype.generateView = function(a, b) {
     this.coordinateButton.addClass("entryEngineButtonWorkspace_w", "entryEngineTopWorkspace", "entryCoordinateButtonWorkspace_w");
     this.view_.appendChild(this.coordinateButton);
     this.coordinateButton.bindOnClick(function(a) {
+      a = Entry.container.getAllObjects();
+      for (var b in a) {
+        a[b].editObjectValues(!1);
+      }
       this.hasClass("toggleOn") ? this.removeClass("toggleOn") : this.addClass("toggleOn");
       d.blur();
       Entry.stage.toggleCoordinator();
@@ -5732,6 +5754,10 @@ Entry.Engine.prototype.generateView = function(a, b) {
     this.addButton.addClass("entryAddButtonWorkspace_w");
     this.addButton.innerHTML = Lang.Workspace.add_object;
     this.addButton.bindOnClick(function(a) {
+      a = Entry.container.getAllObjects();
+      for (var b in a) {
+        a[b].editObjectValues(!1);
+      }
       Entry.dispatchEvent("openSpriteManager");
     });
     this.view_.appendChild(this.addButton);
@@ -5741,6 +5767,10 @@ Entry.Engine.prototype.generateView = function(a, b) {
     this.runButton.innerHTML = Lang.Workspace.run;
     this.view_.appendChild(this.runButton);
     this.runButton.bindOnClick(function(a) {
+      var b = Entry.container.getAllObjects(), c;
+      for (c in b) {
+        b[c].editObjectValues(!1);
+      }
       a.preventDefault();
       Entry.engine.toggleRun();
     });
@@ -6976,8 +7006,10 @@ Entry.EntryObject.prototype.generateView = function() {
       a.stopPropagation();
       if (!Entry.engine.isState("run")) {
         a = Entry.container.getAllObjects();
-        for (var c in a) {
-          a[c].editObjectValues(!1);
+        if (1 < a.length) {
+          for (var c in a) {
+            a[c].nameView_.hasClass("selectedEditingObject") && a[c].editObjectValues(tog, "selected");
+          }
         }
         b.editObjectValues(tog);
       }
@@ -7490,21 +7522,21 @@ Entry.EntryObject.prototype.updateInputViews = function(a) {
   }
 };
 var tog = !0;
-Entry.EntryObject.prototype.editObjectValues = function(a) {
-  var b;
-  b = this.getLock() ? [this.nameView_] : [this.nameView_, this.coordinateView_.xInput_, this.coordinateView_.yInput_, this.rotateInput_, this.directionInput_, this.coordinateView_.sizeInput_];
+Entry.EntryObject.prototype.editObjectValues = function(a, b) {
+  var c;
+  c = this.getLock() ? [this.nameView_] : [this.nameView_, this.coordinateView_.xInput_, this.coordinateView_.yInput_, this.rotateInput_, this.directionInput_, this.coordinateView_.sizeInput_];
   if (a) {
-    for (a = 0;a < b.length;a++) {
-      b[a].removeAttribute("disabled"), b[a].addClass("selectedEditingObject");
+    for (var d = 0;d < c.length;d++) {
+      c[d].removeAttribute("disabled"), c[d].addClass("selectedEditingObject");
     }
     this.nameView_.select();
-    tog = !1;
+    b || (tog = !1);
   } else {
-    for (a = 0;a < b.length;a++) {
-      b[a].setAttribute("disabled", "disabled"), b[a].removeClass("selectedEditingObject");
+    for (d = 0;d < c.length;d++) {
+      c[d].setAttribute("disabled", "disabled"), c[d].removeClass("selectedEditingObject");
     }
-    b[0].blur();
-    tog = !0;
+    c[0].blur();
+    b || (tog = !0);
   }
 };
 Entry.EntryObject.prototype.addStampEntity = function(a) {
@@ -8996,6 +9028,10 @@ Entry.Playground.prototype.generatePictureView = function(a) {
     var b = Entry.createElement("div", "entryAddPicture");
     b.addClass("entryPlaygroundAddPicture");
     b.bindOnClick(function(a) {
+      a = Entry.container.getAllObjects();
+      for (var b in a) {
+        a[b].editObjectValues(!1);
+      }
       Entry.dispatchEvent("openPictureManager");
     });
     var c = Entry.createElement("div", "entryAddPictureInner");
@@ -9020,6 +9056,10 @@ Entry.Playground.prototype.generatePictureView = function(a) {
     this.painter.initialize(b);
   } else {
     "phone" == Entry.type && (b = Entry.createElement("div", "entryAddPicture"), b.addClass("entryPlaygroundAddPicturePhone"), b.bindOnClick(function(a) {
+      a = Entry.container.getAllObjects();
+      for (var b in a) {
+        a[b].editObjectValues(!1);
+      }
       Entry.dispatchEvent("openPictureManager");
     }), c = Entry.createElement("div", "entryAddPictureInner"), c.addClass("entryPlaygroundAddPictureInnerPhone"), c.innerHTML = Lang.Workspace.picture_add, b.appendChild(c), a.appendChild(b), b = Entry.createElement("ul", "entryPictureList"), b.addClass("entryPlaygroundPictureListPhone"), $ && $(b).sortable({start:function(a, b) {
       b.item.data("start_pos", b.item.index());
@@ -9520,7 +9560,6 @@ Entry.Playground.prototype.setMenu = function(a) {
         for (b in a) {
           a[b].editObjectValues(!1);
         }
-        console.log(111);
         Entry.playground.selectMenu(this.id.substring(13));
       });
       Entry.type && "workspace" != Entry.type ? "phone" == Entry.type && d.addClass("entryCategoryElementPhone") : d.addClass("entryCategoryElementWorkspace");
@@ -9868,6 +9907,12 @@ Entry.Scene.prototype.generateView = function(a, b) {
   this.view_.addClass("entryScene");
   if (!b || "workspace" == b) {
     this.view_.addClass("entrySceneWorkspace");
+    this.view_.bindOnClick(function(a) {
+      a = Entry.container.getAllObjects();
+      for (var b in a) {
+        a[b].editObjectValues(!1);
+      }
+    });
     var c = Entry.createElement("ul");
     c.addClass("entrySceneListWorkspace");
     Entry.sceneEditable && $ && $(c).sortable({start:function(a, b) {
@@ -9987,6 +10032,10 @@ Entry.Scene.prototype.removeScene = function(a) {
   }
 };
 Entry.Scene.prototype.selectScene = function(a) {
+  var b = Entry.container.getAllObjects(), c;
+  for (c in b) {
+    b[c].editObjectValues(!1);
+  }
   a = a || this.getScenes()[0];
   this.selectedScene && this.selectedScene.id == a.id || (Entry.engine.isState("run") && Entry.container.resetSceneDuringRun(), this.selectedScene = a, Entry.container.setCurrentObjects(), Entry.stage.objectContainers && 0 !== Entry.stage.objectContainers.length && Entry.stage.selectObjectContainer(a), (a = Entry.container.getCurrentObjects()[0]) && "minimize" != Entry.type ? (Entry.container.selectObject(a.id), Entry.playground.refreshPlayground()) : (Entry.stage.selectObject(null), Entry.playground.flushPlayground(), 
   Entry.variableContainer.updateList()), Entry.container.listView_ || Entry.stage.sortZorder(), Entry.container.updateListView(), this.updateView());
@@ -12017,9 +12066,13 @@ Entry.VariableContainer.prototype.createDom = function(a) {
   var f = this;
   this.variableAddButton_ = c;
   c.bindOnClick(function(a) {
-    a = f.variableAddPanel;
-    var c = a.view.name.value.trim();
-    a.isOpen ? c && 0 !== c.length ? b.addVariable() : (a.view.addClass("entryRemove"), a.isOpen = !1) : (a.view.removeClass("entryRemove"), a.view.name.focus(), a.isOpen = !0);
+    a = Entry.container.getAllObjects();
+    for (var c in a) {
+      a[c].editObjectValues(!1);
+    }
+    c = f.variableAddPanel;
+    a = c.view.name.value.trim();
+    c.isOpen ? a && 0 !== a.length ? b.addVariable() : (c.view.addClass("entryRemove"), c.isOpen = !1) : (c.view.removeClass("entryRemove"), c.view.name.focus(), c.isOpen = !0);
   });
   this.generateVariableAddView();
   this.generateListAddView();
@@ -12032,6 +12085,10 @@ Entry.VariableContainer.prototype.createDom = function(a) {
   c.innerHTML = "+ " + Lang.Workspace.message_create;
   this.messageAddButton_ = c;
   c.bindOnClick(function(a) {
+    a = Entry.container.getAllObjects();
+    for (var c in a) {
+      a[c].editObjectValues(!1);
+    }
     b.addMessage({name:Lang.Workspace.message + " " + (b.messages_.length + 1)});
   });
   c = Entry.createElement("li");
@@ -12040,9 +12097,13 @@ Entry.VariableContainer.prototype.createDom = function(a) {
   c.innerHTML = "+ " + Lang.Workspace.list_create;
   this.listAddButton_ = c;
   c.bindOnClick(function(a) {
-    a = f.listAddPanel;
-    var c = a.view.name.value.trim();
-    a.isOpen ? c && 0 !== c.length ? b.addList() : (a.view.addClass("entryRemove"), a.isOpen = !1) : (a.view.removeClass("entryRemove"), a.view.name.focus(), a.isOpen = !0);
+    a = Entry.container.getAllObjects();
+    for (var c in a) {
+      a[c].editObjectValues(!1);
+    }
+    c = f.listAddPanel;
+    a = c.view.name.value.trim();
+    c.isOpen ? a && 0 !== a.length ? b.addList() : (c.view.addClass("entryRemove"), c.isOpen = !1) : (c.view.removeClass("entryRemove"), c.view.name.focus(), c.isOpen = !0);
   });
   c = Entry.createElement("li");
   c.addClass("entryVariableAddWorkspace");
@@ -12050,6 +12111,10 @@ Entry.VariableContainer.prototype.createDom = function(a) {
   c.innerHTML = "+ " + Lang.Workspace.function_create;
   this.functionAddButton_ = c;
   c.bindOnClick(function(a) {
+    a = Entry.container.getAllObjects();
+    for (var c in a) {
+      a[c].editObjectValues(!1);
+    }
     Entry.playground.changeViewMode("code");
     "func" != Entry.playground.selectedMenu && Entry.playground.selectMenu("func");
     b.createFunction();
@@ -12063,6 +12128,10 @@ Entry.VariableContainer.prototype.createSelectButton = function(a, b) {
   d.addClass("entryVariableSelectButtonWorkspace", a);
   d.innerHTML = Lang.Workspace[a];
   b ? d.bindOnClick(function(b) {
+    b = Entry.container.getAllObjects();
+    for (var d in b) {
+      b[d].editObjectValues(!1);
+    }
     c.selectFilter(a);
     this.addClass("selected");
   }) : d.addClass("disable");

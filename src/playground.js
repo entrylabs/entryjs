@@ -451,6 +451,11 @@ Entry.Playground.prototype.generatePictureView = function(PictureView) {
         var pictureAdd = Entry.createElement('div', 'entryAddPicture');
         pictureAdd.addClass('entryPlaygroundAddPicture');
         pictureAdd.bindOnClick(function(e) {
+            var objects_ = Entry.container.getAllObjects();
+            for (var i in objects_) {
+                objects_[i].editObjectValues(false);
+            }
+
             Entry.dispatchEvent('openPictureManager');
         });
         var innerPictureAdd = Entry.createElement('div', 'entryAddPictureInner');
@@ -487,6 +492,11 @@ Entry.Playground.prototype.generatePictureView = function(PictureView) {
         var pictureAdd = Entry.createElement('div', 'entryAddPicture');
         pictureAdd.addClass('entryPlaygroundAddPicturePhone');
         pictureAdd.bindOnClick(function(e) {
+            var objects_ = Entry.container.getAllObjects();
+            for (var i in objects_) {
+                objects_[i].editObjectValues(false);
+            }
+            
             Entry.dispatchEvent('openPictureManager');
         });
         var innerPictureAdd = Entry.createElement('div', 'entryAddPictureInner');
@@ -1338,7 +1348,6 @@ Entry.Playground.prototype.setMenu = function(objectType) {
             for (var i in objects_) {
                 objects_[i].editObjectValues(false);
             }
-            console.log(111)
             Entry.playground.selectMenu(this.id.substring(13));
         });
         if (!Entry.type || Entry.type == 'workspace') {
