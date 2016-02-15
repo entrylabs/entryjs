@@ -897,8 +897,32 @@ Entry.Playground.prototype.injectCode = function() {
     var object = this.object;
     Blockly.mainWorkspace.clear();
     Blockly.Xml.domToWorkspace(Blockly.mainWorkspace, object.script);
+    this.adjust();
 };
 
+Entry.Playground.prototype.adjust = function() {
+    var hScroll = Blockly.mainWorkspace.scrollbar.hScroll;
+    var vScroll = Blockly.mainWorkspace.scrollbar.vScroll;
+    hScroll.svgGroup_.setAttribute('opacity', '1');
+    vScroll.svgGroup_.setAttribute('opacity', '1');
+    
+    Blockly.removeAllRanges();
+    
+    var metrics = Blockly.mainWorkspace.getMetrics();
+    var x = 0;
+    var y = 0;
+    x = Math.min(x, -metrics.contentLeft);
+    y = Math.min(y, -metrics.contentTop);
+    x = Math.max(x, metrics.viewWidth - metrics.contentLeft -
+                 metrics.contentWidth);
+    y = Math.max(y, metrics.viewHeight - metrics.contentTop -
+                 metrics.contentHeight);
+
+    // Move the scrollbars and the page will scroll automatically.
+    Blockly.mainWorkspace.scrollbar.set(-x - metrics.contentLeft,
+                                        -y - metrics.contentTop);
+    
+};
 /**
  * Inject picture
  */
