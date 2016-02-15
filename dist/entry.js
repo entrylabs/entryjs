@@ -8804,33 +8804,51 @@ Entry.Popup.prototype.resize = function(a) {
   a.style.width = String(b) + "px";
   a.style.height = String(c + 35) + "px";
 };
-Entry.popupHelper = function() {
+Entry.popupHelper = function(a) {
+  this.popupList = {};
+  a && (window.popupHelper = null);
+  Entry.assert(!window.popupHelper, "Popup exist");
   this.body_ = Entry.createElement("div");
   this.body_.addClass("entryPopup hiddenPopup");
-  this.body_.bindOnClick(function(a) {
-    a.target == this && this.popup.hide();
+  this.body_.bindOnClick(function(b) {
+    b.target == this && this.popup.hide();
   });
+  window.popupHelper = this;
   this.body_.popup = this;
-  this.window_ = Entry.createElement("div");
-  this.window_.addClass("entryPopupHelperWindow");
-  this.title_ = Entry.createElement("div");
-  this.title_.addClass("entryPopupHelperTitle");
-  this.titleButton_ = Entry.createElement("div");
-  this.titleButton_.addClass("entryPopupHelperCloseButton");
-  this.titleButton_.addEventListener("click", function() {
-    this.hide();
-  }.bind(this));
-  this.popupWrapper_ = Entry.createElement("div");
-  this.popupWrapper_.appendChild(this.titleButton_);
-  this.popupWrapper_.appendChild(this.title_);
-  this.popupWrapper_.addClass("entryPopupHelperWrapper");
-  this.window_.appendChild(this.popupWrapper_);
-  this.body_.appendChild(this.window_);
   document.body.appendChild(this.body_);
 };
+Entry.popupHelper.prototype.clearPopup = function() {
+  for (var a = this.popupWrapper_.children.length - 1;2 < a;a--) {
+    this.popupWrapper_.removeChild(this.popupWrapper_.children[a]);
+  }
+};
+Entry.popupHelper.prototype.addPopup = function(a, b) {
+  var c = Entry.createElement("div");
+  c.addClass("entryPopupHelperWindow");
+  var d = Entry.createElement("div");
+  d.addClass("entryPopupHelperTitle");
+  var e = Entry.createElement("div");
+  e.addClass("entryPopupHelperCloseButton");
+  e.addEventListener("click", function() {
+    this.hide();
+  }.bind(this));
+  var f = Entry.createElement("div");
+  f.appendChild(e);
+  f.appendChild(d);
+  f.addClass("entryPopupHelperWrapper");
+  c.appendChild(f);
+  c.popupWrapper_ = f;
+  d.textContent = b.title;
+  "function" === typeof b.setPopupLayout && b.setPopupLayout(c);
+  this.popupList[a] = c;
+};
+Entry.popupHelper.prototype.hasPopup = function(a) {
+  return !!this.popupList[a];
+};
 Entry.popupHelper.prototype.setPopup = function(a) {
+  this.clearPopup();
   this.title_.textContent = a.title;
-  "function" === typeof a.setPopupLayout && a.setPopupLayout(this, a.content);
+  "function" === typeof a.setPopupLayout && a.setPopupLayout(this);
 };
 Entry.popupHelper.prototype.remove = function() {
   Entry.removeElement(this.body_);
@@ -8838,183 +8856,15 @@ Entry.popupHelper.prototype.remove = function() {
 };
 Entry.popupHelper.prototype.resize = function(a) {
 };
-Entry.popupHelper.prototype.show = function() {
+Entry.popupHelper.prototype.show = function(a) {
+  0 < this.body_.childNodes.length && this.body_.removeChild(this.body_.childNodes[0]);
+  this.body_.appendChild(this.popupList[a]);
   this.body_.removeClass("hiddenPopup");
 };
 Entry.popupHelper.prototype.hide = function() {
   this.body_.addClass("hiddenPopup");
 };
-function testCm() {
-  var a = {pageIndex:0, setPopupLayout:function(b) {
-    this.exampleBadge_ = Entry.createElement("div");
-    this.exampleBadge_.addClass("entryPopupHelperExampleBadge");
-    this.exampleBadge_.textContent = "\uc608\uc2dc";
-    this.leftButton_ = Entry.createElement("div");
-    this.leftButton_.addClass("entryPopupHelperLeft");
-    this.leftButton_.addEventListener("click", function() {
-      this.setPrevStep();
-    }.bind(this));
-    this.rightButton_ = Entry.createElement("div");
-    this.rightButton_.addClass("entryPopupHelperRight");
-    this.rightButton_.addEventListener("click", function() {
-      this.setNextStep();
-    }.bind(this));
-    this.indicator_ = Entry.createElement("div");
-    this.indicator_.addClass("entryPopupHelperIndicator");
-    if (1 < this.content.length) {
-      var a = Entry.createElement("hr");
-      a.addClass("indicatorHr");
-      this.indicator_.appendChild(a);
-      a = Entry.createElement("span");
-      a.addClass("indicator");
-      for (var d = 0;d < this.content.length;d++) {
-        var e = a.cloneNode(!0);
-        this.indicator_.appendChild(e);
-      }
-      var f = this, g = $(this.indicator_);
-      g.off().on("click", "span:not(.on)", function() {
-        var b = g.find("span").index(this);
-        f.setNthStep(b);
-      });
-      this.indicator_.addClass("show");
-    }
-    this.content_ = Entry.createElement("div");
-    this.content_.addClass("entryPopupHelperContent");
-    this.contentCommand_ = Entry.createElement("div");
-    this.contentCommand_.addClass("entryPopupHelperContentCommand");
-    this.contentDesc_ = Entry.createElement("div");
-    this.contentDesc_.addClass("entryPopupHelperContentDesc");
-    a = Entry.createElement("div");
-    a.appendChild(this.leftButton_);
-    a.appendChild(this.rightButton_);
-    a.appendChild(this.contentCommand_);
-    a.appendChild(this.contentDesc_);
-    a.appendChild(this.exampleBadge_);
-    a.appendChild(this.content_);
-    a.appendChild(this.indicator_);
-    b.popupWrapper_.appendChild(a);
-    b.window_.addClass("commandPopupWindow");
-    this.setContent(this);
-  }, setContent:function() {
-    1 < this.content.length ? (0 === this.pageIndex ? (this.rightButton_.addClass("show"), this.leftButton_.removeClass("show")) : this.pageIndex === this.content.length - 1 ? (this.leftButton_.addClass("show"), this.rightButton_.removeClass("show")) : (this.rightButton_.addClass("show"), this.leftButton_.addClass("show")), $(this.indicator_).find("span").removeClass("on"), $(this.indicator_).find("span:eq(" + this.pageIndex + ")").addClass("on")) : (this.rightButton_.removeClass("show"), this.leftButton_.removeClass("show"));
-    var b = this.content[this.pageIndex];
-    this.contentCommand_.innerHTML = "<span>" + b.command + "</span>";
-    this.contentDesc_.innerHTML = b.description;
-    this.content_.innerHTML = "";
-    b.images.forEach(function(b) {
-      var a = Entry.createElement("div");
-      a.addClass(b);
-      this.content_.appendChild(a);
-    }.bind(this));
-  }, setNthStep:function(b) {
-    this.pageIndex = b;
-    this.setContent();
-  }, setNextStep:function() {
-    this.pageIndex++;
-    this.setContent();
-  }, setPrevStep:function() {
-    this.pageIndex--;
-    this.setContent();
-  }, title:Lang.Menus.maze_command_title, content:[{command:"move();", description:Lang.Menus.maze_command_move_desc, images:["move01", "move02"]}, {command:"jump();", description:Lang.Menus.maze_command_jump_desc, images:["jump01", "jump02"]}, {command:"right();", description:Lang.Menus.maze_command_right_desc, images:["right01", "right02"]}, {command:"left();", description:Lang.Menus.maze_command_left_desc, images:["left01", "left02"]}, {command:"for (var i = 0; i < 1; i++){</br>}", description:Lang.Menus.maze_command_for_desc, 
-  images:["for01", "for02"]}, {command:"while (true) {</br>}", description:Lang.Menus.maze_command_while_desc, images:["while01", "while02"]}, {command:'if (front == "wall") {</br>}', description:Lang.Menus.maze_command_if1_desc, images:["if01", "if02"]}, {command:'if (front == "Bee") {</br>}', description:Lang.Menus.maze_command_if2_desc, images:["if03", "if04"]}, {command:'if (front == "banana") {</br>}', description:Lang.Menus.maze_command_if3_desc, images:["if05", "if06"]}, {command:"promise();", 
-  description:Lang.Menus.maze_command_promise_desc, images:["promise01", "promise02"]}]};
-  window.cm = new Entry.popupHelper;
-  cm.setPopup(a);
-  cm.show();
-}
-function testOb() {
-  var a = {setPopupLayout:function(b) {
-    this.content_ = Entry.createElement("div");
-    this.content_.addClass("entryPopupHelperContent");
-    b.popupWrapper_.appendChild(this.content_);
-    b.window_.addClass("objectPopupWindow");
-    this.setContent(this, b);
-  }, setContent:function(b, a) {
-    1 === this.object.length ? (b.content_.addClass("singleItem"), a.window_.style.height = "219px") : (b.content_.addClass("multiItem"), a.window_.style.height = 107 * this.object.length + 102 + "px");
-    this.object.forEach(function(d, e) {
-      var f = Entry.createElement("div");
-      0 < e && (f.style.marginTop = "25px");
-      var g = Entry.createElement("div");
-      g.addClass(d.class);
-      var h = Entry.createElement("div");
-      h.addClass("equal");
-      var k = Entry.createElement("div");
-      k.addClass("objectText");
-      "small" === d.type ? (g.style.width = "82px", g.style.marginLeft = "35px") : (g.style.width = "162px", a.window_.style.width = "480px", b.content_.style.paddingLeft = "35px");
-      k.textContent = d.text;
-      f.appendChild(g);
-      f.appendChild(h);
-      f.appendChild(k);
-      b.content_.appendChild(f);
-    });
-  }, title:Lang.Menus.maze_object_title, popupType:"big", object:[{type:"small", text:Lang.Menus.maze_object_parts_box, class:"partsBox"}, {type:"small", text:Lang.Menus.maze_object_obstacle1, class:"obstacle1"}, {type:"small", text:Lang.Menus.maze_object_friend, class:"friend"}, {type:"small", text:Lang.Menus.maze_object_obstacle2, class:"obstacle2"}, {type:"big", text:Lang.Menus.maze_object_wall1, class:"wall1"}, {type:"big", text:Lang.Menus.maze_object_wall2, class:"wall2"}, {type:"small", text:Lang.Menus.maze_object_battery, 
-  class:"battery"}, {type:"big", text:Lang.Menus.maze_object_wall3, class:"wall3"}, {type:"small", text:Lang.Menus.maze_object_obstacle3, class:"obstacle3"}]};
-  window.ob = new Entry.popupHelper;
-  ob.setPopup(a);
-  ob.show();
-}
-function testOp() {
-  var a = {pageIndex:0, setPopupLayout:function(b) {
-    this.stepBadge_ = Entry.createElement("div");
-    this.stepBadge_.addClass("entryPopupHelperStep");
-    this.leftButton_ = Entry.createElement("div");
-    this.leftButton_.addClass("entryPopupHelperLeft");
-    this.leftButton_.addEventListener("click", function() {
-      this.setPrevStep();
-    }.bind(this));
-    this.rightButton_ = Entry.createElement("div");
-    this.rightButton_.addClass("entryPopupHelperRight");
-    this.rightButton_.addEventListener("click", function() {
-      this.setNextStep();
-    }.bind(this));
-    this.view_ = Entry.createElement("div");
-    this.view_.addClass("entryPopupHelperView");
-    window.testView = this.view_;
-    this.content_ = Entry.createElement("div");
-    this.content_.addClass("entryPopupHelperContent");
-    b.window_.addClass("operationPopupWindow");
-    b.popupWrapper_.appendChild(this.stepBadge_);
-    b.popupWrapper_.appendChild(this.leftButton_);
-    b.popupWrapper_.appendChild(this.rightButton_);
-    b.popupWrapper_.appendChild(this.content_);
-    b.popupWrapper_.appendChild(this.view_);
-    this.setSetpBadge();
-    this.setContent();
-  }, setSetpBadge:function() {
-    this.stepBadge_.textContent = ["STEP ", this.pageIndex + 1, "/", this.content.length].join("");
-  }, setContent:function() {
-    0 < this.content.length ? 0 === this.pageIndex ? (this.rightButton_.addClass("show"), this.leftButton_.removeClass("show")) : this.pageIndex === this.content.length - 1 ? (this.leftButton_.addClass("show"), this.rightButton_.removeClass("show")) : (this.rightButton_.addClass("show"), this.leftButton_.addClass("show")) : (this.rightButton_.removeClass("show"), this.leftButton_.removeClass("show"));
-    this.setSetpBadge();
-    var b = this.content[this.pageIndex];
-    this.view_.innerHTML = b.description;
-    this.view_.className = ["entryPopupHelperView", b.descStyle].join(" ");
-    this.content_.innerHTML = "";
-    this.content_.className = ["entryPopupHelperContent", b.contentStyle].join(" ");
-    if (b.textSet && 0 < b.textSet.length) {
-      for (var a in b.textSet) {
-        var d = b.textSet[a], e = Entry.createElement("div");
-        e.innerHTML = d.text;
-        e.addClass("defaultChildText");
-        e.style.bottom = [d.y, "px"].join("");
-        e.style.left = [d.x, "px"].join("");
-        e.style.textAlign = d.align || e.style.textAlign;
-        e.style.textAlign && "center" !== e.style.textAlign && (e.style.width = "1px");
-        this.content_.appendChild(e);
-      }
-    }
-  }, setNextStep:function() {
-    this.pageIndex++;
-    this.setContent();
-  }, setPrevStep:function() {
-    this.pageIndex--;
-    this.setContent();
-  }, title:Lang.Menus.maze_operation9_title, content:[{description:Lang.Menus.maze_operation9_1_desc, contentStyle:"operation9_1", descStyle:"descStyle1", textSet:[{text:Lang.Menus.maze_operation9_1_textset_1, x:155, y:-90}]}, {description:Lang.Menus.maze_operation9_2_desc, contentStyle:"operation9_2", descStyle:"descStyle1"}, {description:Lang.Menus.maze_operation9_3_desc, contentStyle:"operation9_3", descStyle:"descStyle1", textSet:[{text:Lang.Menus.maze_operation9_3_textset_1, x:-345, y:-160}, 
-  {text:Lang.Menus.maze_operation9_3_textset_2, x:365, y:-160}]}]};
-  window.op = new Entry.popupHelper;
-  op.setPopup(a);
-  op.show();
-}
-;Entry.getStartProject = function(a) {
+Entry.getStartProject = function(a) {
   return {category:"\uae30\ud0c0", scenes:[{name:"\uc7a5\uba74 1", id:"7dwq"}], variables:[{name:"\ucd08\uc2dc\uacc4", id:"brih", visible:!1, value:"0", variableType:"timer", x:150, y:-70, array:[], object:null, isCloud:!1}, {name:"\ub300\ub2f5", id:"1vu8", visible:!1, value:"0", variableType:"answer", x:150, y:-100, array:[], object:null, isCloud:!1}], objects:[{id:"7y0y", name:"\uc5d4\ud2b8\ub9ac\ubd07", script:'<xml><block type="when_run_button_click" x="136" y="47"><next><block type="repeat_basic"><value name="VALUE"><block type="number"><field name="NUM">10</field></block></value><statement name="DO"><block type="move_direction"><value name="VALUE"><block type="number"><field name="NUM">10</field></block></value></block></statement></block></next></block></xml>', 
   selectedPictureId:"vx80", objectType:"sprite", rotateMethod:"free", scene:"7dwq", sprite:{sounds:[{duration:1.3, ext:".mp3", id:"8el5", fileurl:a + "media/bark.mp3", name:"\uac15\uc544\uc9c0 \uc9d6\ub294\uc18c\ub9ac"}], pictures:[{id:"vx80", fileurl:a + "media/entrybot1.png", name:"\uc5d4\ud2b8\ub9ac\ubd07_\uac77\uae301", scale:100, dimension:{width:284, height:350}}, {id:"4t48", fileurl:a + "media/entrybot2.png", name:"\uc5d4\ud2b8\ub9ac\ubd07_\uac77\uae302", scale:100, dimension:{width:284, height:350}}]}, 
   entity:{x:0, y:0, regX:142, regY:175, scaleX:.3154574132492113, scaleY:.3154574132492113, rotation:0, direction:90, width:284, height:350, visible:!0}, lock:!1, active:!0}], speed:60};
@@ -13942,41 +13792,41 @@ Entry.Code = function(a) {
       }
     }
   };
-  a.getEventMap = function(b) {
-    return this._eventMap[b];
+  a.getEventMap = function(a) {
+    return this._eventMap[a];
   };
-  a.map = function(b) {
-    this._data.map(b);
+  a.map = function(a) {
+    this._data.map(a);
   };
   a.tick = function() {
-    for (var b = this.executors, a = 0;a < b.length;a++) {
-      var d = b[a];
+    for (var a = this.executors, c = 0;c < a.length;c++) {
+      var d = a[c];
       d.execute();
-      null === d.scope.block && (b.splice(a, 1), a--, 0 === b.length && this.executeEndEvent.notify());
+      null === d.scope.block && (a.splice(c, 1), c--, 0 === a.length && this.executeEndEvent.notify());
     }
   };
   a.clearExecutors = function() {
     this.executors = [];
   };
-  a.createThread = function(b) {
-    if (!(b instanceof Array)) {
+  a.createThread = function(a) {
+    if (!(a instanceof Array)) {
       return console.error("blocks must be array");
     }
-    b = new Entry.Thread(b, this);
-    this._data.push(b);
-    return b;
+    a = new Entry.Thread(a, this);
+    this._data.push(a);
+    return a;
   };
-  a.cloneThread = function(b, a) {
-    var d = b.clone(this, a);
+  a.cloneThread = function(a, c) {
+    var d = a.clone(this, c);
     this._data.push(d);
     return d;
   };
-  a.destroyThread = function(b, a) {
-    var d = this._data, e = d.indexOf(b);
+  a.destroyThread = function(a, c) {
+    var d = this._data, e = d.indexOf(a);
     0 > e || d.splice(e, 1);
   };
-  a.doDestroyThread = function(b, a) {
-    var d = this._data, e = d.indexOf(b);
+  a.doDestroyThread = function(a, c) {
+    var d = this._data, e = d.indexOf(a);
     0 > e || d.splice(e, 1);
   };
   a.getThreads = function() {
