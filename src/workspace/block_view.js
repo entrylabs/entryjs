@@ -822,9 +822,8 @@ Entry.BlockView.PARAM_SPACE = 5;
     };
 
     p.getRipplePosition = function() {
-        return {
-            console.log(this);
-        };
+        var dragHeight = this.getBoard().dragBlock.dragInstance.height;
+        return {cx:8, cy:this.height + 1 - dragHeight};
     };
 
 })(Entry.BlockView.prototype);
