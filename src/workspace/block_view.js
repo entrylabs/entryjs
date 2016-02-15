@@ -821,4 +821,10 @@ Entry.BlockView.PARAM_SPACE = 5;
             (this._skeleton.readOnly !== undefined ? this._skeleton.readOnly : false);
     };
 
+    p.getRipplePosition = function() {
+        return {
+            console.log(this);
+        };
+    };
+
 })(Entry.BlockView.prototype);

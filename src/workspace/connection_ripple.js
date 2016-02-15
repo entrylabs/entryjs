@@ -21,9 +21,11 @@ goog.provide("Entry.ConnectionRipple");
         var ripple = this._ripple;
         var svgGroup = blockView.svgGroup;
         ripple.remove();
-        var cy = blockView.svgGroup.getBBox().height;
-        var block = blockView.block;
-        if (block) cy -= block.next.view.svgGroup.getBBox().height;
+
+
+
+
+
         ripple.attr({cy: cy});
         svgGroup.append(ripple);
         ripple._startTime = new Date();
