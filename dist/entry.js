@@ -13103,6 +13103,14 @@ Entry.BlockView = function(a, b, c) {
   d.magnets && d.magnets().next && (this.svgGroup.nextMagnet = this.block);
   this.isInBlockMenu = this.getBoard() instanceof Entry.BlockMenu;
   d.morph && this.block.observe(this, "_renderPath", d.morph, !1);
+  var e = this;
+  this.mouseHandler = function() {
+    var b = e.block.events;
+    b && b.mousedown && b.mousedown.forEach(function(b) {
+      b();
+    });
+    e.onMouseDown.apply(e, arguments);
+  };
   this.prevObserver = null;
   this._startRender(a, c);
   this.block.observe(this, "_bindPrev", ["prev"]);
@@ -13239,14 +13247,10 @@ Entry.BlockView.PARAM_SPACE = 5;
     return this._moveTo(this.x + b, this.y + a, d);
   };
   a._addControl = function() {
-    var b = this;
-    this.svgGroup.mousedown(function() {
-      var a = b.block.events;
-      a && a.mousedown && a.mousedown.forEach(function(b) {
-        b();
-      });
-      b.onMouseDown.apply(b, arguments);
-    });
+    this.svgGroup.mousedown(this.mouseHandler);
+  };
+  a.removeControl = function() {
+    this.svgGroup.unmousedown(this.mouseHandler);
   };
   a.onMouseDown = function(b) {
     function c(b) {
@@ -13391,10 +13395,13 @@ Entry.BlockView.PARAM_SPACE = 5;
     b && this.set({animating:b.animating});
   };
   a.dominate = function() {
+    this.getBoard().svgBlockGroup.append(this.getSvgRoot());
+  };
+  a.getSvgRoot = function() {
     for (var b = this.getBoard().svgBlockGroup, a = this.svgGroup;a.parent() !== b;) {
       a = a.parent();
     }
-    b.append(a);
+    return a;
   };
   a.getBoard = function() {
     return this._board;
@@ -13781,6 +13788,13 @@ Entry.Field = function() {
     this.value = b;
     this._block.params[this._index] = b;
   };
+  a._isEditable = function() {
+    if (this._block.view.dragMode == Entry.DRAG_MODE_MOUSEDOWN) {
+      return !0;
+    }
+    var b = this._block.view, a = b.getBoard().selectedBlockView;
+    return a ? b.getSvgRoot() == a.svgGroup : !1;
+  };
 })(Entry.Field.prototype);
 Entry.FieldAngle = function(a, b, c) {
   this._block = b.block;
@@ -13805,7 +13819,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
     this._header = this.svgGroup.rect(0, d - 8, b, 16, 3).attr({fill:"#fff", "fill-opacity":.4});
     this.svgGroup.append(this.textElement);
     this.svgGroup.mouseup(function(b) {
-      a._block.view.dragMode == Entry.DRAG_MODE_MOUSEDOWN && a.renderOptions();
+      a._isEditable() && a.renderOptions();
     });
     this.box.set({x:0, y:0, width:b, height:16});
   };
@@ -13911,7 +13925,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldColor);
     d ? (a = d.x || 0, d = d.y || 0) : (a = 0, d = -8);
     this._header = this.svgGroup.rect(a, d, 14.5, 16, 0).attr({fill:this.getValue()});
     this.svgGroup.mouseup(function(a) {
-      c._block.view.dragMode == Entry.DRAG_MODE_MOUSEDOWN && c.renderOptions();
+      c._isEditable() && c.renderOptions();
     });
     this.box.set({x:a, y:d, width:14.5, height:16});
   };
@@ -13979,7 +13993,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
     this.svgGroup.append(this.textElement);
     this._arrow = this.svgGroup.polygon(0, -2, 6, -2, 3, 2).attr({fill:a._schema.color, stroke:a._schema.color, transform:"t" + (d - 11) + " 0"});
     this.svgGroup.mouseup(function(a) {
-      c._block.view.dragMode == Entry.DRAG_MODE_MOUSEDOWN && c.renderOptions();
+      c._isEditable() && c.renderOptions();
     });
     this.box.set({x:0, y:0, width:d, height:e});
   };
@@ -14009,7 +14023,10 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
       k = l.text(20, 13, k).attr({"alignment-baseline":"central"});
       e = Math.max(k.node.getComputedTextLength() + 50, e);
       (function(c, d) {
-        c.mousedown(function() {
+        c.mousedown(function(a) {
+          a.stopPropagation();
+        });
+        c.mouseup(function() {
           a.applyValue(d);
           a.destroyOption();
         });
@@ -14129,7 +14146,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldKeyboard);
     this._header = this.svgGroup.rect(0, d - 8, a, 16, 3).attr({fill:"#fff", "fill-opacity":.4});
     this.svgGroup.append(this.textElement);
     this.svgGroup.mouseup(function(a) {
-      c._block.view.dragMode == Entry.DRAG_MODE_MOUSEDOWN && c.renderOptions();
+      c._isEditable() && c.renderOptions();
     });
     this.box.set({x:0, y:0, width:a, height:16});
   };
@@ -14309,8 +14326,8 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
     this.svgGroup = this._blockView.contentSvgGroup.group();
     this.box.set({x:0, y:0, width:0, height:20});
     this._thread = this.getValue();
-    var c = this._thread.getFirstBlock();
-    c && c.isDummy ? (this.dummyBlock = c, this.dummyBlock.appendSvg(this)) : (this.dummyBlock = new Entry.FieldDummyBlock(this, this._blockView), this._thread.insertDummyBlock(this.dummyBlock), this._inspectThread(), this._thread.createView(a), this.dummyBlock.observe(this, "_inspectThread", ["next"]), this.dummyBlock.observe(this, "calcWH", ["next"]));
+    (a = this._thread.getFirstBlock()) && a.isDummy ? (this.dummyBlock = a, this.dummyBlock.appendSvg(this)) : (this.dummyBlock = new Entry.FieldDummyBlock(this, this._blockView), this._thread.insertDummyBlock(this.dummyBlock), this._inspectThread(), this.dummyBlock.observe(this, "_inspectThread", ["next"]), this.dummyBlock.observe(this, "calcWH", ["next"]));
+    this._blockView.getBoard().constructor == Entry.BlockMenu && this.dummyBlock.next.view.removeControl();
     this.calcWH();
   };
   a.align = function(a, c, d) {
@@ -14544,7 +14561,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
     this._header = this.svgGroup.rect(0, d - 8, a, 16, 3).attr({fill:"#fff", "fill-opacity":.4});
     this.svgGroup.append(this.textElement);
     this.svgGroup.mouseup(function(a) {
-      c._block.view.dragMode == Entry.DRAG_MODE_MOUSEDOWN && c.renderOptions();
+      c._isEditable() && c.renderOptions();
     });
     this.box.set({x:0, y:0, width:a, height:16});
   };

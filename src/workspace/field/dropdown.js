@@ -83,8 +83,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
             });
 
         this.svgGroup.mouseup(function(e) {
-            if (that._block.view.dragMode == Entry.DRAG_MODE_MOUSEDOWN)
-                that.renderOptions();
+            if (that._isEditable()) that.renderOptions();
         });
 
         this.box.set({
@@ -118,7 +117,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
         var blockView = this._block.view;
 
         this.documentDownEvent = Entry.documentMousedown.attach(
-            this, function(){
+            this, function() {
                 Entry.documentMousedown.detach(this.documentDownEvent);
                 that.optionGroup.remove();
             }
@@ -175,7 +174,10 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
             );
 
             (function(elem, value) {
-                elem.mousedown(function(){
+                //prevent propagation to document
+                elem.mousedown(function(e){e.stopPropagation();});
+
+                elem.mouseup(function(){
                     that.applyValue(value);
                     that.destroyOption();
                 });

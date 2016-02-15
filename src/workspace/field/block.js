@@ -51,13 +51,15 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
             this.dummyBlock = new Entry.FieldDummyBlock(this, this._blockView);
             this._thread.insertDummyBlock(this.dummyBlock);
             this._inspectThread();
-            this._thread.createView(board);
             this.dummyBlock.observe(this, "_inspectThread", ["next"]);
             this.dummyBlock.observe(this, "calcWH", ["next"]);
         } else {
             this.dummyBlock = firstBlock;
             this.dummyBlock.appendSvg(this);
         }
+
+        if (this._blockView.getBoard().constructor == Entry.BlockMenu)
+            this.dummyBlock.next.view.removeControl();
 
         this.calcWH();
     };

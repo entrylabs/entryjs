@@ -28,6 +28,14 @@ Entry.BlockView = function(block, board, mode) {
     if (skeleton.morph)
         this.block.observe(this, "_renderPath", skeleton.morph, false);
 
+    var that = this;
+    this.mouseHandler = function() {
+        var events = that.block.events;
+        if (events && events.mousedown)
+            events.mousedown.forEach(function(fn){fn();});
+
+        that.onMouseDown.apply(that, arguments);
+    }
     this.prevObserver = null;
     this._startRender(block, mode);
 
@@ -286,14 +294,11 @@ Entry.BlockView.PARAM_SPACE = 5;
     };
 
     p._addControl = function() {
-        var that = this;
-        this.svgGroup.mousedown(function() {
-            var events = that.block.events;
-            if (events && events.mousedown)
-                events.mousedown.forEach(function(fn){fn();});
+        this.svgGroup.mousedown(this.mouseHandler);
+    };
 
-            that.onMouseDown.apply(that, arguments);
-        });
+    p.removeControl = function() {
+        this.svgGroup.unmousedown(this.mouseHandler);
     };
 
     p.onMouseDown = function(e) {
@@ -602,13 +607,17 @@ Entry.BlockView.PARAM_SPACE = 5;
     };
 
     p.dominate = function() {
-        var svgBlockGroup = this.getBoard().svgBlockGroup;
+        this.getBoard()
+            .svgBlockGroup
+            .append(this.getSvgRoot());
+    };
 
+    p.getSvgRoot = function() {
+        var svgBlockGroup = this.getBoard().svgBlockGroup;
         var node = this.svgGroup;
         while (node.parent() !== svgBlockGroup)
             node = node.parent();
-
-        svgBlockGroup.append(node);
+        return node;
     };
 
     p.getBoard = function() {return this._board;};
