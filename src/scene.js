@@ -27,10 +27,35 @@ Entry.Scene.viewBasicWidth = 70;
  */
 Entry.Scene.prototype.generateView = function(sceneView, option) {
     /** @type {!Element} */
+    var that = this;
     this.view_ = sceneView;
     this.view_.addClass('entryScene');
     if (!option || option == 'workspace') {
         this.view_.addClass('entrySceneWorkspace');
+
+        $(this.view_).on('mousedown', function (e) {
+            var offset = $(this).offset();
+            var $window = $(window);
+            var x = e.pageX - offset.left + $window.scrollLeft();
+            var y = e.pageY - offset.top + $window.scrollTop();
+            y = 40 - y;
+            var slope = -40/55;
+            var selectedScene = that.selectedScene;
+            var selectedLeft = $(selectedScene.view).find('.entrySceneRemoveButtonCoverWorkspace').offset().left;
+            if (x < selectedLeft || x > selectedLeft + 55) return;
+
+            x -= selectedLeft;
+            var ret = 40 + slope*x;
+
+            if (y > ret) {
+                 var nextScene = that.getNextScene();
+                 if (nextScene) {
+                    var $sceneView = $(nextScene.view);
+                    $(document).trigger('mouseup');
+                    $sceneView.trigger('mousedown');
+                 }
+            }
+        });
 
         var listView = Entry.createElement('ul');
         listView.addClass('entrySceneListWorkspace');
@@ -67,7 +92,6 @@ Entry.Scene.prototype.generateView = function(sceneView, option) {
             this.view_.appendChild(addButton);
             this.addButton_ = addButton;
         }
-
     }
 };
 
@@ -86,6 +110,7 @@ Entry.Scene.prototype.generateElement = function(scene) {
             e.preventDefault();
             return;
         }
+        var elems = document.elementsFromPoint(e.pageX, e.pageY);
         Entry.scene.selectScene(scene);
     });
     var nameField = Entry.createElement('input');
@@ -418,6 +443,11 @@ Entry.Scene.prototype.resize = function() {
         var scene = scenes[i];
         var view = scene.view;
         view.addClass('minValue');
+
+        //jquery sortable bug
+        //style properties are not removed sometimes
+        $(view).removeProp('style');
+
         var inputWrapper = scene.inputWrapper;
         $(inputWrapper).width(
             Entry.computeInputWidth(scene.name)
@@ -443,4 +473,9 @@ Entry.Scene.prototype.resize = function() {
         }
 
     }
+};
+
+Entry.Scene.prototype.getNextScene = function() {
+    var scenes = this.getScenes();
+    return scenes[scenes.indexOf(this.selectedScene) + 1];
 };

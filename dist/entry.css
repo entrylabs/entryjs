@@ -4202,6 +4202,18 @@
   color: #4b37a0;
   background-position: center left;
 }
+.entrySceneDummyView {
+  width: 55px;
+  height: 40px;
+  background-color: orange;
+  display: inline-block;
+  opacity: 0.3;
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 889;
+  left: 100px;
+}
 
 .block {
   cursor: url('../images/handopen.cur') 8 5, auto;
