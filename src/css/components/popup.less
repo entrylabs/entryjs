@@ -1,4 +1,5 @@
 .entryPopup {
+    overflow: hidden;
     position: absolute;
     margin: 0;
     padding: 0;
@@ -25,22 +26,35 @@
 }
 
 .hiddenPopup {
-    display: none;    
+    display: none;
 }
 
 .entryPopupHelperWindow {
-    
+    .entryPopupHelperCloseButton{
+        width: 13px;
+        height: 13px;
+        position: absolute;
+        right: 10px;
+        top: 10px;
+        background-image: url('/img/assets/popup/x_btn.png');
+        cursor: pointer;
+    }
+
+    .entryPopupHelperTitle {
+        width: 100%;
+        height: 60px;
+        background-color: @titleBack;
+        font-weight: bold;
+        font-size: 20px;
+        line-height: 60px;
+        padding-left: 32px;
+        color: @white;
+        border-top-left-radius: 5px;
+        border-top-right-radius: 5px;
+    }
 }
 
-.entryPopupHelperWindow .entryPopupHelperCloseButton{
-    width: 13px;
-    height: 13px;
-    position: absolute;
-    right: 10px;
-    top: 10px;
-    background-image: url('/img/assets/popup/x_btn.png');
-    cursor: pointer;
-}
+
 
 .entryPopupHelperWindow.operationPopupWindow {
     width: 840px;
@@ -59,49 +73,6 @@
     border-bottom-right-radius: 5px;
 }
 
-.entryPopupHelperWindow .entryPopupHelperTitle {
-    width: 100%;
-    height: 60px;
-    background-color: @titleBack;
-    font-weight: bold;
-    font-size: 20px;
-    line-height: 60px;
-    padding-left: 32px;
-    color: @white;
-    border-top-left-radius: 5px;
-    border-top-right-radius: 5px;
-}
-
-
-.operationPopupWindow .entryPopupHelperStep {
-    background: @stepBack;
-    height: 36px;
-    width: 122px;
-    margin-left: 32px;
-    margin-top: 20px;
-    line-height: 36px;
-    padding: 0 29px;
-    color: @white;
-    border: solid 1px @stepBorder;
-    border-radius: 20px;
-    text-align: center;
-    font-size: 15px;
-    font-weight: bold;
-    white-space: nowrap;
-}
-
-.operationPopupWindow .entryPopupHelperLeft {
-    display: none;
-    width: 62px;    
-    height: 62px;
-    background-image: url("/img/assets/popup/left_btn.png");
-    position: absolute;     
-    margin-left: 25px;
-    margin-top: 193px;
-    cursor: pointer;
-    z-index: 1;
-}
-
 .operationPopupWindow .entryPopupHelperLeft.show,
 .commandPopupWindow .entryPopupHelperLeft.show {
     display: block;
@@ -114,18 +85,6 @@
     background-image: url("/img/assets/popup/left_btn_on.png");
 }
 
-.operationPopupWindow .entryPopupHelperRight {
-    display: none;
-    right: 0;
-    width: 62px;
-    height: 62px;
-    background-image: url("/img/assets/popup/right_btn.png");
-    position: absolute;     
-    margin-right: 25px;
-    margin-top: 193px;
-    cursor: pointer;
-    z-index: 1;
-}
 
 .operationPopupWindow .entryPopupHelperRight.show,
 .commandPopupWindow .entryPopupHelperRight.show {
@@ -139,29 +98,10 @@
     background-image: url("/img/assets/popup/right_btn_on.png");
 }
 
-.operationPopupWindow .entryPopupHelperView {
-    position: absolute;
-    bottom: 30px;
-    left: 34px;
-    font-size: 17px;
-    padding: 24px 150px 0 19px;
-    color: @viewText;
-}
-
 .operationPopupWindow .entryPopupHelperView .textShadow,
 .commandPopupWindow .entryPopupHelperContentDesc .textShadow {
     background-color: @viewShadow;
     padding: 3px 1px 0;
-}
-
-.operationPopupWindow .entryPopupHelperView .textUnderline{
-    border-bottom: @viewUnder solid 2px;
-    box-shadow: inset 0 -1px 0px 0px @viewUnder;
-}
-
-.operationPopupWindow .entryPopupHelperView .textBadge {
-    margin-right: 30px;
-    margin-left: 3px;
 }
 
 .numberBefore {
@@ -173,185 +113,248 @@
     padding-bottom: 5px;
 }
 
-.operationPopupWindow .entryPopupHelperView .number1:before{
-    content: url('/img/assets/popup/number_1_r.png');
-    .numberBefore;
-}
 
-.operationPopupWindow .entryPopupHelperView .number2:before{
-    content: url('/img/assets/popup/number_2_r.png');
-    .numberBefore;
-}
+.operationPopupWindow{
+    .entryPopupHelperStep {
+        background: @stepBack;
+        height: 36px;
+        width: 122px;
+        margin-left: 32px;
+        margin-top: 20px;
+        line-height: 36px;
+        padding: 0 29px;
+        color: @white;
+        border: solid 1px @stepBorder;
+        border-radius: 20px;
+        text-align: center;
+        font-size: 15px;
+        font-weight: bold;
+        white-space: nowrap;
+    }
+    .entryPopupHelperLeft {
+        display: none;
+        width: 62px;    
+        height: 62px;
+        background-image: url("/img/assets/popup/left_btn.png");
+        position: absolute;     
+        margin-left: 25px;
+        margin-top: 193px;
+        cursor: pointer;
+        z-index: 1;
+    }
 
-.operationPopupWindow .entryPopupHelperView .number3:before{
-    content: url('/img/assets/popup/number_3_r.png');
-    .numberBefore;
-}
+    .entryPopupHelperRight {
+        display: none;
+        right: 0;
+        width: 62px;
+        height: 62px;
+        background-image: url("/img/assets/popup/right_btn.png");
+        position: absolute;     
+        margin-right: 25px;
+        margin-top: 193px;
+        cursor: pointer;
+        z-index: 1;
+    }
 
-.operationPopupWindow .entryPopupHelperView.descStyle1 {
-    width: 771px;
-    height: 155px;
-    background: url('/img/assets/popup/txt_1.png');
-}
+    .entryPopupHelperView {
+        position: absolute;
+        bottom: 30px;
+        left: 34px;
+        font-size: 17px;
+        padding: 24px 150px 0 19px;
+        color: @viewText;
+    }
 
-.operationPopupWindow .entryPopupHelperView.descStyle2 {
-    width: 771px;
-    height: 175px;
-    background: url('/img/assets/popup/txt_2.png');
-}
+    .entryPopupHelperView .textUnderline{
+        border-bottom: @viewUnder solid 2px;
+        box-shadow: inset 0 -1px 0px 0px @viewUnder;
+    }
 
-.operationPopupWindow .entryPopupHelperView.descStyle3 {
-    width: 771px;
-    height: 226px;
-    background: url('/img/assets/popup/txt_3.png');
-}
+    .entryPopupHelperView .textBadge {
+        margin-right: 30px;
+        margin-left: 3px;
+    }
 
-.operationPopupWindow .entryPopupHelperContent {
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: 0;
-    bottom: 80px;
-    margin: auto;
-}
+    .entryPopupHelperView .number1:before{
+        content: url('/img/assets/popup/number_1_r.png');
+        .numberBefore;
+    }
 
-.operationPopupWindow .entryPopupHelperContent .defaultChildText {
-    position: fixed;
-    left: 0;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    height: 15px;
-    line-height: 15px;
-    margin: auto;
-    white-space: nowrap;
-    text-align: center;
-    color: #004051;
-    font-size: 15px;
-}
+    .entryPopupHelperView .number2:before{
+        content: url('/img/assets/popup/number_2_r.png');
+        .numberBefore;
+    }
 
-.operationPopupWindow .entryPopupHelperContent .defaultChildText .textMultiline {
-    line-height: 23px;
-}
+    .entryPopupHelperView .number3:before{
+        content: url('/img/assets/popup/number_3_r.png');
+        .numberBefore;
+    }
 
-.operationPopupWindow .entryPopupHelperContent .defaultChildText .textEmphasis {
-    color: @viewEmphasis;
-}
+    .entryPopupHelperView.descStyle1 {
+        width: 771px;
+        height: 155px;
+        background: url('/img/assets/popup/txt_1.png');
+    }
 
-.operationPopupWindow .entryPopupHelperContent.operation1_1 {
-    width: 477px;
-    height: 341px;
-    background: url('/img/assets/popup/operation1_1.png');
-}
+    .entryPopupHelperView.descStyle2 {
+        width: 771px;
+        height: 175px;
+        background: url('/img/assets/popup/txt_2.png');
+    }
 
-.operationPopupWindow .entryPopupHelperContent.operation1_2 {
-    width: 402px;
-    height: 364px;
-    background: url('/img/assets/popup/operation1_2.png');
-}
+    .entryPopupHelperView.descStyle3 {
+        width: 771px;
+        height: 226px;
+        background: url('/img/assets/popup/txt_3.png');
+    }
 
-.operationPopupWindow .entryPopupHelperContent.operation1_3 {
-    width: 595px;
-    height: 263px;
-    background: url('/img/assets/popup/operation1_3.png');
-}
+    .entryPopupHelperContent {
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 80px;
+        margin: auto;
+    }
 
-.operationPopupWindow .entryPopupHelperContent.operation1_4 {
-    width: 460px;
-    height: 375px;
-    background: url('/img/assets/popup/operation1_4.png');
-}
+    .entryPopupHelperContent .defaultChildText {
+        position: fixed;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        height: 15px;
+        line-height: 15px;
+        margin: auto;
+        white-space: nowrap;
+        text-align: center;
+        color: #004051;
+        font-size: 15px;
 
-.operationPopupWindow .entryPopupHelperContent.operation7_1 {
-    width: 634px;
-    height: 207px;
-    background: url('/img/assets/popup/operation7_1.png');
-}
+        .textMultiline {
+            line-height: 23px;
+        }
 
-.operationPopupWindow .entryPopupHelperContent.operation7_2 {
-    width: 571px;
-    height: 312px;
-    background: url('/img/assets/popup/operation7_2.png');
-}
+        .textEmphasis {
+            color: @viewEmphasis;
+        }
+    }
 
-.operationPopupWindow .entryPopupHelperContent.operation7_3 {
-    width: 625px;
-    height: 356px;
-    background: url('/img/assets/popup/operation7_3.png');
-}
+    .entryPopupHelperContent.operation1_1 {
+        width: 477px;
+        height: 341px;
+        background: url('/img/assets/popup/operation1_1.png');
+    }
 
-.operationPopupWindow .entryPopupHelperContent.operation7_4 {
-    width: 680px;
-    height: 214px;
-    background: url('/img/assets/popup/operation7_4.png');
-}
+    .entryPopupHelperContent.operation1_2 {
+        width: 402px;
+        height: 364px;
+        background: url('/img/assets/popup/operation1_2.png');
+    }
 
-.operationPopupWindow .entryPopupHelperContent.operation9_1 {
-    width: 213px;
-    height: 120px;
-    background: url('/img/assets/popup/operation9_1.png');
-}
+    .entryPopupHelperContent.operation1_3 {
+        width: 595px;
+        height: 263px;
+        background: url('/img/assets/popup/operation1_3.png');
+    }
 
-.operationPopupWindow .entryPopupHelperContent.operation9_2 {
-    width: 534px;
-    height: 387px;
-    background: url('/img/assets/popup/operation9_2.png');
-}
+    .entryPopupHelperContent.operation1_4 {
+        width: 460px;
+        height: 375px;
+        background: url('/img/assets/popup/operation1_4.png');
+    }
 
-.operationPopupWindow .entryPopupHelperContent.operation9_3 {
-    width: 506px;
-    height: 207px;
-    background: url('/img/assets/popup/operation9_3.png');
-}
+    .entryPopupHelperContent.operation7_1 {
+        width: 634px;
+        height: 207px;
+        background: url('/img/assets/popup/operation7_1.png');
+    }
 
+    .entryPopupHelperContent.operation7_2 {
+        width: 571px;
+        height: 312px;
+        background: url('/img/assets/popup/operation7_2.png');
+    }
 
-.operationPopupWindow .entryPopupHelperContent.operation10_1 {
-    width: 665px;
-    height: 333px;
-    background: url('/img/assets/popup/operation10_1.png');
-}
+    .entryPopupHelperContent.operation7_3 {
+        width: 625px;
+        height: 356px;
+        background: url('/img/assets/popup/operation7_3.png');
+    }
 
-.operationPopupWindow .entryPopupHelperContent.operation10_2 {
-    width: 271px;
-    height: 167px;
-    background: url('/img/assets/popup/operation10_2.png');
-}
+    .entryPopupHelperContent.operation7_4 {
+        width: 680px;
+        height: 214px;
+        background: url('/img/assets/popup/operation7_4.png');
+    }
 
-.operationPopupWindow .entryPopupHelperContent.operation10_3 {
-    width: 275px;
-    height: 167px;
-    background: url('/img/assets/popup/operation10_3.png');
-}
+    .entryPopupHelperContent.operation9_1 {
+        width: 213px;
+        height: 120px;
+        background: url('/img/assets/popup/operation9_1.png');
+    }
 
-.operationPopupWindow .entryPopupHelperContent.operation10_4 {
-    width: 637px;
-    height: 191px;
-    background: url('/img/assets/popup/operation10_4.png');
-}
-.operationPopupWindow .entryPopupHelperContent.operation15_1 {
-    width: 611px;
-    height: 335px;
-    background: url('/img/assets/popup/operation15_1.png');
-}
+    .entryPopupHelperContent.operation9_2 {
+        width: 534px;
+        height: 387px;
+        background: url('/img/assets/popup/operation9_2.png');
+    }
 
-.operationPopupWindow .entryPopupHelperContent.operation15_2 {
-    width: 218px;
-    height: 161px;
-    background: url('/img/assets/popup/operation15_2.png');
-}
+    .entryPopupHelperContent.operation9_3 {
+        width: 506px;
+        height: 207px;
+        background: url('/img/assets/popup/operation9_3.png');
+    }
 
-.operationPopupWindow .entryPopupHelperContent.operation15_3 {
-    width: 209px;
-    height: 217px;
-    background: url('/img/assets/popup/operation15_3.png');
-}
+    .entryPopupHelperContent.operation10_1 {
+        width: 665px;
+        height: 333px;
+        background: url('/img/assets/popup/operation10_1.png');
+    }
 
-.operationPopupWindow .entryPopupHelperContent.operation15_4 {
-    width: 603px;
-    height: 280px;
-    background: url('/img/assets/popup/operation15_4.png');
-}
+    .entryPopupHelperContent.operation10_2 {
+        width: 271px;
+        height: 167px;
+        background: url('/img/assets/popup/operation10_2.png');
+    }
 
+    .entryPopupHelperContent.operation10_3 {
+        width: 275px;
+        height: 167px;
+        background: url('/img/assets/popup/operation10_3.png');
+    }
+
+    .entryPopupHelperContent.operation10_4 {
+        width: 637px;
+        height: 191px;
+        background: url('/img/assets/popup/operation10_4.png');
+    }
+
+    .entryPopupHelperContent.operation15_1 {
+        width: 611px;
+        height: 335px;
+        background: url('/img/assets/popup/operation15_1.png');
+    }
+
+    .entryPopupHelperContent.operation15_2 {
+        width: 218px;
+        height: 161px;
+        background: url('/img/assets/popup/operation15_2.png');
+    }
+
+    .entryPopupHelperContent.operation15_3 {
+        width: 209px;
+        height: 217px;
+        background: url('/img/assets/popup/operation15_3.png');
+    }
+
+    .entryPopupHelperContent.operation15_4 {
+        width: 603px;
+        height: 280px;
+        background: url('/img/assets/popup/operation15_4.png');
+    }
+
+} 
 
 /* Object Popup:Begin */
 
@@ -370,90 +373,83 @@
     border-bottom-right-radius: 5px;
 }
 
-.objectPopupWindow .entryPopupHelperContent.singleItem {
-    margin:33px 56px 44px 21px;
-}
+.objectPopupWindow {
+    .entryPopupHelperContent.singleItem {
+        margin:33px 56px 44px 21px;
+    }   
+    .entryPopupHelperContent.multiItem {
+        margin:33px 56px 34px 21px;
+    }
+    .entryPopupHelperContent {
+        div{
+            float: left;
+        }
+        .equal {
+            margin-left: 45px;
+            margin-top: 27px;
+            display: inline-block;
+            width: 39px;
+            height: 27px;
+            background: url('/img/assets/popup/equal.png');
+        }
+        .objectText {
+            width: 97px;
+            display: inline-block;
+            margin-left: 25px;
+            font-weight: bold;
+            color: @objectText;
+            font-size: 27px;
+            line-height: 82px;
+            text-align: center;
+            white-space: nowrap;
+        }
+        .partsBox {
+            height: 82px;
+            display: inline-block;
+            background: url('/img/assets/popup/img_1.png');
+        }
+        .obstacle1 {
+            height: 82px;
+            display: inline-block;
+            background: url('/img/assets/popup/img_2.png');
+        }
+        .friend {
+            height: 82px;
+            display: inline-block;
+            background: url('/img/assets/popup/img_3.png');
+        }
+        .obstacle2 {
+            height: 82px;
+            display: inline-block;
+            background: url('/img/assets/popup/img_4.png');
+        }
+        .wall1 {
+            height: 82px;
+            display: inline-block;
+            background: url('/img/assets/popup/img_5.png');
+        }
+        .wall2 {
+            height: 82px;
+            display: inline-block;
+            background: url('/img/assets/popup/img_6.png');
+        }
+        .battery {
+            height: 82px;
+            display: inline-block;
+            background: url('/img/assets/popup/img_7.png');
+        }
+        .wall3 {
+            height: 82px;
+            display: inline-block;
+            background: url('/img/assets/popup/img_8.png');
+        }
+        .obstacle3 {
+            height: 82px;
+            display: inline-block;
+            background: url('/img/assets/popup/img_9.png');
+        }
+    }
 
-.objectPopupWindow .entryPopupHelperContent.multiItem {
-    margin:33px 56px 34px 21px;
-}
-
-.objectPopupWindow .entryPopupHelperContent div{
-    float: left;
-}
-
-.objectPopupWindow .entryPopupHelperContent .equal {
-    margin-left: 45px;
-    margin-top: 27px;
-    display: inline-block;
-    width: 39px;
-    height: 27px;
-    background: url('/img/assets/popup/equal.png');
-}
-
-.objectPopupWindow .entryPopupHelperContent .objectText {
-    width: 97px;
-    display: inline-block;
-    margin-left: 25px;
-    font-weight: bold;
-    color: @objectText;
-    font-size: 27px;
-    line-height: 82px;
-    text-align: center;
-}
-
-.objectPopupWindow .entryPopupHelperContent .partsBox {
-    height: 82px;
-    display: inline-block;
-    background: url('/img/assets/popup/img_1.png');
-}
-
-.objectPopupWindow .entryPopupHelperContent .obstacle1 {
-    height: 82px;
-    display: inline-block;
-    background: url('/img/assets/popup/img_2.png');
-}
-
-.objectPopupWindow .entryPopupHelperContent .friend {
-    height: 82px;
-    display: inline-block;
-    background: url('/img/assets/popup/img_3.png');
-}
-
-.objectPopupWindow .entryPopupHelperContent .obstacle2 {
-    height: 82px;
-    display: inline-block;
-    background: url('/img/assets/popup/img_4.png');
-}
-
-.objectPopupWindow .entryPopupHelperContent .wall1 {
-    height: 82px;
-    display: inline-block;
-    background: url('/img/assets/popup/img_5.png');
-}
-
-.objectPopupWindow .entryPopupHelperContent .wall2 {
-    height: 82px;
-    display: inline-block;
-    background: url('/img/assets/popup/img_6.png');
-}
-
-.objectPopupWindow .entryPopupHelperContent .battery {
-    height: 82px;
-    display: inline-block;
-    background: url('/img/assets/popup/img_7.png');
-}
-
-.objectPopupWindow .entryPopupHelperContent .wall3 {
-    height: 82px;
-    display: inline-block;
-    background: url('/img/assets/popup/img_8.png');
-}
-
-.objectPopupWindow .entryPopupHelperContent .obstacle3 {
-    height: 82px;
-    display: inline-block;
-    background: url('/img/assets/popup/img_9.png');
 }
 /* Object Popup:End */
 
@@ -469,260 +465,266 @@
     z-index: 8000;
 }
 
-.commandPopupWindow .entryPopupHelperWrapper {
-    top: -50%;
-    padding-bottom: 35px;
-    position: relative;
-    background: @white;
-    border-top-left-radius: 6px;
-    border-top-right-radius: 6px;
-    border-bottom-left-radius: 5px;
-    border-bottom-right-radius: 5px;
-    transform: translate3d(0, -50%, 0);
-}
+.commandPopupWindow{
+    .entryPopupHelperWrapper {
+        top: -50%;
+        padding-bottom: 35px;
+        position: relative;
+        background: @white;
+        border-top-left-radius: 6px;
+        border-top-right-radius: 6px;
+        border-bottom-left-radius: 5px;
+        border-bottom-right-radius: 5px;
+        transform: translate3d(0, -50%, 0);
+    }
 
-.commandPopupWindow .entryPopupHelperExampleBadge {
-    background: @exampleBack;
-    height: 30px;
-    width: 104px;
-    margin: 35px auto 0;
-    line-height: 30px;
-    padding: 0 29px;
-    color: @white;
-    border-radius: 20px;
-    text-align: center;
-    font-size: 15px;
-    font-weight: bold;
-    white-space: nowrap;
-}
+    .entryPopupHelperExampleBadge {
+        background: @exampleBack;
+        height: 30px;
+        width: 104px;
+        margin: 35px auto 0;
+        line-height: 30px;
+        padding: 0 29px;
+        color: @white;
+        border-radius: 20px;
+        text-align: center;
+        font-size: 15px;
+        font-weight: bold;
+        white-space: nowrap;
+    }
 
-.commandPopupWindow .entryPopupHelperLeft {
-    display: none;
-    width: 62px;    
-    height: 62px;
-    background-image: url("/img/assets/popup/left_btn.png");
-    position: absolute;     
-    margin-left: 25px;
-    margin-top: 196px;
-    cursor: pointer;
-    z-index: 1;
-}
+    .entryPopupHelperLeft {
+        display: none;
+        width: 62px;    
+        height: 62px;
+        background-image: url("/img/assets/popup/left_btn.png");
+        position: absolute;     
+        margin-left: 25px;
+        margin-top: 196px;
+        cursor: pointer;
+        z-index: 1;
+    }
 
-.commandPopupWindow .entryPopupHelperRight {
-    display: none;
-    right: 0;
-    width: 62px;
-    height: 62px;
-    background-image: url("/img/assets/popup/right_btn.png");
-    position: absolute;     
-    margin-right: 25px;
-    margin-top: 196px;
-    cursor: pointer;
-    z-index: 1;
-}
-.commandPopupWindow .entryPopupHelperContentCommand {
-    text-align: center;
-    margin-top: 40px;
-    font-size: 27px;
-    color: @objectText;
-    font-weight: bold;
-}
+    .entryPopupHelperRight {
+        display: none;
+        right: 0;
+        width: 62px;
+        height: 62px;
+        background-image: url("/img/assets/popup/right_btn.png");
+        position: absolute;     
+        margin-right: 25px;
+        margin-top: 196px;
+        cursor: pointer;
+        z-index: 1;
+    }
+    .entryPopupHelperContentCommand {
+        text-align: center;
+        margin-top: 40px;
+        font-size: 27px;
+        color: @objectText;
+        font-weight: bold;
+    }
 
-.commandPopupWindow .entryPopupHelperContentCommand span {
-    text-align: left;
-    display: inline-block;
-}
+    .entryPopupHelperContentCommand span {
+        text-align: left;
+        display: inline-block;
+    }
 
-.commandPopupWindow .entryPopupHelperContentDesc {
-    font-size: 15px;
-    text-align: center;
-    margin-top: 24px;
-    color: @objectText;
-}
+    .entryPopupHelperContentDesc {
+        font-size: 15px;
+        text-align: center;
+        margin-top: 24px;
+        color: @objectText;
+    }
 
-.commandPopupWindow .entryPopupHelperIndicator {
-    display: none;
-    text-align: center;
-}
+    .entryPopupHelperIndicator {
+        display: none;
+        text-align: center;
+
+        .indicatorHr{
+            border-top: 1px solid #aaaaaa;
+            margin-top: 23px;
+            margin-bottom: 0px;
+            width: 250px;
+        }
+
+        .indicator {
+            width: 20px;
+            height: 20px;
+            background: @indicatorOff;
+            border-radius: 50%;
+            display: inline-block;
+            margin:20px 25px 0 0;
+            cursor: pointer;
+        }
+
+        .indicator.on {
+            background: @indicatorOn;
+            cursor: inherit;
+        }
+
+
+        .indicator:last-child {
+            margin-right: 0;
+        }
+    }
+        
+    .entryPopupHelperIndicator.show {
+        display: block;
+    }
+
+    .entryPopupHelperContentDesc .obstacleSet {
+        margin: 15px auto 0;
+        width: 207px;
+        height: 72px;
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-image: url('/img/assets/popup/obstacleSet.png');
+    }
+
+    .entryPopupHelperContent {
+        .move01 {
+            margin: 10px auto 0;
+            width: 240px;
+            height: 160px;
+            background: url('/img/assets/popup/move01.png');
+        }
+
+        .move02 {
+            margin: 23px auto 0;
+            width: 72px;
+            height: 38px;
+            background: url('/img/assets/popup/move02.png');
+        }
+
+        .jump01 {
+            margin: 10px auto 0;
+            width: 320px;
+            height: 160px;
+            background: url('/img/assets/popup/jump01.png');
+        }
+
+        .jump02 {
+            margin: 23px auto 0;
+            width: 71px;
+            height: 40px;
+            background: url('/img/assets/popup/jump02.png');
+        }
+
+        .right01 {
+            margin: 10px auto 0;
+            width: 160px;
+            height: 240px;
+            background: url('/img/assets/popup/right01.png');
+        }
+
+        .right02 {
+            margin: 23px auto 0;
+            width: 83px;
+            height: 60px;
+            background: url('/img/assets/popup/right02.png');
+        }
+
+        .left01 {
+            margin: 10px auto 0;
+            width: 160px;
+            height: 240px;
+            background: url('/img/assets/popup/left01.png');
+        }
+
+        .left02 {
+            margin: 23px auto 0;
+            width: 72px;
+            height: 60px;
+            background: url('/img/assets/popup/left02.png');
+        }
+
+        .for01 {
+            margin: 10px auto 0;
+            width: 320px;
+            height: 160px;
+            background: url('/img/assets/popup/for01.png');
+        }
+
+        .for02 {
+            margin: 23px auto 0;
+            width: 301px;
+            height: 61px;
+            background: url('/img/assets/popup/for02.png');
+        }
+
+        .while01 {
+            margin: 10px auto 0;
+            width: 320px;
+            height: 160px;
+            background: url('/img/assets/popup/while01.png');
+        }
+
+        .while02 {
+            margin: 23px auto 0;
+            width: 151px;
+            height: 61px;
+            background: url('/img/assets/popup/while02.png');
+        }
+
+        .if01 {
+            margin: 10px auto 0;
+            width: 320px;
+            height: 160px;
+            background: url('/img/assets/popup/if01.png');
+        }
+
+        .if02 {
+            margin: 23px auto 0;
+            width: 259px;
+            height: 126px;
+            background: url('/img/assets/popup/if02.png');
+        }
+
+        .if03 {
+            margin: 10px auto 0;
+            width: 320px;
+            height: 160px;
+            background: url('/img/assets/popup/if03.png');
+        }
+
+        .if04 {
+            margin: 23px auto 0;
+            width: 249px;
+            height: 126px;
+            background: url('/img/assets/popup/if04.png');
+        }
+
+        .if05 {
+            margin: 10px auto 0;
+            width: 320px;
+            height: 160px;
+            background: url('/img/assets/popup/if05.png');
+        }
+
+        .if06 {
+            margin: 23px auto 0;
+            width: 281px;
+            height: 126px;
+            background: url('/img/assets/popup/if06.png');
+        }
+
+        .promise01 {
+            margin: 10px auto 0;
+            width: 320px;
+            height: 240px;
+            background: url('/img/assets/popup/promise01.png');
+        }
+
+        .promise02 {
+            margin: 23px auto 0;
+            width: 262px;
+            height: 104px;
+            background: url('/img/assets/popup/promise02.png');
+        }
+
+    } 
     
-.commandPopupWindow .entryPopupHelperIndicator.show {
-    display: block;
-}
-
-.commandPopupWindow .entryPopupHelperIndicator .indicatorHr{
-    border-top: 1px solid #aaaaaa;
-    margin-top: 23px;
-    margin-bottom: 0px;
-    width: 250px;
-}
-
-.commandPopupWindow .entryPopupHelperIndicator .indicator {
-    width: 20px;
-    height: 20px;
-    background: @indicatorOff;
-    border-radius: 50%;
-    display: inline-block;
-    margin:20px 25px 0 0;
-    cursor: pointer;
-}
-
-.commandPopupWindow .entryPopupHelperIndicator .indicator.on {
-    background: @indicatorOn;
-    cursor: inherit;
-}
-
-
-.commandPopupWindow .entryPopupHelperIndicator .indicator:last-child {
-    margin-right: 0;
-}
-
-.commandPopupWindow .entryPopupHelperContentDesc .obstacleSet {
-    margin: 15px auto 0;
-    width: 207px;
-    height: 72px;
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-image: url('/img/assets/popup/obstacleSet.png');
-}
-
-.commandPopupWindow .entryPopupHelperContent .move01 {
-    margin: 10px auto 0;
-    width: 240px;
-    height: 160px;
-    background: url('/img/assets/popup/move01.png');
-}
-
-.commandPopupWindow .entryPopupHelperContent .move02 {
-    margin: 23px auto 0;
-    width: 72px;
-    height: 38px;
-    background: url('/img/assets/popup/move02.png');
-}
-
-.commandPopupWindow .entryPopupHelperContent .jump01 {
-    margin: 10px auto 0;
-    width: 320px;
-    height: 160px;
-    background: url('/img/assets/popup/jump01.png');
-}
-
-.commandPopupWindow .entryPopupHelperContent .jump02 {
-    margin: 23px auto 0;
-    width: 71px;
-    height: 40px;
-    background: url('/img/assets/popup/jump02.png');
-}
-
-.commandPopupWindow .entryPopupHelperContent .right01 {
-    margin: 10px auto 0;
-    width: 160px;
-    height: 240px;
-    background: url('/img/assets/popup/right01.png');
-}
-
-.commandPopupWindow .entryPopupHelperContent .right02 {
-    margin: 23px auto 0;
-    width: 83px;
-    height: 60px;
-    background: url('/img/assets/popup/right02.png');
-}
-
-.commandPopupWindow .entryPopupHelperContent .left01 {
-    margin: 10px auto 0;
-    width: 160px;
-    height: 240px;
-    background: url('/img/assets/popup/left01.png');
-}
-
-.commandPopupWindow .entryPopupHelperContent .left02 {
-    margin: 23px auto 0;
-    width: 72px;
-    height: 60px;
-    background: url('/img/assets/popup/left02.png');
-}
-
-.commandPopupWindow .entryPopupHelperContent .for01 {
-    margin: 10px auto 0;
-    width: 320px;
-    height: 160px;
-    background: url('/img/assets/popup/for01.png');
-}
-
-.commandPopupWindow .entryPopupHelperContent .for02 {
-    margin: 23px auto 0;
-    width: 301px;
-    height: 61px;
-    background: url('/img/assets/popup/for02.png');
-}
-
-.commandPopupWindow .entryPopupHelperContent .while01 {
-    margin: 10px auto 0;
-    width: 320px;
-    height: 160px;
-    background: url('/img/assets/popup/while01.png');
-}
-
-.commandPopupWindow .entryPopupHelperContent .while02 {
-    margin: 23px auto 0;
-    width: 151px;
-    height: 61px;
-    background: url('/img/assets/popup/while02.png');
-}
-
-.commandPopupWindow .entryPopupHelperContent .if01 {
-    margin: 10px auto 0;
-    width: 320px;
-    height: 160px;
-    background: url('/img/assets/popup/if01.png');
-}
-
-.commandPopupWindow .entryPopupHelperContent .if02 {
-    margin: 23px auto 0;
-    width: 259px;
-    height: 126px;
-    background: url('/img/assets/popup/if02.png');
-}
-
-.commandPopupWindow .entryPopupHelperContent .if03 {
-    margin: 10px auto 0;
-    width: 320px;
-    height: 160px;
-    background: url('/img/assets/popup/if03.png');
-}
-
-.commandPopupWindow .entryPopupHelperContent .if04 {
-    margin: 23px auto 0;
-    width: 249px;
-    height: 126px;
-    background: url('/img/assets/popup/if04.png');
-}
-
-.commandPopupWindow .entryPopupHelperContent .if05 {
-    margin: 10px auto 0;
-    width: 320px;
-    height: 160px;
-    background: url('/img/assets/popup/if05.png');
-}
-
-.commandPopupWindow .entryPopupHelperContent .if06 {
-    margin: 23px auto 0;
-    width: 281px;
-    height: 126px;
-    background: url('/img/assets/popup/if06.png');
-}
-
-.commandPopupWindow .entryPopupHelperContent .promise01 {
-    margin: 10px auto 0;
-    width: 320px;
-    height: 240px;
-    background: url('/img/assets/popup/promise01.png');
-}
-
-.commandPopupWindow .entryPopupHelperContent .promise02 {
-    margin: 23px auto 0;
-    width: 262px;
-    height: 104px;
-    background: url('/img/assets/popup/promise02.png');
-}
+} 
 
 /* Command Popup:End */

@@ -3254,6 +3254,7 @@ span.CodeMirror-selectedtext {
   padding: 3px 20px;
 }
 .entryPopup {
+  overflow: hidden;
   position: absolute;
   margin: 0;
   padding: 0;
@@ -3291,6 +3292,18 @@ span.CodeMirror-selectedtext {
   background-image: url('/img/assets/popup/x_btn.png');
   cursor: pointer;
 }
+.entryPopupHelperWindow .entryPopupHelperTitle {
+  width: 100%;
+  height: 60px;
+  background-color: #2A7DEF;
+  font-weight: bold;
+  font-size: 20px;
+  line-height: 60px;
+  padding-left: 32px;
+  color: #ffffff;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+}
 .entryPopupHelperWindow.operationPopupWindow {
   width: 840px;
   height: 690px;
@@ -3309,17 +3322,37 @@ span.CodeMirror-selectedtext {
   border-bottom-left-radius: 5px;
   border-bottom-right-radius: 5px;
 }
-.entryPopupHelperWindow .entryPopupHelperTitle {
-  width: 100%;
-  height: 60px;
-  background-color: #2A7DEF;
-  font-weight: bold;
-  font-size: 20px;
-  line-height: 60px;
-  padding-left: 32px;
-  color: #ffffff;
-  border-top-left-radius: 5px;
-  border-top-right-radius: 5px;
+.operationPopupWindow .entryPopupHelperLeft.show,
+.commandPopupWindow .entryPopupHelperLeft.show {
+  display: block;
+}
+.operationPopupWindow .entryPopupHelperLeft:active,
+.operationPopupWindow .entryPopupHelperLeft:hover,
+.commandPopupWindow .entryPopupHelperLeft:active,
+.commandPopupWindow .entryPopupHelperLeft:hover {
+  background-image: url("/img/assets/popup/left_btn_on.png");
+}
+.operationPopupWindow .entryPopupHelperRight.show,
+.commandPopupWindow .entryPopupHelperRight.show {
+  display: block;
+}
+.operationPopupWindow .entryPopupHelperRight:active,
+.operationPopupWindow .entryPopupHelperRight:hover,
+.commandPopupWindow .entryPopupHelperRight:active,
+.commandPopupWindow .entryPopupHelperRight:hover {
+  background-image: url("/img/assets/popup/right_btn_on.png");
+}
+.operationPopupWindow .entryPopupHelperView .textShadow,
+.commandPopupWindow .entryPopupHelperContentDesc .textShadow {
+  background-color: #ffed08;
+  padding: 3px 1px 0;
+}
+.numberBefore {
+  position: absolute;
+  margin-top: -4px;
+}
+.pdb5 {
+  padding-bottom: 5px;
 }
 .operationPopupWindow .entryPopupHelperStep {
   background: #f4810f;
@@ -3348,16 +3381,6 @@ span.CodeMirror-selectedtext {
   cursor: pointer;
   z-index: 1;
 }
-.operationPopupWindow .entryPopupHelperLeft.show,
-.commandPopupWindow .entryPopupHelperLeft.show {
-  display: block;
-}
-.operationPopupWindow .entryPopupHelperLeft:active,
-.operationPopupWindow .entryPopupHelperLeft:hover,
-.commandPopupWindow .entryPopupHelperLeft:active,
-.commandPopupWindow .entryPopupHelperLeft:hover {
-  background-image: url("/img/assets/popup/left_btn_on.png");
-}
 .operationPopupWindow .entryPopupHelperRight {
   display: none;
   right: 0;
@@ -3370,16 +3393,6 @@ span.CodeMirror-selectedtext {
   cursor: pointer;
   z-index: 1;
 }
-.operationPopupWindow .entryPopupHelperRight.show,
-.commandPopupWindow .entryPopupHelperRight.show {
-  display: block;
-}
-.operationPopupWindow .entryPopupHelperRight:active,
-.operationPopupWindow .entryPopupHelperRight:hover,
-.commandPopupWindow .entryPopupHelperRight:active,
-.commandPopupWindow .entryPopupHelperRight:hover {
-  background-image: url("/img/assets/popup/right_btn_on.png");
-}
 .operationPopupWindow .entryPopupHelperView {
   position: absolute;
   bottom: 30px;
@@ -3388,11 +3401,6 @@ span.CodeMirror-selectedtext {
   padding: 24px 150px 0 19px;
   color: #004051;
 }
-.operationPopupWindow .entryPopupHelperView .textShadow,
-.commandPopupWindow .entryPopupHelperContentDesc .textShadow {
-  background-color: #ffed08;
-  padding: 3px 1px 0;
-}
 .operationPopupWindow .entryPopupHelperView .textUnderline {
   border-bottom: #ffae0b solid 2px;
   box-shadow: inset 0 -1px 0px 0px #ffae0b;
@@ -3400,13 +3408,6 @@ span.CodeMirror-selectedtext {
 .operationPopupWindow .entryPopupHelperView .textBadge {
   margin-right: 30px;
   margin-left: 3px;
-}
-.numberBefore {
-  position: absolute;
-  margin-top: -4px;
-}
-.pdb5 {
-  padding-bottom: 5px;
 }
 .operationPopupWindow .entryPopupHelperView .number1:before {
   content: url('/img/assets/popup/number_1_r.png');
@@ -3604,6 +3605,7 @@ span.CodeMirror-selectedtext {
   font-size: 27px;
   line-height: 82px;
   text-align: center;
+  white-space: nowrap;
 }
 .objectPopupWindow .entryPopupHelperContent .partsBox {
   height: 82px;
@@ -3732,9 +3734,6 @@ span.CodeMirror-selectedtext {
   display: none;
   text-align: center;
 }
-.commandPopupWindow .entryPopupHelperIndicator.show {
-  display: block;
-}
 .commandPopupWindow .entryPopupHelperIndicator .indicatorHr {
   border-top: 1px solid #aaaaaa;
   margin-top: 23px;
@@ -3756,6 +3755,9 @@ span.CodeMirror-selectedtext {
 }
 .commandPopupWindow .entryPopupHelperIndicator .indicator:last-child {
   margin-right: 0;
+}
+.commandPopupWindow .entryPopupHelperIndicator.show {
+  display: block;
 }
 .commandPopupWindow .entryPopupHelperContentDesc .obstacleSet {
   margin: 15px auto 0;
