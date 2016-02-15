@@ -393,11 +393,13 @@ Entry.BlockMenu = function(dom, align, categoryData) {
             animate = true;
             this.visible = false;
         } else if (!oldView) {
-            boardView.addClass('foldOut');
+            if (!this.visible) {
+                animate = true;
+                boardView.addClass('foldOut');
+                Entry.playground.showTabs();
+            }
             boardView.removeClass('folding');
-            Entry.playground.showTabs();
             this.visible = true;
-            animate = true;
         }
 
         if (animate) {

@@ -13049,7 +13049,7 @@ Entry.BlockMenu = function(a, b, c) {
     "variable" == d && Entry.playground.checkVariables();
     var e = this._categoryElems[d], f = this._selectedCategoryView, g = !1, h = this.workspace.board, k = h.view;
     f && f.removeClass("entrySelectedCategory");
-    e != f || a ? f || (k.addClass("foldOut"), k.removeClass("folding"), Entry.playground.showTabs(), g = this.visible = !0) : (k.addClass("folding"), this._selectedCategoryView = null, e.removeClass("entrySelectedCategory"), Entry.playground.hideTabs(), g = !0, this.visible = !1);
+    e != f || a ? f || (this.visible || (g = !0, k.addClass("foldOut"), Entry.playground.showTabs()), k.removeClass("folding"), this.visible = !0) : (k.addClass("folding"), this._selectedCategoryView = null, e.removeClass("entrySelectedCategory"), Entry.playground.hideTabs(), g = !0, this.visible = !1);
     g && Entry.bindAnimationCallbackOnce(k, function() {
       h.scroller.resizeScrollBar.call(h.scroller);
       k.removeClass("foldOut");
