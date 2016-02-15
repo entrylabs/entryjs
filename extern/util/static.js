@@ -807,13 +807,13 @@ EntryStatic.blockInfo = {
     },
     "sound_something_wait_with_block": {
         "xml": "<block type='sound_something_wait_with_block'><value name='VALUE'><block type='get_sounds'></block></value></block>",
-        "class": "sound_play",
+        "class": "sound_wait",
         "isNotFor": [],
         "usage": ["sound"]
     },
     "sound_something_second_wait_with_block": {
         "xml": "<block type='sound_something_second_wait_with_block'><value name='VALUE'><block type='get_sounds'></block></value><value name='SECOND'><block type='number'><field name='NUM'>1</field></block></value></block>",
-        "class": "sound_play",
+        "class": "sound_wait",
         "isNotFor": [],
         "usage": ["sound"]
     },
@@ -1721,12 +1721,12 @@ EntryStatic.blockInfo = {
     "sound_from_to": {
         "isNotFor": [""],
         "xml": "<block type='sound_from_to'><value name='VALUE'><block type='get_sounds'></block></value><value name='START'><block type='text'><field name='NAME'>1</field></block></value><value name='END'><block type='text'><field name='NAME'>10</field></block></value></block>",
-        "class": ""
+        "class": "sound_play"
     },
     "sound_from_to_and_wait": {
         "isNotFor": [""],
         "xml": "<block type='sound_from_to_and_wait'><value name='VALUE'><block type='get_sounds'></block></value><value name='START'><block type='text'><field name='NAME'>1</field></block></value><value name='END'><block type='text'><field name='NAME'>10</field></block></value></block>",
-        "class": "sound_play"
+        "class": "sound_wait"
     },
     "quotient_and_mod": {
         "isNotFor": [""],
