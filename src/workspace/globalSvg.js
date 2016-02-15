@@ -76,8 +76,6 @@ goog.provide('Entry.GlobalSvg');
         delete this._offsetY;
         delete this._startX;
         delete this._startY;
-        delete this.left;
-        delete this.top;
         this.hide();
     };
 

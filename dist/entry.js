@@ -14636,7 +14636,7 @@ Entry.GlobalSvg = {};
     this.show();
   };
   a.remove = function() {
-    this.svg && (this.svg.remove(), delete this.svg, delete this._view, delete this._offsetX, delete this._offsetY, delete this._startX, delete this._startY, delete this.left, delete this.top, this.hide());
+    this.svg && (this.svg.remove(), delete this.svg, delete this._view, delete this._offsetX, delete this._offsetY, delete this._startX, delete this._startY, this.hide());
   };
   a.align = function() {
     var a = this._view.getSkeleton().box(this._view).offsetX || 0, c = this._view.getSkeleton().box(this._view).offsetY || 0, a = -1 * a + 1, c = -1 * c + 1;

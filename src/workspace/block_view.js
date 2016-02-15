@@ -529,24 +529,24 @@ Entry.BlockView.PARAM_SPACE = 5;
                             } else block.doSeparate();
                         }
                         break;
-                        case gs.RETURN:
-                            var originPos = this.originPos;
-                            if (prevBlock) {
-                                this.set({animating: false});
-                                createjs.Sound.play('entryMagneting');
-                                block.insert(prevBlock);
-                            } else this._moveTo(originPos.x, originPos.y, false);
-                            break;
-                        case gs.REMOVE:
-                            createjs.Sound.play('entryDelete');
-                            if (!fromBlockMenu) {
-                                if (prevBlock) block.doSeparate();
-                                this.block.doDestroy(false);
-                            } else {
-                                if (prevBlock) block.separate();
-                                this.block.destroy(false);
-                            }
-                            break;
+                    case gs.RETURN:
+                        var originPos = this.originPos;
+                        if (prevBlock) {
+                            this.set({animating: false});
+                            createjs.Sound.play('entryMagneting');
+                            block.insert(prevBlock);
+                        } else this._moveTo(originPos.x, originPos.y, false);
+                        break;
+                    case gs.REMOVE:
+                        createjs.Sound.play('entryDelete');
+                        if (!fromBlockMenu) {
+                            if (prevBlock) block.doSeparate();
+                            this.block.doDestroy(false);
+                        } else {
+                            if (prevBlock) block.separate();
+                            this.block.destroy(false);
+                        }
+                        break;
                 }
                 board.setMagnetedBlock(null);
             }
