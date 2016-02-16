@@ -531,10 +531,10 @@ Entry.nodeListToArray = function(nl) {
     return arr;
 };
 
-Entry.computeInputWidth = function(value){
+Entry.computeInputWidth = function(nameField){
     var tmp = document.createElement("span");
     tmp.className = "tmp-element";
-    tmp.innerHTML = value.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    tmp.innerHTML = nameField.value.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
     document.body.appendChild(tmp);
     var theWidth = tmp.offsetWidth;
     document.body.removeChild(tmp);
