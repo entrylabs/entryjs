@@ -3871,7 +3871,7 @@ Entry.block.start_scene = function(a, b) {
 };
 Blockly.Blocks.start_neighbor_scene = {init:function() {
   this.setColour("#3BBD70");
-  this.appendDummyInput().appendField(Lang.Blocks.SCENE_start_neighbor_scene_1).appendField(new Blockly.FieldDropdown([[Lang.Blocks.SCENE_start_scene_pre, "pre"], [Lang.Blocks.SCENE_start_scene_next, "next"]]), "OPERATOR").appendField(Lang.Blocks.SCENE_start_neighbor_scene_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/start_03.png", "*"));
+  this.appendDummyInput().appendField(Lang.Blocks.SCENE_start_neighbor_scene_1).appendField(new Blockly.FieldDropdown([[Lang.Blocks.SCENE_start_scene_next, "next"], [Lang.Blocks.SCENE_start_scene_pre, "pre"]]), "OPERATOR").appendField(Lang.Blocks.SCENE_start_neighbor_scene_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/start_03.png", "*"));
   this.setInputsInline(!0);
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
@@ -9667,6 +9667,7 @@ Entry.Playground.prototype.generatePictureElement = function(a) {
         }
       }
       this.picture.name = this.value;
+      Entry.playground.reloadPlayground();
       Entry.dispatchEvent("pictureNameChanged", this.picture);
     }
   }
@@ -9907,6 +9908,7 @@ Entry.Scene = function() {
 };
 Entry.Scene.viewBasicWidth = 70;
 Entry.Scene.prototype.generateView = function(a, b) {
+  var c = this;
   this.view_ = a;
   this.view_.addClass("entryScene");
   if (!b || "workspace" == b) {
@@ -9917,20 +9919,28 @@ Entry.Scene.prototype.generateView = function(a, b) {
         a[b].editObjectValues(!1);
       }
     });
-    var c = Entry.createElement("ul");
-    c.addClass("entrySceneListWorkspace");
-    Entry.sceneEditable && $ && $(c).sortable({start:function(a, b) {
+    $(this.view_).on("mousedown", function(a) {
+      var b = $(this).offset(), d = $(window), h = a.pageX - b.left + d.scrollLeft();
+      a = a.pageY - b.top + d.scrollTop();
+      a = 40 - a;
+      b = -40 / 55;
+      d = $(c.selectedScene.view).find(".entrySceneRemoveButtonCoverWorkspace").offset().left;
+      !(h < d || h > d + 55) && a > 40 + b * (h - d) && (h = c.getNextScene()) && (h = $(h.view), $(document).trigger("mouseup"), h.trigger("mousedown"));
+    });
+    var d = Entry.createElement("ul");
+    d.addClass("entrySceneListWorkspace");
+    Entry.sceneEditable && $ && $(d).sortable({start:function(a, b) {
       b.item.data("start_pos", b.item.index());
       $(b.item[0]).clone(!0);
     }, stop:function(a, b) {
-      var c = b.item.data("start_pos"), g = b.item.index();
-      Entry.scene.moveScene(c, g);
+      var c = b.item.data("start_pos"), d = b.item.index();
+      Entry.scene.moveScene(c, d);
     }, axis:"x", tolerance:"pointer"});
-    this.view_.appendChild(c);
-    this.listView_ = c;
-    Entry.sceneEditable && (c = Entry.createElement("span"), c.addClass("entrySceneElementWorkspace"), c.addClass("entrySceneAddButtonWorkspace"), c.bindOnClick(function(a) {
+    this.view_.appendChild(d);
+    this.listView_ = d;
+    Entry.sceneEditable && (d = Entry.createElement("span"), d.addClass("entrySceneElementWorkspace"), d.addClass("entrySceneAddButtonWorkspace"), d.bindOnClick(function(a) {
       Entry.engine.isState("run") || Entry.scene.addScene();
-    }), this.view_.appendChild(c), this.addButton_ = c);
+    }), this.view_.appendChild(d), this.addButton_ = d);
   }
 };
 Entry.Scene.prototype.generateElement = function(a) {
@@ -9939,7 +9949,7 @@ Entry.Scene.prototype.generateElement = function(a) {
   c.addClass("entrySceneButtonWorkspace");
   c.addClass("minValue");
   $(c).on("mousedown", function(b) {
-    Entry.engine.isState("run") ? b.preventDefault() : Entry.scene.selectScene(a);
+    Entry.engine.isState("run") ? b.preventDefault() : (document.elementsFromPoint(b.pageX, b.pageY), Entry.scene.selectScene(a));
   });
   var d = Entry.createElement("input");
   d.addClass("entrySceneFieldWorkspace");
@@ -9950,20 +9960,19 @@ Entry.Scene.prototype.generateElement = function(a) {
   c.appendChild(e);
   var f = Entry.createElement("span");
   f.addClass("entrySceneInputCover");
-  f.style.width = Entry.computeInputWidth(d);
+  f.style.width = Entry.computeInputWidth(a.name);
   c.appendChild(f);
   a.inputWrapper = f;
   d.onkeyup = function(c) {
     c = c.keyCode;
-    Entry.isArrowOrBackspace(c) || (a.name = this.value, f.style.width = Entry.computeInputWidth(this), b.resize(), 13 == c && this.blur(), 9 < this.value.length && (this.value = this.value.substring(0, 10), this.blur()));
+    Entry.isArrowOrBackspace(c) || (a.name = this.value, f.style.width = Entry.computeInputWidth(a.name), b.resize(), 13 == c && this.blur(), 9 < this.value.length && (this.value = this.value.substring(0, 10), this.blur()));
   };
   d.onblur = function(b) {
     d.value = this.value;
     a.name = this.value;
-    f.style.width = Entry.computeInputWidth(this);
+    f.style.width = Entry.computeInputWidth(a.name);
   };
   f.appendChild(d);
-  f.nameField = d;
   e = Entry.createElement("span");
   e.addClass("entrySceneRemoveButtonCoverWorkspace");
   c.appendChild(e);
@@ -10046,12 +10055,10 @@ Entry.Scene.prototype.selectScene = function(a) {
 };
 Entry.Scene.prototype.toJSON = function() {
   for (var a = [], b = this.getScenes().length, c = 0;c < b;c++) {
-    var d = this.getScenes()[c], e = d.view, f = d.view;
+    var d = this.getScenes()[c], e = d.view;
     delete d.view;
-    delete d.inputWrapper;
     a.push(JSON.parse(JSON.stringify(d)));
     d.view = e;
-    d.inputWrapper = f;
   }
   return a;
 };
@@ -10099,21 +10106,25 @@ Entry.Scene.prototype.cloneScene = function(a) {
 Entry.Scene.prototype.resize = function() {
   var a = this.getScenes(), b = this.selectedScene, c = a[0];
   if (0 !== a.length && c) {
-    var d = $(c.view).offset().left, c = parseFloat($(b.view).css("margin-left")), d = $(this.view_).width() - d, e = 0, f;
-    for (f in a) {
-      var g = a[f], h = g.view;
+    var d = $(c.view).offset().left, c = parseFloat($(b.view).css("margin-left")), e = $(this.view_).width() - d, f = 0, g;
+    for (g in a) {
+      var d = a[g], h = d.view;
       h.addClass("minValue");
-      g = g.inputWrapper;
-      $(g).width(Entry.computeInputWidth(g.nameField));
+      $(h).removeProp("style");
+      $(d.inputWrapper).width(Entry.computeInputWidth(d.name));
       h = $(h);
-      e = e + h.width() + c;
+      f = f + h.width() + c;
     }
-    if (e > d) {
-      for (f in d -= $(b.view).width(), c = d / (a.length - 1) - (Entry.Scene.viewBasicWidth + c), a) {
-        g = a[f], b.id != g.id ? (g.view.removeClass("minValue"), $(g.inputWrapper).width(c)) : g.view.addClass("minValue");
+    if (f > e) {
+      for (g in e -= $(b.view).width(), c = e / (a.length - 1) - (Entry.Scene.viewBasicWidth + c), a) {
+        d = a[g], b.id != d.id ? (d.view.removeClass("minValue"), $(d.inputWrapper).width(c)) : d.view.addClass("minValue");
       }
     }
   }
+};
+Entry.Scene.prototype.getNextScene = function() {
+  var a = this.getScenes();
+  return a[a.indexOf(this.selectedScene) + 1];
 };
 Entry.Script = function(a) {
   this.entity = a;
@@ -11065,7 +11076,7 @@ Entry.nodeListToArray = function(a) {
 Entry.computeInputWidth = function(a) {
   var b = document.createElement("span");
   b.className = "tmp-element";
-  b.innerHTML = a.value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  b.innerHTML = a.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
   document.body.appendChild(b);
   a = b.offsetWidth;
   document.body.removeChild(b);

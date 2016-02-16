@@ -27,6 +27,7 @@ Entry.Scene.viewBasicWidth = 70;
  */
 Entry.Scene.prototype.generateView = function(sceneView, option) {
     /** @type {!Element} */
+    var that = this;
     this.view_ = sceneView;
     this.view_.addClass('entryScene');
     if (!option || option == 'workspace') {
@@ -36,6 +37,29 @@ Entry.Scene.prototype.generateView = function(sceneView, option) {
             var objects_ = Entry.container.getAllObjects();
             for (var i in objects_) {
                 objects_[i].editObjectValues(false);
+            }
+        });
+        $(this.view_).on('mousedown', function (e) {
+            var offset = $(this).offset();
+            var $window = $(window);
+            var x = e.pageX - offset.left + $window.scrollLeft();
+            var y = e.pageY - offset.top + $window.scrollTop();
+            y = 40 - y;
+            var slope = -40/55;
+            var selectedScene = that.selectedScene;
+            var selectedLeft = $(selectedScene.view).find('.entrySceneRemoveButtonCoverWorkspace').offset().left;
+            if (x < selectedLeft || x > selectedLeft + 55) return;
+
+            x -= selectedLeft;
+            var ret = 40 + slope*x;
+
+            if (y > ret) {
+                 var nextScene = that.getNextScene();
+                 if (nextScene) {
+                    var $sceneView = $(nextScene.view);
+                    $(document).trigger('mouseup');
+                    $sceneView.trigger('mousedown');
+                 }
             }
         });
 
@@ -74,7 +98,6 @@ Entry.Scene.prototype.generateView = function(sceneView, option) {
             this.view_.appendChild(addButton);
             this.addButton_ = addButton;
         }
-
     }
 };
 
@@ -93,6 +116,7 @@ Entry.Scene.prototype.generateElement = function(scene) {
             e.preventDefault();
             return;
         }
+        var elems = document.elementsFromPoint(e.pageX, e.pageY);
         Entry.scene.selectScene(scene);
     });
     var nameField = Entry.createElement('input');
@@ -108,7 +132,7 @@ Entry.Scene.prototype.generateElement = function(scene) {
 
     var divide = Entry.createElement('span');
     divide.addClass('entrySceneInputCover');
-    divide.style.width = Entry.computeInputWidth(nameField);
+    divide.style.width = Entry.computeInputWidth(scene.name);
     viewTemplate.appendChild(divide);
     scene.inputWrapper = divide;
 
@@ -117,7 +141,7 @@ Entry.Scene.prototype.generateElement = function(scene) {
         if (Entry.isArrowOrBackspace(code))
             return;
         scene.name = this.value;
-        divide.style.width = Entry.computeInputWidth(this);
+        divide.style.width = Entry.computeInputWidth(scene.name);
         that.resize();
         if (code == 13)
             this.blur();
@@ -129,10 +153,9 @@ Entry.Scene.prototype.generateElement = function(scene) {
     nameField.onblur = function (e) {
         nameField.value = this.value;
         scene.name = this.value;
-        divide.style.width = Entry.computeInputWidth(this);
+        divide.style.width = Entry.computeInputWidth(scene.name);
     };
     divide.appendChild(nameField);
-    divide.nameField = nameField;
     var removeButtonCover = Entry.createElement('span');
     removeButtonCover.addClass('entrySceneRemoveButtonCoverWorkspace');
     viewTemplate.appendChild(removeButtonCover);
@@ -312,12 +335,9 @@ Entry.Scene.prototype.toJSON = function() {
     for (var i = 0; i<length; i++) {
         var scene = this.getScenes()[i];
         var view = scene.view;
-        var inputWrapper = scene.view;
         delete scene.view;
-        delete scene.inputWrapper;
         json.push(JSON.parse(JSON.stringify(scene)));
         scene.view = view;
-        scene.inputWrapper = inputWrapper;
     }
     return json;
 };
@@ -434,9 +454,14 @@ Entry.Scene.prototype.resize = function() {
         var scene = scenes[i];
         var view = scene.view;
         view.addClass('minValue');
+
+        //jquery sortable bug
+        //style properties are not removed sometimes
+        $(view).removeProp('style');
+
         var inputWrapper = scene.inputWrapper;
         $(inputWrapper).width(
-            Entry.computeInputWidth(inputWrapper.nameField)
+            Entry.computeInputWidth(scene.name)
         );
         view = $(view);
         normWidth = normWidth + view.width() + marginLeft;
@@ -459,4 +484,9 @@ Entry.Scene.prototype.resize = function() {
         }
 
     }
+};
+
+Entry.Scene.prototype.getNextScene = function() {
+    var scenes = this.getScenes();
+    return scenes[scenes.indexOf(this.selectedScene) + 1];
 };
