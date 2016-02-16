@@ -48,6 +48,8 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
         this._thread = this.getValue();
         var firstBlock = this._thread.getFirstBlock();
         if (!firstBlock || !firstBlock.isDummy) {
+            if (firstBlock)
+                firstBlock.createView(board);
             this.dummyBlock = new Entry.FieldDummyBlock(this, this._blockView);
             this._thread.insertDummyBlock(this.dummyBlock);
             this._inspectThread();
