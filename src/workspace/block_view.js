@@ -522,7 +522,7 @@ Entry.BlockView.PARAM_SPACE = 5;
                                             orphan.destroy(false);
                                         } else {
                                             orphan.separate();
-                                            orphan.view._moveBy(10, 10, false);
+                                            orphan.view.bumpAway();
                                         }
                                     }
                                 }
@@ -530,6 +530,13 @@ Entry.BlockView.PARAM_SPACE = 5;
                         }
                         break;
                     case gs.RETURN:
+                        var block = this.block;
+                        if (Entry.FieldDummyBlock.PRIMITIVE_TYPES.indexOf(block.type) > -1) {
+                            block.getThread().cut(block);
+                            block.destroy(false);
+                            break;
+                        }
+
                         var originPos = this.originPos;
                         if (prevBlock) {
                             this.set({animating: false});
@@ -834,5 +841,7 @@ Entry.BlockView.PARAM_SPACE = 5;
         var dragHeight = this.getBoard().dragBlock.dragInstance.height;
         return {cx:8, cy:this.height + 1 - dragHeight};
     };
+
+    p.bumpAway = function() {this._moveBy(10, 10, false);};
 
 })(Entry.BlockView.prototype);
