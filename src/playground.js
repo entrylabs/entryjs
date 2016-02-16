@@ -45,13 +45,6 @@ Entry.Playground.prototype.generateView = function(playgroundView, option) {
     if (!option || option == 'workspace') {
         this.view_.addClass('entryPlaygroundWorkspace');
 
-        this.view_.bindOnClick(function(e) {
-            var objects_ = Entry.container.getAllObjects();
-            for (var i in objects_) {
-                objects_[i].editObjectValues(false);
-            }
-        });
-
         var tabView = Entry.createElement('div', 'entryCategoryTab');
         tabView.addClass('entryPlaygroundTabWorkspace');
         this.view_.appendChild(tabView);
@@ -123,13 +116,6 @@ Entry.Playground.prototype.generateView = function(playgroundView, option) {
             Entry.playground.curtainView_.addClass('entryRemove');});
     } else if (option == 'phone') {
         this.view_.addClass('entryPlaygroundPhone');
-
-        this.view_.bindOnClick(function(e) {
-            var objects_ = Entry.container.getAllObjects();
-            for (var i in objects_) {
-                objects_[i].editObjectValues(false);
-            }
-        });
 
         var tabView = Entry.createElement('div', 'entryCategoryTab');
         tabView.addClass('entryPlaygroundTabPhone');
@@ -223,11 +209,6 @@ Entry.Playground.prototype.generateTabView = function(tabView) {
     tabList.appendChild(codeTab);
     codeTab.bindOnClick(function(e) {
         Entry.playground.changeViewMode('code');
-
-        var objects_ = Entry.container.getAllObjects();
-        for (var i in objects_) {
-            objects_[i].editObjectValues(false);
-        }
     });
     this.tabViewElements.code = codeTab;
 
@@ -238,11 +219,6 @@ Entry.Playground.prototype.generateTabView = function(tabView) {
         tabList.appendChild(pictureTab);
         pictureTab.bindOnClick(function(e) {
             Entry.playground.changeViewMode('picture');
-
-            var objects_ = Entry.container.getAllObjects();
-            for (var i in objects_) {
-                objects_[i].editObjectValues(false);
-            }
         });
         this.tabViewElements.picture = pictureTab;
 
@@ -264,11 +240,6 @@ Entry.Playground.prototype.generateTabView = function(tabView) {
         tabList.appendChild(soundTab);
         soundTab.bindOnClick(function(e) {
             Entry.playground.changeViewMode('sound');
-
-            var objects_ = Entry.container.getAllObjects();
-            for (var i in objects_) {
-                objects_[i].editObjectValues(false);
-            }
         });
         this.tabViewElements.sound = soundTab;
     }
@@ -282,11 +253,6 @@ Entry.Playground.prototype.generateTabView = function(tabView) {
         variableTab.bindOnClick(function(e) {
             Entry.playground.toggleOnVariableView();
             Entry.playground.changeViewMode('variable');
-
-            var objects_ = Entry.container.getAllObjects();
-            for (var i in objects_) {
-                objects_[i].editObjectValues(false);
-            }
         });
         this.tabViewElements.variable = variableTab;
     }
@@ -308,8 +274,6 @@ Entry.Playground.prototype.generateCodeView = function(codeView) {
         categoryListView.addClass('entryCategoryListWorkspace');
         categoryView.appendChild(categoryListView);
         this.categoryListView_ = categoryListView;
-
-
 
         var blockMenuView = Entry.createElement('div', 'entryBlocklyWorkspace');
         blockMenuView.addClass('entryBlockMenuWorkspace');
@@ -338,14 +302,6 @@ Entry.Playground.prototype.generateCodeView = function(codeView) {
             delete this.widthBackup;
             delete Entry.playground.focusBlockMenu;
         });
-
-        blockMenuView.bindOnClick(function(e) {
-            var objects_ = Entry.container.getAllObjects();
-            for (var i in objects_) {
-                objects_[i].editObjectValues(false);
-            }
-        });
-
         Entry.addEventListener('entryBlocklyChanged', function(e) {
             var blockMenuView = Entry.playground.blockMenuView_;
             if (blockMenuView.widthBackup)
@@ -415,13 +371,6 @@ Entry.Playground.prototype.generateCodeView = function(codeView) {
         blocklyView.addClass('entryBlocklyPhone');
         this.blocklyView_ = blocklyView;
         codeView.appendChild(blocklyView);
-
-        this.blocklyView_.bindOnClick(function(e) {
-            var objects_ = Entry.container.getAllObjects();
-            for (var i in objects_) {
-                objects_[i].editObjectValues(false);
-            }
-        });
 
         var XML = Entry.parseTexttoXML('<xml></xml>');
         Blockly.inject(
@@ -1660,6 +1609,7 @@ Entry.Playground.prototype.generatePictureElement = function(picture) {
             }
         }
         this.picture.name = this.value;
+        Entry.playground.reloadPlayground();
         Entry.dispatchEvent('pictureNameChanged', this.picture);
     }
     nameView.onkeypress = function(e) {
@@ -1679,7 +1629,7 @@ Entry.Playground.prototype.generateSoundElement = function(sound) {
     sound.view = element;
     element.addClass('entryPlaygroundSoundElement');
     element.sound = sound;
-   
+
     Entry.Utils.disableContextmenu(sound.view);
     $(sound.view).on('contextmenu', function(){
         var options = [

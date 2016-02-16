@@ -80,13 +80,6 @@ Entry.Container.prototype.generateView = function(containerView, option) {
             ulWrapper.addClass('lecture');
         }
 
-        ulWrapper.bindOnClick(function(e) {
-            var objects_ = Entry.container.getAllObjects();
-            for (var i in objects_) {
-                objects_[i].editObjectValues(false);
-            }
-        });
-
         Entry.Utils.disableContextmenu(ulWrapper);
         $(ulWrapper).on('contextmenu', function(e){
             var options = [
@@ -127,13 +120,6 @@ Entry.Container.prototype.generateView = function(containerView, option) {
         var ulWrapper = Entry.createElement('div');
         ulWrapper.addClass('entryContainerListPhoneWrapper');
         this.view_.appendChild(ulWrapper);
-
-        ulWrapper.bindOnClick(function(e) {
-            var objects_ = Entry.container.getAllObjects();
-            for (var i in objects_) {
-                objects_[i].editObjectValues(false);
-            }
-        });
 
         var listView = Entry.createElement('ul');
         listView.addClass('entryContainerListPhone');
