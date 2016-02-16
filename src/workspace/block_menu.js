@@ -39,7 +39,6 @@ Entry.BlockMenu = function(dom, align, categoryData) {
     this.setWidth();
 
 
-    //this.snap = Snap('#blockMenu');
     this.snap = Snap('#' + this._snapId);
 
     this.svgGroup = this.snap.group();
@@ -54,12 +53,8 @@ Entry.BlockMenu = function(dom, align, categoryData) {
     this.changeEvent = new Entry.Event(this);
     //TODO scroller should be attached
     //this.scroller = new Entry.Scroller(this, false, true);
-    //
 
-    if (categoryData) {
-        this._generateCategoryCodes(categoryData);
-        //this.setMenu(Object.keys(this._categoryCodes)[0]);
-    }
+    if (categoryData) this._generateCategoryCodes(categoryData);
 
     if (Entry.documentMousedown)
         Entry.documentMousedown.attach(this, this.setSelectedBlock);
@@ -111,12 +106,13 @@ Entry.BlockMenu = function(dom, align, categoryData) {
 
         this.svgDom.mouseenter(function(e) {
             if (!Entry.playground || Entry.playground.resizing) return;
+            var hPadding = that._align == 'LEFT' ? 10 : that.svgDom.width()/2;
             Entry.playground.focusBlockMenu = true;
-            var width = that.expandWidth + 64;
-            if (width > Entry.interfaceState.menuWidth) {
+            var expandWidth = that.svgGroup.getBBox().width + hPadding + 64;
+            if (expandWidth > Entry.interfaceState.menuWidth) {
                 this.widthBackup = Entry.interfaceState.menuWidth - 64;
                 $(this).stop().animate({
-                    width: width - 64
+                    width: expandWidth - 64
                 }, 200);
             }
         });
@@ -197,7 +193,6 @@ Entry.BlockMenu = function(dom, align, categoryData) {
         }
 
         this.changeEvent.notify();
-        this.expandWidth = this.svgGroup.getBBox().width + hPadding;
     };
 
     p.cloneToGlobal = function(e) {

@@ -53,8 +53,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
             this.dummyBlock = new Entry.FieldDummyBlock(this, this._blockView);
             this._thread.insertDummyBlock(this.dummyBlock);
             this._inspectThread();
-            this.dummyBlock.observe(this, "_inspectThread", ["next"]);
-            this.dummyBlock.observe(this, "calcWH", ["next"]);
+            this.dummyBlock.observe(this, "_handleNextChange", ["next"]);
         } else {
             this.dummyBlock = firstBlock;
             this.dummyBlock.appendSvg(this);
@@ -84,21 +83,6 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
             y = block.view.height * -0.5;
         }
         var transform = "t" + x + " " + y;
-
-        if (block && block != this._valueBlock) {
-            if (this._valueBlock)
-                this._valueBlock.view.set({shadow:true});
-
-            this._valueBlock = block;
-            if (this._valueBlockObserver) this._valueBlockObserver.destroy();
-            if (this._valueBlock) {
-                var blockView = this._valueBlock.view;
-                this._valueBlockObserver =
-                    blockView.observe(this, "calcWH", ["width", "height"]);
-
-                if (blockView.shadow) blockView.set({shadow:false});
-            }
-        }
 
         if (animate)
             svgGroup.animate({
@@ -143,19 +127,19 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
 
     p._inspectThread = function() {
         if (!this.dummyBlock.next) {
+            var block = null;
             switch (this.acceptType) {
                 case "basic_boolean_field":
-                    this._valueBlock = getBlock(this, {type: "True"});
+                    block = getBlock(this, {type: "True"});
                     break;
                 case "basic_string_field":
-                    this._valueBlock = getBlock(this, {type: "text"});
+                    block = getBlock(this, {type: "text"});
                     break;
                 case "basic_param":
-                    this._valueBlock = getBlock(this, {type: "function_field_label"});
+                    block = getBlock(this, {type: "function_field_label"});
                     break;
             }
-            if (this._valueBlock)
-                this.dummyBlock.insertAfter([this._valueBlock]);
+            if (block) this.dummyBlock.insertAfter([block]);
         }
 
         function getBlock(field, data) {
@@ -170,6 +154,30 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
 
             block.createView(board, mode);
             return block;
+        }
+    };
+
+    p._handleNextChange = function() {
+        this._inspectThread();
+        this._setValueBlock();
+        this.calcWH();
+    };
+
+    p._setValueBlock = function() {
+        var block = this.dummyBlock.next;
+        if (block && block != this._valueBlock) {
+            if (this._valueBlock)
+                this._valueBlock.view.set({shadow:true});
+
+            this._valueBlock = block;
+            if (this._valueBlockObserver) this._valueBlockObserver.destroy();
+            if (this._valueBlock) {
+                var blockView = this._valueBlock.view;
+                this._valueBlockObserver =
+                    blockView.observe(this, "calcWH", ["width", "height"]);
+
+                if (blockView.shadow) blockView.set({shadow:false});
+            }
         }
     };
 
