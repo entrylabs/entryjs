@@ -13348,7 +13348,7 @@ Entry.BlockView.PARAM_SPACE = 5;
             if (b || g) {
               if (g) {
                 if (this.set({animating:!0}), g.next && g.next.view.set({animating:!0}), e.doInsert(g), createjs.Sound.play("entryMagneting"), Entry.ConnectionRipple.setView(g.view).dispose(), g.constructor == Entry.FieldDummyBlock && (e = e.next)) {
-                  -1 < Entry.FieldDummyBlock.PRIMITIVE_TYPES.indexOf(e.type) ? (e.getThread().cut(e), e.destroy(!1)) : (e.separate(), e.view._moveBy(10, 10, !1));
+                  -1 < Entry.FieldDummyBlock.PRIMITIVE_TYPES.indexOf(e.type) ? (e.getThread().cut(e), e.destroy(!1)) : (e.separate(), e.view.bumpAway());
                 }
               } else {
                 e.doSeparate();
@@ -13358,6 +13358,12 @@ Entry.BlockView.PARAM_SPACE = 5;
             }
             break;
           case g.RETURN:
+            e = this.block;
+            if (-1 < Entry.FieldDummyBlock.PRIMITIVE_TYPES.indexOf(e.type)) {
+              e.getThread().cut(e);
+              e.destroy(!1);
+              break;
+            }
             d = this.originPos;
             b ? (this.set({animating:!1}), createjs.Sound.play("entryMagneting"), e.insert(b)) : this._moveTo(d.x, d.y, !1);
             break;
@@ -13514,6 +13520,9 @@ Entry.BlockView.PARAM_SPACE = 5;
   a.getRipplePosition = function() {
     var b = this.getBoard().dragBlock.dragInstance.height;
     return {cx:8, cy:this.height + 1 - b};
+  };
+  a.bumpAway = function() {
+    this._moveBy(10, 10, !1);
   };
 })(Entry.BlockView.prototype);
 Entry.Code = function(a) {
