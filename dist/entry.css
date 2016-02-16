@@ -3468,8 +3468,8 @@ span.CodeMirror-selectedtext {
   color: #f43900;
 }
 .operationPopupWindow .entryPopupHelperContent.operation1_1 {
-  width: 477px;
-  height: 341px;
+  width: 476px;
+  height: 123px;
   background: url('/img/assets/popup/operation1_1.png');
 }
 .operationPopupWindow .entryPopupHelperContent.operation1_2 {
@@ -3484,7 +3484,7 @@ span.CodeMirror-selectedtext {
 }
 .operationPopupWindow .entryPopupHelperContent.operation1_4 {
   width: 460px;
-  height: 375px;
+  height: 164px;
   background: url('/img/assets/popup/operation1_4.png');
 }
 .operationPopupWindow .entryPopupHelperContent.operation7_1 {
