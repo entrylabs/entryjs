@@ -100,6 +100,10 @@ Entry.EntryObject.prototype.generateView= function() {
         objectView.addClass('entryContainerListElementWorkspace');
         objectView.object = this;
         objectView.bindOnClick(function(e) {
+            var objects_ = Entry.container.getAllObjects();
+            for (var i in objects_) {
+                objects_[i].editObjectValues(false);
+            }
             if (Entry.container.getObject(this.id))
                 Entry.container.selectObject(this.id);
             Entry.container.blurAllInputs();
@@ -240,10 +244,17 @@ Entry.EntryObject.prototype.generateView= function() {
                 e.stopPropagation();
                 if(Entry.engine.isState('run')){
                     return;
-                }else{
+                } else {
+                    var objects_ = Entry.container.getAllObjects();
+                    if (objects_.length > 1) {
+                        for (var i in objects_) {
+                            if (objects_[i].nameView_.hasClass('selectedEditingObject')) {
+                                objects_[i].editObjectValues(tog, 'selected');
+                            }
+                        }
+                    } 
                     object.editObjectValues(tog);
                 }
-
             });
             editView.blur = function(e){
                 object.editObjectComplete();
@@ -493,6 +504,10 @@ Entry.EntryObject.prototype.generateView= function() {
         objectView.addClass('entryContainerListElementWorkspace');
         objectView.object = this;
         objectView.bindOnClick(function(e) {
+            var objects_ = Entry.container.getAllObjects();
+            for (var i in objects_) {
+                objects_[i].editObjectValues(false);
+            }
             if (Entry.container.getObject(this.id))
                 Entry.container.selectObject(this.id);
         });
@@ -1401,7 +1416,7 @@ Entry.EntryObject.prototype.updateInputViews = function(isLocked) {
 };
 
 var tog = true;
-Entry.EntryObject.prototype.editObjectValues = function(click) {
+Entry.EntryObject.prototype.editObjectValues = function(click, status) {
 
     var inputs;
     if(this.getLock()) {
@@ -1420,14 +1435,17 @@ Entry.EntryObject.prototype.editObjectValues = function(click) {
             inputs[i].addClass("selectedEditingObject");
         }
         this.nameView_.select();
-        tog = false;
+        if (!status)
+            tog = false;
+
     } else {
         for(var i=0; i<inputs.length; i++){
             inputs[i].setAttribute('disabled', 'disabled');
             inputs[i].removeClass('selectedEditingObject');
         }
         inputs[0].blur();
-        tog = true;
+        if (!status)
+            tog = true;
     }
 };
 

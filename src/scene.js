@@ -33,6 +33,12 @@ Entry.Scene.prototype.generateView = function(sceneView, option) {
     if (!option || option == 'workspace') {
         this.view_.addClass('entrySceneWorkspace');
 
+        this.view_.bindOnClick(function(e) {
+            var objects_ = Entry.container.getAllObjects();
+            for (var i in objects_) {
+                objects_[i].editObjectValues(false);
+            }
+        });
         $(this.view_).on('mousedown', function (e) {
             var offset = $(this).offset();
             var $window = $(window);
@@ -284,6 +290,11 @@ Entry.Scene.prototype.removeScene = function(scene) {
  * @param {scene model} scene
  */
 Entry.Scene.prototype.selectScene = function(scene) {
+    var objects_ = Entry.container.getAllObjects();
+    for (var i in objects_) {
+        objects_[i].editObjectValues(false);
+    }
+    
     scene = scene || this.getScenes()[0];
     if (this.selectedScene && (this.selectedScene.id == scene.id))
         return;

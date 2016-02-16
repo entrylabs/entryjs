@@ -44,9 +44,15 @@ Entry.Playground.prototype.generateView = function(playgroundView, option) {
     this.view_.addClass('entryPlayground');
     if (!option || option == 'workspace') {
         this.view_.addClass('entryPlaygroundWorkspace');
-
+        this.view_.bindOnClick(function(e) {
+            var objects_ = Entry.container.getAllObjects();
+            for (var i in objects_) {
+                objects_[i].editObjectValues(false);
+            }
+        });
         var tabView = Entry.createElement('div', 'entryCategoryTab');
         tabView.addClass('entryPlaygroundTabWorkspace');
+
         this.view_.appendChild(tabView);
         this.generateTabView(tabView);
         this.tabView_ = tabView;
@@ -117,6 +123,13 @@ Entry.Playground.prototype.generateView = function(playgroundView, option) {
     } else if (option == 'phone') {
         this.view_.addClass('entryPlaygroundPhone');
 
+        this.view_.bindOnClick(function(e) {
+            var objects_ = Entry.container.getAllObjects();
+            for (var i in objects_) {
+                objects_[i].editObjectValues(false);
+            }
+        });
+
         var tabView = Entry.createElement('div', 'entryCategoryTab');
         tabView.addClass('entryPlaygroundTabPhone');
         Entry.view_.insertBefore(tabView, this.view_);
@@ -125,6 +138,7 @@ Entry.Playground.prototype.generateView = function(playgroundView, option) {
 
         var curtainView = Entry.createElement('div', 'entryCurtain');
         curtainView.addClass('entryPlaygroundCurtainPhone');
+        
         curtainView.addClass('entryRemove');
         curtainView.innerHTML = Lang.Workspace.cannot_edit_click_to_stop;
         curtainView.bindOnClick( function () {
@@ -209,6 +223,11 @@ Entry.Playground.prototype.generateTabView = function(tabView) {
     tabList.appendChild(codeTab);
     codeTab.bindOnClick(function(e) {
         Entry.playground.changeViewMode('code');
+        var objects_ = Entry.container.getAllObjects();
+        for (var i in objects_) {
+            objects_[i].editObjectValues(false);
+        }
+
     });
     this.tabViewElements.code = codeTab;
 
@@ -219,6 +238,10 @@ Entry.Playground.prototype.generateTabView = function(tabView) {
         tabList.appendChild(pictureTab);
         pictureTab.bindOnClick(function(e) {
             Entry.playground.changeViewMode('picture');
+            var objects_ = Entry.container.getAllObjects();
+            for (var i in objects_) {
+                objects_[i].editObjectValues(false);
+            }
         });
         this.tabViewElements.picture = pictureTab;
 
@@ -240,6 +263,10 @@ Entry.Playground.prototype.generateTabView = function(tabView) {
         tabList.appendChild(soundTab);
         soundTab.bindOnClick(function(e) {
             Entry.playground.changeViewMode('sound');
+            var objects_ = Entry.container.getAllObjects();
+            for (var i in objects_) {
+                objects_[i].editObjectValues(false);
+            }
         });
         this.tabViewElements.sound = soundTab;
     }
@@ -253,6 +280,10 @@ Entry.Playground.prototype.generateTabView = function(tabView) {
         variableTab.bindOnClick(function(e) {
             Entry.playground.toggleOnVariableView();
             Entry.playground.changeViewMode('variable');
+            var objects_ = Entry.container.getAllObjects();
+            for (var i in objects_) {
+                objects_[i].editObjectValues(false);
+            }
         });
         this.tabViewElements.variable = variableTab;
     }
@@ -301,6 +332,12 @@ Entry.Playground.prototype.generateCodeView = function(codeView) {
                 }, 200);
             delete this.widthBackup;
             delete Entry.playground.focusBlockMenu;
+        });
+        blockMenuView.bindOnClick(function(e) {
+            var objects_ = Entry.container.getAllObjects();
+            for (var i in objects_) {
+                objects_[i].editObjectValues(false);
+            }
         });
         Entry.addEventListener('entryBlocklyChanged', function(e) {
             var blockMenuView = Entry.playground.blockMenuView_;
@@ -372,6 +409,14 @@ Entry.Playground.prototype.generateCodeView = function(codeView) {
         this.blocklyView_ = blocklyView;
         codeView.appendChild(blocklyView);
 
+        this.blocklyView_.bindOnClick(function(e) {
+            var objects_ = Entry.container.getAllObjects();
+            for (var i in objects_) {
+                objects_[i].editObjectValues(false);
+            }
+        });
+
+
         var XML = Entry.parseTexttoXML('<xml></xml>');
         Blockly.inject(
             blocklyView,
@@ -400,6 +445,11 @@ Entry.Playground.prototype.generatePictureView = function(PictureView) {
         var pictureAdd = Entry.createElement('div', 'entryAddPicture');
         pictureAdd.addClass('entryPlaygroundAddPicture');
         pictureAdd.bindOnClick(function(e) {
+            var objects_ = Entry.container.getAllObjects();
+            for (var i in objects_) {
+                objects_[i].editObjectValues(false);
+            }
+
             Entry.dispatchEvent('openPictureManager');
         });
         var innerPictureAdd = Entry.createElement('div', 'entryAddPictureInner');
@@ -436,6 +486,11 @@ Entry.Playground.prototype.generatePictureView = function(PictureView) {
         var pictureAdd = Entry.createElement('div', 'entryAddPicture');
         pictureAdd.addClass('entryPlaygroundAddPicturePhone');
         pictureAdd.bindOnClick(function(e) {
+            var objects_ = Entry.container.getAllObjects();
+            for (var i in objects_) {
+                objects_[i].editObjectValues(false);
+            }
+            
             Entry.dispatchEvent('openPictureManager');
         });
         var innerPictureAdd = Entry.createElement('div', 'entryAddPictureInner');
@@ -1283,6 +1338,10 @@ Entry.Playground.prototype.setMenu = function(objectType) {
             element.addClass("entryRemove");
         element.innerHTML = Lang.Blocks[categoryName.toUpperCase()];
         element.bindOnClick(function () {
+            var objects_ = Entry.container.getAllObjects();
+            for (var i in objects_) {
+                objects_[i].editObjectValues(false);
+            }
             Entry.playground.selectMenu(this.id.substring(13));
         });
         if (!Entry.type || Entry.type == 'workspace') {
@@ -1497,6 +1556,10 @@ Entry.Playground.prototype.generatePictureElement = function(picture) {
     element.addClass('entryPlaygroundPictureElement');
     element.picture = picture;
     element.bindOnClick(function(e) {
+        var objects_ = Entry.container.getAllObjects();
+        for (var i in objects_) {
+            objects_[i].editObjectValues(false);
+        }
         Entry.playground.selectPicture(this.picture);
     });
 
