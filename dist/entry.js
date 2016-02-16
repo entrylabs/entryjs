@@ -13824,45 +13824,45 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
     this.box.set({x:0, y:0, width:b, height:16});
   };
   a.renderOptions = function() {
-    var a = this;
+    var b = this;
     this.destroyOption();
     this.documentDownEvent = Entry.documentMousedown.attach(this, function() {
       Entry.documentMousedown.detach(this.documentDownEvent);
-      a.applyValue();
-      a.destroyOption();
+      b.applyValue();
+      b.destroyOption();
     });
     this.optionGroup = Entry.Dom("input", {class:"entry-widget-input-field", parent:$("body")});
     this.optionGroup.val(this.value);
     this.optionGroup.on("mousedown", function(a) {
       a.stopPropagation();
     });
-    this.optionGroup.on("keyup", function(c) {
-      var d = c.keyCode || c.which;
-      a.applyValue(c);
-      -1 < [13, 27].indexOf(d) && a.destroyOption();
+    this.optionGroup.on("keyup", function(a) {
+      var c = a.keyCode || a.which;
+      b.applyValue(a);
+      -1 < [13, 27].indexOf(c) && b.destroyOption();
     });
-    var c = this.getAbsolutePos();
-    c.y -= this.box.height / 2;
-    this.optionGroup.css({height:16, left:c.x, top:c.y, width:a.box.width});
+    var a = this.getAbsolutePos();
+    a.y -= this.box.height / 2;
+    this.optionGroup.css({height:16, left:a.x, top:a.y, width:b.box.width});
     this.optionGroup.select();
     this.svgOptionGroup = this.appendSvgOptionGroup();
     this.svgOptionGroup.circle(0, 0, 49).attr({class:"entry-field-angle-circle"});
     this._dividerGroup = this.svgOptionGroup.group();
-    for (c = 0;360 > c;c += 15) {
-      this._dividerGroup.line(49, 0, 49 - (0 === c % 45 ? 10 : 5), 0).attr({transform:"rotate(" + c + ", 0, 0)", class:"entry-angle-divider"});
+    for (a = 0;360 > a;a += 15) {
+      this._dividerGroup.line(49, 0, 49 - (0 === a % 45 ? 10 : 5), 0).attr({transform:"rotate(" + a + ", 0, 0)", class:"entry-angle-divider"});
     }
-    c = this.getRelativePos();
-    c.x += this.box.width / 2;
-    c.y = c.y + this.box.height / 2 + 49 + 1;
-    this.svgOptionGroup.attr({class:"entry-field-angle", transform:"t" + c.x + " " + c.y});
-    var c = a.getAbsolutePos(), d = [c.x + a.box.width / 2, c.y + a.box.height / 2 + 1];
-    this.svgOptionGroup.mousemove(function(c) {
-      a.optionGroup.val(a.modValue(function(a, b) {
+    a = this.getRelativePos();
+    a.x += this.box.width / 2;
+    a.y = a.y + this.box.height / 2 + 49 + 1;
+    this.svgOptionGroup.attr({class:"entry-field-angle", transform:"t" + a.x + " " + a.y});
+    var a = b.getAbsolutePos(), d = [a.x + b.box.width / 2, a.y + b.box.height / 2 + 1];
+    this.svgOptionGroup.mousemove(function(a) {
+      b.optionGroup.val(b.modValue(function(a, b) {
         var c = b[0] - a[0], d = b[1] - a[1] - 49 - 1, e = Math.atan(-d / c), e = Entry.toDegrees(e), e = 90 - e;
         0 > c ? e += 180 : 0 < d && (e += 360);
         return 15 * Math.round(e / 15);
-      }(d, [c.clientX, c.clientY])));
-      a.applyValue();
+      }(d, [a.clientX, a.clientY])));
+      b.applyValue();
     });
     this.updateGraph();
   };
@@ -14326,7 +14326,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
     this.svgGroup = this._blockView.contentSvgGroup.group();
     this.box.set({x:0, y:0, width:0, height:20});
     this._thread = this.getValue();
-    (a = this._thread.getFirstBlock()) && a.isDummy ? (this.dummyBlock = a, this.dummyBlock.appendSvg(this)) : (this.dummyBlock = new Entry.FieldDummyBlock(this, this._blockView), this._thread.insertDummyBlock(this.dummyBlock), this._inspectThread(), this.dummyBlock.observe(this, "_inspectThread", ["next"]), this.dummyBlock.observe(this, "calcWH", ["next"]));
+    (a = this._thread.getFirstBlock()) && a.isDummy ? (this.dummyBlock = a, this.dummyBlock.appendSvg(this)) : (this.dummyBlock = new Entry.FieldDummyBlock(this, this._blockView), this._thread.insertDummyBlock(this.dummyBlock), this._inspectThread(), this.dummyBlock.observe(this, "_handleNextChange", ["next"]));
     this._blockView.getBoard().constructor == Entry.BlockMenu && this.dummyBlock.next.view.removeControl();
     this.calcWH();
   };
@@ -14338,7 +14338,6 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
     f.isDummy && (f = f.next);
     f && (c = -.5 * f.view.height);
     a = "t" + a + " " + c;
-    f && f != this._valueBlock && (this._valueBlock && this._valueBlock.view.set({shadow:!0}), this._valueBlock = f, this._valueBlockObserver && this._valueBlockObserver.destroy(), this._valueBlock && (f = this._valueBlock.view, this._valueBlockObserver = f.observe(this, "calcWH", ["width", "height"]), f.shadow && f.set({shadow:!1})));
     d ? e.animate({transform:a}, 300, mina.easeinout) : e.attr({transform:a});
   };
   a.calcWH = function() {
@@ -14357,25 +14356,35 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
   a.destroy = function() {
   };
   a._inspectThread = function() {
-    function a(b, d) {
-      var e = b._block.getThread(), f = b._blockView.getBoard(), e = new Entry.Block(d, e), g = f.workspace, h;
-      g && (h = g.getMode());
-      e.createView(f, h);
-      return e;
+    function a(b, c) {
+      var f = b._block.getThread(), g = b._blockView.getBoard(), f = new Entry.Block(c, f), h = g.workspace, k;
+      h && (k = h.getMode());
+      f.createView(g, k);
+      return f;
     }
     if (!this.dummyBlock.next) {
+      var c = null;
       switch(this.acceptType) {
         case "basic_boolean_field":
-          this._valueBlock = a(this, {type:"True"});
+          c = a(this, {type:"True"});
           break;
         case "basic_string_field":
-          this._valueBlock = a(this, {type:"text"});
+          c = a(this, {type:"text"});
           break;
         case "basic_param":
-          this._valueBlock = a(this, {type:"function_field_label"});
+          c = a(this, {type:"function_field_label"});
       }
-      this._valueBlock && this.dummyBlock.insertAfter([this._valueBlock]);
+      c && this.dummyBlock.insertAfter([c]);
     }
+  };
+  a._handleNextChange = function() {
+    this._inspectThread();
+    this._setValueBlock();
+    this.calcWH();
+  };
+  a._setValueBlock = function() {
+    var a = this.dummyBlock.next;
+    a && a != this._valueBlock && (this._valueBlock && this._valueBlock.view.set({shadow:!0}), this._valueBlock = a, this._valueBlockObserver && this._valueBlockObserver.destroy(), this._valueBlock && (a = this._valueBlock.view, this._valueBlockObserver = a.observe(this, "calcWH", ["width", "height"]), a.shadow && a.set({shadow:!1})));
   };
 })(Entry.FieldBlock.prototype);
 Entry.FieldDummyBlock = function(a, b) {
