@@ -541,13 +541,9 @@ Blockly.Block.prototype.onDblClick_ = function(e) {
   if (Entry.Func.isEdit)
     return;
   
-   if(Entry.variableContainer.functions_.length != 0) {
-    var functionList = Entry.variableContainer.functions_;
-    if(functionList.length != 0) {
-      var targetFunc = functionList[this.hashId];
-      Entry.Func.edit(targetFunc);
-    }
-  }
+   var funcs = Entry.variableContainer.functions_;
+   if(funcs && funcs.length !== 0) 
+      Entry.Func.edit(funcs[this.hashId]);
 };
 
 /**
