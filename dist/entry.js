@@ -9249,19 +9249,19 @@ Entry.Playground.prototype.injectCode = function() {
   var a = this.object;
   Blockly.mainWorkspace.clear();
   Blockly.Xml.domToWorkspace(Blockly.mainWorkspace, a.script);
-  this.adjust();
+  this.adjust(0, 0);
 };
-Entry.Playground.prototype.adjust = function() {
-  var a = Blockly.mainWorkspace.scrollbar.vScroll;
+Entry.Playground.prototype.adjust = function(a, b) {
+  var c = Blockly.mainWorkspace.scrollbar.vScroll;
   Blockly.mainWorkspace.scrollbar.hScroll.svgGroup_.setAttribute("opacity", "1");
-  a.svgGroup_.setAttribute("opacity", "1");
+  c.svgGroup_.setAttribute("opacity", "1");
   Blockly.removeAllRanges();
-  var a = Blockly.mainWorkspace.getMetrics(), b, c;
-  b = Math.min(0, -a.contentLeft);
-  c = Math.min(0, -a.contentTop);
-  b = Math.max(b, a.viewWidth - a.contentLeft - a.contentWidth);
-  c = Math.max(c, a.viewHeight - a.contentTop - a.contentHeight);
-  Blockly.mainWorkspace.scrollbar.set(-b - a.contentLeft, -c - a.contentTop);
+  var c = Blockly.mainWorkspace.getMetrics(), d, e;
+  d = Math.min(a, -c.contentLeft);
+  e = Math.min(b, -c.contentTop);
+  d = Math.max(d, c.viewWidth - c.contentLeft - c.contentWidth);
+  e = Math.max(e, c.viewHeight - c.contentTop - c.contentHeight);
+  Blockly.mainWorkspace.scrollbar.set(-d - c.contentLeft, -e - c.contentTop);
 };
 Entry.Playground.prototype.injectPicture = function() {
   var a = this.pictureListView_;

@@ -897,10 +897,11 @@ Entry.Playground.prototype.injectCode = function() {
     var object = this.object;
     Blockly.mainWorkspace.clear();
     Blockly.Xml.domToWorkspace(Blockly.mainWorkspace, object.script);
-    this.adjust();
+
+    this.adjust(0, 0);
 };
 
-Entry.Playground.prototype.adjust = function() {
+Entry.Playground.prototype.adjust = function(xc, xy) {
     var hScroll = Blockly.mainWorkspace.scrollbar.hScroll;
     var vScroll = Blockly.mainWorkspace.scrollbar.vScroll;
     hScroll.svgGroup_.setAttribute('opacity', '1');
@@ -909,8 +910,8 @@ Entry.Playground.prototype.adjust = function() {
     Blockly.removeAllRanges();
     
     var metrics = Blockly.mainWorkspace.getMetrics();
-    var x = 0;
-    var y = 0;
+    var x = xc;
+    var y = xy;
     x = Math.min(x, -metrics.contentLeft);
     y = Math.min(y, -metrics.contentTop);
     x = Math.max(x, metrics.viewWidth - metrics.contentLeft -
