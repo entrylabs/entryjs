@@ -9249,6 +9249,19 @@ Entry.Playground.prototype.injectCode = function() {
   var a = this.object;
   Blockly.mainWorkspace.clear();
   Blockly.Xml.domToWorkspace(Blockly.mainWorkspace, a.script);
+  this.adjust(0, 0);
+};
+Entry.Playground.prototype.adjust = function(a, b) {
+  var c = Blockly.mainWorkspace.scrollbar.vScroll;
+  Blockly.mainWorkspace.scrollbar.hScroll.svgGroup_.setAttribute("opacity", "1");
+  c.svgGroup_.setAttribute("opacity", "1");
+  Blockly.removeAllRanges();
+  var c = Blockly.mainWorkspace.getMetrics(), d, e;
+  d = Math.min(a, -c.contentLeft);
+  e = Math.min(b, -c.contentTop);
+  d = Math.max(d, c.viewWidth - c.contentLeft - c.contentWidth);
+  e = Math.max(e, c.viewHeight - c.contentTop - c.contentHeight);
+  Blockly.mainWorkspace.scrollbar.set(-d - c.contentLeft, -e - c.contentTop);
 };
 Entry.Playground.prototype.injectPicture = function() {
   var a = this.pictureListView_;
