@@ -4851,10 +4851,10 @@ Entry.Event = function(a) {
       a.pop();
     }
   };
-  a.notify = function(a) {
-    var c = this._sender;
-    this._listeners.slice().forEach(function(d) {
-      d.fn.call(d.obj, c, a);
+  a.notify = function() {
+    var a = arguments;
+    this._listeners.slice().forEach(function(c) {
+      c.fn.apply(c.obj, a);
     });
   };
 })(Entry.Event.prototype);
