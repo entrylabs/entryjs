@@ -13,9 +13,11 @@ Entry.popupHelper = function(reset) {
         window.popupHelper = null;
     }
     Entry.assert(!window.popupHelper, 'Popup exist');    
-    this.body_ = Entry.createElement('div');
-    this.body_.addClass('entryPopup hiddenPopup popupHelper');
+
     var spanArea = ['entryPopupHelperTopSpan', 'entryPopupHelperBottomSpan', 'entryPopupHelperLeftSpan', 'entryPopupHelperRightSpan'];
+    this.body_ = Entry.Dom('div', {
+        classes: ['entryPopup', 'hiddenPopup', 'popupHelper'],
+    })
     this.body_.bindOnClick(function(e) {
         var $target = $(e.target);
         spanArea.forEach((function (className) {
@@ -27,18 +29,36 @@ Entry.popupHelper = function(reset) {
             this.popup.hide();
         }
     });
+
     window.popupHelper = this;
-    this.body_.popup = this;
+    this.body_.prop('popup', this);
 
-    Ntry.createElement('div', this.body_, null, 'entryPopupHelperTopSpan');
-    var middle = Ntry.createElement('div', this.body_, null, 'entryPopupHelperMiddleSpan');
-    Ntry.createElement('div', this.body_, null, 'entryPopupHelperBottomSpan');
+    Entry.Dom('div', {
+        class: 'entryPopupHelperTopSpan',
+        parent: this.body_
+    });
+    var middle = Entry.Dom('div', {
+        class: 'entryPopupHelperMiddleSpan',
+        parent: this.body_
+    });
+    Entry.Dom('div', {
+        class: 'entryPopupHelperBottomSpan',
+        parent: this.body_
+    });
+    Entry.Dom('div', {
+        class: 'entryPopupHelperLeftSpan',
+        parent: middle
+    });
+    this.window_ = Entry.Dom('div', {
+        class: 'entryPopupHelperWindow',
+        parent: middle
+    });
+    Entry.Dom('div', {
+        class: 'entryPopupHelperRightSpan',
+        parent: middle
+    });
 
-    Ntry.createElement('div', middle, null, 'entryPopupHelperLeftSpan');
-    this.window_ = Ntry.createElement('div', middle, null, 'entryPopupHelperWindow');
-    Ntry.createElement('div', middle, null, 'entryPopupHelperRightSpan');
-
-    document.body.appendChild(this.body_);
+    $('body').append(this.body_);
 };
 
 Entry.popupHelper.prototype.clearPopup = function() {
@@ -49,27 +69,30 @@ Entry.popupHelper.prototype.clearPopup = function() {
 };
 
 Entry.popupHelper.prototype.addPopup = function(key, popupObject) {
-    var content_ = Entry.createElement('div');
+    var content_ = Entry.Dom('div');
 
-    var title_ = Entry.createElement('div');
-    title_.addClass('entryPopupHelperTitle');    
+    var title_ = Entry.Dom('div', {
+        class: 'entryPopupHelperTitle'
+    });
 
-    var titleButton_ = Entry.createElement('div');
-    titleButton_.addClass('entryPopupHelperCloseButton');    
+    var titleButton_ = Entry.Dom('div', {
+        class: 'entryPopupHelperCloseButton'
+    });
 
-    titleButton_.addEventListener('click', (function () {
+    titleButton_.bindOnClick((function () {
         this.hide();
     }).bind(this));
 
-    var popupWrapper_ = Entry.createElement('div');
-    popupWrapper_.appendChild(titleButton_);
-    popupWrapper_.appendChild(title_);
-    popupWrapper_.addClass('entryPopupHelperWrapper');
+    var popupWrapper_ = Entry.Dom('div', {
+        class: 'entryPopupHelperWrapper'
+    });
+    popupWrapper_.append(titleButton_);
+    popupWrapper_.append(title_);
 
-    content_.appendChild(popupWrapper_);
+    content_.append(popupWrapper_);
     content_.popupWrapper_ = popupWrapper_;
 
-    title_.textContent = popupObject.title;
+    title_.text(popupObject.title);
     if(typeof popupObject.setPopupLayout === 'function') {
         popupObject.setPopupLayout(content_);
     }
@@ -106,10 +129,10 @@ Entry.popupHelper.prototype.resize = function(e) {
 };
 
 Entry.popupHelper.prototype.show = function(key) {
-    if(this.window_.childNodes.length > 0) {
-        this.window_.removeChild(this.window_.childNodes[0]);   
+    if(this.window_.children().length > 0) {
+        this.window_.children().detach();   
     }
-    this.window_.appendChild(this.popupList[key]);
+    this.window_.append(this.popupList[key]);
     this.body_.removeClass('hiddenPopup');
 };
 

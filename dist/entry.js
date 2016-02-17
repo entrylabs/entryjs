@@ -8808,9 +8808,8 @@ Entry.popupHelper = function(a) {
   this.popupList = {};
   a && (window.popupHelper = null);
   Entry.assert(!window.popupHelper, "Popup exist");
-  this.body_ = Entry.createElement("div");
-  this.body_.addClass("entryPopup hiddenPopup popupHelper");
   var b = ["entryPopupHelperTopSpan", "entryPopupHelperBottomSpan", "entryPopupHelperLeftSpan", "entryPopupHelperRightSpan"];
+  this.body_ = Entry.Dom("div", {classes:["entryPopup", "hiddenPopup", "popupHelper"]});
   this.body_.bindOnClick(function(a) {
     var d = $(a.target);
     b.forEach(function(b) {
@@ -8819,14 +8818,14 @@ Entry.popupHelper = function(a) {
     a.target == this && this.popup.hide();
   });
   window.popupHelper = this;
-  this.body_.popup = this;
-  Ntry.createElement("div", this.body_, null, "entryPopupHelperTopSpan");
-  a = Ntry.createElement("div", this.body_, null, "entryPopupHelperMiddleSpan");
-  Ntry.createElement("div", this.body_, null, "entryPopupHelperBottomSpan");
-  Ntry.createElement("div", a, null, "entryPopupHelperLeftSpan");
-  this.window_ = Ntry.createElement("div", a, null, "entryPopupHelperWindow");
-  Ntry.createElement("div", a, null, "entryPopupHelperRightSpan");
-  document.body.appendChild(this.body_);
+  this.body_.prop("popup", this);
+  Entry.Dom("div", {class:"entryPopupHelperTopSpan", parent:this.body_});
+  a = Entry.Dom("div", {class:"entryPopupHelperMiddleSpan", parent:this.body_});
+  Entry.Dom("div", {class:"entryPopupHelperBottomSpan", parent:this.body_});
+  Entry.Dom("div", {class:"entryPopupHelperLeftSpan", parent:a});
+  this.window_ = Entry.Dom("div", {class:"entryPopupHelperWindow", parent:a});
+  Entry.Dom("div", {class:"entryPopupHelperRightSpan", parent:a});
+  $("body").append(this.body_);
 };
 Entry.popupHelper.prototype.clearPopup = function() {
   for (var a = this.popupWrapper_.children.length - 1;2 < a;a--) {
@@ -8834,20 +8833,16 @@ Entry.popupHelper.prototype.clearPopup = function() {
   }
 };
 Entry.popupHelper.prototype.addPopup = function(a, b) {
-  var c = Entry.createElement("div"), d = Entry.createElement("div");
-  d.addClass("entryPopupHelperTitle");
-  var e = Entry.createElement("div");
-  e.addClass("entryPopupHelperCloseButton");
-  e.addEventListener("click", function() {
+  var c = Entry.Dom("div"), d = Entry.Dom("div", {class:"entryPopupHelperTitle"}), e = Entry.Dom("div", {class:"entryPopupHelperCloseButton"});
+  e.bindOnClick(function() {
     this.hide();
   }.bind(this));
-  var f = Entry.createElement("div");
-  f.appendChild(e);
-  f.appendChild(d);
-  f.addClass("entryPopupHelperWrapper");
-  c.appendChild(f);
+  var f = Entry.Dom("div", {class:"entryPopupHelperWrapper"});
+  f.append(e);
+  f.append(d);
+  c.append(f);
   c.popupWrapper_ = f;
-  d.textContent = b.title;
+  d.text(b.title);
   "function" === typeof b.setPopupLayout && b.setPopupLayout(c);
   this.popupList[a] = c;
 };
@@ -8866,8 +8861,8 @@ Entry.popupHelper.prototype.remove = function() {
 Entry.popupHelper.prototype.resize = function(a) {
 };
 Entry.popupHelper.prototype.show = function(a) {
-  0 < this.window_.childNodes.length && this.window_.removeChild(this.window_.childNodes[0]);
-  this.window_.appendChild(this.popupList[a]);
+  0 < this.window_.children().length && this.window_.children().detach();
+  this.window_.append(this.popupList[a]);
   this.body_.removeClass("hiddenPopup");
 };
 Entry.popupHelper.prototype.hide = function() {
