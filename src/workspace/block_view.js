@@ -20,8 +20,11 @@ Entry.BlockView = function(block, board, mode) {
     this._contents = [];
     this._statements = [];
 
-    if (skeleton.magnets && skeleton.magnets().next)
+    if (skeleton.magnets && skeleton.magnets().next) {
         this.svgGroup.nextMagnet = this.block;
+        this._nextGroup = this.svgGroup.group();
+        this.observe(this, "_updateMagnet", ["contentHeight"]);
+    }
 
     this.isInBlockMenu = this.getBoard() instanceof Entry.BlockMenu;
 
@@ -36,12 +39,9 @@ Entry.BlockView = function(block, board, mode) {
 
         that.onMouseDown.apply(that, arguments);
     }
-    this.prevObserver = null;
     this._startRender(block, mode);
 
     // observe
-    this.block.observe(this, "_bindPrev", ["prev"]);
-    this.block.observe(this, "_createEmptyBG", ["next"]);
     this.block.observe(this, "_setMovable", ["movable"]);
     this.block.observe(this, "_setReadOnly", ["movable"]);
     this.observe(this, "_updateBG", ["magneting"]);
@@ -97,6 +97,8 @@ Entry.BlockView.PARAM_SPACE = 5;
         this._moveTo(this.x, this.y, false);
         this._startContentRender(mode);
         this._addControl();
+
+        this._handlePrev();
     };
 
     p._startContentRender = function(mode) {
@@ -183,20 +185,6 @@ Entry.BlockView.PARAM_SPACE = 5;
         this._render();
     };
 
-    p._bindPrev = function() {
-        if (this.prevObserver) this.prevObserver.destroy();
-        if (this.block.prev) {
-            this._toLocalCoordinate(this.block.prev.view.svgGroup);
-            var prevView = this.block.prev.view;
-            this.prevObserver = prevView.observe(
-                this, "_align", ["height"]
-            );
-        } else {
-            this._toGlobalCoordinate();
-            delete this.prevObserver;
-        }
-    };
-
     p._render = function() {
         this._renderPath();
         this.set(this._skeleton.box(this));
@@ -236,20 +224,6 @@ Entry.BlockView.PARAM_SPACE = 5;
         }
     };
 
-    p._align = function(animate) {
-        if (this.block.prev === null)
-            return;
-        var prevBlockView = this.block.prev.view;
-        if (animate === true)
-            this.set({animating: true});
-        this.set({
-            x: 0,
-            y: prevBlockView.height + 1
-        });
-
-        this._setPosition(animate === true || this.animating);
-    };
-
     p._setPosition = function(animate) {
         animate = animate === undefined ? true : animate;
         var transform = "t" +
@@ -270,7 +244,8 @@ Entry.BlockView.PARAM_SPACE = 5;
     p._toLocalCoordinate = function(parentSvgGroup) {
         var parentMatrix = parentSvgGroup.transform().globalMatrix;
         var matrix = this.svgGroup.transform().globalMatrix;
-        this._moveTo(matrix.e - parentMatrix.e, matrix.f - parentMatrix.f, false);
+        //this._moveTo(matrix.e - parentMatrix.e, matrix.f - parentMatrix.f, false);
+        this._moveTo(0,0);
         parentSvgGroup.append(this.svgGroup);
     };
 
@@ -326,7 +301,6 @@ Entry.BlockView.PARAM_SPACE = 5;
                 startY: e.pageY,
                 offsetX: e.pageX,
                 offsetY: e.pageY,
-                prev: this.block.prev,
                 height: 0,
                 mode: true
             });
@@ -397,22 +371,12 @@ Entry.BlockView.PARAM_SPACE = 5;
                 if (!blockView.movable) return;
 
                 if (!blockView.isInBlockMenu) {
-                    if(blockView.block.prev) {
-                        blockView.block.prev.setNext(null);
-                        blockView.block.setPrev(null);
-                        blockView.block.thread.changeEvent.notify();
-                    }
-
                     if (this.animating)
                         this.set({animating: false});
 
                     if (blockView.dragInstance.height === 0) {
                         var block = blockView.block;
                         var height = - 1;
-                        while (block) {
-                            height += block.view.height + 1;
-                            block = block.next;
-                        }
                         blockView.dragInstance.set({
                             height: height
                         });
@@ -505,8 +469,6 @@ Entry.BlockView.PARAM_SPACE = 5;
                         } else {
                             if (closeBlock) {
                                 this.set({animating: true});
-                                if (closeBlock.next)
-                                    closeBlock.next.view.set({animating: true});
 
                                 block.doInsert(closeBlock);
                                 createjs.Sound.play('entryMagneting');
@@ -515,6 +477,7 @@ Entry.BlockView.PARAM_SPACE = 5;
                                     .dispose();
 
                                 if (closeBlock.constructor == Entry.FieldDummyBlock) {
+                                    //TODO get next block
                                     var orphan = block.next;
                                     if (orphan) {
                                         if (Entry.FieldDummyBlock.PRIMITIVE_TYPES.indexOf(orphan.type) > -1) {
@@ -608,6 +571,8 @@ Entry.BlockView.PARAM_SPACE = 5;
     };
 
     p._inheritAnimate = function() {
+        return;
+        //TODO
         var prevBlockView = this.block.prev.view;
         if (prevBlockView)
             this.set({animating: prevBlockView.animating});
@@ -673,6 +638,11 @@ Entry.BlockView.PARAM_SPACE = 5;
 
     p.destroyShadow = function() {
         delete this._shadow;
+    };
+
+    p._updateMagnet = function() {
+        var magnet = this._skeleton.magnets(this);
+        this._nextGroup.transform("t" + magnet.next.x + ' ' + magnet.next.y);
     };
 
     p._updateBG = function() {
@@ -758,6 +728,7 @@ Entry.BlockView.PARAM_SPACE = 5;
     };
 
     p._createEmptyBG = function() {
+        //TODO this never call
         var blockView = this;
         if (this.svgGroup.nextMagnet && !this.block.next) {
             var bg = this.svgGroup.rect(
@@ -842,5 +813,13 @@ Entry.BlockView.PARAM_SPACE = 5;
     };
 
     p.bumpAway = function() {this._moveBy(10, 10, false);};
+
+    p._handlePrev = function() {
+        var prevBlock = this.block.getPrevBlock();
+        if (!prevBlock) return;
+        var prevBlockView = prevBlock.view;
+
+        this._toLocalCoordinate(prevBlockView._nextGroup);
+    };
 
 })(Entry.BlockView.prototype);

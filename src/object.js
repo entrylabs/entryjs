@@ -31,16 +31,6 @@ Entry.EntryObject = function(model) {
                     y: 240
                 },
                 {
-                    type: "repeat_basic",
-                    statements: [
-                        [
-                            {
-                                type: "move_direction"
-                            }
-                        ]
-                    ]
-                },
-                {
                     type: "stop_repeat"
                 }
             ]

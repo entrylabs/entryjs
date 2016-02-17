@@ -37,25 +37,9 @@ Entry.Thread = function(thread, code) {
                 this._data.push(block);
             } else this._data.push(new Entry.Block(block, this));
         }
-        this._setRelation();
 
         var codeView = this._code.view;
         if (codeView) this.createView(codeView.board, mode);
-    };
-
-    p._setRelation = function() {
-        var blocks = this._data.getAll();
-        if (blocks.length === 0) return;
-
-        var prevBlock = blocks[0];
-        prevBlock.setPrev(null);
-        blocks[blocks.length - 1].setNext(null);
-        for (var i = 1; i < blocks.length; i++) {
-            var block = blocks[i];
-            block.setPrev(prevBlock);
-            prevBlock.setNext(block);
-            prevBlock = block;
-        }
     };
 
     p.registerEvent = function(block, eventType) {
@@ -70,6 +54,7 @@ Entry.Thread = function(thread, code) {
     p.createView = function(board, mode) {
         if (!this.view)
             this.view = new Entry.ThreadView(this, board);
+        var prevBlock = null;
         this._data.map(function(b) {
             b.createView(board, mode);
         });
@@ -77,11 +62,6 @@ Entry.Thread = function(thread, code) {
 
     p.separate = function(block) {
         if (!this._data.has(block.id)) return;
-
-        if (block.prev) {
-            block.prev.setNext(null);
-            block.setPrev(null);
-        }
 
         var blocks = this._data.splice(this._data.indexOf(block));
         this._code.createThread(blocks);
@@ -91,24 +71,16 @@ Entry.Thread = function(thread, code) {
     p.cut = function(block) {
         var index = this._data.indexOf(block);
         var splicedData = this._data.splice(index);
-        if (this._data[index - 1])
-            this._data[index - 1].setNext(null);
         this.changeEvent.notify();
         return splicedData;
     };
 
     p.insertDummyBlock = function(dummyBlock) {
         this._data.unshift(dummyBlock);
-        if (this._data[1]) {
-            this._data[1].setPrev(dummyBlock);
-            dummyBlock.setNext(this._data[1]);
-        }
     };
 
     p.insertByBlock = function(block, newBlocks) {
         var index = this._data.indexOf(block);
-        block.setNext(newBlocks[0]);
-        newBlocks[0].setPrev(block);
         for (var i in newBlocks) {
             newBlocks[i].setThread(this);
         }
@@ -116,7 +88,6 @@ Entry.Thread = function(thread, code) {
             this._data,
             [index + 1, 0].concat(newBlocks)
         );
-        this._setRelation();
         this.changeEvent.notify();
     };
 
@@ -195,18 +166,14 @@ Entry.Thread = function(thread, code) {
         blocks.remove(block);
 
         if (blocks.length !== 0) {
-            if (block.prev === null)
-                block.next.setPrev(null);
-            else if (block.next === null)
-                block.prev.setNext(null);
-            else {
-                block.prev.setNext(block.next);
-                block.next.setPrev(block.prev);
-            }
-            this._setRelation();
         } else this.destroy();
 
         this.changeEvent.notify();
+    };
+
+    p.getPrevBlock = function(block) {
+        var index = this._data.indexOf(block);
+        return this._data.at(index - 1);
     };
 
 })(Entry.Thread.prototype);

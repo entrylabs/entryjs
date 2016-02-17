@@ -33,8 +33,6 @@ Entry.Block.MAGNET_OFFSET = 0.4;
         type: null,
         params: [],
         statements: [],
-        prev: null,
-        next: null,
         view: null,
         thread: null,
         movable: null,
@@ -109,22 +107,6 @@ Entry.Block.MAGNET_OFFSET = 0.4;
         return this.thread;
     };
 
-    p.setPrev = function(block) {
-        if (block === this)
-            return;
-        this.set({prev: block});
-    };
-
-    p.setNext = function(block) {
-        if (block === this)
-            return;
-        this.set({next: block});
-    };
-
-    p.next = function() {
-        return this.next;
-    };
-
     p.insertAfter = function(blocks) {
         this.thread.insertByBlock(this, blocks);
     };
@@ -135,8 +117,8 @@ Entry.Block.MAGNET_OFFSET = 0.4;
                 x: this.view.x,
                 y: this.view.y
             });
-        if (this.next)
-            this.next._updatePos();
+
+        //TODO update next pos
     };
 
     p.createView = function(board, mode) {
@@ -159,8 +141,6 @@ Entry.Block.MAGNET_OFFSET = 0.4;
 
     p.toJSON = function(isNew) {
         var json = this._toJSON();
-        delete json.prev;
-        delete json.next;
         delete json.view;
         delete json.thread;
 
@@ -180,10 +160,6 @@ Entry.Block.MAGNET_OFFSET = 0.4;
 
     p.destroy = function(animate) {
         if (this.view) this.view.destroy(animate);
-        if (!this.prev || this.prev.isDummy)
-            this.thread.destroy(animate, false);
-        else this.prev.setNext(this.next);
-
 
         var params = this.params;
         if (params) {
@@ -191,7 +167,6 @@ Entry.Block.MAGNET_OFFSET = 0.4;
                 var param = params[i];
                 if (param instanceof Entry.Thread) {
                     var block = param.getFirstBlock();
-                    if (block.isDummy) block = block.next;
                     if (block) block.destroy(animate);
                 }
             }
@@ -202,16 +177,12 @@ Entry.Block.MAGNET_OFFSET = 0.4;
             for (var i=0; i<statements.length; i++) {
                 var statement = statements[i];
                 var block = statement.getFirstBlock();
-                if (block.isDummy)
-                    block = block.next;
                 if (block) block.destroy(animate);
             }
         }
 
         if (this._schema.event)
             this.thread.unregisterEvent(this, this._schema.event);
-
-        if (this.next) this.next.destroy(animate);
     };
 
     p.destroyAlone = function(animate) {
@@ -404,6 +375,8 @@ Entry.Block.MAGNET_OFFSET = 0.4;
         this.getCode().changeEvent.notify();
     };
 
-
+    p.getPrevBlock = function() {
+        return this.thread.getPrevBlock(this);
+    };
 
 })(Entry.Block.prototype);
