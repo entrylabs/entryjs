@@ -14,14 +14,30 @@ Entry.popupHelper = function(reset) {
     }
     Entry.assert(!window.popupHelper, 'Popup exist');    
     this.body_ = Entry.createElement('div');
-    this.body_.addClass('entryPopup hiddenPopup');
+    this.body_.addClass('entryPopup hiddenPopup popupHelper');
+    var spanArea = ['entryPopupHelperTopSpan', 'entryPopupHelperBottomSpan', 'entryPopupHelperLeftSpan', 'entryPopupHelperRightSpan'];
     this.body_.bindOnClick(function(e) {
+        var $target = $(e.target);
+        spanArea.forEach((function (className) {
+            if($target.hasClass(className)) {
+                this.popup.hide();
+            }
+        }).bind(this));
         if (e.target==this) {
             this.popup.hide();
         }
     });
     window.popupHelper = this;
     this.body_.popup = this;
+
+    Ntry.createElement('div', this.body_, null, 'entryPopupHelperTopSpan');
+    var middle = Ntry.createElement('div', this.body_, null, 'entryPopupHelperMiddleSpan');
+    Ntry.createElement('div', this.body_, null, 'entryPopupHelperBottomSpan');
+
+    Ntry.createElement('div', middle, null, 'entryPopupHelperLeftSpan');
+    this.window_ = Ntry.createElement('div', middle, null, 'entryPopupHelperWindow');
+    Ntry.createElement('div', middle, null, 'entryPopupHelperRightSpan');
+
     document.body.appendChild(this.body_);
 };
 
@@ -33,8 +49,7 @@ Entry.popupHelper.prototype.clearPopup = function() {
 };
 
 Entry.popupHelper.prototype.addPopup = function(key, popupObject) {
-    var window_ = Entry.createElement('div');
-    window_.addClass('entryPopupHelperWindow');
+    var content_ = Entry.createElement('div');
 
     var title_ = Entry.createElement('div');
     title_.addClass('entryPopupHelperTitle');    
@@ -51,15 +66,15 @@ Entry.popupHelper.prototype.addPopup = function(key, popupObject) {
     popupWrapper_.appendChild(title_);
     popupWrapper_.addClass('entryPopupHelperWrapper');
 
-    window_.appendChild(popupWrapper_);
-    window_.popupWrapper_ = popupWrapper_;
+    content_.appendChild(popupWrapper_);
+    content_.popupWrapper_ = popupWrapper_;
 
     title_.textContent = popupObject.title;
     if(typeof popupObject.setPopupLayout === 'function') {
-        popupObject.setPopupLayout(window_);
+        popupObject.setPopupLayout(content_);
     }
 
-    this.popupList[key] = window_;
+    this.popupList[key] = content_;
 };
 
 Entry.popupHelper.prototype.hasPopup = function(key) {
@@ -91,10 +106,10 @@ Entry.popupHelper.prototype.resize = function(e) {
 };
 
 Entry.popupHelper.prototype.show = function(key) {
-    if(this.body_.childNodes.length > 0) {
-        this.body_.removeChild(this.body_.childNodes[0]);   
+    if(this.window_.childNodes.length > 0) {
+        this.window_.removeChild(this.window_.childNodes[0]);   
     }
-    this.body_.appendChild(this.popupList[key]);
+    this.window_.appendChild(this.popupList[key]);
     this.body_.removeClass('hiddenPopup');
 };
 

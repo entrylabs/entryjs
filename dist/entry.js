@@ -8809,12 +8809,23 @@ Entry.popupHelper = function(a) {
   a && (window.popupHelper = null);
   Entry.assert(!window.popupHelper, "Popup exist");
   this.body_ = Entry.createElement("div");
-  this.body_.addClass("entryPopup hiddenPopup");
-  this.body_.bindOnClick(function(b) {
-    b.target == this && this.popup.hide();
+  this.body_.addClass("entryPopup hiddenPopup popupHelper");
+  var b = ["entryPopupHelperTopSpan", "entryPopupHelperBottomSpan", "entryPopupHelperLeftSpan", "entryPopupHelperRightSpan"];
+  this.body_.bindOnClick(function(a) {
+    var d = $(a.target);
+    b.forEach(function(b) {
+      d.hasClass(b) && this.popup.hide();
+    }.bind(this));
+    a.target == this && this.popup.hide();
   });
   window.popupHelper = this;
   this.body_.popup = this;
+  Ntry.createElement("div", this.body_, null, "entryPopupHelperTopSpan");
+  a = Ntry.createElement("div", this.body_, null, "entryPopupHelperMiddleSpan");
+  Ntry.createElement("div", this.body_, null, "entryPopupHelperBottomSpan");
+  Ntry.createElement("div", a, null, "entryPopupHelperLeftSpan");
+  this.window_ = Ntry.createElement("div", a, null, "entryPopupHelperWindow");
+  Ntry.createElement("div", a, null, "entryPopupHelperRightSpan");
   document.body.appendChild(this.body_);
 };
 Entry.popupHelper.prototype.clearPopup = function() {
@@ -8823,9 +8834,7 @@ Entry.popupHelper.prototype.clearPopup = function() {
   }
 };
 Entry.popupHelper.prototype.addPopup = function(a, b) {
-  var c = Entry.createElement("div");
-  c.addClass("entryPopupHelperWindow");
-  var d = Entry.createElement("div");
+  var c = Entry.createElement("div"), d = Entry.createElement("div");
   d.addClass("entryPopupHelperTitle");
   var e = Entry.createElement("div");
   e.addClass("entryPopupHelperCloseButton");
@@ -8857,8 +8866,8 @@ Entry.popupHelper.prototype.remove = function() {
 Entry.popupHelper.prototype.resize = function(a) {
 };
 Entry.popupHelper.prototype.show = function(a) {
-  0 < this.body_.childNodes.length && this.body_.removeChild(this.body_.childNodes[0]);
-  this.body_.appendChild(this.popupList[a]);
+  0 < this.window_.childNodes.length && this.window_.removeChild(this.window_.childNodes[0]);
+  this.window_.appendChild(this.popupList[a]);
   this.body_.removeClass("hiddenPopup");
 };
 Entry.popupHelper.prototype.hide = function() {
@@ -13777,18 +13786,18 @@ Entry.Code = function(a) {
     this._eventMap[a] || (this._eventMap[a] = []);
     this._eventMap[a].push(b);
   };
-  a.unregisterEvent = function(b, a) {
-    var d = this._eventMap[a];
+  a.unregisterEvent = function(a, c) {
+    var d = this._eventMap[c];
     if (d && 0 !== d.length) {
-      var e = d.indexOf(b);
+      var e = d.indexOf(a);
       0 > e || d.splice(e, 1);
     }
   };
-  a.raiseEvent = function(b, a) {
-    var d = this._eventMap[b];
+  a.raiseEvent = function(a, c) {
+    var d = this._eventMap[a];
     if (void 0 !== d) {
       for (var e = 0;e < d.length;e++) {
-        this.executors.push(new Entry.Executor(d[e], a));
+        this.executors.push(new Entry.Executor(d[e], c));
       }
     }
   };
