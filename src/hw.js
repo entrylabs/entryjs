@@ -7,17 +7,7 @@ Entry.HW = function() {
     this.connectTrial = 0;
     this.isFirstConnect = true;
 
-    if ("WebSocket" in window)
-    {
-        try {
-            this.initSocket();
-        } catch (err) {
-            console.log('socket error:',err);
-        }
-    } else {
-        console.log('socket not exist');
-    }
-
+    this.initSocket();
     this.connected = false;
     this.portData = {};
     this.sendQueue = {};
@@ -51,26 +41,27 @@ p.initSocket = function() {
         return;
     }
     var hw = this;
-    var socket = new WebSocket("ws://localhost:23518");
+    // var socket = new WebSocket("ws://localhost:23518");
+    var socket = io.connect('ws://localhost:23518');
     this.socket = socket;
     this.connected = false;
     socket.binaryType = "arraybuffer";
     this.connectTrial++;
 
-    socket.onopen = function()
-    {
+    socket.on('connect', function (data) {
         hw.initHardware();
-    };
-    socket.onmessage = function (evt)
-    {
-        var data = JSON.parse(evt.data);
-        hw.checkDevice(data);
-        hw.updatePortData(data);
-    };
-    socket.onclose = function()
-    {
-        hw.initSocket();
-    };
+    });
+    socket.on('message', function (evt) {
+        if(typeof evt === 'string') {
+            var data = JSON.parse(evt);
+            hw.checkDevice(data);
+            hw.updatePortData(data);
+        }
+    });
+    socket.on('disconnect', function (data) {
+        hw.initHardware();
+    });
+
     Entry.dispatchEvent("hwChanged");
 };
 
@@ -118,9 +109,9 @@ p.setPortReadable = function(port) {
 p.update = function() {
     if (!this.socket)
         return;
-    if (this.socket.readyState != 1)
+    if (this.socket.io.readyState != 'open')
         return;
-    this.socket.send(JSON.stringify(this.sendQueue));
+    this.socket.emit('message', JSON.stringify(this.sendQueue));
     this.sendQueue.readablePorts = [];
     if (false) {
         var bytes = [], queryString;
@@ -150,7 +141,8 @@ p.update = function() {
         for (var i = 0; i < bytes.length; i++) {
             buf[i] = bytes[i];
         }
-        this.socket.send(buf);
+
+        this.socket.emit('message', buf);
     }
 };
 
@@ -159,8 +151,10 @@ p.updatePortData = function(data) {
 };
 
 p.closeConnection = function() {
-    if (this.socket)
+    if (this.socket) {
+        this.socket.emit('close');
         this.socket.close();
+    }
 };
 
 p.downloadConnector = function() {
