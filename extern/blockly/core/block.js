@@ -552,6 +552,9 @@ Blockly.Block.prototype.onDblClick_ = function(e) {
  * @private
  */
 Blockly.Block.prototype.onMouseDown_ = function(e) {
+  if (Entry.documentMousedown)
+      Entry.documentMousedown.notify(e);
+
   if (this.isInFlyout) {
     this.select();
     return;
@@ -630,6 +633,7 @@ Blockly.Block.prototype.onMouseDown_ = function(e) {
  * @private
  */
 Blockly.Block.prototype.onMouseUp_ = function(e) {
+
   if (this.isInBlockMenu) {
     this.isInBlockMenu = false;
     var selected = Blockly.selected;
