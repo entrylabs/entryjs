@@ -2502,7 +2502,7 @@ Blockly.Blocks.is_press_some_key = {init:function() {
 }};
 Entry.block.is_press_some_key = function(a, b) {
   var c = Number(b.getField("VALUE", b));
-  return 0 <= Entry.engine.pressedKeys.indexOf(c);
+  return 0 <= Entry.pressedKeys.indexOf(c);
 };
 Blockly.Blocks.reach_something = {init:function() {
   this.setColour("#AEB8FF");
@@ -5509,9 +5509,7 @@ Entry.Engine = function() {
   this.popup = null;
   this.isUpdating = !0;
   this.speeds = [1, 15, 30, 45, 60];
-  this.pressedKeys = [];
-  Entry.addEventListener("keyPressed", this.captureKeyEvent);
-  Entry.addEventListener("keyUpped", this.captureKeyUpEvent);
+  Entry.keyPressed.attach(this, this.captureKeyEvent);
   Entry.addEventListener("canvasClick", function(b) {
     Entry.engine.fireEvent("mouse_clicked");
   });
@@ -5809,14 +5807,9 @@ Entry.Engine.prototype.raiseEventOnEntity = function(a, b) {
 };
 Entry.Engine.prototype.captureKeyEvent = function(a) {
   var b = a.keyCode, c = Entry.type;
-  0 > Entry.engine.pressedKeys.indexOf(b) && Entry.engine.pressedKeys.push(b);
   a.ctrlKey && "workspace" == c ? 83 == b ? (a.preventDefault(), Entry.dispatchEvent("saveWorkspace")) : 82 == b ? (a.preventDefault(), Entry.engine.run()) : 90 == b ? (a.preventDefault(), Entry.dispatchEvent(a.shiftKey ? "redo" : "undo")) : 48 < b && 58 > b && (a.preventDefault(), Entry.playground.selectMenu(b - 49)) : Entry.engine.isState("run") && (Entry.container.mapEntityIncludeCloneOnScene(Entry.engine.raiseKeyEvent, ["press_some_key", b]), Entry.container.mapEntityIncludeCloneOnScene(Entry.engine.raiseKeyEvent, 
   ["when_some_key_pressed", b]));
   Entry.engine.isState("stop") && "workspace" === c && 37 <= b && 40 >= b && Entry.stage.moveSprite(a);
-};
-Entry.Engine.prototype.captureKeyUpEvent = function(a) {
-  a = a.keyCode;
-  0 <= Entry.engine.pressedKeys.indexOf(a) && Entry.engine.pressedKeys.splice(Entry.engine.pressedKeys.indexOf(a), 1);
 };
 Entry.Engine.prototype.raiseKeyEvent = function(a, b) {
   for (var c = b[0], d = b[1], e = a.parent.script.childNodes, f = 0;f < e.length;f++) {
@@ -8757,7 +8750,7 @@ Entry.init = function(a, b) {
   Entry.assert("object" === typeof b, "Init option is not object");
   this.events_ = {};
   this.interfaceState = {menuWidth:264};
-  Entry.Utils.bindGlobalEvent(["resize", "mousedown", "mousemove"]);
+  Entry.Utils.bindGlobalEvent(["resize", "mousedown", "mousemove", "keydown", "keyup"]);
   this.options = b;
   this.parseOptions(b);
   this.mediaFilePath = (b.libDir ? b.libDir : "/lib") + "/entryjs/images/";
@@ -13746,8 +13739,8 @@ Entry.Field = function() {
     this.box.set({x:b, y:a});
   };
   a.getAbsolutePos = function() {
-    var a = this._block.view, c = a.svgGroup.transform().globalMatrix, d = a.getBoard().svgDom.offset(), a = a.getContentPos();
-    return {x:c.e + d.left + this.box.x + a.x, y:c.f + d.top + this.box.y + a.y};
+    var b = this._block.view, a = b.svgGroup.transform().globalMatrix, d = b.getBoard().svgDom.offset(), b = b.getContentPos();
+    return {x:a.e + d.left + this.box.x + b.x, y:a.f + d.top + this.box.y + b.y};
   };
   a.getRelativePos = function() {
     var a = this._block.view, c = a.svgGroup.transform().globalMatrix, a = a.getContentPos(), d = this.box;

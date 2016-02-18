@@ -14,10 +14,9 @@ Entry.Engine = function() {
     this.isUpdating = true;
     this.speeds = [1, 15, 30, 45, 60];
 
-    this.pressedKeys = [];
 
-    Entry.addEventListener('keyPressed', this.captureKeyEvent);
-    Entry.addEventListener('keyUpped', this.captureKeyUpEvent);
+    Entry.keyPressed.attach(this, this.captureKeyEvent)
+
     Entry.addEventListener('canvasClick', function(e){
         Entry.engine.fireEvent('mouse_clicked');
     });
@@ -47,7 +46,7 @@ Entry.Engine = function() {
         $(window).unbind('keydown', arrowHandler);
     });
 
-    function arrowHandler(e){
+    function arrowHandler(e) {
         var arrows = [37,38,39,40,32];
         var code = (e.keyCode || e.which);
         var input = Entry.stage.inputField;
@@ -617,8 +616,6 @@ Entry.Engine.prototype.captureKeyEvent = function(e) {
     var keyCode = e.keyCode;
     var type = Entry.type;
 
-    if (Entry.engine.pressedKeys.indexOf(keyCode) < 0)
-        Entry.engine.pressedKeys.push(keyCode);
     //mouse shortcuts
     if (e.ctrlKey && type == 'workspace') {
         if (keyCode == 83) {
@@ -647,16 +644,6 @@ Entry.Engine.prototype.captureKeyEvent = function(e) {
             Entry.stage.moveSprite(e);
         }
     }
-};
-/**
- * capture keyboard press up input
- * @param {keyboard event} e
- */
-Entry.Engine.prototype.captureKeyUpEvent = function(e) {
-    var keyCode = e.keyCode;
-    if (Entry.engine.pressedKeys.indexOf(keyCode) >= 0)
-        Entry.engine.pressedKeys.splice(
-            Entry.engine.pressedKeys.indexOf(keyCode), 1);
 };
 
 /**
