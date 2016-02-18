@@ -42,7 +42,14 @@ p.initSocket = function() {
     }
     var hw = this;
     // var socket = new WebSocket("ws://localhost:23518");
-    var socket = io.connect('ws://localhost:23518');
+    var option;
+    var browserType = Entry.getBrowserType().toUpperCase();
+    if(browserType.indexOf('IE') > -1 || browserType.indexOf('EDGE') > -1) {
+        option = {
+            'transports' : ['polling']
+        }
+    }
+    var socket = io.connect('ws://localhost:23518', option);
     this.socket = socket;
     this.connected = false;
     socket.binaryType = "arraybuffer";
