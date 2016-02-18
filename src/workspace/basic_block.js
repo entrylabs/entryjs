@@ -711,7 +711,7 @@ Entry.block.maze_step_start = {
     params: [
         {
             type: "Indicator",
-            boxMultiplier: 1,
+            boxMultiplier: 2,
             img: "/img/assets/block_icon/start_icon_play.png",
             highlightColor: "#3BBD70",
             size: 17,
@@ -772,7 +772,7 @@ Entry.block.maze_step_jump = {
 Entry.block.maze_step_for = {
     skeleton: "basic_loop",
     mode: "maze",
-    color: "#127CDB",
+    color: "#498DEB",
     template: "%1 번 반복하기%2",
     syntax: ["BasicIteration"],
     params: [
@@ -801,11 +801,7 @@ Entry.block.maze_step_for = {
     ],
     statements: [
         {
-            accept: "basic",
-            position: {
-                x: 2,
-                y: 15
-            }
+            accept: "basic"
         }
     ],
     func: function() {
@@ -874,11 +870,7 @@ Entry.block.maze_repeat_until_1 = {
     ],
     statements: [
         {
-            accept: "basic",
-            position: {
-                x: 2,
-                y: 15
-            }
+            accept: "basic"
         }
     ],
     func: function() {
@@ -912,11 +904,7 @@ Entry.block.maze_step_if_1 = {
     ],
     statements: [
         {
-            accept: "basic",
-            position: {
-                x: 2,
-                y: 15
-            }
+            accept: "basic"
         }
     ],
     func: function() {
@@ -996,11 +984,7 @@ Entry.block.maze_step_if_2 = {
     ],
     statements: [
         {
-            accept: "basic",
-            position: {
-                x: 2,
-                y: 15
-            }
+            accept: "basic"
         }
     ],
     func: function() {
@@ -1097,11 +1081,7 @@ Entry.block.maze_define_function = {
     ],
     statements: [
         {
-            accept: "basic",
-            position: {
-                x: 2,
-                y: 15
-            }
+            accept: "basic"
         }
     ],
     func: function(executor) {
@@ -1204,11 +1184,7 @@ Entry.block.maze_step_if_4 = {
     ],
     statements: [
         {
-            accept: "basic",
-            position: {
-                x: 2,
-                y: 15
-            }
+            accept: "basic"
         }
     ],
     func: function() {
