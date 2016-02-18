@@ -4834,10 +4834,10 @@ Entry.Event = function(a) {
       b.pop();
     }
   };
-  a.notify = function(b) {
-    var a = this._sender;
-    this._listeners.slice().forEach(function(d) {
-      d.fn.call(d.obj, a, b);
+  a.notify = function() {
+    var b = arguments;
+    this._listeners.slice().forEach(function(a) {
+      a.fn.apply(a.obj, b);
     });
   };
 })(Entry.Event.prototype);
@@ -13746,8 +13746,8 @@ Entry.Field = function() {
     this.box.set({x:b, y:a});
   };
   a.getAbsolutePos = function() {
-    var b = this._block.view, a = b.svgGroup.transform().globalMatrix, d = b.getBoard().svgDom.offset(), b = b.getContentPos();
-    return {x:a.e + d.left + this.box.x + b.x, y:a.f + d.top + this.box.y + b.y};
+    var a = this._block.view, c = a.svgGroup.transform().globalMatrix, d = a.getBoard().svgDom.offset(), a = a.getContentPos();
+    return {x:c.e + d.left + this.box.x + a.x, y:c.f + d.top + this.box.y + a.y};
   };
   a.getRelativePos = function() {
     var a = this._block.view, c = a.svgGroup.transform().globalMatrix, a = a.getContentPos(), d = this.box;
