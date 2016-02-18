@@ -78,14 +78,11 @@ Entry.Block.MAGNET_OFFSET = 0.4;
 
             var paramInjected = thisParams[i];
 
-            if (params[i].type === 'Output' || params[i].type === 'Block') {
-                if (paramInjected)
-                    thisParams.splice(i, 1, new Entry.Thread(value, that.getCode()));
-                else thisParams.push(new Entry.Thread(value, that.getCode()));
-            } else {
-                if (paramInjected) thisParams.splice(i, 1, value);
-                else thisParams.push(value);
-            }
+            if (value && (params[i].type === 'Output' || params[i].type === 'Block'))
+                value = new Entry.Block(value);
+
+            if (paramInjected) thisParams.splice(i, 1, value);
+            else thisParams.push(value);
         }
 
         var statements = this._schema.statements;

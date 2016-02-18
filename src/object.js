@@ -31,6 +31,9 @@ Entry.EntryObject = function(model) {
                     y: 240
                 },
                 {
+                    type: "move_direction"
+                },
+                {
                     type: "stop_repeat"
                 }
             ]

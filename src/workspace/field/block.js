@@ -31,7 +31,7 @@ Entry.FieldBlock = function(content, blockView, index) {
     this.box.observe(blockView, "alignContent", ["width", "height"]);
 
     this.renderStart(blockView.getBoard());
-    this._block.observe(this, "_updateThread", ["thread"]);
+    //this._block.observe(this, "_updateThread", ["thread"]);
 };
 
 Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
@@ -39,30 +39,27 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
 (function(p) {
     p.renderStart = function(board) {
         this.svgGroup = this._blockView.contentSvgGroup.group();
+        this.view = this;
+        this._nextGroup = this.svgGroup;
         this.box.set({
             x: 0,
             y: 0,
             width: 0,
             height: 20
         });
-        this._thread = this.getValue();
-        var firstBlock = this._thread.getFirstBlock();
-        if (!firstBlock || !firstBlock.isDummy) {
-            if (firstBlock)
-                firstBlock.createView(board);
-            this.dummyBlock = new Entry.FieldDummyBlock(this, this._blockView);
-            this._thread.insertDummyBlock(this.dummyBlock);
-            this._inspectThread();
+        this._valueBlock = this.getValue();
+        this._inspectBlock();
+        this._valueBlock.view._handlePrev();
+        this.calcWH();
+        return;
             this.dummyBlock.observe(this, "_handleNextChange", ["next"]);
-        } else {
+
             this.dummyBlock = firstBlock;
             this.dummyBlock.appendSvg(this);
-        }
 
         if (this._blockView.getBoard().constructor == Entry.BlockMenu)
             this.dummyBlock.next.view.removeControl();
 
-        this.calcWH();
     };
 
     p.align = function(x, y, animate) {
@@ -75,9 +72,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
                 y = this._position.y;
         }
 
-        var block = this._thread.getFirstBlock();
-        if (block.isDummy)
-            block = block.next;
+        var block = this._valueBlock;
 
         if (block) {
             y = block.view.height * -0.5;
@@ -95,8 +90,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
     };
 
     p.calcWH = function() {
-        var block = this._thread.getFirstBlock();
-        if (block.isDummy) block = block.next;
+        var block = this._valueBlock;
 
         if (block) {
             var blockView = block.view;
@@ -125,35 +119,31 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
 
     p.destroy = function() {};
 
-    p._inspectThread = function() {
-        if (!this.dummyBlock.next) {
-            var block = null;
+    p._inspectBlock = function() {
+        if (!this._valueBlock) {
+            var blockType = null;
             switch (this.acceptType) {
                 case "basic_boolean_field":
-                    block = getBlock(this, {type: "True"});
+                    blockType = "True";
                     break;
                 case "basic_string_field":
-                    block = getBlock(this, {type: "text"});
+                    blockType = "text";
                     break;
                 case "basic_param":
-                    block = getBlock(this, {type: "function_field_label"});
+                    blockType = "function_field_label";
                     break;
             }
-            if (block) this.dummyBlock.insertAfter([block]);
-        }
+            var thread = this._block.getThread();
+            var board = this._blockView.getBoard();
 
-        function getBlock(field, data) {
-            var thread = field._block.getThread();
-            var board = field._blockView.getBoard();
-
-            var block = new Entry.Block(data, thread);
+            block = new Entry.Block({type: blockType}, this);
+            this._valueBlock = block;
             var workspace = board.workspace;
             var mode;
             if (workspace)
                 mode = workspace.getMode();
 
             block.createView(board, mode);
-            return block;
         }
     };
 
@@ -179,6 +169,11 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
                 if (blockView.shadow) blockView.set({shadow:false});
             }
         }
+    };
+
+    p.getPrevBlock = function(block) {
+        if (this._valueBlock === block) return this;
+        else return null;
     };
 
 })(Entry.FieldBlock.prototype);

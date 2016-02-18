@@ -6441,7 +6441,7 @@ Entry.EntryObject = function(a) {
     this.text = a.text || this.name;
     this.objectType = a.objectType;
     this.objectType || (this.objectType = "sprite");
-    a.script = [[{type:"when_run_button_click", x:40, y:240}, {type:"stop_repeat"}]];
+    a.script = [[{type:"when_run_button_click", x:40, y:240}, {type:"move_direction"}, {type:"stop_repeat"}]];
     this.script = new Entry.Code(a.script ? a.script : []);
     this.pictures = a.sprite.pictures;
     this.sounds = [];
@@ -14291,32 +14291,29 @@ Entry.FieldBlock = function(a, b, c) {
   this._position = a.position;
   this.box.observe(b, "alignContent", ["width", "height"]);
   this.renderStart(b.getBoard());
-  this._block.observe(this, "_updateThread", ["thread"]);
 };
 Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
 (function(a) {
   a.renderStart = function(a) {
     this.svgGroup = this._blockView.contentSvgGroup.group();
+    this.view = this;
+    this._nextGroup = this.svgGroup;
     this.box.set({x:0, y:0, width:0, height:20});
-    this._thread = this.getValue();
-    var c = this._thread.getFirstBlock();
-    c && c.isDummy ? (this.dummyBlock = c, this.dummyBlock.appendSvg(this)) : (c && c.createView(a), this.dummyBlock = new Entry.FieldDummyBlock(this, this._blockView), this._thread.insertDummyBlock(this.dummyBlock), this._inspectThread(), this.dummyBlock.observe(this, "_handleNextChange", ["next"]));
-    this._blockView.getBoard().constructor == Entry.BlockMenu && this.dummyBlock.next.view.removeControl();
+    this._valueBlock = this.getValue();
+    this._inspectBlock();
+    this._valueBlock.view._handlePrev();
     this.calcWH();
   };
   a.align = function(a, c, d) {
-    d = void 0 === d ? !0 : d;
     var e = this.svgGroup;
     this._position && (this._position.x && (a = this._position.x), this._position.y && (c = this._position.y));
-    var f = this._thread.getFirstBlock();
-    f.isDummy && (f = f.next);
+    var f = this._valueBlock;
     f && (c = -.5 * f.view.height);
     a = "t" + a + " " + c;
-    d ? e.animate({transform:a}, 300, mina.easeinout) : e.attr({transform:a});
+    void 0 === d || d ? e.animate({transform:a}, 300, mina.easeinout) : e.attr({transform:a});
   };
   a.calcWH = function() {
-    var a = this._thread.getFirstBlock();
-    a.isDummy && (a = a.next);
+    var a = this._valueBlock;
     a ? (a = a.view, this.box.set({width:a.width, height:a.height})) : this.box.set({width:15, height:20});
   };
   a.calcHeight = a.calcWH;
@@ -14329,26 +14326,25 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
   };
   a.destroy = function() {
   };
-  a._inspectThread = function() {
-    function a(b, c) {
-      var f = b._block.getThread(), g = b._blockView.getBoard(), f = new Entry.Block(c, f), h = g.workspace, k;
-      h && (k = h.getMode());
-      f.createView(g, k);
-      return f;
-    }
-    if (!this.dummyBlock.next) {
-      var c = null;
+  a._inspectBlock = function() {
+    if (!this._valueBlock) {
+      var a = null;
       switch(this.acceptType) {
         case "basic_boolean_field":
-          c = a(this, {type:"True"});
+          a = "True";
           break;
         case "basic_string_field":
-          c = a(this, {type:"text"});
+          a = "text";
           break;
         case "basic_param":
-          c = a(this, {type:"function_field_label"});
+          a = "function_field_label";
       }
-      c && this.dummyBlock.insertAfter([c]);
+      this._block.getThread();
+      var c = this._blockView.getBoard();
+      this._valueBlock = block = new Entry.Block({type:a}, this);
+      var a = c.workspace, d;
+      a && (d = a.getMode());
+      block.createView(c, d);
     }
   };
   a._handleNextChange = function() {
@@ -14359,6 +14355,9 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
   a._setValueBlock = function() {
     var a = this.dummyBlock.next;
     a && a != this._valueBlock && (this._valueBlock && this._valueBlock.view.set({shadow:!0}), this._valueBlock = a, this._valueBlockObserver && this._valueBlockObserver.destroy(), this._valueBlock && (a = this._valueBlock.view, this._valueBlockObserver = a.observe(this, "calcWH", ["width", "height"]), a.shadow && a.set({shadow:!1})));
+  };
+  a.getPrevBlock = function(a) {
+    return this._valueBlock === a ? this : null;
   };
 })(Entry.FieldBlock.prototype);
 Entry.FieldDummyBlock = function(a, b) {
@@ -14999,7 +14998,7 @@ Entry.Block.MAGNET_OFFSET = .4;
       a = this.params;
       c = this._schema.params;
       for (e = 0;e < c.length;e++) {
-        d = void 0 !== a[e] ? a[e] : c[e].value, f = a[e], "Output" === c[e].type || "Block" === c[e].type ? f ? a.splice(e, 1, new Entry.Thread(d, this.getCode())) : a.push(new Entry.Thread(d, this.getCode())) : f ? a.splice(e, 1, d) : a.push(d);
+        d = void 0 !== a[e] ? a[e] : c[e].value, f = a[e], !d || "Output" !== c[e].type && "Block" !== c[e].type || (d = new Entry.Block(d)), f ? a.splice(e, 1, d) : a.push(d);
       }
       if (a = this._schema.statements) {
         for (e = 0;e < a.length;e++) {
