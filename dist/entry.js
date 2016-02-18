@@ -13203,15 +13203,14 @@ Entry.BlockView.PARAM_SPACE = 5;
   };
   a._setPosition = function(b) {
     b = void 0 === b ? !0 : b;
-    var a = "t" + this.x + " " + this.y;
     this.svgGroup.stop();
-    b && 0 !== Entry.ANIMATION_DURATION ? this.svgGroup.animate({transform:a}, Entry.ANIMATION_DURATION, mina.easeinout) : $(this.svgGroup.node).attr({transform:"translate(" + this.x + " " + this.y + ")"});
+    b && 0 !== Entry.ANIMATION_DURATION ? this.svgGroup.animate({transform:"t" + this.x + " " + this.y}, Entry.ANIMATION_DURATION, mina.easeinout) : $(this.svgGroup.node).attr({transform:"translate(" + this.x + " " + this.y + ")"});
   };
   a._toLocalCoordinate = function(b) {
-    b.transform();
-    this.svgGroup.transform();
-    this._moveTo(0, 0);
+    var a = b.transform().globalMatrix, d = this.svgGroup.transform().globalMatrix;
+    this._moveTo(d.e - a.e, d.f - a.f, !1);
     b.append(this.svgGroup);
+    this._moveTo(0, 0);
   };
   a._toGlobalCoordinate = function() {
     var b = this.svgGroup.transform().globalMatrix;
@@ -13301,7 +13300,7 @@ Entry.BlockView.PARAM_SPACE = 5;
       if (d !== Entry.DRAG_MODE_MOUSEDOWN) {
         (f = this.dragInstance && this.dragInstance.isNew) && (a.workspace.blockMenu.terminateDrag() || e.doAdd());
         var g = Entry.GlobalSvg;
-        b = this.dragInstance && this.dragInstance.prev;
+        b = this.block.getPrevBlock();
         switch(Entry.GlobalSvg.terminateDrag(this)) {
           case g.DONE:
             g = this._getCloseBlock();
@@ -13316,6 +13315,7 @@ Entry.BlockView.PARAM_SPACE = 5;
             } else {
               d != Entry.DRAG_MODE_DRAG || f || e.doMove();
             }
+            this._handlePrev();
             break;
           case g.RETURN:
             e = this.block;
@@ -13328,7 +13328,7 @@ Entry.BlockView.PARAM_SPACE = 5;
             b ? (this.set({animating:!1}), createjs.Sound.play("entryMagneting"), e.insert(b)) : this._moveTo(d.x, d.y, !1);
             break;
           case g.REMOVE:
-            createjs.Sound.play("entryDelete"), f ? (b && e.separate(), this.block.destroy(!1)) : (b && e.doSeparate(), this.block.doDestroy(!1));
+            createjs.Sound.play("entryDelete"), f ? (b && e.separate(), this.block.destroy(!1)) : (b && e.dooleeparate(), this.block.doDestroy(!1));
         }
         a.setMagnetedBlock(null);
       }
@@ -13487,7 +13487,7 @@ Entry.BlockView.PARAM_SPACE = 5;
   };
   a._handlePrev = function() {
     var b = this.block.getPrevBlock();
-    b && this._toLocalCoordinate(b.view._nextGroup);
+    b ? this._toLocalCoordinate(b.view._nextGroup) : this._toGlobalCoordinate();
   };
 })(Entry.BlockView.prototype);
 Entry.Code = function(a) {

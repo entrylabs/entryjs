@@ -226,11 +226,11 @@ Entry.BlockView.PARAM_SPACE = 5;
 
     p._setPosition = function(animate) {
         animate = animate === undefined ? true : animate;
-        var transform = "t" +
-            (this.x) + " " +
-            (this.y);
         this.svgGroup.stop();
         if (animate && Entry.ANIMATION_DURATION !== 0) {
+            var transform = "t" +
+                (this.x) + " " +
+                (this.y);
             this.svgGroup.animate({
                 transform: transform
             }, Entry.ANIMATION_DURATION, mina.easeinout);
@@ -244,9 +244,9 @@ Entry.BlockView.PARAM_SPACE = 5;
     p._toLocalCoordinate = function(parentSvgGroup) {
         var parentMatrix = parentSvgGroup.transform().globalMatrix;
         var matrix = this.svgGroup.transform().globalMatrix;
-        //this._moveTo(matrix.e - parentMatrix.e, matrix.f - parentMatrix.f, false);
-        this._moveTo(0,0);
+        this._moveTo(matrix.e - parentMatrix.e, matrix.f - parentMatrix.f, false);
         parentSvgGroup.append(this.svgGroup);
+        this._moveTo(0, 0);
     };
 
     p._toGlobalCoordinate = function() {
@@ -459,7 +459,7 @@ Entry.BlockView.PARAM_SPACE = 5;
                 }
 
                 var gs = Entry.GlobalSvg;
-                var prevBlock = this.dragInstance && this.dragInstance.prev;
+                var prevBlock = this.block.getPrevBlock();
                 switch (Entry.GlobalSvg.terminateDrag(this)) {
                     case gs.DONE:
                         var closeBlock = this._getCloseBlock();
@@ -491,6 +491,7 @@ Entry.BlockView.PARAM_SPACE = 5;
                                 }
                             } else block.doSeparate();
                         }
+                        this._handlePrev();
                         break;
                     case gs.RETURN:
                         var block = this.block;
@@ -510,7 +511,7 @@ Entry.BlockView.PARAM_SPACE = 5;
                     case gs.REMOVE:
                         createjs.Sound.play('entryDelete');
                         if (!fromBlockMenu) {
-                            if (prevBlock) block.doSeparate();
+                            if (prevBlock) block.dooleeparate();
                             this.block.doDestroy(false);
                         } else {
                             if (prevBlock) block.separate();
@@ -816,10 +817,13 @@ Entry.BlockView.PARAM_SPACE = 5;
 
     p._handlePrev = function() {
         var prevBlock = this.block.getPrevBlock();
-        if (!prevBlock) return;
-        var prevBlockView = prevBlock.view;
+        if (!prevBlock)
+            this._toGlobalCoordinate();
+        else {
+            var prevBlockView = prevBlock.view;
 
-        this._toLocalCoordinate(prevBlockView._nextGroup);
+            this._toLocalCoordinate(prevBlockView._nextGroup);
+        }
     };
 
 })(Entry.BlockView.prototype);
