@@ -103,4 +103,16 @@ Entry.Field = function() {};
         this.value = value;
         this._block.params[this._index] = value;
     };
+
+    p._isEditable = function() {
+        var dragMode = this._block.view.dragMode;
+        if (dragMode == Entry.DRAG_MODE_MOUSEDOWN) return true;
+        var blockView = this._block.view;
+        var board = blockView.getBoard();
+
+        var selectedBlockView = board.selectedBlockView;
+        if (!selectedBlockView) return false;
+
+        return blockView.getSvgRoot() == selectedBlockView.svgGroup;
+    };
 })(Entry.Field.prototype);

@@ -39,7 +39,6 @@ Entry.BlockMenu = function(dom, align, categoryData) {
     this.setWidth();
 
 
-    //this.snap = Snap('#blockMenu');
     this.snap = Snap('#' + this._snapId);
 
     this.svgGroup = this.snap.group();
@@ -54,12 +53,8 @@ Entry.BlockMenu = function(dom, align, categoryData) {
     this.changeEvent = new Entry.Event(this);
     //TODO scroller should be attached
     //this.scroller = new Entry.Scroller(this, false, true);
-    //
 
-    if (categoryData) {
-        this._generateCategoryCodes(categoryData);
-        //this.setMenu(Object.keys(this._categoryCodes)[0]);
-    }
+    if (categoryData) this._generateCategoryCodes(categoryData);
 
     if (Entry.documentMousedown)
         Entry.documentMousedown.attach(this, this.setSelectedBlock);
@@ -111,12 +106,13 @@ Entry.BlockMenu = function(dom, align, categoryData) {
 
         this.svgDom.mouseenter(function(e) {
             if (!Entry.playground || Entry.playground.resizing) return;
+            var hPadding = that._align == 'LEFT' ? 10 : that.svgDom.width()/2;
             Entry.playground.focusBlockMenu = true;
-            var width = that.expandWidth + 64;
-            if (width > Entry.interfaceState.menuWidth) {
+            var expandWidth = that.svgGroup.getBBox().width + hPadding + 64;
+            if (expandWidth > Entry.interfaceState.menuWidth) {
                 this.widthBackup = Entry.interfaceState.menuWidth - 64;
                 $(this).stop().animate({
-                    width: width - 64
+                    width: expandWidth - 64
                 }, 200);
             }
         });
@@ -160,10 +156,12 @@ Entry.BlockMenu = function(dom, align, categoryData) {
     };
 
     p.align = function() {
+        if (!this.code)
+            return;
         var threads = this.code.getThreads();
         var vPadding = 15,
             marginFromTop = 10,
-            hPadding = this._align == 'LEFT' ? 20 : this.svgDom.width()/2;
+            hPadding = this._align == 'LEFT' ? 10 : this.svgDom.width()/2;
 
         var pastClass;
         for (var i=0,len=threads.length; i<len; i++) {
@@ -185,19 +183,23 @@ Entry.BlockMenu = function(dom, align, categoryData) {
             }
             pastClass = className;
 
-            blockView._moveTo(hPadding, marginFromTop, false);
+            marginFromTop -= blockView.offsetY;
+            blockView._moveTo(
+                hPadding - blockView.offsetX,
+                marginFromTop,
+                false);
             marginFromTop += blockView.height + vPadding;
 
         }
 
         this.changeEvent.notify();
-        this.expandWidth = this.svgGroup.getBBox().width + hPadding;
     };
 
     p.cloneToGlobal = function(e) {
         if (this.dragBlock === null) return;
         if (this._boardBlockView) return;
 
+        var globalSvg = Entry.GlobalSvg;
         var workspace = this.workspace;
         var workspaceMode = workspace.getMode();
         var blockView = this.dragBlock;
@@ -228,9 +230,8 @@ Entry.BlockMenu = function(dom, align, categoryData) {
                     this._boardBlockView.observe(this, "_editDragInstance", ['x', 'y'], false);
             }
         } else {
-            //TODO move by global svg
-            Entry.GlobalSvg.setView(blockView, workspace.getMode());
-
+            if(Entry.GlobalSvg.setView(blockView, workspace.getMode()))
+                Entry.GlobalSvg.addControl(e);
         }
     };
 
@@ -291,7 +292,7 @@ Entry.BlockMenu = function(dom, align, categoryData) {
 
     p._createSplitter = function(topPos) {
         var width = this._svgWidth;
-        var hPadding = 30;
+        var hPadding = 10;
         var svgBlockGroup = this.svgBlockGroup;
         var line = svgBlockGroup.line(hPadding, topPos, width-hPadding, topPos);
         line.attr({'stroke' : '#b5b5b5'});
@@ -344,6 +345,11 @@ Entry.BlockMenu = function(dom, align, categoryData) {
         }
     };
 
+    p.getCategoryCodes = function(selector) {
+        var name = this._convertSelector(selector);
+        return this._categoryCodes[name];
+    };
+
     p._convertSelector = function(selector) {
         if (isNaN(selector)) return selector;
 
@@ -382,17 +388,20 @@ Entry.BlockMenu = function(dom, align, categoryData) {
             animate = true;
             this.visible = false;
         } else if (!oldView) {
-            boardView.addClass('foldOut');
+            if (!this.visible) {
+                animate = true;
+                boardView.addClass('foldOut');
+                Entry.playground.showTabs();
+            }
             boardView.removeClass('folding');
-            Entry.playground.showTabs();
             this.visible = true;
-            animate = true;
         }
 
         if (animate) {
             Entry.bindAnimationCallbackOnce(boardView, function(){
                 board.scroller.resizeScrollBar.call(board.scroller);
                 boardView.removeClass('foldOut');
+                Entry.windowResized.notify();
             });
         }
 
@@ -434,6 +443,7 @@ Entry.BlockMenu = function(dom, align, categoryData) {
         var index = this._bannedClass.indexOf(className);
         if (index < 0)
             this._bannedClass.push(className);
+        this.align();
     }
 
     p.unbanClass = function(className) {

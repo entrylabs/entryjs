@@ -46,28 +46,10 @@ Entry.Board = function(option) {
         { parent: this.wrapper }
     );
 
-    var zoom = document.documentElement.clientWidth / window.innerWidth;
-    this.offset = this.svgDom.offset();
-    this.offset.left -= $(window).scrollLeft();
-    this.relativeOffset = this.offset;
-
     this.visible = true;
     var that = this;
-    $(window).scroll(updateOffset);
-    Entry.windowResized.attach(this, updateOffset);
-    function updateOffset(e) {
-        that.offset = that.svgDom.offset();
-        var w = $(window),
-            scrollTop = w.scrollTop(),
-            scrollLeft = w.scrollLeft(),
-            offset = that.offset;
-
-        that.relativeOffset = {
-            top: offset.top - scrollTop,
-            left: offset.left - scrollLeft
-        };
-    }
-
+    $(window).scroll(this.updateOffset);
+    Entry.windowResized.attach(this, this.updateOffset);
     this.snap = Snap('#' + this._snapId);
 
     this._blockViews = [];
@@ -80,6 +62,13 @@ Entry.Board = function(option) {
 
     this.svgBlockGroup = this.svgGroup.group();
     this.svgBlockGroup.board = this;
+
+    if (option.isOverlay) {
+        this.wrapper.addClass("entryOverlayBoard");
+        this.generateButtons();
+    }
+
+    this.updateOffset();
 
     Entry.ANIMATION_DURATION = 200;
     Entry.BOARD_PADDING = 100;
@@ -324,6 +313,52 @@ Entry.Board = function(option) {
         var node = this.svgBlockGroup.node;
         while (node.firstChild)
             node.removeChild(node.firstChild);
+    };
+
+    p.updateOffset = function () {
+        this.offset = this.snap.node.getBoundingClientRect();
+        var w = $(window),
+            scrollTop = w.scrollTop(),
+            scrollLeft = w.scrollLeft(),
+            offset = this.offset;
+
+        this.relativeOffset = {
+            top: offset.top - scrollTop,
+            left: offset.left - scrollLeft
+        };
+
+        if (this.btnWrapper) {
+            this.btnWrapper.attr({
+                transform: "t" +
+                    (offset.width / 2 - 65) + " " +
+                    (offset.height - 200)
+            });
+        }
+    };
+
+    p.generateButtons = function() {
+        var btnWrapper = this.svgGroup.group();
+        this.btnWrapper = btnWrapper;
+        var saveText = btnWrapper.text(27, 33, Lang.Buttons.save).attr({
+            'class': 'entryFunctionButtonText'
+        });
+        var cancelText = btnWrapper.text(102.5, 33, Lang.Buttons.cancel).attr({
+            'class': 'entryFunctionButtonText'
+        });
+        var saveButton = btnWrapper.circle(27.5, 27.5, 27.5).attr({
+            'class': 'entryFunctionButton'
+        });
+        var cancelButton = btnWrapper.circle(102.5, 27.5, 27.5).attr({
+            'class': 'entryFunctionButton'
+        });
+        return;
+
+        var func = this;
+        saveButton.onclick = function(e) { func.save(); };
+        saveText.onclick = function(e) { func.save(); };
+
+        cancelButton.onclick = function(e) { func.cancelEdit(); };
+        cancelText.onclick = function(e) { func.cancelEdit(); };
     };
 
 })(Entry.Board.prototype);

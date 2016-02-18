@@ -202,4 +202,8 @@ Entry.DummyBlock = function(statementField, blockView) {
     p.dominate = function() {
         this.originBlockView.dominate();
     };
+
+    p.getRipplePosition = function() {
+        return {cx:8, cy:5};
+    };
 })(Entry.DummyBlock.prototype);

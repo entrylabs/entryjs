@@ -1,4 +1,4 @@
-/**
+/*
  * @fileoverview Func object for entry function.
  */
 'use strict';
@@ -12,7 +12,15 @@ goog.require("Entry.Utils");
  */
 Entry.Func = function() {
     this.id = Entry.generateHash();
-    this.content = Blockly.Xml.textToDom(Entry.Func.CREATE_BLOCK);
+    this.content = new Entry.Code([
+        [
+            {
+                type: "function_create",
+                x: 40, y: 40,
+                deletable: false
+            }
+        ]
+    ]);
     this.block = null;
     this.stringHash = {};
     this.booleanHash = {};
@@ -79,89 +87,18 @@ Entry.Func.edit = function(func) {
     if (this.workspace)
         this.workspace.visible = true;
     this.initEditView();
-    return;
     this.targetFunc = func;
+    Entry.playground.mainWorkspace.changeOverlayBoardCode(func.content);
+    this.updateMenu();
+    return;
     this.workspace.clear();
     Blockly.Xml.domToWorkspace(this.workspace, func.content);
-    this.updateMenu();
     this.position_();
 };
 
 Entry.Func.initEditView = function() {
-
-    console.log("start edit");
-    return;
-
-
-
-    this.parentView = Entry.playground.blocklyView_;
-    if (!this.svg) {
-        this.svg = Blockly.createSvgElement('svg', {
-            'xmlns': 'http://www.w3.org/2000/svg',
-            'xmlns:html': 'http://www.w3.org/1999/xhtml',
-            'xmlns:xlink': 'http://www.w3.org/1999/xlink',
-            'version': '1.1',
-            'class': 'blocklySvg entryFunctionEdit'
-        });
-        this.workspace = new Blockly.Workspace();
-        this.workspace.visible = true;
-        var func = this;
-
-        this.generateButtons();
-
-        this.svg.appendChild(this.workspace.createDom());
-        this.workspace.scrollbar = new Blockly.ScrollbarPair(
-            this.workspace);
-        var scrollbar = this.workspace.scrollbar;
-        scrollbar.resize();
-
-        this.workspace.addTrashcan();
-
-        Blockly.bindEvent_(window, 'resize', scrollbar, scrollbar.resize);
-        document.addEventListener("blocklyWorkspaceChange", this.syncFunc, false);
-
-        var workspace = this.workspace;
-        Blockly.bindEvent_(this.svg, 'mousedown', null, function(e) {
-            workspace.dragMode = true;
-            workspace.startDragMouseX = e.clientX;
-            workspace.startDragMouseY = e.clientY;
-            workspace.startDragMetrics = workspace.getMetrics();
-            workspace.startScrollX = workspace.scrollX;
-            workspace.startScrollY = workspace.scrollY;
-        });
-        Blockly.bindEvent_(this.svg, 'mousemove', null, function(e) {
-            var hScroll = scrollbar.hScroll;
-            var vScroll = scrollbar.hScroll;
-            hScroll.svgGroup_.setAttribute('opacity', '1');
-            vScroll.svgGroup_.setAttribute('opacity', '1');
-            if (workspace.dragMode) {
-              Blockly.removeAllRanges();
-              var dx = e.clientX - workspace.startDragMouseX;
-              var dy = e.clientY - workspace.startDragMouseY;
-              var metrics = workspace.startDragMetrics;
-              var x = workspace.startScrollX + dx;
-              var y = workspace.startScrollY + dy;
-              x = Math.min(x, -metrics.contentLeft);
-              y = Math.min(y, -metrics.contentTop);
-              x = Math.max(x, metrics.viewWidth - metrics.contentLeft -
-                           metrics.contentWidth);
-              y = Math.max(y, metrics.viewHeight - metrics.contentTop -
-                           metrics.contentHeight);
-
-              // Move the scrollbars and the page will scroll automatically.
-              scrollbar.set(-x - metrics.contentLeft,
-                                      -y - metrics.contentTop);
-            }
-        });
-        Blockly.bindEvent_(this.svg, 'mouseup', null, function(e) {
-            workspace.dragMode = false;
-        });
-    }
-
-    Blockly.mainWorkspace.blockMenu.targetWorkspace = this.workspace;
-
-    this.doWhenInit();
-    this.parentView.appendChild(this.svg);
+    Entry.playground.mainWorkspace.setMode(Entry.Workspace.MODE_OVERLAYBOARD);
+    var blockMenu = Entry.playground.mainWorkspace.getBlockMenu();
 };
 
 Entry.Func.save = function() {
@@ -184,7 +121,6 @@ Entry.Func.cancelEdit = function() {
     }
     delete this.targetFunc;
     this.updateMenu();
-    this.doWhenCancel();
     Entry.variableContainer.updateList();
 };
 
@@ -229,6 +165,18 @@ Entry.Func.syncFunc = function() {
 };
 
 Entry.Func.updateMenu = function() {
+    var blockMenu = Entry.playground.mainWorkspace.getBlockMenu();
+    if (!this.menuCode) {
+        var menuCode = blockMenu.getCategoryCodes("func");
+        menuCode.createThread([ { type: "function_field_label" } ]);
+        menuCode.createThread([ { type: "function_field_string" } ]);
+        menuCode.createThread([ { type: "function_field_boolean" } ]);
+        this.menuCode = menuCode;
+    }
+    blockMenu.banClass("functionInit");
+    blockMenu.unbanClass("functionEdit");
+    console.log(blockMenu.categoryCodes);
+    return;
     if (Entry.playground.selectedMenu == 'func') {
         Entry.playground.blockMenu.hide();
         Entry.playground.blockMenu.show(Entry.Func.getMenuXml());
@@ -380,55 +328,6 @@ Entry.Func.prototype.generateBlock = function(toSave) {
     this.description = generatedInfo.description;
 };
 
-/**
- * Update view when window resizing
- * @private
- */
-Entry.Func.prototype.syncViewSize_ = function() {
-  var rect = this.parentView.getBoundingClientRect();
-  this.svg.style.width = rect.width;
-  this.svg.style.height = rect.height;
-};
-
-Entry.Func.generateButtons = function() {
-    var func = this;
-    var btnWrapper = Blockly.createSvgElement('g', {}, this.svg);
-    this.btnWrapper = btnWrapper;
-    var saveText = Blockly.createSvgElement('text', {
-      'x': '27',
-      'y': '33',
-      'class': 'entryFunctionButtonText'
-      }, btnWrapper);
-    var saveTextNode = document.createTextNode(Lang.Buttons.save);
-    saveText.appendChild(saveTextNode);
-
-    var cancelText = Blockly.createSvgElement('text', {
-      'x': '102.5',
-      'y': '33',
-      'class': 'entryFunctionButtonText'
-      }, btnWrapper);
-    var cancelTextNode = document.createTextNode(Lang.Buttons.cancel);
-    cancelText.appendChild(cancelTextNode);
-    var saveButton = Blockly.createSvgElement('circle', {
-        'cx': '27.5',
-        'cy': '27.5',
-        'r': '27.5',
-        'class': 'entryFunctionButton'
-    }, btnWrapper);
-    var cancelButton = Blockly.createSvgElement('circle', {
-        'cx': '102.5',
-        'cy': '27.5',
-        'r': '27.5',
-        'class': 'entryFunctionButton'
-    }, btnWrapper);
-
-    saveButton.onclick = function(e) { func.save(); };
-    saveText.onclick = function(e) { func.save(); };
-
-    cancelButton.onclick = function(e) { func.cancelEdit(); };
-    cancelText.onclick = function(e) { func.cancelEdit(); };
-};
-
 Entry.Func.position_ = function() {
     var metrics = this.workspace.getMetrics();
     if (!metrics || !this.workspace.visible) {
@@ -461,27 +360,6 @@ Entry.Func.positionBlock_ = function(block) {
     var targetX = metrics.viewWidth/2 - 80;
     var targetY = metrics.viewHeight/2 - 50;
     block.moveBy(targetX-originXY.x, targetY-originXY.y);
-};
-
-Entry.Func.doWhenInit = function() {
-    var svg = this.svg;
-    svg.appendChild(Blockly.fieldKeydownDom);
-    svg.appendChild(Blockly.fieldDropdownDom);
-    svg.appendChild(Blockly.contextMenu);
-    Blockly.bindEvent_(window, 'resize', this, this.position_);
-    Blockly.bindEvent_(svg, 'mousedown', null, Blockly.onMouseDown_);
-    Blockly.bindEvent_(svg, 'contextmenu', null, Blockly.onContextMenu_);
-};
-
-Entry.Func.doWhenCancel = function() {
-    Blockly.clipboard_ = null;
-    var svg = Blockly.svg;
-    svg.appendChild(Blockly.fieldKeydownDom);
-    svg.appendChild(Blockly.fieldDropdownDom);
-    svg.appendChild(Blockly.contextMenu);
-    Blockly.unbindEvent_(window, 'resize', this, this.position_);
-    Blockly.unbindEvent_(svg, 'mousedown', null, Blockly.onMouseDown_);
-    Blockly.unbindEvent_(svg, 'contextmenu', null, Blockly.onContextMenu_);
 };
 
 Entry.Func.generateWsBlock = function(func, content, id) {

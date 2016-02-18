@@ -35,10 +35,7 @@ goog.provide('Entry.GlobalSvg');
     };
 
     gs.setView = function(view, mode) {
-        if (view == this._view) {
-            this.position();
-            return;
-        }
+        if (view == this._view) return;
         var data = view.block;
         if (data.isReadOnly() || !view.movable) return;
         this._view = view;
@@ -46,6 +43,7 @@ goog.provide('Entry.GlobalSvg');
         this.draw();
         this.align();
         this.position();
+        return true;
     };
 
     gs.draw = function() {
@@ -76,6 +74,8 @@ goog.provide('Entry.GlobalSvg');
         delete this._view;
         delete this._offsetX;
         delete this._offsetY;
+        delete this._startX;
+        delete this._startY;
         this.hide();
     };
 
@@ -122,5 +122,47 @@ goog.provide('Entry.GlobalSvg');
             return this.REMOVE;
         else return this.RETURN;
     };
+
+    gs.addControl = function(e) {
+        this.onMouseDown.apply(this, arguments);
+    };
+
+
+    gs.onMouseDown = function(e) {
+        this._startY = e.pageY;
+        var that = this;
+        e.stopPropagation();
+        e.preventDefault();
+        var doc = $(document);
+        doc.bind('mousemove.block', onMouseMove);
+        doc.bind('mouseup.block', onMouseUp);
+        doc.bind('touchmove.block', onMouseMove);
+        doc.bind('touchend.block', onMouseUp);
+        this._startX = e.pageX;
+        this._startY = e.pageY;
+
+        function onMouseMove(e) {
+            var newX = e.pageX;
+            var newY = e.pageY;
+            var dX = newX - that._startX;
+            var dY = newY - that._startY;
+            var newLeft = that.left + dX;
+            var newTop = that.top + dY;
+            that.svgDom.css({
+                left : newLeft,
+                top :  newTop,
+            });
+            that._startX = newX;
+            that._startY = newY;
+            that.left = newLeft;
+            that.top = newTop;
+        }
+
+        function onMouseUp(e) {
+            $(document).unbind('.block');
+        }
+    };
+
+
 
 })(Entry.GlobalSvg);

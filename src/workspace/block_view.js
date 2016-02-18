@@ -28,6 +28,14 @@ Entry.BlockView = function(block, board, mode) {
     if (skeleton.morph)
         this.block.observe(this, "_renderPath", skeleton.morph, false);
 
+    var that = this;
+    this.mouseHandler = function() {
+        var events = that.block.events;
+        if (events && events.mousedown)
+            events.mousedown.forEach(function(fn){fn();});
+
+        that.onMouseDown.apply(that, arguments);
+    }
     this.prevObserver = null;
     this._startRender(block, mode);
 
@@ -44,6 +52,8 @@ Entry.BlockView = function(block, board, mode) {
     this.dragMode = Entry.DRAG_MODE_NONE;
     Entry.Utils.disableContextmenu(this.svgGroup.node);
 };
+
+Entry.BlockView.PARAM_SPACE = 5;
 
 (function(p) {
     p.schema = {
@@ -145,7 +155,7 @@ Entry.BlockView = function(block, board, mode) {
 
             // space between content
             if (i !== this._contents.length - 1)
-                cursor.x += 5;
+                cursor.x += Entry.BlockView.PARAM_SPACE;
 
             var box = c.box;
             cursor.height = Math.max(box.y + box.height, cursor.height);
@@ -284,14 +294,11 @@ Entry.BlockView = function(block, board, mode) {
     };
 
     p._addControl = function() {
-        var that = this;
-        this.svgGroup.mousedown(function() {
-            var events = that.block.events;
-            if (events && events.mousedown)
-                events.mousedown.forEach(function(fn){fn();});
+        this.svgGroup.mousedown(this.mouseHandler);
+    };
 
-            that.onMouseDown.apply(that, arguments);
-        });
+    p.removeControl = function() {
+        this.svgGroup.unmousedown(this.mouseHandler);
     };
 
     p.onMouseDown = function(e) {
@@ -426,7 +433,8 @@ Entry.BlockView = function(block, board, mode) {
                     });
                     blockView.dragMode = Entry.DRAG_MODE_DRAG;
 
-                    Entry.GlobalSvg.setView(blockView, workspaceMode);
+                    if(!Entry.GlobalSvg.setView(blockView, workspaceMode))
+                        Entry.GlobalSvg.position();
                     var magnetedBlock = blockView._getCloseBlock();
                     if (magnetedBlock) {
                         board = magnetedBlock.view.getBoard();
@@ -502,6 +510,9 @@ Entry.BlockView = function(block, board, mode) {
 
                                 block.doInsert(closeBlock);
                                 createjs.Sound.play('entryMagneting');
+                                Entry.ConnectionRipple
+                                    .setView(closeBlock.view)
+                                    .dispose();
 
                                 if (closeBlock.constructor == Entry.FieldDummyBlock) {
                                     var orphan = block.next;
@@ -511,31 +522,38 @@ Entry.BlockView = function(block, board, mode) {
                                             orphan.destroy(false);
                                         } else {
                                             orphan.separate();
-                                            orphan.view._moveBy(10, 10, false);
+                                            orphan.view.bumpAway();
                                         }
                                     }
                                 }
                             } else block.doSeparate();
                         }
                         break;
-                        case gs.RETURN:
-                            var originPos = this.originPos;
-                            if (prevBlock) {
-                                this.set({animating: false});
-                                createjs.Sound.play('entryMagneting');
-                                block.insert(prevBlock);
-                            } else this._moveTo(originPos.x, originPos.y, false);
+                    case gs.RETURN:
+                        var block = this.block;
+                        if (Entry.FieldDummyBlock.PRIMITIVE_TYPES.indexOf(block.type) > -1) {
+                            block.getThread().cut(block);
+                            block.destroy(false);
                             break;
-                        case gs.REMOVE:
-                            createjs.Sound.play('entryDelete');
-                            if (!fromBlockMenu) {
-                                if (prevBlock) block.doSeparate();
-                                this.block.doDestroy(false);
-                            } else {
-                                if (prevBlock) block.separate();
-                                this.block.destroy(false);
-                            }
-                            break;
+                        }
+
+                        var originPos = this.originPos;
+                        if (prevBlock) {
+                            this.set({animating: false});
+                            createjs.Sound.play('entryMagneting');
+                            block.insert(prevBlock);
+                        } else this._moveTo(originPos.x, originPos.y, false);
+                        break;
+                    case gs.REMOVE:
+                        createjs.Sound.play('entryDelete');
+                        if (!fromBlockMenu) {
+                            if (prevBlock) block.doSeparate();
+                            this.block.doDestroy(false);
+                        } else {
+                            if (prevBlock) block.separate();
+                            this.block.destroy(false);
+                        }
+                        break;
                 }
                 board.setMagnetedBlock(null);
             }
@@ -550,6 +568,16 @@ Entry.BlockView = function(block, board, mode) {
     p._getCloseBlock = function() {
         if (!this._skeleton.magnets)
             return;
+        var targetType = this._skeleton.magnets();
+
+        if (targetType.previous) targetType = 'nextMagnet';
+        else if (targetType.string) targetType = 'stringMagnet';
+        else if (targetType.bool) targetType = 'booleanMagnet';
+        else if (targetType.param) targetType = 'paramMagnet';
+        else targetType = null;
+
+        if (!targetType) return;
+
         var board = this.getBoard();
         var x = this.x,
             y = this.y;
@@ -563,15 +591,6 @@ Entry.BlockView = function(block, board, mode) {
         var targetElement = Snap.getElementByPoint(x, y + offset.top - 2);
 
         if (targetElement === null) return;
-
-        var targetType = this._skeleton.magnets();
-
-        if (targetType.previous) targetType = 'nextMagnet';
-        else if (targetType.string) targetType = 'stringMagnet';
-        else if (targetType.bool) targetType = 'booleanMagnet';
-        else targetType = null;
-
-        if (!targetType) return;
 
         var targetBlock = targetElement[targetType];
 
@@ -595,13 +614,17 @@ Entry.BlockView = function(block, board, mode) {
     };
 
     p.dominate = function() {
-        var svgBlockGroup = this.getBoard().svgBlockGroup;
+        this.getBoard()
+            .svgBlockGroup
+            .append(this.getSvgRoot());
+    };
 
+    p.getSvgRoot = function() {
+        var svgBlockGroup = this.getBoard().svgBlockGroup;
         var node = this.svgGroup;
         while (node.parent() !== svgBlockGroup)
             node = node.parent();
-
-        svgBlockGroup.append(node);
+        return node;
     };
 
     p.getBoard = function() {return this._board;};
@@ -813,5 +836,12 @@ Entry.BlockView = function(block, board, mode) {
         this.readOnly = this.block.isReadOnly() !== null ? this.block.isReadOnly() :
             (this._skeleton.readOnly !== undefined ? this._skeleton.readOnly : false);
     };
+
+    p.getRipplePosition = function() {
+        var dragHeight = this.getBoard().dragBlock.dragInstance.height;
+        return {cx:8, cy:this.height + 1 - dragHeight};
+    };
+
+    p.bumpAway = function() {this._moveBy(10, 10, false);};
 
 })(Entry.BlockView.prototype);

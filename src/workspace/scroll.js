@@ -206,8 +206,14 @@ Entry.Scroller.RADIUS = 7;
     };
 
     p.scroll = function(x, y) {
-        var bBox = this.board.svgBlockGroup.getBBox(),
-            svgDom = this.board.svgDom;
+        var clientRect = this.board.svgBlockGroup.node.getBoundingClientRect(),
+            svgDom = this.board.svgDom,
+            bBox = {
+                x: clientRect.left - this.board.offset.left,
+                y: clientRect.top - this.board.offset.top,
+                width: clientRect.width,
+                height: clientRect.height
+            };
         x = Math.max(-bBox.width + Entry.BOARD_PADDING - bBox.x, x);
         y = Math.max(-bBox.height + Entry.BOARD_PADDING - bBox.y, y);
         x = Math.min(

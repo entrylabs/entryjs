@@ -67,8 +67,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
         this.svgGroup.append(this.textElement);
 
         this.svgGroup.mouseup(function(e) {
-            if (that._block.view.dragMode == Entry.DRAG_MODE_MOUSEDOWN)
-                that.renderOptions();
+            if (that._isEditable()) that.renderOptions();
         });
 
         this.box.set({

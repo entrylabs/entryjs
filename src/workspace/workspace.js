@@ -120,6 +120,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
             case Entry.Workspace.MODE_OVERLAYBOARD:
                 if (!this.overlayBoard)
                     this.initOverlayBoard();
+                this.selectedBoard = this.overlayBoard;
                 this.overlayBoard.show();
                 break;
         }
@@ -127,7 +128,12 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
     };
 
     p.changeBoardCode = function(code) {
-        this.selectedBoard.changeCode(code);
+        this.board.changeCode(code);
+    };
+
+    p.changeOverlayBoardCode = function(code) {
+        if (this.overlayBoard)
+            this.overlayBoard.changeCode(code);
     };
 
     p.changeBlockMenuCode = function(code) {
@@ -157,7 +163,8 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
     p.initOverlayBoard = function() {
         this.overlayBoard = new Entry.Board({
             dom: this.board.view,
-            workspace: this
+            workspace: this,
+            isOverlay: true
         });
         this.overlayBoard.changeCode(new Entry.Code([]));
         this.overlayBoard.workspace = this;

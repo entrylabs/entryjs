@@ -3,6 +3,7 @@
 Entry.block.functionAddButton = {
     skeleton: "basic_button",
     color: "#eee",
+    isNotFor: ["functionInit"],
     template: "%1",
     params: [
         {
@@ -21,6 +22,53 @@ Entry.block.functionAddButton = {
     }
 };
 
+Entry.block.function_field_label = {
+    skeleton: "basic_param",
+    color: "#f9c535",
+    template: "%1%2",
+    params: [
+        {
+            type: "TextInput",
+            value: "함수"
+        },
+        {
+            type: "Output",
+            accept: "basic_param"
+        }
+    ]
+};
+
+Entry.block.function_field_string = {
+    skeleton: "basic_param",
+    color: "#ffd974",
+    template: "%1%2",
+    params: [
+        {
+            type: "Block",
+            accept: "basic_string_field"
+        },
+        {
+            type: "Output",
+            accept: "basic_param"
+        }
+    ]
+};
+
+Entry.block.function_field_boolean = {
+    skeleton: "basic_param",
+    color: "#aeb8ff",
+    template: "%1%2",
+    params: [
+        {
+            type: "Block",
+            accept: "basic_boolean_field"
+        },
+        {
+            type: "Output",
+            accept: "basic_param"
+        }
+    ]
+};
 
 Blockly.Blocks.function_field_label = {
   init: function() {
@@ -131,6 +179,28 @@ Blockly.Blocks.function_create = {
 
 Entry.block.function_create = function (sprite, script) {
     return script.callReturn();
+};
+
+Entry.block.function_create = {
+    skeleton: "basic",
+    color: "#cc7337",
+    template: "함수 정의하기 %1 %2",
+    params: [
+        {
+            type: "Block",
+            accept: "basic_param",
+            value: [
+                {
+                    type: "function_field_label"
+                }
+            ]
+        },
+        {
+            type: "Indicator",
+            img: "/lib/entryjs/images/block_icon/function_03.png",
+            size: 12
+        }
+    ]
 };
 
 Blockly.Blocks.function_general = {

@@ -80,7 +80,7 @@ Entry.Block.MAGNET_OFFSET = 0.4;
 
             var paramInjected = thisParams[i];
 
-            if (params[i].type == 'Block') {
+            if (params[i].type === 'Output' || params[i].type === 'Block') {
                 if (paramInjected)
                     thisParams.splice(i, 1, new Entry.Thread(value, that.getCode()));
                 else thisParams.push(new Entry.Thread(value, that.getCode()));
