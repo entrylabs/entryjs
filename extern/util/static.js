@@ -312,7 +312,10 @@ EntryStatic.getAllBlocks = function() {
                 "sensorBoard_convert_scale",
                 //CODEino
                 "CODEino_get_named_sensor_value",
+                "CODEino_get_sound_status",
+                "CODEino_get_light_status",
                 "CODEino_is_button_pressed",
+                "CODEino_get_accelerometer_direction",
                 "CODEino_get_accelerometer_value",
                 "CODEino_get_number_sensor_value",
                 "CODEino_get_digital_value",
@@ -1696,8 +1699,26 @@ EntryStatic.blockInfo = {
         "usage": ["arduino"],
         "class": "CODEino"
     },
+    "CODEino_get_sound_status": {
+        "xml": "<block type='CODEino_get_sound_status'></block>",
+        "isNotFor": ["CODEino"],
+        "usage": ["arduino"],
+        "class": "CODEino"
+    },
+    "CODEino_get_light_status": {
+        "xml": "<block type='CODEino_get_light_status'></block>",
+        "isNotFor": ["CODEino"],
+        "usage": ["arduino"],
+        "class": "CODEino"
+    },
     "CODEino_is_button_pressed": {
         "xml": "<block type='CODEino_is_button_pressed'></block>",
+        "isNotFor": ["CODEino"],
+        "usage": ["arduino"],
+        "class": "CODEino"
+    },
+    "CODEino_get_accelerometer_direction": {
+        "xml": "<block type='CODEino_get_accelerometer_direction'></block>",
         "isNotFor": ["CODEino"],
         "usage": ["arduino"],
         "class": "CODEino"
