@@ -13427,7 +13427,7 @@ Entry.BlockView.PARAM_SPACE = 5;
           }, Entry.ANIMATION_DURATION), a.set({height:b}), delete a.originalHeight;
         }
       }
-      a.block.thread.changeEvent.notify();
+      (d = a.block.thread.changeEvent) && d.notify();
     }
   };
   a._createEmptyBG = function() {
@@ -13743,12 +13743,12 @@ Entry.Field = function() {
     return {x:a.e + d.left + this.box.x + b.x, y:a.f + d.top + this.box.y + b.y};
   };
   a.getRelativePos = function() {
-    var a = this._block.view, c = a.svgGroup.transform().globalMatrix, a = a.getContentPos(), d = this.box;
-    return {x:c.e + d.x + a.x, y:c.f + d.y + a.y};
+    var b = this._block.view, a = b.svgGroup.transform().globalMatrix, b = b.getContentPos(), d = this.box;
+    return {x:a.e + d.x + b.x, y:a.f + d.y + b.y};
   };
   a.truncate = function() {
-    var a = String(this.getValue()), c = this.TEXT_LIMIT_LENGTH, d = a.substring(0, c);
-    a.length > c && (d += "...");
+    var b = String(this.getValue()), a = this.TEXT_LIMIT_LENGTH, d = b.substring(0, a);
+    b.length > a && (d += "...");
     return d;
   };
   a.appendSvgOptionGroup = function() {
@@ -14299,10 +14299,8 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
     this.view = this;
     this._nextGroup = this.svgGroup;
     this.box.set({x:0, y:0, width:0, height:20});
-    this._valueBlock = this.getValue();
-    this._inspectBlock();
-    this._valueBlock.view._handlePrev();
-    this.calcWH();
+    this._updateValueBlock(this.getValue());
+    this._blockView.getBoard().constructor == Entry.BlockMenu && this._valueBlock.view.removeControl();
   };
   a.align = function(a, c, d) {
     var e = this.svgGroup;
@@ -14341,20 +14339,34 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
       }
       this._block.getThread();
       var c = this._blockView.getBoard();
-      this._valueBlock = block = new Entry.Block({type:a}, this);
+      block = new Entry.Block({type:a}, this);
       var a = c.workspace, d;
       a && (d = a.getMode());
       block.createView(c, d);
+      return this._setValueBlock(block);
     }
   };
-  a._handleNextChange = function() {
-    this._inspectThread();
-    this._setValueBlock();
-    this.calcWH();
+  a._setValueBlock = function(a) {
+    if (a != this._valueBlock || !this._valueBlock) {
+      this._valueBlock && this._valueBlock.view.set({shadow:!0});
+      this._valueBlock = a;
+      if (!this._valueBlock) {
+        return this._inspectBlock();
+      }
+      a = this._valueBlock.view;
+      a.shadow && a.set({shadow:!1});
+      return this._valueBlock;
+    }
   };
-  a._setValueBlock = function() {
-    var a = this.dummyBlock.next;
-    a && a != this._valueBlock && (this._valueBlock && this._valueBlock.view.set({shadow:!0}), this._valueBlock = a, this._valueBlockObserver && this._valueBlockObserver.destroy(), this._valueBlock && (a = this._valueBlock.view, this._valueBlockObserver = a.observe(this, "calcWH", ["width", "height"]), a.shadow && a.set({shadow:!1})));
+  a._updateValueBlock = function(a) {
+    a instanceof Entry.Block || (a = void 0);
+    this._sizeObserver && this._sizeObserver.destroy();
+    this._posObserver && this._posObserver.destroy();
+    a = this._setValueBlock(a).view;
+    a._handlePrev();
+    this._posObserver = a.observe(this, "_updateValueBlock", ["x", "y"], !1);
+    this._sizeObserver = a.observe(this, "calcWH", ["width", "height"]);
+    this.calcWH();
   };
   a.getPrevBlock = function(a) {
     return this._valueBlock === a ? this : null;

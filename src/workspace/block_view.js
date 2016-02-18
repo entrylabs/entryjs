@@ -725,7 +725,8 @@ Entry.BlockView.PARAM_SPACE = 5;
             }
 
         }
-        blockView.block.thread.changeEvent.notify();
+        var changeEvent = blockView.block.thread.changeEvent;
+        if (changeEvent) changeEvent.notify();
     };
 
     p._createEmptyBG = function() {

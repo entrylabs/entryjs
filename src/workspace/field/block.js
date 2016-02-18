@@ -47,18 +47,10 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
             width: 0,
             height: 20
         });
-        this._valueBlock = this.getValue();
-        this._inspectBlock();
-        this._valueBlock.view._handlePrev();
-        this.calcWH();
-        return;
-            this.dummyBlock.observe(this, "_handleNextChange", ["next"]);
-
-            this.dummyBlock = firstBlock;
-            this.dummyBlock.appendSvg(this);
+        this._updateValueBlock(this.getValue());
 
         if (this._blockView.getBoard().constructor == Entry.BlockMenu)
-            this.dummyBlock.next.view.removeControl();
+            this._valueBlock.view.removeControl();
 
     };
 
@@ -137,38 +129,41 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
             var board = this._blockView.getBoard();
 
             block = new Entry.Block({type: blockType}, this);
-            this._valueBlock = block;
             var workspace = board.workspace;
             var mode;
             if (workspace)
                 mode = workspace.getMode();
 
             block.createView(board, mode);
+            return this._setValueBlock(block);
         }
     };
 
-    p._handleNextChange = function() {
-        this._inspectThread();
-        this._setValueBlock();
-        this.calcWH();
-    };
-
-    p._setValueBlock = function() {
-        var block = this.dummyBlock.next;
-        if (block && block != this._valueBlock) {
+    p._setValueBlock = function(block) {
+        if (block != this._valueBlock || !this._valueBlock) {
             if (this._valueBlock)
                 this._valueBlock.view.set({shadow:true});
 
             this._valueBlock = block;
-            if (this._valueBlockObserver) this._valueBlockObserver.destroy();
-            if (this._valueBlock) {
-                var blockView = this._valueBlock.view;
-                this._valueBlockObserver =
-                    blockView.observe(this, "calcWH", ["width", "height"]);
+            if (!this._valueBlock)
+                return this._inspectBlock();
 
-                if (blockView.shadow) blockView.set({shadow:false});
-            }
+            var blockView = this._valueBlock.view;
+            if (blockView.shadow) blockView.set({shadow:false});
+            return this._valueBlock;
         }
+    };
+
+    p._updateValueBlock = function(block) {
+        if (!(block instanceof Entry.Block)) block = undefined;
+        if (this._sizeObserver) this._sizeObserver.destroy();
+        if (this._posObserver) this._posObserver.destroy();
+
+        var view = this._setValueBlock(block).view;
+        view._handlePrev();
+        this._posObserver = view.observe(this, "_updateValueBlock", ["x", "y"], false);
+        this._sizeObserver = view.observe(this, "calcWH", ["width", "height"]);
+        this.calcWH();
     };
 
     p.getPrevBlock = function(block) {
