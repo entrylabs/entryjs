@@ -690,7 +690,6 @@ Entry.BlockView.PARAM_SPACE = 5;
             });
             this.svgGroup.prepend(shadow);
             this._clonedShadow = shadow;
-            console.log(shadow);
 
             if (blockView.background) {
                 blockView.background.remove();

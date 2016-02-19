@@ -13622,7 +13622,6 @@ Entry.BlockView.PARAM_SPACE = 5;
         $(e.node).attr({transform:"translate(0 " + (this.height + 1) + ")"});
         this.svgGroup.prepend(e);
         this._clonedShadow = e;
-        console.log(e);
         a.background && (a.background.remove(), a.nextBackground.remove(), delete a.background, delete a.nextBackground);
         b = a.height + b;
         e = d.rect(0 - a.width / 2, 1.5 * a.height + 1, a.width, Math.max(0, b - 1.5 * a.height));
