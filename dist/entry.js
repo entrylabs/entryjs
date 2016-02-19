@@ -3657,7 +3657,7 @@ Entry.block.see_angle_object = function(a, b) {
     return b.callReturn();
   }
   "mouse" == c ? (c = Entry.stage.mouseCoordinate.y, d = Entry.stage.mouseCoordinate.x - d, e = c - e) : (c = Entry.container.getEntity(c), d = c.getX() - d, e = c.getY() - e);
-  e = 0 <= d ? -Math.atan(e / d) / Math.PI * 180 + 90 : -Math.atan(e / d) / Math.PI * 180 + 270;
+  e = 0 === d && 0 === e ? a.getDirection() + a.getRotation() : 0 <= d ? -Math.atan(e / d) / Math.PI * 180 + 90 : -Math.atan(e / d) / Math.PI * 180 + 270;
   d = a.getDirection() + a.getRotation();
   a.setRotation(a.getRotation() + e - d);
   return b.callReturn();
