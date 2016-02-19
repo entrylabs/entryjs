@@ -7119,7 +7119,7 @@ Entry.EntryObject.prototype.generateView = function() {
     this.rotateModeAView_ = a;
     d.appendChild(a);
     a.bindOnClick(function(a) {
-      Entry.engine.isState("run") || this.object.getLock() || this.object.setRotateMethod("free");
+      Entry.engine.isState("run") || this.object.getLock() || (this.object.initRotateValue("free"), this.object.setRotateMethod("free"));
     });
     a = Entry.createElement("div");
     a.addClass("entryObjectRotateModeWorkspace");
@@ -7128,7 +7128,7 @@ Entry.EntryObject.prototype.generateView = function() {
     this.rotateModeBView_ = a;
     d.appendChild(a);
     a.bindOnClick(function(a) {
-      Entry.engine.isState("run") || this.object.getLock() || this.object.setRotateMethod("vertical");
+      Entry.engine.isState("run") || this.object.getLock() || (this.object.initRotateValue("vertical"), this.object.setRotateMethod("vertical"));
     });
     a = Entry.createElement("div");
     a.addClass("entryObjectRotateModeWorkspace");
@@ -7137,7 +7137,7 @@ Entry.EntryObject.prototype.generateView = function() {
     this.rotateModeCView_ = a;
     d.appendChild(a);
     a.bindOnClick(function(a) {
-      Entry.engine.isState("run") || this.object.getLock() || this.object.setRotateMethod("none");
+      Entry.engine.isState("run") || this.object.getLock() || (this.object.initRotateValue("none"), this.object.setRotateMethod("none"));
     });
     this.updateThumbnailView();
     this.updateCoordinateView();
@@ -7269,7 +7269,8 @@ Entry.EntryObject.prototype.updateCoordinateView = function(a) {
 };
 Entry.EntryObject.prototype.updateRotationView = function(a) {
   if (this.isSelected() && this.view_ || a) {
-    a = "", "free" == this.getRotateMethod() ? (this.rotateSpan_.removeClass("entryRemove"), this.rotateInput_.removeClass("entryRemove"), a += this.entity.getRotation().toFixed(1), this.rotateInput_.value = a + "\u02da") : (this.rotateSpan_.addClass("entryRemove"), this.rotateInput_.addClass("entryRemove")), a = "" + this.entity.getDirection().toFixed(1), a += "\u02da", this.directionInput_.value = a;
+    a = "", "free" == this.getRotateMethod() ? (this.rotateSpan_.removeClass("entryRemove"), this.rotateInput_.removeClass("entryRemove"), a += this.entity.getRotation().toFixed(1), this.rotateInput_.value = a + "\u02da", a = "" + this.entity.getDirection().toFixed(1), a += "\u02da", this.directionInput_.value = a) : (this.rotateSpan_.addClass("entryRemove"), this.rotateInput_.addClass("entryRemove"), a = "" + this.entity.getDirection().toFixed(1), a += "\u02da", this.directionInput_.value = a, this.entity.rotation = 
+    0);
   }
 };
 Entry.EntryObject.prototype.select = function(a) {
@@ -7370,6 +7371,10 @@ Entry.EntryObject.prototype.setRotateMethod = function(a) {
   a || (a = "free");
   this.rotateMethod = a;
   this.updateRotateMethodView();
+  Entry.stage.selectedObject && Entry.stage.selectedObject.entity ? (Entry.stage.updateObject(), Entry.stage.updateHandle()) : Entry.container.getObject(this.id) && (Entry.container.selectObject(this.id), Entry.stage.updateObject(), Entry.stage.updateHandle());
+};
+Entry.EntryObject.prototype.initRotateValue = function(a) {
+  this.rotateMethod != a && (this.entity.rotation = 0, this.entity.direction = 90);
 };
 Entry.EntryObject.prototype.updateRotateMethodView = function() {
   var a = this.rotateMethod;
