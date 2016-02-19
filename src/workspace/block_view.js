@@ -252,7 +252,7 @@ Entry.BlockView.PARAM_SPACE = 5;
     p._toGlobalCoordinate = function() {
         var matrix = this.svgGroup.transform().globalMatrix;
         this._moveTo(matrix.e, matrix.f, false);
-        this._board.svgBlockGroup.append(this.svgGroup);
+        this.getBoard().svgBlockGroup.append(this.svgGroup);
     };
 
     p._moveTo = function(x, y, animate) {

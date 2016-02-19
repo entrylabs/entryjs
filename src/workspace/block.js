@@ -1,5 +1,5 @@
 /*
-on*
+ *
  */
 "use strict";
 
@@ -144,7 +144,7 @@ Entry.Block.MAGNET_OFFSET = 0.4;
         if (isNew) delete json.id;
 
         json.params = json.params.map(function(p) {
-            if (p instanceof Entry.Thread)
+            if (p instanceof Entry.Block)
                 p = p.toJSON(isNew);
             return p;
         });

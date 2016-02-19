@@ -13215,7 +13215,7 @@ Entry.BlockView.PARAM_SPACE = 5;
   a._toGlobalCoordinate = function() {
     var b = this.svgGroup.transform().globalMatrix;
     this._moveTo(b.e, b.f, !1);
-    this._board.svgBlockGroup.append(this.svgGroup);
+    this.getBoard().svgBlockGroup.append(this.svgGroup);
   };
   a._moveTo = function(b, a, d) {
     this.set({x:b, y:a});
@@ -15043,7 +15043,7 @@ Entry.Block.MAGNET_OFFSET = .4;
     delete c.thread;
     a && delete c.id;
     c.params = c.params.map(function(c) {
-      c instanceof Entry.Thread && (c = c.toJSON(a));
+      c instanceof Entry.Block && (c = c.toJSON(a));
       return c;
     });
     c.statements = c.statements.map(function(c) {
