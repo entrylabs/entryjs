@@ -958,8 +958,6 @@ Entry.EntryObject.prototype.updateRotationView = function(isForced) {
         content += this.entity.getDirection().toFixed(1);
         content += '˚';
         this.directionInput_.value = content;
-
-        this.entity.rotation = 0.0;
     }
 };
 
