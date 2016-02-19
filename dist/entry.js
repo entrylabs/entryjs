@@ -13758,8 +13758,8 @@ Entry.Field = function() {
     return {x:a.e + d.x + b.x, y:a.f + d.y + b.y};
   };
   a.truncate = function() {
-    var b = String(this.getValue()), a = this.TEXT_LIMIT_LENGTH, d = b.substring(0, a);
-    b.length > a && (d += "...");
+    var a = String(this.getValue()), c = this.TEXT_LIMIT_LENGTH, d = a.substring(0, c);
+    a.length > c && (d += "...");
     return d;
   };
   a.appendSvgOptionGroup = function() {
@@ -13768,16 +13768,16 @@ Entry.Field = function() {
   a.getValue = function() {
     return this._block.params[this._index];
   };
-  a.setValue = function(b) {
-    this.value = b;
-    this._block.params[this._index] = b;
+  a.setValue = function(a) {
+    this.value = a;
+    this._block.params[this._index] = a;
   };
   a._isEditable = function() {
     if (this._block.view.dragMode == Entry.DRAG_MODE_MOUSEDOWN) {
       return !0;
     }
-    var b = this._block.view, a = b.getBoard().selectedBlockView;
-    return a ? b.getSvgRoot() == a.svgGroup : !1;
+    var a = this._block.view, c = a.getBoard().selectedBlockView;
+    return c ? a.getSvgRoot() == c.svgGroup : !1;
   };
 })(Entry.Field.prototype);
 Entry.FieldAngle = function(a, b, c) {
@@ -15785,29 +15785,29 @@ Entry.Playground.prototype.generateDefaultView = function(a) {
   return a;
 };
 Entry.Playground.prototype.generateTabView = function(a) {
-  var b = Entry.createElement("ul");
-  b.addClass("entryTabListWorkspace");
-  this.tabList_ = b;
-  a.appendChild(b);
+  var b = this, c = Entry.createElement("ul");
+  c.addClass("entryTabListWorkspace");
+  this.tabList_ = c;
+  a.appendChild(c);
   this.tabViewElements = {};
   a = Entry.createElement("li", "entryCodeTab");
   a.innerHTML = Lang.Workspace.tab_code;
   a.addClass("entryTabListItemWorkspace");
   a.addClass("entryTabSelected");
-  b.appendChild(a);
+  c.appendChild(a);
   a.bindOnClick(function(a) {
-    Entry.playground.changeViewMode("code");
+    b.changeViewMode("code");
   });
   this.tabViewElements.code = a;
-  Entry.pictureEditable && (a = Entry.createElement("li", "entryPictureTab"), a.innerHTML = Lang.Workspace.tab_picture, a.addClass("entryTabListItemWorkspace"), b.appendChild(a), a.bindOnClick(function(a) {
+  Entry.pictureEditable && (a = Entry.createElement("li", "entryPictureTab"), a.innerHTML = Lang.Workspace.tab_picture, a.addClass("entryTabListItemWorkspace"), c.appendChild(a), a.bindOnClick(function(a) {
     Entry.playground.changeViewMode("picture");
-  }), this.tabViewElements.picture = a, a = Entry.createElement("li", "entryTextboxTab"), a.innerHTML = Lang.Workspace.tab_text, a.addClass("entryTabListItemWorkspace"), b.appendChild(a), a.bindOnClick(function(a) {
+  }), this.tabViewElements.picture = a, a = Entry.createElement("li", "entryTextboxTab"), a.innerHTML = Lang.Workspace.tab_text, a.addClass("entryTabListItemWorkspace"), c.appendChild(a), a.bindOnClick(function(a) {
     Entry.playground.changeViewMode("text");
   }), this.tabViewElements.text = a, a.addClass("entryRemove"));
-  Entry.soundEditable && (a = Entry.createElement("li", "entrySoundTab"), a.innerHTML = Lang.Workspace.tab_sound, a.addClass("entryTabListItemWorkspace"), b.appendChild(a), a.bindOnClick(function(a) {
+  Entry.soundEditable && (a = Entry.createElement("li", "entrySoundTab"), a.innerHTML = Lang.Workspace.tab_sound, a.addClass("entryTabListItemWorkspace"), c.appendChild(a), a.bindOnClick(function(a) {
     Entry.playground.changeViewMode("sound");
   }), this.tabViewElements.sound = a);
-  Entry.hasVariableManager && (a = Entry.createElement("li", "entryVariableTab"), a.innerHTML = Lang.Workspace.tab_attribute, a.addClass("entryTabListItemWorkspace"), a.addClass("entryVariableTabWorkspace"), b.appendChild(a), a.bindOnClick(function(a) {
+  Entry.hasVariableManager && (a = Entry.createElement("li", "entryVariableTab"), a.innerHTML = Lang.Workspace.tab_attribute, a.addClass("entryTabListItemWorkspace"), a.addClass("entryVariableTabWorkspace"), c.appendChild(a), a.bindOnClick(function(a) {
     Entry.playground.toggleOnVariableView();
     Entry.playground.changeViewMode("variable");
   }), this.tabViewElements.variable = a);
@@ -16297,12 +16297,13 @@ Entry.Playground.prototype.createVariableView = function() {
 };
 Entry.Playground.prototype.toggleOnVariableView = function() {
   Entry.playground.changeViewMode("code");
-  this.categoryView_.addClass("entryRemove");
+  this.hideBlockMenu();
   Entry.variableContainer.updateList();
   this.variableView_.removeClass("entryRemove");
   this.resizeHandle_.removeClass("entryRemove");
 };
 Entry.Playground.prototype.toggleOffVariableView = function() {
+  this.showBlockMenu();
   this.variableView_.addClass("entryRemove");
 };
 Entry.Playground.prototype.syncObject = function(a) {
@@ -16558,7 +16559,11 @@ Entry.Playground.prototype.setFontAlign = function(a) {
     this.object.entity.setTextAlign(a);
   }
 };
-Entry.Playground.prototype.setBlockMenu = function() {
+Entry.Playground.prototype.hideBlockMenu = function() {
+  this.mainWorkspace.getBlockMenu().hide();
+};
+Entry.Playground.prototype.showBlockMenu = function() {
+  this.mainWorkspace.getBlockMenu().show();
 };
 Entry.Xml = {};
 Entry.Xml.isTypeOf = function(a, b) {

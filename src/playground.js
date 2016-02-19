@@ -199,6 +199,7 @@ Entry.Playground.prototype.generateDefaultView = function(defaultView) {
  * @return {Element}
  */
 Entry.Playground.prototype.generateTabView = function(tabView) {
+    var that = this;
     var tabList = Entry.createElement('ul');
     tabList.addClass('entryTabListWorkspace');
     this.tabList_ = tabList;
@@ -211,7 +212,7 @@ Entry.Playground.prototype.generateTabView = function(tabView) {
     codeTab.addClass('entryTabSelected');
     tabList.appendChild(codeTab);
     codeTab.bindOnClick(function(e) {
-        Entry.playground.changeViewMode('code');
+        that.changeViewMode('code');
     });
     this.tabViewElements.code = codeTab;
 
@@ -1070,14 +1071,14 @@ Entry.Playground.prototype.createVariableView = function() {
  */
 Entry.Playground.prototype.toggleOnVariableView = function() {
     Entry.playground.changeViewMode('code');
-    this.categoryView_.addClass('entryRemove');
-    //TODO: block menu hide
+    this.hideBlockMenu();
     Entry.variableContainer.updateList();
     this.variableView_.removeClass('entryRemove');
     this.resizeHandle_.removeClass('entryRemove');
 };
 
 Entry.Playground.prototype.toggleOffVariableView = function() {
+    this.showBlockMenu();
     this.variableView_.addClass('entryRemove');
 };
 
@@ -1590,6 +1591,10 @@ Entry.Playground.prototype.setFontAlign = function(fontAlign) {
     this.object.entity.setTextAlign(fontAlign);
 };
 
-Entry.Playground.prototype.setBlockMenu = function() {
-    return;
-}
+Entry.Playground.prototype.hideBlockMenu = function() {
+    this.mainWorkspace.getBlockMenu().hide();
+};
+
+Entry.Playground.prototype.showBlockMenu = function() {
+    this.mainWorkspace.getBlockMenu().show();
+};
