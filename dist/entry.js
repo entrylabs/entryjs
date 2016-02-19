@@ -662,7 +662,7 @@ Blockly.Blocks.arduino_get_number_sensor_value = {init:function() {
   this.setColour("#00979D");
   this.appendDummyInput().appendField(Lang.Blocks.ARDUINO_num_sensor_value_1);
   this.appendValueInput("VALUE").setCheck(["Number", "String", null]);
-  this.appendDummyInput().appendField(Lang.Blocks.ARDUINO_num_sensor_value_2);
+  this.appendDummyInput().appendField(Lang.Blocks.ARDUINO_num_sensor_value_2).appendField(" ");
   this.setInputsInline(!0);
   this.setOutput(!0, "Number");
 }};
@@ -674,7 +674,7 @@ Blockly.Blocks.arduino_get_digital_value = {init:function() {
   this.setColour("#00979D");
   this.appendDummyInput().appendField(Lang.Blocks.ARDUINO_get_digital_value_1);
   this.appendValueInput("VALUE").setCheck("Number");
-  this.appendDummyInput().appendField(Lang.Blocks.ARDUINO_num_sensor_value_2);
+  this.appendDummyInput().appendField(Lang.Blocks.ARDUINO_num_sensor_value_2).appendField(" ");
   this.setInputsInline(!0);
   this.setOutput(!0, "Boolean");
 }};
@@ -727,6 +727,7 @@ Blockly.Blocks.arduino_convert_scale = {init:function() {
   this.appendDummyInput().appendField(Lang.Blocks.ARDUINO_convert_scale_5);
   this.appendValueInput("VALUE5").setCheck(["Number", "String", null]);
   this.appendDummyInput().appendField(Lang.Blocks.ARDUINO_convert_scale_6);
+  this.appendDummyInput().appendField(" ");
   this.setOutput(!0, "Number");
   this.setInputsInline(!0);
 }};
@@ -792,16 +793,59 @@ Blockly.Blocks.CODEino_get_named_sensor_value = {init:function() {
 Entry.block.CODEino_get_named_sensor_value = function(a, b) {
   return Entry.hw.getAnalogPortValue(b.getField("PORT", b));
 };
+Blockly.Blocks.CODEino_get_sound_status = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(Lang.Blocks.CODEino_string_10).appendField(new Blockly.FieldDropdown([[Lang.Blocks.CODEino_string_11, "GREAT"], [Lang.Blocks.CODEino_string_12, "SMALL"]]), "STATUS").appendField(" ");
+  this.setInputsInline(!0);
+  this.setOutput(!0, "Boolean");
+}};
+Entry.block.CODEino_get_sound_status = function(a, b) {
+  return "GREAT" == b.getField("STATUS", b) ? 600 < Entry.hw.getAnalogPortValue(0) ? 1 : 0 : 600 > Entry.hw.getAnalogPortValue(0) ? 1 : 0;
+};
+Blockly.Blocks.CODEino_get_light_status = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(Lang.Blocks.CODEino_string_13).appendField(new Blockly.FieldDropdown([[Lang.Blocks.CODEino_string_14, "BRIGHT"], [Lang.Blocks.CODEino_string_15, "DARK"]]), "STATUS").appendField(" ");
+  this.setInputsInline(!0);
+  this.setOutput(!0, "Boolean");
+}};
+Entry.block.CODEino_get_light_status = function(a, b) {
+  return "DARK" == b.getField("STATUS", b) ? 800 < Entry.hw.getAnalogPortValue(1) ? 1 : 0 : 800 > Entry.hw.getAnalogPortValue(1) ? 1 : 0;
+};
 Blockly.Blocks.CODEino_is_button_pressed = {init:function() {
   this.setColour("#00979D");
-  this.appendDummyInput().appendField(Lang.Blocks.CODEino_string_2).appendField(new Blockly.FieldDropdown([[Lang.Blocks.CODEino_string_3, "4"], [Lang.Blocks.CODEino_string_4, "17"], [Lang.Blocks.CODEino_string_5, "18"], [Lang.Blocks.CODEino_string_6, "19"], [Lang.Blocks.CODEino_string_7, "20"]]), "PORT");
-  this.appendDummyInput().appendField(" ");
+  this.appendDummyInput().appendField(Lang.Blocks.CODEino_string_2).appendField(new Blockly.FieldDropdown([[Lang.Blocks.CODEino_string_3, "4"], [Lang.Blocks.CODEino_string_4, "17"], [Lang.Blocks.CODEino_string_5, "18"], [Lang.Blocks.CODEino_string_6, "19"], [Lang.Blocks.CODEino_string_7, "20"]]), "PORT").appendField(" ");
   this.setInputsInline(!0);
   this.setOutput(!0, "Boolean");
 }};
 Entry.block.CODEino_is_button_pressed = function(a, b) {
   var c = b.getNumberField("PORT", b);
-  return 14 < c ? Entry.hw.getAnalogPortValue(c - 14) : !Entry.hw.getDigitalPortValue(c);
+  return 14 < c ? !Entry.hw.getAnalogPortValue(c - 14) : !Entry.hw.getDigitalPortValue(c);
+};
+Blockly.Blocks.CODEino_get_accelerometer_direction = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(Lang.Blocks.CODEino_string_8).appendField(new Blockly.FieldDropdown([[Lang.Blocks.CODEino_string_16, "LEFT"], [Lang.Blocks.CODEino_string_17, "RIGHT"], [Lang.Blocks.CODEino_string_18, "FRONT"], [Lang.Blocks.CODEino_string_19, "REAR"], [Lang.Blocks.CODEino_string_20, "REVERSE"]]), "DIRECTION");
+  this.appendDummyInput().appendField(" ");
+  this.setInputsInline(!0);
+  this.setOutput(!0, "Boolean");
+}};
+Entry.block.CODEino_get_accelerometer_direction = function(a, b) {
+  var c = b.getField("DIRECTION", b), d = 0;
+  "LEFT" == c || "RIGHT" == c ? d = 3 : "FRONT" == c || "REAR" == c ? d = 4 : "REVERSE" == c && (d = 5);
+  d = Entry.hw.getAnalogPortValue(d);
+  d = 180 / 137 * (d - 265);
+  d += -90;
+  d = Math.min(90, d);
+  d = Math.max(-90, d);
+  d = Math.round(d);
+  if ("LEFT" == c || "REAR" == c) {
+    return -30 > d ? 1 : 0;
+  }
+  if ("RIGHT" == c || "FRONT" == c) {
+    return 30 < d ? 1 : 0;
+  }
+  if ("REVERSE" == c) {
+    return -50 > d ? 1 : 0;
+  }
 };
 Blockly.Blocks.CODEino_get_accelerometer_value = {init:function() {
   this.setColour("#00979D");

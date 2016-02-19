@@ -194,7 +194,8 @@ Blockly.Blocks.arduino_get_number_sensor_value = {
     this.appendValueInput("VALUE")
         .setCheck(["Number", "String", null]);
     this.appendDummyInput()
-        .appendField(Lang.Blocks.ARDUINO_num_sensor_value_2);
+        .appendField(Lang.Blocks.ARDUINO_num_sensor_value_2)
+        .appendField(" ");
     this.setInputsInline(true);
     this.setOutput(true, 'Number');
   }
@@ -213,7 +214,8 @@ Blockly.Blocks.arduino_get_digital_value = {
     this.appendValueInput("VALUE")
         .setCheck("Number");
     this.appendDummyInput()
-        .appendField(Lang.Blocks.ARDUINO_num_sensor_value_2);
+        .appendField(Lang.Blocks.ARDUINO_num_sensor_value_2)
+        .appendField(" ");
     this.setInputsInline(true);
     this.setOutput(true, 'Boolean');
   }
@@ -309,6 +311,7 @@ Blockly.Blocks.arduino_convert_scale = {
         .setCheck(["Number", "String", null]);
     this.appendDummyInput()
         .appendField(Lang.Blocks.ARDUINO_convert_scale_6);
+    this.appendDummyInput().appendField(" ");
     this.setOutput(true, 'Number');
     this.setInputsInline(true);
   }
@@ -461,6 +464,50 @@ Entry.block.CODEino_get_named_sensor_value = function (sprite, script) {
     return Entry.hw.getAnalogPortValue(script.getField("PORT", script));
 };
 
+Blockly.Blocks.CODEino_get_sound_status = {
+  init: function() {
+    this.setColour("#00979D");
+    this.appendDummyInput()
+        .appendField(Lang.Blocks.CODEino_string_10)
+        .appendField(new Blockly.FieldDropdown([
+          [Lang.Blocks.CODEino_string_11,"GREAT"],
+          [Lang.Blocks.CODEino_string_12,"SMALL"]
+          ]), "STATUS")
+        .appendField(' ');
+    this.setInputsInline(true);
+    this.setOutput(true, 'Boolean');
+  }
+};
+
+Entry.block.CODEino_get_sound_status = function (sprite, script) {
+    var value1 = script.getField("STATUS", script);
+    var value2 = 0;
+    if (value1 == "GREAT") return Entry.hw.getAnalogPortValue(value2) > 600 ? 1 : 0;
+    else return Entry.hw.getAnalogPortValue(value2) < 600 ? 1 : 0;
+};
+
+Blockly.Blocks.CODEino_get_light_status = {
+  init: function() {
+    this.setColour("#00979D");
+    this.appendDummyInput()
+        .appendField(Lang.Blocks.CODEino_string_13)
+        .appendField(new Blockly.FieldDropdown([
+          [Lang.Blocks.CODEino_string_14,"BRIGHT"],
+          [Lang.Blocks.CODEino_string_15,"DARK"]
+          ]), "STATUS")
+        .appendField(' ');
+    this.setInputsInline(true);
+    this.setOutput(true, 'Boolean');
+  }
+};
+
+Entry.block.CODEino_get_light_status = function (sprite, script) {
+    var value1 = script.getField("STATUS", script);
+    var value2 = 1;
+    if (value1 == "DARK") return Entry.hw.getAnalogPortValue(value2) > 800 ? 1 : 0;
+    else return Entry.hw.getAnalogPortValue(value2) < 800 ? 1 : 0;
+};
+
 Blockly.Blocks.CODEino_is_button_pressed = {
   init: function() {
     this.setColour("#00979D");
@@ -473,7 +520,6 @@ Blockly.Blocks.CODEino_is_button_pressed = {
           [Lang.Blocks.CODEino_string_6,"19"],
           [Lang.Blocks.CODEino_string_7,"20"]
           ]), "PORT")
-    this.appendDummyInput()
         .appendField(' ');
     this.setInputsInline(true);
     this.setOutput(true, 'Boolean');
@@ -484,8 +530,50 @@ Entry.block.CODEino_is_button_pressed = function (sprite, script) {
     var value = script.getNumberField("PORT", script);
     if (value > 14) {
         value = value - 14;
-        return Entry.hw.getAnalogPortValue(value);
+        return !Entry.hw.getAnalogPortValue(value);
     } else return !Entry.hw.getDigitalPortValue(value);
+};
+
+Blockly.Blocks.CODEino_get_accelerometer_direction = {
+  init: function() {
+    this.setColour("#00979D");
+    this.appendDummyInput()
+        .appendField(Lang.Blocks.CODEino_string_8)
+        .appendField(new Blockly.FieldDropdown([
+          [Lang.Blocks.CODEino_string_16, "LEFT"],
+          [Lang.Blocks.CODEino_string_17, "RIGHT"],
+          [Lang.Blocks.CODEino_string_18, "FRONT"],
+          [Lang.Blocks.CODEino_string_19, "REAR"],
+          [Lang.Blocks.CODEino_string_20, "REVERSE"]
+          ]), "DIRECTION")
+    this.appendDummyInput()
+        .appendField(' ');
+    this.setInputsInline(true);
+    this.setOutput(true, 'Boolean');
+  }
+};
+
+Entry.block.CODEino_get_accelerometer_direction = function (sprite, script) {
+    var value1 = script.getField("DIRECTION", script);
+    var value2 = 0;
+    if (value1 == "LEFT" || value1 =="RIGHT") value2 = 3;
+    else if (value1 == "FRONT" || value1 =="REAR") value2 = 4;
+    else if (value1 == "REVERSE") value2 = 5;
+    var value3 = Entry.hw.getAnalogPortValue(value2);
+    var value4 = 265;
+    var value5 = 402;
+    var value6 = -90;
+    var value7 = 90;
+    var result = value3;
+    result -= value4;
+    result = result * ((value7 - value6) / (value5 - value4));
+    result += value6;
+    result = Math.min(value7, result);
+    result = Math.max(value6, result);
+    result = Math.round(result);
+    if (value1 == "LEFT" || value1 == "REAR") return result < -30 ? 1 : 0;
+    else if (value1 == "RIGHT" || value1 == "FRONT") return result > 30 ? 1 : 0;
+    else if (value1 == "REVERSE") return result < -50 ? 1 : 0;
 };
 
 Blockly.Blocks.CODEino_get_accelerometer_value = {
