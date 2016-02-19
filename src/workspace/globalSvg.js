@@ -53,6 +53,7 @@ goog.provide('Entry.GlobalSvg');
         var isVimMode = this._mode == Entry.Workspace.MODE_VIMBOARD;
 
         this.svg = blockView.svgGroup.clone();
+        this.svg.attr({opacity:1});
         if (isVimMode) {
             var svg = this.svg;
             svg.selectAll('path').animate({

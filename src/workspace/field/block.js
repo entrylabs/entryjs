@@ -161,9 +161,9 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
 
         var view = this._setValueBlock(block).view;
         view._handlePrev();
+        this._blockView.alignContent();
         this._posObserver = view.observe(this, "_updateValueBlock", ["x", "y"], false);
         this._sizeObserver = view.observe(this, "calcWH", ["width", "height"]);
-        this.calcWH();
     };
 
     p.getPrevBlock = function(block) {

@@ -12943,7 +12943,7 @@ Entry.BlockMenu = function(a, b, c) {
         Entry.GlobalSvg.setView(e, a.getMode()) && Entry.GlobalSvg.addControl(b);
       } else {
         var a = e.block, h = a.getThread();
-        a && h && (this._boardBlockView = g.code.cloneThread(h, d).getFirstBlock().view, this._boardBlockView._moveTo(e.x - f, e.y + (this.offset.top - g.offset.top), !1), this._boardBlockView.onMouseDown.call(this._boardBlockView, b), this._dragObserver = this._boardBlockView.observe(this, "_editDragInstance", ["x", "y"], !1));
+        a && h && (this._boardBlockView = g.code.cloneThread(h, d).getFirstBlock().view, this._boardBlockView._moveTo(e.x - f, e.y + (this.offset.top - g.offset.top), !1), this._boardBlockView.set({visible:!1}), this._boardBlockView.onMouseDown.call(this._boardBlockView, b), this._dragObserver = this._boardBlockView.observe(this, "_editDragInstance", ["x", "y"], !1));
       }
     }
   };
@@ -13298,7 +13298,9 @@ Entry.BlockView.PARAM_SPACE = 5;
       a instanceof Entry.BlockMenu ? (a.terminateDrag(), this.vimBoardEvent(b, "dragEnd", e)) : a.clear();
     } else {
       if (d !== Entry.DRAG_MODE_MOUSEDOWN) {
-        (f = this.dragInstance && this.dragInstance.isNew) && (a.workspace.blockMenu.terminateDrag() || e.doAdd());
+        if (f = this.dragInstance && this.dragInstance.isNew) {
+          a.workspace.blockMenu.terminateDrag() || e.doAdd(), this.set({visible:!0});
+        }
         var g = Entry.GlobalSvg;
         b = this.block.getPrevBlock();
         switch(Entry.GlobalSvg.terminateDrag(this)) {
@@ -14369,9 +14371,9 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
     this._posObserver && this._posObserver.destroy();
     a = this._setValueBlock(a).view;
     a._handlePrev();
+    this._blockView.alignContent();
     this._posObserver = a.observe(this, "_updateValueBlock", ["x", "y"], !1);
     this._sizeObserver = a.observe(this, "calcWH", ["width", "height"]);
-    this.calcWH();
   };
   a.getPrevBlock = function(a) {
     return this._valueBlock === a ? this : null;
@@ -14630,6 +14632,7 @@ Entry.GlobalSvg = {};
     this._svg && this.remove();
     var c = this._mode == Entry.Workspace.MODE_VIMBOARD;
     this.svg = a.svgGroup.clone();
+    this.svg.attr({opacity:1});
     c && (a = this.svg, a.selectAll("path").animate({opacity:0}, 500, mina.easeinout), a.selectAll("text").animate({fill:"#000000"}, 530, mina.easeinout));
     this.snap.append(this.svg);
     this.show();
