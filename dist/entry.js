@@ -12931,7 +12931,7 @@ Entry.BlockMenu = function(a, b, c) {
     if (this.code) {
       for (var b = this.code.getThreads(), a = 10, d = "LEFT" == this._align ? 10 : this.svgDom.width() / 2, e, f = 0, g = b.length;f < g;f++) {
         var h = b[f].getFirstBlock(), k = h.view, h = Entry.block[h.type];
-        this.checkBanClass(h) ? k.set({visible:!1}) : (k.set({visible:!0}), h = h.class, e && e !== h && (this._createSplitter(a), a += 15), e = h, a -= k.offsetY, k._moveTo(d - k.offsetX, a, !1), a += k.height + 15);
+        this.checkBanClass(h) ? k.set({display:!1}) : (k.set({display:!0}), h = h.class, e && e !== h && (this._createSplitter(a), a += 15), e = h, a -= k.offsetY, k._moveTo(d - k.offsetX, a, !1), a += k.height + 15);
       }
       this.changeEvent.notify();
     }
@@ -13108,6 +13108,7 @@ Entry.BlockView = function(a, b, c) {
   this.block.observe(this, "_setReadOnly", ["movable"]);
   this.observe(this, "_updateBG", ["magneting"]);
   this.observe(this, "_updateOpacity", ["visible"]);
+  this.observe(this, "_updateDisplay", ["display"], !1);
   this.observe(this, "_updateShadow", ["shadow"]);
   b.code.observe(this, "_setBoard", ["board"], !1);
   this.dragMode = Entry.DRAG_MODE_NONE;
@@ -13115,7 +13116,7 @@ Entry.BlockView = function(a, b, c) {
 };
 Entry.BlockView.PARAM_SPACE = 5;
 (function(a) {
-  a.schema = {id:0, type:Entry.STATIC.BLOCK_RENDER_MODEL, x:0, y:0, offsetX:0, offsetY:0, width:0, height:0, contentWidth:0, contentHeight:0, magneting:!1, visible:!0, animating:!1, shadow:!0};
+  a.schema = {id:0, type:Entry.STATIC.BLOCK_RENDER_MODEL, x:0, y:0, offsetX:0, offsetY:0, width:0, height:0, contentWidth:0, contentHeight:0, magneting:!1, visible:!0, animating:!1, shadow:!0, display:!0};
   a._startRender = function(b, a) {
     this.svgGroup.attr({class:"block"});
     var d = this._skeleton.path(this);
@@ -13495,6 +13496,9 @@ Entry.BlockView.PARAM_SPACE = 5;
   a._handleNext = function() {
     var b = this.block.getNextBlock();
     b && b.view._toLocalCoordinate(this._nextGroup);
+  };
+  a._updateDisplay = function() {
+    this.svgGroup.attr({display:!1 === this.display ? "none" : "block"});
   };
 })(Entry.BlockView.prototype);
 Entry.Code = function(a) {

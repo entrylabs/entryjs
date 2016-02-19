@@ -156,8 +156,8 @@ Entry.BlockMenu = function(dom, align, categoryData) {
     };
 
     p.align = function() {
-        if (!this.code)
-            return;
+        if (!this.code) return;
+
         var threads = this.code.getThreads();
         var vPadding = 15,
             marginFromTop = 10,
@@ -171,11 +171,11 @@ Entry.BlockMenu = function(dom, align, categoryData) {
 
             var blockInfo = Entry.block[block.type];
             if(this.checkBanClass(blockInfo)) {
-                blockView.set({visible:false});
+                blockView.set({display:false});
                 continue;
             }
 
-            blockView.set({visible:true});
+            blockView.set({display:true});
             var className = blockInfo.class;
             if (pastClass && pastClass !== className) {
                 this._createSplitter(marginFromTop);

@@ -46,6 +46,7 @@ Entry.BlockView = function(block, board, mode) {
     this.block.observe(this, "_setReadOnly", ["movable"]);
     this.observe(this, "_updateBG", ["magneting"]);
     this.observe(this, "_updateOpacity", ["visible"]);
+    this.observe(this, "_updateDisplay", ["display"], false);
     this.observe(this, "_updateShadow", ["shadow"]);
     board.code.observe(this, '_setBoard', ['board'], false);
 
@@ -68,9 +69,10 @@ Entry.BlockView.PARAM_SPACE = 5;
         contentWidth: 0,
         contentHeight: 0,
         magneting: false,
-        visible: true,
+        visible: true, //visibility for clickable
         animating: false,
-        shadow: true
+        shadow: true,
+        display: true //visibility for non clickable
     };
 
     p._startRender = function(block, mode) {
@@ -836,6 +838,12 @@ Entry.BlockView.PARAM_SPACE = 5;
 
         var nextBlockView = nextBlock.view;
         nextBlockView._toLocalCoordinate(this._nextGroup);
+    };
+
+    p._updateDisplay = function() {
+        this.svgGroup.attr({
+            display: this.display === false ? 'none' : 'block'
+        });
     };
 
 })(Entry.BlockView.prototype);
