@@ -13316,6 +13316,7 @@ Entry.BlockView.PARAM_SPACE = 5;
               d != Entry.DRAG_MODE_DRAG || f || e.doMove();
             }
             this._handlePrev();
+            this._handleNext();
             break;
           case g.RETURN:
             e = this.block;
@@ -13488,6 +13489,10 @@ Entry.BlockView.PARAM_SPACE = 5;
   a._handlePrev = function() {
     var b = this.block.getPrevBlock();
     b ? this._toLocalCoordinate(b.view._nextGroup) : this._toGlobalCoordinate();
+  };
+  a._handleNext = function() {
+    var b = this.block.getNextBlock();
+    b && b.view._toLocalCoordinate(this._nextGroup);
   };
 })(Entry.BlockView.prototype);
 Entry.Code = function(a) {
@@ -13757,16 +13762,16 @@ Entry.Field = function() {
   a.getValue = function() {
     return this._block.params[this._index];
   };
-  a.setValue = function(a) {
-    this.value = a;
-    this._block.params[this._index] = a;
+  a.setValue = function(b) {
+    this.value = b;
+    this._block.params[this._index] = b;
   };
   a._isEditable = function() {
     if (this._block.view.dragMode == Entry.DRAG_MODE_MOUSEDOWN) {
       return !0;
     }
-    var a = this._block.view, c = a.getBoard().selectedBlockView;
-    return c ? a.getSvgRoot() == c.svgGroup : !1;
+    var b = this._block.view, a = b.getBoard().selectedBlockView;
+    return a ? b.getSvgRoot() == a.svgGroup : !1;
   };
 })(Entry.Field.prototype);
 Entry.FieldAngle = function(a, b, c) {
@@ -15161,6 +15166,9 @@ Entry.Block.MAGNET_OFFSET = .4;
   a.getPrevBlock = function() {
     return this.thread.getPrevBlock(this);
   };
+  a.getNextBlock = function() {
+    return this.thread.getNextBlock(this);
+  };
 })(Entry.Block.prototype);
 Entry.Thread = function(a, b) {
   this._data = new Entry.Collection;
@@ -15271,6 +15279,10 @@ Entry.Thread = function(a, b) {
   a.getPrevBlock = function(a) {
     a = this._data.indexOf(a);
     return this._data.at(a - 1);
+  };
+  a.getNextBlock = function(a) {
+    a = this._data.indexOf(a);
+    return this._data.at(a + 1);
   };
 })(Entry.Thread.prototype);
 Entry.ThreadView = function(a, b) {

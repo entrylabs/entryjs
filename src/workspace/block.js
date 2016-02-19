@@ -376,4 +376,8 @@ Entry.Block.MAGNET_OFFSET = 0.4;
         return this.thread.getPrevBlock(this);
     };
 
+    p.getNextBlock = function() {
+        return this.thread.getNextBlock(this);
+    };
+
 })(Entry.Block.prototype);

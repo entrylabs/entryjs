@@ -492,6 +492,8 @@ Entry.BlockView.PARAM_SPACE = 5;
                             } else block.doSeparate();
                         }
                         this._handlePrev();
+                        this._handleNext();
+
                         break;
                     case gs.RETURN:
                         var block = this.block;
@@ -825,6 +827,14 @@ Entry.BlockView.PARAM_SPACE = 5;
 
             this._toLocalCoordinate(prevBlockView._nextGroup);
         }
+    };
+
+    p._handleNext = function() {
+        var nextBlock = this.block.getNextBlock();
+        if (!nextBlock) return;
+
+        var nextBlockView = nextBlock.view;
+        nextBlockView._toLocalCoordinate(this._nextGroup);
     };
 
 })(Entry.BlockView.prototype);

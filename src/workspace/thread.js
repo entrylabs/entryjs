@@ -176,4 +176,8 @@ Entry.Thread = function(thread, code) {
         return this._data.at(index - 1);
     };
 
+    p.getNextBlock = function(block) {
+        var index = this._data.indexOf(block);
+        return this._data.at(index + 1);
+    };
 })(Entry.Thread.prototype);
