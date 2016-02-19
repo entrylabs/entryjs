@@ -15510,9 +15510,9 @@ Entry.Board = function(a) {
     a instanceof Entry.BlockView ? a.addSelected() : a = null;
     this.set({selectedBlockView:a});
   };
-  a._keyboardControl = function(a, c) {
-    var d = this.selectedBlockView;
-    d && 46 == c.keyCode && d.block.doDestroyAlone(!0) && this.set({selectedBlockView:null});
+  a._keyboardControl = function(a) {
+    var c = this.selectedBlockView;
+    c && 46 == a.keyCode && c.block.doDestroyAlone(!0) && this.set({selectedBlockView:null});
   };
   a.hide = function() {
     this.wrapper.addClass("entryRemove");

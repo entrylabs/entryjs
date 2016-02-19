@@ -258,7 +258,7 @@ Entry.Board = function(option) {
         this.set({selectedBlockView:blockView});
     };
 
-    p._keyboardControl = function(sender, event) {
+    p._keyboardControl = function(event) {
         var selected = this.selectedBlockView;
         if (!selected) return;
 
