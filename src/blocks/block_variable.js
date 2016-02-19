@@ -12,7 +12,13 @@ Entry.block.variableAddButton = {
             align: "center"
         }
     ],
-    func: function() {
+    func: function() {},
+    events: {
+        mousedown: [
+            function() {
+                Entry.variableContainer.openVariableAddPanel('variable');
+            }
+        ]
     }
 };
 
@@ -28,7 +34,13 @@ Entry.block.listAddButton = {
             align: "center"
         }
     ],
-    func: function() {
+    func: function() {},
+    events: {
+        mousedown: [
+            function() {
+                Entry.variableContainer.openVariableAddPanel('list');
+            }
+        ]
     }
 };
 

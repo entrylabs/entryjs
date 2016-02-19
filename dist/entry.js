@@ -4354,9 +4354,13 @@ Entry.block.text_flush = function(a, b) {
   return b.callReturn();
 };
 Entry.block.variableAddButton = {skeleton:"basic_button", color:"#eee", template:"%1", params:[{type:"Text", text:"\ubcc0\uc218 \ucd94\uac00", color:"#333", align:"center"}], func:function() {
-}};
+}, events:{mousedown:[function() {
+  Entry.variableContainer.openVariableAddPanel("variable");
+}]}};
 Entry.block.listAddButton = {skeleton:"basic_button", color:"#eee", template:"%1", params:[{type:"Text", text:"\ub9ac\uc2a4\ud2b8 \ucd94\uac00", color:"#333", align:"center"}], func:function() {
-}};
+}, events:{mousedown:[function() {
+  Entry.variableContainer.openVariableAddPanel("list");
+}]}};
 Blockly.Blocks.change_variable = {init:function() {
   this.setColour("#E457DC");
   this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_change_variable_1);
@@ -11298,43 +11302,6 @@ Entry.VariableContainer.prototype.renderMessageReference = function(a) {
   this.listView_.insertBefore(a.listElement, f);
 };
 Entry.VariableContainer.prototype.renderVariableReference = function(a) {
-  var b = this, c = Entry.container.objects_, d = "get_variable change_variable hide_variable set_variable show_variable add_value_to_list remove_value_from_list insert_value_to_list change_value_list_index value_of_index_from_list length_of_list show_list hide_list is_included_in_list".split(" "), e = [], f = Entry.createElement("ul");
-  f.addClass("entryVariableListCallerListWorkspace");
-  var g, h;
-  for (h in c) {
-    for (var k = c[h], l = k.script.getElementsByTagName("block"), n = 0;n < l.length;n++) {
-      var m = l[n];
-      g = m.getAttribute("type");
-      if (-1 < d.indexOf(g)) {
-        g = Entry.Xml.getField("VARIABLE", m) || Entry.Xml.getField("LIST", m), g == a.id_ && e.push({object:k, block:m});
-      } else {
-        if ("function_general" == g) {
-          var q = m.getElementsByTagName("mutation")[0].getAttribute("hashid");
-          if (q = Entry.variableContainer.getFunction(q)) {
-            for (var q = q.content, q = q.getElementsByTagName("block"), r = 0;r < q.length;r++) {
-              var t = q[r];
-              g = t.getAttribute("type");
-              -1 < d.indexOf(g) && (g = Entry.Xml.getField("VARIABLE", t) || Entry.Xml.getField("LIST", t), g == a.id_ && e.push({object:k, block:t, funcBlock:m}));
-            }
-          }
-        }
-      }
-    }
-  }
-  for (h in e) {
-    c = e[h], d = Entry.createElement("li"), d.addClass("entryVariableListCallerWorkspace"), d.appendChild(c.object.thumbnailView_.cloneNode()), k = Entry.createElement("div"), k.addClass("entryVariableListCallerNameWorkspace"), k.innerHTML = c.object.name + " : " + Lang.Blocks["VARIABLE_" + c.block.getAttribute("type")], d.appendChild(k), d.caller = c, d.variable = a, d.bindOnClick(function(a) {
-      Entry.playground.object != this.caller.object && (Entry.container.selectObject(), Entry.container.selectObject(this.caller.object.id, !0), b.select(null));
-      a = this.caller;
-      a = a.funcBlock ? a.funcBlock.getAttribute("id") : a.block.getAttribute("id");
-      Blockly.mainWorkspace.activatePreviousBlock(Number(a));
-      Entry.playground.toggleOnVariableView();
-      Entry.playground.changeViewMode("variable");
-    }), f.appendChild(d);
-  }
-  0 === e.length && (d = Entry.createElement("li"), d.addClass("entryVariableListCallerWorkspace"), d.addClass("entryVariableListCallerNoneWorkspace"), d.innerHTML = Lang.Workspace.no_use, f.appendChild(d));
-  a.callerListElement = f;
-  this.listView_.insertBefore(f, a.listElement);
-  this.listView_.insertBefore(a.listElement, f);
 };
 Entry.VariableContainer.prototype.renderFunctionReference = function(a) {
   var b = this, c = Entry.container.objects_, d = [], e = Entry.createElement("ul");
@@ -11430,7 +11397,6 @@ Entry.VariableContainer.prototype.updateList = function() {
     }
     this.listView_.appendChild(this.variableSettingView);
     this.listView_.appendChild(this.listSettingView);
-    0 !== b.length && this.select(b[0]);
   }
 };
 Entry.VariableContainer.prototype.setMessages = function(a) {
@@ -13758,8 +13724,8 @@ Entry.Field = function() {
     return {x:a.e + d.x + b.x, y:a.f + d.y + b.y};
   };
   a.truncate = function() {
-    var a = String(this.getValue()), c = this.TEXT_LIMIT_LENGTH, d = a.substring(0, c);
-    a.length > c && (d += "...");
+    var b = String(this.getValue()), a = this.TEXT_LIMIT_LENGTH, d = b.substring(0, a);
+    b.length > a && (d += "...");
     return d;
   };
   a.appendSvgOptionGroup = function() {
@@ -13768,16 +13734,16 @@ Entry.Field = function() {
   a.getValue = function() {
     return this._block.params[this._index];
   };
-  a.setValue = function(a) {
-    this.value = a;
-    this._block.params[this._index] = a;
+  a.setValue = function(b) {
+    this.value = b;
+    this._block.params[this._index] = b;
   };
   a._isEditable = function() {
     if (this._block.view.dragMode == Entry.DRAG_MODE_MOUSEDOWN) {
       return !0;
     }
-    var a = this._block.view, c = a.getBoard().selectedBlockView;
-    return c ? a.getSvgRoot() == c.svgGroup : !1;
+    var b = this._block.view, a = b.getBoard().selectedBlockView;
+    return a ? b.getSvgRoot() == a.svgGroup : !1;
   };
 })(Entry.Field.prototype);
 Entry.FieldAngle = function(a, b, c) {
@@ -13792,20 +13758,20 @@ Entry.FieldAngle = function(a, b, c) {
 };
 Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
 (function(a) {
-  a.renderStart = function(a) {
-    var c = this;
-    this.svgGroup = a.contentSvgGroup.group();
+  a.renderStart = function(b) {
+    var a = this;
+    this.svgGroup = b.contentSvgGroup.group();
     this.svgGroup.attr({class:"entry-input-field"});
-    this.textElement = this.svgGroup.text(4, 4, c.getText());
+    this.textElement = this.svgGroup.text(4, 4, a.getText());
     this.textElement.attr({"font-size":"9pt"});
-    a = this.getTextWidth();
+    b = this.getTextWidth();
     var d = this.position && this.position.y ? this.position.y : 0;
-    this._header = this.svgGroup.rect(0, d - 8, a, 16, 3).attr({fill:"#fff", "fill-opacity":.4});
+    this._header = this.svgGroup.rect(0, d - 8, b, 16, 3).attr({fill:"#fff", "fill-opacity":.4});
     this.svgGroup.append(this.textElement);
-    this.svgGroup.mouseup(function(a) {
-      c._isEditable() && c.renderOptions();
+    this.svgGroup.mouseup(function(b) {
+      a._isEditable() && a.renderOptions();
     });
-    this.box.set({x:0, y:0, width:a, height:16});
+    this.box.set({x:0, y:0, width:b, height:16});
   };
   a.renderOptions = function() {
     var a = this;
@@ -16368,7 +16334,7 @@ Entry.Playground.prototype.initializeResizeHandle = function(a) {
 };
 Entry.Playground.prototype.reloadPlayground = function() {
   var a;
-  document.getElementsByClassName("entrySelectedCategory")[0] && (a = document.getElementsByClassName("entrySelectedCategory")[0], a = a.getAttribute("id").substring(13), Entry.playground.selectMenu(a));
+  document.getElementsByClassName("entrySelectedCategory")[0] && (a = document.getElementsByClassName("entrySelectedCategory")[0], a.getAttribute("id").substring(13));
 };
 Entry.Playground.prototype.flushPlayground = function() {
   this.object = null;

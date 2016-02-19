@@ -313,6 +313,8 @@ Entry.VariableContainer.prototype.renderMessageReference = function(message) {
  * @param {object} variable
  */
 Entry.VariableContainer.prototype.renderVariableReference = function(variable) {
+    //TODO new render block schema
+    return;
     var that = this;
     var objects = Entry.container.objects_;
     var variableType = [
@@ -608,8 +610,8 @@ Entry.VariableContainer.prototype.updateList = function() {
     //select the first element(view) if exist
     this.listView_.appendChild(this.variableSettingView);
     this.listView_.appendChild(this.listSettingView);
-    if (elementList.length !== 0)
-        this.select(elementList[0]);
+    //if (elementList.length !== 0)
+        //this.select(elementList[0]);
     elementList = null;
 };
 

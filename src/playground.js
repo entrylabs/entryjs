@@ -1223,8 +1223,7 @@ Entry.Playground.prototype.reloadPlayground = function () {
     if (document.getElementsByClassName('entrySelectedCategory')[0]) {
         selectedCategory = document.getElementsByClassName('entrySelectedCategory')[0];
         selector = selectedCategory.getAttribute('id').substring(13);
-        //selectedCategory.removeClass('entrySelectedCategory');
-        Entry.playground.selectMenu(selector);
+        //Entry.playground.mainWorkspace.getBlockMenu().selectMenu(selector);
     }
 
     if (Entry.stage.selectedObject) {
