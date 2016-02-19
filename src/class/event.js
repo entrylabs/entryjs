@@ -29,13 +29,11 @@ Entry.Event = function(sender) {
         while(listeners.length) listeners.pop();
     };
 
-    p.notify = function (args) {
-        var sender = this._sender;
-
+    p.notify = function () {
+        var args = arguments;
         this._listeners.slice().forEach(function(listener){
-            listener.fn.call(
+            listener.fn.apply(
                 listener.obj,
-                sender,
                 args
             );
         });

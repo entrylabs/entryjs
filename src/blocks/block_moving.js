@@ -721,7 +721,7 @@ Entry.block.see_angle_object = function (sprite, script) {
     var targetId = script.getField("VALUE", script);
     var spriteX = sprite.getX();
     var spriteY = sprite.getY();
-    var deltaX, deltaY;
+    var deltaX, deltaY, value;
 
     if (sprite.parent.id == targetId)
         return script.callReturn();
@@ -738,10 +738,12 @@ Entry.block.see_angle_object = function (sprite, script) {
         deltaY = targetEntity.getY() - spriteY;
     }
 
-    if ( deltaX >= 0 ) {
-        var value = -Math.atan(deltaY / deltaX) / Math.PI * 180 + 90;
+    if(deltaX === 0 && deltaY === 0) {
+        value = sprite.getDirection() + sprite.getRotation();
+    } else if ( deltaX >= 0 ) {
+        value = -Math.atan(deltaY / deltaX) / Math.PI * 180 + 90;
     } else {
-        var value = -Math.atan(deltaY / deltaX) / Math.PI * 180 + 270;
+        value = -Math.atan(deltaY / deltaX) / Math.PI * 180 + 270;
     }
     var nativeDirection = sprite.getDirection() + sprite.getRotation();
     sprite.setRotation(sprite.getRotation() + value - nativeDirection);

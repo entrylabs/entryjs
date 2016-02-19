@@ -400,6 +400,11 @@
 .entryMaximizeButtonMinimize {
   float: right;
   margin-right: 5px;
+  background-image: url("../images/zoom_in_btn.png");
+}
+.entryPopupWindow > .entryEngineMinimize > .entryMaximizeButtonMinimize {
+  float: right;
+  margin-right: 5px;
   background-image: url("../images/zoom_out_btn.png");
 }
 .entryMaximizeButtonPhone {
