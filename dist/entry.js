@@ -10247,7 +10247,7 @@ Entry.Stage.prototype.sortZorder = function() {
   }
 };
 Entry.Stage.prototype.initCoordinator = function() {
-  var a = new createjs.Container, b = new createjs.Bitmap(Entry.mediaFilePath + "workspace_coordinate_v1.png");
+  var a = new createjs.Container, b = new createjs.Bitmap(Entry.mediaFilePath + "workspace_coordinate.png");
   b.scaleX = .5;
   b.scaleY = .5;
   b.x = -240;
