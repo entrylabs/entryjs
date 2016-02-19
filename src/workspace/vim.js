@@ -37,12 +37,18 @@ Entry.Vim = function(dom) {
             indentUnit: 4,
             styleActiveLine: true,
             extraKeys: {
-                "Shift-Space": "javascript_complete"
+                "Ctrl-Space": "javascriptComplete",
+                "Tab": function(cm) {
+                    var spaces = Array(cm.getOption("indentUnit") + 1).join(" ");
+                    cm.replaceSelection(spaces);
+                }
             },
             // gutters: ["CodeMirror-lint-markers"],
             lint: true,
             viewportMargin: 10
         });
+
+        this.doc = this.codeMirror.getDoc();
 
         _self = this;
         target = this.view[0];
@@ -58,7 +64,18 @@ Entry.Vim = function(dom) {
             });
 
             _self.codeMirror.display.scroller.dispatchEvent(mousedown);
-            _self.codeMirror.replaceSelection(textCode);
+            var testArr = textCode.split('\n');
+            var max = testArr.length - 1;
+            var lastLine = 0;
+            testArr.forEach(function (text, i) {
+                _self.codeMirror.replaceSelection(text);
+                var cursor = _self.doc.getCursor();
+                lastLine = cursor.line;
+                _self.codeMirror.indentLine(lastLine);
+                if(max !== i) {
+                    _self.codeMirror.replaceSelection('\n');
+                }
+            });
         }
 
         function eventDragOver(e) {

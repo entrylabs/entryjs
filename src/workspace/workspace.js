@@ -110,12 +110,19 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                 this.board.clear();
                 break;
             case Entry.Workspace.MODE_BOARD:
-                if (this.vimBoard) this.vimBoard.hide();
-                if (this.overlayBoard) this.overlayBoard.hide();
-                this.selectedBoard = this.board;
-                this.board.show();
-                this.textToCode();
-                this.blockMenu.renderBlock();
+                try {
+                    this.selectedBoard = this.board;
+                    this.board.show();
+                    this.textToCode();
+                    if (this.vimBoard) this.vimBoard.hide();
+                    if (this.overlayBoard) this.overlayBoard.hide();
+                    this.blockMenu.renderBlock();
+                } catch(e) {
+                    if (this.board) this.board.hide();
+                    this.selectedBoard = this.vimBoard;
+                    Entry.dispatchEvent('setProgrammingMode', Entry.Workspace.MODE_VIMBOARD);
+                    throw e;
+                }
                 break;
             case Entry.Workspace.MODE_OVERLAYBOARD:
                 if (!this.overlayBoard)

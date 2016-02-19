@@ -33,7 +33,7 @@ Entry.Parser = function(mode, syntax, cm) {
             for(var key in syntax.Scope ) {
                 assistScope[key + '();'] = syntax.Scope[key];
             }
-            CodeMirror.commands.javascript_complete = function (cm) {
+            CodeMirror.commands.javascriptComplete = function (cm) {
                 CodeMirror.showHint(cm, null, {globalScope:assistScope});
             }
 
@@ -60,8 +60,6 @@ Entry.Parser = function(mode, syntax, cm) {
                     var astTree = acorn.parse(code);
                     result = this._parser.Program(astTree);
                 } catch(error) {
-                    console.dir(error);
-                    console.log(error instanceof SyntaxError);
                     if (this.codeMirror) {
                         var annotation;
                         if (error instanceof SyntaxError) {
@@ -75,7 +73,7 @@ Entry.Parser = function(mode, syntax, cm) {
                                                                error.node.end);
                             annotation.message = error.message;
                             annotation.severity = "error";
-                            var a = this.codeMirror.markText(
+                            this.codeMirror.markText(
                                 annotation.from, annotation.to, {
                                 className: "CodeMirror-lint-mark-error",
                                 __annotation: annotation,

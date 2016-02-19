@@ -8702,7 +8702,7 @@ Entry.Parser = function(a, b, c) {
       for (e in b.Scope) {
         d[e + "();"] = b.Scope[e];
       }
-      CodeMirror.commands.javascript_complete = function(b) {
+      CodeMirror.commands.javascriptComplete = function(b) {
         CodeMirror.showHint(b, null, {globalScope:d});
       };
       c.on("keyup", function(b, a) {
@@ -8721,7 +8721,7 @@ Entry.Parser = function(a, b, c) {
         try {
           var d = acorn.parse(b), a = this._parser.Program(d);
         } catch (e) {
-          console.dir(e), console.log(e instanceof SyntaxError), this.codeMirror && (e instanceof SyntaxError ? e.message = "\ubb38\ubc95 \uc624\ub958\uc785\ub2c8\ub2e4." : (b = this.getLineNumber(e.node.start, e.node.end), b.message = e.message, b.severity = "error", this.codeMirror.markText(b.from, b.to, {className:"CodeMirror-lint-mark-error", __annotation:b, clearOnEnter:!0})), Entry.toast.alert("Error", e.message)), a = [];
+          this.codeMirror && (e instanceof SyntaxError ? e.message = "\ubb38\ubc95 \uc624\ub958\uc785\ub2c8\ub2e4." : (b = this.getLineNumber(e.node.start, e.node.end), b.message = e.message, b.severity = "error", this.codeMirror.markText(b.from, b.to, {className:"CodeMirror-lint-mark-error", __annotation:b, clearOnEnter:!0})), Entry.toast.alert("Error", e.message)), a = [];
         }
         break;
       case "block":
@@ -15785,14 +15785,24 @@ Entry.Vim = function(a) {
       e.codeMirror.display.dragFunctions.leave(a);
       a = new MouseEvent("mousedown", {view:window, bubbles:!0, cancelable:!0, clientX:a.clientX, clientY:a.clientY});
       e.codeMirror.display.scroller.dispatchEvent(a);
-      e.codeMirror.replaceSelection(b);
+      var b = b.split("\n"), c = b.length - 1, d = 0;
+      b.forEach(function(a, b) {
+        e.codeMirror.replaceSelection(a);
+        d = e.doc.getCursor().line;
+        e.codeMirror.indentLine(d);
+        c !== b && e.codeMirror.replaceSelection("\n");
+      });
     }
     function d(a) {
       e.codeMirror.display.dragFunctions.over(a);
     }
     var e;
     this.view = Entry.Dom("div", {parent:a, class:"entryVimBoard"});
-    this.codeMirror = CodeMirror(this.view[0], {lineNumbers:!0, value:"", mode:{name:"javascript", globalVars:!0}, theme:"default", indentUnit:4, styleActiveLine:!0, extraKeys:{"Shift-Space":"javascript_complete"}, lint:!0, viewportMargin:10});
+    this.codeMirror = CodeMirror(this.view[0], {lineNumbers:!0, value:"", mode:{name:"javascript", globalVars:!0}, theme:"default", indentUnit:4, styleActiveLine:!0, extraKeys:{"Ctrl-Space":"javascriptComplete", Tab:function(a) {
+      var b = Array(a.getOption("indentUnit") + 1).join(" ");
+      a.replaceSelection(b);
+    }}, lint:!0, viewportMargin:10});
+    this.doc = this.codeMirror.getDoc();
     e = this;
     a = this.view[0];
     a.removeEventListener("dragEnd", c);
@@ -15879,12 +15889,11 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
         this.board.clear();
         break;
       case Entry.Workspace.MODE_BOARD:
-        this.vimBoard && this.vimBoard.hide();
-        this.overlayBoard && this.overlayBoard.hide();
-        this.selectedBoard = this.board;
-        this.board.show();
-        this.textToCode();
-        this.blockMenu.renderBlock();
+        try {
+          this.selectedBoard = this.board, this.board.show(), this.textToCode(), this.vimBoard && this.vimBoard.hide(), this.overlayBoard && this.overlayBoard.hide(), this.blockMenu.renderBlock();
+        } catch (c) {
+          throw this.board && this.board.hide(), this.selectedBoard = this.vimBoard, Entry.dispatchEvent("setProgrammingMode", Entry.Workspace.MODE_VIMBOARD), c;
+        }
         break;
       case Entry.Workspace.MODE_OVERLAYBOARD:
         this.overlayBoard || this.initOverlayBoard(), this.selectedBoard = this.overlayBoard, this.overlayBoard.show();
