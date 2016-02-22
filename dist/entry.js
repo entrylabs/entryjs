@@ -104,10 +104,13 @@ var Entry = {block:{}, TEXT_ALIGN_CENTER:0, TEXT_ALIGN_LEFT:1, TEXT_ALIGN_RIGHT:
   Entry.stateManager && (a.activityLog = Entry.stateManager.activityLog_);
   return a;
 }, DRAG_MODE_NONE:0, DRAG_MODE_MOUSEDOWN:1, DRAG_MODE_DRAG:2, cancelObjectEdit:function(a) {
-  var b = Entry.playground.object, c = a.target;
-  a = 0 !== $(b.view_).find(c).length;
-  c = c.tagName.toUpperCase();
-  !b.isEditing || "INPUT" === c && a || b.editObjectValues(!1);
+  var b = Entry.playground.object;
+  if (b) {
+    var c = a.target;
+    a = 0 !== $(b.view_).find(c).length;
+    c = c.tagName.toUpperCase();
+    !b.isEditing || "INPUT" === c && a || b.editObjectValues(!1);
+  }
 }};
 window.Entry = Entry;
 Entry.Albert = {PORT_MAP:{leftWheel:0, rightWheel:0, buzzer:0, leftEye:0, rightEye:0, note:0, bodyLed:0, frontLed:0, padWidth:0, padHeight:0}, setZero:function() {
@@ -7423,7 +7426,11 @@ Entry.EntryObject.prototype.setRotateMethod = function(a) {
   a || (a = "free");
   this.rotateMethod = a;
   this.updateRotateMethodView();
+<<<<<<< HEAD
   Entry.stage.selectedObject && Entry.stage.selectedObject.entity && (Entry.stage.updateObject(), Entry.stage.updateHandle());
+=======
+  Entry.stage.selectedObject && Entry.stage.selectedObject.entity ? (Entry.stage.updateObject(), Entry.stage.updateHandle()) : Entry.container.getObject(this.id) && (Entry.container.selectObject(this.id), Entry.stage.updateObject());
+>>>>>>> 1649d51863a8f00da37efd72e3002efbcc3fa504
 };
 Entry.EntryObject.prototype.initRotateValue = function(a) {
   this.rotateMethod != a && (this.entity.rotation = 0, this.entity.direction = 90);
@@ -9900,7 +9907,7 @@ Entry.Scene.prototype.generateElement = function(a) {
   c.addClass("entrySceneButtonWorkspace");
   c.addClass("minValue");
   $(c).on("mousedown", function(b) {
-    Entry.engine.isState("run") ? b.preventDefault() : (document.elementsFromPoint(b.pageX, b.pageY), Entry.scene.selectScene(a));
+    Entry.engine.isState("run") ? b.preventDefault() : Entry.scene.selectScene(a);
   });
   var d = Entry.createElement("input");
   d.addClass("entrySceneFieldWorkspace");

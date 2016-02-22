@@ -110,7 +110,6 @@ Entry.Scene.prototype.generateElement = function(scene) {
             e.preventDefault();
             return;
         }
-        var elems = document.elementsFromPoint(e.pageX, e.pageY);
         Entry.scene.selectScene(scene);
     });
     var nameField = Entry.createElement('input');
