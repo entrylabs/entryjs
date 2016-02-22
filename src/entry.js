@@ -328,6 +328,7 @@ Entry.DRAG_MODE_DRAG = 2;
 
 Entry.cancelObjectEdit = function(e) {
     var object = Entry.playground.object;
+    if (!object) return;
     var objectView = object.view_;
     var target = e.target;
     var isCurrent = $(objectView).find(target).length !== 0;
