@@ -261,7 +261,7 @@ Entry.Stage.prototype.sortZorder = function() {
  */
 Entry.Stage.prototype.initCoordinator = function() {
     var coordinator = new createjs.Container();
-    var img = new createjs.Bitmap(Entry.mediaFilePath + "workspace_coordinate_v1.png");
+    var img = new createjs.Bitmap(Entry.mediaFilePath + "workspace_coordinate.png");
     img.scaleX = 0.5;
     img.scaleY = 0.5;
     img.x = -240;
