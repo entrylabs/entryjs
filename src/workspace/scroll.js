@@ -137,54 +137,55 @@ Entry.Scroller.RADIUS = 7;
     };
 
     p.resizeScrollBar = function() {
-        var bBox = this.board.svgBlockGroup.getBBox(),
-            svgDom = this.board.svgDom,
+        if (!this._visible) return;
+
+        var board = this.board,
+            bRect = board.svgBlockGroup.node.getBoundingClientRect(),
+            svgDom = board.svgDom,
             bWidth = svgDom.width(),
-            bHeight = svgDom.height();
-        var visible = true;
-        //TODO visible setting needed only if overflow happens
-        //if (bBox.width > bWidth || bBox.height > bHeight)
-            //visible = true;
+            bHeight = svgDom.height(),
+            bBox = {
+                x: bRect.left - board.offset.left,
+                y: bRect.top - board.offset.top,
+                width: bRect.width,
+                height: bRect.height
+            };
 
-        this.setVisible(visible);
+        // hScroll
+        if (this._horizontal) {
+            var hLimitA = - bBox.width + Entry.BOARD_PADDING,
+                hLimitB = bWidth - Entry.BOARD_PADDING;
 
-        if (visible) {
-            // hScroll
-            if (this._horizontal) {
-                var hLimitA = - bBox.width + Entry.BOARD_PADDING,
-                    hLimitB = bWidth - Entry.BOARD_PADDING;
+            var hWidth = (bWidth + 2 * Entry.Scroller.RADIUS) * bBox.width /
+                (hLimitB - hLimitA + bBox.width);
+            if (isNaN(hWidth)) hWidth = 0;
+            this.hX = (bBox.x - hLimitA) / (hLimitB - hLimitA) *
+                (bWidth - hWidth - 2 * Entry.Scroller.RADIUS);
+            this.hScrollbar.attr({
+                width: hWidth,
+                x: this.hX,
+                y: bHeight - 2 * Entry.Scroller.RADIUS
+            });
 
-                var hWidth = (bWidth + 2 * Entry.Scroller.RADIUS) * bBox.width /
-                    (hLimitB - hLimitA + bBox.width);
-                if (isNaN(hWidth)) hWidth = 0;
-                this.hX = (bBox.x - hLimitA) / (hLimitB - hLimitA) *
-                    (bWidth - hWidth - 2 * Entry.Scroller.RADIUS);
-                this.hScrollbar.attr({
-                    width: hWidth,
-                    x: this.hX,
-                    y: bHeight - 2 * Entry.Scroller.RADIUS
-                });
+            this.hRatio = (bWidth - hWidth - 2 * Entry.Scroller.RADIUS)/ (hLimitB - hLimitA);
+        }
 
-                this.hRatio = (bWidth - hWidth - 2 * Entry.Scroller.RADIUS)/ (hLimitB - hLimitA);
-            }
+        // vScroll
+        if (this._vertical) {
+            var vLimitA = - bBox.height + Entry.BOARD_PADDING,
+                vLimitB = bHeight - Entry.BOARD_PADDING;
 
-            // vScroll
-            if (this._vertical) {
-                var vLimitA = - bBox.height + Entry.BOARD_PADDING,
-                    vLimitB = bHeight - Entry.BOARD_PADDING;
+            var vWidth = (bHeight + 2 * Entry.Scroller.RADIUS) * bBox.height /
+                (vLimitB - vLimitA + bBox.height);
+            this.vY = (bBox.y - vLimitA) / (vLimitB - vLimitA) *
+                (bHeight - vWidth - 2 * Entry.Scroller.RADIUS);
+            this.vScrollbar.attr({
+                height: vWidth,
+                y: this.vY,
+                x: bWidth - 2 * Entry.Scroller.RADIUS
+            });
 
-                var vWidth = (bHeight + 2 * Entry.Scroller.RADIUS) * bBox.height /
-                    (vLimitB - vLimitA + bBox.height);
-                this.vY = (bBox.y - vLimitA) / (vLimitB - vLimitA) *
-                    (bHeight - vWidth - 2 * Entry.Scroller.RADIUS);
-                this.vScrollbar.attr({
-                    height: vWidth,
-                    y: this.vY,
-                    x: bWidth - 2 * Entry.Scroller.RADIUS
-                });
-
-                this.vRatio = (bHeight - vWidth - 2 * Entry.Scroller.RADIUS)/ (vLimitB - vLimitA);
-            }
+            this.vRatio = (bHeight - vWidth - 2 * Entry.Scroller.RADIUS)/ (vLimitB - vLimitA);
         }
     };
 

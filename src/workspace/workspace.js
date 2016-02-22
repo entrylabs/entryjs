@@ -15,7 +15,8 @@ Entry.Workspace = function(options) {
         this.blockMenu = new Entry.BlockMenu(
             option.dom,
             option.align,
-            option.categoryData
+            option.categoryData,
+            option.scroll
         );
         this.blockMenu.workspace = this;
         this.blockMenu.observe(this, "_setSelectedBlockView", ["selectedBlockView"], false);

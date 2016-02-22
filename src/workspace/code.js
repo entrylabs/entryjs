@@ -171,6 +171,9 @@ Entry.Code = function(code) {
             if (firstBlock)
                 firstBlock.view._moveBy(x, y, false);
         }
+
+        var board = this.board;
+        if (board instanceof Entry.BlockMenu) board.updateSplitters(y);
     };
 
     p.stringify = function() {

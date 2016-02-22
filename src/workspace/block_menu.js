@@ -10,9 +10,10 @@ goog.require("Entry.Utils");
  *
  * @param {object} dom which to inject playground
  */
-Entry.BlockMenu = function(dom, align, categoryData) {
+Entry.BlockMenu = function(dom, align, categoryData, scroll) {
     Entry.Model(this, false);
     this._align = align || "CENTER";
+    this._scroll = scroll !== undefined ? scroll : false;
     this._bannedClass = [];
     this._categories = [];
 
@@ -51,10 +52,12 @@ Entry.BlockMenu = function(dom, align, categoryData) {
 
 
     this.changeEvent = new Entry.Event(this);
-    //TODO scroller should be attached
-    //this.scroller = new Entry.Scroller(this, false, true);
-
     if (categoryData) this._generateCategoryCodes(categoryData);
+
+    if (this._scroll) {
+        this._scroller = new Entry.Scroller(this, false, true);
+        this.changeEvent.attach(this, this._inspectScroll);
+    }
 
     if (Entry.documentMousedown)
         Entry.documentMousedown.attach(this, this.setSelectedBlock);
@@ -300,13 +303,18 @@ Entry.BlockMenu = function(dom, align, categoryData) {
         this._splitters.push(line);
     };
 
-    p._updateSplitters = function() {
+    p.updateSplitters = function(y) {
+        y = y === undefined ? 0 : y;
         var splitters = this._splitters;
         var width = this._svgWidth;
         var hPadding = 30;
-        var dest = width - hPadding;
+        var xDest = width - hPadding;
+        var yDest;
         splitters.forEach(function(line) {
-            line.attr({x2: dest});
+            yDest = Number(line.attr('y1')) + y
+            line.attr({
+                x2: xDest, y1:yDest, y2:yDest
+            });
         });
     };
 
@@ -320,7 +328,7 @@ Entry.BlockMenu = function(dom, align, categoryData) {
 
     p.setWidth = function() {
         this._svgWidth = this.svgDom.width();
-        this._updateSplitters();
+        this.updateSplitters();
         this.offset = this.svgDom.offset();
     };
 
@@ -445,13 +453,13 @@ Entry.BlockMenu = function(dom, align, categoryData) {
         if (index < 0)
             this._bannedClass.push(className);
         this.align();
-    }
+    };
 
     p.unbanClass = function(className) {
         var index = this._bannedClass.indexOf(className);
         if (index > -1)
             this._bannedClass.splice(index, 1);
-    }
+    };
 
     p.checkBanClass = function(blockInfo) {
         if (!blockInfo) return;
@@ -461,5 +469,19 @@ Entry.BlockMenu = function(dom, align, categoryData) {
                 return true;
         }
         return false;
-    }
+    };
+
+    p._inspectScroll = function() {
+        var visible = true;
+        var blockGroupHeight = this.svgBlockGroup.node.getBoundingClientRect().height;
+        if (blockGroupHeight + 10 < this.svgDom.height())
+            visible = false;
+
+        if (this._scroll !== visible) {
+            this._scroll = visible;
+            this._scroller.setVisible(visible);
+        }
+
+        if (this._scroll) this._scroller.resizeScrollBar();
+    };
 })(Entry.BlockMenu.prototype);

@@ -296,6 +296,7 @@ Entry.Playground.prototype.generateCodeView = function(codeView) {
                 dom: blockMenuView,
                 align: "LEFT",
                 categoryData: EntryStatic.getAllBlocks(),
+                scroll: true
             },
             'board': {
                 dom: boardView
