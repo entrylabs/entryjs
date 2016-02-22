@@ -7269,8 +7269,7 @@ Entry.EntryObject.prototype.updateCoordinateView = function(a) {
 };
 Entry.EntryObject.prototype.updateRotationView = function(a) {
   if (this.isSelected() && this.view_ || a) {
-    a = "", "free" == this.getRotateMethod() ? (this.rotateSpan_.removeClass("entryRemove"), this.rotateInput_.removeClass("entryRemove"), a += this.entity.getRotation().toFixed(1), this.rotateInput_.value = a + "\u02da", a = "" + this.entity.getDirection().toFixed(1), a += "\u02da", this.directionInput_.value = a) : (this.rotateSpan_.addClass("entryRemove"), this.rotateInput_.addClass("entryRemove"), a = "" + this.entity.getDirection().toFixed(1), a += "\u02da", this.directionInput_.value = a, this.entity.rotation = 
-    0);
+    a = "", "free" == this.getRotateMethod() ? (this.rotateSpan_.removeClass("entryRemove"), this.rotateInput_.removeClass("entryRemove"), a += this.entity.getRotation().toFixed(1), this.rotateInput_.value = a + "\u02da") : (this.rotateSpan_.addClass("entryRemove"), this.rotateInput_.addClass("entryRemove")), a = "" + this.entity.getDirection().toFixed(1), a += "\u02da", this.directionInput_.value = a;
   }
 };
 Entry.EntryObject.prototype.select = function(a) {
@@ -7371,7 +7370,7 @@ Entry.EntryObject.prototype.setRotateMethod = function(a) {
   a || (a = "free");
   this.rotateMethod = a;
   this.updateRotateMethodView();
-  Entry.stage.selectedObject && Entry.stage.selectedObject.entity ? (Entry.stage.updateObject(), Entry.stage.updateHandle()) : Entry.container.getObject(this.id) && (Entry.container.selectObject(this.id), Entry.stage.updateObject(), Entry.stage.updateHandle());
+  Entry.stage.selectedObject && Entry.stage.selectedObject.entity && (Entry.stage.updateObject(), Entry.stage.updateHandle());
 };
 Entry.EntryObject.prototype.initRotateValue = function(a) {
   this.rotateMethod != a && (this.entity.rotation = 0, this.entity.direction = 90);

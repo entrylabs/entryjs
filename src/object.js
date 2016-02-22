@@ -1187,14 +1187,7 @@ Entry.EntryObject.prototype.setRotateMethod = function(rotateMethod) {
     if(Entry.stage.selectedObject && Entry.stage.selectedObject.entity) {
         Entry.stage.updateObject();
         Entry.stage.updateHandle();
-    } else {
-        if (Entry.container.getObject(this.id)) {
-            Entry.container.selectObject(this.id);
-
-            Entry.stage.updateObject(); 
-            Entry.stage.updateHandle();
-         }
-    }
+    } 
 };
 
 Entry.EntryObject.prototype.initRotateValue = function(rotateMethod) {
