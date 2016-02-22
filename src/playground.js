@@ -898,30 +898,54 @@ Entry.Playground.prototype.injectCode = function() {
     Blockly.mainWorkspace.clear();
     Blockly.Xml.domToWorkspace(Blockly.mainWorkspace, object.script);
 
+    var blockXML = object.script;
+
+    var targetX = 0;
+    var targetY = 0;
+    $(blockXML).children("block").each(function(index) {
+        console.log("block info", this);
+        console.log("block x y", $(this).attr('x'), $(this).attr('y'));
+        var x = $(this).attr('x');
+        var y = $(this).attr('y');
+
+    });
+
+    var metrics = Blockly.mainWorkspace.getMetrics();
+    console.log("metrics", metrics.contentLeft, metrics.contentTop);
+
+    var scrollX = Math.abs(targetX - metrics.contentLeft) - 22;
+    var scrollY = Math.abs(targetY - metrics.contentTop) - 22;
+
+    //Blockly.mainWorkspace.scrollbar.set(scrollX, scrollY);
+
     this.adjust(0, 0);
 };
 
-Entry.Playground.prototype.adjust = function(xc, xy) {
-    var hScroll = Blockly.mainWorkspace.scrollbar.hScroll;
-    var vScroll = Blockly.mainWorkspace.scrollbar.vScroll;
-    hScroll.svgGroup_.setAttribute('opacity', '1');
-    vScroll.svgGroup_.setAttribute('opacity', '1');
-    
-    Blockly.removeAllRanges();
-    
-    var metrics = Blockly.mainWorkspace.getMetrics();
-    var x = xc;
-    var y = xy;
-    x = Math.min(x, -metrics.contentLeft);
-    y = Math.min(y, -metrics.contentTop);
-    x = Math.max(x, metrics.viewWidth - metrics.contentLeft -
-                 metrics.contentWidth);
-    y = Math.max(y, metrics.viewHeight - metrics.contentTop -
+Entry.Playground.prototype.adjust = function(xc, yc) {
+  var hScroll = Blockly.mainWorkspace.scrollbar.hScroll;
+  var vScroll = Blockly.mainWorkspace.scrollbar.vScroll;
+  hScroll.svgGroup_.setAttribute('opacity', '1');
+  vScroll.svgGroup_.setAttribute('opacity', '1');
+  Blockly.removeAllRanges();
+  
+  
+  var metrics = Blockly.mainWorkspace.getMetrics();
+  var x = xc;
+  var y = yc;
+  x = Math.min(x, -metrics.contentLeft);
+  y = Math.min(y, -metrics.contentTop);
+  x = Math.max(x, metrics.viewWidth - metrics.contentLeft -
+               metrics.contentWidth);
+  y = Math.max(y, metrics.viewHeight - metrics.contentTop -
                  metrics.contentHeight);
 
-    // Move the scrollbars and the page will scroll automatically.
-    Blockly.mainWorkspace.scrollbar.set(-x - metrics.contentLeft,
+  console.log("x", x);
+  console.log("y", y);
+
+  // Move the scrollbars and the page will scroll automatically.
+  Blockly.mainWorkspace.scrollbar.set(-x - metrics.contentLeft,
                                         -y - metrics.contentTop);
+  
     
 };
 /**
