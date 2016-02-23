@@ -9,16 +9,22 @@
  */
 Entry.popupHelper = function(reset) {
     this.popupList = {};
+    this.nowContent;
     if(reset) {
         window.popupHelper = null;
     }
     Entry.assert(!window.popupHelper, 'Popup exist');    
 
+    var ignoreCloseType = ['confirm'];
     var spanArea = ['entryPopupHelperTopSpan', 'entryPopupHelperBottomSpan', 'entryPopupHelperLeftSpan', 'entryPopupHelperRightSpan'];
     this.body_ = Entry.Dom('div', {
         classes: ['entryPopup', 'hiddenPopup', 'popupHelper'],
     })
+    var that = this;
     this.body_.bindOnClick(function(e) {
+        if(that.nowContent && ignoreCloseType.indexOf(that.nowContent.prop('type')) > -1) {
+            return;
+        }
         var $target = $(e.target);
         spanArea.forEach((function (className) {
             if($target.hasClass(className)) {
@@ -71,28 +77,36 @@ Entry.popupHelper.prototype.clearPopup = function() {
 Entry.popupHelper.prototype.addPopup = function(key, popupObject) {
     var content_ = Entry.Dom('div');
 
-    var title_ = Entry.Dom('div', {
-        class: 'entryPopupHelperTitle'
-    });
-
     var titleButton_ = Entry.Dom('div', {
         class: 'entryPopupHelperCloseButton'
     });
 
     titleButton_.bindOnClick((function () {
-        this.hide();
+        if(popupObject.closeEvent) {
+            popupObject.closeEvent(this);   
+        } else {
+            this.hide();
+        }
     }).bind(this));
 
     var popupWrapper_ = Entry.Dom('div', {
         class: 'entryPopupHelperWrapper'
     });
     popupWrapper_.append(titleButton_);
-    popupWrapper_.append(title_);
 
+    if(popupObject.title) {
+        var title_ = Entry.Dom('div', {
+            class: 'entryPopupHelperTitle'
+        });
+        popupWrapper_.append(title_);
+        title_.text(popupObject.title);
+    }
+
+    content_.addClass(key);
     content_.append(popupWrapper_);
     content_.popupWrapper_ = popupWrapper_;
-
-    title_.text(popupObject.title);
+    content_.prop('type', popupObject.type);
+    
     if(typeof popupObject.setPopupLayout === 'function') {
         popupObject.setPopupLayout(content_);
     }
@@ -111,9 +125,14 @@ Entry.popupHelper.prototype.setPopup = function(popupObject) {
 /**
  * Remove this popup
  */
-Entry.popupHelper.prototype.remove = function() {
-    Entry.removeElement(this.body_);
-    window.popupHelper = null;
+Entry.popupHelper.prototype.remove = function(key) {
+    if(this.window_.children().length > 0) {
+        this.window_.children().remove();   
+    }
+    this.window_.remove();
+    delete this.popupList[key];
+    this.nowContent = undefined;
+    this.body_.addClass('hiddenPopup');
 };
 
 /**
@@ -129,10 +148,12 @@ Entry.popupHelper.prototype.show = function(key) {
         this.window_.children().detach();   
     }
     this.window_.append(this.popupList[key]);
+    this.nowContent = this.popupList[key];
     this.body_.removeClass('hiddenPopup');
 };
 
 
 Entry.popupHelper.prototype.hide = function() {
+    this.nowContent = undefined;
     this.body_.addClass('hiddenPopup');
 };

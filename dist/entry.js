@@ -5617,7 +5617,6 @@ Entry.Dom = function(a, b) {
   b.parent && b.parent.append(d);
   d.bindOnClick = function(a) {
     $(this).on("click touchstart", function(b) {
-      console.log("click");
       b.stopImmediatePropagation();
       a.call(this, b);
     });
@@ -9835,16 +9834,20 @@ Entry.Popup.prototype.resize = function(a) {
 };
 Entry.popupHelper = function(a) {
   this.popupList = {};
+  this.nowContent;
   a && (window.popupHelper = null);
   Entry.assert(!window.popupHelper, "Popup exist");
-  var b = ["entryPopupHelperTopSpan", "entryPopupHelperBottomSpan", "entryPopupHelperLeftSpan", "entryPopupHelperRightSpan"];
+  var b = ["confirm"], c = ["entryPopupHelperTopSpan", "entryPopupHelperBottomSpan", "entryPopupHelperLeftSpan", "entryPopupHelperRightSpan"];
   this.body_ = Entry.Dom("div", {classes:["entryPopup", "hiddenPopup", "popupHelper"]});
+  var d = this;
   this.body_.bindOnClick(function(a) {
-    var d = $(a.target);
-    b.forEach(function(a) {
-      d.hasClass(a) && this.popup.hide();
-    }.bind(this));
-    a.target == this && this.popup.hide();
+    if (!(d.nowContent && -1 < b.indexOf(d.nowContent.prop("type")))) {
+      var f = $(a.target);
+      c.forEach(function(a) {
+        f.hasClass(a) && this.popup.hide();
+      }.bind(this));
+      a.target == this && this.popup.hide();
+    }
   });
   window.popupHelper = this;
   this.body_.prop("popup", this);
@@ -9862,16 +9865,17 @@ Entry.popupHelper.prototype.clearPopup = function() {
   }
 };
 Entry.popupHelper.prototype.addPopup = function(a, b) {
-  var c = Entry.Dom("div"), d = Entry.Dom("div", {class:"entryPopupHelperTitle"}), e = Entry.Dom("div", {class:"entryPopupHelperCloseButton"});
-  e.bindOnClick(function() {
-    this.hide();
+  var c = Entry.Dom("div"), d = Entry.Dom("div", {class:"entryPopupHelperCloseButton"});
+  d.bindOnClick(function() {
+    b.closeEvent ? b.closeEvent(this) : this.hide();
   }.bind(this));
-  var f = Entry.Dom("div", {class:"entryPopupHelperWrapper"});
-  f.append(e);
-  f.append(d);
-  c.append(f);
-  c.popupWrapper_ = f;
-  d.text(b.title);
+  var e = Entry.Dom("div", {class:"entryPopupHelperWrapper"});
+  e.append(d);
+  b.title && (d = Entry.Dom("div", {class:"entryPopupHelperTitle"}), e.append(d), d.text(b.title));
+  c.addClass(a);
+  c.append(e);
+  c.popupWrapper_ = e;
+  c.prop("type", b.type);
   "function" === typeof b.setPopupLayout && b.setPopupLayout(c);
   this.popupList[a] = c;
 };
@@ -9880,18 +9884,23 @@ Entry.popupHelper.prototype.hasPopup = function(a) {
 };
 Entry.popupHelper.prototype.setPopup = function(a) {
 };
-Entry.popupHelper.prototype.remove = function() {
-  Entry.removeElement(this.body_);
-  window.popupHelper = null;
+Entry.popupHelper.prototype.remove = function(a) {
+  0 < this.window_.children().length && this.window_.children().remove();
+  this.window_.remove();
+  delete this.popupList[a];
+  this.nowContent = void 0;
+  this.body_.addClass("hiddenPopup");
 };
 Entry.popupHelper.prototype.resize = function(a) {
 };
 Entry.popupHelper.prototype.show = function(a) {
   0 < this.window_.children().length && this.window_.children().detach();
   this.window_.append(this.popupList[a]);
+  this.nowContent = this.popupList[a];
   this.body_.removeClass("hiddenPopup");
 };
 Entry.popupHelper.prototype.hide = function() {
+  this.nowContent = void 0;
   this.body_.addClass("hiddenPopup");
 };
 Entry.getStartProject = function(a) {
