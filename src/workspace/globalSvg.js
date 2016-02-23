@@ -9,8 +9,8 @@ goog.provide('Entry.GlobalSvg');
 
     gs.createDom = function() {
         if (this.svgDom) return;
-        if (typeof window.Snap !== "function")
-            return console.error("Snap library is required");
+        if (typeof window.SVG !== "function")
+            return console.error("svg.js library is required");
 
         this.svgDom = Entry.Dom(
             $('<svg id="globalSvg" width="200" height="200"' +
@@ -27,7 +27,7 @@ goog.provide('Entry.GlobalSvg');
             'z-index': '1111'
         });
 
-        this.snap = Snap('#globalSvg');
+        this.svg = SVG('globalSvg');
 
         this.width = 0;
         this.left = 0;
@@ -64,7 +64,7 @@ goog.provide('Entry.GlobalSvg');
                 fill: '#000000'
             }, 530, mina.easeinout);
         }
-        this.snap.append(this.svg);
+        this.svg.add(this.svg);
         this.show();
     };
 

@@ -23,8 +23,8 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
     if (dom.prop("tagName") !== "DIV")
         return console.error("Dom is not div element");
 
-    if (typeof window.Snap !== "function")
-        return console.error("Snap library is required");
+    if (typeof window.SVG !== "function")
+        return console.error("svg.js library is required");
 
     this.view = dom;
 
@@ -32,7 +32,7 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
     this._categoryElems = {};
     this._selectedCategoryView = null;
     this.visible = true;
-    this._snapId = 'blockMenu' + new Date().getTime();
+    this._svgId = 'blockMenu' + new Date().getTime();
     this._generateView(categoryData);
 
     this.offset = this.svgDom.offset();
@@ -40,9 +40,9 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
     this.setWidth();
 
 
-    this.snap = Snap('#' + this._snapId);
+    this.svg = SVG(this._svgId);
 
-    this.svgGroup = this.snap.group();
+    this.svgGroup = this.svg.group();
 
     this.svgThreadGroup = this.svgGroup.group();
     this.svgThreadGroup.board = this;
@@ -103,7 +103,7 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
         });
 
         this.svgDom = Entry.Dom(
-            $('<svg id="' + this._snapId +'" class="blockMenu" version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'),
+            $('<svg id="' + this._svgId +'" class="blockMenu" version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'),
             { parent: this.blockMenuContainer }
         );
 
@@ -111,7 +111,7 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
             if (!Entry.playground || Entry.playground.resizing) return;
             var hPadding = that._align == 'LEFT' ? 10 : that.svgDom.width()/2;
             Entry.playground.focusBlockMenu = true;
-            var expandWidth = that.svgGroup.getBBox().width + hPadding + 64;
+            var expandWidth = that.svgGroup.bbox().width + hPadding + 64;
             if (expandWidth > Entry.interfaceState.menuWidth) {
                 this.widthBackup = Entry.interfaceState.menuWidth - 64;
                 $(this).stop().animate({
@@ -154,8 +154,8 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
         this.svgThreadGroup.remove();
         this.svgBlockGroup = codeView.svgBlockGroup;
         this.svgThreadGroup = codeView.svgThreadGroup;
-        this.svgGroup.append(this.svgThreadGroup);
-        this.svgGroup.append(this.svgBlockGroup);
+        this.svgGroup.add(this.svgThreadGroup);
+        this.svgGroup.add(this.svgBlockGroup);
     };
 
     p.align = function() {

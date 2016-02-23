@@ -4,7 +4,7 @@ goog.provide("Entry.FieldTrashcan");
 
 Entry.FieldTrashcan = function(board) {
     this.board = board;
-    this.svgGroup = board.snap.group();
+    this.svgGroup = board.svg.group();
 
     this.renderStart();
     this.dragBlock = null;
@@ -28,8 +28,8 @@ Entry.FieldTrashcan = function(board) {
         this.trashcan = this.svgGroup.image (
             path + 'body.png', 0, 20, 60, 60);
 
-        var filter = this.svgGroup.filter(Snap.filter.shadow(1,1,2));
-        this.svgGroup.attr({filter: filter});
+        //var filter = this.svgGroup.filter(Snap.filter.shadow(1,1,2));
+        //this.svgGroup.attr({filter: filter});
     };
 
     p.updateDragBlock = function() {
@@ -75,7 +75,7 @@ Entry.FieldTrashcan = function(board) {
 
     p.align = function() {
         var position = this.getPosition();
-        var transform = "t" + position.x + " " + position.y;
+        var transform = "translate(" + position.x + "," + position.y + ")";
 
         this.svgGroup.attr({
             transform: transform
@@ -103,10 +103,10 @@ Entry.FieldTrashcan = function(board) {
         var trashTop = this.trashcanTop;
         if(isOver) {
             trashTop.animate({
-                transform: "t5 -20 r30"}, 50);
+                transform: "translate(5, -20) rotate(30)"}, 50);
         } else {
             trashTop.animate({
-                transform: "r0"}, 50);
+                transform: "rotate(0)"}, 50);
         }
         this.isOver = isOver;
     };

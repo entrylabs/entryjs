@@ -80,7 +80,7 @@ Entry.BlockView.PARAM_SPACE = 5;
 
         this._darkenPath = this.svgGroup.path(path);
         this._darkenPath.attr({
-            transform: "t0 1",
+            transform: "translate(0, 1)",
             fill: Entry.Utils.colorDarken(this._schema.color, 0.7),
             class: 'blockPathDarken'
         });
@@ -181,7 +181,10 @@ Entry.BlockView.PARAM_SPACE = 5;
         });
 
         var contentPos = this.getContentPos();
-        this.contentSvgGroup.transform("t" + contentPos.x + ' ' + contentPos.y);
+        this.contentSvgGroup.transform({
+            x: contentPos.x,
+            y: contentPos.y
+        });
         this._render();
     };
 
@@ -228,9 +231,9 @@ Entry.BlockView.PARAM_SPACE = 5;
         animate = animate === undefined ? true : animate;
         this.svgGroup.stop();
         if (animate && Entry.ANIMATION_DURATION !== 0) {
-            var transform = "t" +
-                (this.x) + " " +
-                (this.y);
+            var transform = "translate(" +
+                (this.x) + "," +
+                (this.y) + ")";
             this.svgGroup.animate({
                 transform: transform
             }, Entry.ANIMATION_DURATION, mina.easeinout);
@@ -242,17 +245,17 @@ Entry.BlockView.PARAM_SPACE = 5;
     };
 
     p._toLocalCoordinate = function(parentSvgGroup) {
-        var parentMatrix = parentSvgGroup.transform().globalMatrix;
-        var matrix = this.svgGroup.transform().globalMatrix;
-        this._moveTo(matrix.e - parentMatrix.e, matrix.f - parentMatrix.f, false);
-        parentSvgGroup.append(this.svgGroup);
+       // var parentMatrix = parentSvgGroup.transform().globalMatrix;
+        //var matrix = this.svgGroup.transform().globalMatrix;
+        this._moveTo(0, 0, false);
+        parentSvgGroup.add(this.svgGroup);
         this._moveTo(0, 0, false);
     };
 
     p._toGlobalCoordinate = function() {
-        var matrix = this.svgGroup.transform().globalMatrix;
-        this._moveTo(matrix.e, matrix.f, false);
-        this.getBoard().svgBlockGroup.append(this.svgGroup);
+        //var matrix = this.svgGroup.transform().globalMatrix;
+        this._moveTo(0, 0, false);
+        this.getBoard().svgBlockGroup.add(this.svgGroup);
     };
 
     p._moveTo = function(x, y, animate) {
@@ -273,7 +276,7 @@ Entry.BlockView.PARAM_SPACE = 5;
     };
 
     p.removeControl = function() {
-        this.svgGroup.unmousedown(this.mouseHandler);
+        this.svgGroup.off('mousedown');
     };
 
     p.onMouseDown = function(e) {
@@ -545,9 +548,8 @@ Entry.BlockView.PARAM_SPACE = 5;
 
         var board = this.getBoard();
         //TODO optimize
-        var matrix = this.svgGroup.transform().globalMatrix,
-            x = matrix.e,
-            y = matrix.f;
+        x = this.x,
+        y = this.y;
 
         console.log(x, y);
 
@@ -584,7 +586,7 @@ Entry.BlockView.PARAM_SPACE = 5;
     p.dominate = function() {
         this.getBoard()
             .svgBlockGroup
-            .append(this.getSvgRoot());
+            .add(this.getSvgRoot());
     };
 
     p.getSvgRoot = function() {
@@ -646,7 +648,7 @@ Entry.BlockView.PARAM_SPACE = 5;
     p._updateMagnet = function() {
         var magnet = this._skeleton.magnets(this);
         this.nextY = magnet.next.y;
-        this._nextGroup.transform("t" + magnet.next.x + ' ' + magnet.next.y);
+        this._nextGroup.transform("translate(" + magnet.next.x + ',' + magnet.next.y + ")");
     };
 
     p._updateBG = function() {
@@ -660,7 +662,7 @@ Entry.BlockView.PARAM_SPACE = 5;
         if (magneting) {
             var shadow = this._board.dragBlock.getShadow();
             $(shadow.node).attr({
-                 transform: 'translate(0 ' + (this.height + 1) + ')'
+                 transform: 'translate(0,' + (this.height + 1) + ')'
             });
             this.svgGroup.prepend(shadow);
             this._clonedShadow = shadow;

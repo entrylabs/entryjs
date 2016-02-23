@@ -39,7 +39,7 @@ Entry.Scroller.RADIUS = 7;
         var r = Entry.Scroller.RADIUS;
         var scroller = this;
 
-        this.svgGroup = this.board.snap.group()
+        this.svgGroup = this.board.svg.group()
                             .attr({class: "boardScrollbar"});
 
 

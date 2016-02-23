@@ -14,24 +14,24 @@ Entry.RenderView = function(dom, align) {
     if (dom.prop("tagName") !== "DIV")
         return console.error("Dom is not div element");
 
-    if (typeof window.Snap !== "function")
-        return console.error("Snap library is required");
+    if (typeof window.SVG !== "function")
+        return console.error("svg.js library is required");
 
     this.view = dom;
     this.viewOnly = true;
 
     this.visible = true;
-    this._snapId = 'renderView_' + new Date().getTime();
+    this._svgId = 'renderView_' + new Date().getTime();
     this._generateView();
 
     this.offset = this.svgDom.offset();
     this.setWidth();
 
 
-    this.snap = Snap('#' + this._snapId);
+    this.svg = SVG(this._svgId);
 
-    if (this.snap) {
-        this.svgGroup = this.snap.group();
+    if (this.svg) {
+        this.svgGroup = this.svg.group();
 
         this.svgThreadGroup = this.svgGroup.group();
         this.svgThreadGroup.board = this;
@@ -60,7 +60,7 @@ Entry.RenderView = function(dom, align) {
 
 
         this.svgDom = Entry.Dom(
-            $('<svg id="' + this._snapId +'" class="renderView" version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'),
+            $('<svg id="' + this._svgId +'" class="renderView" version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'),
             { parent: this.renderViewContainer }
         );
     };
@@ -70,9 +70,9 @@ Entry.RenderView = function(dom, align) {
             return console.error("You must inject code instance");
         var that = this;
         this.code = code;
-        if (!this.snap) {
-            this.snap = Snap('#' + this._snapId);
-            this.svgGroup = this.snap.group();
+        if (!this.svg) {
+            this.svg = SVG(this._svgId);
+            this.svgGroup = this.svg.group();
 
             this.svgThreadGroup = this.svgGroup.group();
             this.svgThreadGroup.board = this;
@@ -120,8 +120,8 @@ Entry.RenderView = function(dom, align) {
         this.svgThreadGroup.remove();
         this.svgBlockGroup = codeView.svgBlockGroup;
         this.svgThreadGroup = codeView.svgThreadGroup;
-        this.svgGroup.append(this.svgThreadGroup);
-        this.svgGroup.append(this.svgBlockGroup);
+        this.svgGroup.add(this.svgThreadGroup);
+        this.svgGroup.add(this.svgBlockGroup);
     };
 
 })(Entry.RenderView.prototype);

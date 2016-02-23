@@ -39,7 +39,7 @@ Entry.Field = function() {};
                 y = this._position.y;
         }
 
-        var transform = "t" + x + " " + y;
+        var transform = "translate(" + x + "," + y + ")";
 
         if (animate)
             svgGroup.animate({

@@ -36,10 +36,11 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldIndicator);
         this.svgGroup = this._block.contentSvgGroup.group();
         this._imgElement = this.svgGroup.image(
             this._imgUrl,
-            this._position ? this._size * -1 : 0,
-            this._size * -1,
             this._size * 2,
             this._size * 2
+        ).move(
+            this._position ? this._size * -1 : 0,
+            this._size * -1
         );
 
         var path = "m 0,-%s a %s,%s 0 1,1 -0.1,0 z"

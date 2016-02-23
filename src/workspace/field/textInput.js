@@ -41,26 +41,23 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
         });
 
         this.textElement =
-            this.svgGroup.text(
-                X_PADDING/2, TEXT_Y_PADDING,
-                this.truncate()
-            );
+            this.svgGroup.text(this.truncate())
+                .move(X_PADDING/2, TEXT_Y_PADDING);
         this.textElement.attr({'font-size' : '9pt'});
 
         var width = this.getTextWidth();
 
         var y = this.position && this.position.y ? this.position.y : 0;
         y -= CONTENT_HEIGHT/2;
-        this._header = this.svgGroup.rect(
-                0, y,
-                width,
-                CONTENT_HEIGHT,
-            3).attr({
+        this._header = this.svgGroup.rect(width, CONTENT_HEIGHT)
+            .move(0, y)
+            .radius(3)
+            .attr({
                 fill: "#fff",
                 'fill-opacity': 0.4
             });
 
-        this.svgGroup.append(this.textElement);
+        this.svgGroup.add(this.textElement);
 
         this.svgGroup.mouseup(function(e) {
             if (that._isEditable()) that.renderOptions();

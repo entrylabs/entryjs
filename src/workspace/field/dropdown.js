@@ -48,14 +48,13 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
 
         this.textElement =
             this.svgGroup.text(
-                2, 0,
                 this.getTextByValue(this.getValue())
-            );
+            ).move(2, 0);
 
-        var bBox = this.textElement.getBBox();
+        var bBox = this.textElement.bbox();
         this.textElement.attr({
             'style': 'white-space: pre; font-size:' + that._FONT_SIZE + 'px',
-            'y': bBox.height * 0.25
+            'y': - bBox.height * 0.5
         });
 
         var width =
@@ -63,23 +62,23 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
 
         var CONTENT_HEIGHT = this._CONTENT_HEIGHT;
 
-        this._header = this.svgGroup.rect(
-                0, -CONTENT_HEIGHT/2,
-                width,
-                CONTENT_HEIGHT, that._ROUND).
-                    attr({
-                        fill: "#fff",
-                        'fill-opacity': 0.4
-                    });
+        this._header = this.svgGroup
+            .rect(width, CONTENT_HEIGHT)
+            .move(0, -CONTENT_HEIGHT/2)
+            .radius(that._ROUND)
+            .attr({
+                fill: "#fff",
+                'fill-opacity': 0.4
+            });
 
-        this.svgGroup.append(this.textElement);
+        this.svgGroup.add(this.textElement);
 
         this._arrow = this.svgGroup.polygon(
             0, -2, 6, -2, 3, 2).
             attr({
                 fill: blockView._schema.color,
                 stroke: blockView._schema.color,
-                transform: "t"+ (width-11) + " 0",
+                transform: "translate("+ (width-11) + ",0)",
             });
 
         this.svgGroup.mouseup(function(e) {
@@ -103,7 +102,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
         });
 
         this._arrow.attr({
-            transform: "t"+ (width-11) + " 0"
+            transform: "translate"+ (width-11) + ",0)"
         });
 
         this.box.set({width: width});
@@ -136,10 +135,10 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
         var maxWidth = 0;
 
         var CONTENT_HEIGHT = 23;
-        resizeList.push(this.optionGroup.rect(
-            0, 0,
-            0, CONTENT_HEIGHT * options.length
-            ).attr({fill:'white'}));
+        resizeList.push(this.optionGroup
+            .rect(0, CONTENT_HEIGHT * options.length)
+            .attr({fill:'white'})
+        );
 
         for (var i=0, len=options.length; i<len; i++) {
             var option = options[i];
@@ -147,26 +146,23 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
             var value = option[1];
             var element = this.optionGroup.group().attr({
                 class: 'rect',
-                transform: "t" + 0 + " " + i * CONTENT_HEIGHT
+                transform: "translate(0," + i * CONTENT_HEIGHT + ")"
             });
 
             resizeList.push(element.rect(
-                0, 0,
                 0, CONTENT_HEIGHT
             ));
 
 
             if (this.getValue() == value) {
                 element.text(
-                    5, 13,
                     '\u2713'
-                ).attr({"alignment-baseline": "central"});
+                ).move(5, 13).attr({"alignment-baseline": "central"});
             }
 
             var text = element.text(
-                20, 13,
                 text
-            ).attr({"alignment-baseline": "central"});
+            ).move(20, 13).attr({"alignment-baseline": "central"});
 
             maxWidth = Math.max(
                 text.node.getComputedTextLength() + OPTION_X_PADDING,
@@ -190,7 +186,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
 
         this.optionGroup.attr({
             class: 'entry-field-dropdown',
-            transform: "t" + pos.x + " " + pos.y
+            transform: "translate(" + pos.x + "," + pos.y + ")"
         });
 
         var attr = {width:maxWidth};

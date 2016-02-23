@@ -25,13 +25,13 @@ Entry.Board = function(option) {
     if (dom.prop("tagName") !== "DIV")
         return console.error("Dom is not div element");
 
-    if (typeof window.Snap !== "function")
-        return console.error("Snap library is required");
+    if (typeof window.SVG !== "function")
+        return console.error("svg.js library is required");
 
     Entry.Model(this, false);
 
     this.view = dom;
-    this._snapId = 'play' + new Date().getTime();
+    this._svgId = 'play' + new Date().getTime();
 
     this.workspace = option.workspace;
 
@@ -41,7 +41,7 @@ Entry.Board = function(option) {
     });
 
     this.svgDom = Entry.Dom(
-        $('<svg id="' + this._snapId + '" class="entryBoard" width="100%" height="100%"' +
+        $('<svg id="' + this._svgId + '" class="entryBoard" width="100%" height="100%"' +
           'version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'),
         { parent: this.wrapper }
     );
@@ -50,13 +50,13 @@ Entry.Board = function(option) {
     var that = this;
     $(window).scroll(this.updateOffset);
     Entry.windowResized.attach(this, this.updateOffset);
-    this.snap = Snap('#' + this._snapId);
+    this.svg = SVG(this._svgId);
 
     this._blockViews = [];
     this._magnetMap = {};
 
     this.trashcan = new Entry.FieldTrashcan(this);
-    this.svgGroup = this.snap.group();
+    this.svgGroup = this.svg.group();
 
     this.svgThreadGroup = this.svgGroup.group();
     this.svgThreadGroup.board = this;
@@ -113,8 +113,8 @@ Entry.Board = function(option) {
         this.svgThreadGroup.remove();
         this.svgBlockGroup = codeView.svgBlockGroup;
         this.svgThreadGroup = codeView.svgThreadGroup;
-        this.svgGroup.append(this.svgThreadGroup);
-        this.svgGroup.append(this.svgBlockGroup);
+        this.svgGroup.add(this.svgThreadGroup);
+        this.svgGroup.add(this.svgBlockGroup);
     };
 
     p.setMagnetedBlock = function(block) {
@@ -318,7 +318,7 @@ Entry.Board = function(option) {
     };
 
     p.updateOffset = function () {
-        this.offset = this.snap.node.getBoundingClientRect();
+        this.offset = this.svg.node.getBoundingClientRect();
         var w = $(window),
             scrollTop = w.scrollTop(),
             scrollLeft = w.scrollLeft(),

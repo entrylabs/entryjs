@@ -69,7 +69,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
         if (block) {
             y = block.view.height * -0.5;
         }
-        var transform = "t" + x + " " + y;
+        var transform = "translate(" + x + "," + y + ")";
 
         if (animate)
             svgGroup.animate({
