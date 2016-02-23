@@ -898,20 +898,47 @@ Entry.Playground.prototype.injectCode = function() {
     Blockly.mainWorkspace.clear();
     Blockly.Xml.domToWorkspace(Blockly.mainWorkspace, object.script);
 
-    this.adjust(0, 0);
+    var blockXML = object.script;
+
+    var targetX = 0;
+    var targetY = 0;
+    var maxX = 0;
+
+    $(blockXML).children("block").each(function(index) {
+        var x = Number($(this).attr('x'));
+        var y = Number($(this).attr('y'));
+        
+        if(index == 0)
+            maxX = x;
+
+        if(x <= maxX) {
+            maxX = x;
+            targetX = x;
+            targetY = y;
+        }
+    });
+
+    var metrics = Blockly.mainWorkspace.getMetrics();
+    var scrollX = Math.abs(targetX - metrics.contentLeft)-20;
+    var scrollY = Math.abs(targetY - metrics.contentTop)-170;
+    
+    this.adjustScroll(0, 0);
+    Blockly.mainWorkspace.scrollbar.set(scrollX, scrollY);
+    
+    
 };
 
-Entry.Playground.prototype.adjust = function(xc, xy) {
-    var hScroll = Blockly.mainWorkspace.scrollbar.hScroll;
-    var vScroll = Blockly.mainWorkspace.scrollbar.vScroll;
-    hScroll.svgGroup_.setAttribute('opacity', '1');
-    vScroll.svgGroup_.setAttribute('opacity', '1');
-    
+Entry.Playground.prototype.adjustScroll = function(xc, yc) {
+  var hScroll = Blockly.mainWorkspace.scrollbar.hScroll;
+  var vScroll = Blockly.mainWorkspace.scrollbar.vScroll;
+  hScroll.svgGroup_.setAttribute('opacity', '1');
+  vScroll.svgGroup_.setAttribute('opacity', '1');
+  
+  if(Blockly.mainWorkspace.getMetrics()) {
     Blockly.removeAllRanges();
-    
     var metrics = Blockly.mainWorkspace.getMetrics();
     var x = xc;
-    var y = xy;
+    var y = yc;
     x = Math.min(x, -metrics.contentLeft);
     y = Math.min(y, -metrics.contentTop);
     x = Math.max(x, metrics.viewWidth - metrics.contentLeft -
@@ -919,10 +946,10 @@ Entry.Playground.prototype.adjust = function(xc, xy) {
     y = Math.max(y, metrics.viewHeight - metrics.contentTop -
                  metrics.contentHeight);
 
-    // Move the scrollbars and the page will scroll automatically.
     Blockly.mainWorkspace.scrollbar.set(-x - metrics.contentLeft,
                                         -y - metrics.contentTop);
-    
+  
+    }    
 };
 /**
  * Inject picture
