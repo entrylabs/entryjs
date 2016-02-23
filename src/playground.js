@@ -899,33 +899,47 @@ Entry.Playground.prototype.injectCode = function() {
     Blockly.Xml.domToWorkspace(Blockly.mainWorkspace, object.script);
 
     var blockXML = object.script;
-
-    var targetX = 0;
-    var targetY = 0;
-    var maxX = 0;
+    var veryLeftX = 0;
+    var veryTopY = 0;
+    var veryLeftBlock = null;
 
     $(blockXML).children("block").each(function(index) {
         var x = Number($(this).attr('x'));
         var y = Number($(this).attr('y'));
-        
-        if(index == 0)
-            maxX = x;
 
-        if(x <= maxX) {
-            maxX = x;
-            targetX = x;
-            targetY = y;
+        if(index == 0) {
+            veryLeftX = x;
+            veryTopY = y;
+            veryLeftBlock = this;
+        }
+
+        if(x < veryLeftX) {
+            veryLeftX = x; //most left-located X coordinate
+            veryLeftBlock = this; //most left-located block for this point
+        }
+
+        if(y < veryTopY) {
+            varyTopY = y; //most top-located Y coordinate for this point
         }
     });
 
-    var metrics = Blockly.mainWorkspace.getMetrics();
-    var scrollX = Math.abs(targetX - metrics.contentLeft)-20;
-    var scrollY = Math.abs(targetY - metrics.contentTop)-170;
-    
-    this.adjustScroll(0, 0);
-    Blockly.mainWorkspace.scrollbar.set(scrollX, scrollY);
-    
-    
+    //adjusing scroll bar by most left-located block
+    if(veryLeftBlock != null) {
+        var targetX = Number($(veryLeftBlock).attr('x'));
+        var targetY = Number($(veryLeftBlock).attr('y'));
+        var adjustingX = 20; //default X adjusting value
+        var adjustingY = 170; //default Y adjusting value
+
+        if(targetY == veryTopY) //if this block's is most top & left located block, adjustingY value is set by 20 
+            adjustingY = 20;
+
+        var metrics = Blockly.mainWorkspace.getMetrics();
+        var scrollX = Math.abs(targetX - metrics.contentLeft)-adjustingX; //20 is the heuristic & optimized value obtained by coordinate adjustment  
+        var scrollY = Math.abs(targetY - metrics.contentTop)-adjustingY; //170 is the heuristic & optimized value obtained by coordinate adjustment
+        
+        this.adjustScroll(0, 0); //adjusting scroll bar by blockly scrolling mechanism
+        Blockly.mainWorkspace.scrollbar.set(scrollX, scrollY); //adjusting scroll bar based on very left block 
+    }
 };
 
 Entry.Playground.prototype.adjustScroll = function(xc, yc) {

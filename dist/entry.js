@@ -9249,15 +9249,20 @@ Entry.Playground.prototype.injectCode = function() {
   var a = this.object;
   Blockly.mainWorkspace.clear();
   Blockly.Xml.domToWorkspace(Blockly.mainWorkspace, a.script);
-  var b = 0, c = 0, d = 0;
+  var b = 0, c = 0, d = null;
   $(a.script).children("block").each(function(a) {
-    var e = Number($(this).attr("x")), h = Number($(this).attr("y"));
-    0 == a && (d = e);
-    e <= d && (b = d = e, c = h);
+    var e = Number($(this).attr("x")), f = Number($(this).attr("y"));
+    0 == a && (b = e, c = f, d = this);
+    e < b && (b = e, d = this);
+    f < c && (varyTopY = f);
   });
-  var e = Blockly.mainWorkspace.getMetrics(), a = Math.abs(b - e.contentLeft) - 20, e = Math.abs(c - e.contentTop) - 170;
-  this.adjustScroll(0, 0);
-  Blockly.mainWorkspace.scrollbar.set(a, e);
+  if (null != d) {
+    var e = Number($(d).attr("x")), a = Number($(d).attr("y")), f = 170;
+    a == c && (f = 20);
+    var g = Blockly.mainWorkspace.getMetrics(), e = Math.abs(e - g.contentLeft) - 20, a = Math.abs(a - g.contentTop) - f;
+    this.adjustScroll(0, 0);
+    Blockly.mainWorkspace.scrollbar.set(e, a);
+  }
 };
 Entry.Playground.prototype.adjustScroll = function(a, b) {
   var c = Blockly.mainWorkspace.scrollbar.vScroll;
