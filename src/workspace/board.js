@@ -53,6 +53,7 @@ Entry.Board = function(option) {
     this.snap = Snap('#' + this._snapId);
 
     this._blockViews = [];
+    this._magnetMap = {};
 
     this.trashcan = new Entry.FieldTrashcan(this);
     this.svgGroup = this.snap.group();
@@ -103,6 +104,7 @@ Entry.Board = function(option) {
             function() {that.changeEvent.notify();}
         );
         code.createView(this);
+        this.generateCodeMagnetMap(code);
         this.changeEvent.notify();
     };
 
@@ -258,7 +260,7 @@ Entry.Board = function(option) {
         this.set({selectedBlockView:blockView});
     };
 
-    p._keyboardControl = function(event) {
+    p._keyboardControl = function(sender, event) {
         var selected = this.selectedBlockView;
         if (!selected) return;
 
@@ -359,6 +361,96 @@ Entry.Board = function(option) {
 
         cancelButton.onclick = function(e) { func.cancelEdit(); };
         cancelText.onclick = function(e) { func.cancelEdit(); };
+    };
+
+    p.generateCodeMagnetMap = function(code) {
+        var a = new Date().getTime();
+        var metaData = this._getCodeBlocks(code);
+        metaData.sort(function(a, b) {return a.point - b.point});
+
+        metaData.unshift({
+            point: - Number.MAX_VALUE,
+            blocks: []
+        });
+        for (var i = 1; i < metaData.length; i++) {
+            var pointData = metaData[i];
+            var block = pointData.startBlock;
+            if (block) {
+                var limit = pointData.endPoint,
+                    index = i;
+                while (limit > pointData.point) {
+                    pointData.blocks.push(block);
+                    index++;
+                    pointData = metaData[index];
+                }
+                delete pointData.startBlock;
+            }
+            pointData.endPoint = Number.MAX_VALUE;
+            metaData[i - 1].endPoint = pointData.point;
+        }
+
+        this._magnetMap.nextMagnet = metaData;
+        console.log(new Date().getTime() - a);
+    };
+
+    p._getCodeBlocks = function(code) {
+        var threads = code.getThreads();
+        var blocks = [];
+        var that = this;
+        threads.map(function(t){blocks = blocks.concat(that._getThreadBlocks(t))});
+        return blocks;
+    };
+
+    p._getThreadBlocks = function(thread) {
+        var blocks = thread.getBlocks();
+        var statementBlocks = [];
+        var metaData = [];
+        var that = this;
+        var cursorY = 0;
+        blocks.map(function(b) {
+            var blockView = b.view;
+            cursorY += blockView.y;
+            metaData.push({
+                point: cursorY,
+                endPoint: cursorY + blockView.height,
+                startBlock: b,
+                blocks: []
+            });
+            metaData.push({
+                point: cursorY + blockView.height,
+                blocks: []
+            });
+            cursorY += blockView.nextY;
+            if (b.statements)
+                b.statements.map(function(t){
+                    statementsBlocks = statementBlocks.concat(
+                        that._getThreadBlocks(t)
+                    );
+                });
+        });
+        return statementBlocks.concat(metaData);
+    };
+
+    p.getNearestMagnet = function(x, y, targetType) {
+        var targetArray = this._magnetMap[targetType],
+            minIndex = 0,
+            maxIndex = targetArray.length - 1,
+            index,
+            pointData,
+            searchValue = y;
+        while (minIndex <= maxIndex) {
+            index = (minIndex + maxIndex) / 2 | 0;
+            pointData = targetArray[index];
+
+            if (searchValue < pointData.point) {
+                maxIndex = index - 1;
+            } else if (searchValue > pointData.endPoint) {
+                minIndex = index + 1;
+            } else {
+                return pointData.blocks[0];
+            }
+        }
+        return null
     };
 
 })(Entry.Board.prototype);

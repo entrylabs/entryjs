@@ -46,7 +46,6 @@ Entry.BlockView = function(block, board, mode) {
     this.block.observe(this, "_setReadOnly", ["movable"]);
     this.observe(this, "_updateBG", ["magneting"]);
     this.observe(this, "_updateOpacity", ["visible"]);
-    this.observe(this, "_updateDisplay", ["display"], false);
     this.observe(this, "_updateShadow", ["shadow"]);
     board.code.observe(this, '_setBoard', ['board'], false);
 
@@ -69,10 +68,9 @@ Entry.BlockView.PARAM_SPACE = 5;
         contentWidth: 0,
         contentHeight: 0,
         magneting: false,
-        visible: true, //visibility for clickable
+        visible: true,
         animating: false,
-        shadow: true,
-        display: true //visibility for non clickable
+        shadow: true
     };
 
     p._startRender = function(block, mode) {
@@ -248,7 +246,7 @@ Entry.BlockView.PARAM_SPACE = 5;
         var matrix = this.svgGroup.transform().globalMatrix;
         this._moveTo(matrix.e - parentMatrix.e, matrix.f - parentMatrix.f, false);
         parentSvgGroup.append(this.svgGroup);
-        this._moveTo(0, 0);
+        this._moveTo(0, 0, false);
     };
 
     p._toGlobalCoordinate = function() {
@@ -458,7 +456,6 @@ Entry.BlockView.PARAM_SPACE = 5;
                 if (fromBlockMenu) {
                     var removed = board.workspace.blockMenu.terminateDrag();
                     if (!removed) block.doAdd();
-                    this.set({visible:true});
                 }
 
                 var gs = Entry.GlobalSvg;
@@ -495,8 +492,6 @@ Entry.BlockView.PARAM_SPACE = 5;
                             } else block.doSeparate();
                         }
                         this._handlePrev();
-                        this._handleNext();
-
                         break;
                     case gs.RETURN:
                         var block = this.block;
@@ -537,6 +532,7 @@ Entry.BlockView.PARAM_SPACE = 5;
     p._getCloseBlock = function() {
         if (!this._skeleton.magnets)
             return;
+
         var targetType = this._skeleton.magnets();
 
         if (targetType.previous) targetType = 'nextMagnet';
@@ -548,14 +544,15 @@ Entry.BlockView.PARAM_SPACE = 5;
         if (!targetType) return;
 
         var board = this.getBoard();
-        var x = this.x,
-            y = this.y;
+        //TODO optimize
+        var matrix = this.svgGroup.transform().globalMatrix,
+            x = matrix.e,
+            y = matrix.f;
 
-        var offset = board.relativeOffset;
-        x += offset.left;
+        console.log(x, y);
 
-        //below the board
-        if (x + this.offsetX < board.offset.left) return null;
+        return board.getNearestMagnet(x, y, targetType);
+
 
         var targetElement = Snap.getElementByPoint(x, y + offset.top - 2);
 
@@ -648,6 +645,7 @@ Entry.BlockView.PARAM_SPACE = 5;
 
     p._updateMagnet = function() {
         var magnet = this._skeleton.magnets(this);
+        this.nextY = magnet.next.y;
         this._nextGroup.transform("t" + magnet.next.x + ' ' + magnet.next.y);
     };
 
@@ -830,20 +828,6 @@ Entry.BlockView.PARAM_SPACE = 5;
 
             this._toLocalCoordinate(prevBlockView._nextGroup);
         }
-    };
-
-    p._handleNext = function() {
-        var nextBlock = this.block.getNextBlock();
-        if (!nextBlock) return;
-
-        var nextBlockView = nextBlock.view;
-        nextBlockView._toLocalCoordinate(this._nextGroup);
-    };
-
-    p._updateDisplay = function() {
-        this.svgGroup.attr({
-            display: this.display === false ? 'none' : 'block'
-        });
     };
 
 })(Entry.BlockView.prototype);
