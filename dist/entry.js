@@ -6578,17 +6578,21 @@ p.initSocket = function() {
     if (-1 < c.indexOf("IE") || -1 < c.indexOf("EDGE")) {
       b = {transports:["polling"]};
     }
-    this.socket = b = io.connect("ws://localhost:23518", b);
+    var d = io.connect("ws://localhost:23518", b);
+    this.socket = d;
     this.connected = !1;
-    b.binaryType = "arraybuffer";
+    d.binaryType = "arraybuffer";
     this.connectTrial++;
-    b.on("connect", function(b) {
+    d.on("reconnect_attempt", function(a) {
+      3 <= a && (d.io.skipReconnect = !0);
+    });
+    d.on("connect", function(b) {
       a.initHardware();
     });
-    b.on("message", function(b) {
+    d.on("message", function(b) {
       "string" === typeof b && (b = JSON.parse(b), a.checkDevice(b), a.updatePortData(b));
     });
-    b.on("disconnect", function(b) {
+    d.on("disconnect", function(b) {
       a.initHardware();
     });
     Entry.dispatchEvent("hwChanged");

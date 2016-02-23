@@ -55,6 +55,11 @@ p.initSocket = function() {
     socket.binaryType = "arraybuffer";
     this.connectTrial++;
 
+    socket.on('reconnect_attempt', function (attempt) {
+        if(attempt >= 3) {
+            socket.io.skipReconnect = true;
+        }
+    });
     socket.on('connect', function (data) {
         hw.initHardware();
     });
