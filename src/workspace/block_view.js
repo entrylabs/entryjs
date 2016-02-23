@@ -86,7 +86,13 @@ Entry.BlockView.PARAM_SPACE = 5;
         });
 
         this._path = this.svgGroup.path(path);
-        var pathStyle = {fill: this._schema.color};
+        var pathStyle = {};
+        if(!this.block.isDeletable()) {
+            pathStyle.fill = Entry.Utils.colorLighten(this._schema.color);
+        } else {
+            pathStyle.fill = this._schema.color;
+        }
+
         if (this._skeleton.outerLine) {
             pathStyle.strokeWidth = "0.5";
             pathStyle.stroke = Entry.Utils.colorDarken(this._schema.color, 0.8);
@@ -752,13 +758,14 @@ Entry.BlockView.PARAM_SPACE = 5;
                 });
                 delete blockView.originalHeight;
             }
-
         }
         blockView.block.thread.changeEvent.notify();
     };
 
     p._createEmptyBG = function() {
         var blockView = this;
+        if (this.isInBlockMenu)
+            return;
         if (this.svgGroup.nextMagnet && !this.block.next) {
             var bg = this.svgGroup.rect(
                 0 + blockView.offsetX,

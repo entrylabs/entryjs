@@ -1240,7 +1240,7 @@ Entry.block.maze_step_move_step = {
     params: [
         {
             type: "Image",
-            img: "/img/assets/ntry/bitmap/jr/cparty_go_straight.png",
+            img: "/img/assets/week/blocks/moveStep.png",
             size: 24
         }
     ],
@@ -1275,7 +1275,7 @@ Entry.block.maze_step_rotate_left= {
     params: [
         {
             type: "Image",
-            img: "/img/assets/ntry/bitmap/jr/cparty_rotate_l.png",
+            img: "/img/assets/week/blocks/turnL.png",
             size: 24
         }
     ],
@@ -1311,7 +1311,7 @@ Entry.block.maze_step_rotate_right = {
     params: [
         {
             type: "Image",
-            img: "/img/assets/ntry/bitmap/jr/cparty_rotate_r.png",
+            img: "/img/assets/week/blocks/turnR.png",
             size: 24
         }
     ],

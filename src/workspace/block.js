@@ -92,6 +92,7 @@ Entry.Block.MAGNET_OFFSET = 0.4;
 
         var statements = this._schema.statements;
         if (statements) {
+            console.log(statements)
             for (var i = 0; i < statements.length; i++) {
                 this.statements.splice(
                     i, 1,
@@ -173,7 +174,7 @@ Entry.Block.MAGNET_OFFSET = 0.4;
         });
 
         json.statements = json.statements.map(
-            function(s) {return s.toJSON(isNew);}
+            function(s) {console.log(s) ; return s.toJSON(isNew);}
         );
         return json;
     };

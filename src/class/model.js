@@ -51,7 +51,10 @@ Entry.Model = function(obj, isSeal) {
                     delete data[key];
                 } else {
                     oldValue[key] = this.data[key];
-                    this.data[key] = data[key];
+                    if (data[key] instanceof Array)
+                        this.data[key] = data[key].concat();
+                    else
+                        this.data[key] = data[key];
                 }
             }
         }

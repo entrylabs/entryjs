@@ -108,6 +108,8 @@ Entry.Vim = function(dom) {
     p.codeToText = function(code) {
         var textCode = this._blockParser.parse(code);
         this.codeMirror.setValue(textCode);
+        this.codeMirror.getDoc().markText({line:0, ch:0}, {line: 1, ch: 100}, {readOnly: true});
+        this.codeMirror.getDoc().markText({line:3, ch:0}, {line: 3, ch: 100}, {readOnly: true});
     };
 
     p.getCodeToText = function(code) {
