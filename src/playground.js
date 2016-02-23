@@ -927,15 +927,15 @@ Entry.Playground.prototype.injectCode = function() {
     if(veryLeftBlock != null) {
         var targetX = Number($(veryLeftBlock).attr('x'));
         var targetY = Number($(veryLeftBlock).attr('y'));
-        var adjustingX = 20; //default X adjusting value
-        var adjustingY = 170; //default Y adjusting value
+        var adjustingX = 20; //adjustingX is the heuristic & optimized value obtained by coordinate adjustment 
+        var adjustingY = 170; //adjustingY is the heuristic & optimized value obtained by coordinate adjustment
 
         if(targetY == veryTopY) //if this block's is most top & left located block, adjustingY value is set by 20 
             adjustingY = 20;
 
         var metrics = Blockly.mainWorkspace.getMetrics();
-        var scrollX = Math.abs(targetX - metrics.contentLeft)-adjustingX; //20 is the heuristic & optimized value obtained by coordinate adjustment  
-        var scrollY = Math.abs(targetY - metrics.contentTop)-adjustingY; //170 is the heuristic & optimized value obtained by coordinate adjustment
+        var scrollX = Math.abs(targetX - metrics.contentLeft)-adjustingX;  
+        var scrollY = Math.abs(targetY - metrics.contentTop)-adjustingY; 
         
         this.adjustScroll(0, 0); //adjusting scroll bar by blockly scrolling mechanism
         Blockly.mainWorkspace.scrollbar.set(scrollX, scrollY); //adjusting scroll bar based on very left block 
