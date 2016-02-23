@@ -12846,7 +12846,7 @@ Entry.BlockMenu = function(a, b, c, d) {
   this.svgBlockGroup.board = this;
   this.changeEvent = new Entry.Event(this);
   c && this._generateCategoryCodes(c);
-  this._scroll && (this._scroller = new Entry.Scroller(this, !1, !0), this.changeEvent.attach(this, this._inspectScroll));
+  this._scroll && (this._scroller = new Entry.BlockMenuScroller(this), this.changeEvent.attach(this, this._inspectScroll));
   Entry.documentMousedown && Entry.documentMousedown.attach(this, this.setSelectedBlock);
 };
 (function(a) {
@@ -13058,6 +13058,73 @@ Entry.BlockMenu = function(a, b, c, d) {
     this._scroll && this._scroller.resizeScrollBar();
   };
 })(Entry.BlockMenu.prototype);
+Entry.BlockMenuScroller = function(a) {
+  this.board = a;
+  this.board.changeEvent.attach(this, this.resizeScrollBar);
+  this.svgGroup = null;
+  this.vRatio = this.vY = this.vWidth = this.hX = 0;
+  this._visible = !0;
+  this.createScrollBar();
+  Entry.windowResized && Entry.windowResized.attach(this, this.resizeScrollBar);
+};
+Entry.BlockMenuScroller.RADIUS = 7;
+(function(a) {
+  a.createScrollBar = function() {
+    var b = Entry.Scroller.RADIUS, a = this;
+    this.svgGroup = this.board.snap.group().attr({class:"boardScrollbar"});
+    this.vScrollbar = this.svgGroup.rect(0, 0, 2 * b, 0, b);
+    this.vScrollbar.mousedown(function(b) {
+      function e(b) {
+        b.stopPropagation();
+        b.preventDefault();
+        b.originalEvent.touches && (b = b.originalEvent.touches[0]);
+        var d = a.dragInstance;
+        a.scroll(0, (b.pageY - d.offsetY) / a.vRatio);
+        d.set({offsetX:b.pageX, offsetY:b.pageY});
+      }
+      function f(b) {
+        $(document).unbind(".scroll");
+        delete a.dragInstance;
+      }
+      if (0 === b.button || b instanceof Touch) {
+        Entry.documentMousedown && Entry.documentMousedown.notify(b);
+        var g = $(document);
+        g.bind("mousemove.scroll", e);
+        g.bind("mouseup.scroll", f);
+        g.bind("touchmove.scroll", e);
+        g.bind("touchend.scroll", f);
+        a.dragInstance = new Entry.DragInstance({startX:b.pageX, startY:b.pageY, offsetX:b.pageX, offsetY:b.pageY});
+      }
+      b.stopPropagation();
+    });
+    this.resizeScrollBar();
+  };
+  a.resizeScrollBar = function() {
+    if (this._visible) {
+      var b = this.board, a = b.svgBlockGroup.node.getBoundingClientRect(), b = b.svgDom.height();
+      console.log("vRatio", a.height / b);
+    }
+  };
+  a.updateScrollBar = function(b, a) {
+    this.vY += a * this.vRatio;
+    this.vScrollbar.attr({y:this.vY});
+  };
+  a.scroll = function(b, a) {
+    var d = this.board.svgBlockGroup.node.getBoundingClientRect(), e = this.board.svgDom, f = d.left - this.board.offset.left, g = d.top - this.board.offset.top, h = d.height;
+    b = Math.max(-d.width + Entry.BOARD_PADDING - f, b);
+    a = Math.max(-h + Entry.BOARD_PADDING - g, a);
+    b = Math.min(e.width() - Entry.BOARD_PADDING - f, b);
+    a = Math.min(e.height() - Entry.BOARD_PADDING - g, a);
+    this.board.code.moveBy(b, a);
+    this.updateScrollBar(b, a);
+  };
+  a.setVisible = function(b) {
+    b != this.isVisible() && (this._visible = b, this.svgGroup.attr({display:!0 === b ? "block" : "none"}));
+  };
+  a.isVisible = function() {
+    return this._visible;
+  };
+})(Entry.BlockMenuScroller.prototype);
 Entry.BlockView = function(a, b, c) {
   Entry.Model(this, !1);
   this.block = a;
