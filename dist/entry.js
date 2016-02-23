@@ -12846,7 +12846,6 @@ Entry.BlockMenu = function(a, b, c, d) {
   this.svgBlockGroup.board = this;
   this.changeEvent = new Entry.Event(this);
   c && this._generateCategoryCodes(c);
-  this._scroll && (this._scroller = new Entry.BlockMenuScroller(this), this.changeEvent.attach(this, this._inspectScroll));
   Entry.documentMousedown && Entry.documentMousedown.attach(this, this.setSelectedBlock);
 };
 (function(a) {

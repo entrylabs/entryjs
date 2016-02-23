@@ -54,10 +54,10 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
     this.changeEvent = new Entry.Event(this);
     if (categoryData) this._generateCategoryCodes(categoryData);
 
-    if (this._scroll) {
-        this._scroller = new Entry.BlockMenuScroller(this);
-        this.changeEvent.attach(this, this._inspectScroll);
-    }
+    //if (this._scroll) {
+        //this._scroller = new Entry.BlockMenuScroller(this);
+        //this.changeEvent.attach(this, this._inspectScroll);
+    //}
 
     if (Entry.documentMousedown)
         Entry.documentMousedown.attach(this, this.setSelectedBlock);
