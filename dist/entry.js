@@ -5615,11 +5615,19 @@ Entry.Dom = function(a, b) {
     d.addClass(a);
   });
   b.parent && b.parent.append(d);
-  d.bindOnClick = function(a) {
-    $(this).on("click touchstart", function(b) {
-      b.stopImmediatePropagation();
-      a.call(this, b);
-    });
+  d.bindOnClick = function() {
+    var a, b, c = function(a) {
+      a.stopImmediatePropagation();
+      a.handled || (a.handled = !0, b.call(this, a));
+    };
+    1 < arguments.length ? (b = arguments[1] instanceof Function ? arguments[1] : function() {
+    }, a = "string" === typeof arguments[0] ? arguments[0] : "") : b = arguments[0] instanceof Function ? arguments[0] : function() {
+    };
+    if (a) {
+      $(this).on("click touchstart", a, c);
+    } else {
+      $(this).on("click touchstart", c);
+    }
   };
   return d;
 };
