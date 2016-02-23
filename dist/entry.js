@@ -13070,34 +13070,6 @@ Entry.BlockMenuScroller = function(a) {
 Entry.BlockMenuScroller.RADIUS = 7;
 (function(a) {
   a.createScrollBar = function() {
-    var b = Entry.Scroller.RADIUS, a = this;
-    this.svgGroup = this.board.snap.group().attr({class:"boardScrollbar"});
-    this.vScrollbar = this.svgGroup.rect(0, 0, 2 * b, 0, b);
-    this.vScrollbar.mousedown(function(b) {
-      function e(b) {
-        b.stopPropagation();
-        b.preventDefault();
-        b.originalEvent.touches && (b = b.originalEvent.touches[0]);
-        var d = a.dragInstance;
-        a.scroll(0, (b.pageY - d.offsetY) / a.vRatio);
-        d.set({offsetX:b.pageX, offsetY:b.pageY});
-      }
-      function f(b) {
-        $(document).unbind(".scroll");
-        delete a.dragInstance;
-      }
-      if (0 === b.button || b instanceof Touch) {
-        Entry.documentMousedown && Entry.documentMousedown.notify(b);
-        var g = $(document);
-        g.bind("mousemove.scroll", e);
-        g.bind("mouseup.scroll", f);
-        g.bind("touchmove.scroll", e);
-        g.bind("touchend.scroll", f);
-        a.dragInstance = new Entry.DragInstance({startX:b.pageX, startY:b.pageY, offsetX:b.pageX, offsetY:b.pageY});
-      }
-      b.stopPropagation();
-    });
-    this.resizeScrollBar();
   };
   a.resizeScrollBar = function() {
     if (this._visible) {

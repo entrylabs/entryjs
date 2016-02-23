@@ -34,6 +34,7 @@ Entry.BlockMenuScroller.RADIUS = 7;
         var r = Entry.Scroller.RADIUS;
         var that = this;
 
+        return;
         this.svgGroup = this.board.snap.group()
                             .attr({class: "boardScrollbar"});
 
