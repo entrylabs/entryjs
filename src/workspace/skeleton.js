@@ -141,7 +141,6 @@ Entry.skeleton.basic_define = {
         var contentHeight = 50;
         // apply scale required.
         return {
-            previous: {x: 0, y: 0},
             next: {x: 0, y: contentHeight + 55}
         };
     },

@@ -15161,7 +15161,7 @@ Entry.skeleton.basic_define = {path:function(a) {
   a = a._statements[0] ? a._statements[0].box.height : 30;
   return "m -8,0 l 16,0 h %w a %h,%h 0 0,1 0,%wh H 24 l -8,8 -8,-8 h -0.4 v %sh h 0.4 l 8,8 8,-8 h %w h -8 a 8,8 0 0,1 0,16 H 8 l -8,8 -8,-8 z".replace(/%wh/gi, c).replace(/%w/gi, b).replace(/%h/gi, c / 2).replace(/%sh/gi, a + 1);
 }, magnets:function() {
-  return {previous:{x:0, y:0}, next:{x:0, y:105}};
+  return {next:{x:0, y:105}};
 }, box:function(a) {
   return {offsetX:0, offsetY:0, width:a.contentWidth, height:Math.max(a.contentHeight, 25) + 46, marginBottom:0};
 }, statementPos:function(a) {
@@ -15897,8 +15897,6 @@ Entry.Vim = function(a) {
   a.codeToText = function(a) {
     a = this._blockParser.parse(a);
     this.codeMirror.setValue(a);
-    this.codeMirror.getDoc().markText({line:0, ch:0}, {line:1, ch:100}, {readOnly:!0});
-    this.codeMirror.getDoc().markText({line:3, ch:0}, {line:3, ch:100}, {readOnly:!0});
   };
   a.getCodeToText = function(a) {
     return this._blockParser.parse(a);
