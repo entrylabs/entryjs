@@ -898,20 +898,61 @@ Entry.Playground.prototype.injectCode = function() {
     Blockly.mainWorkspace.clear();
     Blockly.Xml.domToWorkspace(Blockly.mainWorkspace, object.script);
 
-    this.adjust(0, 0);
+    var blockXML = object.script;
+    var veryLeftX = 0;
+    var veryTopY = 0;
+    var veryLeftBlock = null;
+
+    $(blockXML).children("block").each(function(index) {
+        var x = Number($(this).attr('x'));
+        var y = Number($(this).attr('y'));
+
+        if(index == 0) {
+            veryLeftX = x;
+            veryTopY = y;
+            veryLeftBlock = this;
+        }
+
+        if(x < veryLeftX) {
+            veryLeftX = x; //most left-located X coordinate
+            veryLeftBlock = this; //most left-located block for this point
+        }
+
+        if(y < veryTopY) {
+            varyTopY = y; //most top-located Y coordinate for this point
+        }
+    });
+
+    //adjusing scroll bar by most left-located block
+    if(veryLeftBlock != null) {
+        var targetX = Number($(veryLeftBlock).attr('x'));
+        var targetY = Number($(veryLeftBlock).attr('y'));
+        var adjustingX = 20; //adjustingX is the heuristic & optimized value obtained by coordinate adjustment 
+        var adjustingY = 170; //adjustingY is the heuristic & optimized value obtained by coordinate adjustment
+
+        if(targetY == veryTopY) //if this block's is most top & left located block, adjustingY value is set by 20 
+            adjustingY = 20;
+
+        var metrics = Blockly.mainWorkspace.getMetrics();
+        var scrollX = Math.abs(targetX - metrics.contentLeft)-adjustingX;  
+        var scrollY = Math.abs(targetY - metrics.contentTop)-adjustingY; 
+        
+        this.adjustScroll(0, 0); //adjusting scroll bar by blockly scrolling mechanism
+        Blockly.mainWorkspace.scrollbar.set(scrollX, scrollY); //adjusting scroll bar based on very left block 
+    }
 };
 
-Entry.Playground.prototype.adjust = function(xc, xy) {
-    var hScroll = Blockly.mainWorkspace.scrollbar.hScroll;
-    var vScroll = Blockly.mainWorkspace.scrollbar.vScroll;
-    hScroll.svgGroup_.setAttribute('opacity', '1');
-    vScroll.svgGroup_.setAttribute('opacity', '1');
-    
+Entry.Playground.prototype.adjustScroll = function(xc, yc) {
+  var hScroll = Blockly.mainWorkspace.scrollbar.hScroll;
+  var vScroll = Blockly.mainWorkspace.scrollbar.vScroll;
+  hScroll.svgGroup_.setAttribute('opacity', '1');
+  vScroll.svgGroup_.setAttribute('opacity', '1');
+  
+  if(Blockly.mainWorkspace.getMetrics()) {
     Blockly.removeAllRanges();
-    
     var metrics = Blockly.mainWorkspace.getMetrics();
     var x = xc;
-    var y = xy;
+    var y = yc;
     x = Math.min(x, -metrics.contentLeft);
     y = Math.min(y, -metrics.contentTop);
     x = Math.max(x, metrics.viewWidth - metrics.contentLeft -
@@ -919,10 +960,10 @@ Entry.Playground.prototype.adjust = function(xc, xy) {
     y = Math.max(y, metrics.viewHeight - metrics.contentTop -
                  metrics.contentHeight);
 
-    // Move the scrollbars and the page will scroll automatically.
     Blockly.mainWorkspace.scrollbar.set(-x - metrics.contentLeft,
                                         -y - metrics.contentTop);
-    
+  
+    }    
 };
 /**
  * Inject picture

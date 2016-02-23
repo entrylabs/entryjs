@@ -9445,19 +9445,34 @@ Entry.Playground.prototype.injectCode = function() {
   var a = this.object;
   Blockly.mainWorkspace.clear();
   Blockly.Xml.domToWorkspace(Blockly.mainWorkspace, a.script);
-  this.adjust(0, 0);
+  var b = 0, c = 0, d = null;
+  $(a.script).children("block").each(function(a) {
+    var e = Number($(this).attr("x")), f = Number($(this).attr("y"));
+    0 == a && (b = e, c = f, d = this);
+    e < b && (b = e, d = this);
+    f < c && (varyTopY = f);
+  });
+  if (null != d) {
+    var e = Number($(d).attr("x")), a = Number($(d).attr("y")), f = 170;
+    a == c && (f = 20);
+    var g = Blockly.mainWorkspace.getMetrics(), e = Math.abs(e - g.contentLeft) - 20, a = Math.abs(a - g.contentTop) - f;
+    this.adjustScroll(0, 0);
+    Blockly.mainWorkspace.scrollbar.set(e, a);
+  }
 };
-Entry.Playground.prototype.adjust = function(a, b) {
+Entry.Playground.prototype.adjustScroll = function(a, b) {
   var c = Blockly.mainWorkspace.scrollbar.vScroll;
   Blockly.mainWorkspace.scrollbar.hScroll.svgGroup_.setAttribute("opacity", "1");
   c.svgGroup_.setAttribute("opacity", "1");
-  Blockly.removeAllRanges();
-  var c = Blockly.mainWorkspace.getMetrics(), d, e;
-  d = Math.min(a, -c.contentLeft);
-  e = Math.min(b, -c.contentTop);
-  d = Math.max(d, c.viewWidth - c.contentLeft - c.contentWidth);
-  e = Math.max(e, c.viewHeight - c.contentTop - c.contentHeight);
-  Blockly.mainWorkspace.scrollbar.set(-d - c.contentLeft, -e - c.contentTop);
+  if (Blockly.mainWorkspace.getMetrics()) {
+    Blockly.removeAllRanges();
+    var c = Blockly.mainWorkspace.getMetrics(), d, e;
+    d = Math.min(a, -c.contentLeft);
+    e = Math.min(b, -c.contentTop);
+    d = Math.max(d, c.viewWidth - c.contentLeft - c.contentWidth);
+    e = Math.max(e, c.viewHeight - c.contentTop - c.contentHeight);
+    Blockly.mainWorkspace.scrollbar.set(-d - c.contentLeft, -e - c.contentTop);
+  }
 };
 Entry.Playground.prototype.injectPicture = function() {
   var a = this.pictureListView_;
