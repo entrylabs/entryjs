@@ -137,11 +137,7 @@ Entry.skeleton.basic_define = {
             .replace(/%sh/gi, statementHeight + 1);
     },
     magnets: function() {
-        var contentWidth = 124;
-        var contentHeight = 50;
-        // apply scale required.
         return {
-            next: {x: 0, y: contentHeight + 55}
         };
     },
     box: function(blockView) {

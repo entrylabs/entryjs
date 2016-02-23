@@ -1113,11 +1113,7 @@ Entry.block.maze_step_if_3 = {
     ],
     statements: [
         {
-            accept: "basic",
-            position: {
-                x: 2,
-                y: 15
-            }
+            accept: "basic"
         }
     ],
     func: function() {
