@@ -105,11 +105,7 @@ Entry.popupHelper.prototype.hasPopup = function(key) {
 }
 
 Entry.popupHelper.prototype.setPopup = function(popupObject) {
-    this.clearPopup();
-    this.title_.textContent = popupObject.title;
-    if(typeof popupObject.setPopupLayout === 'function') {
-        popupObject.setPopupLayout(this);
-    }
+
 };
 
 /**

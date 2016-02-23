@@ -41,6 +41,15 @@ Entry.Dom = function (tag, options) {
     if (options.parent)
         options.parent.append(dom);
 
+    dom.bindOnClick = function(func) {
+        $(this).on('click touchstart', function(e) {
+            e.stopImmediatePropagation();
+            // if (e.handled) return;
+            // e.handled = true;
+            func.call(this, e);
+        });
+    };
+
     return dom;
 };
 

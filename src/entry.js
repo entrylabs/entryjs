@@ -327,15 +327,17 @@ Entry.DRAG_MODE_MOUSEDOWN = 1;
 Entry.DRAG_MODE_DRAG = 2;
 
 Entry.cancelObjectEdit = function(e) {
-    var object = Entry.playground.object;
-    var objectView = object.view_;
-    var target = e.target;
-    var isCurrent = $(objectView).find(target).length !== 0;
-    var tagName = target.tagName.toUpperCase();
-    if (!object.isEditing || (tagName === 'INPUT' && isCurrent))
-        return;
+    if(Entry.playground && Entry.playground.object) {
+        var object = Entry.playground.object;
+        var objectView = object.view_;
+        var target = e.target;
+        var isCurrent = $(objectView).find(target).length !== 0;
+        var tagName = target.tagName.toUpperCase();
+        if (!object.isEditing || (tagName === 'INPUT' && isCurrent))
+            return;
 
-    object.editObjectValues(false);
+        object.editObjectValues(false);
+    }
 };
 
 

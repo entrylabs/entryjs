@@ -104,10 +104,12 @@ var Entry = {block:{}, TEXT_ALIGN_CENTER:0, TEXT_ALIGN_LEFT:1, TEXT_ALIGN_RIGHT:
   Entry.stateManager && (a.activityLog = Entry.stateManager.activityLog_);
   return a;
 }, DRAG_MODE_NONE:0, DRAG_MODE_MOUSEDOWN:1, DRAG_MODE_DRAG:2, cancelObjectEdit:function(a) {
-  var b = Entry.playground.object, c = a.target;
-  a = 0 !== $(b.view_).find(c).length;
-  c = c.tagName.toUpperCase();
-  !b.isEditing || "INPUT" === c && a || b.editObjectValues(!1);
+  if (Entry.playground && Entry.playground.object) {
+    var b = Entry.playground.object, c = a.target;
+    a = 0 !== $(b.view_).find(c).length;
+    c = c.tagName.toUpperCase();
+    !b.isEditing || "INPUT" === c && a || b.editObjectValues(!1);
+  }
 }};
 window.Entry = Entry;
 Entry.Albert = {PORT_MAP:{leftWheel:0, rightWheel:0, buzzer:0, leftEye:0, rightEye:0, note:0, bodyLed:0, frontLed:0, padWidth:0, padHeight:0}, setZero:function() {
@@ -5613,6 +5615,13 @@ Entry.Dom = function(a, b) {
     d.addClass(a);
   });
   b.parent && b.parent.append(d);
+  d.bindOnClick = function(a) {
+    $(this).on("click touchstart", function(b) {
+      console.log("click");
+      b.stopImmediatePropagation();
+      a.call(this, b);
+    });
+  };
   return d;
 };
 Entry.Dialog = function(a, b, c, d) {
@@ -9870,9 +9879,6 @@ Entry.popupHelper.prototype.hasPopup = function(a) {
   return !!this.popupList[a];
 };
 Entry.popupHelper.prototype.setPopup = function(a) {
-  this.clearPopup();
-  this.title_.textContent = a.title;
-  "function" === typeof a.setPopupLayout && a.setPopupLayout(this);
 };
 Entry.popupHelper.prototype.remove = function() {
   Entry.removeElement(this.body_);
