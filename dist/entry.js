@@ -13414,11 +13414,11 @@ Entry.BlockView.PARAM_SPACE = 5;
   a._inheritAnimate = function() {
   };
   a.dominate = function() {
-    this.getBoard().svgBlockGroup.add(this.getSvgRoot());
+    this.getBoard().svgBlockGroup.appendChild(this.getSvgRoot());
   };
   a.getSvgRoot = function() {
-    for (var b = this.getBoard().svgBlockGroup, a = this.svgGroup;a.parent() !== b;) {
-      a = a.parent();
+    for (var b = this.getBoard().svgBlockGroup, a = this.svgGroup;a.parentNode !== b;) {
+      a = a.parentNode;
     }
     return a;
   };

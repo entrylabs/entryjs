@@ -593,14 +593,14 @@ Entry.BlockView.PARAM_SPACE = 5;
     p.dominate = function() {
         this.getBoard()
             .svgBlockGroup
-            .add(this.getSvgRoot());
+            .appendChild(this.getSvgRoot());
     };
 
     p.getSvgRoot = function() {
         var svgBlockGroup = this.getBoard().svgBlockGroup;
         var node = this.svgGroup;
-        while (node.parent() !== svgBlockGroup)
-            node = node.parent();
+        while (node.parentNode !== svgBlockGroup)
+            node = node.parentNode;
         return node;
     };
 
