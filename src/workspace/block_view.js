@@ -46,7 +46,7 @@ Entry.BlockView = function(block, board, mode) {
     this.block.observe(this, "_setMovable", ["movable"]);
     this.block.observe(this, "_setReadOnly", ["movable"]);
     this.observe(this, "_updateBG", ["magneting"]);
-    this.observe(this, "_updateOpacity", ["visible"]);
+    this.observe(this, "_updateOpacity", ["visible"], false);
     this.observe(this, "_updateShadow", ["shadow"]);
     board.code.observe(this, '_setBoard', ['board'], false);
 
@@ -455,6 +455,7 @@ Entry.BlockView.PARAM_SPACE = 5;
         var dragMode = this.dragMode;
         var block = this.block;
         var workspaceMode = board.workspace.getMode();
+        this.set({visible:true});
         this.removeDragging();
 
         if (workspaceMode === Entry.Workspace.MODE_VIMBOARD) {

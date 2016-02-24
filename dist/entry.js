@@ -13176,7 +13176,7 @@ Entry.BlockView = function(a, b, c) {
   this.block.observe(this, "_setMovable", ["movable"]);
   this.block.observe(this, "_setReadOnly", ["movable"]);
   this.observe(this, "_updateBG", ["magneting"]);
-  this.observe(this, "_updateOpacity", ["visible"]);
+  this.observe(this, "_updateOpacity", ["visible"], !1);
   this.observe(this, "_updateShadow", ["shadow"]);
   b.code.observe(this, "_setBoard", ["board"], !1);
   this.dragMode = Entry.DRAG_MODE_NONE;
@@ -13357,6 +13357,7 @@ Entry.BlockView.PARAM_SPACE = 5;
   };
   a.terminateDrag = function(b) {
     var a = this.getBoard(), d = this.dragMode, e = this.block, f = a.workspace.getMode();
+    this.set({visible:!0});
     this.removeDragging();
     if (f === Entry.Workspace.MODE_VIMBOARD) {
       a instanceof Entry.BlockMenu ? (a.terminateDrag(), this.vimBoardEvent(b, "dragEnd", e)) : a.clear();
@@ -14702,7 +14703,7 @@ Entry.GlobalSvg = {};
     var a = this._view.getSkeleton().box(this._view).offsetX || 0, c = this._view.getSkeleton().box(this._view).offsetY || 0, a = -1 * a + 1, c = -1 * c + 1;
     this._offsetX = a;
     this._offsetY = c;
-    this.svg.attr({transform:"t" + a + " " + c});
+    this.svgGroup.attr({transform:"translate(" + a + "," + c + ")"});
   };
   a.show = function() {
     this.svgDom.css("display", "block");
@@ -14711,9 +14712,9 @@ Entry.GlobalSvg = {};
     this.svgDom.css("display", "none");
   };
   a.position = function() {
-    var a = this._view, c = a.svgGroup.transform().globalMatrix, a = a.getBoard().offset;
-    this.left = c.e + a.left - this._offsetX;
-    this.top = c.f + a.top - this._offsetY;
+    var a = this._view, c = a.getAbsoluteCoordinate(), a = a.getBoard().offset;
+    this.left = c.x + a.left - this._offsetX;
+    this.top = c.y + a.top - this._offsetY;
     this.svgDom.css({left:this.left, top:this.top});
   };
   a.terminateDrag = function(a) {

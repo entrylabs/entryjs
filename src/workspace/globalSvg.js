@@ -91,8 +91,8 @@ goog.provide('Entry.GlobalSvg');
         offsetY += 1;
         this._offsetX = offsetX;
         this._offsetY = offsetY;
-        var transform = "t" + offsetX + " " + offsetY;
-        this.svg.attr({transform: transform});
+        var transform = "translate(" + offsetX + "," + offsetY + ')';
+        this.svgGroup.attr({transform: transform});
     };
 
     gs.show = function() {this.svgDom.css('display', 'block');};
@@ -102,10 +102,10 @@ goog.provide('Entry.GlobalSvg');
     gs.position = function() {
         var that = this;
         var blockView = this._view;
-        var matrix = blockView.svgGroup.transform().globalMatrix;
+        var pos = blockView.getAbsoluteCoordinate();
         var offset = blockView.getBoard().offset;
-        this.left = matrix.e + offset.left - this._offsetX;
-        this.top = matrix.f + offset.top - this._offsetY;
+        this.left = pos.x + offset.left - this._offsetX;
+        this.top = pos.y + offset.top - this._offsetY;
 
         this.svgDom.css({
             left: that.left,
