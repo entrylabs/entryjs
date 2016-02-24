@@ -238,18 +238,18 @@ Entry.EntryObject.prototype.generateView = function() {
         this.view_.appendChild(editView);
         if(Entry.objectEditable) {
             $(editView).mousedown(function(e) {
-                var current = object.isEditing;  
+                var current = object.isEditing;
                 e.stopPropagation();
                 Entry.documentMousedown.notify(e);
                 if(Entry.engine.isState('run')) return;
-              
+
                 if (current === false) {
                     object.editObjectValues(!current);
                     if (Entry.playground.object !== object)
                         Entry.container.selectObject(object.id);
                     object.nameView_.select();
                     return;
-                } 
+                }
             });
 
             editView.blur = function(e){
@@ -459,6 +459,7 @@ Entry.EntryObject.prototype.generateView = function() {
             if (Entry.engine.isState('run') || this.object.getLock()) {
                 return;
             }
+            this.object.initRotateValue('free');
             this.object.setRotateMethod('free');
         });
 
@@ -472,6 +473,7 @@ Entry.EntryObject.prototype.generateView = function() {
             if (Entry.engine.isState('run') || this.object.getLock()) {
                 return;
             }
+            this.object.initRotateValue('vertical');
             this.object.setRotateMethod('vertical');
         });
 
@@ -484,6 +486,7 @@ Entry.EntryObject.prototype.generateView = function() {
         rotateModeCView.bindOnClick(function(e){
             if (Entry.engine.isState('run') || this.object.getLock())
                 return;
+            this.object.initRotateValue('none');
             this.object.setRotateMethod('none');
         });
 
@@ -944,6 +947,7 @@ Entry.EntryObject.prototype.updateRotationView = function(isForced) {
     if (rotateMethod == 'free') {
         this.rotateSpan_.removeClass('entryRemove');
         this.rotateInput_.removeClass('entryRemove');
+
         content += this.entity.getRotation().toFixed(1);
         content += '˚';
         this.rotateInput_.value = content;
@@ -952,9 +956,11 @@ Entry.EntryObject.prototype.updateRotationView = function(isForced) {
         content += this.entity.getDirection().toFixed(1);
         content += '˚';
         this.directionInput_.value = content;
+
     } else {
         this.rotateSpan_.addClass('entryRemove');
         this.rotateInput_.addClass('entryRemove');
+
         content = '';
         content += this.entity.getDirection().toFixed(1);
         content += '˚';
@@ -1184,6 +1190,26 @@ Entry.EntryObject.prototype.setRotateMethod = function(rotateMethod) {
         rotateMethod = 'free';
     this.rotateMethod = rotateMethod;
     this.updateRotateMethodView();
+
+    if(Entry.stage.selectedObject && Entry.stage.selectedObject.entity) {
+        Entry.stage.updateObject();
+        Entry.stage.updateHandle();
+    } else {
+        if (Entry.container.getObject(this.id)) {
+            Entry.container.selectObject(this.id);
+
+            Entry.stage.updateObject();
+            //Entry.stage.updateHandle();
+         }
+    }
+};
+
+Entry.EntryObject.prototype.initRotateValue = function(rotateMethod) {
+    if(this.rotateMethod != rotateMethod) {
+        this.entity.rotation = 0.0;
+        this.entity.direction = 90.0;
+    }
+
 };
 
 Entry.EntryObject.prototype.updateRotateMethodView = function() {
