@@ -9257,11 +9257,9 @@ Entry.Playground.prototype.injectCode = function() {
     f < c && (varyTopY = f);
   });
   if (null != d) {
-    var e = Number($(d).attr("x")), a = Number($(d).attr("y")), f = 170;
-    a == c && (f = 20);
-    var g = Blockly.mainWorkspace.getMetrics(), e = Math.abs(e - g.contentLeft) - 20, a = Math.abs(a - g.contentTop) - f;
-    this.adjustScroll(0, 0);
-    Blockly.mainWorkspace.scrollbar.set(e, a);
+    var a = Number($(d).attr("x")), e = Number($(d).attr("y")), f = Blockly.mainWorkspace.getMetrics(), g = (.2 * f.viewWidth).toFixed(1), h = (.5 * f.viewHeight).toFixed(1);
+    e == c && (h = (.2 * f.viewHeight).toFixed(1));
+    Blockly.mainWorkspace.scrollbar.set(a - f.contentLeft - g, e - f.contentTop - h);
   }
 };
 Entry.Playground.prototype.adjustScroll = function(a, b) {
