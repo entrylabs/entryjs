@@ -92,7 +92,7 @@ Entry.Field = function() {};
     };
 
     p.appendSvgOptionGroup = function() {
-        return this._block.view.getBoard().svgGroup.group();
+        return this._block.view.getBoard().svgGroup.elem('g');
     };
 
     p.getValue = function() {

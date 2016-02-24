@@ -13791,7 +13791,7 @@ Entry.Field = function() {
     return d;
   };
   a.appendSvgOptionGroup = function() {
-    return this._block.view.getBoard().svgGroup.group();
+    return this._block.view.getBoard().svgGroup.elem("g");
   };
   a.getValue = function() {
     return this._block.params[this._index];
@@ -14222,11 +14222,9 @@ Entry.FieldStatement = function(a, b, c) {
 };
 (function(a) {
   a.renderStart = function(a) {
-    this.svgGroup = this._blockView.statementSvgGroup.group();
+    this.svgGroup = this._blockView.statementSvgGroup.elem("group");
     this.box.set({x:46, y:0, width:0, height:20});
     this._thread = this.getValue();
-    this.dummyBlock = new Entry.DummyBlock(this, this._blockView);
-    this._thread.insertDummyBlock(this.dummyBlock);
     this._thread.createView(a);
     this._thread.changeEvent.attach(this, this.calcHeight);
     this.calcHeight();
@@ -14264,7 +14262,7 @@ Entry.DummyBlock = function(a, b) {
   this._schema = {};
   this._thread = a._thread;
   this.statementField = a;
-  this.svgGroup = a.svgGroup.group();
+  this.svgGroup = a.svgGroup.elem("g");
   this.svgGroup.nextMagnet = this;
   var c = Entry.skeleton[a.acceptType].box();
   this.path = this.svgGroup.rect(c.offsetX, c.offsetY - 10, c.width, c.height);

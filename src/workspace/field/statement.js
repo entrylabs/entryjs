@@ -34,7 +34,7 @@ Entry.FieldStatement = function(content, blockView, index) {
 
 (function(p) {
     p.renderStart = function(board) {
-        this.svgGroup = this._blockView.statementSvgGroup.group();
+        this.svgGroup = this._blockView.statementSvgGroup.elem('group');
         this.box.set({
             x: 46,
             y: 0,
@@ -42,8 +42,8 @@ Entry.FieldStatement = function(content, blockView, index) {
             height: 20
         });
         this._thread = this.getValue();
-        this.dummyBlock = new Entry.DummyBlock(this, this._blockView);
-        this._thread.insertDummyBlock(this.dummyBlock);
+        //this.dummyBlock = new Entry.DummyBlock(this, this._blockView);
+        //this._thread.insertDummyBlock(this.dummyBlock);
         this._thread.createView(board);
         this._thread.changeEvent.attach(this, this.calcHeight);
         this.calcHeight();
@@ -108,7 +108,7 @@ Entry.DummyBlock = function(statementField, blockView) {
     this._thread = statementField._thread;
     this.statementField = statementField;
 
-    this.svgGroup = statementField.svgGroup.group();
+    this.svgGroup = statementField.svgGroup.elem("g");
     this.svgGroup.nextMagnet = this;
 
     var acceptBox = Entry.skeleton[statementField.acceptType].box();
