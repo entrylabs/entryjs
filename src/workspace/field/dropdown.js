@@ -55,7 +55,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
         var bBox = this.textElement.getBBox();
         this.textElement.attr({
             'style': 'white-space: pre; font-size:' + that._FONT_SIZE + 'px',
-            'y': - bBox.height * 0.5
+            'y': bBox.height * 0.25
         });
 
         var width =
@@ -177,9 +177,9 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
 
             (function(elem, value) {
                 //prevent propagation to document
-                elem.mousedown = function(e){e.stopPropagation();};
+                elem.onmousedown = function(e){e.stopPropagation();};
 
-                elem.mouseup = function(){
+                elem.onmouseup = function(){
                     that.applyValue(value);
                     that.destroyOption();
                 };

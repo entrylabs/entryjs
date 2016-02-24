@@ -49,7 +49,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldText);
 
         this.textElement.attr({
             x: x,
-            y: - bBox.height * 0.5
+            y: bBox.height * 0.25
         });
 
         this.box.set({

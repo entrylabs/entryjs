@@ -14000,7 +14000,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
     this.textElement = this.svgGroup.elem("text", {x:2});
     this.textElement.innerHTML = this.getTextByValue(this.getValue());
     var d = this.textElement.getBBox();
-    this.textElement.attr({style:"white-space: pre; font-size:" + c._FONT_SIZE + "px", y:.5 * -d.height});
+    this.textElement.attr({style:"white-space: pre; font-size:" + c._FONT_SIZE + "px", y:.25 * d.height});
     var d = this.textElement.getComputedTextLength() + 18, e = this._CONTENT_HEIGHT;
     this._header = this.svgGroup.elem("rect", {width:d, height:e, y:-e / 2, rx:c._ROUND, ry:c._ROUND, fill:"#fff", "fill-opacity":.4});
     this.svgGroup.appendChild(this.textElement);
@@ -14037,10 +14037,10 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
       k.innerHTML = k;
       e = Math.max(k.getComputedTextLength() + 50, e);
       (function(c, d) {
-        c.mousedown = function(a) {
+        c.onmousedown = function(a) {
           a.stopPropagation();
         };
-        c.mouseup = function() {
+        c.onmouseup = function() {
           a.applyValue(d);
           a.destroyOption();
         };
@@ -14568,7 +14568,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldText);
     a = this.textElement.getBBox();
     var c = 0;
     "center" == this._align && (c = -a.width / 2);
-    this.textElement.attr({x:c, y:.5 * -a.height});
+    this.textElement.attr({x:c, y:.25 * a.height});
     this.box.set({x:0, y:0, width:this.textElement.getComputedTextLength(), height:a.height});
   };
 })(Entry.FieldText.prototype);
