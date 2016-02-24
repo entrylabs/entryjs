@@ -23,9 +23,6 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
     if (dom.prop("tagName") !== "DIV")
         return console.error("Dom is not div element");
 
-    if (typeof window.SVG !== "function")
-        return console.error("svg.js library is required");
-
     this.view = dom;
 
     this._categoryCodes = null;
@@ -39,15 +36,14 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
     this._splitters = [];
     this.setWidth();
 
+    this.svg = Entry.SVG(this._svgId);
 
-    this.svg = SVG(this._svgId);
+    this.svgGroup = this.svg.elem("g");
 
-    this.svgGroup = this.svg.group();
-
-    this.svgThreadGroup = this.svgGroup.group();
+    this.svgThreadGroup = this.svgGroup.elem("g");
     this.svgThreadGroup.board = this;
 
-    this.svgBlockGroup = this.svgGroup.group();
+    this.svgBlockGroup = this.svgGroup.elem("g");
     this.svgBlockGroup.board = this;
 
 
@@ -111,7 +107,7 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
             if (!Entry.playground || Entry.playground.resizing) return;
             var hPadding = that._align == 'LEFT' ? 10 : that.svgDom.width()/2;
             Entry.playground.focusBlockMenu = true;
-            var expandWidth = that.svgGroup.bbox().width + hPadding + 64;
+            var expandWidth = that.svgGroup.getBBox().width + hPadding + 64;
             if (expandWidth > Entry.interfaceState.menuWidth) {
                 this.widthBackup = Entry.interfaceState.menuWidth - 64;
                 $(this).stop().animate({
@@ -154,8 +150,8 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
         this.svgThreadGroup.remove();
         this.svgBlockGroup = codeView.svgBlockGroup;
         this.svgThreadGroup = codeView.svgThreadGroup;
-        this.svgGroup.add(this.svgThreadGroup);
-        this.svgGroup.add(this.svgBlockGroup);
+        this.svgGroup.appendChild(this.svgThreadGroup);
+        this.svgGroup.appendChild(this.svgBlockGroup);
     };
 
     p.align = function() {
@@ -298,8 +294,13 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
         var width = this._svgWidth;
         var hPadding = 10;
         var svgBlockGroup = this.svgBlockGroup;
-        var line = svgBlockGroup.line(hPadding, topPos, width-hPadding, topPos);
-        line.attr({'stroke' : '#b5b5b5'});
+        var line = svgBlockGroup.elem("line", {
+            x1: hPadding,
+            y1: topPos,
+            x2: width-hPadding,
+            y2: topPos,
+            stroke : '#b5b5b5'
+        });
         this._splitters.push(line);
     };
 

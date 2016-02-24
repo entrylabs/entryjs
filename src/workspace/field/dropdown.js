@@ -41,49 +41,50 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
         var contents = this._contents;
 
 
-        this.svgGroup = blockView.contentSvgGroup.group();
+        this.svgGroup = blockView.contentSvgGroup.elem("g");
         this.svgGroup.attr({
             class: 'entry-field-dropdown'
         });
 
         this.textElement =
-            this.svgGroup.text(
-                this.getTextByValue(this.getValue())
-            ).move(2, 0);
+            this.svgGroup.elem("text", {
+                x: 2
+            });
+        this.textElement.innerHTML = this.getTextByValue(this.getValue());
 
-        var bBox = this.textElement.bbox();
+        var bBox = this.textElement.getBBox();
         this.textElement.attr({
             'style': 'white-space: pre; font-size:' + that._FONT_SIZE + 'px',
             'y': - bBox.height * 0.5
         });
 
         var width =
-            this.textElement.node.getComputedTextLength() + X_PADDING;
+            this.textElement.getComputedTextLength() + X_PADDING;
 
         var CONTENT_HEIGHT = this._CONTENT_HEIGHT;
 
-        this._header = this.svgGroup
-            .rect(width, CONTENT_HEIGHT)
-            .move(0, -CONTENT_HEIGHT/2)
-            .radius(that._ROUND)
-            .attr({
-                fill: "#fff",
-                'fill-opacity': 0.4
-            });
+        this._header = this.svgGroup.elem("rect", {
+            width: width,
+            height: CONTENT_HEIGHT,
+            y: -CONTENT_HEIGHT/2,
+            rx: that._ROUND,
+            ry: that._ROUND,
+            fill: "#fff",
+            'fill-opacity': 0.4
+        })
 
-        this.svgGroup.add(this.textElement);
+        this.svgGroup.appendChild(this.textElement);
 
-        this._arrow = this.svgGroup.polygon(
-            0, -2, 6, -2, 3, 2).
-            attr({
-                fill: blockView._schema.color,
-                stroke: blockView._schema.color,
-                transform: "translate("+ (width-11) + ",0)",
-            });
-
-        this.svgGroup.mouseup(function(e) {
-            if (that._isEditable()) that.renderOptions();
+        this._arrow = this.svgGroup.elem("polygon",{
+            points: "0,-2 6,-2 3,2",
+            fill: blockView._schema.color,
+            stroke: blockView._schema.color,
+            transform: "translate("+ (width-11) + ",0)"
         });
+
+        this.svgGroup.mouseup = function(e) {
+            if (that._isEditable()) that.renderOptions();
+        };
 
         this.box.set({
             x: 0,
@@ -95,7 +96,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
 
     p.resize = function() {
         var width =
-            this.textElement.node.getComputedTextLength() + X_PADDING;
+            this.textElement.getComputedTextLength() + X_PADDING;
 
         this._header.attr({
             width: width
@@ -122,7 +123,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
             }
         );
 
-        this.optionGroup = this.appendSvgOptionGroup();
+        this.optionGroup = this.appendSvgOptionelem("g");
 
         var matrix = blockView.svgGroup.transform().globalMatrix;
         var x = matrix.e;
@@ -135,48 +136,53 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
         var maxWidth = 0;
 
         var CONTENT_HEIGHT = 23;
-        resizeList.push(this.optionGroup
-            .rect(0, CONTENT_HEIGHT * options.length)
-            .attr({fill:'white'})
-        );
+        resizeList.push(this.optionGroup.elem("rect" , {
+            height: CONTENT_HEIGHT * options.length,
+            fill:'white'
+        }));
 
         for (var i=0, len=options.length; i<len; i++) {
             var option = options[i];
             var text = option[0];
             var value = option[1];
-            var element = this.optionGroup.group().attr({
+            var element = this.optionGroup.elem("g", {
                 class: 'rect',
                 transform: "translate(0," + i * CONTENT_HEIGHT + ")"
             });
 
-            resizeList.push(element.rect(
-                0, CONTENT_HEIGHT
-            ));
+            resizeList.push(element.elem("rect", {
+                 height: CONTENT_HEIGHT
+            }));
 
 
             if (this.getValue() == value) {
-                element.text(
-                    '\u2713'
-                ).move(5, 13).attr({"alignment-baseline": "central"});
-            }
+                element.elem("text", {
+                    x: 5,
+                    y: 13,
+                    "alignment-baseline": "central"
+                }).innerHTML = '\u2713';
+            };
 
-            var text = element.text(
-                text
-            ).move(20, 13).attr({"alignment-baseline": "central"});
+            var text = element.elem("text", {
+                x: 20,
+                y: 13,
+                "alignment-baseline": "central"
+            });
+            text.innerHTML = text;
 
             maxWidth = Math.max(
-                text.node.getComputedTextLength() + OPTION_X_PADDING,
+                text.getComputedTextLength() + OPTION_X_PADDING,
                 maxWidth
             );
 
             (function(elem, value) {
                 //prevent propagation to document
-                elem.mousedown(function(e){e.stopPropagation();});
+                elem.mousedown = function(e){e.stopPropagation();};
 
-                elem.mouseup(function(){
+                elem.mouseup = function(){
                     that.applyValue(value);
                     that.destroyOption();
-                });
+                };
             })(element, value);
         }
 
@@ -198,7 +204,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
     p.applyValue = function(value) {
         if (this.value == value) return;
         this.setValue(value);
-        this.textElement.node.textContent = this.getTextByValue(value);
+        this.textElement.textContent = this.getTextByValue(value);
         this.resize();
     };
 

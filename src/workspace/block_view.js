@@ -13,7 +13,7 @@ Entry.BlockView = function(block, board, mode) {
     this.block = block;
     this._board = board;
     this.set(block);
-    this.svgGroup = board.svgBlockGroup.group();
+    this.svgGroup = board.svgBlockGroup.elem("g");
 
     this._schema = Entry.block[block.type];
     var skeleton = this._skeleton = Entry.skeleton[this._schema.skeleton];
@@ -22,7 +22,7 @@ Entry.BlockView = function(block, board, mode) {
 
     if (skeleton.magnets && skeleton.magnets().next) {
         this.svgGroup.nextMagnet = this.block;
-        this._nextGroup = this.svgGroup.group();
+        this._nextGroup = this.svgGroup.elem("g");
         this.observe(this, "_updateMagnet", ["contentHeight"]);
     }
 
@@ -78,15 +78,18 @@ Entry.BlockView.PARAM_SPACE = 5;
 
         var path = this._skeleton.path(this);
 
-        this._darkenPath = this.svgGroup.path(path);
-        this._darkenPath.attr({
+        this._darkenPath = this.svgGroup.elem("path", {
+            d: path,
             transform: "translate(0, 1)",
             fill: Entry.Utils.colorDarken(this._schema.color, 0.7),
             class: 'blockPathDarken'
         });
 
-        this._path = this.svgGroup.path(path);
-        var pathStyle = {fill: this._schema.color};
+        this._path = this.svgGroup.elem("path");
+        var pathStyle = {
+            d: path,
+            fill: this._schema.color
+        };
         if (this._skeleton.outerLine) {
             pathStyle.strokeWidth = "0.5";
             pathStyle.stroke = Entry.Utils.colorDarken(this._schema.color, 0.8);
@@ -111,9 +114,9 @@ Entry.BlockView.PARAM_SPACE = 5;
             this.statementSvgGroup.remove();
         this._contents = [];
 
-        this.contentSvgGroup = this.svgGroup.group();
+        this.contentSvgGroup = this.svgGroup.elem("g");
         if (schema.statements && schema.statements.length)
-            this.statementSvgGroup = this.svgGroup.group();
+            this.statementSvgGroup = this.svgGroup.elem("g");
         switch (mode) {
             case Entry.Workspace.MODE_BOARD:
             case Entry.Workspace.MODE_OVERLAYBOARD:
@@ -181,10 +184,9 @@ Entry.BlockView.PARAM_SPACE = 5;
         });
 
         var contentPos = this.getContentPos();
-        this.contentSvgGroup.transform({
-            x: contentPos.x,
-            y: contentPos.y
-        });
+        this.contentSvgGroup.attr("transform",
+            "translate(" + contentPos.x + "," + contentPos.y + ")"
+        );
         this._render();
     };
 
@@ -229,18 +231,23 @@ Entry.BlockView.PARAM_SPACE = 5;
 
     p._setPosition = function(animate) {
         animate = animate === undefined ? true : animate;
-        this.svgGroup.stop();
+        //this.svgGroup.stop();
+        var transform = "translate(" +
+            (this.x) + "," +
+            (this.y) + ")";
         if (animate && Entry.ANIMATION_DURATION !== 0) {
-            var transform = "translate(" +
-                (this.x) + "," +
-                (this.y) + ")";
+            this.svgGroup.attr(
+                "transform", transform
+            );
+            /*
             this.svgGroup.animate({
                 transform: transform
             }, Entry.ANIMATION_DURATION, mina.easeinout);
+            */
         } else {
-            $(this.svgGroup.node).attr({
-                 transform: 'translate(' + this.x + ' ' + this.y + ')'
-            });
+            this.svgGroup.attr(
+                "transform", transform
+            );
         }
     };
 
@@ -248,14 +255,14 @@ Entry.BlockView.PARAM_SPACE = 5;
        // var parentMatrix = parentSvgGroup.transform().globalMatrix;
         //var matrix = this.svgGroup.transform().globalMatrix;
         this._moveTo(0, 0, false);
-        parentSvgGroup.add(this.svgGroup);
+        parentSvgGroup.appendChild(this.svgGroup);
         this._moveTo(0, 0, false);
     };
 
     p._toGlobalCoordinate = function() {
         //var matrix = this.svgGroup.transform().globalMatrix;
         this._moveTo(0, 0, false);
-        this.getBoard().svgBlockGroup.add(this.svgGroup);
+        this.getBoard().svgBlockGroup.appendChild(this.svgGroup);
     };
 
     p._moveTo = function(x, y, animate) {
@@ -272,11 +279,11 @@ Entry.BlockView.PARAM_SPACE = 5;
     };
 
     p._addControl = function() {
-        this.svgGroup.mousedown(this.mouseHandler);
+        this.svgGroup.onmousedown = this.mouseHandler;
     };
 
     p.removeControl = function() {
-        this.svgGroup.off('mousedown');
+        //this.svgGroup.off('mousedown');
     };
 
     p.onMouseDown = function(e) {
@@ -648,7 +655,9 @@ Entry.BlockView.PARAM_SPACE = 5;
     p._updateMagnet = function() {
         var magnet = this._skeleton.magnets(this);
         this.nextY = magnet.next.y;
-        this._nextGroup.transform("translate(" + magnet.next.x + ',' + magnet.next.y + ")");
+        this._nextGroup.attr(
+            "transform", "translate(" + magnet.next.x + ',' + magnet.next.y + ")"
+        );
     };
 
     p._updateBG = function() {

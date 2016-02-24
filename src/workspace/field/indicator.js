@@ -5,6 +5,7 @@
 goog.provide("Entry.FieldIndicator");
 
 goog.require("Entry.Field");
+goog.require("Entry.SVG");
 /*
  *
  */
@@ -33,20 +34,20 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldIndicator);
 
 (function(p) {
     p.renderStart = function() {
-        this.svgGroup = this._block.contentSvgGroup.group();
-        this._imgElement = this.svgGroup.image(
-            this._imgUrl,
-            this._size * 2,
-            this._size * 2
-        ).move(
-            this._position ? this._size * -1 : 0,
-            this._size * -1
-        );
+        this.svgGroup = this._block.contentSvgGroup.elem("g");
+
+        this._imgElement = this.svgGroup.elem("image", {
+            href: this._imgUrl,
+            x: this._position ? this._size * -1 : 0,
+            y: this._size * -1,
+            width: this._size * 2,
+            height: this._size * 2
+        });
 
         var path = "m 0,-%s a %s,%s 0 1,1 -0.1,0 z"
             .replace(/%s/gi, this._size);
-        this._path = this.svgGroup.path(path);
-        this._path.attr({
+        this._path = this.svgGroup.elem("path", {
+            d: path,
             stroke: "none",
             fill: "none"
         });

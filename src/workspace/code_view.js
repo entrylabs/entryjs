@@ -15,14 +15,14 @@ Entry.CodeView = function(code, board) {
     this.set({board: board});
 
 
-    this.svgThreadGroup = board.svgGroup.group();
+    this.svgThreadGroup = board.svgGroup.elem("g");
     this.svgThreadGroup.attr({
         class: 'svgThreadGroup'
     });
 
     this.svgThreadGroup.board = board;
 
-    this.svgBlockGroup = board.svgGroup.group();
+    this.svgBlockGroup = board.svgGroup.elem("g");
     this.svgBlockGroup.attr({
         class: 'svgBlockGroup'
     });

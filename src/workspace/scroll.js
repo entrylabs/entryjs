@@ -39,13 +39,20 @@ Entry.Scroller.RADIUS = 7;
         var r = Entry.Scroller.RADIUS;
         var scroller = this;
 
-        this.svgGroup = this.board.svg.group()
+        this.svgGroup = this.board.svg.elem("g")
                             .attr({class: "boardScrollbar"});
 
 
         if (this._horizontal) {
-            this.hScrollbar = this.svgGroup.rect(0, 0, 0, 2 * r, r);
-            this.hScrollbar.mousedown(function(e) {
+            this.hScrollbar = this.svgGroup.elem(
+                "rect",
+                {
+                    height: 2 * r,
+                    rx: r,
+                    ry: r
+                }
+            );
+            this.hScrollbar.mousedown = function(e) {
                 if (e.button === 0 || e instanceof Touch) {
                     if (Entry.documentMousedown)
                         Entry.documentMousedown.notify(e);
@@ -85,12 +92,19 @@ Entry.Scroller.RADIUS = 7;
                     delete scroller.dragInstance;
                 }
                 e.stopPropagation();
-            });
+            };
         }
 
         if (this._vertical) {
-            this.vScrollbar = this.svgGroup.rect(0, 0, 2 * r, 0, r);
-            this.vScrollbar.mousedown(function(e) {
+            this.vScrollbar = this.svgGroup.elem(
+                "rect",
+                {
+                    width: 2 * r,
+                    rx: r,
+                    ry: r
+                }
+            );
+            this.vScrollbar.mousedown = function(e) {
                 if (e.button === 0 || e instanceof Touch) {
                     if (Entry.documentMousedown)
                         Entry.documentMousedown.notify(e);
@@ -130,7 +144,7 @@ Entry.Scroller.RADIUS = 7;
                     delete scroller.dragInstance;
                 }
                 e.stopPropagation();
-            });
+            };
         }
 
         this.resizeScrollBar();
@@ -140,7 +154,7 @@ Entry.Scroller.RADIUS = 7;
         if (!this._visible) return;
 
         var board = this.board,
-            bRect = board.svgBlockGroup.node.getBoundingClientRect(),
+            bRect = board.svgBlockGroup.getBoundingClientRect(),
             svgDom = board.svgDom,
             bWidth = svgDom.width(),
             bHeight = svgDom.height(),
@@ -207,7 +221,7 @@ Entry.Scroller.RADIUS = 7;
     };
 
     p.scroll = function(x, y) {
-        var clientRect = this.board.svgBlockGroup.node.getBoundingClientRect(),
+        var clientRect = this.board.svgBlockGroup.getBoundingClientRect(),
             svgDom = this.board.svgDom,
             bBox = {
                 x: clientRect.left - this.board.offset.left,

@@ -5456,6 +5456,40 @@ Entry.Dom = function(a, b) {
   };
   return d;
 };
+Entry.SVG = function(a) {
+  a = document.getElementById(a);
+  return Entry.SVG.createElement(a);
+};
+Entry.SVG.NS = "http://www.w3.org/2000/svg";
+Entry.SVG.NS_XLINK = "http://www.w3.org/1999/xlink";
+Entry.SVG.createElement = function(a, b) {
+  var c;
+  c = "string" === typeof a ? document.createElementNS(Entry.SVG.NS, a) : a;
+  if (b) {
+    b.href && (c.setAttributeNS(Entry.SVG.NS_XLINK, "href", b.href), delete b.href);
+    for (var d in b) {
+      c.setAttribute(d, b[d]);
+    }
+  }
+  this instanceof SVGElement && this.appendChild(c);
+  c.elem = Entry.SVG.createElement;
+  c.attr = Entry.SVG.attr;
+  return c;
+};
+Entry.SVG.attr = function(a, b) {
+  if ("string" === typeof a) {
+    var c = {};
+    c[a] = b;
+    a = c;
+  }
+  if (a) {
+    a.href && (this.setAttributeNS(Entry.SVG.NS_XLINK, "href", a.href), delete a.href);
+    for (var d in a) {
+      this.setAttribute(d, a[d]);
+    }
+  }
+  return this;
+};
 Entry.Dialog = function(a, b, c, d) {
   a.dialog && a.dialog.remove();
   a.dialog = this;
@@ -6445,7 +6479,11 @@ Entry.EntryObject = function(a) {
     this.text = a.text || this.name;
     this.objectType = a.objectType;
     this.objectType || (this.objectType = "sprite");
-    a.script = [[{type:"when_run_button_click", x:40, y:240}, {type:"move_direction"}, {type:"stop_repeat"}]];
+    a.script = [[{type:"when_run_button_click", x:40, y:240}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, 
+    {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, 
+    {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, 
+    {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, 
+    {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}]];
     this.script = new Entry.Code(a.script ? a.script : []);
     this.pictures = a.sprite.pictures;
     this.sounds = [];
@@ -12825,9 +12863,6 @@ Entry.BlockMenu = function(a, b, c, d) {
   if ("DIV" !== a.prop("tagName")) {
     return console.error("Dom is not div element");
   }
-  if ("function" !== typeof window.SVG) {
-    return console.error("svg.js library is required");
-  }
   this.view = a;
   this._categoryCodes = null;
   this._categoryElems = {};
@@ -12838,11 +12873,11 @@ Entry.BlockMenu = function(a, b, c, d) {
   this.offset = this.svgDom.offset();
   this._splitters = [];
   this.setWidth();
-  this.svg = SVG(this._svgId);
-  this.svgGroup = this.svg.group();
-  this.svgThreadGroup = this.svgGroup.group();
+  this.svg = Entry.SVG(this._svgId);
+  this.svgGroup = this.svg.elem("g");
+  this.svgThreadGroup = this.svgGroup.elem("g");
   this.svgThreadGroup.board = this;
-  this.svgBlockGroup = this.svgGroup.group();
+  this.svgBlockGroup = this.svgGroup.elem("g");
   this.svgBlockGroup.board = this;
   this.changeEvent = new Entry.Event(this);
   c && this._generateCategoryCodes(c);
@@ -12867,7 +12902,7 @@ Entry.BlockMenu = function(a, b, c, d) {
     this.blockMenuContainer = Entry.Dom("div", {"class":"blockMenuContainer", parent:a});
     this.svgDom = Entry.Dom($('<svg id="' + this._svgId + '" class="blockMenu" version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'), {parent:this.blockMenuContainer});
     this.svgDom.mouseenter(function(b) {
-      Entry.playground && !Entry.playground.resizing && (b = "LEFT" == d._align ? 10 : d.svgDom.width() / 2, Entry.playground.focusBlockMenu = !0, b = d.svgGroup.bbox().width + b + 64, b > Entry.interfaceState.menuWidth && (this.widthBackup = Entry.interfaceState.menuWidth - 64, $(this).stop().animate({width:b - 64}, 200)));
+      Entry.playground && !Entry.playground.resizing && (b = "LEFT" == d._align ? 10 : d.svgDom.width() / 2, Entry.playground.focusBlockMenu = !0, b = d.svgGroup.getBBox().width + b + 64, b > Entry.interfaceState.menuWidth && (this.widthBackup = Entry.interfaceState.menuWidth - 64, $(this).stop().animate({width:b - 64}, 200)));
     });
     this.svgDom.mouseleave(function(b) {
       Entry.playground && !Entry.playground.resizing && ((b = this.widthBackup) && $(this).stop().animate({width:b}, 200), delete this.widthBackup, delete Entry.playground.focusBlockMenu);
@@ -12891,8 +12926,8 @@ Entry.BlockMenu = function(a, b, c, d) {
     this.svgThreadGroup.remove();
     this.svgBlockGroup = b.svgBlockGroup;
     this.svgThreadGroup = b.svgThreadGroup;
-    this.svgGroup.add(this.svgThreadGroup);
-    this.svgGroup.add(this.svgBlockGroup);
+    this.svgGroup.appendChild(this.svgThreadGroup);
+    this.svgGroup.appendChild(this.svgBlockGroup);
   };
   a.align = function() {
     if (this.code) {
@@ -12955,8 +12990,7 @@ Entry.BlockMenu = function(a, b, c, d) {
     }
   };
   a._createSplitter = function(b) {
-    b = this.svgBlockGroup.line(10, b, this._svgWidth - 10, b);
-    b.attr({stroke:"#b5b5b5"});
+    b = this.svgBlockGroup.elem("line", {x1:10, y1:b, x2:this._svgWidth - 10, y2:b, stroke:"#b5b5b5"});
     this._splitters.push(b);
   };
   a.updateSplitters = function(b) {
@@ -13101,12 +13135,12 @@ Entry.BlockView = function(a, b, c) {
   this.block = a;
   this._board = b;
   this.set(a);
-  this.svgGroup = b.svgBlockGroup.group();
+  this.svgGroup = b.svgBlockGroup.elem("g");
   this._schema = Entry.block[a.type];
   var d = this._skeleton = Entry.skeleton[this._schema.skeleton];
   this._contents = [];
   this._statements = [];
-  d.magnets && d.magnets().next && (this.svgGroup.nextMagnet = this.block, this._nextGroup = this.svgGroup.group(), this.observe(this, "_updateMagnet", ["contentHeight"]));
+  d.magnets && d.magnets().next && (this.svgGroup.nextMagnet = this.block, this._nextGroup = this.svgGroup.elem("g"), this.observe(this, "_updateMagnet", ["contentHeight"]));
   this.isInBlockMenu = this.getBoard() instanceof Entry.BlockMenu;
   d.morph && this.block.observe(this, "_renderPath", d.morph, !1);
   var e = this;
@@ -13133,10 +13167,9 @@ Entry.BlockView.PARAM_SPACE = 5;
   a._startRender = function(b, a) {
     this.svgGroup.attr({class:"block"});
     var d = this._skeleton.path(this);
-    this._darkenPath = this.svgGroup.path(d);
-    this._darkenPath.attr({transform:"translate(0, 1)", fill:Entry.Utils.colorDarken(this._schema.color, .7), class:"blockPathDarken"});
-    this._path = this.svgGroup.path(d);
-    d = {fill:this._schema.color};
+    this._darkenPath = this.svgGroup.elem("path", {d:d, transform:"translate(0, 1)", fill:Entry.Utils.colorDarken(this._schema.color, .7), class:"blockPathDarken"});
+    this._path = this.svgGroup.elem("path");
+    d = {d:d, fill:this._schema.color};
     this._skeleton.outerLine && (d.strokeWidth = "0.5", d.stroke = Entry.Utils.colorDarken(this._schema.color, .8));
     d.class = "blockPath";
     this._path.attr(d);
@@ -13151,8 +13184,8 @@ Entry.BlockView.PARAM_SPACE = 5;
     var a = this._schema;
     a.statements && a.statements.length && this.statementSvgGroup && this.statementSvgGroup.remove();
     this._contents = [];
-    this.contentSvgGroup = this.svgGroup.group();
-    a.statements && a.statements.length && (this.statementSvgGroup = this.svgGroup.group());
+    this.contentSvgGroup = this.svgGroup.elem("g");
+    a.statements && a.statements.length && (this.statementSvgGroup = this.svgGroup.elem("g"));
     switch(b) {
       case Entry.Workspace.MODE_BOARD:
       ;
@@ -13198,7 +13231,7 @@ Entry.BlockView.PARAM_SPACE = 5;
     }
     this.set({contentWidth:a, contentHeight:d});
     b = this.getContentPos();
-    this.contentSvgGroup.transform({x:b.x, y:b.y});
+    this.contentSvgGroup.attr("transform", "translate(" + b.x + "," + b.y + ")");
     this._render();
   };
   a._render = function() {
@@ -13216,18 +13249,16 @@ Entry.BlockView.PARAM_SPACE = 5;
     this.set({animating:!1});
   };
   a._setPosition = function(b) {
-    b = void 0 === b ? !0 : b;
-    this.svgGroup.stop();
-    b && 0 !== Entry.ANIMATION_DURATION ? this.svgGroup.animate({transform:"translate(" + this.x + "," + this.y + ")"}, Entry.ANIMATION_DURATION, mina.easeinout) : $(this.svgGroup.node).attr({transform:"translate(" + this.x + " " + this.y + ")"});
+    this.svgGroup.attr("transform", "translate(" + this.x + "," + this.y + ")");
   };
   a._toLocalCoordinate = function(b) {
     this._moveTo(0, 0, !1);
-    b.add(this.svgGroup);
+    b.appendChild(this.svgGroup);
     this._moveTo(0, 0, !1);
   };
   a._toGlobalCoordinate = function() {
     this._moveTo(0, 0, !1);
-    this.getBoard().svgBlockGroup.add(this.svgGroup);
+    this.getBoard().svgBlockGroup.appendChild(this.svgGroup);
   };
   a._moveTo = function(b, a, d) {
     this.set({x:b, y:a});
@@ -13237,10 +13268,9 @@ Entry.BlockView.PARAM_SPACE = 5;
     return this._moveTo(this.x + b, this.y + a, d);
   };
   a._addControl = function() {
-    this.svgGroup.mousedown(this.mouseHandler);
+    this.svgGroup.onmousedown = this.mouseHandler;
   };
   a.removeControl = function() {
-    this.svgGroup.off("mousedown");
   };
   a.onMouseDown = function(b) {
     function c(b) {
@@ -13404,7 +13434,7 @@ Entry.BlockView.PARAM_SPACE = 5;
   a._updateMagnet = function() {
     var b = this._skeleton.magnets(this);
     this.nextY = b.next.y;
-    this._nextGroup.transform("translate(" + b.next.x + "," + b.next.y + ")");
+    this._nextGroup.attr("transform", "translate(" + b.next.x + "," + b.next.y + ")");
   };
   a._updateBG = function() {
     if (this._board.dragBlock && this._board.dragBlock.dragInstance) {
@@ -13617,10 +13647,10 @@ Entry.CodeView = function(a, b) {
   Entry.Model(this, !1);
   this.code = a;
   this.set({board:b});
-  this.svgThreadGroup = b.svgGroup.group();
+  this.svgThreadGroup = b.svgGroup.elem("g");
   this.svgThreadGroup.attr({class:"svgThreadGroup"});
   this.svgThreadGroup.board = b;
-  this.svgBlockGroup = b.svgGroup.group();
+  this.svgBlockGroup = b.svgGroup.elem("g");
   this.svgBlockGroup.attr({class:"svgBlockGroup"});
   this.svgBlockGroup.board = b;
   b.bindCodeView(this);
@@ -13965,22 +13995,23 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
 (function(a) {
   a.renderStart = function(a) {
     var c = this;
-    this.svgGroup = a.contentSvgGroup.group();
+    this.svgGroup = a.contentSvgGroup.elem("g");
     this.svgGroup.attr({class:"entry-field-dropdown"});
-    this.textElement = this.svgGroup.text(this.getTextByValue(this.getValue())).move(2, 0);
-    var d = this.textElement.bbox();
+    this.textElement = this.svgGroup.elem("text", {x:2});
+    this.textElement.innerHTML = this.getTextByValue(this.getValue());
+    var d = this.textElement.getBBox();
     this.textElement.attr({style:"white-space: pre; font-size:" + c._FONT_SIZE + "px", y:.5 * -d.height});
-    var d = this.textElement.node.getComputedTextLength() + 18, e = this._CONTENT_HEIGHT;
-    this._header = this.svgGroup.rect(d, e).move(0, -e / 2).radius(c._ROUND).attr({fill:"#fff", "fill-opacity":.4});
-    this.svgGroup.add(this.textElement);
-    this._arrow = this.svgGroup.polygon(0, -2, 6, -2, 3, 2).attr({fill:a._schema.color, stroke:a._schema.color, transform:"translate(" + (d - 11) + ",0)"});
-    this.svgGroup.mouseup(function(a) {
+    var d = this.textElement.getComputedTextLength() + 18, e = this._CONTENT_HEIGHT;
+    this._header = this.svgGroup.elem("rect", {width:d, height:e, y:-e / 2, rx:c._ROUND, ry:c._ROUND, fill:"#fff", "fill-opacity":.4});
+    this.svgGroup.appendChild(this.textElement);
+    this._arrow = this.svgGroup.elem("polygon", {points:"0,-2 6,-2 3,2", fill:a._schema.color, stroke:a._schema.color, transform:"translate(" + (d - 11) + ",0)"});
+    this.svgGroup.mouseup = function(a) {
       c._isEditable() && c.renderOptions();
-    });
+    };
     this.box.set({x:0, y:0, width:d, height:e});
   };
   a.resize = function() {
-    var a = this.textElement.node.getComputedTextLength() + 18;
+    var a = this.textElement.getComputedTextLength() + 18;
     this._header.attr({width:a});
     this._arrow.attr({transform:"translate" + (a - 11) + ",0)"});
     this.box.set({width:a});
@@ -13994,24 +14025,25 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
       Entry.documentMousedown.detach(this.documentDownEvent);
       a.optionGroup.remove();
     });
-    this.optionGroup = this.appendSvgOptionGroup();
+    this.optionGroup = this.appendSvgOptionelem("g");
     c.svgGroup.transform();
     var d = this._contents.options, c = [], e = 0;
-    c.push(this.optionGroup.rect(0, 23 * d.length).attr({fill:"white"}));
+    c.push(this.optionGroup.elem("rect", {height:23 * d.length, fill:"white"}));
     for (var f = 0, g = d.length;f < g;f++) {
-      var h = d[f], k = h[0], h = h[1], l = this.optionGroup.group().attr({class:"rect", transform:"translate(0," + 23 * f + ")"});
-      c.push(l.rect(0, 23));
-      this.getValue() == h && l.text("\u2713").move(5, 13).attr({"alignment-baseline":"central"});
-      k = l.text(k).move(20, 13).attr({"alignment-baseline":"central"});
-      e = Math.max(k.node.getComputedTextLength() + 50, e);
+      var h = d[f], k = h[0], h = h[1], l = this.optionGroup.elem("g", {class:"rect", transform:"translate(0," + 23 * f + ")"});
+      c.push(l.elem("rect", {height:23}));
+      this.getValue() == h && (l.elem("text", {x:5, y:13, "alignment-baseline":"central"}).innerHTML = "\u2713");
+      k = l.elem("text", {x:20, y:13, "alignment-baseline":"central"});
+      k.innerHTML = k;
+      e = Math.max(k.getComputedTextLength() + 50, e);
       (function(c, d) {
-        c.mousedown(function(a) {
+        c.mousedown = function(a) {
           a.stopPropagation();
-        });
-        c.mouseup(function() {
+        };
+        c.mouseup = function() {
           a.applyValue(d);
           a.destroyOption();
-        });
+        };
       })(l, h);
     }
     d = this.getRelativePos();
@@ -14024,7 +14056,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
     });
   };
   a.applyValue = function(a) {
-    this.value != a && (this.setValue(a), this.textElement.node.textContent = this.getTextByValue(a), this.resize());
+    this.value != a && (this.setValue(a), this.textElement.textContent = this.getTextByValue(a), this.resize());
   };
   a.getTextByValue = function(a) {
     for (var c = this._contents.options, d = 0, e = c.length;d < e;d++) {
@@ -14082,11 +14114,10 @@ Entry.FieldIndicator = function(a, b, c) {
 Entry.Utils.inherit(Entry.Field, Entry.FieldIndicator);
 (function(a) {
   a.renderStart = function() {
-    this.svgGroup = this._block.contentSvgGroup.group();
-    this._imgElement = this.svgGroup.image(this._imgUrl, 2 * this._size, 2 * this._size).move(this._position ? -1 * this._size : 0, -1 * this._size);
+    this.svgGroup = this._block.contentSvgGroup.elem("g");
+    this._imgElement = this.svgGroup.elem("image", {href:this._imgUrl, x:this._position ? -1 * this._size : 0, y:-1 * this._size, width:2 * this._size, height:2 * this._size});
     var a = "m 0,-%s a %s,%s 0 1,1 -0.1,0 z".replace(/%s/gi, this._size);
-    this._path = this.svgGroup.path(a);
-    this._path.attr({stroke:"none", fill:"none"});
+    this._path = this.svgGroup.elem("path", {d:a, stroke:"none", fill:"none"});
     this.box.set({width:this._size * this._boxMultiplier + (this._position ? -this._size : 0), height:this._size * this._boxMultiplier});
   };
   a.enableHighlight = function() {
@@ -14304,7 +14335,7 @@ Entry.FieldBlock = function(a, b, c) {
 Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
 (function(a) {
   a.renderStart = function(a) {
-    this.svgGroup = this._blockView.contentSvgGroup.group();
+    this.svgGroup = this._blockView.contentSvgGroup.elem("g");
     this.view = this;
     this._nextGroup = this.svgGroup;
     this.box.set({x:0, y:0, width:0, height:20});
@@ -14388,7 +14419,7 @@ Entry.FieldDummyBlock = function(a, b) {
   this.originBlockView = b;
   this._thread = a._thread;
   this.statementField = a;
-  this.svgGroup = a.svgGroup.group();
+  this.svgGroup = a.svgGroup.elem("g");
   var c = a.acceptType;
   switch(c) {
     case "basic_string_field":
@@ -14530,15 +14561,15 @@ Entry.FieldText = function(a, b, c) {
 Entry.Utils.inherit(Entry.Field, Entry.FieldText);
 (function(a) {
   a.renderStart = function(a) {
-    this.svgGroup = a.contentSvgGroup.group();
+    this.svgGroup = a.contentSvgGroup.elem("g");
     this._text = this._text.replace(/(\r\n|\n|\r)/gm, " ");
-    this.textElement = this.svgGroup.text(this._text);
-    this.textElement.attr({style:"white-space: pre; font-size:" + this._fontSize + "px", "class":"dragNone", fill:this._color});
-    a = this.textElement.bbox();
+    this.textElement = this.svgGroup.elem("text").attr({style:"white-space: pre; font-size:" + this._fontSize + "px", "class":"dragNone", fill:this._color});
+    this.textElement.innerHTML = this._text;
+    a = this.textElement.getBBox();
     var c = 0;
     "center" == this._align && (c = -a.width / 2);
-    this.textElement.move(c, .5 * -a.height);
-    this.box.set({x:0, y:0, width:this.textElement.node.getComputedTextLength(), height:a.height});
+    this.textElement.attr({x:c, y:.5 * -a.height});
+    this.box.set({x:0, y:0, width:this.textElement.getComputedTextLength(), height:a.height});
   };
 })(Entry.FieldText.prototype);
 Entry.FieldTextInput = function(a, b, c) {
@@ -14555,17 +14586,17 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
 (function(a) {
   a.renderStart = function(a) {
     var c = this;
-    this.svgGroup = a.contentSvgGroup.group();
+    this.svgGroup = a.contentSvgGroup.elem("g");
     this.svgGroup.attr({class:"entry-input-field"});
-    this.textElement = this.svgGroup.text(this.truncate()).move(4, 4);
-    this.textElement.attr({"font-size":"9pt"});
+    this.textElement = this.svgGroup.elem("text", {x:4, y:4, "font-size":"9pt"});
+    this.textElement.innerHTML = this.truncate();
     a = this.getTextWidth();
-    var d = this.position && this.position.y ? this.position.y : 0, d = d - 8;
-    this._header = this.svgGroup.rect(a, 16).move(0, d).radius(3).attr({fill:"#fff", "fill-opacity":.4});
-    this.svgGroup.add(this.textElement);
-    this.svgGroup.mouseup(function(a) {
+    var d = this.position && this.position.y ? this.position.y : 0;
+    this._header = this.svgGroup.elem("rect", {width:a, height:16, y:d - 8, rx:3, ry:3, fill:"#fff", "fill-opacity":.4});
+    this.svgGroup.appendChild(this.textElement);
+    this.svgGroup.onmouseup = function(a) {
       c._isEditable() && c.renderOptions();
-    });
+    };
     this.box.set({x:0, y:0, width:a, height:16});
   };
   a.renderOptions = function() {
@@ -14594,7 +14625,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
   a.applyValue = function(a) {
     a = this.optionGroup.val();
     this.setValue(a);
-    this.textElement.node.textContent = this.truncate();
+    this.textElement.textContent = this.truncate();
     this.resize();
   };
   a.resize = function() {
@@ -14605,7 +14636,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
     this._block.view.alignContent();
   };
   a.getTextWidth = function() {
-    return this.textElement.node.getComputedTextLength() + 8;
+    return this.textElement.getComputedTextLength() + 8;
   };
 })(Entry.FieldTextInput.prototype);
 Entry.GlobalSvg = {};
@@ -14614,15 +14645,7 @@ Entry.GlobalSvg = {};
   a.REMOVE = 1;
   a.RETURN = 2;
   a.createDom = function() {
-    if (!this.svgDom) {
-      if ("function" !== typeof window.SVG) {
-        return console.error("svg.js library is required");
-      }
-      this.svgDom = Entry.Dom($('<svg id="globalSvg" width="200" height="200"version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'), {parent:$("body")});
-      this.svgDom.css({position:"fixed", width:1, height:1, display:"none", overflow:"visible", "z-index":"1111"});
-      this.svg = SVG("globalSvg");
-      this.top = this.left = this.width = 0;
-    }
+    this.svgDom || (this.svgDom = Entry.Dom($('<svg id="globalSvg" width="200" height="200"version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'), {parent:$("body")}), this.svgDom.css({position:"fixed", width:1, height:1, display:"none", overflow:"visible", "z-index":"1111"}), this.svg = Entry.SVG("globalSvg"), this.top = this.left = this.width = 0);
   };
   a.setView = function(a, c) {
     if (a != this._view && !a.block.isReadOnly() && a.movable) {
@@ -14702,17 +14725,14 @@ Entry.RenderView = function(a, b) {
   if ("DIV" !== a.prop("tagName")) {
     return console.error("Dom is not div element");
   }
-  if ("function" !== typeof window.SVG) {
-    return console.error("svg.js library is required");
-  }
   this.view = a;
   this.visible = this.viewOnly = !0;
   this._svgId = "renderView_" + (new Date).getTime();
   this._generateView();
   this.offset = this.svgDom.offset();
   this.setWidth();
-  if (this.svg = SVG(this._svgId)) {
-    this.svgGroup = this.svg.group(), this.svgThreadGroup = this.svgGroup.group(), this.svgThreadGroup.board = this, this.svgBlockGroup = this.svgGroup.group(), this.svgBlockGroup.board = this;
+  if (this.svg = Entry.SVG(this._svgId)) {
+    this.svgGroup = this.svg.elem("g"), this.svgThreadGroup = this.svgGroup.elem("g"), this.svgThreadGroup.board = this, this.svgBlockGroup = this.svgGroup.elem("g"), this.svgBlockGroup.board = this;
   }
 };
 (function(a) {
@@ -14726,7 +14746,7 @@ Entry.RenderView = function(a, b) {
       return console.error("You must inject code instance");
     }
     this.code = a;
-    this.svg || (this.svg = SVG(this._svgId), this.svgGroup = this.svg.group(), this.svgThreadGroup = this.svgGroup.group(), this.svgThreadGroup.board = this, this.svgBlockGroup = this.svgGroup.group(), this.svgBlockGroup.board = this);
+    this.svg || (this.svg = SVG(this._svgId), this.svgGroup = this.svg.elem("g"), this.svgThreadGroup = this.svgGroup.elem("g"), this.svgThreadGroup.board = this, this.svgBlockGroup = this.svgGroup.elem("g"), this.svgBlockGroup.board = this);
     a.createView(this);
     this.align();
   };
@@ -14757,8 +14777,8 @@ Entry.RenderView = function(a, b) {
     this.svgThreadGroup.remove();
     this.svgBlockGroup = a.svgBlockGroup;
     this.svgThreadGroup = a.svgThreadGroup;
-    this.svgGroup.add(this.svgThreadGroup);
-    this.svgGroup.add(this.svgBlockGroup);
+    this.svgGroup.appendChild(this.svgThreadGroup);
+    this.svgGroup.appendChild(this.svgBlockGroup);
   };
 })(Entry.RenderView.prototype);
 Entry.Scroller = function(a, b, c) {
@@ -14776,8 +14796,8 @@ Entry.Scroller.RADIUS = 7;
 (function(a) {
   a.createScrollBar = function() {
     var a = Entry.Scroller.RADIUS, c = this;
-    this.svgGroup = this.board.svg.group().attr({class:"boardScrollbar"});
-    this._horizontal && (this.hScrollbar = this.svgGroup.rect(0, 0, 0, 2 * a, a), this.hScrollbar.mousedown(function(a) {
+    this.svgGroup = this.board.svg.elem("g").attr({class:"boardScrollbar"});
+    this._horizontal && (this.hScrollbar = this.svgGroup.elem("rect", {height:2 * a, rx:a, ry:a}), this.hScrollbar.mousedown = function(a) {
       function b(a) {
         a.stopPropagation();
         a.preventDefault();
@@ -14800,8 +14820,8 @@ Entry.Scroller.RADIUS = 7;
         c.dragInstance = new Entry.DragInstance({startX:a.pageX, startY:a.pageY, offsetX:a.pageX, offsetY:a.pageY});
       }
       a.stopPropagation();
-    }));
-    this._vertical && (this.vScrollbar = this.svgGroup.rect(0, 0, 2 * a, 0, a), this.vScrollbar.mousedown(function(a) {
+    });
+    this._vertical && (this.vScrollbar = this.svgGroup.elem("rect", {width:2 * a, rx:a, ry:a}), this.vScrollbar.mousedown = function(a) {
       function b(a) {
         a.stopPropagation();
         a.preventDefault();
@@ -14824,12 +14844,12 @@ Entry.Scroller.RADIUS = 7;
         c.dragInstance = new Entry.DragInstance({startX:a.pageX, startY:a.pageY, offsetX:a.pageX, offsetY:a.pageY});
       }
       a.stopPropagation();
-    }));
+    });
     this.resizeScrollBar();
   };
   a.resizeScrollBar = function() {
     if (this._visible) {
-      var a = this.board, c = a.svgBlockGroup.node.getBoundingClientRect(), d = a.svgDom, e = d.width(), d = d.height(), f = c.left - a.offset.left, a = c.top - a.offset.top, g = c.width, c = c.height;
+      var a = this.board, c = a.svgBlockGroup.getBoundingClientRect(), d = a.svgDom, e = d.width(), d = d.height(), f = c.left - a.offset.left, a = c.top - a.offset.top, g = c.width, c = c.height;
       if (this._horizontal) {
         var h = -g + Entry.BOARD_PADDING, k = e - Entry.BOARD_PADDING, g = (e + 2 * Entry.Scroller.RADIUS) * g / (k - h + g);
         isNaN(g) && (g = 0);
@@ -14845,7 +14865,7 @@ Entry.Scroller.RADIUS = 7;
     this._vertical && (this.vY += c * this.vRatio, this.vScrollbar.attr({y:this.vY}));
   };
   a.scroll = function(a, c) {
-    var d = this.board.svgBlockGroup.node.getBoundingClientRect(), e = this.board.svgDom, f = d.left - this.board.offset.left, g = d.top - this.board.offset.top, h = d.height;
+    var d = this.board.svgBlockGroup.getBoundingClientRect(), e = this.board.svgDom, f = d.left - this.board.offset.left, g = d.top - this.board.offset.top, h = d.height;
     a = Math.max(-d.width + Entry.BOARD_PADDING - f, a);
     c = Math.max(-h + Entry.BOARD_PADDING - g, c);
     a = Math.min(e.width() - Entry.BOARD_PADDING - f, a);
@@ -15294,7 +15314,7 @@ Entry.Thread = function(a, b) {
 Entry.ThreadView = function(a, b) {
   Entry.Model(this, !1);
   this.thread = a;
-  this.svgGroup = b.svgThreadGroup.group();
+  this.svgGroup = b.svgThreadGroup.elem("group");
 };
 (function(a) {
   a.schema = {scrollX:0, scrollY:0};
@@ -15314,7 +15334,7 @@ Entry.ThreadView = function(a, b) {
 })(Entry.ThreadView.prototype);
 Entry.FieldTrashcan = function(a) {
   this.board = a;
-  this.svgGroup = a.svg.group();
+  this.svgGroup = a.svg.elem("g");
   this.renderStart();
   this.dragBlockObserver = this.dragBlock = null;
   this.isOver = !1;
@@ -15325,8 +15345,8 @@ Entry.FieldTrashcan = function(a) {
 (function(a) {
   a.renderStart = function() {
     var a = Entry.mediaFilePath + "delete_";
-    this.trashcanTop = this.svgGroup.image(a + "cover.png", 0, 0, 60, 20);
-    this.trashcan = this.svgGroup.image(a + "body.png", 0, 20, 60, 60);
+    this.trashcanTop = this.svgGroup.elem("image", {href:a + "cover.png", width:60, height:20});
+    this.trashcanTop = this.svgGroup.elem("image", {href:a + "body.png", y:20, width:60, height:60});
   };
   a.updateDragBlock = function() {
     var a = this.board.dragBlock, c = this.dragBlockObserver;
@@ -15371,9 +15391,6 @@ Entry.Board = function(a) {
   if ("DIV" !== b.prop("tagName")) {
     return console.error("Dom is not div element");
   }
-  if ("function" !== typeof window.SVG) {
-    return console.error("svg.js library is required");
-  }
   Entry.Model(this, !1);
   this.view = b;
   this._svgId = "play" + (new Date).getTime();
@@ -15383,14 +15400,14 @@ Entry.Board = function(a) {
   this.visible = !0;
   $(window).scroll(this.updateOffset);
   Entry.windowResized.attach(this, this.updateOffset);
-  this.svg = SVG(this._svgId);
+  this.svg = Entry.SVG(this._svgId);
   this._blockViews = [];
   this._magnetMap = {};
   this.trashcan = new Entry.FieldTrashcan(this);
-  this.svgGroup = this.svg.group();
-  this.svgThreadGroup = this.svgGroup.group();
+  this.svgGroup = this.svg.elem("g");
+  this.svgThreadGroup = this.svgGroup.elem("g");
   this.svgThreadGroup.board = this;
-  this.svgBlockGroup = this.svgGroup.group();
+  this.svgBlockGroup = this.svgGroup.elem("g");
   this.svgBlockGroup.board = this;
   a.isOverlay && (this.wrapper.addClass("entryOverlayBoard"), this.generateButtons());
   this.updateOffset();
@@ -15414,15 +15431,14 @@ Entry.Board = function(a) {
     });
     a.createView(this);
     this.generateCodeMagnetMap(a);
-    this.changeEvent.notify();
   };
   a.bindCodeView = function(a) {
     this.svgBlockGroup.remove();
     this.svgThreadGroup.remove();
     this.svgBlockGroup = a.svgBlockGroup;
     this.svgThreadGroup = a.svgThreadGroup;
-    this.svgGroup.add(this.svgThreadGroup);
-    this.svgGroup.add(this.svgBlockGroup);
+    this.svgGroup.appendChild(this.svgThreadGroup);
+    this.svgGroup.appendChild(this.svgBlockGroup);
   };
   a.setMagnetedBlock = function(a) {
     if (this.magnetedBlockView) {
@@ -15543,13 +15559,13 @@ Entry.Board = function(a) {
     }
   };
   a.updateOffset = function() {
-    this.offset = this.svg.node.getBoundingClientRect();
+    this.offset = this.svg.getBoundingClientRect();
     var a = $(window), c = a.scrollTop(), a = a.scrollLeft(), d = this.offset;
     this.relativeOffset = {top:d.top - c, left:d.left - a};
     this.btnWrapper && this.btnWrapper.attr({transform:"t" + (d.width / 2 - 65) + " " + (d.height - 200)});
   };
   a.generateButtons = function() {
-    var a = this.svgGroup.group();
+    var a = this.svgGroup.elem("g");
     this.btnWrapper = a;
     a.text(27, 33, Lang.Buttons.save).attr({"class":"entryFunctionButtonText"});
     a.text(102.5, 33, Lang.Buttons.cancel).attr({"class":"entryFunctionButtonText"});

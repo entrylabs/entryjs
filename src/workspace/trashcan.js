@@ -4,7 +4,7 @@ goog.provide("Entry.FieldTrashcan");
 
 Entry.FieldTrashcan = function(board) {
     this.board = board;
-    this.svgGroup = board.svg.group();
+    this.svgGroup = board.svg.elem("g");
 
     this.renderStart();
     this.dragBlock = null;
@@ -22,11 +22,18 @@ Entry.FieldTrashcan = function(board) {
 (function(p) {
     p.renderStart = function() {
         var path = Entry.mediaFilePath + 'delete_';
-        this.trashcanTop = this.svgGroup.image (
-            path + 'cover.png', 0, 0, 60, 20);
+        this.trashcanTop = this.svgGroup.elem("image", {
+            href: path + 'cover.png',
+            width: 60,
+            height: 20
+        });
 
-        this.trashcan = this.svgGroup.image (
-            path + 'body.png', 0, 20, 60, 60);
+        this.trashcanTop = this.svgGroup.elem("image", {
+            href: path + 'body.png',
+            y: 20,
+            width: 60,
+            height: 60
+        });
 
         //var filter = this.svgGroup.filter(Snap.filter.shadow(1,1,2));
         //this.svgGroup.attr({filter: filter});

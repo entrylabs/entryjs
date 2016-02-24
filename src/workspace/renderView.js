@@ -14,9 +14,6 @@ Entry.RenderView = function(dom, align) {
     if (dom.prop("tagName") !== "DIV")
         return console.error("Dom is not div element");
 
-    if (typeof window.SVG !== "function")
-        return console.error("svg.js library is required");
-
     this.view = dom;
     this.viewOnly = true;
 
@@ -28,15 +25,15 @@ Entry.RenderView = function(dom, align) {
     this.setWidth();
 
 
-    this.svg = SVG(this._svgId);
+    this.svg = Entry.SVG(this._svgId);
 
     if (this.svg) {
-        this.svgGroup = this.svg.group();
+        this.svgGroup = this.svg.elem("g");
 
-        this.svgThreadGroup = this.svgGroup.group();
+        this.svgThreadGroup = this.svgGroup.elem("g");
         this.svgThreadGroup.board = this;
 
-        this.svgBlockGroup = this.svgGroup.group();
+        this.svgBlockGroup = this.svgGroup.elem("g");
         this.svgBlockGroup.board = this;
     }
 };
@@ -72,12 +69,12 @@ Entry.RenderView = function(dom, align) {
         this.code = code;
         if (!this.svg) {
             this.svg = SVG(this._svgId);
-            this.svgGroup = this.svg.group();
+            this.svgGroup = this.svg.elem("g");
 
-            this.svgThreadGroup = this.svgGroup.group();
+            this.svgThreadGroup = this.svgGroup.elem("g");
             this.svgThreadGroup.board = this;
 
-            this.svgBlockGroup = this.svgGroup.group();
+            this.svgBlockGroup = this.svgGroup.elem("g");
             this.svgBlockGroup.board = this;
         }
 
@@ -120,8 +117,8 @@ Entry.RenderView = function(dom, align) {
         this.svgThreadGroup.remove();
         this.svgBlockGroup = codeView.svgBlockGroup;
         this.svgThreadGroup = codeView.svgThreadGroup;
-        this.svgGroup.add(this.svgThreadGroup);
-        this.svgGroup.add(this.svgBlockGroup);
+        this.svgGroup.appendChild(this.svgThreadGroup);
+        this.svgGroup.appendChild(this.svgBlockGroup);
     };
 
 })(Entry.RenderView.prototype);

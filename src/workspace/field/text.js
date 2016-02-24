@@ -33,26 +33,29 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldText);
     p.renderStart = function(blockView) {
         var that = this;
 
-        this.svgGroup = blockView.contentSvgGroup.group();
+        this.svgGroup = blockView.contentSvgGroup.elem("g");
 
         this._text = this._text.replace(/(\r\n|\n|\r)/gm," ");
-        this.textElement = this.svgGroup.text(this._text);
-        this.textElement.attr({
+        this.textElement = this.svgGroup.elem("text").attr({
             'style': 'white-space: pre; font-size:' + that._fontSize + 'px',
             "class": "dragNone",
             "fill": that._color
         });
+        this.textElement.innerHTML = this._text;
 
-        var bBox = this.textElement.bbox();
+        var bBox = this.textElement.getBBox();
         var x = 0;
         if (this._align == 'center') x = -bBox.width/2;
 
-        this.textElement.move(x, - bBox.height * 0.5);
+        this.textElement.attr({
+            x: x,
+            y: - bBox.height * 0.5
+        });
 
         this.box.set({
             x: 0,
             y: 0,
-            width: this.textElement.node.getComputedTextLength(),
+            width: this.textElement.getComputedTextLength(),
             height: bBox.height
         });
     };

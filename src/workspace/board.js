@@ -10,6 +10,7 @@ goog.require("Entry.Model");
 goog.require("Entry.Utils");
 goog.require("Entry.FieldTrashcan");
 goog.require("Entry.Scroller");
+goog.require("Entry.SVG");
 
 /*
  *
@@ -24,9 +25,6 @@ Entry.Board = function(option) {
 
     if (dom.prop("tagName") !== "DIV")
         return console.error("Dom is not div element");
-
-    if (typeof window.SVG !== "function")
-        return console.error("svg.js library is required");
 
     Entry.Model(this, false);
 
@@ -50,18 +48,18 @@ Entry.Board = function(option) {
     var that = this;
     $(window).scroll(this.updateOffset);
     Entry.windowResized.attach(this, this.updateOffset);
-    this.svg = SVG(this._svgId);
+    this.svg = Entry.SVG(this._svgId);
 
     this._blockViews = [];
     this._magnetMap = {};
 
     this.trashcan = new Entry.FieldTrashcan(this);
-    this.svgGroup = this.svg.group();
+    this.svgGroup = this.svg.elem("g");
 
-    this.svgThreadGroup = this.svgGroup.group();
+    this.svgThreadGroup = this.svgGroup.elem("g");
     this.svgThreadGroup.board = this;
 
-    this.svgBlockGroup = this.svgGroup.group();
+    this.svgBlockGroup = this.svgGroup.elem("g");
     this.svgBlockGroup.board = this;
 
     if (option.isOverlay) {
@@ -105,7 +103,7 @@ Entry.Board = function(option) {
         );
         code.createView(this);
         this.generateCodeMagnetMap(code);
-        this.changeEvent.notify();
+
     };
 
     p.bindCodeView = function(codeView) {
@@ -113,8 +111,8 @@ Entry.Board = function(option) {
         this.svgThreadGroup.remove();
         this.svgBlockGroup = codeView.svgBlockGroup;
         this.svgThreadGroup = codeView.svgThreadGroup;
-        this.svgGroup.add(this.svgThreadGroup);
-        this.svgGroup.add(this.svgBlockGroup);
+        this.svgGroup.appendChild(this.svgThreadGroup);
+        this.svgGroup.appendChild(this.svgBlockGroup);
     };
 
     p.setMagnetedBlock = function(block) {
@@ -318,7 +316,7 @@ Entry.Board = function(option) {
     };
 
     p.updateOffset = function () {
-        this.offset = this.svg.node.getBoundingClientRect();
+        this.offset = this.svg.getBoundingClientRect();
         var w = $(window),
             scrollTop = w.scrollTop(),
             scrollLeft = w.scrollLeft(),
@@ -339,7 +337,7 @@ Entry.Board = function(option) {
     };
 
     p.generateButtons = function() {
-        var btnWrapper = this.svgGroup.group();
+        var btnWrapper = this.svgGroup.elem("g");
         this.btnWrapper = btnWrapper;
         var saveText = btnWrapper.text(27, 33, Lang.Buttons.save).attr({
             'class': 'entryFunctionButtonText'

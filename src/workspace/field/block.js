@@ -38,7 +38,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
 
 (function(p) {
     p.renderStart = function(board) {
-        this.svgGroup = this._blockView.contentSvgGroup.group();
+        this.svgGroup = this._blockView.contentSvgGroup.elem("g");
         this.view = this;
         this._nextGroup = this.svgGroup;
         this.box.set({
@@ -182,7 +182,7 @@ Entry.FieldDummyBlock = function(statementField, blockView) {
     this._thread = statementField._thread;
     this.statementField = statementField;
 
-    this.svgGroup = statementField.svgGroup.group();
+    this.svgGroup = statementField.svgGroup.elem("g");
 
     var acceptType = statementField.acceptType;
     switch (acceptType) {

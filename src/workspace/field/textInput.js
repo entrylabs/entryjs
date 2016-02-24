@@ -35,33 +35,36 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
         var that = this;
         var contents = this._contents;
 
-        this.svgGroup = blockView.contentSvgGroup.group();
+        this.svgGroup = blockView.contentSvgGroup.elem("g");
         this.svgGroup.attr({
             class: 'entry-input-field'
         });
 
-        this.textElement =
-            this.svgGroup.text(this.truncate())
-                .move(X_PADDING/2, TEXT_Y_PADDING);
-        this.textElement.attr({'font-size' : '9pt'});
+        this.textElement = this.svgGroup.elem("text", {
+            x: X_PADDING/2,
+            y: TEXT_Y_PADDING,
+            'font-size' : '9pt'
+        });
+        this.textElement.innerHTML = this.truncate();
 
         var width = this.getTextWidth();
 
         var y = this.position && this.position.y ? this.position.y : 0;
         y -= CONTENT_HEIGHT/2;
-        this._header = this.svgGroup.rect(width, CONTENT_HEIGHT)
-            .move(0, y)
-            .radius(3)
-            .attr({
-                fill: "#fff",
-                'fill-opacity': 0.4
-            });
-
-        this.svgGroup.add(this.textElement);
-
-        this.svgGroup.mouseup(function(e) {
-            if (that._isEditable()) that.renderOptions();
+        this._header = this.svgGroup.elem("rect", {
+            width: width,
+            height: CONTENT_HEIGHT,
+            y: y,
+            rx: 3, ry: 3,
+            fill: "#fff",
+            'fill-opacity': 0.4
         });
+
+        this.svgGroup.appendChild(this.textElement);
+
+        this.svgGroup.onmouseup = function(e) {
+            if (that._isEditable()) that.renderOptions();
+        };
 
         this.box.set({
             x: 0,
@@ -120,7 +123,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
     p.applyValue = function(event) {
         var value = this.optionGroup.val();
         this.setValue(value);
-        this.textElement.node.textContent = this.truncate();
+        this.textElement.textContent = this.truncate();
         this.resize();
     };
 
@@ -135,7 +138,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
     };
 
     p.getTextWidth = function() {
-         return this.textElement.node.getComputedTextLength() + X_PADDING;
+         return this.textElement.getComputedTextLength() + X_PADDING;
     };
 
 })(Entry.FieldTextInput.prototype);
