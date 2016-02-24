@@ -930,11 +930,11 @@ Entry.Playground.prototype.injectCode = function() {
 
         var metrics = Blockly.mainWorkspace.getMetrics();
 
-        var adjustingX = (metrics.viewWidth * 0.2).toFixed(1); 
-        var adjustingY = (metrics.viewHeight * 0.5).toFixed(1); 
+        var adjustingX = (metrics.viewWidth * 0.1).toFixed(1); 
+        var adjustingY = (metrics.viewHeight * 0.4).toFixed(1); 
 
         if(targetY == veryTopY) 
-            adjustingY = (metrics.viewHeight * 0.2).toFixed(1);
+            adjustingY = (metrics.viewHeight * 0.1).toFixed(1);
 
         var scrollX = targetX - metrics.contentLeft - adjustingX;  
         var scrollY = targetY - metrics.contentTop - adjustingY;

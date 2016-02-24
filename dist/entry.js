@@ -9257,8 +9257,8 @@ Entry.Playground.prototype.injectCode = function() {
     f < c && (varyTopY = f);
   });
   if (null != d) {
-    var a = Number($(d).attr("x")), e = Number($(d).attr("y")), f = Blockly.mainWorkspace.getMetrics(), g = (.2 * f.viewWidth).toFixed(1), h = (.5 * f.viewHeight).toFixed(1);
-    e == c && (h = (.2 * f.viewHeight).toFixed(1));
+    var a = Number($(d).attr("x")), e = Number($(d).attr("y")), f = Blockly.mainWorkspace.getMetrics(), g = (.1 * f.viewWidth).toFixed(1), h = (.4 * f.viewHeight).toFixed(1);
+    e == c && (h = (.1 * f.viewHeight).toFixed(1));
     Blockly.mainWorkspace.scrollbar.set(a - f.contentLeft - g, e - f.contentTop - h);
   }
 };
