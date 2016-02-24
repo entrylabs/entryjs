@@ -102,7 +102,7 @@ Entry.BlockView.PARAM_SPACE = 5;
         this._startContentRender(mode);
         this._addControl();
 
-        this._handlePrev();
+        this._bindPrev();
     };
 
     p._startContentRender = function(mode) {
@@ -388,7 +388,7 @@ Entry.BlockView.PARAM_SPACE = 5;
 
                     if (blockView.dragInstance.height === 0) {
                         var block = blockView.block;
-                        var height = - 1;
+                        var height = - 1 + blockView.height;
                         blockView.dragInstance.set({
                             height: height
                         });
@@ -484,6 +484,7 @@ Entry.BlockView.PARAM_SPACE = 5;
                                 this.set({animating: true});
 
                                 block.doInsert(closeBlock);
+                                this._bindPrev();
                                 createjs.Sound.play('entryMagneting');
                                 Entry.ConnectionRipple
                                     .setView(closeBlock.view)
@@ -674,10 +675,10 @@ Entry.BlockView.PARAM_SPACE = 5;
         var svgGroup = blockView.svgGroup;
         if (magneting) {
             var shadow = this._board.dragBlock.getShadow();
-            $(shadow.node).attr({
+            $(shadow).attr({
                  transform: 'translate(0,' + (this.height + 1) + ')'
             });
-            this.svgGroup.prepend(shadow);
+            this.svgGroup.appendChild(shadow);
             this._clonedShadow = shadow;
 
             if (blockView.background) {
@@ -688,38 +689,11 @@ Entry.BlockView.PARAM_SPACE = 5;
             }
             var height = blockView.height + dragThreadHeight;
 
-            var nextBg = svgGroup.rect(
-                0 - blockView.width/2,
-                blockView.height * 1.5 + 1,
-                blockView.width,
-                Math.max(0, height - blockView.height * 1.5)
-            );
-            nextBg.block = blockView.block.next;
-            blockView.nextBackground = nextBg;
-
-            nextBg.attr({
-                fill: 'transparent'
-            });
-            svgGroup.prepend(nextBg);
-
-            var bg = svgGroup.rect(
-                0 - blockView.width/2,
-                0,
-                blockView.width,
-                height
-            );
-            blockView.background = bg;
-
-            bg.attr({
-                fill: 'transparent'
-            });
-            svgGroup.prepend(bg);
-
             blockView.originalHeight = blockView.height;
             blockView.set({
                 height: height,
-                animating: false
             });
+            this._updateMagnet();
         } else {
             if (this._clonedShadow) {
                 this._clonedShadow.remove();
@@ -739,6 +713,7 @@ Entry.BlockView.PARAM_SPACE = 5;
                 blockView.set({
                     height: height
                 });
+                this._updateMagnet();
                 delete blockView.originalHeight;
             }
 
@@ -834,14 +809,15 @@ Entry.BlockView.PARAM_SPACE = 5;
 
     p.bumpAway = function() {this._moveBy(10, 10, false);};
 
-    p._handlePrev = function() {
+    p._bindPrev = function() {
         var prevBlock = this.block.getPrevBlock();
-        if (!prevBlock)
-            this._toGlobalCoordinate();
-        else {
+        if (prevBlock) {
             var prevBlockView = prevBlock.view;
 
             this._toLocalCoordinate(prevBlockView._nextGroup);
+            var nextBlock = this.block.getNextBlock();
+            nextBlock && nextBlock.view &&
+                nextBlock.view._toLocalCoordinate(this._nextGroup);
         }
     };
 

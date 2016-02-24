@@ -33,11 +33,12 @@ Entry.skeleton.basic = {
             marginBottom: 0
         };
     },
-    magnets: function() {
+    magnets: function(blockView) {
         // apply scale required.
+        var height = blockView ? Math.max(blockView.height, 30) : 30;
         return {
-            previous: {},
-            next: {x: 0, y: 31}
+            previous: {x: 0, y: 0},
+            next: {x: 0, y: height + 1}
         };
     },
     contentPos: function(blockView) {
@@ -64,10 +65,11 @@ Entry.skeleton.basic_event = {
             marginBottom: 0
         };
     },
-    magnets: function() {
+    magnets: function(blockView) {
         // apply scale required.
+        var height = blockView ? Math.max(blockView.height, 30) : 30;
         return {
-            next: {x: 0, y: 31}
+            next: {x: 0, y: height + 1}
         };
     },
     contentPos: function(blockView) {

@@ -6499,11 +6499,7 @@ Entry.EntryObject = function(a) {
     this.text = a.text || this.name;
     this.objectType = a.objectType;
     this.objectType || (this.objectType = "sprite");
-    a.script = [[{type:"when_run_button_click", x:40, y:240}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, 
-    {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, 
-    {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, 
-    {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, 
-    {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}]];
+    a.script = [[{type:"when_run_button_click", x:40, y:240}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}]];
     this.script = new Entry.Code(a.script ? a.script : []);
     this.pictures = a.sprite.pictures;
     this.sounds = [];
@@ -13197,7 +13193,7 @@ Entry.BlockView.PARAM_SPACE = 5;
     this._moveTo(this.x, this.y, !1);
     this._startContentRender(a);
     this._addControl();
-    this._handlePrev();
+    this._bindPrev();
   };
   a._startContentRender = function(b) {
     b = void 0 === b ? Entry.Workspace.MODE_BOARD : b;
@@ -13299,8 +13295,8 @@ Entry.BlockView.PARAM_SPACE = 5;
       var c = e.workspace.getMode();
       c === Entry.Workspace.MODE_VIMBOARD && a.vimBoardEvent(b, "dragOver");
       var d = l.mouseDownCoordinate;
-      l.dragMode != Entry.DRAG_MODE_DRAG && b.pageX === d.x && b.pageY === d.y || !l.movable || (l.isInBlockMenu ? e.cloneToGlobal(b) : (this.animating && this.set({animating:!1}), 0 === l.dragInstance.height && l.dragInstance.set({height:-1}), b.originalEvent.touches && (b = b.originalEvent.touches[0]), d = l.dragInstance, l._moveBy(b.pageX - d.offsetX, b.pageY - d.offsetY, !1), d.set({offsetX:b.pageX, offsetY:b.pageY}), l.dragMode = Entry.DRAG_MODE_DRAG, Entry.GlobalSvg.setView(l, c) || Entry.GlobalSvg.position(), 
-      (b = l._getCloseBlock()) ? (e = b.view.getBoard(), e.setMagnetedBlock(b.view)) : e.setMagnetedBlock(null), l.originPos || (l.originPos = {x:l.x, y:l.y})));
+      l.dragMode != Entry.DRAG_MODE_DRAG && b.pageX === d.x && b.pageY === d.y || !l.movable || (l.isInBlockMenu ? e.cloneToGlobal(b) : (this.animating && this.set({animating:!1}), 0 === l.dragInstance.height && l.dragInstance.set({height:-1 + l.height}), b.originalEvent.touches && (b = b.originalEvent.touches[0]), d = l.dragInstance, l._moveBy(b.pageX - d.offsetX, b.pageY - d.offsetY, !1), d.set({offsetX:b.pageX, offsetY:b.pageY}), l.dragMode = Entry.DRAG_MODE_DRAG, Entry.GlobalSvg.setView(l, c) || 
+      Entry.GlobalSvg.position(), (b = l._getCloseBlock()) ? (e = b.view.getBoard(), e.setMagnetedBlock(b.view)) : e.setMagnetedBlock(null), l.originPos || (l.originPos = {x:l.x, y:l.y})));
     }
     function d(b) {
       Entry.GlobalSvg.remove();
@@ -13371,7 +13367,7 @@ Entry.BlockView.PARAM_SPACE = 5;
             g = this._getCloseBlock();
             if (b || g) {
               if (g) {
-                if (this.set({animating:!0}), e.doInsert(g), createjs.Sound.play("entryMagneting"), Entry.ConnectionRipple.setView(g.view).dispose(), g.constructor == Entry.FieldDummyBlock && (e = e.next)) {
+                if (this.set({animating:!0}), e.doInsert(g), this._bindPrev(), createjs.Sound.play("entryMagneting"), Entry.ConnectionRipple.setView(g.view).dispose(), g.constructor == Entry.FieldDummyBlock && (e = e.next)) {
                   -1 < Entry.FieldDummyBlock.PRIMITIVE_TYPES.indexOf(e.type) ? (e.getThread().cut(e), e.destroy(!1)) : (e.separate(), e.view.bumpAway());
                 }
               } else {
@@ -13460,33 +13456,25 @@ Entry.BlockView.PARAM_SPACE = 5;
   };
   a._updateBG = function() {
     if (this._board.dragBlock && this._board.dragBlock.dragInstance) {
-      var b = this._board.dragBlock.dragInstance.height, a = this, d = a.svgGroup;
+      var b = this._board.dragBlock.dragInstance.height, a = this;
       if (a.magneting) {
-        var e = this._board.dragBlock.getShadow();
-        $(e.node).attr({transform:"translate(0," + (this.height + 1) + ")"});
-        this.svgGroup.prepend(e);
-        this._clonedShadow = e;
+        var d = this._board.dragBlock.getShadow();
+        $(d).attr({transform:"translate(0," + (this.height + 1) + ")"});
+        this.svgGroup.appendChild(d);
+        this._clonedShadow = d;
         a.background && (a.background.remove(), a.nextBackground.remove(), delete a.background, delete a.nextBackground);
         b = a.height + b;
-        e = d.rect(0 - a.width / 2, 1.5 * a.height + 1, a.width, Math.max(0, b - 1.5 * a.height));
-        e.block = a.block.next;
-        a.nextBackground = e;
-        e.attr({fill:"transparent"});
-        d.prepend(e);
-        e = d.rect(0 - a.width / 2, 0, a.width, b);
-        a.background = e;
-        e.attr({fill:"transparent"});
-        d.prepend(e);
         a.originalHeight = a.height;
-        a.set({height:b, animating:!1});
+        a.set({height:b});
+        this._updateMagnet();
       } else {
         if (this._clonedShadow && (this._clonedShadow.remove(), delete this._clonedShadow), b = a.originalHeight) {
           setTimeout(function() {
             a.background && (a.background.remove(), a.nextBackground.remove(), delete a.background, delete a.nextBackground);
-          }, Entry.ANIMATION_DURATION), a.set({height:b}), delete a.originalHeight;
+          }, Entry.ANIMATION_DURATION), a.set({height:b}), this._updateMagnet(), delete a.originalHeight;
         }
       }
-      (d = a.block.thread.changeEvent) && d.notify();
+      (b = a.block.thread.changeEvent) && b.notify();
     }
   };
   a._createEmptyBG = function() {
@@ -13544,9 +13532,9 @@ Entry.BlockView.PARAM_SPACE = 5;
   a.bumpAway = function() {
     this._moveBy(10, 10, !1);
   };
-  a._handlePrev = function() {
+  a._bindPrev = function() {
     var b = this.block.getPrevBlock();
-    b ? this._toLocalCoordinate(b.view._nextGroup) : this._toGlobalCoordinate();
+    b && (this._toLocalCoordinate(b.view._nextGroup), (b = this.block.getNextBlock()) && b.view && b.view._toLocalCoordinate(this._nextGroup));
   };
   a.getAbsoluteCoordinate = function() {
     var b = this.block.getThread().view.requestAbsoluteCoordinate(this);
@@ -13696,20 +13684,14 @@ Entry.CodeView = function(a, b) {
 Entry.ConnectionRipple = {};
 (function(a) {
   a.createDom = function(b) {
-    if (!this.svgDom) {
-      if ("function" !== typeof window.Snap) {
-        return console.error("Snap library is required");
-      }
-      this._ripple = b.svgGroup.circle(0, 0, 0);
-      this._ripple.attr({stroke:"#888", "stroke-width":10});
-    }
+    this.svgDom || (this._ripple = b.svgGroup.elem("cicle", {stroke:"#888", "stroke-width":10}));
   };
   a.setView = function(b) {
     this._ripple || this.createDom(b);
     var a = this._ripple, d = b.svgGroup;
     a.remove();
     a.attr(b.getRipplePosition());
-    d.append(a);
+    d.appendChild(a);
     a._startTime = new Date;
     return this;
   };
@@ -14430,13 +14412,16 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
     this._sizeObserver && this._sizeObserver.destroy();
     this._posObserver && this._posObserver.destroy();
     a = this._setValueBlock(a).view;
-    a._handlePrev();
+    a._bindPrev();
     this._blockView.alignContent();
     this._posObserver = a.observe(this, "_updateValueBlock", ["x", "y"], !1);
     this._sizeObserver = a.observe(this, "calcWH", ["width", "height"]);
   };
   a.getPrevBlock = function(a) {
     return this._valueBlock === a ? this : null;
+  };
+  a.getNextBlock = function() {
+    return null;
   };
   a.requestAbsoluteCoordinate = function(a) {
     a = this._blockView.getAbsoluteCoordinate();
@@ -14922,8 +14907,8 @@ Entry.skeleton.basic = {path:function(a) {
   return "m -8,0 l 8,8 8,-8 h %w a %h,%h 0 0,1 0,%wh h -%w l -8,8 -8,-8 v -%wh z".replace(/%wh/gi, a).replace(/%w/gi, b).replace(/%h/gi, a / 2);
 }, box:function(a) {
   return {offsetX:-8, offsetY:0, width:(a ? a.contentWidth : 150) + 30, height:Math.max(30, (a ? a.contentHeight : 28) + 2), marginBottom:0};
-}, magnets:function() {
-  return {previous:{}, next:{x:0, y:31}};
+}, magnets:function(a) {
+  return {previous:{x:0, y:0}, next:{x:0, y:(a ? Math.max(a.height, 30) : 30) + 1}};
 }, contentPos:function(a) {
   return {x:14, y:Math.max(a.contentHeight, 28) / 2 + 1};
 }};
@@ -14933,8 +14918,8 @@ Entry.skeleton.basic_event = {path:function(a) {
   return "m -8,0 m 0,-5 a 19.5,19.5 0, 0,1 16,0 c 10,5 15,5 20,5 h %w a 15,15 0 0,1 0,30 H 8 l -8,8 -8,-8 l 0,0.5 a 19.5,19.5 0, 0,1 0,-35 z".replace(/%w/gi, a - 30);
 }, box:function(a) {
   return {offsetX:-19, offsetY:-7, width:a.contentWidth + 30, height:30, marginBottom:0};
-}, magnets:function() {
-  return {next:{x:0, y:31}};
+}, magnets:function(a) {
+  return {next:{x:0, y:(a ? Math.max(a.height, 30) : 30) + 1}};
 }, contentPos:function(a) {
   return {x:1, y:15};
 }};
@@ -15612,25 +15597,24 @@ Entry.Board = function(a) {
     a.circle(102.5, 27.5, 27.5).attr({"class":"entryFunctionButton"});
   };
   a.generateCodeMagnetMap = function(a) {
-    var c = (new Date).getTime();
+    (new Date).getTime();
     a = this._getCodeBlocks(a);
     a.sort(function(a, b) {
       return a.point - b.point;
     });
     a.unshift({point:-Number.MAX_VALUE, blocks:[]});
-    for (var d = 1;d < a.length;d++) {
-      var e = a[d], f = e.startBlock;
-      if (f) {
-        for (var g = e.endPoint, h = d;g > e.point;) {
-          e.blocks.push(f), h++, e = a[h];
+    for (var c = 1;c < a.length;c++) {
+      var d = a[c], e = d.startBlock;
+      if (e) {
+        for (var f = d.endPoint, g = c;f > d.point;) {
+          d.blocks.push(e), g++, d = a[g];
         }
-        delete e.startBlock;
+        delete d.startBlock;
       }
-      e.endPoint = Number.MAX_VALUE;
-      a[d - 1].endPoint = e.point;
+      d.endPoint = Number.MAX_VALUE;
+      a[c - 1].endPoint = a[c].point;
     }
     this._magnetMap.nextMagnet = a;
-    console.log((new Date).getTime() - c);
   };
   a._getCodeBlocks = function(a) {
     var c = [], d = this;

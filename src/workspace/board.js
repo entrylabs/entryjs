@@ -384,7 +384,7 @@ Entry.Board = function(option) {
                 delete pointData.startBlock;
             }
             pointData.endPoint = Number.MAX_VALUE;
-            metaData[i - 1].endPoint = pointData.point;
+            metaData[i - 1].endPoint = metaData[i].point;
         }
 
         this._magnetMap.nextMagnet = metaData;
