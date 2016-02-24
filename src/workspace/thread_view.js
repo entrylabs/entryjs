@@ -38,4 +38,16 @@ Entry.ThreadView = function(thread, board) {
             blocks[i].view.renderBlock();
     };
 
+    p.requestAbsoluteCoordinate = function(blockView) {
+        var blocks = this.thread.getBlocks();
+        var block = blocks.shift();
+        var pos = {x: 0, y: 0};
+        while (block.view !== blockView && block.view) {
+            var prevBlockView = block.view;
+            pos.x += prevBlockView.x + prevBlockView.magnet.next.x;
+            pos.y += prevBlockView.y + prevBlockView.magnet.next.y;
+            block = blocks.shift();
+        }
+        return pos;
+    };
 })(Entry.ThreadView.prototype);

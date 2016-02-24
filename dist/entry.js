@@ -13160,6 +13160,7 @@ Entry.BlockView = function(a, b, c) {
   var d = this._skeleton = Entry.skeleton[this._schema.skeleton];
   this._contents = [];
   this._statements = [];
+  this.magnet = {};
   d.magnets && d.magnets().next && (this.svgGroup.nextMagnet = this.block, this._nextGroup = this.svgGroup.elem("g"), this.observe(this, "_updateMagnet", ["contentHeight"]));
   this.isInBlockMenu = this.getBoard() instanceof Entry.BlockMenu;
   d.morph && this.block.observe(this, "_renderPath", d.morph, !1);
@@ -13277,7 +13278,8 @@ Entry.BlockView.PARAM_SPACE = 5;
     this._moveTo(0, 0, !1);
   };
   a._toGlobalCoordinate = function() {
-    this._moveTo(0, 0, !1);
+    var b = this.getAbsoluteCoordinate();
+    this._moveTo(b.x, b.y, !1);
     this.getBoard().svgBlockGroup.appendChild(this.svgGroup);
   };
   a._moveTo = function(b, a, d) {
@@ -13455,6 +13457,7 @@ Entry.BlockView.PARAM_SPACE = 5;
     var b = this._skeleton.magnets(this);
     this.nextY = b.next.y;
     this._nextGroup.attr("transform", "translate(" + b.next.x + "," + b.next.y + ")");
+    this.magnet = b;
   };
   a._updateBG = function() {
     if (this._board.dragBlock && this._board.dragBlock.dragInstance) {
@@ -13545,6 +13548,12 @@ Entry.BlockView.PARAM_SPACE = 5;
   a._handlePrev = function() {
     var b = this.block.getPrevBlock();
     b ? this._toLocalCoordinate(b.view._nextGroup) : this._toGlobalCoordinate();
+  };
+  a.getAbsoluteCoordinate = function() {
+    var b = this.block.getThread().view.requestAbsoluteCoordinate(this);
+    b.x += this.x;
+    b.y += this.y;
+    return b;
   };
 })(Entry.BlockView.prototype);
 Entry.Code = function(a) {
@@ -13856,45 +13865,45 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
     this.box.set({x:0, y:0, width:b, height:16});
   };
   a.renderOptions = function() {
-    var a = this;
+    var b = this;
     this.destroyOption();
     this.documentDownEvent = Entry.documentMousedown.attach(this, function() {
       Entry.documentMousedown.detach(this.documentDownEvent);
-      a.applyValue();
-      a.destroyOption();
+      b.applyValue();
+      b.destroyOption();
     });
     this.optionGroup = Entry.Dom("input", {class:"entry-widget-input-field", parent:$("body")});
     this.optionGroup.val(this.value);
     this.optionGroup.on("mousedown", function(a) {
       a.stopPropagation();
     });
-    this.optionGroup.on("keyup", function(c) {
-      var d = c.keyCode || c.which;
-      a.applyValue(c);
-      -1 < [13, 27].indexOf(d) && a.destroyOption();
+    this.optionGroup.on("keyup", function(a) {
+      var c = a.keyCode || a.which;
+      b.applyValue(a);
+      -1 < [13, 27].indexOf(c) && b.destroyOption();
     });
-    var c = this.getAbsolutePos();
-    c.y -= this.box.height / 2;
-    this.optionGroup.css({height:16, left:c.x, top:c.y, width:a.box.width});
+    var a = this.getAbsolutePos();
+    a.y -= this.box.height / 2;
+    this.optionGroup.css({height:16, left:a.x, top:a.y, width:b.box.width});
     this.optionGroup.select();
     this.svgOptionGroup = this.appendSvgOptionGroup();
     this.svgOptionGroup.circle(0, 0, 49).attr({class:"entry-field-angle-circle"});
     this._dividerGroup = this.svgOptionGroup.group();
-    for (c = 0;360 > c;c += 15) {
-      this._dividerGroup.line(49, 0, 49 - (0 === c % 45 ? 10 : 5), 0).attr({transform:"rotate(" + c + ", 0, 0)", class:"entry-angle-divider"});
+    for (a = 0;360 > a;a += 15) {
+      this._dividerGroup.line(49, 0, 49 - (0 === a % 45 ? 10 : 5), 0).attr({transform:"rotate(" + a + ", 0, 0)", class:"entry-angle-divider"});
     }
-    c = this.getRelativePos();
-    c.x += this.box.width / 2;
-    c.y = c.y + this.box.height / 2 + 49 + 1;
-    this.svgOptionGroup.attr({class:"entry-field-angle", transform:"t" + c.x + " " + c.y});
-    var c = a.getAbsolutePos(), d = [c.x + a.box.width / 2, c.y + a.box.height / 2 + 1];
-    this.svgOptionGroup.mousemove(function(c) {
-      a.optionGroup.val(a.modValue(function(a, b) {
+    a = this.getRelativePos();
+    a.x += this.box.width / 2;
+    a.y = a.y + this.box.height / 2 + 49 + 1;
+    this.svgOptionGroup.attr({class:"entry-field-angle", transform:"t" + a.x + " " + a.y});
+    var a = b.getAbsolutePos(), d = [a.x + b.box.width / 2, a.y + b.box.height / 2 + 1];
+    this.svgOptionGroup.mousemove(function(a) {
+      b.optionGroup.val(b.modValue(function(a, b) {
         var c = b[0] - a[0], d = b[1] - a[1] - 49 - 1, e = Math.atan(-d / c), e = Entry.toDegrees(e), e = 90 - e;
         0 > c ? e += 180 : 0 < d && (e += 360);
         return 15 * Math.round(e / 15);
-      }(d, [c.clientX, c.clientY])));
-      a.applyValue();
+      }(d, [a.clientX, a.clientY])));
+      b.applyValue();
     });
     this.updateGraph();
   };
@@ -14365,8 +14374,9 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
     this._position && (this._position.x && (a = this._position.x), this._position.y && (c = this._position.y));
     var f = this._valueBlock;
     f && (c = -.5 * f.view.height);
-    a = "translate(" + a + "," + c + ")";
-    void 0 === d || d ? e.animate({transform:a}, 300, mina.easeinout) : e.attr({transform:a});
+    f = "translate(" + a + "," + c + ")";
+    void 0 === d || d ? e.animate({transform:f}, 300, mina.easeinout) : e.attr({transform:f});
+    this.box.set({x:a, y:c});
   };
   a.calcWH = function() {
     var a = this._valueBlock;
@@ -14428,6 +14438,12 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
   };
   a.getPrevBlock = function(a) {
     return this._valueBlock === a ? this : null;
+  };
+  a.requestAbsoluteCoordinate = function(a) {
+    a = this._blockView.getAbsoluteCoordinate();
+    a.x += this.box.x;
+    a.y += this.box.y;
+    return a;
   };
 })(Entry.FieldBlock.prototype);
 Entry.FieldDummyBlock = function(a, b) {
@@ -15347,6 +15363,12 @@ Entry.ThreadView = function(a, b) {
     for (var a = this.thread.getBlocks(), c = 0;c < a.length;c++) {
       a[c].view.renderBlock();
     }
+  };
+  a.requestAbsoluteCoordinate = function(a) {
+    for (var c = this.thread.getBlocks(), d = c.shift(), e = {x:0, y:0};d.view !== a && d.view;) {
+      d = d.view, e.x += d.x + d.magnet.next.x, e.y += d.y + d.magnet.next.y, d = c.shift();
+    }
+    return e;
   };
 })(Entry.ThreadView.prototype);
 Entry.FieldTrashcan = function(a) {

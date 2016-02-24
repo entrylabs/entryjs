@@ -19,6 +19,7 @@ Entry.BlockView = function(block, board, mode) {
     var skeleton = this._skeleton = Entry.skeleton[this._schema.skeleton];
     this._contents = [];
     this._statements = [];
+    this.magnet = {};
 
     if (skeleton.magnets && skeleton.magnets().next) {
         this.svgGroup.nextMagnet = this.block;
@@ -261,7 +262,8 @@ Entry.BlockView.PARAM_SPACE = 5;
 
     p._toGlobalCoordinate = function() {
         //var matrix = this.svgGroup.transform().globalMatrix;
-        this._moveTo(0, 0, false);
+        var pos = this.getAbsoluteCoordinate();
+        this._moveTo(pos.x, pos.y, false);
         this.getBoard().svgBlockGroup.appendChild(this.svgGroup);
     };
 
@@ -658,6 +660,7 @@ Entry.BlockView.PARAM_SPACE = 5;
         this._nextGroup.attr(
             "transform", "translate(" + magnet.next.x + ',' + magnet.next.y + ")"
         );
+        this.magnet = magnet;
     };
 
     p._updateBG = function() {
@@ -839,6 +842,14 @@ Entry.BlockView.PARAM_SPACE = 5;
 
             this._toLocalCoordinate(prevBlockView._nextGroup);
         }
+    };
+
+    p.getAbsoluteCoordinate = function() {
+        var threadView = this.block.getThread().view;
+        var pos = threadView.requestAbsoluteCoordinate(this);
+        pos.x += this.x;
+        pos.y += this.y;
+        return pos;
     };
 
 })(Entry.BlockView.prototype);

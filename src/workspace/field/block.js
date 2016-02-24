@@ -79,6 +79,11 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
             svgGroup.attr({
                 transform: transform
             });
+
+        this.box.set({
+            x: x,
+            y: y
+        });
     };
 
     p.calcWH = function() {
@@ -169,6 +174,13 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
     p.getPrevBlock = function(block) {
         if (this._valueBlock === block) return this;
         else return null;
+    };
+
+    p.requestAbsoluteCoordinate = function(blockView) {
+        var pos = this._blockView.getAbsoluteCoordinate();
+        pos.x += this.box.x;
+        pos.y += this.box.y;
+        return pos;
     };
 
 })(Entry.FieldBlock.prototype);
