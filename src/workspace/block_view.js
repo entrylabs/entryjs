@@ -643,10 +643,10 @@ Entry.BlockView.PARAM_SPACE = 5;
 
     p.getShadow = function() {
         if (!this._shadow) {
-            this._shadow = this.svgGroup.clone();
-            this._shadow.attr({
-                opacity: 0.5
-            });
+            this._shadow = Entry.SVG.createElement(
+                this.svgGroup.cloneNode(true),
+                { opacity: 0.5 }
+            );
         }
         return this._shadow;
     };
