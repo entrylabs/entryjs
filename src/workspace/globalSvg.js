@@ -50,10 +50,14 @@ goog.provide('Entry.GlobalSvg');
         if (this._svg) this.remove();
         var isVimMode = this._mode == Entry.Workspace.MODE_VIMBOARD;
 
-        this.svg = blockView.svgGroup.clone();
-        this.svg.attr({opacity:1});
+        this.svgGroup = Entry.SVG.createElement(
+            blockView.svgGroup.cloneNode(true),
+            {'opacity':1}
+        );
+
+        //TODO selectAll function replace
         if (isVimMode) {
-            var svg = this.svg;
+            var svg = this.svgGroup;
             svg.selectAll('path').animate({
                 opacity: 0
             }, 500, mina.easeinout);
@@ -62,14 +66,14 @@ goog.provide('Entry.GlobalSvg');
                 fill: '#000000'
             }, 530, mina.easeinout);
         }
-        this.svg.add(this.svg);
+        this.svg.appendChild(this.svgGroup);
         this.show();
     };
 
     gs.remove = function() {
-        if (!this.svg) return;
-        this.svg.remove();
-        delete this.svg;
+        if (!this.svgGroup) return;
+        this.svgGroup.remove();
+        delete this.svgGroup;
         delete this._view;
         delete this._offsetX;
         delete this._offsetY;

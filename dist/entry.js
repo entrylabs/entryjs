@@ -14674,14 +14674,13 @@ Entry.GlobalSvg = {};
     var a = this._view;
     this._svg && this.remove();
     var c = this._mode == Entry.Workspace.MODE_VIMBOARD;
-    this.svg = a.svgGroup.clone();
-    this.svg.attr({opacity:1});
-    c && (a = this.svg, a.selectAll("path").animate({opacity:0}, 500, mina.easeinout), a.selectAll("text").animate({fill:"#000000"}, 530, mina.easeinout));
-    this.svg.add(this.svg);
+    this.svgGroup = Entry.SVG.createElement(a.svgGroup.cloneNode(!0), {opacity:1});
+    c && (a = this.svgGroup, a.selectAll("path").animate({opacity:0}, 500, mina.easeinout), a.selectAll("text").animate({fill:"#000000"}, 530, mina.easeinout));
+    this.svg.appendChild(this.svgGroup);
     this.show();
   };
   a.remove = function() {
-    this.svg && (this.svg.remove(), delete this.svg, delete this._view, delete this._offsetX, delete this._offsetY, delete this._startX, delete this._startY, this.hide());
+    this.svgGroup && (this.svgGroup.remove(), delete this.svgGroup, delete this._view, delete this._offsetX, delete this._offsetY, delete this._startX, delete this._startY, this.hide());
   };
   a.align = function() {
     var a = this._view.getSkeleton().box(this._view).offsetX || 0, c = this._view.getSkeleton().box(this._view).offsetY || 0, a = -1 * a + 1, c = -1 * c + 1;
