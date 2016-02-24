@@ -32,7 +32,6 @@ Entry.init = function(container, options) {
     this.createDom(container, this.type);
     this.loadInterfaceState();
     this.overridePrototype();
-    this.maxCloneLimit = 302;
     this.cloudSavable = true;
     this.startTime = new Date().getTime();
 
