@@ -5474,6 +5474,9 @@ Entry.SVG.createElement = function(a, b) {
   this instanceof SVGElement && this.appendChild(c);
   c.elem = Entry.SVG.createElement;
   c.attr = Entry.SVG.attr;
+  c.addClass = Entry.SVG.addClass;
+  c.removeClass = Entry.SVG.removeClass;
+  c.hasClass = Entry.SVG.hasClass;
   return c;
 };
 Entry.SVG.attr = function(a, b) {
@@ -5489,6 +5492,23 @@ Entry.SVG.attr = function(a, b) {
     }
   }
   return this;
+};
+Entry.SVG.addClass = function(a) {
+  for (var b = this.getAttribute("class"), c = 0;c < arguments.length;c++) {
+    a = arguments[c], this.hasClass(a) || (b += " " + a);
+  }
+  this.setAttribute("class", b);
+  return this;
+};
+Entry.SVG.removeClass = function(a) {
+  for (var b = this.getAttribute("class"), c = 0;c < arguments.length;c++) {
+    a = arguments[c], this.hasClass(a) && (b = b.replace(new RegExp("(\\s|^)" + a + "(\\s|$)"), " "));
+  }
+  this.setAttribute("class", b);
+  return this;
+};
+Entry.SVG.hasClass = function(a) {
+  return this.getAttribute("class").match(new RegExp("(\\s|^)" + a + "(\\s|$)"));
 };
 Entry.Dialog = function(a, b, c, d) {
   a.dialog && a.dialog.remove();
@@ -13836,45 +13856,45 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
     this.box.set({x:0, y:0, width:b, height:16});
   };
   a.renderOptions = function() {
-    var b = this;
+    var a = this;
     this.destroyOption();
     this.documentDownEvent = Entry.documentMousedown.attach(this, function() {
       Entry.documentMousedown.detach(this.documentDownEvent);
-      b.applyValue();
-      b.destroyOption();
+      a.applyValue();
+      a.destroyOption();
     });
     this.optionGroup = Entry.Dom("input", {class:"entry-widget-input-field", parent:$("body")});
     this.optionGroup.val(this.value);
     this.optionGroup.on("mousedown", function(a) {
       a.stopPropagation();
     });
-    this.optionGroup.on("keyup", function(a) {
-      var c = a.keyCode || a.which;
-      b.applyValue(a);
-      -1 < [13, 27].indexOf(c) && b.destroyOption();
+    this.optionGroup.on("keyup", function(c) {
+      var d = c.keyCode || c.which;
+      a.applyValue(c);
+      -1 < [13, 27].indexOf(d) && a.destroyOption();
     });
-    var a = this.getAbsolutePos();
-    a.y -= this.box.height / 2;
-    this.optionGroup.css({height:16, left:a.x, top:a.y, width:b.box.width});
+    var c = this.getAbsolutePos();
+    c.y -= this.box.height / 2;
+    this.optionGroup.css({height:16, left:c.x, top:c.y, width:a.box.width});
     this.optionGroup.select();
     this.svgOptionGroup = this.appendSvgOptionGroup();
     this.svgOptionGroup.circle(0, 0, 49).attr({class:"entry-field-angle-circle"});
     this._dividerGroup = this.svgOptionGroup.group();
-    for (a = 0;360 > a;a += 15) {
-      this._dividerGroup.line(49, 0, 49 - (0 === a % 45 ? 10 : 5), 0).attr({transform:"rotate(" + a + ", 0, 0)", class:"entry-angle-divider"});
+    for (c = 0;360 > c;c += 15) {
+      this._dividerGroup.line(49, 0, 49 - (0 === c % 45 ? 10 : 5), 0).attr({transform:"rotate(" + c + ", 0, 0)", class:"entry-angle-divider"});
     }
-    a = this.getRelativePos();
-    a.x += this.box.width / 2;
-    a.y = a.y + this.box.height / 2 + 49 + 1;
-    this.svgOptionGroup.attr({class:"entry-field-angle", transform:"t" + a.x + " " + a.y});
-    var a = b.getAbsolutePos(), d = [a.x + b.box.width / 2, a.y + b.box.height / 2 + 1];
-    this.svgOptionGroup.mousemove(function(a) {
-      b.optionGroup.val(b.modValue(function(a, b) {
+    c = this.getRelativePos();
+    c.x += this.box.width / 2;
+    c.y = c.y + this.box.height / 2 + 49 + 1;
+    this.svgOptionGroup.attr({class:"entry-field-angle", transform:"t" + c.x + " " + c.y});
+    var c = a.getAbsolutePos(), d = [c.x + a.box.width / 2, c.y + a.box.height / 2 + 1];
+    this.svgOptionGroup.mousemove(function(c) {
+      a.optionGroup.val(a.modValue(function(a, b) {
         var c = b[0] - a[0], d = b[1] - a[1] - 49 - 1, e = Math.atan(-d / c), e = Entry.toDegrees(e), e = 90 - e;
         0 > c ? e += 180 : 0 < d && (e += 360);
         return 15 * Math.round(e / 15);
-      }(d, [a.clientX, a.clientY])));
-      b.applyValue();
+      }(d, [c.clientX, c.clientY])));
+      a.applyValue();
     });
     this.updateGraph();
   };

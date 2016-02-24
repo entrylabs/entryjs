@@ -42,11 +42,15 @@ Entry.SVG.createElement = function (tag, options) {
     if (this instanceof SVGElement)
         this.appendChild(el);
 
+    //add util functions
     el.elem = Entry.SVG.createElement;
     el.attr = Entry.SVG.attr;
+    el.addClass = Entry.SVG.addClass;
+    el.removeClass = Entry.SVG.removeClass;
+    el.hasClass = Entry.SVG.hasClass;
 
     return el;
-}
+};
 
 Entry.SVG.attr = function(options, property) {
     if (typeof options === "string") {
@@ -66,4 +70,33 @@ Entry.SVG.attr = function(options, property) {
     }
 
     return this;
-}
+};
+
+Entry.SVG.addClass = function(className) {
+    var classAttr = this.getAttribute('class');
+    for (var i = 0; i < arguments.length; i++) {
+        var className = arguments[i];
+        if (!this.hasClass(className)) classAttr += " " + className;
+    }
+
+    this.setAttribute('class', classAttr);
+    return this;
+};
+
+Entry.SVG.removeClass = function(className) {
+    var classAttr = this.getAttribute('class');
+    for (var i = 0; i < arguments.length; i++) {
+        var className = arguments[i];
+        if (this.hasClass(className)) {
+            var reg = new RegExp('(\\s|^)'+className+'(\\s|$)');
+            classAttr = classAttr.replace(reg,' ');
+        }
+    }
+
+    this.setAttribute('class', classAttr);
+    return this;
+};
+
+Entry.SVG.hasClass = function(className) {
+    return this.getAttribute('class').match(new RegExp('(\\s|^)'+className+'(\\s|$)'));
+};
