@@ -533,7 +533,6 @@ Entry.JSParser = function(syntax) {
         for (var i = 0; i < body.length; i++) {
             var childNode = body[i];
             if (childNode.type === "FunctionDeclaration") {
-                console.log(childNode);
                 this.scope[childNode.id.name] = this.scope.promise;
                 if (this.syntax.BasicFunction) {
                     var childBody = childNode.body;

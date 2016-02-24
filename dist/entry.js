@@ -8642,7 +8642,7 @@ Entry.JSParser = function(a) {
     b = b.body;
     for (var a = [], d = 0;d < b.length;d++) {
       var e = b[d];
-      "FunctionDeclaration" === e.type && (console.log(e), this.scope[e.id.name] = this.scope.promise, this.syntax.BasicFunction && (e = e.body, a.push([{type:this.syntax.BasicFunction, statements:[this[e.type](e)]}])));
+      "FunctionDeclaration" === e.type && (this.scope[e.id.name] = this.scope.promise, this.syntax.BasicFunction && (e = e.body, a.push([{type:this.syntax.BasicFunction, statements:[this[e.type](e)]}])));
     }
     return a;
   };
@@ -8700,8 +8700,9 @@ Entry.Parser = function(a, b, c) {
       b = this.syntax;
       var d = {}, e;
       for (e in b.Scope) {
-        d[e + "();"] = b.Scope[e];
+        d[e + "();\n"] = b.Scope[e];
       }
+      "BasicIf" in b && (d.front = "BasicIf");
       CodeMirror.commands.javascriptComplete = function(b) {
         CodeMirror.showHint(b, null, {globalScope:d});
       };
@@ -8721,11 +8722,16 @@ Entry.Parser = function(a, b, c) {
         try {
           var d = acorn.parse(b), a = this._parser.Program(d);
         } catch (e) {
-          this.codeMirror && (e instanceof SyntaxError ? e.message = "\ubb38\ubc95 \uc624\ub958\uc785\ub2c8\ub2e4." : (b = this.getLineNumber(e.node.start, e.node.end), b.message = e.message, b.severity = "error", this.codeMirror.markText(b.from, b.to, {className:"CodeMirror-lint-mark-error", __annotation:b, clearOnEnter:!0})), Entry.toast.alert("Error", e.message)), a = [];
+          this.codeMirror && (e instanceof SyntaxError ? (b = {from:{line:e.loc.line - 1, ch:e.loc.column - 2}, to:{line:e.loc.line - 1, ch:e.loc.column + 1}}, e.message = "\ubb38\ubc95 \uc624\ub958\uc785\ub2c8\ub2e4.") : (b = this.getLineNumber(e.node.start, e.node.end), b.message = e.message, b.severity = "error", this.codeMirror.markText(b.from, b.to, {className:"CodeMirror-lint-mark-error", __annotation:b, clearOnEnter:!0})), Entry.toast.alert("Error", e.message)), a = [];
         }
         break;
       case "block":
-        a = this._parser.Code(b);
+        a = this._parser.Code(b).match(/(function[\S|\s]*?}\n?|\S+)/g).reduce(function(b, a, c) {
+          var d = "";
+          1 === c && (b += "\n");
+          d = -1 < a.indexOf("function") ? a + b : b + a;
+          return d + "\n";
+        });
     }
     return a;
   };
@@ -12975,7 +12981,7 @@ Entry.block.maze_step_if_1 = {skeleton:"basic_loop", mode:"maze", color:"#498DEB
     }
   }
 }};
-Entry.block.maze_step_if_2 = {skeleton:"basic_loop", mode:"maze", color:"#498DEB", template:"\ub9cc\uc57d \uc55e\uc5d0 %1 \uc788\ub2e4\uba74%2", syntax:["BasicIf", 'front == "Bee"'], params:[{type:"Image", img:"/img/assets/ntry/bitmap/maze2/obstacle_01.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/if.png", size:24}], statements:[{accept:"basic"}], func:function() {
+Entry.block.maze_step_if_2 = {skeleton:"basic_loop", mode:"maze", color:"#498DEB", template:"\ub9cc\uc57d \uc55e\uc5d0 %1 \uc788\ub2e4\uba74%2", syntax:["BasicIf", 'front == "bee"'], params:[{type:"Image", img:"/img/assets/ntry/bitmap/maze2/obstacle_01.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/if.png", size:24}], statements:[{accept:"basic"}], func:function() {
   if (!this.isContinue) {
     var a = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT), b, c;
     for (c in a) {
@@ -15284,7 +15290,7 @@ Entry.Block.MAGNET_OFFSET = .4;
         d = void 0 !== a[e] ? a[e] : c[e].value, f = a[e], "Output" === c[e].type || "Block" === c[e].type ? f ? a.splice(e, 1, new Entry.Thread(d, this.getCode())) : a.push(new Entry.Thread(d, this.getCode())) : f ? a.splice(e, 1, d) : a.push(d);
       }
       if (a = this._schema.statements) {
-        for (console.log(a), e = 0;e < a.length;e++) {
+        for (e = 0;e < a.length;e++) {
           this.statements.splice(e, 1, new Entry.Thread(this.statements[e], this.getCode()));
         }
       }

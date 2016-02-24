@@ -31,8 +31,13 @@ Entry.Parser = function(mode, syntax, cm) {
             var assistScope = {};
 
             for(var key in syntax.Scope ) {
-                assistScope[key + '();'] = syntax.Scope[key];
+                assistScope[key + '();\n'] = syntax.Scope[key];
             }
+
+            if('BasicIf' in syntax) {
+                assistScope['front'] = 'BasicIf';
+            }
+
             CodeMirror.commands.javascriptComplete = function (cm) {
                 CodeMirror.showHint(cm, null, {globalScope:assistScope});
             }
@@ -81,15 +86,29 @@ Entry.Parser = function(mode, syntax, cm) {
                             });
                         }
 
-                        
-
                         Entry.toast.alert('Error', error.message);
                     }
                     result = [];
                 }
                 break;
             case "block":
-                result = this._parser.Code(code);
+                var textCode = this._parser.Code(code);
+                var textArr = textCode.match(/(function[\S|\s]*?}\n?|\S+)/g);
+                result = textArr.reduce(function (prev, current, index) {
+                    var temp = '';
+
+                    if(index === 1) {
+                        prev = prev + '\n';
+                    }
+                    if(current.indexOf('function') > -1) {
+                        temp = current + prev;
+                    } else {
+                        temp = prev + current;
+                    }
+
+                    return temp + '\n';
+                });
+
                 break;
         }
 

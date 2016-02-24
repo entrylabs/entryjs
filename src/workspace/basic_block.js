@@ -969,7 +969,7 @@ Entry.block.maze_step_if_2 = {
     mode: "maze",
     color: "#498DEB",
     template: "만약 앞에 %1 있다면%2",
-    syntax: ["BasicIf", 'front == "Bee"'],
+    syntax: ["BasicIf", 'front == "bee"'],
     params: [
         {
             type: "Image",
