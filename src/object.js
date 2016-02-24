@@ -1254,8 +1254,6 @@ Entry.EntryObject.prototype.toggleInformation = function(isToggle) {
  * @param {?xml block} script
  */
 Entry.EntryObject.prototype.addCloneEntity = function(object, entity, script) {
-    if (this.clonedEntities.length > Entry.maxCloneLimit)
-        return;
     var clonedEntity = new Entry.EntityObject(this);
     if (entity) {
         clonedEntity.injectModel(
