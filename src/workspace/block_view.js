@@ -502,9 +502,11 @@ Entry.BlockView.PARAM_SPACE = 5;
                                         }
                                     }
                                 }
-                            } else block.doSeparate();
+                            } else {
+                                this._toGlobalCoordinate();
+                                block.doSeparate();
+                            }
                         }
-                        this._handlePrev();
                         break;
                     case gs.RETURN:
                         var block = this.block;
@@ -560,8 +562,6 @@ Entry.BlockView.PARAM_SPACE = 5;
         //TODO optimize
         x = this.x,
         y = this.y;
-
-        console.log(x, y);
 
         return board.getNearestMagnet(x, y, targetType);
 

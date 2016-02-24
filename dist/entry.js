@@ -13375,12 +13375,11 @@ Entry.BlockView.PARAM_SPACE = 5;
                   -1 < Entry.FieldDummyBlock.PRIMITIVE_TYPES.indexOf(e.type) ? (e.getThread().cut(e), e.destroy(!1)) : (e.separate(), e.view.bumpAway());
                 }
               } else {
-                e.doSeparate();
+                this._toGlobalCoordinate(), e.doSeparate();
               }
             } else {
               d != Entry.DRAG_MODE_DRAG || f || e.doMove();
             }
-            this._handlePrev();
             break;
           case g.RETURN:
             e = this.block;
@@ -13409,7 +13408,6 @@ Entry.BlockView.PARAM_SPACE = 5;
         var a = this.getBoard();
         x = this.x;
         y = this.y;
-        console.log(x, y);
         return a.getNearestMagnet(x, y, b);
       }
     }
