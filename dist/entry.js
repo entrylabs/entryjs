@@ -6862,15 +6862,6 @@ Entry.parseOptions = function(a) {
 Entry.initFonts = function(a) {
   this.fonts = a;
   a || (this.fonts = []);
-  var b = {custom:{families:[], urls:[]}};
-  for (a = 0;a < this.fonts.length;a++) {
-    var c = this.fonts[a];
-    b.custom.families.push(c.family);
-    b.custom.urls.push(c.url);
-  }
-  setTimeout(function() {
-    WebFont.load(b);
-  }, 1E3);
 };
 Entry.Activity = function(a, b) {
   this.name = a;
