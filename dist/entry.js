@@ -15384,7 +15384,7 @@ Entry.FieldTrashcan = function(a) {
   a.renderStart = function() {
     var a = Entry.mediaFilePath + "delete_";
     this.trashcanTop = this.svgGroup.elem("image", {href:a + "cover.png", width:60, height:20});
-    this.trashcanTop = this.svgGroup.elem("image", {href:a + "body.png", y:20, width:60, height:60});
+    this.svgGroup.elem("image", {href:a + "body.png", y:20, width:60, height:60});
   };
   a.updateDragBlock = function() {
     var a = this.board.dragBlock, c = this.dragBlockObserver;
@@ -15418,8 +15418,9 @@ Entry.FieldTrashcan = function(a) {
   a.tAnimation = function(a) {
     if (a !== this.isOver) {
       a = void 0 === a ? !0 : a;
-      var c = this.trashcanTop;
-      a ? c.animate({transform:"translate(5, -20) rotate(30)"}, 50) : c.animate({transform:"rotate(0)"}, 50);
+      var c, d = this.trashcanTop;
+      c = a ? {translateX:15, translateY:-25, rotateZ:30} : {translateX:0, translateY:0, rotateZ:0};
+      $(d).velocity(c, {duration:50});
       this.isOver = a;
     }
   };

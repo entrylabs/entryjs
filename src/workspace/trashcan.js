@@ -28,7 +28,7 @@ Entry.FieldTrashcan = function(board) {
             height: 20
         });
 
-        this.trashcanTop = this.svgGroup.elem("image", {
+        this.svgGroup.elem("image", {
             href: path + 'body.png',
             y: 20,
             width: 60,
@@ -107,14 +107,24 @@ Entry.FieldTrashcan = function(board) {
         if (isOver === this.isOver) return;
 
         isOver = isOver === undefined ? true : isOver;
+        var animation;
         var trashTop = this.trashcanTop;
-        if(isOver) {
-            trashTop.animate({
-                transform: "translate(5, -20) rotate(30)"}, 50);
-        } else {
-            trashTop.animate({
-                transform: "rotate(0)"}, 50);
-        }
+        if(isOver)
+            animation = {
+                translateX:15,
+                translateY:-25,
+                rotateZ:30
+            };
+        else
+            animation = {
+                translateX:0,
+                translateY:0,
+                rotateZ: 0
+            };
+
+        $(trashTop).velocity(
+            animation, {duration:50}
+        );
         this.isOver = isOver;
     };
 })(Entry.FieldTrashcan.prototype);
