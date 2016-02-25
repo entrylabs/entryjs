@@ -13424,7 +13424,7 @@ Entry.BlockView.PARAM_SPACE = 5;
             b ? (this.set({animating:!1}), createjs.Sound.play("entryMagneting"), e.insert(b)) : this._moveTo(d.x, d.y, !1);
             break;
           case g.REMOVE:
-            createjs.Sound.play("entryDelete"), f ? (b && e.separate(), this.block.destroy(!1)) : (b && e.dooleeparate(), this.block.doDestroy(!1));
+            createjs.Sound.play("entryDelete"), f ? (b && e.separate(), this.block.destroy(!1)) : (b && e.doSeparate(), this.block.doDestroy(!1));
         }
         a.setMagnetedBlock(null);
       }
@@ -15399,7 +15399,7 @@ Entry.FieldTrashcan = function(a) {
   a.updateDragBlock = function() {
     var a = this.board.dragBlock, c = this.dragBlockObserver;
     c && (c.destroy(), this.dragBlockObserver = null);
-    a ? this.dragBlockObserver = a.observe(this, "checkBlock", ["x", "y"]) : (this.isOver && this.dragBlock && (this.dragBlock.block.doDestroy(!0), createjs.Sound.play("entryDelete")), this.tAnimation(!1));
+    a ? this.dragBlockObserver = a.observe(this, "checkBlock", ["x", "y"]) : (this.isOver && this.dragBlock && !this.dragBlock.block.getPrevBlock() && (this.dragBlock.block.doDestroy(!0), createjs.Sound.play("entryDelete")), this.tAnimation(!1));
     this.dragBlock = a;
   };
   a.checkBlock = function() {

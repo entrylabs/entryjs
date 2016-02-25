@@ -515,7 +515,7 @@ Entry.BlockView.PARAM_SPACE = 5;
                     case gs.REMOVE:
                         createjs.Sound.play('entryDelete');
                         if (!fromBlockMenu) {
-                            if (prevBlock) block.dooleeparate();
+                            if (prevBlock) block.doSeparate();
                             this.block.doDestroy(false);
                         } else {
                             if (prevBlock) block.separate();

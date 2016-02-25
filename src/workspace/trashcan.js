@@ -53,8 +53,11 @@ Entry.FieldTrashcan = function(board) {
             this.dragBlockObserver = block.observe(this, "checkBlock", ["x", "y"]);
         } else {
             if (this.isOver && this.dragBlock) {
-                this.dragBlock.block.doDestroy(true);
-                createjs.Sound.play('entryDelete');
+                var prevBlock = this.dragBlock.block.getPrevBlock();
+                if (!prevBlock) {
+                    this.dragBlock.block.doDestroy(true);
+                    createjs.Sound.play('entryDelete');
+                }
             }
             this.tAnimation(false);
         }
