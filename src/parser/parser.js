@@ -93,7 +93,7 @@ Entry.Parser = function(mode, syntax, cm) {
                 break;
             case "block":
                 var textCode = this._parser.Code(code);
-                var textArr = textCode.match(/(function[\S|\s]*?}\n?|\S+)/g);
+                var textArr = textCode.match(/(.*{.*[\S|\s]+?}|.+)/g);
                 result = textArr.reduce(function (prev, current, index) {
                     var temp = '';
 

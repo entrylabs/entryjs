@@ -8677,7 +8677,7 @@ Entry.JSParser = function(a) {
         }
       }
       if (this.syntax.BasicIf[d]) {
-        return {type:this.syntax.BasicIf[d], statements:[a]};
+        return Array.isArray(a) || "object" !== typeof a || (a = [a]), {type:this.syntax.BasicIf[d], statements:[a]};
       }
       throw Error();
     } catch (f) {
@@ -8726,7 +8726,7 @@ Entry.Parser = function(a, b, c) {
         }
         break;
       case "block":
-        a = this._parser.Code(b).match(/(function[\S|\s]*?}\n?|\S+)/g).reduce(function(b, a, c) {
+        a = this._parser.Code(b).match(/(.*{.*[\S|\s]+?}|.+)/g).reduce(function(b, a, c) {
           var d = "";
           1 === c && (b += "\n");
           d = -1 < a.indexOf("function") ? a + b : b + a;
@@ -14028,12 +14028,12 @@ Entry.Field = function() {
     return {x:a.e + d.left + this.box.x + b.x, y:a.f + d.top + this.box.y + b.y};
   };
   a.getRelativePos = function() {
-    var b = this._block.view, a = b.svgGroup.transform().globalMatrix, b = b.getContentPos(), d = this.box;
-    return {x:a.e + d.x + b.x, y:a.f + d.y + b.y};
+    var a = this._block.view, c = a.svgGroup.transform().globalMatrix, a = a.getContentPos(), d = this.box;
+    return {x:c.e + d.x + a.x, y:c.f + d.y + a.y};
   };
   a.truncate = function() {
-    var b = String(this.getValue()), a = this.TEXT_LIMIT_LENGTH, d = b.substring(0, a);
-    b.length > a && (d += "...");
+    var a = String(this.getValue()), c = this.TEXT_LIMIT_LENGTH, d = a.substring(0, c);
+    a.length > c && (d += "...");
     return d;
   };
   a.appendSvgOptionGroup = function() {
@@ -15336,7 +15336,6 @@ Entry.Block.MAGNET_OFFSET = .4;
       return c;
     });
     c.statements = c.statements.map(function(c) {
-      console.log(c);
       return c.toJSON(a);
     });
     return c;
@@ -15387,32 +15386,27 @@ Entry.Block.MAGNET_OFFSET = .4;
   };
   a.doAdd = function() {
     var a = this.id;
-    console.log("doAdd", a);
     Entry.activityReporter && (a = [["blockId", a], ["code", this.getCode().stringify()]], Entry.activityReporter.add(new Entry.Activity("addBlock", a)));
     this.getCode().changeEvent.notify();
   };
   a.doMove = function() {
     var a = this.id, c = this.view.x - this.x, d = this.view.y - this.y;
-    console.log("doMove", a, c, d);
     this._updatePos();
     this.getCode().changeEvent.notify();
     Entry.activityReporter && (a = [["blockId", a], ["moveX", c], ["moveY", d], ["code", this.getCode().stringify()]], Entry.activityReporter.add(new Entry.Activity("moveBlock", a)));
   };
   a.doSeparate = function() {
     var a = this.id, c = this.x, d = this.y;
-    console.log("separate", a, c, d);
     this.separate();
     Entry.activityReporter && (a = [["blockId", a], ["positionX", c], ["positionY", d], ["code", this.getCode().stringify()]], Entry.activityReporter.add(new Entry.Activity("seperateBlock", a)));
   };
   a.doInsert = function(a) {
     var c = this.id, d = a.id, e = this.x, f = this.y;
-    console.log("insert", c, d, e, f);
     this.insert(a);
     Entry.activityReporter && (a = [["targetBlockId", d], ["blockId", c], ["positionX", e], ["positionY", f], ["code", this.getCode().stringify()]], Entry.activityReporter.add(new Entry.Activity("insertBlock", a)));
   };
   a.doDestroy = function(a) {
     var c = this.id, d = this.x, e = this.y;
-    console.log("destroy", c, d, e);
     this.destroy(a);
     this.getCode().changeEvent.notify();
     Entry.activityReporter && (a = [["blockId", c], ["positionX", d], ["positionY", e], ["code", this.getCode().stringify()]], Entry.activityReporter.add(new Entry.Activity("destroyBlock", a)));
@@ -15420,7 +15414,6 @@ Entry.Block.MAGNET_OFFSET = .4;
   a.doDestroyAlone = function(a) {
     if (this.isDeletable()) {
       var c = this.id, d = this.x, e = this.y;
-      console.log("destroy alone", c, d, e);
       this.destroyAlone(a);
       this.getCode().changeEvent.notify();
       Entry.activityReporter && (a = [["blockId", c], ["positionX", d], ["positionY", e], ["code", this.getCode().stringify()]], Entry.activityReporter.add(new Entry.Activity("destroyBlockAlone", a)));

@@ -173,7 +173,7 @@ Entry.Block.MAGNET_OFFSET = 0.4;
         });
 
         json.statements = json.statements.map(
-            function(s) {console.log(s) ; return s.toJSON(isNew);}
+            function(s) {return s.toJSON(isNew);}
         );
         return json;
     };
@@ -183,7 +183,6 @@ Entry.Block.MAGNET_OFFSET = 0.4;
         if (!this.prev || this.prev.isDummy)
             this.thread.destroy(animate, false);
         else this.prev.setNext(this.next);
-
 
         var params = this.params;
         if (params) {
@@ -245,7 +244,6 @@ Entry.Block.MAGNET_OFFSET = 0.4;
     // command func
     p.doAdd = function() {
         var id = this.id;
-        console.log("doAdd", id);
         if (Entry.activityReporter) {
             var data = [
                 ['blockId',id],
@@ -260,11 +258,7 @@ Entry.Block.MAGNET_OFFSET = 0.4;
         var id = this.id;
         var moveX = this.view.x - this.x;
         var moveY = this.view.y - this.y;
-        console.log(
-            "doMove",
-            id,
-            moveX,
-            moveY);
+
         this._updatePos();
         this.getCode().changeEvent.notify();
         if (Entry.activityReporter) {
@@ -282,12 +276,7 @@ Entry.Block.MAGNET_OFFSET = 0.4;
         var id = this.id;
         var positionX = this.x;
         var positionY = this.y;
-        console.log(
-            "separate",
-            id,
-            positionX,
-            positionY
-        );
+
         this.separate();
         if (Entry.activityReporter) {
             var data = [
@@ -305,13 +294,7 @@ Entry.Block.MAGNET_OFFSET = 0.4;
         var targetId = targetBlock.id;
         var positionX = this.x;
         var positionY = this.y;
-        console.log(
-            "insert",
-            id,
-            targetId,
-            positionX,
-            positionY
-        );
+
         this.insert(targetBlock);
         if (Entry.activityReporter) {
             var data = [
@@ -330,12 +313,6 @@ Entry.Block.MAGNET_OFFSET = 0.4;
         var positionX = this.x;
         var positionY = this.y;
 
-        console.log(
-            "destroy",
-            id,
-            positionX,
-            positionY
-        );
         this.destroy(animate);
         this.getCode().changeEvent.notify();
         if (Entry.activityReporter) {
@@ -355,12 +332,6 @@ Entry.Block.MAGNET_OFFSET = 0.4;
         var positionX = this.x;
         var positionY = this.y;
 
-        console.log(
-            "destroy alone",
-            id,
-            positionX,
-            positionY
-        );
         this.destroyAlone(animate);
         this.getCode().changeEvent.notify();
         if (Entry.activityReporter) {

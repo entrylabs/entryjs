@@ -601,6 +601,8 @@ Entry.JSParser = function(syntax) {
             }
 
             if (this.syntax.BasicIf[test]) {
+                if(!Array.isArray(consequent) && typeof consequent === 'object') 
+                    consequent = [consequent];
                 return {
                     type: this.syntax.BasicIf[test],
                     statements: [consequent]
