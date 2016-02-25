@@ -10,9 +10,8 @@ goog.provide("Entry.BlockMenuScroller");
  * @param {object} board
  */
 Entry.BlockMenuScroller = function(board) {
-    return;
     this.board = board;
-    this.board.changeEvent.attach(this, this.resizeScrollBar);
+    this.board.changeEvent.attach(this, this._reset);
 
     this.svgGroup = null;
 
@@ -82,53 +81,40 @@ Entry.BlockMenuScroller.RADIUS = 7;
     };
 
     p.resizeScrollBar = function() {
-        this._checkVisible();
-        if (!this._visible) return;
+        this._updateRatio();
+        if (!this._visible || this.vRatio === 0) return;
+        var that = this;
+        var dom = this.board.blockMenuContainer;
 
-        var board = this.board,
-            bRect = board.svgBlockGroup.getBoundingClientRect(),
-            svgDom = board.svgDom,
-            realHeight = svgDom.height(),
-
-            bBox = {
-                x: bRect.left - board.offset.left,
-                y: bRect.top - board.offset.top,
-                height: bRect.height
-            };
-
-        var vRatio = bBox.height/realHeight;
-        if (vRatio === 0) return;
         this.vScrollbar.attr({
             width: 9,
-            height: realHeight / vRatio,
-            x: svgDom.width() - 9
+            height: dom.height() / that.vRatio,
+            x: dom.width() - 9
         });
-
-        this.vRatio = vRatio;
     };
 
     p.updateScrollBar = function(dy) {
-        var clientRect = this.board.svgBlockGroup.getBoundingClientRect(),
-            svgDom = this.board.svgDom,
-            bBox = {
-                x: clientRect.left - this.board.offset.left,
-                y: clientRect.top - this.board.offset.top,
-                width: clientRect.width,
-                height: clientRect.height
-            };
-
-        var limitBottom = svgDom.height() - svgDom.height() / this.vRatio;
         this.vY += dy;
-        this.vY = Math.max(this.vY, 0);
-        this.vY = Math.min(this.vY, limitBottom);
         this.vScrollbar.attr({
             y: this.vY
         });
     };
 
     p.scroll = function(dy) {
-        this.board.code.moveBy(0, dy);
+        if (this._inspectLimit(dy)) return;
+
+        this.board.code.moveBy(0, -dy * this.vRatio);
         this.updateScrollBar(dy);
+    };
+
+
+    //return true when newY is out of range
+    p._inspectLimit = function(dy) {
+        var domHeight = this.board.svgDom.height();
+        var limitBottom = domHeight - domHeight/this.vRatio;
+        var newY = this.vY + dy;
+
+        return newY <= 0 || newY >= limitBottom;
     };
 
     p.setVisible = function(visible) {
@@ -140,24 +126,33 @@ Entry.BlockMenuScroller.RADIUS = 7;
 
     };
 
-    p.isVisible = function() {
-        return this._visible;
+    p.isVisible = function() {return this._visible;};
+
+    p._updateRatio = function() {
+        var board = this.board,
+            bRect = board.svgBlockGroup.getBoundingClientRect(),
+            svgDom = board.svgDom,
+            realHeight = board.blockMenuContainer.height(),
+
+            bBox = {
+                x: bRect.left - board.offset.left,
+                y: bRect.top - board.offset.top,
+                height: bRect.height
+            };
+
+        var vRatio = (bBox.height + bBox.y + 10)/realHeight;
+        this.vRatio = vRatio;
+        if (vRatio <= 1)
+            this.setVisible(false);
+        else
+            this.setVisible(true);
     };
 
-    p._checkVisible = function() {
-        return;
-        //TODO check boundary and set visibility
-        var visible = true;
-        var blockGroupHeight = this.svgBlockGroup.node.getBoundingClientRect().height;
-        if (blockGroupHeight + 10 < this.svgDom.height())
-            visible = false;
-
-        if (this._scroll !== visible) {
-            this._scroll = visible;
-            this._scroller.setVisible(visible);
-        }
-
-        if (this._scroll) this._scroller.resizeScrollBar();
-
+    p._reset = function() {
+        this.vY = 0;
+        this.vScrollbar.attr({
+            y: this.vY
+        });
+        this.resizeScrollBar();
     };
 })(Entry.BlockMenuScroller.prototype);
