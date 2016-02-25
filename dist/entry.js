@@ -7579,7 +7579,7 @@ Entry.EntryObject.prototype.setRotateMethod = function(a) {
   a || (a = "free");
   this.rotateMethod = a;
   this.updateRotateMethodView();
-  Entry.stage.selectedObject && Entry.stage.selectedObject.entity ? (Entry.stage.updateObject(), Entry.stage.updateHandle()) : Entry.container.getObject(this.id) && (Entry.container.selectObject(this.id), Entry.stage.updateObject());
+  Entry.stage.selectedObject && Entry.stage.selectedObject.entity && (Entry.stage.updateObject(), Entry.stage.updateHandle());
 };
 Entry.EntryObject.prototype.initRotateValue = function(a) {
   this.rotateMethod != a && (this.entity.rotation = 0, this.entity.direction = 90);
