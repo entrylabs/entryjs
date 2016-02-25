@@ -350,9 +350,9 @@ Entry.Block.MAGNET_OFFSET = 0.4;
         var cloned = [];
         for (var i=0; i<json.length; i++) cloned.push(json[i]);
 
-        var matrix = this.view.svgGroup.transform().globalMatrix;
-        cloned[0].x = matrix.e + 15;
-        cloned[0].y = matrix.f + 15;
+        var pos = this.view.getAbsoluteCoordinate();
+        cloned[0].x = pos.x + 15;
+        cloned[0].y = pos.y + 15;
 
         return cloned;
     };

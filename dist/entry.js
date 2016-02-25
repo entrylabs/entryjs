@@ -15187,9 +15187,9 @@ Entry.Block.MAGNET_OFFSET = .4;
     for (var a = this.getThread(), c = a.getBlocks().indexOf(this), c = a.toJSON(!0, c), a = [], d = 0;d < c.length;d++) {
       a.push(c[d]);
     }
-    c = this.view.svgGroup.transform().globalMatrix;
-    a[0].x = c.e + 15;
-    a[0].y = c.f + 15;
+    c = this.view.getAbsoluteCoordinate();
+    a[0].x = c.x + 15;
+    a[0].y = c.y + 15;
     return a;
   };
   a.copyToClipboard = function() {
