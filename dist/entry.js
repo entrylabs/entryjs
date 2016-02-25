@@ -5755,6 +5755,20 @@ Entry.Dom = function(a, b) {
     d.addClass(a);
   });
   b.parent && b.parent.append(d);
+  d.bindOnClick = function() {
+    var a, b, c = function(a) {
+      a.stopImmediatePropagation();
+      a.handled || (a.handled = !0, b.call(this, a));
+    };
+    1 < arguments.length ? (b = arguments[1] instanceof Function ? arguments[1] : function() {
+    }, a = "string" === typeof arguments[0] ? arguments[0] : "") : b = arguments[0] instanceof Function ? arguments[0] : function() {
+    };
+    if (a) {
+      $(this).on("click touchstart", a, c);
+    } else {
+      $(this).on("click touchstart", c);
+    }
+  };
   return d;
 };
 Entry.Dialog = function(a, b, c, d) {
@@ -9969,6 +9983,77 @@ Entry.Popup.prototype.resize = function(a) {
   9 * b <= 16 * c ? c = b / 16 * 9 : b = 16 * c / 9;
   a.style.width = String(b) + "px";
   a.style.height = String(c + 35) + "px";
+};
+Entry.popupHelper = function(a) {
+  this.popupList = {};
+  this.nowContent;
+  a && (window.popupHelper = null);
+  Entry.assert(!window.popupHelper, "Popup exist");
+  var b = ["confirm"], c = ["entryPopupHelperTopSpan", "entryPopupHelperBottomSpan", "entryPopupHelperLeftSpan", "entryPopupHelperRightSpan"];
+  this.body_ = Entry.Dom("div", {classes:["entryPopup", "hiddenPopup", "popupHelper"]});
+  var d = this;
+  this.body_.bindOnClick(function(a) {
+    if (!(d.nowContent && -1 < b.indexOf(d.nowContent.prop("type")))) {
+      var f = $(a.target);
+      c.forEach(function(a) {
+        f.hasClass(a) && this.popup.hide();
+      }.bind(this));
+      a.target == this && this.popup.hide();
+    }
+  });
+  window.popupHelper = this;
+  this.body_.prop("popup", this);
+  Entry.Dom("div", {class:"entryPopupHelperTopSpan", parent:this.body_});
+  a = Entry.Dom("div", {class:"entryPopupHelperMiddleSpan", parent:this.body_});
+  Entry.Dom("div", {class:"entryPopupHelperBottomSpan", parent:this.body_});
+  Entry.Dom("div", {class:"entryPopupHelperLeftSpan", parent:a});
+  this.window_ = Entry.Dom("div", {class:"entryPopupHelperWindow", parent:a});
+  Entry.Dom("div", {class:"entryPopupHelperRightSpan", parent:a});
+  $("body").append(this.body_);
+};
+Entry.popupHelper.prototype.clearPopup = function() {
+  for (var a = this.popupWrapper_.children.length - 1;2 < a;a--) {
+    this.popupWrapper_.removeChild(this.popupWrapper_.children[a]);
+  }
+};
+Entry.popupHelper.prototype.addPopup = function(a, b) {
+  var c = Entry.Dom("div"), d = Entry.Dom("div", {class:"entryPopupHelperCloseButton"});
+  d.bindOnClick(function() {
+    b.closeEvent ? b.closeEvent(this) : this.hide();
+  }.bind(this));
+  var e = Entry.Dom("div", {class:"entryPopupHelperWrapper"});
+  e.append(d);
+  b.title && (d = Entry.Dom("div", {class:"entryPopupHelperTitle"}), e.append(d), d.text(b.title));
+  c.addClass(a);
+  c.append(e);
+  c.popupWrapper_ = e;
+  c.prop("type", b.type);
+  "function" === typeof b.setPopupLayout && b.setPopupLayout(c);
+  this.popupList[a] = c;
+};
+Entry.popupHelper.prototype.hasPopup = function(a) {
+  return !!this.popupList[a];
+};
+Entry.popupHelper.prototype.setPopup = function(a) {
+};
+Entry.popupHelper.prototype.remove = function(a) {
+  0 < this.window_.children().length && this.window_.children().remove();
+  this.window_.remove();
+  delete this.popupList[a];
+  this.nowContent = void 0;
+  this.body_.addClass("hiddenPopup");
+};
+Entry.popupHelper.prototype.resize = function(a) {
+};
+Entry.popupHelper.prototype.show = function(a) {
+  0 < this.window_.children().length && this.window_.children().detach();
+  this.window_.append(this.popupList[a]);
+  this.nowContent = this.popupList[a];
+  this.body_.removeClass("hiddenPopup");
+};
+Entry.popupHelper.prototype.hide = function() {
+  this.nowContent = void 0;
+  this.body_.addClass("hiddenPopup");
 };
 Entry.getStartProject = function(a) {
   return {category:"\uae30\ud0c0", scenes:[{name:"\uc7a5\uba74 1", id:"7dwq"}], variables:[{name:"\ucd08\uc2dc\uacc4", id:"brih", visible:!1, value:"0", variableType:"timer", x:150, y:-70, array:[], object:null, isCloud:!1}, {name:"\ub300\ub2f5", id:"1vu8", visible:!1, value:"0", variableType:"answer", x:150, y:-100, array:[], object:null, isCloud:!1}], objects:[{id:"7y0y", name:"\uc5d4\ud2b8\ub9ac\ubd07", script:'<xml><block type="when_run_button_click" x="136" y="47"><next><block type="repeat_basic"><value name="VALUE"><block type="number"><field name="NUM">10</field></block></value><statement name="DO"><block type="move_direction"><value name="VALUE"><block type="number"><field name="NUM">10</field></block></value></block></statement></block></next></block></xml>', 
