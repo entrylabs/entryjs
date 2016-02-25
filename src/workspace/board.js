@@ -77,6 +77,9 @@ Entry.Board = function(option) {
     Entry.BOARD_PADDING = 100;
 
     this.changeEvent = new Entry.Event(this);
+    this.changeEvent.attach(this, function() {
+       this.generateCodeMagnetMap();
+    });
     this.scroller = new Entry.Scroller(this, true, true);
 
     Entry.Utils.disableContextmenu(this.svgDom);
@@ -364,6 +367,8 @@ Entry.Board = function(option) {
     };
 
     p.generateCodeMagnetMap = function(code) {
+        if (!code) code = this.code;
+        if (!code) return;
         var a = new Date().getTime();
         var metaData = this._getCodeBlocks(code);
         metaData.sort(function(a, b) {return a.point - b.point});
@@ -444,7 +449,7 @@ Entry.Board = function(option) {
             maxIndex = targetArray.length - 1,
             index,
             pointData,
-            searchValue = y;
+            searchValue = y - 15;
         while (minIndex <= maxIndex) {
             index = (minIndex + maxIndex) / 2 | 0;
             pointData = targetArray[index];

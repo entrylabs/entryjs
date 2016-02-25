@@ -14906,6 +14906,7 @@ Entry.Scroller.RADIUS = 7;
     a = Math.min(e.width() - Entry.BOARD_PADDING - f, a);
     c = Math.min(e.height() - Entry.BOARD_PADDING - g, c);
     this.board.code.moveBy(a, c);
+    this.board.generateCodeMagnetMap();
     this.updateScrollBar(a, c);
   };
   a.setVisible = function(a) {
@@ -15448,6 +15449,9 @@ Entry.Board = function(a) {
   Entry.ANIMATION_DURATION = 200;
   Entry.BOARD_PADDING = 100;
   this.changeEvent = new Entry.Event(this);
+  this.changeEvent.attach(this, function() {
+    this.generateCodeMagnetMap();
+  });
   this.scroller = new Entry.Scroller(this, !0, !0);
   Entry.Utils.disableContextmenu(this.svgDom);
   this._addControl(b);
@@ -15607,24 +15611,27 @@ Entry.Board = function(a) {
     a.circle(102.5, 27.5, 27.5).attr({"class":"entryFunctionButton"});
   };
   a.generateCodeMagnetMap = function(a) {
-    var c = (new Date).getTime();
-    a = this._getCodeBlocks(a);
-    a.sort(function(a, b) {
-      return a.point - b.point;
-    });
-    a.unshift({point:-Number.MAX_VALUE, blocks:[]});
-    for (var d = 1;d < a.length;d++) {
-      var e = a[d], f = e, g = e.startBlock;
-      if (g) {
-        for (var h = e.endPoint, k = d;h > f.point && (f.blocks.push(g), k++, f = a[k], f);) {
+    a || (a = this.code);
+    if (a) {
+      var c = (new Date).getTime();
+      a = this._getCodeBlocks(a);
+      a.sort(function(a, b) {
+        return a.point - b.point;
+      });
+      a.unshift({point:-Number.MAX_VALUE, blocks:[]});
+      for (var d = 1;d < a.length;d++) {
+        var e = a[d], f = e, g = e.startBlock;
+        if (g) {
+          for (var h = e.endPoint, k = d;h > f.point && (f.blocks.push(g), k++, f = a[k], f);) {
+          }
+          delete e.startBlock;
         }
-        delete e.startBlock;
+        e.endPoint = Number.MAX_VALUE;
+        a[d - 1].endPoint = e.point;
       }
-      e.endPoint = Number.MAX_VALUE;
-      a[d - 1].endPoint = e.point;
+      this._magnetMap.nextMagnet = a;
+      console.log((new Date).getTime() - c);
     }
-    this._magnetMap.nextMagnet = a;
-    console.log((new Date).getTime() - c);
   };
   a._getCodeBlocks = function(a) {
     var c = [], d = this;
@@ -15651,17 +15658,18 @@ Entry.Board = function(a) {
     return c.concat(d);
   };
   a.getNearestMagnet = function(a, c, d) {
-    for (var e = this._magnetMap[d], f = 0, g = e.length - 1, h;f <= g;) {
-      if (h = (f + g) / 2 | 0, d = e[h], c < d.point) {
-        g = h - 1;
+    d = this._magnetMap[d];
+    for (var e = 0, f = d.length - 1, g, h = c - 15;e <= f;) {
+      if (g = (e + f) / 2 | 0, c = d[g], h < c.point) {
+        f = g - 1;
       } else {
-        if (c > d.endPoint) {
-          f = h + 1;
+        if (h > c.endPoint) {
+          e = g + 1;
         } else {
-          c = d.blocks;
-          for (e = 0;e < c.length;e++) {
-            if (f = c[e].view, f.absX < a && a < f.absX + f.width) {
-              return d.blocks[e];
+          d = c.blocks;
+          for (e = 0;e < d.length;e++) {
+            if (f = d[e].view, f.absX < a && a < f.absX + f.width) {
+              return c.blocks[e];
             }
           }
           break;

@@ -240,6 +240,7 @@ Entry.Scroller.RADIUS = 7;
             y
         );
         this.board.code.moveBy(x, y);
+        this.board.generateCodeMagnetMap();
         this.updateScrollBar(x, y);
     };
 
