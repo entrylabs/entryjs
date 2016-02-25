@@ -44,11 +44,15 @@ Entry.Board = function(option) {
         { parent: this.wrapper }
     );
 
+
+
     this.visible = true;
     var that = this;
     $(window).scroll(this.updateOffset);
     Entry.windowResized.attach(this, this.updateOffset);
     this.svg = Entry.SVG(this._svgId);
+
+    this._addFilters();
 
     this._blockViews = [];
     this._magnetMap = {};
@@ -448,5 +452,18 @@ Entry.Board = function(option) {
         }
         return null
     };
+
+    p._addFilters = function() {
+        var defs = this.svg.elem('defs');
+
+        //trashcan filter
+        filter = defs.elem('filter', {'id': 'entryTrashcanFilter'});
+        filter.elem('feGaussianBlur', {'in': 'SourceAlpha', 'stdDeviation': 2, 'result': 'blur'});
+        filter.elem('feOffset', {'in': 'blur', 'dx': 1, 'dy': 1, 'result': 'offsetBlur'});
+        feMerge = filter.elem('feMerge');
+        feMerge.elem('feMergeNode', {'in': 'offsetBlur'});
+        feMerge.elem('feMergeNode', {'in': 'SourceGraphic'}, feMerge);
+    };
+
 
 })(Entry.Board.prototype);

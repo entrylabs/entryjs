@@ -15358,6 +15358,7 @@ Entry.ThreadView = function(a, b) {
 Entry.FieldTrashcan = function(a) {
   this.board = a;
   this.svgGroup = a.svg.elem("g");
+  this.svgGroup.attr({filter:" url(#entryTrashcanFilter)"});
   this.renderStart();
   this.dragBlockObserver = this.dragBlock = null;
   this.isOver = !1;
@@ -15425,6 +15426,7 @@ Entry.Board = function(a) {
   $(window).scroll(this.updateOffset);
   Entry.windowResized.attach(this, this.updateOffset);
   this.svg = Entry.SVG(this._svgId);
+  this._addFilters();
   this._blockViews = [];
   this._magnetMap = {};
   this.trashcan = new Entry.FieldTrashcan(this);
@@ -15653,6 +15655,14 @@ Entry.Board = function(a) {
       }
     }
     return null;
+  };
+  a._addFilters = function() {
+    filter = this.svg.elem("defs").elem("filter", {id:"entryTrashcanFilter"});
+    filter.elem("feGaussianBlur", {"in":"SourceAlpha", stdDeviation:2, result:"blur"});
+    filter.elem("feOffset", {"in":"blur", dx:1, dy:1, result:"offsetBlur"});
+    feMerge = filter.elem("feMerge");
+    feMerge.elem("feMergeNode", {"in":"offsetBlur"});
+    feMerge.elem("feMergeNode", {"in":"SourceGraphic"}, feMerge);
   };
 })(Entry.Board.prototype);
 Entry.Vim = function(a) {
