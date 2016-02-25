@@ -13427,9 +13427,9 @@ Entry.BlockView.PARAM_SPACE = 5;
   };
   a.destroy = function(b) {
     var a = this.svgGroup;
-    b ? a.animate({opacity:0}, 100, null, function() {
-      this.remove();
-    }) : a.remove();
+    b ? $(a).velocity({opacity:0}, {duration:100, complete:function() {
+      a.remove();
+    }}) : a.remove();
     this._contents.forEach(function(b) {
       b.destroy();
     });
@@ -15597,24 +15597,25 @@ Entry.Board = function(a) {
     a.circle(102.5, 27.5, 27.5).attr({"class":"entryFunctionButton"});
   };
   a.generateCodeMagnetMap = function(a) {
-    (new Date).getTime();
+    var c = (new Date).getTime();
     a = this._getCodeBlocks(a);
     a.sort(function(a, b) {
       return a.point - b.point;
     });
     a.unshift({point:-Number.MAX_VALUE, blocks:[]});
-    for (var c = 1;c < a.length;c++) {
-      var d = a[c], e = d.startBlock;
-      if (e) {
-        for (var f = d.endPoint, g = c;f > d.point;) {
-          d.blocks.push(e), g++, d = a[g];
+    for (var d = 1;d < a.length;d++) {
+      var e = a[d], f = e.startBlock;
+      if (f) {
+        for (var g = e.endPoint, h = d;g > e.point;) {
+          e.blocks.push(f), h++, e = a[h];
         }
-        delete d.startBlock;
+        delete e.startBlock;
       }
-      d.endPoint = Number.MAX_VALUE;
-      a[c - 1].endPoint = a[c].point;
+      e.endPoint = Number.MAX_VALUE;
+      a[d - 1].endPoint = a[d].point;
     }
     this._magnetMap.nextMagnet = a;
+    console.log((new Date).getTime() - c);
   };
   a._getCodeBlocks = function(a) {
     var c = [], d = this;

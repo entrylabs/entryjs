@@ -618,12 +618,13 @@ Entry.BlockView.PARAM_SPACE = 5;
         var svgGroup = this.svgGroup;
 
         if (animate) {
-            svgGroup.animate(
-                { opacity: 0 },
-                100,
-                null,
-                function(){
-                    this.remove();
+            $(svgGroup).velocity(
+                {opacity:0},
+                {
+                    duration:100,
+                    complete: function() {
+                        svgGroup.remove();
+                    }
                 }
             );
         } else svgGroup.remove();
