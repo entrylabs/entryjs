@@ -94,20 +94,24 @@ Entry.Parser = function(mode, syntax, cm) {
             case "block":
                 var textCode = this._parser.Code(code);
                 var textArr = textCode.match(/(.*{.*[\S|\s]+?}|.+)/g);
-                result = textArr.reduce(function (prev, current, index) {
-                    var temp = '';
+                if(Array.isArray(textArr)) {
+                    result = textArr.reduce(function (prev, current, index) {
+                        var temp = '';
 
-                    if(index === 1) {
-                        prev = prev + '\n';
-                    }
-                    if(current.indexOf('function') > -1) {
-                        temp = current + prev;
-                    } else {
-                        temp = prev + current;
-                    }
+                        if(index === 1) {
+                            prev = prev + '\n';
+                        }
+                        if(current.indexOf('function') > -1) {
+                            temp = current + prev;
+                        } else {
+                            temp = prev + current;
+                        }
 
-                    return temp + '\n';
-                });
+                        return temp + '\n';
+                    });
+                } else {
+                    result = '';
+                }
 
                 break;
         }

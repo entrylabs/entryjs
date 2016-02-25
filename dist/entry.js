@@ -8726,12 +8726,12 @@ Entry.Parser = function(a, b, c) {
         }
         break;
       case "block":
-        a = this._parser.Code(b).match(/(.*{.*[\S|\s]+?}|.+)/g).reduce(function(b, a, c) {
+        b = this._parser.Code(b).match(/(.*{.*[\S|\s]+?}|.+)/g), a = Array.isArray(b) ? b.reduce(function(b, a, c) {
           var d = "";
           1 === c && (b += "\n");
           d = -1 < a.indexOf("function") ? a + b : b + a;
           return d + "\n";
-        });
+        }) : "";
     }
     return a;
   };
@@ -14028,8 +14028,8 @@ Entry.Field = function() {
     return {x:a.e + d.left + this.box.x + b.x, y:a.f + d.top + this.box.y + b.y};
   };
   a.getRelativePos = function() {
-    var a = this._block.view, c = a.svgGroup.transform().globalMatrix, a = a.getContentPos(), d = this.box;
-    return {x:c.e + d.x + a.x, y:c.f + d.y + a.y};
+    var b = this._block.view, a = b.svgGroup.transform().globalMatrix, b = b.getContentPos(), d = this.box;
+    return {x:a.e + d.x + b.x, y:a.f + d.y + b.y};
   };
   a.truncate = function() {
     var a = String(this.getValue()), c = this.TEXT_LIMIT_LENGTH, d = a.substring(0, c);
