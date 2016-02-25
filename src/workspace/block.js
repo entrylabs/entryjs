@@ -173,17 +173,10 @@ Entry.Block.MAGNET_OFFSET = 0.4;
         if (statements) {
             for (var i=0; i<statements.length; i++) {
                 var statement = statements[i];
-                var block = statement.getFirstBlock();
-                if (block) block.destroy(animate);
+                statement.destroy(animate);
             }
         }
 
-        if (this._schema.event)
-            this.thread.unregisterEvent(this, this._schema.event);
-    };
-
-    p.destroyAlone = function(animate) {
-        if (this.view) this.view.destroy(animate);
         this.getThread().spliceBlock(this);
         if (this._schema.event)
             this.thread.unregisterEvent(this, this._schema.event);
@@ -315,32 +308,7 @@ Entry.Block.MAGNET_OFFSET = 0.4;
             ];
             Entry.activityReporter.add(new Entry.Activity('destroyBlock', data));
         }
-    };
-
-    p.doDestroyAlone = function(animate) {
-        if (!this.isDeletable()) return;
-        var id = this.id;
-        var positionX = this.x;
-        var positionY = this.y;
-
-        console.log(
-            "destroy alone",
-            id,
-            positionX,
-            positionY
-        );
-        this.destroyAlone(animate);
-        this.getCode().changeEvent.notify();
-        if (Entry.activityReporter) {
-            var data = [
-                ['blockId',id],
-                ['positionX',positionX],
-                ['positionY',positionY],
-                ['code',this.getCode().stringify()]
-            ];
-            Entry.activityReporter.add(new Entry.Activity('destroyBlockAlone', data));
-        }
-        return true;
+        return this;
     };
 
     p.copy = function() {

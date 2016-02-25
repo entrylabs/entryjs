@@ -151,7 +151,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
 
         if (blockView && !blockView.isInBlockMenu && blockView.block.isDeletable()) {
             if (keyCode == 8 || keyCode == 46) { //destroy
-                blockView.block.doDestroyAlone(true);
+                blockView.block.doDestroy(true);
                 e.preventDefault();
             } else if (ctrlKey) {
                 if (keyCode == 67) //copy

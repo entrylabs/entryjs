@@ -6435,9 +6435,9 @@ p.generateView = function(a, b) {
   }
 };
 p.bindWorkspace = function(a) {
-  a && a && (this._blockViewObserver && this._blockViewObserver.destroy(), this.workspace = a, this._blockViewObserver = a.observe(this, "updateSelectedBlock", ["selectedBlockView"]));
+  a && (this._blockViewObserver && this._blockViewObserver.destroy(), this.workspace = a, this._blockViewObserver = a.observe(this, "_updateSelectedBlock", ["selectedBlockView"]));
 };
-p.updateSelectedBlock = function() {
+p._updateSelectedBlock = function() {
   var a = this.workspace.selectedBlockView;
   if (a && this.visible && a != this._blockView) {
     this.first && (this.blockHelperContent_.removeClass("entryBlockHelperIntro"), this.first = !1);
@@ -6449,7 +6449,7 @@ p.updateSelectedBlock = function() {
 p.renderBlock = function(a) {
   if (a && this.visible) {
     this.code.clear();
-    this.code.createThread([{type:a, readOnly:!0}]);
+    this.code.createThread([{type:a}]);
     var b = this.code.getThreads()[0].getFirstBlock().view, c = b.svgGroup.getBBox(), d = c.width, c = c.height, b = b.getSkeleton().box(b).offsetX;
     isNaN(b) && (b = 0);
     this.blockHelperDescription_.innerHTML = Lang.Helper[a];
@@ -13334,7 +13334,7 @@ Entry.BlockView.PARAM_SPACE = 5;
             return;
           }
           var f = [], k = {text:"\ube14\ub85d \uc0ad\uc81c", enable:h.isDeletable(), callback:function() {
-            g.block.doDestroyAlone(!0);
+            g.block.doDestroy(!0);
           }};
           f.push({text:"\ube14\ub85d \ubcf5\uc0ac & \ubd99\uc5ec\ub123\uae30", callback:function() {
             e.code.createThread(h.copy());
@@ -13453,7 +13453,6 @@ Entry.BlockView.PARAM_SPACE = 5;
   };
   a._updateMagnet = function() {
     var b = this._skeleton.magnets(this);
-    this.nextY = b.next.y;
     this._nextGroup.attr("transform", "translate(" + b.next.x + "," + b.next.y + ")");
     this.magnet = b;
   };
@@ -13567,7 +13566,7 @@ Entry.Code = function(a) {
   };
   a.clear = function() {
     for (var b = this._data.length - 1;0 <= b;b--) {
-      this._data[b].getFirstBlock().destroy();
+      this._data[b].destroy(!1);
     }
     this.clearExecutors();
     this._eventMap = {};
@@ -13953,12 +13952,12 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldColor);
     this.box.set({x:b, y:d, width:14.5, height:16});
   };
   a.renderOptions = function() {
-    var b = this;
+    var a = this;
     this.destroyOption();
-    var a = this._block.view;
+    var c = this._block.view;
     this.documentDownEvent = Entry.documentMousedown.attach(this, function() {
       Entry.documentMousedown.detach(this.documentDownEvent);
-      b.optionGroup.remove();
+      a.optionGroup.remove();
     });
     var d = Entry.FieldColor.getWidgetColorList();
     this.optionGroup = Entry.Dom("table", {class:"entry-widget-color-table", parent:$("body")});
@@ -13967,20 +13966,20 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldColor);
         var h = Entry.Dom("td", {class:"entry-widget-color-cell", parent:f}), k = d[e][g];
         h.css({"background-color":k});
         h.attr({"data-color-value":k});
-        (function(a, c) {
-          a.mousedown(function() {
-            b.applyValue(c);
-            b.destroyOption();
+        (function(c, d) {
+          c.mousedown(function() {
+            a.applyValue(d);
+            a.destroyOption();
           });
         })(h, k);
       }
     }
-    a.svgGroup.transform();
-    a.getBoard().svgDom.offset();
-    a.getContentPos();
-    a = this.getAbsolutePos();
-    a.y += this.box.height / 2 + 1;
-    this.optionGroup.css({left:a.x, top:a.y});
+    c.svgGroup.transform();
+    c.getBoard().svgDom.offset();
+    c.getContentPos();
+    c = this.getAbsolutePos();
+    c.y += this.box.height / 2 + 1;
+    this.optionGroup.css({left:c.x, top:c.y});
   };
   a.applyValue = function(a) {
     this.value != a && (this.setValue(a), this._header.attr({fill:a}));
@@ -15111,13 +15110,9 @@ Entry.Block.MAGNET_OFFSET = .4;
     }
     if (c = this.statements) {
       for (d = 0;d < c.length;d++) {
-        (e = c[d].getFirstBlock()) && e.destroy(a);
+        c[d].destroy(a);
       }
     }
-    this._schema.event && this.thread.unregisterEvent(this, this._schema.event);
-  };
-  a.destroyAlone = function(a) {
-    this.view && this.view.destroy(a);
     this.getThread().spliceBlock(this);
     this._schema.event && this.thread.unregisterEvent(this, this._schema.event);
   };
@@ -15173,16 +15168,7 @@ Entry.Block.MAGNET_OFFSET = .4;
     this.destroy(a);
     this.getCode().changeEvent.notify();
     Entry.activityReporter && (a = [["blockId", c], ["positionX", d], ["positionY", e], ["code", this.getCode().stringify()]], Entry.activityReporter.add(new Entry.Activity("destroyBlock", a)));
-  };
-  a.doDestroyAlone = function(a) {
-    if (this.isDeletable()) {
-      var c = this.id, d = this.x, e = this.y;
-      console.log("destroy alone", c, d, e);
-      this.destroyAlone(a);
-      this.getCode().changeEvent.notify();
-      Entry.activityReporter && (a = [["blockId", c], ["positionX", d], ["positionY", e], ["code", this.getCode().stringify()]], Entry.activityReporter.add(new Entry.Activity("destroyBlockAlone", a)));
-      return !0;
-    }
+    return this;
   };
   a.copy = function() {
     for (var a = this.getThread(), c = a.getBlocks().indexOf(this), c = a.toJSON(!0, c), a = [], d = 0;d < c.length;d++) {
@@ -15285,6 +15271,9 @@ Entry.Thread = function(a, b) {
   a.destroy = function(a) {
     this._code.destroyThread(this, !1);
     this.view && this.view.destroy(a);
+    for (var c = this._data, d = c.length - 1;0 <= d;d--) {
+      c[d].destroy(a);
+    }
   };
   a.getFirstBlock = function() {
     return this._data[0];
@@ -15558,7 +15547,7 @@ Entry.Board = function(a) {
   };
   a._keyboardControl = function(a) {
     var c = this.selectedBlockView;
-    c && 46 == a.keyCode && c.block.doDestroyAlone(!0) && this.set({selectedBlockView:null});
+    c && 46 == a.keyCode && c.block.doDestroy(!0) && this.set({selectedBlockView:null});
   };
   a.hide = function() {
     this.wrapper.addClass("entryRemove");
@@ -15817,7 +15806,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
     var c = a.keyCode || a.which, d = a.ctrlKey;
     if (!Entry.Utils.isInInput(a)) {
       var e = this.selectedBlockView;
-      e && !e.isInBlockMenu && e.block.isDeletable() && (8 == c || 46 == c ? (e.block.doDestroyAlone(!0), a.preventDefault()) : d && (67 == c ? e.block.copyToClipboard() : 88 == c && (a = e.block, a.copyToClipboard(), a.destroy(!0))));
+      e && !e.isInBlockMenu && e.block.isDeletable() && (8 == c || 46 == c ? (e.block.doDestroy(!0), a.preventDefault()) : d && (67 == c ? e.block.copyToClipboard() : 88 == c && (a = e.block, a.copyToClipboard(), a.destroy(!0))));
       d && 86 == c && (c = this.selectedBoard) && c instanceof Entry.Board && Entry.clipboard && c.code.createThread(Entry.clipboard).getFirstBlock().copyToClipboard();
     }
   };

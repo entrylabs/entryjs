@@ -120,6 +120,11 @@ Entry.Thread = function(thread, code) {
     p.destroy = function(animate) {
         this._code.destroyThread(this, false);
         if (this.view) this.view.destroy(animate);
+
+        var blocks = this._data;
+
+        for (var i=blocks.length-1; i>=0; i--)
+            blocks[i].destroy(animate);
     };
 
     p.getFirstBlock = function() {

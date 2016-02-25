@@ -331,7 +331,7 @@ Entry.BlockView.PARAM_SPACE = 5;
                 text: '블록 삭제',
                 enable: block.isDeletable(),
                 callback: function(){
-                    that.block.doDestroyAlone(true);
+                    that.block.doDestroy(true);
                 }
             };
 

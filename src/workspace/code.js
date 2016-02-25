@@ -46,10 +46,9 @@ Entry.Code = function(code) {
 
     p.clear = function() {
         for (var i = this._data.length - 1; i >= 0; i--)
-            this._data[i].getFirstBlock().destroy();
+            this._data[i].destroy(false);
 
         this.clearExecutors();
-
         this._eventMap = {};
     };
 

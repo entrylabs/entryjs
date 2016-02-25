@@ -58,19 +58,18 @@ p.generateView = function(parentView, option) {
 
 p.bindWorkspace = function(workspace) {
     if (!workspace) return;
-    if (workspace) {
-        if (this._blockViewObserver) this._blockViewObserver.destroy();
 
-        this.workspace = workspace;
-        this._blockViewObserver =
-            workspace.observe(this, "updateSelectedBlock", ['selectedBlockView']);
-    }
+    if (this._blockViewObserver) this._blockViewObserver.destroy();
+
+    this.workspace = workspace;
+    this._blockViewObserver =
+        workspace.observe(this, "_updateSelectedBlock", ['selectedBlockView']);
 };
 
 /**
  * toggle on block helper
  */
-p.updateSelectedBlock = function() {
+p._updateSelectedBlock = function() {
     var blockView = this.workspace.selectedBlockView;
     if (!blockView || !this.visible || blockView == this._blockView) return;
 
@@ -90,8 +89,7 @@ p.renderBlock = function(type) {
     this.code.clear();
 
     this.code.createThread([{
-        type:type,
-        readOnly:true
+        type:type
     }]);
 
     var blockView = this.code.getThreads()[0].getFirstBlock().view;

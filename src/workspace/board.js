@@ -267,7 +267,7 @@ Entry.Board = function(option) {
         if (!selected) return;
 
         if (event.keyCode == 46) {
-            if (selected.block.doDestroyAlone(true))
+            if (selected.block.doDestroy(true))
                 this.set({selectedBlockView:null});
         }
     };
