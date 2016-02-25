@@ -75,25 +75,23 @@ Entry.BlockView.PARAM_SPACE = 5;
     };
 
     p._startRender = function(block, mode) {
-        this.svgGroup.attr({class: "block"});
+        this.svgGroup.attr({
+            class: "block"
+        });
 
         var path = this._skeleton.path(this);
 
-        this._darkenPath = this.svgGroup.elem("path", {
-            d: path,
-            transform: "translate(0, 1)",
-            fill: Entry.Utils.colorDarken(this._schema.color, 0.7),
-            class: 'blockPathDarken'
+        this.pathGroup = this.svgGroup.elem("g", {
+            filter: 'url(#entryBlockShadowFilter)'
         });
 
-        this._path = this.svgGroup.elem("path");
+        this._path = this.pathGroup.elem("path");
         var pathStyle = {
             d: path,
             fill: this._schema.color
         };
         if (this._skeleton.outerLine) {
             pathStyle.strokeWidth = "0.5";
-            pathStyle.stroke = Entry.Utils.colorDarken(this._schema.color, 0.8);
         }
         pathStyle.class = 'blockPath';
         this._path.attr(pathStyle);
@@ -207,21 +205,11 @@ Entry.BlockView.PARAM_SPACE = 5;
 
         if (false && Entry.ANIMATION_DURATION !== 0) {
             setTimeout(function() {
-                that._darkenPath.animate({
-                    d: path
-                }, Entry.ANIMATION_DURATION, mina.easeinout, function() {
-                    that.set({animating: false});
-                });
-
                 that._path.animate({
                     d: path
                 }, Entry.ANIMATION_DURATION, mina.easeinout);
             }, 0);
         } else {
-            this._darkenPath.attr({
-                d: path
-            });
-
             this._path.attr({
                 d: path
             });
@@ -659,7 +647,6 @@ Entry.BlockView.PARAM_SPACE = 5;
 
     p._updateMagnet = function() {
         var magnet = this._skeleton.magnets(this);
-        this.nextY = magnet.next.y;
         this._nextGroup.attr(
             "transform", "translate(" + magnet.next.x + ',' + magnet.next.y + ")"
         );
@@ -789,8 +776,6 @@ Entry.BlockView.PARAM_SPACE = 5;
 
         if (shadow) fill = Entry.Utils.colorDarken(this._schema.color, 0.7);
         else fill = 'transparent';
-
-        this._darkenPath.attr({fill: fill});
     };
 
     p._setMovable = function() {

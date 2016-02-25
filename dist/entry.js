@@ -6499,7 +6499,11 @@ Entry.EntryObject = function(a) {
     this.text = a.text || this.name;
     this.objectType = a.objectType;
     this.objectType || (this.objectType = "sprite");
-    a.script = [[{type:"when_run_button_click", x:40, y:240}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}]];
+    a.script = [[{type:"when_run_button_click", x:40, y:240}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, 
+    {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, 
+    {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, 
+    {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, 
+    {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}]];
     this.script = new Entry.Code(a.script ? a.script : []);
     this.pictures = a.sprite.pictures;
     this.sounds = [];
@@ -13184,10 +13188,10 @@ Entry.BlockView.PARAM_SPACE = 5;
   a._startRender = function(b, a) {
     this.svgGroup.attr({class:"block"});
     var d = this._skeleton.path(this);
-    this._darkenPath = this.svgGroup.elem("path", {d:d, transform:"translate(0, 1)", fill:Entry.Utils.colorDarken(this._schema.color, .7), class:"blockPathDarken"});
-    this._path = this.svgGroup.elem("path");
+    this.pathGroup = this.svgGroup.elem("g", {filter:"url(#entryBlockShadowFilter)"});
+    this._path = this.pathGroup.elem("path");
     d = {d:d, fill:this._schema.color};
-    this._skeleton.outerLine && (d.strokeWidth = "0.5", d.stroke = Entry.Utils.colorDarken(this._schema.color, .8));
+    this._skeleton.outerLine && (d.strokeWidth = "0.5");
     d.class = "blockPath";
     this._path.attr(d);
     this._moveTo(this.x, this.y, !1);
@@ -13261,7 +13265,6 @@ Entry.BlockView.PARAM_SPACE = 5;
   };
   a._renderPath = function() {
     var b = this._skeleton.path(this);
-    this._darkenPath.attr({d:b});
     this._path.attr({d:b});
     this.set({animating:!1});
   };
@@ -13515,9 +13518,7 @@ Entry.BlockView.PARAM_SPACE = 5;
     this.svgGroup.attr({opacity:!1 === this.visible ? 0 : 1});
   };
   a._updateShadow = function() {
-    var b;
-    b = this.shadow ? Entry.Utils.colorDarken(this._schema.color, .7) : "transparent";
-    this._darkenPath.attr({fill:b});
+    this.shadow && Entry.Utils.colorDarken(this._schema.color, .7);
   };
   a._setMovable = function() {
     this.movable = null !== this.block.isMovable() ? this.block.isMovable() : void 0 !== this._skeleton.movable ? this._skeleton.movable : !0;
@@ -15633,7 +15634,7 @@ Entry.Board = function(a) {
       f += b.y;
       d.push({point:f, endPoint:f + b.height, startBlock:a, blocks:[]});
       d.push({point:f + b.height, blocks:[]});
-      f += b.nextY;
+      f += b.magnet.next.y;
       a.statements && a.statements.map(function(a) {
         statementsBlocks = c.concat(e._getThreadBlocks(a));
       });
@@ -15657,12 +15658,15 @@ Entry.Board = function(a) {
     return null;
   };
   a._addFilters = function() {
-    filter = this.svg.elem("defs").elem("filter", {id:"entryTrashcanFilter"});
-    filter.elem("feGaussianBlur", {"in":"SourceAlpha", stdDeviation:2, result:"blur"});
-    filter.elem("feOffset", {"in":"blur", dx:1, dy:1, result:"offsetBlur"});
-    feMerge = filter.elem("feMerge");
+    var a = this.svg.elem("defs");
+    trashCanFilter = a.elem("filter", {id:"entryTrashcanFilter"});
+    trashCanFilter.elem("feGaussianBlur", {"in":"SourceAlpha", stdDeviation:2, result:"blur"});
+    trashCanFilter.elem("feOffset", {"in":"blur", dx:1, dy:1, result:"offsetBlur"});
+    feMerge = trashCanFilter.elem("feMerge");
     feMerge.elem("feMergeNode", {"in":"offsetBlur"});
     feMerge.elem("feMergeNode", {"in":"SourceGraphic"}, feMerge);
+    blockFilter = a.elem("filter", {id:"entryBlockShadowFilter"});
+    blockFilter.innerHTML = '<feOffset result="offOut" in="SourceGraphic" dx="0" dy="1" /><feColorMatrix result="matrixOut" in="offOut" type="matrix"values="0.7 0 0 0 0 0 0.7 0 0 0 0 0 0.7 0 0 0 0 0 1 0" /><feBlend in="SourceGraphic" in2="blurOut" mode="normal" />';
   };
 })(Entry.Board.prototype);
 Entry.Vim = function(a) {

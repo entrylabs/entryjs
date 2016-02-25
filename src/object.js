@@ -41,6 +41,306 @@ Entry.EntryObject = function(model) {
                 },
                 {
                     type: "stop_repeat"
+                },
+                {
+                    type: "move_direction"
+                },
+                {
+                    type: "stop_repeat"
+                },
+                {
+                    type: "move_direction"
+                },
+                {
+                    type: "stop_repeat"
+                },
+                {
+                    type: "move_direction"
+                },
+                {
+                    type: "stop_repeat"
+                },
+                {
+                    type: "move_direction"
+                },
+                {
+                    type: "stop_repeat"
+                },
+                {
+                    type: "move_direction"
+                },
+                {
+                    type: "stop_repeat"
+                },
+                {
+                    type: "move_direction"
+                },
+                {
+                    type: "stop_repeat"
+                },
+                {
+                    type: "move_direction"
+                },
+                {
+                    type: "stop_repeat"
+                },
+                {
+                    type: "move_direction"
+                },
+                {
+                    type: "stop_repeat"
+                },
+                {
+                    type: "move_direction"
+                },
+                {
+                    type: "stop_repeat"
+                },
+                {
+                    type: "move_direction"
+                },
+                {
+                    type: "stop_repeat"
+                },
+                {
+                    type: "move_direction"
+                },
+                {
+                    type: "stop_repeat"
+                },
+                {
+                    type: "move_direction"
+                },
+                {
+                    type: "stop_repeat"
+                },
+                {
+                    type: "move_direction"
+                },
+                {
+                    type: "stop_repeat"
+                },
+                {
+                    type: "move_direction"
+                },
+                {
+                    type: "stop_repeat"
+                },
+                {
+                    type: "move_direction"
+                },
+                {
+                    type: "stop_repeat"
+                },
+                {
+                    type: "move_direction"
+                },
+                {
+                    type: "stop_repeat"
+                },
+                {
+                    type: "move_direction"
+                },
+                {
+                    type: "stop_repeat"
+                },
+                {
+                    type: "move_direction"
+                },
+                {
+                    type: "stop_repeat"
+                },
+                {
+                    type: "move_direction"
+                },
+                {
+                    type: "stop_repeat"
+                },
+                {
+                    type: "move_direction"
+                },
+                {
+                    type: "stop_repeat"
+                },
+                {
+                    type: "move_direction"
+                },
+                {
+                    type: "stop_repeat"
+                },
+                {
+                    type: "move_direction"
+                },
+                {
+                    type: "stop_repeat"
+                },
+                {
+                    type: "move_direction"
+                },
+                {
+                    type: "stop_repeat"
+                },
+                {
+                    type: "move_direction"
+                },
+                {
+                    type: "stop_repeat"
+                },
+                {
+                    type: "move_direction"
+                },
+                {
+                    type: "stop_repeat"
+                },
+                {
+                    type: "move_direction"
+                },
+                {
+                    type: "stop_repeat"
+                },
+                {
+                    type: "move_direction"
+                },
+                {
+                    type: "stop_repeat"
+                },
+                {
+                    type: "move_direction"
+                },
+                {
+                    type: "stop_repeat"
+                },
+                {
+                    type: "move_direction"
+                },
+                {
+                    type: "stop_repeat"
+                },
+                {
+                    type: "move_direction"
+                },
+                {
+                    type: "stop_repeat"
+                },
+                {
+                    type: "move_direction"
+                },
+                {
+                    type: "stop_repeat"
+                },
+                {
+                    type: "move_direction"
+                },
+                {
+                    type: "stop_repeat"
+                },
+                {
+                    type: "move_direction"
+                },
+                {
+                    type: "stop_repeat"
+                },
+                {
+                    type: "move_direction"
+                },
+                {
+                    type: "stop_repeat"
+                },
+                {
+                    type: "move_direction"
+                },
+                {
+                    type: "stop_repeat"
+                },
+                {
+                    type: "move_direction"
+                },
+                {
+                    type: "stop_repeat"
+                },
+                {
+                    type: "move_direction"
+                },
+                {
+                    type: "stop_repeat"
+                },
+                {
+                    type: "move_direction"
+                },
+                {
+                    type: "stop_repeat"
+                },
+                {
+                    type: "move_direction"
+                },
+                {
+                    type: "stop_repeat"
+                },
+                {
+                    type: "move_direction"
+                },
+                {
+                    type: "stop_repeat"
+                },
+                {
+                    type: "move_direction"
+                },
+                {
+                    type: "stop_repeat"
+                },
+                {
+                    type: "move_direction"
+                },
+                {
+                    type: "stop_repeat"
+                },
+                {
+                    type: "move_direction"
+                },
+                {
+                    type: "stop_repeat"
+                },
+                {
+                    type: "move_direction"
+                },
+                {
+                    type: "stop_repeat"
+                },
+                {
+                    type: "move_direction"
+                },
+                {
+                    type: "stop_repeat"
+                },
+                {
+                    type: "move_direction"
+                },
+                {
+                    type: "stop_repeat"
+                },
+                {
+                    type: "move_direction"
+                },
+                {
+                    type: "stop_repeat"
+                },
+                {
+                    type: "move_direction"
+                },
+                {
+                    type: "stop_repeat"
+                },
+                {
+                    type: "move_direction"
+                },
+                {
+                    type: "stop_repeat"
+                },
+                {
+                    type: "move_direction"
+                },
+                {
+                    type: "stop_repeat"
                 }
             ]
         ];
