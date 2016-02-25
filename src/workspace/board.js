@@ -444,6 +444,7 @@ Entry.Board = function(option) {
     };
 
     p.getNearestMagnet = function(x, y, targetType) {
+        console.log(x,y);
         var targetArray = this._magnetMap[targetType],
             minIndex = 0,
             maxIndex = targetArray.length - 1,

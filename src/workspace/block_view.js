@@ -296,11 +296,14 @@ Entry.BlockView.PARAM_SPACE = 5;
             doc.bind('touchmove.block', onMouseMove);
             doc.bind('touchend.block', onMouseUp);
             board.set({dragBlock:this});
+            var absStartPos = this.getAbsoluteCoordinate();
             this.dragInstance = new Entry.DragInstance({
                 startX: e.pageX,
                 startY: e.pageY,
                 offsetX: e.pageX,
                 offsetY: e.pageY,
+                absX: absStartPos.x,
+                absY: absStartPos.y,
                 height: 0,
                 mode: true
             });
@@ -551,27 +554,12 @@ Entry.BlockView.PARAM_SPACE = 5;
         //TODO optimize
         x = this.x,
         y = this.y;
-
-        return board.getNearestMagnet(x, y, targetType);
-
-
-        var targetElement = Snap.getElementByPoint(x, y + offset.top - 2);
-
-        if (targetElement === null) return;
-
-        var targetBlock = targetElement[targetType];
-
-        while (!targetBlock && targetElement.parent() &&
-               targetElement.type !== "svg" && targetElement.type !== "BODY") {
-            targetElement = targetElement.parent();
-            targetBlock = targetElement[targetType];
+        if (this.dragInstance) {
+            x += this.dragInstance.absX;
+            y += this.dragInstance.absY;
         }
 
-        if (targetBlock === undefined || targetBlock === this.block ||
-               targetBlock.view.getBoard() !== board)
-           return null;
-
-        return targetBlock;
+        return board.getNearestMagnet(x, y, targetType);
     };
 
     p._inheritAnimate = function() {

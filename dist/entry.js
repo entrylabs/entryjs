@@ -6499,7 +6499,7 @@ Entry.EntryObject = function(a) {
     this.text = a.text || this.name;
     this.objectType = a.objectType;
     this.objectType || (this.objectType = "sprite");
-    a.script = [[{type:"when_run_button_click", x:40, y:240}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, 
+    a.script = [[{type:"when_run_button_click", x:140, y:140}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, 
     {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, 
     {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, 
     {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, 
@@ -10903,7 +10903,7 @@ Entry.DragInstance = function(a) {
   Entry.Model(this);
   this.set(a);
 };
-Entry.DragInstance.prototype.schema = {type:Entry.STATIC.DRAG_INSTANCE, startX:0, startY:0, offsetX:0, offsetY:0, prev:null, height:0, mode:0, isNew:!1};
+Entry.DragInstance.prototype.schema = {type:Entry.STATIC.DRAG_INSTANCE, startX:0, startY:0, offsetX:0, offsetY:0, absX:0, absY:0, prev:null, height:0, mode:0, isNew:!1};
 Entry.ThreadModel = function() {
   Entry.Model(this);
 };
@@ -13357,7 +13357,8 @@ Entry.BlockView.PARAM_SPACE = 5;
         f.bind("touchmove.block", c);
         f.bind("touchend.block", d);
         e.set({dragBlock:this});
-        this.dragInstance = new Entry.DragInstance({startX:b.pageX, startY:b.pageY, offsetX:b.pageX, offsetY:b.pageY, height:0, mode:!0});
+        f = this.getAbsoluteCoordinate();
+        this.dragInstance = new Entry.DragInstance({startX:b.pageX, startY:b.pageY, offsetX:b.pageX, offsetY:b.pageY, absX:f.x, absY:f.y, height:0, mode:!0});
         this.addDragging();
         this.dragMode = Entry.DRAG_MODE_MOUSEDOWN;
       } else {
@@ -13440,6 +13441,7 @@ Entry.BlockView.PARAM_SPACE = 5;
         var a = this.getBoard();
         x = this.x;
         y = this.y;
+        this.dragInstance && (x += this.dragInstance.absX, y += this.dragInstance.absY);
         return a.getNearestMagnet(x, y, b);
       }
     }
@@ -15673,6 +15675,7 @@ Entry.Board = function(a) {
     return c.concat(d);
   };
   a.getNearestMagnet = function(a, c, d) {
+    console.log(a, c);
     d = this._magnetMap[d];
     for (var e = 0, f = d.length - 1, g, h = c - 15;e <= f;) {
       if (g = (e + f) / 2 | 0, c = d[g], h < c.point) {

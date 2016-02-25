@@ -27,8 +27,8 @@ Entry.EntryObject = function(model) {
             [
                 {
                     type: "when_run_button_click",
-                    x: 40,
-                    y: 240
+                    x: 140,
+                    y: 140
                 },
                 {
                     type: "move_direction"
