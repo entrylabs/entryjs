@@ -50,10 +50,8 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
     this.changeEvent = new Entry.Event(this);
     if (categoryData) this._generateCategoryCodes(categoryData);
 
-    //if (this._scroll) {
-        //this._scroller = new Entry.BlockMenuScroller(this);
-        //this.changeEvent.attach(this, this._inspectScroll);
-    //}
+    if (this._scroll)
+        this._scroller = new Entry.BlockMenuScroller(this);
 
     if (Entry.documentMousedown)
         Entry.documentMousedown.attach(this, this.setSelectedBlock);
@@ -312,7 +310,7 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
         var xDest = width - hPadding;
         var yDest;
         splitters.forEach(function(line) {
-            yDest = Number(line.attr('y1')) + y
+            yDest = parseFloat(line.getAttribute('y1')) + y
             line.attr({
                 x2: xDest, y1:yDest, y2:yDest
             });
@@ -437,7 +435,6 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
             var datum = categoryData[i];
             var blocks = datum.blocks;
             var codesJSON = [];
-            //TODO blockJSON by blockName
             blocks.forEach(function(b){
                 codesJSON.push([{
                     type:b
@@ -470,19 +467,5 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
                 return true;
         }
         return false;
-    };
-
-    p._inspectScroll = function() {
-        var visible = true;
-        var blockGroupHeight = this.svgBlockGroup.node.getBoundingClientRect().height;
-        if (blockGroupHeight + 10 < this.svgDom.height())
-            visible = false;
-
-        if (this._scroll !== visible) {
-            this._scroll = visible;
-            this._scroller.setVisible(visible);
-        }
-
-        if (this._scroll) this._scroller.resizeScrollBar();
     };
 })(Entry.BlockMenu.prototype);

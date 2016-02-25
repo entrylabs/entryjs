@@ -12901,6 +12901,7 @@ Entry.BlockMenu = function(a, b, c, d) {
   this.svgBlockGroup.board = this;
   this.changeEvent = new Entry.Event(this);
   c && this._generateCategoryCodes(c);
+  this._scroll && (this._scroller = new Entry.BlockMenuScroller(this));
   Entry.documentMousedown && Entry.documentMousedown.attach(this, this.setSelectedBlock);
 };
 (function(a) {
@@ -13017,7 +13018,7 @@ Entry.BlockMenu = function(a, b, c, d) {
     b = void 0 === b ? 0 : b;
     var a = this._svgWidth - 30, d;
     this._splitters.forEach(function(e) {
-      d = Number(e.attr("y1")) + b;
+      d = parseFloat(e.getAttribute("y1")) + b;
       e.attr({x2:a, y1:d, y2:d});
     });
   };
@@ -13104,50 +13105,67 @@ Entry.BlockMenu = function(a, b, c, d) {
       return !1;
     }
   };
-  a._inspectScroll = function() {
-    var b = !0;
-    this.svgBlockGroup.node.getBoundingClientRect().height + 10 < this.svgDom.height() && (b = !1);
-    this._scroll !== b && (this._scroll = b, this._scroller.setVisible(b));
-    this._scroll && this._scroller.resizeScrollBar();
-  };
 })(Entry.BlockMenu.prototype);
 Entry.BlockMenuScroller = function(a) {
-  this.board = a;
-  this.board.changeEvent.attach(this, this.resizeScrollBar);
-  this.svgGroup = null;
-  this.vRatio = this.vY = this.vWidth = this.hX = 0;
-  this._visible = !0;
-  this.createScrollBar();
-  Entry.windowResized && Entry.windowResized.attach(this, this.resizeScrollBar);
 };
 Entry.BlockMenuScroller.RADIUS = 7;
 (function(a) {
   a.createScrollBar = function() {
+    var b = this;
+    this.svgGroup = this.board.svgGroup.elem("g", {class:"boardScrollbar"});
+    this.vScrollbar = this.svgGroup.elem("rect", {rx:4, ry:4});
+    this.vScrollbar.onmousedown = function(a) {
+      function d(a) {
+        a.stopPropagation();
+        a.preventDefault();
+        a.originalEvent.touches && (a = a.originalEvent.touches[0]);
+        var c = b.dragInstance;
+        b.scroll(a.pageY - c.offsetY);
+        c.set({offsetY:a.pageY});
+      }
+      function e(a) {
+        $(document).unbind(".scroll");
+        delete b.dragInstance;
+      }
+      if (0 === a.button || a instanceof Touch) {
+        Entry.documentMousedown && Entry.documentMousedown.notify(a);
+        var f = $(document);
+        f.bind("mousemove.scroll", d);
+        f.bind("mouseup.scroll", e);
+        f.bind("touchmove.scroll", d);
+        f.bind("touchend.scroll", e);
+        b.dragInstance = new Entry.DragInstance({startY:a.pageY, offsetY:a.pageY});
+      }
+      a.stopPropagation();
+    };
+    this.resizeScrollBar();
   };
   a.resizeScrollBar = function() {
+    this._checkVisible();
     if (this._visible) {
-      var b = this.board, a = b.svgBlockGroup.node.getBoundingClientRect(), b = b.svgDom.height();
-      console.log("vRatio", a.height / b);
+      var b = this.board, a = b.svgBlockGroup.getBoundingClientRect(), b = b.svgDom, d = b.height(), a = a.height / d;
+      0 !== a && (this.vScrollbar.attr({width:9, height:d / a, x:b.width() - 9}), this.vRatio = a);
     }
   };
-  a.updateScrollBar = function(b, a) {
-    this.vY += a * this.vRatio;
+  a.updateScrollBar = function(b) {
+    this.board.svgBlockGroup.getBoundingClientRect();
+    var a = this.board.svgDom, a = a.height() - a.height() / this.vRatio;
+    this.vY += b;
+    this.vY = Math.max(this.vY, 0);
+    this.vY = Math.min(this.vY, a);
     this.vScrollbar.attr({y:this.vY});
   };
-  a.scroll = function(b, a) {
-    var d = this.board.svgBlockGroup.node.getBoundingClientRect(), e = this.board.svgDom, f = d.left - this.board.offset.left, g = d.top - this.board.offset.top, h = d.height;
-    b = Math.max(-d.width + Entry.BOARD_PADDING - f, b);
-    a = Math.max(-h + Entry.BOARD_PADDING - g, a);
-    b = Math.min(e.width() - Entry.BOARD_PADDING - f, b);
-    a = Math.min(e.height() - Entry.BOARD_PADDING - g, a);
-    this.board.code.moveBy(b, a);
-    this.updateScrollBar(b, a);
+  a.scroll = function(b) {
+    this.board.code.moveBy(0, b);
+    this.updateScrollBar(b);
   };
   a.setVisible = function(b) {
     b != this.isVisible() && (this._visible = b, this.svgGroup.attr({display:!0 === b ? "block" : "none"}));
   };
   a.isVisible = function() {
     return this._visible;
+  };
+  a._checkVisible = function() {
   };
 })(Entry.BlockMenuScroller.prototype);
 Entry.BlockView = function(a, b, c) {
@@ -13855,8 +13873,8 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
     });
     this.optionGroup = Entry.Dom("input", {class:"entry-widget-input-field", parent:$("body")});
     this.optionGroup.val(this.value);
-    this.optionGroup.on("mousedown", function(b) {
-      b.stopPropagation();
+    this.optionGroup.on("mousedown", function(a) {
+      a.stopPropagation();
     });
     this.optionGroup.on("keyup", function(a) {
       var c = a.keyCode || a.which;
@@ -13879,8 +13897,8 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
     this.svgOptionGroup.attr({class:"entry-field-angle", transform:"t" + a.x + " " + a.y});
     var a = b.getAbsolutePos(), d = [a.x + b.box.width / 2, a.y + b.box.height / 2 + 1];
     this.svgOptionGroup.mousemove(function(a) {
-      b.optionGroup.val(b.modValue(function(b, a) {
-        var c = a[0] - b[0], d = a[1] - b[1] - 49 - 1, e = Math.atan(-d / c), e = Entry.toDegrees(e), e = 90 - e;
+      b.optionGroup.val(b.modValue(function(a, b) {
+        var c = b[0] - a[0], d = b[1] - a[1] - 49 - 1, e = Math.atan(-d / c), e = Entry.toDegrees(e), e = 90 - e;
         0 > c ? e += 180 : 0 < d && (e += 360);
         return 15 * Math.round(e / 15);
       }(d, [a.clientX, a.clientY])));
@@ -13890,23 +13908,23 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
   };
   a.updateGraph = function() {
     this._fillPath && this._fillPath.remove();
-    var b = Entry.toRadian(this.getValue()), a = 49 * Math.sin(b), d = -49 * Math.cos(b), b = b > Math.PI ? 1 : 0;
-    this._fillPath = this.svgOptionGroup.path("M 0, 0 v -49 A 49,49 0 %LARGE 1 %X,%Y z".replace("%X", a).replace("%Y", d).replace("%LARGE", b));
+    var a = Entry.toRadian(this.getValue()), c = 49 * Math.sin(a), d = -49 * Math.cos(a), a = a > Math.PI ? 1 : 0;
+    this._fillPath = this.svgOptionGroup.path("M 0, 0 v -49 A 49,49 0 %LARGE 1 %X,%Y z".replace("%X", c).replace("%Y", d).replace("%LARGE", a));
     this._fillPath.attr({class:"entry-angle-fill-area"});
     this.svgOptionGroup.append(this._dividerGroup);
     this._indicator && this._indicator.remove();
-    this._indicator = this.svgOptionGroup.line(0, 0, a, d);
+    this._indicator = this.svgOptionGroup.line(0, 0, c, d);
     this._indicator.attr({class:"entry-angle-indicator"});
   };
   a.applyValue = function() {
-    var b = this.optionGroup.val();
-    isNaN(b) || (b = this.modValue(b), this.setValue(b), this.updateGraph(), this.textElement.node.textContent = this.getValue(), this.optionGroup && this.optionGroup.val(b), this.resize());
+    var a = this.optionGroup.val();
+    isNaN(a) || (a = this.modValue(a), this.setValue(a), this.updateGraph(), this.textElement.node.textContent = this.getValue(), this.optionGroup && this.optionGroup.val(a), this.resize());
   };
   a.resize = function() {
-    var b = this.getTextWidth();
-    this._header.attr({width:b});
-    this.optionGroup && this.optionGroup.css({width:b});
-    this.box.set({width:b});
+    var a = this.getTextWidth();
+    this._header.attr({width:a});
+    this.optionGroup && this.optionGroup.css({width:a});
+    this.box.set({width:a});
     this._block.view.alignContent();
   };
   a.getTextWidth = function() {
@@ -13915,8 +13933,8 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
   a.getText = function() {
     return this.getValue() + "\u00b0";
   };
-  a.modValue = function(b) {
-    return b % 360;
+  a.modValue = function(a) {
+    return a % 360;
   };
   a.destroyOption = function() {
     this.documentDownEvent && (Entry.documentMousedown.detach(this.documentDownEvent), delete this.documentDownEvent);
@@ -13939,17 +13957,17 @@ Entry.FieldColor = function(a, b, c) {
 };
 Entry.Utils.inherit(Entry.Field, Entry.FieldColor);
 (function(a) {
-  a.renderStart = function(b) {
-    var a = this;
-    this.svgGroup = b.contentSvgGroup.group();
+  a.renderStart = function(a) {
+    var c = this;
+    this.svgGroup = a.contentSvgGroup.group();
     this.svgGroup.attr({class:"entry-field-color"});
     var d = this._position;
-    d ? (b = d.x || 0, d = d.y || 0) : (b = 0, d = -8);
-    this._header = this.svgGroup.rect(b, d, 14.5, 16, 0).attr({fill:this.getValue()});
-    this.svgGroup.mouseup(function(b) {
-      a._isEditable() && a.renderOptions();
+    d ? (a = d.x || 0, d = d.y || 0) : (a = 0, d = -8);
+    this._header = this.svgGroup.rect(a, d, 14.5, 16, 0).attr({fill:this.getValue()});
+    this.svgGroup.mouseup(function(a) {
+      c._isEditable() && c.renderOptions();
     });
-    this.box.set({x:b, y:d, width:14.5, height:16});
+    this.box.set({x:a, y:d, width:14.5, height:16});
   };
   a.renderOptions = function() {
     var a = this;
