@@ -15860,7 +15860,7 @@ Entry.Vim = function(a) {
         e.codeMirror.replaceSelection(a);
         d = e.doc.getCursor().line;
         e.codeMirror.indentLine(d);
-        c !== b && e.codeMirror.replaceSelection("\n");
+        0 !== b && c === b || e.codeMirror.replaceSelection("\n");
       });
     }
     function d(a) {

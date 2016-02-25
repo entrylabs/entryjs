@@ -72,7 +72,7 @@ Entry.Vim = function(dom) {
                 var cursor = _self.doc.getCursor();
                 lastLine = cursor.line;
                 _self.codeMirror.indentLine(lastLine);
-                if(max !== i) {
+                if(i === 0 || max !== i) {
                     _self.codeMirror.replaceSelection('\n');
                 }
             });
