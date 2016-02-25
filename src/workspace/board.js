@@ -258,7 +258,7 @@ Entry.Board = function(option) {
         this.set({selectedBlockView:blockView});
     };
 
-    p._keyboardControl = function(sender, event) {
+    p._keyboardControl = function(event) {
         var selected = this.selectedBlockView;
         if (!selected) return;
 
@@ -270,13 +270,11 @@ Entry.Board = function(option) {
 
     p.hide = function() {
         this.wrapper.addClass('entryRemove');
-       // this.wrapper.css('opacity', '0');
         this.visible = false;
     };
 
     p.show = function() {
         this.wrapper.removeClass('entryRemove');
-        //this.wrapper.css('opacity', '1');
         this.visible = true;
         this.trashcan.setPosition();
     };

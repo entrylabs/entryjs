@@ -13855,8 +13855,8 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
     });
     this.optionGroup = Entry.Dom("input", {class:"entry-widget-input-field", parent:$("body")});
     this.optionGroup.val(this.value);
-    this.optionGroup.on("mousedown", function(a) {
-      a.stopPropagation();
+    this.optionGroup.on("mousedown", function(b) {
+      b.stopPropagation();
     });
     this.optionGroup.on("keyup", function(a) {
       var c = a.keyCode || a.which;
@@ -13879,8 +13879,8 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
     this.svgOptionGroup.attr({class:"entry-field-angle", transform:"t" + a.x + " " + a.y});
     var a = b.getAbsolutePos(), d = [a.x + b.box.width / 2, a.y + b.box.height / 2 + 1];
     this.svgOptionGroup.mousemove(function(a) {
-      b.optionGroup.val(b.modValue(function(a, b) {
-        var c = b[0] - a[0], d = b[1] - a[1] - 49 - 1, e = Math.atan(-d / c), e = Entry.toDegrees(e), e = 90 - e;
+      b.optionGroup.val(b.modValue(function(b, a) {
+        var c = a[0] - b[0], d = a[1] - b[1] - 49 - 1, e = Math.atan(-d / c), e = Entry.toDegrees(e), e = 90 - e;
         0 > c ? e += 180 : 0 < d && (e += 360);
         return 15 * Math.round(e / 15);
       }(d, [a.clientX, a.clientY])));
@@ -13890,23 +13890,23 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
   };
   a.updateGraph = function() {
     this._fillPath && this._fillPath.remove();
-    var a = Entry.toRadian(this.getValue()), c = 49 * Math.sin(a), d = -49 * Math.cos(a), a = a > Math.PI ? 1 : 0;
-    this._fillPath = this.svgOptionGroup.path("M 0, 0 v -49 A 49,49 0 %LARGE 1 %X,%Y z".replace("%X", c).replace("%Y", d).replace("%LARGE", a));
+    var b = Entry.toRadian(this.getValue()), a = 49 * Math.sin(b), d = -49 * Math.cos(b), b = b > Math.PI ? 1 : 0;
+    this._fillPath = this.svgOptionGroup.path("M 0, 0 v -49 A 49,49 0 %LARGE 1 %X,%Y z".replace("%X", a).replace("%Y", d).replace("%LARGE", b));
     this._fillPath.attr({class:"entry-angle-fill-area"});
     this.svgOptionGroup.append(this._dividerGroup);
     this._indicator && this._indicator.remove();
-    this._indicator = this.svgOptionGroup.line(0, 0, c, d);
+    this._indicator = this.svgOptionGroup.line(0, 0, a, d);
     this._indicator.attr({class:"entry-angle-indicator"});
   };
   a.applyValue = function() {
-    var a = this.optionGroup.val();
-    isNaN(a) || (a = this.modValue(a), this.setValue(a), this.updateGraph(), this.textElement.node.textContent = this.getValue(), this.optionGroup && this.optionGroup.val(a), this.resize());
+    var b = this.optionGroup.val();
+    isNaN(b) || (b = this.modValue(b), this.setValue(b), this.updateGraph(), this.textElement.node.textContent = this.getValue(), this.optionGroup && this.optionGroup.val(b), this.resize());
   };
   a.resize = function() {
-    var a = this.getTextWidth();
-    this._header.attr({width:a});
-    this.optionGroup && this.optionGroup.css({width:a});
-    this.box.set({width:a});
+    var b = this.getTextWidth();
+    this._header.attr({width:b});
+    this.optionGroup && this.optionGroup.css({width:b});
+    this.box.set({width:b});
     this._block.view.alignContent();
   };
   a.getTextWidth = function() {
@@ -13915,8 +13915,8 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
   a.getText = function() {
     return this.getValue() + "\u00b0";
   };
-  a.modValue = function(a) {
-    return a % 360;
+  a.modValue = function(b) {
+    return b % 360;
   };
   a.destroyOption = function() {
     this.documentDownEvent && (Entry.documentMousedown.detach(this.documentDownEvent), delete this.documentDownEvent);
@@ -13939,25 +13939,25 @@ Entry.FieldColor = function(a, b, c) {
 };
 Entry.Utils.inherit(Entry.Field, Entry.FieldColor);
 (function(a) {
-  a.renderStart = function(a) {
-    var c = this;
-    this.svgGroup = a.contentSvgGroup.group();
+  a.renderStart = function(b) {
+    var a = this;
+    this.svgGroup = b.contentSvgGroup.group();
     this.svgGroup.attr({class:"entry-field-color"});
     var d = this._position;
-    d ? (a = d.x || 0, d = d.y || 0) : (a = 0, d = -8);
-    this._header = this.svgGroup.rect(a, d, 14.5, 16, 0).attr({fill:this.getValue()});
-    this.svgGroup.mouseup(function(a) {
-      c._isEditable() && c.renderOptions();
+    d ? (b = d.x || 0, d = d.y || 0) : (b = 0, d = -8);
+    this._header = this.svgGroup.rect(b, d, 14.5, 16, 0).attr({fill:this.getValue()});
+    this.svgGroup.mouseup(function(b) {
+      a._isEditable() && a.renderOptions();
     });
-    this.box.set({x:a, y:d, width:14.5, height:16});
+    this.box.set({x:b, y:d, width:14.5, height:16});
   };
   a.renderOptions = function() {
-    var a = this;
+    var b = this;
     this.destroyOption();
-    var c = this._block.view;
+    var a = this._block.view;
     this.documentDownEvent = Entry.documentMousedown.attach(this, function() {
       Entry.documentMousedown.detach(this.documentDownEvent);
-      a.optionGroup.remove();
+      b.optionGroup.remove();
     });
     var d = Entry.FieldColor.getWidgetColorList();
     this.optionGroup = Entry.Dom("table", {class:"entry-widget-color-table", parent:$("body")});
@@ -13966,20 +13966,20 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldColor);
         var h = Entry.Dom("td", {class:"entry-widget-color-cell", parent:f}), k = d[e][g];
         h.css({"background-color":k});
         h.attr({"data-color-value":k});
-        (function(c, d) {
-          c.mousedown(function() {
-            a.applyValue(d);
-            a.destroyOption();
+        (function(a, c) {
+          a.mousedown(function() {
+            b.applyValue(c);
+            b.destroyOption();
           });
         })(h, k);
       }
     }
-    c.svgGroup.transform();
-    c.getBoard().svgDom.offset();
-    c.getContentPos();
-    c = this.getAbsolutePos();
-    c.y += this.box.height / 2 + 1;
-    this.optionGroup.css({left:c.x, top:c.y});
+    a.svgGroup.transform();
+    a.getBoard().svgDom.offset();
+    a.getContentPos();
+    a = this.getAbsolutePos();
+    a.y += this.box.height / 2 + 1;
+    this.optionGroup.css({left:a.x, top:a.y});
   };
   a.applyValue = function(a) {
     this.value != a && (this.setValue(a), this._header.attr({fill:a}));
@@ -15553,9 +15553,9 @@ Entry.Board = function(a) {
     a instanceof Entry.BlockView ? a.addSelected() : a = null;
     this.set({selectedBlockView:a});
   };
-  a._keyboardControl = function(a, c) {
-    var d = this.selectedBlockView;
-    d && 46 == c.keyCode && d.block.doDestroyAlone(!0) && this.set({selectedBlockView:null});
+  a._keyboardControl = function(a) {
+    var c = this.selectedBlockView;
+    c && 46 == a.keyCode && c.block.doDestroyAlone(!0) && this.set({selectedBlockView:null});
   };
   a.hide = function() {
     this.wrapper.addClass("entryRemove");
@@ -15708,26 +15708,19 @@ Entry.Vim = function(a) {
 })(Entry.Vim.prototype);
 Entry.Workspace = function(a) {
   Entry.Model(this, !1);
-  var b = this, c = a.blockMenu;
-  c && (this.blockMenu = new Entry.BlockMenu(c.dom, c.align, c.categoryData, c.scroll), this.blockMenu.workspace = this, this.blockMenu.observe(this, "_setSelectedBlockView", ["selectedBlockView"], !1));
-  if (c = a.board) {
-    c.workspace = this, this.board = new Entry.Board(c), this.board.observe(this, "_setSelectedBlockView", ["selectedBlockView"], !1);
+  var b = a.blockMenu;
+  b && (this.blockMenu = new Entry.BlockMenu(b.dom, b.align, b.categoryData, b.scroll), this.blockMenu.workspace = this, this.blockMenu.observe(this, "_setSelectedBlockView", ["selectedBlockView"], !1));
+  if (b = a.board) {
+    b.workspace = this, this.board = new Entry.Board(b), this.board.observe(this, "_setSelectedBlockView", ["selectedBlockView"], !1);
   }
-  if (c = a.vimBoard) {
-    this.vimBoard = new Entry.Vim(c.dom), this.vimBoard.workspace = this;
+  if (b = a.vimBoard) {
+    this.vimBoard = new Entry.Vim(b.dom), this.vimBoard.workspace = this;
   }
   this.board && this.vimBoard && this.vimBoard.hide();
   Entry.GlobalSvg.createDom();
   this.mode = Entry.Workspace.MODE_BOARD;
   this.selectedBoard = this.board;
-  $(document).on("keydown", function(a) {
-    var c = a.keyCode || a.which, f = a.ctrlKey;
-    if (!Entry.Utils.isInInput(a)) {
-      var g = b.selectedBlockView;
-      g && !g.isInBlockMenu && g.block.isDeletable() && (8 == c || 46 == c ? (g.block.doDestroyAlone(!0), a.preventDefault()) : f && (67 == c ? g.block.copyToClipboard() : 88 == c && (a = g.block, a.copyToClipboard(), a.destroy(!0))));
-      f && 86 == c && (c = b.selectedBoard) && c instanceof Entry.Board && Entry.clipboard && c.code.createThread(Entry.clipboard).getFirstBlock().copyToClipboard();
-    }
-  });
+  Entry.keyPressed && Entry.keyPressed.attach(this, this._keyboardControl);
 };
 Entry.Workspace.MODE_BOARD = 0;
 Entry.Workspace.MODE_VIMBOARD = 1;
@@ -15805,6 +15798,14 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
     this.overlayBoard = new Entry.Board({dom:this.board.view, workspace:this, isOverlay:!0});
     this.overlayBoard.changeCode(new Entry.Code([]));
     this.overlayBoard.workspace = this;
+  };
+  a._keyboardControl = function(a) {
+    var c = a.keyCode || a.which, d = a.ctrlKey;
+    if (!Entry.Utils.isInInput(a)) {
+      var e = this.selectedBlockView;
+      e && !e.isInBlockMenu && e.block.isDeletable() && (8 == c || 46 == c ? (e.block.doDestroyAlone(!0), a.preventDefault()) : d && (67 == c ? e.block.copyToClipboard() : 88 == c && (a = e.block, a.copyToClipboard(), a.destroy(!0))));
+      d && 86 == c && (c = this.selectedBoard) && c instanceof Entry.Board && Entry.clipboard && c.code.createThread(Entry.clipboard).getFirstBlock().copyToClipboard();
+    }
   };
 })(Entry.Workspace.prototype);
 Entry.Playground = function() {

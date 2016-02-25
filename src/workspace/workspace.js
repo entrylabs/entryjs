@@ -43,38 +43,8 @@ Entry.Workspace = function(options) {
     this.mode = Entry.Workspace.MODE_BOARD;
     this.selectedBoard = this.board;
 
-    //TODO bind to global keydown event
-    $(document).on('keydown', (function(e) {
-        var keyCode = e.keyCode || e.which,
-            ctrlKey = e.ctrlKey;
-
-        if (Entry.Utils.isInInput(e)) return;
-
-        var blockView = that.selectedBlockView;
-
-        if (blockView && !blockView.isInBlockMenu && blockView.block.isDeletable()) {
-            if (keyCode == 8 || keyCode == 46) { //destroy
-                blockView.block.doDestroyAlone(true);
-                e.preventDefault();
-            } else if (ctrlKey) {
-                if (keyCode == 67) //copy
-                    blockView.block.copyToClipboard();
-                else if (keyCode == 88) { //cut
-                    (function(block) {
-                        block.copyToClipboard();
-                        block.destroy(true);
-                    })(blockView.block);
-                }
-            }
-        }
-
-        if (ctrlKey && keyCode == 86) { //paste
-            var board = that.selectedBoard;
-            if (board && board instanceof Entry.Board && Entry.clipboard)
-                board.code.createThread(Entry.clipboard)
-                    .getFirstBlock().copyToClipboard();
-        }
-    }));
+    if (Entry.keyPressed)
+        Entry.keyPressed.attach(this, this._keyboardControl);
 };
 
 Entry.Workspace.MODE_BOARD = 0;
@@ -169,6 +139,38 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
         });
         this.overlayBoard.changeCode(new Entry.Code([]));
         this.overlayBoard.workspace = this;
+    };
+
+    p._keyboardControl = function(e) {
+        var keyCode = e.keyCode || e.which,
+            ctrlKey = e.ctrlKey;
+
+        if (Entry.Utils.isInInput(e)) return;
+
+        var blockView = this.selectedBlockView;
+
+        if (blockView && !blockView.isInBlockMenu && blockView.block.isDeletable()) {
+            if (keyCode == 8 || keyCode == 46) { //destroy
+                blockView.block.doDestroyAlone(true);
+                e.preventDefault();
+            } else if (ctrlKey) {
+                if (keyCode == 67) //copy
+                    blockView.block.copyToClipboard();
+                else if (keyCode == 88) { //cut
+                    (function(block) {
+                        block.copyToClipboard();
+                        block.destroy(true);
+                    })(blockView.block);
+                }
+            }
+        }
+
+        if (ctrlKey && keyCode == 86) { //paste
+            var board = this.selectedBoard;
+            if (board && board instanceof Entry.Board && Entry.clipboard)
+                board.code.createThread(Entry.clipboard)
+                    .getFirstBlock().copyToClipboard();
+        }
     };
 
 })(Entry.Workspace.prototype);
