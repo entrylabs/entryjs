@@ -374,19 +374,22 @@ Entry.Board = function(option) {
         });
         for (var i = 1; i < metaData.length; i++) {
             var pointData = metaData[i];
+            var includeData = pointData;
             var block = pointData.startBlock;
             if (block) {
                 var limit = pointData.endPoint,
                     index = i;
-                while (limit > pointData.point) {
-                    pointData.blocks.push(block);
+                while (limit > includeData.point) {
+                    includeData.blocks.push(block);
                     index++;
-                    pointData = metaData[index];
+                    includeData = metaData[index];
+                    if (!includeData)
+                        break;
                 }
                 delete pointData.startBlock;
             }
             pointData.endPoint = Number.MAX_VALUE;
-            metaData[i - 1].endPoint = metaData[i].point;
+            metaData[i - 1].endPoint = pointData.point;
         }
 
         this._magnetMap.nextMagnet = metaData;
@@ -407,20 +410,24 @@ Entry.Board = function(option) {
         var metaData = [];
         var that = this;
         var cursorY = 0;
+        var cursorX = 0;
         blocks.map(function(b) {
             var blockView = b.view;
             cursorY += blockView.y;
+            cursorX += blockView.x;
             metaData.push({
                 point: cursorY,
-                endPoint: cursorY + blockView.height,
+                endPoint: cursorY + blockView.magnet.next.y,
                 startBlock: b,
                 blocks: []
             });
             metaData.push({
-                point: cursorY + blockView.height,
+                point: cursorY + blockView.magnet.next.y,
                 blocks: []
             });
+            blockView.absX = cursorX;
             cursorY += blockView.magnet.next.y;
+            cursorX += blockView.magnet.next.x;
             if (b.statements)
                 b.statements.map(function(t){
                     statementsBlocks = statementBlocks.concat(
@@ -447,10 +454,16 @@ Entry.Board = function(option) {
             } else if (searchValue > pointData.endPoint) {
                 minIndex = index + 1;
             } else {
-                return pointData.blocks[0];
+                var blocks = pointData.blocks;
+                for (var i = 0; i < blocks.length; i++) {
+                    var blockView = blocks[i].view;
+                    if (blockView.absX < x && x < blockView.absX + blockView.width)
+                        return pointData.blocks[i];
+                }
+                return null;
             }
         }
-        return null
+        return null;
     };
 
     p._addFilters = function() {

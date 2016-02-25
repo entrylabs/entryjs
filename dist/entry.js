@@ -15614,15 +15614,14 @@ Entry.Board = function(a) {
     });
     a.unshift({point:-Number.MAX_VALUE, blocks:[]});
     for (var d = 1;d < a.length;d++) {
-      var e = a[d], f = e.startBlock;
-      if (f) {
-        for (var g = e.endPoint, h = d;g > e.point;) {
-          e.blocks.push(f), h++, e = a[h];
+      var e = a[d], f = e, g = e.startBlock;
+      if (g) {
+        for (var h = e.endPoint, k = d;h > f.point && (f.blocks.push(g), k++, f = a[k], f);) {
         }
         delete e.startBlock;
       }
       e.endPoint = Number.MAX_VALUE;
-      a[d - 1].endPoint = a[d].point;
+      a[d - 1].endPoint = e.point;
     }
     this._magnetMap.nextMagnet = a;
     console.log((new Date).getTime() - c);
@@ -15635,13 +15634,16 @@ Entry.Board = function(a) {
     return c;
   };
   a._getThreadBlocks = function(a) {
-    var c = [], d = [], e = this, f = 0;
+    var c = [], d = [], e = this, f = 0, g = 0;
     a.getBlocks().map(function(a) {
       var b = a.view;
       f += b.y;
-      d.push({point:f, endPoint:f + b.height, startBlock:a, blocks:[]});
-      d.push({point:f + b.height, blocks:[]});
+      g += b.x;
+      d.push({point:f, endPoint:f + b.magnet.next.y, startBlock:a, blocks:[]});
+      d.push({point:f + b.magnet.next.y, blocks:[]});
+      b.absX = g;
       f += b.magnet.next.y;
+      g += b.magnet.next.x;
       a.statements && a.statements.map(function(a) {
         statementsBlocks = c.concat(e._getThreadBlocks(a));
       });
@@ -15649,16 +15651,20 @@ Entry.Board = function(a) {
     return c.concat(d);
   };
   a.getNearestMagnet = function(a, c, d) {
-    a = this._magnetMap[d];
-    d = 0;
-    for (var e = a.length - 1, f, g;d <= e;) {
-      if (f = (d + e) / 2 | 0, g = a[f], c < g.point) {
-        e = f - 1;
+    for (var e = this._magnetMap[d], f = 0, g = e.length - 1, h;f <= g;) {
+      if (h = (f + g) / 2 | 0, d = e[h], c < d.point) {
+        g = h - 1;
       } else {
-        if (c > g.endPoint) {
-          d = f + 1;
+        if (c > d.endPoint) {
+          f = h + 1;
         } else {
-          return g.blocks[0];
+          c = d.blocks;
+          for (e = 0;e < c.length;e++) {
+            if (f = c[e].view, f.absX < a && a < f.absX + f.width) {
+              return d.blocks[e];
+            }
+          }
+          break;
         }
       }
     }
