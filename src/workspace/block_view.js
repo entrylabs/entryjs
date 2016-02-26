@@ -296,7 +296,12 @@ Entry.BlockView.PARAM_SPACE = 5;
             doc.bind('touchmove.block', onMouseMove);
             doc.bind('touchend.block', onMouseUp);
             board.set({dragBlock:this});
-            var absStartPos = this.getAbsoluteCoordinate();
+            var absStartPos;
+            if (this.isInBlockMenu) {
+                console.log(this.x, this.y);
+                absStartPos = {x: 0, y: 0};
+            }
+            else absStartPos = this.getAbsoluteCoordinate();
             this.dragInstance = new Entry.DragInstance({
                 startX: e.pageX,
                 startY: e.pageY,
@@ -559,6 +564,7 @@ Entry.BlockView.PARAM_SPACE = 5;
             y += this.dragInstance.absY;
         }
 
+        console.log(x,y);
         return board.getNearestMagnet(x, y, targetType);
     };
 
