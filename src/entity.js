@@ -722,12 +722,14 @@ Entry.EntityObject.prototype.setLineBreak = function(lineBreak) {
     var previousState = this.lineBreak;
     this.lineBreak = lineBreak;
     if (previousState && !this.lineBreak) {
+        var width = this.getWidth();
         this.textObject.lineWidth = null;
         this.setHeight(this.textObject.getMeasuredLineHeight());
         this.setText(this.getText().replace(/\n/g, ''));
+        this.setWidth(width);
     } else if (!previousState && this.lineBreak) {
         this.setFontSize(this.getFontSize() * this.getScaleX());
-        this.setHeight(this.textObject.getMeasuredLineHeight() * 3);
+        this.setHeight(this.textObject.getMeasuredLineHeight() * 4.579);
         this.setWidth(this.getWidth() * this.getScaleX());
         this.setScaleX(1);
         this.setScaleY(1);
