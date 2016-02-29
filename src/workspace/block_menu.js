@@ -150,6 +150,8 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
         this.svgThreadGroup = codeView.svgThreadGroup;
         this.svgGroup.appendChild(this.svgThreadGroup);
         this.svgGroup.appendChild(this.svgBlockGroup);
+        if (this._scroller)
+            this.svgGroup.appendChild(this._scroller.svgGroup);
     };
 
     p.align = function() {

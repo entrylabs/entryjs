@@ -12949,6 +12949,7 @@ Entry.BlockMenu = function(a, b, c, d) {
     this.svgThreadGroup = b.svgThreadGroup;
     this.svgGroup.appendChild(this.svgThreadGroup);
     this.svgGroup.appendChild(this.svgBlockGroup);
+    this._scroller && this.svgGroup.appendChild(this._scroller.svgGroup);
   };
   a.align = function() {
     if (this.code) {
