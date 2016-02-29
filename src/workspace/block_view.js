@@ -88,12 +88,12 @@ Entry.BlockView.PARAM_SPACE = 5;
         this._path = this.pathGroup.elem("path");
         var pathStyle = {
             d: path,
-            fill: this._schema.color
+            fill: this._schema.color,
+            class: 'blockPath'
         };
         if (this._skeleton.outerLine) {
             pathStyle.strokeWidth = "0.5";
         }
-        pathStyle.class = 'blockPath';
         this._path.attr(pathStyle);
 
         this._moveTo(this.x, this.y, false);

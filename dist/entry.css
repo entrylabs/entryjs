@@ -4622,6 +4622,10 @@ span.CodeMirror-selectedtext {
   margin: 0;
   background-color: #e5e5e5;
 }
+.block.selected > g > .blockPath {
+  stroke-width: 3px;
+  stroke: #798EB1;
+}
 
 .dragNone {
   -webkit-touch-callout: none;
