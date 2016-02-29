@@ -44,6 +44,39 @@ EntryStatic.categoryList = [
 
 EntryStatic.requiredTimes = [1,2,3,4,5];
 
+EntryStatic.searchProjectOption = [
+   {
+       'key':'search_updated',
+       'lang':'search_updated',
+       'value': 'updated'
+   },
+   {
+       'key':'search_recent',
+       'lang':'search_recent',
+       'value': 'recent'
+   },
+   {
+       'key':'search_complexity',
+       'lang':'search_complexity',
+       'value':'complexity'
+   },
+   {
+       'key':'search_staffPicked',
+       'lang':'search_staffPicked',
+       'value': 'staffPicked'
+   },
+   {
+       'key':'search_childCnt',
+       'lang':'search_childCnt',
+       'value': 'childCnt'
+   },
+   {
+       'key':'search_likeCnt',
+       'lang':'search_likeCnt',
+       'value': 'likeCnt'
+   }
+]
+
 EntryStatic.getAllBlocks = function() {
     return [
         {
