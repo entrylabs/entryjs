@@ -534,7 +534,7 @@ Entry.Func.doWhenInit = function() {
 };
 
 Entry.Func.doWhenCancel = function() {
-    Blockly.clipboard_ = null;
+    //Blockly.clipboard_ = null;
     var svg = Blockly.svg;
     svg.appendChild(Blockly.fieldKeydownDom);
     svg.appendChild(Blockly.fieldDropdownDom);
