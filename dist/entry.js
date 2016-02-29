@@ -8812,6 +8812,7 @@ Entry.Popup.prototype.resize = function(a) {
 };
 Entry.popupHelper = function(a) {
   this.popupList = {};
+  this.nowPopup;
   a && (window.popupHelper = null);
   Entry.assert(!window.popupHelper, "Popup exist");
   var b = ["entryPopupHelperTopSpan", "entryPopupHelperBottomSpan", "entryPopupHelperLeftSpan", "entryPopupHelperRightSpan"];
@@ -8849,18 +8850,17 @@ Entry.popupHelper.prototype.addPopup = function(a, b) {
   c.append(f);
   c.popupWrapper_ = f;
   d.text(b.title);
-  "function" === typeof b.setPopupLayout && b.setPopupLayout(c);
+  "function" === typeof b.setPopupLayout && (b.setPopupLayout(c), c.prop("popup", b));
   this.popupList[a] = c;
 };
 Entry.popupHelper.prototype.hasPopup = function(a) {
   return !!this.popupList[a];
 };
-Entry.popupHelper.prototype.setPopup = function(a) {
-  this.clearPopup();
-  this.title_.textContent = a.title;
-  "function" === typeof a.setPopupLayout && a.setPopupLayout(this);
-};
 Entry.popupHelper.prototype.remove = function() {
+  var a = this.nowPopup.prop("popup");
+  if (a && "onRemove" in a) {
+    a.onRemove();
+  }
   Entry.removeElement(this.body_);
   window.popupHelper = null;
 };
@@ -8868,10 +8868,18 @@ Entry.popupHelper.prototype.resize = function(a) {
 };
 Entry.popupHelper.prototype.show = function(a) {
   0 < this.window_.children().length && this.window_.children().detach();
-  this.window_.append(this.popupList[a]);
+  this.nowPopup = this.popupList[a];
+  this.window_.append(this.nowPopup);
+  if ((a = this.nowPopup.prop("popup")) && "onShow" in a) {
+    a.onShow();
+  }
   this.body_.removeClass("hiddenPopup");
 };
 Entry.popupHelper.prototype.hide = function() {
+  var a = this.nowPopup.prop("popup");
+  if (a && "onHide" in a) {
+    a.onHide();
+  }
   this.body_.addClass("hiddenPopup");
 };
 Entry.getStartProject = function(a) {
@@ -14024,12 +14032,12 @@ Entry.Field = function() {
     this.box.set({x:b, y:a});
   };
   a.getAbsolutePos = function() {
-    var b = this._block.view, a = b.svgGroup.transform().globalMatrix, d = b.getBoard().svgDom.offset(), b = b.getContentPos();
-    return {x:a.e + d.left + this.box.x + b.x, y:a.f + d.top + this.box.y + b.y};
+    var a = this._block.view, c = a.svgGroup.transform().globalMatrix, d = a.getBoard().svgDom.offset(), a = a.getContentPos();
+    return {x:c.e + d.left + this.box.x + a.x, y:c.f + d.top + this.box.y + a.y};
   };
   a.getRelativePos = function() {
-    var b = this._block.view, a = b.svgGroup.transform().globalMatrix, b = b.getContentPos(), d = this.box;
-    return {x:a.e + d.x + b.x, y:a.f + d.y + b.y};
+    var a = this._block.view, c = a.svgGroup.transform().globalMatrix, a = a.getContentPos(), d = this.box;
+    return {x:c.e + d.x + a.x, y:c.f + d.y + a.y};
   };
   a.truncate = function() {
     var a = String(this.getValue()), c = this.TEXT_LIMIT_LENGTH, d = a.substring(0, c);

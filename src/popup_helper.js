@@ -9,6 +9,7 @@
  */
 Entry.popupHelper = function(reset) {
     this.popupList = {};
+    this.nowPopup;
     if(reset) {
         window.popupHelper = null;
     }
@@ -95,6 +96,7 @@ Entry.popupHelper.prototype.addPopup = function(key, popupObject) {
     title_.text(popupObject.title);
     if(typeof popupObject.setPopupLayout === 'function') {
         popupObject.setPopupLayout(content_);
+        content_.prop('popup', popupObject);
     }
 
     this.popupList[key] = content_;
@@ -104,18 +106,14 @@ Entry.popupHelper.prototype.hasPopup = function(key) {
     return !!this.popupList[key];
 }
 
-Entry.popupHelper.prototype.setPopup = function(popupObject) {
-    this.clearPopup();
-    this.title_.textContent = popupObject.title;
-    if(typeof popupObject.setPopupLayout === 'function') {
-        popupObject.setPopupLayout(this);
-    }
-};
-
 /**
  * Remove this popup
  */
 Entry.popupHelper.prototype.remove = function() {
+    var popupObject = this.nowPopup.prop('popup');
+    if(popupObject && 'onRemove' in popupObject) {
+        popupObject.onRemove();
+    }
     Entry.removeElement(this.body_);
     window.popupHelper = null;
 };
@@ -132,11 +130,21 @@ Entry.popupHelper.prototype.show = function(key) {
     if(this.window_.children().length > 0) {
         this.window_.children().detach();   
     }
-    this.window_.append(this.popupList[key]);
+
+    this.nowPopup = this.popupList[key];
+    this.window_.append(this.nowPopup);
+    var popupObject = this.nowPopup.prop('popup');
+    if(popupObject && 'onShow' in popupObject) {
+        popupObject.onShow();
+    }
     this.body_.removeClass('hiddenPopup');
 };
 
 
 Entry.popupHelper.prototype.hide = function() {
+    var popupObject = this.nowPopup.prop('popup');
+    if(popupObject && 'onHide' in popupObject) {
+        popupObject.onHide();
+    }
     this.body_.addClass('hiddenPopup');
 };
