@@ -50,8 +50,10 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
     this.changeEvent = new Entry.Event(this);
     if (categoryData) this._generateCategoryCodes(categoryData);
 
-    if (this._scroll)
+    if (this._scroll) {
         this._scroller = new Entry.BlockMenuScroller(this);
+        this._addControl(dom);
+    }
 
     if (Entry.documentMousedown)
         Entry.documentMousedown.attach(this, this.setSelectedBlock);
@@ -469,5 +471,20 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
                 return true;
         }
         return false;
+    };
+
+    p._addControl = function(dom) {
+        var that = this;
+        dom.on('mousewheel', function(){
+            that._mouseWheel.apply(that, arguments);
+        });
+    };
+
+    p._mouseWheel = function(e) {
+        e = e.originalEvent;
+
+        this._scroller.scroll(
+            (-e.wheelDeltaY || e.deltaY) / 3
+        );
     };
 })(Entry.BlockMenu.prototype);

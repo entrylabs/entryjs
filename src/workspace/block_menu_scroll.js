@@ -95,26 +95,30 @@ Entry.BlockMenuScroller.RADIUS = 7;
 
     p.updateScrollBar = function(dy) {
         this.vY += dy;
-        this.vScrollbar.attr({
-            y: this.vY
-        });
+        this.vScrollbar.attr({y: this.vY});
     };
 
     p.scroll = function(dy) {
-        if (this._inspectLimit(dy)) return;
+        if (!this.isVisible()) return;
+        var dest = this._adjustValue(dy);
+
+        dy = dest - this.vY;
+        if (dy === 0) return;
 
         this.board.code.moveBy(0, -dy * this.vRatio);
         this.updateScrollBar(dy);
     };
 
-
-    //return true when newY is out of range
-    p._inspectLimit = function(dy) {
+    //adjust value by dy for min/max value
+    p._adjustValue = function(dy) {
         var domHeight = this.board.svgDom.height();
         var limitBottom = domHeight - domHeight/this.vRatio;
         var newY = this.vY + dy;
 
-        return newY <= 0 || newY >= limitBottom;
+        newY = Math.max(0, newY);
+        newY = Math.min(limitBottom, newY);
+
+        return newY;
     };
 
     p.setVisible = function(visible) {

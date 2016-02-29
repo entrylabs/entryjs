@@ -12901,7 +12901,7 @@ Entry.BlockMenu = function(a, b, c, d) {
   this.svgBlockGroup.board = this;
   this.changeEvent = new Entry.Event(this);
   c && this._generateCategoryCodes(c);
-  this._scroll && (this._scroller = new Entry.BlockMenuScroller(this));
+  this._scroll && (this._scroller = new Entry.BlockMenuScroller(this), this._addControl(a));
   Entry.documentMousedown && Entry.documentMousedown.attach(this, this.setSelectedBlock);
 };
 (function(a) {
@@ -13106,6 +13106,16 @@ Entry.BlockMenu = function(a, b, c, d) {
       return !1;
     }
   };
+  a._addControl = function(b) {
+    var a = this;
+    b.on("mousewheel", function() {
+      a._mouseWheel.apply(a, arguments);
+    });
+  };
+  a._mouseWheel = function(b) {
+    b = b.originalEvent;
+    this._scroller.scroll((-b.wheelDeltaY || b.deltaY) / 3);
+  };
 })(Entry.BlockMenu.prototype);
 Entry.BlockMenuScroller = function(a) {
   this.board = a;
@@ -13160,12 +13170,13 @@ Entry.BlockMenuScroller.RADIUS = 7;
     this.vScrollbar.attr({y:this.vY});
   };
   a.scroll = function(b) {
-    this._inspectLimit(b) || (this.board.code.moveBy(0, -b * this.vRatio), this.updateScrollBar(b));
+    this.isVisible() && (b = this._adjustValue(b) - this.vY, 0 !== b && (this.board.code.moveBy(0, -b * this.vRatio), this.updateScrollBar(b)));
   };
-  a._inspectLimit = function(b) {
+  a._adjustValue = function(b) {
     var a = this.board.svgDom.height(), a = a - a / this.vRatio;
     b = this.vY + b;
-    return 0 >= b || b >= a;
+    b = Math.max(0, b);
+    return b = Math.min(a, b);
   };
   a.setVisible = function(b) {
     b != this.isVisible() && (this._visible = b, this.svgGroup.attr({display:!0 === b ? "block" : "none"}));
@@ -13935,14 +13946,14 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
     this._indicator.attr({class:"entry-angle-indicator"});
   };
   a.applyValue = function() {
-    var a = this.optionGroup.val();
-    isNaN(a) || (a = this.modValue(a), this.setValue(a), this.updateGraph(), this.textElement.node.textContent = this.getValue(), this.optionGroup && this.optionGroup.val(a), this.resize());
+    var b = this.optionGroup.val();
+    isNaN(b) || (b = this.modValue(b), this.setValue(b), this.updateGraph(), this.textElement.node.textContent = this.getValue(), this.optionGroup && this.optionGroup.val(b), this.resize());
   };
   a.resize = function() {
-    var a = this.getTextWidth();
-    this._header.attr({width:a});
-    this.optionGroup && this.optionGroup.css({width:a});
-    this.box.set({width:a});
+    var b = this.getTextWidth();
+    this._header.attr({width:b});
+    this.optionGroup && this.optionGroup.css({width:b});
+    this.box.set({width:b});
     this._block.view.alignContent();
   };
   a.getTextWidth = function() {
@@ -13951,8 +13962,8 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
   a.getText = function() {
     return this.getValue() + "\u00b0";
   };
-  a.modValue = function(a) {
-    return a % 360;
+  a.modValue = function(b) {
+    return b % 360;
   };
   a.destroyOption = function() {
     this.documentDownEvent && (Entry.documentMousedown.detach(this.documentDownEvent), delete this.documentDownEvent);
@@ -13975,25 +13986,25 @@ Entry.FieldColor = function(a, b, c) {
 };
 Entry.Utils.inherit(Entry.Field, Entry.FieldColor);
 (function(a) {
-  a.renderStart = function(a) {
-    var c = this;
-    this.svgGroup = a.contentSvgGroup.group();
+  a.renderStart = function(b) {
+    var a = this;
+    this.svgGroup = b.contentSvgGroup.group();
     this.svgGroup.attr({class:"entry-field-color"});
     var d = this._position;
-    d ? (a = d.x || 0, d = d.y || 0) : (a = 0, d = -8);
-    this._header = this.svgGroup.rect(a, d, 14.5, 16, 0).attr({fill:this.getValue()});
-    this.svgGroup.mouseup(function(a) {
-      c._isEditable() && c.renderOptions();
+    d ? (b = d.x || 0, d = d.y || 0) : (b = 0, d = -8);
+    this._header = this.svgGroup.rect(b, d, 14.5, 16, 0).attr({fill:this.getValue()});
+    this.svgGroup.mouseup(function(b) {
+      a._isEditable() && a.renderOptions();
     });
-    this.box.set({x:a, y:d, width:14.5, height:16});
+    this.box.set({x:b, y:d, width:14.5, height:16});
   };
   a.renderOptions = function() {
-    var a = this;
+    var b = this;
     this.destroyOption();
-    var c = this._block.view;
+    var a = this._block.view;
     this.documentDownEvent = Entry.documentMousedown.attach(this, function() {
       Entry.documentMousedown.detach(this.documentDownEvent);
-      a.optionGroup.remove();
+      b.optionGroup.remove();
     });
     var d = Entry.FieldColor.getWidgetColorList();
     this.optionGroup = Entry.Dom("table", {class:"entry-widget-color-table", parent:$("body")});
@@ -14002,20 +14013,20 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldColor);
         var h = Entry.Dom("td", {class:"entry-widget-color-cell", parent:f}), k = d[e][g];
         h.css({"background-color":k});
         h.attr({"data-color-value":k});
-        (function(c, d) {
-          c.mousedown(function() {
-            a.applyValue(d);
-            a.destroyOption();
+        (function(a, c) {
+          a.mousedown(function() {
+            b.applyValue(c);
+            b.destroyOption();
           });
         })(h, k);
       }
     }
-    c.svgGroup.transform();
-    c.getBoard().svgDom.offset();
-    c.getContentPos();
-    c = this.getAbsolutePos();
-    c.y += this.box.height / 2 + 1;
-    this.optionGroup.css({left:c.x, top:c.y});
+    a.svgGroup.transform();
+    a.getBoard().svgDom.offset();
+    a.getContentPos();
+    a = this.getAbsolutePos();
+    a.y += this.box.height / 2 + 1;
+    this.optionGroup.css({left:a.x, top:a.y});
   };
   a.applyValue = function(a) {
     this.value != a && (this.setValue(a), this._header.attr({fill:a}));
