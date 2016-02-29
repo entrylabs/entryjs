@@ -155,7 +155,7 @@ Entry.Block.MAGNET_OFFSET = 0.4;
         return json;
     };
 
-    p.destroy = function(animate) {
+    p.destroy = function(animate, next) {
         if (this.view) this.view.destroy(animate);
 
         var params = this.params;
@@ -177,9 +177,18 @@ Entry.Block.MAGNET_OFFSET = 0.4;
             }
         }
 
-        this.getThread().spliceBlock(this);
+        var prevBlock = this.getPrevBlock();
+        var nextBlock = this.getNextBlock();
+
+        var thread = this.getThread();
+        var blocks = thread.spliceBlock(this);
         if (this._schema.event)
-            this.thread.unregisterEvent(this, this._schema.event);
+            thread.unregisterEvent(this, this._schema.event);
+
+        if (nextBlock) {
+            if (next) nextBlock.destroy(animate, next);
+            else nextBlock.view.bindPrev();
+        }
     };
 
     p.getView = function() {return this.view;};
@@ -298,6 +307,31 @@ Entry.Block.MAGNET_OFFSET = 0.4;
             positionY
         );
         this.destroy(animate);
+        this.getCode().changeEvent.notify();
+        if (Entry.activityReporter) {
+            var data = [
+                ['blockId',id],
+                ['positionX',positionX],
+                ['positionY',positionY],
+                ['code',this.getCode().stringify()]
+            ];
+            Entry.activityReporter.add(new Entry.Activity('destroyBlock', data));
+        }
+        return this;
+    };
+
+    p.doDestroyBelow = function(animate) {
+        var id = this.id;
+        var positionX = this.x;
+        var positionY = this.y;
+
+        console.log(
+            "destroyBelow",
+            id,
+            positionX,
+            positionY
+        );
+        this.destroy(animate, true);
         this.getCode().changeEvent.notify();
         if (Entry.activityReporter) {
             var data = [

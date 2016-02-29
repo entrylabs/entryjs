@@ -13230,7 +13230,7 @@ Entry.BlockView.PARAM_SPACE = 5;
     this._moveTo(this.x, this.y, !1);
     this._startContentRender(a);
     this._addControl();
-    this._bindPrev();
+    this.bindPrev();
   };
   a._startContentRender = function(b) {
     b = void 0 === b ? Entry.Workspace.MODE_BOARD : b;
@@ -13404,7 +13404,7 @@ Entry.BlockView.PARAM_SPACE = 5;
             g = this._getCloseBlock();
             if (b || g) {
               if (g) {
-                if (this.set({animating:!0}), e.doInsert(g), this._bindPrev(), createjs.Sound.play("entryMagneting"), Entry.ConnectionRipple.setView(g.view).dispose(), g.constructor == Entry.FieldDummyBlock && (e = e.next)) {
+                if (this.set({animating:!0}), e.doInsert(g), this.bindPrev(), createjs.Sound.play("entryMagneting"), Entry.ConnectionRipple.setView(g.view).dispose(), g.constructor == Entry.FieldDummyBlock && (e = e.next)) {
                   -1 < Entry.FieldDummyBlock.PRIMITIVE_TYPES.indexOf(e.type) ? (e.getThread().cut(e), e.destroy(!1)) : (e.separate(), e.view.bumpAway());
                 }
               } else {
@@ -13425,7 +13425,7 @@ Entry.BlockView.PARAM_SPACE = 5;
             b ? (this.set({animating:!1}), createjs.Sound.play("entryMagneting"), e.insert(b)) : this._moveTo(d.x, d.y, !1);
             break;
           case g.REMOVE:
-            createjs.Sound.play("entryDelete"), f ? (b && e.separate(), this.block.destroy(!1)) : (b && e.doSeparate(), this.block.doDestroy(!1));
+            createjs.Sound.play("entryDelete"), f ? (b && e.separate(), this.block.destroyBelow(!1)) : (b && e.doSeparate(), this.block.doDestroyBelow(!1));
         }
         a.setMagnetedBlock(null);
       }
@@ -13567,7 +13567,7 @@ Entry.BlockView.PARAM_SPACE = 5;
   a.bumpAway = function() {
     this._moveBy(10, 10, !1);
   };
-  a._bindPrev = function() {
+  a.bindPrev = function() {
     var b = this.block.getPrevBlock();
     b && (this._toLocalCoordinate(b.view._nextGroup), (b = this.block.getNextBlock()) && b.view && b.view._toLocalCoordinate(this._nextGroup));
   };
@@ -13914,8 +13914,8 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
     this.svgOptionGroup.attr({class:"entry-field-angle", transform:"t" + a.x + " " + a.y});
     var a = b.getAbsolutePos(), d = [a.x + b.box.width / 2, a.y + b.box.height / 2 + 1];
     this.svgOptionGroup.mousemove(function(a) {
-      b.optionGroup.val(b.modValue(function(a, b) {
-        var c = b[0] - a[0], d = b[1] - a[1] - 49 - 1, e = Math.atan(-d / c), e = Entry.toDegrees(e), e = 90 - e;
+      b.optionGroup.val(b.modValue(function(b, a) {
+        var c = a[0] - b[0], d = a[1] - b[1] - 49 - 1, e = Math.atan(-d / c), e = Entry.toDegrees(e), e = 90 - e;
         0 > c ? e += 180 : 0 < d && (e += 360);
         return 15 * Math.round(e / 15);
       }(d, [a.clientX, a.clientY])));
@@ -13925,12 +13925,12 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
   };
   a.updateGraph = function() {
     this._fillPath && this._fillPath.remove();
-    var a = Entry.toRadian(this.getValue()), c = 49 * Math.sin(a), d = -49 * Math.cos(a), a = a > Math.PI ? 1 : 0;
-    this._fillPath = this.svgOptionGroup.path("M 0, 0 v -49 A 49,49 0 %LARGE 1 %X,%Y z".replace("%X", c).replace("%Y", d).replace("%LARGE", a));
+    var b = Entry.toRadian(this.getValue()), a = 49 * Math.sin(b), d = -49 * Math.cos(b), b = b > Math.PI ? 1 : 0;
+    this._fillPath = this.svgOptionGroup.path("M 0, 0 v -49 A 49,49 0 %LARGE 1 %X,%Y z".replace("%X", a).replace("%Y", d).replace("%LARGE", b));
     this._fillPath.attr({class:"entry-angle-fill-area"});
     this.svgOptionGroup.append(this._dividerGroup);
     this._indicator && this._indicator.remove();
-    this._indicator = this.svgOptionGroup.line(0, 0, c, d);
+    this._indicator = this.svgOptionGroup.line(0, 0, a, d);
     this._indicator.attr({class:"entry-angle-indicator"});
   };
   a.applyValue = function() {
@@ -14447,7 +14447,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
     this._sizeObserver && this._sizeObserver.destroy();
     this._posObserver && this._posObserver.destroy();
     a = this._setValueBlock(a).view;
-    a._bindPrev();
+    a.bindPrev();
     this._blockView.alignContent();
     this._posObserver = a.observe(this, "_updateValueBlock", ["x", "y"], !1);
     this._sizeObserver = a.observe(this, "calcWH", ["width", "height"]);
@@ -15135,22 +15135,26 @@ Entry.Block.MAGNET_OFFSET = .4;
     });
     return c;
   };
-  a.destroy = function(a) {
+  a.destroy = function(a, c) {
     this.view && this.view.destroy(a);
-    var c = this.params;
-    if (c) {
-      for (var d = 0;d < c.length;d++) {
-        var e = c[d];
-        e instanceof Entry.Thread && (e = e.getFirstBlock()) && e.destroy(a);
+    var d = this.params;
+    if (d) {
+      for (var e = 0;e < d.length;e++) {
+        var f = d[e];
+        f instanceof Entry.Thread && (f = f.getFirstBlock()) && f.destroy(a);
       }
     }
-    if (c = this.statements) {
-      for (d = 0;d < c.length;d++) {
-        c[d].destroy(a);
+    if (d = this.statements) {
+      for (e = 0;e < d.length;e++) {
+        d[e].destroy(a);
       }
     }
-    this.getThread().spliceBlock(this);
-    this._schema.event && this.thread.unregisterEvent(this, this._schema.event);
+    this.getPrevBlock();
+    e = this.getNextBlock();
+    d = this.getThread();
+    d.spliceBlock(this);
+    this._schema.event && d.unregisterEvent(this, this._schema.event);
+    e && (c ? e.destroy(a, c) : e.view.bindPrev());
   };
   a.getView = function() {
     return this.view;
@@ -15202,6 +15206,14 @@ Entry.Block.MAGNET_OFFSET = .4;
     var c = this.id, d = this.x, e = this.y;
     console.log("destroy", c, d, e);
     this.destroy(a);
+    this.getCode().changeEvent.notify();
+    Entry.activityReporter && (a = [["blockId", c], ["positionX", d], ["positionY", e], ["code", this.getCode().stringify()]], Entry.activityReporter.add(new Entry.Activity("destroyBlock", a)));
+    return this;
+  };
+  a.doDestroyBelow = function(a) {
+    var c = this.id, d = this.x, e = this.y;
+    console.log("destroyBelow", c, d, e);
+    this.destroy(a, !0);
     this.getCode().changeEvent.notify();
     Entry.activityReporter && (a = [["blockId", c], ["positionX", d], ["positionY", e], ["code", this.getCode().stringify()]], Entry.activityReporter.add(new Entry.Activity("destroyBlock", a)));
     return this;
@@ -15383,13 +15395,11 @@ Entry.ThreadView = function(a, b) {
 })(Entry.ThreadView.prototype);
 Entry.FieldTrashcan = function(a) {
   this.board = a;
-  this.svgGroup = a.svg.elem("g");
-  this.svgGroup.attr({filter:" url(#entryTrashcanFilter)"});
+  this.svgGroup = a.svg.elem("g", {filter:"url(#entryTrashcanFilter)"});
   this.renderStart();
   this.dragBlockObserver = this.dragBlock = null;
   this.isOver = !1;
   a.observe(this, "updateDragBlock", ["dragBlock"]);
-  this.setPosition();
   Entry.windowResized && Entry.windowResized.attach(this, this.setPosition);
 };
 (function(a) {
@@ -15401,7 +15411,7 @@ Entry.FieldTrashcan = function(a) {
   a.updateDragBlock = function() {
     var a = this.board.dragBlock, c = this.dragBlockObserver;
     c && (c.destroy(), this.dragBlockObserver = null);
-    a ? this.dragBlockObserver = a.observe(this, "checkBlock", ["x", "y"]) : (this.isOver && this.dragBlock && !this.dragBlock.block.getPrevBlock() && (this.dragBlock.block.doDestroy(!0), createjs.Sound.play("entryDelete")), this.tAnimation(!1));
+    a ? this.dragBlockObserver = a.observe(this, "checkBlock", ["x", "y"]) : (this.isOver && this.dragBlock && !this.dragBlock.block.getPrevBlock() && (this.dragBlock.block.doDestroyBelow(!0), createjs.Sound.play("entryDelete")), this.tAnimation(!1));
     this.dragBlock = a;
   };
   a.checkBlock = function() {

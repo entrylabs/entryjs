@@ -100,7 +100,7 @@ Entry.BlockView.PARAM_SPACE = 5;
         this._startContentRender(mode);
         this._addControl();
 
-        this._bindPrev();
+        this.bindPrev();
     };
 
     p._startContentRender = function(mode) {
@@ -241,15 +241,12 @@ Entry.BlockView.PARAM_SPACE = 5;
     };
 
     p._toLocalCoordinate = function(parentSvgGroup) {
-       // var parentMatrix = parentSvgGroup.transform().globalMatrix;
-        //var matrix = this.svgGroup.transform().globalMatrix;
         this._moveTo(0, 0, false);
         parentSvgGroup.appendChild(this.svgGroup);
         this._moveTo(0, 0, false);
     };
 
     p._toGlobalCoordinate = function() {
-        //var matrix = this.svgGroup.transform().globalMatrix;
         var pos = this.getAbsoluteCoordinate();
         this._moveTo(pos.x, pos.y, false);
         this.getBoard().svgBlockGroup.appendChild(this.svgGroup);
@@ -475,7 +472,7 @@ Entry.BlockView.PARAM_SPACE = 5;
                                 this.set({animating: true});
 
                                 block.doInsert(closeBlock);
-                                this._bindPrev();
+                                this.bindPrev();
                                 createjs.Sound.play('entryMagneting');
                                 Entry.ConnectionRipple
                                     .setView(closeBlock.view)
@@ -519,10 +516,10 @@ Entry.BlockView.PARAM_SPACE = 5;
                         createjs.Sound.play('entryDelete');
                         if (!fromBlockMenu) {
                             if (prevBlock) block.doSeparate();
-                            this.block.doDestroy(false);
+                            this.block.doDestroyBelow(false);
                         } else {
                             if (prevBlock) block.separate();
-                            this.block.destroy(false);
+                            this.block.destroyBelow(false);
                         }
                         break;
                 }
@@ -783,7 +780,7 @@ Entry.BlockView.PARAM_SPACE = 5;
 
     p.bumpAway = function() {this._moveBy(10, 10, false);};
 
-    p._bindPrev = function() {
+    p.bindPrev = function() {
         var prevBlock = this.block.getPrevBlock();
         if (prevBlock) {
             var prevBlockView = prevBlock.view;

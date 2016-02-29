@@ -165,7 +165,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
         if (this._posObserver) this._posObserver.destroy();
 
         var view = this._setValueBlock(block).view;
-        view._bindPrev();
+        view.bindPrev();
         this._blockView.alignContent();
         this._posObserver = view.observe(this, "_updateValueBlock", ["x", "y"], false);
         this._sizeObserver = view.observe(this, "calcWH", ["width", "height"]);

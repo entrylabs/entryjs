@@ -4,8 +4,7 @@ goog.provide("Entry.FieldTrashcan");
 
 Entry.FieldTrashcan = function(board) {
     this.board = board;
-    this.svgGroup = board.svg.elem("g");
-    this.svgGroup.attr({filter:' url(#entryTrashcanFilter)'});
+    this.svgGroup = board.svg.elem("g", {filter: 'url(#entryTrashcanFilter)'});
 
     this.renderStart();
     this.dragBlock = null;
@@ -13,8 +12,6 @@ Entry.FieldTrashcan = function(board) {
     this.isOver = false;
 
     board.observe(this, "updateDragBlock", ["dragBlock"]);
-
-    this.setPosition();
 
     if (Entry.windowResized)
         Entry.windowResized.attach(this, this.setPosition);
@@ -35,9 +32,6 @@ Entry.FieldTrashcan = function(board) {
             width: 60,
             height: 60
         });
-
-        //var filter = this.svgGroup.filter(Snap.filter.shadow(1,1,2));
-        //this.svgGroup.attr({filter: filter});
     };
 
     p.updateDragBlock = function() {
@@ -55,7 +49,7 @@ Entry.FieldTrashcan = function(board) {
             if (this.isOver && this.dragBlock) {
                 var prevBlock = this.dragBlock.block.getPrevBlock();
                 if (!prevBlock) {
-                    this.dragBlock.block.doDestroy(true);
+                    this.dragBlock.block.doDestroyBelow(true);
                     createjs.Sound.play('entryDelete');
                 }
             }
