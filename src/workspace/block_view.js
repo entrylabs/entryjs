@@ -266,11 +266,11 @@ Entry.BlockView.PARAM_SPACE = 5;
     };
 
     p._addControl = function() {
-        this.svgGroup.onmousedown = this.mouseHandler;
+        this.svgGroup.addEventListener('mousedown', this.mouseHandler);
     };
 
     p.removeControl = function() {
-        //this.svgGroup.off('mousedown');
+        this.svgGroup.removeEventListener('mousedown', this.mouseHandler, false);
     };
 
     p.onMouseDown = function(e) {

@@ -13322,9 +13322,10 @@ Entry.BlockView.PARAM_SPACE = 5;
     return this._moveTo(this.x + b, this.y + a, d);
   };
   a._addControl = function() {
-    this.svgGroup.onmousedown = this.mouseHandler;
+    this.svgGroup.addEventListener("mousedown", this.mouseHandler);
   };
   a.removeControl = function() {
+    this.svgGroup.removeEventListener("mousedown", this.mouseHandler, !1);
   };
   a.onMouseDown = function(b) {
     function c(b) {
