@@ -52,6 +52,7 @@ Entry.BlockView = function(block, board, mode) {
 
     this.dragMode = Entry.DRAG_MODE_NONE;
     Entry.Utils.disableContextmenu(this.svgGroup.node);
+    this._targetType = this._getTargetType();
 };
 
 Entry.BlockView.PARAM_SPACE = 5;
@@ -519,7 +520,7 @@ Entry.BlockView.PARAM_SPACE = 5;
                             this.block.doDestroyBelow(false);
                         } else {
                             if (prevBlock) block.separate();
-                            this.block.destroyBelow(false);
+                            this.block.destroy(false, true);
                         }
                         break;
                 }
@@ -537,13 +538,7 @@ Entry.BlockView.PARAM_SPACE = 5;
         if (!this._skeleton.magnets)
             return;
 
-        var targetType = this._skeleton.magnets();
-
-        if (targetType.previous) targetType = 'nextMagnet';
-        else if (targetType.string) targetType = 'stringMagnet';
-        else if (targetType.bool) targetType = 'booleanMagnet';
-        else if (targetType.param) targetType = 'paramMagnet';
-        else targetType = null;
+        var targetType = this._targetType;
 
         if (!targetType) return;
 
@@ -798,6 +793,18 @@ Entry.BlockView.PARAM_SPACE = 5;
         pos.x += this.x;
         pos.y += this.y;
         return pos;
+    };
+
+    p._getTargetType = function() {
+        var targetType = this._skeleton.magnets();
+
+        if (targetType.previous) targetType = 'nextMagnet';
+        else if (targetType.string) targetType = 'stringMagnet';
+        else if (targetType.bool) targetType = 'booleanMagnet';
+        else if (targetType.param) targetType = 'paramMagnet';
+        else targetType = null;
+
+        return targetType;
     };
 
 })(Entry.BlockView.prototype);

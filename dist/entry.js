@@ -13226,6 +13226,7 @@ Entry.BlockView = function(a, b, c) {
   b.code.observe(this, "_setBoard", ["board"], !1);
   this.dragMode = Entry.DRAG_MODE_NONE;
   Entry.Utils.disableContextmenu(this.svgGroup.node);
+  this._targetType = this._getTargetType();
 };
 Entry.BlockView.PARAM_SPACE = 5;
 (function(a) {
@@ -13437,7 +13438,7 @@ Entry.BlockView.PARAM_SPACE = 5;
             b ? (this.set({animating:!1}), createjs.Sound.play("entryMagneting"), e.insert(b)) : this._moveTo(d.x, d.y, !1);
             break;
           case g.REMOVE:
-            createjs.Sound.play("entryDelete"), f ? (b && e.separate(), this.block.destroyBelow(!1)) : (b && e.doSeparate(), this.block.doDestroyBelow(!1));
+            createjs.Sound.play("entryDelete"), f ? (b && e.separate(), this.block.destroy(!1, !0)) : (b && e.doSeparate(), this.block.doDestroyBelow(!1));
         }
         a.setMagnetedBlock(null);
       }
@@ -13448,8 +13449,8 @@ Entry.BlockView.PARAM_SPACE = 5;
   };
   a._getCloseBlock = function() {
     if (this._skeleton.magnets) {
-      var b = this._skeleton.magnets();
-      if (b = b.previous ? "nextMagnet" : b.string ? "stringMagnet" : b.bool ? "booleanMagnet" : b.param ? "paramMagnet" : null) {
+      var b = this._targetType;
+      if (b) {
         var a = this.getBoard();
         x = this.x;
         y = this.y;
@@ -13588,6 +13589,10 @@ Entry.BlockView.PARAM_SPACE = 5;
     b.x += this.x;
     b.y += this.y;
     return b;
+  };
+  a._getTargetType = function() {
+    var b = this._skeleton.magnets();
+    return b = b.previous ? "nextMagnet" : b.string ? "stringMagnet" : b.bool ? "booleanMagnet" : b.param ? "paramMagnet" : null;
   };
 })(Entry.BlockView.prototype);
 Entry.Code = function(a) {
