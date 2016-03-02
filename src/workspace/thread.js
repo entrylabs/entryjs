@@ -185,4 +185,8 @@ Entry.Thread = function(thread, code) {
         var index = this._data.indexOf(block);
         return this._data.at(index + 1);
     };
+
+    p.getLastBlock = function() {
+        return this._data.at(this._data.length - 1);
+    };
 })(Entry.Thread.prototype);

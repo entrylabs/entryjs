@@ -367,8 +367,7 @@ Entry.Board = function(option) {
 
     p.generateCodeMagnetMap = function() {
         var code = this.code;
-        if (!code) return;
-        var a = new Date().getTime();
+        if (!code || !this.dragBlock) return;
         var metaData = this._getCodeBlocks(code);
         metaData.sort(function(a, b) {return a.point - b.point});
 
@@ -397,7 +396,6 @@ Entry.Board = function(option) {
         }
 
         this._magnetMap.nextMagnet = metaData;
-        console.log(new Date().getTime() - a);
     };
 
     p._getCodeBlocks = function(code) {
@@ -422,14 +420,15 @@ Entry.Board = function(option) {
                 break;
             cursorY += blockView.y;
             cursorX += blockView.x;
+            var endPoint = cursorY + blockView.magnet.next.y + 1;
             metaData.push({
                 point: cursorY,
-                endPoint: cursorY + blockView.magnet.next.y,
+                endPoint: endPoint,
                 startBlock: block,
                 blocks: []
             });
             metaData.push({
-                point: cursorY + blockView.magnet.next.y,
+                point: endPoint,
                 blocks: []
             });
             blockView.absX = cursorX;

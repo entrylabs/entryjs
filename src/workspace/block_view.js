@@ -244,7 +244,6 @@ Entry.BlockView.PARAM_SPACE = 5;
     p._toLocalCoordinate = function(parentSvgGroup) {
         this._moveTo(0, 0, false);
         parentSvgGroup.appendChild(this.svgGroup);
-        this._moveTo(0, 0, false);
     };
 
     p._toGlobalCoordinate = function() {
@@ -472,8 +471,8 @@ Entry.BlockView.PARAM_SPACE = 5;
                             if (closeBlock) {
                                 this.set({animating: true});
 
+                                this.bindPrev(closeBlock);
                                 block.doInsert(closeBlock);
-                                this.bindPrev();
                                 createjs.Sound.play('entryMagneting');
                                 Entry.ConnectionRipple
                                     .setView(closeBlock.view)
@@ -655,7 +654,7 @@ Entry.BlockView.PARAM_SPACE = 5;
                 delete blockView.background;
                 delete blockView.nextBackground;
             }
-            var height = blockView.height + dragThreadHeight;
+            var height = this._board.dragBlock.getBelowHeight() + dragThreadHeight;
 
             blockView.originalHeight = blockView.height;
             blockView.set({
@@ -775,15 +774,24 @@ Entry.BlockView.PARAM_SPACE = 5;
 
     p.bumpAway = function() {this._moveBy(10, 10, false);};
 
-    p.bindPrev = function() {
-        var prevBlock = this.block.getPrevBlock();
+    p.bindPrev = function(prevBlock) {
         if (prevBlock) {
-            var prevBlockView = prevBlock.view;
+            this._toLocalCoordinate(prevBlock.view._nextGroup);
+            var nextBlock = prevBlock.getNextBlock();
+            if (nextBlock) {
+                var endBlock = this.block.getLastBlock();
+                nextBlock.view._toLocalCoordinate(endBlock.view._nextGroup);
+            }
+        } else {
+            prevBlock = this.block.getPrevBlock();
+            if (prevBlock) {
+                var prevBlockView = prevBlock.view;
 
-            this._toLocalCoordinate(prevBlockView._nextGroup);
-            var nextBlock = this.block.getNextBlock();
-            nextBlock && nextBlock.view &&
-                nextBlock.view._toLocalCoordinate(this._nextGroup);
+                this._toLocalCoordinate(prevBlockView._nextGroup);
+                var nextBlock = this.block.getNextBlock();
+                nextBlock && nextBlock.view &&
+                    nextBlock.view._toLocalCoordinate(this._nextGroup);
+            }
         }
     };
 
@@ -796,7 +804,7 @@ Entry.BlockView.PARAM_SPACE = 5;
     };
 
     p._getTargetType = function() {
-        var targetType = this._skeleton.magnets();
+        var targetType = this._skeleton.magnets ? this._skeleton.magnets() : {};
 
         if (targetType.previous) targetType = 'nextMagnet';
         else if (targetType.string) targetType = 'stringMagnet';
@@ -805,6 +813,11 @@ Entry.BlockView.PARAM_SPACE = 5;
         else targetType = null;
 
         return targetType;
+    };
+
+    p.getBelowHeight = function() {
+        var threadView = this.block.getThread().view;
+        return threadView.requestPartHeight(this);
     };
 
 })(Entry.BlockView.prototype);

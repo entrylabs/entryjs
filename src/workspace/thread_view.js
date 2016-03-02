@@ -50,4 +50,16 @@ Entry.ThreadView = function(thread, board) {
         }
         return pos;
     };
+
+    p.requestPartHeight = function(blockView) {
+        var blocks = this.thread.getBlocks();
+        var block = blocks.pop();
+        var height = blockView.magnet.next.y;
+        while (block.view !== blockView && block.view) {
+            var prevBlockView = block.view;
+            height += prevBlockView.magnet.next.y;
+            block = blocks.pop();
+        }
+        return height;
+    };
 })(Entry.ThreadView.prototype);
