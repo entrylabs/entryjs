@@ -179,4 +179,13 @@ Entry.Code = function(code) {
         return JSON.stringify(this.toJSON());
     };
 
+    p.dominate = function(thread) {
+        var data = this._data;
+        var index = data.indexOf(thread);
+        // case of statement thread
+        if (index < 0) return;
+        data.splice(index, 1);
+        data.push(thread);
+    };
+
 })(Entry.Code.prototype);

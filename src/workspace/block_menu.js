@@ -487,4 +487,7 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
             (-e.wheelDeltaY || e.deltaY) / 3
         );
     };
+
+    p.dominate = function() {
+    };
 })(Entry.BlockMenu.prototype);

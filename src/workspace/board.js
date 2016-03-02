@@ -402,7 +402,12 @@ Entry.Board = function(option) {
         var threads = code.getThreads();
         var blocks = [];
         var that = this;
-        threads.map(function(t){blocks = blocks.concat(that._getThreadBlocks(t))});
+        this.indexTemp = 0;
+        for (var i = 0; i < threads.length; i++) {
+            var thread = threads[i];
+            blocks = blocks.concat(that._getThreadBlocks(thread));
+            this.indexTemp++;
+        }
         return blocks;
     };
 
@@ -416,6 +421,7 @@ Entry.Board = function(option) {
         for (var i = 0; i < blocks.length; i++) {
             var block = blocks[i];
             var blockView = block.view;
+            blockView.zIndex = this.indexTemp;
             if (blockView.dragInstance)
                 break;
             cursorY += blockView.y;
@@ -450,6 +456,7 @@ Entry.Board = function(option) {
             maxIndex = targetArray.length - 1,
             index,
             pointData,
+            result = null,
             searchValue = y - 15;
         while (minIndex <= maxIndex) {
             index = (minIndex + maxIndex) / 2 | 0;
@@ -463,10 +470,13 @@ Entry.Board = function(option) {
                 var blocks = pointData.blocks;
                 for (var i = 0; i < blocks.length; i++) {
                     var blockView = blocks[i].view;
-                    if (blockView.absX < x && x < blockView.absX + blockView.width)
-                        return pointData.blocks[i];
+                    if (blockView.absX < x && x < blockView.absX + blockView.width) {
+                        var resultBlock = pointData.blocks[i];
+                        if (!result || result.view.zIndex < resultBlock.view.zIndex)
+                            result = pointData.blocks[i];
+                    }
                 }
-                return null;
+                return result;
             }
         }
         return null;
@@ -491,5 +501,11 @@ Entry.Board = function(option) {
         //blockFilter.elem('feOffset', {'in': "BackgroundImage", 'dx': 1, 'dy': 1});
     };
 
+    p.dominate = function(block) {
+        this.svgBlockGroup
+            .appendChild(block.view.svgGroup);
+        this.code.dominate(block.thread);
+        this.generateCodeMagnetMap();
+    };
 
 })(Entry.Board.prototype);

@@ -189,4 +189,8 @@ Entry.Thread = function(thread, code) {
     p.getLastBlock = function() {
         return this._data.at(this._data.length - 1);
     };
+
+    p.getRootBlock = function() {
+        return this._data.at(0);
+    };
 })(Entry.Thread.prototype);

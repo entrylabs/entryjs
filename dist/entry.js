@@ -13112,6 +13112,8 @@ Entry.BlockMenu = function(a, b, c, d) {
     b = b.originalEvent;
     this._scroller.scroll((-b.wheelDeltaY || b.deltaY) / 3);
   };
+  a.dominate = function() {
+  };
 })(Entry.BlockMenu.prototype);
 Entry.BlockMenuScroller = function(a) {
   this.board = a;
@@ -13457,7 +13459,8 @@ Entry.BlockView.PARAM_SPACE = 5;
   a._inheritAnimate = function() {
   };
   a.dominate = function() {
-    this.getBoard().svgBlockGroup.appendChild(this.getSvgRoot());
+    var b = this.block.getThread().getRootBlock();
+    this.getBoard().dominate(b);
   };
   a.getSvgRoot = function() {
     for (var b = this.getBoard().svgBlockGroup, a = this.svgGroup;a.parentNode !== b;) {
@@ -13715,6 +13718,10 @@ Entry.Code = function(a) {
   };
   a.stringify = function() {
     return JSON.stringify(this.toJSON());
+  };
+  a.dominate = function(b) {
+    var a = this._data, d = a.indexOf(b);
+    0 > d || (a.splice(d, 1), a.push(b));
   };
 })(Entry.Code.prototype);
 Entry.CodeView = function(a, b) {
@@ -15394,6 +15401,9 @@ Entry.Thread = function(a, b) {
   a.getLastBlock = function() {
     return this._data.at(this._data.length - 1);
   };
+  a.getRootBlock = function() {
+    return this._data.at(0);
+  };
 })(Entry.Thread.prototype);
 Entry.ThreadView = function(a, b) {
   Entry.Model(this, !1);
@@ -15692,16 +15702,17 @@ Entry.Board = function(a) {
     }
   };
   a._getCodeBlocks = function(a) {
-    var c = [], d = this;
-    a.getThreads().map(function(a) {
-      c = c.concat(d._getThreadBlocks(a));
-    });
+    a = a.getThreads();
+    for (var c = [], d = this.indexTemp = 0;d < a.length;d++) {
+      c = c.concat(this._getThreadBlocks(a[d])), this.indexTemp++;
+    }
     return c;
   };
   a._getThreadBlocks = function(a) {
     a = a.getBlocks();
     for (var c = [], d = [], e = this, f = 0, g = 0, h = 0;h < a.length;h++) {
       var k = a[h], l = k.view;
+      l.zIndex = this.indexTemp;
       if (l.dragInstance) {
         break;
       }
@@ -15718,21 +15729,22 @@ Entry.Board = function(a) {
     return c.concat(d);
   };
   a.getNearestMagnet = function(a, c, d) {
-    d = this._magnetMap[d];
-    for (var e = 0, f = d.length - 1, g, h = c - 15;e <= f;) {
-      if (g = (e + f) / 2 | 0, c = d[g], h < c.point) {
-        f = g - 1;
+    var e = this._magnetMap[d], f = 0, g = e.length - 1, h;
+    d = null;
+    for (var k = c - 15;f <= g;) {
+      if (h = (f + g) / 2 | 0, c = e[h], k < c.point) {
+        g = h - 1;
       } else {
-        if (h > c.endPoint) {
-          e = g + 1;
+        if (k > c.endPoint) {
+          f = h + 1;
         } else {
-          d = c.blocks;
-          for (e = 0;e < d.length;e++) {
-            if (f = d[e].view, f.absX < a && a < f.absX + f.width) {
-              return c.blocks[e];
+          e = c.blocks;
+          for (f = 0;f < e.length;f++) {
+            if (g = e[f].view, g.absX < a && a < g.absX + g.width && (g = c.blocks[f], !d || d.view.zIndex < g.view.zIndex)) {
+              d = c.blocks[f];
             }
           }
-          break;
+          return d;
         }
       }
     }
@@ -15748,6 +15760,11 @@ Entry.Board = function(a) {
     feMerge.elem("feMergeNode", {"in":"SourceGraphic"}, feMerge);
     blockFilter = a.elem("filter", {id:"entryBlockShadowFilter"});
     blockFilter.innerHTML = '<feOffset result="offOut" in="SourceGraphic" dx="0" dy="1" /><feColorMatrix result="matrixOut" in="offOut" type="matrix"values="0.7 0 0 0 0 0 0.7 0 0 0 0 0 0.7 0 0 0 0 0 1 0" /><feBlend in="SourceGraphic" in2="blurOut" mode="normal" />';
+  };
+  a.dominate = function(a) {
+    this.svgBlockGroup.appendChild(a.view.svgGroup);
+    this.code.dominate(a.thread);
+    this.generateCodeMagnetMap();
   };
 })(Entry.Board.prototype);
 Entry.Vim = function(a) {

@@ -562,9 +562,9 @@ Entry.BlockView.PARAM_SPACE = 5;
     };
 
     p.dominate = function() {
-        this.getBoard()
-            .svgBlockGroup
-            .appendChild(this.getSvgRoot());
+        var rootBlock = this.block.getThread().getRootBlock();
+        var board = this.getBoard();
+        board.dominate(rootBlock);
     };
 
     p.getSvgRoot = function() {
