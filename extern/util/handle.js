@@ -12,7 +12,7 @@ var EaselHandle = function(canvas) {
     this.color = "#c1c7cd";
     //this.color = "#6BD5FF";
     this.arrowColor = "#E79040";
-    this.centerColor = "#93440F";
+    this.centerColor = "#00008b"; //"#93440F";
     this.rotateKnobColor = "#6B6B6B";
 
     this.x = 0;
@@ -224,7 +224,7 @@ p.createHandle = function() {
     centerPoint.graphics.beginFill(this.centerColor)
         .ss(1, 2, 0)
         .s(this.centerColor)
-        .dc(0, 0, 3, 3);
+        .dc(0, 0, 7, 7);
     centerPoint.on("mousedown", function(e) {
         handle.dispatchEditStartEvent();
     });
