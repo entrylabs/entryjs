@@ -883,6 +883,39 @@ Entry.block.maze_repeat_until_1 = {
     }
 };
 
+Entry.block.maze_repeat_until_2 = {
+    skeleton: "basic_loop",
+    mode: "maze",
+    color: "#498DEB",
+    template: "모든 %1 만날 때 까지 반복%2",
+    syntax: ["BasicWhile", "true"],
+    params: [
+        {
+            type: "Image",
+            img: "/img/assets/ntry/block_inner/repeat_goal_1.png",
+            size: 18
+        },
+        {
+            type: "Image",
+            img: "/img/assets/week/blocks/for.png",
+            size: 24
+        }
+    ],
+    statements: [
+        {
+            accept: "basic"
+        }
+    ],
+    func: function() {
+        var statement = this.block.statements[0];
+        if (statement.getBlocks().length === 1)
+            return;
+
+        this.executor.stepInto(statement);
+        return Entry.STATIC.CONTINUE;
+    }
+};
+
 
 Entry.block.maze_step_if_1 = {
     skeleton: "basic_loop",
