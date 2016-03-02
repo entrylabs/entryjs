@@ -77,9 +77,6 @@ Entry.Board = function(option) {
     Entry.BOARD_PADDING = 100;
 
     this.changeEvent = new Entry.Event(this);
-    this.changeEvent.attach(this, function() {
-       this.generateCodeMagnetMap();
-    });
     this.scroller = new Entry.Scroller(this, true, true);
 
     Entry.Utils.disableContextmenu(this.svgDom);
@@ -89,6 +86,8 @@ Entry.Board = function(option) {
         Entry.documentMousedown.attach(this, this.setSelectedBlock);
     if (Entry.keyPressed)
         Entry.keyPressed.attach(this, this._keyboardControl);
+
+    this.observe(this, "generateCodeMagnetMap", ["dragBlock"], false);
 };
 
 (function(p) {
@@ -366,8 +365,8 @@ Entry.Board = function(option) {
         cancelText.onclick = function(e) { func.cancelEdit(); };
     };
 
-    p.generateCodeMagnetMap = function(code) {
-        if (!code) code = this.code;
+    p.generateCodeMagnetMap = function() {
+        var code = this.code;
         if (!code) return;
         var a = new Date().getTime();
         var metaData = this._getCodeBlocks(code);
@@ -416,14 +415,17 @@ Entry.Board = function(option) {
         var that = this;
         var cursorY = 0;
         var cursorX = 0;
-        blocks.map(function(b) {
-            var blockView = b.view;
+        for (var i = 0; i < blocks.length; i++) {
+            var block = blocks[i];
+            var blockView = block.view;
+            if (blockView.dragInstance)
+                break;
             cursorY += blockView.y;
             cursorX += blockView.x;
             metaData.push({
                 point: cursorY,
                 endPoint: cursorY + blockView.magnet.next.y,
-                startBlock: b,
+                startBlock: block,
                 blocks: []
             });
             metaData.push({
@@ -433,13 +435,13 @@ Entry.Board = function(option) {
             blockView.absX = cursorX;
             cursorY += blockView.magnet.next.y;
             cursorX += blockView.magnet.next.x;
-            if (b.statements)
-                b.statements.map(function(t){
+            if (block.statements)
+                block.statements.map(function(t){
                     statementsBlocks = statementBlocks.concat(
                         that._getThreadBlocks(t)
                     );
                 });
-        });
+        }
         return statementBlocks.concat(metaData);
     };
 

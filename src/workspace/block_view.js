@@ -293,7 +293,6 @@ Entry.BlockView.PARAM_SPACE = 5;
             doc.bind('mouseup.block', onMouseUp);
             doc.bind('touchmove.block', onMouseMove);
             doc.bind('touchend.block', onMouseUp);
-            board.set({dragBlock:this});
             var absStartPos = this.getAbsoluteCoordinate();
             this.dragInstance = new Entry.DragInstance({
                 startX: e.pageX,
@@ -305,6 +304,7 @@ Entry.BlockView.PARAM_SPACE = 5;
                 height: 0,
                 mode: true
             });
+            board.set({dragBlock:this});
             this.addDragging();
             this.dragMode = Entry.DRAG_MODE_MOUSEDOWN;
         } else if (Entry.Utils.isRightButton(e)) {

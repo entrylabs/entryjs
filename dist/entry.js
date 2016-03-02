@@ -13369,9 +13369,9 @@ Entry.BlockView.PARAM_SPACE = 5;
         f.bind("mouseup.block", d);
         f.bind("touchmove.block", c);
         f.bind("touchend.block", d);
-        e.set({dragBlock:this});
         f = this.getAbsoluteCoordinate();
         this.dragInstance = new Entry.DragInstance({startX:b.pageX, startY:b.pageY, offsetX:b.pageX, offsetY:b.pageY, absX:f.x - this.x, absY:f.y - this.y, height:0, mode:!0});
+        e.set({dragBlock:this});
         this.addDragging();
         this.dragMode = Entry.DRAG_MODE_MOUSEDOWN;
       } else {
@@ -15493,14 +15493,12 @@ Entry.Board = function(a) {
   Entry.ANIMATION_DURATION = 200;
   Entry.BOARD_PADDING = 100;
   this.changeEvent = new Entry.Event(this);
-  this.changeEvent.attach(this, function() {
-    this.generateCodeMagnetMap();
-  });
   this.scroller = new Entry.Scroller(this, !0, !0);
   Entry.Utils.disableContextmenu(this.svgDom);
   this._addControl(b);
   Entry.documentMousedown && Entry.documentMousedown.attach(this, this.setSelectedBlock);
   Entry.keyPressed && Entry.keyPressed.attach(this, this._keyboardControl);
+  this.observe(this, "generateCodeMagnetMap", ["dragBlock"], !1);
 };
 (function(a) {
   a.schema = {code:null, dragBlock:null, magnetedBlockView:null, selectedBlockView:null};
@@ -15654,11 +15652,10 @@ Entry.Board = function(a) {
     a.circle(27.5, 27.5, 27.5).attr({"class":"entryFunctionButton"});
     a.circle(102.5, 27.5, 27.5).attr({"class":"entryFunctionButton"});
   };
-  a.generateCodeMagnetMap = function(a) {
-    a || (a = this.code);
+  a.generateCodeMagnetMap = function() {
+    var a = this.code;
     if (a) {
-      var c = (new Date).getTime();
-      a = this._getCodeBlocks(a);
+      var c = (new Date).getTime(), a = this._getCodeBlocks(a);
       a.sort(function(a, b) {
         return a.point - b.point;
       });
@@ -15685,20 +15682,23 @@ Entry.Board = function(a) {
     return c;
   };
   a._getThreadBlocks = function(a) {
-    var c = [], d = [], e = this, f = 0, g = 0;
-    a.getBlocks().map(function(a) {
-      var b = a.view;
-      f += b.y;
-      g += b.x;
-      d.push({point:f, endPoint:f + b.magnet.next.y, startBlock:a, blocks:[]});
-      d.push({point:f + b.magnet.next.y, blocks:[]});
-      b.absX = g;
-      f += b.magnet.next.y;
-      g += b.magnet.next.x;
-      a.statements && a.statements.map(function(a) {
+    a = a.getBlocks();
+    for (var c = [], d = [], e = this, f = 0, g = 0, h = 0;h < a.length;h++) {
+      var k = a[h], l = k.view;
+      if (l.dragInstance) {
+        break;
+      }
+      f += l.y;
+      g += l.x;
+      d.push({point:f, endPoint:f + l.magnet.next.y, startBlock:k, blocks:[]});
+      d.push({point:f + l.magnet.next.y, blocks:[]});
+      l.absX = g;
+      f += l.magnet.next.y;
+      g += l.magnet.next.x;
+      k.statements && k.statements.map(function(a) {
         statementsBlocks = c.concat(e._getThreadBlocks(a));
       });
-    });
+    }
     return c.concat(d);
   };
   a.getNearestMagnet = function(a, c, d) {
