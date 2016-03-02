@@ -12,7 +12,7 @@ var EaselHandle = function(canvas) {
     this.color = "#c1c7cd";
     //this.color = "#6BD5FF";
     this.arrowColor = "#E79040";
-    this.centerColor = "#00008b"; //"#93440F";
+    this.centerColor = "#93440F";
     this.rotateKnobColor = "#6B6B6B";
 
     this.x = 0;
