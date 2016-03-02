@@ -292,14 +292,11 @@ Entry.BlockView.PARAM_SPACE = 5;
             doc.bind('mouseup.block', onMouseUp);
             doc.bind('touchmove.block', onMouseMove);
             doc.bind('touchend.block', onMouseUp);
-            var absStartPos = this.getAbsoluteCoordinate();
             this.dragInstance = new Entry.DragInstance({
                 startX: e.pageX,
                 startY: e.pageY,
                 offsetX: e.pageX,
                 offsetY: e.pageY,
-                absX: absStartPos.x - this.x,
-                absY: absStartPos.y - this.y,
                 height: 0,
                 mode: true
             });
@@ -359,6 +356,12 @@ Entry.BlockView.PARAM_SPACE = 5;
         }
 
         function onMouseMove(e) {
+            if (blockView.dragMode != Entry.DRAG_MODE_DRAG) {
+                if (!blockView.isInBlockMenu) {
+                    blockView._toGlobalCoordinate();
+                }
+            }
+
             var workspaceMode = board.workspace.getMode();
 
             if (workspaceMode === Entry.Workspace.MODE_VIMBOARD)
@@ -545,10 +548,6 @@ Entry.BlockView.PARAM_SPACE = 5;
         //TODO optimize
         x = this.x,
         y = this.y;
-        if (this.dragInstance) {
-            x += this.dragInstance.absX;
-            y += this.dragInstance.absY;
-        }
 
         return board.getNearestMagnet(x, y, targetType);
     };
@@ -796,6 +795,8 @@ Entry.BlockView.PARAM_SPACE = 5;
     };
 
     p.getAbsoluteCoordinate = function() {
+        if (this.dragMode === Entry.DRAG_MODE_DRAG)
+            return {x: this.x, y: this.y};
         var threadView = this.block.getThread().view;
         var pos = threadView.requestAbsoluteCoordinate(this);
         pos.x += this.x;

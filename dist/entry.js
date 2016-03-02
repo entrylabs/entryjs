@@ -13338,6 +13338,7 @@ Entry.BlockView.PARAM_SPACE = 5;
   };
   a.onMouseDown = function(b) {
     function c(b) {
+      l.dragMode != Entry.DRAG_MODE_DRAG && (l.isInBlockMenu || l._toGlobalCoordinate());
       var c = e.workspace.getMode();
       c === Entry.Workspace.MODE_VIMBOARD && a.vimBoardEvent(b, "dragOver");
       var d = l.mouseDownCoordinate;
@@ -13366,8 +13367,7 @@ Entry.BlockView.PARAM_SPACE = 5;
         f.bind("mouseup.block", d);
         f.bind("touchmove.block", c);
         f.bind("touchend.block", d);
-        f = this.getAbsoluteCoordinate();
-        this.dragInstance = new Entry.DragInstance({startX:b.pageX, startY:b.pageY, offsetX:b.pageX, offsetY:b.pageY, absX:f.x - this.x, absY:f.y - this.y, height:0, mode:!0});
+        this.dragInstance = new Entry.DragInstance({startX:b.pageX, startY:b.pageY, offsetX:b.pageX, offsetY:b.pageY, height:0, mode:!0});
         e.set({dragBlock:this});
         this.addDragging();
         this.dragMode = Entry.DRAG_MODE_MOUSEDOWN;
@@ -13451,7 +13451,6 @@ Entry.BlockView.PARAM_SPACE = 5;
         var a = this.getBoard();
         x = this.x;
         y = this.y;
-        this.dragInstance && (x += this.dragInstance.absX, y += this.dragInstance.absY);
         return a.getNearestMagnet(x, y, b);
       }
     }
@@ -13591,6 +13590,9 @@ Entry.BlockView.PARAM_SPACE = 5;
     }
   };
   a.getAbsoluteCoordinate = function() {
+    if (this.dragMode === Entry.DRAG_MODE_DRAG) {
+      return {x:this.x, y:this.y};
+    }
     var b = this.block.getThread().view.requestAbsoluteCoordinate(this);
     b.x += this.x;
     b.y += this.y;
