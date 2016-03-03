@@ -47,6 +47,7 @@ Entry.BlockView = function(block, board, mode) {
     this.block.observe(this, "_setReadOnly", ["movable"]);
     this.observe(this, "_updateBG", ["magneting"]);
     this.observe(this, "_updateOpacity", ["visible"], false);
+    this.observe(this, "_updateDisplay", ["display"], false);
     this.observe(this, "_updateShadow", ["shadow"]);
     board.code.observe(this, '_setBoard', ['board'], false);
 
@@ -72,7 +73,8 @@ Entry.BlockView.PARAM_SPACE = 5;
         magneting: false,
         visible: true,
         animating: false,
-        shadow: true
+        shadow: true,
+        display: true
     };
 
     p._startRender = function(block, mode) {
@@ -819,6 +821,12 @@ Entry.BlockView.PARAM_SPACE = 5;
     p.getBelowHeight = function() {
         var threadView = this.block.getThread().view;
         return threadView.requestPartHeight(this);
+    };
+
+    p._updateDisplay = function() {
+        this.svgGroup.attr({
+            display:this.display === false ? 'none' : 'block'
+        });
     };
 
 })(Entry.BlockView.prototype);

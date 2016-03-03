@@ -13220,6 +13220,7 @@ Entry.BlockView = function(a, b, c) {
   this.block.observe(this, "_setReadOnly", ["movable"]);
   this.observe(this, "_updateBG", ["magneting"]);
   this.observe(this, "_updateOpacity", ["visible"], !1);
+  this.observe(this, "_updateDisplay", ["display"], !1);
   this.observe(this, "_updateShadow", ["shadow"]);
   b.code.observe(this, "_setBoard", ["board"], !1);
   this.dragMode = Entry.DRAG_MODE_NONE;
@@ -13228,7 +13229,7 @@ Entry.BlockView = function(a, b, c) {
 };
 Entry.BlockView.PARAM_SPACE = 5;
 (function(a) {
-  a.schema = {id:0, type:Entry.STATIC.BLOCK_RENDER_MODEL, x:0, y:0, offsetX:0, offsetY:0, width:0, height:0, contentWidth:0, contentHeight:0, magneting:!1, visible:!0, animating:!1, shadow:!0};
+  a.schema = {id:0, type:Entry.STATIC.BLOCK_RENDER_MODEL, x:0, y:0, offsetX:0, offsetY:0, width:0, height:0, contentWidth:0, contentHeight:0, magneting:!1, visible:!0, animating:!1, shadow:!0, display:!0};
   a._startRender = function(b, a) {
     this.svgGroup.attr({class:"block"});
     var d = this._skeleton.path(this);
@@ -13604,6 +13605,9 @@ Entry.BlockView.PARAM_SPACE = 5;
   };
   a.getBelowHeight = function() {
     return this.block.getThread().view.requestPartHeight(this);
+  };
+  a._updateDisplay = function() {
+    this.svgGroup.attr({display:!1 === this.display ? "none" : "block"});
   };
 })(Entry.BlockView.prototype);
 Entry.Code = function(a) {
