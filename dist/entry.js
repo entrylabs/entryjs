@@ -12949,10 +12949,12 @@ Entry.BlockMenu = function(a, b, c, d) {
   };
   a.align = function() {
     if (this.code) {
+      this._clearSplitters();
       for (var b = this.code.getThreads(), a = 10, d = "LEFT" == this._align ? 10 : this.svgDom.width() / 2, e, f = 0, g = b.length;f < g;f++) {
         var h = b[f].getFirstBlock(), k = h.view, h = Entry.block[h.type];
         this.checkBanClass(h) ? k.set({display:!1}) : (k.set({display:!0}), h = h.class, e && e !== h && (this._createSplitter(a), a += 15), e = h, a -= k.offsetY, k._moveTo(d - k.offsetX, a, !1), a += k.height + 15);
       }
+      this.updateSplitters();
       this.changeEvent.notify();
     }
   };
@@ -13008,12 +13010,12 @@ Entry.BlockMenu = function(a, b, c, d) {
     }
   };
   a._createSplitter = function(b) {
-    b = this.svgBlockGroup.elem("line", {x1:10, y1:b, x2:this._svgWidth - 10, y2:b, stroke:"#b5b5b5"});
+    b = this.svgBlockGroup.elem("line", {x1:20, y1:b, x2:this._svgWidth - 20, y2:b, stroke:"#b5b5b5"});
     this._splitters.push(b);
   };
   a.updateSplitters = function(b) {
     b = void 0 === b ? 0 : b;
-    var a = this._svgWidth - 30, d;
+    var a = this._svgWidth - 20, d;
     this._splitters.forEach(function(e) {
       d = parseFloat(e.getAttribute("y1")) + b;
       e.attr({x2:a, y1:d, y2:d});
@@ -13025,7 +13027,7 @@ Entry.BlockMenu = function(a, b, c, d) {
     }
   };
   a.setWidth = function() {
-    this._svgWidth = this.svgDom.width();
+    this._svgWidth = this.blockMenuContainer.width();
     this.updateSplitters();
     this.offset = this.svgDom.offset();
   };

@@ -60,6 +60,7 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
 };
 
 (function(p) {
+    var splitterHPadding = 20;
     p.schema = {
         code: null,
         dragBlock: null,
@@ -158,6 +159,7 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
 
     p.align = function() {
         if (!this.code) return;
+        this._clearSplitters();
 
         var threads = this.code.getThreads();
         var vPadding = 15,
@@ -193,6 +195,7 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
 
         }
 
+        this.updateSplitters();
         this.changeEvent.notify();
     };
 
@@ -294,12 +297,11 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
 
     p._createSplitter = function(topPos) {
         var width = this._svgWidth;
-        var hPadding = 10;
         var svgBlockGroup = this.svgBlockGroup;
         var line = svgBlockGroup.elem("line", {
-            x1: hPadding,
+            x1: splitterHPadding,
             y1: topPos,
-            x2: width-hPadding,
+            x2: width-splitterHPadding,
             y2: topPos,
             stroke : '#b5b5b5'
         });
@@ -310,8 +312,7 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
         y = y === undefined ? 0 : y;
         var splitters = this._splitters;
         var width = this._svgWidth;
-        var hPadding = 30;
-        var xDest = width - hPadding;
+        var xDest = width - splitterHPadding;
         var yDest;
         splitters.forEach(function(line) {
             yDest = parseFloat(line.getAttribute('y1')) + y
@@ -330,7 +331,7 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
     };
 
     p.setWidth = function() {
-        this._svgWidth = this.svgDom.width();
+        this._svgWidth = this.blockMenuContainer.width();
         this.updateSplitters();
         this.offset = this.svgDom.offset();
     };
