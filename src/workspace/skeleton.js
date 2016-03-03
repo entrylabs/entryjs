@@ -113,7 +113,7 @@ Entry.skeleton.basic_loop = {
         };
     },
     statementPos: function(blockView) {
-        var height = Math.max(30, blockView.contentHeight + 2);
+        var height = Math.max(30, blockView.contentHeight + 2) + 1;
         return [{
             x: 16, y: height
         }];

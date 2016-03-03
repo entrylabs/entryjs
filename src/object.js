@@ -43,7 +43,9 @@ Entry.EntryObject = function(model) {
                     type: "repeat_basic",
                     statements: [
                         [
-                            {type: "stop_repeat"},
+                            {type: "move_direction"},
+                            {type: "move_x"},
+                            {type: "move_y"},
                             {type: "stop_repeat"}
                         ]
                     ]

@@ -7,7 +7,6 @@ goog.provide("Entry.Thread");
 
 goog.require('Entry.Model');
 goog.require("Entry.Collection");
-goog.require("Entry.DummyBlock");
 
 /*
  *
@@ -75,10 +74,6 @@ Entry.Thread = function(thread, code) {
         return splicedData;
     };
 
-    p.insertDummyBlock = function(dummyBlock) {
-        this._data.unshift(dummyBlock);
-    };
-
     p.insertByBlock = function(block, newBlocks) {
         var index = this._data.indexOf(block);
         for (var i in newBlocks) {
@@ -98,8 +93,6 @@ Entry.Thread = function(thread, code) {
         var cloned = [];
         for (var i=0, len=data.length; i<len; i++) {
             var block = data[i];
-            if (i===0 && block instanceof Entry.DummyBlock)
-                continue;
             cloned.push(data[i].clone(newThread));
         }
         newThread.load(cloned, mode);
@@ -125,10 +118,6 @@ Entry.Thread = function(thread, code) {
 
         for (var i=blocks.length-1; i>=0; i--)
             blocks[i].destroy(animate);
-    };
-
-    p.getFirstBlock = function() {
-        return this._data[0];
     };
 
     p.getBlocks = function() {
@@ -174,6 +163,10 @@ Entry.Thread = function(thread, code) {
         } else this.destroy();
 
         this.changeEvent.notify();
+    };
+
+    p.getFirstBlock = function() {
+        return this._data[0];
     };
 
     p.getPrevBlock = function(block) {

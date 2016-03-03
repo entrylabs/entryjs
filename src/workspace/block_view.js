@@ -178,6 +178,7 @@ Entry.BlockView.PARAM_SPACE = 5;
                 if (pos)
                     s.align(pos.x, pos.y, animate);
             }
+            this._updateMagnet();
         }
 
         this.set({
@@ -358,9 +359,14 @@ Entry.BlockView.PARAM_SPACE = 5;
         }
 
         function onMouseMove(e) {
-            if (blockView.dragMode != Entry.DRAG_MODE_DRAG)
-                if (!blockView.isInBlockMenu)
+            if (blockView.dragMode != Entry.DRAG_MODE_DRAG) {
+                if (!blockView.isInBlockMenu) {
                     blockView._toGlobalCoordinate();
+                    Entry.GlobalSvg.setView(blockView, workspaceMode);
+                }
+                blockView.dragMode = Entry.DRAG_MODE_DRAG;
+                blockView.block.getThread().changeEvent.notify();
+            }
 
             var workspaceMode = board.workspace.getMode();
 
@@ -368,8 +374,7 @@ Entry.BlockView.PARAM_SPACE = 5;
                 p.vimBoardEvent(e, 'dragOver');
 
             var mouseDownCoordinate = blockView.mouseDownCoordinate;
-            if (blockView.dragMode == Entry.DRAG_MODE_DRAG ||
-                e.pageX !== mouseDownCoordinate.x ||
+            if (e.pageX !== mouseDownCoordinate.x ||
                 e.pageY !== mouseDownCoordinate.y) {
                 if (!blockView.movable) return;
 
@@ -400,8 +405,7 @@ Entry.BlockView.PARAM_SPACE = 5;
                     });
                     blockView.dragMode = Entry.DRAG_MODE_DRAG;
 
-                    if(!Entry.GlobalSvg.setView(blockView, workspaceMode))
-                        Entry.GlobalSvg.position();
+                    Entry.GlobalSvg.position();
                     var magnetedBlock = blockView._getCloseBlock();
                     if (magnetedBlock) {
                         board = magnetedBlock.view.getBoard();
@@ -561,9 +565,8 @@ Entry.BlockView.PARAM_SPACE = 5;
     };
 
     p.dominate = function() {
-        var rootBlock = this.block.getThread().getRootBlock();
-        var board = this.getBoard();
-        board.dominate(rootBlock);
+        var threadView = this.block.getThread().view;
+        threadView.dominate();
     };
 
     p.getSvgRoot = function() {

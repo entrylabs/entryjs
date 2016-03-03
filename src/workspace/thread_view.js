@@ -14,6 +14,8 @@ Entry.ThreadView = function(thread, board) {
     this.thread = thread;
 
     this.svgGroup = board.svgThreadGroup.elem("group");
+
+    this._parent = board; // statement
 };
 
 (function(p) {
@@ -24,6 +26,10 @@ Entry.ThreadView = function(thread, board) {
 
     p.destroy = function() {
         this.svgGroup.remove();
+    };
+
+    p.setParent = function(parent) {
+        this._parent = parent;
     };
 
     p.renderText = function() {
@@ -42,6 +48,8 @@ Entry.ThreadView = function(thread, board) {
         var blocks = this.thread.getBlocks();
         var block = blocks.shift();
         var pos = {x: 0, y: 0};
+        if (!(this._parent instanceof Entry.Board))
+            pos = this._parent.requestAbsoluteCoordinate();
         while (block.view !== blockView && block.view) {
             var prevBlockView = block.view;
             pos.x += prevBlockView.x + prevBlockView.magnet.next.x;
@@ -52,14 +60,25 @@ Entry.ThreadView = function(thread, board) {
     };
 
     p.requestPartHeight = function(blockView) {
+        if (!blockView) {
+            var firstBlock = this.thread.getFirstBlock();
+            if (!firstBlock) return 0;
+            else blockView = firstBlock.view;
+        }
         var blocks = this.thread.getBlocks();
         var block = blocks.pop();
         var height = blockView.magnet.next.y;
         while (block.view !== blockView && block.view) {
             var prevBlockView = block.view;
+            if (prevBlockView.dragMode === Entry.DRAG_MODE_DRAG)
+                height = 0;
             height += prevBlockView.magnet.next.y;
             block = blocks.pop();
         }
         return height;
+    };
+
+    p.dominate = function() {
+        this._parent.dominate(this.thread);
     };
 })(Entry.ThreadView.prototype);
