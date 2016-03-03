@@ -44,8 +44,6 @@ Entry.Board = function(option) {
         { parent: this.wrapper }
     );
 
-
-
     this.visible = true;
     var that = this;
     $(window).scroll(this.updateOffset);
@@ -375,6 +373,7 @@ Entry.Board = function(option) {
         var code = this.code;
         if (!code || !this.dragBlock) return;
         var metaData = this._getCodeBlocks(code);
+        console.log(metaData);
         metaData.sort(function(a, b) {return a.point - b.point});
 
         metaData.unshift({
@@ -408,16 +407,16 @@ Entry.Board = function(option) {
         var threads = code.getThreads();
         var blocks = [];
         var that = this;
-        this.indexTemp = 0;
+        var zIndex = 0;
         for (var i = 0; i < threads.length; i++) {
             var thread = threads[i];
-            blocks = blocks.concat(that._getThreadBlocks(thread));
-            this.indexTemp++;
+            blocks = blocks.concat(that._getThreadBlocks(thread, zIndex));
+            zIndex++;
         }
         return blocks;
     };
 
-    p._getThreadBlocks = function(thread) {
+    p._getThreadBlocks = function(thread, zIndex) {
         var blocks = thread.getBlocks();
         var statementBlocks = [];
         var metaData = [];
@@ -427,7 +426,7 @@ Entry.Board = function(option) {
         for (var i = 0; i < blocks.length; i++) {
             var block = blocks[i];
             var blockView = block.view;
-            blockView.zIndex = this.indexTemp;
+            blockView.zIndex = zIndex;
             if (blockView.dragInstance)
                 break;
             cursorY += blockView.y;
@@ -443,16 +442,20 @@ Entry.Board = function(option) {
                 point: endPoint,
                 blocks: []
             });
+            console.log(zIndex);
             blockView.absX = cursorX;
             cursorY += blockView.magnet.next.y;
             cursorX += blockView.magnet.next.x;
             if (block.statements)
                 block.statements.map(function(t){
+                    zIndex += 0.01;
+                    console.log(zIndex, t);
                     statementsBlocks = statementBlocks.concat(
-                        that._getThreadBlocks(t)
+                        that._getThreadBlocks(t, zIndex)
                     );
                 });
         }
+        console.log(statementBlocks.concat(metaData));
         return statementBlocks.concat(metaData);
     };
 
@@ -513,7 +516,7 @@ Entry.Board = function(option) {
         this.svgBlockGroup
             .appendChild(block.view.svgGroup);
         this.code.dominate(block.thread);
-        this.generateCodeMagnetMap();
+        //this.generateCodeMagnetMap();
     };
 
 })(Entry.Board.prototype);

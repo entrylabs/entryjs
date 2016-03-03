@@ -20,8 +20,7 @@ Entry.ThreadView = function(thread, board) {
 
 (function(p) {
     p.schema = {
-        scrollX: 0,
-        scrollY: 0
+        height: 0
     };
 
     p.destroy = function() {

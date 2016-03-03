@@ -82,7 +82,6 @@ Entry.FieldStatement = function(content, blockView, index) {
     };
 
     p.calcHeight = function() {
-        console.log('recalc')
         var height = this._thread.view.requestPartHeight();
         this.box.set({height:Math.max(height, 20)});
     };

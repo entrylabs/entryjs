@@ -279,13 +279,13 @@ Entry.BlockView.PARAM_SPACE = 5;
     p.onMouseDown = function(e) {
         e.stopPropagation();
         e.preventDefault();
-        this.dominate();
         var board = this.getBoard();
         if (Entry.documentMousedown)
             Entry.documentMousedown.notify();
         if (this.readOnly || board.viewOnly) return;
 
         board.setSelectedBlock(this);
+        this.dominate();
         if (e.button === 0 || e instanceof Touch) {
             this.mouseDownCoordinate = {
                 x: e.pageX, y: e.pageY
@@ -359,26 +359,25 @@ Entry.BlockView.PARAM_SPACE = 5;
         }
 
         function onMouseMove(e) {
-            if (blockView.dragMode != Entry.DRAG_MODE_DRAG) {
-                if (!blockView.isInBlockMenu) {
-                    blockView._toGlobalCoordinate();
-                    Entry.GlobalSvg.setView(blockView, workspaceMode);
-                }
-                blockView.dragMode = Entry.DRAG_MODE_DRAG;
-                blockView.block.getThread().changeEvent.notify();
-            }
-
             var workspaceMode = board.workspace.getMode();
 
             if (workspaceMode === Entry.Workspace.MODE_VIMBOARD)
                 p.vimBoardEvent(e, 'dragOver');
 
             var mouseDownCoordinate = blockView.mouseDownCoordinate;
-            if (e.pageX !== mouseDownCoordinate.x ||
+            if (blockView.dragMode == Entry.DRAG_MODE_DRAG ||
+                e.pageX !== mouseDownCoordinate.x ||
                 e.pageY !== mouseDownCoordinate.y) {
                 if (!blockView.movable) return;
 
                 if (!blockView.isInBlockMenu) {
+                    if (blockView.dragMode != Entry.DRAG_MODE_DRAG) {
+                        blockView._toGlobalCoordinate();
+                        blockView.dragMode = Entry.DRAG_MODE_DRAG;
+                        blockView.block.getThread().changeEvent.notify();
+                        Entry.GlobalSvg.setView(blockView, workspaceMode);
+                    }
+
                     if (this.animating)
                         this.set({animating: false});
 
@@ -403,7 +402,6 @@ Entry.BlockView.PARAM_SPACE = 5;
                         offsetX: e.pageX,
                         offsetY: e.pageY
                     });
-                    blockView.dragMode = Entry.DRAG_MODE_DRAG;
 
                     Entry.GlobalSvg.position();
                     var magnetedBlock = blockView._getCloseBlock();
@@ -637,7 +635,6 @@ Entry.BlockView.PARAM_SPACE = 5;
     p._updateBG = function() {
         if (!this._board.dragBlock || !this._board.dragBlock.dragInstance)
             return;
-        var dragThreadHeight = this._board.dragBlock.dragInstance.height;
         var blockView = this;
         var magneting = blockView.magneting;
         var block = blockView.block;
@@ -656,7 +653,7 @@ Entry.BlockView.PARAM_SPACE = 5;
                 delete blockView.background;
                 delete blockView.nextBackground;
             }
-            var height = this._board.dragBlock.getBelowHeight() + dragThreadHeight;
+            var height = this._board.dragBlock.getBelowHeight() + this.height;
 
             blockView.originalHeight = blockView.height;
             blockView.set({
@@ -689,30 +686,6 @@ Entry.BlockView.PARAM_SPACE = 5;
         }
         var changeEvent = blockView.block.thread.changeEvent;
         if (changeEvent) changeEvent.notify();
-    };
-
-    p._createEmptyBG = function() {
-        //TODO this never call
-        var blockView = this;
-        if (this.svgGroup.nextMagnet && !this.block.next) {
-            var bg = this.svgGroup.rect(
-                0 + blockView.offsetX,
-                blockView.height,
-                blockView.width,
-                20
-            );
-            blockView.emptyBackground = bg;
-
-            bg.attr({
-                fill: 'transparent'
-            });
-            this.svgGroup.prepend(bg);
-        } else {
-            if (blockView.emptyBackground) {
-                blockView.emptyBackground.remove();
-                delete blockView.emptyBackground;
-            }
-        }
     };
 
     p.addDragging = function() {
