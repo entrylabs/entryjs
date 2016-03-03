@@ -106,13 +106,13 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
 
         this.svgDom.mouseenter(function(e) {
             if (!Entry.playground || Entry.playground.resizing) return;
-            var hPadding = that._align == 'LEFT' ? 10 : that.svgDom.width()/2;
             Entry.playground.focusBlockMenu = true;
-            var expandWidth = that.svgGroup.getBBox().width + hPadding + 64;
+            var bBox = that.svgGroup.getBBox();
+            var expandWidth = bBox.width + bBox.x + 64;
             if (expandWidth > Entry.interfaceState.menuWidth) {
                 this.widthBackup = Entry.interfaceState.menuWidth - 64;
                 $(this).stop().animate({
-                    width: expandWidth - 64
+                    width: expandWidth - 62
                 }, 200);
             }
         });
