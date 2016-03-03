@@ -15675,15 +15675,28 @@ Entry.Board = function(a) {
     this.offset = this.svg.getBoundingClientRect();
     var a = $(window), c = a.scrollTop(), a = a.scrollLeft(), d = this.offset;
     this.relativeOffset = {top:d.top - c, left:d.left - a};
-    this.btnWrapper && this.btnWrapper.attr({transform:"t" + (d.width / 2 - 65) + " " + (d.height - 200)});
+    this.btnWrapper && (console.log("transform"), this.btnWrapper.attr({transform:"translate(" + (d.width / 2 - 65) + "," + (d.height - 200) + ")"}));
   };
   a.generateButtons = function() {
-    var a = this.svgGroup.elem("g");
-    this.btnWrapper = a;
-    a.text(27, 33, Lang.Buttons.save).attr({"class":"entryFunctionButtonText"});
-    a.text(102.5, 33, Lang.Buttons.cancel).attr({"class":"entryFunctionButtonText"});
-    a.circle(27.5, 27.5, 27.5).attr({"class":"entryFunctionButton"});
-    a.circle(102.5, 27.5, 27.5).attr({"class":"entryFunctionButton"});
+    var a = this, c = this.svgGroup.elem("g");
+    this.btnWrapper = c;
+    var d = c.elem("text", {x:27, y:33, class:"entryFunctionButtonText"});
+    d.innerHTML = Lang.Buttons.save;
+    var e = c.elem("text", {x:102.5, y:33, class:"entryFunctionButtonText"});
+    e.innerHTML = Lang.Buttons.cancel;
+    var f = c.elem("circle", {cx:27.5, cy:27.5, r:27.5, class:"entryFunctionButton"}), c = c.elem("circle", {cx:102.5, cy:27.5, r:27.5, class:"entryFunctionButton"});
+    f.onclick = function(c) {
+      a.save();
+    };
+    d.onclick = function(c) {
+      a.save();
+    };
+    c.onclick = function(c) {
+      a.cancelEdit();
+    };
+    e.onclick = function(c) {
+      a.cancelEdit();
+    };
   };
   a.generateCodeMagnetMap = function() {
     var a = this.code;

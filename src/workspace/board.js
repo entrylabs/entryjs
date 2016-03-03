@@ -332,37 +332,43 @@ Entry.Board = function(option) {
         };
 
         if (this.btnWrapper) {
+            console.log('transform');
             this.btnWrapper.attr({
-                transform: "t" +
-                    (offset.width / 2 - 65) + " " +
-                    (offset.height - 200)
+                "transform": "translate(" +
+                    (offset.width / 2 - 65) + "," +
+                    (offset.height - 200) +")"
             });
         }
     };
 
     p.generateButtons = function() {
+        var that = this;
         var btnWrapper = this.svgGroup.elem("g");
         this.btnWrapper = btnWrapper;
-        var saveText = btnWrapper.text(27, 33, Lang.Buttons.save).attr({
-            'class': 'entryFunctionButtonText'
-        });
-        var cancelText = btnWrapper.text(102.5, 33, Lang.Buttons.cancel).attr({
-            'class': 'entryFunctionButtonText'
-        });
-        var saveButton = btnWrapper.circle(27.5, 27.5, 27.5).attr({
-            'class': 'entryFunctionButton'
-        });
-        var cancelButton = btnWrapper.circle(102.5, 27.5, 27.5).attr({
-            'class': 'entryFunctionButton'
-        });
-        return;
 
-        var func = this;
-        saveButton.onclick = function(e) { func.save(); };
-        saveText.onclick = function(e) { func.save(); };
+        var saveText = btnWrapper.elem('text', {
+            x: 27, y: 33, class: 'entryFunctionButtonText'
+        });
+        saveText.innerHTML = Lang.Buttons.save;
 
-        cancelButton.onclick = function(e) { func.cancelEdit(); };
-        cancelText.onclick = function(e) { func.cancelEdit(); };
+        var cancelText = btnWrapper.elem('text', {
+            x: 102.5, y: 33, class: 'entryFunctionButtonText'
+        });
+        cancelText.innerHTML = Lang.Buttons.cancel;
+
+        var saveButton = btnWrapper.elem('circle', {
+            cx: 27.5, cy: 27.5, r: 27.5, class: 'entryFunctionButton'
+        });
+
+        var cancelButton = btnWrapper.elem('circle', {
+            cx: 102.5, cy: 27.5, r: 27.5, class: 'entryFunctionButton'
+        });
+
+        saveButton.onclick = function(e) { that.save(); };
+        saveText.onclick = function(e) { that.save(); };
+
+        cancelButton.onclick = function(e) { that.cancelEdit(); };
+        cancelText.onclick = function(e) { that.cancelEdit(); };
     };
 
     p.generateCodeMagnetMap = function() {
@@ -499,6 +505,7 @@ Entry.Board = function(option) {
                      'values="0.7 0 0 0 0 0 0.7 0 0 0 0 0 0.7 0 0 0 0 0 1 0" />' +
                      '<feBlend in="SourceGraphic" in2="blurOut" mode="normal" />';
         //blockFilter.elem('feOffset', {'in': "BackgroundImage", 'dx': 1, 'dy': 1});
+
     };
 
     p.dominate = function(block) {
