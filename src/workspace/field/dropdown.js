@@ -82,7 +82,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
             transform: "translate("+ (width-11) + ",0)"
         });
 
-        this.svgGroup.mouseup = function(e) {
+        this.svgGroup.onmouseup = function(e) {
             if (that._isEditable()) that.renderOptions();
         };
 
@@ -103,7 +103,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
         });
 
         this._arrow.attr({
-            transform: "translate"+ (width-11) + ",0)"
+            transform: "translate("+ (width-11) + ",0)"
         });
 
         this.box.set({width: width});
@@ -123,11 +123,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
             }
         );
 
-        this.optionGroup = this.appendSvgOptionelem("g");
-
-        var matrix = blockView.svgGroup.transform().globalMatrix;
-        var x = matrix.e;
-        var y = matrix.f;
+        this.optionGroup = this.svgGroup.elem("g");
 
         var options = this._contents.options;
 
@@ -163,15 +159,15 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
                 }).innerHTML = '\u2713';
             };
 
-            var text = element.elem("text", {
+            var textElement = element.elem("text", {
                 x: 20,
                 y: 13,
                 "alignment-baseline": "central"
             });
-            text.innerHTML = text;
+            textElement.innerHTML = text;
 
             maxWidth = Math.max(
-                text.getComputedTextLength() + OPTION_X_PADDING,
+                textElement.getComputedTextLength() + OPTION_X_PADDING,
                 maxWidth
             );
 
@@ -179,20 +175,20 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
                 //prevent propagation to document
                 elem.onmousedown = function(e){e.stopPropagation();};
 
-                elem.onmouseup = function(){
+                elem.onmouseup = function(e) {
+                    e.stopPropagation();
                     that.applyValue(value);
                     that.destroyOption();
                 };
             })(element, value);
         }
 
-        var pos = this.getRelativePos();
-        pos.y += this.box.height/2;
-        pos.x = pos.x - maxWidth/2 + this.box.width/2;
+        var x = - maxWidth/2 + this.box.width/2;
+        var y = this.box.height/2;
 
         this.optionGroup.attr({
             class: 'entry-field-dropdown',
-            transform: "translate(" + pos.x + "," + pos.y + ")"
+            transform: "translate(" + x + "," + y + ")"
         });
 
         var attr = {width:maxWidth};

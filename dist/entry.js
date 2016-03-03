@@ -13859,8 +13859,8 @@ Entry.Field = function() {
     return {x:a.e + d.left + this.box.x + b.x, y:a.f + d.top + this.box.y + b.y};
   };
   a.getRelativePos = function() {
-    var b = this._block.view, a = b.svgGroup.transform().globalMatrix, b = b.getContentPos(), d = this.box;
-    return {x:a.e + d.x + b.x, y:a.f + d.y + b.y};
+    var b = this._block.view.getContentPos(), a = this.box;
+    return {x:a.x + b.x, y:a.y + b.y};
   };
   a.truncate = function() {
     var b = String(this.getValue()), a = this.TEXT_LIMIT_LENGTH, d = b.substring(0, a);
@@ -14082,7 +14082,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
     this._header = this.svgGroup.elem("rect", {width:d, height:e, y:-e / 2, rx:c._ROUND, ry:c._ROUND, fill:"#fff", "fill-opacity":.4});
     this.svgGroup.appendChild(this.textElement);
     this._arrow = this.svgGroup.elem("polygon", {points:"0,-2 6,-2 3,2", fill:a._schema.color, stroke:a._schema.color, transform:"translate(" + (d - 11) + ",0)"});
-    this.svgGroup.mouseup = function(a) {
+    this.svgGroup.onmouseup = function(a) {
       c._isEditable() && c.renderOptions();
     };
     this.box.set({x:0, y:0, width:d, height:e});
@@ -14090,46 +14090,42 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
   a.resize = function() {
     var a = this.textElement.getComputedTextLength() + 18;
     this._header.attr({width:a});
-    this._arrow.attr({transform:"translate" + (a - 11) + ",0)"});
+    this._arrow.attr({transform:"translate(" + (a - 11) + ",0)"});
     this.box.set({width:a});
     this._block.view.alignContent();
   };
   a.renderOptions = function() {
     var a = this;
     this.destroyOption();
-    var c = this._block.view;
     this.documentDownEvent = Entry.documentMousedown.attach(this, function() {
       Entry.documentMousedown.detach(this.documentDownEvent);
       a.optionGroup.remove();
     });
-    this.optionGroup = this.appendSvgOptionelem("g");
-    c.svgGroup.transform();
-    var d = this._contents.options, c = [], e = 0;
-    c.push(this.optionGroup.elem("rect", {height:23 * d.length, fill:"white"}));
-    for (var f = 0, g = d.length;f < g;f++) {
-      var h = d[f], k = h[0], h = h[1], l = this.optionGroup.elem("g", {class:"rect", transform:"translate(0," + 23 * f + ")"});
-      c.push(l.elem("rect", {height:23}));
+    this.optionGroup = this.svgGroup.elem("g");
+    var c = this._contents.options, d = [], e = 0;
+    d.push(this.optionGroup.elem("rect", {height:23 * c.length, fill:"white"}));
+    for (var f = 0, g = c.length;f < g;f++) {
+      var h = c[f], k = h[0], h = h[1], l = this.optionGroup.elem("g", {class:"rect", transform:"translate(0," + 23 * f + ")"});
+      d.push(l.elem("rect", {height:23}));
       this.getValue() == h && (l.elem("text", {x:5, y:13, "alignment-baseline":"central"}).innerHTML = "\u2713");
-      k = l.elem("text", {x:20, y:13, "alignment-baseline":"central"});
-      k.innerHTML = k;
-      e = Math.max(k.getComputedTextLength() + 50, e);
+      var n = l.elem("text", {x:20, y:13, "alignment-baseline":"central"});
+      n.innerHTML = k;
+      e = Math.max(n.getComputedTextLength() + 50, e);
       (function(c, d) {
         c.onmousedown = function(a) {
           a.stopPropagation();
         };
-        c.onmouseup = function() {
+        c.onmouseup = function(c) {
+          c.stopPropagation();
           a.applyValue(d);
           a.destroyOption();
         };
       })(l, h);
     }
-    d = this.getRelativePos();
-    d.y += this.box.height / 2;
-    d.x = d.x - e / 2 + this.box.width / 2;
-    this.optionGroup.attr({class:"entry-field-dropdown", transform:"translate(" + d.x + "," + d.y + ")"});
-    var n = {width:e};
-    c.forEach(function(a) {
-      a.attr(n);
+    this.optionGroup.attr({class:"entry-field-dropdown", transform:"translate(" + (-e / 2 + this.box.width / 2) + "," + this.box.height / 2 + ")"});
+    var m = {width:e};
+    d.forEach(function(a) {
+      a.attr(m);
     });
   };
   a.applyValue = function(a) {

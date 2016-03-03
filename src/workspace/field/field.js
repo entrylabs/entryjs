@@ -72,13 +72,12 @@ Entry.Field = function() {};
     //get relative position of field from blockView origin
     p.getRelativePos = function() {
         var blockView = this._block.view;
-        var matrix = blockView.svgGroup.transform().globalMatrix;
         var contentPos = blockView.getContentPos();
         var box = this.box;
 
         return {
-            x: matrix.e + box.x + contentPos.x,
-            y: matrix.f + box.y + contentPos.y
+            x: box.x + contentPos.x,
+            y: box.y + contentPos.y
         };
     };
 
