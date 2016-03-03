@@ -6,8 +6,9 @@ goog.provide("Entry.ConnectionRipple");
     cr.createDom = function(blockView) {
         if (this.svgDom) return;
 
-        var svgGroup = blockView.svgGroup;
-        this._ripple = svgGroup.elem("cicle", {
+        var svgGroup = blockView.getBoard().svgGroup;
+        this._ripple = svgGroup.elem("circle", {
+            "cx": 0, "cy": 0, "r": 0,
             'stroke': '#888',
             'stroke-width': 10
         });
@@ -16,10 +17,11 @@ goog.provide("Entry.ConnectionRipple");
     cr.setView = function(blockView) {
         if (!this._ripple) this.createDom(blockView);
         var ripple = this._ripple;
-        var svgGroup = blockView.svgGroup;
+        var svgGroup = blockView.getBoard().svgGroup;
         ripple.remove();
 
         ripple.attr(blockView.getRipplePosition());
+
         svgGroup.appendChild(ripple);
         ripple._startTime = new Date();
         return this;

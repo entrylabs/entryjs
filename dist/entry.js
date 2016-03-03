@@ -13748,11 +13748,11 @@ Entry.CodeView = function(a, b) {
 Entry.ConnectionRipple = {};
 (function(a) {
   a.createDom = function(b) {
-    this.svgDom || (this._ripple = b.svgGroup.elem("cicle", {stroke:"#888", "stroke-width":10}));
+    this.svgDom || (this._ripple = b.getBoard().svgGroup.elem("circle", {cx:0, cy:0, r:0, stroke:"#888", "stroke-width":10}));
   };
   a.setView = function(b) {
     this._ripple || this.createDom(b);
-    var a = this._ripple, d = b.svgGroup;
+    var a = this._ripple, d = b.getBoard().svgGroup;
     a.remove();
     a.attr(b.getRipplePosition());
     d.appendChild(a);
