@@ -743,8 +743,8 @@ Entry.BlockView.PARAM_SPACE = 5;
     };
 
     p.getRipplePosition = function() {
-        var dragHeight = this.getBoard().dragBlock.dragInstance.height;
-        return {cx:8, cy:this.height + 1 - dragHeight};
+        var pos = this.getAbsoluteCoordinate();
+        return {cx:pos.x, cy:pos.y + this.originalHeight};
     };
 
     p.bumpAway = function() {this._moveBy(10, 10, false);};

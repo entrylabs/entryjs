@@ -13565,8 +13565,8 @@ Entry.BlockView.PARAM_SPACE = 5;
     this.readOnly = null !== this.block.isReadOnly() ? this.block.isReadOnly() : void 0 !== this._skeleton.readOnly ? this._skeleton.readOnly : !1;
   };
   a.getRipplePosition = function() {
-    var b = this.getBoard().dragBlock.dragInstance.height;
-    return {cx:8, cy:this.height + 1 - b};
+    var b = this.getAbsoluteCoordinate();
+    return {cx:b.x, cy:b.y + this.originalHeight};
   };
   a.bumpAway = function() {
     this._moveBy(10, 10, !1);
