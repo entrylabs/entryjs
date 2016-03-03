@@ -14234,19 +14234,19 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldKeyboard);
     this.box.set({x:0, y:0, width:b, height:16});
   };
   a.renderOptions = function() {
-    var a = this;
+    var b = this;
     this.destroyOption();
     this._optionVisible = !0;
     this.documentDownEvent = Entry.documentMousedown.attach(this, function() {
       Entry.documentMousedown.detach(this.documentDownEvent);
-      a.destroyOption();
+      b.destroyOption();
     });
     this.optionGroup = this.appendSvgOptionGroup();
     this.optionGroup.image(Entry.mediaFilePath + "/media/keyboard_workspace.png", -5, 0, 249, 106);
-    var c = this.getRelativePos();
-    c.x -= 5;
-    c.y += this.box.height / 2;
-    this.optionGroup.attr({class:"entry-field-keyboard", transform:"t" + c.x + " " + c.y});
+    var a = this.getRelativePos();
+    a.x -= 5;
+    a.y += this.box.height / 2;
+    this.optionGroup.attr({class:"entry-field-keyboard", transform:"t" + a.x + " " + a.y});
   };
   a.destroyOption = function() {
     this.documentDownEvent && (Entry.documentMousedown.detach(this.documentDownEvent), delete this.documentDownEvent);
@@ -15630,7 +15630,7 @@ Entry.Board = function(a) {
     this.offset = this.svg.getBoundingClientRect();
     var a = $(window), c = a.scrollTop(), a = a.scrollLeft(), d = this.offset;
     this.relativeOffset = {top:d.top - c, left:d.left - a};
-    this.btnWrapper && (console.log("transform"), this.btnWrapper.attr({transform:"translate(" + (d.width / 2 - 65) + "," + (d.height - 200) + ")"}));
+    this.btnWrapper && this.btnWrapper.attr({transform:"translate(" + (d.width / 2 - 65) + "," + (d.height - 200) + ")"});
   };
   a.generateButtons = function() {
     var a = this, c = this.svgGroup.elem("g");
@@ -15657,7 +15657,6 @@ Entry.Board = function(a) {
     var a = this.code;
     if (a && this.dragBlock) {
       a = this._getCodeBlocks(a);
-      console.log(a);
       a.sort(function(a, b) {
         return a.point - b.point;
       });
@@ -15682,28 +15681,34 @@ Entry.Board = function(a) {
     }
     return c;
   };
-  a._getThreadBlocks = function(a, c) {
-    for (var d = a.getBlocks(), e = [], f = [], g = this, h = 0, k = 0, l = 0;l < d.length;l++) {
-      var n = d[l], m = n.view;
-      m.zIndex = c;
-      if (m.dragInstance) {
+  a._getThreadBlocks = function(a, c, d) {
+    var e = a.getBlocks(), f = [], g = [];
+    d || (d = {x:0, y:0});
+    var h = d.x;
+    d = d.y;
+    for (var k = 0;k < e.length;k++) {
+      var l = e[k], n = l.view;
+      n.zIndex = c;
+      if (n.dragInstance) {
         break;
       }
-      var h = h + m.y, k = k + m.x, q = h + m.magnet.next.y + 1;
-      f.push({point:h, endPoint:q, startBlock:n, blocks:[]});
-      f.push({point:q, blocks:[]});
-      console.log(c);
-      m.absX = k;
-      h += m.magnet.next.y;
-      k += m.magnet.next.x;
-      n.statements && n.statements.map(function(a) {
-        c += .01;
-        console.log(c, a);
-        statementsBlocks = e.concat(g._getThreadBlocks(a, c));
-      });
+      d += n.y;
+      h += n.x;
+      a = d + n.magnet.next.y + 1;
+      g.push({point:d, endPoint:a, startBlock:l, blocks:[]});
+      g.push({point:a, blocks:[]});
+      n.absX = h;
+      if (l.statements) {
+        for (var m = 0;m < l.statements.length;m++) {
+          c += .01;
+          a = l.statements[m];
+          var q = l.view._statements[m].box, f = f.concat(this._getThreadBlocks(a, c, {x:q.x + h, y:q.y + d}));
+        }
+      }
+      d += n.magnet.next.y;
+      h += n.magnet.next.x;
     }
-    console.log(e.concat(f));
-    return e.concat(f);
+    return f.concat(g);
   };
   a.getNearestMagnet = function(a, c, d) {
     var e = this._magnetMap[d], f = 0, g = e.length - 1, h;

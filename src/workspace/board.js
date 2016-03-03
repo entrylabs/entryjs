@@ -330,7 +330,6 @@ Entry.Board = function(option) {
         };
 
         if (this.btnWrapper) {
-            console.log('transform');
             this.btnWrapper.attr({
                 "transform": "translate(" +
                     (offset.width / 2 - 65) + "," +
@@ -373,7 +372,6 @@ Entry.Board = function(option) {
         var code = this.code;
         if (!code || !this.dragBlock) return;
         var metaData = this._getCodeBlocks(code);
-        console.log(metaData);
         metaData.sort(function(a, b) {return a.point - b.point});
 
         metaData.unshift({
@@ -416,13 +414,14 @@ Entry.Board = function(option) {
         return blocks;
     };
 
-    p._getThreadBlocks = function(thread, zIndex) {
+    p._getThreadBlocks = function(thread, zIndex, offset) {
         var blocks = thread.getBlocks();
         var statementBlocks = [];
         var metaData = [];
         var that = this;
-        var cursorY = 0;
-        var cursorX = 0;
+        if (!offset) offset = {x: 0, y: 0};
+        var cursorX = offset.x;
+        var cursorY = offset.y;
         for (var i = 0; i < blocks.length; i++) {
             var block = blocks[i];
             var blockView = block.view;
@@ -442,20 +441,22 @@ Entry.Board = function(option) {
                 point: endPoint,
                 blocks: []
             });
-            console.log(zIndex);
             blockView.absX = cursorX;
+            if (block.statements)
+                for (var j = 0; j < block.statements.length; j++) {
+                        zIndex += 0.01;
+                        var thread = block.statements[j];
+                        var statementPos = block.view._statements[j].box;
+                        statementBlocks = statementBlocks.concat(
+                            this._getThreadBlocks(thread, zIndex, {
+                                 x: statementPos.x + cursorX,
+                                 y: statementPos.y + cursorY
+                            })
+                        );
+                }
             cursorY += blockView.magnet.next.y;
             cursorX += blockView.magnet.next.x;
-            if (block.statements)
-                block.statements.map(function(t){
-                    zIndex += 0.01;
-                    console.log(zIndex, t);
-                    statementsBlocks = statementBlocks.concat(
-                        that._getThreadBlocks(t, zIndex)
-                    );
-                });
         }
-        console.log(statementBlocks.concat(metaData));
         return statementBlocks.concat(metaData);
     };
 
