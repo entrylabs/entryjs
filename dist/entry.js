@@ -6499,7 +6499,7 @@ Entry.EntryObject = function(a) {
     this.text = a.text || this.name;
     this.objectType = a.objectType;
     this.objectType || (this.objectType = "sprite");
-    a.script = [[{type:"when_run_button_click", x:40, y:240}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"stop_repeat"}]];
+    a.script = [[{type:"when_run_button_click", x:40, y:240}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"repeat_basic", statements:[[{type:"stop_repeat"}, {type:"stop_repeat"}]]}]];
     this.script = new Entry.Code(a.script ? a.script : []);
     this.pictures = a.sprite.pictures;
     this.sounds = [];
@@ -13204,7 +13204,7 @@ Entry.BlockView = function(a, b, c) {
   this._contents = [];
   this._statements = [];
   this.magnet = {};
-  d.magnets && d.magnets().next && (this.svgGroup.nextMagnet = this.block, this._nextGroup = this.svgGroup.elem("g"), this.observe(this, "_updateMagnet", ["contentHeight"]));
+  d.magnets && d.magnets(this).next && (this.svgGroup.nextMagnet = this.block, this._nextGroup = this.svgGroup.elem("g"), this.observe(this, "_updateMagnet", ["contentHeight"]));
   this.isInBlockMenu = this.getBoard() instanceof Entry.BlockMenu;
   d.morph && this.block.observe(this, "_renderPath", d.morph, !1);
   var e = this;
@@ -13580,7 +13580,7 @@ Entry.BlockView.PARAM_SPACE = 5;
   };
   a.bindPrev = function(b) {
     if (b) {
-      if (this._toLocalCoordinate(b.view._nextGroup), b = b.getNextBlock()) {
+      if (this._toLocalCoordinate(b.view._nextGroup), (b = b.getNextBlock()) && b !== this.block) {
         var a = this.block.getLastBlock();
         b.view._toLocalCoordinate(a.view._nextGroup);
       }
@@ -13600,7 +13600,7 @@ Entry.BlockView.PARAM_SPACE = 5;
     return b;
   };
   a._getTargetType = function() {
-    var b = this._skeleton.magnets ? this._skeleton.magnets() : {};
+    var b = this._skeleton.magnets ? this._skeleton.magnets(this) : {};
     return b = b.previous ? "nextMagnet" : b.string ? "stringMagnet" : b.bool ? "booleanMagnet" : b.param ? "paramMagnet" : null;
   };
   a.getBelowHeight = function() {
@@ -14993,12 +14993,12 @@ Entry.skeleton.basic_event = {path:function(a) {
 }};
 Entry.skeleton.basic_loop = {path:function(a) {
   var b = a.contentWidth, c = a.contentHeight, c = Math.max(30, c + 2), b = Math.max(0, b + 9 - c / 2);
-  a = a._statements[0] ? a._statements[0].box.height : 30;
+  a = a._statements[0] ? a._statements[0].box.height : 20;
   return "m -8,0 l 8,8 8,-8 h %w a %h,%h 0 0,1 0,%wh H 24 l -8,8 -8,-8 h -0.4 v %sh h 0.4 l 8,8 8,-8 h %w h -8 a 8,8 0 0,1 0,16 H 8 l -8,8 -8,-8 z".replace(/%wh/gi, c).replace(/%w/gi, b).replace(/%h/gi, c / 2).replace(/%sh/gi, a + 1);
-}, magnets:function() {
-  return {previous:{x:0, y:0}, next:{x:0, y:105}};
+}, magnets:function(a) {
+  return {previous:{x:0, y:0}, next:{x:0, y:Math.max(a.contentHeight + 2, 30) + Math.max(a._statements[0] ? a._statements[0].box.height : 20, 20) + 18}};
 }, box:function(a) {
-  return {offsetX:-8, offsetY:0, width:a.contentWidth + 30, height:Math.max(a.contentHeight + 2, 30) + (a._statements[0] ? a._statements[0].box.height : 30) + 17, marginBottom:0};
+  return {offsetX:-8, offsetY:0, width:a.contentWidth + 30, height:Math.max(a.contentHeight + 2, 30) + (a._statements[0] ? a._statements[0].box.height : 20) + 17, marginBottom:0};
 }, statementPos:function(a) {
   return [{x:16, y:Math.max(30, a.contentHeight + 2)}];
 }, contentPos:function(a) {

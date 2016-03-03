@@ -40,7 +40,13 @@ Entry.EntryObject = function(model) {
                     type: "move_direction"
                 },
                 {
-                    type: "stop_repeat"
+                    type: "repeat_basic",
+                    statements: [
+                        [
+                            {type: "stop_repeat"},
+                            {type: "stop_repeat"}
+                        ]
+                    ]
                 }
             ]
         ];

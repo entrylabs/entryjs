@@ -21,7 +21,7 @@ Entry.BlockView = function(block, board, mode) {
     this._statements = [];
     this.magnet = {};
 
-    if (skeleton.magnets && skeleton.magnets().next) {
+    if (skeleton.magnets && skeleton.magnets(this).next) {
         this.svgGroup.nextMagnet = this.block;
         this._nextGroup = this.svgGroup.elem("g");
         this.observe(this, "_updateMagnet", ["contentHeight"]);
@@ -358,11 +358,9 @@ Entry.BlockView.PARAM_SPACE = 5;
         }
 
         function onMouseMove(e) {
-            if (blockView.dragMode != Entry.DRAG_MODE_DRAG) {
-                if (!blockView.isInBlockMenu) {
+            if (blockView.dragMode != Entry.DRAG_MODE_DRAG)
+                if (!blockView.isInBlockMenu)
                     blockView._toGlobalCoordinate();
-                }
-            }
 
             var workspaceMode = board.workspace.getMode();
 
@@ -779,7 +777,7 @@ Entry.BlockView.PARAM_SPACE = 5;
         if (prevBlock) {
             this._toLocalCoordinate(prevBlock.view._nextGroup);
             var nextBlock = prevBlock.getNextBlock();
-            if (nextBlock) {
+            if (nextBlock && nextBlock !== this.block) {
                 var endBlock = this.block.getLastBlock();
                 nextBlock.view._toLocalCoordinate(endBlock.view._nextGroup);
             }
@@ -807,7 +805,7 @@ Entry.BlockView.PARAM_SPACE = 5;
     };
 
     p._getTargetType = function() {
-        var targetType = this._skeleton.magnets ? this._skeleton.magnets() : {};
+        var targetType = this._skeleton.magnets ? this._skeleton.magnets(this) : {};
 
         if (targetType.previous) targetType = 'nextMagnet';
         else if (targetType.string) targetType = 'stringMagnet';

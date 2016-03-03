@@ -496,7 +496,7 @@ Entry.Board = function(option) {
         blockFilter = defs.elem('filter', {'id': 'entryBlockShadowFilter'});
         blockFilter.innerHTML = '<feOffset result="offOut" in="SourceGraphic" dx="0" dy="1" />' +
                      '<feColorMatrix result="matrixOut" in="offOut" type="matrix"' +
-                        'values="0.7 0 0 0 0 0 0.7 0 0 0 0 0 0.7 0 0 0 0 0 1 0" />' +
+                     'values="0.7 0 0 0 0 0 0.7 0 0 0 0 0 0.7 0 0 0 0 0 1 0" />' +
                      '<feBlend in="SourceGraphic" in2="blurOut" mode="normal" />';
         //blockFilter.elem('feOffset', {'in': "BackgroundImage", 'dx': 1, 'dy': 1});
     };
