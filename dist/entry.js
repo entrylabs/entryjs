@@ -13114,7 +13114,8 @@ Entry.BlockMenu = function(a, b, c, d) {
     b = b.originalEvent;
     this._scroller.scroll((-b.wheelDeltaY || b.deltaY) / 3);
   };
-  a.dominate = function() {
+  a.dominate = function(b) {
+    this.svgBlockGroup.appendChild(b.view.svgGroup);
   };
 })(Entry.BlockMenu.prototype);
 Entry.BlockMenuScroller = function(a) {
@@ -13358,11 +13359,11 @@ Entry.BlockView.PARAM_SPACE = 5;
     }
     b.stopPropagation();
     b.preventDefault();
+    this.dominate();
     var e = this.getBoard();
     Entry.documentMousedown && Entry.documentMousedown.notify();
     if (!this.readOnly && !e.viewOnly) {
       e.setSelectedBlock(this);
-      this.dominate();
       if (0 === b.button || b instanceof Touch) {
         this.mouseDownCoordinate = {x:b.pageX, y:b.pageY};
         var f = $(document);

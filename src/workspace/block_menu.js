@@ -489,6 +489,8 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
         );
     };
 
-    p.dominate = function() {
+    p.dominate = function(block) {
+        this.svgBlockGroup
+            .appendChild(block.view.svgGroup);
     };
 })(Entry.BlockMenu.prototype);

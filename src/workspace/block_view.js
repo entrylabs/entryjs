@@ -278,13 +278,13 @@ Entry.BlockView.PARAM_SPACE = 5;
     p.onMouseDown = function(e) {
         e.stopPropagation();
         e.preventDefault();
+        this.dominate();
         var board = this.getBoard();
         if (Entry.documentMousedown)
             Entry.documentMousedown.notify();
         if (this.readOnly || board.viewOnly) return;
 
         board.setSelectedBlock(this);
-        this.dominate();
         if (e.button === 0 || e instanceof Touch) {
             this.mouseDownCoordinate = {
                 x: e.pageX, y: e.pageY
