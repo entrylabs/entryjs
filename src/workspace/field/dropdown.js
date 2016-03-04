@@ -123,7 +123,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
             }
         );
 
-        this.optionGroup = this.svgGroup.elem("g");
+        this.optionGroup = blockView.svgGroup.elem("g");
 
         var options = this._contents.options;
 
@@ -185,10 +185,13 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
 
         var x = - maxWidth/2 + this.box.width/2;
         var y = this.box.height/2;
+        var pos = this.getRelativePos();
+        pos.x += x;
+        pos.y += y;
 
         this.optionGroup.attr({
             class: 'entry-field-dropdown',
-            transform: "translate(" + x + "," + y + ")"
+            transform: "translate(" + pos.x + "," + pos.y + ")"
         });
 
         var attr = {width:maxWidth};

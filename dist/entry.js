@@ -14094,16 +14094,17 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
   a.renderOptions = function() {
     var b = this;
     this.destroyOption();
+    var a = this._block.view;
     this.documentDownEvent = Entry.documentMousedown.attach(this, function() {
       Entry.documentMousedown.detach(this.documentDownEvent);
       b.optionGroup.remove();
     });
-    this.optionGroup = this.svgGroup.elem("g");
-    var a = this._contents.options, d = [], e = 0;
-    d.push(this.optionGroup.elem("rect", {height:23 * a.length, fill:"white"}));
-    for (var f = 0, g = a.length;f < g;f++) {
-      var h = a[f], k = h[0], h = h[1], l = this.optionGroup.elem("g", {class:"rect", transform:"translate(0," + 23 * f + ")"});
-      d.push(l.elem("rect", {height:23}));
+    this.optionGroup = a.svgGroup.elem("g");
+    var d = this._contents.options, a = [], e = 0;
+    a.push(this.optionGroup.elem("rect", {height:23 * d.length, fill:"white"}));
+    for (var f = 0, g = d.length;f < g;f++) {
+      var h = d[f], k = h[0], h = h[1], l = this.optionGroup.elem("g", {class:"rect", transform:"translate(0," + 23 * f + ")"});
+      a.push(l.elem("rect", {height:23}));
       this.getValue() == h && (l.elem("text", {x:5, y:13, "alignment-baseline":"central"}).innerHTML = "\u2713");
       var n = l.elem("text", {x:20, y:13, "alignment-baseline":"central"});
       n.innerHTML = k;
@@ -14119,9 +14120,14 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
         };
       })(l, h);
     }
-    this.optionGroup.attr({class:"entry-field-dropdown", transform:"translate(" + (-e / 2 + this.box.width / 2) + "," + this.box.height / 2 + ")"});
+    d = -e / 2 + this.box.width / 2;
+    f = this.box.height / 2;
+    g = this.getRelativePos();
+    g.x += d;
+    g.y += f;
+    this.optionGroup.attr({class:"entry-field-dropdown", transform:"translate(" + g.x + "," + g.y + ")"});
     var m = {width:e};
-    d.forEach(function(b) {
+    a.forEach(function(b) {
       b.attr(m);
     });
   };
@@ -14218,20 +14224,20 @@ Entry.FieldKeyboard = function(a, b, c) {
 };
 Entry.Utils.inherit(Entry.Field, Entry.FieldKeyboard);
 (function(a) {
-  a.renderStart = function(b) {
-    var a = this;
-    this.svgGroup = b.contentSvgGroup.group();
+  a.renderStart = function(a) {
+    var c = this;
+    this.svgGroup = a.contentSvgGroup.group();
     this.svgGroup.attr({class:"entry-input-field"});
     this.textElement = this.svgGroup.text(4, 4, Entry.getKeyCodeMap()[this.getValue()]);
     this.textElement.attr({"font-size":"9pt"});
-    b = this.getTextWidth();
+    a = this.getTextWidth();
     var d = this.position && this.position.y ? this.position.y : 0;
-    this._header = this.svgGroup.rect(0, d - 8, b, 16, 3).attr({fill:"#fff", "fill-opacity":.4});
+    this._header = this.svgGroup.rect(0, d - 8, a, 16, 3).attr({fill:"#fff", "fill-opacity":.4});
     this.svgGroup.append(this.textElement);
-    this.svgGroup.mouseup(function(b) {
-      a._isEditable() && a.renderOptions();
+    this.svgGroup.mouseup(function(a) {
+      c._isEditable() && c.renderOptions();
     });
-    this.box.set({x:0, y:0, width:b, height:16});
+    this.box.set({x:0, y:0, width:a, height:16});
   };
   a.renderOptions = function() {
     var b = this;
