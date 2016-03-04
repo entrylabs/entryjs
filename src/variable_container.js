@@ -1954,10 +1954,9 @@ Entry.VariableContainer.prototype.generateVariableSettingView = function () {
     minValueInput.onblur = function (e) {
         if (!isNaN(this.value)) {
             var v = that.selectedVariable;
-            v.setMinValue(Number(this.value));
+            v.setMinValue(this.value);
             that.updateVariableSettingView(v);
         }
-
     };
     element.minValueInput = minValueInput;
     minMaxWrapper.appendChild(minValueInput);
@@ -1975,7 +1974,7 @@ Entry.VariableContainer.prototype.generateVariableSettingView = function () {
     maxValueInput.onblur = function (e) {
         if (!isNaN(this.value)) {
             var v = that.selectedVariable;
-            v.setMaxValue(Number(this.value));
+            v.setMaxValue(this.value);
             that.updateVariableSettingView(v);
         }
     };
