@@ -14964,7 +14964,7 @@ Entry.skeleton.basic_event = {path:function(a) {
 Entry.skeleton.basic_loop = {path:function(a) {
   var b = a.contentWidth, c = a.contentHeight, c = Math.max(30, c + 2), b = Math.max(0, b + 9 - c / 2);
   a = a._statements[0] ? a._statements[0].box.height : 20;
-  return "m -8,0 l 8,8 8,-8 h %w a %h,%h 0 0,1 0,%wh H 24 l -8,8 -8,-8 h -0.4 v %sh h 0.4 l 8,8 8,-8 h %w h -8 a 8,8 0 0,1 0,16 H 8 l -8,8 -8,-8 z".replace(/%wh/gi, c).replace(/%w/gi, b).replace(/%h/gi, c / 2).replace(/%sh/gi, a + 1);
+  return "m -8,0 l 8,8 8,-8 h %w a %h,%h 0 0,1 0,%wh H 24 l -8,8 -8,-8 h -0.4 v %sh h 0.4 l 8,8 8,-8 h %bw a 8,8 0 0,1 0,16 H 8 l -8,8 -8,-8 z".replace(/%wh/gi, c).replace(/%w/gi, b).replace(/%bw/gi, b - 8).replace(/%h/gi, c / 2).replace(/%sh/gi, a + 1);
 }, magnets:function(a) {
   return {previous:{x:0, y:0}, next:{x:0, y:Math.max(a.height, 30)}};
 }, box:function(a) {
