@@ -13453,10 +13453,7 @@ Entry.BlockView.PARAM_SPACE = 5;
     if (this._skeleton.magnets) {
       var b = this._targetType;
       if (b) {
-        var a = this.getBoard();
-        x = this.x;
-        y = this.y;
-        return a.getNearestMagnet(x, y, b);
+        return this.getBoard().getNearestMagnet(this.x, this.y, b);
       }
     }
   };
@@ -14660,8 +14657,6 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
       -1 < [13, 27].indexOf(e) && a.destroyOption();
     });
     var c = this.getAbsolutePosFromDocument();
-    c.y -= this.box.height / 2 + offset.top;
-    c.x += offset.left;
     this.optionGroup.css({height:16, left:c.x, top:c.y, width:a.box.width});
     this.optionGroup.focus();
   };
@@ -14789,7 +14784,7 @@ Entry.RenderView = function(a, b) {
       return console.error("You must inject code instance");
     }
     this.code = a;
-    this.svg || (this.svg = SVG(this._svgId), this.svgGroup = this.svg.elem("g"), this.svgThreadGroup = this.svgGroup.elem("g"), this.svgThreadGroup.board = this, this.svgBlockGroup = this.svgGroup.elem("g"), this.svgBlockGroup.board = this);
+    this.svg || (this.svg = Entry.SVG(this._svgId), this.svgGroup = this.svg.elem("g"), this.svgThreadGroup = this.svgGroup.elem("g"), this.svgThreadGroup.board = this, this.svgBlockGroup = this.svgGroup.elem("g"), this.svgBlockGroup.board = this);
     a.createView(this);
     this.align();
   };
@@ -14824,15 +14819,13 @@ Entry.RenderView = function(a, b) {
     this.svgGroup.appendChild(this.svgBlockGroup);
   };
   a._addFilters = function() {
-    var a = this.svg.elem("defs");
-    trashCanFilter = a.elem("filter", {id:"entryTrashcanFilter"});
-    trashCanFilter.elem("feGaussianBlur", {"in":"SourceAlpha", stdDeviation:2, result:"blur"});
-    trashCanFilter.elem("feOffset", {"in":"blur", dx:1, dy:1, result:"offsetBlur"});
-    feMerge = trashCanFilter.elem("feMerge");
-    feMerge.elem("feMergeNode", {"in":"offsetBlur"});
-    feMerge.elem("feMergeNode", {"in":"SourceGraphic"}, feMerge);
-    blockFilter = a.elem("filter", {id:"entryBlockShadowFilter"});
-    blockFilter.innerHTML = '<feOffset result="offOut" in="SourceGraphic" dx="0" dy="1" /><feColorMatrix result="matrixOut" in="offOut" type="matrix"values="0.7 0 0 0 0 0 0.7 0 0 0 0 0 0.7 0 0 0 0 0 1 0" /><feBlend in="SourceGraphic" in2="blurOut" mode="normal" />';
+    var a = this.svg.elem("defs"), c = a.elem("filter", {id:"entryTrashcanFilter"});
+    c.elem("feGaussianBlur", {"in":"SourceAlpha", stdDeviation:2, result:"blur"});
+    c.elem("feOffset", {"in":"blur", dx:1, dy:1, result:"offsetBlur"});
+    c = c.elem("feMerge");
+    c.elem("feMergeNode", {"in":"offsetBlur"});
+    c.elem("feMergeNode", {"in":"SourceGraphic"}, c);
+    a.elem("filter", {id:"entryBlockShadowFilter"}).innerHTML = '<feOffset result="offOut" in="SourceGraphic" dx="0" dy="1" /><feColorMatrix result="matrixOut" in="offOut" type="matrix"values="0.7 0 0 0 0 0 0.7 0 0 0 0 0 0.7 0 0 0 0 0 1 0" /><feBlend in="SourceGraphic" in2="blurOut" mode="normal" />';
   };
 })(Entry.RenderView.prototype);
 Entry.Scroller = function(a, b, c) {
@@ -15756,15 +15749,13 @@ Entry.Board = function(a) {
     return null;
   };
   a._addFilters = function() {
-    var a = this.svg.elem("defs");
-    trashCanFilter = a.elem("filter", {id:"entryTrashcanFilter"});
-    trashCanFilter.elem("feGaussianBlur", {"in":"SourceAlpha", stdDeviation:2, result:"blur"});
-    trashCanFilter.elem("feOffset", {"in":"blur", dx:1, dy:1, result:"offsetBlur"});
-    feMerge = trashCanFilter.elem("feMerge");
-    feMerge.elem("feMergeNode", {"in":"offsetBlur"});
-    feMerge.elem("feMergeNode", {"in":"SourceGraphic"}, feMerge);
-    blockFilter = a.elem("filter", {id:"entryBlockShadowFilter"});
-    blockFilter.innerHTML = '<feOffset result="offOut" in="SourceGraphic" dx="0" dy="1" /><feColorMatrix result="matrixOut" in="offOut" type="matrix"values="0.7 0 0 0 0 0 0.7 0 0 0 0 0 0.7 0 0 0 0 0 1 0" /><feBlend in="SourceGraphic" in2="blurOut" mode="normal" />';
+    var a = this.svg.elem("defs"), c = a.elem("filter", {id:"entryTrashcanFilter"});
+    c.elem("feGaussianBlur", {"in":"SourceAlpha", stdDeviation:2, result:"blur"});
+    c.elem("feOffset", {"in":"blur", dx:1, dy:1, result:"offsetBlur"});
+    c = c.elem("feMerge");
+    c.elem("feMergeNode", {"in":"offsetBlur"});
+    c.elem("feMergeNode", {"in":"SourceGraphic"}, c);
+    a.elem("filter", {id:"entryBlockShadowFilter"}).innerHTML = '<feOffset result="offOut" in="SourceGraphic" dx="0" dy="1" /><feColorMatrix result="matrixOut" in="offOut" type="matrix"values="0.7 0 0 0 0 0 0.7 0 0 0 0 0 0.7 0 0 0 0 0 1 0" /><feBlend in="SourceGraphic" in2="blurOut" mode="normal" />';
   };
   a.dominate = function(a) {
     a = a.getFirstBlock();

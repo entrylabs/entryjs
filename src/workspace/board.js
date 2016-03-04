@@ -372,7 +372,7 @@ Entry.Board = function(option) {
         var code = this.code;
         if (!code || !this.dragBlock) return;
         var metaData = this._getCodeBlocks(code);
-        metaData.sort(function(a, b) {return a.point - b.point});
+        metaData.sort(function(a, b) {return a.point - b.point;});
 
         metaData.unshift({
             point: - Number.MAX_VALUE,
@@ -496,20 +496,18 @@ Entry.Board = function(option) {
         var defs = this.svg.elem('defs');
 
         //trashcan filter
-        trashCanFilter = defs.elem('filter', {'id': 'entryTrashcanFilter'});
+        var trashCanFilter = defs.elem('filter', {'id': 'entryTrashcanFilter'});
         trashCanFilter.elem('feGaussianBlur', {'in': 'SourceAlpha', 'stdDeviation': 2, 'result': 'blur'});
         trashCanFilter.elem('feOffset', {'in': 'blur', 'dx': 1, 'dy': 1, 'result': 'offsetBlur'});
-        feMerge = trashCanFilter.elem('feMerge');
+        var feMerge = trashCanFilter.elem('feMerge');
         feMerge.elem('feMergeNode', {'in': 'offsetBlur'});
         feMerge.elem('feMergeNode', {'in': 'SourceGraphic'}, feMerge);
 
-        blockFilter = defs.elem('filter', {'id': 'entryBlockShadowFilter'});
+        var blockFilter = defs.elem('filter', {'id': 'entryBlockShadowFilter'});
         blockFilter.innerHTML = '<feOffset result="offOut" in="SourceGraphic" dx="0" dy="1" />' +
                      '<feColorMatrix result="matrixOut" in="offOut" type="matrix"' +
                      'values="0.7 0 0 0 0 0 0.7 0 0 0 0 0 0.7 0 0 0 0 0 1 0" />' +
                      '<feBlend in="SourceGraphic" in2="blurOut" mode="normal" />';
-        //blockFilter.elem('feOffset', {'in': "BackgroundImage", 'dx': 1, 'dy': 1});
-
     };
 
     p.dominate = function(thread) {

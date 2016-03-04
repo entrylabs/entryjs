@@ -71,7 +71,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
             ry: that._ROUND,
             fill: "#fff",
             'fill-opacity': 0.4
-        })
+        });
 
         this.svgGroup.appendChild(this.textElement);
 
@@ -158,7 +158,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
                     y: 13,
                     "alignment-baseline": "central"
                 }).innerHTML = '\u2713';
-            };
+            }
 
             var textElement = element.elem("text", {
                 x: 20,

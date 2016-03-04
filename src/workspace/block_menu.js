@@ -137,7 +137,7 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
         if (this.codeListener)
             this.code.changeEvent.detach(this.codeListener);
         var that = this;
-        this.set({code:code});;
+        this.set({code:code});
         this.codeListener = this.code.changeEvent.attach(
             this,
             function() {that.changeEvent.notify();}
@@ -318,7 +318,7 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
         var xDest = width - splitterHPadding;
         var yDest;
         splitters.forEach(function(line) {
-            yDest = parseFloat(line.getAttribute('y1')) + y
+            yDest = parseFloat(line.getAttribute('y1')) + y;
             line.attr({
                 x2: xDest, y1:yDest, y2:yDest
             });

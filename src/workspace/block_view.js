@@ -39,7 +39,7 @@ Entry.BlockView = function(block, board, mode) {
             events.mousedown.forEach(function(fn){fn();});
 
         that.onMouseDown.apply(that, arguments);
-    }
+    };
     this._startRender(block, mode);
 
     // observe
@@ -539,19 +539,10 @@ Entry.BlockView.PARAM_SPACE = 5;
     };
 
     p._getCloseBlock = function() {
-        if (!this._skeleton.magnets)
-            return;
-
+        if (!this._skeleton.magnets) return;
         var targetType = this._targetType;
-
         if (!targetType) return;
-
-        var board = this.getBoard();
-        //TODO optimize
-        x = this.x,
-        y = this.y;
-
-        return board.getNearestMagnet(x, y, targetType);
+        return this.getBoard().getNearestMagnet(this.x, this.y, targetType);
     };
 
     p._inheritAnimate = function() {
