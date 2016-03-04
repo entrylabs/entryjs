@@ -49,6 +49,12 @@ Entry.EntryObject = function(model) {
                             {type: "stop_repeat"}
                         ]
                     ]
+                },
+                {
+                    type: "stop_repeat"
+                },
+                {
+                    type: "move_direction"
                 }
             ]
         ];

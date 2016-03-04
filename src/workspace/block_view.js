@@ -178,7 +178,6 @@ Entry.BlockView.PARAM_SPACE = 5;
                 if (pos)
                     s.align(pos.x, pos.y, animate);
             }
-            this._updateMagnet();
         }
 
         this.set({
@@ -190,6 +189,7 @@ Entry.BlockView.PARAM_SPACE = 5;
         this.contentSvgGroup.attr("transform",
             "translate(" + contentPos.x + "," + contentPos.y + ")"
         );
+        this._updateMagnet();
         this._render();
     };
 
@@ -450,6 +450,7 @@ Entry.BlockView.PARAM_SPACE = 5;
         var workspaceMode = board.workspace.getMode();
         this.set({visible:true});
         this.removeDragging();
+        this.dragMode = Entry.DRAG_MODE_NONE;
 
         if (workspaceMode === Entry.Workspace.MODE_VIMBOARD) {
             if (board instanceof Entry.BlockMenu) {
@@ -532,7 +533,6 @@ Entry.BlockView.PARAM_SPACE = 5;
             }
         }
 
-        this.dragMode = Entry.DRAG_MODE_NONE;
         this.destroyShadow();
         delete this.originPos;
         return;
@@ -617,9 +617,10 @@ Entry.BlockView.PARAM_SPACE = 5;
 
     p._updateMagnet = function() {
         var magnet = this._skeleton.magnets(this);
-        this._nextGroup.attr(
-            "transform", "translate(" + magnet.next.x + ',' + magnet.next.y + ")"
-        );
+        if (magnet.next)
+            this._nextGroup.attr(
+                "transform", "translate(" + magnet.next.x + ',' + magnet.next.y + ")"
+            );
         this.magnet = magnet;
     };
 
@@ -644,11 +645,11 @@ Entry.BlockView.PARAM_SPACE = 5;
                 delete blockView.background;
                 delete blockView.nextBackground;
             }
-            var height = this._board.dragBlock.getBelowHeight() + this.height;
+            var height = this._board.dragBlock.getBelowHeight() + this.offsetY;
 
-            blockView.originalHeight = blockView.height;
+            blockView.originalHeight = blockView.offsetY;
             blockView.set({
-                height: height,
+                offsetY: height,
             });
             this._updateMagnet();
         } else {
@@ -658,7 +659,7 @@ Entry.BlockView.PARAM_SPACE = 5;
             }
 
             var height = blockView.originalHeight;
-            if (height) {
+            if (height !== undefined) {
                 setTimeout(function() {
                     if (blockView.background) {
                         blockView.background.remove();
@@ -668,7 +669,7 @@ Entry.BlockView.PARAM_SPACE = 5;
                     }
                 }, Entry.ANIMATION_DURATION);
                 blockView.set({
-                    height: height
+                    offsetY: height
                 });
                 this._updateMagnet();
                 delete blockView.originalHeight;

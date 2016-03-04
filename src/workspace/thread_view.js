@@ -60,20 +60,15 @@ Entry.ThreadView = function(thread, board) {
         return pos;
     };
 
-    p.requestPartHeight = function(blockView) {
-        if (!blockView) {
-            var firstBlock = this.thread.getFirstBlock();
-            if (!firstBlock) return 0;
-            else blockView = firstBlock.view;
-        }
+    p.requestPartHeight = function(blockView, forAll) {
         var blocks = this.thread.getBlocks();
         var block = blocks.pop();
-        var height = blockView.magnet.next.y;
-        while (block.view !== blockView && block.view) {
+        var height = blockView ? blockView.magnet.next.y : 0;
+        while (block && block.view !== blockView && block.view) {
             var prevBlockView = block.view;
+            height += prevBlockView.magnet.next.y;
             if (prevBlockView.dragMode === Entry.DRAG_MODE_DRAG)
                 height = 0;
-            height += prevBlockView.magnet.next.y;
             block = blocks.pop();
         }
         return height;

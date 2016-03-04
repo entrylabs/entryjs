@@ -38,7 +38,7 @@ Entry.skeleton.basic = {
         var height = blockView ? Math.max(blockView.height, 30) : 30;
         return {
             previous: {x: 0, y: 0},
-            next: {x: 0, y: height + 1}
+            next: {x: 0, y: height + 1 + blockView.offsetY}
         };
     },
     contentPos: function(blockView) {
@@ -66,7 +66,7 @@ Entry.skeleton.basic_event = {
     },
     magnets: function(blockView) {
         // apply scale required.
-        var height = blockView ? Math.max(blockView.height, 30) : 30;
+        var height = blockView ? Math.max(blockView.height + blockView.offsetY + 7, 30) : 30;
         return {
             next: {x: 0, y: height + 1}
         };
@@ -92,12 +92,11 @@ Entry.skeleton.basic_loop = {
             .replace(/%sh/gi, statementHeight + 1);
     },
     magnets: function(blockView) {
-        var contentWidth = 124;
-        var height = Math.max(blockView.height, 30);
-        // apply scale required.
+        var contentHeight = Math.max(blockView.contentHeight + 2, 30);
+        var statementHeight = blockView._statements[0] ? blockView._statements[0].box.height : 20;
         return {
             previous: {x: 0, y: 0},
-            next: {x: 0, y: height}
+            next: {x: 0, y: statementHeight + contentHeight + 18 + blockView.offsetY}
         };
     },
     box: function(blockView) {

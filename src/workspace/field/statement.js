@@ -28,7 +28,6 @@ Entry.FieldStatement = function(content, blockView, index) {
     this.box.observe(blockView, "alignContent", ["height"]);
 
     this.renderStart(blockView.getBoard());
-    this.block.observe(this, "_updateThread", ["thread"]);
 };
 
 
@@ -82,17 +81,8 @@ Entry.FieldStatement = function(content, blockView, index) {
     };
 
     p.calcHeight = function() {
-        var height = this._thread.view.requestPartHeight();
+        var height = this._thread.view.requestPartHeight(null);
         this.box.set({height:Math.max(height, 20)});
-    };
-
-    p._updateThread = function() {
-        if (this._threadChangeEvent)
-            this._thread.changeEvent.detach(this._threadChangeEvent);
-        var thread = this.block.thread;
-        this._threadChangeEvent = this._thread.changeEvent.attach(this, function() {
-            thread.changeEvent.notify();
-        });
     };
 
     p.getValue = function() {
