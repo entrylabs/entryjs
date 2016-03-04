@@ -22,7 +22,8 @@ goog.provide('Entry.GlobalSvg');
             height: 1,
             display: 'none',
             overflow: 'visible',
-            'z-index': '1111'
+            'z-index': '1111',
+            'opacity': 0.8
         });
 
         this.svg = Entry.SVG('globalSvg');

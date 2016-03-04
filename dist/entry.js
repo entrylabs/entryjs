@@ -14688,7 +14688,7 @@ Entry.GlobalSvg = {};
   a.REMOVE = 1;
   a.RETURN = 2;
   a.createDom = function() {
-    this.svgDom || (this.svgDom = Entry.Dom($('<svg id="globalSvg" width="200" height="200"version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'), {parent:$("body")}), this.svgDom.css({position:"fixed", width:1, height:1, display:"none", overflow:"visible", "z-index":"1111"}), this.svg = Entry.SVG("globalSvg"), this.top = this.left = this.width = 0);
+    this.svgDom || (this.svgDom = Entry.Dom($('<svg id="globalSvg" width="200" height="200"version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'), {parent:$("body")}), this.svgDom.css({position:"fixed", width:1, height:1, display:"none", overflow:"visible", "z-index":"1111", opacity:.8}), this.svg = Entry.SVG("globalSvg"), this.top = this.left = this.width = 0);
   };
   a.setView = function(a, c) {
     if (a != this._view && !a.block.isReadOnly() && a.movable) {

@@ -87,7 +87,7 @@ Entry.skeleton.basic_loop = {
         return ("m -8,0 l 8,8 8,-8 h %w a %h,%h 0 0,1 0,%wh H 24 l -8,8 -8,-8 h -0.4 v %sh h 0.4 l 8,8 8,-8 h %bw a 8,8 0 0,1 0,16 H 8 l -8,8 -8,-8 z")
             .replace(/%wh/gi, height)
             .replace(/%w/gi, width)
-            .replace(/%bw/gi, width-8)
+            .replace(/%bw/gi, width - 8)
             .replace(/%h/gi, height / 2)
             .replace(/%sh/gi, statementHeight + 1);
     },
