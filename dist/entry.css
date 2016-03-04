@@ -4502,7 +4502,7 @@ span.CodeMirror-selectedtext {
   position: absolute;
   overflow: visible;
   left: 50%;
-  padding-top: 10px;
+  padding-top: 20px;
 }
 #entryBlockHelperDescriptionWorkspace {
   position: absolute;

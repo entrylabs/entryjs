@@ -14224,20 +14224,20 @@ Entry.FieldKeyboard = function(a, b, c) {
 };
 Entry.Utils.inherit(Entry.Field, Entry.FieldKeyboard);
 (function(a) {
-  a.renderStart = function(a) {
-    var c = this;
-    this.svgGroup = a.contentSvgGroup.group();
+  a.renderStart = function(b) {
+    var a = this;
+    this.svgGroup = b.contentSvgGroup.group();
     this.svgGroup.attr({class:"entry-input-field"});
     this.textElement = this.svgGroup.text(4, 4, Entry.getKeyCodeMap()[this.getValue()]);
     this.textElement.attr({"font-size":"9pt"});
-    a = this.getTextWidth();
+    b = this.getTextWidth();
     var d = this.position && this.position.y ? this.position.y : 0;
-    this._header = this.svgGroup.rect(0, d - 8, a, 16, 3).attr({fill:"#fff", "fill-opacity":.4});
+    this._header = this.svgGroup.rect(0, d - 8, b, 16, 3).attr({fill:"#fff", "fill-opacity":.4});
     this.svgGroup.append(this.textElement);
-    this.svgGroup.mouseup(function(a) {
-      c._isEditable() && c.renderOptions();
+    this.svgGroup.mouseup(function(b) {
+      a._isEditable() && a.renderOptions();
     });
-    this.box.set({x:0, y:0, width:a, height:16});
+    this.box.set({x:0, y:0, width:b, height:16});
   };
   a.renderOptions = function() {
     var b = this;
@@ -14771,6 +14771,7 @@ Entry.RenderView = function(a, b) {
   if (this.svg = Entry.SVG(this._svgId)) {
     this.svgGroup = this.svg.elem("g"), this.svgThreadGroup = this.svgGroup.elem("g"), this.svgThreadGroup.board = this, this.svgBlockGroup = this.svgGroup.elem("g"), this.svgBlockGroup.board = this;
   }
+  this._addFilters();
 };
 (function(a) {
   a.schema = {code:null, dragBlock:null, closeBlock:null, selectedBlockView:null};
@@ -14790,9 +14791,9 @@ Entry.RenderView = function(a, b) {
   a.align = function() {
     var a = this.code.getThreads();
     if (a && 0 !== a.length) {
-      for (var c = 10, d = "LEFT" == this._align ? 20 : this.svgDom.width() / 2, e = 0, f = a.length;e < f;e++) {
+      for (var c = 0, d = "LEFT" == this._align ? 20 : this.svgDom.width() / 2, e = 0, f = a.length;e < f;e++) {
         var g = a[e].getFirstBlock().view;
-        g._moveTo(d, c, !1);
+        g._moveTo(d - g.offsetX, c - g.offsetY, !1);
         g = g.svgGroup.getBBox().height;
         c += g + 15;
       }
@@ -14816,6 +14817,17 @@ Entry.RenderView = function(a, b) {
     this.svgThreadGroup = a.svgThreadGroup;
     this.svgGroup.appendChild(this.svgThreadGroup);
     this.svgGroup.appendChild(this.svgBlockGroup);
+  };
+  a._addFilters = function() {
+    var a = this.svg.elem("defs");
+    trashCanFilter = a.elem("filter", {id:"entryTrashcanFilter"});
+    trashCanFilter.elem("feGaussianBlur", {"in":"SourceAlpha", stdDeviation:2, result:"blur"});
+    trashCanFilter.elem("feOffset", {"in":"blur", dx:1, dy:1, result:"offsetBlur"});
+    feMerge = trashCanFilter.elem("feMerge");
+    feMerge.elem("feMergeNode", {"in":"offsetBlur"});
+    feMerge.elem("feMergeNode", {"in":"SourceGraphic"}, feMerge);
+    blockFilter = a.elem("filter", {id:"entryBlockShadowFilter"});
+    blockFilter.innerHTML = '<feOffset result="offOut" in="SourceGraphic" dx="0" dy="1" /><feColorMatrix result="matrixOut" in="offOut" type="matrix"values="0.7 0 0 0 0 0 0.7 0 0 0 0 0 0.7 0 0 0 0 0 1 0" /><feBlend in="SourceGraphic" in2="blurOut" mode="normal" />';
   };
 })(Entry.RenderView.prototype);
 Entry.Scroller = function(a, b, c) {

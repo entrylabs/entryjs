@@ -36,6 +36,8 @@ Entry.RenderView = function(dom, align) {
         this.svgBlockGroup = this.svgGroup.elem("g");
         this.svgBlockGroup.board = this;
     }
+
+    this._addFilters();
 };
 
 (function(p) {
@@ -87,7 +89,7 @@ Entry.RenderView = function(dom, align) {
         if (!threads || threads.length === 0) return;
         var totalHeight = 0;
         var vPadding = 15,
-            marginFromTop = 10,
+            marginFromTop = 0,
             hPadding = this._align == 'LEFT' ? 20 : this.svgDom.width()/2;
 
         for (var i=0,len=threads.length; i<len; i++) {
@@ -96,7 +98,11 @@ Entry.RenderView = function(dom, align) {
             var blockView = block.view;
 
             var className = Entry.block[block.type].class;
-            blockView._moveTo(hPadding, marginFromTop, false);
+            blockView._moveTo(
+                hPadding - blockView.offsetX,
+                marginFromTop - blockView.offsetY,
+                false
+            );
             var height = blockView.svgGroup.getBBox().height;
             marginFromTop += height + vPadding;
         }
@@ -119,6 +125,26 @@ Entry.RenderView = function(dom, align) {
         this.svgThreadGroup = codeView.svgThreadGroup;
         this.svgGroup.appendChild(this.svgThreadGroup);
         this.svgGroup.appendChild(this.svgBlockGroup);
+    };
+
+    p._addFilters = function() {
+        var defs = this.svg.elem('defs');
+
+        //trashcan filter
+        trashCanFilter = defs.elem('filter', {'id': 'entryTrashcanFilter'});
+        trashCanFilter.elem('feGaussianBlur', {'in': 'SourceAlpha', 'stdDeviation': 2, 'result': 'blur'});
+        trashCanFilter.elem('feOffset', {'in': 'blur', 'dx': 1, 'dy': 1, 'result': 'offsetBlur'});
+        feMerge = trashCanFilter.elem('feMerge');
+        feMerge.elem('feMergeNode', {'in': 'offsetBlur'});
+        feMerge.elem('feMergeNode', {'in': 'SourceGraphic'}, feMerge);
+
+        blockFilter = defs.elem('filter', {'id': 'entryBlockShadowFilter'});
+        blockFilter.innerHTML = '<feOffset result="offOut" in="SourceGraphic" dx="0" dy="1" />' +
+                     '<feColorMatrix result="matrixOut" in="offOut" type="matrix"' +
+                     'values="0.7 0 0 0 0 0 0.7 0 0 0 0 0 0.7 0 0 0 0 0 1 0" />' +
+                     '<feBlend in="SourceGraphic" in2="blurOut" mode="normal" />';
+        //blockFilter.elem('feOffset', {'in': "BackgroundImage", 'dx': 1, 'dy': 1});
+
     };
 
 })(Entry.RenderView.prototype);
