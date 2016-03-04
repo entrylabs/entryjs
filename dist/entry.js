@@ -14989,7 +14989,7 @@ Entry.skeleton.pebble_event = {path:function(a) {
 }, box:function(a) {
   return {offsetX:-25, offsetY:0, width:50, height:48.3, marginBottom:0};
 }, magnets:function(a) {
-  return {next:{x:0, y:49.3}};
+  return {next:{x:0, y:a ? Math.max(a.height, 49.3) : 49.3}};
 }, contentPos:function() {
   return {x:0, y:25};
 }};
@@ -15010,8 +15010,8 @@ Entry.skeleton.pebble_basic = {fontSize:16, morph:["prev", "next"], path:functio
   a = b.prev && "pebble_basic" === b.prev._schema.skeleton;
   b = b.next && "pebble_basic" === b.next._schema.skeleton;
   return "m 0,9 a 9,9 0 0,0 9,-9 h 28 " + (a ? "l 25,0 0,25" : "q 25,0 25,25") + (b ? "l 0,25 -25,0" : "q 0,25 -25,25") + "h -28 a 9,9 0 0,1 -18,0 h -28 " + (b ? "l -25,0 0,-25" : "q -25,0 -25,-25") + (a ? "l 0,-25 25,0" : "q 0,-25 25,-25") + "h 28 a 9,9 0 0,0 9,9 z";
-}, magnets:function() {
-  return {previous:{x:0, y:0}, next:{x:0, y:51}};
+}, magnets:function(a) {
+  return {previous:{x:0, y:0}, next:{x:0, y:a ? Math.max(a.height, 51) : 51}};
 }, box:function() {
   return {offsetX:-62, offsetY:0, width:124, height:50, marginBottom:0};
 }, contentPos:function() {

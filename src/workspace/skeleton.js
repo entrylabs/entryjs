@@ -174,8 +174,9 @@ Entry.skeleton.pebble_event = {
     },
     magnets: function(blockView) {
         // apply scale required.
+        var height = blockView ? Math.max(blockView.height, 49.3) : 49.3;
         return {
-            next: {x: 0, y: 49.3}
+            next: {x: 0, y: height}
         };
     },
     contentPos: function() {
@@ -248,11 +249,12 @@ Entry.skeleton.pebble_basic = {
             (isPrevSame ? "l 0,-25 25,0" : "q 0,-25 25,-25") +
             "h 28 a 9,9 0 0,0 9,9 z";
     },
-    magnets: function() {
+    magnets: function(blockView) {
         // apply scale required.
+        var height = blockView ? Math.max(blockView.height, 51) : 51;
         return {
             previous: {x: 0, y: 0},
-            next: {x: 0, y: 51}
+            next: {x: 0, y: height}
         };
     },
     box: function() {
