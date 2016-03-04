@@ -187,7 +187,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
         var x = - maxWidth/2 + this.box.width/2;
         var y = this.box.height/2;
 
-        var pos = this.getAbsolutePos();
+        var pos = this.getAbsolutePosFromBoard();
         pos.x += x;
         pos.y += y;
 

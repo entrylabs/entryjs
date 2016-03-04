@@ -57,7 +57,7 @@ Entry.Field = function() {};
     };
 
     //get absolute position of field from parent board
-    p.getAbsolutePos = function() {
+    p.getAbsolutePosFromBoard = function() {
         var blockView = this._block.view;
         var contentPos = blockView.getContentPos();
         var absPos = blockView.getAbsoluteCoordinate();
@@ -65,6 +65,19 @@ Entry.Field = function() {};
         return {
             x: absPos.x + this.box.x + contentPos.x,
             y: absPos.y + this.box.y + contentPos.y
+        };
+    };
+
+    //get absolute position of field from parent document
+    p.getAbsolutePosFromDocument = function() {
+        var blockView = this._block.view;
+        var contentPos = blockView.getContentPos();
+        var absPos = blockView.getAbsoluteCoordinate();
+        var offset = blockView.getBoard().relativeOffset;
+
+        return {
+            x: absPos.x + this.box.x + contentPos.x + offset.left,
+            y: absPos.y + this.box.y + contentPos.y + offset.top
         };
     };
 

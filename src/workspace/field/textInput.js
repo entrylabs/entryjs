@@ -107,8 +107,10 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
                 that.destroyOption();
         });
 
-        var pos = this.getAbsolutePos();
-        pos.y -= this.box.height/2;
+        var pos = this.getAbsolutePosFromDocument();
+        pos.y -= this.box.height/2 + offset.top;
+        pos.x += offset.left;
+
         this.optionGroup.css({
             height: CONTENT_HEIGHT,
             left:pos.x,

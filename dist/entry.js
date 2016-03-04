@@ -13851,9 +13851,13 @@ Entry.Field = function() {
     void 0 === d || d ? e.animate({transform:f}, 300, mina.easeinout) : e.attr({transform:f});
     this.box.set({x:b, y:a});
   };
-  a.getAbsolutePos = function() {
+  a.getAbsolutePosFromBoard = function() {
     var b = this._block.view, a = b.getContentPos(), b = b.getAbsoluteCoordinate();
     return {x:b.x + this.box.x + a.x, y:b.y + this.box.y + a.y};
+  };
+  a.getAbsolutePosFromDocument = function() {
+    var b = this._block.view, a = b.getContentPos(), d = b.getAbsoluteCoordinate(), b = b.getBoard().relativeOffset;
+    return {x:d.x + this.box.x + a.x + b.left, y:d.y + this.box.y + a.y + b.top};
   };
   a.getRelativePos = function() {
     var b = this._block.view.getContentPos(), a = this.box;
@@ -14122,7 +14126,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
     }
     d = -e / 2 + this.box.width / 2;
     f = this.box.height / 2;
-    g = this.getAbsolutePos();
+    g = this.getAbsolutePosFromBoard();
     g.x += d;
     g.y += f;
     this.optionGroup.attr({class:"entry-field-dropdown", transform:"translate(" + g.x + "," + g.y + ")"});
@@ -14655,8 +14659,9 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
       a.applyValue(c);
       -1 < [13, 27].indexOf(e) && a.destroyOption();
     });
-    var c = this.getAbsolutePos();
-    c.y -= this.box.height / 2;
+    var c = this.getAbsolutePosFromDocument();
+    c.y -= this.box.height / 2 + offset.top;
+    c.x += offset.left;
     this.optionGroup.css({height:16, left:c.x, top:c.y, width:a.box.width});
     this.optionGroup.focus();
   };
