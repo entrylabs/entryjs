@@ -224,7 +224,7 @@ p.createHandle = function() {
     centerPoint.graphics.beginFill(this.centerColor)
         .ss(1, 2, 0)
         .s(this.centerColor)
-        .dc(0, 0, 7, 7);
+        .dc(0, 0, 7, 7); 
     centerPoint.on("mousedown", function(e) {
         handle.dispatchEditStartEvent();
     });
