@@ -47,8 +47,10 @@ Entry.ThreadView = function(thread, board) {
         var blocks = this.thread.getBlocks();
         var block = blocks.shift();
         var pos = {x: 0, y: 0};
-        if (!(this._parent instanceof Entry.Board))
+        if (!(this._parent instanceof Entry.Board ||
+              this._parent instanceof Entry.BlockMenu))
             pos = this._parent.requestAbsoluteCoordinate();
+
         while (block.view !== blockView && block.view) {
             var prevBlockView = block.view;
             pos.x += prevBlockView.x + prevBlockView.magnet.next.x;

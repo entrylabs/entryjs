@@ -13852,8 +13852,8 @@ Entry.Field = function() {
     this.box.set({x:b, y:a});
   };
   a.getAbsolutePos = function() {
-    var b = this._block.view, a = b.svgGroup.transform().globalMatrix, d = b.getBoard().svgDom.offset(), b = b.getContentPos();
-    return {x:a.e + d.left + this.box.x + b.x, y:a.f + d.top + this.box.y + b.y};
+    var b = this._block.view, a = b.getContentPos(), b = b.getAbsoluteCoordinate();
+    return {x:b.x + this.box.x + a.x, y:b.y + this.box.y + a.y};
   };
   a.getRelativePos = function() {
     var b = this._block.view.getContentPos(), a = this.box;
@@ -14099,7 +14099,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
       Entry.documentMousedown.detach(this.documentDownEvent);
       b.optionGroup.remove();
     });
-    this.optionGroup = a.svgGroup.elem("g");
+    this.optionGroup = a.getBoard().svgGroup.elem("g");
     var d = this._contents.options, a = [], e = 0;
     a.push(this.optionGroup.elem("rect", {height:23 * d.length, fill:"white"}));
     for (var f = 0, g = d.length;f < g;f++) {
@@ -14122,7 +14122,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
     }
     d = -e / 2 + this.box.width / 2;
     f = this.box.height / 2;
-    g = this.getRelativePos();
+    g = this.getAbsolutePos();
     g.x += d;
     g.y += f;
     this.optionGroup.attr({class:"entry-field-dropdown", transform:"translate(" + g.x + "," + g.y + ")"});
@@ -15394,7 +15394,7 @@ Entry.ThreadView = function(a, b) {
   };
   a.requestAbsoluteCoordinate = function(a) {
     var c = this.thread.getBlocks(), d = c.shift(), e = {x:0, y:0};
-    for (this._parent instanceof Entry.Board || (e = this._parent.requestAbsoluteCoordinate());d.view !== a && d.view;) {
+    for (this._parent instanceof Entry.Board || this._parent instanceof Entry.BlockMenu || (e = this._parent.requestAbsoluteCoordinate());d.view !== a && d.view;) {
       d = d.view, e.x += d.x + d.magnet.next.x, e.y += d.y + d.magnet.next.y, d = c.shift();
     }
     return e;

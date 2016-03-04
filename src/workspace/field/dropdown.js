@@ -123,7 +123,8 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
             }
         );
 
-        this.optionGroup = blockView.svgGroup.elem("g");
+        this.optionGroup =
+            blockView.getBoard().svgGroup.elem("g");
 
         var options = this._contents.options;
 
@@ -185,7 +186,8 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
 
         var x = - maxWidth/2 + this.box.width/2;
         var y = this.box.height/2;
-        var pos = this.getRelativePos();
+
+        var pos = this.getAbsolutePos();
         pos.x += x;
         pos.y += y;
 

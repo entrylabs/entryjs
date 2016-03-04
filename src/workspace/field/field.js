@@ -56,16 +56,15 @@ Entry.Field = function() {};
         });
     };
 
-    //get absolute position of field from document
+    //get absolute position of field from parent board
     p.getAbsolutePos = function() {
         var blockView = this._block.view;
-        var matrix = blockView.svgGroup.transform().globalMatrix;
-        var offset = blockView.getBoard().svgDom.offset();
         var contentPos = blockView.getContentPos();
+        var absPos = blockView.getAbsoluteCoordinate();
 
         return {
-            x: matrix.e + offset.left + this.box.x + contentPos.x,
-            y: matrix.f + offset.top + this.box.y + contentPos.y
+            x: absPos.x + this.box.x + contentPos.x,
+            y: absPos.y + this.box.y + contentPos.y
         };
     };
 
