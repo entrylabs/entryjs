@@ -3116,7 +3116,7 @@ Entry.block.False = function(a, b) {
 Blockly.Blocks.boolean_basic_operator = {init:function() {
   this.setColour("#AEB8FF");
   this.appendValueInput("LEFTHAND").setCheck(["String", "Number"]);
-  this.appendDummyInput("VALUE").appendField(new Blockly.FieldDropdown([["=", "EQUAL"], [">", "GREATER"], ["<", "LESS"], [">=", "GREATER_OR_EQUAL"], ["<=", "LESS_OR_EQUAL"]], null, !1), "OPERATOR");
+  this.appendDummyInput("VALUE").appendField(new Blockly.FieldDropdown([["=", "EQUAL"], [">", "GREATER"], ["<", "LESS"], ["\u2267", "GREATER_OR_EQUAL"], ["\u2266", "LESS_OR_EQUAL"]], null, !1), "OPERATOR");
   this.appendValueInput("RIGHTHAND").setCheck(["Number", "String"]);
   this.setOutput(!0, "Boolean");
   this.setInputsInline(!0);
@@ -9459,19 +9459,32 @@ Entry.Playground.prototype.injectCode = function() {
   var a = this.object;
   Blockly.mainWorkspace.clear();
   Blockly.Xml.domToWorkspace(Blockly.mainWorkspace, a.script);
-  this.adjust(0, 0);
+  var b = 0, c = 0, d = null;
+  $(a.script).children("block").each(function(a) {
+    var e = Number($(this).attr("x")), f = Number($(this).attr("y"));
+    0 == a && (b = e, c = f, d = this);
+    e < b && (b = e, d = this);
+    f < c && (varyTopY = f);
+  });
+  if (null != d) {
+    var a = Number($(d).attr("x")), e = Number($(d).attr("y")), f = Blockly.mainWorkspace.getMetrics(), g = (.1 * f.viewWidth).toFixed(1), h = (.4 * f.viewHeight).toFixed(1);
+    e == c && (h = (.1 * f.viewHeight).toFixed(1));
+    Blockly.mainWorkspace.scrollbar.set(a - f.contentLeft - g, e - f.contentTop - h);
+  }
 };
-Entry.Playground.prototype.adjust = function(a, b) {
+Entry.Playground.prototype.adjustScroll = function(a, b) {
   var c = Blockly.mainWorkspace.scrollbar.vScroll;
   Blockly.mainWorkspace.scrollbar.hScroll.svgGroup_.setAttribute("opacity", "1");
   c.svgGroup_.setAttribute("opacity", "1");
-  Blockly.removeAllRanges();
-  var c = Blockly.mainWorkspace.getMetrics(), d, e;
-  d = Math.min(a, -c.contentLeft);
-  e = Math.min(b, -c.contentTop);
-  d = Math.max(d, c.viewWidth - c.contentLeft - c.contentWidth);
-  e = Math.max(e, c.viewHeight - c.contentTop - c.contentHeight);
-  Blockly.mainWorkspace.scrollbar.set(-d - c.contentLeft, -e - c.contentTop);
+  if (Blockly.mainWorkspace.getMetrics()) {
+    Blockly.removeAllRanges();
+    var c = Blockly.mainWorkspace.getMetrics(), d, e;
+    d = Math.min(a, -c.contentLeft);
+    e = Math.min(b, -c.contentTop);
+    d = Math.max(d, c.viewWidth - c.contentLeft - c.contentWidth);
+    e = Math.max(e, c.viewHeight - c.contentTop - c.contentHeight);
+    Blockly.mainWorkspace.scrollbar.set(-d - c.contentLeft, -e - c.contentTop);
+  }
 };
 Entry.Playground.prototype.injectPicture = function() {
   var a = this.pictureListView_;
@@ -10555,47 +10568,46 @@ Entry.Stage.prototype.updateObject = function() {
   this.handle.setDraggable(!0);
   if (!this.editEntity) {
     var a = this.selectedObject;
-    if (a && a.entity.getVisible()) {
+    if (a) {
       "textBox" == a.objectType ? this.handle.toggleCenter(!1) : this.handle.toggleCenter(!0);
       "free" == a.getRotateMethod() ? this.handle.toggleRotation(!0) : this.handle.toggleRotation(!1);
       this.handle.toggleDirection(!0);
       a.getLock() ? (this.handle.toggleRotation(!1), this.handle.toggleDirection(!1), this.handle.toggleResize(!1), this.handle.toggleCenter(!1), this.handle.setDraggable(!1)) : this.handle.toggleResize(!0);
       this.handle.setVisible(!0);
-      a = a.entity;
-      this.handle.setWidth(a.getScaleX() * a.getWidth());
-      this.handle.setHeight(a.getScaleY() * a.getHeight());
-      var b, c;
-      if ("textBox" == a.type) {
-        if (a.getLineBreak()) {
-          b = a.regX * a.scaleX, c = -a.regY * a.scaleY;
+      var b = a.entity;
+      this.handle.setWidth(b.getScaleX() * b.getWidth());
+      this.handle.setHeight(b.getScaleY() * b.getHeight());
+      var c, d;
+      if ("textBox" == b.type) {
+        if (b.getLineBreak()) {
+          c = b.regX * b.scaleX, d = -b.regY * b.scaleY;
         } else {
-          var d = a.getTextAlign();
-          c = -a.regY * a.scaleY;
-          switch(d) {
+          var e = b.getTextAlign();
+          d = -b.regY * b.scaleY;
+          switch(e) {
             case Entry.TEXT_ALIGN_LEFT:
-              b = -a.getWidth() / 2 * a.scaleX;
+              c = -b.getWidth() / 2 * b.scaleX;
               break;
             case Entry.TEXT_ALIGN_CENTER:
-              b = a.regX * a.scaleX;
+              c = b.regX * b.scaleX;
               break;
             case Entry.TEXT_ALIGN_RIGHT:
-              b = a.getWidth() / 2 * a.scaleX;
+              c = b.getWidth() / 2 * b.scaleX;
           }
         }
       } else {
-        b = (a.regX - a.width / 2) * a.scaleX, c = (a.height / 2 - a.regY) * a.scaleY;
+        c = (b.regX - b.width / 2) * b.scaleX, d = (b.height / 2 - b.regY) * b.scaleY;
       }
-      d = a.getRotation() / 180 * Math.PI;
-      this.handle.setX(a.getX() - b * Math.cos(d) - c * Math.sin(d));
-      this.handle.setY(-a.getY() - b * Math.sin(d) + c * Math.cos(d));
-      this.handle.setRegX((a.regX - a.width / 2) * a.scaleX);
-      this.handle.setRegY((a.regY - a.height / 2) * a.scaleY);
-      this.handle.setRotation(a.getRotation());
-      this.handle.setDirection(a.getDirection());
-      this.handle.render();
+      e = b.getRotation() / 180 * Math.PI;
+      this.handle.setX(b.getX() - c * Math.cos(e) - d * Math.sin(e));
+      this.handle.setY(-b.getY() - c * Math.sin(e) + d * Math.cos(e));
+      this.handle.setRegX((b.regX - b.width / 2) * b.scaleX);
+      this.handle.setRegY((b.regY - b.height / 2) * b.scaleY);
+      this.handle.setRotation(b.getRotation());
+      this.handle.setDirection(b.getDirection());
       this.objectUpdated = !0;
-    } else {
-      this.handle.setVisible(!1);
+      this.handle.setVisible(a.entity.getVisible());
+      a.entity.getVisible() && this.handle.render();
     }
   }
 };

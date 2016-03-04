@@ -196,6 +196,7 @@ p.createHandle = function() {
         handle.dispatchEditEndEvent();
     });
     container.addChild(rotateKnob);
+    container.setChildIndex(rotateKnob, 1);
     this.rotateKnob = rotateKnob;
 
     var directionArrow = new createjs.Shape();
@@ -217,6 +218,7 @@ p.createHandle = function() {
         handle.dispatchEditEndEvent();
     });
     container.addChild(directionArrow);
+    container.setChildIndex(directionArrow, 0);
     this.directionArrow = directionArrow;
 
     // center
