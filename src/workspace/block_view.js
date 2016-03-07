@@ -78,11 +78,17 @@ Entry.BlockView.PARAM_SPACE = 5;
     };
 
     p._startRender = function(block, mode) {
+        var that = this;
+        var skeleton = this._skeleton;
         this.svgGroup.attr({
             class: "block"
         });
 
-        var path = this._skeleton.path(this);
+        var classes = skeleton.classes;
+        if (classes && classes.length !== 0)
+            classes.forEach(function(c){that.svgGroup.addClass(c)});
+
+        var path = skeleton.path(this);
 
         this.pathGroup = this.svgGroup.elem("g", {
             filter: 'url(#entryBlockShadowFilter)'
@@ -94,7 +100,7 @@ Entry.BlockView.PARAM_SPACE = 5;
             fill: this._schema.color,
             class: 'blockPath'
         };
-        if (this._skeleton.outerLine) {
+        if (skeleton.outerLine) {
             pathStyle.strokeWidth = "0.5";
         }
         this._path.attr(pathStyle);

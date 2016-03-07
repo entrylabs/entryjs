@@ -391,6 +391,7 @@ Entry.skeleton.basic_button = {
         return {x: 0, y: 15};
     },
     movable: false,
-    readOnly: true
+    readOnly: true,
+    classes: ['basicButtonView']
 };
 

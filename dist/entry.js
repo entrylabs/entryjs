@@ -13234,13 +13234,18 @@ Entry.BlockView.PARAM_SPACE = 5;
 (function(a) {
   a.schema = {id:0, type:Entry.STATIC.BLOCK_RENDER_MODEL, x:0, y:0, offsetX:0, offsetY:0, width:0, height:0, contentWidth:0, contentHeight:0, magneting:!1, visible:!0, animating:!1, shadow:!0, display:!0};
   a._startRender = function(b, a) {
+    var d = this, e = this._skeleton;
     this.svgGroup.attr({class:"block"});
-    var d = this._skeleton.path(this);
+    var f = e.classes;
+    f && 0 !== f.length && f.forEach(function(b) {
+      d.svgGroup.addClass(b);
+    });
+    f = e.path(this);
     this.pathGroup = this.svgGroup.elem("g", {filter:"url(#entryBlockShadowFilter)"});
     this._path = this.pathGroup.elem("path");
-    d = {d:d, fill:this._schema.color, class:"blockPath"};
-    this._skeleton.outerLine && (d.strokeWidth = "0.5");
-    this._path.attr(d);
+    f = {d:f, fill:this._schema.color, class:"blockPath"};
+    e.outerLine && (f.strokeWidth = "0.5");
+    this._path.attr(f);
     this._moveTo(this.x, this.y, !1);
     this._startContentRender(a);
     this._addControl();
@@ -15049,7 +15054,7 @@ Entry.skeleton.basic_button = {path:function() {
   return {offsetX:-80, offsetY:0, width:140, height:30};
 }, contentPos:function() {
   return {x:0, y:15};
-}, movable:!1, readOnly:!0};
+}, movable:!1, readOnly:!0, classes:["basicButtonView"]};
 Entry.Block = function(a, b) {
   Entry.Model(this, !1);
   this._schema = null;
