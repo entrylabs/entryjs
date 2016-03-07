@@ -80,11 +80,17 @@ Entry.BlockView.PARAM_SPACE = 5;
     };
 
     p._startRender = function(block, mode) {
+        var that = this;
+        var skeleton = this._skeleton;
         this.svgGroup.attr({
             class: "block"
         });
 
-        var path = this._skeleton.path(this);
+        var classes = skeleton.classes;
+        if (classes && classes.length !== 0)
+            classes.forEach(function(c){that.svgGroup.addClass(c)});
+
+        var path = skeleton.path(this);
 
         this.pathGroup = this.svgGroup.elem("g", {
             filter: 'url(#entryBlockShadowFilter)'
@@ -96,7 +102,7 @@ Entry.BlockView.PARAM_SPACE = 5;
             fill: this._schema.color,
             class: 'blockPath'
         };
-        if (this._skeleton.outerLine) {
+        if (skeleton.outerLine) {
             pathStyle.strokeWidth = "0.5";
         }
         this._path.attr(pathStyle);
@@ -250,8 +256,8 @@ Entry.BlockView.PARAM_SPACE = 5;
         parentSvgGroup.appendChild(this.svgGroup);
     };
 
-    p._toGlobalCoordinate = function() {
-        var pos = this.getAbsoluteCoordinate();
+    p._toGlobalCoordinate = function(dragMode) {
+        var pos = this.getAbsoluteCoordinate(dragMode);
         this._moveTo(pos.x, pos.y, false);
         this.getBoard().svgBlockGroup.appendChild(this.svgGroup);
     };
@@ -450,7 +456,6 @@ Entry.BlockView.PARAM_SPACE = 5;
         var workspaceMode = board.workspace.getMode();
         this.set({visible:true});
         this.removeDragging();
-        this.dragMode = Entry.DRAG_MODE_NONE;
 
         if (workspaceMode === Entry.Workspace.MODE_VIMBOARD) {
             if (board instanceof Entry.BlockMenu) {
@@ -486,7 +491,7 @@ Entry.BlockView.PARAM_SPACE = 5;
                                     .setView(closeBlock.view)
                                     .dispose();
                             } else {
-                                this._toGlobalCoordinate();
+                                this._toGlobalCoordinate(dragMode);
                                 block.doSeparate();
                             }
                         }
@@ -521,6 +526,7 @@ Entry.BlockView.PARAM_SPACE = 5;
             }
         }
 
+        this.dragMode = Entry.DRAG_MODE_NONE;
         this.destroyShadow();
         delete this.originPos;
         return;
@@ -604,6 +610,7 @@ Entry.BlockView.PARAM_SPACE = 5;
     };
 
     p._updateMagnet = function() {
+        if (!this._skeleton.magnets) return;
         var magnet = this._skeleton.magnets(this);
         if (magnet.next)
             this._nextGroup.attr(
@@ -748,8 +755,9 @@ Entry.BlockView.PARAM_SPACE = 5;
         }
     };
 
-    p.getAbsoluteCoordinate = function() {
-        if (this.dragMode === Entry.DRAG_MODE_DRAG)
+    p.getAbsoluteCoordinate = function(dragMode) {
+        dragMode = dragMode !== undefined ? dragMode : this.dragMode;
+        if (dragMode === Entry.DRAG_MODE_DRAG)
             return {x: this.x, y: this.y};
         var threadView = this.block.getThread().view;
         var pos = threadView.requestAbsoluteCoordinate(this);

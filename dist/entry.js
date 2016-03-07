@@ -13235,13 +13235,18 @@ Entry.BlockView.PARAM_SPACE = 5;
 (function(a) {
   a.schema = {id:0, type:Entry.STATIC.BLOCK_RENDER_MODEL, x:0, y:0, offsetX:0, offsetY:0, width:0, height:0, contentWidth:0, contentHeight:0, magneting:!1, visible:!0, animating:!1, shadow:!0, display:!0};
   a._startRender = function(b, a) {
+    var d = this, e = this._skeleton;
     this.svgGroup.attr({class:"block"});
-    var d = this._skeleton.path(this);
+    var f = e.classes;
+    f && 0 !== f.length && f.forEach(function(b) {
+      d.svgGroup.addClass(b);
+    });
+    f = e.path(this);
     this.pathGroup = this.svgGroup.elem("g", {filter:"url(#entryBlockShadowFilter)"});
     this._path = this.pathGroup.elem("path");
-    d = {d:d, fill:this._schema.color, class:"blockPath"};
-    this._skeleton.outerLine && (d.strokeWidth = "0.5");
-    this._path.attr(d);
+    f = {d:f, fill:this._schema.color, class:"blockPath"};
+    e.outerLine && (f.strokeWidth = "0.5");
+    this._path.attr(f);
     this._moveTo(this.x, this.y, !1);
     this._startContentRender(a);
     this._addControl();
@@ -13323,8 +13328,8 @@ Entry.BlockView.PARAM_SPACE = 5;
     this._moveTo(0, 0, !1);
     b.appendChild(this.svgGroup);
   };
-  a._toGlobalCoordinate = function() {
-    var b = this.getAbsoluteCoordinate();
+  a._toGlobalCoordinate = function(b) {
+    b = this.getAbsoluteCoordinate(b);
     this._moveTo(b.x, b.y, !1);
     this.getBoard().svgBlockGroup.appendChild(this.svgGroup);
   };
@@ -13406,7 +13411,6 @@ Entry.BlockView.PARAM_SPACE = 5;
     var a = this.getBoard(), d = this.dragMode, e = this.block, f = a.workspace.getMode();
     this.set({visible:!0});
     this.removeDragging();
-    this.dragMode = Entry.DRAG_MODE_NONE;
     if (f === Entry.Workspace.MODE_VIMBOARD) {
       a instanceof Entry.BlockMenu ? (a.terminateDrag(), this.vimBoardEvent(b, "dragEnd", e)) : a.clear();
     } else {
@@ -13417,7 +13421,21 @@ Entry.BlockView.PARAM_SPACE = 5;
         switch(Entry.GlobalSvg.terminateDrag(this)) {
           case g.DONE:
             g = this._getCloseBlock();
+<<<<<<< HEAD
             b || g ? g ? (this.set({animating:!0}), this.bindPrev(g), g instanceof Entry.Block || (g = g.requestBlock(this.block)), e.doInsert(g), createjs.Sound.play("entryMagneting"), Entry.ConnectionRipple.setView(g.view).dispose()) : (this._toGlobalCoordinate(), e.doSeparate()) : d != Entry.DRAG_MODE_DRAG || f || e.doMove();
+=======
+            if (b || g) {
+              if (g) {
+                if (this.set({animating:!0}), this.bindPrev(g), e.doInsert(g), createjs.Sound.play("entryMagneting"), Entry.ConnectionRipple.setView(g.view).dispose(), g.constructor == Entry.FieldDummyBlock && (e = e.next)) {
+                  -1 < Entry.FieldDummyBlock.PRIMITIVE_TYPES.indexOf(e.type) ? (e.getThread().cut(e), e.destroy(!1)) : (e.separate(), e.view.bumpAway());
+                }
+              } else {
+                this._toGlobalCoordinate(d), e.doSeparate();
+              }
+            } else {
+              d != Entry.DRAG_MODE_DRAG || f || e.doMove();
+            }
+>>>>>>> origin/refac/entry-block
             break;
           case g.RETURN:
             e = this.block;
@@ -13435,6 +13453,7 @@ Entry.BlockView.PARAM_SPACE = 5;
         a.setMagnetedBlock(null);
       }
     }
+    this.dragMode = Entry.DRAG_MODE_NONE;
     this.destroyShadow();
     delete this.originPos;
   };
@@ -13487,9 +13506,11 @@ Entry.BlockView.PARAM_SPACE = 5;
     delete this._shadow;
   };
   a._updateMagnet = function() {
-    var b = this._skeleton.magnets(this);
-    b.next && this._nextGroup.attr("transform", "translate(" + b.next.x + "," + b.next.y + ")");
-    this.magnet = b;
+    if (this._skeleton.magnets) {
+      var b = this._skeleton.magnets(this);
+      b.next && this._nextGroup.attr("transform", "translate(" + b.next.x + "," + b.next.y + ")");
+      this.magnet = b;
+    }
   };
   a._updateBG = function() {
     if (this._board.dragBlock && this._board.dragBlock.dragInstance) {
@@ -13566,11 +13587,12 @@ Entry.BlockView.PARAM_SPACE = 5;
       }
     }
   };
-  a.getAbsoluteCoordinate = function() {
-    if (this.dragMode === Entry.DRAG_MODE_DRAG) {
+  a.getAbsoluteCoordinate = function(b) {
+    b = void 0 !== b ? b : this.dragMode;
+    if (b === Entry.DRAG_MODE_DRAG) {
       return {x:this.x, y:this.y};
     }
-    var b = this.block.getThread().view.requestAbsoluteCoordinate(this);
+    b = this.block.getThread().view.requestAbsoluteCoordinate(this);
     b.x += this.x;
     b.y += this.y;
     return b;
@@ -14995,7 +15017,7 @@ Entry.skeleton.basic_button = {path:function() {
   return {offsetX:-80, offsetY:0, width:140, height:30};
 }, contentPos:function() {
   return {x:0, y:15};
-}, movable:!1, readOnly:!0};
+}, movable:!1, readOnly:!0, classes:["basicButtonView"]};
 Entry.Block = function(a, b) {
   Entry.Model(this, !1);
   this._schema = null;

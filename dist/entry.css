@@ -4626,6 +4626,12 @@ span.CodeMirror-selectedtext {
   stroke-width: 3px;
   stroke: #798EB1;
 }
+.block.basicButtonView {
+  cursor: pointer;
+}
+.block.basicButtonView:hover > g > path {
+  fill: #f4f4f4;
+}
 
 .dragNone {
   -webkit-touch-callout: none;
