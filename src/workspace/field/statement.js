@@ -92,7 +92,7 @@ Entry.FieldStatement = function(content, blockView, index) {
 
     p.calcHeight = function() {
         var height = this._thread.view.requestPartHeight(null);
-        this.set({height:Math.max(height, 20)});
+        this.set({height: height});
     };
 
     p.getValue = function() {
@@ -162,13 +162,15 @@ Entry.FieldStatement = function(content, blockView, index) {
                 transform: 'translate(0,0)'
             });
             this.calcHeight();
+            console.log(this.height);
         }
         var changeEvent = blockView.block.thread.changeEvent;
         if (changeEvent) changeEvent.notify();
     };
 
-    p.requestBlock = function(newBlock) {
+    p.insertTopBlock = function(newBlock) {
         var block = this.firstBlock;
+        newBlock.doInsert(this._thread);
         this.firstBlock = newBlock;
         return block;
     };

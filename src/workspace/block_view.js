@@ -456,6 +456,7 @@ Entry.BlockView.PARAM_SPACE = 5;
         var workspaceMode = board.workspace.getMode();
         this.set({visible:true});
         this.removeDragging();
+        this.dragMode = Entry.DRAG_MODE_NONE;
 
         if (workspaceMode === Entry.Workspace.MODE_VIMBOARD) {
             if (board instanceof Entry.BlockMenu) {
@@ -476,7 +477,10 @@ Entry.BlockView.PARAM_SPACE = 5;
                     case gs.DONE:
                         var closeBlock = this._getCloseBlock();
                         if (!prevBlock && !closeBlock) {
-                            if (dragMode == Entry.DRAG_MODE_DRAG && !fromBlockMenu)
+                            if (!block.getThread().view.isGlobal()) {
+                                this._toGlobalCoordinate(dragMode);
+                                block.doSeparate();
+                            } else if (dragMode == Entry.DRAG_MODE_DRAG && !fromBlockMenu)
                                 block.doMove();
                         } else {
                             if (closeBlock) {
@@ -484,8 +488,9 @@ Entry.BlockView.PARAM_SPACE = 5;
 
                                 this.bindPrev(closeBlock);
                                 if (!(closeBlock instanceof Entry.Block))
-                                    closeBlock = closeBlock.requestBlock(this.block);
-                                block.doInsert(closeBlock);
+                                    closeBlock = closeBlock.insertTopBlock(block);
+                                else
+                                    block.doInsert(closeBlock);
                                 createjs.Sound.play('entryMagneting');
                                 Entry.ConnectionRipple
                                     .setView(closeBlock.view)
@@ -526,7 +531,6 @@ Entry.BlockView.PARAM_SPACE = 5;
             }
         }
 
-        this.dragMode = Entry.DRAG_MODE_NONE;
         this.destroyShadow();
         delete this.originPos;
         return;

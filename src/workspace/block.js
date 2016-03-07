@@ -5,6 +5,7 @@
 
 goog.provide("Entry.Block");
 
+goog.require('Entry.Thread');
 goog.require('Entry.Utils');
 goog.require('Entry.Model');
 goog.require("Entry.BoxModel");
@@ -369,7 +370,11 @@ Entry.Block.MAGNET_OFFSET = 0.4;
 
     p.insert = function(targetBlock) {
         var blocks = this.thread.cut(this);
-        targetBlock.insertAfter(blocks);
+        if (targetBlock instanceof Entry.Thread) {
+            targetBlock.insertByBlock(null, blocks);
+        } else {
+            targetBlock.insertAfter(blocks);
+        }
         this._updatePos();
         this.getCode().changeEvent.notify();
     };

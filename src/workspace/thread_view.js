@@ -77,4 +77,8 @@ Entry.ThreadView = function(thread, board) {
     p.dominate = function() {
         this._parent.dominate(this.thread);
     };
+
+    p.isGlobal = function() {
+        return this._parent instanceof Entry.Board;
+    };
 })(Entry.ThreadView.prototype);

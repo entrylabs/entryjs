@@ -84,6 +84,7 @@ Entry.skeleton.basic_loop = {
         height = Math.max(30, height + 2);
         width = Math.max(0, width + 9 - height / 2);
         var statementHeight = blockView._statements[0] ? blockView._statements[0].height : 20;
+        statementHeight = Math.max(statementHeight, 20);
         return ("m -8,0 l 8,8 8,-8 h %w a %h,%h 0 0,1 0,%wh H 24 l -8,8 -8,-8 h -0.4 v %sh h 0.4 l 8,8 8,-8 h %bw a 8,8 0 0,1 0,16 H 8 l -8,8 -8,-8 z")
             .replace(/%wh/gi, height)
             .replace(/%w/gi, width)
@@ -94,6 +95,7 @@ Entry.skeleton.basic_loop = {
     magnets: function(blockView) {
         var contentHeight = Math.max(blockView.contentHeight + 2, 30);
         var statementHeight = blockView._statements[0] ? blockView._statements[0].height : 20;
+        statementHeight = Math.max(statementHeight, 20);
         return {
             previous: {x: 0, y: 0},
             next: {x: 0, y: statementHeight + contentHeight + 18 + blockView.offsetY}
@@ -103,6 +105,7 @@ Entry.skeleton.basic_loop = {
         var contentWidth = blockView.contentWidth;
         var contentHeight = Math.max(blockView.contentHeight + 2, 30);
         var statementHeight = blockView._statements[0] ? blockView._statements[0].height : 20;
+        statementHeight = Math.max(statementHeight, 20);
         return {
             offsetX: -8, offsetY: 0,
             width: contentWidth + 30,
