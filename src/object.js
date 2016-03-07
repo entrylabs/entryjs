@@ -81,7 +81,7 @@ Entry.EntryObject = function(model) {
                     image.src = picture.fileurl;
                 } else {
                     var fileName = picture.filename;
-                    image.src = '/uploads/' + fileName.substring(0, 2) + '/' +
+                    image.src = Entry.defaultPath + '/uploads/' + fileName.substring(0, 2) + '/' +
                         fileName.substring(2, 4) + '/image/' + fileName + '.png';
                 }
             }
@@ -903,7 +903,7 @@ Entry.EntryObject.prototype.updateThumbnailView = function() {
         } else {
             var fileName = this.entity.picture.filename;
             this.thumbnailView_.style.backgroundImage =
-                'url("' + '/uploads/' + fileName.substring(0, 2) + '/' +
+                'url("' + Entry.defaultPath + '/uploads/' + fileName.substring(0, 2) + '/' +
                 fileName.substring(2, 4) + '/thumb/' + fileName + '.png")';
         }
     }

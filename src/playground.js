@@ -1030,7 +1030,7 @@ Entry.Playground.prototype.setPicture = function(picture) {
             // deprecated
             var fileName = picture.filename;
             thumbnailView.style.backgroundImage =
-                'url("' + '/uploads/' + fileName.substring(0, 2) + '/' +
+                'url("' + Entry.defaultPath + '/uploads/' + fileName.substring(0, 2) + '/' +
                 fileName.substring(2, 4) + '/thumb/' + fileName + '.png")';
         }
         var sizeView = $element.find('#s_'+picture.id)[0];
@@ -1628,7 +1628,7 @@ Entry.Playground.prototype.generatePictureElement = function(picture) {
         // deptecated
         var fileName = picture.filename;
         thumbnailView.style.backgroundImage =
-            'url("' + '/uploads/' + fileName.substring(0, 2) + '/' +
+            'url("' + Entry.defaultPath + '/uploads/' + fileName.substring(0, 2) + '/' +
             fileName.substring(2, 4) + '/thumb/' + fileName + '.png")';
     }
     element.appendChild(thumbnailView);
