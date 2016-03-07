@@ -13559,14 +13559,17 @@ Entry.BlockView.PARAM_SPACE = 5;
     var b = this.getAbsoluteCoordinate();
     return {cx:b.x, cy:b.y};
   };
-  a.bumpAway = function() {
-    this._moveBy(10, 10, !1);
+  a.bumpAway = function(b) {
+    var a = this;
+    b ? window.setTimeout(function() {
+      a._moveBy(10, 10, !1);
+    }, b) : a._moveBy(10, 10, !1);
   };
   a.bindPrev = function(b) {
     if (b) {
       if (this._toLocalCoordinate(b.view._nextGroup), (b = b.getNextBlock()) && b !== this.block) {
         var a = this.block.getLastBlock();
-        b.view._toLocalCoordinate(a.view._nextGroup);
+        this.magnet.next ? b.view._toLocalCoordinate(a.view._nextGroup) : (b.view._toGlobalCoordinate(), b.separate(), b.view.bumpAway(10));
       }
     } else {
       if (b = this.block.getPrevBlock()) {
@@ -15354,8 +15357,8 @@ Entry.ThreadView = function(a, b) {
     return e;
   };
   a.requestPartHeight = function(a, c) {
-    for (var d = this.thread.getBlocks(), e = d.pop(), f = a && a.magnet.next ? a.magnet.next.y : 0;e && e.view !== a && e.view;) {
-      e = e.view, f += e.magnet.next.y, e.dragMode === Entry.DRAG_MODE_DRAG && (f = 0), e = d.pop();
+    for (var d = this.thread.getBlocks(), e = d.pop(), f = a ? a.magnet.next ? a.magnet.next.y : a.height : 0;e && e.view !== a && e.view;) {
+      e = e.view, f = e.magnet.next ? f + e.magnet.next.y : f + e.height, e.dragMode === Entry.DRAG_MODE_DRAG && (f = 0), e = d.pop();
     }
     return f;
   };
@@ -15659,7 +15662,8 @@ Entry.Board = function(a) {
       }
       d += n.y;
       h += n.x;
-      a = d + n.magnet.next.y + 1;
+      a = d + 1;
+      n.magnet.next && (a += n.magnet.next.y);
       g.push({point:d, endPoint:a, startBlock:l, blocks:[]});
       g.push({point:a, blocks:[]});
       n.absX = h;
@@ -15676,8 +15680,7 @@ Entry.Board = function(a) {
           f = f.concat(this._getThreadBlocks(a, c, {x:q.x + h, y:q.y + d}));
         }
       }
-      d += n.magnet.next.y;
-      h += n.magnet.next.x;
+      n.magnet.next && (d += n.magnet.next.y, h += n.magnet.next.x);
     }
     return f.concat(g);
   };
