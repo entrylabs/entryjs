@@ -148,21 +148,18 @@ Entry.FieldStatement = function(content, blockView, index) {
 
             var height = blockView.originalHeight;
             if (height !== undefined) {
-                setTimeout(function() {
-                    if (blockView.background) {
-                        blockView.background.remove();
-                        blockView.nextBackground.remove();
-                        delete blockView.background;
-                        delete blockView.nextBackground;
-                    }
-                }, Entry.ANIMATION_DURATION);
+                if (blockView.background) {
+                    blockView.background.remove();
+                    blockView.nextBackground.remove();
+                    delete blockView.background;
+                    delete blockView.nextBackground;
+                }
                 delete blockView.originalHeight;
             }
             this.statementSvgGroup.attr({
                 transform: 'translate(0,0)'
             });
             this.calcHeight();
-            console.log(this.height);
         }
         var changeEvent = blockView.block.thread.changeEvent;
         if (changeEvent) changeEvent.notify();

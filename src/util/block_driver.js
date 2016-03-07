@@ -64,8 +64,10 @@ Entry.BlockMockup = function(blocklyInfo) {
             skeleton = "basic_event";
         else if (this.statements.length)
             skeleton = "basic_loop";
-        else
+        else if (this.isPrev && this.isNext)
             skeleton = "basic";
+        else if (this.isPrev && !this.isNext)
+            skeleton = "basic_without_next";
         return {
             color: this.color,
             skeleton: skeleton,

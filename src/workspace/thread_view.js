@@ -63,7 +63,7 @@ Entry.ThreadView = function(thread, board) {
     p.requestPartHeight = function(blockView, forAll) {
         var blocks = this.thread.getBlocks();
         var block = blocks.pop();
-        var height = blockView ? blockView.magnet.next.y : 0;
+        var height = blockView && blockView.magnet.next ? blockView.magnet.next.y : 0;
         while (block && block.view !== blockView && block.view) {
             var prevBlockView = block.view;
             height += prevBlockView.magnet.next.y;

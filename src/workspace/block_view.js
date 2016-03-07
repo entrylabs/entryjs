@@ -493,7 +493,7 @@ Entry.BlockView.PARAM_SPACE = 5;
                                     block.doInsert(closeBlock);
                                 createjs.Sound.play('entryMagneting');
                                 Entry.ConnectionRipple
-                                    .setView(closeBlock.view)
+                                    .setView(block.view)
                                     .dispose();
                             } else {
                                 this._toGlobalCoordinate(dragMode);
@@ -658,14 +658,12 @@ Entry.BlockView.PARAM_SPACE = 5;
 
             var height = blockView.originalHeight;
             if (height !== undefined) {
-                setTimeout(function() {
-                    if (blockView.background) {
-                        blockView.background.remove();
-                        blockView.nextBackground.remove();
-                        delete blockView.background;
-                        delete blockView.nextBackground;
-                    }
-                }, Entry.ANIMATION_DURATION);
+                if (blockView.background) {
+                    blockView.background.remove();
+                    blockView.nextBackground.remove();
+                    delete blockView.background;
+                    delete blockView.nextBackground;
+                }
                 blockView.set({
                     offsetY: height
                 });

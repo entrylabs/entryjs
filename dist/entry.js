@@ -9877,7 +9877,8 @@ Entry.BlockMockup = function(a) {
     b.init.call(this);
   };
   a.toJSON = function() {
-    var b = "", b = this.output ? "Boolean" === this.output ? "basic_boolean_field" : "basic_string_field" : !this.isPrev && this.isNext ? "basic_event" : this.statements.length ? "basic_loop" : "basic";
+    var b = "";
+    this.output ? b = "Boolean" === this.output ? "basic_boolean_field" : "basic_string_field" : !this.isPrev && this.isNext ? b = "basic_event" : this.statements.length ? b = "basic_loop" : this.isPrev && this.isNext ? b = "basic" : this.isPrev && !this.isNext && (b = "basic_without_next");
     return {color:this.color, skeleton:b, statements:this.statements, template:this.templates.filter(function(b) {
       return "string" === typeof b;
     }).join(" "), params:this.params};
@@ -13422,7 +13423,7 @@ Entry.BlockView.PARAM_SPACE = 5;
         switch(Entry.GlobalSvg.terminateDrag(this)) {
           case g.DONE:
             g = this._getCloseBlock();
-            b || g ? g ? (this.set({animating:!0}), this.bindPrev(g), g instanceof Entry.Block ? e.doInsert(g) : g = g.insertTopBlock(e), createjs.Sound.play("entryMagneting"), Entry.ConnectionRipple.setView(g.view).dispose()) : (this._toGlobalCoordinate(d), e.doSeparate()) : e.getThread().view.isGlobal() ? d != Entry.DRAG_MODE_DRAG || f || e.doMove() : (this._toGlobalCoordinate(d), e.doSeparate());
+            b || g ? g ? (this.set({animating:!0}), this.bindPrev(g), g instanceof Entry.Block ? e.doInsert(g) : g.insertTopBlock(e), createjs.Sound.play("entryMagneting"), Entry.ConnectionRipple.setView(e.view).dispose()) : (this._toGlobalCoordinate(d), e.doSeparate()) : e.getThread().view.isGlobal() ? d != Entry.DRAG_MODE_DRAG || f || e.doMove() : (this._toGlobalCoordinate(d), e.doSeparate());
             break;
           case g.RETURN:
             e = this.block;
@@ -13500,22 +13501,19 @@ Entry.BlockView.PARAM_SPACE = 5;
   };
   a._updateBG = function() {
     if (this._board.dragBlock && this._board.dragBlock.dragInstance) {
-      var b = this;
-      if (b.magneting) {
-        var a = this._board.dragBlock.getShadow();
-        $(a).attr({transform:"translate(0," + (this.height + 1) + ")"});
-        this.svgGroup.appendChild(a);
-        this._clonedShadow = a;
-        b.background && (b.background.remove(), b.nextBackground.remove(), delete b.background, delete b.nextBackground);
-        a = this._board.dragBlock.getBelowHeight() + this.offsetY;
-        b.originalHeight = b.offsetY;
-        b.set({offsetY:a});
+      if (this.magneting) {
+        var b = this._board.dragBlock.getShadow();
+        $(b).attr({transform:"translate(0," + (this.height + 1) + ")"});
+        this.svgGroup.appendChild(b);
+        this._clonedShadow = b;
+        this.background && (this.background.remove(), this.nextBackground.remove(), delete this.background, delete this.nextBackground);
+        b = this._board.dragBlock.getBelowHeight() + this.offsetY;
+        this.originalHeight = this.offsetY;
+        this.set({offsetY:b});
       } else {
-        this._clonedShadow && (this._clonedShadow.remove(), delete this._clonedShadow), a = b.originalHeight, void 0 !== a && (setTimeout(function() {
-          b.background && (b.background.remove(), b.nextBackground.remove(), delete b.background, delete b.nextBackground);
-        }, Entry.ANIMATION_DURATION), b.set({offsetY:a}), delete b.originalHeight);
+        this._clonedShadow && (this._clonedShadow.remove(), delete this._clonedShadow), b = this.originalHeight, void 0 !== b && (this.background && (this.background.remove(), this.nextBackground.remove(), delete this.background, delete this.nextBackground), this.set({offsetY:b}), delete this.originalHeight);
       }
-      (a = b.block.thread.changeEvent) && a.notify();
+      (b = this.block.thread.changeEvent) && b.notify();
     }
   };
   a.addDragging = function() {
@@ -14505,29 +14503,26 @@ Entry.FieldStatement = function(a, b, c) {
   };
   a._updateBG = function() {
     if (this._board.dragBlock && this._board.dragBlock.dragInstance) {
-      var b = this;
-      if (b.magneting) {
-        var a = this._board.dragBlock.getShadow();
-        $(a).attr({transform:"translate(0,0)"});
-        this.svgGroup.appendChild(a);
-        this._clonedShadow = a;
-        b.background && (b.background.remove(), b.nextBackground.remove(), delete b.background, delete b.nextBackground);
-        a = this._board.dragBlock.getBelowHeight();
-        this.statementSvgGroup.attr({transform:"translate(0," + a + ")"});
-        this.set({height:this.height + a});
+      if (this.magneting) {
+        var b = this._board.dragBlock.getShadow();
+        $(b).attr({transform:"translate(0,0)"});
+        this.svgGroup.appendChild(b);
+        this._clonedShadow = b;
+        this.background && (this.background.remove(), this.nextBackground.remove(), delete this.background, delete this.nextBackground);
+        b = this._board.dragBlock.getBelowHeight();
+        this.statementSvgGroup.attr({transform:"translate(0," + b + ")"});
+        this.set({height:this.height + b});
       } else {
-        this._clonedShadow && (this._clonedShadow.remove(), delete this._clonedShadow), a = b.originalHeight, void 0 !== a && (setTimeout(function() {
-          b.background && (b.background.remove(), b.nextBackground.remove(), delete b.background, delete b.nextBackground);
-        }, Entry.ANIMATION_DURATION), delete b.originalHeight), this.statementSvgGroup.attr({transform:"translate(0,0)"}), this.calcHeight(), console.log(this.height);
+        this._clonedShadow && (this._clonedShadow.remove(), delete this._clonedShadow), b = this.originalHeight, void 0 !== b && (this.background && (this.background.remove(), this.nextBackground.remove(), delete this.background, delete this.nextBackground), delete this.originalHeight), this.statementSvgGroup.attr({transform:"translate(0,0)"}), this.calcHeight();
       }
-      (a = b.block.thread.changeEvent) && a.notify();
+      (b = this.block.thread.changeEvent) && b.notify();
     }
   };
-  a.insertTopBlock = function(a) {
-    var c = this.firstBlock;
-    a.doInsert(this._thread);
-    this.firstBlock = a;
-    return c;
+  a.insertTopBlock = function(b) {
+    var a = this.firstBlock;
+    b.doInsert(this._thread);
+    this.firstBlock = b;
+    return a;
   };
   a.getNextBlock = function() {
     return this.firstBlock;
@@ -14546,16 +14541,16 @@ Entry.FieldText = function(a, b, c) {
 };
 Entry.Utils.inherit(Entry.Field, Entry.FieldText);
 (function(a) {
-  a.renderStart = function(a) {
-    this.svgGroup = a.contentSvgGroup.elem("g");
+  a.renderStart = function(b) {
+    this.svgGroup = b.contentSvgGroup.elem("g");
     this._text = this._text.replace(/(\r\n|\n|\r)/gm, " ");
     this.textElement = this.svgGroup.elem("text").attr({style:"white-space: pre; font-size:" + this._fontSize + "px", "class":"dragNone", fill:this._color});
     this.textElement.innerHTML = this._text;
-    a = this.textElement.getBBox();
-    var c = 0;
-    "center" == this._align && (c = -a.width / 2);
-    this.textElement.attr({x:c, y:.25 * a.height});
-    this.box.set({x:0, y:0, width:this.textElement.getComputedTextLength(), height:a.height});
+    b = this.textElement.getBBox();
+    var a = 0;
+    "center" == this._align && (a = -b.width / 2);
+    this.textElement.attr({x:a, y:.25 * b.height});
+    this.box.set({x:0, y:0, width:this.textElement.getComputedTextLength(), height:b.height});
   };
 })(Entry.FieldText.prototype);
 Entry.FieldTextInput = function(a, b, c) {
@@ -15010,6 +15005,15 @@ Entry.skeleton.basic_button = {path:function() {
 }, contentPos:function() {
   return {x:0, y:15};
 }, movable:!1, readOnly:!0, classes:["basicButtonView"]};
+Entry.skeleton.basic_without_next = {box:Entry.skeleton.basic.box, contentPos:Entry.skeleton.basic.contentPos, path:function(a) {
+  var b = a.contentWidth;
+  a = a.contentHeight;
+  a = Math.max(30, a + 2);
+  b = Math.max(0, b + 9 - a / 2);
+  return "m -8,0 l 8,8 8,-8 h %w a %h,%h 0 0,1 0, %wh H -8 z".replace(/%wh/gi, a).replace(/%w/gi, b).replace(/%h/gi, a / 2);
+}, magnets:function(a) {
+  return {previous:{x:0, y:0}};
+}};
 Entry.Thread = function(a, b) {
   this._data = new Entry.Collection;
   this._code = b;
@@ -15350,7 +15354,7 @@ Entry.ThreadView = function(a, b) {
     return e;
   };
   a.requestPartHeight = function(a, c) {
-    for (var d = this.thread.getBlocks(), e = d.pop(), f = a ? a.magnet.next.y : 0;e && e.view !== a && e.view;) {
+    for (var d = this.thread.getBlocks(), e = d.pop(), f = a && a.magnet.next ? a.magnet.next.y : 0;e && e.view !== a && e.view;) {
       e = e.view, f += e.magnet.next.y, e.dragMode === Entry.DRAG_MODE_DRAG && (f = 0), e = d.pop();
     }
     return f;
