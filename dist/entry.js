@@ -13497,9 +13497,11 @@ Entry.BlockView.PARAM_SPACE = 5;
     delete this._shadow;
   };
   a._updateMagnet = function() {
-    var b = this._skeleton.magnets(this);
-    b.next && this._nextGroup.attr("transform", "translate(" + b.next.x + "," + b.next.y + ")");
-    this.magnet = b;
+    if (this._skeleton.magnets) {
+      var b = this._skeleton.magnets(this);
+      b.next && this._nextGroup.attr("transform", "translate(" + b.next.x + "," + b.next.y + ")");
+      this.magnet = b;
+    }
   };
   a._updateBG = function() {
     if (this._board.dragBlock && this._board.dragBlock.dragInstance) {

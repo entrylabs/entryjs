@@ -616,6 +616,7 @@ Entry.BlockView.PARAM_SPACE = 5;
     };
 
     p._updateMagnet = function() {
+        if (!this._skeleton.magnets) return;
         var magnet = this._skeleton.magnets(this);
         if (magnet.next)
             this._nextGroup.attr(
