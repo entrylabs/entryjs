@@ -45,10 +45,12 @@ Entry.BlockView = function(block, board, mode) {
     // observe
     this.block.observe(this, "_setMovable", ["movable"]);
     this.block.observe(this, "_setReadOnly", ["movable"]);
-    this.observe(this, "_updateBG", ["magneting"]);
+    this.observe(this, "_updateBG", ["magneting"], false);
+
     this.observe(this, "_updateOpacity", ["visible"], false);
     this.observe(this, "_updateDisplay", ["display"], false);
     this.observe(this, "_updateShadow", ["shadow"]);
+    this.observe(this, "_updateMagnet", ["offsetY"]);
     board.code.observe(this, '_setBoard', ['board'], false);
 
     this.dragMode = Entry.DRAG_MODE_NONE;
@@ -189,7 +191,6 @@ Entry.BlockView.PARAM_SPACE = 5;
         this.contentSvgGroup.attr("transform",
             "translate(" + contentPos.x + "," + contentPos.y + ")"
         );
-        this._updateMagnet();
         this._render();
     };
 
@@ -406,7 +407,6 @@ Entry.BlockView.PARAM_SPACE = 5;
                     Entry.GlobalSvg.position();
                     var magnetedBlock = blockView._getCloseBlock();
                     if (magnetedBlock) {
-                        board = magnetedBlock.view.getBoard();
                         board.setMagnetedBlock(magnetedBlock.view);
                     } else board.setMagnetedBlock(null);
                     if (!blockView.originPos)
@@ -478,25 +478,13 @@ Entry.BlockView.PARAM_SPACE = 5;
                                 this.set({animating: true});
 
                                 this.bindPrev(closeBlock);
+                                if (!(closeBlock instanceof Entry.Block))
+                                    closeBlock = closeBlock.requestBlock(this.block);
                                 block.doInsert(closeBlock);
                                 createjs.Sound.play('entryMagneting');
                                 Entry.ConnectionRipple
                                     .setView(closeBlock.view)
                                     .dispose();
-
-                                if (closeBlock.constructor == Entry.FieldDummyBlock) {
-                                    //TODO get next block
-                                    var orphan = block.next;
-                                    if (orphan) {
-                                        if (Entry.FieldDummyBlock.PRIMITIVE_TYPES.indexOf(orphan.type) > -1) {
-                                            orphan.getThread().cut(orphan);
-                                            orphan.destroy(false);
-                                        } else {
-                                            orphan.separate();
-                                            orphan.view.bumpAway();
-                                        }
-                                    }
-                                }
                             } else {
                                 this._toGlobalCoordinate();
                                 block.doSeparate();
@@ -651,7 +639,6 @@ Entry.BlockView.PARAM_SPACE = 5;
             blockView.set({
                 offsetY: height,
             });
-            this._updateMagnet();
         } else {
             if (this._clonedShadow) {
                 this._clonedShadow.remove();
@@ -671,7 +658,6 @@ Entry.BlockView.PARAM_SPACE = 5;
                 blockView.set({
                     offsetY: height
                 });
-                this._updateMagnet();
                 delete blockView.originalHeight;
             }
 
@@ -736,7 +722,7 @@ Entry.BlockView.PARAM_SPACE = 5;
 
     p.getRipplePosition = function() {
         var pos = this.getAbsoluteCoordinate();
-        return {cx:pos.x, cy:pos.y + this.originalHeight};
+        return {cx:pos.x, cy:pos.y};
     };
 
     p.bumpAway = function() {this._moveBy(10, 10, false);};

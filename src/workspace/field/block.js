@@ -3,10 +3,8 @@
 "use strict";
 
 goog.provide("Entry.FieldBlock");
-goog.provide("Entry.FieldDummyBlock");
 
 goog.require("Entry.Field");
-goog.require("Entry.DummyBlock");
 /*
  *
  */
@@ -188,96 +186,3 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
     };
 
 })(Entry.FieldBlock.prototype);
-
-Entry.FieldDummyBlock = function(statementField, blockView) {
-    Entry.Model(this, false);
-    this.isDummy = true;
-
-    this.view = this;
-    this.originBlockView = blockView;
-    this._thread = statementField._thread;
-    this.statementField = statementField;
-
-    this.svgGroup = statementField.svgGroup.elem("g");
-
-    var acceptType = statementField.acceptType;
-    switch (acceptType) {
-        case "basic_string_field":
-            this.svgGroup.stringMagnet = this;
-            break;
-        case "basic_boolean_field":
-            this.svgGroup.booleanMagnet = this;
-            break;
-        case "basic_param":
-            this.svgGroup.paramMagnet = this;
-            break;
-    }
-
-    var acceptBox = Entry.skeleton[acceptType].box();
-
-    this.path = this.svgGroup.rect(
-        acceptBox.offsetX,
-        acceptBox.offsetY - 10,
-        acceptBox.width,
-        acceptBox.height
-    );
-
-    this.path.attr({fill: "transparent"});
-
-    this.prevObserver = blockView.observe(
-        this, "_align", ["x", "y"]
-    );
-
-    this.observe(this, "_updateBG", ["magneting"]);
-
-    this._align();
-
-};
-
-Entry.FieldDummyBlock.PRIMITIVE_TYPES = [
-    'True', "text"
-];
-
-Entry.Utils.inherit(Entry.DummyBlock, Entry.FieldDummyBlock);
-
-Entry.FieldDummyBlock.prototype.constructor = Entry.FieldDummyBlock;
-
-Entry.FieldDummyBlock.prototype.schema = {
-    x: 0,
-    y: 0,
-    width: 0,
-    height: -1,
-    next: null,
-    animating: false,
-    magneting: false
-};
-
-Entry.FieldDummyBlock.prototype._updateBG = function() {
-    if (this.magneting) {
-        var block = this.next;
-        if (!block) return;
-
-        var shadow = block.view.svgGroup.selectAll('.blockPath')[0].clone();
-        shadow.attr({
-            transform: "t0 " + 0,
-            "opacity": 1,
-            "fill": 'white',
-            'fill-opacity': 0.5,
-            'stroke': 'white',
-            'stroke-width': 2,
-            'stroke-opacity': 1
-        });
-        this.svgGroup.append(shadow);
-        this._clonedShadow = shadow;
-    } else {
-        if (this._clonedShadow) {
-            this._clonedShadow.remove();
-            delete this._clonedShadow;
-        }
-    }
-};
-
-Entry.FieldDummyBlock.prototype.appendSvg = function(statementField) {
-    this.svgGroup.remove();
-    statementField.svgGroup.append(this.svgGroup);
-};

@@ -3,44 +3,53 @@
 "use strict";
 
 goog.provide("Entry.FieldStatement");
-goog.provide("Entry.DummyBlock");
+
+goog.require("Entry.BlockView");
 
 /*
  *
  */
 Entry.FieldStatement = function(content, blockView, index) {
+    Entry.Model(this, false);
+
     this._blockView = blockView;
     this.block = blockView.block;
 
-
-    var box = new Entry.BoxModel();
-    this.box = box;
+    this.view = this;
 
     this._index = index;
 
     this.acceptType = content.accept;
 
     this.svgGroup = null;
+    this.statementSvgGroup = null;
     this._thread = null;
 
     this._position = content.position;
 
-    this.box.observe(blockView, "alignContent", ["height"]);
+    this.observe(blockView, "alignContent", ["height"]);
+    this.observe(blockView, "_updateMagnet", ["height"]);
+    this.observe(this, "_updateBG", ["magneting"], false);
 
     this.renderStart(blockView.getBoard());
 };
 
 
 (function(p) {
+    p.schema = {
+        x: 0,
+        y: 0,
+        width: 100,
+        height: 20,
+        magneting: false
+    };
+
     p.renderStart = function(board) {
         this.svgGroup = this._blockView.statementSvgGroup.elem('g');
-        this.box.set({
-            x: 46,
-            y: 0,
-            width: 0,
-            height: 20
-        });
+        this.statementSvgGroup = this.svgGroup.elem('g');
+        this._nextGroup = this.statementSvgGroup;
         this._initThread(board);
+        this._board = board;
     };
 
     p._initThread = function(board) {
@@ -50,7 +59,8 @@ Entry.FieldStatement = function(content, blockView, index) {
         thread.view.setParent(this);
         var firstBlock = thread.getFirstBlock();
         if (firstBlock) {
-            firstBlock.view._toLocalCoordinate(this.svgGroup);
+            firstBlock.view._toLocalCoordinate(this.statementSvgGroup);
+            this.firstBlock = firstBlock;
         }
         thread.changeEvent.attach(this, this.calcHeight);
         this.calcHeight();
@@ -68,7 +78,7 @@ Entry.FieldStatement = function(content, blockView, index) {
 
         var transform = "translate(" + x + "," + y + ")";
 
-        this.box.set({x: x, y: y});
+        this.set({x: x, y: y});
 
         if (animate)
             svgGroup.animate({
@@ -82,7 +92,7 @@ Entry.FieldStatement = function(content, blockView, index) {
 
     p.calcHeight = function() {
         var height = this._thread.view.requestPartHeight(null);
-        this.box.set({height:Math.max(height, 20)});
+        this.set({height:Math.max(height, 20)});
     };
 
     p.getValue = function() {
@@ -91,8 +101,8 @@ Entry.FieldStatement = function(content, blockView, index) {
 
     p.requestAbsoluteCoordinate = function() {
         var pos = this._blockView.getAbsoluteCoordinate();
-        pos.x += this.box.x;
-        pos.y += this.box.y;
+        pos.x += this.x;
+        pos.y += this.y;
         return pos;
     };
 
@@ -101,5 +111,70 @@ Entry.FieldStatement = function(content, blockView, index) {
     };
 
     p.destroy = function() {};
+
+    p._updateBG = function() {
+        if (!this._board.dragBlock || !this._board.dragBlock.dragInstance)
+            return;
+        var blockView = this;
+        var magneting = blockView.magneting;
+        var block = blockView.block;
+        var svgGroup = blockView.svgGroup;
+        if (magneting) {
+            var shadow = this._board.dragBlock.getShadow();
+            $(shadow).attr({
+                 transform: 'translate(0,0)'
+            });
+            this.svgGroup.appendChild(shadow);
+            this._clonedShadow = shadow;
+
+            if (blockView.background) {
+                blockView.background.remove();
+                blockView.nextBackground.remove();
+                delete blockView.background;
+                delete blockView.nextBackground;
+            }
+            var height = this._board.dragBlock.getBelowHeight();
+
+            this.statementSvgGroup.attr({
+                transform: 'translate(0,' + height + ')'
+            });
+
+            this.set({height: this.height + height});
+        } else {
+            if (this._clonedShadow) {
+                this._clonedShadow.remove();
+                delete this._clonedShadow;
+            }
+
+            var height = blockView.originalHeight;
+            if (height !== undefined) {
+                setTimeout(function() {
+                    if (blockView.background) {
+                        blockView.background.remove();
+                        blockView.nextBackground.remove();
+                        delete blockView.background;
+                        delete blockView.nextBackground;
+                    }
+                }, Entry.ANIMATION_DURATION);
+                delete blockView.originalHeight;
+            }
+            this.statementSvgGroup.attr({
+                transform: 'translate(0,0)'
+            });
+            this.calcHeight();
+        }
+        var changeEvent = blockView.block.thread.changeEvent;
+        if (changeEvent) changeEvent.notify();
+    };
+
+    p.requestBlock = function(newBlock) {
+        var block = this.firstBlock;
+        this.firstBlock = newBlock;
+        return block;
+    };
+
+    p.getNextBlock = function () {
+        return this.firstBlock;
+    };
 
 })(Entry.FieldStatement.prototype);

@@ -446,11 +446,24 @@ Entry.Board = function(option) {
                 for (var j = 0; j < block.statements.length; j++) {
                         zIndex += 0.01;
                         var thread = block.statements[j];
-                        var statementPos = block.view._statements[j].box;
+                        var statement = block.view._statements[j];
+                        statement.zIndex = zIndex;
+                        statement.absX = cursorX + statement.x;
+                        metaData.push({
+                            point: statement.y + cursorY - 30,
+                            endPoint: statement.y + cursorY + statement.height,
+                            startBlock: statement,
+                            blocks: []
+                        });
+                        metaData.push({
+                            point: statement.y + cursorY + statement.height,
+                            blocks: []
+                        });
+                        zIndex += 0.01;
                         statementBlocks = statementBlocks.concat(
                             this._getThreadBlocks(thread, zIndex, {
-                                 x: statementPos.x + cursorX,
-                                 y: statementPos.y + cursorY
+                                 x: statement.x + cursorX,
+                                 y: statement.y + cursorY
                             })
                         );
                 }
