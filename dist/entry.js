@@ -15005,7 +15005,7 @@ Entry.skeleton.basic_button = {path:function() {
 }, contentPos:function() {
   return {x:0, y:15};
 }, movable:!1, readOnly:!0, classes:["basicButtonView"]};
-Entry.skeleton.basic_without_next = {path:function(a) {
+Entry.skeleton.basic_without_next = {box:Entry.skeleton.basic.box, contentPos:Entry.skeleton.basic.contentPos, path:function(a) {
   var b = a.contentWidth;
   a = a.contentHeight;
   a = Math.max(30, a + 2);
@@ -15013,7 +15013,7 @@ Entry.skeleton.basic_without_next = {path:function(a) {
   return "m -8,0 l 8,8 8,-8 h %w a %h,%h 0 0,1 0, %wh H -8 z".replace(/%wh/gi, a).replace(/%w/gi, b).replace(/%h/gi, a / 2);
 }, magnets:function(a) {
   return {previous:{x:0, y:0}};
-}, box:Entry.skeleton.basic.box, contentPos:Entry.skeleton.basic.contentPos};
+}};
 Entry.Block = function(a, b) {
   Entry.Model(this, !1);
   this._schema = null;
@@ -15354,7 +15354,7 @@ Entry.ThreadView = function(a, b) {
     return e;
   };
   a.requestPartHeight = function(a, c) {
-    for (var d = this.thread.getBlocks(), e = d.pop(), f = a ? a.magnet.next.y : 0;e && e.view !== a && e.view;) {
+    for (var d = this.thread.getBlocks(), e = d.pop(), f = a && a.magnet.next ? a.magnet.next.y : 0;e && e.view !== a && e.view;) {
       e = e.view, f += e.magnet.next.y, e.dragMode === Entry.DRAG_MODE_DRAG && (f = 0), e = d.pop();
     }
     return f;

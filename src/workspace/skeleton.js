@@ -397,7 +397,7 @@ Entry.skeleton.basic_button = {
 
 Entry.skeleton.basic_without_next = {
     box: Entry.skeleton.basic.box,
-    contentPos: Entry.skeleton.basic.contentPos
+    contentPos: Entry.skeleton.basic.contentPos,
     path: function(blockView) {
         var width = blockView.contentWidth;
         var height = blockView.contentHeight;
