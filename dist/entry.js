@@ -9877,7 +9877,8 @@ Entry.BlockMockup = function(a) {
     b.init.call(this);
   };
   a.toJSON = function() {
-    var b = "", b = this.output ? "Boolean" === this.output ? "basic_boolean_field" : "basic_string_field" : !this.isPrev && this.isNext ? "basic_event" : this.statements.length ? "basic_loop" : "basic";
+    var b = "";
+    this.output ? b = "Boolean" === this.output ? "basic_boolean_field" : "basic_string_field" : !this.isPrev && this.isNext ? b = "basic_event" : this.statements.length ? b = "basic_loop" : this.isPrev && this.isNext ? b = "basic" : this.isPrev && !this.isNext && (b = "basic_without_next");
     return {color:this.color, skeleton:b, statements:this.statements, template:this.templates.filter(function(b) {
       return "string" === typeof b;
     }).join(" "), params:this.params};
@@ -13421,21 +13422,7 @@ Entry.BlockView.PARAM_SPACE = 5;
         switch(Entry.GlobalSvg.terminateDrag(this)) {
           case g.DONE:
             g = this._getCloseBlock();
-<<<<<<< HEAD
-            b || g ? g ? (this.set({animating:!0}), this.bindPrev(g), g instanceof Entry.Block || (g = g.requestBlock(this.block)), e.doInsert(g), createjs.Sound.play("entryMagneting"), Entry.ConnectionRipple.setView(g.view).dispose()) : (this._toGlobalCoordinate(), e.doSeparate()) : d != Entry.DRAG_MODE_DRAG || f || e.doMove();
-=======
-            if (b || g) {
-              if (g) {
-                if (this.set({animating:!0}), this.bindPrev(g), e.doInsert(g), createjs.Sound.play("entryMagneting"), Entry.ConnectionRipple.setView(g.view).dispose(), g.constructor == Entry.FieldDummyBlock && (e = e.next)) {
-                  -1 < Entry.FieldDummyBlock.PRIMITIVE_TYPES.indexOf(e.type) ? (e.getThread().cut(e), e.destroy(!1)) : (e.separate(), e.view.bumpAway());
-                }
-              } else {
-                this._toGlobalCoordinate(d), e.doSeparate();
-              }
-            } else {
-              d != Entry.DRAG_MODE_DRAG || f || e.doMove();
-            }
->>>>>>> origin/refac/entry-block
+            b || g ? g ? (this.set({animating:!0}), this.bindPrev(g), g instanceof Entry.Block || (g = g.requestBlock(this.block)), e.doInsert(g), createjs.Sound.play("entryMagneting"), Entry.ConnectionRipple.setView(g.view).dispose()) : (this._toGlobalCoordinate(d), e.doSeparate()) : d != Entry.DRAG_MODE_DRAG || f || e.doMove();
             break;
           case g.RETURN:
             e = this.block;
@@ -14491,26 +14478,26 @@ Entry.FieldStatement = function(a, b, c) {
     a.changeEvent.attach(this, this.calcHeight);
     this.calcHeight();
   };
-  a.align = function(a, c, d) {
+  a.align = function(b, a, d) {
     d = void 0 === d ? !0 : d;
     var e = this.svgGroup;
-    this._position && (this._position.x && (a = this._position.x), this._position.y && (c = this._position.y));
-    var f = "translate(" + a + "," + c + ")";
-    this.set({x:a, y:c});
+    this._position && (this._position.x && (b = this._position.x), this._position.y && (a = this._position.y));
+    var f = "translate(" + b + "," + a + ")";
+    this.set({x:b, y:a});
     d ? e.animate({transform:f}, 300, mina.easeinout) : e.attr({transform:f});
   };
   a.calcHeight = function() {
-    var a = this._thread.view.requestPartHeight(null);
-    this.set({height:Math.max(a, 20)});
+    var b = this._thread.view.requestPartHeight(null);
+    this.set({height:Math.max(b, 20)});
   };
   a.getValue = function() {
     return this.block.statements[this._index];
   };
   a.requestAbsoluteCoordinate = function() {
-    var a = this._blockView.getAbsoluteCoordinate();
-    a.x += this.x;
-    a.y += this.y;
-    return a;
+    var b = this._blockView.getAbsoluteCoordinate();
+    b.x += this.x;
+    b.y += this.y;
+    return b;
   };
   a.dominate = function() {
     this._blockView.dominate();
@@ -14519,22 +14506,22 @@ Entry.FieldStatement = function(a, b, c) {
   };
   a._updateBG = function() {
     if (this._board.dragBlock && this._board.dragBlock.dragInstance) {
-      var a = this;
-      if (a.magneting) {
-        var c = this._board.dragBlock.getShadow();
-        $(c).attr({transform:"translate(0,0)"});
-        this.svgGroup.appendChild(c);
-        this._clonedShadow = c;
-        a.background && (a.background.remove(), a.nextBackground.remove(), delete a.background, delete a.nextBackground);
-        c = this._board.dragBlock.getBelowHeight();
-        this.statementSvgGroup.attr({transform:"translate(0," + c + ")"});
-        this.set({height:this.height + c});
+      var b = this;
+      if (b.magneting) {
+        var a = this._board.dragBlock.getShadow();
+        $(a).attr({transform:"translate(0,0)"});
+        this.svgGroup.appendChild(a);
+        this._clonedShadow = a;
+        b.background && (b.background.remove(), b.nextBackground.remove(), delete b.background, delete b.nextBackground);
+        a = this._board.dragBlock.getBelowHeight();
+        this.statementSvgGroup.attr({transform:"translate(0," + a + ")"});
+        this.set({height:this.height + a});
       } else {
-        this._clonedShadow && (this._clonedShadow.remove(), delete this._clonedShadow), c = a.originalHeight, void 0 !== c && (setTimeout(function() {
-          a.background && (a.background.remove(), a.nextBackground.remove(), delete a.background, delete a.nextBackground);
-        }, Entry.ANIMATION_DURATION), delete a.originalHeight), this.statementSvgGroup.attr({transform:"translate(0,0)"}), this.calcHeight();
+        this._clonedShadow && (this._clonedShadow.remove(), delete this._clonedShadow), a = b.originalHeight, void 0 !== a && (setTimeout(function() {
+          b.background && (b.background.remove(), b.nextBackground.remove(), delete b.background, delete b.nextBackground);
+        }, Entry.ANIMATION_DURATION), delete b.originalHeight), this.statementSvgGroup.attr({transform:"translate(0,0)"}), this.calcHeight();
       }
-      (c = a.block.thread.changeEvent) && c.notify();
+      (a = b.block.thread.changeEvent) && a.notify();
     }
   };
   a.requestBlock = function(a) {
@@ -15018,6 +15005,15 @@ Entry.skeleton.basic_button = {path:function() {
 }, contentPos:function() {
   return {x:0, y:15};
 }, movable:!1, readOnly:!0, classes:["basicButtonView"]};
+Entry.skeleton.basic_without_next = {path:function(a) {
+  var b = a.contentWidth;
+  a = a.contentHeight;
+  a = Math.max(30, a + 2);
+  b = Math.max(0, b + 9 - a / 2);
+  return "m -8,0 l 8,8 8,-8 h %w a %h,%h 0 0,1 0, %wh H -8 z".replace(/%wh/gi, a).replace(/%w/gi, b).replace(/%h/gi, a / 2);
+}, magnets:function(a) {
+  return {previous:{x:0, y:0}};
+}, box:Entry.skeleton.basic.box, contentPos:Entry.skeleton.basic.contentPos};
 Entry.Block = function(a, b) {
   Entry.Model(this, !1);
   this._schema = null;

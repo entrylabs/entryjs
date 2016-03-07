@@ -395,3 +395,24 @@ Entry.skeleton.basic_button = {
     classes: ['basicButtonView']
 };
 
+Entry.skeleton.basic_without_next = {
+    box: Entry.skeleton.basic.box,
+    contentPos: Entry.skeleton.basic.contentPos
+    path: function(blockView) {
+        var width = blockView.contentWidth;
+        var height = blockView.contentHeight;
+        height = Math.max(30, height + 2);
+        width = Math.max(0, width + 9 - height / 2);
+        return "m -8,0 l 8,8 8,-8 h %w a %h,%h 0 0,1 0, %wh H -8 z"
+            .replace(/%wh/gi, height)
+            .replace(/%w/gi, width)
+            .replace(/%h/gi, height / 2);
+    },
+    magnets: function(blockView) {
+        // apply scale required.
+        var height = blockView ? Math.max(blockView.height, 30) : 30;
+        return {
+            previous: {x: 0, y: 0}
+        };
+    }
+};
