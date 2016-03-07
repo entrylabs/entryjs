@@ -13323,8 +13323,8 @@ Entry.BlockView.PARAM_SPACE = 5;
     this._moveTo(0, 0, !1);
     b.appendChild(this.svgGroup);
   };
-  a._toGlobalCoordinate = function() {
-    var b = this.getAbsoluteCoordinate();
+  a._toGlobalCoordinate = function(b) {
+    b = this.getAbsoluteCoordinate(b);
     this._moveTo(b.x, b.y, !1);
     this.getBoard().svgBlockGroup.appendChild(this.svgGroup);
   };
@@ -13406,7 +13406,6 @@ Entry.BlockView.PARAM_SPACE = 5;
     var a = this.getBoard(), d = this.dragMode, e = this.block, f = a.workspace.getMode();
     this.set({visible:!0});
     this.removeDragging();
-    this.dragMode = Entry.DRAG_MODE_NONE;
     if (f === Entry.Workspace.MODE_VIMBOARD) {
       a instanceof Entry.BlockMenu ? (a.terminateDrag(), this.vimBoardEvent(b, "dragEnd", e)) : a.clear();
     } else {
@@ -13423,7 +13422,7 @@ Entry.BlockView.PARAM_SPACE = 5;
                   -1 < Entry.FieldDummyBlock.PRIMITIVE_TYPES.indexOf(e.type) ? (e.getThread().cut(e), e.destroy(!1)) : (e.separate(), e.view.bumpAway());
                 }
               } else {
-                this._toGlobalCoordinate(), e.doSeparate();
+                this._toGlobalCoordinate(d), e.doSeparate();
               }
             } else {
               d != Entry.DRAG_MODE_DRAG || f || e.doMove();
@@ -13445,6 +13444,7 @@ Entry.BlockView.PARAM_SPACE = 5;
         a.setMagnetedBlock(null);
       }
     }
+    this.dragMode = Entry.DRAG_MODE_NONE;
     this.destroyShadow();
     delete this.originPos;
   };
@@ -13577,11 +13577,12 @@ Entry.BlockView.PARAM_SPACE = 5;
       }
     }
   };
-  a.getAbsoluteCoordinate = function() {
-    if (this.dragMode === Entry.DRAG_MODE_DRAG) {
+  a.getAbsoluteCoordinate = function(b) {
+    b = void 0 !== b ? b : this.dragMode;
+    if (b === Entry.DRAG_MODE_DRAG) {
       return {x:this.x, y:this.y};
     }
-    var b = this.block.getThread().view.requestAbsoluteCoordinate(this);
+    b = this.block.getThread().view.requestAbsoluteCoordinate(this);
     b.x += this.x;
     b.y += this.y;
     return b;
@@ -14190,19 +14191,19 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldIndicator);
   a.renderStart = function() {
     this.svgGroup = this._block.contentSvgGroup.elem("g");
     this._imgElement = this.svgGroup.elem("image", {href:this._imgUrl, x:this._position ? -1 * this._size : 0, y:-1 * this._size, width:2 * this._size, height:2 * this._size});
-    var a = "m 0,-%s a %s,%s 0 1,1 -0.1,0 z".replace(/%s/gi, this._size);
-    this._path = this.svgGroup.elem("path", {d:a, stroke:"none", fill:"none"});
+    var b = "m 0,-%s a %s,%s 0 1,1 -0.1,0 z".replace(/%s/gi, this._size);
+    this._path = this.svgGroup.elem("path", {d:b, stroke:"none", fill:"none"});
     this.box.set({width:this._size * this._boxMultiplier + (this._position ? -this._size : 0), height:this._size * this._boxMultiplier});
   };
   a.enableHighlight = function() {
-    var a = this._path.getTotalLength(), c = this._path;
-    this._path.attr({stroke:this._highlightColor, strokeWidth:2, "stroke-linecap":"round", "stroke-dasharray":a + " " + a, "stroke-dashoffset":a});
+    var b = this._path.getTotalLength(), a = this._path;
+    this._path.attr({stroke:this._highlightColor, strokeWidth:2, "stroke-linecap":"round", "stroke-dasharray":b + " " + b, "stroke-dashoffset":b});
     setInterval(function() {
-      c.attr({"stroke-dashoffset":a}).animate({"stroke-dashoffset":0}, 300);
+      a.attr({"stroke-dashoffset":b}).animate({"stroke-dashoffset":0}, 300);
     }, 1400, mina.easeout);
     setTimeout(function() {
       setInterval(function() {
-        c.animate({"stroke-dashoffset":-a}, 300);
+        a.animate({"stroke-dashoffset":-b}, 300);
       }, 1400, mina.easeout);
     }, 500);
   };
@@ -14222,35 +14223,35 @@ Entry.FieldKeyboard = function(a, b, c) {
 };
 Entry.Utils.inherit(Entry.Field, Entry.FieldKeyboard);
 (function(a) {
-  a.renderStart = function(a) {
-    var c = this;
-    this.svgGroup = a.contentSvgGroup.group();
+  a.renderStart = function(b) {
+    var a = this;
+    this.svgGroup = b.contentSvgGroup.group();
     this.svgGroup.attr({class:"entry-input-field"});
     this.textElement = this.svgGroup.text(4, 4, Entry.getKeyCodeMap()[this.getValue()]);
     this.textElement.attr({"font-size":"9pt"});
-    a = this.getTextWidth();
+    b = this.getTextWidth();
     var d = this.position && this.position.y ? this.position.y : 0;
-    this._header = this.svgGroup.rect(0, d - 8, a, 16, 3).attr({fill:"#fff", "fill-opacity":.4});
+    this._header = this.svgGroup.rect(0, d - 8, b, 16, 3).attr({fill:"#fff", "fill-opacity":.4});
     this.svgGroup.append(this.textElement);
-    this.svgGroup.mouseup(function(a) {
-      c._isEditable() && c.renderOptions();
+    this.svgGroup.mouseup(function(b) {
+      a._isEditable() && a.renderOptions();
     });
-    this.box.set({x:0, y:0, width:a, height:16});
+    this.box.set({x:0, y:0, width:b, height:16});
   };
   a.renderOptions = function() {
-    var a = this;
+    var b = this;
     this.destroyOption();
     this._optionVisible = !0;
     this.documentDownEvent = Entry.documentMousedown.attach(this, function() {
       Entry.documentMousedown.detach(this.documentDownEvent);
-      a.destroyOption();
+      b.destroyOption();
     });
     this.optionGroup = this.appendSvgOptionGroup();
     this.optionGroup.image(Entry.mediaFilePath + "/media/keyboard_workspace.png", -5, 0, 249, 106);
-    var c = this.getRelativePos();
-    c.x -= 5;
-    c.y += this.box.height / 2;
-    this.optionGroup.attr({class:"entry-field-keyboard", transform:"t" + c.x + " " + c.y});
+    var a = this.getRelativePos();
+    a.x -= 5;
+    a.y += this.box.height / 2;
+    this.optionGroup.attr({class:"entry-field-keyboard", transform:"t" + a.x + " " + a.y});
   };
   a.destroyOption = function() {
     this.documentDownEvent && (Entry.documentMousedown.detach(this.documentDownEvent), delete this.documentDownEvent);

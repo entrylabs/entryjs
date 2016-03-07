@@ -249,8 +249,8 @@ Entry.BlockView.PARAM_SPACE = 5;
         parentSvgGroup.appendChild(this.svgGroup);
     };
 
-    p._toGlobalCoordinate = function() {
-        var pos = this.getAbsoluteCoordinate();
+    p._toGlobalCoordinate = function(dragMode) {
+        var pos = this.getAbsoluteCoordinate(dragMode);
         this._moveTo(pos.x, pos.y, false);
         this.getBoard().svgBlockGroup.appendChild(this.svgGroup);
     };
@@ -450,7 +450,6 @@ Entry.BlockView.PARAM_SPACE = 5;
         var workspaceMode = board.workspace.getMode();
         this.set({visible:true});
         this.removeDragging();
-        this.dragMode = Entry.DRAG_MODE_NONE;
 
         if (workspaceMode === Entry.Workspace.MODE_VIMBOARD) {
             if (board instanceof Entry.BlockMenu) {
@@ -498,7 +497,7 @@ Entry.BlockView.PARAM_SPACE = 5;
                                     }
                                 }
                             } else {
-                                this._toGlobalCoordinate();
+                                this._toGlobalCoordinate(dragMode);
                                 block.doSeparate();
                             }
                         }
@@ -533,6 +532,7 @@ Entry.BlockView.PARAM_SPACE = 5;
             }
         }
 
+        this.dragMode = Entry.DRAG_MODE_NONE;
         this.destroyShadow();
         delete this.originPos;
         return;
@@ -762,8 +762,9 @@ Entry.BlockView.PARAM_SPACE = 5;
         }
     };
 
-    p.getAbsoluteCoordinate = function() {
-        if (this.dragMode === Entry.DRAG_MODE_DRAG)
+    p.getAbsoluteCoordinate = function(dragMode) {
+        dragMode = dragMode !== undefined ? dragMode : this.dragMode;
+        if (dragMode === Entry.DRAG_MODE_DRAG)
             return {x: this.x, y: this.y};
         var threadView = this.block.getThread().view;
         var pos = threadView.requestAbsoluteCoordinate(this);
