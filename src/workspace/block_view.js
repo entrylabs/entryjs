@@ -734,7 +734,14 @@ Entry.BlockView.PARAM_SPACE = 5;
         return {cx:pos.x, cy:pos.y};
     };
 
-    p.bumpAway = function() {this._moveBy(10, 10, false);};
+    p.bumpAway = function(delay) {
+        var that = this;
+        if (delay) {
+            window.setTimeout(function() {
+                that._moveBy(10, 10, false);
+            }, delay);
+        } else that._moveBy(10, 10, false);
+    };
 
     p.bindPrev = function(prevBlock) {
         if (prevBlock) {
@@ -742,7 +749,13 @@ Entry.BlockView.PARAM_SPACE = 5;
             var nextBlock = prevBlock.getNextBlock();
             if (nextBlock && nextBlock !== this.block) {
                 var endBlock = this.block.getLastBlock();
-                nextBlock.view._toLocalCoordinate(endBlock.view._nextGroup);
+                if (this.magnet.next)
+                    nextBlock.view._toLocalCoordinate(endBlock.view._nextGroup);
+                else {
+                    nextBlock.view._toGlobalCoordinate();
+                    nextBlock.separate();
+                    nextBlock.view.bumpAway(10);
+                }
             }
         } else {
             prevBlock = this.block.getPrevBlock();

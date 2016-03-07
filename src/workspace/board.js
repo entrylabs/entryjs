@@ -430,7 +430,9 @@ Entry.Board = function(option) {
                 break;
             cursorY += blockView.y;
             cursorX += blockView.x;
-            var endPoint = cursorY + blockView.magnet.next.y + 1;
+            var endPoint = cursorY + 1;
+            if (blockView.magnet.next)
+                endPoint += blockView.magnet.next.y;
             metaData.push({
                 point: cursorY,
                 endPoint: endPoint,
@@ -467,8 +469,10 @@ Entry.Board = function(option) {
                             })
                         );
                 }
-            cursorY += blockView.magnet.next.y;
-            cursorX += blockView.magnet.next.x;
+            if (blockView.magnet.next) {
+                cursorY += blockView.magnet.next.y;
+                cursorX += blockView.magnet.next.x;
+            }
         }
         return statementBlocks.concat(metaData);
     };
