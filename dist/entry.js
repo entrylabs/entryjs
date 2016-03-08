@@ -9900,7 +9900,8 @@ Entry.BlockMockup = function(a) {
   };
   a.appendField = function(b) {
     "string" === typeof b && 0 < b.length ? this.templates.push(b) : b instanceof Blockly.FieldIcon ? ("start" === b.type ? this.params.push({type:"Indicator", img:b.src_, size:17, position:{x:0, y:-2}}) : this.params.push({type:"Indicator", img:b.src_, size:12}), this.templates.push(this.getFieldCount())) : b instanceof Blockly.FieldDropdown ? (this.params.push({type:"Dropdown", options:b.menuGenerator_, value:b.menuGenerator_[0][1], fontSize:11}), this.templates.push(this.getFieldCount())) : b instanceof 
-    Blockly.FieldDropdownDynamic ? (this.params.push({type:"Dropdown", options:[["\ub300\uc0c1 \uc5c6\uc74c", "null"]], value:"null", fontSize:11}), this.templates.push(this.getFieldCount())) : b instanceof Blockly.FieldTextInput ? (this.params.push({type:"TextInput", value:10}), this.templates.push(this.getFieldCount())) : b instanceof Blockly.FieldAngle ? console.log(b) : b instanceof Blockly.FieldKeydownInput && (this.params.push({type:"Keyboard", value:81}), this.templates.push(this.getFieldCount()));
+    Blockly.FieldDropdownDynamic ? (this.params.push({type:"Dropdown", options:[["\ub300\uc0c1 \uc5c6\uc74c", "null"]], value:"null", fontSize:11}), this.templates.push(this.getFieldCount())) : b instanceof Blockly.FieldTextInput ? (this.params.push({type:"TextInput", value:10}), this.templates.push(this.getFieldCount())) : b instanceof Blockly.FieldAngle ? console.log(b) : b instanceof Blockly.FieldKeydownInput ? (this.params.push({type:"Keyboard", value:81}), this.templates.push(this.getFieldCount())) : 
+    b instanceof Blockly.FieldColour && (this.params.push({type:"Color"}), this.templates.push(this.getFieldCount()));
     return this;
   };
   a.setColour = function(b) {
@@ -14105,43 +14106,38 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldColor);
 (function(a) {
   a.renderStart = function(b) {
     var a = this;
-    this.svgGroup = b.contentSvgGroup.group();
-    this.svgGroup.attr({class:"entry-field-color"});
+    this.svgGroup = b.contentSvgGroup.elem("g", {class:"entry-field-color"});
     var d = this._position;
     d ? (b = d.x || 0, d = d.y || 0) : (b = 0, d = -8);
-    this._header = this.svgGroup.rect(b, d, 14.5, 16, 0).attr({fill:this.getValue()});
-    this.svgGroup.mouseup(function(b) {
+    this._header = this.svgGroup.elem("rect", {x:b, y:d, width:14.5, height:16, fill:this.getValue()});
+    this.svgGroup.onmouseup = function(b) {
       a._isEditable() && a.renderOptions();
-    });
+    };
     this.box.set({x:b, y:d, width:14.5, height:16});
   };
   a.renderOptions = function() {
     var b = this;
     this.destroyOption();
-    var a = this._block.view;
     this.documentDownEvent = Entry.documentMousedown.attach(this, function() {
       Entry.documentMousedown.detach(this.documentDownEvent);
       b.optionGroup.remove();
     });
-    var d = Entry.FieldColor.getWidgetColorList();
+    var a = Entry.FieldColor.getWidgetColorList();
     this.optionGroup = Entry.Dom("table", {class:"entry-widget-color-table", parent:$("body")});
-    for (var e = 0;e < d.length;e++) {
-      for (var f = Entry.Dom("tr", {class:"entry-widget-color-row", parent:this.optionGroup}), g = 0;g < d[e].length;g++) {
-        var h = Entry.Dom("td", {class:"entry-widget-color-cell", parent:f}), k = d[e][g];
-        h.css({"background-color":k});
-        h.attr({"data-color-value":k});
+    for (var d = 0;d < a.length;d++) {
+      for (var e = Entry.Dom("tr", {class:"entry-widget-color-row", parent:this.optionGroup}), f = 0;f < a[d].length;f++) {
+        var g = Entry.Dom("td", {class:"entry-widget-color-cell", parent:e}), h = a[d][f];
+        g.css({"background-color":h});
+        g.attr({"data-color-value":h});
         (function(a, c) {
           a.mousedown(function() {
             b.applyValue(c);
             b.destroyOption();
           });
-        })(h, k);
+        })(g, h);
       }
     }
-    a.svgGroup.transform();
-    a.getBoard().svgDom.offset();
-    a.getContentPos();
-    a = this.getAbsolutePos();
+    a = this.getAbsolutePosFromDocument();
     a.y += this.box.height / 2 + 1;
     this.optionGroup.css({left:a.x, top:a.y});
   };
@@ -14645,10 +14641,10 @@ Entry.GlobalSvg = {};
     this.svgGroup && (this.svgGroup.remove(), delete this.svgGroup, delete this._view, delete this._offsetX, delete this._offsetY, delete this._startX, delete this._startY, this.hide());
   };
   a.align = function() {
-    var a = this._view.getSkeleton().box(this._view).offsetX || 0, c = this._view.getSkeleton().box(this._view).offsetY || 0, a = -1 * a + 1, c = -1 * c + 1;
-    this._offsetX = a;
-    this._offsetY = c;
-    this.svgGroup.attr({transform:"translate(" + a + "," + c + ")"});
+    var b = this._view.getSkeleton().box(this._view).offsetX || 0, a = this._view.getSkeleton().box(this._view).offsetY || 0, b = -1 * b + 1, a = -1 * a + 1;
+    this._offsetX = b;
+    this._offsetY = a;
+    this.svgGroup.attr({transform:"translate(" + b + "," + a + ")"});
   };
   a.show = function() {
     this.svgDom.css("display", "block");

@@ -157,6 +157,11 @@ Entry.BlockMockup = function(blocklyInfo) {
                     value: 81
                 });
                 this.templates.push(this.getFieldCount());
+            } else if (field instanceof Blockly.FieldColour) {
+                this.params.push({
+                    type: "Color"
+                });
+                this.templates.push(this.getFieldCount());
             } else {
                 //console.log('else', field);
             }
