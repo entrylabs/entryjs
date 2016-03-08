@@ -1067,13 +1067,13 @@ Blockly.Blocks.robotis_carCont_cm_led = {
   init: function() {
     this.setColour("#00979D");
     this.appendDummyInput()
-    .appendField(Lang.Blocks.robotis_cm_led_left)
+    .appendField(Lang.Blocks.robotis_cm_led_4)
     .appendField(new Blockly.FieldDropdown([
       [Lang.Blocks.robotis_common_on,"1"],
       [Lang.Blocks.robotis_common_off,"0"]
       ]), "VALUE_LEFT")
   	.appendField(', ')
-    .appendField(Lang.Blocks.robotis_cm_led_right)
+    .appendField(Lang.Blocks.robotis_cm_led_1)
     .appendField(new Blockly.FieldDropdown([
       [Lang.Blocks.robotis_common_on,"1"],
       [Lang.Blocks.robotis_common_off,"0"]
