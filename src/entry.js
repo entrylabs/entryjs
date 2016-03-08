@@ -53,13 +53,10 @@ Entry.loadProject = function(project) {
  * @param {?Project} project
  */
 Entry.exportProject = function(project) {
-    if (!project) {
-        project = {};
-    }
+    if (!project) project = {};
 
-    if (!Entry.engine.isState('stop')) {
+    if (!Entry.engine.isState('stop'))
         Entry.engine.toggleStop();
-    }
 
     if (Entry.Func &&
         Entry.Func.workspace &&

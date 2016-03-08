@@ -468,7 +468,10 @@ Entry.BlockView.PARAM_SPACE = 5;
                 var fromBlockMenu = this.dragInstance && this.dragInstance.isNew;
                 if (fromBlockMenu) {
                     var removed = board.workspace.blockMenu.terminateDrag();
-                    if (!removed) block.doAdd();
+                    if (!removed) {
+                        block.doAdd();
+                        block._updatePos();
+                    }
                 }
 
                 var gs = Entry.GlobalSvg;

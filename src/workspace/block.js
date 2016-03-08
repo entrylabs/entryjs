@@ -28,7 +28,6 @@ Entry.Block.MAGNET_OFFSET = 0.4;
 (function(p) {
     p.schema = {
         id: null,
-        name: null,
         x: 0,
         y: 0,
         type: null,
@@ -153,6 +152,14 @@ Entry.Block.MAGNET_OFFSET = 0.4;
         json.statements = json.statements.map(
             function(s) {return s.toJSON(isNew);}
         );
+
+        json.x = this.x;
+        json.y = this.y;
+
+        console.log(this.x);
+        json.movable = this.movable;
+        json.deletable = this.deletable;
+        json.readOnly = this.readOnly;
         return json;
     };
 
