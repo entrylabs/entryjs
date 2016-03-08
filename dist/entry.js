@@ -9900,7 +9900,7 @@ Entry.BlockMockup = function(a) {
   };
   a.appendField = function(b) {
     "string" === typeof b && 0 < b.length ? this.templates.push(b) : b instanceof Blockly.FieldIcon ? ("start" === b.type ? this.params.push({type:"Indicator", img:b.src_, size:17, position:{x:0, y:-2}}) : this.params.push({type:"Indicator", img:b.src_, size:12}), this.templates.push(this.getFieldCount())) : b instanceof Blockly.FieldDropdown ? (this.params.push({type:"Dropdown", options:b.menuGenerator_, value:b.menuGenerator_[0][1], fontSize:11}), this.templates.push(this.getFieldCount())) : b instanceof 
-    Blockly.FieldDropdownDynamic ? (this.params.push({type:"Dropdown", options:[["\ub300\uc0c1 \uc5c6\uc74c", "null"]], value:"null", fontSize:11}), this.templates.push(this.getFieldCount())) : b instanceof Blockly.FieldTextInput && (this.params.push({type:"TextInput", value:10}), this.templates.push(this.getFieldCount()));
+    Blockly.FieldDropdownDynamic ? (this.params.push({type:"Dropdown", options:[["\ub300\uc0c1 \uc5c6\uc74c", "null"]], value:"null", fontSize:11}), this.templates.push(this.getFieldCount())) : b instanceof Blockly.FieldTextInput ? (this.params.push({type:"TextInput", value:10}), this.templates.push(this.getFieldCount())) : b instanceof Blockly.FieldAngle ? console.log(b) : b instanceof Blockly.FieldKeydownInput && (this.params.push({type:"Keyboard", value:81}), this.templates.push(this.getFieldCount()));
     return this;
   };
   a.setColour = function(b) {
@@ -14169,8 +14169,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
 (function(a) {
   a.renderStart = function(b) {
     var a = this;
-    this.svgGroup = b.contentSvgGroup.elem("g");
-    this.svgGroup.attr({class:"entry-field-dropdown"});
+    this.svgGroup = b.contentSvgGroup.elem("g", {class:"entry-field-dropdown"});
     this.textElement = this.svgGroup.elem("text", {x:2});
     this.textElement.innerHTML = this.getTextByValue(this.getValue());
     var d = this.textElement.getBBox();
@@ -14194,17 +14193,16 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
   a.renderOptions = function() {
     var b = this;
     this.destroyOption();
-    var a = this._block.view;
     this.documentDownEvent = Entry.documentMousedown.attach(this, function() {
       Entry.documentMousedown.detach(this.documentDownEvent);
       b.optionGroup.remove();
     });
-    this.optionGroup = a.getBoard().svgGroup.elem("g");
-    var d = this._contents.options, a = [], e = 0;
-    a.push(this.optionGroup.elem("rect", {height:23 * d.length, fill:"white"}));
-    for (var f = 0, g = d.length;f < g;f++) {
-      var h = d[f], k = h[0], h = h[1], l = this.optionGroup.elem("g", {class:"rect", transform:"translate(0," + 23 * f + ")"});
-      a.push(l.elem("rect", {height:23}));
+    this.optionGroup = this.appendSvgOptionGroup();
+    var a = this._contents.options, d = [], e = 0;
+    d.push(this.optionGroup.elem("rect", {height:23 * a.length, fill:"white"}));
+    for (var f = 0, g = a.length;f < g;f++) {
+      var h = a[f], k = h[0], h = h[1], l = this.optionGroup.elem("g", {class:"rect", transform:"translate(0," + 23 * f + ")"});
+      d.push(l.elem("rect", {height:23}));
       this.getValue() == h && (l.elem("text", {x:5, y:13, "alignment-baseline":"central"}).innerHTML = "\u2713");
       var n = l.elem("text", {x:20, y:13, "alignment-baseline":"central"});
       n.innerHTML = k;
@@ -14220,14 +14218,14 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
         };
       })(l, h);
     }
-    d = -e / 2 + this.box.width / 2;
+    a = -e / 2 + this.box.width / 2;
     f = this.box.height / 2;
     g = this.getAbsolutePosFromBoard();
-    g.x += d;
+    g.x += a;
     g.y += f;
     this.optionGroup.attr({class:"entry-field-dropdown", transform:"translate(" + g.x + "," + g.y + ")"});
     var m = {width:e};
-    a.forEach(function(b) {
+    d.forEach(function(b) {
       b.attr(m);
     });
   };
@@ -14326,17 +14324,16 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldKeyboard);
 (function(a) {
   a.renderStart = function(b) {
     var a = this;
-    this.svgGroup = b.contentSvgGroup.group();
-    this.svgGroup.attr({class:"entry-input-field"});
-    this.textElement = this.svgGroup.text(4, 4, Entry.getKeyCodeMap()[this.getValue()]);
-    this.textElement.attr({"font-size":"9pt"});
+    this.svgGroup = b.contentSvgGroup.elem("g", {class:"entry-input-field"});
+    this.textElement = this.svgGroup.elem("text").attr({x:4, y:4, "font-size":"9pt"});
+    this.textElement.innerHTML = Entry.getKeyCodeMap()[this.getValue()];
     b = this.getTextWidth();
     var d = this.position && this.position.y ? this.position.y : 0;
-    this._header = this.svgGroup.rect(0, d - 8, b, 16, 3).attr({fill:"#fff", "fill-opacity":.4});
-    this.svgGroup.append(this.textElement);
-    this.svgGroup.mouseup(function(b) {
+    this._header = this.svgGroup.elem("rect", {x:0, y:d - 8, width:b, height:16, rx:3, ry:3, fill:"#fff", "fill-opacity":.4});
+    this.svgGroup.appendChild(this.textElement);
+    this.svgGroup.onmouseup = function(b) {
       a._isEditable() && a.renderOptions();
-    });
+    };
     this.box.set({x:0, y:0, width:b, height:16});
   };
   a.renderOptions = function() {
@@ -14347,28 +14344,28 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldKeyboard);
       Entry.documentMousedown.detach(this.documentDownEvent);
       b.destroyOption();
     });
-    this.optionGroup = this.appendSvgOptionGroup();
-    this.optionGroup.image(Entry.mediaFilePath + "/media/keyboard_workspace.png", -5, 0, 249, 106);
-    var a = this.getRelativePos();
+    var a = this.getAbsolutePosFromBoard();
     a.x -= 5;
     a.y += this.box.height / 2;
-    this.optionGroup.attr({class:"entry-field-keyboard", transform:"t" + a.x + " " + a.y});
+    this.optionGroup = this.appendSvgOptionGroup();
+    this.optionGroup.elem("image", {href:Entry.mediaFilePath + "/media/keyboard_workspace.png", x:-5, y:0, width:249, height:106, class:"entry-field-keyboard", transform:"translate(" + a.x + "," + a.y + ")"});
   };
   a.destroyOption = function() {
     this.documentDownEvent && (Entry.documentMousedown.detach(this.documentDownEvent), delete this.documentDownEvent);
     this.optionGroup && (this.optionGroup.remove(), delete this.optionGroup);
     this._optionVisible = !1;
   };
-  a._keyboardControl = function(b, a) {
-    a.stopPropagation();
+  a._keyboardControl = function(b) {
+    b.stopPropagation();
     if (this._optionVisible) {
-      var d = a.keyCode, e = Entry.getKeyCodeMap()[d];
-      void 0 !== e && this.applyValue(e, d);
+      b = b.keyCode;
+      var a = Entry.getKeyCodeMap()[b];
+      void 0 !== a && this.applyValue(a, b);
     }
   };
   a.applyValue = function(b, a) {
     this.destroyOption();
-    this.getValue() != a && (this.setValue(a), this.textElement.node.textContent = b, this.resize());
+    this.getValue() != a && (this.setValue(a), this.textElement.innerHTML = b, this.resize());
   };
   a.resize = function() {
     var b = this.getTextWidth();
@@ -14377,7 +14374,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldKeyboard);
     this._block.view.alignContent();
   };
   a.getTextWidth = function() {
-    return this.textElement.node.getComputedTextLength() + 8;
+    return this.textElement.getComputedTextLength() + 8;
   };
   a.destroy = function() {
     this.destroyOption();
@@ -14593,8 +14590,8 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
     });
     this.optionGroup = Entry.Dom("input", {class:"entry-widget-input-field", parent:$("body")});
     this.optionGroup.val(this.getValue());
-    this.optionGroup.on("mousedown", function(a) {
-      a.stopPropagation();
+    this.optionGroup.on("mousedown", function(b) {
+      b.stopPropagation();
     });
     this.optionGroup.on("keyup", function(a) {
       var c = a.keyCode || a.which;
@@ -14605,17 +14602,17 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
     this.optionGroup.css({height:16, left:a.x, top:a.y, width:b.box.width});
     this.optionGroup.focus();
   };
-  a.applyValue = function(a) {
-    a = this.optionGroup.val();
-    this.setValue(a);
+  a.applyValue = function(b) {
+    b = this.optionGroup.val();
+    this.setValue(b);
     this.textElement.textContent = this.truncate();
     this.resize();
   };
   a.resize = function() {
-    var a = this.getTextWidth();
-    this._header.attr({width:a});
-    this.optionGroup.css({width:a});
-    this.box.set({width:a});
+    var b = this.getTextWidth();
+    this._header.attr({width:b});
+    this.optionGroup.css({width:b});
+    this.box.set({width:b});
     this._block.view.alignContent();
   };
   a.getTextWidth = function() {
@@ -14630,17 +14627,17 @@ Entry.GlobalSvg = {};
   a.createDom = function() {
     this.svgDom || (this.svgDom = Entry.Dom($('<svg id="globalSvg" width="200" height="200"version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'), {parent:$("body")}), this.svgDom.css({position:"fixed", width:1, height:1, display:"none", overflow:"visible", "z-index":"1111", opacity:.8}), this.svg = Entry.SVG("globalSvg"), this.top = this.left = this.width = 0);
   };
-  a.setView = function(a, c) {
-    if (a != this._view && !a.block.isReadOnly() && a.movable) {
-      return this._view = a, this._mode = c, this.draw(), this.align(), this.position(), !0;
+  a.setView = function(b, a) {
+    if (b != this._view && !b.block.isReadOnly() && b.movable) {
+      return this._view = b, this._mode = a, this.draw(), this.align(), this.position(), !0;
     }
   };
   a.draw = function() {
-    var a = this._view;
+    var b = this._view;
     this._svg && this.remove();
-    var c = this._mode == Entry.Workspace.MODE_VIMBOARD;
-    this.svgGroup = Entry.SVG.createElement(a.svgGroup.cloneNode(!0), {opacity:1});
-    c && (a = this.svgGroup, a.selectAll("path").animate({opacity:0}, 500, mina.easeinout), a.selectAll("text").animate({fill:"#000000"}, 530, mina.easeinout));
+    var a = this._mode == Entry.Workspace.MODE_VIMBOARD;
+    this.svgGroup = Entry.SVG.createElement(b.svgGroup.cloneNode(!0), {opacity:1});
+    a && (b = this.svgGroup, b.selectAll("path").animate({opacity:0}, 500, mina.easeinout), b.selectAll("text").animate({fill:"#000000"}, 530, mina.easeinout));
     this.svg.appendChild(this.svgGroup);
     this.show();
   };

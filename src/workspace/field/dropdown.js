@@ -41,8 +41,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
         var contents = this._contents;
 
 
-        this.svgGroup = blockView.contentSvgGroup.elem("g");
-        this.svgGroup.attr({
+        this.svgGroup = blockView.contentSvgGroup.elem("g", {
             class: 'entry-field-dropdown'
         });
 
@@ -123,8 +122,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
             }
         );
 
-        this.optionGroup =
-            blockView.getBoard().svgGroup.elem("g");
+        this.optionGroup = this.appendSvgOptionGroup();
 
         var options = this._contents.options;
 

@@ -479,7 +479,7 @@ Entry.Board = function(option) {
 
     p.getNearestMagnet = function(x, y, targetType) {
         var targetArray = this._magnetMap[targetType];
-        if (!targetArray || targetArray.length ===0 ) return;
+        if (!targetArray || targetArray.length ===0) return;
 
         var minIndex = 0,
             maxIndex = targetArray.length - 1,

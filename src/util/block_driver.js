@@ -150,7 +150,15 @@ Entry.BlockMockup = function(blocklyInfo) {
                 });
                 this.templates.push(this.getFieldCount());
             } else if (field instanceof Blockly.FieldAngle) {
+                console.log(field);
+            } else if (field instanceof Blockly.FieldKeydownInput) {
+                this.params.push({
+                    type: "Keyboard",
+                    value: 81
+                });
+                this.templates.push(this.getFieldCount());
             } else {
+                //console.log('else', field);
             }
         }
         return this;
