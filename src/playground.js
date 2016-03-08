@@ -13,12 +13,6 @@ goog.require("Entry.BlockDriver");
  * @constructor
  */
 Entry.Playground = function() {
-    /**
-     * apply menu blocks by object type
-     * @type {dictionary}
-     */
-    this.menuBlocks_ = {};
-
     this.isTextBGMode_ = false;
 
     this.enableArduino = false;
@@ -770,8 +764,8 @@ Entry.Playground.prototype.injectObject = function(object) {
         this.object = null;
         return;
     }
-    if (object === this.object)
-        return;
+    if (object === this.object) return;
+
     if (this.object) {
         this.object.toggleInformation(false);
     }
@@ -815,8 +809,7 @@ Entry.Playground.prototype.injectCode = function() {
  */
 Entry.Playground.prototype.injectPicture = function() {
     var view = this.pictureListView_;
-    if (!view)
-        return;
+    if (!view) return;
     while (view.hasChildNodes()) {
         view.removeChild(view.lastChild);
     }

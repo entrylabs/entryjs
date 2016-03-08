@@ -5793,7 +5793,7 @@ Entry.Engine.prototype.run = function() {
 };
 Entry.Engine.prototype.toggleRun = function() {
   Entry.addActivity("run");
-  "stop" == this.state && (Entry.playground.syncObject(), Entry.container.mapEntity(function(a) {
+  "stop" == this.state && (Entry.container.mapEntity(function(a) {
     a.takeSnapshot();
   }), Entry.variableContainer.mapVariable(function(a) {
     a.takeSnapshot();
@@ -15882,7 +15882,6 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
   };
 })(Entry.Workspace.prototype);
 Entry.Playground = function() {
-  this.menuBlocks_ = {};
   this.enableArduino = this.isTextBGMode_ = !1;
   this.viewMode_ = "default";
   Entry.addEventListener("textEdited", this.injectText);
