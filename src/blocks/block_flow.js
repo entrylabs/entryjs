@@ -309,7 +309,8 @@ Blockly.Blocks.repeat_while_true = {
                     [Lang.Blocks.FLOW_repeat_while_true_until,"until"],
                     [Lang.Blocks.FLOW_repeat_while_true_while,"while"]
                     ]), "OPTION")
-                    .appendField(Lang.Blocks.FLOW_repeat_while_true_2);
+                    .appendField(Lang.Blocks.FLOW_repeat_while_true_2)
+                    .appendField(new Blockly.FieldIcon(Entry.mediaFilePath + 'block_icon/flow_03.png', '*'));
             this.appendStatementInput('DO');
             this.setInputsInline(true);
             this.setPreviousStatement(true);
@@ -323,9 +324,10 @@ Blockly.Blocks.repeat_while_true = {
                     [Lang.Blocks.FLOW_repeat_while_true_while,"while"]
                     ]), "OPTION");
             this.appendValueInput("BOOL")
-            .setCheck("Boolean");
+                .setCheck("Boolean");
             this.appendDummyInput()
-                    .appendField(Lang.Blocks.FLOW_repeat_while_true_2);
+                    .appendField(Lang.Blocks.FLOW_repeat_while_true_2)
+                    .appendField(new Blockly.FieldIcon(Entry.mediaFilePath + 'block_icon/flow_03.png', '*'));
             this.appendStatementInput('DO');
             this.setInputsInline(true);
             this.setPreviousStatement(true);
