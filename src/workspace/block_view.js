@@ -469,8 +469,8 @@ Entry.BlockView.PARAM_SPACE = 5;
                 if (fromBlockMenu) {
                     var removed = board.workspace.blockMenu.terminateDrag();
                     if (!removed) {
-                        block.doAdd();
                         block._updatePos();
+                        block.doAdd();
                     }
                 }
 

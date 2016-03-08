@@ -13418,7 +13418,7 @@ Entry.BlockView.PARAM_SPACE = 5;
       a instanceof Entry.BlockMenu ? (a.terminateDrag(), this.vimBoardEvent(b, "dragEnd", e)) : a.clear();
     } else {
       if (d !== Entry.DRAG_MODE_MOUSEDOWN) {
-        (f = this.dragInstance && this.dragInstance.isNew) && !a.workspace.blockMenu.terminateDrag() && (e.doAdd(), e._updatePos());
+        (f = this.dragInstance && this.dragInstance.isNew) && !a.workspace.blockMenu.terminateDrag() && (e._updatePos(), e.doAdd());
         var g = Entry.GlobalSvg;
         b = this.block.getPrevBlock();
         switch(Entry.GlobalSvg.terminateDrag(this)) {
