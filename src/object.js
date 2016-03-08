@@ -23,41 +23,6 @@ Entry.EntryObject = function(model) {
         if (!this.objectType)
             this.objectType = 'sprite';
 
-        model.script = [
-            [
-                {
-                    type: "when_run_button_click",
-                    x: 40,
-                    y: 240
-                },
-                {
-                    type: "move_direction"
-                },
-                {
-                    type: "stop_repeat"
-                },
-                {
-                    type: "move_direction"
-                },
-                {
-                    type: "repeat_basic",
-                    statements: [
-                        [
-                            {type: "move_direction"},
-                            {type: "move_x"},
-                            {type: "move_y"},
-                            {type: "stop_repeat"}
-                        ]
-                    ]
-                },
-                {
-                    type: "stop_repeat"
-                },
-                {
-                    type: "move_direction"
-                }
-            ]
-        ];
         this.script = new Entry.Code(model.script ? model.script : []);
 
         /** @type {Array.<picture object>} */
