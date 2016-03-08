@@ -9699,11 +9699,11 @@ Entry.StateManager.prototype.addCommand = function(a, b, c, d) {
     } else {
       e = new Entry.State, f = Array.prototype.slice.call(arguments), Entry.State.prototype.constructor.apply(e, f), this.undoStack_.push(e), Entry.reporter && Entry.reporter.report(e), this.updateView();
     }
-    Entry.dispatchEvent("saveLocalStorageProject");
+    Entry.creationChangedEvent && Entry.creationChangedEvent.notify();
   }
 };
 Entry.StateManager.prototype.cancelLastCommand = function() {
-  this.canUndo() && (this.undoStack_.pop(), this.updateView(), Entry.dispatchEvent("saveLocalStorageProject"));
+  this.canUndo() && (this.undoStack_.pop(), this.updateView(), Entry.creationChangedEvent && Entry.creationChangedEvent.notify());
 };
 Entry.StateManager.prototype.undo = function() {
   if (this.canUndo() && !this.isRestoring()) {
@@ -9713,7 +9713,7 @@ Entry.StateManager.prototype.undo = function() {
     a.func.apply(a.caller, a.params);
     this.updateView();
     this.endRestore();
-    Entry.dispatchEvent("saveLocalStorageProject");
+    Entry.creationChangedEvent && Entry.creationChangedEvent.notify();
   }
 };
 Entry.StateManager.prototype.redo = function() {
@@ -9722,7 +9722,7 @@ Entry.StateManager.prototype.redo = function() {
     var a = this.redoStack_.pop();
     a.func.apply(a.caller, a.params);
     this.updateView();
-    Entry.dispatchEvent("saveLocalStorageProject");
+    Entry.creationChangedEvent && Entry.creationChangedEvent.notify();
   }
 };
 Entry.StateManager.prototype.updateView = function() {
@@ -13603,6 +13603,7 @@ Entry.Code = function(a) {
   this.executors = [];
   this.executeEndEvent = new Entry.Event(this);
   this.changeEvent = new Entry.Event(this);
+  this.changeEvent.attach(this, this._handleChange);
   this.load(a);
 };
 (function(a) {
@@ -13714,6 +13715,9 @@ Entry.Code = function(a) {
   a.dominate = function(b) {
     var a = this._data, d = a.indexOf(b);
     0 > d || (a.splice(d, 1), a.push(b));
+  };
+  a._handleChange = function() {
+    Entry.creationChangedEvent && Entry.creationChangedEvent.notify();
   };
 })(Entry.Code.prototype);
 Entry.CodeView = function(a, b) {
@@ -15883,8 +15887,6 @@ Entry.Playground = function() {
   this.enableArduino = this.isTextBGMode_ = !1;
   this.viewMode_ = "default";
   Entry.addEventListener("textEdited", this.injectText);
-  Entry.addEventListener("entryBlocklyChanged", this.editBlock);
-  Entry.addEventListener("entryBlocklyMouseUp", this.mouseupBlock);
   Entry.addEventListener("hwChanged", this.updateHW);
 };
 Entry.Playground.prototype.generateView = function(a, b) {
@@ -16299,7 +16301,7 @@ Entry.Playground.prototype.injectObject = function(a) {
     this.changeViewMode("default"), this.object = null;
   } else {
     if (a !== this.object) {
-      this.object && (this.syncObject(this.object), this.object.toggleInformation(!1));
+      this.object && this.object.toggleInformation(!1);
       this.object = a;
       this.setMenu(a.objectType);
       this.injectCode();
@@ -16474,8 +16476,6 @@ Entry.Playground.prototype.toggleOffVariableView = function() {
   this.showBlockMenu();
   this.variableView_.addClass("entryRemove");
 };
-Entry.Playground.prototype.syncObject = function(a) {
-};
 Entry.Playground.prototype.editBlock = function() {
   var a = Entry.playground;
   Entry.stateManager && Entry.stateManager.addCommand("edit block", a, a.restoreBlock, a.object, a.object.getScriptText());
@@ -16490,10 +16490,8 @@ Entry.Playground.prototype.restoreBlock = function(a, b) {
   Entry.container.selectObject(a.id);
   Entry.stateManager && Entry.stateManager.addCommand("restore block", this, this.restoreBlock, this.object, this.object.getScriptText());
   Blockly.Xml.textToDom(b);
-  this.syncObject();
 };
 Entry.Playground.prototype.syncObjectWithEvent = function(a) {
-  Entry.playground.syncObject();
 };
 Entry.Playground.prototype.setMenu = function(a) {
   if (this.currentObjectType != a) {

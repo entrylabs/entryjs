@@ -22,6 +22,7 @@ Entry.Code = function(code) {
 
     this.executeEndEvent = new Entry.Event(this);
     this.changeEvent = new Entry.Event(this);
+    this.changeEvent.attach(this, this._handleChange);
 
     this.load(code);
 };
@@ -186,6 +187,11 @@ Entry.Code = function(code) {
         if (index < 0) return;
         data.splice(index, 1);
         data.push(thread);
+    };
+
+    p._handleChange = function() {
+        if (Entry.creationChangedEvent)
+            Entry.creationChangedEvent.notify();
     };
 
 })(Entry.Code.prototype);

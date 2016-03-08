@@ -30,10 +30,7 @@ Entry.Playground = function() {
      */
     this.viewMode_ = 'default';
     Entry.addEventListener('textEdited', this.injectText);
-    Entry.addEventListener('entryBlocklyChanged', this.editBlock);
-    Entry.addEventListener('entryBlocklyMouseUp', this.mouseupBlock);
     Entry.addEventListener('hwChanged', this.updateHW);
-
 };
 
 /**
@@ -776,7 +773,6 @@ Entry.Playground.prototype.injectObject = function(object) {
     if (object === this.object)
         return;
     if (this.object) {
-        this.syncObject(this.object);
         this.object.toggleInformation(false);
     }
     this.object = object;
@@ -1083,17 +1079,6 @@ Entry.Playground.prototype.toggleOffVariableView = function() {
     this.variableView_.addClass('entryRemove');
 };
 
-/**
- * Save current playground data to selected object
- * @param {?Entry.EntryObject} object
- */
-Entry.Playground.prototype.syncObject = function(object) {
-    if (this.object && !object)
-        object = this.object;
-    if (object) {
-        // TODO : save code to object ?
-    }
-};
 
 /**
  */
@@ -1141,7 +1126,6 @@ Entry.Playground.prototype.restoreBlock = function(targetObject, blockString) {
     }
     var script = Blockly.Xml.textToDom(blockString);
     //TODO: restore block
-    this.syncObject();
 };
 
 /**
@@ -1149,7 +1133,6 @@ Entry.Playground.prototype.restoreBlock = function(targetObject, blockString) {
  * @param {event} e
  */
 Entry.Playground.prototype.syncObjectWithEvent = function(e) {
-    Entry.playground.syncObject();
 };
 
 /**
