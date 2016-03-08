@@ -15202,7 +15202,6 @@ Entry.Block.MAGNET_OFFSET = .4;
     });
     c.x = this.x;
     c.y = this.y;
-    console.log(this.x);
     c.movable = this.movable;
     c.deletable = this.deletable;
     c.readOnly = this.readOnly;
