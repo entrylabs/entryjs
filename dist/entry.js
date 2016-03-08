@@ -15688,26 +15688,29 @@ Entry.Board = function(a) {
     return f.concat(g);
   };
   a.getNearestMagnet = function(a, c, d) {
-    var e = this._magnetMap[d], f = 0, g = e.length - 1, h;
-    d = null;
-    for (var k = c - 15;f <= g;) {
-      if (h = (f + g) / 2 | 0, c = e[h], k < c.point) {
-        g = h - 1;
-      } else {
-        if (k > c.endPoint) {
-          f = h + 1;
+    var e = this._magnetMap[d];
+    if (e && 0 !== e.length) {
+      var f = 0, g = e.length - 1, h;
+      d = null;
+      for (var k = c - 15;f <= g;) {
+        if (h = (f + g) / 2 | 0, c = e[h], k < c.point) {
+          g = h - 1;
         } else {
-          e = c.blocks;
-          for (f = 0;f < e.length;f++) {
-            if (g = e[f].view, g.absX < a && a < g.absX + g.width && (g = c.blocks[f], !d || d.view.zIndex < g.view.zIndex)) {
-              d = c.blocks[f];
+          if (k > c.endPoint) {
+            f = h + 1;
+          } else {
+            e = c.blocks;
+            for (f = 0;f < e.length;f++) {
+              if (g = e[f].view, g.absX < a && a < g.absX + g.width && (g = c.blocks[f], !d || d.view.zIndex < g.view.zIndex)) {
+                d = c.blocks[f];
+              }
             }
+            return d;
           }
-          return d;
         }
       }
+      return null;
     }
-    return null;
   };
   a._addFilters = function() {
     var a = this.svg.elem("defs"), c = a.elem("filter", {id:"entryTrashcanFilter"});
