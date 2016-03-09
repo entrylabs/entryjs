@@ -479,6 +479,7 @@ Entry.BlockView.PARAM_SPACE = 5;
                 }
 
                 var gs = Entry.GlobalSvg;
+                var ripple = false;
                 var prevBlock = this.block.getPrevBlock(this.block);
                 var ripple = false;
                 switch (Entry.GlobalSvg.terminateDrag(this)) {
@@ -492,18 +493,17 @@ Entry.BlockView.PARAM_SPACE = 5;
                                 block.doMove();
                         } else {
                             if (closeBlock) {
-                                ripple = true;
                                 if (closeBlock.view.magnet.next) {
                                     this.bindPrev(closeBlock);
-                                    if (!(closeBlock instanceof Entry.Block))
+                                    if (!(closeBlock instanceof Entry.Block)) {
                                         closeBlock = closeBlock.insertTopBlock(block);
-                                    else
-                                        block.doInsert(closeBlock);
+                                    } else block.doInsert(closeBlock);
                                 } else {// field block
                                     block.doInsert(closeBlock, true);
                                     console.log('field');
                                 }
                                 createjs.Sound.play('entryMagneting');
+                                ripple = true;
                             } else {
                                 this._toGlobalCoordinate(dragMode);
                                 block.doSeparate();
@@ -537,10 +537,11 @@ Entry.BlockView.PARAM_SPACE = 5;
                         break;
                 }
                 board.setMagnetedBlock(null);
-                if (ripple)
+                if (ripple) {
                     Entry.ConnectionRipple
                         .setView(block.view)
                         .dispose();
+                }
             }
         }
 
