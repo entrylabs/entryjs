@@ -44,6 +44,10 @@ Entry.FieldStatement = function(content, blockView, index) {
         magneting: false
     };
 
+    p.magnet = {
+        next: {x: 0, y: 0}
+    };
+
     p.renderStart = function(board) {
         this.svgGroup = this._blockView.statementSvgGroup.elem('g');
         this.statementSvgGroup = this.svgGroup.elem('g');

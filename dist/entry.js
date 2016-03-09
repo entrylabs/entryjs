@@ -14477,6 +14477,7 @@ Entry.FieldStatement = function(a, b, c) {
 };
 (function(a) {
   a.schema = {x:0, y:0, width:100, height:20, magneting:!1};
+  a.magnet = {next:{x:0, y:0}};
   a.renderStart = function(b) {
     this.svgGroup = this._blockView.statementSvgGroup.elem("g");
     this._nextGroup = this.statementSvgGroup = this.svgGroup.elem("g");
