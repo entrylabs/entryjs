@@ -389,6 +389,8 @@ Entry.Stage.prototype.updateObject = function() {
         if(object.entity.getVisible()) {
             this.handle.render();
         }
+    } else {
+        this.handle.setVisible(false);
     }
     //this.toggleHandleEditable(!object.getLock());
 };

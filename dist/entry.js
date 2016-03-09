@@ -10609,6 +10609,8 @@ Entry.Stage.prototype.updateObject = function() {
       this.objectUpdated = !0;
       this.handle.setVisible(a.entity.getVisible());
       a.entity.getVisible() && this.handle.render();
+    } else {
+      this.handle.setVisible(!1);
     }
   }
 };
