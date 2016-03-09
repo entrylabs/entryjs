@@ -13435,7 +13435,7 @@ Entry.BlockView.PARAM_SPACE = 5;
               break;
             }
             d = this.originPos;
-            b ? (this.set({animating:!1}), createjs.Sound.play("entryMagneting"), e.insert(b)) : this._moveTo(d.x, d.y, !1);
+            b ? (this.set({animating:!1}), createjs.Sound.play("entryMagneting"), e.view.bindPrev(b)) : this._moveTo(d.x, d.y, !1);
             break;
           case g.REMOVE:
             createjs.Sound.play("entryDelete"), f ? (b && e.separate(), this.block.destroy(!1, !0)) : (b && e.doSeparate(), this.block.doDestroyBelow(!1));

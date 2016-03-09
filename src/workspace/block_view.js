@@ -519,7 +519,7 @@ Entry.BlockView.PARAM_SPACE = 5;
                         if (prevBlock) {
                             this.set({animating: false});
                             createjs.Sound.play('entryMagneting');
-                            block.insert(prevBlock);
+                            block.view.bindPrev(prevBlock);
                         } else this._moveTo(originPos.x, originPos.y, false);
                         break;
                     case gs.REMOVE:
