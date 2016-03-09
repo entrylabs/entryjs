@@ -144,6 +144,8 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
             if (!this._valueBlock)
                 return this._inspectBlock();
 
+            block.setThread(this);
+
             var blockView = this._valueBlock.view;
             if (blockView.shadow) blockView.set({shadow:false});
             return this._valueBlock;
@@ -174,7 +176,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
     p.requestAbsoluteCoordinate = function(blockView) {
         var pos = this._blockView.getAbsoluteCoordinate();
         pos.x += this.box.x;
-        pos.y += this.box.y;
+        pos.y += this.box.y + this.box.height * 0.5;
         return pos;
     };
 
@@ -193,6 +195,17 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
 
     p.getCode = function() {
         return this._block.thread.getCode();
+    };
+
+    p.cut = function(block) {
+        if (this._valueBlock === block) return [block];
+        else return null;
+    };
+
+    p.replace = function(block) {
+        this._updateValueBlock(block);
+        block.view._toLocalCoordinate(this.svgGroup);
+        this.calcWH();
     };
 
 })(Entry.FieldBlock.prototype);

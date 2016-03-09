@@ -92,9 +92,12 @@ Entry.BlockView.PARAM_SPACE = 5;
 
         var path = skeleton.path(this);
 
-        this.pathGroup = this.svgGroup.elem("g", {
-            filter: 'url(#entryBlockShadowFilter)'
-        });
+        this.pathGroup = this.svgGroup.elem("g");
+        this._updateMagnet();
+        if (this.magnet.next)
+            this.pathGroup.attr({
+                filter: 'url(#entryBlockShadowFilter)'
+            });
 
         this._path = this.pathGroup.elem("path");
         var pathStyle = {
@@ -477,6 +480,7 @@ Entry.BlockView.PARAM_SPACE = 5;
 
                 var gs = Entry.GlobalSvg;
                 var prevBlock = this.block.getPrevBlock(this.block);
+                var ripple = false;
                 switch (Entry.GlobalSvg.terminateDrag(this)) {
                     case gs.DONE:
                         var closeBlock = this._getCloseBlock();
@@ -488,6 +492,7 @@ Entry.BlockView.PARAM_SPACE = 5;
                                 block.doMove();
                         } else {
                             if (closeBlock) {
+                                ripple = true;
                                 if (closeBlock.view.magnet.next) {
                                     this.bindPrev(closeBlock);
                                     if (!(closeBlock instanceof Entry.Block))
@@ -495,12 +500,10 @@ Entry.BlockView.PARAM_SPACE = 5;
                                     else
                                         block.doInsert(closeBlock);
                                 } else {// field block
+                                    block.doInsert(closeBlock, true);
                                     console.log('field');
                                 }
                                 createjs.Sound.play('entryMagneting');
-                                Entry.ConnectionRipple
-                                    .setView(block.view)
-                                    .dispose();
                             } else {
                                 this._toGlobalCoordinate(dragMode);
                                 block.doSeparate();
@@ -534,6 +537,10 @@ Entry.BlockView.PARAM_SPACE = 5;
                         break;
                 }
                 board.setMagnetedBlock(null);
+                if (ripple)
+                    Entry.ConnectionRipple
+                        .setView(block.view)
+                        .dispose();
             }
         }
 
@@ -736,11 +743,6 @@ Entry.BlockView.PARAM_SPACE = 5;
     p._setReadOnly = function() {
         this.readOnly = this.block.isReadOnly() !== null ? this.block.isReadOnly() :
             (this._skeleton.readOnly !== undefined ? this._skeleton.readOnly : false);
-    };
-
-    p.getRipplePosition = function() {
-        var pos = this.getAbsoluteCoordinate();
-        return {cx:pos.x, cy:pos.y};
     };
 
     p.bumpAway = function(delay) {

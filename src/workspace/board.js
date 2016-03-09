@@ -458,8 +458,8 @@ Entry.Board = function(option) {
             });
             blockView.absX = cursorX;
             if (block.statements)
+                zIndex += 0.01;
                 for (var j = 0; j < block.statements.length; j++) {
-                    zIndex += 0.01;
                     var thread = block.statements[j];
                     var statement = block.view._statements[j];
                     statement.zIndex = zIndex;
@@ -477,8 +477,8 @@ Entry.Board = function(option) {
                     zIndex += 0.01;
                     statementBlocks = statementBlocks.concat(
                         this._getNextMagnets(thread, zIndex, {
-                             x: statement.x + cursorX,
-                             y: statement.y + cursorY
+                            x: statement.x + cursorX,
+                            y: statement.y + cursorY
                         })
                     );
                 }
@@ -513,31 +513,16 @@ Entry.Board = function(option) {
                 this._getContentsMetaData(blockView, cursorX, cursorY, zIndex)
             );
             if (block.statements)
+                zIndex += 0.01;
                 for (var j = 0; j < block.statements.length; j++) {
-                    zIndex += 0.01;
-                    /*
                     var thread = block.statements[j];
                     var statement = block.view._statements[j];
-                    statement.zIndex = zIndex;
-                    statement.absX = cursorX + statement.x;
-                    metaData.push({
-                        point: statement.y + cursorY - 30,
-                        endPoint: statement.y + cursorY + statement.height,
-                        startBlock: statement,
-                        blocks: []
-                    });
-                    metaData.push({
-                        point: statement.y + cursorY + statement.height,
-                        blocks: []
-                    });
-                    zIndex += 0.01;
                     statementBlocks = statementBlocks.concat(
                         this._getStringMagnets(thread, zIndex, {
-                             x: statement.x + cursorX,
-                             y: statement.y + cursorY
+                            x: statement.x + cursorX,
+                            y: statement.y + cursorY
                         })
                     );
-                   */
                 }
             if (blockView.magnet.next) {
                 cursorY += blockView.magnet.next.y;
@@ -557,7 +542,7 @@ Entry.Board = function(option) {
             if (!(content instanceof Entry.FieldBlock))
                 continue;
             var startX = cursorX + content.box.x;
-            var startY = cursorY + content.box.y;
+            var startY = cursorY + content.box.y + block.view.height * -0.5;
             var endY = cursorY + content.box.y + content.box.height;
             var contentBlock = content._valueBlock;
             metaData.push({

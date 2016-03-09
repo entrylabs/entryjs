@@ -277,7 +277,7 @@ Entry.Block.MAGNET_OFFSET = 0.4;
         }
     };
 
-    p.doInsert = function(targetBlock) {
+    p.doInsert = function(targetBlock, isFieldBlock) {
         var id = this.id;
         var targetId = targetBlock.id;
         var positionX = this.x;
@@ -289,7 +289,10 @@ Entry.Block.MAGNET_OFFSET = 0.4;
             positionX,
             positionY
         );
-        this.insert(targetBlock);
+        if (isFieldBlock)
+            this.replace(targetBlock);
+        else
+            this.insert(targetBlock);
         if (Entry.activityReporter) {
             var data = [
                 ['targetBlockId',targetId],
@@ -382,6 +385,12 @@ Entry.Block.MAGNET_OFFSET = 0.4;
             targetBlock.insertAfter(blocks);
         }
         this._updatePos();
+        this.getCode().changeEvent.notify();
+    };
+
+    p.replace = function(targetBlock) {
+        this.thread.cut(this);
+        targetBlock.thread.replace(this);
         this.getCode().changeEvent.notify();
     };
 

@@ -13244,7 +13244,9 @@ Entry.BlockView.PARAM_SPACE = 5;
       d.svgGroup.addClass(b);
     });
     f = e.path(this);
-    this.pathGroup = this.svgGroup.elem("g", {filter:"url(#entryBlockShadowFilter)"});
+    this.pathGroup = this.svgGroup.elem("g");
+    this._updateMagnet();
+    this.magnet.next && this.pathGroup.attr({filter:"url(#entryBlockShadowFilter)"});
     this._path = this.pathGroup.elem("path");
     f = {d:f, fill:this._schema.color, class:"blockPath"};
     e.outerLine && (f.strokeWidth = "0.5");
@@ -13419,15 +13421,17 @@ Entry.BlockView.PARAM_SPACE = 5;
       a instanceof Entry.BlockMenu ? (a.terminateDrag(), this.vimBoardEvent(b, "dragEnd", e)) : a.clear();
     } else {
       if (d !== Entry.DRAG_MODE_MOUSEDOWN) {
-        (f = this.dragInstance && this.dragInstance.isNew) && !a.workspace.blockMenu.terminateDrag() && (e._updatePos(), e.doAdd());
-        var g = Entry.GlobalSvg;
+        var g = this.dragInstance && this.dragInstance.isNew;
+        g && !a.workspace.blockMenu.terminateDrag() && (e._updatePos(), e.doAdd());
+        var h = Entry.GlobalSvg;
         b = this.block.getPrevBlock(this.block);
+        f = !1;
         switch(Entry.GlobalSvg.terminateDrag(this)) {
-          case g.DONE:
-            g = this._getCloseBlock();
-            b || g ? g ? (g.view.magnet.next ? (this.bindPrev(g), g instanceof Entry.Block ? e.doInsert(g) : g.insertTopBlock(e)) : console.log("field"), createjs.Sound.play("entryMagneting"), Entry.ConnectionRipple.setView(e.view).dispose()) : (this._toGlobalCoordinate(d), e.doSeparate()) : e.getThread().view.isGlobal() ? d != Entry.DRAG_MODE_DRAG || f || e.doMove() : (this._toGlobalCoordinate(d), e.doSeparate());
+          case h.DONE:
+            h = this._getCloseBlock();
+            b || h ? h ? (f = !0, h.view.magnet.next ? (this.bindPrev(h), h instanceof Entry.Block ? e.doInsert(h) : h.insertTopBlock(e)) : (e.doInsert(h, !0), console.log("field")), createjs.Sound.play("entryMagneting")) : (this._toGlobalCoordinate(d), e.doSeparate()) : e.getThread().view.isGlobal() ? d != Entry.DRAG_MODE_DRAG || g || e.doMove() : (this._toGlobalCoordinate(d), e.doSeparate());
             break;
-          case g.RETURN:
+          case h.RETURN:
             e = this.block;
             if (e.isPrimitive) {
               e.getThread().cut(e);
@@ -13437,10 +13441,11 @@ Entry.BlockView.PARAM_SPACE = 5;
             d = this.originPos;
             b ? (this.set({animating:!1}), createjs.Sound.play("entryMagneting"), e.view.bindPrev(b)) : this._moveTo(d.x, d.y, !1);
             break;
-          case g.REMOVE:
-            createjs.Sound.play("entryDelete"), f ? (b && e.separate(), this.block.destroy(!1, !0)) : (b && e.doSeparate(), this.block.doDestroyBelow(!1));
+          case h.REMOVE:
+            createjs.Sound.play("entryDelete"), g ? (b && e.separate(), this.block.destroy(!1, !0)) : (b && e.doSeparate(), this.block.doDestroyBelow(!1));
         }
         a.setMagnetedBlock(null);
+        f && Entry.ConnectionRipple.setView(e.view).dispose();
       }
     }
     this.destroyShadow();
@@ -13555,10 +13560,6 @@ Entry.BlockView.PARAM_SPACE = 5;
   };
   a._setReadOnly = function() {
     this.readOnly = null !== this.block.isReadOnly() ? this.block.isReadOnly() : void 0 !== this._skeleton.readOnly ? this._skeleton.readOnly : !1;
-  };
-  a.getRipplePosition = function() {
-    var b = this.getAbsoluteCoordinate();
-    return {cx:b.x, cy:b.y};
   };
   a.bumpAway = function(b) {
     var a = this;
@@ -13754,7 +13755,8 @@ Entry.ConnectionRipple = {};
     this._ripple || this.createDom(b);
     var a = this._ripple, d = b.getBoard().svgGroup;
     a.remove();
-    a.attr(b.getRipplePosition());
+    b = b.getAbsoluteCoordinate();
+    a.attr({cx:b.x, cy:b.y});
     d.appendChild(a);
     a._startTime = new Date;
     return this;
@@ -13856,7 +13858,7 @@ Entry.Field = function() {
     return {x:b.x + this.box.x + a.x, y:b.y + this.box.y + a.y};
   };
   a.getAbsolutePosFromDocument = function() {
-    var b = this._block.view, a = b.getContentPos(), d = b.getAbsoluteCoordinate(), b = b.getBoard().relativeOffset;
+    var b = this._block.view, a = b.getContentPos(), d = b.getAbsoluteCoordinate(), b = b.getBoard().svgDom.offset();
     return {x:d.x + this.box.x + a.x + b.left, y:d.y + this.box.y + a.y + b.top};
   };
   a.getRelativePos = function() {
@@ -14068,6 +14070,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
       if (!this._valueBlock) {
         return this._inspectBlock();
       }
+      b.setThread(this);
       b = this._valueBlock.view;
       b.shadow && b.set({shadow:!1});
       return this._valueBlock;
@@ -14092,7 +14095,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
   a.requestAbsoluteCoordinate = function(b) {
     b = this._blockView.getAbsoluteCoordinate();
     b.x += this.box.x;
-    b.y += this.box.y;
+    b.y += this.box.y + .5 * this.box.height;
     return b;
   };
   a.dominate = function() {
@@ -14107,6 +14110,14 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
   };
   a.getCode = function() {
     return this._block.thread.getCode();
+  };
+  a.cut = function(b) {
+    return this._valueBlock === b ? [b] : null;
+  };
+  a.replace = function(b) {
+    this._updateValueBlock(b);
+    b.view._toLocalCoordinate(this.svgGroup);
+    this.calcWH();
   };
 })(Entry.FieldBlock.prototype);
 Entry.FieldColor = function(a, b, c) {
@@ -14689,34 +14700,34 @@ Entry.GlobalSvg = {};
     var d = b.offset.left, e = b.offset.top, f = b.visible ? b.svgDom.width() : 0;
     return a.y > e && a.x > d + f ? this.DONE : a.y > e && a.x > d && b.visible ? this.REMOVE : this.RETURN;
   };
-  a.addControl = function(a) {
+  a.addControl = function(b) {
     this.onMouseDown.apply(this, arguments);
   };
-  a.onMouseDown = function(a) {
-    function c(a) {
-      var b = a.pageX;
-      a = a.pageY;
-      var c = e.left + (b - e._startX), d = e.top + (a - e._startY);
-      e.svgDom.css({left:c, top:d});
-      e._startX = b;
-      e._startY = a;
-      e.left = c;
-      e.top = d;
+  a.onMouseDown = function(b) {
+    function a(b) {
+      var c = b.pageX;
+      b = b.pageY;
+      var d = e.left + (c - e._startX), f = e.top + (b - e._startY);
+      e.svgDom.css({left:d, top:f});
+      e._startX = c;
+      e._startY = b;
+      e.left = d;
+      e.top = f;
     }
-    function d(a) {
+    function d(b) {
       $(document).unbind(".block");
     }
-    this._startY = a.pageY;
+    this._startY = b.pageY;
     var e = this;
-    a.stopPropagation();
-    a.preventDefault();
+    b.stopPropagation();
+    b.preventDefault();
     var f = $(document);
-    f.bind("mousemove.block", c);
+    f.bind("mousemove.block", a);
     f.bind("mouseup.block", d);
-    f.bind("touchmove.block", c);
+    f.bind("touchmove.block", a);
     f.bind("touchend.block", d);
-    this._startX = a.pageX;
-    this._startY = a.pageY;
+    this._startX = b.pageX;
+    this._startY = b.pageY;
   };
 })(Entry.GlobalSvg);
 Entry.RenderView = function(a, b) {
@@ -14742,23 +14753,23 @@ Entry.RenderView = function(a, b) {
     this.renderViewContainer = Entry.Dom("div", {"class":"renderViewContainer", parent:this.view});
     this.svgDom = Entry.Dom($('<svg id="' + this._svgId + '" class="renderView" version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'), {parent:this.renderViewContainer});
   };
-  a.changeCode = function(a) {
-    if (!(a instanceof Entry.Code)) {
+  a.changeCode = function(b) {
+    if (!(b instanceof Entry.Code)) {
       return console.error("You must inject code instance");
     }
-    this.code = a;
+    this.code = b;
     this.svg || (this.svg = Entry.SVG(this._svgId), this.svgGroup = this.svg.elem("g"), this.svgThreadGroup = this.svgGroup.elem("g"), this.svgThreadGroup.board = this, this.svgBlockGroup = this.svgGroup.elem("g"), this.svgBlockGroup.board = this);
-    a.createView(this);
+    b.createView(this);
     this.align();
   };
   a.align = function() {
-    var a = this.code.getThreads();
-    if (a && 0 !== a.length) {
-      for (var c = 0, d = "LEFT" == this._align ? 20 : this.svgDom.width() / 2, e = 0, f = a.length;e < f;e++) {
-        var g = a[e].getFirstBlock().view;
-        g._moveTo(d - g.offsetX, c - g.offsetY, !1);
+    var b = this.code.getThreads();
+    if (b && 0 !== b.length) {
+      for (var a = 0, d = "LEFT" == this._align ? 20 : this.svgDom.width() / 2, e = 0, f = b.length;e < f;e++) {
+        var g = b[e].getFirstBlock().view;
+        g._moveTo(d - g.offsetX, a - g.offsetY, !1);
         g = g.svgGroup.getBBox().height;
-        c += g + 15;
+        a += g + 15;
       }
       this.height = this.svgGroup.getBBox().height;
     }
@@ -14773,22 +14784,22 @@ Entry.RenderView = function(a, b) {
     this._svgWidth = this.svgDom.width();
     this.offset = this.svgDom.offset();
   };
-  a.bindCodeView = function(a) {
+  a.bindCodeView = function(b) {
     this.svgBlockGroup.remove();
     this.svgThreadGroup.remove();
-    this.svgBlockGroup = a.svgBlockGroup;
-    this.svgThreadGroup = a.svgThreadGroup;
+    this.svgBlockGroup = b.svgBlockGroup;
+    this.svgThreadGroup = b.svgThreadGroup;
     this.svgGroup.appendChild(this.svgThreadGroup);
     this.svgGroup.appendChild(this.svgBlockGroup);
   };
   a._addFilters = function() {
-    var a = this.svg.elem("defs"), c = a.elem("filter", {id:"entryTrashcanFilter"});
-    c.elem("feGaussianBlur", {"in":"SourceAlpha", stdDeviation:2, result:"blur"});
-    c.elem("feOffset", {"in":"blur", dx:1, dy:1, result:"offsetBlur"});
-    c = c.elem("feMerge");
-    c.elem("feMergeNode", {"in":"offsetBlur"});
-    c.elem("feMergeNode", {"in":"SourceGraphic"}, c);
-    a.elem("filter", {id:"entryBlockShadowFilter"}).innerHTML = '<feOffset result="offOut" in="SourceGraphic" dx="0" dy="1" /><feColorMatrix result="matrixOut" in="offOut" type="matrix"values="0.7 0 0 0 0 0 0.7 0 0 0 0 0 0.7 0 0 0 0 0 1 0" /><feBlend in="SourceGraphic" in2="blurOut" mode="normal" />';
+    var b = this.svg.elem("defs"), a = b.elem("filter", {id:"entryTrashcanFilter"});
+    a.elem("feGaussianBlur", {"in":"SourceAlpha", stdDeviation:2, result:"blur"});
+    a.elem("feOffset", {"in":"blur", dx:1, dy:1, result:"offsetBlur"});
+    a = a.elem("feMerge");
+    a.elem("feMergeNode", {"in":"offsetBlur"});
+    a.elem("feMergeNode", {"in":"SourceGraphic"}, a);
+    b.elem("filter", {id:"entryBlockShadowFilter"}).innerHTML = '<feOffset result="offOut" in="SourceGraphic" dx="0" dy="1" /><feColorMatrix result="matrixOut" in="offOut" type="matrix"values="0.7 0 0 0 0 0 0.7 0 0 0 0 0 0.7 0 0 0 0 0 1 0" /><feBlend in="SourceGraphic" in2="blurOut" mode="normal" />';
   };
 })(Entry.RenderView.prototype);
 Entry.Scroller = function(a, b, c) {
@@ -15293,11 +15304,11 @@ Entry.Block.MAGNET_OFFSET = .4;
     this.separate();
     Entry.activityReporter && (a = [["blockId", a], ["positionX", c], ["positionY", d], ["code", this.getCode().stringify()]], Entry.activityReporter.add(new Entry.Activity("seperateBlock", a)));
   };
-  a.doInsert = function(a) {
-    var c = this.id, d = a.id, e = this.x, f = this.y;
-    console.log("insert", c, d, e, f);
-    this.insert(a);
-    Entry.activityReporter && (a = [["targetBlockId", d], ["blockId", c], ["positionX", e], ["positionY", f], ["code", this.getCode().stringify()]], Entry.activityReporter.add(new Entry.Activity("insertBlock", a)));
+  a.doInsert = function(a, c) {
+    var d = this.id, e = a.id, f = this.x, g = this.y;
+    console.log("insert", d, e, f, g);
+    c ? this.replace(a) : this.insert(a);
+    Entry.activityReporter && (d = [["targetBlockId", e], ["blockId", d], ["positionX", f], ["positionY", g], ["code", this.getCode().stringify()]], Entry.activityReporter.add(new Entry.Activity("insertBlock", d)));
   };
   a.doDestroy = function(a) {
     var c = this.id, d = this.x, e = this.y;
@@ -15336,6 +15347,11 @@ Entry.Block.MAGNET_OFFSET = .4;
     var c = this.thread.cut(this);
     a instanceof Entry.Thread ? a.insertByBlock(null, c) : a.insertAfter(c);
     this._updatePos();
+    this.getCode().changeEvent.notify();
+  };
+  a.replace = function(a) {
+    this.thread.cut(this);
+    a.thread.replace(this);
     this.getCode().changeEvent.notify();
   };
   a.getPrevBlock = function() {
@@ -15703,46 +15719,43 @@ Entry.Board = function(a) {
       g.push({point:d, endPoint:a, startBlock:l, blocks:[]});
       g.push({point:a, blocks:[]});
       m.absX = h;
-      if (l.statements) {
-        for (var n = 0;n < l.statements.length;n++) {
-          c += .01;
-          a = l.statements[n];
-          var q = l.view._statements[n];
-          q.zIndex = c;
-          q.absX = h + q.x;
-          g.push({point:q.y + d - 30, endPoint:q.y + d + q.height, startBlock:q, blocks:[]});
-          g.push({point:q.y + d + q.height, blocks:[]});
-          c += .01;
-          f = f.concat(this._getNextMagnets(a, c, {x:q.x + h, y:q.y + d}));
-        }
+      l.statements && (c += .01);
+      for (var n = 0;n < l.statements.length;n++) {
+        a = l.statements[n];
+        var q = l.view._statements[n];
+        q.zIndex = c;
+        q.absX = h + q.x;
+        g.push({point:q.y + d - 30, endPoint:q.y + d + q.height, startBlock:q, blocks:[]});
+        g.push({point:q.y + d + q.height, blocks:[]});
+        c += .01;
+        f = f.concat(this._getNextMagnets(a, c, {x:q.x + h, y:q.y + d}));
       }
       m.magnet.next && (d += m.magnet.next.y, h += m.magnet.next.x);
     }
     return f.concat(g);
   };
   a._getStringMagnets = function(a, c, d) {
-    a = a.getBlocks();
-    var e = [];
+    var e = a.getBlocks(), f = [], g = [];
     d || (d = {x:0, y:0});
-    var f = d.x;
+    var h = d.x;
     d = d.y;
-    for (var g = 0;g < a.length;g++) {
-      var h = a[g], k = h.view;
-      k.zIndex = c;
-      if (k.dragInstance) {
+    for (var k = 0;k < e.length;k++) {
+      var l = e[k], m = l.view;
+      m.zIndex = c;
+      if (m.dragInstance) {
         break;
       }
-      d += k.y;
-      f += k.x;
-      e = e.concat(this._getContentsMetaData(k, f, d, c));
-      if (h.statements) {
-        for (var l = 0;l < h.statements.length;l++) {
-          c += .01;
-        }
+      d += m.y;
+      h += m.x;
+      g = g.concat(this._getContentsMetaData(m, h, d, c));
+      l.statements && (c += .01);
+      for (var n = 0;n < l.statements.length;n++) {
+        a = l.statements[n];
+        var q = l.view._statements[n], f = f.concat(this._getStringMagnets(a, c, {x:q.x + h, y:q.y + d}));
       }
-      k.magnet.next && (d += k.magnet.next.y, f += k.magnet.next.x);
+      m.magnet.next && (d += m.magnet.next.y, h += m.magnet.next.x);
     }
-    return [].concat(e);
+    return f.concat(g);
   };
   a._getContentsMetaData = function(a, c, d, e) {
     var f = a._contents, g = [];
@@ -15751,7 +15764,7 @@ Entry.Board = function(a) {
     for (a = 0;a < f.length;a++) {
       var h = f[a];
       if (h instanceof Entry.FieldBlock) {
-        var k = c + h.box.x, l = d + h.box.y, m = d + h.box.y + h.box.height, h = h._valueBlock;
+        var k = c + h.box.x, l = d + h.box.y + -.5 * block.view.height, m = d + h.box.y + h.box.height, h = h._valueBlock;
         g.push({point:l, endPoint:m, startBlock:h, blocks:[]});
         g.push({point:m, blocks:[]});
         m = h.view;

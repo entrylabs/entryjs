@@ -20,7 +20,8 @@ goog.provide("Entry.ConnectionRipple");
         var svgGroup = blockView.getBoard().svgGroup;
         ripple.remove();
 
-        ripple.attr(blockView.getRipplePosition());
+        var pos = blockView.getAbsoluteCoordinate();
+        ripple.attr({cx:pos.x, cy:pos.y});
 
         svgGroup.appendChild(ripple);
         ripple._startTime = new Date();
