@@ -159,7 +159,8 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                 else if (keyCode == 88) { //cut
                     (function(block) {
                         block.copyToClipboard();
-                        block.destroy(true);
+                        block.destroy(true, true);
+                        blockView.getBoard().setSelectedBlock(null);
                     })(blockView.block);
                 }
             }

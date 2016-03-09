@@ -127,10 +127,10 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
         var options = this._contents.options;
 
         var resizeList = [];
-        var OPTION_X_PADDING = 50;
+        var OPTION_X_PADDING = 30;
         var maxWidth = 0;
 
-        var CONTENT_HEIGHT = 23;
+        var CONTENT_HEIGHT = this._CONTENT_HEIGHT + 4;
         resizeList.push(this.optionGroup.elem("rect" , {
             height: CONTENT_HEIGHT * options.length,
             fill:'white'
@@ -160,7 +160,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
 
             var textElement = element.elem("text", {
                 x: 20,
-                y: 13,
+                y: 10,
                 "alignment-baseline": "central"
             });
             textElement.innerHTML = text;

@@ -14197,15 +14197,15 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
       b.optionGroup.remove();
     });
     this.optionGroup = this.appendSvgOptionGroup();
-    var a = this._contents.options, d = [], e = 0;
-    d.push(this.optionGroup.elem("rect", {height:23 * a.length, fill:"white"}));
-    for (var f = 0, g = a.length;f < g;f++) {
-      var h = a[f], k = h[0], h = h[1], l = this.optionGroup.elem("g", {class:"rect", transform:"translate(0," + 23 * f + ")"});
-      d.push(l.elem("rect", {height:23}));
-      this.getValue() == h && (l.elem("text", {x:5, y:13, "alignment-baseline":"central"}).innerHTML = "\u2713");
-      var n = l.elem("text", {x:20, y:13, "alignment-baseline":"central"});
-      n.innerHTML = k;
-      e = Math.max(n.getComputedTextLength() + 50, e);
+    var a = this._contents.options, d = [], e = 0, f = this._CONTENT_HEIGHT + 4;
+    d.push(this.optionGroup.elem("rect", {height:f * a.length, fill:"white"}));
+    for (var g = 0, h = a.length;g < h;g++) {
+      var k = a[g], l = k[0], k = k[1], n = this.optionGroup.elem("g", {class:"rect", transform:"translate(0," + g * f + ")"});
+      d.push(n.elem("rect", {height:f}));
+      this.getValue() == k && (n.elem("text", {x:5, y:13, "alignment-baseline":"central"}).innerHTML = "\u2713");
+      var m = n.elem("text", {x:20, y:10, "alignment-baseline":"central"});
+      m.innerHTML = l;
+      e = Math.max(m.getComputedTextLength() + 30, e);
       (function(a, c) {
         a.onmousedown = function(b) {
           b.stopPropagation();
@@ -14215,7 +14215,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
           b.applyValue(c);
           b.destroyOption();
         };
-      })(l, h);
+      })(n, k);
     }
     a = -e / 2 + this.box.width / 2;
     f = this.box.height / 2;
@@ -14223,9 +14223,9 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
     g.x += a;
     g.y += f;
     this.optionGroup.attr({class:"entry-field-dropdown", transform:"translate(" + g.x + "," + g.y + ")"});
-    var m = {width:e};
+    var q = {width:e};
     d.forEach(function(b) {
-      b.attr(m);
+      b.attr(q);
     });
   };
   a.applyValue = function(b) {
@@ -15876,7 +15876,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
     var c = a.keyCode || a.which, d = a.ctrlKey;
     if (!Entry.Utils.isInInput(a)) {
       var e = this.selectedBlockView;
-      e && !e.isInBlockMenu && e.block.isDeletable() && (8 == c || 46 == c ? (e.block.doDestroy(!0), a.preventDefault()) : d && (67 == c ? e.block.copyToClipboard() : 88 == c && (a = e.block, a.copyToClipboard(), a.destroy(!0))));
+      e && !e.isInBlockMenu && e.block.isDeletable() && (8 == c || 46 == c ? (e.block.doDestroy(!0), a.preventDefault()) : d && (67 == c ? e.block.copyToClipboard() : 88 == c && (a = e.block, a.copyToClipboard(), a.destroy(!0, !0), e.getBoard().setSelectedBlock(null))));
       d && 86 == c && (c = this.selectedBoard) && c instanceof Entry.Board && Entry.clipboard && c.code.createThread(Entry.clipboard).getFirstBlock().copyToClipboard();
     }
   };
