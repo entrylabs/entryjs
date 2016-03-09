@@ -126,4 +126,9 @@ Entry.Field = function() {};
 
         return blockView.getSvgRoot() == selectedBlockView.svgGroup;
     };
+
+    p._selectBlockView = function() {
+        var blockView = this._block.view;
+        blockView.getBoard().setSelectedBlock(blockView);
+    };
 })(Entry.Field.prototype);

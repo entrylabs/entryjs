@@ -178,6 +178,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
                     e.stopPropagation();
                     that.applyValue(value);
                     that.destroyOption();
+                    that._selectBlockView();
                 };
             })(element, value);
         }

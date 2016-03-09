@@ -13885,6 +13885,10 @@ Entry.Field = function() {
     var b = this._block.view, a = b.getBoard().selectedBlockView;
     return a ? b.getSvgRoot() == a.svgGroup : !1;
   };
+  a._selectBlockView = function() {
+    var b = this._block.view;
+    b.getBoard().setSelectedBlock(b);
+  };
 })(Entry.Field.prototype);
 Entry.FieldAngle = function(a, b, c) {
   this._block = b.block;
@@ -14144,9 +14148,13 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldColor);
         g.css({"background-color":h});
         g.attr({"data-color-value":h});
         (function(a, c) {
-          a.mousedown(function() {
+          a.mousedown(function(b) {
+            b.stopPropagation();
+          });
+          a.mouseup(function(a) {
             b.applyValue(c);
             b.destroyOption();
+            b._selectBlockView();
           });
         })(g, h);
       }
@@ -14225,6 +14233,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
           a.stopPropagation();
           b.applyValue(c);
           b.destroyOption();
+          b._selectBlockView();
         };
       })(m, k);
     }
@@ -14673,11 +14682,11 @@ Entry.GlobalSvg = {};
     this.top = a.y + b.top - this._offsetY;
     this.svgDom.css({left:this.left, top:this.top});
   };
-  a.terminateDrag = function(a) {
-    var c = Entry.mouseCoordinate;
-    a = a.getBoard().workspace.blockMenu;
-    var d = a.offset.left, e = a.offset.top, f = a.visible ? a.svgDom.width() : 0;
-    return c.y > e && c.x > d + f ? this.DONE : c.y > e && c.x > d && a.visible ? this.REMOVE : this.RETURN;
+  a.terminateDrag = function(b) {
+    var a = Entry.mouseCoordinate;
+    b = b.getBoard().workspace.blockMenu;
+    var d = b.offset.left, e = b.offset.top, f = b.visible ? b.svgDom.width() : 0;
+    return a.y > e && a.x > d + f ? this.DONE : a.y > e && a.x > d && b.visible ? this.REMOVE : this.RETURN;
   };
   a.addControl = function(a) {
     this.onMouseDown.apply(this, arguments);

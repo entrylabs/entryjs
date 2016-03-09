@@ -101,9 +101,11 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldColor);
                 td.attr({'data-color-value': color});
 
                 (function(elem, value) {
-                    elem.mousedown(function(){
+                    elem.mousedown(function(e){e.stopPropagation();});
+                    elem.mouseup(function(e){
                         that.applyValue(value);
                         that.destroyOption();
+                        that._selectBlockView();
                     });
                 })(td, color);
             }
