@@ -4282,9 +4282,9 @@ Entry.block.message_cast_wait = function(a, b) {
   }
   var e = [];
   Entry.container.mapEntityIncludeCloneOnScene(function(b, a) {
-    for (var c = a[0], d = a[1], l = b.parent.script.childNodes, n = 0;n < l.length;n++) {
-      var m = l[n], q = Entry.Xml.getField("VALUE", m);
-      Entry.Xml.isTypeOf(c, m) && q == d && (q = new Entry.Script(b), q.init(m), e.push(q));
+    for (var c = a[0], d = a[1], l = b.parent.script.childNodes, m = 0;m < l.length;m++) {
+      var n = l[m], q = Entry.Xml.getField("VALUE", n);
+      Entry.Xml.isTypeOf(c, n) && q == d && (q = new Entry.Script(b), q.init(n), e.push(q));
     }
   }, ["when_message_cast", c]);
   b.runningScript = e;
@@ -6695,48 +6695,48 @@ Entry.EntryObject.prototype.generateView = function() {
     e = Entry.createElement("span");
     e.addClass("entryObjectRotateSpanWorkspace");
     e.innerHTML = Lang.Workspace.rotation + " : ";
-    var n = Entry.createElement("input");
-    n.addClass("entryObjectRotateInputWorkspace");
-    n.setAttribute("disabled", "disabled");
-    n.bindOnClick(function(b) {
-      b.stopPropagation();
-      this.select();
-    });
-    this.rotateSpan_ = e;
-    this.rotateInput_ = n;
-    g = Entry.createElement("span");
-    g.addClass("entryObjectDirectionSpanWorkspace");
-    g.innerHTML = Lang.Workspace.direction + " : ";
     var m = Entry.createElement("input");
-    m.addClass("entryObjectDirectionInputWorkspace");
+    m.addClass("entryObjectRotateInputWorkspace");
     m.setAttribute("disabled", "disabled");
     m.bindOnClick(function(b) {
       b.stopPropagation();
       this.select();
     });
-    this.directionInput_ = m;
+    this.rotateSpan_ = e;
+    this.rotateInput_ = m;
+    g = Entry.createElement("span");
+    g.addClass("entryObjectDirectionSpanWorkspace");
+    g.innerHTML = Lang.Workspace.direction + " : ";
+    var n = Entry.createElement("input");
+    n.addClass("entryObjectDirectionInputWorkspace");
+    n.setAttribute("disabled", "disabled");
+    n.bindOnClick(function(b) {
+      b.stopPropagation();
+      this.select();
+    });
+    this.directionInput_ = n;
     d.appendChild(e);
-    d.appendChild(n);
-    d.appendChild(g);
     d.appendChild(m);
-    d.rotateInput_ = n;
-    d.directionInput_ = m;
+    d.appendChild(g);
+    d.appendChild(n);
+    d.rotateInput_ = m;
+    d.directionInput_ = n;
     c = this;
-    n.onkeypress = function(b) {
-      13 == b.keyCode && this.blur();
-    };
-    n.onblur = function(b) {
-      b = n.value;
-      -1 != b.indexOf("\u02da") && (b = b.substring(0, b.indexOf("\u02da")));
-      isNaN(b) || c.entity.setRotation(Number(b));
-      c.updateRotationView();
-      Entry.stage.updateObject();
-    };
     m.onkeypress = function(b) {
       13 == b.keyCode && this.blur();
     };
     m.onblur = function(b) {
       b = m.value;
+      -1 != b.indexOf("\u02da") && (b = b.substring(0, b.indexOf("\u02da")));
+      isNaN(b) || c.entity.setRotation(Number(b));
+      c.updateRotationView();
+      Entry.stage.updateObject();
+    };
+    n.onkeypress = function(b) {
+      13 == b.keyCode && this.blur();
+    };
+    n.onblur = function(b) {
+      b = n.value;
       -1 != b.indexOf("\u02da") && (b = b.substring(0, b.indexOf("\u02da")));
       isNaN(b) || c.entity.setDirection(Number(b));
       c.updateRotationView();
@@ -6807,15 +6807,15 @@ Entry.EntryObject.prototype.generateView = function() {
       if (b = Entry.container.getObject(this.id)) {
         Entry.container.selectObject(b.id), Entry.playground.injectObject(b);
       }
-    }), this.view_.appendChild(d), d = Entry.createElement("div"), d.addClass("entryObjectInformationWorkspace"), d.object = this, this.isInformationToggle = !1, a.appendChild(d), this.informationView_ = d, d = Entry.createElement("div"), d.addClass("entryObjectRotateLabelWrapperWorkspace"), this.view_.appendChild(d), this.rotateLabelWrapperView_ = d, e = Entry.createElement("span"), e.addClass("entryObjectRotateSpanWorkspace"), e.innerHTML = Lang.Workspace.rotation + " : ", n = Entry.createElement("input"), 
-    n.addClass("entryObjectRotateInputWorkspace"), this.rotateSpan_ = e, this.rotateInput_ = n, g = Entry.createElement("span"), g.addClass("entryObjectDirectionSpanWorkspace"), g.innerHTML = Lang.Workspace.direction + " : ", m = Entry.createElement("input"), m.addClass("entryObjectDirectionInputWorkspace"), this.directionInput_ = m, d.appendChild(e), d.appendChild(n), d.appendChild(g), d.appendChild(m), d.rotateInput_ = n, d.directionInput_ = m, c = this, n.onkeypress = function(b) {
-      13 == b.keyCode && (b = n.value, -1 != b.indexOf("\u02da") && (b = b.substring(0, b.indexOf("\u02da"))), isNaN(b) || c.entity.setRotation(Number(b)), c.updateRotationView(), n.blur());
-    }, n.onblur = function(b) {
+    }), this.view_.appendChild(d), d = Entry.createElement("div"), d.addClass("entryObjectInformationWorkspace"), d.object = this, this.isInformationToggle = !1, a.appendChild(d), this.informationView_ = d, d = Entry.createElement("div"), d.addClass("entryObjectRotateLabelWrapperWorkspace"), this.view_.appendChild(d), this.rotateLabelWrapperView_ = d, e = Entry.createElement("span"), e.addClass("entryObjectRotateSpanWorkspace"), e.innerHTML = Lang.Workspace.rotation + " : ", m = Entry.createElement("input"), 
+    m.addClass("entryObjectRotateInputWorkspace"), this.rotateSpan_ = e, this.rotateInput_ = m, g = Entry.createElement("span"), g.addClass("entryObjectDirectionSpanWorkspace"), g.innerHTML = Lang.Workspace.direction + " : ", n = Entry.createElement("input"), n.addClass("entryObjectDirectionInputWorkspace"), this.directionInput_ = n, d.appendChild(e), d.appendChild(m), d.appendChild(g), d.appendChild(n), d.rotateInput_ = m, d.directionInput_ = n, c = this, m.onkeypress = function(b) {
+      13 == b.keyCode && (b = m.value, -1 != b.indexOf("\u02da") && (b = b.substring(0, b.indexOf("\u02da"))), isNaN(b) || c.entity.setRotation(Number(b)), c.updateRotationView(), m.blur());
+    }, m.onblur = function(b) {
       c.entity.setRotation(c.entity.getRotation());
       Entry.stage.updateObject();
-    }, m.onkeypress = function(b) {
-      13 == b.keyCode && (b = m.value, -1 != b.indexOf("\u02da") && (b = b.substring(0, b.indexOf("\u02da"))), isNaN(b) || c.entity.setDirection(Number(b)), c.updateRotationView(), m.blur());
-    }, m.onblur = function(b) {
+    }, n.onkeypress = function(b) {
+      13 == b.keyCode && (b = n.value, -1 != b.indexOf("\u02da") && (b = b.substring(0, b.indexOf("\u02da"))), isNaN(b) || c.entity.setDirection(Number(b)), c.updateRotationView(), n.blur());
+    }, n.onblur = function(b) {
       c.entity.setDirection(c.entity.getDirection());
       Entry.stage.updateObject();
     }, a = Entry.createElement("div"), a.addClass("entryObjectRotationWrapperWorkspace"), a.object = this, this.view_.appendChild(a), d = Entry.createElement("span"), d.addClass("entryObjectCoordinateWorkspace"), a.appendChild(d), e = Entry.createElement("span"), e.addClass("entryObjectCoordinateSpanWorkspace"), e.innerHTML = "X:", f = Entry.createElement("input"), f.addClass("entryObjectCoordinateInputWorkspace"), g = Entry.createElement("span"), g.addClass("entryObjectCoordinateSpanWorkspace"), 
@@ -7551,14 +7551,14 @@ Entry.Painter.prototype.fill = function() {
     var c = new createjs.Point(this.stage.mouseX, this.stage.mouseY);
     c.x = Math.round(c.x);
     c.y = Math.round(c.y);
-    for (var d = 4 * (c.y * a + c.x), e = this.colorLayerData.data[d], f = this.colorLayerData.data[d + 1], g = this.colorLayerData.data[d + 2], h = this.colorLayerData.data[d + 3], k, l, c = [[c.x, c.y]], n = Entry.hex2rgb(this.stroke.lineColor);c.length;) {
-      for (var d = c.pop(), m = d[0], q = d[1], d = 4 * (q * a + m);0 <= q && this.matchColor(d, e, f, g, h);) {
+    for (var d = 4 * (c.y * a + c.x), e = this.colorLayerData.data[d], f = this.colorLayerData.data[d + 1], g = this.colorLayerData.data[d + 2], h = this.colorLayerData.data[d + 3], k, l, c = [[c.x, c.y]], m = Entry.hex2rgb(this.stroke.lineColor);c.length;) {
+      for (var d = c.pop(), n = d[0], q = d[1], d = 4 * (q * a + n);0 <= q && this.matchColor(d, e, f, g, h);) {
         --q, d -= 4 * a;
       }
       d += 4 * a;
       q += 1;
       for (l = k = !1;q < b - 1 && this.matchColor(d, e, f, g, h);) {
-        q += 1, this.colorPixel(d, n.r, n.g, n.b), 0 < m && (this.matchColor(d - 4, e, f, g, h) ? k || (c.push([m - 1, q]), k = !0) : k && (k = !1)), m < a - 1 && (this.matchColor(d + 4, e, f, g, h) ? l || (c.push([m + 1, q]), l = !0) : l && (l = !1)), d += 4 * a;
+        q += 1, this.colorPixel(d, m.r, m.g, m.b), 0 < n && (this.matchColor(d - 4, e, f, g, h) ? k || (c.push([n - 1, q]), k = !0) : k && (k = !1)), n < a - 1 && (this.matchColor(d + 4, e, f, g, h) ? l || (c.push([n + 1, q]), l = !0) : l && (l = !1)), d += 4 * a;
       }
       if (1080 < c.length) {
         break;
@@ -8099,9 +8099,9 @@ Entry.Painter.prototype.generateView = function(a) {
     this.attrColorArea = Entry.createElement("fieldset", "entryPainterAttrColor");
     this.attrColorArea.addClass("entryPlaygroundPainterAttrColor");
     g.appendChild(this.attrColorArea);
-    var n = Entry.createElement("div");
-    n.addClass("entryPlaygroundPainterAttrColorContainer");
-    this.attrColorArea.appendChild(n);
+    var m = Entry.createElement("div");
+    m.addClass("entryPlaygroundPainterAttrColorContainer");
+    this.attrColorArea.appendChild(m);
     this.attrCircleArea = Entry.createElement("div");
     this.attrCircleArea.addClass("painterAttrCircleArea");
     g.appendChild(this.attrCircleArea);
@@ -8128,7 +8128,7 @@ Entry.Painter.prototype.generateView = function(a) {
         document.getElementById("entryPainterAttrCircle").style.backgroundColor = b.stroke.lineColor;
         document.getElementById("entryPainterAttrCircleInput").value = a;
       });
-      n.appendChild(c);
+      m.appendChild(c);
     });
     this.attrThickArea = Entry.createElement("div", "painterAttrThickArea");
     this.attrThickArea.addClass("entryPlaygroundentryPlaygroundPainterAttrThickArea");
@@ -8137,12 +8137,12 @@ Entry.Painter.prototype.generateView = function(a) {
     d.addClass("painterAttrThickName");
     d.innerHTML = Lang.Workspace.thickness;
     this.attrThickArea.appendChild(d);
-    var m = Entry.createElement("fieldset", "entryPainterAttrThick");
-    m.addClass("entryPlaygroundPainterAttrThick");
-    this.attrThickArea.appendChild(m);
+    var n = Entry.createElement("fieldset", "entryPainterAttrThick");
+    n.addClass("entryPlaygroundPainterAttrThick");
+    this.attrThickArea.appendChild(n);
     d = Entry.createElement("div");
     d.addClass("paintAttrThickTop");
-    m.appendChild(d);
+    n.appendChild(d);
     e = Entry.createElement("select", "entryPainterAttrThick");
     e.addClass("entryPlaygroundPainterAttrThickInput");
     e.size = "1";
@@ -8152,15 +8152,15 @@ Entry.Painter.prototype.generateView = function(a) {
     for (d = 1;10 >= d;d++) {
       c = Entry.createElement("option"), c.value = d, c.innerHTML = d, e.appendChild(c);
     }
-    m.appendChild(e);
+    n.appendChild(e);
     d = Entry.createElement("div", "entryPainterShapeLineColor");
     d.addClass("painterAttrShapeLineColor");
     c = Entry.createElement("div", "entryPainterShapeInnerBackground");
     c.addClass("painterAttrShapeInnerBackground");
     d.appendChild(c);
-    m.appendChild(d);
+    n.appendChild(d);
     this.attrThickArea.painterAttrShapeLineColor = d;
-    m.bindOnClick(function() {
+    n.bindOnClick(function() {
       q.style.zIndex = "1";
       this.style.zIndex = "10";
       r = !1;
@@ -8180,7 +8180,7 @@ Entry.Painter.prototype.generateView = function(a) {
     c.appendChild(q);
     var r = !1;
     q.bindOnClick(function(b) {
-      m.style.zIndex = "1";
+      n.style.zIndex = "1";
       this.style.zIndex = "10";
       r = !0;
     });
@@ -10768,10 +10768,10 @@ Entry.HWMonitor = function(a) {
     }
     h < f - e && (f = h / 2 + 3, e = -h / 2 - 3);
     for (;1 < b.length;) {
-      var k = b.shift(), l = b.pop(), n = e, m = f, q = d;
+      var k = b.shift(), l = b.pop(), m = e, n = f, q = d;
       h <= f - e ? (e += k.width + 5, f -= l.width + 5, q = 0) : 0 === b.length ? (e = (e + f) / 2 - 3, f = e + 6) : (e = Math.max(e, -g / 2 + k.width) + 15, f = Math.min(f, g / 2 - l.width) - 15);
-      this._movePort(k, e, a, n);
-      this._movePort(l, f, a, m);
+      this._movePort(k, e, a, m);
+      this._movePort(l, f, a, n);
       h -= k.width + l.width + 10;
       a += q;
     }
@@ -11325,16 +11325,16 @@ Entry.VariableContainer.prototype.renderMessageReference = function(a) {
   f.addClass("entryVariableListCallerListWorkspace");
   for (var g in c) {
     for (var h = c[g], k = h.script.getElementsByTagName("block"), l = 0;l < k.length;l++) {
-      var n = k[l], m = n.getAttribute("type");
-      if (-1 < d.indexOf(m)) {
-        m = Entry.Xml.getField("VALUE", n), m == a.id && e.push({object:h, block:n});
+      var m = k[l], n = m.getAttribute("type");
+      if (-1 < d.indexOf(n)) {
+        n = Entry.Xml.getField("VALUE", m), n == a.id && e.push({object:h, block:m});
       } else {
-        if ("function_general" == m) {
-          var q = n.getElementsByTagName("mutation")[0].getAttribute("hashid");
+        if ("function_general" == n) {
+          var q = m.getElementsByTagName("mutation")[0].getAttribute("hashid");
           if (q = Entry.variableContainer.getFunction(q)) {
             for (var q = q.content, q = q.getElementsByTagName("block"), r = 0;r < q.length;r++) {
-              var t = q[r], m = t.getAttribute("type");
-              -1 < d.indexOf(m) && (m = Entry.Xml.getField("VALUE", t), m == a.id && e.push({object:h, block:t, funcBlock:n}));
+              var t = q[r], n = t.getAttribute("type");
+              -1 < d.indexOf(n) && (n = Entry.Xml.getField("VALUE", t), n == a.id && e.push({object:h, block:t, funcBlock:m}));
             }
           }
         }
@@ -13307,6 +13307,7 @@ Entry.BlockView.PARAM_SPACE = 5;
     this.set({contentWidth:a, contentHeight:d});
     b = this.getContentPos();
     this.contentSvgGroup.attr("transform", "translate(" + b.x + "," + b.y + ")");
+    this.contentPos = b;
     this._render();
   };
   a._render = function() {
@@ -13419,11 +13420,11 @@ Entry.BlockView.PARAM_SPACE = 5;
       if (d !== Entry.DRAG_MODE_MOUSEDOWN) {
         (f = this.dragInstance && this.dragInstance.isNew) && (a.workspace.blockMenu.terminateDrag() || e.doAdd());
         var g = Entry.GlobalSvg;
-        b = this.block.getPrevBlock();
+        b = this.block.getPrevBlock(this.block);
         switch(Entry.GlobalSvg.terminateDrag(this)) {
           case g.DONE:
             g = this._getCloseBlock();
-            b || g ? g ? (this.set({animating:!0}), this.bindPrev(g), g instanceof Entry.Block ? e.doInsert(g) : g.insertTopBlock(e), createjs.Sound.play("entryMagneting"), Entry.ConnectionRipple.setView(e.view).dispose()) : (this._toGlobalCoordinate(d), e.doSeparate()) : e.getThread().view.isGlobal() ? d != Entry.DRAG_MODE_DRAG || f || e.doMove() : (this._toGlobalCoordinate(d), e.doSeparate());
+            b || g ? g ? (g.view.magnet.next ? (this.bindPrev(g), g instanceof Entry.Block ? e.doInsert(g) : g.insertTopBlock(e)) : console.log("field"), createjs.Sound.play("entryMagneting"), Entry.ConnectionRipple.setView(e.view).dispose()) : (this._toGlobalCoordinate(d), e.doSeparate()) : e.getThread().view.isGlobal() ? d != Entry.DRAG_MODE_DRAG || f || e.doMove() : (this._toGlobalCoordinate(d), e.doSeparate());
             break;
           case g.RETURN:
             e = this.block;
@@ -13451,8 +13452,6 @@ Entry.BlockView.PARAM_SPACE = 5;
         return this.getBoard().getNearestMagnet(this.x, this.y, b);
       }
     }
-  };
-  a._inheritAnimate = function() {
   };
   a.dominate = function() {
     this.block.getThread().view.dominate();
@@ -13501,19 +13500,23 @@ Entry.BlockView.PARAM_SPACE = 5;
   };
   a._updateBG = function() {
     if (this._board.dragBlock && this._board.dragBlock.dragInstance) {
-      if (this.magneting) {
-        var b = this._board.dragBlock.getShadow();
-        $(b).attr({transform:"translate(0," + (this.height + 1) + ")"});
-        this.svgGroup.appendChild(b);
-        this._clonedShadow = b;
-        this.background && (this.background.remove(), this.nextBackground.remove(), delete this.background, delete this.nextBackground);
-        b = this._board.dragBlock.getBelowHeight() + this.offsetY;
-        this.originalHeight = this.offsetY;
-        this.set({offsetY:b});
+      if (this.magnet.next) {
+        if (this.magneting) {
+          var b = this._board.dragBlock.getShadow();
+          $(b).attr({transform:"translate(0," + (this.height + 1) + ")"});
+          this.svgGroup.appendChild(b);
+          this._clonedShadow = b;
+          this.background && (this.background.remove(), this.nextBackground.remove(), delete this.background, delete this.nextBackground);
+          b = this._board.dragBlock.getBelowHeight() + this.offsetY;
+          this.originalHeight = this.offsetY;
+          this.set({offsetY:b});
+        } else {
+          this._clonedShadow && (this._clonedShadow.remove(), delete this._clonedShadow), b = this.originalHeight, void 0 !== b && (this.background && (this.background.remove(), this.nextBackground.remove(), delete this.background, delete this.nextBackground), this.set({offsetY:b}), delete this.originalHeight);
+        }
+        (b = this.block.thread.changeEvent) && b.notify();
       } else {
-        this._clonedShadow && (this._clonedShadow.remove(), delete this._clonedShadow), b = this.originalHeight, void 0 !== b && (this.background && (this.background.remove(), this.nextBackground.remove(), delete this.background, delete this.nextBackground), this.set({offsetY:b}), delete this.originalHeight);
+        this.magneting ? this.svgGroup.attr({filter:"url(#entryBlockHighlightFilter)"}) : this.svgGroup.attr({filter:"initial"});
       }
-      (b = this.block.thread.changeEvent) && b.notify();
     }
   };
   a.addDragging = function() {
@@ -13991,10 +13994,11 @@ Entry.FieldBlock = function(a, b, c) {
   this._block = b.block;
   this._valueBlock = null;
   this.box = new Entry.BoxModel;
+  this.changeEvent = new Entry.Event(this);
   this._index = c;
   this._content = a;
-  this.dummyBlock = null;
   this.acceptType = a.accept;
+  this.view = this;
   this.svgGroup = null;
   this._position = a.position;
   this.box.observe(b, "alignContent", ["width", "height"]);
@@ -14024,13 +14028,6 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
     b ? (b = b.view, this.box.set({width:b.width, height:b.height})) : this.box.set({width:15, height:20});
   };
   a.calcHeight = a.calcWH;
-  a._updateThread = function() {
-    this._threadChangeEvent && this._thread.changeEvent.detach(this._threadChangeEvent);
-    var b = this._block.thread;
-    this._threadChangeEvent = this._thread.changeEvent.attach(this, function() {
-      b.changeEvent.notify();
-    });
-  };
   a.destroy = function() {
   };
   a._inspectBlock = function() {
@@ -14088,6 +14085,19 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
     b.x += this.box.x;
     b.y += this.box.y;
     return b;
+  };
+  a.dominate = function() {
+    this._blockView.dominate();
+  };
+  a.isGlobal = function() {
+    return !1;
+  };
+  a.separate = function(b) {
+    this.getCode().createThread([b]);
+    this.changeEvent.notify();
+  };
+  a.getCode = function() {
+    return this._block.thread.getCode();
   };
 })(Entry.FieldBlock.prototype);
 Entry.FieldColor = function(a, b, c) {
@@ -14206,9 +14216,9 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
       var h = d[f], k = h[0], h = h[1], l = this.optionGroup.elem("g", {class:"rect", transform:"translate(0," + 23 * f + ")"});
       a.push(l.elem("rect", {height:23}));
       this.getValue() == h && (l.elem("text", {x:5, y:13, "alignment-baseline":"central"}).innerHTML = "\u2713");
-      var n = l.elem("text", {x:20, y:13, "alignment-baseline":"central"});
-      n.innerHTML = k;
-      e = Math.max(n.getComputedTextLength() + 50, e);
+      var m = l.elem("text", {x:20, y:13, "alignment-baseline":"central"});
+      m.innerHTML = k;
+      e = Math.max(m.getComputedTextLength() + 50, e);
       (function(a, c) {
         a.onmousedown = function(b) {
           b.stopPropagation();
@@ -14226,9 +14236,9 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
     g.x += d;
     g.y += f;
     this.optionGroup.attr({class:"entry-field-dropdown", transform:"translate(" + g.x + "," + g.y + ")"});
-    var m = {width:e};
+    var n = {width:e};
     a.forEach(function(b) {
-      b.attr(m);
+      b.attr(n);
     });
   };
   a.applyValue = function(b) {
@@ -14568,54 +14578,54 @@ Entry.FieldTextInput = function(a, b, c) {
 };
 Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
 (function(a) {
-  a.renderStart = function(a) {
-    var c = this;
-    this.svgGroup = a.contentSvgGroup.elem("g");
+  a.renderStart = function(b) {
+    var a = this;
+    this.svgGroup = b.contentSvgGroup.elem("g");
     this.svgGroup.attr({class:"entry-input-field"});
     this.textElement = this.svgGroup.elem("text", {x:4, y:4, "font-size":"9pt"});
     this.textElement.innerHTML = this.truncate();
-    a = this.getTextWidth();
+    b = this.getTextWidth();
     var d = this.position && this.position.y ? this.position.y : 0;
-    this._header = this.svgGroup.elem("rect", {width:a, height:16, y:d - 8, rx:3, ry:3, fill:"#fff", "fill-opacity":.4});
+    this._header = this.svgGroup.elem("rect", {width:b, height:16, y:d - 8, rx:3, ry:3, fill:"#fff", "fill-opacity":.4});
     this.svgGroup.appendChild(this.textElement);
-    this.svgGroup.onmouseup = function(a) {
-      c._isEditable() && c.renderOptions();
+    this.svgGroup.onmouseup = function(b) {
+      a._isEditable() && a.renderOptions();
     };
-    this.box.set({x:0, y:0, width:a, height:16});
+    this.box.set({x:0, y:0, width:b, height:16});
   };
   a.renderOptions = function() {
-    var a = this;
+    var b = this;
     this.destroyOption();
     this.documentDownEvent = Entry.documentMousedown.attach(this, function() {
       Entry.documentMousedown.detach(this.documentDownEvent);
-      a.applyValue();
-      a.destroyOption();
+      b.applyValue();
+      b.destroyOption();
     });
     this.optionGroup = Entry.Dom("input", {class:"entry-widget-input-field", parent:$("body")});
     this.optionGroup.val(this.getValue());
-    this.optionGroup.on("mousedown", function(a) {
-      a.stopPropagation();
+    this.optionGroup.on("mousedown", function(b) {
+      b.stopPropagation();
     });
-    this.optionGroup.on("keyup", function(c) {
-      var e = c.keyCode || c.which;
-      a.applyValue(c);
-      -1 < [13, 27].indexOf(e) && a.destroyOption();
+    this.optionGroup.on("keyup", function(a) {
+      var c = a.keyCode || a.which;
+      b.applyValue(a);
+      -1 < [13, 27].indexOf(c) && b.destroyOption();
     });
-    var c = this.getAbsolutePosFromDocument();
-    this.optionGroup.css({height:16, left:c.x, top:c.y, width:a.box.width});
+    var a = this.getAbsolutePosFromDocument();
+    this.optionGroup.css({height:16, left:a.x, top:a.y, width:b.box.width});
     this.optionGroup.focus();
   };
-  a.applyValue = function(a) {
-    a = this.optionGroup.val();
-    this.setValue(a);
+  a.applyValue = function(b) {
+    b = this.optionGroup.val();
+    this.setValue(b);
     this.textElement.textContent = this.truncate();
     this.resize();
   };
   a.resize = function() {
-    var a = this.getTextWidth();
-    this._header.attr({width:a});
-    this.optionGroup.css({width:a});
-    this.box.set({width:a});
+    var b = this.getTextWidth();
+    this._header.attr({width:b});
+    this.optionGroup.css({width:b});
+    this.box.set({width:b});
     this._block.view.alignContent();
   };
   a.getTextWidth = function() {
@@ -14630,17 +14640,17 @@ Entry.GlobalSvg = {};
   a.createDom = function() {
     this.svgDom || (this.svgDom = Entry.Dom($('<svg id="globalSvg" width="200" height="200"version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'), {parent:$("body")}), this.svgDom.css({position:"fixed", width:1, height:1, display:"none", overflow:"visible", "z-index":"1111", opacity:.8}), this.svg = Entry.SVG("globalSvg"), this.top = this.left = this.width = 0);
   };
-  a.setView = function(a, c) {
-    if (a != this._view && !a.block.isReadOnly() && a.movable) {
-      return this._view = a, this._mode = c, this.draw(), this.align(), this.position(), !0;
+  a.setView = function(b, a) {
+    if (b != this._view && !b.block.isReadOnly() && b.movable) {
+      return this._view = b, this._mode = a, this.draw(), this.align(), this.position(), !0;
     }
   };
   a.draw = function() {
-    var a = this._view;
+    var b = this._view;
     this._svg && this.remove();
-    var c = this._mode == Entry.Workspace.MODE_VIMBOARD;
-    this.svgGroup = Entry.SVG.createElement(a.svgGroup.cloneNode(!0), {opacity:1});
-    c && (a = this.svgGroup, a.selectAll("path").animate({opacity:0}, 500, mina.easeinout), a.selectAll("text").animate({fill:"#000000"}, 530, mina.easeinout));
+    var a = this._mode == Entry.Workspace.MODE_VIMBOARD;
+    this.svgGroup = Entry.SVG.createElement(b.svgGroup.cloneNode(!0), {opacity:1});
+    a && (b = this.svgGroup, b.selectAll("path").animate({opacity:0}, 500, mina.easeinout), b.selectAll("text").animate({fill:"#000000"}, 530, mina.easeinout));
     this.svg.appendChild(this.svgGroup);
     this.show();
   };
@@ -14648,10 +14658,10 @@ Entry.GlobalSvg = {};
     this.svgGroup && (this.svgGroup.remove(), delete this.svgGroup, delete this._view, delete this._offsetX, delete this._offsetY, delete this._startX, delete this._startY, this.hide());
   };
   a.align = function() {
-    var a = this._view.getSkeleton().box(this._view).offsetX || 0, c = this._view.getSkeleton().box(this._view).offsetY || 0, a = -1 * a + 1, c = -1 * c + 1;
-    this._offsetX = a;
-    this._offsetY = c;
-    this.svgGroup.attr({transform:"translate(" + a + "," + c + ")"});
+    var b = this._view.getSkeleton().box(this._view).offsetX || 0, a = this._view.getSkeleton().box(this._view).offsetY || 0, b = -1 * b + 1, a = -1 * a + 1;
+    this._offsetX = b;
+    this._offsetY = a;
+    this.svgGroup.attr({transform:"translate(" + b + "," + a + ")"});
   };
   a.show = function() {
     this.svgDom.css("display", "block");
@@ -15627,83 +15637,133 @@ Entry.Board = function(a) {
   a.generateCodeMagnetMap = function() {
     var a = this.code;
     if (a && this.dragBlock) {
-      a = this._getCodeBlocks(a);
+      var c = this.dragBlock._targetType, a = this._getCodeBlocks(a, c);
       a.sort(function(a, b) {
         return a.point - b.point;
       });
       a.unshift({point:-Number.MAX_VALUE, blocks:[]});
-      for (var c = 1;c < a.length;c++) {
-        var d = a[c], e = d, f = d.startBlock;
-        if (f) {
-          for (var g = d.endPoint, h = c;g > e.point && (e.blocks.push(f), h++, e = a[h], e);) {
+      for (var d = 1;d < a.length;d++) {
+        var e = a[d], f = e, g = e.startBlock;
+        if (g) {
+          for (var h = e.endPoint, k = d;h > f.point && (f.blocks.push(g), k++, f = a[k], f);) {
           }
-          delete d.startBlock;
+          delete e.startBlock;
         }
-        d.endPoint = Number.MAX_VALUE;
-        a[c - 1].endPoint = d.point;
+        e.endPoint = Number.MAX_VALUE;
+        a[d - 1].endPoint = e.point;
       }
-      this._magnetMap.nextMagnet = a;
+      this._magnetMap[c] = a;
     }
   };
-  a._getCodeBlocks = function(a) {
-    a = a.getThreads();
-    for (var c = [], d = 0, e = 0;e < a.length;e++) {
-      c = c.concat(this._getThreadBlocks(a[e], d)), d++;
+  a._getCodeBlocks = function(a, c) {
+    var d = a.getThreads(), e = [], f = 0, g;
+    switch(c) {
+      case "nextMagnet":
+        g = this._getNextMagnets;
+        break;
+      case "stringMagnet":
+        g = this._getStringMagnets;
+        break;
+      default:
+        return [];
     }
-    return c;
+    for (var h = 0;h < d.length;h++) {
+      e = e.concat(g.call(this, d[h], f)), f++;
+    }
+    return e;
   };
-  a._getThreadBlocks = function(a, c, d) {
+  a._getNextMagnets = function(a, c, d) {
     var e = a.getBlocks(), f = [], g = [];
     d || (d = {x:0, y:0});
     var h = d.x;
     d = d.y;
     for (var k = 0;k < e.length;k++) {
-      var l = e[k], n = l.view;
-      n.zIndex = c;
-      if (n.dragInstance) {
+      var l = e[k], m = l.view;
+      m.zIndex = c;
+      if (m.dragInstance) {
         break;
       }
-      d += n.y;
-      h += n.x;
+      d += m.y;
+      h += m.x;
       a = d + 1;
-      n.magnet.next && (a += n.magnet.next.y);
+      m.magnet.next && (a += m.magnet.next.y);
       g.push({point:d, endPoint:a, startBlock:l, blocks:[]});
       g.push({point:a, blocks:[]});
-      n.absX = h;
+      m.absX = h;
       if (l.statements) {
-        for (var m = 0;m < l.statements.length;m++) {
+        for (var n = 0;n < l.statements.length;n++) {
           c += .01;
-          a = l.statements[m];
-          var q = l.view._statements[m];
+          a = l.statements[n];
+          var q = l.view._statements[n];
           q.zIndex = c;
           q.absX = h + q.x;
           g.push({point:q.y + d - 30, endPoint:q.y + d + q.height, startBlock:q, blocks:[]});
           g.push({point:q.y + d + q.height, blocks:[]});
           c += .01;
-          f = f.concat(this._getThreadBlocks(a, c, {x:q.x + h, y:q.y + d}));
+          f = f.concat(this._getNextMagnets(a, c, {x:q.x + h, y:q.y + d}));
         }
       }
-      n.magnet.next && (d += n.magnet.next.y, h += n.magnet.next.x);
+      m.magnet.next && (d += m.magnet.next.y, h += m.magnet.next.x);
     }
     return f.concat(g);
   };
+  a._getStringMagnets = function(a, c, d) {
+    a = a.getBlocks();
+    var e = [];
+    d || (d = {x:0, y:0});
+    var f = d.x;
+    d = d.y;
+    for (var g = 0;g < a.length;g++) {
+      var h = a[g], k = h.view;
+      k.zIndex = c;
+      if (k.dragInstance) {
+        break;
+      }
+      d += k.y;
+      f += k.x;
+      e = e.concat(this._getContentsMetaData(k, f, d, c));
+      if (h.statements) {
+        for (var l = 0;l < h.statements.length;l++) {
+          c += .01;
+        }
+      }
+      k.magnet.next && (d += k.magnet.next.y, f += k.magnet.next.x);
+    }
+    return [].concat(e);
+  };
+  a._getContentsMetaData = function(a, c, d, e) {
+    var f = a._contents, g = [];
+    c += a.contentPos.x;
+    d += a.contentPos.y;
+    for (a = 0;a < f.length;a++) {
+      var h = f[a];
+      if (h instanceof Entry.FieldBlock) {
+        var k = c + h.box.x, l = d + h.box.y, m = d + h.box.y + h.box.height, h = h._valueBlock;
+        g.push({point:l, endPoint:m, startBlock:h, blocks:[]});
+        g.push({point:m, blocks:[]});
+        m = h.view;
+        m.absX = k;
+        m.zIndex = e;
+        g = g.concat(this._getContentsMetaData(m, k + m.contentPos.x, l + m.contentPos.y, e + .01));
+      }
+    }
+    return g;
+  };
   a.getNearestMagnet = function(a, c, d) {
-    var e = this._magnetMap[d], f = 0, g = e.length - 1, h;
-    d = null;
-    for (var k = c - 15;f <= g;) {
-      if (h = (f + g) / 2 | 0, c = e[h], k < c.point) {
-        g = h - 1;
+    for (var e = this._magnetMap[d], f = 0, g = e.length - 1, h = null, k = "nextMagnet" === d ? c - 15 : c;f <= g;) {
+      if (d = (f + g) / 2 | 0, c = e[d], k < c.point) {
+        g = d - 1;
       } else {
         if (k > c.endPoint) {
-          f = h + 1;
+          f = d + 1;
         } else {
           e = c.blocks;
           for (f = 0;f < e.length;f++) {
-            if (g = e[f].view, g.absX < a && a < g.absX + g.width && (g = c.blocks[f], !d || d.view.zIndex < g.view.zIndex)) {
-              d = c.blocks[f];
+            if (g = e[f].view, g.absX < a && a < g.absX + g.width && (g = c.blocks[f], !h || h.view.zIndex < g.view.zIndex)) {
+              h = c.blocks[f];
             }
           }
-          return d;
+          return h;
         }
       }
     }
@@ -15717,6 +15777,7 @@ Entry.Board = function(a) {
     c.elem("feMergeNode", {"in":"offsetBlur"});
     c.elem("feMergeNode", {"in":"SourceGraphic"}, c);
     a.elem("filter", {id:"entryBlockShadowFilter"}).innerHTML = '<feOffset result="offOut" in="SourceGraphic" dx="0" dy="1" /><feColorMatrix result="matrixOut" in="offOut" type="matrix"values="0.7 0 0 0 0 0 0.7 0 0 0 0 0 0.7 0 0 0 0 0 1 0" /><feBlend in="SourceGraphic" in2="blurOut" mode="normal" />';
+    a.elem("filter", {id:"entryBlockHighlightFilter"}).innerHTML = '<feOffset result="offOut" in="SourceGraphic" dx="0" dy="0" /><feColorMatrix result="matrixOut" in="offOut" type="matrix"values="1.3 0 0 0 0 0 1.3 0 0 0 0 0 1.3 0 0 0 0 0 1 0" />';
   };
   a.dominate = function(a) {
     a = a.getFirstBlock();
@@ -16117,11 +16178,11 @@ Entry.Playground.prototype.generateTextView = function(a) {
   d.bindOnClick(function() {
     var a = !Entry.playground.object.entity.getStrike() || !1;
     Entry.playground.object.entity.setStrike(a);
-    n.src = Entry.mediaFilePath + "text_button_strike_" + a + ".png";
+    m.src = Entry.mediaFilePath + "text_button_strike_" + a + ".png";
   });
-  var n = Entry.createElement("img", "entryPlaygroundText_strikeImage");
-  d.appendChild(n);
-  n.src = Entry.mediaFilePath + "text_button_strike_false.png";
+  var m = Entry.createElement("img", "entryPlaygroundText_strikeImage");
+  d.appendChild(m);
+  m.src = Entry.mediaFilePath + "text_button_strike_false.png";
   d = Entry.createElement("li");
   e.appendChild(d);
   c = Entry.createElement("a");
@@ -16196,16 +16257,16 @@ Entry.Playground.prototype.generateTextView = function(a) {
   a.addClass("entryPlaygroundFontSizeWrapper");
   b.appendChild(a);
   this.fontSizeWrapper = a;
-  var m = Entry.createElement("div");
-  m.addClass("entryPlaygroundFontSizeSlider");
-  a.appendChild(m);
+  var n = Entry.createElement("div");
+  n.addClass("entryPlaygroundFontSizeSlider");
+  a.appendChild(n);
   var q = Entry.createElement("div");
   q.addClass("entryPlaygroundFontSizeIndicator");
-  m.appendChild(q);
+  n.appendChild(q);
   this.fontSizeIndiciator = q;
   var r = Entry.createElement("div");
   r.addClass("entryPlaygroundFontSizeKnob");
-  m.appendChild(r);
+  n.appendChild(r);
   this.fontSizeKnob = r;
   e = Entry.createElement("div");
   e.addClass("entryPlaygroundFontSizeLabel");
@@ -16214,7 +16275,7 @@ Entry.Playground.prototype.generateTextView = function(a) {
   var t = !1, u = 0;
   r.onmousedown = function(a) {
     t = !0;
-    u = $(m).offset().left;
+    u = $(n).offset().left;
   };
   document.addEventListener("mousemove", function(a) {
     t && (a = a.pageX - u, a = Math.max(a, 5), a = Math.min(a, 88), r.style.left = a + "px", a /= .88, q.style.width = a + "%", Entry.playground.object.entity.setFontSize(a));

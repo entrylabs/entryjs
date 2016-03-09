@@ -197,6 +197,7 @@ Entry.BlockView.PARAM_SPACE = 5;
         this.contentSvgGroup.attr("transform",
             "translate(" + contentPos.x + "," + contentPos.y + ")"
         );
+        this.contentPos = contentPos;
         this._render();
     };
 
@@ -472,7 +473,7 @@ Entry.BlockView.PARAM_SPACE = 5;
                 }
 
                 var gs = Entry.GlobalSvg;
-                var prevBlock = this.block.getPrevBlock();
+                var prevBlock = this.block.getPrevBlock(this.block);
                 switch (Entry.GlobalSvg.terminateDrag(this)) {
                     case gs.DONE:
                         var closeBlock = this._getCloseBlock();
@@ -484,13 +485,15 @@ Entry.BlockView.PARAM_SPACE = 5;
                                 block.doMove();
                         } else {
                             if (closeBlock) {
-                                this.set({animating: true});
-
-                                this.bindPrev(closeBlock);
-                                if (!(closeBlock instanceof Entry.Block))
-                                    closeBlock = closeBlock.insertTopBlock(block);
-                                else
-                                    block.doInsert(closeBlock);
+                                if (closeBlock.view.magnet.next) {
+                                    this.bindPrev(closeBlock);
+                                    if (!(closeBlock instanceof Entry.Block))
+                                        closeBlock = closeBlock.insertTopBlock(block);
+                                    else
+                                        block.doInsert(closeBlock);
+                                } else {// field block
+                                    console.log('field');
+                                }
                                 createjs.Sound.play('entryMagneting');
                                 Entry.ConnectionRipple
                                     .setView(block.view)
@@ -541,14 +544,6 @@ Entry.BlockView.PARAM_SPACE = 5;
         var targetType = this._targetType;
         if (!targetType) return;
         return this.getBoard().getNearestMagnet(this.x, this.y, targetType);
-    };
-
-    p._inheritAnimate = function() {
-        return;
-        //TODO
-        var prevBlockView = this.block.prev.view;
-        if (prevBlockView)
-            this.set({animating: prevBlockView.animating});
     };
 
     p.dominate = function() {
@@ -626,6 +621,17 @@ Entry.BlockView.PARAM_SPACE = 5;
     p._updateBG = function() {
         if (!this._board.dragBlock || !this._board.dragBlock.dragInstance)
             return;
+        if (!this.magnet.next) {// field block
+            if (this.magneting)
+                this.svgGroup.attr({
+                    filter: 'url(#entryBlockHighlightFilter)'
+                });
+            else
+                this.svgGroup.attr({
+                    filter: 'initial'
+                });
+            return;
+        }
         var blockView = this;
         var magneting = blockView.magneting;
         var block = blockView.block;

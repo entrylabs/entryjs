@@ -16,11 +16,14 @@ Entry.FieldBlock = function(content, blockView, index) {
     var box = new Entry.BoxModel();
     this.box = box;
 
+    this.changeEvent = new Entry.Event(this);
+
     this._index = index;
     this._content = content;
-    this.dummyBlock = null;
 
     this.acceptType = content.accept;
+
+    this.view = this;
 
     this.svgGroup = null;
 
@@ -29,7 +32,6 @@ Entry.FieldBlock = function(content, blockView, index) {
     this.box.observe(blockView, "alignContent", ["width", "height"]);
 
     this.renderStart(blockView.getBoard());
-    //this._block.observe(this, "_updateThread", ["thread"]);
 };
 
 Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
@@ -103,15 +105,6 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
 
     p.calcHeight = p.calcWH;
 
-    p._updateThread = function() {
-        if (this._threadChangeEvent)
-            this._thread.changeEvent.detach(this._threadChangeEvent);
-        var thread = this._block.thread;
-        this._threadChangeEvent = this._thread.changeEvent.attach(this, function() {
-            thread.changeEvent.notify();
-        });
-    };
-
     p.destroy = function() {};
 
     p._inspectBlock = function() {
@@ -183,6 +176,23 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
         pos.x += this.box.x;
         pos.y += this.box.y;
         return pos;
+    };
+
+    p.dominate = function() {
+        this._blockView.dominate();
+    };
+
+    p.isGlobal = function() {
+         return false;
+    };
+
+    p.separate = function(block) {
+        this.getCode().createThread([block]);
+        this.changeEvent.notify();
+    };
+
+    p.getCode = function() {
+        return this._block.thread.getCode();
     };
 
 })(Entry.FieldBlock.prototype);

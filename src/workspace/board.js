@@ -8,6 +8,7 @@ goog.provide("Entry.Board");
 goog.require("Entry.Dom");
 goog.require("Entry.Model");
 goog.require("Entry.Utils");
+goog.require("Entry.FieldBlock");
 goog.require("Entry.FieldTrashcan");
 goog.require("Entry.Scroller");
 goog.require("Entry.SVG");
@@ -371,7 +372,10 @@ Entry.Board = function(option) {
     p.generateCodeMagnetMap = function() {
         var code = this.code;
         if (!code || !this.dragBlock) return;
-        var metaData = this._getCodeBlocks(code);
+
+        var targetType = this.dragBlock._targetType;
+
+        var metaData = this._getCodeBlocks(code, targetType);
         metaData.sort(function(a, b) {return a.point - b.point;});
 
         metaData.unshift({
@@ -398,27 +402,36 @@ Entry.Board = function(option) {
             metaData[i - 1].endPoint = pointData.point;
         }
 
-        this._magnetMap.nextMagnet = metaData;
+        this._magnetMap[targetType] = metaData;
     };
 
-    p._getCodeBlocks = function(code) {
+    p._getCodeBlocks = function(code, targetType) {
         var threads = code.getThreads();
         var blocks = [];
-        var that = this;
         var zIndex = 0;
+        var func;
+        switch (targetType) {
+            case "nextMagnet":
+                func = this._getNextMagnets;
+                break;
+            case "stringMagnet":
+                func = this._getStringMagnets;
+                break;
+            default:
+                return [];
+        }
         for (var i = 0; i < threads.length; i++) {
             var thread = threads[i];
-            blocks = blocks.concat(that._getThreadBlocks(thread, zIndex));
+            blocks = blocks.concat(func.call(this, thread, zIndex));
             zIndex++;
         }
         return blocks;
     };
 
-    p._getThreadBlocks = function(thread, zIndex, offset) {
+    p._getNextMagnets = function(thread, zIndex, offset) {
         var blocks = thread.getBlocks();
         var statementBlocks = [];
         var metaData = [];
-        var that = this;
         if (!offset) offset = {x: 0, y: 0};
         var cursorX = offset.x;
         var cursorY = offset.y;
@@ -446,28 +459,28 @@ Entry.Board = function(option) {
             blockView.absX = cursorX;
             if (block.statements)
                 for (var j = 0; j < block.statements.length; j++) {
-                        zIndex += 0.01;
-                        var thread = block.statements[j];
-                        var statement = block.view._statements[j];
-                        statement.zIndex = zIndex;
-                        statement.absX = cursorX + statement.x;
-                        metaData.push({
-                            point: statement.y + cursorY - 30,
-                            endPoint: statement.y + cursorY + statement.height,
-                            startBlock: statement,
-                            blocks: []
-                        });
-                        metaData.push({
-                            point: statement.y + cursorY + statement.height,
-                            blocks: []
-                        });
-                        zIndex += 0.01;
-                        statementBlocks = statementBlocks.concat(
-                            this._getThreadBlocks(thread, zIndex, {
-                                 x: statement.x + cursorX,
-                                 y: statement.y + cursorY
-                            })
-                        );
+                    zIndex += 0.01;
+                    var thread = block.statements[j];
+                    var statement = block.view._statements[j];
+                    statement.zIndex = zIndex;
+                    statement.absX = cursorX + statement.x;
+                    metaData.push({
+                        point: statement.y + cursorY - 30,
+                        endPoint: statement.y + cursorY + statement.height,
+                        startBlock: statement,
+                        blocks: []
+                    });
+                    metaData.push({
+                        point: statement.y + cursorY + statement.height,
+                        blocks: []
+                    });
+                    zIndex += 0.01;
+                    statementBlocks = statementBlocks.concat(
+                        this._getNextMagnets(thread, zIndex, {
+                             x: statement.x + cursorX,
+                             y: statement.y + cursorY
+                        })
+                    );
                 }
             if (blockView.magnet.next) {
                 cursorY += blockView.magnet.next.y;
@@ -477,6 +490,100 @@ Entry.Board = function(option) {
         return statementBlocks.concat(metaData);
     };
 
+    p._getStringMagnets = function(thread, zIndex, offset) {
+        var blocks = thread.getBlocks();
+        var statementBlocks = [];
+        var metaData = [];
+        var that = this;
+        if (!offset) offset = {x: 0, y: 0};
+        var cursorX = offset.x;
+        var cursorY = offset.y;
+        for (var i = 0; i < blocks.length; i++) {
+            var block = blocks[i];
+            var blockView = block.view;
+            blockView.zIndex = zIndex;
+            if (blockView.dragInstance)
+                break;
+            cursorY += blockView.y;
+            cursorX += blockView.x;
+            var endPoint = cursorY + 1;
+            if (blockView.magnet.next)
+                endPoint += blockView.magnet.next.y;
+            metaData = metaData.concat(
+                this._getContentsMetaData(blockView, cursorX, cursorY, zIndex)
+            );
+            if (block.statements)
+                for (var j = 0; j < block.statements.length; j++) {
+                    zIndex += 0.01;
+                    /*
+                    var thread = block.statements[j];
+                    var statement = block.view._statements[j];
+                    statement.zIndex = zIndex;
+                    statement.absX = cursorX + statement.x;
+                    metaData.push({
+                        point: statement.y + cursorY - 30,
+                        endPoint: statement.y + cursorY + statement.height,
+                        startBlock: statement,
+                        blocks: []
+                    });
+                    metaData.push({
+                        point: statement.y + cursorY + statement.height,
+                        blocks: []
+                    });
+                    zIndex += 0.01;
+                    statementBlocks = statementBlocks.concat(
+                        this._getStringMagnets(thread, zIndex, {
+                             x: statement.x + cursorX,
+                             y: statement.y + cursorY
+                        })
+                    );
+                   */
+                }
+            if (blockView.magnet.next) {
+                cursorY += blockView.magnet.next.y;
+                cursorX += blockView.magnet.next.x;
+            }
+        }
+        return statementBlocks.concat(metaData);
+    };
+
+    p._getContentsMetaData = function(blockView, cursorX, cursorY, zIndex) {
+        var contents = blockView._contents;
+        var metaData = [];
+        cursorX += blockView.contentPos.x;
+        cursorY += blockView.contentPos.y;
+        for (var i = 0; i < contents.length; i++) {
+            var content = contents[i];
+            if (!(content instanceof Entry.FieldBlock))
+                continue;
+            var startX = cursorX + content.box.x;
+            var startY = cursorY + content.box.y;
+            var endY = cursorY + content.box.y + content.box.height;
+            var contentBlock = content._valueBlock;
+            metaData.push({
+                point: startY,
+                endPoint: endY,
+                startBlock: contentBlock,
+                blocks: []
+            });
+            metaData.push({
+                point: endY,
+                blocks: []
+            });
+            var contentBlockView = contentBlock.view;
+            contentBlockView.absX = startX;
+            contentBlockView.zIndex = zIndex;
+            metaData = metaData.concat(
+                this._getContentsMetaData(contentBlockView,
+                                          startX + contentBlockView.contentPos.x,
+                                          startY + contentBlockView.contentPos.y,
+                                          zIndex + 0.01)
+            );
+        }
+        return metaData;
+    };
+
+
     p.getNearestMagnet = function(x, y, targetType) {
         var targetArray = this._magnetMap[targetType],
             minIndex = 0,
@@ -484,7 +591,7 @@ Entry.Board = function(option) {
             index,
             pointData,
             result = null,
-            searchValue = y - 15;
+            searchValue = targetType === "nextMagnet" ? y - 15 : y;
         while (minIndex <= maxIndex) {
             index = (minIndex + maxIndex) / 2 | 0;
             pointData = targetArray[index];
@@ -525,6 +632,12 @@ Entry.Board = function(option) {
                      '<feColorMatrix result="matrixOut" in="offOut" type="matrix"' +
                      'values="0.7 0 0 0 0 0 0.7 0 0 0 0 0 0.7 0 0 0 0 0 1 0" />' +
                      '<feBlend in="SourceGraphic" in2="blurOut" mode="normal" />';
+
+        var blockHighlightFilter = defs.elem('filter', {'id': 'entryBlockHighlightFilter'});
+        blockHighlightFilter.innerHTML =
+            '<feOffset result="offOut" in="SourceGraphic" dx="0" dy="0" />' +
+             '<feColorMatrix result="matrixOut" in="offOut" type="matrix"' +
+             'values="1.3 0 0 0 0 0 1.3 0 0 0 0 0 1.3 0 0 0 0 0 1 0" />';
     };
 
     p.dominate = function(thread) {
