@@ -14609,6 +14609,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
       -1 < [13, 27].indexOf(c) && b.destroyOption();
     });
     var a = this.getAbsolutePosFromDocument();
+    a.y -= this.box.height / 2;
     this.optionGroup.css({height:16, left:a.x, top:a.y, width:b.box.width});
     this.optionGroup.focus();
   };
@@ -14672,11 +14673,11 @@ Entry.GlobalSvg = {};
     this.top = a.y + b.top - this._offsetY;
     this.svgDom.css({left:this.left, top:this.top});
   };
-  a.terminateDrag = function(b) {
-    var a = Entry.mouseCoordinate;
-    b = b.getBoard().workspace.blockMenu;
-    var d = b.offset.left, e = b.offset.top, f = b.visible ? b.svgDom.width() : 0;
-    return a.y > e && a.x > d + f ? this.DONE : a.y > e && a.x > d && b.visible ? this.REMOVE : this.RETURN;
+  a.terminateDrag = function(a) {
+    var c = Entry.mouseCoordinate;
+    a = a.getBoard().workspace.blockMenu;
+    var d = a.offset.left, e = a.offset.top, f = a.visible ? a.svgDom.width() : 0;
+    return c.y > e && c.x > d + f ? this.DONE : c.y > e && c.x > d && a.visible ? this.REMOVE : this.RETURN;
   };
   a.addControl = function(a) {
     this.onMouseDown.apply(this, arguments);

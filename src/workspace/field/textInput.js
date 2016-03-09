@@ -108,6 +108,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
         });
 
         var pos = this.getAbsolutePosFromDocument();
+        pos.y -= this.box.height/2;
         this.optionGroup.css({
             height: CONTENT_HEIGHT,
             left:pos.x,
@@ -116,7 +117,6 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
         });
 
         this.optionGroup.focus();
-
     };
 
     p.applyValue = function(event) {
