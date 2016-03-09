@@ -6869,6 +6869,7 @@ Entry.init = function(a, b) {
   this.parseOptions(b);
   this.mediaFilePath = (b.libDir ? b.libDir : "/lib") + "/entryjs/images/";
   this.defaultPath = b.defaultDir || "";
+  this.blockInjectPath = b.blockInjectDir || "";
   "workspace" == this.type && this.isPhone() && (this.type = "phone");
   this.initialize_();
   this.view_ = a;
@@ -9127,7 +9128,7 @@ Entry.Playground.prototype.generateCodeView = function(a) {
     });
     a.appendChild(b);
     c = Entry.parseTexttoXML("<xml></xml>");
-    Blockly.inject(b, {path:".././", toolbox:c, trashcan:!0, blockmenu:this.blockMenuView_, mediaFilePath:Entry.mediaFilePath});
+    Blockly.inject(b, {path:Entry.blockInjectPath || ".././", toolbox:c, trashcan:!0, blockmenu:this.blockMenuView_, mediaFilePath:Entry.mediaFilePath});
     Blockly.mainWorkspace.flyout_.hide();
     Blockly.mainWorkspace.blockMenu.hide();
     document.addEventListener("blocklyWorkspaceChange", this.syncObjectWithEvent, !1);
@@ -9137,7 +9138,7 @@ Entry.Playground.prototype.generateCodeView = function(a) {
   }
   if ("phone" == Entry.type) {
     return b = Entry.createElement("div", "entryCategory"), b.addClass("entryCategoryPhone"), a.appendChild(b), this.categoryView_ = b, c = Entry.createElement("ul", "entryCategoryList"), c.addClass("entryCategoryListPhone"), b.appendChild(c), this.categoryListView_ = c, b = this.createVariableView(), a.appendChild(b), this.variableView_ = b, b = Entry.createElement("div", "entryBlockly"), b.addClass("entryBlocklyPhone"), this.blocklyView_ = b, a.appendChild(b), c = Entry.parseTexttoXML("<xml></xml>"), 
-    Blockly.inject(b, {path:".././", toolbox:c, trashcan:!0, mediaFilePath:Entry.mediaFilePath}), Blockly.mainWorkspace.flyout_.autoClose = !0, Blockly.mainWorkspace.flyout_.hide(), document.addEventListener("blocklyWorkspaceChange", this.syncObjectWithEvent, !1), this.blockMenu = Blockly.mainWorkspace.flyout_, Entry.hw.banHW(), a;
+    Blockly.inject(b, {path:Entry.blockInjectPath || ".././", toolbox:c, trashcan:!0, mediaFilePath:Entry.mediaFilePath}), Blockly.mainWorkspace.flyout_.autoClose = !0, Blockly.mainWorkspace.flyout_.hide(), document.addEventListener("blocklyWorkspaceChange", this.syncObjectWithEvent, !1), this.blockMenu = Blockly.mainWorkspace.flyout_, Entry.hw.banHW(), a;
   }
 };
 Entry.Playground.prototype.generatePictureView = function(a) {

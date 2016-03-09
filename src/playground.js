@@ -328,7 +328,7 @@ Entry.Playground.prototype.generateCodeView = function(codeView) {
         Blockly.inject(
             blocklyView,
             {
-                path: '.././',
+                path: Entry.blockInjectPath || '.././',
                 toolbox: XML,
                 trashcan: true,
                 blockmenu: this.blockMenuView_,
@@ -376,7 +376,7 @@ Entry.Playground.prototype.generateCodeView = function(codeView) {
         Blockly.inject(
             blocklyView,
             {
-                path: '.././',
+                path: Entry.blockInjectPath || '.././',
                 toolbox: XML,
                 trashcan: true,
                 mediaFilePath: Entry.mediaFilePath
