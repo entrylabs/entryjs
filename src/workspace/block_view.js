@@ -476,6 +476,7 @@ Entry.BlockView.PARAM_SPACE = 5;
                 }
 
                 var gs = Entry.GlobalSvg;
+                var ripple = false;
                 var prevBlock = this.block.getPrevBlock(this.block);
                 switch (Entry.GlobalSvg.terminateDrag(this)) {
                     case gs.DONE:
@@ -490,17 +491,14 @@ Entry.BlockView.PARAM_SPACE = 5;
                             if (closeBlock) {
                                 if (closeBlock.view.magnet.next) {
                                     this.bindPrev(closeBlock);
-                                    if (!(closeBlock instanceof Entry.Block))
+                                    if (!(closeBlock instanceof Entry.Block)) {
                                         closeBlock = closeBlock.insertTopBlock(block);
-                                    else
-                                        block.doInsert(closeBlock);
+                                    } else block.doInsert(closeBlock);
                                 } else {// field block
                                     console.log('field');
                                 }
                                 createjs.Sound.play('entryMagneting');
-                                Entry.ConnectionRipple
-                                    .setView(block.view)
-                                    .dispose();
+                                ripple = true;
                             } else {
                                 this._toGlobalCoordinate(dragMode);
                                 block.doSeparate();
@@ -534,6 +532,11 @@ Entry.BlockView.PARAM_SPACE = 5;
                         break;
                 }
                 board.setMagnetedBlock(null);
+                if (ripple) {
+                    Entry.ConnectionRipple
+                        .setView(block.view)
+                        .dispose();
+                }
             }
         }
 
@@ -736,11 +739,6 @@ Entry.BlockView.PARAM_SPACE = 5;
     p._setReadOnly = function() {
         this.readOnly = this.block.isReadOnly() !== null ? this.block.isReadOnly() :
             (this._skeleton.readOnly !== undefined ? this._skeleton.readOnly : false);
-    };
-
-    p.getRipplePosition = function() {
-        var pos = this.getAbsoluteCoordinate();
-        return {cx:pos.x, cy:pos.y};
     };
 
     p.bumpAway = function(delay) {

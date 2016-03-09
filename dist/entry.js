@@ -13419,15 +13419,17 @@ Entry.BlockView.PARAM_SPACE = 5;
       a instanceof Entry.BlockMenu ? (a.terminateDrag(), this.vimBoardEvent(b, "dragEnd", e)) : a.clear();
     } else {
       if (d !== Entry.DRAG_MODE_MOUSEDOWN) {
-        (f = this.dragInstance && this.dragInstance.isNew) && !a.workspace.blockMenu.terminateDrag() && (e._updatePos(), e.doAdd());
-        var g = Entry.GlobalSvg;
-        b = this.block.getPrevBlock(this.block);
+        var g = this.dragInstance && this.dragInstance.isNew;
+        g && !a.workspace.blockMenu.terminateDrag() && (e._updatePos(), e.doAdd());
+        var h = Entry.GlobalSvg;
+        b = !1;
+        f = this.block.getPrevBlock(this.block);
         switch(Entry.GlobalSvg.terminateDrag(this)) {
-          case g.DONE:
-            g = this._getCloseBlock();
-            b || g ? g ? (g.view.magnet.next ? (this.bindPrev(g), g instanceof Entry.Block ? e.doInsert(g) : g.insertTopBlock(e)) : console.log("field"), createjs.Sound.play("entryMagneting"), Entry.ConnectionRipple.setView(e.view).dispose()) : (this._toGlobalCoordinate(d), e.doSeparate()) : e.getThread().view.isGlobal() ? d != Entry.DRAG_MODE_DRAG || f || e.doMove() : (this._toGlobalCoordinate(d), e.doSeparate());
+          case h.DONE:
+            h = this._getCloseBlock();
+            f || h ? h ? (h.view.magnet.next ? (this.bindPrev(h), h instanceof Entry.Block ? e.doInsert(h) : h.insertTopBlock(e)) : console.log("field"), createjs.Sound.play("entryMagneting"), b = !0) : (this._toGlobalCoordinate(d), e.doSeparate()) : e.getThread().view.isGlobal() ? d != Entry.DRAG_MODE_DRAG || g || e.doMove() : (this._toGlobalCoordinate(d), e.doSeparate());
             break;
-          case g.RETURN:
+          case h.RETURN:
             e = this.block;
             if (e.isPrimitive) {
               e.getThread().cut(e);
@@ -13435,12 +13437,13 @@ Entry.BlockView.PARAM_SPACE = 5;
               break;
             }
             d = this.originPos;
-            b ? (this.set({animating:!1}), createjs.Sound.play("entryMagneting"), e.view.bindPrev(b)) : this._moveTo(d.x, d.y, !1);
+            f ? (this.set({animating:!1}), createjs.Sound.play("entryMagneting"), e.view.bindPrev(f)) : this._moveTo(d.x, d.y, !1);
             break;
-          case g.REMOVE:
-            createjs.Sound.play("entryDelete"), f ? (b && e.separate(), this.block.destroy(!1, !0)) : (b && e.doSeparate(), this.block.doDestroyBelow(!1));
+          case h.REMOVE:
+            createjs.Sound.play("entryDelete"), g ? (f && e.separate(), this.block.destroy(!1, !0)) : (f && e.doSeparate(), this.block.doDestroyBelow(!1));
         }
         a.setMagnetedBlock(null);
+        b && Entry.ConnectionRipple.setView(e.view).dispose();
       }
     }
     this.destroyShadow();
@@ -13555,10 +13558,6 @@ Entry.BlockView.PARAM_SPACE = 5;
   };
   a._setReadOnly = function() {
     this.readOnly = null !== this.block.isReadOnly() ? this.block.isReadOnly() : void 0 !== this._skeleton.readOnly ? this._skeleton.readOnly : !1;
-  };
-  a.getRipplePosition = function() {
-    var b = this.getAbsoluteCoordinate();
-    return {cx:b.x, cy:b.y};
   };
   a.bumpAway = function(b) {
     var a = this;
@@ -13754,7 +13753,8 @@ Entry.ConnectionRipple = {};
     this._ripple || this.createDom(b);
     var a = this._ripple, d = b.getBoard().svgGroup;
     a.remove();
-    a.attr(b.getRipplePosition());
+    b = b.getAbsoluteCoordinate();
+    a.attr({cx:b.x, cy:b.y});
     d.appendChild(a);
     a._startTime = new Date;
     return this;
@@ -14683,11 +14683,11 @@ Entry.GlobalSvg = {};
     this.top = a.y + b.top - this._offsetY;
     this.svgDom.css({left:this.left, top:this.top});
   };
-  a.terminateDrag = function(b) {
-    var a = Entry.mouseCoordinate;
-    b = b.getBoard().workspace.blockMenu;
-    var d = b.offset.left, e = b.offset.top, f = b.visible ? b.svgDom.width() : 0;
-    return a.y > e && a.x > d + f ? this.DONE : a.y > e && a.x > d && b.visible ? this.REMOVE : this.RETURN;
+  a.terminateDrag = function(a) {
+    var c = Entry.mouseCoordinate;
+    a = a.getBoard().workspace.blockMenu;
+    var d = a.offset.left, e = a.offset.top, f = a.visible ? a.svgDom.width() : 0;
+    return c.y > e && c.x > d + f ? this.DONE : c.y > e && c.x > d && a.visible ? this.REMOVE : this.RETURN;
   };
   a.addControl = function(a) {
     this.onMouseDown.apply(this, arguments);
