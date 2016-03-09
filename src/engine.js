@@ -464,7 +464,6 @@ Entry.Engine.prototype.run = function() {
 Entry.Engine.prototype.toggleRun = function() {
     Entry.addActivity("run");
     if (this.state == 'stop') {
-        Entry.playground.syncObject();
         Entry.container.mapEntity(function(entity){
             entity.takeSnapshot();
         });

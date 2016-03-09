@@ -39,36 +39,37 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldKeyboard);
         var that = this;
         var contents = this._contents;
 
-        this.svgGroup = blockView.contentSvgGroup.group();
-        this.svgGroup.attr({
+        this.svgGroup = blockView.contentSvgGroup.elem("g", {
             class: 'entry-input-field'
         });
 
         this.textElement =
-            this.svgGroup.text(
-                X_PADDING/2, TEXT_Y_PADDING,
-                Entry.getKeyCodeMap()[this.getValue()]
-            );
-        this.textElement.attr({'font-size' : '9pt'});
+            this.svgGroup.elem('text').attr({
+                x: X_PADDING/2,
+                y: TEXT_Y_PADDING,
+                'font-size' : '9pt'
+            });
+
+        this.textElement.innerHTML = Entry.getKeyCodeMap()[this.getValue()];
 
         var width = this.getTextWidth();
 
         var y = this.position && this.position.y ? this.position.y : 0;
         y -= CONTENT_HEIGHT/2;
-        this._header = this.svgGroup.rect(
-                0, y,
-                width,
-                CONTENT_HEIGHT,
-            3).attr({
+        this._header = this.svgGroup.elem('rect', {
+                x: 0, y: y,
+                width: width,
+                height: CONTENT_HEIGHT,
+                rx: 3, ry: 3,
                 fill: "#fff",
                 'fill-opacity': 0.4
-                });
+            });
 
-        this.svgGroup.append(this.textElement);
+        this.svgGroup.appendChild(this.textElement);
 
-        this.svgGroup.mouseup(function(e) {
+        this.svgGroup.onmouseup = function(e) {
             if (that._isEditable()) that.renderOptions();
-        });
+        };
 
         this.box.set({
             x: 0,
@@ -91,24 +92,17 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldKeyboard);
             }
         );
 
-        this.optionGroup = this.appendSvgOptionGroup();
-        this.optionGroup.image(
-            Entry.mediaFilePath + '/media/keyboard_workspace.png',
-            -5,
-            0,
-            249,
-            106
-        );
-
-        var pos = this.getRelativePos();
+        var pos = this.getAbsolutePosFromBoard();
         pos.x -= 5;
         pos.y += this.box.height/2;
 
-        this.optionGroup.attr({
+        this.optionGroup = this.appendSvgOptionGroup();
+        this.optionGroup.elem('image', {
+            href: Entry.mediaFilePath + '/media/keyboard_workspace.png',
+            x: -5, y: 0, width: 249, height: 106,
             class: 'entry-field-keyboard',
-            transform: "t" + pos.x + " " + pos.y
+            transform: "translate(" + pos.x + "," + pos.y + ')'
         });
-
     };
 
     p.destroyOption = function() {
@@ -125,7 +119,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldKeyboard);
         this._optionVisible = false;
     };
 
-    p._keyboardControl = function(sender, event) {
+    p._keyboardControl = function(event) {
         event.stopPropagation();
         if (!this._optionVisible) return;
 
@@ -138,7 +132,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldKeyboard);
         this.destroyOption();
         if (this.getValue() == value) return;
         this.setValue(value);
-        this.textElement.node.textContent = text;
+        this.textElement.innerHTML = text;
         this.resize();
     };
 
@@ -152,7 +146,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldKeyboard);
     };
 
     p.getTextWidth = function() {
-         return this.textElement.node.getComputedTextLength() + X_PADDING;
+         return this.textElement.getComputedTextLength() + X_PADDING;
     };
 
     p.destroy = function() {

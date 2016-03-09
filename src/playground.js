@@ -13,12 +13,6 @@ goog.require("Entry.BlockDriver");
  * @constructor
  */
 Entry.Playground = function() {
-    /**
-     * apply menu blocks by object type
-     * @type {dictionary}
-     */
-    this.menuBlocks_ = {};
-
     this.isTextBGMode_ = false;
 
     this.enableArduino = false;
@@ -30,10 +24,7 @@ Entry.Playground = function() {
      */
     this.viewMode_ = 'default';
     Entry.addEventListener('textEdited', this.injectText);
-    Entry.addEventListener('entryBlocklyChanged', this.editBlock);
-    Entry.addEventListener('entryBlocklyMouseUp', this.mouseupBlock);
     Entry.addEventListener('hwChanged', this.updateHW);
-
 };
 
 /**
@@ -773,10 +764,9 @@ Entry.Playground.prototype.injectObject = function(object) {
         this.object = null;
         return;
     }
-    if (object === this.object)
-        return;
+    if (object === this.object) return;
+
     if (this.object) {
-        this.syncObject(this.object);
         this.object.toggleInformation(false);
     }
     this.object = object;
@@ -819,8 +809,7 @@ Entry.Playground.prototype.injectCode = function() {
  */
 Entry.Playground.prototype.injectPicture = function() {
     var view = this.pictureListView_;
-    if (!view)
-        return;
+    if (!view) return;
     while (view.hasChildNodes()) {
         view.removeChild(view.lastChild);
     }
@@ -1083,17 +1072,6 @@ Entry.Playground.prototype.toggleOffVariableView = function() {
     this.variableView_.addClass('entryRemove');
 };
 
-/**
- * Save current playground data to selected object
- * @param {?Entry.EntryObject} object
- */
-Entry.Playground.prototype.syncObject = function(object) {
-    if (this.object && !object)
-        object = this.object;
-    if (object) {
-        // TODO : save code to object ?
-    }
-};
 
 /**
  */
@@ -1141,7 +1119,6 @@ Entry.Playground.prototype.restoreBlock = function(targetObject, blockString) {
     }
     var script = Blockly.Xml.textToDom(blockString);
     //TODO: restore block
-    this.syncObject();
 };
 
 /**
@@ -1149,7 +1126,6 @@ Entry.Playground.prototype.restoreBlock = function(targetObject, blockString) {
  * @param {event} e
  */
 Entry.Playground.prototype.syncObjectWithEvent = function(e) {
-    Entry.playground.syncObject();
 };
 
 /**

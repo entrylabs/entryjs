@@ -4523,7 +4523,7 @@ span.CodeMirror-selectedtext {
   width: 64px;
   height: 100%;
   display: inline-block;
-  background-color: orange;
+  background-color: #f5f5f5;
   list-style-type: none;
   margin: 0;
   padding: 0;
@@ -4538,10 +4538,6 @@ span.CodeMirror-selectedtext {
   height: 100%;
   width: 100%;
 }
-/*.entryCategoryListWorkspace {*/
-/*padding: 44px 0 0 0;*/
-/*margin: 0;*/
-/*}*/
 .entryCategoryListPhone {
   padding: 0;
   margin: 0;
@@ -4632,32 +4628,6 @@ span.CodeMirror-selectedtext {
 .block.basicButtonView:hover > g > path {
   fill: #f4f4f4;
 }
-
-.dragNone {
-  -webkit-touch-callout: none;
-  -webkit-user-select: none;
-  -khtml-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-}
-.entryHidden {
-  visibility: hidden;
-}
-.entryRemove {
-  display: none !important;
-}
-.entryRemoveElement {
-  display: none !important;
-}
-.entryNoDeco {
-  text-decoration: none !important;
-}
-.entryBtn {
-  border: none;
-  margin: 0;
-  background-color: transparent;
-}
 .block {
   cursor: url('../images/handopen.cur') 8 5, auto;
 }
@@ -4678,7 +4648,8 @@ svg .svgBlockGroup text {
   fill: white;
 }
 .entry-field-dropdown .rect text {
-  fill: black;
+  fill: #000;
+  font-size: 9pt;
 }
 .entry-field-dropdown .rect:hover {
   fill: #127cdb;
@@ -4686,40 +4657,7 @@ svg .svgBlockGroup text {
 .entry-field-dropdown .rect:hover text {
   fill: white;
 }
-.entryBoard {
-  cursor: move;
-}
-.entryOverlayBoard {
-  background: rgba(180, 180, 180, 0.4);
-}
-.boardScrollbar {
-  opacity: 0.4;
-  cursor: move;
-}
-.boardScrollbar:hover {
-  opacity: 0.6;
-}
 .entry-field-color {
-  cursor: pointer;
-}
-.entry-widget-color-table {
-  border: 1px solid #666;
-  border-collapse: collapse;
-  z-index: 1001;
-  position: fixed;
-}
-.entry-widget-color-table .entry-widget-color-row {
-  border-bottom: 2px solid #666;
-}
-.entry-widget-color-table .entry-widget-color-cell {
-  height: 13px;
-  width: 15px;
-  margin: 0;
-  border: 0;
-  text-align: center;
-  vertical-align: middle;
-  border-right: 2px solid #666;
-  font-size: 1px;
   cursor: pointer;
 }
 .entry-input-field {
@@ -4754,6 +4692,65 @@ svg .svgBlockGroup text {
 .entry-angle-fill-area {
   fill: #f88;
   fill-opacity: 0.8;
+}
+
+.dragNone {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+.entryHidden {
+  visibility: hidden;
+}
+.entryRemove {
+  display: none !important;
+}
+.entryRemoveElement {
+  display: none !important;
+}
+.entryNoDeco {
+  text-decoration: none !important;
+}
+.entryBtn {
+  border: none;
+  margin: 0;
+  background-color: transparent;
+}
+.entryBoard {
+  cursor: move;
+}
+.entryOverlayBoard {
+  background: rgba(180, 180, 180, 0.4);
+}
+.boardScrollbar {
+  opacity: 0.4;
+  cursor: move;
+}
+.boardScrollbar:hover {
+  opacity: 0.6;
+}
+.entry-widget-color-table {
+  border: 1px solid #666;
+  border-collapse: collapse;
+  z-index: 1001;
+  position: fixed;
+}
+.entry-widget-color-table .entry-widget-color-row {
+  border-bottom: 2px solid #666;
+}
+.entry-widget-color-table .entry-widget-color-cell {
+  height: 13px;
+  width: 15px;
+  margin: 0;
+  border: 0;
+  text-align: center;
+  vertical-align: middle;
+  border-right: 2px solid #666;
+  font-size: 1px;
+  cursor: pointer;
 }
 .entryBoardWrapper {
   position: absolute;

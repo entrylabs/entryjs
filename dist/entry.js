@@ -1827,8 +1827,8 @@ Entry.block.stop_run = function(a, b) {
 };
 Blockly.Blocks.repeat_while_true = {init:function() {
   this.setColour("#498deb");
-  "ko" == Lang.type ? (this.appendDummyInput().appendField(Lang.Blocks.FLOW_repeat_while_true_1), this.appendValueInput("BOOL").setCheck("Boolean"), this.appendDummyInput().appendField(new Blockly.FieldDropdown([[Lang.Blocks.FLOW_repeat_while_true_until, "until"], [Lang.Blocks.FLOW_repeat_while_true_while, "while"]]), "OPTION").appendField(Lang.Blocks.FLOW_repeat_while_true_2)) : (this.appendDummyInput().appendField(Lang.Blocks.FLOW_repeat_while_true_1), this.appendDummyInput().appendField(new Blockly.FieldDropdown([[Lang.Blocks.FLOW_repeat_while_true_until, 
-  "until"], [Lang.Blocks.FLOW_repeat_while_true_while, "while"]]), "OPTION"), this.appendValueInput("BOOL").setCheck("Boolean"), this.appendDummyInput().appendField(Lang.Blocks.FLOW_repeat_while_true_2));
+  "ko" == Lang.type ? (this.appendDummyInput().appendField(Lang.Blocks.FLOW_repeat_while_true_1), this.appendValueInput("BOOL").setCheck("Boolean"), this.appendDummyInput().appendField(new Blockly.FieldDropdown([[Lang.Blocks.FLOW_repeat_while_true_until, "until"], [Lang.Blocks.FLOW_repeat_while_true_while, "while"]]), "OPTION").appendField(Lang.Blocks.FLOW_repeat_while_true_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/flow_03.png", "*"))) : (this.appendDummyInput().appendField(Lang.Blocks.FLOW_repeat_while_true_1), 
+  this.appendDummyInput().appendField(new Blockly.FieldDropdown([[Lang.Blocks.FLOW_repeat_while_true_until, "until"], [Lang.Blocks.FLOW_repeat_while_true_while, "while"]]), "OPTION"), this.appendValueInput("BOOL").setCheck("Boolean"), this.appendDummyInput().appendField(Lang.Blocks.FLOW_repeat_while_true_2).appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/flow_03.png", "*")));
   this.appendStatementInput("DO");
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
@@ -5793,7 +5793,7 @@ Entry.Engine.prototype.run = function() {
 };
 Entry.Engine.prototype.toggleRun = function() {
   Entry.addActivity("run");
-  "stop" == this.state && (Entry.playground.syncObject(), Entry.container.mapEntity(function(a) {
+  "stop" == this.state && (Entry.container.mapEntity(function(a) {
     a.takeSnapshot();
   }), Entry.variableContainer.mapVariable(function(a) {
     a.takeSnapshot();
@@ -6499,7 +6499,6 @@ Entry.EntryObject = function(a) {
     this.text = a.text || this.name;
     this.objectType = a.objectType;
     this.objectType || (this.objectType = "sprite");
-    a.script = [[{type:"when_run_button_click", x:40, y:240}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"repeat_basic", statements:[[{type:"move_direction"}, {type:"move_x"}, {type:"move_y"}, {type:"stop_repeat"}]]}, {type:"stop_repeat"}, {type:"move_direction"}]];
     this.script = new Entry.Code(a.script ? a.script : []);
     this.pictures = a.sprite.pictures;
     this.sounds = [];
@@ -8743,9 +8742,9 @@ Entry.Popup.prototype.resize = function(a) {
   a.style.height = String(c + 35) + "px";
 };
 Entry.getStartProject = function(a) {
-  return {category:"\uae30\ud0c0", scenes:[{name:"\uc7a5\uba74 1", id:"7dwq"}], variables:[{name:"\ucd08\uc2dc\uacc4", id:"brih", visible:!1, value:"0", variableType:"timer", x:150, y:-70, array:[], object:null, isCloud:!1}, {name:"\ub300\ub2f5", id:"1vu8", visible:!1, value:"0", variableType:"answer", x:150, y:-100, array:[], object:null, isCloud:!1}], objects:[{id:"7y0y", name:"\uc5d4\ud2b8\ub9ac\ubd07", script:'<xml><block type="when_run_button_click" x="136" y="47"><next><block type="repeat_basic"><value name="VALUE"><block type="number"><field name="NUM">10</field></block></value><statement name="DO"><block type="move_direction"><value name="VALUE"><block type="number"><field name="NUM">10</field></block></value></block></statement></block></next></block></xml>', 
-  selectedPictureId:"vx80", objectType:"sprite", rotateMethod:"free", scene:"7dwq", sprite:{sounds:[{duration:1.3, ext:".mp3", id:"8el5", fileurl:a + "media/bark.mp3", name:"\uac15\uc544\uc9c0 \uc9d6\ub294\uc18c\ub9ac"}], pictures:[{id:"vx80", fileurl:a + "media/entrybot1.png", name:"\uc5d4\ud2b8\ub9ac\ubd07_\uac77\uae301", scale:100, dimension:{width:284, height:350}}, {id:"4t48", fileurl:a + "media/entrybot2.png", name:"\uc5d4\ud2b8\ub9ac\ubd07_\uac77\uae302", scale:100, dimension:{width:284, height:350}}]}, 
-  entity:{x:0, y:0, regX:142, regY:175, scaleX:.3154574132492113, scaleY:.3154574132492113, rotation:0, direction:90, width:284, height:350, visible:!0}, lock:!1, active:!0}], speed:60};
+  return {category:"\uae30\ud0c0", scenes:[{name:"\uc7a5\uba74 1", id:"7dwq"}], variables:[{name:"\ucd08\uc2dc\uacc4", id:"brih", visible:!1, value:"0", variableType:"timer", x:150, y:-70, array:[], object:null, isCloud:!1}, {name:"\ub300\ub2f5", id:"1vu8", visible:!1, value:"0", variableType:"answer", x:150, y:-100, array:[], object:null, isCloud:!1}], objects:[{id:"7y0y", name:"\uc5d4\ud2b8\ub9ac\ubd07", script:[[{type:"when_run_button_click", x:40, y:240}, {type:"move_direction"}, {type:"stop_repeat"}, 
+  {type:"move_direction"}, {type:"repeat_basic", statements:[[{type:"move_direction"}, {type:"move_x"}, {type:"move_y"}, {type:"stop_repeat"}]]}, {type:"stop_repeat"}, {type:"move_direction"}]], selectedPictureId:"vx80", objectType:"sprite", rotateMethod:"free", scene:"7dwq", sprite:{sounds:[{duration:1.3, ext:".mp3", id:"8el5", fileurl:a + "media/bark.mp3", name:"\uac15\uc544\uc9c0 \uc9d6\ub294\uc18c\ub9ac"}], pictures:[{id:"vx80", fileurl:a + "media/entrybot1.png", name:"\uc5d4\ud2b8\ub9ac\ubd07_\uac77\uae301", 
+  scale:100, dimension:{width:284, height:350}}, {id:"4t48", fileurl:a + "media/entrybot2.png", name:"\uc5d4\ud2b8\ub9ac\ubd07_\uac77\uae302", scale:100, dimension:{width:284, height:350}}]}, entity:{x:0, y:0, regX:142, regY:175, scaleX:.3154574132492113, scaleY:.3154574132492113, rotation:0, direction:90, width:284, height:350, visible:!0}, lock:!1, active:!0}], speed:60};
 };
 Entry.PropertyPanel = function() {
   this.modes = {};
@@ -9699,11 +9698,11 @@ Entry.StateManager.prototype.addCommand = function(a, b, c, d) {
     } else {
       e = new Entry.State, f = Array.prototype.slice.call(arguments), Entry.State.prototype.constructor.apply(e, f), this.undoStack_.push(e), Entry.reporter && Entry.reporter.report(e), this.updateView();
     }
-    Entry.dispatchEvent("saveLocalStorageProject");
+    Entry.creationChangedEvent && Entry.creationChangedEvent.notify();
   }
 };
 Entry.StateManager.prototype.cancelLastCommand = function() {
-  this.canUndo() && (this.undoStack_.pop(), this.updateView(), Entry.dispatchEvent("saveLocalStorageProject"));
+  this.canUndo() && (this.undoStack_.pop(), this.updateView(), Entry.creationChangedEvent && Entry.creationChangedEvent.notify());
 };
 Entry.StateManager.prototype.undo = function() {
   if (this.canUndo() && !this.isRestoring()) {
@@ -9713,7 +9712,7 @@ Entry.StateManager.prototype.undo = function() {
     a.func.apply(a.caller, a.params);
     this.updateView();
     this.endRestore();
-    Entry.dispatchEvent("saveLocalStorageProject");
+    Entry.creationChangedEvent && Entry.creationChangedEvent.notify();
   }
 };
 Entry.StateManager.prototype.redo = function() {
@@ -9722,7 +9721,7 @@ Entry.StateManager.prototype.redo = function() {
     var a = this.redoStack_.pop();
     a.func.apply(a.caller, a.params);
     this.updateView();
-    Entry.dispatchEvent("saveLocalStorageProject");
+    Entry.creationChangedEvent && Entry.creationChangedEvent.notify();
   }
 };
 Entry.StateManager.prototype.updateView = function() {
@@ -9899,8 +9898,9 @@ Entry.BlockMockup = function(a) {
     "Boolean" === b && (a[a.length - 1].accept = "basic_boolean_field");
   };
   a.appendField = function(b) {
-    "string" === typeof b && 0 < b.length ? this.templates.push(b) : b instanceof Blockly.FieldIcon ? ("start" === b.type ? this.params.push({type:"Indicator", img:b.src_, size:17, position:{x:0, y:-2}}) : this.params.push({type:"Indicator", img:b.src_, size:12}), this.templates.push(this.getFieldCount())) : b instanceof Blockly.FieldDropdown ? (this.params.push({type:"Dropdown", options:b.menuGenerator_, value:b.menuGenerator_[0][1], fontSize:11}), this.templates.push(this.getFieldCount())) : b instanceof 
-    Blockly.FieldDropdownDynamic ? (this.params.push({type:"Dropdown", options:[["\ub300\uc0c1 \uc5c6\uc74c", "null"]], value:"null", fontSize:11}), this.templates.push(this.getFieldCount())) : b instanceof Blockly.FieldTextInput && (this.params.push({type:"TextInput", value:10}), this.templates.push(this.getFieldCount()));
+    "string" === typeof b && 0 < b.length ? this.templates.push(b) : b.constructor == Blockly.FieldIcon ? ("start" === b.type ? this.params.push({type:"Indicator", img:b.src_, size:17, position:{x:0, y:-2}}) : this.params.push({type:"Indicator", img:b.src_, size:12}), this.templates.push(this.getFieldCount())) : b.constructor == Blockly.FieldDropdown ? (this.params.push({type:"Dropdown", options:b.menuGenerator_, value:b.menuGenerator_[0][1], fontSize:11}), this.templates.push(this.getFieldCount())) : 
+    b.constructor == Blockly.FieldDropdownDynamic ? (this.params.push({type:"Dropdown", options:[["\ub300\uc0c1 \uc5c6\uc74c", "null"]], value:"null", fontSize:11}), this.templates.push(this.getFieldCount())) : b.constructor == Blockly.FieldTextInput ? (this.params.push({type:"TextInput", value:10}), this.templates.push(this.getFieldCount())) : b.constructor == Blockly.FieldAngle ? (this.params.push({type:"Angle"}), this.templates.push(this.getFieldCount())) : b.constructor == Blockly.FieldKeydownInput ? 
+    (this.params.push({type:"Keyboard", value:81}), this.templates.push(this.getFieldCount())) : b.constructor == Blockly.FieldColour && (this.params.push({type:"Color"}), this.templates.push(this.getFieldCount()));
     return this;
   };
   a.setColour = function(b) {
@@ -13418,7 +13418,7 @@ Entry.BlockView.PARAM_SPACE = 5;
       a instanceof Entry.BlockMenu ? (a.terminateDrag(), this.vimBoardEvent(b, "dragEnd", e)) : a.clear();
     } else {
       if (d !== Entry.DRAG_MODE_MOUSEDOWN) {
-        (f = this.dragInstance && this.dragInstance.isNew) && (a.workspace.blockMenu.terminateDrag() || e.doAdd());
+        (f = this.dragInstance && this.dragInstance.isNew) && !a.workspace.blockMenu.terminateDrag() && (e._updatePos(), e.doAdd());
         var g = Entry.GlobalSvg;
         b = this.block.getPrevBlock(this.block);
         switch(Entry.GlobalSvg.terminateDrag(this)) {
@@ -13562,14 +13562,14 @@ Entry.BlockView.PARAM_SPACE = 5;
   a.bumpAway = function(b) {
     var a = this;
     b ? window.setTimeout(function() {
-      a._moveBy(10, 10, !1);
-    }, b) : a._moveBy(10, 10, !1);
+      a._moveBy(15, 15, !1);
+    }, b) : a._moveBy(15, 15, !1);
   };
   a.bindPrev = function(b) {
     if (b) {
       if (this._toLocalCoordinate(b.view._nextGroup), (b = b.getNextBlock()) && b !== this.block) {
         var a = this.block.getLastBlock();
-        this.magnet.next ? b.view._toLocalCoordinate(a.view._nextGroup) : (b.view._toGlobalCoordinate(), b.separate(), b.view.bumpAway(10));
+        a.view.magnet.next ? b.view._toLocalCoordinate(a.view._nextGroup) : (b.view._toGlobalCoordinate(), b.separate(), b.view.bumpAway(100));
       }
     } else {
       if (b = this.block.getPrevBlock()) {
@@ -13605,6 +13605,7 @@ Entry.Code = function(a) {
   this.executors = [];
   this.executeEndEvent = new Entry.Event(this);
   this.changeEvent = new Entry.Event(this);
+  this.changeEvent.attach(this, this._handleChange);
   this.load(a);
 };
 (function(a) {
@@ -13716,6 +13717,9 @@ Entry.Code = function(a) {
   a.dominate = function(b) {
     var a = this._data, d = a.indexOf(b);
     0 > d || (a.splice(d, 1), a.push(b));
+  };
+  a._handleChange = function() {
+    Entry.creationChangedEvent && Entry.creationChangedEvent.notify();
   };
 })(Entry.Code.prototype);
 Entry.CodeView = function(a, b) {
@@ -14115,43 +14119,38 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldColor);
 (function(a) {
   a.renderStart = function(b) {
     var a = this;
-    this.svgGroup = b.contentSvgGroup.group();
-    this.svgGroup.attr({class:"entry-field-color"});
+    this.svgGroup = b.contentSvgGroup.elem("g", {class:"entry-field-color"});
     var d = this._position;
     d ? (b = d.x || 0, d = d.y || 0) : (b = 0, d = -8);
-    this._header = this.svgGroup.rect(b, d, 14.5, 16, 0).attr({fill:this.getValue()});
-    this.svgGroup.mouseup(function(b) {
+    this._header = this.svgGroup.elem("rect", {x:b, y:d, width:14.5, height:16, fill:this.getValue()});
+    this.svgGroup.onmouseup = function(b) {
       a._isEditable() && a.renderOptions();
-    });
+    };
     this.box.set({x:b, y:d, width:14.5, height:16});
   };
   a.renderOptions = function() {
     var b = this;
     this.destroyOption();
-    var a = this._block.view;
     this.documentDownEvent = Entry.documentMousedown.attach(this, function() {
       Entry.documentMousedown.detach(this.documentDownEvent);
       b.optionGroup.remove();
     });
-    var d = Entry.FieldColor.getWidgetColorList();
+    var a = Entry.FieldColor.getWidgetColorList();
     this.optionGroup = Entry.Dom("table", {class:"entry-widget-color-table", parent:$("body")});
-    for (var e = 0;e < d.length;e++) {
-      for (var f = Entry.Dom("tr", {class:"entry-widget-color-row", parent:this.optionGroup}), g = 0;g < d[e].length;g++) {
-        var h = Entry.Dom("td", {class:"entry-widget-color-cell", parent:f}), k = d[e][g];
-        h.css({"background-color":k});
-        h.attr({"data-color-value":k});
+    for (var d = 0;d < a.length;d++) {
+      for (var e = Entry.Dom("tr", {class:"entry-widget-color-row", parent:this.optionGroup}), f = 0;f < a[d].length;f++) {
+        var g = Entry.Dom("td", {class:"entry-widget-color-cell", parent:e}), h = a[d][f];
+        g.css({"background-color":h});
+        g.attr({"data-color-value":h});
         (function(a, c) {
           a.mousedown(function() {
             b.applyValue(c);
             b.destroyOption();
           });
-        })(h, k);
+        })(g, h);
       }
     }
-    a.svgGroup.transform();
-    a.getBoard().svgDom.offset();
-    a.getContentPos();
-    a = this.getAbsolutePos();
+    a = this.getAbsolutePosFromDocument();
     a.y += this.box.height / 2 + 1;
     this.optionGroup.css({left:a.x, top:a.y});
   };
@@ -14179,8 +14178,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
 (function(a) {
   a.renderStart = function(b) {
     var a = this;
-    this.svgGroup = b.contentSvgGroup.elem("g");
-    this.svgGroup.attr({class:"entry-field-dropdown"});
+    this.svgGroup = b.contentSvgGroup.elem("g", {class:"entry-field-dropdown"});
     this.textElement = this.svgGroup.elem("text", {x:2});
     this.textElement.innerHTML = this.getTextByValue(this.getValue());
     var d = this.textElement.getBBox();
@@ -14204,11 +14202,11 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
   a.renderOptions = function() {
     var b = this;
     this.destroyOption();
-    var a = this._block.view;
     this.documentDownEvent = Entry.documentMousedown.attach(this, function() {
       Entry.documentMousedown.detach(this.documentDownEvent);
       b.optionGroup.remove();
     });
+<<<<<<< HEAD
     this.optionGroup = a.getBoard().svgGroup.elem("g");
     var d = this._contents.options, a = [], e = 0;
     a.push(this.optionGroup.elem("rect", {height:23 * d.length, fill:"white"}));
@@ -14219,6 +14217,18 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
       var m = l.elem("text", {x:20, y:13, "alignment-baseline":"central"});
       m.innerHTML = k;
       e = Math.max(m.getComputedTextLength() + 50, e);
+=======
+    this.optionGroup = this.appendSvgOptionGroup();
+    var a = this._contents.options, d = [], e = 0, f = this._CONTENT_HEIGHT + 4;
+    d.push(this.optionGroup.elem("rect", {height:f * a.length, fill:"white"}));
+    for (var g = 0, h = a.length;g < h;g++) {
+      var k = a[g], l = k[0], k = k[1], n = this.optionGroup.elem("g", {class:"rect", transform:"translate(0," + g * f + ")"});
+      d.push(n.elem("rect", {height:f}));
+      this.getValue() == k && (n.elem("text", {x:5, y:13, "alignment-baseline":"central"}).innerHTML = "\u2713");
+      var m = n.elem("text", {x:20, y:10, "alignment-baseline":"central"});
+      m.innerHTML = l;
+      e = Math.max(m.getComputedTextLength() + 30, e);
+>>>>>>> origin/refac/entry-block
       (function(a, c) {
         a.onmousedown = function(b) {
           b.stopPropagation();
@@ -14228,17 +14238,23 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
           b.applyValue(c);
           b.destroyOption();
         };
-      })(l, h);
+      })(n, k);
     }
-    d = -e / 2 + this.box.width / 2;
+    a = -e / 2 + this.box.width / 2;
     f = this.box.height / 2;
     g = this.getAbsolutePosFromBoard();
-    g.x += d;
+    g.x += a;
     g.y += f;
     this.optionGroup.attr({class:"entry-field-dropdown", transform:"translate(" + g.x + "," + g.y + ")"});
+<<<<<<< HEAD
     var n = {width:e};
     a.forEach(function(b) {
       b.attr(n);
+=======
+    var q = {width:e};
+    d.forEach(function(b) {
+      b.attr(q);
+>>>>>>> origin/refac/entry-block
     });
   };
   a.applyValue = function(b) {
@@ -14336,17 +14352,16 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldKeyboard);
 (function(a) {
   a.renderStart = function(b) {
     var a = this;
-    this.svgGroup = b.contentSvgGroup.group();
-    this.svgGroup.attr({class:"entry-input-field"});
-    this.textElement = this.svgGroup.text(4, 4, Entry.getKeyCodeMap()[this.getValue()]);
-    this.textElement.attr({"font-size":"9pt"});
+    this.svgGroup = b.contentSvgGroup.elem("g", {class:"entry-input-field"});
+    this.textElement = this.svgGroup.elem("text").attr({x:4, y:4, "font-size":"9pt"});
+    this.textElement.innerHTML = Entry.getKeyCodeMap()[this.getValue()];
     b = this.getTextWidth();
     var d = this.position && this.position.y ? this.position.y : 0;
-    this._header = this.svgGroup.rect(0, d - 8, b, 16, 3).attr({fill:"#fff", "fill-opacity":.4});
-    this.svgGroup.append(this.textElement);
-    this.svgGroup.mouseup(function(b) {
+    this._header = this.svgGroup.elem("rect", {x:0, y:d - 8, width:b, height:16, rx:3, ry:3, fill:"#fff", "fill-opacity":.4});
+    this.svgGroup.appendChild(this.textElement);
+    this.svgGroup.onmouseup = function(b) {
       a._isEditable() && a.renderOptions();
-    });
+    };
     this.box.set({x:0, y:0, width:b, height:16});
   };
   a.renderOptions = function() {
@@ -14357,28 +14372,28 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldKeyboard);
       Entry.documentMousedown.detach(this.documentDownEvent);
       b.destroyOption();
     });
-    this.optionGroup = this.appendSvgOptionGroup();
-    this.optionGroup.image(Entry.mediaFilePath + "/media/keyboard_workspace.png", -5, 0, 249, 106);
-    var a = this.getRelativePos();
+    var a = this.getAbsolutePosFromBoard();
     a.x -= 5;
     a.y += this.box.height / 2;
-    this.optionGroup.attr({class:"entry-field-keyboard", transform:"t" + a.x + " " + a.y});
+    this.optionGroup = this.appendSvgOptionGroup();
+    this.optionGroup.elem("image", {href:Entry.mediaFilePath + "/media/keyboard_workspace.png", x:-5, y:0, width:249, height:106, class:"entry-field-keyboard", transform:"translate(" + a.x + "," + a.y + ")"});
   };
   a.destroyOption = function() {
     this.documentDownEvent && (Entry.documentMousedown.detach(this.documentDownEvent), delete this.documentDownEvent);
     this.optionGroup && (this.optionGroup.remove(), delete this.optionGroup);
     this._optionVisible = !1;
   };
-  a._keyboardControl = function(b, a) {
-    a.stopPropagation();
+  a._keyboardControl = function(b) {
+    b.stopPropagation();
     if (this._optionVisible) {
-      var d = a.keyCode, e = Entry.getKeyCodeMap()[d];
-      void 0 !== e && this.applyValue(e, d);
+      b = b.keyCode;
+      var a = Entry.getKeyCodeMap()[b];
+      void 0 !== a && this.applyValue(a, b);
     }
   };
   a.applyValue = function(b, a) {
     this.destroyOption();
-    this.getValue() != a && (this.setValue(a), this.textElement.node.textContent = b, this.resize());
+    this.getValue() != a && (this.setValue(a), this.textElement.innerHTML = b, this.resize());
   };
   a.resize = function() {
     var b = this.getTextWidth();
@@ -14387,7 +14402,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldKeyboard);
     this._block.view.alignContent();
   };
   a.getTextWidth = function() {
-    return this.textElement.node.getComputedTextLength() + 8;
+    return this.textElement.getComputedTextLength() + 8;
   };
   a.destroy = function() {
     this.destroyOption();
@@ -15156,7 +15171,7 @@ Entry.Block = function(a, b) {
 Entry.Block.MAGNET_RANGE = 10;
 Entry.Block.MAGNET_OFFSET = .4;
 (function(a) {
-  a.schema = {id:null, name:null, x:0, y:0, type:null, params:[], statements:[], view:null, thread:null, movable:null, deletable:!0, readOnly:null, events:{}};
+  a.schema = {id:null, x:0, y:0, type:null, params:[], statements:[], view:null, thread:null, movable:null, deletable:!0, readOnly:null, events:{}};
   a.load = function(a) {
     a.id || (a.id = Entry.Utils.generateId());
     this.set(a);
@@ -15217,6 +15232,11 @@ Entry.Block.MAGNET_OFFSET = .4;
     c.statements = c.statements.map(function(c) {
       return c.toJSON(a);
     });
+    c.x = this.x;
+    c.y = this.y;
+    c.movable = this.movable;
+    c.deletable = this.deletable;
+    c.readOnly = this.readOnly;
     return c;
   };
   a.destroy = function(a, c) {
@@ -15750,6 +15770,7 @@ Entry.Board = function(a) {
     return g;
   };
   a.getNearestMagnet = function(a, c, d) {
+<<<<<<< HEAD
     for (var e = this._magnetMap[d], f = 0, g = e.length - 1, h = null, k = "nextMagnet" === d ? c - 15 : c;f <= g;) {
       if (d = (f + g) / 2 | 0, c = e[d], k < c.point) {
         g = d - 1;
@@ -15761,13 +15782,35 @@ Entry.Board = function(a) {
           for (f = 0;f < e.length;f++) {
             if (g = e[f].view, g.absX < a && a < g.absX + g.width && (g = c.blocks[f], !h || h.view.zIndex < g.view.zIndex)) {
               h = c.blocks[f];
+=======
+    var e = this._magnetMap[d];
+    if (e && 0 !== e.length) {
+      var f = 0, g = e.length - 1, h;
+      d = null;
+      for (var k = c - 15;f <= g;) {
+        if (h = (f + g) / 2 | 0, c = e[h], k < c.point) {
+          g = h - 1;
+        } else {
+          if (k > c.endPoint) {
+            f = h + 1;
+          } else {
+            e = c.blocks;
+            for (f = 0;f < e.length;f++) {
+              if (g = e[f].view, g.absX < a && a < g.absX + g.width && (g = c.blocks[f], !d || d.view.zIndex < g.view.zIndex)) {
+                d = c.blocks[f];
+              }
+>>>>>>> origin/refac/entry-block
             }
+            return d;
           }
+<<<<<<< HEAD
           return h;
+=======
+>>>>>>> origin/refac/entry-block
         }
       }
+      return null;
     }
-    return null;
   };
   a._addFilters = function() {
     var a = this.svg.elem("defs"), c = a.elem("filter", {id:"entryTrashcanFilter"});
@@ -15933,18 +15976,15 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
     var c = a.keyCode || a.which, d = a.ctrlKey;
     if (!Entry.Utils.isInInput(a)) {
       var e = this.selectedBlockView;
-      e && !e.isInBlockMenu && e.block.isDeletable() && (8 == c || 46 == c ? (e.block.doDestroy(!0), a.preventDefault()) : d && (67 == c ? e.block.copyToClipboard() : 88 == c && (a = e.block, a.copyToClipboard(), a.destroy(!0))));
+      e && !e.isInBlockMenu && e.block.isDeletable() && (8 == c || 46 == c ? (e.block.doDestroy(!0), a.preventDefault()) : d && (67 == c ? e.block.copyToClipboard() : 88 == c && (a = e.block, a.copyToClipboard(), a.destroy(!0, !0), e.getBoard().setSelectedBlock(null))));
       d && 86 == c && (c = this.selectedBoard) && c instanceof Entry.Board && Entry.clipboard && c.code.createThread(Entry.clipboard).getFirstBlock().copyToClipboard();
     }
   };
 })(Entry.Workspace.prototype);
 Entry.Playground = function() {
-  this.menuBlocks_ = {};
   this.enableArduino = this.isTextBGMode_ = !1;
   this.viewMode_ = "default";
   Entry.addEventListener("textEdited", this.injectText);
-  Entry.addEventListener("entryBlocklyChanged", this.editBlock);
-  Entry.addEventListener("entryBlocklyMouseUp", this.mouseupBlock);
   Entry.addEventListener("hwChanged", this.updateHW);
 };
 Entry.Playground.prototype.generateView = function(a, b) {
@@ -16359,7 +16399,7 @@ Entry.Playground.prototype.injectObject = function(a) {
     this.changeViewMode("default"), this.object = null;
   } else {
     if (a !== this.object) {
-      this.object && (this.syncObject(this.object), this.object.toggleInformation(!1));
+      this.object && this.object.toggleInformation(!1);
       this.object = a;
       this.setMenu(a.objectType);
       this.injectCode();
@@ -16534,8 +16574,6 @@ Entry.Playground.prototype.toggleOffVariableView = function() {
   this.showBlockMenu();
   this.variableView_.addClass("entryRemove");
 };
-Entry.Playground.prototype.syncObject = function(a) {
-};
 Entry.Playground.prototype.editBlock = function() {
   var a = Entry.playground;
   Entry.stateManager && Entry.stateManager.addCommand("edit block", a, a.restoreBlock, a.object, a.object.getScriptText());
@@ -16550,10 +16588,8 @@ Entry.Playground.prototype.restoreBlock = function(a, b) {
   Entry.container.selectObject(a.id);
   Entry.stateManager && Entry.stateManager.addCommand("restore block", this, this.restoreBlock, this.object, this.object.getScriptText());
   Blockly.Xml.textToDom(b);
-  this.syncObject();
 };
 Entry.Playground.prototype.syncObjectWithEvent = function(a) {
-  Entry.playground.syncObject();
 };
 Entry.Playground.prototype.setMenu = function(a) {
   if (this.currentObjectType != a) {

@@ -469,7 +469,10 @@ Entry.BlockView.PARAM_SPACE = 5;
                 var fromBlockMenu = this.dragInstance && this.dragInstance.isNew;
                 if (fromBlockMenu) {
                     var removed = board.workspace.blockMenu.terminateDrag();
-                    if (!removed) block.doAdd();
+                    if (!removed) {
+                        block._updatePos();
+                        block.doAdd();
+                    }
                 }
 
                 var gs = Entry.GlobalSvg;
@@ -744,9 +747,9 @@ Entry.BlockView.PARAM_SPACE = 5;
         var that = this;
         if (delay) {
             window.setTimeout(function() {
-                that._moveBy(10, 10, false);
+                that._moveBy(15, 15, false);
             }, delay);
-        } else that._moveBy(10, 10, false);
+        } else that._moveBy(15, 15, false);
     };
 
     p.bindPrev = function(prevBlock) {
@@ -755,12 +758,12 @@ Entry.BlockView.PARAM_SPACE = 5;
             var nextBlock = prevBlock.getNextBlock();
             if (nextBlock && nextBlock !== this.block) {
                 var endBlock = this.block.getLastBlock();
-                if (this.magnet.next)
+                if (endBlock.view.magnet.next)
                     nextBlock.view._toLocalCoordinate(endBlock.view._nextGroup);
                 else {
                     nextBlock.view._toGlobalCoordinate();
                     nextBlock.separate();
-                    nextBlock.view.bumpAway(10);
+                    nextBlock.view.bumpAway(100);
                 }
             }
         } else {

@@ -110,7 +110,7 @@ Entry.BlockMockup = function(blocklyInfo) {
         if (typeof field === "string" && field.length > 0)
             this.templates.push(field);
         else {
-            if (field instanceof Blockly.FieldIcon) {
+            if (field.constructor == Blockly.FieldIcon) {
                 if (field.type === "start")
                     this.params.push({
                         type: "Indicator",
@@ -127,7 +127,7 @@ Entry.BlockMockup = function(blocklyInfo) {
                         size: 12,
                     });
                 this.templates.push(this.getFieldCount());
-            } else if (field instanceof Blockly.FieldDropdown) {
+            } else if (field.constructor == Blockly.FieldDropdown) {
                 this.params.push({
                     type: "Dropdown",
                     options: field.menuGenerator_,
@@ -135,7 +135,7 @@ Entry.BlockMockup = function(blocklyInfo) {
                     fontSize: 11
                 });
                 this.templates.push(this.getFieldCount());
-            } else if (field instanceof Blockly.FieldDropdownDynamic) {
+            } else if (field.constructor == Blockly.FieldDropdownDynamic) {
                 this.params.push({
                     type: "Dropdown",
                     options: [["대상 없음", "null"]],
@@ -143,14 +143,30 @@ Entry.BlockMockup = function(blocklyInfo) {
                     fontSize: 11
                 });
                 this.templates.push(this.getFieldCount());
-            } else if (field instanceof Blockly.FieldTextInput) {
+            } else if (field.constructor == Blockly.FieldTextInput) {
                 this.params.push({
                     type: "TextInput",
                     value: 10
                 });
                 this.templates.push(this.getFieldCount());
-            } else if (field instanceof Blockly.FieldAngle) {
+            } else if (field.constructor == Blockly.FieldAngle) {
+                this.params.push({
+                    type: "Angle"
+                });
+                this.templates.push(this.getFieldCount());
+            } else if (field.constructor == Blockly.FieldKeydownInput) {
+                this.params.push({
+                    type: "Keyboard",
+                    value: 81
+                });
+                this.templates.push(this.getFieldCount());
+            } else if (field.constructor == Blockly.FieldColour) {
+                this.params.push({
+                    type: "Color"
+                });
+                this.templates.push(this.getFieldCount());
             } else {
+                //console.log('else', field);
             }
         }
         return this;

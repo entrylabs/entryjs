@@ -35,8 +35,8 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldColor);
         var that = this;
         var contents = this._contents;
 
-        this.svgGroup = blockView.contentSvgGroup.group();
-        this.svgGroup.attr({
+
+        this.svgGroup = blockView.contentSvgGroup.elem('g', {
             class: 'entry-field-color'
         });
 
@@ -50,15 +50,14 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldColor);
             y = -HEIGHT/2;
         }
 
-        this._header = this.svgGroup.rect(
-                x, y,
-                WIDTH,
-                HEIGHT,
-            0).attr({fill: this.getValue()});
+        this._header = this.svgGroup.elem('rect', {
+            x:x, y:y, width: WIDTH, height: HEIGHT,
+            fill: this.getValue()
+            });
 
-        this.svgGroup.mouseup(function(e) {
+        this.svgGroup.onmouseup = function(e) {
             if (that._isEditable()) that.renderOptions();
-        });
+        };
 
         this.box.set({
             x: x,
@@ -109,13 +108,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldColor);
                 })(td, color);
             }
         }
-        var matrix = blockView.svgGroup.transform().globalMatrix;
-        var offset = blockView.getBoard().svgDom.offset();
-
-
-        var contentPos = blockView.getContentPos();
-
-        var pos = this.getAbsolutePos();
+        var pos = this.getAbsolutePosFromDocument();
         pos.y += this.box.height/2 + 1;
 
         this.optionGroup.css({

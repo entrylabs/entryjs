@@ -39,7 +39,42 @@ Entry.getStartProject = function(mediaFilePath) {
         {
             "id" : "7y0y",
             "name" : "엔트리봇",
-            "script" : "<xml><block type=\"when_run_button_click\" x=\"136\" y=\"47\"><next><block type=\"repeat_basic\"><value name=\"VALUE\"><block type=\"number\"><field name=\"NUM\">10</field></block></value><statement name=\"DO\"><block type=\"move_direction\"><value name=\"VALUE\"><block type=\"number\"><field name=\"NUM\">10</field></block></value></block></statement></block></next></block></xml>",
+            //TODO restore original script
+            "script" : [
+                [
+                    {
+                        type: "when_run_button_click",
+                        x: 40,
+                        y: 240
+                    },
+                    {
+                        type: "move_direction"
+                    },
+                    {
+                        type: "stop_repeat"
+                    },
+                    {
+                        type: "move_direction"
+                    },
+                    {
+                        type: "repeat_basic",
+                        statements: [
+                            [
+                                {type: "move_direction"},
+                                {type: "move_x"},
+                                {type: "move_y"},
+                                {type: "stop_repeat"}
+                            ]
+                        ]
+                    },
+                    {
+                        type: "stop_repeat"
+                    },
+                    {
+                        type: "move_direction"
+                    }
+                ]
+            ],
             "selectedPictureId" : "vx80",
             "objectType" : "sprite",
             "rotateMethod" : "free",
