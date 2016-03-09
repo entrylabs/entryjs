@@ -509,7 +509,7 @@ Entry.BlockView.PARAM_SPACE = 5;
                         break;
                     case gs.RETURN:
                         var block = this.block;
-                        if (Entry.FieldDummyBlock.PRIMITIVE_TYPES.indexOf(block.type) > -1) {
+                        if (block.isPrimitive) {
                             block.getThread().cut(block);
                             block.destroy(false);
                             break;

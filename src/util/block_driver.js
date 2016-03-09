@@ -30,6 +30,11 @@ Entry.BlockDriver = function() {
             blockObject.isNotFor = blockInfo.isNotFor;
         }
 
+        var PRIMITIVES = ['NUMBER', 'TRUE', 'FALSE',
+            'TEXT', 'FUNCTION_PARAM_BOOLEAN', 'FUNCTION_PARAM_STRING', 'TRUE_UN'];
+
+        if (PRIMITIVES.indexOf(blockType.toUpperCase()) > -1)
+            blockObject.isPrimitive = true;
         Entry.block[blockType] = blockObject;
     };
 

@@ -9859,6 +9859,7 @@ Entry.BlockDriver = function() {
     a.func = Entry.block[b];
     var d = EntryStatic.blockInfo[b];
     d && (a.class = d.class, a.isNotFor = d.isNotFor);
+    -1 < "NUMBER TRUE FALSE TEXT FUNCTION_PARAM_BOOLEAN FUNCTION_PARAM_STRING TRUE_UN".split(" ").indexOf(b.toUpperCase()) && (a.isPrimitive = !0);
     Entry.block[b] = a;
   };
 })(Entry.BlockDriver.prototype);
@@ -13428,7 +13429,7 @@ Entry.BlockView.PARAM_SPACE = 5;
             break;
           case g.RETURN:
             e = this.block;
-            if (-1 < Entry.FieldDummyBlock.PRIMITIVE_TYPES.indexOf(e.type)) {
+            if (e.isPrimitive) {
               e.getThread().cut(e);
               e.destroy(!1);
               break;
@@ -14206,29 +14207,16 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
       Entry.documentMousedown.detach(this.documentDownEvent);
       b.optionGroup.remove();
     });
-<<<<<<< HEAD
-    this.optionGroup = a.getBoard().svgGroup.elem("g");
-    var d = this._contents.options, a = [], e = 0;
-    a.push(this.optionGroup.elem("rect", {height:23 * d.length, fill:"white"}));
-    for (var f = 0, g = d.length;f < g;f++) {
-      var h = d[f], k = h[0], h = h[1], l = this.optionGroup.elem("g", {class:"rect", transform:"translate(0," + 23 * f + ")"});
-      a.push(l.elem("rect", {height:23}));
-      this.getValue() == h && (l.elem("text", {x:5, y:13, "alignment-baseline":"central"}).innerHTML = "\u2713");
-      var m = l.elem("text", {x:20, y:13, "alignment-baseline":"central"});
-      m.innerHTML = k;
-      e = Math.max(m.getComputedTextLength() + 50, e);
-=======
     this.optionGroup = this.appendSvgOptionGroup();
     var a = this._contents.options, d = [], e = 0, f = this._CONTENT_HEIGHT + 4;
     d.push(this.optionGroup.elem("rect", {height:f * a.length, fill:"white"}));
     for (var g = 0, h = a.length;g < h;g++) {
-      var k = a[g], l = k[0], k = k[1], n = this.optionGroup.elem("g", {class:"rect", transform:"translate(0," + g * f + ")"});
-      d.push(n.elem("rect", {height:f}));
-      this.getValue() == k && (n.elem("text", {x:5, y:13, "alignment-baseline":"central"}).innerHTML = "\u2713");
-      var m = n.elem("text", {x:20, y:10, "alignment-baseline":"central"});
-      m.innerHTML = l;
-      e = Math.max(m.getComputedTextLength() + 30, e);
->>>>>>> origin/refac/entry-block
+      var k = a[g], l = k[0], k = k[1], m = this.optionGroup.elem("g", {class:"rect", transform:"translate(0," + g * f + ")"});
+      d.push(m.elem("rect", {height:f}));
+      this.getValue() == k && (m.elem("text", {x:5, y:13, "alignment-baseline":"central"}).innerHTML = "\u2713");
+      var n = m.elem("text", {x:20, y:10, "alignment-baseline":"central"});
+      n.innerHTML = l;
+      e = Math.max(n.getComputedTextLength() + 30, e);
       (function(a, c) {
         a.onmousedown = function(b) {
           b.stopPropagation();
@@ -14238,7 +14226,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
           b.applyValue(c);
           b.destroyOption();
         };
-      })(n, k);
+      })(m, k);
     }
     a = -e / 2 + this.box.width / 2;
     f = this.box.height / 2;
@@ -14246,15 +14234,9 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
     g.x += a;
     g.y += f;
     this.optionGroup.attr({class:"entry-field-dropdown", transform:"translate(" + g.x + "," + g.y + ")"});
-<<<<<<< HEAD
-    var n = {width:e};
-    a.forEach(function(b) {
-      b.attr(n);
-=======
     var q = {width:e};
     d.forEach(function(b) {
       b.attr(q);
->>>>>>> origin/refac/entry-block
     });
   };
   a.applyValue = function(b) {
@@ -14685,16 +14667,16 @@ Entry.GlobalSvg = {};
     this.svgDom.css("display", "none");
   };
   a.position = function() {
-    var a = this._view, c = a.getAbsoluteCoordinate(), a = a.getBoard().offset;
-    this.left = c.x + a.left - this._offsetX;
-    this.top = c.y + a.top - this._offsetY;
+    var b = this._view, a = b.getAbsoluteCoordinate(), b = b.getBoard().offset;
+    this.left = a.x + b.left - this._offsetX;
+    this.top = a.y + b.top - this._offsetY;
     this.svgDom.css({left:this.left, top:this.top});
   };
-  a.terminateDrag = function(a) {
-    var c = Entry.mouseCoordinate;
-    a = a.getBoard().workspace.blockMenu;
-    var d = a.offset.left, e = a.offset.top, f = a.visible ? a.svgDom.width() : 0;
-    return c.y > e && c.x > d + f ? this.DONE : c.y > e && c.x > d && a.visible ? this.REMOVE : this.RETURN;
+  a.terminateDrag = function(b) {
+    var a = Entry.mouseCoordinate;
+    b = b.getBoard().workspace.blockMenu;
+    var d = b.offset.left, e = b.offset.top, f = b.visible ? b.svgDom.width() : 0;
+    return a.y > e && a.x > d + f ? this.DONE : a.y > e && a.x > d && b.visible ? this.REMOVE : this.RETURN;
   };
   a.addControl = function(a) {
     this.onMouseDown.apply(this, arguments);
@@ -15770,43 +15752,23 @@ Entry.Board = function(a) {
     return g;
   };
   a.getNearestMagnet = function(a, c, d) {
-<<<<<<< HEAD
-    for (var e = this._magnetMap[d], f = 0, g = e.length - 1, h = null, k = "nextMagnet" === d ? c - 15 : c;f <= g;) {
-      if (d = (f + g) / 2 | 0, c = e[d], k < c.point) {
-        g = d - 1;
-      } else {
-        if (k > c.endPoint) {
-          f = d + 1;
-        } else {
-          e = c.blocks;
-          for (f = 0;f < e.length;f++) {
-            if (g = e[f].view, g.absX < a && a < g.absX + g.width && (g = c.blocks[f], !h || h.view.zIndex < g.view.zIndex)) {
-              h = c.blocks[f];
-=======
     var e = this._magnetMap[d];
     if (e && 0 !== e.length) {
-      var f = 0, g = e.length - 1, h;
-      d = null;
-      for (var k = c - 15;f <= g;) {
-        if (h = (f + g) / 2 | 0, c = e[h], k < c.point) {
-          g = h - 1;
+      for (var f = 0, g = e.length - 1, h = null, k = "nextMagnet" === d ? c - 15 : c;f <= g;) {
+        if (d = (f + g) / 2 | 0, c = e[d], k < c.point) {
+          g = d - 1;
         } else {
           if (k > c.endPoint) {
-            f = h + 1;
+            f = d + 1;
           } else {
             e = c.blocks;
             for (f = 0;f < e.length;f++) {
-              if (g = e[f].view, g.absX < a && a < g.absX + g.width && (g = c.blocks[f], !d || d.view.zIndex < g.view.zIndex)) {
-                d = c.blocks[f];
+              if (g = e[f].view, g.absX < a && a < g.absX + g.width && (g = c.blocks[f], !h || h.view.zIndex < g.view.zIndex)) {
+                h = c.blocks[f];
               }
->>>>>>> origin/refac/entry-block
             }
-            return d;
+            return h;
           }
-<<<<<<< HEAD
-          return h;
-=======
->>>>>>> origin/refac/entry-block
         }
       }
       return null;
