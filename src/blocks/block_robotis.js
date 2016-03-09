@@ -36,6 +36,44 @@ Entry.Robotis_carCont = {
     },
     name: 'robotis_carCont',
     delay: 40,
+    postCallReturn: function(script, data, ms) {
+        if (ms <= 0) {
+            Entry.hw.sendQueue['ROBOTIS_DATA'] = data;
+            Entry.hw.update();
+            return script.callReturn();
+        }
+        
+        if (!script.isStart) {
+            script.isStart = true;
+            script.timeFlag = 1;
+            //data setting
+            Entry.hw.sendQueue['ROBOTIS_DATA'] = data;
+            //delay xx ms
+            setTimeout(function() {
+                script.timeFlag = 0;
+            }, ms);
+
+            return script;
+        } else if (script.timeFlag == 1) {
+            Entry.hw.sendQueue['ROBOTIS_DATA'] = [[0, 0, 0, 0]];
+            return script;
+        } else {
+            delete script.timeFlag;
+            delete script.isStart;
+            Entry.engine.isContinue = false;
+            Entry.hw.update();
+            return script.callReturn();
+        }
+    },
+    wait: function(sq, ms) {
+        Entry.hw.socket.send(JSON.stringify(sq));
+        
+        var start = new Date().getTime();
+        var end = start;
+        while(end < start + ms) {//wait XX ms
+            end = new Date().getTime();
+        }
+    }
 };
 
 Entry.Robotis_openCM70 = {
@@ -454,7 +492,7 @@ Entry.block.robotis_openCM70_cm_buzzer_index = function (sprite, script) {
 	data_value_2 = cmBuzzerIndex;
 
 	var data_sendqueue = [[data_instruction, data_address_1, data_length_1, data_value_1], [data_instruction, data_address_2, data_length_2, data_value_2]];
-    return postCallReturn(script, data_sendqueue, cmBuzzerTime * 1000);
+    return Entry.Robotis_carCont.postCallReturn(script, data_sendqueue, cmBuzzerTime * 1000);
 };
 
 Blockly.Blocks.robotis_openCM70_cm_buzzer_melody = {
@@ -520,7 +558,7 @@ Entry.block.robotis_openCM70_cm_buzzer_melody = function (sprite, script) {
 	data_value_2 = cmBuzzerMelody;
 
     var data_sendqueue = [[data_instruction, data_address_1, data_length_1, data_value_1], [data_instruction, data_address_2, data_length_2, data_value_2]];
-    return postCallReturn(script, data_sendqueue, 1000);
+    return Entry.Robotis_carCont.postCallReturn(script, data_sendqueue, 1000);
 };
 
 Blockly.Blocks.robotis_openCM70_cm_sound_detected_clear = {
@@ -548,7 +586,7 @@ Entry.block.robotis_openCM70_cm_sound_detected_clear = function (sprite, script)
 	data_value = 0;    	
     
     var data_sendqueue = [[data_instruction, data_address, data_length, data_value]];
-    return postCallReturn(script, data_sendqueue, Entry.Robotis_openCM70.delay);
+    return Entry.Robotis_carCont.postCallReturn(script, data_sendqueue, Entry.Robotis_openCM70.delay);
 };
 
 Blockly.Blocks.robotis_openCM70_cm_led = {
@@ -597,7 +635,7 @@ Entry.block.robotis_openCM70_cm_led = function (sprite, script) {
     data_value = value;
 
     var data_sendqueue = [[data_instruction, data_address, data_length, data_value]];
-    return postCallReturn(script, data_sendqueue, Entry.Robotis_openCM70.delay);
+    return Entry.Robotis_carCont.postCallReturn(script, data_sendqueue, Entry.Robotis_openCM70.delay);
     
 };
 
@@ -628,7 +666,7 @@ Entry.block.robotis_openCM70_cm_motion = function (sprite, script) {
 	data_value = script.getNumberValue("VALUE", script);
 
 	var data_sendqueue = [[data_instruction, data_address, data_length, data_value]];
-    return postCallReturn(script, data_sendqueue, Entry.Robotis_openCM70.delay);    
+    return Entry.Robotis_carCont.postCallReturn(script, data_sendqueue, Entry.Robotis_openCM70.delay);    
 };
 
 Blockly.Blocks.robotis_openCM70_aux_motor_speed = {
@@ -686,7 +724,7 @@ Entry.block.robotis_openCM70_aux_motor_speed = function (sprite, script) {
 	data_value = value;
     
     var data_sendqueue = [[data_instruction, data_address, data_length, data_value]];
-    return postCallReturn(script, data_sendqueue, Entry.Robotis_openCM70.delay);
+    return Entry.Robotis_carCont.postCallReturn(script, data_sendqueue, Entry.Robotis_openCM70.delay);
 };
 
 Blockly.Blocks.robotis_openCM70_aux_servo_mode = {
@@ -730,7 +768,7 @@ Entry.block.robotis_openCM70_aux_servo_mode = function (sprite, script) {
 	data_value = mode;
     
     var data_sendqueue = [[data_instruction, data_address, data_length, data_value]];
-    return postCallReturn(script, data_sendqueue, Entry.Robotis_openCM70.delay);
+    return Entry.Robotis_carCont.postCallReturn(script, data_sendqueue, Entry.Robotis_openCM70.delay);
 };
 
 Blockly.Blocks.robotis_openCM70_aux_servo_speed = {
@@ -790,7 +828,7 @@ Entry.block.robotis_openCM70_aux_servo_speed = function (sprite, script) {
 	data_value = value;
     
     var data_sendqueue = [[data_instruction, data_address, data_length, data_value]];
-    return postCallReturn(script, data_sendqueue, Entry.Robotis_openCM70.delay);
+    return Entry.Robotis_carCont.postCallReturn(script, data_sendqueue, Entry.Robotis_openCM70.delay);
 };
 
 Blockly.Blocks.robotis_openCM70_aux_servo_position = {
@@ -839,7 +877,7 @@ Entry.block.robotis_openCM70_aux_servo_position = function (sprite, script) {
 	data_value = value;
     
     var data_sendqueue = [[data_instruction, data_address, data_length, data_value]];
-    return postCallReturn(script, data_sendqueue, Entry.Robotis_openCM70.delay);
+    return Entry.Robotis_carCont.postCallReturn(script, data_sendqueue, Entry.Robotis_openCM70.delay);
 };
 
 Blockly.Blocks.robotis_openCM70_aux_led_module = {
@@ -885,7 +923,7 @@ Entry.block.robotis_openCM70_aux_led_module = function (sprite, script) {
 	data_value = ledModule;
     
     var data_sendqueue = [[data_instruction, data_address, data_length, data_value]];
-    return postCallReturn(script, data_sendqueue, Entry.Robotis_openCM70.delay);
+    return Entry.Robotis_carCont.postCallReturn(script, data_sendqueue, Entry.Robotis_openCM70.delay);
 };
 
 Blockly.Blocks.robotis_openCM70_aux_custom = {
@@ -927,7 +965,7 @@ Entry.block.robotis_openCM70_aux_custom = function (sprite, script) {
 	data_value = value;
     
     var data_sendqueue = [[data_instruction, data_address, data_length, data_value]];
-    return postCallReturn(script, data_sendqueue, Entry.Robotis_openCM70.delay);
+    return Entry.Robotis_carCont.postCallReturn(script, data_sendqueue, Entry.Robotis_openCM70.delay);
 };
 
 Blockly.Blocks.robotis_openCM70_cm_custom = {
@@ -966,7 +1004,7 @@ Entry.block.robotis_openCM70_cm_custom = function (sprite, script) {
     }
 
 	var data_sendqueue = [[data_instruction, data_address, data_length, data_value]];
-    return postCallReturn(script, data_sendqueue, Entry.Robotis_openCM70.delay);
+    return Entry.Robotis_carCont.postCallReturn(script, data_sendqueue, Entry.Robotis_openCM70.delay);
 };
 
 Blockly.Blocks.robotis_carCont_sensor_value = {
@@ -1107,7 +1145,7 @@ Entry.block.robotis_carCont_cm_led = function (sprite, script) {
     }
     
     var data_sendqueue = [[data_instruction, data_address, data_length, data_value]];
-    return postCallReturn(script, data_sendqueue, Entry.Robotis_carCont.delay);
+    return Entry.Robotis_carCont.postCallReturn(script, data_sendqueue, Entry.Robotis_carCont.delay);
 };
 
 Blockly.Blocks.robotis_carCont_cm_sound_detected_clear = {
@@ -1135,7 +1173,7 @@ Entry.block.robotis_carCont_cm_sound_detected_clear = function (sprite, script) 
 	data_value = 0;    	
     
     var data_sendqueue = [[data_instruction, data_address, data_length, data_value]];
-    return postCallReturn(script, data_sendqueue, Entry.Robotis_carCont.delay);
+    return Entry.Robotis_carCont.postCallReturn(script, data_sendqueue, Entry.Robotis_carCont.delay);
 };
 
 Blockly.Blocks.robotis_carCont_aux_motor_speed = {
@@ -1196,7 +1234,7 @@ Entry.block.robotis_carCont_aux_motor_speed = function (sprite, script) {
 	data_value = value;
     
     var data_sendqueue = [[data_instruction, data_address, data_length, data_value]];
-    return postCallReturn(script, data_sendqueue, Entry.Robotis_carCont.delay);
+    return Entry.Robotis_carCont.postCallReturn(script, data_sendqueue, Entry.Robotis_carCont.delay);
 };
 
 Blockly.Blocks.robotis_carCont_cm_calibration = {
@@ -1240,49 +1278,9 @@ Entry.block.robotis_carCont_cm_calibration = function (sprite, script) {
 	data_value = value;
     
     var data_sendqueue = [[data_instruction, data_address, data_length, data_value]];
-    return postCallReturn(script, data_sendqueue, Entry.Robotis_carCont.delay);
+    return Entry.Robotis_carCont.postCallReturn(script, data_sendqueue, Entry.Robotis_carCont.delay);
     
     // Entry.hw.sendQueue['ROBOTIS_DATA'] = [[data_instruction, data_address, data_length, data_value]];
     // Entry.hw.update();
     // return script.callReturn();
-};
-
-function postCallReturn (script, data, ms) {
-	if (ms <= 0) {
-		Entry.hw.sendQueue['ROBOTIS_DATA'] = data;
-		Entry.hw.update();
-    	return script.callReturn();
-	}
-	
-	if (!script.isStart) {
-		script.isStart = true;
-		script.timeFlag = 1;
-		//data setting
-		Entry.hw.sendQueue['ROBOTIS_DATA'] = data;
-		//delay xx ms
-		setTimeout(function() {
-			script.timeFlag = 0;
-		}, ms);
-
-		return script;
-	} else if (script.timeFlag == 1) {
-		Entry.hw.sendQueue['ROBOTIS_DATA'] = [[0, 0, 0, 0]];
-		return script;
-	} else {
-		delete script.timeFlag;
-		delete script.isStart;
-		Entry.engine.isContinue = false;
-		Entry.hw.update();
-		return script.callReturn();
-	}
-};
-
-function wait (sq, ms) {
-    Entry.hw.socket.send(JSON.stringify(sq));
-    
-    var start = new Date().getTime();
-   	var end = start;
-   	while(end < start + ms) {//wait XX ms
-    	end = new Date().getTime();
-  	}
 };
