@@ -73,7 +73,7 @@ Entry.Field = function() {};
         var blockView = this._block.view;
         var contentPos = blockView.getContentPos();
         var absPos = blockView.getAbsoluteCoordinate();
-        var offset = blockView.getBoard().relativeOffset;
+        var offset = blockView.getBoard().svgDom.offset();
 
         return {
             x: absPos.x + this.box.x + contentPos.x + offset.left,
