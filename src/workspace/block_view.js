@@ -179,7 +179,7 @@ Entry.BlockView.PARAM_SPACE = 5;
                 cursor.x += Entry.BlockView.PARAM_SPACE;
 
             var box = c.box;
-            cursor.height = Math.max(box.y + box.height, cursor.height);
+            cursor.height = Math.max(box.height, cursor.height);
             cursor.x += box.width;
         }
 

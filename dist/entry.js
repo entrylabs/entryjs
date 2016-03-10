@@ -13303,7 +13303,7 @@ Entry.BlockView.PARAM_SPACE = 5;
       f.align(a, 0, b);
       e !== this._contents.length - 1 && (a += Entry.BlockView.PARAM_SPACE);
       f = f.box;
-      d = Math.max(f.y + f.height, d);
+      d = Math.max(f.height, d);
       a += f.width;
     }
     if (this._statements.length) {
@@ -15203,7 +15203,7 @@ Entry.Block.MAGNET_OFFSET = .4;
       a = this.params;
       c = this._schema.params;
       for (e = 0;e < c.length;e++) {
-        d = void 0 !== a[e] ? a[e] : c[e].value, f = a[e], !d || "Output" !== c[e].type && "Block" !== c[e].type || (console.log(d), d = new Entry.Block(d), console.log(d)), f ? a.splice(e, 1, d) : a.push(d);
+        d = void 0 !== a[e] ? a[e] : c[e].value, f = a[e], !d || "Output" !== c[e].type && "Block" !== c[e].type || (d = new Entry.Block(d)), f ? a.splice(e, 1, d) : a.push(d);
       }
       if (a = this._schema.statements) {
         for (e = 0;e < a.length;e++) {
