@@ -13317,6 +13317,7 @@ Entry.BlockView.PARAM_SPACE = 5;
     this.contentSvgGroup.attr("transform", "translate(" + b.x + "," + b.y + ")");
     this.contentPos = b;
     this._render();
+    this._updateMagnet();
   };
   a._render = function() {
     this._renderPath();
@@ -13435,7 +13436,7 @@ Entry.BlockView.PARAM_SPACE = 5;
         switch(Entry.GlobalSvg.terminateDrag(this)) {
           case h.DONE:
             h = this._getCloseBlock();
-            f || h ? h ? (h.view.magnet.next ? (this.bindPrev(h), h instanceof Entry.Block ? e.doInsert(h) : h.insertTopBlock(e)) : (e.doInsert(h, !0), console.log("field")), createjs.Sound.play("entryMagneting"), b = !0) : (this._toGlobalCoordinate(d), e.doSeparate()) : e.getThread().view.isGlobal() ? d != Entry.DRAG_MODE_DRAG || g || e.doMove() : (this._toGlobalCoordinate(d), e.doSeparate());
+            f || h ? h ? (h.view.magnet.next ? (this.bindPrev(h), h instanceof Entry.Block ? e.doInsert(h) : h.insertTopBlock(e)) : e.doInsert(h, !0), createjs.Sound.play("entryMagneting"), b = !0) : (this._toGlobalCoordinate(d), e.doSeparate()) : e.getThread().view.isGlobal() ? d != Entry.DRAG_MODE_DRAG || g || e.doMove() : (this._toGlobalCoordinate(d), e.doSeparate());
             break;
           case h.RETURN:
             e = this.block;
@@ -13503,6 +13504,7 @@ Entry.BlockView.PARAM_SPACE = 5;
       var b = this._skeleton.magnets(this);
       b.next && this._nextGroup.attr("transform", "translate(" + b.next.x + "," + b.next.y + ")");
       this.magnet = b;
+      console.log(b.next, this.height);
       this.block.getThread().changeEvent.notify();
     }
   };
@@ -14489,7 +14491,6 @@ Entry.FieldStatement = function(a, b, c) {
   this._thread = this.statementSvgGroup = this.svgGroup = null;
   this._position = a.position;
   this.observe(b, "alignContent", ["height"]);
-  this.observe(b, "_updateMagnet", ["height"]);
   this.observe(this, "_updateBG", ["magneting"], !1);
   this.renderStart(b.getBoard());
 };
@@ -15334,13 +15335,18 @@ Entry.Block.MAGNET_OFFSET = .4;
     return this;
   };
   a.copy = function() {
-    for (var a = this.getThread(), c = a.getBlocks().indexOf(this), c = a.toJSON(!0, c), a = [], d = 0;d < c.length;d++) {
-      a.push(c[d]);
+    var a = this.getThread(), c = [];
+    if (a instanceof Entry.Thread) {
+      for (var d = a.getBlocks().indexOf(this), a = a.toJSON(!0, d), d = 0;d < a.length;d++) {
+        c.push(a[d]);
+      }
+    } else {
+      c.push(this.toJSON(!0));
     }
-    c = this.view.getAbsoluteCoordinate();
-    a[0].x = c.x + 15;
-    a[0].y = c.y + 15;
-    return a;
+    a = this.view.getAbsoluteCoordinate();
+    c[0].x = a.x + 15;
+    c[0].y = a.y + 15;
+    return c;
   };
   a.copyToClipboard = function() {
     Entry.clipboard = this.copy();

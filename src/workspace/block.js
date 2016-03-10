@@ -357,10 +357,13 @@ Entry.Block.MAGNET_OFFSET = 0.4;
 
     p.copy = function() {
         var thread = this.getThread();
-        var index = thread.getBlocks().indexOf(this);
-        var json = thread.toJSON(true, index);
         var cloned = [];
-        for (var i=0; i<json.length; i++) cloned.push(json[i]);
+        if (thread instanceof Entry.Thread) {
+            var index = thread.getBlocks().indexOf(this);
+            var json = thread.toJSON(true, index);
+            for (var i=0; i<json.length; i++) cloned.push(json[i]);
+        } else
+            cloned.push(this.toJSON(true));
 
         var pos = this.view.getAbsoluteCoordinate();
         cloned[0].x = pos.x + 15;

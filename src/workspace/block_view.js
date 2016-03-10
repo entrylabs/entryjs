@@ -205,6 +205,7 @@ Entry.BlockView.PARAM_SPACE = 5;
         );
         this.contentPos = contentPos;
         this._render();
+        this._updateMagnet();
     };
 
     p._render = function() {
@@ -503,7 +504,6 @@ Entry.BlockView.PARAM_SPACE = 5;
                                     } else block.doInsert(closeBlock);
                                 } else {// field block
                                     block.doInsert(closeBlock, true);
-                                    console.log('field');
                                 }
                                 createjs.Sound.play('entryMagneting');
                                 ripple = true;
@@ -626,6 +626,7 @@ Entry.BlockView.PARAM_SPACE = 5;
                 "transform", "translate(" + magnet.next.x + ',' + magnet.next.y + ")"
             );
         this.magnet = magnet;
+        console.log(magnet.next, this.height);
         this.block.getThread().changeEvent.notify();
     };
 
