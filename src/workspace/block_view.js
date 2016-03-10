@@ -511,12 +511,8 @@ Entry.BlockView.PARAM_SPACE = 5;
                         }
                         break;
                     case gs.RETURN:
+                        //TODO retrn block to origin position
                         var block = this.block;
-                        if (block.isPrimitive) {
-                            block.getThread().cut(block);
-                            block.destroy(false);
-                            break;
-                        }
 
                         var originPos = this.originPos;
                         if (prevBlock) {
@@ -746,13 +742,14 @@ Entry.BlockView.PARAM_SPACE = 5;
             (this._skeleton.readOnly !== undefined ? this._skeleton.readOnly : false);
     };
 
-    p.bumpAway = function(delay) {
+    p.bumpAway = function(distance, delay) {
         var that = this;
+        distance = distance || 15;
         if (delay) {
             window.setTimeout(function() {
-                that._moveBy(15, 15, false);
+                that._moveBy(distance, distance, false);
             }, delay);
-        } else that._moveBy(15, 15, false);
+        } else that._moveBy(distance, distance, false);
     };
 
     p.bindPrev = function(prevBlock) {
@@ -766,7 +763,7 @@ Entry.BlockView.PARAM_SPACE = 5;
                 else {
                     nextBlock.view._toGlobalCoordinate();
                     nextBlock.separate();
-                    nextBlock.view.bumpAway(100);
+                    nextBlock.view.bumpAway(null, 100);
                 }
             }
         } else {

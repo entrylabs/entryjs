@@ -13434,11 +13434,6 @@ Entry.BlockView.PARAM_SPACE = 5;
             break;
           case h.RETURN:
             e = this.block;
-            if (e.isPrimitive) {
-              e.getThread().cut(e);
-              e.destroy(!1);
-              break;
-            }
             d = this.originPos;
             f ? (this.set({animating:!1}), createjs.Sound.play("entryMagneting"), e.view.bindPrev(f)) : this._moveTo(d.x, d.y, !1);
             break;
@@ -13562,17 +13557,18 @@ Entry.BlockView.PARAM_SPACE = 5;
   a._setReadOnly = function() {
     this.readOnly = null !== this.block.isReadOnly() ? this.block.isReadOnly() : void 0 !== this._skeleton.readOnly ? this._skeleton.readOnly : !1;
   };
-  a.bumpAway = function(b) {
-    var a = this;
-    b ? window.setTimeout(function() {
-      a._moveBy(15, 15, !1);
-    }, b) : a._moveBy(15, 15, !1);
+  a.bumpAway = function(b, a) {
+    var d = this;
+    b = b || 15;
+    a ? window.setTimeout(function() {
+      d._moveBy(b, b, !1);
+    }, a) : d._moveBy(b, b, !1);
   };
   a.bindPrev = function(b) {
     if (b) {
       if (this._toLocalCoordinate(b.view._nextGroup), (b = b.getNextBlock()) && b !== this.block) {
         var a = this.block.getLastBlock();
-        a.view.magnet.next ? b.view._toLocalCoordinate(a.view._nextGroup) : (b.view._toGlobalCoordinate(), b.separate(), b.view.bumpAway(100));
+        a.view.magnet.next ? b.view._toLocalCoordinate(a.view._nextGroup) : (b.view._toGlobalCoordinate(), b.separate(), b.view.bumpAway(null, 100));
       }
     } else {
       if (b = this.block.getPrevBlock()) {
@@ -14116,6 +14112,8 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
     return this._valueBlock === b ? [b] : null;
   };
   a.replace = function(b) {
+    var a = this._valueBlock;
+    Entry.block[a.type].isPrimitive ? a.destroy() : (a.view._toGlobalCoordinate(), this.separate(a), a.view.bumpAway(30, 150));
     this._updateValueBlock(b);
     b.view._toLocalCoordinate(this.svgGroup);
     this.calcWH();
@@ -15261,7 +15259,7 @@ Entry.Block.MAGNET_OFFSET = .4;
     this.getPrevBlock();
     e = this.getNextBlock();
     d = this.getThread();
-    d.spliceBlock(this);
+    d.spliceBlock && d.spliceBlock(this);
     this._schema.event && d.unregisterEvent(this, this._schema.event);
     e && (c ? e.destroy(a, c) : e.view.bindPrev());
   };

@@ -188,7 +188,7 @@ Entry.Block.MAGNET_OFFSET = 0.4;
         var nextBlock = this.getNextBlock();
 
         var thread = this.getThread();
-        var blocks = thread.spliceBlock(this);
+        if (thread.spliceBlock) thread.spliceBlock(this);
         if (this._schema.event)
             thread.unregisterEvent(this, this._schema.event);
 
