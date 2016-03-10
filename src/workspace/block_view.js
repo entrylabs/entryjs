@@ -94,10 +94,6 @@ Entry.BlockView.PARAM_SPACE = 5;
 
         this.pathGroup = this.svgGroup.elem("g");
         this._updateMagnet();
-        if (this.magnet.next)
-            this.pathGroup.attr({
-                filter: 'url(#entryBlockShadowFilter)'
-            });
 
         this._path = this.pathGroup.elem("path");
         var pathStyle = {
@@ -105,6 +101,13 @@ Entry.BlockView.PARAM_SPACE = 5;
             fill: this._schema.color,
             class: 'blockPath'
         };
+        if (this.magnet.next)
+            this.pathGroup.attr({
+                filter: 'url(#entryBlockShadowFilter)'
+            });
+        else if (this.magnet.string || this.magnet.bool)
+            pathStyle.stroke = Entry.Utils.colorDarken(this._schema.color, 0.9);
+
         if (skeleton.outerLine) {
             pathStyle.strokeWidth = "0.5";
         }
@@ -623,6 +626,7 @@ Entry.BlockView.PARAM_SPACE = 5;
                 "transform", "translate(" + magnet.next.x + ',' + magnet.next.y + ")"
             );
         this.magnet = magnet;
+        this.block.getThread().changeEvent.notify();
     };
 
     p._updateBG = function() {
