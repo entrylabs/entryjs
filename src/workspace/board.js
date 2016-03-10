@@ -542,7 +542,7 @@ Entry.Board = function(option) {
             if (!(content instanceof Entry.FieldBlock))
                 continue;
             var startX = cursorX + content.box.x;
-            var startY = cursorY + content.box.y + block.view.height * -0.5;
+            var startY = cursorY + content.box.y + blockView.height * -0.5;
             var endY = cursorY + content.box.y + content.box.height;
             var contentBlock = content._valueBlock;
             metaData.push({
