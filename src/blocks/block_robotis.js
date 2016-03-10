@@ -305,9 +305,7 @@ Entry.block.robotis_openCM70_aux_sensor_value = function (sprite, script) {
         increase = 4;
     } else if (port == 'PORT_6') {
         increase = 5;
-    } else {
-        increase = 0;
-    } 
+    }
 
     if (sensor == 'AUX_SERVO_POSITION') {
         data_default_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_POSITION[0];

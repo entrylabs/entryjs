@@ -35,7 +35,7 @@ Entry.HW = function() {
         '25': Entry.Albert,
         '31': Entry.Bitbrick,
         '71': Entry.Robotis_carCont,
-        '72': Entry.Robotis_openCM70,
+        '72': Entry.Robotis_openCM70
     };
 };
 
