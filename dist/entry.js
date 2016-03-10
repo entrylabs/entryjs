@@ -14071,6 +14071,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
   a._setValueBlock = function(b) {
     if (b != this._valueBlock || !this._valueBlock) {
       this._valueBlock = b;
+      this.setValue(b);
       if (!this._valueBlock) {
         return this._inspectBlock();
       }

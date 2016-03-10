@@ -144,6 +144,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
         if (block != this._valueBlock || !this._valueBlock) {
 
             this._valueBlock = block;
+            this.setValue(block);
             if (!this._valueBlock)
                 return this._inspectBlock();
 
