@@ -14090,9 +14090,11 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
     return null;
   };
   a.requestAbsoluteCoordinate = function(b) {
-    b = this._blockView.getAbsoluteCoordinate();
-    b.x += this.box.x;
-    b.y += this.box.y + .5 * this.box.height;
+    b = this._blockView;
+    var a = b.contentPos;
+    b = b.getAbsoluteCoordinate();
+    b.x += this.box.x + a.x;
+    b.y += this.box.y + a.y;
     return b;
   };
   a.dominate = function() {

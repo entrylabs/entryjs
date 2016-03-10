@@ -174,9 +174,11 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
     };
 
     p.requestAbsoluteCoordinate = function(blockView) {
-        var pos = this._blockView.getAbsoluteCoordinate();
-        pos.x += this.box.x;
-        pos.y += this.box.y + this.box.height * 0.5;
+        var blockView = this._blockView;
+        var contentPos = blockView.contentPos;
+        var pos = blockView.getAbsoluteCoordinate();
+        pos.x += this.box.x + contentPos.x;
+        pos.y += this.box.y + contentPos.y;
         return pos;
     };
 
@@ -185,7 +187,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
     };
 
     p.isGlobal = function() {
-         return false;
+        return false;
     };
 
     p.separate = function(block) {
