@@ -146,7 +146,7 @@ Entry.BlockView.PARAM_SPACE = 5;
                         var paramIndex = Number(param.split('%')[1]) - 1;
                         param = params[paramIndex];
                         this._contents.push(
-                            new Entry['Field' + param.type](param, this, paramIndex)
+                            new Entry['Field' + param.type](param, this, paramIndex, mode)
                         );
                     } else this._contents.push(new Entry.FieldText({text: param}, this));
                 }

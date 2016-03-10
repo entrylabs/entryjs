@@ -8,7 +8,7 @@ goog.require("Entry.Field");
 /*
  *
  */
-Entry.FieldBlock = function(content, blockView, index) {
+Entry.FieldBlock = function(content, blockView, index, mode) {
     this._blockView = blockView;
     this._block = blockView.block;
     this._valueBlock = null;
@@ -31,13 +31,13 @@ Entry.FieldBlock = function(content, blockView, index) {
 
     this.box.observe(blockView, "alignContent", ["width", "height"]);
 
-    this.renderStart(blockView.getBoard());
+    this.renderStart(blockView.getBoard(), mode);
 };
 
 Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
 
 (function(p) {
-    p.renderStart = function(board) {
+    p.renderStart = function(board, mode) {
         this.svgGroup = this._blockView.contentSvgGroup.elem("g");
         this.view = this;
         this._nextGroup = this.svgGroup;
@@ -47,7 +47,12 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
             width: 0,
             height: 20
         });
-        this._updateValueBlock(this.getValue());
+        var block = this.getValue();
+        if (block && !block.view) {
+            block.setThread(this);
+            block.createView(board, mode);
+        }
+        this._updateValueBlock(block);
 
         if (this._blockView.getBoard().constructor == Entry.BlockMenu)
             this._valueBlock.view.removeControl();
@@ -137,8 +142,6 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
 
     p._setValueBlock = function(block) {
         if (block != this._valueBlock || !this._valueBlock) {
-            if (this._valueBlock)
-                this._valueBlock.view.set({shadow:true});
 
             this._valueBlock = block;
             if (!this._valueBlock)
@@ -146,8 +149,6 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
 
             block.setThread(this);
 
-            var blockView = this._valueBlock.view;
-            if (blockView.shadow) blockView.set({shadow:false});
             return this._valueBlock;
         }
     };

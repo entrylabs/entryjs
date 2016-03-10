@@ -97,8 +97,6 @@ Entry.FieldStatement = function(content, blockView, index) {
     p.calcHeight = function() {
         var height = this._thread.view.requestPartHeight(null);
         this.set({height: height});
-        if (this._blockView.block.getThread().view.isGlobal())
-            console.log('calcheight', height);
     };
 
     p.getValue = function() {

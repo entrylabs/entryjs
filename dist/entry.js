@@ -8742,9 +8742,9 @@ Entry.Popup.prototype.resize = function(a) {
   a.style.height = String(c + 35) + "px";
 };
 Entry.getStartProject = function(a) {
-  return {category:"\uae30\ud0c0", scenes:[{name:"\uc7a5\uba74 1", id:"7dwq"}], variables:[{name:"\ucd08\uc2dc\uacc4", id:"brih", visible:!1, value:"0", variableType:"timer", x:150, y:-70, array:[], object:null, isCloud:!1}, {name:"\ub300\ub2f5", id:"1vu8", visible:!1, value:"0", variableType:"answer", x:150, y:-100, array:[], object:null, isCloud:!1}], objects:[{id:"7y0y", name:"\uc5d4\ud2b8\ub9ac\ubd07", script:[[{type:"when_run_button_click", x:40, y:240}, {type:"move_direction"}, {type:"stop_repeat"}, 
-  {type:"move_direction"}, {type:"repeat_basic", statements:[[{type:"move_direction"}, {type:"move_x"}, {type:"move_y"}, {type:"stop_repeat"}]]}, {type:"stop_repeat"}, {type:"move_direction"}]], selectedPictureId:"vx80", objectType:"sprite", rotateMethod:"free", scene:"7dwq", sprite:{sounds:[{duration:1.3, ext:".mp3", id:"8el5", fileurl:a + "media/bark.mp3", name:"\uac15\uc544\uc9c0 \uc9d6\ub294\uc18c\ub9ac"}], pictures:[{id:"vx80", fileurl:a + "media/entrybot1.png", name:"\uc5d4\ud2b8\ub9ac\ubd07_\uac77\uae301", 
-  scale:100, dimension:{width:284, height:350}}, {id:"4t48", fileurl:a + "media/entrybot2.png", name:"\uc5d4\ud2b8\ub9ac\ubd07_\uac77\uae302", scale:100, dimension:{width:284, height:350}}]}, entity:{x:0, y:0, regX:142, regY:175, scaleX:.3154574132492113, scaleY:.3154574132492113, rotation:0, direction:90, width:284, height:350, visible:!0}, lock:!1, active:!0}], speed:60};
+  return {category:"\uae30\ud0c0", scenes:[{name:"\uc7a5\uba74 1", id:"7dwq"}], variables:[{name:"\ucd08\uc2dc\uacc4", id:"brih", visible:!1, value:"0", variableType:"timer", x:150, y:-70, array:[], object:null, isCloud:!1}, {name:"\ub300\ub2f5", id:"1vu8", visible:!1, value:"0", variableType:"answer", x:150, y:-100, array:[], object:null, isCloud:!1}], objects:[{id:"7y0y", name:"\uc5d4\ud2b8\ub9ac\ubd07", script:[[{type:"length_of_string", x:200, y:140, params:[{type:"length_of_string"}]}], [{type:"when_run_button_click", 
+  x:40, y:240}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"repeat_basic", statements:[[{type:"move_direction"}, {type:"move_x"}, {type:"move_y"}, {type:"stop_repeat"}]]}, {type:"stop_repeat"}, {type:"move_direction"}]], selectedPictureId:"vx80", objectType:"sprite", rotateMethod:"free", scene:"7dwq", sprite:{sounds:[{duration:1.3, ext:".mp3", id:"8el5", fileurl:a + "media/bark.mp3", name:"\uac15\uc544\uc9c0 \uc9d6\ub294\uc18c\ub9ac"}], pictures:[{id:"vx80", fileurl:a + 
+  "media/entrybot1.png", name:"\uc5d4\ud2b8\ub9ac\ubd07_\uac77\uae301", scale:100, dimension:{width:284, height:350}}, {id:"4t48", fileurl:a + "media/entrybot2.png", name:"\uc5d4\ud2b8\ub9ac\ubd07_\uac77\uae302", scale:100, dimension:{width:284, height:350}}]}, entity:{x:0, y:0, regX:142, regY:175, scaleX:.3154574132492113, scaleY:.3154574132492113, rotation:0, direction:90, width:284, height:350, visible:!0}, lock:!1, active:!0}], speed:60};
 };
 Entry.PropertyPanel = function() {
   this.modes = {};
@@ -13274,26 +13274,25 @@ Entry.BlockView.PARAM_SPACE = 5;
       case Entry.Workspace.MODE_BOARD:
       ;
       case Entry.Workspace.MODE_OVERLAYBOARD:
-        var d = /(%\d)/mi, e = a.template.split(d), f = a.params;
-        for (b = 0;b < e.length;b++) {
-          var g = e[b].trim();
-          if (0 !== g.length) {
-            if (d.test(g)) {
-              var h = Number(g.split("%")[1]) - 1, g = f[h];
-              this._contents.push(new Entry["Field" + g.type](g, this, h));
+        for (var d = /(%\d)/mi, e = a.template.split(d), f = a.params, g = 0;g < e.length;g++) {
+          var h = e[g].trim();
+          if (0 !== h.length) {
+            if (d.test(h)) {
+              var k = Number(h.split("%")[1]) - 1, h = f[k];
+              this._contents.push(new Entry["Field" + h.type](h, this, k, b));
             } else {
-              this._contents.push(new Entry.FieldText({text:g}, this));
+              this._contents.push(new Entry.FieldText({text:h}, this));
             }
           }
         }
-        if ((a = a.statements) && a.length) {
-          for (b = 0;b < a.length;b++) {
-            this._statements.push(new Entry.FieldStatement(a[b], this, b));
+        if ((b = a.statements) && b.length) {
+          for (g = 0;g < b.length;g++) {
+            this._statements.push(new Entry.FieldStatement(b[g], this, g));
           }
         }
         break;
       case Entry.Workspace.MODE_VIMBOARD:
-        a = this.getBoard().workspace.getCodeToText(this.block), this._contents.push(new Entry.FieldText({text:a, color:"white"}, this));
+        g = this.getBoard().workspace.getCodeToText(this.block), this._contents.push(new Entry.FieldText({text:g, color:"white"}, this));
     }
     this.alignContent(!1);
   };
@@ -14004,7 +14003,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
     this.resize();
   };
 })(Entry.FieldAngle.prototype);
-Entry.FieldBlock = function(a, b, c) {
+Entry.FieldBlock = function(a, b, c, d) {
   this._blockView = b;
   this._block = b.block;
   this._valueBlock = null;
@@ -14017,16 +14016,18 @@ Entry.FieldBlock = function(a, b, c) {
   this.svgGroup = null;
   this._position = a.position;
   this.box.observe(b, "alignContent", ["width", "height"]);
-  this.renderStart(b.getBoard());
+  this.renderStart(b.getBoard(), d);
 };
 Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
 (function(a) {
-  a.renderStart = function(b) {
+  a.renderStart = function(b, a) {
     this.svgGroup = this._blockView.contentSvgGroup.elem("g");
     this.view = this;
     this._nextGroup = this.svgGroup;
     this.box.set({x:0, y:0, width:0, height:20});
-    this._updateValueBlock(this.getValue());
+    var d = this.getValue();
+    d && !d.view && (d.setThread(this), d.createView(b, a));
+    this._updateValueBlock(d);
     this._blockView.getBoard().constructor == Entry.BlockMenu && this._valueBlock.view.removeControl();
   };
   a.align = function(b, a, d) {
@@ -14069,14 +14070,11 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
   };
   a._setValueBlock = function(b) {
     if (b != this._valueBlock || !this._valueBlock) {
-      this._valueBlock && this._valueBlock.view.set({shadow:!0});
       this._valueBlock = b;
       if (!this._valueBlock) {
         return this._inspectBlock();
       }
       b.setThread(this);
-      b = this._valueBlock.view;
-      b.shadow && b.set({shadow:!1});
       return this._valueBlock;
     }
   };
@@ -14525,7 +14523,6 @@ Entry.FieldStatement = function(a, b, c) {
   a.calcHeight = function() {
     var b = this._thread.view.requestPartHeight(null);
     this.set({height:b});
-    this._blockView.block.getThread().view.isGlobal() && console.log("calcheight", b);
   };
   a.getValue = function() {
     return this.block.statements[this._index];
@@ -14709,34 +14706,34 @@ Entry.GlobalSvg = {};
     var d = b.offset.left, e = b.offset.top, f = b.visible ? b.svgDom.width() : 0;
     return a.y > e && a.x > d + f ? this.DONE : a.y > e && a.x > d && b.visible ? this.REMOVE : this.RETURN;
   };
-  a.addControl = function(b) {
+  a.addControl = function(a) {
     this.onMouseDown.apply(this, arguments);
   };
-  a.onMouseDown = function(b) {
-    function a(b) {
-      var c = b.pageX;
-      b = b.pageY;
-      var d = e.left + (c - e._startX), f = e.top + (b - e._startY);
-      e.svgDom.css({left:d, top:f});
-      e._startX = c;
-      e._startY = b;
-      e.left = d;
-      e.top = f;
+  a.onMouseDown = function(a) {
+    function c(a) {
+      var b = a.pageX;
+      a = a.pageY;
+      var c = e.left + (b - e._startX), d = e.top + (a - e._startY);
+      e.svgDom.css({left:c, top:d});
+      e._startX = b;
+      e._startY = a;
+      e.left = c;
+      e.top = d;
     }
-    function d(b) {
+    function d(a) {
       $(document).unbind(".block");
     }
-    this._startY = b.pageY;
+    this._startY = a.pageY;
     var e = this;
-    b.stopPropagation();
-    b.preventDefault();
+    a.stopPropagation();
+    a.preventDefault();
     var f = $(document);
-    f.bind("mousemove.block", a);
+    f.bind("mousemove.block", c);
     f.bind("mouseup.block", d);
-    f.bind("touchmove.block", a);
+    f.bind("touchmove.block", c);
     f.bind("touchend.block", d);
-    this._startX = b.pageX;
-    this._startY = b.pageY;
+    this._startX = a.pageX;
+    this._startY = a.pageY;
   };
 })(Entry.GlobalSvg);
 Entry.RenderView = function(a, b) {
@@ -14762,23 +14759,23 @@ Entry.RenderView = function(a, b) {
     this.renderViewContainer = Entry.Dom("div", {"class":"renderViewContainer", parent:this.view});
     this.svgDom = Entry.Dom($('<svg id="' + this._svgId + '" class="renderView" version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'), {parent:this.renderViewContainer});
   };
-  a.changeCode = function(b) {
-    if (!(b instanceof Entry.Code)) {
+  a.changeCode = function(a) {
+    if (!(a instanceof Entry.Code)) {
       return console.error("You must inject code instance");
     }
-    this.code = b;
+    this.code = a;
     this.svg || (this.svg = Entry.SVG(this._svgId), this.svgGroup = this.svg.elem("g"), this.svgThreadGroup = this.svgGroup.elem("g"), this.svgThreadGroup.board = this, this.svgBlockGroup = this.svgGroup.elem("g"), this.svgBlockGroup.board = this);
-    b.createView(this);
+    a.createView(this);
     this.align();
   };
   a.align = function() {
-    var b = this.code.getThreads();
-    if (b && 0 !== b.length) {
-      for (var a = 0, d = "LEFT" == this._align ? 20 : this.svgDom.width() / 2, e = 0, f = b.length;e < f;e++) {
-        var g = b[e].getFirstBlock().view;
-        g._moveTo(d - g.offsetX, a - g.offsetY, !1);
+    var a = this.code.getThreads();
+    if (a && 0 !== a.length) {
+      for (var c = 0, d = "LEFT" == this._align ? 20 : this.svgDom.width() / 2, e = 0, f = a.length;e < f;e++) {
+        var g = a[e].getFirstBlock().view;
+        g._moveTo(d - g.offsetX, c - g.offsetY, !1);
         g = g.svgGroup.getBBox().height;
-        a += g + 15;
+        c += g + 15;
       }
       this.height = this.svgGroup.getBBox().height;
     }
@@ -14793,22 +14790,22 @@ Entry.RenderView = function(a, b) {
     this._svgWidth = this.svgDom.width();
     this.offset = this.svgDom.offset();
   };
-  a.bindCodeView = function(b) {
+  a.bindCodeView = function(a) {
     this.svgBlockGroup.remove();
     this.svgThreadGroup.remove();
-    this.svgBlockGroup = b.svgBlockGroup;
-    this.svgThreadGroup = b.svgThreadGroup;
+    this.svgBlockGroup = a.svgBlockGroup;
+    this.svgThreadGroup = a.svgThreadGroup;
     this.svgGroup.appendChild(this.svgThreadGroup);
     this.svgGroup.appendChild(this.svgBlockGroup);
   };
   a._addFilters = function() {
-    var b = this.svg.elem("defs"), a = b.elem("filter", {id:"entryTrashcanFilter"});
-    a.elem("feGaussianBlur", {"in":"SourceAlpha", stdDeviation:2, result:"blur"});
-    a.elem("feOffset", {"in":"blur", dx:1, dy:1, result:"offsetBlur"});
-    a = a.elem("feMerge");
-    a.elem("feMergeNode", {"in":"offsetBlur"});
-    a.elem("feMergeNode", {"in":"SourceGraphic"}, a);
-    b.elem("filter", {id:"entryBlockShadowFilter"}).innerHTML = '<feOffset result="offOut" in="SourceGraphic" dx="0" dy="1" /><feColorMatrix result="matrixOut" in="offOut" type="matrix"values="0.7 0 0 0 0 0 0.7 0 0 0 0 0 0.7 0 0 0 0 0 1 0" /><feBlend in="SourceGraphic" in2="blurOut" mode="normal" />';
+    var a = this.svg.elem("defs"), c = a.elem("filter", {id:"entryTrashcanFilter"});
+    c.elem("feGaussianBlur", {"in":"SourceAlpha", stdDeviation:2, result:"blur"});
+    c.elem("feOffset", {"in":"blur", dx:1, dy:1, result:"offsetBlur"});
+    c = c.elem("feMerge");
+    c.elem("feMergeNode", {"in":"offsetBlur"});
+    c.elem("feMergeNode", {"in":"SourceGraphic"}, c);
+    a.elem("filter", {id:"entryBlockShadowFilter"}).innerHTML = '<feOffset result="offOut" in="SourceGraphic" dx="0" dy="1" /><feColorMatrix result="matrixOut" in="offOut" type="matrix"values="0.7 0 0 0 0 0 0.7 0 0 0 0 0 0.7 0 0 0 0 0 1 0" /><feBlend in="SourceGraphic" in2="blurOut" mode="normal" />';
   };
 })(Entry.RenderView.prototype);
 Entry.Scroller = function(a, b, c) {
@@ -15206,7 +15203,7 @@ Entry.Block.MAGNET_OFFSET = .4;
       a = this.params;
       c = this._schema.params;
       for (e = 0;e < c.length;e++) {
-        d = void 0 !== a[e] ? a[e] : c[e].value, f = a[e], !d || "Output" !== c[e].type && "Block" !== c[e].type || (d = new Entry.Block(d)), f ? a.splice(e, 1, d) : a.push(d);
+        d = void 0 !== a[e] ? a[e] : c[e].value, f = a[e], !d || "Output" !== c[e].type && "Block" !== c[e].type || (console.log(d), d = new Entry.Block(d), console.log(d)), f ? a.splice(e, 1, d) : a.push(d);
       }
       if (a = this._schema.statements) {
         for (e = 0;e < a.length;e++) {
