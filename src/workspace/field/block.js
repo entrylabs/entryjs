@@ -116,10 +116,10 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
         if (!this._valueBlock) {
             var blockType = null;
             switch (this.acceptType) {
-                case "basic_boolean_field":
+                case "booleanMagnet":
                     blockType = "True";
                     break;
-                case "basic_string_field":
+                case "stringMagnet":
                     blockType = "text";
                     break;
                 case "basic_param":

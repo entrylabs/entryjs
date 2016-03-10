@@ -9887,7 +9887,7 @@ Entry.BlockMockup = function(a) {
     return this;
   };
   a.appendValueInput = function(b) {
-    this.params.push({type:"Block", accept:"basic_string_field"});
+    this.params.push({type:"Block", accept:"stringMagnet"});
     this.templates.push(this.getFieldCount());
     return this;
   };
@@ -9896,7 +9896,7 @@ Entry.BlockMockup = function(a) {
   };
   a.setCheck = function(b) {
     var a = this.params;
-    "Boolean" === b && (a[a.length - 1].accept = "basic_boolean_field");
+    "Boolean" === b && (a[a.length - 1].accept = "booleanMagnet");
   };
   a.appendField = function(b) {
     "string" === typeof b && 0 < b.length ? this.templates.push(b) : b.constructor == Blockly.FieldIcon ? ("start" === b.type ? this.params.push({type:"Indicator", img:b.src_, size:17, position:{x:0, y:-2}}) : this.params.push({type:"Indicator", img:b.src_, size:12}), this.templates.push(this.getFieldCount())) : b.constructor == Blockly.FieldDropdown ? (this.params.push({type:"Dropdown", options:b.menuGenerator_, value:b.menuGenerator_[0][1], fontSize:11}), this.templates.push(this.getFieldCount())) : 
@@ -13504,7 +13504,6 @@ Entry.BlockView.PARAM_SPACE = 5;
       var b = this._skeleton.magnets(this);
       b.next && this._nextGroup.attr("transform", "translate(" + b.next.x + "," + b.next.y + ")");
       this.magnet = b;
-      console.log(b.next, this.height);
       this.block.getThread().changeEvent.notify();
     }
   };
@@ -14052,10 +14051,10 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
     if (!this._valueBlock) {
       var b = null;
       switch(this.acceptType) {
-        case "basic_boolean_field":
+        case "booleanMagnet":
           b = "True";
           break;
-        case "basic_string_field":
+        case "stringMagnet":
           b = "text";
           break;
         case "basic_param":
@@ -15706,87 +15705,90 @@ Entry.Board = function(a) {
       case "stringMagnet":
         g = this._getStringMagnets;
         break;
+      case "booleanMagnet":
+        g = this._getStringMagnets;
+        break;
       default:
         return [];
     }
     for (var h = 0;h < d.length;h++) {
-      e = e.concat(g.call(this, d[h], f)), f++;
+      e = e.concat(g.call(this, d[h], f, null, c)), f++;
     }
     return e;
   };
-  a._getNextMagnets = function(a, c, d) {
-    var e = a.getBlocks(), f = [], g = [];
+  a._getNextMagnets = function(a, c, d, e) {
+    var f = a.getBlocks(), g = [], h = [];
     d || (d = {x:0, y:0});
-    var h = d.x;
+    var k = d.x;
     d = d.y;
-    for (var k = 0;k < e.length;k++) {
-      var l = e[k], n = l.view;
-      n.zIndex = c;
-      if (n.dragInstance) {
+    for (var l = 0;l < f.length;l++) {
+      var n = f[l], m = n.view;
+      m.zIndex = c;
+      if (m.dragInstance) {
         break;
       }
-      d += n.y;
-      h += n.x;
+      d += m.y;
+      k += m.x;
       a = d + 1;
-      n.magnet.next && (a += n.magnet.next.y);
-      g.push({point:d, endPoint:a, startBlock:l, blocks:[]});
-      g.push({point:a, blocks:[]});
-      n.absX = h;
-      l.statements && (c += .01);
-      for (var m = 0;m < l.statements.length;m++) {
-        a = l.statements[m];
-        var q = l.view._statements[m];
-        q.zIndex = c;
-        q.absX = h + q.x;
-        g.push({point:q.y + d - 30, endPoint:q.y + d + q.height, startBlock:q, blocks:[]});
-        g.push({point:q.y + d + q.height, blocks:[]});
+      m.magnet.next && (a += m.magnet.next.y);
+      h.push({point:d, endPoint:a, startBlock:n, blocks:[]});
+      h.push({point:a, blocks:[]});
+      m.absX = k;
+      n.statements && (c += .01);
+      for (var q = 0;q < n.statements.length;q++) {
+        a = n.statements[q];
+        var r = n.view._statements[q];
+        r.zIndex = c;
+        r.absX = k + r.x;
+        h.push({point:r.y + d - 30, endPoint:r.y + d + r.height, startBlock:r, blocks:[]});
+        h.push({point:r.y + d + r.height, blocks:[]});
         c += .01;
-        f = f.concat(this._getNextMagnets(a, c, {x:q.x + h, y:q.y + d}));
+        g = g.concat(this._getNextMagnets(a, c, {x:r.x + k, y:r.y + d}, e));
       }
-      n.magnet.next && (d += n.magnet.next.y, h += n.magnet.next.x);
+      m.magnet.next && (d += m.magnet.next.y, k += m.magnet.next.x);
     }
-    return f.concat(g);
+    return g.concat(h);
   };
-  a._getStringMagnets = function(a, c, d) {
-    var e = a.getBlocks(), f = [], g = [];
+  a._getStringMagnets = function(a, c, d, e) {
+    var f = a.getBlocks(), g = [], h = [];
     d || (d = {x:0, y:0});
-    var h = d.x;
+    var k = d.x;
     d = d.y;
-    for (var k = 0;k < e.length;k++) {
-      var l = e[k], n = l.view;
-      n.zIndex = c;
-      if (n.dragInstance) {
+    for (var l = 0;l < f.length;l++) {
+      var n = f[l], m = n.view;
+      m.zIndex = c;
+      if (m.dragInstance) {
         break;
       }
-      d += n.y;
-      h += n.x;
-      g = g.concat(this._getContentsMetaData(n, h, d, c));
-      l.statements && (c += .01);
-      for (var m = 0;m < l.statements.length;m++) {
-        a = l.statements[m];
-        var q = l.view._statements[m], f = f.concat(this._getStringMagnets(a, c, {x:q.x + h, y:q.y + d}));
+      d += m.y;
+      k += m.x;
+      h = h.concat(this._getContentsMetaData(m, k, d, c, e));
+      n.statements && (c += .01);
+      for (var q = 0;q < n.statements.length;q++) {
+        a = n.statements[q];
+        var r = n.view._statements[q], g = g.concat(this._getStringMagnets(a, c, {x:r.x + k, y:r.y + d}, e));
       }
-      n.magnet.next && (d += n.magnet.next.y, h += n.magnet.next.x);
+      m.magnet.next && (d += m.magnet.next.y, k += m.magnet.next.x);
     }
-    return f.concat(g);
+    return g.concat(h);
   };
-  a._getContentsMetaData = function(a, c, d, e) {
-    var f = a._contents, g = [];
+  a._getContentsMetaData = function(a, c, d, e, f) {
+    var g = a._contents, h = [];
     c += a.contentPos.x;
     d += a.contentPos.y;
-    for (var h = 0;h < f.length;h++) {
-      var k = f[h];
-      if (k instanceof Entry.FieldBlock) {
-        var l = c + k.box.x, n = d + k.box.y + -.5 * a.height, m = d + k.box.y + k.box.height, k = k._valueBlock;
-        g.push({point:n, endPoint:m, startBlock:k, blocks:[]});
-        g.push({point:m, blocks:[]});
-        m = k.view;
-        m.absX = l;
-        m.zIndex = e;
-        g = g.concat(this._getContentsMetaData(m, l + m.contentPos.x, n + m.contentPos.y, e + .01));
+    for (var k = 0;k < g.length;k++) {
+      var l = g[k];
+      if (l instanceof Entry.FieldBlock && l.acceptType === f) {
+        var n = c + l.box.x, m = d + l.box.y + -.5 * a.height, q = d + l.box.y + l.box.height, l = l._valueBlock;
+        h.push({point:m, endPoint:q, startBlock:l, blocks:[]});
+        h.push({point:q, blocks:[]});
+        q = l.view;
+        q.absX = n;
+        q.zIndex = e;
+        h = h.concat(this._getContentsMetaData(q, n + q.contentPos.x, m + q.contentPos.y, e + .01, f));
       }
     }
-    return g;
+    return h;
   };
   a.getNearestMagnet = function(a, c, d) {
     var e = this._magnetMap[d];

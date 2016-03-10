@@ -626,7 +626,6 @@ Entry.BlockView.PARAM_SPACE = 5;
                 "transform", "translate(" + magnet.next.x + ',' + magnet.next.y + ")"
             );
         this.magnet = magnet;
-        console.log(magnet.next, this.height);
         this.block.getThread().changeEvent.notify();
     };
 
