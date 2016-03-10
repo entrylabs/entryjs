@@ -22,6 +22,7 @@ Entry.init = function(container, options) {
     this.parseOptions(options);
     this.mediaFilePath = (options.libDir ? options.libDir : '/lib') + '/entryjs/images/';
     this.defaultPath = options.defaultDir || '';
+    this.blockInjectPath = options.blockInjectDir || '';
 
     if (this.type == 'workspace' && this.isPhone())
         this.type = 'phone';
