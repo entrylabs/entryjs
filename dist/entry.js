@@ -14122,9 +14122,9 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
     return this._valueBlock === b ? [b] : null;
   };
   a.replace = function(b) {
-    var a = this._valueBlock;
-    Entry.block[a.type].isPrimitive ? a.destroy() : (a.view._toGlobalCoordinate(), this.separate(a), a.view.bumpAway(30, 150));
+    var a = this._valueBlock, d = a.type;
     this._updateValueBlock(b);
+    Entry.block[d].isPrimitive ? a.destroy() : (a.view._toGlobalCoordinate(), this.separate(a), a.view.bumpAway(30, 150));
     b.view._toLocalCoordinate(this.svgGroup);
     this.calcWH();
   };

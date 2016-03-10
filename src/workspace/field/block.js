@@ -160,6 +160,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
         if (this._posObserver) this._posObserver.destroy();
 
         var view = this._setValueBlock(block).view;
+        //view._toLocalCoordinate();
         view.bindPrev();
         this._blockView.alignContent();
         this._posObserver = view.observe(this, "_updateValueBlock", ["x", "y"], false);
@@ -209,6 +210,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
     p.replace = function(block) {
         var valueBlock = this._valueBlock;
         var valueBlockType = valueBlock.type;
+        this._updateValueBlock(block);
         if (Entry.block[valueBlockType].isPrimitive)
             valueBlock.destroy();
         else {
@@ -216,7 +218,6 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
             this.separate(valueBlock);
             valueBlock.view.bumpAway(30, 150);
         }
-        this._updateValueBlock(block);
         block.view._toLocalCoordinate(this.svgGroup);
         this.calcWH();
     };
