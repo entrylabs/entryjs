@@ -164,6 +164,8 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
         this._blockView.alignContent();
         this._posObserver = view.observe(this, "_updateValueBlock", ["x", "y"], false);
         this._sizeObserver = view.observe(this, "calcWH", ["width", "height"]);
+        var board = this._blockView.getBoard();// performance issue
+        board.generateCodeMagnetMap();
     };
 
     p.getPrevBlock = function(block) {

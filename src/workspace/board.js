@@ -505,8 +505,6 @@ Entry.Board = function(option) {
             var block = blocks[i];
             var blockView = block.view;
             blockView.zIndex = zIndex;
-            if (blockView.dragInstance)
-                break;
             cursorY += blockView.y;
             cursorX += blockView.x;
             var endPoint = cursorY + 1;
@@ -546,10 +544,12 @@ Entry.Board = function(option) {
                 continue;
             if (content.acceptType !== targetType)
                 continue;
+            var contentBlock = content._valueBlock;
+            if (contentBlock.view.dragInstance)
+                break;
             var startX = cursorX + content.box.x;
             var startY = cursorY + content.box.y + blockView.height * -0.5;
             var endY = cursorY + content.box.y + content.box.height;
-            var contentBlock = content._valueBlock;
             metaData.push({
                 point: startY,
                 endPoint: endY,

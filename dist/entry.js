@@ -14088,6 +14088,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
     this._blockView.alignContent();
     this._posObserver = b.observe(this, "_updateValueBlock", ["x", "y"], !1);
     this._sizeObserver = b.observe(this, "calcWH", ["width", "height"]);
+    this._blockView.getBoard().generateCodeMagnetMap();
   };
   a.getPrevBlock = function(b) {
     return this._valueBlock === b ? this : null;
@@ -15756,9 +15757,6 @@ Entry.Board = function(a) {
     for (var l = 0;l < f.length;l++) {
       var n = f[l], m = n.view;
       m.zIndex = c;
-      if (m.dragInstance) {
-        break;
-      }
       d += m.y;
       k += m.x;
       h = h.concat(this._getContentsMetaData(m, k, d, c, e));
@@ -15778,13 +15776,17 @@ Entry.Board = function(a) {
     for (var k = 0;k < g.length;k++) {
       var l = g[k];
       if (l instanceof Entry.FieldBlock && l.acceptType === f) {
-        var n = c + l.box.x, m = d + l.box.y + -.5 * a.height, q = d + l.box.y + l.box.height, l = l._valueBlock;
-        h.push({point:m, endPoint:q, startBlock:l, blocks:[]});
-        h.push({point:q, blocks:[]});
-        q = l.view;
-        q.absX = n;
-        q.zIndex = e;
-        h = h.concat(this._getContentsMetaData(q, n + q.contentPos.x, m + q.contentPos.y, e + .01, f));
+        var n = l._valueBlock;
+        if (n.view.dragInstance) {
+          break;
+        }
+        var m = c + l.box.x, q = d + l.box.y + -.5 * a.height, l = d + l.box.y + l.box.height;
+        h.push({point:q, endPoint:l, startBlock:n, blocks:[]});
+        h.push({point:l, blocks:[]});
+        n = n.view;
+        n.absX = m;
+        n.zIndex = e;
+        h = h.concat(this._getContentsMetaData(n, m + n.contentPos.x, q + n.contentPos.y, e + .01, f));
       }
     }
     return h;
