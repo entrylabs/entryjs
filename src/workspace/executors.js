@@ -16,7 +16,7 @@ Entry.Executor = function(block, entity) {
         while (true) {
             var returnVal = this.scope.block._schema.func.call(this.scope, this.entity, this.scope);
             if (returnVal === undefined || returnVal === null) {
-                this.scope = new Entry.Scope(this.scope.block.next, this);
+                this.scope = new Entry.Scope(this.scope.block.getNextBlock(), this);
                 if (this.scope.block === null) {
                     if (this._callStack.length)
                         this.scope = this._callStack.pop();
@@ -36,7 +36,6 @@ Entry.Executor = function(block, entity) {
         this._callStack.push(this.scope);
 
         var block = thread.getFirstBlock();
-        if (block.isDummy) block = block.next;
 
         this.scope = new Entry.Scope(block, this);
     };
@@ -55,7 +54,7 @@ Entry.Scope = function(block, executor) {
     };
 
     p.getValue = function(key, block) {
-        var fieldBlock = this.block.params[0]._data[1];
+        var fieldBlock = this.block.params[0];
         var newScope = new Entry.Scope(fieldBlock, this.executor);
         var result = Entry.block[fieldBlock.type].func.call(newScope, this.entity, newScope);
         return result;

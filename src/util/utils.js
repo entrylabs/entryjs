@@ -81,7 +81,9 @@ Entry.Utils.bindGlobalEvent = function(options) {
     if (!Entry.documentMousemove && options.indexOf('mousemove') > -1) {
         Entry.mouseCoordinate = {};
         Entry.documentMousemove = new Entry.Event(window);
-        $(document).on('mousemove', (function(e) {
+        $(document).on('touchmove mousemove', (function(e) {
+            if (e.originalEvent && e.originalEvent.touches)
+                e = e.originalEvent.touches[0];
             Entry.documentMousemove.notify(e);
             Entry.mouseCoordinate.x = e.clientX;
             Entry.mouseCoordinate.y = e.clientY;

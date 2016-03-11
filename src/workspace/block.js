@@ -402,7 +402,7 @@ Entry.Block.MAGNET_OFFSET = 0.4;
     };
 
     p.getNextBlock = function() {
-        return this.thread.getNextBlock(this);
+        return this.thread.getNextBlock(this) || null;
     };
 
     p.getLastBlock = function() {
