@@ -14060,12 +14060,10 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
           b = "function_field_label";
       }
       this._block.getThread();
-      var a = this._blockView.getBoard();
-      block = new Entry.Block({type:b}, this);
-      var b = a.workspace, d;
-      b && (d = b.getMode());
-      block.createView(a, d);
-      return this._setValueBlock(block);
+      var a = this._blockView.getBoard(), b = new Entry.Block({type:b}, this), d = a.workspace, e;
+      d && (e = d.getMode());
+      b.createView(a, e);
+      return this._setValueBlock(b);
     }
   };
   a._setValueBlock = function(b) {

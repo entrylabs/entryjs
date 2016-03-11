@@ -129,7 +129,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
             var thread = this._block.getThread();
             var board = this._blockView.getBoard();
 
-            block = new Entry.Block({type: blockType}, this);
+            var block = new Entry.Block({type: blockType}, this);
             var workspace = board.workspace;
             var mode;
             if (workspace)

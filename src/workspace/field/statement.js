@@ -67,7 +67,7 @@ Entry.FieldStatement = function(content, blockView, index) {
         }
         thread.changeEvent.attach(this, this.calcHeight);
         this.calcHeight();
-    }
+    };
 
     p.align = function(x, y, animate) {
         animate = animate === undefined ? true : animate;

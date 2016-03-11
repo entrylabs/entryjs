@@ -88,7 +88,7 @@ Entry.BlockView.PARAM_SPACE = 5;
 
         var classes = skeleton.classes;
         if (classes && classes.length !== 0)
-            classes.forEach(function(c){that.svgGroup.addClass(c)});
+            classes.forEach(function(c){that.svgGroup.addClass(c);});
 
         var path = skeleton.path(this);
 
@@ -777,7 +777,7 @@ Entry.BlockView.PARAM_SPACE = 5;
 
                 this._toLocalCoordinate(prevBlockView._nextGroup);
                 var nextBlock = this.block.getNextBlock();
-                nextBlock && nextBlock.view &&
+                if (nextBlock && nextBlock.view)
                     nextBlock.view._toLocalCoordinate(this._nextGroup);
             }
         }

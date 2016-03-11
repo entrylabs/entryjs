@@ -77,9 +77,9 @@ Entry.BlockMockup = function(blocklyInfo) {
             color: this.color,
             skeleton: skeleton,
             statements: this.statements,
-            template: this.templates.filter(function(p) {return typeof p === "string"}).join(" "),
+            template: this.templates.filter(function(p) {return typeof p === "string";}).join(" "),
             params: this.params
-        }
+        };
     };
 
     p.appendDummyInput = function() {
