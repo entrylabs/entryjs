@@ -178,7 +178,7 @@ Entry.skeleton.pebble_event = {
         // apply scale required.
         var height = blockView ? Math.max(blockView.height, 49.3) : 49.3;
         return {
-            next: {x: 0, y: height}
+            next: {x: 0, y: height + blockView.offsetY}
         };
     },
     contentPos: function() {
@@ -193,7 +193,7 @@ Entry.skeleton.pebble_loop = {
     path: function(blockView) {
         var contentWidth = 124;
         var contentHeight = Math.max(blockView.contentHeight, 50);
-        var statementHeight = Math.max(blockView._statements[0] ? blockView._statements[0].box.height : 50, 50);
+        var statementHeight = Math.max(blockView._statements[0] ? blockView._statements[0].height : 50, 50);
         return ("M 0,9 a 9,9 0 0,0 9,-9 h %cw q 25,0 25,25 v %ch q 0,25 -25,25 h -%cw a 9,9 0 0,1 -18,0 " +
             "h -%cw q -25,0 -25,-25 v -%ch q 0,-25 25,-25 h %cw a 9,9 0 0,0 9,9 " +
             "M 0,49 a 9,9 0 0,1 -9,-9 h -28 a 25,25 0 0,0 -25,25 v %cih a 25,25 0 0,0 25,25 h 28 a 9,9 0 0,0 18,0 " +
@@ -202,27 +202,29 @@ Entry.skeleton.pebble_loop = {
             .replace(/%ch/gi, statementHeight + 4)
             .replace(/%cih/gi, statementHeight - 50);
     },
-    magnets: function() {
-        var contentWidth = 124;
-        var contentHeight = 50;
-        // apply scale required.
+    magnets: function(blockView) {
+        var contentHeight = Math.max(blockView.contentHeight + 2, 41);
+        var statementHeight = blockView._statements[0] ? blockView._statements[0].height : 20;
+        statementHeight = Math.max(statementHeight, 51);
         return {
             previous: {x: 0, y: 0},
-            next: {x: 0, y: contentHeight + 55}
+            next: {x: 0, y: statementHeight + contentHeight + 13 + blockView.offsetY}
         };
     },
     box: function(blockView) {
-        var contentWidth = 124;
-        var statementHeight = Math.max(blockView._statements[0] ? blockView._statements[0].box.height : 50, 50);
+        var contentWidth = blockView.contentWidth;
+        var contentHeight = Math.max(blockView.contentHeight + 2, 41);
+        var statementHeight = blockView._statements[0] ? blockView._statements[0].height : 20;
+        statementHeight = Math.max(statementHeight, 51);
         return {
             offsetX: -(contentWidth / 2 + 13), offsetY: 0,
-            width: contentWidth + 26,
-            height: statementHeight + 54,
+            width: contentWidth + 30,
+            height: contentHeight + statementHeight + 13,
             marginBottom: 0
         };
     },
     statementPos: function(blockView) {
-        var height = 39;
+        var height = Math.max(39, blockView.contentHeight + 2) + 1.5;
         return [{
             x: 0, y: height
         }];
@@ -256,7 +258,7 @@ Entry.skeleton.pebble_basic = {
         var height = blockView ? Math.max(blockView.height, 51) : 51;
         return {
             previous: {x: 0, y: 0},
-            next: {x: 0, y: height}
+            next: {x: 0, y: height + blockView.offsetY}
         };
     },
     box: function() {

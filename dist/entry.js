@@ -14684,10 +14684,10 @@ Entry.GlobalSvg = {};
     this.svgGroup && (this.svgGroup.remove(), delete this.svgGroup, delete this._view, delete this._offsetX, delete this._offsetY, delete this._startX, delete this._startY, this.hide());
   };
   a.align = function() {
-    var b = this._view.getSkeleton().box(this._view).offsetX || 0, a = this._view.getSkeleton().box(this._view).offsetY || 0, b = -1 * b + 1, a = -1 * a + 1;
-    this._offsetX = b;
-    this._offsetY = a;
-    this.svgGroup.attr({transform:"translate(" + b + "," + a + ")"});
+    var a = this._view.getSkeleton().box(this._view).offsetX || 0, c = this._view.getSkeleton().box(this._view).offsetY || 0, a = -1 * a + 1, c = -1 * c + 1;
+    this._offsetX = a;
+    this._offsetY = c;
+    this.svgGroup.attr({transform:"translate(" + a + "," + c + ")"});
   };
   a.show = function() {
     this.svgDom.css("display", "block");
@@ -14696,9 +14696,9 @@ Entry.GlobalSvg = {};
     this.svgDom.css("display", "none");
   };
   a.position = function() {
-    var b = this._view, a = b.getAbsoluteCoordinate(), b = b.getBoard().offset;
-    this.left = a.x + b.left - this._offsetX;
-    this.top = a.y + b.top - this._offsetY;
+    var a = this._view, c = a.getAbsoluteCoordinate(), a = a.getBoard().offset;
+    this.left = c.x + a.left - this._offsetX;
+    this.top = c.y + a.top - this._offsetY;
     this.svgDom.css({left:this.left, top:this.top});
   };
   a.terminateDrag = function(a) {
@@ -14968,19 +14968,23 @@ Entry.skeleton.pebble_event = {path:function(a) {
 }, box:function(a) {
   return {offsetX:-25, offsetY:0, width:50, height:48.3, marginBottom:0};
 }, magnets:function(a) {
-  return {next:{x:0, y:a ? Math.max(a.height, 49.3) : 49.3}};
+  return {next:{x:0, y:(a ? Math.max(a.height, 49.3) : 49.3) + a.offsetY}};
 }, contentPos:function() {
   return {x:0, y:25};
 }};
 Entry.skeleton.pebble_loop = {fontSize:16, dropdownHeight:23, path:function(a) {
-  a = Math.max(a._statements[0] ? a._statements[0].box.height : 50, 50);
+  a = Math.max(a._statements[0] ? a._statements[0].height : 50, 50);
   return "M 0,9 a 9,9 0 0,0 9,-9 h %cw q 25,0 25,25 v %ch q 0,25 -25,25 h -%cw a 9,9 0 0,1 -18,0 h -%cw q -25,0 -25,-25 v -%ch q 0,-25 25,-25 h %cw a 9,9 0 0,0 9,9 M 0,49 a 9,9 0 0,1 -9,-9 h -28 a 25,25 0 0,0 -25,25 v %cih a 25,25 0 0,0 25,25 h 28 a 9,9 0 0,0 18,0 h 28 a 25,25 0 0,0 25,-25 v -%cih a 25,25 0 0,0 -25,-25 h -28 a 9,9 0 0,1 -9,9 z".replace(/%cw/gi, 41).replace(/%ch/gi, a + 4).replace(/%cih/gi, a - 50);
-}, magnets:function() {
-  return {previous:{x:0, y:0}, next:{x:0, y:105}};
+}, magnets:function(a) {
+  var b = Math.max(a.contentHeight + 2, 41), c = a._statements[0] ? a._statements[0].height : 20, c = Math.max(c, 51);
+  return {previous:{x:0, y:0}, next:{x:0, y:c + b + 13 + a.offsetY}};
 }, box:function(a) {
-  return {offsetX:-75, offsetY:0, width:150, height:Math.max(a._statements[0] ? a._statements[0].box.height : 50, 50) + 54, marginBottom:0};
+  var b = a.contentWidth, c = Math.max(a.contentHeight + 2, 41);
+  a = a._statements[0] ? a._statements[0].height : 20;
+  a = Math.max(a, 51);
+  return {offsetX:-(b / 2 + 13), offsetY:0, width:b + 30, height:c + a + 13, marginBottom:0};
 }, statementPos:function(a) {
-  return [{x:0, y:39}];
+  return [{x:0, y:Math.max(39, a.contentHeight + 2) + 1.5}];
 }, contentPos:function() {
   return {x:-46, y:25};
 }};
@@ -14990,7 +14994,7 @@ Entry.skeleton.pebble_basic = {fontSize:16, morph:["prev", "next"], path:functio
   b = b.next && "pebble_basic" === b.next._schema.skeleton;
   return "m 0,9 a 9,9 0 0,0 9,-9 h 28 " + (a ? "l 25,0 0,25" : "q 25,0 25,25") + (b ? "l 0,25 -25,0" : "q 0,25 -25,25") + "h -28 a 9,9 0 0,1 -18,0 h -28 " + (b ? "l -25,0 0,-25" : "q -25,0 -25,-25") + (a ? "l 0,-25 25,0" : "q 0,-25 25,-25") + "h 28 a 9,9 0 0,0 9,9 z";
 }, magnets:function(a) {
-  return {previous:{x:0, y:0}, next:{x:0, y:a ? Math.max(a.height, 51) : 51}};
+  return {previous:{x:0, y:0}, next:{x:0, y:(a ? Math.max(a.height, 51) : 51) + a.offsetY}};
 }, box:function() {
   return {offsetX:-62, offsetY:0, width:124, height:50, marginBottom:0};
 }, contentPos:function() {
