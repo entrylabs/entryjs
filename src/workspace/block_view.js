@@ -183,6 +183,11 @@ Entry.BlockView.PARAM_SPACE = 5;
             cursor.x += box.width;
         }
 
+        this.set({
+            contentWidth: cursor.x,
+            contentHeight: cursor.height
+        });
+
         if (this._statements.length) {
             var positions = this._skeleton.statementPos ?
                 this._skeleton.statementPos(this) : [];
@@ -193,11 +198,6 @@ Entry.BlockView.PARAM_SPACE = 5;
                     s.align(pos.x, pos.y, animate);
             }
         }
-
-        this.set({
-            contentWidth: cursor.x,
-            contentHeight: cursor.height
-        });
 
         var contentPos = this.getContentPos();
         this.contentSvgGroup.attr("transform",

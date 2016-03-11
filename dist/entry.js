@@ -13306,13 +13306,12 @@ Entry.BlockView.PARAM_SPACE = 5;
       d = Math.max(f.height, d);
       a += f.width;
     }
+    this.set({contentWidth:a, contentHeight:d});
     if (this._statements.length) {
-      for (f = this._skeleton.statementPos ? this._skeleton.statementPos(this) : [], e = 0;e < this._statements.length;e++) {
-        var g = this._statements[e], h = f[e];
-        h && g.align(h.x, h.y, b);
+      for (a = this._skeleton.statementPos ? this._skeleton.statementPos(this) : [], e = 0;e < this._statements.length;e++) {
+        d = this._statements[e], (f = a[e]) && d.align(f.x, f.y, b);
       }
     }
-    this.set({contentWidth:a, contentHeight:d});
     b = this.getContentPos();
     this.contentSvgGroup.attr("transform", "translate(" + b.x + "," + b.y + ")");
     this.contentPos = b;
@@ -14701,11 +14700,11 @@ Entry.GlobalSvg = {};
     this.top = a.y + b.top - this._offsetY;
     this.svgDom.css({left:this.left, top:this.top});
   };
-  a.terminateDrag = function(b) {
-    var a = Entry.mouseCoordinate;
-    b = b.getBoard().workspace.blockMenu;
-    var d = b.offset.left, e = b.offset.top, f = b.visible ? b.svgDom.width() : 0;
-    return a.y > e && a.x > d + f ? this.DONE : a.y > e && a.x > d && b.visible ? this.REMOVE : this.RETURN;
+  a.terminateDrag = function(a) {
+    var c = Entry.mouseCoordinate;
+    a = a.getBoard().workspace.blockMenu;
+    var d = a.offset.left, e = a.offset.top, f = a.visible ? a.svgDom.width() : 0;
+    return c.y > e && c.x > d + f ? this.DONE : c.y > e && c.x > d && a.visible ? this.REMOVE : this.RETURN;
   };
   a.addControl = function(a) {
     this.onMouseDown.apply(this, arguments);
