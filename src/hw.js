@@ -33,7 +33,9 @@ Entry.HW = function() {
         '13': Entry.CODEino,
         '24': Entry.Hamster,
         '25': Entry.Albert,
-        '31': Entry.Bitbrick
+        '31': Entry.Bitbrick,
+        '71': Entry.Robotis_carCont,
+        '72': Entry.Robotis_openCM70
     };
 };
 
