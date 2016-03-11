@@ -171,6 +171,7 @@ Entry.Board = function(option) {
     p.onMouseDown = function(e) {
         if (this.workspace.getMode() == Entry.Workspace.MODE_VIMBOARD)
             return;
+        e.stopPropagation();
         if (e.originalEvent.touches)
             e = e.originalEvent.touches[0];
 
@@ -239,7 +240,6 @@ Entry.Board = function(option) {
             $(document).unbind('.entryBoard');
             delete board.dragInstance;
         }
-        e.stopPropagation();
     };
 
     p.mouseWheel = function(e) {

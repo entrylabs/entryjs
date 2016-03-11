@@ -284,7 +284,13 @@ Entry.BlockView.PARAM_SPACE = 5;
     };
 
     p._addControl = function() {
-        this.svgGroup.addEventListener('mousedown', this.mouseHandler);
+        var that = this;
+        $(this.svgGroup).mousedown(function() {
+            that.mouseHandler.apply(that, arguments);
+        });
+        $(this.svgGroup).bind('touchstart', function() {
+            that.mouseHandler.apply(that, arguments);
+        });
     };
 
     p.removeControl = function() {
@@ -292,8 +298,12 @@ Entry.BlockView.PARAM_SPACE = 5;
     };
 
     p.onMouseDown = function(e) {
-        e.stopPropagation();
-        e.preventDefault();
+        if (e instanceof Touch) {
+            e.button = 0;
+        } else {
+            e.stopPropagation();
+            e.preventDefault();
+        }
         var board = this.getBoard();
         if (Entry.documentMousedown)
             Entry.documentMousedown.notify();
@@ -301,7 +311,9 @@ Entry.BlockView.PARAM_SPACE = 5;
 
         board.setSelectedBlock(this);
         this.dominate();
-        if (e.button === 0 || e instanceof Touch) {
+        if (e.button === 0 || e.originalEvent instanceof TouchEvent) {
+            if (e.originalEvent && e.originalEvent.touches)
+                e = e.originalEvent.touches[0];
             this.mouseDownCoordinate = {
                 x: e.pageX, y: e.pageY
             };
@@ -378,6 +390,8 @@ Entry.BlockView.PARAM_SPACE = 5;
 
             if (workspaceMode === Entry.Workspace.MODE_VIMBOARD)
                 p.vimBoardEvent(e, 'dragOver');
+            if (e.originalEvent.touches)
+                e = e.originalEvent.touches[0];
 
             var mouseDownCoordinate = blockView.mouseDownCoordinate;
             if (blockView.dragMode == Entry.DRAG_MODE_DRAG ||
@@ -404,9 +418,6 @@ Entry.BlockView.PARAM_SPACE = 5;
                         });
                     }
 
-                    if (e.originalEvent.touches) {
-                        e = e.originalEvent.touches[0];
-                    }
                     var dragInstance = blockView.dragInstance;
                     blockView._moveBy(
                         e.pageX - dragInstance.offsetX,
@@ -437,7 +448,6 @@ Entry.BlockView.PARAM_SPACE = 5;
             if (board) board.set({dragBlock: null});
             delete blockView.dragInstance;
         }
-        e.stopPropagation();
     };
 
     p.vimBoardEvent = function(event, type, block) {
