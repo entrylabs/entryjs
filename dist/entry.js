@@ -14088,7 +14088,8 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
     this._blockView.alignContent();
     this._posObserver = b.observe(this, "_updateValueBlock", ["x", "y"], !1);
     this._sizeObserver = b.observe(this, "calcWH", ["width", "height"]);
-    this._blockView.getBoard().generateCodeMagnetMap();
+    b = this._blockView.getBoard();
+    b.constructor === Entry.Board && b.generateCodeMagnetMap();
   };
   a.getPrevBlock = function(b) {
     return this._valueBlock === b ? this : null;
