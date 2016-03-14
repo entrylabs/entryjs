@@ -36,8 +36,6 @@ Entry.RenderView = function(dom, align) {
         this.svgBlockGroup = this.svgGroup.elem("g");
         this.svgBlockGroup.board = this;
     }
-
-    this._addFilters();
 };
 
 (function(p) {
@@ -126,23 +124,4 @@ Entry.RenderView = function(dom, align) {
         this.svgGroup.appendChild(this.svgThreadGroup);
         this.svgGroup.appendChild(this.svgBlockGroup);
     };
-
-    p._addFilters = function() {
-        var defs = this.svg.elem('defs');
-
-        //trashcan filter
-        var trashCanFilter = defs.elem('filter', {'id': 'entryTrashcanFilter'});
-        trashCanFilter.elem('feGaussianBlur', {'in': 'SourceAlpha', 'stdDeviation': 2, 'result': 'blur'});
-        trashCanFilter.elem('feOffset', {'in': 'blur', 'dx': 1, 'dy': 1, 'result': 'offsetBlur'});
-        var feMerge = trashCanFilter.elem('feMerge');
-        feMerge.elem('feMergeNode', {'in': 'offsetBlur'});
-        feMerge.elem('feMergeNode', {'in': 'SourceGraphic'}, feMerge);
-
-        var blockFilter = defs.elem('filter', {'id': 'entryBlockShadowFilter'});
-        blockFilter.innerHTML = '<feOffset result="offOut" in="SourceGraphic" dx="0" dy="1" />' +
-                     '<feColorMatrix result="matrixOut" in="offOut" type="matrix"' +
-                     'values="0.7 0 0 0 0 0 0.7 0 0 0 0 0 0.7 0 0 0 0 0 1 0" />' +
-                     '<feBlend in="SourceGraphic" in2="blurOut" mode="normal" />';
-    };
-
 })(Entry.RenderView.prototype);

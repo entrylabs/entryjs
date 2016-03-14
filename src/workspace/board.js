@@ -620,11 +620,12 @@ Entry.Board = function(option) {
         feMerge.elem('feMergeNode', {'in': 'offsetBlur'});
         feMerge.elem('feMergeNode', {'in': 'SourceGraphic'}, feMerge);
 
+
         var blockFilter = defs.elem('filter', {'id': 'entryBlockShadowFilter', 'height': '200%'});
         blockFilter.innerHTML = '<feOffset result="offOut" in="SourceGraphic" dx="0" dy="1" />' +
                      '<feColorMatrix result="matrixOut" in="offOut" type="matrix"' +
                      'values="0.7 0 0 0 0 0 0.7 0 0 0 0 0 0.7 0 0 0 0 0 1 0" />' +
-                     '<feBlend in="SourceGraphic" in2="offOut" mode="normal" />';
+                     '<feBlend in="SourceGraphic" in1="offOut" mode="normal" />';
 
         var blockHighlightFilter = defs.elem('filter', {'id': 'entryBlockHighlightFilter'});
         blockHighlightFilter.innerHTML =
