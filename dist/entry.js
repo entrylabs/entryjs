@@ -13747,7 +13747,8 @@ Entry.BlockView.PARAM_SPACE = 5;
     this._board = this._board.code.board;
   };
   a.destroy = function(b) {
-    var a = this.svgGroup;
+    var a = this.svgGroup, d = this.block.getThread();
+    d instanceof Entry.FieldBlock && d._updateValueBlock();
     b ? $(a).velocity({opacity:0}, {duration:100, complete:function() {
       a.remove();
     }}) : a.remove();
@@ -13757,9 +13758,9 @@ Entry.BlockView.PARAM_SPACE = 5;
     this._statements.forEach(function(b) {
       b.destroy();
     });
-    var d = this.block;
-    (b = d.events.blockDestroy) && !this.isInBlockMenu && b.forEach(function(b) {
-      b(d);
+    var e = this.block;
+    (b = e.events.blockDestroy) && !this.isInBlockMenu && b.forEach(function(b) {
+      b(e);
     });
   };
   a.getShadow = function() {
