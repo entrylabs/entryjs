@@ -76,7 +76,7 @@ Entry.Thread = function(thread, code) {
 
     p.insertByBlock = function(block, newBlocks) {
         var index = block ? this._data.indexOf(block) : -1;
-        for (var i in newBlocks) {
+        for (var i = 0; i < newBlocks.length; i++) {
             newBlocks[i].setThread(this);
         }
         this._data.splice.apply(

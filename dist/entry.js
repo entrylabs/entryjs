@@ -13706,7 +13706,7 @@ Entry.BlockView.PARAM_SPACE = 5;
         switch(Entry.GlobalSvg.terminateDrag(this)) {
           case h.DONE:
             h = this._getCloseBlock();
-            f || h ? h ? (h.view.magnet.next ? (this.bindPrev(h), h instanceof Entry.Block ? e.doInsert(h) : h.insertTopBlock(e)) : e.doInsert(h, !0), createjs.Sound.play("entryMagneting"), b = !0) : (this._toGlobalCoordinate(d), e.doSeparate()) : e.getThread().view.isGlobal() ? d != Entry.DRAG_MODE_DRAG || g || e.doMove() : (this._toGlobalCoordinate(d), e.doSeparate());
+            f && !h ? e.getThread().view.isGlobal() ? d != Entry.DRAG_MODE_DRAG || g || e.doMove() : (this._toGlobalCoordinate(d), e.doSeparate()) : h ? (h.view.magnet.next ? (this.bindPrev(h), h instanceof Entry.Block ? e.doInsert(h) : h.insertTopBlock(e)) : e.doInsert(h, !0), createjs.Sound.play("entryMagneting"), b = !0) : (this._toGlobalCoordinate(d), e.doSeparate());
             break;
           case h.RETURN:
             e = this.block;
@@ -14765,7 +14765,7 @@ Entry.FieldStatement = function(a, b, c) {
     a.createView(b);
     a.view.setParent(this);
     if (b = a.getFirstBlock()) {
-      b.view._toLocalCoordinate(this.statementSvgGroup), this.firstBlock = b;
+      this._posObserver = b.view.observe(this, "removeFirstBlock", ["x", "y"]), b.view._toLocalCoordinate(this.statementSvgGroup), this.firstBlock = b;
     }
     a.changeEvent.attach(this, this.calcHeight);
     this.calcHeight();
@@ -14814,10 +14814,16 @@ Entry.FieldStatement = function(a, b, c) {
     }
   };
   a.insertTopBlock = function(b) {
+    this._posObserver && this._posObserver.destroy();
     var a = this.firstBlock;
     b.doInsert(this._thread);
     this.firstBlock = b;
+    this._posObserver = b.view.observe(this, "removeFirstBlock", ["x", "y"], !1);
     return a;
+  };
+  a.removeFirstBlock = function() {
+    this._posObserver && this._posObserver.destroy();
+    this.firstBlock = null;
   };
   a.getNextBlock = function() {
     return this.firstBlock;
@@ -15363,8 +15369,7 @@ Entry.Thread = function(a, b) {
     return a;
   };
   a.insertByBlock = function(a, c) {
-    var d = a ? this._data.indexOf(a) : -1, e;
-    for (e in c) {
+    for (var d = a ? this._data.indexOf(a) : -1, e = 0;e < c.length;e++) {
       c[e].setThread(this);
     }
     this._data.splice.apply(this._data, [d + 1, 0].concat(c));

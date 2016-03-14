@@ -502,7 +502,7 @@ Entry.BlockView.PARAM_SPACE = 5;
                 switch (Entry.GlobalSvg.terminateDrag(this)) {
                     case gs.DONE:
                         var closeBlock = this._getCloseBlock();
-                        if (!prevBlock && !closeBlock) {
+                        if (prevBlock && !closeBlock) {
                             if (!block.getThread().view.isGlobal()) {
                                 this._toGlobalCoordinate(dragMode);
                                 block.doSeparate();
@@ -514,7 +514,9 @@ Entry.BlockView.PARAM_SPACE = 5;
                                     this.bindPrev(closeBlock);
                                     if (!(closeBlock instanceof Entry.Block)) {
                                         closeBlock = closeBlock.insertTopBlock(block);
-                                    } else block.doInsert(closeBlock);
+                                    } else {
+                                        block.doInsert(closeBlock);
+                                    }
                                 } else {// field block
                                     block.doInsert(closeBlock, true);
                                 }

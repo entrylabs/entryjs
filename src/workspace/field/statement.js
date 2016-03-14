@@ -33,7 +33,6 @@ Entry.FieldStatement = function(content, blockView, index) {
     this.renderStart(blockView.getBoard());
 };
 
-
 (function(p) {
     p.schema = {
         x: 0,
@@ -62,6 +61,7 @@ Entry.FieldStatement = function(content, blockView, index) {
         thread.view.setParent(this);
         var firstBlock = thread.getFirstBlock();
         if (firstBlock) {
+            this._posObserver = firstBlock.view.observe(this, "removeFirstBlock", ["x", "y"]);
             firstBlock.view._toLocalCoordinate(this.statementSvgGroup);
             this.firstBlock = firstBlock;
         }
@@ -169,10 +169,19 @@ Entry.FieldStatement = function(content, blockView, index) {
     };
 
     p.insertTopBlock = function(newBlock) {
+        if (this._posObserver) this._posObserver.destroy();
+
         var block = this.firstBlock;
         newBlock.doInsert(this._thread);
         this.firstBlock = newBlock;
+
+        this._posObserver = newBlock.view.observe(this, "removeFirstBlock", ["x", "y"], false);
         return block;
+    };
+
+    p.removeFirstBlock = function() {
+        if (this._posObserver) this._posObserver.destroy();
+        this.firstBlock = null;
     };
 
     p.getNextBlock = function () {
