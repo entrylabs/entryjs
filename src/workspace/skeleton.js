@@ -135,15 +135,15 @@ Entry.skeleton.basic_define = {
         width = Math.max(0, width + 9 - height / 2);
         var statementHeight = blockView._statements[0] ? blockView._statements[0].height : 30;
         statementHeight = Math.max(statementHeight, 20);
-        return ("m -8,0 l 16,0 h %w a %h,%h 0 0,1 0,%wh H 24 l -8,8 -8,-8 h -0.4 v %sh h 0.4 l 8,8 8,-8 h %w h -8 a 8,8 0 0,1 0,16 H 8 l -8,8 -8,-8 z")
+        return ("m -8,0 l 16,0 h %w a %h,%h 0 0,1 0,%wh H 24 l -8,8 -8,-8 h -0.4 v %sh h 0.4 l 8,8 8,-8 h %bw a 8,8 0 0,1 0,16 H -8 z")
             .replace(/%wh/gi, height)
             .replace(/%w/gi, width)
             .replace(/%h/gi, height / 2)
+            .replace(/%bw/gi, width - 8)
             .replace(/%sh/gi, statementHeight + 1);
     },
     magnets: function() {
-        return {
-        };
+        return {};
     },
     box: function(blockView) {
         var contentWidth = blockView.contentWidth;

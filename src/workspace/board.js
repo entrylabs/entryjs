@@ -624,7 +624,7 @@ Entry.Board = function(option) {
         blockFilter.innerHTML = '<feOffset result="offOut" in="SourceGraphic" dx="0" dy="1" />' +
                      '<feColorMatrix result="matrixOut" in="offOut" type="matrix"' +
                      'values="0.7 0 0 0 0 0 0.7 0 0 0 0 0 0.7 0 0 0 0 0 1 0" />' +
-                     '<feBlend in="SourceGraphic" in2="blurOut" mode="normal" />';
+                     '<feBlend in="SourceGraphic" in2="offOut" mode="normal" />';
 
         var blockHighlightFilter = defs.elem('filter', {'id': 'entryBlockHighlightFilter'});
         blockHighlightFilter.innerHTML =
