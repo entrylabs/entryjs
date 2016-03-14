@@ -301,7 +301,7 @@ Entry.BlockView.PARAM_SPACE = 5;
     };
 
     p.onMouseDown = function(e) {
-        if (e instanceof Touch) {
+        if (window.Touch && e instanceof Touch) {
             e.button = 0;
         } else {
             e.stopPropagation();
