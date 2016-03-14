@@ -60,15 +60,18 @@ goog.provide('Entry.GlobalSvg');
         this.svg.appendChild(this.svgGroup);
         this.show();
         if (isVimMode) {
-            var svg = $(this.svg);
-            svg.find('path').css({
-                opacity: 0,
-                transition: "0.5s"
+            var svg = $(this.svgGroup);
+            svg.find('g').css({filter: 'none'});
+            svg.find('path').velocity({
+                opacity: 0
+            }, {
+                duration: 500
             });
 
-            svg.find('text').css({
-                fill: '#000000',
-                transition: "0.53s"
+            svg.find('text').velocity({
+                fill: '#000000'
+            }, {
+                duration: 530
             });
         }
     };
@@ -168,7 +171,5 @@ goog.provide('Entry.GlobalSvg');
             $(document).unbind('.block');
         }
     };
-
-
 
 })(Entry.GlobalSvg);
