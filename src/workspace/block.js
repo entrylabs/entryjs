@@ -222,7 +222,6 @@ Entry.Block.MAGNET_OFFSET = 0.4;
     // command func
     p.doAdd = function() {
         var id = this.id;
-        console.log("doAdd", id);
         if (Entry.activityReporter) {
             var data = [
                 ['blockId',id],
@@ -237,11 +236,7 @@ Entry.Block.MAGNET_OFFSET = 0.4;
         var id = this.id;
         var moveX = this.view.x - this.x;
         var moveY = this.view.y - this.y;
-        console.log(
-            "doMove",
-            id,
-            moveX,
-            moveY);
+
         this._updatePos();
         this.getCode().changeEvent.notify();
         if (Entry.activityReporter) {
@@ -259,12 +254,7 @@ Entry.Block.MAGNET_OFFSET = 0.4;
         var id = this.id;
         var positionX = this.x;
         var positionY = this.y;
-        console.log(
-            "separate",
-            id,
-            positionX,
-            positionY
-        );
+
         this.separate();
         if (Entry.activityReporter) {
             var data = [
@@ -310,12 +300,6 @@ Entry.Block.MAGNET_OFFSET = 0.4;
         var positionX = this.x;
         var positionY = this.y;
 
-        console.log(
-            "destroy",
-            id,
-            positionX,
-            positionY
-        );
         this.destroy(animate);
         this.getCode().changeEvent.notify();
         if (Entry.activityReporter) {

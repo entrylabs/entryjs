@@ -16,7 +16,11 @@ Entry.FieldIndicator = function(content, block, index) {
     this.box = box;
 
     this._size = content.size;
-    this._imgUrl = content.img;
+    if(!block.block.isDeletable()) {
+        this._imgUrl = content.img.replace('.png', '_un.png');
+    } else {
+        this._imgUrl = content.img;
+    }
     this._boxMultiplier = content.boxMultiplier || 2;
     this._highlightColor =
         content.highlightColor? content.highlightColor : "#F59900";

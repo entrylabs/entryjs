@@ -8444,11 +8444,23 @@ Entry.BlockParser = function(a) {
     b = b._schema.syntax.concat();
     return b.splice(1, b.length - 1).join(".") + "();\n";
   };
+  a.BasicFunction = function(b) {
+    b = this.Thread(b.statements[0]);
+    return "function promise() {\n" + this.indent(b) + "}\n";
+  };
   a.BasicIteration = function(b) {
     var a = b.params[0], d = this.publishIterateVariable();
     b = this.Thread(b.statements[0]);
     this.unpublishIterateVariable();
     return "for (var " + d + " = 0; " + d + " < " + a + "; " + d + "++){\n" + this.indent(b) + "}\n";
+  };
+  a.BasicIf = function(b) {
+    var a = this.Thread(b.statements[0]);
+    return "if (" + b._schema.syntax.concat()[1] + ") {\n" + this.indent(a) + "}\n";
+  };
+  a.BasicWhile = function(b) {
+    var a = this.Thread(b.statements[0]);
+    return "while (" + b._schema.syntax.concat()[1] + ") {\n" + this.indent(a) + "}\n";
   };
   a.indent = function(b) {
     var a = "    ";
@@ -8470,20 +8482,20 @@ Entry.BlockParser = function(a) {
 })(Entry.BlockParser.prototype);
 Entry.JSParser = function(a) {
   this.syntax = a;
+  this.scopeChain = [];
+  this.scope = null;
 };
 (function(a) {
   a.Program = function(b) {
-    var a = [];
-    b = b.body;
-    a.push({type:this.syntax.Program});
-    for (var d = 0;d < b.length;d++) {
-      var e = b[d];
-      a.push(this[e.type](e));
-    }
-    return a;
+    var a = [], d = [];
+    d.push({type:this.syntax.Program});
+    var e = this.initScope(b), d = d.concat(this.BlockStatement(b));
+    this.unloadScope();
+    a.push(d);
+    return a = a.concat(e);
   };
   a.Identifier = function(b, a) {
-    return a ? a[b.name] : this.syntax.Scope[b.name];
+    return a ? a[b.name] : this.scope[b.name];
   };
   a.ExpressionStatement = function(b) {
     b = b.expression;
@@ -8515,8 +8527,13 @@ Entry.JSParser = function(a) {
     var a = [];
     b = b.body;
     for (var d = 0;d < b.length;d++) {
-      var e = b[d];
-      a.push(this[e.type](e));
+      var e = b[d], f = this[e.type](e);
+      if (f) {
+        if (void 0 === f.type) {
+          throw {message:"\ud574\ub2f9\ud558\ub294 \ube14\ub85d\uc774 \uc5c6\uc2b5\ub2c8\ub2e4.", node:e};
+        }
+        f && a.push(f);
+      }
     }
     return a;
   };
@@ -8542,7 +8559,10 @@ Entry.JSParser = function(a) {
     throw {message:"continue\ub294 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:b};
   };
   a.IfStatement = function(b) {
-    return {test:b.test, consequent:b.consequent, alternate:b.alternate};
+    if (this.syntax.IfStatement) {
+      throw {message:"if\ub294 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:b};
+    }
+    return this.BasicIf(b);
   };
   a.SwitchStatement = function(b) {
     throw {message:"switch\ub294 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:b};
@@ -8560,7 +8580,11 @@ Entry.JSParser = function(a) {
     throw {message:"catch\ub294 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:b};
   };
   a.WhileStatement = function(b) {
-    throw {message:"while\uc740 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:b};
+    var a = b.body, d = this.syntax.WhileStatement, a = this[a.type](a);
+    if (d) {
+      throw {message:"while\uc740 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:b};
+    }
+    return this.BasicWhile(b, a);
   };
   a.DoWhileStatement = function(b) {
     throw {message:"do ~ while\uc740 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:b};
@@ -8569,13 +8593,16 @@ Entry.JSParser = function(a) {
     throw {message:"for ~ in\uc740 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:b};
   };
   a.FunctionDeclaration = function(b) {
-    throw {message:"function\uc740 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:b};
+    if (this.syntax.FunctionDeclaration) {
+      throw {message:"function\uc740 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:b};
+    }
+    return null;
   };
   a.VariableDeclaration = function(b) {
     throw {message:"var\uc740 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:b};
   };
   a.ThisExpression = function(b) {
-    return "this";
+    return this.scope.this;
   };
   a.ArrayExpression = function(b) {
     throw {message:"array\ub294 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:b};
@@ -8614,11 +8641,15 @@ Entry.JSParser = function(a) {
     return ["||", "&&"];
   };
   a.MemberExpression = function(b) {
-    var a = b.object, d = b.property, a = this[a.type](a), d = this[d.type](d, a);
+    var a = b.object, d = b.property;
+    console.log(a.type);
+    a = this[a.type](a);
+    console.log(a);
+    d = this[d.type](d, a);
     if (Object(a) !== a || Object.getPrototypeOf(a) !== Object.prototype) {
       throw {message:a + "\uc740(\ub294) \uc798\ubabb\ub41c \uba64\ubc84 \ubcc0\uc218\uc785\ub2c8\ub2e4.", node:b};
     }
-    a = a[d];
+    a = d;
     if (!a) {
       throw {message:d + "\uc774(\uac00) \uc874\uc7ac\ud558\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4.", node:b};
     }
@@ -8640,6 +8671,34 @@ Entry.JSParser = function(a) {
   a.SequenceExpression = function(b) {
     throw {message:"\uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:b};
   };
+  a.initScope = function(b) {
+    if (null === this.scope) {
+      var a = function() {
+      };
+      a.prototype = this.syntax.Scope;
+    } else {
+      a = function() {
+      }, a.prototype = this.scope;
+    }
+    this.scope = new a;
+    this.scopeChain.push(this.scope);
+    return this.scanDefinition(b);
+  };
+  a.unloadScope = function() {
+    this.scopeChain.pop();
+    this.scope = this.scopeChain.length ? this.scopeChain[this.scopeChain.length - 1] : null;
+  };
+  a.scanDefinition = function(b) {
+    b = b.body;
+    for (var a = [], d = 0;d < b.length;d++) {
+      var e = b[d];
+      "FunctionDeclaration" === e.type && (this.scope[e.id.name] = this.scope.promise, this.syntax.BasicFunction && (e = e.body, a.push([{type:this.syntax.BasicFunction, statements:[this[e.type](e)]}])));
+    }
+    return a;
+  };
+  a.BasicFunction = function(b, a) {
+    return null;
+  };
   a.BasicIteration = function(b, a, d) {
     var e = this.syntax.BasicIteration;
     if (!e) {
@@ -8647,16 +8706,59 @@ Entry.JSParser = function(a) {
     }
     return {params:[a], type:e, statements:[d]};
   };
+  a.BasicWhile = function(b, a) {
+    var d = b.test.raw;
+    if (this.syntax.BasicWhile[d]) {
+      return {type:this.syntax.BasicWhile[d], statements:[a]};
+    }
+    throw {message:"\uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:b.test};
+  };
+  a.BasicIf = function(b) {
+    var a = b.consequent, a = this[a.type](a);
+    try {
+      var d = "", e = "===" === b.test.operator ? "==" : b.test.operator;
+      if ("Identifier" === b.test.left.type && "Literal" === b.test.right.type) {
+        d = b.test.left.name + " " + e + " " + b.test.right.raw;
+      } else {
+        if ("Literal" === b.test.left.type && "Identifier" === b.test.right.type) {
+          d = b.test.right.name + " " + e + " " + b.test.left.raw;
+        } else {
+          throw Error();
+        }
+      }
+      if (this.syntax.BasicIf[d]) {
+        return Array.isArray(a) || "object" !== typeof a || (a = [a]), {type:this.syntax.BasicIf[d], statements:[a]};
+      }
+      throw Error();
+    } catch (f) {
+      throw {message:"\uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:b.test};
+    }
+  };
 })(Entry.JSParser.prototype);
 Entry.Parser = function(a, b, c) {
   this._mode = a;
   this.syntax = {};
   this.codeMirror = c;
   this._lang = b || "js";
+  this.availableCode = [];
+  this._stageId = Number(Ntry.configManager.getConfig("stageId"));
+  this.setAvailableCode(NtryData.config[this._stageId].availableCode, NtryData.player[this._stageId].code);
   this.mappingSyntax(a);
   switch(this._lang) {
     case "js":
       this._parser = new Entry.JSParser(this.syntax);
+      b = this.syntax;
+      var d = {}, e;
+      for (e in b.Scope) {
+        d[e + "();\n"] = b.Scope[e];
+      }
+      "BasicIf" in b && (d.front = "BasicIf");
+      CodeMirror.commands.javascriptComplete = function(b) {
+        CodeMirror.showHint(b, null, {globalScope:d});
+      };
+      c.on("keyup", function(b, a) {
+        !b.state.completionActive && 65 <= a.keyCode && 95 >= a.keyCode && CodeMirror.showHint(b, null, {completeSingle:!1, globalScope:d});
+      });
       break;
     case "block":
       this._parser = new Entry.BlockParser(this.syntax);
@@ -8667,16 +8769,19 @@ Entry.Parser = function(a, b, c) {
     var a = null;
     switch(this._lang) {
       case "js":
-        b = acorn.parse(b);
-        console.log(b);
         try {
-          a = this._parser.Program(b);
-        } catch (d) {
-          console.log(d), this.codeMirror && (a = this.getLineNumber(d.node.start, d.node.end), a.message = d.message, a.severity = "error", this.codeMirror.markText(a.from, a.to, {className:"CodeMirror-lint-mark-error", __annotation:a, clearOnEnter:!0})), a = [];
+          var d = acorn.parse(b), a = this._parser.Program(d);
+        } catch (e) {
+          this.codeMirror && (e instanceof SyntaxError ? (b = {from:{line:e.loc.line - 1, ch:e.loc.column - 2}, to:{line:e.loc.line - 1, ch:e.loc.column + 1}}, e.message = "\ubb38\ubc95 \uc624\ub958\uc785\ub2c8\ub2e4.") : (b = this.getLineNumber(e.node.start, e.node.end), b.message = e.message, b.severity = "error", this.codeMirror.markText(b.from, b.to, {className:"CodeMirror-lint-mark-error", __annotation:b, clearOnEnter:!0})), Entry.toast.alert("Error", e.message)), a = [];
         }
         break;
       case "block":
-        a = this._parser.Code(b);
+        b = this._parser.Code(b).match(/(.*{.*[\S|\s]+?}|.+)/g), a = Array.isArray(b) ? b.reduce(function(b, a, c) {
+          var d = "";
+          1 === c && (b += "\n");
+          d = -1 < a.indexOf("function") ? a + b : b + a;
+          return d + "\n";
+        }) : "";
     }
     return a;
   };
@@ -8692,7 +8797,7 @@ Entry.Parser = function(a, b, c) {
   a.mappingSyntax = function(b) {
     for (var a = Object.keys(Entry.block), d = 0;d < a.length;d++) {
       var e = a[d], f = Entry.block[e];
-      if (f.mode === b && (f = f.syntax)) {
+      if (f.mode === b && -1 < this.availableCode.indexOf(e) && (f = f.syntax)) {
         for (var g = this.syntax, h = 0;h < f.length;h++) {
           var k = f[h];
           if (h === f.length - 2 && "function" === typeof f[h + 1]) {
@@ -8704,6 +8809,20 @@ Entry.Parser = function(a, b, c) {
         }
       }
     }
+  };
+  a.setAvailableCode = function(b, a) {
+    var d = [];
+    b.forEach(function(b, a) {
+      b.forEach(function(b, a) {
+        d.push(b.type);
+      });
+    });
+    a.forEach(function(b, a) {
+      b.forEach(function(b, a) {
+        b.type !== NtryData.START && -1 === d.indexOf(b.type) && d.push(b.type);
+      });
+    });
+    this.availableCode = this.availableCode.concat(d);
   };
 })(Entry.Parser.prototype);
 Entry.Popup = function() {
@@ -8740,6 +8859,78 @@ Entry.Popup.prototype.resize = function(a) {
   9 * b <= 16 * c ? c = b / 16 * 9 : b = 16 * c / 9;
   a.style.width = String(b) + "px";
   a.style.height = String(c + 35) + "px";
+};
+Entry.popupHelper = function(a) {
+  this.popupList = {};
+  this.nowPopup;
+  a && (window.popupHelper = null);
+  Entry.assert(!window.popupHelper, "Popup exist");
+  var b = ["entryPopupHelperTopSpan", "entryPopupHelperBottomSpan", "entryPopupHelperLeftSpan", "entryPopupHelperRightSpan"];
+  this.body_ = Entry.Dom("div", {classes:["entryPopup", "hiddenPopup", "popupHelper"]});
+  this.body_.bindOnClick(function(a) {
+    var d = $(a.target);
+    b.forEach(function(b) {
+      d.hasClass(b) && this.popup.hide();
+    }.bind(this));
+    a.target == this && this.popup.hide();
+  });
+  window.popupHelper = this;
+  this.body_.prop("popup", this);
+  Entry.Dom("div", {class:"entryPopupHelperTopSpan", parent:this.body_});
+  a = Entry.Dom("div", {class:"entryPopupHelperMiddleSpan", parent:this.body_});
+  Entry.Dom("div", {class:"entryPopupHelperBottomSpan", parent:this.body_});
+  Entry.Dom("div", {class:"entryPopupHelperLeftSpan", parent:a});
+  this.window_ = Entry.Dom("div", {class:"entryPopupHelperWindow", parent:a});
+  Entry.Dom("div", {class:"entryPopupHelperRightSpan", parent:a});
+  $("body").append(this.body_);
+};
+Entry.popupHelper.prototype.clearPopup = function() {
+  for (var a = this.popupWrapper_.children.length - 1;2 < a;a--) {
+    this.popupWrapper_.removeChild(this.popupWrapper_.children[a]);
+  }
+};
+Entry.popupHelper.prototype.addPopup = function(a, b) {
+  var c = Entry.Dom("div"), d = Entry.Dom("div", {class:"entryPopupHelperTitle"}), e = Entry.Dom("div", {class:"entryPopupHelperCloseButton"});
+  e.bindOnClick(function() {
+    this.hide();
+  }.bind(this));
+  var f = Entry.Dom("div", {class:"entryPopupHelperWrapper"});
+  f.append(e);
+  f.append(d);
+  c.append(f);
+  c.popupWrapper_ = f;
+  d.text(b.title);
+  "function" === typeof b.setPopupLayout && (b.setPopupLayout(c), c.prop("popup", b));
+  this.popupList[a] = c;
+};
+Entry.popupHelper.prototype.hasPopup = function(a) {
+  return !!this.popupList[a];
+};
+Entry.popupHelper.prototype.remove = function() {
+  var a = this.nowPopup.prop("popup");
+  if (a && "onRemove" in a) {
+    a.onRemove();
+  }
+  Entry.removeElement(this.body_);
+  window.popupHelper = null;
+};
+Entry.popupHelper.prototype.resize = function(a) {
+};
+Entry.popupHelper.prototype.show = function(a) {
+  0 < this.window_.children().length && this.window_.children().detach();
+  this.nowPopup = this.popupList[a];
+  this.window_.append(this.nowPopup);
+  if ((a = this.nowPopup.prop("popup")) && "onShow" in a) {
+    a.onShow();
+  }
+  this.body_.removeClass("hiddenPopup");
+};
+Entry.popupHelper.prototype.hide = function() {
+  var a = this.nowPopup.prop("popup");
+  if (a && "onHide" in a) {
+    a.onHide();
+  }
+  this.body_.addClass("hiddenPopup");
 };
 Entry.getStartProject = function(a) {
   return {category:"\uae30\ud0c0", scenes:[{name:"\uc7a5\uba74 1", id:"7dwq"}], variables:[{name:"\ucd08\uc2dc\uacc4", id:"brih", visible:!1, value:"0", variableType:"timer", x:150, y:-70, array:[], object:null, isCloud:!1}, {name:"\ub300\ub2f5", id:"1vu8", visible:!1, value:"0", variableType:"answer", x:150, y:-100, array:[], object:null, isCloud:!1}], objects:[{id:"7y0y", name:"\uc5d4\ud2b8\ub9ac\ubd07", script:[[{type:"length_of_string", x:200, y:140, params:[{type:"length_of_string"}]}], [{type:"when_run_button_click", 
@@ -10003,6 +10194,71 @@ Entry.Utils.colorDarken = function(a, b) {
   e = Math.floor(e * b).toString(16);
   return "#" + c + d + e;
 };
+Entry.Utils.colorLighten = function(a, b) {
+  b = 0 === b ? 0 : b || 20;
+  var c = Entry.Utils.hexToHsl(a);
+  c.l += b / 100;
+  c.l = Math.min(1, Math.max(0, c.l));
+  return Entry.Utils.hslToHex(c);
+};
+Entry.Utils.bound01 = function(a, b) {
+  var c = a;
+  "string" == typeof c && -1 != c.indexOf(".") && 1 === parseFloat(c) && (a = "100%");
+  c = "string" === typeof a && -1 != a.indexOf("%");
+  a = Math.min(b, Math.max(0, parseFloat(a)));
+  c && (a = parseInt(a * b, 10) / 100);
+  return 1E-6 > Math.abs(a - b) ? 1 : a % b / parseFloat(b);
+};
+Entry.Utils.hexToHsl = function(a) {
+  var b, c;
+  7 === a.length ? (b = parseInt(a.substr(1, 2), 16), c = parseInt(a.substr(3, 2), 16), a = parseInt(a.substr(5, 2), 16)) : (b = parseInt(a.substr(1, 2), 16), c = parseInt(a.substr(2, 2), 16), a = parseInt(a.substr(3, 2), 16));
+  b = Entry.Utils.bound01(b, 255);
+  c = Entry.Utils.bound01(c, 255);
+  a = Entry.Utils.bound01(a, 255);
+  var d = Math.max(b, c, a), e = Math.min(b, c, a), f, g = (d + e) / 2;
+  if (d == e) {
+    f = e = 0;
+  } else {
+    var h = d - e, e = .5 < g ? h / (2 - d - e) : h / (d + e);
+    switch(d) {
+      case b:
+        f = (c - a) / h + (c < a ? 6 : 0);
+        break;
+      case c:
+        f = (a - b) / h + 2;
+        break;
+      case a:
+        f = (b - c) / h + 4;
+    }
+    f /= 6;
+  }
+  return {h:360 * f, s:e, l:g};
+};
+Entry.Utils.hslToHex = function(a) {
+  function b(b, a, c) {
+    0 > c && (c += 1);
+    1 < c && --c;
+    return c < 1 / 6 ? b + 6 * (a - b) * c : .5 > c ? a : c < 2 / 3 ? b + (a - b) * (2 / 3 - c) * 6 : b;
+  }
+  function c(b) {
+    return 1 == b.length ? "0" + b : "" + b;
+  }
+  var d, e;
+  e = Entry.Utils.bound01(a.h, 360);
+  d = Entry.Utils.bound01(a.s, 1);
+  a = Entry.Utils.bound01(a.l, 1);
+  if (0 === d) {
+    d = a = e = a;
+  } else {
+    var f = .5 > a ? a * (1 + d) : a + d - a * d, g = 2 * a - f;
+    d = b(g, f, e + 1 / 3);
+    a = b(g, f, e);
+    e = b(g, f, e - 1 / 3);
+  }
+  a *= 255;
+  e *= 255;
+  return "#" + [c(Math.round(255 * d).toString(16)), c(Math.round(a).toString(16)), c(Math.round(e).toString(16))].join("");
+};
 Entry.Utils.bindGlobalEvent = function(a) {
   void 0 === a && (a = ["resize", "mousedown", "mousemove", "keydown", "keyup"]);
   !Entry.windowReszied && -1 < a.indexOf("resize") && (Entry.windowResized = new Entry.Event(window), $(window).on("resize", function(b) {
@@ -10438,7 +10694,7 @@ Entry.Model = function(a, b) {
   a.set = function(b, a) {
     var d = {}, e;
     for (e in this.data) {
-      void 0 !== b[e] && (b[e] === this.data[e] ? delete b[e] : (d[e] = this.data[e], this.data[e] = b[e]));
+      void 0 !== b[e] && (b[e] === this.data[e] ? delete b[e] : (d[e] = this.data[e], this.data[e] = b[e] instanceof Array ? b[e].concat() : b[e]));
     }
     a || this.notify(Object.keys(b), d);
   };
@@ -12645,7 +12901,7 @@ Entry.block.jr_go_slow = {skeleton:"basic", color:"#f46c6c", template:"\ucc9c\uc
     return Entry.STATIC.CONTINUE;
   }
 }};
-Entry.block.jr_repeat_until_dest = {skeleton:"basic_loop", color:"#498DEB", template:"%1 \ub9cc\ub0a0 \ub54c \uae4c\uc9c0 \ubc18\ubcf5\ud558\uae30 %2", params:[{type:"Image", img:"/img/assets/ntry/bitmap/jr/jr_goal_image.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic"}], func:function() {
+Entry.block.jr_repeat_until_dest = {skeleton:"basic_loop", color:"#498DEB", template:"%1 \ub9cc\ub0a0 \ub54c \uae4c\uc9c0 \ubc18\ubcf5\ud558\uae30 %2", syntax:["BasicWhile", "true"], params:[{type:"Image", img:"/img/assets/ntry/bitmap/jr/jr_goal_image.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic"}], func:function() {
   var a = this.block.statements[0];
   if (1 !== a.getBlocks().length) {
     return this.executor.stepInto(a), Entry.STATIC.CONTINUE;
@@ -12687,7 +12943,7 @@ Entry.block.jr_if_speed = {skeleton:"basic_loop", color:"#498DEB", template:"\ub
     }
   }
 }};
-Entry.block.maze_step_start = {skeleton:"basic_event", mode:"maze", event:"start", color:"#3BBD70", template:"%1 \uc2dc\uc791\ud558\uae30\ub97c \ud074\ub9ad\ud588\uc744 \ub54c", syntax:["Program"], params:[{type:"Indicator", boxMultiplier:1, img:"/img/assets/block_icon/start_icon_play.png", highlightColor:"#3BBD70", size:17, position:{x:0, y:-2}}], func:function() {
+Entry.block.maze_step_start = {skeleton:"basic_event", mode:"maze", event:"start", color:"#3BBD70", template:"%1 \uc2dc\uc791\ud558\uae30\ub97c \ud074\ub9ad\ud588\uc744 \ub54c", syntax:["Program"], params:[{type:"Indicator", boxMultiplier:2, img:"/img/assets/block_icon/start_icon_play.png", highlightColor:"#3BBD70", size:17, position:{x:0, y:-2}}], func:function() {
   var a = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT), b;
   for (b in a) {
     this._unit = a[b];
@@ -12710,7 +12966,7 @@ Entry.block.maze_step_jump = {skeleton:"basic", mode:"maze", color:"#FF6E4B", te
     return Entry.STATIC.CONTINUE;
   }
 }};
-Entry.block.maze_step_for = {skeleton:"basic_loop", mode:"maze", color:"#127CDB", template:"%1 \ubc88 \ubc18\ubcf5\ud558\uae30%2", syntax:["BasicIteration"], params:[{type:"Dropdown", key:"REPEAT", options:[[1, 1], [2, 2], [3, 3], [4, 4], [5, 5], [6, 6], [7, 7], [8, 8], [9, 9], [10, 10]], value:1}, {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic", position:{x:2, y:15}}], func:function() {
+Entry.block.maze_step_for = {skeleton:"basic_loop", mode:"maze", color:"#498DEB", template:"%1 \ubc88 \ubc18\ubcf5\ud558\uae30%2", syntax:["BasicIteration"], params:[{type:"Dropdown", key:"REPEAT", options:[[1, 1], [2, 2], [3, 3], [4, 4], [5, 5], [6, 6], [7, 7], [8, 8], [9, 9], [10, 10]], value:1}, {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic"}], func:function() {
   if (void 0 === this.repeatCount) {
     return this.repeatCount = this.block.params[0], Entry.STATIC.CONTINUE;
   }
@@ -12721,13 +12977,19 @@ Entry.block.maze_step_for = {skeleton:"basic_loop", mode:"maze", color:"#127CDB"
 }};
 Entry.block.test = {skeleton:"basic_boolean_field", mode:"maze", color:"#127CDB", template:"%1 this is test block %2", params:[{type:"Angle", value:"90"}, {type:"Dropdown", options:[[1, 1], [2, 2], [3, 3], [4, 4], [5, 5], [6, 6], [7, 7], [8, 8], [9, 9], [10, 10]], value:1}], func:function() {
 }};
-Entry.block.maze_repeat_until_1 = {skeleton:"basic_loop", mode:"maze", color:"#498DEB", template:"%1 \ub9cc\ub0a0 \ub54c \uae4c\uc9c0 \ubc18\ubcf5%2", params:[{type:"Image", img:"/img/assets/ntry/block_inner/repeat_goal_1.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic", position:{x:2, y:15}}], func:function() {
+Entry.block.maze_repeat_until_1 = {skeleton:"basic_loop", mode:"maze", color:"#498DEB", template:"%1 \ub9cc\ub0a0 \ub54c \uae4c\uc9c0 \ubc18\ubcf5%2", syntax:["BasicWhile", "true"], params:[{type:"Image", img:"/img/assets/ntry/block_inner/repeat_goal_1.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic"}], func:function() {
   var a = this.block.statements[0];
   if (1 !== a.getBlocks().length) {
     return this.executor.stepInto(a), Entry.STATIC.CONTINUE;
   }
 }};
-Entry.block.maze_step_if_1 = {skeleton:"basic_loop", mode:"maze", color:"#498DEB", template:"\ub9cc\uc57d \uc55e\uc5d0 %1 \uc788\ub2e4\uba74%2", params:[{type:"Image", img:"/img/assets/ntry/block_inner/if_target_1.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/if.png", size:24}], statements:[{accept:"basic", position:{x:2, y:15}}], func:function() {
+Entry.block.maze_repeat_until_2 = {skeleton:"basic_loop", mode:"maze", color:"#498DEB", template:"\ubaa8\ub4e0 %1 \ub9cc\ub0a0 \ub54c \uae4c\uc9c0 \ubc18\ubcf5%2", syntax:["BasicWhile", "true"], params:[{type:"Image", img:"/img/assets/ntry/block_inner/repeat_goal_1.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic"}], func:function() {
+  var a = this.block.statements[0];
+  if (1 !== a.getBlocks().length) {
+    return this.executor.stepInto(a), Entry.STATIC.CONTINUE;
+  }
+}};
+Entry.block.maze_step_if_1 = {skeleton:"basic_loop", mode:"maze", color:"#498DEB", template:"\ub9cc\uc57d \uc55e\uc5d0 %1 \uc788\ub2e4\uba74%2", syntax:["BasicIf", 'front == "wall"'], params:[{type:"Image", img:"/img/assets/ntry/block_inner/if_target_1.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/if.png", size:24}], statements:[{accept:"basic"}], func:function() {
   if (!this.isContinue) {
     var a = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT), b, c;
     for (c in a) {
@@ -12749,7 +13011,7 @@ Entry.block.maze_step_if_1 = {skeleton:"basic_loop", mode:"maze", color:"#498DEB
     }
   }
 }};
-Entry.block.maze_step_if_2 = {skeleton:"basic_loop", mode:"maze", color:"#498DEB", template:"\ub9cc\uc57d \uc55e\uc5d0 %1 \uc788\ub2e4\uba74%2", params:[{type:"Image", img:"/img/assets/ntry/bitmap/maze2/obstacle_01.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/if.png", size:24}], statements:[{accept:"basic", position:{x:2, y:15}}], func:function() {
+Entry.block.maze_step_if_2 = {skeleton:"basic_loop", mode:"maze", color:"#498DEB", template:"\ub9cc\uc57d \uc55e\uc5d0 %1 \uc788\ub2e4\uba74%2", syntax:["BasicIf", 'front == "bee"'], params:[{type:"Image", img:"/img/assets/ntry/bitmap/maze2/obstacle_01.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/if.png", size:24}], statements:[{accept:"basic"}], func:function() {
   if (!this.isContinue) {
     var a = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT), b, c;
     for (c in a) {
@@ -12767,7 +13029,7 @@ Entry.block.maze_step_if_2 = {skeleton:"basic_loop", mode:"maze", color:"#498DEB
     }
   }
 }};
-Entry.block.maze_call_function = {skeleton:"basic", mode:"maze", color:"#B57242", template:"\uc57d\uc18d \ubd88\ub7ec\uc624\uae30%1", params:[{type:"Image", img:"/img/assets/week/blocks/function.png", size:24}], func:function() {
+Entry.block.maze_call_function = {skeleton:"basic", mode:"maze", color:"#B57242", template:"\uc57d\uc18d \ubd88\ub7ec\uc624\uae30%1", syntax:["Scope", "promise"], params:[{type:"Image", img:"/img/assets/week/blocks/function.png", size:24}], func:function() {
   if (!this.funcExecutor) {
     var a = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.CODE), b;
     for (b in a) {
@@ -12779,12 +13041,12 @@ Entry.block.maze_call_function = {skeleton:"basic", mode:"maze", color:"#B57242"
     return Entry.STATIC.CONTINUE;
   }
 }};
-Entry.block.maze_define_function = {skeleton:"basic_define", mode:"maze", color:"#B57242", event:"define", template:"\uc57d\uc18d\ud558\uae30%1", params:[{type:"Image", img:"/img/assets/week/blocks/function.png", size:24}], statements:[{accept:"basic", position:{x:2, y:15}}], func:function(a) {
+Entry.block.maze_define_function = {skeleton:"basic_define", mode:"maze", color:"#B57242", event:"define", template:"\uc57d\uc18d\ud558\uae30%1", syntax:["BasicFunction"], params:[{type:"Image", img:"/img/assets/week/blocks/function.png", size:24}], statements:[{accept:"basic"}], func:function(a) {
   if (!this.executed) {
     return this.executor.stepInto(this.block.statements[0]), this.executed = !0, Entry.STATIC.CONTINUE;
   }
 }};
-Entry.block.maze_step_if_3 = {skeleton:"basic_loop", mode:"maze", color:"#498DEB", template:"\ub9cc\uc57d \uc55e\uc5d0 %1 \uc788\ub2e4\uba74%2", params:[{type:"Image", img:"/img/assets/ntry/block_inner/if_target_3.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/if.png", size:24}], statements:[{accept:"basic", position:{x:2, y:15}}], func:function() {
+Entry.block.maze_step_if_3 = {skeleton:"basic_loop", mode:"maze", color:"#498DEB", template:"\ub9cc\uc57d \uc55e\uc5d0 %1 \uc788\ub2e4\uba74%2", syntax:["BasicIf", 'front == "banana"'], params:[{type:"Image", img:"/img/assets/ntry/block_inner/if_target_3.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/if.png", size:24}], statements:[{accept:"basic"}], func:function() {
   if (!this.isContinue) {
     var a = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT), b, c;
     for (c in a) {
@@ -12802,7 +13064,7 @@ Entry.block.maze_step_if_3 = {skeleton:"basic_loop", mode:"maze", color:"#498DEB
     }
   }
 }};
-Entry.block.maze_step_if_4 = {skeleton:"basic_loop", mode:"maze", color:"#498DEB", template:"\ub9cc\uc57d \uc55e\uc5d0 %1 \uc788\ub2e4\uba74%2", params:[{type:"Image", img:"/img/assets/ntry/block_inner/if_target_2.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/if.png", size:24}], statements:[{accept:"basic", position:{x:2, y:15}}], func:function() {
+Entry.block.maze_step_if_4 = {skeleton:"basic_loop", mode:"maze", color:"#498DEB", template:"\ub9cc\uc57d \uc55e\uc5d0 %1 \uc788\ub2e4\uba74%2", syntax:["BasicIf", 'front == "wall"'], params:[{type:"Image", img:"/img/assets/ntry/block_inner/if_target_2.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/if.png", size:24}], statements:[{accept:"basic"}], func:function() {
   if (!this.isContinue) {
     var a = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT), b, c;
     for (c in a) {
@@ -12820,7 +13082,7 @@ Entry.block.maze_step_if_4 = {skeleton:"basic_loop", mode:"maze", color:"#498DEB
     }
   }
 }};
-Entry.block.maze_step_move_step = {skeleton:"basic", mode:"maze", color:"#A751E3", template:"\uc55e\uc73c\ub85c \ud55c \uce78 \uc774\ub3d9%1", syntax:["Scope", "move"], params:[{type:"Image", img:"/img/assets/ntry/bitmap/jr/cparty_go_straight.png", size:24}], func:function() {
+Entry.block.maze_step_move_step = {skeleton:"basic", mode:"maze", color:"#A751E3", template:"\uc55e\uc73c\ub85c \ud55c \uce78 \uc774\ub3d9%1", syntax:["Scope", "move"], params:[{type:"Image", img:"/img/assets/week/blocks/moveStep.png", size:24}], func:function() {
   if (this.isContinue) {
     if (this.isAction) {
       return Entry.STATIC.CONTINUE;
@@ -12836,7 +13098,7 @@ Entry.block.maze_step_move_step = {skeleton:"basic", mode:"maze", color:"#A751E3
     return Entry.STATIC.CONTINUE;
   }
 }};
-Entry.block.maze_step_rotate_left = {skeleton:"basic", mode:"maze", color:"#A751E3", template:"\uc67c\ucabd\uc73c\ub85c \ud68c\uc804%1", syntax:["Scope", "left"], params:[{type:"Image", img:"/img/assets/ntry/bitmap/jr/cparty_rotate_l.png", size:24}], func:function() {
+Entry.block.maze_step_rotate_left = {skeleton:"basic", mode:"maze", color:"#A751E3", template:"\uc67c\ucabd\uc73c\ub85c \ud68c\uc804%1", syntax:["Scope", "left"], params:[{type:"Image", img:"/img/assets/week/blocks/turnL.png", size:24}], func:function() {
   if (this.isContinue) {
     if (this.isAction) {
       return Entry.STATIC.CONTINUE;
@@ -12852,7 +13114,7 @@ Entry.block.maze_step_rotate_left = {skeleton:"basic", mode:"maze", color:"#A751
     return Entry.STATIC.CONTINUE;
   }
 }};
-Entry.block.maze_step_rotate_right = {skeleton:"basic", mode:"maze", color:"#A751E3", template:"\uc624\ub978\ucabd\uc73c\ub85c \ud68c\uc804%1", syntax:["Scope", "right"], params:[{type:"Image", img:"/img/assets/ntry/bitmap/jr/cparty_rotate_r.png", size:24}], func:function() {
+Entry.block.maze_step_rotate_right = {skeleton:"basic", mode:"maze", color:"#A751E3", template:"\uc624\ub978\ucabd\uc73c\ub85c \ud68c\uc804%1", syntax:["Scope", "right"], params:[{type:"Image", img:"/img/assets/week/blocks/turnR.png", size:24}], func:function() {
   if (this.isContinue) {
     if (this.isAction) {
       return Entry.STATIC.CONTINUE;
@@ -14289,7 +14551,7 @@ Entry.FieldImage = function(a, b, c) {
   this._block = b;
   this.box = new Entry.BoxModel;
   this._size = a.size;
-  this._imgUrl = a.img;
+  b.block.isDeletable() ? this._imgUrl = a.img : this._imgUrl = a.img.replace(".png", "_un.png");
   this._highlightColor = a.highlightColor ? a.highlightColor : "#F59900";
   this._position = a.position;
   this._imgElement = this._path = this.svgGroup = null;
@@ -14299,28 +14561,16 @@ Entry.FieldImage = function(a, b, c) {
 Entry.Utils.inherit(Entry.Field, Entry.FieldImage);
 (function(a) {
   a.renderStart = function() {
-    this.svgGroup = this._block.contentSvgGroup.group();
-    this._imgElement = this.svgGroup.image(this._imgUrl, 0, -.5 * this._size, this._size, this._size);
+    this.svgGroup = this._block.contentSvgGroup.elem("g");
+    this._imgElement = this.svgGroup.elem("image", {href:this._imgUrl, x:0, y:-.5 * this._size, width:this._size, height:this._size});
     this.box.set({x:this._size, y:0, width:this._size, height:this._size});
-  };
-  a.enableHighlight = function() {
-    var b = this._path.getTotalLength(), a = this._path;
-    this._path.attr({stroke:this._highlightColor, strokeWidth:2, "stroke-linecap":"round", "stroke-dasharray":b + " " + b, "stroke-dashoffset":b});
-    setInterval(function() {
-      a.attr({"stroke-dashoffset":b}).animate({"stroke-dashoffset":0}, 300);
-    }, 1400, mina.easeout);
-    setTimeout(function() {
-      setInterval(function() {
-        a.animate({"stroke-dashoffset":-b}, 300);
-      }, 1400, mina.easeout);
-    }, 500);
   };
 })(Entry.FieldImage.prototype);
 Entry.FieldIndicator = function(a, b, c) {
   this._block = b;
   this.box = new Entry.BoxModel;
   this._size = a.size;
-  this._imgUrl = a.img;
+  b.block.isDeletable() ? this._imgUrl = a.img : this._imgUrl = a.img.replace(".png", "_un.png");
   this._boxMultiplier = a.boxMultiplier || 2;
   this._highlightColor = a.highlightColor ? a.highlightColor : "#F59900";
   this._position = a.position;
@@ -14624,39 +14874,39 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
     this.box.set({x:0, y:0, width:b, height:16});
   };
   a.renderOptions = function() {
-    var b = this;
+    var a = this;
     this.destroyOption();
     this.documentDownEvent = Entry.documentMousedown.attach(this, function() {
       Entry.documentMousedown.detach(this.documentDownEvent);
-      b.applyValue();
-      b.destroyOption();
+      a.applyValue();
+      a.destroyOption();
     });
     this.optionGroup = Entry.Dom("input", {class:"entry-widget-input-field", parent:$("body")});
     this.optionGroup.val(this.getValue());
-    this.optionGroup.on("mousedown", function(b) {
-      b.stopPropagation();
+    this.optionGroup.on("mousedown", function(a) {
+      a.stopPropagation();
     });
-    this.optionGroup.on("keyup", function(a) {
-      var c = a.keyCode || a.which;
-      b.applyValue(a);
-      -1 < [13, 27].indexOf(c) && b.destroyOption();
+    this.optionGroup.on("keyup", function(c) {
+      var e = c.keyCode || c.which;
+      a.applyValue(c);
+      -1 < [13, 27].indexOf(e) && a.destroyOption();
     });
-    var a = this.getAbsolutePosFromDocument();
-    a.y -= this.box.height / 2;
-    this.optionGroup.css({height:16, left:a.x, top:a.y, width:b.box.width});
+    var c = this.getAbsolutePosFromDocument();
+    c.y -= this.box.height / 2;
+    this.optionGroup.css({height:16, left:c.x, top:c.y, width:a.box.width});
     this.optionGroup.focus();
   };
-  a.applyValue = function(b) {
-    b = this.optionGroup.val();
-    this.setValue(b);
+  a.applyValue = function(a) {
+    a = this.optionGroup.val();
+    this.setValue(a);
     this.textElement.textContent = this.truncate();
     this.resize();
   };
   a.resize = function() {
-    var b = this.getTextWidth();
-    this._header.attr({width:b});
-    this.optionGroup.css({width:b});
-    this.box.set({width:b});
+    var a = this.getTextWidth();
+    this._header.attr({width:a});
+    this.optionGroup.css({width:a});
+    this.box.set({width:a});
     this._block.view.alignContent();
   };
   a.getTextWidth = function() {
@@ -14671,28 +14921,28 @@ Entry.GlobalSvg = {};
   a.createDom = function() {
     this.svgDom || (this.svgDom = Entry.Dom($('<svg id="globalSvg" width="200" height="200"version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'), {parent:$("body")}), this.svgDom.css({position:"fixed", width:1, height:1, display:"none", overflow:"visible", "z-index":"1111", opacity:.8}), this.svg = Entry.SVG("globalSvg"), this.top = this.left = this.width = 0);
   };
-  a.setView = function(b, a) {
-    if (b != this._view && !b.block.isReadOnly() && b.movable) {
-      return this._view = b, this._mode = a, this.draw(), this.align(), this.position(), !0;
+  a.setView = function(a, c) {
+    if (a != this._view && !a.block.isReadOnly() && a.movable) {
+      return this._view = a, this._mode = c, this.draw(), this.align(), this.position(), !0;
     }
   };
   a.draw = function() {
-    var b = this._view;
+    var a = this._view;
     this._svg && this.remove();
-    var a = this._mode == Entry.Workspace.MODE_VIMBOARD;
-    this.svgGroup = Entry.SVG.createElement(b.svgGroup.cloneNode(!0), {opacity:1});
-    a && (b = this.svgGroup, b.selectAll("path").animate({opacity:0}, 500, mina.easeinout), b.selectAll("text").animate({fill:"#000000"}, 530, mina.easeinout));
+    var c = this._mode == Entry.Workspace.MODE_VIMBOARD;
+    this.svgGroup = Entry.SVG.createElement(a.svgGroup.cloneNode(!0), {opacity:1});
     this.svg.appendChild(this.svgGroup);
     this.show();
+    c && (a = $(this.svg), a.find("path").css({opacity:0, transition:"0.5s"}), a.find("text").css({fill:"#000000", transition:"0.53s"}));
   };
   a.remove = function() {
     this.svgGroup && (this.svgGroup.remove(), delete this.svgGroup, delete this._view, delete this._offsetX, delete this._offsetY, delete this._startX, delete this._startY, this.hide());
   };
   a.align = function() {
-    var b = this._view.getSkeleton().box(this._view).offsetX || 0, a = this._view.getSkeleton().box(this._view).offsetY || 0, b = -1 * b + 1, a = -1 * a + 1;
-    this._offsetX = b;
-    this._offsetY = a;
-    this.svgGroup.attr({transform:"translate(" + b + "," + a + ")"});
+    var a = this._view.getSkeleton().box(this._view).offsetX || 0, c = this._view.getSkeleton().box(this._view).offsetY || 0, a = -1 * a + 1, c = -1 * c + 1;
+    this._offsetX = a;
+    this._offsetY = c;
+    this.svgGroup.attr({transform:"translate(" + a + "," + c + ")"});
   };
   a.show = function() {
     this.svgDom.css("display", "block");
@@ -14701,45 +14951,45 @@ Entry.GlobalSvg = {};
     this.svgDom.css("display", "none");
   };
   a.position = function() {
-    var b = this._view, a = b.getAbsoluteCoordinate(), b = b.getBoard().offset;
-    this.left = a.x + b.left - this._offsetX;
-    this.top = a.y + b.top - this._offsetY;
+    var a = this._view, c = a.getAbsoluteCoordinate(), a = a.getBoard().offset;
+    this.left = c.x + a.left - this._offsetX;
+    this.top = c.y + a.top - this._offsetY;
     this.svgDom.css({left:this.left, top:this.top});
   };
-  a.terminateDrag = function(b) {
-    var a = Entry.mouseCoordinate;
-    b = b.getBoard().workspace.blockMenu;
-    var d = b.offset.left, e = b.offset.top, f = b.visible ? b.svgDom.width() : 0;
-    return a.y > e && a.x > d + f ? this.DONE : a.y > e && a.x > d && b.visible ? this.REMOVE : this.RETURN;
+  a.terminateDrag = function(a) {
+    var c = Entry.mouseCoordinate;
+    a = a.getBoard().workspace.blockMenu;
+    var d = a.offset.left, e = a.offset.top, f = a.visible ? a.svgDom.width() : 0;
+    return c.y > e && c.x > d + f ? this.DONE : c.y > e && c.x > d && a.visible ? this.REMOVE : this.RETURN;
   };
-  a.addControl = function(b) {
+  a.addControl = function(a) {
     this.onMouseDown.apply(this, arguments);
   };
-  a.onMouseDown = function(b) {
-    function a(b) {
-      var c = b.pageX;
-      b = b.pageY;
-      var d = e.left + (c - e._startX), f = e.top + (b - e._startY);
-      e.svgDom.css({left:d, top:f});
-      e._startX = c;
-      e._startY = b;
-      e.left = d;
-      e.top = f;
+  a.onMouseDown = function(a) {
+    function c(a) {
+      var b = a.pageX;
+      a = a.pageY;
+      var c = e.left + (b - e._startX), d = e.top + (a - e._startY);
+      e.svgDom.css({left:c, top:d});
+      e._startX = b;
+      e._startY = a;
+      e.left = c;
+      e.top = d;
     }
-    function d(b) {
+    function d(a) {
       $(document).unbind(".block");
     }
-    this._startY = b.pageY;
+    this._startY = a.pageY;
     var e = this;
-    b.stopPropagation();
-    b.preventDefault();
+    a.stopPropagation();
+    a.preventDefault();
     var f = $(document);
-    f.bind("mousemove.block", a);
+    f.bind("mousemove.block", c);
     f.bind("mouseup.block", d);
-    f.bind("touchmove.block", a);
+    f.bind("touchmove.block", c);
     f.bind("touchend.block", d);
-    this._startX = b.pageX;
-    this._startY = b.pageY;
+    this._startX = a.pageX;
+    this._startY = a.pageY;
   };
 })(Entry.GlobalSvg);
 Entry.RenderView = function(a, b) {
@@ -14765,23 +15015,23 @@ Entry.RenderView = function(a, b) {
     this.renderViewContainer = Entry.Dom("div", {"class":"renderViewContainer", parent:this.view});
     this.svgDom = Entry.Dom($('<svg id="' + this._svgId + '" class="renderView" version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'), {parent:this.renderViewContainer});
   };
-  a.changeCode = function(b) {
-    if (!(b instanceof Entry.Code)) {
+  a.changeCode = function(a) {
+    if (!(a instanceof Entry.Code)) {
       return console.error("You must inject code instance");
     }
-    this.code = b;
+    this.code = a;
     this.svg || (this.svg = Entry.SVG(this._svgId), this.svgGroup = this.svg.elem("g"), this.svgThreadGroup = this.svgGroup.elem("g"), this.svgThreadGroup.board = this, this.svgBlockGroup = this.svgGroup.elem("g"), this.svgBlockGroup.board = this);
-    b.createView(this);
+    a.createView(this);
     this.align();
   };
   a.align = function() {
-    var b = this.code.getThreads();
-    if (b && 0 !== b.length) {
-      for (var a = 0, d = "LEFT" == this._align ? 20 : this.svgDom.width() / 2, e = 0, f = b.length;e < f;e++) {
-        var g = b[e].getFirstBlock().view;
-        g._moveTo(d - g.offsetX, a - g.offsetY, !1);
+    var a = this.code.getThreads();
+    if (a && 0 !== a.length) {
+      for (var c = 0, d = "LEFT" == this._align ? 20 : this.svgDom.width() / 2, e = 0, f = a.length;e < f;e++) {
+        var g = a[e].getFirstBlock().view;
+        g._moveTo(d - g.offsetX, c - g.offsetY, !1);
         g = g.svgGroup.getBBox().height;
-        a += g + 15;
+        c += g + 15;
       }
       this.height = this.svgGroup.getBBox().height;
     }
@@ -14796,22 +15046,22 @@ Entry.RenderView = function(a, b) {
     this._svgWidth = this.svgDom.width();
     this.offset = this.svgDom.offset();
   };
-  a.bindCodeView = function(b) {
+  a.bindCodeView = function(a) {
     this.svgBlockGroup.remove();
     this.svgThreadGroup.remove();
-    this.svgBlockGroup = b.svgBlockGroup;
-    this.svgThreadGroup = b.svgThreadGroup;
+    this.svgBlockGroup = a.svgBlockGroup;
+    this.svgThreadGroup = a.svgThreadGroup;
     this.svgGroup.appendChild(this.svgThreadGroup);
     this.svgGroup.appendChild(this.svgBlockGroup);
   };
   a._addFilters = function() {
-    var b = this.svg.elem("defs"), a = b.elem("filter", {id:"entryTrashcanFilter"});
-    a.elem("feGaussianBlur", {"in":"SourceAlpha", stdDeviation:2, result:"blur"});
-    a.elem("feOffset", {"in":"blur", dx:1, dy:1, result:"offsetBlur"});
-    a = a.elem("feMerge");
-    a.elem("feMergeNode", {"in":"offsetBlur"});
-    a.elem("feMergeNode", {"in":"SourceGraphic"}, a);
-    b.elem("filter", {id:"entryBlockShadowFilter"}).innerHTML = '<feOffset result="offOut" in="SourceGraphic" dx="0" dy="1" /><feColorMatrix result="matrixOut" in="offOut" type="matrix"values="0.7 0 0 0 0 0 0.7 0 0 0 0 0 0.7 0 0 0 0 0 1 0" /><feBlend in="SourceGraphic" in2="blurOut" mode="normal" />';
+    var a = this.svg.elem("defs"), c = a.elem("filter", {id:"entryTrashcanFilter"});
+    c.elem("feGaussianBlur", {"in":"SourceAlpha", stdDeviation:2, result:"blur"});
+    c.elem("feOffset", {"in":"blur", dx:1, dy:1, result:"offsetBlur"});
+    c = c.elem("feMerge");
+    c.elem("feMergeNode", {"in":"offsetBlur"});
+    c.elem("feMergeNode", {"in":"SourceGraphic"}, c);
+    a.elem("filter", {id:"entryBlockShadowFilter"}).innerHTML = '<feOffset result="offOut" in="SourceGraphic" dx="0" dy="1" /><feColorMatrix result="matrixOut" in="offOut" type="matrix"values="0.7 0 0 0 0 0 0.7 0 0 0 0 0 0.7 0 0 0 0 0 1 0" /><feBlend in="SourceGraphic" in2="blurOut" mode="normal" />';
   };
 })(Entry.RenderView.prototype);
 Entry.Scroller = function(a, b, c) {
@@ -14959,12 +15209,16 @@ Entry.skeleton.basic_loop = {path:function(a) {
   return {x:14, y:Math.max(a.contentHeight, 28) / 2 + 1};
 }};
 Entry.skeleton.basic_define = {path:function(a) {
-  var b = Math.max(a.contentHeight, 25);
-  return "m -8,0 h 16 h %cw a 15,15 0 0,1 0,30 H 24 l -8,8 -8,-8 h -0.4 v %ch h 0.4 l 8,8 8,-8 h %cw h -8 a 8,8 0 0,1 0,16 H 8 l -8,8 -8,-8 z".replace(/%cw/gi, Math.max(0, a.contentWidth - 6)).replace(/%ch/gi, b);
+  var b = a.contentWidth, c = a.contentHeight, c = Math.max(30, c + 2), b = Math.max(0, b + 9 - c / 2);
+  a = a._statements[0] ? a._statements[0].height : 30;
+  a = Math.max(a, 20);
+  return "m -8,0 l 16,0 h %w a %h,%h 0 0,1 0,%wh H 24 l -8,8 -8,-8 h -0.4 v %sh h 0.4 l 8,8 8,-8 h %w h -8 a 8,8 0 0,1 0,16 H 8 l -8,8 -8,-8 z".replace(/%wh/gi, c).replace(/%w/gi, b).replace(/%h/gi, c / 2).replace(/%sh/gi, a + 1);
 }, magnets:function() {
-  return {previous:{x:0, y:0}, next:{x:0, y:105}};
+  return {};
 }, box:function(a) {
   return {offsetX:0, offsetY:0, width:a.contentWidth, height:Math.max(a.contentHeight, 25) + 46, marginBottom:0};
+}, statementPos:function(a) {
+  return [{x:16, y:Math.max(30, a.contentHeight + 2)}];
 }, contentPos:function() {
   return {x:14, y:15};
 }};
@@ -15303,20 +15557,17 @@ Entry.Block.MAGNET_OFFSET = .4;
   };
   a.doAdd = function() {
     var a = this.id;
-    console.log("doAdd", a);
     Entry.activityReporter && (a = [["blockId", a], ["code", this.getCode().stringify()]], Entry.activityReporter.add(new Entry.Activity("addBlock", a)));
     this.getCode().changeEvent.notify();
   };
   a.doMove = function() {
     var a = this.id, c = this.view.x - this.x, d = this.view.y - this.y;
-    console.log("doMove", a, c, d);
     this._updatePos();
     this.getCode().changeEvent.notify();
     Entry.activityReporter && (a = [["blockId", a], ["moveX", c], ["moveY", d], ["code", this.getCode().stringify()]], Entry.activityReporter.add(new Entry.Activity("moveBlock", a)));
   };
   a.doSeparate = function() {
     var a = this.id, c = this.x, d = this.y;
-    console.log("separate", a, c, d);
     this.separate();
     Entry.activityReporter && (a = [["blockId", a], ["positionX", c], ["positionY", d], ["code", this.getCode().stringify()]], Entry.activityReporter.add(new Entry.Activity("seperateBlock", a)));
   };
@@ -15328,7 +15579,6 @@ Entry.Block.MAGNET_OFFSET = .4;
   };
   a.doDestroy = function(a) {
     var c = this.id, d = this.x, e = this.y;
-    console.log("destroy", c, d, e);
     this.destroy(a);
     this.getCode().changeEvent.notify();
     Entry.activityReporter && (a = [["blockId", c], ["positionX", d], ["positionY", e], ["code", this.getCode().stringify()]], Entry.activityReporter.add(new Entry.Activity("destroyBlock", a)));
@@ -15654,7 +15904,7 @@ Entry.Board = function(a) {
     this.scroller.resizeScrollBar();
   };
   a.clear = function() {
-    for (var a = this.svgBlockGroup.node;a.firstChild;) {
+    for (var a = this.svgBlockGroup;a.firstChild;) {
       a.removeChild(a.firstChild);
     }
   };
@@ -15845,9 +16095,9 @@ Entry.Vim = function(a) {
   if ("DIV" !== a.prop("tagName")) {
     return console.error("Dom is not div element");
   }
+  this.createDom(a);
   this._parser = new Entry.Parser("maze", "js", this.codeMirror);
   this._blockParser = new Entry.Parser("maze", "block");
-  this.createDom(a);
   Entry.Model(this, !1);
   window.eventset = [];
 };
@@ -15858,14 +16108,24 @@ Entry.Vim = function(a) {
       e.codeMirror.display.dragFunctions.leave(a);
       a = new MouseEvent("mousedown", {view:window, bubbles:!0, cancelable:!0, clientX:a.clientX, clientY:a.clientY});
       e.codeMirror.display.scroller.dispatchEvent(a);
-      e.codeMirror.replaceSelection(b);
+      var b = b.split("\n"), c = b.length - 1, d = 0;
+      b.forEach(function(a, b) {
+        e.codeMirror.replaceSelection(a);
+        d = e.doc.getCursor().line;
+        e.codeMirror.indentLine(d);
+        0 !== b && c === b || e.codeMirror.replaceSelection("\n");
+      });
     }
     function d(a) {
       e.codeMirror.display.dragFunctions.over(a);
     }
     var e;
     this.view = Entry.Dom("div", {parent:a, class:"entryVimBoard"});
-    this.codeMirror = CodeMirror(this.view[0], {lineNumbers:!0, value:"this.move();\nthis.move();\nthis.move();\n", mode:{name:"javascript", globalVars:!0}, theme:"default", indentUnit:4, styleActiveLine:!0, extraKeys:{"Shift-Space":"autocomplete"}, lint:!0, viewportMargin:10});
+    this.codeMirror = CodeMirror(this.view[0], {lineNumbers:!0, value:"", mode:{name:"javascript", globalVars:!0}, theme:"default", indentUnit:4, styleActiveLine:!0, extraKeys:{"Ctrl-Space":"javascriptComplete", Tab:function(a) {
+      var b = Array(a.getOption("indentUnit") + 1).join(" ");
+      a.replaceSelection(b);
+    }}, lint:!0, viewportMargin:10});
+    this.doc = this.codeMirror.getDoc();
     e = this;
     a = this.view[0];
     a.removeEventListener("dragEnd", c);
@@ -15880,8 +16140,11 @@ Entry.Vim = function(a) {
     this.view.removeClass("entryRemove");
   };
   a.textToCode = function() {
-    var a = this.codeMirror.getValue();
-    return [this._parser.parse(a)];
+    var a = this.codeMirror.getValue(), a = this._parser.parse(a);
+    if (0 === a.length) {
+      throw "\ube14\ub85d \ud30c\uc2f1 \uc624\ub958";
+    }
+    return a;
   };
   a.codeToText = function(a) {
     a = this._blockParser.parse(a);
@@ -15942,12 +16205,11 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
         this.board.clear();
         break;
       case Entry.Workspace.MODE_BOARD:
-        this.vimBoard && this.vimBoard.hide();
-        this.overlayBoard && this.overlayBoard.hide();
-        this.selectedBoard = this.board;
-        this.board.show();
-        this.textToCode();
-        this.blockMenu.renderBlock();
+        try {
+          this.selectedBoard = this.board, this.board.show(), this.textToCode(), this.vimBoard && this.vimBoard.hide(), this.overlayBoard && this.overlayBoard.hide(), this.blockMenu.renderBlock();
+        } catch (c) {
+          throw this.board && this.board.hide(), this.selectedBoard = this.vimBoard, Entry.dispatchEvent("setProgrammingMode", Entry.Workspace.MODE_VIMBOARD), c;
+        }
         break;
       case Entry.Workspace.MODE_OVERLAYBOARD:
         this.overlayBoard || this.initOverlayBoard(), this.selectedBoard = this.overlayBoard, this.overlayBoard.show();

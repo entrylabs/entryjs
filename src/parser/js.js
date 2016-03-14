@@ -7,30 +7,39 @@ goog.provide("Entry.JSParser");
 
 Entry.JSParser = function(syntax) {
     this.syntax = syntax;
+
+    this.scopeChain = [];
+    this.scope = null;
 };
 
 (function(p){
     p.Program = function(node) {
+        var code = [];
         var block = [];
         var body = node.body;
+
+        //block statement
 
         block.push({
             type: this.syntax.Program
         });
 
-        for (var i = 0; i < body.length; i++) {
-            var childNode = body[i];
-            block.push(this[childNode.type](childNode));
-        }
+        var separatedBlocks = this.initScope(node);
 
-        return block;
+        block = block.concat(this.BlockStatement(node));
+
+        this.unloadScope();
+
+        code.push(block);
+        code = code.concat(separatedBlocks);
+        return code;
     };
 
     p.Identifier = function(node, scope) {
         if (scope)
             return scope[node.name];
         else
-            return this.syntax.Scope[node.name];
+            return this.scope[node.name];
     };
 
     // Statement
@@ -93,15 +102,27 @@ Entry.JSParser = function(syntax) {
     };
 
     p.BlockStatement = function(node) {
-        var block = [];
+        var blocks = [];
         var body = node.body;
 
         for (var i = 0; i < body.length; i++) {
             var childNode = body[i];
-            block.push(this[childNode.type](childNode));
+
+            var block = this[childNode.type](childNode);
+            if(!block) {
+                continue;
+            }
+            else if(block.type === undefined) {
+                throw {
+                    message : '해당하는 블록이 없습니다.',
+                    node : childNode
+                };
+            }
+            else if (block)
+                blocks.push(block);
         }
 
-        return block;
+        return blocks;
     };
 
     p.EmptyStatement = function(node) {
@@ -171,11 +192,16 @@ Entry.JSParser = function(syntax) {
             consequent = node.consequent,
             alternate  = node.alternate;
 
-        return {
-            test : test,
-            consequent : consequent,
-            alternate : alternate
-        };
+        var blockType = this.syntax.IfStatement;
+        if (!blockType) {
+            return this.BasicIf(node);
+        } else {
+            throw {
+                message : 'if는 지원하지 않는 표현식 입니다.',
+                node : node
+            };
+        }
+
     };
 
     p.SwitchStatement = function(node) {
@@ -233,11 +259,18 @@ Entry.JSParser = function(syntax) {
     p.WhileStatement = function(node) {
         var test = node.test,
             body = node.body;
+        var blockType = this.syntax.WhileStatement;
+        body = this[body.type](body);
 
-        throw {
-            message : 'while은 지원하지 않는 표현식 입니다.',
-            node : node
-        };
+        if (!blockType) {
+            return this.BasicWhile(node, body);
+        } else {
+
+            throw {
+                message : 'while은 지원하지 않는 표현식 입니다.',
+                node : node
+            };
+        }
     };
 
     p.DoWhileStatement = function(node) {
@@ -267,10 +300,16 @@ Entry.JSParser = function(syntax) {
     p.FunctionDeclaration = function(node) {
         var id = node.id;
 
-        throw {
-            message : 'function은 지원하지 않는 표현식 입니다.',
-            node : node
-        };
+        var blockType = this.syntax.FunctionDeclaration;
+
+        if (!blockType) {
+            return null;
+        } else {
+            throw {
+                message : 'function은 지원하지 않는 표현식 입니다.',
+                node : node
+            };
+        }
     };
 
     p.VariableDeclaration = function(node) {
@@ -285,7 +324,7 @@ Entry.JSParser = function(syntax) {
 
     // Expression
     p.ThisExpression = function(node) {
-        return "this";
+        return this.scope.this;
     };
 
     p.ArrayExpression = function(node) {
@@ -395,7 +434,9 @@ Entry.JSParser = function(syntax) {
             property = node.property,
             computed = node.computed;
 
+        console.log(object.type)
         object = this[object.type](object);
+        console.log(object);
 
         property = this[property.type](property, object);
 
@@ -406,7 +447,7 @@ Entry.JSParser = function(syntax) {
             };
         }
 
-        var blockType = object[property];
+        var blockType = property;
         if(!blockType) {
             throw {
                 message : property + '이(가) 존재하지 않습니다.',
@@ -463,6 +504,53 @@ Entry.JSParser = function(syntax) {
         };
     };
 
+    // scope method
+    p.initScope = function(node) {
+        if (this.scope === null) {
+            var scoper = function() {};
+            scoper.prototype = this.syntax.Scope;
+            this.scope = new scoper();
+        } else {
+            var scoper = function() {};
+            scoper.prototype = this.scope;
+            this.scope = new scoper();
+        }
+        this.scopeChain.push(this.scope);
+        return this.scanDefinition(node);
+    };
+
+    p.unloadScope = function() {
+        this.scopeChain.pop();
+        if (this.scopeChain.length)
+            this.scope = this.scopeChain[this.scopeChain.length - 1];
+        else
+            this.scope = null;
+    };
+
+    p.scanDefinition = function(node) {
+        var body = node.body;
+        var separatedBlocks = [];
+        for (var i = 0; i < body.length; i++) {
+            var childNode = body[i];
+            if (childNode.type === "FunctionDeclaration") {
+                this.scope[childNode.id.name] = this.scope.promise;
+                if (this.syntax.BasicFunction) {
+                    var childBody = childNode.body;
+                    separatedBlocks.push([{
+                        type: this.syntax.BasicFunction,
+                        statements: [this[childBody.type](childBody)]
+                    }]);
+                }
+            }
+        }
+        return separatedBlocks;
+    };
+
+    p.BasicFunction = function(node, body) {
+
+        return null;
+    };
+
     // custom node parser
     p.BasicIteration = function(node, iterCount, body) {
         var blockType = this.syntax.BasicIteration;
@@ -477,4 +565,57 @@ Entry.JSParser = function(syntax) {
             statements: [body]
         };
     };
+
+    p.BasicWhile = function(node, body) {
+        var raw = node.test.raw;
+        if (this.syntax.BasicWhile[raw]) {
+            return {
+                type: this.syntax.BasicWhile[raw],
+                statements: [body]
+            }
+        } else {
+            throw {
+                message : '지원하지 않는 표현식 입니다.',
+                node : node.test
+            };
+        }
+    };
+
+    p.BasicIf = function(node) {
+        var consequent = node.consequent;
+        consequent = this[consequent.type](consequent);
+        try{
+            var test = '';
+            var operator = (node.test.operator === '===') ? '==' : node.test.operator;
+
+            if(node.test.left.type === 'Identifier' && node.test.right.type === 'Literal') {
+                test = node.test.left.name + " " +
+                operator + " " +
+                node.test.right.raw;
+            } else if(node.test.left.type === 'Literal' && node.test.right.type === 'Identifier') {
+                test = node.test.right.name + " " +
+                operator + " " +
+                node.test.left.raw;
+            } else {
+                throw new Error();
+            }
+
+            if (this.syntax.BasicIf[test]) {
+                if(!Array.isArray(consequent) && typeof consequent === 'object') 
+                    consequent = [consequent];
+                return {
+                    type: this.syntax.BasicIf[test],
+                    statements: [consequent]
+                }
+            } else {
+                throw new Error();
+            }
+        } catch (e) {
+            throw {
+                message : '지원하지 않는 표현식 입니다.',
+                node : node.test
+            };
+        }
+    };
+
 })(Entry.JSParser.prototype);

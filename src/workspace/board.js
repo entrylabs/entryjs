@@ -313,7 +313,7 @@ Entry.Board = function(option) {
     };
 
     p.clear = function() {
-        var node = this.svgBlockGroup.node;
+        var node = this.svgBlockGroup;
         while (node.firstChild)
             node.removeChild(node.firstChild);
     };

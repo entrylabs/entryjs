@@ -57,18 +57,20 @@ goog.provide('Entry.GlobalSvg');
         );
 
         //TODO selectAll function replace
-        if (isVimMode) {
-            var svg = this.svgGroup;
-            svg.selectAll('path').animate({
-                opacity: 0
-            }, 500, mina.easeinout);
-
-            svg.selectAll('text').animate({
-                fill: '#000000'
-            }, 530, mina.easeinout);
-        }
         this.svg.appendChild(this.svgGroup);
         this.show();
+        if (isVimMode) {
+            var svg = $(this.svg);
+            svg.find('path').css({
+                opacity: 0,
+                transition: "0.5s"
+            });
+
+            svg.find('text').css({
+                fill: '#000000',
+                transition: "0.53s"
+            });
+        }
     };
 
     gs.remove = function() {

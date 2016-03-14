@@ -11,11 +11,10 @@ Entry.Vim = function(dom) {
     if (dom.prop("tagName") !== "DIV")
         return console.error("Dom is not div element");
 
+    this.createDom(dom);
 
     this._parser = new Entry.Parser("maze", "js", this.codeMirror);
     this._blockParser = new Entry.Parser("maze", "block");
-
-    this.createDom(dom);
 
     Entry.Model(this, false);
     window.eventset = [];
@@ -32,16 +31,24 @@ Entry.Vim = function(dom) {
 
         this.codeMirror = CodeMirror(this.view[0], {
             lineNumbers: true,
-            value: "this.move();\nthis.move();\nthis.move();\n",
+            value: "",
             mode:  {name:"javascript", globalVars: true},
             theme: "default",
             indentUnit: 4,
             styleActiveLine: true,
-            extraKeys: {"Shift-Space": "autocomplete"},
+            extraKeys: {
+                "Ctrl-Space": "javascriptComplete",
+                "Tab": function(cm) {
+                    var spaces = Array(cm.getOption("indentUnit") + 1).join(" ");
+                    cm.replaceSelection(spaces);
+                }
+            },
             // gutters: ["CodeMirror-lint-markers"],
             lint: true,
             viewportMargin: 10
         });
+
+        this.doc = this.codeMirror.getDoc();
 
         _self = this;
         target = this.view[0];
@@ -57,7 +64,18 @@ Entry.Vim = function(dom) {
             });
 
             _self.codeMirror.display.scroller.dispatchEvent(mousedown);
-            _self.codeMirror.replaceSelection(textCode);
+            var testArr = textCode.split('\n');
+            var max = testArr.length - 1;
+            var lastLine = 0;
+            testArr.forEach(function (text, i) {
+                _self.codeMirror.replaceSelection(text);
+                var cursor = _self.doc.getCursor();
+                lastLine = cursor.line;
+                _self.codeMirror.indentLine(lastLine);
+                if(i === 0 || max !== i) {
+                    _self.codeMirror.replaceSelection('\n');
+                }
+            });
         }
 
         function eventDragOver(e) {
@@ -80,12 +98,17 @@ Entry.Vim = function(dom) {
 
     p.textToCode = function() {
         var textCode = this.codeMirror.getValue();
-        return [this._parser.parse(textCode)];
+        var code = this._parser.parse(textCode);
+        if(code.length === 0) {
+            throw ('블록 파싱 오류');
+        }
+        return code; 
     };
 
     p.codeToText = function(code) {
         var textCode = this._blockParser.parse(code);
         this.codeMirror.setValue(textCode);
+        // this.codeMirror.getDoc().markText({line:0, ch:0}, {line: 1, ch: 100}, {readOnly: true});
     };
 
     p.getCodeToText = function(code) {

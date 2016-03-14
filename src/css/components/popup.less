@@ -1,4 +1,5 @@
 .entryPopup {
+    overflow: hidden;
     position: absolute;
     margin: 0;
     padding: 0;
@@ -8,6 +9,21 @@
     width: 100%;
     z-index: 7000;
     background-color: rgba(0, 0, 0, 0.2);
+}
+
+.entryPopup.popupHelper {
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-box-direction: normal;
+    -moz-box-direction: normal;
+    -webkit-box-orient: vertical;
+    -moz-box-orient: vertical;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
 }
 
 .entryPopupWindow {
@@ -21,6 +37,40 @@
     max-height: 100%;
     /*overflow: hidden;*/
     z-index: 8000;
-    background-color: white;
+    background-color: @white;
 }
 
+.entryPopup.hiddenPopup {
+    display: none;
+}
+
+.entryPopupHelperTopSpan,
+.entryPopupHelperBottomSpan {
+    -webkit-box-flex: 1;
+    -moz-box-flex: 1;
+    -ms-flex: 1;
+    flex: 1;
+}
+
+.entryPopupHelperMiddleSpan {
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-box-direction: normal;
+    -moz-box-direction: normal;
+    -webkit-box-orient: horizontal;
+    -moz-box-orient: horizontal;
+    -webkit-flex-direction: row;
+    -ms-flex-direction: row;
+    flex-direction: row;
+
+    .entryPopupHelperLeftSpan,
+    .entryPopupHelperRightSpan {
+        -webkit-box-flex: 1;
+        -moz-box-flex: 1;
+        -ms-flex: 1;
+        flex: 1;
+    }
+}

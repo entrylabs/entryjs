@@ -543,6 +543,7 @@ Entry.block.jr_repeat_until_dest = {
     skeleton: "basic_loop",
     color: "#498DEB",
     template: "%1 만날 때 까지 반복하기 %2",
+    syntax: ["BasicWhile", "true"],
     params: [
         {
             type: "Image",
@@ -710,7 +711,7 @@ Entry.block.maze_step_start = {
     params: [
         {
             type: "Indicator",
-            boxMultiplier: 1,
+            boxMultiplier: 2,
             img: "/img/assets/block_icon/start_icon_play.png",
             highlightColor: "#3BBD70",
             size: 17,
@@ -771,7 +772,7 @@ Entry.block.maze_step_jump = {
 Entry.block.maze_step_for = {
     skeleton: "basic_loop",
     mode: "maze",
-    color: "#127CDB",
+    color: "#498DEB",
     template: "%1 번 반복하기%2",
     syntax: ["BasicIteration"],
     params: [
@@ -800,11 +801,7 @@ Entry.block.maze_step_for = {
     ],
     statements: [
         {
-            accept: "basic",
-            position: {
-                x: 2,
-                y: 15
-            }
+            accept: "basic"
         }
     ],
     func: function() {
@@ -858,6 +855,7 @@ Entry.block.maze_repeat_until_1 = {
     mode: "maze",
     color: "#498DEB",
     template: "%1 만날 때 까지 반복%2",
+    syntax: ["BasicWhile", "true"],
     params: [
         {
             type: "Image",
@@ -872,11 +870,40 @@ Entry.block.maze_repeat_until_1 = {
     ],
     statements: [
         {
-            accept: "basic",
-            position: {
-                x: 2,
-                y: 15
-            }
+            accept: "basic"
+        }
+    ],
+    func: function() {
+        var statement = this.block.statements[0];
+        if (statement.getBlocks().length === 1)
+            return;
+
+        this.executor.stepInto(statement);
+        return Entry.STATIC.CONTINUE;
+    }
+};
+
+Entry.block.maze_repeat_until_2 = {
+    skeleton: "basic_loop",
+    mode: "maze",
+    color: "#498DEB",
+    template: "모든 %1 만날 때 까지 반복%2",
+    syntax: ["BasicWhile", "true"],
+    params: [
+        {
+            type: "Image",
+            img: "/img/assets/ntry/block_inner/repeat_goal_1.png",
+            size: 18
+        },
+        {
+            type: "Image",
+            img: "/img/assets/week/blocks/for.png",
+            size: 24
+        }
+    ],
+    statements: [
+        {
+            accept: "basic"
         }
     ],
     func: function() {
@@ -895,6 +922,7 @@ Entry.block.maze_step_if_1 = {
     mode: "maze",
     color: "#498DEB",
     template: "만약 앞에 %1 있다면%2",
+    syntax: ["BasicIf", 'front == "wall"'],
     params: [
         {
             type: "Image",
@@ -909,11 +937,7 @@ Entry.block.maze_step_if_1 = {
     ],
     statements: [
         {
-            accept: "basic",
-            position: {
-                x: 2,
-                y: 15
-            }
+            accept: "basic"
         }
     ],
     func: function() {
@@ -948,8 +972,6 @@ Entry.block.maze_step_if_1 = {
             return Entry.STATIC.CONTINUE;
         }
 
-
-
         var fitEntities = Ntry.entityManager.find(
             {
                 type: Ntry.STATIC.GRID,
@@ -963,7 +985,6 @@ Entry.block.maze_step_if_1 = {
         );
 
         this.isContinue = true;
-
 
         if (fitEntities.length === 0) {
             return;
@@ -981,6 +1002,7 @@ Entry.block.maze_step_if_2 = {
     mode: "maze",
     color: "#498DEB",
     template: "만약 앞에 %1 있다면%2",
+    syntax: ["BasicIf", 'front == "bee"'],
     params: [
         {
             type: "Image",
@@ -995,11 +1017,7 @@ Entry.block.maze_step_if_2 = {
     ],
     statements: [
         {
-            accept: "basic",
-            position: {
-                x: 2,
-                y: 15
-            }
+            accept: "basic"
         }
     ],
     func: function() {
@@ -1051,6 +1069,7 @@ Entry.block.maze_call_function = {
     mode: "maze",
     color: "#B57242",
     template: "약속 불러오기%1",
+    syntax: ["Scope", "promise"],
     params: [
         {
             type: "Image",
@@ -1085,6 +1104,7 @@ Entry.block.maze_define_function = {
     color: "#B57242",
     event: "define",
     template: "약속하기%1",
+    syntax: ["BasicFunction"],
     params: [
         {
             type: "Image",
@@ -1094,11 +1114,7 @@ Entry.block.maze_define_function = {
     ],
     statements: [
         {
-            accept: "basic",
-            position: {
-                x: 2,
-                y: 15
-            }
+            accept: "basic"
         }
     ],
     func: function(executor) {
@@ -1115,6 +1131,7 @@ Entry.block.maze_step_if_3 = {
     mode: "maze",
     color: "#498DEB",
     template: "만약 앞에 %1 있다면%2",
+    syntax: ["BasicIf", 'front == "banana"'],
     params: [
         {
             type: "Image",
@@ -1129,11 +1146,7 @@ Entry.block.maze_step_if_3 = {
     ],
     statements: [
         {
-            accept: "basic",
-            position: {
-                x: 2,
-                y: 15
-            }
+            accept: "basic"
         }
     ],
     func: function() {
@@ -1185,6 +1198,7 @@ Entry.block.maze_step_if_4 = {
     mode: "maze",
     color: "#498DEB",
     template: "만약 앞에 %1 있다면%2",
+    syntax: ["BasicIf", 'front == "wall"'],
     params: [
         {
             type: "Image",
@@ -1199,11 +1213,7 @@ Entry.block.maze_step_if_4 = {
     ],
     statements: [
         {
-            accept: "basic",
-            position: {
-                x: 2,
-                y: 15
-            }
+            accept: "basic"
         }
     ],
     func: function() {
@@ -1259,7 +1269,7 @@ Entry.block.maze_step_move_step = {
     params: [
         {
             type: "Image",
-            img: "/img/assets/ntry/bitmap/jr/cparty_go_straight.png",
+            img: "/img/assets/week/blocks/moveStep.png",
             size: 24
         }
     ],
@@ -1294,7 +1304,7 @@ Entry.block.maze_step_rotate_left= {
     params: [
         {
             type: "Image",
-            img: "/img/assets/ntry/bitmap/jr/cparty_rotate_l.png",
+            img: "/img/assets/week/blocks/turnL.png",
             size: 24
         }
     ],
@@ -1330,7 +1340,7 @@ Entry.block.maze_step_rotate_right = {
     params: [
         {
             type: "Image",
-            img: "/img/assets/ntry/bitmap/jr/cparty_rotate_r.png",
+            img: "/img/assets/week/blocks/turnR.png",
             size: 24
         }
     ],

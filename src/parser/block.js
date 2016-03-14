@@ -60,6 +60,13 @@ Entry.BlockParser = function(syntax) {
         return syntax.splice(1, syntax.length - 1).join(".") + "();\n";
     };
 
+    p.BasicFunction = function(block) {
+        var statementCode = this.Thread(block.statements[0]);
+        var code = "function promise() {\n" +
+            this.indent(statementCode) + "}\n"
+        return code;
+    };
+
     p.BasicIteration = function(block) {
         var iterateNumber = block.params[0];
         var iterVariable = this.publishIterateVariable();
@@ -71,6 +78,22 @@ Entry.BlockParser = function(syntax) {
         return code;
     };
 
+    p.BasicIf = function(block) {
+        var statementCode = this.Thread(block.statements[0]);
+        var syntax = block._schema.syntax.concat();
+        var code = "if (" + syntax[1] + ") {\n" +
+            this.indent(statementCode) + "}\n"
+        return code;
+    };
+
+    p.BasicWhile = function(block) {
+        var statementCode = this.Thread(block.statements[0]);
+        var syntax = block._schema.syntax.concat();
+        var code = "while (" + syntax[1] + ") {\n" +
+            this.indent(statementCode) + "}\n"
+        return code;
+    };
+
     p.indent = function(textCode) {
         var result = "    ";
         var indentedCode = textCode.split("\n");
@@ -79,6 +102,7 @@ Entry.BlockParser = function(syntax) {
         return result;
     };
 
+    // iterate variable
     p.publishIterateVariable = function() {
         var iterVariable = "";
         var iterVariableCount = this._iterVariableCount;

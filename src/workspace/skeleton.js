@@ -129,19 +129,20 @@ Entry.skeleton.basic_loop = {
 
 Entry.skeleton.basic_define = {
     path: function(blockView) {
-        var contentWidth = Math.max(0, blockView.contentWidth - 6);
-        var contentHeight = Math.max(blockView.contentHeight, 25);
-        return ("m -8,0 h 16 h %cw a 15,15 0 0,1 0,30 H 24 l -8,8 -8,-8 h -0.4 v %ch h 0.4 l 8,8 8,-8 h %cw h -8 a 8,8 0 0,1 0,16 H 8 l -8,8 -8,-8 z")
-            .replace(/%cw/gi, contentWidth)
-            .replace(/%ch/gi, contentHeight);
+        var width = blockView.contentWidth;
+        var height = blockView.contentHeight;
+        height = Math.max(30, height + 2);
+        width = Math.max(0, width + 9 - height / 2);
+        var statementHeight = blockView._statements[0] ? blockView._statements[0].height : 30;
+        statementHeight = Math.max(statementHeight, 20);
+        return ("m -8,0 l 16,0 h %w a %h,%h 0 0,1 0,%wh H 24 l -8,8 -8,-8 h -0.4 v %sh h 0.4 l 8,8 8,-8 h %w h -8 a 8,8 0 0,1 0,16 H 8 l -8,8 -8,-8 z")
+            .replace(/%wh/gi, height)
+            .replace(/%w/gi, width)
+            .replace(/%h/gi, height / 2)
+            .replace(/%sh/gi, statementHeight + 1);
     },
     magnets: function() {
-        var contentWidth = 124;
-        var contentHeight = 50;
-        // apply scale required.
         return {
-            previous: {x: 0, y: 0},
-            next: {x: 0, y: contentHeight + 55}
         };
     },
     box: function(blockView) {
@@ -153,6 +154,12 @@ Entry.skeleton.basic_define = {
             height: contentHeight + 46,
             marginBottom: 0
         };
+    },
+    statementPos: function(blockView) {
+        var height = Math.max(30, blockView.contentHeight + 2);
+        return [{
+            x: 16, y: height
+        }];
     },
     contentPos: function() {
         // apply scale required.

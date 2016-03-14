@@ -3254,6 +3254,7 @@ span.CodeMirror-selectedtext {
   padding: 3px 20px;
 }
 .entryPopup {
+  overflow: hidden;
   position: absolute;
   margin: 0;
   padding: 0;
@@ -3263,6 +3264,20 @@ span.CodeMirror-selectedtext {
   width: 100%;
   z-index: 7000;
   background-color: rgba(0, 0, 0, 0.2);
+}
+.entryPopup.popupHelper {
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-box-direction: normal;
+  -moz-box-direction: normal;
+  -webkit-box-orient: vertical;
+  -moz-box-orient: vertical;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
 }
 .entryPopupWindow {
   width: 80%;
@@ -3277,7 +3292,38 @@ span.CodeMirror-selectedtext {
   max-height: 100%;
   /*overflow: hidden;*/
   z-index: 8000;
-  background-color: white;
+  background-color: #ffffff;
+}
+.entryPopup.hiddenPopup {
+  display: none;
+}
+.entryPopupHelperTopSpan,
+.entryPopupHelperBottomSpan {
+  -webkit-box-flex: 1;
+  -moz-box-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+}
+.entryPopupHelperMiddleSpan {
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-box-direction: normal;
+  -moz-box-direction: normal;
+  -webkit-box-orient: horizontal;
+  -moz-box-orient: horizontal;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+}
+.entryPopupHelperMiddleSpan .entryPopupHelperLeftSpan,
+.entryPopupHelperMiddleSpan .entryPopupHelperRightSpan {
+  -webkit-box-flex: 1;
+  -moz-box-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
 }
 .entryFunctionEdit {
   position: absolute;
@@ -4531,7 +4577,7 @@ span.CodeMirror-selectedtext {
 .blockMenuContainer {
   display: inline-block;
   vertical-align: top;
-  width: 186px;
+  width: 200px;
   height: 100%;
 }
 .blockMenu {

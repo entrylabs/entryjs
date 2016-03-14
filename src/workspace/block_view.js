@@ -696,7 +696,6 @@ Entry.BlockView.PARAM_SPACE = 5;
                 });
                 delete blockView.originalHeight;
             }
-
         }
         var changeEvent = blockView.block.thread.changeEvent;
         if (changeEvent) changeEvent.notify();
