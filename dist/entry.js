@@ -7221,7 +7221,7 @@ p.closeConnection = function() {
   this.socket && this.socket.close();
 };
 p.downloadConnector = function() {
-  window.open("http://play-entry.org/down/Entry_HW_v1.1.2.exe", "_blank").focus();
+  window.open("http://play-entry.org/down/Entry_HW_v1.1.3.exe", "_blank").focus();
 };
 p.downloadSource = function() {
   window.open("http://play-entry.com/down/board.ino", "_blank").focus();
@@ -9841,13 +9841,13 @@ Entry.Playground.prototype.injectCode = function() {
   Blockly.Xml.domToWorkspace(Blockly.mainWorkspace, a.script);
   var b = 0, c = 0, d = null;
   $(a.script).children("block").each(function(a) {
-    var e = +$(this).attr("x"), f = +$(this).attr("y");
+    var e = Number($(this).attr("x")), f = Number($(this).attr("y"));
     0 == a && (b = e, c = f, d = this);
     e < b && (b = e, d = this);
     f < c && (varyTopY = f);
   });
   if (null != d) {
-    var a = +$(d).attr("x"), e = +$(d).attr("y"), f = Blockly.mainWorkspace.getMetrics(), g = (.1 * f.viewWidth).toFixed(1), h = (.4 * f.viewHeight).toFixed(1);
+    var a = Number($(d).attr("x")), e = Number($(d).attr("y")), f = Blockly.mainWorkspace.getMetrics(), g = (.1 * f.viewWidth).toFixed(1), h = (.4 * f.viewHeight).toFixed(1);
     e == c && (h = (.1 * f.viewHeight).toFixed(1));
     Blockly.mainWorkspace.scrollbar.set(a - f.contentLeft - g, e - f.contentTop - h);
   }
