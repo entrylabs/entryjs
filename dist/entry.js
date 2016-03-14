@@ -13510,7 +13510,9 @@ Entry.BlockView.PARAM_SPACE = 5;
     this.pathGroup = this.svgGroup.elem("g");
     this._updateMagnet();
     this._path = this.pathGroup.elem("path");
-    f = {d:f, fill:this._schema.color, class:"blockPath"};
+    var g = this._schema.color;
+    this.block.isDeletable() || (g = Entry.Utils.colorLighten(g));
+    f = {d:f, fill:g, class:"blockPath"};
     if (this.magnet.next) {
       this.pathGroup.attr({filter:"url(#entryBlockShadowFilter)"});
     } else {
@@ -14874,26 +14876,26 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
     this.box.set({x:0, y:0, width:b, height:16});
   };
   a.renderOptions = function() {
-    var b = this;
+    var a = this;
     this.destroyOption();
     this.documentDownEvent = Entry.documentMousedown.attach(this, function() {
       Entry.documentMousedown.detach(this.documentDownEvent);
-      b.applyValue();
-      b.destroyOption();
+      a.applyValue();
+      a.destroyOption();
     });
     this.optionGroup = Entry.Dom("input", {class:"entry-widget-input-field", parent:$("body")});
     this.optionGroup.val(this.getValue());
     this.optionGroup.on("mousedown", function(a) {
       a.stopPropagation();
     });
-    this.optionGroup.on("keyup", function(a) {
-      var c = a.keyCode || a.which;
-      b.applyValue(a);
-      -1 < [13, 27].indexOf(c) && b.destroyOption();
+    this.optionGroup.on("keyup", function(c) {
+      var e = c.keyCode || c.which;
+      a.applyValue(c);
+      -1 < [13, 27].indexOf(e) && a.destroyOption();
     });
-    var a = this.getAbsolutePosFromDocument();
-    a.y -= this.box.height / 2;
-    this.optionGroup.css({height:16, left:a.x, top:a.y, width:b.box.width});
+    var c = this.getAbsolutePosFromDocument();
+    c.y -= this.box.height / 2;
+    this.optionGroup.css({height:16, left:c.x, top:c.y, width:a.box.width});
     this.optionGroup.focus();
   };
   a.applyValue = function(a) {
@@ -15249,8 +15251,10 @@ Entry.skeleton.pebble_loop = {fontSize:16, dropdownHeight:23, path:function(a) {
 }};
 Entry.skeleton.pebble_basic = {fontSize:16, morph:["prev", "next"], path:function(a) {
   var b = a.block;
-  a = b.prev && "pebble_basic" === b.prev._schema.skeleton;
-  b = b.next && "pebble_basic" === b.next._schema.skeleton;
+  a = b.getPrevBlock();
+  b = b.getNextBlock();
+  a = a && "pebble_basic" === a._schema.skeleton;
+  b = b && "pebble_basic" === b._schema.skeleton;
   return "m 0,9 a 9,9 0 0,0 9,-9 h 28 " + (a ? "l 25,0 0,25" : "q 25,0 25,25") + (b ? "l 0,25 -25,0" : "q 0,25 -25,25") + "h -28 a 9,9 0 0,1 -18,0 h -28 " + (b ? "l -25,0 0,-25" : "q -25,0 -25,-25") + (a ? "l 0,-25 25,0" : "q 0,-25 25,-25") + "h 28 a 9,9 0 0,0 9,9 z";
 }, magnets:function(a) {
   return {previous:{x:0, y:0}, next:{x:0, y:(a ? Math.max(a.height, 51) : 51) + a.offsetY}};

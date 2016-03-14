@@ -249,8 +249,10 @@ Entry.skeleton.pebble_basic = {
     ],
     path: function(blockView) {
         var block = blockView.block;
-        var isPrevSame = block.prev && block.prev._schema.skeleton === "pebble_basic";
-        var isNextSame = block.next && block.next._schema.skeleton === "pebble_basic";
+        var prev = block.getPrevBlock();
+        var next = block.getNextBlock();
+        var isPrevSame = prev && prev._schema.skeleton === "pebble_basic";
+        var isNextSame = next && next._schema.skeleton === "pebble_basic";
 
         return "m 0,9 a 9,9 0 0,0 9,-9 h 28 " +
             (isPrevSame ? "l 25,0 0,25" : "q 25,0 25,25") +

@@ -96,9 +96,12 @@ Entry.BlockView.PARAM_SPACE = 5;
         this._updateMagnet();
 
         this._path = this.pathGroup.elem("path");
+        var fillColor = this._schema.color;
+        if (!this.block.isDeletable())
+            fillColor = Entry.Utils.colorLighten(fillColor);
         var pathStyle = {
             d: path,
-            fill: this._schema.color,
+            fill: fillColor,
             class: 'blockPath'
         };
         if (this.magnet.next)
