@@ -140,7 +140,7 @@ Entry.initSound = function(sound) {
     if (sound.fileurl) {
         sound.path = sound.fileurl;
     } else {
-        sound.path = '/uploads/' + sound.filename.substring(0,2)+'/'+
+        sound.path = Entry.defaultPath + '/uploads/' + sound.filename.substring(0,2)+'/'+
             sound.filename.substring(2,4)+'/'+sound.filename+sound.ext;
         //createjs.Sound.removeSound(path);
         //createjs.Sound.registerSound(path, sound.id, 4);

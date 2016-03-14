@@ -439,7 +439,7 @@ Entry.Engine.prototype.computeFunction = function(entity) {
                 Entry.engine.isUpdating = false;
                 if (Entry.type == 'workspace') {
                     Entry.container.selectObject();
-                    Entry.container.selectObject(script.entity.parent.id);
+                    Entry.container.selectObject(script.entity.parent.id, true);
                     Entry.playground.changeViewMode('code');
                     Blockly.mainWorkspace.activatePreviousBlock(script.id);
                 }

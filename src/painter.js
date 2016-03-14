@@ -413,7 +413,7 @@ Entry.Painter.prototype.initPicture = function() {
             image.src = picture.fileurl;
         } else {
             // deprecated
-            image.src = '/uploads/' + picture.filename.substring(0,2)+'/' + picture.filename.substring(2,4)+'/image/'+picture.filename+'.png';
+            image.src = Entry.defaultPath + '/uploads/' + picture.filename.substring(0,2)+'/' + picture.filename.substring(2,4)+'/image/'+picture.filename+'.png';
         }
 
         image.onload = function(event) {
@@ -1434,7 +1434,7 @@ Entry.Painter.prototype.addPicture = function(picture) {
     if (picture.fileurl) {
         image.src = picture.fileurl;
     } else {
-        image.src = '/uploads/' + picture.filename.substring(0,2)+'/'+picture.filename.substring(2,4)+'/image/'+picture.filename+'.png';
+        image.src = Entry.defaultPath + '/uploads/' + picture.filename.substring(0,2)+'/'+picture.filename.substring(2,4)+'/image/'+picture.filename+'.png';
     }
 
     var painter = this;
