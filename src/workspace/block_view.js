@@ -593,6 +593,10 @@ Entry.BlockView.PARAM_SPACE = 5;
     p.destroy = function(animate) {
         var svgGroup = this.svgGroup;
 
+        var thread = this.block.getThread();
+        if (thread instanceof Entry.FieldBlock)
+            thread._updateValueBlock();
+
         if (animate) {
             $(svgGroup).velocity(
                 {opacity:0},
