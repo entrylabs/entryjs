@@ -52,7 +52,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
             block.setThread(this);
             block.createView(board, mode);
         }
-        this._updateValueBlock(block);
+        this.updateValueBlock(block);
 
         if (this._blockView.getBoard().constructor == Entry.BlockMenu)
             this._valueBlock.view.removeControl();
@@ -154,7 +154,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
         }
     };
 
-    p._updateValueBlock = function(block) {
+    p.updateValueBlock = function(block) {
         if (!(block instanceof Entry.Block)) block = undefined;
         if (this._sizeObserver) this._sizeObserver.destroy();
         if (this._posObserver) this._posObserver.destroy();
@@ -162,7 +162,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
         var view = this._setValueBlock(block).view;
         view.bindPrev();
         this._blockView.alignContent();
-        this._posObserver = view.observe(this, "_updateValueBlock", ["x", "y"], false);
+        this._posObserver = view.observe(this, "updateValueBlock", ["x", "y"], false);
         this._sizeObserver = view.observe(this, "calcWH", ["width", "height"]);
         var board = this._blockView.getBoard();// performance issue
         if (board.constructor === Entry.Board)
@@ -212,14 +212,15 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
     p.replace = function(block) {
         var valueBlock = this._valueBlock;
         var valueBlockType = valueBlock.type;
-        this._updateValueBlock(block);
-        if (Entry.block[valueBlockType].isPrimitive)
+        if (Entry.block[valueBlockType].isPrimitive) {
             valueBlock.destroy();
+        }
         else {
             valueBlock.view._toGlobalCoordinate();
             this.separate(valueBlock);
             valueBlock.view.bumpAway(30, 150);
         }
+        this.updateValueBlock(block);
         block.view._toLocalCoordinate(this.svgGroup);
         this.calcWH();
     };
