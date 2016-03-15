@@ -217,8 +217,11 @@ Entry.BlockView.PARAM_SPACE = 5;
 
         var block = this.block;
         var events = block.events.whenBlockAdd;
-        if (events && !this.isInBlockMenu)
-            events.forEach(function(fn){fn(block);});
+        if (events && !this.isInBlockMenu) {
+            events.forEach(function(fn) {
+                if (Entry.Utils.isFunction(fn)) fn(block);
+            });
+        }
     };
 
     p._renderPath = function() {
@@ -622,7 +625,9 @@ Entry.BlockView.PARAM_SPACE = 5;
         var block = this.block;
         var events = block.events.whenBlockDestroy;
         if (events && !this.isInBlockMenu)
-            events.forEach(function(fn){fn(block);});
+            events.forEach(function(fn){
+                if (Entry.Utils.isFunction(fn)) fn(block);
+            });
     };
 
     p.getShadow = function() {
