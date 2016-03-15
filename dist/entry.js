@@ -10759,7 +10759,7 @@ Entry.Model = function(a, b) {
 })(Entry.Model);
 Entry.Func = function() {
   this.id = Entry.generateHash();
-  this.content = new Entry.Code([[{type:"function_create", x:40, y:40, deletable:!1}]]);
+  this.content = new Entry.Code([[{type:"function_create", x:40, y:40}]]);
   this.block = null;
   this.stringHash = {};
   this.booleanHash = {};

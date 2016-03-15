@@ -30,3 +30,5 @@ node_modules
 extern/closure-library
 
 .DS_Store
+
+*.map
