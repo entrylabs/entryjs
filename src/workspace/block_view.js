@@ -104,11 +104,11 @@ Entry.BlockView.PARAM_SPACE = 5;
             fill: fillColor,
             class: 'blockPath'
         };
-        if (this.magnet.next)
-            this.pathGroup.attr({
-                filter: 'url(#entryBlockShadowFilter)'
-            });
-        else if (this.magnet.string || this.magnet.bool)
+        if (this.magnet.next) {
+            //this.pathGroup.attr({
+                //filter: 'url(#entryBlockShadowFilter)'
+            //});
+        } else if (this.magnet.string || this.magnet.bool)
             pathStyle.stroke = Entry.Utils.colorDarken(this._schema.color, 0.9);
 
         if (skeleton.outerLine) {
@@ -216,7 +216,7 @@ Entry.BlockView.PARAM_SPACE = 5;
         this.set(this._skeleton.box(this));
 
         var block = this.block;
-        var events = block.events.blockAdd;
+        var events = block.events.whenBlockAdd;
         if (events && !this.isInBlockMenu)
             events.forEach(function(fn){fn(block);});
     };
@@ -620,7 +620,7 @@ Entry.BlockView.PARAM_SPACE = 5;
         });
 
         var block = this.block;
-        var events = block.events.blockDestroy;
+        var events = block.events.whenBlockDestroy;
         if (events && !this.isInBlockMenu)
             events.forEach(function(fn){fn(block);});
     };

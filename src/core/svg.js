@@ -48,6 +48,7 @@ Entry.SVG.createElement = function (tag, options) {
     el.addClass = Entry.SVG.addClass;
     el.removeClass = Entry.SVG.removeClass;
     el.hasClass = Entry.SVG.hasClass;
+    el.remove = Entry.SVG.remove;
 
     return el;
 };
@@ -100,3 +101,5 @@ Entry.SVG.removeClass = function(className) {
 Entry.SVG.hasClass = function(className) {
     return this.getAttribute('class').match(new RegExp('(\\s|^)'+className+'(\\s|$)'));
 };
+
+Entry.SVG.remove = function() {$(this).remove();};

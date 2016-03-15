@@ -5477,6 +5477,7 @@ Entry.SVG.createElement = function(a, b) {
   c.addClass = Entry.SVG.addClass;
   c.removeClass = Entry.SVG.removeClass;
   c.hasClass = Entry.SVG.hasClass;
+  c.remove = Entry.SVG.remove;
   return c;
 };
 Entry.SVG.attr = function(a, b) {
@@ -5509,6 +5510,9 @@ Entry.SVG.removeClass = function(a) {
 };
 Entry.SVG.hasClass = function(a) {
   return this.getAttribute("class").match(new RegExp("(\\s|^)" + a + "(\\s|$)"));
+};
+Entry.SVG.remove = function() {
+  $(this).remove();
 };
 Entry.Dialog = function(a, b, c, d) {
   a.dialog && a.dialog.remove();
@@ -13527,13 +13531,7 @@ Entry.BlockView.PARAM_SPACE = 5;
     var g = this._schema.color;
     this.block.isDeletable() || (g = Entry.Utils.colorLighten(g));
     f = {d:f, fill:g, class:"blockPath"};
-    if (this.magnet.next) {
-      this.pathGroup.attr({filter:"url(#entryBlockShadowFilter)"});
-    } else {
-      if (this.magnet.string || this.magnet.bool) {
-        f.stroke = Entry.Utils.colorDarken(this._schema.color, .9);
-      }
-    }
+    this.magnet.next || !this.magnet.string && !this.magnet.bool || (f.stroke = Entry.Utils.colorDarken(this._schema.color, .9));
     e.outerLine && (f.strokeWidth = "0.5");
     this._path.attr(f);
     this._moveTo(this.x, this.y, !1);
@@ -13600,7 +13598,7 @@ Entry.BlockView.PARAM_SPACE = 5;
   a._render = function() {
     this._renderPath();
     this.set(this._skeleton.box(this));
-    var b = this.block, a = b.events.blockAdd;
+    var b = this.block, a = b.events.whenBlockAdd;
     a && !this.isInBlockMenu && a.forEach(function(a) {
       a(b);
     });
@@ -13767,7 +13765,7 @@ Entry.BlockView.PARAM_SPACE = 5;
       b.destroy();
     });
     var e = this.block;
-    (b = e.events.blockDestroy) && !this.isInBlockMenu && b.forEach(function(b) {
+    (b = e.events.whenBlockDestroy) && !this.isInBlockMenu && b.forEach(function(b) {
       b(e);
     });
   };
