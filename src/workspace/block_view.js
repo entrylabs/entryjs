@@ -284,20 +284,18 @@ Entry.BlockView.PARAM_SPACE = 5;
             this.y + y,
             animate
         );
-    };
+};
 
     p._addControl = function() {
         var that = this;
-        $(this.svgGroup).mousedown(function() {
-            that.mouseHandler.apply(that, arguments);
-        });
-        $(this.svgGroup).bind('touchstart', function() {
-            that.mouseHandler.apply(that, arguments);
-        });
+        $(this.svgGroup).bind(
+            'mousedown.blockViewMousedown touchstart.blockViewMousedown',
+            that.mouseHandler
+        );
     };
 
     p.removeControl = function() {
-        this.svgGroup.removeEventListener('mousedown', this.mouseHandler, false);
+        $(this.svgGroup).unbind('.blockViewMousedown');
     };
 
     p.onMouseDown = function(e) {
