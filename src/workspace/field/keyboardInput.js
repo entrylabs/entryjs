@@ -50,7 +50,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldKeyboard);
                 'font-size' : '9pt'
             });
 
-        this.textElement.innerHTML = Entry.getKeyCodeMap()[this.getValue()];
+        this.textElement.textContent = Entry.getKeyCodeMap()[this.getValue()];
 
         var width = this.getTextWidth();
 
@@ -132,7 +132,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldKeyboard);
         this.destroyOption();
         if (this.getValue() == value) return;
         this.setValue(value);
-        this.textElement.innerHTML = text;
+        this.textElement.textContent = text;
         this.resize();
     };
 

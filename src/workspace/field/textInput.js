@@ -45,7 +45,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
             y: TEXT_Y_PADDING,
             'font-size' : '9pt'
         });
-        this.textElement.innerHTML = this.truncate();
+        this.textElement.textContent = this.truncate();
 
         var width = this.getTextWidth();
 

@@ -41,7 +41,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldText);
             "class": "dragNone",
             "fill": that._color
         });
-        this.textElement.innerHTML = this._text;
+        this.textElement.textContent = this._text;
 
         var bBox = this.textElement.getBBox();
         var x = 0;
