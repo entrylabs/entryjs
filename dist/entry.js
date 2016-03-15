@@ -14950,6 +14950,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
     a.y -= this.box.height / 2;
     this.optionGroup.css({height:16, left:a.x, top:a.y, width:b.box.width});
     this.optionGroup.focus();
+    this.optionGroup.select();
   };
   a.applyValue = function(a) {
     a = this.optionGroup.val();

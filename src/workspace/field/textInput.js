@@ -117,6 +117,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
         });
 
         this.optionGroup.focus();
+        this.optionGroup.select();
     };
 
     p.applyValue = function(event) {
