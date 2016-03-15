@@ -502,6 +502,8 @@ Entry.Board = function(option) {
         for (var i = 0; i < blocks.length; i++) {
             var block = blocks[i];
             var blockView = block.view;
+            if (blockView.dragInstance)
+                break;
             blockView.zIndex = zIndex;
             cursorY += blockView.y;
             cursorX += blockView.x;

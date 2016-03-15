@@ -16059,6 +16059,9 @@ Entry.Board = function(a) {
     d = d.y;
     for (var l = 0;l < f.length;l++) {
       var n = f[l], m = n.view;
+      if (m.dragInstance) {
+        break;
+      }
       m.zIndex = c;
       d += m.y;
       k += m.x;
