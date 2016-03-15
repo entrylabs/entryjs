@@ -501,11 +501,15 @@ Entry.BlockView.PARAM_SPACE = 5;
                     case gs.DONE:
                         var closeBlock = this._getCloseBlock();
                         if (prevBlock && !closeBlock) {
+                            this._toGlobalCoordinate(dragMode);
+                            block.doSeparate();
+                        } else if (!prevBlock && !closeBlock && !fromBlockMenu) {
                             if (!block.getThread().view.isGlobal()) {
                                 this._toGlobalCoordinate(dragMode);
                                 block.doSeparate();
-                            } else if (dragMode == Entry.DRAG_MODE_DRAG && !fromBlockMenu)
+                            } else {
                                 block.doMove();
+                            }
                         } else {
                             if (closeBlock) {
                                 if (closeBlock.view.magnet.next) {
