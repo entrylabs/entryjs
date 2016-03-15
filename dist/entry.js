@@ -8999,6 +8999,7 @@ Entry.init = function(a, b) {
   this.events_ = {};
   this.interfaceState = {menuWidth:264};
   Entry.Utils.bindGlobalEvent(["resize", "mousedown", "mousemove", "keydown", "keyup"]);
+  Entry.Utils.generateGlobalFilters();
   this.options = b;
   this.parseOptions(b);
   this.mediaFilePath = (b.libDir ? b.libDir : "/lib") + "/entryjs/images/";
@@ -10662,6 +10663,20 @@ Entry.bindAnimationCallbackOnce = function(a, b) {
 };
 Entry.Utils.isInInput = function(a) {
   return "textarea" == a.target.type || "text" == a.target.type;
+};
+Entry.Utils.generateGlobalFilters = function generateGlobalFilters() {
+  if (!generateGlobalFilters.initiated) {
+    generateGlobalFilters.initiated = !0;
+    Entry.Dom($('<svg id="entryWorkspaceFilters" class="entryWorkspaceFilters" width="0" height="0"version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'), {parent:$("body")});
+    var b = Entry.SVG("entryWorkspaceFilters").elem("defs"), c = b.elem("filter", {id:"entryTrashcanFilter"});
+    c.elem("feGaussianBlur", {"in":"SourceAlpha", stdDeviation:2, result:"blur"});
+    c.elem("feOffset", {"in":"blur", dx:1, dy:1, result:"offsetBlur"});
+    c = c.elem("feMerge");
+    c.elem("feMergeNode", {"in":"offsetBlur"});
+    c.elem("feMergeNode", {"in":"SourceGraphic"}, c);
+    b.elem("filter", {id:"entryBlockShadowFilter", height:"200%"}).innerHTML = '<feOffset result="offOut" in="SourceGraphic" dx="0" dy="1" /><feColorMatrix result="matrixOut" in="offOut" type="matrix"values="0.7 0 0 0 0 0 0.7 0 0 0 0 0 0.7 0 0 0 0 0 1 0" /><feBlend in="SourceGraphic" in1="offOut" mode="normal" />';
+    b.elem("filter", {id:"entryBlockHighlightFilter"}).innerHTML = '<feOffset result="offOut" in="SourceGraphic" dx="0" dy="0" /><feColorMatrix result="matrixOut" in="offOut" type="matrix"values="1.3 0 0 0 0 0 1.3 0 0 0 0 0 1.3 0 0 0 0 0 1 0" />';
+  }
 };
 Entry.Model = function(a, b) {
   var c = Entry.Model;
@@ -13615,16 +13630,10 @@ Entry.BlockView.PARAM_SPACE = 5;
     return this._moveTo(this.x + b, this.y + a, d);
   };
   a._addControl = function() {
-    var b = this;
-    $(this.svgGroup).mousedown(function() {
-      b.mouseHandler.apply(b, arguments);
-    });
-    $(this.svgGroup).bind("touchstart", function() {
-      b.mouseHandler.apply(b, arguments);
-    });
+    $(this.svgGroup).bind("mousedown.blockViewMousedown touchstart.blockViewMousedown", this.mouseHandler);
   };
   a.removeControl = function() {
-    this.svgGroup.removeEventListener("mousedown", this.mouseHandler, !1);
+    $(this.svgGroup).unbind(".blockViewMousedown");
   };
   a.onMouseDown = function(b) {
     function c(b) {
@@ -14880,16 +14889,16 @@ Entry.FieldText = function(a, b, c) {
 };
 Entry.Utils.inherit(Entry.Field, Entry.FieldText);
 (function(a) {
-  a.renderStart = function(b) {
-    this.svgGroup = b.contentSvgGroup.elem("g");
+  a.renderStart = function(a) {
+    this.svgGroup = a.contentSvgGroup.elem("g");
     this._text = this._text.replace(/(\r\n|\n|\r)/gm, " ");
     this.textElement = this.svgGroup.elem("text").attr({style:"white-space: pre; font-size:" + this._fontSize + "px", "class":"dragNone", fill:this._color});
     this.textElement.innerHTML = this._text;
-    b = this.textElement.getBBox();
-    var a = 0;
-    "center" == this._align && (a = -b.width / 2);
-    this.textElement.attr({x:a, y:.25 * b.height});
-    this.box.set({x:0, y:0, width:this.textElement.getComputedTextLength(), height:b.height});
+    a = this.textElement.getBBox();
+    var c = 0;
+    "center" == this._align && (c = -a.width / 2);
+    this.textElement.attr({x:c, y:.25 * a.height});
+    this.box.set({x:0, y:0, width:this.textElement.getComputedTextLength(), height:a.height});
   };
 })(Entry.FieldText.prototype);
 Entry.FieldTextInput = function(a, b, c) {
@@ -14904,42 +14913,42 @@ Entry.FieldTextInput = function(a, b, c) {
 };
 Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
 (function(a) {
-  a.renderStart = function(b) {
-    var a = this;
-    this.svgGroup = b.contentSvgGroup.elem("g");
+  a.renderStart = function(a) {
+    var c = this;
+    this.svgGroup = a.contentSvgGroup.elem("g");
     this.svgGroup.attr({class:"entry-input-field"});
     this.textElement = this.svgGroup.elem("text", {x:4, y:4, "font-size":"9pt"});
     this.textElement.innerHTML = this.truncate();
-    b = this.getTextWidth();
+    a = this.getTextWidth();
     var d = this.position && this.position.y ? this.position.y : 0;
-    this._header = this.svgGroup.elem("rect", {width:b, height:16, y:d - 8, rx:3, ry:3, fill:"#fff", "fill-opacity":.4});
+    this._header = this.svgGroup.elem("rect", {width:a, height:16, y:d - 8, rx:3, ry:3, fill:"#fff", "fill-opacity":.4});
     this.svgGroup.appendChild(this.textElement);
-    this.svgGroup.onmouseup = function(b) {
-      a._isEditable() && a.renderOptions();
+    this.svgGroup.onmouseup = function(a) {
+      c._isEditable() && c.renderOptions();
     };
-    this.box.set({x:0, y:0, width:b, height:16});
+    this.box.set({x:0, y:0, width:a, height:16});
   };
   a.renderOptions = function() {
-    var b = this;
+    var a = this;
     this.destroyOption();
     this.documentDownEvent = Entry.documentMousedown.attach(this, function() {
       Entry.documentMousedown.detach(this.documentDownEvent);
-      b.applyValue();
-      b.destroyOption();
+      a.applyValue();
+      a.destroyOption();
     });
     this.optionGroup = Entry.Dom("input", {class:"entry-widget-input-field", parent:$("body")});
     this.optionGroup.val(this.getValue());
     this.optionGroup.on("mousedown", function(b) {
       b.stopPropagation();
     });
-    this.optionGroup.on("keyup", function(a) {
-      var c = a.keyCode || a.which;
-      b.applyValue(a);
-      -1 < [13, 27].indexOf(c) && b.destroyOption();
+    this.optionGroup.on("keyup", function(c) {
+      var e = c.keyCode || c.which;
+      a.applyValue(c);
+      -1 < [13, 27].indexOf(e) && a.destroyOption();
     });
-    var a = this.getAbsolutePosFromDocument();
-    a.y -= this.box.height / 2;
-    this.optionGroup.css({height:16, left:a.x, top:a.y, width:b.box.width});
+    var c = this.getAbsolutePosFromDocument();
+    c.y -= this.box.height / 2;
+    this.optionGroup.css({height:16, left:c.x, top:c.y, width:a.box.width});
     this.optionGroup.focus();
   };
   a.applyValue = function(b) {
@@ -15053,7 +15062,6 @@ Entry.RenderView = function(a, b) {
   if (this.svg = Entry.SVG(this._svgId)) {
     this.svgGroup = this.svg.elem("g"), this.svgThreadGroup = this.svgGroup.elem("g"), this.svgThreadGroup.board = this, this.svgBlockGroup = this.svgGroup.elem("g"), this.svgBlockGroup.board = this;
   }
-  this._addFilters();
 };
 (function(a) {
   a.schema = {code:null, dragBlock:null, closeBlock:null, selectedBlockView:null};
@@ -15099,15 +15107,6 @@ Entry.RenderView = function(a, b) {
     this.svgThreadGroup = a.svgThreadGroup;
     this.svgGroup.appendChild(this.svgThreadGroup);
     this.svgGroup.appendChild(this.svgBlockGroup);
-  };
-  a._addFilters = function() {
-    var a = this.svg.elem("defs"), c = a.elem("filter", {id:"entryTrashcanFilter"});
-    c.elem("feGaussianBlur", {"in":"SourceAlpha", stdDeviation:2, result:"blur"});
-    c.elem("feOffset", {"in":"blur", dx:1, dy:1, result:"offsetBlur"});
-    c = c.elem("feMerge");
-    c.elem("feMergeNode", {"in":"offsetBlur"});
-    c.elem("feMergeNode", {"in":"SourceGraphic"}, c);
-    a.elem("filter", {id:"entryBlockShadowFilter"}).innerHTML = '<feOffset result="offOut" in="SourceGraphic" dx="0" dy="1" /><feColorMatrix result="matrixOut" in="offOut" type="matrix"values="0.7 0 0 0 0 0 0.7 0 0 0 0 0 0.7 0 0 0 0 0 1 0" /><feBlend in="SourceGraphic" in2="blurOut" mode="normal" />';
   };
 })(Entry.RenderView.prototype);
 Entry.Scroller = function(a, b, c) {
@@ -15794,7 +15793,6 @@ Entry.Board = function(a) {
   $(window).scroll(this.updateOffset);
   Entry.windowResized.attach(this, this.updateOffset);
   this.svg = Entry.SVG(this._svgId);
-  this._addFilters();
   this._blockViews = [];
   this._magnetMap = {};
   this.trashcan = new Entry.FieldTrashcan(this);
@@ -16119,16 +16117,6 @@ Entry.Board = function(a) {
       }
       return null;
     }
-  };
-  a._addFilters = function() {
-    var a = this.svg.elem("defs"), c = a.elem("filter", {id:"entryTrashcanFilter"});
-    c.elem("feGaussianBlur", {"in":"SourceAlpha", stdDeviation:2, result:"blur"});
-    c.elem("feOffset", {"in":"blur", dx:1, dy:1, result:"offsetBlur"});
-    c = c.elem("feMerge");
-    c.elem("feMergeNode", {"in":"offsetBlur"});
-    c.elem("feMergeNode", {"in":"SourceGraphic"}, c);
-    a.elem("filter", {id:"entryBlockShadowFilter", height:"200%"}).innerHTML = '<feOffset result="offOut" in="SourceGraphic" dx="0" dy="1" /><feColorMatrix result="matrixOut" in="offOut" type="matrix"values="0.7 0 0 0 0 0 0.7 0 0 0 0 0 0.7 0 0 0 0 0 1 0" /><feBlend in="SourceGraphic" in2="offOut" mode="normal" />';
-    a.elem("filter", {id:"entryBlockHighlightFilter"}).innerHTML = '<feOffset result="offOut" in="SourceGraphic" dx="0" dy="0" /><feColorMatrix result="matrixOut" in="offOut" type="matrix"values="1.3 0 0 0 0 0 1.3 0 0 0 0 0 1.3 0 0 0 0 0 1 0" />';
   };
   a.dominate = function(a) {
     a = a.getFirstBlock();

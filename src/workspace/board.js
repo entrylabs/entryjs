@@ -51,8 +51,6 @@ Entry.Board = function(option) {
     Entry.windowResized.attach(this, this.updateOffset);
     this.svg = Entry.SVG(this._svgId);
 
-    this._addFilters();
-
     this._blockViews = [];
     this._magnetMap = {};
 
@@ -609,36 +607,11 @@ Entry.Board = function(option) {
         return null;
     };
 
-    p._addFilters = function() {
-        var defs = this.svg.elem('defs');
-
-        //trashcan filter
-        var trashCanFilter = defs.elem('filter', {'id': 'entryTrashcanFilter'});
-        trashCanFilter.elem('feGaussianBlur', {'in': 'SourceAlpha', 'stdDeviation': 2, 'result': 'blur'});
-        trashCanFilter.elem('feOffset', {'in': 'blur', 'dx': 1, 'dy': 1, 'result': 'offsetBlur'});
-        var feMerge = trashCanFilter.elem('feMerge');
-        feMerge.elem('feMergeNode', {'in': 'offsetBlur'});
-        feMerge.elem('feMergeNode', {'in': 'SourceGraphic'}, feMerge);
-
-        var blockFilter = defs.elem('filter', {'id': 'entryBlockShadowFilter', 'height': '200%'});
-        blockFilter.innerHTML = '<feOffset result="offOut" in="SourceGraphic" dx="0" dy="1" />' +
-                     '<feColorMatrix result="matrixOut" in="offOut" type="matrix"' +
-                     'values="0.7 0 0 0 0 0 0.7 0 0 0 0 0 0.7 0 0 0 0 0 1 0" />' +
-                     '<feBlend in="SourceGraphic" in2="offOut" mode="normal" />';
-
-        var blockHighlightFilter = defs.elem('filter', {'id': 'entryBlockHighlightFilter'});
-        blockHighlightFilter.innerHTML =
-            '<feOffset result="offOut" in="SourceGraphic" dx="0" dy="0" />' +
-             '<feColorMatrix result="matrixOut" in="offOut" type="matrix"' +
-             'values="1.3 0 0 0 0 0 1.3 0 0 0 0 0 1.3 0 0 0 0 0 1 0" />';
-    };
-
     p.dominate = function(thread) {
         var block = thread.getFirstBlock();
         this.svgBlockGroup
             .appendChild(block.view.svgGroup);
         this.code.dominate(block.thread);
-        //this.generateCodeMagnetMap();
     };
 
 })(Entry.Board.prototype);
