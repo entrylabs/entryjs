@@ -13754,7 +13754,7 @@ Entry.BlockView.PARAM_SPACE = 5;
   };
   a.destroy = function(b) {
     var a = this.svgGroup, d = this.block.getThread();
-    d instanceof Entry.FieldBlock && d._updateValueBlock();
+    d instanceof Entry.FieldBlock && d.updateValueBlock();
     b ? $(a).velocity({opacity:0}, {duration:100, complete:function() {
       a.remove();
     }}) : a.remove();
@@ -14304,7 +14304,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
     this.box.set({x:0, y:0, width:0, height:20});
     var d = this.getValue();
     d && !d.view && (d.setThread(this), d.createView(b, a));
-    this._updateValueBlock(d);
+    this.updateValueBlock(d);
     this._blockView.getBoard().constructor == Entry.BlockMenu && this._valueBlock.view.removeControl();
   };
   a.align = function(b, a, d) {
@@ -14354,14 +14354,14 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
       return this._valueBlock;
     }
   };
-  a._updateValueBlock = function(b) {
+  a.updateValueBlock = function(b) {
     b instanceof Entry.Block || (b = void 0);
     this._sizeObserver && this._sizeObserver.destroy();
     this._posObserver && this._posObserver.destroy();
     b = this._setValueBlock(b).view;
     b.bindPrev();
     this._blockView.alignContent();
-    this._posObserver = b.observe(this, "_updateValueBlock", ["x", "y"], !1);
+    this._posObserver = b.observe(this, "updateValueBlock", ["x", "y"], !1);
     this._sizeObserver = b.observe(this, "calcWH", ["width", "height"]);
     b = this._blockView.getBoard();
     b.constructor === Entry.Board && b.generateCodeMagnetMap();
@@ -14397,9 +14397,9 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
     return this._valueBlock === b ? [b] : null;
   };
   a.replace = function(b) {
-    var a = this._valueBlock, d = a.type;
-    this._updateValueBlock(b);
-    Entry.block[d].isPrimitive ? a.destroy() : (a.view._toGlobalCoordinate(), this.separate(a), a.view.bumpAway(30, 150));
+    var a = this._valueBlock;
+    Entry.block[a.type].isPrimitive ? a.destroy() : (a.view._toGlobalCoordinate(), this.separate(a), a.view.bumpAway(30, 150));
+    this.updateValueBlock(b);
     b.view._toLocalCoordinate(this.svgGroup);
     this.calcWH();
   };

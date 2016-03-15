@@ -597,7 +597,7 @@ Entry.BlockView.PARAM_SPACE = 5;
 
         var thread = this.block.getThread();
         if (thread instanceof Entry.FieldBlock)
-            thread._updateValueBlock();
+            thread.updateValueBlock();
 
         if (animate) {
             $(svgGroup).velocity(
