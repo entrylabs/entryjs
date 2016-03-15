@@ -947,3 +947,38 @@ Entry.bindAnimationCallbackOnce = function($elem, func) {
 Entry.Utils.isInInput = function(e) {
     return e.target.type == 'textarea' || e.target.type == 'text';
 };
+
+Entry.Utils.generateGlobalFilters = function generateGlobalFilters() {
+    if (generateGlobalFilters.initiated) return;
+    generateGlobalFilters.initiated = true;
+    var svgId = 'entryWorkspaceFilters';
+    var svgDom = Entry.Dom(
+        $('<svg id="' + svgId + '" class="entryWorkspaceFilters" width="0" height="0"' +
+          'version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'),
+        { parent: $('body') }
+    );
+
+    var svg = Entry.SVG(svgId);
+    var defs = svg.elem('defs');
+
+    //trashcan filter
+    var trashCanFilter = defs.elem('filter', {'id': 'entryTrashcanFilter'});
+    trashCanFilter.elem('feGaussianBlur', {'in': 'SourceAlpha', 'stdDeviation': 2, 'result': 'blur'});
+    trashCanFilter.elem('feOffset', {'in': 'blur', 'dx': 1, 'dy': 1, 'result': 'offsetBlur'});
+    var feMerge = trashCanFilter.elem('feMerge');
+    feMerge.elem('feMergeNode', {'in': 'offsetBlur'});
+    feMerge.elem('feMergeNode', {'in': 'SourceGraphic'}, feMerge);
+
+
+    var blockFilter = defs.elem('filter', {'id': 'entryBlockShadowFilter', 'height': '200%'});
+    blockFilter.innerHTML = '<feOffset result="offOut" in="SourceGraphic" dx="0" dy="1" />' +
+                 '<feColorMatrix result="matrixOut" in="offOut" type="matrix"' +
+                 'values="0.7 0 0 0 0 0 0.7 0 0 0 0 0 0.7 0 0 0 0 0 1 0" />' +
+                 '<feBlend in="SourceGraphic" in1="offOut" mode="normal" />';
+
+    var blockHighlightFilter = defs.elem('filter', {'id': 'entryBlockHighlightFilter'});
+    blockHighlightFilter.innerHTML =
+        '<feOffset result="offOut" in="SourceGraphic" dx="0" dy="0" />' +
+         '<feColorMatrix result="matrixOut" in="offOut" type="matrix"' +
+         'values="1.3 0 0 0 0 0 1.3 0 0 0 0 0 1.3 0 0 0 0 0 1 0" />';
+};

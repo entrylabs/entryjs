@@ -8999,6 +8999,7 @@ Entry.init = function(a, b) {
   this.events_ = {};
   this.interfaceState = {menuWidth:264};
   Entry.Utils.bindGlobalEvent(["resize", "mousedown", "mousemove", "keydown", "keyup"]);
+  Entry.Utils.generateGlobalFilters();
   this.options = b;
   this.parseOptions(b);
   this.mediaFilePath = (b.libDir ? b.libDir : "/lib") + "/entryjs/images/";
@@ -10662,6 +10663,20 @@ Entry.bindAnimationCallbackOnce = function(a, b) {
 };
 Entry.Utils.isInInput = function(a) {
   return "textarea" == a.target.type || "text" == a.target.type;
+};
+Entry.Utils.generateGlobalFilters = function generateGlobalFilters() {
+  if (!generateGlobalFilters.initiated) {
+    generateGlobalFilters.initiated = !0;
+    Entry.Dom($('<svg id="entryWorkspaceFilters" class="entryWorkspaceFilters" width="0" height="0"version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'), {parent:$("body")});
+    var b = Entry.SVG("entryWorkspaceFilters").elem("defs"), c = b.elem("filter", {id:"entryTrashcanFilter"});
+    c.elem("feGaussianBlur", {"in":"SourceAlpha", stdDeviation:2, result:"blur"});
+    c.elem("feOffset", {"in":"blur", dx:1, dy:1, result:"offsetBlur"});
+    c = c.elem("feMerge");
+    c.elem("feMergeNode", {"in":"offsetBlur"});
+    c.elem("feMergeNode", {"in":"SourceGraphic"}, c);
+    b.elem("filter", {id:"entryBlockShadowFilter", height:"200%"}).innerHTML = '<feOffset result="offOut" in="SourceGraphic" dx="0" dy="1" /><feColorMatrix result="matrixOut" in="offOut" type="matrix"values="0.7 0 0 0 0 0 0.7 0 0 0 0 0 0.7 0 0 0 0 0 1 0" /><feBlend in="SourceGraphic" in1="offOut" mode="normal" />';
+    b.elem("filter", {id:"entryBlockHighlightFilter"}).innerHTML = '<feOffset result="offOut" in="SourceGraphic" dx="0" dy="0" /><feColorMatrix result="matrixOut" in="offOut" type="matrix"values="1.3 0 0 0 0 0 1.3 0 0 0 0 0 1.3 0 0 0 0 0 1 0" />';
+  }
 };
 Entry.Model = function(a, b) {
   var c = Entry.Model;
@@ -15748,7 +15763,6 @@ Entry.Board = function(a) {
   $(window).scroll(this.updateOffset);
   Entry.windowResized.attach(this, this.updateOffset);
   this.svg = Entry.SVG(this._svgId);
-  this._addFilters();
   this._blockViews = [];
   this._magnetMap = {};
   this.trashcan = new Entry.FieldTrashcan(this);
@@ -16073,16 +16087,6 @@ Entry.Board = function(a) {
       }
       return null;
     }
-  };
-  a._addFilters = function() {
-    var a = this.svg.elem("defs"), c = a.elem("filter", {id:"entryTrashcanFilter"});
-    c.elem("feGaussianBlur", {"in":"SourceAlpha", stdDeviation:2, result:"blur"});
-    c.elem("feOffset", {"in":"blur", dx:1, dy:1, result:"offsetBlur"});
-    c = c.elem("feMerge");
-    c.elem("feMergeNode", {"in":"offsetBlur"});
-    c.elem("feMergeNode", {"in":"SourceGraphic"}, c);
-    a.elem("filter", {id:"entryBlockShadowFilter", height:"200%"}).innerHTML = '<feOffset result="offOut" in="SourceGraphic" dx="0" dy="1" /><feColorMatrix result="matrixOut" in="offOut" type="matrix"values="0.7 0 0 0 0 0 0.7 0 0 0 0 0 0.7 0 0 0 0 0 1 0" /><feBlend in="SourceGraphic" in1="offOut" mode="normal" />';
-    a.elem("filter", {id:"entryBlockHighlightFilter"}).innerHTML = '<feOffset result="offOut" in="SourceGraphic" dx="0" dy="0" /><feColorMatrix result="matrixOut" in="offOut" type="matrix"values="1.3 0 0 0 0 0 1.3 0 0 0 0 0 1.3 0 0 0 0 0 1 0" />';
   };
   a.dominate = function(a) {
     a = a.getFirstBlock();

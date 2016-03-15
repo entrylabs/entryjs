@@ -23,6 +23,8 @@ Entry.init = function(container, options) {
         'keyup'
     ]);
 
+    Entry.Utils.generateGlobalFilters();
+
     /** @type {object} */
     this.options = options;
     this.parseOptions(options);

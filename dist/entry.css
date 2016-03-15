@@ -4739,6 +4739,11 @@ svg .svgBlockGroup text {
   fill: #f88;
   fill-opacity: 0.8;
 }
+.entryWorkspaceFilters {
+  position: absolute;
+  left: -100px;
+  top: -100px;
+}
 
 .dragNone {
   -webkit-touch-callout: none;
