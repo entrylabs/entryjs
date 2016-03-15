@@ -103,5 +103,5 @@ Entry.SVG.hasClass = function(className) {
 };
 
 Entry.SVG.remove = function() {
-    this.parentNode.removeChild(this);
+    if (this.parentNode) this.parentNode.removeChild(this);
 };

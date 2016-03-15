@@ -5512,7 +5512,7 @@ Entry.SVG.hasClass = function(a) {
   return this.getAttribute("class").match(new RegExp("(\\s|^)" + a + "(\\s|$)"));
 };
 Entry.SVG.remove = function() {
-  this.parentNode.removeChild(this);
+  this.parentNode && this.parentNode.removeChild(this);
 };
 Entry.Dialog = function(a, b, c, d) {
   a.dialog && a.dialog.remove();
