@@ -166,7 +166,7 @@ p.closeConnection = function() {
 };
 
 p.downloadConnector = function() {
-    var url = "http://play-entry.org/down/Entry_HW_v1.1.2.exe";
+    var url = "http://play-entry.org/down/Entry_HW_v1.1.3.exe";
     var win = window.open(url, '_blank');
     win.focus();
 };

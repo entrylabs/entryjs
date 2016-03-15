@@ -7221,7 +7221,7 @@ p.closeConnection = function() {
   this.socket && this.socket.close();
 };
 p.downloadConnector = function() {
-  window.open("http://play-entry.org/down/Entry_HW_v1.1.2.exe", "_blank").focus();
+  window.open("http://play-entry.org/down/Entry_HW_v1.1.3.exe", "_blank").focus();
 };
 p.downloadSource = function() {
   window.open("http://play-entry.com/down/board.ino", "_blank").focus();
