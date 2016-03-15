@@ -13,7 +13,7 @@ Entry.ThreadView = function(thread, board) {
 
     this.thread = thread;
 
-    this.svgGroup = board.svgThreadGroup.elem("group");
+    this.svgGroup = board.svgThreadGroup.elem("g");
 
     this._parent = board; // statement
 };

@@ -49,6 +49,7 @@ Entry.BlockMockup = function(blocklyInfo) {
     this.isNext = false;
     this.output = false;
     this.fieldCount = 0;
+    this.events = {};
 
     this.simulate(blocklyInfo);
 };
@@ -56,6 +57,17 @@ Entry.BlockMockup = function(blocklyInfo) {
 (function(p) {
     p.simulate = function(blocklyInfo) {
         blocklyInfo.init.call(this);
+        if (blocklyInfo.whenAdd) {
+            if (!this.events['whenBlockAdd'])
+                this.events['whenBlockAdd'] = [];
+            this.events['whenBlockAdd'].push(blocklyInfo.whenAdd);
+        }
+
+        if (blocklyInfo.whenRemove) {
+            if (!this.events['whenBlockDestroy'])
+                this.events['whenBlockDestroy'] = [];
+            this.events['whenBlockDestroy'].push(blocklyInfo.whenRemove);
+        }
     };
 
     p.toJSON = function() {
@@ -78,7 +90,8 @@ Entry.BlockMockup = function(blocklyInfo) {
             skeleton: skeleton,
             statements: this.statements,
             template: this.templates.filter(function(p) {return typeof p === "string";}).join(" "),
-            params: this.params
+            params: this.params,
+            events: this.events
         };
     };
 
