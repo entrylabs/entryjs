@@ -5512,7 +5512,7 @@ Entry.SVG.hasClass = function(a) {
   return this.getAttribute("class").match(new RegExp("(\\s|^)" + a + "(\\s|$)"));
 };
 Entry.SVG.remove = function() {
-  $(this).remove();
+  this.parentNode.removeChild(this);
 };
 Entry.Dialog = function(a, b, c, d) {
   a.dialog && a.dialog.remove();
@@ -10066,18 +10066,21 @@ Entry.BlockMockup = function(a) {
   this.color = "";
   this.output = this.isNext = this.isPrev = !1;
   this.fieldCount = 0;
+  this.events = {};
   this.simulate(a);
 };
 (function(a) {
   a.simulate = function(b) {
     b.init.call(this);
+    b.whenAdd && (this.events.whenBlockAdd || (this.events.whenBlockAdd = []), this.events.whenBlockAdd.push(b.whenAdd));
+    b.whenRemove && (this.events.whenBlockDestroy || (this.events.whenBlockDestroy = []), this.events.whenBlockDestroy.push(b.whenRemove));
   };
   a.toJSON = function() {
     var b = "";
     this.output ? b = "Boolean" === this.output ? "basic_boolean_field" : "basic_string_field" : !this.isPrev && this.isNext ? b = "basic_event" : this.statements.length ? b = "basic_loop" : this.isPrev && this.isNext ? b = "basic" : this.isPrev && !this.isNext && (b = "basic_without_next");
     return {color:this.color, skeleton:b, statements:this.statements, template:this.templates.filter(function(b) {
       return "string" === typeof b;
-    }).join(" "), params:this.params};
+    }).join(" "), params:this.params, events:this.events};
   };
   a.appendDummyInput = function() {
     return this;
@@ -14950,17 +14953,17 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
     this.optionGroup.focus();
     this.optionGroup.select();
   };
-  a.applyValue = function(a) {
-    a = this.optionGroup.val();
-    this.setValue(a);
+  a.applyValue = function(b) {
+    b = this.optionGroup.val();
+    this.setValue(b);
     this.textElement.textContent = this.truncate();
     this.resize();
   };
   a.resize = function() {
-    var a = this.getTextWidth();
-    this._header.attr({width:a});
-    this.optionGroup.css({width:a});
-    this.box.set({width:a});
+    var b = this.getTextWidth();
+    this._header.attr({width:b});
+    this.optionGroup.css({width:b});
+    this.box.set({width:b});
     this._block.view.alignContent();
   };
   a.getTextWidth = function() {
@@ -14975,19 +14978,19 @@ Entry.GlobalSvg = {};
   a.createDom = function() {
     this.svgDom || (this.svgDom = Entry.Dom($('<svg id="globalSvg" width="200" height="200"version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'), {parent:$("body")}), this.svgDom.css({position:"fixed", width:1, height:1, display:"none", overflow:"visible", "z-index":"1111", opacity:.8}), this.svg = Entry.SVG("globalSvg"), this.top = this.left = this.width = 0);
   };
-  a.setView = function(a, c) {
-    if (a != this._view && !a.block.isReadOnly() && a.movable) {
-      return this._view = a, this._mode = c, this.draw(), this.align(), this.position(), !0;
+  a.setView = function(b, a) {
+    if (b != this._view && !b.block.isReadOnly() && b.movable) {
+      return this._view = b, this._mode = a, this.draw(), this.align(), this.position(), !0;
     }
   };
   a.draw = function() {
-    var a = this._view;
+    var b = this._view;
     this._svg && this.remove();
-    var c = this._mode == Entry.Workspace.MODE_VIMBOARD;
-    this.svgGroup = Entry.SVG.createElement(a.svgGroup.cloneNode(!0), {opacity:1});
+    var a = this._mode == Entry.Workspace.MODE_VIMBOARD;
+    this.svgGroup = Entry.SVG.createElement(b.svgGroup.cloneNode(!0), {opacity:1});
     this.svg.appendChild(this.svgGroup);
     this.show();
-    c && (a = $(this.svgGroup), a.find("g").css({filter:"none"}), a.find("path").velocity({opacity:0}, {duration:500}), a.find("text").velocity({fill:"#000000"}, {duration:530}));
+    a && (b = $(this.svgGroup), b.find("g").css({filter:"none"}), b.find("path").velocity({opacity:0}, {duration:500}), b.find("text").velocity({fill:"#000000"}, {duration:530}));
   };
   a.remove = function() {
     this.svgGroup && (this.svgGroup.remove(), delete this.svgGroup, delete this._view, delete this._offsetX, delete this._offsetY, delete this._startX, delete this._startY, this.hide());
@@ -15682,7 +15685,7 @@ Entry.Block.MAGNET_OFFSET = .4;
 Entry.ThreadView = function(a, b) {
   Entry.Model(this, !1);
   this.thread = a;
-  this.svgGroup = b.svgThreadGroup.elem("group");
+  this.svgGroup = b.svgThreadGroup.elem("g");
   this._parent = b;
 };
 (function(a) {
