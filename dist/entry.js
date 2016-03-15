@@ -10622,10 +10622,12 @@ Entry.Scene.prototype.selectScene = function(a) {
 };
 Entry.Scene.prototype.toJSON = function() {
   for (var a = [], b = this.getScenes().length, c = 0;c < b;c++) {
-    var d = this.getScenes()[c], e = d.view;
+    var d = this.getScenes()[c], e = d.view, f = d.inputWrapper;
     delete d.view;
+    delete d.inputWrapper;
     a.push(JSON.parse(JSON.stringify(d)));
     d.view = e;
+    d.inputWrapper = f;
   }
   return a;
 };
