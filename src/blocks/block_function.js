@@ -45,7 +45,7 @@ Entry.block.function_field_string = {
     params: [
         {
             type: "Block",
-            accept: "basic_string_field"
+            accept: "stringMagnet"
         },
         {
             type: "Output",
@@ -61,7 +61,7 @@ Entry.block.function_field_boolean = {
     params: [
         {
             type: "Block",
-            accept: "basic_boolean_field"
+            accept: "booleanMagnet"
         },
         {
             type: "Output",
@@ -189,11 +189,9 @@ Entry.block.function_create = {
         {
             type: "Block",
             accept: "basic_param",
-            value: [
-                {
+            value: {
                     type: "function_field_label"
-                }
-            ]
+            }
         },
         {
             type: "Indicator",

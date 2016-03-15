@@ -1902,8 +1902,8 @@ Entry.block.functionAddButton = {skeleton:"basic_button", color:"#eee", isNotFor
   Entry.variableContainer.createFunction();
 }]}};
 Entry.block.function_field_label = {skeleton:"basic_param", color:"#f9c535", template:"%1%2", params:[{type:"TextInput", value:"\ud568\uc218"}, {type:"Output", accept:"basic_param"}]};
-Entry.block.function_field_string = {skeleton:"basic_param", color:"#ffd974", template:"%1%2", params:[{type:"Block", accept:"basic_string_field"}, {type:"Output", accept:"basic_param"}]};
-Entry.block.function_field_boolean = {skeleton:"basic_param", color:"#aeb8ff", template:"%1%2", params:[{type:"Block", accept:"basic_boolean_field"}, {type:"Output", accept:"basic_param"}]};
+Entry.block.function_field_string = {skeleton:"basic_param", color:"#ffd974", template:"%1%2", params:[{type:"Block", accept:"stringMagnet"}, {type:"Output", accept:"basic_param"}]};
+Entry.block.function_field_boolean = {skeleton:"basic_param", color:"#aeb8ff", template:"%1%2", params:[{type:"Block", accept:"booleanMagnet"}, {type:"Output", accept:"basic_param"}]};
 Blockly.Blocks.function_field_label = {init:function() {
   this.setColour("#f9c535");
   this.appendDummyInput().appendField(new Blockly.FieldTextInput(Lang.Blocks.FUNCTION_explanation_1), "NAME");
@@ -1972,7 +1972,7 @@ Blockly.Blocks.function_create = {init:function() {
 Entry.block.function_create = function(a, b) {
   return b.callReturn();
 };
-Entry.block.function_create = {skeleton:"basic", color:"#cc7337", template:"\ud568\uc218 \uc815\uc758\ud558\uae30 %1 %2", params:[{type:"Block", accept:"basic_param", value:[{type:"function_field_label"}]}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/function_03.png", size:12}]};
+Entry.block.function_create = {skeleton:"basic", color:"#cc7337", template:"\ud568\uc218 \uc815\uc758\ud558\uae30 %1 %2", params:[{type:"Block", accept:"basic_param", value:{type:"function_field_label"}}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/function_03.png", size:12}]};
 Blockly.Blocks.function_general = {init:function() {
   this.setColour("#cc7337");
   this.setInputsInline(!0);
@@ -10820,7 +10820,6 @@ Entry.Func.updateMenu = function() {
   }
   a.banClass("functionInit");
   a.unbanClass("functionEdit");
-  console.log(a.categoryCodes);
 };
 Entry.Func.prototype.edit = function() {
   Entry.Func.isEdit || (Entry.Func.isEdit = !0, Entry.Func.svg ? this.parentView.appendChild(this.svg) : Entry.Func.initEditView());
@@ -14677,65 +14676,103 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldKeyboard);
     Entry.keyPressed && this.keyPressed && Entry.keyPressed.detach(this.keyPressed);
   };
 })(Entry.FieldKeyboard.prototype);
-Entry.FieldOutput = function(a, b, c) {
+Entry.FieldOutput = function(a, b, c, d) {
   this._blockView = b;
   this._block = b.block;
   this._valueBlock = null;
   this.box = new Entry.BoxModel;
+  this.changeEvent = new Entry.Event(this);
   this._index = c;
   this._content = a;
-  this.dummyBlock = null;
   this.acceptType = a.accept;
+  this.view = this;
   this.svgGroup = null;
   this._position = a.position;
   this.box.observe(b, "alignContent", ["width", "height"]);
-  this.renderStart(b.getBoard());
-  this._block.observe(this, "_updateThread", ["thread"]);
+  this.renderStart(b.getBoard(), d);
 };
 Entry.Utils.inherit(Entry.Field, Entry.FieldOutput);
 (function(a) {
-  a.renderStart = function(b) {
-    this.svgGroup = this._blockView.contentSvgGroup.group();
-    this.box.set({width:-Entry.BlockView.PARAM_SPACE, height:0});
-    this._thread = this.getValue();
-    this.dummyBlock = new Entry.OutputDummyBlock(this, this._blockView);
-    this._thread.insertDummyBlock(this.dummyBlock);
-    this._inspectThread();
-    this._thread.createView(b);
-    this.dummyBlock.observe(this, "_inspectThread", ["next"]);
-    this.dummyBlock.observe(this, "calcWH", ["next"]);
-    this.calcWH();
+  a.renderStart = function(b, a) {
+    this.svgGroup = this._blockView.contentSvgGroup.elem("g");
+    this.view = this;
+    this._nextGroup = this.svgGroup;
+    this.box.set({x:0, y:0, width:0, height:20});
+    var d = this.getValue();
+    d && !d.view && (d.setThread(this), d.createView(b, a));
+    this._updateValueBlock(d);
+    this._blockView.getBoard().constructor == Entry.BlockMenu && this._valueBlock && this._valueBlock.view.removeControl();
   };
   a.align = function(b, a, d) {
-    d = void 0 === d ? !0 : d;
     var e = this.svgGroup;
     this._position && (this._position.x && (b = this._position.x), this._position.y && (a = this._position.y));
-    b -= 2;
-    var f = this._thread.getFirstBlock();
-    f.isDummy && (f = f.next);
+    var f = this._valueBlock;
     f && (a = -.5 * f.view.height);
-    b = "t" + b + " " + a;
-    f != this._valueBlock && (this._valueBlock && this._valueBlock.view.set({shadow:!0}), this._valueBlock = f, this._valueBlockObserver && this._valueBlockObserver.destroy(), this._valueBlock && (f = this._valueBlock.view, this._valueBlockObserver = f.observe(this, "calcWH", ["width", "height"]), f.shadow && f.set({shadow:!1})));
-    d ? e.animate({transform:b}, 300, mina.easeinout) : e.attr({transform:b});
+    f = "translate(" + b + "," + a + ")";
+    void 0 === d || d ? e.animate({transform:f}, 300, mina.easeinout) : e.attr({transform:f});
+    this.box.set({x:b, y:a});
   };
   a.calcWH = function() {
-    var b = this._thread.getFirstBlock();
-    b.isDummy && (b = b.next);
-    b && (this.outputWidth = b.view.width);
-    this._blockView.alignContent();
+    var b = this._valueBlock;
+    b ? (b = b.view, this.box.set({width:b.width, height:b.height})) : this.box.set({width:15, height:20});
   };
   a.calcHeight = a.calcWH;
-  a._updateThread = function() {
-    this._threadChangeEvent && this._thread.changeEvent.detach(this._threadChangeEvent);
-    var b = this._block.thread;
-    this._threadChangeEvent = this._thread.changeEvent.attach(this, function() {
-      b.changeEvent.notify();
-    });
-  };
   a.destroy = function() {
   };
-  a._inspectThread = function() {
-    this.dummyBlock.next || this._valueBlock && this.dummyBlock.insertAfter([this._valueBlock]);
+  a._inspectBlock = function() {
+  };
+  a._setValueBlock = function(b) {
+    if (b != this._valueBlock || !this._valueBlock) {
+      return this._valueBlock = b, this.setValue(b), b && b.setThread(this), this._valueBlock;
+    }
+  };
+  a._updateValueBlock = function(b) {
+    b instanceof Entry.Block || (b = void 0);
+    this._sizeObserver && this._sizeObserver.destroy();
+    this._posObserver && this._posObserver.destroy();
+    if (b = this._setValueBlock(b)) {
+      b = b.view, b.bindPrev(), this._posObserver = b.observe(this, "_updateValueBlock", ["x", "y"], !1), this._sizeObserver = b.observe(this, "calcWH", ["width", "height"]);
+    }
+    this._blockView.alignContent();
+    b = this._blockView.getBoard();
+    b.constructor === Entry.Board && b.generateCodeMagnetMap();
+  };
+  a.getPrevBlock = function(b) {
+    return this._valueBlock === b ? this : null;
+  };
+  a.getNextBlock = function() {
+    return null;
+  };
+  a.requestAbsoluteCoordinate = function(b) {
+    b = this._blockView;
+    var a = b.contentPos;
+    b = b.getAbsoluteCoordinate();
+    b.x += this.box.x + a.x;
+    b.y += this.box.y + a.y;
+    return b;
+  };
+  a.dominate = function() {
+    this._blockView.dominate();
+  };
+  a.isGlobal = function() {
+    return !1;
+  };
+  a.separate = function(b) {
+    this.getCode().createThread([b]);
+    this.changeEvent.notify();
+  };
+  a.getCode = function() {
+    return this._block.thread.getCode();
+  };
+  a.cut = function(b) {
+    return this._valueBlock === b ? [b] : null;
+  };
+  a.replace = function(b) {
+    var a = this._valueBlock, d = a.type;
+    this._updateValueBlock(b);
+    Entry.block[d].isPrimitive ? a.destroy() : (a.view._toGlobalCoordinate(), this.separate(a), a.view.bumpAway(30, 150));
+    b.view._toLocalCoordinate(this.svgGroup);
+    this.calcWH();
   };
 })(Entry.FieldOutput.prototype);
 Entry.FieldStatement = function(a, b, c) {
@@ -14892,8 +14929,8 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
     });
     this.optionGroup = Entry.Dom("input", {class:"entry-widget-input-field", parent:$("body")});
     this.optionGroup.val(this.getValue());
-    this.optionGroup.on("mousedown", function(a) {
-      a.stopPropagation();
+    this.optionGroup.on("mousedown", function(b) {
+      b.stopPropagation();
     });
     this.optionGroup.on("keyup", function(a) {
       var c = a.keyCode || a.which;
@@ -14905,17 +14942,17 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
     this.optionGroup.css({height:16, left:a.x, top:a.y, width:b.box.width});
     this.optionGroup.focus();
   };
-  a.applyValue = function(a) {
-    a = this.optionGroup.val();
-    this.setValue(a);
+  a.applyValue = function(b) {
+    b = this.optionGroup.val();
+    this.setValue(b);
     this.textElement.textContent = this.truncate();
     this.resize();
   };
   a.resize = function() {
-    var a = this.getTextWidth();
-    this._header.attr({width:a});
-    this.optionGroup.css({width:a});
-    this.box.set({width:a});
+    var b = this.getTextWidth();
+    this._header.attr({width:b});
+    this.optionGroup.css({width:b});
+    this.box.set({width:b});
     this._block.view.alignContent();
   };
   a.getTextWidth = function() {
@@ -14930,28 +14967,28 @@ Entry.GlobalSvg = {};
   a.createDom = function() {
     this.svgDom || (this.svgDom = Entry.Dom($('<svg id="globalSvg" width="200" height="200"version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'), {parent:$("body")}), this.svgDom.css({position:"fixed", width:1, height:1, display:"none", overflow:"visible", "z-index":"1111", opacity:.8}), this.svg = Entry.SVG("globalSvg"), this.top = this.left = this.width = 0);
   };
-  a.setView = function(a, c) {
-    if (a != this._view && !a.block.isReadOnly() && a.movable) {
-      return this._view = a, this._mode = c, this.draw(), this.align(), this.position(), !0;
+  a.setView = function(b, a) {
+    if (b != this._view && !b.block.isReadOnly() && b.movable) {
+      return this._view = b, this._mode = a, this.draw(), this.align(), this.position(), !0;
     }
   };
   a.draw = function() {
-    var a = this._view;
+    var b = this._view;
     this._svg && this.remove();
-    var c = this._mode == Entry.Workspace.MODE_VIMBOARD;
-    this.svgGroup = Entry.SVG.createElement(a.svgGroup.cloneNode(!0), {opacity:1});
+    var a = this._mode == Entry.Workspace.MODE_VIMBOARD;
+    this.svgGroup = Entry.SVG.createElement(b.svgGroup.cloneNode(!0), {opacity:1});
     this.svg.appendChild(this.svgGroup);
     this.show();
-    c && (a = $(this.svgGroup), a.find("g").css({filter:"none"}), a.find("path").velocity({opacity:0}, {duration:500}), a.find("text").velocity({fill:"#000000"}, {duration:530}));
+    a && (b = $(this.svgGroup), b.find("g").css({filter:"none"}), b.find("path").velocity({opacity:0}, {duration:500}), b.find("text").velocity({fill:"#000000"}, {duration:530}));
   };
   a.remove = function() {
     this.svgGroup && (this.svgGroup.remove(), delete this.svgGroup, delete this._view, delete this._offsetX, delete this._offsetY, delete this._startX, delete this._startY, this.hide());
   };
   a.align = function() {
-    var a = this._view.getSkeleton().box(this._view).offsetX || 0, c = this._view.getSkeleton().box(this._view).offsetY || 0, a = -1 * a + 1, c = -1 * c + 1;
-    this._offsetX = a;
-    this._offsetY = c;
-    this.svgGroup.attr({transform:"translate(" + a + "," + c + ")"});
+    var b = this._view.getSkeleton().box(this._view).offsetX || 0, a = this._view.getSkeleton().box(this._view).offsetY || 0, b = -1 * b + 1, a = -1 * a + 1;
+    this._offsetX = b;
+    this._offsetY = a;
+    this.svgGroup.attr({transform:"translate(" + b + "," + a + ")"});
   };
   a.show = function() {
     this.svgDom.css("display", "block");
@@ -15583,7 +15620,6 @@ Entry.Block.MAGNET_OFFSET = .4;
   };
   a.doInsert = function(a, c) {
     var d = this.id, e = a.id, f = this.x, g = this.y;
-    console.log("insert", d, e, f, g);
     c ? this.replace(a) : this.insert(a);
     Entry.activityReporter && (d = [["targetBlockId", e], ["blockId", d], ["positionX", f], ["positionY", g], ["code", this.getCode().stringify()]], Entry.activityReporter.add(new Entry.Activity("insertBlock", d)));
   };

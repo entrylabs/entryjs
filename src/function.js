@@ -175,7 +175,6 @@ Entry.Func.updateMenu = function() {
     }
     blockMenu.banClass("functionInit");
     blockMenu.unbanClass("functionEdit");
-    console.log(blockMenu.categoryCodes);
     return;
     if (Entry.playground.selectedMenu == 'func') {
         Entry.playground.blockMenu.hide();

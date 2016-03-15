@@ -272,13 +272,6 @@ Entry.Block.MAGNET_OFFSET = 0.4;
         var targetId = targetBlock.id;
         var positionX = this.x;
         var positionY = this.y;
-        console.log(
-            "insert",
-            id,
-            targetId,
-            positionX,
-            positionY
-        );
         if (isFieldBlock)
             this.replace(targetBlock);
         else
