@@ -13722,7 +13722,7 @@ Entry.BlockView.PARAM_SPACE = 5;
           case h.RETURN:
             e = this.block;
             d = this.originPos;
-            f ? (this.set({animating:!1}), createjs.Sound.play("entryMagneting"), e.view.bindPrev(f)) : this._moveTo(d.x, d.y, !1);
+            f ? (this.set({animating:!1}), createjs.Sound.play("entryMagneting"), this.bindPrev(f), e.insert(f)) : (f = e.getThread().view.getParent(), f instanceof Entry.FieldStatement ? (this.bindPrev(f), f.insertTopBlock(e)) : f instanceof Entry.FieldBlock ? e.replace(f._valueBlock) : this._moveTo(d.x, d.y, !1));
             break;
           case h.REMOVE:
             createjs.Sound.play("entryDelete"), g ? (f && e.separate(), this.block.destroy(!1, !0)) : (f && e.doSeparate(), this.block.doDestroyBelow(!1));
@@ -14316,7 +14316,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
     this._nextGroup = this.svgGroup;
     this.box.set({x:0, y:0, width:0, height:20});
     var d = this.getValue();
-    d && !d.view && (d.setThread(this), d.createView(b, a));
+    d && !d.view && (d.setThread(this), d.createView(b, a), d.getThread().view.setParent(this));
     this.updateValueBlock(d);
     this._blockView.getBoard().constructor == Entry.BlockMenu && this._valueBlock.view.removeControl();
   };
@@ -14364,8 +14364,12 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
         return this._inspectBlock();
       }
       b.setThread(this);
+      b.getThread().view.setParent(this);
       return this._valueBlock;
     }
+  };
+  a._getValueBlock = function() {
+    return this._valueBlock;
   };
   a.updateValueBlock = function(b) {
     b instanceof Entry.Block || (b = void 0);
@@ -14415,6 +14419,12 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
     this.updateValueBlock(b);
     b.view._toLocalCoordinate(this.svgGroup);
     this.calcWH();
+  };
+  a.setParent = function(b) {
+    this._parent = b;
+  };
+  a.getParent = function() {
+    return this._parent;
   };
 })(Entry.FieldBlock.prototype);
 Entry.FieldColor = function(a, b, c) {
@@ -15732,6 +15742,9 @@ Entry.ThreadView = function(a, b) {
   };
   a.setParent = function(a) {
     this._parent = a;
+  };
+  a.getParent = function() {
+    return this._parent;
   };
   a.renderText = function() {
     for (var a = this.thread.getBlocks(), c = 0;c < a.length;c++) {

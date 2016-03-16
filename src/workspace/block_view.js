@@ -534,15 +534,23 @@ Entry.BlockView.PARAM_SPACE = 5;
                         }
                         break;
                     case gs.RETURN:
-                        //TODO retrn block to origin position
                         var block = this.block;
-
                         var originPos = this.originPos;
                         if (prevBlock) {
                             this.set({animating: false});
                             createjs.Sound.play('entryMagneting');
-                            block.view.bindPrev(prevBlock);
-                        } else this._moveTo(originPos.x, originPos.y, false);
+                            this.bindPrev(prevBlock);
+                            block.insert(prevBlock);
+                        } else {
+                            var parent = block.getThread().view.getParent();
+
+                            if (parent instanceof Entry.FieldStatement) {
+                                this.bindPrev(parent);
+                                parent.insertTopBlock(block);
+                            } else if (parent instanceof Entry.FieldBlock)
+                                block.replace(parent._valueBlock);
+                            else this._moveTo(originPos.x, originPos.y, false);
+                        }
                         break;
                     case gs.REMOVE:
                         createjs.Sound.play('entryDelete');
