@@ -563,7 +563,7 @@ Entry.block.jr_repeat_until_dest = {
     ],
     func: function() {
         var statement = this.block.statements[0];
-        if (statement.getBlocks().length === 1)
+        if (statement.getBlocks().length === 0)
             return;
 
         this.executor.stepInto(statement);
@@ -626,7 +626,7 @@ Entry.block.jr_if_construction = {
 
         var statement = this.block.statements[0];
         if (fitEntities.length === 0) return;
-        else if (statement.getBlocks().length === 1) return;
+        else if (statement.getBlocks().length === 0) return;
         else {
             this.executor.stepInto(statement);
             return Entry.STATIC.CONTINUE;
@@ -690,7 +690,7 @@ Entry.block.jr_if_speed = {
 
         var statement = this.block.statements[0];
         if (fitEntities.length === 0) return;
-        else if(statement.getBlocks().length === 1) return;
+        else if(statement.getBlocks().length === 0) return;
         else {
             this.executor.stepInto(statement);
             return Entry.STATIC.CONTINUE;
@@ -875,7 +875,7 @@ Entry.block.maze_repeat_until_1 = {
     ],
     func: function() {
         var statement = this.block.statements[0];
-        if (statement.getBlocks().length === 1)
+        if (statement.getBlocks().length === 0)
             return;
 
         this.executor.stepInto(statement);
@@ -908,7 +908,7 @@ Entry.block.maze_repeat_until_2 = {
     ],
     func: function() {
         var statement = this.block.statements[0];
-        if (statement.getBlocks().length === 1)
+        if (statement.getBlocks().length === 0)
             return;
 
         this.executor.stepInto(statement);
@@ -988,7 +988,7 @@ Entry.block.maze_step_if_1 = {
 
         if (fitEntities.length === 0) {
             return;
-        } else if (statement.getBlocks().length === 1)
+        } else if (statement.getBlocks().length === 0)
             return;
         else {
             this.executor.stepInto(statement);
@@ -1055,7 +1055,7 @@ Entry.block.maze_step_if_2 = {
         var statement = this.block.statements[0];
         if (fitEntities.length === 0) {
             return;
-        } else if (statement.getBlocks().length === 1)
+        } else if (statement.getBlocks().length === 0)
             return;
         else {
             this.executor.stepInto(statement);
@@ -1184,7 +1184,7 @@ Entry.block.maze_step_if_3 = {
         var statement = this.block.statements[0];
         if (fitEntities.length === 0) {
             return;
-        } else if (statement.getBlocks().length === 1)
+        } else if (statement.getBlocks().length === 0)
             return;
         else {
             this.executor.stepInto(statement);
@@ -1251,7 +1251,7 @@ Entry.block.maze_step_if_4 = {
         var statement = this.block.statements[0];
         if (fitEntities.length === 0) {
             return;
-        } else if (statement.getBlocks().length === 1)
+        } else if (statement.getBlocks().length === 0)
             return;
         else {
             this.executor.stepInto(statement);

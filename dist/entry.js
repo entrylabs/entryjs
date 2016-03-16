@@ -12927,7 +12927,7 @@ Entry.block.jr_go_slow = {skeleton:"basic", color:"#f46c6c", template:"\ucc9c\uc
 }};
 Entry.block.jr_repeat_until_dest = {skeleton:"basic_loop", color:"#498DEB", template:"%1 \ub9cc\ub0a0 \ub54c \uae4c\uc9c0 \ubc18\ubcf5\ud558\uae30 %2", syntax:["BasicWhile", "true"], params:[{type:"Image", img:"/img/assets/ntry/bitmap/jr/jr_goal_image.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic"}], func:function() {
   var a = this.block.statements[0];
-  if (1 !== a.getBlocks().length) {
+  if (0 !== a.getBlocks().length) {
     return this.executor.stepInto(a), Entry.STATIC.CONTINUE;
   }
 }};
@@ -12944,7 +12944,7 @@ Entry.block.jr_if_construction = {skeleton:"basic_loop", color:"#498DEB", templa
     b = Ntry.entityManager.find({type:Ntry.STATIC.GRID, x:b.x, y:b.y}, {type:Ntry.STATIC.TILE, tileType:Ntry.STATIC.OBSTACLE_REPAIR});
     this.isContinue = !0;
     a = this.block.statements[0];
-    if (0 !== b.length && 1 !== a.getBlocks().length) {
+    if (0 !== b.length && 0 !== a.getBlocks().length) {
       return this.executor.stepInto(a), Entry.STATIC.CONTINUE;
     }
   }
@@ -12962,7 +12962,7 @@ Entry.block.jr_if_speed = {skeleton:"basic_loop", color:"#498DEB", template:"\ub
     b = Ntry.entityManager.find({type:Ntry.STATIC.GRID, x:b.x, y:b.y}, {type:Ntry.STATIC.TILE, tileType:Ntry.STATIC.OBSTACLE_SLOW});
     this.isContinue = !0;
     a = this.block.statements[0];
-    if (0 !== b.length && 1 !== a.getBlocks().length) {
+    if (0 !== b.length && 0 !== a.getBlocks().length) {
       return this.executor.stepInto(a), Entry.STATIC.CONTINUE;
     }
   }
@@ -13003,13 +13003,13 @@ Entry.block.test = {skeleton:"basic_boolean_field", mode:"maze", color:"#127CDB"
 }};
 Entry.block.maze_repeat_until_1 = {skeleton:"basic_loop", mode:"maze", color:"#498DEB", template:"%1 \ub9cc\ub0a0 \ub54c \uae4c\uc9c0 \ubc18\ubcf5%2", syntax:["BasicWhile", "true"], params:[{type:"Image", img:"/img/assets/ntry/block_inner/repeat_goal_1.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic"}], func:function() {
   var a = this.block.statements[0];
-  if (1 !== a.getBlocks().length) {
+  if (0 !== a.getBlocks().length) {
     return this.executor.stepInto(a), Entry.STATIC.CONTINUE;
   }
 }};
 Entry.block.maze_repeat_until_2 = {skeleton:"basic_loop", mode:"maze", color:"#498DEB", template:"\ubaa8\ub4e0 %1 \ub9cc\ub0a0 \ub54c \uae4c\uc9c0 \ubc18\ubcf5%2", syntax:["BasicWhile", "true"], params:[{type:"Image", img:"/img/assets/ntry/block_inner/repeat_goal_1.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic"}], func:function() {
   var a = this.block.statements[0];
-  if (1 !== a.getBlocks().length) {
+  if (0 !== a.getBlocks().length) {
     return this.executor.stepInto(a), Entry.STATIC.CONTINUE;
   }
 }};
@@ -13030,7 +13030,7 @@ Entry.block.maze_step_if_1 = {skeleton:"basic_loop", mode:"maze", color:"#498DEB
     }
     b = Ntry.entityManager.find({type:Ntry.STATIC.GRID, x:b.x, y:b.y}, {type:Ntry.STATIC.TILE, tileType:Ntry.STATIC.WALL});
     this.isContinue = !0;
-    if (0 !== b.length && 1 !== a.getBlocks().length) {
+    if (0 !== b.length && 0 !== a.getBlocks().length) {
       return this.executor.stepInto(a), Entry.STATIC.CONTINUE;
     }
   }
@@ -13048,7 +13048,7 @@ Entry.block.maze_step_if_2 = {skeleton:"basic_loop", mode:"maze", color:"#498DEB
     b = Ntry.entityManager.find({type:Ntry.STATIC.GRID, x:b.x, y:b.y}, {type:Ntry.STATIC.TILE, tileType:Ntry.STATIC.OBSTACLE_BEE});
     this.isContinue = !0;
     a = this.block.statements[0];
-    if (0 !== b.length && 1 !== a.getBlocks().length) {
+    if (0 !== b.length && 0 !== a.getBlocks().length) {
       return this.executor.stepInto(a), Entry.STATIC.CONTINUE;
     }
   }
@@ -13083,7 +13083,7 @@ Entry.block.maze_step_if_3 = {skeleton:"basic_loop", mode:"maze", color:"#498DEB
     b = Ntry.entityManager.find({type:Ntry.STATIC.GRID, x:b.x, y:b.y}, {type:Ntry.STATIC.TILE, tileType:Ntry.STATIC.OBSTACLE_BANANA});
     this.isContinue = !0;
     a = this.block.statements[0];
-    if (0 !== b.length && 1 !== a.getBlocks().length) {
+    if (0 !== b.length && 0 !== a.getBlocks().length) {
       return this.executor.stepInto(a), Entry.STATIC.CONTINUE;
     }
   }
@@ -13101,7 +13101,7 @@ Entry.block.maze_step_if_4 = {skeleton:"basic_loop", mode:"maze", color:"#498DEB
     b = Ntry.entityManager.find({type:Ntry.STATIC.GRID, x:b.x, y:b.y}, {type:Ntry.STATIC.TILE, tileType:Ntry.STATIC.WALL});
     this.isContinue = !0;
     a = this.block.statements[0];
-    if (0 !== b.length && 1 !== a.getBlocks().length) {
+    if (0 !== b.length && 0 !== a.getBlocks().length) {
       return this.executor.stepInto(a), Entry.STATIC.CONTINUE;
     }
   }
