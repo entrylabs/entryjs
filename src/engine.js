@@ -724,17 +724,18 @@ Entry.Engine.prototype.showProjectTimer = function() {
 };
 
 //decide Entry.engine.projectTimer to show
-Entry.Engine.prototype.hideProjectTimer = function(removeBlock) {
+Entry.Engine.prototype.hideProjectTimer = function() {
     var timer = this.projectTimer;
     if (!timer || !timer.isVisible() || this.isState('run'))
         return;
     var objects = Entry.container.getAllObjects();
+
     var timerTypes = ['get_project_timer_value',
                        'reset_project_timer',
                         'set_visible_project_timer'];
 
     for (var i=0, len=objects.length; i<len; i++) {
-        var blocks = objects[i].script.getElementsByTagName('block');
+        var threads = objects[i].script;
         for (var j = 0, bLen=blocks.length; j < bLen; j++) {
             if (timerTypes.indexOf(blocks[j].getAttribute('type')) > -1) {
                 if (blocks[j].getAttribute('id') == removeBlock.getAttribute('id'))

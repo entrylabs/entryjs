@@ -163,7 +163,6 @@ Entry.Block.MAGNET_OFFSET = 0.4;
     };
 
     p.destroy = function(animate, next) {
-        if (this.view) this.view.destroy(animate);
 
         var params = this.params;
         if (params) {
@@ -188,14 +187,18 @@ Entry.Block.MAGNET_OFFSET = 0.4;
         var nextBlock = this.getNextBlock();
 
         var thread = this.getThread();
-        if (thread.spliceBlock) thread.spliceBlock(this);
         if (this._schema.event)
             thread.unregisterEvent(this, this._schema.event);
 
         if (nextBlock) {
             if (next) nextBlock.destroy(animate, next);
-            else nextBlock.view.bindPrev();
+            else {
+                if (!prevBlock) nextBlock.view._toGlobalCoordinate();
+                else nextBlock.view.bindPrev(prevBlock);
+            }
         }
+        if (thread.spliceBlock) thread.spliceBlock(this);
+        if (this.view) this.view.destroy(animate);
     };
 
     p.getView = function() {return this.view;};

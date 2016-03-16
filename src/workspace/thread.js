@@ -186,4 +186,37 @@ Entry.Thread = function(thread, code) {
     p.getRootBlock = function() {
         return this._data.at(0);
     };
+
+    p.hasBlockType = function(type) {
+        var ret = false;
+        for (var i = 0; i < this._data.length; i++) {
+            var block = this._data[i];
+            if (inspectBlock(block)) ret = true;
+            if (ret) break;
+        }
+        return ret;
+
+        function inspectBlock(block) {
+            var ret = false;
+            if (type == block.type) ret = true;
+            console.log(block.type);
+
+            var params = block.params;
+            for (var k = 0; k < params.length; k++) {
+                var param = params[k];
+                if (param && param.constructor == Entry.Block) {
+                    var temp = inspectBlock(param);
+                    if (temp) ret = true;
+                }
+            }
+
+            var statements = block.statements;
+            if (statements) {
+                for (var j = 0; j < statements.length; j++)
+                    if (statements[j].hasBlockType(type))
+                        ret = true;
+            }
+            return ret;
+        }
+    };
 })(Entry.Thread.prototype);

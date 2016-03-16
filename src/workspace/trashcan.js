@@ -4,7 +4,8 @@ goog.provide("Entry.FieldTrashcan");
 
 Entry.FieldTrashcan = function(board) {
     this.board = board;
-    this.svgGroup = board.svg.elem("g", {filter: 'url(#entryTrashcanFilter)'});
+    //this.svgGroup = board.svg.elem("g", {filter: 'url(#entryTrashcanFilter)'});
+    this.svgGroup = board.svg.elem("g");
 
     this.renderStart();
     this.dragBlock = null;
