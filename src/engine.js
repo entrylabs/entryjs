@@ -726,24 +726,20 @@ Entry.Engine.prototype.showProjectTimer = function() {
 //decide Entry.engine.projectTimer to show
 Entry.Engine.prototype.hideProjectTimer = function() {
     var timer = this.projectTimer;
-    if (!timer || !timer.isVisible() || this.isState('run'))
-        return;
+    if (!timer || !timer.isVisible() || this.isState('run')) return;
     var objects = Entry.container.getAllObjects();
 
-    var timerTypes = ['get_project_timer_value',
-                       'reset_project_timer',
-                        'set_visible_project_timer'];
+    var timerTypes = [
+            'get_project_timer_value',
+            'reset_project_timer',
+            'set_visible_project_timer',
+            'choose_project_timer_action'
+    ];
 
-    for (var i=0, len=objects.length; i<len; i++) {
-        var threads = objects[i].script;
-        for (var j = 0, bLen=blocks.length; j < bLen; j++) {
-            if (timerTypes.indexOf(blocks[j].getAttribute('type')) > -1) {
-                if (blocks[j].getAttribute('id') == removeBlock.getAttribute('id'))
-                    continue;
-                else
-                    return;
-            }
-        }
+    for (var i = 0, len = objects.length; i < len; i++) {
+        var code = objects[i].script;
+        for (var j = 0; j < timerTypes.length; j++)
+            if(code.hasBlockType(timerTypes[j])) return;
     }
     timer.setVisible(false);
 };

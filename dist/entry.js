@@ -5395,16 +5395,15 @@ Entry.Container.prototype.showProjectAnswer = function() {
   a && a.setVisible(!0);
 };
 Entry.Container.prototype.hideProjectAnswer = function(a) {
-  var b = this.inputValue;
-  if (b && b.isVisible() && !Entry.engine.isState("run")) {
-    for (var c = Entry.container.getAllObjects(), d = ["ask_and_wait", "get_canvas_input_value", "set_visible_answer"], e = 0, f = c.length;e < f;e++) {
-      for (var g = c[e].script.getElementsByTagName("block"), h = 0, k = g.length;h < k;h++) {
-        if (-1 < d.indexOf(g[h].getAttribute("type")) && g[h].getAttribute("id") != a.getAttribute("id")) {
+  if ((a = this.inputValue) && a.isVisible() && !Entry.engine.isState("run")) {
+    for (var b = Entry.container.getAllObjects(), c = ["ask_and_wait", "get_canvas_input_value", "set_visible_answer"], d = 0, e = b.length;d < e;d++) {
+      for (var f = b[d].script, g = 0;g < c.length;g++) {
+        if (f.hasBlockType(c[g])) {
           return;
         }
       }
     }
-    b.setVisible(!1);
+    a.setVisible(!1);
   }
 };
 Entry.Container.prototype.getView = function() {
@@ -5910,9 +5909,9 @@ Entry.Engine.prototype.showProjectTimer = function() {
 Entry.Engine.prototype.hideProjectTimer = function() {
   var a = this.projectTimer;
   if (a && a.isVisible() && !this.isState("run")) {
-    for (var b = ["get_project_timer_value", "reset_project_timer", "set_visible_project_timer"], c = 0, d = Entry.container.getAllObjects().length;c < d;c++) {
-      for (var e = 0, f = blocks.length;e < f;e++) {
-        if (-1 < b.indexOf(blocks[e].getAttribute("type")) && blocks[e].getAttribute("id") != removeBlock.getAttribute("id")) {
+    for (var b = Entry.container.getAllObjects(), c = ["get_project_timer_value", "reset_project_timer", "set_visible_project_timer", "choose_project_timer_action"], d = 0, e = b.length;d < e;d++) {
+      for (var f = b[d].script, g = 0;g < c.length;g++) {
+        if (f.hasBlockType(c[g])) {
           return;
         }
       }
@@ -14010,6 +14009,14 @@ Entry.Code = function(a) {
   a._handleChange = function() {
     Entry.creationChangedEvent && Entry.creationChangedEvent.notify();
   };
+  a.hasBlockType = function(b) {
+    for (var a = this.getThreads(), d = 0;d < a.length;d++) {
+      if (a[d].hasBlockType(b)) {
+        return !0;
+      }
+    }
+    return !1;
+  };
 })(Entry.Code.prototype);
 Entry.CodeView = function(a, b) {
   Entry.Model(this, !1);
@@ -14942,8 +14949,8 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
     });
     this.optionGroup = Entry.Dom("input", {class:"entry-widget-input-field", parent:$("body")});
     this.optionGroup.val(this.getValue());
-    this.optionGroup.on("mousedown", function(b) {
-      b.stopPropagation();
+    this.optionGroup.on("mousedown", function(a) {
+      a.stopPropagation();
     });
     this.optionGroup.on("keyup", function(a) {
       var c = a.keyCode || a.which;
@@ -15488,23 +15495,30 @@ Entry.Thread = function(a, b) {
   };
   a.hasBlockType = function(a) {
     function c(d) {
-      var e = !1;
-      a == d.type && (e = !0);
-      console.log(d.type);
-      for (var h = d.params, k = 0;k < h.length;k++) {
-        var l = h[k];
-        l && l.constructor == Entry.Block && c(l) && (e = !0);
+      if (a == d.type) {
+        return !0;
       }
-      if (d = d.statements) {
-        for (h = 0;h < d.length;h++) {
-          d[h].hasBlockType(a) && (e = !0);
+      for (var f = d.params, g = 0;g < f.length;g++) {
+        var h = f[g];
+        if (h && h.constructor == Entry.Block && c(h)) {
+          return !0;
         }
       }
-      return e;
+      if (d = d.statements) {
+        for (f = 0;f < d.length;f++) {
+          if (d[f].hasBlockType(a)) {
+            return !0;
+          }
+        }
+      }
+      return !1;
     }
-    for (var d = !1, e = 0;e < this._data.length && (c(this._data[e]) && (d = !0), !d);e++) {
+    for (var d = 0;d < this._data.length;d++) {
+      if (c(this._data[d])) {
+        return !0;
+      }
     }
-    return d;
+    return !1;
   };
 })(Entry.Thread.prototype);
 Entry.Block = function(a, b) {

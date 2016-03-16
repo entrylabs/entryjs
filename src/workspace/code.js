@@ -194,4 +194,13 @@ Entry.Code = function(code) {
             Entry.creationChangedEvent.notify();
     };
 
+    p.hasBlockType = function(type) {
+        var threads = this.getThreads();
+
+        for (var i = 0; i < threads.length; i ++)
+            if (threads[i].hasBlockType(type)) return true;
+
+        return false;
+    };
+
 })(Entry.Code.prototype);

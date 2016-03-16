@@ -188,35 +188,28 @@ Entry.Thread = function(thread, code) {
     };
 
     p.hasBlockType = function(type) {
-        var ret = false;
-        for (var i = 0; i < this._data.length; i++) {
-            var block = this._data[i];
-            if (inspectBlock(block)) ret = true;
-            if (ret) break;
-        }
-        return ret;
+        for (var i = 0; i < this._data.length; i++)
+            if (inspectBlock(this._data[i])) return true;
+        return false;
 
         function inspectBlock(block) {
-            var ret = false;
-            if (type == block.type) ret = true;
-            console.log(block.type);
+            if (type == block.type) return true;
 
             var params = block.params;
             for (var k = 0; k < params.length; k++) {
                 var param = params[k];
                 if (param && param.constructor == Entry.Block) {
-                    var temp = inspectBlock(param);
-                    if (temp) ret = true;
+                    if (inspectBlock(param)) return true;
                 }
             }
-
             var statements = block.statements;
             if (statements) {
-                for (var j = 0; j < statements.length; j++)
+                for (var j = 0; j < statements.length; j++) {
                     if (statements[j].hasBlockType(type))
-                        ret = true;
+                        return true;
+                }
             }
-            return ret;
+            return false;
         }
     };
 })(Entry.Thread.prototype);
