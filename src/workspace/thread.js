@@ -159,8 +159,12 @@ Entry.Thread = function(thread, code) {
         var blocks = this._data;
         blocks.remove(block);
 
-        if (blocks.length !== 0) {
-        } else this.destroy();
+        if (blocks.length === 0) {
+            var parent = this.view.getParent();
+            if (parent.constructor === Entry.FieldStatement)
+                parent.removeFirstBlock();
+            else this.destroy();
+        }
 
         this.changeEvent.notify();
     };

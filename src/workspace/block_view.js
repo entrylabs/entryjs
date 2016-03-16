@@ -622,13 +622,8 @@ Entry.BlockView.PARAM_SPACE = 5;
             );
         } else svgGroup.remove();
 
-        this._contents.forEach(function(c) {
-            c.destroy();
-        });
-
-        this._statements.forEach(function(c) {
-            c.destroy();
-        });
+        this._contents.forEach(function(c) {c.destroy();});
+        this._statements.forEach(function(c) {c.destroy();});
 
         var block = this.block;
         var events = block.events.whenBlockDestroy;

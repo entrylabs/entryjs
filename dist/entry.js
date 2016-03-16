@@ -15483,7 +15483,7 @@ Entry.Thread = function(a, b) {
   a.spliceBlock = function(a) {
     var c = this._data;
     c.remove(a);
-    0 === c.length && this.destroy();
+    0 === c.length && (a = this.view.getParent(), a.constructor === Entry.FieldStatement ? a.removeFirstBlock() : this.destroy());
     this.changeEvent.notify();
   };
   a.getFirstBlock = function() {
@@ -15621,12 +15621,12 @@ Entry.Block.MAGNET_OFFSET = .4;
         d[e].destroy(a);
       }
     }
-    e = this.getPrevBlock();
-    d = this.getNextBlock();
-    f = this.getThread();
-    this._schema.event && f.unregisterEvent(this, this._schema.event);
-    d && (c ? d.destroy(a, c) : e ? d.view.bindPrev(e) : d.view._toGlobalCoordinate());
-    f.spliceBlock && f.spliceBlock(this);
+    f = this.getPrevBlock();
+    e = this.getNextBlock();
+    d = this.getThread();
+    this._schema.event && d.unregisterEvent(this, this._schema.event);
+    e && (c ? e.destroy(a, c) : f ? e.view.bindPrev(f) : (f = this.getThread().view.getParent(), f.constructor === Entry.FieldStatement ? (e.view.bindPrev(f), f.insertTopBlock(e)) : f.constructor === Entry.FieldStatement ? e.replace(f._valueBlock) : e.view._toGlobalCoordinate()));
+    d.spliceBlock && d.spliceBlock(this);
     this.view && this.view.destroy(a);
   };
   a.getView = function() {
@@ -15977,7 +15977,7 @@ Entry.Board = function(a) {
   };
   a._keyboardControl = function(a) {
     var c = this.selectedBlockView;
-    c && 46 == a.keyCode && c.block.doDestroy(!0) && this.set({selectedBlockView:null});
+    c && 46 == a.keyCode && c.block.doDestroy(!1) && this.set({selectedBlockView:null});
   };
   a.hide = function() {
     this.wrapper.addClass("entryRemove");

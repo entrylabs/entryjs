@@ -193,8 +193,15 @@ Entry.Block.MAGNET_OFFSET = 0.4;
         if (nextBlock) {
             if (next) nextBlock.destroy(animate, next);
             else {
-                if (!prevBlock) nextBlock.view._toGlobalCoordinate();
-                else nextBlock.view.bindPrev(prevBlock);
+                if (!prevBlock) {
+                    var parent = this.getThread().view.getParent();
+                    if (parent.constructor === Entry.FieldStatement) {
+                        nextBlock.view.bindPrev(parent);
+                        parent.insertTopBlock(nextBlock);
+                    } else if (parent.constructor === Entry.FieldStatement) {
+                        nextBlock.replace(parent._valueBlock);
+                    } else nextBlock.view._toGlobalCoordinate();
+                } else nextBlock.view.bindPrev(prevBlock);
             }
         }
         if (thread.spliceBlock) thread.spliceBlock(this);
