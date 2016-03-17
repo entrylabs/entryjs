@@ -14543,16 +14543,17 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
       var k = a[g], l = k[0], k = k[1], n = this.optionGroup.elem("g", {class:"rect", transform:"translate(0," + g * f + ")"});
       d.push(n.elem("rect", {height:f}));
       this.getValue() == k && (n.elem("text", {x:5, y:13, "alignment-baseline":"central"}).textContent = "\u2713");
-      var m = n.elem("text", {x:20, "alignment-baseline":"baseline"});
+      var m = n.elem("text", {x:20, "alignment-baseline":"central"});
       m.textContent = l;
       l = m.getBoundingClientRect();
-      m.attr({y:(f + l.height - 8) / 2});
+      m.attr({y:f / 2});
       e = Math.max(l.width + 30, e);
       (function(a, c) {
-        a.onmousedown = function(b) {
+        var d = $(a);
+        d.bind("mousedown touchend", function(b) {
           b.stopPropagation();
-        };
-        $(a).bind("mouseup touchend", function(a) {
+        });
+        d.bind("mouseup touchend", function(a) {
           a.stopPropagation();
           b.applyValue(c);
           b.destroyOption();

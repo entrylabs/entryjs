@@ -160,14 +160,12 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
 
             var textElement = element.elem("text", {
                 x: 20,
-                "alignment-baseline": "baseline"
+                "alignment-baseline": "central"
             });
             textElement.textContent = text;
             var bBox = textElement.getBoundingClientRect();
-            //i.e compatibility problem.
-            //adjust 8 point needed
             textElement.attr({
-                y: (CONTENT_HEIGHT + bBox.height -8)/2
+                y: (CONTENT_HEIGHT)/2
             });
 
             maxWidth = Math.max(
@@ -177,9 +175,12 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
 
             (function(elem, value) {
                 //prevent propagation to document
-                elem.onmousedown = function(e){e.stopPropagation();};
+                var $elem = $(elem);
+                $elem.bind('mousedown touchend', function(e) {
+                    e.stopPropagation();
+                });
 
-                $(elem).bind('mouseup touchend', function(e){
+                $elem.bind('mouseup touchend', function(e){
                     e.stopPropagation();
                     that.applyValue(value);
                     that.destroyOption();
