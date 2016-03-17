@@ -14510,7 +14510,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
     var a = this;
     this.svgGroup = b.contentSvgGroup.elem("g", {class:"entry-field-dropdown"});
     this.textElement = this.svgGroup.elem("text", {x:2});
-    this.textElement.innerHTML = this.getTextByValue(this.getValue());
+    this.textElement.textContent = this.getTextByValue(this.getValue());
     var d = this.textElement.getBBox();
     this.textElement.attr({style:"white-space: pre; font-size:" + a._FONT_SIZE + "px", y:.25 * d.height});
     var d = this.textElement.getComputedTextLength() + 18, e = this._CONTENT_HEIGHT;
@@ -14542,10 +14542,12 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
     for (var g = 0, h = a.length;g < h;g++) {
       var k = a[g], l = k[0], k = k[1], n = this.optionGroup.elem("g", {class:"rect", transform:"translate(0," + g * f + ")"});
       d.push(n.elem("rect", {height:f}));
-      this.getValue() == k && (n.elem("text", {x:5, y:13, "alignment-baseline":"central"}).innerHTML = "\u2713");
-      var m = n.elem("text", {x:20, y:10, "alignment-baseline":"central"});
-      m.innerHTML = l;
-      e = Math.max(m.getComputedTextLength() + 30, e);
+      this.getValue() == k && (n.elem("text", {x:5, y:13, "alignment-baseline":"central"}).textContent = "\u2713");
+      var m = n.elem("text", {x:20, "alignment-baseline":"baseline"});
+      m.textContent = l;
+      l = m.getBoundingClientRect();
+      m.attr({y:(f + l.height - 8) / 2});
+      e = Math.max(l.width + 30, e);
       (function(a, c) {
         a.onmousedown = function(b) {
           b.stopPropagation();

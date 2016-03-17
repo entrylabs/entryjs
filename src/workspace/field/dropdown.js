@@ -49,7 +49,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
             this.svgGroup.elem("text", {
                 x: 2
             });
-        this.textElement.innerHTML = this.getTextByValue(this.getValue());
+        this.textElement.textContent = this.getTextByValue(this.getValue());
 
         var bBox = this.textElement.getBBox();
         this.textElement.attr({
@@ -155,18 +155,23 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
                     x: 5,
                     y: 13,
                     "alignment-baseline": "central"
-                }).innerHTML = '\u2713';
+                }).textContent = '\u2713';
             }
 
             var textElement = element.elem("text", {
                 x: 20,
-                y: 10,
-                "alignment-baseline": "central"
+                "alignment-baseline": "baseline"
             });
-            textElement.innerHTML = text;
+            textElement.textContent = text;
+            var bBox = textElement.getBoundingClientRect();
+            //i.e compatibility problem.
+            //adjust 8 point needed
+            textElement.attr({
+                y: (CONTENT_HEIGHT + bBox.height -8)/2
+            });
 
             maxWidth = Math.max(
-                textElement.getComputedTextLength() + OPTION_X_PADDING,
+                bBox.width + OPTION_X_PADDING,
                 maxWidth
             );
 
