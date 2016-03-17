@@ -368,14 +368,9 @@ Entry.skeleton.basic_param = {
     outerLine: true,
     box: function(blockView) {
         var width = blockView ? blockView.contentWidth : 5;
-        if (blockView)
-            blockView._contents.map(function (c) {
-                if (c.outputWidth)
-                    width += c.outputWidth - 4;
-            });
         return {
             offsetX: 0, offsetY: 0,
-            width: width + 13,
+            width: width + 11,
             height: 24,
             marginBottom: 0
         };

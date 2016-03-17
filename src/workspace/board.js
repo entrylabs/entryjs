@@ -429,7 +429,6 @@ Entry.Board = function(option) {
             blocks = blocks.concat(func.call(this, thread, zIndex, null, targetType));
             zIndex++;
         }
-        console.log(blocks);
         return blocks;
     };
 
@@ -580,7 +579,6 @@ Entry.Board = function(option) {
 
     p._getOutputMagnets = function(thread, zIndex, offset, targetType) {
         var blocks = thread.getBlocks();
-        console.log(blocks);
         var statementBlocks = [];
         var metaData = [];
         var that = this;
@@ -629,26 +627,23 @@ Entry.Board = function(option) {
         for (var i = 0; i < contents.length; i++) {
             var content = contents[i];
             var startX = cursorX + content.box.x;
-            var startY = cursorY + content.box.y - 10;
-            var endY = cursorY + content.box.y + 10;
+            var startY = cursorY + content.box.y - 24;
+            var endY = cursorY + content.box.y;
             if (content instanceof Entry.FieldBlock) {
                 var contentBlock = content._valueBlock;
-                console.log(contentBlock);
                 if (contentBlock) {
                     metaData = metaData.concat(
                         this._getOutputMetaData(contentBlock.view,
-                                                  startX + contentBlock.view.contentPos.x,
-                                                  startY + contentBlock.view.contentPos.y,
+                                                  startX,
+                                                  cursorY + content.box.y,
                                                   zIndex + 0.01,
                                                   targetType)
                     );
-                console.log(metaData);
                 }
                 continue;
             }
             if (!(content instanceof Entry.FieldOutput))
                 continue;
-            console.log(content.acceptType, targetType)
             if (content.acceptType !== targetType)
                 continue;
             metaData.push({
@@ -672,8 +667,8 @@ Entry.Board = function(option) {
             var contentBlockView = contentBlock.view;
             metaData = metaData.concat(
                 this._getOutputMetaData(contentBlockView,
-                                          startX + contentBlockView.contentPos.x,
-                                          startY + contentBlockView.contentPos.y,
+                                          cursorX + content.box.x,
+                                          cursorY + content.box.y,
                                           zIndex + 0.01,
                                           targetType)
             );
@@ -704,14 +699,12 @@ Entry.Board = function(option) {
                 var blocks = pointData.blocks;
                 for (var i = 0; i < blocks.length; i++) {
                     var blockView = blocks[i].view;
-                    console.log(blockView);
                     if (blockView.absX < x && x < blockView.absX + blockView.width) {
                         var resultBlock = pointData.blocks[i];
                         if (!result || result.view.zIndex < resultBlock.view.zIndex)
                             result = pointData.blocks[i];
                     }
                 }
-                console.log(result);
                 return result;
             }
         }

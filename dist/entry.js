@@ -14728,7 +14728,8 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldOutput);
   };
   a.calcWH = function() {
     var b = this._valueBlock;
-    b ? (b = b.view, this.box.set({width:b.width, height:b.height})) : this.box.set({width:15, height:20});
+    b ? (b = b.view, this.box.set({width:b.width, height:b.height})) : this.box.set({width:0, height:20});
+    console.log(this.width);
   };
   a.calcHeight = a.calcWH;
   a.destroy = function() {
@@ -14744,9 +14745,10 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldOutput);
     b instanceof Entry.Block || (b = void 0);
     this._sizeObserver && this._sizeObserver.destroy();
     this._posObserver && this._posObserver.destroy();
-    if (b = this._setValueBlock(b)) {
-      b = b.view, b.bindPrev(), this._posObserver = b.observe(this, "_updateValueBlock", ["x", "y"], !1), this._sizeObserver = b.observe(this, "calcWH", ["width", "height"]);
-    }
+    console.log(b);
+    b = this._setValueBlock(b);
+    console.log(b);
+    b ? (b = b.view, b.bindPrev(), this._posObserver = b.observe(this, "_updateValueBlock", ["x", "y"], !1), this._sizeObserver = b.observe(this, "calcWH", ["width", "height"])) : this.calcWH();
     this._blockView.alignContent();
     b = this._blockView.getBoard();
     b.constructor === Entry.Board && b.generateCodeMagnetMap();
@@ -14773,6 +14775,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldOutput);
   };
   a.separate = function(b) {
     this.getCode().createThread([b]);
+    console.log(b);
     this.changeEvent.notify();
   };
   a.getCode = function() {
@@ -15347,11 +15350,7 @@ Entry.skeleton.basic_param = {path:function(a) {
   b = Math.max(0, b);
   return "m 4,0 h 10 h %w l 2,2 0,3 3,0 1,1 0,12 -1,1 -3,0 0,3 -2,2h -%w h -10 l -2,-2 0,-3 3,0 1,-1 0,-12 -1,-1 -3,0 0,-3 2,-2".replace(/%w/gi, b);
 }, outerLine:!0, box:function(a) {
-  var b = a ? a.contentWidth : 5;
-  a && a._contents.map(function(a) {
-    a.outputWidth && (b += a.outputWidth - 4);
-  });
-  return {offsetX:0, offsetY:0, width:b + 13, height:24, marginBottom:0};
+  return {offsetX:0, offsetY:0, width:(a ? a.contentWidth : 5) + 11, height:24, marginBottom:0};
 }, magnets:function() {
   return {param:{}};
 }, contentPos:function(a) {
@@ -15397,13 +15396,13 @@ Entry.Thread = function(a, b) {
     this._event = a;
     this._code.registerEvent(b, a);
   };
-  a.unregisterEvent = function(a, c) {
-    this._code.unregisterEvent(a, c);
+  a.unregisterEvent = function(b, a) {
+    this._code.unregisterEvent(b, a);
   };
-  a.createView = function(a, c) {
-    this.view || (this.view = new Entry.ThreadView(this, a));
+  a.createView = function(b, a) {
+    this.view || (this.view = new Entry.ThreadView(this, b));
     this._data.map(function(d) {
-      d.createView(a, c);
+      d.createView(b, a);
     });
   };
   a.separate = function(a) {
@@ -16031,7 +16030,6 @@ Entry.Board = function(a) {
     for (var h = 0;h < d.length;h++) {
       e = e.concat(g.call(this, d[h], f, null, c)), f++;
     }
-    console.log(e);
     return e;
   };
   a._getNextMagnets = function(a, c, d, e) {
@@ -16112,9 +16110,7 @@ Entry.Board = function(a) {
     return h;
   };
   a._getOutputMagnets = function(a, c, d, e) {
-    var f = a.getBlocks();
-    console.log(f);
-    var g = [], h = [];
+    var f = a.getBlocks(), g = [], h = [];
     d || (d = {x:0, y:0});
     var k = d.x;
     d = d.y;
@@ -16141,9 +16137,8 @@ Entry.Board = function(a) {
     c += a.contentPos.x;
     d += a.contentPos.y;
     for (a = 0;a < g.length;a++) {
-      var k = g[a], l = c + k.box.x, n = d + k.box.y - 10, m = d + k.box.y + 10;
-      k instanceof Entry.FieldBlock ? (k = k._valueBlock, console.log(k), k && (h = h.concat(this._getOutputMetaData(k.view, l + k.view.contentPos.x, n + k.view.contentPos.y, e + .01, f)), console.log(h))) : k instanceof Entry.FieldOutput && (console.log(k.acceptType, f), k.acceptType === f && (h.push({point:n, endPoint:m, startBlock:k, blocks:[]}), h.push({point:m, blocks:[]}), k.absX = l, k.zIndex = e, k.width = 20, (k = k._valueBlock) && !k.view.dragInstance && (k = k.view, h = h.concat(this._getOutputMetaData(k, 
-      l + k.contentPos.x, n + k.contentPos.y, e + .01, f)))));
+      var k = g[a], l = c + k.box.x, n = d + k.box.y - 24, m = d + k.box.y;
+      k instanceof Entry.FieldBlock ? (n = k._valueBlock) && (h = h.concat(this._getOutputMetaData(n.view, l, d + k.box.y, e + .01, f))) : k instanceof Entry.FieldOutput && k.acceptType === f && (h.push({point:n, endPoint:m, startBlock:k, blocks:[]}), h.push({point:m, blocks:[]}), k.absX = l, k.zIndex = e, k.width = 20, (n = k._valueBlock) && (n.view.dragInstance || (h = h.concat(this._getOutputMetaData(n.view, c + k.box.x, d + k.box.y, e + .01, f)))));
     }
     return h;
   };
@@ -16159,11 +16154,10 @@ Entry.Board = function(a) {
           } else {
             e = c.blocks;
             for (f = 0;f < e.length;f++) {
-              if (g = e[f].view, console.log(g), g.absX < a && a < g.absX + g.width && (g = c.blocks[f], !h || h.view.zIndex < g.view.zIndex)) {
+              if (g = e[f].view, g.absX < a && a < g.absX + g.width && (g = c.blocks[f], !h || h.view.zIndex < g.view.zIndex)) {
                 h = c.blocks[f];
               }
             }
-            console.log(h);
             return h;
           }
         }

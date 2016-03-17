@@ -110,7 +110,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldOutput);
             });
         } else {
             this.box.set({
-                width: 15,
+                width: 0,
                 height: 20
             });
         }
@@ -141,13 +141,16 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldOutput);
         if (this._sizeObserver) this._sizeObserver.destroy();
         if (this._posObserver) this._posObserver.destroy();
 
-        var block = this._setValueBlock(block);
+        console.log(block);
+        block = this._setValueBlock(block);
+        console.log(block);
         if (block) {
             var view = block.view;
             view.bindPrev();
             this._posObserver = view.observe(this, "_updateValueBlock", ["x", "y"], false);
             this._sizeObserver = view.observe(this, "calcWH", ["width", "height"]);
-
+        } else {
+            this.calcWH();
         }
         this._blockView.alignContent();
         var board = this._blockView.getBoard();// performance issue
@@ -183,6 +186,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldOutput);
 
     p.separate = function(block) {
         this.getCode().createThread([block]);
+        console.log(block);
         this.changeEvent.notify();
     };
 
