@@ -14550,7 +14550,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
       e = Math.max(l.width + 30, e);
       (function(a, c) {
         var d = $(a);
-        d.bind("mousedown touchend", function(b) {
+        d.bind("mousedown touchstart", function(b) {
           b.stopPropagation();
         });
         d.bind("mouseup touchend", function(a) {

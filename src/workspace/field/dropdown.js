@@ -176,7 +176,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
             (function(elem, value) {
                 //prevent propagation to document
                 var $elem = $(elem);
-                $elem.bind('mousedown touchend', function(e) {
+                $elem.bind('mousedown touchstart', function(e) {
                     e.stopPropagation();
                 });
 
