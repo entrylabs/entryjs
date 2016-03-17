@@ -14517,9 +14517,9 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
     this._header = this.svgGroup.elem("rect", {width:d, height:e, y:-e / 2, rx:a._ROUND, ry:a._ROUND, fill:"#fff", "fill-opacity":.4});
     this.svgGroup.appendChild(this.textElement);
     this._arrow = this.svgGroup.elem("polygon", {points:"0,-2 6,-2 3,2", fill:b._schema.color, stroke:b._schema.color, transform:"translate(" + (d - 11) + ",0)"});
-    this.svgGroup.onmouseup = function(b) {
+    $(this.svgGroup).bind("mouseup touchend", function(b) {
       a._isEditable() && a.renderOptions();
-    };
+    });
     this.box.set({x:0, y:0, width:d, height:e});
   };
   a.resize = function() {
@@ -14552,12 +14552,12 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
         a.onmousedown = function(b) {
           b.stopPropagation();
         };
-        a.onmouseup = function(a) {
+        $(a).bind("mouseup touchend", function(a) {
           a.stopPropagation();
           b.applyValue(c);
           b.destroyOption();
           b._selectBlockView();
-        };
+        });
       })(n, k);
     }
     a = -e / 2 + this.box.width / 2;

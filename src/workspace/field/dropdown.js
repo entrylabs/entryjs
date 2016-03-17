@@ -81,9 +81,9 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
             transform: "translate("+ (width-11) + ",0)"
         });
 
-        this.svgGroup.onmouseup = function(e) {
+        $(this.svgGroup).bind('mouseup touchend', function(e){
             if (that._isEditable()) that.renderOptions();
-        };
+        });
 
         this.box.set({
             x: 0,
@@ -179,12 +179,12 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
                 //prevent propagation to document
                 elem.onmousedown = function(e){e.stopPropagation();};
 
-                elem.onmouseup = function(e) {
+                $(elem).bind('mouseup touchend', function(e){
                     e.stopPropagation();
                     that.applyValue(value);
                     that.destroyOption();
                     that._selectBlockView();
-                };
+                });
             })(element, value);
         }
 
