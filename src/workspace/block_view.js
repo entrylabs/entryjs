@@ -512,7 +512,7 @@ Entry.BlockView.PARAM_SPACE = 5;
                             }
                         } else {
                             if (closeBlock) {
-                                if (closeBlock.view.magnet.next) {
+                                if (closeBlock.view.magnet && closeBlock.view.magnet.next) {
                                     this.bindPrev(closeBlock);
                                     if (!(closeBlock instanceof Entry.Block)) {
                                         closeBlock = closeBlock.insertTopBlock(block);

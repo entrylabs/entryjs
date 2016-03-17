@@ -33,7 +33,7 @@ Entry.block.function_field_label = {
         },
         {
             type: "Output",
-            accept: "basic_param"
+            accept: "paramMagnet"
         }
     ]
 };
@@ -49,7 +49,7 @@ Entry.block.function_field_string = {
         },
         {
             type: "Output",
-            accept: "basic_param"
+            accept: "paramMagnet"
         }
     ]
 };
@@ -65,7 +65,7 @@ Entry.block.function_field_boolean = {
         },
         {
             type: "Output",
-            accept: "basic_param"
+            accept: "paramMagnet"
         }
     ]
 };

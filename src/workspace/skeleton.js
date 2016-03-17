@@ -357,6 +357,9 @@ Entry.skeleton.basic_boolean_field = {
 Entry.skeleton.basic_param = {
     path: function(blockView) {
         var width = blockView.contentWidth;
+        var output = blockView._contents[blockView._contents.length- 1];
+        if (output)
+            width -= output.box.width + Entry.BlockView.PARAM_SPACE - 2;
         width = Math.max(0, width);
         return ("m 4,0 h 10 h %w l 2,2 0,3 3,0 1,1 0,12 -1,1 -3,0 0,3 -2,2" +
                 "h -%w h -10 l -2,-2 0,-3 3,0 1,-1 0,-12 -1,-1 -3,0 0,-3 2,-2")
@@ -372,7 +375,7 @@ Entry.skeleton.basic_param = {
             });
         return {
             offsetX: 0, offsetY: 0,
-            width: width + 18,
+            width: width + 13,
             height: 24,
             marginBottom: 0
         };

@@ -9,6 +9,8 @@ goog.require("Entry.Field");
  *
  */
 Entry.FieldOutput = function(content, blockView, index, mode) {
+    Entry.Model(this, false);
+
     this._blockView = blockView;
     this._block = blockView.block;
     this._valueBlock = null;
@@ -24,12 +26,14 @@ Entry.FieldOutput = function(content, blockView, index, mode) {
     this.acceptType = content.accept;
 
     this.view = this;
+    this.thread = this;
 
     this.svgGroup = null;
 
     this._position = content.position;
 
     this.box.observe(blockView, "alignContent", ["width", "height"]);
+    this.observe(this, "_updateBG", ["magneting"], false);
 
     this.renderStart(blockView.getBoard(), mode);
 };
@@ -37,6 +41,10 @@ Entry.FieldOutput = function(content, blockView, index, mode) {
 Entry.Utils.inherit(Entry.Field, Entry.FieldOutput);
 
 (function(p) {
+    p.schema = {
+        magneting: false
+    };
+
     p.renderStart = function(board, mode) {
         this.svgGroup = this._blockView.contentSvgGroup.elem("g");
         this.view = this;
@@ -57,7 +65,6 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldOutput);
         if (this._blockView.getBoard().constructor == Entry.BlockMenu &&
             this._valueBlock)
             this._valueBlock.view.removeControl();
-
     };
 
     p.align = function(x, y, animate) {
@@ -188,17 +195,30 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldOutput);
         else return null;
     };
 
+    p._updateBG = function() {
+        if (this.magneting) {
+            this._bg = this.svgGroup.elem("path", {
+                d: "m -4,-12 h 3 l 2,2 0,3 3,0 1,1 0,12 -1,1 -3,0 0,3 -2,2 h -3 ",
+                fill: "#fff",
+                stroke: "#fff",
+                'fill-opacity': 0.7
+            });
+        } else {
+            if (this._bg) {
+                this._bg.remove();
+                delete this._bg;
+            }
+        }
+    };
+
     p.replace = function(block) {
         var valueBlock = this._valueBlock;
-        var valueBlockType = valueBlock.type;
-        this._updateValueBlock(block);
-        if (Entry.block[valueBlockType].isPrimitive)
-            valueBlock.destroy();
-        else {
+        if (valueBlock) {
             valueBlock.view._toGlobalCoordinate();
             this.separate(valueBlock);
             valueBlock.view.bumpAway(30, 150);
         }
+        this._updateValueBlock(block);
         block.view._toLocalCoordinate(this.svgGroup);
         this.calcWH();
     };
