@@ -44,6 +44,8 @@ Entry.EntryObject = function(model) {
         /** @type {string} */
         this.lock = model.lock ? model.lock : false;
 
+        this.isEditing = false;
+
         if (this.objectType == "sprite") {
             if (!model.selectedPictureId)
                 this.selectedPicture = this.pictures[0];
@@ -79,7 +81,7 @@ Entry.EntryObject = function(model) {
                     image.src = picture.fileurl;
                 } else {
                     var fileName = picture.filename;
-                    image.src = '/uploads/' + fileName.substring(0, 2) + '/' +
+                    image.src = Entry.defaultPath + '/uploads/' + fileName.substring(0, 2) + '/' +
                         fileName.substring(2, 4) + '/image/' + fileName + '.png';
                 }
             }
@@ -94,7 +96,7 @@ Entry.EntryObject = function(model) {
  * View generator for workspace or others.
  * @return {!Element}
  */
-Entry.EntryObject.prototype.generateView= function() {
+Entry.EntryObject.prototype.generateView = function() {
     if (Entry.type == "workspace") {
         var objectView = Entry.createElement('li', this.id);
         objectView.addClass('entryContainerListElementWorkspace');
@@ -102,7 +104,6 @@ Entry.EntryObject.prototype.generateView= function() {
         objectView.bindOnClick(function(e) {
             if (Entry.container.getObject(this.id))
                 Entry.container.selectObject(this.id);
-            Entry.container.blurAllInputs();
         });
 
         // generate context menu
@@ -112,7 +113,8 @@ Entry.EntryObject.prototype.generateView= function() {
             var options = [
                 {
                     text: Lang.Workspace.context_rename,
-                    callback: function(){
+                    callback: function(e){
+                        e.stopPropagation();
                         (function (o){
                             o.setLock(false);
                             o.editObjectValues(true);
@@ -225,7 +227,7 @@ Entry.EntryObject.prototype.generateView= function() {
         };
         this.nameView_.onkeypress = function(e) {
             if (e.keyCode == 13)
-                this.entryObject.editObjectValues(tog);
+                this.entryObject.editObjectValues(false);
         };
         this.nameView_.value = this.name;
 
@@ -234,17 +236,22 @@ Entry.EntryObject.prototype.generateView= function() {
         editView.object = this;
         this.editView_ = editView;
         this.view_.appendChild(editView);
-        var click = false;
         if(Entry.objectEditable) {
-            editView.bindOnClick(function(e){
+            $(editView).mousedown(function(e) {
+                var current = object.isEditing;
                 e.stopPropagation();
-                if(Entry.engine.isState('run')){
-                    return;
-                }else{
-                    object.editObjectValues(tog);
-                }
+                Entry.documentMousedown.notify(e);
+                if(Entry.engine.isState('run')) return;
 
+                if (current === false) {
+                    object.editObjectValues(!current);
+                    if (Entry.playground.object !== object)
+                        Entry.container.selectObject(object.id);
+                    object.nameView_.select();
+                    return;
+                }
             });
+
             editView.blur = function(e){
                 object.editObjectComplete();
             };
@@ -334,7 +341,7 @@ Entry.EntryObject.prototype.generateView= function() {
         var thisPointer = this;
         xInput.onkeypress = function (e) {
             if (e.keyCode == 13)
-                thisPointer.editObjectValues(tog);
+                thisPointer.editObjectValues(false);
         };
 
         xInput.onblur = function (e) {
@@ -346,7 +353,7 @@ Entry.EntryObject.prototype.generateView= function() {
         };
         yInput.onkeypress = function (e) {
             if (e.keyCode == 13)
-                thisPointer.editObjectValues(tog);
+                thisPointer.editObjectValues(false);
         };
         yInput.onblur = function (e) {
             if (!isNaN(yInput.value)) {
@@ -357,7 +364,7 @@ Entry.EntryObject.prototype.generateView= function() {
         };
         sizeInput.onkeypress = function (e) {
             if (e.keyCode == 13)
-                thisPointer.editObjectValues(tog);
+                thisPointer.editObjectValues(false);
         };
         sizeInput.onblur = function (e) {
             if (!isNaN(sizeInput.value)) {
@@ -406,7 +413,7 @@ Entry.EntryObject.prototype.generateView= function() {
         var thisPointer = this;
         rotateInput.onkeypress = function (e) {
             if (e.keyCode == 13)
-                thisPointer.editObjectValues(tog)
+                thisPointer.editObjectValues(false)
         };
         rotateInput.onblur = function (e) {
             var value = rotateInput.value;
@@ -420,7 +427,7 @@ Entry.EntryObject.prototype.generateView= function() {
         };
         directionInput.onkeypress = function (e) {
             if (e.keyCode == 13)
-                thisPointer.editObjectValues(tog);
+                thisPointer.editObjectValues(false);
         };
         directionInput.onblur = function (e) {
             var value = directionInput.value;
@@ -452,6 +459,7 @@ Entry.EntryObject.prototype.generateView= function() {
             if (Entry.engine.isState('run') || this.object.getLock()) {
                 return;
             }
+            this.object.initRotateValue('free');
             this.object.setRotateMethod('free');
         });
 
@@ -465,6 +473,7 @@ Entry.EntryObject.prototype.generateView= function() {
             if (Entry.engine.isState('run') || this.object.getLock()) {
                 return;
             }
+            this.object.initRotateValue('vertical');
             this.object.setRotateMethod('vertical');
         });
 
@@ -477,6 +486,7 @@ Entry.EntryObject.prototype.generateView= function() {
         rotateModeCView.bindOnClick(function(e){
             if (Entry.engine.isState('run') || this.object.getLock())
                 return;
+            this.object.initRotateValue('none');
             this.object.setRotateMethod('none');
         });
 
@@ -893,7 +903,7 @@ Entry.EntryObject.prototype.updateThumbnailView = function() {
         } else {
             var fileName = this.entity.picture.filename;
             this.thumbnailView_.style.backgroundImage =
-                'url("' + '/uploads/' + fileName.substring(0, 2) + '/' +
+                'url("' + Entry.defaultPath + '/uploads/' + fileName.substring(0, 2) + '/' +
                 fileName.substring(2, 4) + '/thumb/' + fileName + '.png")';
         }
     }
@@ -937,6 +947,7 @@ Entry.EntryObject.prototype.updateRotationView = function(isForced) {
     if (rotateMethod == 'free') {
         this.rotateSpan_.removeClass('entryRemove');
         this.rotateInput_.removeClass('entryRemove');
+
         content += this.entity.getRotation().toFixed(1);
         content += '˚';
         this.rotateInput_.value = content;
@@ -945,9 +956,11 @@ Entry.EntryObject.prototype.updateRotationView = function(isForced) {
         content += this.entity.getDirection().toFixed(1);
         content += '˚';
         this.directionInput_.value = content;
+
     } else {
         this.rotateSpan_.addClass('entryRemove');
         this.rotateInput_.addClass('entryRemove');
+
         content = '';
         content += this.entity.getDirection().toFixed(1);
         content += '˚';
@@ -1177,6 +1190,19 @@ Entry.EntryObject.prototype.setRotateMethod = function(rotateMethod) {
         rotateMethod = 'free';
     this.rotateMethod = rotateMethod;
     this.updateRotateMethodView();
+
+    if(Entry.stage.selectedObject && Entry.stage.selectedObject.entity) {
+        Entry.stage.updateObject();
+        Entry.stage.updateHandle();
+    } 
+};
+
+Entry.EntryObject.prototype.initRotateValue = function(rotateMethod) {
+    if(this.rotateMethod != rotateMethod) {
+        this.entity.rotation = 0.0;
+        this.entity.direction = 90.0;
+    }
+
 };
 
 Entry.EntryObject.prototype.updateRotateMethodView = function() {
@@ -1394,15 +1420,14 @@ Entry.EntryObject.prototype.updateInputViews = function(isLocked) {
             for(var i=0; i<inputs.length; i++){
                 inputs[i].setAttribute('disabled', 'disabled');
                 inputs[i].removeClass('selectedEditingObject');
-                tog = true;
+                this.isEditing = false;
             }
         }
     }
 };
 
-var tog = true;
-Entry.EntryObject.prototype.editObjectValues = function(click) {
 
+Entry.EntryObject.prototype.editObjectValues = function(click) {
     var inputs;
     if(this.getLock()) {
         inputs = [this.nameView_];
@@ -1413,21 +1438,18 @@ Entry.EntryObject.prototype.editObjectValues = function(click) {
             this.directionInput_, this.coordinateView_.sizeInput_
         ];
     }
-
     if (click) {
         for(var i=0; i<inputs.length; i++){
             inputs[i].removeAttribute('disabled');
             inputs[i].addClass("selectedEditingObject");
         }
-        this.nameView_.select();
-        tog = false;
+        this.isEditing = true;
     } else {
         for(var i=0; i<inputs.length; i++){
             inputs[i].setAttribute('disabled', 'disabled');
             inputs[i].removeClass('selectedEditingObject');
         }
-        inputs[0].blur();
-        tog = true;
+        this.isEditing = false;
     }
 };
 

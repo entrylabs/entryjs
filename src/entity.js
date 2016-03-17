@@ -802,7 +802,7 @@ Entry.EntityObject.prototype.setImage = function(pictureModel) {
             image.src = pictureModel.fileurl;
         } else {
             var fileName = pictureModel.filename;
-            image.src = '/uploads/' + fileName.substring(0, 2) + '/' +
+            image.src = Entry.defaultPath + '/uploads/' + fileName.substring(0, 2) + '/' +
                 fileName.substring(2, 4) + '/image/' + fileName + '.png';
         }
         image = image;

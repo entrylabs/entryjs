@@ -140,7 +140,7 @@ Entry.initSound = function(sound) {
     if (sound.fileurl) {
         sound.path = sound.fileurl;
     } else {
-        sound.path = '/uploads/' + sound.filename.substring(0,2)+'/'+
+        sound.path = Entry.defaultPath + '/uploads/' + sound.filename.substring(0,2)+'/'+
             sound.filename.substring(2,4)+'/'+sound.filename+sound.ext;
         //createjs.Sound.removeSound(path);
         //createjs.Sound.registerSound(path, sound.id, 4);
@@ -325,5 +325,19 @@ Entry.getActivityLog = function() {
 Entry.DRAG_MODE_NONE = 0;
 Entry.DRAG_MODE_MOUSEDOWN = 1;
 Entry.DRAG_MODE_DRAG = 2;
+
+Entry.cancelObjectEdit = function(e) {
+    var object = Entry.playground.object;
+    if (!object) return;
+    var objectView = object.view_;
+    var target = e.target;
+    var isCurrent = $(objectView).find(target).length !== 0;
+    var tagName = target.tagName.toUpperCase();
+    if (!object.isEditing || (tagName === 'INPUT' && isCurrent))
+        return;
+
+    object.editObjectValues(false);
+};
+
 
 window.Entry = Entry;

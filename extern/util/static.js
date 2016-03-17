@@ -44,6 +44,39 @@ EntryStatic.categoryList = [
 
 EntryStatic.requiredTimes = [1,2,3,4,5];
 
+EntryStatic.searchProjectOption = [
+   {
+       'key':'search_updated',
+       'lang':'search_updated',
+       'value': 'updated'
+   },
+   {
+       'key':'search_recent',
+       'lang':'search_recent',
+       'value': 'recent'
+   },
+   {
+       'key':'search_complexity',
+       'lang':'search_complexity',
+       'value':'complexity'
+   },
+   {
+       'key':'search_staffPicked',
+       'lang':'search_staffPicked',
+       'value': 'staffPicked'
+   },
+   {
+       'key':'search_childCnt',
+       'lang':'search_childCnt',
+       'value': 'childCnt'
+   },
+   {
+       'key':'search_likeCnt',
+       'lang':'search_likeCnt',
+       'value': 'likeCnt'
+   }
+]
+
 EntryStatic.getAllBlocks = function() {
     return [
         {
@@ -312,13 +345,36 @@ EntryStatic.getAllBlocks = function() {
                 "sensorBoard_convert_scale",
                 //CODEino
                 "CODEino_get_named_sensor_value",
+                "CODEino_get_sound_status",
+                "CODEino_get_light_status",
                 "CODEino_is_button_pressed",
+                "CODEino_get_accelerometer_direction",
                 "CODEino_get_accelerometer_value",
                 "CODEino_get_number_sensor_value",
                 "CODEino_get_digital_value",
                 "CODEino_toggle_led",
                 "CODEino_toggle_pwm",
-                "CODEino_convert_scale"
+                "CODEino_convert_scale",
+                "robotis_openCM70_sensor_value",
+                "robotis_openCM70_aux_sensor_value",
+                "robotis_openCM70_cm_buzzer_index",
+                "robotis_openCM70_cm_buzzer_melody",
+                "robotis_openCM70_cm_sound_detected_clear",
+                "robotis_openCM70_cm_led",
+                "robotis_openCM70_cm_motion",
+                "robotis_openCM70_aux_motor_speed",              
+                "robotis_openCM70_aux_servo_mode",
+                "robotis_openCM70_aux_servo_speed",
+                "robotis_openCM70_aux_servo_position",
+                "robotis_openCM70_aux_led_module",
+                "robotis_openCM70_aux_custom",
+                "robotis_openCM70_cm_custom_value",
+                "robotis_openCM70_cm_custom",
+                "robotis_carCont_sensor_value",  
+                "robotis_carCont_cm_led",
+                "robotis_carCont_cm_sound_detected_clear",
+                "robotis_carCont_aux_motor_speed",
+                "robotis_carCont_cm_calibration"
             ]
         }
     ]
@@ -1696,8 +1752,26 @@ EntryStatic.blockInfo = {
         "usage": ["arduino"],
         "class": "CODEino"
     },
+    "CODEino_get_sound_status": {
+        "xml": "<block type='CODEino_get_sound_status'></block>",
+        "isNotFor": ["CODEino"],
+        "usage": ["arduino"],
+        "class": "CODEino"
+    },
+    "CODEino_get_light_status": {
+        "xml": "<block type='CODEino_get_light_status'></block>",
+        "isNotFor": ["CODEino"],
+        "usage": ["arduino"],
+        "class": "CODEino"
+    },
     "CODEino_is_button_pressed": {
         "xml": "<block type='CODEino_is_button_pressed'></block>",
+        "isNotFor": ["CODEino"],
+        "usage": ["arduino"],
+        "class": "CODEino"
+    },
+    "CODEino_get_accelerometer_direction": {
+        "xml": "<block type='CODEino_get_accelerometer_direction'></block>",
         "isNotFor": ["CODEino"],
         "usage": ["arduino"],
         "class": "CODEino"
@@ -1746,7 +1820,107 @@ EntryStatic.blockInfo = {
         "isNotFor": [""],
         "xml": "<block type='choose_project_timer_action'><field name='ACTION'>START</field></block>",
         "class": "calc_timer"
-    }
+    },
+    "robotis_openCM70_cm_buzzer_index": {
+        "isNotFor": ['robotis_openCM70'],
+        "xml": "<block type='robotis_openCM70_cm_buzzer_index'><value name='CM_BUZZER_TIME'><block type='number'><field name='NUM'>1</field></block></value></block>",
+        "class": "robotis_openCM70_cm"
+    },
+    "robotis_openCM70_cm_buzzer_melody": {
+        "isNotFor": ['robotis_openCM70'],
+        "xml": "<block type='robotis_openCM70_cm_buzzer_melody'></block>",
+        "class": "robotis_openCM70_cm"
+    },
+    "robotis_openCM70_cm_sound_detected_clear": {
+        "isNotFor": ['robotis_openCM70'],
+        "xml": "<block type='robotis_openCM70_cm_sound_detected_clear'></block>",
+        "class": "robotis_openCM70_cm"
+    },
+    "robotis_openCM70_sensor_value": {
+        "isNotFor": ['robotis_openCM70'],
+        "xml": "<block type='robotis_openCM70_sensor_value'></block>",
+        "class": "robotis_openCM70_cm"
+    },
+    "robotis_openCM70_aux_sensor_value": {
+        "isNotFor": ['robotis_openCM70'],
+        "xml": "<block type='robotis_openCM70_aux_sensor_value'></block>",
+        "class": "robotis_openCM70_cm"
+    },
+    "robotis_openCM70_cm_led": {
+        "isNotFor": ['robotis_openCM70'],
+        "xml": "<block type='robotis_openCM70_cm_led'></block>",
+        "class": "robotis_openCM70_cm"
+    },
+    "robotis_openCM70_cm_motion": {
+        "isNotFor": ['robotis_openCM70'],
+        "xml": "<block type='robotis_openCM70_cm_motion'><value name='VALUE'><block type='number'><field name='NUM'>1</field></block></value></block>",
+        "class": "robotis_openCM70_cm"
+    },
+    "robotis_openCM70_aux_motor_speed": {
+        "isNotFor": ['robotis_openCM70'],
+        "xml": "<block type='robotis_openCM70_aux_motor_speed'><value name='VALUE'><block type='number'><field name='NUM'>500</field></block></value></block>",
+        "class": "robotis_openCM70_cm"
+    },
+    "robotis_openCM70_aux_servo_mode": {
+        "isNotFor": ['robotis_openCM70'],
+        "xml": "<block type='robotis_openCM70_aux_servo_mode'></block>",
+        "class": "robotis_openCM70_cm"
+    },
+    "robotis_openCM70_aux_servo_speed": {
+        "isNotFor": ['robotis_openCM70'],
+        "xml": "<block type='robotis_openCM70_aux_servo_speed'><value name='VALUE'><block type='number'><field name='NUM'>500</field></block></value></block>",
+        "class": "robotis_openCM70_cm"
+    },
+    "robotis_openCM70_aux_servo_position": {
+        "isNotFor": ['robotis_openCM70'],
+        "xml": "<block type='robotis_openCM70_aux_servo_position'><value name='VALUE'><block type='number'><field name='NUM'>512</field></block></value></block>",
+        "class": "robotis_openCM70_cm"
+    },
+    "robotis_openCM70_aux_led_module": {
+        "isNotFor": ['robotis_openCM70'],
+        "xml": "<block type='robotis_openCM70_aux_led_module'></block>",
+        "class": "robotis_openCM70_cm"
+    },
+    "robotis_openCM70_aux_custom": {
+        "isNotFor": ['robotis_openCM70'],
+        "xml": "<block type='robotis_openCM70_aux_custom'><value name='VALUE'><block type='number'><field name='NUM'>0</field></block></value></block>",
+        "class": "robotis_openCM70_cm"
+    },
+    "robotis_openCM70_cm_custom_value": {
+        "isNotFor": ['robotis_openCM70'],
+        "xml": "<block type='robotis_openCM70_cm_custom_value'><value name='VALUE'><block type='number'><field name='NUM'>0</field></block></value></block>",
+        "class": "robotis_openCM70_custom"
+    },
+    "robotis_openCM70_cm_custom": {
+        "isNotFor": ['robotis_openCM70'],
+        "xml": "<block type='robotis_openCM70_cm_custom'><value name='ADDRESS'><block type='number'><field name='NUM'>0</field></block></value><value name='VALUE'><block type='number'><field name='NUM'>0</field></block></value></block>",
+        "class": "robotis_openCM70_custom"
+    },
+    "robotis_carCont_sensor_value": {
+        "isNotFor": ['robotis_carCont'],
+        "xml": "<block type='robotis_carCont_sensor_value'></block>",
+        "class": "robotis_carCont_cm"
+    },
+    "robotis_carCont_cm_led": {
+        "isNotFor": ['robotis_carCont'],
+        "xml": "<block type='robotis_carCont_cm_led'></block>",
+        "class": "robotis_carCont_cm"
+    },
+    "robotis_carCont_cm_sound_detected_clear": {
+        "isNotFor": ['robotis_carCont'],
+        "xml": "<block type='robotis_carCont_cm_sound_detected_clear'></block>",
+        "class": "robotis_carCont_cm"
+    },
+    "robotis_carCont_aux_motor_speed": {
+        "isNotFor": ['robotis_carCont'],
+        "xml": "<block type='robotis_carCont_aux_motor_speed'><value name='VALUE'><block type='number'><field name='NUM'>500</field></block></value></block>",
+        "class": "robotis_carCont_cm"
+    },
+    "robotis_carCont_cm_calibration": {
+        "isNotFor": ['robotis_carCont'],
+        "xml": "<block type='robotis_carCont_cm_calibration'><value name='VALUE'><block type='number'><field name='NUM'>0</field></block></value></block>",
+        "class": "robotis_carCont_cm"
+    },
 }
 
 EntryStatic.discussCategories = [
