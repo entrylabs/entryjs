@@ -5395,16 +5395,15 @@ Entry.Container.prototype.showProjectAnswer = function() {
   a && a.setVisible(!0);
 };
 Entry.Container.prototype.hideProjectAnswer = function(a) {
-  var b = this.inputValue;
-  if (b && b.isVisible() && !Entry.engine.isState("run")) {
-    for (var c = Entry.container.getAllObjects(), d = ["ask_and_wait", "get_canvas_input_value", "set_visible_answer"], e = 0, f = c.length;e < f;e++) {
-      for (var g = c[e].script.getElementsByTagName("block"), h = 0, k = g.length;h < k;h++) {
-        if (-1 < d.indexOf(g[h].getAttribute("type")) && g[h].getAttribute("id") != a.getAttribute("id")) {
+  if ((a = this.inputValue) && a.isVisible() && !Entry.engine.isState("run")) {
+    for (var b = Entry.container.getAllObjects(), c = ["ask_and_wait", "get_canvas_input_value", "set_visible_answer"], d = 0, e = b.length;d < e;d++) {
+      for (var f = b[d].script, g = 0;g < c.length;g++) {
+        if (f.hasBlockType(c[g])) {
           return;
         }
       }
     }
-    b.setVisible(!1);
+    a.setVisible(!1);
   }
 };
 Entry.Container.prototype.getView = function() {
@@ -5907,17 +5906,17 @@ Entry.Engine.prototype.exitFullScreen = function() {
 Entry.Engine.prototype.showProjectTimer = function() {
   Entry.engine.projectTimer && this.projectTimer.setVisible(!0);
 };
-Entry.Engine.prototype.hideProjectTimer = function(a) {
-  var b = this.projectTimer;
-  if (b && b.isVisible() && !this.isState("run")) {
-    for (var c = Entry.container.getAllObjects(), d = ["get_project_timer_value", "reset_project_timer", "set_visible_project_timer"], e = 0, f = c.length;e < f;e++) {
-      for (var g = c[e].script.getElementsByTagName("block"), h = 0, k = g.length;h < k;h++) {
-        if (-1 < d.indexOf(g[h].getAttribute("type")) && g[h].getAttribute("id") != a.getAttribute("id")) {
+Entry.Engine.prototype.hideProjectTimer = function() {
+  var a = this.projectTimer;
+  if (a && a.isVisible() && !this.isState("run")) {
+    for (var b = Entry.container.getAllObjects(), c = ["get_project_timer_value", "reset_project_timer", "set_visible_project_timer", "choose_project_timer_action"], d = 0, e = b.length;d < e;d++) {
+      for (var f = b[d].script, g = 0;g < c.length;g++) {
+        if (f.hasBlockType(c[g])) {
           return;
         }
       }
     }
-    b.setVisible(!1);
+    a.setVisible(!1);
   }
 };
 Entry.Engine.prototype.clearTimer = function() {
@@ -10671,6 +10670,9 @@ Entry.bindAnimationCallbackOnce = function(a, b) {
 Entry.Utils.isInInput = function(a) {
   return "textarea" == a.target.type || "text" == a.target.type;
 };
+Entry.Utils.isFunction = function(a) {
+  return "function" === typeof a;
+};
 Entry.Utils.generateGlobalFilters = function generateGlobalFilters() {
   if (!generateGlobalFilters.initiated) {
     generateGlobalFilters.initiated = !0;
@@ -12924,7 +12926,7 @@ Entry.block.jr_go_slow = {skeleton:"basic", color:"#f46c6c", template:"\ucc9c\uc
 }};
 Entry.block.jr_repeat_until_dest = {skeleton:"basic_loop", color:"#498DEB", template:"%1 \ub9cc\ub0a0 \ub54c \uae4c\uc9c0 \ubc18\ubcf5\ud558\uae30 %2", syntax:["BasicWhile", "true"], params:[{type:"Image", img:"/img/assets/ntry/bitmap/jr/jr_goal_image.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic"}], func:function() {
   var a = this.block.statements[0];
-  if (1 !== a.getBlocks().length) {
+  if (0 !== a.getBlocks().length) {
     return this.executor.stepInto(a), Entry.STATIC.CONTINUE;
   }
 }};
@@ -12941,7 +12943,7 @@ Entry.block.jr_if_construction = {skeleton:"basic_loop", color:"#498DEB", templa
     b = Ntry.entityManager.find({type:Ntry.STATIC.GRID, x:b.x, y:b.y}, {type:Ntry.STATIC.TILE, tileType:Ntry.STATIC.OBSTACLE_REPAIR});
     this.isContinue = !0;
     a = this.block.statements[0];
-    if (0 !== b.length && 1 !== a.getBlocks().length) {
+    if (0 !== b.length && 0 !== a.getBlocks().length) {
       return this.executor.stepInto(a), Entry.STATIC.CONTINUE;
     }
   }
@@ -12959,7 +12961,7 @@ Entry.block.jr_if_speed = {skeleton:"basic_loop", color:"#498DEB", template:"\ub
     b = Ntry.entityManager.find({type:Ntry.STATIC.GRID, x:b.x, y:b.y}, {type:Ntry.STATIC.TILE, tileType:Ntry.STATIC.OBSTACLE_SLOW});
     this.isContinue = !0;
     a = this.block.statements[0];
-    if (0 !== b.length && 1 !== a.getBlocks().length) {
+    if (0 !== b.length && 0 !== a.getBlocks().length) {
       return this.executor.stepInto(a), Entry.STATIC.CONTINUE;
     }
   }
@@ -13000,13 +13002,13 @@ Entry.block.test = {skeleton:"basic_boolean_field", mode:"maze", color:"#127CDB"
 }};
 Entry.block.maze_repeat_until_1 = {skeleton:"basic_loop", mode:"maze", color:"#498DEB", template:"%1 \ub9cc\ub0a0 \ub54c \uae4c\uc9c0 \ubc18\ubcf5%2", syntax:["BasicWhile", "true"], params:[{type:"Image", img:"/img/assets/ntry/block_inner/repeat_goal_1.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic"}], func:function() {
   var a = this.block.statements[0];
-  if (1 !== a.getBlocks().length) {
+  if (0 !== a.getBlocks().length) {
     return this.executor.stepInto(a), Entry.STATIC.CONTINUE;
   }
 }};
 Entry.block.maze_repeat_until_2 = {skeleton:"basic_loop", mode:"maze", color:"#498DEB", template:"\ubaa8\ub4e0 %1 \ub9cc\ub0a0 \ub54c \uae4c\uc9c0 \ubc18\ubcf5%2", syntax:["BasicWhile", "true"], params:[{type:"Image", img:"/img/assets/ntry/block_inner/repeat_goal_1.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic"}], func:function() {
   var a = this.block.statements[0];
-  if (1 !== a.getBlocks().length) {
+  if (0 !== a.getBlocks().length) {
     return this.executor.stepInto(a), Entry.STATIC.CONTINUE;
   }
 }};
@@ -13027,7 +13029,7 @@ Entry.block.maze_step_if_1 = {skeleton:"basic_loop", mode:"maze", color:"#498DEB
     }
     b = Ntry.entityManager.find({type:Ntry.STATIC.GRID, x:b.x, y:b.y}, {type:Ntry.STATIC.TILE, tileType:Ntry.STATIC.WALL});
     this.isContinue = !0;
-    if (0 !== b.length && 1 !== a.getBlocks().length) {
+    if (0 !== b.length && 0 !== a.getBlocks().length) {
       return this.executor.stepInto(a), Entry.STATIC.CONTINUE;
     }
   }
@@ -13045,7 +13047,7 @@ Entry.block.maze_step_if_2 = {skeleton:"basic_loop", mode:"maze", color:"#498DEB
     b = Ntry.entityManager.find({type:Ntry.STATIC.GRID, x:b.x, y:b.y}, {type:Ntry.STATIC.TILE, tileType:Ntry.STATIC.OBSTACLE_BEE});
     this.isContinue = !0;
     a = this.block.statements[0];
-    if (0 !== b.length && 1 !== a.getBlocks().length) {
+    if (0 !== b.length && 0 !== a.getBlocks().length) {
       return this.executor.stepInto(a), Entry.STATIC.CONTINUE;
     }
   }
@@ -13080,7 +13082,7 @@ Entry.block.maze_step_if_3 = {skeleton:"basic_loop", mode:"maze", color:"#498DEB
     b = Ntry.entityManager.find({type:Ntry.STATIC.GRID, x:b.x, y:b.y}, {type:Ntry.STATIC.TILE, tileType:Ntry.STATIC.OBSTACLE_BANANA});
     this.isContinue = !0;
     a = this.block.statements[0];
-    if (0 !== b.length && 1 !== a.getBlocks().length) {
+    if (0 !== b.length && 0 !== a.getBlocks().length) {
       return this.executor.stepInto(a), Entry.STATIC.CONTINUE;
     }
   }
@@ -13098,7 +13100,7 @@ Entry.block.maze_step_if_4 = {skeleton:"basic_loop", mode:"maze", color:"#498DEB
     b = Ntry.entityManager.find({type:Ntry.STATIC.GRID, x:b.x, y:b.y}, {type:Ntry.STATIC.TILE, tileType:Ntry.STATIC.WALL});
     this.isContinue = !0;
     a = this.block.statements[0];
-    if (0 !== b.length && 1 !== a.getBlocks().length) {
+    if (0 !== b.length && 0 !== a.getBlocks().length) {
       return this.executor.stepInto(a), Entry.STATIC.CONTINUE;
     }
   }
@@ -13403,6 +13405,9 @@ Entry.BlockMenu = function(a, b, c, d) {
   a.dominate = function(b) {
     this.svgBlockGroup.appendChild(b.view.svgGroup);
   };
+  a.reDraw = function() {
+    this.selectMenu(this.lastSelector, !0);
+  };
 })(Entry.BlockMenu.prototype);
 Entry.BlockMenuScroller = function(a) {
   this.board = a;
@@ -13603,7 +13608,7 @@ Entry.BlockView.PARAM_SPACE = 5;
     this.set(this._skeleton.box(this));
     var b = this.block, a = b.events.whenBlockAdd;
     a && !this.isInBlockMenu && a.forEach(function(a) {
-      a(b);
+      Entry.Utils.isFunction(a) && a(b);
     });
   };
   a._renderPath = function() {
@@ -13720,7 +13725,7 @@ Entry.BlockView.PARAM_SPACE = 5;
           case h.RETURN:
             e = this.block;
             d = this.originPos;
-            f ? (this.set({animating:!1}), createjs.Sound.play("entryMagneting"), e.view.bindPrev(f)) : this._moveTo(d.x, d.y, !1);
+            f ? (this.set({animating:!1}), createjs.Sound.play("entryMagneting"), this.bindPrev(f), e.insert(f)) : (f = e.getThread().view.getParent(), f instanceof Entry.FieldStatement ? (this.bindPrev(f), f.insertTopBlock(e)) : f instanceof Entry.FieldBlock ? e.replace(f._valueBlock) : this._moveTo(d.x, d.y, !1));
             break;
           case h.REMOVE:
             createjs.Sound.play("entryDelete"), g ? (f && e.separate(), this.block.destroy(!1, !0)) : (f && e.doSeparate(), this.block.doDestroyBelow(!1));
@@ -13769,7 +13774,7 @@ Entry.BlockView.PARAM_SPACE = 5;
     });
     var e = this.block;
     (b = e.events.whenBlockDestroy) && !this.isInBlockMenu && b.forEach(function(b) {
-      b(e);
+      Entry.Utils.isFunction(b) && b(e);
     });
   };
   a.getShadow = function() {
@@ -14006,6 +14011,14 @@ Entry.Code = function(a) {
   };
   a._handleChange = function() {
     Entry.creationChangedEvent && Entry.creationChangedEvent.notify();
+  };
+  a.hasBlockType = function(b) {
+    for (var a = this.getThreads(), d = 0;d < a.length;d++) {
+      if (a[d].hasBlockType(b)) {
+        return !0;
+      }
+    }
+    return !1;
   };
 })(Entry.Code.prototype);
 Entry.CodeView = function(a, b) {
@@ -14306,7 +14319,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
     this._nextGroup = this.svgGroup;
     this.box.set({x:0, y:0, width:0, height:20});
     var d = this.getValue();
-    d && !d.view && (d.setThread(this), d.createView(b, a));
+    d && !d.view && (d.setThread(this), d.createView(b, a), d.getThread().view.setParent(this));
     this.updateValueBlock(d);
     this._blockView.getBoard().constructor == Entry.BlockMenu && this._valueBlock.view.removeControl();
   };
@@ -14354,8 +14367,12 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
         return this._inspectBlock();
       }
       b.setThread(this);
+      b.getThread().view.setParent(this);
       return this._valueBlock;
     }
+  };
+  a._getValueBlock = function() {
+    return this._valueBlock;
   };
   a.updateValueBlock = function(b) {
     b instanceof Entry.Block || (b = void 0);
@@ -14405,6 +14422,12 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
     this.updateValueBlock(b);
     b.view._toLocalCoordinate(this.svgGroup);
     this.calcWH();
+  };
+  a.setParent = function(b) {
+    this._parent = b;
+  };
+  a.getParent = function() {
+    return this._parent;
   };
 })(Entry.FieldBlock.prototype);
 Entry.FieldColor = function(a, b, c) {
@@ -14729,7 +14752,6 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldOutput);
   a.calcWH = function() {
     var b = this._valueBlock;
     b ? (b = b.view, this.box.set({width:b.width, height:b.height})) : this.box.set({width:0, height:20});
-    console.log(this.width);
   };
   a.calcHeight = a.calcWH;
   a.destroy = function() {
@@ -15029,34 +15051,34 @@ Entry.GlobalSvg = {};
     var d = b.offset.left, e = b.offset.top, f = b.visible ? b.svgDom.width() : 0;
     return a.y > e && a.x > d + f ? this.DONE : a.y > e && a.x > d && b.visible ? this.REMOVE : this.RETURN;
   };
-  a.addControl = function(b) {
+  a.addControl = function(a) {
     this.onMouseDown.apply(this, arguments);
   };
-  a.onMouseDown = function(b) {
-    function a(b) {
-      var c = b.pageX;
-      b = b.pageY;
-      var d = e.left + (c - e._startX), f = e.top + (b - e._startY);
-      e.svgDom.css({left:d, top:f});
-      e._startX = c;
-      e._startY = b;
-      e.left = d;
-      e.top = f;
+  a.onMouseDown = function(a) {
+    function c(a) {
+      var b = a.pageX;
+      a = a.pageY;
+      var c = e.left + (b - e._startX), d = e.top + (a - e._startY);
+      e.svgDom.css({left:c, top:d});
+      e._startX = b;
+      e._startY = a;
+      e.left = c;
+      e.top = d;
     }
-    function d(b) {
+    function d(a) {
       $(document).unbind(".block");
     }
-    this._startY = b.pageY;
+    this._startY = a.pageY;
     var e = this;
-    b.stopPropagation();
-    b.preventDefault();
+    a.stopPropagation();
+    a.preventDefault();
     var f = $(document);
-    f.bind("mousemove.block", a);
+    f.bind("mousemove.block", c);
     f.bind("mouseup.block", d);
-    f.bind("touchmove.block", a);
+    f.bind("touchmove.block", c);
     f.bind("touchend.block", d);
-    this._startX = b.pageX;
-    this._startY = b.pageY;
+    this._startX = a.pageX;
+    this._startY = a.pageY;
   };
 })(Entry.GlobalSvg);
 Entry.RenderView = function(a, b) {
@@ -15081,23 +15103,23 @@ Entry.RenderView = function(a, b) {
     this.renderViewContainer = Entry.Dom("div", {"class":"renderViewContainer", parent:this.view});
     this.svgDom = Entry.Dom($('<svg id="' + this._svgId + '" class="renderView" version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'), {parent:this.renderViewContainer});
   };
-  a.changeCode = function(b) {
-    if (!(b instanceof Entry.Code)) {
+  a.changeCode = function(a) {
+    if (!(a instanceof Entry.Code)) {
       return console.error("You must inject code instance");
     }
-    this.code = b;
+    this.code = a;
     this.svg || (this.svg = Entry.SVG(this._svgId), this.svgGroup = this.svg.elem("g"), this.svgThreadGroup = this.svgGroup.elem("g"), this.svgThreadGroup.board = this, this.svgBlockGroup = this.svgGroup.elem("g"), this.svgBlockGroup.board = this);
-    b.createView(this);
+    a.createView(this);
     this.align();
   };
   a.align = function() {
-    var b = this.code.getThreads();
-    if (b && 0 !== b.length) {
-      for (var a = 0, d = "LEFT" == this._align ? 20 : this.svgDom.width() / 2, e = 0, f = b.length;e < f;e++) {
-        var g = b[e].getFirstBlock().view;
-        g._moveTo(d - g.offsetX, a - g.offsetY, !1);
+    var a = this.code.getThreads();
+    if (a && 0 !== a.length) {
+      for (var c = 0, d = "LEFT" == this._align ? 20 : this.svgDom.width() / 2, e = 0, f = a.length;e < f;e++) {
+        var g = a[e].getFirstBlock().view;
+        g._moveTo(d - g.offsetX, c - g.offsetY, !1);
         g = g.svgGroup.getBBox().height;
-        a += g + 15;
+        c += g + 15;
       }
       this.height = this.svgGroup.getBBox().height;
     }
@@ -15112,11 +15134,11 @@ Entry.RenderView = function(a, b) {
     this._svgWidth = this.svgDom.width();
     this.offset = this.svgDom.offset();
   };
-  a.bindCodeView = function(b) {
+  a.bindCodeView = function(a) {
     this.svgBlockGroup.remove();
     this.svgThreadGroup.remove();
-    this.svgBlockGroup = b.svgBlockGroup;
-    this.svgThreadGroup = b.svgThreadGroup;
+    this.svgBlockGroup = a.svgBlockGroup;
+    this.svgThreadGroup = a.svgThreadGroup;
     this.svgGroup.appendChild(this.svgThreadGroup);
     this.svgGroup.appendChild(this.svgBlockGroup);
   };
@@ -15135,61 +15157,61 @@ Entry.Scroller = function(a, b, c) {
 Entry.Scroller.RADIUS = 7;
 (function(a) {
   a.createScrollBar = function() {
-    var b = Entry.Scroller.RADIUS, a = this;
+    var a = Entry.Scroller.RADIUS, c = this;
     this.svgGroup = this.board.svg.elem("g").attr({class:"boardScrollbar"});
-    this._horizontal && (this.hScrollbar = this.svgGroup.elem("rect", {height:2 * b, rx:b, ry:b}), this.hScrollbar.mousedown = function(b) {
-      function e(b) {
-        b.stopPropagation();
-        b.preventDefault();
-        b.originalEvent.touches && (b = b.originalEvent.touches[0]);
-        var d = a.dragInstance;
-        a.scroll((b.pageX - d.offsetX) / a.hRatio, 0);
-        d.set({offsetX:b.pageX, offsetY:b.pageY});
+    this._horizontal && (this.hScrollbar = this.svgGroup.elem("rect", {height:2 * a, rx:a, ry:a}), this.hScrollbar.mousedown = function(a) {
+      function b(a) {
+        a.stopPropagation();
+        a.preventDefault();
+        a.originalEvent.touches && (a = a.originalEvent.touches[0]);
+        var d = c.dragInstance;
+        c.scroll((a.pageX - d.offsetX) / c.hRatio, 0);
+        d.set({offsetX:a.pageX, offsetY:a.pageY});
       }
-      function f(b) {
+      function f(a) {
         $(document).unbind(".scroll");
-        delete a.dragInstance;
+        delete c.dragInstance;
       }
-      if (0 === b.button || b instanceof Touch) {
-        Entry.documentMousedown && Entry.documentMousedown.notify(b);
+      if (0 === a.button || a instanceof Touch) {
+        Entry.documentMousedown && Entry.documentMousedown.notify(a);
         var g = $(document);
-        g.bind("mousemove.scroll", e);
+        g.bind("mousemove.scroll", b);
         g.bind("mouseup.scroll", f);
-        g.bind("touchmove.scroll", e);
+        g.bind("touchmove.scroll", b);
         g.bind("touchend.scroll", f);
-        a.dragInstance = new Entry.DragInstance({startX:b.pageX, startY:b.pageY, offsetX:b.pageX, offsetY:b.pageY});
+        c.dragInstance = new Entry.DragInstance({startX:a.pageX, startY:a.pageY, offsetX:a.pageX, offsetY:a.pageY});
       }
-      b.stopPropagation();
+      a.stopPropagation();
     });
-    this._vertical && (this.vScrollbar = this.svgGroup.elem("rect", {width:2 * b, rx:b, ry:b}), this.vScrollbar.mousedown = function(b) {
-      function e(b) {
-        b.stopPropagation();
-        b.preventDefault();
-        b.originalEvent.touches && (b = b.originalEvent.touches[0]);
-        var d = a.dragInstance;
-        a.scroll(0, (b.pageY - d.offsetY) / a.vRatio);
-        d.set({offsetX:b.pageX, offsetY:b.pageY});
+    this._vertical && (this.vScrollbar = this.svgGroup.elem("rect", {width:2 * a, rx:a, ry:a}), this.vScrollbar.mousedown = function(a) {
+      function b(a) {
+        a.stopPropagation();
+        a.preventDefault();
+        a.originalEvent.touches && (a = a.originalEvent.touches[0]);
+        var d = c.dragInstance;
+        c.scroll(0, (a.pageY - d.offsetY) / c.vRatio);
+        d.set({offsetX:a.pageX, offsetY:a.pageY});
       }
-      function f(b) {
+      function f(a) {
         $(document).unbind(".scroll");
-        delete a.dragInstance;
+        delete c.dragInstance;
       }
-      if (0 === b.button || b instanceof Touch) {
-        Entry.documentMousedown && Entry.documentMousedown.notify(b);
+      if (0 === a.button || a instanceof Touch) {
+        Entry.documentMousedown && Entry.documentMousedown.notify(a);
         var g = $(document);
-        g.bind("mousemove.scroll", e);
+        g.bind("mousemove.scroll", b);
         g.bind("mouseup.scroll", f);
-        g.bind("touchmove.scroll", e);
+        g.bind("touchmove.scroll", b);
         g.bind("touchend.scroll", f);
-        a.dragInstance = new Entry.DragInstance({startX:b.pageX, startY:b.pageY, offsetX:b.pageX, offsetY:b.pageY});
+        c.dragInstance = new Entry.DragInstance({startX:a.pageX, startY:a.pageY, offsetX:a.pageX, offsetY:a.pageY});
       }
-      b.stopPropagation();
+      a.stopPropagation();
     });
     this.resizeScrollBar();
   };
   a.resizeScrollBar = function() {
     if (this._visible) {
-      var b = this.board, a = b.svgBlockGroup.getBoundingClientRect(), d = b.svgDom, e = d.width(), d = d.height(), f = a.left - b.offset.left, b = a.top - b.offset.top, g = a.width, a = a.height;
+      var a = this.board, c = a.svgBlockGroup.getBoundingClientRect(), d = a.svgDom, e = d.width(), d = d.height(), f = c.left - a.offset.left, a = c.top - a.offset.top, g = c.width, c = c.height;
       if (this._horizontal) {
         var h = -g + Entry.BOARD_PADDING, k = e - Entry.BOARD_PADDING, g = (e + 2 * Entry.Scroller.RADIUS) * g / (k - h + g);
         isNaN(g) && (g = 0);
@@ -15197,25 +15219,25 @@ Entry.Scroller.RADIUS = 7;
         this.hScrollbar.attr({width:g, x:this.hX, y:d - 2 * Entry.Scroller.RADIUS});
         this.hRatio = (e - g - 2 * Entry.Scroller.RADIUS) / (k - h);
       }
-      this._vertical && (f = -a + Entry.BOARD_PADDING, g = d - Entry.BOARD_PADDING, a = (d + 2 * Entry.Scroller.RADIUS) * a / (g - f + a), this.vY = (b - f) / (g - f) * (d - a - 2 * Entry.Scroller.RADIUS), this.vScrollbar.attr({height:a, y:this.vY, x:e - 2 * Entry.Scroller.RADIUS}), this.vRatio = (d - a - 2 * Entry.Scroller.RADIUS) / (g - f));
+      this._vertical && (f = -c + Entry.BOARD_PADDING, g = d - Entry.BOARD_PADDING, c = (d + 2 * Entry.Scroller.RADIUS) * c / (g - f + c), this.vY = (a - f) / (g - f) * (d - c - 2 * Entry.Scroller.RADIUS), this.vScrollbar.attr({height:c, y:this.vY, x:e - 2 * Entry.Scroller.RADIUS}), this.vRatio = (d - c - 2 * Entry.Scroller.RADIUS) / (g - f));
     }
   };
-  a.updateScrollBar = function(b, a) {
-    this._horizontal && (this.hX += b * this.hRatio, this.hScrollbar.attr({x:this.hX}));
-    this._vertical && (this.vY += a * this.vRatio, this.vScrollbar.attr({y:this.vY}));
+  a.updateScrollBar = function(a, c) {
+    this._horizontal && (this.hX += a * this.hRatio, this.hScrollbar.attr({x:this.hX}));
+    this._vertical && (this.vY += c * this.vRatio, this.vScrollbar.attr({y:this.vY}));
   };
-  a.scroll = function(b, a) {
+  a.scroll = function(a, c) {
     var d = this.board.svgBlockGroup.getBoundingClientRect(), e = this.board.svgDom, f = d.left - this.board.offset.left, g = d.top - this.board.offset.top, h = d.height;
-    b = Math.max(-d.width + Entry.BOARD_PADDING - f, b);
-    a = Math.max(-h + Entry.BOARD_PADDING - g, a);
-    b = Math.min(e.width() - Entry.BOARD_PADDING - f, b);
-    a = Math.min(e.height() - Entry.BOARD_PADDING - g, a);
-    this.board.code.moveBy(b, a);
+    a = Math.max(-d.width + Entry.BOARD_PADDING - f, a);
+    c = Math.max(-h + Entry.BOARD_PADDING - g, c);
+    a = Math.min(e.width() - Entry.BOARD_PADDING - f, a);
+    c = Math.min(e.height() - Entry.BOARD_PADDING - g, c);
+    this.board.code.moveBy(a, c);
     this.board.generateCodeMagnetMap();
-    this.updateScrollBar(b, a);
+    this.updateScrollBar(a, c);
   };
-  a.setVisible = function(b) {
-    b != this.isVisible() && (this._visible = b, this.svgGroup.attr({display:!0 === b ? "block" : "none"}));
+  a.setVisible = function(a) {
+    a != this.isVisible() && (this._visible = a, this.svgGroup.attr({display:!0 === a ? "block" : "none"}));
   };
   a.isVisible = function() {
     return this._visible;
@@ -15381,28 +15403,28 @@ Entry.Thread = function(a, b) {
   this.load(a);
 };
 (function(a) {
-  a.load = function(b, a) {
-    void 0 === b && (b = []);
-    if (!(b instanceof Array)) {
+  a.load = function(a, c) {
+    void 0 === a && (a = []);
+    if (!(a instanceof Array)) {
       return console.error("thread must be array");
     }
-    for (var d = 0;d < b.length;d++) {
-      var e = b[d];
+    for (var d = 0;d < a.length;d++) {
+      var e = a[d];
       e instanceof Entry.Block || e.isDummy ? (e.setThread(this), this._data.push(e)) : this._data.push(new Entry.Block(e, this));
     }
-    (d = this._code.view) && this.createView(d.board, a);
+    (d = this._code.view) && this.createView(d.board, c);
   };
-  a.registerEvent = function(b, a) {
-    this._event = a;
-    this._code.registerEvent(b, a);
+  a.registerEvent = function(a, c) {
+    this._event = c;
+    this._code.registerEvent(a, c);
   };
-  a.unregisterEvent = function(b, a) {
-    this._code.unregisterEvent(b, a);
+  a.unregisterEvent = function(a, c) {
+    this._code.unregisterEvent(a, c);
   };
-  a.createView = function(b, a) {
-    this.view || (this.view = new Entry.ThreadView(this, b));
+  a.createView = function(a, c) {
+    this.view || (this.view = new Entry.ThreadView(this, a));
     this._data.map(function(d) {
-      d.createView(b, a);
+      d.createView(a, c);
     });
   };
   a.separate = function(a) {
@@ -15470,7 +15492,7 @@ Entry.Thread = function(a, b) {
   a.spliceBlock = function(a) {
     var c = this._data;
     c.remove(a);
-    0 === c.length && this.destroy();
+    0 === c.length && (a = this.view.getParent(), a.constructor === Entry.FieldStatement ? a.removeFirstBlock() : this.destroy());
     this.changeEvent.notify();
   };
   a.getFirstBlock = function() {
@@ -15489,6 +15511,33 @@ Entry.Thread = function(a, b) {
   };
   a.getRootBlock = function() {
     return this._data.at(0);
+  };
+  a.hasBlockType = function(a) {
+    function c(d) {
+      if (a == d.type) {
+        return !0;
+      }
+      for (var f = d.params, g = 0;g < f.length;g++) {
+        var h = f[g];
+        if (h && h.constructor == Entry.Block && c(h)) {
+          return !0;
+        }
+      }
+      if (d = d.statements) {
+        for (f = 0;f < d.length;f++) {
+          if (d[f].hasBlockType(a)) {
+            return !0;
+          }
+        }
+      }
+      return !1;
+    }
+    for (var d = 0;d < this._data.length;d++) {
+      if (c(this._data[d])) {
+        return !0;
+      }
+    }
+    return !1;
   };
 })(Entry.Thread.prototype);
 Entry.Block = function(a, b) {
@@ -15569,7 +15618,6 @@ Entry.Block.MAGNET_OFFSET = .4;
     return c;
   };
   a.destroy = function(a, c) {
-    this.view && this.view.destroy(a);
     var d = this.params;
     if (d) {
       for (var e = 0;e < d.length;e++) {
@@ -15582,12 +15630,13 @@ Entry.Block.MAGNET_OFFSET = .4;
         d[e].destroy(a);
       }
     }
-    this.getPrevBlock();
+    f = this.getPrevBlock();
     e = this.getNextBlock();
     d = this.getThread();
-    d.spliceBlock && d.spliceBlock(this);
     this._schema.event && d.unregisterEvent(this, this._schema.event);
-    e && (c ? e.destroy(a, c) : e.view.bindPrev());
+    e && (c ? e.destroy(a, c) : f ? e.view.bindPrev(f) : (f = this.getThread().view.getParent(), f.constructor === Entry.FieldStatement ? (e.view.bindPrev(f), f.insertTopBlock(e)) : f.constructor === Entry.FieldStatement ? e.replace(f._valueBlock) : e.view._toGlobalCoordinate()));
+    d.spliceBlock && d.spliceBlock(this);
+    this.view && this.view.destroy(a);
   };
   a.getView = function() {
     return this.view;
@@ -15703,6 +15752,9 @@ Entry.ThreadView = function(a, b) {
   a.setParent = function(a) {
     this._parent = a;
   };
+  a.getParent = function() {
+    return this._parent;
+  };
   a.renderText = function() {
     for (var a = this.thread.getBlocks(), c = 0;c < a.length;c++) {
       a[c].view.renderText();
@@ -15735,7 +15787,7 @@ Entry.ThreadView = function(a, b) {
 })(Entry.ThreadView.prototype);
 Entry.FieldTrashcan = function(a) {
   this.board = a;
-  this.svgGroup = a.svg.elem("g", {filter:"url(#entryTrashcanFilter)"});
+  this.svgGroup = a.svg.elem("g");
   this.renderStart();
   this.dragBlockObserver = this.dragBlock = null;
   this.isOver = !1;
@@ -15934,7 +15986,7 @@ Entry.Board = function(a) {
   };
   a._keyboardControl = function(a) {
     var c = this.selectedBlockView;
-    c && 46 == a.keyCode && c.block.doDestroy(!0) && this.set({selectedBlockView:null});
+    c && 46 == a.keyCode && c.block.doDestroy(!1) && this.set({selectedBlockView:null});
   };
   a.hide = function() {
     this.wrapper.addClass("entryRemove");
@@ -16420,6 +16472,7 @@ Entry.Playground.prototype.generateTabView = function(a) {
   c.appendChild(a);
   a.bindOnClick(function(a) {
     b.changeViewMode("code");
+    b.blockMenu();
   });
   this.tabViewElements.code = a;
   Entry.pictureEditable && (a = Entry.createElement("li", "entryPictureTab"), a.innerHTML = Lang.Workspace.tab_picture, a.addClass("entryTabListItemWorkspace"), c.appendChild(a), a.bindOnClick(function(a) {
@@ -16889,7 +16942,6 @@ Entry.Playground.prototype.changeViewMode = function(a) {
   "default" != a && this.tabViewElements[a].addClass("entryTabSelected");
   if ("variable" != a) {
     var c = this.view_.children;
-    this.viewMode_ = a;
     for (b = 0;b < c.length;b++) {
       var d = c[b];
       -1 < d.id.toUpperCase().indexOf(a.toUpperCase()) ? d.removeClass("entryRemove") : d.addClass("entryRemove");

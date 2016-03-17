@@ -995,31 +995,30 @@ Entry.Container.prototype.blurAllInputs = function() {
 
 Entry.Container.prototype.showProjectAnswer = function() {
     var answer = this.inputValue;
-    if (!answer)
-        return;
+    if (!answer) return;
     answer.setVisible(true);
 };
 
 
 Entry.Container.prototype.hideProjectAnswer = function(removeBlock) {
     var answer = this.inputValue;
-    if (!answer || !answer.isVisible() || Entry.engine.isState('run'))
-        return;
-    var objects = Entry.container.getAllObjects();
-    var answerTypes = ['ask_and_wait', 'get_canvas_input_value',
-    'set_visible_answer'];
+    if (!answer || !answer.isVisible() || Entry.engine.isState('run')) return;
 
-    for (var i=0, len=objects.length; i<len; i++) {
-        var blocks = objects[i].script.getElementsByTagName('block');
-        for (var j = 0, bLen=blocks.length; j < bLen; j++) {
-            if (answerTypes.indexOf(blocks[j].getAttribute('type')) > -1) {
-                if (blocks[j].getAttribute('id') == removeBlock.getAttribute('id'))
-                    continue;
-                else
-                    return;
-            }
-        }
+    var objects = Entry.container.getAllObjects();
+    var answerTypes = [
+        'ask_and_wait',
+        'get_canvas_input_value',
+        'set_visible_answer'
+    ];
+
+    for (var i = 0, len = objects.length; i < len; i++) {
+        var code = objects[i].script;
+        for (var j = 0; j < answerTypes.length; j++)
+            if (code.hasBlockType(answerTypes[j])) return;
     }
+
+    //answer related blocks not found
+    //hide canvas answer view
     answer.setVisible(false);
 };
 

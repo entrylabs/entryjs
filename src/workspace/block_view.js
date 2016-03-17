@@ -217,8 +217,11 @@ Entry.BlockView.PARAM_SPACE = 5;
 
         var block = this.block;
         var events = block.events.whenBlockAdd;
-        if (events && !this.isInBlockMenu)
-            events.forEach(function(fn){fn(block);});
+        if (events && !this.isInBlockMenu) {
+            events.forEach(function(fn) {
+                if (Entry.Utils.isFunction(fn)) fn(block);
+            });
+        }
     };
 
     p._renderPath = function() {
@@ -531,15 +534,23 @@ Entry.BlockView.PARAM_SPACE = 5;
                         }
                         break;
                     case gs.RETURN:
-                        //TODO retrn block to origin position
                         var block = this.block;
-
                         var originPos = this.originPos;
                         if (prevBlock) {
                             this.set({animating: false});
                             createjs.Sound.play('entryMagneting');
-                            block.view.bindPrev(prevBlock);
-                        } else this._moveTo(originPos.x, originPos.y, false);
+                            this.bindPrev(prevBlock);
+                            block.insert(prevBlock);
+                        } else {
+                            var parent = block.getThread().view.getParent();
+
+                            if (parent instanceof Entry.FieldStatement) {
+                                this.bindPrev(parent);
+                                parent.insertTopBlock(block);
+                            } else if (parent instanceof Entry.FieldBlock)
+                                block.replace(parent._valueBlock);
+                            else this._moveTo(originPos.x, originPos.y, false);
+                        }
                         break;
                     case gs.REMOVE:
                         createjs.Sound.play('entryDelete');
@@ -611,18 +622,15 @@ Entry.BlockView.PARAM_SPACE = 5;
             );
         } else svgGroup.remove();
 
-        this._contents.forEach(function(c) {
-            c.destroy();
-        });
-
-        this._statements.forEach(function(c) {
-            c.destroy();
-        });
+        this._contents.forEach(function(c) {c.destroy();});
+        this._statements.forEach(function(c) {c.destroy();});
 
         var block = this.block;
         var events = block.events.whenBlockDestroy;
         if (events && !this.isInBlockMenu)
-            events.forEach(function(fn){fn(block);});
+            events.forEach(function(fn){
+                if (Entry.Utils.isFunction(fn)) fn(block);
+            });
     };
 
     p.getShadow = function() {

@@ -31,6 +31,10 @@ Entry.ThreadView = function(thread, board) {
         this._parent = parent;
     };
 
+    p.getParent = function() {
+        return this._parent;
+    };
+
     p.renderText = function() {
         var blocks = this.thread.getBlocks();
         for (var i=0; i<blocks.length; i++)

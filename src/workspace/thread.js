@@ -159,8 +159,12 @@ Entry.Thread = function(thread, code) {
         var blocks = this._data;
         blocks.remove(block);
 
-        if (blocks.length !== 0) {
-        } else this.destroy();
+        if (blocks.length === 0) {
+            var parent = this.view.getParent();
+            if (parent.constructor === Entry.FieldStatement)
+                parent.removeFirstBlock();
+            else this.destroy();
+        }
 
         this.changeEvent.notify();
     };
@@ -185,5 +189,31 @@ Entry.Thread = function(thread, code) {
 
     p.getRootBlock = function() {
         return this._data.at(0);
+    };
+
+    p.hasBlockType = function(type) {
+        for (var i = 0; i < this._data.length; i++)
+            if (inspectBlock(this._data[i])) return true;
+        return false;
+
+        function inspectBlock(block) {
+            if (type == block.type) return true;
+
+            var params = block.params;
+            for (var k = 0; k < params.length; k++) {
+                var param = params[k];
+                if (param && param.constructor == Entry.Block) {
+                    if (inspectBlock(param)) return true;
+                }
+            }
+            var statements = block.statements;
+            if (statements) {
+                for (var j = 0; j < statements.length; j++) {
+                    if (statements[j].hasBlockType(type))
+                        return true;
+                }
+            }
+            return false;
+        }
     };
 })(Entry.Thread.prototype);

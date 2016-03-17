@@ -51,6 +51,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
         if (block && !block.view) {
             block.setThread(this);
             block.createView(board, mode);
+            block.getThread().view.setParent(this);
         }
         this.updateValueBlock(block);
 
@@ -149,10 +150,13 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
                 return this._inspectBlock();
 
             block.setThread(this);
+            block.getThread().view.setParent(this);
 
             return this._valueBlock;
         }
     };
+
+    p._getValueBlock = function() {return this._valueBlock;};
 
     p.updateValueBlock = function(block) {
         if (!(block instanceof Entry.Block)) block = undefined;
@@ -223,6 +227,14 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
         this.updateValueBlock(block);
         block.view._toLocalCoordinate(this.svgGroup);
         this.calcWH();
+    };
+
+    p.setParent = function(parent) {
+        this._parent = parent;
+    };
+
+    p.getParent = function() {
+        return this._parent;
     };
 
 })(Entry.FieldBlock.prototype);

@@ -496,4 +496,8 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
         this.svgBlockGroup
             .appendChild(block.view.svgGroup);
     };
+
+    p.reDraw = function() {
+        this.selectMenu(this.lastSelector, true);
+    };
 })(Entry.BlockMenu.prototype);

@@ -948,6 +948,10 @@ Entry.Utils.isInInput = function(e) {
     return e.target.type == 'textarea' || e.target.type == 'text';
 };
 
+Entry.Utils.isFunction = function(fn) {
+    return typeof fn === 'function';
+};
+
 Entry.Utils.generateGlobalFilters = function generateGlobalFilters() {
     if (generateGlobalFilters.initiated) return;
     generateGlobalFilters.initiated = true;
