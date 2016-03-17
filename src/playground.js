@@ -204,6 +204,7 @@ Entry.Playground.prototype.generateTabView = function(tabView) {
     tabList.appendChild(codeTab);
     codeTab.bindOnClick(function(e) {
         that.changeViewMode('code');
+        that.blockMenu();
     });
     this.tabViewElements.code = codeTab;
 
@@ -1009,7 +1010,6 @@ Entry.Playground.prototype.changeViewMode = function(viewType) {
     if (viewType == 'variable')
         return;
     var views = this.view_.children;
-    this.viewMode_ = viewType;
     for (var i = 0; i<views.length; i++) {
         var view = views[i];
         if (view.id.toUpperCase().indexOf(viewType.toUpperCase()) > -1)

@@ -13405,6 +13405,9 @@ Entry.BlockMenu = function(a, b, c, d) {
   a.dominate = function(b) {
     this.svgBlockGroup.appendChild(b.view.svgGroup);
   };
+  a.reDraw = function() {
+    this.selectMenu(this.lastSelector, !0);
+  };
 })(Entry.BlockMenu.prototype);
 Entry.BlockMenuScroller = function(a) {
   this.board = a;
@@ -14959,8 +14962,8 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
     });
     this.optionGroup = Entry.Dom("input", {class:"entry-widget-input-field", parent:$("body")});
     this.optionGroup.val(this.getValue());
-    this.optionGroup.on("mousedown", function(a) {
-      a.stopPropagation();
+    this.optionGroup.on("mousedown", function(b) {
+      b.stopPropagation();
     });
     this.optionGroup.on("keyup", function(a) {
       var c = a.keyCode || a.which;
@@ -16428,6 +16431,7 @@ Entry.Playground.prototype.generateTabView = function(a) {
   c.appendChild(a);
   a.bindOnClick(function(a) {
     b.changeViewMode("code");
+    b.blockMenu();
   });
   this.tabViewElements.code = a;
   Entry.pictureEditable && (a = Entry.createElement("li", "entryPictureTab"), a.innerHTML = Lang.Workspace.tab_picture, a.addClass("entryTabListItemWorkspace"), c.appendChild(a), a.bindOnClick(function(a) {
@@ -16897,7 +16901,6 @@ Entry.Playground.prototype.changeViewMode = function(a) {
   "default" != a && this.tabViewElements[a].addClass("entryTabSelected");
   if ("variable" != a) {
     var c = this.view_.children;
-    this.viewMode_ = a;
     for (b = 0;b < c.length;b++) {
       var d = c[b];
       -1 < d.id.toUpperCase().indexOf(a.toUpperCase()) ? d.removeClass("entryRemove") : d.addClass("entryRemove");
