@@ -13065,8 +13065,8 @@ Entry.block.maze_call_function = {skeleton:"basic", mode:"maze", color:"#B57242"
   }
 }};
 Entry.block.maze_define_function = {skeleton:"basic_define", mode:"maze", color:"#B57242", event:"define", template:"\uc57d\uc18d\ud558\uae30%1", syntax:["BasicFunction"], params:[{type:"Image", img:"/img/assets/week/blocks/function.png", size:24}], statements:[{accept:"basic"}], func:function(a) {
-  if (!this.executed) {
-    return this.executor.stepInto(this.block.statements[0]), this.executed = !0, Entry.STATIC.CONTINUE;
+  if (!this.executed && (a = this.block.statements[0], 0 !== a.getBlocks().length)) {
+    return this.executor.stepInto(a), this.executed = !0, Entry.STATIC.CONTINUE;
   }
 }};
 Entry.block.maze_step_if_3 = {skeleton:"basic_loop", mode:"maze", color:"#498DEB", template:"\ub9cc\uc57d \uc55e\uc5d0 %1 \uc788\ub2e4\uba74%2", syntax:["BasicIf", 'front == "banana"'], params:[{type:"Image", img:"/img/assets/ntry/block_inner/if_target_3.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/if.png", size:24}], statements:[{accept:"basic"}], func:function() {
