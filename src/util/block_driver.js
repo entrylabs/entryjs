@@ -125,6 +125,7 @@ Entry.BlockMockup = function(blocklyInfo) {
     };
 
     p.appendField = function(field) {
+        if (!field) return this;
         if (typeof field === "string" && field.length > 0)
             this.templates.push(field);
         else {
