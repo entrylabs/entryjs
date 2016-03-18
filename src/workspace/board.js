@@ -627,8 +627,8 @@ Entry.Board = function(option) {
         for (var i = 0; i < contents.length; i++) {
             var content = contents[i];
             var startX = cursorX + content.box.x;
-            var startY = cursorY + content.box.y - 24;
-            var endY = cursorY + content.box.y;
+            var startY = cursorY - 24;
+            var endY = cursorY;
             if (content instanceof Entry.FieldBlock) {
                 var contentBlock = content._valueBlock;
                 if (contentBlock) {

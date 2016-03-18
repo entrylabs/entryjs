@@ -141,9 +141,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldOutput);
         if (this._sizeObserver) this._sizeObserver.destroy();
         if (this._posObserver) this._posObserver.destroy();
 
-        console.log(block);
         block = this._setValueBlock(block);
-        console.log(block);
         if (block) {
             var view = block.view;
             view.bindPrev();
@@ -186,7 +184,6 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldOutput);
 
     p.separate = function(block) {
         this.getCode().createThread([block]);
-        console.log(block);
         this.changeEvent.notify();
     };
 
@@ -205,7 +202,8 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldOutput);
                 d: "m -4,-12 h 3 l 2,2 0,3 3,0 1,1 0,12 -1,1 -3,0 0,3 -2,2 h -3 ",
                 fill: "#fff",
                 stroke: "#fff",
-                'fill-opacity': 0.7
+                'fill-opacity': 0.7,
+                transform: "translate(0," + (this._valueBlock ? 12 : 0) + ")"
             });
         } else {
             if (this._bg) {
