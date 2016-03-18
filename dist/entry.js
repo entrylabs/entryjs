@@ -6638,12 +6638,13 @@ Entry.EntityObject.prototype.injectModel = function(a, b) {
   } else {
     if ("textBox" == this.type) {
       var c = this.parent;
-      b.text = c.text || c.name;
+      b.text = b.text || c.text || c.name;
       this.setFont(b.font);
       this.setBGColour(b.bgColor);
       this.setColour(b.colour);
       this.setUnderLine(b.underLine);
       this.setStrike(b.strike);
+      this.setText(b.text);
     }
   }
   b && this.syncModel_(b);
@@ -7974,7 +7975,7 @@ Entry.EntryObject.prototype.toggleInformation = function(a) {
   a ? this.view_.addClass("informationToggle") : this.view_.removeClass("informationToggle");
 };
 Entry.EntryObject.prototype.addCloneEntity = function(a, b, c) {
-  this.clonedEntities.length > Entry.maxCloneLimit || (a = new Entry.EntityObject(this), b ? (a.injectModel(b.picture ? b.picture : null, b.toJSON()), a.snapshot_ = b.snapshot_, b.effect && (a.effect = Entry.cloneSimpleObject(b.effect), a.applyFilter()), b.brush && Entry.setCloneBrush(a, b.brush)) : (a.injectModel(this.entity.picture ? this.entity.picture : null, this.entity.toJSON(a)), a.snapshot_ = this.entity.snapshot_, this.entity.effect && (a.effect = Entry.cloneSimpleObject(this.entity.effect), 
+  this.clonedEntities.length > Entry.maxCloneLimit || (a = new Entry.EntityObject(this), b ? (a.injectModel(b.picture ? b.picture : null, b.toJSON()), a.snapshot_ = b.snapshot_, b.effect && (a.effect = Entry.cloneSimpleObject(b.effect), a.applyFilter()), b.brush && Entry.setCloneBrush(a, b.brush)) : (console.log(this.entity.toJSON(a)), a.injectModel(this.entity.picture ? this.entity.picture : null, this.entity.toJSON(a)), a.snapshot_ = this.entity.snapshot_, this.entity.effect && (a.effect = Entry.cloneSimpleObject(this.entity.effect), 
   a.applyFilter()), this.entity.brush && Entry.setCloneBrush(a, this.entity.brush)), Entry.engine.raiseEventOnEntity(a, [a, "when_clone_start"]), a.isClone = !0, a.isStarted = !0, this.addCloneVariables(this, a, b ? b.variables : null, b ? b.lists : null), this.clonedEntities.push(a), Entry.stage.loadEntity(a));
 };
 Entry.EntryObject.prototype.initializeSplitter = function(a) {
