@@ -16,6 +16,9 @@ Entry.BlockView = function(block, board, mode) {
     this.svgGroup = board.svgBlockGroup.elem("g");
 
     this._schema = Entry.block[block.type];
+    if (this._schema.changeEvent)
+        this._schemaChangeEvent = this._schema.changeEvent.attach(
+            this, this._updateSchema);
     var skeleton = this._skeleton = Entry.skeleton[this._schema.skeleton];
     this._contents = [];
     this._statements = [];
@@ -168,6 +171,10 @@ Entry.BlockView.PARAM_SPACE = 5;
                 break;
         }
         this.alignContent(false);
+    };
+
+    p._updateSchema = function() {
+        this._startContentRender();
     };
 
     p.alignContent = function(animate) {

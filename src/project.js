@@ -43,6 +43,24 @@ Entry.getStartProject = function(mediaFilePath) {
             "script" : [
                 [
                     {
+                        type: "mutant",
+                        x: 180,
+                        y: 100,
+                        params: [
+                        ]
+                    }
+                ],
+                [
+                    {
+                        type: "mutant",
+                        x: 100,
+                        y: 100,
+                        params: [
+                        ]
+                    }
+                ],
+                [
+                    {
                         type: "length_of_string",
                         x: 200,
                         y: 140,

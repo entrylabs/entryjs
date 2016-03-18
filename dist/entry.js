@@ -8936,9 +8936,10 @@ Entry.popupHelper.prototype.hide = function() {
   this.body_.addClass("hiddenPopup");
 };
 Entry.getStartProject = function(a) {
-  return {category:"\uae30\ud0c0", scenes:[{name:"\uc7a5\uba74 1", id:"7dwq"}], variables:[{name:"\ucd08\uc2dc\uacc4", id:"brih", visible:!1, value:"0", variableType:"timer", x:150, y:-70, array:[], object:null, isCloud:!1}, {name:"\ub300\ub2f5", id:"1vu8", visible:!1, value:"0", variableType:"answer", x:150, y:-100, array:[], object:null, isCloud:!1}], objects:[{id:"7y0y", name:"\uc5d4\ud2b8\ub9ac\ubd07", script:[[{type:"length_of_string", x:200, y:140, params:[{type:"length_of_string"}]}], [{type:"when_run_button_click", 
-  x:40, y:240}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"repeat_basic", statements:[[{type:"move_direction"}, {type:"move_x"}, {type:"move_y"}, {type:"stop_repeat"}]]}, {type:"stop_repeat"}, {type:"move_direction"}]], selectedPictureId:"vx80", objectType:"sprite", rotateMethod:"free", scene:"7dwq", sprite:{sounds:[{duration:1.3, ext:".mp3", id:"8el5", fileurl:a + "media/bark.mp3", name:"\uac15\uc544\uc9c0 \uc9d6\ub294\uc18c\ub9ac"}], pictures:[{id:"vx80", fileurl:a + 
-  "media/entrybot1.png", name:"\uc5d4\ud2b8\ub9ac\ubd07_\uac77\uae301", scale:100, dimension:{width:284, height:350}}, {id:"4t48", fileurl:a + "media/entrybot2.png", name:"\uc5d4\ud2b8\ub9ac\ubd07_\uac77\uae302", scale:100, dimension:{width:284, height:350}}]}, entity:{x:0, y:0, regX:142, regY:175, scaleX:.3154574132492113, scaleY:.3154574132492113, rotation:0, direction:90, width:284, height:350, visible:!0}, lock:!1, active:!0}], speed:60};
+  return {category:"\uae30\ud0c0", scenes:[{name:"\uc7a5\uba74 1", id:"7dwq"}], variables:[{name:"\ucd08\uc2dc\uacc4", id:"brih", visible:!1, value:"0", variableType:"timer", x:150, y:-70, array:[], object:null, isCloud:!1}, {name:"\ub300\ub2f5", id:"1vu8", visible:!1, value:"0", variableType:"answer", x:150, y:-100, array:[], object:null, isCloud:!1}], objects:[{id:"7y0y", name:"\uc5d4\ud2b8\ub9ac\ubd07", script:[[{type:"mutant", x:180, y:100, params:[]}], [{type:"mutant", x:100, y:100, params:[]}], 
+  [{type:"length_of_string", x:200, y:140, params:[{type:"length_of_string"}]}], [{type:"when_run_button_click", x:40, y:240}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"repeat_basic", statements:[[{type:"move_direction"}, {type:"move_x"}, {type:"move_y"}, {type:"stop_repeat"}]]}, {type:"stop_repeat"}, {type:"move_direction"}]], selectedPictureId:"vx80", objectType:"sprite", rotateMethod:"free", scene:"7dwq", sprite:{sounds:[{duration:1.3, ext:".mp3", id:"8el5", 
+  fileurl:a + "media/bark.mp3", name:"\uac15\uc544\uc9c0 \uc9d6\ub294\uc18c\ub9ac"}], pictures:[{id:"vx80", fileurl:a + "media/entrybot1.png", name:"\uc5d4\ud2b8\ub9ac\ubd07_\uac77\uae301", scale:100, dimension:{width:284, height:350}}, {id:"4t48", fileurl:a + "media/entrybot2.png", name:"\uc5d4\ud2b8\ub9ac\ubd07_\uac77\uae302", scale:100, dimension:{width:284, height:350}}]}, entity:{x:0, y:0, regX:142, regY:175, scaleX:.3154574132492113, scaleY:.3154574132492113, rotation:0, direction:90, width:284, 
+  height:350, visible:!0}, lock:!1, active:!0}], speed:60};
 };
 Entry.PropertyPanel = function() {
   this.modes = {};
@@ -12670,6 +12671,8 @@ Entry.VariableContainer.prototype.updateCloudVariables = function() {
 };
 Entry.block.run = {skeleton:"basic", color:"#3BBD70", contents:["this is", "basic block"], func:function() {
 }};
+Entry.block.mutant = {skeleton:"basic", event:"start", color:"#3BBD70", template:"test mutant block", params:[], func:function() {
+}, changeEvent:new Entry.Event};
 Entry.block.jr_start = {skeleton:"pebble_event", event:"start", color:"#3BBD70", template:"%1", params:[{type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_play_image.png", highlightColor:"#3BBD70", position:{x:0, y:0}, size:22}], func:function() {
   var a = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT), b;
   for (b in a) {
@@ -13504,6 +13507,7 @@ Entry.BlockView = function(a, b, c) {
   this.set(a);
   this.svgGroup = b.svgBlockGroup.elem("g");
   this._schema = Entry.block[a.type];
+  this._schema.changeEvent && (this._schemaChangeEvent = this._schema.changeEvent.attach(this, this._updateSchema));
   var d = this._skeleton = Entry.skeleton[this._schema.skeleton];
   this._contents = [];
   this._statements = [];
@@ -13590,6 +13594,9 @@ Entry.BlockView.PARAM_SPACE = 5;
         g = this.getBoard().workspace.getCodeToText(this.block), this._contents.push(new Entry.FieldText({text:g, color:"white"}, this));
     }
     this.alignContent(!1);
+  };
+  a._updateSchema = function() {
+    this._startContentRender();
   };
   a.alignContent = function(b) {
     !0 !== b && (b = !1);
@@ -15025,22 +15032,22 @@ Entry.GlobalSvg = {};
     }
   };
   a.draw = function() {
-    var b = this._view;
+    var a = this._view;
     this._svg && this.remove();
-    var a = this._mode == Entry.Workspace.MODE_VIMBOARD;
-    this.svgGroup = Entry.SVG.createElement(b.svgGroup.cloneNode(!0), {opacity:1});
+    var c = this._mode == Entry.Workspace.MODE_VIMBOARD;
+    this.svgGroup = Entry.SVG.createElement(a.svgGroup.cloneNode(!0), {opacity:1});
     this.svg.appendChild(this.svgGroup);
     this.show();
-    a && (b = $(this.svgGroup), b.find("g").css({filter:"none"}), b.find("path").velocity({opacity:0}, {duration:500}), b.find("text").velocity({fill:"#000000"}, {duration:530}));
+    c && (a = $(this.svgGroup), a.find("g").css({filter:"none"}), a.find("path").velocity({opacity:0}, {duration:500}), a.find("text").velocity({fill:"#000000"}, {duration:530}));
   };
   a.remove = function() {
     this.svgGroup && (this.svgGroup.remove(), delete this.svgGroup, delete this._view, delete this._offsetX, delete this._offsetY, delete this._startX, delete this._startY, this.hide());
   };
   a.align = function() {
-    var b = this._view.getSkeleton().box(this._view).offsetX || 0, a = this._view.getSkeleton().box(this._view).offsetY || 0, b = -1 * b + 1, a = -1 * a + 1;
-    this._offsetX = b;
-    this._offsetY = a;
-    this.svgGroup.attr({transform:"translate(" + b + "," + a + ")"});
+    var a = this._view.getSkeleton().box(this._view).offsetX || 0, c = this._view.getSkeleton().box(this._view).offsetY || 0, a = -1 * a + 1, c = -1 * c + 1;
+    this._offsetX = a;
+    this._offsetY = c;
+    this.svgGroup.attr({transform:"translate(" + a + "," + c + ")"});
   };
   a.show = function() {
     this.svgDom.css("display", "block");
@@ -15090,6 +15097,19 @@ Entry.GlobalSvg = {};
     this._startY = a.pageY;
   };
 })(Entry.GlobalSvg);
+Entry.Mutator = function() {
+};
+(function(a) {
+  a.mutate = function(a, c) {
+    var d = Entry.block[a];
+    void 0 === d.changeEvent && (d.changeEvent = new Entry.Event);
+    d.template = c.template;
+    d.params = c.params;
+    d.changeEvent.notify();
+  };
+})(Entry.Mutator);
+(function(a) {
+})(Entry.Mutator.prototype);
 Entry.RenderView = function(a, b) {
   this._align = b || "CENTER";
   a = "string" === typeof a ? $("#" + a) : $(a);
@@ -15566,6 +15586,7 @@ Entry.Block.MAGNET_OFFSET = .4;
   };
   a.getSchema = function() {
     if (this._schema = Entry.block[this.type]) {
+      !this._schemaChangeEvent && this._schema.changeEvent && (this._schemaChangeEvent = this._schema.changeEvent.attach(this, this.getSchema));
       var a = this._schema.events;
       if (a) {
         for (var c in a) {

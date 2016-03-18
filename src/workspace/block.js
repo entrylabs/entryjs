@@ -55,6 +55,10 @@ Entry.Block.MAGNET_OFFSET = 0.4;
 
         if (!this._schema) return;
 
+        if (!this._schemaChangeEvent && this._schema.changeEvent)
+            this._schemaChangeEvent = this._schema.changeEvent.attach(
+                this, this.getSchema);
+
         var events = this._schema.events;
         if (events) {
             for (var key in events) {

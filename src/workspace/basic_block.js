@@ -12,6 +12,18 @@ Entry.block.run = {
     }
 };
 
+Entry.block.mutant = {
+    skeleton: "basic",
+    event: "start",
+    color: "#3BBD70",
+    template: "test mutant block",
+    params: [
+    ],
+    func: function() {
+    },
+    changeEvent: new Entry.Event()
+};
+
 
 Entry.block.jr_start = {
     skeleton: "pebble_event",
