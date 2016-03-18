@@ -3116,7 +3116,7 @@ Entry.block.False = function(a, b) {
 Blockly.Blocks.boolean_basic_operator = {init:function() {
   this.setColour("#AEB8FF");
   this.appendValueInput("LEFTHAND").setCheck(["String", "Number"]);
-  this.appendDummyInput("VALUE").appendField(new Blockly.FieldDropdown([["=", "EQUAL"], [">", "GREATER"], ["<", "LESS"], ["\u2267", "GREATER_OR_EQUAL"], ["\u2266", "LESS_OR_EQUAL"]], null, !1), "OPERATOR");
+  this.appendDummyInput("VALUE").appendField(new Blockly.FieldDropdown([["=", "EQUAL"], [">", "GREATER"], ["<", "LESS"], ["\u2265", "GREATER_OR_EQUAL"], ["\u2264", "LESS_OR_EQUAL"]], null, !1), "OPERATOR");
   this.appendValueInput("RIGHTHAND").setCheck(["Number", "String"]);
   this.setOutput(!0, "Boolean");
   this.setInputsInline(!0);
