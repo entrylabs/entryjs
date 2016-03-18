@@ -744,9 +744,9 @@ Entry.Playground.prototype.generateTextView = function(textView) {
     var linebreakOffImage = Entry.createElement("img");
     linebreakOffImage.bindOnClick(function() {
         Entry.playground.toggleLineBreak(false);
-        linebreakDescTitle.innerHTML = '글상자의 크기가 글자의 크기를 결정합니다.';
-        linebreakDescList1.innerHTML = '내용을 한 줄로만 작성할 수 있습니다.';
-        linebreakDescList2.innerHTML = '새로운 글자가 추가되면 글상자의 좌우 길이가 길어집니다.';
+        linebreakDescTitle.innerHTML = Lang.Menus.linebreak_off_desc_1;
+        linebreakDescList1.innerHTML = Lang.Menus.linebreak_off_desc_2;
+        linebreakDescList2.innerHTML = Lang.Menus.linebreak_off_desc_3;
     });
 
     linebreakOffImage.src = Entry.mediaFilePath + 'text-linebreak-off-true.png';
@@ -756,9 +756,9 @@ Entry.Playground.prototype.generateTextView = function(textView) {
     var linebreakOnImage = Entry.createElement("img");
     linebreakOnImage.bindOnClick(function() {
         Entry.playground.toggleLineBreak(true);
-        linebreakDescTitle.innerHTML = '글상자의 크기가 글자가 쓰일 수 있는 영역을 결정합니다.';
-        linebreakDescList1.innerHTML = '내용 작성시 엔터키로 줄바꿈을 할 수 있습니다.';
-        linebreakDescList2.innerHTML = '내용을 작성하시거나 새로운 글자를 추가시 길이가 글상자의 가로 영역을 넘어서면 자동으로 줄이 바뀝니다.';
+        linebreakDescTitle.innerHTML = Lang.Menus.linebreak_on_desc_1;
+        linebreakDescList1.innerHTML = Lang.Menus.linebreak_on_desc_2;
+        linebreakDescList2.innerHTML = Lang.Menus.linebreak_on_desc_3;
     });
 
     linebreakOnImage.src = Entry.mediaFilePath + 'text-linebreak-on-false.png';
@@ -770,16 +770,16 @@ Entry.Playground.prototype.generateTextView = function(textView) {
     linebreakWrapper.appendChild(linebreakDescription);
 
     var linebreakDescTitle = Entry.createElement("p");
-    linebreakDescTitle.innerHTML = '글상자의 크기가 글자의 크기를 결정합니다.';
+    linebreakDescTitle.innerHTML = Lang.Menus.linebreak_off_desc_1;
     linebreakDescription.appendChild(linebreakDescTitle);
 
     var linebreakDescUL = Entry.createElement("ul");
     linebreakDescription.appendChild(linebreakDescUL);
     var linebreakDescList1 = Entry.createElement("li");
-    linebreakDescList1.innerHTML = '내용을 한 줄로만 작성할 수 있습니다.';
+    linebreakDescList1.innerHTML = Lang.Menus.linebreak_off_desc_2;
     linebreakDescUL.appendChild(linebreakDescList1);
     var linebreakDescList2 = Entry.createElement("li");
-    linebreakDescList2.innerHTML = '새로운 글자가 추가되면 글상자의 좌우 길이가 길어집니다.';
+    linebreakDescList2.innerHTML = Lang.Menus.linebreak_off_desc_3;
     linebreakDescUL.appendChild(linebreakDescList2);
 
 
