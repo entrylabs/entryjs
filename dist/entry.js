@@ -7171,16 +7171,12 @@ p.initSocket = function() {
       a.initHardware();
     };
     c.onmessage = function(b) {
-      console.log("onmessage");
       b = JSON.parse(b.data);
       a.checkDevice(b);
       a.updatePortData(b);
     };
     c.onclose = function() {
       "WebSocket" === a.socketType && (this.socket = null, a.initSocket());
-    };
-    c.onerror = function() {
-      console.log("error");
     };
     d.connect();
     d.on("connect", function(b) {
