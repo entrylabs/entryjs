@@ -1264,7 +1264,6 @@ Entry.EntryObject.prototype.addCloneEntity = function(object, entity, script) {
             Entry.setCloneBrush(clonedEntity, entity.brush);
         }
     } else {
-        console.log(this.entity.toJSON(clonedEntity));
         clonedEntity.injectModel(
             this.entity.picture ? this.entity.picture : null,
             this.entity.toJSON(clonedEntity)
