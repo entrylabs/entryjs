@@ -74,7 +74,10 @@ Entry.block.jr_repeat = {
             return Entry.STATIC.CONTINUE;
         } else if (this.repeatCount > 0) {
             this.repeatCount--;
-            this.executor.stepInto(this.block.statements[0]);
+            var statement = this.block.statements[0];
+            if (statement.getBlocks().length === 0)
+                return;
+            this.executor.stepInto(statement);
             return Entry.STATIC.CONTINUE;
         } else {
             delete this.repeatCount;
@@ -810,7 +813,10 @@ Entry.block.maze_step_for = {
             return Entry.STATIC.CONTINUE;
         } else if (this.repeatCount > 0) {
             this.repeatCount--;
-            this.executor.stepInto(this.block.statements[0]);
+            var statement = this.block.statements[0];
+            if (statement.getBlocks().length === 0)
+                return;
+            this.executor.stepInto(statement);
             return Entry.STATIC.CONTINUE;
         } else {
             delete this.repeatCount;
@@ -1120,7 +1126,10 @@ Entry.block.maze_define_function = {
     func: function(executor) {
         if (this.executed)
             return;
-        this.executor.stepInto(this.block.statements[0]);
+        var statement = this.block.statements[0];
+        if (statement.getBlocks().length === 0)
+            return;
+        this.executor.stepInto(statement);
         this.executed = true;
         return Entry.STATIC.CONTINUE;
     }

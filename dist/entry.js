@@ -12682,9 +12682,14 @@ Entry.block.jr_repeat = {skeleton:"pebble_loop", color:"#127CDB", template:"%1 \
     return this.repeatCount = this.block.params[0], Entry.STATIC.CONTINUE;
   }
   if (0 < this.repeatCount) {
-    return this.repeatCount--, this.executor.stepInto(this.block.statements[0]), Entry.STATIC.CONTINUE;
+    this.repeatCount--;
+    var a = this.block.statements[0];
+    if (0 !== a.getBlocks().length) {
+      return this.executor.stepInto(a), Entry.STATIC.CONTINUE;
+    }
+  } else {
+    delete this.repeatCount;
   }
-  delete this.repeatCount;
 }};
 Entry.block.jr_item = {skeleton:"pebble_basic", color:"#F46C6C", template:"\uaf43 \ubaa8\uc73c\uae30 %1", params:[{type:"Indicator", img:"/img/assets/ntry/bitmap/jr/block_item_image.png", highlightColor:"#FFF", position:{x:83, y:0}, size:22}], func:function() {
   if (this.isContinue) {
@@ -12994,9 +12999,14 @@ Entry.block.maze_step_for = {skeleton:"basic_loop", mode:"maze", color:"#498DEB"
     return this.repeatCount = this.block.params[0], Entry.STATIC.CONTINUE;
   }
   if (0 < this.repeatCount) {
-    return this.repeatCount--, this.executor.stepInto(this.block.statements[0]), Entry.STATIC.CONTINUE;
+    this.repeatCount--;
+    var a = this.block.statements[0];
+    if (0 !== a.getBlocks().length) {
+      return this.executor.stepInto(a), Entry.STATIC.CONTINUE;
+    }
+  } else {
+    delete this.repeatCount;
   }
-  delete this.repeatCount;
 }};
 Entry.block.test = {skeleton:"basic_boolean_field", mode:"maze", color:"#127CDB", template:"%1 this is test block %2", params:[{type:"Angle", value:"90"}, {type:"Dropdown", options:[[1, 1], [2, 2], [3, 3], [4, 4], [5, 5], [6, 6], [7, 7], [8, 8], [9, 9], [10, 10]], value:1}], func:function() {
 }};
@@ -13065,8 +13075,8 @@ Entry.block.maze_call_function = {skeleton:"basic", mode:"maze", color:"#B57242"
   }
 }};
 Entry.block.maze_define_function = {skeleton:"basic_define", mode:"maze", color:"#B57242", event:"define", template:"\uc57d\uc18d\ud558\uae30%1", syntax:["BasicFunction"], params:[{type:"Image", img:"/img/assets/week/blocks/function.png", size:24}], statements:[{accept:"basic"}], func:function(a) {
-  if (!this.executed) {
-    return this.executor.stepInto(this.block.statements[0]), this.executed = !0, Entry.STATIC.CONTINUE;
+  if (!this.executed && (a = this.block.statements[0], 0 !== a.getBlocks().length)) {
+    return this.executor.stepInto(a), this.executed = !0, Entry.STATIC.CONTINUE;
   }
 }};
 Entry.block.maze_step_if_3 = {skeleton:"basic_loop", mode:"maze", color:"#498DEB", template:"\ub9cc\uc57d \uc55e\uc5d0 %1 \uc788\ub2e4\uba74%2", syntax:["BasicIf", 'front == "banana"'], params:[{type:"Image", img:"/img/assets/ntry/block_inner/if_target_3.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/if.png", size:24}], statements:[{accept:"basic"}], func:function() {
@@ -14510,16 +14520,16 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
     var a = this;
     this.svgGroup = b.contentSvgGroup.elem("g", {class:"entry-field-dropdown"});
     this.textElement = this.svgGroup.elem("text", {x:2});
-    this.textElement.innerHTML = this.getTextByValue(this.getValue());
+    this.textElement.textContent = this.getTextByValue(this.getValue());
     var d = this.textElement.getBBox();
     this.textElement.attr({style:"white-space: pre; font-size:" + a._FONT_SIZE + "px", y:.25 * d.height});
     var d = this.textElement.getComputedTextLength() + 18, e = this._CONTENT_HEIGHT;
     this._header = this.svgGroup.elem("rect", {width:d, height:e, y:-e / 2, rx:a._ROUND, ry:a._ROUND, fill:"#fff", "fill-opacity":.4});
     this.svgGroup.appendChild(this.textElement);
     this._arrow = this.svgGroup.elem("polygon", {points:"0,-2 6,-2 3,2", fill:b._schema.color, stroke:b._schema.color, transform:"translate(" + (d - 11) + ",0)"});
-    this.svgGroup.onmouseup = function(b) {
+    $(this.svgGroup).bind("mouseup touchend", function(b) {
       a._isEditable() && a.renderOptions();
-    };
+    });
     this.box.set({x:0, y:0, width:d, height:e});
   };
   a.resize = function() {
@@ -14542,20 +14552,23 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
     for (var g = 0, h = a.length;g < h;g++) {
       var k = a[g], l = k[0], k = k[1], n = this.optionGroup.elem("g", {class:"rect", transform:"translate(0," + g * f + ")"});
       d.push(n.elem("rect", {height:f}));
-      this.getValue() == k && (n.elem("text", {x:5, y:13, "alignment-baseline":"central"}).innerHTML = "\u2713");
-      var m = n.elem("text", {x:20, y:10, "alignment-baseline":"central"});
-      m.innerHTML = l;
-      e = Math.max(m.getComputedTextLength() + 30, e);
+      this.getValue() == k && (n.elem("text", {x:5, y:13, "alignment-baseline":"central"}).textContent = "\u2713");
+      var m = n.elem("text", {x:20, "alignment-baseline":"central"});
+      m.textContent = l;
+      l = m.getBoundingClientRect();
+      m.attr({y:f / 2});
+      e = Math.max(l.width + 30, e);
       (function(a, c) {
-        a.onmousedown = function(b) {
+        var d = $(a);
+        d.bind("mousedown touchstart", function(b) {
           b.stopPropagation();
-        };
-        a.onmouseup = function(a) {
+        });
+        d.bind("mouseup touchend", function(a) {
           a.stopPropagation();
           b.applyValue(c);
           b.destroyOption();
           b._selectBlockView();
-        };
+        });
       })(n, k);
     }
     a = -e / 2 + this.box.width / 2;
@@ -15036,9 +15049,9 @@ Entry.GlobalSvg = {};
     this.svgDom.css("display", "none");
   };
   a.position = function() {
-    var b = this._view, a = b.getAbsoluteCoordinate(), b = b.getBoard().offset;
-    this.left = a.x + b.left - this._offsetX;
-    this.top = a.y + b.top - this._offsetY;
+    var a = this._view, c = a.getAbsoluteCoordinate(), a = a.getBoard().offset;
+    this.left = c.x + a.left - this._offsetX;
+    this.top = c.y + a.top - this._offsetY;
     this.svgDom.css({left:this.left, top:this.top});
   };
   a.terminateDrag = function(a) {
