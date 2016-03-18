@@ -6068,7 +6068,7 @@ Entry.Container.prototype.initDoneProject = function(a) {
   b.setAttribute("width", a);
   b.setAttribute("height", 9 * a / 16 + 35);
   b.setAttribute("frameborder", 0);
-  b.setAttribute("src", "/api/project/iframe/" + this.doneProject);
+  b.setAttribute("src", "/api/iframe/project/" + this.doneProject);
   this.doneProjectFrame = b;
   this.doneContainer.appendChild(b);
 };
