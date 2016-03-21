@@ -44,6 +44,39 @@ EntryStatic.categoryList = [
 
 EntryStatic.requiredTimes = [1,2,3,4,5];
 
+EntryStatic.searchProjectOption = [
+   {
+       'key':'search_updated',
+       'lang':'search_updated',
+       'value': 'updated'
+   },
+   {
+       'key':'search_recent',
+       'lang':'search_recent',
+       'value': 'recent'
+   },
+   {
+       'key':'search_complexity',
+       'lang':'search_complexity',
+       'value':'complexity'
+   },
+   {
+       'key':'search_staffPicked',
+       'lang':'search_staffPicked',
+       'value': 'staffPicked'
+   },
+   {
+       'key':'search_childCnt',
+       'lang':'search_childCnt',
+       'value': 'childCnt'
+   },
+   {
+       'key':'search_likeCnt',
+       'lang':'search_likeCnt',
+       'value': 'likeCnt'
+   }
+]
+
 EntryStatic.getAllBlocks = function() {
     return [
         {
@@ -145,7 +178,6 @@ EntryStatic.getAllBlocks = function() {
         {
             category: "text",
             blocks: [
-                "text",
                 "text_write",
                 "text_append",
                 "text_prepend",
@@ -250,6 +282,7 @@ EntryStatic.getAllBlocks = function() {
                 "neobot_play_note_for",
                 "neobot_set_sensor_value",
                 "bitbrick_sensor_value",
+                "bitbrick_convert_scale",
                 "bitbrick_is_touch_pressed",
                 "bitbrick_turn_off_color_led",
                 "bitbrick_turn_on_color_led_by_rgb",
@@ -260,57 +293,57 @@ EntryStatic.getAllBlocks = function() {
                 "bitbrick_dc_speed",
                 "bitbrick_dc_direction_speed",
                 "bitbrick_servomotor_angle",
-                "hamster_move_forward",
-                "hamster_move_backward",
-                "hamster_turn_around",
-                "hamster_set_led_to",
-                "hamster_clear_led",
-                "hamster_beep",
-                "hamster_hand_found",
+				"hamster_hand_found",
+                "hamster_value",
+				"hamster_move_forward_once",
+				"hamster_turn_once",
                 "hamster_move_forward_for_secs",
                 "hamster_move_backward_for_secs",
                 "hamster_turn_for_secs",
+				"hamster_change_both_wheels_by",
+                "hamster_set_both_wheels_to",
+                "hamster_change_wheel_by",
+                "hamster_set_wheel_to",
+				"hamster_follow_line_using",
+				"hamster_follow_line_until",
+				"hamster_set_following_speed_to",
+                "hamster_stop",
+				"hamster_set_led_to",
+                "hamster_clear_led",
+                "hamster_beep",
+				"hamster_change_buzzer_by",
+                "hamster_set_buzzer_to",
+                "hamster_clear_buzzer",
                 "hamster_play_note_for",
                 "hamster_rest_for",
                 "hamster_change_tempo_by",
                 "hamster_set_tempo_to",
-                "hamster_change_both_wheels_by",
-                "hamster_set_both_wheels_to",
-                "hamster_change_wheels_by",
-                "hamster_set_wheels_to",
-                "hamster_stop",
-                "hamster_change_buzzer_by",
-                "hamster_set_buzzer_to",
-                "hamster_clear_buzzer",
-                "hamster_value",
-                "albert_move_forward",
-                "albert_move_backward",
-                "albert_turn_around",
-                "albert_set_led_to",
-                "albert_clear_led",
-                "albert_body_led",
-                "albert_front_led",
-                "albert_beep",
+				"hamster_set_port_to",
+				"hamster_change_output_by",
+				"hamster_set_output_to",
                 "albert_hand_found",
+				"albert_value",
                 "albert_move_forward_for_secs",
                 "albert_move_backward_for_secs",
                 "albert_turn_for_secs",
+				"albert_change_both_wheels_by",
+                "albert_set_both_wheels_to",
+                "albert_change_wheel_by",
+                "albert_set_wheel_to",
+                "albert_stop",
+				"albert_set_pad_size_to",
+				"albert_set_eye_to",
+                "albert_clear_eye",
+                "albert_body_led",
+                "albert_front_led",
+                "albert_beep",
+				"albert_change_buzzer_by",
+                "albert_set_buzzer_to",
+                "albert_clear_buzzer",
                 "albert_play_note_for",
                 "albert_rest_for",
                 "albert_change_tempo_by",
                 "albert_set_tempo_to",
-                "albert_change_both_wheels_by",
-                "albert_set_both_wheels_to",
-                "albert_change_wheels_by",
-                "albert_set_wheels_to",
-                "albert_stop",
-                "albert_change_buzzer_by",
-                "albert_set_buzzer_to",
-                "albert_clear_buzzer",
-                "albert_value",
-                //"hamster_set_port_to",
-                //"hamster_change_output_by",
-                //"hamster_set_output_to",
                 //sensorBoard
                 "sensorBoard_get_named_sensor_value",
                 "sensorBoard_is_button_pressed",
@@ -319,7 +352,39 @@ EntryStatic.getAllBlocks = function() {
                 "sensorBoard_get_digital_value",
                 "sensorBoard_toggle_led",
                 "sensorBoard_toggle_pwm",
-                "sensorBoard_convert_scale"
+                "sensorBoard_convert_scale",
+                //CODEino
+                "CODEino_get_named_sensor_value",
+                "CODEino_get_sound_status",
+                "CODEino_get_light_status",
+                "CODEino_is_button_pressed",
+                "CODEino_get_accelerometer_direction",
+                "CODEino_get_accelerometer_value",
+                "CODEino_get_number_sensor_value",
+                "CODEino_get_digital_value",
+                "CODEino_toggle_led",
+                "CODEino_toggle_pwm",
+                "CODEino_convert_scale",
+                "robotis_openCM70_sensor_value",
+                "robotis_openCM70_aux_sensor_value",
+                "robotis_openCM70_cm_buzzer_index",
+                "robotis_openCM70_cm_buzzer_melody",
+                "robotis_openCM70_cm_sound_detected_clear",
+                "robotis_openCM70_cm_led",
+                "robotis_openCM70_cm_motion",
+                "robotis_openCM70_aux_motor_speed",              
+                "robotis_openCM70_aux_servo_mode",
+                "robotis_openCM70_aux_servo_speed",
+                "robotis_openCM70_aux_servo_position",
+                "robotis_openCM70_aux_led_module",
+                "robotis_openCM70_aux_custom",
+                "robotis_openCM70_cm_custom_value",
+                "robotis_openCM70_cm_custom",
+                "robotis_carCont_sensor_value",  
+                "robotis_carCont_cm_led",
+                "robotis_carCont_cm_sound_detected_clear",
+                "robotis_carCont_aux_motor_speed",
+                "robotis_carCont_cm_calibration"
             ]
         }
     ]
@@ -808,13 +873,13 @@ EntryStatic.blockInfo = {
     },
     "sound_something_wait_with_block": {
         "xml": "<block type='sound_something_wait_with_block'><value name='VALUE'><block type='get_sounds'></block></value></block>",
-        "class": "sound_play",
+        "class": "sound_wait",
         "isNotFor": [],
         "usage": ["sound"]
     },
     "sound_something_second_wait_with_block": {
         "xml": "<block type='sound_something_second_wait_with_block'><value name='VALUE'><block type='get_sounds'></block></value><value name='SECOND'><block type='number'><field name='NUM'>1</field></block></value></block>",
-        "class": "sound_play",
+        "class": "sound_wait",
         "isNotFor": [],
         "usage": ["sound"]
     },
@@ -1052,7 +1117,7 @@ EntryStatic.blockInfo = {
         "usage": ["variable"]
     },
     "value_of_index_from_list": {
-        "xml": "<block type='value_of_index_from_list'> <value name='INDEX'> <block type='options_for_list'></block> </value> </block>",
+        "xml": "<block type='value_of_index_from_list'> <value name='INDEX'> <block type='number'><field name='NUM'>1</field></block> </value> </block>",
         "class": "list_element",
         "isNotFor": ["list", "listNotExist"],
         "usage": ["list"]
@@ -1098,12 +1163,6 @@ EntryStatic.blockInfo = {
         "class": "list_visibility",
         "isNotFor": ["list", "listNotExist"],
         "usage": ["list"]
-    },
-    "text": {
-        "xml": "<block type='text'></block>",
-        "class": "text",
-        "isNotFor": ["sprite"],
-        "description": "해당 글상자가 표시하고 있는 문자값을 의미합니다."
     },
     "text_write": {
         "xml": "<block type='text_write'><value name='VALUE'><block type='text'></block></value></block>",
@@ -1165,6 +1224,12 @@ EntryStatic.blockInfo = {
         "usage": ["arduino"],
         "class": "arduino_value"
     },
+    "CODEino_get_number_sensor_value": {
+        "xml": "<block type='arduino_get_number_sensor_value'><value name='VALUE'><block type='CODEino_get_sensor_number'></block></value></block>",
+        "isNotFor": ['CODEino'],
+        "usage": ["arduino"],
+        "class": "arduino_value"
+    },
     "arduino_get_digital_value": {
         "xml": "<block type='arduino_get_digital_value'><value name='VALUE'><block type='arduino_get_port_number'></block></value></block>",
         "isNotFor": ['arduino'],
@@ -1174,6 +1239,12 @@ EntryStatic.blockInfo = {
     "sensorBoard_get_digital_value": {
         "xml": "<block type='arduino_get_digital_value'><value name='VALUE'><block type='arduino_get_port_number'></block></value></block>",
         "isNotFor": ['sensorBoard'],
+        "usage": ["arduino"],
+        "class": "arduino_value"
+    },    
+    "CODEino_get_digital_value": {
+        "xml": "<block type='arduino_get_digital_value'><value name='VALUE'><block type='arduino_get_port_number'></block></value></block>",
+        "isNotFor": ['CODEino'],
         "usage": ["arduino"],
         "class": "arduino_value"
     },
@@ -1189,6 +1260,12 @@ EntryStatic.blockInfo = {
         "usage": ["arduino"],
         "class": "arduino_set"
     },
+    "CODEino_toggle_led": {
+        "xml": "<block type='arduino_toggle_led'><value name='VALUE'><block type='arduino_get_port_number'></block></value></block>",
+        "isNotFor": ['CODEino'],
+        "usage": ["arduino"],
+        "class": "arduino_set"
+    },
     "arduino_toggle_pwm": {
         "xml": "<block type='arduino_toggle_pwm'><value name='PORT'><block type='arduino_get_pwm_port_number'></block></value><value name='VALUE'><block type='arduino_text'><field name='NAME'>255</field></block></value></block>",
         "isNotFor": ['arduino'],
@@ -1201,6 +1278,12 @@ EntryStatic.blockInfo = {
         "usage": ["arduino"],
         "class": "arduino_set"
     },
+    "CODEino_toggle_pwm": {
+        "xml": "<block type='arduino_toggle_pwm'><value name='PORT'><block type='arduino_get_pwm_port_number'></block></value><value name='VALUE'><block type='arduino_text'><field name='NAME'>255</field></block></value></block>",
+        "isNotFor": ['CODEino'],
+        "usage": ["arduino"],
+        "class": "arduino_set"
+    },
     "arduino_convert_scale": {
         "xml": "<block type='arduino_convert_scale'><value name='VALUE1'><block type='arduino_get_number_sensor_value'><value name='VALUE'><block type='arduino_get_sensor_number'></block></value></block></value><value name='VALUE2'> <block type='number'><field name='NUM'>0</field></block> </value><value name='VALUE3'> <block type='number'><field name='NUM'>1023</field></block> </value><value name='VALUE4'> <block type='number'><field name='NUM'>0</field></block> </value><value name='VALUE5'> <block type='number'><field name='NUM'>100</field></block> </value></block>",
         "isNotFor": ['arduino'],
@@ -1210,6 +1293,12 @@ EntryStatic.blockInfo = {
     "sensorBoard_convert_scale": {
         "xml": "<block type='arduino_convert_scale'><value name='VALUE1'><block type='arduino_get_number_sensor_value'><value name='VALUE'><block type='arduino_get_sensor_number'></block></value></block></value><value name='VALUE2'> <block type='number'><field name='NUM'>0</field></block> </value><value name='VALUE3'> <block type='number'><field name='NUM'>1023</field></block> </value><value name='VALUE4'> <block type='number'><field name='NUM'>0</field></block> </value><value name='VALUE5'> <block type='number'><field name='NUM'>100</field></block> </value></block>",
         "isNotFor": ['sensorBoard'],
+        "usage": ["arduino"],
+        "class": "arduino"
+    },
+    "CODEino_convert_scale": {
+        "xml": "<block type='arduino_convert_scale'><value name='VALUE1'><block type='arduino_get_number_sensor_value'><value name='VALUE'><block type='CODEino_get_sensor_number'></block></value></block></value><value name='VALUE2'> <block type='number'><field name='NUM'>0</field></block> </value><value name='VALUE3'> <block type='number'><field name='NUM'>1023</field></block> </value><value name='VALUE4'> <block type='number'><field name='NUM'>0</field></block> </value><value name='VALUE5'> <block type='number'><field name='NUM'>100</field></block> </value></block>",
+        "isNotFor": ['CODEino'],
         "usage": ["arduino"],
         "class": "arduino"
     },
@@ -1324,7 +1413,7 @@ EntryStatic.blockInfo = {
         "usage": []
     },
     "change_string_case": {
-        "xml": "<block type='change_string_case'><value name='STRING'><block type='text'><field name='NAME'>안녕, 엔트리!</field></block></value></block>",
+        "xml": "<block type='change_string_case'><value name='STRING'><block type='text'><field name='NAME'>Hello, Entry!</field></block></value></block>",
         "class": "calc_string",
         "isNotFor": [],
         "usage": []
@@ -1439,285 +1528,268 @@ EntryStatic.blockInfo = {
         "isNotFor": ['bitbrick'],
         "xml": "<block type='bitbrick_servomotor_angle'><value name='VALUE'><block type='text'><field name='NAME'>100</field></block></value></block>",
         "class": "condition"
+    },    
+    "bitbrick_convert_scale": {
+        "isNotFor": ['bitbrick'],
+        "xml": "<block type='bitbrick_convert_scale'><value name='VALUE2'> <block type='number'><field name='NUM'>0</field></block> </value><value name='VALUE3'> <block type='number'><field name='NUM'>1023</field></block> </value><value name='VALUE4'> <block type='number'><field name='NUM'>-100</field></block> </value><value name='VALUE5'> <block type='number'><field name='NUM'>100</field></block> </value></block>",
+        "class": "condition"
     },
-    "hamster_move_forward": {
-        "isNotFor": ["hamster"],
-        "xml": "<block type='hamster_move_forward'></block>",
-        "class": "hamster_novice"
-    },
-    "hamster_move_backward": {
-        "isNotFor": ["hamster"],
-        "xml": "<block type='hamster_move_backward'></block>",
-        "class": "hamster_novice"
-    },
-    "hamster_turn_around": {
-        "isNotFor": ["hamster"],
-        "xml": "<block type='hamster_turn_around'></block>",
-        "class": "hamster_novice"
-    },
-    "hamster_set_led_to": {
-        "isNotFor": ["hamster"],
-        "xml": "<block type='hamster_set_led_to'></block>",
-        "class": "hamster_novice"
-    },
-    "hamster_clear_led": {
-        "isNotFor": ["hamster"],
-        "xml": "<block type='hamster_clear_led'></block>",
-        "class": "hamster_novice"
-    },
-    "hamster_beep": {
-        "isNotFor": ["hamster"],
-        "xml": "<block type='hamster_beep'></block>",
-        "class": "hamster_novice"
-    },
-    "hamster_hand_found": {
+	"hamster_hand_found": {
         "isNotFor": ["hamster"],
         "xml": "<block type='hamster_hand_found'></block>",
-        "class": "hamster_novice"
-    },
-    "hamster_move_forward_for_secs": {
-        "isNotFor": ["hamster"],
-        "xml": "<block type='hamster_move_forward_for_secs'><value name='VALUE'><block type='text'><field name='NAME'>1</field></block></value></block>",
-        "class": "intermediate"
-    },
-    "hamster_move_backward_for_secs": {
-        "isNotFor": ["hamster"],
-        "xml": "<block type='hamster_move_backward_for_secs'><value name='VALUE'><block type='text'><field name='NAME'>1</field></block></value></block>",
-        "class": "intermediate"
-    },
-    "hamster_turn_for_secs": {
-        "isNotFor": ["hamster"],
-        "xml": "<block type='hamster_turn_for_secs'><value name='VALUE'><block type='text'><field name='NAME'>1</field></block></value></block>",
-        "class": "intermediate"
-    },
-    "hamster_play_note_for": {
-        "isNotFor": ["hamster"],
-        "xml": "<block type='hamster_play_note_for'><field name='OCTAVE'>4</field><value name='VALUE'><block type='text'><field name='NAME'>0.5</field></block></value></block>",
-        "class": "intermediate"
-    },
-    "hamster_rest_for": {
-        "isNotFor": ["hamster"],
-        "xml": "<block type='hamster_rest_for'><value name='VALUE'><block type='text'><field name='NAME'>0.25</field></block></value></block>",
-        "class": "intermediate"
-    },
-    "hamster_change_tempo_by": {
-        "isNotFor": ["hamster"],
-        "xml": "<block type='hamster_change_tempo_by'><value name='VALUE'><block type='text'><field name='NAME'>20</field></block></value></block>",
-        "class": "intermediate"
-    },
-    "hamster_set_tempo_to": {
-        "isNotFor": ["hamster"],
-        "xml": "<block type='hamster_set_tempo_to'><value name='VALUE'><block type='text'><field name='NAME'>60</field></block></value></block>",
-        "class": "intermediate"
-    },
-
-
-
-    "hamster_change_both_wheels_by": {
-        "isNotFor": ["hamster"],
-        "xml": "<block type='hamster_change_both_wheels_by'><value name='LEFT'><block type='text'><field name='NAME'>10</field></block></value><value name='RIGHT'><block type='text'><field name='NAME'>10</field></block></value></block>",
-        "class": "rank"
-    },
-    "hamster_set_both_wheels_to": {
-        "isNotFor": ["hamster"],
-        "xml": "<block type='hamster_set_both_wheels_to'><value name='LEFT'><block type='text'><field name='NAME'>30</field></block></value><value name='RIGHT'><block type='text'><field name='NAME'>30</field></block></value></block>",
-        "class": "rank"
-    },
-    "hamster_change_wheels_by": {
-        "isNotFor": ["hamster"],
-        "xml": "<block type='hamster_change_wheels_by'><value name='VALUE'><block type='text'><field name='NAME'>10</field></block></value></block>",
-        "class": "rank"
-    },
-    "hamster_set_wheels_to": {
-        "isNotFor": ["hamster"],
-        "xml": "<block type='hamster_set_wheels_to'><value name='VALUE'><block type='text'><field name='NAME'>30</field></block></value></block>",
-        "class": "rank"
-    },
-    "hamster_stop": {
-        "isNotFor": ["hamster"],
-        "xml": "<block type='hamster_stop'></block>",
-        "class": "rank"
-    },
-    "hamster_change_buzzer_by": {
-        "isNotFor": ["hamster"],
-        "xml": "<block type='hamster_change_buzzer_by'><value name='VALUE'><block type='text'><field name='NAME'>10</field></block></value></block>",
-        "class": "rank"
-    },
-    "hamster_set_buzzer_to": {
-        "isNotFor": ["hamster"],
-        "xml": "<block type='hamster_set_buzzer_to'><value name='VALUE'><block type='text'><field name='NAME'>1000</field></block></value></block>",
-        "class": "rank"
-    },
-    "hamster_clear_buzzer": {
-        "isNotFor": ["hamster"],
-        "xml": "<block type='hamster_clear_buzzer'></block>",
-        "class": "rank"
+        "class": "hamster_sensor"
     },
     "hamster_value": {
         "isNotFor": ["hamster"],
         "xml": "<block type='hamster_value'></block>",
-        "class": "rank"
+        "class": "hamster_sensor"
+    },
+	"hamster_move_forward_once": {
+        "isNotFor": ["hamster"],
+        "xml": "<block type='hamster_move_forward_once'></block>",
+        "class": "hamster_board"
+    },
+    "hamster_turn_once": {
+        "isNotFor": ["hamster"],
+        "xml": "<block type='hamster_turn_once'></block>",
+        "class": "hamster_board"
+    },
+    "hamster_move_forward_for_secs": {
+        "isNotFor": ["hamster"],
+        "xml": "<block type='hamster_move_forward_for_secs'><value name='VALUE'><block type='text'><field name='NAME'>1</field></block></value></block>",
+        "class": "hamster_wheel"
+    },
+    "hamster_move_backward_for_secs": {
+        "isNotFor": ["hamster"],
+        "xml": "<block type='hamster_move_backward_for_secs'><value name='VALUE'><block type='text'><field name='NAME'>1</field></block></value></block>",
+        "class": "hamster_wheel"
+    },
+    "hamster_turn_for_secs": {
+        "isNotFor": ["hamster"],
+        "xml": "<block type='hamster_turn_for_secs'><value name='VALUE'><block type='text'><field name='NAME'>1</field></block></value></block>",
+        "class": "hamster_wheel"
+    },
+	"hamster_change_both_wheels_by": {
+        "isNotFor": ["hamster"],
+        "xml": "<block type='hamster_change_both_wheels_by'><value name='LEFT'><block type='text'><field name='NAME'>10</field></block></value><value name='RIGHT'><block type='text'><field name='NAME'>10</field></block></value></block>",
+        "class": "hamster_wheel"
+    },
+    "hamster_set_both_wheels_to": {
+        "isNotFor": ["hamster"],
+        "xml": "<block type='hamster_set_both_wheels_to'><value name='LEFT'><block type='text'><field name='NAME'>30</field></block></value><value name='RIGHT'><block type='text'><field name='NAME'>30</field></block></value></block>",
+        "class": "hamster_wheel"
+    },
+    "hamster_change_wheel_by": {
+        "isNotFor": ["hamster"],
+        "xml": "<block type='hamster_change_wheel_by'><value name='VALUE'><block type='text'><field name='NAME'>10</field></block></value></block>",
+        "class": "hamster_wheel"
+    },
+    "hamster_set_wheel_to": {
+        "isNotFor": ["hamster"],
+        "xml": "<block type='hamster_set_wheel_to'><value name='VALUE'><block type='text'><field name='NAME'>30</field></block></value></block>",
+        "class": "hamster_wheel"
+    },
+	"hamster_follow_line_using": {
+        "isNotFor": ["hamster"],
+        "xml": "<block type='hamster_follow_line_using'></block>",
+        "class": "hamster_wheel"
+    },
+	"hamster_follow_line_until": {
+        "isNotFor": ["hamster"],
+        "xml": "<block type='hamster_follow_line_until'></block>",
+        "class": "hamster_wheel"
+    },
+	"hamster_set_following_speed_to": {
+        "isNotFor": ["hamster"],
+        "xml": "<block type='hamster_set_following_speed_to'><field name='SPEED'>5</field></block>",
+        "class": "hamster_wheel"
+    },
+    "hamster_stop": {
+        "isNotFor": ["hamster"],
+        "xml": "<block type='hamster_stop'></block>",
+        "class": "hamster_wheel"
+    },
+	"hamster_set_led_to": {
+        "isNotFor": ["hamster"],
+        "xml": "<block type='hamster_set_led_to'></block>",
+        "class": "hamster_led"
+    },
+    "hamster_clear_led": {
+        "isNotFor": ["hamster"],
+        "xml": "<block type='hamster_clear_led'></block>",
+        "class": "hamster_led"
+    },
+    "hamster_beep": {
+        "isNotFor": ["hamster"],
+        "xml": "<block type='hamster_beep'></block>",
+        "class": "hamster_buzzer"
+    },
+	"hamster_change_buzzer_by": {
+        "isNotFor": ["hamster"],
+        "xml": "<block type='hamster_change_buzzer_by'><value name='VALUE'><block type='text'><field name='NAME'>10</field></block></value></block>",
+        "class": "hamster_buzzer"
+    },
+    "hamster_set_buzzer_to": {
+        "isNotFor": ["hamster"],
+        "xml": "<block type='hamster_set_buzzer_to'><value name='VALUE'><block type='text'><field name='NAME'>1000</field></block></value></block>",
+        "class": "hamster_buzzer"
+    },
+    "hamster_clear_buzzer": {
+        "isNotFor": ["hamster"],
+        "xml": "<block type='hamster_clear_buzzer'></block>",
+        "class": "hamster_buzzer"
+    },
+    "hamster_play_note_for": {
+        "isNotFor": ["hamster"],
+        "xml": "<block type='hamster_play_note_for'><field name='OCTAVE'>4</field><value name='VALUE'><block type='text'><field name='NAME'>0.5</field></block></value></block>",
+        "class": "hamster_buzzer"
+    },
+    "hamster_rest_for": {
+        "isNotFor": ["hamster"],
+        "xml": "<block type='hamster_rest_for'><value name='VALUE'><block type='text'><field name='NAME'>0.25</field></block></value></block>",
+        "class": "hamster_buzzer"
+    },
+    "hamster_change_tempo_by": {
+        "isNotFor": ["hamster"],
+        "xml": "<block type='hamster_change_tempo_by'><value name='VALUE'><block type='text'><field name='NAME'>20</field></block></value></block>",
+        "class": "hamster_buzzer"
+    },
+    "hamster_set_tempo_to": {
+        "isNotFor": ["hamster"],
+        "xml": "<block type='hamster_set_tempo_to'><value name='VALUE'><block type='text'><field name='NAME'>60</field></block></value></block>",
+        "class": "hamster_buzzer"
     },
     "hamster_set_port_to": {
         "isNotFor": ["hamster"],
         "xml": "<block type='hamster_set_port_to'></block>",
-        "class": "rank"
+        "class": "hamster_port"
     },
     "hamster_change_output_by": {
         "isNotFor": ["hamster"],
-        "xml": "<block type='hamster_change_output_by'><value name='VALUE'><block type='text'><field name='NAME'>60</field></block></value></block>",
-        "class": "rank"
+        "xml": "<block type='hamster_change_output_by'><value name='VALUE'><block type='text'><field name='NAME'>10</field></block></value></block>",
+        "class": "hamster_port"
     },
     "hamster_set_output_to": {
         "isNotFor": ["hamster"],
-        "xml": "<block type='hamster_set_output_to'><value name='VALUE'><block type='text'><field name='NAME'>60</field></block></value></block>",
-        "class": "rank"
+        "xml": "<block type='hamster_set_output_to'><value name='VALUE'><block type='text'><field name='NAME'>100</field></block></value></block>",
+        "class": "hamster_port"
     },
 
-    "albert_move_forward": {
-        "isNotFor": ["albert"],
-        "xml": "<block type='albert_move_forward'></block>",
-        "class": "albert_novice"
-    },
-    "albert_move_backward": {
-        "isNotFor": ["albert"],
-        "xml": "<block type='albert_move_backward'></block>",
-        "class": "albert_novice"
-    },
-    "albert_turn_around": {
-        "isNotFor": ["albert"],
-        "xml": "<block type='albert_turn_around'></block>",
-        "class": "albert_novice"
-    },
-    "albert_set_led_to": {
-        "isNotFor": ["albert"],
-        "xml": "<block type='albert_set_led_to'></block>",
-        "class": "albert_novice"
-    },
-    "albert_clear_led": {
-        "isNotFor": ["albert"],
-        "xml": "<block type='albert_clear_led'></block>",
-        "class": "albert_novice"
-    },
-    "albert_body_led": {
-        "isNotFor": ["albert"],
-        "xml": "<block type='albert_body_led'></block>",
-        "class": "albert_novice"
-    },
-    "albert_front_led": {
-        "isNotFor": ["albert"],
-        "xml": "<block type='albert_front_led'></block>",
-        "class": "albert_novice"
-    },
-    "albert_beep": {
-        "isNotFor": ["albert"],
-        "xml": "<block type='albert_beep'></block>",
-        "class": "albert_novice"
-    },
-    "albert_hand_found": {
+	"albert_hand_found": {
         "isNotFor": ["albert"],
         "xml": "<block type='albert_hand_found'></block>",
-        "class": "albert_novice"
+        "class": "albert_sensor"
     },
-    "albert_move_forward_for_secs": {
+	"albert_value": {
+        "isNotFor": ["albert"],
+        "xml": "<block type='albert_value'></block>",
+        "class": "albert_sensor"
+    },
+	"albert_move_forward_for_secs": {
         "isNotFor": ["albert"],
         "xml": "<block type='albert_move_forward_for_secs'><value name='VALUE'><block type='text'><field name='NAME'>1</field></block></value></block>",
-        "class": "intermediate"
+        "class": "albert_wheel"
     },
     "albert_move_backward_for_secs": {
         "isNotFor": ["albert"],
         "xml": "<block type='albert_move_backward_for_secs'><value name='VALUE'><block type='text'><field name='NAME'>1</field></block></value></block>",
-        "class": "intermediate"
+        "class": "albert_wheel"
     },
     "albert_turn_for_secs": {
         "isNotFor": ["albert"],
         "xml": "<block type='albert_turn_for_secs'><value name='VALUE'><block type='text'><field name='NAME'>1</field></block></value></block>",
-        "class": "intermediate"
+        "class": "albert_wheel"
     },
-    "albert_play_note_for": {
-        "isNotFor": ["albert"],
-        "xml": "<block type='albert_play_note_for'><field name='OCTAVE'>4</field><value name='VALUE'><block type='text'><field name='NAME'>0.5</field></block></value></block>",
-        "class": "intermediate"
-    },
-    "albert_rest_for": {
-        "isNotFor": ["albert"],
-        "xml": "<block type='albert_rest_for'><value name='VALUE'><block type='text'><field name='NAME'>0.25</field></block></value></block>",
-        "class": "intermediate"
-    },
-    "albert_change_tempo_by": {
-        "isNotFor": ["albert"],
-        "xml": "<block type='albert_change_tempo_by'><value name='VALUE'><block type='text'><field name='NAME'>20</field></block></value></block>",
-        "class": "intermediate"
-    },
-    "albert_set_tempo_to": {
-        "isNotFor": ["albert"],
-        "xml": "<block type='albert_set_tempo_to'><value name='VALUE'><block type='text'><field name='NAME'>60</field></block></value></block>",
-        "class": "intermediate"
-    },
-
-
-
-    "albert_change_both_wheels_by": {
+	"albert_change_both_wheels_by": {
         "isNotFor": ["albert"],
         "xml": "<block type='albert_change_both_wheels_by'><value name='LEFT'><block type='text'><field name='NAME'>10</field></block></value><value name='RIGHT'><block type='text'><field name='NAME'>10</field></block></value></block>",
-        "class": "rank"
+        "class": "albert_wheel"
     },
     "albert_set_both_wheels_to": {
         "isNotFor": ["albert"],
         "xml": "<block type='albert_set_both_wheels_to'><value name='LEFT'><block type='text'><field name='NAME'>30</field></block></value><value name='RIGHT'><block type='text'><field name='NAME'>30</field></block></value></block>",
-        "class": "rank"
+        "class": "albert_wheel"
     },
-    "albert_change_wheels_by": {
+    "albert_change_wheel_by": {
         "isNotFor": ["albert"],
-        "xml": "<block type='albert_change_wheels_by'><value name='VALUE'><block type='text'><field name='NAME'>10</field></block></value></block>",
-        "class": "rank"
+        "xml": "<block type='albert_change_wheel_by'><value name='VALUE'><block type='text'><field name='NAME'>10</field></block></value></block>",
+        "class": "albert_wheel"
     },
-    "albert_set_wheels_to": {
+    "albert_set_wheel_to": {
         "isNotFor": ["albert"],
-        "xml": "<block type='albert_set_wheels_to'><value name='VALUE'><block type='text'><field name='NAME'>30</field></block></value></block>",
-        "class": "rank"
+        "xml": "<block type='albert_set_wheel_to'><value name='VALUE'><block type='text'><field name='NAME'>30</field></block></value></block>",
+        "class": "albert_wheel"
     },
     "albert_stop": {
         "isNotFor": ["albert"],
         "xml": "<block type='albert_stop'></block>",
-        "class": "rank"
+        "class": "albert_wheel"
     },
-    "albert_change_buzzer_by": {
+	"albert_set_pad_size_to": {
+        "isNotFor": ["albert"],
+        "xml": "<block type='albert_set_pad_size_to'><value name='WIDTH'><block type='text'><field name='NAME'>108</field></block></value><value name='HEIGHT'><block type='text'><field name='NAME'>76</field></block></value></block>",
+        "class": "albert_wheel"
+    },
+    "albert_set_eye_to": {
+        "isNotFor": ["albert"],
+        "xml": "<block type='albert_set_eye_to'></block>",
+        "class": "albert_led"
+    },
+    "albert_clear_eye": {
+        "isNotFor": ["albert"],
+        "xml": "<block type='albert_clear_eye'></block>",
+        "class": "albert_led"
+    },
+    "albert_body_led": {
+        "isNotFor": ["albert"],
+        "xml": "<block type='albert_body_led'></block>",
+        "class": "albert_led"
+    },
+    "albert_front_led": {
+        "isNotFor": ["albert"],
+        "xml": "<block type='albert_front_led'></block>",
+        "class": "albert_led"
+    },
+    "albert_beep": {
+        "isNotFor": ["albert"],
+        "xml": "<block type='albert_beep'></block>",
+        "class": "albert_buzzer"
+    },
+	"albert_change_buzzer_by": {
         "isNotFor": ["albert"],
         "xml": "<block type='albert_change_buzzer_by'><value name='VALUE'><block type='text'><field name='NAME'>10</field></block></value></block>",
-        "class": "rank"
+        "class": "albert_buzzer"
     },
     "albert_set_buzzer_to": {
         "isNotFor": ["albert"],
         "xml": "<block type='albert_set_buzzer_to'><value name='VALUE'><block type='text'><field name='NAME'>1000</field></block></value></block>",
-        "class": "rank"
+        "class": "albert_buzzer"
     },
     "albert_clear_buzzer": {
         "isNotFor": ["albert"],
         "xml": "<block type='albert_clear_buzzer'></block>",
-        "class": "rank"
+        "class": "albert_buzzer"
     },
-    "albert_value": {
+    "albert_play_note_for": {
         "isNotFor": ["albert"],
-        "xml": "<block type='albert_value'></block>",
-        "class": "rank"
+        "xml": "<block type='albert_play_note_for'><field name='OCTAVE'>4</field><value name='VALUE'><block type='text'><field name='NAME'>0.5</field></block></value></block>",
+        "class": "albert_buzzer"
     },
-    "albert_set_port_to": {
+    "albert_rest_for": {
         "isNotFor": ["albert"],
-        "xml": "<block type='albert_set_port_to'></block>",
-        "class": "rank"
+        "xml": "<block type='albert_rest_for'><value name='VALUE'><block type='text'><field name='NAME'>0.25</field></block></value></block>",
+        "class": "albert_buzzer"
     },
-    "albert_change_output_by": {
+    "albert_change_tempo_by": {
         "isNotFor": ["albert"],
-        "xml": "<block type='albert_change_output_by'><value name='VALUE'><block type='text'><field name='NAME'>60</field></block></value></block>",
-        "class": "rank"
+        "xml": "<block type='albert_change_tempo_by'><value name='VALUE'><block type='text'><field name='NAME'>20</field></block></value></block>",
+        "class": "albert_buzzer"
     },
-    "albert_set_output_to": {
+    "albert_set_tempo_to": {
         "isNotFor": ["albert"],
-        "xml": "<block type='albert_set_output_to'><value name='VALUE'><block type='text'><field name='NAME'>60</field></block></value></block>",
-        "class": "rank"
+        "xml": "<block type='albert_set_tempo_to'><value name='VALUE'><block type='text'><field name='NAME'>60</field></block></value></block>",
+        "class": "albert_buzzer"
     },
-
     "sensorBoard_get_named_sensor_value": {
         "xml": "<block type='sensorBoard_get_named_sensor_value'></block>",
         "isNotFor": ['sensorBoard'],
@@ -1734,6 +1806,42 @@ EntryStatic.blockInfo = {
         "xml": "<block type='sensorBoard_led'></block>",
         "class": "sensorBoard"
     },
+    "CODEino_get_named_sensor_value": {
+        "xml": "<block type='CODEino_get_named_sensor_value'></block>",
+        "isNotFor": ['CODEino'],
+        "usage": ["arduino"],
+        "class": "CODEino"
+    },
+    "CODEino_get_sound_status": {
+        "xml": "<block type='CODEino_get_sound_status'></block>",
+        "isNotFor": ["CODEino"],
+        "usage": ["arduino"],
+        "class": "CODEino"
+    },
+    "CODEino_get_light_status": {
+        "xml": "<block type='CODEino_get_light_status'></block>",
+        "isNotFor": ["CODEino"],
+        "usage": ["arduino"],
+        "class": "CODEino"
+    },
+    "CODEino_is_button_pressed": {
+        "xml": "<block type='CODEino_is_button_pressed'></block>",
+        "isNotFor": ["CODEino"],
+        "usage": ["arduino"],
+        "class": "CODEino"
+    },
+    "CODEino_get_accelerometer_direction": {
+        "xml": "<block type='CODEino_get_accelerometer_direction'></block>",
+        "isNotFor": ["CODEino"],
+        "usage": ["arduino"],
+        "class": "CODEino"
+    },
+    "CODEino_get_accelerometer_value": {
+        "xml": "<block type='CODEino_get_accelerometer_value'></block>",
+        "isNotFor": ["CODEino"],
+        "usage": ["arduino"],
+        "class": "CODEino"
+    },
     "direction_relative_duration": {
         "isNotFor": [""],
         "xml": "<block type='direction_relative_duration'><value name='DURATION'><block type='text'><field name='NAME'>2</field></block></value><value name='AMOUNT'><block type='angle'></block></value></block>",
@@ -1746,13 +1854,13 @@ EntryStatic.blockInfo = {
     },
     "sound_from_to": {
         "isNotFor": [""],
-        "xml": "<block type='sound_from_to'><value name='START'><block type='text'><field name='NAME'>1</field></block></value><value name='END'><block type='text'><field name='NAME'>10</field></block></value></block>",
-        "class": ""
+        "xml": "<block type='sound_from_to'><value name='VALUE'><block type='get_sounds'></block></value><value name='START'><block type='text'><field name='NAME'>1</field></block></value><value name='END'><block type='text'><field name='NAME'>10</field></block></value></block>",
+        "class": "sound_play"
     },
     "sound_from_to_and_wait": {
         "isNotFor": [""],
-        "xml": "<block type='sound_from_to_and_wait'><value name='START'><block type='text'><field name='NAME'>1</field></block></value><value name='END'><block type='text'><field name='NAME'>10</field></block></value></block>",
-        "class": "sound_play"
+        "xml": "<block type='sound_from_to_and_wait'><value name='VALUE'><block type='get_sounds'></block></value><value name='START'><block type='text'><field name='NAME'>1</field></block></value><value name='END'><block type='text'><field name='NAME'>10</field></block></value></block>",
+        "class": "sound_wait"
     },
     "quotient_and_mod": {
         "isNotFor": [""],
@@ -1765,14 +1873,114 @@ EntryStatic.blockInfo = {
     },
     "set_visible_answer": {
         "isNotFor": [""],
-        "xml": "<block type='set_visible_answer'><field name='BOOL'>SHOW</field></block>",
+        "xml": "<block type='set_visible_answer'><field name='BOOL'>HIDE</field></block>",
         "class": "ask"
     },
     "choose_project_timer_action": {
         "isNotFor": [""],
         "xml": "<block type='choose_project_timer_action'><field name='ACTION'>START</field></block>",
         "class": "calc_timer"
-    }
+    },
+    "robotis_openCM70_cm_buzzer_index": {
+        "isNotFor": ['robotis_openCM70'],
+        "xml": "<block type='robotis_openCM70_cm_buzzer_index'><value name='CM_BUZZER_TIME'><block type='number'><field name='NUM'>1</field></block></value></block>",
+        "class": "robotis_openCM70_cm"
+    },
+    "robotis_openCM70_cm_buzzer_melody": {
+        "isNotFor": ['robotis_openCM70'],
+        "xml": "<block type='robotis_openCM70_cm_buzzer_melody'></block>",
+        "class": "robotis_openCM70_cm"
+    },
+    "robotis_openCM70_cm_sound_detected_clear": {
+        "isNotFor": ['robotis_openCM70'],
+        "xml": "<block type='robotis_openCM70_cm_sound_detected_clear'></block>",
+        "class": "robotis_openCM70_cm"
+    },
+    "robotis_openCM70_sensor_value": {
+        "isNotFor": ['robotis_openCM70'],
+        "xml": "<block type='robotis_openCM70_sensor_value'></block>",
+        "class": "robotis_openCM70_cm"
+    },
+    "robotis_openCM70_aux_sensor_value": {
+        "isNotFor": ['robotis_openCM70'],
+        "xml": "<block type='robotis_openCM70_aux_sensor_value'></block>",
+        "class": "robotis_openCM70_cm"
+    },
+    "robotis_openCM70_cm_led": {
+        "isNotFor": ['robotis_openCM70'],
+        "xml": "<block type='robotis_openCM70_cm_led'></block>",
+        "class": "robotis_openCM70_cm"
+    },
+    "robotis_openCM70_cm_motion": {
+        "isNotFor": ['robotis_openCM70'],
+        "xml": "<block type='robotis_openCM70_cm_motion'><value name='VALUE'><block type='number'><field name='NUM'>1</field></block></value></block>",
+        "class": "robotis_openCM70_cm"
+    },
+    "robotis_openCM70_aux_motor_speed": {
+        "isNotFor": ['robotis_openCM70'],
+        "xml": "<block type='robotis_openCM70_aux_motor_speed'><value name='VALUE'><block type='number'><field name='NUM'>500</field></block></value></block>",
+        "class": "robotis_openCM70_cm"
+    },
+    "robotis_openCM70_aux_servo_mode": {
+        "isNotFor": ['robotis_openCM70'],
+        "xml": "<block type='robotis_openCM70_aux_servo_mode'></block>",
+        "class": "robotis_openCM70_cm"
+    },
+    "robotis_openCM70_aux_servo_speed": {
+        "isNotFor": ['robotis_openCM70'],
+        "xml": "<block type='robotis_openCM70_aux_servo_speed'><value name='VALUE'><block type='number'><field name='NUM'>500</field></block></value></block>",
+        "class": "robotis_openCM70_cm"
+    },
+    "robotis_openCM70_aux_servo_position": {
+        "isNotFor": ['robotis_openCM70'],
+        "xml": "<block type='robotis_openCM70_aux_servo_position'><value name='VALUE'><block type='number'><field name='NUM'>512</field></block></value></block>",
+        "class": "robotis_openCM70_cm"
+    },
+    "robotis_openCM70_aux_led_module": {
+        "isNotFor": ['robotis_openCM70'],
+        "xml": "<block type='robotis_openCM70_aux_led_module'></block>",
+        "class": "robotis_openCM70_cm"
+    },
+    "robotis_openCM70_aux_custom": {
+        "isNotFor": ['robotis_openCM70'],
+        "xml": "<block type='robotis_openCM70_aux_custom'><value name='VALUE'><block type='number'><field name='NUM'>0</field></block></value></block>",
+        "class": "robotis_openCM70_cm"
+    },
+    "robotis_openCM70_cm_custom_value": {
+        "isNotFor": ['robotis_openCM70'],
+        "xml": "<block type='robotis_openCM70_cm_custom_value'><value name='VALUE'><block type='number'><field name='NUM'>0</field></block></value></block>",
+        "class": "robotis_openCM70_custom"
+    },
+    "robotis_openCM70_cm_custom": {
+        "isNotFor": ['robotis_openCM70'],
+        "xml": "<block type='robotis_openCM70_cm_custom'><value name='ADDRESS'><block type='number'><field name='NUM'>0</field></block></value><value name='VALUE'><block type='number'><field name='NUM'>0</field></block></value></block>",
+        "class": "robotis_openCM70_custom"
+    },
+    "robotis_carCont_sensor_value": {
+        "isNotFor": ['robotis_carCont'],
+        "xml": "<block type='robotis_carCont_sensor_value'></block>",
+        "class": "robotis_carCont_cm"
+    },
+    "robotis_carCont_cm_led": {
+        "isNotFor": ['robotis_carCont'],
+        "xml": "<block type='robotis_carCont_cm_led'></block>",
+        "class": "robotis_carCont_cm"
+    },
+    "robotis_carCont_cm_sound_detected_clear": {
+        "isNotFor": ['robotis_carCont'],
+        "xml": "<block type='robotis_carCont_cm_sound_detected_clear'></block>",
+        "class": "robotis_carCont_cm"
+    },
+    "robotis_carCont_aux_motor_speed": {
+        "isNotFor": ['robotis_carCont'],
+        "xml": "<block type='robotis_carCont_aux_motor_speed'><value name='VALUE'><block type='number'><field name='NUM'>500</field></block></value></block>",
+        "class": "robotis_carCont_cm"
+    },
+    "robotis_carCont_cm_calibration": {
+        "isNotFor": ['robotis_carCont'],
+        "xml": "<block type='robotis_carCont_cm_calibration'><value name='VALUE'><block type='number'><field name='NUM'>0</field></block></value></block>",
+        "class": "robotis_carCont_cm"
+    },
 }
 
 EntryStatic.discussCategories = [

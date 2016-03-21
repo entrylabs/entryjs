@@ -886,6 +886,12 @@ Entry.VariableContainer.prototype.addVariable = function(variable) {
 Entry.VariableContainer.prototype.removeVariable = function(variable) {
     var index = this.variables_.indexOf(variable);
     var variableJSON = variable.toJSON();
+
+    if (this.selected == variable)
+        this.select(null);
+    variable.remove();
+    this.variables_.splice(index, 1);
+
     if (Entry.stateManager)
         Entry.stateManager.addCommand(
             "remove variable",
@@ -893,10 +899,7 @@ Entry.VariableContainer.prototype.removeVariable = function(variable) {
             this.addVariable,
             variableJSON
         );
-    if (this.selected == variable)
-        this.select(null);
-    variable.remove();
-    this.variables_.splice(index, 1);
+
     Entry.playground.reloadPlayground();
     this.updateList();
     return new Entry.State(this,
@@ -927,6 +930,7 @@ Entry.VariableContainer.prototype.changeVariableName = function(variable, name) 
     }
     variable.name_ = name;
     variable.updateView();
+    Entry.playground.reloadPlayground();
     Entry.toast.success(Lang.Workspace.variable_rename,
                         Lang.Workspace.variable_rename_ok);
 };
@@ -954,6 +958,7 @@ Entry.VariableContainer.prototype.changeListName = function(list, name) {
     }
     list.name_ = name;
     list.updateView();
+    Entry.playground.reloadPlayground();
     Entry.toast.success(Lang.Workspace.list_rename,
                         Lang.Workspace.list_rename_ok);
 };
@@ -1138,6 +1143,7 @@ Entry.VariableContainer.prototype.changeMessageName = function(message, name) {
         return;
     }
     message.name = name;
+    Entry.playground.reloadPlayground();
     Entry.toast.success(Lang.Workspace.message_rename,
                         Lang.Workspace.message_rename_ok);
 };
@@ -1778,7 +1784,11 @@ Entry.VariableContainer.prototype.addCloneLocalVariables = function (param) {
             delete newVar.x;
             delete newVar.y;
             variables.push(newVar);
-            param.json.script = param.json.script.replace(newVar.originId, newVar.id);
+
+            var reg = new RegExp(newVar.originId, 'g');
+            param.json.script = param.json.script.replace(reg, newVar.id);
+
+            //param.json.script = param.json.script.replace(newVar.originId, newVar.id);
         }
     }, param);
 
@@ -1921,6 +1931,7 @@ Entry.VariableContainer.prototype.generateVariableSettingView = function () {
             maxValueInput.setAttribute('disabled', 'disabled');
         }
         that.createVariableView(newVariable);
+
         that.removeVariable(v);
         that.updateSelectedVariable(newVariable);
         newVariable.generateView();
@@ -1943,10 +1954,9 @@ Entry.VariableContainer.prototype.generateVariableSettingView = function () {
     minValueInput.onblur = function (e) {
         if (!isNaN(this.value)) {
             var v = that.selectedVariable;
-            v.setMinValue(Number(this.value));
+            v.setMinValue(this.value);
             that.updateVariableSettingView(v);
         }
-
     };
     element.minValueInput = minValueInput;
     minMaxWrapper.appendChild(minValueInput);
@@ -1964,7 +1974,7 @@ Entry.VariableContainer.prototype.generateVariableSettingView = function () {
     maxValueInput.onblur = function (e) {
         if (!isNaN(this.value)) {
             var v = that.selectedVariable;
-            v.setMaxValue(Number(this.value));
+            v.setMaxValue(this.value);
             that.updateVariableSettingView(v);
         }
     };

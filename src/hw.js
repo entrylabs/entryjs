@@ -204,7 +204,7 @@ p.checkDevice = function(data) {
     );
     if (this.hwModule.monitorTemplate) {
         this.hwMonitor = new Entry.HWMonitor(this.hwModule);
-        Entry.propertyPanel.addMode("hw", this.hwMonitor);
+            Entry.propertyPanel.addMode("hw", this.hwMonitor);
         this.hwMonitor.generateView();
     }
 };

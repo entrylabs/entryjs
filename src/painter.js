@@ -21,13 +21,15 @@ Entry.Painter = function() {
         modified: false,
         mode: 'new' // new or edit
     };
+
     this.font = {
         name: 'KoPub Batang',
         size: 20,
         style: 'normal'
     };
-
     this.selectArea = {};
+
+    this.firstStatement  = false;
 };
 
 
@@ -342,9 +344,11 @@ Entry.Painter.prototype.updateImageHandleCursor = function () {
     handle.NWHandle.cursor = cursorList[0];
 };
 
-Entry.Painter.prototype.clearCanvas = function() {
+Entry.Painter.prototype.clearCanvas = function(skipInit) {
     this.clearHandle();
-    this.initCommand();
+    if(!skipInit) {
+        this.initCommand();
+    }
 
     this.objectContainer.removeAllChildren();
     this.stage.update();
@@ -391,10 +395,10 @@ Entry.Painter.prototype.initPicture = function() {
             if (save) {
                 painter.file_ = JSON.parse(JSON.stringify(painter.file));
                 painter.file_save(true);
-                painter.file.modified = false;
             }
         }
-        painter.clearCanvas();
+        painter.file.modified = false;
+        painter.clearCanvas(true);
 
         var image = new Image();
         if (picture.id)
@@ -405,12 +409,11 @@ Entry.Painter.prototype.initPicture = function() {
         painter.file.id = image.id;
         painter.file.name = picture.name;
         painter.file.mode = 'edit';
-
         if (picture.fileurl) {
             image.src = picture.fileurl;
         } else {
             // deprecated
-            image.src = '/uploads/' + picture.filename.substring(0,2)+'/' + picture.filename.substring(2,4)+'/image/'+picture.filename+'.png';
+            image.src = Entry.defaultPath + '/uploads/' + picture.filename.substring(0,2)+'/' + picture.filename.substring(2,4)+'/image/'+picture.filename+'.png';
         }
 
         image.onload = function(event) {
@@ -424,6 +427,13 @@ Entry.Painter.prototype.initPicture = function() {
 
     Entry.addEventListener('pictureNameChanged', function(picture) {
         painter.file.name = picture.name;
+    });
+
+    Entry.addEventListener('pictureClear', function(picture) {
+        painter.file.modified = false;
+        painter.file.id = '';
+        painter.file.name = '';
+        painter.clearCanvas();
     });
 };
 
@@ -698,13 +708,15 @@ Entry.Painter.prototype.initCommand = function() {
         this.canvas.height
     );
 
-    if (Entry.stateManager)
+    if (Entry.stateManager && this.firstStatement)
         Entry.stateManager.addCommand(
             "edit sprite",
             this,
             this.restorePainter,
             this.colorLayerModel
         );
+
+    this.firstStatement =  true;
 
     if (restoreHandle)
         this.handle.visible = true;
@@ -1422,7 +1434,7 @@ Entry.Painter.prototype.addPicture = function(picture) {
     if (picture.fileurl) {
         image.src = picture.fileurl;
     } else {
-        image.src = '/uploads/' + picture.filename.substring(0,2)+'/'+picture.filename.substring(2,4)+'/image/'+picture.filename+'.png';
+        image.src = Entry.defaultPath + '/uploads/' + picture.filename.substring(0,2)+'/'+picture.filename.substring(2,4)+'/image/'+picture.filename+'.png';
     }
 
     var painter = this;

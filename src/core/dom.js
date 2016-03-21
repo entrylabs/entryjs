@@ -41,13 +41,30 @@ Entry.Dom = function (tag, options) {
     if (options.parent)
         options.parent.append(dom);
 
-    dom.bindOnClick = function(func) {
-        $(this).on('click touchstart', function(e) {
+    dom.bindOnClick = function() {
+        var hasChild = false;
+        var child;
+        var func;
+
+        var handler = function (e) {
             e.stopImmediatePropagation();
             if (e.handled) return;
             e.handled = true;
             func.call(this, e);
-        });
+        }
+
+        if(arguments.length > 1 ) {
+            func = (arguments[1] instanceof Function) ? arguments[1] : function () {};
+            child = (typeof arguments[0] === 'string') ? arguments[0] : '';
+        } else {
+            func = (arguments[0] instanceof Function) ? arguments[0] : function () {};
+        }
+
+        if(child) {
+            $(this).on('click touchstart', child, handler);
+        } else {
+            $(this).on('click touchstart', handler);
+        }
     };
 
     return dom;

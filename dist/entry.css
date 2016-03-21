@@ -33,9 +33,7 @@
 }
 .entrySceneListWorkspace {
   margin: 0px;
-  margin-left: 30px;
-  padding: 0px 5px 0px 25px;
-  float: left;
+  padding: 0px 5px 0px 55px;
 }
 .entrySceneElementWorkspace {
   float: left;
@@ -81,18 +79,21 @@
   display: inline-block;
   float: left;
   height: 40px;
+  width: 76px;
   padding-top: 11px;
   padding-right: 2px;
   background-color: #0e68e3;
+}
+.minValue .entrySceneInputCover {
+  min-width: 70px;
 }
 .entrySceneFieldWorkspace {
   cursor: text !important;
   display: inline-block;
   margin: 0px;
   height: 20px;
-  width: 76px;
+  width: 100%;
   color: white;
-  min-width: 70px;
   border: 1px solid transparent;
   background-color: #0e68e3;
   padding: 0px 0px 0px 5px;
@@ -103,6 +104,7 @@
 }
 .selectedScene .entrySceneInputCover {
   background-color: white;
+  min-width: 70px;
 }
 .selectedScene .entrySceneFieldWorkspace {
   background-color: white;
@@ -126,22 +128,26 @@
   background-image: url("../images/top_tab_b_nor_right_blue.png");
 }
 .selectedScene .entrySceneRemoveButtonCoverWorkspace {
-  background-image: url("../images/top_tab_b_sel_right.png");
+  display: inline-block;
+  background: url("../images/top_tab_b_sel_right.png");
 }
 .entrySceneRemoveButtonWorkspace {
   border: 0;
   padding: 0;
   width: 12px;
   background-color: #0e68e3;
-  display: inline-block;
   height: 14px;
   position: absolute;
   right: 45px;
   top: 12px;
+  display: none;
 }
 .selectedScene .entrySceneRemoveButtonWorkspace {
   background-color: white;
   color: black;
+}
+.minValue .entrySceneRemoveButtonWorkspace {
+  display: inline-block;
 }
 .entrySceneRemoveButtonWorkspace:hover {
   color: #FF3E24;
@@ -202,7 +208,8 @@
   width: 100% !important;
   height: 100% !important;
   position: relative;
-  /*padding-bottom: 35px;*/
+  border-bottom: 1px solid #ccc;
+  border-top: 0px;
 }
 .entryPopupWindow > .entryEngine_w {
   width: 100% !important;
@@ -212,9 +219,11 @@
   border-top: 1px solid #ccc;
 }
 .entryPopupWindow > div > .entryCanvasWorkspace {
-  border-top: 1px solid #ccc;
+  bottom: 24px;
+  border-bottom: 1px solid #ccc;
   width: 100% !important;
   height: 100% !important;
+  top: -25px !important;
 }
 .entryEngineWorkspace {
   height: 35px;
@@ -244,44 +253,55 @@
 .entryPopupWindow > .entryEngineWorkspace_w {
   position: absolute;
   width: 100% !important;
-  top: -15px !important;
+  top: 0px !important;
 }
 .entryPopupWindow > .entryEngineWorkspace_w > .entryRunButtonWorkspace_w {
   display: none;
+  top: 37%;
+  left: 46%;
 }
 .entryPopupWindow > .entryEngineWorkspace_w > .entryRunButtonWorkspace_w2 {
   display: block;
-  width: 84px;
-  height: 84px;
-  background-image: url("../images/screen_btn_play_nor.png");
+  width: 111px;
+  height: 111px;
+  background-image: url("../images/play_btn.png");
+  background-position: 40px center;
+  background-color: rgba(0, 0, 0, 0.5);
+  border-radius: 55px;
   background-repeat: no-repeat;
   right: 5px;
   /*bottom: 5px;*/
   bottom: -10px;
+  left: 44%;
+  top: 35%;
 }
 .entryPopupWindow > .entryEngineWorkspace_w > .entryStopButtonWorkspace_w2 {
   display: block;
-  width: 84px;
-  height: 84px;
-  background-image: url("../images/screen_btn_stop_nor.png");
+  background-image: url("../images/stop_btn.png");
   background-repeat: no-repeat;
-  right: 5px;
-  /*bottom: 5px;*/
+  left: 20px;
+  color: transparent;
   bottom: -10px;
+  width: 90px;
+  background-position: left;
+  color: #4b37a0;
 }
 .entryPopupWindow > .entryEngineWorkspace_w > .entryStopButtonWorkspace_w {
   display: none;
 }
 .entryPopupWindow > .entryEngineWorkspace_w > .entryCoordinateButtonWorkspace_w {
-  left: 5px;
+  background-image: url("../images/grid.png") !important;
+  right: 34px;
+  color: #4b37a0;
 }
 .entryPopupWindow > .entryEngineWorkspace_w > .entryMaximizeButtonWorkspace_w {
-  background-image: url("../images/layers_icon_fullmode02_nor.png");
+  background-image: url("../images/zoom_out_btn.png");
   background-repeat: no-repeat;
   right: 5px;
 }
 .entryPopupWindow > .entryEngineWorkspace_w > .entryEngineButtonWorkspace_w {
   position: absolute;
+  bottom: 1px;
 }
 .entryPopupWindow > .entryEngineWorkspace_w > .entryAddButtonWorkspace_w {
   display: none;
@@ -389,6 +409,11 @@
 .entryMaximizeButtonMinimize {
   float: right;
   margin-right: 5px;
+  background-image: url("../images/zoom_in_btn.png");
+}
+.entryPopupWindow > .entryEngineMinimize > .entryMaximizeButtonMinimize {
+  float: right;
+  margin-right: 5px;
   background-image: url("../images/zoom_out_btn.png");
 }
 .entryMaximizeButtonPhone {
@@ -427,6 +452,16 @@
 }
 .entryPopupWindow > div > .entrySpeedButtonWorkspace {
   display: none;
+}
+.entryPopupWindow .entryMouseViewWorkspace_w {
+  font-size: 9pt;
+  margin: 0 auto;
+  width: 100%;
+  color: #4b37a0;
+  line-height: 24px;
+  bottom: 1px;
+  position: absolute;
+  text-align: center;
 }
 #entrySpeedProgressWorkspace {
   position: absolute;
@@ -2934,7 +2969,9 @@
   border: 1px solid gray;
 }
 .entryVariableAddSpaceCheckWorkspace.entryVariableAddChecked {
-  background-color: gray;
+  /*background-color: gray;*/
+  background-image: url("../images/check_on.png");
+  background-repeat: no-repeat;
 }
 .entryVariableAddSpaceLocalWrapperWorkspace {
   color: #5e5e5e;
@@ -3816,7 +3853,9 @@
 }
 .entryVariableAddSpaceCheckWorkspace.entryVariableAddChecked,
 .entryVariableSettingCheckWorkspace.entryVariableSettingChecked {
-  background-color: gray;
+  /*background-color: gray;*/
+  background-image: url("../images/check_on.png");
+  background-repeat: no-repeat;
 }
 .entryVariableSettingInitValueWrapperWorkspace,
 .entryVariableSettingSlideWrapperWorkspace,
@@ -3887,7 +3926,9 @@
   color: #5e5e5e;
 }
 .entryListSettingCheckedWorkspace {
-  background-color: gray;
+  /*background-color: gray;*/
+  background-image: url("../images/check_on.png");
+  background-repeat: no-repeat;
 }
 .entryListSettingLengthWrapperWorkspace {
   margin-top: 15px;
@@ -4239,6 +4280,103 @@
   color: #ccc;
   padding: 3px 20px;
 }
+.entryPauseButtonWorkspace_w {
+  display: none;
+}
+.entryPopupWindow .entryPauseButtonWorkspace_w {
+  display: inline-block;
+  background: url("../images/pause_btn.png");
+  background-repeat: no-repeat;
+  color: transparent;
+  width: 90px;
+  left: 103px;
+  color: #4b37a0;
+  background-position: center left;
+}
+.entrySceneDummyView {
+  width: 55px;
+  height: 40px;
+  background-color: orange;
+  display: inline-block;
+  opacity: 0.3;
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 889;
+  left: 100px;
+}
+.entryPopup {
+  overflow: hidden;
+  position: absolute;
+  margin: 0;
+  padding: 0;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  z-index: 7000;
+  background-color: rgba(0, 0, 0, 0.2);
+}
+.entryPopup.popupHelper {
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-box-direction: normal;
+  -moz-box-direction: normal;
+  -webkit-box-orient: vertical;
+  -moz-box-orient: vertical;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+}
+.entryPopupWindow {
+  width: 80%;
+  height: 80%;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+  max-width: 100%;
+  max-height: 100%;
+  /*overflow: hidden;*/
+  z-index: 8000;
+  background-color: #ffffff;
+}
+.entryPopup.hiddenPopup {
+  display: none;
+}
+.entryPopupHelperTopSpan,
+.entryPopupHelperBottomSpan {
+  -webkit-box-flex: 1;
+  -moz-box-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+}
+.entryPopupHelperMiddleSpan {
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-box-direction: normal;
+  -moz-box-direction: normal;
+  -webkit-box-orient: horizontal;
+  -moz-box-orient: horizontal;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+}
+.entryPopupHelperMiddleSpan .entryPopupHelperLeftSpan,
+.entryPopupHelperMiddleSpan .entryPopupHelperRightSpan {
+  -webkit-box-flex: 1;
+  -moz-box-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+}
 
 .block {
   cursor: url('../images/handopen.cur') 8 5, auto;
@@ -4275,5 +4413,6 @@
 .boardScrollbar:hover {
   opacity: 0.6;
 }
+
 
 

@@ -15,6 +15,7 @@ Entry.EntityObject = function(object) {
     /** @type {Array<xml script>} */
     this.runningScript = [];
     this.flip = false;
+    this.collision = Entry.Utils.COLLISION.NONE;
     this.id = Entry.generateHash();
 
     if (this.type == 'sprite') {
@@ -801,7 +802,7 @@ Entry.EntityObject.prototype.setImage = function(pictureModel) {
             image.src = pictureModel.fileurl;
         } else {
             var fileName = pictureModel.filename;
-            image.src = '/uploads/' + fileName.substring(0, 2) + '/' +
+            image.src = Entry.defaultPath + '/uploads/' + fileName.substring(0, 2) + '/' +
                 fileName.substring(2, 4) + '/image/' + fileName + '.png';
         }
         image = image;
@@ -930,6 +931,7 @@ Entry.EntityObject.prototype.updateDialog = function() {
  */
 Entry.EntityObject.prototype.takeSnapshot = function() {
     this.snapshot_ = this.toJSON();
+    this.collision = Entry.Utils.COLLISION.NONE;
 };
 
 /**
