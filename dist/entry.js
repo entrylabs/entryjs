@@ -13650,7 +13650,7 @@ Entry.BlockView.PARAM_SPACE = 5;
   };
   a._moveTo = function(b, a, d) {
     this.set({x:b, y:a});
-    this._setPosition(d);
+    (this.visible || this.display) && this._setPosition(d);
   };
   a._moveBy = function(b, a, d) {
     return this._moveTo(this.x + b, this.y + a, d);
@@ -13725,8 +13725,8 @@ Entry.BlockView.PARAM_SPACE = 5;
   };
   a.terminateDrag = function(b) {
     var a = this.getBoard(), d = this.dragMode, e = this.block, f = a.workspace.getMode();
-    this.set({visible:!0});
     this.removeDragging();
+    this.set({visible:!0});
     this.dragMode = Entry.DRAG_MODE_NONE;
     if (f === Entry.Workspace.MODE_VIMBOARD) {
       a instanceof Entry.BlockMenu ? (a.terminateDrag(), this.vimBoardEvent(b, "dragEnd", e)) : a.clear();
@@ -13860,6 +13860,7 @@ Entry.BlockView.PARAM_SPACE = 5;
   };
   a._updateOpacity = function() {
     this.svgGroup.attr({opacity:!1 === this.visible ? 0 : 1});
+    this.visible && this._setPosition();
   };
   a._updateShadow = function() {
     this.shadow && Entry.Utils.colorDarken(this._schema.color, .7);
@@ -13908,6 +13909,7 @@ Entry.BlockView.PARAM_SPACE = 5;
   };
   a._updateDisplay = function() {
     this.svgGroup.attr({display:!1 === this.display ? "none" : "block"});
+    this.display && this._setPosition();
   };
 })(Entry.BlockView.prototype);
 Entry.Code = function(a) {
