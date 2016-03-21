@@ -10102,8 +10102,8 @@ Entry.BlockMockup = function(a) {
       return this;
     }
     "string" === typeof b && 0 < b.length ? this.templates.push(b) : b.constructor == Blockly.FieldIcon ? ("start" === b.type ? this.params.push({type:"Indicator", img:b.src_, size:17, position:{x:0, y:-2}}) : this.params.push({type:"Indicator", img:b.src_, size:12}), this.templates.push(this.getFieldCount())) : b.constructor == Blockly.FieldDropdown ? (this.params.push({type:"Dropdown", options:b.menuGenerator_, value:b.menuGenerator_[0][1], fontSize:11}), this.templates.push(this.getFieldCount())) : 
-    b.constructor == Blockly.FieldDropdownDynamic ? (this.params.push({type:"Dropdown", options:[["\ub300\uc0c1 \uc5c6\uc74c", "null"]], value:"null", fontSize:11}), this.templates.push(this.getFieldCount())) : b.constructor == Blockly.FieldTextInput ? (this.params.push({type:"TextInput", value:10}), this.templates.push(this.getFieldCount())) : b.constructor == Blockly.FieldAngle ? (this.params.push({type:"Angle"}), this.templates.push(this.getFieldCount())) : b.constructor == Blockly.FieldKeydownInput ? 
-    (this.params.push({type:"Keyboard", value:81}), this.templates.push(this.getFieldCount())) : b.constructor == Blockly.FieldColour && (this.params.push({type:"Color"}), this.templates.push(this.getFieldCount()));
+    b.constructor == Blockly.FieldDropdownDynamic ? (this.params.push({type:"DropdownDynamic", value:null, menuName:b.menuName_, fontSize:11}), this.templates.push(this.getFieldCount())) : b.constructor == Blockly.FieldTextInput ? (this.params.push({type:"TextInput", value:10}), this.templates.push(this.getFieldCount())) : b.constructor == Blockly.FieldAngle ? (this.params.push({type:"Angle"}), this.templates.push(this.getFieldCount())) : b.constructor == Blockly.FieldKeydownInput ? (this.params.push({type:"Keyboard", 
+    value:81}), this.templates.push(this.getFieldCount())) : b.constructor == Blockly.FieldColour && (this.params.push({type:"Color"}), this.templates.push(this.getFieldCount()));
     return this;
   };
   a.setColour = function(b) {
@@ -14599,6 +14599,9 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
     this.value != b && (this.setValue(b), this.textElement.textContent = this.getTextByValue(b), this.resize());
   };
   a.getTextByValue = function(b) {
+    if (!b) {
+      return Lang.Blocks.no_target;
+    }
     for (var a = this._contents.options, d = 0, e = a.length;d < e;d++) {
       var f = a[d];
       if (f[1] == b) {
@@ -14608,6 +14611,68 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
     return b;
   };
 })(Entry.FieldDropdown.prototype);
+Entry.FieldDropdownDynamic = function(a, b, c) {
+  this._block = b.block;
+  this.box = new Entry.BoxModel;
+  this.svgGroup = null;
+  this._contents = a;
+  this._index = c;
+  c = Entry.container.getDropdownList(this._contents.menuName);
+  this._contents.options = c;
+  c = this.getValue() || 0 !== c.length ? c[0][1] : null;
+  this.setValue(c);
+  this._CONTENT_HEIGHT = a.dropdownHeight || b.getSkeleton().dropdownHeight || 16;
+  this._FONT_SIZE = a.fontSize || b.getSkeleton().fontSize || 12;
+  this._ROUND = a.roundValue || 0;
+  this.renderStart(b);
+};
+Entry.Utils.inherit(Entry.FieldDropdown, Entry.FieldDropdownDynamic);
+(function(a) {
+  a.constructor = Entry.FieldDropDownDynamic;
+  a.renderOptions = function() {
+    var b = this;
+    this.destroyOption();
+    this.documentDownEvent = Entry.documentMousedown.attach(this, function() {
+      Entry.documentMousedown.detach(this.documentDownEvent);
+      b.optionGroup.remove();
+    });
+    this.optionGroup = this.appendSvgOptionGroup();
+    var a = Entry.container.getDropdownList(this._contents.menuName), d = [], e = 0, f = this._CONTENT_HEIGHT + 4;
+    d.push(this.optionGroup.elem("rect", {height:f * a.length, fill:"white"}));
+    for (var g = 0, h = a.length;g < h;g++) {
+      var k = a[g], l = k[0], k = k[1], n = this.optionGroup.elem("g", {class:"rect", transform:"translate(0," + g * f + ")"});
+      d.push(n.elem("rect", {height:f}));
+      this.getValue() == k && (n.elem("text", {x:5, y:13, "alignment-baseline":"central"}).textContent = "\u2713");
+      var m = n.elem("text", {x:20, "alignment-baseline":"central"});
+      m.textContent = l;
+      l = m.getBoundingClientRect();
+      m.attr({y:f / 2});
+      e = Math.max(l.width + 30, e);
+      (function(a, c) {
+        var d = $(a);
+        d.bind("mousedown touchstart", function(b) {
+          b.stopPropagation();
+        });
+        d.bind("mouseup touchend", function(a) {
+          a.stopPropagation();
+          b.applyValue(c);
+          b.destroyOption();
+          b._selectBlockView();
+        });
+      })(n, k);
+    }
+    a = -e / 2 + this.box.width / 2;
+    f = this.box.height / 2;
+    g = this.getAbsolutePosFromBoard();
+    g.x += a;
+    g.y += f;
+    this.optionGroup.attr({class:"entry-field-dropdown", transform:"translate(" + g.x + "," + g.y + ")"});
+    var q = {width:e};
+    d.forEach(function(b) {
+      b.attr(q);
+    });
+  };
+})(Entry.FieldDropdownDynamic.prototype);
 Entry.FieldImage = function(a, b, c) {
   this._block = b;
   this.box = new Entry.BoxModel;
@@ -15050,10 +15115,10 @@ Entry.GlobalSvg = {};
     this.svgGroup && (this.svgGroup.remove(), delete this.svgGroup, delete this._view, delete this._offsetX, delete this._offsetY, delete this._startX, delete this._startY, this.hide());
   };
   a.align = function() {
-    var b = this._view.getSkeleton().box(this._view).offsetX || 0, a = this._view.getSkeleton().box(this._view).offsetY || 0, b = -1 * b + 1, a = -1 * a + 1;
-    this._offsetX = b;
-    this._offsetY = a;
-    this.svgGroup.attr({transform:"translate(" + b + "," + a + ")"});
+    var a = this._view.getSkeleton().box(this._view).offsetX || 0, c = this._view.getSkeleton().box(this._view).offsetY || 0, a = -1 * a + 1, c = -1 * c + 1;
+    this._offsetX = a;
+    this._offsetY = c;
+    this.svgGroup.attr({transform:"translate(" + a + "," + c + ")"});
   };
   a.show = function() {
     this.svgDom.css("display", "block");
