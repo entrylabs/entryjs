@@ -22,6 +22,18 @@ Entry.block.functionAddButton = {
     }
 };
 
+Blockly.Blocks.function_field_label = {
+  init: function() {
+    this.setColour("#f9c535");
+    this.appendDummyInput()
+        .appendField(new Blockly.FieldTextInput(Lang.Blocks.FUNCTION_explanation_1), "NAME");
+    this.appendValueInput("NEXT")
+        .setCheck(['Param']);
+    this.setOutput(true, 'Param');
+    this.setInputsInline(true);
+  }
+};
+
 Entry.block.function_field_label = {
     skeleton: "basic_param",
     color: "#f9c535",
@@ -36,6 +48,18 @@ Entry.block.function_field_label = {
             accept: "paramMagnet"
         }
     ]
+};
+
+Blockly.Blocks.function_field_string = {
+  init: function() {
+    this.setColour("#ffec64");
+    this.appendValueInput("PARAM")
+        .setCheck(['String']);
+    this.appendValueInput("NEXT")
+        .setCheck(['Param']);
+    this.setOutput(true, 'Param');
+    this.setInputsInline(true);
+  }
 };
 
 Entry.block.function_field_string = {
@@ -54,6 +78,18 @@ Entry.block.function_field_string = {
     ]
 };
 
+Blockly.Blocks.function_field_boolean = {
+  init: function() {
+    this.setColour("#2FC9F0");
+    this.appendValueInput("PARAM")
+        .setCheck(['Boolean']);
+    this.appendValueInput("NEXT")
+        .setCheck(['Param']);
+    this.setOutput(true, 'Param');
+    this.setInputsInline(true);
+  }
+};
+
 Entry.block.function_field_boolean = {
     skeleton: "basic_param",
     color: "#aeb8ff",
@@ -68,42 +104,6 @@ Entry.block.function_field_boolean = {
             accept: "paramMagnet"
         }
     ]
-};
-
-Blockly.Blocks.function_field_label = {
-  init: function() {
-    this.setColour("#f9c535");
-    this.appendDummyInput()
-        .appendField(new Blockly.FieldTextInput(Lang.Blocks.FUNCTION_explanation_1), "NAME");
-    this.appendValueInput("NEXT")
-        .setCheck(['Param']);
-    this.setOutput(true, 'Param');
-    this.setInputsInline(true);
-  }
-};
-
-Blockly.Blocks.function_field_string = {
-  init: function() {
-    this.setColour("#ffec64");
-    this.appendValueInput("PARAM")
-        .setCheck(['String']);
-    this.appendValueInput("NEXT")
-        .setCheck(['Param']);
-    this.setOutput(true, 'Param');
-    this.setInputsInline(true);
-  }
-};
-
-Blockly.Blocks.function_field_boolean = {
-  init: function() {
-    this.setColour("#2FC9F0");
-    this.appendValueInput("PARAM")
-        .setCheck(['Boolean']);
-    this.appendValueInput("NEXT")
-        .setCheck(['Param']);
-    this.setOutput(true, 'Param');
-    this.setInputsInline(true);
-  }
 };
 
 Blockly.Blocks.function_param_string = {
@@ -137,6 +137,12 @@ Entry.block.function_param_string = function (sprite, script, register) {
     return script.register[script.hashId].run()
 };
 
+Entry.block.function_param_string = {
+    skeleton: "basic_string_field",
+    color: "#ffd974",
+    template: "문자/숫자값"
+};
+
 Blockly.Blocks.function_param_boolean = {
   init: function() {
     this.setEditable(false);
@@ -161,6 +167,12 @@ Blockly.Blocks.function_param_boolean = {
 
 Entry.block.function_param_boolean = function (sprite, script, register) {
     return script.register[script.hashId].run()
+};
+
+Entry.block.function_param_boolean = {
+    skeleton: "basic_boolean_field",
+    color: "#aeb8ff",
+    template: "판단값"
 };
 
 Blockly.Blocks.function_create = {

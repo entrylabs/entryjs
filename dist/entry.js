@@ -1901,9 +1901,6 @@ Entry.block.remove_all_clones = function(a, b) {
 Entry.block.functionAddButton = {skeleton:"basic_button", color:"#eee", isNotFor:["functionInit"], template:"%1", params:[{type:"Text", text:"\ud568\uc218 \ucd94\uac00", color:"#333", align:"center"}], events:{mousedown:[function() {
   Entry.variableContainer.createFunction();
 }]}};
-Entry.block.function_field_label = {skeleton:"basic_param", color:"#f9c535", template:"%1%2", params:[{type:"TextInput", value:"\ud568\uc218"}, {type:"Output", accept:"paramMagnet"}]};
-Entry.block.function_field_string = {skeleton:"basic_param", color:"#ffd974", template:"%1%2", params:[{type:"Block", accept:"stringMagnet"}, {type:"Output", accept:"paramMagnet"}]};
-Entry.block.function_field_boolean = {skeleton:"basic_param", color:"#aeb8ff", template:"%1%2", params:[{type:"Block", accept:"booleanMagnet"}, {type:"Output", accept:"paramMagnet"}]};
 Blockly.Blocks.function_field_label = {init:function() {
   this.setColour("#f9c535");
   this.appendDummyInput().appendField(new Blockly.FieldTextInput(Lang.Blocks.FUNCTION_explanation_1), "NAME");
@@ -1911,6 +1908,7 @@ Blockly.Blocks.function_field_label = {init:function() {
   this.setOutput(!0, "Param");
   this.setInputsInline(!0);
 }};
+Entry.block.function_field_label = {skeleton:"basic_param", color:"#f9c535", template:"%1%2", params:[{type:"TextInput", value:"\ud568\uc218"}, {type:"Output", accept:"paramMagnet"}]};
 Blockly.Blocks.function_field_string = {init:function() {
   this.setColour("#ffec64");
   this.appendValueInput("PARAM").setCheck(["String"]);
@@ -1918,6 +1916,7 @@ Blockly.Blocks.function_field_string = {init:function() {
   this.setOutput(!0, "Param");
   this.setInputsInline(!0);
 }};
+Entry.block.function_field_string = {skeleton:"basic_param", color:"#ffd974", template:"%1%2", params:[{type:"Block", accept:"stringMagnet"}, {type:"Output", accept:"paramMagnet"}]};
 Blockly.Blocks.function_field_boolean = {init:function() {
   this.setColour("#2FC9F0");
   this.appendValueInput("PARAM").setCheck(["Boolean"]);
@@ -1925,6 +1924,7 @@ Blockly.Blocks.function_field_boolean = {init:function() {
   this.setOutput(!0, "Param");
   this.setInputsInline(!0);
 }};
+Entry.block.function_field_boolean = {skeleton:"basic_param", color:"#aeb8ff", template:"%1%2", params:[{type:"Block", accept:"booleanMagnet"}, {type:"Output", accept:"paramMagnet"}]};
 Blockly.Blocks.function_param_string = {init:function() {
   this.setEditable(!1);
   this.setColour("#ffec64");
@@ -1943,6 +1943,7 @@ Blockly.Blocks.function_param_string = {init:function() {
 Entry.block.function_param_string = function(a, b, c) {
   return b.register[b.hashId].run();
 };
+Entry.block.function_param_string = {skeleton:"basic_string_field", color:"#ffd974", template:"\ubb38\uc790/\uc22b\uc790\uac12"};
 Blockly.Blocks.function_param_boolean = {init:function() {
   this.setEditable(!1);
   this.setColour("#2FC9F0");
@@ -1961,6 +1962,7 @@ Blockly.Blocks.function_param_boolean = {init:function() {
 Entry.block.function_param_boolean = function(a, b, c) {
   return b.register[b.hashId].run();
 };
+Entry.block.function_param_boolean = {skeleton:"basic_boolean_field", color:"#aeb8ff", template:"\ud310\ub2e8\uac12"};
 Blockly.Blocks.function_create = {init:function() {
   this.appendDummyInput().appendField(Lang.Blocks.FUNCTION_define);
   this.setColour("#cc7337");
@@ -10837,15 +10839,39 @@ Entry.Func.syncFunc = function() {
     (a.fieldText != b || a.workspaceLength != c) && 1 > Blockly.Block.dragMode_ && (a.updateMenu(), a.fieldText = b, a.workspaceLength = c);
   }
 };
+Entry.Func.setupMenuCode = function() {
+  var a = Entry.playground.mainWorkspace.getBlockMenu().getCategoryCodes("func");
+  this._fieldLabel = a.createThread([{type:"function_field_label"}]).getFirstBlock();
+  this._fieldString = a.createThread([{type:"function_field_string", params:[{type:this.requestParamBlock("string")}]}]).getFirstBlock();
+  this._fieldBoolean = a.createThread([{type:"function_field_boolean", params:[{type:this.requestParamBlock("boolean")}]}]).getFirstBlock();
+  this.menuCode = a;
+  console.log(this._fieldLabel);
+};
+Entry.Func.requestParamBlock = function(a) {
+  var b = Entry.generateHash(), c;
+  switch(a) {
+    case "string":
+      c = Entry.block.function_param_string;
+      break;
+    case "boolean":
+      c = Entry.block.function_param_boolean;
+      break;
+    default:
+      return null;
+  }
+  var d = function() {
+  };
+  d.prototype = c;
+  d = new d;
+  a += b;
+  Entry.block[a] = d;
+  console.log(a);
+  console.log(d);
+  return a;
+};
 Entry.Func.updateMenu = function() {
   var a = Entry.playground.mainWorkspace.getBlockMenu();
-  if (!this.menuCode) {
-    var b = a.getCategoryCodes("func");
-    b.createThread([{type:"function_field_label"}]);
-    b.createThread([{type:"function_field_string"}]);
-    b.createThread([{type:"function_field_boolean"}]);
-    this.menuCode = b;
-  }
+  this.menuCode || this.setupMenuCode();
   a.banClass("functionInit");
   a.unbanClass("functionEdit");
 };
@@ -14965,56 +14991,56 @@ Entry.FieldTextInput = function(a, b, c) {
 };
 Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
 (function(a) {
-  a.renderStart = function(b) {
-    var a = this;
-    this.svgGroup = b.contentSvgGroup.elem("g");
+  a.renderStart = function(a) {
+    var c = this;
+    this.svgGroup = a.contentSvgGroup.elem("g");
     this.svgGroup.attr({class:"entry-input-field"});
     this.textElement = this.svgGroup.elem("text", {x:4, y:4, "font-size":"9pt"});
     this.textElement.textContent = this.truncate();
-    b = this.getTextWidth();
+    a = this.getTextWidth();
     var d = this.position && this.position.y ? this.position.y : 0;
-    this._header = this.svgGroup.elem("rect", {width:b, height:16, y:d - 8, rx:3, ry:3, fill:"#fff", "fill-opacity":.4});
+    this._header = this.svgGroup.elem("rect", {width:a, height:16, y:d - 8, rx:3, ry:3, fill:"#fff", "fill-opacity":.4});
     this.svgGroup.appendChild(this.textElement);
-    this.svgGroup.onmouseup = function(b) {
-      a._isEditable() && a.renderOptions();
+    this.svgGroup.onmouseup = function(a) {
+      c._isEditable() && c.renderOptions();
     };
-    this.box.set({x:0, y:0, width:b, height:16});
+    this.box.set({x:0, y:0, width:a, height:16});
   };
   a.renderOptions = function() {
-    var b = this;
+    var a = this;
     this.destroyOption();
     this.documentDownEvent = Entry.documentMousedown.attach(this, function() {
       Entry.documentMousedown.detach(this.documentDownEvent);
-      b.applyValue();
-      b.destroyOption();
+      a.applyValue();
+      a.destroyOption();
     });
     this.optionGroup = Entry.Dom("input", {class:"entry-widget-input-field", parent:$("body")});
     this.optionGroup.val(this.getValue());
-    this.optionGroup.on("mousedown", function(b) {
-      b.stopPropagation();
+    this.optionGroup.on("mousedown", function(a) {
+      a.stopPropagation();
     });
-    this.optionGroup.on("keyup", function(a) {
-      var c = a.keyCode || a.which;
-      b.applyValue(a);
-      -1 < [13, 27].indexOf(c) && b.destroyOption();
+    this.optionGroup.on("keyup", function(c) {
+      var e = c.keyCode || c.which;
+      a.applyValue(c);
+      -1 < [13, 27].indexOf(e) && a.destroyOption();
     });
-    var a = this.getAbsolutePosFromDocument();
-    a.y -= this.box.height / 2;
-    this.optionGroup.css({height:16, left:a.x, top:a.y, width:b.box.width});
+    var c = this.getAbsolutePosFromDocument();
+    c.y -= this.box.height / 2;
+    this.optionGroup.css({height:16, left:c.x, top:c.y, width:a.box.width});
     this.optionGroup.focus();
     this.optionGroup.select();
   };
-  a.applyValue = function(b) {
-    b = this.optionGroup.val();
-    this.setValue(b);
+  a.applyValue = function(a) {
+    a = this.optionGroup.val();
+    this.setValue(a);
     this.textElement.textContent = this.truncate();
     this.resize();
   };
   a.resize = function() {
-    var b = this.getTextWidth();
-    this._header.attr({width:b});
-    this.optionGroup.css({width:b});
-    this.box.set({width:b});
+    var a = this.getTextWidth();
+    this._header.attr({width:a});
+    this.optionGroup.css({width:a});
+    this.box.set({width:a});
     this._block.view.alignContent();
   };
   a.getTextWidth = function() {
@@ -15029,9 +15055,9 @@ Entry.GlobalSvg = {};
   a.createDom = function() {
     this.svgDom || (this.svgDom = Entry.Dom($('<svg id="globalSvg" width="200" height="200"version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'), {parent:$("body")}), this.svgDom.css({position:"fixed", width:1, height:1, display:"none", overflow:"visible", "z-index":"1111", opacity:.8}), this.svg = Entry.SVG("globalSvg"), this.top = this.left = this.width = 0);
   };
-  a.setView = function(b, a) {
-    if (b != this._view && !b.block.isReadOnly() && b.movable) {
-      return this._view = b, this._mode = a, this.draw(), this.align(), this.position(), !0;
+  a.setView = function(a, c) {
+    if (a != this._view && !a.block.isReadOnly() && a.movable) {
+      return this._view = a, this._mode = c, this.draw(), this.align(), this.position(), !0;
     }
   };
   a.draw = function() {
@@ -15603,7 +15629,7 @@ Entry.Block.MAGNET_OFFSET = .4;
       this._schema.event && this.thread.registerEvent(this, this._schema.event);
       a = this.params;
       c = this._schema.params;
-      for (e = 0;e < c.length;e++) {
+      for (e = 0;c && e < c.length;e++) {
         d = void 0 !== a[e] ? a[e] : c[e].value, f = a[e], !d || "Output" !== c[e].type && "Block" !== c[e].type || (d = new Entry.Block(d)), f ? a.splice(e, 1, d) : a.push(d);
       }
       if (a = this._schema.statements) {

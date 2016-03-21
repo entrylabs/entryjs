@@ -163,15 +163,57 @@ Entry.Func.syncFunc = function() {
     }
 };
 
+Entry.Func.setupMenuCode = function() {
+    var blockMenu = Entry.playground.mainWorkspace.getBlockMenu();
+    var menuCode = blockMenu.getCategoryCodes("func");
+    this._fieldLabel = menuCode.createThread([{
+        type: "function_field_label"
+    } ]).getFirstBlock();
+    this._fieldString = menuCode.createThread([{
+        type: "function_field_string",
+        params: [
+            {type: this.requestParamBlock("string")}
+        ]
+    }]).getFirstBlock();
+    this._fieldBoolean = menuCode.createThread([{
+        type: "function_field_boolean",
+        params: [
+            {type: this.requestParamBlock("boolean")}
+        ]
+    }]).getFirstBlock();
+    this.menuCode = menuCode;
+    console.log(this._fieldLabel);
+}
+
+Entry.Func.requestParamBlock = function(type) {
+    var id = Entry.generateHash();
+    var blockPrototype;
+    switch (type) {
+        case "string":
+            blockPrototype = Entry.block.function_param_string;
+            break;
+        case "boolean":
+            blockPrototype = Entry.block.function_param_boolean;
+            break;
+        default:
+            return null;
+    }
+
+    var blockSchema = function () {};
+    blockSchema.prototype = blockPrototype;
+    blockSchema = new blockSchema();
+
+    var blockType = type + id;
+    Entry.block[blockType] = blockSchema;
+    console.log(blockType);
+    console.log(blockSchema);
+    return blockType;
+};
+
 Entry.Func.updateMenu = function() {
     var blockMenu = Entry.playground.mainWorkspace.getBlockMenu();
-    if (!this.menuCode) {
-        var menuCode = blockMenu.getCategoryCodes("func");
-        menuCode.createThread([ { type: "function_field_label" } ]);
-        menuCode.createThread([ { type: "function_field_string" } ]);
-        menuCode.createThread([ { type: "function_field_boolean" } ]);
-        this.menuCode = menuCode;
-    }
+    if (!this.menuCode)
+        this.setupMenuCode();
     blockMenu.banClass("functionInit");
     blockMenu.unbanClass("functionEdit");
     return;
