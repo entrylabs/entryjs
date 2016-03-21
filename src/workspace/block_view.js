@@ -285,7 +285,8 @@ Entry.BlockView.PARAM_SPACE = 5;
 
     p._moveTo = function(x, y, animate) {
         this.set({ x: x, y: y });
-        this._setPosition(animate);
+        if (this.visible || this.display)
+            this._setPosition(animate);
     };
 
     p._moveBy = function(x, y, animate) {
@@ -397,6 +398,7 @@ Entry.BlockView.PARAM_SPACE = 5;
         }
 
         function onMouseMove(e) {
+            e.stopPropagation();
             var workspaceMode = board.workspace.getMode();
 
             if (workspaceMode === Entry.Workspace.MODE_VIMBOARD)
@@ -483,8 +485,8 @@ Entry.BlockView.PARAM_SPACE = 5;
         var dragMode = this.dragMode;
         var block = this.block;
         var workspaceMode = board.workspace.getMode();
-        this.set({visible:true});
         this.removeDragging();
+        this.set({visible:true});
         this.dragMode = Entry.DRAG_MODE_NONE;
 
         if (workspaceMode === Entry.Workspace.MODE_VIMBOARD) {
@@ -761,6 +763,8 @@ Entry.BlockView.PARAM_SPACE = 5;
         this.svgGroup.attr({
             opacity:this.visible === false ? 0 : 1
         });
+
+        if (this.visible) this._setPosition();
     };
 
     p._updateShadow = function() {
@@ -850,6 +854,8 @@ Entry.BlockView.PARAM_SPACE = 5;
         this.svgGroup.attr({
             display:this.display === false ? 'none' : 'block'
         });
+
+        if (this.display) this._setPosition();
     };
 
 })(Entry.BlockView.prototype);

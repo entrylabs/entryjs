@@ -2,13 +2,13 @@
  */
 "use strict";
 
-goog.provide("Entry.FieldDropdown");
+goog.provide("Entry.FieldDropdownDynamic");
 
-goog.require("Entry.Field");
+goog.require("Entry.FieldDropdown");
 /*
  *
  */
-Entry.FieldDropdown = function(content, blockView, index) {
+Entry.FieldDropdownDynamic = function(content, blockView, index) {
     this._block = blockView.block;
 
     var box = new Entry.BoxModel();
@@ -18,7 +18,11 @@ Entry.FieldDropdown = function(content, blockView, index) {
 
     this._contents = content;
     this._index = index;
-    this.setValue(this.getValue());
+    var options = Entry.container.getDropdownList(this._contents.menuName);
+    this._contents.options = options;
+    var value = this.getValue() ||
+        options.length !== 0 ? options[0][1] : null;
+    this.setValue(value);
 
     this._CONTENT_HEIGHT =
         content.dropdownHeight || blockView.getSkeleton().dropdownHeight || 16;
@@ -27,88 +31,13 @@ Entry.FieldDropdown = function(content, blockView, index) {
         content.fontSize || blockView.getSkeleton().fontSize || 12;
 
     this._ROUND = content.roundValue || 0;
-
     this.renderStart(blockView);
 };
 
-Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
+Entry.Utils.inherit(Entry.FieldDropdown, Entry.FieldDropdownDynamic);
 
 (function(p) {
-
-    p.renderStart = function(blockView) {
-        var X_PADDING = 18;
-        var that = this;
-        var contents = this._contents;
-
-
-        this.svgGroup = blockView.contentSvgGroup.elem("g", {
-            class: 'entry-field-dropdown'
-        });
-
-        this.textElement =
-            this.svgGroup.elem("text", {
-                x: 2
-            });
-        this.textElement.textContent = this.getTextByValue(this.getValue());
-
-        var bBox = this.textElement.getBBox();
-        this.textElement.attr({
-            'style': 'white-space: pre; font-size:' + that._FONT_SIZE + 'px',
-            'y': bBox.height * 0.25
-        });
-
-        var width =
-            this.textElement.getComputedTextLength() + X_PADDING;
-
-        var CONTENT_HEIGHT = this._CONTENT_HEIGHT;
-
-        this._header = this.svgGroup.elem("rect", {
-            width: width,
-            height: CONTENT_HEIGHT,
-            y: -CONTENT_HEIGHT/2,
-            rx: that._ROUND,
-            ry: that._ROUND,
-            fill: "#fff",
-            'fill-opacity': 0.4
-        });
-
-        this.svgGroup.appendChild(this.textElement);
-
-        this._arrow = this.svgGroup.elem("polygon",{
-            points: "0,-2 6,-2 3,2",
-            fill: blockView._schema.color,
-            stroke: blockView._schema.color,
-            transform: "translate("+ (width-11) + ",0)"
-        });
-
-        $(this.svgGroup).bind('mouseup touchend', function(e){
-            if (that._isEditable()) that.renderOptions();
-        });
-
-        this.box.set({
-            x: 0,
-            y: 0,
-            width: width,
-            height: CONTENT_HEIGHT
-        });
-    };
-
-    p.resize = function() {
-        var X_PADDING = 18;
-        var width =
-            this.textElement.getComputedTextLength() + X_PADDING;
-
-        this._header.attr({
-            width: width
-        });
-
-        this._arrow.attr({
-            transform: "translate("+ (width-11) + ",0)"
-        });
-
-        this.box.set({width: width});
-        this._block.view.alignContent();
-    };
+    p.constructor = Entry.FieldDropDownDynamic;
 
     p.renderOptions = function() {
         var that = this;
@@ -125,7 +54,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
 
         this.optionGroup = this.appendSvgOptionGroup();
 
-        var options = this._contents.options;
+        var options = Entry.container.getDropdownList(this._contents.menuName);
 
         var resizeList = [];
         var OPTION_X_PADDING = 30;
@@ -208,23 +137,4 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
         });
     };
 
-    p.applyValue = function(value) {
-        if (this.value == value) return;
-        this.setValue(value);
-        this.textElement.textContent = this.getTextByValue(value);
-        this.resize();
-    };
-
-    p.getTextByValue = function(value) {
-        if (!value) return Lang.Blocks.no_target;
-
-        var options = this._contents.options;
-        for (var i=0, len=options.length; i<len; i++) {
-            var option = options[i];
-            if (option[1] == value)
-                return option[0];
-        }
-        //no match found
-        return value;
-    };
-})(Entry.FieldDropdown.prototype);
+})(Entry.FieldDropdownDynamic.prototype);

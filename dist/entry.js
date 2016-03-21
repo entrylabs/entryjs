@@ -10104,8 +10104,8 @@ Entry.BlockMockup = function(a) {
       return this;
     }
     "string" === typeof b && 0 < b.length ? this.templates.push(b) : b.constructor == Blockly.FieldIcon ? ("start" === b.type ? this.params.push({type:"Indicator", img:b.src_, size:17, position:{x:0, y:-2}}) : this.params.push({type:"Indicator", img:b.src_, size:12}), this.templates.push(this.getFieldCount())) : b.constructor == Blockly.FieldDropdown ? (this.params.push({type:"Dropdown", options:b.menuGenerator_, value:b.menuGenerator_[0][1], fontSize:11}), this.templates.push(this.getFieldCount())) : 
-    b.constructor == Blockly.FieldDropdownDynamic ? (this.params.push({type:"Dropdown", options:[["\ub300\uc0c1 \uc5c6\uc74c", "null"]], value:"null", fontSize:11}), this.templates.push(this.getFieldCount())) : b.constructor == Blockly.FieldTextInput ? (this.params.push({type:"TextInput", value:10}), this.templates.push(this.getFieldCount())) : b.constructor == Blockly.FieldAngle ? (this.params.push({type:"Angle"}), this.templates.push(this.getFieldCount())) : b.constructor == Blockly.FieldKeydownInput ? 
-    (this.params.push({type:"Keyboard", value:81}), this.templates.push(this.getFieldCount())) : b.constructor == Blockly.FieldColour && (this.params.push({type:"Color"}), this.templates.push(this.getFieldCount()));
+    b.constructor == Blockly.FieldDropdownDynamic ? (this.params.push({type:"DropdownDynamic", value:null, menuName:b.menuName_, fontSize:11}), this.templates.push(this.getFieldCount())) : b.constructor == Blockly.FieldTextInput ? (this.params.push({type:"TextInput", value:10}), this.templates.push(this.getFieldCount())) : b.constructor == Blockly.FieldAngle ? (this.params.push({type:"Angle"}), this.templates.push(this.getFieldCount())) : b.constructor == Blockly.FieldKeydownInput ? (this.params.push({type:"Keyboard", 
+    value:81}), this.templates.push(this.getFieldCount())) : b.constructor == Blockly.FieldColour && (this.params.push({type:"Color"}), this.templates.push(this.getFieldCount()));
     return this;
   };
   a.setColour = function(b) {
@@ -13295,7 +13295,7 @@ Entry.BlockMenu = function(a, b, c, d) {
         Entry.GlobalSvg.setView(e, a.getMode()) && Entry.GlobalSvg.addControl(b);
       } else {
         var a = e.block, h = a.getThread();
-        a && h && (this._boardBlockView = g.code.cloneThread(h, d).getFirstBlock().view, this._boardBlockView._moveTo(e.x - f, e.y + (this.offset.top - g.offset.top), !1), this._boardBlockView.set({visible:!1}), this._boardBlockView.onMouseDown.call(this._boardBlockView, b), this._dragObserver = this._boardBlockView.observe(this, "_editDragInstance", ["x", "y"], !1));
+        a && h && (this._boardBlockView = g.code.cloneThread(h, d).getFirstBlock().view, this._boardBlockView._moveTo(e.x - f, e.y + (this.offset.top - g.offset.top), !1), this._boardBlockView.onMouseDown.call(this._boardBlockView, b), this._dragObserver = this._boardBlockView.observe(this, "_editDragInstance", ["x", "y"], !1));
       }
     }
   };
@@ -13676,7 +13676,7 @@ Entry.BlockView.PARAM_SPACE = 5;
   };
   a._moveTo = function(b, a, d) {
     this.set({x:b, y:a});
-    this._setPosition(d);
+    (this.visible || this.display) && this._setPosition(d);
   };
   a._moveBy = function(b, a, d) {
     return this._moveTo(this.x + b, this.y + a, d);
@@ -13689,6 +13689,7 @@ Entry.BlockView.PARAM_SPACE = 5;
   };
   a.onMouseDown = function(b) {
     function c(b) {
+      b.stopPropagation();
       var c = e.workspace.getMode();
       c === Entry.Workspace.MODE_VIMBOARD && a.vimBoardEvent(b, "dragOver");
       b.originalEvent.touches && (b = b.originalEvent.touches[0]);
@@ -13750,8 +13751,8 @@ Entry.BlockView.PARAM_SPACE = 5;
   };
   a.terminateDrag = function(b) {
     var a = this.getBoard(), d = this.dragMode, e = this.block, f = a.workspace.getMode();
-    this.set({visible:!0});
     this.removeDragging();
+    this.set({visible:!0});
     this.dragMode = Entry.DRAG_MODE_NONE;
     if (f === Entry.Workspace.MODE_VIMBOARD) {
       a instanceof Entry.BlockMenu ? (a.terminateDrag(), this.vimBoardEvent(b, "dragEnd", e)) : a.clear();
@@ -13885,6 +13886,7 @@ Entry.BlockView.PARAM_SPACE = 5;
   };
   a._updateOpacity = function() {
     this.svgGroup.attr({opacity:!1 === this.visible ? 0 : 1});
+    this.visible && this._setPosition();
   };
   a._updateShadow = function() {
     this.shadow && Entry.Utils.colorDarken(this._schema.color, .7);
@@ -13933,6 +13935,7 @@ Entry.BlockView.PARAM_SPACE = 5;
   };
   a._updateDisplay = function() {
     this.svgGroup.attr({display:!1 === this.display ? "none" : "block"});
+    this.display && this._setPosition();
   };
 })(Entry.BlockView.prototype);
 Entry.Code = function(a) {
@@ -14622,6 +14625,9 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
     this.value != b && (this.setValue(b), this.textElement.textContent = this.getTextByValue(b), this.resize());
   };
   a.getTextByValue = function(b) {
+    if (!b) {
+      return Lang.Blocks.no_target;
+    }
     for (var a = this._contents.options, d = 0, e = a.length;d < e;d++) {
       var f = a[d];
       if (f[1] == b) {
@@ -14631,6 +14637,68 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
     return b;
   };
 })(Entry.FieldDropdown.prototype);
+Entry.FieldDropdownDynamic = function(a, b, c) {
+  this._block = b.block;
+  this.box = new Entry.BoxModel;
+  this.svgGroup = null;
+  this._contents = a;
+  this._index = c;
+  c = Entry.container.getDropdownList(this._contents.menuName);
+  this._contents.options = c;
+  c = this.getValue() || 0 !== c.length ? c[0][1] : null;
+  this.setValue(c);
+  this._CONTENT_HEIGHT = a.dropdownHeight || b.getSkeleton().dropdownHeight || 16;
+  this._FONT_SIZE = a.fontSize || b.getSkeleton().fontSize || 12;
+  this._ROUND = a.roundValue || 0;
+  this.renderStart(b);
+};
+Entry.Utils.inherit(Entry.FieldDropdown, Entry.FieldDropdownDynamic);
+(function(a) {
+  a.constructor = Entry.FieldDropDownDynamic;
+  a.renderOptions = function() {
+    var b = this;
+    this.destroyOption();
+    this.documentDownEvent = Entry.documentMousedown.attach(this, function() {
+      Entry.documentMousedown.detach(this.documentDownEvent);
+      b.optionGroup.remove();
+    });
+    this.optionGroup = this.appendSvgOptionGroup();
+    var a = Entry.container.getDropdownList(this._contents.menuName), d = [], e = 0, f = this._CONTENT_HEIGHT + 4;
+    d.push(this.optionGroup.elem("rect", {height:f * a.length, fill:"white"}));
+    for (var g = 0, h = a.length;g < h;g++) {
+      var k = a[g], l = k[0], k = k[1], n = this.optionGroup.elem("g", {class:"rect", transform:"translate(0," + g * f + ")"});
+      d.push(n.elem("rect", {height:f}));
+      this.getValue() == k && (n.elem("text", {x:5, y:13, "alignment-baseline":"central"}).textContent = "\u2713");
+      var m = n.elem("text", {x:20, "alignment-baseline":"central"});
+      m.textContent = l;
+      l = m.getBoundingClientRect();
+      m.attr({y:f / 2});
+      e = Math.max(l.width + 30, e);
+      (function(a, c) {
+        var d = $(a);
+        d.bind("mousedown touchstart", function(b) {
+          b.stopPropagation();
+        });
+        d.bind("mouseup touchend", function(a) {
+          a.stopPropagation();
+          b.applyValue(c);
+          b.destroyOption();
+          b._selectBlockView();
+        });
+      })(n, k);
+    }
+    a = -e / 2 + this.box.width / 2;
+    f = this.box.height / 2;
+    g = this.getAbsolutePosFromBoard();
+    g.x += a;
+    g.y += f;
+    this.optionGroup.attr({class:"entry-field-dropdown", transform:"translate(" + g.x + "," + g.y + ")"});
+    var q = {width:e};
+    d.forEach(function(b) {
+      b.attr(q);
+    });
+  };
+})(Entry.FieldDropdownDynamic.prototype);
 Entry.FieldImage = function(a, b, c) {
   this._block = b;
   this.box = new Entry.BoxModel;
@@ -15053,21 +15121,27 @@ Entry.GlobalSvg = {};
   a.REMOVE = 1;
   a.RETURN = 2;
   a.createDom = function() {
-    this.svgDom || (this.svgDom = Entry.Dom($('<svg id="globalSvg" width="200" height="200"version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'), {parent:$("body")}), this.svgDom.css({position:"fixed", width:1, height:1, display:"none", overflow:"visible", "z-index":"1111", opacity:.8}), this.svg = Entry.SVG("globalSvg"), this.top = this.left = this.width = 0);
+    this.svgDom || (this.svgDom = Entry.Dom($('<svg id="globalSvg" width="0" height="0"version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'), {parent:$("body")}), this.svgDom.css({position:"fixed", width:1, height:1, display:"none", overflow:"visible", "z-index":"1111", opacity:.8}), this.svg = Entry.SVG("globalSvg"), this.top = this.left = this.width = 0);
   };
+<<<<<<< HEAD
   a.setView = function(a, c) {
     if (a != this._view && !a.block.isReadOnly() && a.movable) {
       return this._view = a, this._mode = c, this.draw(), this.align(), this.position(), !0;
+=======
+  a.setView = function(b, a) {
+    if (b != this._view && !b.block.isReadOnly() && b.movable) {
+      return b.set({visible:!1}), this._view = b, this._mode = a, this.draw(), this.align(), this.position(), !0;
+>>>>>>> origin/refac/entry-block
     }
   };
   a.draw = function() {
-    var a = this._view;
+    var b = this._view;
     this._svg && this.remove();
-    var c = this._mode == Entry.Workspace.MODE_VIMBOARD;
-    this.svgGroup = Entry.SVG.createElement(a.svgGroup.cloneNode(!0), {opacity:1});
+    var a = this._mode == Entry.Workspace.MODE_VIMBOARD;
+    this.svgGroup = Entry.SVG.createElement(b.svgGroup.cloneNode(!0), {opacity:1});
     this.svg.appendChild(this.svgGroup);
     this.show();
-    c && (a = $(this.svgGroup), a.find("g").css({filter:"none"}), a.find("path").velocity({opacity:0}, {duration:500}), a.find("text").velocity({fill:"#000000"}, {duration:530}));
+    a && (b = $(this.svgGroup), b.find("g").css({filter:"none"}), b.find("path").velocity({opacity:0}, {duration:500}), b.find("text").velocity({fill:"#000000"}, {duration:530}));
   };
   a.remove = function() {
     this.svgGroup && (this.svgGroup.remove(), delete this.svgGroup, delete this._view, delete this._offsetX, delete this._offsetY, delete this._startX, delete this._startY, this.hide());

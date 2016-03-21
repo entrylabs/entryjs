@@ -11,7 +11,7 @@ goog.provide('Entry.GlobalSvg');
         if (this.svgDom) return;
 
         this.svgDom = Entry.Dom(
-            $('<svg id="globalSvg" width="200" height="200"' +
+            $('<svg id="globalSvg" width="0" height="0"' +
               'version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'),
             { parent: $('body') }
         );
@@ -37,6 +37,7 @@ goog.provide('Entry.GlobalSvg');
         if (view == this._view) return;
         var data = view.block;
         if (data.isReadOnly() || !view.movable) return;
+        view.set({visible:false});
         this._view = view;
         this._mode = mode;
         this.draw();

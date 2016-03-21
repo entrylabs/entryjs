@@ -4772,6 +4772,7 @@ svg .svgBlockGroup text {
 }
 .entryBoard {
   cursor: move;
+  position: absolute;
 }
 .entryOverlayBoard {
   background: rgba(180, 180, 180, 0.4);

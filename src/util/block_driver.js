@@ -156,9 +156,9 @@ Entry.BlockMockup = function(blocklyInfo) {
                 this.templates.push(this.getFieldCount());
             } else if (field.constructor == Blockly.FieldDropdownDynamic) {
                 this.params.push({
-                    type: "Dropdown",
-                    options: [["대상 없음", "null"]],
-                    value: "null",
+                    type: "DropdownDynamic",
+                    value: null,
+                    menuName: field.menuName_,
                     fontSize: 11
                 });
                 this.templates.push(this.getFieldCount());
