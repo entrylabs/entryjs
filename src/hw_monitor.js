@@ -6,8 +6,7 @@ goog.require("Entry.Utils");
 Entry.HWMonitor = function(hwModule) {
     this.svgDom = Entry.Dom(
         $('<svg id="hwMonitor" class="hwMonitor" width="100%" height="100%"' +
-          'version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'),
-        { parent: this.view }
+          'version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>')    
     );
 
     var that = this;
@@ -30,21 +29,32 @@ Entry.HWMonitor = function(hwModule) {
      * Generate View
      */
     p.generateView = function() {
-        this.snap = Snap('#hwMonitor');
-        this._svgGroup = this.snap.group();
+        this.snap = Entry.SVG('hwMonitor');
+        this._svgGroup = this.snap.elem("g");
+
         var monitorTemplate = this._hwModule.monitorTemplate;
-        this.hwView = this._svgGroup.group();
-        this.hwView.image(
-            Entry.mediaFilePath + "hw/neobot.png",
-            - monitorTemplate.width / 2,
-            - monitorTemplate.height / 2,
-            monitorTemplate.width,
-            monitorTemplate.height
-        );
+        
+        var imgObj = {
+            href : Entry.mediaFilePath + "hw/neobot.png",
+            x : - monitorTemplate.width / 2,
+            y : - monitorTemplate.height / 2,
+            width : monitorTemplate.width,
+            height : monitorTemplate.height
+        };
+        this.hwView = this._svgGroup.elem("image");
+        this.hwView = this.hwView.attr(imgObj);
+
+        // this.hwView.image(
+        //     Entry.mediaFilePath + "hw/neobot.png",
+        //     - monitorTemplate.width / 2,
+        //      - monitorTemplate.height / 2,
+        //     monitorTemplate.width,
+        //     monitorTemplate.height
+        // );
         this._template = monitorTemplate;
         var ports = monitorTemplate.ports;
 
-        this.pathGroup = this._svgGroup.group();
+        this.pathGroup = this._svgGroup.elem("g");
 
         var portsTemp = [];
         for (var key in ports) {
@@ -53,9 +63,11 @@ Entry.HWMonitor = function(hwModule) {
             this._portViews[key] = portView;
             portsTemp.push(portView);
         }
+
         portsTemp.sort(function(a, b) {
             return a.box.x - b.box.x;
         });
+
         var portMap = this._portMap;
         portsTemp.map(function(v) {
             var degree = Math.atan2(v.box.y, v.box.x);
@@ -67,7 +79,7 @@ Entry.HWMonitor = function(hwModule) {
                     portMap.e.push(v);
                     break;
                 case 1:
-                    portMap.s.push(v);
+                    portMap.s.push(v); 
                     break;
                 case 2:
                     portMap.w.push(v);
@@ -79,35 +91,60 @@ Entry.HWMonitor = function(hwModule) {
     };
 
     p.generatePortView = function(port) {
-        var svgGroup = this._svgGroup.group();
+        var svgGroup = this._svgGroup.elem("g");
         svgGroup.addClass("hwComponent");
-        var path = this.pathGroup.path("m0,0").attr({
+
+        var path = this.pathGroup.elem("path").attr({
+            "d" : "m0,0",
             "fill": "none",
             "stroke": port.type === "input" ? "#00979d" : "#A751E3",
             "stroke-width": 3
         });
-        var wrapperRect = svgGroup.rect(0, 0, 150, 22, 4).attr({
+        var wrapperRect = svgGroup.elem("rect").attr({
+            "x" : 0,
+            "y" : 0,
+            "width" : 150,
+            "height" : 22,
+            "rx" : 4,
+            "ry" : 4,
             "fill": "#fff",
             "stroke": "#a0a1a1"
         });
-        var nameView = svgGroup.text(4, 12, port.name).attr({
+        var nameView = svgGroup.elem("text").attr({
+            "x" : 4,
+            "y" : 12,
             "fill": "#000",
             "class": "hwComponentName",
             "alignment-baseline": "central"
         });
-        var width = nameView.node.getComputedTextLength();
-        var valueRect = svgGroup.rect(width + 8, 2, 30, 18, 9).attr({
+        nameView.textContent = port.name;
+        
+        var width = nameView.getComputedTextLength();
+
+        var valueRect = svgGroup.elem("rect").attr({
+            "x" : width+8,
+            "y" : 2,
+            "width" : 30,
+            "height" : 18,
+            "rx" : 9,
+            "ry" : 9,
             "fill": port.type === "input" ? "#00979d" : "#A751E3"
         });
-        var valueView = svgGroup.text(width + 13, 12, '0').attr({
+
+        var valueView = svgGroup.elem("text").attr({
+            "x" : width + 13,
+            "y" : 12,
             "fill": "#fff",
             "class": "hwComponentValue",
             "alignment-baseline": "central"
         });
+        valueView.textContent = 0;
         width += 40;
+
         wrapperRect.attr({
-            "width": width + "px"
+            "width": width
         });
+
         return {
             group: svgGroup,
             value: valueView,
@@ -142,11 +179,13 @@ Entry.HWMonitor = function(hwModule) {
     };
 
     p.resize = function() {
-        this.hwView.attr({ transform: "s" + this.scale });
+
+        this.hwView.attr({ "transform" : "scale(" + this.scale + ")" });
         var bRect = this.svgDom.get(0).getBoundingClientRect();
         this._svgGroup.attr({
-            transform: "t" + bRect.width / 2 + "," + bRect.height / 2
+            "transform"  : "translate(" + bRect.width / 2 + "," + bRect.height / 2 + ")"
         });
+
         this._rect = bRect;
         this.scale = bRect.height / this._template.height / 2;
         this.align();
@@ -161,8 +200,8 @@ Entry.HWMonitor = function(hwModule) {
             var port = ports[i];
             var x = this._template.width * (i / length - 0.5);
             port.group.attr({
-                transform: "t" + x + "," +
-                    (- this._template.width/2 - 30)
+                "transform"  : "translate(" + x + "," +
+                    (- this._template.width/2 - 30) + ")"
             });
         }
 
@@ -206,7 +245,6 @@ Entry.HWMonitor = function(hwModule) {
             }
 
             this._movePort(lPort, lP, yCursor, prevLP);
-
             this._movePort(rPort, rP, yCursor, prevRP);
 
             wholeWidth -= lPort.width + rPort.width + 10;
@@ -214,8 +252,8 @@ Entry.HWMonitor = function(hwModule) {
         };
         if (ports.length) {
             ports[0].group.attr({
-                transform: "t" + (rP + lP - ports[0].width) / 2 + "," + yCursor
-            });
+                "transform"  : "translate(" + (rP + lP - ports[0].width) / 2 + "," + yCursor
+            + ")"});
         };
     };
 
@@ -246,7 +284,7 @@ Entry.HWMonitor = function(hwModule) {
                     "H" + (portX) +
                     "L" + (portX) + "," + (portY)
 
-        port.group.attr({ transform: "t" + groupX + "," + y });
+        port.group.attr({ "transform" : "translate(" + groupX + "," + y  + ")"});
         port.path.attr({ "d": path });
     };
 

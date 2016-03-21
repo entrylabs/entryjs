@@ -5441,6 +5441,65 @@ Entry.Dom = function(a, b) {
   };
   return d;
 };
+Entry.SVG = function(a) {
+  a = document.getElementById(a);
+  return Entry.SVG.createElement(a);
+};
+Entry.SVG.NS = "http://www.w3.org/2000/svg";
+Entry.SVG.NS_XLINK = "http://www.w3.org/1999/xlink";
+Entry.SVG.createElement = function(a, b) {
+  var c;
+  c = "string" === typeof a ? document.createElementNS(Entry.SVG.NS, a) : a;
+  if (b) {
+    b.href && (c.setAttributeNS(Entry.SVG.NS_XLINK, "href", b.href), delete b.href);
+    for (var d in b) {
+      c.setAttribute(d, b[d]);
+    }
+  }
+  this instanceof SVGElement && this.appendChild(c);
+  c.elem = Entry.SVG.createElement;
+  c.attr = Entry.SVG.attr;
+  c.addClass = Entry.SVG.addClass;
+  c.removeClass = Entry.SVG.removeClass;
+  c.hasClass = Entry.SVG.hasClass;
+  c.remove = Entry.SVG.remove;
+  return c;
+};
+Entry.SVG.attr = function(a, b) {
+  if ("string" === typeof a) {
+    var c = {};
+    c[a] = b;
+    a = c;
+  }
+  if (a) {
+    a.href && (this.setAttributeNS(Entry.SVG.NS_XLINK, "href", a.href), delete a.href);
+    for (var d in a) {
+      this.setAttribute(d, a[d]);
+    }
+  }
+  return this;
+};
+Entry.SVG.addClass = function(a) {
+  for (var b = this.getAttribute("class"), c = 0;c < arguments.length;c++) {
+    a = arguments[c], this.hasClass(a) || (b += " " + a);
+  }
+  this.setAttribute("class", b);
+  return this;
+};
+Entry.SVG.removeClass = function(a) {
+  for (var b = this.getAttribute("class"), c = 0;c < arguments.length;c++) {
+    a = arguments[c], this.hasClass(a) && (b = b.replace(new RegExp("(\\s|^)" + a + "(\\s|$)"), " "));
+  }
+  this.setAttribute("class", b);
+  return this;
+};
+Entry.SVG.hasClass = function(a) {
+  var b = this.getAttribute("class");
+  return b ? b.match(new RegExp("(\\s|^)" + a + "(\\s|$)")) : !1;
+};
+Entry.SVG.remove = function() {
+  this.parentNode && this.parentNode.removeChild(this);
+};
 Entry.Dialog = function(a, b, c, d) {
   a.dialog && a.dialog.remove();
   a.dialog = this;
@@ -11312,7 +11371,7 @@ Entry.Func.generateWsBlock = function(a, b, c) {
 };
 Entry.HWMontior = {};
 Entry.HWMonitor = function(a) {
-  this.svgDom = Entry.Dom($('<svg id="hwMonitor" class="hwMonitor" width="100%" height="100%"version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'), {parent:this.view});
+  this.svgDom = Entry.Dom($('<svg id="hwMonitor" class="hwMonitor" width="100%" height="100%"version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'));
   var b = this;
   Entry.addEventListener("windowResized", function() {
     b.resize();
@@ -11324,14 +11383,14 @@ Entry.HWMonitor = function(a) {
 };
 (function(a) {
   a.generateView = function() {
-    this.snap = Snap("#hwMonitor");
-    this._svgGroup = this.snap.group();
-    var a = this._hwModule.monitorTemplate;
-    this.hwView = this._svgGroup.group();
-    this.hwView.image(Entry.mediaFilePath + "hw/neobot.png", -a.width / 2, -a.height / 2, a.width, a.height);
+    this.snap = Entry.SVG("hwMonitor");
+    this._svgGroup = this.snap.elem("g");
+    var a = this._hwModule.monitorTemplate, c = {href:Entry.mediaFilePath + "hw/neobot.png", x:-a.width / 2, y:-a.height / 2, width:a.width, height:a.height};
+    this.hwView = this._svgGroup.elem("image");
+    this.hwView = this.hwView.attr(c);
     this._template = a;
     a = a.ports;
-    this.pathGroup = this._svgGroup.group();
+    this.pathGroup = this._svgGroup.elem("g");
     var c = [], d;
     for (d in a) {
       var e = this.generatePortView(a[d]);
@@ -11360,12 +11419,16 @@ Entry.HWMonitor = function(a) {
     this.resize();
   };
   a.generatePortView = function(a) {
-    var c = this._svgGroup.group();
+    var c = this._svgGroup.elem("g");
     c.addClass("hwComponent");
-    var d = this.pathGroup.path("m0,0").attr({fill:"none", stroke:"input" === a.type ? "#00979d" : "#A751E3", "stroke-width":3}), e = c.rect(0, 0, 150, 22, 4).attr({fill:"#fff", stroke:"#a0a1a1"}), f = c.text(4, 12, a.name).attr({fill:"#000", "class":"hwComponentName", "alignment-baseline":"central"}).node.getComputedTextLength();
-    c.rect(f + 8, 2, 30, 18, 9).attr({fill:"input" === a.type ? "#00979d" : "#A751E3"});
-    var g = c.text(f + 13, 12, "0").attr({fill:"#fff", "class":"hwComponentValue", "alignment-baseline":"central"}), f = f + 40;
-    e.attr({width:f + "px"});
+    var d = this.pathGroup.elem("path").attr({d:"m0,0", fill:"none", stroke:"input" === a.type ? "#00979d" : "#A751E3", "stroke-width":3}), e = c.elem("rect").attr({x:0, y:0, width:150, height:22, rx:4, ry:4, fill:"#fff", stroke:"#a0a1a1"}), f = c.elem("text").attr({x:4, y:12, fill:"#000", "class":"hwComponentName", "alignment-baseline":"central"});
+    f.textContent = a.name;
+    f = f.getComputedTextLength();
+    c.elem("rect").attr({x:f + 8, y:2, width:30, height:18, rx:9, ry:9, fill:"input" === a.type ? "#00979d" : "#A751E3"});
+    var g = c.elem("text").attr({x:f + 13, y:12, fill:"#fff", "class":"hwComponentValue", "alignment-baseline":"central"});
+    g.textContent = 0;
+    f += 40;
+    e.attr({width:f});
     return {group:c, value:g, type:a.type, path:d, box:{x:a.pos.x - this._template.width / 2, y:a.pos.y - this._template.height / 2, width:f}, width:f};
   };
   a.getView = function() {
@@ -11379,16 +11442,16 @@ Entry.HWMonitor = function(a) {
     }
   };
   a.resize = function() {
-    this.hwView.attr({transform:"s" + this.scale});
+    this.hwView.attr({transform:"scale(" + this.scale + ")"});
     var a = this.svgDom.get(0).getBoundingClientRect();
-    this._svgGroup.attr({transform:"t" + a.width / 2 + "," + a.height / 2});
+    this._svgGroup.attr({transform:"translate(" + a.width / 2 + "," + a.height / 2 + ")"});
     this._rect = a;
     this.scale = a.height / this._template.height / 2;
     this.align();
   };
   a.align = function() {
     for (var a = this._portMap.n, c = a.length, d = 0;d < a.length;d++) {
-      a[d].group.attr({transform:"t" + this._template.width * (d / c - .5) + "," + (-this._template.width / 2 - 30)});
+      a[d].group.attr({transform:"translate(" + this._template.width * (d / c - .5) + "," + (-this._template.width / 2 - 30) + ")"});
     }
     a = this._portMap.s.concat();
     this._alignNS(a, this._template.width * this.scale / 2 + 5, 27);
@@ -11408,12 +11471,12 @@ Entry.HWMonitor = function(a) {
       h -= k.width + l.width + 10;
       c += q;
     }
-    a.length && a[0].group.attr({transform:"t" + (f + e - a[0].width) / 2 + "," + c});
+    a.length && a[0].group.attr({transform:"translate(" + (f + e - a[0].width) / 2 + "," + c + ")"});
   };
   a._movePort = function(a, c, d, e) {
     var f = c, g = a.box.x * this.scale, h = a.box.y * this.scale;
     c > e ? (f = c - a.width, c = c > g && g > e ? "M" + g + "," + d + "L" + g + "," + h : "M" + (c + e) / 2 + "," + d + "l0," + (h > d ? 28 : -3) + "H" + g + "L" + g + "," + h) : c = c < g && g < e ? "m" + g + "," + d + "L" + g + "," + h : "m" + (e + c) / 2 + "," + d + "l0," + (h > d ? 28 : -3) + "H" + g + "L" + g + "," + h;
-    a.group.attr({transform:"t" + f + "," + d});
+    a.group.attr({transform:"translate(" + f + "," + d + ")"});
     a.path.attr({d:c});
   };
 })(Entry.HWMonitor.prototype);
