@@ -232,7 +232,6 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
                     blockView.y+distance,
                     false
                 );
-                this._boardBlockView.set({visible:false});
                 this._boardBlockView.onMouseDown.call(this._boardBlockView, e);
                 this._dragObserver =
                     this._boardBlockView.observe(this, "_editDragInstance", ['x', 'y'], false);
