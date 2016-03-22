@@ -121,7 +121,8 @@ Entry.Albert = {PORT_MAP:{leftWheel:0, rightWheel:0, buzzer:0, leftEye:0, rightE
   a = Entry.Albert;
   a.tempo = 60;
   a.removeAllTimeouts();
-}, tempo:60, timeouts:[], removeTimeout:function(a) {
+}, monitorTemplate:{imgPath:"hw/albert.png", width:268, height:270, ports:{leftProximity:{name:Lang.Blocks.ALBERT_sensor_leftProximity, type:"input", pos:{x:0, y:0}}, rightProximity:{name:Lang.Blocks.ALBERT_sensor_rightProximity, type:"input", pos:{x:0, y:0}}, battery:{name:Lang.Blocks.ALBERT_sensor_battery, type:"input", pos:{x:0, y:0}}, light:{name:Lang.Blocks.ALBERT_sensor_light, type:"input", pos:{x:0, y:0}}, leftWheel:{name:"\uc67c\ucabd \ubc14\ud034", type:"output", pos:{x:0, y:0}}, rightWheel:{name:"\uc624\ub978\ucabd \ubc14\ud034", 
+type:"output", pos:{x:0, y:0}}, buzzer:{name:"\ubd80\uc800 1", type:"output", pos:{x:0, y:0}}, leftEye:{name:"\uc67c\ucabd \ub208", type:"output", pos:{x:0, y:0}}, rightEye:{name:"\uc624\ub978\ucabd \ub208", type:"output", pos:{x:0, y:0}}, note:{name:"\ubd80\uc800 2", type:"output", pos:{x:0, y:0}}, bodyLed:{name:"\ubab8\ud1b5 \ubd88\ube5b", type:"output", pos:{x:0, y:0}}, frontLed:{name:"\uc55e\ucabd \ubd88\ube5b", type:"output", pos:{x:0, y:0}}}}, tempo:60, timeouts:[], removeTimeout:function(a) {
   clearTimeout(a);
   var b = this.timeouts;
   a = b.indexOf(a);
@@ -713,9 +714,11 @@ Entry.Arduino = {name:"arduino", setZero:function() {
     Entry.hw.sendQueue[a] = 0;
   }
   Entry.hw.update();
-}};
-Entry.SensorBoard = {name:"sensorBoard", setZero:Entry.Arduino.setZero};
-Entry.CODEino = {name:"CODEino", setZero:Entry.Arduino.setZero};
+}, monitorTemplate:{imgPath:"hw/arduino.png", width:268, height:270, ports:{0:{name:"0\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, 1:{name:"1\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, 2:{name:"2\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, 3:{name:"3\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, 4:{name:"4\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, 5:{name:"5\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, 6:{name:"6\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, 
+y:0}}, 7:{name:"7\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, 8:{name:"8\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, 9:{name:"9\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, 10:{name:"10\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, 11:{name:"11\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, 12:{name:"12\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, 13:{name:"13\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, a0:{name:"0\ubc88  \ud3ec\ud2b8", type:"input", 
+pos:{x:0, y:0}}, a1:{name:"1\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, a2:{name:"2\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, a3:{name:"3\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, a4:{name:"4\ubc88 \ud3ec\ud2b8", type:"input", "po\u00cfs":{x:0, y:0}}, a5:{name:"5\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}}}};
+Entry.SensorBoard = {name:"sensorBoard", setZero:Entry.Arduino.setZero, monitorTemplate:Entry.Arduino.monitorTemplate};
+Entry.CODEino = {name:"CODEino", setZero:Entry.Arduino.setZero, monitorTemplate:Entry.Arduino.monitorTemplate};
 Blockly.Blocks.arduino_text = {init:function() {
   this.setColour("#00979D");
   this.appendDummyInput().appendField(new Blockly.FieldTextInput("Arduino"), "NAME");
@@ -1038,7 +1041,9 @@ Entry.Bitbrick = {SENSOR_MAP:{1:"light", 2:"IR", 3:"touch", 4:"potentiometer", 5
     a[b] = 0;
   }
   Entry.hw.update();
-}, name:"bitbrick", servoMaxValue:181, servoMinValue:1, dcMaxValue:100, dcMinValue:-100};
+}, name:"bitbrick", servoMaxValue:181, servoMinValue:1, dcMaxValue:100, dcMinValue:-100, monitorTemplate:{imgPath:"hw/bitbrick.png", width:268, height:270, ports:{0:{name:"0\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, 1:{name:"1\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, 2:{name:"2\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, 3:{name:"3\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, 4:{name:"4\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, 5:{name:"5\ubc88 \ud3ec\ud2b8", 
+type:"input", pos:{x:0, y:0}}, 6:{name:"6\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, 7:{name:"7\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, 8:{name:"8\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, 9:{name:"9\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, 10:{name:"10\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, 11:{name:"11\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, 12:{name:"12\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, 13:{name:"13\ubc88 \ud3ec\ud2b8", 
+type:"input", pos:{x:0, y:0}}, a0:{name:"0\ubc88  \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, a1:{name:"1\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, a2:{name:"2\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, a3:{name:"3\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, a4:{name:"4\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, a5:{name:"5\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}}}};
 Blockly.Blocks.bitbrick_sensor_value = {init:function() {
   this.setColour("#00979D");
   this.appendDummyInput().appendField("").appendField(new Blockly.FieldDropdownDynamic(Entry.Bitbrick.sensorList), "PORT").appendField(" \uac12");
@@ -2283,7 +2288,9 @@ Entry.Hamster = {PORT_MAP:{leftWheel:0, rightWheel:0, buzzer:0, outputA:0, outpu
   this.lineTracerModeId = this.lineTracerModeId + 1 & 255;
   a.lineTracerMode = b;
   a.lineTracerModeId = this.lineTracerModeId;
-}, name:"hamster"};
+}, name:"hamster", monitorTemplate:{imgPath:"hw/hamster.png", width:268, height:270, ports:{leftProximity:{name:Lang.Blocks.HAMSTER_sensor_leftProximity, type:"input", pos:{x:5, y:79}}, rightProximity:{name:Lang.Blocks.HAMSTER_sensor_rightProximity, type:"input", pos:{x:94, y:127}}, leftFloor:{name:Lang.Blocks.HAMSTER_sensor_leftFloor, type:"input", pos:{x:34, y:150}}, rightFloor:{name:Lang.Blocks.HAMSTER_sensor_rightFloor, type:"input", pos:{x:110, y:184}}, accelerationX:{name:Lang.Blocks.HAMSTER_sensor_accelerationX, 
+type:"input", pos:{x:32, y:141}}, accelerationY:{name:Lang.Blocks.HAMSTER_sensor_accelerationY, type:"input", pos:{x:98, y:65}}, accelerationZ:{name:Lang.Blocks.HAMSTER_sensor_accelerationZ, type:"input", pos:{x:188, y:70}}, light:{name:Lang.Blocks.HAMSTER_sensor_light, type:"input", pos:{x:36, y:145}}, temperature:{name:Lang.Blocks.HAMSTER_sensor_temperature, type:"input", pos:{x:50, y:152}}, leftWheel:{name:"\uc67c\ucabd \ubc14\ud034", type:"output", pos:{x:93, y:68}}, rightWheel:{name:"\uc624\ub978\ucabd \ubc14\ud034", 
+type:"output", pos:{x:168, y:130}}, buzzer:{name:"\ubd80\uc800 1", type:"output", pos:{x:88, y:55}}, outputA:{name:"outputA", type:"output", pos:{x:17, y:126}}, outputB:{name:"outputB", type:"output", pos:{x:108, y:172}}, leftLed:{name:"\uc67c\ucabd LED", type:"output", pos:{x:26, y:149}}, rightLed:{name:"\uc624\ub978\ucabd LED", type:"output", pos:{x:72, y:180}}, note:{name:"\ubd80\uc800 2", type:"output", pos:{x:89, y:60}}}}};
 Blockly.Blocks.hamster_hand_found = {init:function() {
   this.setColour("#00979D");
   this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_hand_found);
@@ -12434,7 +12441,9 @@ Entry.HWMonitor = function(a) {
   a.generateView = function() {
     this.snap = Entry.SVG("hwMonitor");
     this._svgGroup = this.snap.elem("g");
-    var a = this._hwModule.monitorTemplate, c = {href:Entry.mediaFilePath + "hw/neobot.png", x:-a.width / 2, y:-a.height / 2, width:a.width, height:a.height};
+    var a = this._hwModule.monitorTemplate;
+    console.log(a);
+    var c = {href:Entry.mediaFilePath + a.imgPath, x:-a.width / 2, y:-a.height / 2, width:a.width, height:a.height};
     this.hwView = this._svgGroup.elem("image");
     this.hwView = this.hwView.attr(c);
     this._template = a;

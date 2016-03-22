@@ -7,17 +7,47 @@ Entry.Arduino = {
           Entry.hw.sendQueue[port] = 0;
         }
         Entry.hw.update();
+    },
+    monitorTemplate: {
+        imgPath: "hw/arduino.png",
+        width: 268,
+        height: 270,
+        ports: {
+            "0":{name: "0번 포트", type: "input", pos: {x : 0, y: 0}},
+            "1":{name: "1번 포트", type: "input", pos: {x: 0, y: 0}},
+            "2":{name: "2번 포트", type: "input", pos: {x : 0, y: 0}},
+            "3":{name: "3번 포트", type: "input", pos: {x: 0, y: 0}},
+            "4":{name: "4번 포트", type: "input", pos: {x: 0, y: 0}},
+            "5":{name: "5번 포트", type: "input", pos: {x: 0, y: 0}},
+            "6":{name: "6번 포트", type: "input", pos: {x: 0, y: 0}},
+            "7":{name: "7번 포트", type: "input", pos: {x: 0, y: 0}},
+            "8":{name: "8번 포트", type: "input", pos: {x: 0, y: 0}},
+            "9":{name: "9번 포트", type: "input", pos: {x: 0, y: 0}},
+            "10":{name: "10번 포트", type: "input", pos: {x: 0, y: 0}},
+            "11":{name: "11번 포트", type: "input", pos: {x: 0, y: 0}},
+            "12":{name: "12번 포트", type: "input", pos: {x: 0, y: 0}},
+            "13":{name: "13번 포트", type: "input", pos: {x: 0, y: 0}},
+            "a0":{name: "0번  포트", type: "input", pos: {x: 0, y: 0}},
+            "a1":{name: "1번 포트", type: "input", pos: {x: 0, y: 0}},
+            "a2":{name: "2번 포트", type: "input", pos: {x: 0, y: 0}},
+            "a3":{name: "3번 포트", type: "input", pos: {x: 0, y: 0}},
+            "a4":{name: "4번 포트", type: "input", poÏs: {x: 0, y: 0}},
+            "a5":{name: "5번 포트", type: "input", pos: {x: 0, y: 0}}
+        }
     }
 };
 
 Entry.SensorBoard = {
     name: 'sensorBoard',
-    setZero: Entry.Arduino.setZero
+    setZero: Entry.Arduino.setZero,
+    monitorTemplate: Entry.Arduino.monitorTemplate
 };
 
 Entry.CODEino = {
     name: 'CODEino',
-    setZero: Entry.Arduino.setZero
+    setZero: Entry.Arduino.setZero,
+    monitorTemplate: Entry.Arduino.monitorTemplate
+
 };
 
 Blockly.Blocks.arduino_text = {

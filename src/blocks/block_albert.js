@@ -24,6 +24,25 @@ Entry.Albert = {
 		albert.tempo = 60;
 		albert.removeAllTimeouts();
 	},
+	monitorTemplate: {
+        imgPath: "hw/albert.png",
+        width: 268,
+        height: 270,
+        ports: {
+            "leftProximity":{name: Lang.Blocks.ALBERT_sensor_leftProximity, type: "input", pos: {x : 0, y: 0}},
+            "rightProximity":{name: Lang.Blocks.ALBERT_sensor_rightProximity, type: "input", pos: {x: 0, y: 0}},
+            "battery":{name: Lang.Blocks.ALBERT_sensor_battery , type: "input", pos: {x : 0, y: 0}},
+            "light":{name: Lang.Blocks.ALBERT_sensor_light, type: "input", pos: {x: 0, y: 0}},
+            "leftWheel":{name: "왼쪽 바퀴", type: "output", pos: {x: 0, y: 0}},
+            "rightWheel":{name: "오른쪽 바퀴", type: "output", pos: {x: 0, y: 0}},
+            "buzzer":{name: "부저 1", type: "output", pos: {x: 0, y: 0}},
+            "leftEye":{name: "왼쪽 눈", type: "output", pos: {x: 0, y: 0}},
+            "rightEye":{name: "오른쪽 눈", type: "output", pos: {x: 0, y: 0}},
+            "note":{name: "부저 2", type: "output", pos: {x: 0, y: 0}},
+            "bodyLed":{name: "몸통 불빛", type: "output", pos: {x: 0, y: 0}},
+            "frontLed":{name: "앞쪽 불빛", type: "output", pos: {x: 0, y: 0}}
+        }
+    },
 	tempo: 60,
 	timeouts: [],
 	removeTimeout: function(id) {

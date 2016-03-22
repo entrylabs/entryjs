@@ -33,9 +33,9 @@ Entry.HWMonitor = function(hwModule) {
         this._svgGroup = this.snap.elem("g");
 
         var monitorTemplate = this._hwModule.monitorTemplate;
-        
+        console.log(monitorTemplate);
         var imgObj = {
-            href : Entry.mediaFilePath + "hw/neobot.png",
+            href : Entry.mediaFilePath + monitorTemplate.imgPath,
             x : - monitorTemplate.width / 2,
             y : - monitorTemplate.height / 2,
             width : monitorTemplate.width,
@@ -44,13 +44,6 @@ Entry.HWMonitor = function(hwModule) {
         this.hwView = this._svgGroup.elem("image");
         this.hwView = this.hwView.attr(imgObj);
 
-        // this.hwView.image(
-        //     Entry.mediaFilePath + "hw/neobot.png",
-        //     - monitorTemplate.width / 2,
-        //      - monitorTemplate.height / 2,
-        //     monitorTemplate.width,
-        //     monitorTemplate.height
-        // );
         this._template = monitorTemplate;
         var ports = monitorTemplate.ports;
 
