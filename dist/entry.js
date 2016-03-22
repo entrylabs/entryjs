@@ -14201,15 +14201,20 @@ Entry.Field = function() {
     this._block.params[this._index] = b;
   };
   a._isEditable = function() {
-    if (this._block.view.dragMode == Entry.DRAG_MODE_MOUSEDOWN) {
+    var b = this._block.view;
+    if (b.dragMode == Entry.DRAG_MODE_MOUSEDOWN && b.svgGroup.hasClass("selected")) {
       return !0;
     }
-    var b = this._block.view, a = b.getBoard().selectedBlockView;
-    return a ? b.getSvgRoot() == a.svgGroup : !1;
   };
   a._selectBlockView = function() {
     var b = this._block.view;
     b.getBoard().setSelectedBlock(b);
+  };
+  a._bindRenderOptions = function() {
+    var b = this;
+    $(this.svgGroup).bind("mouseup touchend", function(a) {
+      b._isEditable() && b.renderOptions();
+    });
   };
 })(Entry.Field.prototype);
 Entry.FieldAngle = function(a, b, c) {
@@ -14468,15 +14473,12 @@ Entry.FieldColor = function(a, b, c) {
 Entry.Utils.inherit(Entry.Field, Entry.FieldColor);
 (function(a) {
   a.renderStart = function(b) {
-    var a = this;
     this.svgGroup = b.contentSvgGroup.elem("g", {class:"entry-field-color"});
-    var d = this._position;
-    d ? (b = d.x || 0, d = d.y || 0) : (b = 0, d = -8);
-    this._header = this.svgGroup.elem("rect", {x:b, y:d, width:14.5, height:16, fill:this.getValue()});
-    this.svgGroup.onmouseup = function(b) {
-      a._isEditable() && a.renderOptions();
-    };
-    this.box.set({x:b, y:d, width:14.5, height:16});
+    var a = this._position;
+    a ? (b = a.x || 0, a = a.y || 0) : (b = 0, a = -8);
+    this._header = this.svgGroup.elem("rect", {x:b, y:a, width:14.5, height:16, fill:this.getValue()});
+    this._bindRenderOptions();
+    this.box.set({x:b, y:a, width:14.5, height:16});
   };
   a.renderOptions = function() {
     var b = this;
@@ -14531,20 +14533,17 @@ Entry.FieldDropdown = function(a, b, c) {
 Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
 (function(a) {
   a.renderStart = function(b) {
-    var a = this;
     this.svgGroup = b.contentSvgGroup.elem("g", {class:"entry-field-dropdown"});
     this.textElement = this.svgGroup.elem("text", {x:2});
     this.textElement.textContent = this.getTextByValue(this.getValue());
-    var d = this.textElement.getBBox();
-    this.textElement.attr({style:"white-space: pre; font-size:" + a._FONT_SIZE + "px", y:.25 * d.height});
-    var d = this.textElement.getComputedTextLength() + 18, e = this._CONTENT_HEIGHT;
-    this._header = this.svgGroup.elem("rect", {width:d, height:e, y:-e / 2, rx:a._ROUND, ry:a._ROUND, fill:"#fff", "fill-opacity":.4});
+    var a = this.textElement.getBBox();
+    this.textElement.attr({style:"white-space: pre; font-size:" + this._FONT_SIZE + "px", y:.25 * a.height});
+    var a = this.textElement.getComputedTextLength() + 18, d = this._CONTENT_HEIGHT;
+    this._header = this.svgGroup.elem("rect", {width:a, height:d, y:-d / 2, rx:this._ROUND, ry:this._ROUND, fill:"#fff", "fill-opacity":.4});
     this.svgGroup.appendChild(this.textElement);
-    this._arrow = this.svgGroup.elem("polygon", {points:"0,-2 6,-2 3,2", fill:b._schema.color, stroke:b._schema.color, transform:"translate(" + (d - 11) + ",0)"});
-    $(this.svgGroup).bind("mouseup touchend", function(b) {
-      a._isEditable() && a.renderOptions();
-    });
-    this.box.set({x:0, y:0, width:d, height:e});
+    this._arrow = this.svgGroup.elem("polygon", {points:"0,-2 6,-2 3,2", fill:b._schema.color, stroke:b._schema.color, transform:"translate(" + (a - 11) + ",0)"});
+    this._bindRenderOptions();
+    this.box.set({x:0, y:0, width:a, height:d});
   };
   a.resize = function() {
     var b = this.textElement.getComputedTextLength() + 18;
@@ -14629,10 +14628,10 @@ Entry.Utils.inherit(Entry.FieldDropdown, Entry.FieldDropdownDynamic);
       this.getValue() == f && (k += "\u2713  ");
       h.text(k += g);
       (function(a, c) {
-        a.bind("mousedown touchstart", function(b) {
+        a.mousedown(function(b) {
           b.stopPropagation();
         });
-        a.bind("mouseup touchend", function(a) {
+        a.mouseup(function(a) {
           a.stopPropagation();
           b.applyValue(c);
           b.destroyOption();
@@ -14715,17 +14714,14 @@ Entry.FieldKeyboard = function(a, b, c) {
 Entry.Utils.inherit(Entry.Field, Entry.FieldKeyboard);
 (function(a) {
   a.renderStart = function(b) {
-    var a = this;
     this.svgGroup = b.contentSvgGroup.elem("g", {class:"entry-input-field"});
     this.textElement = this.svgGroup.elem("text").attr({x:4, y:4, "font-size":"9pt"});
     this.textElement.textContent = Entry.getKeyCodeMap()[this.getValue()];
     b = this.getTextWidth();
-    var d = this.position && this.position.y ? this.position.y : 0;
-    this._header = this.svgGroup.elem("rect", {x:0, y:d - 8, width:b, height:16, rx:3, ry:3, fill:"#fff", "fill-opacity":.4});
+    var a = this.position && this.position.y ? this.position.y : 0;
+    this._header = this.svgGroup.elem("rect", {x:0, y:a - 8, width:b, height:16, rx:3, ry:3, fill:"#fff", "fill-opacity":.4});
     this.svgGroup.appendChild(this.textElement);
-    this.svgGroup.onmouseup = function(b) {
-      a._isEditable() && a.renderOptions();
-    };
+    this._bindRenderOptions();
     this.box.set({x:0, y:0, width:b, height:16});
   };
   a.renderOptions = function() {
@@ -14982,16 +14978,16 @@ Entry.FieldText = function(a, b, c) {
 };
 Entry.Utils.inherit(Entry.Field, Entry.FieldText);
 (function(a) {
-  a.renderStart = function(b) {
-    this.svgGroup = b.contentSvgGroup.elem("g");
+  a.renderStart = function(a) {
+    this.svgGroup = a.contentSvgGroup.elem("g");
     this._text = this._text.replace(/(\r\n|\n|\r)/gm, " ");
     this.textElement = this.svgGroup.elem("text").attr({style:"white-space: pre; font-size:" + this._fontSize + "px", "class":"dragNone", fill:this._color});
     this.textElement.textContent = this._text;
-    b = this.textElement.getBBox();
-    var a = 0;
-    "center" == this._align && (a = -b.width / 2);
-    this.textElement.attr({x:a, y:.25 * b.height});
-    this.box.set({x:0, y:0, width:this.textElement.getComputedTextLength(), height:b.height});
+    a = this.textElement.getBBox();
+    var c = 0;
+    "center" == this._align && (c = -a.width / 2);
+    this.textElement.attr({x:c, y:.25 * a.height});
+    this.box.set({x:0, y:0, width:this.textElement.getComputedTextLength(), height:a.height});
   };
 })(Entry.FieldText.prototype);
 Entry.FieldTextInput = function(a, b, c) {
@@ -15007,18 +15003,15 @@ Entry.FieldTextInput = function(a, b, c) {
 Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
 (function(a) {
   a.renderStart = function(a) {
-    var c = this;
     this.svgGroup = a.contentSvgGroup.elem("g");
     this.svgGroup.attr({class:"entry-input-field"});
     this.textElement = this.svgGroup.elem("text", {x:4, y:4, "font-size":"9pt"});
     this.textElement.textContent = this.truncate();
     a = this.getTextWidth();
-    var d = this.position && this.position.y ? this.position.y : 0;
-    this._header = this.svgGroup.elem("rect", {width:a, height:16, y:d - 8, rx:3, ry:3, fill:"#fff", "fill-opacity":.4});
+    var c = this.position && this.position.y ? this.position.y : 0;
+    this._header = this.svgGroup.elem("rect", {width:a, height:16, y:c - 8, rx:3, ry:3, fill:"#fff", "fill-opacity":.4});
     this.svgGroup.appendChild(this.textElement);
-    this.svgGroup.onmouseup = function(a) {
-      c._isEditable() && c.renderOptions();
-    };
+    this._bindRenderOptions();
     this.box.set({x:0, y:0, width:a, height:16});
   };
   a.renderOptions = function() {

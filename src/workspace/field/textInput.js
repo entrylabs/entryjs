@@ -62,9 +62,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
 
         this.svgGroup.appendChild(this.textElement);
 
-        this.svgGroup.onmouseup = function(e) {
-            if (that._isEditable()) that.renderOptions();
-        };
+        this._bindRenderOptions();
 
         this.box.set({
             x: 0,

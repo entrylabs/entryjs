@@ -55,9 +55,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldColor);
             fill: this.getValue()
             });
 
-        this.svgGroup.onmouseup = function(e) {
-            if (that._isEditable()) that.renderOptions();
-        };
+        this._bindRenderOptions();
 
         this.box.set({
             x: x,

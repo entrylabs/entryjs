@@ -81,9 +81,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
             transform: "translate("+ (width-11) + ",0)"
         });
 
-        $(this.svgGroup).bind('mouseup touchend', function(e){
-            if (that._isEditable()) that.renderOptions();
-        });
+        this._bindRenderOptions();
 
         this.box.set({
             x: 0,
@@ -148,7 +146,6 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
             if (this.getValue() == value) str += '\u2713  ';
 
             element.text(str += text);
-
 
             (function(elem, value) {
                 //prevent propagation to document

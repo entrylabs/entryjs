@@ -81,11 +81,11 @@ Entry.Utils.inherit(Entry.FieldDropdown, Entry.FieldDropdownDynamic);
 
             (function(elem, value) {
                 //prevent propagation to document
-                elem.bind('mousedown touchstart', function(e) {
+                elem.mousedown(function(e) {
                     e.stopPropagation();
                 });
 
-                elem.bind('mouseup touchend', function(e){
+                elem.mouseup(function(e){
                     e.stopPropagation();
                     that.applyValue(value);
                     that.destroyOption();
