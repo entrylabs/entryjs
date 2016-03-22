@@ -6068,7 +6068,7 @@ Entry.Container.prototype.initDoneProject = function(a) {
   b.setAttribute("width", a);
   b.setAttribute("height", 9 * a / 16 + 35);
   b.setAttribute("frameborder", 0);
-  b.setAttribute("src", "/api/project/iframe/" + this.doneProject);
+  b.setAttribute("src", "/api/iframe/project/" + this.doneProject);
   this.doneProjectFrame = b;
   this.doneContainer.appendChild(b);
 };
@@ -9760,6 +9760,9 @@ Entry.Playground.prototype.generateTextView = function(a) {
   e = Entry.createElement("img");
   e.bindOnClick(function() {
     Entry.playground.toggleLineBreak(!1);
+    v.innerHTML = Lang.Menus.linebreak_off_desc_1;
+    w.innerHTML = Lang.Menus.linebreak_off_desc_2;
+    x.innerHTML = Lang.Menus.linebreak_off_desc_3;
   });
   e.src = Entry.mediaFilePath + "text-linebreak-off-true.png";
   b.appendChild(e);
@@ -9767,6 +9770,9 @@ Entry.Playground.prototype.generateTextView = function(a) {
   e = Entry.createElement("img");
   e.bindOnClick(function() {
     Entry.playground.toggleLineBreak(!0);
+    v.innerHTML = Lang.Menus.linebreak_on_desc_1;
+    w.innerHTML = Lang.Menus.linebreak_on_desc_2;
+    x.innerHTML = Lang.Menus.linebreak_on_desc_3;
   });
   e.src = Entry.mediaFilePath + "text-linebreak-on-false.png";
   b.appendChild(e);
@@ -9774,17 +9780,17 @@ Entry.Playground.prototype.generateTextView = function(a) {
   b = Entry.createElement("div");
   b.addClass("entryPlaygroundLinebreakDescription");
   a.appendChild(b);
-  a = Entry.createElement("p");
-  a.innerHTML = "\uae00\uc0c1\uc790\uc758 \ud06c\uae30\uac00 \uae00\uc790\uac00 \uc4f0\uc77c \uc218 \uc788\ub294 \uc601\uc5ed\uc744 \uacb0\uc815\ud569\ub2c8\ub2e4.";
-  b.appendChild(a);
+  var v = Entry.createElement("p");
+  v.innerHTML = Lang.Menus.linebreak_off_desc_1;
+  b.appendChild(v);
   a = Entry.createElement("ul");
   b.appendChild(a);
-  b = Entry.createElement("li");
-  b.innerHTML = "\ub0b4\uc6a9 \uc791\uc131\uc2dc \uc5d4\ud130\ud0a4\ub85c \uc904\ubc14\uafc8\uc744 \ud560 \uc218 \uc788\uc2b5\ub2c8\ub2e4.";
-  a.appendChild(b);
-  b = Entry.createElement("li");
-  b.innerHTML = "\ub0b4\uc6a9\uc744 \uc791\uc131\ud558\uc2dc\uac70\ub098 \uc0c8\ub85c\uc6b4 \uae00\uc790\ub97c \ucd94\uac00\uc2dc \uae38\uc774\uac00 \uae00\uc0c1\uc790\uc758 \uac00\ub85c \uc601\uc5ed\uc744 \ub118\uc5b4\uc11c\uba74 \uc790\ub3d9\uc73c\ub85c \uc904\uc774 \ubc14\ub01d\ub2c8\ub2e4.";
-  a.appendChild(b);
+  var w = Entry.createElement("li");
+  w.innerHTML = Lang.Menus.linebreak_off_desc_2;
+  a.appendChild(w);
+  var x = Entry.createElement("li");
+  x.innerHTML = Lang.Menus.linebreak_off_desc_3;
+  a.appendChild(x);
 };
 Entry.Playground.prototype.generateSoundView = function(a) {
   if ("workspace" == Entry.type) {
