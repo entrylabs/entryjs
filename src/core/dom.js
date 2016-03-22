@@ -17,38 +17,20 @@ Entry.Dom = function (tag, options) {
     var tagRegex = /<(\w+)>/,
         dom;
 
-    if (tag instanceof HTMLElement)
-        dom = $(tag);
-    else if (tag instanceof jQuery)
-        dom = tag;
-    else if (tagRegex.test(tag))
-        dom = $(tag);
-    else
-        dom = $('<' + tag + '></' + tag + '>');
+    if (tag instanceof HTMLElement) dom = $(tag);
+    else if (tag instanceof jQuery) dom = tag;
+    else if (tagRegex.test(tag)) dom = $(tag);
+    else dom = $('<' + tag + '></' + tag + '>');
 
-    if (options === undefined)
-        return dom;
-
-    if (options.id)
-        dom.attr('id', options.id);
-
-    if (options.class)
-        dom.addClass(options.class);
-
-    if (options.classes)
-        options.classes.map(function (className) { dom.addClass(className); });
-
-    if (options.src)
-        dom.attr('src', options.src);
-
-    if (options.parent)
-        options.parent.append(dom);
+    if (options === undefined) return dom;
+    if (options.id) dom.attr('id', options.id);
+    if (options.class) dom.addClass(options.class);
+    if (options.classes) options.classes.map(function (className) {dom.addClass(className);});
+    if (options.src) dom.attr('src', options.src);
+    if (options.parent) options.parent.append(dom);
 
     dom.bindOnClick = function(func) {
-        $(this).on('click touchstart', function(e) {
-            e.stopImmediatePropagation();
-            if (e.handled) return;
-            e.handled = true;
+        $(this).bind('click touchstart', function(e) {
             func.call(this, e);
         });
     };

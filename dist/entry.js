@@ -5453,9 +5453,8 @@ Entry.Dom = function(a, b) {
   b.src && d.attr("src", b.src);
   b.parent && b.parent.append(d);
   d.bindOnClick = function(b) {
-    $(this).on("click touchstart", function(a) {
-      a.stopImmediatePropagation();
-      a.handled || (a.handled = !0, b.call(this, a));
+    $(this).bind("click touchstart", function(a) {
+      b.call(this, a);
     });
   };
   return d;
@@ -13200,6 +13199,7 @@ Entry.BlockMenu = function(a, b, c, d) {
           b.text(Lang.Blocks[a.toUpperCase()]);
           d._categoryElems[a] = b;
           b.bindOnClick(function(b) {
+            b.preventDefault();
             d.selectMenu(a);
           });
         })(Entry.Dom("li", {id:"entryCategory" + g, class:"entryCategoryElementWorkspace", parent:e}), g);
@@ -13524,6 +13524,7 @@ Entry.BlockView = function(a, b, c) {
   this._targetType = this._getTargetType();
 };
 Entry.BlockView.PARAM_SPACE = 5;
+Entry.BlockView.DRAG_RADIUS = 5;
 (function(a) {
   a.schema = {id:0, type:Entry.STATIC.BLOCK_RENDER_MODEL, x:0, y:0, offsetX:0, offsetY:0, width:0, height:0, contentWidth:0, contentHeight:0, magneting:!1, visible:!0, animating:!1, shadow:!0, display:!0};
   a._startRender = function(b, a) {
@@ -13654,12 +13655,16 @@ Entry.BlockView.PARAM_SPACE = 5;
   a.onMouseDown = function(b) {
     function c(b) {
       b.stopPropagation();
-      var c = e.workspace.getMode();
-      c === Entry.Workspace.MODE_VIMBOARD && a.vimBoardEvent(b, "dragOver");
-      b.originalEvent.touches && (b = b.originalEvent.touches[0]);
-      var d = l.mouseDownCoordinate;
-      l.dragMode != Entry.DRAG_MODE_DRAG && b.pageX === d.x && b.pageY === d.y || !l.movable || (l.isInBlockMenu ? e.cloneToGlobal(b) : (l.dragMode != Entry.DRAG_MODE_DRAG && (l._toGlobalCoordinate(), l.dragMode = Entry.DRAG_MODE_DRAG, l.block.getThread().changeEvent.notify(), Entry.GlobalSvg.setView(l, c)), this.animating && this.set({animating:!1}), 0 === l.dragInstance.height && l.dragInstance.set({height:-1 + l.height}), c = l.dragInstance, l._moveBy(b.pageX - c.offsetX, b.pageY - c.offsetY, 
-      !1), c.set({offsetX:b.pageX, offsetY:b.pageY}), Entry.GlobalSvg.position(), (b = l._getCloseBlock()) ? e.setMagnetedBlock(b.view) : e.setMagnetedBlock(null), l.originPos || (l.originPos = {x:l.x, y:l.y})));
+      if (l.movable) {
+        var c = e.workspace.getMode();
+        c === Entry.Workspace.MODE_VIMBOARD && a.vimBoardEvent(b, "dragOver");
+        b.originalEvent.touches && (b = b.originalEvent.touches[0]);
+        var d = l.mouseDownCoordinate, d = Math.sqrt(Math.pow(b.pageX - d.x, 2) + Math.pow(b.pageY - d.y, 2));
+        if (l.dragMode == Entry.DRAG_MODE_DRAG || d >= Entry.BlockView.DRAG_RADIUS) {
+          l.isInBlockMenu ? e.cloneToGlobal(b) : (l.dragMode != Entry.DRAG_MODE_DRAG && (l._toGlobalCoordinate(), l.dragMode = Entry.DRAG_MODE_DRAG, l.block.getThread().changeEvent.notify(), Entry.GlobalSvg.setView(l, c)), this.animating && this.set({animating:!1}), 0 === l.dragInstance.height && l.dragInstance.set({height:-1 + l.height}), c = l.dragInstance, l._moveBy(b.pageX - c.offsetX, b.pageY - c.offsetY, !1), c.set({offsetX:b.pageX, offsetY:b.pageY}), Entry.GlobalSvg.position(), (b = l._getCloseBlock()) ? 
+          e.setMagnetedBlock(b.view) : e.setMagnetedBlock(null), l.originPos || (l.originPos = {x:l.x, y:l.y}));
+        }
+      }
     }
     function d(b) {
       $(document).unbind(".block");
@@ -14987,16 +14992,16 @@ Entry.FieldText = function(a, b, c) {
 };
 Entry.Utils.inherit(Entry.Field, Entry.FieldText);
 (function(a) {
-  a.renderStart = function(a) {
-    this.svgGroup = a.contentSvgGroup.elem("g");
+  a.renderStart = function(b) {
+    this.svgGroup = b.contentSvgGroup.elem("g");
     this._text = this._text.replace(/(\r\n|\n|\r)/gm, " ");
     this.textElement = this.svgGroup.elem("text").attr({style:"white-space: pre; font-size:" + this._fontSize + "px", "class":"dragNone", fill:this._color});
     this.textElement.textContent = this._text;
-    a = this.textElement.getBBox();
-    var c = 0;
-    "center" == this._align && (c = -a.width / 2);
-    this.textElement.attr({x:c, y:.25 * a.height});
-    this.box.set({x:0, y:0, width:this.textElement.getComputedTextLength(), height:a.height});
+    b = this.textElement.getBBox();
+    var a = 0;
+    "center" == this._align && (a = -b.width / 2);
+    this.textElement.attr({x:a, y:.25 * b.height});
+    this.box.set({x:0, y:0, width:this.textElement.getComputedTextLength(), height:b.height});
   };
 })(Entry.FieldText.prototype);
 Entry.FieldTextInput = function(a, b, c) {
@@ -16564,7 +16569,7 @@ Entry.Playground.prototype.generateTabView = function(a) {
   c.appendChild(a);
   a.bindOnClick(function(a) {
     b.changeViewMode("code");
-    b.blockMenu();
+    b.blockMenu.reDraw();
   });
   this.tabViewElements.code = a;
   Entry.pictureEditable && (a = Entry.createElement("li", "entryPictureTab"), a.innerHTML = Lang.Workspace.tab_picture, a.addClass("entryTabListItemWorkspace"), c.appendChild(a), a.bindOnClick(function(a) {
