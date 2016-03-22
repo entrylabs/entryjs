@@ -400,4 +400,14 @@ Entry.Block.MAGNET_OFFSET = 0.4;
         return this.thread.getLastBlock();
     };
 
+    p.getOutputBlock = function() {
+        var params = this._schema.params;
+        for (var i = 0; params && i < params.length; i++) {
+            var paramDef = params[i];
+            if (paramDef.type === "Output")
+                return this.params[i];
+        };
+        return null;
+    };
+
 })(Entry.Block.prototype);

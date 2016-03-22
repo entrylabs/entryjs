@@ -1916,7 +1916,7 @@ Blockly.Blocks.function_field_string = {init:function() {
   this.setOutput(!0, "Param");
   this.setInputsInline(!0);
 }};
-Entry.block.function_field_string = {skeleton:"basic_param", color:"#ffd974", template:"%1%2", params:[{type:"Block", accept:"stringMagnet"}, {type:"Output", accept:"paramMagnet"}]};
+Entry.block.function_field_string = {skeleton:"basic_param", color:"#ffd974", template:"%1%2", params:[{type:"Block", accept:"stringMagnet", restore:!0}, {type:"Output", accept:"paramMagnet"}]};
 Blockly.Blocks.function_field_boolean = {init:function() {
   this.setColour("#2FC9F0");
   this.appendValueInput("PARAM").setCheck(["Boolean"]);
@@ -1924,7 +1924,7 @@ Blockly.Blocks.function_field_boolean = {init:function() {
   this.setOutput(!0, "Param");
   this.setInputsInline(!0);
 }};
-Entry.block.function_field_boolean = {skeleton:"basic_param", color:"#aeb8ff", template:"%1%2", params:[{type:"Block", accept:"booleanMagnet"}, {type:"Output", accept:"paramMagnet"}]};
+Entry.block.function_field_boolean = {skeleton:"basic_param", color:"#aeb8ff", template:"%1%2", params:[{type:"Block", accept:"booleanMagnet", restore:!0}, {type:"Output", accept:"paramMagnet"}]};
 Blockly.Blocks.function_param_string = {init:function() {
   this.setEditable(!1);
   this.setColour("#ffec64");
@@ -1974,7 +1974,7 @@ Blockly.Blocks.function_create = {init:function() {
 Entry.block.function_create = function(a, b) {
   return b.callReturn();
 };
-Entry.block.function_create = {skeleton:"basic", color:"#cc7337", template:"\ud568\uc218 \uc815\uc758\ud558\uae30 %1 %2", params:[{type:"Block", accept:"basic_param", value:{type:"function_field_label"}}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/function_03.png", size:12}]};
+Entry.block.function_create = {skeleton:"basic", color:"#cc7337", event:"funcDef", template:"\ud568\uc218 \uc815\uc758\ud558\uae30 %1 %2", params:[{type:"Block", accept:"basic_param", value:{type:"function_field_label"}}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/function_03.png", size:12}]};
 Blockly.Blocks.function_general = {init:function() {
   this.setColour("#cc7337");
   this.setInputsInline(!0);
@@ -10769,8 +10769,7 @@ Entry.Func = function() {
   this.id = Entry.generateHash();
   this.content = new Entry.Code([[{type:"function_create", x:40, y:40}]]);
   this.block = null;
-  this.stringHash = {};
-  this.booleanHash = {};
+  this.hashMap = {};
 };
 Entry.Func.threads = {};
 Entry.Func.registerFunction = function(a, b) {
@@ -10802,24 +10801,24 @@ Entry.Func.fieldBlocks = Entry.nodeListToArray(Blockly.Xml.textToDom(Entry.Func.
 Entry.Func.CREATE_BLOCK = '<xml><block type="function_create" deletable="false" x="28" y="28"></block></xml>';
 Entry.Func.edit = function(a) {
   this.cancelEdit();
-  this.workspace && (this.workspace.visible = !0);
-  this.initEditView();
+  this.initEditView(a.content);
   this.targetFunc = a;
-  Entry.playground.mainWorkspace.changeOverlayBoardCode(a.content);
+  this._funcChangeEvent = a.content.getEventMap("funcDef")[0].thread.changeEvent.attach(this, this.generateWsBlock);
   this.updateMenu();
 };
-Entry.Func.initEditView = function() {
+Entry.Func.initEditView = function(a) {
   Entry.playground.mainWorkspace.setMode(Entry.Workspace.MODE_OVERLAYBOARD);
   Entry.playground.mainWorkspace.getBlockMenu();
+  Entry.playground.mainWorkspace.changeOverlayBoardCode(a);
 };
 Entry.Func.save = function() {
-  this.targetFunc.content = Blockly.Xml.workspaceToDom(this.workspace);
+  this._funcChangeEvent.destroy();
   this.targetFunc.generateBlock(!0);
   Entry.variableContainer.saveFunction(this.targetFunc);
   this.cancelEdit();
 };
 Entry.Func.cancelEdit = function() {
-  this.svg && this.targetFunc && (this.workspace.visible = !1, this.parentView.removeChild(this.svg), Entry.Func.isEdit = !1, Blockly.mainWorkspace.blockMenu.targetWorkspace = Blockly.mainWorkspace, this.targetFunc.block || (delete Entry.variableContainer.functions_[this.targetFunc.id], delete Entry.variableContainer.selected), delete this.targetFunc, this.updateMenu(), Entry.variableContainer.updateList());
+  this.svg && this.targetFunc && (this._funcChangeEvent.destroy(), this.parentView.removeChild(this.svg), Entry.Func.isEdit = !1, Blockly.mainWorkspace.blockMenu.targetWorkspace = Blockly.mainWorkspace, this.targetFunc.block || (delete Entry.variableContainer.functions_[this.targetFunc.id], delete Entry.variableContainer.selected), delete this.targetFunc, this.updateMenu(), Entry.variableContainer.updateList());
 };
 Entry.Func.getMenuXml = function() {
   var a = [];
@@ -10845,7 +10844,10 @@ Entry.Func.setupMenuCode = function() {
   this._fieldString = a.createThread([{type:"function_field_string", params:[{type:this.requestParamBlock("string")}]}]).getFirstBlock();
   this._fieldBoolean = a.createThread([{type:"function_field_boolean", params:[{type:this.requestParamBlock("boolean")}]}]).getFirstBlock();
   this.menuCode = a;
-  console.log(this._fieldLabel);
+};
+Entry.Func.refreshMenuCode = function() {
+  this._fieldString.view._contents[0].replace(this.requestParamBlock("string"), !0);
+  this._fieldBoolean.view._contents[0].replace(this.requestParamBlock("boolean"), !0);
 };
 Entry.Func.requestParamBlock = function(a) {
   var b = Entry.generateHash(), c;
@@ -10863,10 +10865,9 @@ Entry.Func.requestParamBlock = function(a) {
   };
   d.prototype = c;
   d = new d;
-  a += b;
+  d.changeEvent = new Entry.Event;
+  a = a + "Param_" + b;
   Entry.block[a] = d;
-  console.log(a);
-  console.log(d);
   return a;
 };
 Entry.Func.updateMenu = function() {
@@ -10925,68 +10926,20 @@ Entry.Func.prototype.generateBlock = function(a) {
   this.block = a.block;
   this.description = a.description;
 };
-Entry.Func.position_ = function() {
-  var a = this.workspace.getMetrics();
-  if (a && this.workspace.visible) {
-    var b = this.btnWrapper;
-    b.setAttribute("transform", "translate(30, 501)");
-    Blockly.RTL ? this.left_ = this.MARGIN_SIDE_ : b.left_ = a.viewWidth / 2 + a.absoluteLeft - 60;
-    b.top_ = a.viewHeight + a.absoluteTop - 200;
-    b.setAttribute("transform", "translate(" + b.left_ + "," + b.top_ + ")");
-  }
-};
-Entry.Func.positionBlock_ = function(a) {
-  var b = this.workspace.getMetrics();
-  if (b && this.workspace.visible) {
-    var c = a.getSvgRoot(), c = Blockly.getSvgXY_(c);
-    a.getHeightWidth();
-    a.moveBy(b.viewWidth / 2 - 80 - c.x, b.viewHeight / 2 - 50 - c.y);
-  }
-};
-Entry.Func.generateWsBlock = function(a, b, c) {
-  b = b.childNodes;
-  var d, e;
-  for (e in b) {
-    if ("function_create" == b[e].getAttribute("type")) {
-      d = b[e];
-      break;
-    }
-  }
-  e = new Entry.Script;
-  e.init(d);
-  d = e;
-  d.values && (d = e.values.FIELD);
-  e = '<mutation hashid="' + c + '">';
-  c = b = "";
-  var f = 0, g = 0;
-  a.stringHash = {};
-  for (a.booleanHash = {};;) {
-    switch(d.type) {
-      case "function_field_label":
-        e += '<field type="label" content="' + d.fields.NAME.replace("<", "&lt;").replace(">", "&gt;") + '"></field>';
-        c += d.fields.NAME;
-        break;
+Entry.Func.generateWsBlock = function() {
+  for (var a = this.targetFunc.content.getEventMap("funcDef")[0].params[0], b = 0, c = 0;a;) {
+    var d = a.params[0];
+    switch(a.type) {
       case "function_field_boolean":
-        var h = d.values.PARAM.hashId;
-        e += '<field type="boolean" hashid="' + h + '"></field>';
-        b += '<value name="' + h + '"><block type="function_param_boolean"><mutation hashid="' + h + '"></mutation></block></value>';
-        a.booleanHash[h] = g;
-        g++;
-        c += "\ub17c\ub9ac\uac12" + g;
+        Entry.Mutator.mutate(d.type, {template:"\ud310\ub2e8\uac12" + b});
+        b++;
         break;
       case "function_field_string":
-        h = d.values.PARAM.hashId, e += '<field type="string" hashid="' + h + '"></field>', b += '<value name="' + h + '"><block type="function_param_string"><mutation hashid="' + h + '"></mutation></block></value>', a.stringHash[h] = f, f++, c += "\ubb38\uc790\uac12" + f;
+        Entry.Mutator.mutate(d.type, {template:"\ud310\ub2e8\uac12" + c}), c++;
     }
-    if (d.values && d.values.NEXT) {
-      d = d.values.NEXT;
-    } else {
-      break;
-    }
-    c += " ";
+    a = a.getOutputBlock();
   }
-  a = '<xml><block type="function_general">' + (e + "</mutation>") + b + "</block></xml>";
-  c || (c = "\ud568\uc218");
-  return {block:Blockly.Xml.textToDom(a).childNodes[0], description:c};
+  this.refreshMenuCode();
 };
 Entry.HWMontior = {};
 Entry.HWMonitor = function(a) {
@@ -13808,8 +13761,8 @@ Entry.BlockView.PARAM_SPACE = 5;
     this._board = this._board.code.board;
   };
   a.destroy = function(b) {
-    var a = this.svgGroup, d = this.block.getThread();
-    d instanceof Entry.FieldBlock && d.updateValueBlock();
+    var a = this.svgGroup;
+    this.block.getThread();
     b ? $(a).velocity({opacity:0}, {duration:100, complete:function() {
       a.remove();
     }}) : a.remove();
@@ -13819,9 +13772,9 @@ Entry.BlockView.PARAM_SPACE = 5;
     this._statements.forEach(function(b) {
       b.destroy();
     });
-    var e = this.block;
-    (b = e.events.whenBlockDestroy) && !this.isInBlockMenu && b.forEach(function(b) {
-      Entry.Utils.isFunction(b) && b(e);
+    var d = this.block;
+    (b = d.events.whenBlockDestroy) && !this.isInBlockMenu && b.forEach(function(b) {
+      Entry.Utils.isFunction(b) && b(d);
     });
   };
   a.getShadow = function() {
@@ -14354,6 +14307,7 @@ Entry.FieldBlock = function(a, b, c, d) {
   this._index = c;
   this._content = a;
   this.acceptType = a.accept;
+  this._restoreCurrent = a.restore;
   this.view = this;
   this.svgGroup = null;
   this._position = a.position;
@@ -14388,32 +14342,34 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
   a.calcHeight = a.calcWH;
   a.destroy = function() {
   };
-  a._inspectBlock = function() {
+  a.inspectBlock = function() {
     if (!this._valueBlock) {
       var b = null;
-      switch(this.acceptType) {
-        case "booleanMagnet":
-          b = "True";
-          break;
-        case "stringMagnet":
-          b = "text";
-          break;
-        case "basic_param":
-          b = "function_field_label";
+      if (this._originBlock) {
+        b = this._originBlock.type, delete this._originBlock;
+      } else {
+        switch(this.acceptType) {
+          case "booleanMagnet":
+            b = "True";
+            break;
+          case "stringMagnet":
+            b = "text";
+            break;
+          case "basic_param":
+            b = "function_field_label";
+        }
       }
-      this._block.getThread();
-      var a = this._blockView.getBoard(), b = new Entry.Block({type:b}, this), d = a.workspace, e;
-      d && (e = d.getMode());
-      b.createView(a, e);
+      b = this._createBlockByType(b);
       return this._setValueBlock(b);
     }
   };
   a._setValueBlock = function(b) {
     if (b != this._valueBlock || !this._valueBlock) {
+      this._restoreCurrent && (this._originBlock = this._valueBlock);
       this._valueBlock = b;
       this.setValue(b);
       if (!this._valueBlock) {
-        return this._inspectBlock();
+        return this.inspectBlock();
       }
       b.setThread(this);
       b.getThread().view.setParent(this);
@@ -14466,6 +14422,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
     return this._valueBlock === b ? [b] : null;
   };
   a.replace = function(b) {
+    "string" === typeof b && (b = this._createBlockByType(b));
     var a = this._valueBlock;
     Entry.block[a.type].isPrimitive ? a.destroy() : (a.view._toGlobalCoordinate(), this.separate(a), a.view.bumpAway(30, 150));
     this.updateValueBlock(b);
@@ -14477,6 +14434,15 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
   };
   a.getParent = function() {
     return this._parent;
+  };
+  a._createBlockByType = function(b) {
+    this._block.getThread();
+    var a = this._blockView.getBoard();
+    b = new Entry.Block({type:b}, this);
+    var d = a.workspace, e;
+    d && (e = d.getMode());
+    b.createView(a, e);
+    return b;
   };
 })(Entry.FieldBlock.prototype);
 Entry.FieldColor = function(a, b, c) {
@@ -15035,16 +15001,16 @@ Entry.FieldText = function(a, b, c) {
 };
 Entry.Utils.inherit(Entry.Field, Entry.FieldText);
 (function(a) {
-  a.renderStart = function(b) {
-    this.svgGroup = b.contentSvgGroup.elem("g");
+  a.renderStart = function(a) {
+    this.svgGroup = a.contentSvgGroup.elem("g");
     this._text = this._text.replace(/(\r\n|\n|\r)/gm, " ");
     this.textElement = this.svgGroup.elem("text").attr({style:"white-space: pre; font-size:" + this._fontSize + "px", "class":"dragNone", fill:this._color});
     this.textElement.textContent = this._text;
-    b = this.textElement.getBBox();
-    var a = 0;
-    "center" == this._align && (a = -b.width / 2);
-    this.textElement.attr({x:a, y:.25 * b.height});
-    this.box.set({x:0, y:0, width:this.textElement.getComputedTextLength(), height:b.height});
+    a = this.textElement.getBBox();
+    var c = 0;
+    "center" == this._align && (c = -a.width / 2);
+    this.textElement.attr({x:c, y:.25 * a.height});
+    this.box.set({x:0, y:0, width:this.textElement.getComputedTextLength(), height:a.height});
   };
 })(Entry.FieldText.prototype);
 Entry.FieldTextInput = function(a, b, c) {
@@ -15123,25 +15089,19 @@ Entry.GlobalSvg = {};
   a.createDom = function() {
     this.svgDom || (this.svgDom = Entry.Dom($('<svg id="globalSvg" width="0" height="0"version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'), {parent:$("body")}), this.svgDom.css({position:"fixed", width:1, height:1, display:"none", overflow:"visible", "z-index":"1111", opacity:.8}), this.svg = Entry.SVG("globalSvg"), this.top = this.left = this.width = 0);
   };
-<<<<<<< HEAD
   a.setView = function(a, c) {
     if (a != this._view && !a.block.isReadOnly() && a.movable) {
-      return this._view = a, this._mode = c, this.draw(), this.align(), this.position(), !0;
-=======
-  a.setView = function(b, a) {
-    if (b != this._view && !b.block.isReadOnly() && b.movable) {
-      return b.set({visible:!1}), this._view = b, this._mode = a, this.draw(), this.align(), this.position(), !0;
->>>>>>> origin/refac/entry-block
+      return a.set({visible:!1}), this._view = a, this._mode = c, this.draw(), this.align(), this.position(), !0;
     }
   };
   a.draw = function() {
-    var b = this._view;
+    var a = this._view;
     this._svg && this.remove();
-    var a = this._mode == Entry.Workspace.MODE_VIMBOARD;
-    this.svgGroup = Entry.SVG.createElement(b.svgGroup.cloneNode(!0), {opacity:1});
+    var c = this._mode == Entry.Workspace.MODE_VIMBOARD;
+    this.svgGroup = Entry.SVG.createElement(a.svgGroup.cloneNode(!0), {opacity:1});
     this.svg.appendChild(this.svgGroup);
     this.show();
-    a && (b = $(this.svgGroup), b.find("g").css({filter:"none"}), b.find("path").velocity({opacity:0}, {duration:500}), b.find("text").velocity({fill:"#000000"}, {duration:530}));
+    c && (a = $(this.svgGroup), a.find("g").css({filter:"none"}), a.find("path").velocity({opacity:0}, {duration:500}), a.find("text").velocity({fill:"#000000"}, {duration:530}));
   };
   a.remove = function() {
     this.svgGroup && (this.svgGroup.remove(), delete this.svgGroup, delete this._view, delete this._offsetX, delete this._offsetY, delete this._startX, delete this._startY, this.hide());
@@ -15869,6 +15829,14 @@ Entry.Block.MAGNET_OFFSET = .4;
   };
   a.getLastBlock = function() {
     return this.thread.getLastBlock();
+  };
+  a.getOutputBlock = function() {
+    for (var a = this._schema.params, c = 0;a && c < a.length;c++) {
+      if ("Output" === a[c].type) {
+        return this.params[c];
+      }
+    }
+    return null;
   };
 })(Entry.Block.prototype);
 Entry.ThreadView = function(a, b) {

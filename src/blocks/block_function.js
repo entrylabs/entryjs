@@ -69,7 +69,8 @@ Entry.block.function_field_string = {
     params: [
         {
             type: "Block",
-            accept: "stringMagnet"
+            accept: "stringMagnet",
+            restore: true
         },
         {
             type: "Output",
@@ -97,7 +98,8 @@ Entry.block.function_field_boolean = {
     params: [
         {
             type: "Block",
-            accept: "booleanMagnet"
+            accept: "booleanMagnet",
+            restore: true
         },
         {
             type: "Output",
@@ -196,6 +198,7 @@ Entry.block.function_create = function (sprite, script) {
 Entry.block.function_create = {
     skeleton: "basic",
     color: "#cc7337",
+    event: "funcDef",
     template: "함수 정의하기 %1 %2",
     params: [
         {
