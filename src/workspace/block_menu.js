@@ -46,9 +46,10 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
     this.svgBlockGroup = this.svgGroup.elem("g");
     this.svgBlockGroup.board = this;
 
-
     this.changeEvent = new Entry.Event(this);
     if (categoryData) this._generateCategoryCodes(categoryData);
+
+    this.observe(this, "_handleDragBlock", ["dragBlock"]);
 
     if (this._scroll) {
         this._scroller = new Entry.BlockMenuScroller(this);
@@ -203,8 +204,8 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
     };
 
     p.cloneToGlobal = function(e) {
-        if (this.dragBlock === null) return;
         if (this._boardBlockView) return;
+        if (this.dragBlock === null) return;
 
         var globalSvg = Entry.GlobalSvg;
         var workspace = this.workspace;
@@ -233,20 +234,12 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
                     false
                 );
                 this._boardBlockView.onMouseDown.call(this._boardBlockView, e);
-                this._dragObserver =
-                    this._boardBlockView.observe(this, "_editDragInstance", ['x', 'y'], false);
+                this._boardBlockView.dragInstance.set({isNew:true});
             }
         } else {
             if(Entry.GlobalSvg.setView(blockView, workspace.getMode()))
                 Entry.GlobalSvg.addControl(e);
         }
-    };
-
-    p._editDragInstance = function() {
-        if (this._boardBlockView)
-            this._boardBlockView.dragInstance.set({isNew:true});
-        if (this._dragObserver)
-            this._dragObserver.destroy();
     };
 
     p.terminateDrag = function() {
@@ -498,5 +491,9 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
 
     p.reDraw = function() {
         this.selectMenu(this.lastSelector, true);
+    };
+
+    p._handleDragBlock = function() {
+        this._boardBlockView = null;
     };
 })(Entry.BlockMenu.prototype);

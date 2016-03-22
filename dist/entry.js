@@ -13201,6 +13201,7 @@ Entry.BlockMenu = function(a, b, c, d) {
   this.svgBlockGroup.board = this;
   this.changeEvent = new Entry.Event(this);
   c && this._generateCategoryCodes(c);
+  this.observe(this, "_handleDragBlock", ["dragBlock"]);
   this._scroll && (this._scroller = new Entry.BlockMenuScroller(this), this._addControl(a));
   Entry.documentMousedown && Entry.documentMousedown.attach(this, this.setSelectedBlock);
 };
@@ -13263,19 +13264,15 @@ Entry.BlockMenu = function(a, b, c, d) {
     }
   };
   a.cloneToGlobal = function(b) {
-    if (null !== this.dragBlock && !this._boardBlockView) {
+    if (!this._boardBlockView && null !== this.dragBlock) {
       var a = this.workspace, d = a.getMode(), e = this.dragBlock, f = this._svgWidth, g = a.selectedBoard;
       if (!g || d != Entry.Workspace.MODE_BOARD && d != Entry.Workspace.MODE_OVERLAYBOARD) {
         Entry.GlobalSvg.setView(e, a.getMode()) && Entry.GlobalSvg.addControl(b);
       } else {
         var a = e.block, h = a.getThread();
-        a && h && (this._boardBlockView = g.code.cloneThread(h, d).getFirstBlock().view, this._boardBlockView._moveTo(e.x - f, e.y + (this.offset.top - g.offset.top), !1), this._boardBlockView.onMouseDown.call(this._boardBlockView, b), this._dragObserver = this._boardBlockView.observe(this, "_editDragInstance", ["x", "y"], !1));
+        a && h && (this._boardBlockView = g.code.cloneThread(h, d).getFirstBlock().view, this._boardBlockView._moveTo(e.x - f, e.y + (this.offset.top - g.offset.top), !1), this._boardBlockView.onMouseDown.call(this._boardBlockView, b), this._boardBlockView.dragInstance.set({isNew:!0}));
       }
     }
-  };
-  a._editDragInstance = function() {
-    this._boardBlockView && this._boardBlockView.dragInstance.set({isNew:!0});
-    this._dragObserver && this._dragObserver.destroy();
   };
   a.terminateDrag = function() {
     if (this._boardBlockView) {
@@ -13423,6 +13420,9 @@ Entry.BlockMenu = function(a, b, c, d) {
   };
   a.reDraw = function() {
     this.selectMenu(this.lastSelector, !0);
+  };
+  a._handleDragBlock = function() {
+    this._boardBlockView = null;
   };
 })(Entry.BlockMenu.prototype);
 Entry.BlockMenuScroller = function(a) {
@@ -13672,11 +13672,11 @@ Entry.BlockView.PARAM_SPACE = 5;
       !1), c.set({offsetX:b.pageX, offsetY:b.pageY}), Entry.GlobalSvg.position(), (b = l._getCloseBlock()) ? e.setMagnetedBlock(b.view) : e.setMagnetedBlock(null), l.originPos || (l.originPos = {x:l.x, y:l.y})));
     }
     function d(b) {
-      Entry.GlobalSvg.remove();
       $(document).unbind(".block");
-      delete this.mouseDownCoordinate;
       l.terminateDrag(b);
       e && e.set({dragBlock:null});
+      Entry.GlobalSvg.remove();
+      delete this.mouseDownCoordinate;
       delete l.dragInstance;
     }
     window.Touch && b instanceof Touch ? b.button = 0 : (b.stopPropagation(), b.preventDefault());
@@ -13731,7 +13731,7 @@ Entry.BlockView.PARAM_SPACE = 5;
     if (f === Entry.Workspace.MODE_VIMBOARD) {
       a instanceof Entry.BlockMenu ? (a.terminateDrag(), this.vimBoardEvent(b, "dragEnd", e)) : a.clear();
     } else {
-      if (d !== Entry.DRAG_MODE_MOUSEDOWN) {
+      if (d === Entry.DRAG_MODE_DRAG) {
         var g = this.dragInstance && this.dragInstance.isNew;
         g && !a.workspace.blockMenu.terminateDrag() && (e._updatePos(), e.doAdd());
         var h = Entry.GlobalSvg;
