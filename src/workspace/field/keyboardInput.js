@@ -92,16 +92,18 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldKeyboard);
             }
         );
 
-        var pos = this.getAbsolutePosFromBoard();
-        pos.x -= 5;
-        pos.y += this.box.height/2;
+        var pos = this.getAbsolutePosFromDocument();
+        pos.x -= this.box.width/2;
+        pos.y += this.box.height/2 + 1;
 
-        this.optionGroup = this.appendSvgOptionGroup();
-        this.optionGroup.elem('image', {
-            href: Entry.mediaFilePath + '/media/keyboard_workspace.png',
-            x: -5, y: 0, width: 249, height: 106,
-            class: 'entry-field-keyboard',
-            transform: "translate(" + pos.x + "," + pos.y + ')'
+        this.optionGroup = Entry.Dom('img', {
+            class:'entry-widget-keyboard-input',
+            src: Entry.mediaFilePath + '/media/keyboard_workspace.png',
+            parent: $('body')
+        });
+
+        this.optionGroup.css({
+            left: pos.x, top: pos.y
         });
     };
 

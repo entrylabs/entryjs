@@ -5446,6 +5446,7 @@ Entry.Dom = function(a, b) {
   b.classes && b.classes.map(function(b) {
     d.addClass(b);
   });
+  b.src && d.attr("src", b.src);
   b.parent && b.parent.append(d);
   d.bindOnClick = function(b) {
     $(this).on("click touchstart", function(a) {
@@ -14763,11 +14764,11 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldKeyboard);
       Entry.documentMousedown.detach(this.documentDownEvent);
       b.destroyOption();
     });
-    var a = this.getAbsolutePosFromBoard();
-    a.x -= 5;
-    a.y += this.box.height / 2;
-    this.optionGroup = this.appendSvgOptionGroup();
-    this.optionGroup.elem("image", {href:Entry.mediaFilePath + "/media/keyboard_workspace.png", x:-5, y:0, width:249, height:106, class:"entry-field-keyboard", transform:"translate(" + a.x + "," + a.y + ")"});
+    var a = this.getAbsolutePosFromDocument();
+    a.x -= this.box.width / 2;
+    a.y += this.box.height / 2 + 1;
+    this.optionGroup = Entry.Dom("img", {class:"entry-widget-keyboard-input", src:Entry.mediaFilePath + "/media/keyboard_workspace.png", parent:$("body")});
+    this.optionGroup.css({left:a.x, top:a.y});
   };
   a.destroyOption = function() {
     this.documentDownEvent && (Entry.documentMousedown.detach(this.documentDownEvent), delete this.documentDownEvent);
@@ -15103,13 +15104,13 @@ Entry.GlobalSvg = {};
     }
   };
   a.draw = function() {
-    var a = this._view;
+    var b = this._view;
     this._svg && this.remove();
-    var c = this._mode == Entry.Workspace.MODE_VIMBOARD;
-    this.svgGroup = Entry.SVG.createElement(a.svgGroup.cloneNode(!0), {opacity:1});
+    var a = this._mode == Entry.Workspace.MODE_VIMBOARD;
+    this.svgGroup = Entry.SVG.createElement(b.svgGroup.cloneNode(!0), {opacity:1});
     this.svg.appendChild(this.svgGroup);
     this.show();
-    c && (a = $(this.svgGroup), a.find("g").css({filter:"none"}), a.find("path").velocity({opacity:0}, {duration:500}), a.find("text").velocity({fill:"#000000"}, {duration:530}));
+    a && (b = $(this.svgGroup), b.find("g").css({filter:"none"}), b.find("path").velocity({opacity:0}, {duration:500}), b.find("text").velocity({fill:"#000000"}, {duration:530}));
   };
   a.remove = function() {
     this.svgGroup && (this.svgGroup.remove(), delete this.svgGroup, delete this._view, delete this._offsetX, delete this._offsetY, delete this._startX, delete this._startY, this.hide());

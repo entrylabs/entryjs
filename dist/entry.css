@@ -4744,6 +4744,9 @@ svg .svgBlockGroup text {
   left: -100px;
   top: -100px;
 }
+.entry-widget-keyboard-input {
+  position: fixed;
+}
 
 .dragNone {
   -webkit-touch-callout: none;
