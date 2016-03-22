@@ -16473,12 +16473,13 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
     return this.vimBoard.getCodeToText(a);
   };
   a._setSelectedBlockView = function() {
-    this.set({selectedBlockView:this.board.selectedBlockView || this.blockMenu.selectedBlockView});
+    this.set({selectedBlockView:this.board.selectedBlockView || this.blockMenu.selectedBlockView || (this.overlayBoard ? this.overlayBoard.selectedBlockView : null)});
   };
   a.initOverlayBoard = function() {
     this.overlayBoard = new Entry.Board({dom:this.board.view, workspace:this, isOverlay:!0});
     this.overlayBoard.changeCode(new Entry.Code([]));
     this.overlayBoard.workspace = this;
+    this.overlayBoard.observe(this, "_setSelectedBlockView", ["selectedBlockView"], !1);
   };
   a._keyboardControl = function(a) {
     var c = a.keyCode || a.which, d = a.ctrlKey;

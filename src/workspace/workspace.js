@@ -134,7 +134,10 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
     };
 
     p._setSelectedBlockView = function() {
-        var blockView = this.board.selectedBlockView || this.blockMenu.selectedBlockView;
+        var view = 'selectedBlockView';
+        var blockView = this.board[view] ||
+            this.blockMenu[view] ||
+            (this.overlayBoard ? this.overlayBoard[view] : null);
         this.set({selectedBlockView:blockView});
     };
 
@@ -146,6 +149,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
         });
         this.overlayBoard.changeCode(new Entry.Code([]));
         this.overlayBoard.workspace = this;
+        this.overlayBoard.observe(this, "_setSelectedBlockView", ["selectedBlockView"], false);
     };
 
     p._keyboardControl = function(e) {
