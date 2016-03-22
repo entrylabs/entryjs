@@ -13541,6 +13541,7 @@ Entry.BlockView = function(a, b, c) {
   this._targetType = this._getTargetType();
 };
 Entry.BlockView.PARAM_SPACE = 5;
+Entry.BlockView.DRAG_RADIUS = 5;
 (function(a) {
   a.schema = {id:0, type:Entry.STATIC.BLOCK_RENDER_MODEL, x:0, y:0, offsetX:0, offsetY:0, width:0, height:0, contentWidth:0, contentHeight:0, magneting:!1, visible:!0, animating:!1, shadow:!0, display:!0};
   a._startRender = function(b, a) {
@@ -13665,12 +13666,16 @@ Entry.BlockView.PARAM_SPACE = 5;
   a.onMouseDown = function(b) {
     function c(b) {
       b.stopPropagation();
-      var c = e.workspace.getMode();
-      c === Entry.Workspace.MODE_VIMBOARD && a.vimBoardEvent(b, "dragOver");
-      b.originalEvent.touches && (b = b.originalEvent.touches[0]);
-      var d = l.mouseDownCoordinate;
-      l.dragMode != Entry.DRAG_MODE_DRAG && b.pageX === d.x && b.pageY === d.y || !l.movable || (l.isInBlockMenu ? e.cloneToGlobal(b) : (l.dragMode != Entry.DRAG_MODE_DRAG && (l._toGlobalCoordinate(), l.dragMode = Entry.DRAG_MODE_DRAG, l.block.getThread().changeEvent.notify(), Entry.GlobalSvg.setView(l, c)), this.animating && this.set({animating:!1}), 0 === l.dragInstance.height && l.dragInstance.set({height:-1 + l.height}), c = l.dragInstance, l._moveBy(b.pageX - c.offsetX, b.pageY - c.offsetY, 
-      !1), c.set({offsetX:b.pageX, offsetY:b.pageY}), Entry.GlobalSvg.position(), (b = l._getCloseBlock()) ? e.setMagnetedBlock(b.view) : e.setMagnetedBlock(null), l.originPos || (l.originPos = {x:l.x, y:l.y})));
+      if (l.movable) {
+        var c = e.workspace.getMode();
+        c === Entry.Workspace.MODE_VIMBOARD && a.vimBoardEvent(b, "dragOver");
+        b.originalEvent.touches && (b = b.originalEvent.touches[0]);
+        var d = l.mouseDownCoordinate, d = Math.sqrt(Math.pow(b.pageX - d.x, 2) + Math.pow(b.pageY - d.y, 2));
+        if (l.dragMode == Entry.DRAG_MODE_DRAG || d >= Entry.BlockView.DRAG_RADIUS) {
+          l.isInBlockMenu ? e.cloneToGlobal(b) : (l.dragMode != Entry.DRAG_MODE_DRAG && (l._toGlobalCoordinate(), l.dragMode = Entry.DRAG_MODE_DRAG, l.block.getThread().changeEvent.notify(), Entry.GlobalSvg.setView(l, c)), this.animating && this.set({animating:!1}), 0 === l.dragInstance.height && l.dragInstance.set({height:-1 + l.height}), c = l.dragInstance, l._moveBy(b.pageX - c.offsetX, b.pageY - c.offsetY, !1), c.set({offsetX:b.pageX, offsetY:b.pageY}), Entry.GlobalSvg.position(), (b = l._getCloseBlock()) ? 
+          e.setMagnetedBlock(b.view) : e.setMagnetedBlock(null), l.originPos || (l.originPos = {x:l.x, y:l.y}));
+        }
+      }
     }
     function d(b) {
       $(document).unbind(".block");

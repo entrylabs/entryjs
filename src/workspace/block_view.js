@@ -62,6 +62,7 @@ Entry.BlockView = function(block, board, mode) {
 };
 
 Entry.BlockView.PARAM_SPACE = 5;
+Entry.BlockView.DRAG_RADIUS = 5;
 
 (function(p) {
     p.schema = {
@@ -399,6 +400,7 @@ Entry.BlockView.PARAM_SPACE = 5;
 
         function onMouseMove(e) {
             e.stopPropagation();
+            if (!blockView.movable) return;
             var workspaceMode = board.workspace.getMode();
 
             if (workspaceMode === Entry.Workspace.MODE_VIMBOARD)
@@ -407,10 +409,10 @@ Entry.BlockView.PARAM_SPACE = 5;
                 e = e.originalEvent.touches[0];
 
             var mouseDownCoordinate = blockView.mouseDownCoordinate;
+            var diff = Math.sqrt(Math.pow(e.pageX - mouseDownCoordinate.x, 2) +
+                            Math.pow(e.pageY - mouseDownCoordinate.y, 2));
             if (blockView.dragMode == Entry.DRAG_MODE_DRAG ||
-                e.pageX !== mouseDownCoordinate.x ||
-                e.pageY !== mouseDownCoordinate.y) {
-                if (!blockView.movable) return;
+                diff >= Entry.BlockView.DRAG_RADIUS) {
 
                 if (!blockView.isInBlockMenu) {
                     if (blockView.dragMode != Entry.DRAG_MODE_DRAG) {
