@@ -6638,12 +6638,13 @@ Entry.EntityObject.prototype.injectModel = function(a, b) {
   } else {
     if ("textBox" == this.type) {
       var c = this.parent;
-      b.text = c.text || c.name;
+      b.text = b.text || c.text || c.name;
       this.setFont(b.font);
       this.setBGColour(b.bgColor);
       this.setColour(b.colour);
       this.setUnderLine(b.underLine);
       this.setStrike(b.strike);
+      this.setText(b.text);
     }
   }
   b && this.syncModel_(b);
