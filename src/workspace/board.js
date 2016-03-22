@@ -78,7 +78,7 @@ Entry.Board = function(option) {
 
     Entry.Utils.disableContextmenu(this.svgDom);
 
-    this._addControl(dom);
+    this._addControl();
     if (Entry.documentMousedown)
         Entry.documentMousedown.attach(this, this.setSelectedBlock);
     if (Entry.keyPressed)
@@ -153,7 +153,8 @@ Entry.Board = function(option) {
         }
     };
 
-    p._addControl = function(dom) {
+    p._addControl = function() {
+        var dom = this.svgDom;
         var that = this;
         dom.mousedown(function() {
             that.onMouseDown.apply(that, arguments);

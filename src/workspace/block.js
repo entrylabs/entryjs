@@ -106,7 +106,7 @@ Entry.Block.MAGNET_OFFSET = 0.4;
         this.set({type: type});
         this.getSchema();
         if (this.view)
-            this.view._updateSchema();
+            this.view.changeType(type);
     };
 
     p.setThread = function(thread) {
@@ -219,6 +219,8 @@ Entry.Block.MAGNET_OFFSET = 0.4;
         }
         if (thread.spliceBlock) thread.spliceBlock(this);
         if (this.view) this.view.destroy(animate);
+        if (this._schemaChangeEvent)
+            this._schemaChangeEvent.destroy();
     };
 
     p.getView = function() {return this.view;};

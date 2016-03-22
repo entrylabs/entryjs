@@ -177,6 +177,16 @@ Entry.BlockView.PARAM_SPACE = 5;
         this._startContentRender();
     };
 
+    p.changeType = function(type) {
+        if (this._schemaChangeEvent)
+            this._schemaChangeEvent.destroy();
+        this._schema = Entry.block[type];
+        if (this._schema.changeEvent)
+            this._schemaChangeEvent = this._schema.changeEvent.attach(
+                this, this._updateSchema);
+        this._updateSchema();
+    };
+
     p.alignContent = function(animate) {
         if (animate !== true) animate = false;
         var cursor = {x: 0, y: 0, height: 0};
@@ -449,16 +459,18 @@ Entry.BlockView.PARAM_SPACE = 5;
                     } else board.setMagnetedBlock(null);
                     if (!blockView.originPos)
                         blockView.originPos = {x: blockView.x, y: blockView.y};
-                } else board.cloneToGlobal(e);
+                } else {
+                    board.cloneToGlobal(e);
+                }
             }
         }
 
         function onMouseUp(e) {
-            Entry.GlobalSvg.remove();
             $(document).unbind('.block');
-            delete this.mouseDownCoordinate;
             blockView.terminateDrag(e);
             if (board) board.set({dragBlock: null});
+            Entry.GlobalSvg.remove();
+            delete this.mouseDownCoordinate;
             delete blockView.dragInstance;
         }
     };
@@ -495,7 +507,7 @@ Entry.BlockView.PARAM_SPACE = 5;
                 this.vimBoardEvent(e, 'dragEnd', block);
             } else board.clear();
         } else {
-            if (dragMode !== Entry.DRAG_MODE_MOUSEDOWN) {
+            if (dragMode === Entry.DRAG_MODE_DRAG) {
                 var fromBlockMenu = this.dragInstance && this.dragInstance.isNew;
                 if (fromBlockMenu) {
                     var removed = board.workspace.blockMenu.terminateDrag();
@@ -640,6 +652,9 @@ Entry.BlockView.PARAM_SPACE = 5;
             events.forEach(function(fn){
                 if (Entry.Utils.isFunction(fn)) fn(block);
             });
+
+        if (this._schemaChangeEvent)
+            this._schemaChangeEvent.destroy();
     };
 
     p.getShadow = function() {

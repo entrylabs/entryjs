@@ -180,8 +180,14 @@ Entry.Func.setupMenuCode = function() {
 }
 
 Entry.Func.refreshMenuCode = function() {
-    this._fieldString.params[0].changeType(this.requestParamBlock("string"));
-    this._fieldBoolean.params[0].changeType(this.requestParamBlock("boolean"));
+    var stringType = this._fieldString.params[0].type;
+    var referenceCount = Entry.block[stringType].changeEvent._listeners.length;
+    if (referenceCount > 2) // check new block type is used
+        this._fieldString.params[0].changeType(this.requestParamBlock("string"));
+    var booleanType = this._fieldBoolean.params[0].type;
+    referenceCount = Entry.block[booleanType].changeEvent._listeners.length;
+    if (referenceCount > 2)
+        this._fieldBoolean.params[0].changeType(this.requestParamBlock("boolean"));
 };
 
 Entry.Func.requestParamBlock = function(type) {
@@ -303,11 +309,11 @@ Entry.Func.generateWsBlock = function() {
             case 'function_field_label':
                 break;
             case 'function_field_boolean':
-                Entry.Mutator.mutate(value.type, {template: "boolean" + booleanIndex});
+                Entry.Mutator.mutate(value.type, {template: "판단값 " + booleanIndex});
                 booleanIndex++;
                 break;
             case 'function_field_string':
-                Entry.Mutator.mutate(value.type, {template: "string" + stringIndex});
+                Entry.Mutator.mutate(value.type, {template: "문자/숫자값 " + stringIndex});
                 stringIndex++;
                 break;
         }

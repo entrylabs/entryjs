@@ -116,19 +116,23 @@ Entry.Field = function() {};
     };
 
     p._isEditable = function() {
-        var dragMode = this._block.view.dragMode;
-        if (dragMode == Entry.DRAG_MODE_MOUSEDOWN) return true;
         var blockView = this._block.view;
-        var board = blockView.getBoard();
-
-        var selectedBlockView = board.selectedBlockView;
-        if (!selectedBlockView) return false;
-
-        return blockView.getSvgRoot() == selectedBlockView.svgGroup;
+        var dragMode = blockView.dragMode;
+        if (dragMode == Entry.DRAG_MODE_MOUSEDOWN &&
+           blockView.svgGroup.hasClass('selected')) return true;
     };
 
     p._selectBlockView = function() {
         var blockView = this._block.view;
         blockView.getBoard().setSelectedBlock(blockView);
     };
+
+    p._bindRenderOptions = function() {
+        var that = this;
+        $(this.svgGroup).bind('mouseup touchend', function(e){
+            if (that._isEditable()) that.renderOptions();
+        });
+    }
+
+
 })(Entry.Field.prototype);

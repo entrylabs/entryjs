@@ -81,9 +81,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
             transform: "translate("+ (width-11) + ",0)"
         });
 
-        $(this.svgGroup).bind('mouseup touchend', function(e){
-            if (that._isEditable()) that.renderOptions();
-        });
+        this._bindRenderOptions();
 
         this.box.set({
             x: 0,
@@ -123,65 +121,39 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
             }
         );
 
-        this.optionGroup = this.appendSvgOptionGroup();
+        this.optionGroup = Entry.Dom('ul', {
+            class:'entry-widget-dropdown',
+            parent: $('body')
+        });
 
         var options = this._contents.options;
 
-        var resizeList = [];
         var OPTION_X_PADDING = 30;
         var maxWidth = 0;
 
         var CONTENT_HEIGHT = this._CONTENT_HEIGHT + 4;
-        resizeList.push(this.optionGroup.elem("rect" , {
-            height: CONTENT_HEIGHT * options.length,
-            fill:'white'
-        }));
 
         for (var i=0, len=options.length; i<len; i++) {
             var option = options[i];
             var text = option[0];
             var value = option[1];
-            var element = this.optionGroup.elem("g", {
+            var element = Entry.Dom('li', {
                 class: 'rect',
-                transform: "translate(0," + i * CONTENT_HEIGHT + ")"
+                parent: this.optionGroup
             });
 
-            resizeList.push(element.elem("rect", {
-                 height: CONTENT_HEIGHT
-            }));
+            var str = '';
+            if (this.getValue() == value) str += '\u2713  ';
 
-
-            if (this.getValue() == value) {
-                element.elem("text", {
-                    x: 5,
-                    y: 13,
-                    "alignment-baseline": "central"
-                }).textContent = '\u2713';
-            }
-
-            var textElement = element.elem("text", {
-                x: 20,
-                "alignment-baseline": "central"
-            });
-            textElement.textContent = text;
-            var bBox = textElement.getBoundingClientRect();
-            textElement.attr({
-                y: (CONTENT_HEIGHT)/2
-            });
-
-            maxWidth = Math.max(
-                bBox.width + OPTION_X_PADDING,
-                maxWidth
-            );
+            element.text(str += text);
 
             (function(elem, value) {
                 //prevent propagation to document
-                var $elem = $(elem);
-                $elem.bind('mousedown touchstart', function(e) {
+                elem.bind('mousedown touchstart', function(e) {
                     e.stopPropagation();
                 });
 
-                $elem.bind('mouseup touchend', function(e){
+                elem.bind('mouseup touchend', function(e){
                     e.stopPropagation();
                     that.applyValue(value);
                     that.destroyOption();
@@ -190,22 +162,13 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
             })(element, value);
         }
 
-        var x = - maxWidth/2 + this.box.width/2;
-        var y = this.box.height/2;
 
-        var pos = this.getAbsolutePosFromBoard();
-        pos.x += x;
-        pos.y += y;
+        var pos = this.getAbsolutePosFromDocument();
+        pos.x += this.box.width/2 - this.optionGroup.width()/2;
+        pos.y += this.box.height/2;
 
-        this.optionGroup.attr({
-            class: 'entry-field-dropdown',
-            transform: "translate(" + pos.x + "," + pos.y + ")"
-        });
+        this.optionGroup.css({left: pos.x, top: pos.y});
 
-        var attr = {width:maxWidth};
-        resizeList.forEach(function(elem){
-            elem.attr(attr);
-        });
     };
 
     p.applyValue = function(value) {
