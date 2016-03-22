@@ -204,7 +204,7 @@ Entry.Playground.prototype.generateTabView = function(tabView) {
     tabList.appendChild(codeTab);
     codeTab.bindOnClick(function(e) {
         that.changeViewMode('code');
-        that.blockMenu();
+        that.blockMenu.reDraw();
     });
     this.tabViewElements.code = codeTab;
 

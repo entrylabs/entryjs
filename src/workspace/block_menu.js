@@ -90,7 +90,10 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
                 (function(elem, name){
                     elem.text(Lang.Blocks[name.toUpperCase()]);
                     that._categoryElems[name] = elem;
-                    elem.bindOnClick(function(e){that.selectMenu(name);});
+                    elem.bindOnClick(function(e) {
+                        e.preventDefault();
+                        that.selectMenu(name);
+                    });
                 })(element, name);
             }
         }

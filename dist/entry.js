@@ -5449,9 +5449,8 @@ Entry.Dom = function(a, b) {
   b.src && d.attr("src", b.src);
   b.parent && b.parent.append(d);
   d.bindOnClick = function(b) {
-    $(this).on("click touchstart", function(a) {
-      a.stopImmediatePropagation();
-      a.handled || (a.handled = !0, b.call(this, a));
+    $(this).bind("click touchstart", function(a) {
+      b.call(this, a);
     });
   };
   return d;
@@ -13217,6 +13216,7 @@ Entry.BlockMenu = function(a, b, c, d) {
           b.text(Lang.Blocks[a.toUpperCase()]);
           d._categoryElems[a] = b;
           b.bindOnClick(function(b) {
+            b.preventDefault();
             d.selectMenu(a);
           });
         })(Entry.Dom("li", {id:"entryCategory" + g, class:"entryCategoryElementWorkspace", parent:e}), g);
@@ -14978,16 +14978,16 @@ Entry.FieldText = function(a, b, c) {
 };
 Entry.Utils.inherit(Entry.Field, Entry.FieldText);
 (function(a) {
-  a.renderStart = function(a) {
-    this.svgGroup = a.contentSvgGroup.elem("g");
+  a.renderStart = function(b) {
+    this.svgGroup = b.contentSvgGroup.elem("g");
     this._text = this._text.replace(/(\r\n|\n|\r)/gm, " ");
     this.textElement = this.svgGroup.elem("text").attr({style:"white-space: pre; font-size:" + this._fontSize + "px", "class":"dragNone", fill:this._color});
     this.textElement.textContent = this._text;
-    a = this.textElement.getBBox();
-    var c = 0;
-    "center" == this._align && (c = -a.width / 2);
-    this.textElement.attr({x:c, y:.25 * a.height});
-    this.box.set({x:0, y:0, width:this.textElement.getComputedTextLength(), height:a.height});
+    b = this.textElement.getBBox();
+    var a = 0;
+    "center" == this._align && (a = -b.width / 2);
+    this.textElement.attr({x:a, y:.25 * b.height});
+    this.box.set({x:0, y:0, width:this.textElement.getComputedTextLength(), height:b.height});
   };
 })(Entry.FieldText.prototype);
 Entry.FieldTextInput = function(a, b, c) {
@@ -16540,7 +16540,7 @@ Entry.Playground.prototype.generateTabView = function(a) {
   c.appendChild(a);
   a.bindOnClick(function(a) {
     b.changeViewMode("code");
-    b.blockMenu();
+    b.blockMenu.reDraw();
   });
   this.tabViewElements.code = a;
   Entry.pictureEditable && (a = Entry.createElement("li", "entryPictureTab"), a.innerHTML = Lang.Workspace.tab_picture, a.addClass("entryTabListItemWorkspace"), c.appendChild(a), a.bindOnClick(function(a) {
