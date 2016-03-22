@@ -14560,41 +14560,27 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
       Entry.documentMousedown.detach(this.documentDownEvent);
       b.optionGroup.remove();
     });
-    this.optionGroup = this.appendSvgOptionGroup();
-    var a = this._contents.options, d = [], e = 0, f = this._CONTENT_HEIGHT + 4;
-    d.push(this.optionGroup.elem("rect", {height:f * a.length, fill:"white"}));
-    for (var g = 0, h = a.length;g < h;g++) {
-      var k = a[g], l = k[0], k = k[1], n = this.optionGroup.elem("g", {class:"rect", transform:"translate(0," + g * f + ")"});
-      d.push(n.elem("rect", {height:f}));
-      this.getValue() == k && (n.elem("text", {x:5, y:13, "alignment-baseline":"central"}).textContent = "\u2713");
-      var m = n.elem("text", {x:20, "alignment-baseline":"central"});
-      m.textContent = l;
-      l = m.getBoundingClientRect();
-      m.attr({y:f / 2});
-      e = Math.max(l.width + 30, e);
+    this.optionGroup = Entry.Dom("ul", {class:"entry-widget-dropdown", parent:$("body")});
+    for (var a = this._contents.options, d = 0, e = a.length;d < e;d++) {
+      var f = a[d], g = f[0], f = f[1], h = Entry.Dom("li", {class:"rect", parent:this.optionGroup}), k = "";
+      this.getValue() == f && (k += "\u2713  ");
+      h.text(k += g);
       (function(a, c) {
-        var d = $(a);
-        d.bind("mousedown touchstart", function(b) {
+        a.bind("mousedown touchstart", function(b) {
           b.stopPropagation();
         });
-        d.bind("mouseup touchend", function(a) {
+        a.bind("mouseup touchend", function(a) {
           a.stopPropagation();
           b.applyValue(c);
           b.destroyOption();
           b._selectBlockView();
         });
-      })(n, k);
+      })(h, f);
     }
-    a = -e / 2 + this.box.width / 2;
-    f = this.box.height / 2;
-    g = this.getAbsolutePosFromBoard();
-    g.x += a;
-    g.y += f;
-    this.optionGroup.attr({class:"entry-field-dropdown", transform:"translate(" + g.x + "," + g.y + ")"});
-    var q = {width:e};
-    d.forEach(function(b) {
-      b.attr(q);
-    });
+    a = this.getAbsolutePosFromDocument();
+    a.x += this.box.width / 2 - this.optionGroup.width() / 2;
+    a.y += this.box.height / 2;
+    this.optionGroup.css({left:a.x, top:a.y});
   };
   a.applyValue = function(b) {
     this.value != b && (this.setValue(b), this.textElement.textContent = this.getTextByValue(b), this.resize());
@@ -14637,41 +14623,27 @@ Entry.Utils.inherit(Entry.FieldDropdown, Entry.FieldDropdownDynamic);
       Entry.documentMousedown.detach(this.documentDownEvent);
       b.optionGroup.remove();
     });
-    this.optionGroup = this.appendSvgOptionGroup();
-    var a = Entry.container.getDropdownList(this._contents.menuName), d = [], e = 0, f = this._CONTENT_HEIGHT + 4;
-    d.push(this.optionGroup.elem("rect", {height:f * a.length, fill:"white"}));
-    for (var g = 0, h = a.length;g < h;g++) {
-      var k = a[g], l = k[0], k = k[1], n = this.optionGroup.elem("g", {class:"rect", transform:"translate(0," + g * f + ")"});
-      d.push(n.elem("rect", {height:f}));
-      this.getValue() == k && (n.elem("text", {x:5, y:13, "alignment-baseline":"central"}).textContent = "\u2713");
-      var m = n.elem("text", {x:20, "alignment-baseline":"central"});
-      m.textContent = l;
-      l = m.getBoundingClientRect();
-      m.attr({y:f / 2});
-      e = Math.max(l.width + 30, e);
+    this.optionGroup = Entry.Dom("ul", {class:"entry-widget-dropdown", parent:$("body")});
+    for (var a = Entry.container.getDropdownList(this._contents.menuName), d = 0, e = a.length;d < e;d++) {
+      var f = a[d], g = f[0], f = f[1], h = Entry.Dom("li", {class:"rect", parent:this.optionGroup}), k = "";
+      this.getValue() == f && (k += "\u2713  ");
+      h.text(k += g);
       (function(a, c) {
-        var d = $(a);
-        d.bind("mousedown touchstart", function(b) {
+        a.bind("mousedown touchstart", function(b) {
           b.stopPropagation();
         });
-        d.bind("mouseup touchend", function(a) {
+        a.bind("mouseup touchend", function(a) {
           a.stopPropagation();
           b.applyValue(c);
           b.destroyOption();
           b._selectBlockView();
         });
-      })(n, k);
+      })(h, f);
     }
-    a = -e / 2 + this.box.width / 2;
-    f = this.box.height / 2;
-    g = this.getAbsolutePosFromBoard();
-    g.x += a;
-    g.y += f;
-    this.optionGroup.attr({class:"entry-field-dropdown", transform:"translate(" + g.x + "," + g.y + ")"});
-    var q = {width:e};
-    d.forEach(function(b) {
-      b.attr(q);
-    });
+    a = this.getAbsolutePosFromDocument();
+    a.x += this.box.width / 2 - this.optionGroup.width() / 2;
+    a.y += this.box.height / 2;
+    this.optionGroup.css({left:a.x, top:a.y});
   };
 })(Entry.FieldDropdownDynamic.prototype);
 Entry.FieldImage = function(a, b, c) {
@@ -15034,56 +15006,56 @@ Entry.FieldTextInput = function(a, b, c) {
 };
 Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
 (function(a) {
-  a.renderStart = function(b) {
-    var a = this;
-    this.svgGroup = b.contentSvgGroup.elem("g");
+  a.renderStart = function(a) {
+    var c = this;
+    this.svgGroup = a.contentSvgGroup.elem("g");
     this.svgGroup.attr({class:"entry-input-field"});
     this.textElement = this.svgGroup.elem("text", {x:4, y:4, "font-size":"9pt"});
     this.textElement.textContent = this.truncate();
-    b = this.getTextWidth();
+    a = this.getTextWidth();
     var d = this.position && this.position.y ? this.position.y : 0;
-    this._header = this.svgGroup.elem("rect", {width:b, height:16, y:d - 8, rx:3, ry:3, fill:"#fff", "fill-opacity":.4});
+    this._header = this.svgGroup.elem("rect", {width:a, height:16, y:d - 8, rx:3, ry:3, fill:"#fff", "fill-opacity":.4});
     this.svgGroup.appendChild(this.textElement);
-    this.svgGroup.onmouseup = function(b) {
-      a._isEditable() && a.renderOptions();
+    this.svgGroup.onmouseup = function(a) {
+      c._isEditable() && c.renderOptions();
     };
-    this.box.set({x:0, y:0, width:b, height:16});
+    this.box.set({x:0, y:0, width:a, height:16});
   };
   a.renderOptions = function() {
-    var b = this;
+    var a = this;
     this.destroyOption();
     this.documentDownEvent = Entry.documentMousedown.attach(this, function() {
       Entry.documentMousedown.detach(this.documentDownEvent);
-      b.applyValue();
-      b.destroyOption();
+      a.applyValue();
+      a.destroyOption();
     });
     this.optionGroup = Entry.Dom("input", {class:"entry-widget-input-field", parent:$("body")});
     this.optionGroup.val(this.getValue());
-    this.optionGroup.on("mousedown", function(b) {
-      b.stopPropagation();
+    this.optionGroup.on("mousedown", function(a) {
+      a.stopPropagation();
     });
-    this.optionGroup.on("keyup", function(a) {
-      var c = a.keyCode || a.which;
-      b.applyValue(a);
-      -1 < [13, 27].indexOf(c) && b.destroyOption();
+    this.optionGroup.on("keyup", function(c) {
+      var e = c.keyCode || c.which;
+      a.applyValue(c);
+      -1 < [13, 27].indexOf(e) && a.destroyOption();
     });
-    var a = this.getAbsolutePosFromDocument();
-    a.y -= this.box.height / 2;
-    this.optionGroup.css({height:16, left:a.x, top:a.y, width:b.box.width});
+    var c = this.getAbsolutePosFromDocument();
+    c.y -= this.box.height / 2;
+    this.optionGroup.css({height:16, left:c.x, top:c.y, width:a.box.width});
     this.optionGroup.focus();
     this.optionGroup.select();
   };
-  a.applyValue = function(b) {
-    b = this.optionGroup.val();
-    this.setValue(b);
+  a.applyValue = function(a) {
+    a = this.optionGroup.val();
+    this.setValue(a);
     this.textElement.textContent = this.truncate();
     this.resize();
   };
   a.resize = function() {
-    var b = this.getTextWidth();
-    this._header.attr({width:b});
-    this.optionGroup.css({width:b});
-    this.box.set({width:b});
+    var a = this.getTextWidth();
+    this._header.attr({width:a});
+    this.optionGroup.css({width:a});
+    this.box.set({width:a});
     this._block.view.alignContent();
   };
   a.getTextWidth = function() {
@@ -15098,19 +15070,19 @@ Entry.GlobalSvg = {};
   a.createDom = function() {
     this.svgDom || (this.svgDom = Entry.Dom($('<svg id="globalSvg" width="0" height="0"version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'), {parent:$("body")}), this.svgDom.css({position:"fixed", width:1, height:1, display:"none", overflow:"visible", "z-index":"1111", opacity:.8}), this.svg = Entry.SVG("globalSvg"), this.top = this.left = this.width = 0);
   };
-  a.setView = function(b, a) {
-    if (b != this._view && !b.block.isReadOnly() && b.movable) {
-      return b.set({visible:!1}), this._view = b, this._mode = a, this.draw(), this.align(), this.position(), !0;
+  a.setView = function(a, c) {
+    if (a != this._view && !a.block.isReadOnly() && a.movable) {
+      return a.set({visible:!1}), this._view = a, this._mode = c, this.draw(), this.align(), this.position(), !0;
     }
   };
   a.draw = function() {
-    var b = this._view;
+    var a = this._view;
     this._svg && this.remove();
-    var a = this._mode == Entry.Workspace.MODE_VIMBOARD;
-    this.svgGroup = Entry.SVG.createElement(b.svgGroup.cloneNode(!0), {opacity:1});
+    var c = this._mode == Entry.Workspace.MODE_VIMBOARD;
+    this.svgGroup = Entry.SVG.createElement(a.svgGroup.cloneNode(!0), {opacity:1});
     this.svg.appendChild(this.svgGroup);
     this.show();
-    a && (b = $(this.svgGroup), b.find("g").css({filter:"none"}), b.find("path").velocity({opacity:0}, {duration:500}), b.find("text").velocity({fill:"#000000"}, {duration:530}));
+    c && (a = $(this.svgGroup), a.find("g").css({filter:"none"}), a.find("path").velocity({opacity:0}, {duration:500}), a.find("text").velocity({fill:"#000000"}, {duration:530}));
   };
   a.remove = function() {
     this.svgGroup && (this.svgGroup.remove(), delete this.svgGroup, delete this._view, delete this._offsetX, delete this._offsetY, delete this._startX, delete this._startY, this.hide());

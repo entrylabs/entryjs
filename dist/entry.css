@@ -4687,22 +4687,6 @@ span.CodeMirror-selectedtext {
 svg .svgBlockGroup text {
   white-space: pre;
 }
-.entry-field-dropdown {
-  cursor: pointer;
-}
-.entry-field-dropdown .rect {
-  fill: white;
-}
-.entry-field-dropdown .rect text {
-  fill: #000;
-  font-size: 9pt;
-}
-.entry-field-dropdown .rect:hover {
-  fill: #127cdb;
-}
-.entry-field-dropdown .rect:hover text {
-  fill: white;
-}
 .entry-field-color {
   cursor: pointer;
 }
@@ -4746,6 +4730,28 @@ svg .svgBlockGroup text {
 }
 .entry-widget-keyboard-input {
   position: fixed;
+}
+.entry-widget-dropdown {
+  position: fixed;
+  cursor: pointer;
+  list-style: none;
+  background-color: white;
+  border: 1px gray solid;
+  margin: 0;
+  padding: 0;
+  text-align: center;
+  font-size: 9pt;
+  color: #000;
+}
+.entry-widget-dropdown .rect {
+  height: 20px;
+  line-height: 13px;
+  padding: 5px 15px;
+  width: 100%;
+}
+.entry-widget-dropdown .rect:hover {
+  background-color: #127cdb;
+  color: white;
 }
 
 .dragNone {

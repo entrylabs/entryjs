@@ -28,24 +28,6 @@ svg .svgBlockGroup text {
     white-space: pre;
 }
 
-.entry-field-dropdown {
-    cursor: pointer;
-    .rect {
-        fill: white;
-        text {
-            fill: #000;
-            font-size: 9pt;
-        }
-    }
-
-    .rect:hover {
-        fill: #127cdb;
-        text {
-            fill: white;
-        }
-    }
-}
-
 .entry-field-color {
     cursor: pointer;
 }
@@ -99,3 +81,29 @@ svg .svgBlockGroup text {
 .entry-widget-keyboard-input {
      position: fixed;
 }
+
+.entry-widget-dropdown {
+    position: fixed;
+    cursor: pointer;
+    list-style: none;
+    background-color: white;
+    border: 1px gray solid;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+    font-size: 9pt;
+    color: #000;
+
+    .rect {
+        height: 20px;
+        line-height: 13px;
+        padding: 5px 15px;
+        width: 100%;
+    }
+
+    .rect:hover {
+        background-color: #127cdb;
+        color: white;
+    }
+}
+
