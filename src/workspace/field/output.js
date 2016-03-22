@@ -225,4 +225,12 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldOutput);
         this.calcWH();
     };
 
+    p.setParent = function(parent) {
+        this._parent = parent;
+    };
+
+    p.getParent = function() {
+        return this._parent;
+    };
+
 })(Entry.FieldOutput.prototype);

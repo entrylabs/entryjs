@@ -100,6 +100,15 @@ Entry.Block.MAGNET_OFFSET = 0.4;
         }
     };
 
+    p.changeType = function(type) {
+        if (this._schemaChangeEvent)
+            this._schemaChangeEvent.destroy();
+        this.set({type: type});
+        this.getSchema();
+        if (this.view)
+            this.view._updateSchema();
+    };
+
     p.setThread = function(thread) {
         this.set({thread: thread});
     };

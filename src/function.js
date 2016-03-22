@@ -180,12 +180,8 @@ Entry.Func.setupMenuCode = function() {
 }
 
 Entry.Func.refreshMenuCode = function() {
-    this._fieldString.view._contents[0].replace(
-        this.requestParamBlock("string"), true
-    );
-    this._fieldBoolean.view._contents[0].replace(
-        this.requestParamBlock("boolean"), true
-    );
+    this._fieldString.params[0].changeType(this.requestParamBlock("string"));
+    this._fieldBoolean.params[0].changeType(this.requestParamBlock("boolean"));
 };
 
 Entry.Func.requestParamBlock = function(type) {
@@ -307,11 +303,11 @@ Entry.Func.generateWsBlock = function() {
             case 'function_field_label':
                 break;
             case 'function_field_boolean':
-                Entry.Mutator.mutate(value.type, {template: "판단값" + booleanIndex});
+                Entry.Mutator.mutate(value.type, {template: "boolean" + booleanIndex});
                 booleanIndex++;
                 break;
             case 'function_field_string':
-                Entry.Mutator.mutate(value.type, {template: "판단값" + stringIndex});
+                Entry.Mutator.mutate(value.type, {template: "string" + stringIndex});
                 stringIndex++;
                 break;
         }

@@ -4824,9 +4824,11 @@ Entry.Event = function(a) {
 };
 (function(a) {
   a.attach = function(b, a) {
-    var d = {obj:b, fn:a};
-    this._listeners.push(d);
-    return d;
+    var d = this, e = {obj:b, fn:a, destroy:function() {
+      d.detach(this);
+    }};
+    this._listeners.push(e);
+    return e;
   };
   a.detach = function(b) {
     var a = this._listeners;
@@ -10846,8 +10848,8 @@ Entry.Func.setupMenuCode = function() {
   this.menuCode = a;
 };
 Entry.Func.refreshMenuCode = function() {
-  this._fieldString.view._contents[0].replace(this.requestParamBlock("string"), !0);
-  this._fieldBoolean.view._contents[0].replace(this.requestParamBlock("boolean"), !0);
+  this._fieldString.params[0].changeType(this.requestParamBlock("string"));
+  this._fieldBoolean.params[0].changeType(this.requestParamBlock("boolean"));
 };
 Entry.Func.requestParamBlock = function(a) {
   var b = Entry.generateHash(), c;
@@ -10931,11 +10933,11 @@ Entry.Func.generateWsBlock = function() {
     var d = a.params[0];
     switch(a.type) {
       case "function_field_boolean":
-        Entry.Mutator.mutate(d.type, {template:"\ud310\ub2e8\uac12" + b});
+        Entry.Mutator.mutate(d.type, {template:"boolean" + b});
         b++;
         break;
       case "function_field_string":
-        Entry.Mutator.mutate(d.type, {template:"\ud310\ub2e8\uac12" + c}), c++;
+        Entry.Mutator.mutate(d.type, {template:"string" + c}), c++;
     }
     a = a.getOutputBlock();
   }
@@ -14895,6 +14897,12 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldOutput);
     b.view._toLocalCoordinate(this.svgGroup);
     this.calcWH();
   };
+  a.setParent = function(b) {
+    this._parent = b;
+  };
+  a.getParent = function() {
+    return this._parent;
+  };
 })(Entry.FieldOutput.prototype);
 Entry.FieldStatement = function(a, b, c) {
   Entry.Model(this, !1);
@@ -15672,6 +15680,12 @@ Entry.Block.MAGNET_OFFSET = .4;
         }
       }
     }
+  };
+  a.changeType = function(a) {
+    this._schemaChangeEvent && this._schemaChangeEvent.destroy();
+    this.set({type:a});
+    this.getSchema();
+    this.view && this.view._updateSchema();
   };
   a.setThread = function(a) {
     this.set({thread:a});
