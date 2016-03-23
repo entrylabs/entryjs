@@ -178,6 +178,16 @@ Entry.BlockView.DRAG_RADIUS = 5;
         this._startContentRender();
     };
 
+    p.changeType = function(type) {
+        if (this._schemaChangeEvent)
+            this._schemaChangeEvent.destroy();
+        this._schema = Entry.block[type];
+        if (this._schema.changeEvent)
+            this._schemaChangeEvent = this._schema.changeEvent.attach(
+                this, this._updateSchema);
+        this._updateSchema();
+    };
+
     p.alignContent = function(animate) {
         if (animate !== true) animate = false;
         var cursor = {x: 0, y: 0, height: 0};
@@ -620,8 +630,8 @@ Entry.BlockView.DRAG_RADIUS = 5;
         var svgGroup = this.svgGroup;
 
         var thread = this.block.getThread();
-        if (thread instanceof Entry.FieldBlock)
-            thread.updateValueBlock();
+        //if (thread instanceof Entry.FieldBlock)
+            //thread.updateValueBlock();
 
         if (animate) {
             $(svgGroup).velocity(
@@ -644,6 +654,9 @@ Entry.BlockView.DRAG_RADIUS = 5;
             events.forEach(function(fn){
                 if (Entry.Utils.isFunction(fn)) fn(block);
             });
+
+        if (this._schemaChangeEvent)
+            this._schemaChangeEvent.destroy();
     };
 
     p.getShadow = function() {

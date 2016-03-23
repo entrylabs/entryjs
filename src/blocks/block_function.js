@@ -22,6 +22,18 @@ Entry.block.functionAddButton = {
     }
 };
 
+Blockly.Blocks.function_field_label = {
+  init: function() {
+    this.setColour("#f9c535");
+    this.appendDummyInput()
+        .appendField(new Blockly.FieldTextInput(Lang.Blocks.FUNCTION_explanation_1), "NAME");
+    this.appendValueInput("NEXT")
+        .setCheck(['Param']);
+    this.setOutput(true, 'Param');
+    this.setInputsInline(true);
+  }
+};
+
 Entry.block.function_field_label = {
     skeleton: "basic_param",
     color: "#f9c535",
@@ -38,50 +50,6 @@ Entry.block.function_field_label = {
     ]
 };
 
-Entry.block.function_field_string = {
-    skeleton: "basic_param",
-    color: "#ffd974",
-    template: "%1%2",
-    params: [
-        {
-            type: "Block",
-            accept: "stringMagnet"
-        },
-        {
-            type: "Output",
-            accept: "paramMagnet"
-        }
-    ]
-};
-
-Entry.block.function_field_boolean = {
-    skeleton: "basic_param",
-    color: "#aeb8ff",
-    template: "%1%2",
-    params: [
-        {
-            type: "Block",
-            accept: "booleanMagnet"
-        },
-        {
-            type: "Output",
-            accept: "paramMagnet"
-        }
-    ]
-};
-
-Blockly.Blocks.function_field_label = {
-  init: function() {
-    this.setColour("#f9c535");
-    this.appendDummyInput()
-        .appendField(new Blockly.FieldTextInput(Lang.Blocks.FUNCTION_explanation_1), "NAME");
-    this.appendValueInput("NEXT")
-        .setCheck(['Param']);
-    this.setOutput(true, 'Param');
-    this.setInputsInline(true);
-  }
-};
-
 Blockly.Blocks.function_field_string = {
   init: function() {
     this.setColour("#ffec64");
@@ -94,6 +62,23 @@ Blockly.Blocks.function_field_string = {
   }
 };
 
+Entry.block.function_field_string = {
+    skeleton: "basic_param",
+    color: "#ffd974",
+    template: "%1%2",
+    params: [
+        {
+            type: "Block",
+            accept: "stringMagnet",
+            restore: true
+        },
+        {
+            type: "Output",
+            accept: "paramMagnet"
+        }
+    ]
+};
+
 Blockly.Blocks.function_field_boolean = {
   init: function() {
     this.setColour("#2FC9F0");
@@ -104,6 +89,23 @@ Blockly.Blocks.function_field_boolean = {
     this.setOutput(true, 'Param');
     this.setInputsInline(true);
   }
+};
+
+Entry.block.function_field_boolean = {
+    skeleton: "basic_param",
+    color: "#aeb8ff",
+    template: "%1%2",
+    params: [
+        {
+            type: "Block",
+            accept: "booleanMagnet",
+            restore: true
+        },
+        {
+            type: "Output",
+            accept: "paramMagnet"
+        }
+    ]
 };
 
 Blockly.Blocks.function_param_string = {
@@ -137,6 +139,12 @@ Entry.block.function_param_string = function (sprite, script, register) {
     return script.register[script.hashId].run()
 };
 
+Entry.block.function_param_string = {
+    skeleton: "basic_string_field",
+    color: "#ffd974",
+    template: "문자/숫자값"
+};
+
 Blockly.Blocks.function_param_boolean = {
   init: function() {
     this.setEditable(false);
@@ -163,6 +171,12 @@ Entry.block.function_param_boolean = function (sprite, script, register) {
     return script.register[script.hashId].run()
 };
 
+Entry.block.function_param_boolean = {
+    skeleton: "basic_boolean_field",
+    color: "#aeb8ff",
+    template: "판단값"
+};
+
 Blockly.Blocks.function_create = {
   init: function() {
     this.appendDummyInput()
@@ -184,6 +198,7 @@ Entry.block.function_create = function (sprite, script) {
 Entry.block.function_create = {
     skeleton: "basic",
     color: "#cc7337",
+    event: "funcDef",
     template: "함수 정의하기 %1 %2",
     params: [
         {

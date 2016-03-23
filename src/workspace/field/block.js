@@ -22,6 +22,7 @@ Entry.FieldBlock = function(content, blockView, index, mode) {
     this._content = content;
 
     this.acceptType = content.accept;
+    this._restoreCurrent = content.restore;
 
     this.view = this;
 
@@ -113,30 +114,26 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
 
     p.destroy = function() {};
 
-    p._inspectBlock = function() {
+    p.inspectBlock = function() {
         if (!this._valueBlock) {
             var blockType = null;
-            switch (this.acceptType) {
-                case "booleanMagnet":
-                    blockType = "True";
-                    break;
-                case "stringMagnet":
-                    blockType = "text";
-                    break;
-                case "basic_param":
-                    blockType = "function_field_label";
-                    break;
+            if (this._originBlock) {
+                blockType = this._originBlock.type;
+                delete this._originBlock;
+            } else {
+                switch (this.acceptType) {
+                    case "booleanMagnet":
+                        blockType = "True";
+                        break;
+                    case "stringMagnet":
+                        blockType = "text";
+                        break;
+                    case "basic_param":
+                        blockType = "function_field_label";
+                        break;
+                }
             }
-            var thread = this._block.getThread();
-            var board = this._blockView.getBoard();
-
-            var block = new Entry.Block({type: blockType}, this);
-            var workspace = board.workspace;
-            var mode;
-            if (workspace)
-                mode = workspace.getMode();
-
-            block.createView(board, mode);
+            var block = this._createBlockByType(blockType);
             return this._setValueBlock(block);
         }
     };
@@ -144,10 +141,12 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
     p._setValueBlock = function(block) {
         if (block != this._valueBlock || !this._valueBlock) {
 
+            if (this._restoreCurrent)
+                this._originBlock = this._valueBlock;
             this._valueBlock = block;
             this.setValue(block);
             if (!this._valueBlock)
-                return this._inspectBlock();
+                return this.inspectBlock();
 
             block.setThread(this);
             block.getThread().view.setParent(this);
@@ -214,6 +213,8 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
     };
 
     p.replace = function(block) {
+        if (typeof block === "string")
+            block = this._createBlockByType(block);
         var valueBlock = this._valueBlock;
         var valueBlockType = valueBlock.type;
         if (Entry.block[valueBlockType].isPrimitive) {
@@ -235,6 +236,20 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
 
     p.getParent = function() {
         return this._parent;
+    };
+
+    p._createBlockByType = function(blockType) {
+        var thread = this._block.getThread();
+        var board = this._blockView.getBoard();
+
+        var block = new Entry.Block({type: blockType}, this);
+        var workspace = board.workspace;
+        var mode;
+        if (workspace)
+            mode = workspace.getMode();
+
+        block.createView(board, mode);
+        return block;
     };
 
 })(Entry.FieldBlock.prototype);

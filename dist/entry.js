@@ -1901,9 +1901,6 @@ Entry.block.remove_all_clones = function(a, b) {
 Entry.block.functionAddButton = {skeleton:"basic_button", color:"#eee", isNotFor:["functionInit"], template:"%1", params:[{type:"Text", text:"\ud568\uc218 \ucd94\uac00", color:"#333", align:"center"}], events:{mousedown:[function() {
   Entry.variableContainer.createFunction();
 }]}};
-Entry.block.function_field_label = {skeleton:"basic_param", color:"#f9c535", template:"%1%2", params:[{type:"TextInput", value:"\ud568\uc218"}, {type:"Output", accept:"paramMagnet"}]};
-Entry.block.function_field_string = {skeleton:"basic_param", color:"#ffd974", template:"%1%2", params:[{type:"Block", accept:"stringMagnet"}, {type:"Output", accept:"paramMagnet"}]};
-Entry.block.function_field_boolean = {skeleton:"basic_param", color:"#aeb8ff", template:"%1%2", params:[{type:"Block", accept:"booleanMagnet"}, {type:"Output", accept:"paramMagnet"}]};
 Blockly.Blocks.function_field_label = {init:function() {
   this.setColour("#f9c535");
   this.appendDummyInput().appendField(new Blockly.FieldTextInput(Lang.Blocks.FUNCTION_explanation_1), "NAME");
@@ -1911,6 +1908,7 @@ Blockly.Blocks.function_field_label = {init:function() {
   this.setOutput(!0, "Param");
   this.setInputsInline(!0);
 }};
+Entry.block.function_field_label = {skeleton:"basic_param", color:"#f9c535", template:"%1%2", params:[{type:"TextInput", value:"\ud568\uc218"}, {type:"Output", accept:"paramMagnet"}]};
 Blockly.Blocks.function_field_string = {init:function() {
   this.setColour("#ffec64");
   this.appendValueInput("PARAM").setCheck(["String"]);
@@ -1918,6 +1916,7 @@ Blockly.Blocks.function_field_string = {init:function() {
   this.setOutput(!0, "Param");
   this.setInputsInline(!0);
 }};
+Entry.block.function_field_string = {skeleton:"basic_param", color:"#ffd974", template:"%1%2", params:[{type:"Block", accept:"stringMagnet", restore:!0}, {type:"Output", accept:"paramMagnet"}]};
 Blockly.Blocks.function_field_boolean = {init:function() {
   this.setColour("#2FC9F0");
   this.appendValueInput("PARAM").setCheck(["Boolean"]);
@@ -1925,6 +1924,7 @@ Blockly.Blocks.function_field_boolean = {init:function() {
   this.setOutput(!0, "Param");
   this.setInputsInline(!0);
 }};
+Entry.block.function_field_boolean = {skeleton:"basic_param", color:"#aeb8ff", template:"%1%2", params:[{type:"Block", accept:"booleanMagnet", restore:!0}, {type:"Output", accept:"paramMagnet"}]};
 Blockly.Blocks.function_param_string = {init:function() {
   this.setEditable(!1);
   this.setColour("#ffec64");
@@ -1943,6 +1943,7 @@ Blockly.Blocks.function_param_string = {init:function() {
 Entry.block.function_param_string = function(a, b, c) {
   return b.register[b.hashId].run();
 };
+Entry.block.function_param_string = {skeleton:"basic_string_field", color:"#ffd974", template:"\ubb38\uc790/\uc22b\uc790\uac12"};
 Blockly.Blocks.function_param_boolean = {init:function() {
   this.setEditable(!1);
   this.setColour("#2FC9F0");
@@ -1961,6 +1962,7 @@ Blockly.Blocks.function_param_boolean = {init:function() {
 Entry.block.function_param_boolean = function(a, b, c) {
   return b.register[b.hashId].run();
 };
+Entry.block.function_param_boolean = {skeleton:"basic_boolean_field", color:"#aeb8ff", template:"\ud310\ub2e8\uac12"};
 Blockly.Blocks.function_create = {init:function() {
   this.appendDummyInput().appendField(Lang.Blocks.FUNCTION_define);
   this.setColour("#cc7337");
@@ -1972,7 +1974,7 @@ Blockly.Blocks.function_create = {init:function() {
 Entry.block.function_create = function(a, b) {
   return b.callReturn();
 };
-Entry.block.function_create = {skeleton:"basic", color:"#cc7337", template:"\ud568\uc218 \uc815\uc758\ud558\uae30 %1 %2", params:[{type:"Block", accept:"basic_param", value:{type:"function_field_label"}}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/function_03.png", size:12}]};
+Entry.block.function_create = {skeleton:"basic", color:"#cc7337", event:"funcDef", template:"\ud568\uc218 \uc815\uc758\ud558\uae30 %1 %2", params:[{type:"Block", accept:"basic_param", value:{type:"function_field_label"}}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/function_03.png", size:12}]};
 Blockly.Blocks.function_general = {init:function() {
   this.setColour("#cc7337");
   this.setInputsInline(!0);
@@ -4822,9 +4824,11 @@ Entry.Event = function(a) {
 };
 (function(a) {
   a.attach = function(b, a) {
-    var d = {obj:b, fn:a};
-    this._listeners.push(d);
-    return d;
+    var d = this, e = {obj:b, fn:a, destroy:function() {
+      d.detach(this);
+    }};
+    this._listeners.push(e);
+    return e;
   };
   a.detach = function(b) {
     var a = this._listeners;
@@ -10767,8 +10771,7 @@ Entry.Func = function() {
   this.id = Entry.generateHash();
   this.content = new Entry.Code([[{type:"function_create", x:40, y:40}]]);
   this.block = null;
-  this.stringHash = {};
-  this.booleanHash = {};
+  this.hashMap = {};
 };
 Entry.Func.threads = {};
 Entry.Func.registerFunction = function(a, b) {
@@ -10800,24 +10803,24 @@ Entry.Func.fieldBlocks = Entry.nodeListToArray(Blockly.Xml.textToDom(Entry.Func.
 Entry.Func.CREATE_BLOCK = '<xml><block type="function_create" deletable="false" x="28" y="28"></block></xml>';
 Entry.Func.edit = function(a) {
   this.cancelEdit();
-  this.workspace && (this.workspace.visible = !0);
-  this.initEditView();
+  this.initEditView(a.content);
   this.targetFunc = a;
-  Entry.playground.mainWorkspace.changeOverlayBoardCode(a.content);
+  this._funcChangeEvent = a.content.getEventMap("funcDef")[0].thread.changeEvent.attach(this, this.generateWsBlock);
   this.updateMenu();
 };
-Entry.Func.initEditView = function() {
+Entry.Func.initEditView = function(a) {
   Entry.playground.mainWorkspace.setMode(Entry.Workspace.MODE_OVERLAYBOARD);
   Entry.playground.mainWorkspace.getBlockMenu();
+  Entry.playground.mainWorkspace.changeOverlayBoardCode(a);
 };
 Entry.Func.save = function() {
-  this.targetFunc.content = Blockly.Xml.workspaceToDom(this.workspace);
+  this._funcChangeEvent.destroy();
   this.targetFunc.generateBlock(!0);
   Entry.variableContainer.saveFunction(this.targetFunc);
   this.cancelEdit();
 };
 Entry.Func.cancelEdit = function() {
-  this.svg && this.targetFunc && (this.workspace.visible = !1, this.parentView.removeChild(this.svg), Entry.Func.isEdit = !1, Blockly.mainWorkspace.blockMenu.targetWorkspace = Blockly.mainWorkspace, this.targetFunc.block || (delete Entry.variableContainer.functions_[this.targetFunc.id], delete Entry.variableContainer.selected), delete this.targetFunc, this.updateMenu(), Entry.variableContainer.updateList());
+  this.svg && this.targetFunc && (this._funcChangeEvent.destroy(), this.parentView.removeChild(this.svg), Entry.Func.isEdit = !1, Blockly.mainWorkspace.blockMenu.targetWorkspace = Blockly.mainWorkspace, this.targetFunc.block || (delete Entry.variableContainer.functions_[this.targetFunc.id], delete Entry.variableContainer.selected), delete this.targetFunc, this.updateMenu(), Entry.variableContainer.updateList());
 };
 Entry.Func.getMenuXml = function() {
   var a = [];
@@ -10837,15 +10840,43 @@ Entry.Func.syncFunc = function() {
     (a.fieldText != b || a.workspaceLength != c) && 1 > Blockly.Block.dragMode_ && (a.updateMenu(), a.fieldText = b, a.workspaceLength = c);
   }
 };
+Entry.Func.setupMenuCode = function() {
+  var a = Entry.playground.mainWorkspace.getBlockMenu().getCategoryCodes("func");
+  this._fieldLabel = a.createThread([{type:"function_field_label"}]).getFirstBlock();
+  this._fieldString = a.createThread([{type:"function_field_string", params:[{type:this.requestParamBlock("string")}]}]).getFirstBlock();
+  this._fieldBoolean = a.createThread([{type:"function_field_boolean", params:[{type:this.requestParamBlock("boolean")}]}]).getFirstBlock();
+  this.menuCode = a;
+};
+Entry.Func.refreshMenuCode = function() {
+  var a = Entry.block[this._fieldString.params[0].type].changeEvent._listeners.length;
+  2 < a && this._fieldString.params[0].changeType(this.requestParamBlock("string"));
+  a = Entry.block[this._fieldBoolean.params[0].type].changeEvent._listeners.length;
+  2 < a && this._fieldBoolean.params[0].changeType(this.requestParamBlock("boolean"));
+};
+Entry.Func.requestParamBlock = function(a) {
+  var b = Entry.generateHash(), c;
+  switch(a) {
+    case "string":
+      c = Entry.block.function_param_string;
+      break;
+    case "boolean":
+      c = Entry.block.function_param_boolean;
+      break;
+    default:
+      return null;
+  }
+  var d = function() {
+  };
+  d.prototype = c;
+  d = new d;
+  d.changeEvent = new Entry.Event;
+  a = a + "Param_" + b;
+  Entry.block[a] = d;
+  return a;
+};
 Entry.Func.updateMenu = function() {
   var a = Entry.playground.mainWorkspace.getBlockMenu();
-  if (!this.menuCode) {
-    var b = a.getCategoryCodes("func");
-    b.createThread([{type:"function_field_label"}]);
-    b.createThread([{type:"function_field_string"}]);
-    b.createThread([{type:"function_field_boolean"}]);
-    this.menuCode = b;
-  }
+  this.menuCode || this.setupMenuCode();
   a.banClass("functionInit");
   a.unbanClass("functionEdit");
 };
@@ -10899,68 +10930,20 @@ Entry.Func.prototype.generateBlock = function(a) {
   this.block = a.block;
   this.description = a.description;
 };
-Entry.Func.position_ = function() {
-  var a = this.workspace.getMetrics();
-  if (a && this.workspace.visible) {
-    var b = this.btnWrapper;
-    b.setAttribute("transform", "translate(30, 501)");
-    Blockly.RTL ? this.left_ = this.MARGIN_SIDE_ : b.left_ = a.viewWidth / 2 + a.absoluteLeft - 60;
-    b.top_ = a.viewHeight + a.absoluteTop - 200;
-    b.setAttribute("transform", "translate(" + b.left_ + "," + b.top_ + ")");
-  }
-};
-Entry.Func.positionBlock_ = function(a) {
-  var b = this.workspace.getMetrics();
-  if (b && this.workspace.visible) {
-    var c = a.getSvgRoot(), c = Blockly.getSvgXY_(c);
-    a.getHeightWidth();
-    a.moveBy(b.viewWidth / 2 - 80 - c.x, b.viewHeight / 2 - 50 - c.y);
-  }
-};
-Entry.Func.generateWsBlock = function(a, b, c) {
-  b = b.childNodes;
-  var d, e;
-  for (e in b) {
-    if ("function_create" == b[e].getAttribute("type")) {
-      d = b[e];
-      break;
-    }
-  }
-  e = new Entry.Script;
-  e.init(d);
-  d = e;
-  d.values && (d = e.values.FIELD);
-  e = '<mutation hashid="' + c + '">';
-  c = b = "";
-  var f = 0, g = 0;
-  a.stringHash = {};
-  for (a.booleanHash = {};;) {
-    switch(d.type) {
-      case "function_field_label":
-        e += '<field type="label" content="' + d.fields.NAME.replace("<", "&lt;").replace(">", "&gt;") + '"></field>';
-        c += d.fields.NAME;
-        break;
+Entry.Func.generateWsBlock = function() {
+  for (var a = this.targetFunc.content.getEventMap("funcDef")[0].params[0], b = 0, c = 0;a;) {
+    var d = a.params[0];
+    switch(a.type) {
       case "function_field_boolean":
-        var h = d.values.PARAM.hashId;
-        e += '<field type="boolean" hashid="' + h + '"></field>';
-        b += '<value name="' + h + '"><block type="function_param_boolean"><mutation hashid="' + h + '"></mutation></block></value>';
-        a.booleanHash[h] = g;
-        g++;
-        c += "\ub17c\ub9ac\uac12" + g;
+        Entry.Mutator.mutate(d.type, {template:"\ud310\ub2e8\uac12 " + b});
+        b++;
         break;
       case "function_field_string":
-        h = d.values.PARAM.hashId, e += '<field type="string" hashid="' + h + '"></field>', b += '<value name="' + h + '"><block type="function_param_string"><mutation hashid="' + h + '"></mutation></block></value>', a.stringHash[h] = f, f++, c += "\ubb38\uc790\uac12" + f;
+        Entry.Mutator.mutate(d.type, {template:"\ubb38\uc790/\uc22b\uc790\uac12 " + c}), c++;
     }
-    if (d.values && d.values.NEXT) {
-      d = d.values.NEXT;
-    } else {
-      break;
-    }
-    c += " ";
+    a = a.getOutputBlock();
   }
-  a = '<xml><block type="function_general">' + (e + "</mutation>") + b + "</block></xml>";
-  c || (c = "\ud568\uc218");
-  return {block:Blockly.Xml.textToDom(a).childNodes[0], description:c};
+  this.refreshMenuCode();
 };
 Entry.HWMontior = {};
 Entry.HWMonitor = function(a) {
@@ -13603,6 +13586,12 @@ Entry.BlockView.DRAG_RADIUS = 5;
   a._updateSchema = function() {
     this._startContentRender();
   };
+  a.changeType = function(b) {
+    this._schemaChangeEvent && this._schemaChangeEvent.destroy();
+    this._schema = Entry.block[b];
+    this._schema.changeEvent && (this._schemaChangeEvent = this._schema.changeEvent.attach(this, this._updateSchema));
+    this._updateSchema();
+  };
   a.alignContent = function(b) {
     !0 !== b && (b = !1);
     for (var a = 0, d = 0, e = 0;e < this._contents.length;e++) {
@@ -13784,8 +13773,8 @@ Entry.BlockView.DRAG_RADIUS = 5;
     this._board = this._board.code.board;
   };
   a.destroy = function(b) {
-    var a = this.svgGroup, d = this.block.getThread();
-    d instanceof Entry.FieldBlock && d.updateValueBlock();
+    var a = this.svgGroup;
+    this.block.getThread();
     b ? $(a).velocity({opacity:0}, {duration:100, complete:function() {
       a.remove();
     }}) : a.remove();
@@ -13795,10 +13784,11 @@ Entry.BlockView.DRAG_RADIUS = 5;
     this._statements.forEach(function(b) {
       b.destroy();
     });
-    var e = this.block;
-    (b = e.events.whenBlockDestroy) && !this.isInBlockMenu && b.forEach(function(b) {
-      Entry.Utils.isFunction(b) && b(e);
+    var d = this.block;
+    (b = d.events.whenBlockDestroy) && !this.isInBlockMenu && b.forEach(function(b) {
+      Entry.Utils.isFunction(b) && b(d);
     });
+    this._schemaChangeEvent && this._schemaChangeEvent.destroy();
   };
   a.getShadow = function() {
     this._shadow || (this._shadow = Entry.SVG.createElement(this.svgGroup.cloneNode(!0), {opacity:.5}));
@@ -14340,6 +14330,7 @@ Entry.FieldBlock = function(a, b, c, d) {
   this._index = c;
   this._content = a;
   this.acceptType = a.accept;
+  this._restoreCurrent = a.restore;
   this.view = this;
   this.svgGroup = null;
   this._position = a.position;
@@ -14374,32 +14365,34 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
   a.calcHeight = a.calcWH;
   a.destroy = function() {
   };
-  a._inspectBlock = function() {
+  a.inspectBlock = function() {
     if (!this._valueBlock) {
       var b = null;
-      switch(this.acceptType) {
-        case "booleanMagnet":
-          b = "True";
-          break;
-        case "stringMagnet":
-          b = "text";
-          break;
-        case "basic_param":
-          b = "function_field_label";
+      if (this._originBlock) {
+        b = this._originBlock.type, delete this._originBlock;
+      } else {
+        switch(this.acceptType) {
+          case "booleanMagnet":
+            b = "True";
+            break;
+          case "stringMagnet":
+            b = "text";
+            break;
+          case "basic_param":
+            b = "function_field_label";
+        }
       }
-      this._block.getThread();
-      var a = this._blockView.getBoard(), b = new Entry.Block({type:b}, this), d = a.workspace, e;
-      d && (e = d.getMode());
-      b.createView(a, e);
+      b = this._createBlockByType(b);
       return this._setValueBlock(b);
     }
   };
   a._setValueBlock = function(b) {
     if (b != this._valueBlock || !this._valueBlock) {
+      this._restoreCurrent && (this._originBlock = this._valueBlock);
       this._valueBlock = b;
       this.setValue(b);
       if (!this._valueBlock) {
-        return this._inspectBlock();
+        return this.inspectBlock();
       }
       b.setThread(this);
       b.getThread().view.setParent(this);
@@ -14452,6 +14445,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
     return this._valueBlock === b ? [b] : null;
   };
   a.replace = function(b) {
+    "string" === typeof b && (b = this._createBlockByType(b));
     var a = this._valueBlock;
     Entry.block[a.type].isPrimitive ? a.destroy() : (a.view._toGlobalCoordinate(), this.separate(a), a.view.bumpAway(30, 150));
     this.updateValueBlock(b);
@@ -14463,6 +14457,15 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
   };
   a.getParent = function() {
     return this._parent;
+  };
+  a._createBlockByType = function(b) {
+    this._block.getThread();
+    var a = this._blockView.getBoard();
+    b = new Entry.Block({type:b}, this);
+    var d = a.workspace, e;
+    d && (e = d.getMode());
+    b.createView(a, e);
+    return b;
   };
 })(Entry.FieldBlock.prototype);
 Entry.FieldColor = function(a, b, c) {
@@ -14858,25 +14861,31 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldOutput);
   a.isGlobal = function() {
     return !1;
   };
-  a.separate = function(b) {
-    this.getCode().createThread([b]);
+  a.separate = function(a) {
+    this.getCode().createThread([a]);
     this.changeEvent.notify();
   };
   a.getCode = function() {
     return this._block.thread.getCode();
   };
-  a.cut = function(b) {
-    return this._valueBlock === b ? [b] : null;
+  a.cut = function(a) {
+    return this._valueBlock === a ? [a] : null;
   };
   a._updateBG = function() {
     this.magneting ? this._bg = this.svgGroup.elem("path", {d:"m -4,-12 h 3 l 2,2 0,3 3,0 1,1 0,12 -1,1 -3,0 0,3 -2,2 h -3 ", fill:"#fff", stroke:"#fff", "fill-opacity":.7, transform:"translate(0," + (this._valueBlock ? 12 : 0) + ")"}) : this._bg && (this._bg.remove(), delete this._bg);
   };
-  a.replace = function(b) {
-    var a = this._valueBlock;
-    a && (a.view._toGlobalCoordinate(), this.separate(a), a.view.bumpAway(30, 150));
-    this._updateValueBlock(b);
-    b.view._toLocalCoordinate(this.svgGroup);
+  a.replace = function(a) {
+    var c = this._valueBlock;
+    c && (c.view._toGlobalCoordinate(), this.separate(c), c.view.bumpAway(30, 150));
+    this._updateValueBlock(a);
+    a.view._toLocalCoordinate(this.svgGroup);
     this.calcWH();
+  };
+  a.setParent = function(a) {
+    this._parent = a;
+  };
+  a.getParent = function() {
+    return this._parent;
   };
 })(Entry.FieldOutput.prototype);
 Entry.FieldStatement = function(a, b, c) {
@@ -14895,29 +14904,29 @@ Entry.FieldStatement = function(a, b, c) {
 (function(a) {
   a.schema = {x:0, y:0, width:100, height:20, magneting:!1};
   a.magnet = {next:{x:0, y:0}};
-  a.renderStart = function(b) {
+  a.renderStart = function(a) {
     this.svgGroup = this._blockView.statementSvgGroup.elem("g");
     this._nextGroup = this.statementSvgGroup = this.svgGroup.elem("g");
-    this._initThread(b);
-    this._board = b;
+    this._initThread(a);
+    this._board = a;
   };
-  a._initThread = function(b) {
-    var a = this.getValue();
-    this._thread = a;
-    a.createView(b);
-    a.view.setParent(this);
-    if (b = a.getFirstBlock()) {
-      this._posObserver = b.view.observe(this, "removeFirstBlock", ["x", "y"]), b.view._toLocalCoordinate(this.statementSvgGroup), this.firstBlock = b;
+  a._initThread = function(a) {
+    var c = this.getValue();
+    this._thread = c;
+    c.createView(a);
+    c.view.setParent(this);
+    if (a = c.getFirstBlock()) {
+      this._posObserver = a.view.observe(this, "removeFirstBlock", ["x", "y"]), a.view._toLocalCoordinate(this.statementSvgGroup), this.firstBlock = a;
     }
-    a.changeEvent.attach(this, this.calcHeight);
+    c.changeEvent.attach(this, this.calcHeight);
     this.calcHeight();
   };
-  a.align = function(b, a, d) {
+  a.align = function(a, c, d) {
     d = void 0 === d ? !0 : d;
     var e = this.svgGroup;
-    this._position && (this._position.x && (b = this._position.x), this._position.y && (a = this._position.y));
-    var f = "translate(" + b + "," + a + ")";
-    this.set({x:b, y:a});
+    this._position && (this._position.x && (a = this._position.x), this._position.y && (c = this._position.y));
+    var f = "translate(" + a + "," + c + ")";
+    this.set({x:a, y:c});
     d ? e.animate({transform:f}, 300, mina.easeinout) : e.attr({transform:f});
   };
   a.calcHeight = function() {
@@ -15643,7 +15652,7 @@ Entry.Block.MAGNET_OFFSET = .4;
       this._schema.event && this.thread.registerEvent(this, this._schema.event);
       a = this.params;
       c = this._schema.params;
-      for (e = 0;e < c.length;e++) {
+      for (e = 0;c && e < c.length;e++) {
         d = void 0 !== a[e] ? a[e] : c[e].value, f = a[e], !d || "Output" !== c[e].type && "Block" !== c[e].type || (d = new Entry.Block(d)), f ? a.splice(e, 1, d) : a.push(d);
       }
       if (a = this._schema.statements) {
@@ -15652,6 +15661,12 @@ Entry.Block.MAGNET_OFFSET = .4;
         }
       }
     }
+  };
+  a.changeType = function(a) {
+    this._schemaChangeEvent && this._schemaChangeEvent.destroy();
+    this.set({type:a});
+    this.getSchema();
+    this.view && this.view.changeType(a);
   };
   a.setThread = function(a) {
     this.set({thread:a});
@@ -15710,6 +15725,7 @@ Entry.Block.MAGNET_OFFSET = .4;
     e && (c ? e.destroy(a, c) : f ? e.view.bindPrev(f) : (f = this.getThread().view.getParent(), f.constructor === Entry.FieldStatement ? (e.view.bindPrev(f), f.insertTopBlock(e)) : f.constructor === Entry.FieldStatement ? e.replace(f._valueBlock) : e.view._toGlobalCoordinate()));
     d.spliceBlock && d.spliceBlock(this);
     this.view && this.view.destroy(a);
+    this._schemaChangeEvent && this._schemaChangeEvent.destroy();
   };
   a.getView = function() {
     return this.view;
@@ -15809,6 +15825,14 @@ Entry.Block.MAGNET_OFFSET = .4;
   };
   a.getLastBlock = function() {
     return this.thread.getLastBlock();
+  };
+  a.getOutputBlock = function() {
+    for (var a = this._schema.params, c = 0;a && c < a.length;c++) {
+      if ("Output" === a[c].type) {
+        return this.params[c];
+      }
+    }
+    return null;
   };
 })(Entry.Block.prototype);
 Entry.ThreadView = function(a, b) {

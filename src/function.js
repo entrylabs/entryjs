@@ -21,8 +21,7 @@ Entry.Func = function() {
         ]
     ]);
     this.block = null;
-    this.stringHash = {};
-    this.booleanHash = {};
+    this.hashMap = {};
 };
 
 Entry.Func.threads = {};
@@ -83,25 +82,21 @@ Entry.Func.CREATE_BLOCK =
 
 Entry.Func.edit = function(func) {
     this.cancelEdit();
-    if (this.workspace)
-        this.workspace.visible = true;
-    this.initEditView();
+    this.initEditView(func.content);
     this.targetFunc = func;
-    Entry.playground.mainWorkspace.changeOverlayBoardCode(func.content);
+    this._funcChangeEvent = func.content.getEventMap("funcDef")[0].thread
+        .changeEvent.attach(this, this.generateWsBlock);
     this.updateMenu();
-    return;
-    this.workspace.clear();
-    Blockly.Xml.domToWorkspace(this.workspace, func.content);
-    this.position_();
 };
 
-Entry.Func.initEditView = function() {
+Entry.Func.initEditView = function(content) {
     Entry.playground.mainWorkspace.setMode(Entry.Workspace.MODE_OVERLAYBOARD);
     var blockMenu = Entry.playground.mainWorkspace.getBlockMenu();
+    Entry.playground.mainWorkspace.changeOverlayBoardCode(content);
 };
 
 Entry.Func.save = function() {
-    this.targetFunc.content = Blockly.Xml.workspaceToDom(this.workspace);
+    this._funcChangeEvent.destroy();
     this.targetFunc.generateBlock(true);
     Entry.variableContainer.saveFunction(this.targetFunc);
     this.cancelEdit();
@@ -110,7 +105,7 @@ Entry.Func.save = function() {
 Entry.Func.cancelEdit = function() {
     if (!this.svg || !this.targetFunc)
         return;
-    this.workspace.visible = false;
+    this._funcChangeEvent.destroy();
     this.parentView.removeChild(this.svg);
     Entry.Func.isEdit = false;
     Blockly.mainWorkspace.blockMenu.targetWorkspace = Blockly.mainWorkspace;
@@ -163,91 +158,68 @@ Entry.Func.syncFunc = function() {
     }
 };
 
+Entry.Func.setupMenuCode = function() {
+    var blockMenu = Entry.playground.mainWorkspace.getBlockMenu();
+    var menuCode = blockMenu.getCategoryCodes("func");
+    this._fieldLabel = menuCode.createThread([{
+        type: "function_field_label"
+    } ]).getFirstBlock();
+    this._fieldString = menuCode.createThread([{
+        type: "function_field_string",
+        params: [
+            {type: this.requestParamBlock("string")}
+        ]
+    }]).getFirstBlock();
+    this._fieldBoolean = menuCode.createThread([{
+        type: "function_field_boolean",
+        params: [
+            {type: this.requestParamBlock("boolean")}
+        ]
+    }]).getFirstBlock();
+    this.menuCode = menuCode;
+}
+
+Entry.Func.refreshMenuCode = function() {
+    var stringType = this._fieldString.params[0].type;
+    var referenceCount = Entry.block[stringType].changeEvent._listeners.length;
+    if (referenceCount > 2) // check new block type is used
+        this._fieldString.params[0].changeType(this.requestParamBlock("string"));
+    var booleanType = this._fieldBoolean.params[0].type;
+    referenceCount = Entry.block[booleanType].changeEvent._listeners.length;
+    if (referenceCount > 2)
+        this._fieldBoolean.params[0].changeType(this.requestParamBlock("boolean"));
+};
+
+Entry.Func.requestParamBlock = function(type) {
+    var id = Entry.generateHash();
+    var blockPrototype, hashMap;
+    switch (type) {
+        case "string":
+            blockPrototype = Entry.block.function_param_string;
+            break;
+        case "boolean":
+            blockPrototype = Entry.block.function_param_boolean;
+            break;
+        default:
+            return null;
+    }
+
+    var blockSchema = function () {};
+    blockSchema.prototype = blockPrototype;
+    blockSchema = new blockSchema();
+    blockSchema.changeEvent = new Entry.Event();
+
+    var blockType = type + "Param_" + id;
+    Entry.block[blockType] = blockSchema;
+    return blockType;
+};
+
 Entry.Func.updateMenu = function() {
     var blockMenu = Entry.playground.mainWorkspace.getBlockMenu();
-    if (!this.menuCode) {
-        var menuCode = blockMenu.getCategoryCodes("func");
-        menuCode.createThread([ { type: "function_field_label" } ]);
-        menuCode.createThread([ { type: "function_field_string" } ]);
-        menuCode.createThread([ { type: "function_field_boolean" } ]);
-        this.menuCode = menuCode;
-    }
+    if (!this.menuCode)
+        this.setupMenuCode();
     blockMenu.banClass("functionInit");
     blockMenu.unbanClass("functionEdit");
-    return;
-    if (Entry.playground.selectedMenu == 'func') {
-        Entry.playground.blockMenu.hide();
-        Entry.playground.blockMenu.show(Entry.Func.getMenuXml());
-        if (!Blockly.WidgetDiv.field_ && Entry.Func.targetFunc) {
-            var target = Entry.Func.targetFunc;
-            var xml = Blockly.Xml.workspaceToDom(Entry.Func.workspace);
-            var generals = xml.getElementsByClassName("function_general");
-            var hash = target.id;
-            var block;
-            generals = Entry.nodeListToArray(generals);
-            var currentGenerals = [];
-            var otherGenerals = {};
-
-            generals.map(function(b) {
-                var functionHash = b.getElementsByTagName("mutation")[0]
-                            .getAttribute('hashid');
-                if (functionHash == hash) currentGenerals.push(b);
-                else {
-                    if (!otherGenerals[functionHash])
-                        otherGenerals[functionHash] = [];
-                    otherGenerals[functionHash].push(b);
-                }
-            });
-            currentGenerals.map(function(b) {
-                block = Entry.Func.generateWsBlock(xml,
-                    Blockly.Xml.workspaceToDom(Entry.Func.workspace),
-                    hash).block;
-                var remainBlocks = [];
-                var flag = false;
-                while (b.firstChild) {
-                    var child = b.firstChild;
-                    var xmlTag = child.tagName;
-                    if (flag || xmlTag == 'NEXT') {
-                        flag = true;
-                        remainBlocks.push(child);
-                    }
-                    b.removeChild(child);
-                }
-                while (block.firstChild)
-                    b.appendChild(block.firstChild);
-                while(remainBlocks.length)
-                    b.appendChild(remainBlocks.shift());
-            });
-
-            for (var hashKey in otherGenerals) {
-                var otherBlocks = otherGenerals[hashKey];
-                var funcContent = Entry.variableContainer.getFunction(hashKey).content;
-                otherBlocks.map(function(b) {
-                    block = Entry.Func.generateWsBlock(xml,
-                        funcContent,
-                        hashKey).block;
-                    var remainBlocks = [];
-                    var flag = false;
-                    while (b.firstChild) {
-                        var child = b.firstChild;
-                        var xmlTag = child.tagName;
-                        if (flag || xmlTag == 'NEXT') {
-                            flag = true;
-                            remainBlocks.push(child);
-                        }
-                        b.removeChild(child);
-                    }
-                    while (block.firstChild)
-                        b.appendChild(block.firstChild);
-                    while(remainBlocks.length)
-                        b.appendChild(remainBlocks.shift());
-                });
-            }
-
-            Entry.Func.workspace.clear();
-            Blockly.Xml.domToWorkspace(Entry.Func.workspace, xml);
-        }
-    }
 };
 
 Entry.Func.prototype.edit = function() {
@@ -326,41 +298,29 @@ Entry.Func.prototype.generateBlock = function(toSave) {
     this.description = generatedInfo.description;
 };
 
-Entry.Func.position_ = function() {
-    var metrics = this.workspace.getMetrics();
-    if (!metrics || !this.workspace.visible) {
-      // There are no metrics available (workspace is probably not visible).
-        return;
+Entry.Func.generateWsBlock = function() {
+    var defBlock = this.targetFunc.content.getEventMap("funcDef")[0];
+    var outputBlock = defBlock.params[0];
+    var booleanIndex = 0;
+    var stringIndex = 0;
+    while(outputBlock) {
+        var value = outputBlock.params[0];
+        switch(outputBlock.type) {
+            case 'function_field_label':
+                break;
+            case 'function_field_boolean':
+                Entry.Mutator.mutate(value.type, {template: "판단값 " + booleanIndex});
+                booleanIndex++;
+                break;
+            case 'function_field_string':
+                Entry.Mutator.mutate(value.type, {template: "문자/숫자값 " + stringIndex});
+                stringIndex++;
+                break;
+        }
+        outputBlock = outputBlock.getOutputBlock();
     }
-    var wrapper = this.btnWrapper;
-    wrapper.setAttribute('transform', 'translate(30, 501)');
-
-    if (Blockly.RTL) {
-        //I didn't code here anything
-        this.left_ = this.MARGIN_SIDE_;
-    } else {
-        wrapper.left_ = metrics.viewWidth/2 + metrics.absoluteLeft - 60;
-    }
-    wrapper.top_ = metrics.viewHeight + metrics.absoluteTop - 200;
-    wrapper.setAttribute('transform',
-        'translate(' + wrapper.left_ + ',' + wrapper.top_ + ')');
-};
-
-Entry.Func.positionBlock_ = function(block) {
-    var metrics = this.workspace.getMetrics();
-    if (!metrics || !this.workspace.visible)
-        return;
-
-    var originRoot = block.getSvgRoot();
-    var originXY = Blockly.getSvgXY_(originRoot);
-
-    var hw = block.getHeightWidth();
-    var targetX = metrics.viewWidth/2 - 80;
-    var targetY = metrics.viewHeight/2 - 50;
-    block.moveBy(targetX-originXY.x, targetY-originXY.y);
-};
-
-Entry.Func.generateWsBlock = function(func, content, id) {
+    this.refreshMenuCode();
+    return;
     var topBlocks = content.childNodes;
     var createBlock;
     for (var i in topBlocks) {

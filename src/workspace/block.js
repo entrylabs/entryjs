@@ -77,7 +77,7 @@ Entry.Block.MAGNET_OFFSET = 0.4;
         var thisParams = this.params;
 
         var params = this._schema.params;
-        for (var i = 0; i < params.length; i++) {
+        for (var i = 0; params && i < params.length; i++) {
             var value = thisParams[i] !== undefined ? thisParams[i] : params[i].value;
 
             var paramInjected = thisParams[i];
@@ -98,6 +98,15 @@ Entry.Block.MAGNET_OFFSET = 0.4;
                 );
             }
         }
+    };
+
+    p.changeType = function(type) {
+        if (this._schemaChangeEvent)
+            this._schemaChangeEvent.destroy();
+        this.set({type: type});
+        this.getSchema();
+        if (this.view)
+            this.view.changeType(type);
     };
 
     p.setThread = function(thread) {
@@ -210,6 +219,8 @@ Entry.Block.MAGNET_OFFSET = 0.4;
         }
         if (thread.spliceBlock) thread.spliceBlock(this);
         if (this.view) this.view.destroy(animate);
+        if (this._schemaChangeEvent)
+            this._schemaChangeEvent.destroy();
     };
 
     p.getView = function() {return this.view;};
@@ -398,6 +409,16 @@ Entry.Block.MAGNET_OFFSET = 0.4;
 
     p.getLastBlock = function() {
         return this.thread.getLastBlock();
+    };
+
+    p.getOutputBlock = function() {
+        var params = this._schema.params;
+        for (var i = 0; params && i < params.length; i++) {
+            var paramDef = params[i];
+            if (paramDef.type === "Output")
+                return this.params[i];
+        };
+        return null;
     };
 
 })(Entry.Block.prototype);
