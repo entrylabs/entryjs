@@ -13680,6 +13680,7 @@ Entry.BlockView.DRAG_RADIUS = 5;
     if (!this.readOnly && !e.viewOnly) {
       e.setSelectedBlock(this);
       this.dominate();
+      console.log(b.originalEvent);
       if (0 === b.button || b.originalEvent instanceof TouchEvent) {
         var f;
         f = b.originalEvent && b.originalEvent.touches ? b.originalEvent.touches[0] : b;
@@ -16050,7 +16051,7 @@ Entry.Board = function(a) {
       a.stopPropagation && a.stopPropagation();
       a.preventDefault && a.preventDefault();
       var e;
-      if (0 === a.button || a.originalEvent instanceof TouchEvent) {
+      if (0 === a.button || "touchstart" === a.originalEvent.type.toLowerCase()) {
         e = a.originalEvent && a.originalEvent.touches ? a.originalEvent.touches[0] : a, Entry.documentMousedown && Entry.documentMousedown.notify(e), a = $(document), a.bind("mousemove.entryBoard", c), a.bind("mouseup.entryBoard", d), a.bind("touchmove.entryBoard", c), a.bind("touchend.entryBoard", d), this.dragInstance = new Entry.DragInstance({startX:e.pageX, startY:e.pageY, offsetX:e.pageX, offsetY:e.pageY});
       } else {
         if (Entry.Utils.isRightButton(e)) {

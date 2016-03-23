@@ -331,6 +331,7 @@ Entry.BlockView.DRAG_RADIUS = 5;
 
         board.setSelectedBlock(this);
         this.dominate();
+        console.log(e.originalEvent);
         if (e.button === 0 || e.originalEvent instanceof TouchEvent) {
             var event;
             if (e.originalEvent && e.originalEvent.touches) {
