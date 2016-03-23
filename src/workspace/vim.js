@@ -13,8 +13,8 @@ Entry.Vim = function(dom) {
 
     this.createDom(dom);
 
-    this._parser = new Entry.Parser("maze", "js", this.codeMirror);
-    this._blockParser = new Entry.Parser("maze", "block");
+    //this._parser = new Entry.Parser("maze", "js", this.codeMirror);
+    //this._blockParser = new Entry.Parser("maze", "block");
 
     Entry.Model(this, false);
     window.eventset = [];
@@ -102,7 +102,7 @@ Entry.Vim = function(dom) {
         if(code.length === 0) {
             throw ('블록 파싱 오류');
         }
-        return code; 
+        return code;
     };
 
     p.codeToText = function(code) {
