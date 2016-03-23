@@ -48,7 +48,9 @@ Entry.Board = function(option) {
     this.visible = true;
     var that = this;
     this.svg = Entry.SVG(this._svgId);
-    $(window).scroll(this.updateOffset);
+    $(window).scroll(function() {
+        that.updateOffset
+    });
     Entry.windowResized.attach(this, this.updateOffset);
 
     this._blockViews = [];
