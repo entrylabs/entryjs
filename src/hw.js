@@ -33,7 +33,9 @@ Entry.HW = function() {
         '13': Entry.CODEino,
         '24': Entry.Hamster,
         '25': Entry.Albert,
-        '31': Entry.Bitbrick
+        '31': Entry.Bitbrick,
+        '71': Entry.Robotis_carCont,
+        '72': Entry.Robotis_openCM70
     };
 };
 
@@ -164,7 +166,7 @@ p.closeConnection = function() {
 };
 
 p.downloadConnector = function() {
-    var url = "http://play-entry.org/down/Entry_HW_v1.1.2.exe";
+    var url = "http://play-entry.org/down/Entry_HW_v1.1.3.exe";
     var win = window.open(url, '_blank');
     win.focus();
 };

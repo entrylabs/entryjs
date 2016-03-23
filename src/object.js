@@ -81,7 +81,7 @@ Entry.EntryObject = function(model) {
                     image.src = picture.fileurl;
                 } else {
                     var fileName = picture.filename;
-                    image.src = '/uploads/' + fileName.substring(0, 2) + '/' +
+                    image.src = Entry.defaultPath + '/uploads/' + fileName.substring(0, 2) + '/' +
                         fileName.substring(2, 4) + '/image/' + fileName + '.png';
                 }
             }
@@ -903,7 +903,7 @@ Entry.EntryObject.prototype.updateThumbnailView = function() {
         } else {
             var fileName = this.entity.picture.filename;
             this.thumbnailView_.style.backgroundImage =
-                'url("' + '/uploads/' + fileName.substring(0, 2) + '/' +
+                'url("' + Entry.defaultPath + '/uploads/' + fileName.substring(0, 2) + '/' +
                 fileName.substring(2, 4) + '/thumb/' + fileName + '.png")';
         }
     }
@@ -1194,14 +1194,7 @@ Entry.EntryObject.prototype.setRotateMethod = function(rotateMethod) {
     if(Entry.stage.selectedObject && Entry.stage.selectedObject.entity) {
         Entry.stage.updateObject();
         Entry.stage.updateHandle();
-    } else {
-        if (Entry.container.getObject(this.id)) {
-            Entry.container.selectObject(this.id);
-
-            Entry.stage.updateObject();
-            //Entry.stage.updateHandle();
-         }
-    }
+    } 
 };
 
 Entry.EntryObject.prototype.initRotateValue = function(rotateMethod) {
