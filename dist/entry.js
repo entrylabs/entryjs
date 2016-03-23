@@ -10665,6 +10665,9 @@ Entry.Utils.disableContextmenu = function(a) {
 Entry.Utils.isRightButton = function(a) {
   return 2 == a.button || a.ctrlKey;
 };
+Entry.Utils.isTouchEvent = function(a) {
+  return "mousedown" !== a.type.toLowerCase();
+};
 Entry.Utils.inherit = function(a, b) {
   function c() {
   }
@@ -13641,7 +13644,7 @@ Entry.BlockView.DRAG_RADIUS = 5;
   };
   a._moveTo = function(b, a, d) {
     this.set({x:b, y:a});
-    (this.visible || this.display) && this._setPosition(d);
+    this.visible && this.display && this._setPosition(d);
   };
   a._moveBy = function(b, a, d) {
     return this._moveTo(this.x + b, this.y + a, d);
@@ -13655,16 +13658,12 @@ Entry.BlockView.DRAG_RADIUS = 5;
   a.onMouseDown = function(b) {
     function c(b) {
       b.stopPropagation();
-      if (l.movable) {
-        var c = e.workspace.getMode();
-        c === Entry.Workspace.MODE_VIMBOARD && a.vimBoardEvent(b, "dragOver");
-        b.originalEvent.touches && (b = b.originalEvent.touches[0]);
-        var d = l.mouseDownCoordinate, d = Math.sqrt(Math.pow(b.pageX - d.x, 2) + Math.pow(b.pageY - d.y, 2));
-        if (l.dragMode == Entry.DRAG_MODE_DRAG || d >= Entry.BlockView.DRAG_RADIUS) {
-          l.isInBlockMenu ? e.cloneToGlobal(b) : (l.dragMode != Entry.DRAG_MODE_DRAG && (l._toGlobalCoordinate(), l.dragMode = Entry.DRAG_MODE_DRAG, l.block.getThread().changeEvent.notify(), Entry.GlobalSvg.setView(l, c)), this.animating && this.set({animating:!1}), 0 === l.dragInstance.height && l.dragInstance.set({height:-1 + l.height}), c = l.dragInstance, l._moveBy(b.pageX - c.offsetX, b.pageY - c.offsetY, !1), c.set({offsetX:b.pageX, offsetY:b.pageY}), Entry.GlobalSvg.position(), (b = l._getCloseBlock()) ? 
-          e.setMagnetedBlock(b.view) : e.setMagnetedBlock(null), l.originPos || (l.originPos = {x:l.x, y:l.y}));
-        }
-      }
+      var c = e.workspace.getMode();
+      c === Entry.Workspace.MODE_VIMBOARD && a.vimBoardEvent(b, "dragOver");
+      b.originalEvent.touches && (b = b.originalEvent.touches[0]);
+      var d = l.mouseDownCoordinate, d = Math.sqrt(Math.pow(b.pageX - d.x, 2) + Math.pow(b.pageY - d.y, 2));
+      (l.dragMode == Entry.DRAG_MODE_DRAG || d > Entry.BlockView.DRAG_RADIUS) && l.movable && (l.isInBlockMenu ? e.cloneToGlobal(b) : (l.dragMode != Entry.DRAG_MODE_DRAG && (l._toGlobalCoordinate(), l.dragMode = Entry.DRAG_MODE_DRAG, l.block.getThread().changeEvent.notify(), Entry.GlobalSvg.setView(l, c)), this.animating && this.set({animating:!1}), 0 === l.dragInstance.height && l.dragInstance.set({height:-1 + l.height}), c = l.dragInstance, l._moveBy(b.pageX - c.offsetX, b.pageY - c.offsetY, !1), 
+      c.set({offsetX:b.pageX, offsetY:b.pageY}), Entry.GlobalSvg.position(), (b = l._getCloseBlock()) ? e.setMagnetedBlock(b.view) : e.setMagnetedBlock(null), l.originPos || (l.originPos = {x:l.x, y:l.y})));
     }
     function d(b) {
       $(document).unbind(".block");
@@ -13674,13 +13673,13 @@ Entry.BlockView.DRAG_RADIUS = 5;
       delete this.mouseDownCoordinate;
       delete l.dragInstance;
     }
-    window.Touch && b instanceof Touch ? b.button = 0 : (b.stopPropagation(), b.preventDefault());
+    Entry.Utils.isTouchEvent(b) ? b.button = 0 : (b.stopPropagation(), b.preventDefault());
     var e = this.getBoard();
     Entry.documentMousedown && Entry.documentMousedown.notify();
     if (!this.readOnly && !e.viewOnly) {
       e.setSelectedBlock(this);
       this.dominate();
-      if (0 === b.button || b.originalEvent instanceof TouchEvent) {
+      if (0 === b.button) {
         b.originalEvent && b.originalEvent.touches && (b = b.originalEvent.touches[0]);
         this.mouseDownCoordinate = {x:b.pageX, y:b.pageY};
         var f = $(document);
@@ -14196,10 +14195,15 @@ Entry.Field = function() {
     this._block.params[this._index] = b;
   };
   a._isEditable = function() {
-    var b = this._block.view;
-    if (b.dragMode == Entry.DRAG_MODE_MOUSEDOWN && b.svgGroup.hasClass("selected")) {
-      return !0;
+    if (this._block.view.dragMode == Entry.DRAG_MODE_DRAG) {
+      return !1;
     }
+    var b = this._block.view, a = b.getBoard(), d = a.workspace.selectedBlockView;
+    if (!d || a != d.getBoard()) {
+      return !1;
+    }
+    a = b.getSvgRoot();
+    return a == d.svgGroup || $(a).has($(b.svgGroup));
   };
   a._selectBlockView = function() {
     var b = this._block.view;
@@ -14860,24 +14864,24 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldOutput);
   a.isGlobal = function() {
     return !1;
   };
-  a.separate = function(b) {
-    this.getCode().createThread([b]);
+  a.separate = function(a) {
+    this.getCode().createThread([a]);
     this.changeEvent.notify();
   };
   a.getCode = function() {
     return this._block.thread.getCode();
   };
-  a.cut = function(b) {
-    return this._valueBlock === b ? [b] : null;
+  a.cut = function(a) {
+    return this._valueBlock === a ? [a] : null;
   };
   a._updateBG = function() {
     this.magneting ? this._bg = this.svgGroup.elem("path", {d:"m -4,-12 h 3 l 2,2 0,3 3,0 1,1 0,12 -1,1 -3,0 0,3 -2,2 h -3 ", fill:"#fff", stroke:"#fff", "fill-opacity":.7, transform:"translate(0," + (this._valueBlock ? 12 : 0) + ")"}) : this._bg && (this._bg.remove(), delete this._bg);
   };
-  a.replace = function(b) {
-    var a = this._valueBlock;
-    a && (a.view._toGlobalCoordinate(), this.separate(a), a.view.bumpAway(30, 150));
-    this._updateValueBlock(b);
-    b.view._toLocalCoordinate(this.svgGroup);
+  a.replace = function(a) {
+    var c = this._valueBlock;
+    c && (c.view._toGlobalCoordinate(), this.separate(c), c.view.bumpAway(30, 150));
+    this._updateValueBlock(a);
+    a.view._toLocalCoordinate(this.svgGroup);
     this.calcWH();
   };
   a.setParent = function(a) {
@@ -16041,9 +16045,9 @@ Entry.Board = function(a) {
       delete g.dragInstance;
     }
     if (this.workspace.getMode() != Entry.Workspace.MODE_VIMBOARD) {
-      a.stopPropagation();
-      a.originalEvent.touches && (a = a.originalEvent.touches[0]);
-      if (0 === a.button || a instanceof Touch) {
+      Entry.Utils.isTouchEvent(a) ? a.button = 0 : (a.stopPropagation(), a.preventDefault());
+      if (0 === a.button) {
+        a.originalEvent && a.originalEvent.touches && (a = a.originalEvent.touches[0]);
         Entry.documentMousedown && Entry.documentMousedown.notify(a);
         var e = $(document);
         e.bind("mousemove.entryBoard", c);

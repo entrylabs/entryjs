@@ -170,11 +170,16 @@ Entry.Board = function(option) {
     p.onMouseDown = function(e) {
         if (this.workspace.getMode() == Entry.Workspace.MODE_VIMBOARD)
             return;
-        e.stopPropagation();
-        if (e.originalEvent.touches)
-            e = e.originalEvent.touches[0];
+        if (Entry.Utils.isTouchEvent(e)) {
+            e.button = 0;
+        } else {
+            e.stopPropagation();
+            e.preventDefault();
+        }
 
-        if (e.button === 0 || e instanceof Touch) {
+        if (e.button === 0) {
+            if (e.originalEvent && e.originalEvent.touches)
+                e = e.originalEvent.touches[0];
             if (Entry.documentMousedown)
                 Entry.documentMousedown.notify(e);
             var doc = $(document);
