@@ -47,9 +47,9 @@ Entry.Board = function(option) {
 
     this.visible = true;
     var that = this;
+    this.svg = Entry.SVG(this._svgId);
     $(window).scroll(this.updateOffset);
     Entry.windowResized.attach(this, this.updateOffset);
-    this.svg = Entry.SVG(this._svgId);
 
     this._blockViews = [];
     this._magnetMap = null;

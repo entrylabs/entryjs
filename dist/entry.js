@@ -15951,9 +15951,9 @@ Entry.Board = function(a) {
   this.wrapper = Entry.Dom("div", {parent:b, class:"entryBoardWrapper"});
   this.svgDom = Entry.Dom($('<svg id="' + this._svgId + '" class="entryBoard" width="100%" height="100%"version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'), {parent:this.wrapper});
   this.visible = !0;
+  this.svg = Entry.SVG(this._svgId);
   $(window).scroll(this.updateOffset);
   Entry.windowResized.attach(this, this.updateOffset);
-  this.svg = Entry.SVG(this._svgId);
   this._blockViews = [];
   this._magnetMap = null;
   this.trashcan = new Entry.FieldTrashcan(this);
