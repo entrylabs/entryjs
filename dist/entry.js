@@ -4284,8 +4284,8 @@ Entry.block.message_cast_wait = function(a, b) {
   }
   var e = [];
   Entry.container.mapEntityIncludeCloneOnScene(function(b, a) {
-    for (var c = a[0], d = a[1], n = b.parent.script.childNodes, l = 0;l < n.length;l++) {
-      var m = n[l], q = Entry.Xml.getField("VALUE", m);
+    for (var c = a[0], d = a[1], l = b.parent.script.childNodes, n = 0;n < l.length;n++) {
+      var m = l[n], q = Entry.Xml.getField("VALUE", m);
       Entry.Xml.isTypeOf(c, m) && q == d && (q = new Entry.Script(b), q.init(m), e.push(q));
     }
   }, ["when_message_cast", c]);
@@ -6652,22 +6652,22 @@ Entry.EntryObject.prototype.generateView = function() {
     var k = Entry.createElement("span");
     k.addClass("entryObjectCoordinateSizeWorkspace");
     k.innerHTML = "\ud06c\uae30 :";
-    var n = Entry.createElement("input");
-    n.addClass("entryObjectCoordinateInputWorkspace", "entryObjectCoordinateInputWorkspace_size");
-    n.bindOnClick(function(b) {
+    var l = Entry.createElement("input");
+    l.addClass("entryObjectCoordinateInputWorkspace", "entryObjectCoordinateInputWorkspace_size");
+    l.bindOnClick(function(b) {
       b.stopPropagation();
       this.select();
     });
-    n.setAttribute("disabled", "disabled");
+    l.setAttribute("disabled", "disabled");
     d.appendChild(e);
     d.appendChild(f);
     d.appendChild(g);
     d.appendChild(h);
     d.appendChild(k);
-    d.appendChild(n);
+    d.appendChild(l);
     d.xInput_ = f;
     d.yInput_ = h;
-    d.sizeInput_ = n;
+    d.sizeInput_ = l;
     this.coordinateView_ = d;
     c = this;
     f.onkeypress = function(b) {
@@ -6686,11 +6686,11 @@ Entry.EntryObject.prototype.generateView = function() {
       c.updateCoordinateView();
       Entry.stage.updateObject();
     };
-    n.onkeypress = function(b) {
+    l.onkeypress = function(b) {
       13 == b.keyCode && this.blur();
     };
-    n.onblur = function(b) {
-      isNaN(n.value) || c.entity.setSize(Number(n.value));
+    l.onblur = function(b) {
+      isNaN(l.value) || c.entity.setSize(Number(l.value));
       c.updateCoordinateView();
       Entry.stage.updateObject();
     };
@@ -6701,15 +6701,15 @@ Entry.EntryObject.prototype.generateView = function() {
     e = Entry.createElement("span");
     e.addClass("entryObjectRotateSpanWorkspace");
     e.innerHTML = Lang.Workspace.rotation + " : ";
-    var l = Entry.createElement("input");
-    l.addClass("entryObjectRotateInputWorkspace");
-    l.setAttribute("disabled", "disabled");
-    l.bindOnClick(function(b) {
+    var n = Entry.createElement("input");
+    n.addClass("entryObjectRotateInputWorkspace");
+    n.setAttribute("disabled", "disabled");
+    n.bindOnClick(function(b) {
       b.stopPropagation();
       this.select();
     });
     this.rotateSpan_ = e;
-    this.rotateInput_ = l;
+    this.rotateInput_ = n;
     g = Entry.createElement("span");
     g.addClass("entryObjectDirectionSpanWorkspace");
     g.innerHTML = Lang.Workspace.direction + " : ";
@@ -6722,17 +6722,17 @@ Entry.EntryObject.prototype.generateView = function() {
     });
     this.directionInput_ = m;
     d.appendChild(e);
-    d.appendChild(l);
+    d.appendChild(n);
     d.appendChild(g);
     d.appendChild(m);
-    d.rotateInput_ = l;
+    d.rotateInput_ = n;
     d.directionInput_ = m;
     c = this;
-    l.onkeypress = function(b) {
+    n.onkeypress = function(b) {
       13 == b.keyCode && this.blur();
     };
-    l.onblur = function(b) {
-      b = l.value;
+    n.onblur = function(b) {
+      b = n.value;
       -1 != b.indexOf("\u02da") && (b = b.substring(0, b.indexOf("\u02da")));
       isNaN(b) || c.entity.setRotation(Number(b));
       c.updateRotationView();
@@ -6813,10 +6813,10 @@ Entry.EntryObject.prototype.generateView = function() {
       if (b = Entry.container.getObject(this.id)) {
         Entry.container.selectObject(b.id), Entry.playground.injectObject(b);
       }
-    }), this.view_.appendChild(d), d = Entry.createElement("div"), d.addClass("entryObjectInformationWorkspace"), d.object = this, this.isInformationToggle = !1, a.appendChild(d), this.informationView_ = d, d = Entry.createElement("div"), d.addClass("entryObjectRotateLabelWrapperWorkspace"), this.view_.appendChild(d), this.rotateLabelWrapperView_ = d, e = Entry.createElement("span"), e.addClass("entryObjectRotateSpanWorkspace"), e.innerHTML = Lang.Workspace.rotation + " : ", l = Entry.createElement("input"), 
-    l.addClass("entryObjectRotateInputWorkspace"), this.rotateSpan_ = e, this.rotateInput_ = l, g = Entry.createElement("span"), g.addClass("entryObjectDirectionSpanWorkspace"), g.innerHTML = Lang.Workspace.direction + " : ", m = Entry.createElement("input"), m.addClass("entryObjectDirectionInputWorkspace"), this.directionInput_ = m, d.appendChild(e), d.appendChild(l), d.appendChild(g), d.appendChild(m), d.rotateInput_ = l, d.directionInput_ = m, c = this, l.onkeypress = function(b) {
-      13 == b.keyCode && (b = l.value, -1 != b.indexOf("\u02da") && (b = b.substring(0, b.indexOf("\u02da"))), isNaN(b) || c.entity.setRotation(Number(b)), c.updateRotationView(), l.blur());
-    }, l.onblur = function(b) {
+    }), this.view_.appendChild(d), d = Entry.createElement("div"), d.addClass("entryObjectInformationWorkspace"), d.object = this, this.isInformationToggle = !1, a.appendChild(d), this.informationView_ = d, d = Entry.createElement("div"), d.addClass("entryObjectRotateLabelWrapperWorkspace"), this.view_.appendChild(d), this.rotateLabelWrapperView_ = d, e = Entry.createElement("span"), e.addClass("entryObjectRotateSpanWorkspace"), e.innerHTML = Lang.Workspace.rotation + " : ", n = Entry.createElement("input"), 
+    n.addClass("entryObjectRotateInputWorkspace"), this.rotateSpan_ = e, this.rotateInput_ = n, g = Entry.createElement("span"), g.addClass("entryObjectDirectionSpanWorkspace"), g.innerHTML = Lang.Workspace.direction + " : ", m = Entry.createElement("input"), m.addClass("entryObjectDirectionInputWorkspace"), this.directionInput_ = m, d.appendChild(e), d.appendChild(n), d.appendChild(g), d.appendChild(m), d.rotateInput_ = n, d.directionInput_ = m, c = this, n.onkeypress = function(b) {
+      13 == b.keyCode && (b = n.value, -1 != b.indexOf("\u02da") && (b = b.substring(0, b.indexOf("\u02da"))), isNaN(b) || c.entity.setRotation(Number(b)), c.updateRotationView(), n.blur());
+    }, n.onblur = function(b) {
       c.entity.setRotation(c.entity.getRotation());
       Entry.stage.updateObject();
     }, m.onkeypress = function(b) {
@@ -6825,8 +6825,8 @@ Entry.EntryObject.prototype.generateView = function() {
       c.entity.setDirection(c.entity.getDirection());
       Entry.stage.updateObject();
     }, a = Entry.createElement("div"), a.addClass("entryObjectRotationWrapperWorkspace"), a.object = this, this.view_.appendChild(a), d = Entry.createElement("span"), d.addClass("entryObjectCoordinateWorkspace"), a.appendChild(d), e = Entry.createElement("span"), e.addClass("entryObjectCoordinateSpanWorkspace"), e.innerHTML = "X:", f = Entry.createElement("input"), f.addClass("entryObjectCoordinateInputWorkspace"), g = Entry.createElement("span"), g.addClass("entryObjectCoordinateSpanWorkspace"), 
-    g.innerHTML = "Y:", h = Entry.createElement("input"), h.addClass("entryObjectCoordinateInputWorkspace entryObjectCoordinateInputWorkspace_right"), k = Entry.createElement("span"), k.addClass("entryObjectCoordinateSpanWorkspace"), k.innerHTML = Lang.Workspace.Size, n = Entry.createElement("input"), n.addClass("entryObjectCoordinateInputWorkspace", "entryObjectCoordinateInputWorkspace_size"), d.appendChild(e), d.appendChild(f), d.appendChild(g), d.appendChild(h), d.appendChild(k), d.appendChild(n), 
-    d.xInput_ = f, d.yInput_ = h, d.sizeInput_ = n, this.coordinateView_ = d, c = this, f.onkeypress = function(b) {
+    g.innerHTML = "Y:", h = Entry.createElement("input"), h.addClass("entryObjectCoordinateInputWorkspace entryObjectCoordinateInputWorkspace_right"), k = Entry.createElement("span"), k.addClass("entryObjectCoordinateSpanWorkspace"), k.innerHTML = Lang.Workspace.Size, l = Entry.createElement("input"), l.addClass("entryObjectCoordinateInputWorkspace", "entryObjectCoordinateInputWorkspace_size"), d.appendChild(e), d.appendChild(f), d.appendChild(g), d.appendChild(h), d.appendChild(k), d.appendChild(l), 
+    d.xInput_ = f, d.yInput_ = h, d.sizeInput_ = l, this.coordinateView_ = d, c = this, f.onkeypress = function(b) {
       13 == b.keyCode && (isNaN(f.value) || c.entity.setX(Number(f.value)), c.updateCoordinateView(), f.blur());
     }, f.onblur = function(b) {
       c.entity.setX(c.entity.getX());
@@ -7557,14 +7557,14 @@ Entry.Painter.prototype.fill = function() {
     var c = new createjs.Point(this.stage.mouseX, this.stage.mouseY);
     c.x = Math.round(c.x);
     c.y = Math.round(c.y);
-    for (var d = 4 * (c.y * a + c.x), e = this.colorLayerData.data[d], f = this.colorLayerData.data[d + 1], g = this.colorLayerData.data[d + 2], h = this.colorLayerData.data[d + 3], k, n, c = [[c.x, c.y]], l = Entry.hex2rgb(this.stroke.lineColor);c.length;) {
+    for (var d = 4 * (c.y * a + c.x), e = this.colorLayerData.data[d], f = this.colorLayerData.data[d + 1], g = this.colorLayerData.data[d + 2], h = this.colorLayerData.data[d + 3], k, l, c = [[c.x, c.y]], n = Entry.hex2rgb(this.stroke.lineColor);c.length;) {
       for (var d = c.pop(), m = d[0], q = d[1], d = 4 * (q * a + m);0 <= q && this.matchColor(d, e, f, g, h);) {
         --q, d -= 4 * a;
       }
       d += 4 * a;
       q += 1;
-      for (n = k = !1;q < b - 1 && this.matchColor(d, e, f, g, h);) {
-        q += 1, this.colorPixel(d, l.r, l.g, l.b), 0 < m && (this.matchColor(d - 4, e, f, g, h) ? k || (c.push([m - 1, q]), k = !0) : k && (k = !1)), m < a - 1 && (this.matchColor(d + 4, e, f, g, h) ? n || (c.push([m + 1, q]), n = !0) : n && (n = !1)), d += 4 * a;
+      for (l = k = !1;q < b - 1 && this.matchColor(d, e, f, g, h);) {
+        q += 1, this.colorPixel(d, n.r, n.g, n.b), 0 < m && (this.matchColor(d - 4, e, f, g, h) ? k || (c.push([m - 1, q]), k = !0) : k && (k = !1)), m < a - 1 && (this.matchColor(d + 4, e, f, g, h) ? l || (c.push([m + 1, q]), l = !0) : l && (l = !1)), d += 4 * a;
       }
       if (1080 < c.length) {
         break;
@@ -7876,13 +7876,13 @@ Entry.Painter.prototype.generateView = function(a) {
     h.appendChild(k);
     h = Entry.createElement("li");
     k.appendChild(h);
-    var n = Entry.createElement("a", "entryPainterTopMenuFileSave");
-    n.bindOnClick(function() {
+    var l = Entry.createElement("a", "entryPainterTopMenuFileSave");
+    l.bindOnClick(function() {
       b.file_save(!1);
     });
-    n.addClass("entryPainterTopMenuFileSave");
-    n.innerHTML = Lang.Workspace.painter_file_save;
-    h.appendChild(n);
+    l.addClass("entryPainterTopMenuFileSave");
+    l.innerHTML = Lang.Workspace.painter_file_save;
+    h.appendChild(l);
     h = Entry.createElement("li");
     k.appendChild(h);
     k = Entry.createElement("a", "entryPainterTopMenuFileSaveAs");
@@ -8105,9 +8105,9 @@ Entry.Painter.prototype.generateView = function(a) {
     this.attrColorArea = Entry.createElement("fieldset", "entryPainterAttrColor");
     this.attrColorArea.addClass("entryPlaygroundPainterAttrColor");
     g.appendChild(this.attrColorArea);
-    var l = Entry.createElement("div");
-    l.addClass("entryPlaygroundPainterAttrColorContainer");
-    this.attrColorArea.appendChild(l);
+    var n = Entry.createElement("div");
+    n.addClass("entryPlaygroundPainterAttrColorContainer");
+    this.attrColorArea.appendChild(n);
     this.attrCircleArea = Entry.createElement("div");
     this.attrCircleArea.addClass("painterAttrCircleArea");
     g.appendChild(this.attrCircleArea);
@@ -8134,7 +8134,7 @@ Entry.Painter.prototype.generateView = function(a) {
         document.getElementById("entryPainterAttrCircle").style.backgroundColor = b.stroke.lineColor;
         document.getElementById("entryPainterAttrCircleInput").value = a;
       });
-      l.appendChild(c);
+      n.appendChild(c);
     });
     this.attrThickArea = Entry.createElement("div", "painterAttrThickArea");
     this.attrThickArea.addClass("entryPlaygroundentryPlaygroundPainterAttrThickArea");
@@ -8242,7 +8242,7 @@ Entry.Painter.prototype.generateView = function(a) {
     };
     h = [{label:"\ubcf4\ud1b5", value:"normal"}, {label:"\uad75\uac8c", value:"bold"}, {label:"\uae30\uc6b8\uc784", value:"italic"}];
     for (d = 0;d < h.length;d++) {
-      n = h[d], c = Entry.createElement("option"), c.value = n.value, c.innerHTML = n.label, k.appendChild(c);
+      l = h[d], c = Entry.createElement("option"), c.value = l.value, c.innerHTML = l.label, k.appendChild(c);
     }
     e.appendChild(k);
     this.attrLineArea = Entry.createElement("div", "painterAttrLineStyle");
@@ -10147,14 +10147,14 @@ Entry.ContextMenu = {};
       var d = this.dom;
       d.empty();
       for (var e = 0, f = b.length;e < f;e++) {
-        var g = b[e], h = g.text, k = !1 !== g.enable, n = Entry.Dom("li", {class:k ? "menuAble" : "menuDisable", parent:d});
-        n.text(h);
+        var g = b[e], h = g.text, k = !1 !== g.enable, l = Entry.Dom("li", {class:k ? "menuAble" : "menuDisable", parent:d});
+        l.text(h);
         k && g.callback && function(b, a) {
           b.mousedown(function(b) {
             b.preventDefault();
             a();
           });
-        }(n, g.callback);
+        }(l, g.callback);
       }
       d.removeClass("entryRemove");
       this.position(Entry.mouseCoordinate);
@@ -11039,11 +11039,11 @@ Entry.HWMonitor = function(a) {
     }
     h < f - e && (f = h / 2 + 3, e = -h / 2 - 3);
     for (;1 < b.length;) {
-      var k = b.shift(), n = b.pop(), l = e, m = f, q = d;
-      h <= f - e ? (e += k.width + 5, f -= n.width + 5, q = 0) : 0 === b.length ? (e = (e + f) / 2 - 3, f = e + 6) : (e = Math.max(e, -g / 2 + k.width) + 15, f = Math.min(f, g / 2 - n.width) - 15);
-      this._movePort(k, e, a, l);
-      this._movePort(n, f, a, m);
-      h -= k.width + n.width + 10;
+      var k = b.shift(), l = b.pop(), n = e, m = f, q = d;
+      h <= f - e ? (e += k.width + 5, f -= l.width + 5, q = 0) : 0 === b.length ? (e = (e + f) / 2 - 3, f = e + 6) : (e = Math.max(e, -g / 2 + k.width) + 15, f = Math.min(f, g / 2 - l.width) - 15);
+      this._movePort(k, e, a, n);
+      this._movePort(l, f, a, m);
+      h -= k.width + l.width + 10;
       a += q;
     }
     b.length && b[0].group.attr({transform:"t" + (f + e - b[0].width) / 2 + "," + a});
@@ -11595,17 +11595,17 @@ Entry.VariableContainer.prototype.renderMessageReference = function(a) {
   var b = this, c = Entry.container.objects_, d = ["when_message_cast", "message_cast", "message_cast_wait"], e = [], f = Entry.createElement("ul");
   f.addClass("entryVariableListCallerListWorkspace");
   for (var g in c) {
-    for (var h = c[g], k = h.script.getElementsByTagName("block"), n = 0;n < k.length;n++) {
-      var l = k[n], m = l.getAttribute("type");
+    for (var h = c[g], k = h.script.getElementsByTagName("block"), l = 0;l < k.length;l++) {
+      var n = k[l], m = n.getAttribute("type");
       if (-1 < d.indexOf(m)) {
-        m = Entry.Xml.getField("VALUE", l), m == a.id && e.push({object:h, block:l});
+        m = Entry.Xml.getField("VALUE", n), m == a.id && e.push({object:h, block:n});
       } else {
         if ("function_general" == m) {
-          var q = l.getElementsByTagName("mutation")[0].getAttribute("hashid");
+          var q = n.getElementsByTagName("mutation")[0].getAttribute("hashid");
           if (q = Entry.variableContainer.getFunction(q)) {
             for (var q = q.content, q = q.getElementsByTagName("block"), r = 0;r < q.length;r++) {
               var t = q[r], m = t.getAttribute("type");
-              -1 < d.indexOf(m) && (m = Entry.Xml.getField("VALUE", t), m == a.id && e.push({object:h, block:t, funcBlock:l}));
+              -1 < d.indexOf(m) && (m = Entry.Xml.getField("VALUE", t), m == a.id && e.push({object:h, block:t, funcBlock:n}));
             }
           }
         }
@@ -11634,8 +11634,8 @@ Entry.VariableContainer.prototype.renderFunctionReference = function(a) {
   e.addClass("entryVariableListCallerListWorkspace");
   for (var f in c) {
     for (var g = c[f], h = g.script.getElementsByTagName("block"), k = 0;k < h.length;k++) {
-      var n = h[k];
-      "function_general" == n.getAttribute("type") && n.getElementsByTagName("mutation")[0].getAttribute("hashid") == a.id && d.push({object:g, block:n});
+      var l = h[k];
+      "function_general" == l.getAttribute("type") && l.getElementsByTagName("mutation")[0].getAttribute("hashid") == a.id && d.push({object:g, block:l});
     }
   }
   for (f in d) {
@@ -13658,12 +13658,12 @@ Entry.BlockView.DRAG_RADIUS = 5;
   a.onMouseDown = function(b) {
     function c(b) {
       b.stopPropagation();
-      var c = e.workspace.getMode();
+      var c = e.workspace.getMode(), d;
       c === Entry.Workspace.MODE_VIMBOARD && a.vimBoardEvent(b, "dragOver");
-      f = b.originalEvent && b.originalEvent.touches ? b.originalEvent.touches[0] : b;
-      var d = l.mouseDownCoordinate, d = Math.sqrt(Math.pow(f.pageX - d.x, 2) + Math.pow(f.pageY - d.y, 2));
-      (l.dragMode == Entry.DRAG_MODE_DRAG || d > Entry.BlockView.DRAG_RADIUS) && l.movable && (l.isInBlockMenu ? e.cloneToGlobal(b) : (l.dragMode != Entry.DRAG_MODE_DRAG && (l._toGlobalCoordinate(), l.dragMode = Entry.DRAG_MODE_DRAG, l.block.getThread().changeEvent.notify(), Entry.GlobalSvg.setView(l, c)), this.animating && this.set({animating:!1}), 0 === l.dragInstance.height && l.dragInstance.set({height:-1 + l.height}), b = l.dragInstance, l._moveBy(f.pageX - b.offsetX, f.pageY - b.offsetY, !1), 
-      b.set({offsetX:f.pageX, offsetY:f.pageY}), Entry.GlobalSvg.position(), (b = l._getCloseBlock()) ? e.setMagnetedBlock(b.view) : e.setMagnetedBlock(null), l.originPos || (l.originPos = {x:l.x, y:l.y})));
+      d = b.originalEvent && b.originalEvent.touches ? b.originalEvent.touches[0] : b;
+      var f = l.mouseDownCoordinate, f = Math.sqrt(Math.pow(d.pageX - f.x, 2) + Math.pow(d.pageY - f.y, 2));
+      (l.dragMode == Entry.DRAG_MODE_DRAG || f > Entry.BlockView.DRAG_RADIUS) && l.movable && (l.isInBlockMenu ? e.cloneToGlobal(b) : (l.dragMode != Entry.DRAG_MODE_DRAG && (l._toGlobalCoordinate(), l.dragMode = Entry.DRAG_MODE_DRAG, l.block.getThread().changeEvent.notify(), Entry.GlobalSvg.setView(l, c)), this.animating && this.set({animating:!1}), 0 === l.dragInstance.height && l.dragInstance.set({height:-1 + l.height}), b = l.dragInstance, l._moveBy(d.pageX - b.offsetX, d.pageY - b.offsetY, !1), 
+      b.set({offsetX:d.pageX, offsetY:d.pageY}), Entry.GlobalSvg.position(), (d = l._getCloseBlock()) ? e.setMagnetedBlock(d.view) : e.setMagnetedBlock(null), l.originPos || (l.originPos = {x:l.x, y:l.y})));
     }
     function d(b) {
       $(document).unbind(".block");
@@ -13676,12 +13676,11 @@ Entry.BlockView.DRAG_RADIUS = 5;
     b.stopPropagation && b.stopPropagation();
     b.preventDefault && b.preventDefault();
     var e = this.getBoard();
-    Entry.documentMousedown && Entry.documentMousedown.notify();
+    Entry.documentMousedown && Entry.documentMousedown.notify(b);
     if (!this.readOnly && !e.viewOnly) {
       e.setSelectedBlock(this);
       this.dominate();
-      console.log(b.originalEvent);
-      if (0 === b.button || b.originalEvent instanceof TouchEvent) {
+      if (0 === b.button || b.originalEvent && b.originalEvent.touches) {
         var f;
         f = b.originalEvent && b.originalEvent.touches ? b.originalEvent.touches[0] : b;
         this.mouseDownCoordinate = {x:f.pageX, y:f.pageY};
@@ -13700,21 +13699,22 @@ Entry.BlockView.DRAG_RADIUS = 5;
           if (this.isInBlockMenu) {
             return;
           }
-          var g = [], n = {text:"\ube14\ub85d \uc0ad\uc81c", enable:k.isDeletable(), callback:function() {
+          f = [];
+          g = {text:"\ube14\ub85d \uc0ad\uc81c", enable:k.isDeletable(), callback:function() {
             h.block.doDestroy(!0);
           }};
-          g.push({text:"\ube14\ub85d \ubcf5\uc0ac & \ubd99\uc5ec\ub123\uae30", callback:function() {
+          f.push({text:"\ube14\ub85d \ubcf5\uc0ac & \ubd99\uc5ec\ub123\uae30", callback:function() {
             e.code.createThread(k.copy());
           }});
-          g.push({text:"\ube14\ub85d \ubcf5\uc0ac", callback:function() {
+          f.push({text:"\ube14\ub85d \ubcf5\uc0ac", callback:function() {
             h.block.copyToClipboard();
           }});
-          g.push(n);
-          Entry.ContextMenu.show(g);
+          f.push(g);
+          Entry.ContextMenu.show(f);
         }
       }
       var l = this;
-      e.workspace.getMode() === Entry.Workspace.MODE_VIMBOARD && b && (b = new MouseEvent("dragStart", {view:window, bubbles:!0, cancelable:!0, clientX:f.clientX, clientY:f.clientY}), document.getElementsByClassName("CodeMirror")[0].dispatchEvent(b));
+      e.workspace.getMode() === Entry.Workspace.MODE_VIMBOARD && b && (b = new MouseEvent("dragStart", {view:window, bubbles:!0, cancelable:!0, clientX:event.clientX, clientY:event.clientY}), document.getElementsByClassName("CodeMirror")[0].dispatchEvent(b));
     }
   };
   a.vimBoardEvent = function(b, a, d) {
@@ -14766,14 +14766,14 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldKeyboard);
       void 0 !== a && this.applyValue(a, b);
     }
   };
-  a.applyValue = function(a, c) {
+  a.applyValue = function(b, a) {
     this.destroyOption();
-    this.getValue() != c && (this.setValue(c), this.textElement.textContent = a, this.resize());
+    this.getValue() != a && (this.setValue(a), this.textElement.textContent = b, this.resize());
   };
   a.resize = function() {
-    var a = this.getTextWidth();
-    this._header.attr({width:a});
-    this.box.set({width:a});
+    var b = this.getTextWidth();
+    this._header.attr({width:b});
+    this.box.set({width:b});
     this._block.view.alignContent();
   };
   a.getTextWidth = function() {
@@ -14805,13 +14805,13 @@ Entry.FieldOutput = function(a, b, c, d) {
 Entry.Utils.inherit(Entry.Field, Entry.FieldOutput);
 (function(a) {
   a.schema = {magneting:!1};
-  a.renderStart = function(a, c) {
+  a.renderStart = function(b, a) {
     this.svgGroup = this._blockView.contentSvgGroup.elem("g");
     this.view = this;
     this._nextGroup = this.svgGroup;
     this.box.set({x:0, y:0, width:0, height:20});
     var d = this.getValue();
-    d && !d.view && (d.setThread(this), d.createView(a, c));
+    d && !d.view && (d.setThread(this), d.createView(b, a));
     this._updateValueBlock(d);
     this._blockView.getBoard().constructor == Entry.BlockMenu && this._valueBlock && this._valueBlock.view.removeControl();
   };
@@ -16050,23 +16050,29 @@ Entry.Board = function(a) {
     if (this.workspace.getMode() != Entry.Workspace.MODE_VIMBOARD) {
       a.stopPropagation && a.stopPropagation();
       a.preventDefault && a.preventDefault();
-      var e;
-      if (0 === a.button || a.originalEvent instanceof TouchEvent) {
-        e = a.originalEvent && a.originalEvent.touches ? a.originalEvent.touches[0] : a, Entry.documentMousedown && Entry.documentMousedown.notify(e), a = $(document), a.bind("mousemove.entryBoard", c), a.bind("mouseup.entryBoard", d), a.bind("touchmove.entryBoard", c), a.bind("touchend.entryBoard", d), this.dragInstance = new Entry.DragInstance({startX:e.pageX, startY:e.pageY, offsetX:e.pageX, offsetY:e.pageY});
+      if (0 === a.button || a.originalEvent && a.originalEvent.touches) {
+        a = a.originalEvent && a.originalEvent.touches ? a.originalEvent.touches[0] : a;
+        Entry.documentMousedown && Entry.documentMousedown.notify(a);
+        var e = $(document);
+        e.bind("mousemove.entryBoard", c);
+        e.bind("mouseup.entryBoard", d);
+        e.bind("touchmove.entryBoard", c);
+        e.bind("touchend.entryBoard", d);
+        this.dragInstance = new Entry.DragInstance({startX:a.pageX, startY:a.pageY, offsetX:a.pageX, offsetY:a.pageY});
       } else {
-        if (Entry.Utils.isRightButton(e)) {
+        if (Entry.Utils.isRightButton(event)) {
           if (!this.visible) {
             return;
           }
           var f = this;
-          e = [];
-          e.push({text:"\ubd99\uc5ec\ub123\uae30", enable:!!Entry.clipboard, callback:function() {
+          a = [];
+          a.push({text:"\ubd99\uc5ec\ub123\uae30", enable:!!Entry.clipboard, callback:function() {
             f.code.createThread(Entry.clipboard).getFirstBlock().copyToClipboard();
           }});
-          e.push({text:"\ube14\ub85d \uc815\ub9ac\ud558\uae30", callback:function() {
+          a.push({text:"\ube14\ub85d \uc815\ub9ac\ud558\uae30", callback:function() {
             f.alignThreads();
           }});
-          Entry.ContextMenu.show(e);
+          Entry.ContextMenu.show(a);
         }
       }
       var g = this;
@@ -16097,11 +16103,11 @@ Entry.Board = function(a) {
   };
   a.alignThreads = function() {
     for (var a = this.svgDom.height(), c = this.code.getThreads(), d = 15, e = 0, a = a - 30, f = 50, g = 0;g < c.length;g++) {
-      var h = c[g].getFirstBlock().view, k = h.svgGroup.getBBox(), n = d + 15;
-      n > a && (f = f + e + 10, e = 0, d = 15);
+      var h = c[g].getFirstBlock().view, k = h.svgGroup.getBBox(), l = d + 15;
+      l > a && (f = f + e + 10, e = 0, d = 15);
       e = Math.max(e, k.width);
-      n = d + 15;
-      h._moveTo(f, n, !1);
+      l = d + 15;
+      h._moveTo(f, l, !1);
       d = d + k.height + 15;
     }
     this.scroller.resizeScrollBar();
@@ -16187,8 +16193,8 @@ Entry.Board = function(a) {
     d || (d = {x:0, y:0});
     var k = d.x;
     d = d.y;
-    for (var n = 0;n < f.length;n++) {
-      var l = f[n], m = l.view;
+    for (var l = 0;l < f.length;l++) {
+      var n = f[l], m = n.view;
       m.zIndex = c;
       if (m.dragInstance) {
         break;
@@ -16197,13 +16203,13 @@ Entry.Board = function(a) {
       k += m.x;
       a = d + 1;
       m.magnet.next && (a += m.magnet.next.y);
-      h.push({point:d, endPoint:a, startBlock:l, blocks:[]});
+      h.push({point:d, endPoint:a, startBlock:n, blocks:[]});
       h.push({point:a, blocks:[]});
       m.absX = k;
-      l.statements && (c += .01);
-      for (var q = 0;q < l.statements.length;q++) {
-        a = l.statements[q];
-        var r = l.view._statements[q];
+      n.statements && (c += .01);
+      for (var q = 0;q < n.statements.length;q++) {
+        a = n.statements[q];
+        var r = n.view._statements[q];
         r.zIndex = c;
         r.absX = k + r.x;
         h.push({point:r.y + d - 30, endPoint:r.y + d + r.height, startBlock:r, blocks:[]});
@@ -16220,8 +16226,8 @@ Entry.Board = function(a) {
     d || (d = {x:0, y:0});
     var k = d.x;
     d = d.y;
-    for (var n = 0;n < f.length;n++) {
-      var l = f[n], m = l.view;
+    for (var l = 0;l < f.length;l++) {
+      var n = f[l], m = n.view;
       if (m.dragInstance) {
         break;
       }
@@ -16229,10 +16235,10 @@ Entry.Board = function(a) {
       d += m.y;
       k += m.x;
       h = h.concat(this._getFieldBlockMetaData(m, k, d, c, e));
-      l.statements && (c += .01);
-      for (var q = 0;q < l.statements.length;q++) {
-        a = l.statements[q];
-        var r = l.view._statements[q], g = g.concat(this._getFieldMagnets(a, c, {x:r.x + k, y:r.y + d}, e));
+      n.statements && (c += .01);
+      for (var q = 0;q < n.statements.length;q++) {
+        a = n.statements[q];
+        var r = n.view._statements[q], g = g.concat(this._getFieldMagnets(a, c, {x:r.x + k, y:r.y + d}, e));
       }
       m.magnet.next && (d += m.magnet.next.y, k += m.magnet.next.x);
     }
@@ -16243,17 +16249,17 @@ Entry.Board = function(a) {
     c += a.contentPos.x;
     d += a.contentPos.y;
     for (var k = 0;k < g.length;k++) {
-      var n = g[k];
-      if (n instanceof Entry.FieldBlock && n.acceptType === f) {
-        var l = n._valueBlock;
-        if (!l.view.dragInstance) {
-          var m = c + n.box.x, q = d + n.box.y + -.5 * a.height, n = d + n.box.y + n.box.height;
-          h.push({point:q, endPoint:n, startBlock:l, blocks:[]});
-          h.push({point:n, blocks:[]});
-          l = l.view;
-          l.absX = m;
-          l.zIndex = e;
-          h = h.concat(this._getFieldBlockMetaData(l, m + l.contentPos.x, q + l.contentPos.y, e + .01, f));
+      var l = g[k];
+      if (l instanceof Entry.FieldBlock && l.acceptType === f) {
+        var n = l._valueBlock;
+        if (!n.view.dragInstance) {
+          var m = c + l.box.x, q = d + l.box.y + -.5 * a.height, l = d + l.box.y + l.box.height;
+          h.push({point:q, endPoint:l, startBlock:n, blocks:[]});
+          h.push({point:l, blocks:[]});
+          n = n.view;
+          n.absX = m;
+          n.zIndex = e;
+          h = h.concat(this._getFieldBlockMetaData(n, m + n.contentPos.x, q + n.contentPos.y, e + .01, f));
         }
       }
     }
@@ -16264,8 +16270,8 @@ Entry.Board = function(a) {
     d || (d = {x:0, y:0});
     var k = d.x;
     d = d.y;
-    for (var n = 0;n < f.length;n++) {
-      var l = f[n], m = l.view;
+    for (var l = 0;l < f.length;l++) {
+      var n = f[l], m = n.view;
       if (m.dragInstance) {
         break;
       }
@@ -16273,10 +16279,10 @@ Entry.Board = function(a) {
       d += m.y;
       k += m.x;
       h = h.concat(this._getOutputMetaData(m, k, d, c, e));
-      l.statements && (c += .01);
-      for (var q = 0;q < l.statements.length;q++) {
-        a = l.statements[q];
-        var r = l.view._statements[q], g = g.concat(this._getOutputMagnets(a, c, {x:r.x + k, y:r.y + d}, e));
+      n.statements && (c += .01);
+      for (var q = 0;q < n.statements.length;q++) {
+        a = n.statements[q];
+        var r = n.view._statements[q], g = g.concat(this._getOutputMagnets(a, c, {x:r.x + k, y:r.y + d}, e));
       }
       m.magnet.next && (d += m.magnet.next.y, k += m.magnet.next.x);
     }
@@ -16287,8 +16293,8 @@ Entry.Board = function(a) {
     c += a.contentPos.x;
     d += a.contentPos.y;
     for (a = 0;a < g.length;a++) {
-      var k = g[a], n = c + k.box.x, l = d - 24, m = d;
-      k instanceof Entry.FieldBlock ? (l = k._valueBlock) && (h = h.concat(this._getOutputMetaData(l.view, n, d + k.box.y, e + .01, f))) : k instanceof Entry.FieldOutput && k.acceptType === f && (h.push({point:l, endPoint:m, startBlock:k, blocks:[]}), h.push({point:m, blocks:[]}), k.absX = n, k.zIndex = e, k.width = 20, (l = k._valueBlock) && (l.view.dragInstance || (h = h.concat(this._getOutputMetaData(l.view, c + k.box.x, d + k.box.y, e + .01, f)))));
+      var k = g[a], l = c + k.box.x, n = d - 24, m = d;
+      k instanceof Entry.FieldBlock ? (n = k._valueBlock) && (h = h.concat(this._getOutputMetaData(n.view, l, d + k.box.y, e + .01, f))) : k instanceof Entry.FieldOutput && k.acceptType === f && (h.push({point:n, endPoint:m, startBlock:k, blocks:[]}), h.push({point:m, blocks:[]}), k.absX = l, k.zIndex = e, k.width = 20, (n = k._valueBlock) && (n.view.dragInstance || (h = h.concat(this._getOutputMetaData(n.view, c + k.box.x, d + k.box.y, e + .01, f)))));
     }
     return h;
   };
@@ -16713,11 +16719,11 @@ Entry.Playground.prototype.generateTextView = function(a) {
   d = Entry.createElement("a");
   c.appendChild(d);
   d.bindOnClick(function() {
-    Entry.playground.object.entity.toggleFontItalic() ? n.src = Entry.mediaFilePath + "text_button_italic_true.png" : n.src = Entry.mediaFilePath + "/text_button_italic_false.png";
+    Entry.playground.object.entity.toggleFontItalic() ? l.src = Entry.mediaFilePath + "text_button_italic_true.png" : l.src = Entry.mediaFilePath + "/text_button_italic_false.png";
   });
-  var n = Entry.createElement("img", "entryPlaygroundText_italicImage");
-  d.appendChild(n);
-  n.src = Entry.mediaFilePath + "text_button_italic_false.png";
+  var l = Entry.createElement("img", "entryPlaygroundText_italicImage");
+  d.appendChild(l);
+  l.src = Entry.mediaFilePath + "text_button_italic_false.png";
   c = Entry.createElement("li");
   e.appendChild(c);
   d = Entry.createElement("a");
@@ -16725,11 +16731,11 @@ Entry.Playground.prototype.generateTextView = function(a) {
   d.bindOnClick(function() {
     var a = !Entry.playground.object.entity.getStrike() || !1;
     Entry.playground.object.entity.setStrike(a);
-    l.src = Entry.mediaFilePath + "text_button_strike_" + a + ".png";
+    n.src = Entry.mediaFilePath + "text_button_strike_" + a + ".png";
   });
-  var l = Entry.createElement("img", "entryPlaygroundText_strikeImage");
-  d.appendChild(l);
-  l.src = Entry.mediaFilePath + "text_button_strike_false.png";
+  var n = Entry.createElement("img", "entryPlaygroundText_strikeImage");
+  d.appendChild(n);
+  n.src = Entry.mediaFilePath + "text_button_strike_false.png";
   d = Entry.createElement("li");
   e.appendChild(d);
   c = Entry.createElement("a");

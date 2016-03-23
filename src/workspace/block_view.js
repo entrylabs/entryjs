@@ -326,20 +326,19 @@ Entry.BlockView.DRAG_RADIUS = 5;
 
         var board = this.getBoard();
         if (Entry.documentMousedown)
-            Entry.documentMousedown.notify();
+            Entry.documentMousedown.notify(e);
         if (this.readOnly || board.viewOnly) return;
 
         board.setSelectedBlock(this);
         this.dominate();
-        console.log(e.originalEvent);
-        if (e.button === 0 || e.originalEvent instanceof TouchEvent) {
-            var event;
+        if (e.button === 0 || (e.originalEvent && e.originalEvent.touches)) {
+            var mouseEvent;
             if (e.originalEvent && e.originalEvent.touches) {
-                event = e.originalEvent.touches[0];
-            } else event = e;
+                mouseEvent = e.originalEvent.touches[0];
+            } else mouseEvent = e;
 
             this.mouseDownCoordinate = {
-                x: event.pageX, y: event.pageY
+                x: mouseEvent.pageX, y: mouseEvent.pageY
             };
             var doc = $(document);
             doc.bind('mousemove.block', onMouseMove);
@@ -347,10 +346,10 @@ Entry.BlockView.DRAG_RADIUS = 5;
             doc.bind('touchmove.block', onMouseMove);
             doc.bind('touchend.block', onMouseUp);
             this.dragInstance = new Entry.DragInstance({
-                startX: event.pageX,
-                startY: event.pageY,
-                offsetX: event.pageX,
-                offsetY: event.pageY,
+                startX: mouseEvent.pageX,
+                startY: mouseEvent.pageY,
+                offsetX: mouseEvent.pageX,
+                offsetY: mouseEvent.pageY,
                 height: 0,
                 mode: true
             });
@@ -413,15 +412,16 @@ Entry.BlockView.DRAG_RADIUS = 5;
             e.stopPropagation();
             var workspaceMode = board.workspace.getMode();
 
+            var mouseEvent;
             if (workspaceMode === Entry.Workspace.MODE_VIMBOARD)
                 p.vimBoardEvent(e, 'dragOver');
             if (e.originalEvent && e.originalEvent.touches)
-                event = e.originalEvent.touches[0];
-            else event = e;
+                mouseEvent = e.originalEvent.touches[0];
+            else mouseEvent = e;
 
             var mouseDownCoordinate = blockView.mouseDownCoordinate;
-            var diff = Math.sqrt(Math.pow(event.pageX - mouseDownCoordinate.x, 2) +
-                            Math.pow(event.pageY - mouseDownCoordinate.y, 2));
+            var diff = Math.sqrt(Math.pow(mouseEvent.pageX - mouseDownCoordinate.x, 2) +
+                            Math.pow(mouseEvent.pageY - mouseDownCoordinate.y, 2));
             if (blockView.dragMode == Entry.DRAG_MODE_DRAG ||
                 diff > Entry.BlockView.DRAG_RADIUS) {
                 if (!blockView.movable) return;
@@ -447,13 +447,13 @@ Entry.BlockView.DRAG_RADIUS = 5;
 
                     var dragInstance = blockView.dragInstance;
                     blockView._moveBy(
-                        event.pageX - dragInstance.offsetX,
-                        event.pageY - dragInstance.offsetY,
+                        mouseEvent.pageX - dragInstance.offsetX,
+                        mouseEvent.pageY - dragInstance.offsetY,
                         false
                     );
                     dragInstance.set({
-                        offsetX: event.pageX,
-                        offsetY: event.pageY
+                        offsetX: mouseEvent.pageX,
+                        offsetY: mouseEvent.pageY
                     });
 
                     Entry.GlobalSvg.position();
