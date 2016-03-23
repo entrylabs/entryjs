@@ -174,23 +174,23 @@ Entry.Board = function(option) {
         if (e.stopPropagation) e.stopPropagation();
         if (e.preventDefault) e.preventDefault();
 
-        var event;
-        if (e.button === 0 || e.originalEvent instanceof TouchEvent) {
+        var mouseEvent;
+        if (e.button === 0 || (e.originalEvent && e.originalEvent.touches)) {
             if (e.originalEvent && e.originalEvent.touches)
-                 event = e.originalEvent.touches[0];
-            else event = e;
+                 mouseEvent = e.originalEvent.touches[0];
+            else mouseEvent = e;
             if (Entry.documentMousedown)
-                Entry.documentMousedown.notify(event);
+                Entry.documentMousedown.notify(mouseEvent);
             var doc = $(document);
             doc.bind('mousemove.entryBoard', onMouseMove);
             doc.bind('mouseup.entryBoard', onMouseUp);
             doc.bind('touchmove.entryBoard', onMouseMove);
             doc.bind('touchend.entryBoard', onMouseUp);
             this.dragInstance = new Entry.DragInstance({
-                startX: event.pageX,
-                startY: event.pageY,
-                offsetX: event.pageX,
-                offsetY: event.pageY
+                startX: mouseEvent.pageX,
+                startY: mouseEvent.pageY,
+                offsetX: mouseEvent.pageX,
+                offsetY: mouseEvent.pageY
             });
         } else if (Entry.Utils.isRightButton(event)) {
             if (!this.visible) return;
@@ -222,22 +222,22 @@ Entry.Board = function(option) {
 
         var board = this;
         function onMouseMove(e) {
-            var event;
+            var mouseEvent;
             if (e.stopPropagation) e.stopPropagation();
             if (e.preventDefault) e.preventDefault();
 
             if (e.originalEvent && e.originalEvent.touches)
-                event = e.originalEvent.touches[0];
-            else event = e;
+                mouseEvent = e.originalEvent.touches[0];
+            else mouseEvent = e;
 
             var dragInstance = board.dragInstance;
             board.scroller.scroll(
-                event.pageX - dragInstance.offsetX,
-                event.pageY - dragInstance.offsetY
+                mouseEvent.pageX - dragInstance.offsetX,
+                mouseEvent.pageY - dragInstance.offsetY
             );
             dragInstance.set({
-                offsetX: event.pageX,
-                offsetY: event.pageY
+                offsetX: mouseEvent.pageX,
+                offsetY: mouseEvent.pageY
             });
         }
 
