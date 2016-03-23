@@ -4745,8 +4745,7 @@ svg .svgBlockGroup text {
 }
 .entry-widget-dropdown .rect {
   height: 20px;
-  line-height: 13px;
-  padding: 5px 15px;
+  padding: 3px 15px;
   width: 100%;
 }
 .entry-widget-dropdown .rect:hover {
