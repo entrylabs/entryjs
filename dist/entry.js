@@ -14815,14 +14815,14 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldOutput);
     this._updateValueBlock(d);
     this._blockView.getBoard().constructor == Entry.BlockMenu && this._valueBlock && this._valueBlock.view.removeControl();
   };
-  a.align = function(a, c, d) {
+  a.align = function(b, a, d) {
     var e = this.svgGroup;
-    this._position && (this._position.x && (a = this._position.x), this._position.y && (c = this._position.y));
+    this._position && (this._position.x && (b = this._position.x), this._position.y && (a = this._position.y));
     var f = this._valueBlock;
-    f && (c = -.5 * f.view.height);
-    f = "translate(" + a + "," + c + ")";
+    f && (a = -.5 * f.view.height);
+    f = "translate(" + b + "," + a + ")";
     void 0 === d || d ? e.animate({transform:f}, 300, mina.easeinout) : e.attr({transform:f});
-    this.box.set({x:a, y:c});
+    this.box.set({x:b, y:a});
   };
   a.calcWH = function() {
     var a = this._valueBlock;
@@ -16063,7 +16063,7 @@ Entry.Board = function(a) {
         e.bind("touchend.entryBoard", d);
         this.dragInstance = new Entry.DragInstance({startX:a.pageX, startY:a.pageY, offsetX:a.pageX, offsetY:a.pageY});
       } else {
-        if (Entry.Utils.isRightButton(event)) {
+        if (Entry.Utils.isRightButton(a)) {
           if (!this.visible) {
             return;
           }

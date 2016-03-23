@@ -194,7 +194,7 @@ Entry.Board = function(option) {
                 offsetX: mouseEvent.pageX,
                 offsetY: mouseEvent.pageY
             });
-        } else if (Entry.Utils.isRightButton(event)) {
+        } else if (Entry.Utils.isRightButton(e)) {
             if (!this.visible) return;
             var that = this;
 
