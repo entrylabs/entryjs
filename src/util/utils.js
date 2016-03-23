@@ -933,6 +933,10 @@ Entry.Utils.isRightButton = function(e) {
     return e.button == 2 || e.ctrlKey;
 };
 
+Entry.Utils.isTouchEvent = function(e) {
+    return e.type.toLowerCase() !== 'mousedown';
+};
+
 Entry.Utils.inherit = function(parent, child) {
     function F() {}
     F.prototype = parent.prototype;

@@ -321,7 +321,7 @@ Entry.BlockView.DRAG_RADIUS = 5;
     };
 
     p.onMouseDown = function(e) {
-        if (window.Touch && e instanceof Touch) {
+        if (Entry.Utils.isTouchEvent(e)) {
             e.button = 0;
         } else {
             e.stopPropagation();
@@ -334,7 +334,7 @@ Entry.BlockView.DRAG_RADIUS = 5;
 
         board.setSelectedBlock(this);
         this.dominate();
-        if (e.button === 0 || e.originalEvent instanceof TouchEvent) {
+        if (e.button === 0) {
             if (e.originalEvent && e.originalEvent.touches)
                 e = e.originalEvent.touches[0];
             this.mouseDownCoordinate = {

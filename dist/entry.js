@@ -10665,6 +10665,9 @@ Entry.Utils.disableContextmenu = function(a) {
 Entry.Utils.isRightButton = function(a) {
   return 2 == a.button || a.ctrlKey;
 };
+Entry.Utils.isTouchEvent = function(a) {
+  return "mousedown" !== a.type.toLowerCase();
+};
 Entry.Utils.inherit = function(a, b) {
   function c() {
   }
@@ -13670,13 +13673,13 @@ Entry.BlockView.DRAG_RADIUS = 5;
       delete this.mouseDownCoordinate;
       delete l.dragInstance;
     }
-    window.Touch && b instanceof Touch ? b.button = 0 : (b.stopPropagation(), b.preventDefault());
+    Entry.Utils.isTouchEvent(b) ? b.button = 0 : (b.stopPropagation(), b.preventDefault());
     var e = this.getBoard();
     Entry.documentMousedown && Entry.documentMousedown.notify();
     if (!this.readOnly && !e.viewOnly) {
       e.setSelectedBlock(this);
       this.dominate();
-      if (0 === b.button || b.originalEvent instanceof TouchEvent) {
+      if (0 === b.button) {
         b.originalEvent && b.originalEvent.touches && (b = b.originalEvent.touches[0]);
         this.mouseDownCoordinate = {x:b.pageX, y:b.pageY};
         var f = $(document);
@@ -16042,9 +16045,9 @@ Entry.Board = function(a) {
       delete g.dragInstance;
     }
     if (this.workspace.getMode() != Entry.Workspace.MODE_VIMBOARD) {
-      a.stopPropagation();
-      a.originalEvent.touches && (a = a.originalEvent.touches[0]);
-      if (0 === a.button || a instanceof Touch) {
+      Entry.Utils.isTouchEvent(a) ? a.button = 0 : (a.stopPropagation(), a.preventDefault());
+      if (0 === a.button) {
+        a.originalEvent && a.originalEvent.touches && (a = a.originalEvent.touches[0]);
         Entry.documentMousedown && Entry.documentMousedown.notify(a);
         var e = $(document);
         e.bind("mousemove.entryBoard", c);
