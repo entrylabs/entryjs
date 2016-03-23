@@ -13652,7 +13652,7 @@ Entry.BlockView.DRAG_RADIUS = 5;
   };
   a._moveTo = function(b, a, d) {
     this.set({x:b, y:a});
-    (this.visible || this.display) && this._setPosition(d);
+    this.visible && this.display && this._setPosition(d);
   };
   a._moveBy = function(b, a, d) {
     return this._moveTo(this.x + b, this.y + a, d);
@@ -13666,16 +13666,12 @@ Entry.BlockView.DRAG_RADIUS = 5;
   a.onMouseDown = function(b) {
     function c(b) {
       b.stopPropagation();
-      if (l.movable) {
-        var c = e.workspace.getMode();
-        c === Entry.Workspace.MODE_VIMBOARD && a.vimBoardEvent(b, "dragOver");
-        b.originalEvent.touches && (b = b.originalEvent.touches[0]);
-        var d = l.mouseDownCoordinate, d = Math.sqrt(Math.pow(b.pageX - d.x, 2) + Math.pow(b.pageY - d.y, 2));
-        if (l.dragMode == Entry.DRAG_MODE_DRAG || d >= Entry.BlockView.DRAG_RADIUS) {
-          l.isInBlockMenu ? e.cloneToGlobal(b) : (l.dragMode != Entry.DRAG_MODE_DRAG && (l._toGlobalCoordinate(), l.dragMode = Entry.DRAG_MODE_DRAG, l.block.getThread().changeEvent.notify(), Entry.GlobalSvg.setView(l, c)), this.animating && this.set({animating:!1}), 0 === l.dragInstance.height && l.dragInstance.set({height:-1 + l.height}), c = l.dragInstance, l._moveBy(b.pageX - c.offsetX, b.pageY - c.offsetY, !1), c.set({offsetX:b.pageX, offsetY:b.pageY}), Entry.GlobalSvg.position(), (b = l._getCloseBlock()) ? 
-          e.setMagnetedBlock(b.view) : e.setMagnetedBlock(null), l.originPos || (l.originPos = {x:l.x, y:l.y}));
-        }
-      }
+      var c = e.workspace.getMode();
+      c === Entry.Workspace.MODE_VIMBOARD && a.vimBoardEvent(b, "dragOver");
+      b.originalEvent.touches && (b = b.originalEvent.touches[0]);
+      var d = l.mouseDownCoordinate, d = Math.sqrt(Math.pow(b.pageX - d.x, 2) + Math.pow(b.pageY - d.y, 2));
+      (l.dragMode == Entry.DRAG_MODE_DRAG || d > Entry.BlockView.DRAG_RADIUS) && l.movable && (l.isInBlockMenu ? e.cloneToGlobal(b) : (l.dragMode != Entry.DRAG_MODE_DRAG && (l._toGlobalCoordinate(), l.dragMode = Entry.DRAG_MODE_DRAG, l.block.getThread().changeEvent.notify(), Entry.GlobalSvg.setView(l, c)), this.animating && this.set({animating:!1}), 0 === l.dragInstance.height && l.dragInstance.set({height:-1 + l.height}), c = l.dragInstance, l._moveBy(b.pageX - c.offsetX, b.pageY - c.offsetY, !1), 
+      c.set({offsetX:b.pageX, offsetY:b.pageY}), Entry.GlobalSvg.position(), (b = l._getCloseBlock()) ? e.setMagnetedBlock(b.view) : e.setMagnetedBlock(null), l.originPos || (l.originPos = {x:l.x, y:l.y})));
     }
     function d(b) {
       $(document).unbind(".block");
@@ -14206,10 +14202,15 @@ Entry.Field = function() {
     this._block.params[this._index] = b;
   };
   a._isEditable = function() {
-    var b = this._block.view;
-    if (b.dragMode == Entry.DRAG_MODE_MOUSEDOWN && b.svgGroup.hasClass("selected")) {
-      return !0;
+    if (this._block.view.dragMode == Entry.DRAG_MODE_DRAG) {
+      return !1;
     }
+    var b = this._block.view, a = b.getBoard(), d = a.workspace.selectedBlockView;
+    if (!d || a != d.getBoard()) {
+      return !1;
+    }
+    a = b.getSvgRoot();
+    return a == d.svgGroup || $(a).has($(b.svgGroup));
   };
   a._selectBlockView = function() {
     var b = this._block.view;
@@ -14920,17 +14921,17 @@ Entry.FieldStatement = function(a, b, c) {
     d ? e.animate({transform:f}, 300, mina.easeinout) : e.attr({transform:f});
   };
   a.calcHeight = function() {
-    var b = this._thread.view.requestPartHeight(null);
-    this.set({height:b});
+    var a = this._thread.view.requestPartHeight(null);
+    this.set({height:a});
   };
   a.getValue = function() {
     return this.block.statements[this._index];
   };
   a.requestAbsoluteCoordinate = function() {
-    var b = this._blockView.getAbsoluteCoordinate();
-    b.x += this.x;
-    b.y += this.y;
-    return b;
+    var a = this._blockView.getAbsoluteCoordinate();
+    a.x += this.x;
+    a.y += this.y;
+    return a;
   };
   a.dominate = function() {
     this._blockView.dominate();
@@ -14940,27 +14941,27 @@ Entry.FieldStatement = function(a, b, c) {
   a._updateBG = function() {
     if (this._board.dragBlock && this._board.dragBlock.dragInstance) {
       if (this.magneting) {
-        var b = this._board.dragBlock.getShadow();
-        $(b).attr({transform:"translate(0,0)"});
-        this.svgGroup.appendChild(b);
-        this._clonedShadow = b;
+        var a = this._board.dragBlock.getShadow();
+        $(a).attr({transform:"translate(0,0)"});
+        this.svgGroup.appendChild(a);
+        this._clonedShadow = a;
         this.background && (this.background.remove(), this.nextBackground.remove(), delete this.background, delete this.nextBackground);
-        b = this._board.dragBlock.getBelowHeight();
-        this.statementSvgGroup.attr({transform:"translate(0," + b + ")"});
-        this.set({height:this.height + b});
+        a = this._board.dragBlock.getBelowHeight();
+        this.statementSvgGroup.attr({transform:"translate(0," + a + ")"});
+        this.set({height:this.height + a});
       } else {
-        this._clonedShadow && (this._clonedShadow.remove(), delete this._clonedShadow), b = this.originalHeight, void 0 !== b && (this.background && (this.background.remove(), this.nextBackground.remove(), delete this.background, delete this.nextBackground), delete this.originalHeight), this.statementSvgGroup.attr({transform:"translate(0,0)"}), this.calcHeight();
+        this._clonedShadow && (this._clonedShadow.remove(), delete this._clonedShadow), a = this.originalHeight, void 0 !== a && (this.background && (this.background.remove(), this.nextBackground.remove(), delete this.background, delete this.nextBackground), delete this.originalHeight), this.statementSvgGroup.attr({transform:"translate(0,0)"}), this.calcHeight();
       }
-      (b = this.block.thread.changeEvent) && b.notify();
+      (a = this.block.thread.changeEvent) && a.notify();
     }
   };
-  a.insertTopBlock = function(b) {
+  a.insertTopBlock = function(a) {
     this._posObserver && this._posObserver.destroy();
-    var a = this.firstBlock;
-    b.doInsert(this._thread);
-    this.firstBlock = b;
-    this._posObserver = b.view.observe(this, "removeFirstBlock", ["x", "y"], !1);
-    return a;
+    var c = this.firstBlock;
+    a.doInsert(this._thread);
+    this.firstBlock = a;
+    this._posObserver = a.view.observe(this, "removeFirstBlock", ["x", "y"], !1);
+    return c;
   };
   a.removeFirstBlock = function() {
     this._posObserver && this._posObserver.destroy();
@@ -14983,16 +14984,16 @@ Entry.FieldText = function(a, b, c) {
 };
 Entry.Utils.inherit(Entry.Field, Entry.FieldText);
 (function(a) {
-  a.renderStart = function(b) {
-    this.svgGroup = b.contentSvgGroup.elem("g");
+  a.renderStart = function(a) {
+    this.svgGroup = a.contentSvgGroup.elem("g");
     this._text = this._text.replace(/(\r\n|\n|\r)/gm, " ");
     this.textElement = this.svgGroup.elem("text").attr({style:"white-space: pre; font-size:" + this._fontSize + "px", "class":"dragNone", fill:this._color});
     this.textElement.textContent = this._text;
-    b = this.textElement.getBBox();
-    var a = 0;
-    "center" == this._align && (a = -b.width / 2);
-    this.textElement.attr({x:a, y:.25 * b.height});
-    this.box.set({x:0, y:0, width:this.textElement.getComputedTextLength(), height:b.height});
+    a = this.textElement.getBBox();
+    var c = 0;
+    "center" == this._align && (c = -a.width / 2);
+    this.textElement.attr({x:c, y:.25 * a.height});
+    this.box.set({x:0, y:0, width:this.textElement.getComputedTextLength(), height:a.height});
   };
 })(Entry.FieldText.prototype);
 Entry.FieldTextInput = function(a, b, c) {

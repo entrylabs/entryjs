@@ -286,7 +286,7 @@ Entry.BlockView.DRAG_RADIUS = 5;
 
     p._moveTo = function(x, y, animate) {
         this.set({ x: x, y: y });
-        if (this.visible || this.display)
+        if (this.visible && this.display)
             this._setPosition(animate);
     };
 
@@ -400,7 +400,6 @@ Entry.BlockView.DRAG_RADIUS = 5;
 
         function onMouseMove(e) {
             e.stopPropagation();
-            if (!blockView.movable) return;
             var workspaceMode = board.workspace.getMode();
 
             if (workspaceMode === Entry.Workspace.MODE_VIMBOARD)
@@ -412,7 +411,8 @@ Entry.BlockView.DRAG_RADIUS = 5;
             var diff = Math.sqrt(Math.pow(e.pageX - mouseDownCoordinate.x, 2) +
                             Math.pow(e.pageY - mouseDownCoordinate.y, 2));
             if (blockView.dragMode == Entry.DRAG_MODE_DRAG ||
-                diff >= Entry.BlockView.DRAG_RADIUS) {
+                diff > Entry.BlockView.DRAG_RADIUS) {
+                if (!blockView.movable) return;
 
                 if (!blockView.isInBlockMenu) {
                     if (blockView.dragMode != Entry.DRAG_MODE_DRAG) {

@@ -116,10 +116,19 @@ Entry.Field = function() {};
     };
 
     p._isEditable = function() {
+        var dragMode = this._block.view.dragMode;
+        if (dragMode == Entry.DRAG_MODE_DRAG) return false;
         var blockView = this._block.view;
-        var dragMode = blockView.dragMode;
-        if (dragMode == Entry.DRAG_MODE_MOUSEDOWN &&
-           blockView.svgGroup.hasClass('selected')) return true;
+        var board = blockView.getBoard();
+
+        var selectedBlockView = board.workspace.selectedBlockView;
+
+        if (!selectedBlockView || board != selectedBlockView.getBoard()) return false;
+
+        var root = blockView.getSvgRoot();
+
+        return root == selectedBlockView.svgGroup ||
+                $(root).has($(blockView.svgGroup));
     };
 
     p._selectBlockView = function() {
@@ -132,7 +141,6 @@ Entry.Field = function() {};
         $(this.svgGroup).bind('mouseup touchend', function(e){
             if (that._isEditable()) that.renderOptions();
         });
-    }
-
+    };
 
 })(Entry.Field.prototype);
