@@ -700,7 +700,7 @@ Entry.Board = function(option) {
                 var blocks = pointData.blocks;
                 for (var i = 0; i < blocks.length; i++) {
                     var blockView = blocks[i].view;
-                    if (blockView.absX < x && x < blockView.absX + blockView.width) {
+                    if (blockView.absX - 20 < x && x < blockView.absX + blockView.width) {
                         var resultBlock = pointData.blocks[i];
                         if (!result || result.view.zIndex < resultBlock.view.zIndex)
                             result = pointData.blocks[i];
