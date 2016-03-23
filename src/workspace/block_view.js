@@ -321,12 +321,9 @@ Entry.BlockView.DRAG_RADIUS = 5;
     };
 
     p.onMouseDown = function(e) {
-        if (Entry.Utils.isTouchEvent(e)) {
-            e.button = 0;
-        } else {
-            e.stopPropagation();
-            e.preventDefault();
-        }
+        if (e.stopPropagation) e.stopPropagation();
+        if (e.preventDefault) e.preventDefault();
+
         var board = this.getBoard();
         if (Entry.documentMousedown)
             Entry.documentMousedown.notify();
@@ -334,11 +331,15 @@ Entry.BlockView.DRAG_RADIUS = 5;
 
         board.setSelectedBlock(this);
         this.dominate();
-        if (e.button === 0) {
-            if (e.originalEvent && e.originalEvent.touches)
-                e = e.originalEvent.touches[0];
+        console.log(e.originalEvent);
+        if (e.button === 0 || e.originalEvent instanceof TouchEvent) {
+            var event;
+            if (e.originalEvent && e.originalEvent.touches) {
+                event = e.originalEvent.touches[0];
+            } else event = e;
+
             this.mouseDownCoordinate = {
-                x: e.pageX, y: e.pageY
+                x: event.pageX, y: event.pageY
             };
             var doc = $(document);
             doc.bind('mousemove.block', onMouseMove);
@@ -346,10 +347,10 @@ Entry.BlockView.DRAG_RADIUS = 5;
             doc.bind('touchmove.block', onMouseMove);
             doc.bind('touchend.block', onMouseUp);
             this.dragInstance = new Entry.DragInstance({
-                startX: e.pageX,
-                startY: e.pageY,
-                offsetX: e.pageX,
-                offsetY: e.pageY,
+                startX: event.pageX,
+                startY: event.pageY,
+                offsetX: event.pageX,
+                offsetY: event.pageY,
                 height: 0,
                 mode: true
             });
@@ -400,8 +401,8 @@ Entry.BlockView.DRAG_RADIUS = 5;
                     'view': window,
                     'bubbles': true,
                     'cancelable': true,
-                    'clientX' : e.clientX,
-                    'clientY' : e.clientY
+                    'clientX' : event.clientX,
+                    'clientY' : event.clientY
                 });
 
                 document.getElementsByClassName('CodeMirror')[0].dispatchEvent(dragEnd);
@@ -414,12 +415,13 @@ Entry.BlockView.DRAG_RADIUS = 5;
 
             if (workspaceMode === Entry.Workspace.MODE_VIMBOARD)
                 p.vimBoardEvent(e, 'dragOver');
-            if (e.originalEvent.touches)
-                e = e.originalEvent.touches[0];
+            if (e.originalEvent && e.originalEvent.touches)
+                event = e.originalEvent.touches[0];
+            else event = e;
 
             var mouseDownCoordinate = blockView.mouseDownCoordinate;
-            var diff = Math.sqrt(Math.pow(e.pageX - mouseDownCoordinate.x, 2) +
-                            Math.pow(e.pageY - mouseDownCoordinate.y, 2));
+            var diff = Math.sqrt(Math.pow(event.pageX - mouseDownCoordinate.x, 2) +
+                            Math.pow(event.pageY - mouseDownCoordinate.y, 2));
             if (blockView.dragMode == Entry.DRAG_MODE_DRAG ||
                 diff > Entry.BlockView.DRAG_RADIUS) {
                 if (!blockView.movable) return;
@@ -445,13 +447,13 @@ Entry.BlockView.DRAG_RADIUS = 5;
 
                     var dragInstance = blockView.dragInstance;
                     blockView._moveBy(
-                        e.pageX - dragInstance.offsetX,
-                        e.pageY - dragInstance.offsetY,
+                        event.pageX - dragInstance.offsetX,
+                        event.pageY - dragInstance.offsetY,
                         false
                     );
                     dragInstance.set({
-                        offsetX: e.pageX,
-                        offsetY: e.pageY
+                        offsetX: event.pageX,
+                        offsetY: event.pageY
                     });
 
                     Entry.GlobalSvg.position();
