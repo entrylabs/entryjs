@@ -24,30 +24,31 @@ Entry.Robotis_carCont = {
     },
     setZero: function() {
         // instruction / address / length / value / default length
-        Entry.hw.sendQueue['ROBOTIS_DATA'] = [
+        this.setRobotisData([
             [Entry.Robotis_carCont.INSTRUCTION.WRITE, 152, 2, 0], 
             [Entry.Robotis_carCont.INSTRUCTION.WRITE, 154, 2, 0]
-        ];
+        ]);
         Entry.hw.sendQueue['setZero'] = [1];
-        Entry.hw.update();
-        Entry.hw.sendQueue['ROBOTIS_DATA'] = null;
+        this.update();
+        this.setRobotisData(null);
         Entry.hw.sendQueue['setZero'] = null;
-        Entry.hw.update();
+        this.update();
     },
     name: 'robotis_carCont',
     delay: 40,
     postCallReturn: function(script, data, ms) {
         if (ms <= 0) {
-            Entry.hw.sendQueue['ROBOTIS_DATA'] = data;
-            Entry.hw.update();
+            this.setRobotisData(data);
+            this.update();
             return script.callReturn();
         }
-        
+
         if (!script.isStart) {
             script.isStart = true;
             script.timeFlag = 1;
             //data setting
-            Entry.hw.sendQueue['ROBOTIS_DATA'] = data;
+            this.setRobotisData(data);
+
             //delay xx ms
             setTimeout(function() {
                 script.timeFlag = 0;
@@ -55,23 +56,34 @@ Entry.Robotis_carCont = {
 
             return script;
         } else if (script.timeFlag == 1) {
-            Entry.hw.sendQueue['ROBOTIS_DATA'] = [[0, 0, 0, 0]];
+            this.setRobotisData(null);
             return script;
         } else {
             delete script.timeFlag;
             delete script.isStart;
             Entry.engine.isContinue = false;
-            Entry.hw.update();
+            this.update();
             return script.callReturn();
         }
     },
     wait: function(sq, ms) {
         Entry.hw.socket.send(JSON.stringify(sq));
-        
+    
         var start = new Date().getTime();
         var end = start;
         while(end < start + ms) {//wait XX ms
             end = new Date().getTime();
+        }
+    },
+    update: function() {
+        Entry.hw.update();
+        this.setRobotisData(null);
+    },
+    setRobotisData: function(data) {
+        if (data == null) {
+            Entry.hw.sendQueue['ROBOTIS_DATA'] = null;
+        } else {
+            Entry.hw.sendQueue['ROBOTIS_DATA'] = (Entry.hw.sendQueue['ROBOTIS_DATA']) ? Entry.hw.sendQueue['ROBOTIS_DATA'].concat(data) : data;
         }
     }
 };
@@ -114,7 +126,7 @@ Entry.Robotis_openCM70 = {
     },
     setZero: function() {
         // instruction / address / length / value / default length
-        Entry.hw.sendQueue['ROBOTIS_DATA'] = [
+        Entry.Robotis_carCont.setRobotisData([
             [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 136, 2, 0], 
             [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 138, 2, 0], 
             [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 140, 2, 0], 
@@ -124,12 +136,12 @@ Entry.Robotis_openCM70 = {
             [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 79, 1, 0],
             [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 80, 1, 0],
             [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 81, 1, 0]
-        ];
+        ]);
         Entry.hw.sendQueue['setZero'] = [1];
-        Entry.hw.update();
-        Entry.hw.sendQueue['ROBOTIS_DATA'] = null;
+        Entry.Robotis_carCont.update();
+        Entry.Robotis_carCont.setRobotisData(null);
         Entry.hw.sendQueue['setZero'] = null;
-        Entry.hw.update();
+        Entry.Robotis_carCont.update();
     },
     name: 'robotis_openCM70',
     delay: 15,
@@ -178,9 +190,9 @@ Entry.block.robotis_openCM70_cm_custom_value = function (sprite, script) {
     data_default_address = data_address;    
     data_default_length = data_length;
     
-    Entry.hw.sendQueue['ROBOTIS_DATA'] = [[data_instruction, data_address, data_length, data_value, data_default_length]];          
+    Entry.Robotis_carCont.setRobotisData([[data_instruction, data_address, data_length, data_value, data_default_length]]);
     // Entry.hw.socket.send(JSON.stringify(Entry.hw.sendQueue));
-    Entry.hw.update();
+    Entry.Robotis_carCont.update();
     
     return Entry.hw.portData[data_default_address];
 };
@@ -237,9 +249,9 @@ Entry.block.robotis_openCM70_sensor_value = function (sprite, script) {
     
     data_default_address = data_default_address + increase * data_default_length;
       
-    Entry.hw.sendQueue['ROBOTIS_DATA'] = [[data_instruction, data_address, data_length, data_value, data_default_length]];          
+    Entry.Robotis_carCont.setRobotisData([[data_instruction, data_address, data_length, data_value, data_default_length]]);
     // Entry.hw.socket.send(JSON.stringify(Entry.hw.sendQueue));
-    Entry.hw.update();
+    Entry.Robotis_carCont.update();
     
     return Entry.hw.portData[data_default_address];
 };
@@ -374,9 +386,9 @@ Entry.block.robotis_openCM70_aux_sensor_value = function (sprite, script) {
         data_length = 6 * data_default_length;
     }
     
-    Entry.hw.sendQueue['ROBOTIS_DATA'] = [[data_instruction, data_address, data_length, data_value, data_default_length]];          
+    Entry.Robotis_carCont.setRobotisData([[data_instruction, data_address, data_length, data_value, data_default_length]]);
     // Entry.hw.socket.send(JSON.stringify(Entry.hw.sendQueue));
-    Entry.hw.update();
+    Entry.Robotis_carCont.update();
     
     return Entry.hw.portData[data_default_address];
 };
@@ -1093,9 +1105,9 @@ Entry.block.robotis_carCont_sensor_value = function (sprite, script) {
         data_length = Entry.Robotis_carCont.CONTROL_TABLE.CM_BUTTON_STATUS[1];
       }
       
-    Entry.hw.sendQueue['ROBOTIS_DATA'] = [[data_instruction, data_address, data_length, data_value, data_default_length]];          
+    Entry.Robotis_carCont.setRobotisData([[data_instruction, data_address, data_length, data_value, data_default_length]]);
     // Entry.hw.socket.send(JSON.stringify(Entry.hw.sendQueue));
-    Entry.hw.update();
+    Entry.Robotis_carCont.update();
     
     return Entry.hw.portData[data_default_address];
 };
@@ -1280,6 +1292,6 @@ Entry.block.robotis_carCont_cm_calibration = function (sprite, script) {
     return Entry.Robotis_carCont.postCallReturn(script, data_sendqueue, Entry.Robotis_carCont.delay);
     
     // Entry.hw.sendQueue['ROBOTIS_DATA'] = [[data_instruction, data_address, data_length, data_value]];
-    // Entry.hw.update();
+    // update();
     // return script.callReturn();
 };
