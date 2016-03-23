@@ -170,30 +170,29 @@ Entry.Board = function(option) {
     p.onMouseDown = function(e) {
         if (this.workspace.getMode() == Entry.Workspace.MODE_VIMBOARD)
             return;
-        if (Entry.Utils.isTouchEvent(e)) {
-            e.button = 0;
-        } else {
-            e.stopPropagation();
-            e.preventDefault();
-        }
 
-        if (e.button === 0) {
+        if (e.stopPropagation) e.stopPropagation();
+        if (e.preventDefault) e.preventDefault();
+
+        var event;
+        if (e.button === 0 || e.originalEvent instanceof TouchEvent) {
             if (e.originalEvent && e.originalEvent.touches)
-                e = e.originalEvent.touches[0];
+                 event = e.originalEvent.touches[0];
+            else event = e;
             if (Entry.documentMousedown)
-                Entry.documentMousedown.notify(e);
+                Entry.documentMousedown.notify(event);
             var doc = $(document);
             doc.bind('mousemove.entryBoard', onMouseMove);
             doc.bind('mouseup.entryBoard', onMouseUp);
             doc.bind('touchmove.entryBoard', onMouseMove);
             doc.bind('touchend.entryBoard', onMouseUp);
             this.dragInstance = new Entry.DragInstance({
-                startX: e.pageX,
-                startY: e.pageY,
-                offsetX: e.pageX,
-                offsetY: e.pageY
+                startX: event.pageX,
+                startY: event.pageY,
+                offsetX: event.pageX,
+                offsetY: event.pageY
             });
-        } else if (Entry.Utils.isRightButton(e)) {
+        } else if (Entry.Utils.isRightButton(event)) {
             if (!this.visible) return;
             var that = this;
 
@@ -223,20 +222,22 @@ Entry.Board = function(option) {
 
         var board = this;
         function onMouseMove(e) {
-            e.stopPropagation();
-            e.preventDefault();
+            var event;
+            if (e.stopPropagation) e.stopPropagation();
+            if (e.preventDefault) e.preventDefault();
 
-            if (e.originalEvent.touches) {
-                e = e.originalEvent.touches[0];
-            }
+            if (e.originalEvent && e.originalEvent.touches)
+                event = e.originalEvent.touches[0];
+            else event = e;
+
             var dragInstance = board.dragInstance;
             board.scroller.scroll(
-                e.pageX - dragInstance.offsetX,
-                e.pageY - dragInstance.offsetY
+                event.pageX - dragInstance.offsetX,
+                event.pageY - dragInstance.offsetY
             );
             dragInstance.set({
-                offsetX: e.pageX,
-                offsetY: e.pageY
+                offsetX: event.pageX,
+                offsetY: event.pageY
             });
         }
 
