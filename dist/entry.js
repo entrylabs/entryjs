@@ -15100,7 +15100,7 @@ Entry.GlobalSvg = {};
   };
   a.setView = function(b, a) {
     if (b != this._view && !b.block.isReadOnly() && b.movable) {
-      return b.set({visible:!1}), this._view = b, this._mode = a, this.draw(), this.align(), this.position(), !0;
+      return this._view = b, this._mode = a, a !== Entry.Workspace.MODE_VIMBOARD && b.set({visible:!1}), this.draw(), this.align(), this.position(), !0;
     }
   };
   a.draw = function() {

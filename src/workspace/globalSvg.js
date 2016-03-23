@@ -37,9 +37,10 @@ goog.provide('Entry.GlobalSvg');
         if (view == this._view) return;
         var data = view.block;
         if (data.isReadOnly() || !view.movable) return;
-        view.set({visible:false});
         this._view = view;
         this._mode = mode;
+        if (mode !== Entry.Workspace.MODE_VIMBOARD)
+            view.set({visible:false});
         this.draw();
         this.align();
         this.position();
