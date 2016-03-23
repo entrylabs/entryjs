@@ -16,7 +16,8 @@ Entry.Func = function() {
         [
             {
                 type: "function_create",
-                x: 40, y: 40
+                x: 40, y: 40,
+                copyable: false
             }
         ]
     ]);

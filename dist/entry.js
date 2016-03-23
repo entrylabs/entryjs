@@ -4284,9 +4284,9 @@ Entry.block.message_cast_wait = function(a, b) {
   }
   var e = [];
   Entry.container.mapEntityIncludeCloneOnScene(function(b, a) {
-    for (var c = a[0], d = a[1], l = b.parent.script.childNodes, n = 0;n < l.length;n++) {
-      var m = l[n], q = Entry.Xml.getField("VALUE", m);
-      Entry.Xml.isTypeOf(c, m) && q == d && (q = new Entry.Script(b), q.init(m), e.push(q));
+    for (var c = a[0], d = a[1], m = b.parent.script.childNodes, n = 0;n < m.length;n++) {
+      var l = m[n], q = Entry.Xml.getField("VALUE", l);
+      Entry.Xml.isTypeOf(c, l) && q == d && (q = new Entry.Script(b), q.init(l), e.push(q));
     }
   }, ["when_message_cast", c]);
   b.runningScript = e;
@@ -6652,22 +6652,22 @@ Entry.EntryObject.prototype.generateView = function() {
     var k = Entry.createElement("span");
     k.addClass("entryObjectCoordinateSizeWorkspace");
     k.innerHTML = "\ud06c\uae30 :";
-    var l = Entry.createElement("input");
-    l.addClass("entryObjectCoordinateInputWorkspace", "entryObjectCoordinateInputWorkspace_size");
-    l.bindOnClick(function(b) {
+    var m = Entry.createElement("input");
+    m.addClass("entryObjectCoordinateInputWorkspace", "entryObjectCoordinateInputWorkspace_size");
+    m.bindOnClick(function(b) {
       b.stopPropagation();
       this.select();
     });
-    l.setAttribute("disabled", "disabled");
+    m.setAttribute("disabled", "disabled");
     d.appendChild(e);
     d.appendChild(f);
     d.appendChild(g);
     d.appendChild(h);
     d.appendChild(k);
-    d.appendChild(l);
+    d.appendChild(m);
     d.xInput_ = f;
     d.yInput_ = h;
-    d.sizeInput_ = l;
+    d.sizeInput_ = m;
     this.coordinateView_ = d;
     c = this;
     f.onkeypress = function(b) {
@@ -6686,11 +6686,11 @@ Entry.EntryObject.prototype.generateView = function() {
       c.updateCoordinateView();
       Entry.stage.updateObject();
     };
-    l.onkeypress = function(b) {
+    m.onkeypress = function(b) {
       13 == b.keyCode && this.blur();
     };
-    l.onblur = function(b) {
-      isNaN(l.value) || c.entity.setSize(Number(l.value));
+    m.onblur = function(b) {
+      isNaN(m.value) || c.entity.setSize(Number(m.value));
       c.updateCoordinateView();
       Entry.stage.updateObject();
     };
@@ -6713,20 +6713,20 @@ Entry.EntryObject.prototype.generateView = function() {
     g = Entry.createElement("span");
     g.addClass("entryObjectDirectionSpanWorkspace");
     g.innerHTML = Lang.Workspace.direction + " : ";
-    var m = Entry.createElement("input");
-    m.addClass("entryObjectDirectionInputWorkspace");
-    m.setAttribute("disabled", "disabled");
-    m.bindOnClick(function(b) {
+    var l = Entry.createElement("input");
+    l.addClass("entryObjectDirectionInputWorkspace");
+    l.setAttribute("disabled", "disabled");
+    l.bindOnClick(function(b) {
       b.stopPropagation();
       this.select();
     });
-    this.directionInput_ = m;
+    this.directionInput_ = l;
     d.appendChild(e);
     d.appendChild(n);
     d.appendChild(g);
-    d.appendChild(m);
+    d.appendChild(l);
     d.rotateInput_ = n;
-    d.directionInput_ = m;
+    d.directionInput_ = l;
     c = this;
     n.onkeypress = function(b) {
       13 == b.keyCode && this.blur();
@@ -6738,11 +6738,11 @@ Entry.EntryObject.prototype.generateView = function() {
       c.updateRotationView();
       Entry.stage.updateObject();
     };
-    m.onkeypress = function(b) {
+    l.onkeypress = function(b) {
       13 == b.keyCode && this.blur();
     };
-    m.onblur = function(b) {
-      b = m.value;
+    l.onblur = function(b) {
+      b = l.value;
       -1 != b.indexOf("\u02da") && (b = b.substring(0, b.indexOf("\u02da")));
       isNaN(b) || c.entity.setDirection(Number(b));
       c.updateRotationView();
@@ -6814,19 +6814,19 @@ Entry.EntryObject.prototype.generateView = function() {
         Entry.container.selectObject(b.id), Entry.playground.injectObject(b);
       }
     }), this.view_.appendChild(d), d = Entry.createElement("div"), d.addClass("entryObjectInformationWorkspace"), d.object = this, this.isInformationToggle = !1, a.appendChild(d), this.informationView_ = d, d = Entry.createElement("div"), d.addClass("entryObjectRotateLabelWrapperWorkspace"), this.view_.appendChild(d), this.rotateLabelWrapperView_ = d, e = Entry.createElement("span"), e.addClass("entryObjectRotateSpanWorkspace"), e.innerHTML = Lang.Workspace.rotation + " : ", n = Entry.createElement("input"), 
-    n.addClass("entryObjectRotateInputWorkspace"), this.rotateSpan_ = e, this.rotateInput_ = n, g = Entry.createElement("span"), g.addClass("entryObjectDirectionSpanWorkspace"), g.innerHTML = Lang.Workspace.direction + " : ", m = Entry.createElement("input"), m.addClass("entryObjectDirectionInputWorkspace"), this.directionInput_ = m, d.appendChild(e), d.appendChild(n), d.appendChild(g), d.appendChild(m), d.rotateInput_ = n, d.directionInput_ = m, c = this, n.onkeypress = function(b) {
+    n.addClass("entryObjectRotateInputWorkspace"), this.rotateSpan_ = e, this.rotateInput_ = n, g = Entry.createElement("span"), g.addClass("entryObjectDirectionSpanWorkspace"), g.innerHTML = Lang.Workspace.direction + " : ", l = Entry.createElement("input"), l.addClass("entryObjectDirectionInputWorkspace"), this.directionInput_ = l, d.appendChild(e), d.appendChild(n), d.appendChild(g), d.appendChild(l), d.rotateInput_ = n, d.directionInput_ = l, c = this, n.onkeypress = function(b) {
       13 == b.keyCode && (b = n.value, -1 != b.indexOf("\u02da") && (b = b.substring(0, b.indexOf("\u02da"))), isNaN(b) || c.entity.setRotation(Number(b)), c.updateRotationView(), n.blur());
     }, n.onblur = function(b) {
       c.entity.setRotation(c.entity.getRotation());
       Entry.stage.updateObject();
-    }, m.onkeypress = function(b) {
-      13 == b.keyCode && (b = m.value, -1 != b.indexOf("\u02da") && (b = b.substring(0, b.indexOf("\u02da"))), isNaN(b) || c.entity.setDirection(Number(b)), c.updateRotationView(), m.blur());
-    }, m.onblur = function(b) {
+    }, l.onkeypress = function(b) {
+      13 == b.keyCode && (b = l.value, -1 != b.indexOf("\u02da") && (b = b.substring(0, b.indexOf("\u02da"))), isNaN(b) || c.entity.setDirection(Number(b)), c.updateRotationView(), l.blur());
+    }, l.onblur = function(b) {
       c.entity.setDirection(c.entity.getDirection());
       Entry.stage.updateObject();
     }, a = Entry.createElement("div"), a.addClass("entryObjectRotationWrapperWorkspace"), a.object = this, this.view_.appendChild(a), d = Entry.createElement("span"), d.addClass("entryObjectCoordinateWorkspace"), a.appendChild(d), e = Entry.createElement("span"), e.addClass("entryObjectCoordinateSpanWorkspace"), e.innerHTML = "X:", f = Entry.createElement("input"), f.addClass("entryObjectCoordinateInputWorkspace"), g = Entry.createElement("span"), g.addClass("entryObjectCoordinateSpanWorkspace"), 
-    g.innerHTML = "Y:", h = Entry.createElement("input"), h.addClass("entryObjectCoordinateInputWorkspace entryObjectCoordinateInputWorkspace_right"), k = Entry.createElement("span"), k.addClass("entryObjectCoordinateSpanWorkspace"), k.innerHTML = Lang.Workspace.Size, l = Entry.createElement("input"), l.addClass("entryObjectCoordinateInputWorkspace", "entryObjectCoordinateInputWorkspace_size"), d.appendChild(e), d.appendChild(f), d.appendChild(g), d.appendChild(h), d.appendChild(k), d.appendChild(l), 
-    d.xInput_ = f, d.yInput_ = h, d.sizeInput_ = l, this.coordinateView_ = d, c = this, f.onkeypress = function(b) {
+    g.innerHTML = "Y:", h = Entry.createElement("input"), h.addClass("entryObjectCoordinateInputWorkspace entryObjectCoordinateInputWorkspace_right"), k = Entry.createElement("span"), k.addClass("entryObjectCoordinateSpanWorkspace"), k.innerHTML = Lang.Workspace.Size, m = Entry.createElement("input"), m.addClass("entryObjectCoordinateInputWorkspace", "entryObjectCoordinateInputWorkspace_size"), d.appendChild(e), d.appendChild(f), d.appendChild(g), d.appendChild(h), d.appendChild(k), d.appendChild(m), 
+    d.xInput_ = f, d.yInput_ = h, d.sizeInput_ = m, this.coordinateView_ = d, c = this, f.onkeypress = function(b) {
       13 == b.keyCode && (isNaN(f.value) || c.entity.setX(Number(f.value)), c.updateCoordinateView(), f.blur());
     }, f.onblur = function(b) {
       c.entity.setX(c.entity.getX());
@@ -7557,14 +7557,14 @@ Entry.Painter.prototype.fill = function() {
     var c = new createjs.Point(this.stage.mouseX, this.stage.mouseY);
     c.x = Math.round(c.x);
     c.y = Math.round(c.y);
-    for (var d = 4 * (c.y * a + c.x), e = this.colorLayerData.data[d], f = this.colorLayerData.data[d + 1], g = this.colorLayerData.data[d + 2], h = this.colorLayerData.data[d + 3], k, l, c = [[c.x, c.y]], n = Entry.hex2rgb(this.stroke.lineColor);c.length;) {
-      for (var d = c.pop(), m = d[0], q = d[1], d = 4 * (q * a + m);0 <= q && this.matchColor(d, e, f, g, h);) {
+    for (var d = 4 * (c.y * a + c.x), e = this.colorLayerData.data[d], f = this.colorLayerData.data[d + 1], g = this.colorLayerData.data[d + 2], h = this.colorLayerData.data[d + 3], k, m, c = [[c.x, c.y]], n = Entry.hex2rgb(this.stroke.lineColor);c.length;) {
+      for (var d = c.pop(), l = d[0], q = d[1], d = 4 * (q * a + l);0 <= q && this.matchColor(d, e, f, g, h);) {
         --q, d -= 4 * a;
       }
       d += 4 * a;
       q += 1;
-      for (l = k = !1;q < b - 1 && this.matchColor(d, e, f, g, h);) {
-        q += 1, this.colorPixel(d, n.r, n.g, n.b), 0 < m && (this.matchColor(d - 4, e, f, g, h) ? k || (c.push([m - 1, q]), k = !0) : k && (k = !1)), m < a - 1 && (this.matchColor(d + 4, e, f, g, h) ? l || (c.push([m + 1, q]), l = !0) : l && (l = !1)), d += 4 * a;
+      for (m = k = !1;q < b - 1 && this.matchColor(d, e, f, g, h);) {
+        q += 1, this.colorPixel(d, n.r, n.g, n.b), 0 < l && (this.matchColor(d - 4, e, f, g, h) ? k || (c.push([l - 1, q]), k = !0) : k && (k = !1)), l < a - 1 && (this.matchColor(d + 4, e, f, g, h) ? m || (c.push([l + 1, q]), m = !0) : m && (m = !1)), d += 4 * a;
       }
       if (1080 < c.length) {
         break;
@@ -7876,13 +7876,13 @@ Entry.Painter.prototype.generateView = function(a) {
     h.appendChild(k);
     h = Entry.createElement("li");
     k.appendChild(h);
-    var l = Entry.createElement("a", "entryPainterTopMenuFileSave");
-    l.bindOnClick(function() {
+    var m = Entry.createElement("a", "entryPainterTopMenuFileSave");
+    m.bindOnClick(function() {
       b.file_save(!1);
     });
-    l.addClass("entryPainterTopMenuFileSave");
-    l.innerHTML = Lang.Workspace.painter_file_save;
-    h.appendChild(l);
+    m.addClass("entryPainterTopMenuFileSave");
+    m.innerHTML = Lang.Workspace.painter_file_save;
+    h.appendChild(m);
     h = Entry.createElement("li");
     k.appendChild(h);
     k = Entry.createElement("a", "entryPainterTopMenuFileSaveAs");
@@ -8143,12 +8143,12 @@ Entry.Painter.prototype.generateView = function(a) {
     d.addClass("painterAttrThickName");
     d.innerHTML = Lang.Workspace.thickness;
     this.attrThickArea.appendChild(d);
-    var m = Entry.createElement("fieldset", "entryPainterAttrThick");
-    m.addClass("entryPlaygroundPainterAttrThick");
-    this.attrThickArea.appendChild(m);
+    var l = Entry.createElement("fieldset", "entryPainterAttrThick");
+    l.addClass("entryPlaygroundPainterAttrThick");
+    this.attrThickArea.appendChild(l);
     d = Entry.createElement("div");
     d.addClass("paintAttrThickTop");
-    m.appendChild(d);
+    l.appendChild(d);
     e = Entry.createElement("select", "entryPainterAttrThick");
     e.addClass("entryPlaygroundPainterAttrThickInput");
     e.size = "1";
@@ -8158,15 +8158,15 @@ Entry.Painter.prototype.generateView = function(a) {
     for (d = 1;10 >= d;d++) {
       c = Entry.createElement("option"), c.value = d, c.innerHTML = d, e.appendChild(c);
     }
-    m.appendChild(e);
+    l.appendChild(e);
     d = Entry.createElement("div", "entryPainterShapeLineColor");
     d.addClass("painterAttrShapeLineColor");
     c = Entry.createElement("div", "entryPainterShapeInnerBackground");
     c.addClass("painterAttrShapeInnerBackground");
     d.appendChild(c);
-    m.appendChild(d);
+    l.appendChild(d);
     this.attrThickArea.painterAttrShapeLineColor = d;
-    m.bindOnClick(function() {
+    l.bindOnClick(function() {
       q.style.zIndex = "1";
       this.style.zIndex = "10";
       r = !1;
@@ -8186,7 +8186,7 @@ Entry.Painter.prototype.generateView = function(a) {
     c.appendChild(q);
     var r = !1;
     q.bindOnClick(function(b) {
-      m.style.zIndex = "1";
+      l.style.zIndex = "1";
       this.style.zIndex = "10";
       r = !0;
     });
@@ -8242,7 +8242,7 @@ Entry.Painter.prototype.generateView = function(a) {
     };
     h = [{label:"\ubcf4\ud1b5", value:"normal"}, {label:"\uad75\uac8c", value:"bold"}, {label:"\uae30\uc6b8\uc784", value:"italic"}];
     for (d = 0;d < h.length;d++) {
-      l = h[d], c = Entry.createElement("option"), c.value = l.value, c.innerHTML = l.label, k.appendChild(c);
+      m = h[d], c = Entry.createElement("option"), c.value = m.value, c.innerHTML = m.label, k.appendChild(c);
     }
     e.appendChild(k);
     this.attrLineArea = Entry.createElement("div", "painterAttrLineStyle");
@@ -10145,14 +10145,14 @@ Entry.ContextMenu = {};
       var d = this.dom;
       d.empty();
       for (var e = 0, f = b.length;e < f;e++) {
-        var g = b[e], h = g.text, k = !1 !== g.enable, l = Entry.Dom("li", {class:k ? "menuAble" : "menuDisable", parent:d});
-        l.text(h);
+        var g = b[e], h = g.text, k = !1 !== g.enable, m = Entry.Dom("li", {class:k ? "menuAble" : "menuDisable", parent:d});
+        m.text(h);
         k && g.callback && function(b, a) {
           b.mousedown(function(b) {
             b.preventDefault();
             a();
           });
-        }(l, g.callback);
+        }(m, g.callback);
       }
       d.removeClass("entryRemove");
       this.position(Entry.mouseCoordinate);
@@ -10770,7 +10770,7 @@ Entry.Model = function(a, b) {
 })(Entry.Model);
 Entry.Func = function() {
   this.id = Entry.generateHash();
-  this.content = new Entry.Code([[{type:"function_create", x:40, y:40}]]);
+  this.content = new Entry.Code([[{type:"function_create", x:40, y:40, copyable:!1}]]);
   this.block = null;
   this.hashMap = {};
 };
@@ -11037,11 +11037,11 @@ Entry.HWMonitor = function(a) {
     }
     h < f - e && (f = h / 2 + 3, e = -h / 2 - 3);
     for (;1 < b.length;) {
-      var k = b.shift(), l = b.pop(), n = e, m = f, q = d;
-      h <= f - e ? (e += k.width + 5, f -= l.width + 5, q = 0) : 0 === b.length ? (e = (e + f) / 2 - 3, f = e + 6) : (e = Math.max(e, -g / 2 + k.width) + 15, f = Math.min(f, g / 2 - l.width) - 15);
+      var k = b.shift(), m = b.pop(), n = e, l = f, q = d;
+      h <= f - e ? (e += k.width + 5, f -= m.width + 5, q = 0) : 0 === b.length ? (e = (e + f) / 2 - 3, f = e + 6) : (e = Math.max(e, -g / 2 + k.width) + 15, f = Math.min(f, g / 2 - m.width) - 15);
       this._movePort(k, e, a, n);
-      this._movePort(l, f, a, m);
-      h -= k.width + l.width + 10;
+      this._movePort(m, f, a, l);
+      h -= k.width + m.width + 10;
       a += q;
     }
     b.length && b[0].group.attr({transform:"t" + (f + e - b[0].width) / 2 + "," + a});
@@ -11593,17 +11593,17 @@ Entry.VariableContainer.prototype.renderMessageReference = function(a) {
   var b = this, c = Entry.container.objects_, d = ["when_message_cast", "message_cast", "message_cast_wait"], e = [], f = Entry.createElement("ul");
   f.addClass("entryVariableListCallerListWorkspace");
   for (var g in c) {
-    for (var h = c[g], k = h.script.getElementsByTagName("block"), l = 0;l < k.length;l++) {
-      var n = k[l], m = n.getAttribute("type");
-      if (-1 < d.indexOf(m)) {
-        m = Entry.Xml.getField("VALUE", n), m == a.id && e.push({object:h, block:n});
+    for (var h = c[g], k = h.script.getElementsByTagName("block"), m = 0;m < k.length;m++) {
+      var n = k[m], l = n.getAttribute("type");
+      if (-1 < d.indexOf(l)) {
+        l = Entry.Xml.getField("VALUE", n), l == a.id && e.push({object:h, block:n});
       } else {
-        if ("function_general" == m) {
+        if ("function_general" == l) {
           var q = n.getElementsByTagName("mutation")[0].getAttribute("hashid");
           if (q = Entry.variableContainer.getFunction(q)) {
             for (var q = q.content, q = q.getElementsByTagName("block"), r = 0;r < q.length;r++) {
-              var t = q[r], m = t.getAttribute("type");
-              -1 < d.indexOf(m) && (m = Entry.Xml.getField("VALUE", t), m == a.id && e.push({object:h, block:t, funcBlock:n}));
+              var t = q[r], l = t.getAttribute("type");
+              -1 < d.indexOf(l) && (l = Entry.Xml.getField("VALUE", t), l == a.id && e.push({object:h, block:t, funcBlock:n}));
             }
           }
         }
@@ -11632,8 +11632,8 @@ Entry.VariableContainer.prototype.renderFunctionReference = function(a) {
   e.addClass("entryVariableListCallerListWorkspace");
   for (var f in c) {
     for (var g = c[f], h = g.script.getElementsByTagName("block"), k = 0;k < h.length;k++) {
-      var l = h[k];
-      "function_general" == l.getAttribute("type") && l.getElementsByTagName("mutation")[0].getAttribute("hashid") == a.id && d.push({object:g, block:l});
+      var m = h[k];
+      "function_general" == m.getAttribute("type") && m.getElementsByTagName("mutation")[0].getAttribute("hashid") == a.id && d.push({object:g, block:m});
     }
   }
   for (f in d) {
@@ -13526,6 +13526,7 @@ Entry.BlockView = function(a, b, c) {
   this._startRender(a, c);
   this.block.observe(this, "_setMovable", ["movable"]);
   this.block.observe(this, "_setReadOnly", ["movable"]);
+  this.block.observe(this, "_setCopyable", ["copyable"]);
   this.observe(this, "_updateBG", ["magneting"], !1);
   this.observe(this, "_updateOpacity", ["visible"], !1);
   this.observe(this, "_updateDisplay", ["display"], !1);
@@ -13710,16 +13711,16 @@ Entry.BlockView.DRAG_RADIUS = 5;
             return;
           }
           f = [];
-          g = {text:"\ube14\ub85d \uc0ad\uc81c", enable:k.isDeletable(), callback:function() {
+          var g = {text:"\ube14\ub85d \ubcf5\uc0ac & \ubd99\uc5ec\ub123\uae30", enable:this.copyable, callback:function() {
+            e.code.createThread(k.copy());
+          }}, m = {text:"\ube14\ub85d \ubcf5\uc0ac", enable:this.copyable, callback:function() {
+            h.block.copyToClipboard();
+          }}, n = {text:"\ube14\ub85d \uc0ad\uc81c", enable:k.isDeletable(), callback:function() {
             h.block.doDestroy(!0);
           }};
-          f.push({text:"\ube14\ub85d \ubcf5\uc0ac & \ubd99\uc5ec\ub123\uae30", callback:function() {
-            e.code.createThread(k.copy());
-          }});
-          f.push({text:"\ube14\ub85d \ubcf5\uc0ac", callback:function() {
-            h.block.copyToClipboard();
-          }});
           f.push(g);
+          f.push(m);
+          f.push(n);
           Entry.ContextMenu.show(f);
         }
       }
@@ -13878,6 +13879,9 @@ Entry.BlockView.DRAG_RADIUS = 5;
   };
   a._setReadOnly = function() {
     this.readOnly = null !== this.block.isReadOnly() ? this.block.isReadOnly() : void 0 !== this._skeleton.readOnly ? this._skeleton.readOnly : !1;
+  };
+  a._setCopyable = function() {
+    this.copyable = null !== this.block.isCopyable() ? this.block.isCopyable() : void 0 !== this._skeleton.copyable ? this._skeleton.copyable : !0;
   };
   a.bumpAway = function(b, a) {
     var d = this;
@@ -15646,7 +15650,7 @@ Entry.Block = function(a, b) {
 Entry.Block.MAGNET_RANGE = 10;
 Entry.Block.MAGNET_OFFSET = .4;
 (function(a) {
-  a.schema = {id:null, x:0, y:0, type:null, params:[], statements:[], view:null, thread:null, movable:null, deletable:!0, readOnly:null, events:{}};
+  a.schema = {id:null, x:0, y:0, type:null, params:[], statements:[], view:null, thread:null, movable:null, deletable:!0, readOnly:null, copyable:!0, events:{}};
   a.load = function(a) {
     a.id || (a.id = Entry.Utils.generateId());
     this.set(a);
@@ -15749,8 +15753,14 @@ Entry.Block.MAGNET_OFFSET = .4;
   a.setMovable = function(a) {
     this.movable != a && this.set({movable:a});
   };
+  a.setCopyable = function(a) {
+    this.copyable != a && this.set({copyable:a});
+  };
   a.isMovable = function() {
     return this.movable;
+  };
+  a.isCopyable = function() {
+    return this.copyable;
   };
   a.setDeletable = function(a) {
     this.deletable != a && this.set({deletable:a});
@@ -16116,11 +16126,11 @@ Entry.Board = function(a) {
   };
   a.alignThreads = function() {
     for (var a = this.svgDom.height(), c = this.code.getThreads(), d = 15, e = 0, a = a - 30, f = 50, g = 0;g < c.length;g++) {
-      var h = c[g].getFirstBlock().view, k = h.svgGroup.getBBox(), l = d + 15;
-      l > a && (f = f + e + 10, e = 0, d = 15);
+      var h = c[g].getFirstBlock().view, k = h.svgGroup.getBBox(), m = d + 15;
+      m > a && (f = f + e + 10, e = 0, d = 15);
       e = Math.max(e, k.width);
-      l = d + 15;
-      h._moveTo(f, l, !1);
+      m = d + 15;
+      h._moveTo(f, m, !1);
       d = d + k.height + 15;
     }
     this.scroller.resizeScrollBar();
@@ -16206,19 +16216,19 @@ Entry.Board = function(a) {
     d || (d = {x:0, y:0});
     var k = d.x;
     d = d.y;
-    for (var l = 0;l < f.length;l++) {
-      var n = f[l], m = n.view;
-      m.zIndex = c;
-      if (m.dragInstance) {
+    for (var m = 0;m < f.length;m++) {
+      var n = f[m], l = n.view;
+      l.zIndex = c;
+      if (l.dragInstance) {
         break;
       }
-      d += m.y;
-      k += m.x;
+      d += l.y;
+      k += l.x;
       a = d + 1;
-      m.magnet.next && (a += m.magnet.next.y);
+      l.magnet.next && (a += l.magnet.next.y);
       h.push({point:d, endPoint:a, startBlock:n, blocks:[]});
       h.push({point:a, blocks:[]});
-      m.absX = k;
+      l.absX = k;
       n.statements && (c += .01);
       for (var q = 0;q < n.statements.length;q++) {
         a = n.statements[q];
@@ -16230,7 +16240,7 @@ Entry.Board = function(a) {
         c += .01;
         g = g.concat(this._getNextMagnets(a, c, {x:r.x + k, y:r.y + d}, e));
       }
-      m.magnet.next && (d += m.magnet.next.y, k += m.magnet.next.x);
+      l.magnet.next && (d += l.magnet.next.y, k += l.magnet.next.x);
     }
     return g.concat(h);
   };
@@ -16239,21 +16249,21 @@ Entry.Board = function(a) {
     d || (d = {x:0, y:0});
     var k = d.x;
     d = d.y;
-    for (var l = 0;l < f.length;l++) {
-      var n = f[l], m = n.view;
-      if (m.dragInstance) {
+    for (var m = 0;m < f.length;m++) {
+      var n = f[m], l = n.view;
+      if (l.dragInstance) {
         break;
       }
-      m.zIndex = c;
-      d += m.y;
-      k += m.x;
-      h = h.concat(this._getFieldBlockMetaData(m, k, d, c, e));
+      l.zIndex = c;
+      d += l.y;
+      k += l.x;
+      h = h.concat(this._getFieldBlockMetaData(l, k, d, c, e));
       n.statements && (c += .01);
       for (var q = 0;q < n.statements.length;q++) {
         a = n.statements[q];
         var r = n.view._statements[q], g = g.concat(this._getFieldMagnets(a, c, {x:r.x + k, y:r.y + d}, e));
       }
-      m.magnet.next && (d += m.magnet.next.y, k += m.magnet.next.x);
+      l.magnet.next && (d += l.magnet.next.y, k += l.magnet.next.x);
     }
     return g.concat(h);
   };
@@ -16262,17 +16272,17 @@ Entry.Board = function(a) {
     c += a.contentPos.x;
     d += a.contentPos.y;
     for (var k = 0;k < g.length;k++) {
-      var l = g[k];
-      if (l instanceof Entry.FieldBlock && l.acceptType === f) {
-        var n = l._valueBlock;
+      var m = g[k];
+      if (m instanceof Entry.FieldBlock && m.acceptType === f) {
+        var n = m._valueBlock;
         if (!n.view.dragInstance) {
-          var m = c + l.box.x, q = d + l.box.y + -.5 * a.height, l = d + l.box.y + l.box.height;
-          h.push({point:q, endPoint:l, startBlock:n, blocks:[]});
-          h.push({point:l, blocks:[]});
+          var l = c + m.box.x, q = d + m.box.y + -.5 * a.height, m = d + m.box.y + m.box.height;
+          h.push({point:q, endPoint:m, startBlock:n, blocks:[]});
+          h.push({point:m, blocks:[]});
           n = n.view;
-          n.absX = m;
+          n.absX = l;
           n.zIndex = e;
-          h = h.concat(this._getFieldBlockMetaData(n, m + n.contentPos.x, q + n.contentPos.y, e + .01, f));
+          h = h.concat(this._getFieldBlockMetaData(n, l + n.contentPos.x, q + n.contentPos.y, e + .01, f));
         }
       }
     }
@@ -16283,21 +16293,21 @@ Entry.Board = function(a) {
     d || (d = {x:0, y:0});
     var k = d.x;
     d = d.y;
-    for (var l = 0;l < f.length;l++) {
-      var n = f[l], m = n.view;
-      if (m.dragInstance) {
+    for (var m = 0;m < f.length;m++) {
+      var n = f[m], l = n.view;
+      if (l.dragInstance) {
         break;
       }
-      m.zIndex = c;
-      d += m.y;
-      k += m.x;
-      h = h.concat(this._getOutputMetaData(m, k, d, c, e));
+      l.zIndex = c;
+      d += l.y;
+      k += l.x;
+      h = h.concat(this._getOutputMetaData(l, k, d, c, e));
       n.statements && (c += .01);
       for (var q = 0;q < n.statements.length;q++) {
         a = n.statements[q];
         var r = n.view._statements[q], g = g.concat(this._getOutputMagnets(a, c, {x:r.x + k, y:r.y + d}, e));
       }
-      m.magnet.next && (d += m.magnet.next.y, k += m.magnet.next.x);
+      l.magnet.next && (d += l.magnet.next.y, k += l.magnet.next.x);
     }
     return g.concat(h);
   };
@@ -16306,8 +16316,8 @@ Entry.Board = function(a) {
     c += a.contentPos.x;
     d += a.contentPos.y;
     for (a = 0;a < g.length;a++) {
-      var k = g[a], l = c + k.box.x, n = d - 24, m = d;
-      k instanceof Entry.FieldBlock ? (n = k._valueBlock) && (h = h.concat(this._getOutputMetaData(n.view, l, d + k.box.y, e + .01, f))) : k instanceof Entry.FieldOutput && k.acceptType === f && (h.push({point:n, endPoint:m, startBlock:k, blocks:[]}), h.push({point:m, blocks:[]}), k.absX = l, k.zIndex = e, k.width = 20, (n = k._valueBlock) && (n.view.dragInstance || (h = h.concat(this._getOutputMetaData(n.view, c + k.box.x, d + k.box.y, e + .01, f)))));
+      var k = g[a], m = c + k.box.x, n = d - 24, l = d;
+      k instanceof Entry.FieldBlock ? (n = k._valueBlock) && (h = h.concat(this._getOutputMetaData(n.view, m, d + k.box.y, e + .01, f))) : k instanceof Entry.FieldOutput && k.acceptType === f && (h.push({point:n, endPoint:l, startBlock:k, blocks:[]}), h.push({point:l, blocks:[]}), k.absX = m, k.zIndex = e, k.width = 20, (n = k._valueBlock) && (n.view.dragInstance || (h = h.concat(this._getOutputMetaData(n.view, c + k.box.x, d + k.box.y, e + .01, f)))));
     }
     return h;
   };
@@ -16730,11 +16740,11 @@ Entry.Playground.prototype.generateTextView = function(a) {
   d = Entry.createElement("a");
   c.appendChild(d);
   d.bindOnClick(function() {
-    Entry.playground.object.entity.toggleFontItalic() ? l.src = Entry.mediaFilePath + "text_button_italic_true.png" : l.src = Entry.mediaFilePath + "/text_button_italic_false.png";
+    Entry.playground.object.entity.toggleFontItalic() ? m.src = Entry.mediaFilePath + "text_button_italic_true.png" : m.src = Entry.mediaFilePath + "/text_button_italic_false.png";
   });
-  var l = Entry.createElement("img", "entryPlaygroundText_italicImage");
-  d.appendChild(l);
-  l.src = Entry.mediaFilePath + "text_button_italic_false.png";
+  var m = Entry.createElement("img", "entryPlaygroundText_italicImage");
+  d.appendChild(m);
+  m.src = Entry.mediaFilePath + "text_button_italic_false.png";
   c = Entry.createElement("li");
   e.appendChild(c);
   d = Entry.createElement("a");
@@ -16821,16 +16831,16 @@ Entry.Playground.prototype.generateTextView = function(a) {
   a.addClass("entryPlaygroundFontSizeWrapper");
   b.appendChild(a);
   this.fontSizeWrapper = a;
-  var m = Entry.createElement("div");
-  m.addClass("entryPlaygroundFontSizeSlider");
-  a.appendChild(m);
+  var l = Entry.createElement("div");
+  l.addClass("entryPlaygroundFontSizeSlider");
+  a.appendChild(l);
   var q = Entry.createElement("div");
   q.addClass("entryPlaygroundFontSizeIndicator");
-  m.appendChild(q);
+  l.appendChild(q);
   this.fontSizeIndiciator = q;
   var r = Entry.createElement("div");
   r.addClass("entryPlaygroundFontSizeKnob");
-  m.appendChild(r);
+  l.appendChild(r);
   this.fontSizeKnob = r;
   e = Entry.createElement("div");
   e.addClass("entryPlaygroundFontSizeLabel");
@@ -16839,7 +16849,7 @@ Entry.Playground.prototype.generateTextView = function(a) {
   var t = !1, u = 0;
   r.onmousedown = function(a) {
     t = !0;
-    u = $(m).offset().left;
+    u = $(l).offset().left;
   };
   document.addEventListener("mousemove", function(a) {
     t && (a = a.pageX - u, a = Math.max(a, 5), a = Math.min(a, 88), r.style.left = a + "px", a /= .88, q.style.width = a + "%", Entry.playground.object.entity.setFontSize(a));

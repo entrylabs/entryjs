@@ -48,6 +48,7 @@ Entry.BlockView = function(block, board, mode) {
     // observe
     this.block.observe(this, "_setMovable", ["movable"]);
     this.block.observe(this, "_setReadOnly", ["movable"]);
+    this.block.observe(this, "_setCopyable", ["copyable"]);
     this.observe(this, "_updateBG", ["magneting"], false);
 
     this.observe(this, "_updateOpacity", ["visible"], false);
@@ -365,6 +366,7 @@ Entry.BlockView.DRAG_RADIUS = 5;
 
             var copyAndPaste = {
                 text: '블록 복사 & 붙여넣기',
+                enable: this.copyable,
                 callback: function(){
                     board.code.createThread(block.copy());
                 }
@@ -372,6 +374,7 @@ Entry.BlockView.DRAG_RADIUS = 5;
 
             var copy = {
                 text: '블록 복사',
+                enable: this.copyable,
                 callback: function(){
                     that.block.copyToClipboard();
                 }
@@ -802,6 +805,11 @@ Entry.BlockView.DRAG_RADIUS = 5;
     p._setReadOnly = function() {
         this.readOnly = this.block.isReadOnly() !== null ? this.block.isReadOnly() :
             (this._skeleton.readOnly !== undefined ? this._skeleton.readOnly : false);
+    };
+
+    p._setCopyable = function() {
+        this.copyable = this.block.isCopyable() !== null ? this.block.isCopyable() :
+            (this._skeleton.copyable !== undefined ? this._skeleton.copyable : true);
     };
 
     p.bumpAway = function(distance, delay) {

@@ -38,6 +38,7 @@ Entry.Block.MAGNET_OFFSET = 0.4;
         movable: null,
         deletable: true,
         readOnly: null,
+        copyable: true,
         events: {}
     };
 
@@ -230,7 +231,14 @@ Entry.Block.MAGNET_OFFSET = 0.4;
         this.set({movable: movable});
     };
 
+    p.setCopyable = function(copyable) {
+        if (this.copyable == copyable) return;
+        this.set({copyable: copyable});
+    };
+
     p.isMovable = function() {return this.movable;};
+
+    p.isCopyable = function() {return this.copyable;};
 
     p.setDeletable = function(deletable) {
         if (this.deletable == deletable) return;
