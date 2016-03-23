@@ -10,6 +10,7 @@ goog.provide("Entry.BlockMenuScroller");
  * @param {object} board
  */
 Entry.BlockMenuScroller = function(board) {
+    var that = this;
     this.board = board;
     this.board.changeEvent.attach(this, this._reset);
 
@@ -21,7 +22,12 @@ Entry.BlockMenuScroller = function(board) {
     this.vRatio = 0;
     this._visible = true;
 
+    this.mouseHandler = function() {
+        that.onMouseDown.apply(that, arguments);
+    }
+
     this.createScrollBar();
+    this._addControl();
 
     if (Entry.windowResized)
         Entry.windowResized.attach(this, this.resizeScrollBar);
@@ -37,45 +43,9 @@ Entry.BlockMenuScroller.RADIUS = 7;
         this.svgGroup =
             this.board.svgGroup.elem('g',{class: "boardScrollbar"});
 
-            this.vScrollbar = this.svgGroup.elem('rect', {
-                rx: 4, ry:4
-            });
-
-        this.vScrollbar.onmousedown = function(e) {
-            if (e.button === 0 || e instanceof Touch) {
-                if (Entry.documentMousedown)
-                    Entry.documentMousedown.notify(e);
-                var doc = $(document);
-                doc.bind('mousemove.scroll', onMouseMove);
-                doc.bind('mouseup.scroll', onMouseUp);
-                doc.bind('touchmove.scroll', onMouseMove);
-                doc.bind('touchend.scroll', onMouseUp);
-                that.dragInstance = new Entry.DragInstance({
-                    startY: e.pageY,
-                    offsetY: e.pageY
-                });
-            }
-
-            function onMouseMove(e) {
-                e.stopPropagation();
-                e.preventDefault();
-
-                if (e.originalEvent.touches) e = e.originalEvent.touches[0];
-
-                var dragInstance = that.dragInstance;
-                that.scroll(e.pageY - dragInstance.offsetY);
-
-                dragInstance.set({
-                    offsetY: e.pageY
-                });
-            }
-
-            function onMouseUp(e) {
-                $(document).unbind('.scroll');
-                delete that.dragInstance;
-            }
-            e.stopPropagation();
-        };
+        this.vScrollbar = this.svgGroup.elem('rect', {
+            rx: 4, ry:4
+        });
 
         this.resizeScrollBar();
     };
@@ -159,4 +129,66 @@ Entry.BlockMenuScroller.RADIUS = 7;
         });
         this.resizeScrollBar();
     };
+
+
+    p.onMouseDown = function(e) {
+        var that = this;
+        if (e.stopPropagation) e.stopPropagation();
+        if (e.preventDefault) e.preventDefault();
+
+        if (e.button === 0 || (e.originalEvent && e.originalEvent.touches)) {
+            if (Entry.documentMousedown)
+                Entry.documentMousedown.notify(e);
+
+            var mouseEvent;
+            if (e.originalEvent && e.originalEvent.touches) {
+                mouseEvent = e.originalEvent.touches[0];
+            } else mouseEvent = e;
+
+
+            var doc = $(document);
+            doc.bind('mousemove.scroll', onMouseMove);
+            doc.bind('mouseup.scroll', onMouseUp);
+            doc.bind('touchmove.scroll', onMouseMove);
+            doc.bind('touchend.scroll', onMouseUp);
+            that.dragInstance = new Entry.DragInstance({
+                startY: mouseEvent.pageY,
+                offsetY: mouseEvent.pageY
+            });
+        }
+
+        function onMouseMove(e) {
+            if (e.stopPropagation) e.stopPropagation();
+            if (e.preventDefault) e.preventDefault();
+
+            var mouseEvent;
+            if (e.originalEvent && e.originalEvent.touches) {
+                mouseEvent = e.originalEvent.touches[0];
+            } else mouseEvent = e;
+
+            var dragInstance = that.dragInstance;
+            that.scroll(mouseEvent.pageY - dragInstance.offsetY);
+
+            dragInstance.set({
+                offsetY: mouseEvent.pageY
+            });
+        }
+
+        function onMouseUp(e) {
+            $(document).unbind('.scroll');
+            delete that.dragInstance;
+        }
+        e.stopPropagation();
+    };
+
+    p._addControl = function() {
+        var that = this;
+        $(this.vScrollbar).bind(
+            'mousedown touchstart',
+            that.mouseHandler
+        );
+    };
+
+
+
 })(Entry.BlockMenuScroller.prototype);
