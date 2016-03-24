@@ -22,7 +22,7 @@ Entry.Parser = function(mode, syntax, cm) {
         var playerCode = NtryData.player[this._stageId].code;
         this.setAvailableCode(configCode, playerCode);
     }
-    //this.mappingSyntax(mode);
+    this.mappingSyntax(mode);
 
     switch (this._lang) {
         case "js":

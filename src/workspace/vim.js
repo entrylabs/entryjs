@@ -13,8 +13,8 @@ Entry.Vim = function(dom) {
 
     this.createDom(dom);
 
-    //this._parser = new Entry.Parser("maze", "js", this.codeMirror);
-    //this._blockParser = new Entry.Parser("maze", "block");
+    this._parser = new Entry.Parser("maze", "js", this.codeMirror);
+    this._blockParser = new Entry.Parser("maze", "block");
 
     Entry.Model(this, false);
     window.eventset = [];

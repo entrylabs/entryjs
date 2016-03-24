@@ -292,10 +292,10 @@ Entry.Playground.prototype.generateCodeView = function(codeView) {
             },
             'board': {
                 dom: boardView
-            },
+            }/*,
             'vimBoard': {
                 dom: boardView
-            }
+            }*/
         }
     );
     this.blockMenu = this.mainWorkspace.blockMenu;

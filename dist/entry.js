@@ -8749,6 +8749,7 @@ Entry.Parser = function(a, b, c) {
   this._lang = b || "js";
   this.availableCode = [];
   "maze" === a && (this._stageId = Number(Ntry.configManager.getConfig("stageId")), this.setAvailableCode(NtryData.config[this._stageId].availableCode, NtryData.player[this._stageId].code));
+  this.mappingSyntax(a);
   switch(this._lang) {
     case "js":
       this._parser = new Entry.JSParser(this.syntax);
@@ -16356,6 +16357,8 @@ Entry.Vim = function(a) {
     return console.error("Dom is not div element");
   }
   this.createDom(a);
+  this._parser = new Entry.Parser("maze", "js", this.codeMirror);
+  this._blockParser = new Entry.Parser("maze", "block");
   Entry.Model(this, !1);
   window.eventset = [];
 };
@@ -16624,7 +16627,7 @@ Entry.Playground.prototype.generateCodeView = function(a) {
   this.blockDriver = new Entry.BlockDriver;
   this.blockDriver.convert();
   Entry.block.when_run_button_click.event = "start";
-  this.mainWorkspace = new Entry.Workspace({blockMenu:{dom:a, align:"LEFT", categoryData:EntryStatic.getAllBlocks(), scroll:!0}, board:{dom:b}, vimBoard:{dom:b}});
+  this.mainWorkspace = new Entry.Workspace({blockMenu:{dom:a, align:"LEFT", categoryData:EntryStatic.getAllBlocks(), scroll:!0}, board:{dom:b}});
   this.blockMenu = this.mainWorkspace.blockMenu;
   this.board = this.mainWorkspace.board;
 };
