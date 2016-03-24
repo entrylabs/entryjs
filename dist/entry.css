@@ -4676,6 +4676,7 @@ span.CodeMirror-selectedtext {
 }
 .block {
   cursor: url('../images/handopen.cur') 8 5, auto;
+  -ms-touch-action: none;
 }
 .block.dragging {
   cursor: url('../images/handclosed.cur') 8 5, auto;
@@ -4782,6 +4783,7 @@ svg .svgBlockGroup text {
 .entryBoard {
   cursor: move;
   position: absolute;
+  -ms-touch-action: none;
 }
 .entryOverlayBoard {
   background: rgba(180, 180, 180, 0.4);
@@ -4789,6 +4791,7 @@ svg .svgBlockGroup text {
 .boardScrollbar {
   opacity: 0.4;
   cursor: move;
+  -ms-touch-action: none;
 }
 .boardScrollbar:hover {
   opacity: 0.6;
