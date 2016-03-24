@@ -564,10 +564,10 @@ Blockly.Blocks.reset_project_timer = {
     this.setNextStatement(true);
   },
   whenAdd: function () {
-      Entry.engine.showProjectTimer();
+      if (Entry.engine) Entry.engine.showProjectTimer();
   },
   whenRemove: function (removeBlock) {
-      Entry.engine.hideProjectTimer(removeBlock);
+      if (Entry.engine) Entry.engine.hideProjectTimer(removeBlock);
   }
 };
 
@@ -594,10 +594,10 @@ Blockly.Blocks.set_visible_project_timer = {
     this.setNextStatement(true);
   },
   whenAdd: function () {
-      Entry.engine.showProjectTimer();
+      if (Entry.engine) Entry.engine.showProjectTimer();
   },
   whenRemove: function (removeBlock) {
-      Entry.engine.hideProjectTimer(removeBlock);
+      if (Entry.engine) Entry.engine.hideProjectTimer(removeBlock);
   }
 };
 
@@ -639,10 +639,10 @@ Blockly.Blocks.get_project_timer_value = {
     this.setInputsInline(true);
   },
   whenAdd: function () {
-      Entry.engine.showProjectTimer();
+      if (Entry.engine) Entry.engine.showProjectTimer();
   },
   whenRemove: function (removeBlock) {
-      Entry.engine.hideProjectTimer(removeBlock);
+      if (Entry.engine) Entry.engine.hideProjectTimer(removeBlock);
   }
 };
 
@@ -923,10 +923,10 @@ Blockly.Blocks.choose_project_timer_action = {
     this.setNextStatement(true);
   },
   whenAdd: function () {
-      Entry.engine.showProjectTimer();
+      if (Entry.engine) Entry.engine.showProjectTimer();
   },
   whenRemove: function (removeBlock) {
-      Entry.engine.hideProjectTimer(removeBlock);
+      if (Entry.engine) Entry.engine.hideProjectTimer(removeBlock);
   }
 };
 

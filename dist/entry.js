@@ -1461,9 +1461,9 @@ Blockly.Blocks.reset_project_timer = {init:function() {
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
 }, whenAdd:function() {
-  Entry.engine.showProjectTimer();
+  Entry.engine && Entry.engine.showProjectTimer();
 }, whenRemove:function(a) {
-  Entry.engine.hideProjectTimer(a);
+  Entry.engine && Entry.engine.hideProjectTimer(a);
 }};
 Entry.block.reset_project_timer = function(a, b) {
   Entry.engine.updateProjectTimer(0);
@@ -1478,9 +1478,9 @@ Blockly.Blocks.set_visible_project_timer = {init:function() {
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
 }, whenAdd:function() {
-  Entry.engine.showProjectTimer();
+  Entry.engine && Entry.engine.showProjectTimer();
 }, whenRemove:function(a) {
-  Entry.engine.hideProjectTimer(a);
+  Entry.engine && Entry.engine.hideProjectTimer(a);
 }};
 Entry.block.set_visible_project_timer = function(a, b) {
   var c = b.getField("ACTION", b), d = Entry.engine.projectTimer;
@@ -1502,9 +1502,9 @@ Blockly.Blocks.get_project_timer_value = {init:function() {
   this.setOutput(!0, "Number");
   this.setInputsInline(!0);
 }, whenAdd:function() {
-  Entry.engine.showProjectTimer();
+  Entry.engine && Entry.engine.showProjectTimer();
 }, whenRemove:function(a) {
-  Entry.engine.hideProjectTimer(a);
+  Entry.engine && Entry.engine.hideProjectTimer(a);
 }};
 Entry.block.get_project_timer_value = function(a, b) {
   return Entry.engine.projectTimer.getValue();
@@ -1647,9 +1647,9 @@ Blockly.Blocks.choose_project_timer_action = {init:function() {
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
 }, whenAdd:function() {
-  Entry.engine.showProjectTimer();
+  Entry.engine && Entry.engine.showProjectTimer();
 }, whenRemove:function(a) {
-  Entry.engine.hideProjectTimer(a);
+  Entry.engine && Entry.engine.hideProjectTimer(a);
 }};
 Entry.block.choose_project_timer_action = function(a, b) {
   var c = b.getField("ACTION"), d = Entry.engine, e = d.projectTimer;
@@ -4452,9 +4452,9 @@ Blockly.Blocks.ask_and_wait = {init:function() {
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
 }, whenAdd:function() {
-  Entry.container.showProjectAnswer();
+  Entry.container && Entry.container.showProjectAnswer();
 }, whenRemove:function(a) {
-  Entry.container.hideProjectAnswer(a);
+  Entry.container && Entry.container.hideProjectAnswer(a);
 }};
 Entry.block.ask_and_wait = function(a, b) {
   var c = Entry.container.inputValue, d = Entry.stage.inputField, e = b.getValue("VALUE", b);
@@ -4485,9 +4485,9 @@ Blockly.Blocks.get_canvas_input_value = {init:function() {
   this.setOutput(!0, "Number");
   this.setInputsInline(!0);
 }, whenAdd:function() {
-  Entry.container.showProjectAnswer();
+  Entry.container && Entry.container.showProjectAnswer();
 }, whenRemove:function(a) {
-  Entry.container.hideProjectAnswer(a);
+  Entry.container && Entry.container.hideProjectAnswer(a);
 }};
 Entry.block.get_canvas_input_value = function(a, b) {
   return Entry.container.getInputValue();
@@ -4649,9 +4649,9 @@ Blockly.Blocks.set_visible_answer = {init:function() {
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
 }, whenAdd:function() {
-  Entry.container.showProjectAnswer();
+  Entry.container && Entry.container.showProjectAnswer();
 }, whenRemove:function(a) {
-  Entry.container.hideProjectAnswer(a);
+  Entry.container && Entry.container.hideProjectAnswer(a);
 }};
 Entry.block.set_visible_answer = function(a, b) {
   "HIDE" == b.getField("BOOL", b) ? Entry.container.inputValue.setVisible(!1) : Entry.container.inputValue.setVisible(!0);
@@ -14633,7 +14633,8 @@ Entry.FieldDropdownDynamic = function(a, b, c) {
   this.svgGroup = null;
   this._contents = a;
   this._index = c;
-  c = Entry.container.getDropdownList(this._contents.menuName);
+  c = [];
+  Entry.container && (c = Entry.container.getDropdownList(this._contents.menuName));
   this._contents.options = c;
   c = this.getValue() || 0 !== c.length ? c[0][1] : null;
   this.setValue(c);

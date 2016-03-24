@@ -205,10 +205,10 @@ Blockly.Blocks.ask_and_wait = {
     this.setNextStatement(true);
   },
   whenAdd: function () {
-    Entry.container.showProjectAnswer();
+    if (Entry.container) Entry.container.showProjectAnswer();
   },
   whenRemove: function (removeBlock) {
-    Entry.container.hideProjectAnswer(removeBlock);
+    if (Entry.container) Entry.container.hideProjectAnswer(removeBlock);
   }
 };
 
@@ -260,10 +260,10 @@ Blockly.Blocks.get_canvas_input_value = {
         this.setInputsInline(true);
     },
     whenAdd: function () {
-      Entry.container.showProjectAnswer();
+        if (Entry.container) Entry.container.showProjectAnswer();
     },
     whenRemove: function (removeBlock) {
-      Entry.container.hideProjectAnswer(removeBlock);
+        if (Entry.container) Entry.container.hideProjectAnswer(removeBlock);
     }
 };
 
@@ -552,10 +552,10 @@ Blockly.Blocks.set_visible_answer = {
     this.setNextStatement(true);
   },
   whenAdd: function () {
-    Entry.container.showProjectAnswer();
+        if (Entry.container) Entry.container.showProjectAnswer();
   },
   whenRemove: function (removeBlock) {
-    Entry.container.hideProjectAnswer(removeBlock);
+        if (Entry.container) Entry.container.hideProjectAnswer(removeBlock);
   }
 };
 

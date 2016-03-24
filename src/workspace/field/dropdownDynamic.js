@@ -18,7 +18,10 @@ Entry.FieldDropdownDynamic = function(content, blockView, index) {
 
     this._contents = content;
     this._index = index;
-    var options = Entry.container.getDropdownList(this._contents.menuName);
+    var options = [];
+    if (Entry.container)
+        options = Entry.container.getDropdownList(this._contents.menuName);
+
     this._contents.options = options;
     var value = this.getValue() ||
         options.length !== 0 ? options[0][1] : null;
