@@ -27,13 +27,15 @@ Entry.Arduino = {
             "11":{name: "11번 포트", type: "input", pos: {x: 0, y: 0}},
             "12":{name: "12번 포트", type: "input", pos: {x: 0, y: 0}},
             "13":{name: "13번 포트", type: "input", pos: {x: 0, y: 0}},
-            "a0":{name: "0번  포트", type: "input", pos: {x: 0, y: 0}},
+            "a0":{name: "0번 포트", type: "input", pos: {x: 0, y: 0}},
             "a1":{name: "1번 포트", type: "input", pos: {x: 0, y: 0}},
             "a2":{name: "2번 포트", type: "input", pos: {x: 0, y: 0}},
             "a3":{name: "3번 포트", type: "input", pos: {x: 0, y: 0}},
-            "a4":{name: "4번 포트", type: "input", poÏs: {x: 0, y: 0}},
+            "a4":{name: "4번 포트", type: "input", pos: {x: 0, y: 0}},
             "a5":{name: "5번 포트", type: "input", pos: {x: 0, y: 0}}
-        }
+        },
+        mode : 'list'
+
     }
 };
 

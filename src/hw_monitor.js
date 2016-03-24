@@ -33,7 +33,7 @@ Entry.HWMonitor = function(hwModule) {
         this._svgGroup = this.snap.elem("g");
 
         var monitorTemplate = this._hwModule.monitorTemplate;
-        console.log(monitorTemplate);
+        
         var imgObj = {
             href : Entry.mediaFilePath + monitorTemplate.imgPath,
             x : - monitorTemplate.width / 2,
@@ -41,9 +41,12 @@ Entry.HWMonitor = function(hwModule) {
             width : monitorTemplate.width,
             height : monitorTemplate.height
         };
-        this.hwView = this._svgGroup.elem("image");
-        this.hwView = this.hwView.attr(imgObj);
 
+        if(monitorTemplate.mode != 'list') {
+            this.hwView = this._svgGroup.elem("image");
+            this.hwView = this.hwView.attr(imgObj);
+        }
+        
         this._template = monitorTemplate;
         var ports = monitorTemplate.ports;
 
@@ -53,15 +56,18 @@ Entry.HWMonitor = function(hwModule) {
         for (var key in ports) {
             var port = ports[key];
             var portView = this.generatePortView(port);
+
             this._portViews[key] = portView;
             portsTemp.push(portView);
         }
 
-        portsTemp.sort(function(a, b) {
-            return a.box.x - b.box.x;
-        });
+        if(monitorTemplate.mode != 'list')
+            portsTemp.sort(function(a, b) {
+                return a.box.x - b.box.x;
+            });
 
         var portMap = this._portMap;
+
         portsTemp.map(function(v) {
             var degree = Math.atan2(v.box.y, v.box.x);
             switch (Math.round(degree / Math.PI * 2)) {
@@ -86,6 +92,8 @@ Entry.HWMonitor = function(hwModule) {
     p.generatePortView = function(port) {
         var svgGroup = this._svgGroup.elem("g");
         svgGroup.addClass("hwComponent");
+
+        var mode = this._hwModule.monitorTemplate.mode;
 
         var path = this.pathGroup.elem("path").attr({
             "d" : "m0,0",
@@ -172,13 +180,15 @@ Entry.HWMonitor = function(hwModule) {
     };
 
     p.resize = function() {
-
-        this.hwView.attr({ "transform" : "scale(" + this.scale + ")" });
+        
+        if(this._hwModule.monitorTemplate.mode != 'list') {
+            this.hwView.attr({ "transform" : "scale(" + this.scale + ")" });
+        }
         var bRect = this.svgDom.get(0).getBoundingClientRect();
+        
         this._svgGroup.attr({
             "transform"  : "translate(" + bRect.width / 2 + "," + bRect.height / 2 + ")"
         });
-
         this._rect = bRect;
         this.scale = bRect.height / this._template.height / 2;
         this.align();
@@ -187,22 +197,33 @@ Entry.HWMonitor = function(hwModule) {
     p.align = function() {
         //for (var direction in this._portMap) {
             //var ports = this._portMap[direction];
+        
         var ports = this._portMap.n;
         var length = ports.length;
+
         for (var i = 0; i < ports.length; i++) {
             var port = ports[i];
-            var x = this._template.width * (i / length - 0.5);
+
             port.group.attr({
-                "transform"  : "translate(" + x + "," +
+                "transform"  : "translate(" + this._template.width * (i / length - 0.5) + "," +
                     (- this._template.width/2 - 30) + ")"
             });
         }
 
-        var ports = this._portMap.s.concat();
-        this._alignNS(ports, this._template.width * this.scale / 2 + 5, 27)
+        if(this._hwModule.monitorTemplate.mode != 'list') {
+            var ports = this._portMap.s.concat();   
+            this._alignNS(ports, this._template.width * this.scale / 2 + 5, 27);
 
-        ports = this._portMap.n.concat();
-        this._alignNS(ports, - this._template.width * this.scale / 2 - 32, - 27);
+            ports = this._portMap.n.concat();
+            this._alignNS(ports, - this._template.width * this.scale / 2 - 32, - 27);    
+        } else {
+            var ports = this._portMap.s.concat();   
+            this._alignNSList(ports, this._template.width * this.scale / 2 + 5, 27);
+
+            ports = this._portMap.n.concat();
+            this._alignNSList(ports, - this._template.width * this.scale / 2 - 32, - 27);    
+        }
+        
     };
 
     p._alignNS = function(ports, yCursor, gap) {
@@ -211,14 +232,18 @@ Entry.HWMonitor = function(hwModule) {
             lP = - this._rect.width / 2,
             rP = this._rect.width / 2,
             width = this._rect.width,
-            wholeWidth = 0;
+            wholeWidth = 0,
+            listLine = 0,
+            mode = this._hwModule.monitorTemplate.mode;
+        
         for (var i = 0; i < ports.length; i++)
-            wholeWidth += ports[i].width + 5;
-
+            wholeWidth += ports[i].width + 5;    
+        
         if (wholeWidth < rP - lP) {
             rP = wholeWidth / 2 + 3;
             lP = - wholeWidth / 2 - 3;
         }
+
         while (ports.length > 1) {
             var lPort = ports.shift(),
                 rPort = ports.pop(),
@@ -232,14 +257,17 @@ Entry.HWMonitor = function(hwModule) {
             } else if (ports.length === 0) {
                 lP = (lP + rP) / 2 - 3;
                 rP = lP + 6;
-            } else {
+            } else if(mode != "list"){
                 lP = Math.max(lP, - width / 2 + lPort.width) + 15;
                 rP = Math.min(rP, width / 2 - rPort.width) - 15;
+            } else if(mode == "list"){
+                listLine = parseInt(wholeWidth / this._rect.width);
+        
+                wholeWidth = this._rect.width;
+                lP = Math.min(lP - lPort.width , -width / 2);
+                rP = Math.max(rP + rPort.width , width / 2 );
             }
-
-            this._movePort(lPort, lP, yCursor, prevLP);
-            this._movePort(rPort, rP, yCursor, prevRP);
-
+            
             wholeWidth -= lPort.width + rPort.width + 10;
             yCursor += gapTemp;
         };
@@ -249,6 +277,48 @@ Entry.HWMonitor = function(hwModule) {
             + ")"});
         };
     };
+
+     p._alignNSList = function(ports, yCursor) {
+        var length = ports.length,
+            width = this._rect.width,
+            height = this._rect.height;
+            initX = - this._rect.width / 2 + 10;
+            initY = - this._rect.height/ 2 + 10;
+            wholeWidth = 0,
+            listLine = 0;
+            
+        for (var i = 0; i < ports.length; i++)
+            wholeWidth += ports[i].width;    // 전체 width
+
+        var lineIndent = 0;
+        var currentWidth = 0;
+        var tempXpos = initX;
+        var Yval = 0;
+        var cPort = 0;
+        var nPort = 0;
+        for(var i = 0; i < ports.length; i++) {
+            cPort = ports[i];
+    
+            if(i != (ports.length -1) )
+                nPort = ports[i+1];
+
+            currentWidth += (cPort.width);
+
+            lP = initX;
+            Yval = initY + (lineIndent * 30);
+            cPort.group.attr({ "transform" : "translate(" + lP + "," + Yval  + ")"});   
+            initX += (cPort.width + 10);
+
+
+            if(currentWidth > (width - (cPort.width + ( nPort.width / 2.2)))) {
+                lineIndent += 1;
+                initX = tempXpos;
+                currentWidth = 0;
+            }
+
+        };
+    };
+
 
     p._movePort = function(port, x, y, prevPointer) {
         var groupX = x;
@@ -275,9 +345,9 @@ Entry.HWMonitor = function(hwModule) {
                 path = "m" + ((prevPointer + x) / 2) + "," + y +
                     "l0," + (portY > y ? 28 : -3) +
                     "H" + (portX) +
-                    "L" + (portX) + "," + (portY)
+                    "L" + (portX) + "," + (portY);
 
-        port.group.attr({ "transform" : "translate(" + groupX + "," + y  + ")"});
+        port.group.attr({ "transform" : "translate(" + groupX + "," + y  + ")"});    
         port.path.attr({ "d": path });
     };
 

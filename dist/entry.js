@@ -715,8 +715,8 @@ Entry.Arduino = {name:"arduino", setZero:function() {
   }
   Entry.hw.update();
 }, monitorTemplate:{imgPath:"hw/arduino.png", width:268, height:270, ports:{0:{name:"0\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, 1:{name:"1\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, 2:{name:"2\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, 3:{name:"3\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, 4:{name:"4\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, 5:{name:"5\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, 6:{name:"6\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, 
-y:0}}, 7:{name:"7\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, 8:{name:"8\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, 9:{name:"9\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, 10:{name:"10\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, 11:{name:"11\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, 12:{name:"12\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, 13:{name:"13\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, a0:{name:"0\ubc88  \ud3ec\ud2b8", type:"input", 
-pos:{x:0, y:0}}, a1:{name:"1\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, a2:{name:"2\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, a3:{name:"3\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, a4:{name:"4\ubc88 \ud3ec\ud2b8", type:"input", "po\u00cfs":{x:0, y:0}}, a5:{name:"5\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}}}};
+y:0}}, 7:{name:"7\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, 8:{name:"8\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, 9:{name:"9\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, 10:{name:"10\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, 11:{name:"11\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, 12:{name:"12\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, 13:{name:"13\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, a0:{name:"0\ubc88 \ud3ec\ud2b8", type:"input", 
+pos:{x:0, y:0}}, a1:{name:"1\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, a2:{name:"2\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, a3:{name:"3\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, a4:{name:"4\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, a5:{name:"5\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}}, mode:"list"}};
 Entry.SensorBoard = {name:"sensorBoard", setZero:Entry.Arduino.setZero, monitorTemplate:Entry.Arduino.monitorTemplate};
 Entry.CODEino = {name:"CODEino", setZero:Entry.Arduino.setZero, monitorTemplate:Entry.Arduino.monitorTemplate};
 Blockly.Blocks.arduino_text = {init:function() {
@@ -12441,37 +12441,34 @@ Entry.HWMonitor = function(a) {
   a.generateView = function() {
     this.snap = Entry.SVG("hwMonitor");
     this._svgGroup = this.snap.elem("g");
-    var a = this._hwModule.monitorTemplate;
-    console.log(a);
-    var c = {href:Entry.mediaFilePath + a.imgPath, x:-a.width / 2, y:-a.height / 2, width:a.width, height:a.height};
-    this.hwView = this._svgGroup.elem("image");
-    this.hwView = this.hwView.attr(c);
+    var a = this._hwModule.monitorTemplate, c = {href:Entry.mediaFilePath + a.imgPath, x:-a.width / 2, y:-a.height / 2, width:a.width, height:a.height};
+    "list" != a.mode && (this.hwView = this._svgGroup.elem("image"), this.hwView = this.hwView.attr(c));
     this._template = a;
-    a = a.ports;
+    c = a.ports;
     this.pathGroup = this._svgGroup.elem("g");
-    var c = [], d;
-    for (d in a) {
-      var e = this.generatePortView(a[d]);
-      this._portViews[d] = e;
-      c.push(e);
+    var d = [], e;
+    for (e in c) {
+      var f = this.generatePortView(c[e]);
+      this._portViews[e] = f;
+      d.push(f);
     }
-    c.sort(function(a, b) {
+    "list" != a.mode && d.sort(function(a, b) {
       return a.box.x - b.box.x;
     });
-    var f = this._portMap;
-    c.map(function(a) {
+    var g = this._portMap;
+    d.map(function(a) {
       switch(Math.round(Math.atan2(a.box.y, a.box.x) / Math.PI * 2)) {
         case -1:
-          f.n.push(a);
+          g.n.push(a);
           break;
         case 0:
-          f.e.push(a);
+          g.e.push(a);
           break;
         case 1:
-          f.s.push(a);
+          g.s.push(a);
           break;
         case 2:
-          f.w.push(a);
+          g.w.push(a);
       }
     });
     this.resize();
@@ -12500,7 +12497,7 @@ Entry.HWMonitor = function(a) {
     }
   };
   a.resize = function() {
-    this.hwView.attr({transform:"scale(" + this.scale + ")"});
+    "list" != this._hwModule.monitorTemplate.mode && this.hwView.attr({transform:"scale(" + this.scale + ")"});
     var a = this.svgDom.get(0).getBoundingClientRect();
     this._svgGroup.attr({transform:"translate(" + a.width / 2 + "," + a.height / 2 + ")"});
     this._rect = a;
@@ -12511,25 +12508,31 @@ Entry.HWMonitor = function(a) {
     for (var a = this._portMap.n, c = a.length, d = 0;d < a.length;d++) {
       a[d].group.attr({transform:"translate(" + this._template.width * (d / c - .5) + "," + (-this._template.width / 2 - 30) + ")"});
     }
-    a = this._portMap.s.concat();
-    this._alignNS(a, this._template.width * this.scale / 2 + 5, 27);
-    a = this._portMap.n.concat();
-    this._alignNS(a, -this._template.width * this.scale / 2 - 32, -27);
+    "list" != this._hwModule.monitorTemplate.mode ? (a = this._portMap.s.concat(), this._alignNS(a, this._template.width * this.scale / 2 + 5, 27), a = this._portMap.n.concat(), this._alignNS(a, -this._template.width * this.scale / 2 - 32, -27)) : (a = this._portMap.s.concat(), this._alignNSList(a, this._template.width * this.scale / 2 + 5, 27), a = this._portMap.n.concat(), this._alignNSList(a, -this._template.width * this.scale / 2 - 32, -27));
   };
   a._alignNS = function(a, c, d) {
-    for (var e = -this._rect.width / 2, f = this._rect.width / 2, g = this._rect.width, h = 0, k = 0;k < a.length;k++) {
-      h += a[k].width + 5;
+    for (var e = -this._rect.width / 2, f = this._rect.width / 2, g = this._rect.width, h = 0, k = this._hwModule.monitorTemplate.mode, l = 0;l < a.length;l++) {
+      h += a[l].width + 5;
     }
     h < f - e && (f = h / 2 + 3, e = -h / 2 - 3);
     for (;1 < a.length;) {
-      var k = a.shift(), l = a.pop(), n = e, m = f, q = d;
-      h <= f - e ? (e += k.width + 5, f -= l.width + 5, q = 0) : 0 === a.length ? (e = (e + f) / 2 - 3, f = e + 6) : (e = Math.max(e, -g / 2 + k.width) + 15, f = Math.min(f, g / 2 - l.width) - 15);
-      this._movePort(k, e, c, n);
-      this._movePort(l, f, c, m);
-      h -= k.width + l.width + 10;
-      c += q;
+      var l = a.shift(), n = a.pop(), m = d;
+      h <= f - e ? (e += l.width + 5, f -= n.width + 5, m = 0) : 0 === a.length ? (e = (e + f) / 2 - 3, f = e + 6) : "list" != k ? (e = Math.max(e, -g / 2 + l.width) + 15, f = Math.min(f, g / 2 - n.width) - 15) : "list" == k && (parseInt(h / this._rect.width), h = this._rect.width, e = Math.min(e - l.width, -g / 2), f = Math.max(f + n.width, g / 2));
+      h -= l.width + n.width + 10;
+      c += m;
     }
     a.length && a[0].group.attr({transform:"translate(" + (f + e - a[0].width) / 2 + "," + c + ")"});
+  };
+  a._alignNSList = function(a, c) {
+    var d = this._rect.width;
+    initX = -this._rect.width / 2 + 10;
+    initY = -this._rect.height / 2 + 10;
+    for (var e = listLine = wholeWidth = 0;e < a.length;e++) {
+      wholeWidth += a[e].width;
+    }
+    for (var f = 0, g = 0, h = initX, k = 0, l = 0, n = 0, e = 0;e < a.length;e++) {
+      l = a[e], e != a.length - 1 && (n = a[e + 1]), g += l.width, lP = initX, k = initY + 30 * f, l.group.attr({transform:"translate(" + lP + "," + k + ")"}), initX += l.width + 10, g > d - (l.width + n.width / 2.2) && (f += 1, initX = h, g = 0);
+    }
   };
   a._movePort = function(a, c, d, e) {
     var f = c, g = a.box.x * this.scale, h = a.box.y * this.scale;
