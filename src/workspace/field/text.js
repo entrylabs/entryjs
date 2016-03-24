@@ -43,9 +43,9 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldText);
         });
         this.textElement.textContent = this._text;
 
-        var bBox = this.textElement.getBBox();
         var x = 0;
         if (this._align == 'center') x = -bBox.width/2;
+        var bBox = this.textElement.getBBox();
 
         this.textElement.attr({
             x: x,
