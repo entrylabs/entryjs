@@ -49,7 +49,7 @@ Entry.BlockView = function(block, board, mode) {
     this.block.observe(this, "_setMovable", ["movable"]);
     this.block.observe(this, "_setReadOnly", ["movable"]);
     this.block.observe(this, "_setCopyable", ["copyable"]);
-    this.block.observe(this, "_setColor", ["deletable"], false);
+    this.block.observe(this, "_updateColor", ["deletable"], false);
     this.observe(this, "_updateBG", ["magneting"], false);
 
     this.observe(this, "_updateOpacity", ["visible"], false);

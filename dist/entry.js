@@ -13528,7 +13528,7 @@ Entry.BlockView = function(a, b, c) {
   this.block.observe(this, "_setMovable", ["movable"]);
   this.block.observe(this, "_setReadOnly", ["movable"]);
   this.block.observe(this, "_setCopyable", ["copyable"]);
-  this.block.observe(this, "_setColor", ["deletable"], !1);
+  this.block.observe(this, "_updateColor", ["deletable"], !1);
   this.observe(this, "_updateBG", ["magneting"], !1);
   this.observe(this, "_updateOpacity", ["visible"], !1);
   this.observe(this, "_updateDisplay", ["display"], !1);
