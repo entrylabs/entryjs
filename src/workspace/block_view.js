@@ -49,6 +49,7 @@ Entry.BlockView = function(block, board, mode) {
     this.block.observe(this, "_setMovable", ["movable"]);
     this.block.observe(this, "_setReadOnly", ["movable"]);
     this.block.observe(this, "_setCopyable", ["copyable"]);
+    this.block.observe(this, "_setColor", ["deletable"], false);
     this.observe(this, "_updateBG", ["magneting"], false);
 
     this.observe(this, "_updateOpacity", ["visible"], false);
@@ -883,6 +884,15 @@ Entry.BlockView.DRAG_RADIUS = 5;
         });
 
         if (this.display) this._setPosition();
+    };
+
+    p._updateColor = function() {
+        var fillColor = this._schema.color;
+        if (!this.block.isDeletable())
+            fillColor = Entry.Utils.colorLighten(fillColor);
+        this._path.attr({fill:fillColor});
+        //update block inner images
+        this._startContentRender(this.getBoard().workspace.getMode());
     };
 
 })(Entry.BlockView.prototype);

@@ -13528,6 +13528,7 @@ Entry.BlockView = function(a, b, c) {
   this.block.observe(this, "_setMovable", ["movable"]);
   this.block.observe(this, "_setReadOnly", ["movable"]);
   this.block.observe(this, "_setCopyable", ["copyable"]);
+  this.block.observe(this, "_setColor", ["deletable"], !1);
   this.observe(this, "_updateBG", ["magneting"], !1);
   this.observe(this, "_updateOpacity", ["visible"], !1);
   this.observe(this, "_updateDisplay", ["display"], !1);
@@ -13923,6 +13924,12 @@ Entry.BlockView.DRAG_RADIUS = 5;
   a._updateDisplay = function() {
     this.svgGroup.attr({display:!1 === this.display ? "none" : "block"});
     this.display && this._setPosition();
+  };
+  a._updateColor = function() {
+    var b = this._schema.color;
+    this.block.isDeletable() || (b = Entry.Utils.colorLighten(b));
+    this._path.attr({fill:b});
+    this._startContentRender(this.getBoard().workspace.getMode());
   };
 })(Entry.BlockView.prototype);
 Entry.Code = function(a) {
@@ -15061,8 +15068,8 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
     });
     this.optionGroup = Entry.Dom("input", {class:"entry-widget-input-field", parent:$("body")});
     this.optionGroup.val(this.getValue());
-    this.optionGroup.on("mousedown", function(a) {
-      a.stopPropagation();
+    this.optionGroup.on("mousedown", function(b) {
+      b.stopPropagation();
     });
     this.optionGroup.on("keyup", function(a) {
       var c = a.keyCode || a.which;
