@@ -10771,7 +10771,7 @@ Entry.Model = function(a, b) {
 })(Entry.Model);
 Entry.Func = function() {
   this.id = Entry.generateHash();
-  this.content = new Entry.Code([[{type:"function_create", x:40, y:40, copyable:!1}]]);
+  this.content = new Entry.Code([[{type:"function_create", x:40, y:40}]]);
   this.block = null;
   this.hashMap = {};
 };
@@ -10933,18 +10933,25 @@ Entry.Func.prototype.generateBlock = function(a) {
   this.description = a.description;
 };
 Entry.Func.generateWsBlock = function() {
-  for (var a = this.targetFunc.content.getEventMap("funcDef")[0].params[0], b = 0, c = 0;a;) {
-    var d = a.params[0];
+  for (var a = this.targetFunc.content.getEventMap("funcDef")[0].params[0], b = 0, c = 0, d = [], e = "";a;) {
+    var f = a.params[0];
     switch(a.type) {
+      case "function_field_label":
+        e = e + " " + f;
+        break;
       case "function_field_boolean":
-        Entry.Mutator.mutate(d.type, {template:"\ud310\ub2e8\uac12 " + b});
+        Entry.Mutator.mutate(f.type, {template:"\ud310\ub2e8\uac12 " + b});
         b++;
+        d.push({type:"Block", accept:"booleanMagnet"});
+        e = e + " %" + (b + c);
         break;
       case "function_field_string":
-        Entry.Mutator.mutate(d.type, {template:"\ubb38\uc790/\uc22b\uc790\uac12 " + c}), c++;
+        Entry.Mutator.mutate(f.type, {template:"\ubb38\uc790/\uc22b\uc790\uac12 " + c}), c++, e = e + " %" + (b + c), d.push({type:"Block", accept:"stringMagnet"});
     }
     a = a.getOutputBlock();
   }
+  Entry.Mutator.mutate("mutant", {params:d, template:e});
+  console.log(e);
   this.refreshMenuCode();
 };
 Entry.HWMontior = {};

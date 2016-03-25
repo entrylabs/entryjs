@@ -16,8 +16,7 @@ Entry.Func = function() {
         [
             {
                 type: "function_create",
-                x: 40, y: 40,
-                copyable: false
+                x: 40, y: 40
             }
         ]
     ]);
@@ -304,83 +303,36 @@ Entry.Func.generateWsBlock = function() {
     var outputBlock = defBlock.params[0];
     var booleanIndex = 0;
     var stringIndex = 0;
+    var schemaParams = [];
+    var schemaTemplate = "";
     while(outputBlock) {
         var value = outputBlock.params[0];
         switch(outputBlock.type) {
             case 'function_field_label':
+                schemaTemplate = schemaTemplate + " " + value;
                 break;
             case 'function_field_boolean':
                 Entry.Mutator.mutate(value.type, {template: "판단값 " + booleanIndex});
                 booleanIndex++;
+                schemaParams.push({
+                    type: "Block",
+                    accept: "booleanMagnet"
+                });
+                schemaTemplate = schemaTemplate + " %" + (booleanIndex + stringIndex);
                 break;
             case 'function_field_string':
                 Entry.Mutator.mutate(value.type, {template: "문자/숫자값 " + stringIndex});
                 stringIndex++;
+                schemaTemplate = schemaTemplate + " %" + (booleanIndex + stringIndex);
+                schemaParams.push({
+                    type: "Block",
+                    accept: "stringMagnet"
+                });
                 break;
         }
         outputBlock = outputBlock.getOutputBlock();
     }
+    Entry.Mutator.mutate("mutant", {params: schemaParams, template: schemaTemplate});
+        console.log(schemaTemplate);
     this.refreshMenuCode();
-    return;
-    var topBlocks = content.childNodes;
-    var createBlock;
-    for (var i in topBlocks) {
-        if (topBlocks[i].getAttribute('type') == 'function_create') {
-            createBlock = topBlocks[i];
-            break;
-        }
-    }
-    var script = new Entry.Script();
-    script.init(createBlock);
-    var field = script;
-    if (field.values)
-        field = script.values.FIELD;
-    var mutationXml = '<mutation hashid="' + id + '">';
-    var fieldXml = '';
-    var description = '';
-    var stringCount = 0;
-    var booleanCount = 0;
-    func.stringHash = {};
-    func.booleanHash = {};
-    while(true) {
-        switch (field.type) {
-            case 'function_field_label':
-                mutationXml += '<field type="label" content="' +
-                    field.fields.NAME.replace("<", "&lt;").replace(">", "&gt;") + '"></field>';
-                description += field.fields.NAME;
-                break;
-            case 'function_field_boolean':
-                var hash = field.values.PARAM.hashId;
-                mutationXml += '<field type="boolean" hashid="' + hash +
-                               '"></field>';
-                fieldXml += '<value name="' + hash + '"><block type="function_param_boolean">' +
-                    '<mutation hashid="'+ hash +'"></mutation></block></value>';
-                func.booleanHash[hash] = booleanCount;
-                booleanCount++;
-                description += '논리값' + booleanCount;
-                break;
-            case 'function_field_string':
-                var hash = field.values.PARAM.hashId;
-                mutationXml += '<field type="string" hashid="' + hash +
-                               '"></field>';
-                fieldXml += '<value name="' + hash + '"><block type="function_param_string">' +
-                    '<mutation hashid="'+ hash +'"></mutation></block></value>';
-                func.stringHash[hash] = stringCount;
-                stringCount++;
-                description += '문자값' + stringCount;
-                break;
-        }
-        if (field.values && field.values.NEXT)
-            field = field.values.NEXT;
-        else break;
-        description += ' ';
-    }
-    mutationXml += '</mutation>';
-    var blockText = '<xml><block type="function_general">' +
-        mutationXml + fieldXml + '</block></xml>';
-    if (!description) description = "함수";
-    return {
-        block: Blockly.Xml.textToDom(blockText).childNodes[0],
-        description: description
-    };
 };
