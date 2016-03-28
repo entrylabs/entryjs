@@ -93,6 +93,7 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
                     elem.bindOnClick(function(e) {
                         e.preventDefault();
                         that.selectMenu(name);
+                        return false;
                     });
                 })(element, name);
             }
