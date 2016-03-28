@@ -14399,38 +14399,31 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
   a.destroy = function() {
   };
   a.inspectBlock = function() {
-    if (!this._valueBlock) {
-      var b = null;
-      if (this._originBlock) {
-        b = this._originBlock.type, delete this._originBlock;
-      } else {
-        switch(this.acceptType) {
-          case "booleanMagnet":
-            b = "True";
-            break;
-          case "stringMagnet":
-            b = "text";
-            break;
-          case "basic_param":
-            b = "function_field_label";
-        }
+    var b = null;
+    if (this._originBlock) {
+      b = this._originBlock.type, delete this._originBlock;
+    } else {
+      switch(this.acceptType) {
+        case "booleanMagnet":
+          b = "True";
+          break;
+        case "stringMagnet":
+          b = "text";
+          break;
+        case "basic_param":
+          b = "function_field_label";
       }
-      b = this._createBlockByType(b);
-      return this._setValueBlock(b);
     }
+    return this._createBlockByType(b);
   };
   a._setValueBlock = function(b) {
-    if (b != this._valueBlock || !this._valueBlock) {
-      this._restoreCurrent && (this._originBlock = this._valueBlock);
-      this._valueBlock = b;
-      this.setValue(b);
-      if (!this._valueBlock) {
-        return this.inspectBlock();
-      }
-      b.setThread(this);
-      b.getThread().view.setParent(this);
-      return this._valueBlock;
-    }
+    this._restoreCurrent && (this._originBlock = this._valueBlock);
+    b || (b = this.inspectBlock());
+    this._valueBlock = b;
+    this.setValue(b);
+    b.setThread(this);
+    b.getThread().view.setParent(this);
+    return this._valueBlock;
   };
   a._getValueBlock = function() {
     return this._valueBlock;
@@ -14440,7 +14433,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
     this._sizeObserver && this._sizeObserver.destroy();
     this._posObserver && this._posObserver.destroy();
     b = this._setValueBlock(b).view;
-    b.bindPrev();
+    b.bindPrev(this);
     this._blockView.alignContent();
     this._posObserver = b.observe(this, "updateValueBlock", ["x", "y"], !1);
     this._sizeObserver = b.observe(this, "calcWH", ["width", "height"]);
@@ -14499,6 +14492,9 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
     d && (e = d.getMode());
     b.createView(a, e);
     return b;
+  };
+  a.spliceBlock = function() {
+    this.updateValueBlock();
   };
 })(Entry.FieldBlock.prototype);
 Entry.FieldColor = function(a, b, c) {
@@ -15033,8 +15029,8 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldText);
     this.textElement = this.svgGroup.elem("text").attr({style:"white-space: pre; font-size:" + this._fontSize + "px", "class":"dragNone", fill:this._color});
     this.textElement.textContent = this._text;
     b = 0;
-    "center" == this._align && (b = -a.width / 2);
     var a = this.textElement.getBBox();
+    "center" == this._align && (b = -a.width / 2);
     this.textElement.attr({x:b, y:.25 * a.height});
     this.box.set({x:0, y:0, width:this.textElement.getComputedTextLength(), height:a.height});
   };
@@ -15191,7 +15187,7 @@ Entry.Mutator = function() {
     void 0 === d.changeEvent && (d.changeEvent = new Entry.Event);
     d.template = c.template;
     d.params = c.params;
-    d.changeEvent.notify();
+    d.changeEvent.notify(1);
   };
 })(Entry.Mutator);
 (function(a) {
@@ -15670,9 +15666,13 @@ Entry.Block.MAGNET_OFFSET = .4;
     this.set(a);
     this.getSchema();
   };
+  a.changeSchema = function(a) {
+    this.set({params:[]});
+    this.getSchema();
+  };
   a.getSchema = function() {
     if (this._schema = Entry.block[this.type]) {
-      !this._schemaChangeEvent && this._schema.changeEvent && (this._schemaChangeEvent = this._schema.changeEvent.attach(this, this.getSchema));
+      !this._schemaChangeEvent && this._schema.changeEvent && (this._schemaChangeEvent = this._schema.changeEvent.attach(this, this.changeSchema));
       var a = this._schema.events;
       if (a) {
         for (var c in a) {
@@ -15757,7 +15757,7 @@ Entry.Block.MAGNET_OFFSET = .4;
     d = this.getThread();
     this._schema.event && d.unregisterEvent(this, this._schema.event);
     e && (c ? e.destroy(a, c) : f ? e.view.bindPrev(f) : (f = this.getThread().view.getParent(), f.constructor === Entry.FieldStatement ? (e.view.bindPrev(f), f.insertTopBlock(e)) : f.constructor === Entry.FieldStatement ? e.replace(f._valueBlock) : e.view._toGlobalCoordinate()));
-    d.spliceBlock && d.spliceBlock(this);
+    d.spliceBlock(this);
     this.view && this.view.destroy(a);
     this._schemaChangeEvent && this._schemaChangeEvent.destroy();
   };

@@ -115,44 +115,39 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
     p.destroy = function() {};
 
     p.inspectBlock = function() {
-        if (!this._valueBlock) {
-            var blockType = null;
-            if (this._originBlock) {
-                blockType = this._originBlock.type;
-                delete this._originBlock;
-            } else {
-                switch (this.acceptType) {
-                    case "booleanMagnet":
-                        blockType = "True";
-                        break;
-                    case "stringMagnet":
-                        blockType = "text";
-                        break;
-                    case "basic_param":
-                        blockType = "function_field_label";
-                        break;
-                }
+        var blockType = null;
+        if (this._originBlock) {
+            blockType = this._originBlock.type;
+            delete this._originBlock;
+        } else {
+            switch (this.acceptType) {
+                case "booleanMagnet":
+                    blockType = "True";
+                    break;
+                case "stringMagnet":
+                    blockType = "text";
+                    break;
+                case "basic_param":
+                    blockType = "function_field_label";
+                    break;
             }
-            var block = this._createBlockByType(blockType);
-            return this._setValueBlock(block);
         }
+        var block = this._createBlockByType(blockType);
+        return block;
     };
 
     p._setValueBlock = function(block) {
-        if (block != this._valueBlock || !this._valueBlock) {
+        if (this._restoreCurrent)
+            this._originBlock = this._valueBlock;
+        if (!block)
+            block = this.inspectBlock();
+        this._valueBlock = block;
+        this.setValue(block);
 
-            if (this._restoreCurrent)
-                this._originBlock = this._valueBlock;
-            this._valueBlock = block;
-            this.setValue(block);
-            if (!this._valueBlock)
-                return this.inspectBlock();
+        block.setThread(this);
+        block.getThread().view.setParent(this);
 
-            block.setThread(this);
-            block.getThread().view.setParent(this);
-
-            return this._valueBlock;
-        }
+        return this._valueBlock;
     };
 
     p._getValueBlock = function() {return this._valueBlock;};
@@ -163,7 +158,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
         if (this._posObserver) this._posObserver.destroy();
 
         var view = this._setValueBlock(block).view;
-        view.bindPrev();
+        view.bindPrev(this);
         this._blockView.alignContent();
         this._posObserver = view.observe(this, "updateValueBlock", ["x", "y"], false);
         this._sizeObserver = view.observe(this, "calcWH", ["width", "height"]);
@@ -250,6 +245,10 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
 
         block.createView(board, mode);
         return block;
+    };
+
+    p.spliceBlock = function() {
+        this.updateValueBlock();
     };
 
 })(Entry.FieldBlock.prototype);

@@ -50,6 +50,11 @@ Entry.Block.MAGNET_OFFSET = 0.4;
         this.getSchema();
     };
 
+    p.changeSchema = function(diff) {
+        this.set({params: []});
+        this.getSchema();
+    };
+
     p.getSchema = function() {
         var that = this;
         this._schema = Entry.block[this.type];
@@ -58,7 +63,7 @@ Entry.Block.MAGNET_OFFSET = 0.4;
 
         if (!this._schemaChangeEvent && this._schema.changeEvent)
             this._schemaChangeEvent = this._schema.changeEvent.attach(
-                this, this.getSchema);
+                this, this.changeSchema);
 
         var events = this._schema.events;
         if (events) {
@@ -218,7 +223,7 @@ Entry.Block.MAGNET_OFFSET = 0.4;
                 } else nextBlock.view.bindPrev(prevBlock);
             }
         }
-        if (thread.spliceBlock) thread.spliceBlock(this);
+        thread.spliceBlock(this);
         if (this.view) this.view.destroy(animate);
         if (this._schemaChangeEvent)
             this._schemaChangeEvent.destroy();
