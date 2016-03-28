@@ -123,7 +123,7 @@ Entry.Engine.prototype.generateView = function(controlView, option) {
 
         this.view_.appendChild(this.runButton);
         this.runButton.bindOnClick(function(e) {
-            e.preventDefault();
+            console.log(e);
             Entry.engine.toggleRun();
         });
         this.runButton2 = Entry.createElement('button');

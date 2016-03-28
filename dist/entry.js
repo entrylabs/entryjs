@@ -5679,7 +5679,7 @@ Entry.Engine.prototype.generateView = function(a, b) {
     this.runButton.innerHTML = Lang.Workspace.run;
     this.view_.appendChild(this.runButton);
     this.runButton.bindOnClick(function(b) {
-      b.preventDefault();
+      console.log(b);
       Entry.engine.toggleRun();
     });
     this.runButton2 = Entry.createElement("button");
@@ -10333,9 +10333,9 @@ Entry.createElement = function(a, b) {
     }
   };
   c.bindOnClick = function(b) {
-    $(this).on("click touchstart", function(a) {
+    $(this).on("click tab", function(a) {
       a.stopImmediatePropagation();
-      a.handled || (a.handled = !0, b.call(this, a));
+      b.call(this, a);
     });
   };
   return c;
@@ -15119,13 +15119,13 @@ Entry.GlobalSvg = {};
     }
   };
   a.draw = function() {
-    var a = this._view;
+    var b = this._view;
     this._svg && this.remove();
-    var c = this._mode == Entry.Workspace.MODE_VIMBOARD;
-    this.svgGroup = Entry.SVG.createElement(a.svgGroup.cloneNode(!0), {opacity:1});
+    var a = this._mode == Entry.Workspace.MODE_VIMBOARD;
+    this.svgGroup = Entry.SVG.createElement(b.svgGroup.cloneNode(!0), {opacity:1});
     this.svg.appendChild(this.svgGroup);
     this.show();
-    c && (a = $(this.svgGroup), a.find("g").css({filter:"none"}), a.find("path").velocity({opacity:0}, {duration:500}), a.find("text").velocity({fill:"#000000"}, {duration:530}));
+    a && (b = $(this.svgGroup), b.find("g").css({filter:"none"}), b.find("path").velocity({opacity:0}, {duration:500}), b.find("text").velocity({fill:"#000000"}, {duration:530}));
   };
   a.remove = function() {
     this.svgGroup && (this.svgGroup.remove(), delete this.svgGroup, delete this._view, delete this._offsetX, delete this._offsetY, delete this._startX, delete this._startY, this.hide());
