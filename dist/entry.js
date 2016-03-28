@@ -16355,7 +16355,9 @@ Entry.FieldTrashcan = function(a) {
   a.setBoard = function(a) {
     this._dragBlockObserver && this._dragBlockObserver.destroy();
     this.board = a;
-    this.svgGroup ? a.svg.appendChild(this.svgGroup) : this._generateView();
+    this.svgGroup || this._generateView();
+    var c = a.svg, d = c.firstChild;
+    d ? c.insertBefore(this.svgGroup, d) : c.appendChild(this.svgGroup);
     this._dragBlockObserver = a.observe(this, "updateDragBlock", ["dragBlock"]);
     this.setPosition();
   };

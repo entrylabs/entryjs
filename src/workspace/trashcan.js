@@ -132,7 +132,12 @@ Entry.FieldTrashcan = function(board) {
         if (this._dragBlockObserver) this._dragBlockObserver.destroy();
         this.board = board;
         if (!this.svgGroup) this._generateView();
-        else board.svg.appendChild(this.svgGroup);
+
+        //control z-index
+        var svg = board.svg;
+        var firstChild = svg.firstChild;
+        if (firstChild) svg.insertBefore(this.svgGroup, firstChild);
+        else svg.appendChild(this.svgGroup);
 
         this._dragBlockObserver = board.observe(this, "updateDragBlock", ["dragBlock"]);
         this.setPosition();
