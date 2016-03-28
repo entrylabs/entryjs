@@ -5607,18 +5607,14 @@ Entry.Engine.prototype.generateView = function(a, b) {
       this.hasClass("toggleOn") ? this.removeClass("toggleOn") : this.addClass("toggleOn");
       Entry.stage.toggleCoordinator();
     }), this.runButton = Entry.createElement("button"), this.runButton.addClass("entryEngineButtonMinimize"), this.runButton.addClass("entryRunButtonMinimize"), this.runButton.innerHTML = Lang.Blocks.START, this.view_.appendChild(this.runButton), this.runButton.bindOnClick(function(b) {
-      b.preventDefault();
       Entry.engine.toggleRun();
     }), this.runButton2 = Entry.createElement("button"), this.runButton2.addClass("entryEngineBigButtonMinimize_popup"), this.runButton2.addClass("entryEngineBigButtonMinimize_popup_run"), this.view_.appendChild(this.runButton2), this.runButton2.bindOnClick(function(b) {
-      b.preventDefault();
       Entry.engine.toggleRun();
     }), this.stopButton = Entry.createElement("button"), this.stopButton.addClass("entryEngineButtonMinimize"), this.stopButton.addClass("entryStopButtonMinimize"), this.stopButton.addClass("entryRemove"), this.stopButton.innerHTML = Lang.Workspace.stop, this.view_.appendChild(this.stopButton), this.stopButton.bindOnClick(function(b) {
       this.blur();
-      b.preventDefault();
       Entry.engine.toggleStop();
     }), this.pauseButton = Entry.createElement("button"), this.pauseButton.innerHTML = Lang.Workspace.pause, this.pauseButton.addClass("entryEngineButtonMinimize"), this.pauseButton.addClass("entryPauseButtonMinimize"), this.pauseButton.addClass("entryRemove"), this.view_.appendChild(this.pauseButton), this.pauseButton.bindOnClick(function(b) {
       this.blur();
-      b.preventDefault();
       Entry.engine.togglePause();
     }), this.mouseView = Entry.createElement("div"), this.mouseView.addClass("entryMouseViewMinimize"), this.mouseView.addClass("entryRemove"), this.view_.appendChild(this.mouseView)) : "phone" == b && (this.view_ = a, this.view_.addClass("entryEngine", "entryEnginePhone"), this.headerView_ = Entry.createElement("div", "entryEngineHeader"), this.headerView_.addClass("entryEngineHeaderPhone"), this.view_.appendChild(this.headerView_), this.maximizeButton = Entry.createElement("button"), this.maximizeButton.addClass("entryEngineButtonPhone", 
     "entryMaximizeButtonPhone"), this.headerView_.appendChild(this.maximizeButton), this.maximizeButton.bindOnClick(function(b) {
@@ -5632,10 +5628,8 @@ Entry.Engine.prototype.generateView = function(a, b) {
     }), document.addEventListener("mozfullscreenchange", function(b) {
       Entry.engine.exitFullScreen();
     }), this.footerView_ = Entry.createElement("div", "entryEngineFooter"), this.footerView_.addClass("entryEngineFooterPhone"), this.view_.appendChild(this.footerView_), this.runButton = Entry.createElement("button"), this.runButton.addClass("entryEngineButtonPhone", "entryRunButtonPhone"), Entry.objectAddable && this.runButton.addClass("small"), this.runButton.innerHTML = Lang.Workspace.run, this.footerView_.appendChild(this.runButton), this.runButton.bindOnClick(function(b) {
-      b.preventDefault();
       Entry.engine.toggleRun();
     }), this.stopButton = Entry.createElement("button"), this.stopButton.addClass("entryEngineButtonPhone", "entryStopButtonPhone", "entryRemove"), Entry.objectAddable && this.stopButton.addClass("small"), this.stopButton.innerHTML = Lang.Workspace.stop, this.footerView_.appendChild(this.stopButton), this.stopButton.bindOnClick(function(b) {
-      b.preventDefault();
       Entry.engine.toggleStop();
     }));
   } else {
@@ -5679,7 +5673,6 @@ Entry.Engine.prototype.generateView = function(a, b) {
     this.runButton.innerHTML = Lang.Workspace.run;
     this.view_.appendChild(this.runButton);
     this.runButton.bindOnClick(function(b) {
-      console.log(b);
       Entry.engine.toggleRun();
     });
     this.runButton2 = Entry.createElement("button");
@@ -5687,7 +5680,6 @@ Entry.Engine.prototype.generateView = function(a, b) {
     this.runButton2.addClass("entryRunButtonWorkspace_w2");
     this.view_.appendChild(this.runButton2);
     this.runButton2.bindOnClick(function(b) {
-      b.preventDefault();
       Entry.engine.toggleRun();
     });
     this.stopButton = Entry.createElement("button");
@@ -5697,7 +5689,6 @@ Entry.Engine.prototype.generateView = function(a, b) {
     this.stopButton.innerHTML = Lang.Workspace.stop;
     this.view_.appendChild(this.stopButton);
     this.stopButton.bindOnClick(function(b) {
-      b.preventDefault();
       Entry.engine.toggleStop();
     });
     this.stopButton2 = Entry.createElement("button");
@@ -5707,7 +5698,6 @@ Entry.Engine.prototype.generateView = function(a, b) {
     this.stopButton2.innerHTML = Lang.Workspace.stop;
     this.view_.appendChild(this.stopButton2);
     this.stopButton2.bindOnClick(function(b) {
-      b.preventDefault();
       Entry.engine.toggleStop();
     });
     this.pauseButton = Entry.createElement("button");
@@ -5716,7 +5706,6 @@ Entry.Engine.prototype.generateView = function(a, b) {
     this.pauseButton.addClass("entryRemove");
     this.view_.appendChild(this.pauseButton);
     this.pauseButton.bindOnClick(function(b) {
-      b.preventDefault();
       Entry.engine.togglePause();
     });
     this.mouseView = Entry.createElement("div");
@@ -13208,9 +13197,7 @@ Entry.BlockMenu = function(a, b, c, d) {
           b.text(Lang.Blocks[a.toUpperCase()]);
           d._categoryElems[a] = b;
           b.bindOnClick(function(b) {
-            b.preventDefault();
             d.selectMenu(a);
-            return !1;
           });
         })(Entry.Dom("li", {id:"entryCategory" + g, class:"entryCategoryElementWorkspace", parent:e}), g);
       }
@@ -15065,40 +15052,40 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
     this.box.set({x:0, y:0, width:b, height:16});
   };
   a.renderOptions = function() {
-    var b = this;
+    var a = this;
     this.destroyOption();
     this.documentDownEvent = Entry.documentMousedown.attach(this, function() {
       Entry.documentMousedown.detach(this.documentDownEvent);
-      b.applyValue();
-      b.destroyOption();
+      a.applyValue();
+      a.destroyOption();
     });
     this.optionGroup = Entry.Dom("input", {class:"entry-widget-input-field", parent:$("body")});
     this.optionGroup.val(this.getValue());
-    this.optionGroup.on("mousedown", function(b) {
-      b.stopPropagation();
+    this.optionGroup.on("mousedown", function(a) {
+      a.stopPropagation();
     });
-    this.optionGroup.on("keyup", function(a) {
-      var c = a.keyCode || a.which;
-      b.applyValue(a);
-      -1 < [13, 27].indexOf(c) && b.destroyOption();
+    this.optionGroup.on("keyup", function(c) {
+      var e = c.keyCode || c.which;
+      a.applyValue(c);
+      -1 < [13, 27].indexOf(e) && a.destroyOption();
     });
-    var a = this.getAbsolutePosFromDocument();
-    a.y -= this.box.height / 2;
-    this.optionGroup.css({height:16, left:a.x, top:a.y, width:b.box.width});
+    var c = this.getAbsolutePosFromDocument();
+    c.y -= this.box.height / 2;
+    this.optionGroup.css({height:16, left:c.x, top:c.y, width:a.box.width});
     this.optionGroup.focus();
     this.optionGroup.select();
   };
-  a.applyValue = function(b) {
-    b = this.optionGroup.val();
-    this.setValue(b);
+  a.applyValue = function(a) {
+    a = this.optionGroup.val();
+    this.setValue(a);
     this.textElement.textContent = this.truncate();
     this.resize();
   };
   a.resize = function() {
-    var b = this.getTextWidth();
-    this._header.attr({width:b});
-    this.optionGroup.css({width:b});
-    this.box.set({width:b});
+    var a = this.getTextWidth();
+    this._header.attr({width:a});
+    this.optionGroup.css({width:a});
+    this.box.set({width:a});
     this._block.view.alignContent();
   };
   a.getTextWidth = function() {
@@ -15113,19 +15100,19 @@ Entry.GlobalSvg = {};
   a.createDom = function() {
     this.svgDom || (this.svgDom = Entry.Dom($('<svg id="globalSvg" width="0" height="0"version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'), {parent:$("body")}), this.svgDom.css({position:"fixed", width:1, height:1, display:"none", overflow:"visible", "z-index":"1111", opacity:.8}), this.svg = Entry.SVG("globalSvg"), this.top = this.left = this.width = 0);
   };
-  a.setView = function(b, a) {
-    if (b != this._view && !b.block.isReadOnly() && b.movable) {
-      return this._view = b, this._mode = a, a !== Entry.Workspace.MODE_VIMBOARD && b.set({visible:!1}), this.draw(), this.align(), this.position(), !0;
+  a.setView = function(a, c) {
+    if (a != this._view && !a.block.isReadOnly() && a.movable) {
+      return this._view = a, this._mode = c, c !== Entry.Workspace.MODE_VIMBOARD && a.set({visible:!1}), this.draw(), this.align(), this.position(), !0;
     }
   };
   a.draw = function() {
-    var b = this._view;
+    var a = this._view;
     this._svg && this.remove();
-    var a = this._mode == Entry.Workspace.MODE_VIMBOARD;
-    this.svgGroup = Entry.SVG.createElement(b.svgGroup.cloneNode(!0), {opacity:1});
+    var c = this._mode == Entry.Workspace.MODE_VIMBOARD;
+    this.svgGroup = Entry.SVG.createElement(a.svgGroup.cloneNode(!0), {opacity:1});
     this.svg.appendChild(this.svgGroup);
     this.show();
-    a && (b = $(this.svgGroup), b.find("g").css({filter:"none"}), b.find("path").velocity({opacity:0}, {duration:500}), b.find("text").velocity({fill:"#000000"}, {duration:530}));
+    c && (a = $(this.svgGroup), a.find("g").css({filter:"none"}), a.find("path").velocity({opacity:0}, {duration:500}), a.find("text").velocity({fill:"#000000"}, {duration:530}));
   };
   a.remove = function() {
     this.svgGroup && (this.svgGroup.remove(), delete this.svgGroup, delete this._view, delete this._offsetX, delete this._offsetY, delete this._startX, delete this._startY, this.hide());

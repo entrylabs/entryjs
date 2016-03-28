@@ -91,9 +91,7 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
                     elem.text(Lang.Blocks[name.toUpperCase()]);
                     that._categoryElems[name] = elem;
                     elem.bindOnClick(function(e) {
-                        e.preventDefault();
                         that.selectMenu(name);
-                        return false;
                     });
                 })(element, name);
             }
