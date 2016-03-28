@@ -2029,6 +2029,7 @@ Entry.block.function_general = function(a, b) {
   delete b.thread;
   return b.callReturn();
 };
+Entry.block.function_general = {skeleton:"basic", color:"#cc7337", template:"\ud568\uc218", params:[]};
 Entry.Hamster = {PORT_MAP:{leftWheel:0, rightWheel:0, buzzer:0, outputA:0, outputB:0, leftLed:0, rightLed:0, note:0, ioModeA:0, ioModeB:0}, setZero:function() {
   var a = Entry.Hamster.PORT_MAP, b;
   for (b in a) {
@@ -8928,10 +8929,9 @@ Entry.popupHelper.prototype.hide = function() {
   this.body_.addClass("hiddenPopup");
 };
 Entry.getStartProject = function(a) {
-  return {category:"\uae30\ud0c0", scenes:[{name:"\uc7a5\uba74 1", id:"7dwq"}], variables:[{name:"\ucd08\uc2dc\uacc4", id:"brih", visible:!1, value:"0", variableType:"timer", x:150, y:-70, array:[], object:null, isCloud:!1}, {name:"\ub300\ub2f5", id:"1vu8", visible:!1, value:"0", variableType:"answer", x:150, y:-100, array:[], object:null, isCloud:!1}], objects:[{id:"7y0y", name:"\uc5d4\ud2b8\ub9ac\ubd07", script:[[{type:"mutant", x:180, y:100, params:[]}], [{type:"mutant", x:100, y:100, params:[]}], 
-  [{type:"length_of_string", x:200, y:140, params:[{type:"length_of_string"}]}], [{type:"when_run_button_click", x:40, y:240}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"repeat_basic", statements:[[{type:"move_direction"}, {type:"move_x"}, {type:"move_y"}, {type:"stop_repeat"}]]}, {type:"stop_repeat"}, {type:"move_direction"}]], selectedPictureId:"vx80", objectType:"sprite", rotateMethod:"free", scene:"7dwq", sprite:{sounds:[{duration:1.3, ext:".mp3", id:"8el5", 
-  fileurl:a + "media/bark.mp3", name:"\uac15\uc544\uc9c0 \uc9d6\ub294\uc18c\ub9ac"}], pictures:[{id:"vx80", fileurl:a + "media/entrybot1.png", name:"\uc5d4\ud2b8\ub9ac\ubd07_\uac77\uae301", scale:100, dimension:{width:284, height:350}}, {id:"4t48", fileurl:a + "media/entrybot2.png", name:"\uc5d4\ud2b8\ub9ac\ubd07_\uac77\uae302", scale:100, dimension:{width:284, height:350}}]}, entity:{x:0, y:0, regX:142, regY:175, scaleX:.3154574132492113, scaleY:.3154574132492113, rotation:0, direction:90, width:284, 
-  height:350, visible:!0}, lock:!1, active:!0}], speed:60};
+  return {category:"\uae30\ud0c0", scenes:[{name:"\uc7a5\uba74 1", id:"7dwq"}], variables:[{name:"\ucd08\uc2dc\uacc4", id:"brih", visible:!1, value:"0", variableType:"timer", x:150, y:-70, array:[], object:null, isCloud:!1}, {name:"\ub300\ub2f5", id:"1vu8", visible:!1, value:"0", variableType:"answer", x:150, y:-100, array:[], object:null, isCloud:!1}], objects:[{id:"7y0y", name:"\uc5d4\ud2b8\ub9ac\ubd07", script:[[{type:"length_of_string", x:200, y:140, params:[{type:"length_of_string"}]}], [{type:"when_run_button_click", 
+  x:40, y:240}, {type:"move_direction"}, {type:"stop_repeat"}, {type:"move_direction"}, {type:"repeat_basic", statements:[[{type:"move_direction"}, {type:"move_x"}, {type:"move_y"}, {type:"stop_repeat"}]]}, {type:"stop_repeat"}, {type:"move_direction"}]], selectedPictureId:"vx80", objectType:"sprite", rotateMethod:"free", scene:"7dwq", sprite:{sounds:[{duration:1.3, ext:".mp3", id:"8el5", fileurl:a + "media/bark.mp3", name:"\uac15\uc544\uc9c0 \uc9d6\ub294\uc18c\ub9ac"}], pictures:[{id:"vx80", fileurl:a + 
+  "media/entrybot1.png", name:"\uc5d4\ud2b8\ub9ac\ubd07_\uac77\uae301", scale:100, dimension:{width:284, height:350}}, {id:"4t48", fileurl:a + "media/entrybot2.png", name:"\uc5d4\ud2b8\ub9ac\ubd07_\uac77\uae302", scale:100, dimension:{width:284, height:350}}]}, entity:{x:0, y:0, regX:142, regY:175, scaleX:.3154574132492113, scaleY:.3154574132492113, rotation:0, direction:90, width:284, height:350, visible:!0}, lock:!1, active:!0}], speed:60};
 };
 Entry.PropertyPanel = function() {
   this.modes = {};
@@ -10763,13 +10763,18 @@ Entry.Func = function() {
   this.content = new Entry.Code([[{type:"function_create", x:40, y:40}]]);
   this.block = null;
   this.hashMap = {};
+  var a = function() {
+  };
+  a.prototype = Entry.block.function_general;
+  a = new a;
+  a.changeEvent = new Entry.Event;
+  Entry.block["func_" + this.id] = a;
+  Entry.Func.registerFunction(this);
 };
 Entry.Func.threads = {};
-Entry.Func.registerFunction = function(a, b) {
-  var c = Entry.generateHash(), d = Entry.variableContainer.getFunction(a), e = new Entry.Script(b);
-  e.init(d.content.childNodes[0]);
-  this.threads[c] = e;
-  return c;
+Entry.Func.registerFunction = function(a) {
+  this.menuCode || this.setupMenuCode();
+  Entry.playground.mainWorkspace.getBlockMenu().getCategoryCodes("func").createThread([{type:"func_" + a.id}]);
 };
 Entry.Func.executeFunction = function(a) {
   var b = this.threads[a];
@@ -10787,15 +10792,10 @@ Entry.Func.prototype.init = function(a) {
   this.content = Blockly.Xml.textToDom(a.content);
   this.block = Blockly.Xml.textToDom("<xml>" + a.block + "</xml>").childNodes[0];
 };
-Entry.Func.CREATE_BTN = '<xml><btn text="Lang.Workspace.create_function" onclick="Entry.variableContainer.createFunction()"></btn></xml>';
-Entry.Func.createBtn = Entry.nodeListToArray(Blockly.Xml.textToDom(Entry.Func.CREATE_BTN).childNodes);
-Entry.Func.FIELD_BLOCK = '<xml><block type="function_field_label"></block><block type="function_field_string"><value name="PARAM"><block type="function_param_string"><mutation hashid="#1"/></block></value></block><block type="function_field_boolean"><value name="PARAM"><block type="function_param_boolean"><mutation hashid="#2"/></block></value></block></xml>';
-Entry.Func.fieldBlocks = Entry.nodeListToArray(Blockly.Xml.textToDom(Entry.Func.FIELD_BLOCK).childNodes);
-Entry.Func.CREATE_BLOCK = '<xml><block type="function_create" deletable="false" x="28" y="28"></block></xml>';
 Entry.Func.edit = function(a) {
   this.cancelEdit();
-  this.initEditView(a.content);
   this.targetFunc = a;
+  this.initEditView(a.content);
   this._funcChangeEvent = a.content.getEventMap("funcDef")[0].thread.changeEvent.attach(this, this.generateWsBlock);
   this.updateMenu();
 };
@@ -10939,8 +10939,7 @@ Entry.Func.generateWsBlock = function() {
     }
     a = a.getOutputBlock();
   }
-  Entry.Mutator.mutate("mutant", {params:d, template:e});
-  console.log(e);
+  Entry.Mutator.mutate("func_" + this.targetFunc.id, {params:d, template:e});
   this.refreshMenuCode();
 };
 Entry.HWMontior = {};
@@ -15035,39 +15034,39 @@ Entry.FieldTextInput = function(a, b, c) {
 };
 Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
 (function(a) {
-  a.renderStart = function(b) {
-    this.svgGroup = b.contentSvgGroup.elem("g");
+  a.renderStart = function(a) {
+    this.svgGroup = a.contentSvgGroup.elem("g");
     this.svgGroup.attr({class:"entry-input-field"});
     this.textElement = this.svgGroup.elem("text", {x:4, y:4, "font-size":"9pt"});
     this.textElement.textContent = this.truncate();
-    b = this.getTextWidth();
-    var a = this.position && this.position.y ? this.position.y : 0;
-    this._header = this.svgGroup.elem("rect", {width:b, height:16, y:a - 8, rx:3, ry:3, fill:"#fff", "fill-opacity":.4});
+    a = this.getTextWidth();
+    var c = this.position && this.position.y ? this.position.y : 0;
+    this._header = this.svgGroup.elem("rect", {width:a, height:16, y:c - 8, rx:3, ry:3, fill:"#fff", "fill-opacity":.4});
     this.svgGroup.appendChild(this.textElement);
     this._bindRenderOptions();
-    this.box.set({x:0, y:0, width:b, height:16});
+    this.box.set({x:0, y:0, width:a, height:16});
   };
   a.renderOptions = function() {
-    var b = this;
+    var a = this;
     this.destroyOption();
     this.documentDownEvent = Entry.documentMousedown.attach(this, function() {
       Entry.documentMousedown.detach(this.documentDownEvent);
-      b.applyValue();
-      b.destroyOption();
+      a.applyValue();
+      a.destroyOption();
     });
     this.optionGroup = Entry.Dom("input", {class:"entry-widget-input-field", parent:$("body")});
     this.optionGroup.val(this.getValue());
     this.optionGroup.on("mousedown", function(a) {
       a.stopPropagation();
     });
-    this.optionGroup.on("keyup", function(a) {
-      var c = a.keyCode || a.which;
-      b.applyValue(a);
-      -1 < [13, 27].indexOf(c) && b.destroyOption();
+    this.optionGroup.on("keyup", function(c) {
+      var e = c.keyCode || c.which;
+      a.applyValue(c);
+      -1 < [13, 27].indexOf(e) && a.destroyOption();
     });
-    var a = this.getAbsolutePosFromDocument();
-    a.y -= this.box.height / 2;
-    this.optionGroup.css({height:16, left:a.x, top:a.y, width:b.box.width});
+    var c = this.getAbsolutePosFromDocument();
+    c.y -= this.box.height / 2;
+    this.optionGroup.css({height:16, left:c.x, top:c.y, width:a.box.width});
     this.optionGroup.focus();
     this.optionGroup.select();
   };

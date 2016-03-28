@@ -22,17 +22,27 @@ Entry.Func = function() {
     ]);
     this.block = null;
     this.hashMap = {};
+
+    var blockSchema = function () {};
+    blockSchema.prototype = Entry.block.function_general;
+    blockSchema = new blockSchema();
+    blockSchema.changeEvent = new Entry.Event();
+
+    Entry.block["func_" + this.id] = blockSchema;
+
+    Entry.Func.registerFunction(this);
 };
 
 Entry.Func.threads = {};
 
-Entry.Func.registerFunction = function(functionHash, entity) {
-    var threadHash = Entry.generateHash();
-    var func = Entry.variableContainer.getFunction(functionHash);
-    var script = new Entry.Script(entity);
-    script.init(func.content.childNodes[0]);
-    this.threads[threadHash] = script;
-    return threadHash;
+Entry.Func.registerFunction = function(func) {
+    if (!this.menuCode)
+        this.setupMenuCode();
+    var blockMenu = Entry.playground.mainWorkspace.getBlockMenu();
+    var menuCode = blockMenu.getCategoryCodes("func");
+    menuCode.createThread([{
+        type: "func_" + func.id
+    } ]);
 };
 
 Entry.Func.executeFunction = function(threadHash) {
@@ -58,32 +68,10 @@ Entry.Func.prototype.init = function(model) {
     this.block = Blockly.Xml.textToDom(xmlText).childNodes[0];
 };
 
-Entry.Func.CREATE_BTN =
-    '<xml><btn text="Lang.Workspace.create_function" ' +
-    'onclick="Entry.variableContainer.createFunction()"></btn></xml>';
-
-Entry.Func.createBtn = Entry.nodeListToArray(
-    Blockly.Xml.textToDom(Entry.Func.CREATE_BTN).childNodes);
-
-Entry.Func.FIELD_BLOCK =
-    '<xml><block type="function_field_label"></block>' +
-    '<block type="function_field_string"><value name="PARAM">' +
-    '<block type="function_param_string"><mutation hashid="#1"/></block></value></block>' +
-    '<block type="function_field_boolean"><value name="PARAM">' +
-    '<block type="function_param_boolean"><mutation hashid="#2"/></block></value></block>' +
-    '</xml>';
-
-Entry.Func.fieldBlocks = Entry.nodeListToArray(
-    Blockly.Xml.textToDom(Entry.Func.FIELD_BLOCK).childNodes);
-
-Entry.Func.CREATE_BLOCK =
-    '<xml><block type="function_create" deletable="false" x="28" y="28">' +
-    '</block></xml>';
-
 Entry.Func.edit = function(func) {
     this.cancelEdit();
-    this.initEditView(func.content);
     this.targetFunc = func;
+    this.initEditView(func.content);
     this._funcChangeEvent = func.content.getEventMap("funcDef")[0].thread
         .changeEvent.attach(this, this.generateWsBlock);
     this.updateMenu();
@@ -332,7 +320,9 @@ Entry.Func.generateWsBlock = function() {
         }
         outputBlock = outputBlock.getOutputBlock();
     }
-    Entry.Mutator.mutate("mutant", {params: schemaParams, template: schemaTemplate});
-        console.log(schemaTemplate);
+    Entry.Mutator.mutate(
+        "func_" + this.targetFunc.id,
+        {params: schemaParams, template: schemaTemplate}
+    );
     this.refreshMenuCode();
 };

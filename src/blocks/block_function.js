@@ -302,3 +302,12 @@ Entry.block.function_general = function (sprite, script) {
         return script;
     }
 };
+
+Entry.block.function_general = {
+    skeleton: "basic",
+    color: "#cc7337",
+    template: "함수",
+    params: [
+    ]
+};
+
