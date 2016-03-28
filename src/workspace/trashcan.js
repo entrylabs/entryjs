@@ -3,22 +3,22 @@
 goog.provide("Entry.FieldTrashcan");
 
 Entry.FieldTrashcan = function(board) {
-    this.board = board;
-    //this.svgGroup = board.svg.elem("g", {filter: 'url(#entryTrashcanFilter)'});
-    this.svgGroup = board.svg.elem("g");
+    if (board) this.setBoard(board);
 
-    this.renderStart();
     this.dragBlock = null;
     this.dragBlockObserver = null;
     this.isOver = false;
-
-    board.observe(this, "updateDragBlock", ["dragBlock"]);
 
     if (Entry.windowResized)
         Entry.windowResized.attach(this, this.setPosition);
 };
 
 (function(p) {
+    p._generateView = function() {
+        this.svgGroup = this.board.svg.elem("g");
+        this.renderStart();
+    };
+
     p.renderStart = function() {
         var path = Entry.mediaFilePath + 'delete_';
         this.trashcanTop = this.svgGroup.elem("image", {
@@ -89,6 +89,7 @@ Entry.FieldTrashcan = function(board) {
     };
 
     p.setPosition = function() {
+        if (!this.board) return;
         var svgDom = this.board.svgDom;
         this._x = svgDom.width()-110;
         this._y = svgDom.height()-110;
@@ -126,6 +127,17 @@ Entry.FieldTrashcan = function(board) {
         );
         this.isOver = isOver;
     };
+
+    p.setBoard = function(board) {
+        if (this._dragBlockObserver) this._dragBlockObserver.destroy();
+        this.board = board;
+        if (!this.svgGroup) this._generateView();
+        else board.svg.appendChild(this.svgGroup);
+
+        this._dragBlockObserver = board.observe(this, "updateDragBlock", ["dragBlock"]);
+        this.setPosition();
+    };
+
 })(Entry.FieldTrashcan.prototype);
 
 

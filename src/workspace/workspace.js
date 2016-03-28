@@ -4,10 +4,14 @@
 "use strict";
 
 goog.provide("Entry.Workspace");
+
 goog.require("Entry.Model");
+goog.require("Entry.FieldTrashcan");
 
 Entry.Workspace = function(options) {
     Entry.Model(this, false);
+    this.observe(this, "_handleChangeBoard", ["selectedBoard"], false);
+    this.trashcan = new Entry.FieldTrashcan();
     var that = this;
 
     var option = options.blockMenu;
@@ -27,6 +31,7 @@ Entry.Workspace = function(options) {
         option.workspace = this;
         this.board = new Entry.Board(option);
         this.board.observe(this, "_setSelectedBlockView", ["selectedBlockView"], false);
+        this.set({selectedBoard:this.board});
     }
 
     option = options.vimBoard;
@@ -41,10 +46,10 @@ Entry.Workspace = function(options) {
     Entry.GlobalSvg.createDom();
 
     this.mode = Entry.Workspace.MODE_BOARD;
-    this.selectedBoard = this.board;
 
     if (Entry.keyPressed)
         Entry.keyPressed.attach(this, this._keyboardControl);
+
 };
 
 Entry.Workspace.MODE_BOARD = 0;
@@ -53,7 +58,8 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
 
 (function(p) {
     p.schema = {
-        selectedBlockView: null
+        selectedBlockView: null,
+        selectedBoard: null
     };
 
     p.getBoard = function(){return this.board;};
@@ -74,7 +80,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
             case Entry.Workspace.MODE_VIMBOARD:
                 if (this.board) this.board.hide();
                 if (this.overlayBoard) this.overlayBoard.hide();
-                this.selectedBoard = this.vimBoard;
+                this.set({selectedBoard:this.vimBoard});
                 this.vimBoard.show();
                 this.vimBoard.codeToText(this.board.code);
                 this.blockMenu.renderText();
@@ -82,15 +88,15 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                 break;
             case Entry.Workspace.MODE_BOARD:
                 try {
-                    this.selectedBoard = this.board;
                     this.board.show();
+                    this.set({selectedBoard:this.board});
                     this.textToCode();
                     if (this.vimBoard) this.vimBoard.hide();
                     if (this.overlayBoard) this.overlayBoard.hide();
                     this.blockMenu.renderBlock();
                 } catch(e) {
                     if (this.board) this.board.hide();
-                    this.selectedBoard = this.vimBoard;
+                    this.set({selectedBoard:this.vimBoard});
                     Entry.dispatchEvent('setProgrammingMode', Entry.Workspace.MODE_VIMBOARD);
                     throw e;
                 }
@@ -98,7 +104,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
             case Entry.Workspace.MODE_OVERLAYBOARD:
                 if (!this.overlayBoard)
                     this.initOverlayBoard();
-                this.selectedBoard = this.overlayBoard;
+                this.set({selectedBoard:this.overlayBoard});
                 this.overlayBoard.show();
                 break;
         }
@@ -183,6 +189,13 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                 board.code.createThread(Entry.clipboard)
                     .getFirstBlock().copyToClipboard();
         }
+    };
+
+    p._handleChangeBoard = function() {
+        var board = this.selectedBoard;
+        if (!board) return;
+        if (board.constructor === Entry.Board)
+            this.trashcan.setBoard(board);
     };
 
 })(Entry.Workspace.prototype);
