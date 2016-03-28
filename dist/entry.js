@@ -15622,24 +15622,6 @@ Entry.Board = function(a) {
     }
     return g.concat(h);
   };
-<<<<<<< HEAD
-  a.changeSchema = function(a) {
-    this.set({params:[]});
-    this.getSchema();
-  };
-  a.getSchema = function() {
-    if (this._schema = Entry.block[this.type]) {
-      !this._schemaChangeEvent && this._schema.changeEvent && (this._schemaChangeEvent = this._schema.changeEvent.attach(this, this.changeSchema));
-      var a = this._schema.events;
-      if (a) {
-        for (var c in a) {
-          this.events[c] || (this.events[c] = []);
-          for (var d = a[c], e = 0;e < d.length;e++) {
-            var f = d[e];
-            0 > this.events[c].indexOf(f) && this.events[c].push(f);
-          }
-        }
-=======
   a._getFieldMagnets = function(a, c, d, e) {
     var f = a.getBlocks(), g = [], h = [];
     d || (d = {x:0, y:0});
@@ -15649,7 +15631,6 @@ Entry.Board = function(a) {
       var n = f[m], l = n.view;
       if (l.dragInstance) {
         break;
->>>>>>> origin/refac/entry-block
       }
       l.zIndex = c;
       d += l.y;
@@ -15706,73 +15687,7 @@ Entry.Board = function(a) {
       }
       l.magnet.next && (d += l.magnet.next.y, k += l.magnet.next.x);
     }
-<<<<<<< HEAD
-    f = this.getPrevBlock();
-    e = this.getNextBlock();
-    d = this.getThread();
-    this._schema.event && d.unregisterEvent(this, this._schema.event);
-    e && (c ? e.destroy(a, c) : f ? e.view.bindPrev(f) : (f = this.getThread().view.getParent(), f.constructor === Entry.FieldStatement ? (e.view.bindPrev(f), f.insertTopBlock(e)) : f.constructor === Entry.FieldStatement ? e.replace(f._valueBlock) : e.view._toGlobalCoordinate()));
-    d.spliceBlock(this);
-    this.view && this.view.destroy(a);
-    this._schemaChangeEvent && this._schemaChangeEvent.destroy();
-  };
-  a.getView = function() {
-    return this.view;
-  };
-  a.setMovable = function(a) {
-    this.movable != a && this.set({movable:a});
-  };
-  a.setCopyable = function(a) {
-    this.copyable != a && this.set({copyable:a});
-  };
-  a.isMovable = function() {
-    return this.movable;
-  };
-  a.isCopyable = function() {
-    return this.copyable;
-  };
-  a.setDeletable = function(a) {
-    this.deletable != a && this.set({deletable:a});
-  };
-  a.isDeletable = function() {
-    return this.deletable;
-  };
-  a.isReadOnly = function() {
-    return this.readOnly;
-  };
-  a.getCode = function() {
-    return this.thread.getCode();
-  };
-  a.doAdd = function() {
-    var a = this.id;
-    Entry.activityReporter && (a = [["blockId", a], ["code", this.getCode().stringify()]], Entry.activityReporter.add(new Entry.Activity("addBlock", a)));
-    this.getCode().changeEvent.notify();
-  };
-  a.doMove = function() {
-    var a = this.id, c = this.view.x - this.x, d = this.view.y - this.y;
-    this._updatePos();
-    this.getCode().changeEvent.notify();
-    Entry.activityReporter && (a = [["blockId", a], ["moveX", c], ["moveY", d], ["code", this.getCode().stringify()]], Entry.activityReporter.add(new Entry.Activity("moveBlock", a)));
-  };
-  a.doSeparate = function() {
-    var a = this.id, c = this.x, d = this.y;
-    this.separate();
-    Entry.activityReporter && (a = [["blockId", a], ["positionX", c], ["positionY", d], ["code", this.getCode().stringify()]], Entry.activityReporter.add(new Entry.Activity("seperateBlock", a)));
-  };
-  a.doInsert = function(a, c) {
-    var d = this.id, e = a.id, f = this.x, g = this.y;
-    c ? this.replace(a) : this.insert(a);
-    Entry.activityReporter && (d = [["targetBlockId", e], ["blockId", d], ["positionX", f], ["positionY", g], ["code", this.getCode().stringify()]], Entry.activityReporter.add(new Entry.Activity("insertBlock", d)));
-  };
-  a.doDestroy = function(a) {
-    var c = this.id, d = this.x, e = this.y;
-    this.destroy(a);
-    this.getCode().changeEvent.notify();
-    Entry.activityReporter && (a = [["blockId", c], ["positionX", d], ["positionY", e], ["code", this.getCode().stringify()]], Entry.activityReporter.add(new Entry.Activity("destroyBlock", a)));
-    return this;
-=======
     return g.concat(h);
->>>>>>> origin/refac/entry-block
   };
   a._getOutputMetaData = function(a, c, d, e, f) {
     var g = a._contents, h = [];
@@ -16125,9 +16040,13 @@ Entry.Block.MAGNET_OFFSET = .4;
     this.set(a);
     this.getSchema();
   };
+  a.changeSchema = function(a) {
+    this.set({params:[]});
+    this.getSchema();
+  };
   a.getSchema = function() {
     if (this._schema = Entry.block[this.type]) {
-      !this._schemaChangeEvent && this._schema.changeEvent && (this._schemaChangeEvent = this._schema.changeEvent.attach(this, this.getSchema));
+      !this._schemaChangeEvent && this._schema.changeEvent && (this._schemaChangeEvent = this._schema.changeEvent.attach(this, this.changeSchema));
       var a = this._schema.events;
       if (a) {
         for (var c in a) {
@@ -16212,7 +16131,7 @@ Entry.Block.MAGNET_OFFSET = .4;
     d = this.getThread();
     this._schema.event && d.unregisterEvent(this, this._schema.event);
     e && (c ? e.destroy(a, c) : f ? e.view.bindPrev(f) : (f = this.getThread().view.getParent(), f.constructor === Entry.FieldStatement ? (e.view.bindPrev(f), f.insertTopBlock(e)) : f.constructor === Entry.FieldStatement ? e.replace(f._valueBlock) : e.view._toGlobalCoordinate()));
-    d.spliceBlock && d.spliceBlock(this);
+    d.spliceBlock(this);
     this.view && this.view.destroy(a);
     this._schemaChangeEvent && this._schemaChangeEvent.destroy();
   };
