@@ -319,10 +319,8 @@ Entry.createElement = function(type, elementId) {
         }
     };
     element.bindOnClick = function(func) {
-        $(this).on('click touchstart', function(e) {
+        $(this).on('click tab', function(e) {
             e.stopImmediatePropagation();
-            if (e.handled) return;
-            e.handled = true;
             func.call(this, e);
         });
     };

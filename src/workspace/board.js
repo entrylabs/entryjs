@@ -9,7 +9,6 @@ goog.require("Entry.Dom");
 goog.require("Entry.Model");
 goog.require("Entry.Utils");
 goog.require("Entry.FieldBlock");
-goog.require("Entry.FieldTrashcan");
 goog.require("Entry.Scroller");
 goog.require("Entry.SVG");
 
@@ -56,7 +55,6 @@ Entry.Board = function(option) {
     this._blockViews = [];
     this._magnetMap = null;
 
-    this.trashcan = new Entry.FieldTrashcan(this);
     this.svgGroup = this.svg.elem("g");
 
     this.svgThreadGroup = this.svgGroup.elem("g");
@@ -288,7 +286,6 @@ Entry.Board = function(option) {
     p.show = function() {
         this.wrapper.removeClass('entryRemove');
         this.visible = true;
-        this.trashcan.setPosition();
     };
 
     p.alignThreads = function() {

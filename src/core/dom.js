@@ -30,7 +30,7 @@ Entry.Dom = function (tag, options) {
     if (options.parent) options.parent.append(dom);
 
     dom.bindOnClick = function(func) {
-        $(this).bind('click touchstart', function(e) {
+        $(this).bind('click tab', function(e) {
             func.call(this, e);
         });
     };
