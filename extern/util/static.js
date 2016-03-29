@@ -2136,15 +2136,20 @@ EntryStatic.fonts = [
 }
 ];
 
-EntryStatic.getName = function(str) {
-    var sprites = SpriteNames;
+EntryStatic.getName = function(str, type) {
+    var dict = SpriteNames;
+    if (type == 'picture')
+        dict = PictureNames;
+    else if (type == 'sound')
+        dict = SoundNames;
+
     var lang = navigator.language ? navigator.language : 'ko';
     if (window.user && window.user.language)
         lang = window.user.language;
 
-    if (!sprites || lang == 'ko' || lang == 'code') {
+    if (!dict || lang == 'ko' || lang == 'code') {
         return str;
     } else {
-        return sprites[str] ? sprites[str] : str;
+        return dict[str] ? dict[str] : str;
     }
 };
