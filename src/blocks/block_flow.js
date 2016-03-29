@@ -53,7 +53,8 @@ Blockly.Blocks.repeat_basic = {
         this.setInputsInline(true);
         this.setPreviousStatement(true);
         this.setNextStatement(true);
-    }
+    },
+    syntax: {js: [], py: ["if (%1) {\n$1\n}"]}
 };
 
 Entry.block.repeat_basic = function (sprite, script) {
@@ -85,7 +86,8 @@ Blockly.Blocks.repeat_inf = {
         this.setInputsInline(true);
         this.setPreviousStatement(true);
         this.setNextStatement(true);
-    }
+    },
+    syntax: {js: [], py: ["while (true) {\n$1\n}"]}
 };
 
 Entry.block.repeat_inf = function (sprite, script) {
@@ -104,7 +106,8 @@ Blockly.Blocks.stop_repeat = {
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-  }
+  },
+  syntax: {js: [], py: [""]}
 };
 
 Entry.block.stop_repeat = function (sprite, script) {
@@ -159,14 +162,15 @@ Blockly.Blocks._if = {
             .appendField(Lang.Blocks.FLOW__if_1);
         this.appendValueInput("BOOL")
             .setCheck("Boolean");
-        this.appendDummyInput()
+        this.appendDummyInput()     
             .appendField(Lang.Blocks.FLOW__if_2)
         .appendField(new Blockly.FieldIcon(Entry.mediaFilePath + 'block_icon/flow_03.png', '*'));
         this.appendStatementInput("STACK");
         this.setInputsInline(true);
         this.setPreviousStatement(true);
         this.setNextStatement(true);
-    }
+    },
+    syntax: {js: [], py: ["if (%1) {\n$1\n}"]}
 };
 
 Entry.block._if = function (sprite, script) {
@@ -201,7 +205,8 @@ Blockly.Blocks.if_else = {
         this.setInputsInline(true);
         this.setPreviousStatement(true);
         this.setNextStatement(true);
-    }
+    },
+    syntax: {js: [], py: [""]}
 };
 
 Entry.block.if_else = function (sprite, script) {
@@ -333,7 +338,8 @@ Blockly.Blocks.repeat_while_true = {
             this.setPreviousStatement(true);
             this.setNextStatement(true);
         }
-    }
+    },
+    syntax: {js: [], py: [""]}
 };
 
 Entry.block.repeat_while_true = function (sprite, script) {

@@ -1692,7 +1692,7 @@ Blockly.Blocks.repeat_basic = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}};
+}, syntax:{js:[], py:["if (%1) {\n$1\n}"]}};
 Entry.block.repeat_basic = function(a, b) {
   var c;
   if (!b.isLooped) {
@@ -1716,7 +1716,7 @@ Blockly.Blocks.repeat_inf = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}};
+}, syntax:{js:[], py:["while (true) {\n$1\n}"]}};
 Entry.block.repeat_inf = function(a, b) {
   b.isLooped = !0;
   return b.getStatement("DO");
@@ -1727,7 +1727,7 @@ Blockly.Blocks.stop_repeat = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}};
+}, syntax:{js:[], py:[""]}};
 Entry.block.stop_repeat = function(a, b) {
   for (var c = b;"REPEAT" != c.type.substr(0, 6).toUpperCase() && c.parentScript;) {
     c = c.parentScript, delete c.isLooped, delete c.iterCount;
@@ -1756,7 +1756,7 @@ Blockly.Blocks._if = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}};
+}, syntax:{js:[], py:["if (%1) {\n$1\n}"]}};
 Entry.block._if = function(a, b) {
   return b.isLooped ? (delete b.isLooped, b.callReturn()) : b.getBooleanValue("BOOL", b) ? (b.isLooped = !0, b.getStatement("STACK", b)) : b.callReturn();
 };
@@ -1771,7 +1771,7 @@ Blockly.Blocks.if_else = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}};
+}, syntax:{js:[], py:[""]}};
 Entry.block.if_else = function(a, b) {
   if (b.isLooped) {
     return delete b.isLooped, b.callReturn();
@@ -1833,7 +1833,7 @@ Blockly.Blocks.repeat_while_true = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}};
+}, syntax:{js:[], py:[""]}};
 Entry.block.repeat_while_true = function(a, b) {
   var c = b.getBooleanValue("BOOL", b);
   "until" == b.getField("OPTION", b) && (c = !c);
@@ -2647,7 +2647,7 @@ Blockly.Blocks.boolean_and = {init:function() {
   this.appendValueInput("RIGHTHAND").setCheck("Boolean");
   this.setOutput(!0, "Boolean");
   this.setInputsInline(!0);
-}};
+}, syntax:{py:["%1 and %2"]}};
 Entry.block.boolean_and = function(a, b) {
   var c = b.getBooleanValue("LEFTHAND", b), d = b.getBooleanValue("RIGHTHAND", b);
   return c && d;
@@ -2659,7 +2659,7 @@ Blockly.Blocks.boolean_or = {init:function() {
   this.appendValueInput("RIGHTHAND").setCheck("Boolean");
   this.setOutput(!0, "Boolean");
   this.setInputsInline(!0);
-}};
+}, syntax:{py:["%1 or %2"]}};
 Entry.block.boolean_or = function(a, b) {
   var c = b.getBooleanValue("LEFTHAND", b), d = b.getBooleanValue("RIGHTHAND", b);
   return c || d;
@@ -2691,7 +2691,7 @@ Blockly.Blocks.True = {init:function() {
   this.appendDummyInput().appendField(Lang.Blocks.JUDGEMENT_true, "#3D3D3D").appendField(" ");
   this.setOutput(!0, "Boolean");
   this.setInputsInline(!0);
-}};
+}, syntax:{py:["true"]}};
 Entry.block.True = function(a, b) {
   return !0;
 };
@@ -2700,7 +2700,7 @@ Blockly.Blocks.False = {init:function() {
   this.appendDummyInput().appendField(Lang.Blocks.JUDGEMENT_false, "#3D3D3D").appendField(" ");
   this.setOutput(!0, "Boolean");
   this.setInputsInline(!0);
-}};
+}, syntax:{py:["false"]}};
 Entry.block.False = function(a, b) {
   return !1;
 };
@@ -8477,6 +8477,56 @@ Entry.BlockParser = function(a) {
     this._iterVariableCount && this._iterVariableCount--;
   };
 })(Entry.BlockParser.prototype);
+Entry.PythonBlockParser = function(a) {
+  this.syntax = a;
+  this._iterVariableCount = 0;
+  this._iterVariableChunk = ["i", "j", "k"];
+};
+(function(a) {
+  a.Code = function(b) {
+    if (b instanceof Entry.Thread) {
+      return this.Thread(b);
+    }
+    if (b instanceof Entry.Block) {
+      return this.Block(b);
+    }
+    var a = "";
+    b = b.getThreads();
+    for (var d = 0;d < b.length;d++) {
+      a += this.Thread(b[d]);
+    }
+    return a;
+  };
+  a.Thread = function(b) {
+    if (b instanceof Entry.Block) {
+      return this.Block(b);
+    }
+    var a = "";
+    b = b.getBlocks();
+    for (var d = 0;d < b.length;d++) {
+      a += this.Block(b[d]);
+    }
+    return a;
+  };
+  a.Block = function(b) {
+    console.log("block.params", b.params);
+    var a = b._schema.syntax;
+    if (!a) {
+      return "";
+    }
+    for (var a = b._schema.syntax.py[0], d = /(%\d)/mi, a = a.split(d), e = b._schema.params, f = "", g = 0;g < a.length;g++) {
+      var h = a[g];
+      0 !== h.length && (d.test(h) ? (h = Number(h.split("%")[1]) - 1, console.log("type", e[h].type), f += this["Field" + e[h].type](b.params[h])) : f += h);
+    }
+    return f;
+  };
+  a.FieldBlock = function(b) {
+    return this.Block(b);
+  };
+  a.FieldIndicator = function(b) {
+    return this.Block(b);
+  };
+})(Entry.PythonBlockParser.prototype);
 Entry.JSParser = function(a) {
   this.syntax = a;
   this.scopeChain = [];
@@ -8758,6 +8808,9 @@ Entry.Parser = function(a, b, c) {
       break;
     case "block":
       this._parser = new Entry.BlockParser(this.syntax);
+      break;
+    case "blockPython":
+      this._parser = new Entry.PythonBlockParser(this.syntax);
   }
 };
 (function(a) {
@@ -8772,7 +8825,17 @@ Entry.Parser = function(a, b, c) {
         }
         break;
       case "block":
-        b = this._parser.Code(b).match(/(.*{.*[\S|\s]+?}|.+)/g), a = Array.isArray(b) ? b.reduce(function(b, a, c) {
+        b = this._parser.Code(b);
+        b = b.match(/(.*{.*[\S|\s]+?}|.+)/g);
+        a = Array.isArray(b) ? b.reduce(function(b, a, c) {
+          var d = "";
+          1 === c && (b += "\n");
+          d = -1 < a.indexOf("function") ? a + b : b + a;
+          return d + "\n";
+        }) : "";
+        break;
+      case "blockPython":
+        console.log("block py code", b), b = this._parser.Code(b), b = b.match(/(.*{.*[\S|\s]+?}|.+)/g), a = Array.isArray(b) ? b.reduce(function(b, a, c) {
           var d = "";
           1 === c && (b += "\n");
           d = -1 < a.indexOf("function") ? a + b : b + a;
@@ -10043,12 +10106,14 @@ Entry.BlockDriver = function() {
     console.log((new Date).getTime() - b.getTime());
   };
   a._convertBlock = function(b) {
-    var a = (new Entry.BlockMockup(Blockly.Blocks[b])).toJSON();
-    a.func = Entry.block[b];
-    var d = EntryStatic.blockInfo[b];
-    d && (a.class = d.class, a.isNotFor = d.isNotFor);
-    -1 < "NUMBER TRUE FALSE TEXT FUNCTION_PARAM_BOOLEAN FUNCTION_PARAM_STRING TRUE_UN".split(" ").indexOf(b.toUpperCase()) && (a.isPrimitive = !0);
-    Entry.block[b] = a;
+    var a = Blockly.Blocks[b], d = (new Entry.BlockMockup(a)).toJSON();
+    d.func = Entry.block[b];
+    d.syntax = a.syntax;
+    if (a = EntryStatic.blockInfo[b]) {
+      d.class = a.class, d.isNotFor = a.isNotFor;
+    }
+    -1 < "NUMBER TRUE FALSE TEXT FUNCTION_PARAM_BOOLEAN FUNCTION_PARAM_STRING TRUE_UN".split(" ").indexOf(b.toUpperCase()) && (d.isPrimitive = !0);
+    Entry.block[b] = d;
   };
 })(Entry.BlockDriver.prototype);
 Entry.BlockMockup = function(a) {
@@ -15034,39 +15099,39 @@ Entry.FieldTextInput = function(a, b, c) {
 };
 Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
 (function(a) {
-  a.renderStart = function(a) {
-    this.svgGroup = a.contentSvgGroup.elem("g");
+  a.renderStart = function(b) {
+    this.svgGroup = b.contentSvgGroup.elem("g");
     this.svgGroup.attr({class:"entry-input-field"});
     this.textElement = this.svgGroup.elem("text", {x:4, y:4, "font-size":"9pt"});
     this.textElement.textContent = this.truncate();
-    a = this.getTextWidth();
-    var c = this.position && this.position.y ? this.position.y : 0;
-    this._header = this.svgGroup.elem("rect", {width:a, height:16, y:c - 8, rx:3, ry:3, fill:"#fff", "fill-opacity":.4});
+    b = this.getTextWidth();
+    var a = this.position && this.position.y ? this.position.y : 0;
+    this._header = this.svgGroup.elem("rect", {width:b, height:16, y:a - 8, rx:3, ry:3, fill:"#fff", "fill-opacity":.4});
     this.svgGroup.appendChild(this.textElement);
     this._bindRenderOptions();
-    this.box.set({x:0, y:0, width:a, height:16});
+    this.box.set({x:0, y:0, width:b, height:16});
   };
   a.renderOptions = function() {
-    var a = this;
+    var b = this;
     this.destroyOption();
     this.documentDownEvent = Entry.documentMousedown.attach(this, function() {
       Entry.documentMousedown.detach(this.documentDownEvent);
-      a.applyValue();
-      a.destroyOption();
+      b.applyValue();
+      b.destroyOption();
     });
     this.optionGroup = Entry.Dom("input", {class:"entry-widget-input-field", parent:$("body")});
     this.optionGroup.val(this.getValue());
     this.optionGroup.on("mousedown", function(a) {
       a.stopPropagation();
     });
-    this.optionGroup.on("keyup", function(c) {
-      var e = c.keyCode || c.which;
-      a.applyValue(c);
-      -1 < [13, 27].indexOf(e) && a.destroyOption();
+    this.optionGroup.on("keyup", function(a) {
+      var c = a.keyCode || a.which;
+      b.applyValue(a);
+      -1 < [13, 27].indexOf(c) && b.destroyOption();
     });
-    var c = this.getAbsolutePosFromDocument();
-    c.y -= this.box.height / 2;
-    this.optionGroup.css({height:16, left:c.x, top:c.y, width:a.box.width});
+    var a = this.getAbsolutePosFromDocument();
+    a.y -= this.box.height / 2;
+    this.optionGroup.css({height:16, left:a.x, top:a.y, width:b.box.width});
     this.optionGroup.focus();
     this.optionGroup.select();
   };
@@ -16361,14 +16426,15 @@ Entry.FieldTrashcan = function(a) {
     this.setPosition();
   };
 })(Entry.FieldTrashcan.prototype);
-Entry.Vim = function(a) {
+Entry.Vim = function(a, b) {
   a = "string" === typeof a ? $("#" + a) : $(a);
   if ("DIV" !== a.prop("tagName")) {
     return console.error("Dom is not div element");
   }
   this.createDom(a);
-  this._parser = new Entry.Parser("maze", "js", this.codeMirror);
-  this._blockParser = new Entry.Parser("maze", "block");
+  this._jsParser = new Entry.Parser("ws", "js", this.codeMirror);
+  this._jsBlockParser = new Entry.Parser("ws", "block");
+  this._pythonBlockParser = new Entry.Parser("ws", "blockPython");
   Entry.Model(this, !1);
   window.eventset = [];
 };
@@ -16411,18 +16477,22 @@ Entry.Vim = function(a) {
     this.view.removeClass("entryRemove");
   };
   a.textToCode = function() {
-    var a = this.codeMirror.getValue(), a = this._parser.parse(a);
+    var a = this.codeMirror.getValue(), a = this._jsParser.parse(a);
     if (0 === a.length) {
       throw "\ube14\ub85d \ud30c\uc2f1 \uc624\ub958";
     }
     return a;
   };
   a.codeToText = function(a) {
-    a = this._blockParser.parse(a);
+    var c = this.workspace.type, d;
+    "js" === c ? d = this._jsBlockParser : "python" === c && (d = this._pythonBlockParser);
+    a = d.parse(a);
     this.codeMirror.setValue(a);
   };
   a.getCodeToText = function(a) {
-    return this._blockParser.parse(a);
+    var c = this.workspace.type, d;
+    "js" === c ? d = this._jsBlockParser : "python" === c && (d = this._pythonBlockParser);
+    return d.parse(a);
   };
 })(Entry.Vim.prototype);
 Entry.Workspace = function(a) {
@@ -16462,11 +16532,10 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
   a.getMode = function() {
     return this.mode;
   };
-  a.setMode = function(a) {
-    a = Number(a);
+  a.setMode = function(a, c) {
+    this.mode = a = Number(a);
+    this.type = c;
     switch(a) {
-      case this.mode:
-        return;
       case Entry.Workspace.MODE_VIMBOARD:
         this.board && this.board.hide();
         this.overlayBoard && this.overlayBoard.hide();
@@ -16479,14 +16548,13 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
       case Entry.Workspace.MODE_BOARD:
         try {
           this.board.show(), this.set({selectedBoard:this.board}), this.textToCode(), this.vimBoard && this.vimBoard.hide(), this.overlayBoard && this.overlayBoard.hide(), this.blockMenu.renderBlock();
-        } catch (c) {
-          throw this.board && this.board.hide(), this.set({selectedBoard:this.vimBoard}), Entry.dispatchEvent("setProgrammingMode", Entry.Workspace.MODE_VIMBOARD), c;
+        } catch (d) {
+          throw this.board && this.board.hide(), this.set({selectedBoard:this.vimBoard}), Entry.dispatchEvent("setProgrammingMode", Entry.Workspace.MODE_VIMBOARD), d;
         }
         break;
       case Entry.Workspace.MODE_OVERLAYBOARD:
         this.overlayBoard || this.initOverlayBoard(), this.set({selectedBoard:this.overlayBoard}), this.overlayBoard.show();
     }
-    this.mode = a;
   };
   a.changeBoardCode = function(a) {
     this.board.changeCode(a);
@@ -16535,8 +16603,16 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
 Entry.Playground = function() {
   this.enableArduino = this.isTextBGMode_ = !1;
   this.viewMode_ = "default";
+  var a = this;
   Entry.addEventListener("textEdited", this.injectText);
   Entry.addEventListener("hwChanged", this.updateHW);
+  Entry.addEventListener("changeMode", function(b) {
+    a.setMode(b);
+  });
+};
+Entry.Playground.prototype.setMode = function(a) {
+  console.log("mdoe", a[0], "type", a[1]);
+  this.mainWorkspace.setMode(a[0], a[1]);
 };
 Entry.Playground.prototype.generateView = function(a, b) {
   this.view_ = a;
@@ -16642,9 +16718,10 @@ Entry.Playground.prototype.generateCodeView = function(a) {
   this.blockDriver = new Entry.BlockDriver;
   this.blockDriver.convert();
   Entry.block.when_run_button_click.event = "start";
-  this.mainWorkspace = new Entry.Workspace({blockMenu:{dom:a, align:"LEFT", categoryData:EntryStatic.getAllBlocks(), scroll:!0}, board:{dom:b}});
+  this.mainWorkspace = new Entry.Workspace({blockMenu:{dom:a, align:"LEFT", categoryData:EntryStatic.getAllBlocks(), scroll:!0}, board:{dom:b}, vimBoard:{dom:b}});
   this.blockMenu = this.mainWorkspace.blockMenu;
   this.board = this.mainWorkspace.board;
+  this.vimBoard = this.mainWorkspace.vimBoard;
 };
 Entry.Playground.prototype.generatePictureView = function(a) {
   if ("workspace" == Entry.type) {

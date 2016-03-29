@@ -24,6 +24,8 @@ Entry.BlockDriver = function() {
 
         blockObject.func = Entry.block[blockType];
 
+        blockObject.syntax = blocklyInfo.syntax;
+
         var blockInfo = EntryStatic.blockInfo[blockType];
         if (blockInfo) {
             blockObject.class = blockInfo.class;

@@ -52,7 +52,7 @@ Entry.Workspace = function(options) {
 
 };
 
-Entry.Workspace.MODE_BOARD = 0;
+Entry.Workspace.MODE_BOARD = 0; 
 Entry.Workspace.MODE_VIMBOARD = 1;
 Entry.Workspace.MODE_OVERLAYBOARD = 2;
 
@@ -72,11 +72,11 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
 
     p.getMode = function() {return this.mode;};
 
-    p.setMode = function(mode){
+    p.setMode = function(mode, type){
         mode = Number(mode);
+        this.mode = mode;
+        this.type = type;
         switch (mode) {
-            case this.mode:
-                return;
             case Entry.Workspace.MODE_VIMBOARD:
                 if (this.board) this.board.hide();
                 if (this.overlayBoard) this.overlayBoard.hide();
@@ -108,7 +108,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                 this.overlayBoard.show();
                 break;
         }
-        this.mode = mode;
+       
     };
 
     p.changeBoardCode = function(code) {

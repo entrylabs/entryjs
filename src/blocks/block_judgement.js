@@ -255,7 +255,8 @@ Blockly.Blocks.boolean_and = {
             .setCheck("Boolean");
         this.setOutput(true, 'Boolean');
         this.setInputsInline(true);
-    }
+    },
+    syntax: {py: ["%1 and %2"]}
 };
 
 Entry.block.boolean_and = function (sprite, script) {
@@ -275,7 +276,8 @@ Blockly.Blocks.boolean_or = {
             .setCheck("Boolean");
         this.setOutput(true, 'Boolean');
         this.setInputsInline(true);
-    }
+    },
+    syntax: {py: ["%1 or %2"]}
 };
 
 Entry.block.boolean_or = function (sprite, script) {
@@ -332,7 +334,8 @@ Blockly.Blocks.True = {
             .appendField(" ");
         this.setOutput(true, 'Boolean');
         this.setInputsInline(true);
-    }
+    },
+    syntax: {py: ["true"]}
 };
 
 Entry.block.True = function (sprite, script) {
@@ -347,7 +350,8 @@ Blockly.Blocks.False = {
             .appendField(" ");
         this.setOutput(true, 'Boolean');
         this.setInputsInline(true);
-    }
+    },
+    syntax: {py: ["false"]}
 };
 
 Entry.block.False = function (sprite, script) {

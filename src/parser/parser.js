@@ -12,7 +12,7 @@ Entry.Parser = function(mode, syntax, cm) {
     this._mode = mode; // maze ai workspace
     this.syntax = {};
     this.codeMirror = cm;
-    this._lang = syntax || "js";
+    this._lang = syntax || "js"; 
     this.availableCode = [];
 
 
@@ -21,7 +21,11 @@ Entry.Parser = function(mode, syntax, cm) {
         var configCode = NtryData.config[this._stageId].availableCode;
         var playerCode = NtryData.player[this._stageId].code;
         this.setAvailableCode(configCode, playerCode);
+    } else if (mode === "ws") {
+
     }
+
+
     this.mappingSyntax(mode);
 
     switch (this._lang) {
@@ -53,6 +57,9 @@ Entry.Parser = function(mode, syntax, cm) {
             break;
         case "block":
             this._parser = new Entry.BlockParser(this.syntax);
+            break;
+        case "blockPython":
+            this._parser = new Entry.PythonBlockParser(this.syntax);
             break;
     }
 };
@@ -94,6 +101,31 @@ Entry.Parser = function(mode, syntax, cm) {
                 }
                 break;
             case "block":
+                var textCode = this._parser.Code(code);
+                var textArr = textCode.match(/(.*{.*[\S|\s]+?}|.+)/g);
+                if(Array.isArray(textArr)) {
+                    result = textArr.reduce(function (prev, current, index) {
+                        var temp = '';
+
+                        if(index === 1) {
+                            prev = prev + '\n';
+                        }
+                        if(current.indexOf('function') > -1) {
+                            temp = current + prev;
+                        } else {
+                            temp = prev + current;
+                        }
+
+                        return temp + '\n';
+                    });
+                } else {
+                    result = '';
+                }
+
+                break;
+
+            case "blockPython":
+                console.log("block py code", code);
                 var textCode = this._parser.Code(code);
                 var textArr = textCode.match(/(.*{.*[\S|\s]+?}|.+)/g);
                 if(Array.isArray(textArr)) {

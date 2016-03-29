@@ -2,7 +2,7 @@
 
 goog.provide("Entry.Vim");
 
-Entry.Vim = function(dom) {
+Entry.Vim = function(dom, mode) {
     if (typeof dom === "string")
         dom = $('#' + dom);
     else
@@ -13,8 +13,13 @@ Entry.Vim = function(dom) {
 
     this.createDom(dom);
 
-    this._parser = new Entry.Parser("maze", "js", this.codeMirror);
-    this._blockParser = new Entry.Parser("maze", "block");
+    //this._parser = new Entry.Parser("maze", "js", this.codeMirror);
+    //this._blockParser = new Entry.Parser("maze", "block");
+
+    this._jsParser = new Entry.Parser("ws", "js", this.codeMirror);
+    this._jsBlockParser = new Entry.Parser("ws", "block");
+    this._pythonBlockParser = new Entry.Parser("ws", "blockPython");
+
 
     Entry.Model(this, false);
     window.eventset = [];
@@ -98,7 +103,7 @@ Entry.Vim = function(dom) {
 
     p.textToCode = function() {
         var textCode = this.codeMirror.getValue();
-        var code = this._parser.parse(textCode);
+        var code = this._jsParser.parse(textCode);
         if(code.length === 0) {
             throw ('블록 파싱 오류');
         }
@@ -106,13 +111,23 @@ Entry.Vim = function(dom) {
     };
 
     p.codeToText = function(code) {
-        var textCode = this._blockParser.parse(code);
+        var type = this.workspace.type;
+        var parser;
+        if (type === 'js') parser = this._jsBlockParser;
+        else if(type === 'python') parser = this._pythonBlockParser;
+
+        var textCode = parser.parse(code);
         this.codeMirror.setValue(textCode);
         // this.codeMirror.getDoc().markText({line:0, ch:0}, {line: 1, ch: 100}, {readOnly: true});
     };
 
     p.getCodeToText = function(code) {
-        var textCode = this._blockParser.parse(code);
+        var type = this.workspace.type;
+        var parser;
+        if (type === 'js') parser = this._jsBlockParser;
+        else if(type === 'python') parser = this._pythonBlockParser;
+
+        var textCode = parser.parse(code);
         return textCode;
     };
 
