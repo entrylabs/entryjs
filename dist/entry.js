@@ -13501,6 +13501,7 @@ Entry.BlockView = function(a, b, c) {
   Entry.Model(this, !1);
   this.block = a;
   this._board = b;
+  this._observers = [];
   this.set(a);
   this.svgGroup = b.svgBlockGroup.elem("g");
   this._schema = Entry.block[a.type];
@@ -13509,9 +13510,9 @@ Entry.BlockView = function(a, b, c) {
   this._contents = [];
   this._statements = [];
   this.magnet = {};
-  d.magnets && d.magnets(this).next && (this.svgGroup.nextMagnet = this.block, this._nextGroup = this.svgGroup.elem("g"), this.observe(this, "_updateMagnet", ["contentHeight"]));
+  d.magnets && d.magnets(this).next && (this.svgGroup.nextMagnet = this.block, this._nextGroup = this.svgGroup.elem("g"), this._observers.push(this.observe(this, "_updateMagnet", ["contentHeight"])));
   this.isInBlockMenu = this.getBoard() instanceof Entry.BlockMenu;
-  d.morph && this.block.observe(this, "_renderPath", d.morph, !1);
+  d.morph && this._observers.push(this.block.observe(this, "_renderPath", d.morph, !1));
   var e = this;
   this.mouseHandler = function() {
     var b = e.block.events;
@@ -13521,16 +13522,16 @@ Entry.BlockView = function(a, b, c) {
     e.onMouseDown.apply(e, arguments);
   };
   this._startRender(a, c);
-  this.block.observe(this, "_setMovable", ["movable"]);
-  this.block.observe(this, "_setReadOnly", ["movable"]);
-  this.block.observe(this, "_setCopyable", ["copyable"]);
-  this.block.observe(this, "_updateColor", ["deletable"], !1);
-  this.observe(this, "_updateBG", ["magneting"], !1);
-  this.observe(this, "_updateOpacity", ["visible"], !1);
-  this.observe(this, "_updateDisplay", ["display"], !1);
-  this.observe(this, "_updateShadow", ["shadow"]);
-  this.observe(this, "_updateMagnet", ["offsetY"]);
-  b.code.observe(this, "_setBoard", ["board"], !1);
+  this._observers.push(this.block.observe(this, "_setMovable", ["movable"]));
+  this._observers.push(this.block.observe(this, "_setReadOnly", ["movable"]));
+  this._observers.push(this.block.observe(this, "_setCopyable", ["copyable"]));
+  this._observers.push(this.block.observe(this, "_updateColor", ["deletable"], !1));
+  this._observers.push(this.observe(this, "_updateBG", ["magneting"], !1));
+  this._observers.push(this.observe(this, "_updateOpacity", ["visible"], !1));
+  this._observers.push(this.observe(this, "_updateDisplay", ["display"], !1));
+  this._observers.push(this.observe(this, "_updateShadow", ["shadow"]));
+  this._observers.push(this.observe(this, "_updateMagnet", ["offsetY"]));
+  this._observers.push(b.code.observe(this, "_setBoard", ["board"], !1));
   this.dragMode = Entry.DRAG_MODE_NONE;
   Entry.Utils.disableContextmenu(this.svgGroup.node);
   this._targetType = this._getTargetType();
@@ -13786,16 +13787,14 @@ Entry.BlockView.DRAG_RADIUS = 5;
     this._board = this._board.code.board;
   };
   a.destroy = function(b) {
+    this._destroyObservers();
     var a = this.svgGroup;
     this.block.getThread();
     b ? $(a).velocity({opacity:0}, {duration:100, complete:function() {
       a.remove();
     }}) : a.remove();
     this._contents.forEach(function(b) {
-      b.destroy();
-    });
-    this._statements.forEach(function(b) {
-      b.destroy();
+      b.constructor !== Entry.Block && b.destroy();
     });
     var d = this.block;
     (b = d.events.whenBlockDestroy) && !this.isInBlockMenu && b.forEach(function(b) {
@@ -13924,6 +13923,11 @@ Entry.BlockView.DRAG_RADIUS = 5;
     this.block.isDeletable() || (b = Entry.Utils.colorLighten(b));
     this._path.attr({fill:b});
     this._startContentRender(this.getBoard().workspace.getMode());
+  };
+  a._destroyObservers = function() {
+    for (var b = this._observers;b.length;) {
+      b.pop().destroy();
+    }
   };
 })(Entry.BlockView.prototype);
 Entry.Code = function(a) {
@@ -16125,7 +16129,7 @@ Entry.Block.MAGNET_OFFSET = .4;
     if (d) {
       for (var e = 0;e < d.length;e++) {
         var f = d[e];
-        f instanceof Entry.Block && f.destroy(a);
+        f instanceof Entry.Block && (f.doNotSplice = !0, f.destroy(a));
       }
     }
     if (d = this.statements) {
@@ -16138,7 +16142,7 @@ Entry.Block.MAGNET_OFFSET = .4;
     d = this.getThread();
     this._schema.event && d.unregisterEvent(this, this._schema.event);
     e && (c ? e.destroy(a, c) : f ? e.view.bindPrev(f) : (f = this.getThread().view.getParent(), f.constructor === Entry.FieldStatement ? (e.view.bindPrev(f), f.insertTopBlock(e)) : f.constructor === Entry.FieldStatement ? e.replace(f._valueBlock) : e.view._toGlobalCoordinate()));
-    d.spliceBlock(this);
+    this.doNotSplice ? delete this.doNotSplice : d.spliceBlock(this);
     this.view && this.view.destroy(a);
     this._schemaChangeEvent && this._schemaChangeEvent.destroy();
   };
@@ -16493,7 +16497,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
         }
         break;
       case Entry.Workspace.MODE_OVERLAYBOARD:
-        this.overlayBoard || this.initOverlayBoard(), this.set({selectedBoard:this.overlayBoard}), this.overlayBoard.show();
+        this.overlayBoard || this.initOverlayBoard(), this.overlayBoard.show(), this.set({selectedBoard:this.overlayBoard});
     }
     this.mode = a;
     this.changeEvent.notify(c);

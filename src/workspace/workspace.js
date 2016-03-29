@@ -106,8 +106,8 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
             case Entry.Workspace.MODE_OVERLAYBOARD:
                 if (!this.overlayBoard)
                     this.initOverlayBoard();
-                this.set({selectedBoard:this.overlayBoard});
                 this.overlayBoard.show();
+                this.set({selectedBoard:this.overlayBoard});
                 break;
         }
         this.mode = mode;
