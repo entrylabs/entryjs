@@ -16117,7 +16117,7 @@ Entry.Block.MAGNET_OFFSET = .4;
     if (d) {
       for (var e = 0;e < d.length;e++) {
         var f = d[e];
-        f instanceof Entry.Thread && (f = f.getFirstBlock()) && f.destroy(a);
+        f instanceof Entry.Block && f.destroy(a);
       }
     }
     if (d = this.statements) {

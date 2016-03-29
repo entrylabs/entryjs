@@ -183,14 +183,11 @@ Entry.Block.MAGNET_OFFSET = 0.4;
 
     p.destroy = function(animate, next) {
         var params = this.params;
-        //TODO: no thraed exist for param
         if (params) {
             for (var i=0; i<params.length; i++) {
                 var param = params[i];
-                if (param instanceof Entry.Thread) {
-                    var block = param.getFirstBlock();
-                    if (block) block.destroy(animate);
-                }
+                if (param instanceof Entry.Block)
+                    param.destroy(animate);
             }
         }
 
