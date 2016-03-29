@@ -50,6 +50,8 @@ Entry.Workspace = function(options) {
     if (Entry.keyPressed)
         Entry.keyPressed.attach(this, this._keyboardControl);
 
+    // view state change event
+    this.changeEvent = new Entry.Event(this);
 };
 
 Entry.Workspace.MODE_BOARD = 0;
@@ -72,7 +74,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
 
     p.getMode = function() {return this.mode;};
 
-    p.setMode = function(mode){
+    p.setMode = function(mode, message){
         mode = Number(mode);
         switch (mode) {
             case this.mode:
@@ -109,6 +111,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                 break;
         }
         this.mode = mode;
+        this.changeEvent.notify(message);
     };
 
     p.changeBoardCode = function(code) {

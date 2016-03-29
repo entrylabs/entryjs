@@ -36,6 +36,7 @@ Blockly.Blocks.function_field_label = {
 
 Entry.block.function_field_label = {
     skeleton: "basic_param",
+    isNotFor: ["functionEdit"],
     color: "#f9c535",
     template: "%1%2",
     params: [
@@ -64,6 +65,7 @@ Blockly.Blocks.function_field_string = {
 
 Entry.block.function_field_string = {
     skeleton: "basic_param",
+    isNotFor: ["functionEdit"],
     color: "#ffd974",
     template: "%1%2",
     params: [
@@ -93,6 +95,7 @@ Blockly.Blocks.function_field_boolean = {
 
 Entry.block.function_field_boolean = {
     skeleton: "basic_param",
+    isNotFor: ["functionEdit"],
     color: "#aeb8ff",
     template: "%1%2",
     params: [

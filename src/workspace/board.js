@@ -373,6 +373,14 @@ Entry.Board = function(option) {
         cancelText.onclick = function(e) { that.cancelEdit(); };
     };
 
+    p.cancelEdit = function() {
+        this.workspace.setMode(Entry.Workspace.MODE_BOARD, "cancelEdit");
+    };
+
+    p.save = function() {
+        this.workspace.setMode(Entry.Workspace.MODE_BOARD, "save");
+    };
+
     p.generateCodeMagnetMap = function() {
         var code = this.code;
         if (!code || !this.dragBlock) return;

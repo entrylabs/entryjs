@@ -1908,7 +1908,7 @@ Blockly.Blocks.function_field_label = {init:function() {
   this.setOutput(!0, "Param");
   this.setInputsInline(!0);
 }};
-Entry.block.function_field_label = {skeleton:"basic_param", color:"#f9c535", template:"%1%2", params:[{type:"TextInput", value:"\ud568\uc218"}, {type:"Output", accept:"paramMagnet"}]};
+Entry.block.function_field_label = {skeleton:"basic_param", isNotFor:["functionEdit"], color:"#f9c535", template:"%1%2", params:[{type:"TextInput", value:"\ud568\uc218"}, {type:"Output", accept:"paramMagnet"}]};
 Blockly.Blocks.function_field_string = {init:function() {
   this.setColour("#ffec64");
   this.appendValueInput("PARAM").setCheck(["String"]);
@@ -1916,7 +1916,7 @@ Blockly.Blocks.function_field_string = {init:function() {
   this.setOutput(!0, "Param");
   this.setInputsInline(!0);
 }};
-Entry.block.function_field_string = {skeleton:"basic_param", color:"#ffd974", template:"%1%2", params:[{type:"Block", accept:"stringMagnet", restore:!0}, {type:"Output", accept:"paramMagnet"}]};
+Entry.block.function_field_string = {skeleton:"basic_param", isNotFor:["functionEdit"], color:"#ffd974", template:"%1%2", params:[{type:"Block", accept:"stringMagnet", restore:!0}, {type:"Output", accept:"paramMagnet"}]};
 Blockly.Blocks.function_field_boolean = {init:function() {
   this.setColour("#2FC9F0");
   this.appendValueInput("PARAM").setCheck(["Boolean"]);
@@ -1924,7 +1924,7 @@ Blockly.Blocks.function_field_boolean = {init:function() {
   this.setOutput(!0, "Param");
   this.setInputsInline(!0);
 }};
-Entry.block.function_field_boolean = {skeleton:"basic_param", color:"#aeb8ff", template:"%1%2", params:[{type:"Block", accept:"booleanMagnet", restore:!0}, {type:"Output", accept:"paramMagnet"}]};
+Entry.block.function_field_boolean = {skeleton:"basic_param", isNotFor:["functionEdit"], color:"#aeb8ff", template:"%1%2", params:[{type:"Block", accept:"booleanMagnet", restore:!0}, {type:"Output", accept:"paramMagnet"}]};
 Blockly.Blocks.function_param_string = {init:function() {
   this.setEditable(!1);
   this.setColour("#ffec64");
@@ -10800,18 +10800,22 @@ Entry.Func.edit = function(a) {
   this.updateMenu();
 };
 Entry.Func.initEditView = function(a) {
-  Entry.playground.mainWorkspace.setMode(Entry.Workspace.MODE_OVERLAYBOARD);
-  Entry.playground.mainWorkspace.getBlockMenu();
-  Entry.playground.mainWorkspace.changeOverlayBoardCode(a);
+  var b = Entry.playground.mainWorkspace;
+  b.setMode(Entry.Workspace.MODE_OVERLAYBOARD);
+  b.changeOverlayBoardCode(a);
+  b.changeEvent.attach(this, this.endEdit);
+};
+Entry.Func.endEdit = function(a) {
+  this._funcChangeEvent.destroy();
+  "save" === a ? this.save() : this.cancelEdit();
 };
 Entry.Func.save = function() {
-  this._funcChangeEvent.destroy();
   this.targetFunc.generateBlock(!0);
   Entry.variableContainer.saveFunction(this.targetFunc);
   this.cancelEdit();
 };
 Entry.Func.cancelEdit = function() {
-  this.svg && this.targetFunc && (this._funcChangeEvent.destroy(), this.parentView.removeChild(this.svg), Entry.Func.isEdit = !1, Blockly.mainWorkspace.blockMenu.targetWorkspace = Blockly.mainWorkspace, this.targetFunc.block || (delete Entry.variableContainer.functions_[this.targetFunc.id], delete Entry.variableContainer.selected), delete this.targetFunc, this.updateMenu(), Entry.variableContainer.updateList());
+  this.targetFunc && (Entry.Func.isEdit = !1, this.targetFunc.block || (delete Entry.variableContainer.functions_[this.targetFunc.id], delete Entry.variableContainer.selected), delete this.targetFunc, this.updateMenu(), Entry.variableContainer.updateList());
 };
 Entry.Func.getMenuXml = function() {
   var a = [];
@@ -10867,9 +10871,7 @@ Entry.Func.requestParamBlock = function(a) {
 };
 Entry.Func.updateMenu = function() {
   var a = Entry.playground.mainWorkspace.getBlockMenu();
-  this.menuCode || this.setupMenuCode();
-  a.banClass("functionInit");
-  a.unbanClass("functionEdit");
+  this.targetFunc ? (this.menuCode || this.setupMenuCode(), a.banClass("functionInit"), a.unbanClass("functionEdit")) : (a.unbanClass("functionInit"), a.banClass("functionEdit"));
 };
 Entry.Func.prototype.edit = function() {
   Entry.Func.isEdit || (Entry.Func.isEdit = !0, Entry.Func.svg ? this.parentView.appendChild(this.svg) : Entry.Func.initEditView());
@@ -15010,16 +15012,16 @@ Entry.FieldText = function(a, b, c) {
 };
 Entry.Utils.inherit(Entry.Field, Entry.FieldText);
 (function(a) {
-  a.renderStart = function(b) {
-    this.svgGroup = b.contentSvgGroup.elem("g");
+  a.renderStart = function(a) {
+    this.svgGroup = a.contentSvgGroup.elem("g");
     this._text = this._text.replace(/(\r\n|\n|\r)/gm, " ");
     this.textElement = this.svgGroup.elem("text").attr({style:"white-space: pre; font-size:" + this._fontSize + "px", "class":"dragNone", fill:this._color});
     this.textElement.textContent = this._text;
-    b = 0;
-    var a = this.textElement.getBBox();
-    "center" == this._align && (b = -a.width / 2);
-    this.textElement.attr({x:b, y:.25 * a.height});
-    this.box.set({x:0, y:0, width:this.textElement.getComputedTextLength(), height:a.height});
+    a = 0;
+    var c = this.textElement.getBBox();
+    "center" == this._align && (a = -c.width / 2);
+    this.textElement.attr({x:a, y:.25 * c.height});
+    this.box.set({x:0, y:0, width:this.textElement.getComputedTextLength(), height:c.height});
   };
 })(Entry.FieldText.prototype);
 Entry.FieldTextInput = function(a, b, c) {
@@ -15543,6 +15545,12 @@ Entry.Board = function(a) {
     e.onclick = function(c) {
       a.cancelEdit();
     };
+  };
+  a.cancelEdit = function() {
+    this.workspace.setMode(Entry.Workspace.MODE_BOARD, "cancelEdit");
+  };
+  a.save = function() {
+    this.workspace.setMode(Entry.Workspace.MODE_BOARD, "save");
   };
   a.generateCodeMagnetMap = function() {
     var a = this.code;
@@ -16441,6 +16449,7 @@ Entry.Workspace = function(a) {
   Entry.GlobalSvg.createDom();
   this.mode = Entry.Workspace.MODE_BOARD;
   Entry.keyPressed && Entry.keyPressed.attach(this, this._keyboardControl);
+  this.changeEvent = new Entry.Event(this);
 };
 Entry.Workspace.MODE_BOARD = 0;
 Entry.Workspace.MODE_VIMBOARD = 1;
@@ -16462,7 +16471,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
   a.getMode = function() {
     return this.mode;
   };
-  a.setMode = function(a) {
+  a.setMode = function(a, c) {
     a = Number(a);
     switch(a) {
       case this.mode:
@@ -16479,14 +16488,15 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
       case Entry.Workspace.MODE_BOARD:
         try {
           this.board.show(), this.set({selectedBoard:this.board}), this.textToCode(), this.vimBoard && this.vimBoard.hide(), this.overlayBoard && this.overlayBoard.hide(), this.blockMenu.renderBlock();
-        } catch (c) {
-          throw this.board && this.board.hide(), this.set({selectedBoard:this.vimBoard}), Entry.dispatchEvent("setProgrammingMode", Entry.Workspace.MODE_VIMBOARD), c;
+        } catch (d) {
+          throw this.board && this.board.hide(), this.set({selectedBoard:this.vimBoard}), Entry.dispatchEvent("setProgrammingMode", Entry.Workspace.MODE_VIMBOARD), d;
         }
         break;
       case Entry.Workspace.MODE_OVERLAYBOARD:
         this.overlayBoard || this.initOverlayBoard(), this.set({selectedBoard:this.overlayBoard}), this.overlayBoard.show();
     }
     this.mode = a;
+    this.changeEvent.notify(c);
   };
   a.changeBoardCode = function(a) {
     this.board.changeCode(a);
