@@ -39,6 +39,7 @@ Entry.PropertyPanel = function() {
     };
 
     p.addMode = function(mode, contentObj) {
+
         var contentDom = contentObj.getView();
         // will be removed after apply new Dom class
         contentDom = Entry.Dom(contentDom, {
@@ -52,6 +53,7 @@ Entry.PropertyPanel = function() {
         tabDom.bindOnClick(function() {
             that.select(mode);
         });
+
         if (this.modes[mode]) {
             this.modes[mode].tabDom.remove();
             this.modes[mode].contentDom.remove();
@@ -61,6 +63,7 @@ Entry.PropertyPanel = function() {
             tabDom: tabDom,
             contentDom: contentDom
         };
+        console.log("123123213123123123232njknfdjkasnjfk");
     };
 
     p.resize = function(canvasSize) {
@@ -74,10 +77,17 @@ Entry.PropertyPanel = function() {
         else
             this._view.addClass("collapsed");
 
-        this.modes[this.selected].obj.resize();
+        console.log(this.modes);
+        Entry.dispatchEvent('windowResized');
+        // if(this.selected == 'hw' && this.modes.hw.obj.listPorts)
+        //     this.modes[this.selected].obj.resizeList();
+        // else 
+        //     this.modes[this.selected].obj.resize();
+    
     };
 
     p.select = function(modeName) {
+        console.log(modeName);
         for (var key in this.modes) {
             var mode = this.modes[key];
             mode.tabDom.removeClass("selected");
@@ -86,6 +96,8 @@ Entry.PropertyPanel = function() {
         var selected = this.modes[modeName];
         selected.tabDom.addClass("selected");
         selected.contentDom.removeClass("entryHidden");
+        console.log(123321);
+        console.log(selected);
         selected.obj.resize();
         this.selected = modeName;
     };

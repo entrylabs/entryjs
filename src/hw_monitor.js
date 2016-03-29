@@ -9,14 +9,33 @@ Entry.HWMonitor = function(hwModule) {
           'version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>')    
     );
 
-    var that = this;
-    Entry.addEventListener('windowResized', function() { that.resize(); });
-
     this._hwModule = hwModule;
+    
+    var that = this;
+    Entry.addEventListener('windowResized', function() { 
+        var mode = that._hwModule.monitorTemplate.mode;
+        console.log(that._hwModule);
+        if(mode == 'both') {
+            that.resizeList();
+            that.resize();
+        } else if(mode == 'list') {
+            that.resizeList();
+        } else {
+            that.resize();
+        }
+            
+    });
 
     this.scale = 0.5;
     this._portViews = {};
     this._portMap = {
+        n: [],
+        e: [],
+        s: [],
+        w: []
+    };
+
+    this._portMapList = {
         n: [],
         e: [],
         s: [],
@@ -29,6 +48,7 @@ Entry.HWMonitor = function(hwModule) {
      * Generate View
      */
     p.generateView = function() {
+        console.log("generate view");
         this.snap = Entry.SVG('hwMonitor');
         this._svgGroup = this.snap.elem("g");
 
@@ -42,11 +62,9 @@ Entry.HWMonitor = function(hwModule) {
             height : monitorTemplate.height
         };
 
-        if(monitorTemplate.mode != 'list') {
-            this.hwView = this._svgGroup.elem("image");
-            this.hwView = this.hwView.attr(imgObj);
-        }
-        
+
+        this.hwView = this._svgGroup.elem("image");
+        this.hwView = this.hwView.attr(imgObj);
         this._template = monitorTemplate;
         var ports = monitorTemplate.ports;
 
@@ -55,21 +73,21 @@ Entry.HWMonitor = function(hwModule) {
         var portsTemp = [];
         for (var key in ports) {
             var port = ports[key];
-            var portView = this.generatePortView(port);
+            var portView = this.generatePortView(port , '_svgGroup');
 
             this._portViews[key] = portView;
             portsTemp.push(portView);
         }
 
-        if(monitorTemplate.mode != 'list')
-            portsTemp.sort(function(a, b) {
-                return a.box.x - b.box.x;
-            });
+        portsTemp.sort(function(a, b) {
+            return a.box.x - b.box.x;
+        });
 
         var portMap = this._portMap;
 
         portsTemp.map(function(v) {
             var degree = Math.atan2(v.box.y, v.box.x);
+            console.log(degree);
             switch (Math.round(degree / Math.PI * 2)) {
                 case -1:
                     portMap.n.push(v);
@@ -89,8 +107,53 @@ Entry.HWMonitor = function(hwModule) {
         this.resize();
     };
 
-    p.generatePortView = function(port) {
-        var svgGroup = this._svgGroup.elem("g");
+
+    p.generateListView = function() {
+        console.log("generate List ");
+        this.listsnap = Entry.SVG('hwMonitor');
+        this._svglistGroup = this.listsnap.elem("g");
+
+        var monitorTemplate = this._hwModule.monitorTemplate;
+        
+        this._template = monitorTemplate;
+        var ports = monitorTemplate.listPorts;
+
+        this.pathGroup = this._svglistGroup.elem("g");
+
+        var portsTempList = [];
+        for (var key in ports) {
+            var port = ports[key];
+            var portView = this.generatePortView(port , '_svglistGroup');
+
+            this._portViews[key] = portView;
+            portsTempList.push(portView);
+        }
+
+        var portMapList = this._portMapList;
+
+        portsTempList.map(function(v) {
+            var degree = Math.atan2(v.box.y, v.box.x);
+            switch (Math.round(degree / Math.PI * 2)) {
+                case -1:
+                    portMapList.n.push(v);
+                    break;
+                case 0:
+                    portMapList.e.push(v);
+                    break;
+                case 1:
+                    portMapList.s.push(v); 
+                    break;
+                case 2:
+                    portMapList.w.push(v);
+                    break;
+            }
+        });
+
+        this.resizeList();
+    };
+
+    p.generatePortView = function(port , target) {
+        var svgGroup = this[target].elem("g");
         svgGroup.addClass("hwComponent");
 
         var mode = this._hwModule.monitorTemplate.mode;
@@ -181,11 +244,11 @@ Entry.HWMonitor = function(hwModule) {
 
     p.resize = function() {
         
-        if(this._hwModule.monitorTemplate.mode != 'list') {
+        if(this._hwModule.monitorTemplate.mode != 'list')
             this.hwView.attr({ "transform" : "scale(" + this.scale + ")" });
-        }
+
         var bRect = this.svgDom.get(0).getBoundingClientRect();
-        
+        console.log('BRect : ------' , bRect);
         this._svgGroup.attr({
             "transform"  : "translate(" + bRect.width / 2 + "," + bRect.height / 2 + ")"
         });
@@ -194,11 +257,59 @@ Entry.HWMonitor = function(hwModule) {
         this.align();
     };
 
+    p.resizeList = function() {
+        
+        var bRect = this.svgDom.get(0).getBoundingClientRect();
+        this._svglistGroup.attr({
+            "transform"  : "translate(" + bRect.width / 2 + "," + bRect.height / 2 + ")"
+        });
+        this._rect = bRect;
+        this.scale = bRect.height / this._template.height / 2;
+        this.alignList();
+    };
+
+
     p.align = function() {
         //for (var direction in this._portMap) {
             //var ports = this._portMap[direction];
-        
-        var ports = this._portMap.n;
+        var mode = this._hwModule.monitorTemplate.mode;
+        var ports; 
+
+        if(mode == 'list')
+            ports = this._portMapList.n;
+        else 
+            ports = this._portMap.n;
+
+        var length = ports.length;
+
+        for (var i = 0; i < ports.length; i++) {
+            var port = ports[i];
+
+            console.log(port);
+            port.group.attr({
+                "transform"  : "translate(" + this._template.width * (i / length - 0.5) + "," +
+                    (- this._template.width/2 - 30) + ")"
+            });
+        }
+
+            var ports = this._portMap.s.concat();   
+            this._alignNS(ports, this._template.width * this.scale / 2 + 5, 27);
+
+            ports = this._portMap.n.concat();
+            this._alignNS(ports, - this._template.width * this.scale / 2 - 32, - 27);    
+    };
+
+    p.alignList = function() {
+        //for (var direction in this._portMap) {
+            //var ports = this._portMap[direction];
+        var mode = this._hwModule.monitorTemplate.mode;
+        var ports; 
+
+        if(mode == 'list')
+            ports = this._portMapList.n;
+        else 
+            ports = this._portMap.n;
+
         var length = ports.length;
 
         for (var i = 0; i < ports.length; i++) {
@@ -210,21 +321,15 @@ Entry.HWMonitor = function(hwModule) {
             });
         }
 
-        if(this._hwModule.monitorTemplate.mode != 'list') {
-            var ports = this._portMap.s.concat();   
-            this._alignNS(ports, this._template.width * this.scale / 2 + 5, 27);
+        var ports = this._portMapList.s.concat();   
+        this._alignNSList(ports, this._template.width * this.scale / 2 + 5, 27);
 
-            ports = this._portMap.n.concat();
-            this._alignNS(ports, - this._template.width * this.scale / 2 - 32, - 27);    
-        } else {
-            var ports = this._portMap.s.concat();   
-            this._alignNSList(ports, this._template.width * this.scale / 2 + 5, 27);
+        ports = this._portMapList.n.concat();
+        this._alignNSList(ports, - this._template.width * this.scale / 2 - 32, - 27);    
 
-            ports = this._portMap.n.concat();
-            this._alignNSList(ports, - this._template.width * this.scale / 2 - 32, - 27);    
-        }
         
     };
+
 
     p._alignNS = function(ports, yCursor, gap) {
         var length = ports.length,
@@ -260,6 +365,7 @@ Entry.HWMonitor = function(hwModule) {
             } else if(mode != "list"){
                 lP = Math.max(lP, - width / 2 + lPort.width) + 15;
                 rP = Math.min(rP, width / 2 - rPort.width) - 15;
+                console.log(123123);
             } else if(mode == "list"){
                 listLine = parseInt(wholeWidth / this._rect.width);
         
@@ -271,6 +377,11 @@ Entry.HWMonitor = function(hwModule) {
             wholeWidth -= lPort.width + rPort.width + 10;
             yCursor += gapTemp;
         };
+
+
+        this._movePort(lPort, lP, yCursor, prevLP);
+        this._movePort(rPort, rP, yCursor, prevRP);
+
         if (ports.length) {
             ports[0].group.attr({
                 "transform"  : "translate(" + (rP + lP - ports[0].width) / 2 + "," + yCursor

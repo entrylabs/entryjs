@@ -31,7 +31,6 @@ Entry.Neobot = {
             "1":{name: "1번 포트", type: "input", pos: {x: 78, y: 9}},
             "2":{name: "2번 포트", type: "input", pos: {x : 115, y: 9}},
             "3":{name: "3번 포트", type: "input", pos: {x: 153, y: 9}},
-            //{name: "리모컨", type: "input"},
             "LMOT":{name: "왼쪽 모터", type: "output", pos: {x: 78, y: 259}},
             "RMOT":{name: "오른쪽 모터", type: "output", pos: {x: 191, y: 259}},
             "note":{name: "부저", type: "output", pos: {x: 98, y: 184}},

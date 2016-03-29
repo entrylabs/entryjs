@@ -714,10 +714,12 @@ Entry.Arduino = {name:"arduino", setZero:function() {
     Entry.hw.sendQueue[a] = 0;
   }
   Entry.hw.update();
-}, monitorTemplate:{imgPath:"hw/arduino.png", width:268, height:270, ports:{0:{name:"0\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, 1:{name:"1\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, 2:{name:"2\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, 3:{name:"3\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, 4:{name:"4\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, 5:{name:"5\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, 6:{name:"6\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, 
-y:0}}, 7:{name:"7\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, 8:{name:"8\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, 9:{name:"9\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, 10:{name:"10\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, 11:{name:"11\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, 12:{name:"12\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, 13:{name:"13\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, a0:{name:"0\ubc88 \ud3ec\ud2b8", type:"input", 
+}, monitorTemplate:{imgPath:"hw/arduino.png", width:268, height:270, listPorts:{0:{name:"0\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, 1:{name:"1\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, 2:{name:"2\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, 3:{name:"3\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, 4:{name:"4\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, 5:{name:"5\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, 6:{name:"6\ubc88 \ud3ec\ud2b8", type:"input", 
+pos:{x:0, y:0}}, 7:{name:"7\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, 8:{name:"8\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, 9:{name:"9\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, 10:{name:"10\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, 11:{name:"11\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, 12:{name:"12\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, 13:{name:"13\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, a0:{name:"0\ubc88 \ud3ec\ud2b8", type:"input", 
 pos:{x:0, y:0}}, a1:{name:"1\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, a2:{name:"2\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, a3:{name:"3\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, a4:{name:"4\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, a5:{name:"5\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}}, mode:"list"}};
-Entry.SensorBoard = {name:"sensorBoard", setZero:Entry.Arduino.setZero, monitorTemplate:Entry.Arduino.monitorTemplate};
+Entry.SensorBoard = {name:"sensorBoard", setZero:Entry.Arduino.setZero, monitorTemplate:{imgPath:"hw/sensorBoard.png", width:268, height:270, listPorts:{D0:{name:"0\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, D1:{name:"1\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, D6:{name:"2\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, D7:{name:"3\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, D12:{name:"4\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, D13:{name:"5\ubc88 \ud3ec\ud2b8", 
+type:"input", pos:{x:0, y:0}}}, ports:{MIC:{name:"\ub9c8\uc774\ud06c", type:"input", pos:{x:136, y:245}}, CDS1:{name:"\ube5b \uc13c\uc11c1", type:"output", pos:{x:70, y:246}}, CDS2:{name:"\ube5b \uc13c\uc11c2", type:"output", pos:{x:200, y:245}}, SLIDE:{name:"\uc2ac\ub77c\uc774\ub4dc", type:"input", pos:{x:139, y:22}}, TEMP:{name:"\uc628\ub3c4", type:"output", pos:{x:237, y:271}}, SW_R:{name:"\uc2a4\uc704\uce58 1", type:"input", pos:{x:196, y:134}}, SW_L:{name:"\uc2a4\uc704\uce58 2", type:"input", 
+pos:{x:129, y:185}}, SW_D:{name:"\uc2a4\uc704\uce58 3", type:"input", pos:{x:74, y:125}}, SW_U:{name:"\uc2a4\uc704\uce58 4", type:"input", pos:{x:136, y:73}}}, mode:"both"}};
 Entry.CODEino = {name:"CODEino", setZero:Entry.Arduino.setZero, monitorTemplate:Entry.Arduino.monitorTemplate};
 Blockly.Blocks.arduino_text = {init:function() {
   this.setColour("#00979D");
@@ -1041,9 +1043,9 @@ Entry.Bitbrick = {SENSOR_MAP:{1:"light", 2:"IR", 3:"touch", 4:"potentiometer", 5
     a[b] = 0;
   }
   Entry.hw.update();
-}, name:"bitbrick", servoMaxValue:181, servoMinValue:1, dcMaxValue:100, dcMinValue:-100, monitorTemplate:{imgPath:"hw/bitbrick.png", width:268, height:270, ports:{0:{name:"0\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, 1:{name:"1\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, 2:{name:"2\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, 3:{name:"3\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, 4:{name:"4\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, 5:{name:"5\ubc88 \ud3ec\ud2b8", 
+}, name:"bitbrick", servoMaxValue:181, servoMinValue:1, dcMaxValue:100, dcMinValue:-100, monitorTemplate:{imgPath:"hw/bitbrick.png", width:268, height:270, listPorts:{0:{name:"0\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, 1:{name:"1\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, 2:{name:"2\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, 3:{name:"3\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, 4:{name:"4\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, 5:{name:"5\ubc88 \ud3ec\ud2b8", 
 type:"input", pos:{x:0, y:0}}, 6:{name:"6\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, 7:{name:"7\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, 8:{name:"8\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, 9:{name:"9\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, 10:{name:"10\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, 11:{name:"11\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, 12:{name:"12\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, 13:{name:"13\ubc88 \ud3ec\ud2b8", 
-type:"input", pos:{x:0, y:0}}, a0:{name:"0\ubc88  \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, a1:{name:"1\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, a2:{name:"2\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, a3:{name:"3\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, a4:{name:"4\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, a5:{name:"5\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}}}};
+type:"input", pos:{x:0, y:0}}, a0:{name:"0\ubc88  \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, a1:{name:"1\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, a2:{name:"2\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, a3:{name:"3\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, a4:{name:"4\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, a5:{name:"5\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}}}, mode:"list"};
 Blockly.Blocks.bitbrick_sensor_value = {init:function() {
   this.setColour("#00979D");
   this.appendDummyInput().appendField("").appendField(new Blockly.FieldDropdownDynamic(Entry.Bitbrick.sensorList), "PORT").appendField(" \uac12");
@@ -10386,13 +10388,16 @@ Entry.PropertyPanel = function() {
     });
     this.modes[a] && (this.modes[a].tabDom.remove(), this.modes[a].contentDom.remove());
     this.modes[a] = {obj:c, tabDom:e, contentDom:d};
+    console.log("123123213123123123232njknfdjkasnjfk");
   };
   a.resize = function(a) {
     this._view.css({width:a + "px", top:9 * a / 16 + 123 - 22 + "px"});
     430 <= a ? this._view.removeClass("collapsed") : this._view.addClass("collapsed");
-    this.modes[this.selected].obj.resize();
+    console.log(this.modes);
+    Entry.dispatchEvent("windowResized");
   };
   a.select = function(a) {
+    console.log(a);
     for (var c in this.modes) {
       var d = this.modes[c];
       d.tabDom.removeClass("selected");
@@ -10401,6 +10406,8 @@ Entry.PropertyPanel = function() {
     c = this.modes[a];
     c.tabDom.addClass("selected");
     c.contentDom.removeClass("entryHidden");
+    console.log(123321);
+    console.log(c);
     c.obj.resize();
     this.selected = a;
   };
@@ -12428,63 +12435,102 @@ Entry.Func.generateWsBlock = function(a, b, c) {
 Entry.HWMontior = {};
 Entry.HWMonitor = function(a) {
   this.svgDom = Entry.Dom($('<svg id="hwMonitor" class="hwMonitor" width="100%" height="100%"version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'));
+  this._hwModule = a;
   var b = this;
   Entry.addEventListener("windowResized", function() {
-    b.resize();
+    var a = b._hwModule.monitorTemplate.mode;
+    console.log(b._hwModule);
+    "both" == a ? (b.resizeList(), b.resize()) : "list" == a ? b.resizeList() : b.resize();
   });
-  this._hwModule = a;
   this.scale = .5;
   this._portViews = {};
   this._portMap = {n:[], e:[], s:[], w:[]};
+  this._portMapList = {n:[], e:[], s:[], w:[]};
 };
 (function(a) {
   a.generateView = function() {
+    console.log("generate view");
     this.snap = Entry.SVG("hwMonitor");
     this._svgGroup = this.snap.elem("g");
     var a = this._hwModule.monitorTemplate, c = {href:Entry.mediaFilePath + a.imgPath, x:-a.width / 2, y:-a.height / 2, width:a.width, height:a.height};
-    "list" != a.mode && (this.hwView = this._svgGroup.elem("image"), this.hwView = this.hwView.attr(c));
+    this.hwView = this._svgGroup.elem("image");
+    this.hwView = this.hwView.attr(c);
     this._template = a;
-    c = a.ports;
+    a = a.ports;
     this.pathGroup = this._svgGroup.elem("g");
-    var d = [], e;
-    for (e in c) {
-      var f = this.generatePortView(c[e]);
-      this._portViews[e] = f;
-      d.push(f);
+    var c = [], d;
+    for (d in a) {
+      var e = this.generatePortView(a[d], "_svgGroup");
+      this._portViews[d] = e;
+      c.push(e);
     }
-    "list" != a.mode && d.sort(function(a, b) {
+    c.sort(function(a, b) {
       return a.box.x - b.box.x;
     });
-    var g = this._portMap;
-    d.map(function(a) {
-      switch(Math.round(Math.atan2(a.box.y, a.box.x) / Math.PI * 2)) {
+    var f = this._portMap;
+    c.map(function(a) {
+      var b = Math.atan2(a.box.y, a.box.x);
+      console.log(b);
+      switch(Math.round(b / Math.PI * 2)) {
         case -1:
-          g.n.push(a);
+          f.n.push(a);
           break;
         case 0:
-          g.e.push(a);
+          f.e.push(a);
           break;
         case 1:
-          g.s.push(a);
+          f.s.push(a);
           break;
         case 2:
-          g.w.push(a);
+          f.w.push(a);
       }
     });
     this.resize();
   };
-  a.generatePortView = function(a) {
-    var c = this._svgGroup.elem("g");
-    c.addClass("hwComponent");
-    var d = this.pathGroup.elem("path").attr({d:"m0,0", fill:"none", stroke:"input" === a.type ? "#00979d" : "#A751E3", "stroke-width":3}), e = c.elem("rect").attr({x:0, y:0, width:150, height:22, rx:4, ry:4, fill:"#fff", stroke:"#a0a1a1"}), f = c.elem("text").attr({x:4, y:12, fill:"#000", "class":"hwComponentName", "alignment-baseline":"central"});
-    f.textContent = a.name;
-    f = f.getComputedTextLength();
-    c.elem("rect").attr({x:f + 8, y:2, width:30, height:18, rx:9, ry:9, fill:"input" === a.type ? "#00979d" : "#A751E3"});
-    var g = c.elem("text").attr({x:f + 13, y:12, fill:"#fff", "class":"hwComponentValue", "alignment-baseline":"central"});
-    g.textContent = 0;
-    f += 40;
-    e.attr({width:f});
-    return {group:c, value:g, type:a.type, path:d, box:{x:a.pos.x - this._template.width / 2, y:a.pos.y - this._template.height / 2, width:f}, width:f};
+  a.generateListView = function() {
+    console.log("generate List ");
+    this.listsnap = Entry.SVG("hwMonitor");
+    this._svglistGroup = this.listsnap.elem("g");
+    var a = this._hwModule.monitorTemplate;
+    this._template = a;
+    a = a.listPorts;
+    this.pathGroup = this._svglistGroup.elem("g");
+    var c = [], d;
+    for (d in a) {
+      var e = this.generatePortView(a[d], "_svglistGroup");
+      this._portViews[d] = e;
+      c.push(e);
+    }
+    var f = this._portMapList;
+    c.map(function(a) {
+      switch(Math.round(Math.atan2(a.box.y, a.box.x) / Math.PI * 2)) {
+        case -1:
+          f.n.push(a);
+          break;
+        case 0:
+          f.e.push(a);
+          break;
+        case 1:
+          f.s.push(a);
+          break;
+        case 2:
+          f.w.push(a);
+      }
+    });
+    this.resizeList();
+  };
+  a.generatePortView = function(a, c) {
+    var d = this[c].elem("g");
+    d.addClass("hwComponent");
+    var e = this.pathGroup.elem("path").attr({d:"m0,0", fill:"none", stroke:"input" === a.type ? "#00979d" : "#A751E3", "stroke-width":3}), f = d.elem("rect").attr({x:0, y:0, width:150, height:22, rx:4, ry:4, fill:"#fff", stroke:"#a0a1a1"}), g = d.elem("text").attr({x:4, y:12, fill:"#000", "class":"hwComponentName", "alignment-baseline":"central"});
+    g.textContent = a.name;
+    g = g.getComputedTextLength();
+    d.elem("rect").attr({x:g + 8, y:2, width:30, height:18, rx:9, ry:9, fill:"input" === a.type ? "#00979d" : "#A751E3"});
+    var h = d.elem("text").attr({x:g + 13, y:12, fill:"#fff", "class":"hwComponentValue", "alignment-baseline":"central"});
+    h.textContent = 0;
+    g += 40;
+    f.attr({width:g});
+    return {group:d, value:h, type:a.type, path:e, box:{x:a.pos.x - this._template.width / 2, y:a.pos.y - this._template.height / 2, width:g}, width:g};
   };
   a.getView = function() {
     return this.svgDom;
@@ -12499,16 +12545,42 @@ Entry.HWMonitor = function(a) {
   a.resize = function() {
     "list" != this._hwModule.monitorTemplate.mode && this.hwView.attr({transform:"scale(" + this.scale + ")"});
     var a = this.svgDom.get(0).getBoundingClientRect();
+    console.log("BRect : ------", a);
     this._svgGroup.attr({transform:"translate(" + a.width / 2 + "," + a.height / 2 + ")"});
     this._rect = a;
     this.scale = a.height / this._template.height / 2;
     this.align();
   };
+  a.resizeList = function() {
+    var a = this.svgDom.get(0).getBoundingClientRect();
+    this._svglistGroup.attr({transform:"translate(" + a.width / 2 + "," + a.height / 2 + ")"});
+    this._rect = a;
+    this.scale = a.height / this._template.height / 2;
+    this.alignList();
+  };
   a.align = function() {
-    for (var a = this._portMap.n, c = a.length, d = 0;d < a.length;d++) {
+    var a;
+    a = "list" == this._hwModule.monitorTemplate.mode ? this._portMapList.n : this._portMap.n;
+    for (var c = a.length, d = 0;d < a.length;d++) {
+      var e = a[d];
+      console.log(e);
+      e.group.attr({transform:"translate(" + this._template.width * (d / c - .5) + "," + (-this._template.width / 2 - 30) + ")"});
+    }
+    a = this._portMap.s.concat();
+    this._alignNS(a, this._template.width * this.scale / 2 + 5, 27);
+    a = this._portMap.n.concat();
+    this._alignNS(a, -this._template.width * this.scale / 2 - 32, -27);
+  };
+  a.alignList = function() {
+    var a;
+    a = "list" == this._hwModule.monitorTemplate.mode ? this._portMapList.n : this._portMap.n;
+    for (var c = a.length, d = 0;d < a.length;d++) {
       a[d].group.attr({transform:"translate(" + this._template.width * (d / c - .5) + "," + (-this._template.width / 2 - 30) + ")"});
     }
-    "list" != this._hwModule.monitorTemplate.mode ? (a = this._portMap.s.concat(), this._alignNS(a, this._template.width * this.scale / 2 + 5, 27), a = this._portMap.n.concat(), this._alignNS(a, -this._template.width * this.scale / 2 - 32, -27)) : (a = this._portMap.s.concat(), this._alignNSList(a, this._template.width * this.scale / 2 + 5, 27), a = this._portMap.n.concat(), this._alignNSList(a, -this._template.width * this.scale / 2 - 32, -27));
+    a = this._portMapList.s.concat();
+    this._alignNSList(a, this._template.width * this.scale / 2 + 5, 27);
+    a = this._portMapList.n.concat();
+    this._alignNSList(a, -this._template.width * this.scale / 2 - 32, -27);
   };
   a._alignNS = function(a, c, d) {
     for (var e = -this._rect.width / 2, f = this._rect.width / 2, g = this._rect.width, h = 0, k = this._hwModule.monitorTemplate.mode, l = 0;l < a.length;l++) {
@@ -12516,11 +12588,13 @@ Entry.HWMonitor = function(a) {
     }
     h < f - e && (f = h / 2 + 3, e = -h / 2 - 3);
     for (;1 < a.length;) {
-      var l = a.shift(), n = a.pop(), m = d;
-      h <= f - e ? (e += l.width + 5, f -= n.width + 5, m = 0) : 0 === a.length ? (e = (e + f) / 2 - 3, f = e + 6) : "list" != k ? (e = Math.max(e, -g / 2 + l.width) + 15, f = Math.min(f, g / 2 - n.width) - 15) : "list" == k && (parseInt(h / this._rect.width), h = this._rect.width, e = Math.min(e - l.width, -g / 2), f = Math.max(f + n.width, g / 2));
-      h -= l.width + n.width + 10;
-      c += m;
+      var n = a.shift(), m = a.pop(), q = e, r = f, l = d;
+      h <= f - e ? (e += n.width + 5, f -= m.width + 5, l = 0) : 0 === a.length ? (e = (e + f) / 2 - 3, f = e + 6) : "list" != k ? (e = Math.max(e, -g / 2 + n.width) + 15, f = Math.min(f, g / 2 - m.width) - 15, console.log(123123)) : "list" == k && (parseInt(h / this._rect.width), h = this._rect.width, e = Math.min(e - n.width, -g / 2), f = Math.max(f + m.width, g / 2));
+      h -= n.width + m.width + 10;
+      c += l;
     }
+    this._movePort(n, e, c, q);
+    this._movePort(m, f, c, r);
     a.length && a[0].group.attr({transform:"translate(" + (f + e - a[0].width) / 2 + "," + c + ")"});
   };
   a._alignNSList = function(a, c) {
@@ -12633,7 +12707,8 @@ p.setZero = function() {
   Entry.hw.hwModule && Entry.hw.hwModule.setZero();
 };
 p.checkDevice = function(a) {
-  void 0 !== a.company && (a = "" + a.company + a.model, a != this.selectedDevice && (this.selectedDevice = a, this.hwModule = this.hwInfo[a], Entry.dispatchEvent("hwChanged"), Entry.toast.success(Lang.Menus.connect_hw, Lang.Menus.connect_message.replace("%1", Lang.Device[Entry.hw.hwModule.name]), !1), this.hwModule.monitorTemplate && (this.hwMonitor = new Entry.HWMonitor(this.hwModule), Entry.propertyPanel.addMode("hw", this.hwMonitor), this.hwMonitor.generateView())));
+  void 0 !== a.company && (a = "" + a.company + a.model, a != this.selectedDevice && (this.selectedDevice = a, this.hwModule = this.hwInfo[a], Entry.dispatchEvent("hwChanged"), Entry.toast.success(Lang.Menus.connect_hw, Lang.Menus.connect_message.replace("%1", Lang.Device[Entry.hw.hwModule.name]), !1), this.hwModule.monitorTemplate && (this.hwMonitor = new Entry.HWMonitor(this.hwModule), Entry.propertyPanel.addMode("hw", this.hwMonitor), a = this.hwModule.monitorTemplate, "both" == a.mode ? (a.mode = 
+  "list", this.hwMonitor.generateListView(), a.mode = "general", this.hwMonitor.generateView(), a.mode = "both") : "list" == a.mode ? this.hwMonitor.generateListView() : this.hwMonitor.generateView())));
 };
 p.banHW = function() {
   var a = this.hwInfo, b;

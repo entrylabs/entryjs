@@ -204,8 +204,22 @@ p.checkDevice = function(data) {
     );
     if (this.hwModule.monitorTemplate) {
         this.hwMonitor = new Entry.HWMonitor(this.hwModule);
-            Entry.propertyPanel.addMode("hw", this.hwMonitor);
-        this.hwMonitor.generateView();
+        Entry.propertyPanel.addMode("hw", this.hwMonitor);
+
+        var mt = this.hwModule.monitorTemplate;
+        
+        if(mt.mode == "both") {
+            mt.mode = "list";
+            this.hwMonitor.generateListView();
+            mt.mode = "general";
+            this.hwMonitor.generateView();
+            mt.mode = "both";
+        } else if(mt.mode == "list") {
+            this.hwMonitor.generateListView();    
+        } else {
+            this.hwMonitor.generateView();
+        }
+        
     }
 };
 

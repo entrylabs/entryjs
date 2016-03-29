@@ -88,7 +88,7 @@ Entry.Bitbrick = {
         imgPath: "hw/bitbrick.png",
         width: 268,
         height: 270,
-        ports: {
+        listPorts: {
             "0":{name: "0번 포트", type: "input", pos: {x : 0, y: 0}},
             "1":{name: "1번 포트", type: "input", pos: {x: 0, y: 0}},
             "2":{name: "2번 포트", type: "input", pos: {x : 0, y: 0}},
@@ -110,7 +110,8 @@ Entry.Bitbrick = {
             "a4":{name: "4번 포트", type: "input", pos: {x: 0, y: 0}},
             "a5":{name: "5번 포트", type: "input", pos: {x: 0, y: 0}}
         }
-    }
+    },
+    mode: 'list'
 };
 
 
