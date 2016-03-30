@@ -14,7 +14,8 @@ Blockly.Blocks.move_direction = {
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-  }
+  },
+  syntax: {js: [], py: ["self.move_to_direction(%1)\n"]}
 };
 
 Entry.block.move_direction = function (sprite, script) {
@@ -41,7 +42,8 @@ Blockly.Blocks.move_x = {
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-  }
+  },
+  syntax: {js: [], py: ["self.change_x(%1)\n"]}
 };
 
 Entry.block.move_x = function (sprite, script) {
@@ -67,7 +69,8 @@ Blockly.Blocks.move_y = {
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-  }
+  },
+  syntax: {js: [], py: ["self.change_y(%1)\n"]}
 };
 
 Entry.block.move_y = function (sprite, script) {
@@ -100,7 +103,8 @@ Blockly.Blocks.locate_xy_time = {
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-  }
+  },
+  syntax: {js: [], py: ["self.move_xy_by_seconds(%1, %2, %3)\n"]}
 };
 
 Entry.block.locate_xy_time = function (sprite, script) {
@@ -248,7 +252,8 @@ Blockly.Blocks.locate_xy = {
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-  }
+  },
+  syntax: {js: [], py: ["self.move_xy(%1, %2)\n"]}
 };
 
 Entry.block.locate_xy = function (sprite, script) {
@@ -276,7 +281,8 @@ Blockly.Blocks.locate_x = {
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-  }
+  },
+  syntax: {js: [], py: ["self.move_x(%1)\n"]}
 };
 
 Entry.block.locate_x = function (sprite, script) {
@@ -302,7 +308,8 @@ Blockly.Blocks.locate_y = {
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-  }
+  },
+  syntax: {js: [], py: ["self.move_y(%1)\n"]}
 };
 
 Entry.block.locate_y = function (sprite, script) {
@@ -329,7 +336,8 @@ Blockly.Blocks.locate = {
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-  }
+  },
+  syntax: {js: [], py: ["self.move_at(%1)\n"]}
 };
 
 Entry.block.locate = function (sprite, script) {
@@ -372,7 +380,8 @@ Blockly.Blocks.move_xy_time = {
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-  }
+  },
+  syntax: {js: [], py: ["self.move_xy_by_seconds(%1, %2, %3)\n"]}
 };
 
 Entry.block.move_xy_time = function (sprite, script) {
@@ -494,7 +503,8 @@ Blockly.Blocks.bounce_wall = {
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-  }
+  },
+  syntax: {js: [], py: ["self.on_bounce_at_wall()\n"]}
 };
 
 Entry.block.bounce_wall = function(sprite, script) {
@@ -647,7 +657,8 @@ Blockly.Blocks.see_angle_object = {
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-  }
+  },
+  syntax: {js: [], py: ["self.look_at(%1)\n"]}
 };
 
 Entry.block.see_angle_object = function (sprite, script) {
@@ -744,7 +755,8 @@ Blockly.Blocks.locate_object_time = {
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-  }
+  },
+  syntax: {js: [], py: ["self.move_at_by_seconds(%1, %2)\n"]}
 };
 
 Entry.block.locate_object_time = function (sprite, script) {
@@ -813,7 +825,8 @@ Blockly.Blocks.rotate_absolute = {
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-  }
+  },
+  syntax: {js: [], py: ["self.set_direction(%1)\n"]}
 };
 
 Entry.block.rotate_absolute = function (entity, script) {
@@ -835,7 +848,8 @@ Blockly.Blocks.rotate_relative = {
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-  }
+  },
+  syntax: {js: [], py: ["self.rotate_direction(%1)\n"]}
 };
 
 Entry.block.rotate_relative = function (entity, script) {
@@ -857,7 +871,8 @@ Blockly.Blocks.direction_absolute = {
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-  }
+  },
+  syntax: {js: [], py: ["self.set_moving_direction(%1)\n"]}
 };
 
 Entry.block.direction_absolute = function (entity, script) {
@@ -879,7 +894,8 @@ Blockly.Blocks.direction_relative = {
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-  }
+  },
+  syntax: {js: [], py: ["self.rotate_moving_direction(%1)\n"]}
 };
 
 Entry.block.direction_relative = function (entity, script) {
@@ -905,7 +921,8 @@ Blockly.Blocks.move_to_angle = {
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-  }
+  },
+  syntax: {js: [], py: ["self.move_to_by(%1, %2)\n"]}
 };
 
 Entry.block.move_to_angle = function (sprite, script) {
@@ -938,7 +955,8 @@ Blockly.Blocks.rotate_by_time = {
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-  }
+  },
+  syntax: {js: [], py: ["self.rotate_direction_by_seconds(%1, %2)\n"]}
 };
 
 Entry.block.rotate_by_time = function (sprite, script) {
@@ -978,7 +996,8 @@ Blockly.Blocks.direction_relative_duration = {
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-  }
+  },
+  syntax: {js: [], py: ["self.rotate_moving_direction_by_seconds(%1, %2)\n"]}
 };
 
 Entry.block.direction_relative_duration = function (sprite, script) {

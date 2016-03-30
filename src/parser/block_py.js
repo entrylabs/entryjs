@@ -59,6 +59,7 @@ Entry.PyBlockParser = function(syntax) {
             if (token.length === 0) continue;
             if (breg.test(token)) {
                 var paramIndex = Number(token.split('%')[1]) - 1;
+                console.log("schema param", schemaParams[paramIndex]);
                 result += this['Field' + schemaParams[paramIndex].type](
                     block.params[paramIndex], schemaParams[paramIndex]);
             } 
@@ -102,17 +103,30 @@ Entry.PyBlockParser = function(syntax) {
     };
 
     p.FieldDropdown = function(param, schema) {
-        var value = param;
+        console.log("FieldDropdown", param);
+        /*var value = param;
         var options = schema.options;
         for (var i=0, len=options.length; i<len; i++) {
             var option = options[i];
-            if (option[1] == value)
+            if (option[1] == value){
+                console.log("option", option[0]);
                 return option[0];
-        }
+            }
+        }*/
         return param;
     };
 
     p.FieldDropdownDynamic = function(param, schema) {
+        console.log("FieldDropdownDynamic", param);
+        /*var value = param;
+        var options = schema.options;
+        for (var i=0, len=options.length; i<len; i++) {
+            var option = options[i];
+            if (option[1] == value){
+                console.log("option", option[0]);
+                return option[0];
+            }
+        }*/
         return param;
     };
 
@@ -121,12 +135,13 @@ Entry.PyBlockParser = function(syntax) {
         return this.Block(param);
     };
 
-    p.FieldIndicator = function(param) {
+    p.FieldIndicator = function(param, schema) {
         console.log("FieldIndicator", param);
-        return this.Block(param);
+        console.log("schema", schema);
+        return param;
     };
 
-    p.FieldKeyboardInput = function(param) {
+    p.FieldKeyboard = function(param) {
         console.log("FieldKeyboardInput", param);
         return this.Block(param);
     };

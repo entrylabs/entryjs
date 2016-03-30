@@ -9,7 +9,8 @@ Blockly.Blocks.when_run_button_click = {
         .appendField(Lang.Blocks.START_when_run_button_click);
     this.setInputsInline(true);
     this.setNextStatement(true);
-  }
+  },
+  syntax: {js: [], py: ["Entry.on_start_program()\n"]}
 };
 
 Entry.block.when_run_button_click = function (sprite, script) {
@@ -42,7 +43,8 @@ Blockly.Blocks.press_some_key = {
         .appendField(new Blockly.FieldIcon(Entry.mediaFilePath + 'block_icon/start_03.png', '*'));
         this.setInputsInline(true);
         this.setNextStatement(true);
-    }
+    },
+    syntax: {js: [], py: ["Entry.is_key_pressed()\n"]}
 };
 
 Entry.block.press_some_key = function (sprite, script) {
@@ -59,7 +61,8 @@ Blockly.Blocks.when_some_key_pressed = {
         .appendField(Lang.Blocks.START_press_some_key_2);
     this.setInputsInline(true);
     this.setNextStatement(true);
-  }
+  },
+  syntax: {js: [], py: ["Entry.on_key_press(%1)\n"]}
 };
 
 Entry.block.when_some_key_pressed = function (sprite, script) {
@@ -75,7 +78,8 @@ Blockly.Blocks["mouse_clicked"] = {
         .appendField(Lang.Blocks.START_mouse_clicked);
         this.setInputsInline(true);
         this.setNextStatement(true);
-    }
+    },
+    syntax: {js: [], py: ["Entry.on_mouse_down()\n"]}
 };
 
 Entry.block.mouse_clicked = function (sprite, script) {
@@ -91,7 +95,8 @@ Blockly.Blocks.mouse_click_cancled = {
         .appendField(Lang.Blocks.START_mouse_click_cancled);
         this.setInputsInline(true);
         this.setNextStatement(true);
-    }
+    },
+    syntax: {js: [], py: ["Entry.on_mouse_up()\n"]}
 };
 
 Entry.block.mouse_click_cancled = function (sprite, script) {
@@ -100,20 +105,20 @@ Entry.block.mouse_click_cancled = function (sprite, script) {
 
 
 // //장면이 시작했을 때
-// Blockly.Blocks.when_scene_start = {
-//   init: function() {
-//       this.setColour("#3BBD70");
-//     this.appendDummyInput()
-//         .appendField(new Blockly.FieldIcon(Entry.mediaFilePath + 'block_icon/start_icon_start.png', '*', "start"))
-//         .appendField(Lang.Blocks.START_when_scene_start);
-//     this.setInputsInline(true);
-//     this.setNextStatement(true);
-//   }
-// };
+/*Blockly.Blocks.when_scene_start = {
+  init: function() {
+      this.setColour("#3BBD70");
+    this.appendDummyInput()
+        .appendField(new Blockly.FieldIcon(Entry.mediaFilePath + 'block_icon/start_icon_start.png', '*', "start"))
+        .appendField(Lang.Blocks.START_when_scene_start);
+    this.setInputsInline(true);
+    this.setNextStatement(true);
+  }
+};*/
 
-// Entry.block.when_scene_start = function (sprite, script) {
-//     return script.callReturn();
-// };
+Entry.block.when_scene_start = function (sprite, script) {
+    return script.callReturn();
+};
 
 //오브젝트를 클릭 했을 때
 Blockly.Blocks.when_object_click = {
@@ -124,7 +129,8 @@ Blockly.Blocks.when_object_click = {
         .appendField(Lang.Blocks.START_when_object_click);
     this.setInputsInline(true);
     this.setNextStatement(true);
-  }
+  },
+  syntax: {js: [], py: ["self.on_mouse_down()\n"]}
 };
 
 Entry.block.when_object_click = function (sprite, script) {
@@ -140,7 +146,8 @@ Blockly.Blocks.when_object_click_canceled = {
         .appendField(Lang.Blocks.START_when_object_click_canceled);
     this.setInputsInline(true);
     this.setNextStatement(true);
-  }
+  },
+  syntax: {js: [], py: ["self.on_mouse_up()\n"]}
 };
 
 Entry.block.when_object_click_canceled = function (sprite, script) {
@@ -156,7 +163,8 @@ Blockly.Blocks.when_some_key_click = {
         .appendField(Lang.Blocks.START_when_some_key_click);
     this.setInputsInline(true);
     this.setNextStatement(true);
-  }
+  },
+  syntax: {js: [], py: ["Entry.on_key_down(%1)\n"]}
 };
 
 Entry.block.when_some_key_click = function (sprite, script) {
@@ -174,7 +182,8 @@ Blockly.Blocks.when_message_cast = {
         .appendField(Lang.Blocks.START_when_message_cast_2);
     this.setInputsInline(true);
     this.setNextStatement(true);
-  }
+  },
+  syntax: {js: [], py: ["self.on_message(%1)\n"]}
 };
 
 Entry.block.when_message_cast = function (sprite, script) {
@@ -194,7 +203,8 @@ Blockly.Blocks.message_cast = {
     this.setInputsInline(true);
     this.setNextStatement(true);
     this.setPreviousStatement(true);
-  }
+  },
+  syntax: {js: [], py: ["self.send_message(%1)\n"]}
 };
 
 Entry.block.message_cast = function (sprite, script) {
@@ -221,7 +231,8 @@ Blockly.Blocks.message_cast_wait = {
     this.setInputsInline(true);
     this.setNextStatement(true);
     this.setPreviousStatement(true);
-  }
+  },
+  syntax: {js: [], py: ["self.wait_after_message(%1)\n"]}
 };
 
 Entry.block.message_cast_wait = function (sprite, script) {

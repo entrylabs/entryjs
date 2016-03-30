@@ -14,7 +14,9 @@ Blockly.Blocks.wait_second = {
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-  }
+  },
+  syntax: {js: [], py: ["self.sleep_seconds(%1)\n"]}
+
 };
 
 Entry.block.wait_second = function (sprite, script) {
@@ -54,7 +56,7 @@ Blockly.Blocks.repeat_basic = {
         this.setPreviousStatement(true);
         this.setNextStatement(true);
     },
-    syntax: {js: [], py: ["for (i=0; i<%1; i++)\n{\n$1\n}"]}
+    syntax: {js: [], py: ["for i in range(%1):\n$1\n"]}
 };
 
 Entry.block.repeat_basic = function (sprite, script) {
@@ -87,7 +89,7 @@ Blockly.Blocks.repeat_inf = {
         this.setPreviousStatement(true);
         this.setNextStatement(true);
     },
-    syntax: {js: [], py: ["while {\n$1\n}"]}
+    syntax: {js: [], py: ["while True:\n$1\n"]}
 };
 
 Entry.block.repeat_inf = function (sprite, script) {
@@ -107,7 +109,7 @@ Blockly.Blocks.stop_repeat = {
     this.setPreviousStatement(true);
     this.setNextStatement(true);
   },
-  syntax: {js: [], py: ["break"]}
+  syntax: {js: [], py: ["break\n"]}
 };
 
 Entry.block.stop_repeat = function (sprite, script) {
@@ -142,7 +144,8 @@ Blockly.Blocks.wait_until_true = {
         this.setInputsInline(true);
         this.setPreviousStatement(true);
         this.setNextStatement(true);
-    }
+    },
+    syntax: {js: [], py: ["while !%1:\n"]}
 };
 
 Entry.block.wait_until_true = function (sprite, script) {
@@ -170,7 +173,7 @@ Blockly.Blocks._if = {
         this.setPreviousStatement(true);
         this.setNextStatement(true);
     },
-    syntax: {js: [], py: ["if (%1) {\n$1\n}"]}
+    syntax: {js: [], py: ["if %1:\n$1\n\n"]}
 };
 
 Entry.block._if = function (sprite, script) {
@@ -186,7 +189,6 @@ Entry.block._if = function (sprite, script) {
         return script.callReturn();
     }
 };
-
 // 만약 <>라면, 아니
 Blockly.Blocks.if_else = {
     init: function() {
@@ -206,7 +208,7 @@ Blockly.Blocks.if_else = {
         this.setPreviousStatement(true);
         this.setNextStatement(true);
     },
-    syntax: {js: [], py: ["if (%1) {\n$1\n}\n else (%1) {\n$1\n}"]}
+    syntax: {js: [], py: ["if %1:\n $1\nelse:\n$2\n"]}
 };
 
 Entry.block.if_else = function (sprite, script) {
@@ -235,7 +237,8 @@ Blockly.Blocks.create_clone = {
         this.setInputsInline(true);
         this.setPreviousStatement(true);
         this.setNextStatement(true);
-    }
+    },
+    syntax: {js: [], py: ["Entry.create_clone(%1)\n"]}
 };
 
 Entry.block.create_clone = function (sprite, script) {
@@ -258,7 +261,8 @@ Blockly.Blocks.delete_clone = {
         .appendField(new Blockly.FieldIcon(Entry.mediaFilePath + 'block_icon/flow_03.png', '*'));
         this.setInputsInline(true);
         this.setPreviousStatement(true);
-    }
+    },
+    syntax: {js: [], py: ["self.delete_clone()\n"]}
 };
 
 Entry.block.delete_clone = function (sprite, script) {
@@ -276,7 +280,8 @@ Blockly.Blocks.when_clone_start = {
             .appendField(Lang.Blocks.FLOW_when_clone_start);
         this.setInputsInline(true);
         this.setNextStatement(true);
-    }
+    },
+    syntax: {js: [], py: ["Entry.isClonedFirst()\n"]}
 };
 
 Entry.block.when_clone_start = function (sprite, script) {
@@ -339,7 +344,7 @@ Blockly.Blocks.repeat_while_true = {
             this.setNextStatement(true);
         }
     },
-    syntax: {js: [], py: ["while ((%1) == true) {\n$1\n}"]}
+    syntax: {js: [], py: ["Entry.repeat(%1, \"%2\")\n"]}
 };
 
 Entry.block.repeat_while_true = function (sprite, script) {
@@ -371,7 +376,8 @@ Blockly.Blocks.stop_object = {
         this.setInputsInline(true);
         this.setPreviousStatement(true);
         this.setNextStatement(true);
-    }
+    },
+    syntax: {js: [], py: ["Entry.stop(%1)\n"]}
 };
 
 Entry.block.stop_object = function (sprite, script) {
@@ -415,7 +421,8 @@ Blockly.Blocks.restart_project = {
         .appendField(new Blockly.FieldIcon(Entry.mediaFilePath + 'block_icon/flow_03.png', '*'));
         this.setInputsInline(true);
         this.setPreviousStatement(true);
-    }
+    },
+    syntax: {js: [], py: ["Entry.restart()\n"]}
 };
 
 Entry.block.restart_project = function (sprite, script) {
@@ -432,7 +439,8 @@ Blockly.Blocks.remove_all_clones = {
         this.setInputsInline(true);
         this.setPreviousStatement(true);
         this.setNextStatement(true);
-    }
+    },
+    syntax: {js: [], py: ["Entry.remove_all_clones()\n"]}
 };
 
 Entry.block.remove_all_clones = function (sprite, script) {
