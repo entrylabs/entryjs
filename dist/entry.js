@@ -10774,7 +10774,7 @@ Entry.Func = function() {
 Entry.Func.threads = {};
 Entry.Func.registerFunction = function(a) {
   this.menuCode || this.setupMenuCode();
-  Entry.playground.mainWorkspace.getBlockMenu().getCategoryCodes("func").createThread([{type:"func_" + a.id}]);
+  this._targetFuncBlock = Entry.playground.mainWorkspace.getBlockMenu().getCategoryCodes("func").createThread([{type:"func_" + a.id}]);
 };
 Entry.Func.executeFunction = function(a) {
   var b = this.threads[a];
@@ -10796,7 +10796,7 @@ Entry.Func.edit = function(a) {
   this.cancelEdit();
   this.targetFunc = a;
   this.initEditView(a.content);
-  this._funcChangeEvent = a.content.getEventMap("funcDef")[0].thread.changeEvent.attach(this, this.generateWsBlock);
+  this._funcChangeEvent = a.content.getEventMap("funcDef")[0].view._contents[1].changeEvent.attach(this, this.generateWsBlock);
   this.updateMenu();
 };
 Entry.Func.initEditView = function(a) {
@@ -10807,7 +10807,12 @@ Entry.Func.initEditView = function(a) {
 };
 Entry.Func.endEdit = function(a) {
   this._funcChangeEvent.destroy();
-  "save" === a ? this.save() : this.cancelEdit();
+  switch(a) {
+    case "save":
+      this.save();
+    case "cancelEdit":
+      this.cancelEdit();
+  }
 };
 Entry.Func.save = function() {
   this.targetFunc.generateBlock(!0);
@@ -10815,7 +10820,7 @@ Entry.Func.save = function() {
   this.cancelEdit();
 };
 Entry.Func.cancelEdit = function() {
-  this.targetFunc && (Entry.Func.isEdit = !1, this.targetFunc.block || (delete Entry.variableContainer.functions_[this.targetFunc.id], delete Entry.variableContainer.selected), delete this.targetFunc, this.updateMenu(), Entry.variableContainer.updateList());
+  this.targetFunc && (Entry.Func.isEdit = !1, this.targetFunc.block || (this._targetFuncBlock.destroy(), delete Entry.variableContainer.functions_[this.targetFunc.id], delete Entry.variableContainer.selected), delete this.targetFunc, this.updateMenu(), Entry.variableContainer.updateList());
 };
 Entry.Func.getMenuXml = function() {
   var a = [];
@@ -10876,50 +10881,12 @@ Entry.Func.updateMenu = function() {
 Entry.Func.prototype.edit = function() {
   Entry.Func.isEdit || (Entry.Func.isEdit = !0, Entry.Func.svg ? this.parentView.appendChild(this.svg) : Entry.Func.initEditView());
 };
-Entry.Func.generateBlock = function(a, b, c) {
-  b = Entry.nodeListToArray(b.childNodes);
-  var d, e;
-  for (e in b) {
-    "function_create" == b[e].getAttribute("type") && (d = b[e]);
-  }
-  e = new Entry.Script;
-  e.init(d);
-  d = e;
-  d.values && (d = e.values.FIELD);
-  e = '<mutation hashid="' + c + '">';
-  c = b = "";
-  var f = 0, g = 0;
-  a.stringHash = {};
-  for (a.booleanHash = {};;) {
-    switch(d.type) {
-      case "function_field_label":
-        e += '<field type="label" content="' + d.fields.NAME.replace("<", "&lt;").replace(">", "&gt;") + '"></field>';
-        c += d.fields.NAME;
-        break;
-      case "function_field_boolean":
-        var h = d.values.PARAM.hashId;
-        e += '<field type="boolean" hashid="' + h + '"></field>';
-        b += '<value name="' + h + '"><block type="True"></block></value>';
-        a.booleanHash[h] = g;
-        g++;
-        c += "\ub17c\ub9ac\uac12" + g;
-        break;
-      case "function_field_string":
-        h = d.values.PARAM.hashId, e += '<field type="string" hashid="' + h + '"></field>', b += '<value name="' + h + '"><block type="text"><field name="NAME">10</field></block></value>', a.stringHash[h] = f, f++, c += "\ubb38\uc790\uac12" + f;
-    }
-    if (d.values && d.values.NEXT) {
-      d = d.values.NEXT;
-    } else {
-      break;
-    }
-    c += " ";
-  }
-  a = Blockly.Xml.textToDom('<xml><block type="function_general">' + (e + "</mutation>") + b + "</block></xml>").childNodes[0];
-  c || (c = "\ud568\uc218");
-  return {block:a, description:c};
+Entry.Func.generateBlock = function(a) {
+  a = Entry.block["func_" + a.id];
+  return {block:{template:a.template, params:a.params}, description:a.template};
 };
 Entry.Func.prototype.generateBlock = function(a) {
-  a = Entry.Func.generateBlock(this, this.content, this.id);
+  a = Entry.Func.generateBlock(this);
   this.block = a.block;
   this.description = a.description;
 };
@@ -14954,26 +14921,26 @@ Entry.FieldStatement = function(a, b, c) {
     a.changeEvent.attach(this, this.calcHeight);
     this.calcHeight();
   };
-  a.align = function(b, a, d) {
+  a.align = function(a, c, d) {
     d = void 0 === d ? !0 : d;
     var e = this.svgGroup;
-    this._position && (this._position.x && (b = this._position.x), this._position.y && (a = this._position.y));
-    var f = "translate(" + b + "," + a + ")";
-    this.set({x:b, y:a});
+    this._position && (this._position.x && (a = this._position.x), this._position.y && (c = this._position.y));
+    var f = "translate(" + a + "," + c + ")";
+    this.set({x:a, y:c});
     d ? e.animate({transform:f}, 300, mina.easeinout) : e.attr({transform:f});
   };
   a.calcHeight = function() {
-    var b = this._thread.view.requestPartHeight(null);
-    this.set({height:b});
+    var a = this._thread.view.requestPartHeight(null);
+    this.set({height:a});
   };
   a.getValue = function() {
     return this.block.statements[this._index];
   };
   a.requestAbsoluteCoordinate = function() {
-    var b = this._blockView.getAbsoluteCoordinate();
-    b.x += this.x;
-    b.y += this.y;
-    return b;
+    var a = this._blockView.getAbsoluteCoordinate();
+    a.x += this.x;
+    a.y += this.y;
+    return a;
   };
   a.dominate = function() {
     this._blockView.dominate();
@@ -14983,27 +14950,27 @@ Entry.FieldStatement = function(a, b, c) {
   a._updateBG = function() {
     if (this._board.dragBlock && this._board.dragBlock.dragInstance) {
       if (this.magneting) {
-        var b = this._board.dragBlock.getShadow();
-        $(b).attr({transform:"translate(0,0)"});
-        this.svgGroup.appendChild(b);
-        this._clonedShadow = b;
+        var a = this._board.dragBlock.getShadow();
+        $(a).attr({transform:"translate(0,0)"});
+        this.svgGroup.appendChild(a);
+        this._clonedShadow = a;
         this.background && (this.background.remove(), this.nextBackground.remove(), delete this.background, delete this.nextBackground);
-        b = this._board.dragBlock.getBelowHeight();
-        this.statementSvgGroup.attr({transform:"translate(0," + b + ")"});
-        this.set({height:this.height + b});
+        a = this._board.dragBlock.getBelowHeight();
+        this.statementSvgGroup.attr({transform:"translate(0," + a + ")"});
+        this.set({height:this.height + a});
       } else {
-        this._clonedShadow && (this._clonedShadow.remove(), delete this._clonedShadow), b = this.originalHeight, void 0 !== b && (this.background && (this.background.remove(), this.nextBackground.remove(), delete this.background, delete this.nextBackground), delete this.originalHeight), this.statementSvgGroup.attr({transform:"translate(0,0)"}), this.calcHeight();
+        this._clonedShadow && (this._clonedShadow.remove(), delete this._clonedShadow), a = this.originalHeight, void 0 !== a && (this.background && (this.background.remove(), this.nextBackground.remove(), delete this.background, delete this.nextBackground), delete this.originalHeight), this.statementSvgGroup.attr({transform:"translate(0,0)"}), this.calcHeight();
       }
-      (b = this.block.thread.changeEvent) && b.notify();
+      (a = this.block.thread.changeEvent) && a.notify();
     }
   };
-  a.insertTopBlock = function(b) {
+  a.insertTopBlock = function(a) {
     this._posObserver && this._posObserver.destroy();
-    var a = this.firstBlock;
-    b.doInsert(this._thread);
-    this.firstBlock = b;
-    this._posObserver = b.view.observe(this, "removeFirstBlock", ["x", "y"], !1);
-    return a;
+    var c = this.firstBlock;
+    a.doInsert(this._thread);
+    this.firstBlock = a;
+    this._posObserver = a.view.observe(this, "removeFirstBlock", ["x", "y"], !1);
+    return c;
   };
   a.removeFirstBlock = function() {
     this._posObserver && this._posObserver.destroy();
