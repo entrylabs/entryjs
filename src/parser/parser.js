@@ -58,7 +58,7 @@ Entry.Parser = function(mode, syntax, cm) {
         case "block":
             this._parser = new Entry.BlockParser(this.syntax);
             break;
-        case "blockPython":
+        case "blockPy":
             this._parser = new Entry.PythonBlockParser(this.syntax);
             break;
     }
@@ -124,8 +124,7 @@ Entry.Parser = function(mode, syntax, cm) {
 
                 break;
 
-            case "blockPython":
-                console.log("block py code", code);
+            case "blockPy":
                 var textCode = this._parser.Code(code);
                 var textArr = textCode.match(/(.*{.*[\S|\s]+?}|.+)/g);
                 if(Array.isArray(textArr)) {

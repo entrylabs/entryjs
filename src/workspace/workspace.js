@@ -74,6 +74,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
 
     p.setMode = function(mode, type){
         mode = Number(mode);
+        console.log("mode", mode, "type", type);
         this.mode = mode;
         this.type = type;
         switch (mode) {

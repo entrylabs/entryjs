@@ -54,7 +54,7 @@ Blockly.Blocks.repeat_basic = {
         this.setPreviousStatement(true);
         this.setNextStatement(true);
     },
-    syntax: {js: [], py: ["if (%1) {\n$1\n}"]}
+    syntax: {js: [], py: ["for (i=0; i<%1; i++)\n{\n$1\n}"]}
 };
 
 Entry.block.repeat_basic = function (sprite, script) {
@@ -87,7 +87,7 @@ Blockly.Blocks.repeat_inf = {
         this.setPreviousStatement(true);
         this.setNextStatement(true);
     },
-    syntax: {js: [], py: ["while (true) {\n$1\n}"]}
+    syntax: {js: [], py: ["while {\n$1\n}"]}
 };
 
 Entry.block.repeat_inf = function (sprite, script) {
@@ -107,7 +107,7 @@ Blockly.Blocks.stop_repeat = {
     this.setPreviousStatement(true);
     this.setNextStatement(true);
   },
-  syntax: {js: [], py: [""]}
+  syntax: {js: [], py: ["break"]}
 };
 
 Entry.block.stop_repeat = function (sprite, script) {
@@ -206,7 +206,7 @@ Blockly.Blocks.if_else = {
         this.setPreviousStatement(true);
         this.setNextStatement(true);
     },
-    syntax: {js: [], py: [""]}
+    syntax: {js: [], py: ["if (%1) {\n$1\n}\n else (%1) {\n$1\n}"]}
 };
 
 Entry.block.if_else = function (sprite, script) {
@@ -339,7 +339,7 @@ Blockly.Blocks.repeat_while_true = {
             this.setNextStatement(true);
         }
     },
-    syntax: {js: [], py: [""]}
+    syntax: {js: [], py: ["while ((%1) == true) {\n$1\n}"]}
 };
 
 Entry.block.repeat_while_true = function (sprite, script) {

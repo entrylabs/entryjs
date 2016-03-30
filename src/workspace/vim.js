@@ -18,7 +18,7 @@ Entry.Vim = function(dom, mode) {
 
     this._jsParser = new Entry.Parser("ws", "js", this.codeMirror);
     this._jsBlockParser = new Entry.Parser("ws", "block");
-    this._pythonBlockParser = new Entry.Parser("ws", "blockPython");
+    this._pythonBlockParser = new Entry.Parser("ws", "blockPy");
 
 
     Entry.Model(this, false);
@@ -114,7 +114,7 @@ Entry.Vim = function(dom, mode) {
         var type = this.workspace.type;
         var parser;
         if (type === 'js') parser = this._jsBlockParser;
-        else if(type === 'python') parser = this._pythonBlockParser;
+        else if(type === 'py') parser = this._pythonBlockParser;
 
         var textCode = parser.parse(code);
         this.codeMirror.setValue(textCode);
@@ -125,7 +125,7 @@ Entry.Vim = function(dom, mode) {
         var type = this.workspace.type;
         var parser;
         if (type === 'js') parser = this._jsBlockParser;
-        else if(type === 'python') parser = this._pythonBlockParser;
+        else if(type === 'py') parser = this._pythonBlockParser;
 
         var textCode = parser.parse(code);
         return textCode;

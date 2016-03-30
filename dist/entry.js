@@ -1692,7 +1692,7 @@ Blockly.Blocks.repeat_basic = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["if (%1) {\n$1\n}"]}};
+}, syntax:{js:[], py:["for (i=0; i<%1; i++)\n{\n$1\n}"]}};
 Entry.block.repeat_basic = function(a, b) {
   var c;
   if (!b.isLooped) {
@@ -1716,7 +1716,7 @@ Blockly.Blocks.repeat_inf = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["while (true) {\n$1\n}"]}};
+}, syntax:{js:[], py:["while {\n$1\n}"]}};
 Entry.block.repeat_inf = function(a, b) {
   b.isLooped = !0;
   return b.getStatement("DO");
@@ -1727,7 +1727,7 @@ Blockly.Blocks.stop_repeat = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:[""]}};
+}, syntax:{js:[], py:["break"]}};
 Entry.block.stop_repeat = function(a, b) {
   for (var c = b;"REPEAT" != c.type.substr(0, 6).toUpperCase() && c.parentScript;) {
     c = c.parentScript, delete c.isLooped, delete c.iterCount;
@@ -1771,7 +1771,7 @@ Blockly.Blocks.if_else = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:[""]}};
+}, syntax:{js:[], py:["if (%1) {\n$1\n}\n else (%1) {\n$1\n}"]}};
 Entry.block.if_else = function(a, b) {
   if (b.isLooped) {
     return delete b.isLooped, b.callReturn();
@@ -1833,7 +1833,7 @@ Blockly.Blocks.repeat_while_true = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:[""]}};
+}, syntax:{js:[], py:["while ((%1) == true) {\n$1\n}"]}};
 Entry.block.repeat_while_true = function(a, b) {
   var c = b.getBooleanValue("BOOL", b);
   "until" == b.getField("OPTION", b) && (c = !c);
@@ -8504,26 +8504,44 @@ Entry.PythonBlockParser = function(a) {
     var a = "";
     b = b.getBlocks();
     for (var d = 0;d < b.length;d++) {
-      a += this.Block(b[d]);
+      var e = b[d];
+      console.log("threadblock", e);
+      a += this.Block(e);
     }
     return a;
   };
   a.Block = function(b) {
-    console.log("block.params", b.params);
     var a = b._schema.syntax;
     if (!a) {
       return "";
     }
-    for (var a = b._schema.syntax.py[0], d = /(%\d)/mi, a = a.split(d), e = b._schema.params, f = "", g = 0;g < a.length;g++) {
-      var h = a[g];
-      0 !== h.length && (d.test(h) ? (h = Number(h.split("%")[1]) - 1, console.log("type", e[h].type), f += this["Field" + e[h].type](b.params[h])) : f += h);
+    for (var a = b._schema.syntax.py[0], d = /(%\d)/mi, e = /(\$\d)/mi, a = a.split(d), f = b._schema.params, g = "", h = 0;h < a.length;h++) {
+      var k = a[h];
+      if (0 !== k.length) {
+        if (d.test(k)) {
+          var m = Number(k.split("%")[1]) - 1, g = g + this["Field" + f[m].type](b.params[m])
+        } else {
+          if (e.test(k)) {
+            k = k.split(e);
+            console.log("stokens", k);
+            for (var n = 0;n < k.length;n++) {
+              m = k[n], console.log("token2", m), 0 !== m.length && (e.test(m) ? (console.log("in!!!"), m = Number(m.split("$")[1]) - 1, console.log("block.statement", b.statements[m]), g += this.Thread(b.statements[m])) : g += m);
+            }
+          } else {
+            g += k;
+          }
+        }
+      }
     }
-    return f;
+    return g;
   };
   a.FieldBlock = function(b) {
     return this.Block(b);
   };
   a.FieldIndicator = function(b) {
+    return this.Block(b);
+  };
+  a.FieldTextInput = function(b) {
     return this.Block(b);
   };
 })(Entry.PythonBlockParser.prototype);
@@ -8809,7 +8827,7 @@ Entry.Parser = function(a, b, c) {
     case "block":
       this._parser = new Entry.BlockParser(this.syntax);
       break;
-    case "blockPython":
+    case "blockPy":
       this._parser = new Entry.PythonBlockParser(this.syntax);
   }
 };
@@ -8834,8 +8852,8 @@ Entry.Parser = function(a, b, c) {
           return d + "\n";
         }) : "";
         break;
-      case "blockPython":
-        console.log("block py code", b), b = this._parser.Code(b), b = b.match(/(.*{.*[\S|\s]+?}|.+)/g), a = Array.isArray(b) ? b.reduce(function(b, a, c) {
+      case "blockPy":
+        b = this._parser.Code(b), b = b.match(/(.*{.*[\S|\s]+?}|.+)/g), a = Array.isArray(b) ? b.reduce(function(b, a, c) {
           var d = "";
           1 === c && (b += "\n");
           d = -1 < a.indexOf("function") ? a + b : b + a;
@@ -15121,8 +15139,8 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
     });
     this.optionGroup = Entry.Dom("input", {class:"entry-widget-input-field", parent:$("body")});
     this.optionGroup.val(this.getValue());
-    this.optionGroup.on("mousedown", function(a) {
-      a.stopPropagation();
+    this.optionGroup.on("mousedown", function(b) {
+      b.stopPropagation();
     });
     this.optionGroup.on("keyup", function(a) {
       var c = a.keyCode || a.which;
@@ -16434,7 +16452,7 @@ Entry.Vim = function(a, b) {
   this.createDom(a);
   this._jsParser = new Entry.Parser("ws", "js", this.codeMirror);
   this._jsBlockParser = new Entry.Parser("ws", "block");
-  this._pythonBlockParser = new Entry.Parser("ws", "blockPython");
+  this._pythonBlockParser = new Entry.Parser("ws", "blockPy");
   Entry.Model(this, !1);
   window.eventset = [];
 };
@@ -16485,13 +16503,13 @@ Entry.Vim = function(a, b) {
   };
   a.codeToText = function(a) {
     var c = this.workspace.type, d;
-    "js" === c ? d = this._jsBlockParser : "python" === c && (d = this._pythonBlockParser);
+    "js" === c ? d = this._jsBlockParser : "py" === c && (d = this._pythonBlockParser);
     a = d.parse(a);
     this.codeMirror.setValue(a);
   };
   a.getCodeToText = function(a) {
     var c = this.workspace.type, d;
-    "js" === c ? d = this._jsBlockParser : "python" === c && (d = this._pythonBlockParser);
+    "js" === c ? d = this._jsBlockParser : "py" === c && (d = this._pythonBlockParser);
     return d.parse(a);
   };
 })(Entry.Vim.prototype);
@@ -16533,7 +16551,9 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
     return this.mode;
   };
   a.setMode = function(a, c) {
-    this.mode = a = Number(a);
+    a = Number(a);
+    console.log("mode", a, "type", c);
+    this.mode = a;
     this.type = c;
     switch(a) {
       case Entry.Workspace.MODE_VIMBOARD:
