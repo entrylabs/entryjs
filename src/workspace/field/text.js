@@ -12,6 +12,7 @@ goog.require("Entry.Field");
  */
 Entry.FieldText = function(content, blockView, index) {
     this._block = blockView.block;
+    this._blockView = blockView;
     this._index = index;
 
     var box = new Entry.BoxModel();
@@ -30,7 +31,9 @@ Entry.FieldText = function(content, blockView, index) {
 Entry.Utils.inherit(Entry.Field, Entry.FieldText);
 
 (function(p) {
-    p.renderStart = function(blockView) {
+    p.renderStart = function() {
+        if (this.svgGroup) $(this.svgGroup).remove();
+        var blockView = this._blockView;
         var that = this;
 
         this.svgGroup = blockView.contentSvgGroup.elem("g");
