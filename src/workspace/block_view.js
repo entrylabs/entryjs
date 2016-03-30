@@ -893,7 +893,10 @@ Entry.BlockView.DRAG_RADIUS = 5;
             fillColor = Entry.Utils.colorLighten(fillColor);
         this._path.attr({fill:fillColor});
         //update block inner images
-        this._startContentRender(this.getBoard().workspace.getMode());
+
+        for (var i=0; i<this._contents.length; i++)
+            this._contents[i].renderStart();
+        this.alignContent(false);
     };
 
     p._destroyObservers = function() {

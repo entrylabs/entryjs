@@ -10,6 +10,7 @@ goog.require("Entry.Field");
  */
 Entry.FieldDropdown = function(content, blockView, index) {
     this._block = blockView.block;
+    this._blockView = blockView;
 
     var box = new Entry.BoxModel();
     this.box = box;
@@ -28,14 +29,16 @@ Entry.FieldDropdown = function(content, blockView, index) {
 
     this._ROUND = content.roundValue || 0;
 
-    this.renderStart(blockView);
+    this.renderStart();
 };
 
 Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
 
 (function(p) {
 
-    p.renderStart = function(blockView) {
+    p.renderStart = function() {
+        if (this.svgGroup) $(this.svgGroup).remove();
+        var blockView = this._blockView;
         var X_PADDING = 18;
         var that = this;
         var contents = this._contents;

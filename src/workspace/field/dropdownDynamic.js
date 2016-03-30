@@ -10,6 +10,7 @@ goog.require("Entry.FieldDropdown");
  */
 Entry.FieldDropdownDynamic = function(content, blockView, index) {
     this._block = blockView.block;
+    this._blockView = blockView;
 
     var box = new Entry.BoxModel();
     this.box = box;
