@@ -15362,9 +15362,8 @@ Entry.Board = function(a) {
   var c = this;
   this.svg = Entry.SVG(this._svgId);
   $(window).scroll(function() {
-    c.updateOffset;
+    c.updateOffset();
   });
-  Entry.windowResized.attach(this, this.updateOffset);
   this._blockViews = [];
   this._magnetMap = null;
   this.svgGroup = this.svg.elem("g");
@@ -15373,15 +15372,16 @@ Entry.Board = function(a) {
   this.svgBlockGroup = this.svgGroup.elem("g");
   this.svgBlockGroup.board = this;
   a.isOverlay && (this.wrapper.addClass("entryOverlayBoard"), this.generateButtons());
-  this.updateOffset();
   Entry.ANIMATION_DURATION = 200;
   Entry.BOARD_PADDING = 100;
+  this.updateOffset();
   this.changeEvent = new Entry.Event(this);
   this.scroller = new Entry.Scroller(this, !0, !0);
   Entry.Utils.disableContextmenu(this.svgDom);
   this._addControl();
   Entry.documentMousedown && Entry.documentMousedown.attach(this, this.setSelectedBlock);
   Entry.keyPressed && Entry.keyPressed.attach(this, this._keyboardControl);
+  Entry.windowResized && Entry.windowResized.attach(this, this.updateOffset);
   this.observe(this, "generateCodeMagnetMap", ["dragBlock"], !1);
 };
 (function(a) {
