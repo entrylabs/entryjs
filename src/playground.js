@@ -32,7 +32,8 @@ Entry.Playground = function() {
 }
 
 Entry.Playground.prototype.setMode = function(mode) {
-    console.log("mode", mode);
+    this.boardType = mode.boardType;
+    this.textType = mode.textType;
     this.mainWorkspace.setMode(mode.boardType, mode.textType);
 }
 
