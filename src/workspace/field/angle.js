@@ -10,6 +10,7 @@ goog.require("Entry.Field");
  */
 Entry.FieldAngle = function(content, blockView, index) {
     this._block = blockView.block;
+    this._blockView = blockView;
 
     var box = new Entry.BoxModel();
     this.box = box;
@@ -21,7 +22,7 @@ Entry.FieldAngle = function(content, blockView, index) {
     this._index = index;
     this.setValue(this.modValue(this.getValue()));
 
-    this.renderStart(blockView);
+    this.renderStart();
 };
 
 Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
@@ -34,7 +35,9 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
         RADIUS = 49,
         FILL_PATH = 'M 0, 0 v -49 A 49,49 0 %LARGE 1 %X,%Y z';
 
-    p.renderStart = function(blockView) {
+    p.renderStart = function() {
+        if (this.svgGroup) $(this.svgGroup).remove();
+        var blockView = this._blockView;
         var that = this;
         var contents = this._contents;
 

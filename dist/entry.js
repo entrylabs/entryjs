@@ -13922,7 +13922,10 @@ Entry.BlockView.DRAG_RADIUS = 5;
     var b = this._schema.color;
     this.block.isDeletable() || (b = Entry.Utils.colorLighten(b));
     this._path.attr({fill:b});
-    this._startContentRender(this.getBoard().workspace.getMode());
+    for (b = 0;b < this._contents.length;b++) {
+      this._contents[b].renderStart();
+    }
+    this.alignContent(!1);
   };
   a._destroyObservers = function() {
     for (var b = this._observers;b.length;) {
@@ -14241,30 +14244,31 @@ Entry.Field = function() {
 })(Entry.Field.prototype);
 Entry.FieldAngle = function(a, b, c) {
   this._block = b.block;
+  this._blockView = b;
   this.box = new Entry.BoxModel;
   this.svgGroup = null;
   this.position = a.position;
   this._contents = a;
   this._index = c;
   this.setValue(this.modValue(this.getValue()));
-  this.renderStart(b);
+  this.renderStart();
 };
 Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
 (function(a) {
-  a.renderStart = function(b) {
-    var a = this;
-    this.svgGroup = b.contentSvgGroup.group();
+  a.renderStart = function() {
+    this.svgGroup && $(this.svgGroup).remove();
+    var b = this;
+    this.svgGroup = this._blockView.contentSvgGroup.group();
     this.svgGroup.attr({class:"entry-input-field"});
-    this.textElement = this.svgGroup.text(4, 4, a.getText());
+    this.textElement = this.svgGroup.text(4, 4, b.getText());
     this.textElement.attr({"font-size":"9pt"});
-    b = this.getTextWidth();
-    var d = this.position && this.position.y ? this.position.y : 0;
-    this._header = this.svgGroup.rect(0, d - 8, b, 16, 3).attr({fill:"#fff", "fill-opacity":.4});
+    var a = this.getTextWidth(), d = this.position && this.position.y ? this.position.y : 0;
+    this._header = this.svgGroup.rect(0, d - 8, a, 16, 3).attr({fill:"#fff", "fill-opacity":.4});
     this.svgGroup.append(this.textElement);
-    this.svgGroup.mouseup(function(b) {
-      a._isEditable() && a.renderOptions();
+    this.svgGroup.mouseup(function(a) {
+      b._isEditable() && b.renderOptions();
     });
-    this.box.set({x:0, y:0, width:b, height:16});
+    this.box.set({x:0, y:0, width:a, height:16});
   };
   a.renderOptions = function() {
     var b = this;
@@ -14551,6 +14555,7 @@ Entry.FieldColor.getWidgetColorList = function() {
 };
 Entry.FieldDropdown = function(a, b, c) {
   this._block = b.block;
+  this._blockView = b;
   this.box = new Entry.BoxModel;
   this.svgGroup = null;
   this._contents = a;
@@ -14563,7 +14568,9 @@ Entry.FieldDropdown = function(a, b, c) {
 };
 Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
 (function(a) {
-  a.renderStart = function(b) {
+  a.renderStart = function() {
+    this.svgGroup && $(this.svgGroup).remove();
+    var b = this._blockView;
     this.svgGroup = b.contentSvgGroup.elem("g", {class:"entry-field-dropdown"});
     this.textElement = this.svgGroup.elem("text", {x:2});
     this.textElement.textContent = this.getTextByValue(this.getValue());
@@ -14678,10 +14685,11 @@ Entry.Utils.inherit(Entry.FieldDropdown, Entry.FieldDropdownDynamic);
   };
 })(Entry.FieldDropdownDynamic.prototype);
 Entry.FieldImage = function(a, b, c) {
-  this._block = b;
+  this._block = b.block;
+  this._blockView = b;
+  this._content = a;
   this.box = new Entry.BoxModel;
   this._size = a.size;
-  b.block.isDeletable() ? this._imgUrl = a.img : this._imgUrl = a.img.replace(".png", "_un.png");
   this._highlightColor = a.highlightColor ? a.highlightColor : "#F59900";
   this._position = a.position;
   this._imgElement = this._path = this.svgGroup = null;
@@ -14691,7 +14699,9 @@ Entry.FieldImage = function(a, b, c) {
 Entry.Utils.inherit(Entry.Field, Entry.FieldImage);
 (function(a) {
   a.renderStart = function() {
-    this.svgGroup = this._block.contentSvgGroup.elem("g");
+    this.svgGroup && this.svgGroup.remove();
+    this._block.isDeletable() ? this._imgUrl = this._content.img : this._imgUrl = this._content.img.replace(".png", "_un.png");
+    this.svgGroup = this._blockView.contentSvgGroup.elem("g");
     this._imgElement = this.svgGroup.elem("image", {href:this._imgUrl, x:0, y:-.5 * this._size, width:this._size, height:this._size});
     this.box.set({x:this._size, y:0, width:this._size, height:this._size});
   };
@@ -15005,6 +15015,7 @@ Entry.FieldStatement = function(a, b, c) {
 })(Entry.FieldStatement.prototype);
 Entry.FieldText = function(a, b, c) {
   this._block = b.block;
+  this._blockView = b;
   this._index = c;
   this.box = new Entry.BoxModel;
   this._fontSize = a.fontSize || b.getSkeleton().fontSize || 12;
@@ -15016,16 +15027,16 @@ Entry.FieldText = function(a, b, c) {
 };
 Entry.Utils.inherit(Entry.Field, Entry.FieldText);
 (function(a) {
-  a.renderStart = function(a) {
-    this.svgGroup = a.contentSvgGroup.elem("g");
+  a.renderStart = function() {
+    this.svgGroup && $(this.svgGroup).remove();
+    this.svgGroup = this._blockView.contentSvgGroup.elem("g");
     this._text = this._text.replace(/(\r\n|\n|\r)/gm, " ");
     this.textElement = this.svgGroup.elem("text").attr({style:"white-space: pre; font-size:" + this._fontSize + "px", "class":"dragNone", fill:this._color});
     this.textElement.textContent = this._text;
-    a = 0;
-    var c = this.textElement.getBBox();
-    "center" == this._align && (a = -c.width / 2);
-    this.textElement.attr({x:a, y:.25 * c.height});
-    this.box.set({x:0, y:0, width:this.textElement.getComputedTextLength(), height:c.height});
+    var b = 0, a = this.textElement.getBBox();
+    "center" == this._align && (b = -a.width / 2);
+    this.textElement.attr({x:b, y:.25 * a.height});
+    this.box.set({x:0, y:0, width:this.textElement.getComputedTextLength(), height:a.height});
   };
 })(Entry.FieldText.prototype);
 Entry.FieldTextInput = function(a, b, c) {
