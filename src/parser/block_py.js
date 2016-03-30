@@ -43,7 +43,7 @@ Entry.PyBlockParser = function(syntax) {
         return code;
     };
 
-    p.Block = function(block) { 
+    p.Block = function(block) {
         if(!block._schema || !block._schema.syntax)
             return "";
         var syntax = block._schema.syntax.py[0];
@@ -61,19 +61,20 @@ Entry.PyBlockParser = function(syntax) {
                 var paramIndex = Number(token.split('%')[1]) - 1;
                 result += this['Field' + schemaParams[paramIndex].type](
                     block.params[paramIndex], schemaParams[paramIndex]);
-            } 
+            }
             else if (sreg.test(token)) {
                 var stokens = token.split(sreg);
-            
+
                 for (var j=0; j<stokens.length; j++) {
                     var token2 = stokens[j];
                     if (token2.length === 0) continue;
                     if (sreg.test(token2)) {
                         var paramIndex = Number(token2.split('$')[1]) - 1;
-                        result += this.Thread(block.statements[paramIndex]);
-                        
-                    } else
-                    result += token2;
+                        //result += this.indent(this.Thread(block.statements[paramIndex]));
+                        var a = this.Thread(block.statements[paramIndex]);
+                        result += a;
+                        console.log(a);
+                    } else result += token2;
                 }
             }
             else
@@ -85,19 +86,19 @@ Entry.PyBlockParser = function(syntax) {
 
     p.FieldAngle = function(param) {
         console.log("FieldAngle", param);
-        
+
         return this.Block(param);
     };
 
     p.FieldBlock = function(param) {
         console.log("FieldBlock", param);
-       
+
         return this.Block(param);
     };
 
     p.FieldColor = function(param) {
         console.log("FieldColor", param);
-        
+
         return param;
     };
 
@@ -149,6 +150,15 @@ Entry.PyBlockParser = function(syntax) {
     p.FieldTextInput = function(param) {
         console.log("FieldTextInput", param);
         return param;
+    };
+
+    p.indent = function(textCode) {
+        var result = "    ";
+        var indentedCode = textCode.split("\n");
+        indentedCode.pop();
+        result += indentedCode.join("\n    ") + "\n";
+        debugger;
+        return result;
     };
 
 })(Entry.PyBlockParser.prototype);

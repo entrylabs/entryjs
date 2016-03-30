@@ -1631,7 +1631,7 @@ Blockly.Blocks.quotient_and_mod = {init:function() {
   this.appendDummyInput().appendField(Lang.Blocks.CALC_quotient_and_mod_4, calcFontColor);
   this.setOutput(!0, "Number");
   this.setInputsInline(!0);
-}, syntax:{js:[], py:["Entry.getQuotient(%1, %2)"]}};
+}, syntax:{js:[], py:['Entry.getQuotientandRemainder(%1, %2, "%3")']}};
 Entry.block.quotient_and_mod = function(a, b) {
   var c = b.getNumberValue("LEFTHAND", b), d = b.getNumberValue("RIGHTHAND", b);
   if (isNaN(c) || isNaN(d)) {
@@ -8521,7 +8521,7 @@ Entry.PyBlockParser = function(a) {
         } else {
           if (d.test(k)) {
             for (var k = k.split(d), n = 0;n < k.length;n++) {
-              m = k[n], 0 !== m.length && (d.test(m) ? (m = Number(m.split("$")[1]) - 1, g += this.Thread(b.statements[m])) : g += m);
+              m = k[n], 0 !== m.length && (d.test(m) ? (m = Number(m.split("$")[1]) - 1, m = this.Thread(b.statements[m]), g += m, console.log(m)) : g += m);
             }
           } else {
             g += k;
@@ -8582,6 +8582,14 @@ Entry.PyBlockParser = function(a) {
   a.FieldTextInput = function(b) {
     console.log("FieldTextInput", b);
     return b;
+  };
+  a.indent = function(b) {
+    var a = "    ";
+    b = b.split("\n");
+    b.pop();
+    a += b.join("\n    ") + "\n";
+    debugger;
+    return a;
   };
 })(Entry.PyBlockParser.prototype);
 Entry.JSParser = function(a) {
