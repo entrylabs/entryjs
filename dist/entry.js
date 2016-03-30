@@ -14531,7 +14531,7 @@ Entry.FieldDropdown = function(a, b, c) {
   this._CONTENT_HEIGHT = a.dropdownHeight || b.getSkeleton().dropdownHeight || 16;
   this._FONT_SIZE = a.fontSize || b.getSkeleton().fontSize || 12;
   this._ROUND = a.roundValue || 0;
-  this.renderStart(b);
+  this.renderStart();
 };
 Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
 (function(a) {
@@ -14604,6 +14604,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
 })(Entry.FieldDropdown.prototype);
 Entry.FieldDropdownDynamic = function(a, b, c) {
   this._block = b.block;
+  this._blockView = b;
   this.box = new Entry.BoxModel;
   this.svgGroup = null;
   this._contents = a;
@@ -15000,10 +15001,10 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldText);
     this._text = this._text.replace(/(\r\n|\n|\r)/gm, " ");
     this.textElement = this.svgGroup.elem("text").attr({style:"white-space: pre; font-size:" + this._fontSize + "px", "class":"dragNone", fill:this._color});
     this.textElement.textContent = this._text;
-    var b = 0, a = this.textElement.getBBox();
-    "center" == this._align && (b = -a.width / 2);
-    this.textElement.attr({x:b, y:.25 * a.height});
-    this.box.set({x:0, y:0, width:this.textElement.getComputedTextLength(), height:a.height});
+    var a = 0, c = this.textElement.getBBox();
+    "center" == this._align && (a = -c.width / 2);
+    this.textElement.attr({x:a, y:.25 * c.height});
+    this.box.set({x:0, y:0, width:this.textElement.getComputedTextLength(), height:c.height});
   };
 })(Entry.FieldText.prototype);
 Entry.FieldTextInput = function(a, b, c) {
