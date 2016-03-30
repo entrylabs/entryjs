@@ -12,7 +12,8 @@ Blockly.Blocks.number = {
     .appendField(new Blockly.FieldTextInput(""), "NUM")
     this.setOutput(true, 'Number');
     this.setInputsInline(true);
-  }
+  },
+  syntax: {js: [], py: ["%1"]}
 };
 
 Entry.block.number = function (sprite, script) {
@@ -26,7 +27,8 @@ Blockly.Blocks.angle = {
     .appendField(new Blockly.FieldAngle("90"), "ANGLE");
     this.setOutput(true, 'Number');
     this.setInputsInline(true);
-  }
+  },
+  syntax: {js: [], py: ["%1"]}
 };
 
 Entry.block.angle = function (sprite, script) {
@@ -40,7 +42,8 @@ Blockly.Blocks.get_x_coordinate = {
         .appendField(Lang.Blocks.CALC_get_x_coordinate, calcFontColor);
     this.setOutput(true, 'Number');
     this.setInputsInline(true);
-  }
+  },
+  syntax: {js: [], py: ["Entry.getX()"]}
 };
 
 Entry.block.get_x_coordinate = function (sprite, script) {
@@ -56,7 +59,8 @@ Blockly.Blocks.get_y_coordinate = {
         .appendField(Lang.Blocks.CALC_get_y_coordinate, calcFontColor);
     this.setOutput(true, 'Number');
     this.setInputsInline(true);
-  }
+  },
+  syntax: {js: [], py: ["Entry.getY()"]}
 };
 
 Entry.block.get_y_coordinate = function (sprite, script) {
@@ -72,7 +76,8 @@ Blockly.Blocks.get_angle = {
         .appendField(Lang.Blocks.CALC_get_angle, calcFontColor);
     this.setOutput(true, 'Number');
     this.setInputsInline(true);
-  }
+  },
+  syntax: {js: [], py: ["Entry.getAngle()"]}
 };
 
 Entry.block.get_angle = function (sprite, script) {
@@ -91,7 +96,8 @@ Blockly.Blocks.get_rotation_direction = {
         .appendField(" ");
     this.setOutput(true, 'Number');
     this.setInputsInline(true);
-  }
+  },
+  syntax: {js: [], py: ["Entry.getDirection()"]}
 };
 
 Entry.block.get_rotation_direction = function (sprite, script) {
@@ -112,7 +118,8 @@ Blockly.Blocks.distance_something = {
         .appendField(Lang.Blocks.CALC_distance_something_2, calcFontColor);
     this.setOutput(true, 'Number');
     this.setInputsInline(true);
-  }
+  },
+   syntax: {js: [], py: ["Entry.getAngle()"]}
 };
 
 Entry.block.distance_something = function (sprite, script) {
@@ -142,7 +149,8 @@ Blockly.Blocks.coordinate_mouse = {
     .appendField(Lang.Blocks.CALC_coordinate_mouse_2, calcFontColor);
     this.setOutput(true, 'Number');
     this.setInputsInline(true);
-  }
+  },
+  syntax: {js: [], py: ["Entry.getMouseCoordinate(\"%1\")"]}
 };
 
 Entry.block.coordinate_mouse = function (sprite, script) {
@@ -174,7 +182,8 @@ Blockly.Blocks.coordinate_object = {
         .appendField(Lang.Blocks.CALC_coordinate_object_3, calcFontColor)
     this.setOutput(true, 'Number');
     this.setInputsInline(true);
-  }
+  },
+  syntax: {js: [], py: ["Entry.getObjectCoordinate(\"%1\", \"%2\")"]}
 };
 
 Entry.block.coordinate_object = function (sprite, script) {
@@ -226,7 +235,8 @@ Blockly.Blocks.calc_basic = {
         .setCheck(["Number", "String"]);
     this.setOutput(true, 'Number');
     this.setInputsInline(true);
-  }
+  },
+   syntax: {js: [], py: ["%1 %2 %3"]}
 };
 
 Entry.block.calc_basic = function (sprite, script) {
@@ -473,7 +483,8 @@ Blockly.Blocks.calc_rand = {
     this.appendDummyInput("VALUE")
     .appendField(Lang.Blocks.CALC_calc_rand_3, calcFontColor);
     this.setInputsInline(true);
-  }
+  },
+  syntax: {js: [], py: ["random.randrange(%1, %2)"]}
 };
 
 Entry.block.calc_rand = function (sprite, script) {
@@ -542,6 +553,7 @@ Blockly.Blocks.get_sound_duration = {
     this.setOutput(true, 'Number');
     this.setInputsInline(true);
   }
+
 };
 
 Entry.block.get_sound_duration = function (sprite, script) {
@@ -846,7 +858,8 @@ Blockly.Blocks.get_sound_volume = {
         .appendField(' ', calcFontColor);
     this.setOutput(true, 'Number');
     this.setInputsInline(true);
-  }
+  },
+  syntax: {js: [], py: ["Entry.getSoundVolume()"]}
 };
 
 Entry.block.get_sound_volume = function (sprite, script) {
@@ -891,7 +904,8 @@ Blockly.Blocks.quotient_and_mod = {
         .appendField(Lang.Blocks.CALC_quotient_and_mod_4, calcFontColor);
     this.setOutput(true, 'Number');
     this.setInputsInline(true);
-  }
+  },
+  syntax: {js: [], py: ["Entry.getQuotientandRemainder(%1, %2, \"%3\"]"}
 };
 
 Entry.block.quotient_and_mod = function (sprite, script) {

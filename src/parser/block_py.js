@@ -38,18 +38,15 @@ Entry.PyBlockParser = function(syntax) {
 
         for (var i = 0; i < blocks.length; i++) {
             var block = blocks[i];
-            console.log("threadblock", block);
             code += this.Block(block);
         }
         return code;
     };
 
     p.Block = function(block) { 
-        var syntax = block._schema.syntax;
-        if (!syntax)
+        if(!block._schema || !block._schema.syntax)
             return "";
-
-        syntax = block._schema.syntax.py[0];
+        var syntax = block._schema.syntax.py[0];
         var breg = /(%\d)/mi;
         var sreg = /(\$\d)/mi;
         var btokens = syntax.split(breg);
@@ -62,20 +59,17 @@ Entry.PyBlockParser = function(syntax) {
             if (token.length === 0) continue;
             if (breg.test(token)) {
                 var paramIndex = Number(token.split('%')[1]) - 1;
-                result += this['Field' + schemaParams[paramIndex].type](block.params[paramIndex]);
+                result += this['Field' + schemaParams[paramIndex].type](
+                    block.params[paramIndex], schemaParams[paramIndex]);
             } 
             else if (sreg.test(token)) {
                 var stokens = token.split(sreg);
-                console.log("stokens", stokens);
-
+            
                 for (var j=0; j<stokens.length; j++) {
                     var token2 = stokens[j];
-                    console.log("token2", token2);
                     if (token2.length === 0) continue;
                     if (sreg.test(token2)) {
-                        console.log("in!!!");
                         var paramIndex = Number(token2.split('$')[1]) - 1;
-                        console.log("block.statement", block.statements[paramIndex]);
                         result += this.Thread(block.statements[paramIndex]);
                         
                     } else
@@ -89,19 +83,72 @@ Entry.PyBlockParser = function(syntax) {
         return result;
     };
 
-    p.FieldBlock = function(param) {
+    p.FieldAngle = function(param) {
+        console.log("FieldAngle", param);
         
         return this.Block(param);
     };
 
-    p.FieldIndicator = function(param) {
+    p.FieldBlock = function(param) {
+        console.log("FieldBlock", param);
        
         return this.Block(param);
     };
 
-    p.FieldTextInput = function(param) {
+    p.FieldColor = function(param) {
+        console.log("FieldColor", param);
         
+        return param;
+    };
+
+    p.FieldDropdown = function(param, schema) {
+        var value = param;
+        var options = schema.options;
+        for (var i=0, len=options.length; i<len; i++) {
+            var option = options[i];
+            if (option[1] == value)
+                return option[0];
+        }
+        return param;
+    };
+
+    p.FieldDropdownDynamic = function(param, schema) {
+        return param;
+    };
+
+    p.FieldImage = function(param) {
+        console.log("FieldImage", param);
         return this.Block(param);
-    }
+    };
+
+    p.FieldIndicator = function(param) {
+        console.log("FieldIndicator", param);
+        return this.Block(param);
+    };
+
+    p.FieldKeyboardInput = function(param) {
+        console.log("FieldKeyboardInput", param);
+        return this.Block(param);
+    };
+
+    p.FieldOutput = function(param) {
+        console.log("FieldOutput", param);
+        return this.Block(param);
+    };
+
+    p.FieldStatement = function(param) {
+        console.log("FieldStatement", param);
+        return this.Block(param);
+    };
+
+    p.FieldText = function(param) {
+        console.log("FieldText", param);
+        return this.Block(param);
+    };
+
+    p.FieldTextInput = function(param) {
+        console.log("FieldTextInput", param);
+        return param;
+    };
 
 })(Entry.PyBlockParser.prototype);

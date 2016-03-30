@@ -994,7 +994,7 @@ Blockly.Blocks.start_drawing = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}};
+}, syntax:{js:[], py:["self.startDrawing()"]}};
 Entry.block.start_drawing = function(a, b) {
   a.brush ? a.brush.stop = !1 : Entry.setBasicBrush(a);
   Entry.stage.sortZorder();
@@ -1007,7 +1007,7 @@ Blockly.Blocks.stop_drawing = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}};
+}, syntax:{js:[], py:["self.stopDrawing()"]}};
 Entry.block.stop_drawing = function(a, b) {
   a.brush && a.shape && (a.brush.stop = !0);
   return b.callReturn();
@@ -1020,7 +1020,7 @@ Blockly.Blocks.set_color = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}};
+}, syntax:{js:[], py:["self.setBrushColor(%1)"]}};
 Entry.block.set_color = function(a, b) {
   var c = b.getField("VALUE", b);
   a.brush || (Entry.setBasicBrush(a), a.brush.stop = !0);
@@ -1033,7 +1033,7 @@ Blockly.Blocks.set_random_color = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}};
+}, syntax:{js:[], py:["self.setBrushRandomColor()"]}};
 Entry.block.set_random_color = function(a, b) {
   a.brush || (Entry.setBasicBrush(a), a.brush.stop = !0);
   if (a.brush) {
@@ -1053,7 +1053,7 @@ Blockly.Blocks.change_thickness = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}};
+}, syntax:{js:[], py:["self.changeBrushThickness(%1)"]}};
 Entry.block.change_thickness = function(a, b) {
   var c = b.getNumberValue("VALUE", b);
   a.brush || (Entry.setBasicBrush(a), a.brush.stop = !0);
@@ -1068,7 +1068,7 @@ Blockly.Blocks.set_thickness = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}};
+}, syntax:{js:[], py:["self.setBrushThickness(%1)"]}};
 Entry.block.set_thickness = function(a, b) {
   var c = b.getNumberValue("VALUE", b);
   a.brush || (Entry.setBasicBrush(a), a.brush.stop = !0);
@@ -1083,7 +1083,7 @@ Blockly.Blocks.change_opacity = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}};
+}, syntax:{js:[], py:["self.changeBrushOpacity(%1)"]}};
 Entry.block.change_opacity = function(a, b) {
   var c = b.getNumberValue("VALUE", b);
   a.brush || (Entry.setBasicBrush(a), a.brush.stop = !0);
@@ -1099,7 +1099,7 @@ Blockly.Blocks.set_opacity = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}};
+}, syntax:{js:[], py:["self.setBrushOpacity(%1)"]}};
 Entry.block.set_opacity = function(a, b) {
   var c = b.getNumberValue("VALUE", b);
   a.brush || (Entry.setBasicBrush(a), a.brush.stop = !0);
@@ -1112,7 +1112,7 @@ Blockly.Blocks.brush_erase_all = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}};
+}, syntax:{js:[], py:["self.eraseAllBrush()"]}};
 Entry.block.brush_erase_all = function(a, b) {
   var c = a.brush;
   if (c) {
@@ -1133,7 +1133,7 @@ Blockly.Blocks.brush_stamp = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}};
+}, syntax:{js:[], py:["self.stamp()"]}};
 Entry.block.brush_stamp = function(a, b) {
   a.parent.addStampEntity(a);
   return b.callReturn();
@@ -1146,7 +1146,7 @@ Blockly.Blocks.change_brush_transparency = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}};
+}, syntax:{js:[], py:["self.changeBrushTransparency(%1)"]}};
 Entry.block.change_brush_transparency = function(a, b) {
   var c = b.getNumberValue("VALUE", b);
   a.brush || (Entry.setBasicBrush(a), a.brush.stop = !0);
@@ -1162,7 +1162,7 @@ Blockly.Blocks.set_brush_tranparency = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}};
+}, syntax:{js:[], py:["self.setBrushTransparency(%1)"]}};
 Entry.block.set_brush_tranparency = function(a, b) {
   var c = b.getNumberValue("VALUE", b);
   a.brush || (Entry.setBasicBrush(a), a.brush.stop = !0);
@@ -1175,7 +1175,7 @@ Blockly.Blocks.number = {init:function() {
   this.appendDummyInput().appendField(new Blockly.FieldTextInput(""), "NUM");
   this.setOutput(!0, "Number");
   this.setInputsInline(!0);
-}};
+}, syntax:{js:[], py:["%1"]}};
 Entry.block.number = function(a, b) {
   return b.getField("NUM");
 };
@@ -1184,7 +1184,7 @@ Blockly.Blocks.angle = {init:function() {
   this.appendDummyInput().appendField(new Blockly.FieldAngle("90"), "ANGLE");
   this.setOutput(!0, "Number");
   this.setInputsInline(!0);
-}};
+}, syntax:{js:[], py:["%1"]}};
 Entry.block.angle = function(a, b) {
   return b.getNumberField("ANGLE");
 };
@@ -1193,7 +1193,7 @@ Blockly.Blocks.get_x_coordinate = {init:function() {
   this.appendDummyInput().appendField(Lang.Blocks.CALC_get_x_coordinate, calcFontColor);
   this.setOutput(!0, "Number");
   this.setInputsInline(!0);
-}};
+}, syntax:{js:[], py:["Entry.getX()"]}};
 Entry.block.get_x_coordinate = function(a, b) {
   return a.getX();
 };
@@ -1202,7 +1202,7 @@ Blockly.Blocks.get_y_coordinate = {init:function() {
   this.appendDummyInput().appendField(Lang.Blocks.CALC_get_y_coordinate, calcFontColor);
   this.setOutput(!0, "Number");
   this.setInputsInline(!0);
-}};
+}, syntax:{js:[], py:["Entry.getY()"]}};
 Entry.block.get_y_coordinate = function(a, b) {
   return a.getY();
 };
@@ -1211,7 +1211,7 @@ Blockly.Blocks.get_angle = {init:function() {
   this.appendDummyInput().appendField(Lang.Blocks.CALC_get_angle, calcFontColor);
   this.setOutput(!0, "Number");
   this.setInputsInline(!0);
-}};
+}, syntax:{js:[], py:["Entry.getAngle()"]}};
 Entry.block.get_angle = function(a, b) {
   return parseFloat(a.getRotation().toFixed(1));
 };
@@ -1221,7 +1221,7 @@ Blockly.Blocks.get_rotation_direction = {init:function() {
   this.appendDummyInput().appendField(" ");
   this.setOutput(!0, "Number");
   this.setInputsInline(!0);
-}};
+}, syntax:{js:[], py:["Entry.getDirection()"]}};
 Entry.block.get_rotation_direction = function(a, b) {
   return "DIRECTION" == b.getField("OPERATOR", b).toUpperCase() ? parseFloat(a.getDirection().toFixed(1)) : parseFloat(a.getRotation().toFixed(1));
 };
@@ -1230,7 +1230,7 @@ Blockly.Blocks.distance_something = {init:function() {
   this.appendDummyInput().appendField(Lang.Blocks.CALC_distance_something_1, calcFontColor).appendField(new Blockly.FieldDropdownDynamic("spritesWithMouse", null, !0, calcArrowColor), "VALUE").appendField(Lang.Blocks.CALC_distance_something_2, calcFontColor);
   this.setOutput(!0, "Number");
   this.setInputsInline(!0);
-}};
+}, syntax:{js:[], py:["Entry.getAngle()"]}};
 Entry.block.distance_something = function(a, b) {
   var c = b.getField("VALUE", b);
   if ("mouse" == c) {
@@ -1244,7 +1244,7 @@ Blockly.Blocks.coordinate_mouse = {init:function() {
   this.appendDummyInput().appendField(Lang.Blocks.CALC_coordinate_mouse_1, calcFontColor).appendField(new Blockly.FieldDropdown([["x", "x"], ["y", "y"]], null, !0, calcArrowColor), "VALUE").appendField(Lang.Blocks.CALC_coordinate_mouse_2, calcFontColor);
   this.setOutput(!0, "Number");
   this.setInputsInline(!0);
-}};
+}, syntax:{js:[], py:['Entry.getMouseCoordinate("%1")']}};
 Entry.block.coordinate_mouse = function(a, b) {
   return "x" === b.getField("VALUE", b) ? Number(Entry.stage.mouseCoordinate.x) : Number(Entry.stage.mouseCoordinate.y);
 };
@@ -1254,7 +1254,7 @@ Blockly.Blocks.coordinate_object = {init:function() {
   [Lang.Blocks.CALC_coordinate_size_value, "size"], [Lang.Blocks.CALC_picture_index, "picture_index"], [Lang.Blocks.CALC_picture_name, "picture_name"]], null, !0, calcArrowColor), "COORDINATE").appendField(Lang.Blocks.CALC_coordinate_object_3, calcFontColor);
   this.setOutput(!0, "Number");
   this.setInputsInline(!0);
-}};
+}, syntax:{js:[], py:['Entry.getObjectCoordinate("%1", "%2")']}};
 Entry.block.coordinate_object = function(a, b) {
   var c = b.getField("VALUE", b), c = "self" == c ? a : Entry.container.getEntity(c);
   switch(b.getField("COORDINATE", b)) {
@@ -1282,7 +1282,7 @@ Blockly.Blocks.calc_basic = {init:function() {
   this.appendValueInput("RIGHTHAND").setCheck(["Number", "String"]);
   this.setOutput(!0, "Number");
   this.setInputsInline(!0);
-}};
+}, syntax:{js:[], py:["%1 %2 %3"]}};
 Entry.block.calc_basic = function(a, b) {
   var c = b.getField("OPERATOR", b), d = b.getNumberValue("LEFTHAND", b), e = b.getNumberValue("RIGHTHAND", b);
   return "PLUS" == c ? d + e : "MINUS" == c ? d - e : "MULTI" == c ? d * e : d / e;
@@ -1423,7 +1423,7 @@ Blockly.Blocks.calc_rand = {init:function() {
   this.setOutput(!0, "Number");
   this.appendDummyInput("VALUE").appendField(Lang.Blocks.CALC_calc_rand_3, calcFontColor);
   this.setInputsInline(!0);
-}};
+}, syntax:{js:[], py:["random.randrange(%1, %2)"]}};
 Entry.block.calc_rand = function(a, b) {
   var c = b.getStringValue("LEFTHAND", b), d = b.getStringValue("RIGHTHAND", b), e = Math.min(c, d), f = Math.max(c, d), c = Entry.isFloat(c);
   return Entry.isFloat(d) || c ? (Math.random() * (f - e) + e).toFixed(2) : Math.floor(Math.random() * (f - e + 1) + e);
@@ -1619,7 +1619,7 @@ Blockly.Blocks.get_sound_volume = {init:function() {
   this.appendDummyInput().appendField(Lang.Blocks.CALC_get_sound_volume, calcFontColor).appendField(" ", calcFontColor);
   this.setOutput(!0, "Number");
   this.setInputsInline(!0);
-}};
+}, syntax:{js:[], py:["Entry.getSoundVolume()"]}};
 Entry.block.get_sound_volume = function(a, b) {
   return 100 * createjs.Sound.getVolume();
 };
@@ -1631,7 +1631,7 @@ Blockly.Blocks.quotient_and_mod = {init:function() {
   this.appendDummyInput().appendField(Lang.Blocks.CALC_quotient_and_mod_4, calcFontColor);
   this.setOutput(!0, "Number");
   this.setInputsInline(!0);
-}};
+}, syntax:{js:[], py:["Entry.getQuotient(%1, %2)"]}};
 Entry.block.quotient_and_mod = function(a, b) {
   var c = b.getNumberValue("LEFTHAND", b), d = b.getNumberValue("RIGHTHAND", b);
   if (isNaN(c) || isNaN(d)) {
@@ -4299,7 +4299,7 @@ Blockly.Blocks.text = {init:function() {
   this.appendDummyInput().appendField(new Blockly.FieldTextInput(Lang.Blocks.TEXT_text), "NAME");
   this.setOutput(!0, "String");
   this.setInputsInline(!0);
-}};
+}, syntax:{js:[], py:["%1"]}};
 Entry.block.text = function(a, b) {
   return b.getField("NAME");
 };
@@ -8505,28 +8505,23 @@ Entry.PyBlockParser = function(a) {
     var a = "";
     b = b.getBlocks();
     for (var d = 0;d < b.length;d++) {
-      var e = b[d];
-      console.log("threadblock", e);
-      a += this.Block(e);
+      a += this.Block(b[d]);
     }
     return a;
   };
   a.Block = function(b) {
-    var a = b._schema.syntax;
-    if (!a) {
+    if (!b._schema || !b._schema.syntax) {
       return "";
     }
-    for (var a = b._schema.syntax.py[0], d = /(%\d)/mi, e = /(\$\d)/mi, a = a.split(d), f = b._schema.params, g = "", h = 0;h < a.length;h++) {
-      var k = a[h];
+    for (var a = /(%\d)/mi, d = /(\$\d)/mi, e = b._schema.syntax.py[0].split(a), f = b._schema.params, g = "", h = 0;h < e.length;h++) {
+      var k = e[h];
       if (0 !== k.length) {
-        if (d.test(k)) {
-          var m = Number(k.split("%")[1]) - 1, g = g + this["Field" + f[m].type](b.params[m])
+        if (a.test(k)) {
+          var m = Number(k.split("%")[1]) - 1, g = g + this["Field" + f[m].type](b.params[m], f[m])
         } else {
-          if (e.test(k)) {
-            k = k.split(e);
-            console.log("stokens", k);
-            for (var n = 0;n < k.length;n++) {
-              m = k[n], console.log("token2", m), 0 !== m.length && (e.test(m) ? (console.log("in!!!"), m = Number(m.split("$")[1]) - 1, console.log("block.statement", b.statements[m]), g += this.Thread(b.statements[m])) : g += m);
+          if (d.test(k)) {
+            for (var k = k.split(d), n = 0;n < k.length;n++) {
+              m = k[n], 0 !== m.length && (d.test(m) ? (m = Number(m.split("$")[1]) - 1, g += this.Thread(b.statements[m])) : g += m);
             }
           } else {
             g += k;
@@ -8536,14 +8531,57 @@ Entry.PyBlockParser = function(a) {
     }
     return g;
   };
+  a.FieldAngle = function(b) {
+    console.log("FieldAngle", b);
+    return this.Block(b);
+  };
   a.FieldBlock = function(b) {
+    console.log("FieldBlock", b);
+    return this.Block(b);
+  };
+  a.FieldColor = function(b) {
+    console.log("FieldColor", b);
+    return b;
+  };
+  a.FieldDropdown = function(b, a) {
+    for (var d = a.options, e = 0, f = d.length;e < f;e++) {
+      var g = d[e];
+      if (g[1] == b) {
+        return g[0];
+      }
+    }
+    return b;
+  };
+  a.FieldDropdownDynamic = function(b, a) {
+    return b;
+  };
+  a.FieldImage = function(b) {
+    console.log("FieldImage", b);
     return this.Block(b);
   };
   a.FieldIndicator = function(b) {
+    console.log("FieldIndicator", b);
+    return this.Block(b);
+  };
+  a.FieldKeyboardInput = function(b) {
+    console.log("FieldKeyboardInput", b);
+    return this.Block(b);
+  };
+  a.FieldOutput = function(b) {
+    console.log("FieldOutput", b);
+    return this.Block(b);
+  };
+  a.FieldStatement = function(b) {
+    console.log("FieldStatement", b);
+    return this.Block(b);
+  };
+  a.FieldText = function(b) {
+    console.log("FieldText", b);
     return this.Block(b);
   };
   a.FieldTextInput = function(b) {
-    return this.Block(b);
+    console.log("FieldTextInput", b);
+    return b;
   };
 })(Entry.PyBlockParser.prototype);
 Entry.JSParser = function(a) {
@@ -14719,7 +14757,7 @@ Entry.FieldDropdownDynamic = function(a, b, c) {
   this._contents = a;
   this._index = c;
   c = [];
-  Entry.container && (c = Entry.container.getDropdownList(this._contents.menuName));
+  Entry.container && (this.option = c = Entry.container.getDropdownList(this._contents.menuName));
   this._contents.options = c;
   c = this.getValue() || 0 !== c.length ? c[0][1] : null;
   this.setValue(c);
@@ -14739,7 +14777,9 @@ Entry.Utils.inherit(Entry.FieldDropdown, Entry.FieldDropdownDynamic);
       b.optionGroup.remove();
     });
     this.optionGroup = Entry.Dom("ul", {class:"entry-widget-dropdown", parent:$("body")});
-    for (var a = Entry.container.getDropdownList(this._contents.menuName), d = 0, e = a.length;d < e;d++) {
+    var a = Entry.container.getDropdownList(this._contents.menuName);
+    this.option = a;
+    for (var d = 0, e = a.length;d < e;d++) {
       var f = a[d], g = f[0], f = f[1], h = Entry.Dom("li", {class:"rect", parent:this.optionGroup}), k = "";
       this.getValue() == f && (k += "\u2713  ");
       h.text(k += g);
@@ -15160,17 +15200,17 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
     this.optionGroup.focus();
     this.optionGroup.select();
   };
-  a.applyValue = function(a) {
-    a = this.optionGroup.val();
-    this.setValue(a);
+  a.applyValue = function(b) {
+    b = this.optionGroup.val();
+    this.setValue(b);
     this.textElement.textContent = this.truncate();
     this.resize();
   };
   a.resize = function() {
-    var a = this.getTextWidth();
-    this._header.attr({width:a});
-    this.optionGroup.css({width:a});
-    this.box.set({width:a});
+    var b = this.getTextWidth();
+    this._header.attr({width:b});
+    this.optionGroup.css({width:b});
+    this.box.set({width:b});
     this._block.view.alignContent();
   };
   a.getTextWidth = function() {
@@ -15185,28 +15225,28 @@ Entry.GlobalSvg = {};
   a.createDom = function() {
     this.svgDom || (this.svgDom = Entry.Dom($('<svg id="globalSvg" width="0" height="0"version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'), {parent:$("body")}), this.svgDom.css({position:"fixed", width:1, height:1, display:"none", overflow:"visible", "z-index":"1111", opacity:.8}), this.svg = Entry.SVG("globalSvg"), this.top = this.left = this.width = 0);
   };
-  a.setView = function(a, c) {
-    if (a != this._view && !a.block.isReadOnly() && a.movable) {
-      return this._view = a, this._mode = c, c !== Entry.Workspace.MODE_VIMBOARD && a.set({visible:!1}), this.draw(), this.align(), this.position(), !0;
+  a.setView = function(b, a) {
+    if (b != this._view && !b.block.isReadOnly() && b.movable) {
+      return this._view = b, this._mode = a, a !== Entry.Workspace.MODE_VIMBOARD && b.set({visible:!1}), this.draw(), this.align(), this.position(), !0;
     }
   };
   a.draw = function() {
-    var a = this._view;
+    var b = this._view;
     this._svg && this.remove();
-    var c = this._mode == Entry.Workspace.MODE_VIMBOARD;
-    this.svgGroup = Entry.SVG.createElement(a.svgGroup.cloneNode(!0), {opacity:1});
+    var a = this._mode == Entry.Workspace.MODE_VIMBOARD;
+    this.svgGroup = Entry.SVG.createElement(b.svgGroup.cloneNode(!0), {opacity:1});
     this.svg.appendChild(this.svgGroup);
     this.show();
-    c && (a = $(this.svgGroup), a.find("g").css({filter:"none"}), a.find("path").velocity({opacity:0}, {duration:500}), a.find("text").velocity({fill:"#000000"}, {duration:530}));
+    a && (b = $(this.svgGroup), b.find("g").css({filter:"none"}), b.find("path").velocity({opacity:0}, {duration:500}), b.find("text").velocity({fill:"#000000"}, {duration:530}));
   };
   a.remove = function() {
     this.svgGroup && (this.svgGroup.remove(), delete this.svgGroup, delete this._view, delete this._offsetX, delete this._offsetY, delete this._startX, delete this._startY, this.hide());
   };
   a.align = function() {
-    var a = this._view.getSkeleton().box(this._view).offsetX || 0, c = this._view.getSkeleton().box(this._view).offsetY || 0, a = -1 * a + 1, c = -1 * c + 1;
-    this._offsetX = a;
-    this._offsetY = c;
-    this.svgGroup.attr({transform:"translate(" + a + "," + c + ")"});
+    var b = this._view.getSkeleton().box(this._view).offsetX || 0, a = this._view.getSkeleton().box(this._view).offsetY || 0, b = -1 * b + 1, a = -1 * a + 1;
+    this._offsetX = b;
+    this._offsetY = a;
+    this.svgGroup.attr({transform:"translate(" + b + "," + a + ")"});
   };
   a.show = function() {
     this.svgDom.css("display", "block");
@@ -15215,16 +15255,16 @@ Entry.GlobalSvg = {};
     this.svgDom.css("display", "none");
   };
   a.position = function() {
-    var a = this._view, c = a.getAbsoluteCoordinate(), a = a.getBoard().offset;
-    this.left = c.x + a.left - this._offsetX;
-    this.top = c.y + a.top - this._offsetY;
+    var b = this._view, a = b.getAbsoluteCoordinate(), b = b.getBoard().offset;
+    this.left = a.x + b.left - this._offsetX;
+    this.top = a.y + b.top - this._offsetY;
     this.svgDom.css({left:this.left, top:this.top});
   };
-  a.terminateDrag = function(a) {
-    var c = Entry.mouseCoordinate;
-    a = a.getBoard().workspace.blockMenu;
-    var d = a.offset.left, e = a.offset.top, f = a.visible ? a.svgDom.width() : 0;
-    return c.y > e && c.x > d + f ? this.DONE : c.y > e && c.x > d && a.visible ? this.REMOVE : this.RETURN;
+  a.terminateDrag = function(b) {
+    var a = Entry.mouseCoordinate;
+    b = b.getBoard().workspace.blockMenu;
+    var d = b.offset.left, e = b.offset.top, f = b.visible ? b.svgDom.width() : 0;
+    return a.y > e && a.x > d + f ? this.DONE : a.y > e && a.x > d && b.visible ? this.REMOVE : this.RETURN;
   };
   a.addControl = function(a) {
     this.onMouseDown.apply(this, arguments);
@@ -16515,13 +16555,14 @@ Entry.Vim = function(a, b) {
     return a;
   };
   a.codeToText = function(a) {
-    var c = this.workspace.type, d;
+    var c = this.workspace.textType, d;
+    console.log("type", c);
     "js" === c ? d = this._jsBlockParser : "py" === c && (d = this._pythonBlockParser);
     a = d.parse(a);
     this.codeMirror.setValue(a);
   };
   a.getCodeToText = function(a) {
-    var c = this.workspace.type, d;
+    var c = this.workspace.textType, d;
     "js" === c ? d = this._jsBlockParser : "py" === c && (d = this._pythonBlockParser);
     return d.parse(a);
   };
@@ -16565,13 +16606,12 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
     return this.mode;
   };
   a.setMode = function(a, c) {
-    a = Number(a);
-    this.mode = a[0];
-    this.type = type[1];
+    this.mode = a = Number(a);
     switch(a) {
       case Entry.Workspace.MODE_VIMBOARD:
         this.board && this.board.hide();
         this.overlayBoard && this.overlayBoard.hide();
+        this.textType = c;
         this.set({selectedBoard:this.vimBoard});
         this.vimBoard.show();
         this.vimBoard.codeToText(this.board.code);
@@ -16645,7 +16685,8 @@ Entry.Playground = function() {
   });
 };
 Entry.Playground.prototype.setMode = function(a) {
-  this.mainWorkspace.setMode(a);
+  console.log("mode", a);
+  this.mainWorkspace.setMode(a.boardType, a.textType);
 };
 Entry.Playground.prototype.generateView = function(a, b) {
   this.view_ = a;

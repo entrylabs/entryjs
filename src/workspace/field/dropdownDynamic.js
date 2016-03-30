@@ -19,8 +19,10 @@ Entry.FieldDropdownDynamic = function(content, blockView, index) {
     this._contents = content;
     this._index = index;
     var options = [];
-    if (Entry.container)
+    if (Entry.container){
         options = Entry.container.getDropdownList(this._contents.menuName);
+        this.option = options;
+    }
 
     this._contents.options = options;
     var value = this.getValue() ||
@@ -61,6 +63,7 @@ Entry.Utils.inherit(Entry.FieldDropdown, Entry.FieldDropdownDynamic);
         });
 
         var options = Entry.container.getDropdownList(this._contents.menuName);
+        this.option = options;
 
         var OPTION_X_PADDING = 30;
         var maxWidth = 0;

@@ -76,12 +76,12 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
 
     p.setMode = function(mode, message){
         mode = Number(mode);
-        this.mode = mode[0];
-        this.type = type[1];
+        this.mode = mode;
         switch (mode) {
             case Entry.Workspace.MODE_VIMBOARD:
                 if (this.board) this.board.hide();
                 if (this.overlayBoard) this.overlayBoard.hide();
+                this.textType = message;
                 this.set({selectedBoard:this.vimBoard});
                 this.vimBoard.show();
                 this.vimBoard.codeToText(this.board.code);

@@ -11,7 +11,8 @@ Blockly.Blocks.start_drawing = {
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-  }
+  },
+  syntax: {js: [], py: ["self.startDrawing()"]}
 };
 
 Entry.block.start_drawing = function (sprite, script) {
@@ -38,7 +39,8 @@ Blockly.Blocks.stop_drawing = {
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-  }
+  },
+  syntax: {js: [], py: ["self.stopDrawing()"]}
 };
 
 Entry.block.stop_drawing = function (sprite, script) {
@@ -62,7 +64,8 @@ Blockly.Blocks.set_color = {
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-  }
+  },
+  syntax: {js: [], py: ["self.setBrushColor(%1)"]}
 };
 
 Entry.block.set_color = function (sprite, script) {
@@ -95,7 +98,8 @@ Blockly.Blocks.set_random_color = {
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-  }
+  },
+  syntax: {js: [], py: ["self.setBrushRandomColor()"]}
 };
 
 Entry.block.set_random_color = function (sprite, script) {
@@ -129,7 +133,8 @@ Blockly.Blocks.change_thickness = {
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-  }
+  },
+  syntax: {js: [], py: ["self.changeBrushThickness(%1)"]}
 };
 
 Entry.block.change_thickness = function (sprite, script) {
@@ -167,7 +172,8 @@ Blockly.Blocks.set_thickness = {
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-  }
+  },
+  syntax: {js: [], py: ["self.setBrushThickness(%1)"]}
 };
 
 Entry.block.set_thickness = function (sprite, script) {
@@ -202,7 +208,8 @@ Blockly.Blocks.change_opacity = {
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-  }
+  },
+  syntax: {js: [], py: ["self.changeBrushOpacity(%1)"]}
 };
 
 Entry.block.change_opacity = function (sprite, script) {
@@ -240,7 +247,8 @@ Blockly.Blocks.set_opacity = {
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-  }
+  },
+  syntax: {js: [], py: ["self.setBrushOpacity(%1)"]}
 };
 
 Entry.block.set_opacity = function (sprite, script) {
@@ -273,7 +281,8 @@ Blockly.Blocks.brush_erase_all = {
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-  }
+  },
+  syntax: {js: [], py: ["self.eraseAllBrush()"]}
 };
 
 Entry.block.brush_erase_all = function (sprite, script) {
@@ -303,7 +312,8 @@ Blockly.Blocks.brush_stamp = {
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-  }
+  },
+  syntax: {js: [], py: ["self.stamp()"]}
 };
 
 Entry.block.brush_stamp = function (sprite, script) {
@@ -325,7 +335,8 @@ Blockly.Blocks.change_brush_transparency = {
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-  }
+  },
+  syntax: {js: [], py: ["self.changeBrushTransparency(%1)"]}
 };
 
 Entry.block.change_brush_transparency = function (sprite, script) {
@@ -361,7 +372,8 @@ Blockly.Blocks.set_brush_tranparency = {
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-  }
+  },
+  syntax: {js: [], py: ["self.setBrushTransparency(%1)"]}
 };
 
 Entry.block.set_brush_tranparency = function (sprite, script) {

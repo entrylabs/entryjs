@@ -9,7 +9,8 @@ Blockly.Blocks.text = {
         .appendField(new Blockly.FieldTextInput(Lang.Blocks.TEXT_text), "NAME");
     this.setOutput(true, 'String');
     this.setInputsInline(true);
-  }
+  },
+  syntax: {js: [], py: ["%1"]}
 };
 
 Entry.block.text = function (sprite, script) {

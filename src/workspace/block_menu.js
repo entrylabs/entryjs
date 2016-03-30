@@ -217,7 +217,7 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
         var svgWidth = this._svgWidth;
 
         var board = workspace.selectedBoard;
-
+        
         if (board && (workspaceMode == Entry.Workspace.MODE_BOARD ||
                       workspaceMode == Entry.Workspace.MODE_OVERLAYBOARD)) {
             var block = blockView.block;

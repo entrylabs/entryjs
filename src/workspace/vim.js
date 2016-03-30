@@ -2,7 +2,7 @@
 
 goog.provide("Entry.Vim");
 
-Entry.Vim = function(dom, mode) {
+Entry.Vim = function(dom, textType) {
     if (typeof dom === "string")
         dom = $('#' + dom);
     else
@@ -111,10 +111,11 @@ Entry.Vim = function(dom, mode) {
     };
 
     p.codeToText = function(code) {
-        var type = this.workspace.type;
+        var textType = this.workspace.textType;
         var parser;
-        if (type === 'js') parser = this._jsBlockParser;
-        else if(type === 'py') parser = this._pythonBlockParser;
+        console.log("type", textType);
+        if (textType === 'js') parser = this._jsBlockParser;
+        else if(textType === 'py') parser = this._pythonBlockParser;
 
         var textCode = parser.parse(code);
         this.codeMirror.setValue(textCode);
@@ -122,10 +123,10 @@ Entry.Vim = function(dom, mode) {
     };
 
     p.getCodeToText = function(code) {
-        var type = this.workspace.type;
+        var textType = this.workspace.textType;
         var parser;
-        if (type === 'js') parser = this._jsBlockParser;
-        else if(type === 'py') parser = this._pythonBlockParser;
+        if (textType === 'js') parser = this._jsBlockParser;
+        else if(textType === 'py') parser = this._pythonBlockParser;
 
         var textCode = parser.parse(code);
         return textCode;
