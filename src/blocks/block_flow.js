@@ -165,7 +165,7 @@ Blockly.Blocks._if = {
             .appendField(Lang.Blocks.FLOW__if_1);
         this.appendValueInput("BOOL")
             .setCheck("Boolean");
-        this.appendDummyInput()     
+        this.appendDummyInput()
             .appendField(Lang.Blocks.FLOW__if_2)
         .appendField(new Blockly.FieldIcon(Entry.mediaFilePath + 'block_icon/flow_03.png', '*'));
         this.appendStatementInput("STACK");

@@ -918,6 +918,7 @@ Blockly.Blocks.quotient_and_mod = {
     this.setInputsInline(true);
   },
   syntax: {js: [], py: ["Entry.get_quotient_remainder(%1, %2, \"%3\"\n"]}
+
 };
 
 Entry.block.quotient_and_mod = function (sprite, script) {
