@@ -29,7 +29,7 @@ Entry.FieldDropdown = function(content, blockView, index) {
 
     this._ROUND = content.roundValue || 0;
 
-    this.renderStart(blockView);
+    this.renderStart();
 };
 
 Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);

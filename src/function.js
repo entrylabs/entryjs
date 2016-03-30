@@ -40,7 +40,7 @@ Entry.Func.registerFunction = function(func) {
         this.setupMenuCode();
     var blockMenu = Entry.playground.mainWorkspace.getBlockMenu();
     var menuCode = blockMenu.getCategoryCodes("func");
-    menuCode.createThread([{
+    this._targetFuncBlock = menuCode.createThread([{
         type: "func_" + func.id
     }]);
 };
@@ -72,7 +72,7 @@ Entry.Func.edit = function(func) {
     this.cancelEdit();
     this.targetFunc = func;
     this.initEditView(func.content);
-    this._funcChangeEvent = func.content.getEventMap("funcDef")[0].thread
+    this._funcChangeEvent = func.content.getEventMap("funcDef")[0].view._contents[1]
         .changeEvent.attach(this, this.generateWsBlock);
     this.updateMenu();
 };
@@ -86,10 +86,12 @@ Entry.Func.initEditView = function(content) {
 
 Entry.Func.endEdit = function(message) {
     this._funcChangeEvent.destroy();
-    if (message === "save")
-        this.save();
-    else
-        this.cancelEdit();
+    switch(message){
+        case "save":
+            this.save();
+        case "cancelEdit":
+            this.cancelEdit();
+    }
 }
 
 Entry.Func.save = function() {
@@ -103,6 +105,7 @@ Entry.Func.cancelEdit = function() {
         return;
     Entry.Func.isEdit = false;
     if (!this.targetFunc.block) {
+        this._targetFuncBlock.destroy();
         delete Entry.variableContainer.functions_[this.targetFunc.id];
         delete Entry.variableContainer.selected;
     }
@@ -231,67 +234,17 @@ Entry.Func.prototype.edit = function() {
     }
 };
 
-Entry.Func.generateBlock = function(func, content, id) {
-    var topBlocks = Entry.nodeListToArray(content.childNodes);
-    var createBlock;
-    for (var i in topBlocks)
-        if (topBlocks[i].getAttribute('type') == 'function_create')
-            createBlock = topBlocks[i];
-    var script = new Entry.Script();
-    script.init(createBlock);
-    var field = script;
-    if (field.values)
-        field = script.values.FIELD;
-    var mutationXml = '<mutation hashid="' + id + '">';
-    var fieldXml = '';
-    var description = '';
-    var stringCount = 0;
-    var booleanCount = 0;
-    func.stringHash = {};
-    func.booleanHash = {};
-    while(true) {
-        var type = field.type;
-        switch (type) {
-            case 'function_field_label':
-                mutationXml += '<field type="label" content="' +
-                    field.fields.NAME.replace("<", "&lt;").replace(">", "&gt;") + '"></field>';
-                description += field.fields.NAME;
-                break;
-            case 'function_field_boolean':
-                var hash = field.values.PARAM.hashId;
-                mutationXml += '<field type="boolean" hashid="' + hash +
-                               '"></field>';
-                fieldXml += '<value name="' + hash + '"><block type="True">' +
-                    '</block></value>';
-                func.booleanHash[hash] = booleanCount;
-                booleanCount++;
-                description += '논리값' + booleanCount;
-                break;
-            case 'function_field_string':
-                var hash = field.values.PARAM.hashId;
-                mutationXml += '<field type="string" hashid="' + hash +
-                               '"></field>';
-                fieldXml += '<value name="' + hash + '"><block type="text">' +
-                    '<field name="NAME">10</field></block></value>';
-                func.stringHash[hash] = stringCount;
-                stringCount++;
-                description += '문자값' + stringCount;
-                break;
-        }
-        if (field.values && field.values.NEXT) field = field.values.NEXT;
-        else break;
-        description += ' ';
+Entry.Func.generateBlock = function(func) {
+    var blockSchema = Entry.block["func_" + func.id];
+    var block = {
+        template: blockSchema.template,
+        params: blockSchema.params
     }
-    mutationXml += '</mutation>';
-    var blockText = '<xml><block type="function_general">' + mutationXml +
-        fieldXml + '</block></xml>';
-    var block = Blockly.Xml.textToDom(blockText).childNodes[0];
-    if (!description) description = "함수";
-    return {block: block, description: description};
+    return {block: block, description: blockSchema.template};
 };
 
 Entry.Func.prototype.generateBlock = function(toSave) {
-    var generatedInfo = Entry.Func.generateBlock(this, this.content, this.id);
+    var generatedInfo = Entry.Func.generateBlock(this);
     this.block = generatedInfo.block;
     this.description = generatedInfo.description;
 };
