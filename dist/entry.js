@@ -710,7 +710,7 @@ Entry.block.albert_set_wheels_to = function(a, b) {
   return b.callReturn();
 };
 Entry.Arduino = {name:"arduino", setZero:function() {
-  for (var a = 0;14 > a;a++) {
+  for (var a = 0;20 > a;a++) {
     Entry.hw.sendQueue[a] = 0;
   }
   Entry.hw.update();
@@ -718,8 +718,8 @@ Entry.Arduino = {name:"arduino", setZero:function() {
 pos:{x:0, y:0}}, 7:{name:"7\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, 8:{name:"8\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, 9:{name:"9\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, 10:{name:"10\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, 11:{name:"11\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, 12:{name:"12\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, 13:{name:"13\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, a0:{name:"0\ubc88 \ud3ec\ud2b8", type:"input", 
 pos:{x:0, y:0}}, a1:{name:"1\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, a2:{name:"2\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, a3:{name:"3\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, a4:{name:"4\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, a5:{name:"5\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}}, mode:"list"}};
 Entry.SensorBoard = {name:"sensorBoard", setZero:Entry.Arduino.setZero, monitorTemplate:{imgPath:"hw/sensorBoard.png", width:268, height:270, listPorts:{D0:{name:"0\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, D1:{name:"1\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, D6:{name:"2\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, D7:{name:"3\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, D12:{name:"4\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, D13:{name:"5\ubc88 \ud3ec\ud2b8", 
-type:"input", pos:{x:0, y:0}}}, ports:{MIC:{name:"\ub9c8\uc774\ud06c", type:"input", pos:{x:136, y:245}}, CDS1:{name:"\ube5b \uc13c\uc11c1", type:"output", pos:{x:70, y:246}}, CDS2:{name:"\ube5b \uc13c\uc11c2", type:"output", pos:{x:200, y:245}}, SLIDE:{name:"\uc2ac\ub77c\uc774\ub4dc", type:"input", pos:{x:139, y:22}}, TEMP:{name:"\uc628\ub3c4", type:"output", pos:{x:237, y:271}}, SW_R:{name:"\uc2a4\uc704\uce58 1", type:"input", pos:{x:196, y:134}}, SW_L:{name:"\uc2a4\uc704\uce58 2", type:"input", 
-pos:{x:129, y:185}}, SW_D:{name:"\uc2a4\uc704\uce58 3", type:"input", pos:{x:74, y:125}}, SW_U:{name:"\uc2a4\uc704\uce58 4", type:"input", pos:{x:136, y:73}}}, mode:"both"}};
+type:"input", pos:{x:0, y:0}}}, ports:{MIC:{name:"\ub9c8\uc774\ud06c", type:"input", pos:{x:130, y:245}}, CDS1:{name:"\ube5b \uc13c\uc11c1", type:"output", pos:{x:80, y:216}}, CDS2:{name:"\ube5b \uc13c\uc11c2", type:"output", pos:{x:190, y:215}}, SLIDE:{name:"\uc2ac\ub77c\uc774\ub4dc", type:"input", pos:{x:139, y:22}}, TEMP:{name:"\uc628\ub3c4", type:"output", pos:{x:207, y:251}}, SW_R:{name:"\uc2a4\uc704\uce58 1", type:"input", pos:{x:180, y:120}}, SW_L:{name:"\uc2a4\uc704\uce58 2", type:"input", 
+pos:{x:90, y:143}}, SW_D:{name:"\uc2a4\uc704\uce58 3", type:"input", pos:{x:120, y:185}}, SW_U:{name:"\uc2a4\uc704\uce58 4", type:"input", pos:{x:130, y:73}}}, mode:"both"}};
 Entry.CODEino = {name:"CODEino", setZero:Entry.Arduino.setZero, monitorTemplate:Entry.Arduino.monitorTemplate};
 Blockly.Blocks.arduino_text = {init:function() {
   this.setColour("#00979D");
@@ -10388,16 +10388,13 @@ Entry.PropertyPanel = function() {
     });
     this.modes[a] && (this.modes[a].tabDom.remove(), this.modes[a].contentDom.remove());
     this.modes[a] = {obj:c, tabDom:e, contentDom:d};
-    console.log("123123213123123123232njknfdjkasnjfk");
   };
   a.resize = function(a) {
     this._view.css({width:a + "px", top:9 * a / 16 + 123 - 22 + "px"});
     430 <= a ? this._view.removeClass("collapsed") : this._view.addClass("collapsed");
-    console.log(this.modes);
     Entry.dispatchEvent("windowResized");
   };
   a.select = function(a) {
-    console.log(a);
     for (var c in this.modes) {
       var d = this.modes[c];
       d.tabDom.removeClass("selected");
@@ -10406,8 +10403,6 @@ Entry.PropertyPanel = function() {
     c = this.modes[a];
     c.tabDom.addClass("selected");
     c.contentDom.removeClass("entryHidden");
-    console.log(123321);
-    console.log(c);
     c.obj.resize();
     this.selected = a;
   };
@@ -12439,17 +12434,16 @@ Entry.HWMonitor = function(a) {
   var b = this;
   Entry.addEventListener("windowResized", function() {
     var a = b._hwModule.monitorTemplate.mode;
-    console.log(b._hwModule);
     "both" == a ? (b.resizeList(), b.resize()) : "list" == a ? b.resizeList() : b.resize();
   });
   this.scale = .5;
   this._portViews = {};
+  this._listPortViews = {};
   this._portMap = {n:[], e:[], s:[], w:[]};
   this._portMapList = {n:[], e:[], s:[], w:[]};
 };
 (function(a) {
   a.generateView = function() {
-    console.log("generate view");
     this.snap = Entry.SVG("hwMonitor");
     this._svgGroup = this.snap.elem("g");
     var a = this._hwModule.monitorTemplate, c = {href:Entry.mediaFilePath + a.imgPath, x:-a.width / 2, y:-a.height / 2, width:a.width, height:a.height};
@@ -12469,26 +12463,11 @@ Entry.HWMonitor = function(a) {
     });
     var f = this._portMap;
     c.map(function(a) {
-      var b = Math.atan2(a.box.y, a.box.x);
-      console.log(b);
-      switch(Math.round(b / Math.PI * 2)) {
-        case -1:
-          f.n.push(a);
-          break;
-        case 0:
-          f.e.push(a);
-          break;
-        case 1:
-          f.s.push(a);
-          break;
-        case 2:
-          f.w.push(a);
-      }
+      (1 > (Math.atan2(-a.box.y, a.box.x) / Math.PI + 2) % 2 ? f.n : f.s).push(a);
     });
     this.resize();
   };
   a.generateListView = function() {
-    console.log("generate List ");
     this.listsnap = Entry.SVG("hwMonitor");
     this._svglistGroup = this.listsnap.elem("g");
     var a = this._hwModule.monitorTemplate;
@@ -12498,7 +12477,7 @@ Entry.HWMonitor = function(a) {
     var c = [], d;
     for (d in a) {
       var e = this.generatePortView(a[d], "_svglistGroup");
-      this._portViews[d] = e;
+      this._listPortViews[d] = e;
       c.push(e);
     }
     var f = this._portMapList;
@@ -12522,7 +12501,7 @@ Entry.HWMonitor = function(a) {
   a.generatePortView = function(a, c) {
     var d = this[c].elem("g");
     d.addClass("hwComponent");
-    var e = this.pathGroup.elem("path").attr({d:"m0,0", fill:"none", stroke:"input" === a.type ? "#00979d" : "#A751E3", "stroke-width":3}), f = d.elem("rect").attr({x:0, y:0, width:150, height:22, rx:4, ry:4, fill:"#fff", stroke:"#a0a1a1"}), g = d.elem("text").attr({x:4, y:12, fill:"#000", "class":"hwComponentName", "alignment-baseline":"central"});
+    var e = null, e = this.pathGroup.elem("path").attr({d:"m0,0", fill:"none", stroke:"input" === a.type ? "#00979d" : "#A751E3", "stroke-width":3}), f = d.elem("rect").attr({x:0, y:0, width:150, height:22, rx:4, ry:4, fill:"#fff", stroke:"#a0a1a1"}), g = d.elem("text").attr({x:4, y:12, fill:"#000", "class":"hwComponentName", "alignment-baseline":"central"});
     g.textContent = a.name;
     g = g.getComputedTextLength();
     d.elem("rect").attr({x:g + 8, y:2, width:30, height:18, rx:9, ry:9, fill:"input" === a.type ? "#00979d" : "#A751E3"});
@@ -12536,16 +12515,15 @@ Entry.HWMonitor = function(a) {
     return this.svgDom;
   };
   a.update = function() {
-    var a = Entry.hw.portData, c = Entry.hw.sendQueue, d;
-    for (d in this._portViews) {
-      var e = this._portViews[d], f = "input" == e.type ? a[d] : c[d];
-      e.value.attr({text:f ? f : 0});
+    var a = Entry.hw.portData, c = Entry.hw.sendQueue, d = [], d = "list" == this._hwModule.monitorTemplate.mode ? this._listPortViews : this._portViews, e;
+    for (e in d) {
+      var f = d[e], g = "input" == f.type ? a[e] : c[e];
+      f.value.attr({text:g ? g : 0});
     }
   };
   a.resize = function() {
-    "list" != this._hwModule.monitorTemplate.mode && this.hwView.attr({transform:"scale(" + this.scale + ")"});
+    this.hwView.attr({transform:"scale(" + this.scale + ")"});
     var a = this.svgDom.get(0).getBoundingClientRect();
-    console.log("BRect : ------", a);
     this._svgGroup.attr({transform:"translate(" + a.width / 2 + "," + a.height / 2 + ")"});
     this._rect = a;
     this.scale = a.height / this._template.height / 2;
@@ -12559,22 +12537,17 @@ Entry.HWMonitor = function(a) {
     this.alignList();
   };
   a.align = function() {
-    var a;
-    a = "list" == this._hwModule.monitorTemplate.mode ? this._portMapList.n : this._portMap.n;
-    for (var c = a.length, d = 0;d < a.length;d++) {
-      var e = a[d];
-      console.log(e);
-      e.group.attr({transform:"translate(" + this._template.width * (d / c - .5) + "," + (-this._template.width / 2 - 30) + ")"});
-    }
-    a = this._portMap.s.concat();
-    this._alignNS(a, this._template.width * this.scale / 2 + 5, 27);
+    var a = [], a = this._portMap.s.concat();
+    this._alignNS(a, this.scale / 2 * this._template.width + 5, 27);
     a = this._portMap.n.concat();
     this._alignNS(a, -this._template.width * this.scale / 2 - 32, -27);
+    a = this._portMap.e.concat();
+    this._alignEW(a, -this._template.height * this.scale / 2 - 5, -27);
+    a = this._portMap.w.concat();
+    this._alignEW(a, this._template.height * this.scale / 3 - 32, -27);
   };
   a.alignList = function() {
-    var a;
-    a = "list" == this._hwModule.monitorTemplate.mode ? this._portMapList.n : this._portMap.n;
-    for (var c = a.length, d = 0;d < a.length;d++) {
+    for (var a = this._portMapList.n, c = a.length, d = 0;d < a.length;d++) {
       a[d].group.attr({transform:"translate(" + this._template.width * (d / c - .5) + "," + (-this._template.width / 2 - 30) + ")"});
     }
     a = this._portMapList.s.concat();
@@ -12582,20 +12555,40 @@ Entry.HWMonitor = function(a) {
     a = this._portMapList.n.concat();
     this._alignNSList(a, -this._template.width * this.scale / 2 - 32, -27);
   };
+  a._alignEW = function(a, c, d) {
+    var e = a.length, f = this._rect.height - 50;
+    tP = -f / 2;
+    bP = f / 2;
+    height = this._rect.height;
+    listVLine = wholeHeight = 0;
+    mode = this._hwModule.monitorTemplate;
+    for (f = 0;f < e;f++) {
+      wholeHeight += a[f].height + 5;
+    }
+    wholeHeight < bP - tP && (bP = wholeHeight / 2 + 3, tP = -wholeHeight / 2 - 3);
+    for (;1 < e;) {
+      var g = a.shift(), f = a.pop(), h = tP, k = bP, l = d;
+      wholeWidth <= bP - tP ? (tP += g.width + 5, bP -= f.width + 5, l = 0) : 0 === a.length ? (tP = (tP + bP) / 2 - 3, bP = tP + 6) : (tP = Math.max(tP, -width / 2 + g.width) + 15, bP = Math.min(bP, width / 2 - f.width) - 15);
+      wholeWidth -= g.width + f.width + 10;
+      c += l;
+    }
+    a.length && a[0].group.attr({transform:"translate(" + c + ",60)"});
+    g && rPort && (this._movePort(g, c, tP, h), this._movePort(rPort, c, bP, k));
+  };
   a._alignNS = function(a, c, d) {
-    for (var e = -this._rect.width / 2, f = this._rect.width / 2, g = this._rect.width, h = 0, k = this._hwModule.monitorTemplate.mode, l = 0;l < a.length;l++) {
-      h += a[l].width + 5;
+    for (var e = -this._rect.width / 2, f = this._rect.width / 2, g = this._rect.width, h = 0, k = 0;k < a.length;k++) {
+      h += a[k].width + 5;
     }
     h < f - e && (f = h / 2 + 3, e = -h / 2 - 3);
     for (;1 < a.length;) {
-      var n = a.shift(), m = a.pop(), q = e, r = f, l = d;
-      h <= f - e ? (e += n.width + 5, f -= m.width + 5, l = 0) : 0 === a.length ? (e = (e + f) / 2 - 3, f = e + 6) : "list" != k ? (e = Math.max(e, -g / 2 + n.width) + 15, f = Math.min(f, g / 2 - m.width) - 15, console.log(123123)) : "list" == k && (parseInt(h / this._rect.width), h = this._rect.width, e = Math.min(e - n.width, -g / 2), f = Math.max(f + m.width, g / 2));
-      h -= n.width + m.width + 10;
-      c += l;
+      var k = a.shift(), l = a.pop(), n = e, m = f, q = d;
+      h <= f - e ? (e += k.width + 5, f -= l.width + 5, q = 0) : 0 === a.length ? (e = (e + f) / 2 - 3, f = e + 6) : (e = Math.max(e, -g / 2 + k.width) + 15, f = Math.min(f, g / 2 - l.width) - 15);
+      this._movePort(k, e, c, n);
+      this._movePort(l, f, c, m);
+      h -= k.width + l.width + 10;
+      c += q;
     }
-    this._movePort(n, e, c, q);
-    this._movePort(m, f, c, r);
-    a.length && a[0].group.attr({transform:"translate(" + (f + e - a[0].width) / 2 + "," + c + ")"});
+    a.length && this._movePort(a[0], (f + e - a[0].width) / 2, c, 1E3);
   };
   a._alignNSList = function(a, c) {
     var d = this._rect.width;

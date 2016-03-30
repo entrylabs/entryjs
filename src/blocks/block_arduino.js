@@ -3,7 +3,7 @@
 Entry.Arduino = {
     name: 'arduino',
     setZero: function() {
-        for (var port = 0; port < 14; port++) {
+        for (var port = 0; port < 20; port++) {
           Entry.hw.sendQueue[port] = 0;
         }
         Entry.hw.update();
@@ -53,17 +53,17 @@ Entry.SensorBoard = {
             "D7":{name: "3번 포트", type: "input", pos: {x: 0, y: 0}},
             "D12":{name: "4번 포트", type: "input", pos: {x: 0, y: 0}},
             "D13":{name: "5번 포트", type: "input", pos: {x: 0, y: 0}}
-        },
+                },
         ports : {
-            "MIC":{name: "마이크", type: "input",pos: {x : 136, y: 245}},
-            "CDS1":{name: "빛 센서1", type: "output",pos: {x : 70, y: 246}},
-            "CDS2":{name: "빛 센서2", type: "output",pos: {x : 200, y: 245}},
+            "MIC":{name: "마이크", type: "input",pos: {x : 130, y: 245}},
+            "CDS1":{name: "빛 센서1", type: "output",pos: {x : 80, y: 216}},
+            "CDS2":{name: "빛 센서2", type: "output",pos: {x : 190, y: 215}},
             "SLIDE":{name: "슬라이드", type: "input",pos: {x : 139, y: 22}},
-            "TEMP":{name: "온도", type: "output",pos: {x : 237, y: 271}},
-            "SW_R":{name: "스위치 1", type: "input",pos: {x : 196, y: 134}},
-            "SW_L":{name: "스위치 2", type: "input",pos: {x : 129, y: 185}},
-            "SW_D":{name: "스위치 3", type: "input",pos: {x : 74, y: 125}},
-            "SW_U":{name: "스위치 4", type: "input",pos: {x : 136, y: 73}}
+            "TEMP":{name: "온도", type: "output",pos: {x : 207, y: 251}},
+            "SW_R":{name: "스위치 1", type: "input",pos: {x : 180, y: 120}},
+            "SW_L":{name: "스위치 2", type: "input",pos: {x : 90, y: 143}},
+            "SW_D":{name: "스위치 3", type: "input",pos: {x : 120, y: 185}},
+            "SW_U":{name: "스위치 4", type: "input",pos: {x : 130, y: 73}}
       },
       mode : 'both'
     }

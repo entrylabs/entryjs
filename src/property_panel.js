@@ -63,7 +63,6 @@ Entry.PropertyPanel = function() {
             tabDom: tabDom,
             contentDom: contentDom
         };
-        console.log("123123213123123123232njknfdjkasnjfk");
     };
 
     p.resize = function(canvasSize) {
@@ -76,8 +75,7 @@ Entry.PropertyPanel = function() {
             this._view.removeClass("collapsed");
         else
             this._view.addClass("collapsed");
-
-        console.log(this.modes);
+        
         Entry.dispatchEvent('windowResized');
         // if(this.selected == 'hw' && this.modes.hw.obj.listPorts)
         //     this.modes[this.selected].obj.resizeList();
@@ -87,7 +85,6 @@ Entry.PropertyPanel = function() {
     };
 
     p.select = function(modeName) {
-        console.log(modeName);
         for (var key in this.modes) {
             var mode = this.modes[key];
             mode.tabDom.removeClass("selected");
@@ -96,8 +93,6 @@ Entry.PropertyPanel = function() {
         var selected = this.modes[modeName];
         selected.tabDom.addClass("selected");
         selected.contentDom.removeClass("entryHidden");
-        console.log(123321);
-        console.log(selected);
         selected.obj.resize();
         this.selected = modeName;
     };
