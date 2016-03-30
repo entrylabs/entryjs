@@ -70,10 +70,7 @@ Entry.PyBlockParser = function(syntax) {
                     if (token2.length === 0) continue;
                     if (sreg.test(token2)) {
                         var paramIndex = Number(token2.split('$')[1]) - 1;
-                        //result += this.indent(this.Thread(block.statements[paramIndex]));
-                        var a = this.Thread(block.statements[paramIndex]);
-                        result += a;
-                        console.log(a);
+                        result += this.indent(this.Thread(block.statements[paramIndex]));
                     } else result += token2;
                 }
             }
@@ -153,11 +150,10 @@ Entry.PyBlockParser = function(syntax) {
     };
 
     p.indent = function(textCode) {
-        var result = "    ";
+        var result = "\t";
         var indentedCode = textCode.split("\n");
         indentedCode.pop();
-        result += indentedCode.join("\n    ") + "\n";
-        debugger;
+        result += indentedCode.join("\n\t") + "\n";
         return result;
     };
 

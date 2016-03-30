@@ -54,7 +54,7 @@ Blockly.Blocks.repeat_basic = {
         this.setPreviousStatement(true);
         this.setNextStatement(true);
     },
-    syntax: {js: [], py: ["for (i=0; i<%1; i++)\n{\n$1\n}"]}
+    syntax: {js: [], py: ["for (i=0; i<%1; i++)\n{\n$1\n}\n"]}
 };
 
 Entry.block.repeat_basic = function (sprite, script) {
@@ -162,7 +162,7 @@ Blockly.Blocks._if = {
             .appendField(Lang.Blocks.FLOW__if_1);
         this.appendValueInput("BOOL")
             .setCheck("Boolean");
-        this.appendDummyInput()     
+        this.appendDummyInput()
             .appendField(Lang.Blocks.FLOW__if_2)
         .appendField(new Blockly.FieldIcon(Entry.mediaFilePath + 'block_icon/flow_03.png', '*'));
         this.appendStatementInput("STACK");

@@ -1692,7 +1692,7 @@ Blockly.Blocks.repeat_basic = {init:function() {
   this.setInputsInline(!0);
   this.setPreviousStatement(!0);
   this.setNextStatement(!0);
-}, syntax:{js:[], py:["for (i=0; i<%1; i++)\n{\n$1\n}"]}};
+}, syntax:{js:[], py:["for (i=0; i<%1; i++)\n{\n$1\n}\n"]}};
 Entry.block.repeat_basic = function(a, b) {
   var c;
   if (!b.isLooped) {
@@ -8521,7 +8521,7 @@ Entry.PyBlockParser = function(a) {
         } else {
           if (d.test(k)) {
             for (var k = k.split(d), n = 0;n < k.length;n++) {
-              m = k[n], 0 !== m.length && (d.test(m) ? (m = Number(m.split("$")[1]) - 1, m = this.Thread(b.statements[m]), g += m, console.log(m)) : g += m);
+              m = k[n], 0 !== m.length && (d.test(m) ? (m = Number(m.split("$")[1]) - 1, g += this.indent(this.Thread(b.statements[m]))) : g += m);
             }
           } else {
             g += k;
@@ -8584,12 +8584,10 @@ Entry.PyBlockParser = function(a) {
     return b;
   };
   a.indent = function(b) {
-    var a = "    ";
+    var a = "\t";
     b = b.split("\n");
     b.pop();
-    a += b.join("\n    ") + "\n";
-    debugger;
-    return a;
+    return a += b.join("\n\t") + "\n";
   };
 })(Entry.PyBlockParser.prototype);
 Entry.JSParser = function(a) {
