@@ -5,7 +5,7 @@
 
 goog.provide("Entry.PythonBlockParser");
 
-Entry.PythonBlockParser = function(syntax) {
+Entry.PyBlockParser = function(syntax) {
     this.syntax = syntax;
 
     this._iterVariableCount = 0;
@@ -104,4 +104,4 @@ Entry.PythonBlockParser = function(syntax) {
         return this.Block(param);
     }
 
-})(Entry.PythonBlockParser.prototype);
+})(Entry.PyBlockParser.prototype);

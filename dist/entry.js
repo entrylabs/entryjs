@@ -8477,7 +8477,8 @@ Entry.BlockParser = function(a) {
     this._iterVariableCount && this._iterVariableCount--;
   };
 })(Entry.BlockParser.prototype);
-Entry.PythonBlockParser = function(a) {
+Entry.PythonBlockParser = {};
+Entry.PyBlockParser = function(a) {
   this.syntax = a;
   this._iterVariableCount = 0;
   this._iterVariableChunk = ["i", "j", "k"];
@@ -8544,7 +8545,7 @@ Entry.PythonBlockParser = function(a) {
   a.FieldTextInput = function(b) {
     return this.Block(b);
   };
-})(Entry.PythonBlockParser.prototype);
+})(Entry.PyBlockParser.prototype);
 Entry.JSParser = function(a) {
   this.syntax = a;
   this.scopeChain = [];
@@ -8828,7 +8829,7 @@ Entry.Parser = function(a, b, c) {
       this._parser = new Entry.BlockParser(this.syntax);
       break;
     case "blockPy":
-      this._parser = new Entry.PythonBlockParser(this.syntax);
+      this._parser = new Entry.PyBlockParser(this.syntax);
   }
 };
 (function(a) {

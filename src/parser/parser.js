@@ -59,7 +59,7 @@ Entry.Parser = function(mode, syntax, cm) {
             this._parser = new Entry.BlockParser(this.syntax);
             break;
         case "blockPy":
-            this._parser = new Entry.PythonBlockParser(this.syntax);
+            this._parser = new Entry.PyBlockParser(this.syntax);
             break;
     }
 };
