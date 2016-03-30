@@ -121,8 +121,9 @@ Entry.Albert = {PORT_MAP:{leftWheel:0, rightWheel:0, buzzer:0, leftEye:0, rightE
   a = Entry.Albert;
   a.tempo = 60;
   a.removeAllTimeouts();
-}, monitorTemplate:{imgPath:"hw/albert.png", width:268, height:270, ports:{leftProximity:{name:Lang.Blocks.ALBERT_sensor_leftProximity, type:"input", pos:{x:0, y:0}}, rightProximity:{name:Lang.Blocks.ALBERT_sensor_rightProximity, type:"input", pos:{x:0, y:0}}, battery:{name:Lang.Blocks.ALBERT_sensor_battery, type:"input", pos:{x:0, y:0}}, light:{name:Lang.Blocks.ALBERT_sensor_light, type:"input", pos:{x:0, y:0}}, leftWheel:{name:"\uc67c\ucabd \ubc14\ud034", type:"output", pos:{x:0, y:0}}, rightWheel:{name:"\uc624\ub978\ucabd \ubc14\ud034", 
-type:"output", pos:{x:0, y:0}}, buzzer:{name:"\ubd80\uc800 1", type:"output", pos:{x:0, y:0}}, leftEye:{name:"\uc67c\ucabd \ub208", type:"output", pos:{x:0, y:0}}, rightEye:{name:"\uc624\ub978\ucabd \ub208", type:"output", pos:{x:0, y:0}}, note:{name:"\ubd80\uc800 2", type:"output", pos:{x:0, y:0}}, bodyLed:{name:"\ubab8\ud1b5 \ubd88\ube5b", type:"output", pos:{x:0, y:0}}, frontLed:{name:"\uc55e\ucabd \ubd88\ube5b", type:"output", pos:{x:0, y:0}}}}, tempo:60, timeouts:[], removeTimeout:function(a) {
+}, monitorTemplate:{imgPath:"hw/albert.png", width:387, height:503, ports:{leftProximity:{name:Lang.Blocks.ALBERT_sensor_leftProximity, type:"input", pos:{x:178, y:401}}, rightProximity:{name:Lang.Blocks.ALBERT_sensor_rightProximity, type:"input", pos:{x:66, y:359}}, battery:{name:Lang.Blocks.ALBERT_sensor_battery, type:"input", pos:{x:88, y:368}}, light:{name:Lang.Blocks.ALBERT_sensor_light, type:"input", pos:{x:147, y:391}}, leftWheel:{name:"\uc67c\ucabd \ubc14\ud034", type:"output", pos:{x:299, 
+y:406}}, rightWheel:{name:"\uc624\ub978\ucabd \ubc14\ud034", type:"output", pos:{x:22, y:325}}, buzzer:{name:"\ubd80\uc800 1", type:"output", pos:{x:111, y:217}}, leftEye:{name:"\uc67c\ucabd \ub208", type:"output", pos:{x:260, y:46}}, rightEye:{name:"\uc624\ub978\ucabd \ub208", type:"output", pos:{x:164, y:33}}, note:{name:"\ubd80\uc800 2", type:"output", pos:{x:212, y:228}}, bodyLed:{name:"\ubab8\ud1b5 \ubd88\ube5b", type:"output", pos:{x:367, y:308}}, frontLed:{name:"\uc55e\ucabd \ubd88\ube5b", 
+type:"output", pos:{x:117, y:379}}}}, tempo:60, timeouts:[], removeTimeout:function(a) {
   clearTimeout(a);
   var b = this.timeouts;
   a = b.indexOf(a);
