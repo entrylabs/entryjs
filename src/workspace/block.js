@@ -186,8 +186,10 @@ Entry.Block.MAGNET_OFFSET = 0.4;
         if (params) {
             for (var i=0; i<params.length; i++) {
                 var param = params[i];
-                if (param instanceof Entry.Block)
+                if (param instanceof Entry.Block) {
+                    param.doNotSplice = true;
                     param.destroy(animate);
+                }
             }
         }
 
@@ -205,7 +207,6 @@ Entry.Block.MAGNET_OFFSET = 0.4;
         var thread = this.getThread();
         if (this._schema.event)
             thread.unregisterEvent(this, this._schema.event);
-
         if (nextBlock) {
             if (next) nextBlock.destroy(animate, next);
             else {
@@ -220,7 +221,8 @@ Entry.Block.MAGNET_OFFSET = 0.4;
                 } else nextBlock.view.bindPrev(prevBlock);
             }
         }
-        thread.spliceBlock(this);
+        if (!this.doNotSplice) thread.spliceBlock(this);
+        else delete this.doNotSplice;
         if (this.view) this.view.destroy(animate);
         if (this._schemaChangeEvent)
             this._schemaChangeEvent.destroy();

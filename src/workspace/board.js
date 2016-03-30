@@ -48,9 +48,8 @@ Entry.Board = function(option) {
     var that = this;
     this.svg = Entry.SVG(this._svgId);
     $(window).scroll(function() {
-        that.updateOffset
+        that.updateOffset();
     });
-    Entry.windowResized.attach(this, this.updateOffset);
 
     this._blockViews = [];
     this._magnetMap = null;
@@ -68,10 +67,11 @@ Entry.Board = function(option) {
         this.generateButtons();
     }
 
-    this.updateOffset();
 
     Entry.ANIMATION_DURATION = 200;
     Entry.BOARD_PADDING = 100;
+
+    this.updateOffset();
 
     this.changeEvent = new Entry.Event(this);
     this.scroller = new Entry.Scroller(this, true, true);
@@ -83,6 +83,8 @@ Entry.Board = function(option) {
         Entry.documentMousedown.attach(this, this.setSelectedBlock);
     if (Entry.keyPressed)
         Entry.keyPressed.attach(this, this._keyboardControl);
+    if (Entry.windowResized)
+        Entry.windowResized.attach(this, this.updateOffset);
 
     this.observe(this, "generateCodeMagnetMap", ["dragBlock"], false);
 };
@@ -371,6 +373,14 @@ Entry.Board = function(option) {
 
         cancelButton.onclick = function(e) { that.cancelEdit(); };
         cancelText.onclick = function(e) { that.cancelEdit(); };
+    };
+
+    p.cancelEdit = function() {
+        this.workspace.setMode(Entry.Workspace.MODE_BOARD, "cancelEdit");
+    };
+
+    p.save = function() {
+        this.workspace.setMode(Entry.Workspace.MODE_BOARD, "save");
     };
 
     p.generateCodeMagnetMap = function() {

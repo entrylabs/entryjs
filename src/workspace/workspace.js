@@ -50,6 +50,8 @@ Entry.Workspace = function(options) {
     if (Entry.keyPressed)
         Entry.keyPressed.attach(this, this._keyboardControl);
 
+    // view state change event
+    this.changeEvent = new Entry.Event(this);
 };
 
 Entry.Workspace.MODE_BOARD = 0; 
@@ -72,11 +74,10 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
 
     p.getMode = function() {return this.mode;};
 
-    p.setMode = function(mode, type){
+    p.setMode = function(mode, message){
         mode = Number(mode);
-        console.log("mode", mode, "type", type);
-        this.mode = mode;
-        this.type = type;
+        this.mode = mode[0];
+        this.type = type[1];
         switch (mode) {
             case Entry.Workspace.MODE_VIMBOARD:
                 if (this.board) this.board.hide();
@@ -105,11 +106,12 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
             case Entry.Workspace.MODE_OVERLAYBOARD:
                 if (!this.overlayBoard)
                     this.initOverlayBoard();
-                this.set({selectedBoard:this.overlayBoard});
                 this.overlayBoard.show();
+                this.set({selectedBoard:this.overlayBoard});
                 break;
         }
-       
+        if(message)
+            this.changeEvent.notify(message);
     };
 
     p.changeBoardCode = function(code) {

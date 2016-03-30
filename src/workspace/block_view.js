@@ -12,6 +12,7 @@ Entry.BlockView = function(block, board, mode) {
     Entry.Model(this, false);
     this.block = block;
     this._board = board;
+    this._observers = [];
     this.set(block);
     this.svgGroup = board.svgBlockGroup.elem("g");
 
@@ -27,13 +28,13 @@ Entry.BlockView = function(block, board, mode) {
     if (skeleton.magnets && skeleton.magnets(this).next) {
         this.svgGroup.nextMagnet = this.block;
         this._nextGroup = this.svgGroup.elem("g");
-        this.observe(this, "_updateMagnet", ["contentHeight"]);
+        this._observers.push(this.observe(this, "_updateMagnet", ["contentHeight"]));
     }
 
     this.isInBlockMenu = this.getBoard() instanceof Entry.BlockMenu;
 
     if (skeleton.morph)
-        this.block.observe(this, "_renderPath", skeleton.morph, false);
+        this._observers.push(this.block.observe(this, "_renderPath", skeleton.morph, false));
 
     var that = this;
     this.mouseHandler = function() {
@@ -46,17 +47,17 @@ Entry.BlockView = function(block, board, mode) {
     this._startRender(block, mode);
 
     // observe
-    this.block.observe(this, "_setMovable", ["movable"]);
-    this.block.observe(this, "_setReadOnly", ["movable"]);
-    this.block.observe(this, "_setCopyable", ["copyable"]);
-    this.block.observe(this, "_updateColor", ["deletable"], false);
-    this.observe(this, "_updateBG", ["magneting"], false);
+    this._observers.push(this.block.observe(this, "_setMovable", ["movable"]));
+    this._observers.push(this.block.observe(this, "_setReadOnly", ["movable"]));
+    this._observers.push(this.block.observe(this, "_setCopyable", ["copyable"]));
+    this._observers.push(this.block.observe(this, "_updateColor", ["deletable"], false));
+    this._observers.push(this.observe(this, "_updateBG", ["magneting"], false));
 
-    this.observe(this, "_updateOpacity", ["visible"], false);
-    this.observe(this, "_updateDisplay", ["display"], false);
-    this.observe(this, "_updateShadow", ["shadow"]);
-    this.observe(this, "_updateMagnet", ["offsetY"]);
-    board.code.observe(this, '_setBoard', ['board'], false);
+    this._observers.push(this.observe(this, "_updateOpacity", ["visible"], false));
+    this._observers.push(this.observe(this, "_updateDisplay", ["display"], false));
+    this._observers.push(this.observe(this, "_updateShadow", ["shadow"]));
+    this._observers.push(this.observe(this, "_updateMagnet", ["offsetY"]));
+    this._observers.push(board.code.observe(this, '_setBoard', ['board'], false));
 
     this.dragMode = Entry.DRAG_MODE_NONE;
     Entry.Utils.disableContextmenu(this.svgGroup.node);
@@ -631,6 +632,7 @@ Entry.BlockView.DRAG_RADIUS = 5;
     };
 
     p.destroy = function(animate) {
+        this._destroyObservers();
         var svgGroup = this.svgGroup;
 
         var thread = this.block.getThread();
@@ -649,8 +651,9 @@ Entry.BlockView.DRAG_RADIUS = 5;
             );
         } else svgGroup.remove();
 
-        this._contents.forEach(function(c) {c.destroy();});
-        this._statements.forEach(function(c) {c.destroy();});
+        this._contents.forEach(function(c) {
+            if (c.constructor !== Entry.Block) c.destroy();
+        });
 
         var block = this.block;
         var events = block.events.whenBlockDestroy;
@@ -891,6 +894,14 @@ Entry.BlockView.DRAG_RADIUS = 5;
         this._path.attr({fill:fillColor});
         //update block inner images
         this._startContentRender(this.getBoard().workspace.getMode());
+    };
+
+    p._destroyObservers = function() {
+        var observers = this._observers;
+        while(observers.length) {
+            var o = observers.pop();
+            o.destroy();
+        }
     };
 
 })(Entry.BlockView.prototype);

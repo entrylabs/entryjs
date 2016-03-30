@@ -26,14 +26,13 @@ Entry.Playground = function() {
     var that = this;
     Entry.addEventListener('textEdited', this.injectText);
     Entry.addEventListener('hwChanged', this.updateHW);
-    Entry.addEventListener('changeMode', function(info) {
-        that.setMode(info);
+    Entry.addEventListener('changeMode', function(mode) {
+        that.setMode(mode);
     });
 }
 
-Entry.Playground.prototype.setMode = function(info) {
-    console.log("mdoe", info[0], "type", info[1]);
-    this.mainWorkspace.setMode(info[0], info[1]);
+Entry.Playground.prototype.setMode = function(mode) {
+    this.mainWorkspace.setMode(mode);
 }
 
 /**

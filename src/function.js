@@ -42,7 +42,7 @@ Entry.Func.registerFunction = function(func) {
     var menuCode = blockMenu.getCategoryCodes("func");
     menuCode.createThread([{
         type: "func_" + func.id
-    } ]);
+    }]);
 };
 
 Entry.Func.executeFunction = function(threadHash) {
@@ -78,25 +78,30 @@ Entry.Func.edit = function(func) {
 };
 
 Entry.Func.initEditView = function(content) {
-    Entry.playground.mainWorkspace.setMode(Entry.Workspace.MODE_OVERLAYBOARD);
-    var blockMenu = Entry.playground.mainWorkspace.getBlockMenu();
-    Entry.playground.mainWorkspace.changeOverlayBoardCode(content);
+    var workspace = Entry.playground.mainWorkspace;
+    workspace.setMode(Entry.Workspace.MODE_OVERLAYBOARD);
+    workspace.changeOverlayBoardCode(content);
+    workspace.changeEvent.attach(this, this.endEdit);
 };
 
-Entry.Func.save = function() {
+Entry.Func.endEdit = function(message) {
     this._funcChangeEvent.destroy();
+    if (message === "save")
+        this.save();
+    else
+        this.cancelEdit();
+}
+
+Entry.Func.save = function() {
     this.targetFunc.generateBlock(true);
     Entry.variableContainer.saveFunction(this.targetFunc);
     this.cancelEdit();
 };
 
 Entry.Func.cancelEdit = function() {
-    if (!this.svg || !this.targetFunc)
+    if (!this.targetFunc)
         return;
-    this._funcChangeEvent.destroy();
-    this.parentView.removeChild(this.svg);
     Entry.Func.isEdit = false;
-    Blockly.mainWorkspace.blockMenu.targetWorkspace = Blockly.mainWorkspace;
     if (!this.targetFunc.block) {
         delete Entry.variableContainer.functions_[this.targetFunc.id];
         delete Entry.variableContainer.selected;
@@ -204,10 +209,15 @@ Entry.Func.requestParamBlock = function(type) {
 
 Entry.Func.updateMenu = function() {
     var blockMenu = Entry.playground.mainWorkspace.getBlockMenu();
-    if (!this.menuCode)
-        this.setupMenuCode();
-    blockMenu.banClass("functionInit");
-    blockMenu.unbanClass("functionEdit");
+    if (this.targetFunc) {
+        if (!this.menuCode)
+            this.setupMenuCode();
+        blockMenu.banClass("functionInit");
+        blockMenu.unbanClass("functionEdit");
+    } else {
+        blockMenu.unbanClass("functionInit");
+        blockMenu.banClass("functionEdit");
+    }
 };
 
 Entry.Func.prototype.edit = function() {
