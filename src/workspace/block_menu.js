@@ -146,6 +146,15 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
             function() {that.changeEvent.notify();}
         );
         code.createView(this);
+        var workspace = this.workspace;
+        var workspaceMode = workspace.getMode();
+        if (this.workspace.getMode() === Entry.Workspace.MODE_VIMBOARD) {
+            if (!code.mode || code.mode === 'code')
+                this.renderText();
+        } else {
+            if (code.mode === 'text')
+                this.renderBlock();
+        }
         this.align();
     };
 
@@ -217,7 +226,7 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
         var svgWidth = this._svgWidth;
 
         var board = workspace.selectedBoard;
-        
+
         if (board && (workspaceMode == Entry.Workspace.MODE_BOARD ||
                       workspaceMode == Entry.Workspace.MODE_OVERLAYBOARD)) {
             var block = blockView.block;
@@ -282,12 +291,14 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
 
     p.renderText = function() {
         var threads = this.code.getThreads();
+        this.code.mode = 'text';
         for (var i=0; i<threads.length; i++)
             threads[i].view.renderText();
     };
 
     p.renderBlock = function() {
         var threads = this.code.getThreads();
+        this.code.mode = 'code';
         for (var i=0; i<threads.length; i++)
             threads[i].view.renderBlock();
     };

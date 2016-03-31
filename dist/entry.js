@@ -13320,6 +13320,8 @@ Entry.BlockMenu = function(a, b, c, d) {
       a.changeEvent.notify();
     });
     b.createView(this);
+    this.workspace.getMode();
+    this.workspace.getMode() === Entry.Workspace.MODE_VIMBOARD ? b.mode && "code" !== b.mode || this.renderText() : "text" === b.mode && this.renderBlock();
     this.align();
   };
   a.bindCodeView = function(b) {
@@ -13380,12 +13382,16 @@ Entry.BlockMenu = function(a, b, c, d) {
     this.view.removeClass("entryRemove");
   };
   a.renderText = function() {
-    for (var b = this.code.getThreads(), a = 0;a < b.length;a++) {
+    var b = this.code.getThreads();
+    this.code.mode = "text";
+    for (var a = 0;a < b.length;a++) {
       b[a].view.renderText();
     }
   };
   a.renderBlock = function() {
-    for (var b = this.code.getThreads(), a = 0;a < b.length;a++) {
+    var b = this.code.getThreads();
+    this.code.mode = "code";
+    for (var a = 0;a < b.length;a++) {
       b[a].view.renderBlock();
     }
   };
@@ -15242,9 +15248,9 @@ Entry.GlobalSvg = {};
     this.svgDom.css("display", "none");
   };
   a.position = function() {
-    var a = this._view, c = a.getAbsoluteCoordinate(), a = a.getBoard().offset;
-    this.left = c.x + a.left - this._offsetX;
-    this.top = c.y + a.top - this._offsetY;
+    var b = this._view, a = b.getAbsoluteCoordinate(), b = b.getBoard().offset;
+    this.left = a.x + b.left - this._offsetX;
+    this.top = a.y + b.top - this._offsetY;
     this.svgDom.css({left:this.left, top:this.top});
   };
   a.terminateDrag = function(a) {
