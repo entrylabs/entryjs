@@ -15198,9 +15198,7 @@ Entry.RenderView = function(a, b) {
   a.align = function() {
     var a = this.code.getThreads();
     if (a && 0 !== a.length) {
-      var c = 0, d = "LEFT" == this._align ? 20 : this.svgDom.width() / 2;
-      console.log(d);
-      for (var e = 0, f = a.length;e < f;e++) {
+      for (var c = 0, d = "LEFT" == this._align ? 20 : this.svgDom.width() / 2, e = 0, f = a.length;e < f;e++) {
         var g = a[e].getFirstBlock().view;
         g._moveTo(d, c - g.offsetY, !1);
         g = g.svgGroup.getBBox().height;

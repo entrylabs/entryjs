@@ -90,9 +90,6 @@ Entry.RenderView = function(dom, align) {
             marginFromTop = 0,
             hPadding = this._align == 'LEFT' ? 20 : this.svgDom.width()/2;
 
-        console.log(hPadding);
-
-
         for (var i=0,len=threads.length; i<len; i++) {
             var thread = threads[i];
             var block = thread.getFirstBlock();
