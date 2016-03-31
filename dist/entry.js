@@ -7282,6 +7282,7 @@ p.generateView = function() {
   this.blockMenu_ = new Blockly.BlockMenu(a);
   this.blockMenu_.isViewOnly = !0;
   this.blockMenu_.isCenterAlign = !0;
+  1;
   this.blockHelperContent_.appendChild(a);
   a = Entry.createElement("div", "entryBlockHelperDescriptionWorkspace");
   this.blockHelperContent_.appendChild(a);
@@ -7294,7 +7295,7 @@ p.getView = function() {
   return this._view;
 };
 p.bindEvent = function() {
-  this.blockChangeEvent || (console.log("bindEvent"), this.blockChangeEvent = Blockly.bindEvent_(Blockly.mainWorkspace.getCanvas(), "blocklySelectChange", this, this.updateSelectedBlock), Entry.playground.blockMenu && (this.menuBlockChangeEvent = Blockly.bindEvent_(Entry.playground.blockMenu.workspace_.getCanvas(), "blocklySelectChange", this, this.updateSelectedBlock)));
+  this.blockChangeEvent || (this.blockChangeEvent = Blockly.bindEvent_(Blockly.mainWorkspace.getCanvas(), "blocklySelectChange", this, this.updateSelectedBlock), Entry.playground.blockMenu && (this.menuBlockChangeEvent = Blockly.bindEvent_(Entry.playground.blockMenu.workspace_.getCanvas(), "blocklySelectChange", this, this.updateSelectedBlock)));
 };
 p.updateSelectedBlock = function() {
   Blockly.selected && (this.first && (this.blockHelperContent_.removeClass("entryBlockHelperIntro"), this.first = !1), this.renderBlock(Blockly.selected.type));
@@ -10384,7 +10385,6 @@ Entry.PropertyPanel = function() {
     c.tabDom.addClass("selected");
     c.contentDom.removeClass("entryHidden");
     c.obj.resize && c.obj.resize();
-    c.obj.blockHelperOn && c.obj.blockHelperOn();
     this.selected = a;
   };
   a.initializeSplitter = function(a) {

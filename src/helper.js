@@ -39,7 +39,7 @@ p.generateView = function() {
                             'entryBlockHelperBlockWorkspace');
     this.blockMenu_ = new Blockly.BlockMenu(blockHelperBlock);
     this.blockMenu_.isViewOnly = true;
-    this.blockMenu_.isCenterAlign = true;
+    this.blockMenu_.isCenterAlign = true;1
     helper.blockHelperContent_.appendChild(blockHelperBlock);
 
     var blockHelperDescription = Entry.createElement('div',
@@ -62,7 +62,6 @@ p.getView = function() {
 
 p.bindEvent = function() {
     if (!this.blockChangeEvent) {
-        console.log('bindEvent')
         this.blockChangeEvent = Blockly.bindEvent_(Blockly.mainWorkspace.getCanvas(),
         'blocklySelectChange', this, this.updateSelectedBlock);
         if (Entry.playground.blockMenu)
