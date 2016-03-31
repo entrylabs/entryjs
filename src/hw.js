@@ -53,18 +53,28 @@ p.initSocket = function() {
         option['transports'] = ['polling'];
     }
 
-    var socket = new WebSocket("ws://localhost:23518");
-    var socketIO = io.connect('ws://localhost:23517', option);
+    var socket, socketSecurity;
+    var protocol = '';
+    if(location.protocol.indexOf('https') > -1) {
+        socketSecurity = new WebSocket("wss://localhost:23518");
+    } else {
+        try{
+            socket = new WebSocket("ws://localhost:23518");
+        } catch(e) {}
+        try{
+            socketSecurity = new WebSocket("wss://localhost:23518");
+        } catch(e) {}
+    }
 
     this.connected = false;
     socket.binaryType = "arraybuffer";
-    socketIO.binaryType = "arraybuffer";
+    socketSecurity.binaryType = "arraybuffer";
     this.connectTrial++;
 
     socket.onopen = function()
     {
         hw.socketType = 'WebSocket';
-        hw.initHardware();
+        hw.initHardware(socket);
     };
 
     socket.onmessage = function (evt)
@@ -80,29 +90,28 @@ p.initSocket = function() {
             this.socket = null;
             hw.initSocket();
         }
+    };    
+
+    socketSecurity.onopen = function()
+    {
+        hw.socketType = 'WebSocketSecurity';
+        hw.initHardware(socketSecurity);
     };
-    
-    socketIO.connect();
-    socketIO.on('connect', function (data) {
-        hw.socketType = 'SocketIO';
-        hw.initHardware(socketIO);
-    });
 
-    socketIO.on('message', function (evt) {
-        if(typeof evt === 'string') {
-            var data = JSON.parse(evt);
-            hw.checkDevice(data);
-            hw.updatePortData(data);
-        }
-    });
+    socketSecurity.onmessage = function (evt)
+    {
+        var data = JSON.parse(evt.data);
+        hw.checkDevice(data);
+        hw.updatePortData(data);
+    };
 
-    socketIO.on('disconnect', function (data) {
-        if(hw.socketType === 'SocketIO') {
+    socketSecurity.onclose = function()
+    {
+        if(hw.socketType === 'WebSocketSecurity') {
             this.socket = null;
-            socketIO.destroy(socketIO);
             hw.initSocket();
         }
-    });
+    };
 
     Entry.dispatchEvent("hwChanged");
 };
@@ -153,19 +162,12 @@ p.update = function() {
     if (!this.socket) {
         return;
     }
-    if(this.socketType === 'SocketIO') {
-        if (this.socket.io.readyState != 'open') {
-            return;
-        }
-        
-        this.socket.emit('message', JSON.stringify(this.sendQueue));
-    } else if (this.socketType === 'WebSocket') {
-        if(this.socket.readyState != 1) {
-            return;
-        }
 
-        this.socket.send(JSON.stringify(this.sendQueue));
+    if(this.socket.readyState != 1) {
+        return;
     }
+
+    this.socket.send(JSON.stringify(this.sendQueue));
 
     this.sendQueue.readablePorts = [];
 };
@@ -176,9 +178,6 @@ p.updatePortData = function(data) {
 
 p.closeConnection = function() {
     if (this.socket) {
-        if(this.socketType === 'SocketIO') {
-            this.socket.emit('close');
-        }
         this.socket.close();
     }
 };

@@ -7163,18 +7163,28 @@ p.initSocket = function() {
   if (this.connectTrial >= Entry.HW.TRIAL_LIMIT) {
     this.isFirstConnect || Entry.toast.alert(Lang.Menus.connect_hw, Lang.Menus.connect_fail, !1), this.isFirstConnect = !1;
   } else {
-    var a = this, b = {reconnection:!1}, c = Entry.getBrowserType().toUpperCase();
-    if (-1 < c.indexOf("IE") || -1 < c.indexOf("EDGE")) {
-      b.transports = ["polling"];
+    var a = this, b = Entry.getBrowserType().toUpperCase();
+    -1 < b.indexOf("IE") || b.indexOf("EDGE");
+    var c, d;
+    if (-1 < location.protocol.indexOf("https")) {
+      d = new WebSocket("wss://localhost:23518");
+    } else {
+      try {
+        c = new WebSocket("ws://localhost:23518");
+      } catch (e) {
+      }
+      try {
+        d = new WebSocket("wss://localhost:23518");
+      } catch (e) {
+      }
     }
-    var c = new WebSocket("ws://localhost:23518"), d = io.connect("ws://localhost:23517", b);
     this.connected = !1;
     c.binaryType = "arraybuffer";
     d.binaryType = "arraybuffer";
     this.connectTrial++;
     c.onopen = function() {
       a.socketType = "WebSocket";
-      a.initHardware();
+      a.initHardware(c);
     };
     c.onmessage = function(b) {
       b = JSON.parse(b.data);
@@ -7184,17 +7194,18 @@ p.initSocket = function() {
     c.onclose = function() {
       "WebSocket" === a.socketType && (this.socket = null, a.initSocket());
     };
-    d.connect();
-    d.on("connect", function(b) {
-      a.socketType = "SocketIO";
+    d.onopen = function() {
+      a.socketType = "WebSocketSecurity";
       a.initHardware(d);
-    });
-    d.on("message", function(b) {
-      "string" === typeof b && (b = JSON.parse(b), a.checkDevice(b), a.updatePortData(b));
-    });
-    d.on("disconnect", function(b) {
-      "SocketIO" === a.socketType && (this.socket = null, d.destroy(d), a.initSocket());
-    });
+    };
+    d.onmessage = function(b) {
+      b = JSON.parse(b.data);
+      a.checkDevice(b);
+      a.updatePortData(b);
+    };
+    d.onclose = function() {
+      "WebSocketSecurity" === a.socketType && (this.socket = null, a.initSocket());
+    };
     Entry.dispatchEvent("hwChanged");
   }
 };
@@ -7227,28 +7238,13 @@ p.setPortReadable = function(a) {
   this.sendQueue.readablePorts.push(a);
 };
 p.update = function() {
-  if (this.socket) {
-    if ("SocketIO" === this.socketType) {
-      if ("open" != this.socket.io.readyState) {
-        return;
-      }
-      this.socket.emit("message", JSON.stringify(this.sendQueue));
-    } else {
-      if ("WebSocket" === this.socketType) {
-        if (1 != this.socket.readyState) {
-          return;
-        }
-        this.socket.send(JSON.stringify(this.sendQueue));
-      }
-    }
-    this.sendQueue.readablePorts = [];
-  }
+  this.socket && 1 == this.socket.readyState && (this.socket.send(JSON.stringify(this.sendQueue)), this.sendQueue.readablePorts = []);
 };
 p.updatePortData = function(a) {
   this.portData = a;
 };
 p.closeConnection = function() {
-  this.socket && ("SocketIO" === this.socketType && this.socket.emit("close"), this.socket.close());
+  this.socket && this.socket.close();
 };
 p.downloadConnector = function() {
   window.open("http://play-entry.org/down/Entry_HW_v1.1.3.exe", "_blank").focus();
