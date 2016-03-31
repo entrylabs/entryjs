@@ -2144,6 +2144,9 @@ EntryStatic.getName = function(str, type) {
         dict = SoundNames;
 
     var lang = navigator.language ? navigator.language : 'ko';
+    if (window.lang)
+        lang = window.lang;
+
     if (window.user && window.user.language)
         lang = window.user.language;
 
