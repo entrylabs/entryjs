@@ -75,7 +75,7 @@ Entry.PropertyPanel = function() {
             this._view.removeClass("collapsed");
         else
             this._view.addClass("collapsed");
-        
+
         Entry.dispatchEvent('windowResized');
         // if(this.selected == 'hw' && this.modes.hw.obj.listPorts)
         //     this.modes[this.selected].obj.resizeList();
@@ -93,7 +93,9 @@ Entry.PropertyPanel = function() {
         var selected = this.modes[modeName];
         selected.tabDom.addClass("selected");
         selected.contentDom.removeClass("entryHidden");
-        selected.obj.resize();
+
+        if(selected.obj.resize)
+            selected.obj.resize();
         this.selected = modeName;
     };
 

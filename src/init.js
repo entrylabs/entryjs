@@ -125,7 +125,7 @@ Entry.initialize_ = function() {
 
     /**
      * Initialize container for objects.
-     * @type {!Entry.Container}
+     * @type {!Entry.Container}π
      * @type {!object}
      */
     this.container = new Entry.Container();
@@ -233,7 +233,7 @@ Entry.createDom = function(container, option) {
             for(var i=0; i<tempList.length; i++) {
                 var list = tempList[i];
                 if(wheelDirection){
-                    if(list.scrollButton_.y >= 46 )
+                    if(list.scrollButton_.y >= 46 ) 
                         list.scrollButton_.y -= 23;
                     else
                         list.scrollButton_.y = 23;
@@ -254,16 +254,17 @@ Entry.createDom = function(container, option) {
         /** @type {!Element} */
         this.containerView = containerView;
         this.container.generateView(this.containerView, option);
-        this.propertyPanel.addMode("container", this.container);
-        this.propertyPanel.select("container");
-
-        this.helper.initBlockHelper(containerView);
 
         var playgroundView = Entry.createElement('div');
         container.appendChild(playgroundView);
         /** @type {!Element} */
         this.playgroundView = playgroundView;
         this.playground.generateView(this.playgroundView, option);
+
+        this.propertyPanel.addMode("container", this.container);
+
+        this.propertyPanel.addMode("helper" , this.helper);
+        this.propertyPanel.select("container");
     } else if (option == 'minimize') {
         var canvas = Entry.createElement('canvas');
         canvas.className = 'entryCanvasWorkspace';

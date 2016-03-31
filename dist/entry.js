@@ -122,7 +122,7 @@ Entry.Albert = {PORT_MAP:{leftWheel:0, rightWheel:0, buzzer:0, leftEye:0, rightE
   a.tempo = 60;
   a.removeAllTimeouts();
 }, monitorTemplate:{imgPath:"hw/albert.png", width:387, height:503, ports:{leftProximity:{name:Lang.Blocks.ALBERT_sensor_leftProximity, type:"input", pos:{x:178, y:401}}, rightProximity:{name:Lang.Blocks.ALBERT_sensor_rightProximity, type:"input", pos:{x:66, y:359}}, battery:{name:Lang.Blocks.ALBERT_sensor_battery, type:"input", pos:{x:88, y:368}}, light:{name:Lang.Blocks.ALBERT_sensor_light, type:"input", pos:{x:147, y:391}}, leftWheel:{name:"\uc67c\ucabd \ubc14\ud034", type:"output", pos:{x:299, 
-y:406}}, rightWheel:{name:"\uc624\ub978\ucabd \ubc14\ud034", type:"output", pos:{x:22, y:325}}, buzzer:{name:"\ubd80\uc800 1", type:"output", pos:{x:111, y:217}}, leftEye:{name:"\uc67c\ucabd \ub208", type:"output", pos:{x:260, y:46}}, rightEye:{name:"\uc624\ub978\ucabd \ub208", type:"output", pos:{x:164, y:33}}, note:{name:"\ubd80\uc800 2", type:"output", pos:{x:212, y:228}}, bodyLed:{name:"\ubab8\ud1b5 \ubd88\ube5b", type:"output", pos:{x:367, y:308}}, frontLed:{name:"\uc55e\ucabd \ubd88\ube5b", 
+y:406}}, rightWheel:{name:"\uc624\ub978\ucabd \ubc14\ud034", type:"output", pos:{x:22, y:325}}, buzzer:{name:"\ubd80\uc800 1", type:"output", pos:{x:111, y:217}}, leftEye:{name:" \uc67c\ucabd \ub208", type:"output", pos:{x:260, y:26}}, rightEye:{name:" \uc624\ub978\ucabd \ub208", type:"output", pos:{x:164, y:13}}, note:{name:"\ubd80\uc800 2", type:"output", pos:{x:212, y:228}}, bodyLed:{name:"\ubab8\ud1b5 \ubd88\ube5b", type:"output", pos:{x:367, y:308}}, frontLed:{name:"\uc55e\ucabd \ubd88\ube5b", 
 type:"output", pos:{x:117, y:379}}}}, tempo:60, timeouts:[], removeTimeout:function(a) {
   clearTimeout(a);
   var b = this.timeouts;
@@ -2291,9 +2291,9 @@ Entry.Hamster = {PORT_MAP:{leftWheel:0, rightWheel:0, buzzer:0, outputA:0, outpu
   this.lineTracerModeId = this.lineTracerModeId + 1 & 255;
   a.lineTracerMode = b;
   a.lineTracerModeId = this.lineTracerModeId;
-}, name:"hamster", monitorTemplate:{imgPath:"hw/hamster.png", width:268, height:270, ports:{leftProximity:{name:Lang.Blocks.HAMSTER_sensor_leftProximity, type:"input", pos:{x:5, y:79}}, rightProximity:{name:Lang.Blocks.HAMSTER_sensor_rightProximity, type:"input", pos:{x:94, y:127}}, leftFloor:{name:Lang.Blocks.HAMSTER_sensor_leftFloor, type:"input", pos:{x:34, y:150}}, rightFloor:{name:Lang.Blocks.HAMSTER_sensor_rightFloor, type:"input", pos:{x:110, y:184}}, accelerationX:{name:Lang.Blocks.HAMSTER_sensor_accelerationX, 
-type:"input", pos:{x:32, y:141}}, accelerationY:{name:Lang.Blocks.HAMSTER_sensor_accelerationY, type:"input", pos:{x:98, y:65}}, accelerationZ:{name:Lang.Blocks.HAMSTER_sensor_accelerationZ, type:"input", pos:{x:188, y:70}}, light:{name:Lang.Blocks.HAMSTER_sensor_light, type:"input", pos:{x:36, y:145}}, temperature:{name:Lang.Blocks.HAMSTER_sensor_temperature, type:"input", pos:{x:50, y:152}}, leftWheel:{name:"\uc67c\ucabd \ubc14\ud034", type:"output", pos:{x:93, y:68}}, rightWheel:{name:"\uc624\ub978\ucabd \ubc14\ud034", 
-type:"output", pos:{x:168, y:130}}, buzzer:{name:"\ubd80\uc800 1", type:"output", pos:{x:88, y:55}}, outputA:{name:"outputA", type:"output", pos:{x:17, y:126}}, outputB:{name:"outputB", type:"output", pos:{x:108, y:172}}, leftLed:{name:"\uc67c\ucabd LED", type:"output", pos:{x:26, y:149}}, rightLed:{name:"\uc624\ub978\ucabd LED", type:"output", pos:{x:72, y:180}}, note:{name:"\ubd80\uc800 2", type:"output", pos:{x:89, y:60}}}}};
+}, name:"hamster", monitorTemplate:{imgPath:"hw/hamster.png", width:256, height:256, listPorts:{temperature:{name:Lang.Blocks.HAMSTER_sensor_temperature, type:"input", pos:{x:0, y:0}}, accelerationX:{name:Lang.Blocks.HAMSTER_sensor_accelerationX, type:"input", pos:{x:0, y:0}}, accelerationY:{name:Lang.Blocks.HAMSTER_sensor_accelerationY, type:"input", pos:{x:0, y:0}}, accelerationZ:{name:Lang.Blocks.HAMSTER_sensor_accelerationZ, type:"input", pos:{x:0, y:0}}, buzzer:{name:"\ubd80\uc800 1", type:"output", 
+pos:{x:0, y:0}}, "note ":{name:"\ubd80\uc800 2", type:"output", pos:{x:0, y:0}}}, ports:{leftProximity:{name:Lang.Blocks.HAMSTER_sensor_leftProximity, type:"input", pos:{x:122, y:156}}, rightProximity:{name:Lang.Blocks.HAMSTER_sensor_rightProximity, type:"input", pos:{x:10, y:108}}, leftFloor:{name:Lang.Blocks.HAMSTER_sensor_leftFloor, type:"input", pos:{x:137, y:219}}, rightFloor:{name:Lang.Blocks.HAMSTER_sensor_rightFloor, type:"input", pos:{x:4, y:166}}, light:{name:Lang.Blocks.HAMSTER_sensor_light, 
+type:"input", pos:{x:56, y:189}}, leftWheel:{name:"\uc67c\ucabd \ubc14\ud034", type:"output", pos:{x:210, y:164}}, rightWheel:{name:"\uc624\ub978\ucabd \ubc14\ud034", type:"output", pos:{x:37, y:104}}, outputA:{name:"outputA", type:"output", pos:{x:26, y:154}}, outputB:{name:"outputB", type:"output", pos:{x:108, y:172}}, leftLed:{name:"\uc67c\ucabd LED", type:"output", pos:{x:121, y:98}}, rightLed:{name:"\uc624\ub978\ucabd LED", type:"output", pos:{x:42, y:62}}}, mode:"both"}};
 Blockly.Blocks.hamster_hand_found = {init:function() {
   this.setColour("#00979D");
   this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_hand_found);
@@ -7259,63 +7259,42 @@ Entry.EntityObject.prototype.syncDialogVisible = function() {
   this.dialog && (this.dialog.object.visible = this.visible);
 };
 Entry.Helper = function() {
+  this.generateView();
 };
 var p = Entry.Helper.prototype;
-p.initBlockHelper = function(a) {
-  this.parentView_ || (this.parentView_ = a);
-};
-p.blockHelperOn = function() {
-  if (this.blockHelperView_) {
-    return this.blockHelperOff();
-  }
-  var a = this;
-  a.blockHelpData = EntryStatic.blockInfo;
-  var b = Entry.createElement("div", "entryBlockHelperWorkspace");
-  Entry.isForLecture && b.addClass("lecture");
-  a.parentView_.appendChild(b);
+p.generateView = function() {
+  this.blockHelpData = EntryStatic.blockInfo;
+  var a = Entry.createElement("div", "entryBlockHelperWorkspace");
+  this._view = a;
+  Entry.isForLecture && a.addClass("lecture");
   if (!Entry.isForLecture) {
-    var c = Entry.createElement("div", "entryBlockHelperHeaderWorkspace");
-    c.innerHTML = Lang.Helper.Block_info;
-    var d = Entry.createElement("button", "entryBlockHelperDisposeWorkspace");
-    d.addClass("entryBtn");
-    d.bindOnClick(function() {
-      a.blockHelperOff();
-    });
-    c.appendChild(d);
-    b.appendChild(c);
+    var b = Entry.createElement("div", "entryBlockHelperHeaderWorkspace");
+    b.innerHTML = Lang.Helper.Block_info;
+    a.appendChild(b);
   }
-  c = Entry.createElement("div", "entryBlockHelperContentWorkspace");
-  c.addClass("entryBlockHelperIntro");
-  Entry.isForLecture && c.addClass("lecture");
-  b.appendChild(c);
-  a.blockHelperContent_ = c;
-  a.blockHelperView_ = b;
-  b = Entry.createElement("div", "entryBlockHelperBlockWorkspace");
-  this.blockMenu_ = new Blockly.BlockMenu(b);
+  b = Entry.createElement("div", "entryBlockHelperContentWorkspace");
+  b.addClass("entryBlockHelperIntro");
+  Entry.isForLecture && b.addClass("lecture");
+  a.appendChild(b);
+  this.blockHelperContent_ = b;
+  this.blockHelperView_ = a;
+  a = Entry.createElement("div", "entryBlockHelperBlockWorkspace");
+  this.blockMenu_ = new Blockly.BlockMenu(a);
   this.blockMenu_.isViewOnly = !0;
   this.blockMenu_.isCenterAlign = !0;
-  a.blockHelperContent_.appendChild(b);
-  b = Entry.createElement("div", "entryBlockHelperDescriptionWorkspace");
-  a.blockHelperContent_.appendChild(b);
-  b.innerHTML = Lang.Helper.Block_click_msg;
-  this.blockHelperDescription_ = b;
-  this.blockChangeEvent = Blockly.bindEvent_(Blockly.mainWorkspace.getCanvas(), "blocklySelectChange", this, this.updateSelectedBlock);
-  Entry.playground.blockMenu && (this.menuBlockChangeEvent = Blockly.bindEvent_(Entry.playground.blockMenu.workspace_.getCanvas(), "blocklySelectChange", this, this.updateSelectedBlock));
+  this.blockHelperContent_.appendChild(a);
+  a = Entry.createElement("div", "entryBlockHelperDescriptionWorkspace");
+  this.blockHelperContent_.appendChild(a);
+  a.innerHTML = Lang.Helper.Block_click_msg;
+  this.blockHelperDescription_ = a;
   this.first = !0;
 };
-p.blockHelperOff = function() {
-  if (this.blockHelperView_ && !Entry.isForLecture) {
-    var a = this;
-    a.blockHelperView_.addClass("dispose");
-    Blockly.unbindEvent_(this.blockChangeEvent);
-    delete this.blockChangeEvent;
-    Entry.playground.blockMenu && (Blockly.unbindEvent_(this.menuBlockChangeEvent), delete this.menuBlockChangeEvent);
-    Entry.bindAnimationCallback(a.blockHelperView_, function(b) {
-      a.parentView_.removeChild(a.blockHelperView_);
-      delete a.blockHelperContent_;
-      delete a.blockHelperView_;
-    });
-  }
+p.getView = function() {
+  this.bindEvent();
+  return this._view;
+};
+p.bindEvent = function() {
+  this.blockChangeEvent || (console.log("bindEvent"), this.blockChangeEvent = Blockly.bindEvent_(Blockly.mainWorkspace.getCanvas(), "blocklySelectChange", this, this.updateSelectedBlock), Entry.playground.blockMenu && (this.menuBlockChangeEvent = Blockly.bindEvent_(Entry.playground.blockMenu.workspace_.getCanvas(), "blocklySelectChange", this, this.updateSelectedBlock)));
 };
 p.updateSelectedBlock = function() {
   Blockly.selected && (this.first && (this.blockHelperContent_.removeClass("entryBlockHelperIntro"), this.first = !1), this.renderBlock(Blockly.selected.type));
@@ -10404,7 +10383,8 @@ Entry.PropertyPanel = function() {
     c = this.modes[a];
     c.tabDom.addClass("selected");
     c.contentDom.removeClass("entryHidden");
-    c.obj.resize();
+    c.obj.resize && c.obj.resize();
+    c.obj.blockHelperOn && c.obj.blockHelperOn();
     this.selected = a;
   };
   a.initializeSplitter = function(a) {
@@ -10535,13 +10515,13 @@ Entry.createDom = function(a, b) {
     this.propertyPanel.generateView(a, b);
     this.containerView = c;
     this.container.generateView(this.containerView, b);
-    this.propertyPanel.addMode("container", this.container);
-    this.propertyPanel.select("container");
-    this.helper.initBlockHelper(c);
     c = Entry.createElement("div");
     a.appendChild(c);
     this.playgroundView = c;
     this.playground.generateView(this.playgroundView, b);
+    this.propertyPanel.addMode("container", this.container);
+    this.propertyPanel.addMode("helper", this.helper);
+    this.propertyPanel.select("container");
   }
 };
 Entry.start = function(a) {
@@ -12539,13 +12519,13 @@ Entry.HWMonitor = function(a) {
   };
   a.align = function() {
     var a = [], a = this._portMap.s.concat();
-    this._alignNS(a, this.scale / 2 * this._template.width + 5, 27);
+    this._alignNS(a, this.scale / 2 * this._template.height + 5, 27);
     a = this._portMap.n.concat();
-    this._alignNS(a, -this._template.width * this.scale / 2 - 32, -27);
+    this._alignNS(a, -this._template.height * this.scale / 2 - 32, -27);
     a = this._portMap.e.concat();
-    this._alignEW(a, -this._template.height * this.scale / 2 - 5, -27);
+    this._alignEW(a, -this._template.width * this.scale / 2 - 5, -27);
     a = this._portMap.w.concat();
-    this._alignEW(a, this._template.height * this.scale / 3 - 32, -27);
+    this._alignEW(a, this._template.width * this.scale / 3 - 32, -27);
   };
   a.alignList = function() {
     for (var a = this._portMapList.n, c = a.length, d = 0;d < a.length;d++) {

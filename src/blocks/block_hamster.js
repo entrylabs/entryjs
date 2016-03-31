@@ -56,27 +56,30 @@ Entry.Hamster = {
 	name: 'hamster',
 	monitorTemplate: {
         imgPath: "hw/hamster.png",
-        width: 268,
-        height: 270,
+        width: 256,
+        height: 256,
+        listPorts:{
+            "temperature":{name: Lang.Blocks.HAMSTER_sensor_temperature, type: "input", pos: {x: 0, y: 0}},
+            "accelerationX":{name: Lang.Blocks.HAMSTER_sensor_accelerationX, type: "input", pos: {x: 0, y: 0}},
+            "accelerationY":{name: Lang.Blocks.HAMSTER_sensor_accelerationY, type: "input", pos: {x: 0, y: 0}},
+            "accelerationZ":{name: Lang.Blocks.HAMSTER_sensor_accelerationZ, type: "input", pos: {x: 0, y: 0}},
+            "buzzer":{name: "부저 1", type: "output", pos: {x: 0, y: 0}},
+            "note ":{name: "부저 2", type: "output", pos: {x: 0, y: 0}}
+        },
         ports: {
-            "leftProximity":{name: Lang.Blocks.HAMSTER_sensor_leftProximity, type: "input", pos: {x: 5, y: 79}},
-            "rightProximity":{name: Lang.Blocks.HAMSTER_sensor_rightProximity, type: "input", pos: {x : 94, y: 127}},
-            "leftFloor":{name: Lang.Blocks.HAMSTER_sensor_leftFloor, type: "input", pos: {x: 34, y: 150}},
-            "rightFloor":{name: Lang.Blocks.HAMSTER_sensor_rightFloor, type: "input", pos: {x: 110, y: 184}},
-            "accelerationX":{name: Lang.Blocks.HAMSTER_sensor_accelerationX, type: "input", pos: {x: 32, y: 141}},
-            "accelerationY":{name: Lang.Blocks.HAMSTER_sensor_accelerationY, type: "input", pos: {x: 98, y: 65}},
-            "accelerationZ":{name: Lang.Blocks.HAMSTER_sensor_accelerationZ, type: "input", pos: {x: 188, y: 70}},
-            "light":{name: Lang.Blocks.HAMSTER_sensor_light, type: "input", pos: {x: 36, y: 145}},
-            "temperature":{name: Lang.Blocks.HAMSTER_sensor_temperature, type: "input", pos: {x: 50, y: 152}},
-            "leftWheel":{name: "왼쪽 바퀴", type: "output", pos: {x: 93, y: 68}},
-            "rightWheel":{name: "오른쪽 바퀴", type: "output", pos: {x: 168, y: 130}},
-            "buzzer":{name: "부저 1", type: "output", pos: {x: 88, y: 55}},
-            "outputA":{name: "outputA", type: "output", pos: {x: 17, y: 126}},
+            "leftProximity":{name: Lang.Blocks.HAMSTER_sensor_leftProximity, type: "input", pos: {x: 122, y: 156}},
+            "rightProximity":{name: Lang.Blocks.HAMSTER_sensor_rightProximity, type: "input", pos: {x : 10, y: 108}},
+            "leftFloor":{name: Lang.Blocks.HAMSTER_sensor_leftFloor, type: "input", pos: {x: 137, y: 219}},
+            "rightFloor":{name: Lang.Blocks.HAMSTER_sensor_rightFloor, type: "input", pos: {x: 4, y: 166}},
+            "light":{name: Lang.Blocks.HAMSTER_sensor_light, type: "input", pos: {x: 56, y: 189}},
+            "leftWheel":{name: "왼쪽 바퀴", type: "output", pos: {x: 210, y: 164}},
+            "rightWheel":{name: "오른쪽 바퀴", type: "output", pos: {x: 37, y: 104}},
+            "outputA":{name: "outputA", type: "output", pos: {x: 26, y: 154}},
             "outputB":{name: "outputB", type: "output", pos: {x: 108, y: 172}},
-            "leftLed":{name: "왼쪽 LED", type: "output", pos: {x: 26, y: 149}},
-            "rightLed":{name: "오른쪽 LED", type: "output", pos: {x: 72, y: 180}},
-            "note":{name: "부저 2", type: "output", pos: {x: 89, y: 60}}
-        }
+            "leftLed":{name: "왼쪽 LED", type: "output", pos: {x: 121, y: 98}},
+            "rightLed":{name: "오른쪽 LED", type: "output", pos: {x: 42, y: 62}},
+        },
+      mode : 'both'
     }
 };
 

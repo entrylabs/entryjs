@@ -278,16 +278,16 @@ Entry.HWMonitor = function(hwModule) {
         var ports = [];
       
         var ports = this._portMap.s.concat();
-        this._alignNS(ports, this._template.width * (this.scale / 2) + 5, 27);
+        this._alignNS(ports, this._template.height * (this.scale / 2) + 5, 27);
 
         ports = this._portMap.n.concat();
-        this._alignNS(ports, - this._template.width * this.scale / 2 - 32, - 27); 
+        this._alignNS(ports, - this._template.height * this.scale / 2 - 32, - 27); 
 
-        ports = this._portMap.e.concat();
-        this._alignEW(ports, - this._template.height * this.scale / 2 - 5, - 27);       
+        ports = this._portMap.e.concat();   
+        this._alignEW(ports, - this._template.width * this.scale / 2 - 5, - 27);       
 
         ports = this._portMap.w.concat();
-        this._alignEW(ports,  this._template.height * this.scale / 3 - 32, - 27);    
+        this._alignEW(ports,  this._template.width * this.scale / 3 - 32, - 27);    
     };
 
     p.alignList = function() {

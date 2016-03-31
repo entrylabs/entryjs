@@ -36,8 +36,8 @@ Entry.Albert = {
             "leftWheel":{name: "왼쪽 바퀴", type: "output", pos: {x: 299, y: 406}},
             "rightWheel":{name: "오른쪽 바퀴", type: "output", pos: {x: 22, y: 325}},
             "buzzer":{name: "부저 1", type: "output", pos: {x: 111, y: 217}},
-            "leftEye":{name: "왼쪽 눈", type: "output", pos: {x: 260, y:46}},
-            "rightEye":{name: "오른쪽 눈", type: "output", pos: {x: 164, y: 33}},
+            "leftEye":{name: " 왼쪽 눈", type: "output", pos: {x: 260, y:26}},
+            "rightEye":{name: " 오른쪽 눈", type: "output", pos: {x: 164, y: 13}},
             "note":{name: "부저 2", type: "output", pos: {x: 212, y: 228}},
             "bodyLed":{name: "몸통 불빛", type: "output", pos: {x: 367, y: 308}},
             "frontLed":{name: "앞쪽 불빛", type: "output", pos: {x: 117, y: 379}}

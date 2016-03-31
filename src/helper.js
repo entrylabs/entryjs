@@ -7,45 +7,23 @@
  * Helper provide block description with 'blockHelper'
  */
 Entry.Helper = function() {
+    this.generateView();
 };
 
 var p = Entry.Helper.prototype;
 
-/**
- * initialize block helper
- * @param {!Element} parentView
- */
-p.initBlockHelper = function(parentView) {
-    if (this.parentView_)
-        return;
-    /** @type {!Element} parent view */
-    this.parentView_ = parentView;
-};
-
-/**
- * toggle on block helper
- */
-p.blockHelperOn = function() {
-    if (this.blockHelperView_)
-        return this.blockHelperOff();
+p.generateView = function() {
     var helper = this;
     helper.blockHelpData = EntryStatic.blockInfo;
     var blockHelperView = Entry.createElement('div',
                             'entryBlockHelperWorkspace');
+    this._view = blockHelperView;
     if (Entry.isForLecture)
         blockHelperView.addClass('lecture');
-    helper.parentView_.appendChild(blockHelperView);
     if (!Entry.isForLecture) {
         var blockHelperHeader = Entry.createElement('div',
                                 'entryBlockHelperHeaderWorkspace');
         blockHelperHeader.innerHTML = Lang.Helper.Block_info;
-        var blockHelperDispose = Entry.createElement('button',
-                                'entryBlockHelperDisposeWorkspace');
-        blockHelperDispose.addClass('entryBtn');
-        blockHelperDispose.bindOnClick(function() {
-            helper.blockHelperOff();
-        });
-        blockHelperHeader.appendChild(blockHelperDispose);
         blockHelperView.appendChild(blockHelperHeader);
     }
     var blockHelperContent = Entry.createElement('div',
@@ -69,43 +47,32 @@ p.blockHelperOn = function() {
     helper.blockHelperContent_.appendChild(blockHelperDescription);
     blockHelperDescription.innerHTML = Lang.Helper.Block_click_msg;
     this.blockHelperDescription_ = blockHelperDescription;
-
-    this.blockChangeEvent = Blockly.bindEvent_(Blockly.mainWorkspace.getCanvas(),
-        'blocklySelectChange', this, this.updateSelectedBlock);
-    if (Entry.playground.blockMenu)
-        this.menuBlockChangeEvent = Blockly.bindEvent_(
-            Entry.playground.blockMenu.workspace_.getCanvas(),
-            'blocklySelectChange', this, this.updateSelectedBlock);
-
+ 
     this.first = true;
 };
 
 /**
  * toggle on block helper
  */
-p.blockHelperOff = function() {
-    if (!this.blockHelperView_)
-        return;
-    if (Entry.isForLecture)
-        return;
-    var helper = this;
-    helper.blockHelperView_.addClass('dispose');
-    Blockly.unbindEvent_(this.blockChangeEvent);
-    delete this.blockChangeEvent;
-    if (Entry.playground.blockMenu) {
-        Blockly.unbindEvent_(this.menuBlockChangeEvent);
-        delete this.menuBlockChangeEvent;
-    }
-    Entry.bindAnimationCallback(helper.blockHelperView_, function(e) {
-        helper.parentView_.removeChild(helper.blockHelperView_);
-        delete helper.blockHelperContent_;
-        delete helper.blockHelperView_;
-    });
+
+p.getView = function() {
+    this.bindEvent();
+    return this._view;
 };
 
-/**
- * toggle on block helper
- */
+p.bindEvent = function() {
+    if (!this.blockChangeEvent) {
+        console.log('bindEvent')
+        this.blockChangeEvent = Blockly.bindEvent_(Blockly.mainWorkspace.getCanvas(),
+        'blocklySelectChange', this, this.updateSelectedBlock);
+        if (Entry.playground.blockMenu)
+            this.menuBlockChangeEvent = Blockly.bindEvent_(
+                Entry.playground.blockMenu.workspace_.getCanvas(),
+                'blocklySelectChange', this, this.updateSelectedBlock);
+    }
+}
+
+
 p.updateSelectedBlock = function() {
     if (!Blockly.selected)
         return;

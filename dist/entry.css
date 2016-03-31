@@ -3718,7 +3718,6 @@
   width: 100%;
   height: 100%;
   background-color: #fff;
-  z-index: 1000;
   -webkit-animation-name: blockHelperUp;
   -moz-animation-name: blockHelperUp;
   -ms-animation-name: blockHelperUp;
