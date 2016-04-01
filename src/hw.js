@@ -35,76 +35,78 @@ Entry.HW.TRIAL_LIMIT = 1;
 var p = Entry.HW.prototype;
 
 p.initSocket = function() {
-    if (this.connectTrial >= Entry.HW.TRIAL_LIMIT) {
-        if (!this.isFirstConnect)
-            Entry.toast.alert(Lang.Menus.connect_hw,
-                              Lang.Menus.connect_fail,
-                              false);
-        this.isFirstConnect = false;
-        return;
-    }
-    var hw = this;
-
-    var option = {
-        reconnection: false
-    };
-    var browserType = Entry.getBrowserType().toUpperCase();
-    if(browserType.indexOf('IE') > -1 || browserType.indexOf('EDGE') > -1) {
-        option['transports'] = ['polling'];
-    }
-
-    var socket = new WebSocket("ws://localhost:23518");
-    var socketIO = io.connect('ws://localhost:23517', option);
-
-    this.connected = false;
-    socket.binaryType = "arraybuffer";
-    socketIO.binaryType = "arraybuffer";
-    this.connectTrial++;
-
-    socket.onopen = function()
-    {
-        hw.socketType = 'WebSocket';
-        hw.initHardware(socket);
-    };
-
-    socket.onmessage = function (evt)
-    {
-        var data = JSON.parse(evt.data);
-        hw.checkDevice(data);
-        hw.updatePortData(data);
-    };
-
-    socket.onclose = function()
-    {
-        if(hw.socketType === 'WebSocket') {
-            this.socket = null;
-            hw.initSocket();
+    try{
+        if (this.connectTrial >= Entry.HW.TRIAL_LIMIT) {
+            if (!this.isFirstConnect)
+                Entry.toast.alert(Lang.Menus.connect_hw,
+                                  Lang.Menus.connect_fail,
+                                  false);
+            this.isFirstConnect = false;
+            return;
         }
-    };
-    
-    socketIO.connect();
-    socketIO.on('connect', function (data) {
-        hw.socketType = 'SocketIO';
-        hw.initHardware(socketIO);
-    });
+        var hw = this;
 
-    socketIO.on('message', function (evt) {
-        if(typeof evt === 'string') {
-            var data = JSON.parse(evt);
+        var option = {
+            reconnection: false
+        };
+        var browserType = Entry.getBrowserType().toUpperCase();
+        if(browserType.indexOf('IE') > -1 || browserType.indexOf('EDGE') > -1) {
+            option['transports'] = ['polling'];
+        }
+
+        var socket = new WebSocket("ws://localhost:23518");
+        var socketIO = io.connect('ws://localhost:23517', option);
+
+        this.connected = false;
+        socket.binaryType = "arraybuffer";
+        socketIO.binaryType = "arraybuffer";
+        this.connectTrial++;
+
+        socket.onopen = function()
+        {
+            hw.socketType = 'WebSocket';
+            hw.initHardware(socket);
+        };
+
+        socket.onmessage = function (evt)
+        {
+            var data = JSON.parse(evt.data);
             hw.checkDevice(data);
             hw.updatePortData(data);
-        }
-    });
+        };
 
-    socketIO.on('disconnect', function (data) {
-        if(hw.socketType === 'SocketIO') {
-            this.socket = null;
-            socketIO.destroy(socketIO);
-            hw.initSocket();
-        }
-    });
+        socket.onclose = function()
+        {
+            if(hw.socketType === 'WebSocket') {
+                this.socket = null;
+                hw.initSocket();
+            }
+        };
+        
+        socketIO.connect();
+        socketIO.on('connect', function (data) {
+            hw.socketType = 'SocketIO';
+            hw.initHardware(socketIO);
+        });
 
-    Entry.dispatchEvent("hwChanged");
+        socketIO.on('message', function (evt) {
+            if(typeof evt === 'string') {
+                var data = JSON.parse(evt);
+                hw.checkDevice(data);
+                hw.updatePortData(data);
+            }
+        });
+
+        socketIO.on('disconnect', function (data) {
+            if(hw.socketType === 'SocketIO') {
+                this.socket = null;
+                socketIO.destroy(socketIO);
+                hw.initSocket();
+            }
+        });
+
+        Entry.dispatchEvent("hwChanged");        
+    } catch(e) {}
 };
 
 p.retryConnect = function() {
