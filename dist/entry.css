@@ -1142,6 +1142,18 @@
   width: 22px;
   height: 22px;
 }
+.propertyTabhelper {
+  background-image: url("../images/property/helper_off.png");
+}
+.propertyTabhelper.selected {
+  background-image: url("../images/property/helper_on.png");
+}
+.propertyTabcontainer {
+  background-image: url("../images/property/container_off.png");
+}
+.propertyTabcontainer.selected {
+  background-image: url("../images/property/container_on.png");
+}
 .entryObjectRotateModeAWorkspace {
   margin-left: 80px;
   background-image: url("../images/layers_icon_rotate01_nor.png");

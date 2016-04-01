@@ -121,8 +121,8 @@ Entry.Albert = {PORT_MAP:{leftWheel:0, rightWheel:0, buzzer:0, leftEye:0, rightE
   a = Entry.Albert;
   a.tempo = 60;
   a.removeAllTimeouts();
-}, monitorTemplate:{imgPath:"hw/albert.png", width:387, height:503, listPorts:{oid:{name:"OID", type:"input", pos:{x:0, y:0}}}, ports:{leftProximity:{name:Lang.Blocks.ALBERT_sensor_leftProximity, type:"input", pos:{x:178, y:401}}, rightProximity:{name:Lang.Blocks.ALBERT_sensor_rightProximity, type:"input", pos:{x:66, y:359}}, battery:{name:Lang.Blocks.ALBERT_sensor_battery, type:"input", pos:{x:88, y:368}}, light:{name:Lang.Blocks.ALBERT_sensor_light, type:"input", pos:{x:127, y:391}}, leftWheel:{name:"\uc67c\ucabd \ubc14\ud034", 
-type:"output", pos:{x:299, y:406}}, rightWheel:{name:"\uc624\ub978\ucabd \ubc14\ud034", type:"output", pos:{x:22, y:325}}, buzzer:{name:"\ubd80\uc800 1", type:"output", pos:{x:111, y:217}}, leftEye:{name:" \uc67c\ucabd \ub208", type:"output", pos:{x:260, y:26}}, rightEye:{name:" \uc624\ub978\ucabd \ub208", type:"output", pos:{x:164, y:13}}, note:{name:"\ubd80\uc800 2", type:"output", pos:{x:212, y:228}}, bodyLed:{name:"\ubab8\ud1b5 \ubd88\ube5b", type:"output", pos:{x:367, y:308}}, frontLed:{name:"\uc55e\ucabd \ubd88\ube5b", 
+}, monitorTemplate:{imgPath:"hw/albert.png", width:387, height:503, listPorts:{oid:{name:"OID", type:"input", pos:{x:0, y:0}}, buzzer:{name:"\ubd80\uc800", type:"output", pos:{x:0, y:0}}, note:{name:"\ub178\ud2b8", type:"output", pos:{x:0, y:0}}}, ports:{leftProximity:{name:Lang.Blocks.ALBERT_sensor_leftProximity, type:"input", pos:{x:178, y:401}}, rightProximity:{name:Lang.Blocks.ALBERT_sensor_rightProximity, type:"input", pos:{x:66, y:359}}, battery:{name:Lang.Blocks.ALBERT_sensor_battery, type:"input", 
+pos:{x:88, y:368}}, light:{name:Lang.Blocks.ALBERT_sensor_light, type:"input", pos:{x:127, y:391}}, leftWheel:{name:"\uc67c\ucabd \ubc14\ud034", type:"output", pos:{x:299, y:406}}, rightWheel:{name:"\uc624\ub978\ucabd \ubc14\ud034", type:"output", pos:{x:22, y:325}}, leftEye:{name:" \uc67c\ucabd \ub208", type:"output", pos:{x:260, y:26}}, rightEye:{name:" \uc624\ub978\ucabd \ub208", type:"output", pos:{x:164, y:13}}, bodyLed:{name:"\ubab8\ud1b5 \ubd88\ube5b", type:"output", pos:{x:367, y:308}}, frontLed:{name:"\uc55e\ucabd \ubd88\ube5b", 
 type:"output", pos:{x:117, y:410}}}, mode:"both"}, tempo:60, timeouts:[], removeTimeout:function(a) {
   clearTimeout(a);
   var b = this.timeouts;
@@ -1044,8 +1044,8 @@ Entry.Bitbrick = {SENSOR_MAP:{1:"light", 2:"IR", 3:"touch", 4:"potentiometer", 5
     a[b] = 0;
   }
   Entry.hw.update();
-}, name:"bitbrick", servoMaxValue:181, servoMinValue:1, dcMaxValue:100, dcMinValue:-100, monitorTemplate:{imgPath:"hw/bitbrick.gif", width:133, height:148, listPorts:{1:{name:"1\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, 2:{name:"2\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, 3:{name:"3\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, 4:{name:"4\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, A:{name:"A \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, B:{name:"B \ud3ec\ud2b8", 
-type:"input", pos:{x:0, y:0}}, C:{name:"C \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, D:{name:"D \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}}, mode:"both"}};
+}, name:"bitbrick", servoMaxValue:181, servoMinValue:1, dcMaxValue:100, dcMinValue:-100, monitorTemplate:{imgPath:"hw/bitbrick.gif", width:133, height:153, ports:{1:{name:"1\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:10, y:56}}, 2:{name:"2\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:31, y:76}}, 3:{name:"3\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:31, y:96}}, 4:{name:"4\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:10, y:116}}, A:{name:"A \ud3ec\ud2b8", type:"input", pos:{x:123, y:56}}, B:{name:"B \ud3ec\ud2b8", 
+type:"input", pos:{x:104, y:76}}, C:{name:"C \ud3ec\ud2b8", type:"input", pos:{x:104, y:96}}, D:{name:"D \ud3ec\ud2b8", type:"input", pos:{x:123, y:116}}}}};
 Blockly.Blocks.bitbrick_sensor_value = {init:function() {
   this.setColour("#00979D");
   this.appendDummyInput().appendField("").appendField(new Blockly.FieldDropdownDynamic(Entry.Bitbrick.sensorList), "PORT").appendField(" \uac12");
@@ -4050,8 +4050,8 @@ Entry.Neobot = {name:"neobot", PORT_MAP:{1:0, 2:0, 3:0, SERVO1:0, SERVO2:0, SERV
     Entry.hw.sendQueue[a] = Entry.Neobot.PORT_MAP[a];
   }
   Entry.hw.update();
-}, monitorTemplate:{imgPath:"hw/neobot.png", width:268, height:270, ports:{1:{name:"1\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:78, y:9}}, 2:{name:"2\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:115, y:9}}, 3:{name:"3\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:153, y:9}}, LMOT:{name:"\uc67c\ucabd \ubaa8\ud130", type:"output", pos:{x:78, y:259}}, RMOT:{name:"\uc624\ub978\ucabd \ubaa8\ud130", type:"output", pos:{x:191, y:259}}, note:{name:"\ubd80\uc800", type:"output", pos:{x:98, y:184}}, SERVO1:{name:"SERVO \ubaa8\ud130 1", 
-type:"output", pos:{x:115, y:259}}, SERVO2:{name:"SERVO \ubaa8\ud130 2", type:"output", pos:{x:191, y:9}}}}};
+}, name:"neobot", monitorTemplate:{imgPath:"hw/neobot.png", width:268, height:270, ports:{1:{name:"1\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:78, y:9}}, 2:{name:"2\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:115, y:9}}, 3:{name:"3\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:153, y:9}}, LMOT:{name:"\uc67c\ucabd \ubaa8\ud130", type:"output", pos:{x:78, y:259}}, RMOT:{name:"\uc624\ub978\ucabd \ubaa8\ud130", type:"output", pos:{x:191, y:259}}, note:{name:"\ubd80\uc800", type:"output", pos:{x:98, y:184}}, 
+SERVO1:{name:"SERVO \ubaa8\ud130 1", type:"output", pos:{x:115, y:259}}, SERVO2:{name:"SERVO \ubaa8\ud130 2", type:"output", pos:{x:191, y:9}}}}};
 Blockly.Blocks.neobot_sensor_value = {init:function() {
   this.setColour("#00979D");
   this.appendDummyInput().appendField("").appendField(new Blockly.FieldDropdown([["1\ubc88 \ud3ec\ud2b8", "1"], ["2\ubc88 \ud3ec\ud2b8", "2"], ["3\ubc88 \ud3ec\ud2b8", "3"], ["\ub9ac\ubaa8\ucee8", "4"]]), "PORT").appendField(" \uac12");
@@ -12568,7 +12568,7 @@ Entry.HWMonitor = function(a) {
       h -= k.width + l.width + 10;
       c += q;
     }
-    a.length && this._movePort(a[0], (f + e - a[0].width) / 2, c, 1E3);
+    a.length && this._movePort(a[0], (f + e - a[0].width) / 2, c, 100);
   };
   a._alignNSList = function(a, c) {
     var d = this._rect.width;

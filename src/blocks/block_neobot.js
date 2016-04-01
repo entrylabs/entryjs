@@ -23,6 +23,7 @@ Entry.Neobot = {
         }
         Entry.hw.update();
     },
+    name: 'neobot',
     monitorTemplate: {
         imgPath: "hw/neobot.png",
         width: 268,

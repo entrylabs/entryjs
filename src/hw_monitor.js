@@ -419,7 +419,7 @@ Entry.HWMonitor = function(hwModule) {
 
        
         if (ports.length) {
-            this._movePort(ports[0], (rP + lP - ports[0].width) / 2, yCursor, 1000);
+            this._movePort(ports[0], (rP + lP - ports[0].width) / 2, yCursor, 100);
         };
 
        

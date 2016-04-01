@@ -87,17 +87,17 @@ Entry.Bitbrick = {
   monitorTemplate: {
         imgPath: "hw/bitbrick.gif",
         width: 133,
-        height: 148,
-        listPorts: {
-            "1":{name: "1번 포트", type: "input", pos: {x: 0, y: 0}},
-            "2":{name: "2번 포트", type: "input", pos: {x: 0, y: 0}},
-            "3":{name: "3번 포트", type: "input", pos: {x: 0, y: 0}},
-            "4":{name: "4번 포트", type: "input", pos: {x: 0, y: 0}},
-            "A":{name: "A 포트", type: "input", pos: {x: 0, y: 0}},
-            "B":{name: "B 포트", type: "input", pos: {x: 0, y: 0}},
-            "C":{name: "C 포트", type: "input", pos: {x: 0, y: 0}},
-            "D":{name: "D 포트", type: "input", pos: {x: 0, y: 0}}
-        },
+        height: 153,
+        ports: {
+            "1":{name: "1번 포트", type: "input", pos: {x: 10, y: 56}},
+            "2":{name: "2번 포트", type: "input", pos: {x: 31, y: 76}},
+            "3":{name: "3번 포트", type: "input", pos: {x: 31, y: 96}},
+            "4":{name: "4번 포트", type: "input", pos: {x: 10, y: 116}},
+            "A":{name: "A 포트", type: "input", pos: {x: 123, y: 56}},
+            "B":{name: "B 포트", type: "input", pos: {x: 104, y: 76}},
+            "C":{name: "C 포트", type: "input", pos: {x: 104, y: 96}},
+            "D":{name: "D 포트", type: "input", pos: {x: 123, y: 116}}
+        }
         // },
         // ports : {
         //     "1":{name: "light", type: "input", pos: {x: 0, y: 0}},
@@ -115,7 +115,7 @@ Entry.Bitbrick = {
         //     "LEDG":{name: "LEDG", type: "output", pos: {x: 0, y: 0}},
         //     "LEDB":{name: "LEDG", type: "output", pos: {x: 0, y: 0}}
         // },
-        mode: 'both'
+        // mode: 'both'
     }
 };
 
