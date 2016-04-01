@@ -28,11 +28,14 @@ Entry.Albert = {
         imgPath: "hw/albert.png",
         width: 387,
         height: 503,
+        listPorts: {
+            "oid":{name: "OID", type: "input", pos: {x: 0, y: 0}},
+        },
         ports: {
             "leftProximity":{name: Lang.Blocks.ALBERT_sensor_leftProximity, type: "input", pos: {x : 178, y: 401}},
             "rightProximity":{name: Lang.Blocks.ALBERT_sensor_rightProximity, type: "input", pos: {x: 66, y: 359}},
             "battery":{name: Lang.Blocks.ALBERT_sensor_battery , type: "input", pos: {x : 88, y: 368}},
-            "light":{name: Lang.Blocks.ALBERT_sensor_light, type: "input", pos: {x: 147, y: 391}},
+            "light":{name: Lang.Blocks.ALBERT_sensor_light, type: "input", pos: {x: 127, y: 391}},
             "leftWheel":{name: "왼쪽 바퀴", type: "output", pos: {x: 299, y: 406}},
             "rightWheel":{name: "오른쪽 바퀴", type: "output", pos: {x: 22, y: 325}},
             "buzzer":{name: "부저 1", type: "output", pos: {x: 111, y: 217}},
@@ -40,8 +43,9 @@ Entry.Albert = {
             "rightEye":{name: " 오른쪽 눈", type: "output", pos: {x: 164, y: 13}},
             "note":{name: "부저 2", type: "output", pos: {x: 212, y: 228}},
             "bodyLed":{name: "몸통 불빛", type: "output", pos: {x: 367, y: 308}},
-            "frontLed":{name: "앞쪽 불빛", type: "output", pos: {x: 117, y: 379}}
-        }
+            "frontLed":{name: "앞쪽 불빛", type: "output", pos: {x: 117, y: 410}}
+        },
+        mode : 'both'
     },
 	tempo: 60,
 	timeouts: [],

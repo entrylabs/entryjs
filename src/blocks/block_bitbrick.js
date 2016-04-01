@@ -1,6 +1,6 @@
 "use strict";
-
 Entry.Bitbrick = {
+
     SENSOR_MAP : {
         1: "light",
         2: "IR",
@@ -85,33 +85,38 @@ Entry.Bitbrick = {
   dcMaxValue: 100,
   dcMinValue: -100,
   monitorTemplate: {
-        imgPath: "hw/bitbrick.png",
-        width: 268,
-        height: 270,
+        imgPath: "hw/bitbrick.gif",
+        width: 133,
+        height: 148,
         listPorts: {
-            "0":{name: "0번 포트", type: "input", pos: {x : 0, y: 0}},
             "1":{name: "1번 포트", type: "input", pos: {x: 0, y: 0}},
-            "2":{name: "2번 포트", type: "input", pos: {x : 0, y: 0}},
+            "2":{name: "2번 포트", type: "input", pos: {x: 0, y: 0}},
             "3":{name: "3번 포트", type: "input", pos: {x: 0, y: 0}},
             "4":{name: "4번 포트", type: "input", pos: {x: 0, y: 0}},
-            "5":{name: "5번 포트", type: "input", pos: {x: 0, y: 0}},
-            "6":{name: "6번 포트", type: "input", pos: {x: 0, y: 0}},
-            "7":{name: "7번 포트", type: "input", pos: {x: 0, y: 0}},
-            "8":{name: "8번 포트", type: "input", pos: {x: 0, y: 0}},
-            "9":{name: "9번 포트", type: "input", pos: {x: 0, y: 0}},
-            "10":{name: "10번 포트", type: "input", pos: {x: 0, y: 0}},
-            "11":{name: "11번 포트", type: "input", pos: {x: 0, y: 0}},
-            "12":{name: "12번 포트", type: "input", pos: {x: 0, y: 0}},
-            "13":{name: "13번 포트", type: "input", pos: {x: 0, y: 0}},
-            "a0":{name: "0번  포트", type: "input", pos: {x: 0, y: 0}},
-            "a1":{name: "1번 포트", type: "input", pos: {x: 0, y: 0}},
-            "a2":{name: "2번 포트", type: "input", pos: {x: 0, y: 0}},
-            "a3":{name: "3번 포트", type: "input", pos: {x: 0, y: 0}},
-            "a4":{name: "4번 포트", type: "input", pos: {x: 0, y: 0}},
-            "a5":{name: "5번 포트", type: "input", pos: {x: 0, y: 0}}
-        }
-    },
-    mode: 'list'
+            "A":{name: "A 포트", type: "input", pos: {x: 0, y: 0}},
+            "B":{name: "B 포트", type: "input", pos: {x: 0, y: 0}},
+            "C":{name: "C 포트", type: "input", pos: {x: 0, y: 0}},
+            "D":{name: "D 포트", type: "input", pos: {x: 0, y: 0}}
+        },
+        // },
+        // ports : {
+        //     "1":{name: "light", type: "input", pos: {x: 0, y: 0}},
+        //     "2":{name: "IR", type: "input", pos: {x : 0, y: 0}},
+        //     "3":{name: "touch", type: "input", pos: {x: 0, y: 0}},
+        //     "4":{name: "potentiometer", type: "input", pos: {x: 0, y: 0}},
+        //     "5":{name: "MIC", type: "input", pos: {x: 0, y: 0}},
+        //     "21":{name: "UserSensor", type: "input", pos: {x: 0, y: 0}},
+        //     "11":{name: "USER INPUT", type: "input", pos: {x: 0, y: 0}},
+        //     "20":{name: "LED", type: "input", pos: {x: 0, y: 0}},
+        //     "19":{name: "SERVO", type: "input", pos: {x: 0, y: 0}},
+        //     "18":{name: "DC", type: "input", pos: {x: 0, y: 0}},
+        //     "buzzer":{name: "부저", type: "input", pos: {x: 0, y: 0}},
+        //     "LEDR":{name: "LEDR", type: "output", pos: {x: 0, y: 0}},
+        //     "LEDG":{name: "LEDG", type: "output", pos: {x: 0, y: 0}},
+        //     "LEDB":{name: "LEDG", type: "output", pos: {x: 0, y: 0}}
+        // },
+        mode: 'both'
+    }
 };
 
 
