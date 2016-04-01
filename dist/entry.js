@@ -15692,20 +15692,21 @@ Entry.Board = function(a) {
   a.getNearestMagnet = function(a, c, d) {
     var e = this._magnetMap;
     if (e && 0 !== e.length) {
-      for (var f = 0, g = e.length - 1, h = null, k = "nextMagnet" === d ? c - 15 : c;f <= g;) {
-        if (d = (f + g) / 2 | 0, c = e[d], k < c.point) {
-          g = d - 1;
+      var f = 0, g = e.length - 1, h, k = null, m = "nextMagnet" === d ? c - 15 : c;
+      for (c = "nextMagnet" === d ? 20 : 0;f <= g;) {
+        if (h = (f + g) / 2 | 0, d = e[h], m < d.point) {
+          g = h - 1;
         } else {
-          if (k > c.endPoint) {
-            f = d + 1;
+          if (m > d.endPoint) {
+            f = h + 1;
           } else {
-            e = c.blocks;
+            e = d.blocks;
             for (f = 0;f < e.length;f++) {
-              if (g = e[f].view, g.absX - 20 < a && a < g.absX + g.width && (g = c.blocks[f], !h || h.view.zIndex < g.view.zIndex)) {
-                h = c.blocks[f];
+              if (g = e[f].view, g.absX - c < a && a < g.absX + g.width && (g = d.blocks[f], !k || k.view.zIndex < g.view.zIndex)) {
+                k = d.blocks[f];
               }
             }
-            return h;
+            return k;
           }
         }
       }

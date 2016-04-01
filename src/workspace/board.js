@@ -702,7 +702,8 @@ Entry.Board = function(option) {
             index,
             pointData,
             result = null,
-            searchValue = targetType === "nextMagnet" ? y - 15 : y;
+            searchValue = targetType === "nextMagnet" ? y - 15 : y,
+            leftOffset = targetType === "nextMagnet" ? 20 : 0;
         while (minIndex <= maxIndex) {
             index = (minIndex + maxIndex) / 2 | 0;
             pointData = targetArray[index];
@@ -715,7 +716,7 @@ Entry.Board = function(option) {
                 var blocks = pointData.blocks;
                 for (var i = 0; i < blocks.length; i++) {
                     var blockView = blocks[i].view;
-                    if (blockView.absX - 20 < x && x < blockView.absX + blockView.width) {
+                    if (blockView.absX - leftOffset < x && x < blockView.absX + blockView.width) {
                         var resultBlock = pointData.blocks[i];
                         if (!result || result.view.zIndex < resultBlock.view.zIndex)
                             result = pointData.blocks[i];
