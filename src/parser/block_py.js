@@ -40,7 +40,7 @@ Entry.PyBlockParser = function(syntax) {
             var block = blocks[i];
             code += this.Block(block);
         }
-        return code;
+        return code + '\n';
     };
 
     p.Block = function(block) {
@@ -59,11 +59,10 @@ Entry.PyBlockParser = function(syntax) {
             if (token.length === 0) continue;
             if (breg.test(token)) {
                 var paramIndex = Number(token.split('%')[1]) - 1;
-                console.log("schema param", schemaParams[paramIndex]);
+                //console.log("schema param", schemaParams[paramIndex]);
                 result += this['Field' + schemaParams[paramIndex].type](
                     block.params[paramIndex], schemaParams[paramIndex]);
-            }
-            else if (sreg.test(token)) {
+            } else if (sreg.test(token)) {
                 var stokens = token.split(sreg);
 
                 for (var j=0; j<stokens.length; j++) {
@@ -74,8 +73,7 @@ Entry.PyBlockParser = function(syntax) {
                         result += this.indent(this.Thread(block.statements[paramIndex]));
                     } else result += token2;
                 }
-            }
-            else
+            } else
                 result += token;
         }
 
@@ -83,25 +81,25 @@ Entry.PyBlockParser = function(syntax) {
     };
 
     p.FieldAngle = function(param) {
-        console.log("FieldAngle", param);
+        //console.log("FieldAngle", param);
 
         return this.Block(param);
     };
 
     p.FieldBlock = function(param) {
-        console.log("FieldBlock", param);
+        //console.log("FieldBlock", param);
 
         return this.Block(param);
     };
 
     p.FieldColor = function(param) {
-        console.log("FieldColor", param);
+        //console.log("FieldColor", param);
 
         return param;
     };
 
     p.FieldDropdown = function(param, schema) {
-        console.log("FieldDropdown", param);
+        //console.log("FieldDropdown", param);
         /*var value = param;
         var options = schema.options;
         for (var i=0, len=options.length; i<len; i++) {
@@ -115,7 +113,7 @@ Entry.PyBlockParser = function(syntax) {
     };
 
     p.FieldDropdownDynamic = function(param, schema) {
-        console.log("FieldDropdownDynamic", param);
+        //console.log("FieldDropdownDynamic", param);
         /*var value = param;
         var options = schema.options;
         for (var i=0, len=options.length; i<len; i++) {
@@ -129,38 +127,38 @@ Entry.PyBlockParser = function(syntax) {
     };
 
     p.FieldImage = function(param) {
-        console.log("FieldImage", param);
+        //console.log("FieldImage", param);
         return this.Block(param);
     };
 
     p.FieldIndicator = function(param, schema) {
-        console.log("FieldIndicator", param);
-        console.log("schema", schema);
+        //console.log("FieldIndicator", param);
+        //console.log("schema", schema);
         return param;
     };
 
     p.FieldKeyboard = function(param) {
-        console.log("FieldKeyboardInput", param);
+        //console.log("FieldKeyboardInput", param);
         return this.Block(param);
     };
 
     p.FieldOutput = function(param) {
-        console.log("FieldOutput", param);
+        //console.log("FieldOutput", param);
         return this.Block(param);
     };
 
     p.FieldStatement = function(param) {
-        console.log("FieldStatement", param);
+        //console.log("FieldStatement", param);
         return this.Block(param);
     };
 
     p.FieldText = function(param) {
-        console.log("FieldText", param);
+        //console.log("FieldText", param);
         return this.Block(param);
     };
 
     p.FieldTextInput = function(param) {
-        console.log("FieldTextInput", param);
+        //console.log("FieldTextInput", param);
         return param;
     };
 

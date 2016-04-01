@@ -19,7 +19,8 @@ Entry.block.functionAddButton = {
                 Entry.variableContainer.createFunction();
             }
         ]
-    }
+    },
+    syntax: {js:[], py: ["함수 추가"]}
 };
 
 Blockly.Blocks.function_field_label = {

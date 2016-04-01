@@ -1900,7 +1900,7 @@ Entry.block.remove_all_clones = function(a, b) {
 };
 Entry.block.functionAddButton = {skeleton:"basic_button", color:"#eee", isNotFor:["functionInit"], template:"%1", params:[{type:"Text", text:"\ud568\uc218 \ucd94\uac00", color:"#333", align:"center"}], events:{mousedown:[function() {
   Entry.variableContainer.createFunction();
-}]}};
+}]}, syntax:{js:[], py:["\ud568\uc218 \ucd94\uac00"]}};
 Blockly.Blocks.function_field_label = {init:function() {
   this.setColour("#f9c535");
   this.appendDummyInput().appendField(new Blockly.FieldTextInput(Lang.Blocks.FUNCTION_explanation_1), "NAME");
@@ -4362,11 +4362,11 @@ Entry.block.text_flush = function(a, b) {
 Entry.block.variableAddButton = {skeleton:"basic_button", color:"#eee", template:"%1", params:[{type:"Text", text:"\ubcc0\uc218 \ucd94\uac00", color:"#333", align:"center"}], func:function() {
 }, events:{mousedown:[function() {
   Entry.variableContainer.openVariableAddPanel("variable");
-}]}};
+}]}, syntax:{js:[], py:["\ubcc0\uc218 \ucd94\uac00"]}};
 Entry.block.listAddButton = {skeleton:"basic_button", color:"#eee", template:"%1", params:[{type:"Text", text:"\ub9ac\uc2a4\ud2b8 \ucd94\uac00", color:"#333", align:"center"}], func:function() {
 }, events:{mousedown:[function() {
   Entry.variableContainer.openVariableAddPanel("list");
-}]}};
+}]}, syntax:{js:[], py:["\ub9ac\uc2a4\ud2b8 \ucd94\uac00"]}};
 Blockly.Blocks.change_variable = {init:function() {
   this.setColour("#E457DC");
   this.appendDummyInput().appendField(Lang.Blocks.VARIABLE_change_variable_1);
@@ -8510,7 +8510,7 @@ Entry.PyBlockParser = function(a) {
     for (var d = 0;d < b.length;d++) {
       a += this.Block(b[d]);
     }
-    return a;
+    return a + "\n";
   };
   a.Block = function(b) {
     if (!b._schema || !b._schema.syntax) {
@@ -8520,9 +8520,7 @@ Entry.PyBlockParser = function(a) {
       var k = e[h];
       if (0 !== k.length) {
         if (a.test(k)) {
-          var m = Number(k.split("%")[1]) - 1;
-          console.log("schema param", f[m]);
-          g += this["Field" + f[m].type](b.params[m], f[m]);
+          var m = Number(k.split("%")[1]) - 1, g = g + this["Field" + f[m].type](b.params[m], f[m])
         } else {
           if (d.test(k)) {
             for (var k = k.split(d), n = 0;n < k.length;n++) {
@@ -8537,52 +8535,39 @@ Entry.PyBlockParser = function(a) {
     return g;
   };
   a.FieldAngle = function(b) {
-    console.log("FieldAngle", b);
     return this.Block(b);
   };
   a.FieldBlock = function(b) {
-    console.log("FieldBlock", b);
     return this.Block(b);
   };
   a.FieldColor = function(b) {
-    console.log("FieldColor", b);
     return b;
   };
   a.FieldDropdown = function(b, a) {
-    console.log("FieldDropdown", b);
     return b;
   };
   a.FieldDropdownDynamic = function(b, a) {
-    console.log("FieldDropdownDynamic", b);
     return b;
   };
   a.FieldImage = function(b) {
-    console.log("FieldImage", b);
     return this.Block(b);
   };
   a.FieldIndicator = function(b, a) {
-    console.log("FieldIndicator", b);
-    console.log("schema", a);
     return b;
   };
   a.FieldKeyboard = function(b) {
-    console.log("FieldKeyboardInput", b);
     return this.Block(b);
   };
   a.FieldOutput = function(b) {
-    console.log("FieldOutput", b);
     return this.Block(b);
   };
   a.FieldStatement = function(b) {
-    console.log("FieldStatement", b);
     return this.Block(b);
   };
   a.FieldText = function(b) {
-    console.log("FieldText", b);
     return this.Block(b);
   };
   a.FieldTextInput = function(b) {
-    console.log("FieldTextInput", b);
     return b;
   };
   a.indent = function(b) {
@@ -15224,22 +15209,22 @@ Entry.GlobalSvg = {};
     }
   };
   a.draw = function() {
-    var b = this._view;
+    var a = this._view;
     this._svg && this.remove();
-    var a = this._mode == Entry.Workspace.MODE_VIMBOARD;
-    this.svgGroup = Entry.SVG.createElement(b.svgGroup.cloneNode(!0), {opacity:1});
+    var c = this._mode == Entry.Workspace.MODE_VIMBOARD;
+    this.svgGroup = Entry.SVG.createElement(a.svgGroup.cloneNode(!0), {opacity:1});
     this.svg.appendChild(this.svgGroup);
     this.show();
-    a && (b = $(this.svgGroup), b.find("g").css({filter:"none"}), b.find("path").velocity({opacity:0}, {duration:500}), b.find("text").velocity({fill:"#000000"}, {duration:530}));
+    c && (a = $(this.svgGroup), a.find("g").css({filter:"none"}), a.find("path").velocity({opacity:0}, {duration:500}), a.find("text").velocity({fill:"#000000"}, {duration:530}));
   };
   a.remove = function() {
     this.svgGroup && (this.svgGroup.remove(), delete this.svgGroup, delete this._view, delete this._offsetX, delete this._offsetY, delete this._startX, delete this._startY, this.hide());
   };
   a.align = function() {
-    var b = this._view.getSkeleton().box(this._view).offsetX || 0, a = this._view.getSkeleton().box(this._view).offsetY || 0, b = -1 * b + 1, a = -1 * a + 1;
-    this._offsetX = b;
-    this._offsetY = a;
-    this.svgGroup.attr({transform:"translate(" + b + "," + a + ")"});
+    var a = this._view.getSkeleton().box(this._view).offsetX || 0, c = this._view.getSkeleton().box(this._view).offsetY || 0, a = -1 * a + 1, c = -1 * c + 1;
+    this._offsetX = a;
+    this._offsetY = c;
+    this.svgGroup.attr({transform:"translate(" + a + "," + c + ")"});
   };
   a.show = function() {
     this.svgDom.css("display", "block");
@@ -15248,9 +15233,9 @@ Entry.GlobalSvg = {};
     this.svgDom.css("display", "none");
   };
   a.position = function() {
-    var b = this._view, a = b.getAbsoluteCoordinate(), b = b.getBoard().offset;
-    this.left = a.x + b.left - this._offsetX;
-    this.top = a.y + b.top - this._offsetY;
+    var a = this._view, c = a.getAbsoluteCoordinate(), a = a.getBoard().offset;
+    this.left = c.x + a.left - this._offsetX;
+    this.top = c.y + a.top - this._offsetY;
     this.svgDom.css({left:this.left, top:this.top});
   };
   a.terminateDrag = function(a) {

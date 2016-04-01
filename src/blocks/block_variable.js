@@ -19,7 +19,8 @@ Entry.block.variableAddButton = {
                 Entry.variableContainer.openVariableAddPanel('variable');
             }
         ]
-    }
+    },
+    syntax: {js:[], py: ["변수 추가"]}
 };
 
 Entry.block.listAddButton = {
@@ -41,7 +42,8 @@ Entry.block.listAddButton = {
                 Entry.variableContainer.openVariableAddPanel('list');
             }
         ]
-    }
+    },
+    syntax: {js:[], py: ["리스트 추가"]}
 };
 
 // (변수▼) 를 () 만큼 바꾸기
