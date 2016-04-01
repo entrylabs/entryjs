@@ -62,13 +62,14 @@ Entry.Utils.inherit(Entry.FieldDropdown, Entry.FieldDropdownDynamic);
         });
 
         var options = Entry.container.getDropdownList(this._contents.menuName);
+        this._contents.options = options;
 
         var OPTION_X_PADDING = 30;
         var maxWidth = 0;
 
         var CONTENT_HEIGHT = this._CONTENT_HEIGHT + 4;
 
-        for (var i=0, len=options.length; i<len; i++) {
+        for (var i=options.length-1; i>=0; i--) {
             var option = options[i];
             var text = option[0];
             var value = option[1];

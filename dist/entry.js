@@ -14641,10 +14641,12 @@ Entry.Utils.inherit(Entry.FieldDropdown, Entry.FieldDropdownDynamic);
       b.optionGroup.remove();
     });
     this.optionGroup = Entry.Dom("ul", {class:"entry-widget-dropdown", parent:$("body")});
-    for (var a = Entry.container.getDropdownList(this._contents.menuName), d = 0, e = a.length;d < e;d++) {
-      var f = a[d], g = f[0], f = f[1], h = Entry.Dom("li", {class:"rect", parent:this.optionGroup}), k = "";
-      this.getValue() == f && (k += "\u2713  ");
-      h.text(k += g);
+    var a = Entry.container.getDropdownList(this._contents.menuName);
+    this._contents.options = a;
+    for (var d = a.length - 1;0 <= d;d--) {
+      var e = a[d], f = e[0], e = e[1], g = Entry.Dom("li", {class:"rect", parent:this.optionGroup}), h = "";
+      this.getValue() == e && (h += "\u2713  ");
+      g.text(h += f);
       (function(a, c) {
         a.mousedown(function(b) {
           b.stopPropagation();
@@ -14655,7 +14657,7 @@ Entry.Utils.inherit(Entry.FieldDropdown, Entry.FieldDropdownDynamic);
           b.destroyOption();
           b._selectBlockView();
         });
-      })(h, f);
+      })(g, e);
     }
     a = this.getAbsolutePosFromDocument();
     a.x += this.box.width / 2 - this.optionGroup.width() / 2;
