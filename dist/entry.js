@@ -13768,7 +13768,6 @@ Entry.BlockView.DRAG_RADIUS = 5;
   a.destroy = function(b) {
     this._destroyObservers();
     var a = this.svgGroup;
-    this.block.getThread();
     b ? $(a).fadeOut(100, function() {
       a.remove();
     }) : a.remove();

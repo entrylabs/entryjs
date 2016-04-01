@@ -636,8 +636,6 @@ Entry.BlockView.DRAG_RADIUS = 5;
         this._destroyObservers();
         var svgGroup = this.svgGroup;
 
-        var thread = this.block.getThread();
-
         if (animate) {
             $(svgGroup).fadeOut(100, function() {
                 svgGroup.remove();
