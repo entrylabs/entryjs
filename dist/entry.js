@@ -13769,9 +13769,9 @@ Entry.BlockView.DRAG_RADIUS = 5;
     this._destroyObservers();
     var a = this.svgGroup;
     this.block.getThread();
-    b ? $(a).velocity({opacity:0}, {duration:1E4, complete:function() {
+    b ? $(a).fadeOut(100, function() {
       a.remove();
-    }}) : a.remove();
+    }) : a.remove();
     this._contents.forEach(function(b) {
       b.constructor !== Entry.Block && b.destroy();
     });

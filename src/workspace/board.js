@@ -66,7 +66,7 @@ Entry.Board = function(option) {
         this.wrapper.addClass("entryOverlayBoard");
         this.generateButtons();
         this.suffix = 'overlayBoard';
-    } else this.suffix = 'board'
+    } else this.suffix = 'board';
     Entry.Utils.addFilters(this.svg, this.suffix);
 
     Entry.ANIMATION_DURATION = 200;

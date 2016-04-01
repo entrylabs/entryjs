@@ -637,19 +637,11 @@ Entry.BlockView.DRAG_RADIUS = 5;
         var svgGroup = this.svgGroup;
 
         var thread = this.block.getThread();
-        //if (thread instanceof Entry.FieldBlock)
-            //thread.updateValueBlock();
 
         if (animate) {
-            $(svgGroup).velocity(
-                {opacity:0},
-                {
-                    duration:10000,
-                    complete: function() {
-                        svgGroup.remove();
-                    }
-                }
-            );
+            $(svgGroup).fadeOut(100, function() {
+                svgGroup.remove();
+            });
         } else svgGroup.remove();
 
         this._contents.forEach(function(c) {

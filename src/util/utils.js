@@ -967,20 +967,14 @@ Entry.Utils.addFilters = function (boardSvgDom, suffix) {
 
 
     var blockFilter = defs.elem('filter', {'id': 'entryBlockShadowFilter_' + suffix, 'height': '200%'});
-    blockFilter.elem('feOffset', {
-        result: 'offOut', in: 'SourceGraphic', dx: 0, dy:1
-    });
+    blockFilter.elem('feOffset', {result: 'offOut', in: 'SourceGraphic', dx: 0, dy:1});
     blockFilter.elem('feColorMatrix', {
         result: 'matrixOut', in: 'offOut', type: 'matrix', values: '0.7 0 0 0 0 0 0.7 0 0 0 0 0 0.7 0 0 0 0 0 1 0'
     });
-    blockFilter.elem('feBlend', {
-        in: 'SourceGraphic', in1:'offOut', mode: 'normal'
-    });
+    blockFilter.elem('feBlend', {in: 'SourceGraphic', in1:'offOut', mode: 'normal'});
 
     var blockHighlightFilter = defs.elem('filter', {'id': 'entryBlockHighlightFilter_' + suffix});
-    blockHighlightFilter.elem('feOffset', {
-        result: 'offOut', in:"SourceGraphic", dx:0, dy:0
-    });
+    blockHighlightFilter.elem('feOffset', {result: 'offOut', in:"SourceGraphic", dx:0, dy:0});
     blockHighlightFilter.elem('feColorMatrix', {
         result: 'matrixOut', in:"offOut", type: 'matrix', values: '1.3 0 0 0 0 0 1.3 0 0 0 0 0 1.3 0 0 0 0 0 1 0'
     });
