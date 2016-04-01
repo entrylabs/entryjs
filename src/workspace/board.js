@@ -463,6 +463,7 @@ Entry.Board = function(option) {
         if (!offset) offset = {x: 0, y: 0};
         var cursorX = offset.x;
         var cursorY = offset.y;
+
         for (var i = 0; i < blocks.length; i++) {
             var block = blocks[i];
             var blockView = block.view;
@@ -472,19 +473,20 @@ Entry.Board = function(option) {
             cursorY += blockView.y;
             cursorX += blockView.x;
             var endPoint = cursorY + 1;
-            if (blockView.magnet.next)
+            if (blockView.magnet.next) {
                 endPoint += blockView.magnet.next.y;
-            metaData.push({
-                point: cursorY,
-                endPoint: endPoint,
-                startBlock: block,
-                blocks: []
-            });
-            metaData.push({
-                point: endPoint,
-                blocks: []
-            });
-            blockView.absX = cursorX;
+                metaData.push({
+                    point: cursorY,
+                    endPoint: endPoint,
+                    startBlock: block,
+                    blocks: []
+                });
+                metaData.push({
+                    point: endPoint,
+                    blocks: []
+                });
+                blockView.absX = cursorX;
+            }
             if (block.statements)
                 zIndex += 0.01;
                 for (var j = 0; j < block.statements.length; j++) {

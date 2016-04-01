@@ -15606,10 +15606,7 @@ Entry.Board = function(a) {
       d += l.y;
       k += l.x;
       a = d + 1;
-      l.magnet.next && (a += l.magnet.next.y);
-      h.push({point:d, endPoint:a, startBlock:n, blocks:[]});
-      h.push({point:a, blocks:[]});
-      l.absX = k;
+      l.magnet.next && (a += l.magnet.next.y, h.push({point:d, endPoint:a, startBlock:n, blocks:[]}), h.push({point:a, blocks:[]}), l.absX = k);
       n.statements && (c += .01);
       for (var q = 0;q < n.statements.length;q++) {
         a = n.statements[q];
