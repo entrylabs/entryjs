@@ -126,11 +126,19 @@ Entry.BlockMockup = function(blocklyInfo) {
                 "booleanMagnet";
     };
 
-    p.appendField = function(field) {
+    p.appendField = function(field, opt) {
         if (!field) return this;
-        if (typeof field === "string" && field.length > 0)
-            this.templates.push(field);
-        else {
+        if (typeof field === "string" && field.length > 0) {
+            if (opt) {
+                field = {
+                    type: "Text",
+                    text: field,
+                    color: opt
+                }
+                this.params.push(field);
+                this.templates.push(this.getFieldCount());
+            } else this.templates.push(field);
+        } else {
             if (field.constructor == Blockly.FieldIcon) {
                 if (field.type === "start")
                     this.params.push({
