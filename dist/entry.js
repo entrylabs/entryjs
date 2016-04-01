@@ -16472,7 +16472,6 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
   a.setMode = function(a, c) {
     a = Number(a);
     var d = this.mode;
-    this.mode = a;
     switch(a) {
       case d:
         return;
@@ -16495,6 +16494,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
       case Entry.Workspace.MODE_OVERLAYBOARD:
         this.overlayBoard || this.initOverlayBoard(), this.overlayBoard.show(), this.set({selectedBoard:this.overlayBoard});
     }
+    this.mode = a;
     this.changeEvent.notify(c);
   };
   a.changeBoardCode = function(a) {

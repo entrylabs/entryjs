@@ -77,7 +77,6 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
     p.setMode = function(mode, message){
         mode = Number(mode);
         var oldMode = this.mode;
-        this.mode = mode;
         switch (mode) {
             case oldMode:
                 return;
@@ -112,6 +111,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                 this.set({selectedBoard:this.overlayBoard});
                 break;
         }
+        this.mode = mode;
         this.changeEvent.notify(message);
     };
 
