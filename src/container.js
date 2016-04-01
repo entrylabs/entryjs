@@ -1036,7 +1036,7 @@ Entry.Container.prototype.initDoneProject = function(projectId) {
     var view = this._view;
     var width = view.style.width.substring(0,
                                           view.style.width.length-2);
-    var url = '/api/project/iframe/';
+    var url = '/api/iframe/project/';
     var iframe = Entry.createElement('iframe');
     iframe.setAttribute('width', width);
     iframe.setAttribute('height',width*9/16 + 35);

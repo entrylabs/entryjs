@@ -372,7 +372,7 @@ EntryStatic.getAllBlocks = function() {
                 "robotis_openCM70_cm_sound_detected_clear",
                 "robotis_openCM70_cm_led",
                 "robotis_openCM70_cm_motion",
-                "robotis_openCM70_aux_motor_speed",              
+                "robotis_openCM70_aux_motor_speed",
                 "robotis_openCM70_aux_servo_mode",
                 "robotis_openCM70_aux_servo_speed",
                 "robotis_openCM70_aux_servo_position",
@@ -380,7 +380,7 @@ EntryStatic.getAllBlocks = function() {
                 "robotis_openCM70_aux_custom",
                 "robotis_openCM70_cm_custom_value",
                 "robotis_openCM70_cm_custom",
-                "robotis_carCont_sensor_value",  
+                "robotis_carCont_sensor_value",
                 "robotis_carCont_cm_led",
                 "robotis_carCont_cm_sound_detected_clear",
                 "robotis_carCont_aux_motor_speed",
@@ -1241,7 +1241,7 @@ EntryStatic.blockInfo = {
         "isNotFor": ['sensorBoard'],
         "usage": ["arduino"],
         "class": "arduino_value"
-    },    
+    },
     "CODEino_get_digital_value": {
         "xml": "<block type='arduino_get_digital_value'><value name='VALUE'><block type='arduino_get_port_number'></block></value></block>",
         "isNotFor": ['CODEino'],
@@ -1528,7 +1528,7 @@ EntryStatic.blockInfo = {
         "isNotFor": ['bitbrick'],
         "xml": "<block type='bitbrick_servomotor_angle'><value name='VALUE'><block type='text'><field name='NAME'>100</field></block></value></block>",
         "class": "condition"
-    },    
+    },
     "bitbrick_convert_scale": {
         "isNotFor": ['bitbrick'],
         "xml": "<block type='bitbrick_convert_scale'><value name='VALUE2'> <block type='number'><field name='NUM'>0</field></block> </value><value name='VALUE3'> <block type='number'><field name='NUM'>1023</field></block> </value><value name='VALUE4'> <block type='number'><field name='NUM'>-100</field></block> </value><value name='VALUE5'> <block type='number'><field name='NUM'>100</field></block> </value></block>",
@@ -2196,3 +2196,20 @@ EntryStatic.fonts = [
 }
 ];
 
+EntryStatic.getName = function(str, type) {
+    var dict = SpriteNames;
+    if (type == 'picture')
+        dict = PictureNames;
+    else if (type == 'sound')
+        dict = SoundNames;
+
+    var lang = navigator.language ? navigator.language : 'ko';
+    if (window.user && window.user.language)
+        lang = window.user.language;
+
+    if (!dict || lang == 'ko' || lang == 'code') {
+        return str;
+    } else {
+        return dict[str] ? dict[str] : str;
+    }
+};

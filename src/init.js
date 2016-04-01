@@ -402,39 +402,4 @@ Entry.initFonts = function(fonts) {
     this.fonts = fonts;
     if (!fonts) this.fonts = [];
 
-    var config = {
-        custom: {
-            families: [],
-            urls: []
-        }
-    };
-
-    for (var i=0; i<this.fonts.length; i++) {
-        var font = this.fonts[i];
-        config.custom.families.push(font.family);
-        config.custom.urls.push(font.url);
-    }
-
-    setTimeout(function() {
-        WebFont.load(config);
-    },1000);
-
-    /*
-    config.custom.families.forEach(function(font) {
-        var node = Entry.createElement('div');
-        node.innerHTML = "abcd한글123#$";
-        node.style.position      = 'absolute';
-        node.style.left          = '-10000px';
-        node.style.top           = '-10000px';
-        node.style.fontSize      = '300px';
-
-        node.style.fontFamily    = font;
-        node.style.fontVariant   = 'normal';
-        node.style.fontStyle     = 'normal';
-        node.style.fontWeight    = 'normal';
-        node.style.letterSpacing = '0';
-        document.body.appendChild(node);
-    });
-    */
-
 };

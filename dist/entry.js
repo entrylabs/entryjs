@@ -3124,7 +3124,7 @@ Entry.block.False = function(a, b) {
 Blockly.Blocks.boolean_basic_operator = {init:function() {
   this.setColour("#AEB8FF");
   this.appendValueInput("LEFTHAND").setCheck(["String", "Number"]);
-  this.appendDummyInput("VALUE").appendField(new Blockly.FieldDropdown([["=", "EQUAL"], [">", "GREATER"], ["<", "LESS"], ["\u2267", "GREATER_OR_EQUAL"], ["\u2266", "LESS_OR_EQUAL"]], null, !1), "OPERATOR");
+  this.appendDummyInput("VALUE").appendField(new Blockly.FieldDropdown([["=", "EQUAL"], [">", "GREATER"], ["<", "LESS"], ["\u2265", "GREATER_OR_EQUAL"], ["\u2264", "LESS_OR_EQUAL"]], null, !1), "OPERATOR");
   this.appendValueInput("RIGHTHAND").setCheck(["Number", "String"]);
   this.setOutput(!0, "Boolean");
   this.setInputsInline(!0);
@@ -4230,29 +4230,29 @@ Entry.block.neobot_set_sensor_value = function(a, b) {
   return b.callReturn();
 };
 Entry.Robotis_carCont = {INSTRUCTION:{NONE:0, WRITE:3, READ:2}, CONTROL_TABLE:{CM_LED:[67, 1], CM_SPRING_RIGHT:[69, 1, 69, 2], CM_SPRING_LEFT:[70, 1, 69, 2], CM_SWITCH:[71, 1], CM_SOUND_DETECTED:[86, 1], CM_SOUND_DETECTING:[87, 1], CM_IR_LEFT:[91, 2, 91, 4], CM_IR_RIGHT:[93, 2, 91, 4], CM_CALIBRATION_LEFT:[95, 2], CM_CALIBRATION_RIGHT:[97, 2], AUX_MOTOR_SPEED_LEFT:[152, 2], AUX_MOTOR_SPEED_RIGHT:[154, 2]}, setZero:function() {
-  Entry.hw.sendQueue.ROBOTIS_DATA = [[Entry.Robotis_carCont.INSTRUCTION.WRITE, 152, 2, 0], [Entry.Robotis_carCont.INSTRUCTION.WRITE, 154, 2, 0]];
+  this.setRobotisData([[Entry.Robotis_carCont.INSTRUCTION.WRITE, 152, 2, 0], [Entry.Robotis_carCont.INSTRUCTION.WRITE, 154, 2, 0]]);
   Entry.hw.sendQueue.setZero = [1];
-  Entry.hw.update();
-  Entry.hw.sendQueue.ROBOTIS_DATA = null;
+  this.update();
+  this.setRobotisData(null);
   Entry.hw.sendQueue.setZero = null;
-  Entry.hw.update();
+  this.update();
 }, name:"robotis_carCont", delay:40, postCallReturn:function(a, b, c) {
   if (0 >= c) {
-    return Entry.hw.sendQueue.ROBOTIS_DATA = b, Entry.hw.update(), a.callReturn();
+    return this.setRobotisData(b), this.update(), a.callReturn();
   }
   if (a.isStart) {
     if (1 == a.timeFlag) {
-      return Entry.hw.sendQueue.ROBOTIS_DATA = [[0, 0, 0, 0]], a;
+      return this.setRobotisData(null), a;
     }
     delete a.timeFlag;
     delete a.isStart;
     Entry.engine.isContinue = !1;
-    Entry.hw.update();
+    this.update();
     return a.callReturn();
   }
   a.isStart = !0;
   a.timeFlag = 1;
-  Entry.hw.sendQueue.ROBOTIS_DATA = b;
+  this.setRobotisData(b);
   setTimeout(function() {
     a.timeFlag = 0;
   }, c);
@@ -4262,16 +4262,21 @@ Entry.Robotis_carCont = {INSTRUCTION:{NONE:0, WRITE:3, READ:2}, CONTROL_TABLE:{C
   for (var c = (new Date).getTime(), d = c;d < c + b;) {
     d = (new Date).getTime();
   }
+}, update:function() {
+  Entry.hw.update();
+  this.setRobotisData(null);
+}, setRobotisData:function(a) {
+  Entry.hw.sendQueue.ROBOTIS_DATA = null == a ? null : Entry.hw.sendQueue.ROBOTIS_DATA ? Entry.hw.sendQueue.ROBOTIS_DATA.concat(a) : a;
 }};
 Entry.Robotis_openCM70 = {INSTRUCTION:{NONE:0, WRITE:3, READ:2}, CONTROL_TABLE:{CM_LED_R:[79, 1], CM_LED_G:[80, 1], CM_LED_B:[81, 1], CM_BUZZER_INDEX:[84, 1], CM_BUZZER_TIME:[85, 1], CM_SOUND_DETECTED:[86, 1], CM_SOUND_DETECTING:[87, 1], CM_USER_BUTTON:[26, 1], CM_MOTION:[66, 1], AUX_SERVO_POSITION:[152, 2], AUX_IR:[168, 2], AUX_TOUCH:[202, 1], AUX_TEMPERATURE:[234, 1], AUX_ULTRASONIC:[242, 1], AUX_MAGNETIC:[250, 1], AUX_MOTION_DETECTION:[258, 1], AUX_COLOR:[266, 1], AUX_CUSTOM:[216, 2], AUX_BRIGHTNESS:[288, 
 2], AUX_HYDRO_THEMO_HUMIDITY:[274, 1], AUX_HYDRO_THEMO_TEMPER:[282, 1], AUX_SERVO_MODE:[126, 1], AUX_SERVO_SPEED:[136, 2], AUX_MOTOR_SPEED:[136, 2], AUX_LED_MODULE:[210, 1]}, setZero:function() {
-  Entry.hw.sendQueue.ROBOTIS_DATA = [[Entry.Robotis_openCM70.INSTRUCTION.WRITE, 136, 2, 0], [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 138, 2, 0], [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 140, 2, 0], [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 142, 2, 0], [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 144, 2, 0], [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 146, 2, 0], [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 79, 1, 0], [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 80, 1, 0], [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 
-  81, 1, 0]];
+  Entry.Robotis_carCont.setRobotisData([[Entry.Robotis_openCM70.INSTRUCTION.WRITE, 136, 2, 0], [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 138, 2, 0], [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 140, 2, 0], [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 142, 2, 0], [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 144, 2, 0], [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 146, 2, 0], [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 79, 1, 0], [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 80, 1, 0], [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 
+  81, 1, 0]]);
   Entry.hw.sendQueue.setZero = [1];
-  Entry.hw.update();
-  Entry.hw.sendQueue.ROBOTIS_DATA = null;
+  Entry.Robotis_carCont.update();
+  Entry.Robotis_carCont.setRobotisData(null);
   Entry.hw.sendQueue.setZero = null;
-  Entry.hw.update();
+  Entry.Robotis_carCont.update();
 }, name:"robotis_openCM70", delay:15};
 Blockly.Blocks.robotis_openCM70_cm_custom_value = {init:function() {
   this.setColour("#00979D");
@@ -4288,8 +4293,8 @@ Entry.block.robotis_openCM70_cm_custom_value = function(a, b) {
   var c = Entry.Robotis_openCM70.INSTRUCTION.READ, d = 0, e = 0, f = 0, d = b.getStringField("SIZE");
   "BYTE" == d ? e = 1 : "WORD" == d ? e = 2 : "DWORD" == d && (e = 4);
   f = d = b.getNumberValue("VALUE");
-  Entry.hw.sendQueue.ROBOTIS_DATA = [[c, d, e, 0, e]];
-  Entry.hw.update();
+  Entry.Robotis_carCont.setRobotisData([[c, d, e, 0, e]]);
+  Entry.Robotis_carCont.update();
   return Entry.hw.portData[f];
 };
 Blockly.Blocks.robotis_openCM70_sensor_value = {init:function() {
@@ -4311,8 +4316,8 @@ Entry.block.robotis_openCM70_sensor_value = function(a, b) {
   "CM_SOUND_DETECTED" == h ? (f = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTED[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTED[1], d = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTED[0], e = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTED[1]) : "CM_SOUND_DETECTING" == h ? (f = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTING[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTING[1], d = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTING[0], 
   e = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTING[1]) : "CM_USER_BUTTON" == h && (f = Entry.Robotis_openCM70.CONTROL_TABLE.CM_USER_BUTTON[0], g = Entry.Robotis_openCM70.CONTROL_TABLE.CM_USER_BUTTON[1], d = Entry.Robotis_openCM70.CONTROL_TABLE.CM_USER_BUTTON[0], e = Entry.Robotis_openCM70.CONTROL_TABLE.CM_USER_BUTTON[1]);
   f += 0 * g;
-  Entry.hw.sendQueue.ROBOTIS_DATA = [[c, d, e, 0, g]];
-  Entry.hw.update();
+  Entry.Robotis_carCont.setRobotisData([[c, d, e, 0, g]]);
+  Entry.Robotis_carCont.update();
   return Entry.hw.portData[f];
 };
 Blockly.Blocks.robotis_openCM70_aux_sensor_value = {init:function() {
@@ -4359,8 +4364,8 @@ Entry.block.robotis_openCM70_aux_sensor_value = function(a, b) {
   d = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_CUSTOM[0], e = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_CUSTOM[1]);
   f += l * g;
   0 != l && (e = 6 * g);
-  Entry.hw.sendQueue.ROBOTIS_DATA = [[c, d, e, 0, g]];
-  Entry.hw.update();
+  Entry.Robotis_carCont.setRobotisData([[c, d, e, 0, g]]);
+  Entry.Robotis_carCont.update();
   return Entry.hw.portData[f];
 };
 Blockly.Blocks.robotis_openCM70_cm_buzzer_index = {init:function() {
@@ -4550,8 +4555,8 @@ Entry.block.robotis_carCont_sensor_value = function(a, b) {
   "CM_IR_RIGHT" == h ? (f = Entry.Robotis_carCont.CONTROL_TABLE.CM_IR_RIGHT[0], g = Entry.Robotis_carCont.CONTROL_TABLE.CM_IR_RIGHT[1], d = Entry.Robotis_carCont.CONTROL_TABLE.CM_IR_RIGHT[2], e = Entry.Robotis_carCont.CONTROL_TABLE.CM_IR_RIGHT[3]) : "CM_CALIBRATION_LEFT" == h ? (f = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_LEFT[0], g = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_LEFT[1], d = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_LEFT[0], e = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_LEFT[1]) : 
   "CM_CALIBRATION_RIGHT" == h ? (f = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_RIGHT[0], g = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_RIGHT[1], d = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_RIGHT[0], e = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_RIGHT[1]) : "CM_BUTTON_STATUS" == h && (f = Entry.Robotis_carCont.CONTROL_TABLE.CM_BUTTON_STATUS[0], g = Entry.Robotis_carCont.CONTROL_TABLE.CM_BUTTON_STATUS[1], d = Entry.Robotis_carCont.CONTROL_TABLE.CM_BUTTON_STATUS[0], 
   e = Entry.Robotis_carCont.CONTROL_TABLE.CM_BUTTON_STATUS[1]);
-  Entry.hw.sendQueue.ROBOTIS_DATA = [[c, d, e, 0, g]];
-  Entry.hw.update();
+  Entry.Robotis_carCont.setRobotisData([[c, d, e, 0, g]]);
+  Entry.Robotis_carCont.update();
   return Entry.hw.portData[f];
 };
 Blockly.Blocks.robotis_carCont_cm_led = {init:function() {
@@ -6188,7 +6193,7 @@ Entry.Container.prototype.initDoneProject = function(a) {
   b.setAttribute("width", a);
   b.setAttribute("height", 9 * a / 16 + 35);
   b.setAttribute("frameborder", 0);
-  b.setAttribute("src", "/api/project/iframe/" + this.doneProject);
+  b.setAttribute("src", "/api/iframe/project/" + this.doneProject);
   this.doneProjectFrame = b;
   this.doneContainer.appendChild(b);
 };
@@ -6822,12 +6827,13 @@ Entry.EntityObject.prototype.injectModel = function(a, b) {
   } else {
     if ("textBox" == this.type) {
       var c = this.parent;
-      b.text = c.text || c.name;
+      b.text = b.text || c.text || c.name;
       this.setFont(b.font);
       this.setBGColour(b.bgColor);
       this.setColour(b.colour);
       this.setUnderLine(b.underLine);
       this.setStrike(b.strike);
+      this.setText(b.text);
     }
   }
   b && this.syncModel_(b);
@@ -9652,6 +9658,9 @@ Entry.Playground.prototype.generateTextView = function(a) {
   e = Entry.createElement("img");
   e.bindOnClick(function() {
     Entry.playground.toggleLineBreak(!1);
+    v.innerHTML = Lang.Menus.linebreak_off_desc_1;
+    w.innerHTML = Lang.Menus.linebreak_off_desc_2;
+    x.innerHTML = Lang.Menus.linebreak_off_desc_3;
   });
   e.src = Entry.mediaFilePath + "text-linebreak-off-true.png";
   b.appendChild(e);
@@ -9659,6 +9668,9 @@ Entry.Playground.prototype.generateTextView = function(a) {
   e = Entry.createElement("img");
   e.bindOnClick(function() {
     Entry.playground.toggleLineBreak(!0);
+    v.innerHTML = Lang.Menus.linebreak_on_desc_1;
+    w.innerHTML = Lang.Menus.linebreak_on_desc_2;
+    x.innerHTML = Lang.Menus.linebreak_on_desc_3;
   });
   e.src = Entry.mediaFilePath + "text-linebreak-on-false.png";
   b.appendChild(e);
@@ -9666,17 +9678,17 @@ Entry.Playground.prototype.generateTextView = function(a) {
   b = Entry.createElement("div");
   b.addClass("entryPlaygroundLinebreakDescription");
   a.appendChild(b);
-  a = Entry.createElement("p");
-  a.innerHTML = "\uae00\uc0c1\uc790\uc758 \ud06c\uae30\uac00 \uae00\uc790\uac00 \uc4f0\uc77c \uc218 \uc788\ub294 \uc601\uc5ed\uc744 \uacb0\uc815\ud569\ub2c8\ub2e4.";
-  b.appendChild(a);
+  var v = Entry.createElement("p");
+  v.innerHTML = Lang.Menus.linebreak_off_desc_1;
+  b.appendChild(v);
   a = Entry.createElement("ul");
   b.appendChild(a);
-  b = Entry.createElement("li");
-  b.innerHTML = "\ub0b4\uc6a9 \uc791\uc131\uc2dc \uc5d4\ud130\ud0a4\ub85c \uc904\ubc14\uafc8\uc744 \ud560 \uc218 \uc788\uc2b5\ub2c8\ub2e4.";
-  a.appendChild(b);
-  b = Entry.createElement("li");
-  b.innerHTML = "\ub0b4\uc6a9\uc744 \uc791\uc131\ud558\uc2dc\uac70\ub098 \uc0c8\ub85c\uc6b4 \uae00\uc790\ub97c \ucd94\uac00\uc2dc \uae38\uc774\uac00 \uae00\uc0c1\uc790\uc758 \uac00\ub85c \uc601\uc5ed\uc744 \ub118\uc5b4\uc11c\uba74 \uc790\ub3d9\uc73c\ub85c \uc904\uc774 \ubc14\ub01d\ub2c8\ub2e4.";
-  a.appendChild(b);
+  var w = Entry.createElement("li");
+  w.innerHTML = Lang.Menus.linebreak_off_desc_2;
+  a.appendChild(w);
+  var x = Entry.createElement("li");
+  x.innerHTML = Lang.Menus.linebreak_off_desc_3;
+  a.appendChild(x);
 };
 Entry.Playground.prototype.generateSoundView = function(a) {
   if ("workspace" == Entry.type) {
@@ -10560,15 +10572,6 @@ Entry.parseOptions = function(a) {
 Entry.initFonts = function(a) {
   this.fonts = a;
   a || (this.fonts = []);
-  var b = {custom:{families:[], urls:[]}};
-  for (a = 0;a < this.fonts.length;a++) {
-    var c = this.fonts[a];
-    b.custom.families.push(c.family);
-    b.custom.urls.push(c.url);
-  }
-  setTimeout(function() {
-    WebFont.load(b);
-  }, 1E3);
 };
 Entry.Reporter = function(a) {
   this.projectId = this.userId = null;
@@ -10739,10 +10742,12 @@ Entry.Scene.prototype.selectScene = function(a) {
 };
 Entry.Scene.prototype.toJSON = function() {
   for (var a = [], b = this.getScenes().length, c = 0;c < b;c++) {
-    var d = this.getScenes()[c], e = d.view;
+    var d = this.getScenes()[c], e = d.view, f = d.inputWrapper;
     delete d.view;
+    delete d.inputWrapper;
     a.push(JSON.parse(JSON.stringify(d)));
     d.view = e;
+    d.inputWrapper = f;
   }
   return a;
 };
@@ -12591,20 +12596,12 @@ Entry.HWMonitor = function(a) {
 Entry.HW = function() {
   this.connectTrial = 0;
   this.isFirstConnect = !0;
-  if ("WebSocket" in window) {
-    try {
-      this.initSocket();
-    } catch (a) {
-      console.log("socket error:", a);
-    }
-  } else {
-    console.log("socket not exist");
-  }
+  this.initSocket();
   this.connected = !1;
   this.portData = {};
   this.sendQueue = {};
   this.settingQueue = {};
-  this.hwModule = this.selectedDevice = null;
+  this.socketType = this.hwModule = this.selectedDevice = null;
   Entry.addEventListener("stop", this.setZero);
   this.hwInfo = {11:Entry.Arduino, 12:Entry.SensorBoard, 24:Entry.Hamster, 25:Entry.Albert, 31:Entry.Bitbrick, 51:Entry.Neobot};
 };
@@ -12614,22 +12611,38 @@ p.initSocket = function() {
   if (this.connectTrial >= Entry.HW.TRIAL_LIMIT) {
     this.isFirstConnect || Entry.toast.alert(Lang.Menus.connect_hw, Lang.Menus.connect_fail, !1), this.isFirstConnect = !1;
   } else {
-    var a = this, b = new WebSocket("ws://localhost:23518");
-    this.socket = b;
+    var a = this, b = {reconnection:!1}, c = Entry.getBrowserType().toUpperCase();
+    if (-1 < c.indexOf("IE") || -1 < c.indexOf("EDGE")) {
+      b.transports = ["polling"];
+    }
+    var c = new WebSocket("ws://localhost:23518"), d = io.connect("ws://localhost:23517", b);
     this.connected = !1;
-    b.binaryType = "arraybuffer";
+    c.binaryType = "arraybuffer";
+    d.binaryType = "arraybuffer";
     this.connectTrial++;
-    b.onopen = function() {
+    c.onopen = function() {
+      a.socketType = "WebSocket";
       a.initHardware();
     };
-    b.onmessage = function(b) {
+    c.onmessage = function(b) {
       b = JSON.parse(b.data);
       a.checkDevice(b);
       a.updatePortData(b);
     };
-    b.onclose = function() {
-      a.initSocket();
+    c.onclose = function() {
+      "WebSocket" === a.socketType && (this.socket = null, a.initSocket());
     };
+    d.connect();
+    d.on("connect", function(b) {
+      a.socketType = "SocketIO";
+      a.initHardware(d);
+    });
+    d.on("message", function(b) {
+      "string" === typeof b && (b = JSON.parse(b), a.checkDevice(b), a.updatePortData(b));
+    });
+    d.on("disconnect", function(b) {
+      "SocketIO" === a.socketType && (this.socket = null, d.destroy(d), a.initSocket());
+    });
     Entry.dispatchEvent("hwChanged");
   }
 };
@@ -12637,7 +12650,8 @@ p.retryConnect = function() {
   this.connectTrial = 0;
   this.initSocket();
 };
-p.initHardware = function() {
+p.initHardware = function(a) {
+  this.socket = a;
   this.connectTrial = 0;
   this.connected = !0;
   Entry.dispatchEvent("hwChanged");
@@ -12661,14 +12675,29 @@ p.setPortReadable = function(a) {
   this.sendQueue.readablePorts.push(a);
 };
 p.update = function() {
-  this.socket && 1 == this.socket.readyState && (this.socket.send(JSON.stringify(this.sendQueue)), this.sendQueue.readablePorts = []);
+  if (this.socket) {
+    if ("SocketIO" === this.socketType) {
+      if ("open" != this.socket.io.readyState) {
+        return;
+      }
+      this.socket.emit("message", JSON.stringify(this.sendQueue));
+    } else {
+      if ("WebSocket" === this.socketType) {
+        if (1 != this.socket.readyState) {
+          return;
+        }
+        this.socket.send(JSON.stringify(this.sendQueue));
+      }
+    }
+    this.sendQueue.readablePorts = [];
+  }
 };
 p.updatePortData = function(a) {
   this.portData = a;
   this.hwMonitor && this.hwMonitor.update();
 };
 p.closeConnection = function() {
-  this.socket && this.socket.close();
+  this.socket && ("SocketIO" === this.socketType && this.socket.emit("close"), this.socket.close());
 };
 p.downloadConnector = function() {
   window.open("http://play-entry.org/down/entry-hw_v1.1.zip", "_blank").focus();

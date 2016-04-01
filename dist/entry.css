@@ -62,17 +62,17 @@
   position: relative;
   z-index: 999;
   cursor: pointer;
-  background-image: url("../images/top_icon_add_b_nor.png");
+  background-image: url("../../images/top_icon_add_b_nor.png");
 }
 .selectedScene .entrySceneLeftWorkspace {
-  background-image: url("../images/top_tab_b_sel_left.png");
+  background-image: url("../../images/top_tab_b_sel_left.png");
 }
 .entrySceneLeftWorkspace {
   display: inline-block;
   float: left;
   width: 15px;
   height: 40px;
-  background-image: url("../images/top_tab_b_nor_left_blue.png");
+  background-image: url("../../images/top_tab_b_nor_left_blue.png");
 }
 .entrySceneInputCover {
   margin-left: -1px;
@@ -125,11 +125,11 @@
   float: left;
   height: 40px;
   position: relative;
-  background-image: url("../images/top_tab_b_nor_right_blue.png");
+  background-image: url("../../images/top_tab_b_nor_right_blue.png");
 }
 .selectedScene .entrySceneRemoveButtonCoverWorkspace {
   display: inline-block;
-  background: url("../images/top_tab_b_sel_right.png");
+  background: url("../../images/top_tab_b_sel_right.png");
 }
 .entrySceneRemoveButtonWorkspace {
   border: 0;
@@ -264,7 +264,7 @@
   display: block;
   width: 111px;
   height: 111px;
-  background-image: url("../images/play_btn.png");
+  background-image: url("../../images/play_btn.png");
   background-position: 40px center;
   background-color: rgba(0, 0, 0, 0.5);
   border-radius: 55px;
@@ -277,7 +277,7 @@
 }
 .entryPopupWindow > .entryEngineWorkspace_w > .entryStopButtonWorkspace_w2 {
   display: block;
-  background-image: url("../images/stop_btn.png");
+  background-image: url("../../images/stop_btn.png");
   background-repeat: no-repeat;
   left: 20px;
   color: transparent;
@@ -290,12 +290,12 @@
   display: none;
 }
 .entryPopupWindow > .entryEngineWorkspace_w > .entryCoordinateButtonWorkspace_w {
-  background-image: url("../images/grid.png") !important;
+  background-image: url("../../images/grid.png") !important;
   right: 34px;
   color: #4b37a0;
 }
 .entryPopupWindow > .entryEngineWorkspace_w > .entryMaximizeButtonWorkspace_w {
-  background-image: url("../images/zoom_out_btn.png");
+  background-image: url("../../images/zoom_out_btn.png");
   background-repeat: no-repeat;
   right: 5px;
 }
@@ -343,7 +343,7 @@
   background-color: transparent;
   font-size: 12pt;
   border-bottom: 2px solid #89c0d5;
-  background-image: url("../images/layers_icon_button_play_nor.png");
+  background-image: url("../../images/layers_icon_button_play_nor.png");
   background-position: 10px 50%;
   background-repeat: no-repeat;
 }
@@ -354,7 +354,7 @@
   background-color: transparent;
   font-size: 12pt;
   border-bottom: 2px solid #89c0d5;
-  background-image: url("../images/layers_icon_button_stop_nor.png");
+  background-image: url("../../images/layers_icon_button_stop_nor.png");
   background-position: 10px 50%;
   background-repeat: no-repeat;
 }
@@ -404,17 +404,17 @@
 .entryMaximizeButtonWorkspace {
   float: left;
   margin-left: 5px;
-  background-image: url("../images/fullscreen_edit.png");
+  background-image: url("../../images/fullscreen_edit.png");
 }
 .entryMaximizeButtonMinimize {
   float: right;
   margin-right: 5px;
-  background-image: url("../images/zoom_in_btn.png");
+  background-image: url("../../images/zoom_in_btn.png");
 }
 .entryPopupWindow > .entryEngineMinimize > .entryMaximizeButtonMinimize {
   float: right;
   margin-right: 5px;
-  background-image: url("../images/zoom_out_btn.png");
+  background-image: url("../../images/zoom_out_btn.png");
 }
 .entryMaximizeButtonPhone {
   width: 20px;
@@ -425,16 +425,16 @@
   background-repeat: no-repeat;
   background-position: center;
   background-color: transparent;
-  background-image: url("../images/layers_icon_fullmode01_nor.png");
+  background-image: url("../../images/layers_icon_fullmode01_nor.png");
 }
 .entryMaximizeButtonWorkspace_w {
   float: right;
   margin-right: 5px;
-  background-image: url("../images/layers_icon_fullmode01_nor_1.png");
+  background-image: url("../../images/layers_icon_fullmode01_nor_1.png");
   background-repeat: no-repeat;
 }
 .entryEngineBlueWorkspace > .entryMaximizeButtonWorkspace {
-  background-image: url("../images/fullscreen_play.png");
+  background-image: url("../../images/fullscreen_play.png");
 }
 #entrySpeedPanelWorkspace {
   width: 100%;
@@ -448,7 +448,7 @@
   height: 15px;
   margin-top: 5px;
   margin-left: 10px;
-  background-image: url("../images/speed_edit.png");
+  background-image: url("../../images/speed_edit.png");
 }
 .entryPopupWindow > div > .entrySpeedButtonWorkspace {
   display: none;
@@ -519,28 +519,28 @@
   height: 16px;
   top: 21px;
   z-index: 100;
-  background-image: url("../images/speed_handle.png");
+  background-image: url("../../images/speed_handle.png");
 }
 .entryCoordinateButtonWorkspace {
   float: right;
-  background-image: url("../images/coordinates_edit.png");
+  background-image: url("../../images/coordinates_edit.png");
 }
 .entryCoordinateButtonMinimize {
   float: right;
-  background-image: url("../images/grid.png");
+  background-image: url("../../images/grid.png");
 }
 .entryCoordinateButtonWorkspace_w {
   float: right;
-  background-image: url("../images/layers_icon_grid_nor.png");
+  background-image: url("../../images/layers_icon_grid_nor.png");
 }
 .entryCoordinateButtonWorkspace.toggleOn {
-  background-image: url("../images/coordinates_edit_on.png");
+  background-image: url("../../images/coordinates_edit_on.png");
 }
 .entryCoordinateButtonWorkspace_w.toggleOn {
-  background-image: url("../images/layers_icon_grid_nor_1.png");
+  background-image: url("../../images/layers_icon_grid_nor_1.png");
 }
 .entryEngineBlueWorkspace > .entryCoordinateButtonWorkspace {
-  background-image: url("../images/coordinates_play.png");
+  background-image: url("../../images/coordinates_play.png");
 }
 .entryRunButtonWorkspace {
   float: right;
@@ -550,7 +550,7 @@
   text-align: right;
   font-size: 9pt;
   color: #61abdb;
-  background-image: url("../images/playbutton_edit.png");
+  background-image: url("../../images/playbutton_edit.png");
 }
 .entryRunButtonMinimize {
   display: none;
@@ -574,7 +574,7 @@
   background-repeat: no-repeat;
   background-position: 10% 43%;
   font-family: nanumBarunBold !important;
-  background-image: url("../images/layers_icon_button_plus_nor.png");
+  background-image: url("../../images/layers_icon_button_plus_nor.png");
 }
 .collapsed > .entryAddButtonWorkspace_w {
   color: transparent;
@@ -596,7 +596,7 @@
   background-repeat: no-repeat;
   background-position: 10% 43%;
   font-family: nanumBarunBold !important;
-  background-image: url("../images/layers_icon_button_play_nor_1.png");
+  background-image: url("../../images/layers_icon_button_play_nor_1.png");
 }
 .collapsed > .entryRunButtonWorkspace_w {
   color: transparent;
@@ -606,7 +606,7 @@
   display: none;
 }
 .entryEngineBlueWorkspace > .entryRunButtonWorkspace {
-  background-image: url("../images/playbutton_play.png");
+  background-image: url("../../images/playbutton_play.png");
   color: white;
 }
 .entryStopButtonWorkspace {
@@ -618,7 +618,7 @@
   text-align: right;
   font-size: 9pt;
   color: #61abdb;
-  background-image: url("../images/stopbutton_pause.png");
+  background-image: url("../../images/stopbutton_pause.png");
 }
 .entryStopButtonMinimize {
   float: left;
@@ -628,7 +628,7 @@
   text-align: right;
   font-size: 9pt;
   color: #6c5af2;
-  background-image: url("../images/stop_btn.png");
+  background-image: url("../../images/stop_btn.png");
 }
 .entryStopButtonWorkspace_w {
   top: 289px;
@@ -646,7 +646,7 @@
   background-repeat: no-repeat;
   background-position: 10% center;
   font-weight: 600;
-  background-image: url("../images/layers_icon_button_stop_nor_1.png");
+  background-image: url("../../images/layers_icon_button_stop_nor_1.png");
 }
 .collapsed > .entryStopButtonWorkspace_w {
   color: transparent;
@@ -659,16 +659,16 @@
   display: none;
 }
 .entryEngineBlueWorkspace > .entryStopButtonWorkspace {
-  background-image: url("../images/stopbutton_play.png");
+  background-image: url("../../images/stopbutton_play.png");
   color: white;
 }
 .entryPauseButtonWorkspace {
   float: right;
-  background-image: url("../images/pausebutton_edit.png");
+  background-image: url("../../images/pausebutton_edit.png");
 }
 .entryPauseButtonMinimize {
   float: left;
-  background-image: url("../images/pause_btn.png");
+  background-image: url("../../images/pause_btn.png");
   width: auto;
   background-position: left;
   padding-left: 17px;
@@ -676,7 +676,7 @@
   font-size: 9pt;
 }
 .entryEngineBlueWorkspace > .entryPauseButtonWorkspace {
-  background-image: url("../images/pausebutton_play.png");
+  background-image: url("../../images/pausebutton_play.png");
   color: white;
 }
 .propertyPanel {
@@ -717,16 +717,16 @@
   color: #fff;
 }
 .propertyTabcontainer {
-  background-image: url("../images/property/container_off.png");
+  background-image: url("../../images/property/container_off.png");
 }
 .propertyTabcontainer.selected {
-  background-image: url("../images/property/container_on.png");
+  background-image: url("../../images/property/container_on.png");
 }
 .propertyTabhw {
-  background-image: url("../images/property/hw_off.png");
+  background-image: url("../../images/property/hw_off.png");
 }
 .propertyTabhw.selected {
-  background-image: url("../images/property/hw_on.png");
+  background-image: url("../../images/property/hw_on.png");
 }
 .propertyContent {
   position: absolute;
@@ -837,7 +837,7 @@
   left: 0;
   height: 18px;
   width: 18px;
-  background-image: url("../images/layers_icon_visible.png");
+  background-image: url("../../images/layers_icon_visible.png");
   border-bottom: 1px solid rgba(159, 159, 159, 0.3);
   cursor: pointer;
   -webkit-box-sizing: border-box;
@@ -845,7 +845,7 @@
   box-sizing: border-box;
 }
 .objectInfo_unvisible {
-  background-image: url("../images/layers_icon_unvisible.png");
+  background-image: url("../../images/layers_icon_unvisible.png");
 }
 .objectInfo_unlock {
   display: inline-block;
@@ -854,14 +854,14 @@
   left: 0;
   height: 18px;
   width: 18px;
-  background-image: url("../images/layers_icon_unlock.png");
+  background-image: url("../../images/layers_icon_unlock.png");
   cursor: pointer;
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
 }
 .objectInfo_lock {
-  background-image: url("../images/layers_icon_lock.png");
+  background-image: url("../../images/layers_icon_lock.png");
 }
 .entryObjectThumbnailWorkspace {
   float: left;
@@ -940,7 +940,7 @@
   right: 43px;
   top: 22px;
   cursor: pointer;
-  background-image: url("../images/layers_icon_edit_nor_new.png");
+  background-image: url("../../images/layers_icon_edit_nor_new.png");
 }
 .entryObjectDeleteWorkspace {
   float: left;
@@ -950,7 +950,7 @@
   right: 21px;
   top: 22px;
   cursor: pointer;
-  background-image: url("../images/layers_icon_close_nor_new.png");
+  background-image: url("../../images/layers_icon_close_nor_new.png");
 }
 .entryObjectDeletePhone {
   float: left;
@@ -960,7 +960,7 @@
   right: 57px;
   top: 25px;
   cursor: pointer;
-  background-image: url("../images/layers_icon_close_nor.png");
+  background-image: url("../../images/layers_icon_close_nor.png");
 }
 .entryObjectEditPhone {
   float: left;
@@ -973,7 +973,7 @@
   border: none;
   top: 21px;
   cursor: pointer;
-  background-image: url("../images/glyphicons_150_edit.png");
+  background-image: url("../../images/glyphicons_150_edit.png");
 }
 .entryObjectSelectedImgWorkspace {
   float: left;
@@ -983,7 +983,7 @@
   right: 0;
   top: 20px;
   cursor: col-resize;
-  background-image: url("../images/entry_scroll.png");
+  background-image: url("../../images/entry_scroll.png");
 }
 .selectedObject .entryObjectSelectedImgWorkspace {
   float: left;
@@ -993,7 +993,7 @@
   right: 0;
   top: 20px;
   cursor: col-resize;
-  background-image: url("../images/entry_scroll.png");
+  background-image: url("../../images/entry_scroll.png");
 }
 .entryObjectCoordinateWorkspace {
   float: left;
@@ -1014,13 +1014,13 @@
   margin: 12px 0 0 0;
   width: 13px;
   height: 13px;
-  background-image: url("../images/layers_arrow_up_nor.png");
+  background-image: url("../../images/layers_arrow_up_nor.png");
 }
 .selectedObject .entryObjectInformationWorkspace {
-  background-image: url("../images/layers_arrow_down_nor.png");
+  background-image: url("../../images/layers_arrow_down_nor.png");
 }
 .informationToggle > .entryObjectWrapperWorkspace > .entryObjectInformationWorkspace {
-  background-image: url("../images/layers_arrow_down_nor_1.png");
+  background-image: url("../../images/layers_arrow_down_nor_1.png");
 }
 .entryObjectButtonWorkspace {
   display: none;
@@ -1045,28 +1045,28 @@
   display: none;
 }
 .entryObjectSoundWorkspace {
-  background-image: url("../images/icon_sound.png");
+  background-image: url("../../images/icon_sound.png");
   background-color: #6a9a1f;
 }
 .entryObjectSoundWorkspace:hover {
   background-color: #83AF3D;
 }
 .entryObjectPictureWorkspace {
-  background-image: url("../images/icon_picture.png");
+  background-image: url("../../images/icon_picture.png");
   background-color: #f26724;
 }
 .entryObjectPictureWorkspace:hover {
   background-color: #F3783C;
 }
 .entryObjectCodeWorkspace {
-  background-image: url("../images/icon_code.png");
+  background-image: url("../../images/icon_code.png");
   background-color: #00ace9;
 }
 .entryObjectCodeWorkspace:hover {
   background-color: #5FC8EE;
 }
 .entryObjectTextWorkspace {
-  background-image: url("../images/text_icon_white.png");
+  background-image: url("../../images/text_icon_white.png");
   background-color: #F3BB1D;
   background-position: 50% 20%;
   background-size: 75%;
@@ -1142,36 +1142,36 @@
   width: 22px;
   height: 22px;
 }
-.propertyTabhelper {
+.propertyTabHelper {
   background-image: url("../images/property/helper_off.png");
 }
-.propertyTabhelper.selected {
+.propertyTabHelper.selected {
   background-image: url("../images/property/helper_on.png");
 }
-.propertyTabcontainer {
+.propertyTabContainer {
   background-image: url("../images/property/container_off.png");
 }
-.propertyTabcontainer.selected {
+.propertyTabContainer.selected {
   background-image: url("../images/property/container_on.png");
 }
 .entryObjectRotateModeAWorkspace {
   margin-left: 80px;
-  background-image: url("../images/layers_icon_rotate01_nor.png");
+  background-image: url("../../images/layers_icon_rotate01_nor.png");
 }
 .entryObjectRotateModeAWorkspace.selected {
-  background-image: url("../images/layers_icon_rotate01_sel.png");
+  background-image: url("../../images/layers_icon_rotate01_sel.png");
 }
 .entryObjectRotateModeBWorkspace {
-  background-image: url("../images/layers_icon_rotate02_nor.png");
+  background-image: url("../../images/layers_icon_rotate02_nor.png");
 }
 .entryObjectRotateModeBWorkspace.selected {
-  background-image: url("../images/layers_icon_rotate02_sel.png");
+  background-image: url("../../images/layers_icon_rotate02_sel.png");
 }
 .entryObjectRotateModeCWorkspace {
-  background-image: url("../images/layers_icon_rotate03_nor.png");
+  background-image: url("../../images/layers_icon_rotate03_nor.png");
 }
 .entryObjectRotateModeCWorkspace.selected {
-  background-image: url("../images/layers_icon_rotate03_sel.png");
+  background-image: url("../../images/layers_icon_rotate03_sel.png");
 }
 .entryPlaygroundWorkspace {
   position: absolute;
@@ -1197,7 +1197,7 @@
   border: solid 1px #afafaf;
   border-left: none;
   z-index: 250;
-  background-image: url("../images/entry_scroll_02.png");
+  background-image: url("../../images/entry_scroll_02.png");
 }
 .entryPlaygroundTabWorkspace {
   position: absolute;
@@ -1553,7 +1553,7 @@
   height: 40px;
   opacity: 0;
   background-color: transparent;
-  background-image: url("../images/layers_icon_close_nor_new_1.png");
+  background-image: url("../../images/layers_icon_close_nor_new_1.png");
   background-repeat: no-repeat;
   background-position: center;
 }
@@ -1570,7 +1570,7 @@
   margin-top: 5px;
   margin-right: 25px;
   background-color: transparent;
-  background-image: url("../images/layers_icon_edit_nor_new_1.png");
+  background-image: url("../../images/layers_icon_edit_nor_new_1.png");
   background-repeat: no-repeat;
   background-position: center;
   opacity: 0;
@@ -1624,28 +1624,28 @@
   padding-left: 50px;
 }
 .entryVariableLocalElementWorkspace {
-  background-image: url("../images/local_question_icon.png");
+  background-image: url("../../images/local_question_icon.png");
 }
 .entryVariableCloudElementWorkspace {
-  background-image: url("../images/cloud_question_icon.png");
+  background-image: url("../../images/cloud_question_icon.png");
 }
 .entryVariableGlobalElementWorkspace {
-  background-image: url("../images/list_icon_question.png");
+  background-image: url("../../images/list_icon_question.png");
 }
 .entryMessageElementWorkspace {
-  background-image: url("../images/list_icon_signal.png");
+  background-image: url("../../images/list_icon_signal.png");
 }
 .entryListCloudElementWorkspace {
-  background-image: url("../images/cloud_list_icon.png");
+  background-image: url("../../images/cloud_list_icon.png");
 }
 .entryListGlobalElementWorkspace {
-  background-image: url("../images/list_icon_list.png");
+  background-image: url("../../images/list_icon_list.png");
 }
 .entryListLocalElementWorkspace {
-  background-image: url("../images/local_list_icon.png");
+  background-image: url("../../images/local_list_icon.png");
 }
 .entryFunctionElementWorkspace {
-  background-image: url("../images/list_icon_function_v1.png");
+  background-image: url("../../images/list_icon_function_v1.png");
 }
 .entryPlaygroundPictureWorkspace {
   position: absolute;
@@ -1830,17 +1830,17 @@
   float: right;
 }
 #entryFontColorToggle {
-  background-image: url("../images/text_in_off.png");
+  background-image: url("../../images/text_in_off.png");
 }
 #entryFontColorToggle.selected {
-  background-image: url("../images/text_in_on.png");
+  background-image: url("../../images/text_in_on.png");
 }
 #entryFontBGToggle {
   margin-left: 6px;
-  background-image: url("../images/text_out_off.png");
+  background-image: url("../../images/text_out_off.png");
 }
 #entryFontBGToggle.selected {
-  background-image: url("../images/text_out_on.png");
+  background-image: url("../../images/text_out_on.png");
 }
 .entryPlaygroundSoundWorkspace {
   position: absolute;
@@ -1938,10 +1938,10 @@
   cursor: pointer;
 }
 .entryPlaygroundSoundThumbnail.entryPlaygroundSoundPlay {
-  background-image: url("../images/workspace_sound_play.png");
+  background-image: url("../../images/workspace_sound_play.png");
 }
 .entryPlaygroundSoundThumbnail.entryPlaygroundSoundStop {
-  background-image: url("../images/workspace_sound_stop.png");
+  background-image: url("../../images/workspace_sound_stop.png");
 }
 .entryPlaygroundSoundName {
   float: left;
@@ -2075,7 +2075,7 @@
   overflow: hidden;
   border: solid 1px #C4C4B9;
   border-top-left-radius: 10px;
-  background-image: url("../images/entry_bg.png");
+  background-image: url("../../images/entry_bg.png");
 }
 .entryBlocklyWorkspace.folding {
   z-index: 300;
@@ -2171,11 +2171,11 @@
   overflow: hidden;
   border: solid 1px #C4C4B9;
   border-left: 0;
-  background-image: url("../images/entry_bg_1.png");
+  background-image: url("../../images/entry_bg_1.png");
 }
 #entryCategorymoving {
   /*border-right: 4px solid #A751E3;*/
-  background-image: url("../images/movement.png");
+  background-image: url("../../images/movement.png");
   background-repeat: no-repeat;
 }
 .entrySelectedCategory#entryCategorymoving {
@@ -2184,7 +2184,7 @@
 }
 #entryCategorylooks {
   /*border-right: 4px solid #EC4466;*/
-  background-image: url("../images/looks.png");
+  background-image: url("../../images/looks.png");
   background-repeat: no-repeat;
 }
 .entrySelectedCategory#entryCategorylooks {
@@ -2193,63 +2193,63 @@
 }
 #entryCategorybrush {
   /*border-right: 4px solid #FF9E20;*/
-  background-image: url("../images/brush.png");
+  background-image: url("../../images/brush.png");
   background-repeat: no-repeat;
 }
 .entrySelectedCategory#entryCategorybrush {
   border-right: none;
 }
 #entryCategorytext {
-  background-image: url("../images/postbox_new.png");
+  background-image: url("../../images/postbox_new.png");
   background-repeat: no-repeat;
 }
 .entrySelectedCategory#entryCategorytext {
   border-right: none;
 }
 #entryCategorysound {
-  background-image: url("../images/sound.png");
+  background-image: url("../../images/sound.png");
   background-repeat: no-repeat;
 }
 .entrySelectedCategory#entryCategorysound {
   border-right: none;
 }
 #entryCategorystart {
-  background-image: url("../images/start.png");
+  background-image: url("../../images/start.png");
   background-repeat: no-repeat;
 }
 .entrySelectedCategory#entryCategorystart {
   border-right: none;
 }
 #entryCategoryflow {
-  background-image: url("../images/flow.png");
+  background-image: url("../../images/flow.png");
   background-repeat: no-repeat;
 }
 .entrySelectedCategory#entryCategoryflow {
   border-right: none;
 }
 #entryCategoryjudgement {
-  background-image: url("../images/judgement.png");
+  background-image: url("../../images/judgement.png");
   background-repeat: no-repeat;
 }
 .entrySelectedCategory#entryCategoryjudgement {
   border-right: none;
 }
 #entryCategorycalc {
-  background-image: url("../images/calc.png");
+  background-image: url("../../images/calc.png");
   background-repeat: no-repeat;
 }
 .entrySelectedCategory#entryCategorycalc {
   border-right: none;
 }
 #entryCategoryvariable {
-  background-image: url("../images/variable.png");
+  background-image: url("../../images/variable.png");
   background-repeat: no-repeat;
 }
 .entrySelectedCategory#entryCategoryvariable {
   border-right: none;
 }
 #entryCategoryfunc {
-  background-image: url("../images/function.png");
+  background-image: url("../../images/function.png");
   background-repeat: no-repeat;
 }
 .entrySelectedCategory#entryCategoryfunc {
@@ -2257,7 +2257,7 @@
 }
 #entryCategoryscene {
   border-right: none;
-  background-image: url("../images/scene.png");
+  background-image: url("../../images/scene.png");
   background-repeat: no-repeat;
 }
 .entrySelectedCategory#entryCategoryscene {
@@ -2265,7 +2265,7 @@
   border-right: none;
 }
 #entryCategoryarduino {
-  background-image: url("../images/arduino.png");
+  background-image: url("../../images/arduino.png");
   background-repeat: no-repeat;
 }
 .entrySelectedCategory#entryCategoryarduino {
@@ -2635,7 +2635,7 @@
   position: absolute;
   top: 90px;
   left: 90px;
-  background-image: url("../images/horizontal.png");
+  background-image: url("../../images/horizontal.png");
   background-repeat: no-repeat;
   border-radius: 3px;
   width: 28px;
@@ -2645,7 +2645,7 @@
   position: absolute;
   top: 90px;
   left: 60px;
-  background-image: url("../images/vertical.png");
+  background-image: url("../../images/vertical.png");
   background-repeat: no-repeat;
   border-radius: 3px;
   width: 28px;
@@ -2952,11 +2952,11 @@
 .entryVariableAddSpaceNameWrapperWorkspace {
   height: 28px;
   margin-top: 16px;
-  background-image: url("../images/list_icon_question_1.png");
+  background-image: url("../../images/list_icon_question_1.png");
   background-repeat: no-repeat;
 }
 .entryVariableAddSpaceNameWrapperWorkspace.entryListAddSpaceNameWrapperWorkspace {
-  background-image: url("../images/list_icon_list_1.png");
+  background-image: url("../../images/list_icon_list_1.png");
 }
 .entryVariableAddSpaceInputWorkspace {
   width: 80%;
@@ -3091,71 +3091,71 @@
   list-style-type: none;
 }
 .entryPlaygroundPainterToolboxPen {
-  background-image: url("../images/off_pen.png");
+  background-image: url("../../images/off_pen.png");
   background-repeat: no-repeat;
 }
 .entryPlaygroundPainterToolboxPen:hover {
-  background-image: url("../images/on_pen.png");
+  background-image: url("../../images/on_pen.png");
 }
 .entryPlaygroundPainterToolboxLine {
-  background-image: url("../images/off_line.png");
+  background-image: url("../../images/off_line.png");
 }
 .entryPlaygroundPainterToolboxLine:hover {
-  background-image: url("../images/on_line.png");
+  background-image: url("../../images/on_line.png");
 }
 .entryPlaygroundPainterToolboxRect {
-  background-image: url("../images/off_square.png");
+  background-image: url("../../images/off_square.png");
 }
 .entryPlaygroundPainterToolboxRect:hover {
-  background-image: url("../images/on_square.png");
+  background-image: url("../../images/on_square.png");
 }
 .entryPlaygroundPainterToolboxCircle {
-  background-image: url("../images/off_circle.png");
+  background-image: url("../../images/off_circle.png");
 }
 .entryPlaygroundPainterToolboxCircle:hover {
-  background-image: url("../images/on_circle.png");
+  background-image: url("../../images/on_circle.png");
 }
 .entryPlaygroundPainterToolboxSelect:hover {
-  background-image: url("../images/on_choice.png");
+  background-image: url("../../images/on_choice.png");
 }
 .entryPlaygroundPainterToolboxText {
-  background-image: url("../images/off_text.png");
+  background-image: url("../../images/off_text.png");
 }
 .entryPlaygroundPainterToolboxText:hover {
-  background-image: url("../images/on_text.png");
+  background-image: url("../../images/on_text.png");
 }
 .entryPlaygroundPainterToolboxFill {
-  background-image: url("../images/off_paint.png");
+  background-image: url("../../images/off_paint.png");
 }
 .entryPlaygroundPainterToolboxFill:hover {
-  background-image: url("../images/on_paint.png");
+  background-image: url("../../images/on_paint.png");
 }
 .entryPlaygroundPainterToolboxErase {
-  background-image: url("../images/off_eraser.png");
+  background-image: url("../../images/off_eraser.png");
 }
 .entryPlaygroundPainterToolboxErase:hover {
-  background-image: url("../images/on_eraser.png");
+  background-image: url("../../images/on_eraser.png");
 }
 .entryPlaygroundPainterToolboxSelect {
-  background-image: url("../images/off_choice.png");
+  background-image: url("../../images/off_choice.png");
 }
 .entryPlaygroundPainterToolboxCoordinate {
-  background-image: url("../images/off_center.png");
+  background-image: url("../../images/off_center.png");
 }
 .entryPlaygroundPainterToolboxCoordinate:hover {
-  background-image: url("../images/on_center.png");
+  background-image: url("../../images/on_center.png");
 }
 .entryPlaygroundPainterToolboxGlasses {
-  background-image: url("../images/off_zoom.png");
+  background-image: url("../../images/off_zoom.png");
 }
 .entryPlaygroundPainterToolboxGlasses:hover {
-  background-image: url("../images/on_zoom.png");
+  background-image: url("../../images/on_zoom.png");
 }
 .entryPlaygroundPainterToolboxCursor {
-  background-image: url("../images/off_hand.png");
+  background-image: url("../../images/off_hand.png");
 }
 .entryPlaygroundPainterToolboxCursor:hover {
-  background-image: url("../images/on_hand.png");
+  background-image: url("../../images/on_hand.png");
 }
 .entryPlaygroundPainterAttrResizeX {
   position: absolute;
@@ -3319,7 +3319,7 @@
   background-color: #000;
 }
 .entryPlaygroundPainterAttrFGButton {
-  background-image: url("../images/square_on_in.png");
+  background-image: url("../../images/square_on_in.png");
   background-repeat: no-repeat;
   width: 42px;
   height: 42px;
@@ -3332,7 +3332,7 @@
   margin: 10px;
 }
 .entryPlaygroundPainterAttrBGButton {
-  background-image: url("../images/square_off_out.png");
+  background-image: url("../../images/square_off_out.png");
   background-repeat: no-repeat;
   width: 42px;
   height: 42px;
@@ -3345,7 +3345,7 @@
   width: 27px;
   height: 27px;
   background-repeat: no-repeat;
-  background-image: url("../images/color_off_spoid.png");
+  background-image: url("../../images/color_off_spoid.png");
 }
 .painterAttrColorSpoidClicked {
   position: absolute;
@@ -3354,7 +3354,7 @@
   width: 27px;
   height: 27px;
   background-repeat: no-repeat;
-  background-image: url("../images/color_on_spoid.png");
+  background-image: url("../../images/color_on_spoid.png");
 }
 .painterAttrColorTransparent {
   position: absolute;
@@ -3363,7 +3363,7 @@
   width: 27px;
   height: 27px;
   background-repeat: no-repeat;
-  background-image: url("../images/color_off_spoid_1.png");
+  background-image: url("../../images/color_off_spoid_1.png");
 }
 .painterAttrRotateName,
 .painterAttrOpacityName {
@@ -3460,13 +3460,13 @@
   display: none;
 }
 .entryPlaygroundPainterAttrAddButton {
-  background-image: url("../images/fill_in.png");
+  background-image: url("../../images/fill_in.png");
 }
 .entryPlaygroundPainterAttrRemoveButton {
-  background-image: url("../images/fill_out.png");
+  background-image: url("../../images/fill_out.png");
 }
 .painterAttrColorSpoid:hover {
-  background-image: url("../images/color_on_spoid_1.png");
+  background-image: url("../../images/color_on_spoid_1.png");
   background-repeat: no-repeat;
 }
 .displayPaintArea {
@@ -3507,63 +3507,63 @@
 .entryPlaygroundPainterAttrLineStyleLine {
   position: absolute;
   top: 10px;
-  background-image: url("../images/line1_category_off.png");
+  background-image: url("../../images/line1_category_off.png");
   background-repeat: no-repeat;
   background-color: #f5f5f5;
   width: 76px;
   height: 24px;
 }
 .entryPlaygroundPainterAttrLineStyleLine:hover {
-  background-image: url("../images/line1_category_on.png");
+  background-image: url("../../images/line1_category_on.png");
   background-repeat: no-repeat;
 }
 .entryPlaygroundPainterAttrLineStyleDot1 {
   position: absolute;
   top: -9px;
   left: 1px;
-  background-image: url("../images/line2_off.png");
+  background-image: url("../../images/line2_off.png");
   background-repeat: no-repeat;
   background-color: #f5f5f5;
   width: 75px;
   height: 20px;
 }
 .entryPlaygroundPainterAttrLineStyleDot1:hover {
-  background-image: url("../images/line2_on.png");
+  background-image: url("../../images/line2_on.png");
   background-repeat: no-repeat;
 }
 .entryPlaygroundPainterAttrLineStyleDot2 {
   position: absolute;
   top: -29px;
   left: 1px;
-  background-image: url("../images/line3_off.png");
+  background-image: url("../../images/line3_off.png");
   background-repeat: no-repeat;
   background-color: #f5f5f5;
   width: 75px;
   height: 20px;
 }
 .entryPlaygroundPainterAttrLineStyleDot2:hover {
-  background-image: url("../images/line3_on.png");
+  background-image: url("../../images/line3_on.png");
   background-repeat: no-repeat;
 }
 .entryPlaygroundPainterAttrLineStyleDot3 {
   position: absolute;
   top: -48px;
   left: 1px;
-  background-image: url("../images/line4_off.png");
+  background-image: url("../../images/line4_off.png");
   background-repeat: no-repeat;
   background-color: #f5f5f5;
   width: 75px;
   height: 19px;
 }
 .entryPlaygroundPainterAttrLineStyleDot3:hover {
-  background-image: url("../images/line4_on.png");
+  background-image: url("../../images/line4_on.png");
   background-repeat: no-repeat;
 }
 .entryPlaygroundPainterAttrLineStyleLine1 {
   position: absolute;
   top: -67px;
   left: 1px;
-  background-image: url("../images/line1_off.png");
+  background-image: url("../../images/line1_off.png");
   background-repeat: no-repeat;
   background-color: #f5f5f5;
   width: 75px;
@@ -3571,7 +3571,7 @@
   border-radius: 4px;
 }
 .entryPlaygroundPainterAttrLineStyleLine1:hover {
-  background-image: url("../images/line1_on.png");
+  background-image: url("../../images/line1_on.png");
   background-repeat: no-repeat;
 }
 .painterAttrLineStyleBackgroundDot1,
@@ -3586,62 +3586,62 @@
   height: 21px;
 }
 .painterAttrLineStyleBackgroundDot1 {
-  background-image: url("../images/line2_category_off.png");
+  background-image: url("../../images/line2_category_off.png");
 }
 .painterAttrLineStyleBackgroundDot2 {
-  background-image: url("../images/line3_category_off.png");
+  background-image: url("../../images/line3_category_off.png");
 }
 .painterAttrLineStyleBackgroundDot3 {
-  background-image: url("../images/line4_category_off.png");
+  background-image: url("../../images/line4_category_off.png");
 }
 .painterAttrLineStyleBackgroundLine {
-  background-image: url("../images/line1_category_off_1.png");
+  background-image: url("../../images/line1_category_off_1.png");
 }
 .painterAttrLineStyleBackgroundDot1:hover {
-  background-image: url("../images/line2_category_on.png");
+  background-image: url("../../images/line2_category_on.png");
   background-repeat: no-repeat;
 }
 .painterAttrLineStyleBackgroundDot2:hover {
-  background-image: url("../images/line3_category_on.png");
+  background-image: url("../../images/line3_category_on.png");
   background-repeat: no-repeat;
 }
 .painterAttrLineStyleBackgroundDot3:hover {
-  background-image: url("../images/line4_category_on.png");
+  background-image: url("../../images/line4_category_on.png");
   background-repeat: no-repeat;
 }
 .painterAttrLineStyleBackgroundLine:hover {
-  background-image: url("../images/line1_category_on_1.png");
+  background-image: url("../../images/line1_category_on_1.png");
   background-repeat: no-repeat;
 }
 .entryToolboxCursorClicked {
-  background-image: url("../images/on_hand_1.png");
+  background-image: url("../../images/on_hand_1.png");
 }
 .entryToolboxSelectClicked {
-  background-image: url("../images/on_choice_1.png");
+  background-image: url("../../images/on_choice_1.png");
 }
 .entryToolboxPenClicked {
-  background-image: url("../images/on_pen_1.png");
+  background-image: url("../../images/on_pen_1.png");
 }
 .entryToolboxLineClicked {
-  background-image: url("../images/on_line_1.png");
+  background-image: url("../../images/on_line_1.png");
 }
 .entryToolboxRectClicked {
-  background-image: url("../images/on_square_1.png");
+  background-image: url("../../images/on_square_1.png");
 }
 .entryToolBoxCircleClicked {
-  background-image: url("../images/on_circle_1.png");
+  background-image: url("../../images/on_circle_1.png");
 }
 .entryToolBoxTextClicked {
-  background-image: url("../images/on_text_1.png");
+  background-image: url("../../images/on_text_1.png");
 }
 .entryToolBoxFillClicked {
-  background-image: url("../images/on_paint_1.png");
+  background-image: url("../../images/on_paint_1.png");
 }
 .entryToolBoxEraseClicked {
-  background-image: url("../images/on_eraser_1.png");
+  background-image: url("../../images/on_eraser_1.png");
 }
 .dd {
-  cursor: url("../images/cursor_eraser.cur");
+  cursor: url("../../images/cursor_eraser.cur");
 }
 /* helper */
 @keyframes blockHelperUp {
@@ -3765,7 +3765,7 @@
 }
 #entryBlockHelperDisposeWorkspace {
   float: right;
-  background-image: url("../images/block_helper_dispose.png");
+  background-image: url("../../images/block_helper_dispose.png");
   background-repeat: no-repeat;
   background-position: center;
   padding: 15px;
@@ -3784,7 +3784,7 @@
   top: 0px;
 }
 .entryBlockHelperIntro {
-  background-image: url("../images/block_help_icon.png");
+  background-image: url("../../images/block_help_icon.png");
   background-repeat: no-repeat;
   background-position: center top;
   margin-top: 28px;
@@ -3795,7 +3795,7 @@
 }
 #entryBlockHelpBtn {
   position: absolute;
-  background-image: url("../images/block_help.png");
+  background-image: url("../../images/block_help.png");
   background-repeat: no-repeat;
   background-position: center;
   padding: 15px;
@@ -3960,7 +3960,7 @@
   width: 23px;
   height: 23px;
   float: left;
-  background-image: url("../images/list_minus.png");
+  background-image: url("../../images/list_minus.png");
   cursor: pointer;
 }
 .entryListSettingLengthInputWorkspace {
@@ -3980,7 +3980,7 @@
   width: 23px;
   height: 23px;
   float: left;
-  background-image: url("../images/list_plus.png");
+  background-image: url("../../images/list_plus.png");
   cursor: pointer;
 }
 .entryListSettingSeperatorWorkspace {
@@ -4021,7 +4021,7 @@
   margin-right: 10px;
   margin-top: 4px;
   cursor: pointer;
-  background-image: url("../images/list_remove_button.png");
+  background-image: url("../../images/list_remove_button.png");
 }
 .entryEngineBigButtonMinimize_popup {
   border: none;
@@ -4047,7 +4047,7 @@
   outline: none;
 }
 .entryEngineBigButtonMinimize_popup.entryEngineBigButtonMinimize_popup_run {
-  background-image: url("../images/play_btn.png");
+  background-image: url("../../images/play_btn.png");
 }
 .entryPopupWindow .entryEngineBigButtonMinimize_popup {
   display: block;
@@ -4128,22 +4128,22 @@
   cursor: pointer;
 }
 .entryPlaygroundTextAlignLeft {
-  background-image: url("../images/text_align_left_off.png");
+  background-image: url("../../images/text_align_left_off.png");
 }
 .entryPlaygroundTextAlignLeft.toggle {
-  background-image: url("../images/text_align_left_on.png");
+  background-image: url("../../images/text_align_left_on.png");
 }
 .entryPlaygroundTextAlignCenter {
-  background-image: url("../images/text_align_center_off.png");
+  background-image: url("../../images/text_align_center_off.png");
 }
 .entryPlaygroundTextAlignCenter.toggle {
-  background-image: url("../images/text_align_center_on.png");
+  background-image: url("../../images/text_align_center_on.png");
 }
 .entryPlaygroundTextAlignRight {
-  background-image: url("../images/text_align_right_off.png");
+  background-image: url("../../images/text_align_right_off.png");
 }
 .entryPlaygroundTextAlignRight.toggle {
-  background-image: url("../images/text_align_right_on.png");
+  background-image: url("../../images/text_align_right_on.png");
 }
 .entryPlayground_fgColorDiv {
   position: absolute;
@@ -4202,7 +4202,7 @@
   position: relative;
   margin-top: -10px;
   margin-left: -7px;
-  background-image: url("../images/text_size_knob.png");
+  background-image: url("../../images/text_size_knob.png");
   cursor: pointer;
 }
 .entryPlaygroundTextColoursWrapper {
@@ -4214,7 +4214,7 @@
   margin-left: 335px;
   padding: 20px 5px;
   position: absolute;
-  background-image: url("../images/text_color_bg.png");
+  background-image: url("../../images/text_color_bg.png");
   background-repeat: no-repeat;
   background-size: 260px 226px;
 }
@@ -4227,7 +4227,7 @@
   margin-left: 369px;
   padding: 20px 5px;
   position: absolute;
-  background-image: url("../images/text_color_bg_1.png");
+  background-image: url("../../images/text_color_bg_1.png");
   background-repeat: no-repeat;
   background-size: 260px 226px;
 }
@@ -4297,7 +4297,7 @@
 }
 .entryPopupWindow .entryPauseButtonWorkspace_w {
   display: inline-block;
-  background: url("../images/pause_btn.png");
+  background: url("../../images/pause_btn.png");
   background-repeat: no-repeat;
   color: transparent;
   width: 90px;
@@ -4391,10 +4391,10 @@
 }
 
 .block {
-  cursor: url('../images/handopen.cur') 8 5, auto;
+  cursor: url('../../images/handopen.cur') 8 5, auto;
 }
 .block.dragging {
-  cursor: url('../images/handclosed.cur') 8 5, auto;
+  cursor: url('../../images/handclosed.cur') 8 5, auto;
 }
 .block.selected > path {
   stroke-width: 3px;
