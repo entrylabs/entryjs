@@ -64,7 +64,7 @@ p.initSocket = function() {
     socket.onopen = function()
     {
         hw.socketType = 'WebSocket';
-        hw.initHardware();
+        hw.initHardware(socket);
     };
 
     socket.onmessage = function (evt)

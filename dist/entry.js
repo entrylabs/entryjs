@@ -7167,33 +7167,33 @@ p.initSocket = function() {
     if (-1 < c.indexOf("IE") || -1 < c.indexOf("EDGE")) {
       b.transports = ["polling"];
     }
-    var c = new WebSocket("ws://localhost:23518"), d = io.connect("ws://localhost:23517", b);
+    var d = new WebSocket("ws://localhost:23518"), e = io.connect("ws://localhost:23517", b);
     this.connected = !1;
-    c.binaryType = "arraybuffer";
     d.binaryType = "arraybuffer";
+    e.binaryType = "arraybuffer";
     this.connectTrial++;
-    c.onopen = function() {
+    d.onopen = function() {
       a.socketType = "WebSocket";
-      a.initHardware();
+      a.initHardware(d);
     };
-    c.onmessage = function(b) {
+    d.onmessage = function(b) {
       b = JSON.parse(b.data);
       a.checkDevice(b);
       a.updatePortData(b);
     };
-    c.onclose = function() {
+    d.onclose = function() {
       "WebSocket" === a.socketType && (this.socket = null, a.initSocket());
     };
-    d.connect();
-    d.on("connect", function(b) {
+    e.connect();
+    e.on("connect", function(b) {
       a.socketType = "SocketIO";
-      a.initHardware(d);
+      a.initHardware(e);
     });
-    d.on("message", function(b) {
+    e.on("message", function(b) {
       "string" === typeof b && (b = JSON.parse(b), a.checkDevice(b), a.updatePortData(b));
     });
-    d.on("disconnect", function(b) {
-      "SocketIO" === a.socketType && (this.socket = null, d.destroy(d), a.initSocket());
+    e.on("disconnect", function(b) {
+      "SocketIO" === a.socketType && (this.socket = null, e.destroy(e), a.initSocket());
     });
     Entry.dispatchEvent("hwChanged");
   }
