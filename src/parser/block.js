@@ -44,10 +44,10 @@ Entry.BlockParser = function(syntax) {
     };
 
     p.Block = function(block) {
-        var syntax = block._schema.syntax;
+        var syntax = block._schema.syntax.js[0];
         if (!syntax)
             return "";
-        var syntaxType = syntax[0];
+        var syntaxType = syntax;
         return this[syntaxType](block);
     };
 

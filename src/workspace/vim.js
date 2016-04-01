@@ -113,7 +113,6 @@ Entry.Vim = function(dom, textType) {
     p.codeToText = function(code) {
         var textType = this.workspace.textType;
         var parser;
-        console.log("type", textType);
         if (textType === 'js') parser = this._jsBlockParser;
         else if(textType === 'py') parser = this._pyBlockParser;
 

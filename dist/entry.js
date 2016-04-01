@@ -8434,8 +8434,8 @@ Entry.BlockParser = function(a) {
     return a;
   };
   a.Block = function(b) {
-    var a = b._schema.syntax;
-    return a ? this[a[0]](b) : "";
+    var a = b._schema.syntax.js[0];
+    return a ? this[a](b) : "";
   };
   a.Program = function(b) {
     return "";
@@ -8856,7 +8856,7 @@ Entry.Parser = function(a, b, c) {
         !b.state.completionActive && 65 <= a.keyCode && 95 >= a.keyCode && CodeMirror.showHint(b, null, {completeSingle:!1, globalScope:d});
       });
       break;
-    case "block":
+    case "blockJs":
       this._parser = new Entry.BlockParser(this.syntax);
       break;
     case "blockPy":
@@ -8874,7 +8874,7 @@ Entry.Parser = function(a, b, c) {
           this.codeMirror && (e instanceof SyntaxError ? (b = {from:{line:e.loc.line - 1, ch:e.loc.column - 2}, to:{line:e.loc.line - 1, ch:e.loc.column + 1}}, e.message = "\ubb38\ubc95 \uc624\ub958\uc785\ub2c8\ub2e4.") : (b = this.getLineNumber(e.node.start, e.node.end), b.message = e.message, b.severity = "error", this.codeMirror.markText(b.from, b.to, {className:"CodeMirror-lint-mark-error", __annotation:b, clearOnEnter:!0})), Entry.toast.alert("Error", e.message)), a = [];
         }
         break;
-      case "block":
+      case "blockJs":
         b = this._parser.Code(b);
         b = b.match(/(.*{.*[\S|\s]+?}|.+)/g);
         a = Array.isArray(b) ? b.reduce(function(b, a, c) {
@@ -16535,7 +16535,6 @@ Entry.Vim = function(a, b) {
   };
   a.codeToText = function(a) {
     var c = this.workspace.textType, d;
-    console.log("type", c);
     "js" === c ? d = this._jsBlockParser : "py" === c && (d = this._pyBlockParser);
     a = d.parse(a);
     this.codeMirror.setValue(a);
