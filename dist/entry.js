@@ -13769,7 +13769,7 @@ Entry.BlockView.DRAG_RADIUS = 5;
     this._destroyObservers();
     var a = this.svgGroup;
     this.block.getThread();
-    b ? $(a).velocity({opacity:0}, {duration:100, complete:function() {
+    b ? $(a).velocity({opacity:0}, {duration:1E4, complete:function() {
       a.remove();
     }}) : a.remove();
     this._contents.forEach(function(b) {
@@ -14894,8 +14894,8 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldOutput);
     b.view._toLocalCoordinate(this.svgGroup);
     this.calcWH();
   };
-  a.setParent = function(b) {
-    this._parent = b;
+  a.setParent = function(a) {
+    this._parent = a;
   };
   a.getParent = function() {
     return this._parent;
@@ -14917,21 +14917,21 @@ Entry.FieldStatement = function(a, b, c) {
 (function(a) {
   a.schema = {x:0, y:0, width:100, height:20, magneting:!1};
   a.magnet = {next:{x:0, y:0}};
-  a.renderStart = function(b) {
+  a.renderStart = function(a) {
     this.svgGroup = this._blockView.statementSvgGroup.elem("g");
     this._nextGroup = this.statementSvgGroup = this.svgGroup.elem("g");
-    this._initThread(b);
-    this._board = b;
+    this._initThread(a);
+    this._board = a;
   };
-  a._initThread = function(b) {
-    var a = this.getValue();
-    this._thread = a;
-    a.createView(b);
-    a.view.setParent(this);
-    if (b = a.getFirstBlock()) {
-      this._posObserver = b.view.observe(this, "removeFirstBlock", ["x", "y"]), b.view._toLocalCoordinate(this.statementSvgGroup), this.firstBlock = b;
+  a._initThread = function(a) {
+    var c = this.getValue();
+    this._thread = c;
+    c.createView(a);
+    c.view.setParent(this);
+    if (a = c.getFirstBlock()) {
+      this._posObserver = a.view.observe(this, "removeFirstBlock", ["x", "y"]), a.view._toLocalCoordinate(this.statementSvgGroup), this.firstBlock = a;
     }
-    a.changeEvent.attach(this, this.calcHeight);
+    c.changeEvent.attach(this, this.calcHeight);
     this.calcHeight();
   };
   a.align = function(a, c, d) {
@@ -15466,14 +15466,13 @@ Entry.Board = function(a) {
             return;
           }
           var f = this;
-          a = [];
-          a.push({text:"\ubd99\uc5ec\ub123\uae30", enable:!!Entry.clipboard, callback:function() {
+          Entry.ContextMenu.show([{text:"\ubd99\uc5ec\ub123\uae30", enable:!!Entry.clipboard, callback:function() {
             f.code.createThread(Entry.clipboard).getFirstBlock().copyToClipboard();
-          }});
-          a.push({text:"\ube14\ub85d \uc815\ub9ac\ud558\uae30", callback:function() {
+          }}, {text:"\ube14\ub85d \uc815\ub9ac\ud558\uae30", callback:function() {
             f.alignThreads();
-          }});
-          Entry.ContextMenu.show(a);
+          }}, {text:"\ubaa8\ub4e0 \ucf54\ub4dc \uc0ad\uc81c\ud558\uae30", callback:function() {
+            f.code.clear();
+          }}]);
         }
       }
       var g = this;

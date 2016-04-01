@@ -644,7 +644,7 @@ Entry.BlockView.DRAG_RADIUS = 5;
             $(svgGroup).velocity(
                 {opacity:0},
                 {
-                    duration:100,
+                    duration:10000,
                     complete: function() {
                         svgGroup.remove();
                     }

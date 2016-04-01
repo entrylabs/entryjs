@@ -199,7 +199,6 @@ Entry.Board = function(option) {
             if (!this.visible) return;
             var that = this;
 
-            var options = [];
 
             var paste = {
                 text: '붙여넣기',
@@ -217,10 +216,18 @@ Entry.Board = function(option) {
                 }
             };
 
-            options.push(paste);
-            options.push(align);
+            var remove = {
+                text: '모든 코드 삭제하기',
+                callback: function(){
+                    that.code.clear();
+                }
+            };
 
-            Entry.ContextMenu.show(options);
+            Entry.ContextMenu.show([
+                paste,
+                align,
+                remove
+            ]);
         }
 
         var board = this;
