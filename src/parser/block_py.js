@@ -95,7 +95,7 @@ Entry.PyBlockParser = function(syntax) {
     p.FieldColor = function(param) {
         //console.log("FieldColor", param);
 
-        return param;
+        return "'" + param + "'";
     };
 
     p.FieldDropdown = function(param, schema) {

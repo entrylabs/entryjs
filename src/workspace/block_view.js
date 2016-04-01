@@ -170,7 +170,7 @@ Entry.BlockView.DRAG_RADIUS = 5;
             case Entry.Workspace.MODE_VIMBOARD:
                 var text = this.getBoard().workspace.getCodeToText(this.block);
                 this._contents.push(
-                    new Entry.FieldText({text: text, color: 'white'}, this)
+                    new Entry.FieldText({text: text}, this)
                 );
                 break;
         }

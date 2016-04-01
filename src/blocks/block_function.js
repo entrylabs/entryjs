@@ -9,8 +9,7 @@ Entry.block.functionAddButton = {
         {
             type: "Text",
             text: "함수 추가",
-            color: "#333",
-            align: "center"
+            color: "#333"
         }
     ],
     events: {

@@ -1898,7 +1898,7 @@ Entry.block.remove_all_clones = function(a, b) {
   c = null;
   return b.callReturn();
 };
-Entry.block.functionAddButton = {skeleton:"basic_button", color:"#eee", isNotFor:["functionInit"], template:"%1", params:[{type:"Text", text:"\ud568\uc218 \ucd94\uac00", color:"#333", align:"center"}], events:{mousedown:[function() {
+Entry.block.functionAddButton = {skeleton:"basic_button", color:"#eee", isNotFor:["functionInit"], template:"%1", params:[{type:"Text", text:"\ud568\uc218 \ucd94\uac00", color:"#333"}], events:{mousedown:[function() {
   Entry.variableContainer.createFunction();
 }]}, syntax:{js:[], py:["\ud568\uc218 \ucd94\uac00"]}};
 Blockly.Blocks.function_field_label = {init:function() {
@@ -4359,11 +4359,11 @@ Entry.block.text_flush = function(a, b) {
   a.setText("");
   return b.callReturn();
 };
-Entry.block.variableAddButton = {skeleton:"basic_button", color:"#eee", template:"%1", params:[{type:"Text", text:"\ubcc0\uc218 \ucd94\uac00", color:"#333", align:"center"}], func:function() {
+Entry.block.variableAddButton = {skeleton:"basic_button", color:"#eee", template:"%1", params:[{type:"Text", text:"\ubcc0\uc218 \ucd94\uac00", color:"#333"}], func:function() {
 }, events:{mousedown:[function() {
   Entry.variableContainer.openVariableAddPanel("variable");
 }]}, syntax:{js:[], py:["\ubcc0\uc218 \ucd94\uac00"]}};
-Entry.block.listAddButton = {skeleton:"basic_button", color:"#eee", template:"%1", params:[{type:"Text", text:"\ub9ac\uc2a4\ud2b8 \ucd94\uac00", color:"#333", align:"center"}], func:function() {
+Entry.block.listAddButton = {skeleton:"basic_button", color:"#eee", template:"%1", params:[{type:"Text", text:"\ub9ac\uc2a4\ud2b8 \ucd94\uac00", color:"#333"}], func:function() {
 }, events:{mousedown:[function() {
   Entry.variableContainer.openVariableAddPanel("list");
 }]}, syntax:{js:[], py:["\ub9ac\uc2a4\ud2b8 \ucd94\uac00"]}};
@@ -8541,7 +8541,7 @@ Entry.PyBlockParser = function(a) {
     return this.Block(b);
   };
   a.FieldColor = function(b) {
-    return b;
+    return "'" + b + "'";
   };
   a.FieldDropdown = function(b, a) {
     return b;
@@ -13680,7 +13680,7 @@ Entry.BlockView.DRAG_RADIUS = 5;
         }
         break;
       case Entry.Workspace.MODE_VIMBOARD:
-        g = this.getBoard().workspace.getCodeToText(this.block), this._contents.push(new Entry.FieldText({text:g, color:"white"}, this));
+        g = this.getBoard().workspace.getCodeToText(this.block), this._contents.push(new Entry.FieldText({text:g}, this));
     }
     this.alignContent(!1);
   };
@@ -15114,7 +15114,7 @@ Entry.FieldText = function(a, b, c) {
   this._align = a.align || "left";
   this._text = this.getValue() || a.text;
   this.textElement = null;
-  this.renderStart(b);
+  this.renderStart();
 };
 Entry.Utils.inherit(Entry.Field, Entry.FieldText);
 (function(a) {
@@ -15981,8 +15981,8 @@ Entry.skeleton.basic_button = {path:function() {
 }, box:function() {
   return {offsetX:-80, offsetY:0, width:140, height:30};
 }, contentPos:function() {
-  return {x:0, y:15};
-}, movable:!1, readOnly:!0, classes:["basicButtonView"]};
+  return {x:-50, y:15};
+}, movable:!1, readOnly:!0, color:"#333", classes:["basicButtonView"]};
 Entry.skeleton.basic_without_next = {box:Entry.skeleton.basic.box, contentPos:Entry.skeleton.basic.contentPos, path:function(a) {
   var b = a.contentWidth;
   a = a.contentHeight;

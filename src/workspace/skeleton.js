@@ -400,10 +400,11 @@ Entry.skeleton.basic_button = {
     },
     contentPos: function() {
         // apply scale required.
-        return {x: 0, y: 15};
+        return {x: -50, y: 15};
     },
     movable: false,
     readOnly: true,
+    color: "#333",
     classes: ['basicButtonView']
 };
 

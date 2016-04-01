@@ -8,8 +8,7 @@ Entry.block.variableAddButton = {
         {
             type: "Text",
             text: "변수 추가",
-            color: "#333",
-            align: "center"
+            color: "#333"
         }
     ],
     func: function() {},
@@ -31,8 +30,7 @@ Entry.block.listAddButton = {
         {
             type: "Text",
             text: "리스트 추가",
-            color: "#333",
-            align: "center"
+            color: "#333"
         }
     ],
     func: function() {},

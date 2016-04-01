@@ -25,7 +25,7 @@ Entry.FieldText = function(content, blockView, index) {
 
     this.textElement = null;
 
-    this.renderStart(blockView);
+    this.renderStart();
 };
 
 Entry.Utils.inherit(Entry.Field, Entry.FieldText);
