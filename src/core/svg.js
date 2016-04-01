@@ -49,6 +49,7 @@ Entry.SVG.createElement = function (tag, options) {
     el.removeClass = Entry.SVG.removeClass;
     el.hasClass = Entry.SVG.hasClass;
     el.remove = Entry.SVG.remove;
+    el.removeAttr = Entry.SVG.removeAttr;
 
     return el;
 };
@@ -104,4 +105,8 @@ Entry.SVG.hasClass = function(className) {
 
 Entry.SVG.remove = function() {
     if (this.parentNode) this.parentNode.removeChild(this);
+};
+
+Entry.SVG.removeAttr = function(attrName) {
+    this.removeAttribute(attrName);
 };

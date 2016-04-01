@@ -99,7 +99,7 @@ Entry.Utils.bound01 = function(n, max) {
 
     // Convert into [0, 1] range if it isn't already
     return (n % max) / parseFloat(max);
-}
+};
 
 // `rgbToHsl`
 // Converts an RGB color value to HSL.
@@ -141,7 +141,7 @@ Entry.Utils.hexToHsl = function(color) {
 
     var hsl = { h: h, s: s, l: l };
     return { h: hsl.h * 360, s: hsl.s, l: hsl.l};
-}
+};
 
 // `hslToRgb`
 // Converts an HSL color value to RGB.
@@ -187,7 +187,7 @@ Entry.Utils.hslToHex = function(color) {
     ];
 
     return '#' + hex.join('');
-}
+};
 
 
 Entry.Utils.bindGlobalEvent = function(options) {
@@ -954,21 +954,11 @@ Entry.Utils.isFunction = function(fn) {
     return typeof fn === 'function';
 };
 
-Entry.Utils.generateGlobalFilters = function generateGlobalFilters() {
-    if (generateGlobalFilters.initiated) return;
-    generateGlobalFilters.initiated = true;
-    var svgId = 'entryWorkspaceFilters';
-    var svgDom = Entry.Dom(
-        $('<svg id="' + svgId + '" class="entryWorkspaceFilters" width="0" height="0"' +
-          'version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'),
-        { parent: $('body') }
-    );
-
-    var svg = Entry.SVG(svgId);
-    var defs = svg.elem('defs');
+Entry.Utils.addFilters = function (boardSvgDom, suffix) {
+        var defs = boardSvgDom.elem('defs');
 
     //trashcan filter
-    var trashCanFilter = defs.elem('filter', {'id': 'entryTrashcanFilter'});
+    var trashCanFilter = defs.elem('filter', {'id': 'entryTrashcanFilter_' + suffix});
     trashCanFilter.elem('feGaussianBlur', {'in': 'SourceAlpha', 'stdDeviation': 2, 'result': 'blur'});
     trashCanFilter.elem('feOffset', {'in': 'blur', 'dx': 1, 'dy': 1, 'result': 'offsetBlur'});
     var feMerge = trashCanFilter.elem('feMerge');
@@ -976,15 +966,16 @@ Entry.Utils.generateGlobalFilters = function generateGlobalFilters() {
     feMerge.elem('feMergeNode', {'in': 'SourceGraphic'}, feMerge);
 
 
-    var blockFilter = defs.elem('filter', {'id': 'entryBlockShadowFilter', 'height': '200%'});
-    blockFilter.innerHTML = '<feOffset result="offOut" in="SourceGraphic" dx="0" dy="1" />' +
-                 '<feColorMatrix result="matrixOut" in="offOut" type="matrix"' +
-                 'values="0.7 0 0 0 0 0 0.7 0 0 0 0 0 0.7 0 0 0 0 0 1 0" />' +
-                 '<feBlend in="SourceGraphic" in1="offOut" mode="normal" />';
+    var blockFilter = defs.elem('filter', {'id': 'entryBlockShadowFilter_' + suffix, 'height': '200%'});
+    blockFilter.elem('feOffset', {result: 'offOut', in: 'SourceGraphic', dx: 0, dy:1});
+    blockFilter.elem('feColorMatrix', {
+        result: 'matrixOut', in: 'offOut', type: 'matrix', values: '0.7 0 0 0 0 0 0.7 0 0 0 0 0 0.7 0 0 0 0 0 1 0'
+    });
+    blockFilter.elem('feBlend', {in: 'SourceGraphic', in1:'offOut', mode: 'normal'});
 
-    var blockHighlightFilter = defs.elem('filter', {'id': 'entryBlockHighlightFilter'});
-    blockHighlightFilter.innerHTML =
-        '<feOffset result="offOut" in="SourceGraphic" dx="0" dy="0" />' +
-         '<feColorMatrix result="matrixOut" in="offOut" type="matrix"' +
-         'values="1.3 0 0 0 0 0 1.3 0 0 0 0 0 1.3 0 0 0 0 0 1 0" />';
+    var blockHighlightFilter = defs.elem('filter', {'id': 'entryBlockHighlightFilter_' + suffix});
+    blockHighlightFilter.elem('feOffset', {result: 'offOut', in:"SourceGraphic", dx:0, dy:0});
+    blockHighlightFilter.elem('feColorMatrix', {
+        result: 'matrixOut', in:"offOut", type: 'matrix', values: '1.3 0 0 0 0 0 1.3 0 0 0 0 0 1.3 0 0 0 0 0 1 0'
+    });
 };

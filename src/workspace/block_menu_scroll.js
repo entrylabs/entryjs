@@ -24,7 +24,7 @@ Entry.BlockMenuScroller = function(board) {
 
     this.mouseHandler = function() {
         that.onMouseDown.apply(that, arguments);
-    }
+    };
 
     this.createScrollBar();
     this._addControl();

@@ -16,6 +16,7 @@ Entry.RenderView = function(dom, align) {
 
     this.view = dom;
     this.viewOnly = true;
+    this.suffix = 'renderView';
 
     this.visible = true;
     this._svgId = 'renderView_' + new Date().getTime();
@@ -26,6 +27,7 @@ Entry.RenderView = function(dom, align) {
 
 
     this.svg = Entry.SVG(this._svgId);
+    Entry.Utils.addFilters(this.svg, this.suffix);
 
     if (this.svg) {
         this.svgGroup = this.svg.elem("g");
@@ -97,7 +99,7 @@ Entry.RenderView = function(dom, align) {
 
             var className = Entry.block[block.type].class;
             blockView._moveTo(
-                hPadding - blockView.offsetX,
+                hPadding,
                 marginFromTop - blockView.offsetY,
                 false
             );

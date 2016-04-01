@@ -112,9 +112,10 @@ Entry.BlockView.DRAG_RADIUS = 5;
             class: 'blockPath'
         };
         if (this.magnet.next) {
-            //this.pathGroup.attr({
-                //filter: 'url(#entryBlockShadowFilter)'
-            //});
+            var suffix = this.getBoard().suffix;
+            this.pathGroup.attr({
+                filter: 'url(#entryBlockShadowFilter_' + suffix + ')'
+            });
         } else if (this.magnet.string || this.magnet.bool)
             pathStyle.stroke = Entry.Utils.colorDarken(this._schema.color, 0.9);
 
@@ -635,20 +636,10 @@ Entry.BlockView.DRAG_RADIUS = 5;
         this._destroyObservers();
         var svgGroup = this.svgGroup;
 
-        var thread = this.block.getThread();
-        //if (thread instanceof Entry.FieldBlock)
-            //thread.updateValueBlock();
-
         if (animate) {
-            $(svgGroup).velocity(
-                {opacity:0},
-                {
-                    duration:100,
-                    complete: function() {
-                        svgGroup.remove();
-                    }
-                }
-            );
+            $(svgGroup).fadeOut(100, function() {
+                svgGroup.remove();
+            });
         } else svgGroup.remove();
 
         this._contents.forEach(function(c) {
@@ -697,12 +688,10 @@ Entry.BlockView.DRAG_RADIUS = 5;
         if (!this.magnet.next) {// field block
             if (this.magneting)
                 this.svgGroup.attr({
-                    filter: 'url(#entryBlockHighlightFilter)'
+                    filter: 'url(#entryBlockHighlightFilter_' + this.getBoard().suffix + ')'
                 });
             else
-                this.svgGroup.attr({
-                    filter: 'initial'
-                });
+                this.svgGroup.removeAttr('filter');
             return;
         }
         var blockView = this;

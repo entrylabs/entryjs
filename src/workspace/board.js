@@ -65,8 +65,9 @@ Entry.Board = function(option) {
     if (option.isOverlay) {
         this.wrapper.addClass("entryOverlayBoard");
         this.generateButtons();
-    }
-
+        this.suffix = 'overlayBoard';
+    } else this.suffix = 'board';
+    Entry.Utils.addFilters(this.svg, this.suffix);
 
     Entry.ANIMATION_DURATION = 200;
     Entry.BOARD_PADDING = 100;
@@ -198,7 +199,6 @@ Entry.Board = function(option) {
             if (!this.visible) return;
             var that = this;
 
-            var options = [];
 
             var paste = {
                 text: '붙여넣기',
@@ -216,10 +216,18 @@ Entry.Board = function(option) {
                 }
             };
 
-            options.push(paste);
-            options.push(align);
+            var remove = {
+                text: '모든 코드 삭제하기',
+                callback: function(){
+                    that.code.clear();
+                }
+            };
 
-            Entry.ContextMenu.show(options);
+            Entry.ContextMenu.show([
+                paste,
+                align,
+                remove
+            ]);
         }
 
         var board = this;
@@ -353,12 +361,12 @@ Entry.Board = function(option) {
         var saveText = btnWrapper.elem('text', {
             x: 27, y: 33, class: 'entryFunctionButtonText'
         });
-        saveText.innerHTML = Lang.Buttons.save;
+        saveText.textContent = Lang.Buttons.save;
 
         var cancelText = btnWrapper.elem('text', {
             x: 102.5, y: 33, class: 'entryFunctionButtonText'
         });
-        cancelText.innerHTML = Lang.Buttons.cancel;
+        cancelText.textContent = Lang.Buttons.cancel;
 
         var saveButton = btnWrapper.elem('circle', {
             cx: 27.5, cy: 27.5, r: 27.5, class: 'entryFunctionButton'
@@ -702,7 +710,8 @@ Entry.Board = function(option) {
             index,
             pointData,
             result = null,
-            searchValue = targetType === "nextMagnet" ? y - 15 : y;
+            searchValue = targetType === "nextMagnet" ? y - 15 : y,
+            leftOffset = targetType === "nextMagnet" ? 20 : 0;
         while (minIndex <= maxIndex) {
             index = (minIndex + maxIndex) / 2 | 0;
             pointData = targetArray[index];
@@ -715,7 +724,7 @@ Entry.Board = function(option) {
                 var blocks = pointData.blocks;
                 for (var i = 0; i < blocks.length; i++) {
                     var blockView = blocks[i].view;
-                    if (blockView.absX - 20 < x && x < blockView.absX + blockView.width) {
+                    if (blockView.absX - leftOffset < x && x < blockView.absX + blockView.width) {
                         var resultBlock = pointData.blocks[i];
                         if (!result || result.view.zIndex < resultBlock.view.zIndex)
                             result = pointData.blocks[i];

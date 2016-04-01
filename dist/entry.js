@@ -5482,6 +5482,7 @@ Entry.SVG.createElement = function(a, b) {
   c.removeClass = Entry.SVG.removeClass;
   c.hasClass = Entry.SVG.hasClass;
   c.remove = Entry.SVG.remove;
+  c.removeAttr = Entry.SVG.removeAttr;
   return c;
 };
 Entry.SVG.attr = function(a, b) {
@@ -5517,6 +5518,9 @@ Entry.SVG.hasClass = function(a) {
 };
 Entry.SVG.remove = function() {
   this.parentNode && this.parentNode.removeChild(this);
+};
+Entry.SVG.removeAttr = function(a) {
+  this.removeAttribute(a);
 };
 Entry.Dialog = function(a, b, c, d) {
   a.dialog && a.dialog.remove();
@@ -8995,7 +8999,6 @@ Entry.init = function(a, b) {
   this.events_ = {};
   this.interfaceState = {menuWidth:264};
   Entry.Utils.bindGlobalEvent(["resize", "mousedown", "mousemove", "keydown", "keyup"]);
-  Entry.Utils.generateGlobalFilters();
   this.options = b;
   this.parseOptions(b);
   this.mediaFilePath = (b.libDir ? b.libDir : "/lib") + "/entryjs/images/";
@@ -10089,13 +10092,13 @@ Entry.BlockMockup = function(a) {
     var a = this.params;
     "Boolean" === b && (a[a.length - 1].accept = "booleanMagnet");
   };
-  a.appendField = function(b) {
+  a.appendField = function(b, a) {
     if (!b) {
       return this;
     }
-    "string" === typeof b && 0 < b.length ? this.templates.push(b) : b.constructor == Blockly.FieldIcon ? ("start" === b.type ? this.params.push({type:"Indicator", img:b.src_, size:17, position:{x:0, y:-2}}) : this.params.push({type:"Indicator", img:b.src_, size:12}), this.templates.push(this.getFieldCount())) : b.constructor == Blockly.FieldDropdown ? (this.params.push({type:"Dropdown", options:b.menuGenerator_, value:b.menuGenerator_[0][1], fontSize:11}), this.templates.push(this.getFieldCount())) : 
-    b.constructor == Blockly.FieldDropdownDynamic ? (this.params.push({type:"DropdownDynamic", value:null, menuName:b.menuName_, fontSize:11}), this.templates.push(this.getFieldCount())) : b.constructor == Blockly.FieldTextInput ? (this.params.push({type:"TextInput", value:10}), this.templates.push(this.getFieldCount())) : b.constructor == Blockly.FieldAngle ? (this.params.push({type:"Angle"}), this.templates.push(this.getFieldCount())) : b.constructor == Blockly.FieldKeydownInput ? (this.params.push({type:"Keyboard", 
-    value:81}), this.templates.push(this.getFieldCount())) : b.constructor == Blockly.FieldColour && (this.params.push({type:"Color"}), this.templates.push(this.getFieldCount()));
+    "string" === typeof b && 0 < b.length ? a ? (b = {type:"Text", text:b, color:a}, this.params.push(b), this.templates.push(this.getFieldCount())) : this.templates.push(b) : b.constructor == Blockly.FieldIcon ? ("start" === b.type ? this.params.push({type:"Indicator", img:b.src_, size:17, position:{x:0, y:-2}}) : this.params.push({type:"Indicator", img:b.src_, size:12}), this.templates.push(this.getFieldCount())) : b.constructor == Blockly.FieldDropdown ? (this.params.push({type:"Dropdown", options:b.menuGenerator_, 
+    value:b.menuGenerator_[0][1], fontSize:11}), this.templates.push(this.getFieldCount())) : b.constructor == Blockly.FieldDropdownDynamic ? (this.params.push({type:"DropdownDynamic", value:null, menuName:b.menuName_, fontSize:11}), this.templates.push(this.getFieldCount())) : b.constructor == Blockly.FieldTextInput ? (this.params.push({type:"TextInput", value:10}), this.templates.push(this.getFieldCount())) : b.constructor == Blockly.FieldAngle ? (this.params.push({type:"Angle"}), this.templates.push(this.getFieldCount())) : 
+    b.constructor == Blockly.FieldKeydownInput ? (this.params.push({type:"Keyboard", value:81}), this.templates.push(this.getFieldCount())) : b.constructor == Blockly.FieldColour && (this.params.push({type:"Color"}), this.templates.push(this.getFieldCount()));
     return this;
   };
   a.setColour = function(b) {
@@ -10672,19 +10675,20 @@ Entry.Utils.isInInput = function(a) {
 Entry.Utils.isFunction = function(a) {
   return "function" === typeof a;
 };
-Entry.Utils.generateGlobalFilters = function generateGlobalFilters() {
-  if (!generateGlobalFilters.initiated) {
-    generateGlobalFilters.initiated = !0;
-    Entry.Dom($('<svg id="entryWorkspaceFilters" class="entryWorkspaceFilters" width="0" height="0"version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'), {parent:$("body")});
-    var b = Entry.SVG("entryWorkspaceFilters").elem("defs"), c = b.elem("filter", {id:"entryTrashcanFilter"});
-    c.elem("feGaussianBlur", {"in":"SourceAlpha", stdDeviation:2, result:"blur"});
-    c.elem("feOffset", {"in":"blur", dx:1, dy:1, result:"offsetBlur"});
-    c = c.elem("feMerge");
-    c.elem("feMergeNode", {"in":"offsetBlur"});
-    c.elem("feMergeNode", {"in":"SourceGraphic"}, c);
-    b.elem("filter", {id:"entryBlockShadowFilter", height:"200%"}).innerHTML = '<feOffset result="offOut" in="SourceGraphic" dx="0" dy="1" /><feColorMatrix result="matrixOut" in="offOut" type="matrix"values="0.7 0 0 0 0 0 0.7 0 0 0 0 0 0.7 0 0 0 0 0 1 0" /><feBlend in="SourceGraphic" in1="offOut" mode="normal" />';
-    b.elem("filter", {id:"entryBlockHighlightFilter"}).innerHTML = '<feOffset result="offOut" in="SourceGraphic" dx="0" dy="0" /><feColorMatrix result="matrixOut" in="offOut" type="matrix"values="1.3 0 0 0 0 0 1.3 0 0 0 0 0 1.3 0 0 0 0 0 1 0" />';
-  }
+Entry.Utils.addFilters = function(a, b) {
+  var c = a.elem("defs"), d = c.elem("filter", {id:"entryTrashcanFilter_" + b});
+  d.elem("feGaussianBlur", {"in":"SourceAlpha", stdDeviation:2, result:"blur"});
+  d.elem("feOffset", {"in":"blur", dx:1, dy:1, result:"offsetBlur"});
+  d = d.elem("feMerge");
+  d.elem("feMergeNode", {"in":"offsetBlur"});
+  d.elem("feMergeNode", {"in":"SourceGraphic"}, d);
+  d = c.elem("filter", {id:"entryBlockShadowFilter_" + b, height:"200%"});
+  d.elem("feOffset", {result:"offOut", in:"SourceGraphic", dx:0, dy:1});
+  d.elem("feColorMatrix", {result:"matrixOut", in:"offOut", type:"matrix", values:"0.7 0 0 0 0 0 0.7 0 0 0 0 0 0.7 0 0 0 0 0 1 0"});
+  d.elem("feBlend", {in:"SourceGraphic", in1:"offOut", mode:"normal"});
+  c = c.elem("filter", {id:"entryBlockHighlightFilter_" + b});
+  c.elem("feOffset", {result:"offOut", in:"SourceGraphic", dx:0, dy:0});
+  c.elem("feColorMatrix", {result:"matrixOut", in:"offOut", type:"matrix", values:"1.3 0 0 0 0 0 1.3 0 0 0 0 0 1.3 0 0 0 0 0 1 0"});
 };
 Entry.Model = function(a, b) {
   var c = Entry.Model;
@@ -13128,6 +13132,7 @@ Entry.BlockMenu = function(a, b, c, d) {
   this._scroll = void 0 !== d ? d : !1;
   this._bannedClass = [];
   this._categories = [];
+  this.suffix = "blockMenu";
   a = "string" === typeof a ? $("#" + a) : $(a);
   if ("DIV" !== a.prop("tagName")) {
     return console.error("Dom is not div element");
@@ -13143,6 +13148,7 @@ Entry.BlockMenu = function(a, b, c, d) {
   this._splitters = [];
   this.setWidth();
   this.svg = Entry.SVG(this._svgId);
+  Entry.Utils.addFilters(this.svg, this.suffix);
   this.svgGroup = this.svg.elem("g");
   this.svgThreadGroup = this.svgGroup.elem("g");
   this.svgThreadGroup.board = this;
@@ -13521,7 +13527,13 @@ Entry.BlockView.DRAG_RADIUS = 5;
     var g = this._schema.color;
     this.block.isDeletable() || (g = Entry.Utils.colorLighten(g));
     f = {d:f, fill:g, class:"blockPath"};
-    this.magnet.next || !this.magnet.string && !this.magnet.bool || (f.stroke = Entry.Utils.colorDarken(this._schema.color, .9));
+    if (this.magnet.next) {
+      g = this.getBoard().suffix, this.pathGroup.attr({filter:"url(#entryBlockShadowFilter_" + g + ")"});
+    } else {
+      if (this.magnet.string || this.magnet.bool) {
+        f.stroke = Entry.Utils.colorDarken(this._schema.color, .9);
+      }
+    }
     e.outerLine && (f.strokeWidth = "0.5");
     this._path.attr(f);
     this._moveTo(this.x, this.y, !1);
@@ -13756,10 +13768,9 @@ Entry.BlockView.DRAG_RADIUS = 5;
   a.destroy = function(b) {
     this._destroyObservers();
     var a = this.svgGroup;
-    this.block.getThread();
-    b ? $(a).velocity({opacity:0}, {duration:100, complete:function() {
+    b ? $(a).fadeOut(100, function() {
       a.remove();
-    }}) : a.remove();
+    }) : a.remove();
     this._contents.forEach(function(b) {
       b.constructor !== Entry.Block && b.destroy();
     });
@@ -13801,7 +13812,7 @@ Entry.BlockView.DRAG_RADIUS = 5;
         }
         (b = this.block.thread.changeEvent) && b.notify();
       } else {
-        this.magneting ? this.svgGroup.attr({filter:"url(#entryBlockHighlightFilter)"}) : this.svgGroup.attr({filter:"initial"});
+        this.magneting ? this.svgGroup.attr({filter:"url(#entryBlockHighlightFilter_" + this.getBoard().suffix + ")"}) : this.svgGroup.removeAttr("filter");
       }
     }
   };
@@ -14882,8 +14893,8 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldOutput);
     b.view._toLocalCoordinate(this.svgGroup);
     this.calcWH();
   };
-  a.setParent = function(b) {
-    this._parent = b;
+  a.setParent = function(a) {
+    this._parent = a;
   };
   a.getParent = function() {
     return this._parent;
@@ -14905,21 +14916,21 @@ Entry.FieldStatement = function(a, b, c) {
 (function(a) {
   a.schema = {x:0, y:0, width:100, height:20, magneting:!1};
   a.magnet = {next:{x:0, y:0}};
-  a.renderStart = function(b) {
+  a.renderStart = function(a) {
     this.svgGroup = this._blockView.statementSvgGroup.elem("g");
     this._nextGroup = this.statementSvgGroup = this.svgGroup.elem("g");
-    this._initThread(b);
-    this._board = b;
+    this._initThread(a);
+    this._board = a;
   };
-  a._initThread = function(b) {
-    var a = this.getValue();
-    this._thread = a;
-    a.createView(b);
-    a.view.setParent(this);
-    if (b = a.getFirstBlock()) {
-      this._posObserver = b.view.observe(this, "removeFirstBlock", ["x", "y"]), b.view._toLocalCoordinate(this.statementSvgGroup), this.firstBlock = b;
+  a._initThread = function(a) {
+    var c = this.getValue();
+    this._thread = c;
+    c.createView(a);
+    c.view.setParent(this);
+    if (a = c.getFirstBlock()) {
+      this._posObserver = a.view.observe(this, "removeFirstBlock", ["x", "y"]), a.view._toLocalCoordinate(this.statementSvgGroup), this.firstBlock = a;
     }
-    a.changeEvent.attach(this, this.calcHeight);
+    c.changeEvent.attach(this, this.calcHeight);
     this.calcHeight();
   };
   a.align = function(a, c, d) {
@@ -15171,14 +15182,16 @@ Entry.RenderView = function(a, b) {
     return console.error("Dom is not div element");
   }
   this.view = a;
-  this.visible = this.viewOnly = !0;
+  this.viewOnly = !0;
+  this.suffix = "renderView";
+  this.visible = !0;
   this._svgId = "renderView_" + (new Date).getTime();
   this._generateView();
   this.offset = this.svgDom.offset();
   this.setWidth();
-  if (this.svg = Entry.SVG(this._svgId)) {
-    this.svgGroup = this.svg.elem("g"), this.svgThreadGroup = this.svgGroup.elem("g"), this.svgThreadGroup.board = this, this.svgBlockGroup = this.svgGroup.elem("g"), this.svgBlockGroup.board = this;
-  }
+  this.svg = Entry.SVG(this._svgId);
+  Entry.Utils.addFilters(this.svg, this.suffix);
+  this.svg && (this.svgGroup = this.svg.elem("g"), this.svgThreadGroup = this.svgGroup.elem("g"), this.svgThreadGroup.board = this, this.svgBlockGroup = this.svgGroup.elem("g"), this.svgBlockGroup.board = this);
 };
 (function(a) {
   a.schema = {code:null, dragBlock:null, closeBlock:null, selectedBlockView:null};
@@ -15200,7 +15213,7 @@ Entry.RenderView = function(a, b) {
     if (a && 0 !== a.length) {
       for (var c = 0, d = "LEFT" == this._align ? 20 : this.svgDom.width() / 2, e = 0, f = a.length;e < f;e++) {
         var g = a[e].getFirstBlock().view;
-        g._moveTo(d - g.offsetX, c - g.offsetY, !1);
+        g._moveTo(d, c - g.offsetY, !1);
         g = g.svgGroup.getBBox().height;
         c += g + 15;
       }
@@ -15350,7 +15363,8 @@ Entry.Board = function(a) {
   this.svgThreadGroup.board = this;
   this.svgBlockGroup = this.svgGroup.elem("g");
   this.svgBlockGroup.board = this;
-  a.isOverlay && (this.wrapper.addClass("entryOverlayBoard"), this.generateButtons());
+  a.isOverlay ? (this.wrapper.addClass("entryOverlayBoard"), this.generateButtons(), this.suffix = "overlayBoard") : this.suffix = "board";
+  Entry.Utils.addFilters(this.svg, this.suffix);
   Entry.ANIMATION_DURATION = 200;
   Entry.BOARD_PADDING = 100;
   this.updateOffset();
@@ -15451,14 +15465,13 @@ Entry.Board = function(a) {
             return;
           }
           var f = this;
-          a = [];
-          a.push({text:"\ubd99\uc5ec\ub123\uae30", enable:!!Entry.clipboard, callback:function() {
+          Entry.ContextMenu.show([{text:"\ubd99\uc5ec\ub123\uae30", enable:!!Entry.clipboard, callback:function() {
             f.code.createThread(Entry.clipboard).getFirstBlock().copyToClipboard();
-          }});
-          a.push({text:"\ube14\ub85d \uc815\ub9ac\ud558\uae30", callback:function() {
+          }}, {text:"\ube14\ub85d \uc815\ub9ac\ud558\uae30", callback:function() {
             f.alignThreads();
-          }});
-          Entry.ContextMenu.show(a);
+          }}, {text:"\ubaa8\ub4e0 \ucf54\ub4dc \uc0ad\uc81c\ud558\uae30", callback:function() {
+            f.code.clear();
+          }}]);
         }
       }
       var g = this;
@@ -15512,9 +15525,9 @@ Entry.Board = function(a) {
     var a = this, c = this.svgGroup.elem("g");
     this.btnWrapper = c;
     var d = c.elem("text", {x:27, y:33, class:"entryFunctionButtonText"});
-    d.innerHTML = Lang.Buttons.save;
+    d.textContent = Lang.Buttons.save;
     var e = c.elem("text", {x:102.5, y:33, class:"entryFunctionButtonText"});
-    e.innerHTML = Lang.Buttons.cancel;
+    e.textContent = Lang.Buttons.cancel;
     var f = c.elem("circle", {cx:27.5, cy:27.5, r:27.5, class:"entryFunctionButton"}), c = c.elem("circle", {cx:102.5, cy:27.5, r:27.5, class:"entryFunctionButton"});
     f.onclick = function(c) {
       a.save();
@@ -15692,20 +15705,21 @@ Entry.Board = function(a) {
   a.getNearestMagnet = function(a, c, d) {
     var e = this._magnetMap;
     if (e && 0 !== e.length) {
-      for (var f = 0, g = e.length - 1, h = null, k = "nextMagnet" === d ? c - 15 : c;f <= g;) {
-        if (d = (f + g) / 2 | 0, c = e[d], k < c.point) {
-          g = d - 1;
+      var f = 0, g = e.length - 1, h, k = null, m = "nextMagnet" === d ? c - 15 : c;
+      for (c = "nextMagnet" === d ? 20 : 0;f <= g;) {
+        if (h = (f + g) / 2 | 0, d = e[h], m < d.point) {
+          g = h - 1;
         } else {
-          if (k > c.endPoint) {
-            f = d + 1;
+          if (m > d.endPoint) {
+            f = h + 1;
           } else {
-            e = c.blocks;
+            e = d.blocks;
             for (f = 0;f < e.length;f++) {
-              if (g = e[f].view, g.absX - 20 < a && a < g.absX + g.width && (g = c.blocks[f], !h || h.view.zIndex < g.view.zIndex)) {
-                h = c.blocks[f];
+              if (g = e[f].view, g.absX - c < a && a < g.absX + g.width && (g = d.blocks[f], !k || k.view.zIndex < g.view.zIndex)) {
+                k = d.blocks[f];
               }
             }
-            return h;
+            return k;
           }
         }
       }
@@ -16349,6 +16363,7 @@ Entry.FieldTrashcan = function(a) {
     var c = a.svg, d = c.firstChild;
     d ? c.insertBefore(this.svgGroup, d) : c.appendChild(this.svgGroup);
     this._dragBlockObserver = a.observe(this, "updateDragBlock", ["dragBlock"]);
+    this.svgGroup.attr({filter:"url(#entryTrashcanFilter_" + a.suffix + ")"});
     this.setPosition();
   };
 })(Entry.FieldTrashcan.prototype);
@@ -16456,8 +16471,10 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
   };
   a.setMode = function(a, c) {
     a = Number(a);
+    var d = this.mode;
+    this.mode = a;
     switch(a) {
-      case this.mode:
+      case d:
         return;
       case Entry.Workspace.MODE_VIMBOARD:
         this.board && this.board.hide();
@@ -16471,14 +16488,13 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
       case Entry.Workspace.MODE_BOARD:
         try {
           this.board.show(), this.set({selectedBoard:this.board}), this.textToCode(), this.vimBoard && this.vimBoard.hide(), this.overlayBoard && this.overlayBoard.hide(), this.blockMenu.renderBlock();
-        } catch (d) {
-          throw this.board && this.board.hide(), this.set({selectedBoard:this.vimBoard}), Entry.dispatchEvent("setProgrammingMode", Entry.Workspace.MODE_VIMBOARD), d;
+        } catch (e) {
+          throw this.board && this.board.hide(), this.set({selectedBoard:this.vimBoard}), Entry.dispatchEvent("setProgrammingMode", Entry.Workspace.MODE_VIMBOARD), e;
         }
         break;
       case Entry.Workspace.MODE_OVERLAYBOARD:
         this.overlayBoard || this.initOverlayBoard(), this.overlayBoard.show(), this.set({selectedBoard:this.overlayBoard});
     }
-    this.mode = a;
     this.changeEvent.notify(c);
   };
   a.changeBoardCode = function(a) {

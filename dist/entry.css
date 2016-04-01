@@ -3212,6 +3212,7 @@ span.CodeMirror-selectedtext {
   border-width: 1px;
   outline: none;
   font-size: 13px;
+  z-index: 300;
 }
 #entry-contextmenu .menuAble {
   cursor: pointer;
