@@ -15527,9 +15527,9 @@ Entry.Board = function(a) {
     var a = this, c = this.svgGroup.elem("g");
     this.btnWrapper = c;
     var d = c.elem("text", {x:27, y:33, class:"entryFunctionButtonText"});
-    d.innerHTML = Lang.Buttons.save;
+    d.textContent = Lang.Buttons.save;
     var e = c.elem("text", {x:102.5, y:33, class:"entryFunctionButtonText"});
-    e.innerHTML = Lang.Buttons.cancel;
+    e.textContent = Lang.Buttons.cancel;
     var f = c.elem("circle", {cx:27.5, cy:27.5, r:27.5, class:"entryFunctionButton"}), c = c.elem("circle", {cx:102.5, cy:27.5, r:27.5, class:"entryFunctionButton"});
     f.onclick = function(c) {
       a.save();

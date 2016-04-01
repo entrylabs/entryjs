@@ -354,12 +354,12 @@ Entry.Board = function(option) {
         var saveText = btnWrapper.elem('text', {
             x: 27, y: 33, class: 'entryFunctionButtonText'
         });
-        saveText.innerHTML = Lang.Buttons.save;
+        saveText.textContent = Lang.Buttons.save;
 
         var cancelText = btnWrapper.elem('text', {
             x: 102.5, y: 33, class: 'entryFunctionButtonText'
         });
-        cancelText.innerHTML = Lang.Buttons.cancel;
+        cancelText.textContent = Lang.Buttons.cancel;
 
         var saveButton = btnWrapper.elem('circle', {
             cx: 27.5, cy: 27.5, r: 27.5, class: 'entryFunctionButton'
