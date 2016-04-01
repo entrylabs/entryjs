@@ -16,6 +16,7 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
     this._scroll = scroll !== undefined ? scroll : false;
     this._bannedClass = [];
     this._categories = [];
+    this.suffix = 'blockMenu';
 
     if (typeof dom === "string") dom = $('#' + dom);
     else dom = $(dom);
@@ -37,6 +38,7 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
     this.setWidth();
 
     this.svg = Entry.SVG(this._svgId);
+    Entry.Utils.addFilters(this.svg, this.suffix);
 
     this.svgGroup = this.svg.elem("g");
 

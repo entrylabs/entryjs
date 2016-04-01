@@ -23,7 +23,7 @@ Entry.Mutator = function() {
         blockSchema.params = schemaDiff.params;
 
         blockSchema.changeEvent.notify(1);
-    }
+    };
 })(Entry.Mutator);
 
 (function(p) {

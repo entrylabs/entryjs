@@ -140,6 +140,9 @@ Entry.FieldTrashcan = function(board) {
         else svg.appendChild(this.svgGroup);
 
         this._dragBlockObserver = board.observe(this, "updateDragBlock", ["dragBlock"]);
+        this.svgGroup.attr({
+            'filter': 'url(#entryTrashcanFilter_'+ board.suffix +')'
+        });
         this.setPosition();
     };
 

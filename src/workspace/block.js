@@ -429,7 +429,7 @@ Entry.Block.MAGNET_OFFSET = 0.4;
             var paramDef = params[i];
             if (paramDef.type === "Output")
                 return this.params[i];
-        };
+        }
         return null;
     };
 
