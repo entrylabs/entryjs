@@ -10092,13 +10092,13 @@ Entry.BlockMockup = function(a) {
     var a = this.params;
     "Boolean" === b && (a[a.length - 1].accept = "booleanMagnet");
   };
-  a.appendField = function(b) {
+  a.appendField = function(b, a) {
     if (!b) {
       return this;
     }
-    "string" === typeof b && 0 < b.length ? this.templates.push(b) : b.constructor == Blockly.FieldIcon ? ("start" === b.type ? this.params.push({type:"Indicator", img:b.src_, size:17, position:{x:0, y:-2}}) : this.params.push({type:"Indicator", img:b.src_, size:12}), this.templates.push(this.getFieldCount())) : b.constructor == Blockly.FieldDropdown ? (this.params.push({type:"Dropdown", options:b.menuGenerator_, value:b.menuGenerator_[0][1], fontSize:11}), this.templates.push(this.getFieldCount())) : 
-    b.constructor == Blockly.FieldDropdownDynamic ? (this.params.push({type:"DropdownDynamic", value:null, menuName:b.menuName_, fontSize:11}), this.templates.push(this.getFieldCount())) : b.constructor == Blockly.FieldTextInput ? (this.params.push({type:"TextInput", value:10}), this.templates.push(this.getFieldCount())) : b.constructor == Blockly.FieldAngle ? (this.params.push({type:"Angle"}), this.templates.push(this.getFieldCount())) : b.constructor == Blockly.FieldKeydownInput ? (this.params.push({type:"Keyboard", 
-    value:81}), this.templates.push(this.getFieldCount())) : b.constructor == Blockly.FieldColour && (this.params.push({type:"Color"}), this.templates.push(this.getFieldCount()));
+    "string" === typeof b && 0 < b.length ? a ? (b = {type:"Text", text:b, color:a}, this.params.push(b), this.templates.push(this.getFieldCount())) : this.templates.push(b) : b.constructor == Blockly.FieldIcon ? ("start" === b.type ? this.params.push({type:"Indicator", img:b.src_, size:17, position:{x:0, y:-2}}) : this.params.push({type:"Indicator", img:b.src_, size:12}), this.templates.push(this.getFieldCount())) : b.constructor == Blockly.FieldDropdown ? (this.params.push({type:"Dropdown", options:b.menuGenerator_, 
+    value:b.menuGenerator_[0][1], fontSize:11}), this.templates.push(this.getFieldCount())) : b.constructor == Blockly.FieldDropdownDynamic ? (this.params.push({type:"DropdownDynamic", value:null, menuName:b.menuName_, fontSize:11}), this.templates.push(this.getFieldCount())) : b.constructor == Blockly.FieldTextInput ? (this.params.push({type:"TextInput", value:10}), this.templates.push(this.getFieldCount())) : b.constructor == Blockly.FieldAngle ? (this.params.push({type:"Angle"}), this.templates.push(this.getFieldCount())) : 
+    b.constructor == Blockly.FieldKeydownInput ? (this.params.push({type:"Keyboard", value:81}), this.templates.push(this.getFieldCount())) : b.constructor == Blockly.FieldColour && (this.params.push({type:"Color"}), this.templates.push(this.getFieldCount()));
     return this;
   };
   a.setColour = function(b) {
