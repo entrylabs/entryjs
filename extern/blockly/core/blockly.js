@@ -619,7 +619,7 @@ Blockly.showContextMenu_ = function(xy) {
         pasteOption.enabled = false;
     }
     var cleanUpOption = {
-        text: '블록 정리하기',
+        text: Lang.Blocks.tidy_up_block,
         enabled: true,
         callback: function() {
             Blockly.mainWorkspace.organizeBlocks();

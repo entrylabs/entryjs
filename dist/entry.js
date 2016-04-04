@@ -210,7 +210,7 @@ Blockly.Blocks.albert_set_led_to = {init:function() {
   this.setNextStatement(!0);
 }};
 Entry.block.albert_set_led_to = function(a, b) {
-  var c = Entry.hw.sendQueue, d = b.getField("DIRECTION", b), e = Number(b.getField("COLOR", b));
+  var c = Entry.hw.sendQueue, d = b.getField("DIRECTION", b), e = +b.getField("COLOR", b);
   "FRONT" == d ? (c.leftEye = e, c.rightEye = e) : "LEFT" == d ? c.leftEye = e : c.rightEye = e;
   return b.callReturn();
 };
@@ -632,7 +632,7 @@ Entry.block.arduino_get_number = function(a, b) {
   d.open("POST", "http://localhost:23518/arduino/", !1);
   d.send(String(c));
   Entry.assert(200 == d.status, "arduino is not connected");
-  return Number(d.responseText);
+  return +d.responseText;
 };
 Blockly.Blocks.arduino_get_number = {init:function() {
   this.setColour("#00979D");
@@ -1246,7 +1246,7 @@ Blockly.Blocks.coordinate_mouse = {init:function() {
   this.setInputsInline(!0);
 }};
 Entry.block.coordinate_mouse = function(a, b) {
-  return "x" === b.getField("VALUE", b) ? Number(Entry.stage.mouseCoordinate.x) : Number(Entry.stage.mouseCoordinate.y);
+  return "x" === b.getField("VALUE", b) ? +Entry.stage.mouseCoordinate.x : +Entry.stage.mouseCoordinate.y;
 };
 Blockly.Blocks.coordinate_object = {init:function() {
   this.setColour(calcBlockColor);
@@ -1270,7 +1270,7 @@ Entry.block.coordinate_object = function(a, b) {
       var d = c.parent, d = d.pictures;
       return d.indexOf(c.picture) + 1;
     case "size":
-      return Number(c.getSize().toFixed(1));
+      return +c.getSize().toFixed(1);
     case "picture_name":
       return d = c.parent, d = d.pictures, d[d.indexOf(c.picture)].name;
   }
@@ -2133,7 +2133,7 @@ Blockly.Blocks.hamster_set_led_to = {init:function() {
   this.setNextStatement(!0);
 }};
 Entry.block.hamster_set_led_to = function(a, b) {
-  var c = Entry.hw.sendQueue, d = b.getField("DIRECTION", b), e = Number(b.getField("COLOR", b));
+  var c = Entry.hw.sendQueue, d = b.getField("DIRECTION", b), e = +b.getField("COLOR", b);
   "FRONT" == d ? (c.leftLed = e, c.rightLed = e) : "LEFT" == d ? c.leftLed = e : c.rightLed = e;
   return b.callReturn();
 };
@@ -2504,7 +2504,7 @@ Blockly.Blocks.is_press_some_key = {init:function() {
   this.setInputsInline(!0);
 }};
 Entry.block.is_press_some_key = function(a, b) {
-  var c = Number(b.getField("VALUE", b));
+  var c = +b.getField("VALUE", b);
   return 0 <= Entry.pressedKeys.indexOf(c);
 };
 Blockly.Blocks.reach_something = {init:function() {
@@ -2718,13 +2718,13 @@ Entry.block.boolean_basic_operator = function(a, b) {
     case "EQUAL":
       return d == e;
     case "GREATER":
-      return Number(d) > Number(e);
+      return +d > +e;
     case "LESS":
-      return Number(d) < Number(e);
+      return +d < +e;
     case "GREATER_OR_EQUAL":
-      return Number(d) >= Number(e);
+      return +d >= +e;
     case "LESS_OR_EQUAL":
-      return Number(d) <= Number(e);
+      return +d <= +e;
   }
 };
 Blockly.Blocks.show = {init:function() {
@@ -3198,7 +3198,7 @@ Blockly.Blocks.rotate_by_angle_dropdown = {init:function() {
 }};
 Entry.block.rotate_by_angle_dropdown = function(a, b) {
   var c = b.getField("VALUE", b);
-  a.setRotation(a.getRotation() + Number(c));
+  a.setRotation(a.getRotation() + +c);
   return b.callReturn();
 };
 Blockly.Blocks.see_angle = {init:function() {
@@ -3290,8 +3290,8 @@ Blockly.Blocks.locate = {init:function() {
 Entry.block.locate = function(a, b) {
   var c = b.getField("VALUE", b), d;
   "mouse" == c ? (c = Entry.stage.mouseCoordinate.x, d = Entry.stage.mouseCoordinate.y) : (d = Entry.container.getEntity(c), c = d.getX(), d = d.getY());
-  a.setX(Number(c));
-  a.setY(Number(d));
+  a.setX(+c);
+  a.setY(+d);
   a.brush && !a.brush.stop && a.brush.lineTo(c, -1 * d);
   return b.callReturn();
 };
@@ -3515,7 +3515,7 @@ Entry.block.locate_object_time = function(a, b) {
     if (0 != c) {
       "mouse" == d ? (d = e.x - a.getX(), e = e.y - a.getY()) : (e = Entry.container.getEntity(d), d = e.getX() - a.getX(), e = e.getY() - a.getY()), b.isStart = !0, b.frameCount = c, b.dX = d / b.frameCount, b.dY = e / b.frameCount;
     } else {
-      return "mouse" == d ? (d = Number(e.x), e = Number(e.y)) : (e = Entry.container.getEntity(d), d = e.getX(), e = e.getY()), a.setX(d), a.setY(e), a.brush && !a.brush.stop && a.brush.lineTo(a.getX(), -1 * a.getY()), b.callReturn();
+      return "mouse" == d ? (d = +e.x, e = +e.y) : (e = Entry.container.getEntity(d), d = e.getX(), e = e.getY()), a.setX(d), a.setY(e), a.brush && !a.brush.stop && a.brush.lineTo(a.getX(), -1 * a.getY()), b.callReturn();
     }
   }
   if (0 != b.frameCount) {
@@ -6668,7 +6668,7 @@ Entry.EntryObject.prototype.generateView = function() {
       13 == b.keyCode && this.blur();
     };
     f.onblur = function(b) {
-      isNaN(f.value) || c.entity.setX(Number(f.value));
+      isNaN(f.value) || c.entity.setX(+f.value);
       c.updateCoordinateView();
       Entry.stage.updateObject();
     };
@@ -6676,7 +6676,7 @@ Entry.EntryObject.prototype.generateView = function() {
       13 == b.keyCode && this.blur();
     };
     h.onblur = function(b) {
-      isNaN(h.value) || c.entity.setY(Number(h.value));
+      isNaN(h.value) || c.entity.setY(+h.value);
       c.updateCoordinateView();
       Entry.stage.updateObject();
     };
@@ -6684,7 +6684,7 @@ Entry.EntryObject.prototype.generateView = function() {
       13 == b.keyCode && this.blur();
     };
     m.onblur = function(b) {
-      isNaN(m.value) || c.entity.setSize(Number(m.value));
+      isNaN(m.value) || c.entity.setSize(+m.value);
       c.updateCoordinateView();
       Entry.stage.updateObject();
     };
@@ -6728,7 +6728,7 @@ Entry.EntryObject.prototype.generateView = function() {
     n.onblur = function(b) {
       b = n.value;
       -1 != b.indexOf("\u02da") && (b = b.substring(0, b.indexOf("\u02da")));
-      isNaN(b) || c.entity.setRotation(Number(b));
+      isNaN(b) || c.entity.setRotation(+b);
       c.updateRotationView();
       Entry.stage.updateObject();
     };
@@ -6738,7 +6738,7 @@ Entry.EntryObject.prototype.generateView = function() {
     l.onblur = function(b) {
       b = l.value;
       -1 != b.indexOf("\u02da") && (b = b.substring(0, b.indexOf("\u02da")));
-      isNaN(b) || c.entity.setDirection(Number(b));
+      isNaN(b) || c.entity.setDirection(+b);
       c.updateRotationView();
       Entry.stage.updateObject();
     };
@@ -6809,24 +6809,24 @@ Entry.EntryObject.prototype.generateView = function() {
       }
     }), this.view_.appendChild(d), d = Entry.createElement("div"), d.addClass("entryObjectInformationWorkspace"), d.object = this, this.isInformationToggle = !1, a.appendChild(d), this.informationView_ = d, d = Entry.createElement("div"), d.addClass("entryObjectRotateLabelWrapperWorkspace"), this.view_.appendChild(d), this.rotateLabelWrapperView_ = d, e = Entry.createElement("span"), e.addClass("entryObjectRotateSpanWorkspace"), e.innerHTML = Lang.Workspace.rotation + " : ", n = Entry.createElement("input"), 
     n.addClass("entryObjectRotateInputWorkspace"), this.rotateSpan_ = e, this.rotateInput_ = n, g = Entry.createElement("span"), g.addClass("entryObjectDirectionSpanWorkspace"), g.innerHTML = Lang.Workspace.direction + " : ", l = Entry.createElement("input"), l.addClass("entryObjectDirectionInputWorkspace"), this.directionInput_ = l, d.appendChild(e), d.appendChild(n), d.appendChild(g), d.appendChild(l), d.rotateInput_ = n, d.directionInput_ = l, c = this, n.onkeypress = function(b) {
-      13 == b.keyCode && (b = n.value, -1 != b.indexOf("\u02da") && (b = b.substring(0, b.indexOf("\u02da"))), isNaN(b) || c.entity.setRotation(Number(b)), c.updateRotationView(), n.blur());
+      13 == b.keyCode && (b = n.value, -1 != b.indexOf("\u02da") && (b = b.substring(0, b.indexOf("\u02da"))), isNaN(b) || c.entity.setRotation(+b), c.updateRotationView(), n.blur());
     }, n.onblur = function(b) {
       c.entity.setRotation(c.entity.getRotation());
       Entry.stage.updateObject();
     }, l.onkeypress = function(b) {
-      13 == b.keyCode && (b = l.value, -1 != b.indexOf("\u02da") && (b = b.substring(0, b.indexOf("\u02da"))), isNaN(b) || c.entity.setDirection(Number(b)), c.updateRotationView(), l.blur());
+      13 == b.keyCode && (b = l.value, -1 != b.indexOf("\u02da") && (b = b.substring(0, b.indexOf("\u02da"))), isNaN(b) || c.entity.setDirection(+b), c.updateRotationView(), l.blur());
     }, l.onblur = function(b) {
       c.entity.setDirection(c.entity.getDirection());
       Entry.stage.updateObject();
     }, a = Entry.createElement("div"), a.addClass("entryObjectRotationWrapperWorkspace"), a.object = this, this.view_.appendChild(a), d = Entry.createElement("span"), d.addClass("entryObjectCoordinateWorkspace"), a.appendChild(d), e = Entry.createElement("span"), e.addClass("entryObjectCoordinateSpanWorkspace"), e.innerHTML = "X:", f = Entry.createElement("input"), f.addClass("entryObjectCoordinateInputWorkspace"), g = Entry.createElement("span"), g.addClass("entryObjectCoordinateSpanWorkspace"), 
     g.innerHTML = "Y:", h = Entry.createElement("input"), h.addClass("entryObjectCoordinateInputWorkspace entryObjectCoordinateInputWorkspace_right"), k = Entry.createElement("span"), k.addClass("entryObjectCoordinateSpanWorkspace"), k.innerHTML = Lang.Workspace.Size, m = Entry.createElement("input"), m.addClass("entryObjectCoordinateInputWorkspace", "entryObjectCoordinateInputWorkspace_size"), d.appendChild(e), d.appendChild(f), d.appendChild(g), d.appendChild(h), d.appendChild(k), d.appendChild(m), 
     d.xInput_ = f, d.yInput_ = h, d.sizeInput_ = m, this.coordinateView_ = d, c = this, f.onkeypress = function(b) {
-      13 == b.keyCode && (isNaN(f.value) || c.entity.setX(Number(f.value)), c.updateCoordinateView(), f.blur());
+      13 == b.keyCode && (isNaN(f.value) || c.entity.setX(+f.value), c.updateCoordinateView(), f.blur());
     }, f.onblur = function(b) {
       c.entity.setX(c.entity.getX());
       Entry.stage.updateObject();
     }, h.onkeypress = function(b) {
-      13 == b.keyCode && (isNaN(h.value) || c.entity.setY(Number(h.value)), c.updateCoordinateView(), h.blur());
+      13 == b.keyCode && (isNaN(h.value) || c.entity.setY(+h.value), c.updateCoordinateView(), h.blur());
     }, h.onblur = function(b) {
       c.entity.setY(c.entity.getY());
       Entry.stage.updateObject();
@@ -8742,7 +8742,7 @@ Entry.Parser = function(a, b, c) {
   this.codeMirror = c;
   this._lang = b || "js";
   this.availableCode = [];
-  "maze" === a && (this._stageId = Number(Ntry.configManager.getConfig("stageId")), this.setAvailableCode(NtryData.config[this._stageId].availableCode, NtryData.player[this._stageId].code));
+  "maze" === a && (this._stageId = +Ntry.configManager.getConfig("stageId"), this.setAvailableCode(NtryData.config[this._stageId].availableCode, NtryData.player[this._stageId].code));
   this.mappingSyntax(a);
   switch(this._lang) {
     case "js":
@@ -9371,7 +9371,7 @@ p = Entry.Script.prototype;
 p.init = function(a, b, c) {
   Entry.assert("BLOCK" == a.tagName.toUpperCase(), a.tagName);
   this.type = a.getAttribute("type");
-  this.id = Number(a.getAttribute("id"));
+  this.id = +a.getAttribute("id");
   a.getElementsByTagName("mutation").length && a.getElementsByTagName("mutation")[0].hasAttribute("hashid") && (this.hashId = a.childNodes[0].getAttribute("hashid"));
   "REPEAT" == this.type.substr(0, 6).toUpperCase() && (this.isRepeat = !0);
   b instanceof Entry.Script && (this.previousScript = b, b.parentScript && (this.parentScript = b.parentScript));
@@ -9435,7 +9435,7 @@ p.getValue = function(a) {
   return this.values[a].run();
 };
 p.getNumberValue = function(a) {
-  return Number(this.values[a].run());
+  return +this.values[a].run();
 };
 p.getStringValue = function(a) {
   return String(this.values[a].run());
@@ -9450,7 +9450,7 @@ p.getStringField = function(a) {
   return String(this.fields[a]);
 };
 p.getNumberField = function(a) {
-  return Number(this.fields[a]);
+  return +this.fields[a];
 };
 p.callReturn = function() {
   return this.nextScript ? this.nextScript : this.parentScript ? this.parentScript : null;
@@ -10406,7 +10406,7 @@ Entry.getElementsByClassName = function(a) {
   return b;
 };
 Entry.parseNumber = function(a) {
-  return "string" != typeof a || isNaN(Number(a)) ? "number" != typeof a || isNaN(Number(a)) ? !1 : a : Number(a);
+  return "string" != typeof a || isNaN(+a) ? "number" != typeof a || isNaN(+a) ? !1 : a : +a;
 };
 Entry.countStringLength = function(a) {
   var b, c = 0;
@@ -10472,7 +10472,7 @@ Entry.computeInputWidth = function(a) {
   document.body.appendChild(b);
   a = b.offsetWidth;
   document.body.removeChild(b);
-  return Number(a + 10) + "px";
+  return +(a + 10) + "px";
 };
 Entry.isArrowOrBackspace = function(a) {
   return -1 < [37, 38, 39, 40, 8].indexOf(a);
@@ -10623,7 +10623,7 @@ Entry.getMaxFloatPoint = function(a) {
   return Math.min(b, 20);
 };
 Entry.convertToRoundedDecimals = function(a, b) {
-  return isNaN(a) || !this.isFloat(a) ? a : Number(Math.round(a + "e" + b) + "e-" + b);
+  return isNaN(a) || !this.isFloat(a) ? a : +(Math.round(a + "e" + b) + "e-" + b);
 };
 Entry.attachEventListener = function(a, b, c) {
   setTimeout(function() {
@@ -11316,7 +11316,7 @@ Entry.Variable.prototype.getId = function() {
   return this.id_;
 };
 Entry.Variable.prototype.getValue = function() {
-  return this.isNumber() ? Number(this.value_) : this.value_;
+  return this.isNumber() ? +this.value_ : this.value_;
 };
 Entry.Variable.prototype.isNumber = function() {
   return isNaN(this.value_) ? !1 : !0;
@@ -11423,7 +11423,7 @@ Entry.Variable.prototype.updateSlideValueByView = function() {
   var a = Math.max(this.valueSetter_.graphics.command.x - 10, 0) / this.maxWidth;
   0 > a && (a = 0);
   1 < a && (a = 1);
-  a = (this.minValue_ + Number(Math.abs(this.maxValue_ - this.minValue_) * a)).toFixed(2);
+  a = (this.minValue_ + Math.abs(this.maxValue_ - this.minValue_) * a).toFixed(2);
   a < this.minValue_ ? this.setValue(this.minValue_) : a > this.maxValue_ ? this.setValue(this.maxValue_) : this.setValue(a);
 };
 Entry.Variable.prototype.getMinValue = function() {
@@ -11584,7 +11584,7 @@ Entry.VariableContainer.prototype.renderMessageReference = function(a) {
       Entry.playground.object != this.caller.object && (Entry.container.selectObject(), Entry.container.selectObject(this.caller.object.id, !0), b.select(null), b.select(this.message));
       a = this.caller;
       a = a.funcBlock ? a.funcBlock.getAttribute("id") : a.block.getAttribute("id");
-      Blockly.mainWorkspace.activatePreviousBlock(Number(a));
+      Blockly.mainWorkspace.activatePreviousBlock(+a);
       Entry.playground.toggleOnVariableView();
       Entry.playground.changeViewMode("variable");
     }), f.appendChild(d);
@@ -11609,7 +11609,7 @@ Entry.VariableContainer.prototype.renderFunctionReference = function(a) {
     c = d[f], g = Entry.createElement("li"), g.addClass("entryVariableListCallerWorkspace"), g.appendChild(c.object.thumbnailView_.cloneNode()), h = Entry.createElement("div"), h.addClass("entryVariableListCallerNameWorkspace"), h.innerHTML = c.object.name, g.appendChild(h), g.caller = c, g.bindOnClick(function(c) {
       Entry.playground.object != this.caller.object && (Entry.container.selectObject(), Entry.container.selectObject(this.caller.object.id, !0), b.select(null), b.select(a));
       c = this.caller.block.getAttribute("id");
-      Blockly.mainWorkspace.activatePreviousBlock(Number(c));
+      Blockly.mainWorkspace.activatePreviousBlock(+c);
       Entry.playground.toggleOnVariableView();
       Entry.playground.changeViewMode("variable");
     }), e.appendChild(g);
@@ -12434,7 +12434,7 @@ Entry.VariableContainer.prototype.generateVariableSettingView = function() {
   d = a.selectedVariable;
   e.value = d && "slide" == d.type ? d.minValue_ : 0;
   e.onblur = function(b) {
-    isNaN(this.value) || (b = a.selectedVariable, b.setMinValue(Number(this.value)), a.updateVariableSettingView(b));
+    isNaN(this.value) || (b = a.selectedVariable, b.setMinValue(+this.value), a.updateVariableSettingView(b));
   };
   b.minValueInput = e;
   c.appendChild(e);
@@ -12446,7 +12446,7 @@ Entry.VariableContainer.prototype.generateVariableSettingView = function() {
   g.addClass("entryVariableSettingMaxValueInputWorkspace");
   g.value = d && "slide" == d.type ? d.maxValue_ : 100;
   g.onblur = function(b) {
-    isNaN(this.value) || (b = a.selectedVariable, b.setMaxValue(Number(this.value)), a.updateVariableSettingView(b));
+    isNaN(this.value) || (b = a.selectedVariable, b.setMaxValue(+this.value), a.updateVariableSettingView(b));
   };
   b.maxValueInput = g;
   c.appendChild(g);
@@ -12574,7 +12574,7 @@ Entry.VariableContainer.prototype.updateListSettingView = function(a) {
   c.removeClass("entryRemove");
 };
 Entry.VariableContainer.prototype.setListLength = function(a) {
-  a = Number(a);
+  a = +a;
   var b = this.selectedList.array_;
   if (!isNaN(a)) {
     var c = b.length;
@@ -12894,7 +12894,7 @@ Entry.block.jr_repeat_until_dest = {skeleton:"basic_loop", color:"#498DEB", temp
     return this.executor.stepInto(a), Entry.STATIC.CONTINUE;
   }
 }};
-Entry.block.jr_if_construction = {skeleton:"basic_loop", color:"#498DEB", template:"\ub9cc\uc57d %1 \uc55e\uc5d0 \uc788\ub2e4\uba74 %2", params:[{type:"Image", img:"/img/assets/ntry/bitmap/jr/jr_construction_image.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic"}], func:function() {
+Entry.block.jr_if_construction = {skeleton:"basic_loop", color:"#498DEB", template:Lang.Menus.ai_if_front_1 + "%1" + Lang.Menus.ai_if_front_2 + "%2", params:[{type:"Image", img:"/img/assets/ntry/bitmap/jr/jr_construction_image.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic"}], func:function() {
   if (!this.isContinue) {
     var a = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT), b, c;
     for (c in a) {
@@ -12912,7 +12912,7 @@ Entry.block.jr_if_construction = {skeleton:"basic_loop", color:"#498DEB", templa
     }
   }
 }};
-Entry.block.jr_if_speed = {skeleton:"basic_loop", color:"#498DEB", template:"\ub9cc\uc57d %1 \uc55e\uc5d0 \uc788\ub2e4\uba74 %2", params:[{type:"Image", img:"/img/assets/ntry/bitmap/jr/jr_speed_image.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic"}], func:function() {
+Entry.block.jr_if_speed = {skeleton:"basic_loop", color:"#498DEB", template:Lang.Menus.ai_if_front_1 + "%1" + Lang.Menus.ai_if_front_2 + "%2", params:[{type:"Image", img:"/img/assets/ntry/bitmap/jr/jr_speed_image.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic"}], func:function() {
   if (!this.isContinue) {
     var a = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT), b, c;
     for (c in a) {
@@ -12930,14 +12930,14 @@ Entry.block.jr_if_speed = {skeleton:"basic_loop", color:"#498DEB", template:"\ub
     }
   }
 }};
-Entry.block.maze_step_start = {skeleton:"basic_event", mode:"maze", event:"start", color:"#3BBD70", template:"%1 \uc2dc\uc791\ud558\uae30\ub97c \ud074\ub9ad\ud588\uc744 \ub54c", syntax:["Program"], params:[{type:"Indicator", boxMultiplier:2, img:"/img/assets/block_icon/start_icon_play.png", highlightColor:"#3BBD70", size:17, position:{x:0, y:-2}}], func:function() {
+Entry.block.maze_step_start = {skeleton:"basic_event", mode:"maze", event:"start", color:"#3BBD70", template:"%1" + Lang.Menus.maze_when_run, syntax:["Program"], params:[{type:"Indicator", boxMultiplier:2, img:"/img/assets/block_icon/start_icon_play.png", highlightColor:"#3BBD70", size:17, position:{x:0, y:-2}}], func:function() {
   var a = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT), b;
   for (b in a) {
     this._unit = a[b];
   }
   Ntry.unitComp = Ntry.entityManager.getComponent(this._unit.id, Ntry.STATIC.UNIT);
 }};
-Entry.block.maze_step_jump = {skeleton:"basic", mode:"maze", color:"#FF6E4B", template:"\ub6f0\uc5b4\ub118\uae30%1", params:[{type:"Image", img:"/img/assets/week/blocks/jump.png", size:24}], syntax:["Scope", "jump"], func:function() {
+Entry.block.maze_step_jump = {skeleton:"basic", mode:"maze", color:"#FF6E4B", template:Lang.Menus.jump_over + "%1", params:[{type:"Image", img:"/img/assets/week/blocks/jump.png", size:24}], syntax:["Scope", "jump"], func:function() {
   if (this.isContinue) {
     if (this.isAction) {
       return Entry.STATIC.CONTINUE;
@@ -12953,7 +12953,7 @@ Entry.block.maze_step_jump = {skeleton:"basic", mode:"maze", color:"#FF6E4B", te
     return Entry.STATIC.CONTINUE;
   }
 }};
-Entry.block.maze_step_for = {skeleton:"basic_loop", mode:"maze", color:"#498DEB", template:"%1 \ubc88 \ubc18\ubcf5\ud558\uae30%2", syntax:["BasicIteration"], params:[{type:"Dropdown", key:"REPEAT", options:[[1, 1], [2, 2], [3, 3], [4, 4], [5, 5], [6, 6], [7, 7], [8, 8], [9, 9], [10, 10]], value:1}, {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic"}], func:function() {
+Entry.block.maze_step_for = {skeleton:"basic_loop", mode:"maze", color:"#498DEB", template:Lang.Menus.maze_repeat_times_1 + "%1" + Lang.Menus.maze_repeat_times_2 + "%2", syntax:["BasicIteration"], params:[{type:"Dropdown", key:"REPEAT", options:[[1, 1], [2, 2], [3, 3], [4, 4], [5, 5], [6, 6], [7, 7], [8, 8], [9, 9], [10, 10]], value:1}, {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic"}], func:function() {
   if (void 0 === this.repeatCount) {
     return this.repeatCount = this.block.params[0], Entry.STATIC.CONTINUE;
   }
@@ -12969,19 +12969,19 @@ Entry.block.maze_step_for = {skeleton:"basic_loop", mode:"maze", color:"#498DEB"
 }};
 Entry.block.test = {skeleton:"basic_boolean_field", mode:"maze", color:"#127CDB", template:"%1 this is test block %2", params:[{type:"Angle", value:"90"}, {type:"Dropdown", options:[[1, 1], [2, 2], [3, 3], [4, 4], [5, 5], [6, 6], [7, 7], [8, 8], [9, 9], [10, 10]], value:1}], func:function() {
 }};
-Entry.block.maze_repeat_until_1 = {skeleton:"basic_loop", mode:"maze", color:"#498DEB", template:"%1 \ub9cc\ub0a0 \ub54c \uae4c\uc9c0 \ubc18\ubcf5%2", syntax:["BasicWhile", "true"], params:[{type:"Image", img:"/img/assets/ntry/block_inner/repeat_goal_1.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic"}], func:function() {
+Entry.block.maze_repeat_until_1 = {skeleton:"basic_loop", mode:"maze", color:"#498DEB", template:Lang.Menus.maze_repeat_until_1 + "%1" + Lang.Menus.maze_repeat_until_2 + "%2", syntax:["BasicWhile", "true"], params:[{type:"Image", img:"/img/assets/ntry/block_inner/repeat_goal_1.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic"}], func:function() {
   var a = this.block.statements[0];
   if (0 !== a.getBlocks().length) {
     return this.executor.stepInto(a), Entry.STATIC.CONTINUE;
   }
 }};
-Entry.block.maze_repeat_until_2 = {skeleton:"basic_loop", mode:"maze", color:"#498DEB", template:"\ubaa8\ub4e0 %1 \ub9cc\ub0a0 \ub54c \uae4c\uc9c0 \ubc18\ubcf5%2", syntax:["BasicWhile", "true"], params:[{type:"Image", img:"/img/assets/ntry/block_inner/repeat_goal_1.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic"}], func:function() {
+Entry.block.maze_repeat_until_2 = {skeleton:"basic_loop", mode:"maze", color:"#498DEB", template:Lang.Menus.maze_repeat_until_all_1 + "%1" + Lang.Menus.maze_repeat_until_all_2, syntax:["BasicWhile", "true"], params:[{type:"Image", img:"/img/assets/ntry/block_inner/repeat_goal_1.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/for.png", size:24}], statements:[{accept:"basic"}], func:function() {
   var a = this.block.statements[0];
   if (0 !== a.getBlocks().length) {
     return this.executor.stepInto(a), Entry.STATIC.CONTINUE;
   }
 }};
-Entry.block.maze_step_if_1 = {skeleton:"basic_loop", mode:"maze", color:"#498DEB", template:"\ub9cc\uc57d \uc55e\uc5d0 %1 \uc788\ub2e4\uba74%2", syntax:["BasicIf", 'front == "wall"'], params:[{type:"Image", img:"/img/assets/ntry/block_inner/if_target_1.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/if.png", size:24}], statements:[{accept:"basic"}], func:function() {
+Entry.block.maze_step_if_1 = {skeleton:"basic_loop", mode:"maze", color:"#498DEB", template:Lang.Menus.ai_if_front_1 + "%1" + Lang.Menus.ai_if_front_2 + "%2", syntax:["BasicIf", 'front == "wall"'], params:[{type:"Image", img:"/img/assets/ntry/block_inner/if_target_1.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/if.png", size:24}], statements:[{accept:"basic"}], func:function() {
   if (!this.isContinue) {
     var a = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT), b, c;
     for (c in a) {
@@ -13003,7 +13003,7 @@ Entry.block.maze_step_if_1 = {skeleton:"basic_loop", mode:"maze", color:"#498DEB
     }
   }
 }};
-Entry.block.maze_step_if_2 = {skeleton:"basic_loop", mode:"maze", color:"#498DEB", template:"\ub9cc\uc57d \uc55e\uc5d0 %1 \uc788\ub2e4\uba74%2", syntax:["BasicIf", 'front == "bee"'], params:[{type:"Image", img:"/img/assets/ntry/bitmap/maze2/obstacle_01.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/if.png", size:24}], statements:[{accept:"basic"}], func:function() {
+Entry.block.maze_step_if_2 = {skeleton:"basic_loop", mode:"maze", color:"#498DEB", template:Lang.Menus.ai_if_front_1 + "%1" + Lang.Menus.ai_if_front_2 + "%2", syntax:["BasicIf", 'front == "bee"'], params:[{type:"Image", img:"/img/assets/ntry/bitmap/maze2/obstacle_01.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/if.png", size:24}], statements:[{accept:"basic"}], func:function() {
   if (!this.isContinue) {
     var a = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT), b, c;
     for (c in a) {
@@ -13021,7 +13021,7 @@ Entry.block.maze_step_if_2 = {skeleton:"basic_loop", mode:"maze", color:"#498DEB
     }
   }
 }};
-Entry.block.maze_call_function = {skeleton:"basic", mode:"maze", color:"#B57242", template:"\uc57d\uc18d \ubd88\ub7ec\uc624\uae30%1", syntax:["Scope", "promise"], params:[{type:"Image", img:"/img/assets/week/blocks/function.png", size:24}], func:function() {
+Entry.block.maze_call_function = {skeleton:"basic", mode:"maze", color:"#B57242", template:Lang.Menus.maze_call_function + "%1", syntax:["Scope", "promise"], params:[{type:"Image", img:"/img/assets/week/blocks/function.png", size:24}], func:function() {
   if (!this.funcExecutor) {
     var a = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.CODE), b;
     for (b in a) {
@@ -13033,12 +13033,12 @@ Entry.block.maze_call_function = {skeleton:"basic", mode:"maze", color:"#B57242"
     return Entry.STATIC.CONTINUE;
   }
 }};
-Entry.block.maze_define_function = {skeleton:"basic_define", mode:"maze", color:"#B57242", event:"define", template:"\uc57d\uc18d\ud558\uae30%1", syntax:["BasicFunction"], params:[{type:"Image", img:"/img/assets/week/blocks/function.png", size:24}], statements:[{accept:"basic"}], func:function(a) {
+Entry.block.maze_define_function = {skeleton:"basic_define", mode:"maze", color:"#B57242", event:"define", template:Lang.Menus.maze_function + "%1", syntax:["BasicFunction"], params:[{type:"Image", img:"/img/assets/week/blocks/function.png", size:24}], statements:[{accept:"basic"}], func:function(a) {
   if (!this.executed && (a = this.block.statements[0], 0 !== a.getBlocks().length)) {
     return this.executor.stepInto(a), this.executed = !0, Entry.STATIC.CONTINUE;
   }
 }};
-Entry.block.maze_step_if_3 = {skeleton:"basic_loop", mode:"maze", color:"#498DEB", template:"\ub9cc\uc57d \uc55e\uc5d0 %1 \uc788\ub2e4\uba74%2", syntax:["BasicIf", 'front == "banana"'], params:[{type:"Image", img:"/img/assets/ntry/block_inner/if_target_3.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/if.png", size:24}], statements:[{accept:"basic"}], func:function() {
+Entry.block.maze_step_if_3 = {skeleton:"basic_loop", mode:"maze", color:"#498DEB", template:Lang.Menus.ai_if_front_1 + "%1" + Lang.Menus.ai_if_front_2 + "%2", syntax:["BasicIf", 'front == "banana"'], params:[{type:"Image", img:"/img/assets/ntry/block_inner/if_target_3.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/if.png", size:24}], statements:[{accept:"basic"}], func:function() {
   if (!this.isContinue) {
     var a = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT), b, c;
     for (c in a) {
@@ -13056,7 +13056,7 @@ Entry.block.maze_step_if_3 = {skeleton:"basic_loop", mode:"maze", color:"#498DEB
     }
   }
 }};
-Entry.block.maze_step_if_4 = {skeleton:"basic_loop", mode:"maze", color:"#498DEB", template:"\ub9cc\uc57d \uc55e\uc5d0 %1 \uc788\ub2e4\uba74%2", syntax:["BasicIf", 'front == "wall"'], params:[{type:"Image", img:"/img/assets/ntry/block_inner/if_target_2.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/if.png", size:24}], statements:[{accept:"basic"}], func:function() {
+Entry.block.maze_step_if_4 = {skeleton:"basic_loop", mode:"maze", color:"#498DEB", template:Lang.Menus.ai_if_front_1 + "%1" + Lang.Menus.ai_if_front_2 + "%2", syntax:["BasicIf", 'front == "wall"'], params:[{type:"Image", img:"/img/assets/ntry/block_inner/if_target_2.png", size:18}, {type:"Image", img:"/img/assets/week/blocks/if.png", size:24}], statements:[{accept:"basic"}], func:function() {
   if (!this.isContinue) {
     var a = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT), b, c;
     for (c in a) {
@@ -13074,7 +13074,7 @@ Entry.block.maze_step_if_4 = {skeleton:"basic_loop", mode:"maze", color:"#498DEB
     }
   }
 }};
-Entry.block.maze_step_move_step = {skeleton:"basic", mode:"maze", color:"#A751E3", template:"\uc55e\uc73c\ub85c \ud55c \uce78 \uc774\ub3d9%1", syntax:["Scope", "move"], params:[{type:"Image", img:"/img/assets/week/blocks/moveStep.png", size:24}], func:function() {
+Entry.block.maze_step_move_step = {skeleton:"basic", mode:"maze", color:"#A751E3", template:Lang.Menus.maze_move_forward + "%1", syntax:["Scope", "move"], params:[{type:"Image", img:"/img/assets/week/blocks/moveStep.png", size:24}], func:function() {
   if (this.isContinue) {
     if (this.isAction) {
       return Entry.STATIC.CONTINUE;
@@ -13090,7 +13090,7 @@ Entry.block.maze_step_move_step = {skeleton:"basic", mode:"maze", color:"#A751E3
     return Entry.STATIC.CONTINUE;
   }
 }};
-Entry.block.maze_step_rotate_left = {skeleton:"basic", mode:"maze", color:"#A751E3", template:"\uc67c\ucabd\uc73c\ub85c \ud68c\uc804%1", syntax:["Scope", "left"], params:[{type:"Image", img:"/img/assets/week/blocks/turnL.png", size:24}], func:function() {
+Entry.block.maze_step_rotate_left = {skeleton:"basic", mode:"maze", color:"#A751E3", template:Lang.Menus.maze_turn_left + "%1", syntax:["Scope", "left"], params:[{type:"Image", img:"/img/assets/week/blocks/turnL.png", size:24}], func:function() {
   if (this.isContinue) {
     if (this.isAction) {
       return Entry.STATIC.CONTINUE;
@@ -13106,7 +13106,7 @@ Entry.block.maze_step_rotate_left = {skeleton:"basic", mode:"maze", color:"#A751
     return Entry.STATIC.CONTINUE;
   }
 }};
-Entry.block.maze_step_rotate_right = {skeleton:"basic", mode:"maze", color:"#A751E3", template:"\uc624\ub978\ucabd\uc73c\ub85c \ud68c\uc804%1", syntax:["Scope", "right"], params:[{type:"Image", img:"/img/assets/week/blocks/turnR.png", size:24}], func:function() {
+Entry.block.maze_step_rotate_right = {skeleton:"basic", mode:"maze", color:"#A751E3", template:Lang.Menus.maze_turn_right + "%1", syntax:["Scope", "right"], params:[{type:"Image", img:"/img/assets/week/blocks/turnR.png", size:24}], func:function() {
   if (this.isContinue) {
     if (this.isAction) {
       return Entry.STATIC.CONTINUE;
@@ -13307,7 +13307,7 @@ Entry.BlockMenu = function(a, b, c, d) {
     if (isNaN(b)) {
       return b;
     }
-    b = Number(b);
+    b = +b;
     for (var a = this._categories, d = this._categoryElems, e = 0;e < a.length;e++) {
       var f = a[e];
       if (!d[f].hasClass("entryRemove") && 0 === b--) {
@@ -13557,7 +13557,7 @@ Entry.BlockView.DRAG_RADIUS = 5;
           var h = e[g].trim();
           if (0 !== h.length) {
             if (d.test(h)) {
-              var k = Number(h.split("%")[1]) - 1, h = f[k];
+              var k = +h.split("%")[1] - 1, h = f[k];
               this._contents.push(new Entry["Field" + h.type](h, this, k, b));
             } else {
               this._contents.push(new Entry.FieldText({text:h}, this));
@@ -13687,11 +13687,11 @@ Entry.BlockView.DRAG_RADIUS = 5;
             return;
           }
           f = [];
-          var g = {text:"\ube14\ub85d \ubcf5\uc0ac & \ubd99\uc5ec\ub123\uae30", enable:this.copyable, callback:function() {
+          var g = {text:Lang.Blocks.Duplication_option, enable:this.copyable, callback:function() {
             e.code.createThread(k.copy());
-          }}, m = {text:"\ube14\ub85d \ubcf5\uc0ac", enable:this.copyable, callback:function() {
+          }}, m = {text:Lang.Blocks.copy_block, enable:this.copyable, callback:function() {
             h.block.copyToClipboard();
-          }}, n = {text:"\ube14\ub85d \uc0ad\uc81c", enable:k.isDeletable(), callback:function() {
+          }}, n = {text:Lang.Blocks.delete_block, enable:k.isDeletable(), callback:function() {
             h.block.doDestroy(!0);
           }};
           f.push(g);
@@ -14134,10 +14134,10 @@ Entry.Scope = function(a, b) {
     return String(this.getValue(b, a));
   };
   a.getNumberValue = function(b, a) {
-    return Number(this.getValue(b, a));
+    return +this.getValue(b, a);
   };
   a.getBooleanValue = function(b, a) {
-    return Number(this.getValue(b, a)) ? !0 : !1;
+    return +this.getValue(b, a) ? !0 : !1;
   };
   a.getField = function() {
     return this.block.params[0];
@@ -14146,7 +14146,7 @@ Entry.Scope = function(a, b) {
     return String(this.getField());
   };
   a.getNumberField = function() {
-    return Number(this.getField());
+    return +this.getField();
   };
   a.getStatement = function(b) {
     this.executor.stepInto(this.block.statements[0]);
@@ -15465,11 +15465,11 @@ Entry.Board = function(a) {
             return;
           }
           var f = this;
-          Entry.ContextMenu.show([{text:"\ubd99\uc5ec\ub123\uae30", enable:!!Entry.clipboard, callback:function() {
+          Entry.ContextMenu.show([{text:Lang.Blocks.Paste_blocks, enable:!!Entry.clipboard, callback:function() {
             f.code.createThread(Entry.clipboard).getFirstBlock().copyToClipboard();
-          }}, {text:"\ube14\ub85d \uc815\ub9ac\ud558\uae30", callback:function() {
+          }}, {text:Lang.Blocks.tidy_up_block, callback:function() {
             f.alignThreads();
-          }}, {text:"\ubaa8\ub4e0 \ucf54\ub4dc \uc0ad\uc81c\ud558\uae30", callback:function() {
+          }}, {text:Lang.Blocks.Clear_all_blocks, callback:function() {
             f.code.clear();
           }}]);
         }
@@ -16470,7 +16470,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
     return this.mode;
   };
   a.setMode = function(a, c) {
-    a = Number(a);
+    a = +a;
     var d = this.mode;
     switch(a) {
       case d:
@@ -17470,7 +17470,7 @@ Entry.Xml.getNumberValue = function(a, b, c) {
   }
   for (var d in c) {
     if (c[d].tagName && "VALUE" == c[d].tagName.toUpperCase() && c[d].getAttribute("name") == b) {
-      return Number(Entry.Xml.operate(a, c[d].children[0]));
+      return +Entry.Xml.operate(a, c[d].children[0]);
     }
   }
   return null;
@@ -17493,7 +17493,7 @@ Entry.Xml.getNumberField = function(a, b) {
   }
   for (var d in c) {
     if ("FIELD" == c[d].tagName.toUpperCase() && c[d].getAttribute("name") == a) {
-      return Number(c[d].textContent);
+      return +c[d].textContent;
     }
   }
 };

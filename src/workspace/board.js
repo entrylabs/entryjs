@@ -210,7 +210,7 @@ Entry.Board = function(option) {
             };
 
             var align = {
-                text: '블록 정리하기',
+                text: Lang.Blocks.tidy_up_block,
                 callback: function(){
                     that.alignThreads();
                 }

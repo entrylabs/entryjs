@@ -906,7 +906,7 @@ Entry.block.maze_repeat_until_2 = {
     skeleton: "basic_loop",
     mode: "maze",
     color: "#498DEB",
-    template: "모든 %1 만날 때 까지 반복%2",
+    template: Lang.Menus.maze_repeat_until_all_1 + "%1" + Lang.Menus.maze_repeat_until_all_2,
     syntax: ["BasicWhile", "true"],
     params: [
         {
