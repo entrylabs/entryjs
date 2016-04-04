@@ -13604,7 +13604,7 @@ a) {
     case "picture_name":
       return d = c.parent, d = d.pictures, d[d.indexOf(c.picture)].name;
   }
-}, "class":"calc", isNotFor:[]}, calc_basic:{color:"#FFD974", skeleton:"basic_string_field", statements:[], template:"%1 %2 %3", params:[{type:"Block", accept:"stringMagnet"}, {type:"Dropdown", options:[["+", "PLUS"], ["-", "MINUS"], ["x", "MULTI"], ["/", "DIVIDE"]], value:"PLUS", fontSize:11}, {type:"Block", accept:"stringMagnet"}], events:{}, func:function(b, a) {
+}, "class":"calc", isNotFor:[]}, calc_basic:{color:"#FFD974", skeleton:"basic_string_field", statements:[], template:"%1 %2 %3", params:[{type:"Block", accept:"stringMagnet"}, {type:"Dropdown", options:[["+", "PLUS"], ["-", "MINUS"], ["x", "MULTI"], ["/", "DIVIDE"]], value:"PLUS", fontSize:11, noArrow:!0}, {type:"Block", accept:"stringMagnet"}], events:{}, func:function(b, a) {
   var c = a.getField("OPERATOR", a), d = a.getNumberValue("LEFTHAND", a), e = a.getNumberValue("RIGHTHAND", a);
   return "PLUS" == c ? d + e : "MINUS" == c ? d - e : "MULTI" == c ? d * e : d / e;
 }, "class":"calc", isNotFor:[]}, calc_plus:{color:"#FFD974", skeleton:"basic_string_field", statements:[], template:"%1 %2 %3", params:[{type:"Block", accept:"stringMagnet"}, {type:"Text", text:"+", color:"#3D3D3D"}, {type:"Block", accept:"stringMagnet"}], events:{}, func:function(b, a) {
@@ -16417,6 +16417,7 @@ Entry.FieldDropdown = function(b, a, c) {
   this.box = new Entry.BoxModel;
   this.svgGroup = null;
   this._contents = b;
+  this._noArrow = b.noArrow;
   this._index = c;
   this.setValue(this.getValue());
   this._CONTENT_HEIGHT = b.dropdownHeight || a.getSkeleton().dropdownHeight || 16;
@@ -16434,17 +16435,18 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
     this.textElement.textContent = this.getTextByValue(this.getValue());
     var b = this.textElement.getBBox();
     this.textElement.attr({style:"white-space: pre; font-size:" + this._FONT_SIZE + "px", y:.25 * b.height});
-    var b = this.textElement.getComputedTextLength() + 18, d = this._CONTENT_HEIGHT;
-    this._header = this.svgGroup.elem("rect", {width:b, height:d, y:-d / 2, rx:this._ROUND, ry:this._ROUND, fill:"#fff", "fill-opacity":.4});
+    b = this.textElement.getComputedTextLength() + 18;
+    this._noArrow ? b -= 14 : this._arrow = this.svgGroup.elem("polygon", {points:"0,-2 6,-2 3,2", fill:a._schema.color, stroke:a._schema.color, transform:"translate(" + (b - 11) + ",0)"});
+    a = this._CONTENT_HEIGHT;
+    this._header = this.svgGroup.elem("rect", {width:b, height:a, y:-a / 2, rx:this._ROUND, ry:this._ROUND, fill:"#fff", "fill-opacity":.4});
     this.svgGroup.appendChild(this.textElement);
-    this._arrow = this.svgGroup.elem("polygon", {points:"0,-2 6,-2 3,2", fill:a._schema.color, stroke:a._schema.color, transform:"translate(" + (b - 11) + ",0)"});
     this._bindRenderOptions();
-    this.box.set({x:0, y:0, width:b, height:d});
+    this.box.set({x:0, y:0, width:b, height:a});
   };
   b.resize = function() {
     var a = this.textElement.getComputedTextLength() + 18;
+    this._noArrow ? a -= 14 : this._arrow.attr({transform:"translate(" + (a - 11) + ",0)"});
     this._header.attr({width:a});
-    this._arrow.attr({transform:"translate(" + (a - 11) + ",0)"});
     this.box.set({width:a});
     this._block.view.alignContent();
   };

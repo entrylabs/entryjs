@@ -18,6 +18,7 @@ Entry.FieldDropdown = function(content, blockView, index) {
     this.svgGroup = null;
 
     this._contents = content;
+    this._noArrow = content.noArrow;
     this._index = index;
     this.setValue(this.getValue());
 
@@ -63,6 +64,16 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
         var width =
             this.textElement.getComputedTextLength() + X_PADDING;
 
+        if (!this._noArrow) {
+            this._arrow = this.svgGroup.elem("polygon",{
+                points: "0,-2 6,-2 3,2",
+                fill: blockView._schema.color,
+                stroke: blockView._schema.color,
+                transform: "translate("+ (width-11) + ",0)"
+            });
+        } else width -= 14;
+
+
         var CONTENT_HEIGHT = this._CONTENT_HEIGHT;
 
         this._header = this.svgGroup.elem("rect", {
@@ -76,13 +87,6 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
         });
 
         this.svgGroup.appendChild(this.textElement);
-
-        this._arrow = this.svgGroup.elem("polygon",{
-            points: "0,-2 6,-2 3,2",
-            fill: blockView._schema.color,
-            stroke: blockView._schema.color,
-            transform: "translate("+ (width-11) + ",0)"
-        });
 
         this._bindRenderOptions();
 
@@ -99,12 +103,14 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
         var width =
             this.textElement.getComputedTextLength() + X_PADDING;
 
+        if (!this._noArrow) {
+            this._arrow.attr({
+                transform: "translate("+ (width-11) + ",0)"
+            });
+        } else width -= 14;
+
         this._header.attr({
             width: width
-        });
-
-        this._arrow.attr({
-            transform: "translate("+ (width-11) + ",0)"
         });
 
         this.box.set({width: width});

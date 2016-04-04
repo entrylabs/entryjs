@@ -2841,7 +2841,8 @@ Entry.block = {
           ]
         ],
         "value": "PLUS",
-        "fontSize": 11
+        "fontSize": 11,
+        "noArrow": true
       },
       {
         "type": "Block",
