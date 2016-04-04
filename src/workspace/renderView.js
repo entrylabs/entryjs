@@ -19,6 +19,7 @@ Entry.RenderView = function(dom, align) {
     this.suffix = 'renderView';
 
     this.visible = true;
+    this.disableMouseEvent = true;
     this._svgId = 'renderView_' + new Date().getTime();
     this._generateView();
 

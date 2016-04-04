@@ -56,7 +56,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
         }
         this.updateValueBlock(block);
 
-        if (this._blockView.getBoard().constructor == Entry.BlockMenu)
+        if (this._blockView.getBoard().constructor !== Entry.Board)
             this._valueBlock.view.removeControl();
 
     };

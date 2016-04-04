@@ -126,7 +126,8 @@ Entry.BlockView.DRAG_RADIUS = 5;
 
         this._moveTo(this.x, this.y, false);
         this._startContentRender(mode);
-        this._addControl();
+        if (this._board.disableMouseEvent !== true)
+            this._addControl();
 
         this.bindPrev();
     };
