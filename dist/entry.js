@@ -14873,8 +14873,11 @@ options:[["\uc804\uc9c4", "1"], ["\ud6c4\uc9c4", "2"], ["\uc88c\ud68c\uc804", "3
 }, "class":"text", isNotFor:["sprite"]}, text_flush:{color:"#FFCA36", skeleton:"basic", statements:[], template:"\ud14d\uc2a4\ud2b8 \ubaa8\ub450 \uc9c0\uc6b0\uae30", params:[], events:{}, func:function(b, a) {
   b.setText("");
   return a.callReturn();
-}, "class":"text", isNotFor:["sprite"]}, variableAddButton:{skeleton:"basic_button", color:"#eee", template:"%1", params:[{type:"Text", text:"\ubcc0\uc218 \ucd94\uac00", color:"#333", align:"center"}], events:{mousedown:[null]}}, listAddButton:{skeleton:"basic_button", color:"#eee", template:"%1", params:[{type:"Text", text:"\ub9ac\uc2a4\ud2b8 \ucd94\uac00", color:"#333", align:"center"}], events:{mousedown:[null]}}, change_variable:{color:"#E457DC", skeleton:"basic", statements:[], template:"%1 \uc5d0 %2 \ub9cc\ud07c \ub354\ud558\uae30 %3", 
-params:[{type:"DropdownDynamic", value:null, menuName:"variables", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/variable_03.png", size:12}], events:{}, func:function(b, a) {
+}, "class":"text", isNotFor:["sprite"]}, variableAddButton:{skeleton:"basic_button", color:"#eee", template:"%1", params:[{type:"Text", text:"\ubcc0\uc218 \ucd94\uac00", color:"#333", align:"center"}], events:{mousedown:[function() {
+  Entry.variableContainer.openVariableAddPanel("variable");
+}]}}, listAddButton:{skeleton:"basic_button", color:"#eee", template:"%1", params:[{type:"Text", text:"\ub9ac\uc2a4\ud2b8 \ucd94\uac00", color:"#333", align:"center"}], events:{mousedown:[function() {
+  Entry.variableContainer.openVariableAddPanel("list");
+}]}}, change_variable:{color:"#E457DC", skeleton:"basic", statements:[], template:"%1 \uc5d0 %2 \ub9cc\ud07c \ub354\ud558\uae30 %3", params:[{type:"DropdownDynamic", value:null, menuName:"variables", fontSize:11}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/variable_03.png", size:12}], events:{}, func:function(b, a) {
   var c = a.getField("VARIABLE", a), d = a.getNumberValue("VALUE", a), e = 0, d = Entry.parseNumber(d);
   if (0 == d && "boolean" == typeof d) {
     throw Error("Type is not correct");
