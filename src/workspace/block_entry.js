@@ -2842,7 +2842,7 @@ Entry.block = {
         ],
         "value": "PLUS",
         "fontSize": 11,
-        "noArrow": true
+        "arrowColor": 'red',
       },
       {
         "type": "Block",

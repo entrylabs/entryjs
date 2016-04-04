@@ -19,6 +19,7 @@ Entry.FieldDropdown = function(content, blockView, index) {
 
     this._contents = content;
     this._noArrow = content.noArrow;
+    this._arrowColor = content.arrowColor;
     this._index = index;
     this.setValue(this.getValue());
 
@@ -64,14 +65,9 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
         var width =
             this.textElement.getComputedTextLength() + X_PADDING;
 
-        if (!this._noArrow) {
-            this._arrow = this.svgGroup.elem("polygon",{
-                points: "0,-2 6,-2 3,2",
-                fill: blockView._schema.color,
-                stroke: blockView._schema.color,
-                transform: "translate("+ (width-11) + ",0)"
-            });
-        } else width -= 14;
+
+
+        if (this._noArrow) width -= 14;
 
 
         var CONTENT_HEIGHT = this._CONTENT_HEIGHT;
@@ -87,6 +83,16 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
         });
 
         this.svgGroup.appendChild(this.textElement);
+
+        if (!this._noArrow) {
+            var fillColor = this._arrowColor || blockView._schema.color;
+            this._arrow = this.svgGroup.elem("polygon",{
+                points: "0,-2.1 6.4,-2.1 3.2,2.1",
+                fill: fillColor,
+                stroke: fillColor,
+                transform: "translate("+ (width-11) + ",0)"
+            });
+        }
 
         this._bindRenderOptions();
 
