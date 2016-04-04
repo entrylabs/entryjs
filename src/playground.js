@@ -1197,11 +1197,7 @@ Entry.Playground.prototype.initializeResizeHandle = function(handle) {
 Entry.Playground.prototype.reloadPlayground = function () {
     var selectedCategory, selector;
 
-    if (document.getElementsByClassName('entrySelectedCategory')[0]) {
-        selectedCategory = document.getElementsByClassName('entrySelectedCategory')[0];
-        selector = selectedCategory.getAttribute('id').substring(13);
-        //Entry.playground.mainWorkspace.getBlockMenu().selectMenu(selector);
-    }
+    this.mainWorkspace.getBlockMenu().reDraw();
 
     if (Entry.stage.selectedObject) {
         //TODO : reload board

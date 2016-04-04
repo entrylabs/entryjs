@@ -11787,7 +11787,7 @@ Entry.VariableContainer.prototype.createFunctionView = function(b) {
   e.bindOnClick(function(a) {
     a.stopPropagation();
     Entry.Func.edit(b);
-    Entry.playground && (Entry.playground.changeViewMode("code"), "func" != Entry.playground.selectedMenu && Entry.playground.selectMenu("func"));
+    Entry.playground && (Entry.playground.changeViewMode("code"), "func" != Entry.playground.selectedMenu && Entry.playground.mainWorkspace.blockMenu.selectMenu("func"));
   });
   var f = Entry.createElement("div");
   f.addClass("entryVariableFunctionElementNameWorkspace");
@@ -15197,17 +15197,19 @@ Entry.BlockMenu = function(b, a, c, d) {
   };
   b.selectMenu = function(a, b) {
     var d = this._convertSelector(a);
-    "variable" == d && Entry.playground.checkVariables();
-    var e = this._categoryElems[d], f = this._selectedCategoryView, g = !1, h = this.workspace.board, k = h.view;
-    f && f.removeClass("entrySelectedCategory");
-    e != f || b ? f || (this.visible || (g = !0, k.addClass("foldOut"), Entry.playground.showTabs()), k.removeClass("folding"), this.visible = !0) : (k.addClass("folding"), this._selectedCategoryView = null, e.removeClass("entrySelectedCategory"), Entry.playground.hideTabs(), g = !0, this.visible = !1);
-    g && Entry.bindAnimationCallbackOnce(k, function() {
-      h.scroller.resizeScrollBar.call(h.scroller);
-      k.removeClass("foldOut");
-      Entry.windowResized.notify();
-    });
-    this.visible && (e.addClass("entrySelectedCategory"), f = this._categoryCodes[d], this._selectedCategoryView = e, e.addClass("entrySelectedCategory"), f.constructor !== Entry.Code && (f = this._categoryCodes[d] = new Entry.Code(f)), this.changeCode(f));
-    this.lastSelector = d;
+    if (d) {
+      "variable" == d && Entry.playground.checkVariables();
+      var e = this._categoryElems[d], f = this._selectedCategoryView, g = !1, h = this.workspace.board, k = h.view;
+      f && f.removeClass("entrySelectedCategory");
+      e != f || b ? f || (this.visible || (g = !0, k.addClass("foldOut"), Entry.playground.showTabs()), k.removeClass("folding"), this.visible = !0) : (k.addClass("folding"), this._selectedCategoryView = null, e.removeClass("entrySelectedCategory"), Entry.playground.hideTabs(), g = !0, this.visible = !1);
+      g && Entry.bindAnimationCallbackOnce(k, function() {
+        h.scroller.resizeScrollBar.call(h.scroller);
+        k.removeClass("foldOut");
+        Entry.windowResized.notify();
+      });
+      this.visible && (f = this._categoryCodes[d], this._selectedCategoryView = e, e.addClass("entrySelectedCategory"), f.constructor !== Entry.Code && (f = this._categoryCodes[d] = new Entry.Code(f)), this.changeCode(f));
+      this.lastSelector = d;
+    }
   };
   b._generateCategoryCodes = function(a) {
     this._categoryCodes = {};
@@ -19080,8 +19082,7 @@ Entry.Playground.prototype.initializeResizeHandle = function(b) {
   });
 };
 Entry.Playground.prototype.reloadPlayground = function() {
-  var b;
-  document.getElementsByClassName("entrySelectedCategory")[0] && (b = document.getElementsByClassName("entrySelectedCategory")[0], b.getAttribute("id").substring(13));
+  this.mainWorkspace.getBlockMenu().reDraw();
 };
 Entry.Playground.prototype.flushPlayground = function() {
   this.object = null;

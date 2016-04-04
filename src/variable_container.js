@@ -813,7 +813,7 @@ Entry.VariableContainer.prototype.createFunctionView = function(func) {
         if (Entry.playground) {
             Entry.playground.changeViewMode('code');
             if (Entry.playground.selectedMenu != 'func')
-                Entry.playground.selectMenu('func');
+                Entry.playground.mainWorkspace.blockMenu.selectMenu('func');
         }
     });
 

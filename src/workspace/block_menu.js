@@ -382,6 +382,7 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
 
     p.selectMenu = function(selector, doNotFold) {
         var name = this._convertSelector(selector);
+        if (!name) return;
         if (name == 'variable')
             Entry.playground.checkVariables();
 
@@ -420,7 +421,6 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
         }
 
         if (this.visible) {
-            elem.addClass(className);
             var code = this._categoryCodes[name];
 
             this._selectedCategoryView = elem;
