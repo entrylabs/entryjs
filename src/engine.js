@@ -615,9 +615,6 @@ Entry.Engine.prototype.captureKeyEvent = function(e) {
         } else if (keyCode == 90) {
             e.preventDefault();
             Entry.dispatchEvent(e.shiftKey ? 'redo' : 'undo');
-        } else if (keyCode > 48 && keyCode < 58) {
-            e.preventDefault();
-            Entry.playground.selectMenu(keyCode - 49);
         }
     } else if (Entry.engine.isState('run')) {
         Entry.container.mapEntityIncludeCloneOnScene(Entry.engine.raiseKeyEvent,

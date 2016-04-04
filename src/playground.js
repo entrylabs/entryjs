@@ -1523,8 +1523,7 @@ Entry.Playground.prototype.updateHW = function() {
         self.blockMenu.unbanClass("arduinoDisconnected");
         Entry.hw.banHW();
     }
-    if (self.object)
-        self.blockMenu.selectMenu(self.blockMenu.lastSelector, true);
+    if (self.object) self.blockMenu.redraw();
 };
 
 Entry.Playground.prototype.toggleLineBreak = function(isLineBreak) {

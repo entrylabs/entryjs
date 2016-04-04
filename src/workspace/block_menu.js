@@ -60,6 +60,8 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
 
     if (Entry.documentMousedown)
         Entry.documentMousedown.attach(this, this.setSelectedBlock);
+    if (this._categoryCodes && Entry.keyPressed)
+        Entry.keyPressed.attach(this, this._captureKeyEvent)
 };
 
 (function(p) {
@@ -499,5 +501,17 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
 
     p._handleDragBlock = function() {
         this._boardBlockView = null;
+    };
+
+    p._captureKeyEvent = function(e) {
+        var keyCode = e.keyCode;
+        var type = Entry.type;
+
+        if (e.ctrlKey && type == 'workspace') {
+            if (keyCode > 48 && keyCode < 58) {
+                e.preventDefault();
+                this.selectMenu(keyCode - 49);
+            }
+        }
     };
 })(Entry.BlockMenu.prototype);

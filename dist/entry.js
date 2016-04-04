@@ -5866,8 +5866,7 @@ Entry.Engine.prototype.raiseEventOnEntity = function(b, a) {
 };
 Entry.Engine.prototype.captureKeyEvent = function(b) {
   var a = b.keyCode, c = Entry.type;
-  b.ctrlKey && "workspace" == c ? 83 == a ? (b.preventDefault(), Entry.dispatchEvent("saveWorkspace")) : 82 == a ? (b.preventDefault(), Entry.engine.run()) : 90 == a ? (b.preventDefault(), Entry.dispatchEvent(b.shiftKey ? "redo" : "undo")) : 48 < a && 58 > a && (b.preventDefault(), Entry.playground.selectMenu(a - 49)) : Entry.engine.isState("run") && (Entry.container.mapEntityIncludeCloneOnScene(Entry.engine.raiseKeyEvent, ["press_some_key", a]), Entry.container.mapEntityIncludeCloneOnScene(Entry.engine.raiseKeyEvent, 
-  ["when_some_key_pressed", a]));
+  b.ctrlKey && "workspace" == c ? 83 == a ? (b.preventDefault(), Entry.dispatchEvent("saveWorkspace")) : 82 == a ? (b.preventDefault(), Entry.engine.run()) : 90 == a && (b.preventDefault(), Entry.dispatchEvent(b.shiftKey ? "redo" : "undo")) : Entry.engine.isState("run") && (Entry.container.mapEntityIncludeCloneOnScene(Entry.engine.raiseKeyEvent, ["press_some_key", a]), Entry.container.mapEntityIncludeCloneOnScene(Entry.engine.raiseKeyEvent, ["when_some_key_pressed", a]));
   Entry.engine.isState("stop") && "workspace" === c && 37 <= a && 40 >= a && Entry.stage.moveSprite(b);
 };
 Entry.Engine.prototype.raiseKeyEvent = function(b, a) {
@@ -15039,6 +15038,7 @@ Entry.BlockMenu = function(b, a, c, d) {
   this.observe(this, "_handleDragBlock", ["dragBlock"]);
   this._scroll && (this._scroller = new Entry.BlockMenuScroller(this), this._addControl(b));
   Entry.documentMousedown && Entry.documentMousedown.attach(this, this.setSelectedBlock);
+  this._categoryCodes && Entry.keyPressed && Entry.keyPressed.attach(this, this._captureKeyEvent);
 };
 (function(b) {
   b.schema = {code:null, dragBlock:null, closeBlock:null, selectedBlockView:null};
@@ -15258,6 +15258,10 @@ Entry.BlockMenu = function(b, a, c, d) {
   };
   b._handleDragBlock = function() {
     this._boardBlockView = null;
+  };
+  b._captureKeyEvent = function(a) {
+    var b = a.keyCode, d = Entry.type;
+    a.ctrlKey && "workspace" == d && 48 < b && 58 > b && (a.preventDefault(), this.selectMenu(b - 49));
   };
 })(Entry.BlockMenu.prototype);
 Entry.BlockMenuScroller = function(b) {
@@ -19243,7 +19247,7 @@ Entry.Playground.prototype.updateHW = function() {
   if (b.blockMenu) {
     var a = Entry.hw;
     a && a.connected ? (b.blockMenu.unbanClass("arduinoConnected"), b.blockMenu.banClass("arduinoDisconnected"), a.banHW(), a.hwModule && b.blockMenu.unbanClass(a.hwModule.name)) : (b.blockMenu.banClass("arduinoConnected"), b.blockMenu.unbanClass("arduinoDisconnected"), Entry.hw.banHW());
-    b.object && b.blockMenu.selectMenu(b.blockMenu.lastSelector, !0);
+    b.object && b.blockMenu.redraw();
   }
 };
 Entry.Playground.prototype.toggleLineBreak = function(b) {
