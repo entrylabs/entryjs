@@ -11516,7 +11516,7 @@ Entry.VariableContainer.prototype.createDom = function(b) {
   this.functionAddButton_ = c;
   c.bindOnClick(function(b) {
     Entry.playground.changeViewMode("code");
-    "func" != Entry.playground.selectedMenu && Entry.playground.selectMenu("func");
+    "func" != Entry.playground.selectedMenu && Entry.playground.mainWorkspace.blockMenu.selectMenu("func");
     a.createFunction();
   });
   return b;

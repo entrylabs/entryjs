@@ -130,7 +130,7 @@ Entry.VariableContainer.prototype.createDom = function(view) {
     functionAddButton.bindOnClick(function(e) {
         Entry.playground.changeViewMode('code');
         if (Entry.playground.selectedMenu != 'func')
-            Entry.playground.selectMenu('func');
+            Entry.playground.mainWorkspace.blockMenu.selectMenu('func');
         that.createFunction();
     });
 
