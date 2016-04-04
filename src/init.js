@@ -71,10 +71,15 @@ Entry.init = function(container, options) {
     Entry.soundQueue.installPlugin(createjs.Sound);
 
     Entry.loadAudio_(
-        [Entry.mediaFilePath + 'media/click.mp3', Entry.mediaFilePath + 'media/click.wav', Entry.mediaFilePath + 'media/click.ogg'], 'click');
+        [Entry.mediaFilePath + 'sounds/click.mp3',
+        Entry.mediaFilePath + 'sounds/click.wav',
+        Entry.mediaFilePath + 'sounds/click.ogg'], 'entryMagneting');
     Entry.loadAudio_(
-        [Entry.mediaFilePath + 'media/delete.mp3', Entry.mediaFilePath + 'media/delete.ogg', Entry.mediaFilePath + 'media/delete.wav'], 'delete');
+        [Entry.mediaFilePath + 'sounds/delete.mp3',
+        Entry.mediaFilePath + 'sounds/delete.ogg',
+        Entry.mediaFilePath + 'sounds/delete.wav'], 'entryDelete');
 
+    createjs.Sound.stop();
 
 };
 
