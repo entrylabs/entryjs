@@ -16647,8 +16647,6 @@ Entry.Playground.prototype.generateCodeView = function(a) {
   a = Entry.Dom(a);
   b = Entry.Dom("div", {parent:a, id:"entryWorkspaceBoard", class:"entryWorkspaceBoard"});
   a = Entry.Dom("div", {parent:a, id:"entryWorkspaceBlockMenu", class:"entryWorkspaceBlockMenu"});
-  this.blockDriver = new Entry.BlockDriver;
-  this.blockDriver.convert();
   Entry.block.when_run_button_click.event = "start";
   this.mainWorkspace = new Entry.Workspace({blockMenu:{dom:a, align:"LEFT", categoryData:EntryStatic.getAllBlocks(), scroll:!0}, board:{dom:b}});
   this.blockMenu = this.mainWorkspace.blockMenu;
