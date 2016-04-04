@@ -4401,7 +4401,9 @@ Entry.block = {
     ],
     "events": {
       "mousedown": [
-        null
+            function() {
+                Entry.variableContainer.createFunction();
+            }
       ]
     }
   },
