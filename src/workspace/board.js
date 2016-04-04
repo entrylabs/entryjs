@@ -201,7 +201,7 @@ Entry.Board = function(option) {
 
 
             var paste = {
-                text: '붙여넣기',
+                text: Lang.Blocks.Paste_blocks,
                 enable: !!Entry.clipboard,
                 callback: function(){
                     that.code.createThread(Entry.clipboard)
@@ -217,7 +217,7 @@ Entry.Board = function(option) {
             };
 
             var remove = {
-                text: '모든 코드 삭제하기',
+                text: Lang.Blocks.Clear_all_blocks,
                 callback: function(){
                     that.code.clear();
                 }

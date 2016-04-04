@@ -589,7 +589,7 @@ Entry.block.jr_repeat_until_dest = {
 Entry.block.jr_if_construction = {
     skeleton: "basic_loop",
     color: "#498DEB",
-    template: "만약 %1 앞에 있다면 %2",
+    template: Lang.Menus.ai_if_front_1 + "%1" + Lang.Menus.ai_if_front_2 + "%2",
     params: [
         {
             type: "Image",
@@ -652,7 +652,7 @@ Entry.block.jr_if_construction = {
 Entry.block.jr_if_speed = {
     skeleton: "basic_loop",
     color: "#498DEB",
-    template: "만약 %1 앞에 있다면 %2",
+    template: Lang.Menus.ai_if_front_1 + "%1" + Lang.Menus.ai_if_front_2 + "%2",
     params: [
         {
             type: "Image",
@@ -721,7 +721,8 @@ Entry.block.maze_step_start = {
     mode: "maze",
     event: "start",
     color: "#3BBD70",
-    template: "%1 시작하기를 클릭했을 때",
+    // template: "%1 시작하기를 클릭했을 때",
+    template: "%1" + Lang.Menus.maze_when_run,
     syntax: ["Program"],
     params: [
         {
@@ -751,7 +752,7 @@ Entry.block.maze_step_jump = {
     skeleton: "basic",
     mode: "maze",
     color: "#FF6E4B",
-    template: "뛰어넘기%1",
+    template: Lang.Menus.jump_over + "%1",
     params: [
         {
             type: "Image",
@@ -788,7 +789,7 @@ Entry.block.maze_step_for = {
     skeleton: "basic_loop",
     mode: "maze",
     color: "#498DEB",
-    template: "%1 번 반복하기%2",
+    template: Lang.Menus.maze_repeat_times_1 + "%1" + Lang.Menus.maze_repeat_times_2 +"%2",
     syntax: ["BasicIteration"],
     params: [
         {
@@ -872,7 +873,7 @@ Entry.block.maze_repeat_until_1 = {
     skeleton: "basic_loop",
     mode: "maze",
     color: "#498DEB",
-    template: "%1 만날 때 까지 반복%2",
+    template: Lang.Menus.maze_repeat_until_1 + "%1" + Lang.Menus.maze_repeat_until_2 + "%2",
     syntax: ["BasicWhile", "true"],
     params: [
         {
@@ -939,7 +940,7 @@ Entry.block.maze_step_if_1 = {
     skeleton: "basic_loop",
     mode: "maze",
     color: "#498DEB",
-    template: "만약 앞에 %1 있다면%2",
+    template: Lang.Menus.ai_if_front_1 + "%1" + Lang.Menus.ai_if_front_2 + "%2",
     syntax: ["BasicIf", 'front == "wall"'],
     params: [
         {
@@ -1019,7 +1020,7 @@ Entry.block.maze_step_if_2 = {
     skeleton: "basic_loop",
     mode: "maze",
     color: "#498DEB",
-    template: "만약 앞에 %1 있다면%2",
+    template: Lang.Menus.ai_if_front_1 + "%1" + Lang.Menus.ai_if_front_2 + "%2",
     syntax: ["BasicIf", 'front == "bee"'],
     params: [
         {
@@ -1086,7 +1087,7 @@ Entry.block.maze_call_function = {
     skeleton: "basic",
     mode: "maze",
     color: "#B57242",
-    template: "약속 불러오기%1",
+    template: Lang.Menus.maze_call_function + "%1",
     syntax: ["Scope", "promise"],
     params: [
         {
@@ -1121,7 +1122,7 @@ Entry.block.maze_define_function = {
     mode: "maze",
     color: "#B57242",
     event: "define",
-    template: "약속하기%1",
+    template: Lang.Menus.maze_function + "%1",
     syntax: ["BasicFunction"],
     params: [
         {
@@ -1151,7 +1152,7 @@ Entry.block.maze_step_if_3 = {
     skeleton: "basic_loop",
     mode: "maze",
     color: "#498DEB",
-    template: "만약 앞에 %1 있다면%2",
+    template: Lang.Menus.ai_if_front_1 + "%1" + Lang.Menus.ai_if_front_2 + "%2",
     syntax: ["BasicIf", 'front == "banana"'],
     params: [
         {
@@ -1218,7 +1219,7 @@ Entry.block.maze_step_if_4 = {
     skeleton: "basic_loop",
     mode: "maze",
     color: "#498DEB",
-    template: "만약 앞에 %1 있다면%2",
+    template: Lang.Menus.ai_if_front_1 + "%1" + Lang.Menus.ai_if_front_2 + "%2",
     syntax: ["BasicIf", 'front == "wall"'],
     params: [
         {
@@ -1285,7 +1286,7 @@ Entry.block.maze_step_move_step = {
     skeleton: "basic",
     mode: "maze",
     color: "#A751E3",
-    template: "앞으로 한 칸 이동%1",
+    template: Lang.Menus.maze_move_forward + "%1",
     syntax: ["Scope", "move"],
     params: [
         {
@@ -1320,7 +1321,7 @@ Entry.block.maze_step_rotate_left= {
     skeleton: "basic",
     mode: "maze",
     color: "#A751E3",
-    template: "왼쪽으로 회전%1",
+    template: Lang.Menus.maze_turn_left + "%1",
     syntax: ["Scope", "left"],
     params: [
         {
@@ -1356,7 +1357,7 @@ Entry.block.maze_step_rotate_right = {
     skeleton: "basic",
     mode: "maze",
     color: "#A751E3",
-    template: "오른쪽으로 회전%1",
+    template: Lang.Menus.maze_turn_right + "%1",
     syntax: ["Scope", "right"],
     params: [
         {

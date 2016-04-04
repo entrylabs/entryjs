@@ -366,7 +366,7 @@ Entry.BlockView.DRAG_RADIUS = 5;
             var options = [];
 
             var copyAndPaste = {
-                text: '블록 복사 & 붙여넣기',
+                text: Lang.Blocks.Duplication_option,
                 enable: this.copyable,
                 callback: function(){
                     board.code.createThread(block.copy());
@@ -374,7 +374,7 @@ Entry.BlockView.DRAG_RADIUS = 5;
             };
 
             var copy = {
-                text: '블록 복사',
+                text: Lang.Blocks.copy_block,
                 enable: this.copyable,
                 callback: function(){
                     that.block.copyToClipboard();
@@ -382,7 +382,7 @@ Entry.BlockView.DRAG_RADIUS = 5;
             };
 
             var remove = {
-                text: '블록 삭제',
+                text: Lang.Blocks.delete_block,
                 enable: block.isDeletable(),
                 callback: function(){
                     that.block.doDestroy(true);
