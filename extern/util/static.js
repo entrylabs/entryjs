@@ -1071,7 +1071,7 @@ EntryStatic.blockInfo = {
         "usage": ["answer"]
     },
     "combine_something": {
-        "xml": "<block type='combine_something'> <value name='VALUE1'> <block type='text'> <field name='NAME'>" + Lang.Blocks.block_hi + "</field> </block> </value> <value name='VALUE2'> <block type='text'> <field name='NAME'>엔트리</field> </block> </value> </block>",
+        "xml": "<block type='combine_something'> <value name='VALUE1'> <block type='text'> <field name='NAME'>" + Lang.Blocks.block_hi + "</field> </block> </value> <value name='VALUE2'> <block type='text'> <field name='NAME'>" + Lang.Blocks.entry + "</field> </block> </value> </block>",
         "class": "calc_string",
         "isNotFor": [],
         "description": "입력한 두 개의 문자를 결합합니다."
@@ -1385,7 +1385,7 @@ EntryStatic.blockInfo = {
         "usage": []
     },
     "length_of_string": {
-        "xml": "<block type='length_of_string'><value name='STRING'><block type='text'><field name='NAME'>엔트리</field></block></value></block>",
+        "xml": "<block type='length_of_string'><value name='STRING'><block type='text'><field name='NAME'>" + Lang.Blocks.entry + "</field></block></value></block>",
         "class": "calc_string",
         "isNotFor": [],
         "usage": []
@@ -1397,7 +1397,7 @@ EntryStatic.blockInfo = {
         "usage": []
     },
     "replace_string": {
-        "xml": "<block type='replace_string'><value name='STRING'><block type='text'><field name='NAME'>" + Lang.Blocks.hi_entry + "</field></block></value><value name='OLD_WORD'><block type='text'><field name='NAME'>안녕</field></block></value><value name='NEW_WORD'><block type='text'><field name='NAME'>반가워</field></block></value></block>",
+        "xml": "<block type='replace_string'><value name='STRING'><block type='text'><field name='NAME'>" + Lang.Blocks.hi_entry + "</field></block></value><value name='OLD_WORD'><block type='text'><field name='NAME'>" + Lang.Blocks.hello + "</field></block></value><value name='NEW_WORD'><block type='text'><field name='NAME'>" + Lang.Blocks.nice + "</field></block></value></block>",
         "class": "calc_string",
         "isNotFor": [],
         "usage": []
@@ -1409,7 +1409,7 @@ EntryStatic.blockInfo = {
         "usage": []
     },
     "index_of_string": {
-        "xml": "<block type='index_of_string'><value name='LEFTHAND'><block type='text'><field name='NAME'>" + Lang.Blocks.hi_entry + "</field></block></value><value name='RIGHTHAND'><block type='text'><field name='NAME'>엔트리</field></block></value></block>",
+        "xml": "<block type='index_of_string'><value name='LEFTHAND'><block type='text'><field name='NAME'>" + Lang.Blocks.hi_entry + "</field></block></value><value name='RIGHTHAND'><block type='text'><field name='NAME'>" + Lang.Blocks.entry + "</field></block></value></block>",
         "class": "calc_string",
         "isNotFor": [],
         "usage": []
