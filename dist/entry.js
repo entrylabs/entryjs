@@ -1974,7 +1974,7 @@ Blockly.Blocks.function_create = {init:function() {
 Entry.block.function_create = function(b, a) {
   return a.callReturn();
 };
-Entry.block.function_create = {skeleton:"basic", color:"#cc7337", event:"funcDef", template:"\ud568\uc218 \uc815\uc758\ud558\uae30 %1 %2", params:[{type:"Block", accept:"basic_param", value:{type:"function_field_label"}}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/function_03.png", size:12}]};
+Entry.block.function_create = {skeleton:"basic", color:"#cc7337", event:"funcDef", template:"\ud568\uc218 \uc815\uc758\ud558\uae30 %1 %2", params:[{type:"Block", accept:"paramMagnet", value:{type:"function_field_label"}}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/function_03.png", size:12}]};
 Blockly.Blocks.function_general = {init:function() {
   this.setColour("#cc7337");
   this.setInputsInline(!0);
@@ -13842,7 +13842,7 @@ func:function(b, a) {
 }, "class":"clone", isNotFor:[]}, functionAddButton:{skeleton:"basic_button", color:"#eee", isNotFor:["functionInit"], template:"%1", params:[{type:"Text", text:"\ud568\uc218 \ucd94\uac00", color:"#333", align:"center"}], events:{mousedown:[function() {
   Entry.variableContainer.createFunction();
 }]}}, function_field_label:{skeleton:"basic_param", isNotFor:["functionEdit"], color:"#f9c535", template:"%1%2", params:[{type:"TextInput", value:"\ud568\uc218"}, {type:"Output", accept:"paramMagnet"}]}, function_field_string:{skeleton:"basic_param", isNotFor:["functionEdit"], color:"#ffd974", template:"%1%2", params:[{type:"Block", accept:"stringMagnet", restore:!0}, {type:"Output", accept:"paramMagnet"}]}, function_field_boolean:{skeleton:"basic_param", isNotFor:["functionEdit"], color:"#aeb8ff", 
-template:"%1%2", params:[{type:"Block", accept:"booleanMagnet", restore:!0}, {type:"Output", accept:"paramMagnet"}]}, function_param_string:{skeleton:"basic_string_field", color:"#ffd974", template:"\ubb38\uc790/\uc22b\uc790\uac12"}, function_param_boolean:{skeleton:"basic_boolean_field", color:"#aeb8ff", template:"\ud310\ub2e8\uac12"}, function_create:{skeleton:"basic", color:"#cc7337", event:"funcDef", template:"\ud568\uc218 \uc815\uc758\ud558\uae30 %1 %2", params:[{type:"Block", accept:"basic_param", 
+template:"%1%2", params:[{type:"Block", accept:"booleanMagnet", restore:!0}, {type:"Output", accept:"paramMagnet"}]}, function_param_string:{skeleton:"basic_string_field", color:"#ffd974", template:"\ubb38\uc790/\uc22b\uc790\uac12"}, function_param_boolean:{skeleton:"basic_boolean_field", color:"#aeb8ff", template:"\ud310\ub2e8\uac12"}, function_create:{skeleton:"basic", color:"#cc7337", event:"funcDef", template:"\ud568\uc218 \uc815\uc758\ud558\uae30 %1 %2", params:[{type:"Block", accept:"paramMagnet", 
 value:{type:"function_field_label"}}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/function_03.png", size:12}]}, function_general:{skeleton:"basic", color:"#cc7337", template:"\ud568\uc218", params:[]}, hamster_move_forward:{color:"#00979D", skeleton:"basic", statements:[], template:"\uc55e\uc73c\ub85c \uc774\ub3d9\ud558\uae30 %1", params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, func:function(b, a) {
   var c = Entry.hw.sendQueue;
   if (a.isStart) {
@@ -15240,6 +15240,7 @@ Entry.BlockMenu = function(b, a, c, d) {
   b.unbanClass = function(a) {
     a = this._bannedClass.indexOf(a);
     -1 < a && this._bannedClass.splice(a, 1);
+    this.align();
   };
   b.checkBanClass = function(a) {
     if (a) {
@@ -16246,6 +16247,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
   };
 })(Entry.FieldAngle.prototype);
 Entry.FieldBlock = function(b, a, c, d) {
+  Entry.Model(this, !1);
   this._blockView = a;
   this._block = a.block;
   this._valueBlock = null;
@@ -16259,10 +16261,12 @@ Entry.FieldBlock = function(b, a, c, d) {
   this.svgGroup = null;
   this._position = b.position;
   this.box.observe(a, "alignContent", ["width", "height"]);
+  this.observe(this, "_updateBG", ["magneting"], !1);
   this.renderStart(a.getBoard(), d);
 };
 Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
 (function(b) {
+  b.schema = {magneting:!1};
   b.renderStart = function(a, b) {
     this.svgGroup = this._blockView.contentSvgGroup.elem("g");
     this.view = this;
@@ -16301,7 +16305,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
         case "stringMagnet":
           a = "text";
           break;
-        case "basic_param":
+        case "paramMagnet":
           a = "function_field_label";
       }
     }
@@ -16386,6 +16390,12 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
   };
   b.spliceBlock = function() {
     this.updateValueBlock();
+  };
+  b._updateBG = function() {
+    this.magneting ? this._bg = this.svgGroup.elem("path", {d:"m 8,12 l -4,0 -2,-2 0,-3 3,0 1,-1 0,-12 -1,-1 -3,0 0,-3 2,-2 l 4,0 z", fill:"#fff", stroke:"#fff", "fill-opacity":.7, transform:"translate(0,12)"}) : this._bg && (this._bg.remove(), delete this._bg);
+  };
+  b.getThread = function() {
+    return this;
   };
 })(Entry.FieldBlock.prototype);
 Entry.FieldColor = function(b, a, c) {
@@ -16723,7 +16733,6 @@ Entry.FieldOutput = function(b, a, c, d) {
   this._content = b;
   this.acceptType = b.accept;
   this.view = this;
-  this.thread = this;
   this.svgGroup = null;
   this._position = b.position;
   this.box.observe(a, "alignContent", ["width", "height"]);
@@ -16820,6 +16829,9 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldOutput);
   };
   b.getParent = function() {
     return this._parent;
+  };
+  b.getThread = function() {
+    return this;
   };
 })(Entry.FieldOutput.prototype);
 Entry.FieldStatement = function(b, a, c) {
@@ -17618,7 +17630,8 @@ Entry.Board = function(b) {
     d += a.contentPos.y;
     for (a = 0;a < g.length;a++) {
       var k = g[a], m = b + k.box.x, n = d - 24, l = d;
-      k instanceof Entry.FieldBlock ? (n = k._valueBlock) && (h = h.concat(this._getOutputMetaData(n.view, m, d + k.box.y, e + .01, f))) : k instanceof Entry.FieldOutput && k.acceptType === f && (h.push({point:n, endPoint:l, startBlock:k, blocks:[]}), h.push({point:l, blocks:[]}), k.absX = m, k.zIndex = e, k.width = 20, (n = k._valueBlock) && (n.view.dragInstance || (h = h.concat(this._getOutputMetaData(n.view, b + k.box.x, d + k.box.y, e + .01, f)))));
+      k instanceof Entry.FieldBlock ? (k.acceptType === f && (h.push({point:n, endPoint:l, startBlock:k, blocks:[]}), h.push({point:l, blocks:[]}), k.absX = m, k.zIndex = e, k.width = 20), (n = k._valueBlock) && (h = h.concat(this._getOutputMetaData(n.view, m, d + k.box.y, e + .01, f)))) : k instanceof Entry.FieldOutput && k.acceptType === f && (h.push({point:n, endPoint:l, startBlock:k, blocks:[]}), h.push({point:l, blocks:[]}), k.absX = m, k.zIndex = e, k.width = 20, (n = k._valueBlock) && (n.view.dragInstance || 
+      (h = h.concat(this._getOutputMetaData(n.view, b + k.box.x, d + k.box.y, e + .01, f)))));
     }
     return h;
   };
@@ -18155,7 +18168,7 @@ Entry.Block.MAGNET_OFFSET = .4;
   };
   b.replace = function(a) {
     this.thread.cut(this);
-    a.thread.replace(this);
+    a.getThread().replace(this);
     this.getCode().changeEvent.notify();
   };
   b.getPrevBlock = function() {

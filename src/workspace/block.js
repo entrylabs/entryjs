@@ -407,7 +407,7 @@ Entry.Block.MAGNET_OFFSET = 0.4;
 
     p.replace = function(targetBlock) {
         this.thread.cut(this);
-        targetBlock.thread.replace(this);
+        targetBlock.getThread().replace(this);
         this.getCode().changeEvent.notify();
     };
 

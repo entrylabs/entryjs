@@ -658,6 +658,22 @@ Entry.Board = function(option) {
             var startY = cursorY - 24;
             var endY = cursorY;
             if (content instanceof Entry.FieldBlock) {
+                if (content.acceptType === targetType) {
+                    metaData.push({
+                        point: startY,
+                        endPoint: endY,
+                        startBlock: content,
+                        blocks: []
+                    });
+                    metaData.push({
+                        point: endY,
+                        blocks: []
+                    });
+                        content.absX = startX;
+                        content.zIndex = zIndex;
+                        content.width = 20;
+                }
+
                 var contentBlock = content._valueBlock;
                 if (contentBlock) {
                     metaData = metaData.concat(
@@ -669,37 +685,36 @@ Entry.Board = function(option) {
                     );
                 }
                 continue;
+            } else if (content instanceof Entry.FieldOutput) {
+                if (content.acceptType !== targetType)
+                    continue;
+                metaData.push({
+                    point: startY,
+                    endPoint: endY,
+                    startBlock: content,
+                    blocks: []
+                });
+                metaData.push({
+                    point: endY,
+                    blocks: []
+                });
+                content.absX = startX;
+                content.zIndex = zIndex;
+                content.width = 20;
+                var contentBlock = content._valueBlock;
+                if (!contentBlock)
+                    continue;
+                if (contentBlock.view.dragInstance)
+                    continue;
+                var contentBlockView = contentBlock.view;
+                metaData = metaData.concat(
+                    this._getOutputMetaData(contentBlockView,
+                                              cursorX + content.box.x,
+                                              cursorY + content.box.y,
+                                              zIndex + 0.01,
+                                              targetType)
+                );
             }
-            if (!(content instanceof Entry.FieldOutput))
-                continue;
-            if (content.acceptType !== targetType)
-                continue;
-            metaData.push({
-                point: startY,
-                endPoint: endY,
-                startBlock: content,
-                blocks: []
-            });
-            metaData.push({
-                point: endY,
-                blocks: []
-            });
-            content.absX = startX;
-            content.zIndex = zIndex;
-            content.width = 20;
-            var contentBlock = content._valueBlock;
-            if (!contentBlock)
-                continue;
-            if (contentBlock.view.dragInstance)
-                continue;
-            var contentBlockView = contentBlock.view;
-            metaData = metaData.concat(
-                this._getOutputMetaData(contentBlockView,
-                                          cursorX + content.box.x,
-                                          cursorY + content.box.y,
-                                          zIndex + 0.01,
-                                          targetType)
-            );
         }
         return metaData;
     };

@@ -9,6 +9,7 @@ goog.require("Entry.Field");
  *
  */
 Entry.FieldBlock = function(content, blockView, index, mode) {
+    Entry.Model(this, false);
     this._blockView = blockView;
     this._block = blockView.block;
     this._valueBlock = null;
@@ -31,6 +32,7 @@ Entry.FieldBlock = function(content, blockView, index, mode) {
     this._position = content.position;
 
     this.box.observe(blockView, "alignContent", ["width", "height"]);
+    this.observe(this, "_updateBG", ["magneting"], false);
 
     this.renderStart(blockView.getBoard(), mode);
 };
@@ -38,6 +40,10 @@ Entry.FieldBlock = function(content, blockView, index, mode) {
 Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
 
 (function(p) {
+    p.schema = {
+        magneting: false
+    };
+
     p.renderStart = function(board, mode) {
         this.svgGroup = this._blockView.contentSvgGroup.elem("g");
         this.view = this;
@@ -127,7 +133,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
                 case "stringMagnet":
                     blockType = "text";
                     break;
-                case "basic_param":
+                case "paramMagnet":
                     blockType = "function_field_label";
                     break;
             }
@@ -250,5 +256,26 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
     p.spliceBlock = function() {
         this.updateValueBlock();
     };
+
+    p._updateBG = function() {
+        if (this.magneting) {
+            this._bg = this.svgGroup.elem("path", {
+                d: "m 8,12 l -4,0 -2,-2 0,-3 3,0 1,-1 0,-12 -1,-1 -3,0 0,-3 2,-2 l 4,0 z",
+                fill: "#fff",
+                stroke: "#fff",
+                'fill-opacity': 0.7,
+                transform: "translate(0,12)"
+            });
+        } else {
+            if (this._bg) {
+                this._bg.remove();
+                delete this._bg;
+            }
+        }
+    };
+
+    p.getThread = function() {
+         return this;
+    }
 
 })(Entry.FieldBlock.prototype);

@@ -464,6 +464,7 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
         var index = this._bannedClass.indexOf(className);
         if (index > -1)
             this._bannedClass.splice(index, 1);
+        this.align();
     };
 
     p.checkBanClass = function(blockInfo) {

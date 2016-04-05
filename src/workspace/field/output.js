@@ -26,7 +26,6 @@ Entry.FieldOutput = function(content, blockView, index, mode) {
     this.acceptType = content.accept;
 
     this.view = this;
-    this.thread = this;
 
     this.svgGroup = null;
 
@@ -231,6 +230,10 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldOutput);
 
     p.getParent = function() {
         return this._parent;
+    };
+
+    p.getThread = function() {
+         return this;
     };
 
 })(Entry.FieldOutput.prototype);
