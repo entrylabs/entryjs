@@ -979,3 +979,59 @@ Entry.Utils.addFilters = function (boardSvgDom, suffix) {
         result: 'matrixOut', in:"offOut", type: 'matrix', values: '1.3 0 0 0 0 0 1.3 0 0 0 0 0 1.3 0 0 0 0 0 1 0'
     });
 };
+
+Entry.Utils.addBlockPattern = function (boardSvgDom, suffix) {
+    var pattern = boardSvgDom.elem('pattern', {
+        id: 'blockHoverPattern_' + suffix,
+        class: 'blockHoverPattern',
+        patternUnits: "userSpaceOnUse",
+        patternTransform: "translate(12, 0)",
+        x: 0, y: 0,
+        width: 125,
+        height: 33
+    });
+
+    var group = pattern.elem('g');
+
+    //this rect should be controlled by the board
+    //according to the target block
+    var elem = group.elem("rect", {
+        x: 0, y: 0,
+        width: 125,
+        height: 33
+    });
+
+    group.elem("image", {
+        class: 'pattern1',
+        href: '/lib/entryjs/images/block_pattern_1.png',
+        x: 0, y: 0,
+        width: 125,
+        height: 33
+    });
+
+    group.elem("image", {
+        class: 'pattern2',
+        href: '/lib/entryjs/images/block_pattern_2.png',
+        x: 0, y: 0,
+        width: 125,
+        height: 33
+    });
+
+    group.elem("image", {
+        class: 'pattern3',
+        href: '/lib/entryjs/images/block_pattern_3.png',
+        x: 0, y: 0,
+        width: 125,
+        height: 33
+    });
+
+    group.elem("image", {
+        class: 'pattern4',
+        href: '/lib/entryjs/images/block_pattern_4.png',
+        x: 0, y: 0,
+        width: 125,
+        height: 33
+    });
+
+    return elem;
+};

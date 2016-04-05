@@ -25,6 +25,11 @@
     stroke: #798EB1;
 }
 
+.block g text,
+.block g image {
+    pointer-events: none;
+}
+
 svg .svgBlockGroup text {
     white-space: pre;
 }
@@ -106,5 +111,69 @@ svg .svgBlockGroup text {
         background-color: #127cdb;
         color: white;
     }
+}
+
+.blockHoverPattern {
+    .pattern1 {
+        opacity: 0;
+        .animation-duration(0.7s);
+        .animation-direction(alternate);
+        .animation-name(blockPatternAnimation);
+        .animation-iteration-count(infinite);
+    }
+
+    .pattern2 {
+        opacity: 0;
+        .animation-delay(0.33s);
+        .animation-duration(0.7s);
+        .animation-direction(alternate);
+        .animation-name(blockPatternAnimation);
+        .animation-iteration-count(infinite);
+    }
+
+    .pattern3 {
+        opacity: 0;
+        .animation-delay(0.67s);
+        .animation-duration(0.7s);
+        .animation-direction(alternate);
+        .animation-name(blockPatternAnimation);
+        .animation-iteration-count(infinite);
+    }
+
+    .pattern4 {
+        opacity: 0;
+        .animation-delay(1s);
+        .animation-duration(0.7s);
+        .animation-direction(alternate);
+        .animation-name(blockPatternAnimation);
+        .animation-iteration-count(infinite);
+    }
+
+}
+
+//hover block background pattern animation
+@keyframes blockPatternAnimation {
+    from {opacity:0}
+    to {opacity:0.2}
+}
+
+@-o-keyframes blockPatternAnimation {
+    from {opacity:0}
+    to {opacity:0.2}
+}
+
+@-ms-keyframes blockPatternAnimation {
+    from {opacity:0}
+    to {opacity:0.2}
+}
+
+@-moz-keyframes blockPatternAnimation {
+    from {opacity:0}
+    to {opacity:0.2}
+}
+
+@-webkit-keyframes blockPatternAnimation {
+    from {opacity:0}
+    to {opacity:0.2}
 }
 

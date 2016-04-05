@@ -4686,6 +4686,10 @@ span.CodeMirror-selectedtext {
   stroke-width: 3px;
   stroke: #798EB1;
 }
+.block g text,
+.block g image {
+  pointer-events: none;
+}
 svg .svgBlockGroup text {
   white-space: pre;
 }
@@ -4754,6 +4758,145 @@ svg .svgBlockGroup text {
 .entry-widget-dropdown .rect:hover {
   background-color: #127cdb;
   color: white;
+}
+.blockHoverPattern .pattern1 {
+  opacity: 0;
+  -webkit-animation-duration: 0.7s;
+  -moz-animation-duration: 0.7s;
+  -ms-animation-duration: 0.7s;
+  -o-animation-duration: 0.7s;
+  -webkit-animation-direction: alternate;
+  -moz-animation-direction: alternate;
+  -ms-animation-direction: alternate;
+  -o-animation-direction: alternate;
+  -webkit-animation-name: blockPatternAnimation;
+  -moz-animation-name: blockPatternAnimation;
+  -ms-animation-name: blockPatternAnimation;
+  -o-animation-name: blockPatternAnimation;
+  animation-name: blockPatternAnimation;
+  -webkit-animation-iteration-count: infinite;
+  -moz-animation-iteration-count: infinite;
+  -ms-animation-iteration-count: infinite;
+  -o-animation-iteration-count: infinite;
+  animation-iteration-count: infinite;
+}
+.blockHoverPattern .pattern2 {
+  opacity: 0;
+  -webkit-animation-delay: 0.33s;
+  -moz-animation-delay: 0.33s;
+  -ms-animation-delay: 0.33s;
+  -o-animation-delay: 0.33s;
+  animation-delay: 0.33s;
+  -webkit-animation-duration: 0.7s;
+  -moz-animation-duration: 0.7s;
+  -ms-animation-duration: 0.7s;
+  -o-animation-duration: 0.7s;
+  -webkit-animation-direction: alternate;
+  -moz-animation-direction: alternate;
+  -ms-animation-direction: alternate;
+  -o-animation-direction: alternate;
+  -webkit-animation-name: blockPatternAnimation;
+  -moz-animation-name: blockPatternAnimation;
+  -ms-animation-name: blockPatternAnimation;
+  -o-animation-name: blockPatternAnimation;
+  animation-name: blockPatternAnimation;
+  -webkit-animation-iteration-count: infinite;
+  -moz-animation-iteration-count: infinite;
+  -ms-animation-iteration-count: infinite;
+  -o-animation-iteration-count: infinite;
+  animation-iteration-count: infinite;
+}
+.blockHoverPattern .pattern3 {
+  opacity: 0;
+  -webkit-animation-delay: 0.67s;
+  -moz-animation-delay: 0.67s;
+  -ms-animation-delay: 0.67s;
+  -o-animation-delay: 0.67s;
+  animation-delay: 0.67s;
+  -webkit-animation-duration: 0.7s;
+  -moz-animation-duration: 0.7s;
+  -ms-animation-duration: 0.7s;
+  -o-animation-duration: 0.7s;
+  -webkit-animation-direction: alternate;
+  -moz-animation-direction: alternate;
+  -ms-animation-direction: alternate;
+  -o-animation-direction: alternate;
+  -webkit-animation-name: blockPatternAnimation;
+  -moz-animation-name: blockPatternAnimation;
+  -ms-animation-name: blockPatternAnimation;
+  -o-animation-name: blockPatternAnimation;
+  animation-name: blockPatternAnimation;
+  -webkit-animation-iteration-count: infinite;
+  -moz-animation-iteration-count: infinite;
+  -ms-animation-iteration-count: infinite;
+  -o-animation-iteration-count: infinite;
+  animation-iteration-count: infinite;
+}
+.blockHoverPattern .pattern4 {
+  opacity: 0;
+  -webkit-animation-delay: 1s;
+  -moz-animation-delay: 1s;
+  -ms-animation-delay: 1s;
+  -o-animation-delay: 1s;
+  animation-delay: 1s;
+  -webkit-animation-duration: 0.7s;
+  -moz-animation-duration: 0.7s;
+  -ms-animation-duration: 0.7s;
+  -o-animation-duration: 0.7s;
+  -webkit-animation-direction: alternate;
+  -moz-animation-direction: alternate;
+  -ms-animation-direction: alternate;
+  -o-animation-direction: alternate;
+  -webkit-animation-name: blockPatternAnimation;
+  -moz-animation-name: blockPatternAnimation;
+  -ms-animation-name: blockPatternAnimation;
+  -o-animation-name: blockPatternAnimation;
+  animation-name: blockPatternAnimation;
+  -webkit-animation-iteration-count: infinite;
+  -moz-animation-iteration-count: infinite;
+  -ms-animation-iteration-count: infinite;
+  -o-animation-iteration-count: infinite;
+  animation-iteration-count: infinite;
+}
+@keyframes blockPatternAnimation {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 0.2;
+  }
+}
+@-o-keyframes blockPatternAnimation {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 0.2;
+  }
+}
+@-ms-keyframes blockPatternAnimation {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 0.2;
+  }
+}
+@-moz-keyframes blockPatternAnimation {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 0.2;
+  }
+}
+@-webkit-keyframes blockPatternAnimation {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 0.2;
+  }
 }
 
 .dragNone {
