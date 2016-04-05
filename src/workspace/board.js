@@ -67,7 +67,9 @@ Entry.Board = function(option) {
         this.generateButtons();
         this.suffix = 'overlayBoard';
     } else this.suffix = 'board';
+
     Entry.Utils.addFilters(this.svg, this.suffix);
+    this.patternRect = Entry.Utils.addBlockPattern(this.svg, this.suffix);
 
     Entry.ANIMATION_DURATION = 200;
     Entry.BOARD_PADDING = 100;
@@ -744,5 +746,10 @@ Entry.Board = function(option) {
             .appendChild(block.view.svgGroup);
         this.code.dominate(block.thread);
     };
+
+    p.setPatternRectFill = function(color) {
+        this.patternRect.attr({fill:color});
+    };
+
 
 })(Entry.Board.prototype);

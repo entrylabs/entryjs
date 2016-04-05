@@ -103,9 +103,21 @@ Entry.BlockView.DRAG_RADIUS = 5;
         this._updateMagnet();
 
         this._path = this.pathGroup.elem("path");
+
+        if (this.getBoard().patternRect) {
+            $(this._path).mouseenter(function(e) {
+                that._changeFill(true);
+            });
+
+            $(this._path).mouseleave(function(e) {
+                that._changeFill(false);
+            });
+        }
+
         var fillColor = this._schema.color;
         if (!this.block.isDeletable())
             fillColor = Entry.Utils.colorLighten(fillColor);
+        this._fillColor = fillColor;
         var pathStyle = {
             d: path,
             fill: fillColor,
@@ -896,5 +908,19 @@ Entry.BlockView.DRAG_RADIUS = 5;
             o.destroy();
         }
     };
+
+    p._changeFill = function(isPattern) {
+        if (!this.getBoard().patternRect) return;
+        var path = this._path;
+        var fillColor = this._fillColor;
+
+        if (isPattern) {
+            var board = this.getBoard();
+            board.setPatternRectFill(fillColor);
+            fillColor = "url(#blockHoverPattern_" + this.getBoard().suffix +")";
+        }
+        path.attr({fill:fillColor});
+    };
+
 
 })(Entry.BlockView.prototype);

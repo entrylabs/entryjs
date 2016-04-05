@@ -10690,6 +10690,14 @@ Entry.Utils.addFilters = function(b, a) {
   c.elem("feOffset", {result:"offOut", in:"SourceGraphic", dx:0, dy:0});
   c.elem("feColorMatrix", {result:"matrixOut", in:"offOut", type:"matrix", values:"1.3 0 0 0 0 0 1.3 0 0 0 0 0 1.3 0 0 0 0 0 1 0"});
 };
+Entry.Utils.addBlockPattern = function(b, a) {
+  var c = b.elem("pattern", {id:"blockHoverPattern_" + a, class:"blockHoverPattern", patternUnits:"userSpaceOnUse", patternTransform:"translate(12, 0)", x:0, y:0, width:125, height:33}).elem("g"), d = c.elem("rect", {x:0, y:0, width:125, height:33});
+  c.elem("image", {class:"pattern1", href:"/lib/entryjs/images/block_pattern_1.png", x:0, y:0, width:125, height:33});
+  c.elem("image", {class:"pattern2", href:"/lib/entryjs/images/block_pattern_2.png", x:0, y:0, width:125, height:33});
+  c.elem("image", {class:"pattern3", href:"/lib/entryjs/images/block_pattern_3.png", x:0, y:0, width:125, height:33});
+  c.elem("image", {class:"pattern4", href:"/lib/entryjs/images/block_pattern_4.png", x:0, y:0, width:125, height:33});
+  return d;
+};
 Entry.Model = function(b, a) {
   var c = Entry.Model;
   c.generateSchema(b);
@@ -15029,6 +15037,7 @@ Entry.BlockMenu = function(b, a, c, d) {
   this.setWidth();
   this.svg = Entry.SVG(this._svgId);
   Entry.Utils.addFilters(this.svg, this.suffix);
+  this.patternRect = Entry.Utils.addBlockPattern(this.svg, this.suffix);
   this.svgGroup = this.svg.elem("g");
   this.svgThreadGroup = this.svgGroup.elem("g");
   this.svgThreadGroup.board = this;
@@ -15266,6 +15275,9 @@ Entry.BlockMenu = function(b, a, c, d) {
     var b = a.keyCode, d = Entry.type;
     a.ctrlKey && "workspace" == d && 48 < b && 58 > b && (a.preventDefault(), this.selectMenu(b - 49));
   };
+  b.setPatternRectFill = function(a) {
+    this.patternRect.attr({fill:a});
+  };
 })(Entry.BlockMenu.prototype);
 Entry.BlockMenuScroller = function(b) {
   var a = this;
@@ -15411,8 +15423,14 @@ Entry.BlockView.DRAG_RADIUS = 5;
     this.pathGroup = this.svgGroup.elem("g");
     this._updateMagnet();
     this._path = this.pathGroup.elem("path");
+    this.getBoard().patternRect && ($(this._path).mouseenter(function(a) {
+      d._changeFill(!0);
+    }), $(this._path).mouseleave(function(a) {
+      d._changeFill(!1);
+    }));
     var g = this._schema.color;
     this.block.isDeletable() || (g = Entry.Utils.colorLighten(g));
+    this._fillColor = g;
     f = {d:f, fill:g, class:"blockPath"};
     if (this.magnet.next) {
       g = this.getBoard().suffix, this.pathGroup.attr({filter:"url(#entryBlockShadowFilter_" + g + ")"});
@@ -15795,6 +15813,13 @@ Entry.BlockView.DRAG_RADIUS = 5;
   b._destroyObservers = function() {
     for (var a = this._observers;a.length;) {
       a.pop().destroy();
+    }
+  };
+  b._changeFill = function(a) {
+    if (this.getBoard().patternRect) {
+      var b = this._path, d = this._fillColor;
+      a && (this.getBoard().setPatternRectFill(d), d = "url(#blockHoverPattern_" + this.getBoard().suffix + ")");
+      b.attr({fill:d});
     }
   };
 })(Entry.BlockView.prototype);
@@ -17262,6 +17287,7 @@ Entry.Board = function(b) {
   this.svgBlockGroup.board = this;
   b.isOverlay ? (this.wrapper.addClass("entryOverlayBoard"), this.generateButtons(), this.suffix = "overlayBoard") : this.suffix = "board";
   Entry.Utils.addFilters(this.svg, this.suffix);
+  this.patternRect = Entry.Utils.addBlockPattern(this.svg, this.suffix);
   Entry.ANIMATION_DURATION = 200;
   Entry.BOARD_PADDING = 100;
   this.updateOffset();
@@ -17624,6 +17650,9 @@ Entry.Board = function(b) {
     a = a.getFirstBlock();
     this.svgBlockGroup.appendChild(a.view.svgGroup);
     this.code.dominate(a.thread);
+  };
+  b.setPatternRectFill = function(a) {
+    this.patternRect.attr({fill:a});
   };
 })(Entry.Board.prototype);
 Entry.skeleton = function() {
