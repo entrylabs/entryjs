@@ -26,6 +26,7 @@ Entry.HW = function() {
         '24': Entry.Hamster,
         '25': Entry.Albert,
         '31': Entry.Bitbrick,
+        '42': Entry.Arduino,
         '51': Entry.Neobot
     };
 };
