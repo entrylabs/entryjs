@@ -714,8 +714,8 @@ Blockly.Blocks.arduino_toggle_led = {init:function() {
   this.setNextStatement(!0);
 }};
 Entry.block.arduino_toggle_led = function(a, b) {
-  var c = b.getNumberValue("VALUE"), d = "on" == b.getField("OPERATOR") ? 255 : 0;
-  Entry.hw.setDigitalPortValue(c, d);
+  var c = b.getNumberValue("VALUE"), d = b.getField("OPERATOR");
+  Entry.hw.setDigitalPortValue(c, "on" == d ? 255 : 0);
   return b.callReturn();
 };
 Blockly.Blocks.arduino_toggle_pwm = {init:function() {
@@ -1677,10 +1677,10 @@ Entry.block.wait_second = function(a, b) {
   }
   b.isStart = !0;
   b.timeFlag = 1;
-  var c = b.getNumberValue("SECOND", b), c = 60 / (Entry.FPS || 60) * c * 1E3;
+  var c = b.getNumberValue("SECOND", b);
   setTimeout(function() {
     b.timeFlag = 0;
-  }, c);
+  }, 60 / (Entry.FPS || 60) * c * 1E3);
   return b;
 };
 Blockly.Blocks.repeat_basic = {init:function() {
@@ -8860,7 +8860,11 @@ Entry.Parser = function(a, b, c) {
       this._parser = new Entry.BlockParser(this.syntax);
       break;
     case "blockPy":
-      this._parser = new Entry.PyBlockParser(this.syntax);
+      this._parser = new Entry.PyBlockParser(this.syntax), CodeMirror.commands.javascriptComplete = function(b) {
+        CodeMirror.showHint(b, null, {globalScope:d});
+      }, c.on("keyup", function(b, a) {
+        !b.state.completionActive && 65 <= a.keyCode && 95 >= a.keyCode && CodeMirror.showHint(b, null, {completeSingle:!1, globalScope:d});
+      });
   }
 };
 (function(a) {

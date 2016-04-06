@@ -60,6 +60,16 @@ Entry.Parser = function(mode, syntax, cm) {
             break;
         case "blockPy":
             this._parser = new Entry.PyBlockParser(this.syntax);
+
+            CodeMirror.commands.javascriptComplete = function (cm) {
+                CodeMirror.showHint(cm, null, {globalScope:assistScope});
+            }
+
+            cm.on("keyup", function (cm, event) {
+                if (!cm.state.completionActive &&  (event.keyCode >= 65 && event.keyCode <= 95))  {
+                    CodeMirror.showHint(cm, null, {completeSingle: false, globalScope:assistScope});
+                }
+            });
             break;
     }
 };
