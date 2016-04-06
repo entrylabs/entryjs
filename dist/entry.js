@@ -11633,7 +11633,7 @@ Entry.createElement = function(a, b) {
   return c;
 };
 Entry.makeAutolink = function(a) {
-  return a.replace(/(http|https|ftp|telnet|news|irc):\/\/([-/.a-zA-Z0-9_~#%$?&=:200-377()][^)\]}]+)/gi, "<a href='$1://$2' target='_blank'>$1://$2</a>").replace(/([xA1-xFEa-z0-9_-]+@[xA1-xFEa-z0-9-]+.[a-z0-9-]+)/gi, "<a href='mailto:$1'>$1</a>");
+  return a ? a.replace(/(http|https|ftp|telnet|news|irc):\/\/([-/.a-zA-Z0-9_~#%$?&=:200-377()][^)\]}]+)/gi, "<a href='$1://$2' target='_blank'>$1://$2</a>").replace(/([xA1-xFEa-z0-9_-]+@[xA1-xFEa-z0-9-]+.[a-z0-9-]+)/gi, "<a href='mailto:$1'>$1</a>") : "";
 };
 Entry.generateHash = function() {
   return ("0000" + (Math.random() * Math.pow(36, 4) << 0).toString(36)).substr(-4);
@@ -12603,7 +12603,7 @@ Entry.HW = function() {
   this.settingQueue = {};
   this.socketType = this.hwModule = this.selectedDevice = null;
   Entry.addEventListener("stop", this.setZero);
-  this.hwInfo = {11:Entry.Arduino, 12:Entry.SensorBoard, 24:Entry.Hamster, 25:Entry.Albert, 31:Entry.Bitbrick, 42:Entry.Arduino, 51:Entry.Neobot};
+  this.hwInfo = {11:Entry.Arduino, 12:Entry.SensorBoard, 13:Entry.CODEino, 24:Entry.Hamster, 25:Entry.Albert, 31:Entry.Bitbrick, 42:Entry.Arduino, 51:Entry.Neobot, 71:Entry.Robotis_carCont, 72:Entry.Robotis_openCM70};
 };
 Entry.HW.TRIAL_LIMIT = 1;
 p = Entry.HW.prototype;
@@ -12612,41 +12612,50 @@ p.initSocket = function() {
     if (this.connectTrial >= Entry.HW.TRIAL_LIMIT) {
       this.isFirstConnect || Entry.toast.alert(Lang.Menus.connect_hw, Lang.Menus.connect_fail, !1), this.isFirstConnect = !1;
     } else {
-      var a = this, b = {reconnection:!1}, c = Entry.getBrowserType().toUpperCase();
-      if (-1 < c.indexOf("IE") || -1 < c.indexOf("EDGE")) {
-        b.transports = ["polling"];
+      var a = this, b, c;
+      if (-1 < location.protocol.indexOf("https")) {
+        c = new WebSocket("wss://localhost:23518");
+      } else {
+        try {
+          b = new WebSocket("ws://localhost:23518");
+        } catch (d) {
+        }
+        try {
+          c = new WebSocket("wss://localhost:23518");
+        } catch (d) {
+        }
       }
-      var d = new WebSocket("ws://localhost:23518"), e = io.connect("ws://localhost:23517", b);
       this.connected = !1;
-      d.binaryType = "arraybuffer";
-      e.binaryType = "arraybuffer";
+      b.binaryType = "arraybuffer";
+      c.binaryType = "arraybuffer";
       this.connectTrial++;
-      d.onopen = function() {
+      b.onopen = function() {
         a.socketType = "WebSocket";
-        a.initHardware(d);
+        a.initHardware(b);
       };
-      d.onmessage = function(b) {
+      b.onmessage = function(b) {
         b = JSON.parse(b.data);
         a.checkDevice(b);
         a.updatePortData(b);
       };
-      d.onclose = function() {
+      b.onclose = function() {
         "WebSocket" === a.socketType && (this.socket = null, a.initSocket());
       };
-      e.connect();
-      e.on("connect", function(b) {
-        a.socketType = "SocketIO";
-        a.initHardware(e);
-      });
-      e.on("message", function(b) {
-        "string" === typeof b && (b = JSON.parse(b), a.checkDevice(b), a.updatePortData(b));
-      });
-      e.on("disconnect", function(b) {
-        "SocketIO" === a.socketType && (this.socket = null, e.destroy(e), a.initSocket());
-      });
+      c.onopen = function() {
+        a.socketType = "WebSocketSecurity";
+        a.initHardware(c);
+      };
+      c.onmessage = function(b) {
+        b = JSON.parse(b.data);
+        a.checkDevice(b);
+        a.updatePortData(b);
+      };
+      c.onclose = function() {
+        "WebSocketSecurity" === a.socketType && (this.socket = null, a.initSocket());
+      };
       Entry.dispatchEvent("hwChanged");
     }
-  } catch (f) {
+  } catch (d) {
   }
 };
 p.retryConnect = function() {
@@ -12662,6 +12671,7 @@ p.initHardware = function(a) {
 };
 p.setDigitalPortValue = function(a, b) {
   this.sendQueue[a] = b;
+  this.removePortReadable(a);
 };
 p.getAnalogPortValue = function(a) {
   return this.connected ? this.portData["a" + a] : 0;
@@ -12675,38 +12685,42 @@ p.getDigitalPortValue = function(a) {
 };
 p.setPortReadable = function(a) {
   this.sendQueue.readablePorts || (this.sendQueue.readablePorts = []);
-  this.sendQueue.readablePorts.push(a);
+  var b = !1, c;
+  for (c in this.sendQueue.readablePorts) {
+    if (this.sendQueue.readablePorts[c] == a) {
+      b = !0;
+      break;
+    }
+  }
+  b || this.sendQueue.readablePorts.push(a);
 };
-p.update = function() {
-  if (this.socket) {
-    if ("SocketIO" === this.socketType) {
-      if ("open" != this.socket.io.readyState) {
-        return;
-      }
-      this.socket.emit("message", JSON.stringify(this.sendQueue));
-    } else {
-      if ("WebSocket" === this.socketType) {
-        if (1 != this.socket.readyState) {
-          return;
-        }
-        this.socket.send(JSON.stringify(this.sendQueue));
+p.removePortReadable = function(a) {
+  if (this.sendQueue.readablePorts || Array.isArray(this.sendQueue.readablePorts)) {
+    var b, c;
+    for (c in this.sendQueue.readablePorts) {
+      if (this.sendQueue.readablePorts[c] == a) {
+        b = c;
+        break;
       }
     }
-    this.sendQueue.readablePorts = [];
+    this.sendQueue.readablePorts = b ? this.sendQueue.readablePorts.slice(0, b).concat(this.sendQueue.readablePorts.slice(b + 1, this.sendQueue.readablePorts.length)) : [];
   }
+};
+p.update = function() {
+  this.socket && 1 == this.socket.readyState && this.socket.send(JSON.stringify(this.sendQueue));
 };
 p.updatePortData = function(a) {
   this.portData = a;
   this.hwMonitor && this.hwMonitor.update();
 };
 p.closeConnection = function() {
-  this.socket && ("SocketIO" === this.socketType && this.socket.emit("close"), this.socket.close());
+  this.socket && this.socket.close();
 };
 p.downloadConnector = function() {
-  window.open("http://play-entry.org/down/entry-hw_v1.1.zip", "_blank").focus();
+  window.open("http://play-entry.org/down/Entry_HW_v1.1.3.exe", "_blank").focus();
 };
 p.downloadSource = function() {
-  window.open("http://play-entry.com/lib/EntryArduino/arduino/entry.ino", "_blank").focus();
+  window.open("http://play-entry.com/down/board.ino", "_blank").focus();
 };
 p.setZero = function() {
   Entry.hw.hwModule && Entry.hw.hwModule.setZero();
