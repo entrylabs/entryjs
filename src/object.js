@@ -274,13 +274,6 @@ Entry.EntryObject.prototype.generateView = function() {
             });
         }
 
-        var selectedImgView = Entry.createElement('div');
-        selectedImgView.addClass('entryObjectSelectedImgWorkspace');
-        this.selectedImgView_ = selectedImgView;
-        this.view_.appendChild(selectedImgView);
-        this.initializeSplitter(selectedImgView);
-        this.splitter = selectedImgView;
-
         var informationView = Entry.createElement('div');
         informationView.addClass('entryObjectInformationWorkspace');
         informationView.object = this;

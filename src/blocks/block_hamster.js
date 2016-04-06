@@ -53,7 +53,34 @@ Entry.Hamster = {
 		sq.lineTracerMode = mode;
 		sq.lineTracerModeId = this.lineTracerModeId;
 	},
-	name: 'hamster'
+	name: 'hamster',
+	monitorTemplate: {
+        imgPath: "hw/hamster.png",
+        width: 256,
+        height: 256,
+        listPorts:{
+            "temperature":{name: Lang.Blocks.HAMSTER_sensor_temperature, type: "input", pos: {x: 0, y: 0}},
+            "accelerationX":{name: Lang.Blocks.HAMSTER_sensor_accelerationX, type: "input", pos: {x: 0, y: 0}},
+            "accelerationY":{name: Lang.Blocks.HAMSTER_sensor_accelerationY, type: "input", pos: {x: 0, y: 0}},
+            "accelerationZ":{name: Lang.Blocks.HAMSTER_sensor_accelerationZ, type: "input", pos: {x: 0, y: 0}},
+            "buzzer":{name: "부저 1", type: "output", pos: {x: 0, y: 0}},
+            "note ":{name: "부저 2", type: "output", pos: {x: 0, y: 0}},
+            "outputA":{name: "outputA", type: "output", pos: {x: 0, y: 0}},
+            "outputB":{name: "outputB", type: "output", pos: {x: 0, y: 0}}
+        },
+        ports: {
+            "leftProximity":{name: Lang.Blocks.HAMSTER_sensor_leftProximity, type: "input", pos: {x: 122, y: 156}},
+            "rightProximity":{name: Lang.Blocks.HAMSTER_sensor_rightProximity, type: "input", pos: {x : 10, y: 108}},
+            "leftFloor":{name: Lang.Blocks.HAMSTER_sensor_leftFloor, type: "input", pos: {x: 100, y: 234}},
+            "rightFloor":{name: Lang.Blocks.HAMSTER_sensor_rightFloor, type: "input", pos: {x: 13, y: 180}},
+            "lightsensor":{name: "빛센서", type: "input", pos: {x: 56, y: 189}},
+            "leftWheel":{name: "왼쪽 바퀴", type: "output", pos: {x: 209, y: 115}},
+            "rightWheel":{name: "오른쪽 바퀴", type: "output", pos: {x: 98, y: 30}},           
+            "leftLed":{name: "왼쪽 LED", type: "output", pos: {x: 87, y: 210}},
+            "rightLed":{name: "오른쪽 LED", type: "output", pos: {x: 24, y: 168}},
+        },
+      mode : 'both'
+    }
 };
 
 //sensor

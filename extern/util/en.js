@@ -1694,6 +1694,7 @@ Lang.Category.background_others = "Others";
 Lang.Device = {};
 Lang.Device.arduino = "arduino";
 Lang.Device.hamster = "hamster";
+Lang.Device.neobot = "neobot";
 Lang.Device.albert = "albert";
 Lang.Device.robotis_carCont = "";
 Lang.Device.robotis_openCM70 = "";

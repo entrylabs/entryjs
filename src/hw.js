@@ -3,6 +3,8 @@
  */
 'use strict';
 
+goog.require("Entry.HWMontior");
+
 Entry.HW = function() {
     this.connectTrial = 0;
     this.isFirstConnect = true;
@@ -25,6 +27,7 @@ Entry.HW = function() {
         '24': Entry.Hamster,
         '25': Entry.Albert,
         '31': Entry.Bitbrick,
+        '51': Entry.Neobot,
         '71': Entry.Robotis_carCont,
         '72': Entry.Robotis_openCM70
     };
@@ -35,85 +38,79 @@ Entry.HW.TRIAL_LIMIT = 1;
 var p = Entry.HW.prototype;
 
 p.initSocket = function() {
-    if (this.connectTrial >= Entry.HW.TRIAL_LIMIT) {
-        if (!this.isFirstConnect)
-            Entry.toast.alert(Lang.Menus.connect_hw,
-                              Lang.Menus.connect_fail,
-                              false);
-        this.isFirstConnect = false;
-        return;
-    }
-    var hw = this;
+    try{
+        if (this.connectTrial >= Entry.HW.TRIAL_LIMIT) {
+            if (!this.isFirstConnect)
+                Entry.toast.alert(Lang.Menus.connect_hw,
+                                  Lang.Menus.connect_fail,
+                                  false);
+            this.isFirstConnect = false;
+            return;
+        }
+        var hw = this;
 
-    var option = {
-        reconnection: false
-    };
-    var browserType = Entry.getBrowserType().toUpperCase();
-    if(browserType.indexOf('IE') > -1 || browserType.indexOf('EDGE') > -1) {
-        option['transports'] = ['polling'];
-    }
-
-    var socket, socketSecurity;
-    var protocol = '';
-    if(location.protocol.indexOf('https') > -1) {
-        socketSecurity = new WebSocket("wss://localhost:23518");
-    } else {
-        try{
-            socket = new WebSocket("ws://localhost:23518");
-        } catch(e) {}
-        try{
+        var socket, socketSecurity;
+        var protocol = '';
+        if(location.protocol.indexOf('https') > -1) {
             socketSecurity = new WebSocket("wss://localhost:23518");
-        } catch(e) {}
-    }
-
-    this.connected = false;
-    socket.binaryType = "arraybuffer";
-    socketSecurity.binaryType = "arraybuffer";
-    this.connectTrial++;
-
-    socket.onopen = function()
-    {
-        hw.socketType = 'WebSocket';
-        hw.initHardware(socket);
-    };
-
-    socket.onmessage = function (evt)
-    {
-        var data = JSON.parse(evt.data);
-        hw.checkDevice(data);
-        hw.updatePortData(data);
-    };
-
-    socket.onclose = function()
-    {
-        if(hw.socketType === 'WebSocket') {
-            this.socket = null;
-            hw.initSocket();
+        } else {
+            try{
+                socket = new WebSocket("ws://localhost:23518");
+            } catch(e) {}
+            try{
+                socketSecurity = new WebSocket("wss://localhost:23518");
+            } catch(e) {}
         }
-    };    
 
-    socketSecurity.onopen = function()
-    {
-        hw.socketType = 'WebSocketSecurity';
-        hw.initHardware(socketSecurity);
-    };
+        this.connected = false;
+        socket.binaryType = "arraybuffer";
+        socketSecurity.binaryType = "arraybuffer";
+        this.connectTrial++;
 
-    socketSecurity.onmessage = function (evt)
-    {
-        var data = JSON.parse(evt.data);
-        hw.checkDevice(data);
-        hw.updatePortData(data);
-    };
+        socket.onopen = function()
+        {
+            hw.socketType = 'WebSocket';
+            hw.initHardware(socket);
+        };
 
-    socketSecurity.onclose = function()
-    {
-        if(hw.socketType === 'WebSocketSecurity') {
-            this.socket = null;
-            hw.initSocket();
-        }
-    };
+        socket.onmessage = function (evt)
+        {
+            var data = JSON.parse(evt.data);
+            hw.checkDevice(data);
+            hw.updatePortData(data);
+        };
 
-    Entry.dispatchEvent("hwChanged");
+        socket.onclose = function()
+        {
+            if(hw.socketType === 'WebSocket') {
+                this.socket = null;
+                hw.initSocket();
+            }
+        };    
+
+        socketSecurity.onopen = function()
+        {
+            hw.socketType = 'WebSocketSecurity';
+            hw.initHardware(socketSecurity);
+        };
+
+        socketSecurity.onmessage = function (evt)
+        {
+            var data = JSON.parse(evt.data);
+            hw.checkDevice(data);
+            hw.updatePortData(data);
+        };
+
+        socketSecurity.onclose = function()
+        {
+            if(hw.socketType === 'WebSocketSecurity') {
+                this.socket = null;
+                hw.initSocket();
+            }
+        };
+
+        Entry.dispatchEvent("hwChanged");        
+    } catch(e) {}
 };
 
 p.retryConnect = function() {
@@ -174,6 +171,8 @@ p.update = function() {
 
 p.updatePortData = function(data) {
     this.portData = data;
+    if (this.hwMonitor)
+        this.hwMonitor.update();
 };
 
 p.closeConnection = function() {
@@ -217,10 +216,30 @@ p.checkDevice = function(data) {
         ),
         false
     );
+    if (this.hwModule.monitorTemplate) {
+        this.hwMonitor = new Entry.HWMonitor(this.hwModule);
+        Entry.propertyPanel.addMode("hw", this.hwMonitor);
+
+        var mt = this.hwModule.monitorTemplate;
+        
+        if(mt.mode == "both") {
+            mt.mode = "list";
+            this.hwMonitor.generateListView();
+            mt.mode = "general";
+            this.hwMonitor.generateView();
+            mt.mode = "both";
+        } else if(mt.mode == "list") {
+            this.hwMonitor.generateListView();    
+        } else {
+            this.hwMonitor.generateView();
+        }
+        
+    }
 };
 
 p.banHW = function() {
     var hwOptions = this.hwInfo;
     for (var i in hwOptions)
         Entry.playground.blockMenu.banClass(hwOptions[i].name);
+
 };

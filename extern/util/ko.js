@@ -1694,6 +1694,7 @@ Lang.Category.background_others = "기타";
 Lang.Device = {};
 Lang.Device.arduino = "아두이노";
 Lang.Device.hamster = "햄스터";
+Lang.Device.neobot = "네오봇";
 Lang.Device.albert = "알버트";
 Lang.Device.robotis_carCont = "로보티즈 자동차 로봇";
 Lang.Device.robotis_openCM70 = "로보티즈 IoT";
@@ -2296,3 +2297,4 @@ Lang.Fonts.gothic = "고딕체";
 Lang.Fonts.pen_script = "필기체";
 Lang.Fonts.jeju_hallasan = "한라산체";
 Lang.Fonts.gothic_coding = "코딩고딕체";
+>>>>>>> dist/stage
