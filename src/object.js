@@ -24,6 +24,7 @@ Entry.EntryObject = function(model) {
             this.objectType = 'sprite';
 
         this.script = new Entry.Code(model.script ? model.script : []);
+        this.script.object = this;
 
         /** @type {Array.<picture object>} */
         this.pictures = model.sprite.pictures;

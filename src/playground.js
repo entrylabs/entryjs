@@ -277,6 +277,7 @@ Entry.Playground.prototype.generateCodeView = function(codeView) {
         class: "entryWorkspaceBlockMenu"
     });
 
+    new Entry.BlockDriver().convert();
     Entry.block.when_run_button_click.event = "start";
 
     this.mainWorkspace = new Entry.Workspace(

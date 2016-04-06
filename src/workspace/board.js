@@ -1,5 +1,4 @@
 /*
- *
  */
 "use strict";
 
@@ -33,6 +32,8 @@ Entry.Board = function(option) {
 
     this.workspace = option.workspace;
 
+    this._activatedBlockView = null;
+
     this.wrapper = Entry.Dom('div', {
         parent: dom,
         class: 'entryBoardWrapper'
@@ -51,7 +52,6 @@ Entry.Board = function(option) {
         that.updateOffset();
     });
 
-    this._blockViews = [];
     this._magnetMap = null;
 
     this.svgGroup = this.svg.elem("g");
@@ -82,8 +82,10 @@ Entry.Board = function(option) {
     Entry.Utils.disableContextmenu(this.svgDom);
 
     this._addControl();
-    if (Entry.documentMousedown)
+    if (Entry.documentMousedown) {
         Entry.documentMousedown.attach(this, this.setSelectedBlock);
+        Entry.documentMousedown.attach(this, this._removeActivated);
+    }
     if (Entry.keyPressed)
         Entry.keyPressed.attach(this, this._keyboardControl);
     if (Entry.windowResized)
@@ -750,6 +752,32 @@ Entry.Board = function(option) {
     p.setPatternRectFill = function(color) {
         this.patternRect.attr({fill:color});
     };
+
+    p._removeActivated = function() {
+        if (!this._activatedBlockView) return;
+
+        this._activatedBlockView.removeActivated();
+        this._activatedBlockView = null;
+    };
+
+    p.activateBlock = function(block) {
+        var view = block.view;
+        var pos = view.getAbsoluteCoordinate();
+        var svgDom = this.svgDom;
+        var blockX = pos.x,
+            blockY = pos.y;
+
+        var dx = svgDom.width()/2 - blockX;
+        var dy = svgDom.height()/2 - blockY - 100;
+        this.scroller.scroll(
+            dx, dy
+        );
+
+        view.addActivated();
+
+        this._activatedBlockView = view;
+    };
+
 
 
 })(Entry.Board.prototype);

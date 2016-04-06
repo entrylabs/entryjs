@@ -174,7 +174,15 @@ Blockly.Blocks.when_message_cast = {
         .appendField(Lang.Blocks.START_when_message_cast_2);
     this.setInputsInline(true);
     this.setNextStatement(true);
-  }
+    },
+    whenAdd: function (block) {
+        var vc = Entry.variableContainer;
+        if (vc) vc.addRef('_messageRefs', block);
+    },
+    whenRemove: function (block) {
+        var vc = Entry.variableContainer;
+        if (vc) vc.removeRef('_messageRefs', block);
+    }
 };
 
 Entry.block.when_message_cast = function (sprite, script) {
@@ -194,7 +202,15 @@ Blockly.Blocks.message_cast = {
     this.setInputsInline(true);
     this.setNextStatement(true);
     this.setPreviousStatement(true);
-  }
+    },
+    whenAdd: function (block) {
+        var vc = Entry.variableContainer;
+        if (vc) vc.addRef('_messageRefs', block);
+    },
+    whenRemove: function (block) {
+        var vc = Entry.variableContainer;
+        if (vc) vc.removeRef('_messageRefs', block);
+    }
 };
 
 Entry.block.message_cast = function (sprite, script) {
@@ -221,7 +237,15 @@ Blockly.Blocks.message_cast_wait = {
     this.setInputsInline(true);
     this.setNextStatement(true);
     this.setPreviousStatement(true);
-  }
+    },
+    whenAdd: function (block) {
+        var vc = Entry.variableContainer;
+        if (vc) vc.addRef('_messageRefs', block);
+    },
+    whenRemove: function (block) {
+        var vc = Entry.variableContainer;
+        if (vc) vc.removeRef('_messageRefs', block);
+    }
 };
 
 Entry.block.message_cast_wait = function (sprite, script) {
