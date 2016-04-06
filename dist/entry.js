@@ -10910,13 +10910,13 @@ Entry.Func.generateWsBlock = function() {
         e = e + " " + f;
         break;
       case "function_field_boolean":
-        Entry.Mutator.mutate(f.type, {template:"\ud310\ub2e8\uac12 " + a});
+        Entry.Mutator.mutate(f.type, {template:Lang.Blocks.FUNCTION_logical_variable + " " + (a ? a : "")});
         a++;
         d.push({type:"Block", accept:"booleanMagnet"});
         e = e + " %" + (a + c);
         break;
       case "function_field_string":
-        Entry.Mutator.mutate(f.type, {template:"\ubb38\uc790/\uc22b\uc790\uac12 " + c}), c++, e = e + " %" + (a + c), d.push({type:"Block", accept:"stringMagnet"});
+        Entry.Mutator.mutate(f.type, {template:Lang.Blocks.FUNCTION_character_variable + " " + (c ? c : "")}), c++, e = e + " %" + (a + c), d.push({type:"Block", accept:"stringMagnet"});
     }
     b = b.getOutputBlock();
   }
@@ -16372,6 +16372,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
     this.updateValueBlock(a);
     a.view._toLocalCoordinate(this.svgGroup);
     this.calcWH();
+    this.changeEvent.notify();
   };
   b.setParent = function(a) {
     this._parent = a;

@@ -229,6 +229,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
         this.updateValueBlock(block);
         block.view._toLocalCoordinate(this.svgGroup);
         this.calcWH();
+        this.changeEvent.notify();
     };
 
     p.setParent = function(parent) {

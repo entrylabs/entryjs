@@ -159,7 +159,7 @@ Entry.Func.setupMenuCode = function() {
     var menuCode = blockMenu.getCategoryCodes("func");
     this._fieldLabel = menuCode.createThread([{
         type: "function_field_label"
-    } ]).getFirstBlock();
+    }]).getFirstBlock();
     this._fieldString = menuCode.createThread([{
         type: "function_field_string",
         params: [
@@ -263,7 +263,10 @@ Entry.Func.generateWsBlock = function() {
                 schemaTemplate = schemaTemplate + " " + value;
                 break;
             case 'function_field_boolean':
-                Entry.Mutator.mutate(value.type, {template: "판단값 " + booleanIndex});
+                Entry.Mutator.mutate(value.type, {
+                    template: Lang.Blocks.FUNCTION_logical_variable +
+                        " " + (booleanIndex ? booleanIndex : "")
+                });
                 booleanIndex++;
                 schemaParams.push({
                     type: "Block",
@@ -272,7 +275,10 @@ Entry.Func.generateWsBlock = function() {
                 schemaTemplate = schemaTemplate + " %" + (booleanIndex + stringIndex);
                 break;
             case 'function_field_string':
-                Entry.Mutator.mutate(value.type, {template: "문자/숫자값 " + stringIndex});
+                Entry.Mutator.mutate(value.type, {
+                    template: Lang.Blocks.FUNCTION_character_variable +
+                        " " + (stringIndex ? stringIndex : "")
+                });
                 stringIndex++;
                 schemaTemplate = schemaTemplate + " %" + (booleanIndex + stringIndex);
                 schemaParams.push({
