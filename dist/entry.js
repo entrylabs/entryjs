@@ -9853,6 +9853,7 @@ Entry.Playground.prototype.injectText = function() {
     $(".entryPlayground_fgColorDiv").css("backgroundColor", Entry.playground.object.entity.colour);
     $(".entryPlayground_bgColorDiv").css("backgroundColor", Entry.playground.object.entity.bgColour);
     Entry.playground.toggleLineBreak(Entry.playground.object.entity.getLineBreak());
+    Entry.playground.object.entity.getLineBreak() && ($(".entryPlaygroundLinebreakDescription > p").html(Lang.Menus.linebreak_on_desc_1), $(".entryPlaygroundLinebreakDescription > ul > li").eq(0).html(Lang.Menus.linebreak_on_desc_2), $(".entryPlaygroundLinebreakDescription > ul > li").eq(1).html(Lang.Menus.linebreak_on_desc_3));
     Entry.playground.setFontAlign(Entry.playground.object.entity.getTextAlign());
     a = Entry.playground.object.entity.getFontSize();
     Entry.playground.fontSizeIndiciator.style.width = a + "%";

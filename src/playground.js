@@ -781,8 +781,6 @@ Entry.Playground.prototype.generateTextView = function(textView) {
     var linebreakDescList2 = Entry.createElement("li");
     linebreakDescList2.innerHTML = Lang.Menus.linebreak_off_desc_3;
     linebreakDescUL.appendChild(linebreakDescList2);
-
-
 };
 
 /**
@@ -1127,12 +1125,19 @@ Entry.Playground.prototype.injectText = function() {
         Entry.playground.toggleLineBreak(
             Entry.playground.object.entity.getLineBreak());
 
+        if (Entry.playground.object.entity.getLineBreak()) {
+            $(".entryPlaygroundLinebreakDescription > p").html(Lang.Menus.linebreak_on_desc_1);
+            $(".entryPlaygroundLinebreakDescription > ul > li").eq(0).html(Lang.Menus.linebreak_on_desc_2);
+            $(".entryPlaygroundLinebreakDescription > ul > li").eq(1).html(Lang.Menus.linebreak_on_desc_3);
+        }
+
         Entry.playground.setFontAlign(
             Entry.playground.object.entity.getTextAlign());
 
         var fontSize = Entry.playground.object.entity.getFontSize();
         Entry.playground.fontSizeIndiciator.style.width = fontSize + '%';
         Entry.playground.fontSizeKnob.style.left = (fontSize * 0.88) + 'px';
+
     }
 };
 
