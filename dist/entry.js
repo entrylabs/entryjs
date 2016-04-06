@@ -16812,14 +16812,14 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldOutput);
     return this._block.thread.getCode();
   };
   b.cut = function(a) {
-    return this._valueBlock === a ? [a] : null;
+    return this._valueBlock === a ? (delete this._valueBlock, [a]) : null;
   };
   b._updateBG = function() {
     this.magneting ? this._bg = this.svgGroup.elem("path", {d:"m -4,-12 h 3 l 2,2 0,3 3,0 1,1 0,12 -1,1 -3,0 0,3 -2,2 h -3 ", fill:"#fff", stroke:"#fff", "fill-opacity":.7, transform:"translate(0," + (this._valueBlock ? 12 : 0) + ")"}) : this._bg && (this._bg.remove(), delete this._bg);
   };
   b.replace = function(a) {
     var b = this._valueBlock;
-    b && (b.view._toGlobalCoordinate(), this.separate(b), b.view.bumpAway(30, 150));
+    b && (b.view._toGlobalCoordinate(), this.separate(b), b.replace(a.getTerminateOutputBlock().view._contents[1]));
     this._updateValueBlock(a);
     a.view._toLocalCoordinate(this.svgGroup);
     this.calcWH();
@@ -18187,6 +18187,15 @@ Entry.Block.MAGNET_OFFSET = .4;
       }
     }
     return null;
+  };
+  b.getTerminateOutputBlock = function() {
+    for (var a = this;;) {
+      var b = a.getOutputBlock();
+      if (!b) {
+        return a;
+      }
+      a = b;
+    }
   };
 })(Entry.Block.prototype);
 Entry.ThreadView = function(b, a) {

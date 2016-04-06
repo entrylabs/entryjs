@@ -433,4 +433,14 @@ Entry.Block.MAGNET_OFFSET = 0.4;
         return null;
     };
 
+    p.getTerminateOutputBlock = function() {
+        var block = this;
+        while (true) {
+            var outputBlock = block.getOutputBlock();
+            if (!outputBlock)
+                return block;
+            block = outputBlock;
+        }
+    };
+
 })(Entry.Block.prototype);

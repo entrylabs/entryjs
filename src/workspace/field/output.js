@@ -191,7 +191,10 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldOutput);
     };
 
     p.cut = function(block) {
-        if (this._valueBlock === block) return [block];
+        if (this._valueBlock === block) {
+            delete this._valueBlock;
+            return [block];
+        }
         else return null;
     };
 
@@ -217,7 +220,9 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldOutput);
         if (valueBlock) {
             valueBlock.view._toGlobalCoordinate();
             this.separate(valueBlock);
-            valueBlock.view.bumpAway(30, 150);
+            valueBlock.replace(
+                block.getTerminateOutputBlock().view._contents[1]
+            );
         }
         this._updateValueBlock(block);
         block.view._toLocalCoordinate(this.svgGroup);
