@@ -4686,6 +4686,47 @@ span.CodeMirror-selectedtext {
   stroke-width: 3px;
   stroke: #798EB1;
 }
+.block.activated > g > path {
+  stroke-width: 3px;
+  stroke: red;
+  stroke-dasharray: 20;
+  stroke-dashoffset: 1000;
+  -webkit-animation: activationDash 15s forwards linear;
+  -webkit-animation-iteration-count: infinite;
+  -moz-animation: activationDash 15s forwards linear;
+  -moz-animation-iteration-count: infinite;
+  animation: activationDash 15s forwards linear;
+  animation-iteration-count: infinite;
+  -o-animation: activationDash 15s forwards linear;
+  -o-animation-iteration-count: infinite;
+  -ms-animation: activationDash 15s forwards linear;
+  -ms-animation-iteration-count: infinite;
+}
+@keyframes activationDash {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+@-o-keyframes activationDash {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+@-ms-keyframes activationDash {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+@-moz-keyframes activationDash {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+@-webkit-keyframes activationDash {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
 .block g text,
 .block g image {
   pointer-events: none;

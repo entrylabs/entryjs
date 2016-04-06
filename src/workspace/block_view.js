@@ -62,6 +62,12 @@ Entry.BlockView = function(block, board, mode) {
     this.dragMode = Entry.DRAG_MODE_NONE;
     Entry.Utils.disableContextmenu(this.svgGroup.node);
     this._targetType = this._getTargetType();
+    var events = block.events.whenBlockAdd;
+    if (events && !this.isInBlockMenu) {
+        events.forEach(function(fn) {
+            if (Entry.Utils.isFunction(fn)) fn(block);
+        });
+    }
 };
 
 Entry.BlockView.PARAM_SPACE = 5;
@@ -250,13 +256,6 @@ Entry.BlockView.DRAG_RADIUS = 5;
         this._renderPath();
         this.set(this._skeleton.box(this));
 
-        var block = this.block;
-        var events = block.events.whenBlockAdd;
-        if (events && !this.isInBlockMenu) {
-            events.forEach(function(fn) {
-                if (Entry.Utils.isFunction(fn)) fn(block);
-            });
-        }
     };
 
     p._renderPath = function() {
@@ -920,6 +919,14 @@ Entry.BlockView.DRAG_RADIUS = 5;
             fillColor = "url(#blockHoverPattern_" + this.getBoard().suffix +")";
         }
         path.attr({fill:fillColor});
+    };
+
+    p.addActivated = function() {
+        this.svgGroup.addClass('activated');
+    };
+
+    p.removeActivated = function() {
+        this.svgGroup.removeClass('activated');
     };
 
 

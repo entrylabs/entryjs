@@ -62,7 +62,15 @@ Blockly.Blocks.change_variable = {
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-  }
+    },
+    whenAdd: function (block) {
+        var vc = Entry.variableContainer;
+        if (vc) vc.addRef('_variableRefs', block);
+    },
+    whenRemove: function (block) {
+        var vc = Entry.variableContainer;
+        if (vc) vc.removeRef('_variableRefs', block);
+    }
 };
 
 Entry.block.change_variable = function (sprite, script) {
@@ -97,7 +105,15 @@ Blockly.Blocks.set_variable = {
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-  }
+    },
+    whenAdd: function (block) {
+        var vc = Entry.variableContainer;
+        if (vc) vc.addRef('_variableRefs', block);
+    },
+    whenRemove: function (block) {
+        var vc = Entry.variableContainer;
+        if (vc) vc.removeRef('_variableRefs', block);
+    }
 };
 
 Entry.block.set_variable = function (sprite, script) {
@@ -122,7 +138,15 @@ Blockly.Blocks.show_variable = {
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-  }
+    },
+    whenAdd: function (block) {
+        var vc = Entry.variableContainer;
+        if (vc) vc.addRef('_variableRefs', block);
+    },
+    whenRemove: function (block) {
+        var vc = Entry.variableContainer;
+        if (vc) vc.removeRef('_variableRefs', block);
+    }
 };
 
 Entry.block.show_variable = function (sprite, script) {
@@ -147,7 +171,15 @@ Blockly.Blocks.hide_variable = {
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-  }
+    },
+    whenAdd: function (block) {
+        var vc = Entry.variableContainer;
+        if (vc) vc.addRef('_variableRefs', block);
+    },
+    whenRemove: function (block) {
+        var vc = Entry.variableContainer;
+        if (vc) vc.removeRef('_variableRefs', block);
+    }
 };
 
 Entry.block.hide_variable = function (sprite, script) {
@@ -179,8 +211,17 @@ Blockly.Blocks.get_variable = {
             .appendField(Lang.Blocks.VARIABLE_get_variable_2)
         this.setOutput(true, 'Number');
         this.setInputsInline(true);
+    },
+    whenAdd: function (block) {
+        var vc = Entry.variableContainer;
+        if (vc) vc.addRef('_variableRefs', block);
+    },
+    whenRemove: function (block) {
+        var vc = Entry.variableContainer;
+        if (vc) vc.removeRef('_variableRefs', block);
     }
 };
+
 
 Entry.block.get_variable = function (sprite, script) {
     var variableId = script.getField("VARIABLE", script);
@@ -289,7 +330,15 @@ Blockly.Blocks.add_value_to_list = {
     this.setInputsInline(true);
     this.setPreviousStatement(true);
     this.setNextStatement(true);
-  }
+    },
+    whenAdd: function (block) {
+        var vc = Entry.variableContainer;
+        if (vc) vc.addRef('_variableRefs', block);
+    },
+    whenRemove: function (block) {
+        var vc = Entry.variableContainer;
+        if (vc) vc.removeRef('_variableRefs', block);
+    }
 };
 
 Entry.block.add_value_to_list = function (sprite, script) {
