@@ -57,6 +57,7 @@ Entry.HWMonitor = function(hwModule) {
             href : Entry.mediaFilePath + monitorTemplate.imgPath,
             x : - monitorTemplate.width / 2,
             y : - monitorTemplate.height / 2,
+ 
             width : monitorTemplate.width,
             height : monitorTemplate.height
         };

@@ -200,6 +200,7 @@ p.setZero = function() {
 };
 
 p.checkDevice = function(data) {
+    return;
     if (data.company === undefined)
         return;
     var key = ''+data.company + data.model;

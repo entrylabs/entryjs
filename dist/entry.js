@@ -842,8 +842,8 @@ Blockly.Blocks.arduino_toggle_led = {init:function() {
   this.setNextStatement(!0);
 }};
 Entry.block.arduino_toggle_led = function(a, b) {
-  var c = b.getNumberValue("VALUE"), d = "on" == b.getField("OPERATOR") ? 255 : 0;
-  Entry.hw.setDigitalPortValue(c, d);
+  var c = b.getNumberValue("VALUE"), d = b.getField("OPERATOR");
+  Entry.hw.setDigitalPortValue(c, "on" == d ? 255 : 0);
   return b.callReturn();
 };
 Blockly.Blocks.arduino_toggle_pwm = {init:function() {
@@ -1156,11 +1156,11 @@ Blockly.Blocks.bitbrick_turn_off_all_motors = {init:function() {
 }};
 Entry.block.bitbrick_turn_off_all_motors = function(a, b) {
   var c = Entry.hw.sendQueue, d = Entry.Bitbrick;
-  d.servoList().map(function(a) {
-    c[a[1]] = 0;
+  d.servoList().map(function(b) {
+    c[b[1]] = 0;
   });
-  d.dcList().map(function(a) {
-    c[a[1]] = 128;
+  d.dcList().map(function(b) {
+    c[b[1]] = 128;
   });
   return b.callReturn();
 };
@@ -1367,8 +1367,8 @@ Entry.block.brush_erase_all = function(a, b) {
     c.moveTo(a.getX(), -1 * a.getY());
   }
   c = a.parent.getStampEntities();
-  c.map(function(a) {
-    a.removeClone();
+  c.map(function(b) {
+    b.removeClone();
   });
   c = null;
   return b.callReturn();
@@ -1921,10 +1921,10 @@ Entry.block.wait_second = function(a, b) {
   }
   b.isStart = !0;
   b.timeFlag = 1;
-  var c = b.getNumberValue("SECOND", b), c = 60 / (Entry.FPS || 60) * c * 1E3;
+  var c = b.getNumberValue("SECOND", b);
   setTimeout(function() {
     b.timeFlag = 0;
-  }, c);
+  }, 60 / (Entry.FPS || 60) * c * 1E3);
   return b;
 };
 Blockly.Blocks.repeat_basic = {init:function() {
@@ -2096,23 +2096,23 @@ Entry.block.stop_object = function(a, b) {
   var c = b.getField("TARGET", b), d = Entry.container;
   switch(c) {
     case "all":
-      d.mapEntityIncludeCloneOnScene(function(a) {
-        a.clearScript();
+      d.mapEntityIncludeCloneOnScene(function(b) {
+        b.clearScript();
       });
       break;
     case "thisObject":
       a.clearScript();
       c = a.parent.clonedEntities;
-      c.map(function(a) {
-        a.clearScript();
+      c.map(function(b) {
+        b.clearScript();
       });
       break;
     case "thisOnly":
       a.clearScript();
       break;
     case "otherThread":
-      return a.clearScript(), c = a.parent.clonedEntities, c.map(function(a) {
-        a.clearScript();
+      return a.clearScript(), c = a.parent.clonedEntities, c.map(function(b) {
+        b.clearScript();
       }), b.callReturn();
   }
   return null;
@@ -2136,8 +2136,8 @@ Blockly.Blocks.remove_all_clones = {init:function() {
 }};
 Entry.block.remove_all_clones = function(a, b) {
   var c = a.parent.getClonedEntities();
-  c.map(function(a) {
-    a.removeClone();
+  c.map(function(b) {
+    b.removeClone();
   });
   c = null;
   return b.callReturn();
@@ -4737,7 +4737,7 @@ Entry.block.sound_something_second_wait = function(a, b) {
       d.stop();
       b.playState = 0;
     }, 1E3 * c);
-    d.addEventListener("complete", function(a) {
+    d.addEventListener("complete", function(b) {
     });
   }
   return b;
@@ -4883,7 +4883,7 @@ Entry.block.sound_something_second_wait_with_block = function(a, b) {
       d.stop();
       b.playState = 0;
     }, 1E3 * c);
-    d.addEventListener("complete", function(a) {
+    d.addEventListener("complete", function(b) {
     });
   }
   return b;
@@ -5069,10 +5069,10 @@ Entry.block.message_cast_wait = function(a, b) {
     throw Error("value can not be null or undefined");
   }
   var e = [];
-  Entry.container.mapEntityIncludeCloneOnScene(function(a, b) {
-    for (var c = b[0], d = b[1], l = a.parent.script.childNodes, n = 0;n < l.length;n++) {
+  Entry.container.mapEntityIncludeCloneOnScene(function(b, a) {
+    for (var c = a[0], d = a[1], l = b.parent.script.childNodes, n = 0;n < l.length;n++) {
       var m = l[n], q = Entry.Xml.getField("VALUE", m);
-      Entry.Xml.isTypeOf(c, m) && q == d && (q = new Entry.Script(a), q.init(m), e.push(q));
+      Entry.Xml.isTypeOf(c, m) && q == d && (q = new Entry.Script(b), q.init(m), e.push(q));
     }
   }, ["when_message_cast", c]);
   b.runningScript = e;
@@ -5496,37 +5496,37 @@ Entry.Collection = function(a) {
     b.splice.call(this, d, 0, a);
     this._hashMap[a.id] = a;
   };
-  a.has = function(a) {
-    return !!this._hashMap[a];
+  a.has = function(b) {
+    return !!this._hashMap[b];
   };
-  a.get = function(a) {
-    return this._hashMap[a];
+  a.get = function(b) {
+    return this._hashMap[b];
   };
-  a.at = function(a) {
-    return this[a];
+  a.at = function(b) {
+    return this[b];
   };
   a.getAll = function() {
-    for (var a = this.length, b = [], e = 0;e < a;e++) {
-      b.push(this[e]);
+    for (var b = this.length, a = [], e = 0;e < b;e++) {
+      a.push(this[e]);
     }
-    return b;
+    return a;
   };
   a.indexOf = function(a) {
     return b.indexOf.call(this, a);
   };
-  a.find = function(a) {
-    for (var b = [], e, f = 0, g = this.length;f < g;f++) {
+  a.find = function(b) {
+    for (var a = [], e, f = 0, g = this.length;f < g;f++) {
       e = !0;
       var h = this[f], k;
-      for (k in a) {
-        if (a[k] != h[k]) {
+      for (k in b) {
+        if (b[k] != h[k]) {
           e = !1;
           break;
         }
       }
-      e && b.push(h);
+      e && a.push(h);
     }
-    return b;
+    return a;
   };
   a.pop = function() {
     var a = b.pop.call(this);
@@ -5545,9 +5545,9 @@ Entry.Collection = function(a) {
     }
     return e;
   };
-  a.remove = function(a) {
-    var b = this.indexOf(a);
-    -1 < b && (delete this._hashMap[a.id], this.splice(b, 1));
+  a.remove = function(b) {
+    var a = this.indexOf(b);
+    -1 < a && (delete this._hashMap[b.id], this.splice(a, 1));
   };
   a.splice = function(a, d) {
     var e = b.slice.call(arguments, 2), f = this._hashMap;
@@ -10375,15 +10375,12 @@ Entry.PropertyPanel = function() {
     this.splitter = d;
   };
   a.addMode = function(a, c) {
-    console.log(a);
-    if ("HW" != a) {
-      var d = c.getView(), d = Entry.Dom(d, {parent:this._contentView}), e = Entry.Dom("<div>" + a + "</div>", {classes:["propertyTabElement", "propertyTab" + a], parent:this._tabView}), f = this;
-      e.bindOnClick(function() {
-        f.select(a);
-      });
-      this.modes[a] && (this.modes[a].tabDom.remove(), this.modes[a].contentDom.remove());
-      this.modes[a] = {obj:c, tabDom:e, contentDom:d};
-    }
+    var d = c.getView(), d = Entry.Dom(d, {parent:this._contentView}), e = Entry.Dom("<div>" + a + "</div>", {classes:["propertyTabElement", "propertyTab" + a], parent:this._tabView}), f = this;
+    e.bindOnClick(function() {
+      f.select(a);
+    });
+    this.modes[a] && (this.modes[a].tabDom.remove(), this.modes[a].contentDom.remove());
+    this.modes[a] = {obj:c, tabDom:e, contentDom:d};
   };
   a.resize = function(a) {
     this._view.css({width:a + "px", top:9 * a / 16 + 123 - 22 + "px"});
@@ -12384,37 +12381,36 @@ Entry.Func.generateWsBlock = function(a, b, c) {
   e.init(d);
   d = e;
   d.values && (d = e.values.FIELD);
-  e = '<mutation hashid="' + c + '">';
-  c = b = "";
+  c = '<mutation hashid="' + c + '">';
+  b = e = "";
   var f = 0, g = 0;
   a.stringHash = {};
   for (a.booleanHash = {};;) {
     switch(d.type) {
       case "function_field_label":
-        e += '<field type="label" content="' + d.fields.NAME.replace("<", "&lt;").replace(">", "&gt;") + '"></field>';
-        c += d.fields.NAME;
+        c += '<field type="label" content="' + d.fields.NAME.replace("<", "&lt;").replace(">", "&gt;") + '"></field>';
+        b += d.fields.NAME;
         break;
       case "function_field_boolean":
         var h = d.values.PARAM.hashId;
-        e += '<field type="boolean" hashid="' + h + '"></field>';
-        b += '<value name="' + h + '"><block type="function_param_boolean"><mutation hashid="' + h + '"></mutation></block></value>';
+        c += '<field type="boolean" hashid="' + h + '"></field>';
+        e += '<value name="' + h + '"><block type="function_param_boolean"><mutation hashid="' + h + '"></mutation></block></value>';
         a.booleanHash[h] = g;
         g++;
-        c += "\ub17c\ub9ac\uac12" + g;
+        b += "\ub17c\ub9ac\uac12" + g;
         break;
       case "function_field_string":
-        h = d.values.PARAM.hashId, e += '<field type="string" hashid="' + h + '"></field>', b += '<value name="' + h + '"><block type="function_param_string"><mutation hashid="' + h + '"></mutation></block></value>', a.stringHash[h] = f, f++, c += "\ubb38\uc790\uac12" + f;
+        h = d.values.PARAM.hashId, c += '<field type="string" hashid="' + h + '"></field>', e += '<value name="' + h + '"><block type="function_param_string"><mutation hashid="' + h + '"></mutation></block></value>', a.stringHash[h] = f, f++, b += "\ubb38\uc790\uac12" + f;
     }
     if (d.values && d.values.NEXT) {
       d = d.values.NEXT;
     } else {
       break;
     }
-    c += " ";
+    b += " ";
   }
-  a = '<xml><block type="function_general">' + (e + "</mutation>") + b + "</block></xml>";
-  c || (c = "\ud568\uc218");
-  return {block:Blockly.Xml.textToDom(a).childNodes[0], description:c};
+  b || (b = "\ud568\uc218");
+  return {block:Blockly.Xml.textToDom('<xml><block type="function_general">' + (c + "</mutation>") + e + "</block></xml>").childNodes[0], description:b};
 };
 Entry.HWMontior = {};
 Entry.HWMonitor = function(a) {
