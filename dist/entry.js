@@ -16713,6 +16713,7 @@ Entry.FieldImage = function(b, a, c) {
   this._position = b.position;
   this._imgElement = this._path = this.svgGroup = null;
   this._index = c;
+  this.setValue(null);
   this.renderStart();
 };
 Entry.Utils.inherit(Entry.Field, Entry.FieldImage);
@@ -16726,21 +16727,23 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldImage);
   };
 })(Entry.FieldImage.prototype);
 Entry.FieldIndicator = function(b, a, c) {
-  this._block = a;
+  this._block = a.block;
+  this._blockView = a;
   this.box = new Entry.BoxModel;
   this._size = b.size;
-  a.block.isDeletable() ? this._imgUrl = b.img : this._imgUrl = b.img.replace(".png", "_un.png");
+  this._block.isDeletable() ? this._imgUrl = b.img : this._imgUrl = b.img.replace(".png", "_un.png");
   this._boxMultiplier = b.boxMultiplier || 2;
   this._highlightColor = b.highlightColor ? b.highlightColor : "#F59900";
   this._position = b.position;
   this._index = c;
   this._imgElement = this._path = this.svgGroup = null;
+  this.setValue(null);
   this.renderStart();
 };
 Entry.Utils.inherit(Entry.Field, Entry.FieldIndicator);
 (function(b) {
   b.renderStart = function() {
-    this.svgGroup = this._block.contentSvgGroup.elem("g");
+    this.svgGroup = this._blockView.contentSvgGroup.elem("g");
     this._imgElement = this.svgGroup.elem("image", {href:this._imgUrl, x:this._position ? -1 * this._size : 0, y:-1 * this._size, width:2 * this._size, height:2 * this._size});
     var a = "m 0,-%s a %s,%s 0 1,1 -0.1,0 z".replace(/%s/gi, this._size);
     this._path = this.svgGroup.elem("path", {d:a, stroke:"none", fill:"none"});
@@ -17043,6 +17046,7 @@ Entry.FieldText = function(b, a, c) {
   this._color = b.color || a.getSkeleton().color || "white";
   this._align = b.align || "left";
   this._text = this.getValue() || b.text;
+  this.setValue(null);
   this.textElement = null;
   this.renderStart(a);
 };
@@ -18119,7 +18123,7 @@ Entry.Block.MAGNET_OFFSET = .4;
       a = this.params;
       b = this._schema.params;
       for (e = 0;b && e < b.length;e++) {
-        d = void 0 !== a[e] ? a[e] : b[e].value, f = a[e], !d || "Output" !== b[e].type && "Block" !== b[e].type || (d = new Entry.Block(d)), f ? a.splice(e, 1, d) : a.push(d);
+        d = void 0 !== a[e] ? a[e] : b[e].value, f = void 0 !== a[e], !d || "Output" !== b[e].type && "Block" !== b[e].type || (d = new Entry.Block(d)), f ? a.splice(e, 1, d) : a.push(d);
       }
       if (a = this._schema.statements) {
         for (e = 0;e < a.length;e++) {

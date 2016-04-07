@@ -22,6 +22,7 @@ Entry.FieldText = function(content, blockView, index) {
     this._color = content.color || blockView.getSkeleton().color || 'white';
     this._align = content.align || 'left';
     this._text = this.getValue() || content.text;
+    this.setValue(null);
 
     this.textElement = null;
 
