@@ -200,7 +200,6 @@ p.setZero = function() {
 };
 
 p.checkDevice = function(data) {
-    return;
     if (data.company === undefined)
         return;
     var key = ''+data.company + data.model;
@@ -217,6 +216,7 @@ p.checkDevice = function(data) {
         ),
         false
     );
+    return;
     if (this.hwModule.monitorTemplate) {
         this.hwMonitor = new Entry.HWMonitor(this.hwModule);
         Entry.propertyPanel.addMode("hw", this.hwMonitor);
