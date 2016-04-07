@@ -15,7 +15,8 @@ Entry.Engine = function() {
     this.speeds = [1, 15, 30, 45, 60];
 
 
-    Entry.keyPressed.attach(this, this.captureKeyEvent)
+    if (Entry.keyPressed)
+        Entry.keyPressed.attach(this, this.captureKeyEvent);
 
     Entry.addEventListener('canvasClick', function(e){
         Entry.engine.fireEvent('mouse_clicked');

@@ -10137,7 +10137,17 @@ Entry.block = {
         "fontSize": 11
       }
     ],
-    "events": {},
+    "events": {
+        whenBlockAdd : [function(block) {
+            var vc = Entry.variableContainer;
+            if (vc) vc.addRef('_variableRefs', block);
+        }],
+        whenBlockDestroy : [function(block) {
+            var vc = Entry.variableContainer;
+            if (vc) vc.removeRef('_variableRefs', block);
+        }]
+
+    },
     "func": function (sprite, script) {
     var variableId = script.getField("VARIABLE", script);
     var variable = Entry.variableContainer.getVariable(variableId, sprite);

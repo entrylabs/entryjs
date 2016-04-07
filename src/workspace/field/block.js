@@ -275,8 +275,6 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
         }
     };
 
-    p.getThread = function() {
-         return this;
-    }
+    p.getThread = function() {return this;};
 
 })(Entry.FieldBlock.prototype);

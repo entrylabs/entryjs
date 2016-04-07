@@ -62,7 +62,7 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
     if (Entry.documentMousedown)
         Entry.documentMousedown.attach(this, this.setSelectedBlock);
     if (this._categoryCodes && Entry.keyPressed)
-        Entry.keyPressed.attach(this, this._captureKeyEvent)
+        Entry.keyPressed.attach(this, this._captureKeyEvent);
 };
 
 (function(p) {

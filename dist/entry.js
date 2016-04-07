@@ -5633,7 +5633,7 @@ Entry.Engine = function() {
   this.popup = null;
   this.isUpdating = !0;
   this.speeds = [1, 15, 30, 45, 60];
-  Entry.keyPressed.attach(this, this.captureKeyEvent);
+  Entry.keyPressed && Entry.keyPressed.attach(this, this.captureKeyEvent);
   Entry.addEventListener("canvasClick", function(a) {
     Entry.engine.fireEvent("mouse_clicked");
   });
@@ -15000,7 +15000,13 @@ options:[["\uc804\uc9c4", "1"], ["\ud6c4\uc9c4", "2"], ["\uc88c\ud68c\uc804", "3
   var c = a.getField("VARIABLE", a);
   Entry.variableContainer.getVariable(c, b).setVisible(!1);
   return a.callReturn();
-}, "class":"variable_visibility", isNotFor:["variable", "variableNotExist"]}, get_variable:{color:"#E457DC", skeleton:"basic_string_field", statements:[], template:"%1 \uac12", params:[{type:"DropdownDynamic", value:null, menuName:"variables", fontSize:11}], events:{}, func:function(b, a) {
+}, "class":"variable_visibility", isNotFor:["variable", "variableNotExist"]}, get_variable:{color:"#E457DC", skeleton:"basic_string_field", statements:[], template:"%1 \uac12", params:[{type:"DropdownDynamic", value:null, menuName:"variables", fontSize:11}], events:{whenBlockAdd:[function(b) {
+  var a = Entry.variableContainer;
+  a && a.addRef("_variableRefs", b);
+}], whenBlockDestroy:[function(b) {
+  var a = Entry.variableContainer;
+  a && a.removeRef("_variableRefs", b);
+}]}, func:function(b, a) {
   var c = a.getField("VARIABLE", a);
   return Entry.variableContainer.getVariable(c, b).getValue();
 }, "class":"variable", isNotFor:["variable", "variableNotExist"]}, ask_and_wait:{color:"#E457DC", skeleton:"basic", statements:[], template:"%1 \uc744(\ub97c) \ubb3b\uace0 \ub300\ub2f5 \uae30\ub2e4\ub9ac\uae30 %2", params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/variable_03.png", size:12}], events:{whenBlockAdd:[null], whenBlockDestroy:[null]}, func:function(b, a) {
@@ -15656,12 +15662,14 @@ Entry.BlockView.DRAG_RADIUS = 5;
       $(document).unbind(".block");
       l.terminateDrag(a);
       e && e.set({dragBlock:null});
+      l._changeFill(!1);
       Entry.GlobalSvg.remove();
       delete this.mouseDownCoordinate;
       delete l.dragInstance;
     }
     a.stopPropagation && a.stopPropagation();
     a.preventDefault && a.preventDefault();
+    this._changeFill(!1);
     var e = this.getBoard();
     Entry.documentMousedown && Entry.documentMousedown.notify(a);
     if (!this.readOnly && !e.viewOnly) {
@@ -15909,10 +15917,11 @@ Entry.BlockView.DRAG_RADIUS = 5;
     }
   };
   b._changeFill = function(a) {
-    if (this.getBoard().patternRect) {
-      var b = this._path, d = this._fillColor;
-      a && (this.getBoard().setPatternRectFill(d), d = "url(#blockHoverPattern_" + this.getBoard().suffix + ")");
-      b.attr({fill:d});
+    var b = this.getBoard();
+    if (b.patternRect && !b.dragBlock) {
+      var d = this._path, e = this._fillColor;
+      a && (b = this.getBoard(), b.setPatternRectFill(e), e = "url(#blockHoverPattern_" + this.getBoard().suffix + ")");
+      d.attr({fill:e});
     }
   };
   b.addActivated = function() {

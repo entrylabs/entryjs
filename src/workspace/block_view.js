@@ -340,6 +340,7 @@ Entry.BlockView.DRAG_RADIUS = 5;
         if (e.stopPropagation) e.stopPropagation();
         if (e.preventDefault) e.preventDefault();
 
+        this._changeFill(false);
         var board = this.getBoard();
         if (Entry.documentMousedown)
             Entry.documentMousedown.notify(e);
@@ -489,6 +490,7 @@ Entry.BlockView.DRAG_RADIUS = 5;
             $(document).unbind('.block');
             blockView.terminateDrag(e);
             if (board) board.set({dragBlock: null});
+            blockView._changeFill(false);
             Entry.GlobalSvg.remove();
             delete this.mouseDownCoordinate;
             delete blockView.dragInstance;
@@ -909,7 +911,8 @@ Entry.BlockView.DRAG_RADIUS = 5;
     };
 
     p._changeFill = function(isPattern) {
-        if (!this.getBoard().patternRect) return;
+        var board = this.getBoard();
+        if (!board.patternRect || board.dragBlock) return;
         var path = this._path;
         var fillColor = this._fillColor;
 
