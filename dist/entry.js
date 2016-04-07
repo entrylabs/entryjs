@@ -8849,6 +8849,7 @@ Entry.Parser = function(a, b, c) {
         d[e + "();\n"] = b.Scope[e];
       }
       "BasicIf" in b && (d.front = "BasicIf");
+      c.state.competionActive = null;
       CodeMirror.commands.javascriptComplete = function(b) {
         CodeMirror.showHint(b, null, {globalScope:d});
       };
@@ -8856,13 +8857,25 @@ Entry.Parser = function(a, b, c) {
         !b.state.completionActive && 65 <= a.keyCode && 95 >= a.keyCode && CodeMirror.showHint(b, null, {completeSingle:!1, globalScope:d});
       });
       break;
+    case "py":
+      this._parser = new Entry.PYParser(this.syntax);
+      c.on("keyup", function(b, a) {
+        !b.state.completionActive && 65 <= a.keyCode && 95 >= a.keyCode && CodeMirror.showHint(b, null, {completeSingle:!1, globalScope:d});
+      });
+      break;
     case "blockJs":
       this._parser = new Entry.BlockParser(this.syntax);
+      c.state.competionActive = null;
+      CodeMirror.commands.javascriptComplete = function(b) {
+        CodeMirror.showHint(b, null, {globalScope:d});
+      };
+      c.on("keyup", function(b, a) {
+        !b.state.completionActive && 65 <= a.keyCode && 95 >= a.keyCode && CodeMirror.showHint(b, null, {completeSingle:!1, globalScope:d});
+      });
       break;
     case "blockPy":
-      this._parser = new Entry.PyBlockParser(this.syntax), CodeMirror.commands.javascriptComplete = function(b) {
-        CodeMirror.showHint(b, null, {globalScope:d});
-      }, c.on("keyup", function(b, a) {
+      this._parser = new Entry.PyBlockParser(this.syntax), c.state.competionActive = null, c.on("keyup", function(b, a) {
+        console.log("keyup pyblock");
         !b.state.completionActive && 65 <= a.keyCode && 95 >= a.keyCode && CodeMirror.showHint(b, null, {completeSingle:!1, globalScope:d});
       });
   }
@@ -8938,6 +8951,261 @@ Entry.Parser = function(a, b, c) {
     this.availableCode = this.availableCode.concat(d);
   };
 })(Entry.Parser.prototype);
+Entry.PYParser = function(a) {
+  this.syntax = a;
+  this.scopeChain = [];
+  this.scope = null;
+};
+(function(a) {
+  a.Program = function(b) {
+    var a = [], d = [];
+    d.push({type:this.syntax.Program});
+    var e = this.initScope(b), d = d.concat(this.BlockStatement(b));
+    this.unloadScope();
+    a.push(d);
+    return a = a.concat(e);
+  };
+  a.Identifier = function(b, a) {
+    return a ? a[b.name] : this.scope[b.name];
+  };
+  a.ExpressionStatement = function(b) {
+    b = b.expression;
+    return this[b.type](b);
+  };
+  a.ForStatement = function(b) {
+    var a = b.init, d = b.test, e = b.update, f = b.body;
+    if (this.syntax.ForStatement) {
+      throw {message:"\uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:b};
+    }
+    var f = this[f.type](f), a = a.declarations[0].init.value, g = d.operator, d = d.right.value, h = 0;
+    "++" != e.operator && (e = a, a = d, d = e);
+    switch(g) {
+      case "<":
+        h = d - a;
+        break;
+      case "<=":
+        h = d + 1 - a;
+        break;
+      case ">":
+        h = a - d;
+        break;
+      case ">=":
+        h = a + 1 - d;
+    }
+    return this.BasicIteration(b, h, f);
+  };
+  a.BlockStatement = function(b) {
+    var a = [];
+    b = b.body;
+    for (var d = 0;d < b.length;d++) {
+      var e = b[d], f = this[e.type](e);
+      if (f) {
+        if (void 0 === f.type) {
+          throw {message:"\ud574\ub2f9\ud558\ub294 \ube14\ub85d\uc774 \uc5c6\uc2b5\ub2c8\ub2e4.", node:e};
+        }
+        f && a.push(f);
+      }
+    }
+    return a;
+  };
+  a.EmptyStatement = function(b) {
+    throw {message:"empty\ub294 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:b};
+  };
+  a.DebuggerStatement = function(b) {
+    throw {message:"debugger\ub294 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:b};
+  };
+  a.WithStatement = function(b) {
+    throw {message:"with\ub294 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:b};
+  };
+  a.ReturnStaement = function(b) {
+    throw {message:"return\uc740 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:b};
+  };
+  a.LabeledStatement = function(b) {
+    throw {message:"label\uc740 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:b};
+  };
+  a.BreakStatement = function(b) {
+    throw {message:"break\ub294 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:b};
+  };
+  a.ContinueStatement = function(b) {
+    throw {message:"continue\ub294 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:b};
+  };
+  a.IfStatement = function(b) {
+    if (this.syntax.IfStatement) {
+      throw {message:"if\ub294 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:b};
+    }
+    return this.BasicIf(b);
+  };
+  a.SwitchStatement = function(b) {
+    throw {message:"switch\ub294 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:b};
+  };
+  a.SwitchCase = function(b) {
+    throw {message:"switch ~ case\ub294 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:b};
+  };
+  a.ThrowStatement = function(b) {
+    throw {message:"throw\ub294 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:b};
+  };
+  a.TryStatement = function(b) {
+    throw {message:"try\ub294 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:b};
+  };
+  a.CatchClause = function(b) {
+    throw {message:"catch\ub294 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:b};
+  };
+  a.WhileStatement = function(b) {
+    var a = b.body, d = this.syntax.WhileStatement, a = this[a.type](a);
+    if (d) {
+      throw {message:"while\uc740 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:b};
+    }
+    return this.BasicWhile(b, a);
+  };
+  a.DoWhileStatement = function(b) {
+    throw {message:"do ~ while\uc740 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:b};
+  };
+  a.ForInStatement = function(b) {
+    throw {message:"for ~ in\uc740 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:b};
+  };
+  a.FunctionDeclaration = function(b) {
+    if (this.syntax.FunctionDeclaration) {
+      throw {message:"function\uc740 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:b};
+    }
+    return null;
+  };
+  a.VariableDeclaration = function(b) {
+    throw {message:"var\uc740 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:b};
+  };
+  a.ThisExpression = function(b) {
+    return this.scope.this;
+  };
+  a.ArrayExpression = function(b) {
+    throw {message:"array\ub294 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:b};
+  };
+  a.ObjectExpression = function(b) {
+    throw {message:"object\ub294 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:b};
+  };
+  a.Property = function(b) {
+    throw {message:"init, get, set\uc740 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:b};
+  };
+  a.FunctionExpression = function(b) {
+    throw {message:"function\uc740 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:b};
+  };
+  a.UnaryExpression = function(b) {
+    throw {message:b.operator + "\uc740(\ub294) \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \uba85\ub839\uc5b4 \uc785\ub2c8\ub2e4.", node:b};
+  };
+  a.UnaryOperator = function() {
+    return "- + ! ~ typeof void delete".split(" ");
+  };
+  a.updateOperator = function() {
+    return ["++", "--"];
+  };
+  a.BinaryOperator = function() {
+    return "== != === !== < <= > >= << >> >>> + - * / % , ^ & in instanceof".split(" ");
+  };
+  a.AssignmentExpression = function(b) {
+    throw {message:b.operator + "\uc740(\ub294) \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \uba85\ub839\uc5b4 \uc785\ub2c8\ub2e4.", node:b};
+  };
+  a.AssignmentOperator = function() {
+    return "= += -= *= /= %= <<= >>= >>>= ,= ^= &=".split(" ");
+  };
+  a.LogicalExpression = function(b) {
+    throw {message:b.operator + "\uc740(\ub294) \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \uba85\ub839\uc5b4 \uc785\ub2c8\ub2e4.", node:b};
+  };
+  a.LogicalOperator = function() {
+    return ["||", "&&"];
+  };
+  a.MemberExpression = function(b) {
+    var a = b.object, d = b.property;
+    console.log(a.type);
+    a = this[a.type](a);
+    console.log(a);
+    d = this[d.type](d, a);
+    if (Object(a) !== a || Object.getPrototypeOf(a) !== Object.prototype) {
+      throw {message:a + "\uc740(\ub294) \uc798\ubabb\ub41c \uba64\ubc84 \ubcc0\uc218\uc785\ub2c8\ub2e4.", node:b};
+    }
+    a = d;
+    if (!a) {
+      throw {message:d + "\uc774(\uac00) \uc874\uc7ac\ud558\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4.", node:b};
+    }
+    return a;
+  };
+  a.ConditionalExpression = function(b) {
+    throw {message:"\uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:b};
+  };
+  a.UpdateExpression = function(b) {
+    throw {message:b.operator + "\uc740(\ub294) \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \uba85\ub801\uc5b4 \uc785\ub2c8\ub2e4.", node:b};
+  };
+  a.CallExpression = function(b) {
+    b = b.callee;
+    return {type:this[b.type](b)};
+  };
+  a.NewExpression = function(b) {
+    throw {message:"new\ub294 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:b};
+  };
+  a.SequenceExpression = function(b) {
+    throw {message:"\uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:b};
+  };
+  a.initScope = function(b) {
+    if (null === this.scope) {
+      var a = function() {
+      };
+      a.prototype = this.syntax.Scope;
+    } else {
+      a = function() {
+      }, a.prototype = this.scope;
+    }
+    this.scope = new a;
+    this.scopeChain.push(this.scope);
+    return this.scanDefinition(b);
+  };
+  a.unloadScope = function() {
+    this.scopeChain.pop();
+    this.scope = this.scopeChain.length ? this.scopeChain[this.scopeChain.length - 1] : null;
+  };
+  a.scanDefinition = function(b) {
+    b = b.body;
+    for (var a = [], d = 0;d < b.length;d++) {
+      var e = b[d];
+      "FunctionDeclaration" === e.type && (this.scope[e.id.name] = this.scope.promise, this.syntax.BasicFunction && (e = e.body, a.push([{type:this.syntax.BasicFunction, statements:[this[e.type](e)]}])));
+    }
+    return a;
+  };
+  a.BasicFunction = function(b, a) {
+    return null;
+  };
+  a.BasicIteration = function(b, a, d) {
+    var e = this.syntax.BasicIteration;
+    if (!e) {
+      throw {message:"\uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:b};
+    }
+    return {params:[a], type:e, statements:[d]};
+  };
+  a.BasicWhile = function(b, a) {
+    var d = b.test.raw;
+    if (this.syntax.BasicWhile[d]) {
+      return {type:this.syntax.BasicWhile[d], statements:[a]};
+    }
+    throw {message:"\uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:b.test};
+  };
+  a.BasicIf = function(b) {
+    var a = b.consequent, a = this[a.type](a);
+    try {
+      var d = "", e = "===" === b.test.operator ? "==" : b.test.operator;
+      if ("Identifier" === b.test.left.type && "Literal" === b.test.right.type) {
+        d = b.test.left.name + " " + e + " " + b.test.right.raw;
+      } else {
+        if ("Literal" === b.test.left.type && "Identifier" === b.test.right.type) {
+          d = b.test.right.name + " " + e + " " + b.test.left.raw;
+        } else {
+          throw Error();
+        }
+      }
+      if (this.syntax.BasicIf[d]) {
+        return Array.isArray(a) || "object" !== typeof a || (a = [a]), {type:this.syntax.BasicIf[d], statements:[a]};
+      }
+      throw Error();
+    } catch (f) {
+      throw {message:"\uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:b.test};
+    }
+  };
+})(Entry.PYParser.prototype);
 Entry.Popup = function() {
   Entry.assert(!window.popup, "Popup exist");
   this.body_ = Entry.createElement("div");
@@ -15213,22 +15481,22 @@ Entry.GlobalSvg = {};
     }
   };
   a.draw = function() {
-    var a = this._view;
+    var b = this._view;
     this._svg && this.remove();
-    var c = this._mode == Entry.Workspace.MODE_VIMBOARD;
-    this.svgGroup = Entry.SVG.createElement(a.svgGroup.cloneNode(!0), {opacity:1});
+    var a = this._mode == Entry.Workspace.MODE_VIMBOARD;
+    this.svgGroup = Entry.SVG.createElement(b.svgGroup.cloneNode(!0), {opacity:1});
     this.svg.appendChild(this.svgGroup);
     this.show();
-    c && (a = $(this.svgGroup), a.find("g").css({filter:"none"}), a.find("path").velocity({opacity:0}, {duration:500}), a.find("text").velocity({fill:"#000000"}, {duration:530}));
+    a && (b = $(this.svgGroup), b.find("g").css({filter:"none"}), b.find("path").velocity({opacity:0}, {duration:500}), b.find("text").velocity({fill:"#000000"}, {duration:530}));
   };
   a.remove = function() {
     this.svgGroup && (this.svgGroup.remove(), delete this.svgGroup, delete this._view, delete this._offsetX, delete this._offsetY, delete this._startX, delete this._startY, this.hide());
   };
   a.align = function() {
-    var a = this._view.getSkeleton().box(this._view).offsetX || 0, c = this._view.getSkeleton().box(this._view).offsetY || 0, a = -1 * a + 1, c = -1 * c + 1;
-    this._offsetX = a;
-    this._offsetY = c;
-    this.svgGroup.attr({transform:"translate(" + a + "," + c + ")"});
+    var b = this._view.getSkeleton().box(this._view).offsetX || 0, a = this._view.getSkeleton().box(this._view).offsetY || 0, b = -1 * b + 1, a = -1 * a + 1;
+    this._offsetX = b;
+    this._offsetY = a;
+    this.svgGroup.attr({transform:"translate(" + b + "," + a + ")"});
   };
   a.show = function() {
     this.svgDom.css("display", "block");
@@ -15237,16 +15505,16 @@ Entry.GlobalSvg = {};
     this.svgDom.css("display", "none");
   };
   a.position = function() {
-    var a = this._view, c = a.getAbsoluteCoordinate(), a = a.getBoard().offset;
-    this.left = c.x + a.left - this._offsetX;
-    this.top = c.y + a.top - this._offsetY;
+    var b = this._view, a = b.getAbsoluteCoordinate(), b = b.getBoard().offset;
+    this.left = a.x + b.left - this._offsetX;
+    this.top = a.y + b.top - this._offsetY;
     this.svgDom.css({left:this.left, top:this.top});
   };
-  a.terminateDrag = function(a) {
-    var c = Entry.mouseCoordinate;
-    a = a.getBoard().workspace.blockMenu;
-    var d = a.offset.left, e = a.offset.top, f = a.visible ? a.svgDom.width() : 0;
-    return c.y > e && c.x > d + f ? this.DONE : c.y > e && c.x > d && a.visible ? this.REMOVE : this.RETURN;
+  a.terminateDrag = function(b) {
+    var a = Entry.mouseCoordinate;
+    b = b.getBoard().workspace.blockMenu;
+    var d = b.offset.left, e = b.offset.top, f = b.visible ? b.svgDom.width() : 0;
+    return a.y > e && a.x > d + f ? this.DONE : a.y > e && a.x > d && b.visible ? this.REMOVE : this.RETURN;
   };
   a.addControl = function(a) {
     this.onMouseDown.apply(this, arguments);
@@ -16485,8 +16753,8 @@ Entry.Vim = function(a, b) {
     return console.error("Dom is not div element");
   }
   this.createDom(a);
-  this._jsBlockParser = new Entry.Parser("ws", "blockJs");
-  this._pyBlockParser = new Entry.Parser("ws", "blockPy");
+  this._jsBlockParser = new Entry.Parser("ws", "blockJs", this.codeMirror);
+  this._pyBlockParser = new Entry.Parser("ws", "blockPy", this.codeMirror);
   this._jsParser = new Entry.Parser("ws", "js", this.codeMirror);
   this._pyParser = new Entry.Parser("ws", "py", this.codeMirror);
   Entry.Model(this, !1);
@@ -16516,6 +16784,7 @@ Entry.Vim = function(a, b) {
       var b = Array(a.getOption("indentUnit") + 1).join(" ");
       a.replaceSelection(b);
     }}, lint:!0, viewportMargin:10});
+    console.log("codmirror stat", this.codeMirror.state.completionActive);
     this.doc = this.codeMirror.getDoc();
     e = this;
     a = this.view[0];

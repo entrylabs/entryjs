@@ -16,8 +16,8 @@ Entry.Vim = function(dom, textType) {
     //this._parser = new Entry.Parser("maze", "js", this.codeMirror);
     //this._blockParser = new Entry.Parser("maze", "block");
 
-    this._jsBlockParser = new Entry.Parser("ws", "blockJs");
-    this._pyBlockParser = new Entry.Parser("ws", "blockPy");
+    this._jsBlockParser = new Entry.Parser("ws", "blockJs", this.codeMirror);
+    this._pyBlockParser = new Entry.Parser("ws", "blockPy", this.codeMirror);
     this._jsParser = new Entry.Parser("ws", "js", this.codeMirror);
     this._pyParser = new Entry.Parser("ws", "py", this.codeMirror);
 
@@ -52,6 +52,8 @@ Entry.Vim = function(dom, textType) {
             lint: true,
             viewportMargin: 10
         });
+
+        console.log("codmirror stat", this.codeMirror.state.completionActive);
 
         this.doc = this.codeMirror.getDoc();
 
