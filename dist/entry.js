@@ -15804,23 +15804,9 @@ Entry.BlockView.DRAG_RADIUS = 5;
   };
   b._updateBG = function() {
     if (this._board.dragBlock && this._board.dragBlock.dragInstance) {
-      if (this.magnet.next) {
-        if (this.magneting) {
-          var a = this._board.dragBlock.getShadow();
-          $(a).attr({transform:"translate(0," + (this.height + 1) + ")"});
-          this.svgGroup.appendChild(a);
-          this._clonedShadow = a;
-          this.background && (this.background.remove(), this.nextBackground.remove(), delete this.background, delete this.nextBackground);
-          a = this._board.dragBlock.getBelowHeight() + this.offsetY;
-          this.originalHeight = this.offsetY;
-          this.set({offsetY:a});
-        } else {
-          this._clonedShadow && (this._clonedShadow.remove(), delete this._clonedShadow), a = this.originalHeight, void 0 !== a && (this.background && (this.background.remove(), this.nextBackground.remove(), delete this.background, delete this.nextBackground), this.set({offsetY:a}), delete this.originalHeight);
-        }
-        (a = this.block.thread.changeEvent) && a.notify();
-      } else {
-        this.magneting ? this.svgGroup.attr({filter:"url(#entryBlockHighlightFilter_" + this.getBoard().suffix + ")"}) : this.svgGroup.removeAttr("filter");
-      }
+      var a = this.svgGroup;
+      this.magnet.next ? (this.magneting ? (a = this._board.dragBlock.getShadow(), $(a).attr({transform:"translate(0," + (this.height + 1) + ")"}), this.svgGroup.appendChild(a), this._clonedShadow = a, this.background && (this.background.remove(), this.nextBackground.remove(), delete this.background, delete this.nextBackground), a = this._board.dragBlock.getBelowHeight() + this.offsetY, this.originalHeight = this.offsetY, this.set({offsetY:a})) : (this._clonedShadow && (this._clonedShadow.remove(), 
+      delete this._clonedShadow), a = this.originalHeight, void 0 !== a && (this.background && (this.background.remove(), this.nextBackground.remove(), delete this.background, delete this.nextBackground), this.set({offsetY:a}), delete this.originalHeight)), (a = this.block.thread.changeEvent) && a.notify()) : this.magneting ? (a.attr({filter:"url(#entryBlockHighlightFilter_" + this.getBoard().suffix + ")"}), a.addClass("outputHighlight")) : (a.removeClass("outputHighlight"), a.removeAttr("filter"));
     }
   };
   b.addDragging = function() {

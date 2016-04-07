@@ -699,19 +699,22 @@ Entry.BlockView.DRAG_RADIUS = 5;
     p._updateBG = function() {
         if (!this._board.dragBlock || !this._board.dragBlock.dragInstance)
             return;
+        var blockView = this;
+        var svgGroup = blockView.svgGroup;
         if (!this.magnet.next) {// field block
-            if (this.magneting)
-                this.svgGroup.attr({
+            if (this.magneting) {
+                svgGroup.attr({
                     filter: 'url(#entryBlockHighlightFilter_' + this.getBoard().suffix + ')'
                 });
-            else
-                this.svgGroup.removeAttr('filter');
+                svgGroup.addClass('outputHighlight');
+            } else {
+                svgGroup.removeClass('outputHighlight');
+                svgGroup.removeAttr('filter');
+            }
             return;
         }
-        var blockView = this;
         var magneting = blockView.magneting;
         var block = blockView.block;
-        var svgGroup = blockView.svgGroup;
         if (magneting) {
             var shadow = this._board.dragBlock.getShadow();
             $(shadow).attr({
