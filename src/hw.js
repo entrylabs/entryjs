@@ -200,7 +200,6 @@ p.setZero = function() {
 };
 
 p.checkDevice = function(data) {
-    return; // 임시
     if (data.company === undefined)
         return;
     var key = ''+data.company + data.model;
