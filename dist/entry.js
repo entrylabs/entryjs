@@ -10870,10 +10870,12 @@ Entry.Func.initEditView = function(b) {
   var a = Entry.playground.mainWorkspace;
   a.setMode(Entry.Workspace.MODE_OVERLAYBOARD);
   a.changeOverlayBoardCode(b);
-  a.changeEvent.attach(this, this.endEdit);
+  this._workspaceStateEvent = a.changeEvent.attach(this, this.endEdit);
 };
 Entry.Func.endEdit = function(b) {
   this._funcChangeEvent.destroy();
+  this._workspaceStateEvent.destroy();
+  delete this._workspaceStateEvent;
   switch(b) {
     case "save":
       this.save();
@@ -10884,7 +10886,6 @@ Entry.Func.endEdit = function(b) {
 Entry.Func.save = function() {
   this.targetFunc.generateBlock(!0);
   Entry.variableContainer.saveFunction(this.targetFunc);
-  this.cancelEdit();
 };
 Entry.Func.cancelEdit = function() {
   this.targetFunc && (Entry.Func.isEdit = !1, this.targetFunc.block || (this._targetFuncBlock.destroy(), delete Entry.variableContainer.functions_[this.targetFunc.id], delete Entry.variableContainer.selected), delete this.targetFunc, this.updateMenu(), Entry.variableContainer.updateList());
@@ -10968,10 +10969,10 @@ Entry.Func.generateWsBlock = function() {
         Entry.Mutator.mutate(f.type, {template:Lang.Blocks.FUNCTION_logical_variable + " " + (a ? a : "")});
         a++;
         d.push({type:"Block", accept:"booleanMagnet"});
-        e = e + " %" + (a + c);
+        e += " %" + (a + c);
         break;
       case "function_field_string":
-        Entry.Mutator.mutate(f.type, {template:Lang.Blocks.FUNCTION_character_variable + " " + (c ? c : "")}), c++, e = e + " %" + (a + c), d.push({type:"Block", accept:"stringMagnet"});
+        Entry.Mutator.mutate(f.type, {template:Lang.Blocks.FUNCTION_character_variable + " " + (c ? c : "")}), c++, e += " %" + (a + c), d.push({type:"Block", accept:"stringMagnet"});
     }
     b = b.getOutputBlock();
   }
@@ -12190,7 +12191,7 @@ Entry.VariableContainer.prototype.getMessageJSON = function() {
 Entry.VariableContainer.prototype.getFunctionJSON = function() {
   var b = [], a;
   for (a in this.functions_) {
-    var c = this.functions_[a], c = {id:c.id, block:Blockly.Xml.domToText(c.block), content:Blockly.Xml.domToText(c.content)};
+    var c = this.functions_[a], c = {id:c.id, block:c.block, content:c.content.toJSON()};
     b.push(c);
   }
   return b;

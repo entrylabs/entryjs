@@ -1350,8 +1350,8 @@ Entry.VariableContainer.prototype.getFunctionJSON = function() {
         var func = this.functions_[i];
         var funcJSON = {
             id: func.id,
-            block: Blockly.Xml.domToText(func.block),
-            content: Blockly.Xml.domToText(func.content)
+            block: func.block,
+            content: func.content.toJSON()
         };
         json.push(funcJSON);
     }

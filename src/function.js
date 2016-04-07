@@ -81,11 +81,13 @@ Entry.Func.initEditView = function(content) {
     var workspace = Entry.playground.mainWorkspace;
     workspace.setMode(Entry.Workspace.MODE_OVERLAYBOARD);
     workspace.changeOverlayBoardCode(content);
-    workspace.changeEvent.attach(this, this.endEdit);
+    this._workspaceStateEvent = workspace.changeEvent.attach(this, this.endEdit);
 };
 
 Entry.Func.endEdit = function(message) {
     this._funcChangeEvent.destroy();
+    this._workspaceStateEvent.destroy();
+    delete this._workspaceStateEvent;
     switch(message){
         case "save":
             this.save();
@@ -97,7 +99,6 @@ Entry.Func.endEdit = function(message) {
 Entry.Func.save = function() {
     this.targetFunc.generateBlock(true);
     Entry.variableContainer.saveFunction(this.targetFunc);
-    this.cancelEdit();
 };
 
 Entry.Func.cancelEdit = function() {
@@ -272,7 +273,7 @@ Entry.Func.generateWsBlock = function() {
                     type: "Block",
                     accept: "booleanMagnet"
                 });
-                schemaTemplate = schemaTemplate + " %" + (booleanIndex + stringIndex);
+                schemaTemplate += " %" + (booleanIndex + stringIndex);
                 break;
             case 'function_field_string':
                 Entry.Mutator.mutate(value.type, {
@@ -280,7 +281,7 @@ Entry.Func.generateWsBlock = function() {
                         " " + (stringIndex ? stringIndex : "")
                 });
                 stringIndex++;
-                schemaTemplate = schemaTemplate + " %" + (booleanIndex + stringIndex);
+                schemaTemplate += " %" + (booleanIndex + stringIndex);
                 schemaParams.push({
                     type: "Block",
                     accept: "stringMagnet"
