@@ -714,8 +714,8 @@ Blockly.Blocks.arduino_toggle_led = {init:function() {
   this.setNextStatement(!0);
 }};
 Entry.block.arduino_toggle_led = function(b, a) {
-  var c = a.getNumberValue("VALUE"), d = "on" == a.getField("OPERATOR") ? 255 : 0;
-  Entry.hw.setDigitalPortValue(c, d);
+  var c = a.getNumberValue("VALUE"), d = a.getField("OPERATOR");
+  Entry.hw.setDigitalPortValue(c, "on" == d ? 255 : 0);
   return a.callReturn();
 };
 Blockly.Blocks.arduino_toggle_pwm = {init:function() {
@@ -1677,10 +1677,10 @@ Entry.block.wait_second = function(b, a) {
   }
   a.isStart = !0;
   a.timeFlag = 1;
-  var c = a.getNumberValue("SECOND", a), c = 60 / (Entry.FPS || 60) * c * 1E3;
+  var c = a.getNumberValue("SECOND", a);
   setTimeout(function() {
     a.timeFlag = 0;
-  }, c);
+  }, 60 / (Entry.FPS || 60) * c * 1E3);
   return a;
 };
 Blockly.Blocks.repeat_basic = {init:function() {
@@ -10840,7 +10840,6 @@ Entry.Func = function() {
 };
 Entry.Func.threads = {};
 Entry.Func.registerFunction = function(b) {
-  this.menuCode || this.setupMenuCode();
   this._targetFuncBlock = Entry.playground.mainWorkspace.getBlockMenu().getCategoryCodes("func").createThread([{type:"func_" + b.id}]);
 };
 Entry.Func.executeFunction = function(b) {
@@ -10863,10 +10862,11 @@ Entry.Func.edit = function(b) {
   this.cancelEdit();
   this.targetFunc = b;
   this.initEditView(b.content);
-  this._funcChangeEvent = b.content.getEventMap("funcDef")[0].view._contents[1].changeEvent.attach(this, this.generateWsBlock);
+  this.bindFuncChangeEvent();
   this.updateMenu();
 };
 Entry.Func.initEditView = function(b) {
+  this.menuCode || this.setupMenuCode();
   var a = Entry.playground.mainWorkspace;
   a.setMode(Entry.Workspace.MODE_OVERLAYBOARD);
   a.changeOverlayBoardCode(b);
@@ -10940,6 +10940,7 @@ Entry.Func.requestParamBlock = function(b) {
   d.changeEvent = new Entry.Event;
   b = b + "Param_" + a;
   Entry.block[b] = d;
+  this.targetFunc.hashMap[b] = !0;
   return b;
 };
 Entry.Func.updateMenu = function() {
@@ -10959,25 +10960,38 @@ Entry.Func.prototype.generateBlock = function(b) {
   this.description = b.description;
 };
 Entry.Func.generateWsBlock = function() {
-  for (var b = this.targetFunc.content.getEventMap("funcDef")[0].params[0], a = 0, c = 0, d = [], e = "";b;) {
-    var f = b.params[0];
+  var b = this.targetFunc.content.getEventMap("funcDef")[0].params[0], a = 0, c = 0, d = [], e = "", f = this.targetFunc.hashMap;
+  for (this.unbindFuncChangeEvent();b;) {
+    var g = b.params[0];
     switch(b.type) {
       case "function_field_label":
-        e = e + " " + f;
+        e = e + " " + g;
         break;
       case "function_field_boolean":
-        Entry.Mutator.mutate(f.type, {template:Lang.Blocks.FUNCTION_logical_variable + " " + (a ? a : "")});
+        Entry.Mutator.mutate(g.type, {template:Lang.Blocks.FUNCTION_logical_variable + " " + (a ? a : "")});
+        f[g.type] = !1;
         a++;
         d.push({type:"Block", accept:"booleanMagnet"});
         e += " %" + (a + c);
         break;
       case "function_field_string":
-        Entry.Mutator.mutate(f.type, {template:Lang.Blocks.FUNCTION_character_variable + " " + (c ? c : "")}), c++, e += " %" + (a + c), d.push({type:"Block", accept:"stringMagnet"});
+        Entry.Mutator.mutate(g.type, {template:Lang.Blocks.FUNCTION_character_variable + " " + (c ? c : "")}), f[g.type] = !1, c++, e += " %" + (a + c), d.push({type:"Block", accept:"stringMagnet"});
     }
     b = b.getOutputBlock();
   }
   Entry.Mutator.mutate("func_" + this.targetFunc.id, {params:d, template:e});
+  for (var h in f) {
+    f[h] ? Entry.Mutator.mutate(h, {template:Lang.Blocks.FUNCTION_character_variable}) : f[h] = !0;
+  }
   this.refreshMenuCode();
+  this.bindFuncChangeEvent();
+};
+Entry.Func.bindFuncChangeEvent = function() {
+  this._funcChangeEvent || (this._funcChangeEvent = this.targetFunc.content.getEventMap("funcDef")[0].view._contents[1].changeEvent.attach(this, this.generateWsBlock));
+};
+Entry.Func.unbindFuncChangeEvent = function() {
+  this._funcChangeEvent && this._funcChangeEvent.destroy();
+  delete this._funcChangeEvent;
 };
 Entry.HWMontior = {};
 Entry.HWMonitor = function(b) {
@@ -13507,8 +13521,8 @@ Entry.block = {albert_move_forward:{color:"#00979D", skeleton:"basic", statement
   var c = a.getNumberValue("VALUE", a);
   return Entry.hw.getDigitalPortValue(c);
 }, "class":"arduino_value", isNotFor:["arduino"]}, arduino_toggle_led:{color:"#00979D", skeleton:"basic", statements:[], template:"\ub514\uc9c0\ud138 %1 \ubc88 \ud540 %2 %3", params:[{type:"Block", accept:"stringMagnet"}, {type:"Dropdown", options:[["\ucf1c\uae30", "on"], ["\ub044\uae30", "off"]], value:"on", fontSize:11}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, func:function(b, a) {
-  var c = a.getNumberValue("VALUE"), d = "on" == a.getField("OPERATOR") ? 255 : 0;
-  Entry.hw.setDigitalPortValue(c, d);
+  var c = a.getNumberValue("VALUE"), d = a.getField("OPERATOR");
+  Entry.hw.setDigitalPortValue(c, "on" == d ? 255 : 0);
   return a.callReturn();
 }, "class":"arduino_set", isNotFor:["arduino"]}, arduino_toggle_pwm:{color:"#00979D", skeleton:"basic", statements:[], template:"\ub514\uc9c0\ud138 %1 \ubc88 \ud540\uc744 %2 (\uc73c)\ub85c \uc815\ud558\uae30 %3", params:[{type:"Block", accept:"stringMagnet"}, {type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/hardware_03.png", size:12}], events:{}, func:function(b, a) {
   var c = a.getNumberValue("PORT"), d = a.getNumberValue("VALUE"), d = Math.round(d), d = Math.max(d, 0), d = Math.min(d, 255);
@@ -13842,10 +13856,10 @@ func:function(b, a) {
   }
   a.isStart = !0;
   a.timeFlag = 1;
-  var c = a.getNumberValue("SECOND", a), c = 60 / (Entry.FPS || 60) * c * 1E3;
+  var c = a.getNumberValue("SECOND", a);
   setTimeout(function() {
     a.timeFlag = 0;
-  }, c);
+  }, 60 / (Entry.FPS || 60) * c * 1E3);
   return a;
 }, "class":"delay", isNotFor:[]}, repeat_basic:{color:"#498deb", skeleton:"basic_loop", statements:[{accept:"basic"}], template:"%1 \ubc88 \ubc18\ubcf5\ud558\uae30 %2", params:[{type:"Block", accept:"stringMagnet"}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/flow_03.png", size:12}], events:{}, func:function(b, a) {
   var c;

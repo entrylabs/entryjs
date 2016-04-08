@@ -36,8 +36,6 @@ Entry.Func = function() {
 Entry.Func.threads = {};
 
 Entry.Func.registerFunction = function(func) {
-    if (!this.menuCode)
-        this.setupMenuCode();
     var blockMenu = Entry.playground.mainWorkspace.getBlockMenu();
     var menuCode = blockMenu.getCategoryCodes("func");
     this._targetFuncBlock = menuCode.createThread([{
@@ -72,12 +70,13 @@ Entry.Func.edit = function(func) {
     this.cancelEdit();
     this.targetFunc = func;
     this.initEditView(func.content);
-    this._funcChangeEvent = func.content.getEventMap("funcDef")[0].view._contents[1]
-        .changeEvent.attach(this, this.generateWsBlock);
+    this.bindFuncChangeEvent();
     this.updateMenu();
 };
 
 Entry.Func.initEditView = function(content) {
+    if (!this.menuCode)
+        this.setupMenuCode();
     var workspace = Entry.playground.mainWorkspace;
     workspace.setMode(Entry.Workspace.MODE_OVERLAYBOARD);
     workspace.changeOverlayBoardCode(content);
@@ -189,7 +188,7 @@ Entry.Func.refreshMenuCode = function() {
 
 Entry.Func.requestParamBlock = function(type) {
     var id = Entry.generateHash();
-    var blockPrototype, hashMap;
+    var blockPrototype;
     switch (type) {
         case "string":
             blockPrototype = Entry.block.function_param_string;
@@ -208,6 +207,7 @@ Entry.Func.requestParamBlock = function(type) {
 
     var blockType = type + "Param_" + id;
     Entry.block[blockType] = blockSchema;
+    this.targetFunc.hashMap[blockType] = true;
     return blockType;
 };
 
@@ -257,6 +257,8 @@ Entry.Func.generateWsBlock = function() {
     var stringIndex = 0;
     var schemaParams = [];
     var schemaTemplate = "";
+    var hashMap = this.targetFunc.hashMap;
+    this.unbindFuncChangeEvent();
     while(outputBlock) {
         var value = outputBlock.params[0];
         switch(outputBlock.type) {
@@ -268,6 +270,7 @@ Entry.Func.generateWsBlock = function() {
                     template: Lang.Blocks.FUNCTION_logical_variable +
                         " " + (booleanIndex ? booleanIndex : "")
                 });
+                hashMap[value.type] = false;
                 booleanIndex++;
                 schemaParams.push({
                     type: "Block",
@@ -280,6 +283,7 @@ Entry.Func.generateWsBlock = function() {
                     template: Lang.Blocks.FUNCTION_character_variable +
                         " " + (stringIndex ? stringIndex : "")
                 });
+                hashMap[value.type] = false;
                 stringIndex++;
                 schemaTemplate += " %" + (booleanIndex + stringIndex);
                 schemaParams.push({
@@ -294,5 +298,32 @@ Entry.Func.generateWsBlock = function() {
         "func_" + this.targetFunc.id,
         {params: schemaParams, template: schemaTemplate}
     );
+
+    for (var key in hashMap) {
+        var state = hashMap[key];
+        if (state) {
+            Entry.Mutator.mutate(key, {
+                template: Lang.Blocks.FUNCTION_character_variable
+            });
+        } else {
+            hashMap[key] = true;
+        }
+    }
+
     this.refreshMenuCode();
+
+    this.bindFuncChangeEvent();
+};
+
+Entry.Func.bindFuncChangeEvent = function() {
+    if (!this._funcChangeEvent)
+        this._funcChangeEvent = this.targetFunc.content
+            .getEventMap("funcDef")[0].view._contents[1]
+            .changeEvent.attach(this, this.generateWsBlock);
+};
+
+Entry.Func.unbindFuncChangeEvent = function() {
+    if (this._funcChangeEvent)
+        this._funcChangeEvent.destroy();
+    delete this._funcChangeEvent;
 };
