@@ -7494,7 +7494,7 @@ Entry.EntryObject.prototype.generateView = function() {
     h.setAttribute("disabled", "disabled");
     var k = Entry.createElement("span");
     k.addClass("entryObjectCoordinateSizeWorkspace");
-    k.innerHTML = "\ud06c\uae30 :";
+    k.innerHTML = Lang.Workspace.Size + " : ";
     var l = Entry.createElement("input");
     l.addClass("entryObjectCoordinateInputWorkspace", "entryObjectCoordinateInputWorkspace_size");
     l.bindOnClick(function(a) {

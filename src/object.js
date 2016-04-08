@@ -312,7 +312,7 @@ Entry.EntryObject.prototype.generateView = function() {
         yInput.setAttribute("disabled","disabled");
         var sizeSpan = Entry.createElement('span');
         sizeSpan.addClass('entryObjectCoordinateSizeWorkspace');
-        sizeSpan.innerHTML = '크기 :';
+        sizeSpan.innerHTML = Lang.Workspace.Size + ' : ';
         var sizeInput = Entry.createElement('input');
         sizeInput.addClass('entryObjectCoordinateInputWorkspace',
                            'entryObjectCoordinateInputWorkspace_size');
