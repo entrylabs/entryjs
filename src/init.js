@@ -3,6 +3,8 @@
  */
 'use strict';
 
+goog.require("Entry.PropertyPanel");
+
 /**
  * Initialize method with options.
  * @param {!Element} container for entry workspace or others.
@@ -102,6 +104,7 @@ Entry.initialize_ = function() {
     /**
      * Initialize stage
      * @type {!Entry.Stage}
+     * @type {!object}
      */
     this.stage = new Entry.Stage();
 
@@ -110,30 +113,41 @@ Entry.initialize_ = function() {
     /**
      * Initialize engine for run.
      * @type {!Entry.Engine}
+     * @type {!object}
      */
     this.engine = new Entry.Engine();
 
     /**
+     * Initialize PropertyPanel.
+     * @type {!object}
+     */
+    this.propertyPanel = new Entry.PropertyPanel();
+
+    /**
      * Initialize container for objects.
-     * @type {!Entry.Container}
+     * @type {!Entry.Container}π
+     * @type {!object}
      */
     this.container = new Entry.Container();
 
     /**
      * Initialize helper.
      * @type {!Entry.Helper}
+     * @type {!object}
      */
     this.helper = new Entry.Helper();
 
     /**
      * Initialize container for objects.
      * @type {!Entry.VariableContainer}
+     * @type {!object}
      */
     this.variableContainer = new Entry.VariableContainer();
 
     /**
      * Initialize stateManager for redo and undo.
      * @type {!Entry.StateManager}
+     * @type {!object}
      */
     if (this.type == 'workspace' || this.type == 'phone')
         this.stateManager = new Entry.StateManager();
@@ -141,6 +155,7 @@ Entry.initialize_ = function() {
     /**
      * Initialize scenes.
      * @type {!Entry.Scene}
+     * @type {!object}
      */
     this.scene = new Entry.Scene();
 
@@ -218,7 +233,7 @@ Entry.createDom = function(container, option) {
             for(var i=0; i<tempList.length; i++) {
                 var list = tempList[i];
                 if(wheelDirection){
-                    if(list.scrollButton_.y >= 46 )
+                    if(list.scrollButton_.y >= 46 ) 
                         list.scrollButton_.y -= 23;
                     else
                         list.scrollButton_.y = 23;
@@ -234,18 +249,22 @@ Entry.createDom = function(container, option) {
         this.stage.initStage(this.canvas_);
 
         var containerView = Entry.createElement('div');
-        container.appendChild(containerView);
+        //container.appendChild(containerView);
+        this.propertyPanel.generateView(container, option);
         /** @type {!Element} */
         this.containerView = containerView;
         this.container.generateView(this.containerView, option);
-
-        this.helper.initBlockHelper(containerView);
 
         var playgroundView = Entry.createElement('div');
         container.appendChild(playgroundView);
         /** @type {!Element} */
         this.playgroundView = playgroundView;
         this.playground.generateView(this.playgroundView, option);
+
+        this.propertyPanel.addMode("container", this.container);
+
+        this.propertyPanel.addMode("helper" , this.helper);
+        this.propertyPanel.select("container");
     } else if (option == 'minimize') {
         var canvas = Entry.createElement('canvas');
         canvas.className = 'entryCanvasWorkspace';
@@ -329,7 +348,7 @@ Entry.parseOptions = function(options) {
     this.objectAddable = options.objectaddable;
     if (this.objectAddable === undefined)
         this.objectAddable = true;
-    
+
     this.objectEditable = options.objectEditable;
     if (this.objectEditable === undefined)
         this.objectEditable = true;
@@ -382,40 +401,5 @@ Entry.parseOptions = function(options) {
 Entry.initFonts = function(fonts) {
     this.fonts = fonts;
     if (!fonts) this.fonts = [];
-
-    var config = {
-        custom: {
-            families: [],
-            urls: []
-        }
-    };
-
-    for (var i=0; i<this.fonts.length; i++) {
-        var font = this.fonts[i];
-        config.custom.families.push(font.family);
-        config.custom.urls.push(font.url);
-    }
-
-    setTimeout(function() {
-        WebFont.load(config);
-    },1000);
-
-    /*
-    config.custom.families.forEach(function(font) {
-        var node = Entry.createElement('div');
-        node.innerHTML = "abcd한글123#$";
-        node.style.position      = 'absolute';
-        node.style.left          = '-10000px';
-        node.style.top           = '-10000px';
-        node.style.fontSize      = '300px';
-
-        node.style.fontFamily    = font;
-        node.style.fontVariant   = 'normal';
-        node.style.fontStyle     = 'normal';
-        node.style.fontWeight    = 'normal';
-        node.style.letterSpacing = '0';
-        document.body.appendChild(node);
-    });
-    */
 
 };

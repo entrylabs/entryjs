@@ -274,13 +274,6 @@ Entry.EntryObject.prototype.generateView = function() {
             });
         }
 
-        var selectedImgView = Entry.createElement('div');
-        selectedImgView.addClass('entryObjectSelectedImgWorkspace');
-        this.selectedImgView_ = selectedImgView;
-        this.view_.appendChild(selectedImgView);
-        this.initializeSplitter(selectedImgView);
-        this.splitter = selectedImgView;
-
         var informationView = Entry.createElement('div');
         informationView.addClass('entryObjectInformationWorkspace');
         informationView.object = this;
@@ -319,7 +312,7 @@ Entry.EntryObject.prototype.generateView = function() {
         yInput.setAttribute("disabled","disabled");
         var sizeSpan = Entry.createElement('span');
         sizeSpan.addClass('entryObjectCoordinateSizeWorkspace');
-        sizeSpan.innerHTML = '크기 :';
+        sizeSpan.innerHTML = Lang.Workspace.Size + ' : ';
         var sizeInput = Entry.createElement('input');
         sizeInput.addClass('entryObjectCoordinateInputWorkspace',
                            'entryObjectCoordinateInputWorkspace_size');
@@ -1194,7 +1187,7 @@ Entry.EntryObject.prototype.setRotateMethod = function(rotateMethod) {
     if(Entry.stage.selectedObject && Entry.stage.selectedObject.entity) {
         Entry.stage.updateObject();
         Entry.stage.updateHandle();
-    } 
+    }
 };
 
 Entry.EntryObject.prototype.initRotateValue = function(rotateMethod) {
@@ -1247,8 +1240,8 @@ Entry.EntryObject.prototype.toggleInformation = function(isToggle) {
  * @param {?xml block} script
  */
 Entry.EntryObject.prototype.addCloneEntity = function(object, entity, script) {
-    if (this.clonedEntities.length > Entry.maxCloneLimit)
-        return;
+    if (this.clonedEntities.length > Entry.maxCloneLimit) return;
+
     var clonedEntity = new Entry.EntityObject(this);
     if (entity) {
         clonedEntity.injectModel(

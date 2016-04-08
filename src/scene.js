@@ -323,9 +323,12 @@ Entry.Scene.prototype.toJSON = function() {
     for (var i = 0; i<length; i++) {
         var scene = this.getScenes()[i];
         var view = scene.view;
+        var inputWrapper = scene.inputWrapper;
         delete scene.view;
+        delete scene.inputWrapper;
         json.push(JSON.parse(JSON.stringify(scene)));
         scene.view = view;
+        scene.inputWrapper = inputWrapper;
     }
     return json;
 };
