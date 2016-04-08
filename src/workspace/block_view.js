@@ -112,10 +112,12 @@ Entry.BlockView.DRAG_RADIUS = 5;
 
         if (this.getBoard().patternRect) {
             $(this._path).mouseenter(function(e) {
+                if (!that._mouseEnable) return;
                 that._changeFill(true);
             });
 
             $(this._path).mouseleave(function(e) {
+                if (!that._mouseEnable) return;
                 that._changeFill(false);
             });
         }
@@ -326,6 +328,7 @@ Entry.BlockView.DRAG_RADIUS = 5;
 
     p._addControl = function() {
         var that = this;
+        this._mouseEnable = true;
         $(this.svgGroup).bind(
             'mousedown.blockViewMousedown touchstart.blockViewMousedown',
             that.mouseHandler
@@ -333,6 +336,7 @@ Entry.BlockView.DRAG_RADIUS = 5;
     };
 
     p.removeControl = function() {
+        this._mouseEnable = false;
         $(this.svgGroup).unbind('.blockViewMousedown');
     };
 
@@ -900,6 +904,10 @@ Entry.BlockView.DRAG_RADIUS = 5;
         this._path.attr({fill:fillColor});
         //update block inner images
 
+        this._updateContents();
+    };
+
+    p._updateContents = function() {
         for (var i=0; i<this._contents.length; i++)
             this._contents[i].renderStart();
         this.alignContent(false);
@@ -933,6 +941,27 @@ Entry.BlockView.DRAG_RADIUS = 5;
 
     p.removeActivated = function() {
         this.svgGroup.removeClass('activated');
+    };
+
+    p.reDraw = function() {
+        var block = this.block;
+        this._updateContents();
+        var params = block.params;
+        if (params) {
+            for (var i=0; i<params.length; i++) {
+                var param = params[i];
+                if (param instanceof Entry.Block) {
+                    param.view.reDraw();
+                }
+            }
+        }
+        var statements = block.statements;
+        if (statements) {
+            for (var i=0; i<statements.length; i++) {
+                var statement = statements[i];
+                statement.view.reDraw();
+            }
+        }
     };
 
 

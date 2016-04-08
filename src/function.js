@@ -302,8 +302,13 @@ Entry.Func.generateWsBlock = function() {
     for (var key in hashMap) {
         var state = hashMap[key];
         if (state) {
+            var text;
+            if (key.indexOf("string") > -1)
+                text = Lang.Blocks.FUNCTION_character_variable;
+            else
+                text = Lang.Blocks.FUNCTION_logical_variable;
             Entry.Mutator.mutate(key, {
-                template: Lang.Blocks.FUNCTION_character_variable
+                template: text
             });
         } else {
             hashMap[key] = true;

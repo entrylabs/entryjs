@@ -113,7 +113,9 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
         );
 
         this.svgDom.mouseenter(function(e) {
-            if (!Entry.playground || Entry.playground.resizing) return;
+            var selectedBlockView = that.workspace.selectedBlockView;
+            if (!Entry.playground || Entry.playground.resizing
+               || (selectedBlockView && selectedBlockView.dragMode === Entry.DRAG_MODE_DRAG)) return;
             Entry.playground.focusBlockMenu = true;
             var bBox = that.svgGroup.getBBox();
             var expandWidth = bBox.width + bBox.x + 64;
@@ -443,9 +445,14 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
             var blocks = datum.blocks;
             var codesJSON = [];
             blocks.forEach(function(b){
-                codesJSON.push([{
-                    type:b
-                }]);
+                var block = Entry.block[b];
+                if (!block || !block.def) {
+                    codesJSON.push([{type:b}]);
+                } else {
+                    codesJSON.push([
+                        block.def
+                    ]);
+                }
             });
             var categoryName = datum.category;
             this._categories.push(categoryName);
@@ -499,6 +506,8 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
 
     p.reDraw = function() {
         this.selectMenu(this.lastSelector, true);
+        var codeView = this.code && this.code.view ? this.code.view : null;
+        if (codeView) codeView.reDraw();
     };
 
     p._handleDragBlock = function() {

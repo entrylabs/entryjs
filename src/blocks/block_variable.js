@@ -294,7 +294,7 @@ Blockly.Blocks.get_canvas_input_value = {
     init: function () {
         this.setColour("#E457DC");
         this.appendDummyInput()
-            .appendField(Lang.Blocks.VARIABLE_get_canvas_input_value);
+            .appendField(Lang.Blocks.VARIABLE_get_canvas_input_value, '#fff');
         this.appendDummyInput()
             .appendField(" ");
         this.setOutput(true, 'Number');

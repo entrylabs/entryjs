@@ -1123,13 +1123,6 @@ Entry.Playground.prototype.restoreBlock = function(targetObject, blockString) {
 };
 
 /**
- * Save current playground data to selected object with event
- * @param {event} e
- */
-Entry.Playground.prototype.syncObjectWithEvent = function(e) {
-};
-
-/**
  * Generate category menu with object type.
  * @param {!string} objectType
  */
@@ -1179,16 +1172,24 @@ Entry.Playground.prototype.showTab = function(item) {
 Entry.Playground.prototype.initializeResizeHandle = function(handle) {
     handle.onmousedown = function(e) {
         Entry.playground.resizing = true;
-    };
-    document.addEventListener('mousemove', function(e) {
-        if (Entry.playground.resizing) {
-            Entry.resizeElement({
-                menuWidth: e.x - Entry.interfaceState.canvasWidth
+        if (Entry.documentMousemove) {
+            Entry.playground.resizeEvent = Entry.documentMousemove.attach(this, function(e) {
+                if (Entry.playground.resizing) {
+                    Entry.resizeElement({
+                        menuWidth: e.clientX - Entry.interfaceState.canvasWidth
+                    });
+                }
             });
         }
-    });
+    };
+
     document.addEventListener('mouseup', function(e) {
-        Entry.playground.resizing = false;
+        var listener = Entry.playground.resizeEvent
+        if (listener) {
+            Entry.playground.resizing = false;
+            Entry.documentMousemove.detach(listener);
+            delete Entry.playground.resizeEvent;
+        }
     });
 };
 
@@ -1198,10 +1199,11 @@ Entry.Playground.prototype.initializeResizeHandle = function(handle) {
 Entry.Playground.prototype.reloadPlayground = function () {
     var selectedCategory, selector;
 
-    this.mainWorkspace.getBlockMenu().reDraw();
+    var mainWorkspace = this.mainWorkspace;
+    mainWorkspace.getBlockMenu().reDraw();
 
     if (Entry.stage.selectedObject) {
-        //TODO : reload board
+        Entry.stage.selectedObject.script.view.reDraw();
     }
 };
 
@@ -1211,9 +1213,9 @@ Entry.Playground.prototype.reloadPlayground = function () {
 Entry.Playground.prototype.flushPlayground = function () {
     this.object = null;
     if (Entry.playground && Entry.playground.view_) {
-        // TODO: reset board
         this.injectPicture();
         this.injectSound();
+        Entry.playground.mainWorkspace.getBoard().clear();
     }
 };
 
