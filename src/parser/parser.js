@@ -90,8 +90,9 @@ Entry.Parser = function(mode, syntax, cm) {
             cm.state.competionActive = null;
 
             cm.on("keyup", function (cm, event) {
-                console.log("keyup pyblock");
+                console.log("keyup pyblock", cm.state.competionActive);
                 if (!cm.state.completionActive &&  (event.keyCode >= 65 && event.keyCode <= 95))  {
+                    console.log("check completion");
                     CodeMirror.showHint(cm, null, {completeSingle: false, globalScope:assistScope});
                 }
             });

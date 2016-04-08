@@ -8875,8 +8875,8 @@ Entry.Parser = function(a, b, c) {
       break;
     case "blockPy":
       this._parser = new Entry.PyBlockParser(this.syntax), c.state.competionActive = null, c.on("keyup", function(b, a) {
-        console.log("keyup pyblock");
-        !b.state.completionActive && 65 <= a.keyCode && 95 >= a.keyCode && CodeMirror.showHint(b, null, {completeSingle:!1, globalScope:d});
+        console.log("keyup pyblock", b.state.competionActive);
+        !b.state.completionActive && 65 <= a.keyCode && 95 >= a.keyCode && (console.log("check completion"), CodeMirror.showHint(b, null, {completeSingle:!1, globalScope:d}));
       });
   }
 };
