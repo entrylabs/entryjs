@@ -6143,7 +6143,6 @@ Entry.Container.prototype.generateTabView = function() {
   c.addClass("entryHide");
   a.appendChild(c);
   this.helperContainer = c;
-  Entry.helper.initBlockHelper(c);
   d.addClass("selected");
 };
 Entry.Container.prototype.changeTabView = function(a) {

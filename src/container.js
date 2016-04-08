@@ -200,7 +200,7 @@ Entry.Container.prototype.setObjects = function(objectModels) {
  */
 Entry.Container.prototype.getPictureElement = function(pictureId) {
     for(var i in this.objects_) {
-        var object = this.objects_[i];    
+        var object = this.objects_[i];
         for (var j in object.pictures) {
             if (pictureId === object.pictures[j].id) {
                 return object.pictures[j].view;
@@ -215,7 +215,7 @@ Entry.Container.prototype.getPictureElement = function(pictureId) {
  */
 Entry.Container.prototype.setPicture = function(picture) {
     for(var i in this.objects_) {
-        var object = this.objects_[i];        
+        var object = this.objects_[i];
         for (var j in object.pictures) {
             if (picture.id === object.pictures[j].id) {
                 var picture_ = {};
@@ -948,7 +948,7 @@ Entry.Container.prototype.generateTabView = function() {
     helperContainer.addClass('entryHide');
     view.appendChild(helperContainer);
     this.helperContainer = helperContainer;
-    Entry.helper.initBlockHelper(helperContainer);
+    //Entry.helper.initBlockHelper(helperContainer);
 
     tab1.addClass('selected');
 };
