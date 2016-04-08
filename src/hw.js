@@ -88,7 +88,7 @@ p.initSocket = function() {
                 this.socket = null;
                 hw.initSocket();
             }
-        };    
+        };
 
         socketSecurity.onopen = function()
         {
@@ -111,7 +111,7 @@ p.initSocket = function() {
             }
         };
 
-        Entry.dispatchEvent("hwChanged");        
+        Entry.dispatchEvent("hwChanged");
     } catch(e) {}
 };
 
@@ -214,7 +214,7 @@ p.closeConnection = function() {
 };
 
 p.downloadConnector = function() {
-    var url = "http://play-entry.org/down/Entry_HW_v1.1.3.exe";
+    var url = "https://github.com/entrylabs/entry-hw/releases/download/1.1.4/Entry_HW_v1.1.4.exe";
     var win = window.open(url, '_blank');
     win.focus();
 };
@@ -254,7 +254,7 @@ p.checkDevice = function(data) {
         Entry.propertyPanel.addMode("hw", this.hwMonitor);
 
         var mt = this.hwModule.monitorTemplate;
-        
+
         if(mt.mode == "both") {
             mt.mode = "list";
             this.hwMonitor.generateListView();
@@ -262,11 +262,11 @@ p.checkDevice = function(data) {
             this.hwMonitor.generateView();
             mt.mode = "both";
         } else if(mt.mode == "list") {
-            this.hwMonitor.generateListView();    
+            this.hwMonitor.generateListView();
         } else {
             this.hwMonitor.generateView();
         }
-        
+
     }
 };
 
