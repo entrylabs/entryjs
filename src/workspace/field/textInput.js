@@ -9,6 +9,7 @@ goog.require("Entry.Field");
  *
  */
 Entry.FieldTextInput = function(content, blockView, index) {
+    this._blockView = blockView;
     this._block = blockView.block;
 
     var box = new Entry.BoxModel();
@@ -21,7 +22,7 @@ Entry.FieldTextInput = function(content, blockView, index) {
     this._index = index;
     this.value = this.getValue()  || '';
 
-    this.renderStart(blockView);
+    this.renderStart();
 };
 
 Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
@@ -31,7 +32,9 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
         TEXT_Y_PADDING = 4,
         CONTENT_HEIGHT = 16;
 
-    p.renderStart = function(blockView) {
+    p.renderStart = function() {
+        if (this.svgGroup) $(this.svgGroup).remove();
+        var blockView = this._blockView;
         var that = this;
         var contents = this._contents;
 
@@ -76,7 +79,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
         var that = this;
         this.destroyOption();
 
-        var blockView = this._block.view;
+        var blockView = this._blockView;
         this.documentDownEvent = Entry.documentMousedown.attach(
             this, function(){
                 Entry.documentMousedown.detach(this.documentDownEvent);
@@ -132,7 +135,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
         this.optionGroup.css({width: width});
 
         this.box.set({width: width});
-        this._block.view.alignContent();
+        this._blockView.alignContent();
     };
 
     p.getTextWidth = function() {

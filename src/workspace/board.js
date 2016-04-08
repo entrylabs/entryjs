@@ -793,6 +793,10 @@ Entry.Board = function(option) {
         this._activatedBlockView = view;
     };
 
+    p.reDraw = function() {
+        this.code.view.reDraw();
+    };
+
 
 
 })(Entry.Board.prototype);

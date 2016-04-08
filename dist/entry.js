@@ -13483,6 +13483,8 @@ Entry.BlockMenu = function(a, b, c, d) {
   };
   a.reDraw = function() {
     this.selectMenu(this.lastSelector, !0);
+    var b = this.code && this.code.view ? this.code.view : null;
+    b && b.reDraw();
   };
   a._handleDragBlock = function() {
     this._boardBlockView = null;
@@ -14037,6 +14039,22 @@ Entry.BlockView.DRAG_RADIUS = 5;
   a.removeActivated = function() {
     this.svgGroup.removeClass("activated");
   };
+  a.reDraw = function() {
+    var b = this.block;
+    this._updateContents();
+    var a = b.params;
+    if (a) {
+      for (var d = 0;d < a.length;d++) {
+        var e = a[d];
+        e instanceof Entry.Block && e.view.reDraw();
+      }
+    }
+    if (b = b.statements) {
+      for (d = 0;d < b.length;d++) {
+        b[d].view.reDraw();
+      }
+    }
+  };
 })(Entry.BlockView.prototype);
 Entry.Code = function(a) {
   Entry.Model(this, !1);
@@ -14190,6 +14208,11 @@ Entry.CodeView = function(a, b) {
   a.schema = {board:null, scrollX:0, scrollY:0};
   a._setBoard = function() {
     this.set({board:this.code.board});
+  };
+  a.reDraw = function() {
+    this.code.map(function(b) {
+      b.view.reDraw();
+    });
   };
 })(Entry.CodeView.prototype);
 Entry.ConnectionRipple = {};
@@ -14687,6 +14710,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
 (function(a) {
   a.renderStart = function() {
     this.svgGroup && $(this.svgGroup).remove();
+    this instanceof Entry.FieldDropdownDynamic && this._updateValue();
     var b = this._blockView;
     this.svgGroup = b.contentSvgGroup.elem("g", {class:"entry-field-dropdown"});
     this.textElement = this.svgGroup.elem("text", {x:2});
@@ -14761,11 +14785,6 @@ Entry.FieldDropdownDynamic = function(a, b, c) {
   this.svgGroup = null;
   this._contents = a;
   this._index = c;
-  c = [];
-  Entry.container && (c = Entry.container.getDropdownList(this._contents.menuName));
-  this._contents.options = c;
-  c = this.getValue() || 0 !== c.length ? c[0][1] : null;
-  this.setValue(c);
   this._CONTENT_HEIGHT = a.dropdownHeight || b.getSkeleton().dropdownHeight || 16;
   this._FONT_SIZE = a.fontSize || b.getSkeleton().fontSize || 12;
   this._ROUND = a.roundValue || 0;
@@ -14774,6 +14793,14 @@ Entry.FieldDropdownDynamic = function(a, b, c) {
 Entry.Utils.inherit(Entry.FieldDropdown, Entry.FieldDropdownDynamic);
 (function(a) {
   a.constructor = Entry.FieldDropDownDynamic;
+  a._updateValue = function() {
+    var b = [];
+    Entry.container && (b = Entry.container.getDropdownList(this._contents.menuName));
+    this._contents.options = b;
+    b = this._contents.options;
+    b = this.getValue() || 0 !== b.length ? b[0][1] : null;
+    this.setValue(b);
+  };
   a.renderOptions = function() {
     var b = this;
     this.destroyOption();
@@ -14846,6 +14873,7 @@ Entry.FieldIndicator = function(a, b, c) {
 Entry.Utils.inherit(Entry.Field, Entry.FieldIndicator);
 (function(a) {
   a.renderStart = function() {
+    this.svgGroup && this.svgGroup.remove();
     this.svgGroup = this._blockView.contentSvgGroup.elem("g");
     this._imgElement = this.svgGroup.elem("image", {href:this._imgUrl, x:this._position ? -1 * this._size : 0, y:-1 * this._size, width:2 * this._size, height:2 * this._size});
     var b = "m 0,-%s a %s,%s 0 1,1 -0.1,0 z".replace(/%s/gi, this._size);
@@ -14868,6 +14896,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldIndicator);
 Entry.Keyboard = {};
 Entry.FieldKeyboard = function(a, b, c) {
   this._block = b.block;
+  this._blockView = b;
   this.box = new Entry.BoxModel;
   this.svgGroup = null;
   this.position = a.position;
@@ -14880,12 +14909,12 @@ Entry.FieldKeyboard = function(a, b, c) {
 };
 Entry.Utils.inherit(Entry.Field, Entry.FieldKeyboard);
 (function(a) {
-  a.renderStart = function(b) {
-    this.svgGroup = b.contentSvgGroup.elem("g", {class:"entry-input-field"});
+  a.renderStart = function() {
+    this.svgGroup && $(this.svgGroup).remove();
+    this.svgGroup = this._blockView.contentSvgGroup.elem("g", {class:"entry-input-field"});
     this.textElement = this.svgGroup.elem("text").attr({x:4, y:4, "font-size":"9pt"});
     this.textElement.textContent = Entry.getKeyCodeMap()[this.getValue()];
-    b = this.getTextWidth();
-    var a = this.position && this.position.y ? this.position.y : 0;
+    var b = this.getTextWidth(), a = this.position && this.position.y ? this.position.y : 0;
     this._header = this.svgGroup.elem("rect", {x:0, y:a - 8, width:b, height:16, rx:3, ry:3, fill:"#fff", "fill-opacity":.4});
     this.svgGroup.appendChild(this.textElement);
     this._bindRenderOptions();
@@ -14926,7 +14955,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldKeyboard);
     var b = this.getTextWidth();
     this._header.attr({width:b});
     this.box.set({width:b});
-    this._block.view.alignContent();
+    this._blockView.alignContent();
   };
   a.getTextWidth = function() {
     return this.textElement.getComputedTextLength() + 8;
@@ -15168,6 +15197,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldText);
   };
 })(Entry.FieldText.prototype);
 Entry.FieldTextInput = function(a, b, c) {
+  this._blockView = b;
   this._block = b.block;
   this.box = new Entry.BoxModel;
   this.svgGroup = null;
@@ -15175,17 +15205,17 @@ Entry.FieldTextInput = function(a, b, c) {
   this._contents = a;
   this._index = c;
   this.value = this.getValue() || "";
-  this.renderStart(b);
+  this.renderStart();
 };
 Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
 (function(a) {
-  a.renderStart = function(b) {
-    this.svgGroup = b.contentSvgGroup.elem("g");
+  a.renderStart = function() {
+    this.svgGroup && $(this.svgGroup).remove();
+    this.svgGroup = this._blockView.contentSvgGroup.elem("g");
     this.svgGroup.attr({class:"entry-input-field"});
     this.textElement = this.svgGroup.elem("text", {x:4, y:4, "font-size":"9pt"});
     this.textElement.textContent = this.truncate();
-    b = this.getTextWidth();
-    var a = this.position && this.position.y ? this.position.y : 0;
+    var b = this.getTextWidth(), a = this.position && this.position.y ? this.position.y : 0;
     this._header = this.svgGroup.elem("rect", {width:b, height:16, y:a - 8, rx:3, ry:3, fill:"#fff", "fill-opacity":.4});
     this.svgGroup.appendChild(this.textElement);
     this._bindRenderOptions();
@@ -15226,7 +15256,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
     this._header.attr({width:b});
     this.optionGroup.css({width:b});
     this.box.set({width:b});
-    this._block.view.alignContent();
+    this._blockView.alignContent();
   };
   a.getTextWidth = function() {
     return this.textElement.getComputedTextLength() + 8;
@@ -15246,22 +15276,22 @@ Entry.GlobalSvg = {};
     }
   };
   a.draw = function() {
-    var a = this._view;
+    var b = this._view;
     this._svg && this.remove();
-    var c = this._mode == Entry.Workspace.MODE_VIMBOARD;
-    this.svgGroup = Entry.SVG.createElement(a.svgGroup.cloneNode(!0), {opacity:1});
+    var a = this._mode == Entry.Workspace.MODE_VIMBOARD;
+    this.svgGroup = Entry.SVG.createElement(b.svgGroup.cloneNode(!0), {opacity:1});
     this.svg.appendChild(this.svgGroup);
     this.show();
-    c && (a = $(this.svgGroup), a.find("g").css({filter:"none"}), a.find("path").velocity({opacity:0}, {duration:500}), a.find("text").velocity({fill:"#000000"}, {duration:530}));
+    a && (b = $(this.svgGroup), b.find("g").css({filter:"none"}), b.find("path").velocity({opacity:0}, {duration:500}), b.find("text").velocity({fill:"#000000"}, {duration:530}));
   };
   a.remove = function() {
     this.svgGroup && (this.svgGroup.remove(), delete this.svgGroup, delete this._view, delete this._offsetX, delete this._offsetY, delete this._startX, delete this._startY, this.hide());
   };
   a.align = function() {
-    var a = this._view.getSkeleton().box(this._view).offsetX || 0, c = this._view.getSkeleton().box(this._view).offsetY || 0, a = -1 * a + 1, c = -1 * c + 1;
-    this._offsetX = a;
-    this._offsetY = c;
-    this.svgGroup.attr({transform:"translate(" + a + "," + c + ")"});
+    var b = this._view.getSkeleton().box(this._view).offsetX || 0, a = this._view.getSkeleton().box(this._view).offsetY || 0, b = -1 * b + 1, a = -1 * a + 1;
+    this._offsetX = b;
+    this._offsetY = a;
+    this.svgGroup.attr({transform:"translate(" + b + "," + a + ")"});
   };
   a.show = function() {
     this.svgDom.css("display", "block");
@@ -15270,9 +15300,9 @@ Entry.GlobalSvg = {};
     this.svgDom.css("display", "none");
   };
   a.position = function() {
-    var a = this._view, c = a.getAbsoluteCoordinate(), a = a.getBoard().offset;
-    this.left = c.x + a.left - this._offsetX;
-    this.top = c.y + a.top - this._offsetY;
+    var b = this._view, a = b.getAbsoluteCoordinate(), b = b.getBoard().offset;
+    this.left = a.x + b.left - this._offsetX;
+    this.top = a.y + b.top - this._offsetY;
     this.svgDom.css({left:this.left, top:this.top});
   };
   a.terminateDrag = function(a) {
@@ -15892,6 +15922,9 @@ Entry.Board = function(a) {
     a.addActivated();
     this._activatedBlockView = a;
   };
+  a.reDraw = function() {
+    this.code.view.reDraw();
+  };
 })(Entry.Board.prototype);
 Entry.skeleton = function() {
 };
@@ -16468,6 +16501,11 @@ Entry.ThreadView = function(a, b) {
   };
   a.isGlobal = function() {
     return this._parent instanceof Entry.Board;
+  };
+  a.reDraw = function() {
+    for (var a = this.thread._data, c = a.length - 1;0 <= c;c--) {
+      a[c].view.reDraw();
+    }
   };
 })(Entry.ThreadView.prototype);
 Entry.FieldTrashcan = function(a) {
@@ -17361,10 +17399,11 @@ Entry.Playground.prototype.initializeResizeHandle = function(a) {
 };
 Entry.Playground.prototype.reloadPlayground = function() {
   this.mainWorkspace.getBlockMenu().reDraw();
+  Entry.stage.selectedObject && Entry.stage.selectedObject.script.view.reDraw();
 };
 Entry.Playground.prototype.flushPlayground = function() {
   this.object = null;
-  Entry.playground && Entry.playground.view_ && (this.injectPicture(), this.injectSound());
+  Entry.playground && Entry.playground.view_ && (this.injectPicture(), this.injectSound(), Entry.playground.mainWorkspace.getBoard().clear());
 };
 Entry.Playground.prototype.updateListViewOrder = function(a) {
   a = "picture" == a ? this.pictureListView_.childNodes : this.soundListView_.childNodes;

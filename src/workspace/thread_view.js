@@ -88,4 +88,11 @@ Entry.ThreadView = function(thread, board) {
     p.isGlobal = function() {
         return this._parent instanceof Entry.Board;
     };
+
+    p.reDraw = function() {
+        var blocks = this.thread._data;
+
+        for (var i=blocks.length-1; i>=0; i--)
+            blocks[i].view.reDraw();
+    };
 })(Entry.ThreadView.prototype);

@@ -943,5 +943,26 @@ Entry.BlockView.DRAG_RADIUS = 5;
         this.svgGroup.removeClass('activated');
     };
 
+    p.reDraw = function() {
+        var block = this.block;
+        this._updateContents();
+        var params = block.params;
+        if (params) {
+            for (var i=0; i<params.length; i++) {
+                var param = params[i];
+                if (param instanceof Entry.Block) {
+                    param.view.reDraw();
+                }
+            }
+        }
+        var statements = block.statements;
+        if (statements) {
+            for (var i=0; i<statements.length; i++) {
+                var statement = statements[i];
+                statement.view.reDraw();
+            }
+        }
+    };
+
 
 })(Entry.BlockView.prototype);

@@ -38,6 +38,8 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldIndicator);
 
 (function(p) {
     p.renderStart = function() {
+        if (this.svgGroup) this.svgGroup.remove();
+
         this.svgGroup = this._blockView.contentSvgGroup.elem("g");
 
         this._imgElement = this.svgGroup.elem("image", {

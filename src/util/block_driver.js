@@ -56,7 +56,7 @@ Entry.BlockDriver = function() {
             for (var i =0; i<children.length; i++) {
                 var child = children[i];
                 var tagName = child.tagName;
-                var subChild = $(child).children()[0]
+                var subChild = $(child).children()[0];
                 if (tagName === 'value') {
                     if (subChild.nodeName == 'block') {
                         if (!def.params) def.params = [];
@@ -227,7 +227,7 @@ Entry.BlockMockup = function(blocklyInfo) {
                 });
                 this.templates.push(this.getFieldCount());
             } else {
-                console.log('else', field)
+                console.log('else', field);
                 //console.log('else', field);
             }
         }

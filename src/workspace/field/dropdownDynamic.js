@@ -19,14 +19,7 @@ Entry.FieldDropdownDynamic = function(content, blockView, index) {
 
     this._contents = content;
     this._index = index;
-    var options = [];
-    if (Entry.container)
-        options = Entry.container.getDropdownList(this._contents.menuName);
 
-    this._contents.options = options;
-    var value = this.getValue() ||
-        options.length !== 0 ? options[0][1] : null;
-    this.setValue(value);
 
     this._CONTENT_HEIGHT =
         content.dropdownHeight || blockView.getSkeleton().dropdownHeight || 16;
@@ -42,6 +35,19 @@ Entry.Utils.inherit(Entry.FieldDropdown, Entry.FieldDropdownDynamic);
 
 (function(p) {
     p.constructor = Entry.FieldDropDownDynamic;
+
+    p._updateValue = function() {
+        var options = [];
+        if (Entry.container)
+            options = Entry.container.getDropdownList(this._contents.menuName);
+
+        this._contents.options = options;
+        var options = this._contents.options;
+        var value = this.getValue() ||
+            options.length !== 0 ? options[0][1] : null;
+
+        this.setValue(value);
+    };
 
     p.renderOptions = function() {
         var that = this;

@@ -1190,7 +1190,6 @@ Entry.Playground.prototype.initializeResizeHandle = function(handle) {
             Entry.documentMousemove.detach(listener);
             delete Entry.playground.resizeEvent;
         }
-
     });
 };
 
@@ -1200,10 +1199,11 @@ Entry.Playground.prototype.initializeResizeHandle = function(handle) {
 Entry.Playground.prototype.reloadPlayground = function () {
     var selectedCategory, selector;
 
-    this.mainWorkspace.getBlockMenu().reDraw();
+    var mainWorkspace = this.mainWorkspace;
+    mainWorkspace.getBlockMenu().reDraw();
 
     if (Entry.stage.selectedObject) {
-        //TODO : reload board
+        Entry.stage.selectedObject.script.view.reDraw();
     }
 };
 
@@ -1213,9 +1213,9 @@ Entry.Playground.prototype.reloadPlayground = function () {
 Entry.Playground.prototype.flushPlayground = function () {
     this.object = null;
     if (Entry.playground && Entry.playground.view_) {
-        // TODO: reset board
         this.injectPicture();
         this.injectSound();
+        Entry.playground.mainWorkspace.getBoard().clear();
     }
 };
 

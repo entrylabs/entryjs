@@ -504,6 +504,8 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
 
     p.reDraw = function() {
         this.selectMenu(this.lastSelector, true);
+        var codeView = this.code && this.code.view ? this.code.view : null;
+        if (codeView) codeView.reDraw();
     };
 
     p._handleDragBlock = function() {

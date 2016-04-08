@@ -40,6 +40,9 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
 
     p.renderStart = function() {
         if (this.svgGroup) $(this.svgGroup).remove();
+        //should update value dynamically
+        if (this instanceof Entry.FieldDropdownDynamic) this._updateValue();
+
         var blockView = this._blockView;
         var X_PADDING = 18;
         var that = this;
