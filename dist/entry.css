@@ -840,6 +840,15 @@
   outline: none;
   background-color: transparent;
 }
+.selectedNotEditionObject {
+  background-color: transparent;
+}
+.selectedNotEditionObject:hover {
+  background-color: transparent;
+}
+.selectedNotEditionObject:focus {
+  background-color: transparent !important;
+}
 /*sj*/
 .selectedObject .entryObjectNameWorkspace {
   color: #474747;
@@ -847,15 +856,6 @@
 .selectedObject > .entryObjectWrapperWorkspace > .entryObjectNameWorkspace {
   color: black;
   font-family: nanumBarunRegular !important;
-}
-/*.entryObjectNameWorkspace:hover{
-    background-color: white;
-    color: black;
-}
-*/
-.entryObjectNameWorkspace:focus {
-  background-color: white;
-  color: black;
 }
 .entryObjectNameWorkspace:disabled {
   background-color: transparent;
@@ -2329,17 +2329,9 @@
   position: absolute;
   margin-left: 145px;
 }
-.entryObjectCoordinateInputWorkspace:hover,
 .entryObjectCoordinateInputWorkspace:focus,
-.entryObjectRotateInputWorkspace:hover,
-.entryObjectDirectionInputWorkspace:hover,
 .entryObjectRotateInputWorkspace:focus,
 .entryObjectDirectionInputWorkspace:focus {
-  background-color: white;
-}
-.entryObjectCoordinateInputWorkspace:disabled,
-.entryObjectRotateInputWorkspace:disabled,
-.entryObjectDirectionInputWorkspace:disabled {
   background-color: transparent;
 }
 .entryFunctionEdit {

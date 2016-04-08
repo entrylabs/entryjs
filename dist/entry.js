@@ -109,7 +109,7 @@ var Entry = {block:{}, TEXT_ALIGN_CENTER:0, TEXT_ALIGN_LEFT:1, TEXT_ALIGN_RIGHT:
     var c = a.target;
     a = 0 !== $(b.view_).find(c).length;
     c = c.tagName.toUpperCase();
-    !b.isEditing || "INPUT" === c && a || (console.log("cancel"), b.editObjectValues(!1));
+    !b.isEditing || "INPUT" === c && a || b.editObjectValues(!1);
   }
 }};
 window.Entry = Entry;
@@ -7545,24 +7545,23 @@ Entry.EntryObject.prototype.generateView = function() {
     a = Entry.createElement("div");
     a.addClass("entryObjectWrapperWorkspace");
     this.view_.appendChild(a);
-    var f = Entry.createElement("input");
-    f.bindOnClick(function(a) {
+    d = Entry.createElement("input");
+    d.bindOnClick(function(a) {
       a.stopPropagation();
       this.select();
     });
-    f.addClass("entryObjectNameWorkspace");
-    a.appendChild(f);
-    this.nameView_ = f;
+    d.addClass("entryObjectNameWorkspace");
+    a.appendChild(d);
+    this.nameView_ = d;
     this.nameView_.entryObject = this;
-    f.setAttribute("disabled", "disabled");
+    d.setAttribute("readonly", !0);
+    var f = this;
     this.nameView_.onblur = function(a) {
       this.entryObject.name = this.value;
       Entry.playground.reloadPlayground();
-      console.log(a);
-      a && f.setAttribute("disabled", "disabled");
     };
     this.nameView_.onkeypress = function(a) {
-      13 == a.keyCode && (this.entryObject.editObjectValues(!1), this.entryObject.blurAllInput());
+      13 == a.keyCode && f.editObjectValues(!1);
     };
     this.nameView_.value = this.name;
     d = Entry.createElement("div");
@@ -7605,7 +7604,7 @@ Entry.EntryObject.prototype.generateView = function() {
     e.innerHTML = "X:";
     var g = Entry.createElement("input");
     g.addClass("entryObjectCoordinateInputWorkspace");
-    g.setAttribute("disabled", "disabled");
+    g.setAttribute("readonly", !0);
     g.bindOnClick(function(a) {
       a.stopPropagation();
       this.select();
@@ -7619,7 +7618,7 @@ Entry.EntryObject.prototype.generateView = function() {
       a.stopPropagation();
       this.select();
     });
-    k.setAttribute("disabled", "disabled");
+    k.setAttribute("readonly", !0);
     var l = Entry.createElement("span");
     l.addClass("entryObjectCoordinateSizeWorkspace");
     l.innerHTML = "\ud06c\uae30 :";
@@ -7629,7 +7628,7 @@ Entry.EntryObject.prototype.generateView = function() {
       a.stopPropagation();
       this.select();
     });
-    q.setAttribute("disabled", "disabled");
+    q.setAttribute("readonly", !0);
     d.appendChild(e);
     d.appendChild(g);
     d.appendChild(h);
@@ -7642,31 +7641,28 @@ Entry.EntryObject.prototype.generateView = function() {
     this.coordinateView_ = d;
     c = this;
     g.onkeypress = function(a) {
-      13 == a.keyCode && (c.editObjectValues(!1), c.blurAllInput());
+      13 == a.keyCode && c.editObjectValues(!1);
     };
     g.onblur = function(a) {
       isNaN(g.value) || c.entity.setX(Number(g.value));
       c.updateCoordinateView();
       Entry.stage.updateObject();
-      a && this.setAttribute("disabled", "disabled");
     };
     k.onkeypress = function(a) {
-      13 == a.keyCode && (c.editObjectValues(!1), c.blurAllInput());
+      13 == a.keyCode && c.editObjectValues(!1);
     };
     k.onblur = function(a) {
       isNaN(k.value) || c.entity.setY(Number(k.value));
       c.updateCoordinateView();
       Entry.stage.updateObject();
-      a && this.setAttribute("disabled", "disabled");
     };
     q.onkeypress = function(a) {
-      13 == a.keyCode && (c.editObjectValues(!1), c.blurAllInput());
+      13 == a.keyCode && c.editObjectValues(!1);
     };
     q.onblur = function(a) {
       isNaN(q.value) || c.entity.setSize(Number(q.value));
       c.updateCoordinateView();
       Entry.stage.updateObject();
-      a && q.setAttribute("disabled", "disabled");
     };
     d = Entry.createElement("div");
     d.addClass("entryObjectRotateLabelWrapperWorkspace");
@@ -7677,7 +7673,7 @@ Entry.EntryObject.prototype.generateView = function() {
     e.innerHTML = Lang.Workspace.rotation + " : ";
     var n = Entry.createElement("input");
     n.addClass("entryObjectRotateInputWorkspace");
-    n.setAttribute("disabled", "disabled");
+    n.setAttribute("readonly", !0);
     n.bindOnClick(function(a) {
       a.stopPropagation();
       this.select();
@@ -7689,7 +7685,7 @@ Entry.EntryObject.prototype.generateView = function() {
     h.innerHTML = Lang.Workspace.direction + " : ";
     var m = Entry.createElement("input");
     m.addClass("entryObjectDirectionInputWorkspace");
-    m.setAttribute("disabled", "disabled");
+    m.setAttribute("readonly", !0);
     m.bindOnClick(function(a) {
       a.stopPropagation();
       this.select();
@@ -7703,26 +7699,24 @@ Entry.EntryObject.prototype.generateView = function() {
     d.directionInput_ = m;
     c = this;
     n.onkeypress = function(a) {
-      13 == a.keyCode && (c.editObjectValues(!1), c.blurAllInput());
+      13 == a.keyCode && c.editObjectValues(!1);
     };
     n.onblur = function(a) {
-      var b = n.value;
-      -1 != b.indexOf("\u02da") && (b = b.substring(0, b.indexOf("\u02da")));
-      isNaN(b) || c.entity.setRotation(Number(b));
+      a = n.value;
+      -1 != a.indexOf("\u02da") && (a = a.substring(0, a.indexOf("\u02da")));
+      isNaN(a) || c.entity.setRotation(Number(a));
       c.updateRotationView();
       Entry.stage.updateObject();
-      a && n.setAttribute("disabled", "disabled");
     };
     m.onkeypress = function(a) {
-      13 == a.keyCode && (c.editObjectValues(!1), c.blurAllInput());
+      13 == a.keyCode && c.editObjectValues(!1);
     };
     m.onblur = function(a) {
-      var b = m.value;
-      -1 != b.indexOf("\u02da") && (b = b.substring(0, b.indexOf("\u02da")));
-      isNaN(b) || c.entity.setDirection(Number(b));
+      a = m.value;
+      -1 != a.indexOf("\u02da") && (a = a.substring(0, a.indexOf("\u02da")));
+      isNaN(a) || c.entity.setDirection(Number(a));
       c.updateRotationView();
       Entry.stage.updateObject();
-      a && m.setAttribute("disabled", "disabled");
     };
     d = Entry.createElement("div");
     d.addClass("rotationMethodWrapper");
@@ -7779,12 +7773,11 @@ Entry.EntryObject.prototype.generateView = function() {
       a.preventDefault();
       Entry.container.removeObject(b);
     }}])), this.view_ = a, a = Entry.createElement("ul"), a.addClass("objectInfoView"), d = Entry.createElement("li"), d.addClass("objectInfo_visible"), e = Entry.createElement("li"), e.addClass("objectInfo_lock"), a.appendChild(d), a.appendChild(e), this.view_.appendChild(a), a = Entry.createElement("div"), a.addClass("entryObjectThumbnailWorkspace"), this.view_.appendChild(a), this.thumbnailView_ = a, a = Entry.createElement("div"), a.addClass("entryObjectWrapperWorkspace"), this.view_.appendChild(a), 
-    f = Entry.createElement("input"), f.addClass("entryObjectNameWorkspace"), a.appendChild(f), this.nameView_ = f, this.nameView_.entryObject = this, this.nameView_.onblur = function() {
+    d = Entry.createElement("input"), d.addClass("entryObjectNameWorkspace"), a.appendChild(d), this.nameView_ = d, this.nameView_.entryObject = this, this.nameView_.onblur = function() {
       this.entryObject.name = this.value;
       Entry.playground.reloadPlayground();
     }, this.nameView_.onkeypress = function(a) {
       13 == a.keyCode && c.editObjectValues(!1);
-      c.blurAllInput();
     }, this.nameView_.value = this.name, Entry.objectEditable && Entry.objectDeletable && (d = Entry.createElement("div"), d.addClass("entryObjectDeletePhone"), d.object = this, this.deleteView_ = d, this.view_.appendChild(d), d.bindOnClick(function(a) {
       Entry.engine.isState("run") || Entry.container.removeObject(this.object);
     })), d = Entry.createElement("button"), d.addClass("entryObjectEditPhone"), d.object = this, d.bindOnClick(function(a) {
@@ -8083,9 +8076,9 @@ Entry.EntryObject.prototype.setLock = function(a) {
 Entry.EntryObject.prototype.updateInputViews = function(a) {
   a = a || this.getLock();
   var b = [this.nameView_, this.coordinateView_.xInput_, this.coordinateView_.yInput_, this.rotateInput_, this.directionInput_, this.coordinateView_.sizeInput_];
-  if (a && "disabled" != b[0].getAttribute("disabled")) {
-    for (console.log("!!!!!!!!!!!!!!!!!!!!!!!!!"), a = 0;a < b.length;a++) {
-      b[a].removeClass("selectedEditingObject"), b[a].setAttribute("disabled", "disabled"), this.isEditing = !1;
+  if (a && 1 != b[0].getAttribute("readonly")) {
+    for (a = 0;a < b.length;a++) {
+      b[a].removeClass("selectedEditingObject"), b[a].setAttribute("readonly", !1), this.isEditing = !1;
     }
   }
 };
@@ -8093,8 +8086,9 @@ Entry.EntryObject.prototype.editObjectValues = function(a) {
   var b;
   b = this.getLock() ? [this.nameView_] : [this.nameView_, this.coordinateView_.xInput_, this.coordinateView_.yInput_, this.rotateInput_, this.directionInput_, this.coordinateView_.sizeInput_];
   if (a) {
+    $(b).removeClass("selectedNotEditingObject");
     for (a = 0;a < b.length;a++) {
-      b[a].removeAttribute("disabled"), b[a].addClass("selectedEditingObject");
+      b[a].removeAttribute("readonly"), b[a].addClass("selectedEditingObject");
     }
     this.isEditing = !0;
   } else {
@@ -8106,8 +8100,11 @@ Entry.EntryObject.prototype.editObjectValues = function(a) {
   }
 };
 Entry.EntryObject.prototype.blurAllInput = function() {
-  var a = document.getElementsByClassName(" selectedEditingObject");
+  var a = document.getElementsByClassName("selectedEditingObject");
   $(a).removeClass("selectedEditingObject");
+  for (var a = [this.nameView_, this.coordinateView_.xInput_, this.coordinateView_.yInput_, this.rotateInput_, this.directionInput_, this.coordinateView_.sizeInput_], b = 0;b < a.length;b++) {
+    a[b].addClass("selectedNotEditingObject"), a[b].setAttribute("readonly", !0);
+  }
 };
 Entry.EntryObject.prototype.addStampEntity = function(a) {
   a = new Entry.StampEntity(this, a);

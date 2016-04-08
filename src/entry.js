@@ -335,7 +335,7 @@ Entry.cancelObjectEdit = function(e) {
     var tagName = target.tagName.toUpperCase();
     if (!object.isEditing || (tagName === 'INPUT' && isCurrent))
         return;
-    console.log('cancel');
+    
     object.editObjectValues(false);
 };
 
