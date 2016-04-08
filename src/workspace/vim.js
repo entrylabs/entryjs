@@ -3,6 +3,19 @@
 goog.provide("Entry.Vim");
 
 Entry.Vim = function(dom, textType) {
+    //Definition For Textmode
+    Entry.Textmode.MAZE = 0; 
+    Entry.Textmode.WORKSPACE = 1; 
+
+    Entry.TextType.JS = 0;
+    Entry.TextType.PY = 1;
+
+    Entry.ParserType.BLOCK_TO_JS = 0;
+    Entry.ParserType.BLOCK_TO_PY = 2;
+    Entry.ParserType.JS_TO_BLOCK = 3;
+    Entry.ParserType.JS_TO_BLOCK = 4;
+
+
     if (typeof dom === "string")
         dom = $('#' + dom);
     else
@@ -15,11 +28,14 @@ Entry.Vim = function(dom, textType) {
 
     //this._parser = new Entry.Parser("maze", "js", this.codeMirror);
     //this._blockParser = new Entry.Parser("maze", "block");
+    this._mode = Entry.Textmode.WORKSPACE;
+    this._parserType = Entry.ParserType.BLOCK_TO_JS;
 
-    this._jsBlockParser = new Entry.Parser("ws", "blockJs", this.codeMirror);
-    this._pyBlockParser = new Entry.Parser("ws", "blockPy", this.codeMirror);
-    this._jsParser = new Entry.Parser("ws", "js", this.codeMirror);
-    this._pyParser = new Entry.Parser("ws", "py", this.codeMirror);
+    this._parser = new Entry.Parser(this._mode, this._parserType, this.codeMirror);
+    
+    //this._pyBlockParser = new Entry.Parser("ws", "blockPy", this.codeMirror);
+    //this._jsParser = new Entry.Parser("ws", "js", this.codeMirror);
+    //this._pyParser = new Entry.Parser("ws", "py", this.codeMirror);
 
     Entry.Model(this, false);
     window.eventset = [];
@@ -104,8 +120,16 @@ Entry.Vim = function(dom, textType) {
     };
 
     p.textToCode = function() {
+        if (textType === Entry.TextType.JS) {
+            this._parserType = Entry.ParserType.JS_TO_BLOCK;
+            this._parser.setParser(this._mode, this._parserType, this.codeMirror);
+        } else if(textType === Entry.TextType.PY) {
+            this.parserType = Entry.ParserType.PY_TO_BLOCK;
+            this._parser.setParser(this._mode, this._parserType, this.codeMirror);
+        }
+
         var textCode = this.codeMirror.getValue();
-        var code = this._jsParser.parse(textCode);
+        var code = this._parser.parse(textCode);
         if(code.length === 0) {
             throw ('블록 파싱 오류');
         }
@@ -114,9 +138,13 @@ Entry.Vim = function(dom, textType) {
 
     p.codeToText = function(code) {
         var textType = this.workspace.textType;
-        var parser;
-        if (textType === 'js') parser = this._jsBlockParser;
-        else if(textType === 'py') parser = this._pyBlockParser;
+        if (textType === Entry.TextType.JS) {
+            this._parserType = Entry.ParserType.BLOCK_TO_JS;
+            this._parser.setParser(this._mode, this._parserType, this.codeMirror);
+        } else if(textType === Entry.TextType.PY) {
+            this._parserType = Entry.ParserType.BLOCK_TO_PY;
+            parser.setParser(this._mode, this._parserType, this.codeMirror);
+        } 
 
         var textCode = parser.parse(code);
         this.codeMirror.setValue(textCode);
