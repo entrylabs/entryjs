@@ -271,6 +271,16 @@ EntryStatic.getAllBlocks = function() {
                 "arduino_toggle_led",
                 "arduino_toggle_pwm",
                 "arduino_convert_scale",
+                "neobot_sensor_value",
+                "neobot_turn_left",
+                "neobot_stop_left",
+                "neobot_turn_right",
+                "neobot_stop_right",
+                "neobot_run_motor",
+                "neobot_servo_1",
+                "neobot_servo_2",
+                "neobot_play_note_for",
+                "neobot_set_sensor_value",
                 "bitbrick_sensor_value",
                 "bitbrick_convert_scale",
                 "bitbrick_is_touch_pressed",
@@ -658,13 +668,13 @@ EntryStatic.blockInfo = {
         "usage": ["shape"]
     },
     "dialog_time": {
-        "xml": "<block type='dialog_time'> <value name='VALUE'> <block type='text'> <field name='NAME'>안녕!</field> </block> </value> <value name='SECOND'> <block type='number'><field name='NUM'>4</field></block> </value> </block>",
+        "xml": "<block type='dialog_time'> <value name='VALUE'> <block type='text'> <field name='NAME'>"+ Lang.Blocks.block_hi +"</field> </block> </value> <value name='SECOND'> <block type='number'><field name='NUM'>4</field></block> </value> </block>",
         "class": "say",
         "isNotFor": ["textBox"],
         "usage": ["dialog"]
     },
     "dialog": {
-        "xml": "<block type='dialog'> <value name='VALUE'> <block type='text'> <field name='NAME'>안녕!</field> </block> </value> </block>",
+        "xml": "<block type='dialog'> <value name='VALUE'> <block type='text'> <field name='NAME'>"+ Lang.Blocks.block_hi +"</field> </block> </value> </block>",
         "class": "say",
         "isNotFor": ["textBox"],
         "usage": ["dialog"]
@@ -1059,7 +1069,7 @@ EntryStatic.blockInfo = {
         "class": "button"
     },
     "ask_and_wait": {
-        "xml": "<block type='ask_and_wait'> <value name='VALUE'> <block type='text'> <field name='NAME'>안녕!</field> </block> </value> </block>",
+        "xml": "<block type='ask_and_wait'> <value name='VALUE'> <block type='text'> <field name='NAME'>" + Lang.Blocks.block_hi + "</field> </block> </value> </block>",
         "class": "ask",
         "isNotFor": [],
         "usage": ["answer"]
@@ -1071,7 +1081,7 @@ EntryStatic.blockInfo = {
         "usage": ["answer"]
     },
     "combine_something": {
-        "xml": "<block type='combine_something'> <value name='VALUE1'> <block type='text'> <field name='NAME'>안녕!</field> </block> </value> <value name='VALUE2'> <block type='text'> <field name='NAME'>엔트리</field> </block> </value> </block>",
+        "xml": "<block type='combine_something'> <value name='VALUE1'> <block type='text'> <field name='NAME'>" + Lang.Blocks.block_hi + "</field> </block> </value> <value name='VALUE2'> <block type='text'> <field name='NAME'>" + Lang.Blocks.entry + "</field> </block> </value> </block>",
         "class": "calc_string",
         "isNotFor": [],
         "description": "입력한 두 개의 문자를 결합합니다."
@@ -1379,40 +1389,90 @@ EntryStatic.blockInfo = {
         "class": "condition"
     },
     "char_at": {
-        "xml": "<block type='char_at'><value name='LEFTHAND'><block type='text'><field name='NAME'>안녕, 엔트리!</field></block></value><value name='RIGHTHAND'><block type='number'><field name='NUM'>1</field></block></value></block>",
+        "xml": "<block type='char_at'><value name='LEFTHAND'><block type='text'><field name='NAME'>" + Lang.Blocks.hi_entry + "</field></block></value><value name='RIGHTHAND'><block type='number'><field name='NUM'>1</field></block></value></block>",
         "class": "calc_string",
         "isNotFor": [],
         "usage": []
     },
     "length_of_string": {
-        "xml": "<block type='length_of_string'><value name='STRING'><block type='text'><field name='NAME'>엔트리</field></block></value></block>",
+        "xml": "<block type='length_of_string'><value name='STRING'><block type='text'><field name='NAME'>" + Lang.Blocks.entry + "</field></block></value></block>",
         "class": "calc_string",
         "isNotFor": [],
         "usage": []
     },
     "substring": {
-        "xml": "<block type='substring'><value name='STRING'><block type='text'><field name='NAME'>안녕, 엔트리!</field></block></value><value name='START'><block type='number'><field name='NUM'>2</field></block></value><value name='END'><block type='number'><field name='NUM'>5</field></block></value></block>",
+        "xml": "<block type='substring'><value name='STRING'><block type='text'><field name='NAME'>" + Lang.Blocks.hi_entry + "</field></block></value><value name='START'><block type='number'><field name='NUM'>2</field></block></value><value name='END'><block type='number'><field name='NUM'>5</field></block></value></block>",
         "class": "calc_string",
         "isNotFor": [],
         "usage": []
     },
     "replace_string": {
-        "xml": "<block type='replace_string'><value name='STRING'><block type='text'><field name='NAME'>안녕, 엔트리!</field></block></value><value name='OLD_WORD'><block type='text'><field name='NAME'>안녕</field></block></value><value name='NEW_WORD'><block type='text'><field name='NAME'>반가워</field></block></value></block>",
+        "xml": "<block type='replace_string'><value name='STRING'><block type='text'><field name='NAME'>" + Lang.Blocks.hi_entry + "</field></block></value><value name='OLD_WORD'><block type='text'><field name='NAME'>" + Lang.Blocks.hello + "</field></block></value><value name='NEW_WORD'><block type='text'><field name='NAME'>" + Lang.Blocks.nice + "</field></block></value></block>",
         "class": "calc_string",
         "isNotFor": [],
         "usage": []
     },
     "change_string_case": {
-        "xml": "<block type='change_string_case'><value name='STRING'><block type='text'><field name='NAME'>Hello, Entry!</field></block></value></block>",
+        "xml": "<block type='change_string_case'><value name='STRING'><block type='text'><field name='NAME'>" + Lang.Blocks.hi_entry + "</field></block></value></block>",
         "class": "calc_string",
         "isNotFor": [],
         "usage": []
     },
     "index_of_string": {
-        "xml": "<block type='index_of_string'><value name='LEFTHAND'><block type='text'><field name='NAME'>안녕, 엔트리!</field></block></value><value name='RIGHTHAND'><block type='text'><field name='NAME'>엔트리</field></block></value></block>",
+        "xml": "<block type='index_of_string'><value name='LEFTHAND'><block type='text'><field name='NAME'>" + Lang.Blocks.hi_entry + "</field></block></value><value name='RIGHTHAND'><block type='text'><field name='NAME'>" + Lang.Blocks.entry + "</field></block></value></block>",
         "class": "calc_string",
         "isNotFor": [],
         "usage": []
+    },
+    "neobot_sensor_value": {
+        "isNotFor": ['neobot'],
+        "xml": "<block type='neobot_sensor_value'></block>",
+        "class": "neobot_value"
+    },
+    "neobot_turn_left": {
+        "isNotFor": ['neobot'],
+        "xml": "<block type='neobot_turn_left'></block>",
+        "class": "neobot_motor"
+    },
+    "neobot_stop_left": {
+        "isNotFor": ['neobot'],
+        "xml": "<block type='neobot_stop_left'></block>",
+        "class": "neobot_motor"
+    },
+    "neobot_turn_right": {
+        "isNotFor": ['neobot'],
+        "xml": "<block type='neobot_turn_right'></block>",
+        "class": "neobot_motor"
+    },
+    "neobot_stop_right": {
+        "isNotFor": ['neobot'],
+        "xml": "<block type='neobot_stop_right'></block>",
+        "class": "neobot_motor"
+    },
+    "neobot_run_motor": {
+        "isNotFor": ['neobot'],
+        "xml": "<block type='neobot_run_motor'><value name='DURATION'><block type='text'><field name='NAME'>1</field></block></value></block>",
+        "class": "neobot_motor"
+    },
+    "neobot_servo_1": {
+        "isNotFor": ['neobot'],
+        "xml": "<block type='neobot_servo_1'></block>",
+        "class": "neobot_servo"
+    },
+    "neobot_servo_2": {
+        "isNotFor": ['neobot'],
+        "xml": "<block type='neobot_servo_2'></block>",
+        "class": "neobot_servo"
+    },
+    "neobot_play_note_for": {
+        "isNotFor": ['neobot'],
+        "xml": "<block type='neobot_play_note_for'></block>",
+        "class": "neobot_note"
+    },
+    "neobot_set_sensor_value": {
+        "isNotFor": ['neobot'],
+        "xml": "<block type='neobot_set_sensor_value'></block>",
+        "class": "neobot_set_value" 
     },
     "bitbrick_sensor_value": {
         "isNotFor": ['bitbrick'],
@@ -2144,9 +2204,6 @@ EntryStatic.getName = function(str, type) {
         dict = SoundNames;
 
     var lang = navigator.language ? navigator.language : 'ko';
-    if (window.lang)
-        lang = window.lang;
-
     if (window.user && window.user.language)
         lang = window.user.language;
 

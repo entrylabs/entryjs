@@ -458,7 +458,7 @@ Entry.Engine.computeThread = function(entity, script) {
     while (script && Entry.engine.isContinue && !isSame) {
         Entry.engine.isContinue = !script.isRepeat;
         var newScript = script.run();
-        isSame = (newScript && newScript.type == script.type);
+        isSame = (newScript && newScript === script);
         script = newScript;
     }
     return script;

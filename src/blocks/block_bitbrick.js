@@ -1,6 +1,6 @@
 "use strict";
-
 Entry.Bitbrick = {
+
     SENSOR_MAP : {
         1: "light",
         2: "IR",
@@ -83,7 +83,40 @@ Entry.Bitbrick = {
   servoMaxValue: 181,
   servoMinValue: 1,
   dcMaxValue: 100,
-  dcMinValue: -100
+  dcMinValue: -100,
+  monitorTemplate: {
+        imgPath: "hw/bitbrick.gif",
+        width: 133,
+        height: 153,
+        ports: {
+            "1":{name: "1번 포트", type: "input", pos: {x: 10, y: 56}},
+            "2":{name: "2번 포트", type: "input", pos: {x: 31, y: 76}},
+            "3":{name: "3번 포트", type: "input", pos: {x: 31, y: 96}},
+            "4":{name: "4번 포트", type: "input", pos: {x: 10, y: 116}},
+            "A":{name: "A 포트", type: "input", pos: {x: 123, y: 56}},
+            "B":{name: "B 포트", type: "input", pos: {x: 104, y: 76}},
+            "C":{name: "C 포트", type: "input", pos: {x: 104, y: 96}},
+            "D":{name: "D 포트", type: "input", pos: {x: 123, y: 116}}
+        }
+        // },
+        // ports : {
+        //     "1":{name: "light", type: "input", pos: {x: 0, y: 0}},
+        //     "2":{name: "IR", type: "input", pos: {x : 0, y: 0}},
+        //     "3":{name: "touch", type: "input", pos: {x: 0, y: 0}},
+        //     "4":{name: "potentiometer", type: "input", pos: {x: 0, y: 0}},
+        //     "5":{name: "MIC", type: "input", pos: {x: 0, y: 0}},
+        //     "21":{name: "UserSensor", type: "input", pos: {x: 0, y: 0}},
+        //     "11":{name: "USER INPUT", type: "input", pos: {x: 0, y: 0}},
+        //     "20":{name: "LED", type: "input", pos: {x: 0, y: 0}},
+        //     "19":{name: "SERVO", type: "input", pos: {x: 0, y: 0}},
+        //     "18":{name: "DC", type: "input", pos: {x: 0, y: 0}},
+        //     "buzzer":{name: "부저", type: "input", pos: {x: 0, y: 0}},
+        //     "LEDR":{name: "LEDR", type: "output", pos: {x: 0, y: 0}},
+        //     "LEDG":{name: "LEDG", type: "output", pos: {x: 0, y: 0}},
+        //     "LEDB":{name: "LEDG", type: "output", pos: {x: 0, y: 0}}
+        // },
+        // mode: 'both'
+    }
 };
 
 

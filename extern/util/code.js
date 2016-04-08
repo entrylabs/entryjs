@@ -1693,6 +1693,7 @@ Lang.Category.background_nature = "";
 Lang.Category.background_others = "";
 Lang.Device = {};
 Lang.Device.arduino = "";
+Lang.Device.neobot = "";
 Lang.Device.hamster = "hamster";
 Lang.Device.albert = "albert";
 Lang.Device.robotis_carCont = "";
@@ -2296,3 +2297,4 @@ Lang.Fonts.gothic = "Nanum Gothic";
 Lang.Fonts.pen_script = "Nanum Pen Script";
 Lang.Fonts.jeju_hallasan = "Jeju Hallasan";
 Lang.Fonts.gothic_coding = "Nanum Gothic Coding";
+>>>>>>> dist/stage

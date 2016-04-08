@@ -3,6 +3,8 @@
  */
 'use strict';
 
+goog.require("Entry.HWMontior");
+
 Entry.HW = function() {
     this.connectTrial = 0;
     this.isFirstConnect = true;
@@ -25,6 +27,8 @@ Entry.HW = function() {
         '24': Entry.Hamster,
         '25': Entry.Albert,
         '31': Entry.Bitbrick,
+        '42': Entry.Arduino,
+        '51': Entry.Neobot,
         '71': Entry.Robotis_carCont,
         '72': Entry.Robotis_openCM70
     };
@@ -46,20 +50,23 @@ p.initSocket = function() {
         }
         var hw = this;
 
-        var option = {
-            reconnection: false
-        };
-        var browserType = Entry.getBrowserType().toUpperCase();
-        if(browserType.indexOf('IE') > -1 || browserType.indexOf('EDGE') > -1) {
-            option['transports'] = ['polling'];
+        var socket, socketSecurity;
+        var protocol = '';
+        if(location.protocol.indexOf('https') > -1) {
+            socketSecurity = new WebSocket("wss://localhost:23518");
+        } else {
+            try{
+                socket = new WebSocket("ws://localhost:23518");
+            } catch(e) {}
+            try{
+                socketSecurity = new WebSocket("wss://localhost:23518");
+            } catch(e) {
+            }
         }
-
-        var socket = new WebSocket("ws://localhost:23518");
-        var socketIO = io.connect('ws://localhost:23517', option);
 
         this.connected = false;
         socket.binaryType = "arraybuffer";
-        socketIO.binaryType = "arraybuffer";
+        socketSecurity.binaryType = "arraybuffer";
         this.connectTrial++;
 
         socket.onopen = function()
@@ -82,30 +89,29 @@ p.initSocket = function() {
                 hw.initSocket();
             }
         };
-        
-        socketIO.connect();
-        socketIO.on('connect', function (data) {
-            hw.socketType = 'SocketIO';
-            hw.initHardware(socketIO);
-        });
 
-        socketIO.on('message', function (evt) {
-            if(typeof evt === 'string') {
-                var data = JSON.parse(evt);
-                hw.checkDevice(data);
-                hw.updatePortData(data);
-            }
-        });
+        socketSecurity.onopen = function()
+        {
+            hw.socketType = 'WebSocketSecurity';
+            hw.initHardware(socketSecurity);
+        };
 
-        socketIO.on('disconnect', function (data) {
-            if(hw.socketType === 'SocketIO') {
+        socketSecurity.onmessage = function (evt)
+        {
+            var data = JSON.parse(evt.data);
+            hw.checkDevice(data);
+            hw.updatePortData(data);
+        };
+
+        socketSecurity.onclose = function()
+        {
+            if(hw.socketType === 'WebSocketSecurity') {
                 this.socket = null;
-                socketIO.destroy(socketIO);
                 hw.initSocket();
             }
-        });
+        };
 
-        Entry.dispatchEvent("hwChanged");        
+        Entry.dispatchEvent("hwChanged");
     } catch(e) {}
 };
 
@@ -126,6 +132,7 @@ p.initHardware = function(socket) {
 
 p.setDigitalPortValue = function(port, value) {
     this.sendQueue[port] = value;
+    this.removePortReadable(port);
 };
 
 p.getAnalogPortValue = function(port) {
@@ -148,45 +155,66 @@ p.getDigitalPortValue = function(port) {
 p.setPortReadable = function(port) {
     if (!this.sendQueue.readablePorts)
         this.sendQueue.readablePorts = [];
-    this.sendQueue.readablePorts.push(port);
+
+    var isPass = false;
+    for(var i in this.sendQueue.readablePorts) {
+        if(this.sendQueue.readablePorts[i] == port) {
+            isPass = true;
+            break;
+        }
+    }
+
+    if(!isPass) {
+        this.sendQueue.readablePorts.push(port);
+    }
 };
+
+p.removePortReadable = function(port) {
+    if (!this.sendQueue.readablePorts && !Array.isArray(this.sendQueue.readablePorts))
+        return;
+    var target;
+    for(var i in this.sendQueue.readablePorts) {
+        if(this.sendQueue.readablePorts[i] == port) {
+            target = i;
+            break;
+        }
+    }
+
+    if(target) {
+        this.sendQueue.readablePorts = this.sendQueue.readablePorts.slice(0, target).concat(this.sendQueue.readablePorts.slice(target + 1, this.sendQueue.readablePorts.length));
+    } else {
+        this.sendQueue.readablePorts = [];
+    }
+}
 
 p.update = function() {
     if (!this.socket) {
         return;
     }
-    if(this.socketType === 'SocketIO') {
-        if (this.socket.io.readyState != 'open') {
-            return;
-        }
-        
-        this.socket.emit('message', JSON.stringify(this.sendQueue));
-    } else if (this.socketType === 'WebSocket') {
-        if(this.socket.readyState != 1) {
-            return;
-        }
 
-        this.socket.send(JSON.stringify(this.sendQueue));
+    if(this.socket.readyState != 1) {
+        return;
     }
 
-    this.sendQueue.readablePorts = [];
+    this.socket.send(JSON.stringify(this.sendQueue));
+
+    // this.sendQueue.readablePorts = [];
 };
 
 p.updatePortData = function(data) {
     this.portData = data;
+    if (this.hwMonitor)
+        this.hwMonitor.update();
 };
 
 p.closeConnection = function() {
     if (this.socket) {
-        if(this.socketType === 'SocketIO') {
-            this.socket.emit('close');
-        }
         this.socket.close();
     }
 };
 
 p.downloadConnector = function() {
-    var url = "http://play-entry.org/down/Entry_HW_v1.1.3.exe";
+    var url = "https://github.com/entrylabs/entry-hw/releases/download/1.1.4/Entry_HW_v1.1.4.exe";
     var win = window.open(url, '_blank');
     win.focus();
 };
@@ -220,10 +248,31 @@ p.checkDevice = function(data) {
         ),
         false
     );
+    return;
+    if (this.hwModule.monitorTemplate) {
+        this.hwMonitor = new Entry.HWMonitor(this.hwModule);
+        Entry.propertyPanel.addMode("hw", this.hwMonitor);
+
+        var mt = this.hwModule.monitorTemplate;
+
+        if(mt.mode == "both") {
+            mt.mode = "list";
+            this.hwMonitor.generateListView();
+            mt.mode = "general";
+            this.hwMonitor.generateView();
+            mt.mode = "both";
+        } else if(mt.mode == "list") {
+            this.hwMonitor.generateListView();
+        } else {
+            this.hwMonitor.generateView();
+        }
+
+    }
 };
 
 p.banHW = function() {
     var hwOptions = this.hwInfo;
     for (var i in hwOptions)
         Entry.playground.blockMenu.banClass(hwOptions[i].name);
+
 };
