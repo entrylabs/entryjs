@@ -837,8 +837,8 @@ Blockly.Blocks.arduino_toggle_led = {init:function() {
   this.setNextStatement(!0);
 }};
 Entry.block.arduino_toggle_led = function(a, b) {
-  var c = b.getNumberValue("VALUE"), d = "on" == b.getField("OPERATOR") ? 255 : 0;
-  Entry.hw.setDigitalPortValue(c, d);
+  var c = b.getNumberValue("VALUE"), d = b.getField("OPERATOR");
+  Entry.hw.setDigitalPortValue(c, "on" == d ? 255 : 0);
   return b.callReturn();
 };
 Blockly.Blocks.arduino_toggle_pwm = {init:function() {
@@ -1915,10 +1915,10 @@ Entry.block.wait_second = function(a, b) {
   }
   b.isStart = !0;
   b.timeFlag = 1;
-  var c = b.getNumberValue("SECOND", b), c = 60 / (Entry.FPS || 60) * c * 1E3;
+  var c = b.getNumberValue("SECOND", b);
   setTimeout(function() {
     b.timeFlag = 0;
-  }, c);
+  }, 60 / (Entry.FPS || 60) * c * 1E3);
   return b;
 };
 Blockly.Blocks.repeat_basic = {init:function() {
@@ -12300,37 +12300,36 @@ Entry.Func.generateWsBlock = function(a, b, c) {
   e.init(d);
   d = e;
   d.values && (d = e.values.FIELD);
-  e = '<mutation hashid="' + c + '">';
-  c = b = "";
+  c = '<mutation hashid="' + c + '">';
+  b = e = "";
   var f = 0, g = 0;
   a.stringHash = {};
   for (a.booleanHash = {};;) {
     switch(d.type) {
       case "function_field_label":
-        e += '<field type="label" content="' + d.fields.NAME.replace("<", "&lt;").replace(">", "&gt;") + '"></field>';
-        c += d.fields.NAME;
+        c += '<field type="label" content="' + d.fields.NAME.replace("<", "&lt;").replace(">", "&gt;") + '"></field>';
+        b += d.fields.NAME;
         break;
       case "function_field_boolean":
         var h = d.values.PARAM.hashId;
-        e += '<field type="boolean" hashid="' + h + '"></field>';
-        b += '<value name="' + h + '"><block type="function_param_boolean"><mutation hashid="' + h + '"></mutation></block></value>';
+        c += '<field type="boolean" hashid="' + h + '"></field>';
+        e += '<value name="' + h + '"><block type="function_param_boolean"><mutation hashid="' + h + '"></mutation></block></value>';
         a.booleanHash[h] = g;
         g++;
-        c += "\ub17c\ub9ac\uac12" + g;
+        b += "\ub17c\ub9ac\uac12" + g;
         break;
       case "function_field_string":
-        h = d.values.PARAM.hashId, e += '<field type="string" hashid="' + h + '"></field>', b += '<value name="' + h + '"><block type="function_param_string"><mutation hashid="' + h + '"></mutation></block></value>', a.stringHash[h] = f, f++, c += "\ubb38\uc790\uac12" + f;
+        h = d.values.PARAM.hashId, c += '<field type="string" hashid="' + h + '"></field>', e += '<value name="' + h + '"><block type="function_param_string"><mutation hashid="' + h + '"></mutation></block></value>', a.stringHash[h] = f, f++, b += "\ubb38\uc790\uac12" + f;
     }
     if (d.values && d.values.NEXT) {
       d = d.values.NEXT;
     } else {
       break;
     }
-    c += " ";
+    b += " ";
   }
-  a = '<xml><block type="function_general">' + (e + "</mutation>") + b + "</block></xml>";
-  c || (c = "\ud568\uc218");
-  return {block:Blockly.Xml.textToDom(a).childNodes[0], description:c};
+  b || (b = "\ud568\uc218");
+  return {block:Blockly.Xml.textToDom('<xml><block type="function_general">' + (c + "</mutation>") + e + "</block></xml>").childNodes[0], description:b};
 };
 Entry.BlockModel = function() {
   Entry.Model(this);
