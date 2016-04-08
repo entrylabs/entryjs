@@ -44,8 +44,6 @@ Entry.Parser = function(mode, syntax, cm) {
                 assistScope['front'] = 'BasicIf';
             }
 
-            cm.state.competionActive = null;
-
             CodeMirror.commands.javascriptComplete = function (cm) {
                 CodeMirror.showHint(cm, null, {globalScope:assistScope});
             }
@@ -70,8 +68,6 @@ Entry.Parser = function(mode, syntax, cm) {
         case "blockJs":
             this._parser = new Entry.BlockParser(this.syntax);
 
-            cm.state.competionActive = null;
-
             CodeMirror.commands.javascriptComplete = function (cm) {
                 CodeMirror.showHint(cm, null, {globalScope:assistScope});
             }
@@ -87,11 +83,29 @@ Entry.Parser = function(mode, syntax, cm) {
         case "blockPy":
             this._parser = new Entry.PyBlockParser(this.syntax);
 
-            cm.state.competionActive = null;
+            var syntax = this.syntax;
+            console.log("syntax", syntax);
+
+            var assistScope = {};
+
+            console.log("syntax.scope", syntax.Scope);
+
+            for(var key in syntax.Scope ) {
+                console.log("key", key);
+                assistScope[key + '();\n'] = syntax.Scope[key];
+            }
+
+            if('BasicIf' in syntax) {
+                assistScope['front'] = 'BasicIf';
+            }
+
+            CodeMirror.commands.javascriptComplete = function (cm) {
+                CodeMirror.showHint(cm, null, {globalScope:assistScope});
+            }
 
             cm.on("keyup", function (cm, event) {
-                console.log("keyup pyblock", cm.state.competionActive);
-                if (!cm.state.completionActive &&  (event.keyCode >= 65 && event.keyCode <= 95))  {
+                console.log("py keyup state", cm.state.competionActive, event.keyCode);
+                if (!cm.state.competionActive &&  (event.keyCode >= 65 && event.keyCode <= 95))  {
                     console.log("check completion");
                     CodeMirror.showHint(cm, null, {completeSingle: false, globalScope:assistScope});
                 }
