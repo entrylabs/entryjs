@@ -14010,7 +14010,10 @@ Entry.BlockView.DRAG_RADIUS = 5;
     var b = this._schema.color;
     this.block.isDeletable() || (b = Entry.Utils.colorLighten(b));
     this._path.attr({fill:b});
-    for (b = 0;b < this._contents.length;b++) {
+    this._updateContents();
+  };
+  a._updateContents = function() {
+    for (var b = 0;b < this._contents.length;b++) {
       this._contents[b].renderStart();
     }
     this.alignContent(!1);
@@ -17315,8 +17318,6 @@ Entry.Playground.prototype.restoreBlock = function(a, b) {
   Entry.stateManager && Entry.stateManager.addCommand("restore block", this, this.restoreBlock, this.object, this.object.getScriptText());
   Blockly.Xml.textToDom(b);
 };
-Entry.Playground.prototype.syncObjectWithEvent = function(a) {
-};
 Entry.Playground.prototype.setMenu = function(a) {
   if (this.currentObjectType != a) {
     var b = this.blockMenu;
@@ -17348,12 +17349,14 @@ Entry.Playground.prototype.showTab = function(a) {
 Entry.Playground.prototype.initializeResizeHandle = function(a) {
   a.onmousedown = function(a) {
     Entry.playground.resizing = !0;
+    Entry.documentMousemove && (Entry.playground.resizeEvent = Entry.documentMousemove.attach(this, function(a) {
+      Entry.playground.resizing && Entry.resizeElement({menuWidth:a.clientX - Entry.interfaceState.canvasWidth});
+    }));
   };
-  document.addEventListener("mousemove", function(a) {
-    Entry.playground.resizing && Entry.resizeElement({menuWidth:a.x - Entry.interfaceState.canvasWidth});
-  });
   document.addEventListener("mouseup", function(a) {
-    Entry.playground.resizing = !1;
+    if (a = Entry.playground.resizeEvent) {
+      Entry.playground.resizing = !1, Entry.documentMousemove.detach(a), delete Entry.playground.resizeEvent;
+    }
   });
 };
 Entry.Playground.prototype.reloadPlayground = function() {

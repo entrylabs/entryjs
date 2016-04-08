@@ -904,6 +904,10 @@ Entry.BlockView.DRAG_RADIUS = 5;
         this._path.attr({fill:fillColor});
         //update block inner images
 
+        this._updateContents();
+    };
+
+    p._updateContents = function() {
         for (var i=0; i<this._contents.length; i++)
             this._contents[i].renderStart();
         this.alignContent(false);
