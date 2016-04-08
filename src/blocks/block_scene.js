@@ -46,8 +46,8 @@ Blockly.Blocks.start_neighbor_scene = {
     this.appendDummyInput()
         .appendField(Lang.Blocks.SCENE_start_neighbor_scene_1)
         .appendField(new Blockly.FieldDropdown([
-          [Lang.Blocks.SCENE_start_scene_pre,"pre"],
-          [Lang.Blocks.SCENE_start_scene_next,"next"]
+          [Lang.Blocks.SCENE_start_scene_next,"next"],
+          [Lang.Blocks.SCENE_start_scene_pre,"pre"]
           ]), "OPERATOR")
         .appendField(Lang.Blocks.SCENE_start_neighbor_scene_2)
         .appendField(new Blockly.FieldIcon(Entry.mediaFilePath + 'block_icon/start_03.png', '*'));

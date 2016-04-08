@@ -443,9 +443,14 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
             var blocks = datum.blocks;
             var codesJSON = [];
             blocks.forEach(function(b){
-                codesJSON.push([{
-                    type:b
-                }]);
+                var block = Entry.block[b];
+                if (!block || !block.def) {
+                    codesJSON.push([{type:b}]);
+                } else {
+                    codesJSON.push([
+                        block.def
+                    ]);
+                }
             });
             var categoryName = datum.category;
             this._categories.push(categoryName);

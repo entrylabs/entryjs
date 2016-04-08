@@ -867,7 +867,7 @@ EntryStatic.blockInfo = {
         "usage": ["list"]
     },
     "boolean_basic_operator": {
-        "xml": "<block type='boolean_basic_operator'> <field name='OPERATOR'>EQUAL</field> <value name='LEFTHAND'> <block type='text'><field name='NAME'>10</field></block> </value> <value name='RIGHTHAND'> <block type='text'><field name='NAME'>10</field></block> </value> </block>",
+        "xml": "<block type='boolean_basic_operator'> <value name='LEFTHAND'> <block type='text'><field name='NAME'>10</field></block> </value><field name='OPERATOR'>EQUAL</field>  <value name='RIGHTHAND'> <block type='text'><field name='NAME'>10</field></block> </value> </block>",
         "xmls": [
             "<block type='boolean_basic_operator'> <field name='OPERATOR'>EQUAL</field> <value name='LEFTHAND'> <block type='text'><field name='NAME'>10</field></block> </value> <value name='RIGHTHAND'> <block type='text'><field name='NAME'>10</field></block> </value> </block>",
             "<block type='boolean_basic_operator'> <field name='OPERATOR'>GREATER</field> <value name='LEFTHAND'> <block type='text'><field name='NAME'>10</field></block> </value> <value name='RIGHTHAND'> <block type='text'><field name='NAME'>10</field></block> </value> </block>",
