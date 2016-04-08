@@ -960,6 +960,17 @@
     background-color: transparent;
 }
 
+.selectedNotEditionObject {
+    background-color: transparent;
+}
+
+.selectedNotEditionObject:hover {
+    background-color: transparent;
+}
+
+.selectedNotEditionObject:focus {
+    background-color: transparent !important;
+}
 /*sj*/
 
 .selectedObject .entryObjectNameWorkspace{
@@ -971,15 +982,6 @@
     font-family: nanumBarunRegular !important;
 }
 
-/*.entryObjectNameWorkspace:hover{
-    background-color: white;
-    color: black;
-}
-*/
-.entryObjectNameWorkspace:focus{
-    background-color: white;
-    color: black;
-}
 
 .entryObjectNameWorkspace:disabled{
     background-color: transparent;
@@ -2577,15 +2579,9 @@
     margin-left: 145px;
 }
 
-.entryObjectCoordinateInputWorkspace:hover, .entryObjectCoordinateInputWorkspace:focus,
-.entryObjectRotateInputWorkspace:hover, .entryObjectDirectionInputWorkspace:hover,
-.entryObjectRotateInputWorkspace:focus, .entryObjectDirectionInputWorkspace:focus {
-    background-color: white;
-}
-
-.entryObjectCoordinateInputWorkspace:disabled,
-.entryObjectRotateInputWorkspace:disabled,
-.entryObjectDirectionInputWorkspace:disabled{
+.entryObjectCoordinateInputWorkspace:focus,
+.entryObjectRotateInputWorkspace:focus,
+.entryObjectDirectionInputWorkspace:focus{
     background-color: transparent;
 }
 
@@ -3181,7 +3177,7 @@
 
 .entryVariableAddSpaceCheckWorkspace.entryVariableAddChecked {
     /*background-color: gray;*/
-    background-image: url("../images/check_on.png");
+    background-image: url("@{image_url}check_on.png");
     background-repeat: no-repeat;
 }
 
@@ -3719,11 +3715,11 @@
 
 
 .entryPlaygroundPainterAttrAddButton {
-    background: url("@{image_url}fill_in.png");
+    /*background: url("@{image_url}fill_in.png");*/
 }
 
 .entryPlaygroundPainterAttrRemoveButton {
-    background: url("@{image_url}fill_out.png");
+    /*background: url("@{image_url}fill_out.png");*/
 }
 .painterAttrColorSpoid:hover {
     background: url("@{image_url}color_on_spoid_1.png");
@@ -4104,7 +4100,7 @@
 .entryVariableAddSpaceCheckWorkspace.entryVariableAddChecked,
 .entryVariableSettingCheckWorkspace.entryVariableSettingChecked {
     /*background-color: gray;*/
-    background-image: url("../images/check_on.png");
+    background-image: url("@{image_url}check_on.png");
     background-repeat: no-repeat;
 }
 
@@ -4192,7 +4188,7 @@
 
 .entryListSettingCheckedWorkspace {
     /*background-color: gray;*/
-    background-image: url("../images/check_on.png");
+    background-image: url("@{image_url}check_on.png");
     background-repeat: no-repeat;
 }
 

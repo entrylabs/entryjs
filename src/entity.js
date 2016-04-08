@@ -89,12 +89,13 @@ Entry.EntityObject.prototype.injectModel = function(pictureModel, entityModel) {
         this.setImage(pictureModel);
     } else if (this.type == 'textBox') {
         var parent = this.parent;
-        entityModel.text = parent.text || parent.name;
+        entityModel.text = entityModel.text || parent.text || parent.name;
         this.setFont(entityModel.font);
         this.setBGColour(entityModel.bgColor);
         this.setColour(entityModel.colour);
         this.setUnderLine(entityModel.underLine);
         this.setStrike(entityModel.strike);
+        this.setText(entityModel.text);
     }
 
     //entity
