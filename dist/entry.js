@@ -9038,12 +9038,14 @@ Entry.PropertyPanel = function() {
     b.onmousedown = function(b) {
       Entry.container.disableSort();
       Entry.container.splitterEnable = !0;
+      Entry.documentMousemove && (Entry.container.resizeEvent = Entry.documentMousemove.attach(this, function(b) {
+        Entry.container.splitterEnable && Entry.resizeElement({canvasWidth:b.clientX || b.x});
+      }));
     };
-    document.addEventListener("mousemove", function(b) {
-      Entry.container.splitterEnable && Entry.resizeElement({canvasWidth:b.x || b.clientX});
-    });
     document.addEventListener("mouseup", function(b) {
-      Entry.container.splitterEnable = !1;
+      if (b = Entry.container.resizeEvent) {
+        Entry.container.splitterEnable = !1, Entry.documentMousemove.detach(b), delete Entry.container.resizeEvent;
+      }
       Entry.container.enableSort();
     });
   };
@@ -15305,11 +15307,11 @@ Entry.GlobalSvg = {};
     this.top = a.y + b.top - this._offsetY;
     this.svgDom.css({left:this.left, top:this.top});
   };
-  a.terminateDrag = function(a) {
-    var c = Entry.mouseCoordinate;
-    a = a.getBoard().workspace.blockMenu;
-    var d = a.offset.left, e = a.offset.top, f = a.visible ? a.svgDom.width() : 0;
-    return c.y > e && c.x > d + f ? this.DONE : c.y > e && c.x > d && a.visible ? this.REMOVE : this.RETURN;
+  a.terminateDrag = function(b) {
+    var a = Entry.mouseCoordinate;
+    b = b.getBoard().workspace.blockMenu;
+    var d = b.offset.left, e = b.offset.top, f = b.visible ? b.svgDom.width() : 0;
+    return a.y > e && a.x > d + f ? this.DONE : a.y > e && a.x > d && b.visible ? this.REMOVE : this.RETURN;
   };
   a.addControl = function(a) {
     this.onMouseDown.apply(this, arguments);

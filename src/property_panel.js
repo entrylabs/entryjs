@@ -96,14 +96,24 @@ Entry.PropertyPanel = function() {
         splitter.onmousedown = function(e) {
             Entry.container.disableSort();
             Entry.container.splitterEnable = true;
-        };
-        document.addEventListener('mousemove', function(e) {
-            if (Entry.container.splitterEnable) {
-                Entry.resizeElement({canvasWidth: e.x || e.clientX});
+            if (Entry.documentMousemove) {
+                Entry.container.resizeEvent = Entry.documentMousemove.attach(this, function(e) {
+                    if (Entry.container.splitterEnable) {
+                        Entry.resizeElement({
+                            canvasWidth: e.clientX || e.x
+                        });
+                    }
+                });
             }
-        });
+        };
+
         document.addEventListener('mouseup', function(e) {
-            Entry.container.splitterEnable = false;
+            var listener = Entry.container.resizeEvent
+            if (listener) {
+                Entry.container.splitterEnable = false;
+                Entry.documentMousemove.detach(listener);
+                delete Entry.container.resizeEvent;
+            }
             Entry.container.enableSort();
         });
     };
