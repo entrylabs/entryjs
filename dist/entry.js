@@ -13643,9 +13643,9 @@ Entry.BlockView.DRAG_RADIUS = 5;
     this._updateMagnet();
     this._path = this.pathGroup.elem("path");
     this.getBoard().patternRect && ($(this._path).mouseenter(function(b) {
-      d._changeFill(!0);
+      d._mouseEnable && d._changeFill(!0);
     }), $(this._path).mouseleave(function(b) {
-      d._changeFill(!1);
+      d._mouseEnable && d._changeFill(!1);
     }));
     var g = this._schema.color;
     this.block.isDeletable() || (g = Entry.Utils.colorLighten(g));
@@ -13759,9 +13759,11 @@ Entry.BlockView.DRAG_RADIUS = 5;
     return this._moveTo(this.x + b, this.y + a, d);
   };
   a._addControl = function() {
+    this._mouseEnable = !0;
     $(this.svgGroup).bind("mousedown.blockViewMousedown touchstart.blockViewMousedown", this.mouseHandler);
   };
   a.removeControl = function() {
+    this._mouseEnable = !1;
     $(this.svgGroup).unbind(".blockViewMousedown");
   };
   a.onMouseDown = function(b) {
@@ -15144,9 +15146,6 @@ Entry.FieldText = function(a, b, c) {
   this._color = a.color || b.getSkeleton().color || "white";
   this._align = a.align || "left";
   this._text = this.getValue() || a.text;
-  if ("True" === this._text.type) {
-    debugger;
-  }
   this.setValue(null);
   this.textElement = null;
   this.renderStart(b);

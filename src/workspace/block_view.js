@@ -112,10 +112,12 @@ Entry.BlockView.DRAG_RADIUS = 5;
 
         if (this.getBoard().patternRect) {
             $(this._path).mouseenter(function(e) {
+                if (!that._mouseEnable) return;
                 that._changeFill(true);
             });
 
             $(this._path).mouseleave(function(e) {
+                if (!that._mouseEnable) return;
                 that._changeFill(false);
             });
         }
@@ -326,6 +328,7 @@ Entry.BlockView.DRAG_RADIUS = 5;
 
     p._addControl = function() {
         var that = this;
+        this._mouseEnable = true;
         $(this.svgGroup).bind(
             'mousedown.blockViewMousedown touchstart.blockViewMousedown',
             that.mouseHandler
@@ -333,6 +336,7 @@ Entry.BlockView.DRAG_RADIUS = 5;
     };
 
     p.removeControl = function() {
+        this._mouseEnable = false;
         $(this.svgGroup).unbind('.blockViewMousedown');
     };
 
