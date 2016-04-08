@@ -39,12 +39,12 @@ Entry.PropertyPanel = function() {
     };
 
     p.addMode = function(mode, contentObj) {
-
         var contentDom = contentObj.getView();
         // will be removed after apply new Dom class
         contentDom = Entry.Dom(contentDom, {
             parent: this._contentView
         });
+
         var tabDom = Entry.Dom('<div>' + mode +'</div>', {
             classes: ["propertyTabElement", "propertyTab" + mode],
             parent: this._tabView
