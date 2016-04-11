@@ -8888,6 +8888,7 @@ Entry.Parser = function(a, b, c) {
         }
         console.log("asist", e);
         "BasicIf" in b && (e.front = "BasicIf");
+        d.setOption("mode", {name:"javascript", globalVars:!0});
         CodeMirror.commands.autoCompletion = function(b) {
           CodeMirror.showHint(b, null, {globalScope:e});
         };
@@ -16827,7 +16828,7 @@ Entry.Vim = function(a, b) {
     }
     var e;
     this.view = Entry.Dom("div", {parent:a, class:"entryVimBoard"});
-    this.codeMirror = CodeMirror(this.view[0], {lineNumbers:!0, value:"", mode:{name:"javascript", globalVars:!0}, theme:"default", indentUnit:4, styleActiveLine:!0, extraKeys:{"Ctrl-Space":"javascriptComplete", Tab:function(a) {
+    this.codeMirror = CodeMirror(this.view[0], {lineNumbers:!0, value:"", mode:{name:"javascript", globalVars:!0}, theme:"default", indentUnit:4, styleActiveLine:!0, extraKeys:{"Ctrl-Space":"autocomplete", Tab:function(a) {
       var b = Array(a.getOption("indentUnit") + 1).join(" ");
       a.replaceSelection(b);
     }}, lint:!0, viewportMargin:10});

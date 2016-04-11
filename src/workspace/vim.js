@@ -58,7 +58,7 @@ Entry.Vim = function(dom, textType) {
             indentUnit: 4,
             styleActiveLine: true,
             extraKeys: {
-                "Ctrl-Space": "javascriptComplete",
+                "Ctrl-Space": "autocomplete",
                 "Tab": function(cm) {
                     var spaces = Array(cm.getOption("indentUnit") + 1).join(" ");
                     cm.replaceSelection(spaces);

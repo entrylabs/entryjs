@@ -180,6 +180,8 @@ Entry.Parser = function(mode, type, cm) {
                     assistScope['front'] = 'BasicIf';
                 }
 
+                cm.setOption("mode", {name: "javascript", globalVars: true});
+
                 CodeMirror.commands.autoCompletion = function (cm) {
                     CodeMirror.showHint(cm, null, {globalScope:assistScope});
                 }
@@ -205,6 +207,8 @@ Entry.Parser = function(mode, type, cm) {
                     assistScope['front'] = 'BasicIf';
                 }
 
+                cm.setOption("mode", {name: "python", globalVars: true});
+
                 CodeMirror.commands.autoCompletion = function (cm) {
                     CodeMirror.showHint(cm, null, {globalScope:assistScope});
                 }
@@ -216,7 +220,7 @@ Entry.Parser = function(mode, type, cm) {
                     }
                 });
 
-                cm.on("change", function(cm, change) { .... })
+                
                 break;
         }
     };
