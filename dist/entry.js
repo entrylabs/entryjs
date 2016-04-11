@@ -15079,7 +15079,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldOutput);
   };
   a.replace = function(b) {
     var a = this._valueBlock;
-    a && (a.view._toGlobalCoordinate(), this.separate(a), a.replace(b.getTerminateOutputBlock().view._contents[1]));
+    a && (a.view._toGlobalCoordinate(), this.separate(a), b.getTerminateOutputBlock().view._contents[1].replace(a));
     this._updateValueBlock(b);
     b.view._toLocalCoordinate(this.svgGroup);
     this.calcWH();

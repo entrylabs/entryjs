@@ -220,8 +220,8 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldOutput);
         if (valueBlock) {
             valueBlock.view._toGlobalCoordinate();
             this.separate(valueBlock);
-            valueBlock.replace(
-                block.getTerminateOutputBlock().view._contents[1]
+            block.getTerminateOutputBlock().view._contents[1].replace(
+                valueBlock
             );
         }
         this._updateValueBlock(block);
