@@ -737,7 +737,7 @@
   right: 0;
 }
 .collapsed .propertyContent {
-  left: 30px;
+  /*left: 30px;*/
 }
 .hwMonitor {
   background-color: #363c46;
