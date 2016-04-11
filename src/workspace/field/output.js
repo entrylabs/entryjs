@@ -219,7 +219,6 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldOutput);
         var valueBlock = this._valueBlock;
         if (valueBlock) {
             valueBlock.view._toGlobalCoordinate();
-            this.separate(valueBlock);
             block.getTerminateOutputBlock().view._contents[1].replace(
                 valueBlock
             );
