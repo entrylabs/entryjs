@@ -8834,74 +8834,104 @@ Entry.JSParser = function(a) {
 })(Entry.JSParser.prototype);
 Entry.Parser = function(a, b, c) {
   this._mode = a;
-  this.syntax = {};
+  this.syntax = {Scope:{move:"move", mod:"mod"}};
   this.codeMirror = c;
-  this._lang = b || "js";
+  this._type = b;
   this.availableCode = [];
-  "maze" === a && (this._stageId = Number(Ntry.configManager.getConfig("stageId")), this.setAvailableCode(NtryData.config[this._stageId].availableCode, NtryData.player[this._stageId].code));
-  this.mappingSyntax(a);
-  switch(this._lang) {
-    case "js":
-      this._parser = new Entry.JSParser(this.syntax);
-      b = this.syntax;
-      var d = {}, e;
-      for (e in b.Scope) {
-        d[e + "();\n"] = b.Scope[e];
-      }
-      "BasicIf" in b && (d.front = "BasicIf");
-      CodeMirror.commands.javascriptComplete = function(b) {
-        CodeMirror.showHint(b, null, {globalScope:d});
-      };
-      c.on("keyup", function(b, a) {
-        !b.state.completionActive && 65 <= a.keyCode && 95 >= a.keyCode && CodeMirror.showHint(b, null, {completeSingle:!1, globalScope:d});
-      });
-      break;
-    case "py":
-      this._parser = new Entry.PYParser(this.syntax);
-      c.on("keyup", function(b, a) {
-        !b.state.completionActive && 65 <= a.keyCode && 95 >= a.keyCode && CodeMirror.showHint(b, null, {completeSingle:!1, globalScope:d});
-      });
-      break;
-    case "blockJs":
-      this._parser = new Entry.BlockParser(this.syntax);
-      CodeMirror.commands.javascriptComplete = function(b) {
-        CodeMirror.showHint(b, null, {globalScope:d});
-      };
-      c.on("keyup", function(b, a) {
-        !b.state.completionActive && 65 <= a.keyCode && 95 >= a.keyCode && CodeMirror.showHint(b, null, {completeSingle:!1, globalScope:d});
-      });
-      break;
-    case "blockPy":
-      this._parser = new Entry.PyBlockParser(this.syntax);
-      b = this.syntax;
-      console.log("syntax", b);
-      d = {};
-      console.log("syntax.scope", b.Scope);
-      for (e in b.Scope) {
-        console.log("key", e), d[e + "();\n"] = b.Scope[e];
-      }
-      "BasicIf" in b && (d.front = "BasicIf");
-      CodeMirror.commands.javascriptComplete = function(b) {
-        CodeMirror.showHint(b, null, {globalScope:d});
-      };
-      c.on("keyup", function(b, a) {
-        console.log("py keyup state", b.state.competionActive, a.keyCode);
-        !b.state.competionActive && 65 <= a.keyCode && 95 >= a.keyCode && (console.log("check completion"), CodeMirror.showHint(b, null, {completeSingle:!1, globalScope:d}));
-      });
-  }
 };
 (function(a) {
+  a.setParser = function(b, a, d) {
+    b === Entry.Vim.MAZE_MODE && (this._stageId = Number(Ntry.configManager.getConfig("stageId")), this.setAvailableCode(NtryData.config[this._stageId].availableCode, NtryData.player[this._stageId].code));
+    this.mappingSyntax(b);
+    switch(a) {
+      case Entry.Vim.PARSER_TYPE_JS_TO_BLOCK:
+        console.log("PARSER TYPE => JS To Block");
+        this._parser = new Entry.JSParser(this.syntax);
+        b = this.syntax;
+        var e = {}, f;
+        for (f in b.Scope) {
+          e[f + "();\n"] = b.Scope[f];
+        }
+        "BasicIf" in b && (e.front = "BasicIf");
+        CodeMirror.commands.autoCompletion = function(b) {
+          CodeMirror.showHint(b, null, {globalScope:e});
+        };
+        d.on("keyup", function(b, a) {
+          !b.state.completionActive && 65 <= a.keyCode && 95 >= a.keyCode && CodeMirror.showHint(b, null, {completeSingle:!1, globalScope:e});
+        });
+        break;
+      case Entry.Vim.PARSER_TYPE_PY_TO_BLOCK:
+        console.log("PARSER TYPE => PY To Block");
+        this._parser = new Entry.PYParser(this.syntax);
+        b = this.syntax;
+        e = {};
+        for (f in b.Scope) {
+          e[f + "();\n"] = b.Scope[f];
+        }
+        "BasicIf" in b && (e.front = "BasicIf");
+        CodeMirror.commands.autoCompletion = function(b) {
+          CodeMirror.showHint(b, null, {globalScope:e});
+        };
+        d.on("keyup", function(b, a) {
+          !b.state.completionActive && 65 <= a.keyCode && 95 >= a.keyCode && CodeMirror.showHint(b, null, {completeSingle:!1, globalScope:e});
+        });
+        break;
+      case Entry.Vim.PARSER_TYPE_BLOCK_TO_JS:
+        console.log("PARSER TYPE => BLOCK To JS");
+        this._parser = new Entry.BlockParser(this.syntax);
+        b = this.syntax;
+        console.log("syntax", b);
+        e = {};
+        console.log("syntax Scope", b.Scope);
+        for (f in b.Scope) {
+          console.log("key", f), e[f + "();\n"] = b.Scope[f];
+        }
+        console.log("asist", e);
+        "BasicIf" in b && (e.front = "BasicIf");
+        CodeMirror.commands.autoCompletion = function(b) {
+          CodeMirror.showHint(b, null, {globalScope:e});
+        };
+        d.on("keyup", function(b, a) {
+          !b.state.completionActive && 65 <= a.keyCode && 95 >= a.keyCode && CodeMirror.showHint(b, null, {completeSingle:!1, globalScope:e});
+        });
+        break;
+      case Entry.Vim.PARSER_TYPE_BLOCK_TO_PY:
+        console.log("PARSER TYPE => Block To PY");
+        this._parser = new Entry.PyBlockParser(this.syntax);
+        b = this.syntax;
+        e = {};
+        for (f in b.Scope) {
+          e[f + "();\n"] = b.Scope[f];
+        }
+        "BasicIf" in b && (e.front = "BasicIf");
+        d.setOption("mode", {name:"python", globalVars:!0});
+        CodeMirror.commands.autoCompletion = function(b) {
+          CodeMirror.showHint(b, null, {globalScope:e});
+        };
+        d.on("keyup", function(b, a) {
+          console.log("cm", b);
+          !b.state.completionActive && 65 <= a.keyCode && 95 >= a.keyCode && CodeMirror.showHint(b, null, {completeSingle:!1, globalScope:e});
+        });
+    }
+  };
   a.parse = function(b) {
     var a = null;
-    switch(this._lang) {
-      case "js":
+    switch(this._type) {
+      case Entry.Vim.PARSER_TYPE_JS_TO_BLOCK:
         try {
           var d = acorn.parse(b), a = this._parser.Program(d);
         } catch (e) {
           this.codeMirror && (e instanceof SyntaxError ? (b = {from:{line:e.loc.line - 1, ch:e.loc.column - 2}, to:{line:e.loc.line - 1, ch:e.loc.column + 1}}, e.message = "\ubb38\ubc95 \uc624\ub958\uc785\ub2c8\ub2e4.") : (b = this.getLineNumber(e.node.start, e.node.end), b.message = e.message, b.severity = "error", this.codeMirror.markText(b.from, b.to, {className:"CodeMirror-lint-mark-error", __annotation:b, clearOnEnter:!0})), Entry.toast.alert("Error", e.message)), a = [];
         }
         break;
-      case "blockJs":
+      case Entry.Vim.PARSER_TYPE_PY_TO_BLOCK:
+        try {
+          d = acorn.parse(b), a = this._parser.Program(d);
+        } catch (e) {
+          this.codeMirror && (e instanceof SyntaxError ? (b = {from:{line:e.loc.line - 1, ch:e.loc.column - 2}, to:{line:e.loc.line - 1, ch:e.loc.column + 1}}, e.message = "\ubb38\ubc95 \uc624\ub958\uc785\ub2c8\ub2e4.") : (b = this.getLineNumber(e.node.start, e.node.end), b.message = e.message, b.severity = "error", this.codeMirror.markText(b.from, b.to, {className:"CodeMirror-lint-mark-error", __annotation:b, clearOnEnter:!0})), Entry.toast.alert("Error", e.message)), a = [];
+        }
+        break;
+      case Entry.Vim.PARSER_TYPE_BLOCK_TO_JS:
         b = this._parser.Code(b);
         b = b.match(/(.*{.*[\S|\s]+?}|.+)/g);
         a = Array.isArray(b) ? b.reduce(function(b, a, c) {
@@ -8911,7 +8941,7 @@ Entry.Parser = function(a, b, c) {
           return d + "\n";
         }) : "";
         break;
-      case "blockPy":
+      case Entry.Vim.PARSER_TYPE_BLOCK_TO_PY:
         b = this._parser.Code(b), b = b.match(/(.*{.*[\S|\s]+?}|.+)/g), a = Array.isArray(b) ? b.reduce(function(b, a, c) {
           var d = "";
           1 === c && (b += "\n");
@@ -15825,63 +15855,63 @@ Entry.Board = function(a) {
       a.mouseWheel.apply(a, arguments);
     });
   };
-  a.onMouseDown = function(a) {
-    function c(a) {
-      a.stopPropagation && a.stopPropagation();
-      a.preventDefault && a.preventDefault();
-      a = a.originalEvent && a.originalEvent.touches ? a.originalEvent.touches[0] : a;
-      var b = g.dragInstance;
-      g.scroller.scroll(a.pageX - b.offsetX, a.pageY - b.offsetY);
-      b.set({offsetX:a.pageX, offsetY:a.pageY});
+  a.onMouseDown = function(b) {
+    function a(b) {
+      b.stopPropagation && b.stopPropagation();
+      b.preventDefault && b.preventDefault();
+      b = b.originalEvent && b.originalEvent.touches ? b.originalEvent.touches[0] : b;
+      var c = g.dragInstance;
+      g.scroller.scroll(b.pageX - c.offsetX, b.pageY - c.offsetY);
+      c.set({offsetX:b.pageX, offsetY:b.pageY});
     }
-    function d(a) {
+    function d(b) {
       $(document).unbind(".entryBoard");
       delete g.dragInstance;
     }
     if (this.workspace.getMode() != Entry.Workspace.MODE_VIMBOARD) {
-      a.stopPropagation && a.stopPropagation();
-      a.preventDefault && a.preventDefault();
-      if (0 === a.button || a.originalEvent && a.originalEvent.touches) {
-        a = a.originalEvent && a.originalEvent.touches ? a.originalEvent.touches[0] : a;
-        Entry.documentMousedown && Entry.documentMousedown.notify(a);
+      b.stopPropagation && b.stopPropagation();
+      b.preventDefault && b.preventDefault();
+      if (0 === b.button || b.originalEvent && b.originalEvent.touches) {
+        b = b.originalEvent && b.originalEvent.touches ? b.originalEvent.touches[0] : b;
+        Entry.documentMousedown && Entry.documentMousedown.notify(b);
         var e = $(document);
-        e.bind("mousemove.entryBoard", c);
+        e.bind("mousemove.entryBoard", a);
         e.bind("mouseup.entryBoard", d);
-        e.bind("touchmove.entryBoard", c);
+        e.bind("touchmove.entryBoard", a);
         e.bind("touchend.entryBoard", d);
-        this.dragInstance = new Entry.DragInstance({startX:a.pageX, startY:a.pageY, offsetX:a.pageX, offsetY:a.pageY});
+        this.dragInstance = new Entry.DragInstance({startX:b.pageX, startY:b.pageY, offsetX:b.pageX, offsetY:b.pageY});
       } else {
-        if (Entry.Utils.isRightButton(a)) {
+        if (Entry.Utils.isRightButton(b)) {
           if (!this.visible) {
             return;
           }
           var f = this;
-          a = [];
-          a.push({text:"\ubd99\uc5ec\ub123\uae30", enable:!!Entry.clipboard, callback:function() {
+          b = [];
+          b.push({text:"\ubd99\uc5ec\ub123\uae30", enable:!!Entry.clipboard, callback:function() {
             f.code.createThread(Entry.clipboard).getFirstBlock().copyToClipboard();
           }});
-          a.push({text:"\ube14\ub85d \uc815\ub9ac\ud558\uae30", callback:function() {
+          b.push({text:"\ube14\ub85d \uc815\ub9ac\ud558\uae30", callback:function() {
             f.alignThreads();
           }});
-          Entry.ContextMenu.show(a);
+          Entry.ContextMenu.show(b);
         }
       }
       var g = this;
     }
   };
-  a.mouseWheel = function(a) {
-    a = a.originalEvent;
-    this.scroller.scroll(a.wheelDeltaX || -a.deltaX, a.wheelDeltaY || -a.deltaY);
+  a.mouseWheel = function(b) {
+    b = b.originalEvent;
+    this.scroller.scroll(b.wheelDeltaX || -b.deltaX, b.wheelDeltaY || -b.deltaY);
   };
-  a.setSelectedBlock = function(a) {
-    var c = this.selectedBlockView;
-    c && c.removeSelected();
-    a instanceof Entry.BlockView ? a.addSelected() : a = null;
-    this.set({selectedBlockView:a});
+  a.setSelectedBlock = function(b) {
+    var a = this.selectedBlockView;
+    a && a.removeSelected();
+    b instanceof Entry.BlockView ? b.addSelected() : b = null;
+    this.set({selectedBlockView:b});
   };
-  a._keyboardControl = function(a) {
-    var c = this.selectedBlockView;
-    c && 46 == a.keyCode && c.block.doDestroy(!1) && this.set({selectedBlockView:null});
+  a._keyboardControl = function(b) {
+    var a = this.selectedBlockView;
+    a && 46 == b.keyCode && a.block.doDestroy(!1) && this.set({selectedBlockView:null});
   };
   a.hide = function() {
     this.wrapper.addClass("entryRemove");
@@ -15892,9 +15922,9 @@ Entry.Board = function(a) {
     this.visible = !0;
   };
   a.alignThreads = function() {
-    for (var a = this.svgDom.height(), c = this.code.getThreads(), d = 15, e = 0, a = a - 30, f = 50, g = 0;g < c.length;g++) {
-      var h = c[g].getFirstBlock().view, k = h.svgGroup.getBBox(), m = d + 15;
-      m > a && (f = f + e + 10, e = 0, d = 15);
+    for (var b = this.svgDom.height(), a = this.code.getThreads(), d = 15, e = 0, b = b - 30, f = 50, g = 0;g < a.length;g++) {
+      var h = a[g].getFirstBlock().view, k = h.svgGroup.getBBox(), m = d + 15;
+      m > b && (f = f + e + 10, e = 0, d = 15);
       e = Math.max(e, k.width);
       m = d + 15;
       h._moveTo(f, m, !1);
@@ -15903,35 +15933,35 @@ Entry.Board = function(a) {
     this.scroller.resizeScrollBar();
   };
   a.clear = function() {
-    for (var a = this.svgBlockGroup;a.firstChild;) {
-      a.removeChild(a.firstChild);
+    for (var b = this.svgBlockGroup;b.firstChild;) {
+      b.removeChild(b.firstChild);
     }
   };
   a.updateOffset = function() {
     this.offset = this.svg.getBoundingClientRect();
-    var a = $(window), c = a.scrollTop(), a = a.scrollLeft(), d = this.offset;
-    this.relativeOffset = {top:d.top - c, left:d.left - a};
+    var b = $(window), a = b.scrollTop(), b = b.scrollLeft(), d = this.offset;
+    this.relativeOffset = {top:d.top - a, left:d.left - b};
     this.btnWrapper && this.btnWrapper.attr({transform:"translate(" + (d.width / 2 - 65) + "," + (d.height - 200) + ")"});
   };
   a.generateButtons = function() {
-    var a = this, c = this.svgGroup.elem("g");
-    this.btnWrapper = c;
-    var d = c.elem("text", {x:27, y:33, class:"entryFunctionButtonText"});
+    var b = this, a = this.svgGroup.elem("g");
+    this.btnWrapper = a;
+    var d = a.elem("text", {x:27, y:33, class:"entryFunctionButtonText"});
     d.innerHTML = Lang.Buttons.save;
-    var e = c.elem("text", {x:102.5, y:33, class:"entryFunctionButtonText"});
+    var e = a.elem("text", {x:102.5, y:33, class:"entryFunctionButtonText"});
     e.innerHTML = Lang.Buttons.cancel;
-    var f = c.elem("circle", {cx:27.5, cy:27.5, r:27.5, class:"entryFunctionButton"}), c = c.elem("circle", {cx:102.5, cy:27.5, r:27.5, class:"entryFunctionButton"});
-    f.onclick = function(c) {
-      a.save();
+    var f = a.elem("circle", {cx:27.5, cy:27.5, r:27.5, class:"entryFunctionButton"}), a = a.elem("circle", {cx:102.5, cy:27.5, r:27.5, class:"entryFunctionButton"});
+    f.onclick = function(a) {
+      b.save();
     };
-    d.onclick = function(c) {
-      a.save();
+    d.onclick = function(a) {
+      b.save();
     };
-    c.onclick = function(c) {
-      a.cancelEdit();
+    a.onclick = function(a) {
+      b.cancelEdit();
     };
-    e.onclick = function(c) {
-      a.cancelEdit();
+    e.onclick = function(a) {
+      b.cancelEdit();
     };
   };
   a.cancelEdit = function() {
@@ -15941,24 +15971,24 @@ Entry.Board = function(a) {
     this.workspace.setMode(Entry.Workspace.MODE_BOARD, "save");
   };
   a.generateCodeMagnetMap = function() {
-    var a = this.code;
-    if (a && this.dragBlock) {
-      a = this._getCodeBlocks(a, this.dragBlock._targetType);
-      a.sort(function(a, b) {
+    var b = this.code;
+    if (b && this.dragBlock) {
+      b = this._getCodeBlocks(b, this.dragBlock._targetType);
+      b.sort(function(a, b) {
         return a.point - b.point;
       });
-      a.unshift({point:-Number.MAX_VALUE, blocks:[]});
-      for (var c = 1;c < a.length;c++) {
-        var d = a[c], e = d, f = d.startBlock;
+      b.unshift({point:-Number.MAX_VALUE, blocks:[]});
+      for (var a = 1;a < b.length;a++) {
+        var d = b[a], e = d, f = d.startBlock;
         if (f) {
-          for (var g = d.endPoint, h = c;g > e.point && (e.blocks.push(f), h++, e = a[h], e);) {
+          for (var g = d.endPoint, h = a;g > e.point && (e.blocks.push(f), h++, e = b[h], e);) {
           }
           delete d.startBlock;
         }
         d.endPoint = Number.MAX_VALUE;
-        a[c - 1].endPoint = d.point;
+        b[a - 1].endPoint = d.point;
       }
-      this._magnetMap = a;
+      this._magnetMap = b;
     }
   };
   a._getCodeBlocks = function(a, c) {
@@ -16758,15 +16788,22 @@ Entry.FieldTrashcan = function(a) {
   };
 })(Entry.FieldTrashcan.prototype);
 Entry.Vim = function(a, b) {
+  Entry.Vim.MAZE_MODE = 0;
+  Entry.Vim.WORKSPACE_MODE = 1;
+  Entry.Vim.TEXT_TYPE_JS = 0;
+  Entry.Vim.TEXT_TYPE_PY = 1;
+  Entry.Vim.PARSER_TYPE_BLOCK_TO_JS = 0;
+  Entry.Vim.PARSER_TYPE_BLOCK_TO_PY = 1;
+  Entry.Vim.PARSER_TYPE_JS_TO_BLOCK = 2;
+  Entry.Vim.PARSER_TYPE_PY_TO_BLOCK = 3;
   a = "string" === typeof a ? $("#" + a) : $(a);
   if ("DIV" !== a.prop("tagName")) {
     return console.error("Dom is not div element");
   }
   this.createDom(a);
-  this._jsBlockParser = new Entry.Parser("ws", "blockJs", this.codeMirror);
-  this._pyBlockParser = new Entry.Parser("ws", "blockPy", this.codeMirror);
-  this._jsParser = new Entry.Parser("ws", "js", this.codeMirror);
-  this._pyParser = new Entry.Parser("ws", "py", this.codeMirror);
+  this._mode = Entry.Vim.WORKSPACE_MODE;
+  this._parserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_JS;
+  this._parser = new Entry.Parser(this._mode, this._parserType, this.codeMirror);
   Entry.Model(this, !1);
   window.eventset = [];
 };
@@ -16794,7 +16831,6 @@ Entry.Vim = function(a, b) {
       var b = Array(a.getOption("indentUnit") + 1).join(" ");
       a.replaceSelection(b);
     }}, lint:!0, viewportMargin:10});
-    console.log("codmirror stat", this.codeMirror.state.completionActive);
     this.doc = this.codeMirror.getDoc();
     e = this;
     a = this.view[0];
@@ -16810,22 +16846,23 @@ Entry.Vim = function(a, b) {
     this.view.removeClass("entryRemove");
   };
   a.textToCode = function() {
-    var a = this.codeMirror.getValue(), a = this._jsParser.parse(a);
+    textType === Entry.Vim.TEXT_TYPE_JS ? (this._parserType = Entry.Vim.PARSER_TYPE_JS_TO_BLOCK, this._parser.setParser(this._mode, this._parserType, this.codeMirror)) : textType === Entry.Vim.TEXT_TYPE_PY && (this.parserType = Entry.Vim.PARSER_TYPE_PY_TO_BLOCK, this._parser.setParser(this._mode, this._parserType, this.codeMirror));
+    var a = this.codeMirror.getValue(), a = this._parser.parse(a);
     if (0 === a.length) {
       throw "\ube14\ub85d \ud30c\uc2f1 \uc624\ub958";
     }
     return a;
   };
   a.codeToText = function(a) {
-    var c = this.workspace.textType, d;
-    "js" === c ? d = this._jsBlockParser : "py" === c && (d = this._pyBlockParser);
-    a = d.parse(a);
+    var c = this.workspace.textType;
+    c === Entry.Vim.TEXT_TYPE_JS ? (this._parserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_JS, this._parser.setParser(this._mode, this._parserType, this.codeMirror), console.log("1")) : c === Entry.Vim.TEXT_TYPE_PY && (this._parserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_PY, this._parser.setParser(this._mode, this._parserType, this.codeMirror), console.log("2"));
+    a = this._parser.parse(a);
     this.codeMirror.setValue(a);
   };
   a.getCodeToText = function(a) {
-    var c = this.workspace.textType, d;
-    "js" === c ? d = this._jsBlockParser : "py" === c && (d = this._pyBlockParser);
-    return d.parse(a);
+    var c = this.workspace.textType;
+    c === Entry.Vim.TEXT_TYPE_JS ? (this._parserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_JS, this._parser.setParser(this._mode, this._parserType, this.codeMirror)) : c === Entry.Vim.TEXT_TYPE_PY && (this._parserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_PY, this._parser.setParser(this._mode, this._parserType, this.codeMirror));
+    return this._parser.parse(a);
   };
 })(Entry.Vim.prototype);
 Entry.Workspace = function(a) {

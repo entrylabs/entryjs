@@ -8,23 +8,23 @@ goog.provide("Entry.Parser");
 goog.require("Entry.JSParser");
 goog.require("Entry.BlockParser");
 
-Entry.Parser = function(mode, syntax, cm) {
+Entry.Parser = function(mode, type, cm) {
     this._mode = mode; // maze ai workspace
-    this.syntax = {};
+    this.syntax = {Scope:{move:"move", mod:"mod"}};
     this.codeMirror = cm;
-    this._lang = syntax || "js"; 
+    //this._lang = syntax || "js"; 
+    this._type = type;
     this.availableCode = [];
 
 
-    if (mode === "maze") {
+    /*if (mode === Entry.Vim.MAZE_MODE) {
         this._stageId = Number(Ntry.configManager.getConfig('stageId'));
         var configCode = NtryData.config[this._stageId].availableCode;
         var playerCode = NtryData.player[this._stageId].code;
         this.setAvailableCode(configCode, playerCode);
-    } else if (mode === "ws") {
-
+    } else if (mode === Entry.Vim.WORKSPACE_MODE) {
+        //To Do for ws
     }
-
 
     this.mappingSyntax(mode);
 
@@ -58,40 +58,11 @@ Entry.Parser = function(mode, syntax, cm) {
         case "py":
             this._parser = new Entry.PYParser(this.syntax);
 
-            cm.on("keyup", function (cm, event) {
-                if (!cm.state.completionActive &&  (event.keyCode >= 65 && event.keyCode <= 95))  {
-                    CodeMirror.showHint(cm, null, {completeSingle: false, globalScope:assistScope});
-                }
-            });
-            break;
-
-        case "blockJs":
-            this._parser = new Entry.BlockParser(this.syntax);
-
-            CodeMirror.commands.javascriptComplete = function (cm) {
-                CodeMirror.showHint(cm, null, {globalScope:assistScope});
-            }
-
-            cm.on("keyup", function (cm, event) {
-                if (!cm.state.completionActive &&  (event.keyCode >= 65 && event.keyCode <= 95))  {
-                    CodeMirror.showHint(cm, null, {completeSingle: false, globalScope:assistScope});
-                }
-            });
-
-            break;
-
-        case "blockPy":
-            this._parser = new Entry.PyBlockParser(this.syntax);
-
             var syntax = this.syntax;
-            console.log("syntax", syntax);
 
             var assistScope = {};
 
-            console.log("syntax.scope", syntax.Scope);
-
             for(var key in syntax.Scope ) {
-                console.log("key", key);
                 assistScope[key + '();\n'] = syntax.Scope[key];
             }
 
@@ -104,23 +75,157 @@ Entry.Parser = function(mode, syntax, cm) {
             }
 
             cm.on("keyup", function (cm, event) {
-                console.log("py keyup state", cm.state.competionActive, event.keyCode);
-                if (!cm.state.competionActive &&  (event.keyCode >= 65 && event.keyCode <= 95))  {
-                    console.log("check completion");
+                if (!cm.state.completionActive &&  (event.keyCode >= 65 && event.keyCode <= 95))  {
                     CodeMirror.showHint(cm, null, {completeSingle: false, globalScope:assistScope});
                 }
             });
-
             break;
-    }
+
+        case "blockJs":
+            this._parser = new Entry.BlockParser(this.syntax);
+            var syntax = this.syntax;
+            break;
+
+        case "blockPy":
+            this._parser = new Entry.PyBlockParser(this.syntax);
+            var syntax = this.syntax;
+            break;
+    }*/
 };
 
 (function(p) {
+    p.setParser = function(mode, type, cm) {
+        if (mode === Entry.Vim.MAZE_MODE) {
+            this._stageId = Number(Ntry.configManager.getConfig('stageId'));
+            var configCode = NtryData.config[this._stageId].availableCode;
+            var playerCode = NtryData.player[this._stageId].code;
+            this.setAvailableCode(configCode, playerCode);
+        } else if (mode === Entry.Vim.WORKSPACE_MODE) {
+            //To Do for ws
+        }
+
+        this.mappingSyntax(mode);
+
+        switch (type) {
+            case Entry.Vim.PARSER_TYPE_JS_TO_BLOCK:
+                console.log("PARSER TYPE => JS To Block");
+                this._parser = new Entry.JSParser(this.syntax);
+
+                var syntax = this.syntax;
+
+                var assistScope = {};
+
+                for(var key in syntax.Scope ) {
+                    assistScope[key + '();\n'] = syntax.Scope[key];
+                }
+
+                if('BasicIf' in syntax) {
+                    assistScope['front'] = 'BasicIf';
+                }
+
+                CodeMirror.commands.autoCompletion = function (cm) {
+                    CodeMirror.showHint(cm, null, {globalScope:assistScope});
+                }
+
+                cm.on("keyup", function (cm, event) {
+                    if (!cm.state.completionActive &&  (event.keyCode >= 65 && event.keyCode <= 95))  {
+                        CodeMirror.showHint(cm, null, {completeSingle: false, globalScope:assistScope});
+                    }
+                });
+                break;
+
+            case Entry.Vim.PARSER_TYPE_PY_TO_BLOCK:
+                console.log("PARSER TYPE => PY To Block");
+                this._parser = new Entry.PYParser(this.syntax);
+
+                var syntax = this.syntax;
+
+                var assistScope = {};
+
+                for(var key in syntax.Scope ) {
+                    assistScope[key + '();\n'] = syntax.Scope[key];
+                }
+
+                if('BasicIf' in syntax) {
+                    assistScope['front'] = 'BasicIf';
+                }
+
+                CodeMirror.commands.autoCompletion = function (cm) {
+                    CodeMirror.showHint(cm, null, {globalScope:assistScope});
+                }
+
+                cm.on("keyup", function (cm, event) {
+                    if (!cm.state.completionActive &&  (event.keyCode >= 65 && event.keyCode <= 95))  {
+                        CodeMirror.showHint(cm, null, {completeSingle: false, globalScope:assistScope});
+                    }
+                });
+                break;
+
+            case Entry.Vim.PARSER_TYPE_BLOCK_TO_JS:
+                console.log("PARSER TYPE => BLOCK To JS");
+                this._parser = new Entry.BlockParser(this.syntax);
+                var syntax = this.syntax;
+                console.log("syntax", syntax);
+                var assistScope = {};
+                console.log("syntax Scope", syntax.Scope);
+
+                for(var key in syntax.Scope ) {
+                    console.log("key", key);
+                    assistScope[key + '();\n'] = syntax.Scope[key];
+                }
+
+                console.log("asist", assistScope);
+
+                if('BasicIf' in syntax) {
+                    assistScope['front'] = 'BasicIf';
+                }
+
+                CodeMirror.commands.autoCompletion = function (cm) {
+                    CodeMirror.showHint(cm, null, {globalScope:assistScope});
+                }
+
+                cm.on("keyup", function (cm, event) {
+                    if (!cm.state.completionActive &&  (event.keyCode >= 65 && event.keyCode <= 95))  {
+                        CodeMirror.showHint(cm, null, {completeSingle: false, globalScope:assistScope});
+                    }
+                });
+                break;
+
+            case Entry.Vim.PARSER_TYPE_BLOCK_TO_PY:
+                console.log("PARSER TYPE => Block To PY");
+                this._parser = new Entry.PyBlockParser(this.syntax);
+                var syntax = this.syntax;
+                var assistScope = {};
+
+                for(var key in syntax.Scope ) {
+                    assistScope[key + '();\n'] = syntax.Scope[key];
+                }
+
+                if('BasicIf' in syntax) {
+                    assistScope['front'] = 'BasicIf';
+                }
+
+                CodeMirror.commands.autoCompletion = function (cm) {
+                    CodeMirror.showHint(cm, null, {globalScope:assistScope});
+                }
+
+                cm.on("keyup", function (cm, event) {
+                    console.log("cm", cm);
+                    if (!cm.state.completionActive &&  (event.keyCode >= 65 && event.keyCode <= 95))  {
+                        CodeMirror.showHint(cm, null, {completeSingle: false, globalScope:assistScope});
+                    }
+                });
+
+                cm.on("change", function(cm, change) { .... })
+                break;
+        }
+    };
+
     p.parse = function(code) {
         var result = null;
 
-        switch (this._lang) {
-            case "js":
+        switch (this._type) {
+            case Entry.Vim.PARSER_TYPE_JS_TO_BLOCK:
                 try {
                     var astTree = acorn.parse(code);
                     result = this._parser.Program(astTree);
@@ -151,7 +256,38 @@ Entry.Parser = function(mode, syntax, cm) {
                     result = [];
                 }
                 break;
-            case "blockJs":
+            case Entry.Vim.PARSER_TYPE_PY_TO_BLOCK:
+                try {
+                    var astTree = acorn.parse(code);
+                    result = this._parser.Program(astTree);
+                } catch(error) {
+                    if (this.codeMirror) {
+                        var annotation;
+                        if (error instanceof SyntaxError) {
+                            annotation = {
+                                from: {line: error.loc.line - 1, ch: error.loc.column - 2},
+                                to: {line: error.loc.line - 1, ch: error.loc.column + 1}
+                            }
+                            error.message = "문법 오류입니다.";
+                        } else {
+                            annotation = this.getLineNumber(error.node.start,
+                                                               error.node.end);
+                            annotation.message = error.message;
+                            annotation.severity = "error";
+                            this.codeMirror.markText(
+                                annotation.from, annotation.to, {
+                                className: "CodeMirror-lint-mark-error",
+                                __annotation: annotation,
+                                clearOnEnter: true
+                            });
+                        }
+
+                        Entry.toast.alert('Error', error.message);
+                    }
+                    result = [];
+                }
+                break;
+            case Entry.Vim.PARSER_TYPE_BLOCK_TO_JS:
                 var textCode = this._parser.Code(code);
                 var textArr = textCode.match(/(.*{.*[\S|\s]+?}|.+)/g);
                 if(Array.isArray(textArr)) {
@@ -175,7 +311,7 @@ Entry.Parser = function(mode, syntax, cm) {
 
                 break;
 
-            case "blockPy":
+            case Entry.Vim.PARSER_TYPE_BLOCK_TO_PY:
                 var textCode = this._parser.Code(code);
                 var textArr = textCode.match(/(.*{.*[\S|\s]+?}|.+)/g);
                 if(Array.isArray(textArr)) {

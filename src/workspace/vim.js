@@ -4,16 +4,16 @@ goog.provide("Entry.Vim");
 
 Entry.Vim = function(dom, textType) {
     //Definition For Textmode
-    Entry.Textmode.MAZE = 0; 
-    Entry.Textmode.WORKSPACE = 1; 
+    Entry.Vim.MAZE_MODE = 0; 
+    Entry.Vim.WORKSPACE_MODE = 1; 
 
-    Entry.TextType.JS = 0;
-    Entry.TextType.PY = 1;
+    Entry.Vim.TEXT_TYPE_JS = 0;
+    Entry.Vim.TEXT_TYPE_PY = 1;
 
-    Entry.ParserType.BLOCK_TO_JS = 0;
-    Entry.ParserType.BLOCK_TO_PY = 2;
-    Entry.ParserType.JS_TO_BLOCK = 3;
-    Entry.ParserType.JS_TO_BLOCK = 4;
+    Entry.Vim.PARSER_TYPE_BLOCK_TO_JS = 0;
+    Entry.Vim.PARSER_TYPE_BLOCK_TO_PY = 1;
+    Entry.Vim.PARSER_TYPE_JS_TO_BLOCK = 2;
+    Entry.Vim.PARSER_TYPE_PY_TO_BLOCK = 3;
 
 
     if (typeof dom === "string")
@@ -28,8 +28,8 @@ Entry.Vim = function(dom, textType) {
 
     //this._parser = new Entry.Parser("maze", "js", this.codeMirror);
     //this._blockParser = new Entry.Parser("maze", "block");
-    this._mode = Entry.Textmode.WORKSPACE;
-    this._parserType = Entry.ParserType.BLOCK_TO_JS;
+    this._mode = Entry.Vim.WORKSPACE_MODE;
+    this._parserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_JS;
 
     this._parser = new Entry.Parser(this._mode, this._parserType, this.codeMirror);
     
@@ -68,8 +68,6 @@ Entry.Vim = function(dom, textType) {
             lint: true,
             viewportMargin: 10
         });
-
-        console.log("codmirror stat", this.codeMirror.state.completionActive);
 
         this.doc = this.codeMirror.getDoc();
 
@@ -120,11 +118,11 @@ Entry.Vim = function(dom, textType) {
     };
 
     p.textToCode = function() {
-        if (textType === Entry.TextType.JS) {
-            this._parserType = Entry.ParserType.JS_TO_BLOCK;
+        if (textType === Entry.Vim.TEXT_TYPE_JS) {
+            this._parserType = Entry.Vim.PARSER_TYPE_JS_TO_BLOCK;
             this._parser.setParser(this._mode, this._parserType, this.codeMirror);
-        } else if(textType === Entry.TextType.PY) {
-            this.parserType = Entry.ParserType.PY_TO_BLOCK;
+        } else if(textType === Entry.Vim.TEXT_TYPE_PY) {
+            this.parserType = Entry.Vim.PARSER_TYPE_PY_TO_BLOCK;
             this._parser.setParser(this._mode, this._parserType, this.codeMirror);
         }
 
@@ -138,26 +136,31 @@ Entry.Vim = function(dom, textType) {
 
     p.codeToText = function(code) {
         var textType = this.workspace.textType;
-        if (textType === Entry.TextType.JS) {
-            this._parserType = Entry.ParserType.BLOCK_TO_JS;
+        if (textType === Entry.Vim.TEXT_TYPE_JS) {
+            this._parserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_JS;
             this._parser.setParser(this._mode, this._parserType, this.codeMirror);
-        } else if(textType === Entry.TextType.PY) {
-            this._parserType = Entry.ParserType.BLOCK_TO_PY;
-            parser.setParser(this._mode, this._parserType, this.codeMirror);
+            console.log("1");
+        } else if(textType === Entry.Vim.TEXT_TYPE_PY) {
+            this._parserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_PY;
+            this._parser.setParser(this._mode, this._parserType, this.codeMirror);
+            console.log("2");
         } 
 
-        var textCode = parser.parse(code);
+        var textCode = this._parser.parse(code);
         this.codeMirror.setValue(textCode);
         // this.codeMirror.getDoc().markText({line:0, ch:0}, {line: 1, ch: 100}, {readOnly: true});
     };
 
     p.getCodeToText = function(code) {
         var textType = this.workspace.textType;
-        var parser;
-        if (textType === 'js') parser = this._jsBlockParser;
-        else if(textType === 'py') parser = this._pyBlockParser;
-
-        var textCode = parser.parse(code);
+        if (textType === Entry.Vim.TEXT_TYPE_JS){
+            this._parserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_JS;
+            this._parser.setParser(this._mode, this._parserType, this.codeMirror);
+        } else if(textType === Entry.Vim.TEXT_TYPE_PY){
+            this._parserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_PY;
+            this._parser.setParser(this._mode, this._parserType, this.codeMirror);
+        }
+        var textCode = this._parser.parse(code);
         return textCode;
     };
 
