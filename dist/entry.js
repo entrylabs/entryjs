@@ -8904,9 +8904,10 @@ Entry.Parser = function(a, b, c) {
         for (f in b.Scope) {
           e[f + "();\n"] = b.Scope[f];
         }
+        console.log("asist", e);
         "BasicIf" in b && (e.front = "BasicIf");
         d.setOption("mode", {name:"python", globalVars:!0});
-        CodeMirror.commands.autoCompletion = function(b) {
+        CodeMirror.commands.autocomplete = function(b) {
           CodeMirror.showHint(b, null, {globalScope:e});
         };
         d.on("keyup", function(b, a) {

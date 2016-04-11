@@ -203,13 +203,15 @@ Entry.Parser = function(mode, type, cm) {
                     assistScope[key + '();\n'] = syntax.Scope[key];
                 }
 
+                console.log("asist", assistScope);
+
                 if('BasicIf' in syntax) {
                     assistScope['front'] = 'BasicIf';
                 }
 
                 cm.setOption("mode", {name: "python", globalVars: true});
 
-                CodeMirror.commands.autoCompletion = function (cm) {
+                CodeMirror.commands.autocomplete = function (cm) {
                     CodeMirror.showHint(cm, null, {globalScope:assistScope});
                 }
 
