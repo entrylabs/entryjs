@@ -231,20 +231,29 @@ Entry.HWMonitor = function(hwModule) {
         var mode = this._hwModule.monitorTemplate.mode;
         var portView = [];
 
-        if(mode == "list")
+
+        if(mode == "list") {
             portView = this._listPortViews;
-        else 
+        } else if(mode == "both") {
+            portView = this._listPortViews;
+            if(this._portViews) {
+                for(var item in this._portViews) {
+                    portView[item] = this._portViews[item];
+                }    
+            }
+        } else { 
             portView = this._portViews;
-        
+        }
+
         for (var key in portView) {
             var port = portView[key];
 
             if (port.type == "input") {
                 var value = portData[key];
-                port.value.attr({text: value ? value : 0});
+                port.value.textContent = value ? value : 0;
             } else {
                 var value = sendQueue[key];
-                port.value.attr({text: value ? value : 0});
+                port.value.textContent = value ? value : 0;
             }
         }
     };

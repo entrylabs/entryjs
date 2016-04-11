@@ -64,7 +64,7 @@ Entry.Hamster = {
             "accelerationY":{name: Lang.Blocks.HAMSTER_sensor_accelerationY, type: "input", pos: {x: 0, y: 0}},
             "accelerationZ":{name: Lang.Blocks.HAMSTER_sensor_accelerationZ, type: "input", pos: {x: 0, y: 0}},
             "buzzer":{name: "부저 1", type: "output", pos: {x: 0, y: 0}},
-            "note ":{name: "부저 2", type: "output", pos: {x: 0, y: 0}},
+            "note":{name: "부저 2", type: "output", pos: {x: 0, y: 0}},
             "outputA":{name: "outputA", type: "output", pos: {x: 0, y: 0}},
             "outputB":{name: "outputB", type: "output", pos: {x: 0, y: 0}}
         },

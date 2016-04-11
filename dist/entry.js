@@ -121,9 +121,9 @@ Entry.Albert = {PORT_MAP:{leftWheel:0, rightWheel:0, buzzer:0, leftEye:0, rightE
   a = Entry.Albert;
   a.tempo = 60;
   a.removeAllTimeouts();
-}, monitorTemplate:{imgPath:"hw/albert.png", width:387, height:503, listPorts:{oid:{name:"OID", type:"input", pos:{x:0, y:0}}, buzzer:{name:"\ubd80\uc800", type:"output", pos:{x:0, y:0}}, note:{name:"\ub178\ud2b8", type:"output", pos:{x:0, y:0}}}, ports:{leftProximity:{name:Lang.Blocks.ALBERT_sensor_leftProximity, type:"input", pos:{x:178, y:401}}, rightProximity:{name:Lang.Blocks.ALBERT_sensor_rightProximity, type:"input", pos:{x:66, y:359}}, battery:{name:Lang.Blocks.ALBERT_sensor_battery, type:"input", 
-pos:{x:88, y:368}}, light:{name:Lang.Blocks.ALBERT_sensor_light, type:"input", pos:{x:127, y:391}}, leftWheel:{name:"\uc67c\ucabd \ubc14\ud034", type:"output", pos:{x:299, y:406}}, rightWheel:{name:"\uc624\ub978\ucabd \ubc14\ud034", type:"output", pos:{x:22, y:325}}, leftEye:{name:" \uc67c\ucabd \ub208", type:"output", pos:{x:260, y:26}}, rightEye:{name:" \uc624\ub978\ucabd \ub208", type:"output", pos:{x:164, y:13}}, bodyLed:{name:"\ubab8\ud1b5 \ubd88\ube5b", type:"output", pos:{x:367, y:308}}, frontLed:{name:"\uc55e\ucabd \ubd88\ube5b", 
-type:"output", pos:{x:117, y:410}}}, mode:"both"}, tempo:60, timeouts:[], removeTimeout:function(a) {
+}, monitorTemplate:{imgPath:"hw/albert.png", width:387, height:503, listPorts:{oid:{name:"OID", type:"input", pos:{x:0, y:0}}, buzzer:{name:"\ubd80\uc800", type:"input", pos:{x:0, y:0}}, note:{name:"\ub178\ud2b8", type:"input", pos:{x:0, y:0}}}, ports:{leftProximity:{name:Lang.Blocks.ALBERT_sensor_leftProximity, type:"input", pos:{x:178, y:401}}, rightProximity:{name:Lang.Blocks.ALBERT_sensor_rightProximity, type:"input", pos:{x:66, y:359}}, battery:{name:Lang.Blocks.ALBERT_sensor_battery, type:"input", 
+pos:{x:88, y:368}}, light:{name:Lang.Blocks.ALBERT_sensor_light, type:"input", pos:{x:127, y:391}}, leftWheel:{name:"\uc67c\ucabd \ubc14\ud034", type:"input", pos:{x:299, y:406}}, rightWheel:{name:"\uc624\ub978\ucabd \ubc14\ud034", type:"input", pos:{x:22, y:325}}, leftEye:{name:" \uc67c\ucabd \ub208", type:"input", pos:{x:260, y:26}}, rightEye:{name:" \uc624\ub978\ucabd \ub208", type:"input", pos:{x:164, y:13}}, bodyLed:{name:"\ubab8\ud1b5 \ubd88\ube5b", type:"input", pos:{x:367, y:308}}, frontLed:{name:"\uc55e\ucabd \ubd88\ube5b", 
+type:"input", pos:{x:117, y:410}}}, mode:"both"}, tempo:60, timeouts:[], removeTimeout:function(a) {
   clearTimeout(a);
   var b = this.timeouts;
   a = b.indexOf(a);
@@ -715,12 +715,12 @@ Entry.Arduino = {name:"arduino", setZero:function() {
     Entry.hw.sendQueue[a] = 0;
   }
   Entry.hw.update();
-}, monitorTemplate:{imgPath:"hw/arduino.png", width:268, height:270, listPorts:{2:{name:"2\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, 3:{name:"3\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, 4:{name:"4\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, 5:{name:"5\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, 6:{name:"6\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, 7:{name:"7\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, 8:{name:"8\ubc88 \ud3ec\ud2b8", type:"input", 
-pos:{x:0, y:0}}, 9:{name:"9\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, 10:{name:"10\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, 11:{name:"11\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, 12:{name:"12\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, 13:{name:"13\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, a0:{name:"A0\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, a1:{name:"A1\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, a2:{name:"A2\ubc88 \ud3ec\ud2b8", 
-type:"input", pos:{x:0, y:0}}, a3:{name:"A3\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, a4:{name:"A4\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, a5:{name:"A5\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}}, mode:"both"}};
-Entry.SensorBoard = {name:"sensorBoard", setZero:Entry.Arduino.setZero, monitorTemplate:{imgPath:"hw/sensorBoard.png", width:268, height:270, listPorts:{D0:{name:"0\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, D1:{name:"1\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, D6:{name:"2\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, D7:{name:"3\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, D12:{name:"4\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, D13:{name:"5\ubc88 \ud3ec\ud2b8", 
-type:"input", pos:{x:0, y:0}}}, ports:{MIC:{name:"\ub9c8\uc774\ud06c", type:"input", pos:{x:130, y:245}}, CDS1:{name:"\ube5b \uc13c\uc11c1", type:"input", pos:{x:80, y:216}}, CDS2:{name:"\ube5b \uc13c\uc11c2", type:"input", pos:{x:190, y:215}}, SLIDE:{name:"\uc2ac\ub77c\uc774\ub4dc", type:"input", pos:{x:139, y:22}}, TEMP:{name:"\uc628\ub3c4", type:"input", pos:{x:207, y:251}}, SW_R:{name:"\uc2a4\uc704\uce58 R", type:"input", pos:{x:180, y:120}}, SW_L:{name:"\uc2a4\uc704\uce58 L", type:"input", pos:{x:90, 
-y:143}}, SW_D:{name:"\uc2a4\uc704\uce58 D", type:"input", pos:{x:120, y:185}}, SW_U:{name:"\uc2a4\uc704\uce58 U", type:"input", pos:{x:130, y:73}}}, mode:"both"}};
+}, monitorTemplate:{imgPath:"hw/arduino.png", width:268, height:270, listPorts:{0:{name:"0\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, 1:{name:"1\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, 2:{name:"2\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, 3:{name:"3\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, 4:{name:"4\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, 5:{name:"5\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, 6:{name:"6\ubc88 \ud3ec\ud2b8", type:"input", 
+pos:{x:0, y:0}}, 7:{name:"7\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, 8:{name:"8\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, 9:{name:"9\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, 10:{name:"10\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, 11:{name:"11\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, 12:{name:"12\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, 13:{name:"13\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, a0:{name:"A0\ubc88 \ud3ec\ud2b8", type:"input", 
+pos:{x:0, y:0}}, a1:{name:"A1\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, a2:{name:"A2\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, a3:{name:"A3\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, a4:{name:"A4\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, a5:{name:"A5\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}}, mode:"list"}};
+Entry.SensorBoard = {name:"sensorBoard", setZero:Entry.Arduino.setZero, monitorTemplate:{imgPath:"hw/sensorBoard.png", width:268, height:270, listPorts:{a3:{name:"3\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, a4:{name:"4\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, a5:{name:"5\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, 6:{name:"6\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, 7:{name:"7\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, 12:{name:"12\ubc88 \ud3ec\ud2b8", 
+type:"input", pos:{x:0, y:0}}, 13:{name:"13\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}}, ports:{a0:{name:"\ub9c8\uc774\ud06c", type:"input", pos:{x:130, y:245}}, a1:{name:"\ube5b \uc13c\uc11c1", type:"input", pos:{x:80, y:216}}, a2:{name:"\uc2ac\ub77c\uc774\ub4dc", type:"input", pos:{x:139, y:22}}, 0:{name:"\ube5b \uc13c\uc11c2", type:"input", pos:{x:190, y:215}}, 1:{name:"\uc628\ub3c4", type:"input", pos:{x:207, y:251}}, 11:{name:"\uc2a4\uc704\uce58 R", type:"input", pos:{x:180, y:120}}, 
+10:{name:"\uc2a4\uc704\uce58 L", type:"input", pos:{x:90, y:143}}, 8:{name:"\uc2a4\uc704\uce58 U", type:"input", pos:{x:130, y:73}}, 9:{name:"\uc2a4\uc704\uce58 D", type:"input", pos:{x:120, y:185}}}, mode:"both"}};
 Entry.CODEino = {name:"CODEino", setZero:Entry.Arduino.setZero, monitorTemplate:Entry.Arduino.monitorTemplate};
 Blockly.Blocks.arduino_text = {init:function() {
   this.setColour("#00979D");
@@ -2291,7 +2291,7 @@ Entry.Hamster = {PORT_MAP:{leftWheel:0, rightWheel:0, buzzer:0, outputA:0, outpu
   a.lineTracerMode = b;
   a.lineTracerModeId = this.lineTracerModeId;
 }, name:"hamster", monitorTemplate:{imgPath:"hw/hamster.png", width:256, height:256, listPorts:{temperature:{name:Lang.Blocks.HAMSTER_sensor_temperature, type:"input", pos:{x:0, y:0}}, accelerationX:{name:Lang.Blocks.HAMSTER_sensor_accelerationX, type:"input", pos:{x:0, y:0}}, accelerationY:{name:Lang.Blocks.HAMSTER_sensor_accelerationY, type:"input", pos:{x:0, y:0}}, accelerationZ:{name:Lang.Blocks.HAMSTER_sensor_accelerationZ, type:"input", pos:{x:0, y:0}}, buzzer:{name:"\ubd80\uc800 1", type:"output", 
-pos:{x:0, y:0}}, "note ":{name:"\ubd80\uc800 2", type:"output", pos:{x:0, y:0}}, outputA:{name:"outputA", type:"output", pos:{x:0, y:0}}, outputB:{name:"outputB", type:"output", pos:{x:0, y:0}}}, ports:{leftProximity:{name:Lang.Blocks.HAMSTER_sensor_leftProximity, type:"input", pos:{x:122, y:156}}, rightProximity:{name:Lang.Blocks.HAMSTER_sensor_rightProximity, type:"input", pos:{x:10, y:108}}, leftFloor:{name:Lang.Blocks.HAMSTER_sensor_leftFloor, type:"input", pos:{x:100, y:234}}, rightFloor:{name:Lang.Blocks.HAMSTER_sensor_rightFloor, 
+pos:{x:0, y:0}}, note:{name:"\ubd80\uc800 2", type:"output", pos:{x:0, y:0}}, outputA:{name:"outputA", type:"output", pos:{x:0, y:0}}, outputB:{name:"outputB", type:"output", pos:{x:0, y:0}}}, ports:{leftProximity:{name:Lang.Blocks.HAMSTER_sensor_leftProximity, type:"input", pos:{x:122, y:156}}, rightProximity:{name:Lang.Blocks.HAMSTER_sensor_rightProximity, type:"input", pos:{x:10, y:108}}, leftFloor:{name:Lang.Blocks.HAMSTER_sensor_leftFloor, type:"input", pos:{x:100, y:234}}, rightFloor:{name:Lang.Blocks.HAMSTER_sensor_rightFloor, 
 type:"input", pos:{x:13, y:180}}, lightsensor:{name:"\ube5b\uc13c\uc11c", type:"input", pos:{x:56, y:189}}, leftWheel:{name:"\uc67c\ucabd \ubc14\ud034", type:"output", pos:{x:209, y:115}}, rightWheel:{name:"\uc624\ub978\ucabd \ubc14\ud034", type:"output", pos:{x:98, y:30}}, leftLed:{name:"\uc67c\ucabd LED", type:"output", pos:{x:87, y:210}}, rightLed:{name:"\uc624\ub978\ucabd LED", type:"output", pos:{x:24, y:168}}}, mode:"both"}};
 Blockly.Blocks.hamster_hand_found = {init:function() {
   this.setColour("#00979D");
@@ -12501,10 +12501,22 @@ Entry.HWMonitor = function(a) {
     return this.svgDom;
   };
   a.update = function() {
-    var a = Entry.hw.portData, c = Entry.hw.sendQueue, d = [], d = "list" == this._hwModule.monitorTemplate.mode ? this._listPortViews : this._portViews, e;
-    for (e in d) {
-      var f = d[e], g = "input" == f.type ? a[e] : c[e];
-      f.value.attr({text:g ? g : 0});
+    var a = Entry.hw.portData, c = Entry.hw.sendQueue, d = this._hwModule.monitorTemplate.mode, e = [];
+    if ("list" == d) {
+      e = this._listPortViews;
+    } else {
+      if ("both" == d) {
+        if (e = this._listPortViews, this._portViews) {
+          for (var f in this._portViews) {
+            e[f] = this._portViews[f];
+          }
+        }
+      } else {
+        e = this._portViews;
+      }
+    }
+    for (var g in e) {
+      d = e[g], f = "input" == d.type ? a[g] : c[g], d.value.textContent = f ? f : 0;
     }
   };
   a.resize = function() {
@@ -12727,7 +12739,8 @@ p.setZero = function() {
   Entry.hw.hwModule && Entry.hw.hwModule.setZero();
 };
 p.checkDevice = function(a) {
-  void 0 !== a.company && (a = "" + a.company + a.model, a != this.selectedDevice && (this.selectedDevice = a, this.hwModule = this.hwInfo[a], Entry.dispatchEvent("hwChanged"), Entry.toast.success(Lang.Menus.connect_hw, Lang.Menus.connect_message.replace("%1", Lang.Device[Entry.hw.hwModule.name]), !1)));
+  void 0 !== a.company && (a = "" + a.company + a.model, a != this.selectedDevice && (this.selectedDevice = a, this.hwModule = this.hwInfo[a], Entry.dispatchEvent("hwChanged"), Entry.toast.success(Lang.Menus.connect_hw, Lang.Menus.connect_message.replace("%1", Lang.Device[Entry.hw.hwModule.name]), !1), this.hwModule.monitorTemplate && (this.hwMonitor = new Entry.HWMonitor(this.hwModule), Entry.propertyPanel.addMode("hw", this.hwMonitor), a = this.hwModule.monitorTemplate, "both" == a.mode ? (a.mode = 
+  "list", this.hwMonitor.generateListView(), a.mode = "general", this.hwMonitor.generateView(), a.mode = "both") : "list" == a.mode ? this.hwMonitor.generateListView() : this.hwMonitor.generateView())));
 };
 p.banHW = function() {
   var a = this.hwInfo, b;

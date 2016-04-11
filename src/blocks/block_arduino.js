@@ -13,6 +13,8 @@ Entry.Arduino = {
         width: 268,
         height: 270,
         listPorts: {
+            "0":{name: "0번 포트", type: "input", pos: {x : 0, y: 0}},
+            "1":{name: "1번 포트", type: "input", pos: {x: 0, y: 0}},
             "2":{name: "2번 포트", type: "input", pos: {x : 0, y: 0}},
             "3":{name: "3번 포트", type: "input", pos: {x: 0, y: 0}},
             "4":{name: "4번 포트", type: "input", pos: {x: 0, y: 0}},
@@ -32,7 +34,7 @@ Entry.Arduino = {
             "a4":{name: "A4번 포트", type: "input", pos: {x: 0, y: 0}},
             "a5":{name: "A5번 포트", type: "input", pos: {x: 0, y: 0}}
         },
-        mode : 'both'
+        mode : 'list'
 
     }
 };
@@ -45,23 +47,24 @@ Entry.SensorBoard = {
         width: 268,
         height: 270,
         listPorts: {
-            "D0":{name: "0번 포트", type: "input", pos: {x : 0, y: 0}},
-            "D1":{name: "1번 포트", type: "input", pos: {x: 0, y: 0}},
-            "D6":{name: "2번 포트", type: "input", pos: {x : 0, y: 0}},
-            "D7":{name: "3번 포트", type: "input", pos: {x: 0, y: 0}},
-            "D12":{name: "4번 포트", type: "input", pos: {x: 0, y: 0}},
-            "D13":{name: "5번 포트", type: "input", pos: {x: 0, y: 0}}
-                },
+            "a3":{name: "3번 포트", type: "input", pos: {x : 0, y: 0}},
+            "a4":{name: "4번 포트", type: "input", pos: {x: 0, y: 0}},
+            "a5":{name: "5번 포트", type: "input", pos: {x : 0, y: 0}},
+            "6":{name: "6번 포트", type: "input", pos: {x: 0, y: 0}},
+            "7":{name: "7번 포트", type: "input", pos: {x: 0, y: 0}},
+            "12":{name: "12번 포트", type: "input", pos: {x: 0, y: 0}},
+            "13":{name: "13번 포트", type: "input", pos: {x: 0, y: 0}}
+        },
         ports : {
-            "MIC":{name: "마이크", type: "input",pos: {x : 130, y: 245}},
-            "CDS1":{name: "빛 센서1", type: "input",pos: {x : 80, y: 216}},
-            "CDS2":{name: "빛 센서2", type: "input",pos: {x : 190, y: 215}},
-            "SLIDE":{name: "슬라이드", type: "input",pos: {x : 139, y: 22}},
-            "TEMP":{name: "온도", type: "input",pos: {x : 207, y: 251}},
-            "SW_R":{name: "스위치 R", type: "input",pos: {x : 180, y: 120}},
-            "SW_L":{name: "스위치 L", type: "input",pos: {x : 90, y: 143}},
-            "SW_D":{name: "스위치 D", type: "input",pos: {x : 120, y: 185}},
-            "SW_U":{name: "스위치 U", type: "input",pos: {x : 130, y: 73}}
+            "a0":{name: "마이크", type: "input",pos: {x : 130, y: 245}},
+            "a1":{name: "빛 센서1", type: "input",pos: {x : 80, y: 216}},
+            "a2":{name: "슬라이드", type: "input",pos: {x : 139, y: 22}},
+            "0":{name: "빛 센서2", type: "input",pos: {x : 190, y: 215}},
+            "1":{name: "온도", type: "input",pos: {x : 207, y: 251}},
+            "11":{name: "스위치 R", type: "input",pos: {x : 180, y: 120}},
+            "10":{name: "스위치 L", type: "input",pos: {x : 90, y: 143}},
+            "8":{name: "스위치 U", type: "input",pos: {x : 130, y: 73}},            
+            "9":{name: "스위치 D", type: "input",pos: {x : 120, y: 185}}
       },
       mode : 'both'
     }
