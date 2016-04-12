@@ -88,15 +88,15 @@ Entry.Bitbrick = {
         imgPath: "hw/bitbrick.gif",
         width: 133,
         height: 153,
-        ports: {
-            "1":{name: "1번 포트", type: "input", pos: {x: 10, y: 56}},
-            "2":{name: "2번 포트", type: "input", pos: {x: 31, y: 76}},
-            "3":{name: "3번 포트", type: "input", pos: {x: 31, y: 96}},
-            "4":{name: "4번 포트", type: "input", pos: {x: 10, y: 116}},
-            "A":{name: "A 포트", type: "input", pos: {x: 123, y: 56}},
-            "B":{name: "B 포트", type: "input", pos: {x: 104, y: 76}},
-            "C":{name: "C 포트", type: "input", pos: {x: 104, y: 96}},
-            "D":{name: "D 포트", type: "input", pos: {x: 123, y: 116}}
+        listPorts: {
+            "1":{name: Lang.Hw.port_en + " 1 " + Lang.Hw.port_ko, type: "input", pos: {x : 0, y: 0}},
+            "2":{name: Lang.Hw.port_en + " 2 " + Lang.Hw.port_ko, type: "input", pos: {x: 0, y: 0}},
+            "3":{name: Lang.Hw.port_en + " 3 " + Lang.Hw.port_ko, type: "input", pos: {x: 0, y: 0}},
+            "4":{name: Lang.Hw.port_en + " 4 " + Lang.Hw.port_ko, type: "input", pos: {x: 0, y: 0}},
+            "A":{name: Lang.Hw.port_en + " A " + Lang.Hw.port_ko, type: "input", pos: {x: 0, y: 0}},
+            "B":{name: Lang.Hw.port_en + " B " + Lang.Hw.port_ko, type: "input", pos: {x : 0, y: 0}},
+            "C":{name: Lang.Hw.port_en + " C " + Lang.Hw.port_ko, type: "input", pos: {x: 0, y: 0}},
+            "D":{name: Lang.Hw.port_en + " D " + Lang.Hw.port_ko, type: "input", pos: {x: 0, y: 0}}
         }
         // },
         // ports : {
@@ -115,7 +115,7 @@ Entry.Bitbrick = {
         //     "LEDG":{name: "LEDG", type: "output", pos: {x: 0, y: 0}},
         //     "LEDB":{name: "LEDG", type: "output", pos: {x: 0, y: 0}}
         // },
-        // mode: 'both'
+        ,mode: 'both'
     }
 };
 
