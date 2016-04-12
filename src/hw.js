@@ -13,6 +13,7 @@ Entry.HW = function() {
     this.connected = false;
     this.portData = {};
     this.sendQueue = {};
+    this.outputQueue = {};
     this.settingQueue = {};
     this.selectedDevice = null;
     this.hwModule = null;
@@ -175,14 +176,15 @@ p.removePortReadable = function(port) {
     var target;
     for(var i in this.sendQueue.readablePorts) {
         if(this.sendQueue.readablePorts[i] == port) {
-            target = i;
+            target = Number(i);
             break;
         }
     }
 
-    if(target) {
+    if(target != undefined) {
         this.sendQueue.readablePorts = this.sendQueue.readablePorts.slice(0, target).concat(this.sendQueue.readablePorts.slice(target + 1, this.sendQueue.readablePorts.length));
     } else {
+        this.sendQueue = [];
         this.sendQueue.readablePorts = [];
     }
 }

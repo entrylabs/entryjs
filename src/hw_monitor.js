@@ -149,7 +149,6 @@ Entry.HWMonitor = function(hwModule) {
     };
 
     p.generatePortView = function(port , target) {
-        
         var svgGroup = this[target].elem("g");
         svgGroup.addClass("hwComponent");
         var path = null;
@@ -228,21 +227,27 @@ Entry.HWMonitor = function(hwModule) {
     p.update = function() {
         var portData = Entry.hw.portData;
         var sendQueue = Entry.hw.sendQueue;
+        var readablePort = sendQueue.readablePort;
         var mode = this._hwModule.monitorTemplate.mode;
         var portView = [];
-
 
         if(mode == "list") {
             portView = this._listPortViews;
         } else if(mode == "both") {
             portView = this._listPortViews;
-            if(this._portViews) {
-                for(var item in this._portViews) {
+            
+            if(this._portViews)
+                for(var item in this._portViews) 
                     portView[item] = this._portViews[item];
-                }    
-            }
         } else { 
             portView = this._portViews;
+        }
+        
+        if(sendQueue) {
+            for(var item in sendQueue) {
+                if(sendQueue[item] != 0 && portView[item])
+                    portView[item].type = 'output';
+            } 
         }
 
         for (var key in portView) {
@@ -251,9 +256,11 @@ Entry.HWMonitor = function(hwModule) {
             if (port.type == "input") {
                 var value = portData[key];
                 port.value.textContent = value ? value : 0;
+                port.group.getElementsByTagName('rect')[1].attr({fill : "#00979D"});
             } else {
                 var value = sendQueue[key];
                 port.value.textContent = value ? value : 0;
+                port.group.getElementsByTagName('rect')[1].attr({fill : "#A751E3"})
             }
         }
     };

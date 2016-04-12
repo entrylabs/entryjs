@@ -711,16 +711,17 @@ Entry.block.albert_set_wheels_to = function(a, b) {
   return b.callReturn();
 };
 Entry.Arduino = {name:"arduino", setZero:function() {
+  Entry.hw.sendQueue.readablePorts = [];
   for (var a = 0;20 > a;a++) {
-    Entry.hw.sendQueue[a] = 0;
+    Entry.hw.sendQueue[a] = 0, Entry.hw.sendQueue.readablePorts.push(a);
   }
   Entry.hw.update();
 }, monitorTemplate:{imgPath:"hw/arduino.png", width:268, height:270, listPorts:{0:{name:"0\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, 1:{name:"1\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, 2:{name:"2\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, 3:{name:"3\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, 4:{name:"4\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, 5:{name:"5\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, 6:{name:"6\ubc88 \ud3ec\ud2b8", type:"input", 
 pos:{x:0, y:0}}, 7:{name:"7\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, 8:{name:"8\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, 9:{name:"9\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, 10:{name:"10\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, 11:{name:"11\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, 12:{name:"12\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, 13:{name:"13\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, a0:{name:"A0\ubc88 \ud3ec\ud2b8", type:"input", 
 pos:{x:0, y:0}}, a1:{name:"A1\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, a2:{name:"A2\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, a3:{name:"A3\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, a4:{name:"A4\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, a5:{name:"A5\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}}, mode:"list"}};
-Entry.SensorBoard = {name:"sensorBoard", setZero:Entry.Arduino.setZero, monitorTemplate:{imgPath:"hw/sensorBoard.png", width:268, height:270, listPorts:{a3:{name:"3\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, a4:{name:"4\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, a5:{name:"5\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, 6:{name:"6\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, 7:{name:"7\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, 12:{name:"12\ubc88 \ud3ec\ud2b8", 
-type:"input", pos:{x:0, y:0}}, 13:{name:"13\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}}, ports:{a0:{name:"\ub9c8\uc774\ud06c", type:"input", pos:{x:130, y:245}}, a1:{name:"\ube5b \uc13c\uc11c1", type:"input", pos:{x:80, y:216}}, a2:{name:"\uc2ac\ub77c\uc774\ub4dc", type:"input", pos:{x:139, y:22}}, 0:{name:"\ube5b \uc13c\uc11c2", type:"input", pos:{x:190, y:215}}, 1:{name:"\uc628\ub3c4", type:"input", pos:{x:207, y:251}}, 11:{name:"\uc2a4\uc704\uce58 R", type:"input", pos:{x:180, y:120}}, 
-10:{name:"\uc2a4\uc704\uce58 L", type:"input", pos:{x:90, y:143}}, 8:{name:"\uc2a4\uc704\uce58 U", type:"input", pos:{x:130, y:73}}, 9:{name:"\uc2a4\uc704\uce58 D", type:"input", pos:{x:120, y:185}}}, mode:"both"}};
+Entry.SensorBoard = {name:"sensorBoard", setZero:Entry.Arduino.setZero, monitorTemplate:{imgPath:"hw/sensorBoard.png", width:268, height:270, listPorts:{0:{name:"0\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, 2:{name:"2\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, 3:{name:"3\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, 4:{name:"4\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, 5:{name:"5\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, a3:{name:"3\ubc88 \ud3ec\ud2b8", 
+type:"input", pos:{x:0, y:0}}, a4:{name:"4\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, a5:{name:"5\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, 6:{name:"6\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, 7:{name:"7\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, 12:{name:"12\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, 13:{name:"13\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}}, ports:{a0:{name:"\ub9c8\uc774\ud06c", type:"input", pos:{x:130, y:245}}, a1:{name:"\ube5b \uc13c\uc11c1", 
+type:"input", pos:{x:80, y:216}}, a2:{name:"\uc2ac\ub77c\uc774\ub4dc", type:"input", pos:{x:139, y:22}}, 0:{name:"\ube5b \uc13c\uc11c2", type:"input", pos:{x:190, y:215}}, 1:{name:"\uc628\ub3c4", type:"input", pos:{x:207, y:251}}, 8:{name:"\uc2a4\uc704\uce58 R", type:"input", pos:{x:180, y:120}}, 9:{name:"\uc2a4\uc704\uce58 L", type:"input", pos:{x:90, y:143}}, 10:{name:"\uc2a4\uc704\uce58 U", type:"input", pos:{x:130, y:73}}, 11:{name:"\uc2a4\uc704\uce58 D", type:"input", pos:{x:120, y:185}}}, mode:"both"}};
 Entry.CODEino = {name:"CODEino", setZero:Entry.Arduino.setZero, monitorTemplate:Entry.Arduino.monitorTemplate};
 Blockly.Blocks.arduino_text = {init:function() {
   this.setColour("#00979D");
@@ -12515,8 +12516,13 @@ Entry.HWMonitor = function(a) {
         e = this._portViews;
       }
     }
+    if (c) {
+      for (f in c) {
+        0 != c[f] && e[f] && (e[f].type = "output");
+      }
+    }
     for (var g in e) {
-      d = e[g], f = "input" == d.type ? a[g] : c[g], d.value.textContent = f ? f : 0;
+      d = e[g], "input" == d.type ? (f = a[g], d.value.textContent = f ? f : 0, d.group.getElementsByTagName("rect")[1].attr({fill:"#00979D"})) : (f = c[g], d.value.textContent = f ? f : 0, d.group.getElementsByTagName("rect")[1].attr({fill:"#A751E3"}));
     }
   };
   a.resize = function() {
@@ -12613,6 +12619,7 @@ Entry.HW = function() {
   this.connected = !1;
   this.portData = {};
   this.sendQueue = {};
+  this.outputQueue = {};
   this.settingQueue = {};
   this.socketType = this.hwModule = this.selectedDevice = null;
   Entry.addEventListener("stop", this.setZero);
@@ -12712,11 +12719,11 @@ p.removePortReadable = function(a) {
     var b, c;
     for (c in this.sendQueue.readablePorts) {
       if (this.sendQueue.readablePorts[c] == a) {
-        b = c;
+        b = Number(c);
         break;
       }
     }
-    this.sendQueue.readablePorts = b ? this.sendQueue.readablePorts.slice(0, b).concat(this.sendQueue.readablePorts.slice(b + 1, this.sendQueue.readablePorts.length)) : [];
+    void 0 != b ? this.sendQueue.readablePorts = this.sendQueue.readablePorts.slice(0, b).concat(this.sendQueue.readablePorts.slice(b + 1, this.sendQueue.readablePorts.length)) : (this.sendQueue = [], this.sendQueue.readablePorts = []);
   }
 };
 p.update = function() {

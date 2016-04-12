@@ -3,8 +3,10 @@
 Entry.Arduino = {
     name: 'arduino',
     setZero: function() {
+        Entry.hw.sendQueue.readablePorts = [];
         for (var port = 0; port < 20; port++) {
-          Entry.hw.sendQueue[port] = 0;
+            Entry.hw.sendQueue[port] = 0;
+            Entry.hw.sendQueue.readablePorts.push(port);
         } 
         Entry.hw.update();
     },
@@ -47,6 +49,11 @@ Entry.SensorBoard = {
         width: 268,
         height: 270,
         listPorts: {
+            "0":{name: "0번 포트", type: "input", pos: {x : 0, y: 0}},
+            "2":{name: "2번 포트", type: "input", pos: {x : 0, y: 0}},
+            "3":{name: "3번 포트", type: "input", pos: {x: 0, y: 0}},
+            "4":{name: "4번 포트", type: "input", pos: {x: 0, y: 0}},
+            "5":{name: "5번 포트", type: "input", pos: {x: 0, y: 0}},
             "a3":{name: "3번 포트", type: "input", pos: {x : 0, y: 0}},
             "a4":{name: "4번 포트", type: "input", pos: {x: 0, y: 0}},
             "a5":{name: "5번 포트", type: "input", pos: {x : 0, y: 0}},
@@ -61,10 +68,10 @@ Entry.SensorBoard = {
             "a2":{name: "슬라이드", type: "input",pos: {x : 139, y: 22}},
             "0":{name: "빛 센서2", type: "input",pos: {x : 190, y: 215}},
             "1":{name: "온도", type: "input",pos: {x : 207, y: 251}},
-            "11":{name: "스위치 R", type: "input",pos: {x : 180, y: 120}},
-            "10":{name: "스위치 L", type: "input",pos: {x : 90, y: 143}},
-            "8":{name: "스위치 U", type: "input",pos: {x : 130, y: 73}},            
-            "9":{name: "스위치 D", type: "input",pos: {x : 120, y: 185}}
+            "8":{name: "스위치 R", type: "input",pos: {x : 180, y: 120}},
+            "9":{name: "스위치 L", type: "input",pos: {x : 90, y: 143}},
+            "10":{name: "스위치 U", type: "input",pos: {x : 130, y: 73}},            
+            "11":{name: "스위치 D", type: "input",pos: {x : 120, y: 185}}
       },
       mode : 'both'
     }
