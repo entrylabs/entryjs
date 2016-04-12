@@ -136,7 +136,7 @@ Entry.initialize_ = function() {
      * @type {!object}
      */
     this.helper = new Entry.Helper();
-
+     this.youtube = new Entry.Youtube();
     /**
      * Initialize container for objects.
      * @type {!Entry.VariableContainer}
@@ -260,11 +260,12 @@ Entry.createDom = function(container, option) {
         /** @type {!Element} */
         this.playgroundView = playgroundView;
         this.playground.generateView(this.playgroundView, option);
-
+        console.log("this container" ,this.container);
         this.propertyPanel.addMode("container", this.container);
-
         this.propertyPanel.addMode("helper" , this.helper);
+        this.propertyPanel.addMode("youtube" , this.youtube);
         this.propertyPanel.select("container");
+
     } else if (option == 'minimize') {
         var canvas = Entry.createElement('canvas');
         canvas.className = 'entryCanvasWorkspace';

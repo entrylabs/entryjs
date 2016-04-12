@@ -6145,8 +6145,6 @@ Entry.Container.prototype.generateTabView = function() {
   c.addClass("entryContainerHelperWorkspace");
   c.addClass("entryHide");
   a.appendChild(c);
-  this.helperContainer = c;
-  Entry.helper.initBlockHelper(c);
   d.addClass("selected");
 };
 Entry.Container.prototype.changeTabView = function(a) {
@@ -10473,6 +10471,7 @@ Entry.initialize_ = function() {
   this.propertyPanel = new Entry.PropertyPanel;
   this.container = new Entry.Container;
   this.helper = new Entry.Helper;
+  this.youtube = new Entry.Youtube;
   this.variableContainer = new Entry.VariableContainer;
   if ("workspace" == this.type || "phone" == this.type) {
     this.stateManager = new Entry.StateManager;
@@ -10534,8 +10533,10 @@ Entry.createDom = function(a, b) {
     a.appendChild(c);
     this.playgroundView = c;
     this.playground.generateView(this.playgroundView, b);
+    console.log("this container", this.container);
     this.propertyPanel.addMode("container", this.container);
     this.propertyPanel.addMode("helper", this.helper);
+    this.propertyPanel.addMode("youtube", this.youtube);
     this.propertyPanel.select("container");
   }
 };
@@ -16282,5 +16283,28 @@ Entry.Xml.cloneBlock = function(a, b, c) {
     f instanceof Text ? d.textContent = f.textContent : "parent" == c ? d.appendChild(b) : d.appendChild(Entry.Xml.cloneBlock(f, d, "child"));
   }
   return d;
+};
+Entry.Youtube = function() {
+  this.generateView();
+};
+p = Entry.Youtube.prototype;
+p.init = function(a) {
+  this.youtubeHash = a;
+};
+p.generateView = function() {
+  var a = Entry.createElement("div");
+  a.addClass("entryContainerMovieWorkspace");
+  a.addClass("entryHide");
+  var a = this.movieContainer = a, a = a.style.width.substring(0, a.style.width.length - 2), b = Entry.createElement("iframe");
+  b.setAttribute("width", a);
+  b.setAttribute("height", 9 * a / 16);
+  b.setAttribute("allowfullscreen", "");
+  b.setAttribute("frameborder", 0);
+  b.setAttribute("src", "https://www.youtube.com/embed/" + this.youtubeHash);
+  this.movieFrame = b;
+  this.movieContainer.appendChild(b);
+};
+p.getView = function() {
+  return this.movieFrame;
 };
 
