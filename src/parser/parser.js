@@ -108,10 +108,9 @@ Entry.Parser = function(mode, type, cm) {
 
         switch (type) {
             case Entry.Vim.PARSER_TYPE_JS_TO_BLOCK:
-                console.log("PARSER TYPE => JS To Block");
-                this._parser = new Entry.JSParser(this.syntax);
+                this._convertor = new Entry.JSParser(this.syntax);
 
-                var syntax = this.syntax;
+                /*var syntax = this.syntax;
 
                 var assistScope = {};
 
@@ -131,14 +130,14 @@ Entry.Parser = function(mode, type, cm) {
                     if (!cm.state.completionActive &&  (event.keyCode >= 65 && event.keyCode <= 95))  {
                         CodeMirror.showHint(cm, null, {completeSingle: false, globalScope:assistScope});
                     }
-                });
+                });*/
+
                 break;
 
             case Entry.Vim.PARSER_TYPE_PY_TO_BLOCK:
-                console.log("PARSER TYPE => PY To Block");
-                this._parser = new Entry.PYParser(this.syntax);
+                this._convertor = new Entry.PYParser(this.syntax);
 
-                var syntax = this.syntax;
+                /*var syntax = this.syntax;
 
                 var assistScope = {};
 
@@ -158,23 +157,20 @@ Entry.Parser = function(mode, type, cm) {
                     if (!cm.state.completionActive &&  (event.keyCode >= 65 && event.keyCode <= 95))  {
                         CodeMirror.showHint(cm, null, {completeSingle: false, globalScope:assistScope});
                     }
-                });
+                });*/
+
                 break;
 
             case Entry.Vim.PARSER_TYPE_BLOCK_TO_JS:
-                console.log("PARSER TYPE => BLOCK To JS");
-                this._parser = new Entry.BlockParser(this.syntax);
+                this._convertor = new Entry.BlockParser(this.syntax);
+                
                 var syntax = this.syntax;
-                console.log("syntax", syntax);
                 var assistScope = {};
-                console.log("syntax Scope", syntax.Scope);
 
                 for(var key in syntax.Scope ) {
                     console.log("key", key);
                     assistScope[key + '();\n'] = syntax.Scope[key];
                 }
-
-                console.log("asist", assistScope);
 
                 if('BasicIf' in syntax) {
                     assistScope['front'] = 'BasicIf';
@@ -191,19 +187,18 @@ Entry.Parser = function(mode, type, cm) {
                         CodeMirror.showHint(cm, null, {completeSingle: false, globalScope:assistScope});
                     }
                 });
+
                 break;
 
             case Entry.Vim.PARSER_TYPE_BLOCK_TO_PY:
-                console.log("PARSER TYPE => Block To PY");
-                this._parser = new Entry.PyBlockParser(this.syntax);
+                this._convertor = new Entry.PyBlockParser(this.syntax);
+
                 var syntax = this.syntax;
                 var assistScope = {};
 
                 for(var key in syntax.Scope ) {
                     assistScope[key + '();\n'] = syntax.Scope[key];
                 }
-
-                console.log("asist", assistScope);
 
                 if('BasicIf' in syntax) {
                     assistScope['front'] = 'BasicIf';
@@ -216,12 +211,10 @@ Entry.Parser = function(mode, type, cm) {
                 }
 
                 cm.on("keyup", function (cm, event) {
-                    console.log("cm", cm);
                     if (!cm.state.completionActive &&  (event.keyCode >= 65 && event.keyCode <= 95))  {
                         CodeMirror.showHint(cm, null, {completeSingle: false, globalScope:assistScope});
                     }
                 });
-
                 
                 break;
         }
@@ -234,7 +227,7 @@ Entry.Parser = function(mode, type, cm) {
             case Entry.Vim.PARSER_TYPE_JS_TO_BLOCK:
                 try {
                     var astTree = acorn.parse(code);
-                    result = this._parser.Program(astTree);
+                    result = this._convertor.Program(astTree);
                 } catch(error) {
                     if (this.codeMirror) {
                         var annotation;
@@ -264,8 +257,19 @@ Entry.Parser = function(mode, type, cm) {
                 break;
             case Entry.Vim.PARSER_TYPE_PY_TO_BLOCK:
                 try {
-                    var astTree = acorn.parse(code);
-                    result = this._parser.Program(astTree);
+                    var filbertParse = filbert.parse;
+                    var ranges = false;
+                    var locations = false;
+                    var options = { locations: locations, ranges: ranges };
+                    var astTree;
+                    try {
+                        astTree = filbertParse(code, options);
+                        console.log("astTree", astTree);
+                    }
+                    catch (e) {
+                        console.log("parsing error", e.toString());
+                    }
+                    //result = this._convertor.Program(astTree);
                 } catch(error) {
                     if (this.codeMirror) {
                         var annotation;
@@ -294,7 +298,7 @@ Entry.Parser = function(mode, type, cm) {
                 }
                 break;
             case Entry.Vim.PARSER_TYPE_BLOCK_TO_JS:
-                var textCode = this._parser.Code(code);
+                var textCode = this._convertor.Code(code);
                 var textArr = textCode.match(/(.*{.*[\S|\s]+?}|.+)/g);
                 if(Array.isArray(textArr)) {
                     result = textArr.reduce(function (prev, current, index) {
@@ -318,7 +322,7 @@ Entry.Parser = function(mode, type, cm) {
                 break;
 
             case Entry.Vim.PARSER_TYPE_BLOCK_TO_PY:
-                var textCode = this._parser.Code(code);
+                var textCode = this._convertor.Code(code);
                 var textArr = textCode.match(/(.*{.*[\S|\s]+?}|.+)/g);
                 if(Array.isArray(textArr)) {
                     result = textArr.reduce(function (prev, current, index) {
