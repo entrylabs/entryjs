@@ -1001,37 +1001,16 @@ Entry.Utils.addBlockPattern = function (boardSvgDom, suffix) {
         height: 33
     });
 
-    group.elem("image", {
-        class: 'pattern1',
-        href: '/lib/entryjs/images/block_pattern_1.png',
-        x: 0, y: 0,
-        width: 125,
-        height: 33
-    });
-
-    group.elem("image", {
-        class: 'pattern2',
-        href: '/lib/entryjs/images/block_pattern_2.png',
-        x: 0, y: 0,
-        width: 125,
-        height: 33
-    });
-
-    group.elem("image", {
-        class: 'pattern3',
-        href: '/lib/entryjs/images/block_pattern_3.png',
-        x: 0, y: 0,
-        width: 125,
-        height: 33
-    });
-
-    group.elem("image", {
-        class: 'pattern4',
-        href: '/lib/entryjs/images/block_pattern_4.png',
-        x: 0, y: 0,
-        width: 125,
-        height: 33
-    });
+    var imagePath = Entry.mediaFilePath + 'block_pattern_(order).png';
+    for (var i=1; i<5; i++) {
+        group.elem("image", {
+            class: 'pattern' + i,
+            href: imagePath.replace('(order)', i),
+            x: 0, y: 0,
+            width: 125,
+            height: 33
+        });
+    }
 
     return elem;
 };

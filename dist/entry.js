@@ -10782,11 +10782,9 @@ Entry.Utils.addFilters = function(a, b) {
   c.elem("feColorMatrix", {result:"matrixOut", in:"offOut", type:"matrix", values:"1.3 0 0 0 0 0 1.3 0 0 0 0 0 1.3 0 0 0 0 0 1 0"});
 };
 Entry.Utils.addBlockPattern = function(a, b) {
-  var c = a.elem("pattern", {id:"blockHoverPattern_" + b, class:"blockHoverPattern", patternUnits:"userSpaceOnUse", patternTransform:"translate(12, 0)", x:0, y:0, width:125, height:33}).elem("g"), d = c.elem("rect", {x:0, y:0, width:125, height:33});
-  c.elem("image", {class:"pattern1", href:"/lib/entryjs/images/block_pattern_1.png", x:0, y:0, width:125, height:33});
-  c.elem("image", {class:"pattern2", href:"/lib/entryjs/images/block_pattern_2.png", x:0, y:0, width:125, height:33});
-  c.elem("image", {class:"pattern3", href:"/lib/entryjs/images/block_pattern_3.png", x:0, y:0, width:125, height:33});
-  c.elem("image", {class:"pattern4", href:"/lib/entryjs/images/block_pattern_4.png", x:0, y:0, width:125, height:33});
+  for (var c = a.elem("pattern", {id:"blockHoverPattern_" + b, class:"blockHoverPattern", patternUnits:"userSpaceOnUse", patternTransform:"translate(12, 0)", x:0, y:0, width:125, height:33}).elem("g"), d = c.elem("rect", {x:0, y:0, width:125, height:33}), e = Entry.mediaFilePath + "block_pattern_(order).png", f = 1;5 > f;f++) {
+    c.elem("image", {class:"pattern" + f, href:e.replace("(order)", f), x:0, y:0, width:125, height:33});
+  }
   return d;
 };
 Entry.Model = function(a, b) {

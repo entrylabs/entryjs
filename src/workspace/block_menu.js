@@ -114,8 +114,8 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
 
         this.svgDom.mouseenter(function(e) {
             var selectedBlockView = that.workspace.selectedBlockView;
-            if (!Entry.playground || Entry.playground.resizing
-               || (selectedBlockView && selectedBlockView.dragMode === Entry.DRAG_MODE_DRAG)) return;
+            if (!Entry.playground || Entry.playground.resizing ||
+                (selectedBlockView && selectedBlockView.dragMode === Entry.DRAG_MODE_DRAG)) return;
             Entry.playground.focusBlockMenu = true;
             var bBox = that.svgGroup.getBBox();
             var expandWidth = bBox.width + bBox.x + 64;
