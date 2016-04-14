@@ -262,8 +262,10 @@ Entry.createDom = function(container, option) {
         this.playground.generateView(this.playgroundView, option);
 
         this.propertyPanel.addMode("container", this.container);
+        // this.propertyPanel.addMode("helper" , this.helper);
+ 
+         this.helper.initBlockHelper(containerView);
 
-        this.propertyPanel.addMode("helper" , this.helper);
         this.propertyPanel.select("container");
     } else if (option == 'minimize') {
         var canvas = Entry.createElement('canvas');
