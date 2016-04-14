@@ -882,54 +882,54 @@ Entry.Container.prototype.getProjectWithJSON = function(project) {
 Entry.Container.prototype.generateTabView = function() {
     var view = this._view;
     var that = this;
-    // this.tabViews = [];
+    this.tabViews = [];
 
-    // var container = Entry.createElement('div');
-    // container.addClass('entryContainerTabViewWorkspace');
-    // view.appendChild(container);
+    var container = Entry.createElement('div');
+    container.addClass('entryContainerTabViewWorkspace');
+    view.appendChild(container);
 
-    // var tab1 = Entry.createElement('span');
-    // tab1.addClass('entryContainerTabItemWorkspace');
-    // tab1.addClass('entryEllipsis');
-    // tab1.innerHTML = Lang.Menus.lecture_container_tab_object;
-    // tab1.bindOnClick(function () {
-    //     that.changeTabView('object');
-    // });
-    // this.tabViews.push(tab1);
-    // container.appendChild(tab1);
+    var tab1 = Entry.createElement('span');
+    tab1.addClass('entryContainerTabItemWorkspace');
+    tab1.addClass('entryEllipsis');
+    tab1.innerHTML = Lang.Menus.lecture_container_tab_object;
+    tab1.bindOnClick(function () {
+        that.changeTabView('object');
+    });
+    this.tabViews.push(tab1);
+    container.appendChild(tab1);
 
-    // var tab2 = Entry.createElement('span');
-    // tab2.addClass('entryContainerTabItemWorkspace', 'entryRemove');
-    // tab2.addClass('entryEllipsis');
-    // tab2.innerHTML = Lang.Menus.lecture_container_tab_video;
-    // tab2.bindOnClick(function () {
-    //     that.changeTabView('movie');
-    // });
-    // this.tabViews.push(tab2);
-    // container.appendChild(tab2);
-    // this.youtubeTab = tab2;
+    var tab2 = Entry.createElement('span');
+    tab2.addClass('entryContainerTabItemWorkspace', 'entryRemove');
+    tab2.addClass('entryEllipsis');
+    tab2.innerHTML = Lang.Menus.lecture_container_tab_video;
+    tab2.bindOnClick(function () {
+        that.changeTabView('movie');
+    });
+    this.tabViews.push(tab2);
+    container.appendChild(tab2);
+    this.youtubeTab = tab2;
 
 
-    // var tab3 = Entry.createElement('span');
-    // tab3.addClass('entryContainerTabItemWorkspace', 'entryRemove');
-    // tab3.addClass('entryEllipsis');
-    // tab3.innerHTML = Lang.Menus.lecture_container_tab_project;
-    // tab3.bindOnClick(function () {
-    //     that.changeTabView('done');
-    // });
-    // this.tabViews.push(tab3);
-    // container.appendChild(tab3);
-    // this.iframeTab = tab3;
+    var tab3 = Entry.createElement('span');
+    tab3.addClass('entryContainerTabItemWorkspace', 'entryRemove');
+    tab3.addClass('entryEllipsis');
+    tab3.innerHTML = Lang.Menus.lecture_container_tab_project;
+    tab3.bindOnClick(function () {
+        that.changeTabView('done');
+    });
+    this.tabViews.push(tab3);
+    container.appendChild(tab3);
+    this.iframeTab = tab3;
 
-    // var tab4 = Entry.createElement('span');
-    // tab4.addClass('entryContainerTabItemWorkspace');
-    // tab4.addClass('entryEllipsis');
-    // tab4.innerHTML = Lang.Menus.lecture_container_tab_help;
-    // tab4.bindOnClick(function () {
-    //     that.changeTabView('helper');
-    // });
-    // this.tabViews.push(tab4);
-    // container.appendChild(tab4);
+    var tab4 = Entry.createElement('span');
+    tab4.addClass('entryContainerTabItemWorkspace');
+    tab4.addClass('entryEllipsis');
+    tab4.innerHTML = Lang.Menus.lecture_container_tab_help;
+    tab4.bindOnClick(function () {
+        that.changeTabView('helper');
+    });
+    this.tabViews.push(tab4);
+    container.appendChild(tab4);
 
     var movieContainer = Entry.createElement('div');
     movieContainer.addClass('entryContainerMovieWorkspace');
@@ -947,10 +947,12 @@ Entry.Container.prototype.generateTabView = function() {
     helperContainer.addClass('entryContainerHelperWorkspace');
     helperContainer.addClass('entryHide');
     view.appendChild(helperContainer);
-    // this.helperContainer = helperContainer;
+
+
+    this.helperContainer = helperContainer;
     // Entry.helper.initBlockHelper(helperContainer);
 
-    // tab1.addClass('selected');
+    tab1.addClass('selected');
 };
 
 

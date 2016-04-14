@@ -734,6 +734,7 @@
   bottom: 0;
   left: 50px;
   right: 0;
+  background-color: #363C46;
 }
 .collapsed .propertyContent {
   left: 30px;
@@ -3781,7 +3782,7 @@
   overflow-x: hidden;
 }
 #entryBlockHelperContentWorkspace.lecture {
-  top: 0px;
+  top: 40px;
 }
 .entryBlockHelperIntro {
   background-image: url("../../images/block_help_icon.png");
@@ -4081,12 +4082,18 @@
   color: white;
 }
 .entryContainerMovieWorkspace {
+  /*
+    position: absolute;
+    width: 100%;
+    top: 45px;
+    bottom: 0px;
+    
+    z-index: 1000;
+*/
   position: absolute;
-  width: 100%;
-  top: 45px;
-  bottom: 0px;
   background-color: #363C46;
-  z-index: 1000;
+  top: 0px;
+  width: 100%;
   overflow: scroll;
 }
 .entryContainerMovieWorkspace::-webkit-scrollbar {
@@ -4095,10 +4102,8 @@
 .entryContainerDoneWorkspace {
   position: absolute;
   width: 100%;
-  top: 45px;
-  bottom: 0;
+  top: 0px;
   background-color: #363C46;
-  z-index: 1000;
   overflow: hidden;
   text-align: center;
 }

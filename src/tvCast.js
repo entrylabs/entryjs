@@ -33,5 +33,5 @@ p.generateView = function() {
 
 p.getView = function () {
 
-	return this.movieFrame;
+	return this.movieContainer;
 }

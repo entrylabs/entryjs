@@ -18,14 +18,16 @@ p.generateView = function() {
     var blockHelperView = Entry.createElement('div',
                             'entryBlockHelperWorkspace');
     this._view = blockHelperView;
+    
     if (Entry.isForLecture)
         blockHelperView.addClass('lecture');
-    if (!Entry.isForLecture) {
+
+    // if (!Entry.isForLecture) {
         var blockHelperHeader = Entry.createElement('div',
                                 'entryBlockHelperHeaderWorkspace');
         blockHelperHeader.innerHTML = Lang.Helper.Block_info;
         blockHelperView.appendChild(blockHelperHeader);
-    }
+    // }
     var blockHelperContent = Entry.createElement('div',
                             'entryBlockHelperContentWorkspace');
     blockHelperContent.addClass('entryBlockHelperIntro');
@@ -39,7 +41,7 @@ p.generateView = function() {
                             'entryBlockHelperBlockWorkspace');
     this.blockMenu_ = new Blockly.BlockMenu(blockHelperBlock);
     this.blockMenu_.isViewOnly = true;
-    this.blockMenu_.isCenterAlign = true;1
+    this.blockMenu_.isCenterAlign = true;
     helper.blockHelperContent_.appendChild(blockHelperBlock);
 
     var blockHelperDescription = Entry.createElement('div',
