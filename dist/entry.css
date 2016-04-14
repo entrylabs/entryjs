@@ -716,10 +716,10 @@
   background-color: #5096f5;
   color: #fff;
 }
-.propertyTabcontainer {
+.propertyTabobject {
   background-image: url("../../images/property/container_off.png");
 }
-.propertyTabcontainer.selected {
+.propertyTabobject.selected {
   background-image: url("../../images/property/container_on.png");
 }
 .propertyTabhw {
@@ -4079,9 +4079,6 @@
 .entryContainerTabItemWorkspace.selected {
   background-color: #1bafea;
   color: white;
-}
-.entryContainerListWorkspaceWrapper.lecture {
-  top: 45px;
 }
 .entryContainerMovieWorkspace {
   position: absolute;

@@ -136,7 +136,9 @@ Entry.initialize_ = function() {
      * @type {!object}
      */
     this.helper = new Entry.Helper();
-     this.youtube = new Entry.Youtube();
+    this.youtube = new Entry.Youtube();
+    this.tvCast = new Entry.TvCast();
+    this.doneProject = new Entry.DoneProject();
     /**
      * Initialize container for objects.
      * @type {!Entry.VariableContainer}
@@ -261,10 +263,12 @@ Entry.createDom = function(container, option) {
         this.playgroundView = playgroundView;
         this.playground.generateView(this.playgroundView, option);
         console.log("this container" ,this.container);
-        this.propertyPanel.addMode("container", this.container);
+        this.propertyPanel.addMode("object", this.container);
         this.propertyPanel.addMode("helper" , this.helper);
         this.propertyPanel.addMode("youtube" , this.youtube);
-        this.propertyPanel.select("container");
+        this.propertyPanel.addMode("tvCast" , this.tvCast);
+        this.propertyPanel.addMode("goal" , this.doneProject);
+        this.propertyPanel.select("object");
 
     } else if (option == 'minimize') {
         var canvas = Entry.createElement('canvas');

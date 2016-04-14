@@ -6088,64 +6088,20 @@ Entry.Container.prototype.getProjectWithJSON = function(a) {
   return a;
 };
 Entry.Container.prototype.generateTabView = function() {
-  var a = this._view, b = this;
-  this.tabViews = [];
-  var c = Entry.createElement("div");
-  c.addClass("entryContainerTabViewWorkspace");
-  a.appendChild(c);
-  var d = Entry.createElement("span");
-  d.addClass("entryContainerTabItemWorkspace");
-  d.addClass("entryEllipsis");
-  d.innerHTML = Lang.Menus.lecture_container_tab_object;
-  d.bindOnClick(function() {
-    b.changeTabView("object");
-  });
-  this.tabViews.push(d);
-  c.appendChild(d);
-  var e = Entry.createElement("span");
-  e.addClass("entryContainerTabItemWorkspace", "entryRemove");
-  e.addClass("entryEllipsis");
-  e.innerHTML = Lang.Menus.lecture_container_tab_video;
-  e.bindOnClick(function() {
-    b.changeTabView("movie");
-  });
-  this.tabViews.push(e);
-  c.appendChild(e);
-  this.youtubeTab = e;
-  e = Entry.createElement("span");
-  e.addClass("entryContainerTabItemWorkspace", "entryRemove");
-  e.addClass("entryEllipsis");
-  e.innerHTML = Lang.Menus.lecture_container_tab_project;
-  e.bindOnClick(function() {
-    b.changeTabView("done");
-  });
-  this.tabViews.push(e);
-  c.appendChild(e);
-  this.iframeTab = e;
-  e = Entry.createElement("span");
-  e.addClass("entryContainerTabItemWorkspace");
-  e.addClass("entryEllipsis");
-  e.innerHTML = Lang.Menus.lecture_container_tab_help;
-  e.bindOnClick(function() {
-    b.changeTabView("helper");
-  });
-  this.tabViews.push(e);
-  c.appendChild(e);
-  c = Entry.createElement("div");
-  c.addClass("entryContainerMovieWorkspace");
-  c.addClass("entryHide");
-  a.appendChild(c);
-  this.movieContainer = c;
-  c = Entry.createElement("div");
-  c.addClass("entryContainerDoneWorkspace");
-  c.addClass("entryHide");
-  a.appendChild(c);
-  this.doneContainer = c;
-  c = Entry.createElement("div");
-  c.addClass("entryContainerHelperWorkspace");
-  c.addClass("entryHide");
-  a.appendChild(c);
-  d.addClass("selected");
+  var a = this._view, b = Entry.createElement("div");
+  b.addClass("entryContainerMovieWorkspace");
+  b.addClass("entryHide");
+  a.appendChild(b);
+  this.movieContainer = b;
+  b = Entry.createElement("div");
+  b.addClass("entryContainerDoneWorkspace");
+  b.addClass("entryHide");
+  a.appendChild(b);
+  this.doneContainer = b;
+  b = Entry.createElement("div");
+  b.addClass("entryContainerHelperWorkspace");
+  b.addClass("entryHide");
+  a.appendChild(b);
 };
 Entry.Container.prototype.changeTabView = function(a) {
   for (var b = this.tabViews, c = 0, d = b.length;c < d;c++) {
@@ -6386,6 +6342,28 @@ Entry.Dialog.prototype.createSpeakNotch = function(a) {
 Entry.Dialog.prototype.remove = function() {
   Entry.stage.unloadDialog(this);
   this.parent.dialog = null;
+};
+Entry.DoneProject = function() {
+  this.generateView();
+};
+var p = Entry.DoneProject.prototype;
+p.init = function(a) {
+  this.projectId = a;
+};
+p.generateView = function() {
+  var a = Entry.createElement("div");
+  a.addClass("entryContainerDoneWorkspace");
+  a.addClass("entryHide");
+  var a = this.doneContainer = a, a = a.style.width.substring(0, a.style.width.length - 2), b = Entry.createElement("iframe");
+  b.setAttribute("width", a);
+  b.setAttribute("height", 9 * a / 16 + 35);
+  b.setAttribute("frameborder", 0);
+  b.setAttribute("src", "/api/iframe/project/" + this.doneProject);
+  this.doneProjectFrame = b;
+  this.doneContainer.appendChild(b);
+};
+p.getView = function() {
+  return this.movieFrame;
 };
 Entry.Engine = function() {
   function a(a) {
@@ -7267,7 +7245,7 @@ Entry.EntityObject.prototype.syncDialogVisible = function() {
 Entry.Helper = function() {
   this.generateView();
 };
-var p = Entry.Helper.prototype;
+p = Entry.Helper.prototype;
 p.generateView = function() {
   this.blockHelpData = EntryStatic.blockInfo;
   var a = Entry.createElement("div", "entryBlockHelperWorkspace");
@@ -10472,6 +10450,8 @@ Entry.initialize_ = function() {
   this.container = new Entry.Container;
   this.helper = new Entry.Helper;
   this.youtube = new Entry.Youtube;
+  this.tvCast = new Entry.TvCast;
+  this.doneProject = new Entry.DoneProject;
   this.variableContainer = new Entry.VariableContainer;
   if ("workspace" == this.type || "phone" == this.type) {
     this.stateManager = new Entry.StateManager;
@@ -10534,10 +10514,12 @@ Entry.createDom = function(a, b) {
     this.playgroundView = c;
     this.playground.generateView(this.playgroundView, b);
     console.log("this container", this.container);
-    this.propertyPanel.addMode("container", this.container);
+    this.propertyPanel.addMode("object", this.container);
     this.propertyPanel.addMode("helper", this.helper);
     this.propertyPanel.addMode("youtube", this.youtube);
-    this.propertyPanel.select("container");
+    this.propertyPanel.addMode("tvCast", this.tvCast);
+    this.propertyPanel.addMode("goal", this.doneProject);
+    this.propertyPanel.select("object");
   }
 };
 Entry.start = function(a) {
@@ -11490,6 +11472,29 @@ Entry.Toast.prototype.alert = function(a, b, c) {
       d.style.opacity *= .9;
     }, 20);
   }, 5E3);
+};
+Entry.TvCast = function() {
+  this.generateView();
+};
+p = Entry.TvCast.prototype;
+p.init = function(a) {
+  this.tvCastHash = a;
+};
+p.generateView = function() {
+  var a = Entry.createElement("div");
+  a.addClass("entryContainerMovieWorkspace");
+  a.addClass("entryHide");
+  var a = this.movieContainer = a, a = a.style.width.substring(0, a.style.width.length - 2), b = Entry.createElement("iframe");
+  b.setAttribute("width", a);
+  b.setAttribute("height", 9 * a / 16);
+  b.setAttribute("allowfullscreen", "");
+  b.setAttribute("frameborder", 0);
+  b.setAttribute("src", this.tvcast);
+  this.movieFrame = b;
+  this.movieContainer.appendChild(b);
+};
+p.getView = function() {
+  return this.movieFrame;
 };
 Entry.ContextMenu = {};
 (function(a) {
