@@ -539,7 +539,6 @@ Entry.BlockView.DRAG_RADIUS = 5;
                     var removed = board.workspace.blockMenu.terminateDrag();
                     if (!removed) {
                         block._updatePos();
-                        //block.doAdd();
                         Entry.do("addBlock", block);
                     }
                 }
@@ -552,12 +551,10 @@ Entry.BlockView.DRAG_RADIUS = 5;
                     case gs.DONE:
                         var closeBlock = this._getCloseBlock();
                         if (prevBlock && !closeBlock) {
-                            this._toGlobalCoordinate(dragMode);
-                            block.doSeparate();
+                            Entry.do("separateBlock", block);
                         } else if (!prevBlock && !closeBlock && !fromBlockMenu) {
                             if (!block.getThread().view.isGlobal()) {
-                                this._toGlobalCoordinate(dragMode);
-                                block.doSeparate();
+                                Entry.do("separateBlock", block);
                             } else {
                                 block.doMove();
                             }
@@ -568,16 +565,15 @@ Entry.BlockView.DRAG_RADIUS = 5;
                                     if (!(closeBlock instanceof Entry.Block)) {
                                         closeBlock = closeBlock.insertTopBlock(block);
                                     } else {
-                                        block.doInsert(closeBlock);
+                                        Entry.do("insertBlock", block, closeBlock);
                                     }
                                 } else {// field block
-                                    block.doInsert(closeBlock, true);
+                                    Entry.do("insertBlock", block, closeBlock);
                                 }
                                 createjs.Sound.play('entryMagneting');
                                 ripple = true;
                             } else {
-                                this._toGlobalCoordinate(dragMode);
-                                block.doSeparate();
+                                Entry.do("separateBlock", block);
                             }
                         }
                         break;
@@ -603,10 +599,8 @@ Entry.BlockView.DRAG_RADIUS = 5;
                     case gs.REMOVE:
                         createjs.Sound.play('entryDelete');
                         if (!fromBlockMenu) {
-                            if (prevBlock) block.doSeparate();
                             this.block.doDestroyBelow(false);
                         } else {
-                            if (prevBlock) block.separate();
                             this.block.destroy(false, true);
                         }
                         break;

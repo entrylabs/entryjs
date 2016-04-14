@@ -35,7 +35,8 @@ Entry.Commander = function(injectType) {
                     .concat(commandFunc.state.apply(null, argumentArray))
             );
         }
-        Entry.Command[commandType].apply(Entry.Command, argumentArray);
+        // TODO: activity reporter
+        Entry.Command[commandType].do.apply(Entry.Command, argumentArray);
     };
 
     p.undo = function() {

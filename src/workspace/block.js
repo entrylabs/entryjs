@@ -138,6 +138,15 @@ Entry.Block.MAGNET_OFFSET = 0.4;
         //TODO update next pos
     };
 
+    p.moveTo = function(x, y) {
+        if (this.view)
+            this.view._moveTo(x, y);
+        this.set({
+            x: this.view.x,
+            y: this.view.y
+        });
+    };
+
     p.createView = function(board, mode) {
         if (!this.view) {
             this.set({view: new Entry.BlockView(
@@ -389,8 +398,8 @@ Entry.Block.MAGNET_OFFSET = 0.4;
 
     p.copyToClipboard = function() {Entry.clipboard = this.copy();};
 
-    p.separate = function() {
-        this.thread.separate(this);
+    p.separate = function(count) {
+        this.thread.separate(this, count);
         this._updatePos();
         this.getCode().changeEvent.notify();
     };

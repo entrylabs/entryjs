@@ -59,10 +59,10 @@ Entry.Thread = function(thread, code) {
         });
     };
 
-    p.separate = function(block) {
+    p.separate = function(block, count) {
         if (!this._data.has(block.id)) return;
 
-        var blocks = this._data.splice(this._data.indexOf(block));
+        var blocks = this._data.splice(this._data.indexOf(block), count);
         this._code.createThread(blocks);
         this.changeEvent.notify();
     };
@@ -215,5 +215,12 @@ Entry.Thread = function(thread, code) {
             }
             return false;
         }
+    };
+
+    p.getCount = function(startBlock) {
+        var result = this._data.length;
+        if (startBlock)
+            result -= this._data.indexOf(startBlock);
+        return result
     };
 })(Entry.Thread.prototype);
