@@ -4918,6 +4918,32 @@ Entry.Observer = function(a, b, c, d) {
     return this;
   };
 })(Entry.Observer.prototype);
+Entry.Command = {};
+Entry.Commander = function(a) {
+  if ("workspace" == a || "phone" == a) {
+    Entry.stateManager = new Entry.StateManager;
+  }
+  Entry.do = this.do;
+  Entry.undo = this.undo;
+};
+(function(a) {
+  a.do = function(b) {
+    var a = Array.prototype.slice.call(arguments);
+    a.shift();
+    Entry.Command[b].apply(Entry.Command, a);
+  };
+  a.undo = function() {
+  };
+  a.redo = function() {
+  };
+})(Entry.Commander.prototype);
+Entry.Command.addBlock = function(a) {
+  a.doAdd();
+  console.log(a.toJSON());
+};
+Entry.Command.addBlock.type = 101;
+Entry.Command.addBlock.undo = function() {
+};
 Entry.Container = function() {
   this.objects_ = [];
   this.cachedPicture = {};
@@ -6546,6 +6572,113 @@ Entry.ActivityReporter = function() {
     return this._activities;
   };
 })(Entry.ActivityReporter.prototype);
+Entry.State = function(a, b, c, d) {
+  this.caller = b;
+  this.func = c;
+  3 < arguments.length && (this.params = Array.prototype.slice.call(arguments).slice(3));
+  this.message = a;
+  this.time = Entry.getUpTime();
+};
+Entry.State.prototype.generateMessage = function() {
+};
+Entry.StateManager = function() {
+  this.undoStack_ = [];
+  this.redoStack_ = [];
+  this.isIgnore = this.isRestore = !1;
+  Entry.addEventListener("cancelLastCommand", function(a) {
+    Entry.stateManager.cancelLastCommand();
+  });
+  Entry.addEventListener("run", function(a) {
+    Entry.stateManager.updateView();
+  });
+  Entry.addEventListener("stop", function(a) {
+    Entry.stateManager.updateView();
+  });
+  Entry.addEventListener("saveWorkspace", function(a) {
+    Entry.stateManager.addStamp();
+  });
+  Entry.addEventListener("undo", function(a) {
+    Entry.stateManager.undo();
+  });
+  Entry.addEventListener("redo", function(a) {
+    Entry.stateManager.redo();
+  });
+};
+Entry.StateManager.prototype.generateView = function(a, b) {
+};
+Entry.StateManager.prototype.addCommand = function(a, b, c, d) {
+  if (!this.isIgnoring()) {
+    if (this.isRestoring()) {
+      var e = new Entry.State, f = Array.prototype.slice.call(arguments);
+      Entry.State.prototype.constructor.apply(e, f);
+      this.redoStack_.push(e);
+      Entry.reporter && Entry.reporter.report(e);
+    } else {
+      e = new Entry.State, f = Array.prototype.slice.call(arguments), Entry.State.prototype.constructor.apply(e, f), this.undoStack_.push(e), Entry.reporter && Entry.reporter.report(e), this.updateView();
+    }
+    Entry.creationChangedEvent && Entry.creationChangedEvent.notify();
+  }
+};
+Entry.StateManager.prototype.cancelLastCommand = function() {
+  this.canUndo() && (this.undoStack_.pop(), this.updateView(), Entry.creationChangedEvent && Entry.creationChangedEvent.notify());
+};
+Entry.StateManager.prototype.undo = function() {
+  if (this.canUndo() && !this.isRestoring()) {
+    this.addActivity("undo");
+    this.startRestore();
+    var a = this.undoStack_.pop();
+    a.func.apply(a.caller, a.params);
+    this.updateView();
+    this.endRestore();
+    Entry.creationChangedEvent && Entry.creationChangedEvent.notify();
+  }
+};
+Entry.StateManager.prototype.redo = function() {
+  if (this.canRedo() && !this.isRestoring()) {
+    this.addActivity("redo");
+    var a = this.redoStack_.pop();
+    a.func.apply(a.caller, a.params);
+    this.updateView();
+    Entry.creationChangedEvent && Entry.creationChangedEvent.notify();
+  }
+};
+Entry.StateManager.prototype.updateView = function() {
+  this.undoButton && this.redoButton && (this.canUndo() ? this.undoButton.addClass("active") : this.undoButton.removeClass("active"), this.canRedo() ? this.redoButton.addClass("active") : this.redoButton.removeClass("active"));
+};
+Entry.StateManager.prototype.startRestore = function() {
+  this.isRestore = !0;
+};
+Entry.StateManager.prototype.endRestore = function() {
+  this.isRestore = !1;
+};
+Entry.StateManager.prototype.isRestoring = function() {
+  return this.isRestore;
+};
+Entry.StateManager.prototype.startIgnore = function() {
+  this.isIgnore = !0;
+};
+Entry.StateManager.prototype.endIgnore = function() {
+  this.isIgnore = !1;
+};
+Entry.StateManager.prototype.isIgnoring = function() {
+  return this.isIgnore;
+};
+Entry.StateManager.prototype.canUndo = function() {
+  return 0 < this.undoStack_.length && Entry.engine.isState("stop");
+};
+Entry.StateManager.prototype.canRedo = function() {
+  return 0 < this.redoStack_.length && Entry.engine.isState("stop");
+};
+Entry.StateManager.prototype.addStamp = function() {
+  this.stamp = Entry.generateHash();
+  this.undoStack_.length && (this.undoStack_[this.undoStack_.length - 1].stamp = this.stamp);
+};
+Entry.StateManager.prototype.isSaved = function() {
+  return 0 === this.undoStack_.length || this.undoStack_[this.undoStack_.length - 1].stamp == this.stamp && "string" == typeof this.stamp;
+};
+Entry.StateManager.prototype.addActivity = function(a) {
+  Entry.reporter && Entry.reporter.report(new Entry.State(a));
+};
 Entry.EntryObject = function(a) {
   if (a) {
     this.id = a.id;
@@ -9107,9 +9240,7 @@ Entry.initialize_ = function() {
   this.container = new Entry.Container;
   this.helper = new Entry.Helper;
   this.variableContainer = new Entry.VariableContainer;
-  if ("workspace" == this.type || "phone" == this.type) {
-    this.stateManager = new Entry.StateManager;
-  }
+  this.commander = new Entry.Commander(this.type);
   this.scene = new Entry.Scene;
   this.playground = new Entry.Playground;
   this.toast = new Entry.Toast;
@@ -9902,113 +10033,6 @@ Entry.StampEntity.prototype.applyFilter = EntityPrototype.applyFilter;
 Entry.StampEntity.prototype.removeClone = EntityPrototype.removeClone;
 Entry.StampEntity.prototype.getWidth = EntityPrototype.getWidth;
 Entry.StampEntity.prototype.getHeight = EntityPrototype.getHeight;
-Entry.State = function(a, b, c, d) {
-  this.caller = b;
-  this.func = c;
-  3 < arguments.length && (this.params = Array.prototype.slice.call(arguments).slice(3));
-  this.message = a;
-  this.time = Entry.getUpTime();
-};
-Entry.State.prototype.generateMessage = function() {
-};
-Entry.StateManager = function() {
-  this.undoStack_ = [];
-  this.redoStack_ = [];
-  this.isIgnore = this.isRestore = !1;
-  Entry.addEventListener("cancelLastCommand", function(a) {
-    Entry.stateManager.cancelLastCommand();
-  });
-  Entry.addEventListener("run", function(a) {
-    Entry.stateManager.updateView();
-  });
-  Entry.addEventListener("stop", function(a) {
-    Entry.stateManager.updateView();
-  });
-  Entry.addEventListener("saveWorkspace", function(a) {
-    Entry.stateManager.addStamp();
-  });
-  Entry.addEventListener("undo", function(a) {
-    Entry.stateManager.undo();
-  });
-  Entry.addEventListener("redo", function(a) {
-    Entry.stateManager.redo();
-  });
-};
-Entry.StateManager.prototype.generateView = function(a, b) {
-};
-Entry.StateManager.prototype.addCommand = function(a, b, c, d) {
-  if (!this.isIgnoring()) {
-    if (this.isRestoring()) {
-      var e = new Entry.State, f = Array.prototype.slice.call(arguments);
-      Entry.State.prototype.constructor.apply(e, f);
-      this.redoStack_.push(e);
-      Entry.reporter && Entry.reporter.report(e);
-    } else {
-      e = new Entry.State, f = Array.prototype.slice.call(arguments), Entry.State.prototype.constructor.apply(e, f), this.undoStack_.push(e), Entry.reporter && Entry.reporter.report(e), this.updateView();
-    }
-    Entry.creationChangedEvent && Entry.creationChangedEvent.notify();
-  }
-};
-Entry.StateManager.prototype.cancelLastCommand = function() {
-  this.canUndo() && (this.undoStack_.pop(), this.updateView(), Entry.creationChangedEvent && Entry.creationChangedEvent.notify());
-};
-Entry.StateManager.prototype.undo = function() {
-  if (this.canUndo() && !this.isRestoring()) {
-    this.addActivity("undo");
-    this.startRestore();
-    var a = this.undoStack_.pop();
-    a.func.apply(a.caller, a.params);
-    this.updateView();
-    this.endRestore();
-    Entry.creationChangedEvent && Entry.creationChangedEvent.notify();
-  }
-};
-Entry.StateManager.prototype.redo = function() {
-  if (this.canRedo() && !this.isRestoring()) {
-    this.addActivity("redo");
-    var a = this.redoStack_.pop();
-    a.func.apply(a.caller, a.params);
-    this.updateView();
-    Entry.creationChangedEvent && Entry.creationChangedEvent.notify();
-  }
-};
-Entry.StateManager.prototype.updateView = function() {
-  this.undoButton && this.redoButton && (this.canUndo() ? this.undoButton.addClass("active") : this.undoButton.removeClass("active"), this.canRedo() ? this.redoButton.addClass("active") : this.redoButton.removeClass("active"));
-};
-Entry.StateManager.prototype.startRestore = function() {
-  this.isRestore = !0;
-};
-Entry.StateManager.prototype.endRestore = function() {
-  this.isRestore = !1;
-};
-Entry.StateManager.prototype.isRestoring = function() {
-  return this.isRestore;
-};
-Entry.StateManager.prototype.startIgnore = function() {
-  this.isIgnore = !0;
-};
-Entry.StateManager.prototype.endIgnore = function() {
-  this.isIgnore = !1;
-};
-Entry.StateManager.prototype.isIgnoring = function() {
-  return this.isIgnore;
-};
-Entry.StateManager.prototype.canUndo = function() {
-  return 0 < this.undoStack_.length && Entry.engine.isState("stop");
-};
-Entry.StateManager.prototype.canRedo = function() {
-  return 0 < this.redoStack_.length && Entry.engine.isState("stop");
-};
-Entry.StateManager.prototype.addStamp = function() {
-  this.stamp = Entry.generateHash();
-  this.undoStack_.length && (this.undoStack_[this.undoStack_.length - 1].stamp = this.stamp);
-};
-Entry.StateManager.prototype.isSaved = function() {
-  return 0 === this.undoStack_.length || this.undoStack_[this.undoStack_.length - 1].stamp == this.stamp && "string" == typeof this.stamp;
-};
-Entry.StateManager.prototype.addActivity = function(a) {
-  Entry.reporter && Entry.reporter.report(new Entry.State(a));
-};
 Entry.Toast = function() {
   this.toasts_ = [];
   var a = document.getElementById("entryToastContainer");
@@ -13860,7 +13884,7 @@ Entry.BlockView.DRAG_RADIUS = 5;
     } else {
       if (d === Entry.DRAG_MODE_DRAG) {
         var g = this.dragInstance && this.dragInstance.isNew;
-        g && !a.workspace.blockMenu.terminateDrag() && (e._updatePos(), e.doAdd());
+        g && !a.workspace.blockMenu.terminateDrag() && (e._updatePos(), Entry.do("addBlock", e));
         var h = Entry.GlobalSvg;
         b = !1;
         f = this.block.getPrevBlock(this.block);
@@ -15317,16 +15341,16 @@ Entry.GlobalSvg = {};
     this.svgDom.css("display", "none");
   };
   a.position = function() {
-    var b = this._view, a = b.getAbsoluteCoordinate(), b = b.getBoard().offset;
-    this.left = a.x + b.left - this._offsetX;
-    this.top = a.y + b.top - this._offsetY;
+    var a = this._view, c = a.getAbsoluteCoordinate(), a = a.getBoard().offset;
+    this.left = c.x + a.left - this._offsetX;
+    this.top = c.y + a.top - this._offsetY;
     this.svgDom.css({left:this.left, top:this.top});
   };
-  a.terminateDrag = function(b) {
-    var a = Entry.mouseCoordinate;
-    b = b.getBoard().workspace.blockMenu;
-    var d = b.offset.left, e = b.offset.top, f = b.visible ? b.svgDom.width() : 0;
-    return a.y > e && a.x > d + f ? this.DONE : a.y > e && a.x > d && b.visible ? this.REMOVE : this.RETURN;
+  a.terminateDrag = function(a) {
+    var c = Entry.mouseCoordinate;
+    a = a.getBoard().workspace.blockMenu;
+    var d = a.offset.left, e = a.offset.top, f = a.visible ? a.svgDom.width() : 0;
+    return c.y > e && c.x > d + f ? this.DONE : c.y > e && c.x > d && a.visible ? this.REMOVE : this.RETURN;
   };
   a.addControl = function(a) {
     this.onMouseDown.apply(this, arguments);
@@ -16379,30 +16403,30 @@ Entry.Block.MAGNET_OFFSET = .4;
   };
   a.doAdd = function() {
     var a = this.id;
-    Entry.activityReporter && (a = [["blockId", a], ["code", this.getCode().stringify()]], Entry.activityReporter.add(new Entry.Activity("addBlock", a)));
+    Entry.activityReporter && (a = [a, this.getCode().stringify()], Entry.activityReporter.add(new Entry.Activity("addBlock", a)));
     this.getCode().changeEvent.notify();
   };
   a.doMove = function() {
     var a = this.id, c = this.view.x - this.x, d = this.view.y - this.y;
     this._updatePos();
     this.getCode().changeEvent.notify();
-    Entry.activityReporter && (a = [["blockId", a], ["moveX", c], ["moveY", d], ["code", this.getCode().stringify()]], Entry.activityReporter.add(new Entry.Activity("moveBlock", a)));
+    Entry.activityReporter && (a = [a, c, d, this.getCode().stringify()], Entry.activityReporter.add(new Entry.Activity("moveBlock", a)));
   };
   a.doSeparate = function() {
     var a = this.id, c = this.x, d = this.y;
     this.separate();
-    Entry.activityReporter && (a = [["blockId", a], ["positionX", c], ["positionY", d], ["code", this.getCode().stringify()]], Entry.activityReporter.add(new Entry.Activity("seperateBlock", a)));
+    Entry.activityReporter && (a = [a, c, d, this.getCode().stringify()], Entry.activityReporter.add(new Entry.Activity("seperateBlock", a)));
   };
   a.doInsert = function(a, c) {
     var d = this.id, e = a.id, f = this.x, g = this.y;
     c ? this.replace(a) : this.insert(a);
-    Entry.activityReporter && (d = [["targetBlockId", e], ["blockId", d], ["positionX", f], ["positionY", g], ["code", this.getCode().stringify()]], Entry.activityReporter.add(new Entry.Activity("insertBlock", d)));
+    Entry.activityReporter && (d = [e, d, f, g, this.getCode().stringify()], Entry.activityReporter.add(new Entry.Activity("insertBlock", d)));
   };
   a.doDestroy = function(a) {
     var c = this.id, d = this.x, e = this.y;
     this.destroy(a);
     this.getCode().changeEvent.notify();
-    Entry.activityReporter && (a = [["blockId", c], ["positionX", d], ["positionY", e], ["code", this.getCode().stringify()]], Entry.activityReporter.add(new Entry.Activity("destroyBlock", a)));
+    Entry.activityReporter && (a = [c, d, e, this.getCode().stringify()], Entry.activityReporter.add(new Entry.Activity("destroyBlock", a)));
     return this;
   };
   a.doDestroyBelow = function(a) {
@@ -16410,7 +16434,7 @@ Entry.Block.MAGNET_OFFSET = .4;
     console.log("destroyBelow", c, d, e);
     this.destroy(a, !0);
     this.getCode().changeEvent.notify();
-    Entry.activityReporter && (a = [["blockId", c], ["positionX", d], ["positionY", e], ["code", this.getCode().stringify()]], Entry.activityReporter.add(new Entry.Activity("destroyBlock", a)));
+    Entry.activityReporter && (a = [c, d, e, this.getCode().stringify()], Entry.activityReporter.add(new Entry.Activity("destroyBlock", a)));
     return this;
   };
   a.copy = function() {

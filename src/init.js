@@ -4,6 +4,7 @@
 'use strict';
 
 goog.require("Entry.PropertyPanel");
+goog.require("Entry.Commander");
 
 /**
  * Initialize method with options.
@@ -151,13 +152,7 @@ Entry.initialize_ = function() {
      */
     this.variableContainer = new Entry.VariableContainer();
 
-    /**
-     * Initialize stateManager for redo and undo.
-     * @type {!Entry.StateManager}
-     * @type {!object}
-     */
-    if (this.type == 'workspace' || this.type == 'phone')
-        this.stateManager = new Entry.StateManager();
+    this.commander = new Entry.Commander(this.type);
 
     /**
      * Initialize scenes.

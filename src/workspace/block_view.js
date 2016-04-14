@@ -539,7 +539,8 @@ Entry.BlockView.DRAG_RADIUS = 5;
                     var removed = board.workspace.blockMenu.terminateDrag();
                     if (!removed) {
                         block._updatePos();
-                        block.doAdd();
+                        //block.doAdd();
+                        Entry.do("addBlock", block);
                     }
                 }
 
