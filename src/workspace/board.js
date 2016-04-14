@@ -147,7 +147,7 @@ Entry.Board = function(option) {
     p.findById = function(id) {
         var code = this.code;
         var threads = code.getThreads();
-        for (var i=0,len=threads.length; i<len; i++) {
+        for (var i=0; i<threads.length; i++) {
             var thread = threads[i];
             if (!thread) continue;
 

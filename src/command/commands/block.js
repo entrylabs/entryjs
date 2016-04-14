@@ -5,11 +5,23 @@
 
 goog.require("Entry.Command");
 
-Entry.Command.addBlock = function(block) {
-    block.doAdd();
-    console.log(block.toJSON());
-};
-Entry.Command.addBlock.type = 101;
-Entry.Command.addBlock.undo = function() {
+(function(c) {
+    c.addBlock = function(block) {
+        block.doAdd();
+    };
+    c.addBlock.type = 101;
+    c.addBlock.state = function(block) {
+        return [block.id];
+    };
+    c.addBlock.log = function(block) {
+        return [block.id, block.toJSON()];
+    };
+    c.addBlock.undo = function(blockId) {
+        Entry.playground.mainWorkspace.board.findById(blockId).destroy();
+    };
 
-};
+
+
+
+})(Entry.Command)
+

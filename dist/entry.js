@@ -4930,6 +4930,8 @@ Entry.Commander = function(a) {
   a.do = function(b) {
     var a = Array.prototype.slice.call(arguments);
     a.shift();
+    var d = Entry.Command[b];
+    Entry.stateManager && Entry.stateManager.addCommand.apply(Entry.stateManager, [b, Entry.Command, d.undo].concat(d.state.apply(null, a)));
     Entry.Command[b].apply(Entry.Command, a);
   };
   a.undo = function() {
@@ -4937,13 +4939,21 @@ Entry.Commander = function(a) {
   a.redo = function() {
   };
 })(Entry.Commander.prototype);
-Entry.Command.addBlock = function(a) {
-  a.doAdd();
-  console.log(a.toJSON());
-};
-Entry.Command.addBlock.type = 101;
-Entry.Command.addBlock.undo = function() {
-};
+(function(a) {
+  a.addBlock = function(b) {
+    b.doAdd();
+  };
+  a.addBlock.type = 101;
+  a.addBlock.state = function(b) {
+    return [b.id];
+  };
+  a.addBlock.log = function(b) {
+    return [b.id, b.toJSON()];
+  };
+  a.addBlock.undo = function(b) {
+    Entry.playground.mainWorkspace.board.findById(b).destroy();
+  };
+})(Entry.Command);
 Entry.Container = function() {
   this.objects_ = [];
   this.cachedPicture = {};
@@ -15341,9 +15351,9 @@ Entry.GlobalSvg = {};
     this.svgDom.css("display", "none");
   };
   a.position = function() {
-    var a = this._view, c = a.getAbsoluteCoordinate(), a = a.getBoard().offset;
-    this.left = c.x + a.left - this._offsetX;
-    this.top = c.y + a.top - this._offsetY;
+    var b = this._view, a = b.getAbsoluteCoordinate(), b = b.getBoard().offset;
+    this.left = a.x + b.left - this._offsetX;
+    this.top = a.y + b.top - this._offsetY;
     this.svgDom.css({left:this.left, top:this.top});
   };
   a.terminateDrag = function(a) {
@@ -15632,12 +15642,12 @@ Entry.Board = function(a) {
     return this.code;
   };
   a.findById = function(a) {
-    for (var c = this.code.getThreads(), d = 0, e = c.length;d < e;d++) {
-      var f = c[d];
-      if (f) {
-        for (var f = f.getBlocks(), g = 0, e = f.length;g < e;g++) {
-          if (f[g] && f[g].id == a) {
-            return f[g];
+    for (var c = this.code.getThreads(), d = 0;d < c.length;d++) {
+      var e = c[d];
+      if (e) {
+        for (var e = e.getBlocks(), f = 0, g = e.length;f < g;f++) {
+          if (e[f] && e[f].id == a) {
+            return e[f];
           }
         }
       }
