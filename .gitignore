@@ -32,3 +32,5 @@ extern/closure-library
 .DS_Store
 
 *.map
+
+.vscode/*
