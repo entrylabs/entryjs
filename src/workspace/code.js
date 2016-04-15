@@ -17,6 +17,7 @@ Entry.Code = function(code) {
     this._data = new Entry.Collection();
 
     this._eventMap = {};
+    this._blockMap = {};
 
     this.executors = [];
 
@@ -201,6 +202,18 @@ Entry.Code = function(code) {
             if (threads[i].hasBlockType(type)) return true;
 
         return false;
+    };
+
+    p.findById = function(id) {
+        return this._blockMap[id];
+    };
+
+    p.registerBlock = function(block) {
+        this._blockMap[block.id] = block;
+    };
+
+    p.unregisterBlock = function(block) {
+        delete this._blockMap[block.id];
     };
 
 })(Entry.Code.prototype);

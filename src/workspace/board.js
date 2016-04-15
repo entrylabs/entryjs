@@ -144,19 +144,7 @@ Entry.Board = function(option) {
     };
 
     p.findById = function(id) {
-        var code = this.code;
-        var threads = code.getThreads();
-        for (var i=0; i<threads.length; i++) {
-            var thread = threads[i];
-            if (!thread) continue;
-
-            var blocks = thread.getBlocks();
-            for (var j=0,len=blocks.length; j<len; j++) {
-                if (blocks[j] && blocks[j].id == id) {
-                    return blocks[j];
-                }
-            }
-        }
+        return this.code.findById(id);
     };
 
     p._addControl = function() {

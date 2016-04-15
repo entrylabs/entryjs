@@ -35,34 +35,45 @@ goog.require("Entry.Command");
                     y: block.y
                 }
             ];
-            if (block.thread instanceof Entry.Thread) {
+            if (block.getBlockType() === "basic") {
                 data.push(block.thread.getCount(block));
                 if (block.getPrevBlock())
                     data.push(block.getPrevBlock().id);
             } else {
-                data.push(null);
+                if (!(block.getThread() instanceof Entry.Thread)) {
+                    var parent = block.getThread();
+                    data.push(parent._block.id);
+                    data.push(parent._index);
+                }
             }
             return data;
         },
         log: function(block) {
         },
-        undo: function(blockId, prevPos, count, originBlock) {
+        undo: function(blockId, prevPos, originBlock, count) {
             var block = Entry.playground.mainWorkspace.board.findById(blockId);
-            var prevBlock = block.getPrevBlock();
-            if (originBlock) {
-                console.log('sadf');
-                originBlock = Entry.playground.mainWorkspace.board.findById(originBlock);
-                block.separate(count);
-                block.insert(originBlock);
-                block.view.bindPrev(originBlock);
+            if (block.getBlockType() === "basic") {
+                var prevBlock = block.getPrevBlock();
+                if (originBlock) {
+                    originBlock = Entry.playground.mainWorkspace.board.findById(originBlock);
+                    block.separate(count);
+                    block.insert(originBlock);
+                    block.view.bindPrev(originBlock);
+                } else {
+                    if (block.view)
+                        block.view._toGlobalCoordinate();
+                    block.separate(count);
+                    block.moveTo(prevPos.x, prevPos.y);
+                }
+                if (prevBlock && prevBlock.getNextBlock())
+                    prevBlock.getNextBlock().view.bindPrev();
             } else {
-                if (block.view)
-                    block.view._toGlobalCoordinate();
-                block.separate(count);
-                block.moveTo(prevPos.x, prevPos.y);
+                if (originBlock) {
+                    var param = block.view._contents[count];
+                    block.separate();
+                    block.doInsert(param);
+                }
             }
-            if (prevBlock && prevBlock.getNextBlock())
-                prevBlock.getNextBlock().view.bindPrev();
         }
     };
 
@@ -116,7 +127,4 @@ goog.require("Entry.Command");
         undo: function(blockId) {
         }
     };
-
-
-})(Entry.Command)
-
+})(Entry.Command);

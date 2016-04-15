@@ -20,6 +20,8 @@ Entry.Block = function(block, thread) {
 
     this.setThread(thread);
     this.load(block);
+
+    this.getCode().registerBlock(this);
 };
 
 Entry.Block.MAGNET_RANGE = 10;
@@ -88,9 +90,8 @@ Entry.Block.MAGNET_OFFSET = 0.4;
 
             var paramInjected = thisParams[i] !== undefined;
 
-
             if (value && (params[i].type === 'Output' || params[i].type === 'Block'))
-                value = new Entry.Block(value);
+                value = new Entry.Block(value, this.thread);
 
             if (paramInjected) thisParams.splice(i, 1, value);
             else thisParams.push(value);
@@ -214,6 +215,7 @@ Entry.Block.MAGNET_OFFSET = 0.4;
         var prevBlock = this.getPrevBlock();
         var nextBlock = this.getNextBlock();
 
+        this.getCode().unregisterBlock(this);
         var thread = this.getThread();
         if (this._schema.event)
             thread.unregisterEvent(this, this._schema.event);
@@ -314,17 +316,17 @@ Entry.Block.MAGNET_OFFSET = 0.4;
         }
     };
 
-    p.doInsert = function(targetBlock, isFieldBlock) {
-        var id = this.id;
-        var targetId = targetBlock.id;
-        var positionX = this.x;
-        var positionY = this.y;
-        if (isFieldBlock)
-            this.replace(targetBlock);
-        else
+    p.doInsert = function(targetBlock) {
+        if (this.getBlockType() === "basic")
             this.insert(targetBlock);
+        else
+            this.replace(targetBlock);
         if (Entry.activityReporter) {
-            var data = [
+            var id = this.id,
+                targetId = targetBlock.id,
+                positionX = this.x,
+                positionY = this.y,
+                data = [
                 targetId,
                 id,
                 positionX,
@@ -451,6 +453,19 @@ Entry.Block.MAGNET_OFFSET = 0.4;
                 return block;
             block = outputBlock;
         }
+    };
+
+    p.getBlockType = function() {
+        var skeleton = Entry.skeleton[this._schema.skeleton]
+        var magnet = skeleton.magnets();
+        if (magnet.next || magnet.prev)
+            return "basic";
+        else if (magnet.bool || magnet.string)
+            return "field";
+        else if (magnet.output)
+            return "output";
+        else
+            return null;
     };
 
 })(Entry.Block.prototype);
