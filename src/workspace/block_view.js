@@ -717,7 +717,7 @@ Entry.BlockView.DRAG_RADIUS = 5;
         if (magneting) {
             var shadow = this._board.dragBlock.getShadow();
             $(shadow).attr({
-                 transform: 'translate(0,' + (this.height + 1) + ')'
+                transform: 'translate(0,' + (this.height + 1) + ')'
             });
             this.svgGroup.appendChild(shadow);
             this._clonedShadow = shadow;
