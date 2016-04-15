@@ -714,8 +714,8 @@ Blockly.Blocks.arduino_toggle_led = {init:function() {
   this.setNextStatement(!0);
 }};
 Entry.block.arduino_toggle_led = function(a, b) {
-  var c = b.getNumberValue("VALUE"), d = b.getField("OPERATOR");
-  Entry.hw.setDigitalPortValue(c, "on" == d ? 255 : 0);
+  var c = b.getNumberValue("VALUE"), d = "on" == b.getField("OPERATOR") ? 255 : 0;
+  Entry.hw.setDigitalPortValue(c, d);
   return b.callReturn();
 };
 Blockly.Blocks.arduino_toggle_pwm = {init:function() {
@@ -1693,10 +1693,10 @@ Entry.block.wait_second = function(a, b) {
   }
   b.isStart = !0;
   b.timeFlag = 1;
-  var c = b.getNumberValue("SECOND", b);
+  var c = b.getNumberValue("SECOND", b), c = 60 / (Entry.FPS || 60) * c * 1E3;
   setTimeout(function() {
     b.timeFlag = 0;
-  }, 60 / (Entry.FPS || 60) * c * 1E3);
+  }, c);
   return b;
 };
 Blockly.Blocks.repeat_basic = {init:function() {
@@ -15360,14 +15360,22 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
 Entry.GlobalSvg = {};
 (function(a) {
   a.DONE = 0;
+  a._inited = !1;
   a.REMOVE = 1;
   a.RETURN = 2;
   a.createDom = function() {
-    this.svgDom || (this.svgDom = Entry.Dom($('<svg id="globalSvg" width="0" height="0"version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'), {parent:$("body")}), this.svgDom.css({position:"fixed", width:1, height:1, display:"none", overflow:"visible", "z-index":"1111", opacity:.8}), this.svg = Entry.SVG("globalSvg"), this.top = this.left = this.width = 0);
+    if (!this.inited) {
+      var b = $("body");
+      this._container = Entry.Dom("div", {classes:["globalSvgSurface", "entryRemove"], parent:b});
+      this.svgDom = Entry.Dom($('<svg id="globalSvg" width="0" height="0"version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'), {parent:b});
+      this.svg = Entry.SVG("globalSvg");
+      this.top = this.left = this.width = 0;
+      this._inited = !0;
+    }
   };
   a.setView = function(b, a) {
     if (b != this._view && !b.block.isReadOnly() && b.movable) {
-      return this._view = b, this._mode = a, a !== Entry.Workspace.MODE_VIMBOARD && b.set({visible:!1}), this.draw(), this.align(), this.position(), !0;
+      return this._view = b, this._mode = a, a !== Entry.Workspace.MODE_VIMBOARD && b.set({visible:!1}), this.draw(), this.show(), this.align(), this.position(), !0;
     }
   };
   a.draw = function() {
@@ -15376,7 +15384,6 @@ Entry.GlobalSvg = {};
     var a = this._mode == Entry.Workspace.MODE_VIMBOARD;
     this.svgGroup = Entry.SVG.createElement(b.svgGroup.cloneNode(!0), {opacity:1});
     this.svg.appendChild(this.svgGroup);
-    this.show();
     a && (b = $(this.svgGroup), b.find("g").css({filter:"none"}), b.find("path").velocity({opacity:0}, {duration:500}), b.find("text").velocity({fill:"#000000"}, {duration:530}));
   };
   a.remove = function() {
@@ -15389,9 +15396,11 @@ Entry.GlobalSvg = {};
     this.svgGroup.attr({transform:"translate(" + b + "," + a + ")"});
   };
   a.show = function() {
+    this._container.removeClass("entryRemove");
     this.svgDom.css("display", "block");
   };
   a.hide = function() {
+    this._container.addClass("entryRemove");
     this.svgDom.css("display", "none");
   };
   a.position = function() {

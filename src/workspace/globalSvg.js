@@ -4,33 +4,29 @@ goog.provide('Entry.GlobalSvg');
 
 (function(gs) {
     gs.DONE = 0;
+    gs._inited = false;
     gs.REMOVE = 1;
     gs.RETURN = 2;
 
     gs.createDom = function() {
-        if (this.svgDom) return;
+        if (this.inited) return;
+        var body = $('body');
+        this._container = Entry.Dom('div', {
+            classes: ['globalSvgSurface', 'entryRemove'],
+            parent: body
+        });
 
         this.svgDom = Entry.Dom(
             $('<svg id="globalSvg" width="0" height="0"' +
               'version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'),
-            { parent: $('body') }
+            { parent: body }
         );
 
-        this.svgDom.css({
-            position: 'fixed',
-            width: 1,
-            height: 1,
-            display: 'none',
-            overflow: 'visible',
-            'z-index': '1111',
-            'opacity': 0.8
-        });
-
         this.svg = Entry.SVG('globalSvg');
-
         this.width = 0;
         this.left = 0;
         this.top = 0;
+        this._inited = true;
     };
 
     gs.setView = function(view, mode) {
@@ -41,7 +37,9 @@ goog.provide('Entry.GlobalSvg');
         this._mode = mode;
         if (mode !== Entry.Workspace.MODE_VIMBOARD)
             view.set({visible:false});
+
         this.draw();
+        this.show();
         this.align();
         this.position();
         return true;
@@ -58,9 +56,8 @@ goog.provide('Entry.GlobalSvg');
             {'opacity':1}
         );
 
-        //TODO selectAll function replace
         this.svg.appendChild(this.svgGroup);
-        this.show();
+        //TODO selectAll function replace
         if (isVimMode) {
             var svg = $(this.svgGroup);
             svg.find('g').css({filter: 'none'});
@@ -103,9 +100,15 @@ goog.provide('Entry.GlobalSvg');
         this.svgGroup.attr({transform: transform});
     };
 
-    gs.show = function() {this.svgDom.css('display', 'block');};
+    gs.show = function() {
+        this._container.removeClass('entryRemove');
+        this.svgDom.css('display', 'block');
+    };
 
-    gs.hide = function() {this.svgDom.css('display', 'none');};
+    gs.hide = function() {
+        this._container.addClass('entryRemove');
+        this.svgDom.css('display', 'none');
+    };
 
     gs.position = function() {
         var that = this;
