@@ -794,6 +794,22 @@ Entry.block.sensorBoard_led = function(a, b) {
   Entry.hw.setDigitalPortValue(b.getField("PORT"), b.getNumberField("OPERATOR"));
   return b.callReturn();
 };
+Entry.block.arduino_download_connector = {skeleton:"basic_button", color:"#eee", template:"%1", params:[{type:"Text", text:"\uc5f0\uacb0 \ud504\ub85c\uadf8\ub7a8 \ub2e4\uc6b4\ub85c\ub4dc", color:"#333", align:"center"}], func:function() {
+}, events:{mousedown:[function() {
+  console.log("download connector");
+}]}};
+Entry.block.arduino_download_source = {skeleton:"basic_button", color:"#eee", template:"%1", params:[{type:"Text", text:"\uc5d4\ud2b8\ub9ac \uc544\ub450\uc774\ub178 \uc18c\uc2a4", color:"#333", align:"center"}], func:function() {
+}, events:{mousedown:[function() {
+  console.log("download source");
+}]}};
+Entry.block.arduino_connected = {skeleton:"basic_button", color:"#eee", template:"%1", params:[{type:"Text", text:"\uc5f0\uacb0 \ub428", color:"#333", align:"center"}], func:function() {
+}, events:{mousedown:[function() {
+  console.log("download source");
+}]}};
+Entry.block.arduino_reconnect = {skeleton:"basic_button", color:"#eee", template:"%1", params:[{type:"Text", text:"\ub2e4\uc2dc \uc5f0\uacb0\ud558\uae30", color:"#333", align:"center"}], func:function() {
+}, events:{mousedown:[function() {
+  console.log("download source");
+}]}};
 Entry.Bitbrick = {SENSOR_MAP:{1:"light", 2:"IR", 3:"touch", 4:"potentiometer", 5:"MIC", 11:"USER INPUT", 20:"LED", 19:"SERVO", 18:"DC"}, PORT_MAP:{buzzer:2, 5:4, 6:6, 7:8, 8:10, LEDR:12, LEDG:14, LEDB:16}, sensorList:function() {
   for (var a = [], b = Entry.hw.portData, c = 1;5 > c;c++) {
     var d = b[c];
