@@ -676,12 +676,16 @@ Entry.BlockView.DRAG_RADIUS = 5;
                 this.svgGroup.cloneNode(true),
                 { opacity: 0.5 }
             );
+            this.getBoard().svgGroup.appendChild(this._shadow);
         }
         return this._shadow;
     };
 
     p.destroyShadow = function() {
-        delete this._shadow;
+        if (this._shadow) {
+            this._shadow.remove();
+            delete this._shadow;
+        }
     };
 
     p._updateMagnet = function() {
@@ -716,10 +720,14 @@ Entry.BlockView.DRAG_RADIUS = 5;
         var block = blockView.block;
         if (magneting) {
             var shadow = this._board.dragBlock.getShadow();
+            var pos = this.getAbsoluteCoordinate();
+            var magnet = this.magnet.next;
+            var transform  = 'translate(' + (pos.x + magnet.x) + ',' + (pos.y + magnet.y) + ')';
             $(shadow).attr({
-                transform: 'translate(0,' + (this.height + 1) + ')'
+                transform: transform,
+                display: 'block'
             });
-            this.svgGroup.appendChild(shadow);
+
             this._clonedShadow = shadow;
 
             if (blockView.background) {
@@ -736,7 +744,7 @@ Entry.BlockView.DRAG_RADIUS = 5;
             });
         } else {
             if (this._clonedShadow) {
-                this._clonedShadow.remove();
+                this._clonedShadow.attr({display: 'none'});
                 delete this._clonedShadow;
             }
 

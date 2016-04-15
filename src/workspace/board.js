@@ -136,7 +136,6 @@ Entry.Board = function(option) {
         if (block) {
             block.set({magneting: true});
             block.dominate();
-            this.dragBlock.dominate();
         }
     };
 

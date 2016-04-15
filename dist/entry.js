@@ -14002,11 +14002,11 @@ Entry.BlockView.DRAG_RADIUS = 5;
     this._schemaChangeEvent && this._schemaChangeEvent.destroy();
   };
   a.getShadow = function() {
-    this._shadow || (this._shadow = Entry.SVG.createElement(this.svgGroup.cloneNode(!0), {opacity:.5}));
+    this._shadow || (this._shadow = Entry.SVG.createElement(this.svgGroup.cloneNode(!0), {opacity:.5}), this.getBoard().svgGroup.appendChild(this._shadow));
     return this._shadow;
   };
   a.destroyShadow = function() {
-    delete this._shadow;
+    this._shadow && (this._shadow.remove(), delete this._shadow);
   };
   a._updateMagnet = function() {
     if (this._skeleton.magnets) {
@@ -14019,8 +14019,22 @@ Entry.BlockView.DRAG_RADIUS = 5;
   a._updateBG = function() {
     if (this._board.dragBlock && this._board.dragBlock.dragInstance) {
       var b = this.svgGroup;
-      this.magnet.next ? (this.magneting ? (b = this._board.dragBlock.getShadow(), $(b).attr({transform:"translate(0," + (this.height + 1) + ")"}), this.svgGroup.appendChild(b), this._clonedShadow = b, this.background && (this.background.remove(), this.nextBackground.remove(), delete this.background, delete this.nextBackground), b = this._board.dragBlock.getBelowHeight() + this.offsetY, this.originalHeight = this.offsetY, this.set({offsetY:b})) : (this._clonedShadow && (this._clonedShadow.remove(), 
-      delete this._clonedShadow), b = this.originalHeight, void 0 !== b && (this.background && (this.background.remove(), this.nextBackground.remove(), delete this.background, delete this.nextBackground), this.set({offsetY:b}), delete this.originalHeight)), (b = this.block.thread.changeEvent) && b.notify()) : this.magneting ? (b.attr({filter:"url(#entryBlockHighlightFilter_" + this.getBoard().suffix + ")"}), b.addClass("outputHighlight")) : (b.removeClass("outputHighlight"), b.removeAttr("filter"));
+      if (this.magnet.next) {
+        if (this.magneting) {
+          var b = this._board.dragBlock.getShadow(), a = this.getAbsoluteCoordinate(), d = this.magnet.next, a = "translate(" + (a.x + d.x) + "," + (a.y + d.y) + ")";
+          $(b).attr({transform:a, display:"block"});
+          this._clonedShadow = b;
+          this.background && (this.background.remove(), this.nextBackground.remove(), delete this.background, delete this.nextBackground);
+          b = this._board.dragBlock.getBelowHeight() + this.offsetY;
+          this.originalHeight = this.offsetY;
+          this.set({offsetY:b});
+        } else {
+          this._clonedShadow && (this._clonedShadow.attr({display:"none"}), delete this._clonedShadow), b = this.originalHeight, void 0 !== b && (this.background && (this.background.remove(), this.nextBackground.remove(), delete this.background, delete this.nextBackground), this.set({offsetY:b}), delete this.originalHeight);
+        }
+        (b = this.block.thread.changeEvent) && b.notify();
+      } else {
+        this.magneting ? (b.attr({filter:"url(#entryBlockHighlightFilter_" + this.getBoard().suffix + ")"}), b.addClass("outputHighlight")) : (b.removeClass("outputHighlight"), b.removeAttr("filter"));
+      }
     }
   };
   a.addDragging = function() {
@@ -15234,16 +15248,15 @@ Entry.FieldStatement = function(a, b, c) {
   a._updateBG = function() {
     if (this._board.dragBlock && this._board.dragBlock.dragInstance) {
       if (this.magneting) {
-        var b = this._board.dragBlock.getShadow();
-        $(b).attr({transform:"translate(0,0)"});
-        this.svgGroup.appendChild(b);
+        var b = this._board.dragBlock.getShadow(), a = this.requestAbsoluteCoordinate(), a = "translate(" + a.x + "," + a.y + ")";
+        $(b).attr({transform:a, display:"block"});
         this._clonedShadow = b;
         this.background && (this.background.remove(), this.nextBackground.remove(), delete this.background, delete this.nextBackground);
         b = this._board.dragBlock.getBelowHeight();
         this.statementSvgGroup.attr({transform:"translate(0," + b + ")"});
         this.set({height:this.height + b});
       } else {
-        this._clonedShadow && (this._clonedShadow.remove(), delete this._clonedShadow), b = this.originalHeight, void 0 !== b && (this.background && (this.background.remove(), this.nextBackground.remove(), delete this.background, delete this.nextBackground), delete this.originalHeight), this.statementSvgGroup.attr({transform:"translate(0,0)"}), this.calcHeight();
+        this._clonedShadow && (this._clonedShadow.attr({display:"none"}), delete this._clonedShadow), b = this.originalHeight, void 0 !== b && (this.background && (this.background.remove(), this.nextBackground.remove(), delete this.background, delete this.nextBackground), delete this.originalHeight), this.statementSvgGroup.attr({transform:"translate(0,0)"}), this.calcHeight();
       }
       (b = this.block.thread.changeEvent) && b.notify();
     }
@@ -15689,7 +15702,7 @@ Entry.Board = function(a) {
       this.magnetedBlockView.set({magneting:!1});
     }
     this.set({magnetedBlockView:b});
-    b && (b.set({magneting:!0}), b.dominate(), this.dragBlock.dominate());
+    b && (b.set({magneting:!0}), b.dominate());
   };
   a.getCode = function() {
     return this.code;
@@ -15836,8 +15849,8 @@ Entry.Board = function(a) {
     var b = this.code;
     if (b && this.dragBlock) {
       b = this._getCodeBlocks(b, this.dragBlock._targetType);
-      b.sort(function(b, a) {
-        return b.point - a.point;
+      b.sort(function(a, b) {
+        return a.point - b.point;
       });
       b.unshift({point:-Number.MAX_VALUE, blocks:[]});
       for (var a = 1;a < b.length;a++) {
@@ -15853,9 +15866,9 @@ Entry.Board = function(a) {
       this._magnetMap = b;
     }
   };
-  a._getCodeBlocks = function(b, a) {
-    var d = b.getThreads(), e = [], f = 0, g;
-    switch(a) {
+  a._getCodeBlocks = function(a, c) {
+    var d = a.getThreads(), e = [], f = 0, g;
+    switch(c) {
       case "nextMagnet":
         g = this._getNextMagnets;
         break;
@@ -15872,35 +15885,35 @@ Entry.Board = function(a) {
         return [];
     }
     for (var h = 0;h < d.length;h++) {
-      e = e.concat(g.call(this, d[h], f, null, a)), f++;
+      e = e.concat(g.call(this, d[h], f, null, c)), f++;
     }
     return e;
   };
-  a._getNextMagnets = function(b, a, d, e) {
-    var f = b.getBlocks(), g = [], h = [];
+  a._getNextMagnets = function(a, c, d, e) {
+    var f = a.getBlocks(), g = [], h = [];
     d || (d = {x:0, y:0});
     var k = d.x;
     d = d.y;
     for (var m = 0;m < f.length;m++) {
       var n = f[m], l = n.view;
-      l.zIndex = a;
+      l.zIndex = c;
       if (l.dragInstance) {
         break;
       }
       d += l.y;
       k += l.x;
-      b = d + 1;
-      l.magnet.next && (b += l.magnet.next.y, h.push({point:d, endPoint:b, startBlock:n, blocks:[]}), h.push({point:b, blocks:[]}), l.absX = k);
-      n.statements && (a += .01);
+      a = d + 1;
+      l.magnet.next && (a += l.magnet.next.y, h.push({point:d, endPoint:a, startBlock:n, blocks:[]}), h.push({point:a, blocks:[]}), l.absX = k);
+      n.statements && (c += .01);
       for (var q = 0;q < n.statements.length;q++) {
-        b = n.statements[q];
+        a = n.statements[q];
         var r = n.view._statements[q];
-        r.zIndex = a;
+        r.zIndex = c;
         r.absX = k + r.x;
         h.push({point:r.y + d - 30, endPoint:r.y + d + r.height, startBlock:r, blocks:[]});
         h.push({point:r.y + d + r.height, blocks:[]});
-        a += .01;
-        g = g.concat(this._getNextMagnets(b, a, {x:r.x + k, y:r.y + d}, e));
+        c += .01;
+        g = g.concat(this._getNextMagnets(a, c, {x:r.x + k, y:r.y + d}, e));
       }
       l.magnet.next && (d += l.magnet.next.y, k += l.magnet.next.x);
     }
