@@ -1156,11 +1156,11 @@ Blockly.Blocks.bitbrick_turn_off_all_motors = {init:function() {
 }};
 Entry.block.bitbrick_turn_off_all_motors = function(a, b) {
   var c = Entry.hw.sendQueue, d = Entry.Bitbrick;
-  d.servoList().map(function(b) {
-    c[b[1]] = 0;
+  d.servoList().map(function(a) {
+    c[a[1]] = 0;
   });
-  d.dcList().map(function(b) {
-    c[b[1]] = 128;
+  d.dcList().map(function(a) {
+    c[a[1]] = 128;
   });
   return b.callReturn();
 };
@@ -1367,8 +1367,8 @@ Entry.block.brush_erase_all = function(a, b) {
     c.moveTo(a.getX(), -1 * a.getY());
   }
   c = a.parent.getStampEntities();
-  c.map(function(b) {
-    b.removeClone();
+  c.map(function(a) {
+    a.removeClone();
   });
   c = null;
   return b.callReturn();
@@ -2096,23 +2096,23 @@ Entry.block.stop_object = function(a, b) {
   var c = b.getField("TARGET", b), d = Entry.container;
   switch(c) {
     case "all":
-      d.mapEntityIncludeCloneOnScene(function(b) {
-        b.clearScript();
+      d.mapEntityIncludeCloneOnScene(function(a) {
+        a.clearScript();
       });
       break;
     case "thisObject":
       a.clearScript();
       c = a.parent.clonedEntities;
-      c.map(function(b) {
-        b.clearScript();
+      c.map(function(a) {
+        a.clearScript();
       });
       break;
     case "thisOnly":
       a.clearScript();
       break;
     case "otherThread":
-      return a.clearScript(), c = a.parent.clonedEntities, c.map(function(b) {
-        b.clearScript();
+      return a.clearScript(), c = a.parent.clonedEntities, c.map(function(a) {
+        a.clearScript();
       }), b.callReturn();
   }
   return null;
@@ -2136,8 +2136,8 @@ Blockly.Blocks.remove_all_clones = {init:function() {
 }};
 Entry.block.remove_all_clones = function(a, b) {
   var c = a.parent.getClonedEntities();
-  c.map(function(b) {
-    b.removeClone();
+  c.map(function(a) {
+    a.removeClone();
   });
   c = null;
   return b.callReturn();
@@ -3579,14 +3579,19 @@ Entry.block.locate_xy_time = function(a, b) {
   if (!b.isStart) {
     var c;
     c = b.getNumberValue("VALUE1", b);
-    var d = b.getNumberValue("VALUE2", b) - a.getX(), e = b.getNumberValue("VALUE3", b) - a.getY();
     b.isStart = !0;
     b.frameCount = Math.floor(c * Entry.FPS);
-    b.dX = d / b.frameCount;
-    b.dY = e / b.frameCount;
   }
   if (0 != b.frameCount) {
-    return a.setX(a.getX() + b.dX), a.setY(a.getY() + b.dY), b.frameCount--, a.brush && !a.brush.stop && a.brush.lineTo(a.getX(), -1 * a.getY()), b;
+    c = b.getNumberValue("VALUE2", b) - a.getX();
+    var d = b.getNumberValue("VALUE3", b) - a.getY();
+    c /= b.frameCount;
+    d /= b.frameCount;
+    a.setX(a.getX() + c);
+    a.setY(a.getY() + d);
+    b.frameCount--;
+    a.brush && !a.brush.stop && a.brush.lineTo(a.getX(), -1 * a.getY());
+    return b;
   }
   delete b.isStart;
   delete b.frameCount;
@@ -4737,7 +4742,7 @@ Entry.block.sound_something_second_wait = function(a, b) {
       d.stop();
       b.playState = 0;
     }, 1E3 * c);
-    d.addEventListener("complete", function(b) {
+    d.addEventListener("complete", function(a) {
     });
   }
   return b;
@@ -4883,7 +4888,7 @@ Entry.block.sound_something_second_wait_with_block = function(a, b) {
       d.stop();
       b.playState = 0;
     }, 1E3 * c);
-    d.addEventListener("complete", function(b) {
+    d.addEventListener("complete", function(a) {
     });
   }
   return b;
@@ -5069,10 +5074,10 @@ Entry.block.message_cast_wait = function(a, b) {
     throw Error("value can not be null or undefined");
   }
   var e = [];
-  Entry.container.mapEntityIncludeCloneOnScene(function(b, a) {
-    for (var c = a[0], d = a[1], l = b.parent.script.childNodes, q = 0;q < l.length;q++) {
+  Entry.container.mapEntityIncludeCloneOnScene(function(a, b) {
+    for (var c = b[0], d = b[1], l = a.parent.script.childNodes, q = 0;q < l.length;q++) {
       var n = l[q], m = Entry.Xml.getField("VALUE", n);
-      Entry.Xml.isTypeOf(c, n) && m == d && (m = new Entry.Script(b), m.init(n), e.push(m));
+      Entry.Xml.isTypeOf(c, n) && m == d && (m = new Entry.Script(a), m.init(n), e.push(m));
     }
   }, ["when_message_cast", c]);
   b.runningScript = e;
@@ -5496,37 +5501,37 @@ Entry.Collection = function(a) {
     b.splice.call(this, d, 0, a);
     this._hashMap[a.id] = a;
   };
-  a.has = function(b) {
-    return !!this._hashMap[b];
+  a.has = function(a) {
+    return !!this._hashMap[a];
   };
-  a.get = function(b) {
-    return this._hashMap[b];
+  a.get = function(a) {
+    return this._hashMap[a];
   };
-  a.at = function(b) {
-    return this[b];
+  a.at = function(a) {
+    return this[a];
   };
   a.getAll = function() {
-    for (var b = this.length, a = [], e = 0;e < b;e++) {
-      a.push(this[e]);
+    for (var a = this.length, b = [], e = 0;e < a;e++) {
+      b.push(this[e]);
     }
-    return a;
+    return b;
   };
   a.indexOf = function(a) {
     return b.indexOf.call(this, a);
   };
-  a.find = function(b) {
-    for (var a = [], e, f = 0, g = this.length;f < g;f++) {
+  a.find = function(a) {
+    for (var b = [], e, f = 0, g = this.length;f < g;f++) {
       e = !0;
       var h = this[f], k;
-      for (k in b) {
-        if (b[k] != h[k]) {
+      for (k in a) {
+        if (a[k] != h[k]) {
           e = !1;
           break;
         }
       }
-      e && a.push(h);
+      e && b.push(h);
     }
-    return a;
+    return b;
   };
   a.pop = function() {
     var a = b.pop.call(this);
