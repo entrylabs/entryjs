@@ -3579,14 +3579,19 @@ Entry.block.locate_xy_time = function(a, b) {
   if (!b.isStart) {
     var c;
     c = b.getNumberValue("VALUE1", b);
-    var d = b.getNumberValue("VALUE2", b) - a.getX(), e = b.getNumberValue("VALUE3", b) - a.getY();
     b.isStart = !0;
     b.frameCount = Math.floor(c * Entry.FPS);
-    b.dX = d / b.frameCount;
-    b.dY = e / b.frameCount;
   }
   if (0 != b.frameCount) {
-    return a.setX(a.getX() + b.dX), a.setY(a.getY() + b.dY), b.frameCount--, a.brush && !a.brush.stop && a.brush.lineTo(a.getX(), -1 * a.getY()), b;
+    c = b.getNumberValue("VALUE2", b) - a.getX();
+    var d = b.getNumberValue("VALUE3", b) - a.getY();
+    c /= b.frameCount;
+    d /= b.frameCount;
+    a.setX(a.getX() + c);
+    a.setY(a.getY() + d);
+    b.frameCount--;
+    a.brush && !a.brush.stop && a.brush.lineTo(a.getX(), -1 * a.getY());
+    return b;
   }
   delete b.isStart;
   delete b.frameCount;
