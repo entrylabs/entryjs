@@ -16604,7 +16604,10 @@ Entry.Block.MAGNET_OFFSET = .4;
     }
   };
   a.getBlockType = function() {
-    var a = Entry.skeleton[this._schema.skeleton].magnets({});
+    if (!this.view) {
+      return null;
+    }
+    var a = Entry.skeleton[this._schema.skeleton].magnets(this.view);
     return a.next || a.prev ? "basic" : a.bool || a.string ? "field" : a.output ? "output" : null;
   };
 })(Entry.Block.prototype);
