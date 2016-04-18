@@ -121,9 +121,9 @@ Entry.Albert = {PORT_MAP:{leftWheel:0, rightWheel:0, buzzer:0, leftEye:0, rightE
   a = Entry.Albert;
   a.tempo = 60;
   a.removeAllTimeouts();
-}, monitorTemplate:{imgPath:"hw/albert.png", width:387, height:503, listPorts:{oid:{name:"OID", type:"input", pos:{x:0, y:0}}, buzzer:{name:"\ubd80\uc800", type:"output", pos:{x:0, y:0}}, note:{name:"\ub178\ud2b8", type:"output", pos:{x:0, y:0}}}, ports:{leftProximity:{name:Lang.Blocks.ALBERT_sensor_leftProximity, type:"input", pos:{x:178, y:401}}, rightProximity:{name:Lang.Blocks.ALBERT_sensor_rightProximity, type:"input", pos:{x:66, y:359}}, battery:{name:Lang.Blocks.ALBERT_sensor_battery, type:"input", 
-pos:{x:88, y:368}}, light:{name:Lang.Blocks.ALBERT_sensor_light, type:"input", pos:{x:127, y:391}}, leftWheel:{name:"\uc67c\ucabd \ubc14\ud034", type:"output", pos:{x:299, y:406}}, rightWheel:{name:"\uc624\ub978\ucabd \ubc14\ud034", type:"output", pos:{x:22, y:325}}, leftEye:{name:" \uc67c\ucabd \ub208", type:"output", pos:{x:260, y:26}}, rightEye:{name:" \uc624\ub978\ucabd \ub208", type:"output", pos:{x:164, y:13}}, bodyLed:{name:"\ubab8\ud1b5 \ubd88\ube5b", type:"output", pos:{x:367, y:308}}, frontLed:{name:"\uc55e\ucabd \ubd88\ube5b", 
-type:"output", pos:{x:117, y:410}}}, mode:"both"}, tempo:60, timeouts:[], removeTimeout:function(a) {
+}, monitorTemplate:{imgPath:"hw/albert.png", width:387, height:503, listPorts:{oid:{name:"OID", type:"input", pos:{x:0, y:0}}, buzzer:{name:Lang.Hw.buzzer, type:"output", pos:{x:0, y:0}}, note:{name:Lang.Hw.note, type:"output", pos:{x:0, y:0}}}, ports:{leftProximity:{name:Lang.Blocks.ALBERT_sensor_leftProximity, type:"input", pos:{x:178, y:401}}, rightProximity:{name:Lang.Blocks.ALBERT_sensor_rightProximity, type:"input", pos:{x:66, y:359}}, battery:{name:Lang.Blocks.ALBERT_sensor_battery, type:"input", 
+pos:{x:88, y:368}}, light:{name:Lang.Blocks.ALBERT_sensor_light, type:"input", pos:{x:127, y:391}}, leftWheel:{name:Lang.Hw.leftWheel, type:"output", pos:{x:299, y:406}}, rightWheel:{name:Lang.Hw.rightWheel, type:"output", pos:{x:22, y:325}}, leftEye:{name:Lang.Hw.leftEye, type:"output", pos:{x:260, y:26}}, rightEye:{name:Lang.Hw.rightEye, type:"output", pos:{x:164, y:13}}, bodyLed:{name:Lang.Hw.body + " " + Lang.Hw.led, type:"output", pos:{x:367, y:308}}, frontLed:{name:Lang.Hw.front + " " + Lang.Hw.led, 
+pos:{x:117, y:410}}}, mode:"both"}, tempo:60, timeouts:[], removeTimeout:function(a) {
   clearTimeout(a);
   var b = this.timeouts;
   a = b.indexOf(a);
@@ -711,16 +711,19 @@ Entry.block.albert_set_wheels_to = function(a, b) {
   return b.callReturn();
 };
 Entry.Arduino = {name:"arduino", setZero:function() {
+  Entry.hw.sendQueue.readablePorts = [];
   for (var a = 0;20 > a;a++) {
-    Entry.hw.sendQueue[a] = 0;
+    Entry.hw.sendQueue[a] = 0, Entry.hw.sendQueue.readablePorts.push(a);
   }
   Entry.hw.update();
-}, monitorTemplate:{imgPath:"hw/arduino.png", width:268, height:270, listPorts:{2:{name:"2\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, 3:{name:"3\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, 4:{name:"4\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, 5:{name:"5\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, 6:{name:"6\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, 7:{name:"7\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, 8:{name:"8\ubc88 \ud3ec\ud2b8", type:"input", 
-pos:{x:0, y:0}}, 9:{name:"9\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, 10:{name:"10\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, 11:{name:"11\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, 12:{name:"12\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, 13:{name:"13\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, a0:{name:"A0\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, a1:{name:"A1\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, a2:{name:"A2\ubc88 \ud3ec\ud2b8", 
-type:"input", pos:{x:0, y:0}}, a3:{name:"A3\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, a4:{name:"A4\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, a5:{name:"A5\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}}, mode:"both"}};
-Entry.SensorBoard = {name:"sensorBoard", setZero:Entry.Arduino.setZero, monitorTemplate:{imgPath:"hw/sensorBoard.png", width:268, height:270, listPorts:{D0:{name:"0\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, D1:{name:"1\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, D6:{name:"2\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, D7:{name:"3\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, D12:{name:"4\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:0, y:0}}, D13:{name:"5\ubc88 \ud3ec\ud2b8", 
-type:"input", pos:{x:0, y:0}}}, ports:{MIC:{name:"\ub9c8\uc774\ud06c", type:"input", pos:{x:130, y:245}}, CDS1:{name:"\ube5b \uc13c\uc11c1", type:"input", pos:{x:80, y:216}}, CDS2:{name:"\ube5b \uc13c\uc11c2", type:"input", pos:{x:190, y:215}}, SLIDE:{name:"\uc2ac\ub77c\uc774\ub4dc", type:"input", pos:{x:139, y:22}}, TEMP:{name:"\uc628\ub3c4", type:"input", pos:{x:207, y:251}}, SW_R:{name:"\uc2a4\uc704\uce58 R", type:"input", pos:{x:180, y:120}}, SW_L:{name:"\uc2a4\uc704\uce58 L", type:"input", pos:{x:90, 
-y:143}}, SW_D:{name:"\uc2a4\uc704\uce58 D", type:"input", pos:{x:120, y:185}}, SW_U:{name:"\uc2a4\uc704\uce58 U", type:"input", pos:{x:130, y:73}}}, mode:"both"}};
+}, monitorTemplate:{imgPath:"hw/arduino.png", width:268, height:270, listPorts:{2:{name:Lang.Hw.port_en + " 2 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, 3:{name:Lang.Hw.port_en + " 3 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, 4:{name:Lang.Hw.port_en + " 4 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, 5:{name:Lang.Hw.port_en + " 5 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, 6:{name:Lang.Hw.port_en + " 6 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, 7:{name:Lang.Hw.port_en + 
+" 7 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, 8:{name:Lang.Hw.port_en + " 8 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, 9:{name:Lang.Hw.port_en + " 9 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, 10:{name:Lang.Hw.port_en + " 10 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, 11:{name:Lang.Hw.port_en + " 11 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, 12:{name:Lang.Hw.port_en + " 12 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, 13:{name:Lang.Hw.port_en + " 13 " + 
+Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, a0:{name:Lang.Hw.port_en + " A0 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, a1:{name:Lang.Hw.port_en + " A1 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, a2:{name:Lang.Hw.port_en + " A2 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, a3:{name:Lang.Hw.port_en + " A3 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, a4:{name:Lang.Hw.port_en + " A4 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, a5:{name:Lang.Hw.port_en + " A5 " + 
+Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}}, mode:"both"}};
+Entry.SensorBoard = {name:"sensorBoard", setZero:Entry.Arduino.setZero, monitorTemplate:{imgPath:"hw/sensorBoard.png", width:268, height:270, listPorts:{2:{name:Lang.Hw.port_en + " 2 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, 3:{name:Lang.Hw.port_en + " 3 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, 4:{name:Lang.Hw.port_en + " 4 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, 5:{name:Lang.Hw.port_en + " 5 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, a3:{name:Lang.Hw.port_en + 
+" A3 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, a4:{name:Lang.Hw.port_en + " A4 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, a5:{name:Lang.Hw.port_en + " A5 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, 6:{name:Lang.Hw.port_en + " 6 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, 7:{name:Lang.Hw.port_en + " 7 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, 12:{name:Lang.Hw.port_en + " 12 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, 13:{name:Lang.Hw.port_en + " 13 " + 
+Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}}, ports:{a0:{name:Lang.Hw.port_en + " A0 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, a1:{name:Lang.Hw.port_en + " A1 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, a2:{name:Lang.Hw.port_en + " A2 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, 0:{name:Lang.Hw.light + " " + Lang.Hw.sensor + "2", type:"input", pos:{x:190, y:215}}, 1:{name:Lang.Hw.temp, type:"input", pos:{x:207, y:251}}, 8:{name:Lang.Hw.right_ko + Lang.Hw.switch_ + Lang.Hw.right_en, 
+type:"input", pos:{x:180, y:120}}, 9:{name:Lang.Hw.left_ko + Lang.Hw.switch_ + Lang.Hw.left_en, type:"input", pos:{x:90, y:143}}, 10:{name:Lang.Hw.up_ko + Lang.Hw.switch_ + Lang.Hw.up_en, type:"input", pos:{x:130, y:73}}, 11:{name:Lang.Hw.down_ko + Lang.Hw.switch_ + Lang.Hw.down_en, type:"input", pos:{x:120, y:185}}}, mode:"both"}};
 Entry.CODEino = {name:"CODEino", setZero:Entry.Arduino.setZero, monitorTemplate:Entry.Arduino.monitorTemplate};
 Blockly.Blocks.arduino_text = {init:function() {
   this.setColour("#00979D");
@@ -842,8 +845,8 @@ Blockly.Blocks.arduino_toggle_led = {init:function() {
   this.setNextStatement(!0);
 }};
 Entry.block.arduino_toggle_led = function(a, b) {
-  var c = b.getNumberValue("VALUE"), d = "on" == b.getField("OPERATOR") ? 255 : 0;
-  Entry.hw.setDigitalPortValue(c, d);
+  var c = b.getNumberValue("VALUE"), d = b.getField("OPERATOR");
+  Entry.hw.setDigitalPortValue(c, "on" == d ? 255 : 0);
   return b.callReturn();
 };
 Blockly.Blocks.arduino_toggle_pwm = {init:function() {
@@ -1044,8 +1047,8 @@ Entry.Bitbrick = {SENSOR_MAP:{1:"light", 2:"IR", 3:"touch", 4:"potentiometer", 5
     a[b] = 0;
   }
   Entry.hw.update();
-}, name:"bitbrick", servoMaxValue:181, servoMinValue:1, dcMaxValue:100, dcMinValue:-100, monitorTemplate:{imgPath:"hw/bitbrick.gif", width:133, height:153, ports:{1:{name:"1\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:10, y:56}}, 2:{name:"2\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:31, y:76}}, 3:{name:"3\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:31, y:96}}, 4:{name:"4\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:10, y:116}}, A:{name:"A \ud3ec\ud2b8", type:"input", pos:{x:123, y:56}}, B:{name:"B \ud3ec\ud2b8", 
-type:"input", pos:{x:104, y:76}}, C:{name:"C \ud3ec\ud2b8", type:"input", pos:{x:104, y:96}}, D:{name:"D \ud3ec\ud2b8", type:"input", pos:{x:123, y:116}}}}};
+}, name:"bitbrick", servoMaxValue:181, servoMinValue:1, dcMaxValue:100, dcMinValue:-100, monitorTemplate:{imgPath:"hw/bitbrick.gif", width:133, height:153, listPorts:{1:{name:Lang.Hw.port_en + " 1 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, 2:{name:Lang.Hw.port_en + " 2 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, 3:{name:Lang.Hw.port_en + " 3 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, 4:{name:Lang.Hw.port_en + " 4 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, A:{name:Lang.Hw.port_en + 
+" A " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, B:{name:Lang.Hw.port_en + " B " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, C:{name:Lang.Hw.port_en + " C " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, D:{name:Lang.Hw.port_en + " D " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}}, mode:"both"}};
 Blockly.Blocks.bitbrick_sensor_value = {init:function() {
   this.setColour("#00979D");
   this.appendDummyInput().appendField("").appendField(new Blockly.FieldDropdownDynamic(Entry.Bitbrick.sensorList), "PORT").appendField(" \uac12");
@@ -1156,11 +1159,11 @@ Blockly.Blocks.bitbrick_turn_off_all_motors = {init:function() {
 }};
 Entry.block.bitbrick_turn_off_all_motors = function(a, b) {
   var c = Entry.hw.sendQueue, d = Entry.Bitbrick;
-  d.servoList().map(function(a) {
-    c[a[1]] = 0;
+  d.servoList().map(function(b) {
+    c[b[1]] = 0;
   });
-  d.dcList().map(function(a) {
-    c[a[1]] = 128;
+  d.dcList().map(function(b) {
+    c[b[1]] = 128;
   });
   return b.callReturn();
 };
@@ -1367,8 +1370,8 @@ Entry.block.brush_erase_all = function(a, b) {
     c.moveTo(a.getX(), -1 * a.getY());
   }
   c = a.parent.getStampEntities();
-  c.map(function(a) {
-    a.removeClone();
+  c.map(function(b) {
+    b.removeClone();
   });
   c = null;
   return b.callReturn();
@@ -1921,10 +1924,10 @@ Entry.block.wait_second = function(a, b) {
   }
   b.isStart = !0;
   b.timeFlag = 1;
-  var c = b.getNumberValue("SECOND", b), c = 60 / (Entry.FPS || 60) * c * 1E3;
+  var c = b.getNumberValue("SECOND", b);
   setTimeout(function() {
     b.timeFlag = 0;
-  }, c);
+  }, 60 / (Entry.FPS || 60) * c * 1E3);
   return b;
 };
 Blockly.Blocks.repeat_basic = {init:function() {
@@ -2096,23 +2099,23 @@ Entry.block.stop_object = function(a, b) {
   var c = b.getField("TARGET", b), d = Entry.container;
   switch(c) {
     case "all":
-      d.mapEntityIncludeCloneOnScene(function(a) {
-        a.clearScript();
+      d.mapEntityIncludeCloneOnScene(function(b) {
+        b.clearScript();
       });
       break;
     case "thisObject":
       a.clearScript();
       c = a.parent.clonedEntities;
-      c.map(function(a) {
-        a.clearScript();
+      c.map(function(b) {
+        b.clearScript();
       });
       break;
     case "thisOnly":
       a.clearScript();
       break;
     case "otherThread":
-      return a.clearScript(), c = a.parent.clonedEntities, c.map(function(a) {
-        a.clearScript();
+      return a.clearScript(), c = a.parent.clonedEntities, c.map(function(b) {
+        b.clearScript();
       }), b.callReturn();
   }
   return null;
@@ -2136,8 +2139,8 @@ Blockly.Blocks.remove_all_clones = {init:function() {
 }};
 Entry.block.remove_all_clones = function(a, b) {
   var c = a.parent.getClonedEntities();
-  c.map(function(a) {
-    a.removeClone();
+  c.map(function(b) {
+    b.removeClone();
   });
   c = null;
   return b.callReturn();
@@ -2290,9 +2293,9 @@ Entry.Hamster = {PORT_MAP:{leftWheel:0, rightWheel:0, buzzer:0, outputA:0, outpu
   this.lineTracerModeId = this.lineTracerModeId + 1 & 255;
   a.lineTracerMode = b;
   a.lineTracerModeId = this.lineTracerModeId;
-}, name:"hamster", monitorTemplate:{imgPath:"hw/hamster.png", width:256, height:256, listPorts:{temperature:{name:Lang.Blocks.HAMSTER_sensor_temperature, type:"input", pos:{x:0, y:0}}, accelerationX:{name:Lang.Blocks.HAMSTER_sensor_accelerationX, type:"input", pos:{x:0, y:0}}, accelerationY:{name:Lang.Blocks.HAMSTER_sensor_accelerationY, type:"input", pos:{x:0, y:0}}, accelerationZ:{name:Lang.Blocks.HAMSTER_sensor_accelerationZ, type:"input", pos:{x:0, y:0}}, buzzer:{name:"\ubd80\uc800 1", type:"output", 
-pos:{x:0, y:0}}, "note ":{name:"\ubd80\uc800 2", type:"output", pos:{x:0, y:0}}, outputA:{name:"outputA", type:"output", pos:{x:0, y:0}}, outputB:{name:"outputB", type:"output", pos:{x:0, y:0}}}, ports:{leftProximity:{name:Lang.Blocks.HAMSTER_sensor_leftProximity, type:"input", pos:{x:122, y:156}}, rightProximity:{name:Lang.Blocks.HAMSTER_sensor_rightProximity, type:"input", pos:{x:10, y:108}}, leftFloor:{name:Lang.Blocks.HAMSTER_sensor_leftFloor, type:"input", pos:{x:100, y:234}}, rightFloor:{name:Lang.Blocks.HAMSTER_sensor_rightFloor, 
-type:"input", pos:{x:13, y:180}}, lightsensor:{name:"\ube5b\uc13c\uc11c", type:"input", pos:{x:56, y:189}}, leftWheel:{name:"\uc67c\ucabd \ubc14\ud034", type:"output", pos:{x:209, y:115}}, rightWheel:{name:"\uc624\ub978\ucabd \ubc14\ud034", type:"output", pos:{x:98, y:30}}, leftLed:{name:"\uc67c\ucabd LED", type:"output", pos:{x:87, y:210}}, rightLed:{name:"\uc624\ub978\ucabd LED", type:"output", pos:{x:24, y:168}}}, mode:"both"}};
+}, name:"hamster", monitorTemplate:{imgPath:"hw/hamster.png", width:256, height:256, listPorts:{temperature:{name:Lang.Blocks.HAMSTER_sensor_temperature, type:"input", pos:{x:0, y:0}}, accelerationX:{name:Lang.Blocks.HAMSTER_sensor_accelerationX, type:"input", pos:{x:0, y:0}}, accelerationY:{name:Lang.Blocks.HAMSTER_sensor_accelerationY, type:"input", pos:{x:0, y:0}}, accelerationZ:{name:Lang.Blocks.HAMSTER_sensor_accelerationZ, type:"input", pos:{x:0, y:0}}, buzzer:{name:Lang.Hw.buzzer, type:"output", 
+pos:{x:0, y:0}}, note:{name:Lang.Hw.buzzer + "2", type:"output", pos:{x:0, y:0}}, outputA:{name:Lang.Hw.output + "A", type:"output", pos:{x:0, y:0}}, outputB:{name:Lang.Hw.output + "B", type:"output", pos:{x:0, y:0}}}, ports:{leftProximity:{name:Lang.Blocks.HAMSTER_sensor_leftProximity, type:"input", pos:{x:122, y:156}}, rightProximity:{name:Lang.Blocks.HAMSTER_sensor_rightProximity, type:"input", pos:{x:10, y:108}}, leftFloor:{name:Lang.Blocks.HAMSTER_sensor_leftFloor, type:"input", pos:{x:100, 
+y:234}}, rightFloor:{name:Lang.Blocks.HAMSTER_sensor_rightFloor, type:"input", pos:{x:13, y:180}}, lightsensor:{name:Lang.Hw.light + Lang.Hw.sensor, type:"input", pos:{x:56, y:189}}, leftWheel:{name:Lang.Hw.leftWheel, type:"output", pos:{x:209, y:115}}, rightWheel:{name:Lang.Hw.rightWheel, type:"output", pos:{x:98, y:30}}, leftLed:{name:Lang.Hw.left + " " + Lang.Hw.led, type:"output", pos:{x:87, y:210}}, rightLed:{name:Lang.Hw.right + " " + Lang.Hw.led, type:"output", pos:{x:24, y:168}}}, mode:"both"}};
 Blockly.Blocks.hamster_hand_found = {init:function() {
   this.setColour("#00979D");
   this.appendDummyInput().appendField(Lang.Blocks.HAMSTER_hand_found);
@@ -4055,8 +4058,8 @@ Entry.Neobot = {name:"neobot", PORT_MAP:{1:0, 2:0, 3:0, SERVO1:0, SERVO2:0, SERV
     Entry.hw.sendQueue[a] = Entry.Neobot.PORT_MAP[a];
   }
   Entry.hw.update();
-}, name:"neobot", monitorTemplate:{imgPath:"hw/neobot.png", width:268, height:270, ports:{1:{name:"1\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:78, y:9}}, 2:{name:"2\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:115, y:9}}, 3:{name:"3\ubc88 \ud3ec\ud2b8", type:"input", pos:{x:153, y:9}}, LMOT:{name:"\uc67c\ucabd \ubaa8\ud130", type:"output", pos:{x:78, y:259}}, RMOT:{name:"\uc624\ub978\ucabd \ubaa8\ud130", type:"output", pos:{x:191, y:259}}, note:{name:"\ubd80\uc800", type:"output", pos:{x:98, y:184}}, 
-SERVO1:{name:"SERVO \ubaa8\ud130 1", type:"output", pos:{x:115, y:259}}, SERVO2:{name:"SERVO \ubaa8\ud130 2", type:"output", pos:{x:191, y:9}}}}};
+}, name:"neobot", monitorTemplate:{imgPath:"hw/neobot.png", width:268, height:270, ports:{1:{name:Lang.Hw.port_en + " 1 " + Lang.Hw.port_ko, type:"input", pos:{x:78, y:9}}, 2:{name:Lang.Hw.port_en + " 2 " + Lang.Hw.port_ko, type:"input", pos:{x:115, y:9}}, 3:{name:Lang.Hw.port_en + " 3 " + Lang.Hw.port_ko, type:"input", pos:{x:153, y:9}}, LMOT:{name:Lang.Hw.left + " " + Lang.Hw.motor, type:"output", pos:{x:78, y:259}}, RMOT:{name:Lang.Hw.right + " " + Lang.Hw.motor, type:"output", pos:{x:191, y:259}}, 
+note:{name:Lang.Hw.buzzer, type:"output", pos:{x:98, y:184}}, SERVO1:{name:Lang.Hw.sub + " " + Lang.Hw.motor + " 1", type:"output", pos:{x:115, y:259}}, SERVO2:{name:Lang.Hw.sub + " " + Lang.Hw.motor + " 2", type:"output", pos:{x:191, y:9}}}}};
 Blockly.Blocks.neobot_sensor_value = {init:function() {
   this.setColour("#00979D");
   this.appendDummyInput().appendField("").appendField(new Blockly.FieldDropdown([["1\ubc88 \ud3ec\ud2b8", "1"], ["2\ubc88 \ud3ec\ud2b8", "2"], ["3\ubc88 \ud3ec\ud2b8", "3"], ["\ub9ac\ubaa8\ucee8", "4"]]), "PORT").appendField(" \uac12");
@@ -4742,7 +4745,7 @@ Entry.block.sound_something_second_wait = function(a, b) {
       d.stop();
       b.playState = 0;
     }, 1E3 * c);
-    d.addEventListener("complete", function(a) {
+    d.addEventListener("complete", function(b) {
     });
   }
   return b;
@@ -4888,7 +4891,7 @@ Entry.block.sound_something_second_wait_with_block = function(a, b) {
       d.stop();
       b.playState = 0;
     }, 1E3 * c);
-    d.addEventListener("complete", function(a) {
+    d.addEventListener("complete", function(b) {
     });
   }
   return b;
@@ -5074,10 +5077,10 @@ Entry.block.message_cast_wait = function(a, b) {
     throw Error("value can not be null or undefined");
   }
   var e = [];
-  Entry.container.mapEntityIncludeCloneOnScene(function(a, b) {
-    for (var c = b[0], d = b[1], l = a.parent.script.childNodes, q = 0;q < l.length;q++) {
+  Entry.container.mapEntityIncludeCloneOnScene(function(b, a) {
+    for (var c = a[0], d = a[1], l = b.parent.script.childNodes, q = 0;q < l.length;q++) {
       var n = l[q], m = Entry.Xml.getField("VALUE", n);
-      Entry.Xml.isTypeOf(c, n) && m == d && (m = new Entry.Script(a), m.init(n), e.push(m));
+      Entry.Xml.isTypeOf(c, n) && m == d && (m = new Entry.Script(b), m.init(n), e.push(m));
     }
   }, ["when_message_cast", c]);
   b.runningScript = e;
@@ -5501,37 +5504,37 @@ Entry.Collection = function(a) {
     b.splice.call(this, d, 0, a);
     this._hashMap[a.id] = a;
   };
-  a.has = function(a) {
-    return !!this._hashMap[a];
+  a.has = function(b) {
+    return !!this._hashMap[b];
   };
-  a.get = function(a) {
-    return this._hashMap[a];
+  a.get = function(b) {
+    return this._hashMap[b];
   };
-  a.at = function(a) {
-    return this[a];
+  a.at = function(b) {
+    return this[b];
   };
   a.getAll = function() {
-    for (var a = this.length, b = [], e = 0;e < a;e++) {
-      b.push(this[e]);
+    for (var b = this.length, a = [], e = 0;e < b;e++) {
+      a.push(this[e]);
     }
-    return b;
+    return a;
   };
   a.indexOf = function(a) {
     return b.indexOf.call(this, a);
   };
-  a.find = function(a) {
-    for (var b = [], e, f = 0, g = this.length;f < g;f++) {
+  a.find = function(b) {
+    for (var a = [], e, f = 0, g = this.length;f < g;f++) {
       e = !0;
       var h = this[f], k;
-      for (k in a) {
-        if (a[k] != h[k]) {
+      for (k in b) {
+        if (b[k] != h[k]) {
           e = !1;
           break;
         }
       }
-      e && b.push(h);
+      e && a.push(h);
     }
-    return b;
+    return a;
   };
   a.pop = function() {
     var a = b.pop.call(this);
@@ -5550,9 +5553,9 @@ Entry.Collection = function(a) {
     }
     return e;
   };
-  a.remove = function(a) {
-    var b = this.indexOf(a);
-    -1 < b && (delete this._hashMap[a.id], this.splice(b, 1));
+  a.remove = function(b) {
+    var a = this.indexOf(b);
+    -1 < a && (delete this._hashMap[b.id], this.splice(a, 1));
   };
   a.splice = function(a, d) {
     var e = b.slice.call(arguments, 2), f = this._hashMap;
@@ -5658,6 +5661,7 @@ Entry.Container.prototype.generateView = function(a, b) {
     }), c = Entry.createElement("div"), c.addClass("entryContainerListPhoneWrapper"), this._view.appendChild(c), d = Entry.createElement("ul"), d.addClass("entryContainerListPhone"), c.appendChild(d), this.listView_ = d);
   } else {
     this._view.addClass("entryContainerWorkspace");
+    this._view.setAttribute("id", "entryContainerWorkspaceId");
     var c = Entry.createElement("div");
     c.addClass("entryAddObjectWorkspace");
     c.innerHTML = Lang.Workspace.add_object;
@@ -6148,7 +6152,6 @@ Entry.Container.prototype.generateTabView = function() {
   c.addClass("entryHide");
   a.appendChild(c);
   this.helperContainer = c;
-  Entry.helper.initBlockHelper(c);
   d.addClass("selected");
 };
 Entry.Container.prototype.changeTabView = function(a) {
@@ -6390,6 +6393,34 @@ Entry.Dialog.prototype.createSpeakNotch = function(a) {
 Entry.Dialog.prototype.remove = function() {
   Entry.stage.unloadDialog(this);
   this.parent.dialog = null;
+};
+Entry.DoneProject = function(a) {
+  this.generateView(a);
+};
+var p = Entry.DoneProject.prototype;
+p.init = function(a) {
+  this.projectId = a;
+};
+p.generateView = function(a) {
+  var b = Entry.createElement("div");
+  b.addClass("entryContainerDoneWorkspace");
+  b.addClass("entryHidden");
+  this.doneContainer = b;
+  b = Entry.createElement("iframe");
+  b.setAttribute("id", "doneProjectframe");
+  b.setAttribute("frameborder", 0);
+  b.setAttribute("src", "/api/iframe/project/" + a);
+  this.doneProjectFrame = b;
+  this.doneContainer.appendChild(b);
+};
+p.getView = function() {
+  return this.doneContainer;
+};
+p.resize = function() {
+  var a = document.getElementById("entryContainerWorkspaceId"), b = document.getElementById("doneProjectframe");
+  w = a.offsetWidth;
+  b.width = w + "px";
+  b.height = 9 * w / 16 + "px";
 };
 Entry.Engine = function() {
   function a(a) {
@@ -7269,66 +7300,40 @@ Entry.EntityObject.prototype.syncDialogVisible = function() {
   this.dialog && (this.dialog.object.visible = this.visible);
 };
 Entry.Helper = function() {
+  this.generateView();
 };
-var p = Entry.Helper.prototype;
-p.bindEvent = function() {
-  this.blockChangeEvent || (this.blockChangeEvent = Blockly.bindEvent_(Blockly.mainWorkspace.getCanvas(), "blocklySelectChange", this, this.updateSelectedBlock), Entry.playground.blockMenu && (this.menuBlockChangeEvent = Blockly.bindEvent_(Entry.playground.blockMenu.workspace_.getCanvas(), "blocklySelectChange", this, this.updateSelectedBlock)));
-};
-p.initBlockHelper = function(a) {
-  this.parentView_ || (this.parentView_ = a);
-};
-p.blockHelperOn = function() {
-  if (this.blockHelperView_) {
-    return this.blockHelperOff();
-  }
-  var a = this;
-  a.blockHelpData = EntryStatic.blockInfo;
-  var b = Entry.createElement("div", "entryBlockHelperWorkspace");
+p = Entry.Helper.prototype;
+p.generateView = function() {
+  this.blockHelpData = EntryStatic.blockInfo;
+  var a = Entry.createElement("div", "entryBlockHelperWorkspace");
+  this._view = a;
+  Entry.isForLecture && a.addClass("lecture");
+  var b = Entry.createElement("div", "entryBlockHelperHeaderWorkspace");
+  b.innerHTML = Lang.Helper.Block_info;
+  a.appendChild(b);
+  b = Entry.createElement("div", "entryBlockHelperContentWorkspace");
+  b.addClass("entryBlockHelperIntro");
   Entry.isForLecture && b.addClass("lecture");
-  a.parentView_.appendChild(b);
-  if (!Entry.isForLecture) {
-    var c = Entry.createElement("div", "entryBlockHelperHeaderWorkspace");
-    c.innerHTML = Lang.Helper.Block_info;
-    var d = Entry.createElement("button", "entryBlockHelperDisposeWorkspace");
-    d.addClass("entryBtn");
-    d.bindOnClick(function() {
-      a.blockHelperOff();
-    });
-    c.appendChild(d);
-    b.appendChild(c);
-  }
-  c = Entry.createElement("div", "entryBlockHelperContentWorkspace");
-  c.addClass("entryBlockHelperIntro");
-  Entry.isForLecture && c.addClass("lecture");
-  b.appendChild(c);
-  a.blockHelperContent_ = c;
-  a.blockHelperView_ = b;
-  b = Entry.createElement("div", "entryBlockHelperBlockWorkspace");
-  this.blockMenu_ = new Blockly.BlockMenu(b);
+  a.appendChild(b);
+  this.blockHelperContent_ = b;
+  this.blockHelperView_ = a;
+  a = Entry.createElement("div", "entryBlockHelperBlockWorkspace");
+  this.blockMenu_ = new Blockly.BlockMenu(a);
   this.blockMenu_.isViewOnly = !0;
   this.blockMenu_.isCenterAlign = !0;
-  a.blockHelperContent_.appendChild(b);
-  b = Entry.createElement("div", "entryBlockHelperDescriptionWorkspace");
-  a.blockHelperContent_.appendChild(b);
-  b.innerHTML = Lang.Helper.Block_click_msg;
-  this.blockHelperDescription_ = b;
-  this.blockChangeEvent = Blockly.bindEvent_(Blockly.mainWorkspace.getCanvas(), "blocklySelectChange", this, this.updateSelectedBlock);
-  Entry.playground.blockMenu && (this.menuBlockChangeEvent = Blockly.bindEvent_(Entry.playground.blockMenu.workspace_.getCanvas(), "blocklySelectChange", this, this.updateSelectedBlock));
+  this.blockHelperContent_.appendChild(a);
+  a = Entry.createElement("div", "entryBlockHelperDescriptionWorkspace");
+  this.blockHelperContent_.appendChild(a);
+  a.innerHTML = Lang.Helper.Block_click_msg;
+  this.blockHelperDescription_ = a;
   this.first = !0;
 };
-p.blockHelperOff = function() {
-  if (this.blockHelperView_ && !Entry.isForLecture) {
-    var a = this;
-    a.blockHelperView_.addClass("dispose");
-    Blockly.unbindEvent_(this.blockChangeEvent);
-    delete this.blockChangeEvent;
-    Entry.playground.blockMenu && (Blockly.unbindEvent_(this.menuBlockChangeEvent), delete this.menuBlockChangeEvent);
-    Entry.bindAnimationCallback(a.blockHelperView_, function(b) {
-      a.parentView_.removeChild(a.blockHelperView_);
-      delete a.blockHelperContent_;
-      delete a.blockHelperView_;
-    });
-  }
+p.getView = function() {
+  this.bindEvent();
+  return this._view;
+};
+p.bindEvent = function() {
+  this.blockChangeEvent || (this.blockChangeEvent = Blockly.bindEvent_(Blockly.mainWorkspace.getCanvas(), "blocklySelectChange", this, this.updateSelectedBlock), Entry.playground.blockMenu && (this.menuBlockChangeEvent = Blockly.bindEvent_(Entry.playground.blockMenu.workspace_.getCanvas(), "blocklySelectChange", this, this.updateSelectedBlock)));
 };
 p.updateSelectedBlock = function() {
   Blockly.selected && (this.first && (this.blockHelperContent_.removeClass("entryBlockHelperIntro"), this.first = !1), this.renderBlock(Blockly.selected.type));
@@ -9697,8 +9702,8 @@ Entry.Playground.prototype.generateTextView = function(a) {
   e.bindOnClick(function() {
     Entry.playground.toggleLineBreak(!1);
     v.innerHTML = Lang.Menus.linebreak_off_desc_1;
-    w.innerHTML = Lang.Menus.linebreak_off_desc_2;
-    x.innerHTML = Lang.Menus.linebreak_off_desc_3;
+    x.innerHTML = Lang.Menus.linebreak_off_desc_2;
+    y.innerHTML = Lang.Menus.linebreak_off_desc_3;
   });
   e.src = Entry.mediaFilePath + "text-linebreak-off-true.png";
   b.appendChild(e);
@@ -9707,8 +9712,8 @@ Entry.Playground.prototype.generateTextView = function(a) {
   e.bindOnClick(function() {
     Entry.playground.toggleLineBreak(!0);
     v.innerHTML = Lang.Menus.linebreak_on_desc_1;
-    w.innerHTML = Lang.Menus.linebreak_on_desc_2;
-    x.innerHTML = Lang.Menus.linebreak_on_desc_3;
+    x.innerHTML = Lang.Menus.linebreak_on_desc_2;
+    y.innerHTML = Lang.Menus.linebreak_on_desc_3;
   });
   e.src = Entry.mediaFilePath + "text-linebreak-on-false.png";
   b.appendChild(e);
@@ -9721,12 +9726,12 @@ Entry.Playground.prototype.generateTextView = function(a) {
   b.appendChild(v);
   a = Entry.createElement("ul");
   b.appendChild(a);
-  var w = Entry.createElement("li");
-  w.innerHTML = Lang.Menus.linebreak_off_desc_2;
-  a.appendChild(w);
   var x = Entry.createElement("li");
-  x.innerHTML = Lang.Menus.linebreak_off_desc_3;
+  x.innerHTML = Lang.Menus.linebreak_off_desc_2;
   a.appendChild(x);
+  var y = Entry.createElement("li");
+  y.innerHTML = Lang.Menus.linebreak_off_desc_3;
+  a.appendChild(y);
 };
 Entry.Playground.prototype.generateSoundView = function(a) {
   if ("workspace" == Entry.type) {
@@ -10424,6 +10429,7 @@ Entry.PropertyPanel = function() {
     this._view.css({width:a + "px", top:9 * a / 16 + 123 - 22 + "px"});
     430 <= a ? this._view.removeClass("collapsed") : this._view.addClass("collapsed");
     Entry.dispatchEvent("windowResized");
+    (a = this.modes[this.selected].obj.resize) && a();
   };
   a.select = function(a) {
     for (var c in this.modes) {
@@ -10508,6 +10514,7 @@ Entry.initialize_ = function() {
   this.propertyPanel = new Entry.PropertyPanel;
   this.container = new Entry.Container;
   this.helper = new Entry.Helper;
+  this.youtube = new Entry.Youtube;
   this.variableContainer = new Entry.VariableContainer;
   if ("workspace" == this.type || "phone" == this.type) {
     this.stateManager = new Entry.StateManager;
@@ -10528,8 +10535,8 @@ Entry.initialize_ = function() {
 Entry.createDom = function(a, b) {
   if (b && "workspace" != b) {
     "minimize" == b ? (c = Entry.createElement("canvas"), c.className = "entryCanvasWorkspace", c.id = "entryCanvas", c.width = 640, c.height = 360, d = Entry.createElement("div", "entryCanvasWrapper"), d.appendChild(c), a.appendChild(d), this.canvas_ = c, this.stage.initStage(this.canvas_), d = Entry.createElement("div"), a.appendChild(d), this.engineView = d, this.engine.generateView(this.engineView, b)) : "phone" == b && (this.stateManagerView = c = Entry.createElement("div"), this.stateManager.generateView(this.stateManagerView, 
-    b), d = Entry.createElement("div"), a.appendChild(d), this.engineView = d, this.engine.generateView(this.engineView, b), c = Entry.createElement("canvas"), c.addClass("entryCanvasPhone"), c.id = "entryCanvas", c.width = 640, c.height = 360, d.insertBefore(c, this.engine.footerView_), this.canvas_ = c, this.stage.initStage(this.canvas_), c = Entry.createElement("div"), a.appendChild(c), this.containerView = c, this.container.generateView(this.containerView, b), d = Entry.createElement("div"), 
-    a.appendChild(d), this.playgroundView = d, this.playground.generateView(this.playgroundView, b));
+    b), d = Entry.createElement("div"), a.appendChild(d), this.engineView = d, this.engine.generateView(this.engineView, b), c = Entry.createElement("canvas"), c.addClass("entryCanvasPhone"), c.id = "entryCanvas", c.width = 640, c.height = 360, d.insertBefore(c, this.engine.footerView_), this.canvas_ = c, this.stage.initStage(this.canvas_), c = Entry.createElement("div"), a.appendChild(c), this.containerView = c, this.container.generateView(this.containerView, b), c = Entry.createElement("div"), 
+    a.appendChild(c), this.playgroundView = c, this.playground.generateView(this.playgroundView, b));
   } else {
     Entry.documentMousedown.attach(this, this.cancelObjectEdit);
     var c = Entry.createElement("div");
@@ -10565,13 +10572,13 @@ Entry.createDom = function(a, b) {
     this.propertyPanel.generateView(a, b);
     this.containerView = c;
     this.container.generateView(this.containerView, b);
-    d = Entry.createElement("div");
-    a.appendChild(d);
-    this.playgroundView = d;
+    c = Entry.createElement("div");
+    a.appendChild(c);
+    this.playgroundView = c;
     this.playground.generateView(this.playgroundView, b);
-    this.propertyPanel.addMode("container", this.container);
-    this.helper.initBlockHelper(c);
-    this.propertyPanel.select("container");
+    this.propertyPanel.addMode("object", this.container);
+    this.propertyPanel.addMode("helper", this.helper);
+    this.propertyPanel.select("object");
   }
 };
 Entry.start = function(a) {
@@ -11525,6 +11532,35 @@ Entry.Toast.prototype.alert = function(a, b, c) {
     }, 20);
   }, 5E3);
 };
+Entry.TvCast = function(a) {
+  this.generateView(a);
+};
+p = Entry.TvCast.prototype;
+p.init = function(a) {
+  this.tvCastHash = a;
+};
+p.generateView = function(a) {
+  var b = Entry.createElement("div");
+  b.addClass("entryContainerMovieWorkspace");
+  b.addClass("entryHidden");
+  this.movieContainer = b;
+  b = Entry.createElement("iframe");
+  b.setAttribute("id", "tvCastIframe");
+  b.setAttribute("allowfullscreen", "");
+  b.setAttribute("frameborder", 0);
+  b.setAttribute("src", a);
+  this.movieFrame = b;
+  this.movieContainer.appendChild(this.movieFrame);
+};
+p.getView = function() {
+  return this.movieContainer;
+};
+p.resize = function() {
+  var a = document.getElementById("entryContainerWorkspaceId"), b = document.getElementById("tvCastIframe");
+  w = a.offsetWidth;
+  b.width = w + "px";
+  b.height = 9 * w / 16 + "px";
+};
 Entry.ContextMenu = {};
 (function(a) {
   a.createDom = function() {
@@ -12419,37 +12455,36 @@ Entry.Func.generateWsBlock = function(a, b, c) {
   e.init(d);
   d = e;
   d.values && (d = e.values.FIELD);
-  e = '<mutation hashid="' + c + '">';
-  c = b = "";
+  c = '<mutation hashid="' + c + '">';
+  b = e = "";
   var f = 0, g = 0;
   a.stringHash = {};
   for (a.booleanHash = {};;) {
     switch(d.type) {
       case "function_field_label":
-        e += '<field type="label" content="' + d.fields.NAME.replace("<", "&lt;").replace(">", "&gt;") + '"></field>';
-        c += d.fields.NAME;
+        c += '<field type="label" content="' + d.fields.NAME.replace("<", "&lt;").replace(">", "&gt;") + '"></field>';
+        b += d.fields.NAME;
         break;
       case "function_field_boolean":
         var h = d.values.PARAM.hashId;
-        e += '<field type="boolean" hashid="' + h + '"></field>';
-        b += '<value name="' + h + '"><block type="function_param_boolean"><mutation hashid="' + h + '"></mutation></block></value>';
+        c += '<field type="boolean" hashid="' + h + '"></field>';
+        e += '<value name="' + h + '"><block type="function_param_boolean"><mutation hashid="' + h + '"></mutation></block></value>';
         a.booleanHash[h] = g;
         g++;
-        c += "\ub17c\ub9ac\uac12" + g;
+        b += "\ub17c\ub9ac\uac12" + g;
         break;
       case "function_field_string":
-        h = d.values.PARAM.hashId, e += '<field type="string" hashid="' + h + '"></field>', b += '<value name="' + h + '"><block type="function_param_string"><mutation hashid="' + h + '"></mutation></block></value>', a.stringHash[h] = f, f++, c += "\ubb38\uc790\uac12" + f;
+        h = d.values.PARAM.hashId, c += '<field type="string" hashid="' + h + '"></field>', e += '<value name="' + h + '"><block type="function_param_string"><mutation hashid="' + h + '"></mutation></block></value>', a.stringHash[h] = f, f++, b += "\ubb38\uc790\uac12" + f;
     }
     if (d.values && d.values.NEXT) {
       d = d.values.NEXT;
     } else {
       break;
     }
-    c += " ";
+    b += " ";
   }
-  a = '<xml><block type="function_general">' + (e + "</mutation>") + b + "</block></xml>";
-  c || (c = "\ud568\uc218");
-  return {block:Blockly.Xml.textToDom(a).childNodes[0], description:c};
+  b || (b = "\ud568\uc218");
+  return {block:Blockly.Xml.textToDom('<xml><block type="function_general">' + (c + "</mutation>") + e + "</block></xml>").childNodes[0], description:b};
 };
 Entry.HWMontior = {};
 Entry.HWMonitor = function(a) {
@@ -12539,10 +12574,27 @@ Entry.HWMonitor = function(a) {
     return this.svgDom;
   };
   a.update = function() {
-    var a = Entry.hw.portData, c = Entry.hw.sendQueue, d = [], d = "list" == this._hwModule.monitorTemplate.mode ? this._listPortViews : this._portViews, e;
-    for (e in d) {
-      var f = d[e], g = "input" == f.type ? a[e] : c[e];
-      f.value.attr({text:g ? g : 0});
+    var a = Entry.hw.portData, c = Entry.hw.sendQueue, d = this._hwModule.monitorTemplate.mode, e = [];
+    if ("list" == d) {
+      e = this._listPortViews;
+    } else {
+      if ("both" == d) {
+        if (e = this._listPortViews, this._portViews) {
+          for (var f in this._portViews) {
+            e[f] = this._portViews[f];
+          }
+        }
+      } else {
+        e = this._portViews;
+      }
+    }
+    if (c) {
+      for (f in c) {
+        0 != c[f] && e[f] && (e[f].type = "output");
+      }
+    }
+    for (var g in e) {
+      d = e[g], "input" == d.type ? (f = a[g], d.value.textContent = f ? f : 0, d.group.getElementsByTagName("rect")[1].attr({fill:"#00979D"})) : (f = c[g], d.value.textContent = f ? f : 0, d.group.getElementsByTagName("rect")[1].attr({fill:"#A751E3"}));
     }
   };
   a.resize = function() {
@@ -12639,6 +12691,7 @@ Entry.HW = function() {
   this.connected = !1;
   this.portData = {};
   this.sendQueue = {};
+  this.outputQueue = {};
   this.settingQueue = {};
   this.socketType = this.hwModule = this.selectedDevice = null;
   Entry.addEventListener("stop", this.setZero);
@@ -12738,11 +12791,11 @@ p.removePortReadable = function(a) {
     var b, c;
     for (c in this.sendQueue.readablePorts) {
       if (this.sendQueue.readablePorts[c] == a) {
-        b = c;
+        b = Number(c);
         break;
       }
     }
-    this.sendQueue.readablePorts = b ? this.sendQueue.readablePorts.slice(0, b).concat(this.sendQueue.readablePorts.slice(b + 1, this.sendQueue.readablePorts.length)) : [];
+    void 0 != b ? this.sendQueue.readablePorts = this.sendQueue.readablePorts.slice(0, b).concat(this.sendQueue.readablePorts.slice(b + 1, this.sendQueue.readablePorts.length)) : (this.sendQueue = [], this.sendQueue.readablePorts = []);
   }
 };
 p.update = function() {
@@ -12765,7 +12818,8 @@ p.setZero = function() {
   Entry.hw.hwModule && Entry.hw.hwModule.setZero();
 };
 p.checkDevice = function(a) {
-  void 0 !== a.company && (a = "" + a.company + a.model, a != this.selectedDevice && (this.selectedDevice = a, this.hwModule = this.hwInfo[a], Entry.dispatchEvent("hwChanged"), Entry.toast.success(Lang.Menus.connect_hw, Lang.Menus.connect_message.replace("%1", Lang.Device[Entry.hw.hwModule.name]), !1)));
+  void 0 !== a.company && (a = "" + a.company + a.model, a != this.selectedDevice && (this.selectedDevice = a, this.hwModule = this.hwInfo[a], Entry.dispatchEvent("hwChanged"), Entry.toast.success(Lang.Menus.connect_hw, Lang.Menus.connect_message.replace("%1", Lang.Device[Entry.hw.hwModule.name]), !1), this.hwModule.monitorTemplate && (this.hwMonitor = new Entry.HWMonitor(this.hwModule), Entry.propertyPanel.addMode("hw", this.hwMonitor), a = this.hwModule.monitorTemplate, "both" == a.mode ? (a.mode = 
+  "list", this.hwMonitor.generateListView(), a.mode = "general", this.hwMonitor.generateView(), a.mode = "both") : "list" == a.mode ? this.hwMonitor.generateListView() : this.hwMonitor.generateView())));
 };
 p.banHW = function() {
   var a = this.hwInfo, b;
@@ -16299,5 +16353,35 @@ Entry.Xml.cloneBlock = function(a, b, c) {
     f instanceof Text ? d.textContent = f.textContent : "parent" == c ? d.appendChild(b) : d.appendChild(Entry.Xml.cloneBlock(f, d, "child"));
   }
   return d;
+};
+Entry.Youtube = function(a) {
+  this.generateView(a);
+};
+p = Entry.Youtube.prototype;
+p.init = function(a) {
+  this.youtubeHash = a;
+  this.generateView();
+};
+p.generateView = function(a) {
+  var b = Entry.createElement("div");
+  b.addClass("entryContainerMovieWorkspace");
+  b.addClass("entryHidden");
+  this.movieContainer = b;
+  b = Entry.createElement("iframe");
+  b.setAttribute("id", "youtubeIframe");
+  b.setAttribute("allowfullscreen", "");
+  b.setAttribute("frameborder", 0);
+  b.setAttribute("src", "https://www.youtube.com/embed/" + a);
+  this.movieFrame = b;
+  this.movieContainer.appendChild(b);
+};
+p.getView = function() {
+  return this.movieContainer;
+};
+p.resize = function() {
+  var a = document.getElementById("entryContainerWorkspaceId"), b = document.getElementById("youtubeIframe");
+  w = a.offsetWidth;
+  b.width = w + "px";
+  b.height = 9 * w / 16 + "px";
 };
 

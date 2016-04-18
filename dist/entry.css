@@ -691,7 +691,6 @@
   width: 50px;
   height: 100%;
   background-color: #f5f5f5;
-  display: none;
 }
 .collapsed .propertyTab {
   width: 30px;
@@ -717,10 +716,10 @@
   background-color: #5096f5;
   color: #fff;
 }
-.propertyTabcontainer {
+.propertyTabobject {
   background-image: url("../../images/property/container_off.png");
 }
-.propertyTabcontainer.selected {
+.propertyTabobject.selected {
   background-image: url("../../images/property/container_on.png");
 }
 .propertyTabhw {
@@ -729,15 +728,34 @@
 .propertyTabhw.selected {
   background-image: url("../../images/property/hw_on.png");
 }
+.propertyTabtvCast {
+  background-image: url("../../images/property/vedio_off.png");
+}
+.propertyTabtvCast.selected {
+  background-image: url("../../images/property/vedio_on.png");
+}
+.propertyTabyoutube {
+  background-image: url("../../images/property/vedio_off.png");
+}
+.propertyTabyoutube.selected {
+  background-image: url("../../images/property/vedio_on.png");
+}
+.propertyTabgoal {
+  background-image: url("../../images/property/doneproject.png");
+}
+.propertyTabgoal.selected {
+  background-image: url("../../images/property/doneproject_on.png");
+}
 .propertyContent {
   position: absolute;
   top: 0;
   bottom: 0;
-  left: 0;
+  left: 50px;
   right: 0;
+  background-color: #363C46;
 }
 .collapsed .propertyContent {
-  /*left: 30px;*/
+  left: 30px;
 }
 .hwMonitor {
   background-color: #363c46;
@@ -3774,7 +3792,7 @@
   overflow-x: hidden;
 }
 #entryBlockHelperContentWorkspace.lecture {
-  top: 0px;
+  top: 40px;
 }
 .entryBlockHelperIntro {
   background-image: url("../../images/block_help_icon.png");
@@ -4073,16 +4091,19 @@
   background-color: #1bafea;
   color: white;
 }
-.entryContainerListWorkspaceWrapper.lecture {
-  top: 45px;
-}
 .entryContainerMovieWorkspace {
+  /*
+    position: absolute;
+    width: 100%;
+    top: 45px;
+    bottom: 0px;
+    
+    z-index: 1000;
+*/
   position: absolute;
-  width: 100%;
-  top: 45px;
-  bottom: 0px;
   background-color: #363C46;
-  z-index: 1000;
+  top: 0px;
+  width: 100%;
   overflow: scroll;
 }
 .entryContainerMovieWorkspace::-webkit-scrollbar {
@@ -4091,10 +4112,8 @@
 .entryContainerDoneWorkspace {
   position: absolute;
   width: 100%;
-  top: 45px;
-  bottom: 0;
+  top: 0px;
   background-color: #363C46;
-  z-index: 1000;
   overflow: hidden;
   text-align: center;
 }
