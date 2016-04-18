@@ -388,8 +388,10 @@ Entry.Block.MAGNET_OFFSET = 0.4;
             cloned.push(this.toJSON(true));
 
         var pos = this.view.getAbsoluteCoordinate();
-        cloned[0].x = pos.x + 15;
-        cloned[0].y = pos.y + 15;
+        var block = cloned[0];
+        block.x = pos.x + 15;
+        block.y = pos.y + 15;
+        block.id = Entry.Utils.generateId();
 
         return cloned;
     };

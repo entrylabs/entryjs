@@ -195,7 +195,7 @@ Entry.Board = function(option) {
                 text: '붙여넣기',
                 enable: !!Entry.clipboard,
                 callback: function(){
-                    that.code.createThread(Entry.clipboard)
+                    Entry.do('cloneBlock', that.code)
                         .getFirstBlock().copyToClipboard();
                 }
             };

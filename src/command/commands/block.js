@@ -124,13 +124,20 @@ goog.require("Entry.Command");
 
     c.cloneBlock = {
         type: 105,
-        do: function(block) {
+        do: function(code) {
+            return code.createThread(Entry.clipboard);
         },
-        state: function(block) {
+        state: function(code) {
+            return [Entry.clipboard[0].id];
         },
-        log: function(block) {
+        log: function(code) {
+            return [Entry.clipboard[0].id, Entry.clipboard];
         },
         undo: function(blockId) {
+            Entry.playground.mainWorkspace.board
+                .findById(blockId)
+                .getThread()
+                .destroy(false);
         }
     };
 

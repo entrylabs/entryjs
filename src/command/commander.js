@@ -36,7 +36,7 @@ Entry.Commander = function(injectType) {
             );
         }
         // TODO: activity reporter
-        Entry.Command[commandType].do.apply(Entry.Command, argumentArray);
+        return Entry.Command[commandType].do.apply(Entry.Command, argumentArray);
     };
 
     p.undo = function() {

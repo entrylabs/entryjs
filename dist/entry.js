@@ -4948,7 +4948,7 @@ Entry.Commander = function(a) {
     a.shift();
     var d = Entry.Command[b];
     Entry.stateManager && Entry.stateManager.addCommand.apply(Entry.stateManager, [b, Entry.Command, d.undo].concat(d.state.apply(null, a)));
-    Entry.Command[b].do.apply(Entry.Command, a);
+    return Entry.Command[b].do.apply(Entry.Command, a);
   };
   a.undo = function() {
   };
@@ -5006,9 +5006,13 @@ Entry.Commander = function(a) {
     Entry.playground.mainWorkspace.board.findById(b).moveTo(a, d);
   }};
   a.cloneBlock = {type:105, do:function(b) {
+    return b.createThread(Entry.clipboard);
   }, state:function(b) {
+    return [Entry.clipboard[0].id];
   }, log:function(b) {
+    return [Entry.clipboard[0].id, Entry.clipboard];
   }, undo:function(b) {
+    Entry.playground.mainWorkspace.board.findById(b).getThread().destroy(!1);
   }};
   a.removeBlock = {type:106, do:function(b) {
   }, state:function(b) {
@@ -15784,7 +15788,7 @@ Entry.Board = function(a) {
           }
           var f = this;
           Entry.ContextMenu.show([{text:"\ubd99\uc5ec\ub123\uae30", enable:!!Entry.clipboard, callback:function() {
-            f.code.createThread(Entry.clipboard).getFirstBlock().copyToClipboard();
+            Entry.do("cloneBlock", f.code).getFirstBlock().copyToClipboard();
           }}, {text:"\ube14\ub85d \uc815\ub9ac\ud558\uae30", callback:function() {
             f.alignThreads();
           }}, {text:"\ubaa8\ub4e0 \ucf54\ub4dc \uc0ad\uc81c\ud558\uae30", callback:function() {
@@ -16559,8 +16563,10 @@ Entry.Block.MAGNET_OFFSET = .4;
       c.push(this.toJSON(!0));
     }
     a = this.view.getAbsoluteCoordinate();
-    c[0].x = a.x + 15;
-    c[0].y = a.y + 15;
+    d = c[0];
+    d.x = a.x + 15;
+    d.y = a.y + 15;
+    d.id = Entry.Utils.generateId();
     return c;
   };
   a.copyToClipboard = function() {
@@ -16901,7 +16907,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
     if (!Entry.Utils.isInInput(a)) {
       var e = this.selectedBlockView;
       e && !e.isInBlockMenu && e.block.isDeletable() && (8 == c || 46 == c ? (e.block.doDestroy(!0), a.preventDefault()) : d && (67 == c ? e.block.copyToClipboard() : 88 == c && (a = e.block, a.copyToClipboard(), a.destroy(!0, !0), e.getBoard().setSelectedBlock(null))));
-      d && 86 == c && (c = this.selectedBoard) && c instanceof Entry.Board && Entry.clipboard && c.code.createThread(Entry.clipboard).getFirstBlock().copyToClipboard();
+      d && 86 == c && (c = this.selectedBoard) && c instanceof Entry.Board && Entry.clipboard && Entry.do("cloneBlock", c.code).getFirstBlock().copyToClipboard();
     }
   };
   a._handleChangeBoard = function() {
