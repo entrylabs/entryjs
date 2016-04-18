@@ -120,6 +120,7 @@ Entry.Field = function() {};
         if (dragMode == Entry.DRAG_MODE_DRAG) return false;
         var blockView = this._block.view;
         var board = blockView.getBoard();
+        if (board.disableMouseEvent === true) return false;
 
         var selectedBlockView = board.workspace.selectedBlockView;
 

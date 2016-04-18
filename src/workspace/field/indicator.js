@@ -9,18 +9,17 @@ goog.require("Entry.SVG");
 /*
  *
  */
-Entry.FieldIndicator = function(content, block, index) {
-    this._block = block;
+Entry.FieldIndicator = function(content, blockView, index) {
+    this._block = blockView.block;
+    this._blockView = blockView;
 
     var box = new Entry.BoxModel();
     this.box = box;
 
     this._size = content.size;
-    if(!block.block.isDeletable()) {
+    if(!this._block.isDeletable())
         this._imgUrl = content.img.replace('.png', '_un.png');
-    } else {
-        this._imgUrl = content.img;
-    }
+    else this._imgUrl = content.img;
     this._boxMultiplier = content.boxMultiplier || 2;
     this._highlightColor =
         content.highlightColor? content.highlightColor : "#F59900";
@@ -30,6 +29,7 @@ Entry.FieldIndicator = function(content, block, index) {
     this.svgGroup = null;
     this._path = null;
     this._imgElement = null;
+    this.setValue(null);
 
     this.renderStart();
 };
@@ -38,7 +38,9 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldIndicator);
 
 (function(p) {
     p.renderStart = function() {
-        this.svgGroup = this._block.contentSvgGroup.elem("g");
+        if (this.svgGroup) this.svgGroup.remove();
+
+        this.svgGroup = this._blockView.contentSvgGroup.elem("g");
 
         this._imgElement = this.svgGroup.elem("image", {
             href: this._imgUrl,

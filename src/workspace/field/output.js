@@ -26,7 +26,6 @@ Entry.FieldOutput = function(content, blockView, index, mode) {
     this.acceptType = content.accept;
 
     this.view = this;
-    this.thread = this;
 
     this.svgGroup = null;
 
@@ -192,7 +191,10 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldOutput);
     };
 
     p.cut = function(block) {
-        if (this._valueBlock === block) return [block];
+        if (this._valueBlock === block) {
+            delete this._valueBlock;
+            return [block];
+        }
         else return null;
     };
 
@@ -217,8 +219,9 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldOutput);
         var valueBlock = this._valueBlock;
         if (valueBlock) {
             valueBlock.view._toGlobalCoordinate();
-            this.separate(valueBlock);
-            valueBlock.view.bumpAway(30, 150);
+            block.getTerminateOutputBlock().view._contents[1].replace(
+                valueBlock
+            );
         }
         this._updateValueBlock(block);
         block.view._toLocalCoordinate(this.svgGroup);
@@ -231,6 +234,10 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldOutput);
 
     p.getParent = function() {
         return this._parent;
+    };
+
+    p.getThread = function() {
+         return this;
     };
 
 })(Entry.FieldOutput.prototype);

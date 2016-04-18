@@ -62,6 +62,12 @@ Entry.BlockView = function(block, board, mode) {
     this.dragMode = Entry.DRAG_MODE_NONE;
     Entry.Utils.disableContextmenu(this.svgGroup.node);
     this._targetType = this._getTargetType();
+    var events = block.events.whenBlockAdd;
+    if (events && !this.isInBlockMenu) {
+        events.forEach(function(fn) {
+            if (Entry.Utils.isFunction(fn)) fn(block);
+        });
+    }
 };
 
 Entry.BlockView.PARAM_SPACE = 5;
@@ -103,18 +109,33 @@ Entry.BlockView.DRAG_RADIUS = 5;
         this._updateMagnet();
 
         this._path = this.pathGroup.elem("path");
+
+        if (this.getBoard().patternRect) {
+            $(this._path).mouseenter(function(e) {
+                if (!that._mouseEnable) return;
+                that._changeFill(true);
+            });
+
+            $(this._path).mouseleave(function(e) {
+                if (!that._mouseEnable) return;
+                that._changeFill(false);
+            });
+        }
+
         var fillColor = this._schema.color;
         if (!this.block.isDeletable())
             fillColor = Entry.Utils.colorLighten(fillColor);
+        this._fillColor = fillColor;
         var pathStyle = {
             d: path,
             fill: fillColor,
             class: 'blockPath'
         };
         if (this.magnet.next) {
-            //this.pathGroup.attr({
-                //filter: 'url(#entryBlockShadowFilter)'
-            //});
+            var suffix = this.getBoard().suffix;
+            this.pathGroup.attr({
+                filter: 'url(#entryBlockShadowFilter_' + suffix + ')'
+            });
         } else if (this.magnet.string || this.magnet.bool)
             pathStyle.stroke = Entry.Utils.colorDarken(this._schema.color, 0.9);
 
@@ -125,7 +146,8 @@ Entry.BlockView.DRAG_RADIUS = 5;
 
         this._moveTo(this.x, this.y, false);
         this._startContentRender(mode);
-        this._addControl();
+        if (this._board.disableMouseEvent !== true)
+            this._addControl();
 
         this.bindPrev();
     };
@@ -236,13 +258,6 @@ Entry.BlockView.DRAG_RADIUS = 5;
         this._renderPath();
         this.set(this._skeleton.box(this));
 
-        var block = this.block;
-        var events = block.events.whenBlockAdd;
-        if (events && !this.isInBlockMenu) {
-            events.forEach(function(fn) {
-                if (Entry.Utils.isFunction(fn)) fn(block);
-            });
-        }
     };
 
     p._renderPath = function() {
@@ -313,6 +328,7 @@ Entry.BlockView.DRAG_RADIUS = 5;
 
     p._addControl = function() {
         var that = this;
+        this._mouseEnable = true;
         $(this.svgGroup).bind(
             'mousedown.blockViewMousedown touchstart.blockViewMousedown',
             that.mouseHandler
@@ -320,6 +336,7 @@ Entry.BlockView.DRAG_RADIUS = 5;
     };
 
     p.removeControl = function() {
+        this._mouseEnable = false;
         $(this.svgGroup).unbind('.blockViewMousedown');
     };
 
@@ -327,6 +344,7 @@ Entry.BlockView.DRAG_RADIUS = 5;
         if (e.stopPropagation) e.stopPropagation();
         if (e.preventDefault) e.preventDefault();
 
+        this._changeFill(false);
         var board = this.getBoard();
         if (Entry.documentMousedown)
             Entry.documentMousedown.notify(e);
@@ -476,6 +494,7 @@ Entry.BlockView.DRAG_RADIUS = 5;
             $(document).unbind('.block');
             blockView.terminateDrag(e);
             if (board) board.set({dragBlock: null});
+            blockView._changeFill(false);
             Entry.GlobalSvg.remove();
             delete this.mouseDownCoordinate;
             delete blockView.dragInstance;
@@ -520,7 +539,7 @@ Entry.BlockView.DRAG_RADIUS = 5;
                     var removed = board.workspace.blockMenu.terminateDrag();
                     if (!removed) {
                         block._updatePos();
-                        block.doAdd();
+                        Entry.do("addBlock", block);
                     }
                 }
 
@@ -532,12 +551,10 @@ Entry.BlockView.DRAG_RADIUS = 5;
                     case gs.DONE:
                         var closeBlock = this._getCloseBlock();
                         if (prevBlock && !closeBlock) {
-                            this._toGlobalCoordinate(dragMode);
-                            block.doSeparate();
+                            Entry.do("separateBlock", block);
                         } else if (!prevBlock && !closeBlock && !fromBlockMenu) {
                             if (!block.getThread().view.isGlobal()) {
-                                this._toGlobalCoordinate(dragMode);
-                                block.doSeparate();
+                                Entry.do("separateBlock", block);
                             } else {
                                 block.doMove();
                             }
@@ -548,16 +565,15 @@ Entry.BlockView.DRAG_RADIUS = 5;
                                     if (!(closeBlock instanceof Entry.Block)) {
                                         closeBlock = closeBlock.insertTopBlock(block);
                                     } else {
-                                        block.doInsert(closeBlock);
+                                        Entry.do("insertBlock", block, closeBlock);
                                     }
                                 } else {// field block
-                                    block.doInsert(closeBlock, true);
+                                    Entry.do("insertBlock", block, closeBlock);
                                 }
                                 createjs.Sound.play('entryMagneting');
                                 ripple = true;
                             } else {
-                                this._toGlobalCoordinate(dragMode);
-                                block.doSeparate();
+                                Entry.do("separateBlock", block);
                             }
                         }
                         break;
@@ -583,10 +599,8 @@ Entry.BlockView.DRAG_RADIUS = 5;
                     case gs.REMOVE:
                         createjs.Sound.play('entryDelete');
                         if (!fromBlockMenu) {
-                            if (prevBlock) block.doSeparate();
                             this.block.doDestroyBelow(false);
                         } else {
-                            if (prevBlock) block.separate();
                             this.block.destroy(false, true);
                         }
                         break;
@@ -635,20 +649,10 @@ Entry.BlockView.DRAG_RADIUS = 5;
         this._destroyObservers();
         var svgGroup = this.svgGroup;
 
-        var thread = this.block.getThread();
-        //if (thread instanceof Entry.FieldBlock)
-            //thread.updateValueBlock();
-
         if (animate) {
-            $(svgGroup).velocity(
-                {opacity:0},
-                {
-                    duration:100,
-                    complete: function() {
-                        svgGroup.remove();
-                    }
-                }
-            );
+            $(svgGroup).fadeOut(100, function() {
+                svgGroup.remove();
+            });
         } else svgGroup.remove();
 
         this._contents.forEach(function(c) {
@@ -672,12 +676,16 @@ Entry.BlockView.DRAG_RADIUS = 5;
                 this.svgGroup.cloneNode(true),
                 { opacity: 0.5 }
             );
+            this.getBoard().svgGroup.appendChild(this._shadow);
         }
         return this._shadow;
     };
 
     p.destroyShadow = function() {
-        delete this._shadow;
+        if (this._shadow) {
+            this._shadow.remove();
+            delete this._shadow;
+        }
     };
 
     p._updateMagnet = function() {
@@ -694,27 +702,32 @@ Entry.BlockView.DRAG_RADIUS = 5;
     p._updateBG = function() {
         if (!this._board.dragBlock || !this._board.dragBlock.dragInstance)
             return;
+        var blockView = this;
+        var svgGroup = blockView.svgGroup;
         if (!this.magnet.next) {// field block
-            if (this.magneting)
-                this.svgGroup.attr({
-                    filter: 'url(#entryBlockHighlightFilter)'
+            if (this.magneting) {
+                svgGroup.attr({
+                    filter: 'url(#entryBlockHighlightFilter_' + this.getBoard().suffix + ')'
                 });
-            else
-                this.svgGroup.attr({
-                    filter: 'initial'
-                });
+                svgGroup.addClass('outputHighlight');
+            } else {
+                svgGroup.removeClass('outputHighlight');
+                svgGroup.removeAttr('filter');
+            }
             return;
         }
-        var blockView = this;
         var magneting = blockView.magneting;
         var block = blockView.block;
-        var svgGroup = blockView.svgGroup;
         if (magneting) {
             var shadow = this._board.dragBlock.getShadow();
+            var pos = this.getAbsoluteCoordinate();
+            var magnet = this.magnet.next;
+            var transform  = 'translate(' + (pos.x + magnet.x) + ',' + (pos.y + magnet.y) + ')';
             $(shadow).attr({
-                 transform: 'translate(0,' + (this.height + 1) + ')'
+                transform: transform,
+                display: 'block'
             });
-            this.svgGroup.appendChild(shadow);
+
             this._clonedShadow = shadow;
 
             if (blockView.background) {
@@ -731,7 +744,7 @@ Entry.BlockView.DRAG_RADIUS = 5;
             });
         } else {
             if (this._clonedShadow) {
-                this._clonedShadow.remove();
+                this._clonedShadow.attr({display: 'none'});
                 delete this._clonedShadow;
             }
 
@@ -894,6 +907,10 @@ Entry.BlockView.DRAG_RADIUS = 5;
         this._path.attr({fill:fillColor});
         //update block inner images
 
+        this._updateContents();
+    };
+
+    p._updateContents = function() {
         for (var i=0; i<this._contents.length; i++)
             this._contents[i].renderStart();
         this.alignContent(false);
@@ -906,5 +923,49 @@ Entry.BlockView.DRAG_RADIUS = 5;
             o.destroy();
         }
     };
+
+    p._changeFill = function(isPattern) {
+        var board = this.getBoard();
+        if (!board.patternRect || board.dragBlock) return;
+        var path = this._path;
+        var fillColor = this._fillColor;
+
+        if (isPattern) {
+            var board = this.getBoard();
+            board.setPatternRectFill(fillColor);
+            fillColor = "url(#blockHoverPattern_" + this.getBoard().suffix +")";
+        }
+        path.attr({fill:fillColor});
+    };
+
+    p.addActivated = function() {
+        this.svgGroup.addClass('activated');
+    };
+
+    p.removeActivated = function() {
+        this.svgGroup.removeClass('activated');
+    };
+
+    p.reDraw = function() {
+        var block = this.block;
+        this._updateContents();
+        var params = block.params;
+        if (params) {
+            for (var i=0; i<params.length; i++) {
+                var param = params[i];
+                if (param instanceof Entry.Block) {
+                    param.view.reDraw();
+                }
+            }
+        }
+        var statements = block.statements;
+        if (statements) {
+            for (var i=0; i<statements.length; i++) {
+                var statement = statements[i];
+                statement.view.reDraw();
+            }
+        }
+    };
+
 
 })(Entry.BlockView.prototype);

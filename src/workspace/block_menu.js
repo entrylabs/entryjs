@@ -16,6 +16,7 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
     this._scroll = scroll !== undefined ? scroll : false;
     this._bannedClass = [];
     this._categories = [];
+    this.suffix = 'blockMenu';
 
     if (typeof dom === "string") dom = $('#' + dom);
     else dom = $(dom);
@@ -37,6 +38,8 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
     this.setWidth();
 
     this.svg = Entry.SVG(this._svgId);
+    Entry.Utils.addFilters(this.svg, this.suffix);
+    this.patternRect = Entry.Utils.addBlockPattern(this.svg, this.suffix);
 
     this.svgGroup = this.svg.elem("g");
 
@@ -58,6 +61,8 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
 
     if (Entry.documentMousedown)
         Entry.documentMousedown.attach(this, this.setSelectedBlock);
+    if (this._categoryCodes && Entry.keyPressed)
+        Entry.keyPressed.attach(this, this._captureKeyEvent);
 };
 
 (function(p) {
@@ -108,7 +113,9 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
         );
 
         this.svgDom.mouseenter(function(e) {
-            if (!Entry.playground || Entry.playground.resizing) return;
+            var selectedBlockView = that.workspace.selectedBlockView;
+            if (!Entry.playground || Entry.playground.resizing ||
+                (selectedBlockView && selectedBlockView.dragMode === Entry.DRAG_MODE_DRAG)) return;
             Entry.playground.focusBlockMenu = true;
             var bBox = that.svgGroup.getBBox();
             var expandWidth = bBox.width + bBox.x + 64;
@@ -389,6 +396,7 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
 
     p.selectMenu = function(selector, doNotFold) {
         var name = this._convertSelector(selector);
+        if (!name) return;
         if (name == 'variable')
             Entry.playground.checkVariables();
 
@@ -427,7 +435,6 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
         }
 
         if (this.visible) {
-            elem.addClass(className);
             var code = this._categoryCodes[name];
 
             this._selectedCategoryView = elem;
@@ -449,9 +456,14 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
             var blocks = datum.blocks;
             var codesJSON = [];
             blocks.forEach(function(b){
-                codesJSON.push([{
-                    type:b
-                }]);
+                var block = Entry.block[b];
+                if (!block || !block.def) {
+                    codesJSON.push([{type:b}]);
+                } else {
+                    codesJSON.push([
+                        block.def
+                    ]);
+                }
             });
             var categoryName = datum.category;
             this._categories.push(categoryName);
@@ -470,6 +482,7 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
         var index = this._bannedClass.indexOf(className);
         if (index > -1)
             this._bannedClass.splice(index, 1);
+        this.align();
     };
 
     p.checkBanClass = function(blockInfo) {
@@ -504,9 +517,27 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
 
     p.reDraw = function() {
         this.selectMenu(this.lastSelector, true);
+        var codeView = this.code && this.code.view ? this.code.view : null;
+        if (codeView) codeView.reDraw();
     };
 
     p._handleDragBlock = function() {
         this._boardBlockView = null;
+    };
+
+    p._captureKeyEvent = function(e) {
+        var keyCode = e.keyCode;
+        var type = Entry.type;
+
+        if (e.ctrlKey && type == 'workspace') {
+            if (keyCode > 48 && keyCode < 58) {
+                e.preventDefault();
+                this.selectMenu(keyCode - 49);
+            }
+        }
+    };
+
+    p.setPatternRectFill = function(color) {
+        this.patternRect.attr({fill:color});
     };
 })(Entry.BlockMenu.prototype);

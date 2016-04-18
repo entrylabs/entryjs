@@ -1,5 +1,4 @@
 /*
- *
  */
 "use strict";
 
@@ -33,6 +32,8 @@ Entry.Board = function(option) {
 
     this.workspace = option.workspace;
 
+    this._activatedBlockView = null;
+
     this.wrapper = Entry.Dom('div', {
         parent: dom,
         class: 'entryBoardWrapper'
@@ -51,7 +52,6 @@ Entry.Board = function(option) {
         that.updateOffset();
     });
 
-    this._blockViews = [];
     this._magnetMap = null;
 
     this.svgGroup = this.svg.elem("g");
@@ -65,8 +65,11 @@ Entry.Board = function(option) {
     if (option.isOverlay) {
         this.wrapper.addClass("entryOverlayBoard");
         this.generateButtons();
-    }
+        this.suffix = 'overlayBoard';
+    } else this.suffix = 'board';
 
+    Entry.Utils.addFilters(this.svg, this.suffix);
+    this.patternRect = Entry.Utils.addBlockPattern(this.svg, this.suffix);
 
     Entry.ANIMATION_DURATION = 200;
     Entry.BOARD_PADDING = 100;
@@ -79,8 +82,10 @@ Entry.Board = function(option) {
     Entry.Utils.disableContextmenu(this.svgDom);
 
     this._addControl();
-    if (Entry.documentMousedown)
+    if (Entry.documentMousedown) {
         Entry.documentMousedown.attach(this, this.setSelectedBlock);
+        Entry.documentMousedown.attach(this, this._removeActivated);
+    }
     if (Entry.keyPressed)
         Entry.keyPressed.attach(this, this._keyboardControl);
     if (Entry.windowResized)
@@ -131,7 +136,6 @@ Entry.Board = function(option) {
         if (block) {
             block.set({magneting: true});
             block.dominate();
-            this.dragBlock.dominate();
         }
     };
 
@@ -140,19 +144,7 @@ Entry.Board = function(option) {
     };
 
     p.findById = function(id) {
-        var code = this.code;
-        var threads = code.getThreads();
-        for (var i=0,len=threads.length; i<len; i++) {
-            var thread = threads[i];
-            if (!thread) continue;
-
-            var blocks = thread.getBlocks();
-            for (var j=0,len=blocks.length; j<len; j++) {
-                if (blocks[j] && blocks[j].id == id) {
-                    return blocks[j];
-                }
-            }
-        }
+        return this.code.findById(id);
     };
 
     p._addControl = function() {
@@ -198,7 +190,6 @@ Entry.Board = function(option) {
             if (!this.visible) return;
             var that = this;
 
-            var options = [];
 
             var paste = {
                 text: '붙여넣기',
@@ -216,10 +207,18 @@ Entry.Board = function(option) {
                 }
             };
 
-            options.push(paste);
-            options.push(align);
+            var remove = {
+                text: '모든 코드 삭제하기',
+                callback: function(){
+                    that.code.clear();
+                }
+            };
 
-            Entry.ContextMenu.show(options);
+            Entry.ContextMenu.show([
+                paste,
+                align,
+                remove
+            ]);
         }
 
         var board = this;
@@ -353,12 +352,12 @@ Entry.Board = function(option) {
         var saveText = btnWrapper.elem('text', {
             x: 27, y: 33, class: 'entryFunctionButtonText'
         });
-        saveText.innerHTML = Lang.Buttons.save;
+        saveText.textContent = Lang.Buttons.save;
 
         var cancelText = btnWrapper.elem('text', {
             x: 102.5, y: 33, class: 'entryFunctionButtonText'
         });
-        cancelText.innerHTML = Lang.Buttons.cancel;
+        cancelText.textContent = Lang.Buttons.cancel;
 
         var saveButton = btnWrapper.elem('circle', {
             cx: 27.5, cy: 27.5, r: 27.5, class: 'entryFunctionButton'
@@ -455,6 +454,7 @@ Entry.Board = function(option) {
         if (!offset) offset = {x: 0, y: 0};
         var cursorX = offset.x;
         var cursorY = offset.y;
+
         for (var i = 0; i < blocks.length; i++) {
             var block = blocks[i];
             var blockView = block.view;
@@ -464,19 +464,20 @@ Entry.Board = function(option) {
             cursorY += blockView.y;
             cursorX += blockView.x;
             var endPoint = cursorY + 1;
-            if (blockView.magnet.next)
+            if (blockView.magnet.next) {
                 endPoint += blockView.magnet.next.y;
-            metaData.push({
-                point: cursorY,
-                endPoint: endPoint,
-                startBlock: block,
-                blocks: []
-            });
-            metaData.push({
-                point: endPoint,
-                blocks: []
-            });
-            blockView.absX = cursorX;
+                metaData.push({
+                    point: cursorY,
+                    endPoint: endPoint,
+                    startBlock: block,
+                    blocks: []
+                });
+                metaData.push({
+                    point: endPoint,
+                    blocks: []
+                });
+                blockView.absX = cursorX;
+            }
             if (block.statements)
                 zIndex += 0.01;
                 for (var j = 0; j < block.statements.length; j++) {
@@ -646,6 +647,22 @@ Entry.Board = function(option) {
             var startY = cursorY - 24;
             var endY = cursorY;
             if (content instanceof Entry.FieldBlock) {
+                if (content.acceptType === targetType) {
+                    metaData.push({
+                        point: startY,
+                        endPoint: endY,
+                        startBlock: content,
+                        blocks: []
+                    });
+                    metaData.push({
+                        point: endY,
+                        blocks: []
+                    });
+                        content.absX = startX;
+                        content.zIndex = zIndex;
+                        content.width = 20;
+                }
+
                 var contentBlock = content._valueBlock;
                 if (contentBlock) {
                     metaData = metaData.concat(
@@ -657,37 +674,36 @@ Entry.Board = function(option) {
                     );
                 }
                 continue;
+            } else if (content instanceof Entry.FieldOutput) {
+                if (content.acceptType !== targetType)
+                    continue;
+                metaData.push({
+                    point: startY,
+                    endPoint: endY,
+                    startBlock: content,
+                    blocks: []
+                });
+                metaData.push({
+                    point: endY,
+                    blocks: []
+                });
+                content.absX = startX;
+                content.zIndex = zIndex;
+                content.width = 20;
+                var contentBlock = content._valueBlock;
+                if (!contentBlock)
+                    continue;
+                if (contentBlock.view.dragInstance)
+                    continue;
+                var contentBlockView = contentBlock.view;
+                metaData = metaData.concat(
+                    this._getOutputMetaData(contentBlockView,
+                                              cursorX + content.box.x,
+                                              cursorY + content.box.y,
+                                              zIndex + 0.01,
+                                              targetType)
+                );
             }
-            if (!(content instanceof Entry.FieldOutput))
-                continue;
-            if (content.acceptType !== targetType)
-                continue;
-            metaData.push({
-                point: startY,
-                endPoint: endY,
-                startBlock: content,
-                blocks: []
-            });
-            metaData.push({
-                point: endY,
-                blocks: []
-            });
-            content.absX = startX;
-            content.zIndex = zIndex;
-            content.width = 20;
-            var contentBlock = content._valueBlock;
-            if (!contentBlock)
-                continue;
-            if (contentBlock.view.dragInstance)
-                continue;
-            var contentBlockView = contentBlock.view;
-            metaData = metaData.concat(
-                this._getOutputMetaData(contentBlockView,
-                                          cursorX + content.box.x,
-                                          cursorY + content.box.y,
-                                          zIndex + 0.01,
-                                          targetType)
-            );
         }
         return metaData;
     };
@@ -702,7 +718,8 @@ Entry.Board = function(option) {
             index,
             pointData,
             result = null,
-            searchValue = targetType === "nextMagnet" ? y - 15 : y;
+            searchValue = targetType === "nextMagnet" ? y - 15 : y,
+            leftOffset = targetType === "nextMagnet" ? 20 : 0;
         while (minIndex <= maxIndex) {
             index = (minIndex + maxIndex) / 2 | 0;
             pointData = targetArray[index];
@@ -715,7 +732,7 @@ Entry.Board = function(option) {
                 var blocks = pointData.blocks;
                 for (var i = 0; i < blocks.length; i++) {
                     var blockView = blocks[i].view;
-                    if (blockView.absX - 20 < x && x < blockView.absX + blockView.width) {
+                    if (blockView.absX - leftOffset < x && x < blockView.absX + blockView.width) {
                         var resultBlock = pointData.blocks[i];
                         if (!result || result.view.zIndex < resultBlock.view.zIndex)
                             result = pointData.blocks[i];
@@ -733,5 +750,40 @@ Entry.Board = function(option) {
             .appendChild(block.view.svgGroup);
         this.code.dominate(block.thread);
     };
+
+    p.setPatternRectFill = function(color) {
+        this.patternRect.attr({fill:color});
+    };
+
+    p._removeActivated = function() {
+        if (!this._activatedBlockView) return;
+
+        this._activatedBlockView.removeActivated();
+        this._activatedBlockView = null;
+    };
+
+    p.activateBlock = function(block) {
+        var view = block.view;
+        var pos = view.getAbsoluteCoordinate();
+        var svgDom = this.svgDom;
+        var blockX = pos.x,
+            blockY = pos.y;
+
+        var dx = svgDom.width()/2 - blockX;
+        var dy = svgDom.height()/2 - blockY - 100;
+        this.scroller.scroll(
+            dx, dy
+        );
+
+        view.addActivated();
+
+        this._activatedBlockView = view;
+    };
+
+    p.reDraw = function() {
+        this.code.view.reDraw();
+    };
+
+
 
 })(Entry.Board.prototype);

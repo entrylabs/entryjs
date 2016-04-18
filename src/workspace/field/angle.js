@@ -41,37 +41,33 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
         var that = this;
         var contents = this._contents;
 
-        this.svgGroup = blockView.contentSvgGroup.group();
-        this.svgGroup.attr({
+        this.svgGroup = blockView.contentSvgGroup.elem("g", {
             class: 'entry-input-field'
         });
 
         this.textElement =
-            this.svgGroup.text(
-                X_PADDING/2, TEXT_Y_PADDING,
-                that.getText()
-            );
+            this.svgGroup.elem('text', {
+                x:X_PADDING/2, y:TEXT_Y_PADDING,
+                'font-size': '9pt'
+            });
 
-        this.textElement.attr({'font-size' : '9pt'});
+        this.textElement.textContent = this.getText();
 
         var width = this.getTextWidth();
 
         var y = this.position && this.position.y ? this.position.y : 0;
         y -= CONTENT_HEIGHT/2;
-        this._header = this.svgGroup.rect(
-                0, y,
-                width,
-                CONTENT_HEIGHT,
-            3).attr({
+        this._header = this.svgGroup.elem('rect', {
+                x: 0, y: y,
+                width: width,
+                height: CONTENT_HEIGHT, 'rx':3, 'ry': 3,
                 fill: "#fff",
                 'fill-opacity': 0.4
                 });
 
-        this.svgGroup.append(this.textElement);
+        this.svgGroup.appendChild(this.textElement);
 
-        this.svgGroup.mouseup(function(e) {
-            if (that._isEditable()) that.renderOptions();
-        });
+        this._bindRenderOptions ();
 
         this.box.set({
             x: 0,
@@ -115,7 +111,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
                 that.destroyOption();
         });
 
-        var pos = this.getAbsolutePos();
+        var pos = this.getAbsolutePosFromDocument();
         pos.y -= this.box.height/2;
         this.optionGroup.css({
             height: CONTENT_HEIGHT,
@@ -128,11 +124,10 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
 
         //svg option dom
         this.svgOptionGroup = this.appendSvgOptionGroup();
-        var circle = this.svgOptionGroup.circle(
-            0, 0, RADIUS
-        );
-
-        circle.attr({class:'entry-field-angle-circle'});
+        var circle = this.svgOptionGroup.elem('circle', {
+            x:0, y:0, r:RADIUS,
+            class:'entry-field-angle-circle'
+        });
 
         this._dividerGroup = this.svgOptionGroup.group();
         for (var a = 0; a < 360; a += 15) {
@@ -228,7 +223,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
     };
 
     p.getTextWidth = function() {
-         return this.textElement.node.getComputedTextLength() + X_PADDING;
+         return this.textElement.getComputedTextLength() + X_PADDING;
     };
 
     p.getText = function() {
@@ -252,7 +247,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
             this.svgOptionGroup.remove();
             delete this.svgOptionGroup;
         }
-        this.textElement.node.textContent = this.getText();
+        this.textElement.textContent = this.getText();
         this.resize();
     };
 })(Entry.FieldAngle.prototype);

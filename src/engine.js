@@ -15,7 +15,8 @@ Entry.Engine = function() {
     this.speeds = [1, 15, 30, 45, 60];
 
 
-    Entry.keyPressed.attach(this, this.captureKeyEvent)
+    if (Entry.keyPressed)
+        Entry.keyPressed.attach(this, this.captureKeyEvent);
 
     Entry.addEventListener('canvasClick', function(e){
         Entry.engine.fireEvent('mouse_clicked');
@@ -615,9 +616,6 @@ Entry.Engine.prototype.captureKeyEvent = function(e) {
         } else if (keyCode == 90) {
             e.preventDefault();
             Entry.dispatchEvent(e.shiftKey ? 'redo' : 'undo');
-        } else if (keyCode > 48 && keyCode < 58) {
-            e.preventDefault();
-            Entry.playground.selectMenu(keyCode - 49);
         }
     } else if (Entry.engine.isState('run')) {
         Entry.container.mapEntityIncludeCloneOnScene(Entry.engine.raiseKeyEvent,

@@ -206,7 +206,7 @@ Entry.block.function_create = {
     params: [
         {
             type: "Block",
-            accept: "basic_param",
+            accept: "paramMagnet",
             value: {
                     type: "function_field_label"
             }

@@ -20,6 +20,8 @@ Entry.Block = function(block, thread) {
 
     this.setThread(thread);
     this.load(block);
+
+    this.getCode().registerBlock(this);
 };
 
 Entry.Block.MAGNET_RANGE = 10;
@@ -86,10 +88,10 @@ Entry.Block.MAGNET_OFFSET = 0.4;
         for (var i = 0; params && i < params.length; i++) {
             var value = thisParams[i] !== undefined ? thisParams[i] : params[i].value;
 
-            var paramInjected = thisParams[i];
+            var paramInjected = thisParams[i] !== undefined;
 
             if (value && (params[i].type === 'Output' || params[i].type === 'Block'))
-                value = new Entry.Block(value);
+                value = new Entry.Block(value, this.thread);
 
             if (paramInjected) thisParams.splice(i, 1, value);
             else thisParams.push(value);
@@ -135,6 +137,15 @@ Entry.Block.MAGNET_OFFSET = 0.4;
             });
 
         //TODO update next pos
+    };
+
+    p.moveTo = function(x, y) {
+        if (this.view)
+            this.view._moveTo(x, y);
+        this.set({
+            x: this.view.x,
+            y: this.view.y
+        });
     };
 
     p.createView = function(board, mode) {
@@ -204,6 +215,7 @@ Entry.Block.MAGNET_OFFSET = 0.4;
         var prevBlock = this.getPrevBlock();
         var nextBlock = this.getNextBlock();
 
+        this.getCode().unregisterBlock(this);
         var thread = this.getThread();
         if (this._schema.event)
             thread.unregisterEvent(this, this._schema.event);
@@ -261,8 +273,8 @@ Entry.Block.MAGNET_OFFSET = 0.4;
         var id = this.id;
         if (Entry.activityReporter) {
             var data = [
-                ['blockId',id],
-                ['code',this.getCode().stringify()]
+                id,
+                this.getCode().stringify()
             ];
             Entry.activityReporter.add(new Entry.Activity('addBlock', data));
         }
@@ -278,10 +290,10 @@ Entry.Block.MAGNET_OFFSET = 0.4;
         this.getCode().changeEvent.notify();
         if (Entry.activityReporter) {
             var data = [
-                ['blockId',id],
-                ['moveX',moveX],
-                ['moveY',moveY],
-                ['code',this.getCode().stringify()]
+                id,
+                moveX,
+                moveY,
+                this.getCode().stringify()
             ];
             Entry.activityReporter.add(new Entry.Activity('moveBlock', data));
         }
@@ -295,31 +307,31 @@ Entry.Block.MAGNET_OFFSET = 0.4;
         this.separate();
         if (Entry.activityReporter) {
             var data = [
-                ['blockId',id],
-                ['positionX',positionX],
-                ['positionY',positionY],
-                ['code',this.getCode().stringify()]
+                id,
+                positionX,
+                positionY,
+                this.getCode().stringify()
             ];
             Entry.activityReporter.add(new Entry.Activity('seperateBlock', data));
         }
     };
 
-    p.doInsert = function(targetBlock, isFieldBlock) {
-        var id = this.id;
-        var targetId = targetBlock.id;
-        var positionX = this.x;
-        var positionY = this.y;
-        if (isFieldBlock)
-            this.replace(targetBlock);
-        else
+    p.doInsert = function(targetBlock) {
+        if (this.getBlockType() === "basic")
             this.insert(targetBlock);
+        else
+            this.replace(targetBlock);
         if (Entry.activityReporter) {
-            var data = [
-                ['targetBlockId',targetId],
-                ['blockId',id],
-                ['positionX',positionX],
-                ['positionY',positionY],
-                ['code',this.getCode().stringify()]
+            var id = this.id,
+                targetId = targetBlock.id,
+                positionX = this.x,
+                positionY = this.y,
+                data = [
+                targetId,
+                id,
+                positionX,
+                positionY,
+                this.getCode().stringify()
             ];
             Entry.activityReporter.add(new Entry.Activity('insertBlock', data));
         }
@@ -334,10 +346,10 @@ Entry.Block.MAGNET_OFFSET = 0.4;
         this.getCode().changeEvent.notify();
         if (Entry.activityReporter) {
             var data = [
-                ['blockId',id],
-                ['positionX',positionX],
-                ['positionY',positionY],
-                ['code',this.getCode().stringify()]
+                id,
+                positionX,
+                positionY,
+                this.getCode().stringify()
             ];
             Entry.activityReporter.add(new Entry.Activity('destroyBlock', data));
         }
@@ -359,10 +371,10 @@ Entry.Block.MAGNET_OFFSET = 0.4;
         this.getCode().changeEvent.notify();
         if (Entry.activityReporter) {
             var data = [
-                ['blockId',id],
-                ['positionX',positionX],
-                ['positionY',positionY],
-                ['code',this.getCode().stringify()]
+                id,
+                positionX,
+                positionY,
+                this.getCode().stringify()
             ];
             Entry.activityReporter.add(new Entry.Activity('destroyBlock', data));
         }
@@ -388,8 +400,8 @@ Entry.Block.MAGNET_OFFSET = 0.4;
 
     p.copyToClipboard = function() {Entry.clipboard = this.copy();};
 
-    p.separate = function() {
-        this.thread.separate(this);
+    p.separate = function(count) {
+        this.thread.separate(this, count);
         this._updatePos();
         this.getCode().changeEvent.notify();
     };
@@ -407,7 +419,7 @@ Entry.Block.MAGNET_OFFSET = 0.4;
 
     p.replace = function(targetBlock) {
         this.thread.cut(this);
-        targetBlock.thread.replace(this);
+        targetBlock.getThread().replace(this);
         this.getCode().changeEvent.notify();
     };
 
@@ -429,8 +441,31 @@ Entry.Block.MAGNET_OFFSET = 0.4;
             var paramDef = params[i];
             if (paramDef.type === "Output")
                 return this.params[i];
-        };
+        }
         return null;
+    };
+
+    p.getTerminateOutputBlock = function() {
+        var block = this;
+        while (true) {
+            var outputBlock = block.getOutputBlock();
+            if (!outputBlock)
+                return block;
+            block = outputBlock;
+        }
+    };
+
+    p.getBlockType = function() {
+        var skeleton = Entry.skeleton[this._schema.skeleton]
+        var magnet = skeleton.magnets();
+        if (magnet.next || magnet.prev)
+            return "basic";
+        else if (magnet.bool || magnet.string)
+            return "field";
+        else if (magnet.output)
+            return "output";
+        else
+            return null;
     };
 
 })(Entry.Block.prototype);

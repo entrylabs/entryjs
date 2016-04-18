@@ -22,6 +22,7 @@ Entry.FieldText = function(content, blockView, index) {
     this._color = content.color || blockView.getSkeleton().color || 'white';
     this._align = content.align || 'left';
     this._text = this.getValue() || content.text;
+    this.setValue(null);
 
     this.textElement = null;
 
@@ -47,7 +48,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldText);
         this.textElement.textContent = this._text;
 
         var x = 0;
-        var bBox = this.textElement.getBBox();
+        var bBox = this.textElement.getBoundingClientRect();
         if (this._align == 'center') x = -bBox.width/2;
 
         this.textElement.attr({
@@ -58,7 +59,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldText);
         this.box.set({
             x: 0,
             y: 0,
-            width: this.textElement.getComputedTextLength(),
+            width: bBox.width,
             height: bBox.height
         });
     };

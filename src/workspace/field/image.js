@@ -26,6 +26,7 @@ Entry.FieldImage = function(content, blockView, index) {
     this._imgElement = null;
     this._index = index;
 
+    this.setValue(null);
     this.renderStart();
 };
 

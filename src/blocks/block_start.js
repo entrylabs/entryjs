@@ -184,6 +184,15 @@ Blockly.Blocks.when_message_cast = {
     this.setNextStatement(true);
   },
   syntax: {js: [], py: ["self.on_message(%1)\n"]}
+    },
+    whenAdd: function (block) {
+        var vc = Entry.variableContainer;
+        if (vc) vc.addRef('_messageRefs', block);
+    },
+    whenRemove: function (block) {
+        var vc = Entry.variableContainer;
+        if (vc) vc.removeRef('_messageRefs', block);
+    }
 };
 
 Entry.block.when_message_cast = function (sprite, script) {
@@ -205,6 +214,15 @@ Blockly.Blocks.message_cast = {
     this.setPreviousStatement(true);
   },
   syntax: {js: [], py: ["self.send_message(%1)\n"]}
+    },
+    whenAdd: function (block) {
+        var vc = Entry.variableContainer;
+        if (vc) vc.addRef('_messageRefs', block);
+    },
+    whenRemove: function (block) {
+        var vc = Entry.variableContainer;
+        if (vc) vc.removeRef('_messageRefs', block);
+    }
 };
 
 Entry.block.message_cast = function (sprite, script) {
@@ -233,6 +251,15 @@ Blockly.Blocks.message_cast_wait = {
     this.setPreviousStatement(true);
   },
   syntax: {js: [], py: ["self.wait_after_message(%1)\n"]}
+    },
+    whenAdd: function (block) {
+        var vc = Entry.variableContainer;
+        if (vc) vc.addRef('_messageRefs', block);
+    },
+    whenRemove: function (block) {
+        var vc = Entry.variableContainer;
+        if (vc) vc.removeRef('_messageRefs', block);
+    }
 };
 
 Entry.block.message_cast_wait = function (sprite, script) {

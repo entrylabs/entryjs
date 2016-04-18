@@ -287,9 +287,7 @@ Entry.Playground.prototype.generateCodeView = function(codeView) {
         class: "entryWorkspaceBlockMenu"
     });
 
-    this.blockDriver = new Entry.BlockDriver();
-    this.blockDriver.convert();
-
+    new Entry.BlockDriver().convert();
     Entry.block.when_run_button_click.event = "start";
 
     this.mainWorkspace = new Entry.Workspace(
@@ -1136,13 +1134,6 @@ Entry.Playground.prototype.restoreBlock = function(targetObject, blockString) {
 };
 
 /**
- * Save current playground data to selected object with event
- * @param {event} e
- */
-Entry.Playground.prototype.syncObjectWithEvent = function(e) {
-};
-
-/**
  * Generate category menu with object type.
  * @param {!string} objectType
  */
@@ -1192,16 +1183,24 @@ Entry.Playground.prototype.showTab = function(item) {
 Entry.Playground.prototype.initializeResizeHandle = function(handle) {
     handle.onmousedown = function(e) {
         Entry.playground.resizing = true;
-    };
-    document.addEventListener('mousemove', function(e) {
-        if (Entry.playground.resizing) {
-            Entry.resizeElement({
-                menuWidth: e.x - Entry.interfaceState.canvasWidth
+        if (Entry.documentMousemove) {
+            Entry.playground.resizeEvent = Entry.documentMousemove.attach(this, function(e) {
+                if (Entry.playground.resizing) {
+                    Entry.resizeElement({
+                        menuWidth: e.clientX - Entry.interfaceState.canvasWidth
+                    });
+                }
             });
         }
-    });
+    };
+
     document.addEventListener('mouseup', function(e) {
-        Entry.playground.resizing = false;
+        var listener = Entry.playground.resizeEvent
+        if (listener) {
+            Entry.playground.resizing = false;
+            Entry.documentMousemove.detach(listener);
+            delete Entry.playground.resizeEvent;
+        }
     });
 };
 
@@ -1211,14 +1210,11 @@ Entry.Playground.prototype.initializeResizeHandle = function(handle) {
 Entry.Playground.prototype.reloadPlayground = function () {
     var selectedCategory, selector;
 
-    if (document.getElementsByClassName('entrySelectedCategory')[0]) {
-        selectedCategory = document.getElementsByClassName('entrySelectedCategory')[0];
-        selector = selectedCategory.getAttribute('id').substring(13);
-        //Entry.playground.mainWorkspace.getBlockMenu().selectMenu(selector);
-    }
+    var mainWorkspace = this.mainWorkspace;
+    mainWorkspace.getBlockMenu().reDraw();
 
     if (Entry.stage.selectedObject) {
-        //TODO : reload board
+        Entry.stage.selectedObject.script.view.reDraw();
     }
 };
 
@@ -1228,9 +1224,9 @@ Entry.Playground.prototype.reloadPlayground = function () {
 Entry.Playground.prototype.flushPlayground = function () {
     this.object = null;
     if (Entry.playground && Entry.playground.view_) {
-        // TODO: reset board
         this.injectPicture();
         this.injectSound();
+        Entry.playground.mainWorkspace.getBoard().clear();
     }
 };
 
@@ -1537,8 +1533,7 @@ Entry.Playground.prototype.updateHW = function() {
         self.blockMenu.unbanClass("arduinoDisconnected");
         Entry.hw.banHW();
     }
-    if (self.object)
-        self.blockMenu.selectMenu(self.blockMenu.lastSelector, true);
+    if (self.object) self.blockMenu.redraw();
 };
 
 Entry.Playground.prototype.toggleLineBreak = function(isLineBreak) {

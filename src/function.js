@@ -36,8 +36,6 @@ Entry.Func = function() {
 Entry.Func.threads = {};
 
 Entry.Func.registerFunction = function(func) {
-    if (!this.menuCode)
-        this.setupMenuCode();
     var blockMenu = Entry.playground.mainWorkspace.getBlockMenu();
     var menuCode = blockMenu.getCategoryCodes("func");
     this._targetFuncBlock = menuCode.createThread([{
@@ -72,20 +70,23 @@ Entry.Func.edit = function(func) {
     this.cancelEdit();
     this.targetFunc = func;
     this.initEditView(func.content);
-    this._funcChangeEvent = func.content.getEventMap("funcDef")[0].view._contents[1]
-        .changeEvent.attach(this, this.generateWsBlock);
+    this.bindFuncChangeEvent();
     this.updateMenu();
 };
 
 Entry.Func.initEditView = function(content) {
+    if (!this.menuCode)
+        this.setupMenuCode();
     var workspace = Entry.playground.mainWorkspace;
     workspace.setMode(Entry.Workspace.MODE_OVERLAYBOARD);
     workspace.changeOverlayBoardCode(content);
-    workspace.changeEvent.attach(this, this.endEdit);
+    this._workspaceStateEvent = workspace.changeEvent.attach(this, this.endEdit);
 };
 
 Entry.Func.endEdit = function(message) {
     this._funcChangeEvent.destroy();
+    this._workspaceStateEvent.destroy();
+    delete this._workspaceStateEvent;
     switch(message){
         case "save":
             this.save();
@@ -97,7 +98,6 @@ Entry.Func.endEdit = function(message) {
 Entry.Func.save = function() {
     this.targetFunc.generateBlock(true);
     Entry.variableContainer.saveFunction(this.targetFunc);
-    this.cancelEdit();
 };
 
 Entry.Func.cancelEdit = function() {
@@ -159,7 +159,7 @@ Entry.Func.setupMenuCode = function() {
     var menuCode = blockMenu.getCategoryCodes("func");
     this._fieldLabel = menuCode.createThread([{
         type: "function_field_label"
-    } ]).getFirstBlock();
+    }]).getFirstBlock();
     this._fieldString = menuCode.createThread([{
         type: "function_field_string",
         params: [
@@ -188,7 +188,7 @@ Entry.Func.refreshMenuCode = function() {
 
 Entry.Func.requestParamBlock = function(type) {
     var id = Entry.generateHash();
-    var blockPrototype, hashMap;
+    var blockPrototype;
     switch (type) {
         case "string":
             blockPrototype = Entry.block.function_param_string;
@@ -207,6 +207,7 @@ Entry.Func.requestParamBlock = function(type) {
 
     var blockType = type + "Param_" + id;
     Entry.block[blockType] = blockSchema;
+    this.targetFunc.hashMap[blockType] = true;
     return blockType;
 };
 
@@ -256,6 +257,8 @@ Entry.Func.generateWsBlock = function() {
     var stringIndex = 0;
     var schemaParams = [];
     var schemaTemplate = "";
+    var hashMap = this.targetFunc.hashMap;
+    this.unbindFuncChangeEvent();
     while(outputBlock) {
         var value = outputBlock.params[0];
         switch(outputBlock.type) {
@@ -263,18 +266,26 @@ Entry.Func.generateWsBlock = function() {
                 schemaTemplate = schemaTemplate + " " + value;
                 break;
             case 'function_field_boolean':
-                Entry.Mutator.mutate(value.type, {template: "판단값 " + booleanIndex});
+                Entry.Mutator.mutate(value.type, {
+                    template: Lang.Blocks.FUNCTION_logical_variable +
+                        " " + (booleanIndex ? booleanIndex : "")
+                });
+                hashMap[value.type] = false;
                 booleanIndex++;
                 schemaParams.push({
                     type: "Block",
                     accept: "booleanMagnet"
                 });
-                schemaTemplate = schemaTemplate + " %" + (booleanIndex + stringIndex);
+                schemaTemplate += " %" + (booleanIndex + stringIndex);
                 break;
             case 'function_field_string':
-                Entry.Mutator.mutate(value.type, {template: "문자/숫자값 " + stringIndex});
+                Entry.Mutator.mutate(value.type, {
+                    template: Lang.Blocks.FUNCTION_character_variable +
+                        " " + (stringIndex ? stringIndex : "")
+                });
+                hashMap[value.type] = false;
                 stringIndex++;
-                schemaTemplate = schemaTemplate + " %" + (booleanIndex + stringIndex);
+                schemaTemplate += " %" + (booleanIndex + stringIndex);
                 schemaParams.push({
                     type: "Block",
                     accept: "stringMagnet"
@@ -287,5 +298,37 @@ Entry.Func.generateWsBlock = function() {
         "func_" + this.targetFunc.id,
         {params: schemaParams, template: schemaTemplate}
     );
+
+    for (var key in hashMap) {
+        var state = hashMap[key];
+        if (state) {
+            var text;
+            if (key.indexOf("string") > -1)
+                text = Lang.Blocks.FUNCTION_character_variable;
+            else
+                text = Lang.Blocks.FUNCTION_logical_variable;
+            Entry.Mutator.mutate(key, {
+                template: text
+            });
+        } else {
+            hashMap[key] = true;
+        }
+    }
+
     this.refreshMenuCode();
+
+    this.bindFuncChangeEvent();
+};
+
+Entry.Func.bindFuncChangeEvent = function() {
+    if (!this._funcChangeEvent)
+        this._funcChangeEvent = this.targetFunc.content
+            .getEventMap("funcDef")[0].view._contents[1]
+            .changeEvent.attach(this, this.generateWsBlock);
+};
+
+Entry.Func.unbindFuncChangeEvent = function() {
+    if (this._funcChangeEvent)
+        this._funcChangeEvent.destroy();
+    delete this._funcChangeEvent;
 };

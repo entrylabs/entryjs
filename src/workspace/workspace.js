@@ -76,8 +76,14 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
 
     p.setMode = function(mode, message){
         mode = Number(mode);
+
+        var oldMode = this.mode;
         this.mode = mode;
+
         switch (mode) {
+            case oldMode:
+                return;
+
             case Entry.Workspace.MODE_VIMBOARD:
                 if (this.board) this.board.hide();
                 if (this.overlayBoard) this.overlayBoard.hide();
@@ -110,8 +116,8 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                 this.set({selectedBoard:this.overlayBoard});
                 break;
         }
-        if(message)
-            this.changeEvent.notify(message);
+
+        this.changeEvent.notify(message);
     };
 
     p.changeBoardCode = function(code) {

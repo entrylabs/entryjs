@@ -407,3 +407,94 @@ Entry.block.sensorBoard_led = function (sprite, script) {
                                  script.getNumberField("OPERATOR"));
     return script.callReturn();
 };
+
+Entry.block.arduino_download_connector = {
+    skeleton: "basic_button",
+    color: "#eee",
+    template: "%1",
+    params: [
+        {
+            type: "Text",
+            text: "연결 프로그램 다운로드",
+            color: "#333",
+            align: "center"
+        }
+    ],
+    func: function() {},
+    events: {
+        mousedown: [
+            function() {
+                console.log('download connector');
+            }
+        ]
+    }
+};
+
+Entry.block.arduino_download_source = {
+    skeleton: "basic_button",
+    color: "#eee",
+    template: "%1",
+    params: [
+        {
+            type: "Text",
+            text: "엔트리 아두이노 소스",
+            color: "#333",
+            align: "center"
+        }
+    ],
+    func: function() {},
+    events: {
+        mousedown: [
+            function() {
+                console.log('download source');
+            }
+        ]
+    }
+};
+
+Entry.block.arduino_connected = {
+    skeleton: "basic_button",
+    color: "#eee",
+    template: "%1",
+    params: [
+        {
+            type: "Text",
+            text: "연결 됨",
+            color: "#333",
+            align: "center"
+        }
+    ],
+    func: function() {},
+    events: {
+        mousedown: [
+            function() {
+                console.log('download source');
+            }
+        ]
+    }
+};
+
+
+Entry.block.arduino_reconnect = {
+    skeleton: "basic_button",
+    color: "#eee",
+    template: "%1",
+    params: [
+        {
+            type: "Text",
+            text: "다시 연결하기",
+            color: "#333",
+            align: "center"
+        }
+    ],
+    func: function() {},
+    events: {
+        mousedown: [
+            function() {
+                console.log('download source');
+            }
+        ]
+    }
+};
+
+

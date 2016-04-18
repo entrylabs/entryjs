@@ -18,6 +18,8 @@ Entry.FieldDropdown = function(content, blockView, index) {
     this.svgGroup = null;
 
     this._contents = content;
+    this._noArrow = content.noArrow;
+    this._arrowColor = content.arrowColor;
     this._index = index;
     this.setValue(this.getValue());
 
@@ -38,6 +40,9 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
 
     p.renderStart = function() {
         if (this.svgGroup) $(this.svgGroup).remove();
+        //should update value dynamically
+        if (this instanceof Entry.FieldDropdownDynamic) this._updateValue();
+
         var blockView = this._blockView;
         var X_PADDING = 18;
         var that = this;
@@ -63,6 +68,11 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
         var width =
             this.textElement.getComputedTextLength() + X_PADDING;
 
+
+
+        if (this._noArrow) width -= 14;
+
+
         var CONTENT_HEIGHT = this._CONTENT_HEIGHT;
 
         this._header = this.svgGroup.elem("rect", {
@@ -77,12 +87,15 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
 
         this.svgGroup.appendChild(this.textElement);
 
-        this._arrow = this.svgGroup.elem("polygon",{
-            points: "0,-2 6,-2 3,2",
-            fill: blockView._schema.color,
-            stroke: blockView._schema.color,
-            transform: "translate("+ (width-11) + ",0)"
-        });
+        if (!this._noArrow) {
+            var fillColor = this._arrowColor || blockView._schema.color;
+            this._arrow = this.svgGroup.elem("polygon",{
+                points: "0,-2.1 6.4,-2.1 3.2,2.1",
+                fill: fillColor,
+                stroke: fillColor,
+                transform: "translate("+ (width-11) + ",0)"
+            });
+        }
 
         this._bindRenderOptions();
 
@@ -99,12 +112,14 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
         var width =
             this.textElement.getComputedTextLength() + X_PADDING;
 
+        if (!this._noArrow) {
+            this._arrow.attr({
+                transform: "translate("+ (width-11) + ",0)"
+            });
+        } else width -= 14;
+
         this._header.attr({
             width: width
-        });
-
-        this._arrow.attr({
-            transform: "translate("+ (width-11) + ",0)"
         });
 
         this.box.set({width: width});

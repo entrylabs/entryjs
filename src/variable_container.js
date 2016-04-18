@@ -29,6 +29,9 @@ Entry.VariableContainer = function() {
         }
     };
     this.selectedVariable = null;
+    this._variableRefs = [];
+    this._messageRefs = [];
+    this._functionRefs = [];
 };
 
 Entry.VariableContainer.prototype.createDom = function(view) {
@@ -130,7 +133,7 @@ Entry.VariableContainer.prototype.createDom = function(view) {
     functionAddButton.bindOnClick(function(e) {
         Entry.playground.changeViewMode('code');
         if (Entry.playground.selectedMenu != 'func')
-            Entry.playground.selectMenu('func');
+            Entry.playground.mainWorkspace.blockMenu.selectMenu('func');
         that.createFunction();
     });
 
@@ -227,46 +230,20 @@ Entry.VariableContainer.prototype.select = function(object) {
  */
 Entry.VariableContainer.prototype.renderMessageReference = function(message) {
     var that = this;
-    var objects = Entry.container.objects_;
-    var messageType = ['when_message_cast', 'message_cast', 'message_cast_wait'];
+    var refs = this._messageRefs;
+    var messageId = message.id_;
     var callers = [];
+
+
+    for (var i=0; i<refs.length; i++) {
+        var params = refs[i].block.params;
+        var index = params.indexOf(messageId);
+        if (index > -1) callers.push(refs[i]);
+    }
+
     var listView = Entry.createElement('ul');
     listView.addClass('entryVariableListCallerListWorkspace');
-    for (var i in objects) {
-        var object = objects[i];
-        var script = object.script;
-        var blocks = script.getElementsByTagName('block');
-        for (var j = 0; j < blocks.length; j++) {
-            var block = blocks[j];
-            var type = block.getAttribute('type');
-            if (messageType.indexOf(type) > -1) {
-                var value = Entry.Xml.getField("VALUE", block);
-                if (value == message.id)
-                    callers.push({object:object, block: block});
-            } else if (type == 'function_general') {
-                var hashId = block.getElementsByTagName('mutation')[0].
-                    getAttribute('hashid');
-                var func = Entry.variableContainer.getFunction(hashId);
-                if (func) {
-                    func = func.content;
-                    var funcBlocks = func.getElementsByTagName('block');
-                    for (var k = 0; k < funcBlocks.length; k++) {
-                        var funcBlock = funcBlocks[k];
-                        type = funcBlock.getAttribute('type');
-                        if (messageType.indexOf(type) > -1) {
-                            var value = Entry.Xml.getField("VALUE", funcBlock);
-                            if (value == message.id)
-                                callers.push({
-                                    object:object,
-                                    block: funcBlock,
-                                    funcBlock: block
-                                });
-                        }
-                    }
-                }
-            }
-        }
-    }
+
     for (var i in callers) {
         var caller = callers[i];
         var element = Entry.createElement('li');
@@ -275,7 +252,7 @@ Entry.VariableContainer.prototype.renderMessageReference = function(message) {
         var nameElement = Entry.createElement('div');
         nameElement.addClass('entryVariableListCallerNameWorkspace');
         nameElement.innerHTML = caller.object.name + ' : ' +
-            Lang.Blocks['START_' + caller.block.getAttribute('type')];
+            Lang.Blocks['START_' + caller.block.type];
         element.appendChild(nameElement);
         element.caller = caller;
         element.message = message;
@@ -288,10 +265,6 @@ Entry.VariableContainer.prototype.renderMessageReference = function(message) {
             }
 
             var caller = this.caller;
-            var id;
-            if (caller.funcBlock) id = caller.funcBlock.getAttribute("id");
-            else id = caller.block.getAttribute("id");
-            Blockly.mainWorkspace.activatePreviousBlock(Number(id));
             Entry.playground.toggleOnVariableView();
             Entry.playground.changeViewMode('variable');
         });
@@ -313,58 +286,21 @@ Entry.VariableContainer.prototype.renderMessageReference = function(message) {
  * @param {object} variable
  */
 Entry.VariableContainer.prototype.renderVariableReference = function(variable) {
-    //TODO new render block schema
-    return;
     var that = this;
-    var objects = Entry.container.objects_;
-    var variableType = [
-        'get_variable', 'change_variable', 'hide_variable',
-        'set_variable', 'show_variable',
-        'add_value_to_list', 'remove_value_from_list', 'insert_value_to_list',
-        'change_value_list_index', 'value_of_index_from_list',
-        'length_of_list', 'show_list', 'hide_list', 'is_included_in_list'
-    ];
+    var refs = this._variableRefs;
+    var variableId = variable.id_;
     var callers = [];
+
+
+    for (var i=0; i<refs.length; i++) {
+        var params = refs[i].block.params;
+        var index = params.indexOf(variableId);
+        if (index > -1) callers.push(refs[i]);
+    }
+
     var listView = Entry.createElement('ul');
     listView.addClass('entryVariableListCallerListWorkspace');
-    var value;
-    for (var i in objects) {
-        var object = objects[i];
-        var script = object.script;
-        var blocks = script.getElementsByTagName('block');
-        for (var j = 0; j < blocks.length; j++) {
-            var block = blocks[j];
-            var type = block.getAttribute('type');
-            if (variableType.indexOf(type) > -1) {
-                value = Entry.Xml.getField("VARIABLE", block) ||
-                            Entry.Xml.getField('LIST', block);
-                if (value == variable.id_)
-                    callers.push({object:object, block: block});
-            } else if (type == 'function_general') {
-                var hashId = block.getElementsByTagName('mutation')[0].
-                    getAttribute('hashid');
-                var func = Entry.variableContainer.getFunction(hashId);
-                if (func) {
-                    func = func.content;
-                    var funcBlocks = func.getElementsByTagName('block');
-                    for (var k = 0; k < funcBlocks.length; k++) {
-                        var funcBlock = funcBlocks[k];
-                        type = funcBlock.getAttribute('type');
-                        if (variableType.indexOf(type) > -1) {
-                            value = Entry.Xml.getField("VARIABLE", funcBlock) ||
-                                        Entry.Xml.getField('LIST', funcBlock);
-                            if (value == variable.id_)
-                                callers.push({
-                                    object:object,
-                                    block: funcBlock,
-                                    funcBlock: block
-                                });
-                        }
-                    }
-                }
-            }
-        }
-    }
+
     for (var i in callers) {
         var caller = callers[i];
         var element = Entry.createElement('li');
@@ -373,7 +309,7 @@ Entry.VariableContainer.prototype.renderVariableReference = function(variable) {
         var nameElement = Entry.createElement('div');
         nameElement.addClass('entryVariableListCallerNameWorkspace');
         nameElement.innerHTML = caller.object.name + ' : ' +
-            Lang.Blocks['VARIABLE_' + caller.block.getAttribute('type')];
+            Lang.Blocks['VARIABLE_' + caller.block.type];
         element.appendChild(nameElement);
         element.caller = caller;
         element.variable = variable;
@@ -384,15 +320,14 @@ Entry.VariableContainer.prototype.renderVariableReference = function(variable) {
                 that.select(null);
             }
             var caller = this.caller;
-            var id;
-            if (caller.funcBlock) id = caller.funcBlock.getAttribute("id");
-            else id = caller.block.getAttribute("id");
-            Blockly.mainWorkspace.activatePreviousBlock(Number(id));
+            var block = caller.block;
+            block.view.getBoard().activateBlock(block);
             Entry.playground.toggleOnVariableView();
             Entry.playground.changeViewMode('variable');
         });
         listView.appendChild(element);
     }
+
     if (callers.length === 0) {
         var element = Entry.createElement('li');
         element.addClass('entryVariableListCallerWorkspace');
@@ -410,25 +345,20 @@ Entry.VariableContainer.prototype.renderVariableReference = function(variable) {
  */
 Entry.VariableContainer.prototype.renderFunctionReference = function(func) {
     var that = this;
-    var objects = Entry.container.objects_;
-    var variableType = 'function_general';
+    var refs = this._functionRefs;
+    var funcId = func.id_;
     var callers = [];
+
+
+    for (var i=0; i<refs.length; i++) {
+        var params = refs[i].block.params;
+        var index = params.indexOf(funcId);
+        if (index > -1) callers.push(refs[i]);
+    }
+
     var listView = Entry.createElement('ul');
     listView.addClass('entryVariableListCallerListWorkspace');
-    for (var i in objects) {
-        var object = objects[i];
-        var script = object.script;
-        var blocks = script.getElementsByTagName('block');
-        for (var j = 0; j < blocks.length; j++) {
-            var block = blocks[j];
-            var type = block.getAttribute('type');
-            if (variableType == type) {
-                var mutation = block.getElementsByTagName("mutation")[0];
-                if (mutation.getAttribute("hashid") == func.id)
-                    callers.push({object:object, block: block});
-            }
-        }
-    }
+
     for (var i in callers) {
         var caller = callers[i];
         var element = Entry.createElement('li');
@@ -446,8 +376,7 @@ Entry.VariableContainer.prototype.renderFunctionReference = function(func) {
                 that.select(null);
                 that.select(func);
             }
-            var id = this.caller.block.getAttribute("id");
-            Blockly.mainWorkspace.activatePreviousBlock(Number(id));
+            var id = this.caller.block.id;
             Entry.playground.toggleOnVariableView();
             Entry.playground.changeViewMode('variable');
         });
@@ -813,7 +742,7 @@ Entry.VariableContainer.prototype.createFunctionView = function(func) {
         if (Entry.playground) {
             Entry.playground.changeViewMode('code');
             if (Entry.playground.selectedMenu != 'func')
-                Entry.playground.selectMenu('func');
+                Entry.playground.mainWorkspace.blockMenu.selectMenu('func');
         }
     });
 
@@ -1421,8 +1350,8 @@ Entry.VariableContainer.prototype.getFunctionJSON = function() {
         var func = this.functions_[i];
         var funcJSON = {
             id: func.id,
-            block: Blockly.Xml.domToText(func.block),
-            content: Blockly.Xml.domToText(func.content)
+            block: func.block,
+            content: func.content.toJSON()
         };
         json.push(funcJSON);
     }
@@ -2241,4 +2170,23 @@ Entry.VariableContainer.prototype.updateCloudVariables = function() {
         }
     }).done(function() {
     });
+};
+
+Entry.VariableContainer.prototype.addRef = function(type, block) {
+    this[type].push({
+        object:block.getCode().object,
+        block: block
+    });
+};
+
+Entry.VariableContainer.prototype.removeRef = function(type, block) {
+    var arr = this[type];
+
+    for (var i=0; i<arr.length; i++) {
+        var current = arr[i];
+        if (current.block == block) {
+            arr.splice(i,1);
+            break;
+        }
+    }
 };

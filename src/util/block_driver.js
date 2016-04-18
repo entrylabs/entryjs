@@ -30,6 +30,17 @@ Entry.BlockDriver = function() {
         if (blockInfo) {
             blockObject.class = blockInfo.class;
             blockObject.isNotFor = blockInfo.isNotFor;
+
+            /*
+            //add block definition by xml to json
+            var xml = blockInfo.xml;
+            if (xml) {
+                xml = $.parseXML(xml);
+                var child = xml.childNodes[0];
+                var def = generateBlockDef(child);
+                blockObject.def = def;
+            }
+            */
         }
 
         var PRIMITIVES = ['NUMBER', 'TRUE', 'FALSE',
@@ -38,7 +49,30 @@ Entry.BlockDriver = function() {
         if (PRIMITIVES.indexOf(blockType.toUpperCase()) > -1)
             blockObject.isPrimitive = true;
         Entry.block[blockType] = blockObject;
+
+        function generateBlockDef(block) {
+            var def = {type: block.getAttribute('type')};
+
+            var children = $(block).children();
+            if (!children) return def;
+            for (var i =0; i<children.length; i++) {
+                var child = children[i];
+                var tagName = child.tagName;
+                var subChild = $(child).children()[0];
+                if (tagName === 'value') {
+                    if (subChild.nodeName == 'block') {
+                        if (!def.params) def.params = [];
+                        def.params.push(generateBlockDef(subChild));
+                    }
+                } else if (tagName === 'field') {
+                    if (!def.params) def.params = [];
+                    def.params.push(child.textContent);
+                }
+            }
+            return def;
+        }
     };
+
 
 })(Entry.BlockDriver.prototype);
 
@@ -60,15 +94,15 @@ Entry.BlockMockup = function(blocklyInfo) {
     p.simulate = function(blocklyInfo) {
         blocklyInfo.init.call(this);
         if (blocklyInfo.whenAdd) {
-            if (!this.events['whenBlockAdd'])
-                this.events['whenBlockAdd'] = [];
-            this.events['whenBlockAdd'].push(blocklyInfo.whenAdd);
+            if (!this.events.whenBlockAdd)
+                this.events.whenBlockAdd = [];
+            this.events.whenBlockAdd.push(blocklyInfo.whenAdd);
         }
 
         if (blocklyInfo.whenRemove) {
-            if (!this.events['whenBlockDestroy'])
-                this.events['whenBlockDestroy'] = [];
-            this.events['whenBlockDestroy'].push(blocklyInfo.whenRemove);
+            if (!this.events.whenBlockDestroy)
+                this.events.whenBlockDestroy = [];
+            this.events.whenBlockDestroy.push(blocklyInfo.whenRemove);
         }
     };
 
@@ -131,10 +165,11 @@ Entry.BlockMockup = function(blocklyInfo) {
         if (typeof field === "string" && field.length > 0) {
             if (opt) {
                 field = {
-                    type: "Text",
+                    type: 'Text',
                     text: field,
                     color: opt
-                }
+                };
+
                 this.params.push(field);
                 this.templates.push(this.getFieldCount());
             } else this.templates.push(field);
@@ -195,6 +230,7 @@ Entry.BlockMockup = function(blocklyInfo) {
                 });
                 this.templates.push(this.getFieldCount());
             } else {
+                console.log('else', field);
                 //console.log('else', field);
             }
         }

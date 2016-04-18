@@ -48,4 +48,10 @@ Entry.CodeView = function(code, board) {
         this.set({board:this.code.board});
     };
 
+    p.reDraw = function() {
+        this.code.map(function(thread) {
+            thread.view.reDraw();
+        });
+    };
+
 })(Entry.CodeView.prototype);

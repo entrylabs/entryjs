@@ -122,12 +122,15 @@ Entry.FieldStatement = function(content, blockView, index) {
         var magneting = blockView.magneting;
         var block = blockView.block;
         var svgGroup = blockView.svgGroup;
+
         if (magneting) {
             var shadow = this._board.dragBlock.getShadow();
+            var pos = this.requestAbsoluteCoordinate();
+            var transform  = 'translate(' + pos.x + ',' + pos.y + ')';
             $(shadow).attr({
-                 transform: 'translate(0,0)'
+                transform: transform,
+                display: 'block'
             });
-            this.svgGroup.appendChild(shadow);
             this._clonedShadow = shadow;
 
             if (blockView.background) {
@@ -145,7 +148,7 @@ Entry.FieldStatement = function(content, blockView, index) {
             this.set({height: this.height + height});
         } else {
             if (this._clonedShadow) {
-                this._clonedShadow.remove();
+                this._clonedShadow.attr({display: 'none'});
                 delete this._clonedShadow;
             }
 

@@ -4,6 +4,7 @@
 'use strict';
 
 goog.require("Entry.PropertyPanel");
+goog.require("Entry.Commander");
 
 /**
  * Initialize method with options.
@@ -22,8 +23,6 @@ Entry.init = function(container, options) {
         'mousemove', 'keydown',
         'keyup'
     ]);
-
-    Entry.Utils.generateGlobalFilters();
 
     /** @type {object} */
     this.options = options;
@@ -73,10 +72,15 @@ Entry.init = function(container, options) {
     Entry.soundQueue.installPlugin(createjs.Sound);
 
     Entry.loadAudio_(
-        [Entry.mediaFilePath + 'media/click.mp3', Entry.mediaFilePath + 'media/click.wav', Entry.mediaFilePath + 'media/click.ogg'], 'click');
+        [Entry.mediaFilePath + 'sounds/click.mp3',
+        Entry.mediaFilePath + 'sounds/click.wav',
+        Entry.mediaFilePath + 'sounds/click.ogg'], 'entryMagneting');
     Entry.loadAudio_(
-        [Entry.mediaFilePath + 'media/delete.mp3', Entry.mediaFilePath + 'media/delete.ogg', Entry.mediaFilePath + 'media/delete.wav'], 'delete');
+        [Entry.mediaFilePath + 'sounds/delete.mp3',
+        Entry.mediaFilePath + 'sounds/delete.ogg',
+        Entry.mediaFilePath + 'sounds/delete.wav'], 'entryDelete');
 
+    createjs.Sound.stop();
 
 };
 
@@ -148,13 +152,7 @@ Entry.initialize_ = function() {
      */
     this.variableContainer = new Entry.VariableContainer();
 
-    /**
-     * Initialize stateManager for redo and undo.
-     * @type {!Entry.StateManager}
-     * @type {!object}
-     */
-    if (this.type == 'workspace' || this.type == 'phone')
-        this.stateManager = new Entry.StateManager();
+    this.commander = new Entry.Commander(this.type);
 
     /**
      * Initialize scenes.
