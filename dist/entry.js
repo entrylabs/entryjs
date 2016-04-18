@@ -724,6 +724,7 @@ Entry.SensorBoard = {name:"sensorBoard", setZero:Entry.Arduino.setZero, monitorT
 " A3 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, a4:{name:Lang.Hw.port_en + " A4 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, a5:{name:Lang.Hw.port_en + " A5 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, 6:{name:Lang.Hw.port_en + " 6 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, 7:{name:Lang.Hw.port_en + " 7 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, 12:{name:Lang.Hw.port_en + " 12 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, 13:{name:Lang.Hw.port_en + " 13 " + 
 Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}}, ports:{a0:{name:Lang.Hw.port_en + " A0 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, a1:{name:Lang.Hw.port_en + " A1 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, a2:{name:Lang.Hw.port_en + " A2 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, 0:{name:Lang.Hw.light + " " + Lang.Hw.sensor + "2", type:"input", pos:{x:190, y:215}}, 1:{name:Lang.Hw.temp, type:"input", pos:{x:207, y:251}}, 8:{name:Lang.Hw.right_ko + Lang.Hw.switch_ + Lang.Hw.right_en, 
 type:"input", pos:{x:180, y:120}}, 9:{name:Lang.Hw.left_ko + Lang.Hw.switch_ + Lang.Hw.left_en, type:"input", pos:{x:90, y:143}}, 10:{name:Lang.Hw.up_ko + Lang.Hw.switch_ + Lang.Hw.up_en, type:"input", pos:{x:130, y:73}}, 11:{name:Lang.Hw.down_ko + Lang.Hw.switch_ + Lang.Hw.down_en, type:"input", pos:{x:120, y:185}}}, mode:"both"}};
+Entry.dplay = {name:"dplay", setZero:Entry.Arduino.setZero};
 Entry.CODEino = {name:"CODEino", setZero:Entry.Arduino.setZero, monitorTemplate:Entry.Arduino.monitorTemplate};
 Blockly.Blocks.arduino_text = {init:function() {
   this.setColour("#00979D");
@@ -845,8 +846,8 @@ Blockly.Blocks.arduino_toggle_led = {init:function() {
   this.setNextStatement(!0);
 }};
 Entry.block.arduino_toggle_led = function(a, b) {
-  var c = b.getNumberValue("VALUE"), d = b.getField("OPERATOR");
-  Entry.hw.setDigitalPortValue(c, "on" == d ? 255 : 0);
+  var c = b.getNumberValue("VALUE"), d = "on" == b.getField("OPERATOR") ? 255 : 0;
+  Entry.hw.setDigitalPortValue(c, d);
   return b.callReturn();
 };
 Blockly.Blocks.arduino_toggle_pwm = {init:function() {
@@ -1159,11 +1160,11 @@ Blockly.Blocks.bitbrick_turn_off_all_motors = {init:function() {
 }};
 Entry.block.bitbrick_turn_off_all_motors = function(a, b) {
   var c = Entry.hw.sendQueue, d = Entry.Bitbrick;
-  d.servoList().map(function(b) {
-    c[b[1]] = 0;
+  d.servoList().map(function(a) {
+    c[a[1]] = 0;
   });
-  d.dcList().map(function(b) {
-    c[b[1]] = 128;
+  d.dcList().map(function(a) {
+    c[a[1]] = 128;
   });
   return b.callReturn();
 };
@@ -1370,8 +1371,8 @@ Entry.block.brush_erase_all = function(a, b) {
     c.moveTo(a.getX(), -1 * a.getY());
   }
   c = a.parent.getStampEntities();
-  c.map(function(b) {
-    b.removeClone();
+  c.map(function(a) {
+    a.removeClone();
   });
   c = null;
   return b.callReturn();
@@ -1924,10 +1925,10 @@ Entry.block.wait_second = function(a, b) {
   }
   b.isStart = !0;
   b.timeFlag = 1;
-  var c = b.getNumberValue("SECOND", b);
+  var c = b.getNumberValue("SECOND", b), c = 60 / (Entry.FPS || 60) * c * 1E3;
   setTimeout(function() {
     b.timeFlag = 0;
-  }, 60 / (Entry.FPS || 60) * c * 1E3);
+  }, c);
   return b;
 };
 Blockly.Blocks.repeat_basic = {init:function() {
@@ -2099,23 +2100,23 @@ Entry.block.stop_object = function(a, b) {
   var c = b.getField("TARGET", b), d = Entry.container;
   switch(c) {
     case "all":
-      d.mapEntityIncludeCloneOnScene(function(b) {
-        b.clearScript();
+      d.mapEntityIncludeCloneOnScene(function(a) {
+        a.clearScript();
       });
       break;
     case "thisObject":
       a.clearScript();
       c = a.parent.clonedEntities;
-      c.map(function(b) {
-        b.clearScript();
+      c.map(function(a) {
+        a.clearScript();
       });
       break;
     case "thisOnly":
       a.clearScript();
       break;
     case "otherThread":
-      return a.clearScript(), c = a.parent.clonedEntities, c.map(function(b) {
-        b.clearScript();
+      return a.clearScript(), c = a.parent.clonedEntities, c.map(function(a) {
+        a.clearScript();
       }), b.callReturn();
   }
   return null;
@@ -2139,8 +2140,8 @@ Blockly.Blocks.remove_all_clones = {init:function() {
 }};
 Entry.block.remove_all_clones = function(a, b) {
   var c = a.parent.getClonedEntities();
-  c.map(function(b) {
-    b.removeClone();
+  c.map(function(a) {
+    a.removeClone();
   });
   c = null;
   return b.callReturn();
@@ -4745,7 +4746,7 @@ Entry.block.sound_something_second_wait = function(a, b) {
       d.stop();
       b.playState = 0;
     }, 1E3 * c);
-    d.addEventListener("complete", function(b) {
+    d.addEventListener("complete", function(a) {
     });
   }
   return b;
@@ -4891,7 +4892,7 @@ Entry.block.sound_something_second_wait_with_block = function(a, b) {
       d.stop();
       b.playState = 0;
     }, 1E3 * c);
-    d.addEventListener("complete", function(b) {
+    d.addEventListener("complete", function(a) {
     });
   }
   return b;
@@ -5077,10 +5078,10 @@ Entry.block.message_cast_wait = function(a, b) {
     throw Error("value can not be null or undefined");
   }
   var e = [];
-  Entry.container.mapEntityIncludeCloneOnScene(function(b, a) {
-    for (var c = a[0], d = a[1], l = b.parent.script.childNodes, q = 0;q < l.length;q++) {
+  Entry.container.mapEntityIncludeCloneOnScene(function(a, b) {
+    for (var c = b[0], d = b[1], l = a.parent.script.childNodes, q = 0;q < l.length;q++) {
       var n = l[q], m = Entry.Xml.getField("VALUE", n);
-      Entry.Xml.isTypeOf(c, n) && m == d && (m = new Entry.Script(b), m.init(n), e.push(m));
+      Entry.Xml.isTypeOf(c, n) && m == d && (m = new Entry.Script(a), m.init(n), e.push(m));
     }
   }, ["when_message_cast", c]);
   b.runningScript = e;
@@ -5504,37 +5505,37 @@ Entry.Collection = function(a) {
     b.splice.call(this, d, 0, a);
     this._hashMap[a.id] = a;
   };
-  a.has = function(b) {
-    return !!this._hashMap[b];
+  a.has = function(a) {
+    return !!this._hashMap[a];
   };
-  a.get = function(b) {
-    return this._hashMap[b];
+  a.get = function(a) {
+    return this._hashMap[a];
   };
-  a.at = function(b) {
-    return this[b];
+  a.at = function(a) {
+    return this[a];
   };
   a.getAll = function() {
-    for (var b = this.length, a = [], e = 0;e < b;e++) {
-      a.push(this[e]);
+    for (var a = this.length, b = [], e = 0;e < a;e++) {
+      b.push(this[e]);
     }
-    return a;
+    return b;
   };
   a.indexOf = function(a) {
     return b.indexOf.call(this, a);
   };
-  a.find = function(b) {
-    for (var a = [], e, f = 0, g = this.length;f < g;f++) {
+  a.find = function(a) {
+    for (var b = [], e, f = 0, g = this.length;f < g;f++) {
       e = !0;
       var h = this[f], k;
-      for (k in b) {
-        if (b[k] != h[k]) {
+      for (k in a) {
+        if (a[k] != h[k]) {
           e = !1;
           break;
         }
       }
-      e && a.push(h);
+      e && b.push(h);
     }
-    return a;
+    return b;
   };
   a.pop = function() {
     var a = b.pop.call(this);
@@ -5553,9 +5554,9 @@ Entry.Collection = function(a) {
     }
     return e;
   };
-  a.remove = function(b) {
-    var a = this.indexOf(b);
-    -1 < a && (delete this._hashMap[b.id], this.splice(a, 1));
+  a.remove = function(a) {
+    var b = this.indexOf(a);
+    -1 < b && (delete this._hashMap[a.id], this.splice(b, 1));
   };
   a.splice = function(a, d) {
     var e = b.slice.call(arguments, 2), f = this._hashMap;
@@ -12455,36 +12456,37 @@ Entry.Func.generateWsBlock = function(a, b, c) {
   e.init(d);
   d = e;
   d.values && (d = e.values.FIELD);
-  c = '<mutation hashid="' + c + '">';
-  b = e = "";
+  e = '<mutation hashid="' + c + '">';
+  c = b = "";
   var f = 0, g = 0;
   a.stringHash = {};
   for (a.booleanHash = {};;) {
     switch(d.type) {
       case "function_field_label":
-        c += '<field type="label" content="' + d.fields.NAME.replace("<", "&lt;").replace(">", "&gt;") + '"></field>';
-        b += d.fields.NAME;
+        e += '<field type="label" content="' + d.fields.NAME.replace("<", "&lt;").replace(">", "&gt;") + '"></field>';
+        c += d.fields.NAME;
         break;
       case "function_field_boolean":
         var h = d.values.PARAM.hashId;
-        c += '<field type="boolean" hashid="' + h + '"></field>';
-        e += '<value name="' + h + '"><block type="function_param_boolean"><mutation hashid="' + h + '"></mutation></block></value>';
+        e += '<field type="boolean" hashid="' + h + '"></field>';
+        b += '<value name="' + h + '"><block type="function_param_boolean"><mutation hashid="' + h + '"></mutation></block></value>';
         a.booleanHash[h] = g;
         g++;
-        b += "\ub17c\ub9ac\uac12" + g;
+        c += "\ub17c\ub9ac\uac12" + g;
         break;
       case "function_field_string":
-        h = d.values.PARAM.hashId, c += '<field type="string" hashid="' + h + '"></field>', e += '<value name="' + h + '"><block type="function_param_string"><mutation hashid="' + h + '"></mutation></block></value>', a.stringHash[h] = f, f++, b += "\ubb38\uc790\uac12" + f;
+        h = d.values.PARAM.hashId, e += '<field type="string" hashid="' + h + '"></field>', b += '<value name="' + h + '"><block type="function_param_string"><mutation hashid="' + h + '"></mutation></block></value>', a.stringHash[h] = f, f++, c += "\ubb38\uc790\uac12" + f;
     }
     if (d.values && d.values.NEXT) {
       d = d.values.NEXT;
     } else {
       break;
     }
-    b += " ";
+    c += " ";
   }
-  b || (b = "\ud568\uc218");
-  return {block:Blockly.Xml.textToDom('<xml><block type="function_general">' + (c + "</mutation>") + e + "</block></xml>").childNodes[0], description:b};
+  a = '<xml><block type="function_general">' + (e + "</mutation>") + b + "</block></xml>";
+  c || (c = "\ud568\uc218");
+  return {block:Blockly.Xml.textToDom(a).childNodes[0], description:c};
 };
 Entry.HWMontior = {};
 Entry.HWMonitor = function(a) {
@@ -12695,7 +12697,7 @@ Entry.HW = function() {
   this.settingQueue = {};
   this.socketType = this.hwModule = this.selectedDevice = null;
   Entry.addEventListener("stop", this.setZero);
-  this.hwInfo = {11:Entry.Arduino, 12:Entry.SensorBoard, 13:Entry.CODEino, 24:Entry.Hamster, 25:Entry.Albert, 31:Entry.Bitbrick, 42:Entry.Arduino, 51:Entry.Neobot, 71:Entry.Robotis_carCont, 72:Entry.Robotis_openCM70};
+  this.hwInfo = {11:Entry.Arduino, 12:Entry.SensorBoard, 13:Entry.CODEino, 15:Entry.dplay, 24:Entry.Hamster, 25:Entry.Albert, 31:Entry.Bitbrick, 42:Entry.Arduino, 51:Entry.Neobot, 71:Entry.Robotis_carCont, 72:Entry.Robotis_openCM70};
 };
 Entry.HW.TRIAL_LIMIT = 1;
 p = Entry.HW.prototype;
@@ -12791,7 +12793,7 @@ p.removePortReadable = function(a) {
     var b, c;
     for (c in this.sendQueue.readablePorts) {
       if (this.sendQueue.readablePorts[c] == a) {
-        b = Number(c);
+        b = +c;
         break;
       }
     }
