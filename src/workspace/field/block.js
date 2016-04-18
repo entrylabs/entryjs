@@ -8,7 +8,7 @@ goog.require("Entry.Field");
 /*
  *
  */
-Entry.FieldBlock = function(content, blockView, index, mode) {
+Entry.FieldBlock = function(content, blockView, index, mode, contentIndex) {
     Entry.Model(this, false);
     this._blockView = blockView;
     this._block = blockView.block;
@@ -20,6 +20,7 @@ Entry.FieldBlock = function(content, blockView, index, mode) {
     this.changeEvent = new Entry.Event(this);
 
     this._index = index;
+    this.contentIndex = contentIndex;
     this._content = content;
 
     this.acceptType = content.accept;

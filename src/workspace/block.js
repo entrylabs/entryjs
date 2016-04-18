@@ -135,8 +135,6 @@ Entry.Block.MAGNET_OFFSET = 0.4;
                 x: this.view.x,
                 y: this.view.y
             });
-
-        //TODO update next pos
     };
 
     p.moveTo = function(x, y) {
@@ -457,7 +455,7 @@ Entry.Block.MAGNET_OFFSET = 0.4;
 
     p.getBlockType = function() {
         var skeleton = Entry.skeleton[this._schema.skeleton]
-        var magnet = skeleton.magnets();
+        var magnet = skeleton.magnets({});
         if (magnet.next || magnet.prev)
             return "basic";
         else if (magnet.bool || magnet.string)

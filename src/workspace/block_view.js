@@ -178,7 +178,7 @@ Entry.BlockView.DRAG_RADIUS = 5;
                         var paramIndex = Number(param.split('%')[1]) - 1;
                         param = params[paramIndex];
                         this._contents.push(
-                            new Entry['Field' + param.type](param, this, paramIndex, mode)
+                            new Entry['Field' + param.type](param, this, paramIndex, mode, i)
                         );
                     } else this._contents.push(new Entry.FieldText({text: param}, this));
                 }
@@ -967,5 +967,7 @@ Entry.BlockView.DRAG_RADIUS = 5;
         }
     };
 
+    p.getParam = function(index) {
+    };
 
 })(Entry.BlockView.prototype);

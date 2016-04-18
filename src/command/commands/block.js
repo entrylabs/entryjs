@@ -36,14 +36,16 @@ goog.require("Entry.Command");
                 }
             ];
             if (block.getBlockType() === "basic") {
-                data.push(block.thread.getCount(block));
                 if (block.getPrevBlock())
                     data.push(block.getPrevBlock().id);
+                else
+                    data.push(null);
+                data.push(block.thread.getCount(block));
             } else {
                 if (!(block.getThread() instanceof Entry.Thread)) {
                     var parent = block.getThread();
                     data.push(parent._block.id);
-                    data.push(parent._index);
+                    data.push(parent.contentIndex);
                 }
             }
             return data;
@@ -69,9 +71,15 @@ goog.require("Entry.Command");
                     prevBlock.getNextBlock().view.bindPrev();
             } else {
                 if (originBlock) {
-                    var param = block.view._contents[count];
+                    originBlock = Entry.playground.mainWorkspace.board.findById(originBlock);
+                    var param = originBlock.view._contents[count];
                     block.separate();
                     block.doInsert(param);
+                } else {
+                    if (block.view)
+                        block.view._toGlobalCoordinate();
+                    block.separate(count);
+                    block.moveTo(prevPos.x, prevPos.y);
                 }
             }
         }
