@@ -1472,7 +1472,7 @@ EntryStatic.blockInfo = {
     "neobot_set_sensor_value": {
         "isNotFor": ['neobot'],
         "xml": "<block type='neobot_set_sensor_value'></block>",
-        "class": "neobot_set_value" 
+        "class": "neobot_set_value"
     },
     "bitbrick_sensor_value": {
         "isNotFor": ['bitbrick'],
@@ -2204,6 +2204,9 @@ EntryStatic.getName = function(str, type) {
         dict = SoundNames;
 
     var lang = navigator.language ? navigator.language : 'ko';
+    if (window.lang)
+        lang = window.lang;
+
     if (window.user && window.user.language)
         lang = window.user.language;
 

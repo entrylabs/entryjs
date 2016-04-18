@@ -218,17 +218,23 @@ Entry.EntryObject.prototype.generateView = function() {
         wrapperView.appendChild(nameView);
         this.nameView_ = nameView;
         this.nameView_.entryObject = this;
-        nameView.setAttribute("disabled", 'disabled');
+        nameView.setAttribute("readonly", true);
 
         var self = this;
-        this.nameView_.onblur = function() {
+        this.nameView_.onblur = function(bool) {
             this.entryObject.name = this.value;
             Entry.playground.reloadPlayground();
+
         };
+
         this.nameView_.onkeypress = function(e) {
-            if (e.keyCode == 13)
-                this.entryObject.editObjectValues(false);
+            if (e.keyCode == 13) {
+                self.editObjectValues(false);
+            }
+
+                
         };
+
         this.nameView_.value = this.name;
 
         var editView = Entry.createElement('div');
@@ -294,7 +300,7 @@ Entry.EntryObject.prototype.generateView = function() {
         xCoordi.innerHTML = 'X:';
         var xInput = Entry.createElement('input');
         xInput.addClass('entryObjectCoordinateInputWorkspace');
-        xInput.setAttribute("disabled","disabled");
+        xInput.setAttribute("readonly", true);
         xInput.bindOnClick(function (e) {
             e.stopPropagation();
             this.select();
@@ -309,7 +315,7 @@ Entry.EntryObject.prototype.generateView = function() {
             e.stopPropagation();
             this.select();
         });
-        yInput.setAttribute("disabled","disabled");
+        yInput.setAttribute("readonly", true);
         var sizeSpan = Entry.createElement('span');
         sizeSpan.addClass('entryObjectCoordinateSizeWorkspace');
         sizeSpan.innerHTML = Lang.Workspace.Size + ' : ';
@@ -320,7 +326,7 @@ Entry.EntryObject.prototype.generateView = function() {
             e.stopPropagation();
             this.select();
         });
-        sizeInput.setAttribute("disabled","disabled");
+        sizeInput.setAttribute("readonly", true);
         coordinateView.appendChild(xCoordi);
         coordinateView.appendChild(xInput);
         coordinateView.appendChild(yCoordi);
@@ -332,34 +338,45 @@ Entry.EntryObject.prototype.generateView = function() {
         coordinateView.sizeInput_ = sizeInput;
         this.coordinateView_ = coordinateView;
         var thisPointer = this;
+
         xInput.onkeypress = function (e) {
-            if (e.keyCode == 13)
+            if (e.keyCode == 13) {
                 thisPointer.editObjectValues(false);
+            }               
         };
 
-        xInput.onblur = function (e) {
+        xInput.onblur = function (bool) {
             if (!isNaN(xInput.value)) {
                 thisPointer.entity.setX(Number(xInput.value));
             }
             thisPointer.updateCoordinateView();
             Entry.stage.updateObject();
+
         };
+
         yInput.onkeypress = function (e) {
-            if (e.keyCode == 13)
+            if (e.keyCode == 13) {
                 thisPointer.editObjectValues(false);
+            }
         };
-        yInput.onblur = function (e) {
+
+        yInput.onblur =  function(bool){
             if (!isNaN(yInput.value)) {
                 thisPointer.entity.setY(Number(yInput.value));
             }
             thisPointer.updateCoordinateView();
             Entry.stage.updateObject();
+
         };
+
         sizeInput.onkeypress = function (e) {
-            if (e.keyCode == 13)
+            if (e.keyCode == 13) {
                 thisPointer.editObjectValues(false);
+            }
         };
-        sizeInput.onblur = function (e) {
+
+
+        sizeInput.onblur = function (bool) {
             if (!isNaN(sizeInput.value)) {
                 thisPointer.entity.setSize(Number(sizeInput.value));
             }
@@ -377,7 +394,7 @@ Entry.EntryObject.prototype.generateView = function() {
         rotateSpan.innerHTML = Lang.Workspace.rotation + ' : ';
         var rotateInput = Entry.createElement('input');
         rotateInput.addClass('entryObjectRotateInputWorkspace');
-        rotateInput.setAttribute("disabled","disabled");
+        rotateInput.setAttribute("readonly", true);
         rotateInput.bindOnClick(function (e) {
             e.stopPropagation();
             this.select();
@@ -390,7 +407,7 @@ Entry.EntryObject.prototype.generateView = function() {
         directionSpan.innerHTML = Lang.Workspace.direction + ' : ';
         var directionInput = Entry.createElement('input');
         directionInput.addClass('entryObjectDirectionInputWorkspace');
-        directionInput.setAttribute("disabled","disabled");
+        directionInput.setAttribute("readonly", true);
         directionInput.bindOnClick(function (e) {
             e.stopPropagation();
             this.select();
@@ -405,10 +422,11 @@ Entry.EntryObject.prototype.generateView = function() {
         rotateLabelWrapperView.directionInput_ = directionInput;
         var thisPointer = this;
         rotateInput.onkeypress = function (e) {
-            if (e.keyCode == 13)
-                thisPointer.editObjectValues(false)
+            if (e.keyCode == 13) {
+                thisPointer.editObjectValues(false);
+            }
         };
-        rotateInput.onblur = function (e) {
+        rotateInput.onblur = function (bool) {
             var value = rotateInput.value;
             if (value.indexOf('˚') != -1)
                 value = value.substring(0, value.indexOf('˚'));
@@ -418,11 +436,13 @@ Entry.EntryObject.prototype.generateView = function() {
             thisPointer.updateRotationView();
             Entry.stage.updateObject();
         };
+
         directionInput.onkeypress = function (e) {
-            if (e.keyCode == 13)
+            if (e.keyCode == 13) {
                 thisPointer.editObjectValues(false);
+            }
         };
-        directionInput.onblur = function (e) {
+        directionInput.onblur = function (bool) {
             var value = directionInput.value;
             if (value.indexOf('˚') != -1)
                 value = value.substring(0,value.indexOf('˚'));
@@ -486,10 +506,12 @@ Entry.EntryObject.prototype.generateView = function() {
         this.updateThumbnailView();
         this.updateCoordinateView();
         this.updateRotateMethodView();
-        this.updateInputViews();
+        this.updateInputViews();    
 
         this.updateCoordinateView(true);
         this.updateRotationView(true);
+    
+
         return this.view_;
     } else if (Entry.type == "phone") {
         var objectView = Entry.createElement('li', this.id);
@@ -564,7 +586,7 @@ Entry.EntryObject.prototype.generateView = function() {
         };
         this.nameView_.onkeypress = function(e) {
             if (e.keyCode == 13)
-                this.blur();
+                thisPointer.editObjectValues(false);
         };
         this.nameView_.value = this.name;
 
@@ -706,20 +728,21 @@ Entry.EntryObject.prototype.generateView = function() {
                     thisPointer.entity.setX(Number(xInput.value));
                 }
                 thisPointer.updateCoordinateView();
-                xInput.blur();
+                thisPointer.blur();
             }
         };
         xInput.onblur = function (e) {
             thisPointer.entity.setX(thisPointer.entity.getX());
             Entry.stage.updateObject();
         };
+
         yInput.onkeypress = function (e) {
             if (e.keyCode == 13) {
                 if (!isNaN(yInput.value)) {
                     thisPointer.entity.setY(Number(yInput.value));
                 }
                 thisPointer.updateCoordinateView();
-                yInput.blur();
+                thisPointer.blur();
             }
         };
         yInput.onblur = function (e) {
@@ -1408,10 +1431,10 @@ Entry.EntryObject.prototype.updateInputViews = function(isLocked) {
         this.coordinateView_.sizeInput_
     ];
     if (isLocked){
-        if(inputs[0].getAttribute("disabled")!='disabled'){
+        if(inputs[0].getAttribute("readonly")!= true){
             for(var i=0; i<inputs.length; i++){
-                inputs[i].setAttribute('disabled', 'disabled');
                 inputs[i].removeClass('selectedEditingObject');
+                inputs[i].setAttribute('readonly', false);
                 this.isEditing = false;
             }
         }
@@ -1430,20 +1453,52 @@ Entry.EntryObject.prototype.editObjectValues = function(click) {
             this.directionInput_, this.coordinateView_.sizeInput_
         ];
     }
+
     if (click) {
+        
+        $(inputs).removeClass('selectedNotEditingObject');
+
         for(var i=0; i<inputs.length; i++){
-            inputs[i].removeAttribute('disabled');
+            inputs[i].removeAttribute('readonly');
             inputs[i].addClass("selectedEditingObject");
         }
         this.isEditing = true;
     } else {
         for(var i=0; i<inputs.length; i++){
-            inputs[i].setAttribute('disabled', 'disabled');
-            inputs[i].removeClass('selectedEditingObject');
+            inputs[i].blur(true);
         }
+        
+        this.blurAllInput();
         this.isEditing = false;
     }
 };
+
+Entry.EntryObject.prototype.blurAllInput = function() {
+    var inputs = document.getElementsByClassName('selectedEditingObject');            
+    $(inputs).removeClass('selectedEditingObject');
+
+    inputs = [
+            this.nameView_, this.coordinateView_.xInput_,
+            this.coordinateView_.yInput_, this.rotateInput_,
+            this.directionInput_, this.coordinateView_.sizeInput_
+        ];
+
+        for(var i=0; i<inputs.length; i++){
+            inputs[i].addClass('selectedNotEditingObject');
+            inputs[i].setAttribute('readonly', true);
+        }
+    };
+
+// Entry.EntryObject.prototype.disableInput = function(){
+//     var inputs = [
+//             this.nameView_, this.coordinateView_.xInput_,
+//             this.coordinateView_.yInput_, this.rotateInput_,
+//             this.directionInput_, this.coordinateView_.sizeInput_
+//         ];
+//     for(var i=0; i<inputs.length; i++){     
+//         inputs[i].setAttribute('disabled', 'disabled');
+//     }
+// };
 
 
 /**

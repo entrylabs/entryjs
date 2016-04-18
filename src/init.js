@@ -268,7 +268,6 @@ Entry.createDom = function(container, option) {
         // this.propertyPanel.addMode("youtube" , this.youtube);
 
         this.propertyPanel.select("object");
-
     } else if (option == 'minimize') {
         var canvas = Entry.createElement('canvas');
         canvas.className = 'entryCanvasWorkspace';

@@ -3582,14 +3582,19 @@ Entry.block.locate_xy_time = function(a, b) {
   if (!b.isStart) {
     var c;
     c = b.getNumberValue("VALUE1", b);
-    var d = b.getNumberValue("VALUE2", b) - a.getX(), e = b.getNumberValue("VALUE3", b) - a.getY();
     b.isStart = !0;
     b.frameCount = Math.floor(c * Entry.FPS);
-    b.dX = d / b.frameCount;
-    b.dY = e / b.frameCount;
   }
   if (0 != b.frameCount) {
-    return a.setX(a.getX() + b.dX), a.setY(a.getY() + b.dY), b.frameCount--, a.brush && !a.brush.stop && a.brush.lineTo(a.getX(), -1 * a.getY()), b;
+    c = b.getNumberValue("VALUE2", b) - a.getX();
+    var d = b.getNumberValue("VALUE3", b) - a.getY();
+    c /= b.frameCount;
+    d /= b.frameCount;
+    a.setX(a.getX() + c);
+    a.setY(a.getY() + d);
+    b.frameCount--;
+    a.brush && !a.brush.stop && a.brush.lineTo(a.getX(), -1 * a.getY());
+    return b;
   }
   delete b.isStart;
   delete b.frameCount;
@@ -5072,10 +5077,17 @@ Entry.block.message_cast_wait = function(a, b) {
     throw Error("value can not be null or undefined");
   }
   var e = [];
+<<<<<<< HEAD
   Entry.container.mapEntityIncludeCloneOnScene(function(b, a) {
     for (var c = a[0], d = a[1], l = b.parent.script.childNodes, n = 0;n < l.length;n++) {
       var m = l[n], q = Entry.Xml.getField("VALUE", m);
       Entry.Xml.isTypeOf(c, m) && q == d && (q = new Entry.Script(b), q.init(m), e.push(q));
+=======
+  Entry.container.mapEntityIncludeCloneOnScene(function(a, b) {
+    for (var c = b[0], d = b[1], l = a.parent.script.childNodes, q = 0;q < l.length;q++) {
+      var n = l[q], m = Entry.Xml.getField("VALUE", n);
+      Entry.Xml.isTypeOf(c, n) && m == d && (m = new Entry.Script(a), m.init(n), e.push(m));
+>>>>>>> dist/stage
     }
   }, ["when_message_cast", c]);
   b.runningScript = e;
@@ -7295,8 +7307,8 @@ Entry.EntityObject.prototype.syncDialogVisible = function() {
   this.dialog && (this.dialog.object.visible = this.visible);
 };
 Entry.Helper = function() {
-  this.generateView();
 };
+<<<<<<< HEAD
 p = Entry.Helper.prototype;
 p.generateView = function() {
   this.blockHelpData = EntryStatic.blockInfo;
@@ -7308,27 +7320,75 @@ p.generateView = function() {
   a.appendChild(b);
   b = Entry.createElement("div", "entryBlockHelperContentWorkspace");
   b.addClass("entryBlockHelperIntro");
+=======
+var p = Entry.Helper.prototype;
+p.bindEvent = function() {
+  this.blockChangeEvent || (this.blockChangeEvent = Blockly.bindEvent_(Blockly.mainWorkspace.getCanvas(), "blocklySelectChange", this, this.updateSelectedBlock), Entry.playground.blockMenu && (this.menuBlockChangeEvent = Blockly.bindEvent_(Entry.playground.blockMenu.workspace_.getCanvas(), "blocklySelectChange", this, this.updateSelectedBlock)));
+};
+p.initBlockHelper = function(a) {
+  this.parentView_ || (this.parentView_ = a);
+};
+p.blockHelperOn = function() {
+  if (this.blockHelperView_) {
+    return this.blockHelperOff();
+  }
+  var a = this;
+  a.blockHelpData = EntryStatic.blockInfo;
+  var b = Entry.createElement("div", "entryBlockHelperWorkspace");
+>>>>>>> dist/stage
   Entry.isForLecture && b.addClass("lecture");
-  a.appendChild(b);
-  this.blockHelperContent_ = b;
-  this.blockHelperView_ = a;
-  a = Entry.createElement("div", "entryBlockHelperBlockWorkspace");
-  this.blockMenu_ = new Blockly.BlockMenu(a);
+  a.parentView_.appendChild(b);
+  if (!Entry.isForLecture) {
+    var c = Entry.createElement("div", "entryBlockHelperHeaderWorkspace");
+    c.innerHTML = Lang.Helper.Block_info;
+    var d = Entry.createElement("button", "entryBlockHelperDisposeWorkspace");
+    d.addClass("entryBtn");
+    d.bindOnClick(function() {
+      a.blockHelperOff();
+    });
+    c.appendChild(d);
+    b.appendChild(c);
+  }
+  c = Entry.createElement("div", "entryBlockHelperContentWorkspace");
+  c.addClass("entryBlockHelperIntro");
+  Entry.isForLecture && c.addClass("lecture");
+  b.appendChild(c);
+  a.blockHelperContent_ = c;
+  a.blockHelperView_ = b;
+  b = Entry.createElement("div", "entryBlockHelperBlockWorkspace");
+  this.blockMenu_ = new Blockly.BlockMenu(b);
   this.blockMenu_.isViewOnly = !0;
   this.blockMenu_.isCenterAlign = !0;
+<<<<<<< HEAD
   this.blockHelperContent_.appendChild(a);
   a = Entry.createElement("div", "entryBlockHelperDescriptionWorkspace");
   this.blockHelperContent_.appendChild(a);
   a.innerHTML = Lang.Helper.Block_click_msg;
   this.blockHelperDescription_ = a;
+=======
+  a.blockHelperContent_.appendChild(b);
+  b = Entry.createElement("div", "entryBlockHelperDescriptionWorkspace");
+  a.blockHelperContent_.appendChild(b);
+  b.innerHTML = Lang.Helper.Block_click_msg;
+  this.blockHelperDescription_ = b;
+  this.blockChangeEvent = Blockly.bindEvent_(Blockly.mainWorkspace.getCanvas(), "blocklySelectChange", this, this.updateSelectedBlock);
+  Entry.playground.blockMenu && (this.menuBlockChangeEvent = Blockly.bindEvent_(Entry.playground.blockMenu.workspace_.getCanvas(), "blocklySelectChange", this, this.updateSelectedBlock));
+>>>>>>> dist/stage
   this.first = !0;
 };
-p.getView = function() {
-  this.bindEvent();
-  return this._view;
-};
-p.bindEvent = function() {
-  this.blockChangeEvent || (this.blockChangeEvent = Blockly.bindEvent_(Blockly.mainWorkspace.getCanvas(), "blocklySelectChange", this, this.updateSelectedBlock), Entry.playground.blockMenu && (this.menuBlockChangeEvent = Blockly.bindEvent_(Entry.playground.blockMenu.workspace_.getCanvas(), "blocklySelectChange", this, this.updateSelectedBlock)));
+p.blockHelperOff = function() {
+  if (this.blockHelperView_ && !Entry.isForLecture) {
+    var a = this;
+    a.blockHelperView_.addClass("dispose");
+    Blockly.unbindEvent_(this.blockChangeEvent);
+    delete this.blockChangeEvent;
+    Entry.playground.blockMenu && (Blockly.unbindEvent_(this.menuBlockChangeEvent), delete this.menuBlockChangeEvent);
+    Entry.bindAnimationCallback(a.blockHelperView_, function(b) {
+      a.parentView_.removeChild(a.blockHelperView_);
+      delete a.blockHelperContent_;
+      delete a.blockHelperView_;
+    });
+  }
 };
 p.updateSelectedBlock = function() {
   Blockly.selected && (this.first && (this.blockHelperContent_.removeClass("entryBlockHelperIntro"), this.first = !1), this.renderBlock(Blockly.selected.type));
@@ -7462,13 +7522,14 @@ Entry.EntryObject.prototype.generateView = function() {
     a.appendChild(d);
     this.nameView_ = d;
     this.nameView_.entryObject = this;
-    d.setAttribute("disabled", "disabled");
-    this.nameView_.onblur = function() {
+    d.setAttribute("readonly", !0);
+    var f = this;
+    this.nameView_.onblur = function(a) {
       this.entryObject.name = this.value;
       Entry.playground.reloadPlayground();
     };
     this.nameView_.onkeypress = function(a) {
-      13 == a.keyCode && this.entryObject.editObjectValues(!1);
+      13 == a.keyCode && f.editObjectValues(!1);
     };
     this.nameView_.value = this.name;
     d = Entry.createElement("div");
@@ -7503,65 +7564,65 @@ Entry.EntryObject.prototype.generateView = function() {
     e = Entry.createElement("span");
     e.addClass("entryObjectCoordinateSpanWorkspace");
     e.innerHTML = "X:";
-    var f = Entry.createElement("input");
-    f.addClass("entryObjectCoordinateInputWorkspace");
-    f.setAttribute("disabled", "disabled");
-    f.bindOnClick(function(a) {
+    var g = Entry.createElement("input");
+    g.addClass("entryObjectCoordinateInputWorkspace");
+    g.setAttribute("readonly", !0);
+    g.bindOnClick(function(a) {
       a.stopPropagation();
       this.select();
     });
-    var g = Entry.createElement("span");
-    g.addClass("entryObjectCoordinateSpanWorkspace");
-    g.innerHTML = "Y:";
-    var h = Entry.createElement("input");
-    h.addClass("entryObjectCoordinateInputWorkspace entryObjectCoordinateInputWorkspace_right");
-    h.bindOnClick(function(a) {
+    var h = Entry.createElement("span");
+    h.addClass("entryObjectCoordinateSpanWorkspace");
+    h.innerHTML = "Y:";
+    var k = Entry.createElement("input");
+    k.addClass("entryObjectCoordinateInputWorkspace entryObjectCoordinateInputWorkspace_right");
+    k.bindOnClick(function(a) {
       a.stopPropagation();
       this.select();
     });
-    h.setAttribute("disabled", "disabled");
-    var k = Entry.createElement("span");
-    k.addClass("entryObjectCoordinateSizeWorkspace");
-    k.innerHTML = Lang.Workspace.Size + " : ";
-    var l = Entry.createElement("input");
-    l.addClass("entryObjectCoordinateInputWorkspace", "entryObjectCoordinateInputWorkspace_size");
-    l.bindOnClick(function(a) {
+    k.setAttribute("readonly", !0);
+    var l = Entry.createElement("span");
+    l.addClass("entryObjectCoordinateSizeWorkspace");
+    l.innerHTML = Lang.Workspace.Size + " : ";
+    var q = Entry.createElement("input");
+    q.addClass("entryObjectCoordinateInputWorkspace", "entryObjectCoordinateInputWorkspace_size");
+    q.bindOnClick(function(a) {
       a.stopPropagation();
       this.select();
     });
-    l.setAttribute("disabled", "disabled");
+    q.setAttribute("readonly", !0);
     d.appendChild(e);
-    d.appendChild(f);
     d.appendChild(g);
     d.appendChild(h);
     d.appendChild(k);
     d.appendChild(l);
-    d.xInput_ = f;
-    d.yInput_ = h;
-    d.sizeInput_ = l;
+    d.appendChild(q);
+    d.xInput_ = g;
+    d.yInput_ = k;
+    d.sizeInput_ = q;
     this.coordinateView_ = d;
     c = this;
-    f.onkeypress = function(a) {
+    g.onkeypress = function(a) {
       13 == a.keyCode && c.editObjectValues(!1);
     };
-    f.onblur = function(a) {
-      isNaN(f.value) || c.entity.setX(Number(f.value));
+    g.onblur = function(a) {
+      isNaN(g.value) || c.entity.setX(Number(g.value));
       c.updateCoordinateView();
       Entry.stage.updateObject();
     };
-    h.onkeypress = function(a) {
+    k.onkeypress = function(a) {
       13 == a.keyCode && c.editObjectValues(!1);
     };
-    h.onblur = function(a) {
-      isNaN(h.value) || c.entity.setY(Number(h.value));
+    k.onblur = function(a) {
+      isNaN(k.value) || c.entity.setY(Number(k.value));
       c.updateCoordinateView();
       Entry.stage.updateObject();
     };
-    l.onkeypress = function(a) {
+    q.onkeypress = function(a) {
       13 == a.keyCode && c.editObjectValues(!1);
     };
-    l.onblur = function(a) {
-      isNaN(l.value) || c.entity.setSize(Number(l.value));
+    q.onblur = function(a) {
+      isNaN(q.value) || c.entity.setSize(Number(q.value));
       c.updateCoordinateView();
       Entry.stage.updateObject();
     };
@@ -7574,19 +7635,19 @@ Entry.EntryObject.prototype.generateView = function() {
     e.innerHTML = Lang.Workspace.rotation + " : ";
     var n = Entry.createElement("input");
     n.addClass("entryObjectRotateInputWorkspace");
-    n.setAttribute("disabled", "disabled");
+    n.setAttribute("readonly", !0);
     n.bindOnClick(function(a) {
       a.stopPropagation();
       this.select();
     });
     this.rotateSpan_ = e;
     this.rotateInput_ = n;
-    g = Entry.createElement("span");
-    g.addClass("entryObjectDirectionSpanWorkspace");
-    g.innerHTML = Lang.Workspace.direction + " : ";
+    h = Entry.createElement("span");
+    h.addClass("entryObjectDirectionSpanWorkspace");
+    h.innerHTML = Lang.Workspace.direction + " : ";
     var m = Entry.createElement("input");
     m.addClass("entryObjectDirectionInputWorkspace");
-    m.setAttribute("disabled", "disabled");
+    m.setAttribute("readonly", !0);
     m.bindOnClick(function(a) {
       a.stopPropagation();
       this.select();
@@ -7594,7 +7655,7 @@ Entry.EntryObject.prototype.generateView = function() {
     this.directionInput_ = m;
     d.appendChild(e);
     d.appendChild(n);
-    d.appendChild(g);
+    d.appendChild(h);
     d.appendChild(m);
     d.rotateInput_ = n;
     d.directionInput_ = m;
@@ -7678,7 +7739,7 @@ Entry.EntryObject.prototype.generateView = function() {
       this.entryObject.name = this.value;
       Entry.playground.reloadPlayground();
     }, this.nameView_.onkeypress = function(a) {
-      13 == a.keyCode && this.blur();
+      13 == a.keyCode && c.editObjectValues(!1);
     }, this.nameView_.value = this.name, Entry.objectEditable && Entry.objectDeletable && (d = Entry.createElement("div"), d.addClass("entryObjectDeletePhone"), d.object = this, this.deleteView_ = d, this.view_.appendChild(d), d.bindOnClick(function(a) {
       Entry.engine.isState("run") || Entry.container.removeObject(this.object);
     })), d = Entry.createElement("button"), d.addClass("entryObjectEditPhone"), d.object = this, d.bindOnClick(function(a) {
@@ -7686,7 +7747,7 @@ Entry.EntryObject.prototype.generateView = function() {
         Entry.container.selectObject(a.id), Entry.playground.injectObject(a);
       }
     }), this.view_.appendChild(d), d = Entry.createElement("div"), d.addClass("entryObjectInformationWorkspace"), d.object = this, this.isInformationToggle = !1, a.appendChild(d), this.informationView_ = d, d = Entry.createElement("div"), d.addClass("entryObjectRotateLabelWrapperWorkspace"), this.view_.appendChild(d), this.rotateLabelWrapperView_ = d, e = Entry.createElement("span"), e.addClass("entryObjectRotateSpanWorkspace"), e.innerHTML = Lang.Workspace.rotation + " : ", n = Entry.createElement("input"), 
-    n.addClass("entryObjectRotateInputWorkspace"), this.rotateSpan_ = e, this.rotateInput_ = n, g = Entry.createElement("span"), g.addClass("entryObjectDirectionSpanWorkspace"), g.innerHTML = Lang.Workspace.direction + " : ", m = Entry.createElement("input"), m.addClass("entryObjectDirectionInputWorkspace"), this.directionInput_ = m, d.appendChild(e), d.appendChild(n), d.appendChild(g), d.appendChild(m), d.rotateInput_ = n, d.directionInput_ = m, c = this, n.onkeypress = function(a) {
+    n.addClass("entryObjectRotateInputWorkspace"), this.rotateSpan_ = e, this.rotateInput_ = n, h = Entry.createElement("span"), h.addClass("entryObjectDirectionSpanWorkspace"), h.innerHTML = Lang.Workspace.direction + " : ", m = Entry.createElement("input"), m.addClass("entryObjectDirectionInputWorkspace"), this.directionInput_ = m, d.appendChild(e), d.appendChild(n), d.appendChild(h), d.appendChild(m), d.rotateInput_ = n, d.directionInput_ = m, c = this, n.onkeypress = function(a) {
       13 == a.keyCode && (a = n.value, -1 != a.indexOf("\u02da") && (a = a.substring(0, a.indexOf("\u02da"))), isNaN(a) || c.entity.setRotation(Number(a)), c.updateRotationView(), n.blur());
     }, n.onblur = function(a) {
       c.entity.setRotation(c.entity.getRotation());
@@ -7696,16 +7757,16 @@ Entry.EntryObject.prototype.generateView = function() {
     }, m.onblur = function(a) {
       c.entity.setDirection(c.entity.getDirection());
       Entry.stage.updateObject();
-    }, a = Entry.createElement("div"), a.addClass("entryObjectRotationWrapperWorkspace"), a.object = this, this.view_.appendChild(a), d = Entry.createElement("span"), d.addClass("entryObjectCoordinateWorkspace"), a.appendChild(d), e = Entry.createElement("span"), e.addClass("entryObjectCoordinateSpanWorkspace"), e.innerHTML = "X:", f = Entry.createElement("input"), f.addClass("entryObjectCoordinateInputWorkspace"), g = Entry.createElement("span"), g.addClass("entryObjectCoordinateSpanWorkspace"), 
-    g.innerHTML = "Y:", h = Entry.createElement("input"), h.addClass("entryObjectCoordinateInputWorkspace entryObjectCoordinateInputWorkspace_right"), k = Entry.createElement("span"), k.addClass("entryObjectCoordinateSpanWorkspace"), k.innerHTML = Lang.Workspace.Size, l = Entry.createElement("input"), l.addClass("entryObjectCoordinateInputWorkspace", "entryObjectCoordinateInputWorkspace_size"), d.appendChild(e), d.appendChild(f), d.appendChild(g), d.appendChild(h), d.appendChild(k), d.appendChild(l), 
-    d.xInput_ = f, d.yInput_ = h, d.sizeInput_ = l, this.coordinateView_ = d, c = this, f.onkeypress = function(a) {
-      13 == a.keyCode && (isNaN(f.value) || c.entity.setX(Number(f.value)), c.updateCoordinateView(), f.blur());
-    }, f.onblur = function(a) {
+    }, a = Entry.createElement("div"), a.addClass("entryObjectRotationWrapperWorkspace"), a.object = this, this.view_.appendChild(a), d = Entry.createElement("span"), d.addClass("entryObjectCoordinateWorkspace"), a.appendChild(d), e = Entry.createElement("span"), e.addClass("entryObjectCoordinateSpanWorkspace"), e.innerHTML = "X:", g = Entry.createElement("input"), g.addClass("entryObjectCoordinateInputWorkspace"), h = Entry.createElement("span"), h.addClass("entryObjectCoordinateSpanWorkspace"), 
+    h.innerHTML = "Y:", k = Entry.createElement("input"), k.addClass("entryObjectCoordinateInputWorkspace entryObjectCoordinateInputWorkspace_right"), l = Entry.createElement("span"), l.addClass("entryObjectCoordinateSpanWorkspace"), l.innerHTML = Lang.Workspace.Size, q = Entry.createElement("input"), q.addClass("entryObjectCoordinateInputWorkspace", "entryObjectCoordinateInputWorkspace_size"), d.appendChild(e), d.appendChild(g), d.appendChild(h), d.appendChild(k), d.appendChild(l), d.appendChild(q), 
+    d.xInput_ = g, d.yInput_ = k, d.sizeInput_ = q, this.coordinateView_ = d, c = this, g.onkeypress = function(a) {
+      13 == a.keyCode && (isNaN(g.value) || c.entity.setX(Number(g.value)), c.updateCoordinateView(), c.blur());
+    }, g.onblur = function(a) {
       c.entity.setX(c.entity.getX());
       Entry.stage.updateObject();
-    }, h.onkeypress = function(a) {
-      13 == a.keyCode && (isNaN(h.value) || c.entity.setY(Number(h.value)), c.updateCoordinateView(), h.blur());
-    }, h.onblur = function(a) {
+    }, k.onkeypress = function(a) {
+      13 == a.keyCode && (isNaN(k.value) || c.entity.setY(Number(k.value)), c.updateCoordinateView(), c.blur());
+    }, k.onblur = function(a) {
       c.entity.setY(c.entity.getY());
       Entry.stage.updateObject();
     }, d = Entry.createElement("div"), d.addClass("rotationMethodWrapper"), a.appendChild(d), this.rotationMethodWrapper_ = d, a = Entry.createElement("span"), a.addClass("entryObjectRotateMethodLabelWorkspace"), d.appendChild(a), a.innerHTML = Lang.Workspace.rotate_method + " : ", a = Entry.createElement("div"), a.addClass("entryObjectRotateModeWorkspace"), a.addClass("entryObjectRotateModeAWorkspace"), a.object = this, this.rotateModeAView_ = a, d.appendChild(a), a.bindOnClick(function(a) {
@@ -7977,9 +8038,9 @@ Entry.EntryObject.prototype.setLock = function(a) {
 Entry.EntryObject.prototype.updateInputViews = function(a) {
   a = a || this.getLock();
   var b = [this.nameView_, this.coordinateView_.xInput_, this.coordinateView_.yInput_, this.rotateInput_, this.directionInput_, this.coordinateView_.sizeInput_];
-  if (a && "disabled" != b[0].getAttribute("disabled")) {
+  if (a && 1 != b[0].getAttribute("readonly")) {
     for (a = 0;a < b.length;a++) {
-      b[a].setAttribute("disabled", "disabled"), b[a].removeClass("selectedEditingObject"), this.isEditing = !1;
+      b[a].removeClass("selectedEditingObject"), b[a].setAttribute("readonly", !1), this.isEditing = !1;
     }
   }
 };
@@ -7987,15 +8048,24 @@ Entry.EntryObject.prototype.editObjectValues = function(a) {
   var b;
   b = this.getLock() ? [this.nameView_] : [this.nameView_, this.coordinateView_.xInput_, this.coordinateView_.yInput_, this.rotateInput_, this.directionInput_, this.coordinateView_.sizeInput_];
   if (a) {
+    $(b).removeClass("selectedNotEditingObject");
     for (a = 0;a < b.length;a++) {
-      b[a].removeAttribute("disabled"), b[a].addClass("selectedEditingObject");
+      b[a].removeAttribute("readonly"), b[a].addClass("selectedEditingObject");
     }
     this.isEditing = !0;
   } else {
     for (a = 0;a < b.length;a++) {
-      b[a].setAttribute("disabled", "disabled"), b[a].removeClass("selectedEditingObject");
+      b[a].blur(!0);
     }
+    this.blurAllInput();
     this.isEditing = !1;
+  }
+};
+Entry.EntryObject.prototype.blurAllInput = function() {
+  var a = document.getElementsByClassName("selectedEditingObject");
+  $(a).removeClass("selectedEditingObject");
+  for (var a = [this.nameView_, this.coordinateView_.xInput_, this.coordinateView_.yInput_, this.rotateInput_, this.directionInput_, this.coordinateView_.sizeInput_], b = 0;b < a.length;b++) {
+    a[b].addClass("selectedNotEditingObject"), a[b].setAttribute("readonly", !0);
   }
 };
 Entry.EntryObject.prototype.addStampEntity = function(a) {
@@ -8440,14 +8510,14 @@ Entry.Painter.prototype.fill = function() {
     var c = new createjs.Point(this.stage.mouseX, this.stage.mouseY);
     c.x = Math.round(c.x);
     c.y = Math.round(c.y);
-    for (var d = 4 * (c.y * a + c.x), e = this.colorLayerData.data[d], f = this.colorLayerData.data[d + 1], g = this.colorLayerData.data[d + 2], h = this.colorLayerData.data[d + 3], k, l, c = [[c.x, c.y]], n = Entry.hex2rgb(this.stroke.lineColor);c.length;) {
-      for (var d = c.pop(), m = d[0], q = d[1], d = 4 * (q * a + m);0 <= q && this.matchColor(d, e, f, g, h);) {
-        --q, d -= 4 * a;
+    for (var d = 4 * (c.y * a + c.x), e = this.colorLayerData.data[d], f = this.colorLayerData.data[d + 1], g = this.colorLayerData.data[d + 2], h = this.colorLayerData.data[d + 3], k, l, c = [[c.x, c.y]], q = Entry.hex2rgb(this.stroke.lineColor);c.length;) {
+      for (var d = c.pop(), n = d[0], m = d[1], d = 4 * (m * a + n);0 <= m && this.matchColor(d, e, f, g, h);) {
+        --m, d -= 4 * a;
       }
       d += 4 * a;
-      q += 1;
-      for (l = k = !1;q < b - 1 && this.matchColor(d, e, f, g, h);) {
-        q += 1, this.colorPixel(d, n.r, n.g, n.b), 0 < m && (this.matchColor(d - 4, e, f, g, h) ? k || (c.push([m - 1, q]), k = !0) : k && (k = !1)), m < a - 1 && (this.matchColor(d + 4, e, f, g, h) ? l || (c.push([m + 1, q]), l = !0) : l && (l = !1)), d += 4 * a;
+      m += 1;
+      for (l = k = !1;m < b - 1 && this.matchColor(d, e, f, g, h);) {
+        m += 1, this.colorPixel(d, q.r, q.g, q.b), 0 < n && (this.matchColor(d - 4, e, f, g, h) ? k || (c.push([n - 1, m]), k = !0) : k && (k = !1)), n < a - 1 && (this.matchColor(d + 4, e, f, g, h) ? l || (c.push([n + 1, m]), l = !0) : l && (l = !1)), d += 4 * a;
       }
       if (1080 < c.length) {
         break;
@@ -8988,9 +9058,9 @@ Entry.Painter.prototype.generateView = function(a) {
     this.attrColorArea = Entry.createElement("fieldset", "entryPainterAttrColor");
     this.attrColorArea.addClass("entryPlaygroundPainterAttrColor");
     g.appendChild(this.attrColorArea);
-    var n = Entry.createElement("div");
-    n.addClass("entryPlaygroundPainterAttrColorContainer");
-    this.attrColorArea.appendChild(n);
+    var q = Entry.createElement("div");
+    q.addClass("entryPlaygroundPainterAttrColorContainer");
+    this.attrColorArea.appendChild(q);
     this.attrCircleArea = Entry.createElement("div");
     this.attrCircleArea.addClass("painterAttrCircleArea");
     g.appendChild(this.attrCircleArea);
@@ -9017,7 +9087,7 @@ Entry.Painter.prototype.generateView = function(a) {
         document.getElementById("entryPainterAttrCircle").style.backgroundColor = b.stroke.lineColor;
         document.getElementById("entryPainterAttrCircleInput").value = a;
       });
-      n.appendChild(c);
+      q.appendChild(c);
     });
     this.attrThickArea = Entry.createElement("div", "painterAttrThickArea");
     this.attrThickArea.addClass("entryPlaygroundentryPlaygroundPainterAttrThickArea");
@@ -9026,12 +9096,12 @@ Entry.Painter.prototype.generateView = function(a) {
     d.addClass("painterAttrThickName");
     d.innerHTML = Lang.Workspace.thickness;
     this.attrThickArea.appendChild(d);
-    var m = Entry.createElement("fieldset", "entryPainterAttrThick");
-    m.addClass("entryPlaygroundPainterAttrThick");
-    this.attrThickArea.appendChild(m);
+    var n = Entry.createElement("fieldset", "entryPainterAttrThick");
+    n.addClass("entryPlaygroundPainterAttrThick");
+    this.attrThickArea.appendChild(n);
     d = Entry.createElement("div");
     d.addClass("paintAttrThickTop");
-    m.appendChild(d);
+    n.appendChild(d);
     e = Entry.createElement("select", "entryPainterAttrThick");
     e.addClass("entryPlaygroundPainterAttrThickInput");
     e.size = "1";
@@ -9041,16 +9111,16 @@ Entry.Painter.prototype.generateView = function(a) {
     for (d = 1;10 >= d;d++) {
       c = Entry.createElement("option"), c.value = d, c.innerHTML = d, e.appendChild(c);
     }
-    m.appendChild(e);
+    n.appendChild(e);
     d = Entry.createElement("div", "entryPainterShapeLineColor");
     d.addClass("painterAttrShapeLineColor");
     c = Entry.createElement("div", "entryPainterShapeInnerBackground");
     c.addClass("painterAttrShapeInnerBackground");
     d.appendChild(c);
-    m.appendChild(d);
+    n.appendChild(d);
     this.attrThickArea.painterAttrShapeLineColor = d;
-    m.bindOnClick(function() {
-      q.style.zIndex = "1";
+    n.bindOnClick(function() {
+      m.style.zIndex = "1";
       this.style.zIndex = "10";
       r = !1;
     });
@@ -9063,13 +9133,13 @@ Entry.Painter.prototype.generateView = function(a) {
     c = Entry.createElement("div");
     c.addClass("paintAttrBackgroundTop");
     d.appendChild(c);
-    var q = Entry.createElement("div", "entryPainterShapeBackgroundColor");
-    q.addClass("painterAttrShapeBackgroundColor");
-    this.attrBackgroundArea.painterAttrShapeBackgroundColor = q;
-    c.appendChild(q);
+    var m = Entry.createElement("div", "entryPainterShapeBackgroundColor");
+    m.addClass("painterAttrShapeBackgroundColor");
+    this.attrBackgroundArea.painterAttrShapeBackgroundColor = m;
+    c.appendChild(m);
     var r = !1;
-    q.bindOnClick(function(a) {
-      m.style.zIndex = "1";
+    m.bindOnClick(function(a) {
+      n.style.zIndex = "1";
       this.style.zIndex = "10";
       r = !0;
     });
@@ -9569,11 +9639,11 @@ Entry.Playground.prototype.generateTextView = function(a) {
   d.bindOnClick(function() {
     var a = !Entry.playground.object.entity.getStrike() || !1;
     Entry.playground.object.entity.setStrike(a);
-    n.src = Entry.mediaFilePath + "text_button_strike_" + a + ".png";
+    q.src = Entry.mediaFilePath + "text_button_strike_" + a + ".png";
   });
-  var n = Entry.createElement("img", "entryPlaygroundText_strikeImage");
-  d.appendChild(n);
-  n.src = Entry.mediaFilePath + "text_button_strike_false.png";
+  var q = Entry.createElement("img", "entryPlaygroundText_strikeImage");
+  d.appendChild(q);
+  q.src = Entry.mediaFilePath + "text_button_strike_false.png";
   d = Entry.createElement("li");
   e.appendChild(d);
   c = Entry.createElement("a");
@@ -9648,16 +9718,16 @@ Entry.Playground.prototype.generateTextView = function(a) {
   a.addClass("entryPlaygroundFontSizeWrapper");
   b.appendChild(a);
   this.fontSizeWrapper = a;
+  var n = Entry.createElement("div");
+  n.addClass("entryPlaygroundFontSizeSlider");
+  a.appendChild(n);
   var m = Entry.createElement("div");
-  m.addClass("entryPlaygroundFontSizeSlider");
-  a.appendChild(m);
-  var q = Entry.createElement("div");
-  q.addClass("entryPlaygroundFontSizeIndicator");
-  m.appendChild(q);
-  this.fontSizeIndiciator = q;
+  m.addClass("entryPlaygroundFontSizeIndicator");
+  n.appendChild(m);
+  this.fontSizeIndiciator = m;
   var r = Entry.createElement("div");
   r.addClass("entryPlaygroundFontSizeKnob");
-  m.appendChild(r);
+  n.appendChild(r);
   this.fontSizeKnob = r;
   e = Entry.createElement("div");
   e.addClass("entryPlaygroundFontSizeLabel");
@@ -9666,10 +9736,10 @@ Entry.Playground.prototype.generateTextView = function(a) {
   var t = !1, u = 0;
   r.onmousedown = function(a) {
     t = !0;
-    u = $(m).offset().left;
+    u = $(n).offset().left;
   };
   document.addEventListener("mousemove", function(a) {
-    t && (a = a.pageX - u, a = Math.max(a, 5), a = Math.min(a, 88), r.style.left = a + "px", a /= .88, q.style.width = a + "%", Entry.playground.object.entity.setFontSize(a));
+    t && (a = a.pageX - u, a = Math.max(a, 5), a = Math.min(a, 88), r.style.left = a + "px", a /= .88, m.style.width = a + "%", Entry.playground.object.entity.setFontSize(a));
   });
   document.addEventListener("mouseup", function(a) {
     t = !1;
@@ -10520,8 +10590,8 @@ Entry.initialize_ = function() {
 Entry.createDom = function(a, b) {
   if (b && "workspace" != b) {
     "minimize" == b ? (c = Entry.createElement("canvas"), c.className = "entryCanvasWorkspace", c.id = "entryCanvas", c.width = 640, c.height = 360, d = Entry.createElement("div", "entryCanvasWrapper"), d.appendChild(c), a.appendChild(d), this.canvas_ = c, this.stage.initStage(this.canvas_), d = Entry.createElement("div"), a.appendChild(d), this.engineView = d, this.engine.generateView(this.engineView, b)) : "phone" == b && (this.stateManagerView = c = Entry.createElement("div"), this.stateManager.generateView(this.stateManagerView, 
-    b), d = Entry.createElement("div"), a.appendChild(d), this.engineView = d, this.engine.generateView(this.engineView, b), c = Entry.createElement("canvas"), c.addClass("entryCanvasPhone"), c.id = "entryCanvas", c.width = 640, c.height = 360, d.insertBefore(c, this.engine.footerView_), this.canvas_ = c, this.stage.initStage(this.canvas_), c = Entry.createElement("div"), a.appendChild(c), this.containerView = c, this.container.generateView(this.containerView, b), c = Entry.createElement("div"), 
-    a.appendChild(c), this.playgroundView = c, this.playground.generateView(this.playgroundView, b));
+    b), d = Entry.createElement("div"), a.appendChild(d), this.engineView = d, this.engine.generateView(this.engineView, b), c = Entry.createElement("canvas"), c.addClass("entryCanvasPhone"), c.id = "entryCanvas", c.width = 640, c.height = 360, d.insertBefore(c, this.engine.footerView_), this.canvas_ = c, this.stage.initStage(this.canvas_), c = Entry.createElement("div"), a.appendChild(c), this.containerView = c, this.container.generateView(this.containerView, b), d = Entry.createElement("div"), 
+    a.appendChild(d), this.playgroundView = d, this.playground.generateView(this.playgroundView, b));
   } else {
     Entry.documentMousedown.attach(this, this.cancelObjectEdit);
     var c = Entry.createElement("div");
@@ -10557,13 +10627,19 @@ Entry.createDom = function(a, b) {
     this.propertyPanel.generateView(a, b);
     this.containerView = c;
     this.container.generateView(this.containerView, b);
-    c = Entry.createElement("div");
-    a.appendChild(c);
-    this.playgroundView = c;
+    d = Entry.createElement("div");
+    a.appendChild(d);
+    this.playgroundView = d;
     this.playground.generateView(this.playgroundView, b);
+<<<<<<< HEAD
     this.propertyPanel.addMode("object", this.container);
     this.propertyPanel.addMode("helper", this.helper);
     this.propertyPanel.select("object");
+=======
+    this.propertyPanel.addMode("container", this.container);
+    this.helper.initBlockHelper(c);
+    this.propertyPanel.select("container");
+>>>>>>> dist/stage
   }
 };
 Entry.start = function(a) {
@@ -11563,15 +11639,15 @@ Entry.ContextMenu = {};
       var e = this.dom;
       e.empty();
       for (var f = 0, g = a.length;f < g;f++) {
-        var h = a[f], k = h.text, l = !1 !== h.enable, n = Entry.Dom("li", {class:l ? "menuAble" : "menuDisable", parent:e});
-        n.text(k);
+        var h = a[f], k = h.text, l = !1 !== h.enable, q = Entry.Dom("li", {class:l ? "menuAble" : "menuDisable", parent:e});
+        q.text(k);
         l && h.callback && function(a, b) {
           a.mousedown(function(a) {
             a.preventDefault();
             d.hide();
             b(a);
           });
-        }(n, h.callback);
+        }(q, h.callback);
       }
       e.removeClass("entryRemove");
       this.position(Entry.mouseCoordinate);
@@ -12642,12 +12718,12 @@ Entry.HWMonitor = function(a) {
     }
     h < f - e && (f = h / 2 + 3, e = -h / 2 - 3);
     for (;1 < a.length;) {
-      var k = a.shift(), l = a.pop(), n = e, m = f, q = d;
-      h <= f - e ? (e += k.width + 5, f -= l.width + 5, q = 0) : 0 === a.length ? (e = (e + f) / 2 - 3, f = e + 6) : (e = Math.max(e, -g / 2 + k.width) + 15, f = Math.min(f, g / 2 - l.width) - 15);
-      this._movePort(k, e, c, n);
-      this._movePort(l, f, c, m);
+      var k = a.shift(), l = a.pop(), q = e, n = f, m = d;
+      h <= f - e ? (e += k.width + 5, f -= l.width + 5, m = 0) : 0 === a.length ? (e = (e + f) / 2 - 3, f = e + 6) : (e = Math.max(e, -g / 2 + k.width) + 15, f = Math.min(f, g / 2 - l.width) - 15);
+      this._movePort(k, e, c, q);
+      this._movePort(l, f, c, n);
       h -= k.width + l.width + 10;
-      c += q;
+      c += m;
     }
     a.length && this._movePort(a[0], (f + e - a[0].width) / 2, c, 100);
   };
@@ -12658,8 +12734,8 @@ Entry.HWMonitor = function(a) {
     for (var e = listLine = wholeWidth = 0;e < a.length;e++) {
       wholeWidth += a[e].width;
     }
-    for (var f = 0, g = 0, h = initX, k = 0, l = 0, n = 0, e = 0;e < a.length;e++) {
-      l = a[e], e != a.length - 1 && (n = a[e + 1]), g += l.width, lP = initX, k = initY + 30 * f, l.group.attr({transform:"translate(" + lP + "," + k + ")"}), initX += l.width + 10, g > d - (l.width + n.width / 2.2) && (f += 1, initX = h, g = 0);
+    for (var f = 0, g = 0, h = initX, k = 0, l = 0, q = 0, e = 0;e < a.length;e++) {
+      l = a[e], e != a.length - 1 && (q = a[e + 1]), g += l.width, lP = initX, k = initY + 30 * f, l.group.attr({transform:"translate(" + lP + "," + k + ")"}), initX += l.width + 10, g > d - (l.width + q.width / 2.2) && (f += 1, initX = h, g = 0);
     }
   };
   a._movePort = function(a, c, d, e) {
@@ -13264,16 +13340,16 @@ Entry.VariableContainer.prototype.renderMessageReference = function(a) {
   f.addClass("entryVariableListCallerListWorkspace");
   for (var g in c) {
     for (var h = c[g], k = h.script.getElementsByTagName("block"), l = 0;l < k.length;l++) {
-      var n = k[l], m = n.getAttribute("type");
-      if (-1 < d.indexOf(m)) {
-        m = Entry.Xml.getField("VALUE", n), m == a.id && e.push({object:h, block:n});
+      var q = k[l], n = q.getAttribute("type");
+      if (-1 < d.indexOf(n)) {
+        n = Entry.Xml.getField("VALUE", q), n == a.id && e.push({object:h, block:q});
       } else {
-        if ("function_general" == m) {
-          var q = n.getElementsByTagName("mutation")[0].getAttribute("hashid");
-          if (q = Entry.variableContainer.getFunction(q)) {
-            for (var q = q.content, q = q.getElementsByTagName("block"), r = 0;r < q.length;r++) {
-              var t = q[r], m = t.getAttribute("type");
-              -1 < d.indexOf(m) && (m = Entry.Xml.getField("VALUE", t), m == a.id && e.push({object:h, block:t, funcBlock:n}));
+        if ("function_general" == n) {
+          var m = q.getElementsByTagName("mutation")[0].getAttribute("hashid");
+          if (m = Entry.variableContainer.getFunction(m)) {
+            for (var m = m.content, m = m.getElementsByTagName("block"), r = 0;r < m.length;r++) {
+              var t = m[r], n = t.getAttribute("type");
+              -1 < d.indexOf(n) && (n = Entry.Xml.getField("VALUE", t), n == a.id && e.push({object:h, block:t, funcBlock:q}));
             }
           }
         }
@@ -13300,19 +13376,19 @@ Entry.VariableContainer.prototype.renderVariableReference = function(a) {
   f.addClass("entryVariableListCallerListWorkspace");
   var g, h;
   for (h in c) {
-    for (var k = c[h], l = k.script.getElementsByTagName("block"), n = 0;n < l.length;n++) {
-      var m = l[n];
-      g = m.getAttribute("type");
+    for (var k = c[h], l = k.script.getElementsByTagName("block"), q = 0;q < l.length;q++) {
+      var n = l[q];
+      g = n.getAttribute("type");
       if (-1 < d.indexOf(g)) {
-        g = Entry.Xml.getField("VARIABLE", m) || Entry.Xml.getField("LIST", m), g == a.id_ && e.push({object:k, block:m});
+        g = Entry.Xml.getField("VARIABLE", n) || Entry.Xml.getField("LIST", n), g == a.id_ && e.push({object:k, block:n});
       } else {
         if ("function_general" == g) {
-          var q = m.getElementsByTagName("mutation")[0].getAttribute("hashid");
-          if (q = Entry.variableContainer.getFunction(q)) {
-            for (var q = q.content, q = q.getElementsByTagName("block"), r = 0;r < q.length;r++) {
-              var t = q[r];
+          var m = n.getElementsByTagName("mutation")[0].getAttribute("hashid");
+          if (m = Entry.variableContainer.getFunction(m)) {
+            for (var m = m.content, m = m.getElementsByTagName("block"), r = 0;r < m.length;r++) {
+              var t = m[r];
               g = t.getAttribute("type");
-              -1 < d.indexOf(g) && (g = Entry.Xml.getField("VARIABLE", t) || Entry.Xml.getField("LIST", t), g == a.id_ && e.push({object:k, block:t, funcBlock:m}));
+              -1 < d.indexOf(g) && (g = Entry.Xml.getField("VARIABLE", t) || Entry.Xml.getField("LIST", t), g == a.id_ && e.push({object:k, block:t, funcBlock:n}));
             }
           }
         }
@@ -15264,9 +15340,9 @@ Entry.FieldDropdown = function(a, b) {
         });
       })(l, h);
     }
-    var n = {width:e};
+    var q = {width:e};
     d.forEach(function(a) {
-      a.attr(n);
+      a.attr(q);
     });
   };
   a.align = function(a, c, d) {
