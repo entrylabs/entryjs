@@ -5584,10 +5584,10 @@ Entry.Collection = function(a) {
   a.fromJSON = function() {
   };
   a.toJSON = function() {
-    for (var b = [], a = 0, e = this.length;a < e;a++) {
-      b.push(this[a].toJSON());
+    for (var a = [], b = 0, e = this.length;b < e;b++) {
+      a.push(this[b].toJSON());
     }
-    return b;
+    return a;
   };
   a.observe = function() {
   };
@@ -5656,6 +5656,7 @@ Entry.Container.prototype.generateView = function(a, b) {
     }), c = Entry.createElement("div"), c.addClass("entryContainerListPhoneWrapper"), this._view.appendChild(c), d = Entry.createElement("ul"), d.addClass("entryContainerListPhone"), c.appendChild(d), this.listView_ = d);
   } else {
     this._view.addClass("entryContainerWorkspace");
+    this._view.setAttribute("id", "entryContainerWorkspaceId");
     var c = Entry.createElement("div");
     c.addClass("entryAddObjectWorkspace");
     c.innerHTML = Lang.Workspace.add_object;
@@ -6399,11 +6400,9 @@ p.generateView = function(a) {
   var b = Entry.createElement("div");
   b.addClass("entryContainerDoneWorkspace");
   b.addClass("entryHidden");
-  b = this.doneContainer = b;
-  b.style.width.substring(0, b.style.width.length - 2);
+  this.doneContainer = b;
   b = Entry.createElement("iframe");
-  b.setAttribute("width", "100%");
-  b.setAttribute("height", "380px");
+  b.setAttribute("id", "doneProjectframe");
   b.setAttribute("frameborder", 0);
   b.setAttribute("src", "/api/iframe/project/" + a);
   this.doneProjectFrame = b;
@@ -6411,6 +6410,12 @@ p.generateView = function(a) {
 };
 p.getView = function() {
   return this.doneContainer;
+};
+p.resize = function() {
+  var a = document.getElementById("entryContainerWorkspaceId"), b = document.getElementById("doneProjectframe");
+  w = a.offsetWidth;
+  b.width = w + "px";
+  b.height = 9 * w / 16 + "px";
 };
 Entry.Engine = function() {
   function a(a) {
@@ -9682,8 +9687,8 @@ Entry.Playground.prototype.generateTextView = function(a) {
   e.bindOnClick(function() {
     Entry.playground.toggleLineBreak(!1);
     v.innerHTML = Lang.Menus.linebreak_off_desc_1;
-    w.innerHTML = Lang.Menus.linebreak_off_desc_2;
-    x.innerHTML = Lang.Menus.linebreak_off_desc_3;
+    x.innerHTML = Lang.Menus.linebreak_off_desc_2;
+    y.innerHTML = Lang.Menus.linebreak_off_desc_3;
   });
   e.src = Entry.mediaFilePath + "text-linebreak-off-true.png";
   b.appendChild(e);
@@ -9692,8 +9697,8 @@ Entry.Playground.prototype.generateTextView = function(a) {
   e.bindOnClick(function() {
     Entry.playground.toggleLineBreak(!0);
     v.innerHTML = Lang.Menus.linebreak_on_desc_1;
-    w.innerHTML = Lang.Menus.linebreak_on_desc_2;
-    x.innerHTML = Lang.Menus.linebreak_on_desc_3;
+    x.innerHTML = Lang.Menus.linebreak_on_desc_2;
+    y.innerHTML = Lang.Menus.linebreak_on_desc_3;
   });
   e.src = Entry.mediaFilePath + "text-linebreak-on-false.png";
   b.appendChild(e);
@@ -9706,12 +9711,12 @@ Entry.Playground.prototype.generateTextView = function(a) {
   b.appendChild(v);
   a = Entry.createElement("ul");
   b.appendChild(a);
-  var w = Entry.createElement("li");
-  w.innerHTML = Lang.Menus.linebreak_off_desc_2;
-  a.appendChild(w);
   var x = Entry.createElement("li");
-  x.innerHTML = Lang.Menus.linebreak_off_desc_3;
+  x.innerHTML = Lang.Menus.linebreak_off_desc_2;
   a.appendChild(x);
+  var y = Entry.createElement("li");
+  y.innerHTML = Lang.Menus.linebreak_off_desc_3;
+  a.appendChild(y);
 };
 Entry.Playground.prototype.generateSoundView = function(a) {
   if ("workspace" == Entry.type) {
@@ -10409,6 +10414,7 @@ Entry.PropertyPanel = function() {
     this._view.css({width:a + "px", top:9 * a / 16 + 123 - 22 + "px"});
     430 <= a ? this._view.removeClass("collapsed") : this._view.addClass("collapsed");
     Entry.dispatchEvent("windowResized");
+    (a = this.modes[this.selected].obj.resize) && a();
   };
   a.select = function(a) {
     for (var c in this.modes) {
@@ -11524,16 +11530,21 @@ p.generateView = function(a) {
   b.addClass("entryHidden");
   this.movieContainer = b;
   b = Entry.createElement("iframe");
-  b.setAttribute("width", "100%");
-  b.setAttribute("height", "380");
+  b.setAttribute("id", "tvCastIframe");
   b.setAttribute("allowfullscreen", "");
   b.setAttribute("frameborder", 0);
   b.setAttribute("src", a);
   this.movieFrame = b;
-  this.movieContainer.appendChild(b);
+  this.movieContainer.appendChild(this.movieFrame);
 };
 p.getView = function() {
   return this.movieContainer;
+};
+p.resize = function() {
+  var a = document.getElementById("entryContainerWorkspaceId"), b = document.getElementById("tvCastIframe");
+  w = a.offsetWidth;
+  b.width = w + "px";
+  b.height = 9 * w / 16 + "px";
 };
 Entry.ContextMenu = {};
 (function(a) {
@@ -16342,8 +16353,7 @@ p.generateView = function(a) {
   b.addClass("entryHidden");
   this.movieContainer = b;
   b = Entry.createElement("iframe");
-  b.setAttribute("width", "100%");
-  b.setAttribute("height", "380");
+  b.setAttribute("id", "youtubeIframe");
   b.setAttribute("allowfullscreen", "");
   b.setAttribute("frameborder", 0);
   b.setAttribute("src", "https://www.youtube.com/embed/" + a);
@@ -16352,5 +16362,11 @@ p.generateView = function(a) {
 };
 p.getView = function() {
   return this.movieContainer;
+};
+p.resize = function() {
+  var a = document.getElementById("entryContainerWorkspaceId"), b = document.getElementById("youtubeIframe");
+  w = a.offsetWidth;
+  b.width = w + "px";
+  b.height = 9 * w / 16 + "px";
 };
 

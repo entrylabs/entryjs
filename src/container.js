@@ -51,6 +51,7 @@ Entry.Container.prototype.generateView = function(containerView, option) {
     this._view.addClass('entryContainer');
     if (!option || option == 'workspace') {
         this._view.addClass('entryContainerWorkspace');
+        this._view.setAttribute('id' , 'entryContainerWorkspaceId');
 
         var addButton = Entry.createElement('div');
         addButton.addClass('entryAddObjectWorkspace');
