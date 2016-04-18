@@ -172,7 +172,6 @@ EntryStatic.getAllBlocks = function() {
                 "change_brush_transparency",
                 "set_brush_tranparency",
                 "brush_erase_all"
-
             ]
         },
         {

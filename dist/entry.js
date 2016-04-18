@@ -10331,7 +10331,7 @@ Entry.popupHelper = function(a) {
   this.nowContent;
   a && (window.popupHelper = null);
   Entry.assert(!window.popupHelper, "Popup exist");
-  var b = ["confirm"], c = ["entryPopupHelperTopSpan", "entryPopupHelperBottomSpan", "entryPopupHelperLeftSpan", "entryPopupHelperRightSpan"];
+  var b = ["confirm", "spinner"], c = ["entryPopupHelperTopSpan", "entryPopupHelperBottomSpan", "entryPopupHelperLeftSpan", "entryPopupHelperRightSpan"];
   this.body_ = Entry.Dom("div", {classes:["entryPopup", "hiddenPopup", "popupHelper"]});
   var d = this;
   this.body_.bindOnClick(function(a) {
