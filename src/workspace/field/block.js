@@ -202,6 +202,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
 
     p.separate = function(block) {
         this.getCode().createThread([block]);
+        this.calcWH();
         this.changeEvent.notify();
     };
 

@@ -58,7 +58,11 @@ goog.require("Entry.Command");
                 var prevBlock = block.getPrevBlock();
                 if (originBlock) {
                     originBlock = Entry.playground.mainWorkspace.board.findById(originBlock);
+                    if (block.view)
+                        block.view._toGlobalCoordinate();
                     block.separate(count);
+                    if (prevBlock && prevBlock.getNextBlock())
+                        prevBlock.getNextBlock().view.bindPrev();
                     block.insert(originBlock);
                     block.view.bindPrev(originBlock);
                 } else {
@@ -66,9 +70,9 @@ goog.require("Entry.Command");
                         block.view._toGlobalCoordinate();
                     block.separate(count);
                     block.moveTo(prevPos.x, prevPos.y);
+                    if (prevBlock && prevBlock.getNextBlock())
+                        prevBlock.getNextBlock().view.bindPrev();
                 }
-                if (prevBlock && prevBlock.getNextBlock())
-                    prevBlock.getNextBlock().view.bindPrev();
             } else {
                 if (originBlock) {
                     originBlock = Entry.playground.mainWorkspace.board.findById(originBlock);

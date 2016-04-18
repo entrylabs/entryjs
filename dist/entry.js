@@ -4984,8 +4984,7 @@ Entry.Commander = function(a) {
     b = Entry.playground.mainWorkspace.board.findById(b);
     if ("basic" === b.getBlockType()) {
       var f = b.getPrevBlock();
-      d ? (d = Entry.playground.mainWorkspace.board.findById(d), b.separate(e), b.insert(d), b.view.bindPrev(d)) : (b.view && b.view._toGlobalCoordinate(), b.separate(e), b.moveTo(a.x, a.y));
-      f && f.getNextBlock() && f.getNextBlock().view.bindPrev();
+      d ? (d = Entry.playground.mainWorkspace.board.findById(d), b.view && b.view._toGlobalCoordinate(), b.separate(e), f && f.getNextBlock() && f.getNextBlock().view.bindPrev(), b.insert(d), b.view.bindPrev(d)) : (b.view && b.view._toGlobalCoordinate(), b.separate(e), b.moveTo(a.x, a.y), f && f.getNextBlock() && f.getNextBlock().view.bindPrev());
     } else {
       d ? (d = Entry.playground.mainWorkspace.board.findById(d), a = d.view._contents[e], b.separate(), b.doInsert(a)) : (b.view && b.view._toGlobalCoordinate(), b.separate(e), b.moveTo(a.x, a.y));
     }
@@ -14728,6 +14727,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
   };
   a.separate = function(b) {
     this.getCode().createThread([b]);
+    this.calcWH();
     this.changeEvent.notify();
   };
   a.getCode = function() {
