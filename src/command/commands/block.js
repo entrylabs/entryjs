@@ -103,12 +103,18 @@ goog.require("Entry.Command");
     c.moveBlock = {
         type: 104,
         do: function(block) {
+            block.doMove();
         },
         state: function(block) {
+            return [block.id, block.x, block.y];
         },
         log: function(block) {
+            return [block.id, block.toJSON()];
         },
-        undo: function(blockId) {
+        undo: function(blockId, x, y) {
+            Entry.playground.mainWorkspace.board
+                .findById(blockId)
+                .moveTo(x, y);
         }
     };
 

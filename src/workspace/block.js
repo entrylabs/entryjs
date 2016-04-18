@@ -140,10 +140,8 @@ Entry.Block.MAGNET_OFFSET = 0.4;
     p.moveTo = function(x, y) {
         if (this.view)
             this.view._moveTo(x, y);
-        this.set({
-            x: this.view.x,
-            y: this.view.y
-        });
+        this._updatePos();
+        this.getCode().changeEvent.notify();
     };
 
     p.createView = function(board, mode) {

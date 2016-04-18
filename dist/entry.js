@@ -714,8 +714,8 @@ Blockly.Blocks.arduino_toggle_led = {init:function() {
   this.setNextStatement(!0);
 }};
 Entry.block.arduino_toggle_led = function(a, b) {
-  var c = b.getNumberValue("VALUE"), d = b.getField("OPERATOR");
-  Entry.hw.setDigitalPortValue(c, "on" == d ? 255 : 0);
+  var c = b.getNumberValue("VALUE"), d = "on" == b.getField("OPERATOR") ? 255 : 0;
+  Entry.hw.setDigitalPortValue(c, d);
   return b.callReturn();
 };
 Blockly.Blocks.arduino_toggle_pwm = {init:function() {
@@ -1693,10 +1693,10 @@ Entry.block.wait_second = function(a, b) {
   }
   b.isStart = !0;
   b.timeFlag = 1;
-  var c = b.getNumberValue("SECOND", b);
+  var c = b.getNumberValue("SECOND", b), c = 60 / (Entry.FPS || 60) * c * 1E3;
   setTimeout(function() {
     b.timeFlag = 0;
-  }, 60 / (Entry.FPS || 60) * c * 1E3);
+  }, c);
   return b;
 };
 Blockly.Blocks.repeat_basic = {init:function() {
@@ -4998,9 +4998,13 @@ Entry.Commander = function(a) {
   }, undo:function(b) {
   }};
   a.moveBlock = {type:104, do:function(b) {
+    b.doMove();
   }, state:function(b) {
+    return [b.id, b.x, b.y];
   }, log:function(b) {
-  }, undo:function(b) {
+    return [b.id, b.toJSON()];
+  }, undo:function(b, a, d) {
+    Entry.playground.mainWorkspace.board.findById(b).moveTo(a, d);
   }};
   a.cloneBlock = {type:105, do:function(b) {
   }, state:function(b) {
@@ -13958,7 +13962,7 @@ Entry.BlockView.DRAG_RADIUS = 5;
         switch(Entry.GlobalSvg.terminateDrag(this)) {
           case g.DONE:
             g = this._getCloseBlock();
-            d && !g ? Entry.do("separateBlock", e) : d || g || f ? g ? (g.view.magnet && g.view.magnet.next ? (this.bindPrev(g), g instanceof Entry.Block ? Entry.do("insertBlock", e, g) : g.insertTopBlock(e)) : Entry.do("insertBlock", e, g), createjs.Sound.play("entryMagneting"), b = !0) : Entry.do("separateBlock", e) : e.getThread().view.isGlobal() ? e.doMove() : Entry.do("separateBlock", e);
+            d && !g ? Entry.do("separateBlock", e) : d || g || f ? g ? (g.view.magnet && g.view.magnet.next ? (this.bindPrev(g), g instanceof Entry.Block ? Entry.do("insertBlock", e, g) : g.insertTopBlock(e)) : Entry.do("insertBlock", e, g), createjs.Sound.play("entryMagneting"), b = !0) : Entry.do("separateBlock", e) : e.getThread().view.isGlobal() ? Entry.do("moveBlock", e) : Entry.do("separateBlock", e);
             break;
           case g.RETURN:
             e = this.block;
@@ -15959,16 +15963,16 @@ Entry.Board = function(a) {
     }
     return g.concat(h);
   };
-  a._getFieldBlockMetaData = function(a, c, d, e, f) {
-    var g = a._contents, h = [];
-    c += a.contentPos.x;
-    d += a.contentPos.y;
+  a._getFieldBlockMetaData = function(b, a, d, e, f) {
+    var g = b._contents, h = [];
+    a += b.contentPos.x;
+    d += b.contentPos.y;
     for (var k = 0;k < g.length;k++) {
       var m = g[k];
       if (m instanceof Entry.FieldBlock && m.acceptType === f) {
         var n = m._valueBlock;
         if (!n.view.dragInstance) {
-          var l = c + m.box.x, q = d + m.box.y + -.5 * a.height, m = d + m.box.y + m.box.height;
+          var l = a + m.box.x, q = d + m.box.y + -.5 * b.height, m = d + m.box.y + m.box.height;
           h.push({point:q, endPoint:m, startBlock:n, blocks:[]});
           h.push({point:m, blocks:[]});
           n = n.view;
@@ -16432,7 +16436,8 @@ Entry.Block.MAGNET_OFFSET = .4;
   };
   a.moveTo = function(a, c) {
     this.view && this.view._moveTo(a, c);
-    this.set({x:this.view.x, y:this.view.y});
+    this._updatePos();
+    this.getCode().changeEvent.notify();
   };
   a.createView = function(a, c) {
     this.view || (this.set({view:new Entry.BlockView(this, a, c)}), this._updatePos());

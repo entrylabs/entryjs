@@ -556,7 +556,7 @@ Entry.BlockView.DRAG_RADIUS = 5;
                             if (!block.getThread().view.isGlobal()) {
                                 Entry.do("separateBlock", block);
                             } else {
-                                block.doMove();
+                                Entry.do("moveBlock", block);
                             }
                         } else {
                             if (closeBlock) {
