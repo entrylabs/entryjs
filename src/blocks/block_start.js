@@ -183,8 +183,7 @@ Blockly.Blocks.when_message_cast = {
     this.setInputsInline(true);
     this.setNextStatement(true);
   },
-  syntax: {js: [], py: ["self.on_message(%1)\n"]}
-    },
+  syntax: {js: [], py: ["self.on_message(%1)\n"]},
     whenAdd: function (block) {
         var vc = Entry.variableContainer;
         if (vc) vc.addRef('_messageRefs', block);
@@ -213,8 +212,7 @@ Blockly.Blocks.message_cast = {
     this.setNextStatement(true);
     this.setPreviousStatement(true);
   },
-  syntax: {js: [], py: ["self.send_message(%1)\n"]}
-    },
+  syntax: {js: [], py: ["self.send_message(%1)\n"]},
     whenAdd: function (block) {
         var vc = Entry.variableContainer;
         if (vc) vc.addRef('_messageRefs', block);
@@ -250,8 +248,7 @@ Blockly.Blocks.message_cast_wait = {
     this.setNextStatement(true);
     this.setPreviousStatement(true);
   },
-  syntax: {js: [], py: ["self.wait_after_message(%1)\n"]}
-    },
+  syntax: {js: [], py: ["self.wait_after_message(%1)\n"]},
     whenAdd: function (block) {
         var vc = Entry.variableContainer;
         if (vc) vc.addRef('_messageRefs', block);

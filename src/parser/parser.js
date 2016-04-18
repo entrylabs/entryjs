@@ -168,7 +168,6 @@ Entry.Parser = function(mode, type, cm) {
                 var assistScope = {};
 
                 for(var key in syntax.Scope ) {
-                    console.log("key", key);
                     assistScope[key + '();\n'] = syntax.Scope[key];
                 }
 

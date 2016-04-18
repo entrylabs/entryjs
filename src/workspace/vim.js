@@ -139,11 +139,9 @@ Entry.Vim = function(dom, textType) {
         if (textType === Entry.Vim.TEXT_TYPE_JS) {
             this._parserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_JS;
             this._parser.setParser(this._mode, this._parserType, this.codeMirror);
-            console.log("1");
         } else if(textType === Entry.Vim.TEXT_TYPE_PY) {
             this._parserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_PY;
             this._parser.setParser(this._mode, this._parserType, this.codeMirror);
-            console.log("2");
         } 
 
         var textCode = this._parser.parse(code);
