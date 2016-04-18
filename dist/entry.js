@@ -14739,7 +14739,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
   a.replace = function(b) {
     "string" === typeof b && (b = this._createBlockByType(b));
     var a = this._valueBlock;
-    Entry.block[a.type].isPrimitive ? a.destroy() : (a.view._toGlobalCoordinate(), this.separate(a), a.view.bumpAway(30, 150));
+    Entry.block[a.type].isPrimitive ? (a.doNotSplice = !0, a.destroy()) : (a.view._toGlobalCoordinate(), this.separate(a), a.view.bumpAway(30, 150));
     this.updateValueBlock(b);
     b.view._toLocalCoordinate(this.svgGroup);
     this.calcWH();

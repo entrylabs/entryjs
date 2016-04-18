@@ -220,9 +220,9 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
         var valueBlock = this._valueBlock;
         var valueBlockType = valueBlock.type;
         if (Entry.block[valueBlockType].isPrimitive) {
+            valueBlock.doNotSplice = true;
             valueBlock.destroy();
-        }
-        else {
+        } else {
             valueBlock.view._toGlobalCoordinate();
             this.separate(valueBlock);
             valueBlock.view.bumpAway(30, 150);
