@@ -724,6 +724,7 @@ Entry.SensorBoard = {name:"sensorBoard", setZero:Entry.Arduino.setZero, monitorT
 " A3 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, a4:{name:Lang.Hw.port_en + " A4 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, a5:{name:Lang.Hw.port_en + " A5 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, 6:{name:Lang.Hw.port_en + " 6 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, 7:{name:Lang.Hw.port_en + " 7 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, 12:{name:Lang.Hw.port_en + " 12 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, 13:{name:Lang.Hw.port_en + " 13 " + 
 Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}}, ports:{a0:{name:Lang.Hw.port_en + " A0 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, a1:{name:Lang.Hw.port_en + " A1 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, a2:{name:Lang.Hw.port_en + " A2 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, 0:{name:Lang.Hw.light + " " + Lang.Hw.sensor + "2", type:"input", pos:{x:190, y:215}}, 1:{name:Lang.Hw.temp, type:"input", pos:{x:207, y:251}}, 8:{name:Lang.Hw.right_ko + Lang.Hw.switch_ + Lang.Hw.right_en, 
 type:"input", pos:{x:180, y:120}}, 9:{name:Lang.Hw.left_ko + Lang.Hw.switch_ + Lang.Hw.left_en, type:"input", pos:{x:90, y:143}}, 10:{name:Lang.Hw.up_ko + Lang.Hw.switch_ + Lang.Hw.up_en, type:"input", pos:{x:130, y:73}}, 11:{name:Lang.Hw.down_ko + Lang.Hw.switch_ + Lang.Hw.down_en, type:"input", pos:{x:120, y:185}}}, mode:"both"}};
+Entry.dplay = {name:"dplay", setZero:Entry.Arduino.setZero};
 Entry.CODEino = {name:"CODEino", setZero:Entry.Arduino.setZero, monitorTemplate:Entry.Arduino.monitorTemplate};
 Blockly.Blocks.arduino_text = {init:function() {
   this.setColour("#00979D");
@@ -1159,11 +1160,11 @@ Blockly.Blocks.bitbrick_turn_off_all_motors = {init:function() {
 }};
 Entry.block.bitbrick_turn_off_all_motors = function(a, b) {
   var c = Entry.hw.sendQueue, d = Entry.Bitbrick;
-  d.servoList().map(function(b) {
-    c[b[1]] = 0;
+  d.servoList().map(function(a) {
+    c[a[1]] = 0;
   });
-  d.dcList().map(function(b) {
-    c[b[1]] = 128;
+  d.dcList().map(function(a) {
+    c[a[1]] = 128;
   });
   return b.callReturn();
 };
@@ -1370,8 +1371,8 @@ Entry.block.brush_erase_all = function(a, b) {
     c.moveTo(a.getX(), -1 * a.getY());
   }
   c = a.parent.getStampEntities();
-  c.map(function(b) {
-    b.removeClone();
+  c.map(function(a) {
+    a.removeClone();
   });
   c = null;
   return b.callReturn();
@@ -2099,23 +2100,23 @@ Entry.block.stop_object = function(a, b) {
   var c = b.getField("TARGET", b), d = Entry.container;
   switch(c) {
     case "all":
-      d.mapEntityIncludeCloneOnScene(function(b) {
-        b.clearScript();
+      d.mapEntityIncludeCloneOnScene(function(a) {
+        a.clearScript();
       });
       break;
     case "thisObject":
       a.clearScript();
       c = a.parent.clonedEntities;
-      c.map(function(b) {
-        b.clearScript();
+      c.map(function(a) {
+        a.clearScript();
       });
       break;
     case "thisOnly":
       a.clearScript();
       break;
     case "otherThread":
-      return a.clearScript(), c = a.parent.clonedEntities, c.map(function(b) {
-        b.clearScript();
+      return a.clearScript(), c = a.parent.clonedEntities, c.map(function(a) {
+        a.clearScript();
       }), b.callReturn();
   }
   return null;
@@ -2139,8 +2140,8 @@ Blockly.Blocks.remove_all_clones = {init:function() {
 }};
 Entry.block.remove_all_clones = function(a, b) {
   var c = a.parent.getClonedEntities();
-  c.map(function(b) {
-    b.removeClone();
+  c.map(function(a) {
+    a.removeClone();
   });
   c = null;
   return b.callReturn();
@@ -4745,7 +4746,7 @@ Entry.block.sound_something_second_wait = function(a, b) {
       d.stop();
       b.playState = 0;
     }, 1E3 * c);
-    d.addEventListener("complete", function(b) {
+    d.addEventListener("complete", function(a) {
     });
   }
   return b;
@@ -4891,7 +4892,7 @@ Entry.block.sound_something_second_wait_with_block = function(a, b) {
       d.stop();
       b.playState = 0;
     }, 1E3 * c);
-    d.addEventListener("complete", function(b) {
+    d.addEventListener("complete", function(a) {
     });
   }
   return b;
@@ -5077,10 +5078,10 @@ Entry.block.message_cast_wait = function(a, b) {
     throw Error("value can not be null or undefined");
   }
   var e = [];
-  Entry.container.mapEntityIncludeCloneOnScene(function(b, a) {
-    for (var c = a[0], d = a[1], l = b.parent.script.childNodes, q = 0;q < l.length;q++) {
+  Entry.container.mapEntityIncludeCloneOnScene(function(a, b) {
+    for (var c = b[0], d = b[1], l = a.parent.script.childNodes, q = 0;q < l.length;q++) {
       var n = l[q], m = Entry.Xml.getField("VALUE", n);
-      Entry.Xml.isTypeOf(c, n) && m == d && (m = new Entry.Script(b), m.init(n), e.push(m));
+      Entry.Xml.isTypeOf(c, n) && m == d && (m = new Entry.Script(a), m.init(n), e.push(m));
     }
   }, ["when_message_cast", c]);
   b.runningScript = e;
@@ -5682,37 +5683,37 @@ Entry.Collection = function(a) {
     b.splice.call(this, d, 0, a);
     this._hashMap[a.id] = a;
   };
-  a.has = function(b) {
-    return !!this._hashMap[b];
+  a.has = function(a) {
+    return !!this._hashMap[a];
   };
-  a.get = function(b) {
-    return this._hashMap[b];
+  a.get = function(a) {
+    return this._hashMap[a];
   };
-  a.at = function(b) {
-    return this[b];
+  a.at = function(a) {
+    return this[a];
   };
   a.getAll = function() {
-    for (var b = this.length, a = [], e = 0;e < b;e++) {
-      a.push(this[e]);
+    for (var a = this.length, b = [], e = 0;e < a;e++) {
+      b.push(this[e]);
     }
-    return a;
+    return b;
   };
   a.indexOf = function(a) {
     return b.indexOf.call(this, a);
   };
-  a.find = function(b) {
-    for (var a = [], e, f = 0, g = this.length;f < g;f++) {
+  a.find = function(a) {
+    for (var b = [], e, f = 0, g = this.length;f < g;f++) {
       e = !0;
       var h = this[f], k;
-      for (k in b) {
-        if (b[k] != h[k]) {
+      for (k in a) {
+        if (a[k] != h[k]) {
           e = !1;
           break;
         }
       }
-      e && a.push(h);
+      e && b.push(h);
     }
-    return a;
+    return b;
   };
   a.pop = function() {
     var a = b.pop.call(this);
@@ -5731,9 +5732,9 @@ Entry.Collection = function(a) {
     }
     return e;
   };
-  a.remove = function(b) {
-    var a = this.indexOf(b);
-    -1 < a && (delete this._hashMap[b.id], this.splice(a, 1));
+  a.remove = function(a) {
+    var b = this.indexOf(a);
+    -1 < b && (delete this._hashMap[a.id], this.splice(b, 1));
   };
   a.splice = function(a, d) {
     var e = b.slice.call(arguments, 2), f = this._hashMap;
@@ -7728,7 +7729,11 @@ Entry.EntryObject.prototype.generateView = function() {
     g.onkeypress = function(b) {
       13 == b.keyCode && c.editObjectValues(!1);
     };
+<<<<<<< HEAD
     g.onblur = function(b) {
+=======
+    g.onblur = function(a) {
+>>>>>>> dist/stage
       isNaN(g.value) || c.entity.setX(+g.value);
       c.updateCoordinateView();
       Entry.stage.updateObject();
@@ -7736,7 +7741,11 @@ Entry.EntryObject.prototype.generateView = function() {
     k.onkeypress = function(b) {
       13 == b.keyCode && c.editObjectValues(!1);
     };
+<<<<<<< HEAD
     k.onblur = function(b) {
+=======
+    k.onblur = function(a) {
+>>>>>>> dist/stage
       isNaN(k.value) || c.entity.setY(+k.value);
       c.updateCoordinateView();
       Entry.stage.updateObject();
@@ -7744,7 +7753,11 @@ Entry.EntryObject.prototype.generateView = function() {
     q.onkeypress = function(b) {
       13 == b.keyCode && c.editObjectValues(!1);
     };
+<<<<<<< HEAD
     q.onblur = function(b) {
+=======
+    q.onblur = function(a) {
+>>>>>>> dist/stage
       isNaN(q.value) || c.entity.setSize(+q.value);
       c.updateCoordinateView();
       Entry.stage.updateObject();
@@ -7786,20 +7799,34 @@ Entry.EntryObject.prototype.generateView = function() {
     n.onkeypress = function(b) {
       13 == b.keyCode && c.editObjectValues(!1);
     };
+<<<<<<< HEAD
     n.onblur = function(b) {
       b = n.value;
       -1 != b.indexOf("\u02da") && (b = b.substring(0, b.indexOf("\u02da")));
       isNaN(b) || c.entity.setRotation(+b);
+=======
+    n.onblur = function(a) {
+      a = n.value;
+      -1 != a.indexOf("\u02da") && (a = a.substring(0, a.indexOf("\u02da")));
+      isNaN(a) || c.entity.setRotation(+a);
+>>>>>>> dist/stage
       c.updateRotationView();
       Entry.stage.updateObject();
     };
     m.onkeypress = function(b) {
       13 == b.keyCode && c.editObjectValues(!1);
     };
+<<<<<<< HEAD
     m.onblur = function(b) {
       b = m.value;
       -1 != b.indexOf("\u02da") && (b = b.substring(0, b.indexOf("\u02da")));
       isNaN(b) || c.entity.setDirection(+b);
+=======
+    m.onblur = function(a) {
+      a = m.value;
+      -1 != a.indexOf("\u02da") && (a = a.substring(0, a.indexOf("\u02da")));
+      isNaN(a) || c.entity.setDirection(+a);
+>>>>>>> dist/stage
       c.updateRotationView();
       Entry.stage.updateObject();
     };
@@ -7870,6 +7897,7 @@ Entry.EntryObject.prototype.generateView = function() {
         Entry.container.selectObject(b.id), Entry.playground.injectObject(b);
       }
     }), this.view_.appendChild(d), d = Entry.createElement("div"), d.addClass("entryObjectInformationWorkspace"), d.object = this, this.isInformationToggle = !1, a.appendChild(d), this.informationView_ = d, d = Entry.createElement("div"), d.addClass("entryObjectRotateLabelWrapperWorkspace"), this.view_.appendChild(d), this.rotateLabelWrapperView_ = d, e = Entry.createElement("span"), e.addClass("entryObjectRotateSpanWorkspace"), e.innerHTML = Lang.Workspace.rotation + " : ", n = Entry.createElement("input"), 
+<<<<<<< HEAD
     n.addClass("entryObjectRotateInputWorkspace"), this.rotateSpan_ = e, this.rotateInput_ = n, h = Entry.createElement("span"), h.addClass("entryObjectDirectionSpanWorkspace"), h.innerHTML = Lang.Workspace.direction + " : ", m = Entry.createElement("input"), m.addClass("entryObjectDirectionInputWorkspace"), this.directionInput_ = m, d.appendChild(e), d.appendChild(n), d.appendChild(h), d.appendChild(m), d.rotateInput_ = n, d.directionInput_ = m, c = this, n.onkeypress = function(b) {
       13 == b.keyCode && (b = n.value, -1 != b.indexOf("\u02da") && (b = b.substring(0, b.indexOf("\u02da"))), isNaN(b) || c.entity.setRotation(+b), c.updateRotationView(), n.blur());
     }, n.onblur = function(b) {
@@ -7878,10 +7906,21 @@ Entry.EntryObject.prototype.generateView = function() {
     }, m.onkeypress = function(b) {
       13 == b.keyCode && (b = m.value, -1 != b.indexOf("\u02da") && (b = b.substring(0, b.indexOf("\u02da"))), isNaN(b) || c.entity.setDirection(+b), c.updateRotationView(), m.blur());
     }, m.onblur = function(b) {
+=======
+    n.addClass("entryObjectRotateInputWorkspace"), this.rotateSpan_ = e, this.rotateInput_ = n, h = Entry.createElement("span"), h.addClass("entryObjectDirectionSpanWorkspace"), h.innerHTML = Lang.Workspace.direction + " : ", m = Entry.createElement("input"), m.addClass("entryObjectDirectionInputWorkspace"), this.directionInput_ = m, d.appendChild(e), d.appendChild(n), d.appendChild(h), d.appendChild(m), d.rotateInput_ = n, d.directionInput_ = m, c = this, n.onkeypress = function(a) {
+      13 == a.keyCode && (a = n.value, -1 != a.indexOf("\u02da") && (a = a.substring(0, a.indexOf("\u02da"))), isNaN(a) || c.entity.setRotation(+a), c.updateRotationView(), n.blur());
+    }, n.onblur = function(a) {
+      c.entity.setRotation(c.entity.getRotation());
+      Entry.stage.updateObject();
+    }, m.onkeypress = function(a) {
+      13 == a.keyCode && (a = m.value, -1 != a.indexOf("\u02da") && (a = a.substring(0, a.indexOf("\u02da"))), isNaN(a) || c.entity.setDirection(+a), c.updateRotationView(), m.blur());
+    }, m.onblur = function(a) {
+>>>>>>> dist/stage
       c.entity.setDirection(c.entity.getDirection());
       Entry.stage.updateObject();
     }, a = Entry.createElement("div"), a.addClass("entryObjectRotationWrapperWorkspace"), a.object = this, this.view_.appendChild(a), d = Entry.createElement("span"), d.addClass("entryObjectCoordinateWorkspace"), a.appendChild(d), e = Entry.createElement("span"), e.addClass("entryObjectCoordinateSpanWorkspace"), e.innerHTML = "X:", g = Entry.createElement("input"), g.addClass("entryObjectCoordinateInputWorkspace"), h = Entry.createElement("span"), h.addClass("entryObjectCoordinateSpanWorkspace"), 
     h.innerHTML = "Y:", k = Entry.createElement("input"), k.addClass("entryObjectCoordinateInputWorkspace entryObjectCoordinateInputWorkspace_right"), l = Entry.createElement("span"), l.addClass("entryObjectCoordinateSpanWorkspace"), l.innerHTML = Lang.Workspace.Size, q = Entry.createElement("input"), q.addClass("entryObjectCoordinateInputWorkspace", "entryObjectCoordinateInputWorkspace_size"), d.appendChild(e), d.appendChild(g), d.appendChild(h), d.appendChild(k), d.appendChild(l), d.appendChild(q), 
+<<<<<<< HEAD
     d.xInput_ = g, d.yInput_ = k, d.sizeInput_ = q, this.coordinateView_ = d, c = this, g.onkeypress = function(b) {
       13 == b.keyCode && (isNaN(g.value) || c.entity.setX(+g.value), c.updateCoordinateView(), c.blur());
     }, g.onblur = function(b) {
@@ -7890,6 +7929,16 @@ Entry.EntryObject.prototype.generateView = function() {
     }, k.onkeypress = function(b) {
       13 == b.keyCode && (isNaN(k.value) || c.entity.setY(+k.value), c.updateCoordinateView(), c.blur());
     }, k.onblur = function(b) {
+=======
+    d.xInput_ = g, d.yInput_ = k, d.sizeInput_ = q, this.coordinateView_ = d, c = this, g.onkeypress = function(a) {
+      13 == a.keyCode && (isNaN(g.value) || c.entity.setX(+g.value), c.updateCoordinateView(), c.blur());
+    }, g.onblur = function(a) {
+      c.entity.setX(c.entity.getX());
+      Entry.stage.updateObject();
+    }, k.onkeypress = function(a) {
+      13 == a.keyCode && (isNaN(k.value) || c.entity.setY(+k.value), c.updateCoordinateView(), c.blur());
+    }, k.onblur = function(a) {
+>>>>>>> dist/stage
       c.entity.setY(c.entity.getY());
       Entry.stage.updateObject();
     }, d = Entry.createElement("div"), d.addClass("rotationMethodWrapper"), a.appendChild(d), this.rotationMethodWrapper_ = d, a = Entry.createElement("span"), a.addClass("entryObjectRotateMethodLabelWorkspace"), d.appendChild(a), a.innerHTML = Lang.Workspace.rotate_method + " : ", a = Entry.createElement("div"), a.addClass("entryObjectRotateModeWorkspace"), a.addClass("entryObjectRotateModeAWorkspace"), a.object = this, this.rotateModeAView_ = a, d.appendChild(a), a.bindOnClick(function(b) {
@@ -10508,7 +10557,7 @@ Entry.popupHelper = function(a) {
   this.nowContent;
   a && (window.popupHelper = null);
   Entry.assert(!window.popupHelper, "Popup exist");
-  var b = ["confirm"], c = ["entryPopupHelperTopSpan", "entryPopupHelperBottomSpan", "entryPopupHelperLeftSpan", "entryPopupHelperRightSpan"];
+  var b = ["confirm", "spinner"], c = ["entryPopupHelperTopSpan", "entryPopupHelperBottomSpan", "entryPopupHelperLeftSpan", "entryPopupHelperRightSpan"];
   this.body_ = Entry.Dom("div", {classes:["entryPopup", "hiddenPopup", "popupHelper"]});
   var d = this;
   this.body_.bindOnClick(function(a) {
@@ -12874,7 +12923,11 @@ Entry.HW = function() {
   this.settingQueue = {};
   this.socketType = this.hwModule = this.selectedDevice = null;
   Entry.addEventListener("stop", this.setZero);
+<<<<<<< HEAD
   this.hwInfo = {11:Entry.Arduino, 12:Entry.SensorBoard, 13:Entry.CODEino, 24:Entry.Hamster, 25:Entry.Albert, 31:Entry.Bitbrick, 42:Entry.Arduino, 51:Entry.Neobot, 71:Entry.Robotis_carCont, 72:Entry.Robotis_openCM70, 81:Entry.Xbot};
+=======
+  this.hwInfo = {11:Entry.Arduino, 12:Entry.SensorBoard, 13:Entry.CODEino, 15:Entry.dplay, 24:Entry.Hamster, 25:Entry.Albert, 31:Entry.Bitbrick, 42:Entry.Arduino, 51:Entry.Neobot, 71:Entry.Robotis_carCont, 72:Entry.Robotis_openCM70};
+>>>>>>> dist/stage
 };
 Entry.HW.TRIAL_LIMIT = 1;
 p = Entry.HW.prototype;
