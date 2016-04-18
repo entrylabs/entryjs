@@ -3,9 +3,9 @@
  */
 "use strict";
 
-goog.provide("Entry.JSParser");
+goog.provide("Entry.PyToBlockParser");
 
-Entry.JSParser = function(syntax) {
+Entry.PyToBlockParser = function(syntax) {
     this.syntax = syntax;
 
     this.scopeChain = [];
@@ -618,4 +618,4 @@ Entry.JSParser = function(syntax) {
         }
     };
 
-})(Entry.JSParser.prototype);
+})(Entry.PyToBlockParser.prototype);

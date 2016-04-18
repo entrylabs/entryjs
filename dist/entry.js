@@ -8662,7 +8662,7 @@ Entry.Painter.prototype.selectToolbox = function(a) {
       this.toggleCoordinator();
   }
 };
-Entry.BlockParser = function(a) {
+Entry.BlockToJsParser = function(a) {
   this.syntax = a;
   this._iterVariableCount = 0;
   this._iterVariableChunk = ["i", "j", "k"];
@@ -8739,9 +8739,8 @@ Entry.BlockParser = function(a) {
   a.unpublishIterateVariable = function() {
     this._iterVariableCount && this._iterVariableCount--;
   };
-})(Entry.BlockParser.prototype);
-Entry.PythonBlockParser = {};
-Entry.PyBlockParser = function(a) {
+})(Entry.BlockToJsParser.prototype);
+Entry.BlockToPyParser = function(a) {
   this.syntax = a;
   this._iterVariableCount = 0;
   this._iterVariableChunk = ["i", "j", "k"];
@@ -8836,8 +8835,15 @@ Entry.PyBlockParser = function(a) {
     b.pop();
     return a += b.join("\n\t") + "\n";
   };
-})(Entry.PyBlockParser.prototype);
-Entry.JSParser = function(a) {
+})(Entry.BlockToPyParser.prototype);
+Entry.JsAstGenerator = function() {
+};
+(function(a) {
+  a.generate = function(b) {
+    return arcon.parse(b);
+  };
+})(Entry.JsAstGenerator.prototype);
+Entry.JsToBlockParser = function(a) {
   this.syntax = a;
   this.scopeChain = [];
   this.scope = null;
@@ -9091,27 +9097,338 @@ Entry.JSParser = function(a) {
       throw {message:"\uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:b.test};
     }
   };
-})(Entry.JSParser.prototype);
+})(Entry.JsToBlockParser.prototype);
+Entry.PyAstGenerator = function() {
+};
+(function(a) {
+  a.generate = function(b) {
+    var a = filbert.parse, d = {locations:!1, ranges:!1}, e;
+    try {
+      return e = a(b, d), console.log("astTree", e), e;
+    } catch (f) {
+      console.log("parsing error", f.toString());
+    }
+  };
+})(Entry.PyAstGenerator.prototype);
+Entry.PyToBlockParser = function(a) {
+  this.syntax = a;
+  this.scopeChain = [];
+  this.scope = null;
+};
+(function(a) {
+  a.Program = function(b) {
+    var a = [], d = [];
+    d.push({type:this.syntax.Program});
+    var e = this.initScope(b), d = d.concat(this.BlockStatement(b));
+    this.unloadScope();
+    a.push(d);
+    return a = a.concat(e);
+  };
+  a.Identifier = function(b, a) {
+    return a ? a[b.name] : this.scope[b.name];
+  };
+  a.ExpressionStatement = function(b) {
+    b = b.expression;
+    return this[b.type](b);
+  };
+  a.ForStatement = function(b) {
+    var a = b.init, d = b.test, e = b.update, f = b.body;
+    if (this.syntax.ForStatement) {
+      throw {message:"\uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:b};
+    }
+    var f = this[f.type](f), a = a.declarations[0].init.value, g = d.operator, d = d.right.value, h = 0;
+    "++" != e.operator && (e = a, a = d, d = e);
+    switch(g) {
+      case "<":
+        h = d - a;
+        break;
+      case "<=":
+        h = d + 1 - a;
+        break;
+      case ">":
+        h = a - d;
+        break;
+      case ">=":
+        h = a + 1 - d;
+    }
+    return this.BasicIteration(b, h, f);
+  };
+  a.BlockStatement = function(b) {
+    var a = [];
+    b = b.body;
+    for (var d = 0;d < b.length;d++) {
+      var e = b[d], f = this[e.type](e);
+      if (f) {
+        if (void 0 === f.type) {
+          throw {message:"\ud574\ub2f9\ud558\ub294 \ube14\ub85d\uc774 \uc5c6\uc2b5\ub2c8\ub2e4.", node:e};
+        }
+        f && a.push(f);
+      }
+    }
+    return a;
+  };
+  a.EmptyStatement = function(b) {
+    throw {message:"empty\ub294 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:b};
+  };
+  a.DebuggerStatement = function(b) {
+    throw {message:"debugger\ub294 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:b};
+  };
+  a.WithStatement = function(b) {
+    throw {message:"with\ub294 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:b};
+  };
+  a.ReturnStaement = function(b) {
+    throw {message:"return\uc740 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:b};
+  };
+  a.LabeledStatement = function(b) {
+    throw {message:"label\uc740 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:b};
+  };
+  a.BreakStatement = function(b) {
+    throw {message:"break\ub294 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:b};
+  };
+  a.ContinueStatement = function(b) {
+    throw {message:"continue\ub294 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:b};
+  };
+  a.IfStatement = function(b) {
+    if (this.syntax.IfStatement) {
+      throw {message:"if\ub294 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:b};
+    }
+    return this.BasicIf(b);
+  };
+  a.SwitchStatement = function(b) {
+    throw {message:"switch\ub294 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:b};
+  };
+  a.SwitchCase = function(b) {
+    throw {message:"switch ~ case\ub294 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:b};
+  };
+  a.ThrowStatement = function(b) {
+    throw {message:"throw\ub294 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:b};
+  };
+  a.TryStatement = function(b) {
+    throw {message:"try\ub294 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:b};
+  };
+  a.CatchClause = function(b) {
+    throw {message:"catch\ub294 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:b};
+  };
+  a.WhileStatement = function(b) {
+    var a = b.body, d = this.syntax.WhileStatement, a = this[a.type](a);
+    if (d) {
+      throw {message:"while\uc740 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:b};
+    }
+    return this.BasicWhile(b, a);
+  };
+  a.DoWhileStatement = function(b) {
+    throw {message:"do ~ while\uc740 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:b};
+  };
+  a.ForInStatement = function(b) {
+    throw {message:"for ~ in\uc740 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:b};
+  };
+  a.FunctionDeclaration = function(b) {
+    if (this.syntax.FunctionDeclaration) {
+      throw {message:"function\uc740 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:b};
+    }
+    return null;
+  };
+  a.VariableDeclaration = function(b) {
+    throw {message:"var\uc740 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:b};
+  };
+  a.ThisExpression = function(b) {
+    return this.scope.this;
+  };
+  a.ArrayExpression = function(b) {
+    throw {message:"array\ub294 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:b};
+  };
+  a.ObjectExpression = function(b) {
+    throw {message:"object\ub294 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:b};
+  };
+  a.Property = function(b) {
+    throw {message:"init, get, set\uc740 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:b};
+  };
+  a.FunctionExpression = function(b) {
+    throw {message:"function\uc740 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:b};
+  };
+  a.UnaryExpression = function(b) {
+    throw {message:b.operator + "\uc740(\ub294) \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \uba85\ub839\uc5b4 \uc785\ub2c8\ub2e4.", node:b};
+  };
+  a.UnaryOperator = function() {
+    return "- + ! ~ typeof void delete".split(" ");
+  };
+  a.updateOperator = function() {
+    return ["++", "--"];
+  };
+  a.BinaryOperator = function() {
+    return "== != === !== < <= > >= << >> >>> + - * / % , ^ & in instanceof".split(" ");
+  };
+  a.AssignmentExpression = function(b) {
+    throw {message:b.operator + "\uc740(\ub294) \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \uba85\ub839\uc5b4 \uc785\ub2c8\ub2e4.", node:b};
+  };
+  a.AssignmentOperator = function() {
+    return "= += -= *= /= %= <<= >>= >>>= ,= ^= &=".split(" ");
+  };
+  a.LogicalExpression = function(b) {
+    throw {message:b.operator + "\uc740(\ub294) \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \uba85\ub839\uc5b4 \uc785\ub2c8\ub2e4.", node:b};
+  };
+  a.LogicalOperator = function() {
+    return ["||", "&&"];
+  };
+  a.MemberExpression = function(b) {
+    var a = b.object, d = b.property;
+    console.log(a.type);
+    a = this[a.type](a);
+    console.log(a);
+    d = this[d.type](d, a);
+    if (Object(a) !== a || Object.getPrototypeOf(a) !== Object.prototype) {
+      throw {message:a + "\uc740(\ub294) \uc798\ubabb\ub41c \uba64\ubc84 \ubcc0\uc218\uc785\ub2c8\ub2e4.", node:b};
+    }
+    a = d;
+    if (!a) {
+      throw {message:d + "\uc774(\uac00) \uc874\uc7ac\ud558\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4.", node:b};
+    }
+    return a;
+  };
+  a.ConditionalExpression = function(b) {
+    throw {message:"\uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:b};
+  };
+  a.UpdateExpression = function(b) {
+    throw {message:b.operator + "\uc740(\ub294) \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \uba85\ub801\uc5b4 \uc785\ub2c8\ub2e4.", node:b};
+  };
+  a.CallExpression = function(b) {
+    b = b.callee;
+    return {type:this[b.type](b)};
+  };
+  a.NewExpression = function(b) {
+    throw {message:"new\ub294 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:b};
+  };
+  a.SequenceExpression = function(b) {
+    throw {message:"\uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:b};
+  };
+  a.initScope = function(b) {
+    if (null === this.scope) {
+      var a = function() {
+      };
+      a.prototype = this.syntax.Scope;
+    } else {
+      a = function() {
+      }, a.prototype = this.scope;
+    }
+    this.scope = new a;
+    this.scopeChain.push(this.scope);
+    return this.scanDefinition(b);
+  };
+  a.unloadScope = function() {
+    this.scopeChain.pop();
+    this.scope = this.scopeChain.length ? this.scopeChain[this.scopeChain.length - 1] : null;
+  };
+  a.scanDefinition = function(b) {
+    b = b.body;
+    for (var a = [], d = 0;d < b.length;d++) {
+      var e = b[d];
+      "FunctionDeclaration" === e.type && (this.scope[e.id.name] = this.scope.promise, this.syntax.BasicFunction && (e = e.body, a.push([{type:this.syntax.BasicFunction, statements:[this[e.type](e)]}])));
+    }
+    return a;
+  };
+  a.BasicFunction = function(b, a) {
+    return null;
+  };
+  a.BasicIteration = function(b, a, d) {
+    var e = this.syntax.BasicIteration;
+    if (!e) {
+      throw {message:"\uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:b};
+    }
+    return {params:[a], type:e, statements:[d]};
+  };
+  a.BasicWhile = function(b, a) {
+    var d = b.test.raw;
+    if (this.syntax.BasicWhile[d]) {
+      return {type:this.syntax.BasicWhile[d], statements:[a]};
+    }
+    throw {message:"\uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:b.test};
+  };
+  a.BasicIf = function(b) {
+    var a = b.consequent, a = this[a.type](a);
+    try {
+      var d = "", e = "===" === b.test.operator ? "==" : b.test.operator;
+      if ("Identifier" === b.test.left.type && "Literal" === b.test.right.type) {
+        d = b.test.left.name + " " + e + " " + b.test.right.raw;
+      } else {
+        if ("Literal" === b.test.left.type && "Identifier" === b.test.right.type) {
+          d = b.test.right.name + " " + e + " " + b.test.left.raw;
+        } else {
+          throw Error();
+        }
+      }
+      if (this.syntax.BasicIf[d]) {
+        return Array.isArray(a) || "object" !== typeof a || (a = [a]), {type:this.syntax.BasicIf[d], statements:[a]};
+      }
+      throw Error();
+    } catch (f) {
+      throw {message:"\uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:b.test};
+    }
+  };
+})(Entry.PyToBlockParser.prototype);
 Entry.Parser = function(a, b, c) {
   this._mode = a;
-  this.syntax = {Scope:{move:"move", mod:"mod"}};
+  this.syntax = {};
   this.codeMirror = c;
-  this._type = b;
+  this._lang = d || "js";
+  this._parserType = b;
   this.availableCode = [];
+  a === Entry.Vim.MAZE_MODE ? (this._stageId = Number(Ntry.configManager.getConfig("stageId")), this.setAvailableCode(NtryData.config[this._stageId].availableCode, NtryData.player[this._stageId].code)) : a === Entry.Vim.WORKSPACE_MODE && this.mappingSyntax(Entry.Vim.WORKSPACE_MODE);
+  this.mappingSyntax(a);
+  switch(this._lang) {
+    case "js":
+      this._parser = new Entry.JsToBlockParser(this.syntax);
+      var d = this.syntax, e = {}, f;
+      for (f in d.Scope) {
+        e[f + "();\n"] = d.Scope[f];
+      }
+      "BasicIf" in d && (e.front = "BasicIf");
+      CodeMirror.commands.javascriptComplete = function(b) {
+        CodeMirror.showHint(b, null, {globalScope:e});
+      };
+      c.on("keyup", function(b, a) {
+        !b.state.completionActive && 65 <= a.keyCode && 95 >= a.keyCode && CodeMirror.showHint(b, null, {completeSingle:!1, globalScope:e});
+      });
+      break;
+    case "py":
+      this._parser = new Entry.PyToBlockParser(this.syntax);
+      d = this.syntax;
+      e = {};
+      for (f in d.Scope) {
+        e[f + "();\n"] = d.Scope[f];
+      }
+      "BasicIf" in d && (e.front = "BasicIf");
+      CodeMirror.commands.javascriptComplete = function(b) {
+        CodeMirror.showHint(b, null, {globalScope:e});
+      };
+      c.on("keyup", function(b, a) {
+        !b.state.completionActive && 65 <= a.keyCode && 95 >= a.keyCode && CodeMirror.showHint(b, null, {completeSingle:!1, globalScope:e});
+      });
+      break;
+    case "blockJs":
+      this._parser = new Entry.BlockToJsParser(this.syntax);
+      d = this.syntax;
+      break;
+    case "blockPy":
+      this._parser = new Entry.BlockToPyParser(this.syntax), d = this.syntax;
+  }
 };
 (function(a) {
   a.setParser = function(b, a, d) {
     b === Entry.Vim.MAZE_MODE && (this._stageId = Number(Ntry.configManager.getConfig("stageId")), this.setAvailableCode(NtryData.config[this._stageId].availableCode, NtryData.player[this._stageId].code));
     this.mappingSyntax(b);
+    this._parserType = a;
     switch(a) {
       case Entry.Vim.PARSER_TYPE_JS_TO_BLOCK:
-        this._convertor = new Entry.JSParser(this.syntax);
+        this.syntax = {Scope:{move:"move", mod:"mod"}};
+        this._parser = new Entry.JsToBlockParser(this.syntax);
         break;
       case Entry.Vim.PARSER_TYPE_PY_TO_BLOCK:
-        this._convertor = new Entry.PYParser(this.syntax);
+        this.syntax = {Scope:{move:"move", mod:"mod"}};
+        this._parser = new Entry.PyToBlockParser(this.syntax);
         break;
       case Entry.Vim.PARSER_TYPE_BLOCK_TO_JS:
-        this._convertor = new Entry.BlockParser(this.syntax);
+        this.syntax = {Scope:{move:"move", mod:"mod"}};
+        this._parser = new Entry.BlockToJsParser(this.syntax);
         b = this.syntax;
         var e = {}, f;
         for (f in b.Scope) {
@@ -9127,7 +9444,8 @@ Entry.Parser = function(a, b, c) {
         });
         break;
       case Entry.Vim.PARSER_TYPE_BLOCK_TO_PY:
-        this._convertor = new Entry.PyBlockParser(this.syntax);
+        this.syntax = {Scope:{move:"move", mod:"mod"}};
+        this._parser = new Entry.BlockToPyParser(this.syntax);
         b = this.syntax;
         e = {};
         for (f in b.Scope) {
@@ -9144,29 +9462,25 @@ Entry.Parser = function(a, b, c) {
     }
   };
   a.parse = function(b) {
+    console.log("PARSER TYPE", this._parserType);
     var a = null;
-    switch(this._type) {
+    switch(this._parserType) {
       case Entry.Vim.PARSER_TYPE_JS_TO_BLOCK:
         try {
-          var d = acorn.parse(b), a = this._convertor.Program(d);
-        } catch (g) {
-          this.codeMirror && (g instanceof SyntaxError ? (b = {from:{line:g.loc.line - 1, ch:g.loc.column - 2}, to:{line:g.loc.line - 1, ch:g.loc.column + 1}}, g.message = "\ubb38\ubc95 \uc624\ub958\uc785\ub2c8\ub2e4.") : (b = this.getLineNumber(g.node.start, g.node.end), b.message = g.message, b.severity = "error", this.codeMirror.markText(b.from, b.to, {className:"CodeMirror-lint-mark-error", __annotation:b, clearOnEnter:!0})), Entry.toast.alert("Error", g.message)), a = [];
+          var d = (new Entry.JsAstGenerator).generate(b), a = this._parser.Program(d);
+        } catch (e) {
+          this.codeMirror && (e instanceof SyntaxError ? (b = {from:{line:e.loc.line - 1, ch:e.loc.column - 2}, to:{line:e.loc.line - 1, ch:e.loc.column + 1}}, e.message = "\ubb38\ubc95 \uc624\ub958\uc785\ub2c8\ub2e4.") : (b = this.getLineNumber(e.node.start, e.node.end), b.message = e.message, b.severity = "error", this.codeMirror.markText(b.from, b.to, {className:"CodeMirror-lint-mark-error", __annotation:b, clearOnEnter:!0})), Entry.toast.alert("Error", e.message)), a = [];
         }
         break;
       case Entry.Vim.PARSER_TYPE_PY_TO_BLOCK:
         try {
-          var e = filbert.parse, f = {locations:!1, ranges:!1};
-          try {
-            d = e(b, f), console.log("astTree", d);
-          } catch (g) {
-            console.log("parsing error", g.toString());
-          }
-        } catch (g) {
-          this.codeMirror && (g instanceof SyntaxError ? (b = {from:{line:g.loc.line - 1, ch:g.loc.column - 2}, to:{line:g.loc.line - 1, ch:g.loc.column + 1}}, g.message = "\ubb38\ubc95 \uc624\ub958\uc785\ub2c8\ub2e4.") : (b = this.getLineNumber(g.node.start, g.node.end), b.message = g.message, b.severity = "error", this.codeMirror.markText(b.from, b.to, {className:"CodeMirror-lint-mark-error", __annotation:b, clearOnEnter:!0})), Entry.toast.alert("Error", g.message)), a = [];
+          d = (new Entry.PyAstGenerator).generate(b), a = this._parser.Program(d);
+        } catch (e) {
+          this.codeMirror && (e instanceof SyntaxError ? (b = {from:{line:e.loc.line - 1, ch:e.loc.column - 2}, to:{line:e.loc.line - 1, ch:e.loc.column + 1}}, e.message = "\ubb38\ubc95 \uc624\ub958\uc785\ub2c8\ub2e4.") : (b = this.getLineNumber(e.node.start, e.node.end), b.message = e.message, b.severity = "error", this.codeMirror.markText(b.from, b.to, {className:"CodeMirror-lint-mark-error", __annotation:b, clearOnEnter:!0})), Entry.toast.alert("Error", e.message)), a = [];
         }
         break;
       case Entry.Vim.PARSER_TYPE_BLOCK_TO_JS:
-        b = this._convertor.Code(b);
+        b = this._parser.Code(b);
         b = b.match(/(.*{.*[\S|\s]+?}|.+)/g);
         a = Array.isArray(b) ? b.reduce(function(b, a, c) {
           var d = "";
@@ -9176,7 +9490,7 @@ Entry.Parser = function(a, b, c) {
         }) : "";
         break;
       case Entry.Vim.PARSER_TYPE_BLOCK_TO_PY:
-        b = this._convertor.Code(b), b = b.match(/(.*{.*[\S|\s]+?}|.+)/g), a = Array.isArray(b) ? b.reduce(function(b, a, c) {
+        b = this._parser.Code(b), b = b.match(/(.*{.*[\S|\s]+?}|.+)/g), a = Array.isArray(b) ? b.reduce(function(b, a, c) {
           var d = "";
           1 === c && (b += "\n");
           d = -1 < a.indexOf("function") ? a + b : b + a;
@@ -9225,261 +9539,6 @@ Entry.Parser = function(a, b, c) {
     this.availableCode = this.availableCode.concat(d);
   };
 })(Entry.Parser.prototype);
-Entry.PYParser = function(a) {
-  this.syntax = a;
-  this.scopeChain = [];
-  this.scope = null;
-};
-(function(a) {
-  a.Program = function(b) {
-    var a = [], d = [];
-    d.push({type:this.syntax.Program});
-    var e = this.initScope(b), d = d.concat(this.BlockStatement(b));
-    this.unloadScope();
-    a.push(d);
-    return a = a.concat(e);
-  };
-  a.Identifier = function(b, a) {
-    return a ? a[b.name] : this.scope[b.name];
-  };
-  a.ExpressionStatement = function(b) {
-    b = b.expression;
-    return this[b.type](b);
-  };
-  a.ForStatement = function(b) {
-    var a = b.init, d = b.test, e = b.update, f = b.body;
-    if (this.syntax.ForStatement) {
-      throw {message:"\uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:b};
-    }
-    var f = this[f.type](f), a = a.declarations[0].init.value, g = d.operator, d = d.right.value, h = 0;
-    "++" != e.operator && (e = a, a = d, d = e);
-    switch(g) {
-      case "<":
-        h = d - a;
-        break;
-      case "<=":
-        h = d + 1 - a;
-        break;
-      case ">":
-        h = a - d;
-        break;
-      case ">=":
-        h = a + 1 - d;
-    }
-    return this.BasicIteration(b, h, f);
-  };
-  a.BlockStatement = function(b) {
-    var a = [];
-    b = b.body;
-    for (var d = 0;d < b.length;d++) {
-      var e = b[d], f = this[e.type](e);
-      if (f) {
-        if (void 0 === f.type) {
-          throw {message:"\ud574\ub2f9\ud558\ub294 \ube14\ub85d\uc774 \uc5c6\uc2b5\ub2c8\ub2e4.", node:e};
-        }
-        f && a.push(f);
-      }
-    }
-    return a;
-  };
-  a.EmptyStatement = function(b) {
-    throw {message:"empty\ub294 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:b};
-  };
-  a.DebuggerStatement = function(b) {
-    throw {message:"debugger\ub294 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:b};
-  };
-  a.WithStatement = function(b) {
-    throw {message:"with\ub294 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:b};
-  };
-  a.ReturnStaement = function(b) {
-    throw {message:"return\uc740 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:b};
-  };
-  a.LabeledStatement = function(b) {
-    throw {message:"label\uc740 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:b};
-  };
-  a.BreakStatement = function(b) {
-    throw {message:"break\ub294 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:b};
-  };
-  a.ContinueStatement = function(b) {
-    throw {message:"continue\ub294 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:b};
-  };
-  a.IfStatement = function(b) {
-    if (this.syntax.IfStatement) {
-      throw {message:"if\ub294 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:b};
-    }
-    return this.BasicIf(b);
-  };
-  a.SwitchStatement = function(b) {
-    throw {message:"switch\ub294 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:b};
-  };
-  a.SwitchCase = function(b) {
-    throw {message:"switch ~ case\ub294 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:b};
-  };
-  a.ThrowStatement = function(b) {
-    throw {message:"throw\ub294 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:b};
-  };
-  a.TryStatement = function(b) {
-    throw {message:"try\ub294 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:b};
-  };
-  a.CatchClause = function(b) {
-    throw {message:"catch\ub294 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:b};
-  };
-  a.WhileStatement = function(b) {
-    var a = b.body, d = this.syntax.WhileStatement, a = this[a.type](a);
-    if (d) {
-      throw {message:"while\uc740 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:b};
-    }
-    return this.BasicWhile(b, a);
-  };
-  a.DoWhileStatement = function(b) {
-    throw {message:"do ~ while\uc740 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:b};
-  };
-  a.ForInStatement = function(b) {
-    throw {message:"for ~ in\uc740 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:b};
-  };
-  a.FunctionDeclaration = function(b) {
-    if (this.syntax.FunctionDeclaration) {
-      throw {message:"function\uc740 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:b};
-    }
-    return null;
-  };
-  a.VariableDeclaration = function(b) {
-    throw {message:"var\uc740 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:b};
-  };
-  a.ThisExpression = function(b) {
-    return this.scope.this;
-  };
-  a.ArrayExpression = function(b) {
-    throw {message:"array\ub294 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:b};
-  };
-  a.ObjectExpression = function(b) {
-    throw {message:"object\ub294 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:b};
-  };
-  a.Property = function(b) {
-    throw {message:"init, get, set\uc740 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:b};
-  };
-  a.FunctionExpression = function(b) {
-    throw {message:"function\uc740 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:b};
-  };
-  a.UnaryExpression = function(b) {
-    throw {message:b.operator + "\uc740(\ub294) \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \uba85\ub839\uc5b4 \uc785\ub2c8\ub2e4.", node:b};
-  };
-  a.UnaryOperator = function() {
-    return "- + ! ~ typeof void delete".split(" ");
-  };
-  a.updateOperator = function() {
-    return ["++", "--"];
-  };
-  a.BinaryOperator = function() {
-    return "== != === !== < <= > >= << >> >>> + - * / % , ^ & in instanceof".split(" ");
-  };
-  a.AssignmentExpression = function(b) {
-    throw {message:b.operator + "\uc740(\ub294) \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \uba85\ub839\uc5b4 \uc785\ub2c8\ub2e4.", node:b};
-  };
-  a.AssignmentOperator = function() {
-    return "= += -= *= /= %= <<= >>= >>>= ,= ^= &=".split(" ");
-  };
-  a.LogicalExpression = function(b) {
-    throw {message:b.operator + "\uc740(\ub294) \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \uba85\ub839\uc5b4 \uc785\ub2c8\ub2e4.", node:b};
-  };
-  a.LogicalOperator = function() {
-    return ["||", "&&"];
-  };
-  a.MemberExpression = function(b) {
-    var a = b.object, d = b.property;
-    console.log(a.type);
-    a = this[a.type](a);
-    console.log(a);
-    d = this[d.type](d, a);
-    if (Object(a) !== a || Object.getPrototypeOf(a) !== Object.prototype) {
-      throw {message:a + "\uc740(\ub294) \uc798\ubabb\ub41c \uba64\ubc84 \ubcc0\uc218\uc785\ub2c8\ub2e4.", node:b};
-    }
-    a = d;
-    if (!a) {
-      throw {message:d + "\uc774(\uac00) \uc874\uc7ac\ud558\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4.", node:b};
-    }
-    return a;
-  };
-  a.ConditionalExpression = function(b) {
-    throw {message:"\uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:b};
-  };
-  a.UpdateExpression = function(b) {
-    throw {message:b.operator + "\uc740(\ub294) \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \uba85\ub801\uc5b4 \uc785\ub2c8\ub2e4.", node:b};
-  };
-  a.CallExpression = function(b) {
-    b = b.callee;
-    return {type:this[b.type](b)};
-  };
-  a.NewExpression = function(b) {
-    throw {message:"new\ub294 \uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:b};
-  };
-  a.SequenceExpression = function(b) {
-    throw {message:"\uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:b};
-  };
-  a.initScope = function(b) {
-    if (null === this.scope) {
-      var a = function() {
-      };
-      a.prototype = this.syntax.Scope;
-    } else {
-      a = function() {
-      }, a.prototype = this.scope;
-    }
-    this.scope = new a;
-    this.scopeChain.push(this.scope);
-    return this.scanDefinition(b);
-  };
-  a.unloadScope = function() {
-    this.scopeChain.pop();
-    this.scope = this.scopeChain.length ? this.scopeChain[this.scopeChain.length - 1] : null;
-  };
-  a.scanDefinition = function(b) {
-    b = b.body;
-    for (var a = [], d = 0;d < b.length;d++) {
-      var e = b[d];
-      "FunctionDeclaration" === e.type && (this.scope[e.id.name] = this.scope.promise, this.syntax.BasicFunction && (e = e.body, a.push([{type:this.syntax.BasicFunction, statements:[this[e.type](e)]}])));
-    }
-    return a;
-  };
-  a.BasicFunction = function(b, a) {
-    return null;
-  };
-  a.BasicIteration = function(b, a, d) {
-    var e = this.syntax.BasicIteration;
-    if (!e) {
-      throw {message:"\uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:b};
-    }
-    return {params:[a], type:e, statements:[d]};
-  };
-  a.BasicWhile = function(b, a) {
-    var d = b.test.raw;
-    if (this.syntax.BasicWhile[d]) {
-      return {type:this.syntax.BasicWhile[d], statements:[a]};
-    }
-    throw {message:"\uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:b.test};
-  };
-  a.BasicIf = function(b) {
-    var a = b.consequent, a = this[a.type](a);
-    try {
-      var d = "", e = "===" === b.test.operator ? "==" : b.test.operator;
-      if ("Identifier" === b.test.left.type && "Literal" === b.test.right.type) {
-        d = b.test.left.name + " " + e + " " + b.test.right.raw;
-      } else {
-        if ("Literal" === b.test.left.type && "Identifier" === b.test.right.type) {
-          d = b.test.right.name + " " + e + " " + b.test.left.raw;
-        } else {
-          throw Error();
-        }
-      }
-      if (this.syntax.BasicIf[d]) {
-        return Array.isArray(a) || "object" !== typeof a || (a = [a]), {type:this.syntax.BasicIf[d], statements:[a]};
-      }
-      throw Error();
-    } catch (f) {
-      throw {message:"\uc9c0\uc6d0\ud558\uc9c0 \uc54a\ub294 \ud45c\ud604\uc2dd \uc785\ub2c8\ub2e4.", node:b.test};
-    }
-  };
-})(Entry.PYParser.prototype);
 Entry.Popup = function() {
   Entry.assert(!window.popup, "Popup exist");
   this.body_ = Entry.createElement("div");
@@ -16691,20 +16750,20 @@ Entry.Thread = function(a, b) {
     }
   };
   a.getBlocks = function() {
-    return this._data.map(function(a) {
-      return a;
+    return this._data.map(function(b) {
+      return b;
     });
   };
   a.countBlock = function() {
-    for (var a = 0, c = 0;c < this._data.length;c++) {
-      var d = this._data[c];
-      if (d.type && (a++, d = d.statements)) {
+    for (var b = 0, a = 0;a < this._data.length;a++) {
+      var d = this._data[a];
+      if (d.type && (b++, d = d.statements)) {
         for (var e = 0;e < d.length;e++) {
-          a += d[e].countBlock();
+          b += d[e].countBlock();
         }
       }
     }
-    return a;
+    return b;
   };
   a.handleChange = function() {
     0 === this._data.length && this.destroy();
@@ -17137,10 +17196,10 @@ Entry.Vim = function(a, b) {
   Entry.Vim.WORKSPACE_MODE = 1;
   Entry.Vim.TEXT_TYPE_JS = 0;
   Entry.Vim.TEXT_TYPE_PY = 1;
-  Entry.Vim.PARSER_TYPE_BLOCK_TO_JS = 0;
-  Entry.Vim.PARSER_TYPE_BLOCK_TO_PY = 1;
-  Entry.Vim.PARSER_TYPE_JS_TO_BLOCK = 2;
-  Entry.Vim.PARSER_TYPE_PY_TO_BLOCK = 3;
+  Entry.Vim.PARSER_TYPE_JS_TO_BLOCK = 0;
+  Entry.Vim.PARSER_TYPE_PY_TO_BLOCK = 1;
+  Entry.Vim.PARSER_TYPE_BLOCK_TO_JS = 2;
+  Entry.Vim.PARSER_TYPE_BLOCK_TO_PY = 3;
   a = "string" === typeof a ? $("#" + a) : $(a);
   if ("DIV" !== a.prop("tagName")) {
     return console.error("Dom is not div element");
@@ -17191,8 +17250,10 @@ Entry.Vim = function(a, b) {
     this.view.removeClass("entryRemove");
   };
   a.textToCode = function() {
-    textType === Entry.Vim.TEXT_TYPE_JS ? (this._parserType = Entry.Vim.PARSER_TYPE_JS_TO_BLOCK, this._parser.setParser(this._mode, this._parserType, this.codeMirror)) : textType === Entry.Vim.TEXT_TYPE_PY && (this.parserType = Entry.Vim.PARSER_TYPE_PY_TO_BLOCK, this._parser.setParser(this._mode, this._parserType, this.codeMirror));
-    var a = this.codeMirror.getValue(), a = this._parser.parse(a);
+    var a = this.workspace.textType;
+    a === Entry.Vim.TEXT_TYPE_JS ? (this._parserType = Entry.Vim.PARSER_TYPE_JS_TO_BLOCK, this._parser.setParser(this._mode, this._parserType, this.codeMirror)) : a === Entry.Vim.TEXT_TYPE_PY && (this._parserType = Entry.Vim.PARSER_TYPE_PY_TO_BLOCK, this._parser.setParser(this._mode, this._parserType, this.codeMirror));
+    a = this.codeMirror.getValue();
+    a = this._parser.parse(a);
     if (0 === a.length) {
       throw "\ube14\ub85d \ud30c\uc2f1 \uc624\ub958";
     }
@@ -17251,7 +17312,6 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
   a.setMode = function(a, c) {
     a = Number(a);
     var d = this.mode;
-    this.mode = a;
     switch(a) {
       case d:
         return;
@@ -17261,19 +17321,20 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
         this.textType = c;
         this.set({selectedBoard:this.vimBoard});
         this.vimBoard.show();
-        this.vimBoard.codeToText(this.board.code);
+        this.codeToText(this.board.code);
         this.blockMenu.renderText();
         this.board.clear();
+        this.mode = a;
         break;
       case Entry.Workspace.MODE_BOARD:
         try {
-          this.board.show(), this.set({selectedBoard:this.board}), this.textToCode(), this.vimBoard && this.vimBoard.hide(), this.overlayBoard && this.overlayBoard.hide(), this.blockMenu.renderBlock();
+          this.board.show(), this.set({selectedBoard:this.board}), this.textToCode(), this.vimBoard && this.vimBoard.hide(), this.overlayBoard && this.overlayBoard.hide(), this.blockMenu.renderBlock(), this.textType = c, this.mode = a;
         } catch (e) {
           throw this.board && this.board.hide(), this.set({selectedBoard:this.vimBoard}), Entry.dispatchEvent("setProgrammingMode", Entry.Workspace.MODE_VIMBOARD), e;
         }
         break;
       case Entry.Workspace.MODE_OVERLAYBOARD:
-        this.overlayBoard || this.initOverlayBoard(), this.overlayBoard.show(), this.set({selectedBoard:this.overlayBoard});
+        this.overlayBoard || this.initOverlayBoard(), this.overlayBoard.show(), this.set({selectedBoard:this.overlayBoard}), this.mode = a;
     }
     this.changeEvent.notify(c);
   };

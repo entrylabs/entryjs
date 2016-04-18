@@ -10,10 +10,11 @@ Entry.Vim = function(dom, textType) {
     Entry.Vim.TEXT_TYPE_JS = 0;
     Entry.Vim.TEXT_TYPE_PY = 1;
 
-    Entry.Vim.PARSER_TYPE_BLOCK_TO_JS = 0;
-    Entry.Vim.PARSER_TYPE_BLOCK_TO_PY = 1;
-    Entry.Vim.PARSER_TYPE_JS_TO_BLOCK = 2;
-    Entry.Vim.PARSER_TYPE_PY_TO_BLOCK = 3;
+    Entry.Vim.PARSER_TYPE_JS_TO_BLOCK = 0;
+    Entry.Vim.PARSER_TYPE_PY_TO_BLOCK = 1;
+    Entry.Vim.PARSER_TYPE_BLOCK_TO_JS = 2;
+    Entry.Vim.PARSER_TYPE_BLOCK_TO_PY = 3;
+   
 
 
     if (typeof dom === "string")
@@ -118,11 +119,12 @@ Entry.Vim = function(dom, textType) {
     };
 
     p.textToCode = function() {
+        var textType = this.workspace.textType;
         if (textType === Entry.Vim.TEXT_TYPE_JS) {
             this._parserType = Entry.Vim.PARSER_TYPE_JS_TO_BLOCK;
             this._parser.setParser(this._mode, this._parserType, this.codeMirror);
         } else if(textType === Entry.Vim.TEXT_TYPE_PY) {
-            this.parserType = Entry.Vim.PARSER_TYPE_PY_TO_BLOCK;
+            this._parserType = Entry.Vim.PARSER_TYPE_PY_TO_BLOCK;
             this._parser.setParser(this._mode, this._parserType, this.codeMirror);
         }
 

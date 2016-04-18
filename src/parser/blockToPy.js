@@ -3,9 +3,9 @@
  */
 "use strict";
 
-goog.provide("Entry.PythonBlockParser");
+goog.provide("Entry.BlockToPyParser");
 
-Entry.PyBlockParser = function(syntax) {
+Entry.BlockToPyParser = function(syntax) {
     this.syntax = syntax;
 
     this._iterVariableCount = 0;
@@ -170,4 +170,4 @@ Entry.PyBlockParser = function(syntax) {
         return result;
     };
 
-})(Entry.PyBlockParser.prototype);
+})(Entry.BlockToPyParser.prototype);

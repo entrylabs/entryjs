@@ -75,11 +75,9 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
     p.getMode = function() {return this.mode;};
 
     p.setMode = function(mode, message){
-        mode = Number(mode);
-
+        var mode = Number(mode);
         var oldMode = this.mode;
-        this.mode = mode;
-
+        
         switch (mode) {
             case oldMode:
                 return;
@@ -90,9 +88,10 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                 this.textType = message;
                 this.set({selectedBoard:this.vimBoard});
                 this.vimBoard.show();
-                this.vimBoard.codeToText(this.board.code);
+                this.codeToText(this.board.code);
                 this.blockMenu.renderText();
                 this.board.clear();
+                this.mode = mode;
                 break;
             case Entry.Workspace.MODE_BOARD:
                 try {
@@ -102,6 +101,8 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                     if (this.vimBoard) this.vimBoard.hide();
                     if (this.overlayBoard) this.overlayBoard.hide();
                     this.blockMenu.renderBlock();
+                    this.textType = message;
+                    this.mode = mode;
                 } catch(e) {
                     if (this.board) this.board.hide();
                     this.set({selectedBoard:this.vimBoard});
@@ -114,6 +115,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                     this.initOverlayBoard();
                 this.overlayBoard.show();
                 this.set({selectedBoard:this.overlayBoard});
+                this.mode = mode;
                 break;
         }
 

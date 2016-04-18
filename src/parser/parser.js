@@ -5,32 +5,37 @@
 
 goog.provide("Entry.Parser");
 
-goog.require("Entry.JSParser");
-goog.require("Entry.BlockParser");
+goog.require("Entry.JsAstGenerator");
+goog.require("Entry.PyAstGenerator");
 
-Entry.Parser = function(mode, type, cm) {
+goog.require("Entry.BlockToJsParser");
+goog.require("Entry.BlockToPyParser");
+goog.require("Entry.JsToBlockParser");
+goog.require("Entry.PyToBlockParser");
+
+Entry.Parser = function(mode, parserType, cm) {
     this._mode = mode; // maze ai workspace
-    this.syntax = {Scope:{move:"move", mod:"mod"}};
+    this.syntax = {}; //for maze
     this.codeMirror = cm;
-    //this._lang = syntax || "js"; 
-    this._type = type;
+    this._lang = syntax || "js"; //for maze
+    this._parserType = parserType;
     this.availableCode = [];
 
 
-    /*if (mode === Entry.Vim.MAZE_MODE) {
+    if (mode === Entry.Vim.MAZE_MODE) {
         this._stageId = Number(Ntry.configManager.getConfig('stageId'));
         var configCode = NtryData.config[this._stageId].availableCode;
         var playerCode = NtryData.player[this._stageId].code;
         this.setAvailableCode(configCode, playerCode);
     } else if (mode === Entry.Vim.WORKSPACE_MODE) {
-        //To Do for ws
+        this.mappingSyntax(Entry.Vim.WORKSPACE_MODE);
     }
 
     this.mappingSyntax(mode);
 
     switch (this._lang) {
         case "js":
-            this._parser = new Entry.JSParser(this.syntax);
+            this._parser = new Entry.JsToBlockParser(this.syntax);
 
             var syntax = this.syntax;
 
@@ -56,7 +61,7 @@ Entry.Parser = function(mode, type, cm) {
             break;
 
         case "py":
-            this._parser = new Entry.PYParser(this.syntax);
+            this._parser = new Entry.PyToBlockParser(this.syntax);
 
             var syntax = this.syntax;
 
@@ -82,19 +87,19 @@ Entry.Parser = function(mode, type, cm) {
             break;
 
         case "blockJs":
-            this._parser = new Entry.BlockParser(this.syntax);
+            this._parser = new Entry.BlockToJsParser(this.syntax);
             var syntax = this.syntax;
             break;
 
         case "blockPy":
-            this._parser = new Entry.PyBlockParser(this.syntax);
+            this._parser = new Entry.BlockToPyParser(this.syntax);
             var syntax = this.syntax;
             break;
-    }*/
+    }
 };
 
 (function(p) {
-    p.setParser = function(mode, type, cm) {
+    p.setParser = function(mode, parserType, cm) {
         if (mode === Entry.Vim.MAZE_MODE) {
             this._stageId = Number(Ntry.configManager.getConfig('stageId'));
             var configCode = NtryData.config[this._stageId].availableCode;
@@ -105,64 +110,24 @@ Entry.Parser = function(mode, type, cm) {
         }
 
         this.mappingSyntax(mode);
+        this._parserType = parserType;
 
-        switch (type) {
+        switch (parserType) {
             case Entry.Vim.PARSER_TYPE_JS_TO_BLOCK:
-                this._convertor = new Entry.JSParser(this.syntax);
-
-                /*var syntax = this.syntax;
-
-                var assistScope = {};
-
-                for(var key in syntax.Scope ) {
-                    assistScope[key + '();\n'] = syntax.Scope[key];
-                }
-
-                if('BasicIf' in syntax) {
-                    assistScope['front'] = 'BasicIf';
-                }
-
-                CodeMirror.commands.autoCompletion = function (cm) {
-                    CodeMirror.showHint(cm, null, {globalScope:assistScope});
-                }
-
-                cm.on("keyup", function (cm, event) {
-                    if (!cm.state.completionActive &&  (event.keyCode >= 65 && event.keyCode <= 95))  {
-                        CodeMirror.showHint(cm, null, {completeSingle: false, globalScope:assistScope});
-                    }
-                });*/
+                this.syntax = {Scope:{move:"move", mod:"mod"}};
+                this._parser = new Entry.JsToBlockParser(this.syntax);
 
                 break;
 
             case Entry.Vim.PARSER_TYPE_PY_TO_BLOCK:
-                this._convertor = new Entry.PYParser(this.syntax);
-
-                /*var syntax = this.syntax;
-
-                var assistScope = {};
-
-                for(var key in syntax.Scope ) {
-                    assistScope[key + '();\n'] = syntax.Scope[key];
-                }
-
-                if('BasicIf' in syntax) {
-                    assistScope['front'] = 'BasicIf';
-                }
-
-                CodeMirror.commands.autoCompletion = function (cm) {
-                    CodeMirror.showHint(cm, null, {globalScope:assistScope});
-                }
-
-                cm.on("keyup", function (cm, event) {
-                    if (!cm.state.completionActive &&  (event.keyCode >= 65 && event.keyCode <= 95))  {
-                        CodeMirror.showHint(cm, null, {completeSingle: false, globalScope:assistScope});
-                    }
-                });*/
+                this.syntax = {Scope:{move:"move", mod:"mod"}};
+                this._parser = new Entry.PyToBlockParser(this.syntax);
 
                 break;
 
             case Entry.Vim.PARSER_TYPE_BLOCK_TO_JS:
-                this._convertor = new Entry.BlockParser(this.syntax);
+                this.syntax = {Scope:{move:"move", mod:"mod"}};
+                this._parser = new Entry.BlockToJsParser(this.syntax);
                 
                 var syntax = this.syntax;
                 var assistScope = {};
@@ -190,7 +155,8 @@ Entry.Parser = function(mode, type, cm) {
                 break;
 
             case Entry.Vim.PARSER_TYPE_BLOCK_TO_PY:
-                this._convertor = new Entry.PyBlockParser(this.syntax);
+                this.syntax = {Scope:{move:"move", mod:"mod"}};
+                this._parser = new Entry.BlockToPyParser(this.syntax);
 
                 var syntax = this.syntax;
                 var assistScope = {};
@@ -220,13 +186,17 @@ Entry.Parser = function(mode, type, cm) {
     };
 
     p.parse = function(code) {
+        console.log("PARSER TYPE", this._parserType);
+        
+        var parserType = this._parserType;
         var result = null;
 
-        switch (this._type) {
+        switch (parserType) {
             case Entry.Vim.PARSER_TYPE_JS_TO_BLOCK:
                 try {
-                    var astTree = acorn.parse(code);
-                    result = this._convertor.Program(astTree);
+                    var jsAstGenerator = new Entry.JsAstGenerator();
+                    var astTree = jsAstGenerator.generate(code);
+                    result = this._parser.Program(astTree);
                 } catch(error) {
                     if (this.codeMirror) {
                         var annotation;
@@ -256,18 +226,11 @@ Entry.Parser = function(mode, type, cm) {
                 break;
             case Entry.Vim.PARSER_TYPE_PY_TO_BLOCK:
                 try {
-                    var filbertParse = filbert.parse;
-                    var ranges = false;
-                    var locations = false;
-                    var options = { locations: locations, ranges: ranges };
-                    var astTree;
-                    try {
-                        astTree = filbertParse(code, options);
-                        console.log("astTree", astTree);
-                    }
-                    catch (e) {
-                        console.log("parsing error", e.toString());
-                    }
+                    var pyAstGenerator = new Entry.PyAstGenerator();
+                    var astTree = pyAstGenerator.generate(code);
+
+                    result = this._parser.Program(astTree);
+
                     //result = this._convertor.Program(astTree);
                 } catch(error) {
                     if (this.codeMirror) {
@@ -297,7 +260,7 @@ Entry.Parser = function(mode, type, cm) {
                 }
                 break;
             case Entry.Vim.PARSER_TYPE_BLOCK_TO_JS:
-                var textCode = this._convertor.Code(code);
+                var textCode = this._parser.Code(code);
                 var textArr = textCode.match(/(.*{.*[\S|\s]+?}|.+)/g);
                 if(Array.isArray(textArr)) {
                     result = textArr.reduce(function (prev, current, index) {
@@ -321,7 +284,7 @@ Entry.Parser = function(mode, type, cm) {
                 break;
 
             case Entry.Vim.PARSER_TYPE_BLOCK_TO_PY:
-                var textCode = this._convertor.Code(code);
+                var textCode = this._parser.Code(code);
                 var textArr = textCode.match(/(.*{.*[\S|\s]+?}|.+)/g);
                 if(Array.isArray(textArr)) {
                     result = textArr.reduce(function (prev, current, index) {
@@ -415,7 +378,5 @@ Entry.Parser = function(mode, type, cm) {
         });
 
         this.availableCode = this.availableCode.concat(availableList);
-    }
-
-
+    };
 })(Entry.Parser.prototype);
