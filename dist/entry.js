@@ -5077,17 +5077,10 @@ Entry.block.message_cast_wait = function(a, b) {
     throw Error("value can not be null or undefined");
   }
   var e = [];
-<<<<<<< HEAD
   Entry.container.mapEntityIncludeCloneOnScene(function(b, a) {
-    for (var c = a[0], d = a[1], l = b.parent.script.childNodes, n = 0;n < l.length;n++) {
-      var m = l[n], q = Entry.Xml.getField("VALUE", m);
-      Entry.Xml.isTypeOf(c, m) && q == d && (q = new Entry.Script(b), q.init(m), e.push(q));
-=======
-  Entry.container.mapEntityIncludeCloneOnScene(function(a, b) {
-    for (var c = b[0], d = b[1], l = a.parent.script.childNodes, q = 0;q < l.length;q++) {
+    for (var c = a[0], d = a[1], l = b.parent.script.childNodes, q = 0;q < l.length;q++) {
       var n = l[q], m = Entry.Xml.getField("VALUE", n);
-      Entry.Xml.isTypeOf(c, n) && m == d && (m = new Entry.Script(a), m.init(n), e.push(m));
->>>>>>> dist/stage
+      Entry.Xml.isTypeOf(c, n) && m == d && (m = new Entry.Script(b), m.init(n), e.push(m));
     }
   }, ["when_message_cast", c]);
   b.runningScript = e;
@@ -5582,9 +5575,9 @@ Entry.Collection = function(a) {
     }
     this._hashMap = {};
   };
-  a.map = function(b, a) {
+  a.map = function(a, b) {
     for (var e = 0, f = this.length;e < f;e++) {
-      b(this[e], a);
+      a(this[e], b);
     }
   };
   a.moveFromTo = function(a, d) {
@@ -5615,8 +5608,8 @@ Entry.Event = function(a) {
   this._listeners = [];
 };
 (function(a) {
-  a.attach = function(b, a) {
-    var d = {obj:b, fn:a};
+  a.attach = function(a, c) {
+    var d = {obj:a, fn:c};
     this._listeners.push(d);
     return d;
   };
@@ -7307,8 +7300,8 @@ Entry.EntityObject.prototype.syncDialogVisible = function() {
   this.dialog && (this.dialog.object.visible = this.visible);
 };
 Entry.Helper = function() {
+  this.generateView();
 };
-<<<<<<< HEAD
 p = Entry.Helper.prototype;
 p.generateView = function() {
   this.blockHelpData = EntryStatic.blockInfo;
@@ -7320,75 +7313,27 @@ p.generateView = function() {
   a.appendChild(b);
   b = Entry.createElement("div", "entryBlockHelperContentWorkspace");
   b.addClass("entryBlockHelperIntro");
-=======
-var p = Entry.Helper.prototype;
-p.bindEvent = function() {
-  this.blockChangeEvent || (this.blockChangeEvent = Blockly.bindEvent_(Blockly.mainWorkspace.getCanvas(), "blocklySelectChange", this, this.updateSelectedBlock), Entry.playground.blockMenu && (this.menuBlockChangeEvent = Blockly.bindEvent_(Entry.playground.blockMenu.workspace_.getCanvas(), "blocklySelectChange", this, this.updateSelectedBlock)));
-};
-p.initBlockHelper = function(a) {
-  this.parentView_ || (this.parentView_ = a);
-};
-p.blockHelperOn = function() {
-  if (this.blockHelperView_) {
-    return this.blockHelperOff();
-  }
-  var a = this;
-  a.blockHelpData = EntryStatic.blockInfo;
-  var b = Entry.createElement("div", "entryBlockHelperWorkspace");
->>>>>>> dist/stage
   Entry.isForLecture && b.addClass("lecture");
-  a.parentView_.appendChild(b);
-  if (!Entry.isForLecture) {
-    var c = Entry.createElement("div", "entryBlockHelperHeaderWorkspace");
-    c.innerHTML = Lang.Helper.Block_info;
-    var d = Entry.createElement("button", "entryBlockHelperDisposeWorkspace");
-    d.addClass("entryBtn");
-    d.bindOnClick(function() {
-      a.blockHelperOff();
-    });
-    c.appendChild(d);
-    b.appendChild(c);
-  }
-  c = Entry.createElement("div", "entryBlockHelperContentWorkspace");
-  c.addClass("entryBlockHelperIntro");
-  Entry.isForLecture && c.addClass("lecture");
-  b.appendChild(c);
-  a.blockHelperContent_ = c;
-  a.blockHelperView_ = b;
-  b = Entry.createElement("div", "entryBlockHelperBlockWorkspace");
-  this.blockMenu_ = new Blockly.BlockMenu(b);
+  a.appendChild(b);
+  this.blockHelperContent_ = b;
+  this.blockHelperView_ = a;
+  a = Entry.createElement("div", "entryBlockHelperBlockWorkspace");
+  this.blockMenu_ = new Blockly.BlockMenu(a);
   this.blockMenu_.isViewOnly = !0;
   this.blockMenu_.isCenterAlign = !0;
-<<<<<<< HEAD
   this.blockHelperContent_.appendChild(a);
   a = Entry.createElement("div", "entryBlockHelperDescriptionWorkspace");
   this.blockHelperContent_.appendChild(a);
   a.innerHTML = Lang.Helper.Block_click_msg;
   this.blockHelperDescription_ = a;
-=======
-  a.blockHelperContent_.appendChild(b);
-  b = Entry.createElement("div", "entryBlockHelperDescriptionWorkspace");
-  a.blockHelperContent_.appendChild(b);
-  b.innerHTML = Lang.Helper.Block_click_msg;
-  this.blockHelperDescription_ = b;
-  this.blockChangeEvent = Blockly.bindEvent_(Blockly.mainWorkspace.getCanvas(), "blocklySelectChange", this, this.updateSelectedBlock);
-  Entry.playground.blockMenu && (this.menuBlockChangeEvent = Blockly.bindEvent_(Entry.playground.blockMenu.workspace_.getCanvas(), "blocklySelectChange", this, this.updateSelectedBlock));
->>>>>>> dist/stage
   this.first = !0;
 };
-p.blockHelperOff = function() {
-  if (this.blockHelperView_ && !Entry.isForLecture) {
-    var a = this;
-    a.blockHelperView_.addClass("dispose");
-    Blockly.unbindEvent_(this.blockChangeEvent);
-    delete this.blockChangeEvent;
-    Entry.playground.blockMenu && (Blockly.unbindEvent_(this.menuBlockChangeEvent), delete this.menuBlockChangeEvent);
-    Entry.bindAnimationCallback(a.blockHelperView_, function(b) {
-      a.parentView_.removeChild(a.blockHelperView_);
-      delete a.blockHelperContent_;
-      delete a.blockHelperView_;
-    });
-  }
+p.getView = function() {
+  this.bindEvent();
+  return this._view;
+};
+p.bindEvent = function() {
+  this.blockChangeEvent || (this.blockChangeEvent = Blockly.bindEvent_(Blockly.mainWorkspace.getCanvas(), "blocklySelectChange", this, this.updateSelectedBlock), Entry.playground.blockMenu && (this.menuBlockChangeEvent = Blockly.bindEvent_(Entry.playground.blockMenu.workspace_.getCanvas(), "blocklySelectChange", this, this.updateSelectedBlock)));
 };
 p.updateSelectedBlock = function() {
   Blockly.selected && (this.first && (this.blockHelperContent_.removeClass("entryBlockHelperIntro"), this.first = !1), this.renderBlock(Blockly.selected.type));
@@ -10590,8 +10535,8 @@ Entry.initialize_ = function() {
 Entry.createDom = function(a, b) {
   if (b && "workspace" != b) {
     "minimize" == b ? (c = Entry.createElement("canvas"), c.className = "entryCanvasWorkspace", c.id = "entryCanvas", c.width = 640, c.height = 360, d = Entry.createElement("div", "entryCanvasWrapper"), d.appendChild(c), a.appendChild(d), this.canvas_ = c, this.stage.initStage(this.canvas_), d = Entry.createElement("div"), a.appendChild(d), this.engineView = d, this.engine.generateView(this.engineView, b)) : "phone" == b && (this.stateManagerView = c = Entry.createElement("div"), this.stateManager.generateView(this.stateManagerView, 
-    b), d = Entry.createElement("div"), a.appendChild(d), this.engineView = d, this.engine.generateView(this.engineView, b), c = Entry.createElement("canvas"), c.addClass("entryCanvasPhone"), c.id = "entryCanvas", c.width = 640, c.height = 360, d.insertBefore(c, this.engine.footerView_), this.canvas_ = c, this.stage.initStage(this.canvas_), c = Entry.createElement("div"), a.appendChild(c), this.containerView = c, this.container.generateView(this.containerView, b), d = Entry.createElement("div"), 
-    a.appendChild(d), this.playgroundView = d, this.playground.generateView(this.playgroundView, b));
+    b), d = Entry.createElement("div"), a.appendChild(d), this.engineView = d, this.engine.generateView(this.engineView, b), c = Entry.createElement("canvas"), c.addClass("entryCanvasPhone"), c.id = "entryCanvas", c.width = 640, c.height = 360, d.insertBefore(c, this.engine.footerView_), this.canvas_ = c, this.stage.initStage(this.canvas_), c = Entry.createElement("div"), a.appendChild(c), this.containerView = c, this.container.generateView(this.containerView, b), c = Entry.createElement("div"), 
+    a.appendChild(c), this.playgroundView = c, this.playground.generateView(this.playgroundView, b));
   } else {
     Entry.documentMousedown.attach(this, this.cancelObjectEdit);
     var c = Entry.createElement("div");
@@ -10627,19 +10572,13 @@ Entry.createDom = function(a, b) {
     this.propertyPanel.generateView(a, b);
     this.containerView = c;
     this.container.generateView(this.containerView, b);
-    d = Entry.createElement("div");
-    a.appendChild(d);
-    this.playgroundView = d;
+    c = Entry.createElement("div");
+    a.appendChild(c);
+    this.playgroundView = c;
     this.playground.generateView(this.playgroundView, b);
-<<<<<<< HEAD
     this.propertyPanel.addMode("object", this.container);
     this.propertyPanel.addMode("helper", this.helper);
     this.propertyPanel.select("object");
-=======
-    this.propertyPanel.addMode("container", this.container);
-    this.helper.initBlockHelper(c);
-    this.propertyPanel.select("container");
->>>>>>> dist/stage
   }
 };
 Entry.start = function(a) {
