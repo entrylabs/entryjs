@@ -3,8 +3,10 @@
 Entry.Arduino = {
     name: 'arduino',
     setZero: function() {
+        Entry.hw.sendQueue.readablePorts = [];
         for (var port = 0; port < 20; port++) {
-          Entry.hw.sendQueue[port] = 0;
+            Entry.hw.sendQueue[port] = 0;
+            Entry.hw.sendQueue.readablePorts.push(port);
         } 
         Entry.hw.update();
     },
@@ -13,24 +15,24 @@ Entry.Arduino = {
         width: 268,
         height: 270,
         listPorts: {
-            "2":{name: "2번 포트", type: "input", pos: {x : 0, y: 0}},
-            "3":{name: "3번 포트", type: "input", pos: {x: 0, y: 0}},
-            "4":{name: "4번 포트", type: "input", pos: {x: 0, y: 0}},
-            "5":{name: "5번 포트", type: "input", pos: {x: 0, y: 0}},
-            "6":{name: "6번 포트", type: "input", pos: {x: 0, y: 0}},
-            "7":{name: "7번 포트", type: "input", pos: {x: 0, y: 0}},
-            "8":{name: "8번 포트", type: "input", pos: {x: 0, y: 0}},
-            "9":{name: "9번 포트", type: "input", pos: {x: 0, y: 0}},
-            "10":{name: "10번 포트", type: "input", pos: {x: 0, y: 0}},
-            "11":{name: "11번 포트", type: "input", pos: {x: 0, y: 0}},
-            "12":{name: "12번 포트", type: "input", pos: {x: 0, y: 0}},
-            "13":{name: "13번 포트", type: "input", pos: {x: 0, y: 0}},
-            "a0":{name: "A0번 포트", type: "input", pos: {x: 0, y: 0}},
-            "a1":{name: "A1번 포트", type: "input", pos: {x: 0, y: 0}},
-            "a2":{name: "A2번 포트", type: "input", pos: {x: 0, y: 0}},
-            "a3":{name: "A3번 포트", type: "input", pos: {x: 0, y: 0}},
-            "a4":{name: "A4번 포트", type: "input", pos: {x: 0, y: 0}},
-            "a5":{name: "A5번 포트", type: "input", pos: {x: 0, y: 0}}
+            "2":{name: Lang.Hw.port_en + " 2 " + Lang.Hw.port_ko, type: "input", pos: {x : 0, y: 0}},
+            "3":{name: Lang.Hw.port_en + " 3 " + Lang.Hw.port_ko, type: "input", pos: {x: 0, y: 0}},
+            "4":{name: Lang.Hw.port_en + " 4 " + Lang.Hw.port_ko, type: "input", pos: {x: 0, y: 0}},
+            "5":{name: Lang.Hw.port_en + " 5 " + Lang.Hw.port_ko, type: "input", pos: {x: 0, y: 0}},
+            "6":{name: Lang.Hw.port_en + " 6 " + Lang.Hw.port_ko, type: "input", pos: {x: 0, y: 0}},
+            "7":{name: Lang.Hw.port_en + " 7 " + Lang.Hw.port_ko, type: "input", pos: {x: 0, y: 0}},
+            "8":{name: Lang.Hw.port_en + " 8 " + Lang.Hw.port_ko, type: "input", pos: {x: 0, y: 0}},
+            "9":{name: Lang.Hw.port_en + " 9 " + Lang.Hw.port_ko, type: "input", pos: {x: 0, y: 0}},
+            "10":{name: Lang.Hw.port_en + " 10 " + Lang.Hw.port_ko, type: "input", pos: {x: 0, y: 0}},
+            "11":{name: Lang.Hw.port_en + " 11 " + Lang.Hw.port_ko, type: "input", pos: {x: 0, y: 0}},
+            "12":{name: Lang.Hw.port_en + " 12 " + Lang.Hw.port_ko, type: "input", pos: {x: 0, y: 0}},
+            "13":{name: Lang.Hw.port_en + " 13 " + Lang.Hw.port_ko, type: "input", pos: {x: 0, y: 0}},
+            "a0":{name: Lang.Hw.port_en + " A0 " + Lang.Hw.port_ko, type: "input", pos: {x: 0, y: 0}},
+            "a1":{name: Lang.Hw.port_en + " A1 " + Lang.Hw.port_ko, type: "input", pos: {x: 0, y: 0}},
+            "a2":{name: Lang.Hw.port_en + " A2 " + Lang.Hw.port_ko, type: "input", pos: {x: 0, y: 0}},
+            "a3":{name: Lang.Hw.port_en + " A3 " + Lang.Hw.port_ko, type: "input", pos: {x: 0, y: 0}},
+            "a4":{name: Lang.Hw.port_en + " A4 " + Lang.Hw.port_ko, type: "input", pos: {x: 0, y: 0}},
+            "a5":{name: Lang.Hw.port_en + " A5 " + Lang.Hw.port_ko, type: "input", pos: {x: 0, y: 0}}
         },
         mode : 'both'
 
@@ -45,23 +47,28 @@ Entry.SensorBoard = {
         width: 268,
         height: 270,
         listPorts: {
-            "D0":{name: "0번 포트", type: "input", pos: {x : 0, y: 0}},
-            "D1":{name: "1번 포트", type: "input", pos: {x: 0, y: 0}},
-            "D6":{name: "2번 포트", type: "input", pos: {x : 0, y: 0}},
-            "D7":{name: "3번 포트", type: "input", pos: {x: 0, y: 0}},
-            "D12":{name: "4번 포트", type: "input", pos: {x: 0, y: 0}},
-            "D13":{name: "5번 포트", type: "input", pos: {x: 0, y: 0}}
-                },
+            "2":{name: Lang.Hw.port_en + " 2 " + Lang.Hw.port_ko, type: "input", pos: {x : 0, y: 0}},
+            "3":{name: Lang.Hw.port_en + " 3 " + Lang.Hw.port_ko, type: "input", pos: {x: 0, y: 0}},
+            "4":{name: Lang.Hw.port_en + " 4 " + Lang.Hw.port_ko, type: "input", pos: {x: 0, y: 0}},
+            "5":{name: Lang.Hw.port_en + " 5 " + Lang.Hw.port_ko, type: "input", pos: {x: 0, y: 0}},
+            "a3":{name: Lang.Hw.port_en + " A3 " + Lang.Hw.port_ko, type: "input", pos: {x: 0, y: 0}},
+            "a4":{name: Lang.Hw.port_en + " A4 " + Lang.Hw.port_ko, type: "input", pos: {x: 0, y: 0}},
+            "a5":{name: Lang.Hw.port_en + " A5 " + Lang.Hw.port_ko, type: "input", pos: {x: 0, y: 0}},
+            "6":{name: Lang.Hw.port_en + " 6 " + Lang.Hw.port_ko, type: "input", pos: {x: 0, y: 0}},
+            "7":{name: Lang.Hw.port_en + " 7 " + Lang.Hw.port_ko, type: "input", pos: {x: 0, y: 0}},
+            "12":{name: Lang.Hw.port_en + " 12 " + Lang.Hw.port_ko, type: "input", pos: {x: 0, y: 0}},
+            "13":{name: Lang.Hw.port_en + " 13 " + Lang.Hw.port_ko, type: "input", pos: {x: 0, y: 0}}
+        },
         ports : {
-            "MIC":{name: "마이크", type: "input",pos: {x : 130, y: 245}},
-            "CDS1":{name: "빛 센서1", type: "input",pos: {x : 80, y: 216}},
-            "CDS2":{name: "빛 센서2", type: "input",pos: {x : 190, y: 215}},
-            "SLIDE":{name: "슬라이드", type: "input",pos: {x : 139, y: 22}},
-            "TEMP":{name: "온도", type: "input",pos: {x : 207, y: 251}},
-            "SW_R":{name: "스위치 R", type: "input",pos: {x : 180, y: 120}},
-            "SW_L":{name: "스위치 L", type: "input",pos: {x : 90, y: 143}},
-            "SW_D":{name: "스위치 D", type: "input",pos: {x : 120, y: 185}},
-            "SW_U":{name: "스위치 U", type: "input",pos: {x : 130, y: 73}}
+            "a0":{name: Lang.Hw.port_en + " A0 " + Lang.Hw.port_ko, type: "input", pos: {x: 0, y: 0}},
+            "a1":{name: Lang.Hw.port_en + " A1 " + Lang.Hw.port_ko, type: "input", pos: {x: 0, y: 0}},
+            "a2":{name: Lang.Hw.port_en + " A2 " + Lang.Hw.port_ko, type: "input", pos: {x: 0, y: 0}},
+            "0":{name: Lang.Hw.light + " " + Lang.Hw.sensor + "2", type: "input",pos: {x : 190, y: 215}},
+            "1":{name: Lang.Hw.temp, type: "input",pos: {x : 207, y: 251}},
+            "8":{name: Lang.Hw.right_ko + Lang.Hw.switch_ + Lang.Hw.right_en, type: "input",pos: {x : 180, y: 120}},
+            "9":{name: Lang.Hw.left_ko + Lang.Hw.switch_ + Lang.Hw.left_en, type: "input",pos: {x : 90, y: 143}},
+            "10":{name: Lang.Hw.up_ko + Lang.Hw.switch_ + Lang.Hw.up_en, type: "input",pos: {x : 130, y: 73}},            
+            "11":{name: Lang.Hw.down_ko + Lang.Hw.switch_ + Lang.Hw.down_en, type: "input",pos: {x : 120, y: 185}}
       },
       mode : 'both'
     }

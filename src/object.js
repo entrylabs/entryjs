@@ -1218,7 +1218,6 @@ Entry.EntryObject.prototype.initRotateValue = function(rotateMethod) {
         this.entity.rotation = 0.0;
         this.entity.direction = 90.0;
     }
-
 };
 
 Entry.EntryObject.prototype.updateRotateMethodView = function() {

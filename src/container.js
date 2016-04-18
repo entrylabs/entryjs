@@ -51,6 +51,7 @@ Entry.Container.prototype.generateView = function(containerView, option) {
     this._view.addClass('entryContainer');
     if (!option || option == 'workspace') {
         this._view.addClass('entryContainerWorkspace');
+        this._view.setAttribute('id' , 'entryContainerWorkspaceId');
 
         var addButton = Entry.createElement('div');
         addButton.addClass('entryAddObjectWorkspace');
@@ -947,8 +948,10 @@ Entry.Container.prototype.generateTabView = function() {
     helperContainer.addClass('entryContainerHelperWorkspace');
     helperContainer.addClass('entryHide');
     view.appendChild(helperContainer);
+
+
     this.helperContainer = helperContainer;
-    Entry.helper.initBlockHelper(helperContainer);
+    // Entry.helper.initBlockHelper(helperContainer);
 
     tab1.addClass('selected');
 };
@@ -1014,7 +1017,7 @@ Entry.Container.prototype.initYoutube = function(youtubeHash) {
 };
 
 Entry.Container.prototype.initTvcast = function(tvcast) {
-    this.tvcast = tvcast;
+    this.tvcast = tvcast;   
     this.youtubeTab.removeClass('entryRemove');
     var view = this._view;
     var width = view.style.width.substring(0,

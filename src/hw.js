@@ -13,6 +13,7 @@ Entry.HW = function() {
     this.connected = false;
     this.portData = {};
     this.sendQueue = {};
+    this.outputQueue = {};
     this.settingQueue = {};
     this.selectedDevice = null;
     this.hwModule = null;
@@ -28,7 +29,7 @@ Entry.HW = function() {
         '25': Entry.Albert,
         '31': Entry.Bitbrick,
         '42': Entry.Arduino,
-        '51': Entry.Neobot,
+        '51': Entry.Neobot, 
         '71': Entry.Robotis_carCont,
         '72': Entry.Robotis_openCM70
     };
@@ -175,14 +176,15 @@ p.removePortReadable = function(port) {
     var target;
     for(var i in this.sendQueue.readablePorts) {
         if(this.sendQueue.readablePorts[i] == port) {
-            target = i;
+            target = Number(i);
             break;
         }
     }
 
-    if(target) {
+    if(target != undefined) {
         this.sendQueue.readablePorts = this.sendQueue.readablePorts.slice(0, target).concat(this.sendQueue.readablePorts.slice(target + 1, this.sendQueue.readablePorts.length));
     } else {
+        this.sendQueue = [];
         this.sendQueue.readablePorts = [];
     }
 }
@@ -197,7 +199,6 @@ p.update = function() {
     }
 
     this.socket.send(JSON.stringify(this.sendQueue));
-
     // this.sendQueue.readablePorts = [];
 };
 
@@ -248,7 +249,7 @@ p.checkDevice = function(data) {
         ),
         false
     );
-    return;
+
     if (this.hwModule.monitorTemplate) {
         this.hwMonitor = new Entry.HWMonitor(this.hwModule);
         Entry.propertyPanel.addMode("hw", this.hwMonitor);

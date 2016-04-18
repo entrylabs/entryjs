@@ -77,6 +77,12 @@ Entry.PropertyPanel = function() {
             this._view.addClass("collapsed");
 
         Entry.dispatchEvent('windowResized');
+
+        var modeResize  = this.modes[this.selected].obj.resize;
+        
+        if(modeResize)
+            modeResize();
+
         // if(this.selected == 'hw' && this.modes.hw.obj.listPorts)
         //     this.modes[this.selected].obj.resizeList();
         // else 
