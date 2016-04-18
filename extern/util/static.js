@@ -384,13 +384,93 @@ EntryStatic.getAllBlocks = function() {
                 "robotis_carCont_cm_led",
                 "robotis_carCont_cm_sound_detected_clear",
                 "robotis_carCont_aux_motor_speed",
-                "robotis_carCont_cm_calibration"
+                "robotis_carCont_cm_calibration",
+
+                //XBOT Blocks added
+                "xbot_analogValue",
+                "xbot_digitalInput",
+                "xbot_digitalOutput",
+                "xbot_analogOutput",
+                "xbot_rgb",
+                "xbot_rgb_picker",
+                "xbot_buzzer",
+                "xbot_servo",
+                "xbot_oneWheel",
+                "xbot_twoWheel",
+                "xbot_lcd"
+                //end of XBOT Blocks added                
             ]
         }
     ]
 }
 
 EntryStatic.blockInfo = {
+    
+    //XBOT Blocks added    
+    "xbot_servo": {
+        "isNotFor": ['xbot_epor_edge'],
+        "xml": "<block type='xbot_servo'><value name='VALUE'><block type='text'><field name='NAME'>90</field></block></value></block>",
+        "class": "xbot_motor"
+    },
+
+    "xbot_rgb": {
+        "isNotFor": ['xbot_epor_edge'],
+        "xml": "<block type='xbot_rgb'><value name='ledR'><block type='text'><field name='NAME'>255</field></block></value><value name='ledG'><block type='text'><field name='NAME'>255</field></block></value><value name='ledB'><block type='text'><field name='NAME'>255</field></block></value></block>",
+        "class": "xbot_rgb"
+    },
+
+    "xbot_rgb_picker": {
+        "isNotFor": ['xbot_epor_edge'],
+        "xml": "<block type='xbot_rgb_picker'></block>",
+        "class": "xbot_rgb"
+    },
+     "xbot_lcd":{
+        "isNotFor": ["xbot_epor_edge"],
+        "xml": "<block type='xbot_lcd'><value name='VALUE'><block type='text'><field name='NAME'>Hello</field></block></value></block>",
+        "class": "xbot_sensor"
+     },
+
+     "xbot_oneWheel": {
+        "isNotFor": ["xbot_epor_edge"],
+        "xml": "<block type='xbot_oneWheel'><value name='VALUE'><block type='text'><field name='NAME'>0</field></block></value></block>",
+        "class": "xbot_motor"
+    },
+
+     "xbot_twoWheel": {
+        "isNotFor": ["xbot_epor_edge"],
+        "xml": "<block type='xbot_twoWheel'><value name='rightWheel'><block type='text'><field name='NAME'>0</field></block></value><value name='leftWheel'><block type='text'><field name='NAME'>0</field></block></value></block>",
+        "class": "xbot_motor"
+    },
+
+    "xbot_buzzer": {
+        "isNotFor": ['xbot_epor_edge'],
+        "xml": "<block type='xbot_buzzer'><field name='OCTAVE'>4</field><value name='VALUE'><block type='text'><field name='NAME'>0.5</field></block></value></block>",
+        "class": "xbot_sensor"
+    },
+	"xbot_digitalOutput": {
+        "isNotFor": ["xbot_epor_edge"],
+        "xml": "<block type='xbot_digitalOutput'></block>",
+        "class": "xbot_sensor"
+    },
+
+     "xbot_digitalInput": {
+        "isNotFor": ["xbot_epor_edge"],
+        "xml": "<block type='xbot_digitalInput'></block>",
+        "class": "xbot_sensor"
+    },
+
+    "xbot_analogValue": {
+        "isNotFor": ["xbot_epor_edge"],
+        "xml": "<block type='xbot_analogValue'></block>",
+        "class": "xbot_sensor"
+    },
+    "xbot_analogOutput": {
+        "isNotFor": ["xbot_epor_edge"],
+        "xml": "<block type='xbot_analogOutput'><value name='VALUE'><block type='text'><field name='NAME'>255</field></block></value></block>",
+        "class": "xbot_sensor"
+    },
+    //end of XBOT Blocks added   
+
     "when_run_button_click": {
         "xml": "<block type='when_run_button_click'></block>",
         "class": "event",
