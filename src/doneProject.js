@@ -37,7 +37,3 @@ p.getView = function () {
 
 	return this.doneContainer;
 }
-
-p.resize = function() {
-    console.log('doneproject');
-}

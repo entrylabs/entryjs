@@ -728,6 +728,24 @@
 .propertyTabhw.selected {
   background-image: url("../../images/property/hw_on.png");
 }
+.propertyTabtvCast {
+  background-image: url("../../images/property/vedio_off.png");
+}
+.propertyTabtvCast.selected {
+  background-image: url("../../images/property/vedio_on.png");
+}
+.propertyTabyoutube {
+  background-image: url("../../images/property/vedio_off.png");
+}
+.propertyTabyoutube.selected {
+  background-image: url("../../images/property/vedio_on.png");
+}
+.propertyTabgoal {
+  background-image: url("../../images/property/doneproject.png");
+}
+.propertyTabgoal.selected {
+  background-image: url("../../images/property/doneproject_on.png");
+}
 .propertyContent {
   position: absolute;
   top: 0;

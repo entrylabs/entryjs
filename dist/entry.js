@@ -5584,10 +5584,10 @@ Entry.Collection = function(a) {
   a.fromJSON = function() {
   };
   a.toJSON = function() {
-    for (var a = [], b = 0, e = this.length;b < e;b++) {
-      a.push(this[b].toJSON());
+    for (var b = [], a = 0, e = this.length;a < e;a++) {
+      b.push(this[a].toJSON());
     }
-    return a;
+    return b;
   };
   a.observe = function() {
   };
@@ -5603,8 +5603,8 @@ Entry.Event = function(a) {
   this._listeners = [];
 };
 (function(a) {
-  a.attach = function(a, c) {
-    var d = {obj:a, fn:c};
+  a.attach = function(b, a) {
+    var d = {obj:b, fn:a};
     this._listeners.push(d);
     return d;
   };
@@ -6411,9 +6411,6 @@ p.generateView = function(a) {
 };
 p.getView = function() {
   return this.doneContainer;
-};
-p.resize = function() {
-  console.log("doneproject");
 };
 Entry.Engine = function() {
   function a(a) {
@@ -11514,23 +11511,24 @@ Entry.Toast.prototype.alert = function(a, b, c) {
     }, 20);
   }, 5E3);
 };
-Entry.TvCast = function() {
-  this.generateView();
+Entry.TvCast = function(a) {
+  this.generateView(a);
 };
 p = Entry.TvCast.prototype;
 p.init = function(a) {
   this.tvCastHash = a;
 };
-p.generateView = function() {
-  var a = Entry.createElement("div");
-  a.addClass("entryContainerMovieWorkspace");
-  a.addClass("entryHide");
-  var a = this.movieContainer = a, a = a.style.width.substring(0, a.style.width.length - 2), b = Entry.createElement("iframe");
-  b.setAttribute("width", a);
-  b.setAttribute("height", 9 * a / 16);
+p.generateView = function(a) {
+  var b = Entry.createElement("div");
+  b.addClass("entryContainerMovieWorkspace");
+  b.addClass("entryHidden");
+  this.movieContainer = b;
+  b = Entry.createElement("iframe");
+  b.setAttribute("width", "100%");
+  b.setAttribute("height", "380");
   b.setAttribute("allowfullscreen", "");
   b.setAttribute("frameborder", 0);
-  b.setAttribute("src", this.tvcast);
+  b.setAttribute("src", a);
   this.movieFrame = b;
   this.movieContainer.appendChild(b);
 };
@@ -16342,11 +16340,7 @@ p.generateView = function(a) {
   var b = Entry.createElement("div");
   b.addClass("entryContainerMovieWorkspace");
   b.addClass("entryHidden");
-  b = this.movieContainer = b;
-  console.log(b.style);
-  b = b.style.width;
-  console.log(123123123123);
-  console.log(b);
+  this.movieContainer = b;
   b = Entry.createElement("iframe");
   b.setAttribute("width", "100%");
   b.setAttribute("height", "380");
@@ -16358,11 +16352,5 @@ p.generateView = function(a) {
 };
 p.getView = function() {
   return this.movieContainer;
-};
-p.resize = function() {
-  console.log("youtube");
-};
-p.bindOnClick = function() {
-  console.log(321321);
 };
 
