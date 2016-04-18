@@ -948,7 +948,7 @@ Entry.Container.prototype.generateTabView = function() {
     helperContainer.addClass('entryHide');
     view.appendChild(helperContainer);
     this.helperContainer = helperContainer;
-    //Entry.helper.initBlockHelper(helperContainer);
+    Entry.helper.initBlockHelper(helperContainer);
 
     tab1.addClass('selected');
 };
