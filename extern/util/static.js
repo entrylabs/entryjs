@@ -1413,7 +1413,7 @@ EntryStatic.blockInfo = {
         "usage": []
     },
     "change_string_case": {
-        "xml": "<block type='change_string_case'><value name='STRING'><block type='text'><field name='NAME'>" + Lang.Blocks.hi_entry + "</field></block></value></block>",
+        "xml": "<block type='change_string_case'><value name='STRING'><block type='text'><field name='NAME'>" + Lang.Blocks.hi_entry_en + "</field></block></value></block>",
         "class": "calc_string",
         "isNotFor": [],
         "usage": []
