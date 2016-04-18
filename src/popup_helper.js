@@ -15,7 +15,7 @@ Entry.popupHelper = function(reset) {
     }
     Entry.assert(!window.popupHelper, 'Popup exist');    
 
-    var ignoreCloseType = ['confirm'];
+    var ignoreCloseType = ['confirm', 'spinner'];
     var spanArea = ['entryPopupHelperTopSpan', 'entryPopupHelperBottomSpan', 'entryPopupHelperLeftSpan', 'entryPopupHelperRightSpan'];
     this.body_ = Entry.Dom('div', {
         classes: ['entryPopup', 'hiddenPopup', 'popupHelper'],
