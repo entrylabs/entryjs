@@ -30,7 +30,7 @@ Entry.HW = function() {
         '25': Entry.Albert,
         '31': Entry.Bitbrick,
         '42': Entry.Arduino,
-        '51': Entry.Neobot, 
+        '51': Entry.Neobot,
         '71': Entry.Robotis_carCont,
         '72': Entry.Robotis_openCM70,
         '81': Entry.Xbot        

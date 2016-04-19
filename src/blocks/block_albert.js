@@ -39,7 +39,7 @@ Entry.Albert = {
             "battery":{name: Lang.Blocks.ALBERT_sensor_battery , type: "input", pos: {x : 88, y: 368}},
             "light":{name: Lang.Blocks.ALBERT_sensor_light, type: "input", pos: {x: 127, y: 391}},
             "leftWheel":{name: Lang.Hw.leftWheel , type: "output", pos: {x: 299, y: 406}},
-            "rightWheel":{name: Lang.Hw.rightWheel , type: "output", pos: {x: 22, y: 325}},            
+            "rightWheel":{name: Lang.Hw.rightWheel , type: "output", pos: {x: 22, y: 325}},
             "leftEye":{name: Lang.Hw.leftEye , type: "output", pos: {x: 260, y:26}},
             "rightEye":{name: Lang.Hw.rightEye, type: "output", pos: {x: 164, y: 13}},
             "bodyLed":{name: Lang.Hw.body + " " + Lang.Hw.led, type: "output", pos: {x: 367, y: 308}},
