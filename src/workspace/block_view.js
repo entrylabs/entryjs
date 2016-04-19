@@ -174,6 +174,7 @@ Entry.BlockView.DRAG_RADIUS = 5;
                 for (var i=0; i<templateParams.length; i++) {
                     var param = templateParams[i].trim();
                     if (param.length === 0) continue;
+
                     if (reg.test(param)) {
                         var paramIndex = Number(param.split('%')[1]) - 1;
                         param = params[paramIndex];
@@ -216,34 +217,45 @@ Entry.BlockView.DRAG_RADIUS = 5;
     p.alignContent = function(animate) {
         if (animate !== true) animate = false;
         var cursor = {x: 0, y: 0, height: 0};
+        var statementIndex = 0;
+        var width = 0;
+        var secondLineHeight = 0;
         for (var i = 0; i < this._contents.length; i++) {
             var c = this._contents[i];
-            c.align(cursor.x, cursor.y, animate);
 
-            // space between content
-            if (i !== this._contents.length - 1)
-                cursor.x += Entry.BlockView.PARAM_SPACE;
+            if (c instanceof Entry.FieldLineBreak) {
+                this._alignStatement(animate, statementIndex);
+                c.align(statementIndex);
+                statementIndex++;
+                cursor.y = c.box.y;
+                cursor.x = 8;
+            } else {
+                c.align(cursor.x, cursor.y, animate);
+                // space between content
+                if (i !== this._contents.length - 1)
+                    cursor.x += Entry.BlockView.PARAM_SPACE;
+            }
 
             var box = c.box;
-            cursor.height = Math.max(box.height, cursor.height);
+            if (statementIndex !== 0) {
+                secondLineHeight = Math.max(box.height*1000, secondLineHeight);
+            } else
+                cursor.height = Math.max(box.height, cursor.height);
+
             cursor.x += box.width;
+            width = Math.max(width, cursor.x);
+            this.set({
+                contentWidth: width,
+                contentHeight: cursor.height
+            });
         }
 
         this.set({
-            contentWidth: cursor.x,
-            contentHeight: cursor.height
+            contentHeight: cursor.height + secondLineHeight
         });
 
-        if (this._statements.length) {
-            var positions = this._skeleton.statementPos ?
-                this._skeleton.statementPos(this) : [];
-            for (var i = 0; i < this._statements.length; i++) {
-                var s = this._statements[i];
-                var pos = positions[i];
-                if (pos)
-                    s.align(pos.x, pos.y, animate);
-            }
-        }
+        if (this._statements.length != statementIndex)
+            this._alignStatement(animate, statementIndex);
 
         var contentPos = this.getContentPos();
         this.contentSvgGroup.attr("transform",
@@ -252,6 +264,15 @@ Entry.BlockView.DRAG_RADIUS = 5;
         this.contentPos = contentPos;
         this._render();
         this._updateMagnet();
+    };
+
+    p._alignStatement = function(animate, index) {
+        var positions = this._skeleton.statementPos ?
+            this._skeleton.statementPos(this) : [];
+        var statement = this._statements[index];
+        if (!statement) return;
+        var pos = positions[index];
+        if (pos) statement.align(pos.x, pos.y, animate);
     };
 
     p._render = function() {

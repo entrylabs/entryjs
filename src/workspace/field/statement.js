@@ -27,7 +27,7 @@ Entry.FieldStatement = function(content, blockView, index) {
 
     this._position = content.position;
 
-    this.observe(blockView, "alignContent", ["height"]);
+    this.observe(blockView, "alignContent", ["height"], false);
     this.observe(this, "_updateBG", ["magneting"], false);
 
     this.renderStart(blockView.getBoard());
