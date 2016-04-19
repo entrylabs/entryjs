@@ -714,8 +714,8 @@ Blockly.Blocks.arduino_toggle_led = {init:function() {
   this.setNextStatement(!0);
 }};
 Entry.block.arduino_toggle_led = function(a, b) {
-  var c = b.getNumberValue("VALUE"), d = "on" == b.getField("OPERATOR") ? 255 : 0;
-  Entry.hw.setDigitalPortValue(c, d);
+  var c = b.getNumberValue("VALUE"), d = b.getField("OPERATOR");
+  Entry.hw.setDigitalPortValue(c, "on" == d ? 255 : 0);
   return b.callReturn();
 };
 Blockly.Blocks.arduino_toggle_pwm = {init:function() {
@@ -1693,10 +1693,10 @@ Entry.block.wait_second = function(a, b) {
   }
   b.isStart = !0;
   b.timeFlag = 1;
-  var c = b.getNumberValue("SECOND", b), c = 60 / (Entry.FPS || 60) * c * 1E3;
+  var c = b.getNumberValue("SECOND", b);
   setTimeout(function() {
     b.timeFlag = 0;
-  }, c);
+  }, 60 / (Entry.FPS || 60) * c * 1E3);
   return b;
 };
 Blockly.Blocks.repeat_basic = {init:function() {
@@ -4939,8 +4939,9 @@ Entry.Commander = function(a) {
   if ("workspace" == a || "phone" == a) {
     Entry.stateManager = new Entry.StateManager;
   }
-  Entry.do = this.do;
-  Entry.undo = this.undo;
+  Entry.do = this.do.bind(this);
+  Entry.undo = this.undo.bind(this);
+  this.editor = {};
 };
 (function(a) {
   a.do = function(b) {
@@ -4953,6 +4954,9 @@ Entry.Commander = function(a) {
   a.undo = function() {
   };
   a.redo = function() {
+  };
+  a.setCurrentEditor = function(b, a) {
+    this.editor[b] = a;
   };
 })(Entry.Commander.prototype);
 (function(a) {
@@ -13902,6 +13906,7 @@ Entry.BlockView.DRAG_RADIUS = 5;
       delete this.mouseDownCoordinate;
       delete l.dragInstance;
     }
+    console.log(this.block.pointer());
     b.stopPropagation && b.stopPropagation();
     b.preventDefault && b.preventDefault();
     this._changeFill(!1);
@@ -14197,6 +14202,8 @@ Entry.Code = function(a) {
   this.changeEvent.attach(this, this._handleChange);
   this.load(a);
 };
+Entry.STATEMENT = 0;
+Entry.PARAM = -1;
 (function(a) {
   a.schema = {view:null, board:null};
   a.load = function(b) {
@@ -14306,6 +14313,9 @@ Entry.Code = function(a) {
   a.dominate = function(b) {
     var a = this._data, d = a.indexOf(b);
     0 > d || (a.splice(d, 1), a.push(b));
+  };
+  a.indexOf = function(b) {
+    return this._data.indexOf(b);
   };
   a._handleChange = function() {
     Entry.creationChangedEvent && Entry.creationChangedEvent.notify();
@@ -14772,6 +14782,11 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
   };
   a.getThread = function() {
     return this;
+  };
+  a.pointer = function(b) {
+    b.unshift(this.contentIndex);
+    b.unshift(Entry.PARAM);
+    return this._block.pointer(b);
   };
 })(Entry.FieldBlock.prototype);
 Entry.FieldColor = function(a, b, c) {
@@ -15988,8 +16003,8 @@ Entry.Board = function(a) {
     }
     return h;
   };
-  a._getOutputMagnets = function(a, c, d, e) {
-    var f = a.getBlocks(), g = [], h = [];
+  a._getOutputMagnets = function(b, a, d, e) {
+    var f = b.getBlocks(), g = [], h = [];
     d || (d = {x:0, y:0});
     var k = d.x;
     d = d.y;
@@ -15998,35 +16013,35 @@ Entry.Board = function(a) {
       if (l.dragInstance) {
         break;
       }
-      l.zIndex = c;
+      l.zIndex = a;
       d += l.y;
       k += l.x;
-      h = h.concat(this._getOutputMetaData(l, k, d, c, e));
-      n.statements && (c += .01);
+      h = h.concat(this._getOutputMetaData(l, k, d, a, e));
+      n.statements && (a += .01);
       for (var q = 0;q < n.statements.length;q++) {
-        a = n.statements[q];
-        var r = n.view._statements[q], g = g.concat(this._getOutputMagnets(a, c, {x:r.x + k, y:r.y + d}, e));
+        b = n.statements[q];
+        var r = n.view._statements[q], g = g.concat(this._getOutputMagnets(b, a, {x:r.x + k, y:r.y + d}, e));
       }
       l.magnet.next && (d += l.magnet.next.y, k += l.magnet.next.x);
     }
     return g.concat(h);
   };
-  a._getOutputMetaData = function(a, c, d, e, f) {
-    var g = a._contents, h = [];
-    c += a.contentPos.x;
-    d += a.contentPos.y;
-    for (a = 0;a < g.length;a++) {
-      var k = g[a], m = c + k.box.x, n = d - 24, l = d;
+  a._getOutputMetaData = function(b, a, d, e, f) {
+    var g = b._contents, h = [];
+    a += b.contentPos.x;
+    d += b.contentPos.y;
+    for (b = 0;b < g.length;b++) {
+      var k = g[b], m = a + k.box.x, n = d - 24, l = d;
       k instanceof Entry.FieldBlock ? (k.acceptType === f && (h.push({point:n, endPoint:l, startBlock:k, blocks:[]}), h.push({point:l, blocks:[]}), k.absX = m, k.zIndex = e, k.width = 20), (n = k._valueBlock) && (h = h.concat(this._getOutputMetaData(n.view, m, d + k.box.y, e + .01, f)))) : k instanceof Entry.FieldOutput && k.acceptType === f && (h.push({point:n, endPoint:l, startBlock:k, blocks:[]}), h.push({point:l, blocks:[]}), k.absX = m, k.zIndex = e, k.width = 20, (n = k._valueBlock) && (n.view.dragInstance || 
-      (h = h.concat(this._getOutputMetaData(n.view, c + k.box.x, d + k.box.y, e + .01, f)))));
+      (h = h.concat(this._getOutputMetaData(n.view, a + k.box.x, d + k.box.y, e + .01, f)))));
     }
     return h;
   };
-  a.getNearestMagnet = function(a, c, d) {
+  a.getNearestMagnet = function(b, a, d) {
     var e = this._magnetMap;
     if (e && 0 !== e.length) {
-      var f = 0, g = e.length - 1, h, k = null, m = "nextMagnet" === d ? c - 15 : c;
-      for (c = "nextMagnet" === d ? 20 : 0;f <= g;) {
+      var f = 0, g = e.length - 1, h, k = null, m = "nextMagnet" === d ? a - 15 : a;
+      for (a = "nextMagnet" === d ? 20 : 0;f <= g;) {
         if (h = (f + g) / 2 | 0, d = e[h], m < d.point) {
           g = h - 1;
         } else {
@@ -16035,7 +16050,7 @@ Entry.Board = function(a) {
           } else {
             e = d.blocks;
             for (f = 0;f < e.length;f++) {
-              if (g = e[f].view, g.absX - c < a && a < g.absX + g.width && (g = d.blocks[f], !k || k.view.zIndex < g.view.zIndex)) {
+              if (g = e[f].view, g.absX - a < b && b < g.absX + g.width && (g = d.blocks[f], !k || k.view.zIndex < g.view.zIndex)) {
                 k = d.blocks[f];
               }
             }
@@ -16046,23 +16061,23 @@ Entry.Board = function(a) {
       return null;
     }
   };
-  a.dominate = function(a) {
-    a = a.getFirstBlock();
-    this.svgBlockGroup.appendChild(a.view.svgGroup);
-    this.code.dominate(a.thread);
+  a.dominate = function(b) {
+    b = b.getFirstBlock();
+    this.svgBlockGroup.appendChild(b.view.svgGroup);
+    this.code.dominate(b.thread);
   };
-  a.setPatternRectFill = function(a) {
-    this.patternRect.attr({fill:a});
+  a.setPatternRectFill = function(b) {
+    this.patternRect.attr({fill:b});
   };
   a._removeActivated = function() {
     this._activatedBlockView && (this._activatedBlockView.removeActivated(), this._activatedBlockView = null);
   };
-  a.activateBlock = function(a) {
-    a = a.view;
-    var c = a.getAbsoluteCoordinate(), d = this.svgDom, e = c.x, c = c.y, e = d.width() / 2 - e, d = d.height() / 2 - c - 100;
+  a.activateBlock = function(b) {
+    b = b.view;
+    var a = b.getAbsoluteCoordinate(), d = this.svgDom, e = a.x, a = a.y, e = d.width() / 2 - e, d = d.height() / 2 - a - 100;
     this.scroller.scroll(e, d);
-    a.addActivated();
-    this._activatedBlockView = a;
+    b.addActivated();
+    this._activatedBlockView = b;
   };
   a.reDraw = function() {
     this.code.view.reDraw();
@@ -16219,12 +16234,13 @@ Entry.skeleton.basic_without_next = {box:Entry.skeleton.basic.box, contentPos:En
 }, magnets:function(a) {
   return {previous:{x:0, y:0}};
 }};
-Entry.Thread = function(a, b) {
+Entry.Thread = function(a, b, c) {
   this._data = new Entry.Collection;
   this._code = b;
   this.changeEvent = new Entry.Event(this);
   this.changeEvent.attach(this, this.handleChange);
   this._event = null;
+  this._parent = c ? c : b;
   this.load(a);
 };
 (function(a) {
@@ -16373,6 +16389,15 @@ Entry.Thread = function(a, b) {
     a && (c -= this._data.indexOf(a));
     return c;
   };
+  a.indexOf = function(a) {
+    return this._data.indexOf(a);
+  };
+  a.pointer = function(a, c) {
+    var d = this.indexOf(c);
+    a.unshift(d);
+    this._parent instanceof Entry.Block && a.unshift(this._parent.indexOfStatements(this));
+    return this._code === this._parent ? (a.unshift(this._code.indexOf(this)), d = this._data[0], a.unshift(d.y), a.unshift(d.x), a) : this._parent.pointer(a);
+  };
 })(Entry.Thread.prototype);
 Entry.Block = function(a, b) {
   Entry.Model(this, !1);
@@ -16415,7 +16440,7 @@ Entry.Block.MAGNET_OFFSET = .4;
       }
       if (a = this._schema.statements) {
         for (e = 0;e < a.length;e++) {
-          this.statements.splice(e, 1, new Entry.Thread(this.statements[e], this.getCode()));
+          this.statements.splice(e, 1, new Entry.Thread(this.statements[e], this.getCode(), this));
         }
       }
     }
@@ -16620,6 +16645,13 @@ Entry.Block.MAGNET_OFFSET = .4;
     }
     var a = Entry.skeleton[this._schema.skeleton].magnets(this.view);
     return a.next || a.prev ? "basic" : a.bool || a.string ? "field" : a.output ? "output" : null;
+  };
+  a.indexOfStatements = function(a) {
+    return this.statements.indexOf(a);
+  };
+  a.pointer = function(a) {
+    a || (a = []);
+    return this.thread.pointer(a, this);
   };
 })(Entry.Block.prototype);
 Entry.ThreadView = function(a, b) {

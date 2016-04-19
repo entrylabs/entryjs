@@ -102,7 +102,7 @@ Entry.Block.MAGNET_OFFSET = 0.4;
             for (var i = 0; i < statements.length; i++) {
                 this.statements.splice(
                     i, 1,
-                    new Entry.Thread(this.statements[i], that.getCode())
+                    new Entry.Thread(this.statements[i], that.getCode(), this)
                 );
             }
         }
@@ -466,6 +466,16 @@ Entry.Block.MAGNET_OFFSET = 0.4;
             return "output";
         else
             return null;
+    };
+
+    p.indexOfStatements = function(statement) {
+        return this.statements.indexOf(statement);
+    };
+
+    p.pointer = function(pointer) {
+        if (!pointer)
+            pointer = [];
+        return this.thread.pointer(pointer, this);
     };
 
 })(Entry.Block.prototype);

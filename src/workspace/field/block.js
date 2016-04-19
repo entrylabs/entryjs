@@ -279,4 +279,10 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
 
     p.getThread = function() {return this;};
 
+    p.pointer = function(pointer) {
+        pointer.unshift(this.contentIndex);
+        pointer.unshift(Entry.PARAM);
+        return this._block.pointer(pointer);
+    };
+
 })(Entry.FieldBlock.prototype);

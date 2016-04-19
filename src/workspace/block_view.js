@@ -341,6 +341,7 @@ Entry.BlockView.DRAG_RADIUS = 5;
     };
 
     p.onMouseDown = function(e) {
+        console.log(this.block.pointer());
         if (e.stopPropagation) e.stopPropagation();
         if (e.preventDefault) e.preventDefault();
 

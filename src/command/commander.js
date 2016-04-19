@@ -17,9 +17,11 @@ Entry.Commander = function(injectType) {
         Entry.stateManager = new Entry.StateManager();
 
     }
-    Entry.do = this.do;
+    Entry.do = this.do.bind(this);
 
-    Entry.undo = this.undo;
+    Entry.undo = this.undo.bind(this);
+
+    this.editor = {};
 };
 
 
@@ -45,5 +47,9 @@ Entry.Commander = function(injectType) {
 
     p.redo = function() {
 
+    };
+
+    p.setCurrentEditor = function(key, object) {
+        this.editor[key] = object;
     };
 })(Entry.Commander.prototype)

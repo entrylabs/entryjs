@@ -28,6 +28,9 @@ Entry.Code = function(code) {
     this.load(code);
 };
 
+Entry.STATEMENT = 0;
+Entry.PARAM = -1;
+
 (function(p) {
     p.schema = {
         view: null,
@@ -188,6 +191,10 @@ Entry.Code = function(code) {
         if (index < 0) return;
         data.splice(index, 1);
         data.push(thread);
+    };
+
+    p.indexOf = function(thread) {
+        return this._data.indexOf(thread);
     };
 
     p._handleChange = function() {

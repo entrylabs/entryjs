@@ -11,12 +11,13 @@ goog.require("Entry.Collection");
 /*
  *
  */
-Entry.Thread = function(thread, code) {
+Entry.Thread = function(thread, code, parent) {
     this._data = new Entry.Collection();
     this._code = code;
     this.changeEvent = new Entry.Event(this);
     this.changeEvent.attach(this, this.handleChange);
     this._event = null;
+    this._parent = parent ? parent : code;
 
     this.load(thread);
 };
@@ -222,5 +223,24 @@ Entry.Thread = function(thread, code) {
         if (startBlock)
             result -= this._data.indexOf(startBlock);
         return result
+    };
+
+    p.indexOf = function(block) {
+        return this._data.indexOf(block);
+    };
+
+    p.pointer = function(pointer, block) {
+        var index = this.indexOf(block);
+        pointer.unshift(index);
+        if (this._parent instanceof Entry.Block)
+            pointer.unshift(this._parent.indexOfStatements(this));
+        if (this._code === this._parent) {
+            pointer.unshift(this._code.indexOf(this));
+            var topBlock = this._data[0];
+            pointer.unshift(topBlock.y);
+            pointer.unshift(topBlock.x);
+            return pointer;
+        }
+        return this._parent.pointer(pointer);
     };
 })(Entry.Thread.prototype);
