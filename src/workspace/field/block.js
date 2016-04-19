@@ -161,8 +161,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
 
     p.updateValueBlock = function(block) {
         if (!(block instanceof Entry.Block)) block = undefined;
-        if (this._sizeObserver) this._sizeObserver.destroy();
-        if (this._posObserver) this._posObserver.destroy();
+        this._destroyObservers();
 
         var view = this._setValueBlock(block).view;
         view.bindPrev(this);
@@ -172,6 +171,11 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
         var board = this._blockView.getBoard();// performance issue
         if (board.constructor === Entry.Board)
             board.generateCodeMagnetMap();
+    };
+
+    p._destroyObservers = function() {
+        if (this._sizeObserver) this._sizeObserver.destroy();
+        if (this._posObserver) this._posObserver.destroy();
     };
 
     p.getPrevBlock = function(block) {
@@ -224,6 +228,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
             valueBlock.doNotSplice = true;
             valueBlock.destroy();
         } else {
+            this._destroyObservers();
             valueBlock.view._toGlobalCoordinate();
             this.separate(valueBlock);
             valueBlock.view.bumpAway(30, 150);

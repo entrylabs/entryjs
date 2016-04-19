@@ -10229,7 +10229,7 @@ Entry.BlockMockup = function(a) {
   };
   a.toJSON = function() {
     var b = "";
-    this.output ? b = "Boolean" === this.output ? "basic_boolean_field" : "basic_string_field" : !this.isPrev && this.isNext ? b = "basic_event" : this.statements.length ? b = "basic_loop" : this.isPrev && this.isNext ? b = "basic" : this.isPrev && !this.isNext && (b = "basic_without_next");
+    this.output ? b = "Boolean" === this.output ? "basic_boolean_field" : "basic_string_field" : !this.isPrev && this.isNext ? b = "basic_event" : 1 == this.statements.length ? b = "basic_loop" : 2 == this.statements.length ? b = "basic_double_loop" : this.isPrev && this.isNext ? b = "basic" : this.isPrev && !this.isNext && (b = "basic_without_next");
     return {color:this.color, skeleton:b, statements:this.statements, template:this.templates.filter(function(b) {
       return "string" === typeof b;
     }).join(" "), params:this.params, events:this.events};
@@ -13827,25 +13827,26 @@ Entry.BlockView.DRAG_RADIUS = 5;
   };
   a.alignContent = function(b) {
     !0 !== b && (b = !1);
-    for (var a = 0, d = 0, e = 0;e < this._contents.length;e++) {
-      var f = this._contents[e];
-      f.align(a, 0, b);
-      e !== this._contents.length - 1 && (a += Entry.BlockView.PARAM_SPACE);
-      f = f.box;
-      d = Math.max(f.height, d);
-      a += f.width;
+    for (var a = 0, d = 0, e = 0, f = 0, g = 0, h = 0, k = 0;k < this._contents.length;k++) {
+      var m = this._contents[k];
+      m instanceof Entry.FieldLineBreak ? (this._alignStatement(b, f), m.align(f), f++, d = m.box.y, a = 8) : (m.align(a, d, b), k !== this._contents.length - 1 && (a += Entry.BlockView.PARAM_SPACE));
+      m = m.box;
+      0 !== f ? h = Math.max(1E3 * m.height, h) : e = Math.max(m.height, e);
+      a += m.width;
+      g = Math.max(g, a);
+      this.set({contentWidth:g, contentHeight:e});
     }
-    this.set({contentWidth:a, contentHeight:d});
-    if (this._statements.length) {
-      for (a = this._skeleton.statementPos ? this._skeleton.statementPos(this) : [], e = 0;e < this._statements.length;e++) {
-        d = this._statements[e], (f = a[e]) && d.align(f.x, f.y, b);
-      }
-    }
+    this.set({contentHeight:e + h});
+    this._statements.length != f && this._alignStatement(b, f);
     b = this.getContentPos();
     this.contentSvgGroup.attr("transform", "translate(" + b.x + "," + b.y + ")");
     this.contentPos = b;
     this._render();
     this._updateMagnet();
+  };
+  a._alignStatement = function(b, a) {
+    var d = this._skeleton.statementPos ? this._skeleton.statementPos(this) : [], e = this._statements[a];
+    e && (d = d[a]) && e.align(d.x, d.y, b);
   };
   a._render = function() {
     this._renderPath();
@@ -14699,8 +14700,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
   };
   a.updateValueBlock = function(b) {
     b instanceof Entry.Block || (b = void 0);
-    this._sizeObserver && this._sizeObserver.destroy();
-    this._posObserver && this._posObserver.destroy();
+    this._destroyObservers();
     b = this._setValueBlock(b).view;
     b.bindPrev(this);
     this._blockView.alignContent();
@@ -14708,6 +14708,10 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
     this._sizeObserver = b.observe(this, "calcWH", ["width", "height"]);
     b = this._blockView.getBoard();
     b.constructor === Entry.Board && b.generateCodeMagnetMap();
+  };
+  a._destroyObservers = function() {
+    this._sizeObserver && this._sizeObserver.destroy();
+    this._posObserver && this._posObserver.destroy();
   };
   a.getPrevBlock = function(b) {
     return this._valueBlock === b ? this : null;
@@ -14743,7 +14747,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
   a.replace = function(b) {
     "string" === typeof b && (b = this._createBlockByType(b));
     var a = this._valueBlock;
-    Entry.block[a.type].isPrimitive ? (a.doNotSplice = !0, a.destroy()) : (a.view._toGlobalCoordinate(), this.separate(a), a.view.bumpAway(30, 150));
+    Entry.block[a.type].isPrimitive ? (a.doNotSplice = !0, a.destroy()) : (this._destroyObservers(), a.view._toGlobalCoordinate(), this.separate(a), a.view.bumpAway(30, 150));
     this.updateValueBlock(b);
     b.view._toLocalCoordinate(this.svgGroup);
     this.calcWH();
@@ -15107,6 +15111,23 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldKeyboard);
     Entry.keyPressed && this.keyPressed && Entry.keyPressed.detach(this.keyPressed);
   };
 })(Entry.FieldKeyboard.prototype);
+Entry.FieldLineBreak = function(a, b, c) {
+  this._block = b.block;
+  this._blockView = b;
+  this._index = c;
+  this.box = new Entry.BoxModel;
+  this.setValue(null);
+  this.renderStart();
+};
+Entry.Utils.inherit(Entry.Field, Entry.FieldLineBreak);
+(function(a) {
+  a.renderStart = function() {
+  };
+  a.align = function(b) {
+    var a = this._blockView;
+    0 !== a._statements.length && this.box.set({y:(a._statements[b].height || 20) + Math.max(a.contentHeight % 1E3, 30)});
+  };
+})(Entry.FieldLineBreak.prototype);
 Entry.FieldOutput = function(a, b, c, d, e) {
   Entry.Model(this, !1);
   this._blockView = b;
@@ -15229,7 +15250,7 @@ Entry.FieldStatement = function(a, b, c) {
   this.acceptType = a.accept;
   this._thread = this.statementSvgGroup = this.svgGroup = null;
   this._position = a.position;
-  this.observe(b, "alignContent", ["height"]);
+  this.observe(b, "alignContent", ["height"], !1);
   this.observe(this, "_updateBG", ["magneting"], !1);
   this.renderStart(b.getBoard());
 };
@@ -15871,29 +15892,29 @@ Entry.Board = function(a) {
     this.workspace.setMode(Entry.Workspace.MODE_BOARD, "save");
   };
   a.generateCodeMagnetMap = function() {
-    var b = this.code;
-    if (b && this.dragBlock) {
-      b = this._getCodeBlocks(b, this.dragBlock._targetType);
-      b.sort(function(b, a) {
-        return b.point - a.point;
+    var a = this.code;
+    if (a && this.dragBlock) {
+      a = this._getCodeBlocks(a, this.dragBlock._targetType);
+      a.sort(function(a, b) {
+        return a.point - b.point;
       });
-      b.unshift({point:-Number.MAX_VALUE, blocks:[]});
-      for (var a = 1;a < b.length;a++) {
-        var d = b[a], e = d, f = d.startBlock;
+      a.unshift({point:-Number.MAX_VALUE, blocks:[]});
+      for (var c = 1;c < a.length;c++) {
+        var d = a[c], e = d, f = d.startBlock;
         if (f) {
-          for (var g = d.endPoint, h = a;g > e.point && (e.blocks.push(f), h++, e = b[h], e);) {
+          for (var g = d.endPoint, h = c;g > e.point && (e.blocks.push(f), h++, e = a[h], e);) {
           }
           delete d.startBlock;
         }
         d.endPoint = Number.MAX_VALUE;
-        b[a - 1].endPoint = d.point;
+        a[c - 1].endPoint = d.point;
       }
-      this._magnetMap = b;
+      this._magnetMap = a;
     }
   };
-  a._getCodeBlocks = function(b, a) {
-    var d = b.getThreads(), e = [], f = 0, g;
-    switch(a) {
+  a._getCodeBlocks = function(a, c) {
+    var d = a.getThreads(), e = [], f = 0, g;
+    switch(c) {
       case "nextMagnet":
         g = this._getNextMagnets;
         break;
@@ -15910,42 +15931,42 @@ Entry.Board = function(a) {
         return [];
     }
     for (var h = 0;h < d.length;h++) {
-      e = e.concat(g.call(this, d[h], f, null, a)), f++;
+      e = e.concat(g.call(this, d[h], f, null, c)), f++;
     }
     return e;
   };
-  a._getNextMagnets = function(b, a, d, e) {
-    var f = b.getBlocks(), g = [], h = [];
+  a._getNextMagnets = function(a, c, d, e) {
+    var f = a.getBlocks(), g = [], h = [];
     d || (d = {x:0, y:0});
     var k = d.x;
     d = d.y;
     for (var m = 0;m < f.length;m++) {
       var n = f[m], l = n.view;
-      l.zIndex = a;
+      l.zIndex = c;
       if (l.dragInstance) {
         break;
       }
       d += l.y;
       k += l.x;
-      b = d + 1;
-      l.magnet.next && (b += l.magnet.next.y, h.push({point:d, endPoint:b, startBlock:n, blocks:[]}), h.push({point:b, blocks:[]}), l.absX = k);
-      n.statements && (a += .01);
+      a = d + 1;
+      l.magnet.next && (a += l.magnet.next.y, h.push({point:d, endPoint:a, startBlock:n, blocks:[]}), h.push({point:a, blocks:[]}), l.absX = k);
+      n.statements && (c += .01);
       for (var q = 0;q < n.statements.length;q++) {
-        b = n.statements[q];
+        a = n.statements[q];
         var r = n.view._statements[q];
-        r.zIndex = a;
+        r.zIndex = c;
         r.absX = k + r.x;
         h.push({point:r.y + d - 30, endPoint:r.y + d + r.height, startBlock:r, blocks:[]});
         h.push({point:r.y + d + r.height, blocks:[]});
-        a += .01;
-        g = g.concat(this._getNextMagnets(b, a, {x:r.x + k, y:r.y + d}, e));
+        c += .01;
+        g = g.concat(this._getNextMagnets(a, c, {x:r.x + k, y:r.y + d}, e));
       }
       l.magnet.next && (d += l.magnet.next.y, k += l.magnet.next.x);
     }
     return g.concat(h);
   };
-  a._getFieldMagnets = function(b, a, d, e) {
-    var f = b.getBlocks(), g = [], h = [];
+  a._getFieldMagnets = function(a, c, d, e) {
+    var f = a.getBlocks(), g = [], h = [];
     d || (d = {x:0, y:0});
     var k = d.x;
     d = d.y;
@@ -15954,29 +15975,29 @@ Entry.Board = function(a) {
       if (l.dragInstance) {
         break;
       }
-      l.zIndex = a;
+      l.zIndex = c;
       d += l.y;
       k += l.x;
-      h = h.concat(this._getFieldBlockMetaData(l, k, d, a, e));
-      n.statements && (a += .01);
+      h = h.concat(this._getFieldBlockMetaData(l, k, d, c, e));
+      n.statements && (c += .01);
       for (var q = 0;q < n.statements.length;q++) {
-        b = n.statements[q];
-        var r = n.view._statements[q], g = g.concat(this._getFieldMagnets(b, a, {x:r.x + k, y:r.y + d}, e));
+        a = n.statements[q];
+        var r = n.view._statements[q], g = g.concat(this._getFieldMagnets(a, c, {x:r.x + k, y:r.y + d}, e));
       }
       l.magnet.next && (d += l.magnet.next.y, k += l.magnet.next.x);
     }
     return g.concat(h);
   };
-  a._getFieldBlockMetaData = function(b, a, d, e, f) {
-    var g = b._contents, h = [];
-    a += b.contentPos.x;
-    d += b.contentPos.y;
+  a._getFieldBlockMetaData = function(a, c, d, e, f) {
+    var g = a._contents, h = [];
+    c += a.contentPos.x;
+    d += a.contentPos.y;
     for (var k = 0;k < g.length;k++) {
       var m = g[k];
       if (m instanceof Entry.FieldBlock && m.acceptType === f) {
         var n = m._valueBlock;
         if (!n.view.dragInstance) {
-          var l = a + m.box.x, q = d + m.box.y + -.5 * b.height, m = d + m.box.y + m.box.height;
+          var l = c + m.box.x, q = d + m.box.y + -.5 * a.height, m = d + m.box.y + m.box.height;
           h.push({point:q, endPoint:m, startBlock:n, blocks:[]});
           h.push({point:m, blocks:[]});
           n = n.view;
@@ -16218,6 +16239,29 @@ Entry.skeleton.basic_without_next = {box:Entry.skeleton.basic.box, contentPos:En
   return "m -8,0 l 8,8 8,-8 h %w a %h,%h 0 0,1 0, %wh H -8 z".replace(/%wh/gi, a).replace(/%w/gi, b).replace(/%h/gi, a / 2);
 }, magnets:function(a) {
   return {previous:{x:0, y:0}};
+}};
+Entry.skeleton.basic_double_loop = {path:function(a) {
+  var b = a.contentWidth, c = a.contentHeight % 1E3, d = Math.floor(a.contentHeight / 1E3), c = Math.max(30, c + 2), d = Math.max(30, d + 2), b = Math.max(0, b + 5 - c / 2), e = a._statements;
+  a = e[0] ? e[0].height : 20;
+  e = e[1] ? e[1].height : 20;
+  a = Math.max(a, 20);
+  e = Math.max(e, 20);
+  return "m -8,0 l 8,8 8,-8 h %w a %h1,%h1 0 0,1 0,%wh1 H 24 l -8,8 -8,-8 h -0.4 v %sh1 h 0.4 l 8,8 8,-8 h %bw a %h2,%h2 0 0,1 0,%wh2 H 24 l -8,8 -8,-8 h -0.4 v %sh2 h 0.4 l 8,8 8,-8 h %bw a 8,8 0 0,1 0,16 H 8 l -8,8 -8,-8 z".replace(/%wh1/gi, c).replace(/%wh2/gi, d).replace(/%w/gi, b).replace(/%bw/gi, b - 8).replace(/%h1/gi, c / 2).replace(/%h2/gi, d / 2).replace(/%sh1/gi, a + 1).replace(/%sh2/gi, e + 1);
+}, magnets:function(a) {
+  var b = Math.max(a.contentHeight % 1E3 + 2, 30), c = Math.max(Math.floor(a.contentHeight / 1E3) + 2, 30), d = a._statements[0] ? a._statements[0].height : 20, e = a._statements[1] ? a._statements[1].height : 20, d = Math.max(d, 20), e = Math.max(e, 20);
+  return {previous:{x:0, y:0}, next:{x:0, y:d + e + b + c + 19 + a.offsetY}};
+}, box:function(a) {
+  var b = a.contentWidth, c = Math.max(Math.floor(a.contentHeight / 1E3) + 2, 30), d = Math.max(a.contentHeight % 1E3 + 2, 30), e = a._statements[0] ? a._statements[0].height % 1E3 : 20;
+  a = a._statements[1] ? a._statements[1].height : 20;
+  a = Math.floor(a / 1E3);
+  e = Math.max(e, 20);
+  a = Math.max(a, 20);
+  return {offsetX:-8, offsetY:0, width:b + 30, height:c + d + e + a + 17, marginBottom:0};
+}, statementPos:function(a) {
+  var b = Math.max(30, a.contentHeight % 1E3 + 2) + 1;
+  return [{x:16, y:b}, {x:16, y:b + Math.max(a._statements[0] ? a._statements[0].height % 1E3 : 20, 20) + Math.max(Math.floor(a.contentHeight / 1E3) + 2, 30) + 1}];
+}, contentPos:function(a) {
+  return {x:14, y:Math.max(a.contentHeight % 1E3, 28) / 2 + 1};
 }};
 Entry.Thread = function(a, b) {
   this._data = new Entry.Collection;
@@ -17024,6 +17068,8 @@ Entry.Playground.prototype.generateCodeView = function(a) {
   a = Entry.Dom("div", {parent:a, id:"entryWorkspaceBlockMenu", class:"entryWorkspaceBlockMenu"});
   (new Entry.BlockDriver).convert();
   Entry.block.when_run_button_click.event = "start";
+  Entry.block.if_else.template = "\ub9cc\uc77c %1 \uc774\ub77c\uba74 %2 %3 \uc544\ub2c8\uba74";
+  Entry.block.if_else.params.push({type:"LineBreak"});
   this.mainWorkspace = new Entry.Workspace({blockMenu:{dom:a, align:"LEFT", categoryData:EntryStatic.getAllBlocks(), scroll:!0}, board:{dom:b}});
   this.blockMenu = this.mainWorkspace.blockMenu;
   this.board = this.mainWorkspace.board;

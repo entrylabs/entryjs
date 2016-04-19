@@ -113,8 +113,10 @@ Entry.BlockMockup = function(blocklyInfo) {
                 skeleton = "basic_string_field";
         else if (!this.isPrev && this.isNext)
             skeleton = "basic_event";
-        else if (this.statements.length)
+        else if (this.statements.length == 1)
             skeleton = "basic_loop";
+        else if (this.statements.length == 2)
+            skeleton = "basic_double_loop";
         else if (this.isPrev && this.isNext)
             skeleton = "basic";
         else if (this.isPrev && !this.isNext)
