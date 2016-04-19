@@ -7,7 +7,7 @@ Entry.Arduino = {
         for (var port = 0; port < 20; port++) {
             Entry.hw.sendQueue[port] = 0;
             Entry.hw.sendQueue.readablePorts.push(port);
-        } 
+        }
         Entry.hw.update();
     },
     monitorTemplate: {
@@ -60,14 +60,12 @@ Entry.SensorBoard = {
             "13":{name: Lang.Hw.port_en + " 13 " + Lang.Hw.port_ko, type: "input", pos: {x: 0, y: 0}}
         },
         ports : {
-            "a0":{name: Lang.Hw.port_en + " A0 " + Lang.Hw.port_ko, type: "input", pos: {x: 0, y: 0}},
-            "a1":{name: Lang.Hw.port_en + " A1 " + Lang.Hw.port_ko, type: "input", pos: {x: 0, y: 0}},
-            "a2":{name: Lang.Hw.port_en + " A2 " + Lang.Hw.port_ko, type: "input", pos: {x: 0, y: 0}},
             "0":{name: Lang.Hw.light + " " + Lang.Hw.sensor + "2", type: "input",pos: {x : 190, y: 215}},
+            "slider":{ name: Lang.Blocks.CODEino_sensor_name_2 , type: "input",pos: {x : 150, y: 20}},
             "1":{name: Lang.Hw.temp, type: "input",pos: {x : 207, y: 251}},
             "8":{name: Lang.Hw.right_ko + Lang.Hw.switch_ + Lang.Hw.right_en, type: "input",pos: {x : 180, y: 120}},
             "9":{name: Lang.Hw.left_ko + Lang.Hw.switch_ + Lang.Hw.left_en, type: "input",pos: {x : 90, y: 143}},
-            "10":{name: Lang.Hw.up_ko + Lang.Hw.switch_ + Lang.Hw.up_en, type: "input",pos: {x : 130, y: 73}},            
+            "10":{name: Lang.Hw.up_ko + Lang.Hw.switch_ + Lang.Hw.up_en, type: "input",pos: {x : 130, y: 73}},
             "11":{name: Lang.Hw.down_ko + Lang.Hw.switch_ + Lang.Hw.down_en, type: "input",pos: {x : 120, y: 185}}
       },
       mode : 'both'

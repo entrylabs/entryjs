@@ -722,8 +722,8 @@ Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, a0:{name:Lang.Hw.port_en + " A0 
 Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}}, mode:"both"}};
 Entry.SensorBoard = {name:"sensorBoard", setZero:Entry.Arduino.setZero, monitorTemplate:{imgPath:"hw/sensorBoard.png", width:268, height:270, listPorts:{2:{name:Lang.Hw.port_en + " 2 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, 3:{name:Lang.Hw.port_en + " 3 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, 4:{name:Lang.Hw.port_en + " 4 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, 5:{name:Lang.Hw.port_en + " 5 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, a3:{name:Lang.Hw.port_en + 
 " A3 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, a4:{name:Lang.Hw.port_en + " A4 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, a5:{name:Lang.Hw.port_en + " A5 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, 6:{name:Lang.Hw.port_en + " 6 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, 7:{name:Lang.Hw.port_en + " 7 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, 12:{name:Lang.Hw.port_en + " 12 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, 13:{name:Lang.Hw.port_en + " 13 " + 
-Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}}, ports:{a0:{name:Lang.Hw.port_en + " A0 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, a1:{name:Lang.Hw.port_en + " A1 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, a2:{name:Lang.Hw.port_en + " A2 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, 0:{name:Lang.Hw.light + " " + Lang.Hw.sensor + "2", type:"input", pos:{x:190, y:215}}, 1:{name:Lang.Hw.temp, type:"input", pos:{x:207, y:251}}, 8:{name:Lang.Hw.right_ko + Lang.Hw.switch_ + Lang.Hw.right_en, 
-type:"input", pos:{x:180, y:120}}, 9:{name:Lang.Hw.left_ko + Lang.Hw.switch_ + Lang.Hw.left_en, type:"input", pos:{x:90, y:143}}, 10:{name:Lang.Hw.up_ko + Lang.Hw.switch_ + Lang.Hw.up_en, type:"input", pos:{x:130, y:73}}, 11:{name:Lang.Hw.down_ko + Lang.Hw.switch_ + Lang.Hw.down_en, type:"input", pos:{x:120, y:185}}}, mode:"both"}};
+Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}}, ports:{0:{name:Lang.Hw.light + " " + Lang.Hw.sensor + "2", type:"input", pos:{x:190, y:215}}, slider:{name:Lang.Blocks.CODEino_sensor_name_2, type:"input", pos:{x:150, y:20}}, 1:{name:Lang.Hw.temp, type:"input", pos:{x:207, y:251}}, 8:{name:Lang.Hw.right_ko + Lang.Hw.switch_ + Lang.Hw.right_en, type:"input", pos:{x:180, y:120}}, 9:{name:Lang.Hw.left_ko + Lang.Hw.switch_ + Lang.Hw.left_en, type:"input", pos:{x:90, y:143}}, 10:{name:Lang.Hw.up_ko + Lang.Hw.switch_ + 
+Lang.Hw.up_en, type:"input", pos:{x:130, y:73}}, 11:{name:Lang.Hw.down_ko + Lang.Hw.switch_ + Lang.Hw.down_en, type:"input", pos:{x:120, y:185}}}, mode:"both"}};
 Entry.CODEino = {name:"CODEino", setZero:Entry.Arduino.setZero, monitorTemplate:Entry.Arduino.monitorTemplate};
 Blockly.Blocks.arduino_text = {init:function() {
   this.setColour("#00979D");
@@ -5575,9 +5575,9 @@ Entry.Collection = function(a) {
     }
     this._hashMap = {};
   };
-  a.map = function(a, b) {
+  a.map = function(b, a) {
     for (var e = 0, f = this.length;e < f;e++) {
-      a(this[e], b);
+      b(this[e], a);
     }
   };
   a.moveFromTo = function(a, d) {
@@ -5608,8 +5608,8 @@ Entry.Event = function(a) {
   this._listeners = [];
 };
 (function(a) {
-  a.attach = function(a, c) {
-    var d = {obj:a, fn:c};
+  a.attach = function(b, a) {
+    var d = {obj:b, fn:a};
     this._listeners.push(d);
     return d;
   };
@@ -10429,7 +10429,7 @@ Entry.PropertyPanel = function() {
     this._view.css({width:a + "px", top:9 * a / 16 + 123 - 22 + "px"});
     430 <= a ? this._view.removeClass("collapsed") : this._view.addClass("collapsed");
     Entry.dispatchEvent("windowResized");
-    (a = this.modes[this.selected].obj.resize) && a();
+    (a = this.modes[this.selected].obj.resize) && "hw" != this.selected ? a() : "hw" == this.selected && this.modes.hw.obj.listPorts ? this.modes[this.selected].obj.resizeList() : "hw" == this.selected && this.modes[this.selected].obj.resize();
   };
   a.select = function(a) {
     for (var c in this.modes) {
@@ -12488,12 +12488,13 @@ Entry.Func.generateWsBlock = function(a, b, c) {
 };
 Entry.HWMontior = {};
 Entry.HWMonitor = function(a) {
-  this.svgDom = Entry.Dom($('<svg id="hwMonitor" class="hwMonitor" width="100%" height="100%"version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'));
+  this.svgDom = Entry.Dom($('<svg id="hwMonitor" width="100%" height="100%"version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'));
   this._hwModule = a;
   var b = this;
   Entry.addEventListener("windowResized", function() {
     var a = b._hwModule.monitorTemplate.mode;
-    "both" == a ? (b.resizeList(), b.resize()) : "list" == a ? b.resizeList() : b.resize();
+    "both" == a && (b.resize(), b.resizeList());
+    "list" == a ? b.resizeList() : b.resize();
   });
   this.scale = .5;
   this._portViews = {};
@@ -12568,7 +12569,9 @@ Entry.HWMonitor = function(a) {
     h.textContent = 0;
     g += 40;
     f.attr({width:g});
-    return {group:d, value:h, type:a.type, path:e, box:{x:a.pos.x - this._template.width / 2, y:a.pos.y - this._template.height / 2, width:g}, width:g};
+    d = {group:d, value:h, type:a.type, path:e, box:{x:a.pos.x - this._template.width / 2, y:a.pos.y - this._template.height / 2, width:g}, width:g};
+    "both" == this._hwModule.monitorTemplate.mode && (d.box.y += 100);
+    return d;
   };
   a.getView = function() {
     return this.svgDom;
@@ -12598,27 +12601,32 @@ Entry.HWMonitor = function(a) {
     }
   };
   a.resize = function() {
-    this.hwView.attr({transform:"scale(" + this.scale + ")"});
-    var a = this.svgDom.get(0).getBoundingClientRect();
-    this._svgGroup.attr({transform:"translate(" + a.width / 2 + "," + a.height / 2 + ")"});
+    this.hwView && this.hwView.attr({transform:"scale(" + this.scale + ")"});
+    if (this.svgDom) {
+      var a = this.svgDom.get(0).getBoundingClientRect()
+    }
+    this._svgGroup.attr({transform:"translate(" + a.width / 2 + "," + a.height / 1.8 + ")"});
     this._rect = a;
-    this.scale = a.height / this._template.height / 2;
-    this.align();
+    if (!(0 >= this._template.height || 0 >= a.height)) {
+      this.scale = this._template.height / 100 * (a.height / 1E3);
+      var c = (this._template.height - a.height) / a.height;
+      this._template.height * this.scale > a.height && (this.scale = a.height / this._template.height - c);
+      this.align();
+    }
   };
   a.resizeList = function() {
     var a = this.svgDom.get(0).getBoundingClientRect();
     this._svglistGroup.attr({transform:"translate(" + a.width / 2 + "," + a.height / 2 + ")"});
     this._rect = a;
-    this.scale = a.height / this._template.height / 2;
     this.alignList();
   };
   a.align = function() {
     var a = [], a = this._portMap.s.concat();
-    this._alignNS(a, this.scale / 2 * this._template.height + 5, 27);
+    this._alignNS(a, this.scale / 3 * this._template.height + 5, 27);
     a = this._portMap.n.concat();
-    this._alignNS(a, -this._template.height * this.scale / 2 - 32, -27);
+    this._alignNS(a, -this._template.height * this.scale / 3 - 32, -27);
     a = this._portMap.e.concat();
-    this._alignEW(a, -this._template.width * this.scale / 2 - 5, -27);
+    this._alignEW(a, -this._template.width * this.scale / 3 - 5, -27);
     a = this._portMap.w.concat();
     this._alignEW(a, this._template.width * this.scale / 3 - 32, -27);
   };

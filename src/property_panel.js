@@ -79,15 +79,13 @@ Entry.PropertyPanel = function() {
         Entry.dispatchEvent('windowResized');
 
         var modeResize  = this.modes[this.selected].obj.resize;
-        
-        if(modeResize)
+        if(modeResize && this.selected != 'hw')
             modeResize();
+        else if(this.selected == 'hw' && this.modes.hw.obj.listPorts)
+             this.modes[this.selected].obj.resizeList();
+         else if(this.selected == 'hw')
+            this.modes[this.selected].obj.resize();
 
-        // if(this.selected == 'hw' && this.modes.hw.obj.listPorts)
-        //     this.modes[this.selected].obj.resizeList();
-        // else 
-        //     this.modes[this.selected].obj.resize();
-    
     };
 
     p.select = function(modeName) {
