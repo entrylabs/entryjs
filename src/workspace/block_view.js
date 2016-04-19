@@ -24,6 +24,7 @@ Entry.BlockView = function(block, board, mode) {
     this._contents = [];
     this._statements = [];
     this.magnet = {};
+    this._paramMap = {};
 
     if (skeleton.magnets && skeleton.magnets(this).next) {
         this.svgGroup.nextMagnet = this.block;
@@ -178,9 +179,9 @@ Entry.BlockView.DRAG_RADIUS = 5;
                     if (reg.test(param)) {
                         var paramIndex = Number(param.split('%')[1]) - 1;
                         param = params[paramIndex];
-                        this._contents.push(
-                            new Entry['Field' + param.type](param, this, paramIndex, mode, i)
-                        );
+                        var field = new Entry['Field' + param.type](param, this, paramIndex, mode, i);
+                        this._contents.push(field);
+                        this._paramMap[paramIndex] = field;
                     } else this._contents.push(new Entry.FieldText({text: param}, this));
                 }
 
@@ -990,6 +991,7 @@ Entry.BlockView.DRAG_RADIUS = 5;
     };
 
     p.getParam = function(index) {
+        return this._paramMap[index];
     };
 
 })(Entry.BlockView.prototype);

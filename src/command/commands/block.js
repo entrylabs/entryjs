@@ -30,36 +30,28 @@ goog.require("Entry.Command");
         state: function(block, targetBlock) {
             var data = [
                 block.id,
-                {
-                    x: block.x,
-                    y: block.y
-                }
             ];
-            if (block.getBlockType() === "basic") {
-                if (block.getPrevBlock())
-                    data.push(block.getPrevBlock().id);
-                else
-                    data.push(null);
+            var pointer = block.pointer()
+
+            var prevBlock = block.getPrevBlock();
+            if (prevBlock)
+                pointer[pointer.length - 1] = pointer[pointer.length - 1] - 1;
+            data.push(pointer);
+
+            if (block.getBlockType() === "basic")
                 data.push(block.thread.getCount(block));
-            } else {
-                if (!(block.getThread() instanceof Entry.Thread)) {
-                    var parent = block.getThread();
-                    data.push(parent._block.id);
-                    data.push(parent.contentIndex);
-                }
-            }
             return data;
         },
         log: function(block) {
         },
-        undo: function(blockId, prevPos, originBlock, count) {
+        undo: function(blockId, pointer, count) {
             var block = Entry.playground.mainWorkspace.board.findById(blockId);
+            var board = Entry.commander.editor.board;
+            board.insert(block, pointer, count);
+            return;
             if (block.getBlockType() === "basic") {
-                var prevBlock = block.getPrevBlock();
                 if (originBlock) {
                     originBlock = Entry.playground.mainWorkspace.board.findById(originBlock);
-                    if (block.view)
-                        block.view._toGlobalCoordinate();
                     block.separate(count);
                     if (prevBlock && prevBlock.getNextBlock())
                         prevBlock.getNextBlock().view.bindPrev();
@@ -124,20 +116,13 @@ goog.require("Entry.Command");
 
     c.cloneBlock = {
         type: 105,
-        do: function(code) {
-            return code.createThread(Entry.clipboard);
+        do: function(block) {
         },
-        state: function(code) {
-            return [Entry.clipboard[0].id];
+        state: function(block) {
         },
-        log: function(code) {
-            return [Entry.clipboard[0].id, Entry.clipboard];
+        log: function(block) {
         },
         undo: function(blockId) {
-            Entry.playground.mainWorkspace.board
-                .findById(blockId)
-                .getThread()
-                .destroy(false);
         }
     };
 

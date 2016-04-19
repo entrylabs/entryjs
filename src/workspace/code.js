@@ -223,4 +223,25 @@ Entry.PARAM = -1;
         delete this._blockMap[block.id];
     };
 
+    p.getByPointer = function(pointer) {
+        pointer = pointer.concat();
+        pointer.shift();
+        pointer.shift();
+        var thread = this._data[pointer.shift()];
+        var block = thread.getBlock(pointer.shift());
+        while (pointer.length) {
+            if (!(block instanceof Entry.Block))
+                block = block.getValueBlock();
+            var type = pointer.shift();
+            var index = pointer.shift();
+            if (type > -1) {
+                var statements = block.statements[type];
+                block = statements.getBlock(index);
+            } else if (type === -1) {
+                block = block.view.getParam(index);
+            }
+        }
+        return block;
+    };
+
 })(Entry.Code.prototype);

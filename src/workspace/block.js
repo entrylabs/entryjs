@@ -8,7 +8,6 @@ goog.provide("Entry.Block");
 goog.require('Entry.Thread');
 goog.require('Entry.Utils');
 goog.require('Entry.Model');
-goog.require("Entry.BoxModel");
 goog.require("Entry.skeleton");
 
 /*

@@ -241,4 +241,12 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldOutput);
          return this;
     };
 
+    p.getValueBlock = function() {return this._valueBlock;};
+
+    p.pointer = function(pointer) {
+        pointer.unshift(this._index);
+        pointer.unshift(Entry.PARAM);
+        return this._block.pointer(pointer);
+    };
+
 })(Entry.FieldOutput.prototype);

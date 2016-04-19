@@ -16,60 +16,11 @@ goog.require("Entry.SVG");
  * @param {object} dom which to inject playground
  */
 Entry.Board = function(option) {
-    var dom = option.dom;
-    if (typeof dom === "string")
-        dom = $('#' + dom);
-    else
-        dom = $(dom);
-
-    if (dom.prop("tagName") !== "DIV")
-        return console.error("Dom is not div element");
-
     Entry.Model(this, false);
 
-    this.view = dom;
-    this._svgId = 'play' + new Date().getTime();
-
-    this.workspace = option.workspace;
-
-    this._activatedBlockView = null;
-
-    this.wrapper = Entry.Dom('div', {
-        parent: dom,
-        class: 'entryBoardWrapper'
-    });
-
-    this.svgDom = Entry.Dom(
-        $('<svg id="' + this._svgId + '" class="entryBoard" width="100%" height="100%"' +
-          'version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'),
-        { parent: this.wrapper }
-    );
-
-    this.visible = true;
-    var that = this;
-    this.svg = Entry.SVG(this._svgId);
-    $(window).scroll(function() {
-        that.updateOffset();
-    });
+    this.createView(option);
 
     this._magnetMap = null;
-
-    this.svgGroup = this.svg.elem("g");
-
-    this.svgThreadGroup = this.svgGroup.elem("g");
-    this.svgThreadGroup.board = this;
-
-    this.svgBlockGroup = this.svgGroup.elem("g");
-    this.svgBlockGroup.board = this;
-
-    if (option.isOverlay) {
-        this.wrapper.addClass("entryOverlayBoard");
-        this.generateButtons();
-        this.suffix = 'overlayBoard';
-    } else this.suffix = 'board';
-
-    Entry.Utils.addFilters(this.svg, this.suffix);
-    this.patternRect = Entry.Utils.addBlockPattern(this.svg, this.suffix);
 
     Entry.ANIMATION_DURATION = 200;
     Entry.BOARD_PADDING = 100;
@@ -92,6 +43,8 @@ Entry.Board = function(option) {
         Entry.windowResized.attach(this, this.updateOffset);
 
     this.observe(this, "generateCodeMagnetMap", ["dragBlock"], false);
+
+    Entry.commander.setCurrentEditor("board", this);
 };
 
 (function(p) {
@@ -100,6 +53,59 @@ Entry.Board = function(option) {
         dragBlock: null,
         magnetedBlockView: null,
         selectedBlockView: null
+    };
+
+    p.createView = function(option) {
+        var dom = option.dom;
+        if (typeof dom === "string")
+            dom = $('#' + dom);
+        else
+            dom = $(dom);
+
+        if (dom.prop("tagName") !== "DIV")
+            return console.error("Dom is not div element");
+
+        this.view = dom;
+        this._svgId = 'play' + new Date().getTime();
+
+        this.workspace = option.workspace;
+
+        this._activatedBlockView = null;
+
+        this.wrapper = Entry.Dom('div', {
+            parent: dom,
+            class: 'entryBoardWrapper'
+        });
+
+        this.svgDom = Entry.Dom(
+            $('<svg id="' + this._svgId + '" class="entryBoard" width="100%" height="100%"' +
+              'version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'),
+            { parent: this.wrapper }
+        );
+
+        this.visible = true;
+        var that = this;
+        this.svg = Entry.SVG(this._svgId);
+        $(window).scroll(function() {
+            that.updateOffset();
+        });
+
+        this.svgGroup = this.svg.elem("g");
+
+        this.svgThreadGroup = this.svgGroup.elem("g");
+        this.svgThreadGroup.board = this;
+
+        this.svgBlockGroup = this.svgGroup.elem("g");
+        this.svgBlockGroup.board = this;
+
+        if (option.isOverlay) {
+            this.wrapper.addClass("entryOverlayBoard");
+            this.generateButtons();
+            this.suffix = 'overlayBoard';
+        } else this.suffix = 'board';
+
+        Entry.Utils.addFilters(this.svg, this.suffix);
+        this.patternRect = Entry.Utils.addBlockPattern(this.svg, this.suffix);
     };
 
     p.changeCode = function(code) {
@@ -784,6 +790,29 @@ Entry.Board = function(option) {
         this.code.view.reDraw();
     };
 
+    p.separate = function(block, count) {
+        if (typeof block === "string")
+            block = this.findById(block);
+        if (block.view)
+            block.view._toGlobalCoordinate();
+        var prevBlock = block.getPrevBlock();
+        block.separate(count);
+        if (prevBlock && prevBlock.getNextBlock())
+            prevBlock.getNextBlock().view.bindPrev();
+    };
 
+    p.insert = function(block, pointer, count) {
+        if (typeof block === "string")
+            block = this.findById(block);
+        this.separate(block, count);
+        if (pointer.length === 4 && pointer[3] === 0) // is global
+            block.moveTo(pointer[0], pointer[1]);
+        else {
+            var targetObj = this.code.getByPointer(pointer);
+            block.doInsert(targetObj);
+            if (targetObj instanceof Entry.Block)
+                block.view.bindPrev(targetObj);
+        }
+    };
 
 })(Entry.Board.prototype);

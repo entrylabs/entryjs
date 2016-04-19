@@ -157,7 +157,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
         return this._valueBlock;
     };
 
-    p._getValueBlock = function() {return this._valueBlock;};
+    p.getValueBlock = function() {return this._valueBlock;};
 
     p.updateValueBlock = function(block) {
         if (!(block instanceof Entry.Block)) block = undefined;
@@ -285,7 +285,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
     p.getThread = function() {return this;};
 
     p.pointer = function(pointer) {
-        pointer.unshift(this.contentIndex);
+        pointer.unshift(this._index);
         pointer.unshift(Entry.PARAM);
         return this._block.pointer(pointer);
     };

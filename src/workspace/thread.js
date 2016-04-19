@@ -121,6 +121,10 @@ Entry.Thread = function(thread, code, parent) {
             blocks[i].destroy(animate);
     };
 
+    p.getBlock = function(index) {
+        return this._data[index];
+    };
+
     p.getBlocks = function() {
         return this._data.map(function(b){return b;});
     };
