@@ -13,16 +13,15 @@ goog.require("Entry.BlockToPyParser");
 goog.require("Entry.JsToBlockParser");
 goog.require("Entry.PyToBlockParser");
 
-Entry.Parser = function(mode, parserType, cm) {
+Entry.Parser = function(mode, type, cm) {
     this._mode = mode; // maze ai workspace
     this.syntax = {}; //for maze
     this.codeMirror = cm;
     this._lang = syntax || "js"; //for maze
-    this._parserType = parserType;
+    this._type = type;
     this.availableCode = [];
 
-
-    if (mode === Entry.Vim.MAZE_MODE) {
+    if (mode === 'maze') {
         this._stageId = Number(Ntry.configManager.getConfig('stageId'));
         var configCode = NtryData.config[this._stageId].availableCode;
         var playerCode = NtryData.player[this._stageId].code;
@@ -31,7 +30,8 @@ Entry.Parser = function(mode, parserType, cm) {
         this.mappingSyntax(Entry.Vim.WORKSPACE_MODE);
     }
 
-    this.mappingSyntax(mode);
+    this.mappingSyntaxJs(mode);
+    this.mappingSyntaxPy(mode);
 
     switch (this._lang) {
         case "js":
@@ -99,7 +99,7 @@ Entry.Parser = function(mode, parserType, cm) {
 };
 
 (function(p) {
-    p.setParser = function(mode, parserType, cm) {
+    p.setParser = function(mode, type, cm) {
         if (mode === Entry.Vim.MAZE_MODE) {
             this._stageId = Number(Ntry.configManager.getConfig('stageId'));
             var configCode = NtryData.config[this._stageId].availableCode;
@@ -110,23 +110,20 @@ Entry.Parser = function(mode, parserType, cm) {
         }
 
         this.mappingSyntax(mode);
-        this._parserType = parserType;
+        this._type = type;
 
-        switch (parserType) {
+        switch (type) {
             case Entry.Vim.PARSER_TYPE_JS_TO_BLOCK:
-                this.syntax = {Scope:{move:"move", mod:"mod"}};
                 this._parser = new Entry.JsToBlockParser(this.syntax);
 
                 break;
 
             case Entry.Vim.PARSER_TYPE_PY_TO_BLOCK:
-                this.syntax = {Scope:{move:"move", mod:"mod"}};
                 this._parser = new Entry.PyToBlockParser(this.syntax);
 
                 break;
 
             case Entry.Vim.PARSER_TYPE_BLOCK_TO_JS:
-                this.syntax = {Scope:{move:"move", mod:"mod"}};
                 this._parser = new Entry.BlockToJsParser(this.syntax);
                 
                 var syntax = this.syntax;
@@ -155,7 +152,6 @@ Entry.Parser = function(mode, parserType, cm) {
                 break;
 
             case Entry.Vim.PARSER_TYPE_BLOCK_TO_PY:
-                this.syntax = {Scope:{move:"move", mod:"mod"}};
                 this._parser = new Entry.BlockToPyParser(this.syntax);
 
                 var syntax = this.syntax;
@@ -186,12 +182,12 @@ Entry.Parser = function(mode, parserType, cm) {
     };
 
     p.parse = function(code) {
-        console.log("PARSER TYPE", this._parserType);
+        console.log("PARSER TYPE", this._type);
         
-        var parserType = this._parserType;
+        var type = this._type;
         var result = null;
 
-        switch (parserType) {
+        switch (type) {
             case Entry.Vim.PARSER_TYPE_JS_TO_BLOCK:
                 try {
                     var jsAstGenerator = new Entry.JsAstGenerator();
@@ -334,7 +330,9 @@ Entry.Parser = function(mode, parserType, cm) {
 
         for (var i = 0; i < types.length; i++) {
             var type = types[i];
+            
             var block = Entry.block[type];
+
             if (block.mode === mode && this.availableCode.indexOf(type) > -1) {
                 var syntaxArray = block.syntax;
                 if (!syntaxArray)
@@ -361,7 +359,6 @@ Entry.Parser = function(mode, parserType, cm) {
     };
 
     p.setAvailableCode = function (configCode, playerCode) {
-
         var availableList = [];
         configCode.forEach(function (items, i) {
             items.forEach(function (item, i) {
@@ -379,4 +376,77 @@ Entry.Parser = function(mode, parserType, cm) {
 
         this.availableCode = this.availableCode.concat(availableList);
     };
+
+    
+    p.mappingSyntaxJs = function(mode) {
+        var types = Object.keys(Entry.block);
+
+        for (var i = 0; i < types.length; i++) {
+            var type = types[i];
+            
+            var block = Entry.block[type];
+
+            if (block.mode === mode && this.availableCode.indexOf(type) > -1) {
+                var syntaxArray = block.syntax;
+                if (!syntaxArray)
+                    continue;
+                var syntax = this.syntax;
+                for (var j = 0; j < syntaxArray.length; j++) {
+                    var key = syntaxArray[j];
+                    if (j === syntaxArray.length - 2 &&
+                       typeof syntaxArray[j + 1] === "function") {
+                        syntax[key] = syntaxArray[j + 1];
+                        break;
+                    }
+                    if (!syntax[key]) {
+                        syntax[key] = {};
+                    }
+                    if (j === syntaxArray.length - 1) {
+                        syntax[key] = type;
+                    } else {
+                        syntax = syntax[key];
+                    }
+                }
+            }
+        }
+    };
+
+    p.mappingSyntaxPy = function(mode) {
+        if(mode != Entry.Vim.WORKSPACE_MODE) return;
+
+        var syntax = {};
+        var types = Object.keys(Entry.block);
+
+        for (var i = 0; i < types.length; i++) {
+            var type = types[i];
+            
+            var block = Entry.block[type];
+            if(block.syntax && block.syntax.py)
+                var syntaxArray = block.syntax.py;
+
+            if (!syntaxArray)
+                continue;
+
+            for (var j = 0; j < syntaxArray.length; j++) {
+                var key = syntaxArray[j];
+                if (j === syntaxArray.length - 2 &&
+                   typeof syntaxArray[j + 1] === "function") {
+                    syntax[key] = syntaxArray[j + 1];
+                    break;
+                }
+                if (!syntax[key]) {
+                    syntax[key] = {};
+                }
+                if (j === syntaxArray.length - 1) {
+                    syntax[key] = type;
+                } else {
+                    syntax = syntax[key];
+                }
+            }
+            
+        }
+        console.log("syntax", syntax);
+        return syntax;
+    };
+
 })(Entry.Parser.prototype);

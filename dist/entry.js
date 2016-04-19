@@ -9370,10 +9370,11 @@ Entry.Parser = function(a, b, c) {
   this.syntax = {};
   this.codeMirror = c;
   this._lang = d || "js";
-  this._parserType = b;
+  this._type = b;
   this.availableCode = [];
-  a === Entry.Vim.MAZE_MODE ? (this._stageId = Number(Ntry.configManager.getConfig("stageId")), this.setAvailableCode(NtryData.config[this._stageId].availableCode, NtryData.player[this._stageId].code)) : a === Entry.Vim.WORKSPACE_MODE && this.mappingSyntax(Entry.Vim.WORKSPACE_MODE);
-  this.mappingSyntax(a);
+  "maze" === a ? (this._stageId = Number(Ntry.configManager.getConfig("stageId")), this.setAvailableCode(NtryData.config[this._stageId].availableCode, NtryData.player[this._stageId].code)) : a === Entry.Vim.WORKSPACE_MODE && this.mappingSyntax(Entry.Vim.WORKSPACE_MODE);
+  this.mappingSyntaxJs(a);
+  this.mappingSyntaxPy(a);
   switch(this._lang) {
     case "js":
       this._parser = new Entry.JsToBlockParser(this.syntax);
@@ -9416,18 +9417,15 @@ Entry.Parser = function(a, b, c) {
   a.setParser = function(b, a, d) {
     b === Entry.Vim.MAZE_MODE && (this._stageId = Number(Ntry.configManager.getConfig("stageId")), this.setAvailableCode(NtryData.config[this._stageId].availableCode, NtryData.player[this._stageId].code));
     this.mappingSyntax(b);
-    this._parserType = a;
+    this._type = a;
     switch(a) {
       case Entry.Vim.PARSER_TYPE_JS_TO_BLOCK:
-        this.syntax = {Scope:{move:"move", mod:"mod"}};
         this._parser = new Entry.JsToBlockParser(this.syntax);
         break;
       case Entry.Vim.PARSER_TYPE_PY_TO_BLOCK:
-        this.syntax = {Scope:{move:"move", mod:"mod"}};
         this._parser = new Entry.PyToBlockParser(this.syntax);
         break;
       case Entry.Vim.PARSER_TYPE_BLOCK_TO_JS:
-        this.syntax = {Scope:{move:"move", mod:"mod"}};
         this._parser = new Entry.BlockToJsParser(this.syntax);
         b = this.syntax;
         var e = {}, f;
@@ -9444,7 +9442,6 @@ Entry.Parser = function(a, b, c) {
         });
         break;
       case Entry.Vim.PARSER_TYPE_BLOCK_TO_PY:
-        this.syntax = {Scope:{move:"move", mod:"mod"}};
         this._parser = new Entry.BlockToPyParser(this.syntax);
         b = this.syntax;
         e = {};
@@ -9462,9 +9459,9 @@ Entry.Parser = function(a, b, c) {
     }
   };
   a.parse = function(b) {
-    console.log("PARSER TYPE", this._parserType);
+    console.log("PARSER TYPE", this._type);
     var a = null;
-    switch(this._parserType) {
+    switch(this._type) {
       case Entry.Vim.PARSER_TYPE_JS_TO_BLOCK:
         try {
           var d = (new Entry.JsAstGenerator).generate(b), a = this._parser.Program(d);
@@ -9537,6 +9534,46 @@ Entry.Parser = function(a, b, c) {
       });
     });
     this.availableCode = this.availableCode.concat(d);
+  };
+  a.mappingSyntaxJs = function(b) {
+    for (var a = Object.keys(Entry.block), d = 0;d < a.length;d++) {
+      var e = a[d], f = Entry.block[e];
+      if (f.mode === b && -1 < this.availableCode.indexOf(e) && (f = f.syntax)) {
+        for (var g = this.syntax, h = 0;h < f.length;h++) {
+          var k = f[h];
+          if (h === f.length - 2 && "function" === typeof f[h + 1]) {
+            g[k] = f[h + 1];
+            break;
+          }
+          g[k] || (g[k] = {});
+          h === f.length - 1 ? g[k] = e : g = g[k];
+        }
+      }
+    }
+  };
+  a.mappingSyntaxPy = function(b) {
+    if (b == Entry.Vim.WORKSPACE_MODE) {
+      b = {};
+      for (var a = Object.keys(Entry.block), d = 0;d < a.length;d++) {
+        var e = a[d], f = Entry.block[e];
+        if (f.syntax && f.syntax.py) {
+          var g = f.syntax.py
+        }
+        if (g) {
+          for (f = 0;f < g.length;f++) {
+            var h = g[f];
+            if (f === g.length - 2 && "function" === typeof g[f + 1]) {
+              b[h] = g[f + 1];
+              break;
+            }
+            b[h] || (b[h] = {});
+            f === g.length - 1 ? b[h] = e : b = b[h];
+          }
+        }
+      }
+      console.log("syntax", b);
+      return b;
+    }
   };
 })(Entry.Parser.prototype);
 Entry.Popup = function() {
@@ -16771,13 +16808,13 @@ Entry.Thread = function(a, b) {
   a.getCode = function() {
     return this._code;
   };
-  a.setCode = function(a) {
-    this._code = a;
+  a.setCode = function(b) {
+    this._code = b;
   };
-  a.spliceBlock = function(a) {
-    var c = this._data;
-    c.remove(a);
-    0 === c.length && (a = this.view.getParent(), a.constructor === Entry.FieldStatement ? a.removeFirstBlock() : this.destroy());
+  a.spliceBlock = function(b) {
+    var a = this._data;
+    a.remove(b);
+    0 === a.length && (b = this.view.getParent(), b.constructor === Entry.FieldStatement ? b.removeFirstBlock() : this.destroy());
     this.changeEvent.notify();
   };
   a.getFirstBlock = function() {
