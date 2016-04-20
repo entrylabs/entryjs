@@ -3585,10 +3585,12 @@ Entry.block.locate_xy_time = function(b, a) {
     c = a.getNumberValue("VALUE1", a);
     a.isStart = !0;
     a.frameCount = Math.floor(c * Entry.FPS);
+    a.x = a.getNumberValue("VALUE2", a);
+    a.y = a.getNumberValue("VALUE3", a);
   }
   if (0 != a.frameCount) {
-    c = a.getNumberValue("VALUE2", a) - b.getX();
-    var d = a.getNumberValue("VALUE3", a) - b.getY();
+    c = a.x - b.getX();
+    var d = a.y - b.getY();
     c /= a.frameCount;
     d /= a.frameCount;
     b.setX(b.getX() + c);
