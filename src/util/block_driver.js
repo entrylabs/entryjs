@@ -18,28 +18,28 @@ Entry.BlockDriver = function() {
 
     p._convertBlock = function(blockType) {
         var blocklyInfo = Blockly.Blocks[blockType];
-        var mockup = new Entry.BlockMockup(blocklyInfo);
-
-        var blockObject = mockup.toJSON();
-
-        blockObject.func = Entry.block[blockType];
-
         var blockInfo = EntryStatic.blockInfo[blockType];
+        var className, isNotFor;
         if (blockInfo) {
-            blockObject.class = blockInfo.class;
-            blockObject.isNotFor = blockInfo.isNotFor;
+            className = blockInfo.class;
+            isNotFor = blockInfo.isNotFor;
 
-            /*
+
             //add block definition by xml to json
             var xml = blockInfo.xml;
             if (xml) {
                 xml = $.parseXML(xml);
                 var child = xml.childNodes[0];
                 var def = generateBlockDef(child);
-                blockObject.def = def;
             }
-            */
         }
+        var mockup = new Entry.BlockMockup(blocklyInfo, def, blockType);
+
+        var blockObject = mockup.toJSON();
+        blockObject.class = className;
+        blockObject.isNotFor = isNotFor;
+
+        blockObject.func = Entry.block[blockType];
 
         var PRIMITIVES = ['NUMBER', 'TRUE', 'FALSE',
             'TEXT', 'FUNCTION_PARAM_BOOLEAN', 'FUNCTION_PARAM_STRING', 'TRUE_UN'];
@@ -48,8 +48,12 @@ Entry.BlockDriver = function() {
             blockObject.isPrimitive = true;
         Entry.block[blockType] = blockObject;
 
+
         function generateBlockDef(block) {
-            var def = {type: block.getAttribute('type')};
+            var def = {
+                type: block.getAttribute('type'),
+                index: {}
+            };
 
             var children = $(block).children();
             if (!children) return def;
@@ -57,14 +61,17 @@ Entry.BlockDriver = function() {
                 var child = children[i];
                 var tagName = child.tagName;
                 var subChild = $(child).children()[0];
+                var key = child.getAttribute('name');
                 if (tagName === 'value') {
                     if (subChild.nodeName == 'block') {
                         if (!def.params) def.params = [];
                         def.params.push(generateBlockDef(subChild));
+                        def.index[key] = def.params.length-1;
                     }
                 } else if (tagName === 'field') {
                     if (!def.params) def.params = [];
                     def.params.push(child.textContent);
+                    def.index[key] = def.params.length-1;
                 }
             }
             return def;
@@ -74,7 +81,7 @@ Entry.BlockDriver = function() {
 
 })(Entry.BlockDriver.prototype);
 
-Entry.BlockMockup = function(blocklyInfo) {
+Entry.BlockMockup = function(blocklyInfo, def, blockType) {
     this.templates = [];
     this.params = [];
     this.statements = [];
@@ -84,8 +91,14 @@ Entry.BlockMockup = function(blocklyInfo) {
     this.output = false;
     this.fieldCount = 0;
     this.events = {};
+    this.def = def || {};
+    this.definition = {
+        params: [],
+        type: this.def.type
+    };
 
     this.simulate(blocklyInfo);
+    this.def = this.definition;
 };
 
 (function(p) {
@@ -121,13 +134,31 @@ Entry.BlockMockup = function(blocklyInfo) {
             skeleton = "basic";
         else if (this.isPrev && !this.isNext)
             skeleton = "basic_without_next";
+
+
+        var def = this.def
+        removeIndex(def)
+
+        function removeIndex(def) {
+            if (!def) return;
+            var params = def.params;
+            if (!params) return;
+            for (var i=0; i<params.length; i++) {
+                var param = params[i];
+                if (!param) continue;
+                delete param.index;
+                removeIndex(param);
+            }
+        }
+
         return {
             color: this.color,
             skeleton: skeleton,
             statements: this.statements,
             template: this.templates.filter(function(p) {return typeof p === "string";}).join(" "),
             params: this.params,
-            events: this.events
+            events: this.events,
+            def: this.def
         };
     };
 
@@ -137,6 +168,12 @@ Entry.BlockMockup = function(blocklyInfo) {
 
     p.appendValueInput = function(key) {
         // field block
+        if (this.def && this.def.index) {
+            if (this.def.index[key] !== undefined) {
+                this.definition.params.push(this.def.params[this.def.index[key]])
+            } else
+                this.definition.params.push(null)
+        }
         this.params.push({
             type: "Block",
             accept: "stringMagnet"
@@ -171,6 +208,10 @@ Entry.BlockMockup = function(blocklyInfo) {
                 };
                 this.params.push(field);
                 this.templates.push(this.getFieldCount());
+                if (this.def && this.def.index && this.def.index[opt] !== undefined) {
+                    this.definition.params.push(this.def.params[this.def.index[opt]])
+                } else
+                    this.definition.params.push(undefined);
             } else this.templates.push(field);
         } else {
             if (field.constructor == Blockly.FieldIcon) {
@@ -190,6 +231,8 @@ Entry.BlockMockup = function(blocklyInfo) {
                         size: 12,
                     });
                 this.templates.push(this.getFieldCount());
+                if (this.definition)
+                    this.definition.params.push(null);
             } else if (field.constructor == Blockly.FieldDropdown) {
                 this.params.push({
                     type: "Dropdown",
@@ -198,6 +241,10 @@ Entry.BlockMockup = function(blocklyInfo) {
                     fontSize: 11
                 });
                 this.templates.push(this.getFieldCount());
+                if (this.def && this.def.index && this.def.index[opt] !== undefined) {
+                    this.definition.params.push(this.def.params[this.def.index[opt]])
+                } else
+                    this.definition.params.push(undefined);
             } else if (field.constructor == Blockly.FieldDropdownDynamic) {
                 this.params.push({
                     type: "DropdownDynamic",
@@ -206,6 +253,10 @@ Entry.BlockMockup = function(blocklyInfo) {
                     fontSize: 11
                 });
                 this.templates.push(this.getFieldCount());
+                if (this.def && this.def.index && this.def.index[opt] !== undefined) {
+                    this.definition.params.push(this.def.params[this.def.index[opt]])
+                } else
+                    this.definition.params.push(undefined);
             } else if (field.constructor == Blockly.FieldTextInput) {
                 this.params.push({
                     type: "TextInput",
@@ -217,12 +268,20 @@ Entry.BlockMockup = function(blocklyInfo) {
                     type: "Angle"
                 });
                 this.templates.push(this.getFieldCount());
+                if (this.def && this.def.index && this.def.index[opt] !== undefined) {
+                    this.definition.params.push(this.def.params[this.def.index[opt]])
+                } else
+                    this.definition.params.push(null);
             } else if (field.constructor == Blockly.FieldKeydownInput) {
                 this.params.push({
                     type: "Keyboard",
                     value: 81
                 });
                 this.templates.push(this.getFieldCount());
+                if (this.def.index[opt] !== undefined) {
+                    this.definition.params.push(this.def.params[this.def.index[opt]])
+                } else
+                    this.definition.params.push(undefined);
             } else if (field.constructor == Blockly.FieldColour) {
                 this.params.push({
                     type: "Color"

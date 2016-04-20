@@ -20,7 +20,10 @@ Entry.FieldAngle = function(content, blockView, index) {
     this.position = content.position;
     this._contents = content;
     this._index = index;
-    this.setValue(this.modValue(this.getValue()));
+    var value = this.getValue();
+    this.setValue(this.modValue(
+        value !== undefined ? value : 90
+    ));
 
     this.renderStart();
 };
