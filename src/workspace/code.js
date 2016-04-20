@@ -244,4 +244,31 @@ Entry.PARAM = -1;
         return block;
     };
 
+    p.getTargetByPointer = function(pointer) {
+        pointer = pointer.concat();
+        pointer.shift();
+        pointer.shift();
+        var thread = this._data[pointer.shift()];
+        var block = thread.getBlock(pointer.shift());
+        while (pointer.length) {
+            if (!(block instanceof Entry.Block))
+                block = block.getValueBlock();
+            var type = pointer.shift();
+            var index = pointer.shift();
+            if (type > -1) {
+                var statement = block.statements[type];
+                if (!pointer.length) {
+                    if (index === 0)
+                        block = statement.view.getParent();
+                    else
+                        block = statements.getBlock(index - 1);
+                } else {
+                    block = statement.getBlock(index);
+                }
+            } else if (type === -1) {
+                block = block.view.getParam(index);
+            }
+        }
+        return block;
+    }
 })(Entry.Code.prototype);

@@ -4973,7 +4973,6 @@ Entry.Commander = function(a) {
     b.doInsert(a);
   }, state:function(b, a) {
     var d = [b.id], e = b.pointer();
-    b.getPrevBlock() && --e[e.length - 1];
     d.push(e);
     "basic" === b.getBlockType() && d.push(b.thread.getCount(b));
     return d;
@@ -4986,8 +4985,14 @@ Entry.Commander = function(a) {
     b.view && b.view._toGlobalCoordinate(Entry.DRAG_MODE_DRAG);
     b.doSeparate();
   }, state:function(b) {
+    var a = [b.id], d = b.pointer();
+    a.push(d);
+    "basic" === b.getBlockType() && a.push(b.thread.getCount(b));
+    return a;
   }, log:function(b) {
-  }, undo:function(b) {
+  }, undo:function(b, a, d) {
+    b = Entry.playground.mainWorkspace.board.findById(b);
+    Entry.commander.editor.board.insert(b, a, d);
   }};
   a.moveBlock = {type:104, do:function(b) {
     b.doMove();
@@ -14337,6 +14342,17 @@ Entry.PARAM = -1;
     }
     return a;
   };
+  a.getTargetByPointer = function(b) {
+    b = b.concat();
+    b.shift();
+    b.shift();
+    for (var a = this._data[b.shift()].getBlock(b.shift());b.length;) {
+      a instanceof Entry.Block || (a = a.getValueBlock());
+      var d = b.shift(), e = b.shift();
+      -1 < d ? (a = a.statements[d], a = b.length ? a.getBlock(e) : 0 === e ? a.view.getParent() : statements.getBlock(e - 1)) : -1 === d && (a = a.view.getParam(e));
+    }
+    return a;
+  };
 })(Entry.Code.prototype);
 Entry.CodeView = function(a, b) {
   Entry.Model(this, !1);
@@ -15921,8 +15937,8 @@ Entry.Board = function(a) {
     var b = this.code;
     if (b && this.dragBlock) {
       b = this._getCodeBlocks(b, this.dragBlock._targetType);
-      b.sort(function(a, b) {
-        return a.point - b.point;
+      b.sort(function(b, a) {
+        return b.point - a.point;
       });
       b.unshift({point:-Number.MAX_VALUE, blocks:[]});
       for (var a = 1;a < b.length;a++) {
@@ -15938,9 +15954,9 @@ Entry.Board = function(a) {
       this._magnetMap = b;
     }
   };
-  a._getCodeBlocks = function(a, c) {
-    var d = a.getThreads(), e = [], f = 0, g;
-    switch(c) {
+  a._getCodeBlocks = function(b, a) {
+    var d = b.getThreads(), e = [], f = 0, g;
+    switch(a) {
       case "nextMagnet":
         g = this._getNextMagnets;
         break;
@@ -15957,7 +15973,7 @@ Entry.Board = function(a) {
         return [];
     }
     for (var h = 0;h < d.length;h++) {
-      e = e.concat(g.call(this, d[h], f, null, c)), f++;
+      e = e.concat(g.call(this, d[h], f, null, a)), f++;
     }
     return e;
   };
@@ -16124,7 +16140,7 @@ Entry.Board = function(a) {
   a.insert = function(a, c, d) {
     "string" === typeof a && (a = this.findById(a));
     this.separate(a, d);
-    4 === c.length && 0 === c[3] ? a.moveTo(c[0], c[1]) : (c = this.code.getByPointer(c), a.doInsert(c), c instanceof Entry.Block && a.view.bindPrev(c));
+    4 === c.length && 0 === c[3] ? a.moveTo(c[0], c[1]) : (c = this.code.getTargetByPointer(c), c instanceof Entry.Block ? (a.doInsert(c), a.view.bindPrev(c)) : c instanceof Entry.FieldStatement ? (a.view.bindPrev(c), c.insertTopBlock(a)) : a.doInsert(c));
   };
 })(Entry.Board.prototype);
 Entry.skeleton = function() {
