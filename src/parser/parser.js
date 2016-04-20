@@ -30,8 +30,8 @@ Entry.Parser = function(mode, type, cm) {
         this.mappingSyntax(Entry.Vim.WORKSPACE_MODE);
     }
 
-    this.mappingSyntaxJs(mode);
-    this.mappingSyntaxPy(mode);
+    this.syntax.js = this.mappingSyntaxJs(mode);
+    this.syntax.py = this.mappingSyntaxPy(mode);
 
     switch (this._lang) {
         case "js":
@@ -409,44 +409,37 @@ Entry.Parser = function(mode, type, cm) {
                 }
             }
         }
+        return syntax;
     };
 
     p.mappingSyntaxPy = function(mode) {
         if(mode != Entry.Vim.WORKSPACE_MODE) return;
 
-        var syntax = {};
-        var types = Object.keys(Entry.block);
+        var pyBlockSyntax = {};
+        var blockList = Entry.block;
 
-        for (var i = 0; i < types.length; i++) {
-            var type = types[i];
+        for (var key in blockList) {
+            var block = blockList[key];
             
-            var block = Entry.block[type];
+            var syntax = null;
             if(block.syntax && block.syntax.py)
-                var syntaxArray = block.syntax.py;
+                syntax = block.syntax.py;
 
-            if (!syntaxArray)
+            if (!syntax)
                 continue;
 
-            for (var j = 0; j < syntaxArray.length; j++) {
-                var key = syntaxArray[j];
-                if (j === syntaxArray.length - 2 &&
-                   typeof syntaxArray[j + 1] === "function") {
-                    syntax[key] = syntaxArray[j + 1];
-                    break;
-                }
-                if (!syntax[key]) {
-                    syntax[key] = {};
-                }
-                if (j === syntaxArray.length - 1) {
-                    syntax[key] = type;
-                } else {
-                    syntax = syntax[key];
-                }
+            syntax = String(syntax);
+
+            if(syntax.match(/\(.*\)/)) {
+                var index = syntax.indexOf('(');
+                
+                syntax = syntax.substring(0, index);
             }
-            
+            pyBlockSyntax[0] = syntax;
+            pyBlockSyntax[1] = block;
         }
-        console.log("syntax", syntax);
-        return syntax;
+        
+        return pyBlockSyntax;
     };
 
 })(Entry.Parser.prototype);

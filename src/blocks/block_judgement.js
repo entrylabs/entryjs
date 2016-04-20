@@ -8,7 +8,7 @@ Blockly.Blocks.is_clicked = {
         this.setOutput(true, 'Boolean');
         this.setInputsInline(true);
     },
-    syntax: {js: [], py: ["Entry.is_mouse_clicked()"]}
+    syntax: {js: [], py: ["Entry.is_mouse_clicked()\n"]}
 };
 
 Entry.block.is_clicked = function (sprite, script) {
@@ -26,7 +26,7 @@ Blockly.Blocks.is_press_some_key = {
         this.setOutput(true, 'Boolean');
         this.setInputsInline(true);
     },
-    syntax: {js: [], py: ["Entry.is_key_pressed(%1)"]}
+    syntax: {js: [], py: ["Entry.is_key_pressed(%1)\n"]}
 };
 
 Entry.block.is_press_some_key = function (sprite, script) {
@@ -47,7 +47,7 @@ Blockly.Blocks.reach_something = {
         this.setOutput(true, 'Boolean');
         this.setInputsInline(true);
     },
-    syntax: {js: [], py: ["Entry.is_reached(%1)"]}
+    syntax: {js: [], py: ["Entry.is_reached(%1)\n"]}
 };
 
 Entry.block.reach_something = function (sprite, script) {

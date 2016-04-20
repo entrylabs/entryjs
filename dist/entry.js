@@ -2508,7 +2508,7 @@ Blockly.Blocks.is_clicked = {init:function() {
   this.appendDummyInput().appendField(Lang.Blocks.JUDGEMENT_is_clicked, "#3D3D3D");
   this.setOutput(!0, "Boolean");
   this.setInputsInline(!0);
-}, syntax:{js:[], py:["Entry.is_mouse_clicked()"]}};
+}, syntax:{js:[], py:["Entry.is_mouse_clicked()\n"]}};
 Entry.block.is_clicked = function(a, b) {
   return Entry.stage.isClick;
 };
@@ -2518,7 +2518,7 @@ Blockly.Blocks.is_press_some_key = {init:function() {
   this.appendDummyInput().appendField(new Blockly.FieldKeydownInput("81"), "VALUE").appendField(Lang.Blocks.JUDGEMENT_is_press_some_key_2, "#3D3D3D");
   this.setOutput(!0, "Boolean");
   this.setInputsInline(!0);
-}, syntax:{js:[], py:["Entry.is_key_pressed(%1)"]}};
+}, syntax:{js:[], py:["Entry.is_key_pressed(%1)\n"]}};
 Entry.block.is_press_some_key = function(a, b) {
   var c = Number(b.getField("VALUE", b));
   return 0 <= Entry.pressedKeys.indexOf(c);
@@ -2530,7 +2530,7 @@ Blockly.Blocks.reach_something = {init:function() {
   this.appendDummyInput().appendField(Lang.Blocks.JUDGEMENT_reach_something_2, "#3D3D3D");
   this.setOutput(!0, "Boolean");
   this.setInputsInline(!0);
-}, syntax:{js:[], py:["Entry.is_reached(%1)"]}};
+}, syntax:{js:[], py:["Entry.is_reached(%1)\n"]}};
 Entry.block.reach_something = function(a, b) {
   if (!a.getVisible()) {
     return !1;
@@ -8662,6 +8662,25 @@ Entry.Painter.prototype.selectToolbox = function(a) {
       this.toggleCoordinator();
   }
 };
+Entry.JsAstGenerator = function() {
+};
+(function(a) {
+  a.generate = function(b) {
+    return arcon.parse(b);
+  };
+})(Entry.JsAstGenerator.prototype);
+Entry.PyAstGenerator = function() {
+};
+(function(a) {
+  a.generate = function(b) {
+    var a = filbert.parse, d = {locations:!1, ranges:!1}, e;
+    try {
+      return e = a(b, d), console.log("astTree", e), e;
+    } catch (f) {
+      console.log("parsing error", f.toString());
+    }
+  };
+})(Entry.PyAstGenerator.prototype);
 Entry.BlockToJsParser = function(a) {
   this.syntax = a;
   this._iterVariableCount = 0;
@@ -8740,109 +8759,6 @@ Entry.BlockToJsParser = function(a) {
     this._iterVariableCount && this._iterVariableCount--;
   };
 })(Entry.BlockToJsParser.prototype);
-Entry.BlockToPyParser = function(a) {
-  this.syntax = a;
-  this._iterVariableCount = 0;
-  this._iterVariableChunk = ["i", "j", "k"];
-};
-(function(a) {
-  a.Code = function(b) {
-    if (b instanceof Entry.Thread) {
-      return this.Thread(b);
-    }
-    if (b instanceof Entry.Block) {
-      return this.Block(b);
-    }
-    var a = "";
-    b = b.getThreads();
-    for (var d = 0;d < b.length;d++) {
-      a += this.Thread(b[d]);
-    }
-    return a;
-  };
-  a.Thread = function(b) {
-    if (b instanceof Entry.Block) {
-      return this.Block(b);
-    }
-    var a = "";
-    b = b.getBlocks();
-    for (var d = 0;d < b.length;d++) {
-      a += this.Block(b[d]);
-    }
-    return a + "\n";
-  };
-  a.Block = function(b) {
-    if (!b._schema || !b._schema.syntax) {
-      return "";
-    }
-    for (var a = /(%\d)/mi, d = /(\$\d)/mi, e = b._schema.syntax.py[0].split(a), f = b._schema.params, g = "", h = 0;h < e.length;h++) {
-      var k = e[h];
-      if (0 !== k.length) {
-        if (a.test(k)) {
-          var m = Number(k.split("%")[1]) - 1, g = g + this["Field" + f[m].type](b.params[m], f[m])
-        } else {
-          if (d.test(k)) {
-            for (var k = k.split(d), n = 0;n < k.length;n++) {
-              m = k[n], 0 !== m.length && (d.test(m) ? (m = Number(m.split("$")[1]) - 1, g += this.indent(this.Thread(b.statements[m]))) : g += m);
-            }
-          } else {
-            g += k;
-          }
-        }
-      }
-    }
-    return g;
-  };
-  a.FieldAngle = function(b) {
-    return this.Block(b);
-  };
-  a.FieldBlock = function(b) {
-    return this.Block(b);
-  };
-  a.FieldColor = function(b) {
-    return "'" + b + "'";
-  };
-  a.FieldDropdown = function(b, a) {
-    return b;
-  };
-  a.FieldDropdownDynamic = function(b, a) {
-    return b;
-  };
-  a.FieldImage = function(b) {
-    return this.Block(b);
-  };
-  a.FieldIndicator = function(b, a) {
-    return b;
-  };
-  a.FieldKeyboard = function(b) {
-    return this.Block(b);
-  };
-  a.FieldOutput = function(b) {
-    return this.Block(b);
-  };
-  a.FieldStatement = function(b) {
-    return this.Block(b);
-  };
-  a.FieldText = function(b) {
-    return this.Block(b);
-  };
-  a.FieldTextInput = function(b) {
-    return b;
-  };
-  a.indent = function(b) {
-    var a = "\t";
-    b = b.split("\n");
-    b.pop();
-    return a += b.join("\n\t") + "\n";
-  };
-})(Entry.BlockToPyParser.prototype);
-Entry.JsAstGenerator = function() {
-};
-(function(a) {
-  a.generate = function(b) {
-    return arcon.parse(b);
-  };
-})(Entry.JsAstGenerator.prototype);
 Entry.JsToBlockParser = function(a) {
   this.syntax = a;
   this.scopeChain = [];
@@ -9098,18 +9014,109 @@ Entry.JsToBlockParser = function(a) {
     }
   };
 })(Entry.JsToBlockParser.prototype);
-Entry.PyAstGenerator = function() {
+Entry.PyBlockMapper = function() {
 };
 (function(a) {
-  a.generate = function(b) {
-    var a = filbert.parse, d = {locations:!1, ranges:!1}, e;
-    try {
-      return e = a(b, d), console.log("astTree", e), e;
-    } catch (f) {
-      console.log("parsing error", f.toString());
-    }
+  a.getBlock = function(b) {
+    return Block(b);
   };
-})(Entry.PyAstGenerator.prototype);
+})(Entry.PyBlockMapper.prototype);
+Entry.BlockToPyParser = function(a) {
+  this.syntax = a;
+  this._iterVariableCount = 0;
+  this._iterVariableChunk = ["i", "j", "k"];
+};
+(function(a) {
+  a.Code = function(b) {
+    if (b instanceof Entry.Thread) {
+      return this.Thread(b);
+    }
+    if (b instanceof Entry.Block) {
+      return this.Block(b);
+    }
+    var a = "";
+    b = b.getThreads();
+    for (var d = 0;d < b.length;d++) {
+      a += this.Thread(b[d]);
+    }
+    return a;
+  };
+  a.Thread = function(b) {
+    if (b instanceof Entry.Block) {
+      return this.Block(b);
+    }
+    var a = "";
+    b = b.getBlocks();
+    for (var d = 0;d < b.length;d++) {
+      a += this.Block(b[d]);
+    }
+    return a + "\n";
+  };
+  a.Block = function(b) {
+    if (!b._schema || !b._schema.syntax) {
+      return "";
+    }
+    for (var a = /(%\d)/mi, d = /(\$\d)/mi, e = b._schema.syntax.py[0].split(a), f = b._schema.params, g = "", h = 0;h < e.length;h++) {
+      var k = e[h];
+      if (0 !== k.length) {
+        if (a.test(k)) {
+          var m = Number(k.split("%")[1]) - 1, g = g + this["Field" + f[m].type](b.params[m], f[m])
+        } else {
+          if (d.test(k)) {
+            for (var k = k.split(d), n = 0;n < k.length;n++) {
+              m = k[n], 0 !== m.length && (d.test(m) ? (m = Number(m.split("$")[1]) - 1, g += this.indent(this.Thread(b.statements[m]))) : g += m);
+            }
+          } else {
+            g += k;
+          }
+        }
+      }
+    }
+    return g;
+  };
+  a.FieldAngle = function(b) {
+    return this.Block(b);
+  };
+  a.FieldBlock = function(b) {
+    return this.Block(b);
+  };
+  a.FieldColor = function(b) {
+    return "'" + b + "'";
+  };
+  a.FieldDropdown = function(b, a) {
+    return b;
+  };
+  a.FieldDropdownDynamic = function(b, a) {
+    return b;
+  };
+  a.FieldImage = function(b) {
+    return this.Block(b);
+  };
+  a.FieldIndicator = function(b, a) {
+    return b;
+  };
+  a.FieldKeyboard = function(b) {
+    return this.Block(b);
+  };
+  a.FieldOutput = function(b) {
+    return this.Block(b);
+  };
+  a.FieldStatement = function(b) {
+    return this.Block(b);
+  };
+  a.FieldText = function(b) {
+    return this.Block(b);
+  };
+  a.FieldTextInput = function(b) {
+    return b;
+  };
+  a.indent = function(b) {
+    var a = "\t";
+    b = b.split("\n");
+    b.pop();
+    return a += b.join("\n\t") + "\n";
+  };
+})(Entry.BlockToPyParser.prototype);
 Entry.PyToBlockParser = function(a) {
   this.syntax = a;
   this.scopeChain = [];
@@ -9373,8 +9380,8 @@ Entry.Parser = function(a, b, c) {
   this._type = b;
   this.availableCode = [];
   "maze" === a ? (this._stageId = Number(Ntry.configManager.getConfig("stageId")), this.setAvailableCode(NtryData.config[this._stageId].availableCode, NtryData.player[this._stageId].code)) : a === Entry.Vim.WORKSPACE_MODE && this.mappingSyntax(Entry.Vim.WORKSPACE_MODE);
-  this.mappingSyntaxJs(a);
-  this.mappingSyntaxPy(a);
+  this.syntax.js = this.mappingSyntaxJs(a);
+  this.syntax.py = this.mappingSyntaxPy(a);
   switch(this._lang) {
     case "js":
       this._parser = new Entry.JsToBlockParser(this.syntax);
@@ -9550,28 +9557,24 @@ Entry.Parser = function(a, b, c) {
         }
       }
     }
+    return g;
   };
   a.mappingSyntaxPy = function(b) {
     if (b == Entry.Vim.WORKSPACE_MODE) {
       b = {};
-      for (var a = Object.keys(Entry.block), d = 0;d < a.length;d++) {
-        var e = a[d], f = Entry.block[e];
-        if (f.syntax && f.syntax.py) {
-          var g = f.syntax.py
-        }
-        if (g) {
-          for (f = 0;f < g.length;f++) {
-            var h = g[f];
-            if (f === g.length - 2 && "function" === typeof g[f + 1]) {
-              b[h] = g[f + 1];
-              break;
-            }
-            b[h] || (b[h] = {});
-            f === g.length - 1 ? b[h] = e : b = b[h];
+      var a = Entry.block, d;
+      for (d in a) {
+        var e = a[d], f = null;
+        e.syntax && e.syntax.py && (f = e.syntax.py);
+        if (f) {
+          f = String(f);
+          if (f.match(/\(.*\)/)) {
+            var g = f.indexOf("("), f = f.substring(0, g)
           }
+          b[0] = f;
+          b[1] = e;
         }
       }
-      console.log("syntax", b);
       return b;
     }
   };
@@ -16808,13 +16811,13 @@ Entry.Thread = function(a, b) {
   a.getCode = function() {
     return this._code;
   };
-  a.setCode = function(b) {
-    this._code = b;
+  a.setCode = function(a) {
+    this._code = a;
   };
-  a.spliceBlock = function(b) {
-    var a = this._data;
-    a.remove(b);
-    0 === a.length && (b = this.view.getParent(), b.constructor === Entry.FieldStatement ? b.removeFirstBlock() : this.destroy());
+  a.spliceBlock = function(a) {
+    var c = this._data;
+    c.remove(a);
+    0 === c.length && (a = this.view.getParent(), a.constructor === Entry.FieldStatement ? a.removeFirstBlock() : this.destroy());
     this.changeEvent.notify();
   };
   a.getFirstBlock = function() {
