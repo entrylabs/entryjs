@@ -808,10 +808,16 @@ Entry.Board = function(option) {
         if (pointer.length === 4 && pointer[3] === 0) // is global
             block.moveTo(pointer[0], pointer[1]);
         else {
-            var targetObj = this.code.getByPointer(pointer);
-            block.doInsert(targetObj);
-            if (targetObj instanceof Entry.Block)
+            var targetObj = this.code.getTargetByPointer(pointer);
+            if (targetObj instanceof Entry.Block) {
+                block.doInsert(targetObj);
                 block.view.bindPrev(targetObj);
+            } else if (targetObj instanceof Entry.FieldStatement) {
+                block.view.bindPrev(targetObj);
+                targetObj.insertTopBlock(block);
+            } else {
+                block.doInsert(targetObj);
+            }
         }
     };
 

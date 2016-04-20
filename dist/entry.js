@@ -4973,7 +4973,6 @@ Entry.Commander = function(a) {
     b.doInsert(a);
   }, state:function(b, a) {
     var d = [b.id], e = b.pointer();
-    b.getPrevBlock() && --e[e.length - 1];
     d.push(e);
     "basic" === b.getBlockType() && d.push(b.thread.getCount(b));
     return d;
@@ -4986,8 +4985,14 @@ Entry.Commander = function(a) {
     b.view && b.view._toGlobalCoordinate(Entry.DRAG_MODE_DRAG);
     b.doSeparate();
   }, state:function(b) {
+    var a = [b.id], d = b.pointer();
+    a.push(d);
+    "basic" === b.getBlockType() && a.push(b.thread.getCount(b));
+    return a;
   }, log:function(b) {
-  }, undo:function(b) {
+  }, undo:function(b, a, d) {
+    b = Entry.playground.mainWorkspace.board.findById(b);
+    Entry.commander.editor.board.insert(b, a, d);
   }};
   a.moveBlock = {type:104, do:function(b) {
     b.doMove();
@@ -10199,26 +10204,16 @@ Entry.BlockDriver = function() {
         return d;
       }
       for (var e = 0;e < b.length;e++) {
-        var f = b[e], g = f.tagName, h = $(f).children()[0], k = f.getAttribute("name");
-        "value" === g ? "block" == h.nodeName && (d.params || (d.params = []), d.params.push(a(h)), d.index[k] = d.params.length - 1) : "field" === g && (d.params || (d.params = []), d.params.push(f.textContent), d.index[k] = d.params.length - 1);
+        var f = b[e], g = f.tagName, h = $(f).children()[0], u = f.getAttribute("name");
+        "value" === g ? "block" == h.nodeName && (d.params || (d.params = []), d.params.push(a(h)), d.index[u] = d.params.length - 1) : "field" === g && (d.params || (d.params = []), d.params.push(f.textContent), d.index[u] = d.params.length - 1);
       }
       return d;
     }
     var d = Blockly.Blocks[b], e = EntryStatic.blockInfo[b], f, g;
-    if (e) {
-      f = e.class;
-      g = e.isNotFor;
-      var h = e.xml;
-      if (h) {
-        var h = $.parseXML(h), k = h.childNodes[0], k = a(k)
-      }
-      if (e = e.xmls) {
-        for (var m = 0;m < e.length;m++) {
-          h = $.parseXML(h), k = h.childNodes[0], k = a(k);
-        }
-      }
+    if (e && (f = e.class, g = e.isNotFor, e = e.xml)) {
+      var e = $.parseXML(e), h = a(e.childNodes[0])
     }
-    d = (new Entry.BlockMockup(d, k, b)).toJSON();
+    d = (new Entry.BlockMockup(d, h, b)).toJSON();
     d.class = f;
     d.isNotFor = g;
     d.func = Entry.block[b];
@@ -14378,6 +14373,17 @@ Entry.PARAM = -1;
     }
     return a;
   };
+  a.getTargetByPointer = function(b) {
+    b = b.concat();
+    b.shift();
+    b.shift();
+    for (var a = this._data[b.shift()].getBlock(b.shift());b.length;) {
+      a instanceof Entry.Block || (a = a.getValueBlock());
+      var d = b.shift(), e = b.shift();
+      -1 < d ? (a = a.statements[d], a = b.length ? a.getBlock(e) : 0 === e ? a.view.getParent() : statements.getBlock(e - 1)) : -1 === d && (a = a.view.getParam(e));
+    }
+    return a;
+  };
 })(Entry.Code.prototype);
 Entry.CodeView = function(a, b) {
   Entry.Model(this, !1);
@@ -15845,33 +15851,33 @@ Entry.Board = function(a) {
       a.mouseWheel.apply(a, arguments);
     });
   };
-  a.onMouseDown = function(a) {
-    function c(a) {
-      a.stopPropagation && a.stopPropagation();
-      a.preventDefault && a.preventDefault();
-      a = a.originalEvent && a.originalEvent.touches ? a.originalEvent.touches[0] : a;
-      var b = g.dragInstance;
-      g.scroller.scroll(a.pageX - b.offsetX, a.pageY - b.offsetY);
-      b.set({offsetX:a.pageX, offsetY:a.pageY});
+  a.onMouseDown = function(b) {
+    function a(b) {
+      b.stopPropagation && b.stopPropagation();
+      b.preventDefault && b.preventDefault();
+      b = b.originalEvent && b.originalEvent.touches ? b.originalEvent.touches[0] : b;
+      var c = g.dragInstance;
+      g.scroller.scroll(b.pageX - c.offsetX, b.pageY - c.offsetY);
+      c.set({offsetX:b.pageX, offsetY:b.pageY});
     }
-    function d(a) {
+    function d(b) {
       $(document).unbind(".entryBoard");
       delete g.dragInstance;
     }
     if (this.workspace.getMode() != Entry.Workspace.MODE_VIMBOARD) {
-      a.stopPropagation && a.stopPropagation();
-      a.preventDefault && a.preventDefault();
-      if (0 === a.button || a.originalEvent && a.originalEvent.touches) {
-        a = a.originalEvent && a.originalEvent.touches ? a.originalEvent.touches[0] : a;
-        Entry.documentMousedown && Entry.documentMousedown.notify(a);
+      b.stopPropagation && b.stopPropagation();
+      b.preventDefault && b.preventDefault();
+      if (0 === b.button || b.originalEvent && b.originalEvent.touches) {
+        b = b.originalEvent && b.originalEvent.touches ? b.originalEvent.touches[0] : b;
+        Entry.documentMousedown && Entry.documentMousedown.notify(b);
         var e = $(document);
-        e.bind("mousemove.entryBoard", c);
+        e.bind("mousemove.entryBoard", a);
         e.bind("mouseup.entryBoard", d);
-        e.bind("touchmove.entryBoard", c);
+        e.bind("touchmove.entryBoard", a);
         e.bind("touchend.entryBoard", d);
-        this.dragInstance = new Entry.DragInstance({startX:a.pageX, startY:a.pageY, offsetX:a.pageX, offsetY:a.pageY});
+        this.dragInstance = new Entry.DragInstance({startX:b.pageX, startY:b.pageY, offsetX:b.pageX, offsetY:b.pageY});
       } else {
-        if (Entry.Utils.isRightButton(a)) {
+        if (Entry.Utils.isRightButton(b)) {
           if (!this.visible) {
             return;
           }
@@ -15888,19 +15894,19 @@ Entry.Board = function(a) {
       var g = this;
     }
   };
-  a.mouseWheel = function(a) {
-    a = a.originalEvent;
-    this.scroller.scroll(a.wheelDeltaX || -a.deltaX, a.wheelDeltaY || -a.deltaY);
+  a.mouseWheel = function(b) {
+    b = b.originalEvent;
+    this.scroller.scroll(b.wheelDeltaX || -b.deltaX, b.wheelDeltaY || -b.deltaY);
   };
-  a.setSelectedBlock = function(a) {
-    var c = this.selectedBlockView;
-    c && c.removeSelected();
-    a instanceof Entry.BlockView ? a.addSelected() : a = null;
-    this.set({selectedBlockView:a});
+  a.setSelectedBlock = function(b) {
+    var a = this.selectedBlockView;
+    a && a.removeSelected();
+    b instanceof Entry.BlockView ? b.addSelected() : b = null;
+    this.set({selectedBlockView:b});
   };
-  a._keyboardControl = function(a) {
-    var c = this.selectedBlockView;
-    c && 46 == a.keyCode && c.block.doDestroy(!1) && this.set({selectedBlockView:null});
+  a._keyboardControl = function(b) {
+    var a = this.selectedBlockView;
+    a && 46 == b.keyCode && a.block.doDestroy(!1) && this.set({selectedBlockView:null});
   };
   a.hide = function() {
     this.wrapper.addClass("entryRemove");
@@ -15911,9 +15917,9 @@ Entry.Board = function(a) {
     this.visible = !0;
   };
   a.alignThreads = function() {
-    for (var a = this.svgDom.height(), c = this.code.getThreads(), d = 15, e = 0, a = a - 30, f = 50, g = 0;g < c.length;g++) {
-      var h = c[g].getFirstBlock().view, k = h.svgGroup.getBBox(), m = d + 15;
-      m > a && (f = f + e + 10, e = 0, d = 15);
+    for (var b = this.svgDom.height(), a = this.code.getThreads(), d = 15, e = 0, b = b - 30, f = 50, g = 0;g < a.length;g++) {
+      var h = a[g].getFirstBlock().view, k = h.svgGroup.getBBox(), m = d + 15;
+      m > b && (f = f + e + 10, e = 0, d = 15);
       e = Math.max(e, k.width);
       m = d + 15;
       h._moveTo(f, m, !1);
@@ -15922,35 +15928,35 @@ Entry.Board = function(a) {
     this.scroller.resizeScrollBar();
   };
   a.clear = function() {
-    for (var a = this.svgBlockGroup;a.firstChild;) {
-      a.removeChild(a.firstChild);
+    for (var b = this.svgBlockGroup;b.firstChild;) {
+      b.removeChild(b.firstChild);
     }
   };
   a.updateOffset = function() {
     this.offset = this.svg.getBoundingClientRect();
-    var a = $(window), c = a.scrollTop(), a = a.scrollLeft(), d = this.offset;
-    this.relativeOffset = {top:d.top - c, left:d.left - a};
+    var b = $(window), a = b.scrollTop(), b = b.scrollLeft(), d = this.offset;
+    this.relativeOffset = {top:d.top - a, left:d.left - b};
     this.btnWrapper && this.btnWrapper.attr({transform:"translate(" + (d.width / 2 - 65) + "," + (d.height - 200) + ")"});
   };
   a.generateButtons = function() {
-    var a = this, c = this.svgGroup.elem("g");
-    this.btnWrapper = c;
-    var d = c.elem("text", {x:27, y:33, class:"entryFunctionButtonText"});
+    var b = this, a = this.svgGroup.elem("g");
+    this.btnWrapper = a;
+    var d = a.elem("text", {x:27, y:33, class:"entryFunctionButtonText"});
     d.textContent = Lang.Buttons.save;
-    var e = c.elem("text", {x:102.5, y:33, class:"entryFunctionButtonText"});
+    var e = a.elem("text", {x:102.5, y:33, class:"entryFunctionButtonText"});
     e.textContent = Lang.Buttons.cancel;
-    var f = c.elem("circle", {cx:27.5, cy:27.5, r:27.5, class:"entryFunctionButton"}), c = c.elem("circle", {cx:102.5, cy:27.5, r:27.5, class:"entryFunctionButton"});
-    f.onclick = function(c) {
-      a.save();
+    var f = a.elem("circle", {cx:27.5, cy:27.5, r:27.5, class:"entryFunctionButton"}), a = a.elem("circle", {cx:102.5, cy:27.5, r:27.5, class:"entryFunctionButton"});
+    f.onclick = function(a) {
+      b.save();
     };
-    d.onclick = function(c) {
-      a.save();
+    d.onclick = function(a) {
+      b.save();
     };
-    c.onclick = function(c) {
-      a.cancelEdit();
+    a.onclick = function(a) {
+      b.cancelEdit();
     };
-    e.onclick = function(c) {
-      a.cancelEdit();
+    e.onclick = function(a) {
+      b.cancelEdit();
     };
   };
   a.cancelEdit = function() {
@@ -16166,7 +16172,7 @@ Entry.Board = function(a) {
   a.insert = function(a, c, d) {
     "string" === typeof a && (a = this.findById(a));
     this.separate(a, d);
-    4 === c.length && 0 === c[3] ? a.moveTo(c[0], c[1]) : (c = this.code.getByPointer(c), a.doInsert(c), c instanceof Entry.Block && a.view.bindPrev(c));
+    4 === c.length && 0 === c[3] ? a.moveTo(c[0], c[1]) : (c = this.code.getTargetByPointer(c), c instanceof Entry.Block ? (a.doInsert(c), a.view.bindPrev(c)) : c instanceof Entry.FieldStatement ? (a.view.bindPrev(c), c.insertTopBlock(a)) : a.doInsert(c));
   };
 })(Entry.Board.prototype);
 Entry.skeleton = function() {

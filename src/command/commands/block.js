@@ -29,13 +29,9 @@ goog.require("Entry.Command");
         },
         state: function(block, targetBlock) {
             var data = [
-                block.id,
+                block.id
             ];
             var pointer = block.pointer()
-
-            var prevBlock = block.getPrevBlock();
-            if (prevBlock)
-                pointer[pointer.length - 1] = pointer[pointer.length - 1] - 1;
             data.push(pointer);
 
             if (block.getBlockType() === "basic")
@@ -48,36 +44,6 @@ goog.require("Entry.Command");
             var block = Entry.playground.mainWorkspace.board.findById(blockId);
             var board = Entry.commander.editor.board;
             board.insert(block, pointer, count);
-            return;
-            if (block.getBlockType() === "basic") {
-                if (originBlock) {
-                    originBlock = Entry.playground.mainWorkspace.board.findById(originBlock);
-                    block.separate(count);
-                    if (prevBlock && prevBlock.getNextBlock())
-                        prevBlock.getNextBlock().view.bindPrev();
-                    block.insert(originBlock);
-                    block.view.bindPrev(originBlock);
-                } else {
-                    if (block.view)
-                        block.view._toGlobalCoordinate();
-                    block.separate(count);
-                    block.moveTo(prevPos.x, prevPos.y);
-                    if (prevBlock && prevBlock.getNextBlock())
-                        prevBlock.getNextBlock().view.bindPrev();
-                }
-            } else {
-                if (originBlock) {
-                    originBlock = Entry.playground.mainWorkspace.board.findById(originBlock);
-                    var param = originBlock.view._contents[count];
-                    block.separate();
-                    block.doInsert(param);
-                } else {
-                    if (block.view)
-                        block.view._toGlobalCoordinate();
-                    block.separate(count);
-                    block.moveTo(prevPos.x, prevPos.y);
-                }
-            }
         }
     };
 
@@ -89,10 +55,22 @@ goog.require("Entry.Command");
             block.doSeparate();
         },
         state: function(block) {
+            var data = [
+                block.id
+            ];
+            var pointer = block.pointer()
+            data.push(pointer);
+
+            if (block.getBlockType() === "basic")
+                data.push(block.thread.getCount(block));
+            return data;
         },
         log: function(block) {
         },
-        undo: function(blockId) {
+        undo: function(blockId, pointer, count) {
+            var block = Entry.playground.mainWorkspace.board.findById(blockId);
+            var board = Entry.commander.editor.board;
+            board.insert(block, pointer, count);
         }
     };
 
