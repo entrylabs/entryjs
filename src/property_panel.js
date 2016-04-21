@@ -54,6 +54,11 @@ Entry.PropertyPanel = function() {
             that.select(mode);
         });
 
+        if(mode == 'hw') {
+            $('.propertyTabhw').dblclick(function(){
+                Entry.dispatchEvent('hwModeChange');
+            });
+        }
         if (this.modes[mode]) {
             this.modes[mode].tabDom.remove();
             this.modes[mode].contentDom.remove();

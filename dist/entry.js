@@ -5589,10 +5589,10 @@ Entry.Collection = function(a) {
   a.fromJSON = function() {
   };
   a.toJSON = function() {
-    for (var a = [], b = 0, e = this.length;b < e;b++) {
-      a.push(this[b].toJSON());
+    for (var b = [], a = 0, e = this.length;a < e;a++) {
+      b.push(this[a].toJSON());
     }
-    return a;
+    return b;
   };
   a.observe = function() {
   };
@@ -5613,22 +5613,22 @@ Entry.Event = function(a) {
     this._listeners.push(d);
     return d;
   };
-  a.detach = function(a) {
-    var c = this._listeners;
-    a = c.indexOf(a);
-    if (-1 < a) {
-      return c.splice(a, 1);
+  a.detach = function(b) {
+    var a = this._listeners;
+    b = a.indexOf(b);
+    if (-1 < b) {
+      return a.splice(b, 1);
     }
   };
   a.clear = function() {
-    for (var a = this._listeners;a.length;) {
-      a.pop();
+    for (var b = this._listeners;b.length;) {
+      b.pop();
     }
   };
   a.notify = function() {
-    var a = arguments;
-    this._listeners.slice().forEach(function(c) {
-      c.fn.apply(c.obj, a);
+    var b = arguments;
+    this._listeners.slice().forEach(function(a) {
+      a.fn.apply(a.obj, b);
     });
   };
 })(Entry.Event.prototype);
@@ -10422,6 +10422,9 @@ Entry.PropertyPanel = function() {
     e.bindOnClick(function() {
       f.select(a);
     });
+    "hw" == a && $(".propertyTabhw").dblclick(function() {
+      Entry.dispatchEvent("hwModeChange");
+    });
     this.modes[a] && (this.modes[a].tabDom.remove(), this.modes[a].contentDom.remove());
     this.modes[a] = {obj:c, tabDom:e, contentDom:d};
   };
@@ -12496,21 +12499,25 @@ Entry.HWMonitor = function(a) {
     "both" == a && (b.resize(), b.resizeList());
     "list" == a ? b.resizeList() : b.resize();
   });
+  Entry.addEventListener("hwModeChange", function() {
+    b.changeMode();
+  });
   this.scale = .5;
-  this._portViews = {};
   this._listPortViews = {};
-  this._portMap = {n:[], e:[], s:[], w:[]};
-  this._portMapList = {n:[], e:[], s:[], w:[]};
 };
 (function(a) {
   a.generateView = function() {
     this.snap = Entry.SVG("hwMonitor");
     this._svgGroup = this.snap.elem("g");
+    this._portMap = {n:[], e:[], s:[], w:[]};
     var a = this._hwModule.monitorTemplate, c = {href:Entry.mediaFilePath + a.imgPath, x:-a.width / 2, y:-a.height / 2, width:a.width, height:a.height};
+    this._portViews = {};
+    this.hwView = null;
     this.hwView = this._svgGroup.elem("image");
     this.hwView = this.hwView.attr(c);
     this._template = a;
     a = a.ports;
+    this.pathGroup = null;
     this.pathGroup = this._svgGroup.elem("g");
     var c = [], d;
     for (d in a) {
@@ -12527,7 +12534,29 @@ Entry.HWMonitor = function(a) {
     });
     this.resize();
   };
+  a.toggleMode = function(a) {
+    var c = this._hwModule.monitorTemplate;
+    "list" == a ? (c.TempPort = c.ports, this._hwModule.monitorTemplate.listPorts = this.addPortEle(c.listPorts, c.ports), $(this._svglistGroup).remove(), $(this._svgGroup).remove(), $(this._pathGroup).remove(), this._hwModule.monitorTemplate.mode = "list", this.generateListView()) : c.TempPort && (this._hwModule.monitorTemplate.listPorts = this.removePortEle(c.listPorts, c.ports), this._hwModule.monitorTemplate.ports = c.TempPort, $(this.pathGroup).empty(), $(this.hwView).empty(), $(this._svglistGroup).remove(), 
+    $(this._rect).empty(), console.log("template", this._template), delete this._portMap, this._hwModule.monitorTemplate.mode = "both", this.generateListView(), this.generateView());
+  };
+  a.changeMode = function() {
+    var a = this._hwModule.monitorTemplate.mode;
+    "both" == a ? this.toggleMode("list") : "list" == a && this.toggleMode("both");
+  };
+  a.addPortEle = function(a, c) {
+    for (var d in c) {
+      a[d] = c[d];
+    }
+    return a;
+  };
+  a.removePortEle = function(a, c) {
+    for (var d in c) {
+      delete a[d];
+    }
+    return a;
+  };
   a.generateListView = function() {
+    this._portMapList = {n:[]};
     this.listsnap = Entry.SVG("hwMonitor");
     this._svglistGroup = this.listsnap.elem("g");
     var a = this._hwModule.monitorTemplate;
@@ -12542,19 +12571,7 @@ Entry.HWMonitor = function(a) {
     }
     var f = this._portMapList;
     c.map(function(a) {
-      switch(Math.round(Math.atan2(a.box.y, a.box.x) / Math.PI * 2)) {
-        case -1:
-          f.n.push(a);
-          break;
-        case 0:
-          f.e.push(a);
-          break;
-        case 1:
-          f.s.push(a);
-          break;
-        case 2:
-          f.w.push(a);
-      }
+      f.n.push(a);
     });
     this.resizeList();
   };
@@ -12569,9 +12586,7 @@ Entry.HWMonitor = function(a) {
     h.textContent = 0;
     g += 40;
     f.attr({width:g});
-    d = {group:d, value:h, type:a.type, path:e, box:{x:a.pos.x - this._template.width / 2, y:a.pos.y - this._template.height / 2, width:g}, width:g};
-    "both" == this._hwModule.monitorTemplate.mode && (d.box.y += 100);
-    return d;
+    return {group:d, value:h, type:a.type, path:e, box:{x:a.pos.x - this._template.width / 2, y:a.pos.y - this._template.height / 2, width:g}, width:g};
   };
   a.getView = function() {
     return this.svgDom;
@@ -12631,11 +12646,9 @@ Entry.HWMonitor = function(a) {
     this._alignEW(a, this._template.width * this.scale / 3 - 32, -27);
   };
   a.alignList = function() {
-    for (var a = this._portMapList.n, c = a.length, d = 0;d < a.length;d++) {
+    for (var a = {}, a = this._hwModule.monitorTemplate.listPorts, c = a.length, d = 0;d < a.length;d++) {
       a[d].group.attr({transform:"translate(" + this._template.width * (d / c - .5) + "," + (-this._template.width / 2 - 30) + ")"});
     }
-    a = this._portMapList.s.concat();
-    this._alignNSList(a, this._template.width * this.scale / 2 + 5, 27);
     a = this._portMapList.n.concat();
     this._alignNSList(a, -this._template.width * this.scale / 2 - 32, -27);
   };

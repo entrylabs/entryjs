@@ -169,7 +169,6 @@ p.setPortReadable = function(port) {
         this.sendQueue.readablePorts.push(port);
     }
 };
-
 p.removePortReadable = function(port) {
     if (!this.sendQueue.readablePorts && !Array.isArray(this.sendQueue.readablePorts))
         return;
