@@ -13610,13 +13610,14 @@ Entry.BlockMenu = function(a, b, c, d) {
   };
   a._addControl = function(b) {
     var a = this;
-    b.on("mousewheel", function() {
+    b.on("wheel", function() {
       a._mouseWheel.apply(a, arguments);
     });
   };
   a._mouseWheel = function(b) {
     b = b.originalEvent;
-    this._scroller.scroll((-b.wheelDeltaY || b.deltaY) / 3);
+    b.preventDefault();
+    this._scroller.scroll(-b.wheelDeltaY || b.deltaY / 3);
   };
   a.dominate = function(b) {
     this.svgBlockGroup.appendChild(b.view.svgGroup);
@@ -15846,7 +15847,7 @@ Entry.Board = function(a) {
     b.bind("touchstart", function() {
       a.onMouseDown.apply(a, arguments);
     });
-    b.on("mousewheel", function() {
+    b.on("wheel", function() {
       a.mouseWheel.apply(a, arguments);
     });
   };
@@ -15895,6 +15896,7 @@ Entry.Board = function(a) {
   };
   a.mouseWheel = function(b) {
     b = b.originalEvent;
+    b.preventDefault();
     this.scroller.scroll(b.wheelDeltaX || -b.deltaX, b.wheelDeltaY || -b.deltaY);
   };
   a.setSelectedBlock = function(b) {

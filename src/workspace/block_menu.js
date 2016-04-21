@@ -486,16 +486,16 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll) {
 
     p._addControl = function(dom) {
         var that = this;
-        dom.on('mousewheel', function(){
+        dom.on('wheel', function(){
             that._mouseWheel.apply(that, arguments);
         });
     };
 
     p._mouseWheel = function(e) {
         e = e.originalEvent;
-
+        e.preventDefault();
         this._scroller.scroll(
-            (-e.wheelDeltaY || e.deltaY) / 3
+            -e.wheelDeltaY || e.deltaY / 3
         );
     };
 

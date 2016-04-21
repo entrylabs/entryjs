@@ -162,7 +162,7 @@ Entry.Board = function(option) {
         dom.bind('touchstart', function() {
             that.onMouseDown.apply(that, arguments);
         });
-        dom.on('mousewheel', function(){
+        dom.on('wheel', function(){
             that.mouseWheel.apply(that, arguments);
         });
     };
@@ -256,6 +256,7 @@ Entry.Board = function(option) {
 
     p.mouseWheel = function(e) {
         e = e.originalEvent;
+        e.preventDefault();
 
         this.scroller.scroll(
             e.wheelDeltaX || -e.deltaX,
