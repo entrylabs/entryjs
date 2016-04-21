@@ -457,7 +457,7 @@ Entry.Block.MAGNET_OFFSET = 0.4;
             return null;
         var skeleton = Entry.skeleton[this._schema.skeleton]
         var magnet = skeleton.magnets(this.view);
-        if (magnet.next || magnet.prev)
+        if (magnet.next || magnet.previous)
             return "basic";
         else if (magnet.bool || magnet.string)
             return "field";

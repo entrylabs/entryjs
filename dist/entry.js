@@ -4970,7 +4970,7 @@ Entry.Commander = function(a) {
     Entry.playground.mainWorkspace.board.findById(b).destroy();
   }};
   a.insertBlock = {type:102, do:function(b, a) {
-    b.doInsert(a);
+    Entry.commander.editor.board.insert(b, a);
   }, state:function(b, a) {
     var d = [b.id], e = b.pointer();
     d.push(e);
@@ -13963,12 +13963,12 @@ Entry.BlockView.DRAG_RADIUS = 5;
         switch(Entry.GlobalSvg.terminateDrag(this)) {
           case g.DONE:
             g = this._getCloseBlock();
-            d && !g ? Entry.do("separateBlock", e) : d || g || f ? g ? (g.view.magnet && g.view.magnet.next ? (this.bindPrev(g), g instanceof Entry.Block ? Entry.do("insertBlock", e, g) : g.insertTopBlock(e)) : Entry.do("insertBlock", e, g), createjs.Sound.play("entryMagneting"), b = !0) : Entry.do("separateBlock", e) : e.getThread().view.isGlobal() ? Entry.do("moveBlock", e) : Entry.do("separateBlock", e);
+            d && !g ? Entry.do("separateBlock", e) : d || g || f ? g ? (Entry.do("insertBlock", e, g), createjs.Sound.play("entryMagneting"), b = !0) : Entry.do("separateBlock", e) : e.getThread().view.isGlobal() ? Entry.do("moveBlock", e) : Entry.do("separateBlock", e);
             break;
           case g.RETURN:
             e = this.block;
             f = this.originPos;
-            d ? (this.set({animating:!1}), createjs.Sound.play("entryMagneting"), this.bindPrev(d), e.insert(d)) : (d = e.getThread().view.getParent(), d instanceof Entry.FieldStatement ? (this.bindPrev(d), d.insertTopBlock(e)) : d instanceof Entry.FieldBlock ? e.replace(d._valueBlock) : this._moveTo(f.x, f.y, !1));
+            d ? (this.set({animating:!1}), createjs.Sound.play("entryMagneting"), this.bindPrev(d), e.insert(d)) : (d = e.getThread().view.getParent(), d instanceof Entry.Code ? this._moveTo(f.x, f.y, !1) : Entry.do("insertBlock", e, d));
             break;
           case g.REMOVE:
             createjs.Sound.play("entryDelete"), f ? this.block.destroy(!1, !0) : this.block.doDestroyBelow(!1);
@@ -14194,6 +14194,7 @@ Entry.Code = function(a) {
   this.executeEndEvent = new Entry.Event(this);
   this.changeEvent = new Entry.Event(this);
   this.changeEvent.attach(this, this._handleChange);
+  this._maxZIndex = 0;
   this.load(a);
 };
 Entry.STATEMENT = 0;
@@ -14305,8 +14306,7 @@ Entry.PARAM = -1;
     return JSON.stringify(this.toJSON());
   };
   a.dominate = function(b) {
-    var a = this._data, d = a.indexOf(b);
-    0 > d || (a.splice(d, 1), a.push(b));
+    b.view.setZIndex(this._maxZIndex++);
   };
   a.indexOf = function(b) {
     return this._data.indexOf(b);
@@ -14346,12 +14346,17 @@ Entry.PARAM = -1;
     b = b.concat();
     b.shift();
     b.shift();
-    for (var a = this._data[b.shift()].getBlock(b.shift());b.length;) {
-      a instanceof Entry.Block || (a = a.getValueBlock());
-      var d = b.shift(), e = b.shift();
-      -1 < d ? (a = a.statements[d], a = b.length ? a.getBlock(e) : 0 === e ? a.view.getParent() : statements.getBlock(e - 1)) : -1 === d && (a = a.view.getParam(e));
+    var a = this._data[b.shift()], d;
+    if (1 === b.length) {
+      d = a.getBlock(b.shift() - 1);
+    } else {
+      for (d = a.getBlock(b.shift());b.length;) {
+        d instanceof Entry.Block || (d = d.getValueBlock());
+        var e = b.shift(), a = b.shift();
+        -1 < e ? (d = d.statements[e], d = b.length ? d.getBlock(a) : 0 === a ? d.view.getParent() : d.getBlock(a - 1)) : -1 === e && (d = d.view.getParam(a));
+      }
     }
-    return a;
+    return d;
   };
 })(Entry.Code.prototype);
 Entry.CodeView = function(a, b) {
@@ -15310,6 +15315,7 @@ Entry.FieldStatement = function(a, b, c) {
       this._posObserver = b.view.observe(this, "removeFirstBlock", ["x", "y"]), b.view._toLocalCoordinate(this.statementSvgGroup), this.firstBlock = b;
     }
     a.changeEvent.attach(this, this.calcHeight);
+    a.changeEvent.attach(this, this.checkTopBlock);
     this.calcHeight();
   };
   a.align = function(b, a, d) {
@@ -15357,9 +15363,9 @@ Entry.FieldStatement = function(a, b, c) {
   a.insertTopBlock = function(b) {
     this._posObserver && this._posObserver.destroy();
     var a = this.firstBlock;
-    b.doInsert(this._thread);
-    this.firstBlock = b;
-    this._posObserver = b.view.observe(this, "removeFirstBlock", ["x", "y"], !1);
+    if (this.firstBlock = b) {
+      b.doInsert(this._thread), this._posObserver = b.view.observe(this, "removeFirstBlock", ["x", "y"], !1);
+    }
     return a;
   };
   a.removeFirstBlock = function() {
@@ -15368,6 +15374,10 @@ Entry.FieldStatement = function(a, b, c) {
   };
   a.getNextBlock = function() {
     return this.firstBlock;
+  };
+  a.checkTopBlock = function() {
+    var b = this._thread.getFirstBlock();
+    b && this.firstBlock !== b && (this.firstBlock = b, b.view.bindPrev(this));
   };
 })(Entry.FieldStatement.prototype);
 Entry.FieldText = function(a, b, c) {
@@ -15955,60 +15965,60 @@ Entry.Board = function(a) {
     }
   };
   a._getCodeBlocks = function(b, a) {
-    var d = b.getThreads(), e = [], f = 0, g;
+    var d = b.getThreads(), e = [], f;
     switch(a) {
       case "nextMagnet":
-        g = this._getNextMagnets;
+        f = this._getNextMagnets;
         break;
       case "stringMagnet":
-        g = this._getFieldMagnets;
+        f = this._getFieldMagnets;
         break;
       case "booleanMagnet":
-        g = this._getFieldMagnets;
+        f = this._getFieldMagnets;
         break;
       case "paramMagnet":
-        g = this._getOutputMagnets;
+        f = this._getOutputMagnets;
         break;
       default:
         return [];
     }
-    for (var h = 0;h < d.length;h++) {
-      e = e.concat(g.call(this, d[h], f, null, a)), f++;
+    for (var g = 0;g < d.length;g++) {
+      var h = d[g], e = e.concat(f.call(this, h, h.view.zIndex, null, a))
     }
     return e;
   };
-  a._getNextMagnets = function(a, c, d, e) {
-    var f = a.getBlocks(), g = [], h = [];
+  a._getNextMagnets = function(b, a, d, e) {
+    var f = b.getBlocks(), g = [], h = [];
     d || (d = {x:0, y:0});
     var k = d.x;
     d = d.y;
     for (var m = 0;m < f.length;m++) {
       var n = f[m], l = n.view;
-      l.zIndex = c;
+      l.zIndex = a;
       if (l.dragInstance) {
         break;
       }
       d += l.y;
       k += l.x;
-      a = d + 1;
-      l.magnet.next && (a += l.magnet.next.y, h.push({point:d, endPoint:a, startBlock:n, blocks:[]}), h.push({point:a, blocks:[]}), l.absX = k);
-      n.statements && (c += .01);
+      b = d + 1;
+      l.magnet.next && (b += l.magnet.next.y, h.push({point:d, endPoint:b, startBlock:n, blocks:[]}), h.push({point:b, blocks:[]}), l.absX = k);
+      n.statements && (a += .01);
       for (var q = 0;q < n.statements.length;q++) {
-        a = n.statements[q];
+        b = n.statements[q];
         var r = n.view._statements[q];
-        r.zIndex = c;
+        r.zIndex = a;
         r.absX = k + r.x;
         h.push({point:r.y + d - 30, endPoint:r.y + d + r.height, startBlock:r, blocks:[]});
         h.push({point:r.y + d + r.height, blocks:[]});
-        c += .01;
-        g = g.concat(this._getNextMagnets(a, c, {x:r.x + k, y:r.y + d}, e));
+        a += .01;
+        g = g.concat(this._getNextMagnets(b, a, {x:r.x + k, y:r.y + d}, e));
       }
       l.magnet.next && (d += l.magnet.next.y, k += l.magnet.next.x);
     }
     return g.concat(h);
   };
-  a._getFieldMagnets = function(a, c, d, e) {
-    var f = a.getBlocks(), g = [], h = [];
+  a._getFieldMagnets = function(b, a, d, e) {
+    var f = b.getBlocks(), g = [], h = [];
     d || (d = {x:0, y:0});
     var k = d.x;
     d = d.y;
@@ -16017,14 +16027,14 @@ Entry.Board = function(a) {
       if (l.dragInstance) {
         break;
       }
-      l.zIndex = c;
+      l.zIndex = a;
       d += l.y;
       k += l.x;
-      h = h.concat(this._getFieldBlockMetaData(l, k, d, c, e));
-      n.statements && (c += .01);
+      h = h.concat(this._getFieldBlockMetaData(l, k, d, a, e));
+      n.statements && (a += .01);
       for (var q = 0;q < n.statements.length;q++) {
-        a = n.statements[q];
-        var r = n.view._statements[q], g = g.concat(this._getFieldMagnets(a, c, {x:r.x + k, y:r.y + d}, e));
+        b = n.statements[q];
+        var r = n.view._statements[q], g = g.concat(this._getFieldMagnets(b, a, {x:r.x + k, y:r.y + d}, e));
       }
       l.magnet.next && (d += l.magnet.next.y, k += l.magnet.next.x);
     }
@@ -16140,7 +16150,7 @@ Entry.Board = function(a) {
   a.insert = function(a, c, d) {
     "string" === typeof a && (a = this.findById(a));
     this.separate(a, d);
-    4 === c.length && 0 === c[3] ? a.moveTo(c[0], c[1]) : (c = this.code.getTargetByPointer(c), c instanceof Entry.Block ? (a.doInsert(c), a.view.bindPrev(c)) : c instanceof Entry.FieldStatement ? (a.view.bindPrev(c), c.insertTopBlock(a)) : a.doInsert(c));
+    4 === c.length && 0 === c[3] ? a.moveTo(c[0], c[1]) : (c = c instanceof Array ? this.code.getTargetByPointer(c) : c, c instanceof Entry.Block ? ("basic" === a.getBlockType() && a.view.bindPrev(c), a.doInsert(c)) : c instanceof Entry.FieldStatement ? (a.view.bindPrev(c), c.insertTopBlock(a)) : a.doInsert(c));
   };
 })(Entry.Board.prototype);
 Entry.skeleton = function() {
@@ -16323,7 +16333,7 @@ Entry.Thread = function(a, b, c) {
   this.changeEvent = new Entry.Event(this);
   this.changeEvent.attach(this, this.handleChange);
   this._event = null;
-  this._parent = c ? c : b;
+  this.parent = c ? c : b;
   this.load(a);
 };
 (function(a) {
@@ -16481,8 +16491,8 @@ Entry.Thread = function(a, b, c) {
   a.pointer = function(a, c) {
     var d = this.indexOf(c);
     a.unshift(d);
-    this._parent instanceof Entry.Block && a.unshift(this._parent.indexOfStatements(this));
-    return this._code === this._parent ? (a.unshift(this._code.indexOf(this)), d = this._data[0], a.unshift(d.y), a.unshift(d.x), a) : this._parent.pointer(a);
+    this.parent instanceof Entry.Block && a.unshift(this.parent.indexOfStatements(this));
+    return this._code === this.parent ? (a.unshift(this._code.indexOf(this)), d = this._data[0], a.unshift(d.y), a.unshift(d.x), a) : this.parent.pointer(a);
   };
 })(Entry.Thread.prototype);
 Entry.Block = function(a, b) {
@@ -16730,7 +16740,7 @@ Entry.Block.MAGNET_OFFSET = .4;
       return null;
     }
     var a = Entry.skeleton[this._schema.skeleton].magnets(this.view);
-    return a.next || a.prev ? "basic" : a.bool || a.string ? "field" : a.output ? "output" : null;
+    return a.next || a.previous ? "basic" : a.boolean || a.string ? "field" : a.output ? "output" : null;
   };
   a.indexOfStatements = function(a) {
     return this.statements.indexOf(a);
@@ -16744,18 +16754,18 @@ Entry.ThreadView = function(a, b) {
   Entry.Model(this, !1);
   this.thread = a;
   this.svgGroup = b.svgThreadGroup.elem("g");
-  this._parent = b;
+  this.parent = b;
 };
 (function(a) {
-  a.schema = {height:0};
+  a.schema = {height:0, zIndex:0};
   a.destroy = function() {
     this.svgGroup.remove();
   };
   a.setParent = function(a) {
-    this._parent = a;
+    this.parent = a;
   };
   a.getParent = function() {
-    return this._parent;
+    return this.parent;
   };
   a.renderText = function() {
     for (var a = this.thread.getBlocks(), c = 0;c < a.length;c++) {
@@ -16769,7 +16779,7 @@ Entry.ThreadView = function(a, b) {
   };
   a.requestAbsoluteCoordinate = function(a) {
     var c = this.thread.getBlocks(), d = c.shift(), e = {x:0, y:0};
-    for (this._parent instanceof Entry.Board || this._parent instanceof Entry.BlockMenu || (e = this._parent.requestAbsoluteCoordinate());d && d.view !== a && d.view;) {
+    for (this.parent instanceof Entry.Board || this.parent instanceof Entry.BlockMenu || (e = this.parent.requestAbsoluteCoordinate());d && d.view !== a && d.view;) {
       d = d.view, e.x += d.x + d.magnet.next.x, e.y += d.y + d.magnet.next.y, d = c.shift();
     }
     return e;
@@ -16781,15 +16791,18 @@ Entry.ThreadView = function(a, b) {
     return f;
   };
   a.dominate = function() {
-    this._parent.dominate(this.thread);
+    this.parent.dominate(this.thread);
   };
   a.isGlobal = function() {
-    return this._parent instanceof Entry.Board;
+    return this.parent instanceof Entry.Board;
   };
   a.reDraw = function() {
     for (var a = this.thread._data, c = a.length - 1;0 <= c;c--) {
       a[c].view.reDraw();
     }
+  };
+  a.setZIndex = function(a) {
+    this.set({zIndex:a});
   };
 })(Entry.ThreadView.prototype);
 Entry.FieldTrashcan = function(a) {

@@ -25,6 +25,8 @@ Entry.Code = function(code) {
     this.changeEvent = new Entry.Event(this);
     this.changeEvent.attach(this, this._handleChange);
 
+    this._maxZIndex = 0;
+
     this.load(code);
 };
 
@@ -185,12 +187,7 @@ Entry.PARAM = -1;
     };
 
     p.dominate = function(thread) {
-        var data = this._data;
-        var index = data.indexOf(thread);
-        // case of statement thread
-        if (index < 0) return;
-        data.splice(index, 1);
-        data.push(thread);
+        thread.view.setZIndex(this._maxZIndex++);
     };
 
     p.indexOf = function(thread) {
@@ -249,24 +246,29 @@ Entry.PARAM = -1;
         pointer.shift();
         pointer.shift();
         var thread = this._data[pointer.shift()];
-        var block = thread.getBlock(pointer.shift());
-        while (pointer.length) {
-            if (!(block instanceof Entry.Block))
-                block = block.getValueBlock();
-            var type = pointer.shift();
-            var index = pointer.shift();
-            if (type > -1) {
-                var statement = block.statements[type];
-                if (!pointer.length) {
-                    if (index === 0)
-                        block = statement.view.getParent();
-                    else
-                        block = statements.getBlock(index - 1);
-                } else {
-                    block = statement.getBlock(index);
+        var block;
+        if (pointer.length === 1) {
+            block = thread.getBlock(pointer.shift() - 1);
+        } else {
+            block = thread.getBlock(pointer.shift());
+            while (pointer.length) {
+                if (!(block instanceof Entry.Block))
+                    block = block.getValueBlock();
+                var type = pointer.shift();
+                var index = pointer.shift();
+                if (type > -1) {
+                    var statement = block.statements[type];
+                    if (!pointer.length) {
+                        if (index === 0)
+                            block = statement.view.getParent();
+                        else
+                            block = statement.getBlock(index - 1);
+                    } else {
+                        block = statement.getBlock(index);
+                    }
+                } else if (type === -1) {
+                    block = block.view.getParam(index);
                 }
-            } else if (type === -1) {
-                block = block.view.getParam(index);
             }
         }
         return block;

@@ -583,16 +583,7 @@ Entry.BlockView.DRAG_RADIUS = 5;
                             }
                         } else {
                             if (closeBlock) {
-                                if (closeBlock.view.magnet && closeBlock.view.magnet.next) {
-                                    this.bindPrev(closeBlock);
-                                    if (!(closeBlock instanceof Entry.Block)) {
-                                        closeBlock = closeBlock.insertTopBlock(block);
-                                    } else {
-                                        Entry.do("insertBlock", block, closeBlock);
-                                    }
-                                } else {// field block
-                                    Entry.do("insertBlock", block, closeBlock);
-                                }
+                                Entry.do("insertBlock", block, closeBlock);
                                 createjs.Sound.play('entryMagneting');
                                 ripple = true;
                             } else {
@@ -611,12 +602,10 @@ Entry.BlockView.DRAG_RADIUS = 5;
                         } else {
                             var parent = block.getThread().view.getParent();
 
-                            if (parent instanceof Entry.FieldStatement) {
-                                this.bindPrev(parent);
-                                parent.insertTopBlock(block);
-                            } else if (parent instanceof Entry.FieldBlock)
-                                block.replace(parent._valueBlock);
-                            else this._moveTo(originPos.x, originPos.y, false);
+                            if (!(parent instanceof Entry.Code))
+                                Entry.do("insertBlock", block, parent);
+                            else
+                                this._moveTo(originPos.x, originPos.y, false);
                         }
                         break;
                     case gs.REMOVE:

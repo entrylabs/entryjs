@@ -15,12 +15,13 @@ Entry.ThreadView = function(thread, board) {
 
     this.svgGroup = board.svgThreadGroup.elem("g");
 
-    this._parent = board; // statement
+    this.parent = board; // statement
 };
 
 (function(p) {
     p.schema = {
-        height: 0
+        height: 0,
+        zIndex: 0
     };
 
     p.destroy = function() {
@@ -28,11 +29,11 @@ Entry.ThreadView = function(thread, board) {
     };
 
     p.setParent = function(parent) {
-        this._parent = parent;
+        this.parent = parent;
     };
 
     p.getParent = function() {
-        return this._parent;
+        return this.parent;
     };
 
     p.renderText = function() {
@@ -51,9 +52,9 @@ Entry.ThreadView = function(thread, board) {
         var blocks = this.thread.getBlocks();
         var block = blocks.shift();
         var pos = {x: 0, y: 0};
-        if (!(this._parent instanceof Entry.Board ||
-              this._parent instanceof Entry.BlockMenu))
-            pos = this._parent.requestAbsoluteCoordinate();
+        if (!(this.parent instanceof Entry.Board ||
+              this.parent instanceof Entry.BlockMenu))
+            pos = this.parent.requestAbsoluteCoordinate();
 
         while (block && block.view !== blockView && block.view) {
             var prevBlockView = block.view;
@@ -82,11 +83,11 @@ Entry.ThreadView = function(thread, board) {
     };
 
     p.dominate = function() {
-        this._parent.dominate(this.thread);
+        this.parent.dominate(this.thread);
     };
 
     p.isGlobal = function() {
-        return this._parent instanceof Entry.Board;
+        return this.parent instanceof Entry.Board;
     };
 
     p.reDraw = function() {
@@ -95,4 +96,9 @@ Entry.ThreadView = function(thread, board) {
         for (var i=blocks.length-1; i>=0; i--)
             blocks[i].view.reDraw();
     };
+
+    p.setZIndex = function(zIndex) {
+         this.set({zIndex: zIndex});
+    }
+
 })(Entry.ThreadView.prototype);

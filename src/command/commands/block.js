@@ -25,7 +25,8 @@ goog.require("Entry.Command");
     c.insertBlock = {
         type: 102,
         do: function(block, targetBlock) {
-            block.doInsert(targetBlock);
+            var board = Entry.commander.editor.board;
+            board.insert(block, targetBlock);
         },
         state: function(block, targetBlock) {
             var data = [

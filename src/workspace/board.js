@@ -427,7 +427,6 @@ Entry.Board = function(option) {
     p._getCodeBlocks = function(code, targetType) {
         var threads = code.getThreads();
         var blocks = [];
-        var zIndex = 0;
         var func;
         switch (targetType) {
             case "nextMagnet":
@@ -447,8 +446,7 @@ Entry.Board = function(option) {
         }
         for (var i = 0; i < threads.length; i++) {
             var thread = threads[i];
-            blocks = blocks.concat(func.call(this, thread, zIndex, null, targetType));
-            zIndex++;
+            blocks = blocks.concat(func.call(this, thread, thread.view.zIndex, null, targetType));
         }
         return blocks;
     };
@@ -801,17 +799,22 @@ Entry.Board = function(option) {
             prevBlock.getNextBlock().view.bindPrev();
     };
 
-    p.insert = function(block, pointer, count) {
+    p.insert = function(block, pointer, count) { // pointer can be target
         if (typeof block === "string")
             block = this.findById(block);
         this.separate(block, count);
         if (pointer.length === 4 && pointer[3] === 0) // is global
             block.moveTo(pointer[0], pointer[1]);
         else {
-            var targetObj = this.code.getTargetByPointer(pointer);
+            var targetObj;
+            if (pointer instanceof Array)
+                targetObj = this.code.getTargetByPointer(pointer);
+            else
+                targetObj = pointer;
             if (targetObj instanceof Entry.Block) {
+                if (block.getBlockType() === "basic")
+                    block.view.bindPrev(targetObj);
                 block.doInsert(targetObj);
-                block.view.bindPrev(targetObj);
             } else if (targetObj instanceof Entry.FieldStatement) {
                 block.view.bindPrev(targetObj);
                 targetObj.insertTopBlock(block);

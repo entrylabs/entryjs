@@ -66,6 +66,7 @@ Entry.FieldStatement = function(content, blockView, index) {
             this.firstBlock = firstBlock;
         }
         thread.changeEvent.attach(this, this.calcHeight);
+        thread.changeEvent.attach(this, this.checkTopBlock);
         this.calcHeight();
     };
 
@@ -175,10 +176,12 @@ Entry.FieldStatement = function(content, blockView, index) {
         if (this._posObserver) this._posObserver.destroy();
 
         var block = this.firstBlock;
-        newBlock.doInsert(this._thread);
         this.firstBlock = newBlock;
+        if (newBlock) {
+            newBlock.doInsert(this._thread);
 
-        this._posObserver = newBlock.view.observe(this, "removeFirstBlock", ["x", "y"], false);
+            this._posObserver = newBlock.view.observe(this, "removeFirstBlock", ["x", "y"], false);
+        }
         return block;
     };
 
@@ -189,6 +192,14 @@ Entry.FieldStatement = function(content, blockView, index) {
 
     p.getNextBlock = function () {
         return this.firstBlock;
+    };
+
+    p.checkTopBlock = function() {
+        var firstBlock = this._thread.getFirstBlock();
+        if (firstBlock && this.firstBlock !== firstBlock) {
+            this.firstBlock = firstBlock;
+            firstBlock.view.bindPrev(this);
+        }
     };
 
 })(Entry.FieldStatement.prototype);

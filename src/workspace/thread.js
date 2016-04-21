@@ -17,7 +17,7 @@ Entry.Thread = function(thread, code, parent) {
     this.changeEvent = new Entry.Event(this);
     this.changeEvent.attach(this, this.handleChange);
     this._event = null;
-    this._parent = parent ? parent : code;
+    this.parent = parent ? parent : code;
 
     this.load(thread);
 };
@@ -236,15 +236,15 @@ Entry.Thread = function(thread, code, parent) {
     p.pointer = function(pointer, block) {
         var index = this.indexOf(block);
         pointer.unshift(index);
-        if (this._parent instanceof Entry.Block)
-            pointer.unshift(this._parent.indexOfStatements(this));
-        if (this._code === this._parent) {
+        if (this.parent instanceof Entry.Block)
+            pointer.unshift(this.parent.indexOfStatements(this));
+        if (this._code === this.parent) {
             pointer.unshift(this._code.indexOf(this));
             var topBlock = this._data[0];
             pointer.unshift(topBlock.y);
             pointer.unshift(topBlock.x);
             return pointer;
         }
-        return this._parent.pointer(pointer);
+        return this.parent.pointer(pointer);
     };
 })(Entry.Thread.prototype);
