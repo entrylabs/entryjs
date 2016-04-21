@@ -239,7 +239,7 @@ Entry.BlockView.DRAG_RADIUS = 5;
 
             var box = c.box;
             if (statementIndex !== 0) {
-                secondLineHeight = Math.max(box.height*1000, secondLineHeight);
+                secondLineHeight = Math.max(Math.round(box.height)*1000, secondLineHeight);
             } else
                 cursor.height = Math.max(box.height, cursor.height);
 

@@ -714,8 +714,8 @@ Blockly.Blocks.arduino_toggle_led = {init:function() {
   this.setNextStatement(!0);
 }};
 Entry.block.arduino_toggle_led = function(a, b) {
-  var c = b.getNumberValue("VALUE"), d = b.getField("OPERATOR");
-  Entry.hw.setDigitalPortValue(c, "on" == d ? 255 : 0);
+  var c = b.getNumberValue("VALUE"), d = "on" == b.getField("OPERATOR") ? 255 : 0;
+  Entry.hw.setDigitalPortValue(c, d);
   return b.callReturn();
 };
 Blockly.Blocks.arduino_toggle_pwm = {init:function() {
@@ -1693,10 +1693,10 @@ Entry.block.wait_second = function(a, b) {
   }
   b.isStart = !0;
   b.timeFlag = 1;
-  var c = b.getNumberValue("SECOND", b);
+  var c = b.getNumberValue("SECOND", b), c = 60 / (Entry.FPS || 60) * c * 1E3;
   setTimeout(function() {
     b.timeFlag = 0;
-  }, 60 / (Entry.FPS || 60) * c * 1E3);
+  }, c);
   return b;
 };
 Blockly.Blocks.repeat_basic = {init:function() {
@@ -10197,15 +10197,31 @@ Entry.BlockDriver = function() {
     console.log((new Date).getTime() - b.getTime());
   };
   a._convertBlock = function(b) {
-    var a = (new Entry.BlockMockup(Blockly.Blocks[b])).toJSON();
-    a.func = Entry.block[b];
-    var d = EntryStatic.blockInfo[b];
-    d && (a.class = d.class, a.isNotFor = d.isNotFor);
-    -1 < "NUMBER TRUE FALSE TEXT FUNCTION_PARAM_BOOLEAN FUNCTION_PARAM_STRING TRUE_UN".split(" ").indexOf(b.toUpperCase()) && (a.isPrimitive = !0);
-    Entry.block[b] = a;
+    function a(b) {
+      var d = {type:b.getAttribute("type"), index:{}};
+      b = $(b).children();
+      if (!b) {
+        return d;
+      }
+      for (var e = 0;e < b.length;e++) {
+        var f = b[e], g = f.tagName, h = $(f).children()[0], u = f.getAttribute("name");
+        "value" === g ? "block" == h.nodeName && (d.params || (d.params = []), d.params.push(a(h)), d.index[u] = d.params.length - 1) : "field" === g && (d.params || (d.params = []), d.params.push(f.textContent), d.index[u] = d.params.length - 1);
+      }
+      return d;
+    }
+    var d = Blockly.Blocks[b], e = EntryStatic.blockInfo[b], f, g;
+    if (e && (f = e.class, g = e.isNotFor, e = e.xml)) {
+      var e = $.parseXML(e), h = a(e.childNodes[0])
+    }
+    d = (new Entry.BlockMockup(d, h, b)).toJSON();
+    d.class = f;
+    d.isNotFor = g;
+    d.func = Entry.block[b];
+    -1 < "NUMBER TRUE FALSE TEXT FUNCTION_PARAM_BOOLEAN FUNCTION_PARAM_STRING TRUE_UN".split(" ").indexOf(b.toUpperCase()) && (d.isPrimitive = !0);
+    Entry.block[b] = d;
   };
 })(Entry.BlockDriver.prototype);
-Entry.BlockMockup = function(a) {
+Entry.BlockMockup = function(a, b, c) {
   this.templates = [];
   this.params = [];
   this.statements = [];
@@ -10213,7 +10229,10 @@ Entry.BlockMockup = function(a) {
   this.output = this.isNext = this.isPrev = !1;
   this.fieldCount = 0;
   this.events = {};
+  this.def = b || {};
+  this.definition = {params:[], type:this.def.type};
   this.simulate(a);
+  this.def = this.definition;
 };
 (function(a) {
   a.simulate = function(b) {
@@ -10222,16 +10241,26 @@ Entry.BlockMockup = function(a) {
     b.whenRemove && (this.events.whenBlockDestroy || (this.events.whenBlockDestroy = []), this.events.whenBlockDestroy.push(b.whenRemove));
   };
   a.toJSON = function() {
-    var b = "";
-    this.output ? b = "Boolean" === this.output ? "basic_boolean_field" : "basic_string_field" : !this.isPrev && this.isNext ? b = "basic_event" : 1 == this.statements.length ? b = "basic_loop" : 2 == this.statements.length ? b = "basic_double_loop" : this.isPrev && this.isNext ? b = "basic" : this.isPrev && !this.isNext && (b = "basic_without_next");
-    return {color:this.color, skeleton:b, statements:this.statements, template:this.templates.filter(function(b) {
+    function b(a) {
+      if (a && (a = a.params)) {
+        for (var c = 0;c < a.length;c++) {
+          var f = a[c];
+          f && (delete f.index, b(f));
+        }
+      }
+    }
+    var a = "";
+    this.output ? a = "Boolean" === this.output ? "basic_boolean_field" : "basic_string_field" : !this.isPrev && this.isNext ? a = "basic_event" : 1 == this.statements.length ? a = "basic_loop" : 2 == this.statements.length ? a = "basic_double_loop" : this.isPrev && this.isNext ? a = "basic" : this.isPrev && !this.isNext && (a = "basic_without_next");
+    b(this.def);
+    return {color:this.color, skeleton:a, statements:this.statements, template:this.templates.filter(function(b) {
       return "string" === typeof b;
-    }).join(" "), params:this.params, events:this.events};
+    }).join(" "), params:this.params, events:this.events, def:this.def};
   };
   a.appendDummyInput = function() {
     return this;
   };
   a.appendValueInput = function(b) {
+    this.def && this.def.index && (void 0 !== this.def.index[b] ? this.definition.params.push(this.def.params[this.def.index[b]]) : this.definition.params.push(null));
     this.params.push({type:"Block", accept:"stringMagnet"});
     this.templates.push(this.getFieldCount());
     return this;
@@ -10247,9 +10276,11 @@ Entry.BlockMockup = function(a) {
     if (!b) {
       return this;
     }
-    "string" === typeof b && 0 < b.length ? a ? (b = {type:"Text", text:b, color:a}, this.params.push(b), this.templates.push(this.getFieldCount())) : this.templates.push(b) : b.constructor == Blockly.FieldIcon ? ("start" === b.type ? this.params.push({type:"Indicator", img:b.src_, size:17, position:{x:0, y:-2}}) : this.params.push({type:"Indicator", img:b.src_, size:12}), this.templates.push(this.getFieldCount())) : b.constructor == Blockly.FieldDropdown ? (this.params.push({type:"Dropdown", options:b.menuGenerator_, 
-    value:b.menuGenerator_[0][1], fontSize:11}), this.templates.push(this.getFieldCount())) : b.constructor == Blockly.FieldDropdownDynamic ? (this.params.push({type:"DropdownDynamic", value:null, menuName:b.menuName_, fontSize:11}), this.templates.push(this.getFieldCount())) : b.constructor == Blockly.FieldTextInput ? (this.params.push({type:"TextInput", value:10}), this.templates.push(this.getFieldCount())) : b.constructor == Blockly.FieldAngle ? (this.params.push({type:"Angle"}), this.templates.push(this.getFieldCount())) : 
-    b.constructor == Blockly.FieldKeydownInput ? (this.params.push({type:"Keyboard", value:81}), this.templates.push(this.getFieldCount())) : b.constructor == Blockly.FieldColour ? (this.params.push({type:"Color"}), this.templates.push(this.getFieldCount())) : console.log("else", b);
+    "string" === typeof b && 0 < b.length ? a ? (b = {type:"Text", text:b, color:a}, this.params.push(b), this.templates.push(this.getFieldCount()), this.def && this.def.index && void 0 !== this.def.index[a] ? this.definition.params.push(this.def.params[this.def.index[a]]) : this.definition.params.push(void 0)) : this.templates.push(b) : b.constructor == Blockly.FieldIcon ? ("start" === b.type ? this.params.push({type:"Indicator", img:b.src_, size:17, position:{x:0, y:-2}}) : this.params.push({type:"Indicator", 
+    img:b.src_, size:12}), this.templates.push(this.getFieldCount()), this.definition && this.definition.params.push(null)) : b.constructor == Blockly.FieldDropdown ? (this.params.push({type:"Dropdown", options:b.menuGenerator_, value:b.menuGenerator_[0][1], fontSize:11}), this.templates.push(this.getFieldCount()), this.def && this.def.index && void 0 !== this.def.index[a] ? this.definition.params.push(this.def.params[this.def.index[a]]) : this.definition.params.push(void 0)) : b.constructor == Blockly.FieldDropdownDynamic ? 
+    (this.params.push({type:"DropdownDynamic", value:null, menuName:b.menuName_, fontSize:11}), this.templates.push(this.getFieldCount()), this.def && this.def.index && void 0 !== this.def.index[a] ? this.definition.params.push(this.def.params[this.def.index[a]]) : this.definition.params.push(void 0)) : b.constructor == Blockly.FieldTextInput ? (this.params.push({type:"TextInput", value:10}), this.templates.push(this.getFieldCount())) : b.constructor == Blockly.FieldAngle ? (this.params.push({type:"Angle"}), 
+    this.templates.push(this.getFieldCount()), this.def && this.def.index && void 0 !== this.def.index[a] ? this.definition.params.push(this.def.params[this.def.index[a]]) : this.definition.params.push(null)) : b.constructor == Blockly.FieldKeydownInput ? (this.params.push({type:"Keyboard", value:81}), this.templates.push(this.getFieldCount()), void 0 !== this.def.index[a] ? this.definition.params.push(this.def.params[this.def.index[a]]) : this.definition.params.push(void 0)) : b.constructor == Blockly.FieldColour ? 
+    (this.params.push({type:"Color"}), this.templates.push(this.getFieldCount())) : console.log("else", b);
     return this;
   };
   a.setColour = function(b) {
@@ -13579,13 +13610,14 @@ Entry.BlockMenu = function(a, b, c, d) {
   };
   a._addControl = function(b) {
     var a = this;
-    b.on("mousewheel", function() {
+    b.on("wheel", function() {
       a._mouseWheel.apply(a, arguments);
     });
   };
   a._mouseWheel = function(b) {
     b = b.originalEvent;
-    this._scroller.scroll((-b.wheelDeltaY || b.deltaY) / 3);
+    b.preventDefault();
+    this._scroller.scroll(-b.wheelDeltaY || b.deltaY / 3);
   };
   a.dominate = function(b) {
     this.svgBlockGroup.appendChild(b.view.svgGroup);
@@ -13827,7 +13859,7 @@ Entry.BlockView.DRAG_RADIUS = 5;
       var m = this._contents[k];
       m instanceof Entry.FieldLineBreak ? (this._alignStatement(b, f), m.align(f), f++, d = m.box.y, a = 8) : (m.align(a, d, b), k !== this._contents.length - 1 && (a += Entry.BlockView.PARAM_SPACE));
       m = m.box;
-      0 !== f ? h = Math.max(1E3 * m.height, h) : e = Math.max(m.height, e);
+      0 !== f ? h = Math.max(1E3 * Math.round(m.height), h) : e = Math.max(m.height, e);
       a += m.width;
       g = Math.max(g, a);
       this.set({contentWidth:g, contentHeight:e});
@@ -14553,7 +14585,8 @@ Entry.FieldAngle = function(a, b, c) {
   this.position = a.position;
   this._contents = a;
   this._index = c;
-  this.setValue(this.modValue(this.getValue()));
+  a = this.getValue();
+  this.setValue(this.modValue(void 0 !== a ? a : 90));
   this.renderStart();
 };
 Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
@@ -14593,16 +14626,16 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
     this.optionGroup.select();
     this.svgOptionGroup = this.appendSvgOptionGroup();
     this.svgOptionGroup.elem("circle", {x:0, y:0, r:49, class:"entry-field-angle-circle"});
-    this._dividerGroup = this.svgOptionGroup.group();
+    this._dividerGroup = this.svgOptionGroup.elem("g");
     for (a = 0;360 > a;a += 15) {
-      this._dividerGroup.line(49, 0, 49 - (0 === a % 45 ? 10 : 5), 0).attr({transform:"rotate(" + a + ", 0, 0)", class:"entry-angle-divider"});
+      this._dividerGroup.elem("line", {x1:49, y1:0, x2:49 - (0 === a % 45 ? 10 : 5), y2:0, transform:"rotate(" + a + ", 0, 0)", class:"entry-angle-divider"});
     }
-    a = this.getRelativePos();
+    a = this.getAbsolutePosFromBoard();
     a.x += this.box.width / 2;
     a.y = a.y + this.box.height / 2 + 49 + 1;
-    this.svgOptionGroup.attr({class:"entry-field-angle", transform:"t" + a.x + " " + a.y});
-    var a = b.getAbsolutePos(), d = [a.x + b.box.width / 2, a.y + b.box.height / 2 + 1];
-    this.svgOptionGroup.mousemove(function(a) {
+    this.svgOptionGroup.attr({class:"entry-field-angle", transform:"translate(" + a.x + "," + a.y + ")"});
+    var a = b.getAbsolutePosFromDocument(), d = [a.x + b.box.width / 2, a.y + b.box.height / 2 + 1];
+    $(this.svgOptionGroup).mousemove(function(a) {
       b.optionGroup.val(b.modValue(function(b, a) {
         var c = a[0] - b[0], d = a[1] - b[1] - 49 - 1, e = Math.atan(-d / c), e = Entry.toDegrees(e), e = 90 - e;
         0 > c ? e += 180 : 0 < d && (e += 360);
@@ -14615,16 +14648,15 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
   a.updateGraph = function() {
     this._fillPath && this._fillPath.remove();
     var b = Entry.toRadian(this.getValue()), a = 49 * Math.sin(b), d = -49 * Math.cos(b), b = b > Math.PI ? 1 : 0;
-    this._fillPath = this.svgOptionGroup.path("M 0, 0 v -49 A 49,49 0 %LARGE 1 %X,%Y z".replace("%X", a).replace("%Y", d).replace("%LARGE", b));
-    this._fillPath.attr({class:"entry-angle-fill-area"});
-    this.svgOptionGroup.append(this._dividerGroup);
+    this._fillPath = this.svgOptionGroup.elem("path", {d:"M 0,0 v -49 A 49,49 0 %LARGE 1 %X,%Y z".replace("%X", a).replace("%Y", d).replace("%LARGE", b), class:"entry-angle-fill-area"});
+    this.svgOptionGroup.appendChild(this._dividerGroup);
     this._indicator && this._indicator.remove();
-    this._indicator = this.svgOptionGroup.line(0, 0, a, d);
+    this._indicator = this.svgOptionGroup.elem("line", {x1:0, y1:0, x2:a, y2:d});
     this._indicator.attr({class:"entry-angle-indicator"});
   };
   a.applyValue = function() {
     var b = this.optionGroup.val();
-    isNaN(b) || (b = this.modValue(b), this.setValue(b), this.updateGraph(), this.textElement.node.textContent = this.getValue(), this.optionGroup && this.optionGroup.val(b), this.resize());
+    isNaN(b) || (b = this.modValue(b), this.setValue(b), this.updateGraph(), this.textElement.textContent = this.getValue(), this.optionGroup && this.optionGroup.val(b), this.resize());
   };
   a.resize = function() {
     var b = this.getTextWidth();
@@ -14992,7 +15024,7 @@ Entry.Utils.inherit(Entry.FieldDropdown, Entry.FieldDropdownDynamic);
     this.optionGroup = Entry.Dom("ul", {class:"entry-widget-dropdown", parent:$("body")});
     var a = Entry.container.getDropdownList(this._contents.menuName);
     this._contents.options = a;
-    for (var d = a.length - 1;0 <= d;d--) {
+    for (var d = 0;d < a.length;d++) {
       var e = a[d], f = e[0], e = e[1], g = Entry.Dom("li", {class:"rect", parent:this.optionGroup}), h = "";
       this.getValue() == e && (h += "\u2713  ");
       g.text(h += f);
@@ -15825,7 +15857,7 @@ Entry.Board = function(a) {
     b.bind("touchstart", function() {
       a.onMouseDown.apply(a, arguments);
     });
-    b.on("mousewheel", function() {
+    b.on("wheel", function() {
       a.mouseWheel.apply(a, arguments);
     });
   };
@@ -15874,6 +15906,7 @@ Entry.Board = function(a) {
   };
   a.mouseWheel = function(b) {
     b = b.originalEvent;
+    b.preventDefault();
     this.scroller.scroll(b.wheelDeltaX || -b.deltaX, b.wheelDeltaY || -b.deltaY);
   };
   a.setSelectedBlock = function(b) {
@@ -15944,29 +15977,35 @@ Entry.Board = function(a) {
     this.workspace.setMode(Entry.Workspace.MODE_BOARD, "save");
   };
   a.generateCodeMagnetMap = function() {
-    var b = this.code;
-    if (b && this.dragBlock) {
-      b = this._getCodeBlocks(b, this.dragBlock._targetType);
-      b.sort(function(b, a) {
-        return b.point - a.point;
+    var a = this.code;
+    if (a && this.dragBlock) {
+      a = this._getCodeBlocks(a, this.dragBlock._targetType);
+      a.sort(function(a, b) {
+        return a.point - b.point;
       });
-      b.unshift({point:-Number.MAX_VALUE, blocks:[]});
-      for (var a = 1;a < b.length;a++) {
-        var d = b[a], e = d, f = d.startBlock;
+      a.unshift({point:-Number.MAX_VALUE, blocks:[]});
+      for (var c = 1;c < a.length;c++) {
+        var d = a[c], e = d, f = d.startBlock;
         if (f) {
-          for (var g = d.endPoint, h = a;g > e.point && (e.blocks.push(f), h++, e = b[h], e);) {
+          for (var g = d.endPoint, h = c;g > e.point && (e.blocks.push(f), h++, e = a[h], e);) {
           }
           delete d.startBlock;
         }
         d.endPoint = Number.MAX_VALUE;
-        b[a - 1].endPoint = d.point;
+        a[c - 1].endPoint = d.point;
       }
-      this._magnetMap = b;
+      this._magnetMap = a;
     }
   };
+<<<<<<< HEAD
   a._getCodeBlocks = function(b, a) {
     var d = b.getThreads(), e = [], f;
     switch(a) {
+=======
+  a._getCodeBlocks = function(a, c) {
+    var d = a.getThreads(), e = [], f = 0, g;
+    switch(c) {
+>>>>>>> origin/refac/entry-block
       case "nextMagnet":
         f = this._getNextMagnets;
         break;
@@ -15982,8 +16021,13 @@ Entry.Board = function(a) {
       default:
         return [];
     }
+<<<<<<< HEAD
     for (var g = 0;g < d.length;g++) {
       var h = d[g], e = e.concat(f.call(this, h, h.view.zIndex, null, a))
+=======
+    for (var h = 0;h < d.length;h++) {
+      e = e.concat(g.call(this, d[h], f, null, c)), f++;
+>>>>>>> origin/refac/entry-block
     }
     return e;
   };
@@ -16532,7 +16576,7 @@ Entry.Block.MAGNET_OFFSET = .4;
       a = this.params;
       c = this._schema.params;
       for (e = 0;c && e < c.length;e++) {
-        d = void 0 !== a[e] ? a[e] : c[e].value, f = void 0 !== a[e], !d || "Output" !== c[e].type && "Block" !== c[e].type || (d = new Entry.Block(d, this.thread)), f ? a.splice(e, 1, d) : a.push(d);
+        d = a[e] ? a[e] : c[e].value, f = a[e] || e < a.length, !d || "Output" !== c[e].type && "Block" !== c[e].type || (d = new Entry.Block(d, this.thread)), f ? a.splice(e, 1, d) : a.push(d);
       }
       if (a = this._schema.statements) {
         for (e = 0;e < a.length;e++) {
