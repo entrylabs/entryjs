@@ -13858,7 +13858,7 @@ Entry.BlockView.DRAG_RADIUS = 5;
       var m = this._contents[k];
       m instanceof Entry.FieldLineBreak ? (this._alignStatement(b, f), m.align(f), f++, d = m.box.y, a = 8) : (m.align(a, d, b), k !== this._contents.length - 1 && (a += Entry.BlockView.PARAM_SPACE));
       m = m.box;
-      0 !== f ? h = Math.max(1E3 * m.height, h) : e = Math.max(m.height, e);
+      0 !== f ? h = Math.max(1E3 * Math.round(m.height), h) : e = Math.max(m.height, e);
       a += m.width;
       g = Math.max(g, a);
       this.set({contentWidth:g, contentHeight:e});
