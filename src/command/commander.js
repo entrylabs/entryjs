@@ -33,7 +33,7 @@ Entry.Commander = function(injectType) {
         if (Entry.stateManager) {
             Entry.stateManager.addCommand.apply(
                 Entry.stateManager,
-                [commandType, Entry.Command, commandFunc.undo]
+                [commandType, this, this.undo, commandType]
                     .concat(commandFunc.state.apply(null, argumentArray))
             );
         }
@@ -42,7 +42,9 @@ Entry.Commander = function(injectType) {
     };
 
     p.undo = function() {
-
+        var argumentArray = Array.prototype.slice.call(arguments);
+        var commandFunc = Entry.Command[argumentArray.shift()];
+        commandFunc.undo.apply(this, argumentArray);
     };
 
     p.redo = function() {

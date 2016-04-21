@@ -714,8 +714,8 @@ Blockly.Blocks.arduino_toggle_led = {init:function() {
   this.setNextStatement(!0);
 }};
 Entry.block.arduino_toggle_led = function(a, b) {
-  var c = b.getNumberValue("VALUE"), d = "on" == b.getField("OPERATOR") ? 255 : 0;
-  Entry.hw.setDigitalPortValue(c, d);
+  var c = b.getNumberValue("VALUE"), d = b.getField("OPERATOR");
+  Entry.hw.setDigitalPortValue(c, "on" == d ? 255 : 0);
   return b.callReturn();
 };
 Blockly.Blocks.arduino_toggle_pwm = {init:function() {
@@ -1693,10 +1693,10 @@ Entry.block.wait_second = function(a, b) {
   }
   b.isStart = !0;
   b.timeFlag = 1;
-  var c = b.getNumberValue("SECOND", b), c = 60 / (Entry.FPS || 60) * c * 1E3;
+  var c = b.getNumberValue("SECOND", b);
   setTimeout(function() {
     b.timeFlag = 0;
-  }, c);
+  }, 60 / (Entry.FPS || 60) * c * 1E3);
   return b;
 };
 Blockly.Blocks.repeat_basic = {init:function() {
@@ -4948,10 +4948,12 @@ Entry.Commander = function(a) {
     var a = Array.prototype.slice.call(arguments);
     a.shift();
     var d = Entry.Command[b];
-    Entry.stateManager && Entry.stateManager.addCommand.apply(Entry.stateManager, [b, Entry.Command, d.undo].concat(d.state.apply(null, a)));
+    Entry.stateManager && Entry.stateManager.addCommand.apply(Entry.stateManager, [b, this, this.undo, b].concat(d.state.apply(null, a)));
     return Entry.Command[b].do.apply(Entry.Command, a);
   };
   a.undo = function() {
+    var b = Array.prototype.slice.call(arguments);
+    Entry.Command[b.shift()].undo.apply(this, b);
   };
   a.redo = function() {
   };
@@ -15976,35 +15978,29 @@ Entry.Board = function(a) {
     this.workspace.setMode(Entry.Workspace.MODE_BOARD, "save");
   };
   a.generateCodeMagnetMap = function() {
-    var a = this.code;
-    if (a && this.dragBlock) {
-      a = this._getCodeBlocks(a, this.dragBlock._targetType);
-      a.sort(function(a, b) {
-        return a.point - b.point;
+    var b = this.code;
+    if (b && this.dragBlock) {
+      b = this._getCodeBlocks(b, this.dragBlock._targetType);
+      b.sort(function(b, a) {
+        return b.point - a.point;
       });
-      a.unshift({point:-Number.MAX_VALUE, blocks:[]});
-      for (var c = 1;c < a.length;c++) {
-        var d = a[c], e = d, f = d.startBlock;
+      b.unshift({point:-Number.MAX_VALUE, blocks:[]});
+      for (var a = 1;a < b.length;a++) {
+        var d = b[a], e = d, f = d.startBlock;
         if (f) {
-          for (var g = d.endPoint, h = c;g > e.point && (e.blocks.push(f), h++, e = a[h], e);) {
+          for (var g = d.endPoint, h = a;g > e.point && (e.blocks.push(f), h++, e = b[h], e);) {
           }
           delete d.startBlock;
         }
         d.endPoint = Number.MAX_VALUE;
-        a[c - 1].endPoint = d.point;
+        b[a - 1].endPoint = d.point;
       }
-      this._magnetMap = a;
+      this._magnetMap = b;
     }
   };
-<<<<<<< HEAD
   a._getCodeBlocks = function(b, a) {
     var d = b.getThreads(), e = [], f;
     switch(a) {
-=======
-  a._getCodeBlocks = function(a, c) {
-    var d = a.getThreads(), e = [], f = 0, g;
-    switch(c) {
->>>>>>> origin/refac/entry-block
       case "nextMagnet":
         f = this._getNextMagnets;
         break;
@@ -16020,13 +16016,8 @@ Entry.Board = function(a) {
       default:
         return [];
     }
-<<<<<<< HEAD
     for (var g = 0;g < d.length;g++) {
       var h = d[g], e = e.concat(f.call(this, h, h.view.zIndex, null, a))
-=======
-    for (var h = 0;h < d.length;h++) {
-      e = e.concat(g.call(this, d[h], f, null, c)), f++;
->>>>>>> origin/refac/entry-block
     }
     return e;
   };
@@ -16060,8 +16051,8 @@ Entry.Board = function(a) {
     }
     return g.concat(h);
   };
-  a._getFieldMagnets = function(b, a, d, e) {
-    var f = b.getBlocks(), g = [], h = [];
+  a._getFieldMagnets = function(a, c, d, e) {
+    var f = a.getBlocks(), g = [], h = [];
     d || (d = {x:0, y:0});
     var k = d.x;
     d = d.y;
@@ -16070,14 +16061,14 @@ Entry.Board = function(a) {
       if (l.dragInstance) {
         break;
       }
-      l.zIndex = a;
+      l.zIndex = c;
       d += l.y;
       k += l.x;
-      h = h.concat(this._getFieldBlockMetaData(l, k, d, a, e));
-      n.statements && (a += .01);
+      h = h.concat(this._getFieldBlockMetaData(l, k, d, c, e));
+      n.statements && (c += .01);
       for (var q = 0;q < n.statements.length;q++) {
-        b = n.statements[q];
-        var r = n.view._statements[q], g = g.concat(this._getFieldMagnets(b, a, {x:r.x + k, y:r.y + d}, e));
+        a = n.statements[q];
+        var r = n.view._statements[q], g = g.concat(this._getFieldMagnets(a, c, {x:r.x + k, y:r.y + d}, e));
       }
       l.magnet.next && (d += l.magnet.next.y, k += l.magnet.next.x);
     }
@@ -16783,7 +16774,7 @@ Entry.Block.MAGNET_OFFSET = .4;
       return null;
     }
     var a = Entry.skeleton[this._schema.skeleton].magnets(this.view);
-    return a.next || a.previous ? "basic" : a.boolean || a.string ? "field" : a.output ? "output" : null;
+    return a.next || a.previous ? "basic" : a.bool || a.string ? "field" : a.output ? "output" : null;
   };
   a.indexOfStatements = function(a) {
     return this.statements.indexOf(a);
