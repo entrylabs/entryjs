@@ -325,9 +325,8 @@ Entry.Board = function(option) {
     };
 
     p.clear = function() {
-        var node = this.svgBlockGroup;
-        while (node.firstChild)
-            node.removeChild(node.firstChild);
+        this.svgBlockGroup.remove();
+        this.svgThreadGroup.remove();
     };
 
     p.updateOffset = function () {

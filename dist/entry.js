@@ -15861,33 +15861,33 @@ Entry.Board = function(a) {
       a.mouseWheel.apply(a, arguments);
     });
   };
-  a.onMouseDown = function(b) {
-    function a(b) {
-      b.stopPropagation && b.stopPropagation();
-      b.preventDefault && b.preventDefault();
-      b = b.originalEvent && b.originalEvent.touches ? b.originalEvent.touches[0] : b;
-      var c = g.dragInstance;
-      g.scroller.scroll(b.pageX - c.offsetX, b.pageY - c.offsetY);
-      c.set({offsetX:b.pageX, offsetY:b.pageY});
+  a.onMouseDown = function(a) {
+    function c(a) {
+      a.stopPropagation && a.stopPropagation();
+      a.preventDefault && a.preventDefault();
+      a = a.originalEvent && a.originalEvent.touches ? a.originalEvent.touches[0] : a;
+      var b = g.dragInstance;
+      g.scroller.scroll(a.pageX - b.offsetX, a.pageY - b.offsetY);
+      b.set({offsetX:a.pageX, offsetY:a.pageY});
     }
-    function d(b) {
+    function d(a) {
       $(document).unbind(".entryBoard");
       delete g.dragInstance;
     }
     if (this.workspace.getMode() != Entry.Workspace.MODE_VIMBOARD) {
-      b.stopPropagation && b.stopPropagation();
-      b.preventDefault && b.preventDefault();
-      if (0 === b.button || b.originalEvent && b.originalEvent.touches) {
-        b = b.originalEvent && b.originalEvent.touches ? b.originalEvent.touches[0] : b;
-        Entry.documentMousedown && Entry.documentMousedown.notify(b);
+      a.stopPropagation && a.stopPropagation();
+      a.preventDefault && a.preventDefault();
+      if (0 === a.button || a.originalEvent && a.originalEvent.touches) {
+        a = a.originalEvent && a.originalEvent.touches ? a.originalEvent.touches[0] : a;
+        Entry.documentMousedown && Entry.documentMousedown.notify(a);
         var e = $(document);
-        e.bind("mousemove.entryBoard", a);
+        e.bind("mousemove.entryBoard", c);
         e.bind("mouseup.entryBoard", d);
-        e.bind("touchmove.entryBoard", a);
+        e.bind("touchmove.entryBoard", c);
         e.bind("touchend.entryBoard", d);
-        this.dragInstance = new Entry.DragInstance({startX:b.pageX, startY:b.pageY, offsetX:b.pageX, offsetY:b.pageY});
+        this.dragInstance = new Entry.DragInstance({startX:a.pageX, startY:a.pageY, offsetX:a.pageX, offsetY:a.pageY});
       } else {
-        if (Entry.Utils.isRightButton(b)) {
+        if (Entry.Utils.isRightButton(a)) {
           if (!this.visible) {
             return;
           }
@@ -15904,20 +15904,20 @@ Entry.Board = function(a) {
       var g = this;
     }
   };
-  a.mouseWheel = function(b) {
-    b = b.originalEvent;
-    b.preventDefault();
-    this.scroller.scroll(b.wheelDeltaX || -b.deltaX, b.wheelDeltaY || -b.deltaY);
+  a.mouseWheel = function(a) {
+    a = a.originalEvent;
+    a.preventDefault();
+    this.scroller.scroll(a.wheelDeltaX || -a.deltaX, a.wheelDeltaY || -a.deltaY);
   };
-  a.setSelectedBlock = function(b) {
-    var a = this.selectedBlockView;
-    a && a.removeSelected();
-    b instanceof Entry.BlockView ? b.addSelected() : b = null;
-    this.set({selectedBlockView:b});
+  a.setSelectedBlock = function(a) {
+    var c = this.selectedBlockView;
+    c && c.removeSelected();
+    a instanceof Entry.BlockView ? a.addSelected() : a = null;
+    this.set({selectedBlockView:a});
   };
-  a._keyboardControl = function(b) {
-    var a = this.selectedBlockView;
-    a && 46 == b.keyCode && a.block.doDestroy(!1) && this.set({selectedBlockView:null});
+  a._keyboardControl = function(a) {
+    var c = this.selectedBlockView;
+    c && 46 == a.keyCode && c.block.doDestroy(!1) && this.set({selectedBlockView:null});
   };
   a.hide = function() {
     this.wrapper.addClass("entryRemove");
@@ -15928,9 +15928,9 @@ Entry.Board = function(a) {
     this.visible = !0;
   };
   a.alignThreads = function() {
-    for (var b = this.svgDom.height(), a = this.code.getThreads(), d = 15, e = 0, b = b - 30, f = 50, g = 0;g < a.length;g++) {
-      var h = a[g].getFirstBlock().view, k = h.svgGroup.getBBox(), m = d + 15;
-      m > b && (f = f + e + 10, e = 0, d = 15);
+    for (var a = this.svgDom.height(), c = this.code.getThreads(), d = 15, e = 0, a = a - 30, f = 50, g = 0;g < c.length;g++) {
+      var h = c[g].getFirstBlock().view, k = h.svgGroup.getBBox(), m = d + 15;
+      m > a && (f = f + e + 10, e = 0, d = 15);
       e = Math.max(e, k.width);
       m = d + 15;
       h._moveTo(f, m, !1);
@@ -15939,35 +15939,34 @@ Entry.Board = function(a) {
     this.scroller.resizeScrollBar();
   };
   a.clear = function() {
-    for (var b = this.svgBlockGroup;b.firstChild;) {
-      b.removeChild(b.firstChild);
-    }
+    this.svgBlockGroup.remove();
+    this.svgThreadGroup.remove();
   };
   a.updateOffset = function() {
     this.offset = this.svg.getBoundingClientRect();
-    var b = $(window), a = b.scrollTop(), b = b.scrollLeft(), d = this.offset;
-    this.relativeOffset = {top:d.top - a, left:d.left - b};
+    var a = $(window), c = a.scrollTop(), a = a.scrollLeft(), d = this.offset;
+    this.relativeOffset = {top:d.top - c, left:d.left - a};
     this.btnWrapper && this.btnWrapper.attr({transform:"translate(" + (d.width / 2 - 65) + "," + (d.height - 200) + ")"});
   };
   a.generateButtons = function() {
-    var b = this, a = this.svgGroup.elem("g");
-    this.btnWrapper = a;
-    var d = a.elem("text", {x:27, y:33, class:"entryFunctionButtonText"});
+    var a = this, c = this.svgGroup.elem("g");
+    this.btnWrapper = c;
+    var d = c.elem("text", {x:27, y:33, class:"entryFunctionButtonText"});
     d.textContent = Lang.Buttons.save;
-    var e = a.elem("text", {x:102.5, y:33, class:"entryFunctionButtonText"});
+    var e = c.elem("text", {x:102.5, y:33, class:"entryFunctionButtonText"});
     e.textContent = Lang.Buttons.cancel;
-    var f = a.elem("circle", {cx:27.5, cy:27.5, r:27.5, class:"entryFunctionButton"}), a = a.elem("circle", {cx:102.5, cy:27.5, r:27.5, class:"entryFunctionButton"});
-    f.onclick = function(a) {
-      b.save();
+    var f = c.elem("circle", {cx:27.5, cy:27.5, r:27.5, class:"entryFunctionButton"}), c = c.elem("circle", {cx:102.5, cy:27.5, r:27.5, class:"entryFunctionButton"});
+    f.onclick = function(c) {
+      a.save();
     };
-    d.onclick = function(a) {
-      b.save();
+    d.onclick = function(c) {
+      a.save();
     };
-    a.onclick = function(a) {
-      b.cancelEdit();
+    c.onclick = function(c) {
+      a.cancelEdit();
     };
-    e.onclick = function(a) {
-      b.cancelEdit();
+    e.onclick = function(c) {
+      a.cancelEdit();
     };
   };
   a.cancelEdit = function() {
