@@ -36,7 +36,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
         TEXT_Y_PADDING = 4,
         CONTENT_HEIGHT = 16,
         RADIUS = 49,
-        FILL_PATH = 'M 0, 0 v -49 A 49,49 0 %LARGE 1 %X,%Y z';
+        FILL_PATH = 'M 0,0 v -49 A 49,49 0 %LARGE 1 %X,%Y z';
 
     p.renderStart = function() {
         if (this.svgGroup) $(this.svgGroup).remove();
@@ -70,7 +70,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
 
         this.svgGroup.appendChild(this.textElement);
 
-        this._bindRenderOptions ();
+        this._bindRenderOptions();
 
         this.box.set({
             x: 0,
@@ -132,32 +132,31 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
             class:'entry-field-angle-circle'
         });
 
-        this._dividerGroup = this.svgOptionGroup.group();
+        this._dividerGroup = this.svgOptionGroup.elem('g');
         for (var a = 0; a < 360; a += 15) {
-            this._dividerGroup.line(
-                RADIUS, 0,
-                RADIUS - (a % 45 === 0 ? 10 : 5), 0
-            ).attr({
+            this._dividerGroup.elem('line', {
+                x1:RADIUS, y1:0,
+                x2:RADIUS - (a % 45 === 0 ? 10 : 5), y2:0,
                 transform: 'rotate(' + a + ', ' +  (0) + ', ' + (0) + ')',
                 class: 'entry-angle-divider'
             });
         }
-        var pos = this.getRelativePos();
+        var pos = this.getAbsolutePosFromBoard();
         pos.x = pos.x + this.box.width/2;
         pos.y = pos.y + this.box.height/2 + RADIUS + 1;
 
         this.svgOptionGroup.attr({
             class: 'entry-field-angle',
-            transform: "t" + pos.x + " " + pos.y
+            transform: "translate(" + pos.x + "," + pos.y + ")"
         });
 
-        //TODO
-        var absolutePos = that.getAbsolutePos();
+        var absolutePos = that.getAbsolutePosFromDocument();
         var zeroPos = [
             absolutePos.x + that.box.width/2,
             absolutePos.y + that.box.height/2 + 1
         ];
-        this.svgOptionGroup.mousemove(function(e){
+
+        $(this.svgOptionGroup).mousemove(function(e) {
             var mousePos = [e.clientX, e.clientY];
 
             that.optionGroup.val(that.modValue(
@@ -185,20 +184,23 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
         var y = Math.cos(angleRadians) * -RADIUS;
         var largeFlag = (angleRadians > Math.PI) ? 1 : 0;
 
-        this._fillPath = this.svgOptionGroup.path(
-            FILL_PATH.
+
+        this._fillPath = this.svgOptionGroup.elem('path', {
+            d: FILL_PATH.
                 replace('%X', x).
                 replace('%Y', y).
-                replace('%LARGE', largeFlag)
-        );
-        this._fillPath.attr({class:'entry-angle-fill-area'});
+                replace('%LARGE', largeFlag),
+            class: 'entry-angle-fill-area'
+        });
 
-        this.svgOptionGroup.append(this._dividerGroup);
+        this.svgOptionGroup.appendChild(this._dividerGroup);
 
         if (this._indicator) this._indicator.remove();
 
         this._indicator =
-            this.svgOptionGroup.line(0,0, x,y);
+            this.svgOptionGroup.elem('line', {
+                x1: 0, y1: 0, x2: x, y2: y
+            });
 
         this._indicator.attr({class:'entry-angle-indicator'});
     };
@@ -209,7 +211,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
         value = this.modValue(value);
         this.setValue(value);
         this.updateGraph();
-        this.textElement.node.textContent = this.getValue();
+        this.textElement.textContent = this.getValue();
         if (this.optionGroup) this.optionGroup.val(value);
         this.resize();
     };

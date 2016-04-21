@@ -75,7 +75,7 @@ Entry.Utils.inherit(Entry.FieldDropdown, Entry.FieldDropdownDynamic);
 
         var CONTENT_HEIGHT = this._CONTENT_HEIGHT + 4;
 
-        for (var i=options.length-1; i>=0; i--) {
+        for (var i=0; i<options.length; i++) {
             var option = options[i];
             var text = option[0];
             var value = option[1];

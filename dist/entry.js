@@ -14620,16 +14620,16 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
     this.optionGroup.select();
     this.svgOptionGroup = this.appendSvgOptionGroup();
     this.svgOptionGroup.elem("circle", {x:0, y:0, r:49, class:"entry-field-angle-circle"});
-    this._dividerGroup = this.svgOptionGroup.group();
+    this._dividerGroup = this.svgOptionGroup.elem("g");
     for (a = 0;360 > a;a += 15) {
-      this._dividerGroup.line(49, 0, 49 - (0 === a % 45 ? 10 : 5), 0).attr({transform:"rotate(" + a + ", 0, 0)", class:"entry-angle-divider"});
+      this._dividerGroup.elem("line", {x1:49, y1:0, x2:49 - (0 === a % 45 ? 10 : 5), y2:0, transform:"rotate(" + a + ", 0, 0)", class:"entry-angle-divider"});
     }
-    a = this.getRelativePos();
+    a = this.getAbsolutePosFromBoard();
     a.x += this.box.width / 2;
     a.y = a.y + this.box.height / 2 + 49 + 1;
-    this.svgOptionGroup.attr({class:"entry-field-angle", transform:"t" + a.x + " " + a.y});
-    var a = b.getAbsolutePos(), d = [a.x + b.box.width / 2, a.y + b.box.height / 2 + 1];
-    this.svgOptionGroup.mousemove(function(a) {
+    this.svgOptionGroup.attr({class:"entry-field-angle", transform:"translate(" + a.x + "," + a.y + ")"});
+    var a = b.getAbsolutePosFromDocument(), d = [a.x + b.box.width / 2, a.y + b.box.height / 2 + 1];
+    $(this.svgOptionGroup).mousemove(function(a) {
       b.optionGroup.val(b.modValue(function(b, a) {
         var c = a[0] - b[0], d = a[1] - b[1] - 49 - 1, e = Math.atan(-d / c), e = Entry.toDegrees(e), e = 90 - e;
         0 > c ? e += 180 : 0 < d && (e += 360);
@@ -14642,16 +14642,15 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
   a.updateGraph = function() {
     this._fillPath && this._fillPath.remove();
     var b = Entry.toRadian(this.getValue()), a = 49 * Math.sin(b), d = -49 * Math.cos(b), b = b > Math.PI ? 1 : 0;
-    this._fillPath = this.svgOptionGroup.path("M 0, 0 v -49 A 49,49 0 %LARGE 1 %X,%Y z".replace("%X", a).replace("%Y", d).replace("%LARGE", b));
-    this._fillPath.attr({class:"entry-angle-fill-area"});
-    this.svgOptionGroup.append(this._dividerGroup);
+    this._fillPath = this.svgOptionGroup.elem("path", {d:"M 0,0 v -49 A 49,49 0 %LARGE 1 %X,%Y z".replace("%X", a).replace("%Y", d).replace("%LARGE", b), class:"entry-angle-fill-area"});
+    this.svgOptionGroup.appendChild(this._dividerGroup);
     this._indicator && this._indicator.remove();
-    this._indicator = this.svgOptionGroup.line(0, 0, a, d);
+    this._indicator = this.svgOptionGroup.elem("line", {x1:0, y1:0, x2:a, y2:d});
     this._indicator.attr({class:"entry-angle-indicator"});
   };
   a.applyValue = function() {
     var b = this.optionGroup.val();
-    isNaN(b) || (b = this.modValue(b), this.setValue(b), this.updateGraph(), this.textElement.node.textContent = this.getValue(), this.optionGroup && this.optionGroup.val(b), this.resize());
+    isNaN(b) || (b = this.modValue(b), this.setValue(b), this.updateGraph(), this.textElement.textContent = this.getValue(), this.optionGroup && this.optionGroup.val(b), this.resize());
   };
   a.resize = function() {
     var b = this.getTextWidth();
@@ -15019,7 +15018,7 @@ Entry.Utils.inherit(Entry.FieldDropdown, Entry.FieldDropdownDynamic);
     this.optionGroup = Entry.Dom("ul", {class:"entry-widget-dropdown", parent:$("body")});
     var a = Entry.container.getDropdownList(this._contents.menuName);
     this._contents.options = a;
-    for (var d = a.length - 1;0 <= d;d--) {
+    for (var d = 0;d < a.length;d++) {
       var e = a[d], f = e[0], e = e[1], g = Entry.Dom("li", {class:"rect", parent:this.optionGroup}), h = "";
       this.getValue() == e && (h += "\u2713  ");
       g.text(h += f);
