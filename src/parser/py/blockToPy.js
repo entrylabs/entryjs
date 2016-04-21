@@ -5,11 +5,8 @@
 
 goog.provide("Entry.BlockToPyParser");
 
-Entry.BlockToPyParser = function(syntax) {
-    this.syntax = syntax;
-
-    this._iterVariableCount = 0;
-    this._iterVariableChunk = ["i", "j", "k"];
+Entry.BlockToPyParser = function() {
+    //Construtor
 };
 
 (function(p){

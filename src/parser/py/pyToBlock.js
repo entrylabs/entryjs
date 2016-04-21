@@ -5,44 +5,53 @@
 
 goog.provide("Entry.PyToBlockParser");
 
-Entry.PyToBlockParser = function(syntax) {
-    this.syntax = syntax;
-
-    this.scopeChain = [];
-    this.scope = null;
+Entry.PyToBlockParser = function(blockSyntaxList) {
+    this.blockSyntaxList = blockSyntaxList;
 };
 
 (function(p){
-    p.Program = function(node) {
+
+    p.Start = function(ast) {
         var code = [];
+        
+        
+        if(ast.type != 'Program') 
+            return;
+        else
+            this.Program(ast);
+
+    };
+
+    p.Program = function(node) {
+
+        //var separatedBlocks = this.initScope(node);
+
+        //block = block.concat(this.BlockStatement(node));
+
+        //this.unloadScope();
+
+        //code.push(block);
+        //code = code.concat(separatedBlocks);
+
         var block = [];
-        var body = node.body;
 
-        //block statement
+        var nodeList = node.body;
 
-        block.push({
-            type: this.syntax.Program
-        });
+        for(var node in nodeList) {
+            var this[node.type](node));
+        }
 
-        var separatedBlocks = this.initScope(node);
-
-        block = block.concat(this.BlockStatement(node));
-
-        this.unloadScope();
-
-        code.push(block);
-        code = code.concat(separatedBlocks);
         return code;
     };
 
-    p.Identifier = function(node, scope) {
-        if (scope)
-            return scope[node.name];
-        else
-            return this.scope[node.name];
+    p.Identifier = function(node) {
+            return node.name;
     };
 
-    // Statement
+    p.Literal = function(node) {
+
+    };
+
     p.ExpressionStatement = function(node) {
         var expression = node.expression;
         return this[expression.type](expression);

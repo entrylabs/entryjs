@@ -33,6 +33,8 @@ Entry.Parser = function(mode, type, cm) {
     this.syntax.js = this.mappingSyntaxJs(mode);
     this.syntax.py = this.mappingSyntaxPy(mode);
 
+    console.log("py syntax", this.syntax.py);
+
     switch (this._lang) {
         case "js":
             this._parser = new Entry.JsToBlockParser(this.syntax);
@@ -114,12 +116,12 @@ Entry.Parser = function(mode, type, cm) {
 
         switch (type) {
             case Entry.Vim.PARSER_TYPE_JS_TO_BLOCK:
-                this._parser = new Entry.JsToBlockParser(this.syntax);
+                this._parser = new Entry.JsToBlockParser(this.syntax.js);
 
                 break;
 
             case Entry.Vim.PARSER_TYPE_PY_TO_BLOCK:
-                this._parser = new Entry.PyToBlockParser(this.syntax);
+                this._parser = new Entry.PyToBlockParser(this.syntax.py);
 
                 break;
 
@@ -152,7 +154,7 @@ Entry.Parser = function(mode, type, cm) {
                 break;
 
             case Entry.Vim.PARSER_TYPE_BLOCK_TO_PY:
-                this._parser = new Entry.BlockToPyParser(this.syntax);
+                this._parser = new Entry.BlockToPyParser();
 
                 var syntax = this.syntax;
                 var assistScope = {};
@@ -415,13 +417,14 @@ Entry.Parser = function(mode, type, cm) {
     p.mappingSyntaxPy = function(mode) {
         if(mode != Entry.Vim.WORKSPACE_MODE) return;
 
-        var pyBlockSyntax = {};
+        var syntaxList = [];
         var blockList = Entry.block;
 
         for (var key in blockList) {
+            var pyBlockSyntax = {};
             var block = blockList[key];
-            
             var syntax = null;
+
             if(block.syntax && block.syntax.py)
                 syntax = block.syntax.py;
 
@@ -437,9 +440,11 @@ Entry.Parser = function(mode, type, cm) {
             }
             pyBlockSyntax[0] = syntax;
             pyBlockSyntax[1] = block;
+
+            syntaxList.push(pyBlockSyntax);
         }
         
-        return pyBlockSyntax;
+        return syntaxList;
     };
 
 })(Entry.Parser.prototype);

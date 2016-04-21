@@ -9021,10 +9021,7 @@ Entry.PyBlockMapper = function() {
     return Block(b);
   };
 })(Entry.PyBlockMapper.prototype);
-Entry.BlockToPyParser = function(a) {
-  this.syntax = a;
-  this._iterVariableCount = 0;
-  this._iterVariableChunk = ["i", "j", "k"];
+Entry.BlockToPyParser = function() {
 };
 (function(a) {
   a.Code = function(b) {
@@ -9118,18 +9115,18 @@ Entry.BlockToPyParser = function(a) {
   };
 })(Entry.BlockToPyParser.prototype);
 Entry.PyToBlockParser = function(a) {
-  this.syntax = a;
-  this.scopeChain = [];
-  this.scope = null;
+  this.blockSyntaxList = a;
 };
 (function(a) {
   a.Program = function(b) {
     var a = [], d = [];
-    d.push({type:this.syntax.Program});
-    var e = this.initScope(b), d = d.concat(this.BlockStatement(b));
-    this.unloadScope();
-    a.push(d);
-    return a = a.concat(e);
+    if ("Program" == b.Type) {
+      d.push({type:this.syntax.Program});
+      var e = this.initScope(b), d = d.concat(this.BlockStatement(b));
+      this.unloadScope();
+      a.push(d);
+      return a = a.concat(e);
+    }
   };
   a.Identifier = function(b, a) {
     return a ? a[b.name] : this.scope[b.name];
@@ -9382,6 +9379,7 @@ Entry.Parser = function(a, b, c) {
   "maze" === a ? (this._stageId = Number(Ntry.configManager.getConfig("stageId")), this.setAvailableCode(NtryData.config[this._stageId].availableCode, NtryData.player[this._stageId].code)) : a === Entry.Vim.WORKSPACE_MODE && this.mappingSyntax(Entry.Vim.WORKSPACE_MODE);
   this.syntax.js = this.mappingSyntaxJs(a);
   this.syntax.py = this.mappingSyntaxPy(a);
+  console.log("py syntax", this.syntax.py);
   switch(this._lang) {
     case "js":
       this._parser = new Entry.JsToBlockParser(this.syntax);
@@ -9427,10 +9425,10 @@ Entry.Parser = function(a, b, c) {
     this._type = a;
     switch(a) {
       case Entry.Vim.PARSER_TYPE_JS_TO_BLOCK:
-        this._parser = new Entry.JsToBlockParser(this.syntax);
+        this._parser = new Entry.JsToBlockParser(this.syntax.js);
         break;
       case Entry.Vim.PARSER_TYPE_PY_TO_BLOCK:
-        this._parser = new Entry.PyToBlockParser(this.syntax);
+        this._parser = new Entry.PyToBlockParser(this.syntax.py);
         break;
       case Entry.Vim.PARSER_TYPE_BLOCK_TO_JS:
         this._parser = new Entry.BlockToJsParser(this.syntax);
@@ -9449,7 +9447,7 @@ Entry.Parser = function(a, b, c) {
         });
         break;
       case Entry.Vim.PARSER_TYPE_BLOCK_TO_PY:
-        this._parser = new Entry.BlockToPyParser(this.syntax);
+        this._parser = new Entry.BlockToPyParser;
         b = this.syntax;
         e = {};
         for (f in b.Scope) {
@@ -9561,18 +9559,19 @@ Entry.Parser = function(a, b, c) {
   };
   a.mappingSyntaxPy = function(b) {
     if (b == Entry.Vim.WORKSPACE_MODE) {
-      b = {};
+      b = [];
       var a = Entry.block, d;
       for (d in a) {
-        var e = a[d], f = null;
-        e.syntax && e.syntax.py && (f = e.syntax.py);
-        if (f) {
-          f = String(f);
-          if (f.match(/\(.*\)/)) {
-            var g = f.indexOf("("), f = f.substring(0, g)
+        var e = {}, f = a[d], g = null;
+        f.syntax && f.syntax.py && (g = f.syntax.py);
+        if (g) {
+          g = String(g);
+          if (g.match(/\(.*\)/)) {
+            var h = g.indexOf("("), g = g.substring(0, h)
           }
-          b[0] = f;
-          b[1] = e;
+          e[0] = g;
+          e[1] = f;
+          b.push(e);
         }
       }
       return b;
