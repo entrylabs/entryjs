@@ -39,6 +39,11 @@ Entry.BlockDriver = function() {
         blockObject.class = className;
         blockObject.isNotFor = isNotFor;
 
+        if (_.isEmpty(blockObject.paramsKeyMap))
+            delete blockObject.paramsKeyMap
+        if (_.isEmpty(blockObject.statementsKeyMap))
+            delete blockObject.statementsKeyMap
+
         blockObject.func = Entry.block[blockType];
 
         var PRIMITIVES = ['NUMBER', 'TRUE', 'FALSE',
@@ -92,6 +97,8 @@ Entry.BlockMockup = function(blocklyInfo, def, blockType) {
     this.fieldCount = 0;
     this.events = {};
     this.def = def || {};
+    this.paramsKeyMap = {};
+    this.statementsKeyMap = {};
     this.definition = {
         params: [],
         type: this.def.type
@@ -151,6 +158,13 @@ Entry.BlockMockup = function(blocklyInfo, def, blockType) {
             }
         }
 
+        var reg = /dummy_/mi;
+        for (var key in this.paramsKeyMap)
+            if (reg.test(key)) delete this.paramsKeyMap[key]
+
+        for (key in this.statementsKeyMap)
+            if (reg.test(key)) delete this.statementsKeyMap[key]
+
         return {
             color: this.color,
             skeleton: skeleton,
@@ -158,7 +172,9 @@ Entry.BlockMockup = function(blocklyInfo, def, blockType) {
             template: this.templates.filter(function(p) {return typeof p === "string";}).join(" "),
             params: this.params,
             events: this.events,
-            def: this.def
+            def: this.def,
+            paramsKeyMap: this.paramsKeyMap,
+            statementsKeyMap: this.statementsKeyMap
         };
     };
 
@@ -178,6 +194,8 @@ Entry.BlockMockup = function(blocklyInfo, def, blockType) {
             type: "Block",
             accept: "stringMagnet"
         });
+
+        this._addToParamsKeyMap(key);
         this.templates.push(this.getFieldCount());
         return this;
     };
@@ -186,6 +204,7 @@ Entry.BlockMockup = function(blocklyInfo, def, blockType) {
         var statement = {
             accept: "basic"
         };
+        this._addToStatementsKeyMap(key);
         this.statements.push(statement);
     };
 
@@ -207,6 +226,7 @@ Entry.BlockMockup = function(blocklyInfo, def, blockType) {
                     color: opt
                 };
                 this.params.push(field);
+                this._addToParamsKeyMap();
                 this.templates.push(this.getFieldCount());
                 if (this.def && this.def.index && this.def.index[opt] !== undefined) {
                     this.definition.params.push(this.def.params[this.def.index[opt]])
@@ -230,6 +250,7 @@ Entry.BlockMockup = function(blocklyInfo, def, blockType) {
                         img: field.src_,
                         size: 12,
                     });
+                this._addToParamsKeyMap();
                 this.templates.push(this.getFieldCount());
                 if (this.definition)
                     this.definition.params.push(null);
@@ -240,6 +261,8 @@ Entry.BlockMockup = function(blocklyInfo, def, blockType) {
                     value: field.menuGenerator_[0][1],
                     fontSize: 11
                 });
+                this._addToParamsKeyMap(opt);
+
                 this.templates.push(this.getFieldCount());
                 if (this.def && this.def.index && this.def.index[opt] !== undefined) {
                     this.definition.params.push(this.def.params[this.def.index[opt]])
@@ -257,12 +280,14 @@ Entry.BlockMockup = function(blocklyInfo, def, blockType) {
                     this.definition.params.push(this.def.params[this.def.index[opt]])
                 } else
                     this.definition.params.push(undefined);
+                this._addToParamsKeyMap(opt);
             } else if (field.constructor == Blockly.FieldTextInput) {
                 this.params.push({
                     type: "TextInput",
                     value: 10
                 });
                 this.templates.push(this.getFieldCount());
+                this._addToParamsKeyMap(opt);
             } else if (field.constructor == Blockly.FieldAngle) {
                 this.params.push({
                     type: "Angle"
@@ -272,6 +297,7 @@ Entry.BlockMockup = function(blocklyInfo, def, blockType) {
                     this.definition.params.push(this.def.params[this.def.index[opt]])
                 } else
                     this.definition.params.push(null);
+                this._addToParamsKeyMap(opt);
             } else if (field.constructor == Blockly.FieldKeydownInput) {
                 this.params.push({
                     type: "Keyboard",
@@ -282,11 +308,13 @@ Entry.BlockMockup = function(blocklyInfo, def, blockType) {
                     this.definition.params.push(this.def.params[this.def.index[opt]])
                 } else
                     this.definition.params.push(undefined);
+                this._addToParamsKeyMap(opt);
             } else if (field.constructor == Blockly.FieldColour) {
                 this.params.push({
                     type: "Color"
                 });
                 this.templates.push(this.getFieldCount());
+                this._addToParamsKeyMap(opt);
             } else {
                 console.log('else', field);
                 //console.log('else', field);
@@ -323,6 +351,18 @@ Entry.BlockMockup = function(blocklyInfo, def, blockType) {
     p.getFieldCount = function() {
         this.fieldCount++;
         return "%" + this.fieldCount;
+    };
+
+    p._addToParamsKeyMap = function(key) {
+        key = key ? key : 'dummy_'+ Entry.Utils.generateId();
+        var map = this.paramsKeyMap;
+        map[key] = Object.keys(map).length;
+    };
+
+    p._addToStatementsKeyMap = function(key) {
+        key = key ? key : 'dummy_'+ Entry.Utils.generateId();
+        var map = this.statementsKeyMap;
+        map[key] = Object.keys(map).length;
     };
 
 })(Entry.BlockMockup.prototype);

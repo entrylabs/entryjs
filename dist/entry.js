@@ -714,8 +714,8 @@ Blockly.Blocks.arduino_toggle_led = {init:function() {
   this.setNextStatement(!0);
 }};
 Entry.block.arduino_toggle_led = function(a, b) {
-  var c = b.getNumberValue("VALUE"), d = b.getField("OPERATOR");
-  Entry.hw.setDigitalPortValue(c, "on" == d ? 255 : 0);
+  var c = b.getNumberValue("VALUE"), d = "on" == b.getField("OPERATOR") ? 255 : 0;
+  Entry.hw.setDigitalPortValue(c, d);
   return b.callReturn();
 };
 Blockly.Blocks.arduino_toggle_pwm = {init:function() {
@@ -1693,10 +1693,10 @@ Entry.block.wait_second = function(a, b) {
   }
   b.isStart = !0;
   b.timeFlag = 1;
-  var c = b.getNumberValue("SECOND", b);
+  var c = b.getNumberValue("SECOND", b), c = 60 / (Entry.FPS || 60) * c * 1E3;
   setTimeout(function() {
     b.timeFlag = 0;
-  }, 60 / (Entry.FPS || 60) * c * 1E3);
+  }, c);
   return b;
 };
 Blockly.Blocks.repeat_basic = {init:function() {
@@ -10230,6 +10230,8 @@ Entry.BlockDriver = function() {
     d = (new Entry.BlockMockup(d, h, b)).toJSON();
     d.class = f;
     d.isNotFor = g;
+    _.isEmpty(d.paramsKeyMap) && delete d.paramsKeyMap;
+    _.isEmpty(d.statementsKeyMap) && delete d.statementsKeyMap;
     d.func = Entry.block[b];
     -1 < "NUMBER TRUE FALSE TEXT FUNCTION_PARAM_BOOLEAN FUNCTION_PARAM_STRING TRUE_UN".split(" ").indexOf(b.toUpperCase()) && (d.isPrimitive = !0);
     Entry.block[b] = d;
@@ -10244,6 +10246,8 @@ Entry.BlockMockup = function(a, b, c) {
   this.fieldCount = 0;
   this.events = {};
   this.def = b || {};
+  this.paramsKeyMap = {};
+  this.statementsKeyMap = {};
   this.definition = {params:[], type:this.def.type};
   this.simulate(a);
   this.def = this.definition;
@@ -10258,17 +10262,24 @@ Entry.BlockMockup = function(a, b, c) {
     function b(a) {
       if (a && (a = a.params)) {
         for (var c = 0;c < a.length;c++) {
-          var f = a[c];
-          f && (delete f.index, b(f));
+          var d = a[c];
+          d && (delete d.index, b(d));
         }
       }
     }
     var a = "";
     this.output ? a = "Boolean" === this.output ? "basic_boolean_field" : "basic_string_field" : !this.isPrev && this.isNext ? a = "basic_event" : 1 == this.statements.length ? a = "basic_loop" : 2 == this.statements.length ? a = "basic_double_loop" : this.isPrev && this.isNext ? a = "basic" : this.isPrev && !this.isNext && (a = "basic_without_next");
     b(this.def);
+    var d = /dummy_/mi, e;
+    for (e in this.paramsKeyMap) {
+      d.test(e) && delete this.paramsKeyMap[e];
+    }
+    for (e in this.statementsKeyMap) {
+      d.test(e) && delete this.statementsKeyMap[e];
+    }
     return {color:this.color, skeleton:a, statements:this.statements, template:this.templates.filter(function(b) {
       return "string" === typeof b;
-    }).join(" "), params:this.params, events:this.events, def:this.def};
+    }).join(" "), params:this.params, events:this.events, def:this.def, paramsKeyMap:this.paramsKeyMap, statementsKeyMap:this.statementsKeyMap};
   };
   a.appendDummyInput = function() {
     return this;
@@ -10276,10 +10287,12 @@ Entry.BlockMockup = function(a, b, c) {
   a.appendValueInput = function(b) {
     this.def && this.def.index && (void 0 !== this.def.index[b] ? this.definition.params.push(this.def.params[this.def.index[b]]) : this.definition.params.push(null));
     this.params.push({type:"Block", accept:"stringMagnet"});
+    this._addToParamsKeyMap(b);
     this.templates.push(this.getFieldCount());
     return this;
   };
   a.appendStatementInput = function(b) {
+    this._addToStatementsKeyMap(b);
     this.statements.push({accept:"basic"});
   };
   a.setCheck = function(b) {
@@ -10290,11 +10303,11 @@ Entry.BlockMockup = function(a, b, c) {
     if (!b) {
       return this;
     }
-    "string" === typeof b && 0 < b.length ? a ? (b = {type:"Text", text:b, color:a}, this.params.push(b), this.templates.push(this.getFieldCount()), this.def && this.def.index && void 0 !== this.def.index[a] ? this.definition.params.push(this.def.params[this.def.index[a]]) : this.definition.params.push(void 0)) : this.templates.push(b) : b.constructor == Blockly.FieldIcon ? ("start" === b.type ? this.params.push({type:"Indicator", img:b.src_, size:17, position:{x:0, y:-2}}) : this.params.push({type:"Indicator", 
-    img:b.src_, size:12}), this.templates.push(this.getFieldCount()), this.definition && this.definition.params.push(null)) : b.constructor == Blockly.FieldDropdown ? (this.params.push({type:"Dropdown", options:b.menuGenerator_, value:b.menuGenerator_[0][1], fontSize:11}), this.templates.push(this.getFieldCount()), this.def && this.def.index && void 0 !== this.def.index[a] ? this.definition.params.push(this.def.params[this.def.index[a]]) : this.definition.params.push(void 0)) : b.constructor == Blockly.FieldDropdownDynamic ? 
-    (this.params.push({type:"DropdownDynamic", value:null, menuName:b.menuName_, fontSize:11}), this.templates.push(this.getFieldCount()), this.def && this.def.index && void 0 !== this.def.index[a] ? this.definition.params.push(this.def.params[this.def.index[a]]) : this.definition.params.push(void 0)) : b.constructor == Blockly.FieldTextInput ? (this.params.push({type:"TextInput", value:10}), this.templates.push(this.getFieldCount())) : b.constructor == Blockly.FieldAngle ? (this.params.push({type:"Angle"}), 
-    this.templates.push(this.getFieldCount()), this.def && this.def.index && void 0 !== this.def.index[a] ? this.definition.params.push(this.def.params[this.def.index[a]]) : this.definition.params.push(null)) : b.constructor == Blockly.FieldKeydownInput ? (this.params.push({type:"Keyboard", value:81}), this.templates.push(this.getFieldCount()), void 0 !== this.def.index[a] ? this.definition.params.push(this.def.params[this.def.index[a]]) : this.definition.params.push(void 0)) : b.constructor == Blockly.FieldColour ? 
-    (this.params.push({type:"Color"}), this.templates.push(this.getFieldCount())) : console.log("else", b);
+    "string" === typeof b && 0 < b.length ? a ? (b = {type:"Text", text:b, color:a}, this.params.push(b), this._addToParamsKeyMap(), this.templates.push(this.getFieldCount()), this.def && this.def.index && void 0 !== this.def.index[a] ? this.definition.params.push(this.def.params[this.def.index[a]]) : this.definition.params.push(void 0)) : this.templates.push(b) : b.constructor == Blockly.FieldIcon ? ("start" === b.type ? this.params.push({type:"Indicator", img:b.src_, size:17, position:{x:0, y:-2}}) : 
+    this.params.push({type:"Indicator", img:b.src_, size:12}), this._addToParamsKeyMap(), this.templates.push(this.getFieldCount()), this.definition && this.definition.params.push(null)) : b.constructor == Blockly.FieldDropdown ? (this.params.push({type:"Dropdown", options:b.menuGenerator_, value:b.menuGenerator_[0][1], fontSize:11}), this._addToParamsKeyMap(a), this.templates.push(this.getFieldCount()), this.def && this.def.index && void 0 !== this.def.index[a] ? this.definition.params.push(this.def.params[this.def.index[a]]) : 
+    this.definition.params.push(void 0)) : b.constructor == Blockly.FieldDropdownDynamic ? (this.params.push({type:"DropdownDynamic", value:null, menuName:b.menuName_, fontSize:11}), this.templates.push(this.getFieldCount()), this.def && this.def.index && void 0 !== this.def.index[a] ? this.definition.params.push(this.def.params[this.def.index[a]]) : this.definition.params.push(void 0), this._addToParamsKeyMap(a)) : b.constructor == Blockly.FieldTextInput ? (this.params.push({type:"TextInput", value:10}), 
+    this.templates.push(this.getFieldCount()), this._addToParamsKeyMap(a)) : b.constructor == Blockly.FieldAngle ? (this.params.push({type:"Angle"}), this.templates.push(this.getFieldCount()), this.def && this.def.index && void 0 !== this.def.index[a] ? this.definition.params.push(this.def.params[this.def.index[a]]) : this.definition.params.push(null), this._addToParamsKeyMap(a)) : b.constructor == Blockly.FieldKeydownInput ? (this.params.push({type:"Keyboard", value:81}), this.templates.push(this.getFieldCount()), 
+    void 0 !== this.def.index[a] ? this.definition.params.push(this.def.params[this.def.index[a]]) : this.definition.params.push(void 0), this._addToParamsKeyMap(a)) : b.constructor == Blockly.FieldColour ? (this.params.push({type:"Color"}), this.templates.push(this.getFieldCount()), this._addToParamsKeyMap(a)) : console.log("else", b);
     return this;
   };
   a.setColour = function(b) {
@@ -10316,6 +10329,16 @@ Entry.BlockMockup = function(a, b, c) {
   a.getFieldCount = function() {
     this.fieldCount++;
     return "%" + this.fieldCount;
+  };
+  a._addToParamsKeyMap = function(b) {
+    b = b ? b : "dummy_" + Entry.Utils.generateId();
+    var a = this.paramsKeyMap;
+    a[b] = Object.keys(a).length;
+  };
+  a._addToStatementsKeyMap = function(b) {
+    b = b ? b : "dummy_" + Entry.Utils.generateId();
+    var a = this.statementsKeyMap;
+    a[b] = Object.keys(a).length;
   };
 })(Entry.BlockMockup.prototype);
 Entry.ContextMenu = {};
