@@ -5611,9 +5611,9 @@ Blockly.Blocks.xbot_rgb_picker = {init:function() {
 }};
 Entry.block.xbot_rgb_picker = function(b, a) {
   var c = a.getStringField("VALUE"), d = Entry.hw.sendQueue;
-  d.ledR = parseInt(c.substr(1, 2), 16);
-  d.ledG = parseInt(c.substr(3, 2), 16);
-  d.ledB = parseInt(c.substr(5, 2), 16);
+  d.ledR = parseInt(.3 * parseInt(c.substr(1, 2), 16));
+  d.ledG = parseInt(.3 * parseInt(c.substr(3, 2), 16));
+  d.ledB = parseInt(.3 * parseInt(c.substr(5, 2), 16));
   return a.callReturn();
 };
 Blockly.Blocks.xbot_buzzer = {init:function() {
@@ -12884,7 +12884,7 @@ Entry.HW = function() {
   this.settingQueue = {};
   this.socketType = this.hwModule = this.selectedDevice = null;
   Entry.addEventListener("stop", this.setZero);
-  this.hwInfo = {11:Entry.Arduino, 12:Entry.SensorBoard, 13:Entry.CODEino, 15:Entry.dplay, 24:Entry.Hamster, 25:Entry.Albert, 31:Entry.Bitbrick, 42:Entry.Arduino, 51:Entry.Neobot, 71:Entry.Robotis_carCont, 72:Entry.Robotis_openCM70, 81:Entry.Xbot};
+  this.hwInfo = {11:Entry.Arduino, 12:Entry.SensorBoard, 13:Entry.CODEino, 15:Entry.dplay, 17:Entry.Xbot, 24:Entry.Hamster, 25:Entry.Albert, 31:Entry.Bitbrick, 42:Entry.Arduino, 51:Entry.Neobot, 71:Entry.Robotis_carCont, 72:Entry.Robotis_openCM70};
 };
 Entry.HW.TRIAL_LIMIT = 1;
 p = Entry.HW.prototype;
@@ -12998,7 +12998,7 @@ p.closeConnection = function() {
   this.socket && this.socket.close();
 };
 p.downloadConnector = function() {
-  window.open("http://github.com/entrylabs/entry-hw/releases/download/1.1.4/Entry_HW_v1.1.4.exe", "_blank").focus();
+  window.open("http://github.com/entrylabs/entry-hw/releases/download/1.5.0/Entry_HW_1.5.0_Setup.exe", "_blank").focus();
 };
 p.downloadSource = function() {
   window.open("http://play-entry.com/down/board.ino", "_blank").focus();
