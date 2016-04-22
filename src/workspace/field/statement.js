@@ -61,7 +61,6 @@ Entry.FieldStatement = function(content, blockView, index) {
         thread.view.setParent(this);
         var firstBlock = thread.getFirstBlock();
         if (firstBlock) {
-            this._posObserver = firstBlock.view.observe(this, "removeFirstBlock", ["x", "y"]);
             firstBlock.view._toLocalCoordinate(this.statementSvgGroup);
             this.firstBlock = firstBlock;
         }
@@ -180,14 +179,8 @@ Entry.FieldStatement = function(content, blockView, index) {
         if (newBlock) {
             newBlock.doInsert(this._thread);
 
-            this._posObserver = newBlock.view.observe(this, "removeFirstBlock", ["x", "y"], false);
         }
         return block;
-    };
-
-    p.removeFirstBlock = function() {
-        if (this._posObserver) this._posObserver.destroy();
-        this.firstBlock = null;
     };
 
     p.getNextBlock = function () {
@@ -199,6 +192,9 @@ Entry.FieldStatement = function(content, blockView, index) {
         if (firstBlock && this.firstBlock !== firstBlock) {
             this.firstBlock = firstBlock;
             firstBlock.view.bindPrev(this);
+            firstBlock._updatePos();
+        } else if (!firstBlock){
+            this.firstBlock = null;
         }
     };
 

@@ -15364,7 +15364,7 @@ Entry.FieldStatement = function(a, b, c) {
     a.createView(b);
     a.view.setParent(this);
     if (b = a.getFirstBlock()) {
-      this._posObserver = b.view.observe(this, "removeFirstBlock", ["x", "y"]), b.view._toLocalCoordinate(this.statementSvgGroup), this.firstBlock = b;
+      b.view._toLocalCoordinate(this.statementSvgGroup), this.firstBlock = b;
     }
     a.changeEvent.attach(this, this.calcHeight);
     a.changeEvent.attach(this, this.checkTopBlock);
@@ -15415,21 +15415,15 @@ Entry.FieldStatement = function(a, b, c) {
   a.insertTopBlock = function(b) {
     this._posObserver && this._posObserver.destroy();
     var a = this.firstBlock;
-    if (this.firstBlock = b) {
-      b.doInsert(this._thread), this._posObserver = b.view.observe(this, "removeFirstBlock", ["x", "y"], !1);
-    }
+    (this.firstBlock = b) && b.doInsert(this._thread);
     return a;
-  };
-  a.removeFirstBlock = function() {
-    this._posObserver && this._posObserver.destroy();
-    this.firstBlock = null;
   };
   a.getNextBlock = function() {
     return this.firstBlock;
   };
   a.checkTopBlock = function() {
     var b = this._thread.getFirstBlock();
-    b && this.firstBlock !== b && (this.firstBlock = b, b.view.bindPrev(this));
+    b && this.firstBlock !== b ? (this.firstBlock = b, b.view.bindPrev(this), b._updatePos()) : b || (this.firstBlock = null);
   };
 })(Entry.FieldStatement.prototype);
 Entry.FieldText = function(a, b, c) {
