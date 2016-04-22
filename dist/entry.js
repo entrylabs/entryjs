@@ -12757,7 +12757,7 @@ p.closeConnection = function() {
   this.socket && this.socket.close();
 };
 p.downloadConnector = function() {
-  window.open("http://github.com/entrylabs/entry-hw/releases/download/1.1.4/Entry_HW_v1.1.4.exe", "_blank").focus();
+  window.open("http://github.com/entrylabs/entry-hw/releases/download/1.5.0/Entry_HW_1.5.0_Setup.exe", "_blank").focus();
 };
 p.downloadSource = function() {
   window.open("http://play-entry.com/down/board.ino", "_blank").focus();
