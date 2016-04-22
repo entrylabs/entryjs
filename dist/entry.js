@@ -4331,7 +4331,7 @@ Blockly.Blocks.text = {init:function() {
   this.setInputsInline(!0);
 }};
 Entry.block.text = function(a, b) {
-  return b.getField("NAME");
+  return b.getField("NAME", b);
 };
 Blockly.Blocks.text_write = {init:function() {
   this.setColour(colour);
@@ -14523,7 +14523,7 @@ Entry.Scope = function(a, b) {
   a.callReturn = function() {
   };
   a.getValue = function(b, a) {
-    var d = this.block.params[0], e = new Entry.Scope(d, this.executor);
+    var d = this.block.params[this._getParamIndex(b, a)], e = new Entry.Scope(d, this.executor);
     return Entry.block[d.type].func.call(e, this.entity, e);
   };
   a.getStringValue = function(b, a) {
@@ -14535,8 +14535,8 @@ Entry.Scope = function(a, b) {
   a.getBooleanValue = function(b, a) {
     return Number(this.getValue(b, a)) ? !0 : !1;
   };
-  a.getField = function() {
-    return this.block.params[0];
+  a.getField = function(b, a) {
+    return this.block.params[this._getParamIndex(b, a)];
   };
   a.getStringField = function() {
     return String(this.getField());
@@ -14547,6 +14547,9 @@ Entry.Scope = function(a, b) {
   a.getStatement = function(b) {
     this.executor.stepInto(this.block.statements[0]);
     return Entry.STATIC.CONTINUE;
+  };
+  a._getParamIndex = function(b, a) {
+    return Entry.block[a.type].paramsKeyMap[b];
   };
 })(Entry.Scope.prototype);
 Entry.Field = function() {

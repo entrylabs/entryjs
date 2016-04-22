@@ -65,7 +65,7 @@ Entry.Scope = function(block, executor) {
     };
 
     p.getValue = function(key, block) {
-        var fieldBlock = this.block.params[0];
+        var fieldBlock = this.block.params[this._getParamIndex(key, block)];
         var newScope = new Entry.Scope(fieldBlock, this.executor);
         var result = Entry.block[fieldBlock.type].func.call(newScope, this.entity, newScope);
         return result;
@@ -83,8 +83,8 @@ Entry.Scope = function(block, executor) {
         return Number(this.getValue(key, block)) ? true : false;
     };
 
-    p.getField = function() {
-        return this.block.params[0];
+    p.getField = function(key, block) {
+        return this.block.params[this._getParamIndex(key, block)];
     };
 
     p.getStringField = function() {
@@ -98,5 +98,9 @@ Entry.Scope = function(block, executor) {
     p.getStatement = function(key) {
         this.executor.stepInto(this.block.statements[0]);
         return Entry.STATIC.CONTINUE;
+    };
+
+    p._getParamIndex = function(key, block) {
+        return Entry.block[block.type].paramsKeyMap[key];
     };
 })(Entry.Scope.prototype);
