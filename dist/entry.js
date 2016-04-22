@@ -4949,7 +4949,7 @@ Entry.Commander = function(a) {
     a.shift();
     var d = Entry.Command[b];
     Entry.stateManager && Entry.stateManager.addCommand.apply(Entry.stateManager, [b, this, this.undo, b].concat(d.state.apply(null, a)));
-    return Entry.Command[b].do.apply(Entry.Command, a);
+    return {value:Entry.Command[b].do.apply(Entry.Command, a), isPass:this.isPass.bind(this)};
   };
   a.undo = function() {
     var b = Array.prototype.slice.call(arguments), a = b.shift(), d = Entry.Command[a];
@@ -4960,10 +4960,12 @@ Entry.Commander = function(a) {
     var b = Array.prototype.slice.call(arguments), a = b.shift(), d = Entry.Command[a];
     Entry.stateManager && Entry.stateManager.addCommand.apply(Entry.stateManager, [a, this, this.undo, a].concat(d.state.apply(null, b)));
     d.undo.apply(this, b);
-    console.log("redo");
   };
   a.setCurrentEditor = function(b, a) {
     this.editor[b] = a;
+  };
+  a.isPass = function() {
+    Entry.stateManager.getLastCommand().isPass = !0;
   };
 })(Entry.Commander.prototype);
 (function(a) {
@@ -6656,6 +6658,7 @@ Entry.State = function(a, b, c, d) {
   3 < arguments.length && (this.params = Array.prototype.slice.call(arguments).slice(3));
   this.message = a;
   this.time = Entry.getUpTime();
+  this.isPass = Entry.Command[a] ? Entry.Command[a].isPass : !1;
 };
 Entry.State.prototype.generateMessage = function() {
 };
@@ -6700,12 +6703,19 @@ Entry.StateManager.prototype.addCommand = function(a, b, c, d) {
 Entry.StateManager.prototype.cancelLastCommand = function() {
   this.canUndo() && (this.undoStack_.pop(), this.updateView(), Entry.creationChangedEvent && Entry.creationChangedEvent.notify());
 };
+Entry.StateManager.prototype.getLastCommand = function() {
+  return this.undoStack_[this.undoStack_.length - 1];
+};
 Entry.StateManager.prototype.undo = function() {
   if (this.canUndo() && !this.isRestoring()) {
     this.addActivity("undo");
-    this.startRestore();
-    var a = this.undoStack_.pop();
-    a.func.apply(a.caller, a.params);
+    for (this.startRestore();;) {
+      var a = this.undoStack_.pop();
+      a.func.apply(a.caller, a.params);
+      if (!0 !== a.isPass) {
+        break;
+      }
+    }
     this.updateView();
     this.endRestore();
     Entry.creationChangedEvent && Entry.creationChangedEvent.notify();
@@ -14003,7 +14013,7 @@ Entry.BlockView.DRAG_RADIUS = 5;
         switch(Entry.GlobalSvg.terminateDrag(this)) {
           case g.DONE:
             g = this._getCloseBlock();
-            d && !g ? Entry.do("separateBlock", e) : d || g || f ? g ? (Entry.do("insertBlock", e, g), createjs.Sound.play("entryMagneting"), b = !0) : Entry.do("separateBlock", e) : e.getThread().view.isGlobal() ? Entry.do("moveBlock", e) : Entry.do("separateBlock", e);
+            d && !g ? Entry.do("separateBlock", e) : d || g || f ? g ? (Entry.do("insertBlock", e, g).isPass(), createjs.Sound.play("entryMagneting"), b = !0) : Entry.do("moveBlock", e).isPass() : e.getThread().view.isGlobal() ? Entry.do("moveBlock", e) : Entry.do("separateBlock", e);
             break;
           case g.RETURN:
             e = this.block;
@@ -15901,7 +15911,7 @@ Entry.Board = function(a) {
           }
           var f = this;
           Entry.ContextMenu.show([{text:"\ubd99\uc5ec\ub123\uae30", enable:!!Entry.clipboard, callback:function() {
-            Entry.do("cloneBlock", f.code).getFirstBlock().copyToClipboard();
+            Entry.do("cloneBlock", f.code).value.getFirstBlock().copyToClipboard();
           }}, {text:"\ube14\ub85d \uc815\ub9ac\ud558\uae30", callback:function() {
             f.alignThreads();
           }}, {text:"\ubaa8\ub4e0 \ucf54\ub4dc \uc0ad\uc81c\ud558\uae30", callback:function() {
@@ -15987,8 +15997,8 @@ Entry.Board = function(a) {
     var b = this.code;
     if (b && this.dragBlock) {
       b = this._getCodeBlocks(b, this.dragBlock._targetType);
-      b.sort(function(b, a) {
-        return b.point - a.point;
+      b.sort(function(a, b) {
+        return a.point - b.point;
       });
       b.unshift({point:-Number.MAX_VALUE, blocks:[]});
       for (var a = 1;a < b.length;a++) {
@@ -16004,9 +16014,9 @@ Entry.Board = function(a) {
       this._magnetMap = b;
     }
   };
-  a._getCodeBlocks = function(b, a) {
-    var d = b.getThreads(), e = [], f;
-    switch(a) {
+  a._getCodeBlocks = function(a, c) {
+    var d = a.getThreads(), e = [], f;
+    switch(c) {
       case "nextMagnet":
         f = this._getNextMagnets;
         break;
@@ -16023,7 +16033,7 @@ Entry.Board = function(a) {
         return [];
     }
     for (var g = 0;g < d.length;g++) {
-      var h = d[g], e = e.concat(f.call(this, h, h.view.zIndex, null, a))
+      var h = d[g], e = e.concat(f.call(this, h, h.view.zIndex, null, c))
     }
     return e;
   };
@@ -17078,7 +17088,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
     if (!Entry.Utils.isInInput(a)) {
       var e = this.selectedBlockView;
       e && !e.isInBlockMenu && e.block.isDeletable() && (8 == c || 46 == c ? (e.block.doDestroy(!0), a.preventDefault()) : d && (67 == c ? e.block.copyToClipboard() : 88 == c && (a = e.block, a.copyToClipboard(), a.destroy(!0, !0), e.getBoard().setSelectedBlock(null))));
-      d && 86 == c && (c = this.selectedBoard) && c instanceof Entry.Board && Entry.clipboard && Entry.do("cloneBlock", c.code).getFirstBlock().copyToClipboard();
+      d && 86 == c && (c = this.selectedBoard) && c instanceof Entry.Board && Entry.clipboard && Entry.do("cloneBlock", c.code).value.getFirstBlock().copyToClipboard();
     }
   };
   a._handleChangeBoard = function() {

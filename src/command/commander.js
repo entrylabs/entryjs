@@ -38,7 +38,10 @@ Entry.Commander = function(injectType) {
             );
         }
         // TODO: activity reporter
-        return Entry.Command[commandType].do.apply(Entry.Command, argumentArray);
+        return {
+            value: Entry.Command[commandType].do.apply(Entry.Command, argumentArray),
+            isPass: this.isPass.bind(this)
+        }
     };
 
     p.undo = function() {
@@ -72,5 +75,9 @@ Entry.Commander = function(injectType) {
 
     p.setCurrentEditor = function(key, object) {
         this.editor[key] = object;
+    };
+
+    p.isPass = function() {
+        Entry.stateManager.getLastCommand().isPass = true;
     };
 })(Entry.Commander.prototype)

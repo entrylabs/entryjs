@@ -583,11 +583,11 @@ Entry.BlockView.DRAG_RADIUS = 5;
                             }
                         } else {
                             if (closeBlock) {
-                                Entry.do("insertBlock", block, closeBlock);
+                                Entry.do("insertBlock", block, closeBlock).isPass();
                                 createjs.Sound.play('entryMagneting');
                                 ripple = true;
                             } else {
-                                Entry.do("separateBlock", block);
+                                Entry.do("moveBlock", block).isPass();
                             }
                         }
                         break;
