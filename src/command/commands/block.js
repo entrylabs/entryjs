@@ -29,13 +29,15 @@ goog.require("Entry.Command");
             board.insert(block, targetBlock);
         },
         state: function(block, targetBlock) {
+            if (typeof block === "string")
+                block = Entry.playground.mainWorkspace.board.findById(block);
             var data = [
                 block.id
             ];
             var pointer = block.pointer()
             data.push(pointer);
 
-            if (block.getBlockType() === "basic")
+            if (typeof block !== "string" && block.getBlockType() === "basic")
                 data.push(block.thread.getCount(block));
             return data;
         },

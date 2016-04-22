@@ -43,12 +43,31 @@ Entry.Commander = function(injectType) {
 
     p.undo = function() {
         var argumentArray = Array.prototype.slice.call(arguments);
-        var commandFunc = Entry.Command[argumentArray.shift()];
+        var commandType = argumentArray.shift();
+        var commandFunc = Entry.Command[commandType];
+        if (Entry.stateManager) {
+            Entry.stateManager.addCommand.apply(
+                Entry.stateManager,
+                [commandType, this, this.redo, commandType]
+                    .concat(commandFunc.state.apply(null, argumentArray))
+            );
+        }
         commandFunc.undo.apply(this, argumentArray);
     };
 
     p.redo = function() {
+        var argumentArray = Array.prototype.slice.call(arguments);
+        var commandType = argumentArray.shift();
+        var commandFunc = Entry.Command[commandType];
 
+        if (Entry.stateManager) {
+            Entry.stateManager.addCommand.apply(
+                Entry.stateManager,
+                [commandType, this, this.undo, commandType]
+                    .concat(commandFunc.state.apply(null, argumentArray))
+            );
+        }
+        commandFunc.undo.apply(this, argumentArray);
     };
 
     p.setCurrentEditor = function(key, object) {
