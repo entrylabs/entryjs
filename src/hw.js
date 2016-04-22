@@ -241,18 +241,22 @@ p.checkDevice = function(data) {
     this.hwModule = this.hwInfo[key];
     Entry.dispatchEvent("hwChanged");
     Entry.toast.success(
-        Lang.Menus.connect_hw,
-        Lang.Menus.connect_message.replace(
+        "하드웨어 연결 성공",
+        /* Lang.Menus.connect_message.replace(
             "%1",
             Lang.Device[Entry.hw.hwModule.name]
-        ),
-        false
+        ) +*/ "하드웨어 아이콘을 더블클릭하면, 센서값만 확인할 수 있습니다.",
+        true
     );
-
     if (this.hwModule.monitorTemplate) {
-        this.hwMonitor = new Entry.HWMonitor(this.hwModule);
-        Entry.propertyPanel.addMode("hw", this.hwMonitor);
 
+        if(!this.hwMonitor) {
+            this.hwMonitor =new Entry.HWMonitor(this.hwModule);
+        } else {
+            this.hwMonitor._hwModule = this.hwModule;
+            this.hwMonitor.init();
+        }
+        Entry.propertyPanel.addMode("hw", this.hwMonitor);
         var mt = this.hwModule.monitorTemplate;
 
         if(mt.mode == "both") {

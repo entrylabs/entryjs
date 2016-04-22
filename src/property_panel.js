@@ -39,6 +39,7 @@ Entry.PropertyPanel = function() {
     };
 
     p.addMode = function(mode, contentObj) {
+       if(mode == 'hw' && this.modes.hw)
         var contentDom = contentObj.getView();
         // will be removed after apply new Dom class
         contentDom = Entry.Dom(contentDom, {
@@ -50,25 +51,31 @@ Entry.PropertyPanel = function() {
             parent: this._tabView
         });
         var that = this;
-        tabDom.bindOnClick(function() {
+        tabDom.bind('click',function() {
             that.select(mode);
         });
 
-        if(mode == 'hw') {
-            $('.propertyTabhw').dblclick(function(){
-                Entry.dispatchEvent('hwModeChange');
-            });
-        }
         if (this.modes[mode]) {
             this.modes[mode].tabDom.remove();
             this.modes[mode].contentDom.remove();
+            if(mode == 'hw'){
+                $(this.modes).removeClass('.propertyTabhw');
+                $('.propertyTabhw').unbind('dblclick');
+            }
         }
+
+
         this.modes[mode] = {
             obj: contentObj,
             tabDom: tabDom,
             contentDom: contentDom
         };
-    };
+     if(mode == 'hw') {
+            $('.propertyTabhw').bind('dblclick',(function(){
+                Entry.dispatchEvent('hwModeChange');
+            }));
+        }
+     };
 
     p.resize = function(canvasSize) {
         var canvasHeight = canvasSize*9/16;

@@ -5641,8 +5641,8 @@ Entry.Observer = function(a, b, c, d) {
 };
 (function(a) {
   a.destroy = function() {
-    var a = this.parent, c = a.indexOf(this);
-    -1 < c && a.splice(c, 1);
+    var b = this.parent, a = b.indexOf(this);
+    -1 < a && b.splice(a, 1);
     return this;
   };
 })(Entry.Observer.prototype);
@@ -10418,15 +10418,18 @@ Entry.PropertyPanel = function() {
     this.splitter = d;
   };
   a.addMode = function(a, c) {
-    var d = c.getView(), d = Entry.Dom(d, {parent:this._contentView}), e = Entry.Dom("<div>" + a + "</div>", {classes:["propertyTabElement", "propertyTab" + a], parent:this._tabView}), f = this;
-    e.bindOnClick(function() {
+    if ("hw" == a && this.modes.hw) {
+      var d = c.getView()
+    }
+    var d = Entry.Dom(d, {parent:this._contentView}), e = Entry.Dom("<div>" + a + "</div>", {classes:["propertyTabElement", "propertyTab" + a], parent:this._tabView}), f = this;
+    e.bind("click", function() {
       f.select(a);
     });
-    "hw" == a && $(".propertyTabhw").dblclick(function() {
+    this.modes[a] && (this.modes[a].tabDom.remove(), this.modes[a].contentDom.remove(), "hw" == a && ($(this.modes).removeClass(".propertyTabhw"), $(".propertyTabhw").unbind("dblclick")));
+    this.modes[a] = {obj:c, tabDom:e, contentDom:d};
+    "hw" == a && $(".propertyTabhw").bind("dblclick", function() {
       Entry.dispatchEvent("hwModeChange");
     });
-    this.modes[a] && (this.modes[a].tabDom.remove(), this.modes[a].contentDom.remove());
-    this.modes[a] = {obj:c, tabDom:e, contentDom:d};
   };
   a.resize = function(a) {
     this._view.css({width:a + "px", top:9 * a / 16 + 123 - 22 + "px"});
@@ -12502,17 +12505,21 @@ Entry.HWMonitor = function(a) {
   Entry.addEventListener("hwModeChange", function() {
     b.changeMode();
   });
+  this.changeOffset = 0;
   this.scale = .5;
   this._listPortViews = {};
 };
 (function(a) {
+  a.init = function() {
+    this.svgDom = Entry.Dom($('<svg id="hwMonitor" width="100%" height="100%"version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'));
+  };
   a.generateView = function() {
+    this.snap = null;
     this.snap = Entry.SVG("hwMonitor");
     this._svgGroup = this.snap.elem("g");
     this._portMap = {n:[], e:[], s:[], w:[]};
     var a = this._hwModule.monitorTemplate, c = {href:Entry.mediaFilePath + a.imgPath, x:-a.width / 2, y:-a.height / 2, width:a.width, height:a.height};
     this._portViews = {};
-    this.hwView = null;
     this.hwView = this._svgGroup.elem("image");
     this.hwView = this.hwView.attr(c);
     this._template = a;
@@ -12536,20 +12543,28 @@ Entry.HWMonitor = function(a) {
   };
   a.toggleMode = function(a) {
     var c = this._hwModule.monitorTemplate;
-    "list" == a ? (c.TempPort = c.ports, this._hwModule.monitorTemplate.listPorts = this.addPortEle(c.listPorts, c.ports), $(this._svglistGroup).remove(), $(this._svgGroup).remove(), $(this._pathGroup).remove(), this._hwModule.monitorTemplate.mode = "list", this.generateListView()) : c.TempPort && (this._hwModule.monitorTemplate.listPorts = this.removePortEle(c.listPorts, c.ports), this._hwModule.monitorTemplate.ports = c.TempPort, $(this.pathGroup).empty(), $(this.hwView).empty(), $(this._svglistGroup).remove(), 
-    $(this._rect).empty(), console.log("template", this._template), delete this._portMap, this._hwModule.monitorTemplate.mode = "both", this.generateListView(), this.generateView());
+    "list" == a ? (c.TempPort = null, this._hwModule.monitorTemplate.ports && (this._hwModule.monitorTemplate.TempPort = this._hwModule.monitorTemplate.ports, this._hwModule.monitorTemplate.listPorts = this.addPortEle(this._hwModule.monitorTemplate.listPorts, this._hwModule.monitorTemplate.ports)), $(this._svglistGroup).remove(), this._svgGroup && $(this._svgGroup).remove(), $(this._pathGroup).remove(), this._hwModule.monitorTemplate.mode = "list", this.generateListView()) : (this._hwModule.monitorTemplate.TempPort && 
+    (this._hwModule.monitorTemplate.ports = this._hwModule.monitorTemplate.TempPort, this._hwModule.monitorTemplate.listPorts = this.removePortEle(this._hwModule.monitorTemplate.listPorts, this._hwModule.monitorTemplate.ports)), $(this._svglistGroup).remove(), this._hwModule.monitorTemplate.mode = "both", this.generateListView(), this.generateView());
   };
-  a.changeMode = function() {
-    var a = this._hwModule.monitorTemplate.mode;
-    "both" == a ? this.toggleMode("list") : "list" == a && this.toggleMode("both");
+  a.setHwmonitor = function(a) {
+    this._hwmodule = a;
+  };
+  a.changeMode = function(a) {
+    "both" == this._hwModule.monitorTemplate.mode ? this.toggleMode("list") : "list" == this._hwModule.monitorTemplate.mode && this.toggleMode("both");
   };
   a.addPortEle = function(a, c) {
+    if ("object" != typeof c) {
+      return a;
+    }
     for (var d in c) {
       a[d] = c[d];
     }
     return a;
   };
   a.removePortEle = function(a, c) {
+    if ("object" != typeof c) {
+      return a;
+    }
     for (var d in c) {
       delete a[d];
     }
@@ -12557,6 +12572,7 @@ Entry.HWMonitor = function(a) {
   };
   a.generateListView = function() {
     this._portMapList = {n:[]};
+    this._svglistGroup = null;
     this.listsnap = Entry.SVG("hwMonitor");
     this._svglistGroup = this.listsnap.elem("g");
     var a = this._hwModule.monitorTemplate;
@@ -12839,8 +12855,8 @@ p.setZero = function() {
   Entry.hw.hwModule && Entry.hw.hwModule.setZero();
 };
 p.checkDevice = function(a) {
-  void 0 !== a.company && (a = "" + a.company + a.model, a != this.selectedDevice && (this.selectedDevice = a, this.hwModule = this.hwInfo[a], Entry.dispatchEvent("hwChanged"), Entry.toast.success(Lang.Menus.connect_hw, Lang.Menus.connect_message.replace("%1", Lang.Device[Entry.hw.hwModule.name]), !1), this.hwModule.monitorTemplate && (this.hwMonitor = new Entry.HWMonitor(this.hwModule), Entry.propertyPanel.addMode("hw", this.hwMonitor), a = this.hwModule.monitorTemplate, "both" == a.mode ? (a.mode = 
-  "list", this.hwMonitor.generateListView(), a.mode = "general", this.hwMonitor.generateView(), a.mode = "both") : "list" == a.mode ? this.hwMonitor.generateListView() : this.hwMonitor.generateView())));
+  void 0 !== a.company && (a = "" + a.company + a.model, a != this.selectedDevice && (this.selectedDevice = a, this.hwModule = this.hwInfo[a], Entry.dispatchEvent("hwChanged"), Entry.toast.success("\ud558\ub4dc\uc6e8\uc5b4 \uc5f0\uacb0 \uc131\uacf5", "\ud558\ub4dc\uc6e8\uc5b4 \uc544\uc774\ucf58\uc744 \ub354\ube14\ud074\ub9ad\ud558\uba74, \uc13c\uc11c\uac12\ub9cc \ud655\uc778\ud560 \uc218 \uc788\uc2b5\ub2c8\ub2e4.", !0), this.hwModule.monitorTemplate && (this.hwMonitor ? (this.hwMonitor._hwModule = 
+  this.hwModule, this.hwMonitor.init()) : this.hwMonitor = new Entry.HWMonitor(this.hwModule), Entry.propertyPanel.addMode("hw", this.hwMonitor), a = this.hwModule.monitorTemplate, "both" == a.mode ? (a.mode = "list", this.hwMonitor.generateListView(), a.mode = "general", this.hwMonitor.generateView(), a.mode = "both") : "list" == a.mode ? this.hwMonitor.generateListView() : this.hwMonitor.generateView())));
 };
 p.banHW = function() {
   var a = this.hwInfo, b;

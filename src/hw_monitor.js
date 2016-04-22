@@ -4,13 +4,12 @@ goog.provide("Entry.HWMontior");
 goog.require("Entry.Utils");
 
 Entry.HWMonitor = function(hwModule) {
-    this.svgDom = Entry.Dom(
+     this.svgDom = Entry.Dom(
         $('<svg id="hwMonitor" width="100%" height="100%"' +
           'version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>')
     );
 
     this._hwModule = hwModule;
-
     var that = this;
     Entry.addEventListener('windowResized', function() {
         var mode = that._hwModule.monitorTemplate.mode;
@@ -26,16 +25,21 @@ Entry.HWMonitor = function(hwModule) {
    Entry.addEventListener('hwModeChange', function() {
        that.changeMode();
    });
-
+    this.changeOffset = 0; // 0 : off 1: on
     this.scale = 0.5;
     this._listPortViews = {};
 };
 
 (function(p) {
     /**
-     * Generate View
-     */
+    */
+    p.init =function() {
+        this.svgDom = Entry.Dom(
+            $('<svg id="hwMonitor" width="100%" height="100%"' + 'version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>')
+         );
+    };
     p.generateView = function() {
+        this.snap = null;
         this.snap = Entry.SVG('hwMonitor');
         this._svgGroup = this.snap.elem("g");
         this._portMap = {
@@ -59,7 +63,6 @@ Entry.HWMonitor = function(hwModule) {
         };
 
         this._portViews = {};
-        this.hwView = null;
         this.hwView = this._svgGroup.elem("image");
         this.hwView = this.hwView.attr(imgObj);
         this._template = monitorTemplate;
@@ -103,47 +106,52 @@ Entry.HWMonitor = function(hwModule) {
 
     p.toggleMode = function(mode) {
         var monitorTemplate = this._hwModule.monitorTemplate;
-        if(mode == 'list' ) {
-monitorTemplate.TempPort = monitorTemplate.ports;
-            this._hwModule.monitorTemplate.listPorts = this.addPortEle(monitorTemplate.listPorts , monitorTemplate.ports);
+        if(mode == 'list') {
+             monitorTemplate.TempPort = null;
+            if(this._hwModule.monitorTemplate.ports){
+                this._hwModule.monitorTemplate.TempPort =  this._hwModule.monitorTemplate.ports;
+                this._hwModule.monitorTemplate.listPorts = this.addPortEle(this._hwModule.monitorTemplate.listPorts , this._hwModule.monitorTemplate.ports);
+            }
 
             $(this._svglistGroup).remove();
-            $(this._svgGroup).remove();
+
+            if(this._svgGroup)
+                $(this._svgGroup).remove();
+
+
             $(this._pathGroup).remove();
             this._hwModule.monitorTemplate.mode = 'list';
             this.generateListView();
-
         } else {
-            if(!monitorTemplate.TempPort)
-                return;
-            this._hwModule.monitorTemplate.listPorts = this.removePortEle(monitorTemplate.listPorts , monitorTemplate.ports);
-            this._hwModule.monitorTemplate.ports = monitorTemplate.TempPort;
-            $(this.pathGroup).empty();
-            $(this.hwView).empty();
+            if(this._hwModule.monitorTemplate.TempPort){
+                this._hwModule.monitorTemplate.ports = this._hwModule.monitorTemplate.TempPort;
+                this._hwModule.monitorTemplate.listPorts = this.removePortEle(this._hwModule.monitorTemplate.listPorts , this._hwModule.monitorTemplate.ports);
+            }
+
             $(this._svglistGroup).remove();
-            $(this._rect).empty();
-            console.log('template', this._template)
-            delete this._portMap;
             this._hwModule.monitorTemplate.mode = 'both';
             this.generateListView();
             this.generateView();
         }
     };
-
-    p.changeMode = function() {
-        var monitorTemplate = this._hwModule.monitorTemplate;
-        var mode = monitorTemplate.mode;
-
-        if(mode == 'both') {
+    p.setHwmonitor = function(module) {
+         this._hwmodule = module;
+    }
+    p.changeMode = function(e) {
+        if(this._hwModule.monitorTemplate.mode == 'both') {
             this.toggleMode('list');
-        } else if(mode == 'list') {
+        } else if(this._hwModule.monitorTemplate.mode == 'list') {
             this.toggleMode('both');
         } else {
             return;
         }
     };
 
+
     p.addPortEle = function(listPort , ports ) {
+        if(typeof ports != 'object')
+            return listPort;
+
         for (var item in ports)
             listPort[item] = ports[item];
 
@@ -151,15 +159,20 @@ monitorTemplate.TempPort = monitorTemplate.ports;
     };
 
     p.removePortEle = function(listPort, ports) {
+        if(typeof ports != 'object')
+            return listPort;
+
         for(var item in ports)
             delete listPort[item]
         return listPort;
     }
 
     p.generateListView = function() {
-       this._portMapList = {
+        this._portMapList = {
             n: []
         };
+        this._svglistGroup = null;
+
         this.listsnap = Entry.SVG('hwMonitor');
         this._svglistGroup = this.listsnap.elem("g");
         var monitorTemplate = this._hwModule.monitorTemplate;
@@ -258,8 +271,6 @@ monitorTemplate.TempPort = monitorTemplate.ports;
         };
 
         var mode = this._hwModule.monitorTemplate.mode;
-//        if(mode == 'both')
-//            returnObj.box.y += 100;
         return returnObj;
     };
 
@@ -331,12 +342,13 @@ monitorTemplate.TempPort = monitorTemplate.ports;
         if(this._template.height*this.scale > bRect.height)
             this.scale =  bRect.height/this._template.height - temp;
 
-      //  if(mode == 'both'){
-      //      var imageBoxHeight = this._svgGroup.getBBox().height;
-      //      var listHeight = this._svglistGroup.getBBox().height;
-      //      var height = imageBoxHeight + (listHeight*0.565);
-            //if(bRect.height < height)
-      //  }
+        //if(mode == 'both'){
+        //    var imageBoxHeight = this._svgGroup.getBBox().height;
+        //    var listHeight = this._svglistGroup.getBBox().height;
+        //    var height = imageBoxHeight + (listHeight*0.565);
+        //    if(bRect.height < height)
+        //        this.toastmsg.warning('알립니다!' ,"하드웨어아이콘을 더블클릭하면, 센서값만 확인할 수 있습니다. ");
+       // }
         this.align();
     };
 
