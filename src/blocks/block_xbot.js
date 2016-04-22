@@ -374,9 +374,9 @@ Entry.block.xbot_rgb_picker = function (sprite, script) {
     var port = script.getStringField("VALUE");
 	var sq = Entry.hw.sendQueue;
 
-	sq.ledR = parseInt(port.substr(1,2), 16);
-	sq.ledG =  parseInt(port.substr(3,2), 16);
-	sq.ledB = parseInt(port.substr(5,2), 16); 
+	sq.ledR = parseInt(parseInt(port.substr(1,2), 16) * 0.3);
+	sq.ledG =  parseInt(parseInt(port.substr(3,2), 16) * 0.3);
+	sq.ledB = parseInt(parseInt(port.substr(5,2), 16) * 0.3); 
 
     return script.callReturn();
 };

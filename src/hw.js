@@ -26,6 +26,7 @@ Entry.HW = function() {
         '12': Entry.SensorBoard,
         '13': Entry.CODEino,
         '15': Entry.dplay,
+        '17': Entry.Xbot        
         '24': Entry.Hamster,
         '25': Entry.Albert,
         '31': Entry.Bitbrick,
@@ -33,7 +34,6 @@ Entry.HW = function() {
         '51': Entry.Neobot,
         '71': Entry.Robotis_carCont,
         '72': Entry.Robotis_openCM70,
-        '81': Entry.Xbot        
     };
 };
 
