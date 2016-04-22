@@ -1745,11 +1745,7 @@ Blockly.Blocks.stop_repeat = {init:function() {
   this.setNextStatement(!0);
 }};
 Entry.block.stop_repeat = function(a, b) {
-  for (var c = b;"REPEAT" != c.type.substr(0, 6).toUpperCase() && c.parentScript;) {
-    c = c.parentScript, delete c.isLooped, delete c.iterCount;
-  }
-  var d = c.callReturn();
-  return c.statements && d ? d : c ? null : b.callReturn();
+  return this.executor.break();
 };
 Blockly.Blocks.wait_until_true = {init:function() {
   this.setColour("#498deb");
@@ -10365,7 +10361,7 @@ Entry.ContextMenu = {};
     this._className && (this.dom.removeClass(this._className), delete this._className);
   };
 })(Entry.ContextMenu);
-Entry.STATIC = {OBJECT:0, ENTITY:1, SPRITE:2, SOUND:3, VARIABLE:4, FUNCTION:5, SCENE:6, MESSAGE:7, BLOCK_MODEL:8, BLOCK_RENDER_MODEL:9, BOX_MODEL:10, THREAD_MODEL:11, DRAG_INSTANCE:12, BLOCK_STATIC:0, BLOCK_MOVE:1, BLOCK_FOLLOW:2, RETURN:0, CONTINUE:1};
+Entry.STATIC = {OBJECT:0, ENTITY:1, SPRITE:2, SOUND:3, VARIABLE:4, FUNCTION:5, SCENE:6, MESSAGE:7, BLOCK_MODEL:8, BLOCK_RENDER_MODEL:9, BOX_MODEL:10, THREAD_MODEL:11, DRAG_INSTANCE:12, BLOCK_STATIC:0, BLOCK_MOVE:1, BLOCK_FOLLOW:2, RETURN:0, CONTINUE:1, BREAK:2, PASS:3};
 Entry.Utils = {};
 Entry.overridePrototype = function() {
   Number.prototype.mod = function(a) {
@@ -14467,16 +14463,18 @@ Entry.Executor = function(a, b) {
   a.execute = function() {
     for (;;) {
       var b = this.scope.block._schema.func.call(this.scope, this.entity, this.scope);
-      if (void 0 === b || null === b) {
+      if (void 0 === b || null === b || b === Entry.STATIC.PASS) {
         if (this.scope = new Entry.Scope(this.scope.block.getNextBlock(), this), null === this.scope.block) {
           if (this._callStack.length) {
-            this.scope = this._callStack.pop();
+            if (b = this.scope, this.scope = this._callStack.pop(), this.scope.isLooped !== b.isLooped) {
+              break;
+            }
           } else {
             break;
           }
         }
       } else {
-        if (b === Entry.STATIC.CONTINUE) {
+        if (b !== Entry.STATIC.CONTINUE && b === Entry.STATIC.BREAK) {
           break;
         }
       }
@@ -14487,6 +14485,10 @@ Entry.Executor = function(a, b) {
     this._callStack.push(this.scope);
     b = b.getFirstBlock();
     this.scope = new Entry.Scope(b, this);
+  };
+  a.break = function() {
+    this._callStack.length && (this.scope = this._callStack.pop());
+    return Entry.STATIC.PASS;
   };
 })(Entry.Executor.prototype);
 Entry.Scope = function(a, b) {

@@ -108,21 +108,7 @@ Blockly.Blocks.stop_repeat = {
 };
 
 Entry.block.stop_repeat = function (sprite, script) {
-    var parentScript = script;
-    while (parentScript.type.substr(0, 6).toUpperCase() != "REPEAT" &&
-        parentScript.parentScript) {
-        parentScript = parentScript.parentScript;
-        delete parentScript.isLooped;
-        delete parentScript.iterCount;
-    }
-    var nextScript = parentScript.callReturn();
-    if (parentScript.statements && nextScript) {
-        return nextScript;
-    }
-    else if (parentScript)
-        return null;
-    else
-        return script.callReturn();
+    return this.executor.break();
 };
 
 // wait until condtion is true

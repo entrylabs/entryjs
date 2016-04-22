@@ -15,15 +15,20 @@ Entry.Executor = function(block, entity) {
     p.execute = function() {
         while (true) {
             var returnVal = this.scope.block._schema.func.call(this.scope, this.entity, this.scope);
-            if (returnVal === undefined || returnVal === null) {
+            if (returnVal === undefined || returnVal === null || returnVal === Entry.STATIC.PASS) {
                 this.scope = new Entry.Scope(this.scope.block.getNextBlock(), this);
                 if (this.scope.block === null) {
-                    if (this._callStack.length)
+                    if (this._callStack.length) {
+                        var oldScope = this.scope;
                         this.scope = this._callStack.pop();
+                        if (this.scope.isLooped !== oldScope.isLooped)
+                            break;
+                    }
                     else
                         break;
                 }
             } else if (returnVal === Entry.STATIC.CONTINUE) {
+            } else if (returnVal === Entry.STATIC.BREAK) {
                 break;
             }
         }
@@ -38,6 +43,12 @@ Entry.Executor = function(block, entity) {
         var block = thread.getFirstBlock();
 
         this.scope = new Entry.Scope(block, this);
+    };
+
+    p.break = function() {
+        if (this._callStack.length)
+            this.scope = this._callStack.pop();
+        return Entry.STATIC.PASS;
     };
 })(Entry.Executor.prototype);
 
