@@ -28,8 +28,7 @@ Entry.PyToBlockParser = function(blockSyntaxList) {
         var nodeList = node.body;
 
         for(var node in nodeList) {
-            var type = node.type;
-            var block = this[type](node));
+            var block = this[node.type](node));
             blocks.push(block);
         }
 
@@ -37,7 +36,10 @@ Entry.PyToBlockParser = function(blockSyntaxList) {
     };
 
     p.Identifier = function(node) {
-        return node.name;
+        var name = node.name
+        return {
+            name: name
+        }
     };
 
     p.Literal = function(node) {
@@ -55,32 +57,177 @@ Entry.PyToBlockParser = function(blockSyntaxList) {
             value = node.value;
         } 
         else if(typeof node.value === RegExp) {
-            var regex = this[typeof node.value](node);
-            value = regex.pattern;
+            var value = this[typeof node.value](node);
+            value = value.regex.pattern;
         }
         else {
-            throw {
-                message : '지원하지 않는 표현식 입니다.',
-                value : node.value
-            };
+            throw value = null;
         }
 
-        return value;
+        return {
+            value: value
+        }
 
     };
 
     p.RegExp = function(node) {
-        return node.regex;
+        var regex = node.regex;
+        return {
+            regex: regex
+        }
     };
 
     P.Function = function(node) {
+        var id = this[node.id](node);
         
+        var params = [];
+        for(var param in node.params){
+            var param = this.pattern(param);
+            params.push(param);
+        }
+
+        var body = this[node.body](node);
+
+        return {
+            id: id,
+            params: params,
+            body: body
+        }
     };
 
+    p.ExpressionStatement = function(node) {
+        var expression = this[node.expression.type](node.expression);
+        return expression;
+    };
 
+    p.BlockStatement = function(node) {
+       var bodies = [];
+       for(var statement in node.body) {
+            var body = this[statement.type](statement);
+            bodies.push(body);
+        }
 
+        return {
+            body: bodies;
+        }
+    };
 
+    p.EmptyStatement = function(node) {
+        return '';
+    };
 
+    p.DebuggerStatement = function(node) {
+        return 'debugger';
+    };
+
+    p.WithStatement = function(node) {
+        var object = this[node.object.type](node.object);
+        var body = this[node.body.type](node.body);
+
+        return {
+            object: object,
+            body: body
+        }
+    };
+
+    p.ReturnStaement = function(node) {
+        var argument;
+        if(node.argument == null) 
+            argument = null;
+        else 
+            argument = this[node.argument.type](node.argument);
+
+        return argument
+    };
+
+    p.LabeledStatement = function(node) {
+        var label = this[node.label.type](node.label);
+        var body = this[node.body.type](node.body);
+
+        return {
+            label: label,
+            body: body
+        }
+    };
+
+    p.BreakStatement = function(node) {
+        var label;
+        if(node.label == null)
+            label = null;
+        else 
+            label = this[node.label.type](node.label);
+
+        return label;
+    };
+
+    p.ContinueStatement = function(node) {
+        var label;
+        if(node.label == null)
+            label = null;
+        else 
+            label = this[node.label.type](node.label);
+
+        return label;
+    };
+
+    p.IfStatement = function(node) {
+        var test = this[node.test.type](node.test);
+        var consequent = this[node.consequent.type](node.consequent);
+        
+        var alternate;
+        if(node.alternate == null)
+            alternate = null;
+        else 
+            alternate = this[node.alternate.type](node.alternate);
+
+        return {
+            test: test,
+            consequent: consequent,
+            alternate: alternate
+        }
+    };
+
+    p.SwitchStatement = function(node) {
+        var discriminant = this[node.discriminant.type](node.discriminant);
+        var cases = [];
+        for(var switchCase in node.cases) {
+            var caseStmt = this[switchCase.type](switchCase);
+            cases.push(caseStmt);
+        }
+
+        return {
+            discriminant: discriminant,
+            cases: cases
+        }
+
+    };
+
+    p.SwitchCase = function(node) {
+        var test;
+        if(node.test == null)
+            test = null;
+        else
+            test = this[node.test.type](node.test);
+
+        var consequents;
+        for(var statment in node.consequent){
+            var consequent = this[statment.type](statment);
+            consequents.push(consequent);
+        } 
+
+        return {
+            test: test,
+            consequent: consequents
+        }
+    };
+
+    p.ThrowStatement = function(node) {
+        var argument = this[node.argument.type](node.argument);
+
+        return {
+            argument: arguemnt
+        }
+    };
 
 
 
