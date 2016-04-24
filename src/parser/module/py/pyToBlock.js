@@ -23,36 +23,92 @@ Entry.PyToBlockParser = function(blockSyntaxList) {
     };
 
     p.Program = function(node) {
-
-        //var separatedBlocks = this.initScope(node);
-
-        //block = block.concat(this.BlockStatement(node));
-
-        //this.unloadScope();
-
-        //code.push(block);
-        //code = code.concat(separatedBlocks);
-
-        var block = [];
+        var blocks = [];
 
         var nodeList = node.body;
 
         for(var node in nodeList) {
-            var this[node.type](node));
+            var type = node.type;
+            var block = this[type](node));
+            blocks.push(block);
         }
 
         return code;
     };
 
     p.Identifier = function(node) {
-            return node.name;
+        return node.name;
     };
 
     p.Literal = function(node) {
+        var value;
+        if(typeof node.value === String) {
+            value = node.value;
+        } 
+        else if(typeof node.value === boolean) {
+            value = node.value;
+        } 
+        else if(typeof node.value === null) {
+            value = node.value;
+        }
+        else if(typeof node.value === Number) {
+            value = node.value;
+        } 
+        else if(typeof node.value === RegExp) {
+            var regex = this[typeof node.value](node);
+            value = regex.pattern;
+        }
+        else {
+            throw {
+                message : '지원하지 않는 표현식 입니다.',
+                value : node.value
+            };
+        }
+
+        return value;
 
     };
 
-    p.ExpressionStatement = function(node) {
+    p.RegExp = function(node) {
+        return node.regex;
+    };
+
+    P.Function = function(node) {
+        
+    };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    //legacy code
+
+    /*p.ExpressionStatement = function(node) {
         var expression = node.expression;
         return this[expression.type](expression);
     };
@@ -625,6 +681,6 @@ Entry.PyToBlockParser = function(blockSyntaxList) {
                 node : node.test
             };
         }
-    };
+    };*/
 
 })(Entry.PyToBlockParser.prototype);
