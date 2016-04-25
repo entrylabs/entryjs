@@ -1986,7 +1986,8 @@ Blockly.Blocks.function_create = {init:function() {
 Entry.block.function_create = function(a, b) {
   return b.callReturn();
 };
-Entry.block.function_create = {skeleton:"basic", color:"#cc7337", event:"funcDef", template:"\ud568\uc218 \uc815\uc758\ud558\uae30 %1 %2", params:[{type:"Block", accept:"paramMagnet", value:{type:"function_field_label"}}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/function_03.png", size:12}]};
+Entry.block.function_create = {skeleton:"basic", color:"#cc7337", event:"funcDef", template:"\ud568\uc218 \uc815\uc758\ud558\uae30 %1 %2", params:[{type:"Block", accept:"paramMagnet", value:{type:"function_field_label"}}, {type:"Indicator", img:"/lib/entryjs/images/block_icon/function_03.png", size:12}], func:function() {
+}};
 Blockly.Blocks.function_general = {init:function() {
   this.setColour("#cc7337");
   this.setInputsInline(!0);
@@ -2041,7 +2042,13 @@ Entry.block.function_general = function(a, b) {
   delete b.thread;
   return b.callReturn();
 };
-Entry.block.function_general = {skeleton:"basic", color:"#cc7337", template:"\ud568\uc218", params:[]};
+Entry.block.function_general = {skeleton:"basic", color:"#cc7337", template:"\ud568\uc218", params:[], func:function(a) {
+  this.initiated || (this.initiated = !0, this.funcCode = Entry.variableContainer.getFunction(this.block.type.substr(5, 9)).content, this.funcExecutor = this.funcCode.raiseEvent("funcDef", a)[0]);
+  this.funcExecutor.execute();
+  if (!this.funcExecutor.isEnd()) {
+    return this.funcCode.removeExecutor(this.funcExecutor), Entry.STATIC.BREAK;
+  }
+}};
 Entry.Hamster = {PORT_MAP:{leftWheel:0, rightWheel:0, buzzer:0, outputA:0, outputB:0, leftLed:0, rightLed:0, note:0, ioModeA:0, ioModeB:0}, setZero:function() {
   var a = Entry.Hamster.PORT_MAP, b;
   for (b in a) {
@@ -14297,11 +14304,17 @@ Entry.PARAM = -1;
   };
   a.raiseEvent = function(b, a, d) {
     b = this._eventMap[b];
+    var e = [];
     if (void 0 !== b) {
-      for (var e = 0;e < b.length;e++) {
-        var f = b[e];
-        (void 0 === d || -1 < f.params.indexOf(d)) && this.executors.push(new Entry.Executor(b[e], a));
+      for (var f = 0;f < b.length;f++) {
+        var g = b[f];
+        if (void 0 === d || -1 < g.params.indexOf(d)) {
+          var h = new Entry.Executor(b[f], a)
+        }
+        this.executors.push(h);
+        e.push(h);
       }
+      return e;
     }
   };
   a.getEventMap = function(b) {
@@ -14314,8 +14327,12 @@ Entry.PARAM = -1;
     for (var b = this.executors, a = 0;a < b.length;a++) {
       var d = b[a];
       d.execute();
-      null === d.scope.block && (b.splice(a, 1), a--, 0 === b.length && this.executeEndEvent.notify());
+      d.isEnd() && (b.splice(a, 1), a--, 0 === b.length && this.executeEndEvent.notify());
     }
+  };
+  a.removeExecutor = function(b) {
+    b = this.executors.indexOf(b);
+    -1 < b && this.executors.splice(b, 1);
   };
   a.clearExecutors = function() {
     this.executors = [];
@@ -14511,6 +14528,9 @@ Entry.Executor = function(a, b) {
   a.break = function() {
     this._callStack.length && (this.scope = this._callStack.pop());
     return Entry.STATIC.PASS;
+  };
+  a.isEnd = function() {
+    return null === this.scope.block;
   };
 })(Entry.Executor.prototype);
 Entry.Scope = function(a, b) {

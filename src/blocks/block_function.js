@@ -216,7 +216,9 @@ Entry.block.function_create = {
             img: "/lib/entryjs/images/block_icon/function_03.png",
             size: 12
         }
-    ]
+    ],
+    func: function() {
+    }
 };
 
 Blockly.Blocks.function_general = {
@@ -311,6 +313,21 @@ Entry.block.function_general = {
     color: "#cc7337",
     template: "함수",
     params: [
-    ]
+    ],
+    func: function(entity) {
+        if (!this.initiated) {
+            this.initiated = true;
+
+            this.funcCode = Entry.variableContainer.getFunction(
+                this.block.type.substr(5, 9)
+            ).content;
+            this.funcExecutor = this.funcCode.raiseEvent("funcDef", entity)[0];
+        }
+        this.funcExecutor.execute();
+        if (!this.funcExecutor.isEnd()) {
+            this.funcCode.removeExecutor(this.funcExecutor);
+            return Entry.STATIC.BREAK;
+        }
+    }
 };
 

@@ -89,13 +89,17 @@ Entry.PARAM = -1;
 
     p.raiseEvent = function(eventType, entity, value) {
         var blocks = this._eventMap[eventType];
+        var executors = [];
         if (blocks === undefined) return;
         for (var i = 0; i < blocks.length; i++) {
             var block = blocks[i];
             if (value === undefined ||
                 block.params.indexOf(value) > -1)
-                this.executors.push(new Entry.Executor(blocks[i], entity));
+                var executor = new Entry.Executor(blocks[i], entity);
+                this.executors.push(executor);
+                executors.push(executor);
         }
+        return executors;
     };
 
     p.getEventMap = function(eventType) {return this._eventMap[eventType];};
@@ -109,13 +113,19 @@ Entry.PARAM = -1;
         for (var i = 0; i < executors.length; i++) {
             var executor = executors[i];
             executor.execute();
-            if (executor.scope.block === null) {
+            if (executor.isEnd()) {
                 executors.splice(i, 1);
                 i--;
                 if (executors.length === 0)
                     this.executeEndEvent.notify();
             }
         }
+    };
+
+    p.removeExecutor = function(executor) {
+        var index = this.executors.indexOf(executor);
+        if (index > -1)
+            this.executors.splice(index, 1);
     };
 
     p.clearExecutors = function() {

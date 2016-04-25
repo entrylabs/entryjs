@@ -54,6 +54,10 @@ Entry.Executor = function(block, entity) {
             this.scope = this._callStack.pop();
         return Entry.STATIC.PASS;
     };
+
+    p.isEnd = function() {
+         return this.scope.block === null;
+    };
 })(Entry.Executor.prototype);
 
 Entry.Scope = function(block, executor) {
