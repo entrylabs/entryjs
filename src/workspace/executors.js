@@ -80,7 +80,7 @@ Entry.Scope = function(block, executor) {
     };
 
     p.getNumberValue = function(key, block) {
-        return Number(this.getValue(key, block));
+        return Number(this.getValue(key));
     };
 
     p.getBooleanValue = function(key, block) {
@@ -95,8 +95,8 @@ Entry.Scope = function(block, executor) {
         return String(this.getField());
     };
 
-    p.getNumberField = function() {
-        return Number(this.getField());
+    p.getNumberField = function(key) {
+        return Number(this.getField(key));
     };
 
     p.getStatement = function(key, block) {
