@@ -5315,7 +5315,7 @@ Entry.Container.prototype.mapObjectOnScene = function(a, b) {
 };
 Entry.Container.prototype.clearRunningStateOnScene = function() {
   this.mapObjectOnScene(function(a) {
-    a.entity.clearScript();
+    a.clearExecutor();
     for (var b = a.clonedEntities.length;0 < b;b--) {
       a.clonedEntities[b - 1].removeClone();
     }
@@ -15059,7 +15059,7 @@ Entry.Utils.inherit(Entry.FieldDropdown, Entry.FieldDropdownDynamic);
     Entry.container && (b = Entry.container.getDropdownList(this._contents.menuName));
     this._contents.options = b;
     b = this._contents.options;
-    b = this.getValue() || 0 !== b.length ? b[0][1] : null;
+    b = this.getValue() || (0 !== b.length ? b[0][1] : null);
     this.setValue(b);
   };
   a.renderOptions = function() {
@@ -17228,10 +17228,14 @@ Entry.Playground.prototype.generateCodeView = function(a) {
   b = Entry.Dom("div", {parent:a, id:"entryWorkspaceBoard", class:"entryWorkspaceBoard"});
   a = Entry.Dom("div", {parent:a, id:"entryWorkspaceBlockMenu", class:"entryWorkspaceBlockMenu"});
   (new Entry.BlockDriver).convert();
-  Entry.block.when_run_button_click.event = "start";
-  Entry.block.when_some_key_pressed.event = "keyPress";
-  Entry.block.if_else.template = "\ub9cc\uc77c %1 \uc774\ub77c\uba74 %2 %3 \uc544\ub2c8\uba74";
-  Entry.block.if_else.params.push({type:"LineBreak"});
+  var c = Entry.block;
+  c.when_run_button_click.event = "start";
+  c.when_some_key_pressed.event = "keyPress";
+  c.when_message_cast.event = "when_message_cast";
+  c.when_scene_start.event = "when_scene_start";
+  c.when_clone_start.event = "when_clone_start";
+  c.if_else.template = "\ub9cc\uc77c %1 \uc774\ub77c\uba74 %2 %3 \uc544\ub2c8\uba74";
+  c.if_else.params.push({type:"LineBreak"});
   this.mainWorkspace = new Entry.Workspace({blockMenu:{dom:a, align:"LEFT", categoryData:EntryStatic.getAllBlocks(), scroll:!0}, board:{dom:b}});
   this.blockMenu = this.mainWorkspace.blockMenu;
   this.board = this.mainWorkspace.board;
