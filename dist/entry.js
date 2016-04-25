@@ -716,14 +716,14 @@ Entry.Arduino = {name:"arduino", setZero:function() {
     Entry.hw.sendQueue[b] = 0, Entry.hw.sendQueue.readablePorts.push(b);
   }
   Entry.hw.update();
-}, monitorTemplate:{imgPath:"hw/arduino.png", width:268, height:270, listPorts:{2:{name:Lang.Hw.port_en + " 2 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, 3:{name:Lang.Hw.port_en + " 3 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, 4:{name:Lang.Hw.port_en + " 4 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, 5:{name:Lang.Hw.port_en + " 5 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, 6:{name:Lang.Hw.port_en + " 6 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, 7:{name:Lang.Hw.port_en + 
+}, monitorTemplate:{imgPath:"hw/arduino.png", width:605, height:434, listPorts:{2:{name:Lang.Hw.port_en + " 2 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, 3:{name:Lang.Hw.port_en + " 3 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, 4:{name:Lang.Hw.port_en + " 4 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, 5:{name:Lang.Hw.port_en + " 5 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, 6:{name:Lang.Hw.port_en + " 6 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, 7:{name:Lang.Hw.port_en + 
 " 7 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, 8:{name:Lang.Hw.port_en + " 8 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, 9:{name:Lang.Hw.port_en + " 9 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, 10:{name:Lang.Hw.port_en + " 10 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, 11:{name:Lang.Hw.port_en + " 11 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, 12:{name:Lang.Hw.port_en + " 12 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, 13:{name:Lang.Hw.port_en + " 13 " + 
 Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, a0:{name:Lang.Hw.port_en + " A0 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, a1:{name:Lang.Hw.port_en + " A1 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, a2:{name:Lang.Hw.port_en + " A2 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, a3:{name:Lang.Hw.port_en + " A3 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, a4:{name:Lang.Hw.port_en + " A4 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, a5:{name:Lang.Hw.port_en + " A5 " + 
 Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}}, mode:"both"}};
-Entry.SensorBoard = {name:"sensorBoard", setZero:Entry.Arduino.setZero, monitorTemplate:{imgPath:"hw/sensorBoard.png", width:268, height:270, listPorts:{2:{name:Lang.Hw.port_en + " 2 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, 3:{name:Lang.Hw.port_en + " 3 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, 4:{name:Lang.Hw.port_en + " 4 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, 5:{name:Lang.Hw.port_en + " 5 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, a3:{name:Lang.Hw.port_en + 
+Entry.SensorBoard = {name:"sensorBoard", setZero:Entry.Arduino.setZero, monitorTemplate:{imgPath:"hw/sensorBoard.png", width:400, height:400, listPorts:{2:{name:Lang.Hw.port_en + " 2 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, 3:{name:Lang.Hw.port_en + " 3 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, 4:{name:Lang.Hw.port_en + " 4 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, 5:{name:Lang.Hw.port_en + " 5 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, a3:{name:Lang.Hw.port_en + 
 " A3 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, a4:{name:Lang.Hw.port_en + " A4 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, a5:{name:Lang.Hw.port_en + " A5 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, 6:{name:Lang.Hw.port_en + " 6 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, 7:{name:Lang.Hw.port_en + " 7 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, 12:{name:Lang.Hw.port_en + " 12 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, 13:{name:Lang.Hw.port_en + " 13 " + 
-Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}}, ports:{0:{name:Lang.Hw.light + " " + Lang.Hw.sensor + "2", type:"input", pos:{x:190, y:215}}, slider:{name:Lang.Blocks.CODEino_sensor_name_2, type:"input", pos:{x:150, y:20}}, 1:{name:Lang.Hw.temp, type:"input", pos:{x:207, y:251}}, 8:{name:Lang.Hw.right_ko + Lang.Hw.switch_ + Lang.Hw.right_en, type:"input", pos:{x:180, y:120}}, 9:{name:Lang.Hw.left_ko + Lang.Hw.switch_ + Lang.Hw.left_en, type:"input", pos:{x:90, y:143}}, 10:{name:Lang.Hw.up_ko + Lang.Hw.switch_ + 
-Lang.Hw.up_en, type:"input", pos:{x:130, y:73}}, 11:{name:Lang.Hw.down_ko + Lang.Hw.switch_ + Lang.Hw.down_en, type:"input", pos:{x:120, y:185}}}, mode:"both"}};
+Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}}, ports:{0:{name:Lang.Hw.light + " " + Lang.Hw.sensor + "2", type:"input", pos:{x:116, y:330}}, slider:{name:Lang.Blocks.CODEino_sensor_name_2, type:"input", pos:{x:230, y:47}}, 1:{name:Lang.Hw.temp, type:"input", pos:{x:310, y:332}}, 8:{name:Lang.Hw.right_ko + Lang.Hw.switch_ + Lang.Hw.right_en, type:"input", pos:{x:273, y:205}}, 9:{name:Lang.Hw.left_ko + Lang.Hw.switch_ + Lang.Hw.left_en, type:"input", pos:{x:112, y:155}}, 10:{name:Lang.Hw.up_ko + 
+Lang.Hw.switch_ + Lang.Hw.up_en, type:"input", pos:{x:188, y:83}}, 11:{name:Lang.Hw.down_ko + Lang.Hw.switch_ + Lang.Hw.down_en, type:"input", pos:{x:196, y:281}}}, mode:"both"}};
 Entry.dplay = {name:"dplay", setZero:Entry.Arduino.setZero};
 Entry.CODEino = {name:"CODEino", setZero:Entry.Arduino.setZero, monitorTemplate:Entry.Arduino.monitorTemplate};
 Blockly.Blocks.arduino_text = {init:function() {
@@ -1048,7 +1048,7 @@ Entry.Bitbrick = {SENSOR_MAP:{1:"light", 2:"IR", 3:"touch", 4:"potentiometer", 5
     b[a] = 0;
   }
   Entry.hw.update();
-}, name:"bitbrick", servoMaxValue:181, servoMinValue:1, dcMaxValue:100, dcMinValue:-100, monitorTemplate:{imgPath:"hw/bitbrick.gif", width:133, height:153, listPorts:{1:{name:Lang.Hw.port_en + " 1 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, 2:{name:Lang.Hw.port_en + " 2 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, 3:{name:Lang.Hw.port_en + " 3 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, 4:{name:Lang.Hw.port_en + " 4 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, A:{name:Lang.Hw.port_en + 
+}, name:"bitbrick", servoMaxValue:181, servoMinValue:1, dcMaxValue:100, dcMinValue:-100, monitorTemplate:{imgPath:"hw/bitbrick.png", width:400, height:400, listPorts:{1:{name:Lang.Hw.port_en + " 1 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, 2:{name:Lang.Hw.port_en + " 2 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, 3:{name:Lang.Hw.port_en + " 3 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, 4:{name:Lang.Hw.port_en + " 4 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, A:{name:Lang.Hw.port_en + 
 " A " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, B:{name:Lang.Hw.port_en + " B " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, C:{name:Lang.Hw.port_en + " C " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, D:{name:Lang.Hw.port_en + " D " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}}, mode:"both"}};
 Blockly.Blocks.bitbrick_sensor_value = {init:function() {
   this.setColour("#00979D");
@@ -10600,11 +10600,14 @@ Entry.PropertyPanel = function() {
   };
   b.addMode = function(a, b) {
     var d = b.getView(), d = Entry.Dom(d, {parent:this._contentView}), e = Entry.Dom("<div>" + a + "</div>", {classes:["propertyTabElement", "propertyTab" + a], parent:this._tabView}), f = this;
-    e.bindOnClick(function() {
+    e.bind("click", function() {
       f.select(a);
     });
-    this.modes[a] && (this.modes[a].tabDom.remove(), this.modes[a].contentDom.remove());
+    this.modes[a] && (this.modes[a].tabDom.remove(), this.modes[a].contentDom.remove(), "hw" == a && ($(this.modes).removeClass(".propertyTabhw"), $(".propertyTabhw").unbind("dblclick")));
     this.modes[a] = {obj:b, tabDom:e, contentDom:d};
+    "hw" == a && $(".propertyTabhw").bind("dblclick", function() {
+      Entry.dispatchEvent("hwModeChange");
+    });
   };
   b.resize = function(a) {
     this._view.css({width:a + "px", top:9 * a / 16 + 123 - 22 + "px"});
@@ -12677,21 +12680,28 @@ Entry.HWMonitor = function(b) {
     "both" == b && (a.resize(), a.resizeList());
     "list" == b ? a.resizeList() : a.resize();
   });
+  Entry.addEventListener("hwModeChange", function() {
+    a.changeMode();
+  });
+  this.changeOffset = 0;
   this.scale = .5;
-  this._portViews = {};
   this._listPortViews = {};
-  this._portMap = {n:[], e:[], s:[], w:[]};
-  this._portMapList = {n:[], e:[], s:[], w:[]};
 };
 (function(b) {
+  b.initView = function() {
+    this.svgDom = Entry.Dom($('<svg id="hwMonitor" width="100%" height="100%"version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'));
+  };
   b.generateView = function() {
     this.snap = Entry.SVG("hwMonitor");
     this._svgGroup = this.snap.elem("g");
+    this._portMap = {n:[], e:[], s:[], w:[]};
     var a = this._hwModule.monitorTemplate, b = {href:Entry.mediaFilePath + a.imgPath, x:-a.width / 2, y:-a.height / 2, width:a.width, height:a.height};
+    this._portViews = {};
     this.hwView = this._svgGroup.elem("image");
     this.hwView = this.hwView.attr(b);
     this._template = a;
     a = a.ports;
+    this.pathGroup = null;
     this.pathGroup = this._svgGroup.elem("g");
     var b = [], d;
     for (d in a) {
@@ -12708,7 +12718,38 @@ Entry.HWMonitor = function(b) {
     });
     this.resize();
   };
+  b.toggleMode = function(a) {
+    var b = this._hwModule.monitorTemplate;
+    "list" == a ? (b.TempPort = null, this._hwModule.monitorTemplate.ports && (this._hwModule.monitorTemplate.TempPort = this._hwModule.monitorTemplate.ports, this._hwModule.monitorTemplate.listPorts = this.addPortEle(this._hwModule.monitorTemplate.listPorts, this._hwModule.monitorTemplate.ports)), $(this._svglistGroup).remove(), this._svgGroup && $(this._svgGroup).remove(), $(this._pathGroup).remove(), this._hwModule.monitorTemplate.mode = "list", this.generateListView()) : (this._hwModule.monitorTemplate.TempPort && 
+    (this._hwModule.monitorTemplate.ports = this._hwModule.monitorTemplate.TempPort, this._hwModule.monitorTemplate.listPorts = this.removePortEle(this._hwModule.monitorTemplate.listPorts, this._hwModule.monitorTemplate.ports)), $(this._svglistGroup).remove(), this._hwModule.monitorTemplate.mode = "both", this.generateListView(), this.generateView());
+  };
+  b.setHwmonitor = function(a) {
+    this._hwmodule = a;
+  };
+  b.changeMode = function(a) {
+    "both" == this._hwModule.monitorTemplate.mode ? this.toggleMode("list") : "list" == this._hwModule.monitorTemplate.mode && this.toggleMode("both");
+  };
+  b.addPortEle = function(a, b) {
+    if ("object" != typeof b) {
+      return a;
+    }
+    for (var d in b) {
+      a[d] = b[d];
+    }
+    return a;
+  };
+  b.removePortEle = function(a, b) {
+    if ("object" != typeof b) {
+      return a;
+    }
+    for (var d in b) {
+      delete a[d];
+    }
+    return a;
+  };
   b.generateListView = function() {
+    this._portMapList = {n:[]};
+    this._svglistGroup = null;
     this.listsnap = Entry.SVG("hwMonitor");
     this._svglistGroup = this.listsnap.elem("g");
     var a = this._hwModule.monitorTemplate;
@@ -12723,19 +12764,7 @@ Entry.HWMonitor = function(b) {
     }
     var f = this._portMapList;
     b.map(function(a) {
-      switch(Math.round(Math.atan2(a.box.y, a.box.x) / Math.PI * 2)) {
-        case -1:
-          f.n.push(a);
-          break;
-        case 0:
-          f.e.push(a);
-          break;
-        case 1:
-          f.s.push(a);
-          break;
-        case 2:
-          f.w.push(a);
-      }
+      f.n.push(a);
     });
     this.resizeList();
   };
@@ -12750,9 +12779,7 @@ Entry.HWMonitor = function(b) {
     h.textContent = 0;
     g += 40;
     f.attr({width:g});
-    d = {group:d, value:h, type:a.type, path:e, box:{x:a.pos.x - this._template.width / 2, y:a.pos.y - this._template.height / 2, width:g}, width:g};
-    "both" == this._hwModule.monitorTemplate.mode && (d.box.y += 100);
-    return d;
+    return {group:d, value:h, type:a.type, path:e, box:{x:a.pos.x - this._template.width / 2, y:a.pos.y - this._template.height / 2, width:g}, width:g};
   };
   b.getView = function() {
     return this.svgDom;
@@ -12788,12 +12815,7 @@ Entry.HWMonitor = function(b) {
     }
     this._svgGroup.attr({transform:"translate(" + a.width / 2 + "," + a.height / 1.8 + ")"});
     this._rect = a;
-    if (!(0 >= this._template.height || 0 >= a.height)) {
-      this.scale = this._template.height / 100 * (a.height / 1E3);
-      var b = (this._template.height - a.height) / a.height;
-      this._template.height * this.scale > a.height && (this.scale = a.height / this._template.height - b);
-      this.align();
-    }
+    0 >= this._template.height || 0 >= a.height || (this.scale = a.height / this._template.height * this._template.height / 1E3, this.align());
   };
   b.resizeList = function() {
     var a = this.svgDom.get(0).getBoundingClientRect();
@@ -12812,11 +12834,9 @@ Entry.HWMonitor = function(b) {
     this._alignEW(a, this._template.width * this.scale / 3 - 32, -27);
   };
   b.alignList = function() {
-    for (var a = this._portMapList.n, b = a.length, d = 0;d < a.length;d++) {
+    for (var a = {}, a = this._hwModule.monitorTemplate.listPorts, b = a.length, d = 0;d < a.length;d++) {
       a[d].group.attr({transform:"translate(" + this._template.width * (d / b - .5) + "," + (-this._template.width / 2 - 30) + ")"});
     }
-    a = this._portMapList.s.concat();
-    this._alignNSList(a, this._template.width * this.scale / 2 + 5, 27);
     a = this._portMapList.n.concat();
     this._alignNSList(a, -this._template.width * this.scale / 2 - 32, -27);
   };
@@ -13007,8 +13027,8 @@ p.setZero = function() {
   Entry.hw.hwModule && Entry.hw.hwModule.setZero();
 };
 p.checkDevice = function(b) {
-  void 0 !== b.company && (b = "" + b.company + b.model, b != this.selectedDevice && (this.selectedDevice = b, this.hwModule = this.hwInfo[b], Entry.dispatchEvent("hwChanged"), Entry.toast.success(Lang.Menus.connect_hw, Lang.Menus.connect_message.replace("%1", Lang.Device[Entry.hw.hwModule.name]), !1), this.hwModule.monitorTemplate && (this.hwMonitor = new Entry.HWMonitor(this.hwModule), Entry.propertyPanel.addMode("hw", this.hwMonitor), b = this.hwModule.monitorTemplate, "both" == b.mode ? (b.mode = 
-  "list", this.hwMonitor.generateListView(), b.mode = "general", this.hwMonitor.generateView(), b.mode = "both") : "list" == b.mode ? this.hwMonitor.generateListView() : this.hwMonitor.generateView())));
+  void 0 !== b.company && (b = "" + b.company + b.model, b != this.selectedDevice && (this.selectedDevice = b, this.hwModule = this.hwInfo[b], Entry.dispatchEvent("hwChanged"), Entry.toast.success("\ud558\ub4dc\uc6e8\uc5b4 \uc5f0\uacb0 \uc131\uacf5", "\ud558\ub4dc\uc6e8\uc5b4 \uc544\uc774\ucf58\uc744 \ub354\ube14\ud074\ub9ad\ud558\uba74, \uc13c\uc11c\uac12\ub9cc \ud655\uc778\ud560 \uc218 \uc788\uc2b5\ub2c8\ub2e4.", !0), this.hwModule.monitorTemplate && (this.hwMonitor ? (this.hwMonitor._hwModule = 
+  this.hwModule, this.hwMonitor.initView()) : this.hwMonitor = new Entry.HWMonitor(this.hwModule), Entry.propertyPanel.addMode("hw", this.hwMonitor), b = this.hwModule.monitorTemplate, "both" == b.mode ? (b.mode = "list", this.hwMonitor.generateListView(), b.mode = "general", this.hwMonitor.generateView(), b.mode = "both") : "list" == b.mode ? this.hwMonitor.generateListView() : this.hwMonitor.generateView())));
 };
 p.banHW = function() {
   var b = this.hwInfo, a;

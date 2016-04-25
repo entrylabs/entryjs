@@ -85,9 +85,9 @@ Entry.Bitbrick = {
   dcMaxValue: 100,
   dcMinValue: -100,
   monitorTemplate: {
-        imgPath: "hw/bitbrick.gif",
-        width: 133,
-        height: 153,
+        imgPath: "hw/bitbrick.png",
+        width: 400,
+        height: 400,
         listPorts: {
             "1":{name: Lang.Hw.port_en + " 1 " + Lang.Hw.port_ko, type: "input", pos: {x : 0, y: 0}},
             "2":{name: Lang.Hw.port_en + " 2 " + Lang.Hw.port_ko, type: "input", pos: {x: 0, y: 0}},
@@ -448,7 +448,7 @@ Blockly.Blocks.bitbrick_convert_scale = {
 
 Entry.block.bitbrick_convert_scale = function (sprite, script) {
     var port = script.getNumberField("PORT");
-    var value1 = Entry.hw.portData[port].value;    
+    var value1 = Entry.hw.portData[port].value;
     var value2 = script.getNumberValue("VALUE2", script);
     var value3 = script.getNumberValue("VALUE3", script);
     var value4 = script.getNumberValue("VALUE4", script);
