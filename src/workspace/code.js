@@ -41,7 +41,7 @@ Entry.PARAM = -1;
 
     p.load = function(code) {
         if (!(code instanceof Array))
-            return console.error("code must be array");
+            code = JSON.parse(code);
 
         this.clear();
 

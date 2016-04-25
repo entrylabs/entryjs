@@ -801,7 +801,7 @@ Entry.EntryObject.prototype.setScript = function(script) {
  * @return {!xml script} script
  */
 Entry.EntryObject.prototype.getScriptText = function() {
-    return this.script.toJSON();
+    return JSON.stringify(this.script.toJSON());
 };
 
 /**

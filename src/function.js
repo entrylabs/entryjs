@@ -23,6 +23,8 @@ Entry.Func = function() {
     this.block = null;
     this.hashMap = {};
 
+    this.paramMap = {};
+
     var blockSchema = function () {};
     blockSchema.prototype = Entry.block.function_general;
     blockSchema = new blockSchema();
@@ -258,6 +260,7 @@ Entry.Func.generateWsBlock = function() {
     var schemaParams = [];
     var schemaTemplate = "";
     var hashMap = this.targetFunc.hashMap;
+    var paramMap = this.targetFunc.paramMap;
     this.unbindFuncChangeEvent();
     while(outputBlock) {
         var value = outputBlock.params[0];
@@ -271,6 +274,7 @@ Entry.Func.generateWsBlock = function() {
                         " " + (booleanIndex ? booleanIndex : "")
                 });
                 hashMap[value.type] = false;
+                paramMap[value.type] = booleanIndex + stringIndex;
                 booleanIndex++;
                 schemaParams.push({
                     type: "Block",
@@ -284,6 +288,7 @@ Entry.Func.generateWsBlock = function() {
                         " " + (stringIndex ? stringIndex : "")
                 });
                 hashMap[value.type] = false;
+                paramMap[value.type] = booleanIndex + stringIndex;
                 stringIndex++;
                 schemaTemplate += " %" + (booleanIndex + stringIndex);
                 schemaParams.push({

@@ -714,8 +714,8 @@ Blockly.Blocks.arduino_toggle_led = {init:function() {
   this.setNextStatement(!0);
 }};
 Entry.block.arduino_toggle_led = function(a, b) {
-  var c = b.getNumberValue("VALUE"), d = "on" == b.getField("OPERATOR") ? 255 : 0;
-  Entry.hw.setDigitalPortValue(c, d);
+  var c = b.getNumberValue("VALUE"), d = b.getField("OPERATOR");
+  Entry.hw.setDigitalPortValue(c, "on" == d ? 255 : 0);
   return b.callReturn();
 };
 Blockly.Blocks.arduino_toggle_pwm = {init:function() {
@@ -1693,10 +1693,10 @@ Entry.block.wait_second = function(a, b) {
   }
   b.isStart = !0;
   b.timeFlag = 1;
-  var c = b.getNumberValue("SECOND", b), c = 60 / (Entry.FPS || 60) * c * 1E3;
+  var c = b.getNumberValue("SECOND", b);
   setTimeout(function() {
     b.timeFlag = 0;
-  }, c);
+  }, 60 / (Entry.FPS || 60) * c * 1E3);
   return b;
 };
 Blockly.Blocks.repeat_basic = {init:function() {
@@ -1955,7 +1955,9 @@ Blockly.Blocks.function_param_string = {init:function() {
 Entry.block.function_param_string = function(a, b, c) {
   return b.register[b.hashId].run();
 };
-Entry.block.function_param_string = {skeleton:"basic_string_field", color:"#ffd974", template:"\ubb38\uc790/\uc22b\uc790\uac12"};
+Entry.block.function_param_string = {skeleton:"basic_string_field", color:"#ffd974", template:"\ubb38\uc790/\uc22b\uc790\uac12", func:function() {
+  return this.executor.register.params[this.executor.register.paramMap[this.block.type]];
+}};
 Blockly.Blocks.function_param_boolean = {init:function() {
   this.setEditable(!1);
   this.setColour("#2FC9F0");
@@ -1974,7 +1976,9 @@ Blockly.Blocks.function_param_boolean = {init:function() {
 Entry.block.function_param_boolean = function(a, b, c) {
   return b.register[b.hashId].run();
 };
-Entry.block.function_param_boolean = {skeleton:"basic_boolean_field", color:"#aeb8ff", template:"\ud310\ub2e8\uac12"};
+Entry.block.function_param_boolean = {skeleton:"basic_boolean_field", color:"#aeb8ff", template:"\ud310\ub2e8\uac12", func:function() {
+  return this.executor.register.params[this.executor.register.paramMap[this.block.type]];
+}};
 Blockly.Blocks.function_create = {init:function() {
   this.appendDummyInput().appendField(Lang.Blocks.FUNCTION_define);
   this.setColour("#cc7337");
@@ -2043,7 +2047,14 @@ Entry.block.function_general = function(a, b) {
   return b.callReturn();
 };
 Entry.block.function_general = {skeleton:"basic", color:"#cc7337", template:"\ud568\uc218", params:[], func:function(a) {
-  this.initiated || (this.initiated = !0, this.funcCode = Entry.variableContainer.getFunction(this.block.type.substr(5, 9)).content, this.funcExecutor = this.funcCode.raiseEvent("funcDef", a)[0]);
+  if (!this.initiated) {
+    this.initiated = !0;
+    var b = Entry.variableContainer.getFunction(this.block.type.substr(5, 9));
+    this.funcCode = b.content;
+    this.funcExecutor = this.funcCode.raiseEvent("funcDef", a)[0];
+    this.funcExecutor.register.params = this.getParams();
+    this.funcExecutor.register.paramMap = b.paramMap;
+  }
   this.funcExecutor.execute();
   if (!this.funcExecutor.isEnd()) {
     return this.funcCode.removeExecutor(this.funcExecutor), Entry.STATIC.BREAK;
@@ -7121,7 +7132,7 @@ Entry.EntryObject.prototype.setScript = function(a) {
   this.script = a;
 };
 Entry.EntryObject.prototype.getScriptText = function() {
-  return this.script.toJSON();
+  return JSON.stringify(this.script.toJSON());
 };
 Entry.EntryObject.prototype.initEntity = function(a) {
   var b = {};
@@ -10993,6 +11004,7 @@ Entry.Func = function() {
   this.content = new Entry.Code([[{type:"function_create", x:40, y:40}]]);
   this.block = null;
   this.hashMap = {};
+  this.paramMap = {};
   var a = function() {
   };
   a.prototype = Entry.block.function_general;
@@ -11123,28 +11135,29 @@ Entry.Func.prototype.generateBlock = function(a) {
   this.description = a.description;
 };
 Entry.Func.generateWsBlock = function() {
-  var a = this.targetFunc.content.getEventMap("funcDef")[0].params[0], b = 0, c = 0, d = [], e = "", f = this.targetFunc.hashMap;
+  var a = this.targetFunc.content.getEventMap("funcDef")[0].params[0], b = 0, c = 0, d = [], e = "", f = this.targetFunc.hashMap, g = this.targetFunc.paramMap;
   for (this.unbindFuncChangeEvent();a;) {
-    var g = a.params[0];
+    var h = a.params[0];
     switch(a.type) {
       case "function_field_label":
-        e = e + " " + g;
+        e = e + " " + h;
         break;
       case "function_field_boolean":
-        Entry.Mutator.mutate(g.type, {template:Lang.Blocks.FUNCTION_logical_variable + " " + (b ? b : "")});
-        f[g.type] = !1;
+        Entry.Mutator.mutate(h.type, {template:Lang.Blocks.FUNCTION_logical_variable + " " + (b ? b : "")});
+        f[h.type] = !1;
+        g[h.type] = b + c;
         b++;
         d.push({type:"Block", accept:"booleanMagnet"});
         e += " %" + (b + c);
         break;
       case "function_field_string":
-        Entry.Mutator.mutate(g.type, {template:Lang.Blocks.FUNCTION_character_variable + " " + (c ? c : "")}), f[g.type] = !1, c++, e += " %" + (b + c), d.push({type:"Block", accept:"stringMagnet"});
+        Entry.Mutator.mutate(h.type, {template:Lang.Blocks.FUNCTION_character_variable + " " + (c ? c : "")}), f[h.type] = !1, g[h.type] = b + c, c++, e += " %" + (b + c), d.push({type:"Block", accept:"stringMagnet"});
     }
     a = a.getOutputBlock();
   }
   Entry.Mutator.mutate("func_" + this.targetFunc.id, {params:d, template:e});
-  for (var h in f) {
-    f[h] ? (a = -1 < h.indexOf("string") ? Lang.Blocks.FUNCTION_character_variable : Lang.Blocks.FUNCTION_logical_variable, Entry.Mutator.mutate(h, {template:a})) : f[h] = !0;
+  for (var k in f) {
+    f[k] ? (a = -1 < k.indexOf("string") ? Lang.Blocks.FUNCTION_character_variable : Lang.Blocks.FUNCTION_logical_variable, Entry.Mutator.mutate(k, {template:a})) : f[k] = !0;
   }
   this.refreshMenuCode();
   this.bindFuncChangeEvent();
@@ -14277,9 +14290,7 @@ Entry.PARAM = -1;
 (function(a) {
   a.schema = {view:null, board:null};
   a.load = function(b) {
-    if (!(b instanceof Array)) {
-      return console.error("code must be array");
-    }
+    b instanceof Array || (b = JSON.parse(b));
     this.clear();
     for (var a = 0;a < b.length;a++) {
       this._data.push(new Entry.Thread(b[a], this));
@@ -14498,6 +14509,7 @@ Entry.Executor = function(a, b) {
   this.scope = new Entry.Scope(a, this);
   this.entity = b;
   this._callStack = [];
+  this.register = {};
 };
 (function(a) {
   a.execute = function() {
@@ -14545,6 +14557,21 @@ Entry.Scope = function(a, b) {
 };
 (function(a) {
   a.callReturn = function() {
+  };
+  a.getParam = function(b) {
+    b = this.block.params[b];
+    var a = new Entry.Scope(b, this.executor);
+    return Entry.block[b.type].func.call(a, this.entity, a);
+  };
+  a.getParams = function() {
+    var b = this;
+    return this.block.params.map(function(a) {
+      if (a instanceof Entry.Block) {
+        var d = new Entry.Scope(a, b.executor);
+        return Entry.block[a.type].func.call(d, b.entity, d);
+      }
+      return a;
+    });
   };
   a.getValue = function(b, a) {
     var d = this.block.params[this._getParamIndex(b, a)], e = new Entry.Scope(d, this.executor);
@@ -16160,8 +16187,8 @@ Entry.Board = function(a) {
     }
     return h;
   };
-  a._getOutputMagnets = function(a, c, d, e) {
-    var f = a.getBlocks(), g = [], h = [];
+  a._getOutputMagnets = function(b, a, d, e) {
+    var f = b.getBlocks(), g = [], h = [];
     d || (d = {x:0, y:0});
     var k = d.x;
     d = d.y;
@@ -16170,14 +16197,14 @@ Entry.Board = function(a) {
       if (l.dragInstance) {
         break;
       }
-      l.zIndex = c;
+      l.zIndex = a;
       d += l.y;
       k += l.x;
-      h = h.concat(this._getOutputMetaData(l, k, d, c, e));
-      n.statements && (c += .01);
+      h = h.concat(this._getOutputMetaData(l, k, d, a, e));
+      n.statements && (a += .01);
       for (var q = 0;q < n.statements.length;q++) {
-        a = n.statements[q];
-        var r = n.view._statements[q], g = g.concat(this._getOutputMagnets(a, c, {x:r.x + k, y:r.y + d}, e));
+        b = n.statements[q];
+        var r = n.view._statements[q], g = g.concat(this._getOutputMagnets(b, a, {x:r.x + k, y:r.y + d}, e));
       }
       l.magnet.next && (d += l.magnet.next.y, k += l.magnet.next.x);
     }

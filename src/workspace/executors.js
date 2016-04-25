@@ -9,6 +9,7 @@ Entry.Executor = function(block, entity) {
     this.scope = new Entry.Scope(block, this);
     this.entity = entity;
     this._callStack = [];
+    this.register = {};
 };
 
 (function(p) {
@@ -70,6 +71,24 @@ Entry.Scope = function(block, executor) {
 (function(p) {
     p.callReturn = function() {
         return undefined;
+    };
+
+    p.getParam = function(index) {
+        var fieldBlock = this.block.params[index];
+        var newScope = new Entry.Scope(fieldBlock, this.executor);
+        var result = Entry.block[fieldBlock.type].func.call(newScope, this.entity, newScope);
+        return result;
+    };
+
+    p.getParams = function() {
+        var that = this;
+        return this.block.params.map(function(param){
+            if (param instanceof Entry.Block) {
+                var fieldBlock = param;
+                var newScope = new Entry.Scope(fieldBlock, that.executor);
+                return Entry.block[fieldBlock.type].func.call(newScope, that.entity, newScope);
+            } else return param;
+        });
     };
 
     p.getValue = function(key, block) {

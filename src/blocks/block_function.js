@@ -145,7 +145,10 @@ Entry.block.function_param_string = function (sprite, script, register) {
 Entry.block.function_param_string = {
     skeleton: "basic_string_field",
     color: "#ffd974",
-    template: "문자/숫자값"
+    template: "문자/숫자값",
+    func: function() {
+        return this.executor.register.params[this.executor.register.paramMap[this.block.type]];
+    }
 };
 
 Blockly.Blocks.function_param_boolean = {
@@ -177,7 +180,10 @@ Entry.block.function_param_boolean = function (sprite, script, register) {
 Entry.block.function_param_boolean = {
     skeleton: "basic_boolean_field",
     color: "#aeb8ff",
-    template: "판단값"
+    template: "판단값",
+    func: function() {
+        return this.executor.register.params[this.executor.register.paramMap[this.block.type]];
+    }
 };
 
 Blockly.Blocks.function_create = {
@@ -318,10 +324,14 @@ Entry.block.function_general = {
         if (!this.initiated) {
             this.initiated = true;
 
-            this.funcCode = Entry.variableContainer.getFunction(
+            var func = Entry.variableContainer.getFunction(
                 this.block.type.substr(5, 9)
-            ).content;
+            );
+            this.funcCode = func.content;
             this.funcExecutor = this.funcCode.raiseEvent("funcDef", entity)[0];
+            this.funcExecutor.register.params = this.getParams();
+            var paramMap = {};
+            this.funcExecutor.register.paramMap = func.paramMap;
         }
         this.funcExecutor.execute();
         if (!this.funcExecutor.isEnd()) {
