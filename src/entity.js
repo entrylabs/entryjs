@@ -13,7 +13,6 @@ Entry.EntityObject = function(object) {
     this.parent = object;
     this.type = object.objectType;
     /** @type {Array<xml script>} */
-    this.runningScript = [];
     this.flip = false;
     this.id = Entry.generateHash();
 
@@ -165,14 +164,6 @@ Entry.EntityObject.prototype.restoreEntity = function(entityModel) {
             this.restoreEntity,
             currentModel
         );
-};
-
-/**
- * clear runningscript
- */
-Entry.EntityObject.prototype.clearScript = function(entityModel) {
-    while (this.runningScript.length)
-        this.runningScript.pop();
 };
 
 /**

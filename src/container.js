@@ -554,7 +554,7 @@ Entry.Container.prototype.getDropdownList = function(menuName) {
  */
 Entry.Container.prototype.clearRunningState = function() {
     this.mapObject(function(object) {
-        object.entity.clearScript();
+        object.clearExecutor();
         for (var j = object.clonedEntities.length; j>0; j--) {
             var entity = object.clonedEntities[j-1];
             entity.removeClone();

@@ -28,7 +28,7 @@ Entry.Executor = function(block, entity) {
                         break;
                 }
             } else if (returnVal === Entry.STATIC.CONTINUE) {
-            } else if (returnVal === Entry.STATIC.BREAK) {
+            } else if (returnVal === Entry.STATIC.BREAK || this.scope === returnVal) {
                 break;
             }
         }

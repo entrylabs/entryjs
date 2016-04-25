@@ -1447,3 +1447,7 @@ Entry.EntryObject.prototype.getStampEntities = function() {
     });
     return entities;
 };
+
+Entry.EntryObject.prototype.clearExecutor = function() {
+    this.script.clearExecutors();
+};

@@ -714,8 +714,8 @@ Blockly.Blocks.arduino_toggle_led = {init:function() {
   this.setNextStatement(!0);
 }};
 Entry.block.arduino_toggle_led = function(a, b) {
-  var c = b.getNumberValue("VALUE"), d = "on" == b.getField("OPERATOR") ? 255 : 0;
-  Entry.hw.setDigitalPortValue(c, d);
+  var c = b.getNumberValue("VALUE"), d = b.getField("OPERATOR");
+  Entry.hw.setDigitalPortValue(c, "on" == d ? 255 : 0);
   return b.callReturn();
 };
 Blockly.Blocks.arduino_toggle_pwm = {init:function() {
@@ -1693,10 +1693,10 @@ Entry.block.wait_second = function(a, b) {
   }
   b.isStart = !0;
   b.timeFlag = 1;
-  var c = b.getNumberValue("SECOND", b), c = 60 / (Entry.FPS || 60) * c * 1E3;
+  var c = b.getNumberValue("SECOND", b);
   setTimeout(function() {
     b.timeFlag = 0;
-  }, c);
+  }, 60 / (Entry.FPS || 60) * c * 1E3);
   return b;
 };
 Blockly.Blocks.repeat_basic = {init:function() {
@@ -5296,7 +5296,7 @@ Entry.Container.prototype.getDropdownList = function(a) {
 };
 Entry.Container.prototype.clearRunningState = function() {
   this.mapObject(function(a) {
-    a.entity.clearScript();
+    a.clearExecutor();
     for (var b = a.clonedEntities.length;0 < b;b--) {
       a.clonedEntities[b - 1].removeClone();
     }
@@ -6090,7 +6090,6 @@ Entry.Engine.prototype.updateProjectTimer = function(a) {
 Entry.EntityObject = function(a) {
   this.parent = a;
   this.type = a.objectType;
-  this.runningScript = [];
   this.flip = !1;
   this.id = Entry.generateHash();
   "sprite" == this.type ? (this.object = new createjs.Bitmap, this.effect = {}, this.setInitialEffectValue()) : "textBox" == this.type && (this.object = new createjs.Container, this.textObject = new createjs.Text, this.textObject.font = "20px Nanum Gothic", this.textObject.textBaseline = "middle", this.textObject.textAlign = "center", this.bgObject = new createjs.Shape, this.bgObject.graphics.setStrokeStyle(1).beginStroke("#f00").drawRect(0, 0, 100, 100), this.object.addChild(this.bgObject), this.object.addChild(this.textObject), 
@@ -6159,11 +6158,6 @@ Entry.EntityObject.prototype.restoreEntity = function(a) {
   this.syncModel_(a);
   Entry.dispatchEvent("updateObject");
   Entry.stateManager && Entry.stateManager.addCommand("restore object", this, this.restoreEntity, b);
-};
-Entry.EntityObject.prototype.clearScript = function(a) {
-  for (;this.runningScript.length;) {
-    this.runningScript.pop();
-  }
 };
 Entry.EntityObject.prototype.setX = function(a) {
   "number" == typeof a && (this.x = a, this.object.x = this.x, this.isClone || this.parent.updateCoordinateView(), this.updateDialog());
@@ -7406,6 +7400,9 @@ Entry.EntryObject.prototype.getStampEntities = function() {
     b.isStamp && a.push(b);
   });
   return a;
+};
+Entry.EntryObject.prototype.clearExecutor = function() {
+  this.script.clearExecutors();
 };
 Entry.Painter = function() {
   this.toolbox = {selected:"cursor"};
@@ -14495,7 +14492,7 @@ Entry.Executor = function(a, b) {
           }
         }
       } else {
-        if (b !== Entry.STATIC.CONTINUE && b === Entry.STATIC.BREAK) {
+        if (b !== Entry.STATIC.CONTINUE && (b === Entry.STATIC.BREAK || this.scope === b)) {
           break;
         }
       }
