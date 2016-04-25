@@ -84,7 +84,7 @@ Entry.Scope = function(block, executor) {
     };
 
     p.getField = function(key, block) {
-        return this.block.params[this._getParamIndex(key, block)];
+        return this.block.params[this._getParamIndex(key)];
     };
 
     p.getStringField = function() {
@@ -102,11 +102,11 @@ Entry.Scope = function(block, executor) {
         return Entry.STATIC.CONTINUE;
     };
 
-    p._getParamIndex = function(key, block) {
-        return Entry.block[block.type].paramsKeyMap[key];
+    p._getParamIndex = function(key) {
+        return Entry.block[this.type].paramsKeyMap[key];
     };
 
-    p._getStatementIndex = function(key, block) {
-        return Entry.block[block.type].statementsKeyMap[key];
+    p._getStatementIndex = function(key) {
+        return Entry.block[this.type].statementsKeyMap[key];
     };
 })(Entry.Scope.prototype);

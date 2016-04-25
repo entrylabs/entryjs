@@ -14531,7 +14531,7 @@ Entry.Scope = function(a, b) {
     return Number(this.getValue(b, a)) ? !0 : !1;
   };
   a.getField = function(b, a) {
-    return this.block.params[this._getParamIndex(b, a)];
+    return this.block.params[this._getParamIndex(b)];
   };
   a.getStringField = function() {
     return String(this.getField());
@@ -14543,11 +14543,11 @@ Entry.Scope = function(a, b) {
     this.executor.stepInto(this.block.statements[this._getStatementIndex(b, a)]);
     return Entry.STATIC.CONTINUE;
   };
-  a._getParamIndex = function(b, a) {
-    return Entry.block[a.type].paramsKeyMap[b];
+  a._getParamIndex = function(b) {
+    return Entry.block[this.type].paramsKeyMap[b];
   };
-  a._getStatementIndex = function(b, a) {
-    return Entry.block[a.type].statementsKeyMap[b];
+  a._getStatementIndex = function(b) {
+    return Entry.block[this.type].statementsKeyMap[b];
   };
 })(Entry.Scope.prototype);
 Entry.Field = function() {
