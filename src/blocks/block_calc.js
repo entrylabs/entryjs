@@ -16,7 +16,7 @@ Blockly.Blocks.number = {
 };
 
 Entry.block.number = function (sprite, script) {
-    return script.getField('NUM');
+    return script.getField('NUM', script);
 };
 
 Blockly.Blocks.angle = {
