@@ -14500,13 +14500,13 @@ Entry.Executor = function(a, b) {
   };
   a.stepInto = function(b) {
     b instanceof Entry.Thread || console.error("Must step in to thread");
-    this._callStack.push(this.scope);
     b = b.getFirstBlock();
     if (!b) {
-      throw Entry.toast.alert(Lang.Msgs.runtime_error, Lang.Workspace.check_runtime_error, !0), Entry.engine.toggleStop(), "workspace" == Entry.type && (Entry.container.selectObject(), Entry.container.selectObject(this.entity.parent.id, !0), Entry.playground.changeViewMode("code")), Error("Statement is empty.");
+      return Entry.STATIC.BREAK;
     }
-    console.log(b);
+    this._callStack.push(this.scope);
     this.scope = new Entry.Scope(b, this);
+    return Entry.STATIC.CONTINUE;
   };
   a.break = function() {
     this._callStack.length && (this.scope = this._callStack.pop());
@@ -14544,8 +14544,7 @@ Entry.Scope = function(a, b) {
     return Number(this.getField());
   };
   a.getStatement = function(b, a) {
-    this.executor.stepInto(this.block.statements[this._getStatementIndex(b, a)]);
-    return Entry.STATIC.CONTINUE;
+    return this.executor.stepInto(this.block.statements[this._getStatementIndex(b, a)]);
   };
   a._getParamIndex = function(b) {
     return Entry.block[this.type].paramsKeyMap[b];
@@ -16115,16 +16114,16 @@ Entry.Board = function(a) {
     }
     return g.concat(h);
   };
-  a._getFieldBlockMetaData = function(b, a, d, e, f) {
-    var g = b._contents, h = [];
-    a += b.contentPos.x;
-    d += b.contentPos.y;
+  a._getFieldBlockMetaData = function(a, c, d, e, f) {
+    var g = a._contents, h = [];
+    c += a.contentPos.x;
+    d += a.contentPos.y;
     for (var k = 0;k < g.length;k++) {
       var m = g[k];
       if (m instanceof Entry.FieldBlock && m.acceptType === f) {
         var n = m._valueBlock;
         if (!n.view.dragInstance) {
-          var l = a + m.box.x, q = d + m.box.y + -.5 * b.height, m = d + m.box.y + m.box.height;
+          var l = c + m.box.x, q = d + m.box.y + -.5 * a.height, m = d + m.box.y + m.box.height;
           h.push({point:q, endPoint:m, startBlock:n, blocks:[]});
           h.push({point:m, blocks:[]});
           n = n.view;

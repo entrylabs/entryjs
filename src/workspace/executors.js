@@ -38,25 +38,15 @@ Entry.Executor = function(block, entity) {
         if (!(thread instanceof Entry.Thread))
             console.error("Must step in to thread");
 
-        this._callStack.push(this.scope);
-
         var block = thread.getFirstBlock();
         if (!block) {
-            Entry.toast.alert(Lang.Msgs.runtime_error,
-                              Lang.Workspace.check_runtime_error, true);
-            Entry.engine.toggleStop();
-            if (Entry.type == 'workspace') {
-                Entry.container.selectObject();
-                Entry.container.selectObject(this.entity.parent.id, true);
-                Entry.playground.changeViewMode('code');
-                //Blockly.mainWorkspace.activatePreviousBlock(script.id);
-            }
-
-            throw new Error("Statement is empty.");
+            return Entry.STATIC.BREAK;
         }
-        console.log(block);
+
+        this._callStack.push(this.scope);
 
         this.scope = new Entry.Scope(block, this);
+        return Entry.STATIC.CONTINUE;
     };
 
     p.break = function() {
@@ -110,10 +100,9 @@ Entry.Scope = function(block, executor) {
     };
 
     p.getStatement = function(key, block) {
-        this.executor.stepInto(this.block.statements[
+        return this.executor.stepInto(this.block.statements[
             this._getStatementIndex(key, block)
         ]);
-        return Entry.STATIC.CONTINUE;
     };
 
     p._getParamIndex = function(key) {
