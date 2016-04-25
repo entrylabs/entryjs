@@ -714,8 +714,8 @@ Blockly.Blocks.arduino_toggle_led = {init:function() {
   this.setNextStatement(!0);
 }};
 Entry.block.arduino_toggle_led = function(a, b) {
-  var c = b.getNumberValue("VALUE"), d = "on" == b.getField("OPERATOR") ? 255 : 0;
-  Entry.hw.setDigitalPortValue(c, d);
+  var c = b.getNumberValue("VALUE"), d = b.getField("OPERATOR");
+  Entry.hw.setDigitalPortValue(c, "on" == d ? 255 : 0);
   return b.callReturn();
 };
 Blockly.Blocks.arduino_toggle_pwm = {init:function() {
@@ -1693,10 +1693,10 @@ Entry.block.wait_second = function(a, b) {
   }
   b.isStart = !0;
   b.timeFlag = 1;
-  var c = b.getNumberValue("SECOND", b), c = 60 / (Entry.FPS || 60) * c * 1E3;
+  var c = b.getNumberValue("SECOND", b);
   setTimeout(function() {
     b.timeFlag = 0;
-  }, c);
+  }, 60 / (Entry.FPS || 60) * c * 1E3);
   return b;
 };
 Blockly.Blocks.repeat_basic = {init:function() {
@@ -14502,6 +14502,10 @@ Entry.Executor = function(a, b) {
     b instanceof Entry.Thread || console.error("Must step in to thread");
     this._callStack.push(this.scope);
     b = b.getFirstBlock();
+    if (!b) {
+      throw Entry.toast.alert(Lang.Msgs.runtime_error, Lang.Workspace.check_runtime_error, !0), Entry.engine.toggleStop(), "workspace" == Entry.type && (Entry.container.selectObject(), Entry.container.selectObject(this.entity.parent.id, !0), Entry.playground.changeViewMode("code")), Error("Statement is empty.");
+    }
+    console.log(b);
     this.scope = new Entry.Scope(b, this);
   };
   a.break = function() {
@@ -16111,16 +16115,16 @@ Entry.Board = function(a) {
     }
     return g.concat(h);
   };
-  a._getFieldBlockMetaData = function(a, c, d, e, f) {
-    var g = a._contents, h = [];
-    c += a.contentPos.x;
-    d += a.contentPos.y;
+  a._getFieldBlockMetaData = function(b, a, d, e, f) {
+    var g = b._contents, h = [];
+    a += b.contentPos.x;
+    d += b.contentPos.y;
     for (var k = 0;k < g.length;k++) {
       var m = g[k];
       if (m instanceof Entry.FieldBlock && m.acceptType === f) {
         var n = m._valueBlock;
         if (!n.view.dragInstance) {
-          var l = c + m.box.x, q = d + m.box.y + -.5 * a.height, m = d + m.box.y + m.box.height;
+          var l = a + m.box.x, q = d + m.box.y + -.5 * b.height, m = d + m.box.y + m.box.height;
           h.push({point:q, endPoint:m, startBlock:n, blocks:[]});
           h.push({point:m, blocks:[]});
           n = n.view;

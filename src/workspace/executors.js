@@ -41,6 +41,20 @@ Entry.Executor = function(block, entity) {
         this._callStack.push(this.scope);
 
         var block = thread.getFirstBlock();
+        if (!block) {
+            Entry.toast.alert(Lang.Msgs.runtime_error,
+                              Lang.Workspace.check_runtime_error, true);
+            Entry.engine.toggleStop();
+            if (Entry.type == 'workspace') {
+                Entry.container.selectObject();
+                Entry.container.selectObject(this.entity.parent.id, true);
+                Entry.playground.changeViewMode('code');
+                //Blockly.mainWorkspace.activatePreviousBlock(script.id);
+            }
+
+            throw new Error("Statement is empty.");
+        }
+        console.log(block);
 
         this.scope = new Entry.Scope(block, this);
     };
