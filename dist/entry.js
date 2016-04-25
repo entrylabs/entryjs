@@ -12816,9 +12816,9 @@ Entry.HWMonitor = function(b) {
     this._svgGroup.attr({transform:"translate(" + a.width / 2 + "," + a.height / 1.8 + ")"});
     this._rect = a;
     if (!(0 >= this._template.height || 0 >= a.height)) {
-      this.scale = this._template.height / 100 * (a.height / 1E3);
-      var b = (this._template.height - a.height) / a.height;
-      this._template.height * this.scale > a.height && (this.scale = a.height / this._template.height - b);
+      this.scale = a.height / this._template.height * this._template.height / 1E3;
+      var b = (1 - this.scale) / 2;
+      this._template.height > a.height ? (this.scale -= b / 2, .1 > this.scale && (this.scale = .1)) : this.scale += b;
       this.align();
     }
   };
