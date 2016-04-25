@@ -5641,8 +5641,8 @@ Entry.Observer = function(a, b, c, d) {
 };
 (function(a) {
   a.destroy = function() {
-    var b = this.parent, a = b.indexOf(this);
-    -1 < a && b.splice(a, 1);
+    var a = this.parent, c = a.indexOf(this);
+    -1 < c && a.splice(c, 1);
     return this;
   };
 })(Entry.Observer.prototype);
@@ -10418,10 +10418,7 @@ Entry.PropertyPanel = function() {
     this.splitter = d;
   };
   a.addMode = function(a, c) {
-    if ("hw" == a && this.modes.hw) {
-      var d = c.getView()
-    }
-    var d = Entry.Dom(d, {parent:this._contentView}), e = Entry.Dom("<div>" + a + "</div>", {classes:["propertyTabElement", "propertyTab" + a], parent:this._tabView}), f = this;
+    var d = c.getView(), d = Entry.Dom(d, {parent:this._contentView}), e = Entry.Dom("<div>" + a + "</div>", {classes:["propertyTabElement", "propertyTab" + a], parent:this._tabView}), f = this;
     e.bind("click", function() {
       f.select(a);
     });
@@ -12510,11 +12507,10 @@ Entry.HWMonitor = function(a) {
   this._listPortViews = {};
 };
 (function(a) {
-  a.init = function() {
+  a.initView = function() {
     this.svgDom = Entry.Dom($('<svg id="hwMonitor" width="100%" height="100%"version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'));
   };
   a.generateView = function() {
-    this.snap = null;
     this.snap = Entry.SVG("hwMonitor");
     this._svgGroup = this.snap.elem("g");
     this._portMap = {n:[], e:[], s:[], w:[]};
@@ -12856,7 +12852,7 @@ p.setZero = function() {
 };
 p.checkDevice = function(a) {
   void 0 !== a.company && (a = "" + a.company + a.model, a != this.selectedDevice && (this.selectedDevice = a, this.hwModule = this.hwInfo[a], Entry.dispatchEvent("hwChanged"), Entry.toast.success("\ud558\ub4dc\uc6e8\uc5b4 \uc5f0\uacb0 \uc131\uacf5", "\ud558\ub4dc\uc6e8\uc5b4 \uc544\uc774\ucf58\uc744 \ub354\ube14\ud074\ub9ad\ud558\uba74, \uc13c\uc11c\uac12\ub9cc \ud655\uc778\ud560 \uc218 \uc788\uc2b5\ub2c8\ub2e4.", !0), this.hwModule.monitorTemplate && (this.hwMonitor ? (this.hwMonitor._hwModule = 
-  this.hwModule, this.hwMonitor.init()) : this.hwMonitor = new Entry.HWMonitor(this.hwModule), Entry.propertyPanel.addMode("hw", this.hwMonitor), a = this.hwModule.monitorTemplate, "both" == a.mode ? (a.mode = "list", this.hwMonitor.generateListView(), a.mode = "general", this.hwMonitor.generateView(), a.mode = "both") : "list" == a.mode ? this.hwMonitor.generateListView() : this.hwMonitor.generateView())));
+  this.hwModule, this.hwMonitor.initView()) : this.hwMonitor = new Entry.HWMonitor(this.hwModule), Entry.propertyPanel.addMode("hw", this.hwMonitor), a = this.hwModule.monitorTemplate, "both" == a.mode ? (a.mode = "list", this.hwMonitor.generateListView(), a.mode = "general", this.hwMonitor.generateView(), a.mode = "both") : "list" == a.mode ? this.hwMonitor.generateListView() : this.hwMonitor.generateView())));
 };
 p.banHW = function() {
   var a = this.hwInfo, b;

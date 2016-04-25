@@ -39,7 +39,7 @@ Entry.PropertyPanel = function() {
     };
 
     p.addMode = function(mode, contentObj) {
-       if(mode == 'hw' && this.modes.hw)
+
         var contentDom = contentObj.getView();
         // will be removed after apply new Dom class
         contentDom = Entry.Dom(contentDom, {
@@ -70,7 +70,7 @@ Entry.PropertyPanel = function() {
             tabDom: tabDom,
             contentDom: contentDom
         };
-     if(mode == 'hw') {
+        if(mode == 'hw') {
             $('.propertyTabhw').bind('dblclick',(function(){
                 Entry.dispatchEvent('hwModeChange');
             }));

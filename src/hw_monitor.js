@@ -33,13 +33,12 @@ Entry.HWMonitor = function(hwModule) {
 (function(p) {
     /**
     */
-    p.init =function() {
+    p.initView =function() {
         this.svgDom = Entry.Dom(
             $('<svg id="hwMonitor" width="100%" height="100%"' + 'version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>')
          );
     };
     p.generateView = function() {
-        this.snap = null;
         this.snap = Entry.SVG('hwMonitor');
         this._svgGroup = this.snap.elem("g");
         this._portMap = {
