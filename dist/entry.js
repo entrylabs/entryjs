@@ -714,8 +714,8 @@ Blockly.Blocks.arduino_toggle_led = {init:function() {
   this.setNextStatement(!0);
 }};
 Entry.block.arduino_toggle_led = function(a, b) {
-  var c = b.getNumberValue("VALUE"), d = b.getField("OPERATOR");
-  Entry.hw.setDigitalPortValue(c, "on" == d ? 255 : 0);
+  var c = b.getNumberValue("VALUE"), d = "on" == b.getField("OPERATOR") ? 255 : 0;
+  Entry.hw.setDigitalPortValue(c, d);
   return b.callReturn();
 };
 Blockly.Blocks.arduino_toggle_pwm = {init:function() {
@@ -1693,10 +1693,10 @@ Entry.block.wait_second = function(a, b) {
   }
   b.isStart = !0;
   b.timeFlag = 1;
-  var c = b.getNumberValue("SECOND", b);
+  var c = b.getNumberValue("SECOND", b), c = 60 / (Entry.FPS || 60) * c * 1E3;
   setTimeout(function() {
     b.timeFlag = 0;
-  }, 60 / (Entry.FPS || 60) * c * 1E3);
+  }, c);
   return b;
 };
 Blockly.Blocks.repeat_basic = {init:function() {
@@ -14539,12 +14539,15 @@ Entry.Scope = function(a, b) {
   a.getNumberField = function() {
     return Number(this.getField());
   };
-  a.getStatement = function(b) {
-    this.executor.stepInto(this.block.statements[0]);
+  a.getStatement = function(b, a) {
+    this.executor.stepInto(this.block.statements[this._getStatementIndex(b, a)]);
     return Entry.STATIC.CONTINUE;
   };
   a._getParamIndex = function(b, a) {
     return Entry.block[a.type].paramsKeyMap[b];
+  };
+  a._getStatementIndex = function(b, a) {
+    return Entry.block[a.type].statementsKeyMap[b];
   };
 })(Entry.Scope.prototype);
 Entry.Field = function() {

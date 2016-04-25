@@ -95,12 +95,18 @@ Entry.Scope = function(block, executor) {
         return Number(this.getField());
     };
 
-    p.getStatement = function(key) {
-        this.executor.stepInto(this.block.statements[0]);
+    p.getStatement = function(key, block) {
+        this.executor.stepInto(this.block.statements[
+            this._getStatementIndex(key, block)
+        ]);
         return Entry.STATIC.CONTINUE;
     };
 
     p._getParamIndex = function(key, block) {
         return Entry.block[block.type].paramsKeyMap[key];
+    };
+
+    p._getStatementIndex = function(key, block) {
+        return Entry.block[block.type].statementsKeyMap[key];
     };
 })(Entry.Scope.prototype);
