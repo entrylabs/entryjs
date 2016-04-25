@@ -339,14 +339,24 @@ Entry.HWMonitor = function(hwModule) {
 //        this.scale =  (this._template.height/100 *(bRect.height /1000));
         this.scale =  (this._template.height *(bRect.height /this._template.height))/1000;
         var temp = (1-this.scale)/2;
-        if(!(this._template.height >  bRect.height)) {
+
+    //if(this.scale + (this.scale/2) < 1)
+     //       this.scale += (this.scale/2);
+       /* if((this._template.height * (this.scale + temp) > bRect.height)) {
             this.scale += temp;
-        } else {
+        }else {
+            this.scale -= temp;
+        }
+*/
+       // if(this.scale < 0)
+       //     this.scale = 0.1;
+     /*   else {
              this.scale -= temp/2;
 
              if(this.scale < 0.1)
                  this.scale = 0.1;
         }
+        */
         //        var temp = (this._template.height - bRect.height)/bRect.height;
 
 /*        if(this._template.height*this.scale > bRect.height) {
@@ -359,7 +369,7 @@ Entry.HWMonitor = function(hwModule) {
         //    var imageBoxHeight = this._svgGroup.getBBox().height;
         //    var listHeight = this._svglistGroup.getBBox().height;
         //    var height = imageBoxHeight + (listHeight*0.565);
-        //    if(bRect.height < height)
+        ////    if(bRect.height < height)
         //        this.toastmsg.warning('알립니다!' ,"하드웨어아이콘을 더블클릭하면, 센서값만 확인할 수 있습니다. ");
        // }
         this.align();
