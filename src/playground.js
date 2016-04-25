@@ -809,6 +809,7 @@ Entry.Playground.prototype.injectObject = function(object) {
         this.changeViewMode('picture');
     else if (viewMode == 'sound')
         this.changeViewMode('sound');
+    this.reloadPlayground();
 };
 
 /**
@@ -1215,9 +1216,7 @@ Entry.Playground.prototype.reloadPlayground = function () {
     var mainWorkspace = this.mainWorkspace;
     mainWorkspace.getBlockMenu().reDraw();
 
-    if (Entry.stage.selectedObject) {
-        Entry.stage.selectedObject.script.view.reDraw();
-    }
+    if (this.object) this.object.script.view.reDraw();
 };
 
 /**

@@ -14537,7 +14537,7 @@ Entry.Scope = function(a, b) {
   a.getField = function(b, a) {
     return this.block.params[this._getParamIndex(b)];
   };
-  a.getStringField = function(b) {
+  a.getStringField = function(b, a) {
     return String(this.getField(b));
   };
   a.getNumberField = function(b) {
@@ -16135,8 +16135,8 @@ Entry.Board = function(a) {
     }
     return h;
   };
-  a._getOutputMagnets = function(b, a, d, e) {
-    var f = b.getBlocks(), g = [], h = [];
+  a._getOutputMagnets = function(a, c, d, e) {
+    var f = a.getBlocks(), g = [], h = [];
     d || (d = {x:0, y:0});
     var k = d.x;
     d = d.y;
@@ -16145,14 +16145,14 @@ Entry.Board = function(a) {
       if (l.dragInstance) {
         break;
       }
-      l.zIndex = a;
+      l.zIndex = c;
       d += l.y;
       k += l.x;
-      h = h.concat(this._getOutputMetaData(l, k, d, a, e));
-      n.statements && (a += .01);
+      h = h.concat(this._getOutputMetaData(l, k, d, c, e));
+      n.statements && (c += .01);
       for (var q = 0;q < n.statements.length;q++) {
-        b = n.statements[q];
-        var r = n.view._statements[q], g = g.concat(this._getOutputMagnets(b, a, {x:r.x + k, y:r.y + d}, e));
+        a = n.statements[q];
+        var r = n.view._statements[q], g = g.concat(this._getOutputMagnets(a, c, {x:r.x + k, y:r.y + d}, e));
       }
       l.magnet.next && (d += l.magnet.next.y, k += l.magnet.next.x);
     }
@@ -17552,6 +17552,7 @@ Entry.Playground.prototype.injectObject = function(a) {
       "sprite" == a.objectType && Entry.pictureEditable ? (this.tabViewElements.text && this.tabViewElements.text.addClass("entryRemove"), this.tabViewElements.picture && this.tabViewElements.picture.removeClass("entryRemove")) : "textBox" == a.objectType && (this.tabViewElements.picture && this.tabViewElements.picture.addClass("entryRemove"), this.tabViewElements.text && this.tabViewElements.text.removeClass("entryRemove"));
       var b = this.viewMode_;
       "default" == b ? this.changeViewMode("code") : "picture" != b && "text" != b || "textBox" != a.objectType ? "text" != b && "picture" != b || "sprite" != a.objectType ? "sound" == b && this.changeViewMode("sound") : this.changeViewMode("picture") : this.changeViewMode("text");
+      this.reloadPlayground();
     }
   }
 };
@@ -17777,7 +17778,7 @@ Entry.Playground.prototype.initializeResizeHandle = function(a) {
 };
 Entry.Playground.prototype.reloadPlayground = function() {
   this.mainWorkspace.getBlockMenu().reDraw();
-  Entry.stage.selectedObject && Entry.stage.selectedObject.script.view.reDraw();
+  this.object && this.object.script.view.reDraw();
 };
 Entry.Playground.prototype.flushPlayground = function() {
   this.object = null;
