@@ -591,8 +591,7 @@ Entry.VariableContainer.prototype.setVariables = function(variables) {
  */
 Entry.VariableContainer.prototype.setFunctions = function(functions) {
     for (var i in functions) {
-        var func = new Entry.Func();
-        func.init(functions[i]);
+        var func = new Entry.Func(functions[i]);
         func.generateBlock();
         this.createFunctionView(func);
         this.functions_[func.id] = func;
@@ -1351,8 +1350,7 @@ Entry.VariableContainer.prototype.getFunctionJSON = function() {
         var func = this.functions_[i];
         var funcJSON = {
             id: func.id,
-            block: func.block,
-            content: func.content.toJSON()
+            content: JSON.stringify(func.content.toJSON())
         };
         json.push(funcJSON);
     }

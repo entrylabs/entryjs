@@ -10,9 +10,9 @@ goog.require("Entry.Utils");
  * @param {variable model} variable
  * @constructor
  */
-Entry.Func = function() {
-    this.id = Entry.generateHash();
-    this.content = new Entry.Code([
+Entry.Func = function(func) {
+    this.id = func ? func.id : Entry.generateHash();
+    this.content = func ? new Entry.Code(func.content) : new Entry.Code([
         [
             {
                 type: "function_create",

@@ -4,10 +4,10 @@ var Entry = {block:{}, TEXT_ALIGN_CENTER:0, TEXT_ALIGN_LEFT:1, TEXT_ALIGN_RIGHT:
   Entry.projectId = a._id;
   Entry.variableContainer.setVariables(a.variables);
   Entry.variableContainer.setMessages(a.messages);
-  Entry.variableContainer.setFunctions(a.functions);
   Entry.scene.addScenes(a.scenes);
   Entry.stage.initObjectContainers();
   Entry.container.setObjects(a.objects);
+  Entry.variableContainer.setFunctions(a.functions);
   Entry.FPS = a.speed ? a.speed : 60;
   createjs.Ticker.setFPS(Entry.FPS);
   "workspace" == this.type && Entry.stateManager.endIgnore();
@@ -10999,13 +10999,13 @@ Entry.Model = function(a, b) {
     return b;
   };
 })(Entry.Model);
-Entry.Func = function() {
-  this.id = Entry.generateHash();
-  this.content = new Entry.Code([[{type:"function_create", x:40, y:40}]]);
+Entry.Func = function(a) {
+  this.id = a ? a.id : Entry.generateHash();
+  this.content = a ? new Entry.Code(a.content) : new Entry.Code([[{type:"function_create", x:40, y:40}]]);
   this.block = null;
   this.hashMap = {};
   this.paramMap = {};
-  var a = function() {
+  a = function() {
   };
   a.prototype = Entry.block.function_general;
   a = new a;
@@ -11996,8 +11996,7 @@ Entry.VariableContainer.prototype.setVariables = function(a) {
 };
 Entry.VariableContainer.prototype.setFunctions = function(a) {
   for (var b in a) {
-    var c = new Entry.Func;
-    c.init(a[b]);
+    var c = new Entry.Func(a[b]);
     c.generateBlock();
     this.createFunctionView(c);
     this.functions_[c.id] = c;
@@ -12383,7 +12382,7 @@ Entry.VariableContainer.prototype.getMessageJSON = function() {
 Entry.VariableContainer.prototype.getFunctionJSON = function() {
   var a = [], b;
   for (b in this.functions_) {
-    var c = this.functions_[b], c = {id:c.id, block:c.block, content:c.content.toJSON()};
+    var c = this.functions_[b], c = {id:c.id, content:JSON.stringify(c.content.toJSON())};
     a.push(c);
   }
   return a;
@@ -16168,16 +16167,16 @@ Entry.Board = function(a) {
     }
     return g.concat(h);
   };
-  a._getFieldBlockMetaData = function(b, a, d, e, f) {
-    var g = b._contents, h = [];
-    a += b.contentPos.x;
-    d += b.contentPos.y;
+  a._getFieldBlockMetaData = function(a, c, d, e, f) {
+    var g = a._contents, h = [];
+    c += a.contentPos.x;
+    d += a.contentPos.y;
     for (var k = 0;k < g.length;k++) {
       var m = g[k];
       if (m instanceof Entry.FieldBlock && m.acceptType === f) {
         var n = m._valueBlock;
         if (!n.view.dragInstance) {
-          var l = a + m.box.x, q = d + m.box.y + -.5 * b.height, m = d + m.box.y + m.box.height;
+          var l = c + m.box.x, q = d + m.box.y + -.5 * a.height, m = d + m.box.y + m.box.height;
           h.push({point:q, endPoint:m, startBlock:n, blocks:[]});
           h.push({point:m, blocks:[]});
           n = n.view;
@@ -16189,8 +16188,8 @@ Entry.Board = function(a) {
     }
     return h;
   };
-  a._getOutputMagnets = function(b, a, d, e) {
-    var f = b.getBlocks(), g = [], h = [];
+  a._getOutputMagnets = function(a, c, d, e) {
+    var f = a.getBlocks(), g = [], h = [];
     d || (d = {x:0, y:0});
     var k = d.x;
     d = d.y;
@@ -16199,14 +16198,14 @@ Entry.Board = function(a) {
       if (l.dragInstance) {
         break;
       }
-      l.zIndex = a;
+      l.zIndex = c;
       d += l.y;
       k += l.x;
-      h = h.concat(this._getOutputMetaData(l, k, d, a, e));
-      n.statements && (a += .01);
+      h = h.concat(this._getOutputMetaData(l, k, d, c, e));
+      n.statements && (c += .01);
       for (var q = 0;q < n.statements.length;q++) {
-        b = n.statements[q];
-        var r = n.view._statements[q], g = g.concat(this._getOutputMagnets(b, a, {x:r.x + k, y:r.y + d}, e));
+        a = n.statements[q];
+        var r = n.view._statements[q], g = g.concat(this._getOutputMagnets(a, c, {x:r.x + k, y:r.y + d}, e));
       }
       l.magnet.next && (d += l.magnet.next.y, k += l.magnet.next.x);
     }
