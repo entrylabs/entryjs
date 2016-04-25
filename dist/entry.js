@@ -14891,6 +14891,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
 })(Entry.FieldBlock.prototype);
 Entry.FieldColor = function(a, b, c) {
   this._block = b.block;
+  this._blockView = b;
   this.box = new Entry.BoxModel;
   this.svgGroup = null;
   this._contents = a;
@@ -14902,13 +14903,13 @@ Entry.FieldColor = function(a, b, c) {
 };
 Entry.Utils.inherit(Entry.Field, Entry.FieldColor);
 (function(a) {
-  a.renderStart = function(b) {
-    this.svgGroup = b.contentSvgGroup.elem("g", {class:"entry-field-color"});
-    var a = this._position;
-    a ? (b = a.x || 0, a = a.y || 0) : (b = 0, a = -8);
-    this._header = this.svgGroup.elem("rect", {x:b, y:a, width:14.5, height:16, fill:this.getValue()});
+  a.renderStart = function() {
+    this.svgGroup = this._blockView.contentSvgGroup.elem("g", {class:"entry-field-color"});
+    var b = this._position, a;
+    b ? (a = b.x || 0, b = b.y || 0) : (a = 0, b = -8);
+    this._header = this.svgGroup.elem("rect", {x:a, y:b, width:14.5, height:16, fill:this.getValue()});
     this._bindRenderOptions();
-    this.box.set({x:b, y:a, width:14.5, height:16});
+    this.box.set({x:a, y:b, width:14.5, height:16});
   };
   a.renderOptions = function() {
     var b = this;
@@ -16087,8 +16088,8 @@ Entry.Board = function(a) {
     }
     return g.concat(h);
   };
-  a._getFieldMagnets = function(a, c, d, e) {
-    var f = a.getBlocks(), g = [], h = [];
+  a._getFieldMagnets = function(b, a, d, e) {
+    var f = b.getBlocks(), g = [], h = [];
     d || (d = {x:0, y:0});
     var k = d.x;
     d = d.y;
@@ -16097,14 +16098,14 @@ Entry.Board = function(a) {
       if (l.dragInstance) {
         break;
       }
-      l.zIndex = c;
+      l.zIndex = a;
       d += l.y;
       k += l.x;
-      h = h.concat(this._getFieldBlockMetaData(l, k, d, c, e));
-      n.statements && (c += .01);
+      h = h.concat(this._getFieldBlockMetaData(l, k, d, a, e));
+      n.statements && (a += .01);
       for (var q = 0;q < n.statements.length;q++) {
-        a = n.statements[q];
-        var r = n.view._statements[q], g = g.concat(this._getFieldMagnets(a, c, {x:r.x + k, y:r.y + d}, e));
+        b = n.statements[q];
+        var r = n.view._statements[q], g = g.concat(this._getFieldMagnets(b, a, {x:r.x + k, y:r.y + d}, e));
       }
       l.magnet.next && (d += l.magnet.next.y, k += l.magnet.next.x);
     }

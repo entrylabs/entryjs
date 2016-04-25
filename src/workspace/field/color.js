@@ -10,6 +10,7 @@ goog.require("Entry.Field");
  */
 Entry.FieldColor = function(content, blockView, index) {
     this._block = blockView.block;
+    this._blockView = blockView;
 
     var box = new Entry.BoxModel();
     this.box = box;
@@ -31,7 +32,8 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldColor);
     var WIDTH = 14.5,
         HEIGHT = 16;
 
-    p.renderStart = function(blockView) {
+    p.renderStart = function() {
+        var blockView = this._blockView;
         var that = this;
         var contents = this._contents;
 
