@@ -166,9 +166,8 @@ Entry.Thread = function(thread, code, parent) {
 
         if (blocks.length === 0) {
             var parent = this.view.getParent();
-            if (parent.constructor === Entry.FieldStatement)
-                parent.removeFirstBlock();
-            else this.destroy();
+            if (parent.constructor !== Entry.FieldStatement)
+                 this.destroy();
         }
 
         this.changeEvent.notify();
