@@ -619,7 +619,7 @@ Entry.Engine.prototype.captureKeyEvent = function(e) {
         }
     } else if (Entry.engine.isState('run')) {
         Entry.container.mapEntityIncludeCloneOnScene(Entry.engine.raiseKeyEvent,
-                                  ["press_some_key", keyCode]);
+                                  ["keyPress", keyCode]);
         Entry.container.mapEntityIncludeCloneOnScene(Entry.engine.raiseKeyEvent,
                                   ["when_some_key_pressed", keyCode]);
     }
@@ -639,19 +639,8 @@ Entry.Engine.prototype.captureKeyEvent = function(e) {
  */
 Entry.Engine.prototype.raiseKeyEvent = function(entity, param) {
     var eventName = param[0];
-    var keyCode = param[1];
-    var blocks = entity.parent.script.childNodes;
-    //handle clone entity
-    for (var i=0; i<blocks.length; i++) {
-        var block = blocks[i];
-        var value = Entry.Xml.getField("VALUE", block);
-        if (Entry.Xml.isTypeOf(eventName, block) &&
-           (value == keyCode)) {
-            var script = new Entry.Script(entity);
-            script.init(block);
-            entity.runningScript.push(script);
-        }
-    }
+    var keyCode = String(param[1]);
+    entity.parent.script.raiseEvent(eventName, entity, keyCode);
 };
 
 /**

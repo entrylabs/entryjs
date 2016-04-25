@@ -6022,14 +6022,11 @@ Entry.Engine.prototype.raiseEventOnEntity = function(a, b) {
 };
 Entry.Engine.prototype.captureKeyEvent = function(a) {
   var b = a.keyCode, c = Entry.type;
-  a.ctrlKey && "workspace" == c ? 83 == b ? (a.preventDefault(), Entry.dispatchEvent("saveWorkspace")) : 82 == b ? (a.preventDefault(), Entry.engine.run()) : 90 == b && (a.preventDefault(), Entry.dispatchEvent(a.shiftKey ? "redo" : "undo")) : Entry.engine.isState("run") && (Entry.container.mapEntityIncludeCloneOnScene(Entry.engine.raiseKeyEvent, ["press_some_key", b]), Entry.container.mapEntityIncludeCloneOnScene(Entry.engine.raiseKeyEvent, ["when_some_key_pressed", b]));
+  a.ctrlKey && "workspace" == c ? 83 == b ? (a.preventDefault(), Entry.dispatchEvent("saveWorkspace")) : 82 == b ? (a.preventDefault(), Entry.engine.run()) : 90 == b && (a.preventDefault(), Entry.dispatchEvent(a.shiftKey ? "redo" : "undo")) : Entry.engine.isState("run") && (Entry.container.mapEntityIncludeCloneOnScene(Entry.engine.raiseKeyEvent, ["keyPress", b]), Entry.container.mapEntityIncludeCloneOnScene(Entry.engine.raiseKeyEvent, ["when_some_key_pressed", b]));
   Entry.engine.isState("stop") && "workspace" === c && 37 <= b && 40 >= b && Entry.stage.moveSprite(a);
 };
 Entry.Engine.prototype.raiseKeyEvent = function(a, b) {
-  for (var c = b[0], d = b[1], e = a.parent.script.childNodes, f = 0;f < e.length;f++) {
-    var g = e[f], h = Entry.Xml.getField("VALUE", g);
-    Entry.Xml.isTypeOf(c, g) && h == d && (h = new Entry.Script(a), h.init(g), a.runningScript.push(h));
-  }
+  a.parent.script.raiseEvent(b[0], a, String(b[1]));
 };
 Entry.Engine.prototype.updateMouseView = function() {
   var a = Entry.stage.mouseCoordinate;
@@ -14301,11 +14298,12 @@ Entry.PARAM = -1;
       0 > e || d.splice(e, 1);
     }
   };
-  a.raiseEvent = function(b, a) {
-    var d = this._eventMap[b];
-    if (void 0 !== d) {
-      for (var e = 0;e < d.length;e++) {
-        this.executors.push(new Entry.Executor(d[e], a));
+  a.raiseEvent = function(b, a, d) {
+    b = this._eventMap[b];
+    if (void 0 !== b) {
+      for (var e = 0;e < b.length;e++) {
+        var f = b[e];
+        (void 0 === d || -1 < f.params.indexOf(d)) && this.executors.push(new Entry.Executor(b[e], a));
       }
     }
   };
@@ -16019,8 +16017,8 @@ Entry.Board = function(a) {
     var b = this.code;
     if (b && this.dragBlock) {
       b = this._getCodeBlocks(b, this.dragBlock._targetType);
-      b.sort(function(a, b) {
-        return a.point - b.point;
+      b.sort(function(b, a) {
+        return b.point - a.point;
       });
       b.unshift({point:-Number.MAX_VALUE, blocks:[]});
       for (var a = 1;a < b.length;a++) {
@@ -16036,9 +16034,9 @@ Entry.Board = function(a) {
       this._magnetMap = b;
     }
   };
-  a._getCodeBlocks = function(a, c) {
-    var d = a.getThreads(), e = [], f;
-    switch(c) {
+  a._getCodeBlocks = function(b, a) {
+    var d = b.getThreads(), e = [], f;
+    switch(a) {
       case "nextMagnet":
         f = this._getNextMagnets;
         break;
@@ -16055,35 +16053,35 @@ Entry.Board = function(a) {
         return [];
     }
     for (var g = 0;g < d.length;g++) {
-      var h = d[g], e = e.concat(f.call(this, h, h.view.zIndex, null, c))
+      var h = d[g], e = e.concat(f.call(this, h, h.view.zIndex, null, a))
     }
     return e;
   };
-  a._getNextMagnets = function(a, c, d, e) {
-    var f = a.getBlocks(), g = [], h = [];
+  a._getNextMagnets = function(b, a, d, e) {
+    var f = b.getBlocks(), g = [], h = [];
     d || (d = {x:0, y:0});
     var k = d.x;
     d = d.y;
     for (var m = 0;m < f.length;m++) {
       var n = f[m], l = n.view;
-      l.zIndex = c;
+      l.zIndex = a;
       if (l.dragInstance) {
         break;
       }
       d += l.y;
       k += l.x;
-      a = d + 1;
-      l.magnet.next && (a += l.magnet.next.y, h.push({point:d, endPoint:a, startBlock:n, blocks:[]}), h.push({point:a, blocks:[]}), l.absX = k);
-      n.statements && (c += .01);
+      b = d + 1;
+      l.magnet.next && (b += l.magnet.next.y, h.push({point:d, endPoint:b, startBlock:n, blocks:[]}), h.push({point:b, blocks:[]}), l.absX = k);
+      n.statements && (a += .01);
       for (var q = 0;q < n.statements.length;q++) {
-        a = n.statements[q];
+        b = n.statements[q];
         var r = n.view._statements[q];
-        r.zIndex = c;
+        r.zIndex = a;
         r.absX = k + r.x;
         h.push({point:r.y + d - 30, endPoint:r.y + d + r.height, startBlock:r, blocks:[]});
         h.push({point:r.y + d + r.height, blocks:[]});
-        c += .01;
-        g = g.concat(this._getNextMagnets(a, c, {x:r.x + k, y:r.y + d}, e));
+        a += .01;
+        g = g.concat(this._getNextMagnets(b, a, {x:r.x + k, y:r.y + d}, e));
       }
       l.magnet.next && (d += l.magnet.next.y, k += l.magnet.next.x);
     }
@@ -17227,6 +17225,7 @@ Entry.Playground.prototype.generateCodeView = function(a) {
   a = Entry.Dom("div", {parent:a, id:"entryWorkspaceBlockMenu", class:"entryWorkspaceBlockMenu"});
   (new Entry.BlockDriver).convert();
   Entry.block.when_run_button_click.event = "start";
+  Entry.block.when_some_key_pressed.event = "keyPress";
   Entry.block.if_else.template = "\ub9cc\uc77c %1 \uc774\ub77c\uba74 %2 %3 \uc544\ub2c8\uba74";
   Entry.block.if_else.params.push({type:"LineBreak"});
   this.mainWorkspace = new Entry.Workspace({blockMenu:{dom:a, align:"LEFT", categoryData:EntryStatic.getAllBlocks(), scroll:!0}, board:{dom:b}});

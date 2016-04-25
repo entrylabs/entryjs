@@ -279,6 +279,7 @@ Entry.Playground.prototype.generateCodeView = function(codeView) {
 
     new Entry.BlockDriver().convert();
     Entry.block.when_run_button_click.event = "start";
+    Entry.block.when_some_key_pressed.event = "keyPress";
     Entry.block.if_else.template = "만일 %1 이라면 %2 %3 아니면";
     Entry.block.if_else.params.push({
         type: 'LineBreak'

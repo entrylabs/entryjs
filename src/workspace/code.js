@@ -87,11 +87,14 @@ Entry.PARAM = -1;
         blocks.splice(index,1);
     };
 
-    p.raiseEvent = function(eventType, entity) {
+    p.raiseEvent = function(eventType, entity, value) {
         var blocks = this._eventMap[eventType];
         if (blocks === undefined) return;
         for (var i = 0; i < blocks.length; i++) {
-            this.executors.push(new Entry.Executor(blocks[i], entity));
+            var block = blocks[i];
+            if (value === undefined ||
+                block.params.indexOf(value) > -1)
+                this.executors.push(new Entry.Executor(blocks[i], entity));
         }
     };
 
