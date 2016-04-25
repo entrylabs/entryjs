@@ -153,7 +153,6 @@ Entry.HWMonitor = function(hwModule) {
 
         for (var item in ports)
             listPort[item] = ports[item];
-
         return listPort;
     };
 
