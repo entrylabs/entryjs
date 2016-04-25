@@ -91,8 +91,8 @@ Entry.Scope = function(block, executor) {
         return this.block.params[this._getParamIndex(key)];
     };
 
-    p.getStringField = function() {
-        return String(this.getField());
+    p.getStringField = function(key, block) {
+        return String(this.getField(key));
     };
 
     p.getNumberField = function(key) {

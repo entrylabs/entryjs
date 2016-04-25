@@ -14537,8 +14537,8 @@ Entry.Scope = function(a, b) {
   a.getField = function(b, a) {
     return this.block.params[this._getParamIndex(b)];
   };
-  a.getStringField = function() {
-    return String(this.getField());
+  a.getStringField = function(b) {
+    return String(this.getField(b));
   };
   a.getNumberField = function(b) {
     return Number(this.getField(b));
@@ -16135,8 +16135,8 @@ Entry.Board = function(a) {
     }
     return h;
   };
-  a._getOutputMagnets = function(a, c, d, e) {
-    var f = a.getBlocks(), g = [], h = [];
+  a._getOutputMagnets = function(b, a, d, e) {
+    var f = b.getBlocks(), g = [], h = [];
     d || (d = {x:0, y:0});
     var k = d.x;
     d = d.y;
@@ -16145,14 +16145,14 @@ Entry.Board = function(a) {
       if (l.dragInstance) {
         break;
       }
-      l.zIndex = c;
+      l.zIndex = a;
       d += l.y;
       k += l.x;
-      h = h.concat(this._getOutputMetaData(l, k, d, c, e));
-      n.statements && (c += .01);
+      h = h.concat(this._getOutputMetaData(l, k, d, a, e));
+      n.statements && (a += .01);
       for (var q = 0;q < n.statements.length;q++) {
-        a = n.statements[q];
-        var r = n.view._statements[q], g = g.concat(this._getOutputMagnets(a, c, {x:r.x + k, y:r.y + d}, e));
+        b = n.statements[q];
+        var r = n.view._statements[q], g = g.concat(this._getOutputMagnets(b, a, {x:r.x + k, y:r.y + d}, e));
       }
       l.magnet.next && (d += l.magnet.next.y, k += l.magnet.next.x);
     }
