@@ -109,10 +109,12 @@ Entry.block.locate_xy_time = function (sprite, script) {
         timeValue = script.getNumberValue("VALUE1", script);
         script.isStart = true;
         script.frameCount = Math.floor(timeValue * Entry.FPS)
+        script.x = script.getNumberValue("VALUE2", script);
+        script.y = script.getNumberValue("VALUE3", script);
     }
     if (script.frameCount != 0) {
-        var dX = script.getNumberValue("VALUE2", script) - sprite.getX();
-        var dY = script.getNumberValue("VALUE3", script) - sprite.getY();
+        var dX = script.x - sprite.getX();
+        var dY = script.y - sprite.getY();
         dX /= script.frameCount;
         dY /= script.frameCount;
         sprite.setX(sprite.getX() + dX);

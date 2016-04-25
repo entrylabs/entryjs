@@ -72,6 +72,11 @@ Entry.SensorBoard = {
     }
 };
 
+Entry.dplay = {
+    name: 'dplay',
+    setZero: Entry.Arduino.setZero
+};
+
 Entry.CODEino = {
     name: 'CODEino',
     setZero: Entry.Arduino.setZero,

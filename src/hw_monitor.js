@@ -133,8 +133,9 @@ Entry.HWMonitor = function(hwModule) {
             this.generateView();
         }
     };
-    p.setHwmonitor = function(module) {
-         this._hwmodule = module;
+    p.setHwmonitor = function(module){
+
+        this._hwmodule = module;
     }
     p.changeMode = function(e) {
         if(this._hwModule.monitorTemplate.mode == 'both') {
@@ -153,6 +154,7 @@ Entry.HWMonitor = function(hwModule) {
 
         for (var item in ports)
             listPort[item] = ports[item];
+
         return listPort;
     };
 

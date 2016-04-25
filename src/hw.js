@@ -25,6 +25,8 @@ Entry.HW = function() {
         '11': Entry.Arduino,
         '12': Entry.SensorBoard,
         '13': Entry.CODEino,
+        '15': Entry.dplay,
+        '17': Entry.Xbot,        
         '24': Entry.Hamster,
         '25': Entry.Albert,
         '31': Entry.Bitbrick,
@@ -214,7 +216,7 @@ p.closeConnection = function() {
 };
 
 p.downloadConnector = function() {
-    var url = "https://github.com/entrylabs/entry-hw/releases/download/1.1.4/Entry_HW_v1.1.4.exe";
+    var url = "http://github.com/entrylabs/entry-hw/releases/download/1.5.0/Entry_HW_1.5.0_Setup.exe";
     var win = window.open(url, '_blank');
     win.focus();
 };
