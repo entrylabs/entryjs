@@ -714,8 +714,8 @@ Blockly.Blocks.arduino_toggle_led = {init:function() {
   this.setNextStatement(!0);
 }};
 Entry.block.arduino_toggle_led = function(a, b) {
-  var c = b.getNumberValue("VALUE"), d = b.getField("OPERATOR");
-  Entry.hw.setDigitalPortValue(c, "on" == d ? 255 : 0);
+  var c = b.getNumberValue("VALUE"), d = "on" == b.getField("OPERATOR") ? 255 : 0;
+  Entry.hw.setDigitalPortValue(c, d);
   return b.callReturn();
 };
 Blockly.Blocks.arduino_toggle_pwm = {init:function() {
@@ -1693,10 +1693,10 @@ Entry.block.wait_second = function(a, b) {
   }
   b.isStart = !0;
   b.timeFlag = 1;
-  var c = b.getNumberValue("SECOND", b);
+  var c = b.getNumberValue("SECOND", b), c = 60 / (Entry.FPS || 60) * c * 1E3;
   setTimeout(function() {
     b.timeFlag = 0;
-  }, 60 / (Entry.FPS || 60) * c * 1E3);
+  }, c);
   return b;
 };
 Blockly.Blocks.repeat_basic = {init:function() {
@@ -15607,8 +15607,10 @@ Entry.GlobalSvg = {};
   a.RETURN = 2;
   a.createDom = function() {
     if (!this.inited) {
+      $("#globalSvgSurface").remove();
+      $("#globalSvg").remove();
       var b = $("body");
-      this._container = Entry.Dom("div", {classes:["globalSvgSurface", "entryRemove"], parent:b});
+      this._container = Entry.Dom("div", {classes:["globalSvgSurface", "entryRemove"], id:"globalSvgSurface", parent:b});
       this.svgDom = Entry.Dom($('<svg id="globalSvg" width="0" height="0"version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'), {parent:b});
       this.svg = Entry.SVG("globalSvg");
       this.top = this.left = this.width = 0;
