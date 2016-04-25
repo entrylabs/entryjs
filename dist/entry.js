@@ -11759,8 +11759,9 @@ Entry.VariableContainer.prototype.createDom = function(a) {
   c.innerHTML = "+ " + Lang.Workspace.function_create;
   this.functionAddButton_ = c;
   c.bindOnClick(function(a) {
+    a = b._getBlockMenu();
     Entry.playground.changeViewMode("code");
-    "func" != Entry.playground.selectedMenu && Entry.playground.mainWorkspace.blockMenu.selectMenu("func");
+    "func" != a.lastSelector && a.selectMenu("func");
     b.createFunction();
   });
   return a;
@@ -12053,16 +12054,17 @@ Entry.VariableContainer.prototype.createFunctionView = function(a) {
   });
   var e = Entry.createElement("button");
   e.addClass("entryVariableListElementEditWorkspace");
+  var f = this._getBlockMenu();
   e.bindOnClick(function(b) {
     b.stopPropagation();
     Entry.Func.edit(a);
-    Entry.playground && (Entry.playground.changeViewMode("code"), "func" != Entry.playground.selectedMenu && Entry.playground.mainWorkspace.blockMenu.selectMenu("func"));
+    Entry.playground && (Entry.playground.changeViewMode("code"), "func" != f.lastSelector && f.selectMenu("func"));
   });
-  var f = Entry.createElement("div");
-  f.addClass("entryVariableFunctionElementNameWorkspace");
-  f.innerHTML = a.description;
-  c.nameField = f;
-  c.appendChild(f);
+  var g = Entry.createElement("div");
+  g.addClass("entryVariableFunctionElementNameWorkspace");
+  g.innerHTML = a.description;
+  c.nameField = g;
+  c.appendChild(g);
   c.appendChild(e);
   c.appendChild(d);
   a.listElement = c;
@@ -12903,6 +12905,9 @@ Entry.VariableContainer.prototype.removeRef = function(a, b) {
       break;
     }
   }
+};
+Entry.VariableContainer.prototype._getBlockMenu = function() {
+  return Entry.playground.mainWorkspace.getBlockMenu();
 };
 Entry.block.run = {skeleton:"basic", color:"#3BBD70", contents:["this is", "basic block"], func:function() {
 }};

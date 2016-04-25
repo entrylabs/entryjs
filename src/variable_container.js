@@ -131,9 +131,10 @@ Entry.VariableContainer.prototype.createDom = function(view) {
     //functionAddButton.innerHTML = '+ ' + Lang.Msgs.to_be_continue;
     this.functionAddButton_ = functionAddButton;
     functionAddButton.bindOnClick(function(e) {
+        var blockMenu = that._getBlockMenu();
         Entry.playground.changeViewMode('code');
-        if (Entry.playground.selectedMenu != 'func')
-            Entry.playground.mainWorkspace.blockMenu.selectMenu('func');
+        if (blockMenu.lastSelector != 'func')
+            blockMenu.selectMenu('func');
         that.createFunction();
     });
 
@@ -736,13 +737,13 @@ Entry.VariableContainer.prototype.createFunctionView = function(func) {
 
     var editButton = Entry.createElement('button');
     editButton.addClass('entryVariableListElementEditWorkspace');
+    var blockMenu = this._getBlockMenu();
     editButton.bindOnClick(function (e) {
         e.stopPropagation();
         Entry.Func.edit(func);
         if (Entry.playground) {
             Entry.playground.changeViewMode('code');
-            if (Entry.playground.selectedMenu != 'func')
-                Entry.playground.mainWorkspace.blockMenu.selectMenu('func');
+            if (blockMenu.lastSelector != 'func') blockMenu.selectMenu('func');
         }
     });
 
@@ -2189,4 +2190,8 @@ Entry.VariableContainer.prototype.removeRef = function(type, block) {
             break;
         }
     }
+};
+
+Entry.VariableContainer.prototype._getBlockMenu = function() {
+    return Entry.playground.mainWorkspace.getBlockMenu();
 };
