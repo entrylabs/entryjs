@@ -336,12 +336,25 @@ Entry.HWMonitor = function(hwModule) {
 
         if(this._template.height <=0 || bRect.height <=0)
             return;
-        this.scale =  (this._template.height/100 *(bRect.height /1000));
+//        this.scale =  (this._template.height/100 *(bRect.height /1000));
+        this.scale =  (this._template.height *(bRect.height /this._template.height))/1000;
+        var temp = (1-this.scale)/2;
+        if(!(this._template.height >  bRect.height)) {
+            this.scale += temp;
+        } else {
+             this.scale -= temp/2;
 
-        var temp = (this._template.height - bRect.height)/bRect.height;
-        if(this._template.height*this.scale > bRect.height)
-            this.scale =  bRect.height/this._template.height - temp;
+             if(this.scale < 0.1)
+                 this.scale = 0.1;
+        }
+        //        var temp = (this._template.height - bRect.height)/bRect.height;
 
+/*        if(this._template.height*this.scale > bRect.height) {
+            this.scale = (bRect.height/this._template.height - temp/2);
+            this.scale = this.scale <0 ? -this.scale : this.scale;
+
+        }
+*/
         //if(mode == 'both'){
         //    var imageBoxHeight = this._svgGroup.getBBox().height;
         //    var listHeight = this._svglistGroup.getBBox().height;
