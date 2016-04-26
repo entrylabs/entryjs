@@ -104,7 +104,8 @@ var Entry = {block:{}, TEXT_ALIGN_CENTER:0, TEXT_ALIGN_LEFT:1, TEXT_ALIGN_RIGHT:
   Entry.stateManager && (b.activityLog = Entry.stateManager.activityLog_);
   return b;
 }, DRAG_MODE_NONE:0, DRAG_MODE_MOUSEDOWN:1, DRAG_MODE_DRAG:2};
-window.Entry = Entry;
+window && (window.Entry = Entry);
+"object" == typeof exports && (exports.block = Entry.block);
 Entry.Albert = {PORT_MAP:{leftWheel:0, rightWheel:0, buzzer:0, bodyLed:0, frontLed:0, leftEye:0, rightEye:0, topology:0, note:0, ioModeA:0, ioModeB:0}, setZero:function() {
   var b = Entry.Albert.PORT_MAP, a;
   for (a in b) {
@@ -11005,12 +11006,19 @@ Entry.Func = function(b) {
   this.block = null;
   this.hashMap = {};
   this.paramMap = {};
-  b = function() {
+  var a = function() {
   };
-  b.prototype = Entry.block.function_general;
-  b = new b;
-  b.changeEvent = new Entry.Event;
-  Entry.block["func_" + this.id] = b;
+  a.prototype = Entry.block.function_general;
+  a = new a;
+  a.changeEvent = new Entry.Event;
+  Entry.block["func_" + this.id] = a;
+  if (b) {
+    b = this.content._blockMap;
+    for (var c in b) {
+      Entry.Func.registerParamBlock(b[c].type);
+    }
+    Entry.Func.generateWsBlock(this);
+  }
   Entry.Func.registerFunction(this);
 };
 Entry.Func.threads = {};
@@ -11048,7 +11056,7 @@ Entry.Func.initEditView = function(b) {
   this._workspaceStateEvent = a.changeEvent.attach(this, this.endEdit);
 };
 Entry.Func.endEdit = function(b) {
-  this._funcChangeEvent.destroy();
+  this.unbindFuncChangeEvent();
   this._workspaceStateEvent.destroy();
   delete this._workspaceStateEvent;
   switch(b) {
@@ -11091,6 +11099,7 @@ Entry.Func.setupMenuCode = function() {
   this.menuCode = b;
 };
 Entry.Func.refreshMenuCode = function() {
+  this.menuCode || this.setupMenuCode();
   var b = Entry.block[this._fieldString.params[0].type].changeEvent._listeners.length;
   2 < b && this._fieldString.params[0].changeType(this.requestParamBlock("string"));
   b = Entry.block[this._fieldBoolean.params[0].type].changeEvent._listeners.length;
@@ -11108,15 +11117,21 @@ Entry.Func.requestParamBlock = function(b) {
     default:
       return null;
   }
-  var d = function() {
-  };
-  d.prototype = c;
-  d = new d;
-  d.changeEvent = new Entry.Event;
   b = b + "Param_" + a;
-  Entry.block[b] = d;
-  this.targetFunc.hashMap[b] = !0;
+  c = Entry.Func.createParamBlock(b, c);
+  Entry.block[b] = c;
   return b;
+};
+Entry.Func.registerParamBlock = function(b) {
+  "string" === b.substr(0, 6) ? Entry.Func.createParamBlock(b, Entry.block.function_param_string) : "boolean" === b.substr(0, 7) && Entry.Func.createParamBlock(b, Entry.block.function_param_boolean);
+};
+Entry.Func.createParamBlock = function(b, a) {
+  var c = function() {
+  };
+  c.prototype = a;
+  c = new c;
+  c.changeEvent = new Entry.Event;
+  return Entry.block[b] = c;
 };
 Entry.Func.updateMenu = function() {
   var b = Entry.playground.mainWorkspace.getBlockMenu();
@@ -11134,36 +11149,37 @@ Entry.Func.prototype.generateBlock = function(b) {
   this.block = b.block;
   this.description = b.description;
 };
-Entry.Func.generateWsBlock = function() {
-  var b = this.targetFunc.content.getEventMap("funcDef")[0].params[0], a = 0, c = 0, d = [], e = "", f = this.targetFunc.hashMap, g = this.targetFunc.paramMap;
-  for (this.unbindFuncChangeEvent();b;) {
-    var h = b.params[0];
-    switch(b.type) {
+Entry.Func.generateWsBlock = function(b) {
+  b = b ? b : this.targetFunc;
+  var a = b.content.getEventMap("funcDef")[0].params[0], c = 0, d = 0, e = [], f = "", g = b.hashMap, h = b.paramMap;
+  for (this.unbindFuncChangeEvent();a;) {
+    var k = a.params[0];
+    switch(a.type) {
       case "function_field_label":
-        e = e + " " + h;
+        f = f + " " + k;
         break;
       case "function_field_boolean":
-        Entry.Mutator.mutate(h.type, {template:Lang.Blocks.FUNCTION_logical_variable + " " + (a ? a : "")});
-        f[h.type] = !1;
-        g[h.type] = a + c;
-        a++;
-        d.push({type:"Block", accept:"booleanMagnet"});
-        e += " %" + (a + c);
+        Entry.Mutator.mutate(k.type, {template:Lang.Blocks.FUNCTION_logical_variable + " " + (c ? c : "")});
+        g[k.type] = !1;
+        h[k.type] = c + d;
+        c++;
+        e.push({type:"Block", accept:"booleanMagnet"});
+        f += " %" + (c + d);
         break;
       case "function_field_string":
-        Entry.Mutator.mutate(h.type, {template:Lang.Blocks.FUNCTION_character_variable + " " + (c ? c : "")}), f[h.type] = !1, g[h.type] = a + c, c++, e += " %" + (a + c), d.push({type:"Block", accept:"stringMagnet"});
+        Entry.Mutator.mutate(k.type, {template:Lang.Blocks.FUNCTION_character_variable + " " + (d ? d : "")}), g[k.type] = !1, h[k.type] = c + d, d++, f += " %" + (c + d), e.push({type:"Block", accept:"stringMagnet"});
     }
-    b = b.getOutputBlock();
+    a = a.getOutputBlock();
   }
-  Entry.Mutator.mutate("func_" + this.targetFunc.id, {params:d, template:e});
-  for (var k in f) {
-    f[k] ? (b = -1 < k.indexOf("string") ? Lang.Blocks.FUNCTION_character_variable : Lang.Blocks.FUNCTION_logical_variable, Entry.Mutator.mutate(k, {template:b})) : f[k] = !0;
+  Entry.Mutator.mutate("func_" + b.id, {params:e, template:f});
+  for (var m in g) {
+    g[m] ? (b = -1 < m.indexOf("string") ? Lang.Blocks.FUNCTION_character_variable : Lang.Blocks.FUNCTION_logical_variable, Entry.Mutator.mutate(m, {template:b})) : g[m] = !0;
   }
   this.refreshMenuCode();
-  this.bindFuncChangeEvent();
 };
-Entry.Func.bindFuncChangeEvent = function() {
-  this._funcChangeEvent || (this._funcChangeEvent = this.targetFunc.content.getEventMap("funcDef")[0].view._contents[1].changeEvent.attach(this, this.generateWsBlock));
+Entry.Func.bindFuncChangeEvent = function(b) {
+  b = b ? b : this.targetFunc;
+  this._funcChangeEvent || (this._funcChangeEvent = b.content.getEventMap("funcDef")[0].view._contents[1].changeEvent.attach(this, this.generateWsBlock));
 };
 Entry.Func.unbindFuncChangeEvent = function() {
   this._funcChangeEvent && this._funcChangeEvent.destroy();
