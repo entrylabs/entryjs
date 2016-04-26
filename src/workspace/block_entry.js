@@ -4405,10 +4405,14 @@ Entry.block = {
         ],
         "events": {
             "whenBlockAdd": [
-                null
+                function() {
+                    if (Entry.engine) Entry.engine.showProjectTimer();
+                }
             ],
             "whenBlockDestroy": [
-                null
+                function(block) {
+                    if (Entry.engine) Entry.engine.hideProjectTimer(block);
+                }
             ]
         },
         "def": {
@@ -4458,10 +4462,14 @@ Entry.block = {
         ],
         "events": {
             "whenBlockAdd": [
-                null
+                function() {
+                    if (Entry.engine) Entry.engine.showProjectTimer();
+                }
             ],
             "whenBlockDestroy": [
-                null
+                function(block) {
+                    if (Entry.engine) Entry.engine.hideProjectTimer(block);
+                }
             ]
         },
         "def": {
@@ -4535,10 +4543,14 @@ Entry.block = {
         ],
         "events": {
             "whenBlockAdd": [
-                null
+                function() {
+                    if (Entry.engine) Entry.engine.showProjectTimer();
+                }
             ],
             "whenBlockDestroy": [
-                null
+                function(block) {
+                    if (Entry.engine) Entry.engine.hideProjectTimer(block);
+                }
             ]
         },
         "def": {
@@ -5141,10 +5153,14 @@ Entry.block = {
         ],
         "events": {
             "whenBlockAdd": [
-                null
+                function() {
+                    if (Entry.engine) Entry.engine.showProjectTimer();
+                }
             ],
             "whenBlockDestroy": [
-                null
+                function(block) {
+                    if (Entry.engine) Entry.engine.hideProjectTimer(block);
+                }
             ]
         },
         "def": {
@@ -5861,7 +5877,9 @@ Entry.block = {
         ],
         "events": {
             "mousedown": [
-                null
+                function() {
+                    Entry.variableContainer.createFunction();
+                }
             ]
         }
     },
@@ -12773,10 +12791,16 @@ Entry.block = {
         ],
         "events": {
             "whenBlockAdd": [
-                null
+                function(block) {
+                    var vc = Entry.variableContainer;
+                    if (vc) vc.addRef('_messageRefs', block);
+                }
             ],
             "whenBlockDestroy": [
-                null
+                function(block) {
+                    var vc = Entry.variableContainer;
+                    if (vc) vc.removeRef('_messageRefs', block);
+                }
             ]
         },
         "def": {
@@ -12818,10 +12842,16 @@ Entry.block = {
         ],
         "events": {
             "whenBlockAdd": [
-                null
+                function(block) {
+                    var vc = Entry.variableContainer;
+                    if (vc) vc.addRef('_messageRefs', block);
+                }
             ],
             "whenBlockDestroy": [
-                null
+                function(block) {
+                    var vc = Entry.variableContainer;
+                    if (vc) vc.removeRef('_messageRefs', block);
+                }
             ]
         },
         "def": {
@@ -12872,10 +12902,16 @@ Entry.block = {
         ],
         "events": {
             "whenBlockAdd": [
-                null
+                function(block) {
+                    var vc = Entry.variableContainer;
+                    if (vc) vc.addRef('_messageRefs', block);
+                }
             ],
             "whenBlockDestroy": [
-                null
+                function(block) {
+                    var vc = Entry.variableContainer;
+                    if (vc) vc.removeRef('_messageRefs', block);
+                }
             ]
         },
         "def": {
@@ -13095,7 +13131,9 @@ Entry.block = {
         ],
         "events": {
             "mousedown": [
-                null
+                function() {
+                    Entry.variableContainer.openVariableAddPanel('variable');
+                }
             ]
         }
     },
@@ -13113,7 +13151,9 @@ Entry.block = {
         ],
         "events": {
             "mousedown": [
-                null
+                function() {
+                    Entry.variableContainer.openVariableAddPanel('list');
+                }
             ]
         }
     },
@@ -13141,10 +13181,16 @@ Entry.block = {
         ],
         "events": {
             "whenBlockAdd": [
-                null
+                function(block) {
+                    var vc = Entry.variableContainer;
+                    if (vc) vc.addRef('_variableRefs', block);
+                }
             ],
             "whenBlockDestroy": [
-                null
+                function(block) {
+                    var vc = Entry.variableContainer;
+                    if (vc) vc.removeRef('_variableRefs', block);
+                }
             ]
         },
         "def": {
@@ -13207,10 +13253,16 @@ Entry.block = {
         ],
         "events": {
             "whenBlockAdd": [
-                null
+                function(block) {
+                    var vc = Entry.variableContainer;
+                    if (vc) vc.addRef('_variableRefs', block);
+                }
             ],
             "whenBlockDestroy": [
-                null
+                function(block) {
+                    var vc = Entry.variableContainer;
+                    if (vc) vc.removeRef('_variableRefs', block);
+                }
             ]
         },
         "def": {
@@ -13263,10 +13315,16 @@ Entry.block = {
         ],
         "events": {
             "whenBlockAdd": [
-                null
+                function(block) {
+                    var vc = Entry.variableContainer;
+                    if (vc) vc.addRef('_variableRefs', block);
+                }
             ],
             "whenBlockDestroy": [
-                null
+                function(block) {
+                    var vc = Entry.variableContainer;
+                    if (vc) vc.removeRef('_variableRefs', block);
+                }
             ]
         },
         "def": {
@@ -13312,10 +13370,16 @@ Entry.block = {
         ],
         "events": {
             "whenBlockAdd": [
-                null
+                function(block) {
+                    var vc = Entry.variableContainer;
+                    if (vc) vc.addRef('_variableRefs', block);
+                }
             ],
             "whenBlockDestroy": [
-                null
+                function(block) {
+                    var vc = Entry.variableContainer;
+                    if (vc) vc.removeRef('_variableRefs', block);
+                }
             ]
         },
         "def": {
@@ -13355,10 +13419,16 @@ Entry.block = {
         ],
         "events": {
             "whenBlockAdd": [
-                null
+                function(block) {
+                    var vc = Entry.variableContainer;
+                    if (vc) vc.addRef('_variableRefs', block);
+                }
             ],
             "whenBlockDestroy": [
-                null
+                function(block) {
+                    var vc = Entry.variableContainer;
+                    if (vc) vc.removeRef('_variableRefs', block);
+                }
             ]
         },
         "def": {
@@ -13399,10 +13469,14 @@ Entry.block = {
         ],
         "events": {
             "whenBlockAdd": [
-                null
+                function() {
+                    if (Entry.container) Entry.container.showProjectAnswer();
+                }
             ],
             "whenBlockDestroy": [
-                null
+                function(block) {
+                    if (Entry.container) Entry.container.hideProjectAnswer(block);
+                }
             ]
         },
         "def": {
@@ -13471,10 +13545,14 @@ Entry.block = {
         ],
         "events": {
             "whenBlockAdd": [
-                null
+                function() {
+                    if (Entry.container) Entry.container.showProjectAnswer();
+                }
             ],
             "whenBlockDestroy": [
-                null
+                function(block) {
+                    if (Entry.container) Entry.container.hideProjectAnswer(block);
+                }
             ]
         },
         "def": {
@@ -13513,10 +13591,16 @@ Entry.block = {
         ],
         "events": {
             "whenBlockAdd": [
-                null
+                function(block) {
+                    var vc = Entry.variableContainer;
+                    if (vc) vc.addRef('_variableRefs', block);
+                }
             ],
             "whenBlockDestroy": [
-                null
+                function(block) {
+                    var vc = Entry.variableContainer;
+                    if (vc) vc.removeRef('_variableRefs', block);
+                }
             ]
         },
         "def": {
@@ -13987,10 +14071,14 @@ Entry.block = {
         ],
         "events": {
             "whenBlockAdd": [
-                null
+                function(block) {
+                    if (Entry.container) Entry.container.showProjectAnswer();
+                }
             ],
             "whenBlockDestroy": [
-                null
+                function(block) {
+                    if (Entry.container) Entry.container.hideProjectAnswer(block);
+                }
             ]
         },
         "def": {
