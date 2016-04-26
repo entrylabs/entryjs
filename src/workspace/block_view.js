@@ -132,7 +132,7 @@ Entry.BlockView.DRAG_RADIUS = 5;
             fill: fillColor,
             class: 'blockPath'
         };
-        if (this.magnet.next) {
+        if (this.magnet.next || this._skeleton.nextShadow) {
             var suffix = this.getBoard().suffix;
             this.pathGroup.attr({
                 filter: 'url(#entryBlockShadowFilter_' + suffix + ')'

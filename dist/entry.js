@@ -15882,7 +15882,7 @@ Entry.BlockView.DRAG_RADIUS = 5;
     this.block.isDeletable() || (g = Entry.Utils.colorLighten(g));
     this._fillColor = g;
     f = {d:f, fill:g, class:"blockPath"};
-    if (this.magnet.next) {
+    if (this.magnet.next || this._skeleton.nextShadow) {
       g = this.getBoard().suffix, this.pathGroup.attr({filter:"url(#entryBlockShadowFilter_" + g + ")"});
     } else {
       if (this.magnet.string || this.magnet.bool) {
@@ -18456,7 +18456,7 @@ Entry.skeleton.basic_button = {path:function() {
   return {offsetX:-80, offsetY:0, width:140, height:30};
 }, contentPos:function() {
   return {x:0, y:15};
-}, movable:!1, readOnly:!0, classes:["basicButtonView"]};
+}, movable:!1, readOnly:!0, nextShadow:!0, classes:["basicButtonView"]};
 Entry.skeleton.basic_without_next = {box:Entry.skeleton.basic.box, contentPos:Entry.skeleton.basic.contentPos, path:function(b) {
   var a = b.contentWidth;
   b = b.contentHeight;

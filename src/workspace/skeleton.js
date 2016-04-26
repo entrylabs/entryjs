@@ -404,6 +404,7 @@ Entry.skeleton.basic_button = {
     },
     movable: false,
     readOnly: true,
+    nextShadow: true,
     classes: ['basicButtonView']
 };
 
