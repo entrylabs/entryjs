@@ -174,14 +174,8 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [
-                        "왼쪽",
-                        "LEFT"
-                    ],
-                    [
-                        "오른쪽",
-                        "RIGHT"
-                    ],
+                    ["왼쪽", "LEFT"],
+                    ["오른쪽", "RIGHT"],
                     [
                         "양쪽",
                         "FRONT"
@@ -12652,7 +12646,8 @@ Entry.block = {
         "isNotFor": [],
         "func": function (sprite, script) {
             return script.callReturn();
-        }
+        },
+        "event": "when_scene_start"
     },
     "mouse_click_cancled": {
         "color": "#3BBD70",
@@ -12681,7 +12676,8 @@ Entry.block = {
         "isNotFor": [],
         "func": function (sprite, script) {
             return script.callReturn();
-        }
+        },
+        "event": "mouse_click_cancled"
     },
     "when_object_click": {
         "color": "#3BBD70",
@@ -12710,7 +12706,8 @@ Entry.block = {
         "isNotFor": [],
         "func": function (sprite, script) {
             return script.callReturn();
-        }
+        },
+        "event": "when_object_click"
     },
     "when_object_click_canceled": {
         "color": "#3BBD70",
@@ -12739,7 +12736,8 @@ Entry.block = {
         "isNotFor": [],
         "func": function (sprite, script) {
             return script.callReturn();
-        }
+        },
+        "event": "when_object_click_canceled"
     },
     "when_some_key_click": {
         "color": "#3BBD70",

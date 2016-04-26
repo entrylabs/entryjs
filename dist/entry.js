@@ -15197,13 +15197,13 @@ params:["10"]}, null], type:"sound_from_to_and_wait"}, paramsKeyMap:{SOUND:0, ST
   return a.callReturn();
 }, event:"keyPress"}, mouse_clicked:{color:"#3BBD70", skeleton:"basic_event", statements:[], template:"%1 \ub9c8\uc6b0\uc2a4\ub97c \ud074\ub9ad\ud588\uc744 \ub54c", params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/start_icon_mouse.png", size:17, position:{x:0, y:-2}}], events:{}, def:{params:[null], type:"mouse_clicked"}, "class":"event", isNotFor:[], func:function(b, a) {
   return a.callReturn();
-}}, mouse_click_cancled:{color:"#3BBD70", skeleton:"basic_event", statements:[], template:"%1 \ub9c8\uc6b0\uc2a4 \ud074\ub9ad\uc744 \ud574\uc81c\ud588\uc744 \ub54c", params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/start_icon_mouse.png", size:17, position:{x:0, y:-2}}], events:{}, def:{params:[null], type:"mouse_click_cancled"}, "class":"event", isNotFor:[], func:function(b, a) {
+}, event:"when_scene_start"}, mouse_click_cancled:{color:"#3BBD70", skeleton:"basic_event", statements:[], template:"%1 \ub9c8\uc6b0\uc2a4 \ud074\ub9ad\uc744 \ud574\uc81c\ud588\uc744 \ub54c", params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/start_icon_mouse.png", size:17, position:{x:0, y:-2}}], events:{}, def:{params:[null], type:"mouse_click_cancled"}, "class":"event", isNotFor:[], func:function(b, a) {
   return a.callReturn();
-}}, when_object_click:{color:"#3BBD70", skeleton:"basic_event", statements:[], template:"%1 \uc624\ube0c\uc81d\ud2b8\ub97c \ud074\ub9ad\ud588\uc744 \ub54c", params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/start_icon_mouse.png", size:17, position:{x:0, y:-2}}], events:{}, def:{params:[null], type:"when_object_click"}, "class":"event", isNotFor:[], func:function(b, a) {
+}, event:"mouse_click_cancled"}, when_object_click:{color:"#3BBD70", skeleton:"basic_event", statements:[], template:"%1 \uc624\ube0c\uc81d\ud2b8\ub97c \ud074\ub9ad\ud588\uc744 \ub54c", params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/start_icon_mouse.png", size:17, position:{x:0, y:-2}}], events:{}, def:{params:[null], type:"when_object_click"}, "class":"event", isNotFor:[], func:function(b, a) {
   return a.callReturn();
-}}, when_object_click_canceled:{color:"#3BBD70", skeleton:"basic_event", statements:[], template:"%1 \uc624\ube0c\uc81d\ud2b8 \ud074\ub9ad\uc744 \ud574\uc81c\ud588\uc744 \ub54c", params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/start_icon_mouse.png", size:17, position:{x:0, y:-2}}], events:{}, def:{params:[null], type:"when_object_click_canceled"}, "class":"event", isNotFor:[], func:function(b, a) {
+}, event:"when_object_click"}, when_object_click_canceled:{color:"#3BBD70", skeleton:"basic_event", statements:[], template:"%1 \uc624\ube0c\uc81d\ud2b8 \ud074\ub9ad\uc744 \ud574\uc81c\ud588\uc744 \ub54c", params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/start_icon_mouse.png", size:17, position:{x:0, y:-2}}], events:{}, def:{params:[null], type:"when_object_click_canceled"}, "class":"event", isNotFor:[], func:function(b, a) {
   return a.callReturn();
-}}, when_some_key_click:{color:"#3BBD70", skeleton:"basic_event", statements:[], template:"%1 \ud0a4\ub97c \ub20c\ub800\uc744 \ub54c", params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/start_icon_keyboard.png", size:17, position:{x:0, y:-2}}], events:{}, def:{params:[null]}, func:function(b, a) {
+}, event:"when_object_click_canceled"}, when_some_key_click:{color:"#3BBD70", skeleton:"basic_event", statements:[], template:"%1 \ud0a4\ub97c \ub20c\ub800\uc744 \ub54c", params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/start_icon_keyboard.png", size:17, position:{x:0, y:-2}}], events:{}, def:{params:[null]}, func:function(b, a) {
   return a.callReturn();
 }}, when_message_cast:{color:"#3BBD70", skeleton:"basic_event", statements:[], template:"%1 %2 \uc2e0\ud638\ub97c \ubc1b\uc558\uc744 \ub54c", params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/start_icon_signal.png", size:17, position:{x:0, y:-2}}, {type:"DropdownDynamic", value:null, menuName:"messages", fontSize:11}], events:{whenBlockAdd:[function(b) {
   var a = Entry.variableContainer;
@@ -19322,6 +19322,10 @@ Entry.Playground.prototype.generateCodeView = function(b) {
   c.when_message_cast.event = "when_message_cast";
   c.when_scene_start.event = "when_scene_start";
   c.when_clone_start.event = "when_clone_start";
+  c.mouse_clicked.event = "mouse_clicked";
+  c.mouse_click_cancled.event = "mouse_click_cancled";
+  c.when_object_click.event = "when_object_click";
+  c.when_object_click_canceled.event = "when_object_click_canceled";
   c.if_else.template = "\ub9cc\uc77c %1 \uc774\ub77c\uba74 %2 %3 \uc544\ub2c8\uba74";
   c.if_else.params.push({type:"LineBreak"});
   this.mainWorkspace = new Entry.Workspace({blockMenu:{dom:b, align:"LEFT", categoryData:EntryStatic.getAllBlocks(), scroll:!0}, board:{dom:a}});
