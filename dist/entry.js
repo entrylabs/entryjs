@@ -11012,7 +11012,13 @@ Entry.Func = function(a) {
   b = new b;
   b.changeEvent = new Entry.Event;
   Entry.block["func_" + this.id] = b;
-  a && (console.log(this.content._blockMap), Entry.Func.generateWsBlock(this));
+  if (a) {
+    a = this.content._blockMap;
+    for (var c in a) {
+      Entry.Func.registerParamBlock(a[c].type);
+    }
+    Entry.Func.generateWsBlock(this);
+  }
   Entry.Func.registerFunction(this);
 };
 Entry.Func.threads = {};
@@ -11050,7 +11056,7 @@ Entry.Func.initEditView = function(a) {
   this._workspaceStateEvent = b.changeEvent.attach(this, this.endEdit);
 };
 Entry.Func.endEdit = function(a) {
-  this._funcChangeEvent.destroy();
+  this.unbindFuncChangeEvent();
   this._workspaceStateEvent.destroy();
   delete this._workspaceStateEvent;
   switch(a) {
@@ -11093,6 +11099,7 @@ Entry.Func.setupMenuCode = function() {
   this.menuCode = a;
 };
 Entry.Func.refreshMenuCode = function() {
+  this.menuCode || this.setupMenuCode();
   var a = Entry.block[this._fieldString.params[0].type].changeEvent._listeners.length;
   2 < a && this._fieldString.params[0].changeType(this.requestParamBlock("string"));
   a = Entry.block[this._fieldBoolean.params[0].type].changeEvent._listeners.length;
@@ -11110,15 +11117,21 @@ Entry.Func.requestParamBlock = function(a) {
     default:
       return null;
   }
-  var d = function() {
-  };
-  d.prototype = c;
-  d = new d;
-  d.changeEvent = new Entry.Event;
   a = a + "Param_" + b;
-  Entry.block[a] = d;
-  this.targetFunc.hashMap[a] = !0;
+  c = Entry.Func.createParamBlock(a, c);
+  Entry.block[a] = c;
   return a;
+};
+Entry.Func.registerParamBlock = function(a) {
+  "string" === a.substr(0, 6) ? Entry.Func.createParamBlock(a, Entry.block.function_param_string) : "boolean" === a.substr(0, 7) && Entry.Func.createParamBlock(a, Entry.block.function_param_boolean);
+};
+Entry.Func.createParamBlock = function(a, b) {
+  var c = function() {
+  };
+  c.prototype = b;
+  c = new c;
+  c.changeEvent = new Entry.Event;
+  return Entry.block[a] = c;
 };
 Entry.Func.updateMenu = function() {
   var a = Entry.playground.mainWorkspace.getBlockMenu();
@@ -11163,10 +11176,10 @@ Entry.Func.generateWsBlock = function(a) {
     g[m] ? (a = -1 < m.indexOf("string") ? Lang.Blocks.FUNCTION_character_variable : Lang.Blocks.FUNCTION_logical_variable, Entry.Mutator.mutate(m, {template:a})) : g[m] = !0;
   }
   this.refreshMenuCode();
-  this.bindFuncChangeEvent();
 };
-Entry.Func.bindFuncChangeEvent = function() {
-  this._funcChangeEvent || (this._funcChangeEvent = this.targetFunc.content.getEventMap("funcDef")[0].view._contents[1].changeEvent.attach(this, this.generateWsBlock));
+Entry.Func.bindFuncChangeEvent = function(a) {
+  a = a ? a : this.targetFunc;
+  this._funcChangeEvent || (this._funcChangeEvent = a.content.getEventMap("funcDef")[0].view._contents[1].changeEvent.attach(this, this.generateWsBlock));
 };
 Entry.Func.unbindFuncChangeEvent = function() {
   this._funcChangeEvent && this._funcChangeEvent.destroy();
@@ -16484,8 +16497,8 @@ Entry.Board = function(a) {
     }
     return g.concat(h);
   };
-  a._getFieldMagnets = function(b, a, d, e) {
-    var f = b.getBlocks(), g = [], h = [];
+  a._getFieldMagnets = function(a, c, d, e) {
+    var f = a.getBlocks(), g = [], h = [];
     d || (d = {x:0, y:0});
     var k = d.x;
     d = d.y;
@@ -16494,29 +16507,29 @@ Entry.Board = function(a) {
       if (l.dragInstance) {
         break;
       }
-      l.zIndex = a;
+      l.zIndex = c;
       d += l.y;
       k += l.x;
-      h = h.concat(this._getFieldBlockMetaData(l, k, d, a, e));
-      n.statements && (a += .01);
+      h = h.concat(this._getFieldBlockMetaData(l, k, d, c, e));
+      n.statements && (c += .01);
       for (var q = 0;q < n.statements.length;q++) {
-        b = n.statements[q];
-        var r = n.view._statements[q], g = g.concat(this._getFieldMagnets(b, a, {x:r.x + k, y:r.y + d}, e));
+        a = n.statements[q];
+        var r = n.view._statements[q], g = g.concat(this._getFieldMagnets(a, c, {x:r.x + k, y:r.y + d}, e));
       }
       l.magnet.next && (d += l.magnet.next.y, k += l.magnet.next.x);
     }
     return g.concat(h);
   };
-  a._getFieldBlockMetaData = function(b, a, d, e, f) {
-    var g = b._contents, h = [];
-    a += b.contentPos.x;
-    d += b.contentPos.y;
+  a._getFieldBlockMetaData = function(a, c, d, e, f) {
+    var g = a._contents, h = [];
+    c += a.contentPos.x;
+    d += a.contentPos.y;
     for (var k = 0;k < g.length;k++) {
       var m = g[k];
       if (m instanceof Entry.FieldBlock && m.acceptType === f) {
         var n = m._valueBlock;
         if (!n.view.dragInstance) {
-          var l = a + m.box.x, q = d + m.box.y + -.5 * b.height, m = d + m.box.y + m.box.height;
+          var l = c + m.box.x, q = d + m.box.y + -.5 * a.height, m = d + m.box.y + m.box.height;
           h.push({point:q, endPoint:m, startBlock:n, blocks:[]});
           h.push({point:m, blocks:[]});
           n = n.view;
@@ -16528,8 +16541,8 @@ Entry.Board = function(a) {
     }
     return h;
   };
-  a._getOutputMagnets = function(b, a, d, e) {
-    var f = b.getBlocks(), g = [], h = [];
+  a._getOutputMagnets = function(a, c, d, e) {
+    var f = a.getBlocks(), g = [], h = [];
     d || (d = {x:0, y:0});
     var k = d.x;
     d = d.y;
@@ -16538,14 +16551,14 @@ Entry.Board = function(a) {
       if (l.dragInstance) {
         break;
       }
-      l.zIndex = a;
+      l.zIndex = c;
       d += l.y;
       k += l.x;
-      h = h.concat(this._getOutputMetaData(l, k, d, a, e));
-      n.statements && (a += .01);
+      h = h.concat(this._getOutputMetaData(l, k, d, c, e));
+      n.statements && (c += .01);
       for (var q = 0;q < n.statements.length;q++) {
-        b = n.statements[q];
-        var r = n.view._statements[q], g = g.concat(this._getOutputMagnets(b, a, {x:r.x + k, y:r.y + d}, e));
+        a = n.statements[q];
+        var r = n.view._statements[q], g = g.concat(this._getOutputMagnets(a, c, {x:r.x + k, y:r.y + d}, e));
       }
       l.magnet.next && (d += l.magnet.next.y, k += l.magnet.next.x);
     }

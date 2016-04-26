@@ -33,7 +33,10 @@ Entry.Func = function(func) {
     Entry.block["func_" + this.id] = blockSchema;
 
     if (func) {
-        console.log(this.content._blockMap);
+        var blockMap = this.content._blockMap;
+        for (var key in blockMap) {
+            Entry.Func.registerParamBlock(blockMap[key].type);
+        }
         Entry.Func.generateWsBlock(this);
     }
 
@@ -91,7 +94,7 @@ Entry.Func.initEditView = function(content) {
 };
 
 Entry.Func.endEdit = function(message) {
-    this._funcChangeEvent.destroy();
+    this.unbindFuncChangeEvent();
     this._workspaceStateEvent.destroy();
     delete this._workspaceStateEvent;
     switch(message){
@@ -183,6 +186,8 @@ Entry.Func.setupMenuCode = function() {
 }
 
 Entry.Func.refreshMenuCode = function() {
+    if (!this.menuCode)
+        this.setupMenuCode();
     var stringType = this._fieldString.params[0].type;
     var referenceCount = Entry.block[stringType].changeEvent._listeners.length;
     if (referenceCount > 2) // check new block type is used
@@ -207,16 +212,29 @@ Entry.Func.requestParamBlock = function(type) {
             return null;
     }
 
+    var blockType = type + "Param_" + id;
+    var blockSchema = Entry.Func.createParamBlock(blockType, blockPrototype);
+    Entry.block[blockType] = blockSchema;
+    return blockType;
+};
+
+Entry.Func.registerParamBlock = function(type) {
+    if (type.substr(0,6) === "string") {
+        Entry.Func.createParamBlock(type, Entry.block.function_param_string);
+    } else if (type.substr(0,7) === "boolean") {
+        Entry.Func.createParamBlock(type, Entry.block.function_param_boolean);
+    }
+};
+
+Entry.Func.createParamBlock = function(type, blockPrototype) {
     var blockSchema = function () {};
     blockSchema.prototype = blockPrototype;
     blockSchema = new blockSchema();
     blockSchema.changeEvent = new Entry.Event();
 
-    var blockType = type + "Param_" + id;
-    Entry.block[blockType] = blockSchema;
-    this.targetFunc.hashMap[blockType] = true;
-    return blockType;
-};
+    Entry.block[type] = blockSchema;
+    return blockSchema;
+}
 
 Entry.Func.updateMenu = function() {
     var blockMenu = Entry.playground.mainWorkspace.getBlockMenu();
@@ -328,12 +346,12 @@ Entry.Func.generateWsBlock = function(targetFunc) {
 
     this.refreshMenuCode();
 
-    this.bindFuncChangeEvent();
 };
 
-Entry.Func.bindFuncChangeEvent = function() {
+Entry.Func.bindFuncChangeEvent = function(targetFunc) {
+    targetFunc = targetFunc ? targetFunc : this.targetFunc;
     if (!this._funcChangeEvent)
-        this._funcChangeEvent = this.targetFunc.content
+        this._funcChangeEvent = targetFunc.content
             .getEventMap("funcDef")[0].view._contents[1]
             .changeEvent.attach(this, this.generateWsBlock);
 };
