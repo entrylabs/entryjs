@@ -15172,6 +15172,7 @@ Entry.Executor = function(a) {
 })(Entry.Executor.prototype);
 Entry.FieldDropdown = function(a, b) {
   this._block = b.block;
+  this._blockView = b;
   this.box = new Entry.BoxModel;
   this.svgGroup = null;
   this._contents = a;
@@ -15210,27 +15211,27 @@ Entry.FieldDropdown = function(a, b) {
       a.optionGroup.remove();
     });
     this.optionGroup = c.getBoard().svgGroup.group();
-    var d = c.svgGroup.transform().globalMatrix, c = this._contents.options;
-    this.optionGroup.attr({class:"entry-field-dropdown", transform:"t" + (d.e - 60) + " " + (d.f + 35)});
-    var d = [], e = 0;
-    d.push(this.optionGroup.rect(0, 0, 0, 23 * c.length).attr({fill:"white"}));
-    for (var f = 0, g = c.length;f < g;f++) {
-      var h = c[f], k = h[0], h = h[1], l = this.optionGroup.group().attr({class:"rect", transform:"t0 " + 23 * f});
-      d.push(l.rect(0, 0, 0, 23));
-      this.value == h && l.text(5, 13, "\u2713").attr({"alignment-baseline":"central"});
-      k = l.text(20, 13, k).attr({"alignment-baseline":"central"});
-      e = Math.max(k.node.getComputedTextLength() + 50, e);
+    var c = c.svgGroup.transform().globalMatrix, d = [], e = 0, f = this._contents.options;
+    d.push(this.optionGroup.rect(0, 0, 0, 23 * f.length).attr({fill:"white"}));
+    for (var g = 0, h = f.length;g < h;g++) {
+      var k = f[g], l = k[0], k = k[1], q = this.optionGroup.group().attr({class:"rect", transform:"t0 " + 23 * g});
+      d.push(q.rect(0, 0, 0, 23));
+      this.value == k && q.text(5, 13, "\u2713").attr({"alignment-baseline":"central"});
+      l = q.text(20, 13, l).attr({"alignment-baseline":"central"});
+      e = Math.max(l.node.getComputedTextLength() + 50, e);
       (function(c, d) {
         c.mousedown(function() {
           a.applyValue(d);
           a.destroyOption();
         });
-      })(l, h);
+      })(q, k);
     }
-    var q = {width:e};
+    var n = {width:e};
     d.forEach(function(a) {
-      a.attr(q);
+      a.attr(n);
     });
+    d = this.box;
+    this.optionGroup.attr({class:"entry-field-dropdown", transform:"t" + (c.e + this._blockView.offsetX + d.x + 29 + d.width / 2 - e / 2) + " " + (c.f + 35)});
   };
   a.align = function(a, c, d) {
     var e = this.svgGroup, f = "t" + a + " " + c;
