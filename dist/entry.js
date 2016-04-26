@@ -104,7 +104,8 @@ var Entry = {block:{}, TEXT_ALIGN_CENTER:0, TEXT_ALIGN_LEFT:1, TEXT_ALIGN_RIGHT:
   Entry.stateManager && (a.activityLog = Entry.stateManager.activityLog_);
   return a;
 }, DRAG_MODE_NONE:0, DRAG_MODE_MOUSEDOWN:1, DRAG_MODE_DRAG:2};
-window.Entry = Entry;
+window && (window.Entry = Entry);
+"object" == typeof exports && (exports.block = Entry.block);
 Entry.Albert = {PORT_MAP:{leftWheel:0, rightWheel:0, buzzer:0, bodyLed:0, frontLed:0, leftEye:0, rightEye:0, topology:0, note:0, ioModeA:0, ioModeB:0}, setZero:function() {
   var a = Entry.Albert.PORT_MAP, b;
   for (b in a) {
@@ -11005,12 +11006,13 @@ Entry.Func = function(a) {
   this.block = null;
   this.hashMap = {};
   this.paramMap = {};
-  a = function() {
+  var b = function() {
   };
-  a.prototype = Entry.block.function_general;
-  a = new a;
-  a.changeEvent = new Entry.Event;
-  Entry.block["func_" + this.id] = a;
+  b.prototype = Entry.block.function_general;
+  b = new b;
+  b.changeEvent = new Entry.Event;
+  Entry.block["func_" + this.id] = b;
+  a && (console.log(this.content._blockMap), Entry.Func.generateWsBlock(this));
   Entry.Func.registerFunction(this);
 };
 Entry.Func.threads = {};
@@ -11134,30 +11136,31 @@ Entry.Func.prototype.generateBlock = function(a) {
   this.block = a.block;
   this.description = a.description;
 };
-Entry.Func.generateWsBlock = function() {
-  var a = this.targetFunc.content.getEventMap("funcDef")[0].params[0], b = 0, c = 0, d = [], e = "", f = this.targetFunc.hashMap, g = this.targetFunc.paramMap;
-  for (this.unbindFuncChangeEvent();a;) {
-    var h = a.params[0];
-    switch(a.type) {
+Entry.Func.generateWsBlock = function(a) {
+  a = a ? a : this.targetFunc;
+  var b = a.content.getEventMap("funcDef")[0].params[0], c = 0, d = 0, e = [], f = "", g = a.hashMap, h = a.paramMap;
+  for (this.unbindFuncChangeEvent();b;) {
+    var k = b.params[0];
+    switch(b.type) {
       case "function_field_label":
-        e = e + " " + h;
+        f = f + " " + k;
         break;
       case "function_field_boolean":
-        Entry.Mutator.mutate(h.type, {template:Lang.Blocks.FUNCTION_logical_variable + " " + (b ? b : "")});
-        f[h.type] = !1;
-        g[h.type] = b + c;
-        b++;
-        d.push({type:"Block", accept:"booleanMagnet"});
-        e += " %" + (b + c);
+        Entry.Mutator.mutate(k.type, {template:Lang.Blocks.FUNCTION_logical_variable + " " + (c ? c : "")});
+        g[k.type] = !1;
+        h[k.type] = c + d;
+        c++;
+        e.push({type:"Block", accept:"booleanMagnet"});
+        f += " %" + (c + d);
         break;
       case "function_field_string":
-        Entry.Mutator.mutate(h.type, {template:Lang.Blocks.FUNCTION_character_variable + " " + (c ? c : "")}), f[h.type] = !1, g[h.type] = b + c, c++, e += " %" + (b + c), d.push({type:"Block", accept:"stringMagnet"});
+        Entry.Mutator.mutate(k.type, {template:Lang.Blocks.FUNCTION_character_variable + " " + (d ? d : "")}), g[k.type] = !1, h[k.type] = c + d, d++, f += " %" + (c + d), e.push({type:"Block", accept:"stringMagnet"});
     }
-    a = a.getOutputBlock();
+    b = b.getOutputBlock();
   }
-  Entry.Mutator.mutate("func_" + this.targetFunc.id, {params:d, template:e});
-  for (var k in f) {
-    f[k] ? (a = -1 < k.indexOf("string") ? Lang.Blocks.FUNCTION_character_variable : Lang.Blocks.FUNCTION_logical_variable, Entry.Mutator.mutate(k, {template:a})) : f[k] = !0;
+  Entry.Mutator.mutate("func_" + a.id, {params:e, template:f});
+  for (var m in g) {
+    g[m] ? (a = -1 < m.indexOf("string") ? Lang.Blocks.FUNCTION_character_variable : Lang.Blocks.FUNCTION_logical_variable, Entry.Mutator.mutate(m, {template:a})) : g[m] = !0;
   }
   this.refreshMenuCode();
   this.bindFuncChangeEvent();
@@ -16504,16 +16507,16 @@ Entry.Board = function(a) {
     }
     return g.concat(h);
   };
-  a._getFieldBlockMetaData = function(a, c, d, e, f) {
-    var g = a._contents, h = [];
-    c += a.contentPos.x;
-    d += a.contentPos.y;
+  a._getFieldBlockMetaData = function(b, a, d, e, f) {
+    var g = b._contents, h = [];
+    a += b.contentPos.x;
+    d += b.contentPos.y;
     for (var k = 0;k < g.length;k++) {
       var m = g[k];
       if (m instanceof Entry.FieldBlock && m.acceptType === f) {
         var n = m._valueBlock;
         if (!n.view.dragInstance) {
-          var l = c + m.box.x, q = d + m.box.y + -.5 * a.height, m = d + m.box.y + m.box.height;
+          var l = a + m.box.x, q = d + m.box.y + -.5 * b.height, m = d + m.box.y + m.box.height;
           h.push({point:q, endPoint:m, startBlock:n, blocks:[]});
           h.push({point:m, blocks:[]});
           n = n.view;
@@ -16525,8 +16528,8 @@ Entry.Board = function(a) {
     }
     return h;
   };
-  a._getOutputMagnets = function(a, c, d, e) {
-    var f = a.getBlocks(), g = [], h = [];
+  a._getOutputMagnets = function(b, a, d, e) {
+    var f = b.getBlocks(), g = [], h = [];
     d || (d = {x:0, y:0});
     var k = d.x;
     d = d.y;
@@ -16535,14 +16538,14 @@ Entry.Board = function(a) {
       if (l.dragInstance) {
         break;
       }
-      l.zIndex = c;
+      l.zIndex = a;
       d += l.y;
       k += l.x;
-      h = h.concat(this._getOutputMetaData(l, k, d, c, e));
-      n.statements && (c += .01);
+      h = h.concat(this._getOutputMetaData(l, k, d, a, e));
+      n.statements && (a += .01);
       for (var q = 0;q < n.statements.length;q++) {
-        a = n.statements[q];
-        var r = n.view._statements[q], g = g.concat(this._getOutputMagnets(a, c, {x:r.x + k, y:r.y + d}, e));
+        b = n.statements[q];
+        var r = n.view._statements[q], g = g.concat(this._getOutputMagnets(b, a, {x:r.x + k, y:r.y + d}, e));
       }
       l.magnet.next && (d += l.magnet.next.y, k += l.magnet.next.x);
     }

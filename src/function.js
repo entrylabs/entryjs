@@ -32,6 +32,11 @@ Entry.Func = function(func) {
 
     Entry.block["func_" + this.id] = blockSchema;
 
+    if (func) {
+        console.log(this.content._blockMap);
+        Entry.Func.generateWsBlock(this);
+    }
+
     Entry.Func.registerFunction(this);
 };
 
@@ -252,15 +257,16 @@ Entry.Func.prototype.generateBlock = function(toSave) {
     this.description = generatedInfo.description;
 };
 
-Entry.Func.generateWsBlock = function() {
-    var defBlock = this.targetFunc.content.getEventMap("funcDef")[0];
+Entry.Func.generateWsBlock = function(targetFunc) {
+    targetFunc = targetFunc ? targetFunc : this.targetFunc;
+    var defBlock = targetFunc.content.getEventMap("funcDef")[0];
     var outputBlock = defBlock.params[0];
     var booleanIndex = 0;
     var stringIndex = 0;
     var schemaParams = [];
     var schemaTemplate = "";
-    var hashMap = this.targetFunc.hashMap;
-    var paramMap = this.targetFunc.paramMap;
+    var hashMap = targetFunc.hashMap;
+    var paramMap = targetFunc.paramMap;
     this.unbindFuncChangeEvent();
     while(outputBlock) {
         var value = outputBlock.params[0];
@@ -300,7 +306,7 @@ Entry.Func.generateWsBlock = function() {
         outputBlock = outputBlock.getOutputBlock();
     }
     Entry.Mutator.mutate(
-        "func_" + this.targetFunc.id,
+        "func_" + targetFunc.id,
         {params: schemaParams, template: schemaTemplate}
     );
 
