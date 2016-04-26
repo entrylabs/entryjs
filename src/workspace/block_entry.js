@@ -1,3 +1,6 @@
+if (typeof Entry !== "object")
+    var Entry = {};
+
 Entry.block = {
     "albert_move_forward": {
         "color": "#00979D",
@@ -14987,3 +14990,6 @@ Entry.block = {
         ]
     }
 }
+
+if (typeof exports == "object")
+    exports.block = Entry.block;

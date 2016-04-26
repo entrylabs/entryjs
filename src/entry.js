@@ -324,7 +324,7 @@ Entry.DRAG_MODE_NONE = 0;
 Entry.DRAG_MODE_MOUSEDOWN = 1;
 Entry.DRAG_MODE_DRAG = 2;
 
-if (window)
+if (typeof window == "object")
     window.Entry = Entry;
 
 if (typeof exports == "object") {
