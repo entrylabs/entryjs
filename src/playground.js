@@ -278,7 +278,6 @@ Entry.Playground.prototype.generateCodeView = function(codeView) {
     });
 
     new Entry.BlockDriver().convert();
-
     //attach event for event block
     var blocks = Entry.block;
 
