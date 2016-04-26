@@ -283,6 +283,7 @@ Entry.Playground.prototype.generateCodeView = function(codeView) {
 
     blocks.when_run_button_click.event = "start";
     blocks.when_some_key_pressed.event = "keyPress";
+    blocks.when_some_key_click.event = "keyPress";
     blocks.when_message_cast.event = "when_message_cast";
     blocks.when_scene_start.event = "when_scene_start";
     blocks.when_clone_start.event = "when_clone_start";

@@ -6041,7 +6041,7 @@ Entry.Engine.prototype.raiseEventOnEntity = function(b, a) {
 };
 Entry.Engine.prototype.captureKeyEvent = function(b) {
   var a = b.keyCode, c = Entry.type;
-  b.ctrlKey && "workspace" == c ? 83 == a ? (b.preventDefault(), Entry.dispatchEvent("saveWorkspace")) : 82 == a ? (b.preventDefault(), Entry.engine.run()) : 90 == a && (b.preventDefault(), Entry.dispatchEvent(b.shiftKey ? "redo" : "undo")) : Entry.engine.isState("run") && (Entry.container.mapEntityIncludeCloneOnScene(Entry.engine.raiseKeyEvent, ["keyPress", a]), Entry.container.mapEntityIncludeCloneOnScene(Entry.engine.raiseKeyEvent, ["when_some_key_pressed", a]));
+  b.ctrlKey && "workspace" == c ? 83 == a ? (b.preventDefault(), Entry.dispatchEvent("saveWorkspace")) : 82 == a ? (b.preventDefault(), Entry.engine.run()) : 90 == a && (b.preventDefault(), Entry.dispatchEvent(b.shiftKey ? "redo" : "undo")) : Entry.engine.isState("run") && Entry.container.mapEntityIncludeCloneOnScene(Entry.engine.raiseKeyEvent, ["keyPress", a]);
   Entry.engine.isState("stop") && "workspace" === c && 37 <= a && 40 >= a && Entry.stage.moveSprite(b);
 };
 Entry.Engine.prototype.raiseKeyEvent = function(b, a) {
@@ -15205,7 +15205,7 @@ params:["10"]}, null], type:"sound_from_to_and_wait"}, paramsKeyMap:{SOUND:0, ST
   return a.callReturn();
 }, event:"when_object_click_canceled"}, when_some_key_click:{color:"#3BBD70", skeleton:"basic_event", statements:[], template:"%1 \ud0a4\ub97c \ub20c\ub800\uc744 \ub54c", params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/start_icon_keyboard.png", size:17, position:{x:0, y:-2}}], events:{}, def:{params:[null]}, func:function(b, a) {
   return a.callReturn();
-}}, when_message_cast:{color:"#3BBD70", skeleton:"basic_event", statements:[], template:"%1 %2 \uc2e0\ud638\ub97c \ubc1b\uc558\uc744 \ub54c", params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/start_icon_signal.png", size:17, position:{x:0, y:-2}}, {type:"DropdownDynamic", value:null, menuName:"messages", fontSize:11}], events:{whenBlockAdd:[function(b) {
+}, event:"keyPress"}, when_message_cast:{color:"#3BBD70", skeleton:"basic_event", statements:[], template:"%1 %2 \uc2e0\ud638\ub97c \ubc1b\uc558\uc744 \ub54c", params:[{type:"Indicator", img:"/lib/entryjs/images/block_icon/start_icon_signal.png", size:17, position:{x:0, y:-2}}, {type:"DropdownDynamic", value:null, menuName:"messages", fontSize:11}], events:{whenBlockAdd:[function(b) {
   var a = Entry.variableContainer;
   a && a.addRef("_messageRefs", b);
 }], whenBlockDestroy:[function(b) {
@@ -19319,6 +19319,7 @@ Entry.Playground.prototype.generateCodeView = function(b) {
   var c = Entry.block;
   c.when_run_button_click.event = "start";
   c.when_some_key_pressed.event = "keyPress";
+  c.when_some_key_click.event = "keyPress";
   c.when_message_cast.event = "when_message_cast";
   c.when_scene_start.event = "when_scene_start";
   c.when_clone_start.event = "when_clone_start";

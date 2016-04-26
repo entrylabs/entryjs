@@ -620,8 +620,6 @@ Entry.Engine.prototype.captureKeyEvent = function(e) {
     } else if (Entry.engine.isState('run')) {
         Entry.container.mapEntityIncludeCloneOnScene(Entry.engine.raiseKeyEvent,
                                   ["keyPress", keyCode]);
-        Entry.container.mapEntityIncludeCloneOnScene(Entry.engine.raiseKeyEvent,
-                                  ["when_some_key_pressed", keyCode]);
     }
 
     if (Entry.engine.isState('stop')) {

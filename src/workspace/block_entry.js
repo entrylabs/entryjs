@@ -12763,7 +12763,8 @@ Entry.block = {
         },
         "func": function (sprite, script) {
             return script.callReturn();
-        }
+        },
+        "event": "keyPress"
     },
     "when_message_cast": {
         "color": "#3BBD70",
